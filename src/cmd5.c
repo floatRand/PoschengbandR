@@ -40,7 +40,7 @@ cptr spell_category_name(int tval)
 
 bool select_the_force = FALSE;
 
-static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm)
+static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm, bool browse)
 {
     int         i;
     int         spell = -1;
@@ -62,7 +62,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
     if (repeat_pull(sn))
     {
         /* Verify the spell */
-        if (spell_okay(*sn, learned, FALSE, use_realm))
+        if (spell_okay(*sn, learned, FALSE, use_realm, FALSE))
         {
             /* Success */
             return (TRUE);
@@ -94,7 +94,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
     for (i = 0; i < num; i++)
     {
         /* Look for "okay" spells */
-        if (spell_okay(spells[i], learned, FALSE, use_realm)) okay = TRUE;
+        if (spell_okay(spells[i], learned, FALSE, use_realm, browse)) okay = TRUE;
     }
 
     /* No "okay" spells */
@@ -227,7 +227,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
         spell = spells[i];
 
         /* Require "okay" spells */
-        if (!spell_okay(spell, learned, FALSE, use_realm))
+        if (!spell_okay(spell, learned, FALSE, use_realm, browse))
         {
             bell();
             msg_format("You may not %s that %s.", prompt, p);
@@ -507,7 +507,7 @@ void do_cmd_browse(void)
     while(TRUE)
     {
         /* Ask for a spell, allow cancel */
-        if (!get_spell(&spell, "browse", o_ptr->sval, TRUE, use_realm))
+        if (!get_spell(&spell, "browse", o_ptr->sval, TRUE, use_realm, TRUE))
         {
             /* If cancelled, leave immediately. */
             if (spell == -1) break;
@@ -682,7 +682,7 @@ void do_cmd_study(void)
     if (mp_ptr->spell_book != TV_LIFE_BOOK)
     {
         /* Ask for a spell, allow cancel */
-        if (!get_spell(&spell, "study", sval, FALSE, o_ptr->tval - TV_LIFE_BOOK + 1)
+        if (!get_spell(&spell, "study", sval, FALSE, o_ptr->tval - TV_LIFE_BOOK + 1, FALSE)
             && (spell == -1)) return;
 
     }
@@ -702,7 +702,7 @@ void do_cmd_study(void)
             {
                 /* Skip non "okay" prayers */
                 if (!spell_okay(spell, FALSE, TRUE,
-                    (increment ? p_ptr->realm2 : p_ptr->realm1))) continue;
+                    (increment ? p_ptr->realm2 : p_ptr->realm1), FALSE)) continue;
 
                 /* Hack -- Prepare the randomizer */
                 k++;
@@ -1067,7 +1067,7 @@ void do_cmd_cast(void)
 
     /* Ask for a spell */
     if (!get_spell(&spell, ((mp_ptr->spell_book == TV_LIFE_BOOK) ? "recite" : "cast"),
-        sval, TRUE, realm))
+        sval, TRUE, realm, FALSE))
     {
         if (spell == -2)
             msg_format("You don't know any %ss in that book.", prayer);
