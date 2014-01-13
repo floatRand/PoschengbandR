@@ -750,7 +750,7 @@ void object_known(object_type *o_ptr)
     o_ptr->ident &= ~(IDENT_EMPTY);
 
     /* Now we know about the item */
-    o_ptr->ident |= (IDENT_KNOWN);
+    o_ptr->ident |= (IDENT_KNOWN | IDENT_MENTAL);
 }
 
 /*
