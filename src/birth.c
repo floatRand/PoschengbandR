@@ -2487,7 +2487,7 @@ static void init_turn(void)
 
 /*
  * Each player starts out with a few items, given as tval/sval pairs.
- * In addition, he always has some food and a few torches.
+ * In addition, he always has some food and a lantern.
  */
 static byte player_init[MAX_CLASS][3][2] =
 {
@@ -2926,9 +2926,9 @@ void player_outfit(void)
     }
     else if (p_ptr->pclass != CLASS_NINJA)
     {
-        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_TORCH));
-        forge.number = (byte)rand_range(3, 7);
-        forge.xtra4 = rand_range(3, 7) * 500;
+        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_LANTERN));
+        forge.number = 1;
+        forge.xtra4 = 5000;
         add_outfit(&forge);
     }
 
