@@ -2047,7 +2047,6 @@ void autopick_pickup_items(cave_type *c_ptr)
 {
     s16b this_o_idx, next_o_idx = 0;
     bool auto_lore = p_ptr->loremaster;
-    bool auto_sense = p_ptr->lev >= 35;
     
     /* Scan the pile of objects */
     for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
@@ -2065,7 +2064,7 @@ void autopick_pickup_items(cave_type *c_ptr)
         {
             if (auto_lore)
                 identify_item(o_ptr);
-            if (auto_sense)
+            else
                 _sense_object_floor(o_ptr);
         }
 
