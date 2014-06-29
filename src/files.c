@@ -2898,12 +2898,7 @@ void do_cmd_suicide(void)
  */
 void do_cmd_save_game(int is_autosave)
 {
-    /* Autosaves do not disturb */
-    if (is_autosave)
-    {
-        msg_print("Autosaving the game...");
-    }
-    else
+    if (!is_autosave)
     {
         /* Disturb the player */
         disturb(1, 0);
@@ -2916,7 +2911,8 @@ void do_cmd_save_game(int is_autosave)
     handle_stuff();
 
     /* Message */
-    prt("Saving game...", 0, 0);
+    if (!is_autosave)
+        prt("Saving game...", 0, 0);
 
 
     /* Refresh */
@@ -2932,7 +2928,8 @@ void do_cmd_save_game(int is_autosave)
     /* Save the player */
     if (save_player())
     {
-        prt("Saving game... done.", 0, 0);
+        if (!is_autosave)
+            prt("Saving game... done.", 0, 0);
 
     }
 
