@@ -751,6 +751,8 @@ void object_known(object_type *o_ptr)
 
     /* Now we know about the item */
     o_ptr->ident |= (IDENT_KNOWN | IDENT_MENTAL);
+
+    ego_aware(o_ptr);
 }
 
 /*
