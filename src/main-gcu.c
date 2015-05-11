@@ -1304,12 +1304,15 @@ static void hook_quit(cptr str)
 errr init_gcu(int argc, char *argv[])
 {
    int i;
-
    char path[1024];
+   bool big_map = FALSE;
 
-   /* Unused */
-   (void)argc;
-   (void)argv;
+   /* Parse Args */
+   for (i = 1; i < argc; i++)
+   {
+      if (strcmp(argv[i], "-b") == 0)
+         big_map = TRUE;
+   }
    
 #ifdef USE_SOUND
 
@@ -1452,6 +1455,12 @@ errr init_gcu(int argc, char *argv[])
          Sorry, but I prefer the map window to be as large as possible. This
          requires me to hard-code the secondary term sizes based on my preferences.
          Probably, they should be configurable. ***/
+    if (big_map)
+    {
+        term_data_init(&data[0], LINES, COLS, 0, 0);
+        angband_term[0] = Term;
+    }
+    else
     {
         const int desired_inv_cx = 60;
         const int desired_msg_cy = 7;
