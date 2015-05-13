@@ -253,6 +253,10 @@ static term_data data[MAX_TERM_DATA];
 # include <sys/types.h>
 #endif
 
+/**
+ * If you have errors relating to curs_set(), comment out the following line
+ */
+#define USE_CURS_SET
 
 /*
  * XXX XXX Hack -- POSIX uses "O_NONBLOCK" instead of "O_NDELAY"
@@ -1074,10 +1078,14 @@ static errr Term_xtra_gcu(int n, int v)
       (void)wrefresh(td->win);
       return (0);
 
+#ifdef USE_CURS_SET
+
       /* Change the cursor visibility */
       case TERM_XTRA_SHAPE:
       curs_set(v);
       return (0);
+
+#endif
 
       /* Suspend/Resume curses */
       case TERM_XTRA_ALIVE:

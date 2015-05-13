@@ -97,15 +97,6 @@
 /*#endif*/
 
 /*
- * OPTION: Use the "curs_set()" call in "main-gcu.c".
- * Hack -- This option will not work on most BSD machines
- */
-#ifdef SYS_V
-# define USE_CURS_SET
-#endif
-
-
-/*
  * OPTION: Include "ncurses.h" instead of "curses.h" in "main-gcu.c"
  */
 /* #define USE_NCURSES */
