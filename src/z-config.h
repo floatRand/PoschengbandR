@@ -19,7 +19,7 @@
  * USE_FONTSET and/or USE_XIM can be commented out
  * when you don't want to use it.
  */
-/*#define USE_FONTSET*/
+#define USE_FONTSET
 
 
 #if defined(USE_FONTSET) || defined(USE_XIM)
