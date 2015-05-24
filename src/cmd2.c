@@ -886,8 +886,9 @@ static int count_chests(int *y, int *x, bool trapped)
         /* Already open */
         if (o_ptr->pval == 0) continue;
 
-        /* No (known) traps here */
-        if (trapped && (!object_is_known(o_ptr) ||
+        /* No (known) traps here
+           CTK: pval is negative if chest is disarmed. Don't read out of bounds!! */
+        if (trapped && (!object_is_known(o_ptr) || o_ptr->pval < 0 ||
             !chest_traps[o_ptr->pval])) continue;
 
         /* OK */
