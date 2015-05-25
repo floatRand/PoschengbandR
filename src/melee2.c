@@ -3349,7 +3349,7 @@ static void process_monster(int m_idx)
                  * produce webs. */
                 if (!(r_ptr->flags2 & RF2_PASS_WALL) && mon_save_p(m_ptr->r_idx, A_NONE))
                 {
-                    cave_set_feat(ny, nx, feat_floor);
+                    cave_set_feat(ny, nx, floor_type[randint0(100)]);
                 }
             }
 

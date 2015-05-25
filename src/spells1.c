@@ -916,7 +916,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
         if (message)
         {
             msg_format("The web %s", message);
-            cave_set_feat(y, x, feat_floor);
+            cave_set_feat(y, x, floor_type[randint0(100)]);
             if (c_ptr->info & (CAVE_MARK)) obvious = TRUE;
         }
     }

@@ -309,7 +309,6 @@ static void _phase_spider_calc_bonuses(void)
     res_add_immune(RES_POIS);
     res_add(RES_NEXUS);
     res_add(RES_CONF);
-    res_add(RES_FEAR);
     res_add_immune(RES_TELEPORT);
     p_ptr->free_act = TRUE;
     p_ptr->see_nocto = TRUE;
@@ -319,7 +318,6 @@ static void _phase_spider_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_RES_NEXUS);
     add_flag(flgs, TR_RES_CONF);
-    add_flag(flgs, TR_RES_FEAR);
     add_flag(flgs, TR_FREE_ACT);
 }
 static void _phase_spider_get_immunities(u32b flgs[TR_FLAG_SIZE])
