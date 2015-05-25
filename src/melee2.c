@@ -3342,7 +3342,16 @@ static void process_monster(int m_idx)
                 }
             }
             if (have_flag(f_ptr->flags, FF_WEB) && r_ptr->d_char != 'S')
+            {
                 m_ptr->energy_need += ENERGY_NEED();
+                /* Monster hacks web to bits? We assume at the moment that only
+                 * the player (in particual, a Spider player monster race) can
+                 * produce webs. */
+                if (!(r_ptr->flags2 & RF2_PASS_WALL) && mon_save_p(m_ptr->r_idx, A_NONE))
+                {
+                    cave_set_feat(ny, nx, feat_floor);
+                }
+            }
 
             if (!is_riding_mon)
             {
