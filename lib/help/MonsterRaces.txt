@@ -1066,7 +1066,7 @@
 
 
 
-***** [a] Rings.txt
+***** [a] rings.txt
 ***** [b] DragonRealms.txt
 
 
