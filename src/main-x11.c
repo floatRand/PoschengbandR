@@ -537,8 +537,6 @@ static errr Metadpy_init_2(Display *dpy, cptr name)
 }
 
 
-#ifndef IGNORE_UNUSED_FUNCTIONS
-
 /*
  * Nuke the current metadpy
  */
@@ -563,9 +561,6 @@ static errr Metadpy_nuke(void)
 	/* Return Success */
 	return (0);
 }
-
-#endif /* IGNORE_UNUSED_FUNCTIONS */
-
 
 /*
  * General Flush/ Sync/ Discard routine
@@ -1062,6 +1057,7 @@ static errr Infoclr_init_1(GC gc)
 	return (0);
 }
 
+#endif /* IGNORE_UNUSED_FUNCTIONS */
 
 /*
  * Nuke an old 'infoclr'.
@@ -1083,9 +1079,6 @@ static errr Infoclr_nuke(void)
 	/* Success */
 	return (0);
 }
-
-#endif /* IGNORE_UNUSED_FUNCTIONS */
-
 
 /*
  * Initialize an infoclr with some data
@@ -3346,7 +3339,9 @@ static void hook_quit(const char *str)
 
 #ifdef USE_GRAPHICS
         if (use_graphics)
-            XFree(td->TmpImage);
+        {
+            XDestroyImage(td->TmpImage);
+        }
         /* TODO: This still leaks:
             ================================================================
             ==14300==ERROR: LeakSanitizer: detected memory leaks
@@ -3376,19 +3371,19 @@ static void hook_quit(const char *str)
         (void)term_nuke(t);
     }
 
-    /* Free colors
+    /* Free colors */
     Infoclr_set(xor);
     (void)Infoclr_nuke();
-    mem_free(xor);
+    KILL(xor, infoclr);
 
-    for (i = 0; i < MAX_COLORS; ++i) {
+    for (i = 0; i < 256; ++i) {
         Infoclr_set(clr[i]);
         (void)Infoclr_nuke();
-        mem_free(clr[i]);
+        KILL(clr[i], infoclr);
     }
-    */
-    /* Close link to display
-    (void)Metadpy_nuke();*/
+
+    /* Close link to display */
+    (void)Metadpy_nuke();
 }
 
 /*
