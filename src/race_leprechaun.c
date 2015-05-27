@@ -274,6 +274,16 @@ static void _get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
     }
 }
 
+static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
+{
+    if ( !p_ptr->shooter_info.heavy_shoot
+      && info_ptr->tval_ammo <= TV_BOLT
+      && info_ptr->tval_ammo >= TV_SHOT )
+    {
+        p_ptr->shooter_info.num_fire += MIN(p_ptr->au / 200000, 75);
+    }
+}
+
 static void _player_action(int energy_use)
 {
     if (_get_toggle() == LEPRECHAUN_TOGGLE_BLINK)
@@ -408,6 +418,7 @@ race_t *mon_leprechaun_get_race_t(void)
         me.caster_info = _caster_info;
         me.calc_innate_attacks = _calc_innate_attacks;
         me.calc_bonuses = _calc_bonuses;
+        me.calc_shooter_bonuses = _calc_shooter_bonuses;
         me.get_flags = _get_flags;
         me.get_vulnerabilities = _get_vulnerabilities;
         me.gain_level = _gain_level;
