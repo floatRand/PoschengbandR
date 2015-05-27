@@ -201,10 +201,15 @@ static void _calc_bonuses(void)
     p_ptr->to_a += ac;
     p_ptr->dis_to_a += ac;
 
+    if (p_ptr->au >= 10 * 1000 * 1000)
+    {
+        p_ptr->device_power++;
+    }
     if (p_ptr->au >= 5 * 1000 * 1000)
     {
         p_ptr->spell_power++;
         p_ptr->spell_cap++;
+        p_ptr->device_power++;
     }
     if (p_ptr->au >= 1000 * 1000)
     {
