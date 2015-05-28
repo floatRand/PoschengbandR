@@ -6652,7 +6652,7 @@ static _ego_type_t _ego_types[] = {
     { EGO_TYPE_LITE, "Lights" },
     { EGO_TYPE_BODY_ARMOR, "Armors" },
     { EGO_TYPE_ROBE, "Robes" },
-    { EGO_TYPE_CLOAK, "Shields" },
+    { EGO_TYPE_CLOAK, "Cloaks" },
     { EGO_TYPE_HELMET, "Helmets" },
     { EGO_TYPE_CROWN, "Crowns" },
     { EGO_TYPE_GLOVES, "Gloves" },
