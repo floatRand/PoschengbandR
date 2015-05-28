@@ -3002,7 +3002,8 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
             else
             {
                 int new_cost = new_object_cost(&copy);
-                choices[i].cost = (new_cost - old_cost)*m;
+                int unit_cost = MAX((i+1)*1500, (new_cost - old_cost)*m); /* Hack: No more cheap/free enchantments! */
+                choices[i].cost = unit_cost;
                 if (is_guild)
                     choices[i].cost /= 2;
             }
