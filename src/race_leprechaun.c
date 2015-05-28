@@ -289,6 +289,11 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
     }
 }
 
+static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
+{
+    info_ptr->xtra_blow += MIN(p_ptr->au / 200000, 100);
+}
+
 static void _player_action(int energy_use)
 {
     if (_get_toggle() == LEPRECHAUN_TOGGLE_BLINK)
@@ -423,6 +428,7 @@ race_t *mon_leprechaun_get_race_t(void)
         me.caster_info = _caster_info;
         me.calc_innate_attacks = _calc_innate_attacks;
         me.calc_bonuses = _calc_bonuses;
+        me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;
         me.get_flags = _get_flags;
         me.get_vulnerabilities = _get_vulnerabilities;

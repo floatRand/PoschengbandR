@@ -236,7 +236,7 @@ static _blow_info_t _get_blow_info(int hand)
         }
         else if (prace_is_(RACE_MON_LEPRECHAUN)) 
         {
-            result.num = 350;
+            result.num = 300;
             result.mul = 20;
         }
         else if (prace_is_(RACE_MON_SWORD))
