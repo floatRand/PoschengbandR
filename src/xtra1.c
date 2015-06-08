@@ -4158,7 +4158,7 @@ void calc_bonuses(void)
     {
         if (p_ptr->weapon_info[i].wield_how != WIELD_NONE)
         {
-            p_ptr->weapon_info[i].dual_wield_pct = p_ptr->weapon_info[i].dual_wield_pct * 75 / 100;
+            p_ptr->weapon_info[i].dual_wield_pct = p_ptr->weapon_info[i].dual_wield_pct * 90 / 100;
             if (p_ptr->weapon_info[i].dual_wield_pct < 100)
                 p_ptr->weapon_info[i].dual_wield_pct = 100;
         }

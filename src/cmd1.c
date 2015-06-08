@@ -497,7 +497,7 @@ critical_t critical_norm(int weight, int plus, s16b meichuu, int mode, int hand)
       && p_ptr->pclass != CLASS_DUELIST 
       && !p_ptr->weapon_info[hand].omoi )
     {
-        roll = roll * 2 / 3;
+        roll = roll * 4 / 5;
     }
 
     /* Extract "blow" power */
