@@ -3755,7 +3755,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                             else if (p_ptr->tim_stealthy_snipe)
                             {
                             }
-                            else
+                            else if (one_in_(2))
                             {
                                 m_ptr->anger_ct++;
                             }

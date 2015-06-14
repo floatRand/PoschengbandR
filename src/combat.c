@@ -1041,7 +1041,7 @@ static int _shooter_info_aux(object_type *bow, object_type *arrow, int row, int 
     int          dd = arrow->dd;
     int          ds = arrow->ds;
     critical_t   crit = {0}; 
-    int             num_fire = 0;
+    int          num_fire = 0;
     int          r,c;
 
     missile_flags_known(arrow, flgs);
