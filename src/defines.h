@@ -5382,6 +5382,8 @@ extern int PlayerUID;
 #define DRAGON_TAIL_SWEEP    73
 #define DRAGON_SMITE_EVIL    74
 
+#define WEAPONMASTER_CLEAVE  75
+
 #define HISSATSU_IAI    100
 
 /*

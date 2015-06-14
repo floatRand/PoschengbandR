@@ -12,7 +12,7 @@
 
 #include "angband.h"
 #include "equip.h"
-
+#include <assert.h>
 static int _max_vampiric_drain(void)
 {
     if (prace_is_(RACE_MON_VAMPIRE) || prace_is_(MIMIC_BAT))
@@ -4481,23 +4481,21 @@ bool py_attack(int y, int x, int mode)
         }
     }
 
-    if (p_ptr->cleave && !fear_stop)
+    if (p_ptr->cleave && !fear_stop && mdeath && mode == 0)
     {
-        int y = 0, x = 0, i, dir = 0;
-        cave_type *c_ptr;
+        int ny = 0, nx = 0, i, dir = 0;
 
         melee_hack = FALSE;
-        for (i = 1; i <= 4; i++) /* TODO: Tweak the number of attempts */
+        for (i = 1; i <= 4 + p_ptr->lev/10; i++)
         {
             dir = randint0(8);
-            y = py + ddy_ddd[dir];
-            x = px + ddx_ddd[dir];
-            c_ptr = &cave[y][x];
+            ny = py + ddy_ddd[dir];
+            nx = px + ddx_ddd[dir];
 
-            if (c_ptr->m_idx)
+            if (cave[ny][nx].m_idx)
             {
                 msg_print("You attempt to cleave another foe!");
-                py_attack(y, x, 0);
+                py_attack(ny, nx, WEAPONMASTER_CLEAVE);
                 break;
             }
         }
