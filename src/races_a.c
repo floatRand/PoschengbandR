@@ -1513,14 +1513,6 @@ static int _hobbit_get_powers(spell_info* spells, int max)
 {
     return get_powers_aux(spells, max, _hobbit_powers);
 }
-static void _hobbit_calc_bonuses(void)
-{
-    p_ptr->hold_life = TRUE;
-}
-static void _hobbit_get_flags(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_HOLD_LIFE);
-}
 race_t *hobbit_get_race_t(void)
 {
     static race_t me = {0};
@@ -1533,8 +1525,7 @@ race_t *hobbit_get_race_t(void)
                     "They also are very good at searching, disarming, perception, and stealth; so they "
                     "make excellent rogues, but prefer to be called burglars. They are much weaker than "
                     "humans, and no good at melee fighting. Halflings have fair infravision, so they can "
-                    "detect warm creatures at a distance. They have a strong hold on their life force, "
-                    "and are thus intrinsically resistant to life draining.";
+                    "detect warm creatures at a distance.";
 
         me.stats[A_STR] = -2;
         me.stats[A_INT] =  1;
@@ -1557,9 +1548,7 @@ race_t *hobbit_get_race_t(void)
         me.exp = 120;
         me.infra = 4;
 
-        me.calc_bonuses = _hobbit_calc_bonuses;
         me.get_powers = _hobbit_get_powers;
-        me.get_flags = _hobbit_get_flags;
         init = TRUE;
     }
 
