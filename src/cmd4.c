@@ -7622,7 +7622,7 @@ static void do_cmd_knowledge_virtues(void)
     
     if (fff)
     {
-        fprintf(fff, "Your alighnment : %s\n\n", your_alignment());
+        fprintf(fff, "Your alignment : %s\n\n", your_alignment());
         virtue_dump(fff);
     }
     
