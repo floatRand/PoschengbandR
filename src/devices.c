@@ -1936,7 +1936,7 @@ static cptr _do_staff(int sval, int mode)
         }
         break;
     case SV_STAFF_HOLINESS:
-        if (desc) return "It does damage to all evil monsters in sight, gives temporary protection from lesser evil creature, cures poison, stuuned, cuts, removes fear and heals you a bit when you use it.";
+        if (desc) return "It does damage to all evil monsters in sight, gives temporary protection from lesser evil creature, cures poison, stunned, cuts, removes fear and heals you a bit when you use it.";
         if (info) return info_damage(0, 0, _staff_power(150));
         if (cast)
         {
