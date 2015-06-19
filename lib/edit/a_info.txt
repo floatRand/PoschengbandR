@@ -3172,28 +3172,28 @@ F:SPEED | SUST_CON | SUST_STR | REGEN | RES_POIS
 E:HEAL_CURING:20:300:700
 E:The Eye engulfs you in healing flames!
 
-N:308:of Fang
+N:308:Dog Collar~ of Fang
 I:40:0:1
 W:5:70:30:5000
 P:0:0d0:2:3:0
 F:QUESTITEM
-F:HIDE_TYPE 
+F:HIDE_TYPE | FULL_NAME
 F:RES_FEAR | STR
 
-N:309:of Wolf
+N:309:Dog Collar~ of Wolf
 I:40:0:1
 W:5:70:30:5000
 P:0:0d0:0:0:7
 F:QUESTITEM
-F:HIDE_TYPE 
+F:HIDE_TYPE | FULL_NAME
 F:FREE_ACT | CON
 
-N:310:of Grip
+N:310:Dog Collar~ of Grip
 I:40:0:1
 W:5:70:30:5000
 P:0:0d0:0:0:0
 F:QUESTITEM
-F:HIDE_TYPE 
+F:HIDE_TYPE | FULL_NAME
 F:SPEED | DEX
 
 N:311:of the Cyberdemon Lord
