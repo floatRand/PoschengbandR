@@ -5161,23 +5161,17 @@ bool inc_stat(int stat)
             gain = ((randint0(100) < 75) ? 1 : 2);
             value += gain;
         }
-
-        /* Gain 1/6 to 1/3 of distance to 18/100 */
         else if (value < (p_ptr->stat_max_max[stat]-2))
         {
-            /* Approximate gain value */
-            gain = (((p_ptr->stat_max_max[stat]) - value) / 2 + 3) / 2;
+            int delta = p_ptr->stat_max_max[stat] - value;
+            int pct = rand_range(20, 35); /* Note: Old spread was about 14% to 40% */
+            int gain = MAX(1, delta * pct / 100);
+            int max_value = p_ptr->stat_max_max[stat] - 1; /* e.g. 18/99 if max is 18/100 */
 
-            /* Paranoia */
-            if (gain < 1) gain = 1;
-
-            /* Apply the bonus */
-            value += randint1(gain) + gain / 2;
-
-            /* Maximal value */
-            if (value > (p_ptr->stat_max_max[stat]-1)) value = p_ptr->stat_max_max[stat]-1;
+            value += gain;
+            if (value > max_value)
+                value = max_value;
         }
-
         /* Gain one point at a time */
         else
         {
