@@ -5407,7 +5407,7 @@ bool kind_is_great(int k_idx)
         case TV_RAGE_BOOK:
         case TV_BURGLARY_BOOK:
         {
-            /*if (k_ptr->sval == SV_BOOK_MIN_GOOD) return one_in_(3);  Third Spellbooks */
+            if (k_ptr->sval == SV_BOOK_MIN_GOOD) return TRUE; /* Third Spellbooks: I want ?Acquirement to grant these! */
             if (k_ptr->sval >= SV_BOOK_MIN_GOOD + 1) return TRUE;   /* Fourth Spellbooks */
             return (FALSE);
         }
@@ -5612,7 +5612,39 @@ static bool _kind_is_potion(int k_idx) {
     }
     return FALSE;
 }
-/*static bool _kind_is_potion_scroll(int k_idx) { 
+static bool _kind_is_scroll(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_SCROLL:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_wand(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_WAND:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_rod(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_ROD:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_staff(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_STAFF:
+        return TRUE;
+    }
+    return FALSE;
+}
+/*static bool _kind_is_potion_scroll(int k_idx) {
     switch (k_info[k_idx].tval)
     {
     case TV_POTION:
@@ -5672,7 +5704,12 @@ bool kind_is_weapon(int k_idx) {
         return TRUE;
     return FALSE;
 }
-bool kind_is_bow_ammo(int k_idx) { 
+static bool _kind_is_bow(int k_idx) {
+    if (k_info[k_idx].tval == TV_BOW && k_info[k_idx].sval != SV_HARP) /* Assume tailored Archer reward, and a harp is just insulting! */
+        return TRUE;
+    return FALSE;
+}
+bool kind_is_bow_ammo(int k_idx) {
     if (k_info[k_idx].tval == TV_BOW)
         return TRUE;
     if (TV_MISSILE_BEGIN <= k_info[k_idx].tval && k_info[k_idx].tval <= TV_MISSILE_END)
@@ -5736,28 +5773,76 @@ static _kind_p _choose_obj_kind(u32b mode)
     else if (_drop_tailored)
         _kind_hook2 = kind_is_tailored;
 
-    for (i = 0; ; i++)
+    if (_drop_tailored)
     {
-        if (!_kind_alloc_table[i].hook) break;
-        tot += _kind_alloc_weight(&_kind_alloc_table[i], mode);
-    }
-
-    if (tot > 0)
-    {
-        int j = randint0(tot);
-        
-        for (i = 0; ; i++)
+        switch (p_ptr->pclass)
         {
-            if (!_kind_alloc_table[i].hook) break;
-            j -= _kind_alloc_weight(&_kind_alloc_table[i], mode);
-            if (j < 0)
+        case CLASS_ARCHER:
+        case CLASS_SNIPER:
+            if (one_in_(5))
+                _kind_hook1 = _kind_is_bow;
+            break;
+        case CLASS_DEVICEMASTER:
+            if (one_in_(5))
             {
-                _kind_hook1 = _kind_alloc_table[i].hook;
-                break;
+                switch (p_ptr->psubclass)
+                {
+                case DEVICEMASTER_POTIONS:
+                    _kind_hook1 = _kind_is_potion;
+                    break;
+                case DEVICEMASTER_SCROLLS:
+                    _kind_hook1 = _kind_is_scroll;
+                    break;
+                case DEVICEMASTER_RODS:
+                    _kind_hook1 = _kind_is_rod;
+                    break;
+                case DEVICEMASTER_WANDS:
+                    _kind_hook1 = _kind_is_wand;
+                    break;
+                case DEVICEMASTER_STAVES:
+                    _kind_hook1 = _kind_is_staff;
+                    break;
+                }
             }
+            break;
+        case CLASS_MAGIC_EATER:
+            if (one_in_(5))
+                _kind_hook1 = kind_is_device;
+            break;
+        case CLASS_RAGE_MAGE:
+            if (one_in_(3))
+                _kind_hook1 = kind_is_book;
+            break;
+        default:
+            if (is_magic(p_ptr->realm1) && one_in_(5))
+                _kind_hook1 = kind_is_book;
         }
     }
 
+    if (!_kind_hook1)
+    {
+        for (i = 0; ; i++)
+        {
+            if (!_kind_alloc_table[i].hook) break;
+            tot += _kind_alloc_weight(&_kind_alloc_table[i], mode);
+        }
+
+        if (tot > 0)
+        {
+            int j = randint0(tot);
+
+            for (i = 0; ; i++)
+            {
+                if (!_kind_alloc_table[i].hook) break;
+                j -= _kind_alloc_weight(&_kind_alloc_table[i], mode);
+                if (j < 0)
+                {
+                    _kind_hook1 = _kind_alloc_table[i].hook;
+                    break;
+                }
+            }
+        }
+    }
     return _kind_hook;
 }
 
