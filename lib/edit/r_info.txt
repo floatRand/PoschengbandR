@@ -3335,7 +3335,7 @@ S:HEAL | BLIND | DARKNESS | CONF | CAUSE_2
 D:"Great greyish-white slippery things which could expand and 
 D:contract at will, and whose principle shape... was that of a 
 D:sort of toad without any eyes, but with a curious vibrating mass 
-D:of short pink tentacles on the end of its blung, vague snout."
+D:of short pink tentacles on the end of its blunt, vague snout."
 
 N:224:Master yeek
 G:y:g
@@ -3701,7 +3701,7 @@ B:HIT:HURT:6d3
 F:AQUATIC | WILD_ALL | RES_WATE |
 F:MALE
 P:Copy:Dark-Elf:Warrior
-D:A race of fair yet belligrent sea elves.
+D:A race of fair yet belligerent sea elves.
 
 N:249:Vlasta
 G:R:b
@@ -3929,7 +3929,7 @@ P:Copy:Human:Beastmaster
 S:1_IN_6
 S:BO_ACID | S_MONSTER | SCARE | DRAIN_MANA
 D:A creature like a giant purple Buddha with lots of teeth.
-D:It cleans them with the bones of sorcerors.
+D:It cleans them with the bones of sorcerers.
 
 
 N:264:Half-orc
@@ -5548,7 +5548,7 @@ S:1_IN_8
 S:BA_POIS | S_MONSTER | SCARE | HOLD |
 P:Copy:Human:Rogue
 P:Life:90
-D:"They walked lithely and sinnously erect on pre-mammalian 
+D:"They walked lithely and sinuously erect on pre-mammalian
 D:members, their pied and hairless bodies bending with great 
 D:suppleness. There was a loud hissing of formulae as they 
 D:went to and fro."
@@ -11346,11 +11346,11 @@ P:Copy:Human:Rage-Mage
 S:1_IN_3 | 
 S:BR_TIME | SLOW | HASTE | HEAL 
 D:"It was a figure no larger than a young child, but sere and 
-D:shriveled as some millenial mummy. Its hairless head, its 
+D:shriveled as some millennial mummy. Its hairless head, its
 D:unfeatured face, borne on a neck of skeleton thinness, were 
 D:lined with a thousand reticulated wrinkles. The body was like 
 D:that of some monstrous, withered abortion that had never drawn 
-D:breath. The pipy arms, ending in bony claws, were outhrust as if 
+D:breath. The pipy arms, ending in bony claws, were outthrust as if
 D:ankylosed in posture of an eternal dreadful groping."
 
 N:685:Shoggoth
@@ -11842,7 +11842,7 @@ S:BRAIN_SMASH | HASTE | BLIND | BLINK | BR_INER | CAUSE_3 | CAUSE_4
 D:The chief among the creatures known as Lloigor. Ghatanothoa has 
 D:assumed a shape which is too horrible to describe: "Nothing I could say 
 D:could even adumbrate the loathsome, unholy, non-human, extra-galactic 
-D:horror and hatefulness and unutterabl evil of that forbidden spawn 
+D:horror and hatefulness and unutterable evil of that forbidden spawn
 D:of black chaos, and illimitable night."
 
 N:708:Ent
@@ -12029,7 +12029,7 @@ P:Copy:Half-Titan:Warrior
 P:Body:Dragon
 S:1_IN_9
 S:BR_FIRE
-D:A great water-beast, with an almost unpenetrable skin.
+D:A great water-beast, with an almost impenetrable skin.
 
 N:717:Garm, Guardian of Hel
 G:C:u
@@ -12170,7 +12170,7 @@ P:Copy:Human:Mauler
 P:Body:Minotaur
 S:1_IN_5 |
 S:BO_PLAS | BA_FIRE
-D:It is a belligrent minotaur with some destructive magical arsenal, armed 
+D:It is a belligerent minotaur with some destructive magical arsenal, armed
 D:with a hammer.
 
 N:724:Nether hound
@@ -13894,7 +13894,7 @@ S:1_IN_5 |
 S:S_DEMON | BR_ACID | S_UNDEAD | S_KIN | CONF | SCARE |
 S:MIND_BLAST | BR_CONF 
 D:"An almost globular torso, with six long, sinuous limbs terminating 
-D:in clab-like claws. From the upper end a subsidiary globe bulged 
+D:in crab-like claws. From the upper end a subsidiary globe bulged
 D:forward bubble-like; its triangle of three staring, fishy eyes, 
 D:its foot-long and evidently flexible proboscis, and a distended 
 D:lateral system analogous to gills, suggested that it was a head."
@@ -14191,7 +14191,7 @@ S:TPORT | TELE_TO
 D:"He saw why the shadow on the frosted pane yesterday had been 
 D:headless and he screamed... but before he could scream out his 
 D:protest his breath was cut off, as the hands descended on his 
-D:face and the wed ret mouths opened in their palms."
+D:face and the wet red mouths opened in their palms."
 
 N:811:Aether hound
 G:Z:B
@@ -14382,7 +14382,7 @@ S:TELE_TO | HOLD | CAUSE_3 | TRAPS | ANIM_DEAD | DISPEL | ANTI_MAGIC | PSY_SPEAR
 S:BO_PLAS | BA_DARK | BA_MANA | BA_FIRE | BA_WATE | BA_NETH
 D:The Mouth of Sauron is a mighty spell caster.  So old that even he cannot 
 D:remember his own name, his power and evil are undeniable.  He believes 
-D:unshakeably that he is unbeatable and laughs as he weaves his awesome 
+D:unshakably that he is unbeatable and laughs as he weaves his awesome
 D:spells.
 
 N:819:Klingsor, Evil Master of Magic
@@ -15609,7 +15609,7 @@ P:Speed:+10
 S:1_IN_5
 S:HEAL | INVULNER | DISPEL | ANTI_MAGIC
 D:A thing like a massive, jet black oyster with four groping tendrils.
-D:  Born of nether, it need not chase its prey, content to seeth
+D:  Born of nether, it need not chase its prey, content to seethe
 D: in the darkness until some unfortunate creature wanders too close.
 
 N:867:Culverin
@@ -16285,7 +16285,7 @@ F:RES_ELEC | RES_COLD | CAN_FLY |
 F:NO_CONF | NO_SLEEP | NO_FEAR | NONLIVING
 F:POS_GAIN_AC | POS_HOLD_LIFE
 P:Copy:Golem:Warrior
-D:Lightning crackes around this huge animated cloud entity, sending shivers
+D:Lightning crackles around this huge animated cloud entity, sending shivers
 D:down your spine.
 
 N:906:Lava golem
@@ -16596,7 +16596,7 @@ W:2:1:20:5:100:951
 B:BITE:HURT:1d8
 F:WEIRD_MIND | DROP_CORPSE
 D:A renegade mushroom from the Mushroom Kingdom that has been 
-D:corruptedby chaos.  It is quite angry and it marches towards you.
+D:corrupted by chaos.  It is quite angry and it marches towards you.
 P:Copy:Yeek:Tourist
 P:Life:60
 P:Body:Mold
@@ -17936,7 +17936,7 @@ B:HIT:SUPERHURT:4d8
 B:HIT:SUPERHURT:4d8
 F:MALE | DROP_CORPSE | DROP_SKELETON | FORCE_MAXHP | HAS_LITE_2 | HUMAN |
 F:OPEN_DOOR | BASH_DOOR | UNIQUE2
-D:He is always traveling togather with 
+D:He is always traveling together with
 D:Mitsukuni of the Yellow Gate, Grand Duke of Mito
 P:Copy:Dunadan:Warrior
 P:Speed:+5
@@ -17949,7 +17949,7 @@ B:HIT:SUPERHURT:4d8
 B:HIT:SUPERHURT:4d8
 F:MALE | DROP_CORPSE | DROP_SKELETON | FORCE_MAXHP | HAS_LITE_2 | HUMAN |
 F:OPEN_DOOR | BASH_DOOR | UNIQUE2
-D:He is always traveling togather with 
+D:He is always traveling together with
 D:Mitsukuni of the Yellow Gate, Grand Duke of Mito
 P:Copy:Dunadan:Warrior
 P:Speed:+5
@@ -18803,7 +18803,7 @@ P:Copy:Dark-Elf:Warrior-Mage
 S:1_IN_3 | 
 S:HEAL | HASTE | BLIND | CONF | SCARE | TPORT | BLINK
 D:A shabby humanoid with a wrinkled skin. It seems to shift 
-D:in and out of existance as you watch. 
+D:in and out of existence as you watch.
 
 N:1053:Novice mindcrafter
 G:p:y
@@ -19187,7 +19187,7 @@ F:FORCE_MAXHP | CAN_SPEAK | WILD_ALL | DROP_SKELETON | DROP_CORPSE |
 F:ONLY_ITEM | DROP_1D2 | DROP_GOOD | OPEN_DOOR | BASH_DOOR |
 S:1_IN_9
 S:SHRIEK
-D:She is the wife of king Meng Huo. She is called as the avater of 
+D:She is the wife of king Meng Huo. She is called as the avatar of
 D:flame spirit.
 P:Copy:Human:Warrior-Mage
 
@@ -19319,7 +19319,7 @@ F:RES_POIS | NO_CONF | NO_SLEEP | RIDING
 F:POS_HOLD_LIFE | POS_SEE_INVIS | POS_GAIN_AC
 P:Copy:Klackon:Warrior
 P:Body:Horse
-D:A denizen of nothern climes.  It stares at you menacingly.
+D:A denizen of northern climes.  It stares at you menacingly.
 
 N:1082:Death Beast
 G:Z:D
