@@ -5165,7 +5165,7 @@ bool inc_stat(int stat)
         {
             int delta = p_ptr->stat_max_max[stat] - value;
             int pct = rand_range(20, 35); /* Note: Old spread was about 14% to 40% */
-            int gain = MAX(1, delta * pct / 100);
+            int gain = MAX(2, delta * pct / 100);
             int max_value = p_ptr->stat_max_max[stat] - 1; /* e.g. 18/99 if max is 18/100 */
 
             value += gain;
