@@ -29,6 +29,7 @@ static void _calc_innate_attacks(void)
         a.flags |= INNATE_NO_DAM;
         a.effect[0] = GF_OLD_CONF;
         a.blows = 100;
+        a.to_h = p_ptr->lev/5;
         a.msg = "You gaze at %s.";
         a.name = "Gaze";
 

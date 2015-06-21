@@ -69,7 +69,7 @@ static void _calc_innate_attacks(void)
         a.dd = 1;
         a.ds = 3 + l / 15;
         a.weight = 2;
-        a.to_h = p_ptr->lev;
+        a.to_h = p_ptr->lev/5;
 
         a.effect[1] = GF_STEAL;
         

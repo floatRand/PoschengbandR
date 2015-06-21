@@ -68,6 +68,7 @@ static void _jelly_calc_innate_attacks(void)
 
         a.dd = 2 + l / 10;
         a.ds = 6 + l / 12;
+        a.to_h += l/2;
         a.to_d += l/5;
         a.to_d += l*l/250;
         a.weight = 100;

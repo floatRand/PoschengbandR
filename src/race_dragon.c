@@ -363,7 +363,7 @@ static void _calc_innate_attacks(void)
 {
     int l = _attack_level();
     int to_d = 0;
-    int to_h = l/10 + l*l/500 + l*l*l/25000;
+    int to_h = l/5 + l*l/250 + l*l*l/12500;
 
     /* Claws */
     {

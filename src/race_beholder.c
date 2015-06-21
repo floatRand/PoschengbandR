@@ -40,7 +40,7 @@ static void _calc_innate_attacks(void)
         a.dd = 1 + (l + 5)/12;
         a.ds = 6 + l/15;
         a.weight = 250;
-        a.to_h = p_ptr->lev;
+        a.to_h = p_ptr->lev/5;
 
         a.effect[0] = GF_MISSILE;
 
@@ -310,8 +310,8 @@ race_t *mon_beholder_get_race_t(void)
 
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 30,  50,  47,   7,  20,  20,  34,  20};
-    skills_t xs = { 10,  20,  15,   1,  20,  20,  12,   7};
+    skills_t bs = { 30,  50,  47,   7,  20,  20,  40,  20};
+    skills_t xs = { 10,  20,  15,   1,  20,  20,  16,   7};
 
         me.name = "Beholder";
         me.desc = "Beholders are floating orbs of flesh with a single central eye surrounded by "
