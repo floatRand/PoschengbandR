@@ -154,7 +154,7 @@ static _blow_info_t _get_blow_info(int hand)
 
     case CLASS_ARCHAEOLOGIST:
         result.num = 400; result.wgt = 70; result.mul = 30;
-        if (p_ptr->lev >= 40 && archaeologist_is_favored_weapon(o_ptr))
+        if (archaeologist_is_favored_weapon(o_ptr))
         {
             result.num = 500;
             result.mul = 40;
@@ -180,7 +180,7 @@ static _blow_info_t _get_blow_info(int hand)
     {
         u32b flgs[TR_FLAG_SIZE];
         object_flags(o_ptr, flgs);
-        if (p_ptr->riding && have_flag(flgs, TR_RIDING)) {result.num = 550; result.wgt = 70; result.mul = 45;}
+        if (p_ptr->riding && have_flag(flgs, TR_RIDING)) {result.num = 550; result.wgt = 70; result.mul = 65;}
         else {result.num = 500; result.wgt = 100; result.mul = 35;}
         break;
     }
