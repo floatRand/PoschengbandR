@@ -153,10 +153,10 @@ static _blow_info_t _get_blow_info(int hand)
         result.num = 400; result.wgt = 100; result.mul = 30; break;
 
     case CLASS_ARCHAEOLOGIST:
-        result.num = 500; result.wgt = 70; result.mul = 30; 
+        result.num = 400; result.wgt = 70; result.mul = 30;
         if (p_ptr->lev >= 40 && archaeologist_is_favored_weapon(o_ptr))
         {
-            result.num = 600;
+            result.num = 500;
             result.mul = 40;
         }
         break;

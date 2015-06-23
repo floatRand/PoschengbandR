@@ -5760,8 +5760,9 @@ static int _kind_alloc_weight(_kind_alloc_entry *entry, u32b mode)
 }
 static _kind_p _choose_obj_kind(u32b mode)
 {
-    int i;
-    int tot = 0;
+    int  i;
+    int  tot = 0;
+    bool tailored = FALSE;
 
     _kind_hook1 = NULL;
     _kind_hook2 = NULL;
@@ -5773,10 +5774,24 @@ static _kind_p _choose_obj_kind(u32b mode)
     else if (_drop_tailored)
         _kind_hook2 = kind_is_tailored;
 
+    /* Circumvent normal object kind frequencies for good, great and tailored drops.
+     * The goal here is, for example, to allow mages to find adequate spellbooks without
+     * drowning other characters with useless junk. */
     if (_drop_tailored)
+        tailored = TRUE;
+    else if ((mode & AM_GOOD) && one_in_(10))
+        tailored = TRUE;
+    else if ((mode & AM_GREAT) && one_in_(5))
+        tailored = TRUE;
+
+    if (tailored)
     {
         switch (p_ptr->pclass)
         {
+        case CLASS_ARCHAEOLOGIST:
+            if (one_in_(3))
+                _kind_hook1 = kind_is_weapon;
+            break;
         case CLASS_ARCHER:
         case CLASS_SNIPER:
             if (one_in_(5))
@@ -5819,6 +5834,9 @@ static _kind_p _choose_obj_kind(u32b mode)
         }
     }
 
+    /* Otherwise, pick the kind of drop using the allocation table defined above.
+     * This allows us to design, say, 3% of drops to be jewelry, 4% potions, or
+     * whatever. */
     if (!_kind_hook1)
     {
         for (i = 0; ; i++)
