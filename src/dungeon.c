@@ -1330,7 +1330,7 @@ static object_type *choose_cursed_obj_name(u32b flag)
 
 static bool _fast_mana_regen(void)
 {
-    switch (possessor_class_idx())
+    switch (get_class_idx())
     {
     case CLASS_MAGE:
     case CLASS_BLOOD_MAGE:

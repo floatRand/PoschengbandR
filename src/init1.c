@@ -3546,7 +3546,7 @@ errr parse_r_info(char *buf, header *head)
                 else
                     return PARSE_ERROR_OUT_OF_BOUNDS;
 
-                idx = get_class_idx(zz[2]);
+                idx = lookup_class_idx(zz[2]);
                 if (idx >= 0)
                 {
                     class_t *class_ptr = get_class_t_aux(idx, 0);
@@ -4451,7 +4451,7 @@ static errr parse_line_building(char *buf)
                 }
                 else
                 {
-                    int idx = get_class_idx(zz[0]);
+                    int idx = lookup_class_idx(zz[0]);
                     if (idx < 0 || idx >= MAX_CLASS)
                         return PARSE_ERROR_GENERIC;
                     building[index].member_class[idx] = c;

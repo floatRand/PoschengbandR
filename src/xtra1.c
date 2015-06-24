@@ -2751,7 +2751,7 @@ static void _calc_encumbrance(void)
 
     /* Armor/Weapon Weight */
     weight = equip_weight(object_is_armour);
-    switch (possessor_class_idx())
+    switch (get_class_idx())
     {
     case CLASS_MAGE:
     case CLASS_NECROMANCER:
@@ -2889,7 +2889,7 @@ static void calc_mana(void)
         }
 
         if (msp && (p_ptr->personality == PERS_MUNCHKIN)) msp += msp/2;
-        if (msp && (possessor_class_idx() == CLASS_SORCERER)) msp += msp*(25+p_ptr->lev)/100;
+        if (msp && (get_class_idx() == CLASS_SORCERER)) msp += msp*(25+p_ptr->lev)/100;
     }
 
     _calc_encumbrance();
@@ -2898,7 +2898,7 @@ static void calc_mana(void)
 
     if (p_ptr->cumber_armor)
     {
-        switch (possessor_class_idx())
+        switch (get_class_idx())
         {
         case CLASS_MAGE:
         case CLASS_NECROMANCER:

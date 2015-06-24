@@ -2074,7 +2074,6 @@ extern int     possessor_get_spells(spell_info* spells, int max);
 extern 
 caster_info   *possessor_caster_info(void);
 extern void    possessor_calc_bonuses(void);
-extern int     possessor_class_idx(void);
 extern int     possessor_r_speed(int r_idx);
 extern int     possessor_r_ac(int r_idx);
 extern void    possessor_get_flags(u32b flgs[TR_FLAG_SIZE]);
@@ -2133,7 +2132,8 @@ extern race_t *wolf_get_race_t(void);
 /* classes.c */
 extern class_t *get_class_t(void);
 extern class_t *get_class_t_aux(int pclass, int psubclass);
-extern int get_class_idx(cptr name);
+extern int lookup_class_idx(cptr name);
+extern int get_class_idx(void);
 extern caster_info *get_caster_info(void);
 extern int get_powers_aux(spell_info* spells, int max, power_info* table);
 extern void dump_powers_aux(FILE *fff, spell_info *table, int ct);
