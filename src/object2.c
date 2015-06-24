@@ -5262,6 +5262,30 @@ static bool _is_favorite_weapon(int tval, int sval)
     return FALSE;
 }
 
+static bool _is_device_class(void)
+{
+    int class_idx = p_ptr->pclass;
+
+    if (class_idx == CLASS_MONSTER)
+        return get_race_t()->pseudo_class_idx;
+
+    switch (class_idx)
+    {
+    case CLASS_ARCHAEOLOGIST:
+    case CLASS_BLOOD_MAGE:
+    case CLASS_HIGH_MAGE:
+    case CLASS_MAGE:
+    case CLASS_MAGIC_EATER:
+    case CLASS_MIRROR_MASTER:
+    case CLASS_NECROMANCER:
+    case CLASS_ROGUE:
+    case CLASS_SORCERER:
+        return TRUE;
+    }
+    /* Note: Devicemasters only want their speciality, which is checked below. */
+    return FALSE;
+}
+
 static bool kind_is_tailored(int k_idx)
 {
     object_kind *k_ptr = &k_info[k_idx];
@@ -5338,6 +5362,24 @@ static bool kind_is_tailored(int k_idx)
     case TV_BURGLARY_BOOK:
         return check_book_realm(k_ptr->tval, k_ptr->sval)
             && k_ptr->sval >= SV_BOOK_MIN_GOOD;
+
+    case TV_WAND:
+        return devicemaster_is_(DEVICEMASTER_WANDS)
+            || _is_device_class();
+
+    case TV_ROD:
+        return devicemaster_is_(DEVICEMASTER_RODS)
+            || _is_device_class();
+
+    case TV_STAFF:
+        return devicemaster_is_(DEVICEMASTER_STAVES)
+            || _is_device_class();
+
+    case TV_POTION:
+        return devicemaster_is_(DEVICEMASTER_POTIONS);
+
+    case TV_SCROLL:
+        return devicemaster_is_(DEVICEMASTER_SCROLLS);
     }
 
     return FALSE;
@@ -5438,6 +5480,15 @@ bool kind_is_great(int k_idx)
         case TV_STAFF:
         {
             if (k_ptr->sval == SV_STAFF_MSTORM) return TRUE;
+            return FALSE;
+        }
+        case TV_ROD:
+        {
+            if (k_ptr->sval == SV_ROD_HEALING) return TRUE;
+            if (k_ptr->sval == SV_ROD_RESTORATION) return TRUE;
+            if (k_ptr->sval == SV_ROD_HAVOC) return TRUE;
+            if (k_ptr->sval == SV_ROD_SPEED) return TRUE;
+            if (k_ptr->sval == SV_ROD_MANA_BALL) return TRUE;
             return FALSE;
         }
         case TV_RING:
@@ -5573,6 +5624,7 @@ bool kind_is_good(int k_idx)
         }
         case TV_STAFF:
         {
+            if (k_ptr->sval == SV_STAFF_POWER) return TRUE;
             if (k_ptr->sval == SV_STAFF_HEALING) return TRUE;
             if (k_ptr->sval == SV_STAFF_MSTORM) return TRUE;
             return FALSE;
@@ -5652,7 +5704,7 @@ static bool _kind_is_staff(int k_idx) {
         return TRUE;
     }
     return FALSE;
-}
+}*/
 static bool _kind_is_wand_rod_staff(int k_idx) { 
     switch (k_info[k_idx].tval)
     {
@@ -5662,7 +5714,7 @@ static bool _kind_is_wand_rod_staff(int k_idx) {
         return TRUE;
     }
     return FALSE;
-}*/
+}
 bool kind_is_jewelry(int k_idx) { 
     switch (k_info[k_idx].tval)
     {
@@ -5701,6 +5753,11 @@ bool kind_is_armor(int k_idx) {
 }
 bool kind_is_weapon(int k_idx) { 
     if (TV_DIGGING <= k_info[k_idx].tval && k_info[k_idx].tval <= TV_WEAPON_END)
+        return TRUE;
+    return FALSE;
+}
+static bool _kind_is_whip(int k_idx) {
+    if (k_info[k_idx].tval == TV_HAFTED && k_info[k_idx].sval == SV_WHIP)
         return TRUE;
     return FALSE;
 }
@@ -5789,8 +5846,12 @@ static _kind_p _choose_obj_kind(u32b mode)
         switch (p_ptr->pclass)
         {
         case CLASS_ARCHAEOLOGIST:
-            if (one_in_(3))
+            if (one_in_(5))
+                _kind_hook1 = _kind_is_whip; /* Diggers swamp out whips ... */
+            else if (one_in_(5))
                 _kind_hook1 = kind_is_weapon;
+            else if (one_in_(5))
+                _kind_hook1 = _kind_is_wand_rod_staff;
             break;
         case CLASS_ARCHER:
         case CLASS_SNIPER:
