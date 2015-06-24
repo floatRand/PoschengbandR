@@ -2783,6 +2783,7 @@ static void _calc_encumbrance(void)
     case CLASS_RANGER:
     case CLASS_RED_MAGE:
     case CLASS_WARRIOR_MAGE:
+    case CLASS_ARCHAEOLOGIST:
         weight += equip_weight(object_is_melee_weapon) / 3;
         break;
 
