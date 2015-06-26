@@ -3840,6 +3840,7 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_HEALING);
     dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_RESTORATION);
     dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_SPEED);
+    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_MANA_BALL);
     dump_aux_group_counts_imp(fff, _kind_is_rod, "Totals");
 
     fprintf(fff, "\n  Spellbooks           Found Bought  Used  Dest\n");
