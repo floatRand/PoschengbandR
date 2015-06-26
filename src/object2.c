@@ -5819,7 +5819,6 @@ static _kind_p _choose_obj_kind(u32b mode)
 {
     int  i;
     int  tot = 0;
-    bool tailored = FALSE;
 
     _kind_hook1 = NULL;
     _kind_hook2 = NULL;
@@ -5835,13 +5834,6 @@ static _kind_p _choose_obj_kind(u32b mode)
      * The goal here is, for example, to allow mages to find adequate spellbooks without
      * drowning other characters with useless junk. */
     if (_drop_tailored)
-        tailored = TRUE;
-    else if ((mode & AM_GOOD) && one_in_(10))
-        tailored = TRUE;
-    else if ((mode & AM_GREAT) && one_in_(5))
-        tailored = TRUE;
-
-    if (tailored)
     {
         switch (p_ptr->pclass)
         {
