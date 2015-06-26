@@ -184,13 +184,8 @@
  */
 /*#define ALLOW_BORG*/
 
-/* Debug options: To enable wizard commands in a custom build,
-   simply remove the following #ifdef _DEBUG and #endif guards. */
 #define ALLOW_WIZARD
-
-#ifdef _DEBUG
 #define ALLOW_SPOILERS
-#endif
 
 /*
  * OPTION: Allow "do_cmd_colors" at run-time

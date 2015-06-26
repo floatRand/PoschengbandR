@@ -250,7 +250,7 @@ static void _monster_races_help(FILE* fff)
         fprintf(fff, "\n");
     }
     fprintf(fff, "\n\n");
-    fprintf(fff, "***** [a] Rings.txt\n");
+    fprintf(fff, "***** [a] rings.txt\n");
     fprintf(fff, "***** [b] DragonRealms.txt\n");
 
     *p_ptr = old;

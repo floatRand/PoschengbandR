@@ -39,9 +39,7 @@
   throws. They also are very good at searching, disarming, perception, and
   stealth; so they make excellent rogues, but prefer to be called burglars.
   They are much weaker than humans, and no good at melee fighting. Halflings
-  have fair infravision, so they can detect warm creatures at a distance. They
-  have a strong hold on their life force, and are thus intrinsically resistant
-  to life draining.
+  have fair infravision, so they can detect warm creatures at a distance.
 
 
 ***** <Gnome>
@@ -537,4 +535,4 @@
 ***** [a] Demigods.txt
 
 
-[[[[s|  Automatically generated for PosChengband 3.4.1.
+[[[[s|  Automatically generated for PosChengband 3.4.6.
