@@ -1377,7 +1377,7 @@ void search(void)
                     if (o_ptr->tval != TV_CHEST) continue;
 
                     /* Skip non-trapped chests */
-                    if (!chest_traps[o_ptr->pval]) continue;
+                    if (o_ptr->pval < 0 || !chest_traps[o_ptr->pval]) continue;
 
                     /* Identify once */
                     if (!object_is_known(o_ptr))
