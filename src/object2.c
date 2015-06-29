@@ -5884,6 +5884,8 @@ static _kind_p _choose_obj_kind(u32b mode)
         default:
             if (is_magic(p_ptr->realm1) && one_in_(5))
                 _kind_hook1 = kind_is_book;
+            else if (_is_device_class() && one_in_(7))
+                _kind_hook1 = _kind_is_wand_rod_staff;
         }
     }
 
