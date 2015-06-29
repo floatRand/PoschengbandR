@@ -2799,21 +2799,27 @@ bool recharge(int power)
                 }
             }
 
-            /* Destroy all members of a stack of objects. */
+            /* Destroy multiple members of a stack of objects. */
             if (fail_type == 3)
             {
-                if (o_ptr->number > 1)
-                    msg_format("Wild magic consumes all your %s!", o_name);
+                int num = randint1(3);
 
+                if (num > o_ptr->number)
+                    num = o_ptr->number;
+
+                if (o_ptr->number == num)
+                    msg_format("Wild magic consumes all of your %s!", o_name);
+                else if (num > 1)
+                    msg_format("Wild magic consumes some of your %s!", o_name);
                 else
-                    msg_format("Wild magic consumes your %s!", o_name);
+                    msg_format("Wild magic consumes one of your %s!", o_name);
 
 
 
                 /* Reduce and describe inventory */
                 if (item >= 0)
                 {
-                    inven_item_increase(item, -999);
+                    inven_item_increase(item, -num);
                     inven_item_describe(item);
                     inven_item_optimize(item);
                 }
@@ -2821,7 +2827,7 @@ bool recharge(int power)
                 /* Reduce and describe floor item */
                 else
                 {
-                    floor_item_increase(0 - item, -999);
+                    floor_item_increase(0 - item, -num);
                     floor_item_describe(0 - item);
                     floor_item_optimize(0 - item);
                 }
