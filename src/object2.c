@@ -2368,7 +2368,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
         o_ptr->name2 = _get_random_ego(EGO_TYPE_RING);
         done = TRUE;
         if ( ((mode & AM_GREAT) && randint0(50) < level)
-          || ((mode & AM_GOOD) && randint0(200) < level) )
+          || ((mode & AM_GOOD) && randint0(120) < level) )
         {
             if ( !apply_magic_ego
               && o_ptr->name2 != EGO_RING_SPEED
