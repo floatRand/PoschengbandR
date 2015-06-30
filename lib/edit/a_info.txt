@@ -1077,14 +1077,14 @@ F:SLAY_ANIMAL | SLOW_DIGEST | REGEN | SHOW_MODS | SEE_INVIS | RES_DISEN
 # The Blade of Chaos 'Doomcaller'
 
 N:91:'Doomcaller'
-I:23:30:-3
+I:23:30:3
 W:70:25:180:250000
 P:0:6d6:18:28:0
 F:KILL_DRAGON | SLAY_ANIMAL | SLAY_EVIL | SLAY_GOOD | BRAND_COLD | SLAY_TROLL |
 F:SLAY_ORC | FREE_ACT | RES_ACID | RES_ELEC | RES_FIRE | RES_COLD |
 F:RES_CONF | RES_CHAOS | SEE_INVIS | TELEPATHY | AGGRAVATE | SHOW_MODS |
 F:SLAY_HUMAN | CHAOTIC | VORPAL | BRAND_FIRE | BRAND_POIS | LITE | 
-F:LIFE | CON | VAMPIRIC
+F:DEC_LIFE | DEC_CON | VAMPIRIC
 D:This weapon of wrath, cursed with a violent anger, dives hungrily 
 D:into the flesh of its enemies. It gathers shadows of death into its 
 D:owner as they inflict wounds that will never heal.
