@@ -5162,11 +5162,16 @@ bool inc_stat(int stat)
             value += gain;
         }
         else if (value < (p_ptr->stat_max_max[stat]-2))
-        {
-            int delta = p_ptr->stat_max_max[stat] - value;
-            int pct = rand_range(20, 35); /* Note: Old spread was about 14% to 40% */
-            int gain = MAX(2, delta * pct / 100);
+        {                                                  /* v--- Scale all calcs by 10 */
+            int delta = (p_ptr->stat_max_max[stat] - value) * 10;
+            int pct = rand_range(200, 350);                /* Note: Old spread was about 14% to 40% */
             int max_value = p_ptr->stat_max_max[stat] - 1; /* e.g. 18/99 if max is 18/100 */
+            int gain;
+
+            gain = delta * pct / 1000;
+            gain = (gain + 5) / 10; /* round back to an integer */
+            if (gain < 2)
+                gain = 2;
 
             value += gain;
             if (value > max_value)
