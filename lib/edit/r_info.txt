@@ -804,7 +804,7 @@ F:NO_CONF | NO_SLEEP | NO_FEAR
 F:POS_GAIN_AC
 P:Copy:Human:Tourist
 P:Body:Jelly3
-D:Its a large pile of white flesh.
+D:It's a large pile of white flesh.
 
 N:49:Giant black ant
 G:a:D
@@ -17194,7 +17194,7 @@ F:DROP_SKELETON | DROP_CORPSE | POS_GAIN_AC
 P:Copy:Demigod:Warrior
 P:Body:Horse
 D:This creature is gentle and submissive until you try to ride it.  
-D:Watch out for it's reckless kicking.
+D:Watch out for its reckless kicking.
 
 # Description in English by Nick Keulmann
 N:958:Red puyo
@@ -17453,7 +17453,7 @@ P:Body:Dragon
 S:1_IN_3 | 
 S:BRAIN_SMASH | BR_FIRE | BA_FIRE
 D:One of the ancient dragons of Lodoss, it causes destruction 
-D:with it's breath of fire.
+D:with its breath of fire.
 
 N:973:Beld, Ruler of Marmo
 G:p:r
@@ -20160,7 +20160,7 @@ P:Copy:Half-Giant:Mauler
 S:1_IN_6
 S:THROW
 D:A minor rock giant, a being made of living stone.
-D:Its boring straight for you!
+D:It's boring straight for you!
 
 N:1125:Ice giant
 G:P:w
