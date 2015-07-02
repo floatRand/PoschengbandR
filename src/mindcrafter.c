@@ -487,18 +487,15 @@ void psycho_spear_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Fires a beam of pure energy which penetrate the invulnerability barrier.");
         break;
-    case SPELL_SPOIL_DESC:
-        var_set_string(res, "Fires a beam of pure energy (Damage L*4 + 1d(L*4)) which penetrates the invulnerability barrier.");
-        break;
     case SPELL_INFO:
-        var_set_string(res, info_damage(1, spell_power(p_ptr->lev * 4), spell_power(p_ptr->lev * 4)));
+        var_set_string(res, info_damage(1, spell_power(p_ptr->lev * 3), spell_power(p_ptr->lev * 3)));
         break;
     case SPELL_CAST:
     {
         int dir = 0;
         var_set_bool(res, FALSE);
         if (!get_aim_dir(&dir)) return;
-        fire_beam(GF_PSY_SPEAR, dir, spell_power(randint1(p_ptr->lev*4)+p_ptr->lev*4));
+        fire_beam(GF_PSY_SPEAR, dir, spell_power(randint1(p_ptr->lev*3)+p_ptr->lev*3));
         var_set_bool(res, TRUE);
         break;
     }
