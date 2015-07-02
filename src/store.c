@@ -4794,7 +4794,7 @@ static void _buyout(void)
     if (cur_store_num == STORE_MUSEUM || cur_store_num == STORE_HOME)
         return;
 
-    if (disturb_minor && !get_check("Are you sure you want to buy the entire inventory of this store? "))
+    if (!get_check("Are you sure you want to buy the entire inventory of this store? "))
         return;
 
     for (i = st_ptr->stock_num - 1; i >= 0; i--)
