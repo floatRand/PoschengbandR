@@ -959,7 +959,7 @@ I:23:20:5
 W:50:25:50:150000
 P:0:8d4:0:0:0
 F:DEX | HIDE_TYPE | VORPAL2 |
-F:SUST_DEX | SHOW_MODS | SPEED
+F:SUST_DEX | SHOW_MODS | SPEED | TUNNEL
 D:An utterly perfect, cleanly chiseled sword, with a edge that effortlessly
 D: slices rock and bone and spells to render the wearer lithe and nimble. It
 D: is combat incarnate.
