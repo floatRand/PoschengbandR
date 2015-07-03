@@ -4120,7 +4120,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
                 break;
             case EGO_BODY_CELESTIAL_PROTECTION:
                 one_high_resistance(o_ptr);
-                do { one_high_resistance(o_ptr); } while (one_in_(3));
+                do { one_high_resistance(o_ptr); } while (one_in_(2));
                 if (one_in_(7))
                     add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
                 if (one_in_(17))
@@ -4367,6 +4367,10 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
                     };
                     _effect_add_list(o_ptr, choices);
                 }
+                break;
+            case EGO_HELMET_RAGE:
+                o_ptr->to_d += 3;
+                o_ptr->to_d += m_bonus(7, level);
                 break;
             }
         }
