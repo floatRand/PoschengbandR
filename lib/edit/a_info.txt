@@ -218,7 +218,7 @@ D:Adorned, showy gilding,
 D:set with runes in the strange speech of Heheh, with power so great that it 
 D:inevitably twists and masters any earthly being who wears it.
 
-N:15:Palantir~ of Westernesse
+N:15:Palantir of Westernesse
 I:39:8:3
 W:60:50:10:60000
 P:0:1d1:0:0:0
@@ -3172,7 +3172,7 @@ F:SPEED | SUST_CON | SUST_STR | REGEN | RES_POIS
 E:HEAL_CURING:20:300:700
 E:The Eye engulfs you in healing flames!
 
-N:308:Dog Collar~ of Fang
+N:308:Dog Collar of Fang
 I:40:0:1
 W:5:70:30:5000
 P:0:0d0:2:3:0
@@ -3180,7 +3180,7 @@ F:QUESTITEM
 F:HIDE_TYPE | FULL_NAME
 F:RES_FEAR | STR
 
-N:309:Dog Collar~ of Wolf
+N:309:Dog Collar of Wolf
 I:40:0:1
 W:5:70:30:5000
 P:0:0d0:0:0:7
@@ -3188,7 +3188,7 @@ F:QUESTITEM
 F:HIDE_TYPE | FULL_NAME
 F:FREE_ACT | CON
 
-N:310:Dog Collar~ of Grip
+N:310:Dog Collar of Grip
 I:40:0:1
 W:5:70:30:5000
 P:0:0d0:0:0:0
