@@ -3282,6 +3282,7 @@ void calc_bonuses(void)
     p_ptr->levitation = FALSE;
     p_ptr->hold_life = FALSE;
     p_ptr->loremaster = FALSE;
+    p_ptr->auto_id_sp = 0;
     p_ptr->cult_of_personality = FALSE;
     p_ptr->telepathy = FALSE;
     p_ptr->esp_animal = FALSE;

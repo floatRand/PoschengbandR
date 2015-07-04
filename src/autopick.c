@@ -2028,7 +2028,14 @@ bool autopick_auto_id(object_type *o_ptr)
             return TRUE;
         }
 
-        /* Player spells not supported ... */
+        if (p_ptr->auto_id_sp && p_ptr->csp >= p_ptr->auto_id_sp)
+        {
+            identify_item(o_ptr);
+            p_ptr->csp -= p_ptr->auto_id_sp;
+            p_ptr->redraw |= PR_MANA;
+            p_ptr->window |= PW_SPELL;
+            return TRUE;
+        }
     }
     return FALSE;
 }

@@ -57,7 +57,7 @@ void _precognition_spell(int cmd, variant *res)
         }
 
         if ((p_ptr->lev > 24) && (p_ptr->lev < 40))
-            set_tim_esp(p_ptr->lev, FALSE);
+            set_tim_esp(p_ptr->lev + randint1(p_ptr->lev), FALSE);
 
         if (!b) msg_print("You feel safe.");
 
@@ -579,6 +579,7 @@ static void _calc_bonuses(void)
     if (p_ptr->lev >= 15) p_ptr->clear_mind = TRUE;
     if (p_ptr->lev >= 10) res_add(RES_FEAR);
     if (p_ptr->lev >= 20) p_ptr->sustain_wis = TRUE;
+    if (p_ptr->lev >= 25) p_ptr->auto_id_sp = 12;
     if (p_ptr->lev >= 30) res_add(RES_CONF);
     if (p_ptr->lev >= 40) p_ptr->telepathy = TRUE;
 }

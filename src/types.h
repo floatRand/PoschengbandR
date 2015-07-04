@@ -1539,6 +1539,7 @@ struct player_type
     bool hold_life;        /* Resist life draining */
 
     bool loremaster;
+    int  auto_id_sp;
     bool cult_of_personality;
     bool fairy_stealth;
 
