@@ -1011,10 +1011,10 @@ E:ESCAPE:20:35
 # The Long Sword 'Elvagil'-> 'Chainsword'
 
 N:85:'Chainsword'
-I:23:16:-2
+I:23:16:2
 W:50:50:130:66666
-P:0:7d5:-30:7:0
-F:DEX | CHR | STEALTH | HIDE_TYPE | SPEED | AGGRAVATE | VORPAL2
+P:0:9d5:-30:7:0
+F:DEC_DEX | DEC_CHR | HIDE_TYPE | AGGRAVATE | VORPAL2
 F:SLAY_HUMAN | SLAY_TROLL | SLAY_ORC | SEE_INVIS | SHOW_MODS |
 F:ESP_ORC | ESP_TROLL | ESP_HUMAN
 
@@ -1043,7 +1043,7 @@ D:dismay to creatures natural and unnatural.
 # The Small Sword 'Sting'
 
 N:88:'Sting'
-I:23:8:3
+I:23:8:2
 W:20:15:75:100000
 P:0:1d6:7:8:0
 F:STR | DEX | CON | BLOWS | SLAY_EVIL | SLAY_UNDEAD | SLAY_ORC |
