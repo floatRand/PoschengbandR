@@ -2716,7 +2716,7 @@ D:This is the charm worn by Zeus, King of the Olympians and Bane of the Titans.
 N:257:of Poseidon
 I:22:5:3
 W:90:127:70:555555
-P:0:30d1:30:30:0
+P:0:20d1:30:30:0
 F:STR | DEX | SPEED | BRAND_ACID | SLAY_EVIL
 F:ORDER | RES_ACID | RES_FIRE | RES_SOUND |
 F:PERMA_CURSE | QUESTITEM
