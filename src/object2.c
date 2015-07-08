@@ -5765,6 +5765,11 @@ static bool _kind_is_whip(int k_idx) {
         return TRUE;
     return FALSE;
 }
+static bool _kind_is_lance(int k_idx) {
+    if (k_info[k_idx].tval == TV_POLEARM && (k_info[k_idx].sval == SV_LANCE || k_info[k_idx].sval == SV_HEAVY_LANCE))
+        return TRUE;
+    return FALSE;
+}
 static bool _kind_is_bow(int k_idx) {
     if (k_info[k_idx].tval == TV_BOW && k_info[k_idx].sval != SV_HARP) /* Assume tailored Archer reward, and a harp is just insulting! */
         return TRUE;
@@ -5885,7 +5890,14 @@ static _kind_p _choose_obj_kind(u32b mode)
             if (one_in_(3))
                 _kind_hook1 = kind_is_book;
             break;
-        default:
+        case CLASS_CAVALRY:
+        case CLASS_BEASTMASTER:
+            if (one_in_(7))
+                _kind_hook1 = _kind_is_lance;
+            break;
+        }
+        if (!_kind_hook1)
+        {
             if (is_magic(p_ptr->realm1) && one_in_(5))
                 _kind_hook1 = kind_is_book;
             else if (_is_device_class() && one_in_(7))
