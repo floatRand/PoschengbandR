@@ -64,12 +64,7 @@ static _blow_info_t _get_blow_info(int hand)
     switch (p_ptr->pclass)
     {
     case CLASS_WARRIOR:
-        result.num = 600; result.wgt = 70; result.mul = 55; 
-        if (p_ptr->lev >= 40) 
-        {
-            result.mul = 75;
-            result.num = 700;
-        }
+        result.num = 600; result.wgt = 70; result.mul = 50 + p_ptr->lev/2;
         break;
 
     case CLASS_MAULER:
