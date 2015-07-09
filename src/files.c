@@ -1837,6 +1837,10 @@ static void player_flags(u32b flgs[TR_FLAG_SIZE])
     {
         add_flag(flgs, TR_RES_FEAR);
     }
+    if (p_ptr->personality == PERS_HASTY)
+    {
+        add_flag(flgs, TR_SPEED);
+    }
     if (p_ptr->special_defense & KATA_FUUJIN)
         add_flag(flgs, TR_REFLECT);
     if (p_ptr->special_defense & KAMAE_GENBU)

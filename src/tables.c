@@ -2042,7 +2042,7 @@ player_seikaku seikaku_info[MAX_PERSONALITIES] =
 
     {
         "Hasty",
-        {  0, -2, -3, 2, -1, 0 },
+        {  0, -2, -2, 2, -1, 0 },
         {-7, -7, -3, -2, -4, -2, -5, -5},
         97, 1, 0, 100
     },
