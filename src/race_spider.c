@@ -254,7 +254,7 @@ static void _phase_shield_spell(int cmd, variant *res)
         var_set_string(res, "Phase Shield");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Teleport as you recieve an attack, potentially escaping damage altogether.");
+        var_set_string(res, "Teleport as you receive an attack, potentially escaping damage altogether.");
         break;
     case SPELL_CAST:
         if (!(p_ptr->special_defense & NINJA_KAWARIMI))

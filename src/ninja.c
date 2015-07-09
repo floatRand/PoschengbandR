@@ -304,7 +304,7 @@ static void _kawarimi_spell(int cmd, variant *res)
         var_set_string(res, "Kawarimi");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Teleport as you recieve an attack. Might be able to teleport just before recieveing damages at higher level.");
+        var_set_string(res, "Teleport as you receive an attack. Might be able to teleport just before receiving damages at higher level.");
         break;
     case SPELL_CAST:
         if (!(p_ptr->special_defense & NINJA_KAWARIMI))
