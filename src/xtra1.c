@@ -3572,8 +3572,8 @@ void calc_bonuses(void)
     if (p_ptr->personality == PERS_FEARLESS) res_add(RES_FEAR);
     if (p_ptr->personality == PERS_HASTY)
     {
-        p_ptr->pspeed += 2 + p_ptr->lev/15;
-        p_ptr->to_m_chance += 3;
+        p_ptr->pspeed += 2;
+        p_ptr->to_m_chance += 1;
     }
 
     if ( p_ptr->personality == PERS_LUCKY
