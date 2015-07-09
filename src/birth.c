@@ -39,7 +39,7 @@ static cptr pact_desc[MAX_PACTS] =
         "own ammo. At high levels, they gain the power of Dimension Door. Making a pact with Aberrations "
         "will reduce damage done to all humanoids (h) and people (p) by a substantial amount.",
 };
-static cptr seikaku_jouhou[MAX_SEIKAKU] =
+static cptr seikaku_jouhou[MAX_PERSONALITIES] =
 {
 "\"Ordinary\" is a personality with no special skills or talents, with unmodified stats and skills.",
 "\"Mighty\" raises your physical stats and skills, but reduces stats and skills which influence magic. It makes your stats suitable for a warrior. Also it directly influences your hit-points and spell fail rate.",
@@ -55,6 +55,7 @@ static cptr seikaku_jouhou[MAX_SEIKAKU] =
 "A \"Patient\" person does things carefully. Patient people have high constitution, and high resilience, but poor abilities in most other skills. Also it directly influences your hit-points.",
 "\"Munchkin\" is a personality for beginners. It raises all your stats and skills. With this personality, you can win the game easily, but gain little honor in doing so.",
 "A \"Craven\" person is a coward, preferring to avoid a fight at any cost. Craven adventurers shoot and use devices well, and their stealth is impressive. But their stats and other skills are somewhat wanting.",
+"A \"Hasty\" person edeavors to do all things quickly. Speed, rather than skill and patience, are paramount, and the Hasty adventure moves quickly through the dungeon, bungling much."
 };
 static cptr realm_jouhou[VALID_REALM] =
 {

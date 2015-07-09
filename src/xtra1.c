@@ -3564,14 +3564,14 @@ void calc_bonuses(void)
             p_ptr->sh_elec = TRUE;
     }
 
-    /* Sexy Gal */
+    /* Personalities */
     if (p_ptr->personality == PERS_SEXY) p_ptr->cursed |= TRC_AGGRAVATE;
     if (p_ptr->personality == PERS_LAZY) p_ptr->to_m_chance += 10;
     if (p_ptr->personality == PERS_SHREWD) p_ptr->to_m_chance -= 3;
     if (p_ptr->personality == PERS_PATIENT || p_ptr->personality == PERS_MIGHTY) p_ptr->to_m_chance++;
     if (p_ptr->personality == PERS_FEARLESS) res_add(RES_FEAR);
+    if (p_ptr->personality == PERS_HASTY) p_ptr->pspeed += 3 + p_ptr->lev/24;
 
-    /* Lucky man. TODO: This should become a birth event! */
     if ( p_ptr->personality == PERS_LUCKY
       && !mut_present(MUT_GOOD_LUCK) )
     {

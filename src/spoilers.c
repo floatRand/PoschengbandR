@@ -490,7 +490,7 @@ static void _personalities_help(FILE* fff)
     int i;
 
     fprintf(fff, "[[[[B|  The Personalities\n\n");
-    for (i = 0; i < MAX_SEIKAKU; i++)
+    for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         _personality_help(fff, i);
     }
@@ -499,7 +499,7 @@ static void _personalities_help(FILE* fff)
     fprintf(fff, "[[[[y|  Table 1 - Personality Statistic Bonus Table ---\n\n");
     fprintf(fff, "[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  Exp\n");    
 
-    for (i = 0; i < MAX_SEIKAKU; i++)
+    for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         player_seikaku *a_ptr = &seikaku_info[i];
 
@@ -514,7 +514,7 @@ static void _personalities_help(FILE* fff)
 
     fprintf(fff, "[[[[y|  Table 2 - Personality Skill Bonus Table ---\n\n");
     fprintf(fff, "[[[[r|                 Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows\n");
-    for (i = 0; i < MAX_SEIKAKU; i++)
+    for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         player_seikaku *a_ptr = &seikaku_info[i];
 

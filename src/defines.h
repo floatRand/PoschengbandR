@@ -867,21 +867,21 @@ enum _mimic_types {
 #define DEVICEMASTER_MAX     5
 
 
-#define PERS_ORDINARY     0
-#define PERS_MIGHTY       1
-#define PERS_SHREWD      2
-#define PERS_PIOUS       3
-#define PERS_NIMBLE       4
-#define PERS_FEARLESS     5
-#define PERS_COMBAT         6
-#define PERS_LAZY         7
-#define PERS_SEXY         8
+#define PERS_ORDINARY      0
+#define PERS_MIGHTY        1
+#define PERS_SHREWD        2
+#define PERS_PIOUS         3
+#define PERS_NIMBLE        4
+#define PERS_FEARLESS      5
+#define PERS_COMBAT        6
+#define PERS_LAZY          7
+#define PERS_SEXY          8
 #define PERS_LUCKY         9
-#define PERS_PATIENT     10
-#define PERS_MUNCHKIN    11
-#define PERS_CRAVEN      12
-#define MAX_SEIKAKU      13
-#define MAX_PERSONALITIES 13
+#define PERS_PATIENT      10
+#define PERS_MUNCHKIN     11
+#define PERS_CRAVEN       12
+#define PERS_HASTY        13
+#define MAX_PERSONALITIES 14
 
 /*** Screen Locations ***/
 

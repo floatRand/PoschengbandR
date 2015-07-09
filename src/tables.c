@@ -1947,7 +1947,7 @@ player_pact pact_info[MAX_PACTS] =
     },
 };
 
-player_seikaku seikaku_info[MAX_SEIKAKU] =
+player_seikaku seikaku_info[MAX_PERSONALITIES] =
 {
     {
         "Ordinary",
@@ -1980,14 +1980,14 @@ player_seikaku seikaku_info[MAX_SEIKAKU] =
     {
         "Nimble",
         {  -1,  1,  -1,  2,  -1,  0 },
-        {7,  2,  -1,  1,  5,  5,  0,  10},
+        {7,  3,  -1,  1,  5,  5,  0,  10},
         99, 0, 0, 100
     },
 
     {
         "Fearless",
         {  1,  0,  0,  -1,  -1,  1 },
-        {-5,  0,  -2,  0,  2,  -2,  5,  0},
+        {-5,  2,  -2,  0,  2,  -2,  5,  0},
         98, 1, 0, 100
     },
 
@@ -2036,9 +2036,17 @@ player_seikaku seikaku_info[MAX_SEIKAKU] =
     {
         "Craven",
         { -1, 1, 1, -1, -1, -3 },
-        {0, 5, -1, 3, 0, 0, -10, 10},
+        {5, 6, -1, 3, 0, 0, -10, 10},
         99, 0, 0, 100
     },
+
+    {
+        "Hasty",
+        {  0, -2, -3, 2, -1, 0 },
+        {-7, -7, -3, -2, -4, -2, -5, -5},
+        97, 1, 0, 100
+    },
+
 };
 
 magic_type technic_info[NUM_TECHNIC][32] =
