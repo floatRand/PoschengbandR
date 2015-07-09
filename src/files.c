@@ -2309,7 +2309,7 @@ static int _known_res_pct(int which)
 
     ct -= hidden;
 
-    return res_pct_aux(ct);
+    return res_pct_aux(which, ct);
 }
 
 /*

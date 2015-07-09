@@ -722,21 +722,20 @@ race_t *sprite_get_race_t(void)
  ****************************************************************/
 static void _tonberry_calc_bonuses(void)
 {
-    int dam = 15*p_ptr->lev/50;
     int hand;
 
     p_ptr->sustain_str = TRUE;
     p_ptr->sustain_con = TRUE;
     res_add(RES_FEAR);
     p_ptr->pspeed -= p_ptr->lev/13;
-    p_ptr->to_d_m  += dam;
 
     for (hand = 0; hand < MAX_HANDS; hand++)
     {
         if (p_ptr->weapon_info[hand].wield_how != WIELD_NONE)
         {
-            p_ptr->weapon_info[hand].to_d += dam / p_ptr->weapon_ct;
-            p_ptr->weapon_info[hand].dis_to_d += dam / p_ptr->weapon_ct;
+            p_ptr->weapon_info[hand].to_d += 2 * p_ptr->lev / p_ptr->weapon_ct;
+            p_ptr->weapon_info[hand].dis_to_d += 2 * p_ptr->lev / p_ptr->weapon_ct;
+            p_ptr->weapon_info[hand].xtra_blow -= 4 * p_ptr->lev;
         }
     }
 }
@@ -744,8 +743,8 @@ static void _tonberry_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_SUST_STR);
     add_flag(flgs, TR_SUST_CON);
-    add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_RES_FEAR);
+    add_flag(flgs, TR_SPEED);
 }
 race_t *tonberry_get_race_t(void)
 {
@@ -760,7 +759,8 @@ race_t *tonberry_get_race_t(void)
                     "however, sluggish in their movements and reactions; young and "
                     "inexperienced tonberries are often preyed on by the other races. "
                     "They possess human-like intelligence, but rarely become mages due "
-                    "to their culture and physiology.";
+                    "to their culture and physiology. Tonberries attack very powerfully "
+                    "in melee, albeit with reduced speed. They are also easily confused.";
         
         me.stats[A_STR] =  4;
         me.stats[A_INT] =  0;
