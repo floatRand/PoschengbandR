@@ -19381,7 +19381,7 @@ D:Yet, this one seems a bit different ...
 
 N:1085:Spellwarp Automaton
 G:g:g
-I:110:100d100:30:200:20:1000
+I:110:50d100:30:200:20:1000
 W:80:4:999:20000:0:0
 B:HIT:HURT:10d15
 B:HIT:HURT:10d15
@@ -19394,14 +19394,14 @@ F:NO_CONF | NO_SLEEP | NO_STUN | EMPTY_MIND | RES_TELE |
 F:POS_GAIN_AC | POS_HOLD_LIFE
 P:Copy:Golem:Warrior
 P:Life:120
-S:1_IN_5 |
+S:1_IN_8 |
 S:BR_DISI
 D:An enormous figure made by powerful magic.  Slow, but
 D:nearly indestructible.
 
 N:1086:Talos, Masterwork Spellwarp Automaton
 G:g:y
-I:115:200d100:30:300:20:2000
+I:115:200d100:30:250:20:2000
 W:90:15:999:40000:0:0
 B:HIT:SHATTER:15d15
 B:HIT:SHATTER:15d15
@@ -19415,7 +19415,7 @@ F:POS_GAIN_AC | POS_HOLD_LIFE
 P:Copy:Golem:Mauler
 P:Life:120
 P:Body:Monk
-S:1_IN_3 |
+S:1_IN_6 |
 S:BA_MANA | BR_DISI | BR_CHAO | PSY_SPEAR | DISPEL | S_KIN
 D:A giant figure of a man, shaped from bronze.  Your spells
 D:fall short, and your blood runs cold as you behold this
@@ -19423,9 +19423,9 @@ D:colossal behemoth striding slowly, but purposefully, towards you.
 
 N:1087:Tonberry
 G:h:u
-I:110:30d100:30:200:80:100
+I:110:30d100:30:50:80:100
 W:80:4:999:5000:0:0
-B:HIT:HURT:50d30
+B:HIT:HURT:50d20
 F:RAND_50 | RAND_25 | FORCE_MAXHP
 F:ONLY_ITEM | DROP_1D2 | DROP_GOOD | AURA_REVENGE
 P:Copy:Tonberry:Warrior
@@ -19436,9 +19436,9 @@ D:over its own feet. Yet you don't remember any tales of heroes who's fought one
 #Note: AC does not reduce damage for EAT_ITEM attacks!
 N:1088:Ninja Tonberry
 G:h:D
-I:125:20d100:30:150:30:90
+I:125:20d100:30:75:30:90
 W:80:7:999:5000:0:0
-B:HIT:EAT_ITEM:30d15
+B:HIT:EAT_ITEM:30d11
 F:ONLY_ITEM | DROP_1D2 | DROP_GOOD | DROP_GREAT | AURA_REVENGE | THIEF
 P:Copy:Tonberry:Ninja
 D:This sluggish lizard-like being approaches you with a large knife brandished. 
@@ -19447,14 +19447,14 @@ D:though.  But perhaps now is not the time to laugh?
 
 N:1089:Master Tonberry
 G:h:y
-I:133:70d100:30:200:80:110
+I:133:70d100:30:100:80:110
 W:80:10:999:40000:0:0
-B:HIT:HURT:70d30
+B:HIT:HURT:50d30
 F:RAND_50 | RAND_25 | FORCE_MAXHP | UNIQUE
 F:ONLY_ITEM | DROP_4D2 | DROP_GOOD | DROP_GREAT
 F:NO_CONF | NO_SLEEP | AURA_REVENGE
 P:Copy:Tonberry:Beastmaster
-S:1_IN_3 |
+S:1_IN_5 |
 S:S_KIN | HEAL | TPORT | TELE_LEVEL
 D:This sluggish lizard-like being approaches you with a large knife brandished. 
 D:It wears a crown of gold, and erratically stumbles towards you.
