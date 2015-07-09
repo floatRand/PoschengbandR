@@ -893,7 +893,7 @@ static void do_cmd_wiz_hack_chris8(void)
         apply_magic(&forge, object_level, AM_GREAT);
         identify_item(&forge);
 
-        if (forge.name2 == EGO_HELMET_PIETY && forge.activation.type)
+        if (forge.name2 == EGO_HELMET_RAGE)
         {
             forge.ident |= (IDENT_MENTAL); 
             object_desc(buf, &forge, 0);
