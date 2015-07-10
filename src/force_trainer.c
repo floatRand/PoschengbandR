@@ -48,7 +48,7 @@ static void _flying_technique_spell(int cmd, variant *res)
         var_set_string(res, "Flying Technique");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Gives levitaion a while.");
+        var_set_string(res, "Gives levitation a while.");
         break;
     case SPELL_CAST:
     {
