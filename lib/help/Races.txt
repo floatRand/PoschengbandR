@@ -17,7 +17,9 @@
   preference for cleavers and large knives. They are, however, sluggish in
   their movements and reactions; young and inexperienced tonberries are often
   preyed on by the other races. They possess human-like intelligence, but
-  rarely become mages due to their culture and physiology.
+  rarely become mages due to their culture and physiology. Tonberries attack
+  very powerfully in melee, albeit with fewer attacks than normal. They are
+  also easily confused and move with reduced speed.
 
 
 ***** <Demigod>
