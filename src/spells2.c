@@ -387,16 +387,10 @@ void self_knowledge(void)
                 }
             }
             break;
-        case CLASS_ROGUE:
-            if (plev > 7)
-            {
-                info[i++] = "You can hit a monster and teleport at a time (cost 12).";
-            }
-            break;
         case CLASS_RANGER:
             if (plev > 14)
             {
-                info[i++] = "You can prove monsters (cost 20).";
+                info[i++] = "You can probe monsters (cost 20).";
             }
             break;
         case CLASS_PALADIN:
