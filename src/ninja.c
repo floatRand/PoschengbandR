@@ -60,7 +60,7 @@ static void _bunshin_spell(int cmd, variant *res)
         var_set_string(res, "Bunshin");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Creates shadows of yourself which gives you abillity to completely evade any attacks at one in two chance for a while.");
+        var_set_string(res, "Creates shadows of yourself which gives you ability to completely evade any attacks at one in two chance for a while.");
         break;
     case SPELL_CAST:
         set_multishadow(6+randint1(6), FALSE);

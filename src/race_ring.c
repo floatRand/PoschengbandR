@@ -646,7 +646,7 @@ static void _glitter_spell(int cmd, variant *res)
         var_set_string(res, "Glitter");
         break;
     case SPELL_DESC:
-        var_set_string(res, "This spell makes yourself irresistable to potential ring bearers.");
+        var_set_string(res, "This spell makes yourself irresistible to potential ring bearers.");
         break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);

@@ -8,7 +8,7 @@ static void _charge_spell(int cmd, variant *res)
         var_set_string(res, "Charge");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Attacks monster with your weapons normaly, then move through counter side of the monster.");
+        var_set_string(res, "Attacks monster with your weapons normally, then move through counter side of the monster.");
         break;
     case SPELL_CAST:
     {

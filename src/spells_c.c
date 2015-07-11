@@ -1378,7 +1378,7 @@ void earthquake_spell(int cmd, variant *res)
         var_set_string(res, "Earthquake");
         break;
     case SPELL_DESC:
-        var_set_string(res, "The walls will tremble and the gound will shake.");
+        var_set_string(res, "The walls will tremble and the ground will shake.");
         break;
     case SPELL_GAIN_MUT:
         msg_print("You gain the ability to wreck the dungeon.");
