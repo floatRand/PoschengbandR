@@ -682,7 +682,7 @@ F:FORCE_WEAPON | SEE_INVIS
 ### Slays ###
 
 N:206:WEAPON:of Slay Animal
-W:0:5:23
+W:0:10:1
 F:SLAY_ANIMAL
 
 N:207:WEAPON:of Slay Demon
