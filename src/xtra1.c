@@ -4539,26 +4539,7 @@ void calc_bonuses(void)
 
             if (p_ptr->pclass == CLASS_FORCETRAINER)
             {
-                if (blow_base > 5) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 9) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 14) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 18) p_ptr->weapon_info[i].base_blow += 25;
-
-                if (blow_base > 22) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 25) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 28) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 31) p_ptr->weapon_info[i].base_blow += 25;
-
-                if (blow_base > 35) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 38) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 41) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 44) p_ptr->weapon_info[i].base_blow += 25;
-
-                if (blow_base > 48) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 51) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 55) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 58) p_ptr->weapon_info[i].base_blow += 25;
-
+                p_ptr->weapon_info[i].base_blow += MIN(400, 400 * blow_base / 60);
                 if (p_ptr->magic_num1[0])
                 {
                     p_ptr->weapon_info[i].to_d += (p_ptr->magic_num1[0]/5);
@@ -4567,62 +4548,11 @@ void calc_bonuses(void)
             }
             else if (p_ptr->pclass == CLASS_MYSTIC)
             {
-                if (blow_base > 4) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 7) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 10) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 13) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 16) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 19) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 22) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 25) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 28) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 31) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 34) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 37) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 40) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 43) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 46) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 49) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 52) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 54) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 56) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 58) p_ptr->weapon_info[i].base_blow += 25;
+                p_ptr->weapon_info[i].base_blow += MIN(500, 500 * blow_base / 60);
             }
             else
             {
-                if (blow_base > 3) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 6) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 9) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 12) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 15) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 17) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 20) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 22) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 24) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 26) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 29) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 31) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 34) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 36) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 39) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 41) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 44) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 46) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 49) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 51) p_ptr->weapon_info[i].base_blow += 25;
-                
-                if (blow_base > 53) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 55) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 57) p_ptr->weapon_info[i].base_blow += 25;
-                if (blow_base > 59) p_ptr->weapon_info[i].base_blow += 25;
+                p_ptr->weapon_info[i].base_blow += MIN(600, 600 * blow_base / 60);
             }
 
             if (heavy_armor() && (p_ptr->pclass != CLASS_BERSERKER))
