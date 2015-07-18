@@ -4342,6 +4342,9 @@ void calc_bonuses(void)
 
         if (info_ptr->wield_how == WIELD_NONE) continue;
 
+        if (p_ptr->tim_weaponmastery) /* Note: Monks won't have an equipped weapon, but should still gain weaponmastery! */
+            info_ptr->to_dd += p_ptr->lev/23;
+
         o_ptr = equip_obj(info_ptr->slot);
         if (!o_ptr) continue;
         
@@ -4361,9 +4364,6 @@ void calc_bonuses(void)
                 info_ptr->to_h -= 20;
             }
         }
-
-        if (p_ptr->tim_weaponmastery)
-            info_ptr->to_dd += p_ptr->lev/23;
 
         if (info_ptr->wield_how == WIELD_TWO_HANDS)
             tmp_hold *= 2;
