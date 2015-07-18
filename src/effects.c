@@ -7506,7 +7506,10 @@ bool set_tim_weaponmastery(int v, bool do_dec)
         }
         else if (!p_ptr->tim_weaponmastery)
         {
-            msg_print("Your weapon seems more powerful!");
+            if (p_ptr->weapon_info[0].bare_hands)
+                msg_print("Your fists seem more powerful!");
+            else
+                msg_print("Your weapon seems more powerful!");
             notice = TRUE;
         }
     }
@@ -7514,7 +7517,10 @@ bool set_tim_weaponmastery(int v, bool do_dec)
     {
         if (p_ptr->tim_weaponmastery)
         {
-            msg_print("Your weapon returns to normal.");
+            if (p_ptr->weapon_info[0].bare_hands)
+                msg_print("Your fists return to normal.");
+            else
+                msg_print("Your weapon returns to normal.");
             notice = TRUE;
         }
     }
