@@ -2004,7 +2004,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " resists.";
 
-                dam /= 2;
+                dam /= 3;
                 if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ACID;
             }
             break;
@@ -2032,7 +2032,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " resists.";
 
-                dam /= 2;
+                dam /= 3;
                 if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ELEC;
             }
             break;
@@ -2060,7 +2060,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " resists.";
 
-                dam /= 2;
+                dam /= 3;
                 if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_FIRE;
             }
             else if (r_ptr->flags3 & RF3_HURT_FIRE)
@@ -2095,7 +2095,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " resists.";
 
-                dam /= 2;
+                dam /= 3;
                 if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_COLD;
             }
             else if (r_ptr->flags3 & RF3_HURT_COLD)
@@ -2130,7 +2130,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " resists.";
 
-                dam /= 2;
+                dam /= 3;
                 if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_POIS;
             }
             break;
