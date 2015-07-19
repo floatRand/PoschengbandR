@@ -1678,6 +1678,33 @@ static bool _get_store_obj2(object_type *o_ptr)
         else if (one_in_(20))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
     }
+    else if (cur_store_num == STORE_MAGIC && one_in_(20))
+    {
+        /* Hack: Early resists are hard to find, and Archviles are so damn nasty! */
+        if (one_in_(5))
+        {
+            object_prep(o_ptr, lookup_kind(TV_AMULET, 0));
+            o_ptr->name2 = EGO_AMULET_ELEMENTAL;
+        }
+        else
+        {
+            object_prep(o_ptr, lookup_kind(TV_RING, 0));
+            o_ptr->name2 = EGO_RING_ELEMENTAL;
+        }
+        switch (randint1(5))
+        {
+        case 1: case 2:
+            add_flag(o_ptr->art_flags, TR_RES_COLD);
+            break;
+        case 3: case 4:
+            add_flag(o_ptr->art_flags, TR_RES_FIRE);
+            break;
+        case 5:
+            add_flag(o_ptr->art_flags, TR_RES_ACID);
+            break;
+        }
+        return TRUE;
+    }
     else if (cur_store_num == STORE_GENERAL)
     {
         if (one_in_(50))
