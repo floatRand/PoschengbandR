@@ -363,7 +363,7 @@ static void _calc_innate_attacks(void)
 {
     int l = _attack_level();
     int to_d = 0;
-    int to_h = l/5 + l*l/250 + l*l*l/12500;
+    int to_h = l/10 + l*l/1000 + l*l*l/100000; /* +30 total for 100 baseline power */
 
     /* Claws */
     {
