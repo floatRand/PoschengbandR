@@ -362,15 +362,16 @@ static int _attack_level(void)
 static void _calc_innate_attacks(void)
 {
     int l = _attack_level();
+    int l2 = p_ptr->lev; /* Note: Using attack_level() for both dd and ds gives too much variation */
     int to_d = 0;
-    int to_h = l/10 + l*l/1000 + l*l*l/100000; /* +30 total for 100 baseline power */
+    int to_h = l2*3/5;
 
     /* Claws */
     {
         innate_attack_t    a = {0};
 
         a.dd = 1 + l / 15;
-        a.ds = 3 + l / 30;
+        a.ds = 3 + l2 / 16; /* d6 max for everybody */
         a.to_h += to_h;
         a.to_d += to_d;
 
@@ -391,7 +392,7 @@ static void _calc_innate_attacks(void)
     {
         innate_attack_t    a = {0};
 
-        a.dd = 1 + l / 18;
+        a.dd = 1 + l2 / 10; /* 6d max for everybody */
         a.ds = 4 + l / 6;
         a.to_h += to_h;
         a.to_d += to_d;
