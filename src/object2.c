@@ -2358,6 +2358,87 @@ static void _finalize_jewelry(object_type *o_ptr)
         add_flag(o_ptr->art_flags, TR_IGNORE_COLD);
 }
 
+static void _create_defender(object_type *o_ptr, int level, int power)
+{
+    add_flag(o_ptr->art_flags, TR_FREE_ACT);
+    add_flag(o_ptr->art_flags, TR_SEE_INVIS);
+    if (abs(power) >= 2)
+    {
+        if (one_in_(2))
+            add_flag(o_ptr->art_flags, TR_LEVITATION);
+        while (one_in_(2))
+            one_sustain(o_ptr);
+        o_ptr->to_a = 5 + randint1(7) + m_bonus(7, level);
+        switch (randint1(4))
+        {
+        case 1: /* Classic Defender */
+            add_flag(o_ptr->art_flags, TR_RES_ACID);
+            add_flag(o_ptr->art_flags, TR_RES_ELEC);
+            add_flag(o_ptr->art_flags, TR_RES_FIRE);
+            add_flag(o_ptr->art_flags, TR_RES_COLD);
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_RES_POIS);
+            else
+                one_high_resistance(o_ptr);
+            break;
+        case 2: /* High Defender */
+            one_high_resistance(o_ptr);
+            do
+            {
+                one_high_resistance(o_ptr);
+            }
+            while (one_in_(2));
+            break;
+        case 3: /* Lordly Protection */
+            o_ptr->to_a += 5;
+            add_flag(o_ptr->art_flags, TR_RES_POIS);
+            add_flag(o_ptr->art_flags, TR_RES_DISEN);
+            add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
+            do
+            {
+                one_lordly_high_resistance(o_ptr);
+            }
+            while (one_in_(4));
+            break;
+        case 4: /* Revenge! */
+            add_flag(o_ptr->art_flags, TR_SH_COLD);
+            add_flag(o_ptr->art_flags, TR_SH_ELEC);
+            add_flag(o_ptr->art_flags, TR_SH_FIRE);
+            if (one_in_(2))
+                add_flag(o_ptr->art_flags, TR_SH_SHARDS);
+            if (one_in_(7))
+                add_flag(o_ptr->art_flags, TR_SH_REVENGE);
+            break;
+        }
+    }
+    else
+    {
+        if (one_in_(5))
+            add_flag(o_ptr->art_flags, TR_LEVITATION);
+        if (one_in_(5))
+            one_sustain(o_ptr);
+        o_ptr->to_a = randint1(5) + m_bonus(5, level);
+
+        if (one_in_(3))
+        {
+            one_high_resistance(o_ptr);
+            one_high_resistance(o_ptr);
+        }
+        else
+        {
+            one_ele_resistance(o_ptr);
+            one_ele_resistance(o_ptr);
+            one_ele_resistance(o_ptr);
+            one_ele_resistance(o_ptr);
+            one_ele_resistance(o_ptr);
+            one_ele_resistance(o_ptr);
+            one_ele_resistance(o_ptr);
+        }
+    }
+    if (one_in_(ACTIVATION_CHANCE))
+        effect_add_random(o_ptr, BIAS_PROTECTION);
+}
+
 static void _create_ring(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
@@ -2384,6 +2465,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
             done = FALSE;
         }
     }
+
     switch (o_ptr->name2)
     {
     case EGO_RING_DWARVES:
@@ -2674,74 +2756,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
         }
         break;
     case EGO_RING_DEFENDER:
-        add_flag(o_ptr->art_flags, TR_FREE_ACT);
-        add_flag(o_ptr->art_flags, TR_SEE_INVIS);
-        if (abs(power) >= 2)
-        {
-            if (one_in_(2))
-                add_flag(o_ptr->art_flags, TR_LEVITATION);
-            if (one_in_(2))
-                one_sustain(o_ptr);
-            o_ptr->to_a = randint1(7) + m_bonus(7, level);
-            switch (randint1(4))
-            {
-            case 1: /* Classic Defender */
-                add_flag(o_ptr->art_flags, TR_RES_ACID);
-                add_flag(o_ptr->art_flags, TR_RES_ELEC);
-                add_flag(o_ptr->art_flags, TR_RES_FIRE);
-                add_flag(o_ptr->art_flags, TR_RES_COLD);
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_RES_POIS);
-                else
-                    one_high_resistance(o_ptr);
-                break;
-            case 2: /* High Defender */
-                one_high_resistance(o_ptr);
-                do
-                {
-                    one_high_resistance(o_ptr);
-                } 
-                while (one_in_(2));
-                break;
-            case 3: /* Lordly Protection */
-                o_ptr->to_a += 5;
-                add_flag(o_ptr->art_flags, TR_RES_POIS);
-                add_flag(o_ptr->art_flags, TR_RES_DISEN);
-                add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
-                do
-                {
-                    one_lordly_high_resistance(o_ptr);
-                }
-                while (one_in_(4));
-                break;
-            case 4: /* Revenge! */
-                add_flag(o_ptr->art_flags, TR_SH_COLD);
-                add_flag(o_ptr->art_flags, TR_SH_ELEC);
-                add_flag(o_ptr->art_flags, TR_SH_FIRE);
-                if (one_in_(2))
-                    add_flag(o_ptr->art_flags, TR_SH_SHARDS);
-                if (one_in_(7))
-                    add_flag(o_ptr->art_flags, TR_SH_REVENGE);
-                break;
-            }
-        }
-        else
-        {
-            if (one_in_(5))
-                add_flag(o_ptr->art_flags, TR_LEVITATION);
-            if (one_in_(5))
-                one_sustain(o_ptr);
-            o_ptr->to_a = randint1(5) + m_bonus(5, level);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-        }
-        if (one_in_(ACTIVATION_CHANCE))
-            effect_add_random(o_ptr, BIAS_PROTECTION);
+        _create_defender(o_ptr, level, power);
         break;
     case EGO_RING_SPEED:
         o_ptr->pval = randint1(5) + m_bonus(5, level);
@@ -2825,6 +2840,7 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
     int powers = 0;
     
     o_ptr->name2 = _get_random_ego(EGO_TYPE_AMULET);
+
     switch (o_ptr->name2)
     {
     case EGO_AMULET_MAGI:
@@ -3225,72 +3241,7 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
             effect_add_random(o_ptr, BIAS_ELEMENTAL);
         break;
     case EGO_AMULET_DEFENDER:
-        add_flag(o_ptr->art_flags, TR_FREE_ACT);
-        add_flag(o_ptr->art_flags, TR_SEE_INVIS);
-        if (abs(power) >= 2)
-        {
-            if (one_in_(2))
-                add_flag(o_ptr->art_flags, TR_LEVITATION);
-            if (one_in_(2))
-                one_sustain(o_ptr);
-            o_ptr->to_a = randint1(7) + m_bonus(7, level);
-            switch (randint1(4))
-            {
-            case 1: /* Classic Defender */
-                add_flag(o_ptr->art_flags, TR_RES_ACID);
-                add_flag(o_ptr->art_flags, TR_RES_ELEC);
-                add_flag(o_ptr->art_flags, TR_RES_FIRE);
-                add_flag(o_ptr->art_flags, TR_RES_COLD);
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_RES_POIS);
-                else if (one_in_(3))
-                    one_high_resistance(o_ptr);
-                break;
-            case 2: /* High Defender */
-                one_high_resistance(o_ptr);
-                do
-                {
-                    one_high_resistance(o_ptr);
-                } 
-                while (one_in_(2));
-                break;
-            case 3: /* Lordly Protection */
-                o_ptr->to_a += 5;
-                add_flag(o_ptr->art_flags, TR_RES_POIS);
-                add_flag(o_ptr->art_flags, TR_RES_DISEN);
-                add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
-                do
-                {
-                    one_lordly_high_resistance(o_ptr);
-                }
-                while (one_in_(4));
-                break;
-            case 4: /* Revenge! */
-                add_flag(o_ptr->art_flags, TR_SH_COLD);
-                add_flag(o_ptr->art_flags, TR_SH_ELEC);
-                add_flag(o_ptr->art_flags, TR_SH_FIRE);
-                if (one_in_(2))
-                    add_flag(o_ptr->art_flags, TR_SH_SHARDS);
-                if (one_in_(7))
-                    add_flag(o_ptr->art_flags, TR_SH_REVENGE);
-                break;
-            }
-        }
-        else
-        {
-            if (one_in_(5))
-                add_flag(o_ptr->art_flags, TR_LEVITATION);
-            if (one_in_(5))
-                one_sustain(o_ptr);
-            o_ptr->to_a = randint1(5) + m_bonus(5, level);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-            one_ele_resistance(o_ptr);
-        }
-        if (one_in_(ACTIVATION_CHANCE))
-            effect_add_random(o_ptr, BIAS_PROTECTION);
+        _create_defender(o_ptr, level, power);
         break;
     }
 
