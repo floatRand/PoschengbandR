@@ -4107,7 +4107,7 @@ void do_cmd_store(void)
     int         i;
     cave_type   *c_ptr;
     bool        need_redraw_store_inv = FALSE; /* To redraw missiles damage and prices in store */
-    int w, h;
+    int         w, h;
     bool        vanilla_zerker_hack = FALSE;
     bool        friend_hack = FALSE;
     int         options = STORE_MAINT_NORMAL;
@@ -4127,7 +4127,6 @@ void do_cmd_store(void)
     if (!cave_have_flag_grid(c_ptr, FF_STORE))
     {
         msg_print("You see no store here.");
-
         return;
     }
 

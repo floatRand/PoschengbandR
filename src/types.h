@@ -941,10 +941,6 @@ struct store_type
     s16b last_lev;
     s32b last_exp;
 
-    s16b table_num;            /* Table -- Number of entries */
-    s16b table_size;        /* Table -- Total Size of Array */
-    s16b *table;            /* Table -- Legal item kinds */
-
     s16b stock_num;            /* Stock -- Number of entries */
     s16b stock_size;        /* Stock -- Total Size of Array */
     object_type *stock;        /* Stock -- Actual stock items */
