@@ -2362,20 +2362,26 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
     bool done = FALSE;
-    
+    bool force_speed = FALSE;
+
+    if (!apply_magic_ego)
+    {
+        if ( ((mode & AM_GREAT) && randint0(50) < level)
+          || ((mode & AM_GOOD) && randint0(150) < level) )
+        {
+            force_speed = TRUE;
+        }
+    }
+
     while (!done)
     {
         o_ptr->name2 = _get_random_ego(EGO_TYPE_RING);
         done = TRUE;
-        if ( ((mode & AM_GREAT) && randint0(50) < level)
-          || ((mode & AM_GOOD) && randint0(120) < level) )
+        if ( force_speed
+          && o_ptr->name2 != EGO_RING_SPEED
+          && o_ptr->name2 != EGO_RING_DEFENDER )
         {
-            if ( !apply_magic_ego
-              && o_ptr->name2 != EGO_RING_SPEED
-              && o_ptr->name2 != EGO_RING_DEFENDER )
-            {
-                done = FALSE;
-            }
+            done = FALSE;
         }
     }
     switch (o_ptr->name2)
@@ -2686,7 +2692,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                 add_flag(o_ptr->art_flags, TR_RES_COLD);
                 if (one_in_(3))
                     add_flag(o_ptr->art_flags, TR_RES_POIS);
-                else if (one_in_(3))
+                else
                     one_high_resistance(o_ptr);
                 break;
             case 2: /* High Defender */
@@ -2726,6 +2732,8 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
             if (one_in_(5))
                 one_sustain(o_ptr);
             o_ptr->to_a = randint1(5) + m_bonus(5, level);
+            one_ele_resistance(o_ptr);
+            one_ele_resistance(o_ptr);
             one_ele_resistance(o_ptr);
             one_ele_resistance(o_ptr);
             one_ele_resistance(o_ptr);
@@ -5483,6 +5491,7 @@ bool kind_is_great(int k_idx)
         }
         case TV_STAFF:
         {
+            if (k_ptr->sval == SV_STAFF_GENOCIDE) return TRUE;
             if (k_ptr->sval == SV_STAFF_MSTORM) return TRUE;
             return FALSE;
         }
@@ -5621,16 +5630,19 @@ bool kind_is_good(int k_idx)
             if (k_ptr->sval == SV_ROD_DETECTION) return TRUE;
             if (k_ptr->sval == SV_ROD_HEALING) return TRUE;
             if (k_ptr->sval == SV_ROD_RESTORATION) return TRUE;
-            if (k_ptr->sval == SV_ROD_HAVOC) return TRUE;
             if (k_ptr->sval == SV_ROD_SPEED) return TRUE;
-            if (k_ptr->sval == SV_ROD_MANA_BALL) return TRUE;
+            if (k_ptr->sval == SV_ROD_MANA_BOLT) return TRUE;
             return FALSE;
         }
         case TV_STAFF:
         {
+            if (k_ptr->sval == SV_STAFF_GENOCIDE) return TRUE;
+            if (k_ptr->sval == SV_STAFF_SPEED) return TRUE;
+            if (k_ptr->sval == SV_STAFF_HOLINESS) return TRUE;
             if (k_ptr->sval == SV_STAFF_POWER) return TRUE;
             if (k_ptr->sval == SV_STAFF_HEALING) return TRUE;
             if (k_ptr->sval == SV_STAFF_MSTORM) return TRUE;
+            if (k_ptr->sval == SV_STAFF_DESTRUCTION) return TRUE;
             return FALSE;
         }
         case TV_RING:

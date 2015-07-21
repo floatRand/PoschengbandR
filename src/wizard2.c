@@ -812,7 +812,7 @@ static void do_cmd_wiz_hack_chris7_imp(FILE* fff)
             int k;
 
             object_wipe(&forge);
-            if (!make_object(&forge, 0)) continue;
+            if (!make_object(&forge, AM_GOOD)) continue;
 
             for (k = 0; ; k++)
             {
