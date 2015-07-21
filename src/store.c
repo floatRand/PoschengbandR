@@ -418,6 +418,9 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
         if (cur_store_num == STORE_BLACK && p_ptr->realm1 != REALM_BURGLARY && !mut_present(MUT_BLACK_MARKETEER))
             price = price / 2;
 
+        if (cur_store_num == STORE_JEWELER)
+            price = price / 2;
+
         if (cur_store_num == STORE_BLACK)
             price = price * (625 - virtue_current(VIRTUE_JUSTICE)) / 625;
 
@@ -437,6 +440,9 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
 
         /* Mega-Hack -- Black market sucks */
         if (cur_store_num == STORE_BLACK && p_ptr->realm1 != REALM_BURGLARY && !mut_present(MUT_BLACK_MARKETEER))
+            price = price * 2;
+
+        if (cur_store_num == STORE_JEWELER)
             price = price * 2;
 
         if (cur_store_num == STORE_BLACK)
@@ -1616,6 +1622,20 @@ static bool _book_accept(int k_idx)
     return FALSE;
 }
 
+static bool _jeweler_accept(int k_idx)
+{
+    if (k_info[k_idx].gen_flags & TRG_INSTA_ART)
+        return FALSE;
+
+    switch (k_info[k_idx].tval)
+    {
+    case TV_RING:
+    case TV_AMULET:
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static bool _get_store_obj2(object_type *o_ptr)
 {
     int level1 = 20; /* Level of get_obj_num ... Second books are L20 */
@@ -1655,6 +1675,11 @@ static bool _get_store_obj2(object_type *o_ptr)
         choose_obj_kind(0);
         level1 = 25 + randint0(25);
         level2 = 25 + randint0(25);
+        break;
+    case STORE_JEWELER:
+        get_obj_num_hook = _jeweler_accept;
+        level1 = 10 + randint0(40);
+        level2 = 10 + randint0(40);
         break;
     }
 

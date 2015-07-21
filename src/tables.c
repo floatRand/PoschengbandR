@@ -1769,6 +1769,42 @@ owner_type owners[MAX_STORES][MAX_OWNERS] =
         { "Museum",                       0,      100, 100,  0, 99, 99},
 
     },
+    {
+        /* Jeweler */
+        { "Gorgeous George",          20000,  250, 150, 10,  5, RACE_HALF_TROLL},
+        { "Snark the Sniveller",      20000,  250, 150, 10,  5, RACE_SNOTLING},
+        { "Dalin the Proud",          30000,  250, 150, 10,  5, RACE_DWARF},
+        { "Mr. T",                    30000,  250, 150, 10,  5, RACE_HUMAN},
+        { "Vestnor the Hungry",       20000,  250, 150, 10,  5, RACE_ZOMBIE},
+        { "Count Vandermont",         20000,  250, 150, 10,  5, RACE_VAMPIRE},
+        { "Constance the Beautiful",  30000,  250, 150, 10,  5, RACE_BEASTMAN},
+        { "Casper the Friendly",      30000,  250, 150, 10,  5, RACE_SPECTRE},
+        { "Parrish the Bloodthirsty", 20000,  250, 150, 10,  5, RACE_VAMPIRE},
+        { "Rattle the Quiet",         20000,  250, 150, 10,  5, RACE_SKELETON},
+        { "Plentor the Corpulent(?)", 30000,  250, 150, 10,  5, RACE_SKELETON},
+        { "Snardar the Greedy",       30000,  250, 150, 10,  5, RACE_IMP},
+        { "Vlad",                     20000,  250, 150, 10,  5, RACE_VAMPIRE},
+
+        { "Flotsam the Bloated",      20000,  250, 150, 10,  5, RACE_ZOMBIE},
+        { "Nieval",                   30000,  250, 150, 10,  5, RACE_VAMPIRE},
+        { "Anastasia the Luminous",   30000,  250, 150, 10,  5, RACE_SPECTRE},
+        { "Charity the Necromancer",  20000,  250, 150, 10,  5, RACE_DARK_ELF},
+        { "Pugnacious the Pugilist",  20000,  250, 150, 10,  5, RACE_SNOTLING},
+        { "Footsore the Lucky",       30000,  250, 150, 10,  5, RACE_BEASTMAN},
+        { "Sidria Lighfingered",      30000,  250, 150, 10,  5, RACE_HUMAN},
+        { "Riatho the Juggler",       20000,  250, 150, 10,  5, RACE_HOBBIT},
+        { "Janaaka the Shifty",       20000,  250, 150, 10,  5, RACE_GNOME},
+        { "Cina the Rogue",           30000,  250, 150, 10,  5, RACE_GNOME},
+        { "Arunikki Greatclaw",       30000,  250, 150, 10,  5, RACE_DRACONIAN},
+        { "Chaeand the Poor",         20000,  250, 150, 10,  5, RACE_HUMAN},
+        { "Afardorf the Brigand",     20000,  250, 150, 10,  5, RACE_BARBARIAN},
+        { "Lathaxl the Greedy",       30000,  250, 150, 10,  5, RACE_MIND_FLAYER},
+        { "Falarewyn",                30000,  250, 150, 10,  5, RACE_SPRITE},
+        { "Vosur the Wrinkled",       20000,  250, 150, 10,  5, RACE_NIBELUNG},
+        { "Araord the Handsome",      20000,  250, 150, 10,  5, RACE_AMBERITE},
+        { "Theradfrid the Loser",     30000,  250, 150, 10,  5, RACE_HUMAN},
+        { "One-Legged Eroolo",        30000,  250, 150, 10,  5, RACE_HALF_OGRE},
+    },
 
 };
 

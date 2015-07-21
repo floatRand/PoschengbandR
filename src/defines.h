@@ -101,7 +101,7 @@
 /*
  * Total number of stores (see "store.c", etc)
  */
-#define MAX_STORES      10
+#define MAX_STORES      11
 
 /*
  * Number of buildings
@@ -121,6 +121,7 @@
 #define STORE_HOME      7
 #define STORE_BOOK      8
 #define STORE_MUSEUM    9
+#define STORE_JEWELER  10
 
 
 #define BUILDING_NON_MEMBER 0
