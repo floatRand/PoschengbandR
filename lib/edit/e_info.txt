@@ -893,12 +893,12 @@ W:20:*:1
 C:5:5:0:0
 E:CHARGE:10:100
 
-N:291:WEAPON:& Hell Lance
+N:291:WEAPON:& Hell Lance~
 W:30:*:2
 C:6:6:0:0
 F:SLAY_GOOD | FULL_NAME
 
-N:292:WEAPON:& Holy Lance
+N:292:WEAPON:& Holy Lance~
 W:40:*:4
 C:7:7:0:0
 F:SLAY_EVIL | BLESSED | FULL_NAME
@@ -910,7 +910,7 @@ F:SLAY_EVIL | BLESSED | FULL_NAME
 N:300:RING:of Protection
 W:10:*:1
 
-N:301:RING:& Elemental Ring
+N:301:RING:& Elemental Ring~
 W:20:*:1
 F:FULL_NAME
 
@@ -955,18 +955,18 @@ F:IGNORE_ACID | IGNORE_FIRE | IGNORE_COLD | IGNORE_ELEC
 ### Amulets ###
 ###############
 
-N:320:AMULET:& Barbarian Talisman
+N:320:AMULET:& Barbarian Talisman~
 W:10:*:2
 F:FULL_NAME
 
-N:321:AMULET:& Elemental Charm
+N:321:AMULET:& Elemental Charm~
 W:10:*:2
 F:FULL_NAME
 
 N:322:AMULET:(Defender)
 W:80:*:16
 
-N:323:AMULET:& Sacred Pendant
+N:323:AMULET:& Sacred Pendant~
 W:30:*:2
 F:FULL_NAME | HIDE_TYPE
 
@@ -974,14 +974,14 @@ N:324:AMULET:& Hell Harness
 W:50:*:3
 F:FULL_NAME
 
-N:325:AMULET:& Dwarven Necklace
+N:325:AMULET:& Dwarven Necklace~
 W:50:*:2
 F:FULL_NAME | HIDE_TYPE
 
 N:326:AMULET:of the Magi
 W:40:*:3
 
-N:327:AMULET:& Torc of the Hero
+N:327:AMULET:& Torc~ of the Hero
 W:40:*:16
 F:FREE_ACT | SEE_INVIS | SUST_STR | SUST_DEX |
 F:RES_FEAR | REGEN | SH_FIRE | HIDE_TYPE | FULL_NAME |
