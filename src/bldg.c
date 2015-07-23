@@ -2795,7 +2795,8 @@ static bool _reforge_artifact(void)
     char o_name[MAX_NLEN];
     char buf[255];
     object_type *src, *dest;
-    int src_max_power = p_ptr->fame * p_ptr->fame * 10;
+    int f = MIN(200, p_ptr->fame);
+    int src_max_power = f * 750 + f * f;
     int dest_max_power = 0;
 
     if (p_ptr->prace == RACE_MON_SWORD || p_ptr->prace == RACE_MON_RING)
@@ -4039,17 +4040,17 @@ static void bldg_process_command(building_type *bldg, int i)
     case BACT_REPUTATION:
         if (p_ptr->fame <= 0)
             msg_format("Who the hell are you? (Fame = %d)", p_ptr->fame);
-        else if (p_ptr->fame < 5)
-            msg_format("I've never even heard of you! (Fame = %d)", p_ptr->fame);
-        else if (p_ptr->fame < 10)
-            msg_format("Hmmm ... You've done a few minor notable deeds, but hardly anything worth bragging about! (Fame = %d)", p_ptr->fame);
-        else if (p_ptr->fame < 15)
-            msg_format("Yes, I've heard of you. The townfolk are talking! (Fame = %d)", p_ptr->fame);
         else if (p_ptr->fame < 20)
+            msg_format("I've never even heard of you! (Fame = %d)", p_ptr->fame);
+        else if (p_ptr->fame < 40)
+            msg_format("Hmmm ... You've done a few minor notable deeds, but hardly anything worth bragging about! (Fame = %d)", p_ptr->fame);
+        else if (p_ptr->fame < 60)
+            msg_format("Yes, I've heard of you. The townfolk are talking! (Fame = %d)", p_ptr->fame);
+        else if (p_ptr->fame < 80)
             msg_format("Ah, good sir. 'Tis an honor to see you again! (Fame = %d)", p_ptr->fame);
-        else if (p_ptr->fame < 50)
+        else if (p_ptr->fame < 100)
             msg_format("You are a true hero! (Fame = %d)", p_ptr->fame);
-        else if (p_ptr->fame < 75)
+        else if (p_ptr->fame < 150)
             msg_format("You are the stuff of legends! (Fame = %d)", p_ptr->fame);
         else
             msg_format("The bards doth sing of ye: Heroic ballads both far 'n wide! (Fame = %d)", p_ptr->fame);
