@@ -2699,7 +2699,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                     add_flag(o_ptr->art_flags, TR_SH_FIRE);
                 if (one_in_(7))
                     add_flag(o_ptr->art_flags, TR_BRAND_FIRE);
-                else if (one_in_(100) && level >= 70)
+                else if (randint1(level) >= 70)
                     add_flag(o_ptr->art_flags, TR_IM_FIRE);
                 if (one_in_(ACTIVATION_CHANCE))
                     effect_add_random(o_ptr, BIAS_FIRE);
@@ -2711,7 +2711,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                     add_flag(o_ptr->art_flags, TR_SH_COLD);
                 if (one_in_(7))
                     add_flag(o_ptr->art_flags, TR_BRAND_COLD);
-                else if (one_in_(100) && level >= 70)
+                else if (randint1(level) >= 70)
                     add_flag(o_ptr->art_flags, TR_IM_COLD);
                 if (one_in_(ACTIVATION_CHANCE))
                     effect_add_random(o_ptr, BIAS_COLD);
@@ -2723,7 +2723,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                     add_flag(o_ptr->art_flags, TR_SH_ELEC);
                 if (one_in_(7))
                     add_flag(o_ptr->art_flags, TR_BRAND_ELEC);
-                else if (one_in_(100) && level >= 70)
+                else if (randint1(level) >= 75)
                     add_flag(o_ptr->art_flags, TR_IM_ELEC);
                 if (one_in_(ACTIVATION_CHANCE))
                     effect_add_random(o_ptr, BIAS_ELEC);
@@ -2733,7 +2733,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                 add_flag(o_ptr->art_flags, TR_RES_ACID);
                 if (one_in_(7))
                     add_flag(o_ptr->art_flags, TR_BRAND_ACID);
-                else if (one_in_(100) && level >= 70)
+                else if (randint1(level) >= 65)
                     add_flag(o_ptr->art_flags, TR_IM_ACID);
                 if (one_in_(ACTIVATION_CHANCE))
                     effect_add_random(o_ptr, BIAS_ACID);
