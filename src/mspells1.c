@@ -3639,7 +3639,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
 
             case MON_TALOS:
                 {
-                    int num = 3 + randint1(3);
+                    int num = randint1(3);
                     for (k = 0; k < num; k++)
                     {
                         count += summon_named_creature(m_idx, y, x, MON_SPELLWARP, mode);
@@ -3649,7 +3649,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
 
             case MON_MASTER_TONBERRY:
                 {
-                    int num = 3 + randint1(3);
+                    int num = randint1(3);
                     for (k = 0; k < num; k++)
                     {
                         if (one_in_(3))
