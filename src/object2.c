@@ -2443,14 +2443,14 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
     bool done = FALSE;
-    bool force_speed = FALSE;
+    bool force_great = FALSE;
 
     if (!apply_magic_ego)
     {
         if ( ((mode & AM_GREAT) && randint0(50) < level)
           || ((mode & AM_GOOD) && randint0(150) < level) )
         {
-            force_speed = TRUE;
+            force_great = TRUE;
         }
     }
 
@@ -2458,7 +2458,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
     {
         o_ptr->name2 = _get_random_ego(EGO_TYPE_RING);
         done = TRUE;
-        if ( force_speed
+        if ( force_great
           && o_ptr->name2 != EGO_RING_SPEED
           && o_ptr->name2 != EGO_RING_DEFENDER )
         {
@@ -2838,8 +2838,28 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
 static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
-    
-    o_ptr->name2 = _get_random_ego(EGO_TYPE_AMULET);
+    bool force_great = FALSE;
+    bool done = FALSE;
+
+    if (!apply_magic_ego)
+    {
+        if ( ((mode & AM_GREAT) && randint0(75) < level)
+          || ((mode & AM_GOOD) && randint0(300) < level) )
+        {
+            force_great = TRUE;
+        }
+    }
+
+    while (!done)
+    {
+        o_ptr->name2 = _get_random_ego(EGO_TYPE_AMULET);
+        done = TRUE;
+        if ( force_great
+          && o_ptr->name2 != EGO_AMULET_DEFENDER )
+        {
+            done = FALSE;
+        }
+    }
 
     switch (o_ptr->name2)
     {
