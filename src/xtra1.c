@@ -3220,6 +3220,8 @@ void calc_bonuses(void)
     p_ptr->speciality_equip = FALSE;
     p_ptr->sneak_attack = FALSE;
 
+    p_ptr->to_d_spell = 0;
+
     p_ptr->to_m_chance = 0;
 
     p_ptr->weapon_ct = 0;

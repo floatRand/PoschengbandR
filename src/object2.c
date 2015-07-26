@@ -2814,8 +2814,17 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                     add_flag(o_ptr->art_flags, TR_DEC_DEX);
                     add_flag(o_ptr->art_flags, TR_DEC_CON);
                     o_ptr->pval = _jewelry_pval(2, level);
-                    break;
                 }
+                else
+                {
+                    o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                    while (one_in_(2) && powers > 0)
+                    {
+                        o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                        powers--;
+                    }
+                }
+                break;
             default:
                 if (abs(power) >= 2 && one_in_(15))
                     add_flag(o_ptr->art_flags, TR_TELEPATHY);
@@ -2823,6 +2832,8 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                     one_low_esp(o_ptr);
             }
         }
+        if (o_ptr->to_d > 20)
+            o_ptr->to_d = 20;
         if (one_in_(ACTIVATION_CHANCE))
             effect_add_random(o_ptr, BIAS_MAGE);
         break;
@@ -2905,14 +2916,25 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
                     add_flag(o_ptr->art_flags, TR_DEC_DEX);
                     add_flag(o_ptr->art_flags, TR_DEC_CON);
                     o_ptr->pval = _jewelry_pval(2, level);
-                    break;
                 }
+                else
+                {
+                    o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                    while (one_in_(2) && powers > 0)
+                    {
+                        o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                        powers--;
+                    }
+                }
+                break;
             default:
                 add_flag(o_ptr->art_flags, TR_INT);
                 if (!o_ptr->pval) o_ptr->pval = _jewelry_pval(5, level);
             }
         }
         if (!o_ptr->pval) o_ptr->pval = randint1(8); /* Searching */
+        if (o_ptr->to_d > 20)
+            o_ptr->to_d = 20;
         if (one_in_(ACTIVATION_CHANCE))
             effect_add_random(o_ptr, BIAS_MAGE);
         break;
@@ -4251,6 +4273,14 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             {
                 add_flag(o_ptr->art_flags, TR_SPELL_POWER);
                 add_flag(o_ptr->art_flags, TR_DEC_CON);
+            }
+            else if (one_in_(3))
+            {
+                o_ptr->to_d += randint1(8) + m_bonus(8, level);
+                while (one_in_(2))
+                    o_ptr->to_d++;
+
+                add_flag(o_ptr->art_flags, TR_SHOW_MODS);
             }
             break;
         case EGO_CROWN_LORDLINESS:

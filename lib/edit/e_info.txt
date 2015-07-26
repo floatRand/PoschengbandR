@@ -926,7 +926,7 @@ N:304:RING:(Defender)
 W:70:*:2
 
 N:305:RING:of Wizardry
-W:50:*:2
+W:30:*:2
 
 N:306:RING:of Speed
 W:70:*:1
@@ -979,7 +979,7 @@ W:50:*:2
 F:FULL_NAME | HIDE_TYPE
 
 N:326:AMULET:of the Magi
-W:40:*:3
+W:30:*:3
 
 N:327:AMULET:& Torc~ of the Hero
 W:40:*:16
@@ -987,7 +987,7 @@ F:FREE_ACT | SEE_INVIS | SUST_STR | SUST_DEX |
 F:RES_FEAR | REGEN | SH_FIRE | HIDE_TYPE | FULL_NAME |
 
 N:328:AMULET:of Devotion
-W:40:*:3
+W:30:*:3
 
 N:329:AMULET:of Trickery
 W:30:*:3

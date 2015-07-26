@@ -305,17 +305,19 @@ static void _test_specific_k_idx(void)
         object_type forge;
         
         object_prep(&forge, k_idx);
-        create_artifact(&forge, CREATE_ART_GOOD);
-        /*apply_magic(&forge, object_level, 0);*/
+        /*create_artifact(&forge, CREATE_ART_GOOD);*/
+        apply_magic(&forge, object_level, 0);
 
-        if (1 || forge.name2 == EGO_RING_COMBAT)
+        if ( forge.name2 == EGO_RING_WIZARDRY
+          || forge.name2 == EGO_AMULET_MAGI
+          || forge.name2 == EGO_CROWN_MAGI )
         {
             identify_item(&forge);
             forge.ident |= (IDENT_MENTAL); 
         
             object_desc(buf, &forge, 0);
             msg_format("%s (%d)", buf, object_value_real(&forge));
-            if (have_flag(forge.art_flags, TR_BLOWS))
+            if (forge.to_d)
                 drop_near(&forge, -1, py, px);
         }
     }
@@ -323,12 +325,12 @@ static void _test_specific_k_idx(void)
 
 static void do_cmd_wiz_hack_chris2(void)
 {
+    /* 
     _test_frequencies(_is_foo);
     _test_frequencies(_is_stat_potion);
-    /* 
     _test_frequencies(_is_rune_sword);
-    _test_specific_k_idx(); 
     */
+    _test_specific_k_idx();
 }
 
 static void do_cmd_wiz_hack_chris3_imp(FILE* file)
