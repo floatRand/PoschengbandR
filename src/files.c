@@ -3870,6 +3870,8 @@ static void dump_aux_object_counts(FILE *fff)
     fprintf(fff, "\n  Egos                 Found Bought  Dest\n");
     fprintf(fff,   "  ---------------------------------------\n");
     dump_aux_ego_counts_imp(fff, EGO_RING_SPEED, "Ring of Speed");
+    dump_aux_ego_counts_imp(fff, EGO_RING_DEFENDER, "Ring (Defender)");
+    dump_aux_ego_counts_imp(fff, EGO_AMULET_DEFENDER, "Amulet (Defender)");
     dump_aux_ego_counts_imp(fff, EGO_BOOTS_ELVENKIND, "Boots of Elvenkind");
     dump_aux_ego_counts_imp(fff, EGO_BOOTS_SPEED, "Boots of Speed");
     dump_aux_ego_counts_imp(fff, EGO_BOOTS_FEANOR, "Boots of Feanor");
