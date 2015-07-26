@@ -2637,7 +2637,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                 one_high_resistance(o_ptr);
                 if (abs(power) >= 2)
                 {
-                    do { one_high_resistance(o_ptr); --power; } while(one_in_(2));
+                    do { one_high_resistance(o_ptr); --power; } while(one_in_(3));
                 }
                 break;
             case 2:
@@ -2949,7 +2949,7 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
             case 5:
                 if (abs(power) >= 2 && one_in_(2) && level >= 30)
                 {
-                    do { one_high_resistance(o_ptr); } while (one_in_(2));
+                    do { one_high_resistance(o_ptr); } while (one_in_(3));
                     break;
                 }
             default:
@@ -5104,7 +5104,12 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
 
         if (e_ptr->gen_flags & (TRG_ONE_SUSTAIN)) one_sustain(o_ptr);
         if (e_ptr->gen_flags & (TRG_XTRA_POWER)) one_ability(o_ptr);
-        if (e_ptr->gen_flags & (TRG_XTRA_H_RES)) one_high_resistance(o_ptr);
+        if (e_ptr->gen_flags & (TRG_XTRA_H_RES))
+        {
+            one_high_resistance(o_ptr);
+            if (randint1(object_level) > 60)
+                one_high_resistance(o_ptr);
+        }
         if (e_ptr->gen_flags & (TRG_XTRA_E_RES)) one_ele_resistance(o_ptr);
         if (e_ptr->gen_flags & (TRG_XTRA_D_RES)) one_dragon_ele_resistance(o_ptr);
         if (e_ptr->gen_flags & (TRG_XTRA_L_RES)) one_lordly_high_resistance(o_ptr);
@@ -5710,7 +5715,23 @@ bool kind_is_jewelry(int k_idx) {
     }
     return FALSE;
 }
-bool kind_is_book(int k_idx) { 
+static bool _kind_is_ring(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_RING:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_amulet(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_AMULET:
+        return TRUE;
+    }
+    return FALSE;
+}
+bool kind_is_book(int k_idx) {
     if (TV_LIFE_BOOK <= k_info[k_idx].tval && k_info[k_idx].tval <= TV_BURGLARY_BOOK)
         return TRUE;
     return FALSE;
@@ -5733,7 +5754,31 @@ bool kind_is_other_armor(int k_idx) {
     }
     return FALSE;
 }
-bool kind_is_armor(int k_idx) { 
+static bool _kind_is_helm_cloak(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_HELM: case TV_CROWN: case TV_CLOAK:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_helm(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_HELM: case TV_CROWN:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_boots(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_BOOTS:
+        return TRUE;
+    }
+    return FALSE;
+}
+bool kind_is_armor(int k_idx) {
     if (TV_ARMOR_BEGIN <= k_info[k_idx].tval && k_info[k_idx].tval <= TV_ARMOR_END)
         return TRUE;
     return FALSE;
@@ -5877,6 +5922,34 @@ static _kind_p _choose_obj_kind(u32b mode)
         case CLASS_BEASTMASTER:
             if (one_in_(7))
                 _kind_hook1 = _kind_is_lance;
+            break;
+
+        case CLASS_MONSTER:
+            switch (p_ptr->prace)
+            {
+            case RACE_MON_BEHOLDER:
+                if (one_in_(5))
+                    _kind_hook1 = _kind_is_ring;
+                else if (one_in_(7))
+                    _kind_hook1 = _kind_is_helm;
+                break;
+            case RACE_MON_CENTIPEDE:
+                if (one_in_(7))
+                    _kind_hook1 = _kind_is_boots;
+                break;
+            case RACE_MON_DRAGON:
+                if (one_in_(5))
+                    _kind_hook1 = _kind_is_ring;
+                else if (one_in_(7))
+                    _kind_hook1 = _kind_is_helm_cloak;
+                break;
+            case RACE_MON_HYDRA:
+                if (one_in_(5))
+                    _kind_hook1 = _kind_is_amulet;
+                else if (one_in_(7))
+                    _kind_hook1 = _kind_is_helm;
+                break;
+            }
             break;
         }
         if (!_kind_hook1)
