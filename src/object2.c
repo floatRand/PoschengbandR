@@ -4276,7 +4276,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             }
             else if (one_in_(3))
             {
-                o_ptr->to_d += randint1(8) + m_bonus(8, level);
+                o_ptr->to_d += 4 + randint1(11);
                 while (one_in_(2))
                     o_ptr->to_d++;
 
