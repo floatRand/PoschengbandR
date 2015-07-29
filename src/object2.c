@@ -5643,7 +5643,7 @@ bool kind_is_good(int k_idx)
         case TV_STAFF:
         {
             if (k_ptr->sval == SV_STAFF_GENOCIDE) return TRUE;
-            if (k_ptr->sval == SV_STAFF_SPEED) return TRUE;
+            /*if (k_ptr->sval == SV_STAFF_SPEED) return TRUE;*/
             if (k_ptr->sval == SV_STAFF_HOLINESS) return TRUE;
             if (k_ptr->sval == SV_STAFF_POWER) return TRUE;
             if (k_ptr->sval == SV_STAFF_HEALING) return TRUE;
