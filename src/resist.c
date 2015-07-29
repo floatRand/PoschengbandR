@@ -207,7 +207,7 @@ int  res_pct_aux(int which, int count)
 
     if (count < 0)
         result *= -1;
-    else
+    else if (result < 100)
     {
         /* These restrictions are no laughing matter. Confusion is up to 600hp
          * and Light is up to 500hp. In practice, players will be hard pressed to
@@ -222,6 +222,19 @@ int  res_pct_aux(int which, int count)
         {
             if (prace_is_(RACE_VAMPIRE) || prace_is_(RACE_MON_VAMPIRE) || prace_is_(MIMIC_VAMPIRE))
                 result = (result + 1) / 2;
+        }
+
+        /* Elemental Damage is more deadly, so I'm being a bit nicer here :) */
+        if (which == RES_FIRE)
+        {
+            if (prace_is_(RACE_ENT))
+                result = result * 7 / 10;
+        }
+
+        if (which == RES_ELEC)
+        {
+            if (prace_is_(RACE_ANDROID))
+                result = result * 7 / 10;
         }
     }
     return result;

@@ -123,7 +123,7 @@ static void _android_calc_bonuses(void)
     p_ptr->slow_digest = TRUE;
     p_ptr->free_act = TRUE;
     res_add(RES_POIS);
-    res_add_vuln(RES_ELEC);
+    /*res_add_vuln(RES_ELEC); cf resists.c res_pct_aux() for an alternative*/
     p_ptr->hold_life = TRUE;
 }
 static void _android_get_flags(u32b flgs[TR_FLAG_SIZE])
@@ -135,7 +135,7 @@ static void _android_get_flags(u32b flgs[TR_FLAG_SIZE])
 }
 static void _android_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
 {
-    add_flag(flgs, TR_RES_ELEC);
+    /*add_flag(flgs, TR_RES_ELEC); cf resists.c res_pct_aux() for an alternative*/
 }
 race_t *android_get_race_t(void)
 {
@@ -956,7 +956,7 @@ static int _ent_get_powers(spell_info* spells, int max)
 }
 static void _ent_calc_bonuses(void)
 {
-    res_add_vuln(RES_FIRE);
+    /*res_add_vuln(RES_FIRE); cf resists.c res_pct_aux() for an alternative*/
     if (!equip_find_first(object_is_melee_weapon)) 
         p_ptr->skill_dig += p_ptr->lev * 10;
 }
@@ -965,7 +965,7 @@ static void _ent_get_flags(u32b flgs[TR_FLAG_SIZE])
 }
 static void _ent_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
 {
-    add_flag(flgs, TR_RES_FIRE);
+    /*add_flag(flgs, TR_RES_FIRE);  cf resists.c res_pct_aux() for an alternative*/
 }
 race_t *ent_get_race_t(void)
 {
