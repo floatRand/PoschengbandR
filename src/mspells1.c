@@ -1617,7 +1617,8 @@ bool make_attack_spell(int m_idx, bool ticked_off)
               && !(cave[m_ptr->fy][m_ptr->fx].info & CAVE_ICKY)
               && !(cave[py][px].info & CAVE_ICKY)
               && !p_ptr->inside_quest 
-              && dun_level )
+              && dun_level
+              && (r_ptr->flags1 & RF1_UNIQUE) )
             {
                 y = m_ptr->fy;
                 x = m_ptr->fx;
