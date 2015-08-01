@@ -1687,7 +1687,7 @@ void enchantment_spell(int cmd, variant *res)
         }
         else
         {
-            if (enchant(o_ptr, randint0(3) + 2, ENCH_TOAC)) okay = TRUE;            
+            if (enchant(o_ptr, randint0(3) + 2, ENCH_TOAC)) okay = TRUE;
         }
             
 

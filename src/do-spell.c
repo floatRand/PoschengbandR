@@ -5835,7 +5835,7 @@ static cptr do_craft_spell(int spell, int mode)
         break;
 
     case 31:
-        if (name) return "Force Branding";
+        if (name) return "Mana Branding";
         if (desc) return "Temporarily brands your weapon with force.";
     
         {

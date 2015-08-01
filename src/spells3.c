@@ -1934,8 +1934,6 @@ bool enchant(object_type *o_ptr, int n, int eflag)
                 idx -= 2*(psion_enchant_power() - 1);
             }
 
-            idx -= virtue_current(VIRTUE_ENCHANTMENT)/110;
-
             if (idx < 0) chance = 0;
             else if (idx > 15) chance = 1000;
             else chance = enchant_table[idx];
@@ -1962,8 +1960,6 @@ bool enchant(object_type *o_ptr, int n, int eflag)
             {
                 idx -= 2*(psion_enchant_power() - 1);
             }
-
-            idx -= virtue_current(VIRTUE_ENCHANTMENT)/110;
 
             if (idx < 0) chance = 0;
             else if (idx > 15) chance = 1000;
@@ -1992,8 +1988,6 @@ bool enchant(object_type *o_ptr, int n, int eflag)
             {
                 idx -= 2*(psion_enchant_power() - 1);
             }
-
-            idx -= virtue_current(VIRTUE_ENCHANTMENT)/110;
 
             if (idx < 0) chance = 0;
             else if (idx > 15) chance = 1000;
