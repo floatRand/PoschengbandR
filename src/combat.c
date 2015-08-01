@@ -81,7 +81,7 @@ static _blow_info_t _get_blow_info(int hand)
     case CLASS_BLOOD_MAGE:
     case CLASS_HIGH_MAGE:
     case CLASS_BLUE_MAGE:
-        result.num = 300; result.wgt = 100; result.mul = 20; break;
+        result.num = 400; result.wgt = 100; result.mul = 20; break;
 
     case CLASS_WARLOCK:
         result.num = 350; result.wgt = 70; result.mul = 25; 
@@ -191,7 +191,7 @@ static _blow_info_t _get_blow_info(int hand)
 
     case CLASS_MIRROR_MASTER:
     case CLASS_SNIPER:
-        result.num = 300; result.wgt = 100; result.mul = 30; break;
+        result.num = 400; result.wgt = 100; result.mul = 30; break;
 
     case CLASS_NINJA:
         result.num = 425; result.wgt = 20; result.mul = 10; break;
@@ -247,14 +247,8 @@ static _blow_info_t _get_blow_info(int hand)
         break;
     }
 
-    if (hex_spelling(HEX_XTRA_MIGHT) || hex_spelling(HEX_BUILDING)) { result.num++; result.wgt /= 2; result.mul += 20; }
-    if (p_ptr->tim_building_up && p_ptr->pclass != CLASS_MAULER) 
-    { 
-        if (result.num < 400 && p_ptr->lev >= 40) 
-            result.num = 400; 
-        result.wgt /= 2; 
-        result.mul += 20; 
-    }
+    if (hex_spelling(HEX_XTRA_MIGHT) || hex_spelling(HEX_BUILDING)) { result.wgt /= 2; result.mul += 20; }
+    if (p_ptr->tim_building_up) { result.wgt /= 2; result.mul += 20; }
 
     /* Xorns and Mariliths have multiple sets of arms */
     if (arm > 0)

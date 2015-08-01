@@ -5494,15 +5494,13 @@ static cptr do_craft_spell(int spell, int mode)
         break;
 
     case 9:
-        if (name) return "Elemental Cloak";
-        if (desc) return "You gain protective elemental auras for a short time.";
+        if (name) return "Remove Curse";
+        if (desc) return "Removes normal curses from equipped items.";
+
+        if (cast)
         {
-            int base = spell_power(10 + plev / 2);
-
-            if (info) return info_duration(base, base);
-
-            if (cast)
-                set_tim_sh_elements(randint1(base) + base, FALSE);
+            if (remove_curse())
+                msg_print("You feel as if someone is watching over you.");
         }
         break;
 
@@ -5552,32 +5550,29 @@ static cptr do_craft_spell(int spell, int mode)
         break;
 
     case 13:
-        if (name) return "Protection from Evil";
-        if (desc) return "Gives aura which protect you from evil monster's physical attack.";
-    
+        if (name) return "Identify";
+        if (desc) return "Identifies an item.";
+
         {
-            int base = spell_power(3 * plev);
-            int sides = spell_power(25);
-
-            if (info) return info_duration(base, sides);
-
             if (cast)
             {
-                set_protevil(randint1(sides) + base, FALSE);
+                if (!ident_spell(NULL)) return NULL;
             }
         }
         break;
 
     case 14:
-        if (name) return "Giant Strength";
-        if (desc) return "For a short time, you grow to a gigantic height and gain great powers of combat.";
+        if (name) return "Curing";
+        if (desc) return "It cures what ails you including fear, poison, stunning, cuts and hallucination.";
         {
-            int base = spell_power(5 + plev / 10);
-
-            if (info) return info_duration(base, base);
-
             if (cast)
-                set_tim_building_up(randint1(base) + base, FALSE);
+            {
+                fear_clear_p();
+                set_poisoned(0, TRUE);
+                set_stun(0, TRUE);
+                set_cut(0, TRUE);
+                set_image(0, TRUE);
+            }
         }
         break;
 
@@ -5675,10 +5670,10 @@ static cptr do_craft_spell(int spell, int mode)
         {
             if (cast)
             {
-                int y = 0, x = 0;
+                int              y = 0, x = 0;
                 cave_type       *c_ptr;
                 monster_type    *m_ptr;
-                int dir;
+                int              dir;
 
                 for (dir = 0; dir < 8; dir++)
                 {
@@ -5694,19 +5689,10 @@ static cptr do_craft_spell(int spell, int mode)
         break;
 
     case 21:
-        if (name) return "Recharging";
-        if (desc) return "Recharges staves, wands or rods.";
-
-        {
-            int power = spell_power(plev * 3);
-
-            if (info) return info_power(power);
-
-            if (cast)
-            {
-                if (!recharge(power)) return NULL;
-            }
-        }
+        if (name) return "Polish Shield";
+        if (desc) return "Makes your shield reflect missiles and bolt spells.";
+        if (cast)
+            polish_shield();
         break;
 
     case 22:
