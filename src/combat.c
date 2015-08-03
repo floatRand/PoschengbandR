@@ -1111,6 +1111,12 @@ static int _shooter_info_aux(object_type *bow, object_type *arrow, int row, int 
 
     _display_missile_slay(mult, 100, num_fire, dd, ds, to_d, to_d_xtra, "Normal", TERM_WHITE, r++, c);
 
+    if (p_ptr->tim_force && p_ptr->csp > (p_ptr->msp / 30))
+    {
+        mult = mult * 3 / 2;
+        _display_missile_slay(mult, 100, num_fire, dd, ds, to_d, to_d_xtra, "Force", TERM_L_BLUE, r++, c);
+    }
+
     if (have_flag(flgs, TR_KILL_ANIMAL)) 
         _display_missile_slay(mult, 270, num_fire, dd, ds, to_d, to_d_xtra, "Animals", TERM_YELLOW, r++, c);
     else if (have_flag(flgs, TR_SLAY_ANIMAL))
