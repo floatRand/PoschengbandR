@@ -11,6 +11,7 @@
 /* Purpose: Spell code (part 3) */
 
 #include "angband.h"
+#include <assert.h>
 
 /* Maximum number of tries for teleporting */
 #define MAX_TRIES 100
@@ -1217,11 +1218,13 @@ bool brand_weapon(int brand_type)
 
 bool brand_weapon_aux(int item)
 {
+    assert(item >= 0);
     apply_magic(&inventory[item], dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
 bool brand_armour_aux(int item)
 {
+    assert(item >= 0);
     apply_magic(&inventory[item], dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
