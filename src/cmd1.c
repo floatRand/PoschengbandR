@@ -20,7 +20,7 @@ static int _max_vampiric_drain(void)
     return 50;
 }
 
-static void _rune_sword_kill(object_type *o_ptr, monster_race *r_ptr)
+/*static*/ void rune_sword_kill(object_type *o_ptr, monster_race *r_ptr)
 {
     if (o_ptr->curse_flags & TRC_PERMA_CURSE)
     {
@@ -3574,7 +3574,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                   && o_ptr->tval == TV_SWORD
                   && o_ptr->sval == SV_RUNESWORD )
                 {
-                    _rune_sword_kill(o_ptr, r_ptr);
+                    rune_sword_kill(o_ptr, r_ptr);
                 }
 
                 if (duelist_attack)

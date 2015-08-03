@@ -3031,28 +3031,28 @@ void do_cmd_debug(void)
 
     case '_':
     {
-        int ct = 10 * 1000;
-        int i;
-        for (i = 0; i < ct; i++)
+        int i, j, ct = 0;
+        object_type obj;
+        char buf[MAX_NLEN];
+
+        object_prep(&obj, 687);
+        apply_magic(&obj, 50, 0);
+        for (i = 0; i < max_r_idx; i++)
         {
-            object_type forge;
-            if (make_object(&forge, AM_GOOD | AM_GREAT | AM_TAILORED))
+            monster_race *r_ptr = &r_info[i];
+            if (r_ptr->level < 30) continue;
+            for (j = 0; j < r_ptr->r_akills; j++)
             {
-                if (!(forge.name1 || forge.name2 || forge.art_name))
-                {
-                    char buf[MAX_NLEN];
-                    identify_item(&forge);
-                    forge.ident |= (IDENT_MENTAL); 
-        
-                    object_desc(buf, &forge, 0);
-                    msg_format("%d) %s", i, buf);
-                }
+                rune_sword_kill(&obj, r_ptr);
+                ct++;
             }
-            else
-            {
-                msg_format("%d) FAILED!!", i);
-            }
-        }        
+        }
+
+        identify_item(&obj);
+        obj.ident |= (IDENT_MENTAL);
+
+        object_desc(buf, &obj, 0);
+        msg_format("%d) %s", ct, buf);
         break;
     }
     default:

@@ -707,6 +707,7 @@ extern void disturb(int stop_search, int flush_output);
 extern void glow_deep_lava_and_bldg(void);
 
 /* cmd1.c */
+extern void rune_sword_kill(object_type *o_ptr, monster_race *r_ptr);
 extern void touch_zap_player(int m_idx);
 extern bool test_hit_fire(int chance, int ac, int vis);
 extern bool random_opponent(int *y, int *x);
