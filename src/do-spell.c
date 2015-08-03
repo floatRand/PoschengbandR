@@ -5744,7 +5744,7 @@ static cptr do_craft_spell(int spell, int mode)
         if (desc) return "Gives ability to pass walls for a while.";
     
         {
-            int base = spell_power(plev / 3);
+            int base = spell_power(plev / 2);
 
             if (info) return info_duration(base, base);
 

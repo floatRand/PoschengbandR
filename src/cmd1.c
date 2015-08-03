@@ -63,7 +63,7 @@ static void _rune_sword_kill(object_type *o_ptr, monster_race *r_ptr)
             if ((r_ptr->level > o_ptr->dd * o_ptr->ds))
             {
                 /*msg_print("Boost dd?");*/
-                if (one_in_((o_ptr->dd + 1) * (o_ptr->ds + 1)) && (unique || one_in_(6)))
+                if (one_in_((o_ptr->dd + 1) * o_ptr->ds) && (unique || one_in_(6)))
                 {
                     if (o_ptr->dd < 9 || one_in_(666))
                     {
@@ -78,7 +78,7 @@ static void _rune_sword_kill(object_type *o_ptr, monster_race *r_ptr)
             if ((r_ptr->level > o_ptr->dd * o_ptr->ds))
             {
                 /*msg_print("Boost ds?");*/
-                if (one_in_((o_ptr->dd + 1) * (o_ptr->ds + 1)) && (unique || one_in_(6)))
+                if (one_in_(o_ptr->dd * (o_ptr->ds + 1)) && (unique || one_in_(6)))
                 {
                     if (o_ptr->ds < 9 || one_in_(666))
                     {
@@ -193,8 +193,8 @@ static void _rune_sword_kill(object_type *o_ptr, monster_race *r_ptr)
             {  
                 o_ptr->curse_flags |= TRC_TY_CURSE;
                 msg_print("Your Rune Sword seeks to dominate you!");
-            /*  if (one_in_(13))
-                    add_flag(o_ptr->art_flags, TR_AGGRAVATE); */
+                if (one_in_(13))
+                    add_flag(o_ptr->art_flags, TR_AGGRAVATE);
                 if (one_in_(13))
                     add_flag(o_ptr->art_flags, TR_DRAIN_EXP);
             }
