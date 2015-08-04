@@ -6041,12 +6041,6 @@ bool make_object(object_type *j_ptr, u32b mode)
     int prob, base;
     byte obj_level;
 
-    /* Since object quality has improved, quantity must decrease.
-    if (!(mode & AM_GREAT) && !(mode & AM_GOOD))
-    {
-        if (randint1(100) < 30 * object_level / 100) return FALSE;
-    } */
-
     /* Chance of "special object" */
     prob = ((mode & AM_GOOD) ? 10 : 1000);
 
