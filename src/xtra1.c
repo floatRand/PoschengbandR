@@ -2349,17 +2349,8 @@ static void calc_spells(void)
     /* Hack -- handle "xtra" mode */
     if (character_xtra) return;
 
-    if ((p_ptr->pclass == CLASS_SORCERER) || 
-        (p_ptr->pclass == CLASS_RED_MAGE) || 
-        (p_ptr->pclass == CLASS_ARCHAEOLOGIST)|| 
-        (p_ptr->pclass == CLASS_TIME_LORD)|| 
-        (p_ptr->pclass == CLASS_WARLOCK)|| 
-        (p_ptr->pclass == CLASS_DUELIST)|| 
-        (p_ptr->pclass == CLASS_RUNE_KNIGHT)|| 
-        (p_ptr->pclass == CLASS_BLOOD_KNIGHT)|| 
-        (p_ptr->pclass == CLASS_MINDCRAFTER)|| 
-        (p_ptr->pclass == CLASS_PSION) ||
-        (p_ptr->pclass == CLASS_WILD_TALENT))
+    if ( p_ptr->pclass == CLASS_SORCERER
+      || p_ptr->pclass == CLASS_RED_MAGE )
     {
         p_ptr->new_spells = 0;
         return;
