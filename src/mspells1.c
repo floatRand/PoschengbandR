@@ -1571,6 +1571,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
           && (f6 & RF6_TELE_TO) 
           && m_ptr->cdis <= (MAX_RANGE * 2/3)
           && r_ptr->level >= 40
+          && (r_ptr->flags1 & RF1_UNIQUE)
           && !(cave[m_ptr->fy][m_ptr->fx].info & CAVE_ICKY) )
         {
             if (one_in_(15))
