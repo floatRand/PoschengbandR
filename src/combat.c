@@ -84,17 +84,17 @@ static _blow_info_t _get_blow_info(int hand)
         result.num = 400; result.wgt = 100; result.mul = 20; break;
 
     case CLASS_WARLOCK:
-        result.num = 350; result.wgt = 70; result.mul = 25; 
+        result.num = 400; result.wgt = 70; result.mul = 25;
         if (p_ptr->psubclass == PACT_DRAGON) 
         {
             result.mul = 40;
-            if (p_ptr->lev >= 35) result.num = 550;
-            else result.num = 450;
+            if (p_ptr->lev >= 40) result.num = 550;
+            else result.num = 500;
         }
         break;
 
     case CLASS_PSION:
-        result.num = 350; result.wgt = 100; result.mul = 30; break;
+        result.num = 400; result.wgt = 100; result.mul = 30; break;
 
     case CLASS_PRIEST:
     case CLASS_MAGIC_EATER:
@@ -247,8 +247,11 @@ static _blow_info_t _get_blow_info(int hand)
         break;
     }
 
-    if (hex_spelling(HEX_XTRA_MIGHT) || hex_spelling(HEX_BUILDING)) { result.wgt /= 2; result.mul += 20; }
-    if (p_ptr->tim_building_up) { result.wgt /= 2; result.mul += 20; }
+    if (hex_spelling(HEX_XTRA_MIGHT) || hex_spelling(HEX_BUILDING) || p_ptr->tim_building_up)
+    {
+        result.wgt /= 2;
+        result.mul += 20;
+    }
 
     /* Xorns and Mariliths have multiple sets of arms */
     if (arm > 0)
