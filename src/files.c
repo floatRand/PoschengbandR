@@ -3915,6 +3915,7 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_object_counts_imp(fff, TV_POTION, SV_POTION_INC_CON);
     dump_aux_object_counts_imp(fff, TV_POTION, SV_POTION_INC_CHR);
     dump_aux_object_counts_imp(fff, TV_POTION, SV_POTION_NEW_LIFE);
+    dump_aux_object_counts_imp(fff, TV_POTION, SV_POTION_EXPERIENCE);
     dump_aux_group_counts_imp(fff, _kind_is_potion, "Totals");
 
     fprintf(fff, "\n  Scrolls              Found Bought  Used  Dest\n");
