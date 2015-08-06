@@ -3922,13 +3922,19 @@ static void _process_player(void)
         {
             p_ptr->elaborate_defense--;
             if (p_ptr->elaborate_defense <= 0)
+            {
                 p_ptr->update |= PU_BONUS;
+                p_ptr->redraw |= PR_ARMOR;
+            }
         }
         if (p_ptr->cloak_of_shadows)
         {
             p_ptr->cloak_of_shadows--;
             if (p_ptr->cloak_of_shadows <= 0)
+            {
                 p_ptr->update |= PU_BONUS;
+                p_ptr->redraw |= PR_ARMOR;
+            }
         }
     }
 }
@@ -4001,8 +4007,12 @@ static void _move_player(void)
     {
         if (p_ptr->speciality_equip && p_ptr->lev >= 5)
         {
+            if (!p_ptr->cloak_of_shadows)
+            {
+                p_ptr->update |= PU_BONUS;
+                p_ptr->redraw |= PR_ARMOR;
+            }
             p_ptr->cloak_of_shadows = 1;
-            p_ptr->update |= PU_BONUS;
         }
     }
     else if (p_ptr->psubclass == WEAPONMASTER_DIGGERS)

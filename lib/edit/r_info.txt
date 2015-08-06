@@ -4172,7 +4172,7 @@ D:A twelve foot tall giant covered in furs.
 N:279:Griffon
 G:H:u
 I:115:30d10:20:50:70:250
-W:15:1:50:350:0:0
+W:15:1:50:150:0:0
 B:SHOOT:HURT:4d5
 B:CLAW:HURT:2d3
 B:CLAW:HURT:2d3

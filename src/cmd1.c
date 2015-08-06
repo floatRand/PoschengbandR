@@ -2938,6 +2938,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 if (update)
                 {
                     p_ptr->update |= PU_BONUS;
+                    p_ptr->redraw |= PR_ARMOR;
                     handle_stuff();
                 }
             }
