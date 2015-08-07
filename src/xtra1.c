@@ -4411,12 +4411,6 @@ void calc_bonuses(void)
                 info_ptr->xtra_blow = 0;
             }
 
-            if (o_ptr->name1 == ART_EVISCERATOR) 
-            {
-                info_ptr->base_blow = 100;
-                info_ptr->xtra_blow = 0;
-            }
-
             if (NUM_BLOWS(i) < 0)
             {
                 info_ptr->base_blow = 0;

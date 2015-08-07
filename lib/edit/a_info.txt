@@ -2902,12 +2902,13 @@ F:CON | SUST_STR | SUST_INT | SUST_WIS | SUST_DEX | SUST_CON | SUST_CHR
 F:RES_TIME | HOLD_LIFE | 
 D:Forged you know not when, this ring seems to have withstood the test of time.
 
-N:275:'Eviscerator'
-I:23:4:0
+N:275:'Assassinator'
+I:23:4:4
 W:44:250:12:110000
 P:0:1d4:44:4:0
-F:VORPAL
-D:A small dagger, impossibly sharp.
+F:VORPAL | STEALTH | DEX
+D:It is the ultimate weapon of the assassin who prefers to dispatch enemies
+D:while they sleep.
 
 N:276:of the Bard
 I:30:2:4

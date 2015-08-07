@@ -1544,7 +1544,7 @@ enum _mimic_types {
 #define ART_BALLISTA        271
 #define ART_KAMIKAZE_ROBE   272
 #define ART_RAILGUN         273
-#define ART_EVISCERATOR     275
+#define ART_ASSASSINATOR    275
 #define ART_STOMPER         277
 #define ART_GONG            278
 

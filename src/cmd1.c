@@ -2693,7 +2693,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     int             dd, ds;
     bool            hit_ct = 0;
     bool            poison_needle = FALSE;
-    bool            eviscerator = FALSE;
 
     if (!c_ptr->m_idx)
     {
@@ -2814,7 +2813,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         if (r_ptr->level + 10 > p_ptr->lev)
             skills_martial_arts_gain();
     }
-    
+
+    if (o_ptr && o_ptr->name1 == ART_ASSASSINATOR && MON_CSLEEP(m_ptr) && m_ptr->ml)
+    {
+        mode = ROGUE_ASSASSINATE;
+    }
+
+    /* Wake up monster */
     set_monster_csleep(c_ptr->m_idx, 0);
     monster_desc(m_name, m_ptr, 0);
 
@@ -2851,11 +2856,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     if (o_ptr && o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE) 
     {
         poison_needle = TRUE;
-        num_blow = 1;
-    }
-    if (o_ptr && o_ptr->name1 == ART_EVISCERATOR) 
-    {
-        eviscerator = TRUE;
         num_blow = 1;
     }
 
@@ -2923,8 +2923,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
             if (have_flag(flgs, TR_VORPAL2))
                 vorpal_chance = 2;
-
-            if (eviscerator && !duelist_attack) num_blow++;
 
             hit_ct++;
             sound(SOUND_HIT);
@@ -4004,8 +4002,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         {
             backstab = FALSE; /* Clumsy! */
             fuiuchi = FALSE; /* Clumsy! */
-
-            if (eviscerator && !duelist_attack && one_in_(2)) num_blow++;
 
             if ( o_ptr
               && o_ptr->tval == TV_POLEARM 

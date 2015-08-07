@@ -262,9 +262,6 @@ static _blow_info_t _get_blow_info(int hand)
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE) 
         result.num = 100;
 
-    if (o_ptr->name1 == ART_EVISCERATOR) 
-        result.num = 100;
-
     return result;
 }
 
