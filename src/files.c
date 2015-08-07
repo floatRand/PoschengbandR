@@ -3848,7 +3848,7 @@ static bool _mon_is_unique(int r_idx)
         return TRUE;
     return FALSE;
 }
-static void dump_aux_kill_counts_imp(FILE *fff, _mon_p p, cptr text)
+static void dump_aux_kill_counts_imp(FILE *fff, _mon_p p, cptr text, int total)
 {
     int i;
     int kills = 0;
@@ -3870,16 +3870,18 @@ static void dump_aux_kill_counts_imp(FILE *fff, _mon_p p, cptr text)
     {
         fprintf(
             fff,
-            "  %-20.20s %5d\n",
+            "  %-20.20s %5d %3d.%1d%%\n",
             text,
-            kills
+            kills,
+            kills*100/total,
+            (kills*1000/total)%10
         );
     }
 }
 
 static void dump_aux_object_counts(FILE *fff)
 {
-    int i;
+    int i, total_kills = _kills();
     counts_t totals = {0};
 
     fprintf(fff, "\n================================== Statistics =================================\n\n");
@@ -4006,27 +4008,27 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_ego_counts_imp(fff, EGO_BOOTS_FEANOR, "Boots of Feanor");
 
     /* Monsters */
-    fprintf(fff, "\n  Monsters             Kills\n");
-    fprintf(fff,   "  --------------------------\n");
-    dump_aux_kill_counts_imp(fff, _mon_is_animal, "Animals");
-    dump_aux_kill_counts_imp(fff, _mon_is_breeder, "Breeders");
-    dump_aux_kill_counts_imp(fff, _mon_is_demon, "Demons");
-    dump_aux_kill_counts_imp(fff, _mon_is_dragon, "Dragons");
-    dump_aux_kill_counts_imp(fff, _mon_is_giant, "Giants");
-    dump_aux_kill_counts_imp(fff, _mon_is_hound, "Hounds");
-    dump_aux_kill_counts_imp(fff, _mon_is_human, "Humans");
-    dump_aux_kill_counts_imp(fff, _mon_is_orc, "Orcs");
-    dump_aux_kill_counts_imp(fff, _mon_is_troll, "Trolls");
-    dump_aux_kill_counts_imp(fff, _mon_is_undead, "Undead");
-    dump_aux_kill_counts_imp(fff, _mon_is_unique, "Uniques");
+    fprintf(fff, "\n  Monsters             Kills   Pct\n");
+    fprintf(fff,   "  --------------------------------\n");
+    dump_aux_kill_counts_imp(fff, _mon_is_animal, "Animals", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_breeder, "Breeders", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_demon, "Demons", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_dragon, "Dragons", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_giant, "Giants", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_hound, "Hounds", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_human, "Humans", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_orc, "Orcs", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_troll, "Trolls", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_undead, "Undead", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_unique, "Uniques", total_kills);
     fprintf(fff, "\n");
-    dump_aux_kill_counts_imp(fff, _mon_is_evil, "Evil Monsters");
-    dump_aux_kill_counts_imp(fff, _mon_is_good, "Good Monsters");
-    dump_aux_kill_counts_imp(fff, _mon_is_neutral, "Neutral Monsters");
+    dump_aux_kill_counts_imp(fff, _mon_is_evil, "Evil Monsters", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_good, "Good Monsters", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_is_neutral, "Neutral Monsters", total_kills);
     fprintf(fff, "\n");
-    dump_aux_kill_counts_imp(fff, _mon_drops_good, "Good Droppers");
-    dump_aux_kill_counts_imp(fff, _mon_drops_great, "Great Droppers");
-    fprintf(fff, "  %-20.20s %5d\n", "Totals", _kills());
+    dump_aux_kill_counts_imp(fff, _mon_drops_good, "Good Droppers", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_drops_great, "Great Droppers", total_kills);
+    fprintf(fff, "  %-20.20s %5d\n", "Totals", total_kills);
 
     fprintf(fff, "\n");
 }
