@@ -3201,6 +3201,9 @@ void calc_bonuses(void)
     p_ptr->shooter_info.to_mult = 0;
     p_ptr->shooter_info.tval_ammo = 0;
 
+    for (i = 0; i < TR_FLAG_SIZE; i++)
+        p_ptr->shooter_info.flags[i] = 0;
+
     if (p_ptr->tim_speed_essentia)
         p_ptr->shooter_info.num_fire += 100;
 
@@ -3374,26 +3377,31 @@ void calc_bonuses(void)
     {
         add_flag(p_ptr->weapon_info[0].flags, TR_BRAND_ACID);
         add_flag(p_ptr->weapon_info[1].flags, TR_BRAND_ACID);
+        add_flag(p_ptr->shooter_info.flags, TR_BRAND_ACID);
     }
     if (p_ptr->special_attack & ATTACK_COLD)
     {
         add_flag(p_ptr->weapon_info[0].flags, TR_BRAND_COLD);
         add_flag(p_ptr->weapon_info[1].flags, TR_BRAND_COLD);
+        add_flag(p_ptr->shooter_info.flags, TR_BRAND_COLD);
     }
     if (p_ptr->special_attack & ATTACK_FIRE)
     {
         add_flag(p_ptr->weapon_info[0].flags, TR_BRAND_FIRE);
         add_flag(p_ptr->weapon_info[1].flags, TR_BRAND_FIRE);
+        add_flag(p_ptr->shooter_info.flags, TR_BRAND_FIRE);
     }
     if (p_ptr->special_attack & ATTACK_ELEC)
     {
         add_flag(p_ptr->weapon_info[0].flags, TR_BRAND_ELEC);
         add_flag(p_ptr->weapon_info[1].flags, TR_BRAND_ELEC);
+        add_flag(p_ptr->shooter_info.flags, TR_BRAND_ELEC);
     }
     if (p_ptr->special_attack & ATTACK_POIS)
     {
         add_flag(p_ptr->weapon_info[0].flags, TR_BRAND_POIS);
         add_flag(p_ptr->weapon_info[1].flags, TR_BRAND_POIS);
+        add_flag(p_ptr->shooter_info.flags, TR_BRAND_POIS);
     }
 
     if (p_ptr->tim_device_power)
