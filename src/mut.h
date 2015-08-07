@@ -136,8 +136,9 @@
 #define MUT_DRACONIAN_KIN 127
 #define MUT_DRACONIAN_LORE 128
 #define MUT_DRACONIAN_RESISTANCE 129
+#define MUT_DRACONIAN_METAMORPHOSIS 130
 
-#define MAX_MUTATIONS      130   /* see also MUT_FLAG_SIZE in defines.h */
+#define MAX_MUTATIONS      131   /* see also MUT_FLAG_SIZE in defines.h */
 
 typedef enum {
     MUT_RATING_AWFUL = -2,
@@ -209,6 +210,7 @@ extern void draconian_breath_mut(int cmd, variant *res);
 extern void draconian_kin_mut(int cmd, variant *res);
 extern void draconian_lore_mut(int cmd, variant *res);
 extern void draconian_magic_resistance_mut(int cmd, variant *res);
+extern void draconian_metamorphosis_mut(int cmd, variant *res);
 extern void draconian_regen_mut(int cmd, variant *res);
 extern void draconian_resistance_mut(int cmd, variant *res);
 extern void draconian_shield_mut(int cmd, variant *res);

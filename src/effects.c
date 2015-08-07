@@ -5767,6 +5767,8 @@ void change_race(int new_race, cptr effect_msg)
             mut_unlock(idx);
             mut_lose(idx);
             p_ptr->draconian_power = -1;
+            if (idx == MUT_DRACONIAN_METAMORPHOSIS)
+                equip_on_change_race();
         }
         p_ptr->psubrace = 0;
     }

@@ -141,6 +141,7 @@ static mutation_info _mutations[MAX_MUTATIONS] =
     {MUT_RATING_GOOD,       MUT_TYPE_ACTIVATION,  A_CHR, 0, {30,  30,  70, draconian_kin_mut}},
     {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_lore_mut}},
     {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_resistance_mut}},
+    {MUT_RATING_GOOD,                    0,             0, 0, {0,  0,   0, draconian_metamorphosis_mut}},
 
 };
 
@@ -582,6 +583,31 @@ bool mut_draconian_pred(int mut_idx)
     case MUT_DRACONIAN_LORE:
     case MUT_DRACONIAN_RESISTANCE:
         return TRUE;
+
+    case MUT_DRACONIAN_METAMORPHOSIS:
+        /* OK, what classes will actually work with no bow or weapon slots? */
+        switch (p_ptr->pclass)
+        {
+        case CLASS_MONK:
+        case CLASS_BEASTMASTER: /* No riding, either! */
+        case CLASS_ARCHER:
+        case CLASS_SAMURAI:
+        case CLASS_FORCETRAINER:
+        case CLASS_CAVALRY:
+        case CLASS_WEAPONSMITH:
+        case CLASS_NINJA:
+        case CLASS_SNIPER:
+        case CLASS_DUELIST:
+        case CLASS_WEAPONMASTER:
+        case CLASS_NECROMANCER:
+        case CLASS_MAULER:
+        case CLASS_MYSTIC:
+            return FALSE;
+            break;
+        default:
+            return TRUE;
+        }
+        break;
     }
     return FALSE;
 }

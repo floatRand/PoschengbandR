@@ -917,6 +917,18 @@ static void _draconian_calc_bonuses(void)
         res_add(RES_NETHER);
         break;
     }
+    if (mut_present(MUT_DRACONIAN_METAMORPHOSIS))
+    {
+        int l = p_ptr->lev;
+        int to_a = l/2 + l*l/100 + l*l*l/5000;
+        int ac = 15 + (l/10)*5;
+
+        p_ptr->ac += ac;
+        p_ptr->dis_ac += ac;
+
+        p_ptr->to_a += to_a;
+        p_ptr->dis_to_a += to_a;
+    }
 }
 static void _draconian_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
@@ -954,6 +966,83 @@ static void _draconian_get_flags(u32b flgs[TR_FLAG_SIZE])
         break;
     }
 }
+static int _draconian_attack_level(void)
+{
+    int l = p_ptr->lev * 2;
+    switch (p_ptr->psubrace)
+    {
+    case DRACONIAN_RED:
+    case DRACONIAN_WHITE:
+        l = MAX(1, l * 105 / 100);
+        break;
+
+    case DRACONIAN_BLACK:
+    case DRACONIAN_GREEN:
+        break;
+
+    case DRACONIAN_BLUE:
+        l = MAX(1, l * 95 / 100);
+        break;
+
+    case DRACONIAN_CRYSTAL:
+    case DRACONIAN_BRONZE:
+    case DRACONIAN_GOLD:
+        l = MAX(1, l * 90 / 100);
+        break;
+
+    case DRACONIAN_SHADOW:
+        l = MAX(1, l * 85 / 100);
+        break;
+    }
+
+    return MAX(1, l);
+}
+static void _draconian_calc_innate_attacks(void)
+{
+    int l = _draconian_attack_level();
+    int l2 = p_ptr->lev; /* Note: Using attack_level() for both dd and ds gives too much variation */
+    int to_d = 0;
+    int to_h = l2*3/5;
+
+    /* Claws */
+    {
+        innate_attack_t    a = {0};
+
+        a.dd = 1 + l / 15;
+        a.ds = 3 + l2 / 16; /* d6 max for everybody */
+        a.to_h += to_h;
+        a.to_d += to_d;
+
+        a.weight = 100 + l;
+        calc_innate_blows(&a, 400);
+        a.msg = "You claw %s.";
+        a.name = "Claw";
+
+        p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
+    }
+    /* Bite */
+    {
+        innate_attack_t    a = {0};
+
+        a.dd = 1 + l2 / 10; /* 6d max for everybody */
+        a.ds = 4 + l / 6;
+        a.to_h += to_h;
+        a.to_d += to_d;
+
+        a.weight = 200 + 2 * l;
+
+        if (p_ptr->lev >= 40)
+            calc_innate_blows(&a, 200);
+        else if (p_ptr->lev >= 35)
+            calc_innate_blows(&a, 150);
+        else
+            a.blows = 100;
+        a.msg = "You bite %s.";
+        a.name = "Bite";
+
+        p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
+    }
+}
 static void _draconian_gain_power()
 {
     if (p_ptr->draconian_power < 0)
@@ -961,11 +1050,18 @@ static void _draconian_gain_power()
         int idx = mut_gain_choice(mut_draconian_pred);
         mut_lock(idx);
         p_ptr->draconian_power = idx;
+        if (idx == MUT_DRACONIAN_METAMORPHOSIS)
+        {
+            msg_print("You are transformed into a dragon!");
+            equip_on_change_race();
+        }
     }
     else if (!mut_present(p_ptr->draconian_power))
     {
         mut_gain(p_ptr->draconian_power);
         mut_lock(p_ptr->draconian_power);
+        if (p_ptr->draconian_power == MUT_DRACONIAN_METAMORPHOSIS)
+            equip_on_change_race();
     }
 }
 static void _draconian_gain_level(int new_level)
@@ -1077,6 +1173,13 @@ race_t *draconian_get_race_t(int psubrace)
             break;
         }
         subrace_init = psubrace;
+    }
+    me.equip_template = NULL;
+    me.calc_innate_attacks = NULL;
+    if (mut_present(MUT_DRACONIAN_METAMORPHOSIS))
+    {
+        me.equip_template = &b_info[20];
+        me.calc_innate_attacks = _draconian_calc_innate_attacks;
     }
     return &me;
 }

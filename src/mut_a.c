@@ -659,6 +659,25 @@ void draconian_magic_resistance_mut(int cmd, variant *res)
     }
 }
 
+void draconian_metamorphosis_mut(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Metamorphosis");
+        break;
+    case SPELL_MUT_DESC:
+        var_set_string(res, "You have metamorphosed into a Dragon!");
+        break;
+    case SPELL_HELP_DESC:
+        var_set_string(res, "Your body will transform into a dragon (e.g. 6 ring slots and no weapons)");
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 void draconian_regen_mut(int cmd, variant *res)
 {
     switch (cmd)
