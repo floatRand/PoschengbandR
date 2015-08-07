@@ -19489,7 +19489,7 @@ D:A human, clothed in a blue robe, moving with speed uncanny.
 
 N:1092:Chronomage
 G:p:b
-I:125:100d10:20:70:20:170
+I:130:100d10:20:70:20:170
 W:40:3:80:1000:0:0
 B:HIT:HURT:3d7
 B:HIT:HURT:3d7
@@ -19499,13 +19499,13 @@ F:DROP_SKELETON | DROP_CORPSE | HUMAN |
 F:SMART | OPEN_DOOR | TAKE_ITEM | BASH_DOOR | 
 P:Copy:Demigod:Time-Lord
 P:Speed:+5
-S:1_IN_3 | HASTE | SLOW | TELE_LEVEL
+S:1_IN_3 | HASTE | SLOW | TELE_LEVEL | BR_TIME
 D:A human, clothed in a blue robe, moving with speed uncanny.
 D:He seems both young and old.
 
 N:1093:Temporal Champion
 G:p:b
-I:131:100d30:20:100:20:170
+I:150:100d30:20:100:20:170
 W:60:3:999:4000:0:0
 B:HIT:TIME:10d5
 B:HIT:TIME:10d5
@@ -19517,7 +19517,7 @@ F:SMART | OPEN_DOOR | TAKE_ITEM | BASH_DOOR |
 F:NO_CONF | NO_SLEEP
 P:Copy:Dunadan:Time-Lord
 P:Speed:+10
-S:1_IN_3 | HASTE | SLOW | TELE_LEVEL
+S:1_IN_3 | HASTE | SLOW | TELE_LEVEL | BR_TIME
 D:A human, clothed in a blue robe, moving with speed uncanny.
 D:He seems to be in several places at once.
 
