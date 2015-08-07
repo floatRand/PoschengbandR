@@ -132,6 +132,16 @@ static mutation_info _mutations[MAX_MUTATIONS] =
     {MUT_RATING_GOOD,                     0,             0, 0, {0,  0,   0, speed_reader_mut}},
     {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, fell_sorcery_mut}},
     {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, tread_softly_mut}},
+
+    {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_shield_mut}},
+    {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_magic_resistance_mut}},
+    {MUT_RATING_GOOD,       MUT_TYPE_ACTIVATION,  A_DEX, 0, {30,  20,   0, draconian_strike_mut}},
+    {MUT_RATING_GOOD,                    0,             0, 0, {0,  0,   0, draconian_breath_mut}},
+    {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_regen_mut}},
+    {MUT_RATING_GOOD,       MUT_TYPE_ACTIVATION,  A_CHR, 0, {30,  30,  70, draconian_kin_mut}},
+    {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_lore_mut}},
+    {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_resistance_mut}},
+
 };
 
 int _mut_prob_gain(int i)
@@ -555,6 +565,23 @@ bool mut_demigod_pred(int mut_idx)
     case MUT_FANTASTIC_FRENZY:
         if (p_ptr->pclass != CLASS_BERSERKER) return TRUE;
         break;
+    }
+    return FALSE;
+}
+
+bool mut_draconian_pred(int mut_idx)
+{
+    switch (mut_idx)
+    {
+    case MUT_DRACONIAN_SHIELD:
+    case MUT_DRACONIAN_MAGIC_RES:
+    case MUT_DRACONIAN_STRIKE:
+    case MUT_DRACONIAN_BREATH:
+    case MUT_DRACONIAN_REGEN:
+    case MUT_DRACONIAN_KIN:
+    case MUT_DRACONIAN_LORE:
+    case MUT_DRACONIAN_RESISTANCE:
+        return TRUE;
     }
     return FALSE;
 }

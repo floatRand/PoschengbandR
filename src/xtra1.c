@@ -3274,6 +3274,7 @@ void calc_bonuses(void)
     p_ptr->free_act = FALSE;
     p_ptr->slow_digest = FALSE;
     p_ptr->regenerate = FALSE;
+    p_ptr->super_regenerate = FALSE;
     p_ptr->can_swim = FALSE;
     p_ptr->levitation = FALSE;
     p_ptr->hold_life = FALSE;

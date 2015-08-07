@@ -1355,6 +1355,7 @@ struct player_type
     u32b muta[MUT_FLAG_SIZE];
     u32b muta_lock[MUT_FLAG_SIZE];   /* Mutations that can not be removed! */
     s16b demigod_power[MAX_DEMIGOD_POWERS];
+    s16b draconian_power;
 
     s16b virtues[8];
     s16b vir_types[8];
@@ -1532,6 +1533,7 @@ struct player_type
     bool free_act;        /* Never paralyzed */
     bool see_inv;        /* Can see invisible */
     bool regenerate;    /* Regenerate hit pts */
+    bool super_regenerate;
     bool hold_life;        /* Resist life draining */
 
     bool loremaster;

@@ -571,7 +571,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
     monster_race *r_ptr = &r_info[m_ptr->r_idx];
     const int monk_elem_slay = 17;
 
-    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_ACID) || mode == MYSTIC_ACID)
+    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_ACID) || mode == MYSTIC_ACID || mode == DRACONIAN_STRIKE_ACID)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)
         {
@@ -588,7 +588,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
-    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_ELEC) || mode == MYSTIC_ELEC)
+    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_ELEC) || mode == MYSTIC_ELEC || mode == DRACONIAN_STRIKE_ELEC)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)
         {
@@ -605,7 +605,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
-    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_FIRE) || mode == MYSTIC_FIRE)
+    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_FIRE) || mode == MYSTIC_FIRE || mode == DRACONIAN_STRIKE_FIRE)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)
         {
@@ -628,7 +628,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
-    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_COLD) || mode == MYSTIC_COLD)
+    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_COLD) || mode == MYSTIC_COLD || mode == DRACONIAN_STRIKE_COLD)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)
         {
@@ -651,7 +651,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
-    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_POIS) || mode == MYSTIC_POIS)
+    if (have_flag(p_ptr->weapon_info[0].flags, TR_BRAND_POIS) || mode == MYSTIC_POIS || mode == DRACONIAN_STRIKE_POIS)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)
         {
@@ -705,8 +705,27 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
     if (thrown)
         object_flags(o_ptr, flgs);
     else
+    {
         weapon_flags(hand, flgs);
-
+        switch (mode)
+        {
+        case DRACONIAN_STRIKE_ACID:
+            add_flag(flgs, TR_BRAND_ACID);
+            break;
+        case DRACONIAN_STRIKE_ELEC:
+            add_flag(flgs, TR_BRAND_ELEC);
+            break;
+        case DRACONIAN_STRIKE_FIRE:
+            add_flag(flgs, TR_BRAND_FIRE);
+            break;
+        case DRACONIAN_STRIKE_COLD:
+            add_flag(flgs, TR_BRAND_COLD);
+            break;
+        case DRACONIAN_STRIKE_POIS:
+            add_flag(flgs, TR_BRAND_POIS);
+            break;
+        }
+    }
     /* Chaos Weapons now have random slay effects, and the slay so
        chosen will augment any existing slay of the same type. */
     if (have_flag(flgs, TR_CHAOTIC))
@@ -2961,6 +2980,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             if ( have_flag(flgs, TR_VAMPIRIC) 
               || chaos_effect == 1 
               || mode == HISSATSU_DRAIN 
+              || mode == DRACONIAN_STRIKE_VAMP
               || hex_spelling(HEX_VAMP_BLADE)
               || weaponmaster_get_toggle() == TOGGLE_BLOOD_BLADE
               || mauler_get_toggle() == MAULER_TOGGLE_DRAIN )
@@ -2973,7 +2993,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             if (!zantetsu_mukou) /* No jelly cuts with Zantetsuken */
             {
                 if (have_flag(flgs, TR_VORPAL) && p_ptr->vorpal && vorpal_chance > 3) vorpal_chance = 3;
-                if (have_flag(flgs, TR_VORPAL) || have_flag(flgs, TR_VORPAL2) || hex_spelling(HEX_RUNESWORD) || p_ptr->vorpal)
+
+                if ( have_flag(flgs, TR_VORPAL)
+                  || have_flag(flgs, TR_VORPAL2)
+                  || hex_spelling(HEX_RUNESWORD)
+                  || p_ptr->vorpal
+                  || mode == DRACONIAN_STRIKE_VORPAL )
                 {
                     if (randint1(vorpal_chance*3/2) == 1)
                         vorpal_cut = TRUE;
@@ -3052,6 +3077,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         m_ptr->mspeed -= 10;
                     }
                 }
+
+                if (mode == DRACONIAN_STRIKE_STUN)
+                    stun_effect *= 2;
 
                 /* Massive Hack: Monk stunning is now greatly biffed! */
                 if (r_ptr->flags1 & RF1_UNIQUE) stun_effect /= 2;
@@ -3618,7 +3646,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     m_ptr->maxhp -= amt;
                     msg_format("%^s seems weakened.", m_name);
                 }
-                if (mode == MAULER_STUNNING_BLOW)
+                if (mode == MAULER_STUNNING_BLOW || mode == DRACONIAN_STRIKE_STUN)
                 {
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
@@ -3890,6 +3918,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
               || chaos_effect == 3 
               || mode == HISSATSU_CONF 
               || mode == MYSTIC_CONFUSE
+              || mode == DRACONIAN_STRIKE_CONF
               || hex_spelling(HEX_CONFUSION)
               || (giant_is_(GIANT_TITAN) && p_ptr->lev >= 30 && one_in_(5)) )
             {

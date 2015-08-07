@@ -265,11 +265,6 @@ void self_knowledge(void)
                 info[i++] = Dummy;
             }
             break;
-        case RACE_DRACONIAN:
-            sprintf(Dummy, "You can breathe, dam. %d (cost %d).", 2 * plev, plev);
-
-            info[i++] = Dummy;
-            break;
         case RACE_MIND_FLAYER:
             if (plev > 14)
                 sprintf(Dummy, "You can mind blast your enemies, dam %d (cost 12).", plev);

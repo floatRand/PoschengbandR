@@ -17,8 +17,8 @@
 
 
 #define VER_MAJOR 3
-#define VER_MINOR 4
-#define VER_PATCH 6
+#define VER_MINOR 5
+#define VER_PATCH 0
 #define VER_EXTRA 0
 
 /*
@@ -723,6 +723,17 @@
 #define DRAGON_STEEL    13
 #define DRAGON_MAX      14
 
+#define DRACONIAN_RED      0
+#define DRACONIAN_WHITE    1
+#define DRACONIAN_BLUE     2
+#define DRACONIAN_BLACK    3
+#define DRACONIAN_GREEN    4
+#define DRACONIAN_BRONZE   5
+#define DRACONIAN_CRYSTAL  6
+#define DRACONIAN_GOLD     7
+#define DRACONIAN_SHADOW   8
+#define DRACONIAN_MAX      9
+
 #define GIANT_FIRE      0
 #define GIANT_FROST     1
 #define GIANT_STORM     2
@@ -784,6 +795,7 @@ enum _mimic_types {
 #define giant_is_(B) (prace_is_(RACE_MON_GIANT) && p_ptr->psubrace == (B))
 #define demon_is_(B) (prace_is_(RACE_MON_DEMON) && p_ptr->psubrace == (B))
 #define elemental_is_(B) (prace_is_(RACE_MON_ELEMENTAL) && p_ptr->psubrace == (B))
+#define draconian_is_(B) (prace_is_(RACE_DRACONIAN) && p_ptr->psubrace == (B))
 
 
 /*
@@ -5384,6 +5396,16 @@ extern int PlayerUID;
 #define DRAGON_SMITE_EVIL    74
 
 #define WEAPONMASTER_CLEAVE  75
+
+#define DRACONIAN_STRIKE_FIRE 76
+#define DRACONIAN_STRIKE_COLD 77
+#define DRACONIAN_STRIKE_ELEC 78
+#define DRACONIAN_STRIKE_ACID 79
+#define DRACONIAN_STRIKE_POIS 80
+#define DRACONIAN_STRIKE_CONF 81
+#define DRACONIAN_STRIKE_STUN 82
+#define DRACONIAN_STRIKE_VORPAL 83
+#define DRACONIAN_STRIKE_VAMP 84
 
 #define HISSATSU_IAI    100
 

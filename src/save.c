@@ -734,6 +734,7 @@ static void wr_extra(savefile_ptr file)
         savefile_write_u32b(file, p_ptr->muta_lock[i]);
     for (i = 0; i < MAX_DEMIGOD_POWERS; ++i)
         savefile_write_s16b(file, p_ptr->demigod_power[i]);
+    savefile_write_s16b(file, p_ptr->draconian_power);
 
     for (i = 0; i<8; i++)
         savefile_write_s16b(file, p_ptr->virtues[i]);

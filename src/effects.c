@@ -5759,6 +5759,17 @@ void change_race(int new_race, cptr effect_msg)
         }
         p_ptr->psubrace = 0;
     }
+    if (old_race == RACE_DRACONIAN)
+    {
+        int idx = p_ptr->draconian_power;
+        if (idx >= 0)
+        {
+            mut_unlock(idx);
+            mut_lose(idx);
+            p_ptr->draconian_power = -1;
+        }
+        p_ptr->psubrace = 0;
+    }
 
     msg_format("You turn into %s %s%s!", (!effect_msg[0] && is_a_vowel(title[0]) ? "an" : "a"), effect_msg, title);
 
@@ -5783,7 +5794,7 @@ void change_race(int new_race, cptr effect_msg)
     /* The experience level may be modified */
     check_experience();
 
-    if (p_ptr->prace == RACE_HUMAN || p_ptr->prace == RACE_DEMIGOD)
+    if (p_ptr->prace == RACE_HUMAN || p_ptr->prace == RACE_DEMIGOD || p_ptr->prace == RACE_DRACONIAN)
     {
         race_t *race_ptr = get_true_race_t();
         if (race_ptr != NULL && race_ptr->gain_level != NULL)

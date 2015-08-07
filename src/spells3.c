@@ -4870,6 +4870,8 @@ bool summon_kin_player(int level, int y, int x, u32b mode)
                 break;
             case RACE_DRACONIAN:
                 summon_kin_type = 'd';
+                if (p_ptr->lev >= 40)
+                    summon_kin_type = 'D';
                 break;
             case RACE_GOLEM:
             case RACE_ANDROID:

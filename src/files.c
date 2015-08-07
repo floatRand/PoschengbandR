@@ -1821,6 +1821,30 @@ static void player_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_STEALTH);
     }
 
+    if (mut_present(MUT_DRACONIAN_SHIELD))
+    {
+        switch (p_ptr->psubrace)
+        {
+        case DRACONIAN_RED:
+            add_flag(flgs, TR_SH_FIRE);
+            break;
+        case DRACONIAN_WHITE:
+            add_flag(flgs, TR_SH_COLD);
+            break;
+        case DRACONIAN_BLUE:
+            add_flag(flgs, TR_SH_ELEC);
+            break;
+        case DRACONIAN_CRYSTAL:
+            add_flag(flgs, TR_SH_SHARDS);
+            break;
+        }
+    }
+
+    if (mut_present(MUT_DRACONIAN_REGEN))
+    {
+        add_flag(flgs, TR_REGEN);
+    }
+
     if (p_ptr->personality == PERS_SEXY)
         add_flag(flgs, TR_AGGRAVATE);
     if (p_ptr->personality == PERS_MUNCHKIN)
@@ -3065,6 +3089,8 @@ void display_player(int mode)
         }
         else if (p_ptr->prace == RACE_DEMIGOD)
             _print_field(5, 1, "Subrace    :", demigod_info[p_ptr->psubrace].name, TERM_L_BLUE, 0);
+        else if (p_ptr->prace == RACE_DRACONIAN)
+            _print_field(5, 1, "Subrace    :", race_ptr->subname, TERM_L_BLUE, 0);
         else
             _print_field(5, 1, "Subrace    :", "None", TERM_L_BLUE, 0);
 

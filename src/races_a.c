@@ -747,9 +747,131 @@ race_t *dark_elf_get_race_t(void)
 /****************************************************************
  * Draconian
  ****************************************************************/
+static int _draconian_breath_amount(void)
+{
+    int l = p_ptr->lev;
+    int amt = 0;
+
+    switch (p_ptr->psubrace)
+    {
+    case DRACONIAN_RED:
+    case DRACONIAN_WHITE:
+    case DRACONIAN_BLUE:
+    case DRACONIAN_BLACK:
+    case DRACONIAN_GREEN:
+        amt = MIN(600, p_ptr->chp * (25 + l*l*l/2500) / 100);
+        break;
+
+    case DRACONIAN_SHADOW:
+        amt = MIN(500, p_ptr->chp * (20 + l*l*l*35/125000) / 100);
+        break;
+
+    case DRACONIAN_CRYSTAL:
+    case DRACONIAN_BRONZE:
+    case DRACONIAN_GOLD:
+        amt = MIN(450, p_ptr->chp * (20 + l*l*l*30/125000) / 100);
+        break;
+    }
+
+    if (!mut_present(MUT_DRACONIAN_BREATH))
+        amt /= 2;
+
+    return MAX(amt, 1);
+}
+
+static int _draconian_breath_cost(void)
+{
+    int l = p_ptr->lev;
+    int cost = l/2 + l*l*15/2500;
+    return MAX(cost, 1);
+}
+
+static cptr _draconian_breath_desc(void)
+{
+    switch (p_ptr->psubrace)
+    {
+    case DRACONIAN_RED: return "fire";
+    case DRACONIAN_WHITE: return "cold";
+    case DRACONIAN_BLUE: return "lightning";
+    case DRACONIAN_BLACK: return "acid";
+    case DRACONIAN_GREEN: return "poison";
+    case DRACONIAN_CRYSTAL: return "shards";
+    case DRACONIAN_BRONZE: return "confusion";
+    case DRACONIAN_GOLD: return "sound";
+    case DRACONIAN_SHADOW: return "nether";
+    }
+    return 0;
+}
+
+static int _draconian_breath_effect(void)
+{
+    switch (p_ptr->psubrace)
+    {
+    case DRACONIAN_RED: return GF_FIRE;
+    case DRACONIAN_WHITE: return GF_COLD;
+    case DRACONIAN_BLUE: return GF_ELEC;
+    case DRACONIAN_BLACK: return GF_ACID;
+    case DRACONIAN_GREEN: return GF_POIS;
+    case DRACONIAN_BRONZE: return GF_CONFUSION;
+    case DRACONIAN_GOLD: return GF_SOUND;
+    case DRACONIAN_SHADOW: return GF_NETHER;
+    case DRACONIAN_CRYSTAL: return GF_SHARDS;
+    }
+    return 0;
+}
+
+static void _draconian_do_breathe(int effect, int dir, int dam)
+{
+    /* Dragon breath changes shape with maturity */
+    if (p_ptr->lev < 20)
+        fire_bolt(effect, dir, dam);
+    else if (p_ptr->lev < 30)
+        fire_beam(effect, dir, dam);
+    else
+        fire_ball(effect, dir, dam, -1 - (p_ptr->lev / 20));
+}
+
+static void _draconian_breathe_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Breathe");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, format("Breathes %s at your opponent.", _draconian_breath_desc()));
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_damage(0, 0, _draconian_breath_amount()));
+        break;
+    case SPELL_COST_EXTRA:
+        var_set_int(res, _draconian_breath_cost());
+        break;
+    case SPELL_CAST:
+    {
+        int dir = 0;
+        var_set_bool(res, FALSE);
+        if (get_aim_dir(&dir))
+        {
+            int e = _draconian_breath_effect();
+            int dam = _draconian_breath_amount();
+            var_set_bool(res, FALSE);
+            if (e < 0) return;
+            msg_format("You breathe %s.", gf_name(e));
+            _draconian_do_breathe(e, dir, dam);
+            var_set_bool(res, TRUE);
+        }
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 static power_info _draconian_powers[] =
 {
-    { A_CON, {1, 1, 70, draconian_breath_spell}},
+    { A_CON, {1, 0, 70, _draconian_breathe_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
 static int _draconian_get_powers(spell_info* spells, int max)
@@ -759,67 +881,201 @@ static int _draconian_get_powers(spell_info* spells, int max)
 static void _draconian_calc_bonuses(void)
 {
     p_ptr->levitation = TRUE;
-    if (p_ptr->lev >=  5) res_add(RES_FIRE);
-    if (p_ptr->lev >= 10) res_add(RES_COLD);
-    if (p_ptr->lev >= 15) res_add(RES_ACID);
-    if (p_ptr->lev >= 20) res_add(RES_ELEC);
-    if (p_ptr->lev >= 30) res_add(RES_POIS);
+    switch (p_ptr->psubrace)
+    {
+    case DRACONIAN_RED:
+        res_add(RES_FIRE);
+        break;
+    case DRACONIAN_WHITE:
+        res_add(RES_COLD);
+        break;
+    case DRACONIAN_BLUE:
+        res_add(RES_ELEC);
+        break;
+    case DRACONIAN_BLACK:
+        res_add(RES_ACID);
+        break;
+    case DRACONIAN_GREEN:
+        res_add(RES_POIS);
+        break;
+    case DRACONIAN_BRONZE:
+        res_add(RES_CONF);
+        break;
+    case DRACONIAN_CRYSTAL:
+        res_add(RES_SHARDS);
+        p_ptr->to_a += 10;
+        p_ptr->dis_to_a += 10;
+        if (p_ptr->lev >= 40)
+            p_ptr->reflect = TRUE;
+        break;
+    case DRACONIAN_GOLD:
+        res_add(RES_SOUND);
+        break;
+    case DRACONIAN_SHADOW:
+        res_add(RES_NETHER);
+        break;
+    }
 }
 static void _draconian_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_LEVITATION);
-    if (p_ptr->lev >= 5)
+    switch (p_ptr->psubrace)
+    {
+    case DRACONIAN_RED:
         add_flag(flgs, TR_RES_FIRE);
-    if (p_ptr->lev >= 10)
+        break;
+    case DRACONIAN_WHITE:
         add_flag(flgs, TR_RES_COLD);
-    if (p_ptr->lev >= 15)
-        add_flag(flgs, TR_RES_ACID);
-    if (p_ptr->lev >= 20)
+        break;
+    case DRACONIAN_BLUE:
         add_flag(flgs, TR_RES_ELEC);
-    if (p_ptr->lev >= 30)
+        break;
+    case DRACONIAN_BLACK:
+        add_flag(flgs, TR_RES_ACID);
+        break;
+    case DRACONIAN_GREEN:
         add_flag(flgs, TR_RES_POIS);
+        break;
+    case DRACONIAN_BRONZE:
+        add_flag(flgs, TR_RES_CONF);
+        break;
+    case DRACONIAN_CRYSTAL:
+        add_flag(flgs, TR_RES_SHARDS);
+        if (p_ptr->lev >= 40)
+            add_flag(flgs, TR_REFLECT);
+        break;
+    case DRACONIAN_GOLD:
+        add_flag(flgs, TR_RES_SOUND);
+        break;
+    case DRACONIAN_SHADOW:
+        add_flag(flgs, TR_RES_NETHER);
+        break;
+    }
 }
-race_t *draconian_get_race_t(void)
+static void _draconian_gain_power()
+{
+    if (p_ptr->draconian_power < 0)
+    {
+        int idx = mut_gain_choice(mut_draconian_pred);
+        mut_lock(idx);
+        p_ptr->draconian_power = idx;
+    }
+    else if (!mut_present(p_ptr->draconian_power))
+    {
+        mut_gain(p_ptr->draconian_power);
+        mut_lock(p_ptr->draconian_power);
+    }
+}
+static void _draconian_gain_level(int new_level)
+{
+    if (new_level >= 35)
+        _draconian_gain_power();
+}
+race_t *draconian_get_race_t(int psubrace)
 {
     static race_t me = {0};
     static bool init = FALSE;
+    static int subrace_init = -1;
 
     if (!init)
     {
         me.name = "Draconian";
-        me.desc = "Draconians are a humanoid race with dragon-like attributes. As they advance levels, they "
-                    "gain new elemental resistances (up to Poison Resistance), and they also have a "
-                    "breath weapon, which becomes more powerful with experience. The exact type of the "
-                    "breath weapon depends on the Draconian's class and level.  With their wings, they "
-                    "can easily escape any pit trap unharmed.";
-
-        me.stats[A_STR] =  2;
-        me.stats[A_INT] =  1;
-        me.stats[A_WIS] =  1;
-        me.stats[A_DEX] =  1;
-        me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  2;
+        me.desc = "Draconians are a humanoid race with dragon-like attributes. There are several "
+                    "subtypes of draconians with different resistances, breaths and attributes. "
+                    "For example, Red Draconians are resistant to fire which they may also breathe "
+                    "at will, while White Draconians breathe and resist cold instead. All draconians "
+                    "levitate. In addition, when they mature enough, they may choose a special "
+                    "draconian power.";
         
-        me.skills.dis = -2;
-        me.skills.dev = 5;
-        me.skills.sav = 2;
-        me.skills.stl = 0;
-        me.skills.srh = 1;
-        me.skills.fos = 10;
-        me.skills.thn = 5;
-        me.skills.thb = 5;
-
-        me.life = 103;
         me.base_hp = 22;
-        me.exp = 195;
         me.infra = 2;
 
         me.calc_bonuses = _draconian_calc_bonuses;
         me.get_powers = _draconian_get_powers;
         me.get_flags = _draconian_get_flags;
+        me.gain_level = _draconian_gain_level;
+
         init = TRUE;
     }
 
+    if (subrace_init != psubrace)
+    {
+        cptr names[DRACONIAN_MAX] = {"Red", "White", "Blue", "Black", "Green", "Bronze", "Crystal", "Gold", "Shadow"};
+
+        /* Reset to baseline */
+        me.subname = "";
+        me.stats[A_STR] =  1;
+        me.stats[A_INT] =  1;
+        me.stats[A_WIS] =  1;
+        me.stats[A_DEX] =  1;
+        me.stats[A_CON] =  2;
+        me.stats[A_CHR] =  2;
+
+        me.skills.dis = -2;
+        me.skills.dev = 5;
+        me.skills.sav = 2;
+        me.skills.stl = 1;
+        me.skills.srh = 1;
+        me.skills.fos = 10;
+        me.skills.thn = 5;
+        me.skills.thb = 5;
+
+        me.exp = 160;
+        me.life = 103;
+
+        /* Override with New Type */
+        if (psubrace >= 0 && psubrace < DRACONIAN_MAX)
+            me.subname = names[psubrace];
+
+        switch (psubrace)
+        {
+        case DRACONIAN_RED:
+        case DRACONIAN_WHITE:
+        case DRACONIAN_BLUE:
+        case DRACONIAN_BLACK:
+            me.stats[A_STR] += 1;
+            me.skills.dev -= 3;
+            me.skills.stl -= 1;
+            me.skills.thn += 5;
+            me.life += 1;
+            break;
+        case DRACONIAN_GREEN:
+            me.exp += 15;
+            break;
+        case DRACONIAN_BRONZE:
+            me.stats[A_INT] += 1;
+            me.skills.dev += 7;
+            me.exp += 25;
+            break;
+        case DRACONIAN_CRYSTAL:
+            me.stats[A_INT] -= 1;
+            me.stats[A_DEX] -= 1;
+            me.stats[A_CON] += 1;
+            me.skills.dev -= 5;
+            me.skills.stl -= 1;
+            me.skills.thn += 7;
+            me.life += 2;
+            me.exp += 60;
+            break;
+        case DRACONIAN_GOLD:
+            me.stats[A_WIS] += 1;
+            me.skills.dev += 5;
+            me.skills.sav += 3;
+            me.life += 1;
+            me.exp += 30;
+            break;
+        case DRACONIAN_SHADOW:
+            me.stats[A_STR] -= 1;
+            me.stats[A_DEX] += 2;
+            me.skills.dev += 3;
+            me.skills.stl += 3;
+            me.skills.thn -= 5;
+            me.life -= 1;
+            me.exp += 35;
+            break;
+        }
+        subrace_init = psubrace;
+    }
     return &me;
 }
 
