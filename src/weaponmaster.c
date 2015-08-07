@@ -3039,8 +3039,8 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
             { 15, 15, 0, _vault_attack_spell },
             { 25, 20,50, _judge_spell },
             { 25, 25, 0, _circle_kick_spell },
-            { 30,  0, 0, _greater_flurry_spell },
             { 40,  0, 0, _monkey_king_spell },
+            { 45,  0, 0, _greater_flurry_spell },
             { -1,  0, 0, NULL },
           },
           { TV_HAFTED, SV_QUARTERSTAFF },
@@ -3855,7 +3855,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     }
     else if (p_ptr->psubclass == WEAPONMASTER_STAVES)
     {
-        if (spec1 && p_ptr->speciality_equip && p_ptr->lev >= 45 && p_ptr->chp == p_ptr->mhp)
+        if (spec1 && p_ptr->speciality_equip && p_ptr->lev >= 30 && p_ptr->chp == p_ptr->mhp)
             info_ptr->xtra_blow += 100;
 
         if (spec1 && p_ptr->speciality_equip)
@@ -4136,14 +4136,12 @@ static void _character_dump(FILE* file)
     {
         fprintf(file, "  * You gain a bonus to AC until your next turn after any successful hit when wielding a staff.\n");
         fprintf(file, "  * You suffer a penalty to speed when wielding a shield.\n");
-        if (p_ptr->lev >= 20)
-            fprintf(file, "  * You gain a bonus to speed when wielding a staff.\n");
-        if (p_ptr->lev >= 45)
-            fprintf(file, "  * You gain an extra attack when you are at full health and wielding a staff.\n");
-
         if (p_ptr->lev >= 5)
             fprintf(file, "  * You gain a bonus AC after moving until your next turn when wielding a staff.\n");
-
+        if (p_ptr->lev >= 20)
+            fprintf(file, "  * You gain a bonus to speed when wielding a staff.\n");
+        if (p_ptr->lev >= 30)
+            fprintf(file, "  * You gain an extra attack when you are at full health and wielding a staff.\n");
         if (p_ptr->lev >= 35)
             fprintf(file, "  * You are unaffected by monster auras when wielding a staff.\n");
     }
