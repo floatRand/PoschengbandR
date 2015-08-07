@@ -759,17 +759,17 @@ static int _draconian_breath_amount(void)
     case DRACONIAN_BLUE:
     case DRACONIAN_BLACK:
     case DRACONIAN_GREEN:
-        amt = MIN(600, p_ptr->chp * (25 + l*l*l/2500) / 100);
+        amt = MIN(500, p_ptr->chp * (25 + l*l*l/2500) / 100);
         break;
 
     case DRACONIAN_SHADOW:
-        amt = MIN(500, p_ptr->chp * (20 + l*l*l*35/125000) / 100);
+        amt = MIN(400, p_ptr->chp * (20 + l*l*l*35/125000) / 100);
         break;
 
     case DRACONIAN_CRYSTAL:
     case DRACONIAN_BRONZE:
     case DRACONIAN_GOLD:
-        amt = MIN(450, p_ptr->chp * (20 + l*l*l*30/125000) / 100);
+        amt = MIN(350, p_ptr->chp * (20 + l*l*l*30/125000) / 100);
         break;
     }
 
@@ -783,6 +783,8 @@ static int _draconian_breath_cost(void)
 {
     int l = p_ptr->lev;
     int cost = l/2 + l*l*15/2500;
+    if (!mut_present(MUT_DRACONIAN_BREATH))
+        cost = cost * 2 / 3;
     return MAX(cost, 1);
 }
 

@@ -135,7 +135,7 @@ static mutation_info _mutations[MAX_MUTATIONS] =
 
     {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_shield_mut}},
     {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_magic_resistance_mut}},
-    {MUT_RATING_GOOD,       MUT_TYPE_ACTIVATION,  A_DEX, 0, {30,  20,   0, draconian_strike_mut}},
+    {MUT_RATING_GOOD,       MUT_TYPE_ACTIVATION,  A_DEX, 0, {30,   0,   0, draconian_strike_mut}},
     {MUT_RATING_GOOD,                    0,             0, 0, {0,  0,   0, draconian_breath_mut}},
     {MUT_RATING_GOOD,       MUT_TYPE_BONUS,             0, 0, {0,  0,   0, draconian_regen_mut}},
     {MUT_RATING_GOOD,       MUT_TYPE_ACTIVATION,  A_CHR, 0, {30,  30,  70, draconian_kin_mut}},

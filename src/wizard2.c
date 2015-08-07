@@ -2855,8 +2855,9 @@ void do_cmd_debug(void)
         for (n = 0; n < 120; n++)
             mut_gain_random(NULL);*/
     /*  mut_gain_choice(mut_demigod_pred);*/
+        mut_gain_choice(mut_draconian_pred);
 
-        n = get_quantity("Which One? ", 500);
+    /*  n = get_quantity("Which One? ", 500);
         if (n == 500)
         {
             int i;
@@ -2864,7 +2865,7 @@ void do_cmd_debug(void)
                 mut_gain(i);
         }
         else
-            mut_gain(n);
+            mut_gain(n); */
         break;
     }
 

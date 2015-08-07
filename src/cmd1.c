@@ -2119,7 +2119,7 @@ void touch_zap_player(int m_idx)
     monster_type *m_ptr = &m_list[m_idx];
     monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
-    if ((r_ptr->flags2 & RF2_AURA_REVENGE) && randint0(120) < r_ptr->level)
+    if ((r_ptr->flags2 & RF2_AURA_REVENGE) && !MON_CONFUSED(m_ptr) && randint0(120) < r_ptr->level)
     {
         if (p_ptr->lightning_reflexes)
         {

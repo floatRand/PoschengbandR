@@ -883,6 +883,28 @@ void draconian_strike_mut(int cmd, variant *res)
         var_set_bool(res, do_blow(mode));
         break;
     }
+    case SPELL_COST_EXTRA:
+        switch (p_ptr->psubrace)
+        {
+        case DRACONIAN_RED:
+        case DRACONIAN_WHITE:
+        case DRACONIAN_BLUE:
+        case DRACONIAN_BLACK:
+        case DRACONIAN_GREEN:
+            var_set_int(res, 15);
+            break;
+        case DRACONIAN_GOLD:
+        case DRACONIAN_BRONZE:
+            var_set_int(res, 20);
+            break;
+        case DRACONIAN_CRYSTAL:
+            var_set_int(res, 12);
+            break;
+        case DRACONIAN_SHADOW:
+            var_set_int(res, 7);
+            break;
+        }
+        break;
     default:
         default_spell(cmd, res);
         break;
