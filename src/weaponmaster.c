@@ -2324,11 +2324,11 @@ bool _design_monkey_clone(void)
     r_ptr->flags2 = 0;
     r_ptr->flags7 = 0;
 
-    if (p_ptr->resist[RES_ACID]) r_ptr->flagsr |= RFR_IM_ACID;
-    if (p_ptr->resist[RES_ELEC]) r_ptr->flagsr |= RFR_IM_ELEC;
-    if (p_ptr->resist[RES_FIRE]) r_ptr->flagsr |= RFR_IM_FIRE;
-    if (p_ptr->resist[RES_COLD]) r_ptr->flagsr |= RFR_IM_COLD;
-    if (p_ptr->resist[RES_POIS]) r_ptr->flagsr |= RFR_IM_POIS;
+    if (p_ptr->resist[RES_ACID]) r_ptr->flagsr |= RFR_RES_ACID;
+    if (p_ptr->resist[RES_ELEC]) r_ptr->flagsr |= RFR_RES_ELEC;
+    if (p_ptr->resist[RES_FIRE]) r_ptr->flagsr |= RFR_RES_FIRE;
+    if (p_ptr->resist[RES_COLD]) r_ptr->flagsr |= RFR_RES_COLD;
+    if (p_ptr->resist[RES_POIS]) r_ptr->flagsr |= RFR_RES_POIS;
     if (p_ptr->resist[RES_LITE]) r_ptr->flagsr |= RFR_RES_LITE;
     if (p_ptr->resist[RES_DARK]) r_ptr->flagsr |= RFR_RES_DARK;
     if (p_ptr->resist[RES_NETHER]) r_ptr->flagsr |= RFR_RES_NETH;
@@ -2398,7 +2398,7 @@ void _circle_kick(void)
     int slot = equip_find_object(TV_BOOTS, SV_ANY);
 
     if (slot)
-        dd = k_info[equip_obj(slot)->k_idx].ac;
+        dd = equip_obj(slot)->ac;
     
     for (i = 0; i < 8; i++)
     {    
@@ -2466,6 +2466,18 @@ static void _circle_kick_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Kicks all adjacent opponents, stunning them.  Damage depends on your boots!");
         break;
+    case SPELL_INFO:
+    {
+        int ds = p_ptr->lev;
+        int dd = 0;
+        int slot = equip_find_object(TV_BOOTS, SV_ANY);
+
+        if (slot)
+            dd = equip_obj(slot)->ac;
+
+        var_set_string(res, info_damage(dd, ds, p_ptr->to_d_m));
+        break;
+    }
     case SPELL_CAST:
     {
         var_set_bool(res, FALSE);
@@ -2583,6 +2595,9 @@ static void _vault_attack_spell(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Charge and attack a nearby opponent in a single move.");
         break;
+    case SPELL_INFO:
+        var_set_string(res, info_range(3));
+        break;
     case SPELL_CAST:
     {
         var_set_bool(res, FALSE);
@@ -2600,7 +2615,6 @@ static void _vault_attack_spell(int cmd, variant *res)
         break;
     }
 }
-
 
 static void _flurry_of_blows_spell(int cmd, variant *res)
 {
@@ -3177,7 +3191,7 @@ int weaponmaster_get_max_blows(object_type *o_ptr, int hand)
                 num = 525;
                 break;
             case WEAPONMASTER_STAVES:
-                num = 550;
+                num = 500;
                 break;
             case WEAPONMASTER_SWORDS:
                 num = 525;
