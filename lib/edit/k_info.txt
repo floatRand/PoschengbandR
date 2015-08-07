@@ -4613,7 +4613,7 @@ W:0:0:0:4:500
 P:0:1d1:0:0:0
 D:A cryptic rune, of powers incomprehensible.
 
-N:677:Weapon Branding:enchantus maximus
+N:677:Crafting:enchantus maximus
 G:?:w
 I:70:55:0
 W:70:0:0:5:100000

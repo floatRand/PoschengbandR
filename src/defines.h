@@ -2108,9 +2108,9 @@ enum _mimic_types {
 #define SV_SCROLL_ARTIFACT              52
 #define SV_SCROLL_RESET_RECALL          53
 #define SV_SCROLL_SUMMON_KIN            54
-#define SV_SCROLL_BRAND_WEAPON          55
-#define SV_SCROLL_MADNESS                56
-#define SV_SCROLL_DETECT_MONSTERS        57
+#define SV_SCROLL_CRAFTING              55
+#define SV_SCROLL_MADNESS               56
+#define SV_SCROLL_DETECT_MONSTERS       57
 #define SV_SCROLL_FIRE                  58
 #define SV_SCROLL_ICE                   59
 #define SV_SCROLL_CHAOS                 60

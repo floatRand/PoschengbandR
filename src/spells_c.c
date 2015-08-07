@@ -292,6 +292,81 @@ void confusing_lights_spell(int cmd, variant *res)
     }
 }
 
+void crafting_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Crafting");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Makes chosen weapon, armor or ammo an ego item.");
+        break;
+    case SPELL_CAST:
+    {
+        int          item;
+        bool         okay = FALSE;
+        object_type *o_ptr;
+        char         o_name[MAX_NLEN];
+
+        var_set_bool(res, FALSE);
+
+        item_tester_hook = object_is_weapon_armour_ammo;
+        item_tester_no_ryoute = TRUE;
+
+        if (!get_item(&item, "Enchant which item? ", "You have nothing to enchant.", (USE_EQUIP | USE_INVEN)))
+            return;
+
+        o_ptr = &inventory[item];
+        object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+
+        if (object_is_nameless(o_ptr))
+        {
+            if (object_is_ammo(o_ptr) && randint1(30) > (o_ptr->number - 30))
+            {
+                brand_weapon_aux(item);
+                o_ptr->discount = 99;
+                okay = TRUE;
+            }
+            else if (object_is_weapon(o_ptr) && o_ptr->number == 1)
+            {
+                brand_weapon_aux(item);
+                o_ptr->discount = 99;
+                okay = TRUE;
+            }
+            else if (object_is_armour(o_ptr) && o_ptr->number == 1)
+            {
+                brand_armour_aux(item);
+                o_ptr->discount = 99;
+                okay = TRUE;
+            }
+        }
+
+        msg_format("%s %s glow%s brightly!",
+                ((item >= 0) ? "Your" : "The"), o_name,
+                ((o_ptr->number > 1) ? "" : "s"));
+
+        if (!okay)
+        {
+            if (flush_failure) flush();
+            msg_print("The enchantment failed.");
+            if (one_in_(3)) virtue_add(VIRTUE_ENCHANTMENT, -1);
+        }
+        else
+        {
+            virtue_add(VIRTUE_ENCHANTMENT, 1);
+            calc_android_exp();
+        }
+        var_set_bool(res, TRUE);
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+bool cast_crafting(void) { return cast_spell(crafting_spell); }
+
 void create_darkness_spell(int cmd, variant *res)
 {
     switch (cmd)
