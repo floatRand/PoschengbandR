@@ -5318,6 +5318,12 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
         return;
     }
 
+    if (o_ptr->art_name)
+    {
+        if (!store_hack)
+            stats_rand_art_counts.generated++;
+    }
+
     /* Examine real objects */
     if (o_ptr->k_idx)
     {
