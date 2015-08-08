@@ -382,7 +382,7 @@ void skills_innate_gain(cptr name)
     if (!info)
     {
         info = malloc(sizeof(_skill_info_t));
-        info->current = 0;
+        info->current = WEAPON_EXP_UNSKILLED;
         info->max = WEAPON_EXP_MASTER;
         str_map_add(_innate_map(), name, info);
     }
