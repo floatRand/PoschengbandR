@@ -762,6 +762,15 @@ int display_innate_attack_info(int which, int row, int col)
         put_str(buf, r++, c);
     }
 
+    {
+        cptr name = skills_innate_calc_name(a);
+        sprintf(buf, " %-7.7s: %s (%+d To Hit)",
+                    "Profic",
+                    skills_innate_describe_current(name),
+                    skills_innate_calc_bonus(name));
+        put_str(buf, r++, c);
+    }
+
     sprintf(buf, " %-7.7s: %d + %d = %d", "To Hit", a->to_h, p_ptr->to_h_m, to_h);
     put_str(buf, r++, c);
 

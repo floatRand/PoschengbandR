@@ -2326,7 +2326,18 @@ extern void skills_riding_gain_archery(monster_race *r_ptr);
 extern int skills_riding_current(void);
 extern int skills_riding_max(void);
 
+extern int skills_innate_current(cptr name);
+extern int skills_innate_max(cptr name);
+extern void skills_innate_gain(cptr name);
+extern void skills_innate_init(cptr name, int current, int max);
+extern int skills_innate_calc_bonus(cptr name);
+extern cptr skills_innate_calc_name(innate_attack_ptr attack); /* Note: Uses a shared buffer so result valid only until the next call */
+extern cptr skills_innate_describe_current(cptr name);
+
 extern void skills_on_birth(void);
+extern void skills_on_load(savefile_ptr file);
+extern void skills_on_save(savefile_ptr file);
+
 
 /* time_lord.c */
 extern class_t *time_lord_get_class_t(void);

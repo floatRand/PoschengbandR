@@ -2273,6 +2273,8 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 
         if (a->flags & INNATE_SKIP) continue;
 
+        skills_innate_gain(skills_innate_calc_name(a));
+
         for (j = 0; j < blows; j++)
         {
             to_h = a->to_h + p_ptr->to_h_m;

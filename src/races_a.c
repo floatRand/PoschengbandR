@@ -460,6 +460,7 @@ race_t *beastman_get_race_t(void)
 static void _centaur_birth(void) 
 { 
     equip_on_change_race();
+    skills_innate_init("Hooves", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 }
 
 static void _jump_spell(int cmd, variant *res)

@@ -4502,6 +4502,16 @@ void calc_bonuses(void)
     if (race_ptr->calc_innate_attacks)
         race_ptr->calc_innate_attacks();
 
+    /* Adjust Innate Attacks for Proficiency */
+    for (i = 0; i < p_ptr->innate_attack_ct; i++)
+    {
+        innate_attack_ptr attack = &p_ptr->innate_attacks[i];
+        cptr              name = skills_innate_calc_name(attack);
+        int               bonus = skills_innate_calc_bonus(name);
+
+        attack->to_h += bonus;
+    }
+
     /* Kamikaze Warrior with a Monster Race/Possessor */
     if (!p_ptr->weapon_ct && p_ptr->tim_speed_essentia)
         p_ptr->innate_attack_info.xtra_blow += 200;

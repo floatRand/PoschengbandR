@@ -30,6 +30,7 @@ static cptr _desc =
 static void _birth(void) 
 { 
     p_ptr->current_r_idx = MON_CHEERFUL_LEPRECHAUN;
+    skills_innate_init("Greedy Hands", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 
     msg_print("You feel the luck of the Irish!");
     mut_gain(MUT_GOOD_LUCK);
