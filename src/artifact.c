@@ -3058,7 +3058,7 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
     {
         forge1.to_a = MAX(10, forge1.to_a);
     }
-    base_power = object_value_real(&forge1);
+    base_power = MAX(7500, object_value_real(&forge1));
     
     best_power = -10000000;
     power = 0;
