@@ -777,6 +777,26 @@ void ego_aware(object_type *o_ptr)
    effect. This is better than leaking kind info in the various browser screens, 
    though.
 */
+counts_t stats_rand_art_counts = {0};
+
+void stats_on_load(savefile_ptr file)
+{
+    stats_rand_art_counts.generated = savefile_read_s32b(file);
+    stats_rand_art_counts.found = savefile_read_s32b(file);
+    stats_rand_art_counts.bought = savefile_read_s32b(file);
+    stats_rand_art_counts.used = savefile_read_s32b(file);
+    stats_rand_art_counts.destroyed = savefile_read_s32b(file);
+}
+
+void stats_on_save(savefile_ptr file)
+{
+    savefile_write_s32b(file, stats_rand_art_counts.generated);
+    savefile_write_s32b(file, stats_rand_art_counts.found);
+    savefile_write_s32b(file, stats_rand_art_counts.bought);
+    savefile_write_s32b(file, stats_rand_art_counts.used);      /* Artifact Devices */
+    savefile_write_s32b(file, stats_rand_art_counts.destroyed); /* Certain Class Powers */
+}
+
 void stats_on_purchase(object_type *o_ptr)
 {
     if (!(o_ptr->marked & OM_COUNTED))
@@ -788,6 +808,11 @@ void stats_on_purchase(object_type *o_ptr)
     {
         e_info[o_ptr->name2].counts.bought += o_ptr->number;
         o_ptr->marked |= OM_EGO_COUNTED;
+    }
+    if (o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
+    {
+        stats_rand_art_counts.bought += o_ptr->number;
+        o_ptr->marked |= OM_ART_COUNTED;
     }
 }
 
@@ -803,6 +828,11 @@ void stats_on_sell(object_type *o_ptr)
         e_info[o_ptr->name2].counts.found += o_ptr->number;
         o_ptr->marked |= OM_EGO_COUNTED;
     }
+    if (o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
+    {
+        stats_rand_art_counts.found += o_ptr->number;
+        o_ptr->marked |= OM_ART_COUNTED;
+    }
 }
 
 void stats_on_notice(object_type *o_ptr, int num)
@@ -811,6 +841,16 @@ void stats_on_notice(object_type *o_ptr, int num)
     {
         k_info[o_ptr->k_idx].counts.found += num;
         o_ptr->marked |= OM_COUNTED;
+    }
+    if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
+    {
+        e_info[o_ptr->name2].counts.found += num;
+        o_ptr->marked |= OM_EGO_COUNTED;
+    }
+    if (o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
+    {
+        stats_rand_art_counts.found += num;
+        o_ptr->marked |= OM_ART_COUNTED;
     }
 }
 
@@ -831,6 +871,10 @@ void stats_on_combine(object_type *dest, object_type *src)
 void stats_on_use(object_type *o_ptr, int num)
 {
     k_info[o_ptr->k_idx].counts.used += num;
+    if (o_ptr->name2)
+        e_info[o_ptr->name2].counts.used += num;
+    if (o_ptr->art_name)
+        stats_rand_art_counts.used += num;
 }
 
 void stats_on_p_destroy(object_type *o_ptr, int num)
@@ -845,10 +889,17 @@ void stats_on_p_destroy(object_type *o_ptr, int num)
         e_info[o_ptr->name2].counts.found += o_ptr->number;
         o_ptr->marked |= OM_EGO_COUNTED;
     }
+    if (o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
+    {
+        stats_rand_art_counts.found += num;
+        o_ptr->marked |= OM_ART_COUNTED;
+    }
 
     k_info[o_ptr->k_idx].counts.destroyed += num;
     if (o_ptr->name2)
         e_info[o_ptr->name2].counts.destroyed += num;
+    if (o_ptr->art_name)
+        stats_rand_art_counts.destroyed += num;
 }
 
 void stats_on_m_destroy(object_type *o_ptr, int num)
@@ -871,6 +922,12 @@ void stats_on_pickup(object_type *o_ptr)
         e_info[o_ptr->name2].counts.found += o_ptr->number;
         o_ptr->marked |= OM_EGO_COUNTED;
     }
+
+    if (object_is_known(o_ptr) && o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
+    {
+        stats_rand_art_counts.found += o_ptr->number;
+        o_ptr->marked |= OM_ART_COUNTED;
+    }
 }
 
 void stats_on_equip(object_type *o_ptr)
@@ -886,6 +943,12 @@ void stats_on_equip(object_type *o_ptr)
         e_info[o_ptr->name2].counts.found += o_ptr->number;
         o_ptr->marked |= OM_EGO_COUNTED;
     }
+
+    if (object_is_known(o_ptr) && o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
+    {
+        stats_rand_art_counts.found += o_ptr->number;
+        o_ptr->marked |= OM_ART_COUNTED;
+    }
 }
 
 void stats_on_identify(object_type *o_ptr)
@@ -900,6 +963,12 @@ void stats_on_identify(object_type *o_ptr)
     {
         e_info[o_ptr->name2].counts.found += o_ptr->number;
         o_ptr->marked |= OM_EGO_COUNTED;
+    }
+
+    if (object_is_known(o_ptr) && o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
+    {
+        stats_rand_art_counts.found += o_ptr->number;
+        o_ptr->marked |= OM_ART_COUNTED;
     }
 }
 
@@ -7295,7 +7364,7 @@ s16b inven_carry(object_type *o_ptr)
     j_ptr->iy = j_ptr->ix = 0;
 
     /* Player touches it, and no longer marked */
-    j_ptr->marked &= (OM_WORN | OM_COUNTED | OM_EGO_COUNTED);  /* Ah, but remember the "worn" status ... */
+    j_ptr->marked &= (OM_WORN | OM_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);  /* Ah, but remember the "worn" status ... */
     j_ptr->marked |= OM_TOUCHED;
 
     /* Increase the weight */

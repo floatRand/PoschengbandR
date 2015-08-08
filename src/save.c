@@ -1282,6 +1282,7 @@ static bool wr_savefile_new(savefile_ptr file)
 
     spell_stats_on_save(file);
     skills_on_save(file);
+    stats_on_save(file);
 
     if (!p_ptr->is_dead)
     {

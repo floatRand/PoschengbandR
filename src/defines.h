@@ -19,7 +19,7 @@
 #define VER_MAJOR 3
 #define VER_MINOR 5
 #define VER_PATCH 0
-#define VER_EXTRA 1
+#define VER_EXTRA 2
 
 /*
  * Number of grids in each block (vertically)
@@ -2991,6 +2991,7 @@ enum summon_specific_e {
 #define OM_WORN         0x0040    /* Object was previously being worn but is possibly no longer a legal piece of equipment (Mimics) */
 #define OM_COUNTED      0x0080    /* Stats */
 #define OM_EGO_COUNTED  0x0100    /* Stats */
+#define OM_ART_COUNTED  0x0200    /* Stats */
 
 
 /*

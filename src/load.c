@@ -1734,6 +1734,10 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     {
         skills_on_load(file);
     }
+    if (!savefile_is_older_than(file, 3, 5, 0, 2))
+    {
+        stats_on_load(file);
+    }
 
     /* I'm not dead yet... */
     if (!p_ptr->is_dead)

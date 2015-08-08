@@ -1195,6 +1195,9 @@ extern void stats_on_m_destroy(object_type *o_ptr, int num);
 extern void stats_on_pickup(object_type *o_ptr);
 extern void stats_on_equip(object_type *o_ptr);
 extern void stats_on_identify(object_type *o_ptr);
+extern void stats_on_load(savefile_ptr file);
+extern void stats_on_save(savefile_ptr file);
+extern counts_t stats_rand_art_counts;
 
 /* object3.c */
 typedef void (*debug_hook)(cptr msg);

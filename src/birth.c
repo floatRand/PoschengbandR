@@ -2066,6 +2066,8 @@ static void k_info_reset(void)
         k_ptr->aware = FALSE;
         WIPE(&k_ptr->counts, counts_t);
     }
+
+    WIPE(&stats_rand_art_counts, counts_t);
 }
 
 /*

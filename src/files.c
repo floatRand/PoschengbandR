@@ -3140,7 +3140,7 @@ void display_player(int mode)
         _print_field(16, 1, "Kills      :", format("%d", _kills()), TERM_L_GREEN, 21);
         _print_field(17, 1, "Uniques    :", format("%d", _uniques()), TERM_L_GREEN, 21);
         _print_field(18, 1, "Artifacts  :", 
-                                no_artifacts ? "N/A" : format("%d" , _artifacts()), 
+                                no_artifacts ? "N/A" : format("%d+%d" , _artifacts(), stats_rand_art_counts.found),
                                 TERM_L_GREEN, 21);
 
         {
