@@ -336,7 +336,8 @@ static void _birth(void)
 
     p_ptr->current_r_idx = MON_BLACK_OOZE;
     equip_on_change_race();
-    
+    skills_innate_init("Pseudopod", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
+
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
     forge.pval = 1;
