@@ -995,6 +995,53 @@ static int _draconian_attack_level(void)
         break;
     }
 
+    switch (p_ptr->pclass)
+    {
+    case CLASS_BERSERKER:
+        l = MAX(1, l * 170 / 100);
+        break;
+    case CLASS_WARRIOR:
+    case CLASS_BLOOD_KNIGHT:
+        l = MAX(1, l * 120 / 100);
+        break;
+    case CLASS_PALADIN:
+    case CLASS_CHAOS_WARRIOR:
+        l = MAX(1, l * 110 / 100);
+        break;
+    case CLASS_IMITATOR:
+    case CLASS_RED_MAGE:
+    case CLASS_WEAPONSMITH:
+        l = MAX(1, l * 105 / 100);
+        break;
+    case CLASS_PRIEST:
+    case CLASS_MINDCRAFTER:
+    case CLASS_MAGIC_EATER:
+    case CLASS_ARCHAEOLOGIST:
+    case CLASS_WILD_TALENT:
+    case CLASS_PSION:
+    case CLASS_SCOUT:
+    case CLASS_DEVICEMASTER:
+        /*l = MAX(1, l * 100 / 100);*/
+        break;
+    case CLASS_BARD:
+    case CLASS_BLUE_MAGE:
+    case CLASS_TIME_LORD:
+    case CLASS_WARLOCK:
+    case CLASS_RAGE_MAGE:
+        l = MAX(1, l * 90 / 100);
+        break;
+    case CLASS_MAGE:
+    case CLASS_HIGH_MAGE:
+    case CLASS_TOURIST:
+    case CLASS_MIRROR_MASTER:
+    case CLASS_BLOOD_MAGE:
+        l = MAX(1, l * 80 / 100);
+        break;
+    case CLASS_SORCERER:
+        l = MAX(1, l * 50 / 100);
+        break;
+    }
+
     return MAX(1, l);
 }
 static void _draconian_calc_innate_attacks(void)
@@ -1031,12 +1078,7 @@ static void _draconian_calc_innate_attacks(void)
 
         a.weight = 200 + 2 * l;
 
-        if (p_ptr->lev >= 40)
-            calc_innate_blows(&a, 200);
-        else if (p_ptr->lev >= 35)
-            calc_innate_blows(&a, 150);
-        else
-            a.blows = 100;
+        a.blows = 100;
         a.msg = "You bite %s.";
         a.name = "Bite";
 

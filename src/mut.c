@@ -599,6 +599,7 @@ bool mut_draconian_pred(int mut_idx)
         case CLASS_SNIPER:
         case CLASS_DUELIST:
         case CLASS_WEAPONMASTER:
+        case CLASS_RUNE_KNIGHT:
         case CLASS_NECROMANCER:
         case CLASS_MAULER:
         case CLASS_MYSTIC:
