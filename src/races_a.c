@@ -1079,9 +1079,15 @@ static void _draconian_calc_innate_attacks(void)
 
         a.weight = 200 + 2 * l;
 
-        if (p_ptr->lev >= 45)
+        if (l >= 175) /* White Berserker Only */
+            calc_innate_blows(&a, 400);
+        else if (l >= 160) /* Berserker Only */
+            calc_innate_blows(&a, 300);
+        else if (l >= 135) /* Berserker Only */
+            calc_innate_blows(&a, 250);
+        else if (l >= 85)  /* CL50 for a Shadow Priest */
             calc_innate_blows(&a, 200);
-        else if (p_ptr->lev >= 40)
+        else if (l >= 70) /* CL45 for a White Mage (Max Rating = 84) */
             calc_innate_blows(&a, 150);
         else
             a.blows = 100;

@@ -19490,7 +19490,7 @@ D:A human, clothed in a blue robe, moving with speed uncanny.
 N:1092:Chronomage
 G:p:b
 I:130:100d10:20:70:20:170
-W:40:3:80:1000:0:0
+W:40:3:80:2000:0:0
 B:HIT:HURT:3d7
 B:HIT:HURT:3d7
 B:HIT:TIME:3d5
@@ -19506,7 +19506,7 @@ D:He seems both young and old.
 N:1093:Temporal Champion
 G:p:b
 I:150:100d30:20:100:20:170
-W:60:3:999:4000:0:0
+W:60:3:999:8000:0:0
 B:HIT:TIME:10d5
 B:HIT:TIME:10d5
 B:HIT:TIME:10d5
