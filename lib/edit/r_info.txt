@@ -3115,7 +3115,7 @@ D:It is a shambling orcish corpse leaving behind a trail of flesh.
 N:209:Hippogriff
 G:H:U
 I:115:40d10:20:60:70:300
-W:15:1:40:250:0:0
+W:15:1:40:150:0:0
 B:KICK:HURT:4d2
 B:KICK:HURT:4d2
 B:BITE:HURT:4d2

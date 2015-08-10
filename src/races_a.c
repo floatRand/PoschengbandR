@@ -1079,7 +1079,12 @@ static void _draconian_calc_innate_attacks(void)
 
         a.weight = 200 + 2 * l;
 
-        a.blows = 100;
+        if (p_ptr->lev >= 45)
+            calc_innate_blows(&a, 200);
+        else if (p_ptr->lev >= 40)
+            calc_innate_blows(&a, 150);
+        else
+            a.blows = 100;
         a.msg = "You bite %s.";
         a.name = "Bite";
 

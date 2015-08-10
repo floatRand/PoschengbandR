@@ -3721,9 +3721,9 @@ static cptr object_group_text[] =
     "Potions",
 /*  "Flasks", */
     "Scrolls",
-/*  "Rings",
+    "Rings",
     "Amulets",
-    "Whistle",
+/*  "Whistle",
     "Lanterns", */
     "Wands",
     "Staves",
@@ -3772,9 +3772,9 @@ static byte object_group_tval[] =
     TV_POTION,
 /*  TV_FLASK, */
     TV_SCROLL,
-/*  TV_RING, 
+    TV_RING,
     TV_AMULET,
-    TV_WHISTLE,
+/*  TV_WHISTLE,
     TV_LITE, */
     TV_WAND,
     TV_STAFF,

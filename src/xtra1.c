@@ -1234,7 +1234,7 @@ static void prt_ac(void)
 {
     char tmp[32];
 
-    put_str("Cur AC ", ROW_AC, COL_AC);
+    put_str("AC ", ROW_AC, COL_AC);
     sprintf(tmp, "%5d", p_ptr->dis_ac + p_ptr->dis_to_a);
     c_put_str(TERM_L_GREEN, tmp, ROW_AC, COL_AC + 7);
 

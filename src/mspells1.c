@@ -1993,6 +1993,8 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             else msg_format("%^s invokes polymorph other.", m_name);
             if (prace_is_(RACE_ANDROID) || p_ptr->pclass == CLASS_MONSTER)
                 msg_print("You are unaffected!");
+            else if (mut_present(MUT_DRACONIAN_METAMORPHOSIS))
+                msg_print("You are unaffected!");
             else if (randint1(100) <= duelist_skill_sav(m_idx) - r_ptr->level/2)
                 msg_print("You resist the effects!");
             else if (check_foresight())

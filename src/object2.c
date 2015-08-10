@@ -2539,6 +2539,10 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
     {
     case EGO_RING_DWARVES:
         o_ptr->to_d += 5;
+        if (one_in_(3))
+            add_flag(o_ptr->art_flags, TR_DEC_DEX);
+        if (one_in_(3))
+            add_flag(o_ptr->art_flags, TR_WIS);
         if (one_in_(6))
             o_ptr->curse_flags |= TRC_PERMA_CURSE;
         if (one_in_(6))
@@ -2547,6 +2551,8 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
             add_flag(o_ptr->art_flags, TR_RES_DARK);
         if (one_in_(3))
             add_flag(o_ptr->art_flags, TR_RES_DISEN);
+        if (one_in_(3))
+            add_flag(o_ptr->art_flags, TR_SUST_STR);
         if (one_in_(6))
             one_high_resistance(o_ptr);
         if (one_in_(ACTIVATION_CHANCE))
@@ -3122,6 +3128,10 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
                     add_flag(o_ptr->art_flags, TR_DEC_DEX);
                 else
                     add_flag(o_ptr->art_flags, TR_DEC_STEALTH);
+
+                if (one_in_(5))
+                    add_flag(o_ptr->art_flags, TR_WIS);
+
                 if (!o_ptr->pval) o_ptr->pval = _jewelry_pval(4, level);
                 break;
             case 3:
@@ -6056,6 +6066,13 @@ static _kind_p _choose_obj_kind(u32b mode)
                 break;
             }
             break;
+        }
+        if (!_kind_hook1 && mut_present(MUT_DRACONIAN_METAMORPHOSIS))
+        {
+            if (one_in_(5))
+                _kind_hook1 = _kind_is_ring;
+            else if (one_in_(7))
+                _kind_hook1 = _kind_is_helm_cloak;
         }
         if (!_kind_hook1)
         {
