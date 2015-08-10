@@ -7009,7 +7009,7 @@ static cptr do_crusade_spell(int spell, int mode)
         if (desc) return "Damages all adjacent monsters with holy power. Damages and attempt to slow, stun, confuse, scare and freeze all monsters in sight. And heals HP.";
     
         {
-            int b_dam = spell_power(plev * 9);
+            int b_dam = spell_power(plev * 11);
             int d_dam = spell_power(plev * 4 + p_ptr->to_d_spell);
             int heal = spell_power(100);
             int power = spell_power(plev * 4);
