@@ -785,25 +785,25 @@ void draconian_shield_mut(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Dragon Shield");
+        var_set_string(res, "Dragon Skin");
         break;
     case SPELL_MUT_DESC:
         switch (p_ptr->psubrace)
         {
         case DRACONIAN_RED:
-            var_set_string(res, "Dragon Shield: You gain +15 AC and an aura of fire");
+            var_set_string(res, "Dragon Skin: You gain +15 AC and an aura of fire");
             break;
         case DRACONIAN_WHITE:
-            var_set_string(res, "Dragon Shield: You gain +15 AC and an aura of cold");
+            var_set_string(res, "Dragon Skin: You gain +15 AC and an aura of cold");
             break;
         case DRACONIAN_BLUE:
-            var_set_string(res, "Dragon Shield: You gain +15 AC and an aura of electricity");
+            var_set_string(res, "Dragon Skin: You gain +15 AC and an aura of electricity");
             break;
         case DRACONIAN_CRYSTAL:
-            var_set_string(res, "Dragon Shield: You gain +10 AC and an aura of shards");
+            var_set_string(res, "Dragon Skin: You gain +10 AC and an aura of shards");
             break;
         default:
-            var_set_string(res, "Dragon Shield: You gain +25 AC");
+            var_set_string(res, "Dragon Skin: You gain +25 AC");
         }
         break;
     case SPELL_HELP_DESC:

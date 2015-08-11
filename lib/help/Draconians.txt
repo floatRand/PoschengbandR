@@ -36,7 +36,7 @@
   removed or changed, so you might want to study this list to decide which
   power you will choose for your character.
 
-  [[[[r|Dragon Shield      | You will gain extra armor class and a defensive aura if available.
+  [[[[r|Dragon Skin        | You will gain extra armor class and a defensive aura if available.
   [[[[r|Magic Resistance   | You will gain an improved saving throw versus magical attacks.
   [[[[r|Dragon Strike      | You will be able to attack an adjacent opponent with a special blow (Fire, Cold, etc).
   [[[[r|Deadly Breath      | Your breath will become more deadly.
