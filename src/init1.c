@@ -4226,13 +4226,13 @@ static dungeon_grid letter[255];
 static errr parse_line_feature(char *buf)
 {
     int num;
-    char *zz[9];
+    char *zz[10];
 
 
     if (init_flags & INIT_ONLY_BUILDINGS) return (0);
 
     /* Tokenize the line */
-    if ((num = tokenize(buf+2, 9, zz, 0)) > 1)
+    if ((num = tokenize(buf+2, 10, zz, 0)) > 1)
     {
         /* Letter to assign */
         int index = zz[0][0];
@@ -4264,7 +4264,7 @@ static errr parse_line_feature(char *buf)
                 {
                     letter[index].random |= RANDOM_TRAP;
                 }
-                else
+                else if (zz[7][0] != '0')
                 {
                     letter[index].trap = f_tag_to_index(zz[7]);
                     if (letter[index].trap < 0) return PARSE_ERROR_UNDEFINED_TERRAIN_TAG;
