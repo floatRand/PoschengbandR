@@ -2868,7 +2868,10 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
         if (p_ptr->pclass == CLASS_WARRIOR || 
             p_ptr->pclass == CLASS_CAVALRY || 
             p_ptr->pclass == CLASS_BERSERKER ||
-            p_ptr->pclass == CLASS_MAULER )
+            p_ptr->pclass == CLASS_MAULER ||
+            p_ptr->prace == RACE_MON_HYDRA ||
+            p_ptr->prace == RACE_MON_TROLL ||
+            p_ptr->prace == RACE_MON_JELLY )
         {
             give_power = TRUE;
             give_resistance = TRUE;

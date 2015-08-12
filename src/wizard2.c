@@ -3032,6 +3032,23 @@ void do_cmd_debug(void)
 
     case '_':
     {
+        int i;
+        char buf[MAX_NLEN];
+        for (i = 1; i < 200; i++)
+        {
+            object_type forge = {0};
+            if (!make_object(&forge, AM_GOOD | AM_GREAT | AM_TAILORED))
+            {
+                msg_format("Whoops #%d", i);
+                continue;
+            }
+            identify_item(&forge);
+            forge.ident |= (IDENT_MENTAL);
+
+            object_desc(buf, &forge, 0);
+            msg_format("%d) %s", i, buf);
+        }
+/*
         int i, j, ct = 0;
         object_type obj;
         char buf[MAX_NLEN];
@@ -3054,6 +3071,7 @@ void do_cmd_debug(void)
 
         object_desc(buf, &obj, 0);
         msg_format("%d) %s", ct, buf);
+*/
         break;
     }
     default:
