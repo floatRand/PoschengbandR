@@ -5012,7 +5012,7 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
         rolls = 0;
         /* AM_FORCE_EGO is used for granting quest rewards. Ego rings and amulets
            can be achieved with just power 1 ... Indeed, power 2 is often too much! */
-        if (o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET)
+        if ((o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET) && lev < 50)
             power = MAX(1, power);
         else
             power = 2;

@@ -4264,7 +4264,7 @@ static errr parse_line_feature(char *buf)
                 {
                     letter[index].random |= RANDOM_TRAP;
                 }
-                else if (zz[7][0] != '0')
+                else
                 {
                     letter[index].trap = f_tag_to_index(zz[7]);
                     if (letter[index].trap < 0) return PARSE_ERROR_UNDEFINED_TERRAIN_TAG;
