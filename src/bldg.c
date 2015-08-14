@@ -3723,6 +3723,10 @@ static bool research_mon(void)
             {
                 /*** Recall on screen ***/
 
+                /* Mark Monster as Seen for Monster Knowledge Screens */
+                if (!r_info[r_idx].r_sights)
+                    r_info[r_idx].r_sights = 1;
+
                 /* Get maximal info about this monster */
                 lore_do_probe(r_idx);
 

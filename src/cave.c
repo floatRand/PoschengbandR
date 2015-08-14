@@ -4855,7 +4855,10 @@ void hit_mon_trap(int y, int x, int m_idx)
                     {
                         if (m_ptr->ml)
                             msg_format("%s falls through the trap door.", m_name);
-                        delete_monster_idx(m_idx);
+                        if (p_ptr->inside_arena)
+                            msg_format("%s climbs back out to continue the fight!", m_name);
+                        else
+                            delete_monster_idx(m_idx);
                     }
                     break;
                 case 6: case 7: case 8: case 9: /* Arrow Trap */

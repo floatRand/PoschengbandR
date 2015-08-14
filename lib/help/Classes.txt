@@ -779,7 +779,7 @@
   Force-Trainer   +0   -1 [[[[G|  +3 |  +2   +1   +0  100%   +4  135%
   Blue-Mage       -4 [[[[G|  +4 |  -1   +1   -2   -2  100%   +4  130%
   Cavalry         +2   -2   -2   +2   +2   +1  111%  +10  120%
-  Berserker     [[[[G|  +8 | -20  -20   +4   +4  -20  200%  +22  160%
+  Berserker     [[[[G|  +8 | -20  -20   +4   +4   +4  200%  +22  160%
   Weaponsmith     +3   -1   -1   +1   +0   +0  111%  +12  130%
   Mirror-Master   -2 [[[[G|  +3 |  +1   -1   -2   -2  100%   +4  130%
   Ninja           +0   -1   -1 [[[[G|  +3 |  +2   +2  100%   +4  120%
@@ -855,4 +855,4 @@
 
 
 
-[[[[s|  Automatically generated for PosChengband 3.5.0.
+[[[[s|  Automatically generated for PosChengband 3.5.1.

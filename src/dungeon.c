@@ -4761,7 +4761,7 @@ static void process_player(void)
                 monster_desc(m_name, m_ptr, 0);
 
                 /* Dump a message */
-                msg_format("%^s is no longer fear.", m_name);
+                msg_format("%^s is no longer afraid.", m_name);
             }
         }
 

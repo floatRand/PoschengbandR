@@ -542,4 +542,4 @@
 ***** [b] Draconians.txt
 
 
-[[[[s|  Automatically generated for PosChengband 3.5.0.
+[[[[s|  Automatically generated for PosChengband 3.5.1.
