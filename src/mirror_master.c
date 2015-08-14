@@ -346,7 +346,7 @@ static void _mirror_of_ruffnor_spell(int cmd, variant *res)
         var_set_string(res, "Mirror of Ruffnor");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Generates barrier which completly protect you from almost all damages. Takes a few your turns when the barrier breaks or duration time is exceeded.");
+        var_set_string(res, "Generates barrier which completely protect you from almost all damages. Takes a few your turns when the barrier breaks or duration time is exceeded.");
         break;
     case SPELL_CAST:
         set_invuln(spell_power(randint1(4) + 4), FALSE);
@@ -373,7 +373,7 @@ static void _mirror_of_seeing_spell(int cmd, variant *res)
         break;
     case SPELL_DESC:
         if (lvl >= 39)
-            var_set_string(res, "Detects monsters in your vicinity. Grants temporary ESP. Maps nearby arean.");
+            var_set_string(res, "Detects monsters in your vicinity. Grants temporary ESP. Maps nearby area.");
         else if (lvl >= 29)
             var_set_string(res, "Detects monsters in your vicinity. Grants temporary ESP");
         else if (lvl >= 19)

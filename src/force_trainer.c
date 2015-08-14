@@ -53,7 +53,7 @@ static void _flying_technique_spell(int cmd, variant *res)
         var_set_string(res, "Flying Technique");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Gives levitaion a while.");
+        var_set_string(res, "Gives levitation a while.");
         break;
     case SPELL_CAST:
     {
@@ -139,7 +139,7 @@ static void _improve_force_spell(int cmd, variant *res)
         var_set_string(res, "Improve Force");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Improves spirit energy power temporaly. Improved spirit energy will be more and more powerfull or have longer duration. Too many improving results in uncontrollable explosion of spirit energy.");
+        var_set_string(res, "Improves spirit energy power temporarily. Improved spirit energy will be more and more powerful or have longer duration. Too many improving results in uncontrollable explosion of spirit energy.");
         break;
     case SPELL_CAST:
     {

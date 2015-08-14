@@ -289,7 +289,7 @@ static void _shard_ball_spell(int cmd, variant *res)
         var_set_string(res, "Shard Ball");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires a ball of shards at chosent target");
+        var_set_string(res, "Fires a ball of shards at chosen target");
         break;
     case SPELL_INFO:
         var_set_string(res, info_damage(0, 0, dam));

@@ -8278,7 +8278,7 @@ static cptr do_hex_spell(int spell, int mode)
 
     case 11:
         if (name) return "Vampiric mist";
-        if (desc) return "Deals few dameges of drain life to all monsters in your sight.";
+        if (desc) return "Deals few damages of drain life to all monsters in your sight.";
         power = (plev / 2) + 5;
         if (info) return info_damage(1, power, 0);
         if (cast || cont)
@@ -8289,7 +8289,7 @@ static cptr do_hex_spell(int spell, int mode)
 
     case 12:
         if (name) return "Swords to runeswords";
-        if (desc) return "Gives vorpal ability to your weapon. Increases damages by your weapon acccording to curse of your weapon.";
+        if (desc) return "Gives vorpal ability to your weapon. Increases damages by your weapon according to curse of your weapon.";
         if (cast)
         {
             if (p_ptr->weapon_ct > 1)
@@ -8316,7 +8316,7 @@ static cptr do_hex_spell(int spell, int mode)
 
     case 14:
         if (name) return "Building up";
-        if (desc) return "Attempts to increases your strength, dexterity and constitusion.";
+        if (desc) return "Attempts to increases your strength, dexterity and constitution.";
         if (cast)
         {
             msg_print("You feel your body is developed more now.");

@@ -4416,7 +4416,7 @@ static void dump_aux_race_history(FILE *fff)
 static void dump_aux_virtues(FILE *fff)
 {
     fprintf(fff, "\n\n=================================== Virtues ===================================\n\n");
-    fprintf(fff, "Your alighnment : %s\n", your_alignment());
+    fprintf(fff, "Your alignment : %s\n", your_alignment());
     fprintf(fff, "\n");
     virtue_dump(fff);
 }

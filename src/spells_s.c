@@ -8,7 +8,7 @@ void satisfy_hunger_spell(int cmd, variant *res)
         var_set_string(res, "Satisfy Hunger");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fills your belly with pure yuminess.");
+        var_set_string(res, "Fills your belly with pure yumminess.");
         break;
     case SPELL_CAST:
         set_food(PY_FOOD_MAX - 1);

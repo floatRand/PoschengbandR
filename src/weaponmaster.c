@@ -387,7 +387,7 @@ static void _piercing_arrow_spell(int cmd, variant *res)
         var_set_string(res, "Piercing Arrow");
         break;
     case SPELL_DESC:
-        var_set_string(res, "If an arrow hits opponent, it pierces and can also hit next opponent in same direction (requires another attack roll), up to 5 opponents. Each successive pierce suffers a cumulative penalty tohit.");
+        var_set_string(res, "If an arrow hits opponent, it pierces and can also hit next opponent in same direction (requires another attack roll), up to 5 opponents. Each successive pierce suffers a cumulative penalty to hit.");
         break;
     default:
         _toggle_spell(TOGGLE_PIERCING_ARROW, cmd, res);

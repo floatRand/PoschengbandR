@@ -195,7 +195,7 @@ void default_spell(int cmd, variant *res) /* Base class */
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Unkown Spell");
+        var_set_string(res, "Unknown Spell");
         break;
 
     case SPELL_DESC:
