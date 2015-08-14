@@ -1554,7 +1554,7 @@ void infernal_deal_mut(int cmd, variant *res)
         var_set_string(res, "You have made an infernal deal.");
         break;
     case SPELL_HELP_DESC:
-        var_set_string(res, "You will regain hp and sp whenever a nearby monster is slain.");
+        var_set_string(res, "You will regain hp and sp whenever a nearby enemy monster is slain.");
         break;
     default:
         default_spell(cmd, res);

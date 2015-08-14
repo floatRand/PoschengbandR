@@ -44,6 +44,7 @@
   [[[[r|Summon Kin         | You will be able to summon aid from dragons.
   [[[[r|Ancient Knowledge  | Items will automatically identify as you pick them up.
   [[[[r|Resistance         | You will gain extra resistance of the appropriate type (e.g. Fire or Cold).
+  [[[[r|Metamorphosis      | Your body will transform into a dragon (e.g. 6 ring slots and no weapons)
 
 
 

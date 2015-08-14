@@ -181,7 +181,7 @@
   [[[[r|Potion Chugger     | You will be able to chug potions much faster than normal.
   [[[[r|One with Magic     | You will have a chance of resisting Dispel Magic.
   [[[[r|Peerless Tracker   | You will gain the ability to map your surroundings.
-  [[[[r|Infernal Deal      | You will regain hp and sp whenever a nearby monster is slain.
+  [[[[r|Infernal Deal      | You will regain hp and sp whenever a nearby enemy monster is slain.
   [[[[r|Merchant's Friend  | You will gain new powers of shopping.
   [[[[r|Sacred Vitality    | You will gain a bonus to all healing effects.
   [[[[r|Cult of Personality| Summoned monsters may sometimes switch alliances.
