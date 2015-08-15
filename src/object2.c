@@ -2514,7 +2514,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
     bool done = FALSE;
     bool force_great = FALSE;
 
-    if (!apply_magic_ego)
+    if (!apply_magic_ego && level > 30)
     {
         if ( ((mode & AM_GREAT) && randint0(50) < level)
           || ((mode & AM_GOOD) && randint0(150) < level) )
@@ -2927,7 +2927,7 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
     bool force_great = FALSE;
     bool done = FALSE;
 
-    if (!apply_magic_ego)
+    if (!apply_magic_ego && level > 30)
     {
         if ( ((mode & AM_GREAT) && randint0(75) < level)
           || ((mode & AM_GOOD) && randint0(300) < level) )
