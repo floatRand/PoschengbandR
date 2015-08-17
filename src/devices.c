@@ -2014,7 +2014,8 @@ static cptr _do_staff(int sval, int mode)
             if ( prace_is_(RACE_SKELETON) 
               || prace_is_(RACE_GOLEM) 
               || prace_is_(RACE_ZOMBIE) 
-              || prace_is_(RACE_SPECTRE) )
+              || prace_is_(RACE_SPECTRE)
+              || elemental_is_(ELEMENTAL_AIR) )
             {
                 msg_print("What a waste.  It's your food!");
             }

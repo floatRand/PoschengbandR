@@ -32,6 +32,7 @@ static void _calc_bonuses(void)
     p_ptr->no_cut = TRUE;
     p_ptr->no_eldritch = TRUE;
     p_ptr->levitation = TRUE;
+    p_ptr->slow_digest = TRUE;
 
     if (p_ptr->lev >= 5)
         res_add(RES_POIS);
@@ -46,6 +47,7 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_CONF);
     add_flag(flgs, TR_RES_FEAR);
     add_flag(flgs, TR_LEVITATION);
+    add_flag(flgs, TR_SLOW_DIGEST);
     if (p_ptr->lev >= 5)
         add_flag(flgs, TR_RES_POIS);
     if (p_ptr->lev >= 10)
@@ -334,7 +336,7 @@ static void _wall_of_earth_spell(int cmd, variant *res)
 
 static power_info _earth_powers[] = 
 {
-    { A_STR, {  1,  1, 35, stone_to_mud_spell}},
+    { A_STR, {  1,  1, 35, eat_rock_spell}},
     { A_STR, {  7,  5, 35, _shard_bolt_spell}},
     { A_CON, { 10, 10, 40, stone_skin_spell}},
     { A_CON, { 15, 10, 40, sense_surroundings_spell}},
@@ -461,6 +463,9 @@ static void _air_birth(void)
     add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_HARD_ARMOR, SV_CHAIN_MAIL));
+    add_outfit(&forge);
+
+    object_prep(&forge, lookup_kind(TV_STAFF, SV_STAFF_NOTHING));
     add_outfit(&forge);
 
     p_ptr->current_r_idx = MON_AIR_SPIRIT; 
@@ -996,6 +1001,11 @@ static void _fire_birth(void)
     object_prep(&forge, lookup_kind(TV_HARD_ARMOR, SV_CHAIN_MAIL));
     add_outfit(&forge);
 
+    object_prep(&forge, lookup_kind(TV_FLASK, SV_ANY));
+    apply_magic(&forge, 1, AM_NO_FIXED_ART);
+    forge.number = (byte)rand_range(7, 12);
+    add_outfit(&forge);
+
     p_ptr->current_r_idx = MON_FIRE_SPIRIT; 
 }
 
@@ -1305,9 +1315,7 @@ race_t *mon_elemental_get_race_t(int psubrace)
 
     result->name = "Elemental";
     result->desc = _desc;
-    result->flags = RACE_IS_MONSTER;
-    /* TODO: Nonliving makes sense, but then what will elementals eat?
-    result->flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;*/
+    result->flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;
     result->base_hp = 30;
     result->pseudo_class_idx = CLASS_WARRIOR;
 

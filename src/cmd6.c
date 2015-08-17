@@ -393,18 +393,19 @@ static void do_cmd_eat_food_aux(int item)
     {
         jelly_eat_object(o_ptr);
     }
-    else if ((prace_is_(RACE_SKELETON) ||
-          prace_is_(RACE_GOLEM) || 
-          prace_is_(RACE_MON_GOLEM) || 
-          prace_is_(RACE_MON_SWORD) || 
-          p_ptr->mimic_form == MIMIC_CLAY_GOLEM ||
-          p_ptr->mimic_form == MIMIC_IRON_GOLEM ||
-          p_ptr->mimic_form == MIMIC_MITHRIL_GOLEM ||
-          p_ptr->mimic_form == MIMIC_COLOSSUS ||
-          prace_is_(RACE_ZOMBIE) ||
-          prace_is_(RACE_MON_LICH) ||
-          prace_is_(RACE_SPECTRE)) &&
-         (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND))
+    else if ( ( prace_is_(RACE_SKELETON)
+             || prace_is_(RACE_GOLEM)
+             || prace_is_(RACE_MON_GOLEM)
+             || prace_is_(RACE_MON_SWORD)
+             || p_ptr->mimic_form == MIMIC_CLAY_GOLEM
+             || p_ptr->mimic_form == MIMIC_IRON_GOLEM
+             || p_ptr->mimic_form == MIMIC_MITHRIL_GOLEM
+             || p_ptr->mimic_form == MIMIC_COLOSSUS
+             || prace_is_(RACE_ZOMBIE)
+             || prace_is_(RACE_MON_LICH)
+             || prace_is_(RACE_SPECTRE)
+             || elemental_is_(ELEMENTAL_AIR) )
+           && (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND) )
     {
         cptr staff;
 
@@ -574,7 +575,8 @@ static bool item_tester_hook_eatable(object_type *o_ptr)
         p_ptr->mimic_form == MIMIC_COLOSSUS ||
         prace_is_(RACE_ZOMBIE) ||
         prace_is_(RACE_MON_LICH) ||
-        prace_is_(RACE_SPECTRE))
+        prace_is_(RACE_SPECTRE) ||
+        elemental_is_(ELEMENTAL_AIR))
     {
         if (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND)
             return TRUE;
@@ -809,7 +811,18 @@ static void do_cmd_quaff_potion_aux(int item)
                 set_food(MIN(p_ptr->food + q_ptr->pval + MAX(0, q_ptr->pval * 10) + 2000, PY_FOOD_MAX - 1));
                 break;
             default:
-                (void)set_food(p_ptr->food + q_ptr->pval);
+                if (elemental_is_(ELEMENTAL_WATER))
+                {
+                    msg_print("That tastes delicious.");
+                    set_food(MIN(p_ptr->food + q_ptr->pval + MAX(0, q_ptr->pval * 10) + 2000, PY_FOOD_MAX - 1));
+                }
+                else if (elemental_is_(ELEMENTAL_FIRE) && q_ptr->tval == TV_FLASK)
+                {
+                    msg_print("Your body flames up with renewed vigor.");
+                    set_food(p_ptr->food + 5000);
+                }
+                else
+                    set_food(p_ptr->food + q_ptr->pval);
                 break;
         }
         break;
@@ -834,7 +847,7 @@ static bool item_tester_hook_quaff(object_type *o_ptr)
 {
     if (o_ptr->tval == TV_POTION) return TRUE;
 
-    if (prace_is_(RACE_ANDROID))
+    if (prace_is_(RACE_ANDROID) || elemental_is_(ELEMENTAL_FIRE))
     {
         if (o_ptr->tval == TV_FLASK && o_ptr->sval == SV_FLASK_OIL)
             return TRUE;

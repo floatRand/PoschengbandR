@@ -1582,17 +1582,29 @@ void eat_rock_spell(int cmd, variant *res)
         }
         else if (have_flag(f_ptr->flags, FF_DOOR) || have_flag(f_ptr->flags, FF_CAN_DIG))
         {
-            set_food(p_ptr->food + 3000);
+            if (elemental_is_(ELEMENTAL_EARTH))
+                set_food(MIN(p_ptr->food + 500, PY_FOOD_MAX - 1));
+            else
+                set_food(p_ptr->food + 3000);
         }
         else if (have_flag(f_ptr->flags, FF_MAY_HAVE_GOLD) || have_flag(f_ptr->flags, FF_HAS_GOLD))
         {
-            set_food(p_ptr->food + 5000);
+            if (elemental_is_(ELEMENTAL_EARTH))
+                set_food(MIN(p_ptr->food + 1000, PY_FOOD_MAX - 1));
+            else
+                set_food(p_ptr->food + 5000);
         }
         else
         {
-            msg_format("This %s is very filling!", 
-                f_name + mimic_f_ptr->name);
-            set_food(p_ptr->food + 10000);
+            if (elemental_is_(ELEMENTAL_EARTH))
+                set_food(MIN(p_ptr->food + 2000, PY_FOOD_MAX - 1));
+            else
+            {
+                msg_format("This %s is very filling!",
+                    f_name + mimic_f_ptr->name);
+
+                set_food(p_ptr->food + 10000);
+            }
         }
 
         /* Destroy the wall */

@@ -2909,6 +2909,10 @@ void player_outfit(void)
     }
     case RACE_MON_JELLY:
         break;
+    case RACE_MON_ELEMENTAL:
+        if (elemental_is_(ELEMENTAL_WATER))
+            _birth_object(TV_POTION, SV_POTION_WATER, rand_range(15, 23));
+        break;
     default:
         _birth_object(TV_FOOD, SV_FOOD_RATION, 2 + rand_range(3, 7));
     }
