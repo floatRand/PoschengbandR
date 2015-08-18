@@ -3781,13 +3781,15 @@ errr parse_r_info(char *buf, header *head)
                 /* XXX XXX XXX Hack -- Read spell frequency */
             if (1 == sscanf(s, "1_IN_%d", &i))
             {
-                /* Extract a "frequency" */
                 r_ptr->freq_spell = 100 / i;
-
-                    /* Start at next entry */
                 s = t;
+                continue;
+            }
 
-                /* Continue */
+            if (1 == sscanf(s, "FREQ_%d", &i))
+            {
+                r_ptr->freq_spell = i;
+                s = t;
                 continue;
             }
 

@@ -109,6 +109,7 @@
 # 'S' is for spells. The first S: line must be S:1_IN_X with X the
 # number of monster turns, on average, before the monster will cast
 # one of its spells. X must not be zero.
+# Alt: Use S:FREQ_NN to specify the spell frequency directly.
 
 # 'F' is for flags. These are fairly self-explanatory. As many F:
 # lines may be used as are needed to specify all the flags and flags
@@ -10970,7 +10971,7 @@ F:NO_CONF | NO_SLEEP
 F:POS_HOLD_LIFE | POS_SEE_INVIS
 P:Copy:Skeleton:Mauler
 P:Body:Skull
-S:1_IN_2 |
+S:FREQ_40 |
 S:BA_WATE | BR_FIRE | BO_ICEE | BA_ELEC | BA_COLD |
 S:CAUSE_4 | DRAIN_MANA | BRAIN_SMASH | 
 S:S_UNDEAD
@@ -14722,7 +14723,7 @@ F:ONLY_ITEM | DROP_2D2 | DROP_4D2 | DROP_GOOD |
 F:OPEN_DOOR | BASH_DOOR | POWERFUL | MOVE_BODY | 
 F:EVIL | RES_FIRE | RES_COLD | NO_CONF | NO_SLEEP | RES_POIS
 F:DROP_CORPSE | POS_GAIN_AC
-S:1_IN_2 | 
+S:FREQ_40 |
 S:BR_DISE | BR_PLAS | BR_NUKE | BR_POIS | BR_ACID
 P:Copy:Barbarian:Warrior
 P:Life:120
@@ -14868,7 +14869,7 @@ F:ONLY_ITEM | DROP_2D2 | DROP_4D2 | DROP_GOOD |
 F:OPEN_DOOR | BASH_DOOR | POWERFUL | MOVE_BODY | 
 F:EVIL | RES_FIRE | RES_COLD | NO_CONF | NO_SLEEP
 F:DROP_CORPSE | POS_GAIN_AC
-S:1_IN_2 | 
+S:FREQ_40 |
 S:BR_FIRE | BR_COLD | BR_DISE
 P:Copy:Barbarian:Warrior
 P:Life:120
@@ -15510,7 +15511,7 @@ F:POS_SUST_STR | POS_SUST_INT | POS_SUST_WIS | POS_SUST_DEX | POS_SUST_CON | POS
 P:Copy:Half-Giant:Mauler
 P:Life:125
 P:Body:Jormungand
-S:1_IN_3 | 
+S:FREQ_40 |
 S:S_MONSTERS | BR_CHAO | BA_CHAO | ROCKET | S_CYBER | S_KIN |
 S:BR_NETH | BR_MANA | S_HI_UNDEAD | S_HI_DRAGON | S_UNIQUE |
 S:BR_NUKE | BR_DISI | HAND_DOOM | DISPEL | ANTI_MAGIC
@@ -15717,7 +15718,7 @@ F:EVIL | RES_FIRE | RES_COLD | RES_POIS | RES_ELEC | NO_CONF | NO_SLEEP
 F:DROP_CORPSE | POS_GAIN_AC
 P:Copy:Half-Titan:Mauler
 P:Body:Hydra5
-S:1_IN_2 | 
+S:FREQ_40 |
 S:BR_FIRE | BR_NEXU | BR_CHAO | BR_POIS | BR_DISE | BR_PLAS | BR_NUKE | BR_DARK
 
 N:873:Combat-Echizen "Because it's time"
@@ -19335,7 +19336,7 @@ F:DROP_CORPSE | POS_GAIN_AC | POS_DETECT_MONSTERS
 P:Copy:Kutar:Rogue
 P:SpellStat:Dex
 P:Body:Hound
-S:1_IN_2 | 
+S:FREQ_35 |
 S:BR_TIME | BR_DISI | BR_NETH
 D:A giant hound, dark as night.  It hunts alone.  Flee!
 

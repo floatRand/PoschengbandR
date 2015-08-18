@@ -1034,16 +1034,16 @@ static void roff_aux(int r_idx, int mode)
         /* Describe the spell frequency */
         if (m > 100 || know_everything)
         {
-            hooked_roff(format("; 1 time in %d", 100 / n));
-
+            /*hooked_roff(format("; 1 time in %d", 100 / n));*/
+            hooked_roff(format("; %d%% of the time", n));
         }
 
         /* Guess at the frequency */
         else if (m)
         {
             n = ((n + 9) / 10) * 10;
-            hooked_roff(format("; about 1 time in %d", 100 / n));
-
+            /*hooked_roff(format("; about 1 time in %d", 100 / n));*/
+            hooked_roff(format("; about %d%% of the time", n));
         }
 
         /* End this sentence */
