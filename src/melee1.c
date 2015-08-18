@@ -556,7 +556,7 @@ bool make_attack_normal(int m_idx)
                     }
                     else 
                     {
-                        if (!res_save(RES_DISEN, 51) && !CHECK_MULTISHADOW())
+                        if (!res_save(RES_DISEN, 31) && !CHECK_MULTISHADOW())
                         {
                             /* Apply disenchantment */
                             if (apply_disenchant(0))

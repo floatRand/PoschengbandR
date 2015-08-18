@@ -1016,7 +1016,7 @@ bool sword_disenchant(void)
         
         if (!n) continue;
         if (i == TR_SPEED) continue;
-        if (res_save(RES_DISEN, 70)) continue;
+        if (res_save(RES_DISEN, 44)) continue;
         
         _essences[i] -= MAX(1, _essences[i] * randint1(r) / 20);
         if (_essences[i] < n)

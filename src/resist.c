@@ -30,6 +30,28 @@ void res_add_vuln(int which)
     p_ptr->resist[which]--;
 }
 
+bool res_is_high(int which)
+{
+    if (res_is_low(which))
+        return FALSE;
+    return TRUE;
+}
+
+bool res_is_low(int which)
+{
+    switch (which)
+    {
+    case RES_ACID:
+    case RES_ELEC:
+    case RES_FIRE:
+    case RES_COLD:
+    case RES_POIS:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+
 typedef struct {
     int flg;
     int res;
@@ -183,7 +205,7 @@ cptr res_name(int which)
 }
 
 #define _MAX_PCTS 29
-static int _pcts[_MAX_PCTS] = {
+static int _lo_pcts[_MAX_PCTS] = {
    0, 50, 65, 72, 75,
   77, 78, 79, 80, 81,
   82, 83, 84, 85, 86,
@@ -191,6 +213,31 @@ static int _pcts[_MAX_PCTS] = {
   92, 93, 94, 95, 96,
   97, 98, 99, 100
 };
+
+static int _hi_pcts[_MAX_PCTS] = {
+   0, 30, 40, 45, 47,
+  48, 49, 50, 51, 52,
+  53, 54, 55, 56, 57,
+  58, 59, 60, 61, 62,
+  63, 64, 65, 66, 67,
+  68, 69, 70, 100
+};
+/* Note: I've decided to move back to a two-tiered resistance system.
+ * While I like the simplicity of a single system, the fact is that it
+ * forced the player to cover all resists, especially rather early on when
+ * it is practically impossible to do so. This redesign is closer to the
+ * original Hengband system. Also, you can no longer "shut-down" end game
+ * high damage with multiple resists like before:
+ * Attack  Hengband(1x) Old(3x) New(3x) New(1x)
+ * ======= ============ ======= ======= =======
+ * ROCKET           400     224     330     420
+ * BR_CHAO          439     196     330     420
+ * BR_NETH          356     182     302     385
+
+ * These are the Serpent's big three attacks. As you can see, he could be
+ * made quite tame with enough resists. But no longer ;)
+ */
+
 
 int  res_pct_aux(int which, int count)
 {
@@ -203,15 +250,15 @@ int  res_pct_aux(int which, int count)
     if (idx >= _MAX_PCTS)
         idx = _MAX_PCTS-1;
 
-    result = _pcts[idx];
+    if (res_is_low(which))
+        result = _lo_pcts[idx];
+    else
+        result = _hi_pcts[idx];
 
     if (count < 0)
         result *= -1;
     else if (result < 100)
     {
-        /* These restrictions are no laughing matter. Confusion is up to 600hp
-         * and Light is up to 500hp. In practice, players will be hard pressed to
-         * exceed 36% resistance, meaning they can expect around 400 and 320 dam */
         if (which == RES_CONF)
         {
             if (prace_is_(RACE_TONBERRY))
@@ -224,7 +271,6 @@ int  res_pct_aux(int which, int count)
                 result = (result + 1) / 2;
         }
 
-        /* Elemental Damage is more deadly, so I'm being a bit nicer here :) */
         if (which == RES_FIRE)
         {
             if (prace_is_(RACE_ENT))
@@ -257,16 +303,19 @@ bool res_save(int which, int power)
 
 bool res_save_default(int which)
 {
-    return res_save(which, 55);
+    int power = res_is_low(which) ? 55 : 35;
+    return res_save(which, power);
 }
 bool res_can_ignore(int which)
 {
-    if (res_pct(which) >= 55)
+    int power = res_is_low(which) ? 55 : 35;
+    if (res_pct(which) >= power)
         return TRUE;
     return FALSE;
 }
 
 bool res_save_inventory(int which)
 {
-    return res_save(which, 66);
+    int power = res_is_low(which) ? 66 : 41;
+    return res_save(which, power);
 }

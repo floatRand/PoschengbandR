@@ -32,6 +32,8 @@ extern void res_calc_bonuses(u32b flgs[TR_FLAG_SIZE]);
 extern int  res_calc_dam(int which, int dam);
 extern bool res_can_ignore(int which);
 extern void res_clear(void);
+extern bool res_is_high(int which);
+extern bool res_is_low(int which);
 extern cptr res_name(int which);
 extern int  res_pct(int which);
 extern int  res_pct_aux(int which, int count);

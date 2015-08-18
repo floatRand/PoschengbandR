@@ -1937,7 +1937,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s shoots something.", m_name);
             else msg_format("%^s fires a rocket.", m_name);
-            dam = MIN(m_ptr->hp / 4, 800);
+            dam = MIN(m_ptr->hp / 4, 600);
             breath(y, x, m_idx, GF_ROCKET,
                 dam, 2, FALSE, MS_ROCKET, learnable);
             update_smart_learn(m_idx, DRS_SHARD);
@@ -2102,7 +2102,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes gas.", m_name);
-            dam = MIN(m_ptr->hp / 5, 700);
+            dam = MIN(m_ptr->hp / 5, 600);
             breath(y, x, m_idx, GF_POIS, dam, 0, TRUE, MS_BR_POIS, learnable);
             update_smart_learn(m_idx, DRS_POIS);
             break;
@@ -2113,7 +2113,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes nether.", m_name);
-            dam = MIN(m_ptr->hp / 6, 650);
+            dam = MIN(m_ptr->hp / 6, 550);
             breath(y, x, m_idx, GF_NETHER, dam,0, TRUE, MS_BR_NETHER, learnable);
             update_smart_learn(m_idx, DRS_NETH);
             break;
@@ -2124,7 +2124,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes light.", m_name);
-            dam = MIN(m_ptr->hp / 6, 500);
+            dam = MIN(m_ptr->hp / 6, 400);
             breath(y_br_lite, x_br_lite, m_idx, GF_LITE, dam,0, TRUE, MS_BR_LITE, learnable);
             update_smart_learn(m_idx, DRS_LITE);
             break;
@@ -2135,7 +2135,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes darkness.", m_name);
-            dam = MIN(m_ptr->hp / 6, 500);
+            dam = MIN(m_ptr->hp / 6, 400);
             breath(y, x, m_idx, GF_DARK, dam,0, TRUE, MS_BR_DARK, learnable);
             update_smart_learn(m_idx, DRS_DARK);
             break;
@@ -2146,7 +2146,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes confusion.", m_name);
-            dam = MIN(m_ptr->hp / 6, 600);
+            dam = MIN(m_ptr->hp / 6, 400);
             breath(y, x, m_idx, GF_CONFUSION, dam,0, TRUE, MS_BR_CONF, learnable);
             update_smart_learn(m_idx, DRS_CONF);
             break;
@@ -2159,7 +2159,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             if (m_ptr->r_idx == MON_JAIAN) msg_format("'Booooeeeeee'");
             else if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes sound.", m_name);
-            dam = MIN(m_ptr->hp / 6, 600);
+            dam = MIN(m_ptr->hp / 6, 450);
             breath(y, x, m_idx, GF_SOUND, dam,0, TRUE, MS_BR_SOUND, learnable);
             update_smart_learn(m_idx, DRS_SOUND);
             break;
@@ -2170,7 +2170,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes chaos.", m_name);
-            dam = MIN(m_ptr->hp / 6, 700);
+            dam = MIN(m_ptr->hp / 6, 600);
             breath(y, x, m_idx, GF_CHAOS, dam,0, TRUE, MS_BR_CHAOS, learnable);
             update_smart_learn(m_idx, DRS_CHAOS);
             break;
@@ -2181,7 +2181,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes disenchantment.", m_name);
-            dam = MIN(m_ptr->hp / 6, 600);
+            dam = MIN(m_ptr->hp / 6, 500);
             breath(y, x, m_idx, GF_DISENCHANT, dam,0, TRUE, MS_BR_DISEN, learnable);
             update_smart_learn(m_idx, DRS_DISEN);
             break;
@@ -2192,7 +2192,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes nexus.", m_name);
-            dam = MIN(m_ptr->hp / 5, 400);
+            dam = MIN(m_ptr->hp / 3, 250);
             breath(y, x, m_idx, GF_NEXUS, dam,0, TRUE, MS_BR_NEXUS, learnable);
             update_smart_learn(m_idx, DRS_NEXUS);
             break;
@@ -2203,7 +2203,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes time.", m_name);
-            dam = MIN(m_ptr->hp / 3, 200);
+            dam = MIN(m_ptr->hp / 3, 150);
             breath(y, x, m_idx, GF_TIME, dam,0, TRUE, MS_BR_TIME, learnable);
             break;
         }
@@ -2234,7 +2234,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             if (m_ptr->r_idx == MON_BOTEI) msg_format("'Botei-Build cutter!!!'");
             else if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes shards.", m_name);
-            dam = MIN(m_ptr->hp / 6, 700);
+            dam = MIN(m_ptr->hp / 6, 500);
             breath(y, x, m_idx, GF_SHARDS, dam,0, TRUE, MS_BR_SHARDS, learnable);
             update_smart_learn(m_idx, DRS_SHARD);
             break;
@@ -2286,7 +2286,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s breathes.", m_name);
             else msg_format("%^s breathes toxic waste.", m_name);
-            dam = MIN(m_ptr->hp / 3, 700);
+            dam = MIN(m_ptr->hp / 5, 600);
             breath(y, x, m_idx, GF_NUKE, dam,0, TRUE, MS_BR_NUKE, learnable);
             update_smart_learn(m_idx, DRS_POIS);
             break;

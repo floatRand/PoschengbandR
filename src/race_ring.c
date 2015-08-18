@@ -1676,7 +1676,7 @@ int ring_calc_torch(void)
 bool ring_disenchant(void)
 {
     bool result = FALSE;
-    if (!res_save(RES_DISEN, 70) && _drain_essences(20))
+    if (!res_save(RES_DISEN, 44) && _drain_essences(20))
     {
         msg_print("You feel power draining from your body!");
         result = TRUE;
