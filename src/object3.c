@@ -983,8 +983,8 @@ s32b weapon_cost(object_type *o_ptr)
         if (have_flag(flgs, TR_KILL_TROLL)) s += (4.0 * .02);
         else if (have_flag(flgs, TR_SLAY_TROLL)) s += (2.0 * .02);
 
-        if (have_flag(flgs, TR_KILL_ANIMAL)) s += (3.0 * .025);
-        else if (have_flag(flgs, TR_SLAY_ANIMAL)) s += (1.5 * .025);
+        if (have_flag(flgs, TR_KILL_ANIMAL)) s += (3.0 * .1);
+        else if (have_flag(flgs, TR_SLAY_ANIMAL)) s += (1.5 * .1);
 
         if (have_flag(flgs, TR_KILL_HUMAN)) s += (3.0 * .1);
         else if (have_flag(flgs, TR_SLAY_HUMAN)) s += (1.5 * .1);

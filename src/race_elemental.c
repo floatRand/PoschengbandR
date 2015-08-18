@@ -915,7 +915,7 @@ static void _water_process_world(void)
         if (have_flag(flgs, TR_IM_ACID)) continue;
         if (have_flag(flgs, TR_RES_ACID)) continue;
         if (have_flag(flgs, TR_IGNORE_ACID) && !one_in_(10)) continue;
-        if (object_is_artifact(o_ptr) && !one_in_(50)) continue;
+        if (object_is_artifact(o_ptr) && !one_in_(2)) continue;
 
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
         msg_format("Your watery touch corrodes your %s!", o_name);
