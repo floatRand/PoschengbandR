@@ -39,7 +39,7 @@ int get_class_idx(void)
         default:
         {
             race_t *race_ptr = get_race_t();
-            if (race_ptr->pseudo_class_idx)
+            /*if (race_ptr->pseudo_class_idx) Note: CLASS_WARRIOR = 0! */
                 result = race_ptr->pseudo_class_idx;
         }
         }

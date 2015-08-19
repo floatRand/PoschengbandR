@@ -2968,6 +2968,70 @@ static void calc_mana(void)
     _report_encumbrance();
 }
 
+/* Experimental: Adjust the non-linearity of extra hp distribution based on class.
+   It's probably best to have all this in one place. See also the hp.ods design doc.  */
+static int _calc_xtra_hp(int amt)
+{
+    int result = 0;
+    int w1 = 0, w2 = 0, w3 = 0, wt = 0;
+    int class_idx = get_class_idx();
+
+    switch (class_idx)
+    {
+    case CLASS_WARRIOR:
+    case CLASS_CAVALRY:
+    case CLASS_BERSERKER:
+    case CLASS_BLOOD_KNIGHT:
+    case CLASS_MAULER:
+        w1 = 1; w2 = 0; w3 = 0;
+        break;
+
+    case CLASS_PALADIN:
+    case CLASS_CHAOS_WARRIOR:
+    case CLASS_SAMURAI:
+    case CLASS_ARCHER:
+    case CLASS_WEAPONSMITH:
+    case CLASS_WEAPONMASTER:
+        w1 = 2; w2 = 1; w3 = 0;
+        break;
+
+    case CLASS_ROGUE:
+    case CLASS_MONK:
+    case CLASS_IMITATOR:
+    case CLASS_NINJA:
+    case CLASS_RUNE_KNIGHT:
+        w1 = 1; w2 = 1; w3 = 0;
+        break;
+
+    case CLASS_BLUE_MAGE:
+    case CLASS_RED_MAGE:
+    case CLASS_MIRROR_MASTER:
+    case CLASS_TIME_LORD:
+    case CLASS_BLOOD_MAGE:
+    case CLASS_WARLOCK:
+    case CLASS_NECROMANCER:
+        w1 = 0; w2 = 1; w3 = 1;
+        break;
+
+    case CLASS_MAGE:
+    case CLASS_HIGH_MAGE:
+    case CLASS_SORCERER:
+        w1 = 0; w2 = 0; w3 = 1;
+        break;
+
+    default:
+        w1 = 1; w2 = 1; w3 = 1;
+    }
+
+    wt = w1 + w2 + w3;
+
+    result += amt * p_ptr->lev * w1 / (50*wt);
+    result += amt * p_ptr->lev * p_ptr->lev * w2 / (50*50*wt);
+    result += amt * p_ptr->lev * p_ptr->lev * p_ptr->lev * w3 / (50*50*50*wt);
+
+    return result;
+}
+
 /*
  * Calculate the players (maximal) hit points
  * Adjust current hitpoints if necessary
@@ -2977,16 +3041,14 @@ static void calc_hitpoints(void)
     int      mhp;
     race_t  *race_ptr = get_race_t();
     class_t *class_ptr = get_class_t();
-/*    pers_t  *pers_ptr = get_pers_t(); */
+/*  pers_t  *pers_ptr = get_pers_t(); */
 
-    mhp = p_ptr->player_hp[p_ptr->lev - 1] * 13 / 100;
-    mhp += 3 * p_ptr->lev / 2;
-    mhp += 3 * p_ptr->lev * p_ptr->lev / 100;
-    mhp += 3 * p_ptr->lev * p_ptr->lev * p_ptr->lev / 5000;
+    mhp = p_ptr->player_hp[p_ptr->lev - 1] * 10 / 100; /* 255 hp total */
+    mhp += _calc_xtra_hp(300);
 
     mhp = mhp * race_ptr->life / 100;
     mhp = mhp * class_ptr->life / 100;
-/*    mhp = mhp * pers_ptr->life / 100; */
+/*  mhp = mhp * pers_ptr->life / 100; */
     mhp = mhp * ap_ptr->life / 100;
     mhp = mhp * p_ptr->life / 100;
     
