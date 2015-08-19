@@ -2181,7 +2181,7 @@ static _elemental_info_t _elemental_info[5] = { /* relies on #define DRAGON_RED 
 
 static void _elemental_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 15 + (l/10)*5;
     int res = _elemental_info[p_ptr->psubrace].which_res;
 
@@ -2315,7 +2315,7 @@ static race_t *_elemental_get_race_t(int subrace)
  **********************************************************************/
 static void _nether_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 15 + (l/10)*2;
 
     p_ptr->ac += ac;
@@ -2435,7 +2435,7 @@ static race_t *_nether_get_race_t(void)
  **********************************************************************/
 static void _law_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 15 + (l/10)*2;
 
     p_ptr->ac += ac;
@@ -2524,7 +2524,7 @@ static race_t *_law_get_race_t(void)
  **********************************************************************/
 static void _chaos_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 15 + (l/10)*2;
 
     p_ptr->ac += ac;
@@ -2613,7 +2613,7 @@ static race_t *_chaos_get_race_t(void)
  **********************************************************************/
 static void _balance_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 10 + (l/10)*2;
 
     p_ptr->ac += ac;
@@ -2702,7 +2702,7 @@ static race_t *_balance_get_race_t(void)
  **********************************************************************/
 static void _ethereal_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 15 + (l/10)*2;
 
     p_ptr->ac += ac;
@@ -2802,7 +2802,7 @@ static race_t *_ethereal_get_race_t(void)
  **********************************************************************/
 static void _crystal_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/50 + l*l*l/2500;
+    int to_a = py_prorata_level_aux(125, 1, 2, 2);
     int ac = 15 + (l/10)*2;
 
     p_ptr->ac += ac;
@@ -2904,7 +2904,7 @@ static race_t *_crystal_get_race_t(void)
  **********************************************************************/
 static void _bronze_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 15 + (l/10)*2;
 
     p_ptr->ac += ac;
@@ -2998,7 +2998,7 @@ static race_t *_bronze_get_race_t(void)
  **********************************************************************/
 static void _gold_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 15 + (l/10)*2;
 
     p_ptr->ac += ac;
@@ -3093,7 +3093,7 @@ static race_t *_gold_get_race_t(void)
  **********************************************************************/
 static void _steel_calc_bonuses(void) {
     int l = p_ptr->lev;
-    int to_a = l + l*l/50 + l*l*l/2500;
+    int to_a = py_prorata_level(150);
     int ac = 15 + (l/10)*2;
 
     p_ptr->skill_dig += 100;

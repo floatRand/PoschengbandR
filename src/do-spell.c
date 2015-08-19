@@ -3909,8 +3909,7 @@ static cptr do_death_spell(int spell, int mode)
         if (desc) return "Fires a huge ball of darkness.";
     
         {
-            int l = p_ptr->lev;
-            int dam = 100 + l + l*l/50 + l*l*l/1250;
+            int dam = 100 + py_prorata_level_aux(200, 1, 1, 2);
             int rad = spell_power(4);
 
             dam = spell_power(dam + p_ptr->to_d_spell);
@@ -6858,8 +6857,7 @@ static cptr do_crusade_spell(int spell, int mode)
         if (desc) return "Fires a huge ball of powerful light.";
     
         {
-            int l = p_ptr->lev;
-            int dam = 100 + l + l*l/50 + l*l*l/1250;
+            int dam = 100 + py_prorata_level_aux(200, 1, 1, 2);
             int rad = spell_power(4);
 
             dam = spell_power(dam + p_ptr->to_d_spell);

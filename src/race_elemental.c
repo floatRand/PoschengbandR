@@ -282,8 +282,7 @@ static void _earthen_portal_spell(int cmd, variant *res)
 
 static void _shard_ball_spell(int cmd, variant *res)
 {
-    int l = p_ptr->lev;
-    int dam = l*2 + l*l/25 + l*l*l/1250;
+    int dam = py_prorata_level(300);
 
     switch (cmd)
     {
@@ -355,8 +354,7 @@ static int _earth_get_powers(spell_info* spells, int max)
 
 static void _earth_calc_bonuses(void) 
 {
-    int l = p_ptr->lev;
-    int to_a = l/3 + l*l/150 + l*l*l/7500;
+    int to_a = py_prorata_level(50);
 
     p_ptr->to_a += to_a;
     p_ptr->dis_to_a += to_a;
@@ -521,8 +519,7 @@ static void _lightning_strike_spell(int cmd, variant *res)
 
 static void _lightning_storm_spell(int cmd, variant *res)
 {
-    int l = p_ptr->lev;
-    int dam = l*2 + l*l/25 + l*l*l/1250;
+    int dam = py_prorata_level(350);
 
     switch (cmd)
     {
@@ -767,8 +764,7 @@ static void _acid_strike_spell(int cmd, variant *res)
 
 static void _water_ball_spell(int cmd, variant *res)
 {
-    int l = p_ptr->lev;
-    int dam = l*2 + l*l/25 + l*l*l/1250;
+    int dam = py_prorata_level(300);
 
     switch (cmd)
     {
@@ -1060,8 +1056,7 @@ static void _fire_whip_spell(int cmd, variant *res)
 
 static void _fire_storm_spell(int cmd, variant *res)
 {
-    int l = p_ptr->lev;
-    int dam = l*2 + l*l/25 + l*l*l/1250;
+    int dam = py_prorata_level(400);
 
     switch (cmd)
     {

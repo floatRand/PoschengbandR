@@ -1630,9 +1630,7 @@ void teleport_to_spell(int cmd, variant *res)
 
 static int _boulder_dam(void)
 {
-    int l = p_ptr->lev;
-    int dam = 2*l + l*l/50 + l*l*l/1250;
-    return dam;
+    return py_prorata_level_aux(250, 2, 1, 2);
 }
 void throw_boulder_spell(int cmd, variant *res)
 {

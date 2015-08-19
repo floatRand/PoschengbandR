@@ -68,9 +68,8 @@ static void _khorne_calc_innate_attacks(void)
 {
     if (p_ptr->current_r_idx == MON_FLESHHOUND_KHORNE)
     {
-        int l = p_ptr->lev;
-        int to_d = l/10 + l*l/500 + l*l*l/25000;
-        int to_h = l/5 + l*l/250 + l*l*l/12500;
+        int to_d = py_prorata_level(15);
+        int to_h = py_prorata_level(30);
 
         /* Claws */
         {
@@ -107,9 +106,8 @@ static void _khorne_calc_innate_attacks(void)
     }
     else if (p_ptr->current_r_idx == MON_JUGGERNAUT_KHORNE)
     {
-        int l = p_ptr->lev;
-        int to_d = l/10 + l*l/500 + l*l*l/25000;
-        int to_h = l/5 + l*l/250 + l*l*l/12500;
+        int to_d = py_prorata_level(15);
+        int to_h = py_prorata_level(30);
 
         /* Claws */
         {
@@ -721,8 +719,7 @@ static race_t *_balrog_get_race_t(void)
  ******************************************************************************/
 static int _rocket_amount(void)
 {
-    int l = p_ptr->lev;
-    int pct = 15 + l/5 + l*l/250 + l*l*l/12500;
+    int pct = 15 + py_prorata_level(30);
     return 25 + p_ptr->chp * pct / 100;
 }
 
@@ -788,8 +785,7 @@ static void _cyber_birth(void)
 
 static void _cyber_calc_bonuses(void) 
 {
-    int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
 
     p_ptr->move_random = TRUE;
 

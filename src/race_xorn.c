@@ -39,8 +39,7 @@ static void _calc_innate_attacks(void)
 }
 
 static void _calc_bonuses(void) {
-    int l = p_ptr->lev;
-    int to_a = l/2 + l*l/100 + l*l*l/5000;
+    int to_a = py_prorata_level(75);
     int ac = 10;
 
     p_ptr->ac += ac;

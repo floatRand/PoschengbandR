@@ -72,8 +72,7 @@ static void _gain_level(int new_level)
  ******************************************************************************/
 static int _bite_amt(void)
 {
-    int l = p_ptr->lev;
-    return 5 + l + l*l/25 + l*l*l*3/2500; /* 5 + 50 + 100 + 150 = 305 */
+    return 5 + py_prorata_level_aux(300, 1, 2, 3);
 }
 static void _bite_spell(int cmd, variant *res)
 {

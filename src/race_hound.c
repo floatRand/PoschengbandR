@@ -128,7 +128,7 @@ static int _bite_effect(void)
 void hound_calc_innate_attacks(void)
 {
     int l = p_ptr->lev;
-    int to_d = l/10 + l*l/500 + l*l*l/25000;
+    int to_d = py_prorata_level(15);
     int to_h = l/2;
 
     /* Claws */
@@ -231,8 +231,7 @@ static int _breath_effect(void)
 
 static int _breath_amount(void)
 {
-    int l = p_ptr->lev;
-    int pct = 15 + l/10 + l*l/500 + l*l*l/12500;
+    int pct = 15 + py_prorata_level(15);
     return MAX(5, p_ptr->chp * pct / 100);
 }
 
@@ -386,8 +385,7 @@ static int _get_powers(spell_info* spells, int max) {
     return ct;
 }
 static void _calc_bonuses(void) {
-    int l = p_ptr->lev;
-    int to_a = l/10 + l*l/250 + l*l*l/12500;
+    int to_a = py_prorata_level_aux(25, 1, 2, 2);
     int tier = _find_tier(p_ptr->current_r_idx);
 
     p_ptr->skill_dig += 100;

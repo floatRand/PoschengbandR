@@ -544,7 +544,7 @@ static void _centaur_get_flags(u32b flgs[TR_FLAG_SIZE])
 static void _centaur_calc_innate_attacks(void)
 {
     int l = p_ptr->lev;
-    int to_d = l/10 + l*l/500 + l*l*l/25000;
+    int to_d = py_prorata_level(15);
     int to_h = l/2;
     innate_attack_t    a = {0};
 
@@ -921,7 +921,7 @@ static void _draconian_calc_bonuses(void)
     if (mut_present(MUT_DRACONIAN_METAMORPHOSIS))
     {
         int l = p_ptr->lev;
-        int to_a = l/2 + l*l/100 + l*l*l/5000;
+        int to_a = py_prorata_level(75);
         int ac = 15 + (l/10)*5;
 
         p_ptr->ac += ac;

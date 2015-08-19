@@ -371,8 +371,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 static void _calc_bonuses(void) 
 {
     int i;
-    int l = p_ptr->lev;
-    int to_a = l + l*l/50 + l*l*l/2500;
+    int to_a = py_prorata_level(150);
 
     to_a += _calc_amount(_essences[_ESSENCE_AC], 2, 10);
     if (p_ptr->current_r_idx == MON_DEATH_SCYTHE)

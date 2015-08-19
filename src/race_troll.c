@@ -252,8 +252,7 @@ static void _gain_level(int new_level)
  ******************************************************************************/
 static void _calc_bonuses(void) 
 {
-    int l = p_ptr->lev;
-    int to_a = l/10 + l*l/250 + l*l*l/12500;
+    int to_a = py_prorata_level_aux(25, 1, 2, 2);
 
     p_ptr->to_a += to_a;
     p_ptr->dis_to_a += to_a;

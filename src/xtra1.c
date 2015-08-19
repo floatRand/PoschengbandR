@@ -2968,12 +2968,37 @@ static void calc_mana(void)
     _report_encumbrance();
 }
 
+/*
+ * Utility: Often, we need to calculate an amount based on player level.
+ * This might be for spell damage, or perhaps to calculate player AC bonuses or hitpoints.
+ * At any rate, it is useful from a design standpoint to make this calculation non-linear.
+ *
+ * Note: If you want a linear proration, call py_prorata_level_aux(amt, 1, 0, 0);
+ * Note: See also design/py_prorata_level.ods
+ */
+int py_prorata_level(int amt)
+{
+    return py_prorata_level_aux(amt, 1, 1, 1);
+}
+
+int py_prorata_level_aux(int amt, int w1, int w2, int w3)
+{
+    int result = 0;
+    int wt = w1 + w2 + w3;
+    int l = p_ptr->lev;
+
+    result += amt * l * w1 / (50*wt);
+    result += amt * l * l * w2 / (50*50*wt);
+    result += (amt * l * l / 50) * l * w3 / (50*50*wt); /* 2^31/50^3 is about 17000 */
+
+    return result;
+}
+
 /* Experimental: Adjust the non-linearity of extra hp distribution based on class.
    It's probably best to have all this in one place. See also the hp.ods design doc.  */
 static int _calc_xtra_hp(int amt)
 {
-    int result = 0;
-    int w1 = 0, w2 = 0, w3 = 0, wt = 0;
+    int w1 = 0, w2 = 0, w3 = 0;
     int class_idx = get_class_idx();
 
     switch (class_idx)
@@ -3023,13 +3048,7 @@ static int _calc_xtra_hp(int amt)
         w1 = 1; w2 = 1; w3 = 1;
     }
 
-    wt = w1 + w2 + w3;
-
-    result += amt * p_ptr->lev * w1 / (50*wt);
-    result += amt * p_ptr->lev * p_ptr->lev * w2 / (50*50*wt);
-    result += amt * p_ptr->lev * p_ptr->lev * p_ptr->lev * w3 / (50*50*50*wt);
-
-    return result;
+    return py_prorata_level_aux(amt, w1, w2, w3);
 }
 
 /*
