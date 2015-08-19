@@ -97,6 +97,12 @@ static void _calc_bonuses(void) {
     p_ptr->levitation = TRUE;
     res_add(RES_POIS);
 
+    if (equip_find_artifact(ART_STONE_OF_LIFE) || equip_find_artifact(ART_STONE_OF_CRUSADE))
+    {
+        p_ptr->dec_mana = TRUE;
+        p_ptr->easy_spell = TRUE;
+    }
+
     if (p_ptr->lev >= 10)
     {
         res_add(RES_FIRE);

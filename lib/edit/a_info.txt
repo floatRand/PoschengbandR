@@ -2840,7 +2840,7 @@ N:268:of Vecna
 I:31:6:-2
 W:66:222:1:666666
 P:0:1d1:0:0:0
-F:CHR | DEC_MANA
+F:CHR
 F:FREE_ACT | PERMA_CURSE | QUESTITEM | INSTA_ART
 D:It is a charred and rotting vestige of the once
 D:great Emperor Lich.
@@ -2849,7 +2849,7 @@ N:269:of Vecna
 I:39:10:2
 W:66:222:1:666666
 P:0:1d1:0:0:0
-F:INT | EASY_SPELL | SPELL_CAP
+F:INT | SPELL_CAP
 F:TELEPATHY | PERMA_CURSE | QUESTITEM | INSTA_ART
 D:It is a shriveled vestige of the once
 D:great Emperor Lich.

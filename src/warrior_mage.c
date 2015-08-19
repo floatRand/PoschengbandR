@@ -28,7 +28,7 @@ static caster_info * _caster_info(void)
         me.magic_desc = "spell";
         me.which_stat = A_INT;
         me.weight = 430;
-        me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
+        me.options = CASTER_GLOVE_ENCUMBRANCE;
         init = TRUE;
     }
     return &me;

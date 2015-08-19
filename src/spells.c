@@ -573,16 +573,6 @@ void browse_spells(spell_info* spells, int ct, cptr desc)
     screen_load();
 }
 
-static bool _allow_dec_mana(caster_info *caster_ptr)
-{
-    if ( (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
-      || prace_is_(RACE_MON_LICH) ) /* TODO: I was never expecting race to influence casting ... */
-    {
-        return TRUE;
-    }
-    return FALSE;
-}
-
 int calculate_cost(int cost)
 {
     int result = cost;
@@ -591,11 +581,9 @@ int calculate_cost(int cost)
     if (caster_ptr && (caster_ptr->options & CASTER_NO_SPELL_COST))
         return 0;
 
-    if (_allow_dec_mana(caster_ptr) && cost > 0)
-    {
-        if (p_ptr->dec_mana)
-            result = MAX(1, result * 3 / 4);
-    }
+    if (p_ptr->dec_mana && cost > 0)
+        result = MAX(1, result * 3 / 4);
+
     return result;
 }
 
@@ -620,7 +608,6 @@ int calculate_fail_rate(int level, int base_fail, int stat_idx)
     fail -= 3 * (adj_mag_stat[stat_idx] - 1);
     if (p_ptr->heavy_spell) fail += 20;
 
-    if (_allow_dec_mana(caster_ptr))
     {
         if (p_ptr->dec_mana && p_ptr->easy_spell) fail -= 4;
         else if (p_ptr->easy_spell) fail -= 3;
@@ -655,10 +642,7 @@ int calculate_fail_rate(int level, int base_fail, int stat_idx)
     /* Some effects violate the Min/Max Fail Rates */
     if (p_ptr->heavy_spell) fail += 5; /* Fail could go to 100% */
 
-    if (_allow_dec_mana(caster_ptr))
-    {
-        if (p_ptr->dec_mana) fail--; /* 5% casters could get 4% fail rates */
-    }
+    if (p_ptr->dec_mana) fail--; /* 5% casters could get 4% fail rates */
 
     if (fail < 0) fail = 0;
     if (fail > 100) fail = 100;

@@ -897,7 +897,6 @@ static caster_info * _caster_info(void)
         me.which_stat = A_WIS;
         me.weight = 400;
         me.on_fail = _on_fail;
-        me.options = CASTER_ALLOW_DEC_MANA;
         init = TRUE;
     }
     return &me;

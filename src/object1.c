@@ -552,7 +552,9 @@ bool screen_object(object_type *o_ptr, u32b mode)
 
     if (have_flag(flgs, TR_EASY_SPELL))
     {
-        info[i++] = "It affects your ability to cast spells.";
+        caster_info *caster_ptr = get_caster_info();
+        if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
+            info[i++] = "It affects your ability to cast spells.";
     }
 
     if (o_ptr->tval == TV_STATUE)
@@ -837,8 +839,11 @@ bool screen_object(object_type *o_ptr, u32b mode)
         info[i++] = "It powerfully strikes at a monster using your mana.";
 
     if (have_flag(flgs, TR_DEC_MANA))
-        info[i++] = "It decreases your mana consumption.";
-
+    {
+        caster_info *caster_ptr = get_caster_info();
+        if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
+            info[i++] = "It decreases your mana consumption.";
+    }
     if (have_flag(flgs, TR_SPELL_POWER))
         info[i++] = "It increases your spell power.";
     if (have_flag(flgs, TR_DEC_SPELL_POWER))

@@ -1684,7 +1684,7 @@ void monster_death(int m_idx, bool drop_item)
             break;
 
         case MON_GANDALF:
-            a_idx = ART_ICANUS;
+            a_idx = ART_INCANUS;
             chance = 20;
             break;
 

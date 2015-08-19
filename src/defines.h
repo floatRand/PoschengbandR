@@ -1320,7 +1320,7 @@ enum _mimic_types {
 #define ART_HITHLOMIR           27
 #define ART_THALKETTOTH         28
 #define ART_HIMRING             127
-#define ART_ICANUS              131
+#define ART_INCANUS             131
 #define ART_NAMAKE_ARMOR        183
 #define ART_GHB                 192
 #define ART_DASAI               200
@@ -1536,7 +1536,6 @@ enum _mimic_types {
 
 /* Arrows */
 #define ART_BARD_ARROW          153
-
 
 #define ART_ZEUS            256
 #define ART_POSEIDON        257

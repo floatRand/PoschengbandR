@@ -1250,7 +1250,32 @@ void equip_calc_bonuses(void)
         if (have_flag(flgs, TR_DRAIN_EXP))   p_ptr->cursed |= TRC_DRAIN_EXP;
         if (have_flag(flgs, TR_TY_CURSE))    p_ptr->cursed |= TRC_TY_CURSE;
 
-        if (have_flag(flgs, TR_DEC_MANA))    p_ptr->dec_mana = TRUE;
+        if (have_flag(flgs, TR_DEC_MANA))
+        {
+            /* In general, you need to be a Mage/Priest to gain from wizardstaves, et. al.
+             * There are exceptions (e.g. Bards and the two artifact harps; Vampires
+             * and The Amulet of the Pitch Dark Night; etc). You will find code
+             * for these exceptions in class/race specific calc_bonuses functions.
+             * However, The Yumi of Irresponsibility works for everybody! */
+            if (o_ptr->name1 == ART_NAMAKE_BOW)
+            {
+                p_ptr->dec_mana = TRUE;
+            }
+            else
+            {
+                caster_info *caster_ptr = get_caster_info();
+                if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
+                    p_ptr->dec_mana = TRUE;
+            }
+
+        }
+        if (have_flag(flgs, TR_EASY_SPELL))
+        {
+            caster_info *caster_ptr = get_caster_info();
+            if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
+                p_ptr->easy_spell = TRUE;
+        }
+
         if (have_flag(flgs, TR_SPELL_POWER)) p_ptr->spell_power += o_ptr->pval;
         if (have_flag(flgs, TR_DEC_SPELL_POWER)) p_ptr->spell_power -= o_ptr->pval;
         if (have_flag(flgs, TR_SPELL_CAP))   p_ptr->spell_cap += o_ptr->pval;
@@ -1340,8 +1365,6 @@ void equip_calc_bonuses(void)
             p_ptr->pass_wall = TRUE;
             p_ptr->no_passwall_dam = TRUE;
         }
-
-        if (have_flag(flgs, TR_EASY_SPELL)) p_ptr->easy_spell = TRUE;
 
         if (o_ptr->curse_flags & TRC_LOW_MAGIC)
         {

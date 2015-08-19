@@ -527,6 +527,12 @@ static void _calc_bonuses(void)
 {
     p_ptr->align -= 200;
     p_ptr->spell_cap += 2;
+
+    if (equip_find_artifact(ART_EYE_OF_VECNA))
+        p_ptr->dec_mana = TRUE;
+    if (equip_find_artifact(ART_HAND_OF_VECNA))
+        p_ptr->easy_spell = TRUE;
+
     if (p_ptr->lev >= 5) res_add(RES_COLD);
     if (p_ptr->lev >= 15) p_ptr->see_inv = TRUE;
     if (p_ptr->lev >= 25) p_ptr->hold_life = TRUE;
@@ -561,7 +567,7 @@ static caster_info * _caster_info(void)
         me.magic_desc = "spell";
         me.which_stat = A_INT;
         me.weight = 430;
-        me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
+        me.options = CASTER_GLOVE_ENCUMBRANCE;
         init = TRUE;
     }
     return &me;

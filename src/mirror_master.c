@@ -763,6 +763,14 @@ static int _get_powers(spell_info* spells, int max)
 
 static void _calc_bonuses(void)
 {
+    if (equip_find_artifact(ART_YATA))
+    {
+        p_ptr->dec_mana = TRUE;
+        p_ptr->easy_spell = TRUE;
+    }
+    if (equip_find_artifact(ART_GIL_GALAD))
+        p_ptr->dec_mana = TRUE;
+
     if (p_ptr->lev >= 40) 
         p_ptr->reflect = TRUE;
 }
@@ -813,7 +821,6 @@ static caster_info * _caster_info(void)
         me.which_stat = A_INT;
         me.weight = 400;
         me.on_fail = _on_fail;
-        me.options = CASTER_ALLOW_DEC_MANA;
         init = TRUE;
     }
     return &me;

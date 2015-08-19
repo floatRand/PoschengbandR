@@ -2021,7 +2021,7 @@ typedef spell_stats_t        *spell_stats_ptr;
    I'm shooting for a single unified interface for choosing, browsing
    and casting spells */
 
-#define CASTER_ALLOW_DEC_MANA       0x0001
+#define CASTER_ALLOW_DEC_MANA       0x0001 /* Wizardstaff and Mage Egos/Artifacts. cf equip.c for more details */
 #define CASTER_GLOVE_ENCUMBRANCE    0x0002
 #define CASTER_NO_SPELL_COST        0x0004
 #define CASTER_NO_SPELL_FAIL        0x0008
