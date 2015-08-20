@@ -83,7 +83,7 @@ static spell_info _spells[] = {
     { 45, 80, 65, clairvoyance_spell},
     { 47, 60, 70, summon_angel_spell},
     { 49, 90, 70, summon_hi_dragon_spell},
-    { 50, 50, 68, starburst_II_spell},
+    { 50, 50, 65, starburst_II_spell},
     { -1, -1, -1, NULL}
 };
 static int _get_spells(spell_info* spells, int max) {
