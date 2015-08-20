@@ -303,12 +303,12 @@ bool res_save(int which, int power)
 
 bool res_save_default(int which)
 {
-    int power = res_is_low(which) ? 55 : 35;
+    int power = res_is_low(which) ? 55 : 33;
     return res_save(which, power);
 }
 bool res_can_ignore(int which)
 {
-    int power = res_is_low(which) ? 55 : 35;
+    int power = res_is_low(which) ? 55 : 33;
     if (res_pct(which) >= power)
         return TRUE;
     return FALSE;

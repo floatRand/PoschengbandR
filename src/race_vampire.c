@@ -412,7 +412,7 @@ static spell_info _spells[] =
     { 35, 25, 50, nether_ball_spell },       /* Vampire Lord */
     { 35, 30, 60, _grasp_spell },
     { 40, 50, 70, _repose_of_the_dead_spell },
-    { 45, 50, 80, darkness_storm_II_spell }, /* Elder Vampire */
+    { 45, 50, 76, darkness_storm_II_spell }, /* Elder Vampire */
     { -1, -1, -1, NULL}
 };
 

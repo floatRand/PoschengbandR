@@ -2429,7 +2429,6 @@ static void display_player_flag_info(void)
 
     display_flag_aux(row+15, col, "Blindness  :", TR_RES_BLIND, &f, 0);
     display_flag_aux(row+15, col, "Blindness  :", TR_VULN_BLIND, &f, DP_VULN);
-    put_str(format(" %3d%%", _known_res_pct(RES_BLIND)), row +15, col + 13 + equip_count() + 1);
 
     display_flag_aux(row+16, col, "Fear       :", TR_RES_FEAR, &f, 0);
     display_flag_aux(row+16, col, "Fear       :", TR_VULN_FEAR, &f, DP_VULN);

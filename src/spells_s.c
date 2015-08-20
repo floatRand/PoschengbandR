@@ -489,6 +489,11 @@ void spit_acid_spell(int cmd, variant *res)
 }
 bool cast_spit_acid(void) { return cast_spell(spit_acid_spell); }
 
+static int _starburst_I_dam(void)
+{
+    return 100 + py_prorata_level_aux(200, 1, 1, 2);
+}
+
 void starburst_I_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -500,7 +505,7 @@ void starburst_I_spell(int cmd, variant *res)
         var_set_string(res, "Fires a huge ball of powerful light.");
         break;
     case SPELL_INFO:
-        var_set_string(res, info_damage(0, 0, spell_power(100 + p_ptr->lev * 2 + p_ptr->to_d_spell)));
+        var_set_string(res, info_damage(0, 0, spell_power(_starburst_I_dam() + p_ptr->to_d_spell)));
         break;
     case SPELL_CAST:
     {
@@ -508,7 +513,7 @@ void starburst_I_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!get_aim_dir(&dir)) return;
         msg_print("You invoke a starburst.");
-        fire_ball(GF_LITE, dir, spell_power(100 + p_ptr->lev * 2 + p_ptr->to_d_spell), spell_power(4));
+        fire_ball(GF_LITE, dir, spell_power(_starburst_I_dam() + p_ptr->to_d_spell), spell_power(4));
         var_set_bool(res, TRUE);
         break;
     }
@@ -516,6 +521,11 @@ void starburst_I_spell(int cmd, variant *res)
         default_spell(cmd, res);
         break;
     }
+}
+
+static int _starburst_II_dam(void)
+{
+    return py_prorata_level_aux(450, 1, 0, 2);
 }
 
 void starburst_II_spell(int cmd, variant *res)
@@ -529,7 +539,7 @@ void starburst_II_spell(int cmd, variant *res)
         var_set_string(res, "Fires a huge ball of powerful light.");
         break;
     case SPELL_INFO:
-        var_set_string(res, info_damage(10, spell_power(10), spell_power(50 + p_ptr->lev * 6 + p_ptr->to_d_spell)));
+        var_set_string(res, info_damage(0, 0, spell_power(_starburst_II_dam() + p_ptr->to_d_spell)));
         break;
     case SPELL_CAST:
     {
@@ -538,7 +548,7 @@ void starburst_II_spell(int cmd, variant *res)
         if (!get_aim_dir(&dir)) return;
         msg_print("You invoke a starburst.");
         fire_ball(GF_LITE, dir, 
-            spell_power(50 + p_ptr->lev * 6 + damroll(10, 10) + p_ptr->to_d_spell),
+            spell_power(_starburst_II_dam() + p_ptr->to_d_spell),
             spell_power(4));
         var_set_bool(res, TRUE);
         break;
