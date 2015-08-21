@@ -437,6 +437,8 @@ void _desc_stat_idx(char *buf, int idx)
         sprintf(buf, "18/%d", (idx-18)*10);
 }
 
+int display_weapon_mode = 0;
+
 int display_weapon_info(int hand, int row, int col)
 {
     object_type *o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
@@ -464,6 +466,20 @@ int display_weapon_info(int hand, int row, int col)
     {
         to_d = o_ptr->to_d;
         to_h = o_ptr->to_h;
+    }
+
+    switch (display_weapon_mode)
+    {
+    case MAULER_STUNNING_BLOW:
+    case MAULER_CRITICAL_BLOW:
+    case MAULER_CRUSHING_BLOW:
+    case MAULER_KNOCKBACK:
+        num_blow = 100;
+        break;
+    case MAULER_KNOCKOUT_BLOW:
+        num_blow = 100;
+        to_h -= 50;
+        break;
     }
 
     weapon_flags_known(hand, flgs);
@@ -494,6 +510,14 @@ int display_weapon_info(int hand, int row, int col)
 
     mult += mult * p_ptr->weapon_info[hand].to_mult / 100;
 
+    if (display_weapon_mode == MAULER_CRUSHING_BLOW)
+    {
+        int d = p_ptr->lev/5;
+        int n = 10*(1 + d)/2; /* scale by 10 */
+
+        mult = mult * (50 + n)/30;
+    }
+
     if (!have_flag(flgs, TR_ORDER))
     {
         const int attempts = 10 * 1000;
@@ -502,7 +526,7 @@ int display_weapon_info(int hand, int row, int col)
         /* Compute Average Effects of Criticals by sampling */
         for (i = 0; i < attempts; i++)
         {
-            critical_t tmp = critical_norm(o_ptr->weight, to_h, p_ptr->weapon_info[hand].to_h, 0, hand);
+            critical_t tmp = critical_norm(o_ptr->weight, to_h, p_ptr->weapon_info[hand].to_h, display_weapon_mode, hand);
             if (tmp.desc)
             {
                 crit.mul += tmp.mul;

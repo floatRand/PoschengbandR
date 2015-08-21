@@ -1445,6 +1445,7 @@ extern int bow_energy(int sval);
 extern int bow_range(object_type *o_ptr);
 extern int bow_mult(object_type *o_ptr);
 extern int display_weapon_info(int hand, int row, int col);
+extern int display_weapon_mode;
 extern int display_innate_attack_info(int which, int row, int col);
 extern int display_shooter_info(int row, int col);
 extern int calculate_base_blows(int hand, int str_idx, int dex_idx);

@@ -4169,7 +4169,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         earthquake(py, px, 10);
 
 
-#if 1
+#if 0
     if (p_ptr->pclass == CLASS_MAULER)
         c_put_str(TERM_WHITE, format("Maul:%5d", dam_tot), 24, 0);    
     if (p_ptr->pclass == CLASS_DUELIST)
