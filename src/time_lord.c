@@ -845,6 +845,11 @@ static int _get_spells(spell_info* spells, int max)
 
 static void _calc_bonuses(void)
 {
+    if (equip_find_artifact(ART_ETERNITY))
+    {
+        p_ptr->dec_mana = TRUE;
+        p_ptr->easy_spell = TRUE;
+    }
     if (p_ptr->lev >= 30) res_add(RES_TIME);
     p_ptr->pspeed += (p_ptr->lev) / 7;
 }

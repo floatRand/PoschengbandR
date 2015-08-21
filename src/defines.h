@@ -1537,6 +1537,7 @@ enum _mimic_types {
 /* Arrows */
 #define ART_BARD_ARROW          153
 
+#define ART_ETERNITY            244
 #define ART_ZEUS            256
 #define ART_POSEIDON        257
 #define ART_HADES            258
