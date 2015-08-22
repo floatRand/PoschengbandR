@@ -1436,9 +1436,11 @@ static bool _town_accept_aux(int k_idx)
     if (k_info[k_idx].gen_flags & TRG_INSTA_ART)
         return FALSE;
 
-    if (!(k_info[k_idx].gen_flags & TRG_TOWN))
-        return FALSE;
-
+    if (p_ptr->town_num != SECRET_TOWN)
+    {
+        if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+            return FALSE;
+    }
     return TRUE;
 }
 
@@ -1490,8 +1492,15 @@ static bool _weapon_accept(int k_idx)
     {
     case TV_POLEARM: 
     case TV_SWORD:
-    case TV_HISSATSU_BOOK: 
+        return TRUE;
+
+    case TV_HISSATSU_BOOK:
     case TV_RAGE_BOOK:
+        if (p_ptr->town_num == SECRET_TOWN && !one_in_(20))
+        {
+            if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+                return FALSE;
+        }
         return TRUE;
     }
     return FALSE;
@@ -1527,9 +1536,16 @@ static bool _temple_accept(int k_idx)
 
     switch (k_info[k_idx].tval)
     {
-    case TV_HAFTED:
     case TV_LIFE_BOOK: 
     case TV_CRUSADE_BOOK:
+        if (p_ptr->town_num == SECRET_TOWN && !one_in_(20))
+        {
+            if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+                return FALSE;
+        }
+        return TRUE;
+
+    case TV_HAFTED:
         return TRUE;
 
     /* Scrolls and Potions are also stocked by the Alchemist */
@@ -1569,6 +1585,12 @@ static bool _alchemist_accept(int k_idx)
     if (!_town_accept_aux(k_idx)) 
         return FALSE;
 
+    if (p_ptr->town_num == SECRET_TOWN && !one_in_(20))
+    {
+        if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+            return FALSE;
+    }
+
     switch (k_info[k_idx].tval)
     {
     /* Scrolls and Potions are also stocked by the Temple. */
@@ -1590,9 +1612,23 @@ static bool _magic_accept(int k_idx)
     {
     case TV_WAND:
     case TV_STAFF:
+        if (p_ptr->town_num == SECRET_TOWN && !one_in_(10))
+        {
+            if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+                return FALSE;
+        }
+        return TRUE;
+
     case TV_FIGURINE:
     case TV_ARCANE_BOOK:
+        return TRUE;
+
     case TV_SORCERY_BOOK: 
+        if (p_ptr->town_num == SECRET_TOWN && !one_in_(20))
+        {
+            if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+                return FALSE;
+        }
         return TRUE;
     }
     return FALSE;
@@ -1602,6 +1638,12 @@ static bool _book_accept(int k_idx)
 {
     if (!_town_accept_aux(k_idx)) 
         return FALSE;
+
+    if (p_ptr->town_num == SECRET_TOWN && !one_in_(10))
+    {
+        if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+            return FALSE;
+    }
 
     switch (k_info[k_idx].tval)
     {
