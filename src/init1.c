@@ -328,7 +328,7 @@ static cptr r_info_flags2[] =
     "AURA_FEAR",
     "CAMELOT",
     "KNIGHT",
-    "XXX",
+    "SOUTHERING",
     "HUMAN",
     "QUANTUM"
 };

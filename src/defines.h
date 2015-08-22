@@ -3441,7 +3441,7 @@ enum summon_specific_e {
 #define RF2_AURA_FEAR       0x04000000
 #define RF2_CAMELOT         0x08000000
 #define RF2_KNIGHT          0x10000000
-#define RF2_XXX6            0x20000000
+#define RF2_SOUTHERING      0x20000000
 #define RF2_HUMAN           0x40000000  /* Human */
 #define RF2_QUANTUM         0x80000000  /* Monster has quantum behavior */
 
@@ -5492,6 +5492,7 @@ extern int PlayerUID;
 #define DUNGEON_DARKNESS 19
 #define DUNGEON_OLYMPUS  22
 #define DUNGEON_ARENA    25
+#define DUNGEON_STRONGHOLD 30
 
 
 #define DUNGEON_FEAT_PROB_NUM 3

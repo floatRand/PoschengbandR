@@ -2273,7 +2273,7 @@ static void player_wipe(void)
     else
     {
         dungeon_type = 0;
-        p_ptr->recall_dungeon = DUNGEON_CAMELOT;
+        p_ptr->recall_dungeon = DUNGEON_STRONGHOLD;
     }
 }
 
