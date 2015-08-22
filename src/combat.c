@@ -68,7 +68,7 @@ static _blow_info_t _get_blow_info(int hand)
         break;
 
     case CLASS_MAULER:
-        result.num = 150; result.wgt = 280; result.mul = 75; break;
+        result.num = 175; result.wgt = 280; result.mul = 75; break;
 
     case CLASS_BERSERKER:
         result.num = 600; result.wgt = 70; result.mul = 75; break;

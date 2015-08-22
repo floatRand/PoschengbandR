@@ -725,13 +725,11 @@ F:@:FLOOR:3:0:0:0:94
 
 ##########################################################################
 # Beastmaster
-# TODO
-# Eorlingas
+# Impaler
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Beastmaster] [EQU [MOD $RANDOM27 5] 0] ]
 F:a:BUILDING_0:3
-F:@:FLOOR:3:0:0:0:100
+F:@:FLOOR:3:0:0:0:324
 
-# TODO
 # Eorlingas
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Beastmaster] [GEQ [MOD $RANDOM27 5] 1] ]
 F:a:BUILDING_0:3
@@ -739,13 +737,11 @@ F:@:FLOOR:3:0:0:0:100
 
 ##########################################################################
 # Cavalry
-# TODO
-# GaeBolg
+# Dragonlance
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Cavalry] [EQU [MOD $RANDOM27 5] 0] ]
 F:a:BUILDING_0:3
-F:@:FLOOR:3:0:0:0:163
+F:@:FLOOR:3:0:0:0:322
 
-# TODO
 # GaeBolg
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Cavalry] [GEQ [MOD $RANDOM27 5] 1] ]
 F:a:BUILDING_0:3
