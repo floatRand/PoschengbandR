@@ -14,6 +14,8 @@
 
 bool initialized = FALSE;
 
+int game_mode = GAME_MODE_NORMAL;
+
 /*
  * Hack -- Link a copyright message into the executable
  */

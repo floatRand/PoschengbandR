@@ -497,6 +497,7 @@ static void wr_extra(savefile_ptr file)
     savefile_write_string(file, p_ptr->last_message ? p_ptr->last_message : "");
     wr_quick_start(file);
 
+    savefile_write_s32b(file, game_mode);
     savefile_write_byte(file, p_ptr->prace);
     savefile_write_byte(file, p_ptr->pclass);
     savefile_write_byte(file, p_ptr->personality);

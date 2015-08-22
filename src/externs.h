@@ -116,6 +116,7 @@ extern mbe_info_type mbe_info[];
 extern byte feature_action_flags[FF_FLAG_MAX];
 
 /* variable.c */
+extern int game_mode;
 extern cptr copyright[5];
 extern byte sf_extra;
 extern u32b sf_system;

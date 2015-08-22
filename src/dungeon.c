@@ -5999,6 +5999,12 @@ void play_game(bool new_game)
             race_ptr->birth();
 
         spell_stats_on_birth();
+
+        if (game_mode == GAME_MODE_BEGINNER)
+        {
+            /*TODO: Write up a quick start guide. We are Light Town, so no wilderness references please! */
+            /*show_file(TRUE, "beginner.txt", NULL, 0, 0);*/
+        }
     }
 
 

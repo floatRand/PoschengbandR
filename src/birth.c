@@ -712,6 +712,55 @@ static bool _valid_class(int which)
     return TRUE;
 }
 
+static int _beginner_classes[] = {
+  CLASS_WARRIOR,
+  CLASS_MAGE,
+  CLASS_PRIEST,
+  CLASS_ROGUE,
+  CLASS_RANGER,
+  CLASS_PALADIN,
+  CLASS_NINJA,
+  -1
+};
+
+static int _prompt_class_beginner(void)
+{
+    int idx;
+    for (;;)
+    {
+    class_t *class_ptr = NULL;
+    menu_t menu = { "Class", "Classes.txt#Tables", "Note: Your 'class' determines various intrinsic factors and bonuses.",
+                        _class_menu_fn,
+                        _beginner_classes, _count_ids(_beginner_classes)};
+
+
+        c_put_str(TERM_WHITE, "              ", 6, 14);
+        c_put_str(TERM_WHITE, "              ", 7, 14);
+        idx = _menu_choose(&menu, _find_id(_beginner_classes, p_ptr->pclass));
+        if (idx < 0) return idx;
+
+        if (_beginner_classes[idx] != p_ptr->pclass)
+        {
+            p_ptr->pclass = _beginner_classes[idx];
+            p_ptr->psubclass = 0;
+            p_ptr->realm1 = 0;
+            p_ptr->realm2 = 0;
+            p_ptr->dragon_realm = 0;
+        }
+        mp_ptr = &m_info[p_ptr->pclass];
+        class_ptr = get_class_t();
+
+        c_put_str(TERM_L_BLUE, format("%-14s", class_ptr->name), 6, 14);
+        if (!_confirm_choice(class_ptr->desc, menu.count)) continue;
+        p_ptr->psubclass = 0;
+        c_put_str(TERM_WHITE, "              ", 7, 14);
+        idx = _prompt_realm1();
+        if (idx == _BIRTH_ESCAPE) continue;
+        return idx;
+    }
+    /*return _BIRTH_ESCAPE;  unreachable */
+}
+
 static int _prompt_class(void)
 {
     if (get_race_t()->flags & RACE_IS_MONSTER)
@@ -860,7 +909,7 @@ static int _prompt_class(void)
 }
 
 #define _MAX_RACES_PER_GROUP 23
-#define _MAX_RACE_GROUPS     9
+#define _MAX_RACE_GROUPS      8
 typedef struct _race_group_s {
     cptr name;
     cptr help;
@@ -885,11 +934,35 @@ static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
     { "Other", "Races.txt#Tables", 
         {RACE_ANDROID, RACE_BEASTMAN, RACE_CENTAUR, RACE_DRACONIAN, RACE_DOPPELGANGER, RACE_ENT, 
          RACE_GOLEM, RACE_KLACKON, RACE_KUTAR, RACE_MIND_FLAYER, RACE_TONBERRY, RACE_YEEK,-1 } },
-    { "Monster", "MonsterRaces.txt", 
-        {RACE_MON_ANGEL, RACE_MON_BEHOLDER, RACE_MON_CENTIPEDE, RACE_MON_SWORD, RACE_MON_DEMON, 
-            RACE_MON_DRAGON, RACE_MON_ELEMENTAL, RACE_MON_GIANT, RACE_MON_GOLEM, RACE_MON_HOUND, 
-            RACE_MON_HYDRA, RACE_MON_JELLY, RACE_MON_LEPRECHAUN, RACE_MON_LICH, RACE_MON_MIMIC, RACE_MON_POSSESSOR,
-            RACE_MON_QUYLTHULG, RACE_MON_RING, RACE_MON_SPIDER, RACE_MON_TROLL, RACE_MON_VAMPIRE, RACE_MON_XORN, -1} },
+};
+
+#define _MAX_MON_RACE_GROUPS      12
+static _race_group_t _mon_race_groups[_MAX_MON_RACE_GROUPS] = {
+    { "Animal", "MonsterRaces.txt",
+        {/*RACE_MON_ANT, RACE_MON_BEETLE, RACE_MON_BIRD, RACE_MON_CAT,*/ RACE_MON_CENTIPEDE,
+            RACE_MON_HOUND, /*RACE_MON_HORSE, */ RACE_MON_HYDRA, RACE_MON_SPIDER, -1} },
+    { "Angel/Demon", "MonsterRaces.txt",
+        {RACE_MON_ANGEL, RACE_MON_DEMON, -1} },
+    { "Beholder",  "MonsterRaces.txt#Beholder",
+        {RACE_MON_BEHOLDER, -1} },
+    { "Dragon",  "MonsterRaces.txt#Dragon",
+        {RACE_MON_DRAGON, -1} },
+    { "Elemental",  "MonsterRaces.txt#Elemental",
+        {RACE_MON_ELEMENTAL, -1} },
+    { "Golem",  "MonsterRaces.txt#Golem",
+        {RACE_MON_GOLEM, -1} },
+    { "Jelly",  "MonsterRaces.txt",
+        {RACE_MON_JELLY, /*RACE_MON_MOLD,*/ RACE_MON_QUYLTHULG, -1} },
+    { "Leprechaun",  "MonsterRaces.txt#Leprechaun",
+        {RACE_MON_LEPRECHAUN, -1} },
+    { "Mimic/Possessor", "MonsterRaces.txt",
+        {RACE_MON_SWORD, /*RACE_MON_ARMOR,*/ RACE_MON_MIMIC, RACE_MON_POSSESSOR, RACE_MON_RING, -1} },
+    { "Orc/Troll/Giant", "MonsterRaces.txt",
+        {RACE_MON_GIANT, /*RACE_MON_KOBOLD, RACE_MON_ORC,*/ RACE_MON_TROLL, -1} },
+    { "Undead", "MonsterRaces.txt",
+        {/*RACE_MON_GHOST,*/ RACE_MON_LICH, RACE_MON_VAMPIRE, /*RACE_MON_WRAITH, RACE_MON_ZOMBIE,*/ -1 } },
+    { "Xorn",  "MonsterRaces.txt#Xorn",
+        {RACE_MON_XORN, -1} },
 };
 
 static void _race_group_menu_fn(int cmd, int which, vptr cookie, variant *res)
@@ -898,6 +971,16 @@ static void _race_group_menu_fn(int cmd, int which, vptr cookie, variant *res)
     {
     case MENU_TEXT:
         var_set_string(res, _race_groups[which].name);
+        break;
+    }
+}
+
+static void _mon_race_group_menu_fn(int cmd, int which, vptr cookie, variant *res)
+{
+    switch (cmd)
+    {
+    case MENU_TEXT:
+        var_set_string(res, _mon_race_groups[which].name);
         break;
     }
 }
@@ -1345,6 +1428,50 @@ static void _elemental_menu_fn(int cmd, int which, vptr cookie, variant *res)
     }
 }
 
+static int _beginner_races[] = {
+  RACE_HUMAN,
+  RACE_DWARF,
+  RACE_HOBBIT,
+  RACE_GNOME,
+  RACE_DUNADAN,
+  RACE_HIGH_ELF,
+  RACE_HALF_TROLL,
+  -1
+};
+
+static int _prompt_race_beginner(void)
+{
+    int idx;
+    for (;;)
+    {
+    race_t *race_ptr = NULL;
+    menu_t menu = { "Race", "Races.txt#Tables", "Note: Your 'race' determines various intrinsic factors and bonuses.",
+                        _race_menu_fn,
+                        _beginner_races, _count_ids(_beginner_races)};
+
+        c_put_str(TERM_WHITE, "              ", 4, 14);
+        c_put_str(TERM_WHITE, "                   ", 5, 14);
+        idx = _menu_choose(&menu, _find_id(_beginner_races, p_ptr->prace));
+        if (idx < 0) return idx;
+
+        if (_beginner_races[idx] != p_ptr->prace)
+        {
+            p_ptr->prace = _beginner_races[idx];
+            p_ptr->psubrace = 0;
+        }
+        race_ptr = get_race_t();
+
+        c_put_str(TERM_L_BLUE, format("%-14s", race_ptr->name), 4, 14);
+        if (!_confirm_choice(race_ptr->desc, menu.count)) continue;
+        c_put_str(TERM_WHITE, "                   ", 5, 14);
+        p_ptr->psubrace = 0;
+        idx = _prompt_class_beginner();
+        if (idx == _BIRTH_ESCAPE) continue;
+        return idx;
+    }
+    /*return _BIRTH_ESCAPE;  unreachable */
+}
+
 static int _prompt_race(void)
 {
     for (;;)
@@ -1424,12 +1551,66 @@ static int _prompt_race(void)
                         return idx;
                     }
                 }
-                else if (p_ptr->prace == RACE_MON_SPIDER)
+                else
+                {
+                    c_put_str(TERM_WHITE, "                   ", 5, 14);
+                    p_ptr->psubrace = 0;
+                    idx = _prompt_class();
+                    if (idx == _BIRTH_ESCAPE) continue;
+                    return idx;
+                }
+            }
+        }
+    }
+    /*return _BIRTH_ESCAPE;  unreachable */
+}
+
+static int _prompt_mon_race(void)
+{
+    for (;;)
+    {
+        int idx = 0;
+        int group_id = 0;
+
+        c_put_str(TERM_WHITE, "              ", 4, 14);
+        c_put_str(TERM_WHITE, "                   ", 5, 14);
+        for (;;)
+        {
+            menu_t menu1 = { "Race Type", "MonsterRaces.txt", "",
+                                _mon_race_group_menu_fn,
+                                NULL, _MAX_MON_RACE_GROUPS};
+            idx = _menu_choose(&menu1, group_id);
+            if (idx < 0) return idx;
+            group_id = idx;
+            for (;;)
+            {
+            race_t *race_ptr = NULL;
+            menu_t menu2 = { "Race", _mon_race_groups[group_id].help, "Note: Your 'race' determines various intrinsic factors and bonuses.",
+                                _race_menu_fn,
+                                _mon_race_groups[group_id].ids, _count_ids(_mon_race_groups[group_id].ids)};
+
+                c_put_str(TERM_WHITE, "              ", 4, 14);
+                c_put_str(TERM_WHITE, "                   ", 5, 14);
+                if (idx == _BIRTH_ESCAPE && menu2.count == 1) break;
+                idx = _menu_choose(&menu2, _find_id(_mon_race_groups[group_id].ids, p_ptr->prace));
+                if (idx == _BIRTH_ESCAPE) break;
+                if (idx < 0) return idx;
+
+                if (_mon_race_groups[group_id].ids[idx] != p_ptr->prace)
+                {
+                    p_ptr->prace = _mon_race_groups[group_id].ids[idx];
+                    p_ptr->psubrace = 0;
+                }
+                race_ptr = get_race_t();
+
+                c_put_str(TERM_L_BLUE, format("%-14s", race_ptr->name), 4, 14);
+                if (!_confirm_choice(race_ptr->desc, menu2.count)) continue;
+                if (p_ptr->prace == RACE_MON_SPIDER)
                 {
                     for (;;)
                     {
                         menu_t menu3 = { "Subrace", "MonsterRaces.txt#Spider", "",
-                                            _spider_menu_fn, 
+                                            _spider_menu_fn,
                                             NULL, SPIDER_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubrace);
@@ -1448,7 +1629,7 @@ static int _prompt_race(void)
                     for (;;)
                     {
                         menu_t menu3 = { "Subrace", "MonsterRaces.txt#Giant", "",
-                                            _giant_menu_fn, 
+                                            _giant_menu_fn,
                                             NULL, GIANT_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubrace);
@@ -1467,7 +1648,7 @@ static int _prompt_race(void)
                     for (;;)
                     {
                         menu_t menu3 = { "Subrace", "MonsterRaces.txt#Golem", "",
-                                            _golem_menu_fn, 
+                                            _golem_menu_fn,
                                             NULL, GOLEM_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubrace);
@@ -1486,7 +1667,7 @@ static int _prompt_race(void)
                     for (;;)
                     {
                         menu_t menu3 = { "Subrace", "MonsterRaces.txt#Troll", "",
-                                            _troll_menu_fn, 
+                                            _troll_menu_fn,
                                             NULL, TROLL_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubrace);
@@ -1505,7 +1686,7 @@ static int _prompt_race(void)
                     for (;;)
                     {
                         menu_t menu3 = { "Subrace", "MonsterRaces.txt#Dragon", "",
-                                            _dragon_menu_fn, 
+                                            _dragon_menu_fn,
                                             NULL, DRAGON_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubrace);
@@ -1524,7 +1705,7 @@ static int _prompt_race(void)
                     for (;;)
                     {
                         menu_t menu3 = { "Subrace", "MonsterRaces.txt#Demon", "",
-                                            _demon_menu_fn, 
+                                            _demon_menu_fn,
                                             NULL, DEMON_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubrace);
@@ -1543,7 +1724,7 @@ static int _prompt_race(void)
                     for (;;)
                     {
                         menu_t menu3 = { "Subrace", "MonsterRaces.txt#Elemental", "",
-                                            _elemental_menu_fn, 
+                                            _elemental_menu_fn,
                                             NULL, ELEMENTAL_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubrace);
@@ -1584,7 +1765,7 @@ static void _sex_menu_fn(int cmd, int which, vptr cookie, variant *res)
     }
 }
 
-static bool _prompt_sex(void)
+static int _prompt_sex(void)
 {
     for (;;)
     {
@@ -1595,12 +1776,95 @@ static bool _prompt_sex(void)
 
         c_put_str(TERM_WHITE, "              ", 2, 14);
         idx = _menu_choose(&menu, p_ptr->psex);
-        if (idx < 0) return FALSE;
+        if (idx < 0) return idx;
+
         p_ptr->psex = idx;
         sp_ptr = &sex_info[p_ptr->psex]; /* TODO: Remove this ... */
         c_put_str(TERM_L_BLUE, format("%-14s", sp_ptr->title), 2, 14);
 
-        idx = _prompt_race();
+        if (game_mode == GAME_MODE_MONSTER)
+            idx = _prompt_mon_race();
+        else if (game_mode == GAME_MODE_BEGINNER)
+            idx = _prompt_race_beginner();
+        else
+            idx = _prompt_race();
+        if (idx == _BIRTH_ESCAPE) continue;
+        return idx;
+    }
+    /*return _BIRTH_ESCAPE;  unreachable */
+}
+
+static _name_desc_t _game_mode_info[GAME_MODE_MAX] = {
+    {"Beginner",
+        "This option restricts the number of races and classes available. Also, instead of playing "
+        "with a normal game wilderness, you play with a special town." },
+    {"Normal",
+        "All races and classes are available and the normal wilderness is used by default." },
+    {"Real Life",
+        "Your race, sex and stats are rolled automatically and then you choose a class and "
+        "personality to match. This is how things work in real life, right? This option is not currently finished!" },
+    {"Monster",
+        "Play as a monster rather than a normal player!" },
+};
+
+static void _game_mode_menu_fn(int cmd, int which, vptr cookie, variant *res)
+{
+    switch (cmd)
+    {
+    case MENU_TEXT:
+        var_set_string(res, _game_mode_info[which].name);
+        break;
+    case MENU_ON_BROWSE:
+    {
+        char buf[80 * 10];
+        int  i, r = 0;
+
+        /* Question: How to erase a line? */
+        put_str("                                                                                ", 16, 5);
+        put_str("                                                                                ", 17, 5);
+        put_str("                                                                                ", 18, 5);
+
+        roff_to_buf(_game_mode_info[which].desc, 70, buf, sizeof(buf));
+        for (i = 0; buf[i]; i += 1 + strlen(&buf[i]))
+        {
+            put_str(buf + i, 16 + r, 5);
+            i++;
+            r++;
+        }
+        var_set_bool(res, TRUE);
+        break;
+    }
+    case MENU_COLOR:
+        var_set_int(res, TERM_WHITE);
+        if (which == GAME_MODE_REAL_LIFE)
+            var_set_int(res, TERM_L_DARK);
+        break;
+    }
+}
+
+static bool _prompt_game_mode(void)
+{
+    for (;;)
+    {
+        int idx;
+        menu_t menu = { "Mode", "birth.txt", "Choose which kind of game to play.",
+                            _game_mode_menu_fn,
+                            NULL, GAME_MODE_MAX};
+
+        c_put_str(TERM_WHITE, "              ", 2, 14);
+        idx = _menu_choose(&menu, game_mode);
+        if (idx < 0) return FALSE;
+        game_mode = idx;
+
+        switch (game_mode)
+        {
+        case GAME_MODE_REAL_LIFE:
+            idx = _BIRTH_ESCAPE; /* TODO */
+            break;
+        default:
+            idx = _prompt_sex();
+        }
+
         if (idx == _BIRTH_RESTART) return FALSE;
         if (idx == _BIRTH_ESCAPE) continue;
         return TRUE;
@@ -1613,7 +1877,7 @@ static bool _prompt(void)
     /* Note: The call stack stores the users path thru the directed graph
        of birth options (up to personality). We now support escaping to 
        back up and rechoose options. */
-    return _prompt_sex();
+    return _prompt_game_mode();
 }
 
 #define AUTOROLLER_STEP 50
@@ -3285,9 +3549,17 @@ static bool player_birth_aux(void)
     put_str("                                     ", 4, 40);
     put_str("                                     ", 5, 40);
 
-    screen_save();
-    do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
-    screen_load();
+    if (game_mode == GAME_MODE_BEGINNER)
+    {
+        vanilla_town = FALSE;
+        lite_town = TRUE;
+    }
+    else
+    {
+        screen_save();
+        do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
+        screen_load();
+    }
 
     /*** Autoroll ***/
 auto_roller_barf:

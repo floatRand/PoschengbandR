@@ -639,6 +639,11 @@ static void rd_extra(savefile_ptr file)
 
     rd_quick_start(file);
 
+    if (savefile_is_older_than(file, 3, 5, 1, 1))
+        game_mode = GAME_MODE_NORMAL;
+    else
+        game_mode = savefile_read_s32b(file);
+
     p_ptr->prace = savefile_read_byte(file);
     p_ptr->pclass = savefile_read_byte(file);
     p_ptr->personality = savefile_read_byte(file);

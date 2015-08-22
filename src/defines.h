@@ -19,7 +19,13 @@
 #define VER_MAJOR 3
 #define VER_MINOR 5
 #define VER_PATCH 1
-#define VER_EXTRA 0
+#define VER_EXTRA 1
+
+#define GAME_MODE_BEGINNER  0
+#define GAME_MODE_NORMAL    1
+#define GAME_MODE_REAL_LIFE 2
+#define GAME_MODE_MONSTER   3
+#define GAME_MODE_MAX       4
 
 /*
  * Number of grids in each block (vertically)
