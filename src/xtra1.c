@@ -863,12 +863,6 @@ static void prt_status(void)
         case TOGGLE_TRIP:
             ADD_FLG(BAR_TRIP);
             break;
-        case TOGGLE_FLURRY_OF_BLOWS:
-            ADD_FLG(BAR_FLURRY_OF_BLOWS);
-            break;
-        case TOGGLE_GREATER_FLURRY:
-            ADD_FLG(BAR_GREATER_FLURRY);
-            break;
         case TOGGLE_STRENGTH_OF_THE_UNDERTAKER:
             ADD_FLG(BAR_STRENGTH_OF_THE_UNDERTAKER);
             break;

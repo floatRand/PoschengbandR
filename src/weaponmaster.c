@@ -2624,29 +2624,17 @@ static void _flurry_of_blows_spell(int cmd, variant *res)
         var_set_string(res, "Flurry of Blows");
         break;
     case SPELL_DESC:
-        var_set_string(res, "You gain additional attacks when using this technique, but you lose accuracy.");
+        var_set_string(res, "You gain additional attacks when using this power, but you lose accuracy.");
+        break;
+    case SPELL_CAST:
+        var_set_bool(res, _do_blow(WEAPONMASTER_FLURRY));
         break;
     default:
-        _toggle_spell(TOGGLE_FLURRY_OF_BLOWS, cmd, res);
+        default_spell(cmd, res);
         break;
     }
 }
 
-static void _greater_flurry_spell(int cmd, variant *res)
-{
-    switch (cmd)
-    {
-    case SPELL_NAME:
-        var_set_string(res, "Greater Flurry");
-        break;
-    case SPELL_DESC:
-        var_set_string(res, "You gain additional attacks when using this technique, but you lose accuracy.");
-        break;
-    default:
-        _toggle_spell(TOGGLE_GREATER_FLURRY, cmd, res);
-        break;
-    }
-}
 
 /****************************************************************
  * Swordmaster
@@ -3035,12 +3023,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
             { 0, 0 },
           },
           {
-            { 10,  0, 0, _flurry_of_blows_spell },
             { 15, 15, 0, _vault_attack_spell },
             { 25, 20,50, _judge_spell },
             { 25, 25, 0, _circle_kick_spell },
             { 40,  0, 0, _monkey_king_spell },
-            { 45,  0, 0, _greater_flurry_spell },
+            { 45, 80, 0, _flurry_of_blows_spell },
             { -1,  0, 0, NULL },
           },
           { TV_HAFTED, SV_QUARTERSTAFF },
@@ -3191,7 +3178,7 @@ int weaponmaster_get_max_blows(object_type *o_ptr, int hand)
                 num = 525;
                 break;
             case WEAPONMASTER_STAVES:
-                num = 500;
+                num = 525;
                 break;
             case WEAPONMASTER_SWORDS:
                 num = 525;
@@ -3584,6 +3571,9 @@ static void _calc_bonuses(void)
                 p_ptr->dis_to_a += 10 + p_ptr->lev*2/3;
             }
 
+            if (p_ptr->lev >= 10)
+                p_ptr->sh_retaliation = TRUE;
+
             if (p_ptr->lev >= 20)
                 p_ptr->pspeed += 2;
 
@@ -3857,24 +3847,6 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     {
         if (spec1 && p_ptr->speciality_equip && p_ptr->lev >= 30 && p_ptr->chp == p_ptr->mhp)
             info_ptr->xtra_blow += 100;
-
-        if (spec1 && p_ptr->speciality_equip)
-        {
-            switch (_get_toggle())
-            {
-            case TOGGLE_FLURRY_OF_BLOWS:
-                info_ptr->xtra_blow += 100;
-                info_ptr->to_h -= 15;
-                info_ptr->dis_to_h -= 15;
-                break;
-
-            case TOGGLE_GREATER_FLURRY:
-                info_ptr->xtra_blow += 200;
-                info_ptr->to_h -= 30;
-                info_ptr->dis_to_h -= 30;
-                break;
-            }
-        }
     }
     else if (p_ptr->psubclass == WEAPONMASTER_DIGGERS)
     {
@@ -4138,6 +4110,8 @@ static void _character_dump(FILE* file)
         fprintf(file, "  * You suffer a penalty to speed when wielding a shield.\n");
         if (p_ptr->lev >= 5)
             fprintf(file, "  * You gain a bonus AC after moving until your next turn when wielding a staff.\n");
+        if (p_ptr->lev >= 10)
+            fprintf(file, "  * You retaliate when struck when wielding a staff.\n");
         if (p_ptr->lev >= 20)
             fprintf(file, "  * You gain a bonus to speed when wielding a staff.\n");
         if (p_ptr->lev >= 30)

@@ -5414,6 +5414,8 @@ extern int PlayerUID;
 #define DRACONIAN_STRIKE_VORPAL 83
 #define DRACONIAN_STRIKE_VAMP 84
 
+#define WEAPONMASTER_FLURRY  85
+
 #define HISSATSU_IAI    100
 
 /*
@@ -5853,10 +5855,6 @@ enum mon_save_fields_e {
 #define TOGGLE_MANY_STRIKE            17
 #define TOGGLE_PIERCING_STRIKE        18
 #define TOGGLE_TRIP                    19
-
-/* Staffmaster */
-#define TOGGLE_FLURRY_OF_BLOWS        20
-#define TOGGLE_GREATER_FLURRY        21
 
 /* Pickmaster */
 #define TOGGLE_STRENGTH_OF_THE_UNDERTAKER    22
