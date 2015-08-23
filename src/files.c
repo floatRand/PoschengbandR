@@ -3873,6 +3873,42 @@ static bool _mon_is_unique(int r_idx)
         return TRUE;
     return FALSE;
 }
+static bool _mon_res_acid(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_ACID | RFR_IM_ACID))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_elec(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_ELEC | RFR_IM_ELEC))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_fire(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_FIRE | RFR_IM_FIRE))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_cold(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_COLD | RFR_IM_COLD))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_pois(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_POIS | RFR_IM_POIS))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_conf(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_NO_CONF)
+        return TRUE;
+    return FALSE;
+}
 static void dump_aux_kill_counts_imp(FILE *fff, _mon_p p, cptr text, int total)
 {
     int i;
@@ -4053,7 +4089,14 @@ static void dump_aux_object_counts(FILE *fff)
     fprintf(fff, "\n");
     dump_aux_kill_counts_imp(fff, _mon_drops_good, "Good Droppers", total_kills);
     dump_aux_kill_counts_imp(fff, _mon_drops_great, "Great Droppers", total_kills);
-    fprintf(fff, "  %-20.20s %5d\n", "Totals", total_kills);
+    fprintf(fff, "\n");
+    dump_aux_kill_counts_imp(fff, _mon_res_acid, "Resist Acid", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_res_elec, "Resist Elec", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_res_fire, "Resist Fire", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_res_cold, "Resist Cold", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_res_pois, "Resist Pois", total_kills);
+    dump_aux_kill_counts_imp(fff, _mon_res_conf, "Resist Conf", total_kills);
+    fprintf(fff, "\n  %-20.20s %5d\n", "Totals", total_kills);
 
     fprintf(fff, "\n");
 }
@@ -4179,7 +4222,8 @@ static void dump_aux_options(FILE *fff)
 {
     fprintf(fff, "\n=================================== Options ===================================\n");
 
-    fprintf(fff, "\n Game Mode:          %s", _game_mode_text[game_mode]);
+    if (game_mode != GAME_MODE_NORMAL)
+        fprintf(fff, "\n Game Mode:          %s", _game_mode_text[game_mode]);
 
     if (preserve_mode)
         fprintf(fff, "\n Preserve Mode:      ON");
