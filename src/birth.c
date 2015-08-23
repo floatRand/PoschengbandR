@@ -10,6 +10,55 @@
 
 #include "angband.h"
 
+/*
+ * Returns adjusted stat -JK-  Algorithm by -JWT-
+ */
+static int adjust_stat(int value, int amount)
+{
+    int i;
+
+    /* Negative amounts */
+    if (amount < 0)
+    {
+        /* Apply penalty */
+        for (i = 0; i < (0 - amount); i++)
+        {
+            if (value >= 18+10)
+            {
+                value -= 10;
+            }
+            else if (value > 18)
+            {
+                value = 18;
+            }
+            else if (value > 3)
+            {
+                value--;
+            }
+        }
+    }
+
+    /* Positive amounts */
+    else if (amount > 0)
+    {
+        /* Apply reward */
+        for (i = 0; i < amount; i++)
+        {
+            if (value < 18)
+            {
+                value++;
+            }
+            else
+            {
+                value += 10;
+            }
+        }
+    }
+
+    /* Return the result */
+    return (value);
+}
+
 /* TODO: These don't belong here ... */
 static cptr pact_desc[MAX_PACTS] = 
 {
@@ -1802,7 +1851,7 @@ static _name_desc_t _game_mode_info[GAME_MODE_MAX] = {
         "All races and classes are available and the normal wilderness is used by default." },
     {"Real Life",
         "Your race, sex and stats are rolled automatically and then you choose a class and "
-        "personality to match. This is how things work in real life, right? This option is not currently finished!" },
+        "personality to match. This is how things work in real life, right?" },
     {"Monster",
         "Play as a monster rather than a normal player!" },
 };
@@ -1819,10 +1868,9 @@ static void _game_mode_menu_fn(int cmd, int which, vptr cookie, variant *res)
         char buf[80 * 10];
         int  i, r = 0;
 
-        /* Question: How to erase a line? */
-        put_str("                                                                                ", 16, 5);
-        put_str("                                                                                ", 17, 5);
-        put_str("                                                                                ", 18, 5);
+        Term_erase(5, 16, 255);
+        Term_erase(5, 17, 255);
+        Term_erase(5, 18, 255);
 
         roff_to_buf(_game_mode_info[which].desc, 70, buf, sizeof(buf));
         for (i = 0; buf[i]; i += 1 + strlen(&buf[i]))
@@ -1834,13 +1882,19 @@ static void _game_mode_menu_fn(int cmd, int which, vptr cookie, variant *res)
         var_set_bool(res, TRUE);
         break;
     }
-    case MENU_COLOR:
-        var_set_int(res, TERM_WHITE);
-        if (which == GAME_MODE_REAL_LIFE)
-            var_set_int(res, TERM_L_DARK);
-        break;
     }
 }
+
+static int _real_life_races[] = {
+    RACE_HUMAN, RACE_TONBERRY, RACE_DEMIGOD, RACE_HOBBIT, RACE_GNOME, RACE_DWARF,
+    RACE_SNOTLING, RACE_HALF_TROLL, RACE_AMBERITE, RACE_HIGH_ELF, RACE_BARBARIAN,
+    RACE_HALF_OGRE, RACE_HALF_GIANT, RACE_HALF_TITAN, RACE_CYCLOPS, RACE_YEEK,
+    RACE_KLACKON, RACE_KOBOLD, RACE_NIBELUNG, RACE_DARK_ELF, RACE_DRACONIAN,
+    RACE_MIND_FLAYER, RACE_IMP, RACE_GOLEM, RACE_SKELETON, RACE_ZOMBIE, RACE_VAMPIRE,
+    RACE_SPECTRE, RACE_SPRITE, RACE_BEASTMAN, RACE_ENT, RACE_ARCHON, RACE_BALROG,
+    RACE_DUNADAN, RACE_SHADOW_FAIRY, RACE_KUTAR, RACE_ANDROID,RACE_DOPPELGANGER,
+    RACE_CENTAUR, RACE_WOOD_ELF, -1
+};
 
 static bool _prompt_game_mode(void)
 {
@@ -1859,8 +1913,83 @@ static bool _prompt_game_mode(void)
         switch (game_mode)
         {
         case GAME_MODE_REAL_LIFE:
-            idx = _BIRTH_ESCAPE; /* TODO */
+        {
+            race_t *race_ptr = NULL;
+            int i, col, row;
+
+            c_put_str(TERM_WHITE, "              ", 2, 14);
+            p_ptr->psex = one_in_(2) ? SEX_MALE : SEX_FEMALE;
+            sp_ptr = &sex_info[p_ptr->psex]; /* TODO: Remove this ... */
+            c_put_str(TERM_L_BLUE, format("%-14s", sp_ptr->title), 2, 14);
+
+            c_put_str(TERM_WHITE, "              ", 4, 14);
+            c_put_str(TERM_WHITE, "                   ", 5, 14);
+            idx = randint0(_count_ids(_real_life_races));
+            p_ptr->prace = _real_life_races[idx];
+            p_ptr->psubrace = 0;
+            race_ptr = get_race_t();
+
+            c_put_str(TERM_L_BLUE, format("%-14s", race_ptr->name), 4, 14);
+
+            if (p_ptr->prace == RACE_DEMIGOD)
+            {
+                p_ptr->psubrace = randint0(MAX_DEMIGOD_TYPES);
+                c_put_str(TERM_L_BLUE, format("%-19s", demigod_info[p_ptr->psubrace].name), 5, 14);
+            }
+            else if (p_ptr->prace == RACE_DRACONIAN)
+            {
+                p_ptr->psubrace = randint0(DRACONIAN_MAX);
+                c_put_str(TERM_L_BLUE, format("%-19s", _draconian_info[p_ptr->psubrace].name), 5, 14);
+            }
+
+            for (;;)
+            {
+                int spread = 0, i;
+                for (i = 0; i < 6; i++)
+                {
+                    int n = randint1(9) - 5;
+                    p_ptr->stat_cur[i] = 13 + n;
+                    p_ptr->stat_max[i] = 13 + n;
+                    spread += n;
+                }
+                if (spread > 2) break;
+            }
+
+            col = 42;
+            row = 1;
+
+            c_put_str(TERM_WHITE, "  Base  R  C  P Total", row, col + 8);
+            for (i = 0; i < 6; i++)
+            {
+                int total;
+                char buf[MAX_NLEN];
+
+                c_put_str(TERM_WHITE, stat_names[i], row+i+1, col+1);
+
+                cnv_stat(p_ptr->stat_max[i], buf);
+                c_put_str(TERM_L_BLUE, buf, row + i+1, col + 8 + 6 - strlen(buf));
+
+                sprintf(buf, "%3d", race_ptr->stats[i]);
+                c_put_str(TERM_L_BLUE, buf, row + i+1, col + 8 + 9 - strlen(buf));
+
+                total = adjust_stat(p_ptr->stat_cur[i], race_ptr->stats[i]);
+                cnv_stat(total, buf);
+                c_put_str(TERM_L_GREEN, buf, row + i+1, col + 8 + 21 - strlen(buf));
+            }
+
+            prt("Your are born thus. Hit any key.", 0, 0);
+            inkey();
+            prt("", 0, 0);
+
+            Term_erase(col, row, 255);
+            for (i = 0; i < 6; i++)
+            {
+                Term_erase(col, row + i + 1, 255);
+            }
+
+            idx = _prompt_class();
             break;
+        }
         default:
             idx = _prompt_sex();
         }
@@ -2001,55 +2130,6 @@ static void load_prev_data(bool swap)
     {
         COPY(&previous_char, &temp, birther);
     }
-}
-
-/*
- * Returns adjusted stat -JK-  Algorithm by -JWT-
- */
-static int adjust_stat(int value, int amount)
-{
-    int i;
-
-    /* Negative amounts */
-    if (amount < 0)
-    {
-        /* Apply penalty */
-        for (i = 0; i < (0 - amount); i++)
-        {
-            if (value >= 18+10)
-            {
-                value -= 10;
-            }
-            else if (value > 18)
-            {
-                value = 18;
-            }
-            else if (value > 3)
-            {
-                value--;
-            }
-        }
-    }
-
-    /* Positive amounts */
-    else if (amount > 0)
-    {
-        /* Apply reward */
-        for (i = 0; i < amount; i++)
-        {
-            if (value < 18)
-            {
-                value++;
-            }
-            else
-            {
-                value += 10;
-            }
-        }
-    }
-
-    /* Return the result */
-    return (value);
 }
 
 /*
@@ -3517,6 +3597,7 @@ static bool player_birth_aux(void)
     bool stop = FALSE;
     bool flag = FALSE;
     bool prev = FALSE;
+    bool use_autoroller = autoroller;
 
     char c;
 
@@ -3561,16 +3642,22 @@ static bool player_birth_aux(void)
         screen_load();
     }
 
+    if (game_mode == GAME_MODE_REAL_LIFE)
+    {
+        use_autoroller = FALSE;
+        stop = TRUE;
+    }
+
     /*** Autoroll ***/
 auto_roller_barf:
-    if (autoroller)
+    if (use_autoroller)
     {
         /* Clear fields */
         auto_round = 0L;
     }
 
     /* Initialize */
-    if (autoroller)
+    if (use_autoroller)
     {
         if (!get_stat_limits()) return FALSE;
     }
@@ -3590,18 +3677,18 @@ auto_roller_barf:
 
         col = 42;
 
-        if (autoroller)
+        if (use_autoroller)
         {
             Term_clear();
             put_str("Round:", 10, col+13);
             put_str("(Hit ESC to stop)", 12, col+13);
         }
-        else
+        else if (game_mode != GAME_MODE_REAL_LIFE)
         {
             get_stats();
         }
 
-        if (autoroller)
+        if (use_autoroller)
         {
             class_t *class_ptr = get_class_t();
             put_str(" Limit", 2, col+5);
@@ -3628,7 +3715,7 @@ auto_roller_barf:
             }
         }
 
-        while (autoroller)
+        while (use_autoroller)
         {
             bool accept = TRUE;
 
@@ -3640,14 +3727,14 @@ auto_roller_barf:
             {
                 auto_round = 1;
 
-                if (autoroller)
+                if (use_autoroller)
                 {
                     for (i = 0; i < 6; i++)
                         stat_match[i] = 0;
                 }
             }
 
-            if (autoroller)
+            if (use_autoroller)
             {
                 /* Check and count acceptable stats */
                 for (i = 0; i < 6; i++)
@@ -3711,7 +3798,7 @@ auto_roller_barf:
             }
         }
 
-        if (autoroller) sound(SOUND_LEVEL);
+        if (use_autoroller) sound(SOUND_LEVEL);
 
         flush();
 

@@ -4166,6 +4166,12 @@ static void dump_aux_recall(FILE *fff)
     }
 }
 
+static cptr _game_mode_text[GAME_MODE_MAX] = {
+    "Beginner",
+    "Normal",
+    "Real Life",
+    "Monster"
+};
 /*
  *
  */
@@ -4173,6 +4179,7 @@ static void dump_aux_options(FILE *fff)
 {
     fprintf(fff, "\n=================================== Options ===================================\n");
 
+    fprintf(fff, "\n Game Mode:          %s", _game_mode_text[game_mode]);
 
     if (preserve_mode)
         fprintf(fff, "\n Preserve Mode:      ON");
