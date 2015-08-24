@@ -2275,7 +2275,8 @@ bool identify_item(object_type *o_ptr)
 
     stats_on_identify(o_ptr);
 
-    if (object_is_jewelry(o_ptr))
+    /* Experimental: Jewelry is a bit tedious to *id*, and id often reveals very little. */
+    if (object_is_jewelry(o_ptr) && !object_is_artifact(o_ptr))
     {
         o_ptr->ident |= IDENT_MENTAL;
         ego_aware(o_ptr);
