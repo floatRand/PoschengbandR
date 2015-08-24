@@ -2275,6 +2275,12 @@ bool identify_item(object_type *o_ptr)
 
     stats_on_identify(o_ptr);
 
+    if (object_is_jewelry(o_ptr))
+    {
+        o_ptr->ident |= IDENT_MENTAL;
+        ego_aware(o_ptr);
+    }
+
     /* Player touches it */
     o_ptr->marked |= OM_TOUCHED;
 
