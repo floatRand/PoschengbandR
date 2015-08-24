@@ -3178,7 +3178,7 @@ int weaponmaster_get_max_blows(object_type *o_ptr, int hand)
                 num = 525;
                 break;
             case WEAPONMASTER_STAVES:
-                num = 525;
+                num = 500;
                 break;
             case WEAPONMASTER_SWORDS:
                 num = 525;
