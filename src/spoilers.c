@@ -604,6 +604,78 @@ static void _show_help(cptr helpfile)
     screen_load();
 }
 
+static void _mon_dam_help(FILE* fff)
+{
+    int i, j;
+    fprintf(fff, "Name,Idx,Lvl,HP,Ac,El,Fi,Co,Po,Li,Dk,Cf,Nt,Nx,So,Sh,Ca,Di\n");
+    for (i = 0; i < max_r_idx; i++)
+    {
+        monster_race *r_ptr = &r_info[i];
+        int           hp = 0;
+        int           dam[RES_MAX] = {0};
+        bool          show = FALSE;
+
+        if (r_ptr->flags1 & RF1_FORCE_MAXHP)
+            hp = r_ptr->hdice * r_ptr->hside;
+        else
+            hp = r_ptr->hdice * (1 + r_ptr->hside)/2;
+
+        /* Damage Logic Duplicated from mspells1.c */
+        if (r_ptr->flags4 & RF4_ROCKET)
+            dam[RES_SHARDS] = MAX(dam[RES_SHARDS], MIN(hp / 4, 600));
+        if (r_ptr->flags4 & RF4_BR_ACID)
+            dam[RES_ACID] = MAX(dam[RES_ACID], MIN(hp / 4, 900));
+        if (r_ptr->flags4 & RF4_BR_ELEC)
+            dam[RES_ELEC] = MAX(dam[RES_ELEC], MIN(hp / 4, 900));
+        if (r_ptr->flags4 & RF4_BR_FIRE)
+            dam[RES_FIRE] = MAX(dam[RES_FIRE], MIN(hp / 4, 900));
+        if (r_ptr->flags4 & RF4_BR_COLD)
+            dam[RES_COLD] = MAX(dam[RES_COLD], MIN(hp / 4, 900));
+        if (r_ptr->flags4 & RF4_BR_POIS)
+            dam[RES_POIS] = MAX(dam[RES_POIS], MIN(hp / 5, 600));
+        if (r_ptr->flags4 & RF4_BR_NETH)
+            dam[RES_NETHER] = MAX(dam[RES_NETHER], MIN(hp / 6, 550));
+        if (r_ptr->flags4 & RF4_BR_LITE)
+            dam[RES_LITE] = MAX(dam[RES_LITE], MIN(hp / 6, 400));
+        if (r_ptr->flags4 & RF4_BR_DARK)
+            dam[RES_DARK] = MAX(dam[RES_DARK], MIN(hp / 6, 400));
+        if (r_ptr->flags4 & RF4_BR_CONF)
+            dam[RES_CONF] = MAX(dam[RES_CONF], MIN(hp / 6, 400));
+        if (r_ptr->flags4 & RF4_BR_SOUN)
+            dam[RES_SOUND] = MAX(dam[RES_SOUND], MIN(hp / 6, 450));
+        if (r_ptr->flags4 & RF4_BR_CHAO)
+            dam[RES_CHAOS] = MAX(dam[RES_CHAOS], MIN(hp / 6, 600));
+        if (r_ptr->flags4 & RF4_BR_DISE)
+            dam[RES_DISEN] = MAX(dam[RES_DISEN], MIN(hp / 6, 500));
+        if (r_ptr->flags4 & RF4_BR_NEXU)
+            dam[RES_NEXUS] = MAX(dam[RES_NEXUS], MIN(hp / 3, 250));
+        if (r_ptr->flags4 & RF4_BR_SHAR)
+            dam[RES_SHARDS] = MAX(dam[RES_SHARDS], MIN(hp / 6, 500));
+        if (r_ptr->flags4 & RF4_BR_NUKE)
+            dam[RES_POIS] = MAX(dam[RES_POIS], MIN(hp / 5, 600));
+        if (r_ptr->flags5 & RF5_BA_DARK)
+            dam[RES_DARK] = MAX(dam[RES_DARK], r_ptr->level*4 + 105);
+        if (r_ptr->flags5 & RF5_BA_LITE)
+            dam[RES_LITE] = MAX(dam[RES_LITE], r_ptr->level*4 + 105);
+
+        for (j = 0; j < RES_MAX; j++)
+        {
+            if (dam[j] > 0)
+                show = TRUE;
+        }
+
+        if (show)
+        {
+            fprintf(fff, "\"%s\",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
+                r_name + r_ptr->name, i, r_ptr->level, hp,
+                dam[RES_ACID], dam[RES_ELEC], dam[RES_FIRE], dam[RES_COLD], dam[RES_POIS],
+                dam[RES_LITE], dam[RES_DARK], dam[RES_CONF], dam[RES_NETHER], dam[RES_NEXUS],
+                dam[RES_SOUND], dam[RES_SHARDS], dam[RES_CHAOS], dam[RES_DISEN]
+            );
+        }
+    }
+}
+
 static void _possessor_stats_help(FILE* fff)
 {
     int i;
@@ -660,6 +732,7 @@ void generate_spoilers(void)
     _text_file("Classes.txt", _classes_help);
     _text_file("Personalities.txt", _personalities_help);
     _text_file("PossessorStats.csv", _possessor_stats_help);
+    _text_file("MonsterDam.csv", _mon_dam_help);
     _text_file("DragonRealms.txt", _dragon_realms_help);
 
     _show_help("Personalities.txt");
