@@ -862,15 +862,15 @@ F:@:FLOOR:3:0:0:0:138
 F:a:BUILDING_0:3
 F:@:FLOOR:3:0:0:0:134
 
-# Monkey King's Cudgel
+# Ruyi Jingu Bang
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [EQU [MOD $RANDOM27 5] 0] ]
 F:a:BUILDING_0:3
 F:@:FLOOR:3:0:0:0:255
 
-# Nar-i-vagil
+# Asclepius
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [GEQ [MOD $RANDOM27 5] 1] ] 
 F:a:BUILDING_0:3
-F:@:FLOOR:3:0:0:0:118
+F:@:FLOOR:3:0:0:0:225
 
 # Werewindle
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] [EQU [MOD $RANDOM27 5] 0] ]

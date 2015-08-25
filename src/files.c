@@ -3674,14 +3674,30 @@ static void dump_aux_object_counts_imp(FILE *fff, int tval, int sval)
     if (k_ptr->counts.found || k_ptr->counts.bought || k_ptr->counts.used || k_ptr->counts.destroyed)
     {
         fprintf(
-            fff, 
-            "  %-20.20s %5d %6d %5d %5d\n", 
+            fff,
+            "  %-20.20s %5d %6d %5d %5d",
             k_name + k_ptr->name,
             k_ptr->counts.found,
             k_ptr->counts.bought,
             k_ptr->counts.used,
             k_ptr->counts.destroyed
         );
+
+        switch (tval)
+        {
+        case TV_WAND: case TV_ROD: case TV_STAFF: case TV_SCROLL:
+        {
+            int         fail;
+            object_type forge;
+            object_prep(&forge, lookup_kind(tval, sval));
+            fail = device_calc_fail_rate(&forge);
+            fprintf(fff, " %3d.%1d%%", fail / 10, fail % 10);
+            break;
+        }
+        }
+
+        fprintf(fff, "\n");
+
     }
 }
 
@@ -3981,8 +3997,8 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_object_counts_imp(fff, TV_POTION, SV_POTION_EXPERIENCE);
     dump_aux_group_counts_imp(fff, _kind_is_potion, "Totals");
 
-    fprintf(fff, "\n  Scrolls              Found Bought  Used  Dest\n");
-    fprintf(fff,   "  ---------------------------------------------\n");
+    fprintf(fff, "\n  Scrolls              Found Bought  Used  Dest  Fail\n");
+    fprintf(fff,   "  ---------------------------------------------------\n");
     dump_aux_object_counts_imp(fff, TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
     dump_aux_object_counts_imp(fff, TV_SCROLL, SV_SCROLL_IDENTIFY);
     dump_aux_object_counts_imp(fff, TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
@@ -3999,8 +4015,8 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_object_counts_imp(fff, TV_SCROLL, SV_SCROLL_ARTIFACT);
     dump_aux_group_counts_imp(fff, _kind_is_scroll, "Totals");
 
-    fprintf(fff, "\n  Wands                Found Bought  Used  Dest\n");
-    fprintf(fff,   "  ---------------------------------------------\n");
+    fprintf(fff, "\n  Wands                Found Bought  Used  Dest  Fail\n");
+    fprintf(fff,   "  ---------------------------------------------------\n");
     dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_STONE_TO_MUD);
     dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_TELEPORT_AWAY);
     dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_DRAGON_COLD);
@@ -4011,8 +4027,8 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_ROCKETS);
     dump_aux_group_counts_imp(fff, _kind_is_wand, "Totals");
 
-    fprintf(fff, "\n  Staves               Found Bought  Used  Dest\n");
-    fprintf(fff,   "  ---------------------------------------------\n");
+    fprintf(fff, "\n  Staves               Found Bought  Used  Dest  Fail\n");
+    fprintf(fff,   "  ---------------------------------------------------\n");
     dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_IDENTIFY);
     dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_MAPPING);
     dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_SPEED);
@@ -4022,8 +4038,8 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_MSTORM);
     dump_aux_group_counts_imp(fff, _kind_is_staff, "Totals");
 
-    fprintf(fff, "\n  Rods                 Found Bought  Used  Dest\n");
-    fprintf(fff,   "  ---------------------------------------------\n");
+    fprintf(fff, "\n  Rods                 Found Bought  Used  Dest  Fail\n");
+    fprintf(fff,   "  ---------------------------------------------------\n");
     dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_DETECT_TRAP);
     dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_DETECT_DOOR);
     dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_DETECT_MONSTERS);
