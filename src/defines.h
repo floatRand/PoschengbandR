@@ -3245,7 +3245,7 @@ enum summon_specific_e {
 #define TRG_RANDOM_CURSE0       0x00002000     /* Item is Random Cursed */
 #define TRG_RANDOM_CURSE1       0x00004000     /* Item is Random Cursed */
 #define TRG_RANDOM_CURSE2       0x00008000     /* Item is Random Cursed */
-#define TRG_XXX                 0x00010000
+#define TRG_AWARE               0x00010000
 #define TRG_TOWN                0x00020000     /* Item is allowed to be stocked in town */
 
 

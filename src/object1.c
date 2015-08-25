@@ -294,7 +294,7 @@ void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
     {
         ego_item_type *e_ptr = &e_info[o_ptr->name2];
 
-        if (e_ptr->aware)
+        if (ego_is_aware(o_ptr->name2))
         {
             for (i = 0; i < TR_FLAG_SIZE; i++)
                 flgs[i] |= e_ptr->flags[i];

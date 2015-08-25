@@ -1130,6 +1130,7 @@ extern errr get_obj_num_prep(void);
 extern void object_known(object_type *o_ptr);
 extern void object_aware(object_type *o_ptr);
 extern void ego_aware(object_type *o_ptr);
+extern bool ego_is_aware(int which);
 extern void object_tried(object_type *o_ptr);
 extern s32b object_value(object_type *o_ptr);
 extern s32b object_value_real(object_type *o_ptr);

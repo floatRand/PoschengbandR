@@ -765,6 +765,12 @@ void ego_aware(object_type *o_ptr)
     if (o_ptr->name2)
         e_info[o_ptr->name2].aware = TRUE;
 }
+bool ego_is_aware(int which)
+{
+    if (e_info[which].aware || (e_info[which].gen_flags & TRG_AWARE))
+        return TRUE;
+    return FALSE;
+}
 
 /* Statistics
    We try hard not to leak information. For example, when picking up an
