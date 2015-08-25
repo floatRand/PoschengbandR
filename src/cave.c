@@ -3583,25 +3583,11 @@ void update_view(void)
 
     /*** Initialize ***/
 
-    /* Optimize */
-    if (view_reduce_view && !dun_level && p_ptr->town_num && !p_ptr->inside_arena && !p_ptr->inside_battle && !p_ptr->inside_quest)
-    {
-        /* Full radius (4) */
-        full = MAX_SIGHT / 5;
+    /* Full radius (20) */
+    full = MAX_SIGHT;
 
-        /* Octagon factor (3) */
-        over = MAX_SIGHT * 3 / 4;
-    }
-
-    /* Normal */
-    else
-    {
-        /* Full radius (20) */
-        full = MAX_SIGHT;
-
-        /* Octagon factor (30) */
-        over = MAX_SIGHT * 3 / 2;
-    }
+    /* Octagon factor (30) */
+    over = MAX_SIGHT * 3 / 2;
 
 
     /*** Step 0 -- Begin ***/

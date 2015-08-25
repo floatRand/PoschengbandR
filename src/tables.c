@@ -3491,9 +3491,6 @@ option_type option_info[] =
     { &view_unsafe_grids,           FALSE, OPT_PAGE_MAPSCREEN, 1, 8,
     "view_unsafe_grids",            "Map marked by detect traps" },
 
-    { &view_reduce_view,            FALSE, OPT_PAGE_MAPSCREEN, 1, 17,
-    "view_reduce_view",             "Reduce view-radius in town" },
-
     { &fresh_before,                TRUE,  OPT_PAGE_MAPSCREEN, 1, 23,
     "fresh_before",                 "Flush output while continuous command" },
 
@@ -3630,6 +3627,9 @@ option_type option_info[] =
 
     { &disturb_minor,               TRUE,  OPT_PAGE_DISTURBANCE, 0, 24,
     "disturb_minor",                "Disturb whenever boring things happen" },
+
+    { &town_no_disturb,            FALSE, OPT_PAGE_DISTURBANCE, 1, 17,
+    "town_no_disturb",             "Never disturb when a town monster moves" },
 
     { &ring_bell,                   FALSE, OPT_PAGE_DISTURBANCE, 0, 14,
     "ring_bell",                    "Audible bell (on errors, etc)" },

@@ -3410,8 +3410,16 @@ static void process_monster(int m_idx)
                  (disturb_near && projectable(py, px, m_ptr->fy, m_ptr->fx)) ||
                  (disturb_high && ap_r_ptr->r_tkills && ap_r_ptr->level >= p_ptr->lev)))
             {
-                /* Disturb */
-                if (is_hostile(m_ptr))
+                if ( town_no_disturb
+                  && !dun_level
+                  && p_ptr->town_num
+                  && !p_ptr->inside_arena
+                  && !p_ptr->inside_battle
+                  && !p_ptr->inside_quest
+                  && r_ptr->level == 0 )
+                {
+                }
+                else if (is_hostile(m_ptr))
                     disturb(0, 0);
             }
 

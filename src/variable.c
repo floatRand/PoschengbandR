@@ -228,7 +228,6 @@ bool view_special_lite;    /* Use special colors for floor grids (slow) */
 bool view_perma_grids;    /* Map remembers all perma-lit grids */
 bool view_torch_grids;    /* Map remembers all torch-lit grids */
 bool view_unsafe_grids;    /* Map marked by detect traps */
-bool view_reduce_view;    /* Reduce view-radius in town */
 bool fresh_before;    /* Flush output while continuous command */
 bool fresh_after;    /* Flush output after monster's move */
 bool fresh_message;    /* Flush output after every message */
@@ -289,6 +288,7 @@ bool disturb_pets;    /* Disturb when visible pets move */
 bool disturb_panel;    /* Disturb whenever map panel changes */
 bool disturb_state;    /* Disturb whenever player state changes */
 bool disturb_minor;    /* Disturb whenever boring things happen */
+bool town_no_disturb;
 bool ring_bell;    /* Audible bell (on errors, etc) */
 bool disturb_trap_detect;    /* Disturb when leaving trap detected area */
 bool alert_trap_detect;    /* Alert when leaving trap detected area */

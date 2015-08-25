@@ -42,7 +42,6 @@ X:view_special_lite
 Y:view_perma_grids
 Y:view_torch_grids
 X:view_unsafe_grids
-X:view_reduce_view
 Y:fresh_before
 X:fresh_after
 X:fresh_message
@@ -93,6 +92,7 @@ X:disturb_pets
 Y:disturb_panel
 Y:disturb_state
 Y:disturb_minor
+X:town_no_disturb
 X:ring_bell
 Y:disturb_trap_detect
 X:alert_trap_detect
