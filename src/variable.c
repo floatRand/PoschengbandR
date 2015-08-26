@@ -300,8 +300,7 @@ bool manual_haggle;    /* Manually haggle in stores */
 bool easy_band;    /* Easy Mode (*) */
 bool smart_learn;    /* Monsters learn from their mistakes (*) */
 bool smart_cheat;    /* Monsters exploit players weaknesses (*) */
-bool vanilla_town;    /* Use 'vanilla' town without quests and wilderness */
-bool lite_town;    /* Use 'lite' town without a wilderness */
+bool no_wilderness;
 bool ironman_shops;    /* Stores are permanently closed (*) */
 bool ironman_small_levels;    /* Always create unusually small dungeon levels (*) */
 bool ironman_downward;    /* Disable recall and use of up stairs (*) */

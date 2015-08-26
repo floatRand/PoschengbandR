@@ -96,9 +96,6 @@ bool object_is_shoukinkubi(object_type *o_ptr)
     /* Require corpse or skeleton */
     if (o_ptr->tval != TV_CORPSE) return FALSE;
 
-    /* No wanted monsters in vanilla town */
-    if (vanilla_town) return FALSE;
-
     /* Today's wanted */
     if (p_ptr->today_mon > 0 && (streq(r_name + r_info[o_ptr->pval].name, r_name + r_info[today_mon].name))) return TRUE;
 

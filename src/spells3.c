@@ -794,7 +794,7 @@ int choose_dungeon(cptr note, int y, int x)
     s16b *dun;
 
     /* Hack -- No need to choose dungeon in some case */
-    if (lite_town || vanilla_town || ironman_downward)
+    if (no_wilderness || ironman_downward)
     {
         if (max_dlv[DUNGEON_ANGBAND]) return DUNGEON_ANGBAND;
         else

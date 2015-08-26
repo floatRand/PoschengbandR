@@ -321,8 +321,7 @@ extern bool manual_haggle;    /* Manually haggle in stores */
 extern bool easy_band;    /* Easy Mode (*) */
 extern bool smart_learn;    /* Monsters learn from their mistakes (*) */
 extern bool smart_cheat;    /* Monsters exploit players weaknesses (*) */
-extern bool vanilla_town;    /* Use 'vanilla' town without quests and wilderness */
-extern bool lite_town;    /* Use 'lite' town without a wilderness */
+extern bool no_wilderness;  /* Play without a normal wilderness */
 extern bool ironman_shops;    /* Stores are permanently closed (*) */
 extern bool ironman_small_levels;    /* Always create unusually small dungeon levels (*) */
 extern bool ironman_downward;    /* Disable recall and use of up stairs (*) */

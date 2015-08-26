@@ -1429,7 +1429,7 @@ errr get_mon_num_prep(monster_hook_type monster_hook,
             if (r_ptr->flags1 & RF1_QUESTOR)
                 continue;
 
-            if ((r_ptr->flags7 & RF7_GUARDIAN) && !(vanilla_town || lite_town))
+            if ((r_ptr->flags7 & RF7_GUARDIAN) && !no_wilderness)
                 continue;
 
             /* Depth Monsters never appear out of depth */

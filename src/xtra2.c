@@ -844,7 +844,7 @@ static bool _mon_is_wanted(int m_idx)
 {
     monster_type *m_ptr = &m_list[m_idx];
     monster_race *r_ptr = &r_info[m_ptr->r_idx];
-    if ((r_ptr->flags1 & RF1_UNIQUE) && !(m_ptr->smart & SM_CLONED) && !vanilla_town)
+    if ((r_ptr->flags1 & RF1_UNIQUE) && !(m_ptr->smart & SM_CLONED))
     {
         int i;
         for (i = 0; i < MAX_KUBI; i++)

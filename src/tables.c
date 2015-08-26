@@ -3654,11 +3654,8 @@ option_type option_info[] =
     { &smart_cheat,                 FALSE, OPT_PAGE_BIRTH, 1, 15,
     "smart_cheat",                  "Monsters exploit players weaknesses (*)" },
 
-    { &vanilla_town,                FALSE, OPT_PAGE_BIRTH, 6, 0,
-    "vanilla_town",                 "Use 'vanilla' town without quests and wilderness" },
-
-    { &lite_town,                   FALSE, OPT_PAGE_BIRTH, 6, 1,
-    "lite_town",                    "Use 'lite' town without a wilderness" },
+    { &no_wilderness,               FALSE, OPT_PAGE_BIRTH, 6, 1,
+    "no_wilderness",                "Play without a wilderness" },
 
     { &ironman_shops,               FALSE, OPT_PAGE_BIRTH, 6, 2,
     "ironman_shops",                "Stores are permanently closed (*)" },

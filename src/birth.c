@@ -2609,7 +2609,7 @@ static void player_wipe(void)
     for (i = 0; i < 8; i++) p_ptr->virtues[i]=0;
 
     /* Set the recall dungeon accordingly */
-    if (vanilla_town)
+    if (no_wilderness)
     {
         dungeon_type = 0;
         p_ptr->recall_dungeon = DUNGEON_ANGBAND;
@@ -2755,8 +2755,6 @@ static void init_dungeon_quests(void)
     int i;
 
     num_random_quests = 10; /*get_quantity("How many quests (0 to 49)? ", 49);*/
-    if (vanilla_town)
-        num_random_quests = 0;
 
     /* Init the random quests */
     init_flags = INIT_ASSIGN;
@@ -3632,11 +3630,11 @@ static bool player_birth_aux(void)
 
     if (game_mode == GAME_MODE_BEGINNER)
     {
-        vanilla_town = FALSE;
-        lite_town = TRUE;
+        no_wilderness = TRUE;
     }
     else
     {
+        /*no_wilderness = FALSE;*/
         screen_save();
         do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
         screen_load();

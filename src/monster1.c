@@ -1774,7 +1774,7 @@ static void roff_aux(int r_idx, int mode)
 
     }
 
-    else if ((flags7 & RF7_GUARDIAN) && !(vanilla_town || lite_town))
+    else if ((flags7 & RF7_GUARDIAN) && !no_wilderness)
     {
         hook_c_roff(TERM_L_RED, "This monster is the master of a dungeon.");
 

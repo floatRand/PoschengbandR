@@ -4260,11 +4260,8 @@ static void dump_aux_options(FILE *fff)
         fprintf(fff, "\n Small Levels:       OFF");
 
 
-    if (vanilla_town)
-        fprintf(fff, "\n Vanilla Town:       ON");
-
-    else if (lite_town)
-        fprintf(fff, "\n Lite Town:          ON");
+    if (no_wilderness)
+        fprintf(fff, "\n Wilderness:         OFF");
 
 
     if (ironman_shops)
@@ -4321,8 +4318,6 @@ static void dump_aux_options(FILE *fff)
  */
 static void dump_aux_arena(FILE *fff)
 {
-    if (lite_town || vanilla_town) return;
-
     if (p_ptr->arena_number < 0)
     {
         if (p_ptr->arena_number <= ARENA_DEFEATED_OLD_VER)

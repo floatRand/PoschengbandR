@@ -4175,7 +4175,6 @@ void do_cmd_store(void)
     cave_type   *c_ptr;
     bool        need_redraw_store_inv = FALSE; /* To redraw missiles damage and prices in store */
     int         w, h;
-    bool        vanilla_zerker_hack = FALSE;
     bool        friend_hack = FALSE;
     int         options = STORE_MAINT_NORMAL;
 
@@ -4204,18 +4203,6 @@ void do_cmd_store(void)
     if ((which == STORE_HOME) || (which == STORE_MUSEUM)) p_ptr->town_num = 1;
     if (dun_level || !p_ptr->town_num) p_ptr->town_num = NO_TOWN;
     inner_town_num = p_ptr->town_num;
-
-    /* Berserkers in Vanilla Town are forced into a tough iron man game, with no id 
-       Let's cut them some slack by giving extra options in the BM.
-    */
-    if ( which == STORE_BLACK
-      && p_ptr->pclass == CLASS_BERSERKER
-      && vanilla_town )
-    {
-        vanilla_zerker_hack = TRUE;
-        --xtra_stock;
-        --store_bottom;
-    }
 
     if ( (mut_present(MUT_MERCHANTS_FRIEND) || p_ptr->wizard)
       && which != STORE_HOME
@@ -4251,7 +4238,6 @@ void do_cmd_store(void)
         int xp = town[p_ptr->town_num].store[which].last_exp;
         xp += MIN(MAX(xp / 20, 1000), 100000);
         if ( !ironman_downward
-          && !vanilla_town
           && p_ptr->max_plv <= town[p_ptr->town_num].store[which].last_lev
           && p_ptr->max_exp <= xp 
           && p_ptr->prace != RACE_ANDROID )
@@ -4340,13 +4326,7 @@ void do_cmd_store(void)
             prt(" SPACE) Next page", 23 + xtra_stock, 0);
         }
 
-        if (vanilla_zerker_hack)
-        {
-            prt(" 1) Identify (100gp)", 24 + xtra_stock, 0);
-            prt("   2) *Identify* (2000gp)", 24 + xtra_stock, 27);
-            prt("  3) Identify All (1000gp)", 24 + xtra_stock, 56);
-        }
-        else if (friend_hack)
+        if (friend_hack)
         {
             prt(" 1) Shuffle Stock (5000gp)", 24 + xtra_stock, 0);
             prt("   2) Hold Item (10000gp)", 24 + xtra_stock, 27);
@@ -4388,54 +4368,7 @@ void do_cmd_store(void)
         /* Get a command */
         request_command(TRUE);
 
-        /* Process the command */
-        if (vanilla_zerker_hack)
-        {
-            /* Total Hackage */
-            switch (command_cmd)
-            {
-            case '1':
-                if (100 > p_ptr->au)
-                    msg_print("You do not have the gold!");
-                else
-                {
-                    if (ident_spell(NULL))
-                    {
-                        p_ptr->au -= 100;
-                        store_prt_gold(); 
-                    }
-                }
-                break;
-            case '2':
-                if (2000 > p_ptr->au)
-                    msg_print("You do not have the gold!");
-                else
-                {
-                    if (identify_fully(NULL))
-                    {
-                        p_ptr->au -= 2000;
-                        store_prt_gold();
-                    }
-                }
-                break;
-            case '3':
-                if (1000 > p_ptr->au)
-                    msg_print("You do not have the gold!");
-                else
-                {
-                    if (!get_check("Do you pay for identify all your possession? ")) break;
-                    identify_pack();
-                    p_ptr->au -= 1000;
-                    msg_print("Your possessions have been identified.");
-                    store_prt_gold();
-                }
-                break;
-            default:
-                store_process_command();
-                break;
-            }
-        }
-        else if (friend_hack)
+        if (friend_hack)
         {
             switch (command_cmd)
             {

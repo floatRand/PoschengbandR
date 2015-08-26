@@ -3185,8 +3185,12 @@ static void process_world(void)
         }
     }
 
-    /* While in the dungeon (vanilla_town or lite_town mode only) */
-    else if ((vanilla_town || (lite_town && !p_ptr->inside_quest && !p_ptr->inside_battle && !p_ptr->inside_arena)) && dun_level)
+    /* While in the dungeon (no_wilderness mode only) */
+    else if ( no_wilderness
+           && !p_ptr->inside_quest
+           && !p_ptr->inside_battle
+           && !p_ptr->inside_arena
+           && dun_level )
     {
         /*** Shuffle the Storekeepers ***/
 
@@ -3815,7 +3819,7 @@ static void process_command(void)
         {
             if (!p_ptr->wild_mode && !dun_level && !p_ptr->inside_arena && !p_ptr->inside_quest)
             {
-                if (vanilla_town) break;
+                if (no_wilderness) break;
 
                 if (p_ptr->food < PY_FOOD_WEAK)
                 {
@@ -6174,22 +6178,14 @@ void play_game(bool new_game)
                     p_ptr->inside_quest = 0;
                     if (dungeon_type) p_ptr->recall_dungeon = dungeon_type;
                     dungeon_type = 0;
-                    if (lite_town || vanilla_town)
+                    if (no_wilderness)
                     {
                         p_ptr->wilderness_y = 1;
                         p_ptr->wilderness_x = 1;
                         p_ptr->wilderness_dx = 0;
                         p_ptr->wilderness_dy = 0;
-                        if (vanilla_town)
-                        {
-                            p_ptr->oldpy = 10;
-                            p_ptr->oldpx = 34;
-                        }
-                        else
-                        {
-                            p_ptr->oldpy = 33;
-                            p_ptr->oldpx = 131;
-                        }
+                        p_ptr->oldpy = 33;
+                        p_ptr->oldpx = 131;
                     }
                     else
                     {

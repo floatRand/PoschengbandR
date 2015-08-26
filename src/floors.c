@@ -1022,7 +1022,7 @@ void leave_floor(void)
 
         if (!(d_info[dungeon_type].flags1 & DF1_RANDOM))
         {
-            if (!vanilla_town && !lite_town)
+            if (!no_wilderness)
             {
                 p_ptr->wilderness_y = d_info[dungeon_type].dy;
                 p_ptr->wilderness_x = d_info[dungeon_type].dx;

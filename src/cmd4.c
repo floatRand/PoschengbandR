@@ -8298,7 +8298,7 @@ void do_cmd_knowledge(void)
             prt("(3) Display remaining uniques", row++, 5);
             prt("(4) Display known monster", row++, 5);
             prt("(5) Display kill count", row++, 5);
-            if (!vanilla_town) prt("(6) Display wanted monsters", row++, 5);
+            prt("(6) Display wanted monsters", row++, 5);
             prt("(7) Display current pets", row++, 5);
             prt("(8) Display home inventory", row++, 5);
             prt("(9) Display *identified* equip.", row++, 5);
@@ -8359,7 +8359,7 @@ void do_cmd_knowledge(void)
             do_cmd_knowledge_kill_count();
             break;
         case '6':
-            if (!vanilla_town) do_cmd_knowledge_kubi();
+            do_cmd_knowledge_kubi();
             break;
         case '7':
             do_cmd_knowledge_pets();

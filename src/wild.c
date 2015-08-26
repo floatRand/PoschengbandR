@@ -442,7 +442,7 @@ void wilderness_move_player(int old_x, int old_y)
     rect_t  valid;
     bool    do_disturb = FALSE;
 
-    if (vanilla_town || lite_town)
+    if (no_wilderness)
         return;
 
     /* There are several ways we could scroll:
@@ -730,8 +730,7 @@ static void _generate_encounters(int x, int y, const rect_t *r, const rect_t *ex
     if ( !wilderness[y][x].town 
       && !wilderness[y][x].road 
       && !wilderness[y][x].entrance
-      && !vanilla_town
-      && !lite_town
+      && !no_wilderness
       && !generate_encounter
       && !no_encounters_hack
       && one_in_(_WILD_ENCOUNTER_CHANCE))
@@ -744,8 +743,7 @@ static void _generate_encounters(int x, int y, const rect_t *r, const rect_t *ex
     /* Scripted Ambush? */
     if ( !wilderness[y][x].town
       && generate_encounter
-      && !vanilla_town
-      && !lite_town
+      && !no_wilderness
       && one_in_(5))
     {
         room_template_t *room_ptr = choose_room_template(ROOM_AMBUSH, _encounter_terrain_type(x, y));
@@ -1656,7 +1654,7 @@ bool change_wild_mode(void)
     if (p_ptr->leaving) return FALSE;
 
 
-    if (lite_town || vanilla_town)
+    if (no_wilderness)
     {
         msg_print("No global map.");
         return FALSE;
