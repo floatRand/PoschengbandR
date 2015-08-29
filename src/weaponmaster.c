@@ -2624,10 +2624,13 @@ static void _flurry_of_blows_spell(int cmd, variant *res)
         var_set_string(res, "Flurry of Blows");
         break;
     case SPELL_DESC:
-        var_set_string(res, "You gain additional attacks when using this power, but you lose accuracy.");
+        var_set_string(res, "Attack a single opponent with a great number of blows, exhausting yourself in the process.");
         break;
     case SPELL_CAST:
         var_set_bool(res, _do_blow(WEAPONMASTER_FLURRY));
+        break;
+    case SPELL_ENERGY:
+        var_set_int(res, 100 + ENERGY_NEED());
         break;
     default:
         default_spell(cmd, res);

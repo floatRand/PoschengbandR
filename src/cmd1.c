@@ -2854,7 +2854,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     /* Calculate the "attack quality" */
     bonus = p_ptr->weapon_info[hand].to_h + to_h;
     if (mode == WEAPONMASTER_KNOCK_BACK) bonus -= 20;
-    if (mode == WEAPONMASTER_FLURRY) bonus -= 20;
     if (mode == WEAPONMASTER_REAPING) bonus -= 40;
     if (mode == MAULER_KNOCKOUT_BLOW) bonus -= 50;
     if (mode == WEAPONMASTER_CUNNING_STRIKE) bonus += 20;
@@ -2874,7 +2873,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     num_blow = _get_num_blow(hand);
 
     if (mode == HISSATSU_COLD) num_blow += 2;
-    if (mode == WEAPONMASTER_FLURRY) num_blow += 2;
+    if (mode == WEAPONMASTER_FLURRY) num_blow *= 2;
     if (mode == WEAPONMASTER_CUNNING_STRIKE) num_blow = (num_blow + 1)/2;
 
     if (o_ptr && o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE) 
