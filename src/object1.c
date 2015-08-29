@@ -478,10 +478,10 @@ bool screen_object(object_type *o_ptr, u32b mode)
                 int fail = effect_calc_fail_rate(&e);
                 strcat(scratch, format("\n      Fail: %d.%d%%", fail/10, fail%10));    
             }
-            if (e.timeout)
+            if (e.cost)
             {
                 strcat(scratch, "\n   Timeout: ");
-                strcat(scratch, format("%d", e.timeout));
+                strcat(scratch, format("%d", e.cost));
             }
         }
         strcat(scratch, "\n ");

@@ -2811,7 +2811,7 @@ typedef struct
     cptr text;
     int  type;
     int  level;
-    int  timeout;
+    int  cost;
     int  rarity;
     int  bias;
 } _effect_info_t;
@@ -3056,7 +3056,7 @@ errr effect_parse(char *line, effect_t *effect) /* LITE_AREA:<Lvl>:<Timeout>:<Ex
     switch (num)
     {
     case 4: effect->extra = atoi(tokens[3]);
-    case 3: effect->timeout = atoi(tokens[2]);
+    case 3: effect->cost = atoi(tokens[2]);
     case 2: effect->level = atoi(tokens[1]);
     case 1:
         for (i = 0; ; i++)
@@ -3139,7 +3139,7 @@ static void _add_index(object_type *o_ptr, int index)
     {
         o_ptr->activation.type = _effect_info[index].type;
         o_ptr->activation.level = _effect_info[index].level;
-        o_ptr->activation.timeout = _effect_info[index].timeout;
+        o_ptr->activation.cost = _effect_info[index].cost;
         o_ptr->activation.extra = 0;
         o_ptr->timeout = 0;
     }
@@ -4228,7 +4228,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
 
     case EFFECT_CHARM_ANIMAL:
     {
-        int lvl = _extra(effect, p_ptr->lev);
+        int lvl = _extra(effect, effect->level);
         if (name) return "Charm Animal";
         if (desc) return "It attempts to charm a single animal.";
         if (info) return format("Power %d", _BOOST(lvl));
@@ -4243,7 +4243,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_CHARM_DEMON:
     {
-        int lvl = _extra(effect, p_ptr->lev);
+        int lvl = _extra(effect, effect->level);
         if (name) return "Dominate Demon";
         if (desc) return "It attempts to dominate a single demon.";
         if (info) return format("Power %d", _BOOST(lvl));
@@ -4258,7 +4258,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_CHARM_UNDEAD:
     {
-        int lvl = _extra(effect, p_ptr->lev);
+        int lvl = _extra(effect, effect->level);
         if (name) return "Enslave Undead";
         if (desc) return "It attempts to enslave a single undead monster.";
         if (info) return format("Power %d", _BOOST(lvl));
@@ -4543,7 +4543,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     /* Offense: Bolts */
     case EFFECT_BOLT_MISSILE:
     {
-        int dd = _extra(effect, 2 + p_ptr->lev/10);
+        int dd = _extra(effect, 2 + effect->level/10);
         if (name) return "Magic Missile";
         if (desc) return "It fires a weak bolt of magic.";
         if (info) return info_damage(_BOOST(dd), 6, 0);
@@ -4558,7 +4558,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_ACID:
     {
-        int dd = _extra(effect, 6 + p_ptr->lev/7);
+        int dd = _extra(effect, 6 + effect->level/7);
         if (name) return "Acid Bolt";
         if (desc) return "It fires a bolt of acid.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4573,7 +4573,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_ELEC:
     {
-        int dd = _extra(effect, 4 + p_ptr->lev/9);
+        int dd = _extra(effect, 4 + effect->level/9);
         if (name) return "Lightning Bolt";
         if (desc) return "It fires a bolt of lightning.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4588,7 +4588,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_FIRE:
     {
-        int dd = _extra(effect, 7 + p_ptr->lev/6);
+        int dd = _extra(effect, 7 + effect->level/6);
         if (name) return "Fire Bolt";
         if (desc) return "It fires a bolt of fire.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4603,7 +4603,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_COLD:
     {
-        int dd = _extra(effect, 5 + p_ptr->lev/8);
+        int dd = _extra(effect, 5 + effect->level/8);
         if (name) return "Frost Bolt";
         if (desc) return "It fires a bolt of frost.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4618,7 +4618,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_POIS:
     {
-        int dd = _extra(effect, 5 + p_ptr->lev/8);
+        int dd = _extra(effect, 5 + effect->level/8);
         if (name) return "Poison Dart";
         if (desc) return "It fires a poison dart.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4633,7 +4633,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_LITE:
     {
-        int dd = _extra(effect, 5 + p_ptr->lev/8);
+        int dd = _extra(effect, 5 + effect->level/8);
         if (name) return "Light Bolt";
         if (desc) return "It fires a bolt of light.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4648,7 +4648,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_DARK:
     {
-        int dd = _extra(effect, 5 + p_ptr->lev/8);
+        int dd = _extra(effect, 5 + effect->level/8);
         if (name) return "Dark Bolt";
         if (desc) return "It fires a bolt of darkness.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4663,7 +4663,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_CONF:
     {
-        int dd = _extra(effect, 5 + p_ptr->lev/8);
+        int dd = _extra(effect, 5 + effect->level/8);
         if (name) return "Confusion Bolt";
         if (desc) return "It fires a bolt of confusion.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4678,7 +4678,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_NETHER:
     {
-        int dd = _extra(effect, 10 + p_ptr->lev/6);
+        int dd = _extra(effect, 10 + effect->level/6);
         if (name) return "Nether Bolt";
         if (desc) return "It fires a bolt of nether.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4693,7 +4693,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_NEXUS:
     {
-        int dd = _extra(effect, 7 + p_ptr->lev/6);
+        int dd = _extra(effect, 7 + effect->level/6);
         if (name) return "Nexus Bolt";
         if (desc) return "It fires a bolt of nexus.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4708,7 +4708,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_SOUND:
     {
-        int dd = _extra(effect, 7 + p_ptr->lev/6);
+        int dd = _extra(effect, 7 + effect->level/6);
         if (name) return "Sound Bolt";
         if (desc) return "It fires a bolt of sound.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4723,7 +4723,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_SHARDS:
     {
-        int dd = _extra(effect, 7 + p_ptr->lev/5);
+        int dd = _extra(effect, 7 + effect->level/5);
         if (name) return "Shard Bolt";
         if (desc) return "It fires a bolt of shards.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4738,7 +4738,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_CHAOS:
     {
-        int dd = _extra(effect, 7 + p_ptr->lev/6);
+        int dd = _extra(effect, 7 + effect->level/6);
         if (name) return "Chaos Bolt";
         if (desc) return "It fires a bolt of chaos.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4753,7 +4753,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_DISEN:
     {
-        int dd = _extra(effect, 7 + p_ptr->lev/6);
+        int dd = _extra(effect, 7 + effect->level/6);
         if (name) return "Disenchantment Bolt";
         if (desc) return "It fires a bolt of disenchantment.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4768,7 +4768,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_TIME:
     {
-        int dd = _extra(effect, 7 + p_ptr->lev/6);
+        int dd = _extra(effect, 7 + effect->level/6);
         if (name) return "Time Bolt";
         if (desc) return "It fires a bolt of time.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4783,7 +4783,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_WATER:
     {
-        int dd = _extra(effect, 7 + p_ptr->lev/4);
+        int dd = _extra(effect, 7 + effect->level/4);
         if (name) return "Water Bolt";
         if (desc) return "It fires a bolt of water.";
         if (info) return info_damage(_BOOST(dd), 8, 0);
@@ -4798,7 +4798,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BOLT_MANA:
     {
-        int dam = _extra(effect, 100 + 2*p_ptr->lev);
+        int dam = _extra(effect, 100 + 2*effect->level);
         if (name) return "Mana Bolt";
         if (desc) return "It fires a powerful bolt of mana.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4849,7 +4849,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     /* Offense: Balls */
     case EFFECT_BALL_ACID:
     {
-        int dam = _extra(effect, 60 + p_ptr->lev);
+        int dam = _extra(effect, 60 + effect->level);
         if (name) return "Acid Ball";
         if (desc) return "It fires a ball of acid.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4864,7 +4864,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_ELEC:
     {
-        int dam = _extra(effect, 40 + p_ptr->lev);
+        int dam = _extra(effect, 40 + effect->level);
         if (name) return "Lightning Ball";
         if (desc) return "It fires a ball of lightning.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4879,7 +4879,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_FIRE:
     {
-        int dam = _extra(effect, 70 + p_ptr->lev);
+        int dam = _extra(effect, 70 + effect->level);
         if (name) return "Fire Ball";
         if (desc) return "It fires a ball of fire.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4894,7 +4894,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_COLD:
     {
-        int dam = _extra(effect, 50 + p_ptr->lev);
+        int dam = _extra(effect, 50 + effect->level);
         if (name) return "Frost Ball";
         if (desc) return "It fires a ball of frost.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4909,7 +4909,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_POIS:
     {
-        int dam = _extra(effect, 12 + p_ptr->lev/4);
+        int dam = _extra(effect, 12 + effect->level/4);
         if (name) return "Stinking Cloud";
         if (desc) return "It fires a ball of poison.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4924,7 +4924,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_LITE:
     {
-        int dam = _extra(effect, 100 + 4*p_ptr->lev);
+        int dam = _extra(effect, 100 + 4*effect->level);
         if (name) return "Star Burst";
         if (desc) return "It fires a huge ball of powerful light.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4939,7 +4939,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_DARK:
     {
-        int dam = _extra(effect, 100 + 4*p_ptr->lev);
+        int dam = _extra(effect, 100 + 4*effect->level);
         if (name) return "Darkness Storm";
         if (desc) return "It fires a huge ball of darkness.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4954,7 +4954,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_CONF:
     {
-        int dam = _extra(effect, 30 + p_ptr->lev);
+        int dam = _extra(effect, 30 + effect->level);
         if (name) return "Confusion Ball";
         if (desc) return "It fires a ball of confusion.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4969,7 +4969,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_NETHER:
     {
-        int dam = _extra(effect, 100 + p_ptr->lev);
+        int dam = _extra(effect, 100 + effect->level);
         if (name) return "Nether Ball";
         if (desc) return "It fires a ball of nether.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4984,7 +4984,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_NEXUS:
     {
-        int dam = _extra(effect, 60 + p_ptr->lev);
+        int dam = _extra(effect, 60 + effect->level);
         if (name) return "Nexus Ball";
         if (desc) return "It fires a ball of nexus.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4999,7 +4999,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_SOUND:
     {
-        int dam = _extra(effect, 80 + 3*p_ptr->lev/2);
+        int dam = _extra(effect, 80 + 3*effect->level/2);
         if (name) return "Sound Ball";
         if (desc) return "It fires a ball of sound.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5014,7 +5014,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_SHARDS:
     {
-        int dam = _extra(effect, 100 + 2*p_ptr->lev);
+        int dam = _extra(effect, 100 + 2*effect->level);
         if (name) return "Shard Ball";
         if (desc) return "It fires a ball of shards.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5029,7 +5029,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_CHAOS:
     {
-        int dam = _extra(effect, 100 + 3*p_ptr->lev);
+        int dam = _extra(effect, 100 + 3*effect->level);
         if (name) return "Invoke Logrus";
         if (desc) return "It fires a huge ball of chaos.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5044,7 +5044,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_DISEN:
     {
-        int dam = _extra(effect, 90 + p_ptr->lev);
+        int dam = _extra(effect, 90 + effect->level);
         if (name) return "Disenchantment Ball";
         if (desc) return "It fires a ball of disenchantment.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5059,7 +5059,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_TIME:
     {
-        int dam = _extra(effect, 50 + p_ptr->lev);
+        int dam = _extra(effect, 50 + effect->level);
         if (name) return "Time Ball";
         if (desc) return "It fires a ball of time.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5074,7 +5074,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_WATER:
     {
-        int dam = _extra(effect, 100 + 3*p_ptr->lev);
+        int dam = _extra(effect, 100 + 3*effect->level);
         if (name) return "Whirlpool";
         if (desc) return "It fires a huge ball of water.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5089,7 +5089,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BALL_MANA:
     {
-        int dam = _extra(effect, 100 + 5*p_ptr->lev);
+        int dam = _extra(effect, 100 + 5*effect->level);
         if (name) return "Mana Ball";
         if (desc) return "It fires a powerful ball of mana.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5106,7 +5106,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     /* Offense: Breaths */
     case EFFECT_BREATHE_ACID:
     {
-        int dam = _extra(effect, p_ptr->lev*4/5 + p_ptr->chp/3);
+        int dam = _extra(effect, effect->level*4/5 + p_ptr->chp/3);
         if (name) return "Breathe Acid";
         if (desc) return "It allows you to breathe acid.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5122,7 +5122,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_ELEC:
     {
-        int dam = _extra(effect, p_ptr->lev*2/5 + p_ptr->chp/3);
+        int dam = _extra(effect, effect->level*2/5 + p_ptr->chp/3);
         if (name) return "Breathe Lightning";
         if (desc) return "It allows you to breathe lightning.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5138,7 +5138,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_FIRE:
     {
-        int dam = _extra(effect, p_ptr->lev + p_ptr->chp/3);
+        int dam = _extra(effect, effect->level + p_ptr->chp/3);
         if (name) return "Breathe Fire";
         if (desc) return "It allows you to breathe fire.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5154,7 +5154,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_COLD:
     {
-        int dam = _extra(effect, p_ptr->lev/2 + p_ptr->chp/3);
+        int dam = _extra(effect, effect->level/2 + p_ptr->chp/3);
         if (name) return "Breathe Frost";
         if (desc) return "It allows you to breathe frost.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5170,7 +5170,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_POIS:
     {
-        int dam = _extra(effect, p_ptr->lev*3/5 + p_ptr->chp/3);
+        int dam = _extra(effect, effect->level*3/5 + p_ptr->chp/3);
         if (name) return "Breathe Poison";
         if (desc) return "It allows you to breathe poison.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5186,7 +5186,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_LITE:
     {
-        int dam = _extra(effect, p_ptr->lev/2 + p_ptr->chp/5);
+        int dam = _extra(effect, effect->level/2 + p_ptr->chp/5);
         if (name) return "Breathe Light";
         if (desc) return "It allows you to breathe light.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5202,7 +5202,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_DARK:
     {
-        int dam = _extra(effect, p_ptr->lev/2 + p_ptr->chp/5);
+        int dam = _extra(effect, effect->level/2 + p_ptr->chp/5);
         if (name) return "Breathe Darkness";
         if (desc) return "It allows you to breathe darkness.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5218,7 +5218,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_CONF:
     {
-        int dam = _extra(effect, p_ptr->lev/2 + p_ptr->chp/5);
+        int dam = _extra(effect, effect->level/2 + p_ptr->chp/5);
         if (name) return "Breathe Confusion";
         if (desc) return "It allows you to breathe confusion.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5234,7 +5234,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_NETHER:
     {
-        int dam = _extra(effect, p_ptr->lev + p_ptr->chp/3);
+        int dam = _extra(effect, effect->level + p_ptr->chp/3);
         if (name) return "Breathe Nether";
         if (desc) return "It allows you to breathe nether.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5250,7 +5250,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_NEXUS:
     {
-        int dam = _extra(effect, p_ptr->lev/2 + p_ptr->chp/5);
+        int dam = _extra(effect, effect->level/2 + p_ptr->chp/5);
         if (name) return "Breathe Nexus";
         if (desc) return "It allows you to breathe nexus.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5266,7 +5266,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_SOUND:
     {
-        int dam = _extra(effect, p_ptr->lev/2 + p_ptr->chp/5);
+        int dam = _extra(effect, effect->level/2 + p_ptr->chp/5);
         if (name) return "Breathe Sound";
         if (desc) return "It allows you to breathe sound.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5282,7 +5282,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_SHARDS:
     {
-        int dam = _extra(effect, p_ptr->lev + p_ptr->chp/3);
+        int dam = _extra(effect, effect->level + p_ptr->chp/3);
         if (name) return "Breathe Shards";
         if (desc) return "It allows you to breathe shards.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5298,7 +5298,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_CHAOS:
     {
-        int dam = _extra(effect, p_ptr->lev + p_ptr->chp/4);
+        int dam = _extra(effect, effect->level + p_ptr->chp/4);
         if (name) return "Breathe Chaos";
         if (desc) return "It allows you to breathe chaos.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5314,7 +5314,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_DISEN:
     {
-        int dam = _extra(effect, p_ptr->lev + p_ptr->chp/4);
+        int dam = _extra(effect, effect->level + p_ptr->chp/4);
         if (name) return "Breathe Disenchantment";
         if (desc) return "It allows you to breathe disenchantment.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5330,7 +5330,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }           
     case EFFECT_BREATHE_TIME:
     {
-        int dam = _extra(effect, p_ptr->lev/3 + p_ptr->chp/6);
+        int dam = _extra(effect, effect->level/3 + p_ptr->chp/6);
         if (name) return "Breathe Time";
         if (desc) return "It allows you to breathe time.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5584,7 +5584,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_DRAIN_LIFE:
     {
-        int dam = _extra(effect, 50 + p_ptr->lev/2);
+        int dam = _extra(effect, 50 + effect->level/2);
         if (name) return "Drain Life";
         if (desc) return "It fires a bolt that steals life from a foe when you use it.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5631,7 +5631,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_WRATH_OF_GOD:
     {
-        int dam = _extra(effect, 25 + p_ptr->lev*3);
+        int dam = _extra(effect, 25 + effect->level*3);
         if (name) return "Wrath of the God";
         if (desc) return "It drops many balls of disintegration near the target.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5645,7 +5645,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
 
     case EFFECT_ROCKET:
     {
-        int dam = _extra(effect, 250 + p_ptr->lev*3);
+        int dam = _extra(effect, 250 + effect->level*3);
         if (name) return "Rocket";
         if (desc) return "It fires a rocket.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5688,7 +5688,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_CONFUSING_LITE:
     {
-        int pow = _extra(effect, p_ptr->lev*4);
+        int pow = _extra(effect, effect->level*4);
         if (name) return "Confusing Lights";
         if (desc) return "It emits dazzling lights which slow, stun, confuse, scare and even freeze nearby monsters.";
         if (info) return format("Power %d", pow);
@@ -5748,7 +5748,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         break;
     case EFFECT_SCARE_MONSTERS:
     {
-        int pow = _extra(effect, p_ptr->lev*3);
+        int pow = _extra(effect, effect->level*3);
         if (name) return "Terrify Monsters";
         if (desc) return "It attempts to frighten all nearby visible monsters.";
         if (info) return format("Power %d", pow);
@@ -5762,7 +5762,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_SLEEP_MONSTERS:
     {
-        int pow = _extra(effect, p_ptr->lev*3);
+        int pow = _extra(effect, effect->level*3);
         if (name) return "Sleep Monsters";
         if (desc) return "It attempts to sleep all nearby visible monsters.";
         if (info) return format("Power %d", pow);
@@ -5776,7 +5776,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_SLOW_MONSTERS:
     {
-        int pow = _extra(effect, p_ptr->lev*3);
+        int pow = _extra(effect, effect->level*3);
         if (name) return "Slow Monsters";
         if (desc) return "It attempts to slow all nearby visible monsters.";
         if (info) return format("Power %d", pow);
@@ -5790,7 +5790,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_STASIS_MONSTERS:
     {
-        int pow = _extra(effect, p_ptr->lev*3);
+        int pow = _extra(effect, effect->level*3);
         if (name) return "Freeze Monsters";
         if (desc) return "It attempts to freeze all nearby visible monsters.";
         if (info) return format("Power %d", pow);
@@ -5804,7 +5804,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_CONFUSE_MONSTERS:
     {
-        int pow = _extra(effect, p_ptr->lev*3);
+        int pow = _extra(effect, effect->level*3);
         if (name) return "Confuse Monsters";
         if (desc) return "It attempts to confuse all nearby visible monsters.";
         if (info) return format("Power %d", pow);
@@ -6088,7 +6088,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         break;
     case EFFECT_GONG:
     {
-        int dam = _extra(effect, 3*p_ptr->lev);
+        int dam = _extra(effect, 3*effect->level);
         if (name) return "Bang a Gong";
         if (desc) return "It makes some very loud noise.";
         if (info) return info_damage(0, 0, _BOOST(dam));

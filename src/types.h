@@ -103,7 +103,7 @@ struct effect_s
     s16b type;
     byte level;
     byte xxx;
-    s16b timeout;
+    s16b cost;
     s16b extra;
 };
 typedef struct effect_s effect_t;

@@ -1957,7 +1957,7 @@ static void do_cmd_activate_aux(int item)
     
     if (effect_use(&effect, boost))
     {
-        o_ptr->timeout = effect.timeout;
+        o_ptr->timeout = effect.cost;
         p_ptr->window |= (PW_INVEN | PW_EQUIP);
     }
 }
