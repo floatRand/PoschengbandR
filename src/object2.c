@@ -5190,7 +5190,7 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
 
     if ((o_ptr->tval == TV_SOFT_ARMOR) &&
         (o_ptr->sval == SV_ABUNAI_MIZUGI) &&
-        (p_ptr->personality == PERS_SEXY || (prace_is_(RACE_DEMIGOD) && p_ptr->psubrace == DEMIGOD_APHRODITE)))
+        (p_ptr->personality == PERS_SEXY || demigod_is_(DEMIGOD_APHRODITE)))
     {
         o_ptr->pval = 3;
         add_flag(o_ptr->art_flags, TR_STR);
