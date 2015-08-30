@@ -157,7 +157,8 @@ static void rd_item(savefile_ptr file, object_type *o_ptr)
             break;
         case SAVE_ITEM_ACTIVATION:
             o_ptr->activation.type = savefile_read_s16b(file);
-            o_ptr->activation.level = savefile_read_byte(file);
+            o_ptr->activation.power = savefile_read_byte(file);
+            o_ptr->activation.difficulty = savefile_read_byte(file);
             o_ptr->activation.cost = savefile_read_s16b(file);
             o_ptr->activation.extra = savefile_read_s16b(file);
             break;
@@ -1405,7 +1406,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
              "Loading a %d.%d.%d savefile...",
              (z_major > 9) ? z_major - 10 : z_major, z_minor, z_patch));
 
-    if (savefile_is_older_than(file, 3, 0, 0, 2))
+    if (savefile_is_older_than(file, 4, 0, 0, 0))
     {
         note("Old savefiles are not supported!");
         return 1;

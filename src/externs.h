@@ -840,13 +840,22 @@ extern bool restore_mana(void);
 /* devices.c */
 extern int  device_calc_fail_rate(object_type *o_ptr); /*95.2% returned as 952*/
 extern bool device_try(object_type *o_ptr);
-extern bool device_use(object_type *o_ptr);
+extern bool device_use(object_type *o_ptr, int boost);
 extern bool device_known;
 extern bool device_noticed;
 extern int  device_extra_power;
 extern int  device_available_charges;
 extern int  device_used_charges;
 extern cptr do_device(int tval, int sval, int mode);
+
+
+extern void device_init(object_type *o_ptr);
+extern int  device_level(object_type *o_ptr);
+extern int  device_sp(object_type *o_ptr);
+extern void device_decrease_sp(object_type *o_ptr, int amt);
+extern int  device_max_sp(object_type *o_ptr);
+extern void device_regen_sp(object_type *o_ptr);
+extern int  device_value(object_type *o_ptr);
 
 extern effect_t obj_get_effect(object_type *o_ptr);
 extern cptr     obj_get_effect_msg(object_type *o_ptr);
@@ -902,6 +911,7 @@ extern s32b turn_real(s32b hoge);
 extern void prevent_turn_overflow(void);
 extern void process_world_aux_movement(void);  /* yuk!  refactor the recall code instead */
 extern void fame_on_failure(void);
+extern void recharged_notice(object_type *o_ptr);
 
 /* files.c */
 extern void safe_setuid_drop(void);

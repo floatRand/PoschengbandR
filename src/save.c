@@ -175,7 +175,8 @@ static void wr_item(savefile_ptr file, object_type *o_ptr)
     {
         savefile_write_byte(file, SAVE_ITEM_ACTIVATION);
         savefile_write_s16b(file, o_ptr->activation.type);
-        savefile_write_byte(file, o_ptr->activation.level);
+        savefile_write_byte(file, o_ptr->activation.power);
+        savefile_write_byte(file, o_ptr->activation.difficulty);
         savefile_write_s16b(file, o_ptr->activation.cost);
         savefile_write_s16b(file, o_ptr->activation.extra);
     }

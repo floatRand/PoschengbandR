@@ -412,7 +412,7 @@ bool screen_object(object_type *o_ptr, u32b mode)
     object_flags_known(o_ptr, flgs);
 
     /* Extract the description */
-    if (object_is_device(o_ptr))
+    if (o_ptr->tval == TV_SCROLL || o_ptr->tval == TV_POTION)
     {
         char scratch[70 * 20];
         cptr res = do_device(o_ptr->tval, o_ptr->sval, SPELL_DESC);
@@ -425,7 +425,7 @@ bool screen_object(object_type *o_ptr, u32b mode)
                 strcat(scratch, "\nInfo: ");
                 strcat(scratch, res);
             }   /* But format() here is fine ... Obvious, huh? */
-            if (o_ptr->tval != TV_POTION)
+            if (o_ptr->tval == TV_SCROLL)
             {
                 int fail = device_calc_fail_rate(o_ptr);
                 strcat(scratch, format("\nFail: %d.%d%%", fail/10, fail%10));    
@@ -455,35 +455,55 @@ bool screen_object(object_type *o_ptr, u32b mode)
         char     scratch[70 * 20];
         effect_t e = obj_get_effect(o_ptr);
         cptr     res = do_effect(&e, SPELL_NAME, 0);
+        int      fail = effect_calc_fail_rate(&e);
 
-        strcpy(scratch, "Activation: ");
-        strcat(scratch, res);
-
-        if (o_ptr->ident & IDENT_MENTAL)
+        switch (o_ptr->tval)
         {
-            /*res = do_effect(&e, SPELL_DESC, 0);
-            if (res && strlen(res))
+        case TV_WAND: case TV_ROD: case TV_STAFF:
+            res = do_effect(&e, SPELL_DESC, 0);
+            strcpy(scratch, res);
+            strcat(scratch, "\n ");
+            if (o_ptr->ident & IDENT_MENTAL)
             {
-                strcat(scratch, " \n      Desc: ");
-                strcat(scratch, res);
-            }*/
+                res = do_effect(&e, SPELL_INFO, 0);
+                if (res && strlen(res))
+                {
+                    strcat(scratch, "\nInfo: ");
+                    strcat(scratch, res);
+                }
+                strcat(scratch, format("\nFail: %d.%d%%", fail/10, fail%10));
+                strcat(scratch, "\nCost: ");
+                strcat(scratch, format("%dsp", e.cost));
+            }
+            break;
+        default:
+            strcpy(scratch, "Activation: ");
+            strcat(scratch, res);
+            if (o_ptr->ident & IDENT_MENTAL)
+            {
+                /* TODO: We need to linebreak the description as well!
+                res = do_effect(&e, SPELL_DESC, 0);
+                if (res && strlen(res))
+                {
+                    strcat(scratch, " \n      Desc: ");
+                    strcat(scratch, res);
+                }*/
 
-            res = do_effect(&e, SPELL_INFO, 0);
-            if (res && strlen(res))
-            {
-                strcat(scratch, "\n      Info: ");
-                strcat(scratch, res);
-            }
-            {
-                int fail = effect_calc_fail_rate(&e);
-                strcat(scratch, format("\n      Fail: %d.%d%%", fail/10, fail%10));    
-            }
-            if (e.cost)
-            {
-                strcat(scratch, "\n   Timeout: ");
-                strcat(scratch, format("%d", e.cost));
+                res = do_effect(&e, SPELL_INFO, 0);
+                if (res && strlen(res))
+                {
+                    strcat(scratch, "\n      Info: ");
+                    strcat(scratch, res);
+                }
+                strcat(scratch, format("\n      Fail: %d.%d%%", fail/10, fail%10));
+                if (e.cost)
+                {
+                    strcat(scratch, "\n   Timeout: ");
+                    strcat(scratch, format("%d", e.cost));
+                }
             }
         }
+
         strcat(scratch, "\n ");
 
         roff_to_buf(scratch, 77-15, block3, sizeof(block3));
@@ -1865,19 +1885,19 @@ int show_inven(int target_item, int mode)
         out_color[k] = tval_to_attr[o_ptr->tval % 128];
 
         /* Grey out charging items */
-        if (o_ptr->timeout)
+        if (obj_has_effect(o_ptr))
         {
-            bool darken = TRUE;
+            bool darken = FALSE;
 
-            if (o_ptr->tval == TV_ROD && o_ptr->number > 1)
+            switch (o_ptr->tval)
             {
-                int power;
-                object_kind *k_ptr = &k_info[o_ptr->k_idx];
+            case TV_WAND: case TV_ROD: case TV_STAFF:
+                if (device_sp(o_ptr) < o_ptr->activation.cost)
+                    darken = TRUE;
+                break;
 
-                darken = FALSE;
-                if (k_ptr->pval == 0) k_ptr->pval = 1;
-                power = (o_ptr->timeout + (k_ptr->pval - 1)) / k_ptr->pval;
-                if (power >= o_ptr->number)
+            default:
+                if (o_ptr->timeout)
                     darken = TRUE;
             }
 

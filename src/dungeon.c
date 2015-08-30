@@ -1272,7 +1272,7 @@ bool psychometry(void)
  * If player has inscribed the object with "!!", let him know when it's
  * recharged. -LM-
  */
-static void recharged_notice(object_type *o_ptr)
+void recharged_notice(object_type *o_ptr)
 {
     char o_name[MAX_NLEN];
 
@@ -2504,9 +2504,7 @@ static void process_world_aux_recharge(void)
     }
 
     /*
-     * Recharge rods.  Rods now use timeout to control charging status,
-     * and each charging rod in a stack decreases the stack's timeout by
-     * one per turn. -LM-
+     * Recharge Devices
      */
     _recharge_changed = FALSE;
     for (i = 0; i < INVEN_PACK; i++)
@@ -2515,7 +2513,11 @@ static void process_world_aux_recharge(void)
         object_kind *k_ptr = &k_info[o_ptr->k_idx];
 
         if (!o_ptr->k_idx) continue;
-        if ((o_ptr->tval == TV_ROD || object_is_mushroom(o_ptr)) && (o_ptr->timeout))
+        if (o_ptr->tval == TV_ROD || o_ptr->tval == TV_WAND || o_ptr->tval == TV_STAFF)
+        {
+            device_regen_sp(o_ptr);
+        }
+        else if (object_is_mushroom(o_ptr) && (o_ptr->timeout))
         {
             /* Determine how many rods are charging. */
             int temp = (o_ptr->timeout + (k_ptr->pval - 1)) / k_ptr->pval;
@@ -2523,8 +2525,6 @@ static void process_world_aux_recharge(void)
 
             /* Decrease timeout by that number. */
             o_ptr->timeout -= temp;
-            if (o_ptr->tval == TV_ROD && devicemaster_is_(DEVICEMASTER_RODS))
-                o_ptr->timeout -= temp;
 
             /* Boundary control. */
             if (o_ptr->timeout < 0) o_ptr->timeout = 0;
@@ -2547,26 +2547,6 @@ static void process_world_aux_recharge(void)
     {
         p_ptr->window |= PW_INVEN;
         wild_regen = 20;
-    }
-
-    /* Process objects on floor */
-    for (i = 1; i < o_max; i++)
-    {
-        /* Access object */
-        object_type *o_ptr = &o_list[i];
-
-        /* Skip dead objects */
-        if (!o_ptr->k_idx) continue;
-
-        /* Recharge rods on the ground.  No messages. */
-        if ((o_ptr->tval == TV_ROD) && (o_ptr->timeout))
-        {
-            /* Charge it */
-            o_ptr->timeout -= o_ptr->number;
-
-            /* Boundary control. */
-            if (o_ptr->timeout < 0) o_ptr->timeout = 0;
-        }
     }
 }
 

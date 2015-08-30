@@ -10,6 +10,8 @@
 
 /* Purpose: Object commands */
 
+#include <assert.h>
+
 #include "angband.h"
 #include "equip.h"
 
@@ -731,7 +733,7 @@ static void do_cmd_quaff_potion_aux(int item)
 
     sound(SOUND_QUAFF);
     if (q_ptr->tval == TV_POTION)
-        device_use(q_ptr);
+        device_use(q_ptr, 0);
 
     if (prace_is_(RACE_SKELETON) || (p_ptr->current_r_idx && r_info[p_ptr->current_r_idx].d_char == 's'))
     {
@@ -989,7 +991,7 @@ static void do_cmd_read_scroll_aux(int item, bool known)
                 amt /= 2;
             }
         }
-        used_up = device_use(o_ptr);
+        used_up = device_use(o_ptr, 0);
         if (object_is_(o_ptr, TV_SCROLL, SV_SCROLL_IDENTIFY))
             number = device_used_charges;
     }
@@ -1225,7 +1227,7 @@ static void do_cmd_use_staff_aux(int item)
         device_available_charges = o_ptr->number * o_ptr->pval;
 
     sound(SOUND_ZAP);
-    used = device_use(o_ptr);
+    used = device_use(o_ptr, 0);
 
     if (!(object_is_aware(o_ptr)))
     {
@@ -1343,28 +1345,18 @@ void do_cmd_use_staff(void)
 /*
  * Aim a wand (from the pack or floor).
  *
- * Use a single charge from a single item.
- * Handle "unstacking" in a logical manner.
- *
- * For simplicity, you cannot use a stack of items from the
- * ground.  This would require too much nasty code.
- *
- * There are no wands which can "destroy" themselves, in the inventory
- * or on the ground, so we can ignore this possibility.  Note that this
- * required giving "wand of wonder" the ability to ignore destruction
- * by electric balls.
- *
- * All wands can be "cancelled" at the "Direction?" prompt for free.
- *
- * Note that the basic "bolt" wands do slightly less damage than the
- * basic "bolt" rods, but the basic "ball" wands do the same damage
- * as the basic "ball" rods.
  */
 static void do_cmd_aim_wand_aux(int item)
 {
     object_type *o_ptr;
     bool         used = FALSE;
     int          charges = 1;
+    int          boost;
+
+    if (devicemaster_is_(DEVICEMASTER_WANDS))
+        boost = device_power_aux(100, p_ptr->device_power + p_ptr->lev/10) - 100;
+    else
+        boost = device_power(100) - 100;
 
     if (item >= 0)
         o_ptr = &inventory[item];
@@ -1378,11 +1370,13 @@ static void do_cmd_aim_wand_aux(int item)
         }
     }
 
+    assert(o_ptr->number == 1); /* Wands no longer stack */
+
     energy_use = 100;
 
     if (devicemaster_is_(DEVICEMASTER_WANDS) && !devicemaster_desperation)
     {
-        int delta = MIN(50, 2*p_ptr->lev - k_info[o_ptr->k_idx].level);
+        int delta = MIN(50, 2*p_ptr->lev - o_ptr->activation.power);
         if (delta > 0)
             energy_use -= delta;
     }
@@ -1392,11 +1386,13 @@ static void do_cmd_aim_wand_aux(int item)
         msg_print("An evil power blocks your magic!");
         return;
     }
+
     if (!(devicemaster_is_(DEVICEMASTER_WANDS) || fear_allow_device()))
     {
         msg_print("You are too scared!");
         return;
     }
+
     if (world_player)
     {
         if (flush_failure) flush();
@@ -1413,7 +1409,7 @@ static void do_cmd_aim_wand_aux(int item)
         return;
     }
 
-    if (o_ptr->pval <= 0)
+    if (device_sp(o_ptr) < o_ptr->activation.cost)
     {
         if (flush_failure) flush();
         msg_print("The wand has no charges left.");
@@ -1425,17 +1421,17 @@ static void do_cmd_aim_wand_aux(int item)
 
     if (devicemaster_desperation)
     {
-        int i, amt = 50, num = o_ptr->number;
-        charges = (o_ptr->pval + num - 1)/num;
+        int i, amt = 50;
+        charges = device_sp(o_ptr) / o_ptr->activation.cost;
         for (i = 1; i < charges && amt; i++)
         {
-            device_extra_power += amt;
+            boost += amt;
             amt /= 2;
         }
     }
 
     sound(SOUND_ZAP);
-    used = device_use(o_ptr);
+    used = device_use(o_ptr, boost);
 
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
     if (!(object_is_aware(o_ptr)))
@@ -1445,31 +1441,27 @@ static void do_cmd_aim_wand_aux(int item)
         virtue_add(VIRTUE_KNOWLEDGE, -1);
     }
     object_tried(o_ptr);
-    if (device_noticed && !object_is_aware(o_ptr))
+    if (device_noticed && !object_is_known(o_ptr))
     {
-        object_aware(o_ptr);
-        stats_on_notice(o_ptr, o_ptr->number);
-        gain_exp((k_info[o_ptr->k_idx].level + (p_ptr->lev >> 1)) / p_ptr->lev);
+        identify_item(o_ptr);
+        stats_on_notice(o_ptr, 1);
     }
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
 
     if (used)
     {
+        stats_on_use(o_ptr, charges);
         if (devicemaster_is_(DEVICEMASTER_WANDS) && !devicemaster_desperation && randint1(100) <= p_ptr->lev)
         {
             msg_print("Your mental focus powers the wand!");
         }
         else
         {
-            stats_on_use(o_ptr, charges);
             if (devicemaster_desperation && randint0(p_ptr->lev*7) < k_info[o_ptr->k_idx].level)
             {
                 char o_name[MAX_NLEN];
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-                if (o_ptr->number > 1)
-                    msg_format("Desperation magic consumes one of your %s!", o_name);
-                else
-                    msg_format("Desperation magic consumes your %s!", o_name);
+                msg_format("Desperation magic consumes your %s!", o_name);
                 if (item >= 0)
                 {
                     inven_item_increase(item, -1);
@@ -1483,11 +1475,8 @@ static void do_cmd_aim_wand_aux(int item)
                     floor_item_optimize(0 - item);
                 }
             }
-            o_ptr->pval -= charges;
-            if (item >= 0)
-                inven_item_charges(item);
             else
-                floor_item_charges(0 - item);
+                device_decrease_sp(o_ptr, o_ptr->activation.cost * charges);
         }
     }
     else
@@ -1618,7 +1607,7 @@ static void do_cmd_zap_rod_aux(int item)
     }
 
     sound(SOUND_ZAP);
-    used = device_use(o_ptr);
+    used = device_use(o_ptr, 0);
 
     /* Increase the timeout by the rod kind's pval. -LM- */
     if (used) 
@@ -1900,7 +1889,6 @@ static void _do_capture_ball(object_type *o_ptr)
 static void do_cmd_activate_aux(int item)
 {
     object_type *o_ptr;
-    effect_t     effect;
     cptr         msg;
     int          boost = device_power(100) - 100;
 
@@ -1927,8 +1915,7 @@ static void do_cmd_activate_aux(int item)
         return;
     }
 
-    effect = obj_get_effect(o_ptr);
-    if (!effect_try(&effect))
+    if (!device_try(o_ptr))
     {
         if (flush_failure) flush();
         msg_print("You failed to activate it properly.");
@@ -1955,9 +1942,9 @@ static void do_cmd_activate_aux(int item)
         return;
     }
     
-    if (effect_use(&effect, boost))
+    if (device_use(o_ptr, boost))
     {
-        o_ptr->timeout = effect.cost;
+        o_ptr->timeout = o_ptr->activation.cost;
         p_ptr->window |= (PW_INVEN | PW_EQUIP);
     }
 }

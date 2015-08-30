@@ -529,12 +529,6 @@ void mass_produce(object_type *o_ptr)
 
     if (!dun_level)
         o_ptr->number -= (size * o_ptr->discount / 100);
-
-    /* Ensure that mass-produced rods and wands get the correct pvals. */
-    if (o_ptr->tval == TV_ROD || o_ptr->tval == TV_WAND)
-    {
-        o_ptr->pval *= o_ptr->number;
-    }
 }
 
 
@@ -554,8 +548,13 @@ static bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
     /* Different objects cannot be stacked */
     if (o_ptr->k_idx != j_ptr->k_idx) return (0);
 
-    /* Different charges (etc) cannot be stacked, unless wands or rods. */
-    if ((o_ptr->pval != j_ptr->pval) && (o_ptr->tval != TV_WAND) && (o_ptr->tval != TV_ROD)) return (0);
+    switch (o_ptr->tval)
+    {
+    case TV_WAND: case TV_ROD: case TV_STAFF:
+        return 0;
+    }
+
+    if (o_ptr->pval != j_ptr->pval) return (0);
 
     /* Require many identical values */
     if (o_ptr->to_h != j_ptr->to_h) return (0);
@@ -591,6 +590,16 @@ static bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
     /* Require matching discounts */
     if (o_ptr->discount != j_ptr->discount) return (0);
 
+    /* Require matching activations */
+    if ( o_ptr->activation.type != j_ptr->activation.type
+      || o_ptr->activation.power != j_ptr->activation.power
+      || o_ptr->activation.difficulty != j_ptr->activation.difficulty
+      || o_ptr->activation.cost != j_ptr->activation.cost
+      || o_ptr->activation.extra != j_ptr->activation.extra )
+    {
+        return 0;
+    }
+
     /* They match, so they must be similar */
     return (TRUE);
 }
@@ -601,25 +610,11 @@ static bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
  */
 static void store_object_absorb(object_type *o_ptr, object_type *j_ptr)
 {
-    int max_num = (o_ptr->tval == TV_ROD) ?
-        MIN(99, MAX_SHORT / k_info[o_ptr->k_idx].pval) : 99;
+    int max_num = 99;
     int total = o_ptr->number + j_ptr->number;
-    int diff = (total > max_num) ? total - max_num : 0;
 
     /* Combine quantity, lose excess items */
     o_ptr->number = (total > max_num) ? max_num : total;
-
-    /* Hack -- if rods are stacking, add the pvals (maximum timeouts) together. -LM- */
-    if (o_ptr->tval == TV_ROD)
-    {
-        o_ptr->pval += j_ptr->pval * (j_ptr->number - diff) / j_ptr->number;
-    }
-
-    /* Hack -- if wands are stacking, combine the charges. -LM- */
-    if (o_ptr->tval == TV_WAND)
-    {
-        o_ptr->pval += j_ptr->pval * (j_ptr->number - diff) / j_ptr->number;
-    }
 }
 
 
@@ -1013,26 +1008,12 @@ bool combine_and_reorder_home(int store_num)
                     }
                     else
                     {
-                        int old_num = o_ptr->number;
                         int remain = j_ptr->number + o_ptr->number - max_num;
 
                         /* Add together the item counts */
                         object_absorb(j_ptr, o_ptr);
 
                         o_ptr->number = remain;
-
-                        /* Hack -- if rods are stacking, add the pvals (maximum timeouts) and current timeouts together. -LM- */
-                        if (o_ptr->tval == TV_ROD)
-                        {
-                            o_ptr->pval =  o_ptr->pval * remain / old_num;
-                            o_ptr->timeout = o_ptr->timeout * remain / old_num;
-                        }
-
-                        /* Hack -- if wands are stacking, combine the charges. -LM- */
-                        else if (o_ptr->tval == TV_WAND)
-                        {
-                            o_ptr->pval = o_ptr->pval * remain / old_num;
-                        }
                     }
 
                     /* Take note */
@@ -1412,12 +1393,6 @@ static void store_delete(void)
 
     /* Hack -- sometimes, only destroy a single item */
     if (randint0(100) < 50) num = 1;
-
-    /* Hack -- decrement the maximum timeouts and total charges of rods and wands. -LM- */
-    if ((st_ptr->stock[what].tval == TV_ROD) || (st_ptr->stock[what].tval == TV_WAND))
-    {
-        st_ptr->stock[what].pval -= num * st_ptr->stock[what].pval / st_ptr->stock[what].number;
-    }
 
     /* Actually destroy (part of) the item */
     store_item_increase(what, -num);
@@ -3166,12 +3141,6 @@ static void store_purchase(void)
                 /* Auto-inscription */
                 autopick_alter_item(item_new, FALSE);
 
-                /* Now, reduce the original stack's pval. */
-                if ((o_ptr->tval == TV_ROD) || (o_ptr->tval == TV_WAND))
-                {
-                    o_ptr->pval -= j_ptr->pval;
-                }
-
                 /* Handle stuff */
                 handle_stuff();
 
@@ -3426,15 +3395,6 @@ static void store_sell(void)
     q_ptr->number = amt;
     q_ptr->marked &= ~OM_WORN;
 
-    /*
-     * Hack -- If a rod or wand, allocate total maximum
-     * timeouts or charges to those being sold. -LM-
-     */
-    if ((o_ptr->tval == TV_ROD) || (o_ptr->tval == TV_WAND))
-    {
-        q_ptr->pval = o_ptr->pval * amt / o_ptr->number;
-    }
-
     /* Get a full description */
     object_desc(o_name, q_ptr, 0);
 
@@ -3519,15 +3479,6 @@ static void store_sell(void)
 
             /* Make it look like to be known */
             q_ptr->ident |= IDENT_STORE;
-
-            /*
-             * Hack -- If a rod or wand, let the shopkeeper know just
-             * how many charges he really paid for. -LM-
-             */
-            if ((o_ptr->tval == TV_ROD) || (o_ptr->tval == TV_WAND))
-            {
-                q_ptr->pval = o_ptr->pval * amt / o_ptr->number;
-            }
 
             /* Get the "actual" value */
             value = object_value(q_ptr) * q_ptr->number;
@@ -4874,9 +4825,6 @@ static void _buyout(void)
                 handle_stuff();
                 autopick_alter_item(slot, FALSE);
             }
-
-            if (o_ptr->tval == TV_ROD || o_ptr->tval == TV_WAND)
-                o_ptr->pval -= j_ptr->pval;
 
             old_stock_num = st_ptr->stock_num;
             store_item_increase(i, -amt);

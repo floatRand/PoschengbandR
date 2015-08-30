@@ -656,7 +656,7 @@ static int _prompt_realm1(void)
 }
 
 #define _MAX_CLASSES_PER_GROUP 20
-#define _MAX_CLASS_GROUPS      11
+#define _MAX_CLASS_GROUPS      10
 typedef struct _class_group_s {
     cptr name;
     int ids[_MAX_CLASSES_PER_GROUP];
@@ -669,7 +669,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Martial Arts", {CLASS_FORCETRAINER, CLASS_MONK, CLASS_MYSTIC, -1} },
     { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE, 
                     CLASS_NECROMANCER, CLASS_SORCERER, -1} },
-    { "Devices", {CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
+/*  { "Devices", {CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} }, */
     { "Prayer", {CLASS_PRIEST, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
     { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_PALADIN, CLASS_RANGER, CLASS_RED_MAGE, 

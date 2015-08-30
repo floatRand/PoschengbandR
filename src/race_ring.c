@@ -1042,7 +1042,8 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
         effect_t effect = {0};
 
         effect.type = s->effect;
-        effect.level = s->level;
+        effect.power = s->level;
+        effect.difficulty = s->level;
 
         sprintf(name, "%s", do_effect(&effect, SPELL_NAME, 0));
         sprintf(info, "%s", do_effect(&effect, SPELL_INFO, _boost(s->effect)));
@@ -1057,7 +1058,8 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
         effect_t effect;
 
         effect.type = s->effect;
-        effect.level = s->level;
+        effect.power = s->level;
+        effect.difficulty = s->level;
         var_set_string(res, do_effect(&effect, SPELL_DESC, 0));
         break;
     }
@@ -1174,7 +1176,8 @@ void ring_cast(void)
     {
         effect_t effect = {0};
         effect.type = spell.effect;
-        effect.level = spell.level;
+        effect.power = spell.level;
+        effect.difficulty = spell.level;
         device_known = TRUE; /* Hack */
         if (!do_effect(&effect, SPELL_CAST, _boost(spell.effect)))
         {
@@ -1211,7 +1214,8 @@ static void _browse(void)
                 Term_erase(13, ct + i + 2, 255);
 
             effect.type = spell.effect;
-            effect.level = spell.level;
+            effect.power = spell.level;
+            effect.difficulty = spell.level;
             sprintf(desc, "%s", do_effect(&effect, SPELL_DESC, 0));
             roff_to_buf(desc, 62, tmp, sizeof(tmp));
 
@@ -1492,7 +1496,8 @@ static void _dump_effects(FILE* fff)
                 effect_t effect = {0};
 
                 effect.type = s->effect;
-                effect.level = s->level;
+                effect.power = s->level;
+                effect.difficulty = s->level;
 
                 sprintf(name, "%s", do_effect(&effect, SPELL_NAME, 0));
                 sprintf(info, "%s", do_effect(&effect, SPELL_INFO, _boost(s->effect)));

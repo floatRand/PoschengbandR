@@ -98,13 +98,15 @@ struct feature_type
     byte x_char[F_LIT_MAX];   /* Desired feature character */
 };
 
+/* Effects are used for activations on objects (e.g. DSM) as well as devices (wand, rod, staff) */
 struct effect_s
 {
-    s16b type;
-    byte level;
-    byte xxx;
-    s16b cost;
-    s16b extra;
+    s16b type;         /* See effect_e in defines.h. */
+    byte power;        /* Power Level (1-100): Determines damage, etc */
+    byte difficulty;   /* Difficulty Level (1-100): Determines fail rate. */
+                       /* Think of power as the player level and difficulty as the spell level. */
+    s16b cost;         /* Timeout for activations. SP for devices */
+    s16b extra;        /* Optionally override normal damage calc. See do_effect for details on a per effect basis. */
 };
 typedef struct effect_s effect_t;
 

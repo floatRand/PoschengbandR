@@ -3037,16 +3037,20 @@ void do_cmd_debug(void)
         for (i = 1; i < 200; i++)
         {
             object_type forge = {0};
-            if (!make_object(&forge, AM_GOOD | AM_GREAT | AM_TAILORED))
-            {
-                msg_format("Whoops #%d", i);
-                continue;
-            }
+            int fail;
+
+            object_prep(&forge, 269);
+            apply_magic(&forge, dun_level, 0);
+
             identify_item(&forge);
             forge.ident |= (IDENT_MENTAL);
 
             object_desc(buf, &forge, 0);
-            msg_format("%d) %s", i, buf);
+            fail = device_calc_fail_rate(&forge);
+            msg_format("%d) %s %d %d.%d%%",
+                i, buf, object_value(&forge), fail/10, fail%10);
+            if (i == 1)
+                drop_near(&forge, -1, py, px);
         }
 /*
         int i, j, ct = 0;

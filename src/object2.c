@@ -1273,6 +1273,7 @@ s32b object_value_real(object_type *o_ptr)
     if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr);
     if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr);
     if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr);
+    if (o_ptr->tval == TV_WAND /*|| o_ptr->tval == TV_ROD || o_ptr->tval == TV_STAFF*/) return device_value(o_ptr);
 
     /* OK, here's the old pricing algorithm :( 
        Note this algorithm cheats for artifacts by relying on cost
@@ -1383,28 +1384,6 @@ s32b object_value_real(object_type *o_ptr)
     /* Analyze the item */
     switch (o_ptr->tval)
     {
-        /* Wands/Staffs */
-        case TV_WAND:
-        {
-            /* Pay extra for charges, depending on standard number of
-             * charges.  Handle new-style wands correctly. -LM-
-             */
-            value += (value * o_ptr->pval / o_ptr->number / (k_ptr->pval * 2));
-
-            /* Done */
-            break;
-        }
-        case TV_STAFF:
-        {
-            /* Pay extra for charges, depending on standard number of
-             * charges.  -LM-
-             */
-            value += (value * o_ptr->pval / (k_ptr->pval * 2));
-
-            /* Done */
-            break;
-        }
-
         /* Rings/Amulets */
         case TV_RING:
         case TV_AMULET:
@@ -1716,44 +1695,9 @@ int object_similar_part(object_type *o_ptr, object_type *j_ptr)
 
         /* Staffs */
         case TV_STAFF:
-        {
-            /* Require either knowledge or known empty for both staffs. */
-            if ((!(o_ptr->ident & (IDENT_EMPTY)) &&
-                !object_is_known(o_ptr)) ||
-                (!(j_ptr->ident & (IDENT_EMPTY)) &&
-                !object_is_known(j_ptr))) return 0;
-
-            /* Require identical charges, since staffs are bulky. */
-            if (o_ptr->pval != j_ptr->pval) return 0;
-
-            /* Assume okay */
-            break;
-        }
-
-        /* Wands */
         case TV_WAND:
-        {
-            /* Require either knowledge or known empty for both wands. */
-            if ((!(o_ptr->ident & (IDENT_EMPTY)) &&
-                !object_is_known(o_ptr)) ||
-                (!(j_ptr->ident & (IDENT_EMPTY)) &&
-                !object_is_known(j_ptr))) return 0;
-
-            /* Wand charges combine in O&ZAngband.  */
-
-            /* Assume okay */
-            break;
-        }
-
-        /* Staffs and Wands and Rods */
         case TV_ROD:
-        {
-            /* Prevent overflaw of timeout */
-            max_num = MIN(max_num, MAX_SHORT / k_info[o_ptr->k_idx].pval);
-
-            /* Assume okay */
-            break;
-        }
+            return 0;
 
         /* Weapons and Armor */
         case TV_BOW:
@@ -1847,7 +1791,8 @@ int object_similar_part(object_type *o_ptr, object_type *j_ptr)
     /* Require identical activations */
     if ( o_ptr->activation.type != j_ptr->activation.type
       || o_ptr->activation.cost != j_ptr->activation.cost
-      || o_ptr->activation.level != j_ptr->activation.level
+      || o_ptr->activation.power != j_ptr->activation.power
+      || o_ptr->activation.difficulty != j_ptr->activation.difficulty
       || o_ptr->activation.extra != j_ptr->activation.extra )
     {
         return 0;
@@ -4649,8 +4594,6 @@ static void _create_lite(object_type *o_ptr, int level, int power, int mode)
  */
 static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
 {
-    object_kind *k_ptr = &k_info[o_ptr->k_idx];
-
     /* Unused */
     (void)level;
 
@@ -4680,20 +4623,9 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
         }
         case TV_WAND:
         case TV_STAFF:
-        {
-            /* The wand or staff gets a number of initial charges equal
-             * to between 1/2 (+1) and the full object kind's pval. -LM-
-             */
-            o_ptr->pval = k_ptr->pval / 2 + randint1((k_ptr->pval + 1) / 2);
-            break;
-        }
-
         case TV_ROD:
-        {
-            /* Transfer the pval. -LM- */
-            o_ptr->pval = k_ptr->pval;
+            device_init(o_ptr);
             break;
-        }
 
         case TV_CAPTURE:
         {
@@ -7262,11 +7194,12 @@ bool object_sort_comp(object_type *o_ptr, s32b o_value, object_type *j_ptr)
         if (o_ptr->to_h + o_ptr->to_d > j_ptr->to_h + j_ptr->to_d) return FALSE;
         break;
 
-    /* Hack:  otherwise identical rods sort by
-    increasing recharge time --dsb */
     case TV_ROD:
-        if (o_ptr->pval < j_ptr->pval) return TRUE;
-        if (o_ptr->pval > j_ptr->pval) return FALSE;
+    case TV_WAND:
+    case TV_STAFF:
+        /* Devices sort by level of effect */
+        if (o_ptr->activation.power < j_ptr->activation.power) return FALSE;
+        if (o_ptr->activation.power > j_ptr->activation.power) return TRUE;
         break;
     }
 

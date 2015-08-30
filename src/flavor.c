@@ -271,15 +271,6 @@ void flavor_init(void)
         k_ptr->flavor = i;
     }
 
-    /* Shuffle Staves */
-    shuffle_flavors(TV_STAFF);
-
-    /* Shuffle Wands */
-    shuffle_flavors(TV_WAND);
-
-    /* Shuffle Rods */
-    shuffle_flavors(TV_ROD);
-
     /* Shuffle Mushrooms */
     shuffle_flavors(TV_FOOD);
 
@@ -949,6 +940,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     bool            aware = FALSE;
     bool            known = FALSE;
     bool            flavor = TRUE;
+    bool            device = FALSE;
 
     bool            show_weapon = FALSE;
     bool            show_armour = FALSE;
@@ -1166,39 +1158,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         }
 
         case TV_STAFF:
-        {
-            /* Color the object */
-            modstr = k_name + flavor_k_ptr->flavor_name;
-
-            if (!flavor)    basenm = "& Staff~ of %";
-            else if (aware) basenm = "& # Staff~ of %";
-            else            basenm = "& # Staff~";
-
-            break;
-        }
-
         case TV_WAND:
-        {
-            /* Color the object */
-            modstr = k_name + flavor_k_ptr->flavor_name;
-
-            if (!flavor)    basenm = "& Wand~ of %";
-            else if (aware) basenm = "& # Wand~ of %";
-            else            basenm = "& # Wand~";
-
-            break;
-        }
-
         case TV_ROD:
-        {
-            /* Color the object */
-            modstr = k_name + flavor_k_ptr->flavor_name;
-
-            if (!flavor)    basenm = "& Rod~ of %";
-            else if (aware) basenm = "& # Rod~ of %";
-            else            basenm = "& # Rod~";
+            device = TRUE;
             break;
-        }
 
         case TV_SCROLL:
         {
@@ -1957,62 +1920,24 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
     if (known) /* Known item only */
     {
-        /*
-         * Hack -- Wands and Staffs have charges.  Make certain how many charges
-         * a stack of staffs really has is clear. -LM-
-         */
-        if (((o_ptr->tval == TV_STAFF) || (o_ptr->tval == TV_WAND)))
+        if (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND || o_ptr->tval == TV_ROD)
         {
-            /* Dump " (N charges)" */
+            char buf[255];
+
+            if (o_ptr->activation.type)
+            {
+                sprintf(buf, ": %s %dsp",
+                        do_effect(&o_ptr->activation, SPELL_NAME, 0),
+                        o_ptr->activation.cost);
+                t = object_desc_str(t, buf);
+            }
+
             t = object_desc_chr(t, ' ');
             t = object_desc_chr(t, p1);
-
-            /* Clear explaination for staffs. */
-            if ((o_ptr->tval == TV_STAFF) && (o_ptr->number > 1))
-            {
-                t = object_desc_num(t, o_ptr->number);
-                t = object_desc_str(t, "x ");
-            }
-            t = object_desc_num(t, o_ptr->pval);
-            t = object_desc_str(t, " charge");
-            if (o_ptr->pval != 1) t = object_desc_chr(t, 's');
-
+            if (o_ptr->ident & IDENT_MENTAL)
+                t = object_desc_str(t, format("L:%d ", device_level(o_ptr)));
+            t = object_desc_str(t, format("SP:%d/%d", device_sp(o_ptr), device_max_sp(o_ptr)));
             t = object_desc_chr(t, p2);
-        }
-        /* Hack -- Rods have a "charging" indicator.  Now that stacks of rods may
-         * be in any state of charge or discharge, this now includes a number. -LM-
-         */
-        else if (o_ptr->tval == TV_ROD)
-        {
-            /* Hack -- Dump " (# charging)" if relevant */
-            if (o_ptr->timeout)
-            {
-                /* Stacks of rods display an exact count of charging rods. */
-                if (o_ptr->number > 1)
-                {
-                    /* Paranoia. */
-                    if (k_ptr->pval == 0) k_ptr->pval = 1;
-
-                    /* Find out how many rods are charging, by dividing
-                     * current timeout by each rod's maximum timeout.
-                     * Ensure that any remainder is rounded up.  Display
-                     * very discharged stacks as merely fully discharged.
-                     */
-                    power = (o_ptr->timeout + (k_ptr->pval - 1)) / k_ptr->pval;
-                    if (power > o_ptr->number) power = o_ptr->number;
-
-                    /* Display prettily. */
-                    t = object_desc_str(t, " (");
-                    t = object_desc_num(t, power);
-                    t = object_desc_str(t, " charging)");
-                }
-
-                /* "one Rod of Perception (1 charging)" would look tacky. */
-                else
-                {
-                    t = object_desc_str(t, " (charging)");
-                }
-            }
         }
 
         /* Dump "pval" flags for wearable items */
@@ -2156,7 +2081,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
     if ( (abbrev_extra || abbrev_all)
       && (o_ptr->ident & IDENT_MENTAL)
-      && obj_has_effect(o_ptr) )
+      && obj_has_effect(o_ptr)
+      && !device )
     {
         char     buf[255];
         effect_t e = obj_get_effect(o_ptr);

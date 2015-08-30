@@ -16,10 +16,10 @@
 #define VERSION_NAME "PosChengband"
 
 
-#define VER_MAJOR 3
-#define VER_MINOR 5
-#define VER_PATCH 1
-#define VER_EXTRA 1
+#define VER_MAJOR 4
+#define VER_MINOR 0
+#define VER_PATCH 0
+#define VER_EXTRA 0
 
 #define GAME_MODE_BEGINNER  0
 #define GAME_MODE_NORMAL    1
@@ -6188,6 +6188,7 @@ enum ego_amulet_e {
     EGO_AMULET_TRICKERY,
 };
 
+/* Effects. These numbers are stored in savefiles so may never be changed! */
 enum effect_e
 {
     EFFECT_NONE = 0,
@@ -6280,6 +6281,7 @@ enum effect_e
     EFFECT_CHARM_ANIMAL = 175,
     EFFECT_CHARM_DEMON,
     EFFECT_CHARM_UNDEAD,
+    EFFECT_CHARM_MONSTER,
 
     EFFECT_RETURN_PETS = 190,
     EFFECT_CAPTURE_PET,
@@ -6319,10 +6321,12 @@ enum effect_e
     EFFECT_BOLT_TIME,
     EFFECT_BOLT_WATER,
     EFFECT_BOLT_MANA,
+    EFFECT_BOLT_ICE,
 
     /* Offense: Beams */
     EFFECT_BEAM_LITE_WEAK = 350,
     EFFECT_BEAM_LITE,
+    EFFECT_BEAM_GRAVITY,
 
     /* Offense: Balls */
     EFFECT_BALL_ACID = 400,
@@ -6342,6 +6346,7 @@ enum effect_e
     EFFECT_BALL_TIME,
     EFFECT_BALL_WATER,
     EFFECT_BALL_MANA,
+    EFFECT_BALL_DISINTEGRATE,
 
     /* Offense: Breaths */
     EFFECT_BREATHE_ACID = 450,
@@ -6394,6 +6399,7 @@ enum effect_e
     EFFECT_AGGRAVATE,
     EFFECT_PIERCING_SHOT,
     EFFECT_CHARGE,
+    EFFECT_WALL_BUILDING,
 
     /* Specific Artifacts ... Try to minimize! */
     EFFECT_JEWEL = 1000,

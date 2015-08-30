@@ -2069,189 +2069,11 @@ P:0:1d1:0:0:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 ##### Wands #####
-N:269:Light:Aluminum
+N:269:& Wand~
 G:-:B
-I:65:7:17
-W:3:0:30:10:200
-A:3/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:270:Tame Monster:Cast Iron
-G:-:D
-I:65:17:9
-W:30:0:60:10:1500
-A:30/2
-P:0:1d1:0:0:0
-
-N:271:Frost Bolts:Chromium
-G:-:w
-I:65:19:12
-W:15:0:30:10:800
-A:15/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:272:Fire Bolts:Copper
-G:-:U
-I:65:18:15
-W:19:0:40:10:1000
-A:19/1
-P:0:1d1:0:0:0
-
-N:273:Stone to Mud:Gold
-G:-:y
-I:65:6:12
-W:10:0:0:10:300
-A:10/1:40/1
-P:0:1d1:0:0:0
-
-N:274:Polymorph:Iron
-G:-:s
-I:65:13:15
-W:15:0:40:10:400
-A:15/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:275:Heal Monster:Magnesium
-G:-:W
-I:65:0:6
-W:2:0:20:10:0
-A:2/1
-P:0:1d1:0:0:0
-
-N:276:Haste Monster:Molybdenum
-G:-:W
-I:65:1:6
-W:20:0:0:10:1
-A:20/1
-P:0:1d1:0:0:0
-
-N:277:Slow Monster:Nickel
-G:-:U
-I:65:9:17
-W:5:0:30:10:500
-A:2/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:278:Confuse Monster:Rusty
-G:-:r
-I:65:10:15
-W:5:0:30:10:500
-A:3/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:279:Sleep Monster:Silver
-G:-:W
-I:65:8:16
-W:5:0:30:10:500
-A:5/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:280:Drain Life:Steel
-G:-:W
-I:65:12:7
-W:40:0:0:10:1200
-A:40/1
-P:0:1d1:0:0:0
-
-N:281:Trap/Door Destruction:Tin
-G:-:W
-I:65:5:15
-W:10:0:50:10:100
-A:10/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:282:Magic Missile:Titanium
-G:-:w
-I:65:15:17
-W:2:0:30:10:200
-A:2/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:283:Clone Monster:Tungsten
-G:-:w
-I:65:2:6
-W:15:0:60:10:0
-A:15/1
-P:0:1d1:0:0:0
-
-N:284:Scare Monster:Zirconium
-G:-:W
-I:65:11:9
-W:10:0:30:10:500
-A:10/4
-F:TOWN
-P:0:1d1:0:0:0
-
-N:285:Teleport Other:Zinc
-G:-:W
-I:65:3:12
-W:20:0:0:10:350
-A:20/1
-P:0:1d1:0:0:0
-
-N:286:Disarming:Copper-Plated
-G:-:U
-I:65:4:10
-W:20:0:0:10:700
-A:20/1
-P:0:1d1:0:0:0
-
-N:287:Lightning Balls:Gold-Plated
-G:-:y
-I:65:21:13
-W:30:0:0:10:1200
-A:30/1
-P:0:1d1:0:0:0
-F:IGNORE_ELEC
-
-N:288:Cold Balls:Silver-Plated
-G:-:W
-I:65:23:9
-W:30:0:0:10:1500
-A:30/1
-P:0:1d1:0:0:0
-F:IGNORE_COLD
-
-N:289:Fire Balls:Tin-Plated
-G:-:W
-I:65:22:7
-W:30:0:0:10:1800
-A:30/1
-P:0:1d1:0:0:0
-F:IGNORE_FIRE
-
-N:290:Stinking Cloud:Zinc-Plated
-G:-:W
-I:65:14:15
-W:5:0:30:10:400
-A:5/1
-F:TOWN
-P:0:1d1:0:0:0
-
-N:291:Acid Balls:Mithril
-G:-:B
-I:65:20:8
-W:30:0:0:10:1650
-A:30/1
-P:0:1d1:0:0:0
-F:IGNORE_ACID
-
-N:292:Wonder:Bronze
-G:-:U
-I:65:24:24
-W:3:0:40:10:250
-A:3/1
-F:TOWN
-P:0:1d1:0:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+I:65:0:0
+W:10:0:0:2:500
+A:10/1:40/1:60/1
 
 ##### Extra ammunition #####
 
@@ -2263,55 +2085,6 @@ A:3/2
 P:0:1d3:0:0:0
 M:100:6d7
 F:SHOW_MODS
-
-##### Additional wands #####
-
-N:294:Acid Bolts:Brass
-G:-:U
-I:65:16:15
-W:20:0:40:10:950
-A:20/1
-P:0:1d1:0:0:0
-
-N:295:Dragon's Flame:Platinum
-G:-:w
-I:65:26:5
-W:50:0:0:10:2400
-A:50/4
-P:0:1d1:0:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:296:Dragon's Frost:Lead
-G:-:s
-I:65:27:5
-W:50:0:0:10:2400
-A:50/4
-P:0:1d1:0:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:297:Dragon's Breath:Lead-Plated
-G:-:s
-I:65:28:5
-W:60:0:0:10:2400
-A:60/4
-P:0:1d1:0:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:298:Disintegrate:Ivory
-G:-:w
-I:65:25:4
-W:60:0:0:10:3000
-A:60/5
-P:0:1d1:0:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:299:Rockets:Adamantite
-G:-:v
-I:65:29:4
-W:80:0:0:10:9500
-A:80/5
-P:0:1d1:0:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 ##### Staffs #####
 
@@ -4308,14 +4081,6 @@ W:40:0:0:160:250
 A:40/2
 P:10:1d6:0:0:0
 
-N:628:Striking:Uridium
-G:-:R
-I:65:30:6
-W:55:0:0:10:4000
-A:55/3
-P:0:1d1:0:0:0
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
 N:629:Mana Storm:Ashen
 G:_:s
 I:55:31:5
@@ -4414,13 +4179,6 @@ W:90:0:0:30:100000
 A:90/3
 P:0:1d1:0:0:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:641:Annihilation:Hexagonal
-G:-:r
-I:65:31:4
-W:60:0:0:10:10000
-A:60/4
-P:0:1d1:0:0:0
 
 N:642:Aggravate Monster:Uridium
 G:-:R
