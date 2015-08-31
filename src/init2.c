@@ -926,7 +926,7 @@ static errr init_misc(void)
  */
 static errr init_towns(void)
 {
-    int i, j, k;
+    int i, j;
 
     /*** Prepare the Towns ***/
 

@@ -415,11 +415,11 @@ bool screen_object(object_type *o_ptr, u32b mode)
     if (o_ptr->tval == TV_SCROLL || o_ptr->tval == TV_POTION)
     {
         char scratch[70 * 20];
-        cptr res = do_device(o_ptr->tval, o_ptr->sval, SPELL_DESC);
+        cptr res = do_device(o_ptr, SPELL_DESC, 0);
         strcpy(scratch, res);
         if (o_ptr->ident & IDENT_MENTAL)
         {
-            res = do_device(o_ptr->tval, o_ptr->sval, SPELL_INFO);
+            res = do_device(o_ptr, SPELL_INFO, 0);
             if (res && strlen(res))
             {   /* Here is a classic case where calling format() leads to bugs ... sigh */
                 strcat(scratch, "\nInfo: ");
@@ -468,12 +468,13 @@ bool screen_object(object_type *o_ptr, u32b mode)
                 res = do_effect(&e, SPELL_INFO, 0);
                 if (res && strlen(res))
                 {
-                    strcat(scratch, "\nInfo: ");
+                    strcat(scratch, "\nInfo:  ");
                     strcat(scratch, res);
                 }
-                strcat(scratch, format("\nFail: %d.%d%%", fail/10, fail%10));
-                strcat(scratch, "\nCost: ");
-                strcat(scratch, format("%dsp", e.cost));
+                strcat(scratch, format("\nFail:  %d.%d%%", fail/10, fail%10));
+                strcat(scratch, format("\nPower: %d", device_level(o_ptr)));
+                strcat(scratch, format("\nSP:    %d/%d", device_sp(o_ptr), device_max_sp(o_ptr)));
+                strcat(scratch, format("\nCost:  %d", e.cost));
             }
             break;
         default:

@@ -1,7 +1,11 @@
 #include "angband.h"
 
 /* TODO: Stop using p_ptr->magicnum*. Rewrite load/save code and keep a local
-   map (tv,sv)->{ ... } instead. */
+   map (tv,sv)->{ ... } instead.
+
+   TODO: Magic-Eaters are currently broken after the re-write of devices. This class
+   has been removed from the birth menus, so you cannot create one.
+*/
 
 #define _EATER_CHARGE 0x10000L
 #define _EATER_ROD_CHARGE 0x10L
@@ -13,7 +17,8 @@ static cptr _do_device(int tval, int sval, int mode)
     cptr res;
     magic_eater_hack = TRUE;
     device_known = TRUE;
-    res = do_device(tval, sval, mode);
+    res = NULL;
+    /*res = do_device(tval, sval, mode);*/
     magic_eater_hack = FALSE;
     return res;
 }

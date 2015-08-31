@@ -5741,7 +5741,7 @@ static bool _kind_is_staff(int k_idx) {
     }
     return FALSE;
 }
-/*static bool _kind_is_potion_scroll(int k_idx) {
+static bool _kind_is_potion_scroll(int k_idx) {
     switch (k_info[k_idx].tval)
     {
     case TV_POTION:
@@ -5749,7 +5749,7 @@ static bool _kind_is_staff(int k_idx) {
         return TRUE;
     }
     return FALSE;
-}*/
+}
 static bool _kind_is_wand_rod_staff(int k_idx) { 
     switch (k_info[k_idx].tval)
     {
@@ -5883,8 +5883,8 @@ static _kind_alloc_entry _kind_alloc_table[] = {
     { kind_is_weapon,          180,    0,    0 },  
     { kind_is_body_armor,      165,    0,    0 },
     { kind_is_other_armor,     200,    0,    0 },
-    { kind_is_device,          210, -160, -160 },
-    { _kind_is_potion,          40,  -25,  -40 },
+    { _kind_is_wand_rod_staff, 150, -100, -140 },
+    { _kind_is_potion_scroll,  100,  -50,  -90 },
     { kind_is_bow_ammo,         70,    0,    0 },
     { kind_is_book,             50,    0,    0 },
     { kind_is_jewelry,          35,    0,    0 },
@@ -7198,8 +7198,8 @@ bool object_sort_comp(object_type *o_ptr, s32b o_value, object_type *j_ptr)
     case TV_WAND:
     case TV_STAFF:
         /* Devices sort by level of effect */
-        if (o_ptr->activation.power < j_ptr->activation.power) return FALSE;
-        if (o_ptr->activation.power > j_ptr->activation.power) return TRUE;
+        if (o_ptr->activation.difficulty < j_ptr->activation.difficulty) return TRUE;
+        if (o_ptr->activation.difficulty > j_ptr->activation.difficulty) return FALSE;
         break;
     }
 

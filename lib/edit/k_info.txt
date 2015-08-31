@@ -2072,8 +2072,10 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 N:269:& Wand~
 G:-:B
 I:65:0:0
-W:10:0:0:2:500
-A:10/1:40/1:60/1
+W:1:0:0:2:500
+A:1/1
+
+#sequence gap
 
 ##### Extra ammunition #####
 

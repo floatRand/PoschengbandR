@@ -968,7 +968,6 @@ static cptr autopick_line_from_entry_kill(autopick_type *entry)
 static bool _collecting(object_type *o1, object_type *o2)
 {
     if (o1->k_idx != o2->k_idx)     return FALSE;
-    if (o1->tval == TV_WAND || o1->tval == TV_STAFF) return TRUE;
     return object_similar(o1, o2);
 }
 

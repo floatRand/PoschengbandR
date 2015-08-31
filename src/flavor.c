@@ -1922,22 +1922,23 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     {
         if (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND || o_ptr->tval == TV_ROD)
         {
-            char buf[255];
-
             if (o_ptr->activation.type)
             {
-                sprintf(buf, ": %s %dsp",
-                        do_effect(&o_ptr->activation, SPELL_NAME, 0),
-                        o_ptr->activation.cost);
+                char buf[255];
+                sprintf(buf, ": %s", do_effect(&o_ptr->activation, SPELL_NAME, 0));
                 t = object_desc_str(t, buf);
             }
 
-            t = object_desc_chr(t, ' ');
-            t = object_desc_chr(t, p1);
-            if (o_ptr->ident & IDENT_MENTAL)
-                t = object_desc_str(t, format("L:%d ", device_level(o_ptr)));
-            t = object_desc_str(t, format("SP:%d/%d", device_sp(o_ptr), device_max_sp(o_ptr)));
-            t = object_desc_chr(t, p2);
+            if (o_ptr->activation.cost)
+            {
+                int  charges = device_sp(o_ptr) / o_ptr->activation.cost;
+                int  max_charges = device_max_sp(o_ptr) / o_ptr->activation.cost;
+
+                t = object_desc_chr(t, ' ');
+                t = object_desc_chr(t, p1);
+                t = object_desc_str(t, format("%d/%d charges", charges, max_charges));
+                t = object_desc_chr(t, p2);
+            }
         }
 
         /* Dump "pval" flags for wearable items */

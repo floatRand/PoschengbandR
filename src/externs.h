@@ -846,7 +846,7 @@ extern bool device_noticed;
 extern int  device_extra_power;
 extern int  device_available_charges;
 extern int  device_used_charges;
-extern cptr do_device(int tval, int sval, int mode);
+extern cptr do_device(object_type *o_ptr, int mode, int boost);
 
 
 extern void device_init(object_type *o_ptr);

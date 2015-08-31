@@ -227,12 +227,7 @@ bool device_try(object_type *o_ptr)
 bool device_use(object_type *o_ptr, int boost)
 {
     device_known = object_is_aware(o_ptr);
-    if (o_ptr->activation.type)
-    {
-        if (do_effect(&o_ptr->activation, SPELL_CAST, boost))
-            return TRUE;
-    }
-    else if (do_device(o_ptr->tval, o_ptr->sval, SPELL_CAST))
+    if (do_device(o_ptr, SPELL_CAST, boost))
         return TRUE;
     return FALSE;
 }
@@ -255,14 +250,6 @@ static int _staff_power(int val)
 {
     val += val * device_extra_power / 100;
     if (devicemaster_is_(DEVICEMASTER_STAVES))
-        return device_power_aux(val, p_ptr->device_power + p_ptr->lev/10);
-    return _device_power_hack(val);
-}
-
-static int _wand_power(int val)
-{
-    val += val * device_extra_power / 100;
-    if (devicemaster_is_(DEVICEMASTER_WANDS))
         return device_power_aux(val, p_ptr->device_power + p_ptr->lev/10);
     return _device_power_hack(val);
 }
@@ -2055,325 +2042,6 @@ static cptr _do_staff(int sval, int mode)
     return "";
 }
 
-static cptr _do_wand(int sval, int mode)
-{
-    bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
-    bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
-    bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
-    bool old_target_pet = target_pet;
-    int  dir = 0;
-
-    if (cast)
-    {
-        /* Aim */
-        if (sval == SV_WAND_HEAL_MONSTER || sval == SV_WAND_HASTE_MONSTER)
-            target_pet = TRUE;
-
-        if (!get_aim_dir(&dir))
-        {
-            target_pet = old_target_pet;
-            return NULL;
-        }
-        target_pet = old_target_pet;
-        /* XXX Hack -- Wand of wonder can do anything before it */
-        if (sval == SV_WAND_WONDER)
-        {
-            int vir = virtue_current(VIRTUE_CHANCE);
-            sval = randint0(SV_WAND_WONDER);
-
-            if (vir > 0)
-            {
-                while (randint1(300) < vir) sval++;
-                if (sval > SV_WAND_COLD_BALL) sval = randint0(4) + SV_WAND_ACID_BALL;
-            }
-            else if (vir < 0)
-            {
-                while (randint1(300) < -vir) sval--;
-                if (sval < SV_WAND_HEAL_MONSTER) sval = randint0(3) + SV_WAND_HEAL_MONSTER;
-            }
-            if (sval < SV_WAND_TELEPORT_AWAY)
-                virtue_add(VIRTUE_CHANCE, 1);
-        }
-    }
-
-    /* Fire! */
-    switch (sval)
-    {
-    case SV_WAND_HEAL_MONSTER:
-        if (desc) return "It heals a monster when you use it.";
-        if (cast)
-        {
-            if (heal_monster(dir, _wand_power(damroll(10, 10)))) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_HASTE_MONSTER:
-        if (desc) return "It hastes a monster when you use it.";
-        if (cast)
-        {
-            if (speed_monster(dir)) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_CLONE_MONSTER:
-        if (desc) return "It clones a monster when you use it. Unique monsters are not cloned.";
-        if (cast)
-        {
-            if (clone_monster(dir)) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_TELEPORT_AWAY:
-        if (desc) return "It fires a beam teleports all monsters on the line when you use it.";
-        if (cast)
-        {
-            if (teleport_monster(dir)) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_DISARMING:
-        if (desc) return "It fires a beam destroys all traps on the line when you use it.";
-        if (cast)
-        {
-            if (disarm_trap(dir)) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_TRAP_DOOR_DEST:
-        if (desc) return "It fires a beam destroys all traps and doors on the line when you use it.";
-        if (cast)
-        {
-            if (destroy_door(dir)) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_STONE_TO_MUD:
-        if (desc) return "It turns a door, rock, wall square to mud when you use it.";
-        if (cast)
-        {
-            if (wall_to_mud(dir)) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_LITE:
-        if (desc) return "It fires a line of light when you use it.";
-        if (cast)
-        {
-            msg_print("A line of blue shimmering light appears.");
-            lite_line(dir);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_SLEEP_MONSTER:
-        if (desc) return "It puts a monster to sleep when you use it.";
-        if (info) return format("Power %d", _wand_power(10 + p_ptr->lev));
-        if (cast)
-        {
-            if (sleep_monster(dir, _wand_power(3*p_ptr->lev))) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_SLOW_MONSTER:
-        if (desc) return "It slows a monster down when you use it.";
-        if (cast)
-        {
-            if (slow_monster(dir)) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_CONFUSE_MONSTER:
-        if (desc) return "It confuses a monster when you use it.";
-        if (cast)
-        {
-            if (confuse_monster(dir, _wand_power(10 + p_ptr->lev))) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_FEAR_MONSTER:
-        if (desc) return "It scares a monster when you use it.";
-        if (cast)
-        {
-            if (fear_monster(dir, _wand_power(p_ptr->lev))) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_DRAIN_LIFE:
-        if (desc) return "It fires a bolt that steals life from a foe when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(50 + p_ptr->lev/2));
-        if (cast)
-        {
-            int dam = _wand_power(50 + p_ptr->lev/2);
-            if (drain_life(dir, dam)) 
-            {
-                if (p_ptr->pclass != CLASS_BLOOD_MAGE)
-                    hp_player(dam);
-                device_noticed = TRUE;
-            }
-        }
-        break;
-    case SV_WAND_POLYMORPH:
-        if (desc) return "It changes a monster into another when you use it.";
-        if (cast)
-        {
-            if (poly_monster(dir)) device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_STINKING_CLOUD:
-        if (desc) return "It fires a ball of poison when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(12 + p_ptr->lev/4));
-        if (cast)
-        {
-            fire_ball(GF_POIS, dir, _wand_power(12 + p_ptr->lev/4), 2);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_MAGIC_MISSILE:
-        if (desc) return "It fires a bolt or beam of magic when you use it.";
-        if (info) return info_damage(_wand_power(2 + p_ptr->lev/10), 6, 0);
-        if (cast)
-        {
-            fire_bolt_or_beam(20, GF_MISSILE, dir, _wand_power(damroll(2 + p_ptr->lev/10, 6)));
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_ACID_BOLT:
-        if (desc) return "It fires a bolt or beam of acid when you use it.";
-        if (info) return info_damage(_wand_power(6 + p_ptr->lev/7), 8, 0);
-        if (cast)
-        {
-            fire_bolt_or_beam(20, GF_ACID, dir, _wand_power(damroll(6 + p_ptr->lev/7, 8)));
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_CHARM_MONSTER:
-        if (desc) return "It charms a monster into your pet when you use it.";
-        if (cast)
-        {
-            if (charm_monster(dir, MAX(20, _wand_power(p_ptr->lev))))
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_FIRE_BOLT:
-        if (desc) return "It fires a bolt or beam of fire when you use it.";
-        if (info) return info_damage(_wand_power(7 + p_ptr->lev/6), 8, 0);
-        if (cast)
-        {
-            fire_bolt_or_beam(20, GF_FIRE, dir, _wand_power(damroll(7 + p_ptr->lev/6, 8)));
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_COLD_BOLT:
-        if (desc) return "It fires a bolt or beam of cold when you use it.";
-        if (info) return info_damage(_wand_power(5 + p_ptr->lev/8), 8, 0);
-        if (cast)
-        {
-            fire_bolt_or_beam(20, GF_COLD, dir, _wand_power(damroll(5 + p_ptr->lev/8, 8)));
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_ACID_BALL:
-        if (desc) return "It fires a ball of acid when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(60 + 3*p_ptr->lev/4));
-        if (cast)
-        {
-            fire_ball(GF_ACID, dir, _wand_power(60 + 3*p_ptr->lev/4), 2);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_ELEC_BALL:
-        if (desc) return "It fires a ball of lightning when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(40 + 3*p_ptr->lev/4));
-        if (cast)
-        {
-            fire_ball(GF_ELEC, dir, _wand_power(40 + 3*p_ptr->lev/4), 2);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_FIRE_BALL:
-        if (desc) return "It fires a ball of fire when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(70 + 3*p_ptr->lev/4));
-        if (cast)
-        {
-            fire_ball(GF_FIRE, dir, _wand_power(70 + 3*p_ptr->lev/4), 2);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_COLD_BALL:
-        if (desc) return "It fires a ball of cold when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(50 + 3*p_ptr->lev/4));
-        if (cast)
-        {
-            fire_ball(GF_COLD, dir, _wand_power(50 + 3*p_ptr->lev/4), 2);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_WONDER:
-        if (desc) return "It has a random effect when you use it.";
-        if (cast) msg_print("Oops.  Wand of wonder activated.");
-        break;
-    case SV_WAND_DRAGON_FIRE:
-        if (desc) return "It breathes fire when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(200));
-        if (cast)
-        {
-            fire_ball(GF_FIRE, dir, _wand_power(200), -3);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_DRAGON_COLD:
-        if (desc) return "It breathes cold when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(180));
-        if (cast)
-        {
-            fire_ball(GF_COLD, dir, _wand_power(180), -3);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_DRAGON_BREATH:
-        if (desc) return "It breathes acid, lightning, fire, cold or poison when you use it.";
-        if (info) return format("dam %d-%d", _wand_power(180), _wand_power(240));
-        if (cast)
-        {
-            switch (randint1(5))
-            {
-            case 1: fire_ball(GF_ACID, dir, _wand_power(240), -3); break;
-            case 2: fire_ball(GF_ELEC, dir, _wand_power(210), -3); break;
-            case 3: fire_ball(GF_FIRE, dir, _wand_power(240), -3); break;
-            case 4: fire_ball(GF_COLD, dir, _wand_power(210), -3); break;
-            case 5: fire_ball(GF_POIS, dir, _wand_power(180), -3); break;
-            }
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_DISINTEGRATE:
-        if (desc) return "It fires a ball of disintegration when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(200 + p_ptr->lev*2));
-        if (cast)
-        {
-            fire_ball(GF_DISINTEGRATE, dir, _wand_power(200 + randint1(p_ptr->lev * 2)), 2);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_ROCKETS:
-        if (desc) return "It fires a rocket when you use it.";
-        if (info) return info_damage(0, 0, _wand_power(250 + p_ptr->lev*3));
-        if (cast)
-        {
-            msg_print("You launch a rocket!");
-            fire_rocket(GF_ROCKET, dir, _wand_power(250 + p_ptr->lev*3), 2);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_STRIKING:
-        if (desc) return "It fires a bolt of meteor when you use it.";
-        if (info) return info_damage(_wand_power(15 + p_ptr->lev/3), 13, 0);
-        if (cast)
-        {
-            fire_bolt(GF_METEOR, dir, _wand_power(damroll(15 + p_ptr->lev/3, 13)));
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_WAND_GENOCIDE:
-        if (desc) return "It removes a monster from current dungeon level unless resisted when you use it.";
-        if (cast)
-        {
-            fire_ball_hide(GF_GENOCIDE, dir, magic_eater_hack ? p_ptr->lev + 50 : _wand_power(250), 0);
-            device_noticed = TRUE;
-        }
-        break;
-    }
-    return "";
-}
-
 static cptr _do_rod(int sval, int mode)
 {
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -2716,19 +2384,25 @@ static cptr _do_rod(int sval, int mode)
     return "";
 }
 
-cptr do_device(int tval, int sval, int mode)
+cptr do_device(object_type *o_ptr, int mode, int boost)
 {
     cptr result = NULL;
 
     device_noticed = FALSE;
     device_used_charges = 0;
-    switch (tval)
+
+    if (o_ptr->activation.type)
     {
-    case TV_STAFF: result = _do_staff(sval, mode); break;
-    case TV_WAND: result = _do_wand(sval, mode); break;
-    case TV_ROD: result = _do_rod(sval, mode); break;
-    case TV_SCROLL: result = _do_scroll(sval, mode); break;
-    case TV_POTION: result = _do_potion(sval, mode); break;
+        /* Devices are being converted to the effect system */
+        result = do_effect(&o_ptr->activation, mode, boost);
+    }
+    else
+    {
+        switch (o_ptr->tval)
+        {
+        case TV_SCROLL: result = _do_scroll(o_ptr->sval, mode); break;
+        case TV_POTION: result = _do_potion(o_ptr->sval, mode); break;
+        }
     }
     device_known = FALSE;
     device_extra_power = 0;
@@ -2866,6 +2540,7 @@ static _effect_info_t _effect_info[] =
     {"TELEKINESIS",     EFFECT_TELEKINESIS,         25, 100,  2, BIAS_MAGE},
     {"ALCHEMY",         EFFECT_ALCHEMY,             70, 500,  4, BIAS_MAGE},
     {"SELF_KNOWLEDGE",  EFFECT_SELF_KNOWLEDGE,      70, 500,  3, BIAS_MAGE},
+    {"GENOCIDE_ONE",    EFFECT_GENOCIDE_ONE,        60, 250,  8, BIAS_NECROMANTIC},
 
     /* Timed Buffs:                                 Lv    T   R  Bias */
     {"STONE_SKIN",      EFFECT_STONE_SKIN,          25, 150,  2, BIAS_WARRIOR | BIAS_PROTECTION},
@@ -2950,6 +2625,7 @@ static _effect_info_t _effect_info[] =
     {"BOLT_WATER",      EFFECT_BOLT_WATER,          55, 150,  4, BIAS_MAGE},
     {"BOLT_MANA",       EFFECT_BOLT_MANA,           50, 100,  4, BIAS_MAGE},
     {"BOLT_ICE",        EFFECT_BOLT_ICE,            50, 100,  4, BIAS_MAGE | BIAS_COLD},
+    {"BOLT_PLASMA",     EFFECT_BOLT_PLASMA,         50, 100,  4, BIAS_FIRE},
 
     /* Offense: Beams                               Lv    T   R  Bias */
     {"BEAM_LITE_WEAK",  EFFECT_BEAM_LITE_WEAK,      10,  20,  1, 0},
@@ -3015,6 +2691,7 @@ static _effect_info_t _effect_info[] =
     {"CONFUSING_LITE",  EFFECT_CONFUSING_LITE,      60, 100,  6, BIAS_CHAOS},
     {"ARROW",           EFFECT_ARROW,               30, 100,  2, BIAS_RANGER | BIAS_ARCHER},
     {"WRATH_OF_GOD",    EFFECT_WRATH_OF_GOD,        80, 250, 32, BIAS_LAW},
+    {"METEOR",          EFFECT_METEOR,              55, 150,  8, 0},
 
     /* Misc                                         Lv    T   R  Bias */
     {"POLY_SELF",       EFFECT_POLY_SELF,           20, 500,  1, BIAS_CHAOS},
@@ -3029,6 +2706,14 @@ static _effect_info_t _effect_info[] =
     {"PIERCING_SHOT",   EFFECT_PIERCING_SHOT,       30, 100,  0, BIAS_ARCHER},
     {"CHARGE",          EFFECT_CHARGE,              15, 100,  0, 0},
     {"WALL_BUILDING",   EFFECT_WALL_BUILDING,       90, 750,  0, 0},
+    {"HEAL_MONSTER",    EFFECT_HEAL_MONSTER,         2,  50,  0, 0},
+    {"HASTE_MONSTER",   EFFECT_HASTE_MONSTER,       20, 100,  0, 0},
+    {"CLONE_MONSTER",   EFFECT_CLONE_MONSTER,       15, 100,  0, 0},
+    {"SLEEP_MONSTER",   EFFECT_SLEEP_MONSTER,        5, 100,  1, 0},
+    {"SLOW_MONSTER",    EFFECT_SLOW_MONSTER,         5, 100,  1, 0},
+    {"CONFUSE_MONSTER", EFFECT_CONFUSE_MONSTER,      5, 100,  1, 0},
+    {"SCARE_MONSTER",   EFFECT_SCARE_MONSTER,       10, 100,  1, 0},
+    {"POLYMORPH",       EFFECT_POLYMORPH,           15, 100,  2, BIAS_CHAOS},
 
     /* Specific Artifacts                           Lv    T   R  Bias */
     {"JEWEL",           EFFECT_JEWEL,                0,   0,  0, 0},
@@ -3198,8 +2883,8 @@ struct _device_effect_info_s
     int  level;
     int  cost;
     int  rarity;
-    int  min_level;
-    int  max_level;
+    int  min_depth;
+    int  max_depth;
     int  extra;
 };
 
@@ -3208,60 +2893,49 @@ typedef struct _device_effect_info_s *_device_effect_info_ptr;
 
 static _device_effect_info_t _wand_effect_info[] =
 {
-    /*                         Lvl Cost Rarity   Min Max  Extra */
-    {EFFECT_BOLT_MISSILE,        1,   1,     1,   0,  15,     0},
-    {EFFECT_BEAM_LITE_WEAK,      2,   2,     1,   0,  15,     0},
-    {EFFECT_BALL_POIS,           5,   3,     1,   0,  17,     0},
-    {EFFECT_STONE_TO_MUD,       10,   4,     1,   0,   0,     0},
-    {EFFECT_BOLT_COLD,          15,   5,     1,  12,  30,     0},
-    {EFFECT_BOLT_ELEC,          17,   5,     1,  13,  30,     0},
-    {EFFECT_BOLT_ACID,          19,   6,     1,  15,  30,     0},
-    {EFFECT_BOLT_FIRE,          20,   7,     1,  17,  30,     0},
-    {EFFECT_TELEPORT_AWAY,      20,   5,     1,  15,   0,     0},
-    {EFFECT_CHARM_MONSTER,      25,   8,     2,  15,  40,     0},
-    {EFFECT_BALL_COLD,          26,   8,     1,  15,  40,     0},
-    {EFFECT_BALL_ELEC,          28,   8,     1,  15,  40,     0},
-    {EFFECT_BALL_ACID,          29,   9,     1,  15,  40,     0},
-    {EFFECT_BALL_FIRE,          30,  10,     1,  15,  40,     0},
-    {EFFECT_BOLT_WATER,         30,  10,     1,  20,  60,     0},
-    {EFFECT_BOLT_ICE,           32,  11,     1,  25,  65,     0},
-    {EFFECT_DRAIN_LIFE,         40,  12,     1,  25,  70,     0},
-    {EFFECT_ARROW,              45,  13,     1,  25,  70,     0},
-    {EFFECT_BREATHE_COLD,       50,  15,     2,  30,  70,   180},
-    {EFFECT_BREATHE_ACID,       50,  17,     2,  30,  75,   190},
-    {EFFECT_BREATHE_FIRE,       50,  20,     2,  30,  80,   200},
-    {EFFECT_BEAM_GRAVITY,       55,  22,     2,  35,   0,     0},
-    {EFFECT_BALL_WATER,         60,  25,     2,  40,   0,     0},
-    {EFFECT_BALL_DISINTEGRATE,  60,  25,     2,  40,   0,     0},
-    {EFFECT_ROCKET,             80,  30,     4,  60,   0,     0},
-    {EFFECT_WALL_BUILDING,      90,  50,    32,  90,   0,     0},
+    /*                            Lvl Cost Rarity  Min  Max  Extra */
+    {EFFECT_BOLT_MISSILE,           1,   1,     1,   0,  15,     0},
+    {EFFECT_HEAL_MONSTER,           2,   1,     1,   0,  20,     0},
+    {EFFECT_BEAM_LITE_WEAK,         2,   2,     1,   0,  15,     0},
+    {EFFECT_BALL_POIS,              5,   3,     1,   0,  17,     0},
+    {EFFECT_SLEEP_MONSTER,          5,   3,     1,   0,  25,     0},
+    {EFFECT_SLOW_MONSTER,           5,   3,     1,   0,  25,     0},
+    {EFFECT_CONFUSE_MONSTER,        5,   3,     1,   0,  25,     0},
+    {EFFECT_SCARE_MONSTER,         10,   3,     1,   0,  25,     0},
+    {EFFECT_STONE_TO_MUD,          10,   4,     1,   0,   0,     0},
+    {EFFECT_POLYMORPH,             15,   4,     1,   0,  30,     0},
+    {EFFECT_CLONE_MONSTER,         15,   4,     1,   0,  30,     0},
+    {EFFECT_BOLT_COLD,             15,   5,     1,  12,  30,     0},
+    {EFFECT_BOLT_ELEC,             17,   5,     1,  13,  30,     0},
+    {EFFECT_BOLT_ACID,             19,   6,     1,  15,  30,     0},
+    {EFFECT_BOLT_FIRE,             20,   7,     1,  17,  30,     0},
+    {EFFECT_HASTE_MONSTER,         20,   5,     1,  15,  40,     0},
+    {EFFECT_TELEPORT_AWAY,         20,   5,     1,  15,   0,     0},
+    {EFFECT_DESTROY_TRAPS,         20,   6,     1,  15,   0,     0},
+    {EFFECT_CHARM_MONSTER,         25,   8,     2,  15,  40,     0},
+    {EFFECT_BALL_COLD,             26,   8,     1,  15,  40,     0},
+    {EFFECT_BALL_ELEC,             28,   8,     1,  15,  40,     0},
+    {EFFECT_BALL_ACID,             29,   9,     1,  15,  40,     0},
+    {EFFECT_BALL_FIRE,             30,  10,     1,  15,  40,     0},
+    {EFFECT_BOLT_WATER,            30,  10,     1,  20,  60,     0},
+    {EFFECT_BOLT_ICE,              32,  11,     1,  25,  65,     0},
+    {EFFECT_BOLT_PLASMA,           35,  12,     1,  25,  70,     0},
+    {EFFECT_DRAIN_LIFE,            40,  12,     1,  25,  70,     0},
+    {EFFECT_ARROW,                 45,  13,     1,  25,  70,     0},
+    {EFFECT_BALL_NEXUS,            47,  14,     1,  27,   0,     0},
+    {EFFECT_BREATHE_COLD,          50,  15,     2,  30,  70,   180},
+    {EFFECT_BREATHE_FIRE,          50,  17,     2,  30,  75,   190},
+    {EFFECT_BREATHE_ONE_MULTIHUED, 55,  20,     2,  35,   0,   200},
+    {EFFECT_BEAM_GRAVITY,          55,  22,     2,  35,   0,     0},
+    {EFFECT_METEOR,                55,  23,     2,  40,   0,     0},
+    {EFFECT_GENOCIDE_ONE,          60,  24,     4,  40,   0,     0},
+    {EFFECT_BALL_WATER,            60,  25,     2,  40,   0,     0},
+    {EFFECT_BALL_DISINTEGRATE,     60,  25,     3,  40,   0,     0},
+    {EFFECT_ROCKET,                80,  30,     5,  60,   0,     0},
+    {EFFECT_WALL_BUILDING,         90,  50,   255,  90,   0,     0},
     {0, 0, 0, 0, 0}
 };
 
-/*
- * EFFECT_METEOR => Striking
- * EFFECT_BOLT_GENOCIDE => Annihilation
- * EFFECT_BOLT_PLASMA
- * Nexus Ball
- * Wall Building
- * The Wand of Mandor => Logrus (BALL_CHAOS)
- *
-    #define SV_WAND_HEAL_MONSTER             0
-    #define SV_WAND_HASTE_MONSTER            1
-    #define SV_WAND_CLONE_MONSTER            2
-    #define SV_WAND_DISARMING                4
-    #define SV_WAND_TRAP_DOOR_DEST           5
-    #define SV_WAND_SLEEP_MONSTER            8
-    #define SV_WAND_SLOW_MONSTER             9
-    #define SV_WAND_CONFUSE_MONSTER         10
-    #define SV_WAND_FEAR_MONSTER            11
-    #define SV_WAND_POLYMORPH               13
-    #define SV_WAND_WONDER                  24
-    #define SV_WAND_DRAGON_BREATH           28
-    #define SV_WAND_STRIKING                30
-    #define SV_WAND_GENOCIDE                31
-
- */
 static _device_effect_info_t _rod_effect_info[] =
 {
     /*                      Lvl Cost Rarity   Min Max  Extra */
@@ -3301,8 +2975,8 @@ static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr tabl
         if (!table[i].type) break;
         if (!table[i].rarity) continue;
         if (table[i].level > device_level(o_ptr)) continue;
-        if (table[i].min_level > object_level) continue;
-        if (table[i].max_level && table[i].max_level < object_level) continue;
+        if (table[i].min_depth > object_level) continue;
+        if (table[i].max_depth && table[i].max_depth < object_level) continue;
 
         tot += MAX(255 / table[i].rarity, 1);
     }
@@ -3315,8 +2989,8 @@ static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr tabl
         if (!table[i].type) break;
         if (!table[i].rarity) continue;
         if (table[i].level > device_level(o_ptr)) continue;
-        if (table[i].min_level > object_level) continue;
-        if (table[i].max_level && table[i].max_level < object_level) continue;
+        if (table[i].min_depth > object_level) continue;
+        if (table[i].max_depth && table[i].max_depth < object_level) continue;
 
         n -= MAX(255 / table[i].rarity, 1);
         if (n <= 0)
@@ -3443,7 +3117,7 @@ int device_value(object_type *o_ptr)
 
     /* TODO: Egos and artifacts */
 
-    return result;
+    return MAX(1, result);
 }
 
 
@@ -3708,7 +3382,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_GENOCIDE:
     {
-        int power = _extra(effect, 300);
+        int power = _extra(effect, 100 + effect->power * 3);
         if (name) return "Genocide";
         if (desc) return "It eliminates an entire class of monster, exhausting you. Powerful or unique monsters may resist.";
         if (info) return format("Power %d", _BOOST(power));
@@ -3722,7 +3396,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_MASS_GENOCIDE:
     {
-        int power = _extra(effect, 300);
+        int power = _extra(effect, 100 + effect->power * 3);
         if (name) return "Mass Genocide";
         if (desc) return "It eliminates all nearby monsters, exhausting you. Powerful or unique monsters may be able to resist.";
         if (info) return format("Power %d", _BOOST(power));
@@ -3969,7 +3643,21 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             device_noticed = TRUE;
         }
         break;
-
+    case EFFECT_GENOCIDE_ONE:
+    {
+        int power = _extra(effect, 50 + effect->power * 3);
+        if (name) return "Annihilation";
+        if (desc) return "It removes a monster from current dungeon level unless resisted when you use it.";
+        if (info) return format("Power %d", _BOOST(power));
+        if (value) return format("%d", power*50);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            fire_ball_hide(GF_GENOCIDE, dir, _BOOST(power), 0);
+            device_noticed = TRUE;
+        }
+        break;
+    }
     /* Timed Buffs */
     case EFFECT_STONE_SKIN:
     {
@@ -5106,11 +4794,27 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (name) return "Ice Bolt";
         if (desc) return "It fires a bolt of ice.";
         if (info) return info_damage(_BOOST(dd), ds, 0);
-        if (value) return format("%d", 150*_extra(effect, 10));
+        if (value) return format("%d", 150*_extra(effect, 25));
         if (cast)
         {
             if (device_known && !get_aim_dir(&dir)) return NULL;
             fire_bolt(GF_ICE, dir, _BOOST(damroll(dd, ds)));
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_BOLT_PLASMA:
+    {
+        int dd = _extra(effect, 5 + effect->power / 4);
+        int ds = 15;
+        if (name) return "Plasma Bolt";
+        if (desc) return "It fires a bolt of plasma.";
+        if (info) return info_damage(_BOOST(dd), ds, 0);
+        if (value) return format("%d", 150*_extra(effect, 25));
+        if (cast)
+        {
+            if (device_known && !get_aim_dir(&dir)) return NULL;
+            fire_bolt(GF_PLASMA, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -5444,13 +5148,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power*4/5 + p_ptr->chp/3);
         if (name) return "Breathe Acid";
-        if (desc) return "It allows you to breathe acid.";
+        if (desc) return "It breathes acid.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 50*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_ACID, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5460,13 +5163,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power*2/5 + p_ptr->chp/3);
         if (name) return "Breathe Lightning";
-        if (desc) return "It allows you to breathe lightning.";
+        if (desc) return "It breathes lightning.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 50*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_ELEC, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5475,14 +5177,13 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_BREATHE_FIRE:
     {
         int dam = _extra(effect, effect->power + p_ptr->chp/3);
-        if (name) return "Breathe Fire";
-        if (desc) return "It allows you to breathe fire.";
+        if (name) return "Dragon's Flame";
+        if (desc) return "It breathes fire.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 50*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_FIRE, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5491,14 +5192,13 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_BREATHE_COLD:
     {
         int dam = _extra(effect, effect->power/2 + p_ptr->chp/3);
-        if (name) return "Breathe Frost";
-        if (desc) return "It allows you to breathe frost.";
+        if (name) return "Dragon's Frost";
+        if (desc) return "It breathes frost.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 50*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_COLD, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5508,13 +5208,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power*3/5 + p_ptr->chp/3);
         if (name) return "Breathe Poison";
-        if (desc) return "It allows you to breathe poison.";
+        if (desc) return "It breathes poison.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 50*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_POIS, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5524,13 +5223,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power/2 + p_ptr->chp/5);
         if (name) return "Breathe Light";
-        if (desc) return "It allows you to breathe light.";
+        if (desc) return "It breathes light.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_LITE, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5540,13 +5238,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power/2 + p_ptr->chp/5);
         if (name) return "Breathe Darkness";
-        if (desc) return "It allows you to breathe darkness.";
+        if (desc) return "It breathes darkness.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_DARK, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5556,13 +5253,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power/2 + p_ptr->chp/5);
         if (name) return "Breathe Confusion";
-        if (desc) return "It allows you to breathe confusion.";
+        if (desc) return "It breathes confusion.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_CONFUSION, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5572,13 +5268,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power + p_ptr->chp/3);
         if (name) return "Breathe Nether";
-        if (desc) return "It allows you to breathe nether.";
+        if (desc) return "It breathes nether.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_NETHER, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5588,13 +5283,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power/2 + p_ptr->chp/5);
         if (name) return "Breathe Nexus";
-        if (desc) return "It allows you to breathe nexus.";
+        if (desc) return "It breathes nexus.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_NEXUS, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5604,13 +5298,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power/2 + p_ptr->chp/5);
         if (name) return "Breathe Sound";
-        if (desc) return "It allows you to breathe sound.";
+        if (desc) return "It breathes sound.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_SOUND, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5620,13 +5313,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power + p_ptr->chp/3);
         if (name) return "Breathe Shards";
-        if (desc) return "It allows you to breathe shards.";
+        if (desc) return "It breathes shards.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 70*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_SHARDS, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5636,13 +5328,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power + p_ptr->chp/4);
         if (name) return "Breathe Chaos";
-        if (desc) return "It allows you to breathe chaos.";
+        if (desc) return "It breathes chaos.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 70*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_CHAOS, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5652,13 +5343,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power + p_ptr->chp/4);
         if (name) return "Breathe Disenchantment";
-        if (desc) return "It allows you to breathe disenchantment.";
+        if (desc) return "It breathes disenchantment.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 70*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_DISENCHANT, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5668,13 +5358,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power/3 + p_ptr->chp/6);
         if (name) return "Breathe Time";
-        if (desc) return "It allows you to breathe time.";
+        if (desc) return "It breathes time.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 70*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_TIME, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5683,8 +5372,8 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_BREATHE_ONE_MULTIHUED:
     {
         int dam = _extra(effect, p_ptr->chp/3);
-        if (name) return "Breathe";
-        if (desc) return "It allows you to breathe one of acid, lightning, fire, frost or poison.";
+        if (name) return "Dragon's Breath";
+        if (desc) return "It breathes acid, lightning, fire, frost or poison.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 50*_extra(effect, 100));
         if (cast)
@@ -5699,8 +5388,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             int which = randint0(5);
 
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
-            msg_format("You breathe %s.", _choices[which].desc);
+            msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5710,7 +5398,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, p_ptr->chp/4);
         if (name) return "Breathe";
-        if (desc) return "It allows you to breathe one of chaos or disenchantment.";
+        if (desc) return "It breathes chaos or disenchantment.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
@@ -5722,8 +5410,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             int which = randint0(2);
 
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
-            msg_format("You breathe %s.", _choices[which].desc);
+            msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5733,7 +5420,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, p_ptr->chp/4);
         if (name) return "Breathe";
-        if (desc) return "It allows you to breathe one of sound or shards.";
+        if (desc) return "It breathes sound or shards.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
@@ -5745,8 +5432,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             int which = randint0(2);
 
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
-            msg_format("You breathe %s.", _choices[which].desc);
+            msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5756,7 +5442,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, p_ptr->chp/4);
         if (name) return "Breathe";
-        if (desc) return "It allows you to breathe one of sound, shards, chaos or disenchantment.";
+        if (desc) return "It breathes sound, shards, chaos or disenchantment.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
@@ -5770,8 +5456,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             int which = randint0(4);
 
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
-            msg_format("You breathe %s.", _choices[which].desc);
+            msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5781,7 +5466,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, p_ptr->chp/5);
         if (name) return "Breathe";
-        if (desc) return "It allows you to breathe one of light or darkness.";
+        if (desc) return "It breathes light or darkness.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 60*_extra(effect, 100));
         if (cast)
@@ -5793,8 +5478,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             int which = randint0(2);
 
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
-            msg_format("You breathe %s.", _choices[which].desc);
+            msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5804,13 +5488,12 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, p_ptr->chp/3);
         if (name) return "Breathe Elements";
-        if (desc) return "It allows you to breathe the elements.";
+        if (desc) return "It breathes the elements.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 100*_extra(effect, 100));
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            stop_mouth();
             fire_ball(GF_MISSILE, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5978,18 +5661,33 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         }
         break;
     }
-
     case EFFECT_ROCKET:
     {
         int dam = _extra(effect, 250 + effect->power*3/2);
         if (name) return "Rocket";
         if (desc) return "It fires a rocket.";
         if (info) return info_damage(0, 0, _BOOST(dam));
-        if (value) return format("%d", 40*_extra(effect, 250));
+        if (value) return format("%d", 60*dam);
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
             fire_rocket(GF_ROCKET, dir, _BOOST(dam), 2);
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_METEOR:
+    {
+        int dd = _extra(effect, 15 + effect->power/5);
+        int ds = 13;
+        if (name) return "Meteor";
+        if (desc) return "It fires a meteor when you use it.";
+        if (info) return info_damage(_BOOST(dd), ds, 0);
+        if (value) return format("%d", 200*_extra(effect, 30));
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            fire_bolt(GF_METEOR, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -6235,6 +5933,106 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             if (!get_aim_dir(&dir)) return NULL;
             fire_beam(GF_STONE_WALL, dir, 0);
             device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_HEAL_MONSTER:
+        if (name) return "Heal Monster";
+        if (desc) return "It heals a monster when you use it.";
+        if (value) return format("%d", 5);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (heal_monster(dir, _BOOST(damroll(10, 10))))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_HASTE_MONSTER:
+        if (name) return "Haste Monster";
+        if (desc) return "It hastes a monster when you use it.";
+        if (value) return format("%d", 15);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (speed_monster(dir))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_CLONE_MONSTER:
+        if (name) return "Clone Monster";
+        if (desc) return "It clones a non-unique monster when you use it.";
+        if (value) return format("%d", 10);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (clone_monster(dir))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_SLEEP_MONSTER:
+    {
+        int power = _extra(effect, 10 + effect->power);
+        if (name) return "Sleep Monster";
+        if (desc) return "It puts a monster to sleep when you use it.";
+        if (info) return format("Power %d", _BOOST(power));
+        if (value) return format("%d", 500);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (sleep_monster(dir, _BOOST(power)))
+                device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_SLOW_MONSTER:
+        if (name) return "Slow Monster";
+        if (desc) return "It slows a monster down when you use it.";
+        if (value) return format("%d", 500);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (slow_monster(dir))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_CONFUSE_MONSTER:
+    {
+        int power = _extra(effect, 10 + effect->power);
+        if (name) return "Confuse Monster";
+        if (desc) return "It confuses a monster when you use it.";
+        if (info) return format("Power %d", _BOOST(power));
+        if (value) return format("%d", 500);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (confuse_monster(dir, _BOOST(power)))
+                device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_SCARE_MONSTER:
+    {
+        int power = _extra(effect, 10 + effect->power);
+        if (name) return "Scare Monster";
+        if (desc) return "It scares a monster when you use it.";
+        if (info) return format("Power %d", _BOOST(power));
+        if (value) return format("%d", 500);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (fear_monster(dir, _BOOST(power)))
+                device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_POLYMORPH:
+        if (name) return "Polymorph";
+        if (desc) return "It changes a monster into another when you use it.";
+        if (value) return format("%d", 250);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (poly_monster(dir))
+                device_noticed = TRUE;
         }
         break;
 
