@@ -3039,16 +3039,22 @@ void do_cmd_debug(void)
             object_type forge = {0};
             int fail;
 
-            object_prep(&forge, 269);
-            apply_magic(&forge, dun_level, 0);
+            object_prep(&forge, 270);
+            if (!apply_magic(&forge, dun_level, AM_GOOD)) continue;
+
+            /*if (forge.activation.type != EFFECT_HEAL_CURING) continue;*/
 
             identify_item(&forge);
             forge.ident |= (IDENT_MENTAL);
 
             object_desc(buf, &forge, 0);
             fail = device_calc_fail_rate(&forge);
-            msg_format("%d) %s %d %d.%d%%",
-                i, buf, object_value(&forge), fail/10, fail%10);
+            msg_format("%d) %s $:%d F:%d.%d%% L:%d I:%s",
+                i, buf, device_value(&forge),
+                fail/10, fail%10,
+                device_level(&forge),
+                do_device(&forge, SPELL_INFO, 0)
+            );
             if (i == 1)
                 drop_near(&forge, -1, py, px);
         }

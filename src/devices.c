@@ -36,27 +36,6 @@ static bool ang_sort_comp_pet(vptr u, vptr v, int a, int b)
    but not my preferred approach ... */
 
 /* Fail Rates ... Scaled by 10 (95.2% returned as 952) */
-static int _rod_calc_fail_rate(object_type *o_ptr)
-{
-    int lev, chance, fail;
-
-    lev = k_info[o_ptr->k_idx].level;
-    chance = p_ptr->skills.dev;
-    if (p_ptr->confused) chance = chance / 2;
-    if (p_ptr->stun) chance = chance * 2 / 3;
-
-    fail = lev+5;
-    if (chance > fail) fail -= (chance - fail)*2;
-    else chance -= (fail - chance)*2;
-    if (fail < USE_DEVICE) fail = USE_DEVICE;
-    if (chance < USE_DEVICE) chance = USE_DEVICE;
-
-    if (chance > fail)
-        return fail*1000/(chance*2);
-
-    return 1000 - chance*1000/(fail*2);
-}
-
 int  effect_calc_fail_rate(effect_t *effect)
 {
     int chance, fail;
@@ -87,7 +66,6 @@ int device_calc_fail_rate(object_type *o_ptr)
         return effect_calc_fail_rate(&o_ptr->activation);
 
     if (p_ptr->pclass == CLASS_BERSERKER) return 1000;
-    if (o_ptr->tval == TV_ROD) return _rod_calc_fail_rate(o_ptr);
 
     lev = k_info[o_ptr->k_idx].level;
     if (lev > 50) lev = 50 + (lev - 50)/2;
@@ -243,14 +221,6 @@ static int _rod_power(int val)
     val += val * device_extra_power / 100;
     if (devicemaster_is_(DEVICEMASTER_RODS))
         return device_power_aux(val, p_ptr->device_power + p_ptr->lev/5);
-    return _device_power_hack(val);
-}
-
-static int _staff_power(int val)
-{
-    val += val * device_extra_power / 100;
-    if (devicemaster_is_(DEVICEMASTER_STAVES))
-        return device_power_aux(val, p_ptr->device_power + p_ptr->lev/10);
     return _device_power_hack(val);
 }
 
@@ -1702,346 +1672,6 @@ static cptr _do_scroll(int sval, int mode)
     return "";
 }
 
-static cptr _do_staff(int sval, int mode)
-{
-    bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
-    bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
-    bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
-
-    switch (sval)
-    {
-    case SV_STAFF_DARKNESS:
-        if (desc) return "It darkens nearby area or current room and blinds you when you use it.";
-        if (cast)
-        {
-            if (!res_save_default(RES_BLIND) && !res_save_default(RES_DARK))
-            {
-                if (set_blind(p_ptr->blind + 3 + randint1(5), FALSE)) device_noticed = TRUE;
-            }
-            if (unlite_area(10, 3)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_SLOWNESS:
-        if (desc) return "It slows you down temporarily when you use it.";
-        if (cast)
-        {
-            if (set_slow(p_ptr->slow + randint1(30) + 15, FALSE)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_HASTE_MONSTERS:
-        if (desc) return "It hastes all monsters in sight when you use it.";
-        if (cast)
-        {
-            if (speed_monsters()) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_SUMMONING:
-        if (desc) return "It summons several monsters as enemies when you use it.";
-        if (cast)
-        {
-            int i;
-            int num = randint1(4);
-            for (i = 0; i < num; i++)
-            {
-                if (summon_specific(0, py, px, dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET)))
-                    device_noticed = TRUE;
-            }
-        }
-        break;
-    case SV_STAFF_TELEPORTATION:
-        if (desc) return "It teleports you a long distance when you use it.";
-        if (cast)
-        {
-            if (mut_present(MUT_ASTRAL_GUIDE))
-                energy_use = energy_use / 3;
-            teleport_player(100, 0L);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_IDENTIFY:
-        if (desc) return "It identifies an item when you use it.";
-        if (cast)
-        {
-            if (!_do_identify()) return NULL;
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_REMOVE_CURSE:
-        if (desc) return "It removes normal curses from equipped items when you use it.";
-        if (cast && remove_curse())
-        {
-            if (magic_eater_hack)
-                msg_print("You feel as if someone is watching over you.");
-            else if (!p_ptr->blind)
-                msg_print("The staff glows blue for a moment.");
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_STARLITE:
-        if (desc) return "It fires a line of light directed randomly for multiple times when you use it.";
-        if (cast)
-        {
-            int num = damroll(5, 3);
-            int y = 0, x = 0, k;
-            int attempts;
-
-            if (!p_ptr->blind && !magic_eater_hack)
-                msg_print("The end of the staff glows brightly...");
-
-            for (k = 0; k < num; k++)
-            {
-                attempts = 1000;
-                while (attempts--)
-                {
-                    scatter(&y, &x, py, px, 4, 0);
-                    if (!cave_have_flag_bold(y, x, FF_PROJECT)) continue;
-                    if (!player_bold(y, x)) break;
-                }
-                project(0, 0, y, x, _staff_power(damroll(6 + p_ptr->lev / 8, 10)), GF_LITE_WEAK,
-                          (PROJECT_BEAM | PROJECT_THRU | PROJECT_GRID | PROJECT_KILL), -1);
-            }
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_LITE:
-        if (desc) return "It lights up nearby area or the current room permanently when you use it.";
-        if (cast)
-        {
-            if (lite_area(damroll(2, 8), 2)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_MAPPING:
-        if (desc) return "It maps your vicinity when you use it.";
-        if (cast)
-        {
-            map_area(_staff_power(DETECT_RAD_MAP));
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_DETECT_GOLD:
-        if (desc) return "It detects all treasures in your vicinity when you use it.";
-        if (cast)
-        {
-            if (detect_treasure(_staff_power(DETECT_RAD_DEFAULT))) device_noticed = TRUE;
-            if (detect_objects_gold(_staff_power(DETECT_RAD_DEFAULT))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_DETECT_ITEM:
-        if (desc) return "It detects all items in your vicinity when you use it.";
-        if (cast)
-        {
-            if (detect_objects_normal(_staff_power(DETECT_RAD_DEFAULT))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_DETECT_TRAP:
-        if (desc) return "It detects all traps in your vicinity when you use it.";
-        if (cast)
-        {
-            if (detect_traps(_staff_power(DETECT_RAD_DEFAULT), device_known)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_DETECT_DOOR:
-        if (desc) return "It detects all doors and stairs in your vicinity when you use it.";
-        if (cast)
-        {
-            if (detect_doors(_staff_power(DETECT_RAD_DEFAULT))) device_noticed = TRUE;
-            if (detect_stairs(_staff_power(DETECT_RAD_DEFAULT))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_DETECT_INVIS:
-        if (desc) return "It detects all invisible monsters in your vicinity when you use it.";
-        if (cast)
-        {
-            if (detect_monsters_invis(_staff_power(DETECT_RAD_DEFAULT))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_DETECT_EVIL:
-        if (desc) return "It detects all evil monsters in your vicinity when you use it.";
-        if (cast)
-        {
-            if (detect_monsters_evil(_staff_power(DETECT_RAD_DEFAULT))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_CURE_LIGHT:
-        if (desc) return "It heals you a bit when you use it.";
-        if (info) return info_heal(6, _staff_power(8), 0);
-        if (cast)
-        {
-            if (hp_player(_staff_power(damroll(6, 8)))) device_noticed = TRUE;
-            if (set_blind(0, TRUE)) device_noticed = TRUE;
-            if (set_confused(0, TRUE)) device_noticed = TRUE;
-            if (set_cut((p_ptr->cut / 2) - 50, TRUE)) device_noticed = TRUE;
-            if (set_shero(0,TRUE)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_CURING:
-        if (desc) return "It cures blindness, poison, confusion, stunned, cuts, hallucination and berserk when you use it.";
-        if (cast)
-        {
-            if (set_blind(0, TRUE)) device_noticed = TRUE;
-            if (set_poisoned(0, TRUE)) device_noticed = TRUE;
-            if (set_confused(0, TRUE)) device_noticed = TRUE;
-            if (set_stun(0, TRUE)) device_noticed = TRUE;
-            if (set_cut(0, TRUE)) device_noticed = TRUE;
-            if (set_image(0, TRUE)) device_noticed = TRUE;
-            if (set_shero(0,TRUE)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_HEALING:
-        if (desc) return "It heals you and cures stunned, cuts and berserk when you use it.";
-        if (info) return info_heal(0, 0, _staff_power(300));
-        if (cast)
-        {
-            if (hp_player(_staff_power(300))) device_noticed = TRUE;
-            if (set_stun(0, TRUE)) device_noticed = TRUE;
-            if (set_cut(0, TRUE)) device_noticed = TRUE;
-            if (set_shero(0,TRUE)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_THE_MAGI:
-        if (desc) return "It restores mana to full, restores your intelligence and cures berserk when you use it.";
-        if (cast)
-        {
-            if (do_res_stat(A_INT)) device_noticed = TRUE;
-            if (restore_mana()) device_noticed = TRUE;
-            if (set_shero(0,TRUE)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_SLEEP_MONSTERS:
-        if (desc) return "It puts all monsters in sight to sleep when you use it.";
-        if (cast)
-        {
-            if (sleep_monsters(_staff_power(20 + p_ptr->lev))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_SLOW_MONSTERS:
-        if (desc) return "It slows all monsters in sight down when you use it.";
-        if (cast)
-        {
-            if (slow_monsters(_staff_power(p_ptr->lev*3))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_SPEED:
-        if (desc) return "It hastes you temporarily when you use it.";
-        if (info) return info_duration(_staff_power(15), _staff_power(30));
-        if (cast)
-        {
-            if (set_fast(_staff_power(randint1(30) + 15), FALSE)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_PROBING:
-        if (desc) return "It probes all monsters' alignment, HP, AC, speed, current experience and true character in sight when you use it.";
-        if (cast)
-        {
-            probing();
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_DISPEL_EVIL:
-        if (desc) return "It damages all evil monsters in sight when you use it.";
-        if (info) return info_damage(0, 0, _staff_power(100));
-        if (cast)
-        {
-            if (dispel_evil(_staff_power(100))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_POWER:
-        if (desc) return "It does damage to all monsters in sight when you use it.";
-        if (info) return info_damage(0, 0, _staff_power(150));
-        if (cast)
-        {
-            if (dispel_monsters(_staff_power(150))) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_HOLINESS:
-        if (desc) return "It does damage to all evil monsters in sight, gives temporary protection from lesser evil creature, cures poison, stunned, cuts, removes fear and heals you a bit when you use it.";
-        if (info) return info_damage(0, 0, _staff_power(150));
-        if (cast)
-        {
-            int k = 3 * p_ptr->lev;
-            if (dispel_evil(_staff_power(150))) device_noticed = TRUE;
-            if (set_protevil(p_ptr->protevil + randint1(25) + k, FALSE)) device_noticed = TRUE;
-            if (set_poisoned(0, TRUE)) device_noticed = TRUE;
-            if (hp_player(_staff_power(50))) device_noticed = TRUE;
-            if (set_stun(0, TRUE)) device_noticed = TRUE;
-            if (set_cut(0, TRUE)) device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_GENOCIDE:
-        if (desc) return "It eliminates an entire class of monster, exhausting you. Powerful or unique monsters may resist.";
-        if (cast)
-        {
-            symbol_genocide((magic_eater_hack ? p_ptr->lev + 50 : _staff_power(200)), TRUE);
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_EARTHQUAKES:
-        if (desc) return "It causes a earthquake nearby you when you use it.";
-        if (cast)
-        {
-            if (!earthquake(py, px, 10))
-                msg_print("The dungeon trembles.");
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_DESTRUCTION:
-        if (desc) return "It destroys everything nearby you when you use it.";
-        if (info) return format("Power %d", _staff_power(4 * p_ptr->lev));
-        if (cast)
-        {
-            if (destroy_area(py, px, 13 + randint0(5), _staff_power(4 * p_ptr->lev)))
-                device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_ANIMATE_DEAD:
-        if (desc) return "It raises corpses and skeletons nearby you from dead and makes them your pet when you use it.";
-        if (cast)
-        {
-            if (animate_dead(0, py, px))
-                device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_MSTORM:
-        if (desc) return "It produces a huge mana ball centered on you when you use it. If you are not magically inclined, you take damage as well.";
-        if (info) return info_damage(1, _staff_power(200), _staff_power(350));
-        if (cast)
-        {
-            msg_print("Mighty magics rend your enemies!");
-            project(0, 5, py, px,
-                _staff_power((randint1(200) + 350) * 2), 
-                GF_MANA, PROJECT_KILL | PROJECT_ITEM | PROJECT_GRID, -1);
-            if ( p_ptr->pclass != CLASS_MAGE
-              && p_ptr->pclass != CLASS_HIGH_MAGE 
-              && p_ptr->pclass != CLASS_SORCERER 
-              && p_ptr->pclass != CLASS_DEVICEMASTER
-              && p_ptr->pclass != CLASS_MAGIC_EATER 
-              && p_ptr->pclass != CLASS_BLUE_MAGE 
-              && p_ptr->pclass != CLASS_BLOOD_MAGE )
-            {
-                take_hit(DAMAGE_NOESCAPE, 50, "unleashing magics too mighty to control", -1);
-            }
-            device_noticed = TRUE;
-        }
-        break;
-    case SV_STAFF_NOTHING:
-        if (desc) return "It does nothing when you use it.";
-        if (cast)
-        {
-            msg_print("Nothing happens.");
-            if ( prace_is_(RACE_SKELETON) 
-              || prace_is_(RACE_GOLEM) 
-              || prace_is_(RACE_ZOMBIE) 
-              || prace_is_(RACE_SPECTRE)
-              || elemental_is_(ELEMENTAL_AIR) )
-            {
-                msg_print("What a waste.  It's your food!");
-            }
-        }
-        break;
-    }    
-    return "";
-}
-
 static cptr _do_rod(int sval, int mode)
 {
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -2505,6 +2135,10 @@ static _effect_info_t _effect_info[] =
     {"DETECT_MONSTERS", EFFECT_DETECT_MONSTERS,      5,  20,  1, BIAS_MAGE | BIAS_ARCHER},
     {"DETECT_OBJECTS",  EFFECT_DETECT_OBJECTS,       8,  25,  1, BIAS_ROGUE},
     {"DETECT_ALL",      EFFECT_DETECT_ALL,          25,  50,  3, BIAS_ROGUE},
+    {"DETECT_GOLD",     EFFECT_DETECT_GOLD,          5,  20,  1, BIAS_ROGUE},
+    {"DETECT_INVISIBLE",EFFECT_DETECT_INVISIBLE,     5,  20,  1, 0},
+    {"DETECT_DOOR_STAIRS",EFFECT_DETECT_DOOR_STAIRS,10,  25,  1, 0},
+    {"DETECT_EVIL",     EFFECT_DETECT_EVIL,         20,  30,  1, BIAS_PRIESTLY},
 
     /* Utility:                                     Lv    T   R  Bias */
     {"PHASE_DOOR",      EFFECT_PHASE_DOOR,           8,  20,  1, BIAS_MAGE | BIAS_ARCHER},
@@ -2692,6 +2326,9 @@ static _effect_info_t _effect_info[] =
     {"ARROW",           EFFECT_ARROW,               30, 100,  2, BIAS_RANGER | BIAS_ARCHER},
     {"WRATH_OF_GOD",    EFFECT_WRATH_OF_GOD,        80, 250, 32, BIAS_LAW},
     {"METEOR",          EFFECT_METEOR,              55, 150,  8, 0},
+    {"HOLINESS",        EFFECT_HOLINESS,            50, 250,  8, BIAS_PRIESTLY | BIAS_LAW},
+    {"STARBURST",       EFFECT_STARBURST,           70, 500, 32, BIAS_LAW},
+    {"DARKNESS_STORM",  EFFECT_DARKNESS_STORM,      70, 500, 32, BIAS_NECROMANTIC},
 
     /* Misc                                         Lv    T   R  Bias */
     {"POLY_SELF",       EFFECT_POLY_SELF,           20, 500,  1, BIAS_CHAOS},
@@ -2702,18 +2339,26 @@ static _effect_info_t _effect_info[] =
     {"STASIS_MONSTERS", EFFECT_STASIS_MONSTERS,     50, 250,  8, BIAS_MAGE},
     {"CONFUSE_MONSTERS",EFFECT_CONFUSE_MONSTERS,    25, 100,  1, BIAS_CHAOS},
     {"FISHING",         EFFECT_FISHING,             10,   0,  0, 0},
-    {"AGGRAVATE",       EFFECT_AGGRAVATE,           10, 100,  1, BIAS_DEMON},
     {"PIERCING_SHOT",   EFFECT_PIERCING_SHOT,       30, 100,  0, BIAS_ARCHER},
     {"CHARGE",          EFFECT_CHARGE,              15, 100,  0, 0},
     {"WALL_BUILDING",   EFFECT_WALL_BUILDING,       90, 750,  0, 0},
-    {"HEAL_MONSTER",    EFFECT_HEAL_MONSTER,         2,  50,  0, 0},
-    {"HASTE_MONSTER",   EFFECT_HASTE_MONSTER,       20, 100,  0, 0},
-    {"CLONE_MONSTER",   EFFECT_CLONE_MONSTER,       15, 100,  0, 0},
     {"SLEEP_MONSTER",   EFFECT_SLEEP_MONSTER,        5, 100,  1, 0},
     {"SLOW_MONSTER",    EFFECT_SLOW_MONSTER,         5, 100,  1, 0},
     {"CONFUSE_MONSTER", EFFECT_CONFUSE_MONSTER,      5, 100,  1, 0},
     {"SCARE_MONSTER",   EFFECT_SCARE_MONSTER,       10, 100,  1, 0},
     {"POLYMORPH",       EFFECT_POLYMORPH,           15, 100,  2, BIAS_CHAOS},
+    {"STARLITE",        EFFECT_STARLITE,            20, 100,  2, 0},
+
+    /* Bad Effects                                  Lv    T   R  Bias */
+    {"AGGRAVATE",       EFFECT_AGGRAVATE,           10, 100,  1, BIAS_DEMON},
+    {"HEAL_MONSTER",    EFFECT_HEAL_MONSTER,         2,  50,  0, 0},
+    {"HASTE_MONSTER",   EFFECT_HASTE_MONSTER,       20, 100,  0, 0},
+    {"HASTE_MONSTERS",  EFFECT_HASTE_MONSTERS,      10,  50,  0, 0},
+    {"CLONE_MONSTER",   EFFECT_CLONE_MONSTER,       15, 100,  0, 0},
+    {"DARKNESS",        EFFECT_DARKNESS,             5,  10,  0, 0},
+    {"SUMMON_ANGRY_MONSTERS",
+                        EFFECT_SUMMON_ANGRY_MONSTERS,10,200,  0, 0},
+    {"SLOWNESS",        EFFECT_SLOWNESS,             5,  10,  0, 0},
 
     /* Specific Artifacts                           Lv    T   R  Bias */
     {"JEWEL",           EFFECT_JEWEL,                0,   0,  0, 0},
@@ -2886,65 +2531,118 @@ struct _device_effect_info_s
     int  min_depth;
     int  max_depth;
     int  extra;
+    int  flags;
 };
+
+#define _DROP_GOOD       0x00000001
+#define _DROP_GREAT      0x00000002
+#define _NO_DESTROY      0x00000004
+#define _STOCK_TOWN      0x00000008
 
 typedef struct _device_effect_info_s  _device_effect_info_t;
 typedef struct _device_effect_info_s *_device_effect_info_ptr;
 
 static _device_effect_info_t _wand_effect_info[] =
 {
-    /*                            Lvl Cost Rarity  Min  Max  Extra */
-    {EFFECT_BOLT_MISSILE,           1,   1,     1,   0,  15,     0},
-    {EFFECT_HEAL_MONSTER,           2,   1,     1,   0,  20,     0},
-    {EFFECT_BEAM_LITE_WEAK,         2,   2,     1,   0,  15,     0},
-    {EFFECT_BALL_POIS,              5,   3,     1,   0,  17,     0},
-    {EFFECT_SLEEP_MONSTER,          5,   3,     1,   0,  25,     0},
-    {EFFECT_SLOW_MONSTER,           5,   3,     1,   0,  25,     0},
-    {EFFECT_CONFUSE_MONSTER,        5,   3,     1,   0,  25,     0},
-    {EFFECT_SCARE_MONSTER,         10,   3,     1,   0,  25,     0},
-    {EFFECT_STONE_TO_MUD,          10,   4,     1,   0,   0,     0},
-    {EFFECT_POLYMORPH,             15,   4,     1,   0,  30,     0},
-    {EFFECT_CLONE_MONSTER,         15,   4,     1,   0,  30,     0},
-    {EFFECT_BOLT_COLD,             15,   5,     1,  12,  30,     0},
-    {EFFECT_BOLT_ELEC,             17,   5,     1,  13,  30,     0},
-    {EFFECT_BOLT_ACID,             19,   6,     1,  15,  30,     0},
-    {EFFECT_BOLT_FIRE,             20,   7,     1,  17,  30,     0},
-    {EFFECT_HASTE_MONSTER,         20,   5,     1,  15,  40,     0},
-    {EFFECT_TELEPORT_AWAY,         20,   5,     1,  15,   0,     0},
-    {EFFECT_DESTROY_TRAPS,         20,   6,     1,  15,   0,     0},
-    {EFFECT_CHARM_MONSTER,         25,   8,     2,  15,  40,     0},
-    {EFFECT_BALL_COLD,             26,   8,     1,  15,  40,     0},
-    {EFFECT_BALL_ELEC,             28,   8,     1,  15,  40,     0},
-    {EFFECT_BALL_ACID,             29,   9,     1,  15,  40,     0},
-    {EFFECT_BALL_FIRE,             30,  10,     1,  15,  40,     0},
-    {EFFECT_BOLT_WATER,            30,  10,     1,  20,  60,     0},
-    {EFFECT_BOLT_ICE,              32,  11,     1,  25,  65,     0},
-    {EFFECT_BOLT_PLASMA,           35,  12,     1,  25,  70,     0},
-    {EFFECT_DRAIN_LIFE,            40,  12,     1,  25,  70,     0},
-    {EFFECT_ARROW,                 45,  13,     1,  25,  70,     0},
-    {EFFECT_BALL_NEXUS,            47,  14,     1,  27,   0,     0},
-    {EFFECT_BREATHE_COLD,          50,  15,     2,  30,  70,   180},
-    {EFFECT_BREATHE_FIRE,          50,  17,     2,  30,  75,   190},
-    {EFFECT_BREATHE_ONE_MULTIHUED, 55,  20,     2,  35,   0,   200},
-    {EFFECT_BEAM_GRAVITY,          55,  22,     2,  35,   0,     0},
-    {EFFECT_METEOR,                55,  23,     2,  40,   0,     0},
-    {EFFECT_GENOCIDE_ONE,          60,  24,     4,  40,   0,     0},
-    {EFFECT_BALL_WATER,            60,  25,     2,  40,   0,     0},
-    {EFFECT_BALL_DISINTEGRATE,     60,  25,     3,  40,   0,     0},
-    {EFFECT_ROCKET,                80,  30,     5,  60,   0,     0},
-    {EFFECT_WALL_BUILDING,         90,  50,   255,  90,   0,     0},
-    {0, 0, 0, 0, 0}
+    /*                            Lvl Cost Rarity  Min  Max  Extra  Flags */
+    {EFFECT_BOLT_MISSILE,           1,   1,     1,   0,  15,     0, _STOCK_TOWN},
+    {EFFECT_HEAL_MONSTER,           2,   1,     1,   0,  20,     0, 0},
+    {EFFECT_BEAM_LITE_WEAK,         2,   2,     1,   0,  15,     0, _STOCK_TOWN},
+    {EFFECT_BALL_POIS,              5,   3,     1,   0,  17,     0, _STOCK_TOWN},
+    {EFFECT_SLEEP_MONSTER,          5,   3,     1,   0,  25,     0, _STOCK_TOWN},
+    {EFFECT_SLOW_MONSTER,           5,   3,     1,   0,  25,     0, _STOCK_TOWN},
+    {EFFECT_CONFUSE_MONSTER,        5,   3,     1,   0,  25,     0, 0},
+    {EFFECT_SCARE_MONSTER,         10,   3,     1,   0,  25,     0, 0},
+    {EFFECT_STONE_TO_MUD,          10,   4,     1,   0,   0,     0, 0},
+    {EFFECT_POLYMORPH,             15,   4,     1,   0,  30,     0, 0},
+    {EFFECT_CLONE_MONSTER,         15,   4,     1,   0,  30,     0, 0},
+    {EFFECT_BOLT_COLD,             15,   5,     1,  12,  30,     0, _STOCK_TOWN},
+    {EFFECT_BOLT_ELEC,             17,   5,     1,  13,  30,     0, 0},
+    {EFFECT_BOLT_ACID,             19,   6,     1,  15,  30,     0, 0},
+    {EFFECT_BOLT_FIRE,             20,   7,     1,  17,  30,     0, 0},
+    {EFFECT_HASTE_MONSTER,         20,   5,     1,  15,  40,     0, 0},
+    {EFFECT_TELEPORT_AWAY,         20,   5,     1,  15,   0,     0, 0},
+    {EFFECT_DESTROY_TRAPS,         20,   6,     1,  15,   0,     0, 0},
+    {EFFECT_CHARM_MONSTER,         25,   8,     2,  15,  40,     0, 0},
+    {EFFECT_BALL_COLD,             26,   8,     1,  15,  40,     0, 0},
+    {EFFECT_BALL_ELEC,             28,   8,     1,  15,  40,     0, 0},
+    {EFFECT_BALL_ACID,             29,   9,     1,  15,  40,     0, 0},
+    {EFFECT_BALL_FIRE,             30,  10,     1,  15,  40,     0, 0},
+    {EFFECT_BOLT_WATER,            30,  10,     1,  20,  60,     0, 0},
+    {EFFECT_BOLT_ICE,              32,  11,     1,  25,  65,     0, 0},
+    {EFFECT_BOLT_PLASMA,           35,  12,     1,  25,  70,     0, 0},
+    {EFFECT_DRAIN_LIFE,            40,  12,     1,  25,  70,     0, 0},
+    {EFFECT_ARROW,                 45,  13,     1,  25,  70,     0, 0},
+    {EFFECT_BALL_NEXUS,            47,  14,     1,  27,   0,     0, _DROP_GOOD},
+    {EFFECT_BREATHE_COLD,          50,  15,     2,  30,  70,   180, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_BREATHE_FIRE,          50,  17,     2,  30,  75,   190, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_BREATHE_ONE_MULTIHUED, 55,  20,     2,  35,   0,   200, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_BEAM_GRAVITY,          55,  22,     2,  35,   0,     0, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_METEOR,                55,  23,     2,  40,   0,     0, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_GENOCIDE_ONE,          60,  24,     4,  40,   0,     0, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_BALL_WATER,            60,  25,     2,  40,   0,     0, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_BALL_DISINTEGRATE,     60,  25,     3,  40,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
+    {EFFECT_ROCKET,                80,  30,     5,  60,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
+    {EFFECT_WALL_BUILDING,         90,  50,   255,  90,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
+    {0, 0, 0, 0, 0, 0}
 };
 
 static _device_effect_info_t _rod_effect_info[] =
 {
-    /*                      Lvl Cost Rarity   Min Max  Extra */
-    {0, 0, 0, 0, 0}
+    /*                            Lvl Cost Rarity  Min  Max  Extra */
+    {0, 0, 0, 0, 0, 0}
 };
 
 static _device_effect_info_t _staff_effect_info[] =
 {
-    /*                      Lvl Cost Rarity   Min Max  Extra */
+    /*                            Lvl Cost Rarity  Min  Max  Extra */
+    {EFFECT_DARKNESS,               1,   1,     1,   0,  15,     0, 0},
+    {EFFECT_LITE_AREA,              1,   1,     1,   0,  30,     0, _STOCK_TOWN},
+    {EFFECT_DETECT_GOLD,            5,   3,     1,   0,  30,     0, _STOCK_TOWN},
+    {EFFECT_DETECT_OBJECTS,         5,   3,     1,   0,  30,     0, _STOCK_TOWN},
+    {EFFECT_DETECT_INVISIBLE,       5,   3,     1,   0,  30,     0, 0},
+    {EFFECT_DETECT_TRAPS,           5,   3,     1,   0,  30,     0, _STOCK_TOWN},
+    {EFFECT_DETECT_DOOR_STAIRS,     5,   3,     1,   0,  30,     0, _STOCK_TOWN},
+    {EFFECT_DETECT_EVIL,            7,   3,     1,   0,  30,     0, 0},
+    {EFFECT_HASTE_MONSTERS,        10,   3,     1,   0,  30,     0, 0},
+    {EFFECT_SUMMON_ANGRY_MONSTERS, 10,   3,     1,   0,  30,     0, 0},
+    {EFFECT_IDENTIFY,              10,   3,     1,   0,   0,     0, _STOCK_TOWN},
+    {EFFECT_SLEEP_MONSTERS,        10,   4,     1,   0,  35,     0, 0},
+    {EFFECT_SLOW_MONSTERS,         10,   4,     1,   0,  35,     0, 0},
+    {EFFECT_CONFUSE_MONSTERS,      15,   5,     1,   0,  35,     0, 0},
+    {EFFECT_TELEPORT,              20,   5,     1,   0,   0,     0, 0},
+    {EFFECT_ENLIGHTENMENT,         20,   5,     1,   0,   0,     0, _STOCK_TOWN},
+    {EFFECT_STARLITE,              20,   6,     1,  10,  50,     0, 0},
+    {EFFECT_EARTHQUAKE,            20,   6,     1,  12,  40,     0, 0},
+    {EFFECT_HEAL,                  20,   7,     2,  15,  50,    50, 0}, /* Cure Wounds for 50hp */
+    {EFFECT_CURING,                25,   7,     1,  15,   0,     0, 0}, /* Curing no longer heals */
+    {EFFECT_SUMMON_HOUNDS,         27,   8,     2,  15,  60,     0, 0},
+    {EFFECT_SUMMON_HYDRAS,         27,   8,     2,  15,  60,     0, 0},
+    {EFFECT_SUMMON_ANTS,           27,   8,     2,  15,  60,     0, 0},
+    {EFFECT_PROBING,               30,   9,     1,  20,  60,     0, 0},
+    {EFFECT_TELEPATHY,             30,  10,     4,  20,   0,     0, 0},
+    {EFFECT_SUMMON_MONSTERS,       32,  11,     2,  20,   0,     0, 0},
+    {EFFECT_ANIMATE_DEAD,          35,  12,     1,  20,  60,     0, 0},
+    {EFFECT_SLOWNESS,              40,  13,     1,  25,  60,     0, 0},
+    {EFFECT_SPEED,                 40,  13,     1,  25,   0,     0, 0},
+    {EFFECT_IDENTIFY_FULL,         40,  15,     2,  25,   0,     0, 0},
+    {EFFECT_REMOVE_CURSE,          40,  16,     1,  25,  60,     0, 0},
+    {EFFECT_DISPEL_DEMON,          50,  17,     1,  30,  80,     0, 0},
+    {EFFECT_DISPEL_UNDEAD,         50,  17,     1,  30,  80,     0, 0},
+    {EFFECT_DISPEL_LIFE,           50,  18,     1,  30,  90,     0, 0},
+    {EFFECT_DISPEL_EVIL,           50,  19,     1,  30,   0,     0, 0},
+    {EFFECT_DISPEL_MONSTERS,       50,  20,     2,  30,   0,     0, 0},
+    {EFFECT_HOLINESS,              50,  21,     2,  30,   0,     0, _DROP_GOOD},
+    {EFFECT_DESTRUCTION,           50,  21,     1,  35,   0,     0, _DROP_GOOD},
+    {EFFECT_CONFUSING_LITE,        55,  23,     2,  35,   0,     0, _DROP_GOOD},
+    {EFFECT_HEAL_CURING,           60,  25,     3,  40,   0,     0, _DROP_GOOD},
+    {EFFECT_BANISH_EVIL,           65,  27,     2,  40,   0,     0, _DROP_GOOD},
+    {EFFECT_BANISH_ALL,            65,  29,     3,  40,   0,     0, _DROP_GOOD},
+    {EFFECT_GENOCIDE,              75,  30,     5,  50,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_MANA_STORM,            85,  32,     4,  50,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
+    {EFFECT_STARBURST,             85,  32,     4,  50,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
+    {EFFECT_DARKNESS_STORM,        85,  32,     4,  50,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
+    {EFFECT_RESTORE_MANA,         100, 100,   255,  90,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {0, 0, 0, 0, 0}
 };
 
@@ -2965,7 +2663,7 @@ static int _rand_normal(int mean, int pct)
     return randnor(mean, MAX(1, mean*pct/100));
 }
 
-static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr table)
+static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr table, int level, int mode)
 {
     int i, n;
     int tot = 0;
@@ -2973,10 +2671,14 @@ static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr tabl
     for (i = 0; ; i++)
     {
         if (!table[i].type) break;
+
         if (!table[i].rarity) continue;
         if (table[i].level > device_level(o_ptr)) continue;
-        if (table[i].min_depth > object_level) continue;
-        if (table[i].max_depth && table[i].max_depth < object_level) continue;
+        if (table[i].min_depth > level) continue;
+        if (table[i].max_depth && table[i].max_depth < level) continue;
+        if ((mode & AM_GOOD) && !(table[i].flags & _DROP_GOOD)) continue;
+        if ((mode & AM_GREAT) && !(table[i].flags & _DROP_GREAT)) continue;
+        if ((mode & AM_STOCK_TOWN) && !(table[i].flags & _STOCK_TOWN)) continue;
 
         tot += MAX(255 / table[i].rarity, 1);
     }
@@ -2987,10 +2689,14 @@ static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr tabl
     for (i = 0; ; i++)
     {
         if (!table[i].type) break;
+
         if (!table[i].rarity) continue;
         if (table[i].level > device_level(o_ptr)) continue;
-        if (table[i].min_depth > object_level) continue;
-        if (table[i].max_depth && table[i].max_depth < object_level) continue;
+        if (table[i].min_depth > level) continue;
+        if (table[i].max_depth && table[i].max_depth < level) continue;
+        if ((mode & AM_GOOD) && !(table[i].flags & _DROP_GOOD)) continue;
+        if ((mode & AM_GREAT) && !(table[i].flags & _DROP_GREAT)) continue;
+        if ((mode & AM_STOCK_TOWN) && !(table[i].flags & _STOCK_TOWN)) continue;
 
         n -= MAX(255 / table[i].rarity, 1);
         if (n <= 0)
@@ -3001,7 +2707,7 @@ static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr tabl
                Difficulty is the level of the effect, and determines the fail rate of the effect.
                We scale up the difficulty a bit depending on the level of the device. */
             o_ptr->activation.power = device_level(o_ptr);
-            o_ptr->activation.difficulty = _bounds_check(_rand_normal(table[i].level, 10), 1, 100);
+            o_ptr->activation.difficulty = _bounds_check(_rand_normal(table[i].level, 10), 1, o_ptr->activation.power);
             o_ptr->activation.difficulty += (o_ptr->activation.power - o_ptr->activation.difficulty) / 3;
 
             o_ptr->activation.cost = _bounds_check(_rand_normal(table[i].cost, 10), 1, 1000);
@@ -3011,27 +2717,33 @@ static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr tabl
     }
 }
 
-void device_init(object_type *o_ptr)
+bool device_init(object_type *o_ptr, int level, int mode)
 {
     /* device_level */
-    o_ptr->xtra3 = _bounds_check(_rand_normal(object_level, 10), 1, 100);
+    o_ptr->xtra3 = _bounds_check(_rand_normal(level*85/100, 10), 1, 100);
 
     switch (o_ptr->tval)
     {
     case TV_WAND:
-        _device_pick_effect(o_ptr, _wand_effect_info);
+        _device_pick_effect(o_ptr, _wand_effect_info, level, mode);
+        if (!o_ptr->activation.type)
+            return FALSE;
         /* device_max_sp */
         o_ptr->xtra4 = _bounds_check(_rand_normal(3*o_ptr->xtra3, 15), o_ptr->activation.cost*4, 1000);
         if (o_ptr->activation.difficulty >= 50)
             add_flag(o_ptr->art_flags, TR_IGNORE_ELEC);
         break;
     case TV_ROD:
-        _device_pick_effect(o_ptr, _rod_effect_info);
+        _device_pick_effect(o_ptr, _rod_effect_info, level, mode);
+        if (!o_ptr->activation.type)
+            return FALSE;
         /* device_max_sp: rods have fewer sp but regen more quickly. */
         o_ptr->xtra4 = _bounds_check(_rand_normal(2*o_ptr->xtra3, 15), o_ptr->activation.cost*2, 1000);
         break;
     case TV_STAFF:
-        _device_pick_effect(o_ptr, _staff_effect_info);
+        _device_pick_effect(o_ptr, _staff_effect_info, level, mode);
+        if (!o_ptr->activation.type)
+            return FALSE;
         /* device_max_sp */
         o_ptr->xtra4 = _bounds_check(_rand_normal(3*o_ptr->xtra3, 15), o_ptr->activation.cost*4, 1000);
         if (o_ptr->activation.difficulty >= 50)
@@ -3043,6 +2755,7 @@ void device_init(object_type *o_ptr)
     }
     /* device_sp */
     o_ptr->xtra5 = _bounds_check(_rand_normal(o_ptr->xtra4/2, 25), o_ptr->activation.cost, o_ptr->xtra4);
+    return TRUE;
 }
 
 int device_level(object_type *o_ptr)
@@ -3110,11 +2823,18 @@ int device_max_sp(object_type *o_ptr)
 
 int device_value(object_type *o_ptr)
 {
-    int result = effect_value(&o_ptr->activation);
+    int result = 1;
 
-    result = result * device_max_sp(o_ptr) / o_ptr->activation.cost;
-    result /= 10;
+    if (o_ptr->activation.type)
+    {
+        result = effect_value(&o_ptr->activation);
 
+        if (o_ptr->activation.cost)
+        {
+            result = result * device_max_sp(o_ptr) / o_ptr->activation.cost;
+            result /= 10;
+        }
+    }
     /* TODO: Egos and artifacts */
 
     return MAX(1, result);
@@ -3242,6 +2962,50 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             detect_all(DETECT_RAD_DEFAULT);
             device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_DETECT_GOLD:
+        if (name) return "Detect Treasure";
+        if (desc) return "It detects all treasures in your vicinity when you use it.";
+        if (value) return format("%d", 200);
+        if (cast)
+        {
+            if (detect_treasure(DETECT_RAD_DEFAULT))
+                device_noticed = TRUE;
+            if (detect_objects_gold(DETECT_RAD_DEFAULT))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_DETECT_INVISIBLE:
+        if (name) return "Detect Invisible";
+        if (desc) return "It detects all invisible monsters in your vicinity when you use it.";
+        if (value) return format("%d", 250);
+        if (cast)
+        {
+            if (detect_monsters_invis(DETECT_RAD_DEFAULT))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_DETECT_DOOR_STAIRS:
+        if (name) return "Detect Doors & Stairs";
+        if (desc) return "It detects all doors and stairs in your vicinity when you use it.";
+        if (value) return format("%d", 250);
+        if (cast)
+        {
+            if (detect_doors(DETECT_RAD_DEFAULT))
+                device_noticed = TRUE;
+            if (detect_stairs(DETECT_RAD_DEFAULT))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_DETECT_EVIL:
+        if (name) return "Detect Evil";
+        if (desc) return "It detects all evil monsters in your vicinity when you use it.";
+        if (value) return format("%d", 500);
+        if (cast)
+        {
+            if (detect_monsters_evil(DETECT_RAD_DEFAULT))
+                device_noticed = TRUE;
         }
         break;
 
@@ -4338,10 +4102,10 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_HEAL:
     {
         int amt = _extra(effect, 50);
-        if (name) return "Cure Wounds";
-        if (desc) return "It heals your hitpoints and cuts.";
+        if (name) return (amt < 100) ? "Cure Wounds" : "Healing";
+        if (desc) return "It heals your hitpoints and cures cuts.";
         if (info) return info_heal(0, 0, _BOOST(amt));
-        if (value) return format("%d", 10*amt);
+        if (value) return format("%d", 30*amt);
         if (cast)
         {
             amt = _BOOST(amt);
@@ -4362,12 +4126,10 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int amt = _extra(effect, 50);
         if (name) return "Curing";
-        if (desc) return "It heals you a bit and cures blindness, poison, confusion, stunning, cuts and hallucination when you quaff it.";
-        if (info) return info_heal(0, 0, _BOOST(amt));
+        if (desc) return "It cures blindness, poison, confusion, stunning, cuts and hallucination when you quaff it.";
         if (value) return format("%d", 500 + 10*amt);
         if (cast)
         {
-            if (hp_player(_BOOST(amt))) device_noticed = TRUE;
             if (set_blind(0, TRUE)) device_noticed = TRUE;
             if (set_poisoned(0, TRUE)) device_noticed = TRUE;
             if (set_confused(0, TRUE)) device_noticed = TRUE;
@@ -4380,11 +4142,19 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_HEAL_CURING:
     {
-        int amt = _extra(effect, 300);
-        if (name) return "Healing";
-        if (desc) return "It heals your hitpoints and cures your ailments.";
+        int amt = _extra(effect, 4*effect->power);
+        if (amt < 100)
+        {
+            if (name) return "Cure Wounds";
+            if (desc) return "It heals your hitpoints and cures blindness and cuts.";
+        }
+        else
+        {
+            if (name) return "Healing";
+            if (desc) return "It heals your hitpoints and cures your ailments.";
+        }
         if (info) return info_heal(0, 0, _BOOST(amt));
-        if (value) return format("%d", 10*amt);
+        if (value) return format("%d", 40*amt);
         if (cast)
         {
             amt = _BOOST(amt);
@@ -4412,7 +4182,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (name) return "Angelic Healing";
         if (desc) return "It heals your hitpoints, cures what ails you, and makes you heroic.";
         if (info) return info_heal(0, 0, _BOOST(amt));
-        if (value) return format("%d", 1000 + 10*amt);
+        if (value) return format("%d", 1000 + 40*amt);
         if (cast)
         {
             if (hp_player(_BOOST(amt))) device_noticed = TRUE;
@@ -4475,7 +4245,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_REMOVE_CURSE:
         if (name) return "Remove Curse";
         if (desc) return "It removes normal curses from equipped items.";
-        if (value) return format("%d", 150);
+        if (value) return format("%d", 1000);
         if (cast)
         {
             if (remove_curse())
@@ -4488,7 +4258,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_REMOVE_ALL_CURSE:
         if (name) return "*Remove Curse*";
         if (desc) return "It removes normal and heavy curses from equipped items.";
-        if (value) return format("%d", 1000);
+        if (value) return format("%d", 5000);
         if (cast)
         {
             if (remove_all_curse())
@@ -5503,7 +5273,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     /* Offense: Other */
     case EFFECT_DISPEL_EVIL:
     {
-        int dam = _extra(effect, 100);
+        int dam = _extra(effect, 2*effect->power);
         if (name) return "Dispel Evil";
         if (desc) return "It damages all evil monsters in sight.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5517,7 +5287,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_DISPEL_EVIL_HERO:
     {
-        int dam = _extra(effect, 100);
+        int dam = _extra(effect, 2*effect->power);
         if (name) return "Dispel Evil";
         if (desc) return "It damages all evil monsters in sight and grants temporary heroism.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5533,7 +5303,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_DISPEL_GOOD:
     {
-        int dam = _extra(effect, 100);
+        int dam = _extra(effect, 2*effect->power);
         if (name) return "Dispel Good";
         if (desc) return "It damages all good monsters in sight.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5547,7 +5317,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_DISPEL_LIFE:
     {
-        int dam = _extra(effect, 100);
+        int dam = _extra(effect, 2*effect->power);
         if (name) return "Dispel Life";
         if (desc) return "It damages all living monsters in sight.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5561,7 +5331,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_DISPEL_DEMON:
     {
-        int dam = _extra(effect, 100);
+        int dam = _extra(effect, 3*effect->power);
         if (name) return "Dispel Demons";
         if (desc) return "It damages all demonic monsters in sight.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5575,7 +5345,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_DISPEL_UNDEAD:
     {
-        int dam = _extra(effect, 100);
+        int dam = _extra(effect, 3*effect->power);
         if (name) return "Dispel Undead";
         if (desc) return "It damages all undead monsters in sight.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5589,7 +5359,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_DISPEL_MONSTERS:
     {
-        int dam = _extra(effect, 4); /* Default is low to mimic Faramir's activation for the Ring race */
+        int dam = _extra(effect, 2*effect->power);
         if (name) return "Dispel Monsters";
         if (desc) return "It damages all monsters in sight.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -5694,16 +5464,16 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_MANA_STORM:
     {
-        int dam = _extra(effect, 350);
+        int dam = _extra(effect, 5*effect->power);
         if (name) return "Mana Storm";
         if (desc) return "It produces a huge mana ball centered on you. If you are not magically inclined, you take damage as well.";
-        if (info) return info_damage(1, _BOOST(200), _BOOST(dam));
-        if (value) return format("%d", 2000 + 20*dam);
+        if (info) return info_damage(0, 0, _BOOST(dam));
+        if (value) return format("%d", 45*dam);
         if (cast)
         {
             msg_print("Mighty magics rend your enemies!");
             project(0, 5, py, px,
-                _BOOST((randint1(200) + dam) * 2), 
+                _BOOST(dam*2),
                 GF_MANA, PROJECT_KILL | PROJECT_ITEM | PROJECT_GRID, -1);
             if ( p_ptr->pclass != CLASS_MAGE
               && p_ptr->pclass != CLASS_HIGH_MAGE 
@@ -5751,6 +5521,63 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             if (!get_aim_dir(&dir)) return NULL;
             fire_bolt(GF_ARROW, dir, _BOOST(dam));
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_HOLINESS:
+    {
+        int dam = _extra(effect, effect->power*2);
+        if (name) return "Holiness";
+        if (desc) return "It does damage to all evil monsters in sight, gives temporary protection from lesser evil creature, cures poison, stunned, cuts, removes fear and heals you a bit when you use it.";
+        if (info) return info_damage(0, 0, _BOOST(dam));
+        if (value) return format("%d", 3000);
+        if (cast)
+        {
+            int k = 3 * p_ptr->lev;
+            if (dispel_evil(_BOOST(dam))) device_noticed = TRUE;
+            if (set_protevil(p_ptr->protevil + randint1(25) + k, FALSE)) device_noticed = TRUE;
+            if (set_poisoned(0, TRUE)) device_noticed = TRUE;
+            if (hp_player(_BOOST(50))) device_noticed = TRUE;
+            if (set_stun(0, TRUE)) device_noticed = TRUE;
+            if (set_cut(0, TRUE)) device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_STARBURST:
+    {
+        int dam = _extra(effect, 5*effect->power);
+        if (name) return "Star Burst";
+        if (desc) return "It produces a huge ball of light centered on you.";
+        if (info) return info_damage(0, 0, _BOOST(dam));
+        if (value) return format("%d", 40*dam);
+        if (cast)
+        {
+            if (!res_save_default(RES_BLIND) && !res_save_default(RES_LITE))
+            {
+                set_blind(p_ptr->blind + 3 + randint1(5), FALSE);
+            }
+            project(0, 5, py, px, _BOOST(dam*2),
+                    GF_LITE, PROJECT_KILL | PROJECT_ITEM | PROJECT_GRID, -1);
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_DARKNESS_STORM:
+    {
+        int dam = _extra(effect, 5*effect->power);
+        if (name) return "Darkness Storm";
+        if (desc) return "It produces a huge ball of darkness centered on you.";
+        if (info) return info_damage(0, 0, _BOOST(dam));
+        if (value) return format("%d", 40*dam);
+        if (cast)
+        {
+            if (!res_save_default(RES_BLIND) && !res_save_default(RES_DARK))
+            {
+                set_blind(p_ptr->blind + 3 + randint1(5), FALSE);
+            }
+            project(0, 5, py, px, _BOOST(dam*2),
+                    GF_DARK, PROJECT_KILL | PROJECT_ITEM | PROJECT_GRID, -1);
             device_noticed = TRUE;
         }
         break;
@@ -5899,16 +5726,6 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             if (!charged) return NULL;
         }
         break;
-    case EFFECT_AGGRAVATE:
-        if (name) return "Aggravate Monsters";
-        if (desc) return "It aggravates nearby monsters.";
-        if (value) return format("%d", 100); /* This actually *can* be useful ... */
-        if (cast)
-        {
-            aggravate_monsters(0);
-            device_known = TRUE;
-        }
-        break;
     case EFFECT_PIERCING_SHOT:
         if (name) return "Piercing Shot";
         if (desc) return "It shoots a bolt through multiple foes.";
@@ -5933,39 +5750,6 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             if (!get_aim_dir(&dir)) return NULL;
             fire_beam(GF_STONE_WALL, dir, 0);
             device_noticed = TRUE;
-        }
-        break;
-    case EFFECT_HEAL_MONSTER:
-        if (name) return "Heal Monster";
-        if (desc) return "It heals a monster when you use it.";
-        if (value) return format("%d", 5);
-        if (cast)
-        {
-            if (!get_aim_dir(&dir)) return NULL;
-            if (heal_monster(dir, _BOOST(damroll(10, 10))))
-                device_noticed = TRUE;
-        }
-        break;
-    case EFFECT_HASTE_MONSTER:
-        if (name) return "Haste Monster";
-        if (desc) return "It hastes a monster when you use it.";
-        if (value) return format("%d", 15);
-        if (cast)
-        {
-            if (!get_aim_dir(&dir)) return NULL;
-            if (speed_monster(dir))
-                device_noticed = TRUE;
-        }
-        break;
-    case EFFECT_CLONE_MONSTER:
-        if (name) return "Clone Monster";
-        if (desc) return "It clones a non-unique monster when you use it.";
-        if (value) return format("%d", 10);
-        if (cast)
-        {
-            if (!get_aim_dir(&dir)) return NULL;
-            if (clone_monster(dir))
-                device_noticed = TRUE;
         }
         break;
     case EFFECT_SLEEP_MONSTER:
@@ -6032,6 +5816,125 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             if (!get_aim_dir(&dir)) return NULL;
             if (poly_monster(dir))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_STARLITE:
+    {
+        int dd = _extra(effect, 6 + effect->power / 10);
+        if (name) return "Starlight";
+        if (desc) return "It fires a line of light directed randomly for multiple times when you use it.";
+        if (value) return format("%d", 750);
+        if (cast)
+        {
+            int num = damroll(5, 3);
+            int y = 0, x = 0, k;
+            int attempts;
+
+            for (k = 0; k < num; k++)
+            {
+                attempts = 1000;
+                while (attempts--)
+                {
+                    scatter(&y, &x, py, px, 4, 0);
+                    if (!cave_have_flag_bold(y, x, FF_PROJECT)) continue;
+                    if (!player_bold(y, x)) break;
+                }
+                project(0, 0, y, x, _BOOST(damroll(dd, 10)), GF_LITE_WEAK,
+                          PROJECT_BEAM | PROJECT_THRU | PROJECT_GRID | PROJECT_KILL, -1);
+            }
+            device_noticed = TRUE;
+        }
+        break;
+    }
+
+    /* Bad Effects */
+    case EFFECT_AGGRAVATE:
+        if (name) return "Aggravate Monsters";
+        if (desc) return "It aggravates nearby monsters.";
+        if (value) return format("%d", 100); /* This actually *can* be useful ... */
+        if (cast)
+        {
+            aggravate_monsters(0);
+            device_known = TRUE;
+        }
+        break;
+    case EFFECT_HEAL_MONSTER:
+        if (name) return "Heal Monster";
+        if (desc) return "It heals a monster when you use it.";
+        if (value) return format("%d", 5);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (heal_monster(dir, _BOOST(damroll(10, 10))))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_HASTE_MONSTER:
+        if (name) return "Haste Monster";
+        if (desc) return "It hastes a monster when you use it.";
+        if (value) return format("%d", 15);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (speed_monster(dir))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_HASTE_MONSTERS:
+        if (name) return "Haste Monsters";
+        if (desc) return "It hastes all monsters in sight when you use it.";
+        if (cast)
+        {
+            if (speed_monsters())
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_CLONE_MONSTER:
+        if (name) return "Clone Monster";
+        if (desc) return "It clones a non-unique monster when you use it.";
+        if (value) return format("%d", 10);
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            if (clone_monster(dir))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_DARKNESS:
+        if (name) return "Darkness";
+        if (desc) return "It darkens nearby area or current room and blinds you when you use it.";
+        if (cast)
+        {
+            if (!res_save_default(RES_BLIND) && !res_save_default(RES_DARK))
+            {
+                if (set_blind(p_ptr->blind + 3 + randint1(5), FALSE))
+                    device_noticed = TRUE;
+            }
+            if (unlite_area(10, 3))
+                device_noticed = TRUE;
+        }
+        break;
+    case EFFECT_SUMMON_ANGRY_MONSTERS:
+        if (name) return "Summoning";
+        if (desc) return "It summons several monsters as enemies when you use it.";
+        if (cast)
+        {
+            int i;
+            int num = randint1(4);
+            for (i = 0; i < num; i++)
+            {
+                if (summon_specific(0, py, px, dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET)))
+                    device_noticed = TRUE;
+            }
+        }
+        break;
+    case EFFECT_SLOWNESS:
+        if (name) return "Slowness";
+        if (desc) return "It slows you down temporarily when you use it.";
+        if (cast)
+        {
+            if (set_slow(p_ptr->slow + randint1(30) + 15, FALSE))
                 device_noticed = TRUE;
         }
         break;

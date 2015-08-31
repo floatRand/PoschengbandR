@@ -1355,6 +1355,9 @@ static bool black_market_crap(object_type *o_ptr)
     if (o_ptr->to_h > 0) return (FALSE);
     if (o_ptr->to_d > 0) return (FALSE);
 
+    /* All devices now share a common k_idx! */
+    if (o_ptr->tval == TV_WAND || o_ptr->tval == TV_STAFF || o_ptr->tval == TV_ROD) return FALSE;
+
     /* Check all stores */
     for (i = 0; i < MAX_STORES; i++)
     {
@@ -1658,6 +1661,13 @@ static bool _get_store_obj2(object_type *o_ptr)
     int level1 = 20; /* Level of get_obj_num ... Second books are L20 */
     int level2 = rand_range(1, STORE_OBJ_LEVEL); /* Level of apply_magic */
     int k_idx = 0;
+    int mode = AM_NO_FIXED_ART;
+
+    if (p_ptr->town_num != SECRET_TOWN && cur_store_num != STORE_BLACK)
+    {
+        mode |=  AM_STOCK_TOWN;
+    }
+
     switch (cur_store_num)
     {
     case STORE_GENERAL:
@@ -1683,6 +1693,7 @@ static bool _get_store_obj2(object_type *o_ptr)
         get_obj_num_hook = _alchemist_accept;
         break;
     case STORE_MAGIC:
+        level2 = 15; /* cf the effect tables in devices.c */
         get_obj_num_hook = _magic_accept;
         break;
     case STORE_BOOK:
@@ -1779,7 +1790,7 @@ static bool _get_store_obj2(object_type *o_ptr)
         get_obj_num_hook = NULL;
     
     object_prep(o_ptr, k_idx);
-    apply_magic(o_ptr, level2, AM_NO_FIXED_ART);
+    apply_magic(o_ptr, level2, mode);
     if (o_ptr->tval == TV_LITE)
     {
         if (o_ptr->sval == SV_LITE_TORCH) o_ptr->xtra4 = FUEL_TORCH / 2;

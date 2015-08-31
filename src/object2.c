@@ -1273,7 +1273,7 @@ s32b object_value_real(object_type *o_ptr)
     if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr);
     if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr);
     if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr);
-    if (o_ptr->tval == TV_WAND /*|| o_ptr->tval == TV_ROD || o_ptr->tval == TV_STAFF*/) return device_value(o_ptr);
+    if (o_ptr->tval == TV_WAND || o_ptr->tval == TV_STAFF || o_ptr->tval == TV_ROD) return device_value(o_ptr);
 
     /* OK, here's the old pricing algorithm :( 
        Note this algorithm cheats for artifacts by relying on cost
@@ -4592,11 +4592,8 @@ static void _create_lite(object_type *o_ptr, int level, int power, int mode)
  *
  * Hack -- note the special code for various items
  */
-static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
+static bool a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
 {
-    /* Unused */
-    (void)level;
-
     /* Apply magic (good or bad) according to type */
     switch (o_ptr->tval)
     {
@@ -4624,7 +4621,8 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
         case TV_WAND:
         case TV_STAFF:
         case TV_ROD:
-            device_init(o_ptr);
+            if (!device_init(o_ptr, level, mode))
+                return FALSE;
             break;
 
         case TV_CAPTURE:
@@ -4794,6 +4792,7 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
             break;
         }
     }
+    return TRUE;
 }
 
 
@@ -4828,7 +4827,7 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
  * "good" and "great" arguments are false.  As a total hack, if "great" is
  * true, then the item gets 3 extra "attempts" to become an artifact.
  */
-void apply_magic(object_type *o_ptr, int lev, u32b mode)
+bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 {
     int i, rolls, f1, f2, power;
 
@@ -4983,7 +4982,7 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
             a_ptr->floor_id = p_ptr->floor_id;
 
         if (cheat_peek) object_mention(o_ptr);
-        return;
+        return TRUE;
     }
 
     if (object_is_fixed_artifact(o_ptr))
@@ -5023,12 +5022,12 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
         if (cheat_peek) object_mention(o_ptr);
 
         /* Done */
-        return;
+        return TRUE;
     }
 
     if (o_ptr->art_name)
     {
-        return;
+        return TRUE;
     }
 
 
@@ -5115,7 +5114,8 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
             break;
         default:
         {
-            a_m_aux_4(o_ptr, lev, power, mode);
+            if (!a_m_aux_4(o_ptr, lev, power, mode))
+                return FALSE;
             break;
         }
     }
@@ -5263,7 +5263,7 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
         }
 
         if (cheat_peek) object_mention(o_ptr);
-        return;
+        return TRUE;
     }
 
     if (o_ptr->art_name)
@@ -5288,6 +5288,7 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
         if (k_ptr->gen_flags & (TRG_RANDOM_CURSE1)) o_ptr->curse_flags |= get_curse(1, o_ptr);
         if (k_ptr->gen_flags & (TRG_RANDOM_CURSE2)) o_ptr->curse_flags |= get_curse(2, o_ptr);
     }
+    return TRUE;
 }
 
 static bool _is_favorite_weapon(int tval, int sval)
@@ -6124,7 +6125,8 @@ bool make_object(object_type *j_ptr, u32b mode)
     }
 
     /* Apply magic (allow artifacts) */
-    apply_magic(j_ptr, object_level, mode);
+    if (!apply_magic(j_ptr, object_level, mode))
+        return FALSE;
 
     /* Note: It is important to do this *after* apply_magic rather than in, say, 
        object_prep() since artifacts should never spawn multiple copies. Ego ammo

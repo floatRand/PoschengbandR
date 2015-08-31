@@ -1141,222 +1141,14 @@ void do_cmd_read_scroll(void)
     do_cmd_read_scroll_aux(item, object_is_aware(o_ptr));
 }
 
-
-/*
- * Use a staff.            -RAK-
- *
- * One charge of one staff disappears.
- *
- * Hack -- staffs of identify can be "cancelled".
- */
-static void do_cmd_use_staff_aux(int item)
-{
-    object_type *o_ptr;
-    bool         used = FALSE;
-    int          charges = 1;
-
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-    {
-        o_ptr = &o_list[0 - item];
-        if (o_ptr->number > 1)
-        {
-            msg_print("You must first pick up the staffs.");
-            return;
-        }
-    }
-
-    energy_use = 100;
-
-    if (devicemaster_is_(DEVICEMASTER_STAVES) && !devicemaster_desperation)
-    {
-        int delta = MIN(50, 2*p_ptr->lev - k_info[o_ptr->k_idx].level);
-        if (delta > 0)
-            energy_use -= delta;
-    }
-
-    if (p_ptr->tim_no_device)
-    {
-        msg_print("An evil power blocks your magic!");
-        return;
-    }
-    if (!(devicemaster_is_(DEVICEMASTER_STAVES) || fear_allow_device()))
-    {
-        msg_print("You are too scared!");
-        return;
-    }
-    if (world_player)
-    {
-        if (flush_failure) flush();
-        msg_print("Nothing happen. Maybe this staff is freezing too.");
-        sound(SOUND_FAIL);
-        return;
-    }
-
-    if (!device_try(o_ptr))
-    {
-        if (flush_failure) flush();
-        msg_print("You failed to use the staff properly.");
-        sound(SOUND_FAIL);
-        return;
-    }
-
-    if (o_ptr->pval <= 0)
-    {
-        if (flush_failure) flush();
-        msg_print("The staff has no charges left.");
-        o_ptr->ident |= (IDENT_EMPTY);
-        p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-        p_ptr->window |= (PW_INVEN);
-        return;
-    }
-
-    if (devicemaster_desperation)
-    {
-        int i, amt = 50;
-        charges = o_ptr->pval;
-        for (i = 1; i < charges && amt; i++)
-        {
-            device_extra_power += amt;
-            amt /= 2;
-        }
-    }
-    
-    if (object_is_(o_ptr, TV_STAFF, SV_STAFF_IDENTIFY))
-        device_available_charges = o_ptr->number * o_ptr->pval;
-
-    sound(SOUND_ZAP);
-    used = device_use(o_ptr, 0);
-
-    if (!(object_is_aware(o_ptr)))
-    {
-        virtue_add(VIRTUE_PATIENCE, -1);
-        virtue_add(VIRTUE_CHANCE, 1);
-        virtue_add(VIRTUE_KNOWLEDGE, -1);
-    }
-
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-    object_tried(o_ptr);
-    if (device_noticed && !object_is_aware(o_ptr))
-    {
-        object_aware(o_ptr);
-        stats_on_notice(o_ptr, o_ptr->number);
-        gain_exp((k_info[o_ptr->k_idx].level + (p_ptr->lev >> 1)) / p_ptr->lev);
-    }
-
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
-    if (!used) 
-    {
-        energy_use = 0;
-        return;
-    }
-
-    if (object_is_(o_ptr, TV_STAFF, SV_STAFF_IDENTIFY))
-        charges = device_used_charges;
-
-    if (devicemaster_is_(DEVICEMASTER_STAVES) && !devicemaster_desperation && randint1(100) <= p_ptr->lev)
-    {
-        msg_print("Your mental focus powers the staff!");
-    }
-    else
-    {
-        stats_on_use(o_ptr, charges);
-        if (devicemaster_desperation && randint0(p_ptr->lev*7) < k_info[o_ptr->k_idx].level)
-        {
-            char o_name[MAX_NLEN];
-            object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-            if (o_ptr->number > 1)
-                msg_format("Desperation magic consumes one of your %s!", o_name);
-            else
-                msg_format("Desperation magic consumes your %s!", o_name);
-            if (item >= 0)
-            {
-                inven_item_increase(item, -1);
-                inven_item_describe(item);
-                inven_item_optimize(item);
-            }
-            else
-            {
-                floor_item_increase(0 - item, -1);
-                floor_item_describe(0 - item);
-                floor_item_optimize(0 - item);
-            }
-        }
-        else if ((item >= 0) && (o_ptr->number > 1))
-        {
-            int overflow = charges % o_ptr->number;
-
-            /* Draw down total stack uniformly */
-            o_ptr->pval -= charges / o_ptr->number;
-
-            /* Overflow the rest */
-            if (overflow)
-            {
-                object_type copy;
-                object_copy(&copy, o_ptr);
-                copy.number = overflow;
-                copy.pval--;
-                o_ptr->number -= overflow;
-                p_ptr->total_weight -= copy.number * copy.weight;
-                item = inven_carry(&copy);
-                msg_print("You unstack your staff.");
-            }
-        }
-        else
-            o_ptr->pval -= charges;
-
-        if (item >= 0)
-            inven_item_charges(item);
-        else
-            floor_item_charges(0 - item);
-    }
-}
-
-
-void do_cmd_use_staff(void)
-{
-    int  item;
-    cptr q, s;
-
-    if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
-    {
-        set_action(ACTION_NONE);
-    }
-
-    if (p_ptr->pclass == CLASS_MAGIC_EATER && !_pack_find_tval(TV_STAFF))
-    {
-        magic_eater_cast(TV_STAFF);
-        return;
-    }
-
-    /* Restrict choices to wands */
-    item_tester_tval = TV_STAFF;
-
-    /* Get an item */
-    q = "Use which staff? ";
-    s = "You have no staff to use.";
-    if (!get_item(&item, q, s, USE_INVEN | USE_FLOOR | SHOW_FAIL_RATES)) return;
-
-    do_cmd_use_staff_aux(item);
-}
-
-
-/*
- * Aim a wand (from the pack or floor).
- *
- */
-static void do_cmd_aim_wand_aux(int item)
+/* Helper for Rods, Wands and Staves */
+static void do_cmd_device_aux(int item)
 {
     object_type *o_ptr;
     bool         used = FALSE;
     int          charges = 1;
     int          boost;
-
-    if (devicemaster_is_(DEVICEMASTER_WANDS))
-        boost = device_power_aux(100, p_ptr->device_power + p_ptr->lev/10) - 100;
-    else
-        boost = device_power(100) - 100;
+    bool         is_devicemaster = FALSE;
 
     if (item >= 0)
         o_ptr = &inventory[item];
@@ -1369,12 +1161,19 @@ static void do_cmd_aim_wand_aux(int item)
             return;
         }
     }
+    assert(o_ptr->number == 1); /* Devices no longer stack */
 
-    assert(o_ptr->number == 1); /* Wands no longer stack */
+    /* Devicemasters get extra power */
+    is_devicemaster = devicemaster_is_speciality(o_ptr);
+    if (is_devicemaster)
+        boost = device_power_aux(100, p_ptr->device_power + p_ptr->lev/10) - 100;
+    else
+        boost = device_power(100) - 100;
 
+
+    /* Devicemasters use devices more quickly */
     energy_use = 100;
-
-    if (devicemaster_is_(DEVICEMASTER_WANDS) && !devicemaster_desperation)
+    if (is_devicemaster && !devicemaster_desperation)
     {
         int delta = MIN(50, 2*p_ptr->lev - o_ptr->activation.power);
         if (delta > 0)
@@ -1387,7 +1186,8 @@ static void do_cmd_aim_wand_aux(int item)
         return;
     }
 
-    if (!(devicemaster_is_(DEVICEMASTER_WANDS) || fear_allow_device()))
+    /* Devicemasters use devices even when afraid */
+    if (!(is_devicemaster || fear_allow_device()))
     {
         msg_print("You are too scared!");
         return;
@@ -1396,7 +1196,7 @@ static void do_cmd_aim_wand_aux(int item)
     if (world_player)
     {
         if (flush_failure) flush();
-        msg_print("Nothing happen. Maybe this wand is freezing too.");
+        msg_print("Nothing happens. Maybe this device is freezing too.");
         sound(SOUND_FAIL);
         return;
     }
@@ -1404,7 +1204,7 @@ static void do_cmd_aim_wand_aux(int item)
     if (!device_try(o_ptr))
     {
         if (flush_failure) flush();
-        msg_print("You failed to use the wand properly.");
+        msg_print("You failed to use the device properly.");
         sound(SOUND_FAIL);
         return;
     }
@@ -1412,14 +1212,11 @@ static void do_cmd_aim_wand_aux(int item)
     if (device_sp(o_ptr) < o_ptr->activation.cost)
     {
         if (flush_failure) flush();
-        msg_print("The wand has no charges left.");
-        o_ptr->ident |= (IDENT_EMPTY);
-        p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-        p_ptr->window |= (PW_INVEN);
+        msg_print("The device has no charges left.");
         return;
     }
 
-    if (devicemaster_desperation)
+    if (is_devicemaster && devicemaster_desperation)
     {
         int i, amt = 50;
         charges = device_sp(o_ptr) / o_ptr->activation.cost;
@@ -1451,13 +1248,15 @@ static void do_cmd_aim_wand_aux(int item)
     if (used)
     {
         stats_on_use(o_ptr, charges);
-        if (devicemaster_is_(DEVICEMASTER_WANDS) && !devicemaster_desperation && randint1(100) <= p_ptr->lev)
+        /* Devicemasters can power the device for free once in a while */
+        if (is_devicemaster && !devicemaster_desperation && randint1(100) <= p_ptr->lev)
         {
             msg_print("Your mental focus powers the wand!");
         }
         else
         {
-            if (devicemaster_desperation && randint0(p_ptr->lev*7) < k_info[o_ptr->k_idx].level)
+            /* Devicemaster Desperation can destroy the device! */
+            if (is_devicemaster && devicemaster_desperation && randint0(p_ptr->lev*7) < k_info[o_ptr->k_idx].level)
             {
                 char o_name[MAX_NLEN];
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
@@ -1481,6 +1280,33 @@ static void do_cmd_aim_wand_aux(int item)
     }
     else
         energy_use = 0;
+}
+
+void do_cmd_use_staff(void)
+{
+    int  item;
+    cptr q, s;
+
+    if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
+    {
+        set_action(ACTION_NONE);
+    }
+
+    if (p_ptr->pclass == CLASS_MAGIC_EATER && !_pack_find_tval(TV_STAFF))
+    {
+        magic_eater_cast(TV_STAFF);
+        return;
+    }
+
+    /* Restrict choices to wands */
+    item_tester_tval = TV_STAFF;
+
+    /* Get an item */
+    q = "Use which staff? ";
+    s = "You have no staff to use.";
+    if (!get_item(&item, q, s, USE_INVEN | USE_FLOOR | SHOW_FAIL_RATES)) return;
+
+    do_cmd_device_aux(item);
 }
 
 
@@ -1510,159 +1336,7 @@ void do_cmd_aim_wand(void)
     if (!get_item(&item, q, s, USE_INVEN | USE_FLOOR | SHOW_FAIL_RATES)) return;
 
     /* Aim the wand */
-    do_cmd_aim_wand_aux(item);
-}
-
-/*
- * Activate (zap) a Rod
- *
- * Unstack fully charged rods as needed.
- *
- * Hack -- rods of perception/genocide can be "cancelled"
- * All rods can be cancelled at the "Direction?" prompt
- *
- * pvals are defined for each rod in k_info. -LM-
- */
-static void do_cmd_zap_rod_aux(int item)
-{
-    object_type *o_ptr;
-    bool         used = FALSE;
-    object_kind *k_ptr;
-    int          charges = 1;
-
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-    {
-        o_ptr = &o_list[0 - item];
-        if (o_ptr->number > 1)
-        {
-            msg_print("You must first pick up the rods.");
-            return;
-        }
-    }
-
-    energy_use = 100;
-
-    if (devicemaster_is_(DEVICEMASTER_RODS) && !devicemaster_desperation)
-    {
-        int delta = MIN(50, 2*p_ptr->lev - k_info[o_ptr->k_idx].level);
-        if (delta > 0)
-            energy_use -= delta;
-    }
-
-    if (p_ptr->tim_no_device)
-    {
-        msg_print("An evil power blocks your magic!");
-        return;
-    }
-    if (!(devicemaster_is_(DEVICEMASTER_RODS) || fear_allow_device()))
-    {
-        msg_print("You are too scared!");
-        return;
-    }
-    if (world_player)
-    {
-        if (flush_failure) flush();
-        msg_print("Nothing happen. Maybe this rod is freezing too.");
-        sound(SOUND_FAIL);
-        return;
-    }
-
-    if (!device_try(o_ptr))
-    {
-        if (flush_failure) flush();
-        msg_print("You failed to use the rod properly.");
-        sound(SOUND_FAIL);
-        return;
-    }
-
-    k_ptr = &k_info[o_ptr->k_idx];
-
-    /* A single rod is still charging */
-    if ((o_ptr->number == 1) && (o_ptr->timeout))
-    {
-        if (flush_failure) flush();
-        msg_print("The rod is still charging.");
-        return;
-    }
-    /* A stack of rods lacks enough energy. */
-    else if ((o_ptr->number > 1) && (o_ptr->timeout > k_ptr->pval * (o_ptr->number - 1)))
-    {
-        if (flush_failure) flush();
-        msg_print("The rods are all still charging.");
-        return;
-    }
-
-    if (devicemaster_desperation)
-    {
-        int i, amt = 50;
-        charges = o_ptr->number - (o_ptr->timeout + k_ptr->pval - 1)  / k_ptr->pval;
-        if (charges > 3) charges = 3;
-        for (i = 1; i < charges && amt; i++)
-        {
-            device_extra_power += amt;
-            amt /= 2;
-        }
-    }
-
-    sound(SOUND_ZAP);
-    used = device_use(o_ptr, 0);
-
-    /* Increase the timeout by the rod kind's pval. -LM- */
-    if (used) 
-    {
-        if (devicemaster_is_(DEVICEMASTER_RODS) && !devicemaster_desperation && randint1(100) <= p_ptr->lev)
-        {
-            msg_print("Your mental focus powers the rod!");
-        }
-        else
-        {
-            stats_on_use(o_ptr, charges);
-            o_ptr->timeout += k_ptr->pval * charges;
-            if (devicemaster_desperation && randint0(p_ptr->lev*11) < k_info[o_ptr->k_idx].level)
-            {
-                char o_name[MAX_NLEN];
-                object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-                if (o_ptr->number > 1)
-                    msg_format("Desperation magic consumes one of your %s!", o_name);
-                else
-                    msg_format("Desperation magic consumes your %s!", o_name);
-                if (item >= 0)
-                {
-                    inven_item_increase(item, -1);
-                    inven_item_describe(item);
-                    inven_item_optimize(item);
-                }
-                else
-                {
-                    floor_item_increase(0 - item, -1);
-                    floor_item_describe(0 - item);
-                    floor_item_optimize(0 - item);
-                }
-            }
-        }
-    }
-    else
-        energy_use = 0;
-
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-    if (!(object_is_aware(o_ptr)))
-    {
-        virtue_add(VIRTUE_PATIENCE, -1);
-        virtue_add(VIRTUE_CHANCE, 1);
-        virtue_add(VIRTUE_KNOWLEDGE, -1);
-    }
-    object_tried(o_ptr);
-
-    if (device_noticed && !object_is_aware(o_ptr))
-    {
-        object_aware(o_ptr);
-        stats_on_notice(o_ptr, o_ptr->number);
-        gain_exp((k_info[o_ptr->k_idx].level + (p_ptr->lev >> 1)) / p_ptr->lev);
-    }
-
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    do_cmd_device_aux(item);
 }
 
 void do_cmd_zap_rod(void)
@@ -1691,7 +1365,7 @@ void do_cmd_zap_rod(void)
     if (!get_item(&item, q, s, USE_INVEN | USE_FLOOR | SHOW_FAIL_RATES)) return;
 
     /* Zap the rod */
-    do_cmd_zap_rod_aux(item);
+    do_cmd_device_aux(item);
 }
 
 
@@ -2065,24 +1739,10 @@ void do_cmd_use(void)
 
         /* Aim a wand */
         case TV_WAND:
-        {
-            do_cmd_aim_wand_aux(item);
-            break;
-        }
-
-        /* Use a staff */
         case TV_STAFF:
-        {
-            do_cmd_use_staff_aux(item);
-            break;
-        }
-
-        /* Zap a rod */
         case TV_ROD:
-        {
-            do_cmd_zap_rod_aux(item);
+            do_cmd_device_aux(item);
             break;
-        }
 
         /* Quaff a potion */
         case TV_POTION:

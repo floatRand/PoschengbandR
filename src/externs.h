@@ -849,7 +849,7 @@ extern int  device_used_charges;
 extern cptr do_device(object_type *o_ptr, int mode, int boost);
 
 
-extern void device_init(object_type *o_ptr);
+extern bool device_init(object_type *o_ptr, int level, int mode);
 extern int  device_level(object_type *o_ptr);
 extern int  device_sp(object_type *o_ptr);
 extern void device_decrease_sp(object_type *o_ptr, int amt);
@@ -1153,7 +1153,7 @@ extern s16b lookup_kind(int tval, int sval);
 extern void object_wipe(object_type *o_ptr);
 extern void object_prep(object_type *o_ptr, int k_idx);
 extern void object_copy(object_type *o_ptr, object_type *j_ptr);
-extern void apply_magic(object_type *o_ptr, int lev, u32b mode);
+extern bool apply_magic(object_type *o_ptr, int lev, u32b mode);
 extern int  apply_magic_ego;
 extern void choose_obj_kind(int mode); /* Hack for BM to use new object tval frequencies */
 extern bool make_object(object_type *j_ptr, u32b mode);
@@ -2232,6 +2232,7 @@ extern class_t *devicemaster_get_class_t(void);
 extern bool     devicemaster_desperation;
 extern cptr     devicemaster_speciality_name(int psubclass);
 extern cptr     devicemaster_speciality_desc(int psubclass);
+extern bool     devicemaster_is_speciality(object_type *o_ptr);
 extern class_t *force_trainer_get_class_t(void);
 extern class_t *high_mage_get_class_t(void);
 extern bool     imitator_cast(bool revenge);

@@ -421,6 +421,38 @@ cptr devicemaster_speciality_desc(int psubclass)
     return "";
 }
 
+bool devicemaster_is_speciality(object_type *o_ptr)
+{
+    if (p_ptr->pclass == CLASS_DEVICEMASTER)
+    {
+        switch (p_ptr->psubclass)
+        {
+        case DEVICEMASTER_RODS:
+            if (o_ptr->tval == TV_ROD)
+                return TRUE;
+            break;
+        case DEVICEMASTER_STAVES:
+            if (o_ptr->tval == TV_STAFF)
+                return TRUE;
+            break;
+        case DEVICEMASTER_WANDS:
+            if (o_ptr->tval == TV_WAND)
+                return TRUE;
+            break;
+        case DEVICEMASTER_POTIONS:
+            if (o_ptr->tval == TV_POTION)
+                return TRUE;
+            break;
+        case DEVICEMASTER_SCROLLS:
+            if (o_ptr->tval == TV_SCROLL)
+                return TRUE;
+            break;
+        }
+    }
+    return FALSE;
+}
+
+
 static void _birth(void) 
 { 
     object_type    forge;
