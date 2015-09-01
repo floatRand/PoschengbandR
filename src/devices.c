@@ -1229,7 +1229,7 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_RECHARGING:
-        if (desc) return "It attempts to recharge a magical device using the mana of a source device when you read it.";
+        if (desc) return "It attempts to recharge a magical device using the mana of a source device. This usually destroys the source device.";
         if (cast)
         {
             if (!recharge_from_device(_scroll_power(75))) return NULL;

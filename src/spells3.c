@@ -2513,8 +2513,13 @@ bool identify_fully(object_p p)
  * The effect may fail, however, wasting either the source device or the player's sp.
  */
 
+static object_type *_obj_recharge_src_ptr = NULL;
 static bool _obj_recharge_dest(object_type *o_ptr)
 {
+    /* dest must be different from source */
+    if (o_ptr == _obj_recharge_src_ptr)
+        return FALSE;
+
     switch (o_ptr->tval)
     {
     case TV_WAND: case TV_ROD: case TV_STAFF:
@@ -2593,30 +2598,31 @@ bool recharge_from_player(int power)
 
 bool recharge_from_device(int power)
 {
-    int          item;
+    int          src_item, dest_item;
     int          amt, max;
     bool         destroy = TRUE;
     object_type *src_ptr, *dest_ptr;
 
     /* Get source device */
     item_tester_hook = _obj_recharge_src;
-    if (!get_item(&item, "Pick a source device? ", "You need a source device to power the recharging.", USE_INVEN | USE_FLOOR))
+    if (!get_item(&src_item, "Pick a source device? ", "You need a source device to power the recharging.", USE_INVEN | USE_FLOOR))
         return FALSE;
 
-    if (item >= 0)
-        src_ptr = &inventory[item];
+    if (src_item >= 0)
+        src_ptr = &inventory[src_item];
     else
-        src_ptr = &o_list[0 - item];
+        src_ptr = &o_list[0 - src_item];
 
     /* Get destination device */
+    _obj_recharge_src_ptr = src_ptr;
     item_tester_hook = _obj_recharge_dest;
-    if (!get_item(&item, "Recharge which item? ", "You have nothing to recharge.", USE_INVEN | USE_FLOOR))
+    if (!get_item(&dest_item, "Recharge which item? ", "You have nothing to recharge.", USE_INVEN | USE_FLOOR))
         return FALSE;
 
-    if (item >= 0)
-        dest_ptr = &inventory[item];
+    if (dest_item >= 0)
+        dest_ptr = &inventory[dest_item];
     else
-        dest_ptr = &o_list[0 - item];
+        dest_ptr = &o_list[0 - dest_item];
 
     amt = device_sp(src_ptr);
     max = device_max_sp(dest_ptr) - device_sp(dest_ptr);
@@ -2630,6 +2636,11 @@ bool recharge_from_device(int power)
         }
     }
 
+    _recharge_aux(dest_ptr, amt, power);
+
+    /* Destroy at the end ... otherwise, the inventory may slide and
+     * invalidate our pointers (dest_ptr could end up pointing at
+     * the wrong object!) */
     if (destroy)
     {
         if (object_is_fixed_artifact(src_ptr))
@@ -2642,21 +2653,20 @@ bool recharge_from_device(int power)
             src_ptr = NULL;
 
             msg_format("Recharging consumes your %s!", name);
-            if (item >= 0)
+            if (src_item >= 0)
             {
-                inven_item_increase(item, -1);
-                inven_item_describe(item);
-                inven_item_optimize(item);
+                inven_item_increase(src_item, -1);
+                inven_item_describe(src_item);
+                inven_item_optimize(src_item);
             }
             else
             {
-                floor_item_increase(0 - item, -1);
-                floor_item_describe(0 - item);
-                floor_item_optimize(0 - item);
+                floor_item_increase(0 - src_item, -1);
+                floor_item_describe(0 - src_item);
+                floor_item_optimize(0 - src_item);
             }
         }
     }
-    _recharge_aux(dest_ptr, amt, power);
 
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
     p_ptr->window |= PW_INVEN;
