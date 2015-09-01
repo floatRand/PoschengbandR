@@ -472,9 +472,10 @@ bool screen_object(object_type *o_ptr, u32b mode)
                     strcat(scratch, res);
                 }
                 strcat(scratch, format("\nFail:  %d.%d%%", fail/10, fail%10));
-                strcat(scratch, format("\nPower: %d", device_level(o_ptr)));
-                strcat(scratch, format("\nSP:    %d/%d", device_sp(o_ptr), device_max_sp(o_ptr)));
-                strcat(scratch, format("\nCost:  %d", e.cost));
+                strcat(scratch, "\n ");
+                strcat(scratch, format("\nIt has a power rating of %d.", device_level(o_ptr)));
+                strcat(scratch, format("\nIt currently has %d out of %d sp.", device_sp(o_ptr), device_max_sp(o_ptr)));
+                strcat(scratch, format("\nEach charge costs %d sp.", e.cost));
             }
             break;
         default:

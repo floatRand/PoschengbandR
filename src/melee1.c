@@ -581,6 +581,8 @@ bool make_attack_normal(int m_idx)
                 case RBE_UN_POWER:
                 {
                     bool drained = FALSE;
+                    bool drain_amt = rlev; /* TODO: Consider using damage instead. Indeed, I nerfed this effect
+                                              so all monsters should probably do some damage here as well. */
 
                     /* Take some damage */
                     damage = reduce_melee_dam_p(damage);
@@ -600,65 +602,53 @@ bool make_attack_normal(int m_idx)
                         /* Skip non-objects */
                         if (!o_ptr->k_idx) continue;
 
-                        /* Drain charged wands/staffs */
-                        if (((o_ptr->tval == TV_STAFF) ||
-                             (o_ptr->tval == TV_WAND)) &&
-                            (o_ptr->pval))
-                        {
-                            /* Calculate healed hitpoints */
-                            int heal=rlev * o_ptr->pval;
-                            if( o_ptr->tval == TV_STAFF)
-                                heal *=  o_ptr->number;
+                        if (o_ptr->tval == TV_ROD)
+                            drain_amt /= 3;
+                        if (drain_amt > device_sp(o_ptr))
+                            drain_amt = device_sp(o_ptr);
 
-                            /* Don't heal more than max hp. Two star cap. */
-                            heal = MIN(heal, m_ptr->max_maxhp / 5);
-                            heal = MIN(heal, m_ptr->maxhp - m_ptr->hp);
+                        obvious = TRUE;
 
-                            obvious = TRUE;
-
-                            if (p_ptr->pclass == CLASS_DEVICEMASTER)
-                            {
-                                int pl = p_ptr->lev;
-                                int dl = k_info[o_ptr->k_idx].level;
-
-                                if (o_ptr->tval == TV_STAFF && devicemaster_is_(DEVICEMASTER_STAVES))
-                                    pl *= 2;
-                                if (o_ptr->tval == TV_WAND && devicemaster_is_(DEVICEMASTER_WANDS))
-                                    pl *= 2;
-
-                                if (pl >= randint1(dl))
-                                {
-                                    msg_print("Energy begins to drain from your pack ... But you pull it back!");
-                                    drained = TRUE; /* No food drain! */
-                                    break;
-                                }
-                            }
-
-                            if (p_ptr->no_charge_drain)
-                                break;
-
-                            msg_print("Energy drains from your pack!");
-                            drained = TRUE;
-
-                            /* Heal the monster */
-                            m_ptr->hp += heal;
-
-                            /* Redraw (later) if needed */
-                            if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-                            if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
-
-                            /* Uncharge */
-                            o_ptr->pval = 0;
-
-                            /* Combine / Reorder the pack */
-                            p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-                            /* Window stuff */
-                            p_ptr->window |= (PW_INVEN);
-
-                            /* Done */
+                        if (p_ptr->no_charge_drain)
                             break;
+
+                        if (p_ptr->pclass == CLASS_DEVICEMASTER)
+                        {
+                            int pl = p_ptr->lev;
+                            int dl = o_ptr->activation.difficulty;
+
+                            if (devicemaster_is_speciality(o_ptr))
+                                pl *= 2;
+
+                            if (pl >= randint1(dl))
+                            {
+                                msg_print("Energy begins to drain from your pack ... But you pull it back!");
+                                drained = TRUE; /* No food drain! */
+                                break;
+                            }
                         }
+
+                        msg_print("Energy drains from your pack!");
+                        device_decrease_sp(o_ptr, drain_amt);
+                        drained = TRUE;
+
+                        /* Heal the monster */
+                        m_ptr->hp += drain_amt;
+                        if (m_ptr->hp > m_ptr->maxhp)
+                            m_ptr->hp = m_ptr->maxhp;
+
+                        /* Redraw (later) if needed */
+                        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
+                        if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+
+                        /* Combine / Reorder the pack */
+                        p_ptr->notice |= (PN_COMBINE | PN_REORDER);
+
+                        /* Window stuff */
+                        p_ptr->window |= (PW_INVEN);
+
+                        /* Done */
+                        break;
                     }
 
                     if ( !drained 

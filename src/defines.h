@@ -6335,6 +6335,7 @@ enum effect_e
     EFFECT_BEAM_LITE_WEAK = 350,
     EFFECT_BEAM_LITE,
     EFFECT_BEAM_GRAVITY,
+    EFFECT_BEAM_DISINTEGRATE,
 
     /* Offense: Balls */
     EFFECT_BALL_ACID = 400,
@@ -6398,6 +6399,7 @@ enum effect_e
     EFFECT_HOLINESS,
     EFFECT_STARBURST,      /* Centered on player. cf EFFECT_BALL_LITE */
     EFFECT_DARKNESS_STORM, /* Centered on player. cf EFFECT_BALL_DARK */
+    EFFECT_PESTICIDE,
 
     /* Misc */
     EFFECT_POLY_SELF = 600,

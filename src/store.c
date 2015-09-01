@@ -1248,14 +1248,11 @@ static int store_carry(object_type *o_ptr)
         if (o_ptr->sval < j_ptr->sval) break;
         if (o_ptr->sval > j_ptr->sval) continue;
 
-        /*
-         * Hack:  otherwise identical rods sort by
-         * increasing recharge time --dsb
-         */
-        if (o_ptr->tval == TV_ROD)
+        /* Devices sort by increasing level of effect */
+        if (o_ptr->tval == TV_WAND || o_ptr->tval == TV_ROD || o_ptr->tval == TV_STAFF)
         {
-            if (o_ptr->pval < j_ptr->pval) break;
-            if (o_ptr->pval > j_ptr->pval) continue;
+            if (o_ptr->activation.difficulty < j_ptr->activation.difficulty) break;
+            if (o_ptr->activation.difficulty > j_ptr->activation.difficulty) continue;
         }
 
         /* Evaluate that slot */
