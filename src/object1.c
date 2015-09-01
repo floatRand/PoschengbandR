@@ -452,44 +452,46 @@ bool screen_object(object_type *o_ptr, u32b mode)
     }
     if (obj_has_effect(o_ptr) && object_is_known(o_ptr))
     {
-        char     scratch[70 * 20];
-        effect_t e = obj_get_effect(o_ptr);
-        cptr     res = do_device(o_ptr, SPELL_NAME, 0);
-        int      fail = device_calc_fail_rate(o_ptr);
+        char scratch[70 * 20];
 
         switch (o_ptr->tval)
         {
         case TV_WAND: case TV_ROD: case TV_STAFF:
-            res = do_device(o_ptr, SPELL_DESC, 0);
+        {
+            cptr res = do_device(o_ptr, SPELL_DESC, 0);
+
             strcpy(scratch, res);
             strcat(scratch, "\n ");
             if (o_ptr->ident & IDENT_MENTAL)
             {
+                int fail = device_calc_fail_rate(o_ptr);
+
                 res = do_device(o_ptr, SPELL_INFO, 0);
                 if (res && strlen(res))
                 {
-                    strcat(scratch, "\nInfo:  ");
+                    strcat(scratch, "\nInfo: ");
                     strcat(scratch, res);
                 }
-                strcat(scratch, format("\nFail:  %d.%d%%", fail/10, fail%10));
+                strcat(scratch, format("\nFail: %d.%d%%", fail/10, fail%10));
                 strcat(scratch, "\n ");
                 strcat(scratch, format("\nIt has a power rating of %d.", device_level(o_ptr)));
+                strcat(scratch, format("\nIt has a difficulty rating of %d.", o_ptr->activation.difficulty));
                 strcat(scratch, format("\nIt currently has %d out of %d sp.", device_sp(o_ptr), device_max_sp(o_ptr)));
-                strcat(scratch, format("\nEach charge costs %d sp.", e.cost));
+                strcat(scratch, format("\nEach charge costs %d sp.", o_ptr->activation.cost));
             }
             break;
+        }
         default:
+        {
+            effect_t e = obj_get_effect(o_ptr);
+            cptr     res = do_effect(&e, SPELL_NAME, 0);
+
             strcpy(scratch, "Activation: ");
             strcat(scratch, res);
+
             if (o_ptr->ident & IDENT_MENTAL)
             {
-                /* TODO: We need to linebreak the description as well!
-                res = do_effect(&e, SPELL_DESC, 0);
-                if (res && strlen(res))
-                {
-                    strcat(scratch, " \n      Desc: ");
-                    strcat(scratch, res);
-                }*/
+                int fail = effect_calc_fail_rate(&e);
 
                 res = do_effect(&e, SPELL_INFO, 0);
                 if (res && strlen(res))
@@ -504,6 +506,7 @@ bool screen_object(object_type *o_ptr, u32b mode)
                     strcat(scratch, format("%d", e.cost));
                 }
             }
+        }
         }
 
         strcat(scratch, "\n ");

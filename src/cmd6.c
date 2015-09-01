@@ -1590,6 +1590,7 @@ static void do_cmd_activate_aux(int item)
 {
     object_type *o_ptr;
     cptr         msg;
+    effect_t     effect;
     int          boost = device_power(100) - 100;
 
     /* Get the item (in the pack) */
@@ -1615,7 +1616,8 @@ static void do_cmd_activate_aux(int item)
         return;
     }
 
-    if (!device_try(o_ptr))
+    effect = obj_get_effect(o_ptr);
+    if (!effect_try(&effect))
     {
         if (flush_failure) flush();
         msg_print("You failed to activate it properly.");
@@ -1642,9 +1644,9 @@ static void do_cmd_activate_aux(int item)
         return;
     }
     
-    if (device_use(o_ptr, boost))
+    if (effect_use(&effect, boost))
     {
-        o_ptr->timeout = o_ptr->activation.cost;
+        o_ptr->timeout = effect.cost;
         p_ptr->window |= (PW_INVEN | PW_EQUIP);
     }
 }

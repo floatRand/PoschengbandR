@@ -581,6 +581,7 @@ bool make_attack_normal(int m_idx)
                 case RBE_UN_POWER:
                 {
                     u32b flgs[TR_FLAG_SIZE];
+                    char buf[MAX_NLEN];
                     bool drained = FALSE;
                     bool drain_amt = rlev; /* TODO: Consider using damage instead. Indeed, I nerfed this effect
                                               so all monsters should probably do some damage here as well. */
@@ -640,7 +641,8 @@ bool make_attack_normal(int m_idx)
                             }
                         }
 
-                        msg_print("Energy drains from your pack!");
+                        object_desc(buf, o_ptr, OD_OMIT_PREFIX);
+                        msg_format("Energy drains from your %s!", buf);
                         device_decrease_sp(o_ptr, drain_amt);
                         drained = TRUE;
 

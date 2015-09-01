@@ -45,14 +45,14 @@ static byte value_check_aux1(object_type *o_ptr)
     if (object_is_ego(o_ptr))
     {
         /* Cursed/Broken */
-        if (object_is_cursed(o_ptr) || object_is_broken(o_ptr)) return FEEL_AWFUL;
+        if ((object_is_cursed(o_ptr) || object_is_broken(o_ptr)) && !object_is_device(o_ptr)) return FEEL_AWFUL;
 
         /* Normal */
         return FEEL_EXCELLENT;
     }
 
     /* Cursed items */
-    if (object_is_cursed(o_ptr)) return FEEL_BAD;
+    if (object_is_cursed(o_ptr) && !object_is_device(o_ptr)) return FEEL_BAD;
 
     /* Broken items */
     if (object_is_broken(o_ptr)) return FEEL_BROKEN;
@@ -81,7 +81,7 @@ static byte value_check_aux1(object_type *o_ptr)
 static byte value_check_aux2(object_type *o_ptr)
 {
     /* Cursed items (all of them) */
-    if (object_is_cursed(o_ptr)) return FEEL_CURSED;
+    if (object_is_cursed(o_ptr) && !object_is_device(o_ptr)) return FEEL_CURSED;
 
     /* Broken items (all of them) */
     if (object_is_broken(o_ptr)) return FEEL_BROKEN;
@@ -577,6 +577,9 @@ static void sense_inventory2(void)
             case TV_AMULET:
             case TV_LITE:
             case TV_FIGURINE:
+            case TV_WAND:
+            case TV_STAFF:
+            case TV_ROD:
             {
                 okay = TRUE;
                 break;

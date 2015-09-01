@@ -2196,7 +2196,14 @@ static void wiz_create_item(void)
     }
     else
     {
-        n = get_quantity("How many? ", 99);    
+        switch (k_info[k_idx].tval)
+        {
+        case TV_WAND: case TV_ROD: case TV_STAFF:
+            n = 1;
+            break;
+        default:
+            n = get_quantity("How many? ", 99);
+        }
     }
 
     /* Get local object */

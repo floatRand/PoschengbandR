@@ -1752,6 +1752,14 @@ bool obj_has_effect(object_type *o_ptr)
     return FALSE;
 }
 
+bool effect_try(effect_t *effect)
+{
+    int fail = effect_calc_fail_rate(effect);
+    if (randint0(1000) < fail)
+        return FALSE;
+    return TRUE;
+}
+
 bool effect_use(effect_t *effect, int boost)
 {
     device_known = TRUE;
