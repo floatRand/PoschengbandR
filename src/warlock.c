@@ -794,11 +794,12 @@ int _demon_get_powers(spell_info* spells, int max)
     spell->fail = calculate_fail_rate(20, 50, p_ptr->stat_ind[A_CHR]);
     spell->fn = teleport_spell;
 
+/*  TODO
     spell = &spells[ct++];
     spell->level = 35;
     spell->cost = 40;
     spell->fail = calculate_fail_rate(35, 70, p_ptr->stat_ind[A_CHR]);
-    spell->fn = recharging_spell;
+    spell->fn = recharging_spell; */
 
     return ct;
 }

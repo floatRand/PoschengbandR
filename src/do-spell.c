@@ -1687,7 +1687,7 @@ static cptr do_sorcery_spell(int spell, int mode)
 
     case 7:
         if (name) return "Recharging";
-        if (desc) return "Recharges staffs, wands or rods.";
+        if (desc) return "It attempts to recharge a device using your mana for power.";
     
         {
             int power = spell_power(plev * 4);
@@ -1696,7 +1696,7 @@ static cptr do_sorcery_spell(int spell, int mode)
 
             if (cast)
             {
-                if (!recharge(power)) return NULL;
+                if (!recharge_from_player(power)) return NULL;
             }
         }
         break;
@@ -3160,7 +3160,7 @@ static cptr do_chaos_spell(int spell, int mode)
 
     case 18:
         if (name) return "Arcane Binding";
-        if (desc) return "Recharges staffs, wands or rods.";
+        if (desc) return "It attempts to recharge a device using your mana for power.";
     
         {
             int power = spell_power(90);
@@ -3169,7 +3169,7 @@ static cptr do_chaos_spell(int spell, int mode)
 
             if (cast)
             {
-                if (!recharge(power)) return NULL;
+                if (!recharge_from_player(power)) return NULL;
             }
         }
         break;
@@ -5218,7 +5218,7 @@ static cptr do_arcane_spell(int spell, int mode)
 
     case 28:
         if (name) return "Recharging";
-        if (desc) return "Recharges staves, wands or rods.";
+        if (desc) return "It attempts to recharge a device using your mana for power.";
 
         {
             int power = spell_power(plev * 3 / 2);
@@ -5227,7 +5227,7 @@ static cptr do_arcane_spell(int spell, int mode)
 
             if (cast)
             {
-                if (!recharge(power)) return NULL;
+                if (!recharge_from_player(power)) return NULL;
             }
         }
         break;
@@ -8365,12 +8365,12 @@ static cptr do_hex_spell(int spell, int mode)
 
     case 18:
         if (name) return "Recharging";
-        if (desc) return "Recharges a magic device.";
+        if (desc) return "It attempts to recharge a device using your mana for power.";
         power = plev * 2;
         if (info) return info_power(power);
         if (cast)
         {
-            if (!recharge(power)) return NULL;
+            if (!recharge_from_player(power)) return NULL;
             add = FALSE;
         }
         break;

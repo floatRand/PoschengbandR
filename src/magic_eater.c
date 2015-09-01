@@ -719,7 +719,7 @@ static bool gain_magic(void)
     int idx;
     char o_name[MAX_NLEN];
 
-    item_tester_hook = item_tester_hook_recharge;
+    item_tester_hook = object_is_device;
     if (!get_item(&item, "Gain power of which item? ", "You have nothing to gain power from.", (USE_INVEN | USE_FLOOR))) 
         return (FALSE);
 

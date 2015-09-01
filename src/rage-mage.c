@@ -575,7 +575,7 @@ static void _shatter_device_spell(int cmd, variant *res)
         object_type *o_ptr;
         
         var_set_bool(res, FALSE);
-        item_tester_hook = item_tester_hook_recharge;
+        item_tester_hook = object_is_device;
         if (!get_item(&item, "Shatter which device?", "You have nothing to shatter.", USE_INVEN)) return;
         o_ptr = &inventory[item];
         var_set_bool(res, TRUE);

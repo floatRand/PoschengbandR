@@ -1049,10 +1049,10 @@ void recharging_spell(int cmd, variant *res)
         var_set_string(res, "Recharging");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Attempts to recharge staffs, wands or rods.  Items may be destroyed on failure.");
+        var_set_string(res, "It attempts to recharge a device using your mana for power.");
         break;
     case SPELL_CAST:
-        var_set_bool(res, recharge(4 * p_ptr->lev));
+        var_set_bool(res, recharge_from_player(4 * p_ptr->lev));
         break;
     default:
         default_spell(cmd, res);

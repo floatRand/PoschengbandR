@@ -1229,10 +1229,10 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_RECHARGING:
-        if (desc) return "It recharges wands, staffs or rods when you read it.";
+        if (desc) return "It attempts to recharge a magical device using the mana of a source device when you read it.";
         if (cast)
         {
-            if (!recharge(_scroll_power(75))) return NULL;
+            if (!recharge_from_device(_scroll_power(75))) return NULL;
             device_noticed = TRUE;
         }
         break;
@@ -1705,7 +1705,9 @@ cptr do_device(object_type *o_ptr, int mode, int boost)
    devices into effects, handling rods, staves, wands, potions, scrolls and
    activations uniformly.  For the moment, effects are *just* activations, 
    and I should mention that each type of effect has its own little quirky
-   fail rate calculation ... sigh. */
+   fail rate calculation ... sigh.
+
+   Update: The Device Rewrite is merging Wands/Rods/Staves into the effect system!*/
 effect_t obj_get_effect(object_type *o_ptr)
 {
     if (o_ptr->activation.type)
@@ -2525,6 +2527,16 @@ void device_decrease_sp(object_type *o_ptr, int amt)
     }
 }
 
+void device_increase_sp(object_type *o_ptr, int amt)
+{
+    if (_is_valid_device(o_ptr))
+    {
+        o_ptr->xtra5 += amt;
+        if (o_ptr->xtra5 > o_ptr->xtra4)
+            o_ptr->xtra5 = o_ptr->xtra4;
+    }
+}
+
 void device_regen_sp(object_type *o_ptr)
 {
     int  mult;
@@ -2948,13 +2960,13 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int power = _extra(effect, 75);
         if (name) return "Recharging";
-        if (desc) return "It attempts to recharge a magical device, but may destroy the device on failure.";
+        if (desc) return "It attempts to recharge a magical device using the mana of a source device.";
         if (info) return format("Power %d", _BOOST(power));
         if (value) return format("%d", power*30);
         if (cast)
         {
             device_noticed = TRUE;
-            if (!recharge(_BOOST(power))) return NULL;
+            if (!recharge_from_device(_BOOST(power))) return NULL;
         }
         break;
     }
