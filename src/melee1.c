@@ -580,6 +580,7 @@ bool make_attack_normal(int m_idx)
 
                 case RBE_UN_POWER:
                 {
+                    u32b flgs[TR_FLAG_SIZE];
                     bool drained = FALSE;
                     bool drain_amt = rlev; /* TODO: Consider using damage instead. Indeed, I nerfed this effect
                                               so all monsters should probably do some damage here as well. */
@@ -602,8 +603,19 @@ bool make_attack_normal(int m_idx)
                         /* Skip non-objects */
                         if (!o_ptr->k_idx) continue;
 
+                        /* Skip non-devices */
+                        if (o_ptr->tval != TV_WAND && o_ptr->tval != TV_STAFF && o_ptr->tval != TV_ROD) continue;
+
+                        object_flags(o_ptr, flgs);
+                        if (have_flag(flgs, TR_HOLD_LIFE))
+                        {
+                            drained = TRUE; /* No food drain! */
+                            break;
+                        }
+
                         if (o_ptr->tval == TV_ROD)
                             drain_amt /= 3;
+
                         if (drain_amt > device_sp(o_ptr))
                             drain_amt = device_sp(o_ptr);
 

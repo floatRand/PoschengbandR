@@ -5960,6 +5960,7 @@ enum ego_e {
     EGO_TYPE_HARP,
     EGO_TYPE_ROBE,
     EGO_TYPE_SPECIAL,
+    EGO_TYPE_DEVICE,
     EGO_TYPE_MAX
 };
 
@@ -6173,7 +6174,7 @@ enum ego_ring_e {
     EGO_RING_WIZARDRY,
     EGO_RING_SPEED,
     EGO_RING_NAZGUL,
-    EGO_RING_DWARVES,
+    EGO_RING_DWARVES = 308,
 };
 
 enum ego_amulet_e {
@@ -6186,10 +6187,19 @@ enum ego_amulet_e {
     EGO_AMULET_MAGI,
     EGO_AMULET_HERO,
     EGO_AMULET_DEVOTION,
-    EGO_AMULET_TRICKERY,
+    EGO_AMULET_TRICKERY = 329,
 };
 
-/* Effects. These numbers are stored in savefiles so may never be changed! */
+enum ego_device_e {
+    EGO_DEVICE_RESISTANCE = 350,
+    EGO_DEVICE_CAPACITY,
+    EGO_DEVICE_REGENERATION,
+    EGO_DEVICE_SIMPLICITY,
+    EGO_DEVICE_POWER,
+    EGO_DEVICE_HOLDING,
+    EGO_DEVICE_QUICKNESS = 356,
+};
+
 enum effect_e
 {
     EFFECT_NONE = 0,

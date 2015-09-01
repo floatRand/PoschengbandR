@@ -1291,7 +1291,7 @@ void recharged_notice(object_type *o_ptr)
         if (s[1] == '!')
         {
             /* Describe (briefly) */
-            object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+            object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
 
             /* Notify the player */
             if (o_ptr->number > 1)

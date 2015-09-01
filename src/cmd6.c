@@ -1149,6 +1149,7 @@ static void do_cmd_device_aux(int item)
     int          charges = 1;
     int          boost;
     bool         is_devicemaster = FALSE;
+    u32b         flgs[TR_FLAG_SIZE];
 
     if (item >= 0)
         o_ptr = &inventory[item];
@@ -1162,6 +1163,7 @@ static void do_cmd_device_aux(int item)
         }
     }
     assert(o_ptr->number == 1); /* Devices no longer stack */
+    object_flags(o_ptr, flgs);
 
     /* Devicemasters get extra power */
     is_devicemaster = devicemaster_is_speciality(o_ptr);
@@ -1169,7 +1171,6 @@ static void do_cmd_device_aux(int item)
         boost = device_power_aux(100, p_ptr->device_power + p_ptr->lev/10) - 100;
     else
         boost = device_power(100) - 100;
-
 
     /* Devicemasters use devices more quickly */
     energy_use = 100;
@@ -1179,6 +1180,9 @@ static void do_cmd_device_aux(int item)
         if (delta > 0)
             energy_use -= delta;
     }
+
+    if (have_flag(flgs, TR_SPEED))
+        energy_use -= energy_use * o_ptr->pval / 10;
 
     if (p_ptr->tim_no_device)
     {
@@ -1206,6 +1210,28 @@ static void do_cmd_device_aux(int item)
         if (flush_failure) flush();
         msg_print("You failed to use the device properly.");
         sound(SOUND_FAIL);
+        return;
+    }
+
+    if ((o_ptr->curse_flags & TRC_CURSED) && one_in_(6))
+    {
+        msg_print("Oops! The device explodes!");
+        project(
+            PROJECT_WHO_UNCTRL_POWER, 4, py, px,
+            device_sp(o_ptr), GF_MANA,
+            PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL, -1);
+        if (item >= 0)
+        {
+            inven_item_increase(item, -1);
+            inven_item_describe(item);
+            inven_item_optimize(item);
+        }
+        else
+        {
+            floor_item_increase(0 - item, -1);
+            floor_item_describe(0 - item);
+            floor_item_optimize(0 - item);
+        }
         return;
     }
 

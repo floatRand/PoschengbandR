@@ -3324,6 +3324,55 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
         power--;
 }
 
+static bool _create_device(object_type *o_ptr, int level, int power, int mode)
+{
+    /* Create the device and pick the effect. This can fail if, for example,
+       mode is AM_GOOD and we are too shallow for any of the good effects. */
+    if (!device_init(o_ptr, level, mode))
+        return FALSE;
+
+    if (abs(power) > 1)
+    {
+        bool done = FALSE;
+        u32b flgs[TR_FLAG_SIZE];
+
+        object_flags(o_ptr, flgs);
+
+        while (!done)
+        {
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_DEVICE);
+            done = TRUE;
+
+            /* Powerful Effects come with ignore elements automatically
+             * for historical reasons. Add an ego of resistance on top would
+             * just be insulting! */
+            if ( o_ptr->name2 == EGO_DEVICE_RESISTANCE
+              && have_flag(flgs, TR_IGNORE_ACID) )
+            {
+                done = FALSE;
+            }
+        }
+
+        switch (o_ptr->name2)
+        {
+        case EGO_DEVICE_CAPACITY:
+            o_ptr->pval = 1 + m_bonus(4, level);
+            o_ptr->xtra4 += o_ptr->xtra4 * o_ptr->pval * 10 / 100;
+            break;
+        case EGO_DEVICE_SIMPLICITY:
+        case EGO_DEVICE_POWER:
+        case EGO_DEVICE_REGENERATION:
+        case EGO_DEVICE_QUICKNESS:
+            o_ptr->pval = 1 + m_bonus(4, level);
+            break;
+        }
+    }
+
+    if (power < 0)
+        o_ptr->curse_flags |= TRC_CURSED;
+
+    return TRUE;
+}
 void adjust_weapon_weight(object_type *o_ptr)
 {
     /* Experimental: Maulers need heavy weapons!
@@ -4592,7 +4641,7 @@ static void _create_lite(object_type *o_ptr, int level, int power, int mode)
  *
  * Hack -- note the special code for various items
  */
-static bool a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
+static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
 {
     /* Apply magic (good or bad) according to type */
     switch (o_ptr->tval)
@@ -4618,13 +4667,6 @@ static bool a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
             o_ptr->pval = 0;
             break;
         }
-        case TV_WAND:
-        case TV_STAFF:
-        case TV_ROD:
-            if (!device_init(o_ptr, level, mode))
-                return FALSE;
-            break;
-
         case TV_CAPTURE:
         {
             o_ptr->pval = 0;
@@ -4792,7 +4834,6 @@ static bool a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
             break;
         }
     }
-    return TRUE;
 }
 
 
@@ -5112,10 +5153,13 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         case TV_LITE:
             _create_lite(o_ptr, lev, power, mode);
             break;
+        case TV_WAND:
+        case TV_ROD:
+        case TV_STAFF:
+            return _create_device(o_ptr, lev, power, mode);
         default:
         {
-            if (!a_m_aux_4(o_ptr, lev, power, mode))
-                return FALSE;
+            a_m_aux_4(o_ptr, lev, power, mode);
             break;
         }
     }

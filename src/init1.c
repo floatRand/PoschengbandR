@@ -3098,6 +3098,7 @@ static cptr e_info_types[] = /* order must match ego_e in defines.h, obviously *
     "HARP",
     "ROBE",
     "SPECIAL",
+    "DEVICE",
 };
 
 /*

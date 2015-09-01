@@ -63,8 +63,19 @@ int device_calc_fail_rate(object_type *o_ptr)
     int lev, chance, fail;
 
     if (o_ptr->activation.type)
-        return effect_calc_fail_rate(&o_ptr->activation);
+    {
+        effect_t effect = o_ptr->activation;
+        u32b     flgs[TR_FLAG_SIZE];
 
+        object_flags(o_ptr, flgs);
+        if (have_flag(flgs, TR_EASY_SPELL))
+            effect.difficulty -= effect.difficulty * o_ptr->pval / 10;
+
+        if (o_ptr->curse_flags & TRC_CURSED)
+            effect.difficulty += effect.difficulty / 5;
+
+        return effect_calc_fail_rate(&effect);
+    }
     if (p_ptr->pclass == CLASS_BERSERKER) return 1000;
 
     lev = k_info[o_ptr->k_idx].level;
@@ -1667,7 +1678,12 @@ cptr do_device(object_type *o_ptr, int mode, int boost)
 
     if (o_ptr->activation.type)
     {
-        /* Devices are being converted to the effect system */
+        u32b flgs[TR_FLAG_SIZE];
+
+        object_flags(o_ptr, flgs);
+        if (have_flag(flgs, TR_DEVICE_POWER))
+            boost += device_power_aux(100, o_ptr->pval) - 100;
+
         result = do_effect(&o_ptr->activation, mode, boost);
     }
     else
@@ -2426,8 +2442,23 @@ static void _device_pick_effect(object_type *o_ptr, _device_effect_info_ptr tabl
     }
 }
 
+static bool _is_valid_device(object_type *o_ptr)
+{
+    switch (o_ptr->tval)
+    {
+    case TV_WAND:
+    case TV_ROD:
+    case TV_STAFF:
+        return TRUE;
+    }
+    return FALSE;
+}
+
 bool device_init(object_type *o_ptr, int level, int mode)
 {
+    if (!_is_valid_device(o_ptr))
+        return FALSE;
+
     /* device_level */
     o_ptr->xtra3 = _bounds_check(_rand_normal(level*85/100, 10), 1, 100);
 
@@ -2439,8 +2470,6 @@ bool device_init(object_type *o_ptr, int level, int mode)
             return FALSE;
         /* device_max_sp */
         o_ptr->xtra4 = _bounds_check(_rand_normal(3*o_ptr->xtra3, 15), o_ptr->activation.cost*4, 1000);
-        if (o_ptr->activation.difficulty >= 50)
-            add_flag(o_ptr->art_flags, TR_IGNORE_ELEC);
         break;
     case TV_ROD:
         _device_pick_effect(o_ptr, _rod_effect_info, level, mode);
@@ -2455,40 +2484,48 @@ bool device_init(object_type *o_ptr, int level, int mode)
             return FALSE;
         /* device_max_sp */
         o_ptr->xtra4 = _bounds_check(_rand_normal(3*o_ptr->xtra3, 15), o_ptr->activation.cost*4, 1000);
-        if (o_ptr->activation.difficulty >= 50)
-        {
-            add_flag(o_ptr->art_flags, TR_IGNORE_FIRE);
-            add_flag(o_ptr->art_flags, TR_IGNORE_ACID);
-        }
         break;
     }
     /* device_sp */
     o_ptr->xtra5 = _bounds_check(_rand_normal(o_ptr->xtra4/2, 25), o_ptr->activation.cost, o_ptr->xtra4);
+
+    /* cf _create_device in object2.c for egos */
     return TRUE;
 }
 
 int device_level(object_type *o_ptr)
 {
-    return o_ptr->xtra3;
+    if (_is_valid_device(o_ptr))
+        return o_ptr->xtra3;
+    return 0;
 }
 
 int device_sp(object_type *o_ptr)
 {
-    return o_ptr->xtra5;
+    if (_is_valid_device(o_ptr))
+        return o_ptr->xtra5;
+    return 0;
 }
 
 void device_decrease_sp(object_type *o_ptr, int amt)
 {
-    o_ptr->xtra5 -= amt;
-    if (o_ptr->xtra5 < 0)
-        o_ptr->xtra5 = 0;
+    if (_is_valid_device(o_ptr))
+    {
+        o_ptr->xtra5 -= amt;
+        if (o_ptr->xtra5 < 0)
+            o_ptr->xtra5 = 0;
+    }
 }
 
 void device_regen_sp(object_type *o_ptr)
 {
-    int pct;
-    int scale = 1000;
-    int amt;
+    int  mult;
+    int  div = 1000;
+    int  amt;
+    u32b flgs[TR_FLAG_SIZE];
+
+    if (!_is_valid_device(o_ptr))
+        return;
 
     if (o_ptr->xtra5 == o_ptr->xtra4)
         return;
@@ -2496,26 +2533,30 @@ void device_regen_sp(object_type *o_ptr)
     switch (o_ptr->tval)
     {
     case TV_WAND:
-        pct = 2;
+        mult = 2;
         if (devicemaster_is_(DEVICEMASTER_WANDS))
-            pct *= 2;
+            mult *= 2;
         break;
     case TV_ROD:
-        pct = 10;
+        mult = 10;
         if (devicemaster_is_(DEVICEMASTER_RODS))
-            pct *= 2;
+            mult *= 2;
         break;
     case TV_STAFF:
-        pct = 2;
+        mult = 2;
         if (devicemaster_is_(DEVICEMASTER_STAVES))
-            pct *= 2;
+            mult *= 2;
         break;
     }
 
-    amt = o_ptr->xtra4 * pct;
+    object_flags(o_ptr, flgs);
+    if (have_flag(flgs, TR_REGEN))
+        mult += mult*o_ptr->pval;
 
-    o_ptr->xtra5 += amt / scale;
-    if (randint0(scale) < (amt % scale))
+    amt = o_ptr->xtra4 * mult;
+
+    o_ptr->xtra5 += amt / div;
+    if (randint0(div) < (amt % div))
         o_ptr->xtra5++;
 
     if (o_ptr->xtra5 > o_ptr->xtra4)
@@ -2527,12 +2568,17 @@ void device_regen_sp(object_type *o_ptr)
 
 int device_max_sp(object_type *o_ptr)
 {
-    return o_ptr->xtra4;
+    if (_is_valid_device(o_ptr))
+        return o_ptr->xtra4;
+    return 0;
 }
 
 int device_value(object_type *o_ptr)
 {
     int result = 1;
+
+    if (!_is_valid_device(o_ptr))
+        return 0;
 
     if (o_ptr->activation.type)
     {

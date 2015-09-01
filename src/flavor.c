@@ -58,7 +58,6 @@ static bool object_easy_know(int i)
         case TV_FOOD:
         case TV_POTION:
         case TV_SCROLL:
-        case TV_ROD:
         {
             return (TRUE);
         }
@@ -1941,65 +1940,22 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
             }
         }
 
-        /* Dump "pval" flags for wearable items */
-        if (have_pval_flags(flgs) && o_ptr->pval)
+        /* Dump "pval" flags for wearable items
+           have_pval_flags doesn't work correctly for devices, so assume all
+           devices with a pval need display. TODO: Fix this!
+        */
+        if ((have_pval_flags(flgs) || object_is_device(o_ptr)) && o_ptr->pval)
         {
-            /* Start the display */
-            t = object_desc_chr(t, ' ');
-            t = object_desc_chr(t, p1);
-
-            /* Dump the "pval" itself */
-            t = object_desc_int(t, o_ptr->pval);
-
-            /* Do not display the "pval" flags */
-            if (have_flag(flgs, TR_HIDE_TYPE))
+            if (o_ptr->name2 == EGO_DEVICE_POWER)
             {
-                /* Nothing */
             }
-
-            /* Speed */
-            else if (have_flag(flgs, TR_SPEED))
+            else
             {
-                /* Dump " to speed"
-                t = object_desc_str(t, " to speed");*/
+                t = object_desc_chr(t, ' ');
+                t = object_desc_chr(t, p1);
+                t = object_desc_int(t, o_ptr->pval);
+                t = object_desc_chr(t, p2);
             }
-#if 0
-            TODO: Blows are now fractional (currently +.50 attacks per pval)
-                  As a result, the display would be wrong if we appended "attacks"
-                  after the pval.
-            /* Attack speed */
-            else if (have_flag(flgs, TR_BLOWS))
-            {
-                /* Add " attack" */
-                t = object_desc_str(t, " attack");
-
-                /* Add "attacks" */
-                if (ABS(o_ptr->pval) != 1) t = object_desc_chr(t, 's');
-            }
-#endif
-            /* Stealth */
-            else if (have_flag(flgs, TR_STEALTH))
-            {
-                /* Dump " to stealth"
-                t = object_desc_str(t, " to stealth"); */
-            }
-
-            /* Search */
-            else if (have_flag(flgs, TR_SEARCH))
-            {
-                /* Dump " to searching"
-                t = object_desc_str(t, " to searching"); */
-            }
-
-            /* Infravision */
-            else if (have_flag(flgs, TR_INFRA))
-            {
-                /* Dump " to infravision"
-                t = object_desc_str(t, " to infravision"); */
-            }
-
-            /* Finish the display */
-            t = object_desc_chr(t, p2);
         }
         if (have_flag(flgs, TR_DEVICE_POWER))
         {
@@ -2157,7 +2113,12 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     /* Note "cursed" if the item is known to be cursed */
     else if (object_is_cursed(o_ptr) && (known || (o_ptr->ident & IDENT_SENSE)))
     {
-        strcpy(fake_insc_buf, "cursed");
+        if (object_is_device(o_ptr) && !(o_ptr->ident & IDENT_MENTAL))
+        {
+            /* Hide cursed status of devices until *Identified* */
+        }
+        else
+            strcpy(fake_insc_buf, "cursed");
     }
 
     /* Note "unidentified" if the item is unidentified */

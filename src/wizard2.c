@@ -3034,18 +3034,24 @@ void do_cmd_debug(void)
     {
         int i;
         char buf[MAX_NLEN];
-        for (i = 1; i < 200; i++)
+        for (i = 1; i < 100; i++)
         {
             object_type forge = {0};
             int fail;
 
-            object_prep(&forge, 271);
+            object_prep(&forge, 269);
             if (!apply_magic(&forge, dun_level, 0)) continue;
 
             /*if (forge.activation.type != EFFECT_HEAL_CURING) continue;*/
+            /*if (forge.curse_flags & TRC_CURSED)
+            {
+                drop_near(&forge, -1, py, px);
+                continue;
+            }*/
 
             identify_item(&forge);
-            forge.ident |= (IDENT_MENTAL);
+            forge.ident |= IDENT_MENTAL;
+            ego_aware(&forge);
 
             object_desc(buf, &forge, 0);
             fail = device_calc_fail_rate(&forge);
@@ -3056,7 +3062,7 @@ void do_cmd_debug(void)
                 device_level(&forge),
                 do_device(&forge, SPELL_INFO, 0)
             );
-            if (forge.activation.type == EFFECT_CLARITY && 0)
+            if (forge.name2 == EGO_DEVICE_POWER)
                 drop_near(&forge, -1, py, px);
         }
 /*

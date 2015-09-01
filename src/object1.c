@@ -454,18 +454,18 @@ bool screen_object(object_type *o_ptr, u32b mode)
     {
         char     scratch[70 * 20];
         effect_t e = obj_get_effect(o_ptr);
-        cptr     res = do_effect(&e, SPELL_NAME, 0);
-        int      fail = effect_calc_fail_rate(&e);
+        cptr     res = do_device(o_ptr, SPELL_NAME, 0);
+        int      fail = device_calc_fail_rate(o_ptr);
 
         switch (o_ptr->tval)
         {
         case TV_WAND: case TV_ROD: case TV_STAFF:
-            res = do_effect(&e, SPELL_DESC, 0);
+            res = do_device(o_ptr, SPELL_DESC, 0);
             strcpy(scratch, res);
             strcat(scratch, "\n ");
             if (o_ptr->ident & IDENT_MENTAL)
             {
-                res = do_effect(&e, SPELL_INFO, 0);
+                res = do_device(o_ptr, SPELL_INFO, 0);
                 if (res && strlen(res))
                 {
                     strcat(scratch, "\nInfo:  ");
@@ -574,9 +574,14 @@ bool screen_object(object_type *o_ptr, u32b mode)
 
     if (have_flag(flgs, TR_EASY_SPELL))
     {
-        caster_info *caster_ptr = get_caster_info();
-        if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
-            info[i++] = "It affects your ability to cast spells.";
+        if (object_is_device(o_ptr))
+            info[i++] = "It is easier to use.";
+        else
+        {
+            caster_info *caster_ptr = get_caster_info();
+            if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
+                info[i++] = "It affects your ability to cast spells.";
+        }
     }
 
     if (o_ptr->tval == TV_STATUE)
@@ -744,8 +749,12 @@ bool screen_object(object_type *o_ptr, u32b mode)
         info[i++] = "It decreases your ability to use magic devices.";
 
     if (have_flag(flgs, TR_DEVICE_POWER))
-        info[i++] = "It increases the power of your magic devices.";
-
+    {
+        if (object_is_device(o_ptr))
+            info[i++] = "It is more powerful than normal.";
+        else
+            info[i++] = "It increases the power of your magic devices.";
+    }
     if (have_flag(flgs, TR_STEALTH))
     {
         if (o_ptr->pval > 0)
@@ -765,7 +774,12 @@ bool screen_object(object_type *o_ptr, u32b mode)
         info[i++] = "It affects your ability to tunnel.";
 
     if (have_flag(flgs, TR_SPEED))
-        info[i++] = "It affects your speed.";
+    {
+        if (object_is_device(o_ptr))
+            info[i++] = "It may be used more quickly than normal.";
+        else
+            info[i++] = "It affects your speed.";
+    }
     if (have_flag(flgs, TR_DEC_SPEED))
         info[i++] = "It decreases your speed.";
 
@@ -899,8 +913,12 @@ bool screen_object(object_type *o_ptr, u32b mode)
     if (have_flag(flgs, TR_FREE_ACT))
         info[i++] = "It provides immunity to paralysis.";
     if (have_flag(flgs, TR_HOLD_LIFE))
-        info[i++] = "It provides resistance to life draining.";
-    
+    {
+        if (object_is_device(o_ptr))
+            info[i++] = "It is immune to charge draining.";
+        else
+            info[i++] = "It provides resistance to life draining.";
+    }
     if (have_flag(flgs, TR_RES_FEAR))
         info[i++] = "It provides resistance to fear.";
     if (have_flag(flgs, TR_VULN_FEAR))
@@ -1033,7 +1051,12 @@ bool screen_object(object_type *o_ptr, u32b mode)
     if (have_flag(flgs, TR_SLOW_DIGEST))
         info[i++] = "It slows your metabolism.";
     if (have_flag(flgs, TR_REGEN))
-        info[i++] = "It speeds your regenerative powers.";
+    {
+        if (object_is_device(o_ptr))
+            info[i++] = "It regenerates charges more quickly.";
+        else
+            info[i++] = "It speeds your regenerative powers.";
+    }
     if (have_flag(flgs, TR_WARNING))
         info[i++] = "It warns you of danger";
     if (have_flag(flgs, TR_REFLECT))
@@ -1075,13 +1098,20 @@ bool screen_object(object_type *o_ptr, u32b mode)
         }
         else
         {
-            info[i++] = "It is cursed.";
+            if (object_is_device(o_ptr) && !(o_ptr->ident & IDENT_MENTAL))
+            {
+                /* Hide cursed status of devices until *Identified* */
+            }
+            else
+            {
+                info[i++] = "It is cursed.";
 
-            /*
-             * It's a trivial infomation since there is
-             * fake inscription {cursed}
-             */
-            trivial_info++;
+                /*
+                 * It's a trivial infomation since there is
+                 * fake inscription {cursed}
+                 */
+                trivial_info++;
+            }
         }
     }
 
