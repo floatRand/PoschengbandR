@@ -2472,7 +2472,9 @@ static void do_cmd_wiz_zap(void)
         /* Delete nearby monsters */
         if (m_ptr->cdis <= MAX_SIGHT)
         {
-            delete_monster_idx(i);
+            bool fear = FALSE;
+            mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
+            /*delete_monster_idx(i);*/
         }
     }
 }
@@ -2497,7 +2499,11 @@ static void do_cmd_wiz_zap_all(void)
         if (i == p_ptr->riding) continue;
 
         /* Delete this monster */
-        delete_monster_idx(i);
+        {
+            bool fear = FALSE;
+            mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
+        }
+        /*delete_monster_idx(i);*/
     }
 }
 

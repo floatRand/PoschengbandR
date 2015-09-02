@@ -1121,10 +1121,22 @@ void monster_death(int m_idx, bool drop_item)
 
         if (arena_info[p_ptr->arena_number].tval)
         {
+            int tval = arena_info[p_ptr->arena_number].tval;
+            int sval = arena_info[p_ptr->arena_number].sval;
+
             q_ptr = &forge;
-            object_prep(q_ptr, lookup_kind(arena_info[p_ptr->arena_number].tval, arena_info[p_ptr->arena_number].sval));
-            apply_magic(q_ptr, object_level, AM_NO_FIXED_ART);
-            mass_produce(q_ptr);
+            switch (tval)
+            {
+            case TV_WAND: case TV_ROD: case TV_STAFF:
+                object_prep(q_ptr, lookup_kind(tval, SV_ANY));
+                device_init_fixed(q_ptr, sval);
+                break;
+            default:
+                object_prep(q_ptr, lookup_kind(tval, sval));
+                apply_magic(q_ptr, object_level, AM_NO_FIXED_ART);
+                mass_produce(q_ptr);
+            }
+
             (void)drop_near(q_ptr, -1, y, x);
         }
 

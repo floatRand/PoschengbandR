@@ -1356,6 +1356,8 @@ byte adj_chr_chm[] =
     85      /* 18/220+ */
 };
 
+/* For devices, the sval is actually the effect you want, and it needs
+ * to be present in the corresponding device effect table in devices.c */
 arena_type arena_info[MAX_ARENA_MONS + 2] =
 {
     { MON_NOBORTA,       0,         0                             },
@@ -1365,37 +1367,37 @@ arena_type arena_info[MAX_ARENA_MONS + 2] =
     { MON_HILL_GIANT,    TV_POTION, SV_POTION_SPEED               },
     { MON_WERERAT,       0,         0                             },
     { MON_ORC_CAPTAIN,   0,         0                             },
-    { MON_BERSERKER,     TV_ROD,    SV_ROD_DETECT_TRAP            },
+    { MON_BERSERKER,     TV_ROD,    EFFECT_DETECT_TRAPS           },
     { MON_STONE_GIANT,   0,         0                             },
     { MON_D_ELF_LORD,    TV_POTION, SV_POTION_HEALING             },
     { MON_IRON_GOLEM,    0,         0                             },
     { MON_C_CRAWLER,     0,         0                             },
     { MON_XICLOTLAN,     0,         0                             },
     { MON_TROLL_PRIEST,  0,         0                             },
-    { MON_ANGEL,         TV_ROD,    SV_ROD_DETECT_MONSTERS        },
+    { MON_ANGEL,         TV_ROD,    EFFECT_DETECT_MONSTERS        },
     { MON_SPIRIT_NAGA,   0,         0                             },
     { MON_BASILISK,      0,         0                             },
-    { MON_MITHRIL_GOLEM, TV_ROD,    SV_ROD_STONE_TO_MUD           },
+    { MON_MITHRIL_GOLEM, TV_WAND,   EFFECT_BALL_ACID              },
     { MON_SHADOW_DRAKE,  0,         0                             },
     { MON_OGRE_SHAMAN,   TV_SCROLL, SV_SCROLL_ACQUIREMENT         },
     { MON_BICLOPS,       TV_POTION, SV_POTION_SELF_KNOWLEDGE      },
     { MON_ETHER_DRAKE,   TV_SCROLL, SV_SCROLL_RUNE_OF_PROTECTION  },
     { MON_HALFLING_S,    0,         0                             },
-    { MON_ELDER_THING,   TV_ROD,    SV_ROD_DRAIN_LIFE             },
+    { MON_ELDER_THING,   TV_WAND,   EFFECT_DRAIN_LIFE             },
     { MON_M_MH_DRAGON,   0,         0                             },
     { MON_ETTIN,         TV_SCROLL, SV_SCROLL_STAR_ENCHANT_WEAPON },
-    { MON_VAMPIRE_LORD,  TV_ROD,    SV_ROD_DETECTION              },
+    { MON_VAMPIRE_LORD,  TV_ROD,    EFFECT_DETECT_ALL             },
     { MON_BARNEY,        TV_SCROLL, SV_SCROLL_GENOCIDE            },
     { MON_GROO,          TV_SCROLL, SV_SCROLL_MUNDANITY           },
-    { MON_D_ELF_SORC,    TV_WAND,   SV_WAND_STRIKING              },
+    { MON_D_ELF_SORC,    TV_WAND,   EFFECT_METEOR                 },
     { MON_IRON_LICH,     TV_POTION, SV_POTION_NEW_LIFE            },
     { MON_G_TITAN,       TV_POTION, SV_POTION_STAR_ENLIGHTENMENT  },
-    { MON_G_BALROG,      TV_ROD,    SV_ROD_MAPPING                },
-    { MON_NIGHTWALKER,   TV_ROD,    SV_ROD_IDENTIFY               },
-    { MON_SHAMBLER,      TV_STAFF,  SV_STAFF_HOLINESS             },
+    { MON_G_BALROG,      TV_ROD,    EFFECT_ENLIGHTENMENT          },
+    { MON_NIGHTWALKER,   TV_ROD,    EFFECT_BEAM_DISINTEGRATE      },
+    { MON_SHAMBLER,      TV_STAFF,  EFFECT_HOLINESS               },
     { MON_BLACK_REAVER,  TV_SCROLL, SV_SCROLL_STAR_ACQUIREMENT    },
-    { MON_FENGHUANG,     TV_STAFF,  SV_STAFF_THE_MAGI             },
-    { MON_WYRM_POWER,    TV_ROD,    SV_ROD_HEALING                },
+    { MON_FENGHUANG,     TV_STAFF,  EFFECT_RESTORE_MANA           },
+    { MON_WYRM_POWER,    TV_ROD,    EFFECT_HEAL_CURING_HERO       },
     { 0,                 0,         0                             }, /* Victory prizing */
     { MON_HAGURE,        TV_SCROLL, SV_SCROLL_ARTIFACT            },
 };

@@ -2464,6 +2464,7 @@ static bool _is_valid_device(object_type *o_ptr)
     return FALSE;
 }
 
+/* Initialize a device with a random effect for monster drops, dungeon objects, etc */
 bool device_init(object_type *o_ptr, int level, int mode)
 {
     if (!_is_valid_device(o_ptr))
@@ -2500,6 +2501,72 @@ bool device_init(object_type *o_ptr, int level, int mode)
     o_ptr->xtra5 = _bounds_check(_rand_normal(o_ptr->xtra4/2, 25), o_ptr->activation.cost, o_ptr->xtra4);
 
     /* cf _create_device in object2.c for egos */
+    return TRUE;
+}
+
+static _device_effect_info_ptr _device_find_effect(_device_effect_info_ptr table, int effect)
+{
+    int i;
+
+    for (i = 0; ; i++)
+    {
+        _device_effect_info_ptr entry = &table[i];
+
+        if (!entry->type) break;
+        if (entry->type == effect) return entry;
+    }
+
+    return NULL;
+}
+
+/* Initialize a device with a fixed effect. This is useful for birth objects, quest rewards, etc */
+bool device_init_fixed(object_type *o_ptr, int effect)
+{
+    _device_effect_info_ptr e_ptr = NULL;
+
+    if (!_is_valid_device(o_ptr))
+        return FALSE;
+
+    switch (o_ptr->tval)
+    {
+    case TV_WAND:
+        e_ptr = _device_find_effect(_wand_effect_info, effect);
+        if (!e_ptr)
+            return FALSE;
+        break;
+    case TV_ROD:
+        e_ptr = _device_find_effect(_rod_effect_info, effect);
+        if (!e_ptr)
+            return FALSE;
+        break;
+    case TV_STAFF:
+        e_ptr = _device_find_effect(_staff_effect_info, effect);
+        if (!e_ptr)
+            return FALSE;
+        break;
+    }
+
+    o_ptr->xtra3 = e_ptr->level;
+    if (o_ptr->tval == TV_ROD)
+        o_ptr->xtra4 = 2 * e_ptr->level;
+    else
+        o_ptr->xtra4 = 3 * e_ptr->level;
+    o_ptr->xtra5 = o_ptr->xtra4; /* Fully Charged */
+
+    o_ptr->activation.type = e_ptr->type;
+    o_ptr->activation.power = e_ptr->level;
+    o_ptr->activation.difficulty = e_ptr->level;
+    o_ptr->activation.cost = e_ptr->cost;
+    o_ptr->activation.extra = e_ptr->extra;
+
+    if (e_ptr->flags & _NO_DESTROY)
+    {
+        add_flag(o_ptr->art_flags, TR_IGNORE_ACID);
+        add_flag(o_ptr->art_flags, TR_IGNORE_ELEC);
+        add_flag(o_ptr->art_flags, TR_IGNORE_FIRE);
+        add_flag(o_ptr->art_flags, TR_IGNORE_COLD);
+    }
+
     return TRUE;
 }
 

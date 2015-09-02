@@ -850,6 +850,7 @@ extern cptr do_device(object_type *o_ptr, int mode, int boost);
 
 
 extern bool device_init(object_type *o_ptr, int level, int mode);
+extern bool device_init_fixed(object_type *o_ptr, int effect);
 extern int  device_level(object_type *o_ptr);
 extern int  device_sp(object_type *o_ptr);
 extern void device_decrease_sp(object_type *o_ptr, int amt);
