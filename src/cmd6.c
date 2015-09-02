@@ -407,84 +407,30 @@ static void do_cmd_eat_food_aux(int item)
              || prace_is_(RACE_MON_LICH)
              || prace_is_(RACE_SPECTRE)
              || elemental_is_(ELEMENTAL_AIR) )
-           && (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND) )
+           && object_is_device(o_ptr) )
     {
-        cptr staff;
+        int amt = o_ptr->activation.cost;
 
-        if (o_ptr->tval == TV_STAFF &&
-            (item < 0) && (o_ptr->number > 1))
+        if (amt > device_sp(o_ptr))
+            amt = device_sp(o_ptr);
+
+        if (!amt)
         {
-            msg_print("You must first pick up the staffs.");
+            msg_print("The device has no energy left.");
             return;
         }
 
-        staff = (o_ptr->tval == TV_STAFF) ? "staff" : "wand";
-
-        /* "Eat" charges */
-        if (o_ptr->pval == 0)
-        {
-            msg_format("The %s has no charges left.", staff);
-            o_ptr->ident |= (IDENT_EMPTY);
-
-            /* Combine / Reorder the pack (later) */
-            p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-            p_ptr->window |= (PW_INVEN);
-
-            return;
-        }
-
-        msg_format("You absorb mana of the %s as your energy.", staff);
-
-        /* Use a single charge */
-        o_ptr->pval--;
-
-        /* Eat a charge */
+        device_decrease_sp(o_ptr, amt);
         set_food(p_ptr->food + 5000);
 
-        /* XXX Hack -- unstack if necessary */
-        if (o_ptr->tval == TV_STAFF &&
-            (item >= 0) && (o_ptr->number > 1))
-        {
-            object_type forge;
-            object_type *q_ptr;
-
-            /* Get local object */
-            q_ptr = &forge;
-
-            /* Obtain a local object */
-            object_copy(q_ptr, o_ptr);
-
-            /* Modify quantity */
-            q_ptr->number = 1;
-
-            /* Restore the charges */
-            o_ptr->pval++;
-
-            /* Unstack the used item */
-            o_ptr->number--;
-            p_ptr->total_weight -= q_ptr->weight;
-            item = inven_carry(q_ptr);
-
-            /* Message */
-            msg_print("You unstack your staff.");
-        }
-
-        /* Describe charges in the pack */
         if (item >= 0)
-        {
             inven_item_charges(item);
-        }
-
-        /* Describe charges on the floor */
         else
-        {
             floor_item_charges(0 - item);
-        }
 
-        /* Window stuff */
         p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
-        /* Don't eat a staff/wand itself */
+        /* Don't consume the object */
         return;
     }
     else if ((p_ptr->mimic_form == MIMIC_DEMON || p_ptr->mimic_form == MIMIC_DEMON_LORD || prace_is_(RACE_BALROG) || prace_is_(RACE_MON_DEMON)) 
@@ -580,7 +526,7 @@ static bool item_tester_hook_eatable(object_type *o_ptr)
         prace_is_(RACE_SPECTRE) ||
         elemental_is_(ELEMENTAL_AIR))
     {
-        if (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND)
+        if (object_is_device(o_ptr))
             return TRUE;
     }
     else if (prace_is_(RACE_BALROG) || prace_is_(RACE_MON_DEMON) || p_ptr->mimic_form == MIMIC_DEMON || p_ptr->mimic_form == MIMIC_DEMON_LORD)

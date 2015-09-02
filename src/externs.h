@@ -645,7 +645,6 @@ extern void add_outfit(object_type *o_ptr);
 extern cptr birth_get_class_desc(int i);
 extern cptr birth_get_personality_desc(int i);
 extern cptr birth_get_realm_desc(int i);
-extern void birth_object(int tv, int sv, int qty);
 extern void e_info_reset(void);
 extern void player_birth(void);
 extern void get_max_stats(void);

@@ -24,13 +24,9 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_CROWN, SV_IRON_CROWN));
     add_outfit(&forge);
 
-    object_prep(&forge, lookup_kind(TV_STAFF, SV_STAFF_POWER));
-    apply_magic(&forge, 1, AM_AVERAGE);
-    add_outfit(&forge);
-
-    object_prep(&forge, lookup_kind(TV_STAFF, SV_STAFF_ANIMATE_DEAD));
-    apply_magic(&forge, 1, AM_AVERAGE);
-    add_outfit(&forge);
+    object_prep(&forge, lookup_kind(TV_STAFF, SV_ANY));
+    if (device_init_fixed(&forge, EFFECT_ANIMATE_DEAD))
+        add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_ROBE));
     add_outfit(&forge);

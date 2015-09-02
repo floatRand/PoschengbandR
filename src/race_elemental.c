@@ -463,8 +463,9 @@ static void _air_birth(void)
     object_prep(&forge, lookup_kind(TV_HARD_ARMOR, SV_CHAIN_MAIL));
     add_outfit(&forge);
 
-    object_prep(&forge, lookup_kind(TV_STAFF, SV_STAFF_NOTHING));
-    add_outfit(&forge);
+    object_prep(&forge, lookup_kind(TV_STAFF, SV_ANY));
+    if (device_init_fixed(&forge, EFFECT_NOTHING))
+        add_outfit(&forge);
 
     p_ptr->current_r_idx = MON_AIR_SPIRIT; 
 }

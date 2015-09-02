@@ -6431,6 +6431,7 @@ enum effect_e
     EFFECT_WALL_BUILDING,
     EFFECT_POLYMORPH,
     EFFECT_STARLITE,
+    EFFECT_NOTHING,      /* Food for undead players */
 
     /* Bad Effects */
     EFFECT_AGGRAVATE = 900,

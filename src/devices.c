@@ -2020,6 +2020,7 @@ static _effect_info_t _effect_info[] =
     {"SCARE_MONSTER",   EFFECT_SCARE_MONSTER,       10, 100,  1, 0},
     {"POLYMORPH",       EFFECT_POLYMORPH,           15, 100,  2, BIAS_CHAOS},
     {"STARLITE",        EFFECT_STARLITE,            20, 100,  2, 0},
+    {"NOTHING",         EFFECT_NOTHING,              1,   1,  0, 0},
 
     /* Bad Effects                                  Lv    T   R  Bias */
     {"AGGRAVATE",       EFFECT_AGGRAVATE,           10, 100,  1, BIAS_DEMON},
@@ -2304,6 +2305,7 @@ static _device_effect_info_t _rod_effect_info[] =
 static _device_effect_info_t _staff_effect_info[] =
 {
     /*                            Lvl Cost Rarity  Min  Max  Extra */
+    {EFFECT_NOTHING,                1,   1,     0,   0,   0,     0, 0},
     {EFFECT_DARKNESS,               1,   1,     1,   0,  15,     0, 0},
     {EFFECT_LITE_AREA,              1,   1,     1,   0,  30,     0, _STOCK_TOWN},
     {EFFECT_DETECT_GOLD,            5,   3,     1,   0,  30,     0, _STOCK_TOWN},
@@ -2547,14 +2549,17 @@ bool device_init_fixed(object_type *o_ptr, int effect)
     }
 
     o_ptr->xtra3 = e_ptr->level;
+    if (o_ptr->xtra3 < 10)
+        o_ptr->xtra3 = 10;
+
     if (o_ptr->tval == TV_ROD)
-        o_ptr->xtra4 = 2 * e_ptr->level;
+        o_ptr->xtra4 = 2 * o_ptr->xtra3;
     else
-        o_ptr->xtra4 = 3 * e_ptr->level;
+        o_ptr->xtra4 = 3 * o_ptr->xtra3;
     o_ptr->xtra5 = o_ptr->xtra4; /* Fully Charged */
 
     o_ptr->activation.type = e_ptr->type;
-    o_ptr->activation.power = e_ptr->level;
+    o_ptr->activation.power = o_ptr->xtra3;
     o_ptr->activation.difficulty = e_ptr->level;
     o_ptr->activation.cost = e_ptr->cost;
     o_ptr->activation.extra = e_ptr->extra;
@@ -5727,6 +5732,13 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         }
         break;
     }
+    case EFFECT_NOTHING:
+        if (name) return "Nothing";
+        if (desc) return "It is your food.";
+        if (value) return format("%d", 1);
+        if (cast)
+            msg_print("What a pity ... You are wasting your food!");
+        break;
 
     /* Bad Effects */
     case EFFECT_AGGRAVATE:

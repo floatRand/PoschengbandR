@@ -2831,7 +2831,7 @@ static void init_turn(void)
  * Each player starts out with a few items, given as tval/sval pairs.
  * In addition, he always has some food and a few torches.
  */
-static byte player_init[MAX_CLASS][3][2] =
+static int player_init[MAX_CLASS][3][2] =
 {
     {
         /* Warrior */
@@ -2934,7 +2934,7 @@ static byte player_init[MAX_CLASS][3][2] =
     {
         /* Sorcerer */
         { TV_HAFTED, SV_WIZSTAFF },
-        { TV_WAND, SV_WAND_MAGIC_MISSILE },
+        { TV_WAND, EFFECT_BOLT_MISSILE },
         { TV_POTION, SV_POTION_RESTORE_MANA }
     },
 
@@ -2947,7 +2947,7 @@ static byte player_init[MAX_CLASS][3][2] =
 
     {
         /* Magic eater */
-        { TV_WAND, SV_WAND_MAGIC_MISSILE },
+        { TV_WAND, EFFECT_BOLT_MISSILE },
         { TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR},
         { TV_SWORD, SV_SHORT_SWORD },
     },
@@ -2983,7 +2983,7 @@ static byte player_init[MAX_CLASS][3][2] =
     {
         /* Blue Mage */
         { TV_SOFT_ARMOR, SV_ROBE },
-        { TV_WAND, SV_WAND_MAGIC_MISSILE },
+        { TV_WAND, EFFECT_BOLT_MISSILE },
         { TV_SWORD, SV_DAGGER }
     },
 
@@ -3132,7 +3132,7 @@ static byte player_init[MAX_CLASS][3][2] =
 
     {
         /* Devicemaster */
-        { TV_WAND, SV_WAND_MAGIC_MISSILE },
+        { TV_WAND, EFFECT_BOLT_MISSILE },
         { TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR},
         { TV_SWORD, SV_SHORT_SWORD },
     },
@@ -3182,16 +3182,27 @@ void add_outfit(object_type *o_ptr)
  */
 static void _birth_object(int tv, int sv, int qty)
 {
-    object_type    forge;
-    object_prep(&forge, lookup_kind(tv, sv));
+    object_type forge;
+
+    switch (tv)
+    {
+    case TV_WAND: case TV_ROD: case TV_STAFF:
+    {
+        int k_idx = lookup_kind(tv, SV_ANY);
+        object_prep(&forge, k_idx);
+        if (!device_init_fixed(&forge, sv))
+            return;
+        qty = 1;
+        break;
+    }
+    default:
+        object_prep(&forge, lookup_kind(tv, sv));
+    }
+
     forge.number = qty;
     identify_item(&forge);
     forge.ident |= IDENT_MENTAL;
     add_outfit(&forge);
-}
-void birth_object(int tv, int sv, int qty)
-{
-    _birth_object(tv, sv, qty);
 }
  
 void player_outfit(void)
@@ -3229,7 +3240,7 @@ void player_outfit(void)
     case RACE_SPECTRE:
     case RACE_MON_GOLEM:
     case RACE_MON_SWORD:
-        _birth_object(TV_STAFF, SV_STAFF_NOTHING, 1);
+        _birth_object(TV_STAFF, EFFECT_NOTHING, 1);
         break;
 
     case RACE_ENT:
@@ -3303,10 +3314,9 @@ void player_outfit(void)
     }
     else if (p_ptr->pclass == CLASS_HIGH_MAGE)
     {
-        object_prep(&forge, lookup_kind(TV_WAND, SV_WAND_MAGIC_MISSILE));
-        forge.number = 1;
-        forge.pval = (byte)rand_range(25, 30);
-        add_outfit(&forge);
+        object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
+        if (device_init_fixed(&forge, EFFECT_BOLT_MISSILE))
+            add_outfit(&forge);
     }
     else if (p_ptr->pclass == CLASS_SORCERER)
     {
@@ -3364,30 +3374,39 @@ void player_outfit(void)
         if (tv == TV_SORCERY_BOOK) tv = TV_LIFE_BOOK + p_ptr->realm1 - 1;
         else if (tv == TV_DEATH_BOOK) tv = TV_LIFE_BOOK + p_ptr->realm2 - 1;
 
-        k_idx = lookup_kind(tv, sv);
-        if (!k_idx) continue;
-        object_prep(&forge, k_idx);
-
-        /* Assassins begin the game with a poisoned dagger */
-        if ((tv == TV_SWORD || tv == TV_HAFTED) && (p_ptr->pclass == CLASS_ROGUE &&
-            p_ptr->realm1 == REALM_DEATH)) /* Only assassins get a poisoned weapon */
+        switch (tv)
         {
-            forge.name2 = EGO_WEAPON_VENOM;
-        }
+        case TV_WAND: case TV_ROD: case TV_STAFF:
+            k_idx = lookup_kind(tv, SV_ANY);
+            object_prep(&forge, k_idx);
+            if (device_init_fixed(&forge, sv))
+                add_outfit(&forge);
+            break;
+        default:
+            k_idx = lookup_kind(tv, sv);
+            if (!k_idx) continue;
+            object_prep(&forge, k_idx);
+            /* Assassins begin the game with a poisoned dagger */
+            if ((tv == TV_SWORD || tv == TV_HAFTED) && (p_ptr->pclass == CLASS_ROGUE &&
+                p_ptr->realm1 == REALM_DEATH)) /* Only assassins get a poisoned weapon */
+            {
+                forge.name2 = EGO_WEAPON_VENOM;
+            }
 
-        /* Hack: Rune-Knights begin with an Absorption Rune on their broad sword (or whip if sexy) */
-        if(p_ptr->personality == PERS_SEXY)
-        {
-            if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_HAFTED && sv == SV_WHIP)
-                rune_add(&forge, RUNE_ABSORPTION, FALSE);
-        }
-        else
-        {
-            if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_SWORD && sv == SV_BROAD_SWORD)
-                rune_add(&forge, RUNE_ABSORPTION, FALSE);
-        }
+            /* Hack: Rune-Knights begin with an Absorption Rune on their broad sword (or whip if sexy) */
+            if(p_ptr->personality == PERS_SEXY)
+            {
+                if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_HAFTED && sv == SV_WHIP)
+                    rune_add(&forge, RUNE_ABSORPTION, FALSE);
+            }
+            else
+            {
+                if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_SWORD && sv == SV_BROAD_SWORD)
+                    rune_add(&forge, RUNE_ABSORPTION, FALSE);
+            }
 
-        add_outfit(&forge);
+            add_outfit(&forge);
+        }
     }
 
     /* Hack -- make aware of the water */

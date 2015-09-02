@@ -178,11 +178,10 @@ static void _birth(void)
 
     p_ptr->current_r_idx = MON_POSSESSOR_SOUL;
     equip_on_change_race();
-    
-    object_prep(&forge, lookup_kind(TV_WAND, SV_WAND_MAGIC_MISSILE));
-    forge.number = 1;
-    forge.pval = (byte)rand_range(25, 30);
-    add_outfit(&forge);
+
+    object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
+    if (device_init_fixed(&forge, EFFECT_BOLT_MISSILE))
+        add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;

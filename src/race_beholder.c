@@ -15,17 +15,13 @@ static void _birth(void)
     add_esp_weak(&forge, FALSE);
     add_outfit(&forge);
 
-    object_prep(&forge, lookup_kind(TV_WAND, SV_WAND_ACID_BOLT));
-    apply_magic(&forge, 1, AM_AVERAGE);
-    add_outfit(&forge);
+    object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
+    if (device_init_fixed(&forge, EFFECT_BOLT_FIRE))
+        add_outfit(&forge);
 
-    object_prep(&forge, lookup_kind(TV_WAND, SV_WAND_FIRE_BOLT));
-    apply_magic(&forge, 1, AM_AVERAGE);
-    add_outfit(&forge);
-
-    object_prep(&forge, lookup_kind(TV_WAND, SV_WAND_COLD_BOLT));
-    apply_magic(&forge, 1, AM_AVERAGE);
-    add_outfit(&forge);
+    object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
+    if (device_init_fixed(&forge, EFFECT_BOLT_COLD))
+        add_outfit(&forge);
 }
 
 /**********************************************************************

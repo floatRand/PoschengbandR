@@ -6914,27 +6914,18 @@ void place_trap(int y, int x)
 void inven_item_charges(int item)
 {
     object_type *o_ptr = &inventory[item];
+    int          charges;
 
-    /* Require staff/wand */
-    if ((o_ptr->tval != TV_STAFF) && (o_ptr->tval != TV_WAND)) return;
-
-    /* Require known item */
+    if (!object_is_device(o_ptr)) return;
     if (!object_is_known(o_ptr)) return;
+    if (!o_ptr->activation.cost) return; /* Just checking ... */
 
-    /* Multiple charges */
-    if (o_ptr->pval != 1)
-    {
-        /* Print a message */
-        msg_format("You have %d charges remaining.", o_ptr->pval);
-    }
+    charges = device_sp(o_ptr) / o_ptr->activation.cost;
 
-    /* Single charge */
+    if (charges == 1)
+        msg_print("You have 1 charge remaining.");
     else
-    {
-        /* Print a message */
-        msg_format("You have %d charge remaining.", o_ptr->pval);
-    }
-
+        msg_format("You have %d charges remaining.", charges);
 }
 
 
@@ -7061,29 +7052,19 @@ void inven_item_optimize(int item)
 void floor_item_charges(int item)
 {
     object_type *o_ptr = &o_list[item];
+    int          charges;
 
-    /* Require staff/wand */
-    if ((o_ptr->tval != TV_STAFF) && (o_ptr->tval != TV_WAND)) return;
-
-    /* Require known item */
+    if (!object_is_device(o_ptr)) return;
     if (!object_is_known(o_ptr)) return;
+    if (!o_ptr->activation.cost) return; /* Just checking ... */
 
-    /* Multiple charges */
-    if (o_ptr->pval != 1)
-    {
-        /* Print a message */
-        msg_format("There are %d charges remaining.", o_ptr->pval);
-    }
+    charges = device_sp(o_ptr) / o_ptr->activation.cost;
 
-    /* Single charge */
+    if (charges == 1)
+        msg_print("There is 1 charge remaining.");
     else
-    {
-        /* Print a message */
-        msg_format("There is %d charge remaining.", o_ptr->pval);
-    }
-
+        msg_format("There are %d charges remaining.", charges);
 }
-
 
 /*
  * Describe an item in the inventory.
