@@ -2208,13 +2208,43 @@ void monster_death(int m_idx, bool drop_item)
 
             if (k_idx)
             {
+                int ego_index = d_info[dungeon_type].final_ego;
+
                 /* Get local object */
                 q_ptr = &forge;
 
                 /* Prepare to make a reward */
                 object_prep(q_ptr, k_idx);
 
-                apply_magic(q_ptr, object_level, AM_NO_FIXED_ART | AM_GOOD);
+                if (ego_index)
+                {
+                    if (object_is_device)
+                    {
+                        /* Hack: There is only a single k_idx for each class of devices, so
+                         * we use the ego index to pick an effect. This means there is no way
+                         * to actually grant an ego device ...*/
+                        if (!device_init_fixed(q_ptr, ego_index))
+                        {
+                            if (ego_index)
+                            {
+                                char     name[255];
+                                effect_t e = {0};
+                                e.type = ego_index;
+                                sprintf(name, "%s", do_effect(&e, SPELL_NAME, 0));
+                                msg_format("Software Bug: %s is not a valid effect for this device.", name);
+                                msg_print("Generating a random device instead.");
+                            }
+                            device_init(q_ptr, object_level, 0);
+                        }
+                    }
+                    else
+                    {
+                        apply_magic_ego = ego_index;
+                        apply_magic(q_ptr, object_level, AM_NO_FIXED_ART | AM_GOOD | AM_FORCE_EGO);
+                    }
+                }
+                else
+                    apply_magic(q_ptr, object_level, AM_NO_FIXED_ART | AM_GOOD);
 
                 /* Drop it in the dungeon */
                 (void)drop_near(q_ptr, -1, y, x);

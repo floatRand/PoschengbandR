@@ -1574,6 +1574,16 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         }
     }
 
+    if (known && object_is_device(o_ptr))
+    {
+        if (o_ptr->activation.type)
+        {
+            char buf[255];
+            sprintf(buf, ": %s", do_effect(&o_ptr->activation, SPELL_NAME, 0));
+            t = object_desc_str(t, buf);
+        }
+    }
+
     /* No more details wanted */
     if (mode & OD_NAME_ONLY) goto object_desc_done;
 
@@ -1919,15 +1929,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
     if (known) /* Known item only */
     {
-        if (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND || o_ptr->tval == TV_ROD)
+        if (object_is_device(o_ptr))
         {
-            if (o_ptr->activation.type)
-            {
-                char buf[255];
-                sprintf(buf, ": %s", do_effect(&o_ptr->activation, SPELL_NAME, 0));
-                t = object_desc_str(t, buf);
-            }
-
             if (o_ptr->activation.cost)
             {
                 int  charges = device_sp(o_ptr) / o_ptr->activation.cost;

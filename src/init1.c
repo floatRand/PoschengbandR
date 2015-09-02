@@ -4058,13 +4058,15 @@ errr parse_d_info(char *buf, header *head)
             /* XXX XXX XXX Hack -- Read Final Object */
             if (1 == sscanf(s, "FINAL_OBJECT_%d", &artif))
             {
-                /* Extract a "Final Artifact" */
                 d_ptr->final_object = artif;
-
-                /* Start at next entry */
                 s = t;
+                continue;
+            }
 
-                /* Continue */
+            if (1 == sscanf(s, "FINAL_EGO_%d", &artif))
+            {
+                d_ptr->final_ego = artif;
+                s = t;
                 continue;
             }
 

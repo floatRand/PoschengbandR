@@ -1887,6 +1887,7 @@ struct dungeon_info_type {
 
     char r_char[5];     /* Monster race allowed */
     int final_object;    /* The object you'll find at the bottom */
+    int final_ego;       /* Ego type for final_object, or effect type for devices */
     int final_artifact;    /* The artifact you'll find at the bottom */
     int final_guardian;    /* The artifact's guardian. If an artifact is specified, then it's NEEDED */
 
