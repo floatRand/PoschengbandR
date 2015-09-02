@@ -283,7 +283,7 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:25
 # continue with quest 28
 ?:[EQU $QUEST25 3]
 F:b:BUILDING_1:3:0:0:0:0:NONE:28
-F:!:FLOOR:3:0:320
+F:!:FLOOR:3:0:270:550
 
 # Quest 25 finished, continue with quest 28
 ?:[EQU $QUEST25 4]
@@ -762,17 +762,17 @@ F:@:FLOOR:3:0:0:0:80
 ##########################################################################
 # Devicemaster
 
-# Wand of Rockets
+# Wand: Rocket
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Wands] ]
-F:@:FLOOR:3:0:299
+F:@:FLOOR:3:0:269:559
 
-# Staff of Mana Storm
+# Staff: Mana Storm
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Staves] ]
-F:@:FLOOR:3:0:629
+F:@:FLOOR:3:0:270:560
 
-# Rod of Havoc
+# Rod: Mana Ball
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Rods] ]
-F:@:FLOOR:3:0:350
+F:@:FLOOR:3:0:271:416
 
 ##########################################################################
 # Weaponmaster

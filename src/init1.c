@@ -4789,8 +4789,26 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                     make_gold(o_ptr);
                     coin_type = 0;
                 }
-
-                if (ego_index)
+                else if (object_is_device(o_ptr))
+                {
+                    /* Hack: There is only a single k_idx for each class of devices, so
+                     * we use the ego index to pick an effect. This means there is no way
+                     * to actually grant an ego device ...*/
+                    if (!device_init_fixed(o_ptr, ego_index))
+                    {
+                        if (ego_index)
+                        {
+                            char     name[255];
+                            effect_t e = {0};
+                            e.type = ego_index;
+                            sprintf(name, "%s", do_effect(&e, SPELL_NAME, 0));
+                            msg_format("Software Bug: %s is not a valid effect for this device.", name);
+                            msg_print("Generating a random device instead.");
+                        }
+                        device_init(o_ptr, p_ptr->lev, 0);
+                    }
+                }
+                else if (ego_index)
                 {
                     /* TODO: Ego initialization needs a rewrite. In the meantime, enjoy this ugly hack ... */
                     apply_magic_ego = ego_index;

@@ -436,6 +436,23 @@ F:!:FLOOR:3:0:0:0:42
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:9
 
+# Tulkas
+?:[AND [EQU $QUEST27 3] [EQU $RACE Ring] ]
+F:b:BUILDING_1:3
+F:!:FLOOR:3:0:0:0:9
+
+##########################################################################
+# Centipede
+# Shiva's Avatar
+?:[AND [EQU $QUEST27 3] [EQU $RACE Centipede] [EQU [MOD $RANDOM27 5] 0] ]
+F:b:BUILDING_1:3
+F:!:FLOOR:3:0:0:0:63
+
+# Stone of War
+?:[AND [EQU $QUEST27 3] [EQU $RACE Centipede] [GEQ [MOD $RANDOM27 5] 1] ]
+F:b:BUILDING_1:3
+F:!:FLOOR:3:0:0:0:291
+
 ##########################################################################
 # Dragon
 # Colluin
@@ -523,10 +540,10 @@ F:!:FLOOR:3:0:0:0:174
 
 ##########################################################################
 # Mauler
-# Nyoi-bou
+# Aegir
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Mauler] [EQU [MOD $RANDOM27 9] 0] ]
 F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:157
+F:!:FLOOR:3:0:0:0:251
 
 # Benkei
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Mauler] [GEQ [MOD $RANDOM27 9] 1] ]
@@ -603,13 +620,11 @@ F:!:FLOOR:3:0:0:0:94
 
 ##########################################################################
 # Beastmaster
-# TODO
-# Eorlingas
+# Impaler
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Beastmaster] [EQU [MOD $RANDOM27 5] 0] ]
 F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:100
+F:!:FLOOR:3:0:0:0:324
 
-# TODO
 # Eorlingas
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Beastmaster] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
@@ -617,13 +632,11 @@ F:!:FLOOR:3:0:0:0:100
 
 ##########################################################################
 # Cavalry
-# TODO
-# GaeBolg
+# Dragonlance
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Cavalry] [EQU [MOD $RANDOM27 5] 0] ]
 F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:163
+F:!:FLOOR:3:0:0:0:322
 
-# TODO
 # GaeBolg
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Cavalry] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
@@ -644,17 +657,17 @@ F:!:FLOOR:3:0:0:0:80
 ##########################################################################
 # Devicemaster
 
-# Wand of Rockets
+# Wand: Rocket
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Wands] ]
-F:!:FLOOR:3:0:299
+F:!:FLOOR:3:0:269:559
 
-# Staff of Mana Storm
+# Staff: Mana Storm
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Staves] ]
-F:!:FLOOR:3:0:629
+F:!:FLOOR:3:0:270:560
 
-# Rod of Havoc
+# Rod: Mana Ball
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Rods] ]
-F:!:FLOOR:3:0:350
+F:!:FLOOR:3:0:271:416
 
 ##########################################################################
 # Weaponmaster
@@ -744,15 +757,15 @@ F:!:FLOOR:3:0:0:0:138
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:134
 
-# Monkey King's Cudgel
+# Ruyi Jingu Bang
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [EQU [MOD $RANDOM27 5] 0] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:255
 
-# Nar-i-vagil
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [GEQ [MOD $RANDOM27 5] 1] ] 
+# Asclepius
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:118
+F:!:FLOOR:3:0:0:0:225
 
 # Werewindle
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] [EQU [MOD $RANDOM27 5] 0] ]
@@ -839,6 +852,16 @@ F:!:FLOOR:3:0:0:0:117
 
 # Palantir
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Priest] [GEQ [MOD $RANDOM27 5] 1] ]
+F:b:BUILDING_1:3
+F:!:FLOOR:3:0:0:0:15
+
+# Aule
+?:[AND [EQU $QUEST27 3] [EQU $RACE Angel] [EQU [MOD $RANDOM27 5] 0] ]
+F:b:BUILDING_1:3
+F:!:FLOOR:3:0:0:0:117
+
+# Palantir
+?:[AND [EQU $QUEST27 3] [EQU $RACE Angel] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:15
 
@@ -1115,7 +1138,7 @@ F:a:BUILDING_0:3:0:0:0:0:NONE:30
 # continue to quest 21
 ?:[EQU $QUEST30 3]
 F:a:BUILDING_0:3:0:0:0:0:NONE:21
-F:?:FLOOR:3:0:375
+F:?:FLOOR:3:0:271:8
 
 # Quest 30 finished, continue to quest 21
 ?:[EQU $QUEST30 4]

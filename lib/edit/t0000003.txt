@@ -58,7 +58,7 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:20
 # Quest 20 rewarding, reward is a Rod of Detection, continue with quest 24
 ?:[EQU $QUEST20 3]
 F:b:BUILDING_1:3:0:0:0:0:NONE:24
-F:~:FLOOR:3:0:375
+F:~:FLOOR:3:0:271:8
 
 # Quest 20 finished, continue with quest 24
 ?:[EQU $QUEST20 4]

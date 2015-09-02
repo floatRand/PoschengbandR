@@ -6057,6 +6057,8 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             }
         }
         break;
+    default:
+        if (name) return format("Invalid Effect: %d", effect->type);
     }
     return "";
 }

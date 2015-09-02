@@ -1,5 +1,7 @@
 #include "angband.h"
 
+#include <assert.h>
+
 bool devicemaster_desperation = FALSE;
 
 static int _speciality_tval(int psubclass)
@@ -146,13 +148,14 @@ void _recharging_spell(int cmd, variant *res)
         var_set_string(res, "Recharging");
         break;
     case SPELL_DESC:
-        var_set_string(res, "It attempts to recharge a device using your mana for power.");
+        var_set_string(res, "It attempts to recharge a device using another device for power.");
         break;
     case SPELL_INFO:
         var_set_string(res, format("Power %d", 50 + 3*p_ptr->lev));
         break;
     case SPELL_CAST:
-        var_set_bool(res, recharge_from_player(50 + 3*p_ptr->lev));
+        /* Devicemasters have no mana */
+        var_set_bool(res, recharge_from_device(50 + 3*p_ptr->lev));
         break;
     default:
         default_spell(cmd, res);
@@ -180,13 +183,129 @@ static bool _transfer_obj_p(object_type *o_ptr)
     return FALSE;
 }
 
+static bool _transfer_effect(void)
+{
+    int src_idx = 0, dest_idx = 0;
+    object_type *src_obj = NULL, *dest_obj = NULL;
+
+    /* Choose the objects */
+    _transfer_src_obj = NULL;
+    item_tester_hook = _transfer_obj_p;
+    if (!get_item(&src_idx, "Transfer from which item? ", "You have no items to use.", USE_INVEN)) return FALSE;
+    src_obj = &inventory[src_idx];
+
+    _transfer_src_obj = src_obj;
+    item_tester_hook = _transfer_obj_p;
+    if (!get_item(&dest_idx, "Transfer to which item? ", "You have no items to use.", USE_INVEN)) return FALSE;
+    dest_obj = &inventory[dest_idx];
+
+    if (dest_obj == src_obj)
+    {
+        msg_print("Failed! Please pick distinct objects for the source and destination.");
+        return FALSE;
+    }
+
+    if (device_level(dest_obj) < src_obj->activation.difficulty)
+    {
+        msg_print("Failed! The destination device is not powerful enough to receive the source effect.");
+        return FALSE;
+    }
+
+    /* Move the effect */
+    dest_obj->activation.type = src_obj->activation.type;
+    dest_obj->activation.difficulty = src_obj->activation.difficulty;
+    dest_obj->activation.cost = src_obj->activation.cost;
+    dest_obj->activation.extra = src_obj->activation.extra;
+
+    /* Destroy the source */
+    assert(src_obj->number == 1); /* Wands/Rods/Staves no longer stack */
+    inven_item_increase(src_idx, -1);
+    inven_item_describe(src_idx);
+    inven_item_optimize(src_idx);
+
+    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    return TRUE;
+}
+
+static bool _transfer_essence(void)
+{
+    int tval = _speciality_tval(p_ptr->psubclass);
+    int src_idx = 0, dest_idx = 0;
+    object_type *src_obj = NULL, *dest_obj = NULL;
+    object_kind *src_kind = NULL, *dest_kind = NULL;
+    int src_charges = 0, dest_charges = 0, max_charges = 0, power = 0;
+
+    /* Choose the objects */
+    _transfer_src_obj = NULL;
+    item_tester_hook = _transfer_obj_p;
+    if (!get_item(&src_idx, "Transfer from which item? ", "You have no items to use.", USE_INVEN)) return FALSE;
+    src_obj = &inventory[src_idx];
+    src_kind = &k_info[src_obj->k_idx];
+
+    _transfer_src_obj = src_obj;
+    item_tester_hook = _transfer_obj_p;
+    if (!get_item(&dest_idx, "Transfer to which item? ", "You have no items to use.", USE_INVEN)) return FALSE;
+    dest_obj = &inventory[dest_idx];
+    dest_kind = &k_info[dest_obj->k_idx];
+
+    if (dest_obj == src_obj)
+    {
+        msg_print("Failed! Please pick distinct objects for the source and destination.");
+        return FALSE;
+    }
+
+    if (tval == TV_SCROLL || tval == TV_POTION)
+    {
+        if (dest_kind->level > src_kind->level) /* Double Check ... should already be excluded! */
+        {
+            msg_print("Failed! You may only transfer to objects of greater or equal power.");
+            return FALSE;
+        }
+    }
+
+    src_charges = src_obj->number;
+    max_charges = 99 - dest_obj->number;
+
+    if (max_charges <= 0)
+    {
+        msg_print("Failed! The destination object is already fully charged.");
+        return FALSE;
+    }
+
+    power = src_charges * src_kind->level;
+    power = power / 2;
+    dest_charges = power / MAX(dest_kind->level, 10);
+
+    if (dest_charges > max_charges)
+        dest_charges = max_charges;
+
+    if (dest_charges <= 0)
+    {
+        msg_print("Failed! The source object is not powerful enough to transfer even a single charge.");
+        return FALSE;
+    }
+
+    /* Perform the transfer: Add to dest first as the inventory may shuffle after decreasing the source. */
+    inven_item_increase(dest_idx, dest_charges);
+    inven_item_describe(dest_idx);
+    inven_item_optimize(dest_idx);
+
+    inven_item_increase(src_idx, -src_charges);
+    inven_item_describe(src_idx);
+    inven_item_optimize(src_idx);
+
+    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    return TRUE;
+}
 void _transfer_charges_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
         if (p_ptr->psubclass != DEVICEMASTER_POTIONS && p_ptr->psubclass != DEVICEMASTER_SCROLLS)
-            var_set_string(res, "Transfer Charges");
+            var_set_string(res, "Transfer Effect");
         else
             var_set_string(res, "Transfer Essence");
         break;
@@ -195,183 +314,19 @@ void _transfer_charges_spell(int cmd, variant *res)
             var_set_string(res, "Transfer essence from one potion to another.");
         else if (p_ptr->psubclass == DEVICEMASTER_SCROLLS)
             var_set_string(res, "Transfer essence from one scroll to another.");
-        else
-            var_set_string(res, "Transfer charges from one device to another.");
+        else if (p_ptr->psubclass == DEVICEMASTER_WANDS)
+            var_set_string(res, "Transfer effect from one wand to another, destroying the source wand.");
+        else if (p_ptr->psubclass == DEVICEMASTER_RODS)
+            var_set_string(res, "Transfer effect from one rod to another, destroying the source rod.");
+        else if (p_ptr->psubclass == DEVICEMASTER_STAVES)
+            var_set_string(res, "Transfer effect from one staff to another, destroying the source staff.");
         break;
     case SPELL_CAST:
-    {
-        int tval = _speciality_tval(p_ptr->psubclass);
-        int src_idx = 0, dest_idx = 0;
-        object_type *src_obj = NULL, *dest_obj = NULL;
-        object_kind *src_kind = NULL, *dest_kind = NULL;
-        int src_charges = 0, dest_charges = 0, max_charges = 0, power = 0;
-
-        var_set_bool(res, FALSE);
-
-        /* Choose the objects */
-        _transfer_src_obj = NULL;
-        item_tester_hook = _transfer_obj_p;
-        if (!get_item(&src_idx, "Transfer from which item? ", "You have no items to use.", USE_INVEN)) return;
-        src_obj = &inventory[src_idx];
-        src_kind = &k_info[src_obj->k_idx];
-
-        _transfer_src_obj = src_obj;
-        item_tester_hook = _transfer_obj_p;
-        if (!get_item(&dest_idx, "Transfer to which item? ", "You have no items to use.", USE_INVEN)) return;
-        dest_obj = &inventory[dest_idx];
-        dest_kind = &k_info[dest_obj->k_idx];
-
-        if (dest_obj == src_obj)
-        {
-            msg_print("Failed! Please pick distinct objects for the source and destination.");
-            return;
-        }
-
-        if (tval == TV_SCROLL || tval == TV_POTION)
-        {
-            if (dest_kind->level > src_kind->level) /* Double Check ... should already be excluded! */
-            {
-                msg_print("Failed! You may only transfer to objects of greater or equal power.");
-                return;
-            }
-        }
-
-        /*if (dest_obj->tval == TV_SCROLL)
-        {
-            switch (dest_obj->sval)
-            {
-            case SV_SCROLL_ARTIFACT:
-            case SV_SCROLL_ACQUIREMENT:
-            case SV_SCROLL_STAR_ACQUIREMENT:
-                msg_print("Failed! You may not transfer to *that* type of scroll!");
-                return;
-            }
-        }
-        if (dest_obj->tval == TV_POTION)
-        {
-            switch (dest_obj->sval)
-            {
-            case SV_POTION_AUGMENTATION:
-            case SV_POTION_INC_STR:
-            case SV_POTION_INC_INT:
-            case SV_POTION_INC_WIS:
-            case SV_POTION_INC_DEX:
-            case SV_POTION_INC_CON:
-            case SV_POTION_INC_CHR:
-            case SV_POTION_EXPERIENCE:
-            case SV_POTION_STAR_ENLIGHTENMENT:
-            case SV_POTION_INVULNERABILITY:
-                msg_print("Failed! You may not transfer to *that* type of potion!");
-                return;
-            }
-        }*/
-
-        var_set_bool(res, TRUE);
-
-        /* Calculate the number of charges */
-        switch (tval)
-        {
-        case TV_ROD:
-            src_charges = src_obj->number - (src_obj->timeout + src_kind->pval - 1)  / src_kind->pval;
-            break;
-        case TV_STAFF:
-            src_charges = src_obj->pval * src_obj->number;
-            break;
-        case TV_WAND:
-            src_charges = src_obj->pval;
-            break;
-        case TV_POTION:
-        case TV_SCROLL:
-            src_charges = src_obj->number;
-            break;
-        }
-        if (src_charges <= 0) 
-        {
-            msg_print("There is nothing to transfer.");
-            return;
-        }
-
-        switch (tval)
-        {
-        case TV_ROD:
-            max_charges = dest_obj->number; /* Don't worry about charging destination rods ... */
-            break;
-        case TV_STAFF:
-            max_charges = dest_kind->pval * dest_obj->number - dest_obj->pval * dest_obj->number;
-            break;
-        case TV_WAND:
-            max_charges = dest_kind->pval * dest_obj->number - dest_obj->pval;
-            break;
-        case TV_POTION:
-        case TV_SCROLL:
-            max_charges = 99 - dest_obj->number;
-            break;
-        }
-
-        if (max_charges <= 0)
-        {
-            msg_print("Failed! The destination object is already fully charged.");
-            return;
-        }
-
-        power = src_charges * src_kind->level;
-        switch (tval)
-        {
-        case TV_WAND:
-        case TV_STAFF:
-        case TV_SCROLL:
-            power = power * 3 / 4;
-            break;
-        case TV_POTION:
-            power = power / 2;
-            break;
-        }
-        dest_charges = power / MAX(dest_kind->level, 10);
-
-        if (dest_charges > max_charges)
-            dest_charges = max_charges;
-
-        if (tval == TV_STAFF)
-            dest_charges /= dest_obj->number;
-
-        if (dest_charges <= 0)
-        {
-            msg_print("Failed! The source object is not powerful enough to transfer even a single charge.");
-            return;
-        }
-
-        /* Perform the transfer */
-        switch (tval)
-        {
-        case TV_ROD:
-            src_obj->timeout += src_charges * src_kind->pval;
-            dest_obj->timeout -= dest_charges * dest_kind->pval;
-            if (dest_obj->timeout < 0)
-                dest_obj->timeout = 0;
-            break;
-        case TV_STAFF:
-            src_obj->pval -= src_charges / src_obj->number;
-            dest_obj->pval += dest_charges;
-            break;
-        case TV_WAND:
-            src_obj->pval -= src_charges;
-            dest_obj->pval += dest_charges;
-            break;
-        case TV_POTION:
-        case TV_SCROLL: /* Must add to dest first!! */
-            inven_item_increase(dest_idx, dest_charges);
-            inven_item_describe(dest_idx);
-            inven_item_optimize(dest_idx);
-
-            inven_item_increase(src_idx, -src_charges);
-            inven_item_describe(src_idx);
-            inven_item_optimize(src_idx);
-            break;
-        }
-        p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-        p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+        if (p_ptr->psubclass != DEVICEMASTER_POTIONS && p_ptr->psubclass != DEVICEMASTER_SCROLLS)
+            var_set_bool(res, _transfer_effect());
+        else
+            var_set_bool(res, _transfer_essence());
         break;
-    }
     default:
         default_spell(cmd, res);
         break;
@@ -425,29 +380,8 @@ bool devicemaster_is_speciality(object_type *o_ptr)
 {
     if (p_ptr->pclass == CLASS_DEVICEMASTER)
     {
-        switch (p_ptr->psubclass)
-        {
-        case DEVICEMASTER_RODS:
-            if (o_ptr->tval == TV_ROD)
-                return TRUE;
-            break;
-        case DEVICEMASTER_STAVES:
-            if (o_ptr->tval == TV_STAFF)
-                return TRUE;
-            break;
-        case DEVICEMASTER_WANDS:
-            if (o_ptr->tval == TV_WAND)
-                return TRUE;
-            break;
-        case DEVICEMASTER_POTIONS:
-            if (o_ptr->tval == TV_POTION)
-                return TRUE;
-            break;
-        case DEVICEMASTER_SCROLLS:
-            if (o_ptr->tval == TV_SCROLL)
-                return TRUE;
-            break;
-        }
+        if (_speciality_tval(p_ptr->psubclass) == o_ptr->tval)
+            return TRUE;
     }
     return FALSE;
 }
@@ -460,18 +394,19 @@ static void _birth(void)
     switch (p_ptr->psubclass)
     {
     case DEVICEMASTER_RODS:
-        object_prep(&forge, lookup_kind(TV_ROD, SV_ROD_SLEEP_MONSTER));
-        add_outfit(&forge);
+        object_prep(&forge, lookup_kind(TV_ROD, SV_ANY));
+        if (device_init_fixed(&forge, EFFECT_DETECT_MONSTERS))
+            add_outfit(&forge);
         break;
     case DEVICEMASTER_STAVES:
-        object_prep(&forge, lookup_kind(TV_STAFF, SV_STAFF_SLEEP_MONSTERS));
-        forge.pval = k_info[forge.k_idx].pval;
-        add_outfit(&forge);
+        object_prep(&forge, lookup_kind(TV_STAFF, SV_ANY));
+        if (device_init_fixed(&forge, EFFECT_SLEEP_MONSTERS))
+            add_outfit(&forge);
         break;
     case DEVICEMASTER_WANDS:
-        object_prep(&forge, lookup_kind(TV_WAND, SV_WAND_SLEEP_MONSTER));
-        forge.pval = k_info[forge.k_idx].pval;
-        add_outfit(&forge);
+        object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
+        if (device_init_fixed(&forge, EFFECT_SLEEP_MONSTER))
+            add_outfit(&forge);
         break;
     case DEVICEMASTER_POTIONS:
         object_prep(&forge, lookup_kind(TV_POTION, SV_POTION_SPEED));
@@ -493,8 +428,6 @@ static void _character_dump(FILE* file)
     fprintf(file, "\n\n================================== Abilities ==================================\n\n");
     {
         int pow = p_ptr->lev / 10;
-        if (devicemaster_is_(DEVICEMASTER_RODS))
-            pow = p_ptr->lev / 5;
         if (pow)
             fprintf(file, " * You gain +%d%% power when using %s.\n", device_power_aux(100, pow) - 100, desc);
     }
@@ -553,8 +486,9 @@ class_t *devicemaster_get_class_t(void)
             "Each of these abilities becomes greater with experience.\n \n"
             "Devicemasters have a few magical abilities to enhance their utility with devices. As expected, "
             "they gain a powerful talent of Recharging very early on. Also, they may detect magical devices "
-            "from a distance. At higher levels, they gain the powerful ability to move charges from "
-            "one device to another without the risk of destroying the target device. As a final ability, "
+            "from a distance. At higher levels, they gain the powerful ability to move effects from "
+            "one device to another (wand/rod/staff) or to move essence from one potion/scroll to a "
+            "lower level potion/scroll. As a final ability, "
             "the Devicemaster may use multiple charges at once from a given device in an act of "
             "desperation. This greatly increases the power of the effect, but may destroy the device "
             "in the process.";

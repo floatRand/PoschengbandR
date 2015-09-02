@@ -1277,7 +1277,7 @@ static void do_cmd_device_aux(int item)
         /* Devicemasters can power the device for free once in a while */
         if (is_devicemaster && !devicemaster_desperation && randint1(100) <= p_ptr->lev)
         {
-            msg_print("Your mental focus powers the wand!");
+            msg_print("Your mental focus powers the device!");
         }
         else
         {

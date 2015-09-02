@@ -458,15 +458,22 @@ bool screen_object(object_type *o_ptr, u32b mode)
         {
         case TV_WAND: case TV_ROD: case TV_STAFF:
         {
-            cptr res = do_device(o_ptr, SPELL_DESC, 0);
+            cptr res;
+            int  boost = 0;
 
+            if (devicemaster_is_speciality(o_ptr))
+                boost = device_power_aux(100, p_ptr->device_power + p_ptr->lev/10) - 100;
+            else
+                boost = device_power(100) - 100;
+
+            res = do_device(o_ptr, SPELL_DESC, boost);
             strcpy(scratch, res);
             strcat(scratch, "\n ");
             if (o_ptr->ident & IDENT_MENTAL)
             {
                 int fail = device_calc_fail_rate(o_ptr);
 
-                res = do_device(o_ptr, SPELL_INFO, 0);
+                res = do_device(o_ptr, SPELL_INFO, boost);
                 if (res && strlen(res))
                 {
                     strcat(scratch, "\nInfo: ");

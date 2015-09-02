@@ -2571,6 +2571,7 @@ bool recharge_from_player(int power)
     object_type *o_ptr;
 
     /* Get destination device */
+    _obj_recharge_src_ptr = NULL;
     item_tester_hook = _obj_recharge_dest;
     if (!get_item(&item, "Recharge which item? ", "You have nothing to recharge.", USE_INVEN | USE_FLOOR))
         return FALSE;
@@ -2626,14 +2627,16 @@ bool recharge_from_device(int power)
 
     amt = device_sp(src_ptr);
     max = device_max_sp(dest_ptr) - device_sp(dest_ptr);
+    if (max > power)
+        max = power;
+
     if (amt > max)
-    {
         amt = max;
-        if (one_in_(3))
-        {
-            device_decrease_sp(src_ptr, amt);
-            destroy = FALSE;
-        }
+
+    if (!one_in_(3) || devicemaster_is_speciality(src_ptr))
+    {
+        device_decrease_sp(src_ptr, amt);
+        destroy = FALSE;
     }
 
     _recharge_aux(dest_ptr, amt, power);
