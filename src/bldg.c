@@ -2533,103 +2533,6 @@ const _gamble_shop_t _gamble_shop_scrolls[] = {
     { 0, 0, 0}
 };
 
-const _gamble_shop_t _gamble_shop_staves[] = {
-  { TV_STAFF, SV_STAFF_MSTORM, 5 }, 
-  { TV_STAFF, SV_STAFF_DESTRUCTION, 35 }, 
-  { TV_STAFF, SV_STAFF_HOLINESS, 30 }, 
-  { TV_STAFF, SV_STAFF_GENOCIDE, 4 }, 
-  { TV_STAFF, SV_STAFF_THE_MAGI, 1 }, 
-  { TV_STAFF, SV_STAFF_POWER, 20 }, 
-  { TV_STAFF, SV_STAFF_DISPEL_EVIL, 40 }, 
-  { TV_STAFF, SV_STAFF_SPEED, 35 }, 
-  { TV_STAFF, SV_STAFF_HEALING, 10 },
-  { TV_STAFF, SV_STAFF_DETECT_GOLD, 50 }, 
-  { TV_STAFF, SV_STAFF_TELEPORTATION, 50 }, 
-  { TV_STAFF, SV_STAFF_CURING, 50 }, 
-  { TV_STAFF, SV_STAFF_SLEEP_MONSTERS, 50 }, 
-  { TV_STAFF, SV_STAFF_SLOW_MONSTERS, 50 }, 
-  { TV_STAFF, SV_STAFF_ANIMATE_DEAD, 50 }, 
-  { TV_STAFF, SV_STAFF_EARTHQUAKES, 50 }, 
-  { TV_STAFF, SV_STAFF_PROBING, 50 }, 
-  { TV_STAFF, SV_STAFF_DETECT_EVIL, 50 }, 
-  { TV_STAFF, SV_STAFF_MAPPING, 50 }, 
-  { TV_STAFF, SV_STAFF_LITE, 50 }, 
-  { TV_STAFF, SV_STAFF_IDENTIFY, 50 }, 
-  { TV_STAFF, SV_STAFF_REMOVE_CURSE, 55 },
-  { TV_STAFF, SV_STAFF_STARLITE, 55 },
-  { TV_STAFF, SV_STAFF_DETECT_ITEM, 55 },
-  { TV_STAFF, SV_STAFF_DETECT_TRAP, 55 },
-  { 0, 0, 0}
-};
-
-const _gamble_shop_t _gamble_shop_wands[] = {
-  { TV_WAND, SV_WAND_GENOCIDE, 10 }, 
-  { TV_WAND, SV_WAND_STRIKING, 10 }, 
-  { TV_WAND, SV_WAND_ROCKETS, 5 }, 
-  { TV_WAND, SV_WAND_DRAGON_BREATH, 15 }, 
-  { TV_WAND, SV_WAND_DRAGON_COLD, 15 }, 
-  { TV_WAND, SV_WAND_DRAGON_FIRE, 15 }, 
-  { TV_WAND, SV_WAND_DISINTEGRATE, 10 }, 
-  { TV_WAND, SV_WAND_WONDER, 50 }, 
-  { TV_WAND, SV_WAND_COLD_BALL, 35 }, 
-  { TV_WAND, SV_WAND_FIRE_BALL, 35 }, 
-  { TV_WAND, SV_WAND_ELEC_BALL, 35 }, 
-  { TV_WAND, SV_WAND_ACID_BALL, 35 }, 
-  { TV_WAND, SV_WAND_COLD_BOLT, 50 }, 
-  { TV_WAND, SV_WAND_FIRE_BOLT, 50 }, 
-  { TV_WAND, SV_WAND_CHARM_MONSTER, 50 }, 
-  { TV_WAND, SV_WAND_ACID_BOLT, 50 }, 
-  { TV_WAND, SV_WAND_MAGIC_MISSILE, 50 }, 
-  { TV_WAND, SV_WAND_STINKING_CLOUD, 50 }, 
-  { TV_WAND, SV_WAND_POLYMORPH, 50 }, 
-  { TV_WAND, SV_WAND_DRAIN_LIFE, 30 }, 
-  { TV_WAND, SV_WAND_FEAR_MONSTER, 50 }, 
-  { TV_WAND, SV_WAND_CONFUSE_MONSTER, 50 }, 
-  { TV_WAND, SV_WAND_SLOW_MONSTER, 50 }, 
-  { TV_WAND, SV_WAND_SLEEP_MONSTER, 50 }, 
-  { TV_WAND, SV_WAND_LITE, 50 }, 
-  { TV_WAND, SV_WAND_STONE_TO_MUD, 50 }, 
-  { TV_WAND, SV_WAND_TELEPORT_AWAY, 50 }, 
-  { 0, 0, 0}
-};
-
-const _gamble_shop_t _gamble_shop_rods[] = {
-  { TV_ROD, SV_ROD_STONE_TO_MUD, 50 }, 
-  { TV_ROD, SV_ROD_HAVOC, 5 }, 
-  { TV_ROD, SV_ROD_COLD_BALL, 20 }, 
-  { TV_ROD, SV_ROD_FIRE_BALL, 20 }, 
-  { TV_ROD, SV_ROD_ELEC_BALL, 20 }, 
-  { TV_ROD, SV_ROD_ACID_BALL, 20 }, 
-  { TV_ROD, SV_ROD_COLD_BOLT, 40 }, 
-  { TV_ROD, SV_ROD_FIRE_BOLT, 40 }, 
-  { TV_ROD, SV_ROD_ELEC_BOLT, 40 }, 
-  { TV_ROD, SV_ROD_ACID_BOLT, 40 }, 
-  { TV_ROD, SV_ROD_POLYMORPH, 30 }, 
-  { TV_ROD, SV_ROD_DRAIN_LIFE, 15 }, 
-  { TV_ROD, SV_ROD_SLOW_MONSTER, 50 }, 
-  { TV_ROD, SV_ROD_SLEEP_MONSTER, 50 }, 
-  { TV_ROD, SV_ROD_LITE, 50 }, 
-  { TV_ROD, SV_ROD_DISARMING, 30 }, 
-  { TV_ROD, SV_ROD_TELEPORT_AWAY, 30 }, 
-  { TV_ROD, SV_ROD_PESTICIDE, 50 }, 
-  { TV_ROD, SV_ROD_SPEED, 7 }, 
-  { TV_ROD, SV_ROD_RESTORATION, 7 }, 
-  { TV_ROD, SV_ROD_HEALING, 7 }, 
-  { TV_ROD, SV_ROD_CURING, 15 }, 
-  { TV_ROD, SV_ROD_PROBING, 50 }, 
-  { TV_ROD, SV_ROD_DETECTION, 25 }, 
-  { TV_ROD, SV_ROD_MAPPING, 20 }, 
-  { TV_ROD, SV_ROD_ILLUMINATION, 40 }, 
-  { TV_ROD, SV_ROD_RECALL, 40 }, 
-  { TV_ROD, SV_ROD_IDENTIFY, 20 }, 
-  { TV_ROD, SV_ROD_DETECT_DOOR, 40 }, 
-  { TV_ROD, SV_ROD_DETECT_TRAP, 50 }, 
-  { TV_ROD, SV_ROD_DETECT_MONSTERS, 30 }, 
-  { TV_ROD, SV_ROD_ESCAPING, 25 }, 
-  { TV_ROD, SV_ROD_MANA_BALL, 10 }, 
-  { 0, 0, 0}
-};
-
 static int _gamble_shop_roll(const _gamble_shop_t *choices)
 {
     int tot = 0, roll;
@@ -2741,6 +2644,26 @@ static bool _gamble_shop_object(object_p pred)
             }
         }
         break;
+    }
+
+    return _gamble_shop_aux(&forge);
+}
+
+static bool _gamble_shop_device(int tval)
+{
+    object_type forge = {0};
+    int lvl = 20;
+    int k_idx;
+
+    while (one_in_(2))
+        lvl += 20;
+
+    for (;;)
+    {
+        k_idx = lookup_kind(tval, SV_ANY);
+        object_prep(&forge, k_idx);
+        if (device_init(&forge, lvl, 0))
+            break;
     }
 
     return _gamble_shop_aux(&forge);
@@ -3646,13 +3569,13 @@ static void bldg_process_command(building_type *bldg, int i)
         paid = _gamble_shop(_gamble_shop_scrolls);
         break;
     case BACT_GAMBLE_SHOP_STAFF:
-        paid = _gamble_shop(_gamble_shop_staves);
+        paid = _gamble_shop_device(TV_STAFF);
         break;
     case BACT_GAMBLE_SHOP_WAND:
-        paid = _gamble_shop(_gamble_shop_wands);
+        paid = _gamble_shop_device(TV_WAND);
         break;
     case BACT_GAMBLE_SHOP_ROD:
-        paid = _gamble_shop(_gamble_shop_rods);
+        paid = _gamble_shop_device(TV_ROD);
         break;
     case BACT_GAMBLE_SHOP_ARMOR:
         paid = _gamble_shop_object(object_is_armour);
