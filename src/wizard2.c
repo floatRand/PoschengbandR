@@ -746,7 +746,7 @@ bool _fourth_book_p(object_type *o_ptr) { return o_ptr->tval >= TV_LIFE_BOOK && 
 bool _scroll_of_destruction_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_STAR_DESTRUCTION); }
 bool _scroll_of_genocide_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_GENOCIDE); }
 bool _scroll_of_mass_genocide_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_MASS_GENOCIDE); }
-bool _wand_of_rockets_p(object_type *o_ptr) { return object_is_(o_ptr, TV_WAND, SV_WAND_ROCKETS); }
+bool _wand_of_rockets_p(object_type *o_ptr) { return o_ptr->tval == TV_WAND && o_ptr->activation.type == EFFECT_ROCKET; }
 bool _ego_weapon_p(object_type *o_ptr) { return object_is_melee_weapon(o_ptr) && o_ptr->name2; }
 bool _ego_shooter_p(object_type *o_ptr) { return o_ptr->tval == TV_BOW && o_ptr->name2; }
 bool _ego_body_armor_p(object_type *o_ptr) { return object_is_body_armour(o_ptr) && o_ptr->name2; }

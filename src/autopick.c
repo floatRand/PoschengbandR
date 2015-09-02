@@ -1217,7 +1217,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
              p_ptr->pclass == CLASS_CAVALRY)
         {
             if (o_ptr->tval == TV_WAND &&
-                o_ptr->sval == SV_WAND_HEAL_MONSTER && object_is_aware(o_ptr))
+                o_ptr->activation.type == EFFECT_HEAL_MONSTER && object_is_aware(o_ptr))
             {
                 is_special = TRUE;
             }
@@ -1707,8 +1707,10 @@ static bool is_opt_confirm_destroy(object_type *o_ptr)
              p_ptr->pclass == CLASS_CAVALRY)
         {
             if (o_ptr->tval == TV_WAND &&
-                o_ptr->sval == SV_WAND_HEAL_MONSTER && object_is_aware(o_ptr))
+                o_ptr->activation.type == EFFECT_HEAL_MONSTER && object_is_aware(o_ptr))
+            {
                 return FALSE;
+            }
         }
     }
 
@@ -1945,6 +1947,23 @@ static void _sense_object_floor(object_type *o_ptr)
     o_ptr->feeling = _get_object_feeling(o_ptr);
 }
 
+static int _pack_find_device(int effect)
+{
+    int i;
+    for (i = 0; i < INVEN_PACK; i++)
+    {
+        object_type *o_ptr = &inventory[i];
+
+        if (!o_ptr->k_idx) continue;
+        if (object_is_device(o_ptr) && o_ptr->activation.type == effect)
+        {
+            if (device_sp(o_ptr) >= o_ptr->activation.cost)
+                return i;
+        }
+    }
+    return -1;
+}
+
 static int _pack_find(int tval, int sval)
 {
     int i;
@@ -1956,24 +1975,11 @@ static int _pack_find(int tval, int sval)
     return -1;
 }
 
-static bool _rod_is_charging(object_type *o_ptr)
-{
-    if (o_ptr->number == 1 && o_ptr->timeout)
-        return TRUE;
-    else if ( o_ptr->number > 1 
-           && o_ptr->timeout > k_info[o_ptr->k_idx].pval * (o_ptr->number - 1) )
-    {
-        return TRUE;
-    }
-    return FALSE;
-}
-
 /* Automatically identify objects, consuming requisite resources.
-   We support scrolls, staves and rods of perception, but nothing else
-   as the source for this convenience. We ignore fail rates and
-   don't even charge the player energy for this boon! This is generous,
-   but it is assumed that the player could (laboriously) locate a quiet
-   safe place and then repeat until successful anyway. */
+   We support scrolls and devices as the source for this convenience.
+   We ignore fail rates and don't even charge the player energy for
+   this boon! This is generous, but it is assumed that the player could
+   (laboriously) locate a quiet safe place and then repeat until successful anyway. */
 bool autopick_auto_id(object_type *o_ptr)
 {
     int     class_idx = p_ptr->pclass;
@@ -1996,34 +2002,12 @@ bool autopick_auto_id(object_type *o_ptr)
             return TRUE;
         }
 
-        i = _pack_find(TV_STAFF, SV_STAFF_IDENTIFY);
+        i = _pack_find_device(EFFECT_IDENTIFY);
         if (i >= 0 && inventory[i].pval > 0)
         {
             identify_item(o_ptr);
-
-            if (inventory[i].number > 1)
-            {
-                object_type copy;
-                object_copy(&copy, &inventory[i]);
-                copy.number = 1;
-                copy.pval--;
-                inventory[i].number--;
-                p_ptr->total_weight -= copy.weight;
-                i = inven_carry(&copy);
-                msg_print("You unstack your staff.");
-            }
-            else
-                inventory[i].pval--;
-
+            device_decrease_sp(&inventory[i], inventory[i].activation.cost);
             inven_item_charges(i);
-            return TRUE;
-        }
-
-        i = _pack_find(TV_ROD, SV_ROD_IDENTIFY);
-        if (i >= 0 && !_rod_is_charging(&inventory[i]))
-        {
-            identify_item(o_ptr);
-            inventory[i].timeout += k_info[inventory[i].k_idx].pval;
             return TRUE;
         }
 

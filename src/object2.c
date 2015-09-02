@@ -5555,26 +5555,10 @@ bool kind_is_great(int k_idx)
             return FALSE;
         }
         case TV_WAND:
-        {
-            if (k_ptr->sval == SV_WAND_ROCKETS) return TRUE;
-            if (k_ptr->sval == SV_WAND_DISINTEGRATE) return TRUE;
-            return FALSE;
-        }
         case TV_STAFF:
-        {
-            if (k_ptr->sval == SV_STAFF_GENOCIDE) return TRUE;
-            if (k_ptr->sval == SV_STAFF_MSTORM) return TRUE;
-            return FALSE;
-        }
         case TV_ROD:
-        {
-            if (k_ptr->sval == SV_ROD_HEALING) return TRUE;
-            if (k_ptr->sval == SV_ROD_RESTORATION) return TRUE;
-            if (k_ptr->sval == SV_ROD_HAVOC) return TRUE;
-            if (k_ptr->sval == SV_ROD_SPEED) return TRUE;
-            if (k_ptr->sval == SV_ROD_MANA_BALL) return TRUE;
-            return FALSE;
-        }
+            return TRUE;
+
         case TV_RING:
         case TV_AMULET:
             return TRUE;
@@ -5686,36 +5670,10 @@ bool kind_is_good(int k_idx)
             return FALSE;
         }
         case TV_WAND:
-        {
-            if (k_ptr->sval == SV_WAND_ROCKETS) return TRUE;
-            if (k_ptr->sval == SV_WAND_DISINTEGRATE) return TRUE;
-            if (k_ptr->sval == SV_WAND_DRAGON_FIRE) return TRUE;
-            if (k_ptr->sval == SV_WAND_DRAGON_COLD) return TRUE;
-            if (k_ptr->sval == SV_WAND_DRAGON_BREATH) return TRUE;
-            if (k_ptr->sval == SV_WAND_STRIKING) return TRUE;
-            return FALSE;
-        }
-        case TV_ROD:
-        {
-            if (k_ptr->sval == SV_ROD_MAPPING) return TRUE;
-            if (k_ptr->sval == SV_ROD_DETECTION) return TRUE;
-            if (k_ptr->sval == SV_ROD_HEALING) return TRUE;
-            if (k_ptr->sval == SV_ROD_RESTORATION) return TRUE;
-            if (k_ptr->sval == SV_ROD_SPEED) return TRUE;
-            if (k_ptr->sval == SV_ROD_MANA_BOLT) return TRUE;
-            return FALSE;
-        }
         case TV_STAFF:
-        {
-            if (k_ptr->sval == SV_STAFF_GENOCIDE) return TRUE;
-            /*if (k_ptr->sval == SV_STAFF_SPEED) return TRUE;*/
-            if (k_ptr->sval == SV_STAFF_HOLINESS) return TRUE;
-            if (k_ptr->sval == SV_STAFF_POWER) return TRUE;
-            if (k_ptr->sval == SV_STAFF_HEALING) return TRUE;
-            if (k_ptr->sval == SV_STAFF_MSTORM) return TRUE;
-            if (k_ptr->sval == SV_STAFF_DESTRUCTION) return TRUE;
-            return FALSE;
-        }
+        case TV_ROD:
+            return TRUE;
+
         case TV_RING:
         case TV_AMULET:
             return TRUE;

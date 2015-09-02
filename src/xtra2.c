@@ -975,33 +975,6 @@ static bool _kind_is_utility(int k_idx)
             return TRUE;
         }
         break;
-
-    case TV_STAFF:
-        switch (k_ptr->sval)
-        {
-        case SV_STAFF_MAPPING:
-        case SV_STAFF_DETECT_EVIL:
-        case SV_STAFF_CURING:
-        case SV_STAFF_CURE_LIGHT:
-        case SV_STAFF_SPEED:
-            return TRUE;
-        }
-        break;
-
-    case TV_ROD:
-        switch (k_ptr->sval)
-        {
-        case SV_ROD_DETECT_TRAP:
-        case SV_ROD_DETECT_DOOR:
-        case SV_ROD_IDENTIFY:
-        case SV_ROD_RECALL:
-        case SV_ROD_ILLUMINATION:
-        case SV_ROD_MAPPING:
-        case SV_ROD_DETECTION:
-        case SV_ROD_TELEPORT_AWAY:
-            return TRUE;
-        }
-        break;
     }
     return FALSE;
 }

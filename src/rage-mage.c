@@ -535,6 +535,13 @@ static bool _object_is_(object_type *o_ptr, int tv, int sv)
 
 static int _object_dam_type(object_type *o_ptr)
 {            
+    switch (o_ptr->activation.type)
+    {
+    case EFFECT_DARKNESS:
+    case EFFECT_DARKNESS_STORM:
+        return GF_DARK;
+    }
+/* TODO: I just got things to compile ... Fix me!
     if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_DARKNESS)) return GF_DARK;
     if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_LITE)) return GF_LITE;
     if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_STARLITE)) return GF_LITE;
@@ -556,6 +563,7 @@ static int _object_dam_type(object_type *o_ptr)
     if (_object_is_(o_ptr, TV_ROD, SV_ROD_FIRE_BALL)) return GF_FIRE;
     if (_object_is_(o_ptr, TV_ROD, SV_ROD_COLD_BOLT)) return GF_COLD;
     if (_object_is_(o_ptr, TV_ROD, SV_ROD_COLD_BALL)) return GF_COLD;
+*/
     return GF_MANA;
 }
 
@@ -580,16 +588,17 @@ static void _shatter_device_spell(int cmd, variant *res)
         o_ptr = &inventory[item];
         var_set_bool(res, TRUE);
         
-        if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_DESTRUCTION))
+        /* TODO: Re-evaluate the logic here ... I simply did enough to get things compiling again! */
+        if (o_ptr->activation.type == EFFECT_DESTRUCTION)
         {
             if (destroy_area(py, px, 15 + p_ptr->lev + randint0(11), 4 * p_ptr->lev))
                 msg_print("The dungeon collapses...");
             else
                 msg_print("The dungeon trembles.");
         }
-        else if ( _object_is_(o_ptr, TV_STAFF, SV_STAFF_HEALING)
-               || _object_is_(o_ptr, TV_ROD, SV_ROD_HEALING)
-               || _object_is_(o_ptr, TV_ROD, SV_ROD_RESTORATION) )
+        else if ( o_ptr->activation.type == EFFECT_HEAL_CURING
+               || o_ptr->activation.type == EFFECT_HEAL_CURING_HERO
+               || o_ptr->activation.type == EFFECT_RESTORING )
         {
             msg_print("You feel life flow through your body!");
             restore_level();
@@ -608,7 +617,7 @@ static void _shatter_device_spell(int cmd, variant *res)
             update_stuff();
             hp_player(5000);
         }
-        else if (_object_is_(o_ptr, TV_ROD, SV_ROD_TELEPORT_AWAY))
+        else if (o_ptr->activation.type == EFFECT_TELEPORT_AWAY)
         {
             banish_monsters(p_ptr->lev * 4);
         }
