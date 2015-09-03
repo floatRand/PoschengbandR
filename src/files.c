@@ -2979,6 +2979,26 @@ static int _kills(void)
 
     return result;
 }
+static int _kills_all(void)
+{
+    int i;
+    int result = 0;
+
+    for (i = 0; i < max_r_idx; i++)
+    {
+        monster_race *r_ptr = &r_info[i];
+        if (r_ptr->flags1 & RF1_UNIQUE)
+        {
+            if (r_ptr->max_num == 0) result++;
+        }
+        else
+        {
+            result += r_ptr->r_akills;
+        }
+    }
+
+    return result;
+}
 
 static int _uniques(void)
 {
@@ -3701,6 +3721,38 @@ static void dump_aux_object_counts_imp(FILE *fff, int tval, int sval)
     }
 }
 
+static void dump_aux_device_counts_imp(FILE *fff, int tval, int effect)
+{
+    device_effect_info_ptr entry = device_get_effect_info(tval, effect);
+
+    if (!entry)
+        return;
+
+    if (entry->counts.found || entry->counts.bought || entry->counts.used || entry->counts.destroyed)
+    {
+        effect_t effect;
+        int      fail;
+
+        effect.power = entry->level;
+        effect.difficulty = entry->level;
+        effect.type = entry->type;
+
+        fprintf(
+            fff,
+            "  %-20.20s %5d %6d %5d %5d",
+            do_effect(&effect, SPELL_NAME, 0),
+            entry->counts.found,
+            entry->counts.bought,
+            entry->counts.used,
+            entry->counts.destroyed
+        );
+
+        fail = effect_calc_fail_rate(&effect);
+        fprintf(fff, " %3d.%1d%%", fail / 10, fail % 10);
+        fprintf(fff, "\n");
+    }
+}
+
 typedef bool (*_kind_p)(int k_idx);
 bool _kind_is_third_book(int k_idx) { 
     if (k_info[k_idx].tval == TV_ARCANE_BOOK) return FALSE;
@@ -3722,24 +3774,69 @@ bool _kind_is_fourth_book(int k_idx) {
     }
     return FALSE;
 }
-bool _kind_is_potion(int k_idx) {
-    if (k_info[k_idx].tval == TV_POTION) return TRUE;
+
+static bool _kind_is_equipment(int i) {
+    int tval = k_info[i].tval;
+    if ( kind_is_weapon(i)
+      || tval == TV_SHIELD
+      || tval == TV_BOW
+      || tval == TV_RING
+      || tval == TV_AMULET
+      || tval == TV_LITE
+      || kind_is_body_armor(i)
+      || tval == TV_HELM
+      || tval == TV_CLOAK
+      || kind_is_helm(i)
+      || tval == TV_GLOVES
+      || tval == TV_BOOTS )
+    {
+        return TRUE;
+    }
     return FALSE;
 }
-bool _kind_is_scroll(int k_idx) {
-    if (k_info[k_idx].tval == TV_SCROLL) return TRUE;
+
+static bool _kind_is_device(int i) {
+    int tval = k_info[i].tval;
+    if ( tval == TV_WAND
+      || tval == TV_ROD
+      || tval == TV_STAFF
+      || tval == TV_POTION
+      || tval == TV_SCROLL )
+    {
+        return TRUE;
+    }
     return FALSE;
 }
-bool _kind_is_wand(int k_idx) {
-    if (k_info[k_idx].tval == TV_WAND) return TRUE;
+static bool _kind_is_corpse(int k_idx) {
+    if (k_info[k_idx].tval == TV_CORPSE && k_info[k_idx].sval == SV_CORPSE)
+        return TRUE;
     return FALSE;
 }
-bool _kind_is_rod(int k_idx) {
-    if (k_info[k_idx].tval == TV_ROD) return TRUE;
+static bool _kind_is_skeleton(int k_idx) {
+    if (k_info[k_idx].tval == TV_CORPSE && k_info[k_idx].sval == SV_SKELETON)
+        return TRUE;
     return FALSE;
 }
-bool _kind_is_staff(int k_idx) {
-    if (k_info[k_idx].tval == TV_STAFF) return TRUE;
+static bool _kind_is_spellbook(int k_idx) {
+    if ( TV_LIFE_BOOK <= k_info[k_idx].tval
+      && k_info[k_idx].tval <= TV_BURGLARY_BOOK )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_other(int k_idx) {
+    int tval = k_info[k_idx].tval;
+    if ( tval == TV_FOOD
+      || _kind_is_corpse(k_idx)
+      || _kind_is_skeleton(k_idx)
+      || _kind_is_spellbook(k_idx)
+      || tval == TV_SHOT
+      || tval == TV_ARROW
+      || tval == TV_BOLT )
+    {
+        return TRUE;
+    }
     return FALSE;
 }
 
@@ -3764,6 +3861,36 @@ static void dump_aux_group_counts_imp(FILE *fff, _kind_p p, cptr text)
         fprintf(
             fff, 
             "  %-20.20s %5d %6d %5d %5d\n", 
+            text,
+            totals.found,
+            totals.bought,
+            totals.used,
+            totals.destroyed
+        );
+    }
+}
+
+static void dump_aux_group_counts_tval_imp(FILE *fff, int tval, cptr text)
+{
+    int i;
+    counts_t totals = {0};
+    for (i = 0; i < max_k_idx; i++)
+    {
+        if (k_info[i].tval == tval)
+        {
+            totals.generated += k_info[i].counts.generated;
+            totals.found += k_info[i].counts.found;
+            totals.bought += k_info[i].counts.bought;
+            totals.used += k_info[i].counts.used;
+            totals.destroyed += k_info[i].counts.destroyed;
+        }
+    }
+
+    if (totals.found || totals.bought || totals.used || totals.destroyed)
+    {
+        fprintf(
+            fff,
+            "  %-20.20s %5d %6d %5d %5d\n",
             text,
             totals.found,
             totals.bought,
@@ -3958,7 +4085,7 @@ static void dump_aux_kill_counts_imp(FILE *fff, _mon_p p, cptr text, int total)
 
 static void dump_aux_object_counts(FILE *fff)
 {
-    int i, total_kills = _kills();
+    int i, total_kills = _kills_all();
     counts_t totals = {0};
 
     fprintf(fff, "\n================================== Statistics =================================\n\n");
@@ -3976,6 +4103,42 @@ static void dump_aux_object_counts(FILE *fff)
     fprintf(fff, "  Objects Found    : %6d\n", totals.found);
     fprintf(fff, "  Objects Bought   : %6d\n", totals.bought);
     fprintf(fff, "  Objects Destroyed: %6d\n", totals.destroyed);
+
+
+    fprintf(fff, "\n  Equipment            Found Bought  Used  Dest\n");
+    fprintf(fff,   "  ---------------------------------------------\n");
+    dump_aux_group_counts_imp(fff, kind_is_weapon, "Weapons");
+    dump_aux_group_counts_tval_imp(fff, TV_SHIELD, "Shields");
+    dump_aux_group_counts_tval_imp(fff, TV_BOW, "Bows");
+    dump_aux_group_counts_tval_imp(fff, TV_RING, "Rings");
+    dump_aux_group_counts_tval_imp(fff, TV_AMULET, "Amulets");
+    dump_aux_group_counts_tval_imp(fff, TV_LITE, "Lights");
+    dump_aux_group_counts_imp(fff, kind_is_body_armor, "Body Armor");
+    dump_aux_group_counts_tval_imp(fff, TV_CLOAK, "Cloaks");
+    dump_aux_group_counts_imp(fff, kind_is_helm, "Helmets");
+    dump_aux_group_counts_tval_imp(fff, TV_GLOVES, "Gloves");
+    dump_aux_group_counts_tval_imp(fff, TV_BOOTS, "Boots");
+    dump_aux_group_counts_imp(fff, _kind_is_equipment, "Totals");
+
+    fprintf(fff, "\n  Devices              Found Bought  Used  Dest\n");
+    fprintf(fff,   "  ---------------------------------------------\n");
+    dump_aux_group_counts_tval_imp(fff, TV_WAND, "Wands");
+    dump_aux_group_counts_tval_imp(fff, TV_STAFF, "Staves");
+    dump_aux_group_counts_tval_imp(fff, TV_ROD, "Rods");
+    dump_aux_group_counts_tval_imp(fff, TV_POTION, "Potions");
+    dump_aux_group_counts_tval_imp(fff, TV_SCROLL, "Scolls");
+    dump_aux_group_counts_imp(fff, _kind_is_device, "Totals");
+
+    fprintf(fff, "\n  Other                Found Bought  Used  Dest\n");
+    fprintf(fff,   "  ---------------------------------------------\n");
+    dump_aux_group_counts_tval_imp(fff, TV_SHOT, "Shots");
+    dump_aux_group_counts_tval_imp(fff, TV_ARROW, "Arrows");
+    dump_aux_group_counts_tval_imp(fff, TV_BOLT, "Bolts");
+    dump_aux_group_counts_imp(fff, _kind_is_spellbook, "Spellbooks");
+    dump_aux_group_counts_tval_imp(fff, TV_FOOD, "Food");
+    dump_aux_group_counts_imp(fff, _kind_is_corpse, "Corpses");
+    dump_aux_group_counts_imp(fff, _kind_is_skeleton, "Skeletons");
+    dump_aux_group_counts_imp(fff, _kind_is_other, "Totals");
 
     fprintf(fff, "\n  Potions              Found Bought  Used  Dest\n");
     fprintf(fff,   "  ---------------------------------------------\n");
@@ -3995,7 +4158,7 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_object_counts_imp(fff, TV_POTION, SV_POTION_INC_CHR);
     dump_aux_object_counts_imp(fff, TV_POTION, SV_POTION_NEW_LIFE);
     dump_aux_object_counts_imp(fff, TV_POTION, SV_POTION_EXPERIENCE);
-    dump_aux_group_counts_imp(fff, _kind_is_potion, "Totals");
+    dump_aux_group_counts_tval_imp(fff, TV_POTION, "Totals");
 
     fprintf(fff, "\n  Scrolls              Found Bought  Used  Dest  Fail\n");
     fprintf(fff,   "  ---------------------------------------------------\n");
@@ -4013,49 +4176,97 @@ static void dump_aux_object_counts(FILE *fff)
     dump_aux_object_counts_imp(fff, TV_SCROLL, SV_SCROLL_ACQUIREMENT);
     dump_aux_object_counts_imp(fff, TV_SCROLL, SV_SCROLL_STAR_ACQUIREMENT);
     dump_aux_object_counts_imp(fff, TV_SCROLL, SV_SCROLL_ARTIFACT);
-    dump_aux_group_counts_imp(fff, _kind_is_scroll, "Totals");
+    dump_aux_group_counts_tval_imp(fff, TV_SCROLL, "Totals");
 
-/*
     fprintf(fff, "\n  Wands                Found Bought  Used  Dest  Fail\n");
     fprintf(fff,   "  ---------------------------------------------------\n");
-    dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_STONE_TO_MUD);
-    dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_TELEPORT_AWAY);
-    dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_DRAGON_COLD);
-    dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_DRAGON_FIRE);
-    dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_DRAGON_BREATH);
-    dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_STRIKING);
-    dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_DISINTEGRATE);
-    dump_aux_object_counts_imp(fff, TV_WAND, SV_WAND_ROCKETS);
-    dump_aux_group_counts_imp(fff, _kind_is_wand, "Totals");
+    if (p_ptr->wizard)
+    {
+        for (i = 0; ; i++)
+        {
+        device_effect_info_ptr entry = &wand_effect_table[i];
+
+            if (!entry->type) break;
+            dump_aux_device_counts_imp(fff, TV_WAND, entry->type);
+        }
+    }
+    else
+    {
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_STONE_TO_MUD);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_TELEPORT_AWAY);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_BREATHE_COLD);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_BREATHE_FIRE);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_BREATHE_ONE_MULTIHUED);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_METEOR);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_BALL_WATER);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_BALL_DISINTEGRATE);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_ROCKET);
+        dump_aux_device_counts_imp(fff, TV_WAND, EFFECT_WALL_BUILDING);
+    }
+    dump_aux_group_counts_tval_imp(fff, TV_WAND, "Totals");
 
     fprintf(fff, "\n  Staves               Found Bought  Used  Dest  Fail\n");
     fprintf(fff,   "  ---------------------------------------------------\n");
-    dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_IDENTIFY);
-    dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_MAPPING);
-    dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_SPEED);
-    dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_HEALING);
-    dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_DESTRUCTION);
-    dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_GENOCIDE);
-    dump_aux_object_counts_imp(fff, TV_STAFF, SV_STAFF_MSTORM);
-    dump_aux_group_counts_imp(fff, _kind_is_staff, "Totals");
+    if (p_ptr->wizard)
+    {
+        for (i = 0; ; i++)
+        {
+        device_effect_info_ptr entry = &staff_effect_table[i];
+
+            if (!entry->type) break;
+            dump_aux_device_counts_imp(fff, TV_STAFF, entry->type);
+        }
+    }
+    else
+    {
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_IDENTIFY);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_ENLIGHTENMENT);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_TELEPATHY);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_SPEED);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_IDENTIFY_FULL);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_DESTRUCTION);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_HEAL_CURING);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_GENOCIDE);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_MANA_STORM);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_STARBURST);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_DARKNESS_STORM);
+        dump_aux_device_counts_imp(fff, TV_STAFF, EFFECT_RESTORE_MANA);
+    }
+    dump_aux_group_counts_tval_imp(fff, TV_STAFF, "Totals");
 
     fprintf(fff, "\n  Rods                 Found Bought  Used  Dest  Fail\n");
     fprintf(fff,   "  ---------------------------------------------------\n");
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_DETECT_TRAP);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_DETECT_DOOR);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_DETECT_MONSTERS);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_ILLUMINATION);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_RECALL);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_DETECTION);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_MAPPING);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_IDENTIFY);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_TELEPORT_AWAY);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_HEALING);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_RESTORATION);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_SPEED);
-    dump_aux_object_counts_imp(fff, TV_ROD, SV_ROD_MANA_BALL);
-    dump_aux_group_counts_imp(fff, _kind_is_rod, "Totals");
-*/
+    if (p_ptr->wizard)
+    {
+        for (i = 0; ; i++)
+        {
+        device_effect_info_ptr entry = &rod_effect_table[i];
+
+            if (!entry->type) break;
+            dump_aux_device_counts_imp(fff, TV_ROD, entry->type);
+        }
+    }
+    else
+    {
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_DETECT_TRAPS);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_DETECT_DOOR_STAIRS);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_DETECT_MONSTERS);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_LITE_AREA);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_RECALL);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_DETECT_ALL);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_ENLIGHTENMENT);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_BALL_SOUND);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_SPEED_HERO);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_HEAL_CURING_HERO);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_RESTORING);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_BALL_MANA);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_BALL_SHARDS);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_BALL_CHAOS);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_CLAIRVOYANCE);
+        dump_aux_device_counts_imp(fff, TV_ROD, EFFECT_BALL_LITE);
+    }
+    dump_aux_group_counts_tval_imp(fff, TV_ROD, "Totals");
+
     fprintf(fff, "\n  Spellbooks           Found Bought  Used  Dest\n");
     fprintf(fff,   "  ---------------------------------------------\n");
     dump_aux_group_counts_imp(fff, _kind_is_third_book, "Third Spellbooks");

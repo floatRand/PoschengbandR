@@ -14,6 +14,8 @@
 
 #include <assert.h>
 
+bool statistics_hack = FALSE;
+
 /*
  * Strip an "object name" into a buffer
  */
@@ -3043,6 +3045,42 @@ void do_cmd_debug(void)
 #endif
         break;
 
+    case '-':
+    {
+        /* Generate Statistics on object/monster distributions. Create a new
+           character, run this command, then create a character dump
+           or browse the object knowledge command (~2). The game seems
+           to be left in a bad state, and it has crashed once for me.
+           Anybody know a cleaner way to do this? */
+        int lev, i;
+
+        dungeon_type = DUNGEON_ANGBAND;
+        statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains */
+        for (lev = 1; lev < 100; lev++)
+        {
+            /* Jump to requested level */
+            dun_level = lev;
+            prepare_change_floor_mode(CFM_RAND_PLACE);
+            energy_use = 0;
+            p_ptr->energy_need = 0;
+            /*prepare_change_floor_mode(CFM_FIRST_FLOOR);*/
+            change_floor();
+
+            /* Zap Everyone: This has been hacked to actually kill the monsters,
+               which updates stastics, grants experience, and generates drops. */
+            do_cmd_wiz_zap_all();
+
+            /* Identify all the Loot! What Fun!! */
+            for (i = 0; i < max_o_idx; i++)
+            {
+                if (!o_list[i].k_idx) continue;
+                if (o_list[i].tval == TV_GOLD) continue;
+                identify_item(&o_list[i]); /* statistics are updated here */
+            }
+        }
+        statistics_hack = FALSE;
+        break;
+    }
     case '_':
     {
         int i;

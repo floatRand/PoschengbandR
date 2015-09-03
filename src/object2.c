@@ -12,6 +12,7 @@
 
 #include "angband.h"
 
+#include "int-map.h"
 #include "kajitips.h"
 
 #include <assert.h>
@@ -599,16 +600,12 @@ errr get_obj_num_prep(void)
  * same table, which is then used to choose an "appropriate" object, in
  * a relatively efficient manner.
  *
- * It is (slightly) more likely to acquire an object of the given level
- * than one of a lower level.  This is done by choosing several objects
- * appropriate to the given level and keeping the "hardest" one.
- *
  * Note that if no objects are "appropriate", then this function will
  * fail, and return zero, but this should *almost* never happen.
  */
 s16b get_obj_num(int level)
 {
-    int             i, j, p;
+    int             i;
     int             k_idx;
     long            value, total;
     object_kind     *k_ptr;
@@ -668,60 +665,24 @@ s16b get_obj_num(int level)
         value = value - table[i].prob3;
     }
 
-
-    /* Power boost */
-    p = randint0(100);
-
-    /* Try for a "better" object once (50%) or twice (10%) */
-    if (p < 60)
-    {
-        /* Save old */
-        j = i;
-
-        /* Pick a object */
-        value = randint0(total);
-
-        /* Find the object */
-        for (i = 0; i < alloc_kind_size; i++)
-        {
-            /* Found the entry */
-            if (value < table[i].prob3) break;
-
-            /* Decrement */
-            value = value - table[i].prob3;
-        }
-
-        /* Keep the "best" one */
-        if (table[i].level < table[j].level) i = j;
-    }
-
-    /* Try for a "better" object twice (10%) */
-    if (p < 10)
-    {
-        /* Save old */
-        j = i;
-
-        /* Pick a object */
-        value = randint0(total);
-
-        /* Find the object */
-        for (i = 0; i < alloc_kind_size; i++)
-        {
-            /* Found the entry */
-            if (value < table[i].prob3) break;
-
-            /* Decrement */
-            value = value - table[i].prob3;
-        }
-
-        /* Keep the "best" one */
-        if (table[i].level < table[j].level) i = j;
-    }
+    /* Note: There used to be power boosting code here, but it gave very bad results in
+     * some situations. For example, I want wands, rods and staves to allocate equally, but
+     * would like wands to be available earlier than staves, which are earlier than rods.
+     * Setting things up as:
+     *   Wand:  A:1/1
+     *   Staff: A:5/1
+     *   Rod:   A:10/1
+     * gave the following allocation distribution (10,000 objects, devices are 15%, below DL10):
+     * > Wands:  286 2.8%
+     * > Staves: 486 4.8%
+     * > Rods:   747 7.4%
+     * Adding duplicate allocation entries helped, but the distribution was still unacceptably
+     * skewed and this "feature" seemed more like a bug to me.  -CTK
+     */
 
     /* Result */
     return (table[i].index);
 }
-
 
 /*
  * Known is true when the "attributes" of an object are "known".
@@ -785,6 +746,27 @@ bool ego_is_aware(int which)
 */
 counts_t stats_rand_art_counts = {0};
 
+void stats_reset(void)
+{
+    int i;
+
+    for (i = 1; i < max_k_idx; i++)
+    {
+        object_kind *k_ptr = &k_info[i];
+
+        WIPE(&k_ptr->counts, counts_t);
+    }
+    for (i = 1; i < max_e_idx; i++)
+    {
+        ego_item_type *e_ptr = &e_info[i];
+
+        WIPE(&e_ptr->counts, counts_t);
+    }
+
+    WIPE(&stats_rand_art_counts, counts_t);
+    device_stats_reset();
+}
+
 void stats_on_load(savefile_ptr file)
 {
     stats_rand_art_counts.generated = savefile_read_s32b(file);
@@ -792,6 +774,8 @@ void stats_on_load(savefile_ptr file)
     stats_rand_art_counts.bought = savefile_read_s32b(file);
     stats_rand_art_counts.used = savefile_read_s32b(file);
     stats_rand_art_counts.destroyed = savefile_read_s32b(file);
+
+    device_stats_on_load(file);
 }
 
 void stats_on_save(savefile_ptr file)
@@ -801,6 +785,8 @@ void stats_on_save(savefile_ptr file)
     savefile_write_s32b(file, stats_rand_art_counts.bought);
     savefile_write_s32b(file, stats_rand_art_counts.used);      /* Artifact Devices */
     savefile_write_s32b(file, stats_rand_art_counts.destroyed); /* Certain Class Powers */
+
+    device_stats_on_save(file);
 }
 
 void stats_on_purchase(object_type *o_ptr)
@@ -809,6 +795,8 @@ void stats_on_purchase(object_type *o_ptr)
     {
         k_info[o_ptr->k_idx].counts.bought += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
+        if (object_is_device(o_ptr))
+            device_stats_on_purchase(o_ptr);
     }
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
@@ -828,6 +816,8 @@ void stats_on_sell(object_type *o_ptr)
     {
         k_info[o_ptr->k_idx].counts.found += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
+        if (object_is_device(o_ptr))
+            device_stats_on_find(o_ptr);
     }
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
@@ -881,6 +871,9 @@ void stats_on_use(object_type *o_ptr, int num)
         e_info[o_ptr->name2].counts.used += num;
     if (o_ptr->art_name)
         stats_rand_art_counts.used += num;
+
+    if (object_is_device(o_ptr))
+        device_stats_on_use(o_ptr, num);
 }
 
 void stats_on_p_destroy(object_type *o_ptr, int num)
@@ -889,6 +882,8 @@ void stats_on_p_destroy(object_type *o_ptr, int num)
     {
         k_info[o_ptr->k_idx].counts.found += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
+        if (object_is_device(o_ptr))
+            device_stats_on_find(o_ptr);
     }
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
@@ -906,6 +901,8 @@ void stats_on_p_destroy(object_type *o_ptr, int num)
         e_info[o_ptr->name2].counts.destroyed += num;
     if (o_ptr->art_name)
         stats_rand_art_counts.destroyed += num;
+    if (object_is_device(o_ptr))
+        device_stats_on_destroy(o_ptr);
 }
 
 void stats_on_m_destroy(object_type *o_ptr, int num)
@@ -913,6 +910,8 @@ void stats_on_m_destroy(object_type *o_ptr, int num)
     k_info[o_ptr->k_idx].counts.destroyed += num;
     if (o_ptr->name2)
         e_info[o_ptr->name2].counts.destroyed += num;
+    if (object_is_device(o_ptr))
+        device_stats_on_destroy(o_ptr);
 }
 
 void stats_on_pickup(object_type *o_ptr)
@@ -963,6 +962,8 @@ void stats_on_identify(object_type *o_ptr)
     {
         k_info[o_ptr->k_idx].counts.found += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
+        if (object_is_device(o_ptr))
+            device_stats_on_find(o_ptr);
     }
 
     if (object_is_known(o_ptr) && o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
@@ -1273,7 +1274,7 @@ s32b object_value_real(object_type *o_ptr)
     if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr);
     if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr);
     if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr);
-    if (o_ptr->tval == TV_WAND || o_ptr->tval == TV_STAFF || o_ptr->tval == TV_ROD) return device_value(o_ptr);
+    if (object_is_device(o_ptr)) return device_value(o_ptr);
 
     /* OK, here's the old pricing algorithm :( 
        Note this algorithm cheats for artifacts by relying on cost
@@ -5750,7 +5751,7 @@ static bool _kind_is_potion_scroll(int k_idx) {
     }
     return FALSE;
 }
-static bool _kind_is_wand_rod_staff(int k_idx) { 
+bool kind_is_wand_rod_staff(int k_idx) {
     switch (k_info[k_idx].tval)
     {
     case TV_WAND:
@@ -5815,7 +5816,7 @@ static bool _kind_is_helm_cloak(int k_idx) {
     }
     return FALSE;
 }
-static bool _kind_is_helm(int k_idx) {
+bool kind_is_helm(int k_idx) {
     switch (k_info[k_idx].tval)
     {
     case TV_HELM: case TV_CROWN:
@@ -5883,7 +5884,7 @@ static _kind_alloc_entry _kind_alloc_table[] = {
     { kind_is_weapon,          180,    0,    0 },  
     { kind_is_body_armor,      165,    0,    0 },
     { kind_is_other_armor,     200,    0,    0 },
-    { _kind_is_wand_rod_staff, 150, -100, -140 },
+    { kind_is_wand_rod_staff,  150, -100, -140 },
     { _kind_is_potion_scroll,  100,  -50,  -90 },
     { kind_is_bow_ammo,         70,    0,    0 },
     { kind_is_book,             50,    0,    0 },
@@ -5933,7 +5934,7 @@ static _kind_p _choose_obj_kind(u32b mode)
             else if (one_in_(5))
                 _kind_hook1 = kind_is_weapon;
             else if (one_in_(5))
-                _kind_hook1 = _kind_is_wand_rod_staff;
+                _kind_hook1 = kind_is_wand_rod_staff;
             break;
         case CLASS_ARCHER:
         case CLASS_SNIPER:
@@ -5984,7 +5985,7 @@ static _kind_p _choose_obj_kind(u32b mode)
                 if (one_in_(5))
                     _kind_hook1 = _kind_is_ring;
                 else if (one_in_(7))
-                    _kind_hook1 = _kind_is_helm;
+                    _kind_hook1 = kind_is_helm;
                 break;
             case RACE_MON_CENTIPEDE:
                 if (one_in_(7))
@@ -6000,7 +6001,7 @@ static _kind_p _choose_obj_kind(u32b mode)
                 if (one_in_(5))
                     _kind_hook1 = _kind_is_amulet;
                 else if (one_in_(7))
-                    _kind_hook1 = _kind_is_helm;
+                    _kind_hook1 = kind_is_helm;
                 break;
             }
             break;
@@ -6017,7 +6018,7 @@ static _kind_p _choose_obj_kind(u32b mode)
             if (is_magic(p_ptr->realm1) && one_in_(5))
                 _kind_hook1 = kind_is_book;
             else if (_is_device_class() && one_in_(7))
-                _kind_hook1 = _kind_is_wand_rod_staff;
+                _kind_hook1 = kind_is_wand_rod_staff;
         }
     }
 

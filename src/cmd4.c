@@ -6658,6 +6658,7 @@ static _ego_type_t _ego_types[] = {
     { EGO_TYPE_GLOVES, "Gloves" },
     { EGO_TYPE_BOOTS, "Boots" },
     { EGO_TYPE_AMMO, "Ammo" },
+    { EGO_TYPE_DEVICE, "Devices" },
     { EGO_TYPE_NONE, NULL },
 };
 

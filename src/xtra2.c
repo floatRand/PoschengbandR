@@ -149,6 +149,8 @@ int exp_requirement(int level)
 void gain_chosen_stat(void)
 {
     int choice;
+    if (statistics_hack)
+        return;
     screen_save();
     while(1)
     {

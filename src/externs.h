@@ -645,7 +645,6 @@ extern void add_outfit(object_type *o_ptr);
 extern cptr birth_get_class_desc(int i);
 extern cptr birth_get_personality_desc(int i);
 extern cptr birth_get_realm_desc(int i);
-extern void e_info_reset(void);
 extern void player_birth(void);
 extern void get_max_stats(void);
 extern void determine_random_questor(quest_type *q_ptr);
@@ -847,7 +846,6 @@ extern int  device_available_charges;
 extern int  device_used_charges;
 extern cptr do_device(object_type *o_ptr, int mode, int boost);
 
-
 extern bool device_init(object_type *o_ptr, int level, int mode);
 extern bool device_init_fixed(object_type *o_ptr, int effect);
 extern int  device_level(object_type *o_ptr);
@@ -857,6 +855,18 @@ extern void device_increase_sp(object_type *o_ptr, int amt);
 extern int  device_max_sp(object_type *o_ptr);
 extern void device_regen_sp(object_type *o_ptr);
 extern int  device_value(object_type *o_ptr);
+extern void device_stats_reset(void);
+extern void device_stats_on_find(object_type *o_ptr);
+extern void device_stats_on_use(object_type *o_ptr, int num);
+extern void device_stats_on_destroy(object_type *o_ptr);
+extern void device_stats_on_purchase(object_type *o_ptr);
+extern void device_stats_on_load(savefile_ptr file);
+extern void device_stats_on_save(savefile_ptr file);
+
+extern device_effect_info_ptr device_get_effect_info(int tval, int effect);
+extern device_effect_info_t   wand_effect_table[];
+extern device_effect_info_t   rod_effect_table[];
+extern device_effect_info_t   staff_effect_table[];
 
 extern effect_t obj_get_effect(object_type *o_ptr);
 extern cptr     obj_get_effect_msg(object_type *o_ptr);
@@ -1164,6 +1174,8 @@ extern bool kind_is_device(int k_idx);
 extern bool kind_is_jewelry(int k_idx);
 extern bool kind_is_book(int k_idx);
 extern bool kind_is_body_armor(int k_idx);
+extern bool kind_is_helm(int k_idx);
+extern bool kind_is_wand_rod_staff(int k_idx);
 extern bool kind_is_other_armor(int k_idx);
 extern bool kind_is_armor(int k_idx);
 extern bool kind_is_weapon(int k_idx);
@@ -1209,6 +1221,7 @@ extern void stats_on_equip(object_type *o_ptr);
 extern void stats_on_identify(object_type *o_ptr);
 extern void stats_on_load(savefile_ptr file);
 extern void stats_on_save(savefile_ptr file);
+extern void stats_reset(void);
 extern counts_t stats_rand_art_counts;
 
 /* object3.c */
@@ -1945,6 +1958,7 @@ extern bool change_wild_mode(void);
 
 /* wizard2.c */
 extern bool spoiler_hack;
+extern bool statistics_hack;
 extern void strip_name(char *buf, int k_idx);
 extern void strip_name_aux(char *dest, const char *src);
 extern cptr race_spoiler_page(int i);

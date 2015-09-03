@@ -2162,3 +2162,18 @@ typedef struct {
     s16b                    breath;
     s16b                    spell_stat;
 } dragon_realm_t, *dragon_realm_ptr;
+
+struct device_effect_info_s
+{
+    int      type;
+    int      level;
+    int      cost;
+    int      rarity;
+    int      max_depth;
+    int      extra;
+    int      flags;
+    counts_t counts;
+};
+
+typedef struct device_effect_info_s  device_effect_info_t;
+typedef struct device_effect_info_s *device_effect_info_ptr;

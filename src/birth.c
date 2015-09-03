@@ -2383,7 +2383,7 @@ static void birth_put_stats(void)
     }
 }
 
-void e_info_reset(void)
+static void e_info_reset(void)
 {
     int i;
 
@@ -2393,7 +2393,6 @@ void e_info_reset(void)
         ego_item_type *e_ptr = &e_info[i];
 
         e_ptr->aware = FALSE;
-        WIPE(&e_ptr->counts, counts_t);
     }
 }
 
@@ -2408,10 +2407,7 @@ static void k_info_reset(void)
 
         k_ptr->tried = FALSE;
         k_ptr->aware = FALSE;
-        WIPE(&k_ptr->counts, counts_t);
     }
-
-    WIPE(&stats_rand_art_counts, counts_t);
 }
 
 /*
@@ -2465,6 +2461,7 @@ static void player_wipe(void)
     /* Reset the objects */
     k_info_reset();
     e_info_reset();
+    stats_reset();
 
     /* Reset the "monsters" */
     for (i = 1; i < max_r_idx; i++)

@@ -359,7 +359,7 @@ N:34:& Broad Sword~
 G:|:W
 I:23:16:0
 W:10:0:0:150:255
-A:10/1:15/1
+A:10/1
 P:0:2d5:0:0:0
 F:SHOW_MODS | RIDING | TOWN
 D:A heavy, double-edged sword with a strong grip.
@@ -387,7 +387,7 @@ N:37:& Two-Handed Sword~
 G:|:W
 I:23:25:0
 W:30:0:0:200:775
-A:30/1:40/1
+A:30/1
 P:0:3d6:0:0:0
 F:SHOW_MODS
 D:A great, double-edged broadsword which few can wield in one hand.
@@ -434,7 +434,7 @@ N:42:& Long Sword~
 G:|:W
 I:23:17:0
 W:10:0:0:130:300
-A:10/1:20/1
+A:10/1
 P:0:2d5:0:0:0
 F:SHOW_MODS | RIDING | TOWN
 D:A long, straight, two-edged blade, with two hand guards projecting out from 
@@ -444,7 +444,7 @@ N:43:& Dagger~
 G:|:W
 I:23:4:0
 W:0:0:0:12:10
-A:0/1:5/1:10/1:20/1
+A:0/1
 P:0:1d4:0:0:0
 F:SHOW_MODS | TOWN
 D:A two-edged knife with a sharp point.
@@ -781,7 +781,7 @@ N:78:& Arrow~
 G:{:U
 I:17:1:0
 W:3:0:0:2:1
-A:3/1:15/1
+A:3/1
 P:0:1d4:0:0:0
 F:SHOW_MODS | TOWN
 M:100:6d7
@@ -803,7 +803,7 @@ N:80:& Bolt~
 G:{:s
 I:18:1:0
 W:3:0:0:3:2
-A:3/1:25/1
+A:3/1
 P:0:1d5:0:0:0
 F:SHOW_MODS | TOWN
 M:100:6d7
@@ -1334,7 +1334,7 @@ N:176:Identify:temeep aks el
 G:?:w
 I:70:12:0
 W:1:0:0:5:50
-A:1/1:5/1:10/1:30/1
+A:1/1
 F:TOWN
 M:100:3d5
 
@@ -1342,7 +1342,7 @@ N:177:*Identify*:triapp trolpet
 G:?:w
 I:70:13:0
 W:30:0:0:5:1500
-A:30/1:50/1:80/1
+A:30/1:50/1
 F:TOWN
 M:100:1d5
 
@@ -1363,8 +1363,8 @@ M:10:1d3
 N:180:Remove Curse:byti sne
 G:?:w
 I:70:14:0
-W:10:0:0:5:100
-A:10/2:20/1
+W:10:0:50:5:100
+A:10/2
 F:TOWN
 M:100:2d3
 
@@ -1372,7 +1372,7 @@ N:181:Light:misat dernin
 G:?:w
 I:70:24:0
 W:0:0:40:5:15
-A:0/1:3/1:10/1
+A:1/1
 F:TOWN
 M:100:3d5
 
@@ -1393,14 +1393,14 @@ M:10:1d3
 N:184:Summon Monster:binvom cosmung
 G:?:w
 I:70:4:0
-W:1:0:50:5:0
+W:1:0:30:5:0
 A:1/1
 M:100:3d5
 
 N:185:Phase Door:ankh sanfu bit
 G:?:w
 I:70:8:0
-W:1:0:0:5:15
+W:1:0:50:5:15
 A:1/1
 F:TOWN
 M:100:3d5
@@ -1423,7 +1423,7 @@ M:50:1d5
 N:188:Monster Confusion:blaata arze
 G:?:w
 I:70:36:0
-W:5:0:0:5:30
+W:5:0:40:5:30
 A:5/1
 F:TOWN
 M:100:1d5
@@ -1431,7 +1431,7 @@ M:100:1d5
 N:189:Magic Mapping:rea fri elip
 G:?:w
 I:70:25:0
-W:5:0:0:5:40
+W:5:0:50:5:40
 A:5/1
 F:TOWN
 M:100:2d3
@@ -1454,7 +1454,7 @@ M:25:1d5
 N:192:Treasure Detection:ner fidtri
 G:?:w
 I:70:26:0
-W:0:0:40:5:15
+W:0:0:20:5:15
 A:0/1
 F:TOWN
 M:100:1d5
@@ -1462,7 +1462,7 @@ M:100:1d5
 N:193:Object Detection:for mic rol
 G:?:w
 I:70:27:0
-W:0:0:40:5:15
+W:0:0:30:5:15
 A:0/1
 F:TOWN
 M:100:1d5
@@ -1471,7 +1471,7 @@ N:194:Trap Detection:sri nelgun
 G:?:w
 I:70:28:0
 W:5:0:30:5:15
-A:5/1:10/1
+A:5/1
 F:TOWN
 M:100:2d3
 
@@ -1502,7 +1502,7 @@ N:197:Door/Stair Location:sehsat ulkab
 G:?:w
 I:70:29:0
 W:5:0:30:5:35
-A:5/1:10/1
+A:5/1
 F:TOWN
 M:100:1d5
 
@@ -1550,7 +1550,7 @@ M:100:3d5
 N:204:Trap/Door Destruction:erk bieklis
 G:?:w
 I:70:39:0
-W:10:0:40:5:50
+W:10:0:30:5:50
 A:10/1
 M:100:1d5
 
@@ -1609,7 +1609,7 @@ A:50/1
 N:213:Curse Weapon:prokaks wahish
 G:?:w
 I:70:3:0
-W:50:0:0:5:0
+W:50:0:70:5:0
 A:50/1
 M:100:1d5
 
@@ -1622,7 +1622,7 @@ A:50/1
 N:215:Curse Armor:alacre re org
 G:?:w
 I:70:2:0
-W:50:0:0:5:0
+W:50:0:70:5:0
 A:50/1
 M:100:1d5
 
@@ -1636,7 +1636,7 @@ M:100:1d5
 N:217:Blessing:ooder dokrog
 G:?:w
 I:70:33:0
-W:1:0:0:5:15
+W:1:0:30:5:15
 A:1/1
 F:TOWN
 M:100:2d3
@@ -1644,7 +1644,7 @@ M:100:2d3
 N:218:Holy Chant:nihum khomar
 G:?:w
 I:70:34:0
-W:10:0:0:5:40
+W:10:0:50:5:40
 A:10/1
 F:TOWN
 M:100:1d5
@@ -1694,7 +1694,7 @@ M:100:1d5
 N:224:Water:Clear
 G:!:w
 I:75:0:200
-W:0:0:0:4:1
+W:0:0:20:4:1
 A:0/1
 P:0:1d1:0:0:0
 F:FIXED_FLAVOR | TOWN
@@ -1704,7 +1704,7 @@ N:225:Strength:Azure
 G:!:B
 I:75:48:0
 W:30:0:0:4:30000
-A:20/6:30/3:60/3
+A:20/6:30/3
 P:0:1d1:0:0:0
 M:2:1d2
 
@@ -1719,7 +1719,7 @@ M:100:1d5
 N:227:Restore Strength:Blue Speckled
 G:!:b
 I:75:42:0
-W:25:0:0:4:300
+W:25:0:60:4:300
 A:25/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -1729,7 +1729,7 @@ N:228:Intelligence:Black
 G:!:D
 I:75:49:0
 W:30:0:0:4:30000
-A:20/6:30/3:60/3
+A:20/6:30/3
 P:0:1d1:0:0:0
 M:2:1d2
 
@@ -1744,7 +1744,7 @@ M:100:1d5
 N:230:Restore Intelligence:Brown Speckled
 G:!:u
 I:75:43:0
-W:25:0:0:4:300
+W:25:0:60:4:300
 A:25/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -1754,7 +1754,7 @@ N:231:Wisdom:Bubbling
 G:!:W
 I:75:50:0
 W:30:0:0:4:30000
-A:20/6:30/3:60/3
+A:20/6:30/3
 P:0:1d1:0:0:0
 M:2:1d2
 
@@ -1769,7 +1769,7 @@ M:100:1d5
 N:233:Restore Wisdom:Cloudy
 G:!:w
 I:75:44:0
-W:25:0:0:4:300
+W:25:0:60:4:300
 A:25/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -1779,7 +1779,7 @@ N:234:Charisma:Copper Speckled
 G:!:U
 I:75:53:0
 W:30:0:0:4:30000
-A:20/6:30/3:60/3
+A:20/6:30/3
 P:0:1d1:0:0:0
 M:2:1d2
 
@@ -1794,7 +1794,7 @@ M:100:1d5
 N:236:Restore Charisma:Cyan
 G:!:B
 I:75:47:0
-W:20:0:0:4:300
+W:20:0:60:4:300
 A:20/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -1826,7 +1826,7 @@ M:5:1d2
 N:240:Cure Serious Wounds:Gold Speckled
 G:!:y
 I:75:35:100
-W:10:0:50:4:40
+W:10:0:30:4:40
 A:10/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -1835,7 +1835,7 @@ M:100:3d5
 N:241:Cure Critical Wounds:Gray
 G:!:s
 I:75:36:100
-W:20:0:0:4:100
+W:20:0:60:4:100
 A:20/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -1853,7 +1853,7 @@ N:243:Constitution:Green
 G:!:g
 I:75:52:0
 W:30:0:0:4:30000
-A:20/6:30/3:60/3
+A:20/6:30/3
 P:0:1d1:0:0:0
 M:2:1d2
 
@@ -1901,7 +1901,7 @@ N:249:Speed:Magenta
 G:!:r
 I:75:29:0
 W:1:0:0:4:75
-A:1/1:40/1:60/1
+A:1/1:40/1
 P:0:1d1:0:0:0
 M:100:2d3
 
@@ -1917,14 +1917,14 @@ N:251:Dexterity:Metallic Red
 G:!:r
 I:75:51:0
 W:30:0:0:4:30000
-A:20/6:30/3:60/3
+A:20/6:30/3
 P:0:1d1:0:0:0
 M:2:1d2
 
 N:252:Restore Dexterity:Metallic Green
 G:!:g
 I:75:45:0
-W:25:0:0:4:300
+W:25:0:60:4:300
 A:25/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -1933,7 +1933,7 @@ M:100:1d5
 N:253:Restore Constitution:Metallic Purple
 G:!:v
 I:75:46:0
-W:25:0:0:4:300
+W:25:0:60:4:300
 A:25/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -1959,7 +1959,7 @@ N:256:Enlightenment:Pink
 G:!:R
 I:75:56:0
 W:25:0:0:4:800
-A:25/1:50/1:100/1
+A:25/1
 P:0:1d1:0:0:0
 M:10:1d3
 
@@ -1967,7 +1967,7 @@ N:257:Heroism:Pink Speckled
 G:!:R
 I:75:32:0
 W:1:0:0:4:35
-A:1/1:40/1:80/1
+A:1/1
 P:0:1d1:0:0:0
 F:TOWN
 M:100:1d5
@@ -2001,7 +2001,7 @@ M:100:2d4
 N:261:Resist Heat:Red Speckled
 G:!:r
 I:75:30:0
-W:1:0:0:4:150
+W:1:0:60:4:150
 A:1/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -2010,7 +2010,7 @@ M:100:2d5
 N:262:Resist Cold:Silver Speckled
 G:!:W
 I:75:31:0
-W:1:0:0:4:150
+W:1:0:60:4:150
 A:1/1
 P:0:1d1:0:0:0
 F:TOWN
@@ -2046,8 +2046,8 @@ M:100:3d5
 N:266:Restore Mana:Vermilion
 G:!:r
 I:75:40:0
-W:15:0:0:4:1000
-A:25/2:40/2:60/2:90/2
+W:25:0:0:4:1000
+A:25/2:90/2
 P:0:1d1:0:0:0
 M:10:1d3
 
@@ -2064,7 +2064,7 @@ N:268:Resistance:Yellow
 G:!:y
 I:75:60:100
 W:20:0:0:4:250
-A:20/1:45/1:80/1:100/1
+A:20/1
 P:0:1d1:0:0:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
@@ -2712,7 +2712,7 @@ N:437:Cure Light Wounds:Gold
 G:!:y
 I:75:34:50
 W:0:0:20:4:15
-A:0/1:1/1:3/1
+A:0/1
 P:0:1d1:0:0:0
 F:TOWN
 M:100:3d5
@@ -4172,7 +4172,7 @@ F:INSTA_ART
 N:716:Clarity:Metallic
 G:!:w
 I:75:70:100
-W:20:0:0:4:100
+W:20:0:60:4:100
 A:20/2:40/1
 P:0:1d1:0:0:0
 D:It clears your mind, restoring spell points a bit.

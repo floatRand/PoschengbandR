@@ -1211,10 +1211,8 @@ static void do_cmd_device_aux(int item)
     }
     object_tried(o_ptr);
     if (device_noticed && !object_is_known(o_ptr))
-    {
         identify_item(o_ptr);
-        stats_on_notice(o_ptr, 1);
-    }
+
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
 
     if (used)
