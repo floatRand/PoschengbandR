@@ -3090,7 +3090,7 @@ void do_cmd_debug(void)
             object_type forge = {0};
             int fail;
 
-            object_prep(&forge, 269);
+            object_prep(&forge, 270);
             if (!apply_magic(&forge, dun_level, 0)) continue;
 
             /*if (forge.activation.type != EFFECT_HEAL_CURING) continue;*/

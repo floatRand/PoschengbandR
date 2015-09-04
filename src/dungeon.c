@@ -2516,11 +2516,19 @@ static void process_world_aux_recharge(void)
         object_kind *k_ptr = &k_info[o_ptr->k_idx];
 
         if (!o_ptr->k_idx) continue;
-        if (o_ptr->tval == TV_ROD || o_ptr->tval == TV_WAND || o_ptr->tval == TV_STAFF)
+        switch (o_ptr->tval)
         {
+        case TV_ROD:
             device_regen_sp(o_ptr);
+            break;
+        case TV_WAND:
+        case TV_STAFF:
+            if ((turn % (TURNS_PER_TICK*10)) == 0)
+                device_regen_sp(o_ptr);
+            break;
         }
-        else if (object_is_mushroom(o_ptr) && (o_ptr->timeout))
+
+        if (object_is_mushroom(o_ptr) && (o_ptr->timeout))
         {
             /* Determine how many rods are charging. */
             int temp = (o_ptr->timeout + (k_ptr->pval - 1)) / k_ptr->pval;
