@@ -151,11 +151,11 @@ void _recharging_spell(int cmd, variant *res)
         var_set_string(res, "It attempts to recharge a device using another device for power.");
         break;
     case SPELL_INFO:
-        var_set_string(res, format("Power %d", 50 + 3*p_ptr->lev));
+        var_set_string(res, format("Power %d", 50 + 2*p_ptr->lev));
         break;
     case SPELL_CAST:
         /* Devicemasters have no mana */
-        var_set_bool(res, recharge_from_player(50 + 3*p_ptr->lev));
+        var_set_bool(res, recharge_from_player(50 + 2*p_ptr->lev));
         break;
     default:
         default_spell(cmd, res);

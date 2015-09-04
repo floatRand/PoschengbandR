@@ -1052,7 +1052,7 @@ void recharging_spell(int cmd, variant *res)
         var_set_string(res, "It attempts to recharge a device using your mana for power.");
         break;
     case SPELL_CAST:
-        var_set_bool(res, recharge_from_player(4 * p_ptr->lev));
+        var_set_bool(res, recharge_from_player(3 * p_ptr->lev));
         break;
     default:
         default_spell(cmd, res);

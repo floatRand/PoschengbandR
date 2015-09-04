@@ -1690,7 +1690,7 @@ static cptr do_sorcery_spell(int spell, int mode)
         if (desc) return "It attempts to recharge a device using your mana for power.";
     
         {
-            int power = spell_power(plev * 4);
+            int power = spell_power(plev * 3);
 
             if (info) return info_power(power);
 
