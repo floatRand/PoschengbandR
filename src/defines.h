@@ -6210,6 +6210,7 @@ enum effect_e
     EFFECT_REMOVE_CURSE,
     EFFECT_REMOVE_ALL_CURSE,
     EFFECT_CLARITY,
+    EFFECT_GREAT_CLARITY,
 
     /* Offense: Bolts */
     EFFECT_BOLT_MISSILE = 300,

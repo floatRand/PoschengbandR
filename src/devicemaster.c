@@ -155,7 +155,7 @@ void _recharging_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
         /* Devicemasters have no mana */
-        var_set_bool(res, recharge_from_device(50 + 3*p_ptr->lev));
+        var_set_bool(res, recharge_from_player(50 + 3*p_ptr->lev));
         break;
     default:
         default_spell(cmd, res);
@@ -456,7 +456,6 @@ static caster_info * _caster_info(void)
     {
         me.which_stat = A_INT;
         me.magic_desc = "talent";
-        me.options = CASTER_USE_HP;
         me.weight = 3000;
         init = TRUE;
     }

@@ -1908,6 +1908,7 @@ static _effect_info_t _effect_info[] =
     {"REMOVE_CURSE",    EFFECT_REMOVE_CURSE,        30, 200,  1, BIAS_PRIESTLY},
     {"REMOVE_ALL_CURSE",EFFECT_REMOVE_ALL_CURSE,    70, 500,  4, BIAS_PRIESTLY},
     {"CLARITY",         EFFECT_CLARITY,             20, 100, 12, BIAS_PRIESTLY | BIAS_MAGE},
+    {"GREAT_CLARITY",   EFFECT_GREAT_CLARITY,       80, 500, 64, BIAS_PRIESTLY | BIAS_MAGE},
 
     /* Offense: Bolts                               Lv    T   R  Bias */
     {"BOLT_MISSILE",    EFFECT_BOLT_MISSILE,         1,  10,  1, BIAS_MAGE | BIAS_ARCHER},
@@ -2263,27 +2264,27 @@ device_effect_info_t rod_effect_table[] =
     {EFFECT_ESCAPE,                30,  20,     2,   0,     0, 0},
     {EFFECT_BOLT_CHAOS,            32,  21,     2,  60,     0, 0},
     {EFFECT_BOLT_SOUND,            32,  22,     2,  60,     0, 0},
-    {EFFECT_CLARITY,               35,  15,     8,   0,     0, _DROP_GOOD},
+    {EFFECT_CLARITY,               35,  15,     5,   0,     0, _DROP_GOOD},
     {EFFECT_TELEKINESIS,           40,  25,     1,   0,     0, 0},
     {EFFECT_BALL_ELEC,             40,  25,     1,  80,     0, 0},
     {EFFECT_BALL_COLD,             40,  25,     1,  80,     0, 0},
     {EFFECT_BALL_FIRE,             42,  27,     1,  90,     0, 0},
     {EFFECT_BALL_ACID,             44,  29,     1,   0,     0, 0},
-    {EFFECT_BOLT_MANA,             45,  30,     4,   0,     0, _DROP_GOOD},
+    {EFFECT_BOLT_MANA,             45,  30,     3,   0,     0, _DROP_GOOD},
     {EFFECT_BALL_NETHER,           45,  31,     1,   0,     0, 0},
     {EFFECT_BALL_DISEN,            47,  32,     1,   0,     0, 0},
     {EFFECT_ENLIGHTENMENT,         50,  33,     2,   0,     0, _DROP_GOOD},
     {EFFECT_BALL_SOUND,            52,  35,     2,   0,     0, 0},
-    {EFFECT_BEAM_DISINTEGRATE,     60,  37,     4,   0,     0, _DROP_GOOD},
-    {EFFECT_SPEED_HERO,            70,  40,    16,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {EFFECT_CLARITY,               80,  60,    16,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {EFFECT_HEAL_CURING_HERO,      80,  60,     8,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {EFFECT_RESTORING,             80,  60,    16,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {EFFECT_BALL_MANA,             80,  62,     4,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {EFFECT_BALL_SHARDS,           80,  63,     4,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {EFFECT_BALL_CHAOS,            80,  64,     4,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {EFFECT_CLAIRVOYANCE,          90, 100,    32,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {EFFECT_BALL_LITE,             95,  70,   100,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_BEAM_DISINTEGRATE,     60,  37,     3,   0,     0, _DROP_GOOD},
+    {EFFECT_SPEED_HERO,            70,  40,     4,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_GREAT_CLARITY,         80,  60,     5,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_HEAL_CURING_HERO,      80,  60,     5,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_RESTORING,             80,  60,     4,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_BALL_MANA,             80,  45,     2,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_BALL_SHARDS,           80,  45,     2,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_BALL_CHAOS,            80,  45,     2,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_CLAIRVOYANCE,          90, 100,     3,   0,     0, _DROP_GOOD | _DROP_GREAT},
+    {EFFECT_BALL_LITE,             95,  50,     5,   0,     0, _DROP_GOOD | _DROP_GREAT},
     {0, 0, 0, 0, 0, 0, 0}
 };
 
@@ -4287,6 +4288,23 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int amt = _extra(effect, effect->cost);
         if (name) return "Clarity";
+        if (desc) return "It clears your mind, restoring some mana.";
+        if (info) return format("%dsp", _BOOST(amt));
+        if (value) return format("%d", 100*amt);
+        if (cast)
+        {
+            if (sp_player(_BOOST(amt)))
+            {
+                msg_print("You feel your mind clear.");
+                device_noticed = TRUE;
+            }
+        }
+        break;
+    }
+    case EFFECT_GREAT_CLARITY: /* FYI: This is a separate effect from EFFECT_CLARITY for purposes */
+    {                          /*      of statistics tracking, which is by effect id. */
+        int amt = _extra(effect, effect->cost);
+        if (name) return "Great Clarity";
         if (desc) return "It clears your mind, restoring some mana.";
         if (info) return format("%dsp", _BOOST(amt));
         if (value) return format("%d", 100*amt);

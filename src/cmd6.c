@@ -1218,10 +1218,15 @@ static void do_cmd_device_aux(int item)
     if (used)
     {
         stats_on_use(o_ptr, charges);
-        /* Devicemasters can power the device for free once in a while */
-        if (is_devicemaster && !devicemaster_desperation && randint1(100) <= p_ptr->lev)
+
+        /* Devicemasters can power the device with their mana once in a while */
+        if ( is_devicemaster
+          && !devicemaster_desperation
+          && p_ptr->csp > o_ptr->activation.cost
+          && randint1(20 + o_ptr->activation.difficulty) <= p_ptr->lev )
         {
             msg_print("Your mental focus powers the device!");
+            sp_player(-o_ptr->activation.cost);
         }
         else
         {

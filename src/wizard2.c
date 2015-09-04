@@ -3052,30 +3052,33 @@ void do_cmd_debug(void)
            or browse the object knowledge command (~2). The game seems
            to be left in a bad state, and it has crashed once for me.
            Anybody know a cleaner way to do this? */
-        int lev, i;
+        int lev, i, j;
 
         dungeon_type = DUNGEON_ANGBAND;
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains */
-        for (lev = 1; lev < 100; lev++)
+        for (lev = 98; lev < 99; lev++)
         {
-            /* Jump to requested level */
-            dun_level = lev;
-            prepare_change_floor_mode(CFM_RAND_PLACE);
-            energy_use = 0;
-            p_ptr->energy_need = 0;
-            /*prepare_change_floor_mode(CFM_FIRST_FLOOR);*/
-            change_floor();
-
-            /* Zap Everyone: This has been hacked to actually kill the monsters,
-               which updates stastics, grants experience, and generates drops. */
-            do_cmd_wiz_zap_all();
-
-            /* Identify all the Loot! What Fun!! */
-            for (i = 0; i < max_o_idx; i++)
+            for (i = 0; i < 100; i++)
             {
-                if (!o_list[i].k_idx) continue;
-                if (o_list[i].tval == TV_GOLD) continue;
-                identify_item(&o_list[i]); /* statistics are updated here */
+                /* Jump to requested level */
+                dun_level = lev;
+                prepare_change_floor_mode(CFM_RAND_PLACE);
+                energy_use = 0;
+                p_ptr->energy_need = 0;
+                /*prepare_change_floor_mode(CFM_FIRST_FLOOR);*/
+                change_floor();
+
+                /* Zap Everyone: This has been hacked to actually kill the monsters,
+                   which updates stastics, grants experience, and generates drops. */
+                do_cmd_wiz_zap_all();
+
+                /* Identify all the Loot! What Fun!! */
+                for (j = 0; j < max_o_idx; j++)
+                {
+                    if (!o_list[j].k_idx) continue;
+                    if (o_list[j].tval == TV_GOLD) continue;
+                    identify_item(&o_list[j]); /* statistics are updated here */
+                }
             }
         }
         statistics_hack = FALSE;
@@ -3083,14 +3086,23 @@ void do_cmd_debug(void)
     }
     case '_':
     {
-        int i;
+        int i, k_idx;
         char buf[MAX_NLEN];
+        msg_print("[w]and, [r]od or [s]taff?");
+        i = inkey();
+        switch (i)
+        {
+        case 'w': k_idx = 269; break;
+        case 's': k_idx = 270; break;
+        case 'r': k_idx = 271; break;
+        default: return;
+        }
         for (i = 1; i < 100; i++)
         {
             object_type forge = {0};
             int fail;
 
-            object_prep(&forge, 270);
+            object_prep(&forge, k_idx);
             if (!apply_magic(&forge, dun_level, 0)) continue;
 
             /*if (forge.activation.type != EFFECT_HEAL_CURING) continue;*/
@@ -3113,8 +3125,11 @@ void do_cmd_debug(void)
                 device_level(&forge),
                 do_device(&forge, SPELL_INFO, 0)
             );
-            if (forge.name2 == EGO_DEVICE_POWER)
+            if ( forge.activation.type == EFFECT_BALL_MANA
+              || forge.activation.type == EFFECT_ROCKET )
+            {
                 drop_near(&forge, -1, py, px);
+            }
         }
 /*
         int i, j, ct = 0;
