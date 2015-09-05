@@ -166,62 +166,6 @@ static void rd_item(savefile_ptr file, object_type *o_ptr)
             TODO: Report an error back to the load routine!!*/
         }
     }
-
-    /* Patch up shooters. Multipliers are now specified in k_info, a_info
-       and stored in the o_ptr (and savefile). Shooters should no longer
-       have the XTRA_MIGHT flag (but rings of archery might) */
-    if ( savefile_is_older_than(file, 3, 0, 6, 1)
-      && o_ptr->tval == TV_BOW
-      && !o_ptr->mult )
-    {
-        if (o_ptr->name1)
-        {
-            artifact_type *a_ptr = &a_info[o_ptr->name1];
-            o_ptr->mult = a_ptr->mult;
-        }
-        else
-        {
-            object_kind *k_ptr = &k_info[o_ptr->k_idx];
-            o_ptr->mult = k_ptr->mult;
-            if ( have_flag(o_ptr->art_flags, TR_XTRA_MIGHT)
-              || o_ptr->name2 == EGO_BOW_LOTHLORIEN /* e_info no longer has the XTRA_MIGHT flag! */
-              || o_ptr->name2 == EGO_BOW_EXTRA_MIGHT
-              || o_ptr->name2 == EGO_BOW_HARADRIM )
-            {
-                o_ptr->mult += 75;
-            }
-            else if (o_ptr->name2 == EGO_BOW_VELOCITY)
-                o_ptr->mult += 25;
-        }
-        remove_flag(o_ptr->art_flags, TR_XTRA_MIGHT);
-    }
-
-    /* Ooops. Stand-art bows were never getting their multipliers set! */
-    if ( savefile_is_older_than(file, 3, 3, 5, 2)
-      && o_ptr->tval == TV_BOW
-      && o_ptr->name1 )
-    {
-        artifact_type *a_ptr = &a_info[o_ptr->name1];
-        o_ptr->mult = a_ptr->mult;
-    }
-
-    /* Extra shots now uses the pval */
-    if ( savefile_is_older_than(file, 3, 0, 6, 2)
-      && o_ptr->tval == TV_BOW
-      && (o_ptr->name2 == EGO_BOW_EXTRA_SHOTS || have_flag(o_ptr->art_flags, TR_XTRA_SHOTS))
-      && !o_ptr->pval )
-    {
-        o_ptr->pval = 3;
-    }
-
-    /* Extra attacks is now .5 per pval */
-    if (savefile_is_older_than(file, 3, 1, 0, 1))
-    {
-        if (o_ptr->name1 && have_flag(a_info[o_ptr->name1].flags, TR_BLOWS))
-            o_ptr->pval = a_info[o_ptr->name1].pval;
-        else if (o_ptr->name2 == EGO_WEAPON_EXTRA_ATTACKS || o_ptr->name2 == EGO_WEAPON_DAEMON)
-            o_ptr->pval *= 2;
-    }
 }
 
 static void rd_monster(savefile_ptr file, monster_type *m_ptr)
@@ -548,13 +492,6 @@ static void rd_options(savefile_ptr file)
     for (n = 0; n < 8; n++) flag[n] = savefile_read_u32b(file);
     for (n = 0; n < 8; n++) mask[n] = savefile_read_u32b(file);
 
-    /* Virtues were removed in 1.0.17 and restored in 1.0.21 */
-    if (savefile_is_older_than(file, 1, 0, 17, 0))
-    {
-        /* Hard coded ... yuk! See tables.c for enable_virtues option. */
-        flag[6] |= (1 << 13);
-    }
-
     for (n = 0; n < 8; n++)
     {
         for (i = 0; i < 32; i++)
@@ -609,10 +546,7 @@ static void rd_quick_start(savefile_ptr file)
     previous_char.personality = savefile_read_byte(file);
     previous_char.realm1 = savefile_read_byte(file);
     previous_char.realm2 = savefile_read_byte(file);
-    if (savefile_is_older_than(file, 3, 1, 6, 1))
-        previous_char.dragon_realm = 0;
-    else
-        previous_char.dragon_realm = savefile_read_byte(file);
+    previous_char.dragon_realm = savefile_read_byte(file);
     previous_char.age = savefile_read_s16b(file);
     previous_char.au = savefile_read_s32b(file);
 
@@ -640,10 +574,7 @@ static void rd_extra(savefile_ptr file)
 
     rd_quick_start(file);
 
-    if (savefile_is_older_than(file, 3, 5, 1, 1))
-        game_mode = GAME_MODE_NORMAL;
-    else
-        game_mode = savefile_read_s32b(file);
+    game_mode = savefile_read_s32b(file);
 
     p_ptr->prace = savefile_read_byte(file);
     p_ptr->pclass = savefile_read_byte(file);
@@ -651,22 +582,10 @@ static void rd_extra(savefile_ptr file)
     p_ptr->psex = savefile_read_byte(file);
     p_ptr->realm1 = savefile_read_byte(file);
     p_ptr->realm2 = savefile_read_byte(file);
-    if (savefile_is_older_than(file, 3, 1, 6, 1))
-        p_ptr->dragon_realm = 0;
-    else
-        p_ptr->dragon_realm = savefile_read_byte(file);
+    p_ptr->dragon_realm = savefile_read_byte(file);
     p_ptr->psubclass = savefile_read_byte(file);
     p_ptr->psubrace = savefile_read_byte(file);
     p_ptr->current_r_idx = savefile_read_s16b(file);
-    if (savefile_is_older_than(file, 2, 0, 0, 1))
-    {
-        if ( p_ptr->prace == RACE_MON_DEMON
-          && p_ptr->psubrace == DEMON_MARILITH
-          && p_ptr->current_r_idx == MON_LESSER_BALROG )
-        {
-            p_ptr->current_r_idx = MON_MARILITH;
-        }
-    }
     p_ptr->expfact = savefile_read_u16b(file);
 
     for (i = 0; i < 6; i++) p_ptr->stat_max[i] = savefile_read_s16b(file);
@@ -674,10 +593,7 @@ static void rd_extra(savefile_ptr file)
     for (i = 0; i < 6; i++) p_ptr->stat_cur[i] = savefile_read_s16b(file);
 
     p_ptr->au = savefile_read_s32b(file);
-    if (savefile_is_older_than(file, 1, 0, 25, 1))
-        p_ptr->fame = 0;
-    else
-        p_ptr->fame = savefile_read_s16b(file);
+    p_ptr->fame = savefile_read_s16b(file);
     p_ptr->max_exp = savefile_read_s32b(file);
     p_ptr->max_max_exp = savefile_read_s32b(file);
     p_ptr->exp = savefile_read_s32b(file);
@@ -799,14 +715,8 @@ static void rd_extra(savefile_ptr file)
     p_ptr->tim_mimic = savefile_read_s16b(file);
     p_ptr->tim_sh_fire = savefile_read_s16b(file);
     p_ptr->tim_sh_elements = savefile_read_s16b(file);
-    if (savefile_is_older_than(file, 3, 1, 6, 2))
-        p_ptr->tim_sh_shards = 0;
-    else
-        p_ptr->tim_sh_shards = savefile_read_s16b(file);
-    if (savefile_is_older_than(file, 3, 1, 6, 3))
-        p_ptr->tim_sh_domination = 0;
-    else
-        p_ptr->tim_sh_domination = savefile_read_s16b(file);
+    p_ptr->tim_sh_shards = savefile_read_s16b(file);
+    p_ptr->tim_sh_domination = savefile_read_s16b(file);
     p_ptr->tim_weaponmastery = savefile_read_s16b(file);
     p_ptr->tim_sh_holy = savefile_read_s16b(file);
     p_ptr->tim_eyeeye = savefile_read_s16b(file);
@@ -912,28 +822,12 @@ static void rd_extra(savefile_ptr file)
     for (i = 0; i < MAX_DEMIGOD_POWERS; ++i)
         p_ptr->demigod_power[i] = savefile_read_s16b(file);
 
-    if (savefile_is_older_than(file, 3, 5, 0, 0))
-        p_ptr->draconian_power = -1;
-    else
-        p_ptr->draconian_power = savefile_read_s16b(file);
+    p_ptr->draconian_power = savefile_read_s16b(file);
 
-    /* Virtues were removed in 1.0.17 and restored in 1.0.21 */
-    if (!savefile_is_older_than(file, 1, 0, 17, 0) && savefile_is_older_than(file, 1, 0, 21, 0))
-    {
-        savefile_read_skip(file, 32);
-        for (i = 0; i < 8; i++)
-            p_ptr->virtues[i] = 0;
-        for (i = 0; i < 8; i++)
-            p_ptr->vir_types[i] = 0;
-        virtue_init();
-    }
-    else
-    {
-        for (i = 0; i < 8; i++)
-            p_ptr->virtues[i] = savefile_read_s16b(file);
-        for (i = 0; i < 8; i++)
-            p_ptr->vir_types[i] = savefile_read_s16b(file);
-    }
+    for (i = 0; i < 8; i++)
+        p_ptr->virtues[i] = savefile_read_s16b(file);
+    for (i = 0; i < 8; i++)
+        p_ptr->vir_types[i] = savefile_read_s16b(file);
 
     mutant_regenerate_mod = mut_regenerate_mod();
 
@@ -1018,9 +912,6 @@ static errr rd_inventory(savefile_ptr file)
         u16b n = savefile_read_u16b(file);
 
         if (n == 0xFFFF) break;
-
-        if (savefile_is_older_than(file, 3, 0, 0, 3) && n > 23)
-            n += 3;
 
         rd_item(file, &forge);
 
@@ -1247,15 +1138,7 @@ static errr rd_saved_floor(savefile_ptr file, saved_floor_type *sf_ptr)
             ptr->guard_m_idx = savefile_read_s16b(file);
             ptr->guard_x = savefile_read_s16b(file);
             ptr->guard_y = savefile_read_s16b(file);
-            if (savefile_is_older_than(file, 3, 4, 0, 1))
-            {
-                if (ptr->ai == AI_MAINTAIN_DISTANCE)
-                    ptr->distance = 5;
-                else
-                    ptr->distance = 0;
-            }
-            else
-                ptr->distance = savefile_read_s16b(file);
+            ptr->distance = savefile_read_s16b(file);
 
             /* I make no effort to keep the same pack_info index on a reload, so
                patch things up.  I'm pretty sure, but not certain, that monster
@@ -1474,38 +1357,13 @@ static errr rd_savefile_new_aux(savefile_ptr file)
         k_ptr->aware = (tmp8u & 0x01) ? TRUE: FALSE;
         k_ptr->tried = (tmp8u & 0x02) ? TRUE: FALSE;
 
-        if (savefile_is_older_than(file, 3, 3, 3, 1))
-        {
-            k_ptr->counts.generated = savefile_read_s32b(file);
-            k_ptr->counts.found = 0;
-            k_ptr->counts.bought = 0;
-            k_ptr->counts.used = 0;
-            k_ptr->counts.destroyed = 0;
-        }
-        else
-        {
-            k_ptr->counts.generated = savefile_read_s32b(file);
-            k_ptr->counts.found = savefile_read_s32b(file);
-            k_ptr->counts.bought = savefile_read_s32b(file);
-            k_ptr->counts.used = savefile_read_s32b(file);
-            k_ptr->counts.destroyed = savefile_read_s32b(file);
-        }        
+        k_ptr->counts.generated = savefile_read_s32b(file);
+        k_ptr->counts.found = savefile_read_s32b(file);
+        k_ptr->counts.bought = savefile_read_s32b(file);
+        k_ptr->counts.used = savefile_read_s32b(file);
+        k_ptr->counts.destroyed = savefile_read_s32b(file);
     }
 
-    if (savefile_is_older_than(file, 3, 3, 3, 2))
-    {
-        /* e_info_reset(); */
-        int i;
-
-        for (i = 1; i < max_e_idx; i++)
-        {
-            ego_item_type *e_ptr = &e_info[i];
-
-            e_ptr->aware = TRUE; /* <== This is the old behavior ... */
-            WIPE(&e_ptr->counts, counts_t);
-        }
-    }
-    else
     {
         tmp16u = savefile_read_u16b(file);
 
@@ -1732,18 +1590,9 @@ static errr rd_savefile_new_aux(savefile_ptr file)
         }
     }
 
-    if (!savefile_is_older_than(file, 3, 3, 4, 1))
-    {
-        spell_stats_on_load(file);
-    }
-    if (!savefile_is_older_than(file, 3, 5, 0, 1))
-    {
-        skills_on_load(file);
-    }
-    if (!savefile_is_older_than(file, 3, 5, 0, 2))
-    {
-        stats_on_load(file);
-    }
+    spell_stats_on_load(file);
+    skills_on_load(file);
+    stats_on_load(file);
 
     /* I'm not dead yet... */
     if (!p_ptr->is_dead)

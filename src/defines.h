@@ -3196,6 +3196,7 @@ enum summon_specific_e {
 #define AM_TAILORED     0x00000080 /* For player monster races to force a wearable item */
 #define AM_FORCE_EGO    0x00000100
 #define AM_STOCK_TOWN   0x00000200
+#define AM_STOCK_BM     0x00000400
 
 
 /*** Monster blow constants ***/

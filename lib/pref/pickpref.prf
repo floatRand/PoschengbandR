@@ -41,13 +41,6 @@ scroll of wall of stone
 acquirement#!*
 ?:1
 
-#?staff of perception#@ui
-#~scroll of teleport#@rt
-#~scroll of phase door#@rb
-#~scroll of word of recall#@rr
-#~scroll of magic mapping#@rm
-#~scroll of identify#@ri
-
 #########################################
 # Devices
 #########################################
@@ -55,25 +48,20 @@ acquirement#!*
 ?unidentified rings
 ?unidentified amulets
 
-rod of healing#@zh
-?staff of healing#@uh
-?staff of speed#@us
-?staff of destruction#@ud
-?wand of rockets#@ar!s!d!k
-?wand of disintegrate#@ad!s!d!k
+rod: angelic healing#@zh
+?staff: healing#@uh
+?staff: speed#@us
+?staff: destruction#@ud
+?wand: rocket#@ar!s!d!k
+?wand: disintegrate#@ad!s!d!k
 
 ?:[OR [EQU $CLASS Mage High-Mage] [EQU $RACE Beholder Lich] ]
-rod of cold balls#!s!d!k
-rod of fire balls#!s!d!k
-rod of lightning balls#!s!d!k
-rod of acid balls#!s!d!k
-rod of mana balls#!s!d!k
 wizardstaff
 
-?:[EQU $CLASS Magic-Eater]
-magical devices:rod
-magical devices:staff
-magical devices:wand
+?:[EQU $CLASS Magic-Eater Devicemaster]
+unidentified magical devices:rod
+unidentified magical devices:staff
+unidentified magical devices:wand
 
 ?:1
 

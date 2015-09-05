@@ -1665,6 +1665,9 @@ static bool _get_store_obj2(object_type *o_ptr)
         mode |=  AM_STOCK_TOWN;
     }
 
+    if (cur_store_num == STORE_BLACK)
+        mode |= AM_STOCK_BM;
+
     switch (cur_store_num)
     {
     case STORE_GENERAL:

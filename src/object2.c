@@ -958,7 +958,7 @@ void stats_on_equip(object_type *o_ptr)
 
 void stats_on_identify(object_type *o_ptr)
 {
-    if (object_is_aware(o_ptr) && !(o_ptr->marked & OM_COUNTED))
+    if (!(o_ptr->marked & OM_COUNTED))
     {
         k_info[o_ptr->k_idx].counts.found += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
@@ -966,13 +966,13 @@ void stats_on_identify(object_type *o_ptr)
             device_stats_on_find(o_ptr);
     }
 
-    if (object_is_known(o_ptr) && o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
+    if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
         e_info[o_ptr->name2].counts.found += o_ptr->number;
         o_ptr->marked |= OM_EGO_COUNTED;
     }
 
-    if (object_is_known(o_ptr) && o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
+    if (o_ptr->art_name && !(o_ptr->marked & OM_ART_COUNTED))
     {
         stats_rand_art_counts.found += o_ptr->number;
         o_ptr->marked |= OM_ART_COUNTED;

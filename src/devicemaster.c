@@ -197,6 +197,12 @@ static bool _transfer_effect(void)
     if (!get_item(&src_idx, "Transfer from which item? ", "You have no items to use.", USE_INVEN)) return FALSE;
     src_obj = &inventory[src_idx];
 
+    if (object_is_artifact(src_obj))
+    {
+        msg_print("Failed! You cannot transfer from artifacts.");
+        return FALSE;
+    }
+
     _transfer_src_obj = src_obj;
     item_tester_hook = _transfer_obj_p;
     if (!get_item(&dest_idx, "Transfer to which item? ", "You have no items to use.", USE_INVEN)) return FALSE;
@@ -205,6 +211,12 @@ static bool _transfer_effect(void)
     if (dest_obj == src_obj)
     {
         msg_print("Failed! Please pick distinct objects for the source and destination.");
+        return FALSE;
+    }
+
+    if (object_is_artifact(dest_obj))
+    {
+        msg_print("Failed! You cannot transfer to artifacts.");
         return FALSE;
     }
 

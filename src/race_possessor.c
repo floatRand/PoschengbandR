@@ -102,38 +102,33 @@ static void _history_on_possess(int r_idx)
 
 static void _history_on_load(savefile_ptr file)
 {
-    if (savefile_is_older_than(file, 3, 3, 6, 1))
-        _history_clear();
-    else
+    int          ct = savefile_read_s32b(file);
+    int          i;
+    _history_ptr c, t, lst = NULL;
+
+    _history_clear();
+    for (i = 0; i < ct; i++)
     {
-        int          ct = savefile_read_s32b(file);
-        int          i;
-        _history_ptr c, t, lst = NULL;
+        c = malloc(sizeof(_history_t));
+        assert(c);
 
-        _history_clear();
-        for (i = 0; i < ct; i++)
-        {
-            c = malloc(sizeof(_history_t));
-            assert(c);
-            
-            c->r_idx = savefile_read_s32b(file);
-            c->d_idx = savefile_read_s32b(file);
-            c->d_lvl = savefile_read_s32b(file);
-            c->p_lvl = savefile_read_s32b(file);
-            c->turn  = savefile_read_s32b(file);
+        c->r_idx = savefile_read_s32b(file);
+        c->d_idx = savefile_read_s32b(file);
+        c->d_lvl = savefile_read_s32b(file);
+        c->p_lvl = savefile_read_s32b(file);
+        c->turn  = savefile_read_s32b(file);
 
-            c->next = lst;
-            lst = c;
-        }
-        
-        /* Reverse List */
-        while (lst)
-        {
-            t = lst;
-            lst = lst->next;
-            t->next = _history;
-            _history = t;
-        }
+        c->next = lst;
+        lst = c;
+    }
+
+    /* Reverse List */
+    while (lst)
+    {
+        t = lst;
+        lst = lst->next;
+        t->next = _history;
+        _history = t;
     }
 }
 

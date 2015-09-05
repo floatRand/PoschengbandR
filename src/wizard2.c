@@ -3056,7 +3056,7 @@ void do_cmd_debug(void)
 
         dungeon_type = DUNGEON_ANGBAND;
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains */
-        for (lev = 1; lev < 100; lev++)
+        for (lev = 15; lev < 100; lev++)
         {
             for (i = 0; i < 1; i++)
             {

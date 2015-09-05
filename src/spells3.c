@@ -2546,9 +2546,13 @@ static void _recharge_aux(object_type *o_ptr, int amt, int power)
 {
     int fail_odds = 0;
     int lev = o_ptr->activation.difficulty;
+    int div = 15;
+
+    if (devicemaster_is_speciality(o_ptr))
+        div = 8;
 
     if (power > lev/2)
-        fail_odds = (power - lev/2) / 10;
+        fail_odds = (power - lev/2) / div;
 
     if (one_in_(fail_odds))
     {

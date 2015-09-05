@@ -2241,7 +2241,7 @@ device_effect_info_t wand_effect_table[] =
     {EFFECT_BALL_NEXUS,            47,  21,     1,   0,     0, _DROP_GOOD},
     {EFFECT_BREATHE_COLD,          50,  22,     2,  70,     0, _DROP_GOOD | _NO_DESTROY},
     {EFFECT_BREATHE_FIRE,          50,  23,     2,  75,     0, _DROP_GOOD | _NO_DESTROY},
-    {EFFECT_BREATHE_ONE_MULTIHUED, 55,  24,     2,   0,     0, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_BREATHE_ONE_MULTIHUED, 55,  24,     3,   0,     0, _DROP_GOOD | _NO_DESTROY},
     {EFFECT_BEAM_GRAVITY,          55,  25,     2,   0,     0, _DROP_GOOD | _NO_DESTROY},
     {EFFECT_METEOR,                55,  26,     2,   0,     0, _DROP_GOOD | _NO_DESTROY},
     {EFFECT_GENOCIDE_ONE,          60,  27,     4,   0,     0, _DROP_GOOD | _NO_DESTROY},
@@ -2264,7 +2264,7 @@ device_effect_info_t rod_effect_table[] =
     {EFFECT_BEAM_COLD,             19,   9,     1,  50,     0, 0},
     {EFFECT_BEAM_FIRE,             21,  10,     1,  50,     0, 0},
     {EFFECT_BEAM_ACID,             23,  12,     1,  55,     0, 0},
-    {EFFECT_BEAM_LITE,             25,   5,     1,   0,     0, 0},
+    {EFFECT_BEAM_LITE,             25,   5,     3,   0,     0, 0},
     {EFFECT_RECALL,                27,  15,     1,   0,     0, 0},
     {EFFECT_DETECT_ALL,            30,  17,     3,   0,     0, 0},
     {EFFECT_ESCAPE,                30,  20,     2,   0,     0, 0},
@@ -2463,11 +2463,16 @@ bool device_init(object_type *o_ptr, int level, int mode)
     if (!_is_valid_device(o_ptr))
         return FALSE;
 
-    if (!(mode & AM_STOCK_TOWN) && one_in_(GREAT_OBJ))
+    if (!(mode & (AM_STOCK_TOWN | AM_STOCK_BM)) && one_in_(30))
     {
-        /* What a bizarre calculation */
-        level = 1 + (level * MAX_DEPTH / randint1(MAX_DEPTH));
+        int boost = level;
+        if (boost < 20)
+            boost = 20;
+        level += rand_range(boost/4, boost/2);
     }
+
+    if (level > 100)
+        level = 100;
 
     /* device_level */
     o_ptr->xtra3 = _bounds_check(_rand_normal(level*85/100, 10), 1, 100);
@@ -3621,7 +3626,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_SPEED:
     {
         int power = _extra(effect, 20);
-        if (name) return "Haste Self";
+        if (name) return "Speed";
         if (desc) return "It grants a temporary speed boost.";
         if (info) return format("Dur d%d + %d", _BOOST(power), _BOOST(power));
         if (value) return format("%d", 2500 + 25*power);
