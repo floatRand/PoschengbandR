@@ -1211,8 +1211,10 @@ static void do_cmd_device_aux(int item)
     }
     object_tried(o_ptr);
     if (device_noticed && !object_is_known(o_ptr))
+    {
         identify_item(o_ptr);
-
+        autopick_alter_item(item, destroy_identify);
+    }
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
 
     if (used)

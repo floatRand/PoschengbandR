@@ -1937,6 +1937,12 @@ static _effect_info_t _effect_info[] =
     {"BEAM_LITE",       EFFECT_BEAM_LITE,           40, 100,  2, 0},
     {"BEAM_GRAVITY",    EFFECT_BEAM_GRAVITY,        50, 150,  8, 0},
     {"BEAM_DISINTEGRATE",EFFECT_BEAM_DISINTEGRATE,  60, 200, 16, 0},
+    {"BEAM_ACID",       EFFECT_BEAM_ACID,           20,  20,  2, BIAS_ACID},
+    {"BEAM_ELEC",       EFFECT_BEAM_ELEC,           20,  20,  2, BIAS_ELEC},
+    {"BEAM_FIRE",       EFFECT_BEAM_FIRE,           20,  20,  2, BIAS_FIRE | BIAS_DEMON},
+    {"BEAM_COLD",       EFFECT_BEAM_COLD,           20,  20,  2, BIAS_COLD},
+    {"BEAM_SOUND",      EFFECT_BEAM_SOUND,          45,  50,  3, BIAS_LAW},
+    {"BEAM_CHAOS",      EFFECT_BEAM_CHAOS,          55, 100,  3, BIAS_CHAOS},
 
     /* Offense: Balls                               Lv    T   R  Bias */
     {"BALL_ACID",       EFFECT_BALL_ACID,           25,  50,  1, BIAS_ACID},
@@ -2211,14 +2217,14 @@ device_effect_info_t wand_effect_table[] =
     {EFFECT_SLEEP_MONSTER,          5,   5,     1,  25,     0, _STOCK_TOWN},
     {EFFECT_SLOW_MONSTER,           5,   5,     1,  25,     0, _STOCK_TOWN},
     {EFFECT_CONFUSE_MONSTER,        5,   5,     1,  25,     0, 0},
-    {EFFECT_SCARE_MONSTER,         10,   5,     1,  25,     0, 0},
+    {EFFECT_SCARE_MONSTER,          7,   5,     1,  25,     0, 0},
     {EFFECT_STONE_TO_MUD,          10,   5,     1,   0,     0, 0},
-    {EFFECT_POLYMORPH,             15,   6,     1,  30,     0, 0},
-    {EFFECT_CLONE_MONSTER,         15,   6,     1,  30,     0, 0},
-    {EFFECT_BOLT_COLD,             15,   7,     1,  30,     0, 0},
-    {EFFECT_BOLT_ELEC,             17,   7,     1,  30,     0, 0},
-    {EFFECT_BOLT_ACID,             19,   8,     1,  30,     0, 0},
-    {EFFECT_BOLT_FIRE,             20,   9,     1,  30,     0, 0},
+    {EFFECT_POLYMORPH,             12,   6,     1,  30,     0, 0},
+    {EFFECT_CLONE_MONSTER,         12,   6,     1,  30,     0, 0},
+    {EFFECT_BOLT_COLD,             12,   7,     1,  30,     0, 0},
+    {EFFECT_BOLT_ELEC,             15,   7,     1,  30,     0, 0},
+    {EFFECT_BOLT_ACID,             17,   8,     1,  30,     0, 0},
+    {EFFECT_BOLT_FIRE,             19,   9,     1,  30,     0, 0},
     {EFFECT_HASTE_MONSTER,         20,   3,     1,  40,     0, 0},
     {EFFECT_TELEPORT_AWAY,         20,  10,     1,   0,     0, 0},
     {EFFECT_DESTROY_TRAPS,         20,  10,     1,   0,     0, 0},
@@ -2251,19 +2257,19 @@ device_effect_info_t rod_effect_table[] =
     /*                            Lvl Cost Rarity  Max  Extra  Flags */
     {EFFECT_PESTICIDE,              1,   3,     1,  30,     0, 0},
     {EFFECT_DETECT_TRAPS,           5,   4,     1,  30,     0, 0},
-    {EFFECT_BEAM_LITE_WEAK,         7,   5,     1,  30,     0, 0},
     {EFFECT_LITE_AREA,             10,   5,     1,  30,     0, 0},
     {EFFECT_DETECT_DOOR_STAIRS,    12,   6,     1,  30,     0, 0},
     {EFFECT_DETECT_MONSTERS,       15,   6,     2,  50,     0, 0},
-    {EFFECT_BOLT_ELEC,             17,   8,     1,  35,     0, 0},
-    {EFFECT_BOLT_COLD,             19,   9,     1,  35,     0, 0},
-    {EFFECT_BOLT_FIRE,             21,  10,     1,  37,     0, 0},
-    {EFFECT_BOLT_ACID,             23,  12,     1,  39,     0, 0},
+    {EFFECT_BEAM_ELEC,             17,   8,     1,  50,     0, 0},
+    {EFFECT_BEAM_COLD,             19,   9,     1,  50,     0, 0},
+    {EFFECT_BEAM_FIRE,             21,  10,     1,  50,     0, 0},
+    {EFFECT_BEAM_ACID,             23,  12,     1,  55,     0, 0},
+    {EFFECT_BEAM_LITE,             25,   5,     1,   0,     0, 0},
     {EFFECT_RECALL,                27,  15,     1,   0,     0, 0},
     {EFFECT_DETECT_ALL,            30,  17,     3,   0,     0, 0},
     {EFFECT_ESCAPE,                30,  20,     2,   0,     0, 0},
-    {EFFECT_BOLT_CHAOS,            32,  21,     2,  60,     0, 0},
-    {EFFECT_BOLT_SOUND,            32,  22,     2,  60,     0, 0},
+    {EFFECT_BEAM_CHAOS,            32,  21,     2,  60,     0, 0},
+    {EFFECT_BEAM_SOUND,            32,  22,     2,  60,     0, 0},
     {EFFECT_CLARITY,               35,  15,     5,   0,     0, _DROP_GOOD},
     {EFFECT_TELEKINESIS,           40,  25,     1,   0,     0, 0},
     {EFFECT_BALL_ELEC,             40,  25,     1,  80,     0, 0},
@@ -4331,7 +4337,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            fire_bolt_or_beam(20, GF_MISSILE, dir, _BOOST(damroll(dd, ds)));
+            fire_bolt(GF_MISSILE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -4347,7 +4353,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            fire_bolt_or_beam(20, GF_ACID, dir, _BOOST(damroll(dd, ds)));
+            fire_bolt(GF_ACID, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -4363,7 +4369,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            fire_bolt_or_beam(20, GF_ELEC, dir, _BOOST(damroll(dd, ds)));
+            fire_bolt(GF_ELEC, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -4379,7 +4385,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            fire_bolt_or_beam(20, GF_FIRE, dir, _BOOST(damroll(dd, ds)));
+            fire_bolt(GF_FIRE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -4395,7 +4401,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            fire_bolt_or_beam(20, GF_COLD, dir, _BOOST(damroll(dd, ds)));
+            fire_bolt(GF_COLD, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -4427,7 +4433,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            fire_bolt_or_beam(20, GF_LITE, dir, _BOOST(damroll(dd, ds)));
+            fire_bolt(GF_LITE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -4443,7 +4449,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (cast)
         {
             if (!get_aim_dir(&dir)) return NULL;
-            fire_bolt_or_beam(20, GF_DARK, dir, _BOOST(damroll(dd, ds)));
+            fire_bolt(GF_DARK, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;
@@ -4661,7 +4667,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_BEAM_LITE:
     {
-        int dam = _extra(effect, 50);
+        int dam = _extra(effect, effect->power*2);
         if (name) return "Beam of Light";
         if (desc) return "It fires a powerful beam of light.";
         if (info) return info_damage(0, 0, _BOOST(dam));
@@ -4703,6 +4709,102 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             if (!get_aim_dir(&dir)) return NULL;
             fire_beam(GF_DISINTEGRATE, dir, _BOOST(damroll(dd, ds)));
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_BEAM_ACID:
+    {
+        int dd = _extra(effect, 6 + effect->power/7);
+        int ds = 8;
+        if (name) return "Shoot Acid";
+        if (desc) return "It fires a beam of acid.";
+        if (info) return info_damage(_BOOST(dd), ds, 0);
+        if (value) return format("%d", 35*_avg_damroll(dd, ds));
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            fire_beam(GF_ACID, dir, _BOOST(damroll(dd, ds)));
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_BEAM_ELEC:
+    {
+        int dd = _extra(effect, 4 + effect->power/9);
+        int ds = 8;
+        if (name) return "Lightning Strike";
+        if (desc) return "It fires a beam of lightning.";
+        if (info) return info_damage(_BOOST(dd), ds, 0);
+        if (value) return format("%d", 30*_avg_damroll(dd, ds));
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            fire_beam(GF_ELEC, dir, _BOOST(damroll(dd, ds)));
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_BEAM_FIRE:
+    {
+        int dd = _extra(effect, 7 + effect->power/6);
+        int ds = 8;
+        if (name) return "Line of Fire";
+        if (desc) return "It fires a beam of fire.";
+        if (info) return info_damage(_BOOST(dd), ds, 0);
+        if (value) return format("%d", 30*_avg_damroll(dd, ds));
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            fire_beam(GF_FIRE, dir, _BOOST(damroll(dd, ds)));
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_BEAM_COLD:
+    {
+        int dd = _extra(effect, 5 + effect->power/8);
+        int ds = 8;
+        if (name) return "Ray of Cold";
+        if (desc) return "It fires a beam of frost.";
+        if (info) return info_damage(_BOOST(dd), ds, 0);
+        if (value) return format("%d", 30*_avg_damroll(dd, ds));
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            fire_beam(GF_COLD, dir, _BOOST(damroll(dd, ds)));
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_BEAM_SOUND:
+    {
+        int dd = _extra(effect, 7 + effect->power/6);
+        int ds = 8;
+        if (name) return "Sound Strike";
+        if (desc) return "It fires a beam of sound.";
+        if (info) return info_damage(_BOOST(dd), ds, 0);
+        if (value) return format("%d", 50*_avg_damroll(dd, ds));
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            fire_beam(GF_SOUND, dir, _BOOST(damroll(dd, ds)));
+            device_noticed = TRUE;
+        }
+        break;
+    }
+    case EFFECT_BEAM_CHAOS:
+    {
+        int dd = _extra(effect, 7 + effect->power/6);
+        int ds = 8;
+        if (name) return "Chaos Strike";
+        if (desc) return "It fires a beam of chaos.";
+        if (info) return info_damage(_BOOST(dd), ds, 0);
+        if (value) return format("%d", 40*_avg_damroll(dd, ds));
+        if (cast)
+        {
+            if (!get_aim_dir(&dir)) return NULL;
+            fire_beam(GF_CHAOS, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
         break;

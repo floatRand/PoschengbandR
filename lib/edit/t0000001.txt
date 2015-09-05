@@ -763,15 +763,23 @@ F:@:FLOOR:3:0:0:0:80
 # Devicemaster
 
 # Wand: Rocket
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Wands] ]
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Wands] [EQU [MOD $RANDOM27 5] 0] ]
 F:@:FLOOR:3:0:269:559
+
+# Wand: Disintegrate
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Wands] [GEQ [MOD $RANDOM27 5] 1] ]
+F:@:FLOOR:3:0:269:417
 
 # Staff: Mana Storm
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Staves] ]
 F:@:FLOOR:3:0:270:560
 
+# Rod: Starburst
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Rods] [EQU [MOD $RANDOM27 5] 0] ]
+F:@:FLOOR:3:0:271:405
+
 # Rod: Mana Ball
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Rods] ]
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Rods] [GEQ [MOD $RANDOM27 5] 1] ]
 F:@:FLOOR:3:0:271:416
 
 ##########################################################################

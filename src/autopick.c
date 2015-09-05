@@ -2003,7 +2003,7 @@ bool autopick_auto_id(object_type *o_ptr)
         }
 
         i = _pack_find_device(EFFECT_IDENTIFY);
-        if (i >= 0 && inventory[i].pval > 0)
+        if (i >= 0)
         {
             identify_item(o_ptr);
             device_decrease_sp(&inventory[i], inventory[i].activation.cost);
