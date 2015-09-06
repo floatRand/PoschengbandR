@@ -3056,11 +3056,14 @@ void do_cmd_debug(void)
 
         dungeon_type = DUNGEON_ANGBAND;
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains */
-        for (lev = 1; lev < 100; lev++)
+        for (lev = 90; lev < 91; lev++)
         {
-            int reps = 1;
-            if (lev == 40 || lev == 60 || lev == 99)
+            int reps = 100;
+            /*
+            if (lev == 40 || lev == 60 || lev == 80)
                 reps = 20;
+            if (lev == 99)
+                reps = 40;*/
 
             for (i = 0; i < reps; i++)
             {

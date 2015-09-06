@@ -4646,6 +4646,8 @@ bool activate_ty_curse(bool stop_ty, int *count)
 
     int flg = (PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP);
 
+    if (statistics_hack) return TRUE;
+
     do
     {
         switch (randint1(34))

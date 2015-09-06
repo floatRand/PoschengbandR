@@ -5913,14 +5913,14 @@ typedef struct {
     int     great;
 } _kind_alloc_entry;
 static _kind_alloc_entry _kind_alloc_table[] = {
-    { kind_is_weapon,          180,    0,    0 },  
-    { kind_is_body_armor,      165,    0,    0 },
-    { kind_is_other_armor,     200,    0,    0 },
-    { kind_is_wand_rod_staff,  150, -100, -140 },
+    { kind_is_weapon,          200,    0,    0 },
+    { kind_is_body_armor,      190,    0,    0 },
+    { kind_is_other_armor,     210,    0,    0 },
+    { kind_is_wand_rod_staff,   90,  -40,  -60 },
     { _kind_is_potion_scroll,  100,  -50,  -90 },
     { kind_is_bow_ammo,         70,    0,    0 },
     { kind_is_book,             50,    0,    0 },
-    { kind_is_jewelry,          35,    0,    0 },
+    { kind_is_jewelry,          40,    0,    0 },
     { kind_is_misc,             50,  -50,  -50 },
     { NULL, 0}
 };
