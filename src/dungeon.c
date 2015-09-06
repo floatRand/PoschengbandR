@@ -4113,14 +4113,15 @@ static void process_command(void)
         {
             if (!p_ptr->wild_mode)
             {
-            if (!p_ptr->inside_arena || devicemaster_is_(DEVICEMASTER_WANDS))
-                do_cmd_aim_wand();
-            else
-            {
-                msg_print("The arena absorbs all attempted magic!");
-
-                msg_print(NULL);
-            }
+                if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_WANDS))
+                {
+                    msg_print("The arena absorbs all attempted magic!");
+                    msg_print(NULL);
+                }
+                else
+                {
+                    do_cmd_aim_wand();
+                }
             }
             break;
         }
@@ -4133,7 +4134,6 @@ static void process_command(void)
                 if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_RODS))
                 {
                     msg_print("The arena absorbs all attempted magic!");
-
                     msg_print(NULL);
                 }
                 else
@@ -4149,13 +4149,14 @@ static void process_command(void)
         {
             if (!p_ptr->wild_mode)
             {
-                if (!p_ptr->inside_arena || devicemaster_is_(DEVICEMASTER_POTIONS))
-                    do_cmd_quaff_potion();
-                else
+                if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_POTIONS))
                 {
                     msg_print("The arena absorbs all attempted magic!");
-
                     msg_print(NULL);
+                }
+                else
+                {
+                    do_cmd_quaff_potion();
                 }
             }
             break;
@@ -4166,13 +4167,14 @@ static void process_command(void)
         {
             if (!p_ptr->wild_mode)
             {
-                if (!p_ptr->inside_arena || devicemaster_is_(DEVICEMASTER_SCROLLS))
-                    do_cmd_read_scroll();
-                else
+                if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_SCROLLS))
                 {
                     msg_print("The arena absorbs all attempted magic!");
-
                     msg_print(NULL);
+                }
+                else
+                {
+                    do_cmd_read_scroll();
                 }
             }
             break;
@@ -4186,7 +4188,6 @@ static void process_command(void)
                 if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_STAVES))
                 {
                     msg_print("The arena absorbs all attempted magic!");
-
                     msg_print(NULL);
                 }
                 else

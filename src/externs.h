@@ -233,7 +233,6 @@ extern bool easy_disarm;    /* Automatically disarm traps */
 extern bool easy_floor;    /* Display floor stacks in a list */
 #endif
 
-extern bool use_command;    /* Allow unified use command */
 extern bool over_exert;    /* Allow casting spells when short of mana */
 extern bool numpad_as_cursorkey;    /* Use numpad keys as cursor key in editor mode */
 
@@ -832,7 +831,6 @@ extern void do_cmd_rerate_aux(void);
 extern int life_rating(void);
 extern void do_cmd_rerate(bool display);
 extern void ring_of_power(int dir);
-extern void do_cmd_use(void);
 extern bool restore_mana(void);
 
 /* devices.c */
@@ -1147,6 +1145,7 @@ extern void wipe_o_list(void);
 extern s16b o_pop(void);
 extern s16b get_obj_num(int level);
 extern errr get_obj_num_prep(void);
+extern bool object_is_aware(object_type *o_ptr);
 extern void object_known(object_type *o_ptr);
 extern void object_aware(object_type *o_ptr);
 extern void ego_aware(object_type *o_ptr);

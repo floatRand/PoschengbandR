@@ -2264,7 +2264,7 @@ device_effect_info_t rod_effect_table[] =
     {EFFECT_BEAM_COLD,             19,   9,     1,  50,     0, 0},
     {EFFECT_BEAM_FIRE,             21,  10,     1,  50,     0, 0},
     {EFFECT_BEAM_ACID,             23,  12,     1,  55,     0, 0},
-    {EFFECT_BEAM_LITE,             25,   5,     3,   0,     0, 0},
+    {EFFECT_BEAM_LITE,             25,  15,     3,   0,     0, 0},
     {EFFECT_RECALL,                27,  15,     1,   0,     0, 0},
     {EFFECT_DETECT_ALL,            30,  17,     3,   0,     0, 0},
     {EFFECT_ESCAPE,                30,  20,     2,   0,     0, 0},

@@ -3885,12 +3885,6 @@ enum summon_specific_e {
 
 
 /*
- * Determine if a given inventory item is "aware"
- */
-#define object_is_aware(T) \
-    (k_info[(T)->k_idx].aware)
-
-/*
  * Determine if a given inventory item is "tried"
  */
 #define object_is_tried(T) \

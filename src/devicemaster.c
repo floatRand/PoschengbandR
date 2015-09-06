@@ -485,8 +485,8 @@ class_t *devicemaster_get_class_t(void)
     /* static info never changes */
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 25,  50,  36,   2,  20,  16,  48,  35 };
-    skills_t xs = {  7,  20,  10,   0,   0,   0,  13,  11 };
+    skills_t bs = { 25,  42,  36,   2,  20,  16,  48,  35 };
+    skills_t xs = {  7,  16,  10,   0,   0,   0,  13,  11 };
 
         me.name = "Devicemaster";
         me.desc = 

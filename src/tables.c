@@ -3455,9 +3455,6 @@ option_type option_info[] =
     "easy_floor",                   "Display floor stacks in a list" },
 #endif /* ALLOW_EASY_FLOOR -- TNB */
 
-    { &use_command,                 FALSE, OPT_PAGE_INPUT, 5, 10,
-    "use_command",                  "Allow unified use command" },
-
     { &over_exert,                  FALSE, OPT_PAGE_INPUT, 0, 29,
     "over_exert",                   "Allow casting spells when short of mana" },
 

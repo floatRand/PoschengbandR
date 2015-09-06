@@ -27,7 +27,6 @@ X:target_pet
 Y:easy_open
 Y:easy_disarm
 X:easy_floor
-X:use_command
 X:over_exert
 Y:numpad_as_cursorkey
 

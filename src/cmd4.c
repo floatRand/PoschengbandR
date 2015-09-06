@@ -3721,13 +3721,13 @@ static cptr object_group_text[] =
     "Potions",
 /*  "Flasks", */
     "Scrolls",
-    "Rings",
-    "Amulets",
+/*  "Rings",
+    "Amulets", */
 /*  "Whistle",
     "Lanterns", */
-    "Wands",
+/*  "Wands",
     "Staves",
-    "Rods",
+    "Rods", */
 /*  "Cards",
     "Capture Balls",
     "Parchments",
@@ -3772,13 +3772,13 @@ static byte object_group_tval[] =
     TV_POTION,
 /*  TV_FLASK, */
     TV_SCROLL,
-    TV_RING,
-    TV_AMULET,
+/*  TV_RING,
+    TV_AMULET, */
 /*  TV_WHISTLE,
     TV_LITE, */
-    TV_WAND,
+/*  TV_WAND,
     TV_STAFF,
-    TV_ROD,
+    TV_ROD,  */
 /*  TV_CARD,
     TV_CAPTURE,
     TV_PARCHMENT,

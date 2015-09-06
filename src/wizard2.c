@@ -3056,9 +3056,13 @@ void do_cmd_debug(void)
 
         dungeon_type = DUNGEON_ANGBAND;
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains */
-        for (lev = 15; lev < 100; lev++)
+        for (lev = 1; lev < 100; lev++)
         {
-            for (i = 0; i < 1; i++)
+            int reps = 1;
+            if (lev == 40 || lev == 60 || lev == 99)
+                reps = 20;
+
+            for (i = 0; i < reps; i++)
             {
                 /* Jump to requested level */
                 dun_level = lev;

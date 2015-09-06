@@ -212,7 +212,6 @@ bool easy_disarm;    /* Automatically disarm traps */
 bool easy_floor;    /* Display floor stacks in a list */
 #endif
 
-bool use_command;    /* Allow unified use command */
 bool over_exert;    /* Allow casting spells when short of mana */
 bool numpad_as_cursorkey;    /* Use numpad keys as cursor key in editor mode */
 
@@ -1013,7 +1012,6 @@ bool easy_disarm;
 bool easy_floor;
 #endif /* ALLOW_EASY_FLOOR -- TNB */
 
-bool use_command;
 bool center_player;
 bool center_running;
 

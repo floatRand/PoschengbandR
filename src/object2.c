@@ -619,8 +619,13 @@ s16b get_obj_num(int level)
         /* Occasional "boost" */
         if (one_in_(GREAT_OBJ))
         {
-            /* What a bizarre calculation */
-            level = 1 + (level * MAX_DEPTH / randint1(MAX_DEPTH));
+            int boost = level;
+            if (boost < 20)
+                boost = 20;
+            level += rand_range(boost/4, boost/2);
+
+            /* What a bizarre calculation
+            level = 1 + (level * MAX_DEPTH / randint1(MAX_DEPTH)); */
         }
     }
 
@@ -684,6 +689,21 @@ s16b get_obj_num(int level)
     return (table[i].index);
 }
 
+bool object_is_aware(object_type *o_ptr)
+{
+    switch (o_ptr->tval)
+    {
+    case TV_RING:
+    case TV_AMULET:
+    case TV_WAND:
+    case TV_ROD:
+    case TV_STAFF:
+        /* These types no longer use the flavor system. */
+        return FALSE;
+    }
+    return k_info[o_ptr->k_idx].aware;
+}
+
 /*
  * Known is true when the "attributes" of an object are "known".
  * These include tohit, todam, toac, cost, and pval (charges).
@@ -719,7 +739,18 @@ void object_known(object_type *o_ptr)
  */
 void object_aware(object_type *o_ptr)
 {
-    k_info[o_ptr->k_idx].aware = TRUE;
+    switch (o_ptr->tval)
+    {
+    case TV_RING:
+    case TV_AMULET:
+    case TV_WAND:
+    case TV_ROD:
+    case TV_STAFF:
+        /* These types no longer use the flavor system. */
+        break;
+    default:
+        k_info[o_ptr->k_idx].aware = TRUE;
+    }
 }
 void ego_aware(object_type *o_ptr)
 {
