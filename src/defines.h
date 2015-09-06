@@ -2880,16 +2880,17 @@ enum summon_specific_e {
  * OM_NOMSG --- temporary flag to suppress messages which were
  *              already printed in autopick_pickup_items().
  */
-#define OM_FOUND        0x0001    /* original boolean flag */
-#define OM_NOMSG        0x0002    /* temporary flag to suppress messages */
-#define OM_NO_QUERY     0x0004    /* Query for auto-pick was already answered as 'No' */
-#define OM_AUTODESTROY  0x0008    /* Destroy later to avoid illegal inventry shift */
-#define OM_TOUCHED      0x0010    /* Object was touched by player */
-#define OM_RESERVED     0x0020    /* Object reserved in the shop */
-#define OM_WORN         0x0040    /* Object was previously being worn but is possibly no longer a legal piece of equipment (Mimics) */
-#define OM_COUNTED      0x0080    /* Stats */
-#define OM_EGO_COUNTED  0x0100    /* Stats */
-#define OM_ART_COUNTED  0x0200    /* Stats */
+#define OM_FOUND           0x0001    /* original boolean flag */
+#define OM_NOMSG           0x0002    /* temporary flag to suppress messages */
+#define OM_NO_QUERY        0x0004    /* Query for auto-pick was already answered as 'No' */
+#define OM_AUTODESTROY     0x0008    /* Destroy later to avoid illegal inventry shift */
+#define OM_TOUCHED         0x0010    /* Object was touched by player */
+#define OM_RESERVED        0x0020    /* Object reserved in the shop */
+#define OM_WORN            0x0040    /* Object was previously being worn but is possibly no longer a legal piece of equipment (Mimics) */
+#define OM_COUNTED         0x0080    /* Stats */
+#define OM_EGO_COUNTED     0x0100    /* Stats */
+#define OM_ART_COUNTED     0x0200    /* Stats */
+#define OM_EFFECT_COUNTED  0x0400    /* Stats */
 
 
 /*

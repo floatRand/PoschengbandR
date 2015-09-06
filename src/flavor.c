@@ -968,6 +968,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
     /* See if the object is "aware" */
     if (object_is_aware(o_ptr)) aware = TRUE;
+    /* Devices no longer use flavor system ... k_info[].aware is meaningless! */
+    if (object_is_device(o_ptr) && object_is_known(o_ptr)) aware = TRUE;
 
     /* Hack object_is_aware() is wrong in this case.
        Anybody know how k_info[].aware gets set?  Perhaps flavor_init? */

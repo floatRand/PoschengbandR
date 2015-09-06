@@ -123,7 +123,6 @@ typedef struct counts_s counts_t;
 /*
  * Information about object "kinds", including player knowledge.
  *
- * Only "aware" and "tried" are saved in the savefile
  */
 
 typedef struct object_kind object_kind;

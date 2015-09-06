@@ -691,16 +691,6 @@ s16b get_obj_num(int level)
 
 bool object_is_aware(object_type *o_ptr)
 {
-    switch (o_ptr->tval)
-    {
-    case TV_RING:
-    case TV_AMULET:
-    case TV_WAND:
-    case TV_ROD:
-    case TV_STAFF:
-        /* These types no longer use the flavor system. */
-        return FALSE;
-    }
     return k_info[o_ptr->k_idx].aware;
 }
 
@@ -739,18 +729,7 @@ void object_known(object_type *o_ptr)
  */
 void object_aware(object_type *o_ptr)
 {
-    switch (o_ptr->tval)
-    {
-    case TV_RING:
-    case TV_AMULET:
-    case TV_WAND:
-    case TV_ROD:
-    case TV_STAFF:
-        /* These types no longer use the flavor system. */
-        break;
-    default:
-        k_info[o_ptr->k_idx].aware = TRUE;
-    }
+    k_info[o_ptr->k_idx].aware = TRUE;
 }
 void ego_aware(object_type *o_ptr)
 {
@@ -826,8 +805,11 @@ void stats_on_purchase(object_type *o_ptr)
     {
         k_info[o_ptr->k_idx].counts.bought += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
-        if (object_is_device(o_ptr))
-            device_stats_on_purchase(o_ptr);
+    }
+    if (object_is_device(o_ptr) && !(o_ptr->marked & OM_EFFECT_COUNTED))
+    {
+        device_stats_on_purchase(o_ptr);
+        o_ptr->marked |= OM_EFFECT_COUNTED;
     }
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
@@ -847,8 +829,11 @@ void stats_on_sell(object_type *o_ptr)
     {
         k_info[o_ptr->k_idx].counts.found += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
-        if (object_is_device(o_ptr))
-            device_stats_on_find(o_ptr);
+    }
+    if (object_is_device(o_ptr) && !(o_ptr->marked & OM_EFFECT_COUNTED))
+    {
+        device_stats_on_find(o_ptr);
+        o_ptr->marked |= OM_EFFECT_COUNTED;
     }
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
@@ -869,6 +854,9 @@ void stats_on_notice(object_type *o_ptr, int num)
         k_info[o_ptr->k_idx].counts.found += num;
         o_ptr->marked |= OM_COUNTED;
     }
+
+    /* Note: Noticing the effect of a device now identifies the device */
+
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
         e_info[o_ptr->name2].counts.found += num;
@@ -893,6 +881,8 @@ void stats_on_combine(object_type *dest, object_type *src)
         k_info[src->k_idx].counts.found += src->number;
         src->marked |= OM_COUNTED;
     }
+
+    /* Note: Devices no longer stack */
 }
 
 void stats_on_use(object_type *o_ptr, int num)
@@ -913,8 +903,11 @@ void stats_on_p_destroy(object_type *o_ptr, int num)
     {
         k_info[o_ptr->k_idx].counts.found += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
-        if (object_is_device(o_ptr))
-            device_stats_on_find(o_ptr);
+    }
+    if (object_is_device(o_ptr) && !(o_ptr->marked & OM_EFFECT_COUNTED))
+    {
+        device_stats_on_find(o_ptr);
+        o_ptr->marked |= OM_EFFECT_COUNTED;
     }
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
@@ -952,7 +945,11 @@ void stats_on_pickup(object_type *o_ptr)
         k_info[o_ptr->k_idx].counts.found += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
     }
-
+    if (object_is_known(o_ptr) && object_is_device(o_ptr) && !(o_ptr->marked & OM_EFFECT_COUNTED))
+    {
+        device_stats_on_find(o_ptr);
+        o_ptr->marked |= OM_EFFECT_COUNTED;
+    }
     if (object_is_known(o_ptr) && o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
         e_info[o_ptr->name2].counts.found += o_ptr->number;
@@ -993,8 +990,12 @@ void stats_on_identify(object_type *o_ptr)
     {
         k_info[o_ptr->k_idx].counts.found += o_ptr->number;
         o_ptr->marked |= OM_COUNTED;
-        if (object_is_device(o_ptr))
-            device_stats_on_find(o_ptr);
+    }
+
+    if (object_is_device(o_ptr) && !(o_ptr->marked & OM_EFFECT_COUNTED))
+    {
+        device_stats_on_find(o_ptr);
+        o_ptr->marked |= OM_EFFECT_COUNTED;
     }
 
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
