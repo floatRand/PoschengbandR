@@ -2660,19 +2660,37 @@ extern void do_cmd_spoilers(void);
 
 #endif /* ALLOW_SPOILERS */
 
+static void _wiz_gather_stats(int which_dungeon, int level, int reps)
+{
+    int i, j;
+    dungeon_type = which_dungeon;
+    for (i = 0; i < reps; i++)
+    {
+        dun_level = level;
+        prepare_change_floor_mode(CFM_RAND_PLACE);
+        energy_use = 0;
+        p_ptr->energy_need = 0;
+        change_floor();
 
+        /* Zap Everyone: This has been hacked to actually kill the monsters,
+           which updates statistics, grants experience, and generates drops. */
+        do_cmd_wiz_zap_all();
 
-/*
- * Hack -- declare external function
- */ 
-extern void do_cmd_debug(void);
-
-
+        /* Identify all the Loot! What Fun!! */
+        for (j = 0; j < max_o_idx; j++)
+        {
+            if (!o_list[j].k_idx) continue;
+            if (o_list[j].tval == TV_GOLD) continue;
+            identify_item(&o_list[j]); /* statistics are updated here */
+        }
+    }
+}
 
 /*
  * Ask for and parse a "debug command"
  * The "command_arg" may have been set.
  */
+extern void do_cmd_debug(void);
 void do_cmd_debug(void)
 {
     int     x, y, n;
@@ -3050,44 +3068,35 @@ void do_cmd_debug(void)
         /* Generate Statistics on object/monster distributions. Create a new
            character, run this command, then create a character dump
            or browse the object knowledge command (~2). The game seems
-           to be left in a bad state, and it has crashed once for me.
-           Anybody know a cleaner way to do this? */
-        int lev, i, j;
+           to be left in a bad state, and it has crashed once for me, so
+           create a character dump right away. */
+        int lev;
+        statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains, no AFC */
 
-        dungeon_type = DUNGEON_ANGBAND;
-        statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains */
-        for (lev = 90; lev < 91; lev++)
+        for (lev = 1; lev < 100; lev++)
         {
-            int reps = 100;
-            /*
-            if (lev == 40 || lev == 60 || lev == 80)
-                reps = 20;
-            if (lev == 99)
-                reps = 40;*/
-
-            for (i = 0; i < reps; i++)
+            int reps = 1;
+            switch (lev)
             {
-                /* Jump to requested level */
-                dun_level = lev;
-                prepare_change_floor_mode(CFM_RAND_PLACE);
-                energy_use = 0;
-                p_ptr->energy_need = 0;
-                /*prepare_change_floor_mode(CFM_FIRST_FLOOR);*/
-                change_floor();
-
-                /* Zap Everyone: This has been hacked to actually kill the monsters,
-                   which updates stastics, grants experience, and generates drops. */
-                do_cmd_wiz_zap_all();
-
-                /* Identify all the Loot! What Fun!! */
-                for (j = 0; j < max_o_idx; j++)
-                {
-                    if (!o_list[j].k_idx) continue;
-                    if (o_list[j].tval == TV_GOLD) continue;
-                    identify_item(&o_list[j]); /* statistics are updated here */
-                }
+            case 30: reps =  5; break;
+            case 40: reps = 10; break;
+            case 60: reps = 10; break;
+            case 80: reps = 10; break;
+            case 98: reps = 15; break;
             }
+
+            _wiz_gather_stats(DUNGEON_ANGBAND, lev, reps);
         }
+        statistics_hack = FALSE;
+        break;
+    }
+    case '=':
+    {
+        /* In this version, we gather statistics on the current level of the
+           current dungeon. You still want to start with a fresh character. */
+        int reps = get_quantity("How many reps? ", 100);
+        statistics_hack = TRUE;
+        _wiz_gather_stats(dungeon_type, dun_level, reps);
         statistics_hack = FALSE;
         break;
     }
@@ -3170,7 +3179,6 @@ void do_cmd_debug(void)
     }
 }
 
-
 #else
 
 #ifdef MACINTOSH
@@ -3178,4 +3186,5 @@ static int i = 0;
 #endif
 
 #endif
+
 

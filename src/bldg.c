@@ -2655,7 +2655,7 @@ static bool _gamble_shop_device(int tval)
     int lvl = 20;
     int k_idx;
 
-    while (one_in_(2))
+    while (one_in_(lvl/10))
         lvl += 20;
 
     for (;;)
