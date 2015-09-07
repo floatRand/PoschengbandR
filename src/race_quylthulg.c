@@ -983,6 +983,7 @@ race_t *mon_quylthulg_get_race_t(void)
         me.infra = 5;
         me.exp = 150;
         me.base_hp = 0;
+        me.shop_adjust = 120;
 
         me.get_spells = _get_spells;
         me.caster_info = _caster_info;

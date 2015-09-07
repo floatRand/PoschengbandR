@@ -385,31 +385,24 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
     int     adjust;
     s32b    price;
 
-
     /* Get the value of one of the items */
     price = object_value(o_ptr);
 
     /* Worthless items */
     if (price <= 0) return (0L);
 
-
-    /* Compute the racial factor */
-    if (prace_is_(RACE_DEMIGOD) && p_ptr->psubrace == DEMIGOD_APHRODITE && flip)
-        factor = 100;
-    else
-    {
-        factor = 110; /* I removed the table approach as there are too many races now (Currently 55) */
-    }
-
-    /* Add in the charisma factor */
-    factor += adj_gold[p_ptr->stat_ind[A_WIS]];
-
+    /* Compute adjustment based on race, wisdom and fame */
+    factor = get_race_t()->shop_adjust;
+    if (factor == 0)
+        factor = 110;
+    factor += adj_gold[p_ptr->stat_ind[A_CHR]];
+    factor += 130 - MIN(200, p_ptr->fame)/4;
 
     /* Shop is buying */
     if (flip)
     {
         /* Adjust for greed */
-        adjust = 100 + (300 - (greed + factor));
+        adjust = 100 + (400 - (greed + factor));
 
         /* Never get "silly" */
         if (adjust > 100) adjust = 100;
@@ -433,7 +426,7 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
     else
     {
         /* Adjust for greed */
-        adjust = 100 + ((greed + factor) - 300);
+        adjust = 100 + ((greed + factor) - 400);
 
         /* Never get "silly" */
         if (adjust < 100) adjust = 100;

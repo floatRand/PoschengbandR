@@ -946,6 +946,7 @@ race_t *mon_sword_get_race_t(void)
         me.infra = 3;
         me.exp = 150;
         me.base_hp = 30;
+        me.shop_adjust = 110; /* I think shopkeepers are puzzled, more than anything else! */
 
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;

@@ -474,6 +474,7 @@ race_t *demigod_get_race_t(int psubrace)
         me.life = 100;
         me.base_hp = 20;
         me.exp = 180;
+        me.shop_adjust = 100;
 
         me.calc_bonuses = NULL;
         me.get_powers = NULL;
@@ -487,6 +488,7 @@ race_t *demigod_get_race_t(int psubrace)
             me.stats[A_CHR] += 2;
             me.exp += 40;
             me.skills.dev += 2;
+            me.shop_adjust = 70;
             me.calc_bonuses = _aphrodite_calc_bonuses;
             me.get_powers = _aphrodite_get_powers;
             me.get_flags = _aphrodite_get_flags;
@@ -584,6 +586,7 @@ race_t *demigod_get_race_t(int psubrace)
             for (i = 0; i < 6; i++)
                 me.stats[i]++;
             me.exp += 70;
+            me.shop_adjust = 90;
             me.calc_bonuses = _zeus_calc_bonuses;
             me.get_flags = _zeus_get_flags;
             break;

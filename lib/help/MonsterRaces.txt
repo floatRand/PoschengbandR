@@ -34,11 +34,11 @@
   life.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Black Ooze             +1   -5   -5   +1   +1   -2   90%  +40  150%
-  Gelatinous Cube        +2  -10  -10   +2   +2   -2  100%  +40  150%
-  Acidic Cytoplasm       +3   -7   -7   +2   +3   -1  105%  +40  150%
-  Shoggoth               +5   -5   -5   +2   +4   +0  108%  +40  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Black Ooze             +1   -5   -5   +1   +1   -2   90%  +40  150%  125
+  Gelatinous Cube        +2  -10  -10   +2   +2   -2  100%  +40  150%  125
+  Acidic Cytoplasm       +3   -7   -7   +2   +3   -1  105%  +40  150%  125
+  Shoggoth               +5   -5   -5   +2   +4   +0  108%  +40  150%  125
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Black Ooze            25+12  18+7   37+11   8+0  14+0   7+0  70+30  30+7 
@@ -68,21 +68,21 @@
   special talents, the cave spider must play carefully if it is to survive.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Cave Spider            -2   -1   -1   +2   -2   -3   70%  +25  200%
-  Giant Spider           +0   -1   -1   +2   +1   -1  100%  +25  200%
-  Phase Spider           +0   +3   -1   +3   +1   -1   90%  +25  200%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Cave Spider            -2   -1   -1   +2   -2   -3   70%  +25  200%  115
+  Giant Spider           +0   -1   -1   +2   +1   -1  100%  +25  200%  115
+  Phase Spider           +0   +3   -1   +3   +1   -1   90%  +25  200%  115
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Cave Spider           25+8   40+15  38+10   6+0  20+0  15+0  56+18  30+7 
   Giant Spider          25+8   40+15  38+10   7+0  20+0  15+0  56+18  30+7 
   Phase Spider          25+8   40+15  38+10  10+0  20+0  15+0  56+18  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Cave Spider            -2   -1   -1   +2   -2   -3   70%  +25  200%
-  Giant Spider           +0   -1   -1   +2   +1   -1  100%  +25  200%
-  Aranea                 +1   +0   -5   +0   +2   +0  100%  +25  200%
-  Elder Aranea           +2   +1   -5   +0   +3   +1  100%  +25  200%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Cave Spider            -2   -1   -1   +2   -2   -3   70%  +25  200%  115
+  Giant Spider           +0   -1   -1   +2   +1   -1  100%  +25  200%  115
+  Aranea                 +1   +0   -5   +0   +2   +0  100%  +25  200%  115
+  Elder Aranea           +2   +1   -5   +0   +3   +1  100%  +25  200%  115
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Cave Spider           25+8   40+15  38+10   6+0  20+0  15+0  56+18  30+7 
@@ -118,12 +118,12 @@
   See [b] for more details on dragons.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Baby Red Dragon        +1   -1   -2   -2   +0   -1  100%  +40  250%
-  Young Red Dragon       +2   +0   -1   -1   +1   +0  105%  +40  250%
-  Mature Red Dragon      +3   +1   +0   +0   +2   +1  110%  +40  250%
-  Ancient Red Dragon     +4   +2   +1   +1   +3   +2  115%  +40  250%
-  Great Hell Wyrm        +5   +3   +2   +2   +4   +3  120%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Baby Red Dragon        +1   -1   -2   -2   +0   -1  100%  +40  250%  130
+  Young Red Dragon       +2   +0   -1   -1   +1   +0  105%  +40  250%  130
+  Mature Red Dragon      +3   +1   +0   +0   +2   +1  110%  +40  250%  130
+  Ancient Red Dragon     +4   +2   +1   +1   +3   +2  115%  +40  250%  130
+  Great Hell Wyrm        +5   +3   +2   +2   +4   +3  120%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Baby Red Dragon       28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
@@ -132,12 +132,12 @@
   Ancient Red Dragon    28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
   Great Hell Wyrm       28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Baby White Dragon      +1   -1   -2   -2   +0   -1  100%  +40  250%
-  Young White Dragon     +2   +0   -1   -1   +1   +0  105%  +40  250%
-  Mature White Dragon    +3   +1   +0   +0   +2   +1  110%  +40  250%
-  Ancient White Dragon   +4   +2   +1   +1   +3   +2  115%  +40  250%
-  Great Ice Wyrm         +5   +3   +2   +2   +4   +3  120%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Baby White Dragon      +1   -1   -2   -2   +0   -1  100%  +40  250%  130
+  Young White Dragon     +2   +0   -1   -1   +1   +0  105%  +40  250%  130
+  Mature White Dragon    +3   +1   +0   +0   +2   +1  110%  +40  250%  130
+  Ancient White Dragon   +4   +2   +1   +1   +3   +2  115%  +40  250%  130
+  Great Ice Wyrm         +5   +3   +2   +2   +4   +3  120%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Baby White Dragon     28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
@@ -146,12 +146,12 @@
   Ancient White Dragon  28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
   Great Ice Wyrm        28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Baby Blue Dragon       +1   -1   -2   -2   +0   -1  100%  +40  250%
-  Young Blue Dragon      +2   +0   -1   -1   +1   +0  105%  +40  250%
-  Mature Blue Dragon     +3   +1   +0   +0   +2   +1  110%  +40  250%
-  Ancient Blue Dragon    +4   +2   +1   +1   +3   +2  115%  +40  250%
-  Great Storm Wyrm       +5   +3   +2   +2   +4   +3  120%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Baby Blue Dragon       +1   -1   -2   -2   +0   -1  100%  +40  250%  130
+  Young Blue Dragon      +2   +0   -1   -1   +1   +0  105%  +40  250%  130
+  Mature Blue Dragon     +3   +1   +0   +0   +2   +1  110%  +40  250%  130
+  Ancient Blue Dragon    +4   +2   +1   +1   +3   +2  115%  +40  250%  130
+  Great Storm Wyrm       +5   +3   +2   +2   +4   +3  120%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Baby Blue Dragon      28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
@@ -160,12 +160,12 @@
   Ancient Blue Dragon   28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
   Great Storm Wyrm      28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Baby Black Dragon      +1   -1   -2   -2   +0   -1  100%  +40  250%
-  Young Black Dragon     +2   +0   -1   -1   +1   +0  105%  +40  250%
-  Mature Black Dragon    +3   +1   +0   +0   +2   +1  110%  +40  250%
-  Ancient Black Dragon   +4   +2   +1   +1   +3   +2  115%  +40  250%
-  Great Bile Wyrm        +5   +3   +2   +2   +4   +3  120%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Baby Black Dragon      +1   -1   -2   -2   +0   -1  100%  +40  250%  130
+  Young Black Dragon     +2   +0   -1   -1   +1   +0  105%  +40  250%  130
+  Mature Black Dragon    +3   +1   +0   +0   +2   +1  110%  +40  250%  130
+  Ancient Black Dragon   +4   +2   +1   +1   +3   +2  115%  +40  250%  130
+  Great Bile Wyrm        +5   +3   +2   +2   +4   +3  120%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Baby Black Dragon     28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
@@ -174,12 +174,12 @@
   Ancient Black Dragon  28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
   Great Bile Wyrm       28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Baby Green Dragon      +1   -1   -2   -2   +0   -1  100%  +40  250%
-  Young Green Dragon     +2   +0   -1   -1   +1   +0  105%  +40  250%
-  Mature Green Dragon    +3   +1   +0   +0   +2   +1  110%  +40  250%
-  Ancient Green Dragon   +4   +2   +1   +1   +3   +2  115%  +40  250%
-  Great Venom Wyrm       +5   +3   +2   +2   +4   +3  120%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Baby Green Dragon      +1   -1   -2   -2   +0   -1  100%  +40  250%  130
+  Young Green Dragon     +2   +0   -1   -1   +1   +0  105%  +40  250%  130
+  Mature Green Dragon    +3   +1   +0   +0   +2   +1  110%  +40  250%  130
+  Ancient Green Dragon   +4   +2   +1   +1   +3   +2  115%  +40  250%  130
+  Great Venom Wyrm       +5   +3   +2   +2   +4   +3  120%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Baby Green Dragon     28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
@@ -188,81 +188,81 @@
   Ancient Green Dragon  28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
   Great Venom Wyrm      28+8   35+9   38+10   2+0  25+0  26+0  70+20  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Shadow Drake           +0   -1   -2   -2   -1   -1   90%  +40  300%
-  Death Drake            +2   +1   -1   -1   +0   +2   95%  +40  300%
-  Spectral Wyrm          +4   +3   +0   +0   +1   +5  100%  +40  300%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Shadow Drake           +0   -1   -2   -2   -1   -1   90%  +40  300%  130
+  Death Drake            +2   +1   -1   -1   +0   +2   95%  +40  300%  130
+  Spectral Wyrm          +4   +3   +0   +0   +1   +5  100%  +40  300%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Shadow Drake          28+8   35+10  38+11   4+0  25+0  26+0  50+15  30+7 
   Death Drake           28+8   35+10  38+11   4+0  25+0  26+0  50+15  30+7 
   Spectral Wyrm         28+8   35+10  38+11   4+0  25+0  26+0  50+15  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Law Drake              +0   -1   -2   -2   -1   -1  100%  +40  280%
-  Great Wyrm of Law      +5   +4   +0   +1   +3   +4  110%  +40  280%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Law Drake              +0   -1   -2   -2   -1   -1  100%  +40  280%  130
+  Great Wyrm of Law      +5   +4   +0   +1   +3   +4  110%  +40  280%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Law Drake             28+8   40+11  40+11   2+0  25+0  26+0  55+15  30+7 
   Great Wyrm of Law     28+8   40+11  40+11   2+0  25+0  26+0  55+15  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Chaos Drake            +0   -1   -2   -2   -1   -1  100%  +40  280%
-  Great Wyrm of Chaos    +5   +4   +0   +1   +3   +4  110%  +40  280%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Chaos Drake            +0   -1   -2   -2   -1   -1  100%  +40  280%  130
+  Great Wyrm of Chaos    +5   +4   +0   +1   +3   +4  110%  +40  280%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Chaos Drake           28+8   40+11  40+11   2+0  25+0  26+0  55+15  30+7 
   Great Wyrm of Chaos   28+8   40+11  40+11   2+0  25+0  26+0  55+15  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Balance Drake          +0   -1   -2   -2   -1   -1   95%  +40  300%
-  Great Wyrm of Balance  +4   +3   +0   +1   +2   +4  105%  +40  300%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Balance Drake          +0   -1   -2   -2   -1   -1   95%  +40  300%  130
+  Great Wyrm of Balance  +4   +3   +0   +1   +2   +4  105%  +40  300%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Balance Drake         28+8   35+10  35+10   2+0  25+0  26+0  50+15  30+7 
   Great Wyrm of Balance 28+8   35+10  35+10   2+0  25+0  26+0  50+15  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Pseudo Dragon          +0   -1   -2   -2   -1   -1   95%  +40  250%
-  Ethereal Drake         +2   +1   -1   +0   +1   +1  102%  +40  250%
-  Ethereal Dragon        +4   +3   +0   +2   +3   +3  109%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Pseudo Dragon          +0   -1   -2   -2   -1   -1   95%  +40  250%  130
+  Ethereal Drake         +2   +1   -1   +0   +1   +1  102%  +40  250%  130
+  Ethereal Dragon        +4   +3   +0   +2   +3   +3  109%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Pseudo Dragon         28+8   35+10  37+11   4+0  25+0  26+0  52+15  30+7 
   Ethereal Drake        28+8   35+10  37+11   4+0  25+0  26+0  52+15  30+7 
   Ethereal Dragon       28+8   35+10  37+11   4+0  25+0  26+0  52+15  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Crystal Drake          +1   -1   -2   +0   +0   +0  100%  +40  275%
-  Great Crystal Drake    +6   +4   +0   +3   +4   +3  115%  +40  275%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Crystal Drake          +1   -1   -2   +0   +0   +0  100%  +40  275%  130
+  Great Crystal Drake    +6   +4   +0   +3   +4   +3  115%  +40  275%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Crystal Drake         28+8   35+7   40+12   1+0  25+0  26+0  70+22  30+7 
   Great Crystal Drake   28+8   35+7   40+12   1+0  25+0  26+0  70+22  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Young Bronze Dragon    +0   -1   -2   -2   -1   -1  100%  +40  250%
-  Mature Bronze Dragon   +2   +1   -1   +0   +1   +1  105%  +40  250%
-  Ancient Bronze Dragon  +4   +3   +0   +2   +3   +3  110%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Young Bronze Dragon    +0   -1   -2   -2   -1   -1  100%  +40  250%  130
+  Mature Bronze Dragon   +2   +1   -1   +0   +1   +1  105%  +40  250%  130
+  Ancient Bronze Dragon  +4   +3   +0   +2   +3   +3  110%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Young Bronze Dragon   28+8   35+10  38+11   3+0  25+0  26+0  55+15  30+7 
   Mature Bronze Dragon  28+8   35+10  38+11   3+0  25+0  26+0  55+15  30+7 
   Ancient Bronze Dragon 28+8   35+10  38+11   3+0  25+0  26+0  55+15  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Young Gold Dragon      +0   -1   -2   -2   -1   -1  100%  +40  250%
-  Mature Gold Dragon     +2   +1   -1   +0   +1   +1  105%  +40  250%
-  Ancient Gold Dragon    +4   +3   +0   +2   +3   +3  110%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Young Gold Dragon      +0   -1   -2   -2   -1   -1  100%  +40  250%  130
+  Mature Gold Dragon     +2   +1   -1   +0   +1   +1  105%  +40  250%  130
+  Ancient Gold Dragon    +4   +3   +0   +2   +3   +3  110%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Young Gold Dragon     28+8   35+9   38+11   2+0  25+0  26+0  55+20  30+7 
   Mature Gold Dragon    28+8   35+9   38+11   2+0  25+0  26+0  55+20  30+7 
   Ancient Gold Dragon   28+8   35+9   38+11   2+0  25+0  26+0  55+20  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Stone Dragon           +5   -6   -6   +0   +4   +0  125%  +40  250%
-  Steel Dragon           +9   -6   -6   -4   +8   +4  145%  +40  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Stone Dragon           +5   -6   -6   +0   +4   +0  125%  +40  250%  130
+  Steel Dragon           +9   -6   -6   -4   +8   +4  145%  +40  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Stone Dragon          28+8   18+7   40+15   0+0  10+0   7+0  75+30  30+7 
@@ -287,11 +287,11 @@
   their deadly touch is often not enough.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Lich                   +0   +3   -3   +1   +0   +0  100%  +20  275%
-  Master Lich            -2   +4   -4   +2   -1   +1   98%  +20  275%
-  Demilich               -4   +5   -5   +3   -1   +2   96%  +20  275%
-  Archlich               -5   +6   -6   +4   -2   +3   94%  +20  275%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Lich                   +0   +3   -3   +1   +0   +0  100%  +20  275%  135
+  Master Lich            -2   +4   -4   +2   -1   +1   98%  +20  275%  135
+  Demilich               -4   +5   -5   +3   -1   +2   96%  +20  275%  135
+  Archlich               -5   +6   -6   +4   -2   +3   94%  +20  275%  135
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Lich                  30+7   45+15  38+12   7+0  20+0  30+0  34+6   20+7 
@@ -318,10 +318,10 @@
   strong as such.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Umber Hulk             +2   -4   -2   -3   +1   -1  100%  +30  150%
-  Xorn                   +3   -4   -2   -2   +2   -1  104%  +30  150%
-  Xaren                  +4   -4   -2   -1   +3   -1  108%  +30  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Umber Hulk             +2   -4   -2   -3   +1   -1  100%  +30  150%  120
+  Xorn                   +3   -4   -2   -2   +2   -1  104%  +30  150%  120
+  Xaren                  +4   -4   -2   -1   +3   -1  108%  +30  150%  120
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Umber Hulk            25+12  20+8   31+10   2+0  14+0   5+0  56+20  30+7 
@@ -348,14 +348,14 @@
   attacks.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Angel                  +1   +1   +4   +1   +1   +1   90%  +26  325%
-  Archangel              +1   +1   +4   +1   +1   +2   93%  +26  325%
-  Cherub                 +2   +2   +5   +2   +2   +3   96%  +26  325%
-  Seraph                 +2   +2   +5   +2   +2   +4   99%  +26  325%
-  Archon                 +3   +3   +6   +3   +3   +5  102%  +26  325%
-  Planetar               +3   +3   +6   +3   +3   +6  105%  +26  325%
-  Solar                  +4   +4   +7   +4   +4   +7  108%  +26  325%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Angel                  +1   +1   +4   +1   +1   +1   90%  +26  325%   90
+  Archangel              +1   +1   +4   +1   +1   +2   93%  +26  325%   90
+  Cherub                 +2   +2   +5   +2   +2   +3   96%  +26  325%   90
+  Seraph                 +2   +2   +5   +2   +2   +4   99%  +26  325%   90
+  Archon                 +3   +3   +6   +3   +3   +5  102%  +26  325%   90
+  Planetar               +3   +3   +6   +3   +3   +6  105%  +26  325%   90
+  Solar                  +4   +4   +7   +4   +4   +7  108%  +26  325%   90
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Angel                 25+7   35+13  40+15   3+0  18+0  12+0  48+18  35+13
@@ -389,14 +389,14 @@
   an amulet around their neck and even a cloak and a suit of body armor.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Clear hound            +1   -3   -5   +2   +1   +0  100%  +22  150%
-  Light hound            +1   -3   -5   +2   +1   +0  100%  +22  150%
-  Fire hound             +2   -3   -5   +3   +2   +0  100%  +22  150%
-  Earth hound            +2   -3   -5   +3   +2   +0  100%  +22  150%
-  Inertia hound          +3   -3   -5   +4   +3   +1  100%  +22  150%
-  Gravity hound          +4   -3   -5   +4   +3   +1  100%  +22  150%
-  Hound of Tindalos      +4   -3   -5   +5   +4   +1  100%  +22  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Clear hound            +1   -3   -5   +2   +1   +0  100%  +22  150%  110
+  Light hound            +1   -3   -5   +2   +1   +0  100%  +22  150%  110
+  Fire hound             +2   -3   -5   +3   +2   +0  100%  +22  150%  110
+  Earth hound            +2   -3   -5   +3   +2   +0  100%  +22  150%  110
+  Inertia hound          +3   -3   -5   +4   +3   +1  100%  +22  150%  110
+  Gravity hound          +4   -3   -5   +4   +3   +1  100%  +22  150%  110
+  Hound of Tindalos      +4   -3   -5   +5   +4   +1  100%  +22  150%  110
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Clear hound           25+8   20+8   31+10   4+1  20+0  15+0  56+20  30+7 
@@ -429,11 +429,11 @@
   attacks.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Hill Giant             +3   -3   -6   -2   +3   +0  100%  +46  200%
-  Stone Giant            +4   -2   -5   -1   +4   +1  107%  +46  200%
-  Fire Giant             +6   -1   -4   +0   +6   +2  114%  +46  200%
-  Elder Fire Giant       +8   +0   -3   +1   +8   +3  121%  +46  200%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Hill Giant             +3   -3   -6   -2   +3   +0  100%  +46  200%  130
+  Stone Giant            +4   -2   -5   -1   +4   +1  107%  +46  200%  130
+  Fire Giant             +6   -1   -4   +0   +6   +2  114%  +46  200%  130
+  Elder Fire Giant       +8   +0   -3   +1   +8   +3  121%  +46  200%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Hill Giant            25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
@@ -441,11 +441,11 @@
   Fire Giant            25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
   Elder Fire Giant      25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Hill Giant             +3   -3   -6   -2   +3   +0  100%  +46  200%
-  Stone Giant            +4   -2   -5   -1   +4   +1  107%  +46  200%
-  Frost Giant            +6   -1   -4   +0   +6   +2  114%  +46  200%
-  Ice Giant              +8   +0   -3   +1   +8   +3  121%  +46  200%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Hill Giant             +3   -3   -6   -2   +3   +0  100%  +46  200%  130
+  Stone Giant            +4   -2   -5   -1   +4   +1  107%  +46  200%  130
+  Frost Giant            +6   -1   -4   +0   +6   +2  114%  +46  200%  130
+  Ice Giant              +8   +0   -3   +1   +8   +3  121%  +46  200%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Hill Giant            25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
@@ -453,12 +453,12 @@
   Frost Giant           25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
   Ice Giant             25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Hill Giant             +3   -3   -6   -2   +3   +0  100%  +46  250%
-  Stone Giant            +4   -2   -5   -1   +4   +1  103%  +46  250%
-  Cloud Giant            +5   -1   -4   +0   +5   +2  106%  +46  250%
-  Storm Giant            +6   +0   -3   +1   +6   +3  109%  +46  250%
-  Elder Storm Giant      +7   +1   -2   +2   +7   +4  112%  +46  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Hill Giant             +3   -3   -6   -2   +3   +0  100%  +46  250%  130
+  Stone Giant            +4   -2   -5   -1   +4   +1  103%  +46  250%  130
+  Cloud Giant            +5   -1   -4   +0   +5   +2  106%  +46  250%  130
+  Storm Giant            +6   +0   -3   +1   +6   +3  109%  +46  250%  130
+  Elder Storm Giant      +7   +1   -2   +2   +7   +4  112%  +46  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Hill Giant            25+10  18+7   30+10   0+0  13+0   7+0  70+30  55+30
@@ -467,11 +467,11 @@
   Storm Giant           25+10  18+7   30+10   0+0  13+0   7+0  70+30  55+30
   Elder Storm Giant     25+10  18+7   30+10   0+0  13+0   7+0  70+30  55+30
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Hill Giant             +3   +0   +0   -2   +3   +3  102%  +46  300%
-  Stone Giant            +4   +1   +1   -1   +4   +4  107%  +46  300%
-  Lesser Titan           +5   +2   +2   +0   +5   +5  112%  +46  300%
-  Greater Titan          +6   +3   +3   +1   +6   +6  117%  +46  300%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Hill Giant             +3   +0   +0   -2   +3   +3  102%  +46  300%  130
+  Stone Giant            +4   +1   +1   -1   +4   +4  107%  +46  300%  130
+  Lesser Titan           +5   +2   +2   +0   +5   +5  112%  +46  300%  130
+  Greater Titan          +6   +3   +3   +1   +6   +6  117%  +46  300%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Hill Giant            25+11  20+8   32+10   0+0  15+0  10+0  75+35  50+30
@@ -479,11 +479,11 @@
   Lesser Titan          25+11  20+8   32+10   0+0  15+0  10+0  75+35  50+30
   Greater Titan         25+11  20+8   32+10   0+0  15+0  10+0  75+35  50+30
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Hill Giant             +3   -3   -6   -2   +3   +0  102%  +46  225%
-  Stone Giant            +5   -2   -5   -1   +4   +1  109%  +46  225%
-  Rock Giant             +7   -1   -4   +0   +6   +2  116%  +46  225%
-  Hru                    +9   +0   -3   +1   +8   +3  123%  +46  225%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Hill Giant             +3   -3   -6   -2   +3   +0  102%  +46  225%  130
+  Stone Giant            +5   -2   -5   -1   +4   +1  109%  +46  225%  130
+  Rock Giant             +7   -1   -4   +0   +6   +2  116%  +46  225%  130
+  Hru                    +9   +0   -3   +1   +8   +3  123%  +46  225%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Hill Giant            25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
@@ -510,12 +510,12 @@
   long against multiple foes.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Gazer                  -3   +4   +0   +1   +0   +0  100%  +20  250%
-  Spectator              -3   +5   +0   +1   +0   +0  100%  +20  250%
-  Beholder               -3   +6   +0   +2   +0   +1  100%  +20  250%
-  Undead Beholder        -3   +7   +0   +2   +0   +1  100%  +20  250%
-  Ultimate Beholder      -3   +8   +0   +3   +0   +2  100%  +20  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Gazer                  -3   +4   +0   +1   +0   +0  100%  +20  250%  140
+  Spectator              -3   +5   +0   +1   +0   +0  100%  +20  250%  140
+  Beholder               -3   +6   +0   +2   +0   +1  100%  +20  250%  140
+  Undead Beholder        -3   +7   +0   +2   +0   +1  100%  +20  250%  140
+  Ultimate Beholder      -3   +8   +0   +3   +0   +2  100%  +20  250%  140
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Gazer                 30+10  50+20  47+15   7+1  20+20 20+20 40+16  20+7 
@@ -555,20 +555,20 @@
   their human enemies. They are unaffected by the Eldritch Horror.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Lesser Balrog          +4   +1  -10   +1   +4   +2  105%  +45  300%
-  Greater Balrog         +7   +3  -10   +3   +6   +3  115%  +45  300%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Lesser Balrog          +4   +1  -10   +1   +4   +2  105%  +45  300%  140
+  Greater Balrog         +7   +3  -10   +3   +6   +3  115%  +45  300%  140
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Lesser Balrog         20+12  35+11  40+15  -2+0  10+0   7+0  75+35  30+7 
   Greater Balrog        20+12  35+11  40+15  -2+0  10+0   7+0  75+35  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Manes                  +0   +0   -5   +0   +0   +0   95%  +30  250%
-  Quasit                 +1   +0   -5   +1   +1   +0   97%  +30  250%
-  Bodak                  +2   +1   -5   +2   +2   +1   99%  +30  250%
-  Death Quasit           +3   +1   -5   +3   +3   +1  101%  +30  250%
-  Marilith               +4   +2   -5   +4   +4   +2  103%  +30  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Manes                  +0   +0   -5   +0   +0   +0   95%  +30  250%  140
+  Quasit                 +1   +0   -5   +1   +1   +0   97%  +30  250%  140
+  Bodak                  +2   +1   -5   +2   +2   +1   99%  +30  250%  140
+  Death Quasit           +3   +1   -5   +3   +3   +1  101%  +30  250%  140
+  Marilith               +4   +2   -5   +4   +4   +2  103%  +30  250%  140
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Manes                 20+12  35+11  36+10   3+0  16+0  10+0  56+20  35+11
@@ -577,11 +577,11 @@
   Death Quasit          20+12  35+11  36+10   3+0  16+0  10+0  56+20  35+11
   Marilith              20+12  35+11  36+10   3+0  16+0  10+0  56+20  35+11
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Bloodletter of Khorne  +3   -5   -5   +0   +2   +0  100%  +42  250%
-  Fleshhound of Khorne   +4   -5   -5   +0   +3   +0  105%  +42  250%
-  Juggernaut of Khorne   +5   -5   -5   +0   +4   +0  110%  +42  250%
-  Bloodthirster          +6   -5   -5   +1   +5   +1  115%  +42  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Bloodletter of Khorne  +3   -5   -5   +0   +2   +0  100%  +42  250%  140
+  Fleshhound of Khorne   +4   -5   -5   +0   +3   +0  105%  +42  250%  140
+  Juggernaut of Khorne   +5   -5   -5   +0   +4   +0  110%  +42  250%  140
+  Bloodthirster          +6   -5   -5   +1   +5   +1  115%  +42  250%  140
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Bloodletter of Khorne 20+12  20+8   40+10  -1+0  13+0   7+0  70+32  30+7 
@@ -589,8 +589,8 @@
   Juggernaut of Khorne  20+12  20+8   40+10  -1+0  13+0   7+0  70+32  30+7 
   Bloodthirster         20+12  20+8   40+10  -1+0  13+0   7+0  70+32  30+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Cyberdemon             +5  -10  -10   -3   +5   +0  120%  +50  275%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Cyberdemon             +5  -10  -10   -3   +5   +0  120%  +50  275%  140
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Cyberdemon            20+12  18+6   31+9   -1+0  13+0   7+0  75+35  30+7 
@@ -615,13 +615,13 @@
   as well.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  2-headed hydra         +0   -2   -2   +0   +0   +0  100%  +45  130%
-  4-headed hydra         +1   -2   -2   +1   +1   +0  103%  +45  130%
-  5-headed hydra         +2   -2   -2   +1   +2   +0  106%  +45  130%
-  7-headed hydra         +3   -2   -2   +2   +3   +0  109%  +45  130%
-  9-headed hydra         +4   -2   -2   +2   +4   +0  112%  +45  130%
-  11-headed hydra        +5   -2   -2   +3   +5   +0  115%  +45  130%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  2-headed hydra         +0   -2   -2   +0   +0   +0  100%  +45  130%  130
+  4-headed hydra         +1   -2   -2   +1   +1   +0  103%  +45  130%  130
+  5-headed hydra         +2   -2   -2   +1   +2   +0  106%  +45  130%  130
+  7-headed hydra         +3   -2   -2   +2   +3   +0  109%  +45  130%  130
+  9-headed hydra         +4   -2   -2   +2   +4   +0  112%  +45  130%  130
+  11-headed hydra        +5   -2   -2   +3   +5   +0  115%  +45  130%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   2-headed hydra        25+12  21+10  35+10   1+0  10+0   7+0  62+25  30+7 
@@ -660,10 +660,10 @@
   of gold on hand.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Cheerful Leprechaun    -2   +1   +1   +3   -2   -2   80%  +15  150%
-  Malicious Leprechaun   -4   +1   +1   +5   -2   -2   80%  +15  150%
-  Death Leprechaun       -6   +1   +1   +7   -2   -2   80%  +15  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Cheerful Leprechaun    -2   +1   +1   +3   -2   -2   80%  +15  150%   85
+  Malicious Leprechaun   -4   +1   +1   +5   -2   -2   80%  +15  150%   85
+  Death Leprechaun       -6   +1   +1   +7   -2   -2   80%  +15  150%   85
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Cheerful Leprechaun   30+12  45+18  38+11  10+1  24+0  16+0  48+13  60+28
@@ -679,13 +679,13 @@
   of regeneration.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%
-  Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%
-  Algroth                +4   -5   -5   -1   +4   +0  108%  +50  150%
-  Aklash                 +5   -5   -5   -1   +4   +0  108%  +50  150%
-  Olog                   +5   -5   -5   -1   +5   +0  112%  +50  150%
-  Ettin                  +6   -5   -5   +0   +6   +0  116%  +50  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%  135
+  Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%  135
+  Algroth                +4   -5   -5   -1   +4   +0  108%  +50  150%  135
+  Aklash                 +5   -5   -5   -1   +4   +0  108%  +50  150%  135
+  Olog                   +5   -5   -5   -1   +5   +0  112%  +50  150%  135
+  Ettin                  +6   -5   -5   +0   +6   +0  116%  +50  150%  135
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Forest troll          25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
@@ -695,13 +695,13 @@
   Olog                  25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
   Ettin                 25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%
-  Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%
-  Algroth                +4   -5   -5   -1   +4   +0  108%  +50  150%
-  Aklash                 +5   -5   -5   -1   +4   +0  108%  +50  150%
-  Olog                   +5   -5   -5   -1   +5   +0  112%  +50  150%
-  Storm troll            +6   -5   -5   +0   +6   +0  116%  +50  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%  135
+  Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%  135
+  Algroth                +4   -5   -5   -1   +4   +0  108%  +50  150%  135
+  Aklash                 +5   -5   -5   -1   +4   +0  108%  +50  150%  135
+  Olog                   +5   -5   -5   -1   +5   +0  112%  +50  150%  135
+  Storm troll            +6   -5   -5   +0   +6   +0  116%  +50  150%  135
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Forest troll          25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
@@ -711,13 +711,13 @@
   Olog                  25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
   Storm troll           25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%
-  Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%
-  Algroth                +4   -5   -5   -1   +4   +0  108%  +50  150%
-  Aklash                 +5   -5   -5   -1   +4   +0  108%  +50  150%
-  Olog                   +5   -5   -5   -1   +5   +0  112%  +50  150%
-  Spirit troll           +6   -5   -5   +0   +6   +0  116%  +50  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%  135
+  Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%  135
+  Algroth                +4   -5   -5   -1   +4   +0  108%  +50  150%  135
+  Aklash                 +5   -5   -5   -1   +4   +0  108%  +50  150%  135
+  Olog                   +5   -5   -5   -1   +5   +0  112%  +50  150%  135
+  Spirit troll           +6   -5   -5   +0   +6   +0  116%  +50  150%  135
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Forest troll          25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
@@ -727,13 +727,13 @@
   Olog                  25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
   Spirit troll          25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%
-  Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%
-  Algroth                +4   -5   -5   -1   +4   +0  108%  +50  150%
-  Aklash                 +5   -5   -5   -1   +4   +0  108%  +50  150%
-  Olog                   +5   -5   -5   -1   +5   +0  112%  +50  150%
-  Troll king             +6   -5   -5   +0   +6   +0  116%  +50  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%  135
+  Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%  135
+  Algroth                +4   -5   -5   -1   +4   +0  108%  +50  150%  135
+  Aklash                 +5   -5   -5   -1   +4   +0  108%  +50  150%  135
+  Olog                   +5   -5   -5   -1   +5   +0  112%  +50  150%  135
+  Troll king             +6   -5   -5   +0   +6   +0  116%  +50  150%  135
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Forest troll          25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
@@ -774,34 +774,34 @@
   corrosive, but, alas, sometimes their armor corrodes as well!
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Earth Spirit           +2   -5   -5   -2   +2   +0  105%  +30  170%
-  Earth Elemental        +5   -5   -5   -4   +6   +0  120%  +30  170%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Earth Spirit           +2   -5   -5   -2   +2   +0  105%  +30  170%  120
+  Earth Elemental        +5   -5   -5   -4   +6   +0  120%  +30  170%  120
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Earth Spirit          28+8   18+8   40+12   5+0  25+0  16+0  70+30  25+7 
   Earth Elemental       28+8   18+8   40+12   5+0  25+0  16+0  70+30  25+7 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Air Spirit             +0   -4   -4   +3   +0   +0   90%  +30  225%
-  Air Elemental          +2   -4   -4   +6   +2   +0  100%  +30  225%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Air Spirit             +0   -4   -4   +3   +0   +0   90%  +30  225%  120
+  Air Elemental          +2   -4   -4   +6   +2   +0  100%  +30  225%  120
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Air Spirit            28+8   25+10  35+9    6+0  25+0  16+0  55+20  35+15
   Air Elemental         28+8   25+10  35+9    6+0  25+0  16+0  55+20  35+15
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Water Spirit           +2   -4   -4   +1   +2   +1  100%  +30  200%
-  Water Elemental        +4   -4   -4   +2   +4   +1  110%  +30  200%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Water Spirit           +2   -4   -4   +1   +2   +1  100%  +30  200%  120
+  Water Elemental        +4   -4   -4   +2   +4   +1  110%  +30  200%  120
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Water Spirit          28+8   25+10  35+9    5+0  25+0  16+0  65+20  35+15
   Water Elemental       28+8   25+10  35+9    5+0  25+0  16+0  65+20  35+15
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Fire Spirit            +1   -4   -4   +0   +1   +0  100%  +30  200%
-  Fire Elemental         +3   -4   -4   +1   +2   +0  105%  +30  200%
-  Magma Elemental        +5   -4   -4   +2   +3   +0  110%  +30  200%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Fire Spirit            +1   -4   -4   +0   +1   +0  100%  +30  200%  120
+  Fire Elemental         +3   -4   -4   +1   +2   +0  105%  +30  200%  120
+  Magma Elemental        +5   -4   -4   +2   +3   +0  110%  +30  200%  120
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Fire Spirit           28+8   25+10  35+9    4+0  25+0  16+0  65+25  35+15
@@ -841,13 +841,13 @@
   nearly forever to build, unfortunately.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Clay golem             +1   -2   -2   -1   +1   +0  100%  +50  200%
-  Stone golem            +2   -3   -3   -2   +2   +1  105%  +50  200%
-  Iron golem             +3   -3   -3   -2   +3   +1  110%  +50  200%
-  Mithril golem          +4   -4   -4   -3   +4   +2  115%  +50  200%
-  Eog golem              +5   -4   -4   -3   +5   +2  120%  +50  200%
-  Colossus               +9   -5   -5   -6   +9   +3  125%  +50  200%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Clay golem             +1   -2   -2   -1   +1   +0  100%  +50  200%  130
+  Stone golem            +2   -3   -3   -2   +2   +1  105%  +50  200%  130
+  Iron golem             +3   -3   -3   -2   +3   +1  110%  +50  200%  130
+  Mithril golem          +4   -4   -4   -3   +4   +2  115%  +50  200%  130
+  Eog golem              +5   -4   -4   -3   +5   +2  120%  +50  200%  130
+  Colossus               +9   -5   -5   -6   +9   +3  125%  +50  200%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Clay golem            25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
@@ -857,13 +857,13 @@
   Eog golem             25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
   Colossus              25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Clay golem             +1   -2   -2   -1   +1   +0  100%  +50  250%
-  Stone golem            +2   -3   -3   -2   +2   +1  102%  +50  250%
-  Iron golem             +3   -3   -3   -2   +3   +1  104%  +50  250%
-  Mithril golem          +4   -4   -4   -3   +4   +2  106%  +50  250%
-  Eog golem              +5   -4   -4   -3   +5   +2  108%  +50  250%
-  Sky golem              +6   -5   -5   -4   +6   +3  110%  +50  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Clay golem             +1   -2   -2   -1   +1   +0  100%  +50  250%  130
+  Stone golem            +2   -3   -3   -2   +2   +1  102%  +50  250%  130
+  Iron golem             +3   -3   -3   -2   +3   +1  104%  +50  250%  130
+  Mithril golem          +4   -4   -4   -3   +4   +2  106%  +50  250%  130
+  Eog golem              +5   -4   -4   -3   +5   +2  108%  +50  250%  130
+  Sky golem              +6   -5   -5   -4   +6   +3  110%  +50  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Clay golem            25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
@@ -873,13 +873,13 @@
   Eog golem             25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
   Sky golem             25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Clay golem             +1   -2   -2   -1   +1   +0  100%  +50  350%
-  Stone golem            +2   -3   -3   -2   +2   +1  103%  +50  350%
-  Iron golem             +3   -3   -3   -2   +3   +1  106%  +50  350%
-  Mithril golem          +4   -4   -4   -3   +4   +2  109%  +50  350%
-  Eog golem              +5   -4   -4   -3   +5   +2  112%  +50  350%
-  Spellwarp Automaton    +6   -5   -5   -4   +6   +3  115%  +50  350%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Clay golem             +1   -2   -2   -1   +1   +0  100%  +50  350%  130
+  Stone golem            +2   -3   -3   -2   +2   +1  103%  +50  350%  130
+  Iron golem             +3   -3   -3   -2   +3   +1  106%  +50  350%  130
+  Mithril golem          +4   -4   -4   -3   +4   +2  109%  +50  350%  130
+  Eog golem              +5   -4   -4   -3   +5   +2  112%  +50  350%  130
+  Spellwarp Automaton    +6   -5   -5   -4   +6   +3  115%  +50  350%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Clay golem            25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
@@ -899,12 +899,12 @@
   of fleeing when the going gets tough. Quylthulgs have no physical attacks.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Quylthulg              -5   -5   -5   -5   -5   +6   95%   +0  150%
-  Nexus quylthulg        -4   -4   -4   -4   -4   +7   95%   +0  150%
-  Rotting quylthulg      -3   -3   -3   -3   -3   +8   95%   +0  150%
-  Greater rotting quylt  -2   -2   -2   -2   -2   +9   95%   +0  150%
-  Master quylthulg       -1   -1   -1   -1   -1  +10   95%   +0  150%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Quylthulg              -5   -5   -5   -5   -5   +6   95%   +0  150%  120
+  Nexus quylthulg        -4   -4   -4   -4   -4   +7   95%   +0  150%  120
+  Rotting quylthulg      -3   -3   -3   -3   -3   +8   95%   +0  150%  120
+  Greater rotting quylt  -2   -2   -2   -2   -2   +9   95%   +0  150%  120
+  Master quylthulg       -1   -1   -1   -1   -1  +10   95%   +0  150%  120
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Quylthulg             30+7   45+15  40+12   7+0  20+0  30+0   0+0    0+0 
@@ -939,8 +939,8 @@
   possessing a new body.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Soul                   -3   +0   -3   +0   -3   -7   60%  +15  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Soul                   -3   +0   -3   +0   -3   -7   60%  +15  250%  110
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Soul                  17+5   22+7   34+9   11+0  17+0  17+0  43+13  15+11
@@ -968,11 +968,11 @@
   and a powerful, hypnotic gaze.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Vampire                +2   +1   -1   +0   -2   +1   90%  +20  250%
-  Master Vampire         +3   +1   -2   +1   -2   +2   93%  +20  250%
-  Vampire Lord           +4   +1   -3   +2   -2   +4   96%  +20  250%
-  Elder Vampire          +5   +1   -4   +3   -2   +5   99%  +20  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Vampire                +2   +1   -1   +0   -2   +1   90%  +20  250%  130
+  Master Vampire         +3   +1   -2   +1   -2   +2   93%  +20  250%  130
+  Vampire Lord           +4   +1   -3   +2   -2   +4   96%  +20  250%  130
+  Elder Vampire          +5   +1   -4   +3   -2   +5   99%  +20  250%  130
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Vampire               25+7   37+12  36+10   7+0  32+0  25+0  60+21  35+11
@@ -1027,8 +1027,8 @@
   command ('U') and the magic command ('m') after assuming a new body.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Mimic                  +0   +1   -1   +2   +0   -1  108%  +15  250%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Mimic                  +0   +1   -1   +2   +0   -1  108%  +15  250%  110
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Mimic                 25+7   30+10  36+10   2+0  18+0  26+0  60+18  50+20
@@ -1047,12 +1047,12 @@
   you can wear. Hopefully, this will be enough.
 
 
-[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-  Giant white centipede  +0   -3   -3   +0   +0   -3   90%  +15  100%
-  Metallic green centip  +0   -3   -3   +1   +1   -3   92%  +15  100%
-  Metallic blue centipe  +0   -3   -3   +2   +1   -3   94%  +15  100%
-  Metallic red centiped  +1   -3   -3   +3   +2   -3   96%  +15  100%
-  Giant clear centipede  +1   -3   -3   +4   +2   -3   98%  +15  100%
+[[[[r|                        STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
+  Giant white centipede  +0   -3   -3   +0   +0   -3   90%  +15  100%  120
+  Metallic green centip  +0   -3   -3   +1   +1   -3   92%  +15  100%  120
+  Metallic blue centipe  +0   -3   -3   +2   +1   -3   94%  +15  100%  120
+  Metallic red centiped  +1   -3   -3   +3   +2   -3   96%  +15  100%  120
+  Giant clear centipede  +1   -3   -3   +4   +2   -3   98%  +15  100%  120
 
 [[[[r|                        Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Giant white centipede 25+12  21+10  35+10   5+0  10+0   7+0  45+15  10+2 
@@ -1068,4 +1068,4 @@
 ***** [b] DragonRealms.txt
 
 
-[[[[s|  Automatically generated for PosChengband 3.5.1.
+[[[[s|  Automatically generated for PosChengband 4.0.0.

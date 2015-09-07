@@ -58,6 +58,8 @@ race_t *amberite_get_race_t(void)
         me.base_hp = 20;
         me.exp = 190;
         me.infra = 0;
+        me.shop_adjust = 100;
+
 
         me.calc_bonuses = _amberite_calc_bonuses;
         me.get_powers = _amberite_get_powers;
@@ -177,6 +179,8 @@ race_t *android_get_race_t(void)
         me.base_hp = 26;
         me.exp = 200;
         me.infra = 0;
+        me.shop_adjust = 120;
+
 
         me.calc_bonuses = _android_calc_bonuses;
         me.get_powers = _android_get_powers;
@@ -238,6 +242,7 @@ race_t *archon_get_race_t(void)
         me.base_hp = 22;
         me.exp = 200;
         me.infra = 3;
+        me.shop_adjust = 90;
 
         me.calc_bonuses = _archon_calc_bonuses;
         me.get_flags = _archon_get_flags;
@@ -312,6 +317,7 @@ race_t *balrog_get_race_t(void)
         me.exp = 180;
         me.infra = 5;
         me.flags = RACE_IS_NONLIVING | RACE_IS_DEMON;
+        me.shop_adjust = 140;
 
         me.calc_bonuses = _balrog_calc_bonuses;
         me.get_powers = _balrog_get_powers;
@@ -375,6 +381,7 @@ race_t *barbarian_get_race_t(void)
         me.base_hp = 22;
         me.exp = 135;
         me.infra = 0;
+        me.shop_adjust = 120;
 
         me.calc_bonuses = _barbarian_calc_bonuses;
         me.get_powers = _barbarian_get_powers;
@@ -443,6 +450,7 @@ race_t *beastman_get_race_t(void)
         me.base_hp = 22;
         me.exp = 150;
         me.infra = 0;
+        me.shop_adjust = 130;
 
         me.calc_bonuses = _beastman_calc_bonuses;
         me.gain_level = _beastman_gain_level;
@@ -598,6 +606,7 @@ race_t *centaur_get_race_t(void)
         me.base_hp = 22;
         me.exp = 190;
         me.infra = 0;
+        me.shop_adjust = 95;
 
         me.birth = _centaur_birth;
         me.calc_innate_attacks = _centaur_calc_innate_attacks;
@@ -666,6 +675,7 @@ race_t *cyclops_get_race_t(void)
         me.base_hp = 24;
         me.exp = 155;
         me.infra = 1;
+        me.shop_adjust = 135;
 
         me.calc_bonuses = _cyclops_calc_bonuses;
         me.get_powers = _cyclops_get_powers;
@@ -735,6 +745,7 @@ race_t *dark_elf_get_race_t(void)
         me.base_hp = 18;
         me.exp = 155;
         me.infra = 5;
+        me.shop_adjust = 120;
 
         me.calc_bonuses = _dark_elf_calc_bonuses;
         me.get_powers = _dark_elf_get_powers;
@@ -1174,6 +1185,8 @@ race_t *draconian_get_race_t(int psubrace)
 
         me.exp = 160;
         me.life = 103;
+        me.shop_adjust = 105;
+
 
         /* Override with New Type */
         if (psubrace >= 0 && psubrace < DRACONIAN_MAX)
@@ -1190,6 +1203,7 @@ race_t *draconian_get_race_t(int psubrace)
             me.skills.stl -= 1;
             me.skills.thn += 5;
             me.life += 1;
+            me.shop_adjust = 110;
             break;
         case DRACONIAN_GREEN:
             me.exp += 15;
@@ -1198,6 +1212,7 @@ race_t *draconian_get_race_t(int psubrace)
             me.stats[A_INT] += 1;
             me.skills.dev += 7;
             me.exp += 25;
+            me.shop_adjust = 100;
             break;
         case DRACONIAN_CRYSTAL:
             me.stats[A_INT] -= 1;
@@ -1215,6 +1230,7 @@ race_t *draconian_get_race_t(int psubrace)
             me.skills.sav += 3;
             me.life += 1;
             me.exp += 30;
+            me.shop_adjust = 95;
             break;
         case DRACONIAN_SHADOW:
             me.stats[A_STR] -= 1;
@@ -1282,6 +1298,7 @@ race_t *dunadan_get_race_t(void)
         me.base_hp = 20;
         me.exp = 160;
         me.infra = 0;
+        me.shop_adjust = 100;
 
         me.calc_bonuses = _dunadan_calc_bonuses;
         me.get_flags = _dunadan_get_flags;
@@ -1347,6 +1364,7 @@ race_t *dwarf_get_race_t(void)
         me.base_hp = 22;
         me.exp = 135;
         me.infra = 5;
+        me.shop_adjust = 115;
 
         me.calc_bonuses = _dwarf_calc_bonuses;
         me.get_powers = _dwarf_get_powers;
@@ -1409,6 +1427,7 @@ race_t *ent_get_race_t(void)
         me.base_hp = 25;
         me.exp = 135;
         me.infra = 0;
+        me.shop_adjust = 95;
 
         me.calc_bonuses = _ent_calc_bonuses;
         me.get_powers = _ent_get_powers;
@@ -1497,6 +1516,7 @@ race_t *gnome_get_race_t(void)
         me.base_hp = 16;
         me.exp = 115;
         me.infra = 4;
+        me.shop_adjust = 115;
 
         me.calc_bonuses = _gnome_calc_bonuses;
         me.get_powers = _gnome_get_powers;
@@ -1584,6 +1604,8 @@ race_t *golem_get_race_t(void)
         me.exp = 185;
         me.infra = 4;
         me.flags = RACE_IS_NONLIVING;
+        me.shop_adjust = 120;
+
 
         me.get_powers = _golem_get_powers;
         me.calc_bonuses = _golem_calc_bonuses;
@@ -1650,6 +1672,7 @@ race_t *half_giant_get_race_t(void)
         me.base_hp = 26;
         me.exp = 150;
         me.infra = 3;
+        me.shop_adjust = 125;
 
         me.calc_bonuses = _half_giant_calc_bonuses;
         me.get_powers = _half_giant_get_powers;
@@ -1717,6 +1740,7 @@ race_t *half_ogre_get_race_t(void)
         me.base_hp = 23;
         me.exp = 140;
         me.infra = 3;
+        me.shop_adjust = 125;
 
         me.calc_bonuses = _half_ogre_calc_bonuses;
         me.get_powers = _half_ogre_get_powers;
@@ -1781,6 +1805,7 @@ race_t *half_titan_get_race_t(void)
         me.base_hp = 28;
         me.exp = 200;
         me.infra = 0;
+        me.shop_adjust = 90;
 
         me.calc_bonuses = _half_titan_calc_bonuses;
         me.get_powers = _half_titan_get_powers;
@@ -1849,6 +1874,7 @@ race_t *half_troll_get_race_t(void)
         me.base_hp = 25;
         me.exp = 150;
         me.infra = 3;
+        me.shop_adjust = 135;
 
         me.calc_bonuses = _half_troll_calc_bonuses;
         me.get_powers = _half_troll_get_powers;
@@ -1907,6 +1933,7 @@ race_t *high_elf_get_race_t(void)
         me.base_hp = 19;
         me.exp = 190;
         me.infra = 4;
+        me.shop_adjust = 90;
 
         me.calc_bonuses = _high_elf_calc_bonuses;
         me.get_flags = _high_elf_get_flags;
@@ -1962,6 +1989,7 @@ race_t *hobbit_get_race_t(void)
         me.base_hp = 14;
         me.exp = 120;
         me.infra = 4;
+        me.shop_adjust = 100;
 
         me.get_powers = _hobbit_get_powers;
         init = TRUE;
@@ -2026,6 +2054,7 @@ race_t *human_get_race_t(void)
         me.base_hp = 20;
         me.exp = 100;
         me.infra = 0;
+        me.shop_adjust = 100;
 
         me.gain_level = _human_gain_level;
         init = TRUE;
@@ -2091,6 +2120,7 @@ race_t *imp_get_race_t(void)
         me.exp = 90;
         me.infra = 3;
         me.flags = RACE_IS_DEMON;
+        me.shop_adjust = 120;
 
         me.calc_bonuses = _imp_calc_bonuses;
         me.get_powers = _imp_get_powers;

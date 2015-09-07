@@ -561,7 +561,7 @@ race_t *mon_golem_get_race_t(int psubrace)
         me.extra_skills = xs;
 
         me.infra = 5;
-        init = TRUE;
+        me.shop_adjust = 130;
 
         me.name = "Golem";
         me.desc = _desc;
@@ -575,6 +575,9 @@ race_t *mon_golem_get_race_t(int psubrace)
         me.base_hp = 50;
         me.boss_r_idx = MON_DESTROYER;
         me.pseudo_class_idx = CLASS_MAULER;
+
+        init = TRUE;
+
     }
 
     me.subname = _mon_name(p_ptr->current_r_idx);
@@ -616,7 +619,6 @@ race_t *mon_golem_get_race_t(int psubrace)
         me.exp = 200;
         break;
     }
-
 
     return &me;
 }

@@ -744,11 +744,11 @@
   Devicemasters have a few magical abilities to enhance their utility with
   devices. As expected, they gain a powerful talent of Recharging very early
   on. Also, they may detect magical devices from a distance. At higher levels,
-  they gain the powerful ability to move charges from one device to another
-  without the risk of destroying the target device. As a final ability, the
-  Devicemaster may use multiple charges at once from a given device in an act
-  of desperation. This greatly increases the power of the effect, but may
-  destroy the device in the process.
+  they gain the powerful ability to move effects from one device to another
+  (wand/rod/staff) or to move essence from one potion/scroll to a lower level
+  potion/scroll. As a final ability, the Devicemaster may use multiple charges
+  at once from a given device in an act of desperation. This greatly increases
+  the power of the effect, but may destroy the device in the process.
 
 
 ***** <Tables>
@@ -850,9 +850,9 @@
 [[[[r|                 Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows
   Mauler         25+12  25+11  35+12     0    14     2  70+30  20+7 
   Mystic         45+15  34+11  36+10     5    32    24  64+18  60+18
-  Devicemaster   25+7   50+20  36+10     2    20    16  48+13  35+11
+  Devicemaster   25+7   42+16  36+10     2    20    16  48+13  35+11
 
 
 
 
-[[[[s|  Automatically generated for PosChengband 3.5.1.
+[[[[s|  Automatically generated for PosChengband 4.0.0.

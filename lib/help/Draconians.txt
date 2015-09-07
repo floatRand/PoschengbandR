@@ -3,16 +3,16 @@
 ***** <Tables>
 [[[[y|  Table 1 - Race Statistic Bonus Table ---
 
-[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  Exp
-  Red             +2   +1   +1   +1   +2   +2  104%  160%
-  White           +2   +1   +1   +1   +2   +2  104%  160%
-  Blue            +2   +1   +1   +1   +2   +2  104%  160%
-  Black           +2   +1   +1   +1   +2   +2  104%  160%
-  Green           +1   +1   +1   +1   +2   +2  103%  175%
-  Bronze          +1   +2   +1   +1   +2   +2  103%  185%
-  Crystal         +1   +0   +1   +0   +3   +2  105%  220%
-  Gold            +1   +1   +2   +1   +2   +2  104%  190%
-  Shadow          +0   +1   +1   +3   +2   +2  102%  195%
+[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  Exp  Shop
+  Red             +2   +1   +1   +1   +2   +2  104%  160%  110
+  White           +2   +1   +1   +1   +2   +2  104%  160%  110
+  Blue            +2   +1   +1   +1   +2   +2  104%  160%  110
+  Black           +2   +1   +1   +1   +2   +2  104%  160%  110
+  Green           +1   +1   +1   +1   +2   +2  103%  175%  105
+  Bronze          +1   +2   +1   +1   +2   +2  103%  185%  100
+  Crystal         +1   +0   +1   +0   +3   +2  105%  220%  105
+  Gold            +1   +1   +2   +1   +2   +2  104%  190%   95
+  Shadow          +0   +1   +1   +3   +2   +2  102%  195%  105
 
 
 [[[[y|  Table 2 - Race Skill Bonus Table
@@ -49,4 +49,4 @@
 
 
 
-[[[[s|  Automatically generated for PosChengband 3.5.1.
+[[[[s|  Automatically generated for PosChengband 4.0.0.

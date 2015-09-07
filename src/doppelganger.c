@@ -458,6 +458,7 @@ race_t *doppelganger_get_race_t(void)
         me.base_hp = 12;
         me.exp = 150;
         me.infra = 0;
+        me.shop_adjust = 150; /* But really, you should shapeshift first, no? */
 
         me.get_powers = _get_powers;
         init = TRUE;

@@ -199,6 +199,7 @@ race_t *mon_centipede_get_race_t(void)
         me.infra = 5;
         me.exp = 100;
         me.base_hp = 15;
+        me.shop_adjust = 120;
 
         me.calc_innate_attacks = _calc_innate_attacks;
         me.calc_bonuses = _calc_bonuses;

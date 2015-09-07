@@ -330,6 +330,8 @@ race_t *mon_beholder_get_race_t(void)
         me.infra = 8;
         me.exp = 250;
         me.base_hp = 20;
+        me.life = 100;
+        me.shop_adjust = 140;
 
         me.birth = _birth;
         me.calc_innate_attacks = _calc_innate_attacks;
@@ -352,7 +354,6 @@ race_t *mon_beholder_get_race_t(void)
     me.stats[A_DEX] =  1 + rank/2;
     me.stats[A_CON] =  0;
     me.stats[A_CHR] =  0 + rank/2;
-    me.life = 100;
 
     me.pseudo_class_idx = CLASS_MAGE;
 

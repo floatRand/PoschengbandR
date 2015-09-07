@@ -315,6 +315,7 @@ race_t *mon_hydra_get_race_t(void)
         me.infra = 5;
         me.exp = 130;
         me.base_hp = 45;
+        me.shop_adjust = 130;
 
         me.get_powers = _get_powers;
         me.calc_innate_attacks = _calc_innate_attacks;

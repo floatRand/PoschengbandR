@@ -925,6 +925,7 @@ race_t *mon_mimic_get_race_t(void)
                     "command ('U') and the magic command ('m') after assuming a new body.";
 
         me.exp = 250;
+        me.shop_adjust = 110; /* Really should depend on current form */
 
         me.birth = _birth;
 

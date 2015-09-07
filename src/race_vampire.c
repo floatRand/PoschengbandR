@@ -551,6 +551,7 @@ race_t *mon_vampire_get_race_t(void)
         me.base_hp = 20;
         me.exp = 250;
         me.infra = 5;
+        me.shop_adjust = 130;
 
         me.birth = _birth;
         me.gain_level = _gain_level;
@@ -799,6 +800,7 @@ race_t *bat_get_race_t(void)
         me.base_hp = 10;
         me.exp = 75;
         me.infra = 10;
+        me.shop_adjust = 120;
 
         me.get_spells = _mimic_get_spells;
         me.calc_innate_attacks = _bat_calc_innate_attacks;
@@ -876,6 +878,7 @@ race_t *mist_get_race_t(void)
         me.base_hp = 15;
         me.exp = 75;
         me.infra = 10;
+        me.shop_adjust = 130;
 
         me.get_spells = _mimic_get_spells;
         me.calc_bonuses = _mist_calc_bonuses;
@@ -936,6 +939,7 @@ race_t *wolf_get_race_t(void)
         me.base_hp = 22;
         me.exp = 120;
         me.infra = 5;
+        me.shop_adjust = 115;
 
         me.get_spells = _mimic_get_spells;
         me.get_powers = _wolf_get_powers;

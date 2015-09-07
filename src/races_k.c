@@ -59,6 +59,7 @@ race_t *klackon_get_race_t(void)
         me.base_hp = 23;
         me.exp = 170;
         me.infra = 2;
+        me.shop_adjust = 115;
 
         me.calc_bonuses = _klackon_calc_bonuses;
         me.get_powers = _klackon_get_powers;
@@ -121,6 +122,7 @@ race_t *kobold_get_race_t(void)
         me.base_hp = 19;
         me.exp = 90;
         me.infra = 3;
+        me.shop_adjust = 120;
 
         me.calc_bonuses = _kobold_calc_bonuses;
         me.get_powers = _kobold_get_powers;
@@ -188,6 +190,7 @@ race_t *kutar_get_race_t(void)
         me.base_hp = 21;
         me.exp = 175;
         me.infra = 0;
+        me.shop_adjust = 95;
 
         me.calc_bonuses = _kutar_calc_bonuses;
         me.get_powers = _kutar_get_powers;
@@ -261,6 +264,7 @@ race_t *mindflayer_get_race_t(void)
         me.base_hp = 18;
         me.exp = 150;
         me.infra = 4;
+        me.shop_adjust = 115;
 
         me.calc_bonuses = _mindflayer_calc_bonuses;
         me.get_powers = _mindflayer_get_powers;
@@ -327,6 +331,7 @@ race_t *nibelung_get_race_t(void)
         me.base_hp = 22;
         me.exp = 165;
         me.infra = 5;
+        me.shop_adjust = 115;
 
         me.calc_bonuses = _nibelung_calc_bonuses;
         me.get_powers = _nibelung_get_powers;
@@ -390,6 +395,7 @@ race_t *shadow_fairy_get_race_t(void)
         me.base_hp = 13;
         me.exp = 140;
         me.infra = 4;
+        me.shop_adjust = 110;
 
         me.calc_bonuses = _shadow_fairy_calc_bonuses;
         me.get_flags = _shadow_fairy_get_flags;
@@ -469,6 +475,7 @@ race_t *skeleton_get_race_t(void)
         me.exp = 115;
         me.infra = 2;
         me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD;
+        me.shop_adjust = 125;
 
         me.calc_bonuses = _skeleton_calc_bonuses;
         me.get_powers = _skeleton_get_powers;
@@ -555,6 +562,7 @@ race_t *snotling_get_race_t(void)
         me.base_hp = 10;
         me.exp = 45;
         me.infra = 2;
+        me.shop_adjust = 125;
 
         me.calc_bonuses = _snotling_calc_bonuses;
         me.get_powers = _snotling_get_powers;
@@ -637,6 +645,7 @@ race_t *spectre_get_race_t(void)
         me.exp = 250;
         me.infra = 5;
         me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD;
+        me.shop_adjust = 135;
 
         me.calc_bonuses = _spectre_calc_bonuses;
         me.get_powers = _spectre_get_powers;
@@ -707,6 +716,7 @@ race_t *sprite_get_race_t(void)
         me.base_hp = 14;
         me.exp = 135;
         me.infra = 4;
+        me.shop_adjust = 90;
 
         me.calc_bonuses = _sprite_calc_bonuses;
         me.get_powers = _sprite_get_powers;
@@ -795,6 +805,7 @@ race_t *tonberry_get_race_t(void)
         me.base_hp = 26;
         me.exp = 175;
         me.infra = 2;
+        me.shop_adjust = 115;
 
         me.calc_bonuses = _tonberry_calc_bonuses;
         me.get_flags = _tonberry_get_flags;
@@ -880,6 +891,7 @@ race_t *vampire_get_race_t(void)
         me.exp = 200;
         me.infra = 5;
         me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD;
+        me.shop_adjust = 130;
 
         me.calc_bonuses = _vampire_calc_bonuses;
         me.get_powers = _vampire_get_powers;
@@ -936,6 +948,7 @@ race_t *wood_elf_get_race_t(void)
         me.base_hp = 16;
         me.exp = 125;
         me.infra = 3;
+        me.shop_adjust = 95;
 
         me.get_powers = _wood_elf_get_powers;
         init = TRUE;
@@ -1003,6 +1016,7 @@ race_t *yeek_get_race_t(void)
         me.base_hp = 14;
         me.exp = 70;
         me.infra = 2;
+        me.shop_adjust = 105;
 
         me.calc_bonuses = _yeek_calc_bonuses;
         me.get_powers = _yeek_get_powers;
@@ -1081,6 +1095,7 @@ race_t *zombie_get_race_t(void)
         me.exp = 180;
         me.infra = 2;
         me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD;
+        me.shop_adjust = 140;
 
         me.calc_bonuses = _zombie_calc_bonuses;
         me.get_powers = _zombie_get_powers;

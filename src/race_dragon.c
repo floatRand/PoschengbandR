@@ -3263,6 +3263,7 @@ race_t *mon_dragon_get_race_t(int psubrace)
     result->equip_template = mon_get_equip_template();
     result->base_hp = 40;
     result->pseudo_class_idx = CLASS_BEASTMASTER;
+    result->shop_adjust = 130;
 
     result->boss_r_idx = MON_GLAURUNG;
     return result;

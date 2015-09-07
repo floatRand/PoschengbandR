@@ -2131,6 +2131,7 @@ typedef struct {
     load_fn                 load_player;
     save_fn                 save_player;
     s16b                    pseudo_class_idx; /* For the "Monster" class ... */
+    s16b                    shop_adjust;
 } race_t;
 
 typedef struct {

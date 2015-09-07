@@ -443,6 +443,7 @@ race_t *mon_troll_get_race_t(void)
         me.infra = 5;
         me.exp = 150;
         me.base_hp = 50;
+        me.shop_adjust = 135;
 
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;

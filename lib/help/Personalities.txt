@@ -149,4 +149,4 @@
 
 
 
-[[[[s|  Automatically generated for PosChengband 3.5.1.
+[[[[s|  Automatically generated for PosChengband 4.0.0.

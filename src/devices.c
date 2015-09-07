@@ -2245,7 +2245,7 @@ device_effect_info_t wand_effect_table[] =
     {EFFECT_METEOR,                55,  26,     2,   0,     0, _DROP_GOOD | _NO_DESTROY},
     {EFFECT_BREATHE_ONE_MULTIHUED, 60,  27,     2,   0,     0, _DROP_GOOD | _NO_DESTROY},
     {EFFECT_GENOCIDE_ONE,          60,  27,     2,   0,     0, _DROP_GOOD | _NO_DESTROY},
-    {EFFECT_BALL_WATER,            70,  28,     2,   0,     0, _DROP_GOOD | _NO_DESTROY},
+    {EFFECT_BALL_WATER,            65,  28,     2,   0,     0, _DROP_GOOD | _NO_DESTROY},
     {EFFECT_BALL_DISINTEGRATE,     70,  29,     2,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_ROCKET,                80,  30,     3,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_WALL_BUILDING,        100,  50,    16,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},

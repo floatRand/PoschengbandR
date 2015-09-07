@@ -100,14 +100,14 @@ static void _races_help(FILE* fff)
         /*if (race_ptr->flags & RACE_IS_DEPRECATED) continue;*/
 
         if (r % 20 == 0)
-            fprintf(fff, "[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp\n");    
+            fprintf(fff, "[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop\n");
         r++;
 
-        fprintf(fff, "  [[[[w|%-14s| %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%\n", 
+        fprintf(fff, "  [[[[w|%-14s| %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d\n",
             race_ptr->name,
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
             race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR], 
-            race_ptr->life, race_ptr->base_hp, race_ptr->exp
+            race_ptr->life, race_ptr->base_hp, race_ptr->exp, race_ptr->shop_adjust
         );
     }
     fprintf(fff, "\n\n");
@@ -176,7 +176,7 @@ static void _monster_races_help(FILE* fff)
 
             race_ptr = get_race_t();
 
-            fprintf(fff, "[[[[r|  %21s STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp\n", "");    
+            fprintf(fff, "[[[[r|  %21s STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop\n", "");
             if (race_ptr->birth)
                 race_ptr->birth();
 
@@ -190,11 +190,11 @@ static void _monster_races_help(FILE* fff)
                 {
                     race_ptr = get_race_t();
 
-                    fprintf(fff, "  %-21.21s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%\n", 
+                    fprintf(fff, "  %-21.21s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d\n",
                         race_ptr->subname,
                         race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
                         race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR], 
-                        race_ptr->life, race_ptr->base_hp, race_ptr->exp
+                        race_ptr->life, race_ptr->base_hp, race_ptr->exp, race_ptr->shop_adjust
                     );
 
                     current_r_idx = p_ptr->current_r_idx;
@@ -283,17 +283,17 @@ static void _demigods_help(FILE* fff)
 
     fprintf(fff, "***** <Tables>\n");
     fprintf(fff, "[[[[y|  Table 1 - Race Statistic Bonus Table ---\n\n");
-    fprintf(fff, "[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  Exp\n");    
+    fprintf(fff, "[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  Exp  Shop\n");
 
     for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
     {
         race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
 
-        fprintf(fff, "  %-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%%\n", 
+        fprintf(fff, "  %-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%% %4d\n",
             demigod_info[i].name,
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
             race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR], 
-            race_ptr->life, race_ptr->exp
+            race_ptr->life, race_ptr->exp, race_ptr->shop_adjust
         );
     }
     fprintf(fff, "\n\n");
@@ -346,17 +346,17 @@ static void _draconians_help(FILE* fff)
 
     fprintf(fff, "***** <Tables>\n");
     fprintf(fff, "[[[[y|  Table 1 - Race Statistic Bonus Table ---\n\n");
-    fprintf(fff, "[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  Exp\n");
+    fprintf(fff, "[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  Exp  Shop\n");
 
     for (i = 0; i < DRACONIAN_MAX; i++)
     {
         race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
 
-        fprintf(fff, "  %-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%%\n",
+        fprintf(fff, "  %-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%% %4d\n",
             race_ptr->subname,
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
             race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
-            race_ptr->life, race_ptr->exp
+            race_ptr->life, race_ptr->exp, race_ptr->shop_adjust
         );
     }
     fprintf(fff, "\n\n");

@@ -1314,6 +1314,7 @@ race_t *mon_elemental_get_race_t(int psubrace)
     result->flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;
     result->base_hp = 30;
     result->pseudo_class_idx = CLASS_WARRIOR;
+    result->shop_adjust = 120;
 
     return result;
 }
