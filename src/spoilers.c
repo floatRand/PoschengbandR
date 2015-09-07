@@ -103,7 +103,7 @@ static void _races_help(FILE* fff)
             fprintf(fff, "[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop\n");
         r++;
 
-        fprintf(fff, "  [[[[w|%-14s| %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d\n",
+        fprintf(fff, "  [[[[w|%-14s| %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
             race_ptr->name,
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
             race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR], 
@@ -190,7 +190,7 @@ static void _monster_races_help(FILE* fff)
                 {
                     race_ptr = get_race_t();
 
-                    fprintf(fff, "  %-21.21s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d\n",
+                    fprintf(fff, "  %-21.21s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
                         race_ptr->subname,
                         race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
                         race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR], 
@@ -289,7 +289,7 @@ static void _demigods_help(FILE* fff)
     {
         race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
 
-        fprintf(fff, "  %-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%% %4d\n",
+        fprintf(fff, "  %-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%% %4d%%\n",
             demigod_info[i].name,
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
             race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR], 
@@ -352,7 +352,7 @@ static void _draconians_help(FILE* fff)
     {
         race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
 
-        fprintf(fff, "  %-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%% %4d\n",
+        fprintf(fff, "  %-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%% %4d%%\n",
             race_ptr->subname,
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
             race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],

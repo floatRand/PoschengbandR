@@ -387,9 +387,9 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
     if (factor == 0)
         factor = 110;
 
-    factor = factor * adj_gold[p_ptr->stat_ind[A_CHR]] / 100;
-    factor = factor * (125 - MIN(200, p_ptr->fame)/4) / 100;
-    factor = factor * greed / 100;
+    factor = (factor * adj_gold[p_ptr->stat_ind[A_CHR]] + 50) / 100;
+    factor = (factor * (135 - MIN(200, p_ptr->fame)/4) + 50) / 100;
+    factor = (factor * greed + 50) / 100;
 
     /* A factor below 100 would sell below value and purchase above value, netting
        the player infinite gold! Not to mention the shopkeeper would quickly go out
@@ -2706,21 +2706,12 @@ static bool sell_haggle(object_type *o_ptr, s32b *price)
 
     *price = 0;
 
-    if (prace_is_(RACE_DEMIGOD) && p_ptr->psubrace == DEMIGOD_APHRODITE)
-    {
-        cur_ask = 1;
-        final_ask = price_item(o_ptr, 100, TRUE);
-        noneed = TRUE;
-    }
-    else
-    {
-        /* Obtain the starting offer and the final offer */
-        cur_ask = price_item(o_ptr, ot_ptr->max_inflate, TRUE);
-        final_ask = price_item(o_ptr, ot_ptr->min_inflate, TRUE);
+    /* Obtain the starting offer and the final offer */
+    cur_ask = price_item(o_ptr, ot_ptr->max_inflate, TRUE);
+    final_ask = price_item(o_ptr, ot_ptr->min_inflate, TRUE);
 
-        /* Determine if haggling is necessary */
-        noneed = noneedtobargain(final_ask);
-    }
+    /* Determine if haggling is necessary */
+    noneed = noneedtobargain(final_ask);
 
     /* Get the owner's payout limit */
     purse = (s32b)(ot_ptr->max_cost);
