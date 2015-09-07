@@ -33,12 +33,14 @@ int get_bldg_member_code(cptr name)
 
 static bool is_owner(building_type *bldg)
 {
+    int race_idx = (p_ptr->mimic_form != MIMIC_NONE) ? p_ptr->mimic_form : p_ptr->prace;
+
     if (bldg->member_class[p_ptr->pclass] == BUILDING_OWNER)
     {
         return (TRUE);
     }
 
-    if (bldg->member_race[p_ptr->prace] == BUILDING_OWNER)
+    if (bldg->member_race[race_idx] == BUILDING_OWNER)
     {
         return (TRUE);
     }
@@ -55,12 +57,14 @@ static bool is_owner(building_type *bldg)
 
 static bool is_member(building_type *bldg)
 {
+    int race_idx = (p_ptr->mimic_form != MIMIC_NONE) ? p_ptr->mimic_form : p_ptr->prace;
+
     if (bldg->member_class[p_ptr->pclass])
     {
         return (TRUE);
     }
 
-    if (bldg->member_race[p_ptr->prace])
+    if (bldg->member_race[race_idx])
     {
         return (TRUE);
     }
@@ -126,67 +130,62 @@ static void show_building(building_type* bldg)
     {
         if (bldg->letters[i])
         {
+            int factor = store_calc_price_factor(100);
+            int member_cost = (bldg->member_costs[i] * factor + 50) / 100;
+            int other_cost = (bldg->other_costs[i] * factor + 50) / 100;
+            bool owner = is_owner(bldg);
+            bool member = is_member(bldg);
+            int cost = owner ? member_cost : other_cost;
+
             if (bldg->action_restr[i] == 0)
             {
-                if ((is_owner(bldg) && (bldg->member_costs[i] == 0)) ||
-                    (!is_owner(bldg) && (bldg->other_costs[i] == 0)))
+                if (cost == 0)
                 {
                     action_color = TERM_WHITE;
                     buff[0] = '\0';
                 }
-                else if (is_owner(bldg))
-                {
-                    action_color = TERM_YELLOW;
-                    sprintf(buff, "(%dgp)", bldg->member_costs[i]);
-                }
                 else
                 {
                     action_color = TERM_YELLOW;
-                    sprintf(buff, "(%dgp)", bldg->other_costs[i]);
+                    sprintf(buff, "(%dgp)", cost);
                 }
             }
             else if (bldg->action_restr[i] == 1)
             {
-                if (!is_member(bldg))
+                if (!member)
                 {
                     action_color = TERM_L_DARK;
                     strcpy(buff, "(closed)");
 
                 }
-                else if ((is_owner(bldg) && (bldg->member_costs[i] == 0)) ||
-                    (is_member(bldg) && (bldg->other_costs[i] == 0)))
+                else if (cost == 0)
                 {
                     action_color = TERM_WHITE;
                     buff[0] = '\0';
                 }
-                else if (is_owner(bldg))
-                {
-                    action_color = TERM_YELLOW;
-                    sprintf(buff, "(%dgp)", bldg->member_costs[i]);
-                }
                 else
                 {
                     action_color = TERM_YELLOW;
-                    sprintf(buff, "(%dgp)", bldg->other_costs[i]);
+                    sprintf(buff, "(%dgp)", cost);
                 }
             }
             else
             {
-                if (!is_owner(bldg))
+                if (!owner)
                 {
                     action_color = TERM_L_DARK;
                     strcpy(buff, "(closed)");
 
                 }
-                else if (bldg->member_costs[i] != 0)
-                {
-                    action_color = TERM_YELLOW;
-                    sprintf(buff, "(%dgp)", bldg->member_costs[i]);
-                }
-                else
+                else if (cost == 0)
                 {
                     action_color = TERM_WHITE;
                     buff[0] = '\0';
+                }
+                else
+                {
+                    action_color = TERM_YELLOW;
+                    sprintf(buff, "(%dgp)", cost);
                 }
             }
 
@@ -2848,6 +2847,10 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     cptr        q, s;
     int         maxenchant;
     char        tmp_str[MAX_NLEN];
+    int         store_factor = store_calc_price_factor(100);
+
+    if (cost == 0)
+        cost = 1500;
 
     if (p_ptr->prace == RACE_MON_SWORD)
     {
@@ -2926,10 +2929,19 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
             else
             {
                 int new_cost = new_object_cost(&copy);
-                int unit_cost = MAX((i+1)*1500, (new_cost - old_cost)*m); /* Hack: No more cheap/free enchantments! */
-                choices[i].cost = unit_cost;
+                int unit_cost = new_cost - old_cost;
+                int min_cost = (i+1)*cost;
+
+                unit_cost *= m;
+                unit_cost = (unit_cost * store_factor + 50) / 100;
+
+                if (unit_cost < min_cost)
+                    unit_cost = min_cost;
+
                 if (is_guild)
-                    choices[i].cost /= 2;
+                    unit_cost = (unit_cost + 1)/2;
+
+                choices[i].cost = unit_cost;
             }
         }
         if (!i)
@@ -3364,6 +3376,9 @@ static void bldg_process_command(building_type *bldg, int i)
     else
         bcost = bldg->other_costs[i];
 
+    /* Adjst price for race, charisma and fame */
+    bcost = (bcost * store_calc_price_factor(100) + 50) / 100;
+
     /* action restrictions */
     if (((bldg->action_restr[i] == 1) && !is_member(bldg)) ||
         ((bldg->action_restr[i] == 2) && !is_owner(bldg)))
@@ -3372,10 +3387,7 @@ static void bldg_process_command(building_type *bldg, int i)
         return;
     }
 
-    /* check gold (HACK - Recharge uses variable costs) */
-    if ((bact != BACT_RECHARGE) &&
-        (((bldg->member_costs[i] > p_ptr->au) && is_owner(bldg)) ||
-         ((bldg->other_costs[i] > p_ptr->au) && !is_owner(bldg))))
+    if (bcost > p_ptr->au)
     {
         msg_print("You do not have the gold!");
         return;

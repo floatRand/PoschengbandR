@@ -1448,6 +1448,7 @@ extern void store_shuffle(int which);
 enum { STORE_MAINT_CULL = 1, STORE_MAINT_NORMAL };
 extern void store_maint(int town_num, int store_num, int options);
 extern void store_init(int town_num, int store_num);
+extern int  store_calc_price_factor(int greed);
 extern void move_to_black_market(object_type * o_ptr);
 extern void mass_produce(object_type *o_ptr);
 

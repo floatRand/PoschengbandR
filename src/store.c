@@ -360,24 +360,9 @@ static void purchase_analyze(s32b price, s32b value, s32b guess)
  */
 static int cur_store_feat;
 
-/*
- * Determine the price of an item (qty one) in a store.
- *
- * This function takes into account the player's charisma, and the
- * shop-keepers friendliness, and the shop-keeper's base greed, but
- * never lets a shop-keeper lose money in a transaction.
- *
- */
-static s32b price_item(object_type *o_ptr, int greed, bool flip)
+int store_calc_price_factor(int greed)
 {
-    int     factor;
-    s32b    price;
-
-    /* Get the value of one of the items */
-    price = object_value(o_ptr);
-
-    /* Worthless items */
-    if (price <= 0) return 0;
+    int factor;
 
     /* Compute adjustment based on race, wisdom, fame and shopkeeper greed.
        Effects are now multiplicative. Also, a shopkeeper that doubles the
@@ -396,6 +381,29 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
        of business :) */
     if (factor < 100)
         factor = 100;
+
+    return factor;
+}
+
+/*
+ * Determine the price of an item (qty one) in a store.
+ *
+ * This function takes into account the player's charisma, and the
+ * shop-keepers friendliness, and the shop-keeper's base greed, but
+ * never lets a shop-keeper lose money in a transaction.
+ *
+ */
+static s32b price_item(object_type *o_ptr, int greed, bool flip)
+{
+    int     factor = store_calc_price_factor(greed);
+    s32b    price;
+
+    /* Get the value of one of the items */
+    price = object_value(o_ptr);
+
+    /* Worthless items */
+    if (price <= 0) return 0;
+
 
     /* Shop is buying */
     if (flip)
