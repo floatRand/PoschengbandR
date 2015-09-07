@@ -2850,7 +2850,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     int         store_factor = store_calc_price_factor(100);
 
     if (cost == 0)
-        cost = 1500;
+        cost = (1500 * store_factor + 50)/100;
 
     if (p_ptr->prace == RACE_MON_SWORD)
     {

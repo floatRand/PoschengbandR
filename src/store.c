@@ -376,12 +376,6 @@ int store_calc_price_factor(int greed)
     factor = (factor * (135 - MIN(200, p_ptr->fame)/4) + 50) / 100;
     factor = (factor * greed + 50) / 100;
 
-    /* A factor below 100 would sell below value and purchase above value, netting
-       the player infinite gold! Not to mention the shopkeeper would quickly go out
-       of business :) */
-    if (factor < 100)
-        factor = 100;
-
     return factor;
 }
 
@@ -397,6 +391,12 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
 {
     int     factor = store_calc_price_factor(greed);
     s32b    price;
+
+    /* A factor below 100 would sell below value and purchase above value, netting
+       the player infinite gold! Not to mention the shopkeeper would quickly go out
+       of business :) */
+    if (factor < 100)
+        factor = 100;
 
     /* Get the value of one of the items */
     price = object_value(o_ptr);
