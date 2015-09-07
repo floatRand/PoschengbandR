@@ -18,6 +18,14 @@
 /* #undef _POSIX_SAVED_IDS */
 
 
+/*locks player name for server play
+ *this is only placed here, since including it in the other
+ *header files would interfere with the extern variable
+ *--phantom
+*/
+bool arg_lock_name;
+
+
 /*
  * Hack -- drop permissions
  */
@@ -5498,6 +5506,9 @@ void process_player_name(bool sf)
  * Unix machines?  XXX XXX
  *
  * What a horrible name for a global function.  XXX XXX XXX
+
+ * Added a check to see if this is for server play, if so, lock the player name
+ * -- phantom
  */
 void get_name(void)
 {
@@ -5506,25 +5517,30 @@ void get_name(void)
     /* Save the player name */
     strcpy(tmp, player_name);
 
-    /* Prompt for a new name */
-    if (get_string("Enter a name for your character: ", tmp, 15))
+    /*If the -l command was used, skip this section*/
+    /*--phantom*/
+    if(!arg_lock_name)
     {
-        /* Use the name */
-        strcpy(player_name, tmp);
-    }
+    	/* Prompt for a new name */
+    	if (get_string("Enter a name for your character: ", tmp, 15))
+    	{
+       	 /* Use the name */
+       	 strcpy(player_name, tmp);
+    	}
 
-    if (0 == strlen(player_name))
-    {
-        /* Use default name */
-        strcpy(player_name, "PLAYER");
-    }
+    	if (0 == strlen(player_name))
+   	 {
+       	 /* Use default name */
+       	 strcpy(player_name, "PLAYER");
+    	}
 
-    /* Re-Draw the name (in light blue) */
-    Term_erase(34, 1, 255);
-    c_put_str(TERM_L_BLUE, player_name, 1, 14);
+    	/* Re-Draw the name (in light blue) */
+    	Term_erase(34, 1, 255);
+   	 c_put_str(TERM_L_BLUE, player_name, 1, 14);
 
-    /* Erase the prompt, etc */
-    clear_from(22);
+    	/* Erase the prompt, etc */
+    	clear_from(22);
+     }
 }
 
 

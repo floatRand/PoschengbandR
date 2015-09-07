@@ -940,6 +940,7 @@ extern errr get_rnd_line(cptr file_name, int entry, char *output);
 
 extern errr counts_write(int where, u32b count);
 extern u32b counts_read(int where);
+extern bool arg_lock_name; /*locks player name for server play --phantom*/
 
 /* flavor.c */
 extern void get_table_name_aux(char *out_string);
