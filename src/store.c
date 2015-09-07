@@ -367,47 +367,39 @@ static int cur_store_feat;
  * shop-keepers friendliness, and the shop-keeper's base greed, but
  * never lets a shop-keeper lose money in a transaction.
  *
- * The "greed" value should exceed 100 when the player is "buying" the
- * item, and should be less than 100 when the player is "selling" it.
- *
- * Hack -- the black market always charges twice as much as it should.
- *
- * Charisma adjustment runs from 80 to 130
- * Racial adjustment runs from 95 to 130
- *
- * Since greed/charisma/racial adjustments are centered at 100, we need
- * to adjust (by 200) to extract a usable multiplier.  Note that the
- * "greed" value is always something (?).
  */
 static s32b price_item(object_type *o_ptr, int greed, bool flip)
 {
     int     factor;
-    int     adjust;
     s32b    price;
 
     /* Get the value of one of the items */
     price = object_value(o_ptr);
 
     /* Worthless items */
-    if (price <= 0) return (0L);
+    if (price <= 0) return 0;
 
-    /* Compute adjustment based on race, wisdom and fame */
+    /* Compute adjustment based on race, wisdom, fame and shopkeeper greed.
+       Effects are now multiplicative. Also, a shopkeeper that doubles the
+       price on sale pays half when purchasing. A shopkeeper that triples
+       on sale pays a third when purchasing. Etc. */
     factor = get_race_t()->shop_adjust;
     if (factor == 0)
         factor = 110;
-    factor += adj_gold[p_ptr->stat_ind[A_CHR]];
-    factor += 130 - MIN(200, p_ptr->fame)/4;
+
+    factor = factor * adj_gold[p_ptr->stat_ind[A_CHR]] / 100;
+    factor = factor * (125 - MIN(200, p_ptr->fame)/4) / 100;
+    factor = factor * greed / 100;
+
+    /* A factor below 100 would sell below value and purchase above value, netting
+       the player infinite gold! Not to mention the shopkeeper would quickly go out
+       of business :) */
+    if (factor < 100)
+        factor = 100;
 
     /* Shop is buying */
     if (flip)
     {
-        /* Adjust for greed */
-        adjust = 100 + (400 - (greed + factor));
-
-        /* Never get "silly" */
-        if (adjust > 100) adjust = 100;
-
-        /* Mega-Hack -- Black market sucks */
         if (cur_store_num == STORE_BLACK && p_ptr->realm1 != REALM_BURGLARY && !mut_present(MUT_BLACK_MARKETEER))
             price = price / 2;
 
@@ -417,21 +409,11 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
         if (cur_store_num == STORE_BLACK)
             price = price * (625 - virtue_current(VIRTUE_JUSTICE)) / 625;
 
-        /* Compute the final price (with rounding) */
-        /* Hack -- prevent underflow */
-        price = (price * adjust + 50L) / 100L;
+        price = price * 100 / factor;
     }
-
     /* Shop is selling */
     else
     {
-        /* Adjust for greed */
-        adjust = 100 + ((greed + factor) - 400);
-
-        /* Never get "silly" */
-        if (adjust < 100) adjust = 100;
-
-        /* Mega-Hack -- Black market sucks */
         if (cur_store_num == STORE_BLACK && p_ptr->realm1 != REALM_BURGLARY && !mut_present(MUT_BLACK_MARKETEER))
             price = price * 2;
 
@@ -441,16 +423,14 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
         if (cur_store_num == STORE_BLACK)
             price = price * (625 + virtue_current(VIRTUE_JUSTICE)) / 625;
 
-        /* Compute the final price (with rounding) */
-        /* Hack -- prevent overflow */
-        price = (s32b)(((u32b)price * (u32b)adjust + 50UL) / 100UL);
+        price = price * factor / 100;
     }
 
     /* Note -- Never become "free" */
-    if (price <= 0L) return (1L);
+    if (price <= 0) return (1);
 
     /* Return the price */
-    return (price);
+    return price;
 }
 
 
