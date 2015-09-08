@@ -4100,7 +4100,7 @@ void dump_yourself(FILE *fff)
 
     roff_to_buf(race_ptr->desc, 78, temp, sizeof(temp));
     fprintf(fff, "\n\n");
-    fprintf(fff, "Race: %s\n", race_ptr->name);
+    fprintf(fff, "[[[[r|Race:| [[[[B|%s\n", race_ptr->name);
     t = temp;
     for (i = 0; i < 50; i++)
     {
@@ -4114,7 +4114,7 @@ void dump_yourself(FILE *fff)
     {
         roff_to_buf(class_ptr->desc, 78, temp, sizeof(temp));
         fprintf(fff, "\n");
-        fprintf(fff, "Class: %s\n", class_ptr->name);
+        fprintf(fff, "[[[[r|Class:| [[[[B|%s\n", class_ptr->name);
         t = temp;
         for (i = 0; i < 50; i++)
         {
@@ -4126,7 +4126,7 @@ void dump_yourself(FILE *fff)
     }
     roff_to_buf(seikaku_jouhou[p_ptr->personality], 78, temp, sizeof(temp));
     fprintf(fff, "\n");
-    fprintf(fff, "Pesonality: %s\n", seikaku_info[p_ptr->personality].title);
+    fprintf(fff, "[[[[r|Pesonality:| [[[[B|%s\n", seikaku_info[p_ptr->personality].title);
     t = temp;
     for (i = 0; i < 50; i++)
     {
@@ -4139,7 +4139,7 @@ void dump_yourself(FILE *fff)
     if (p_ptr->realm1)
     {
         roff_to_buf(realm_jouhou[technic2magic(p_ptr->realm1)-1], 78, temp, sizeof(temp));
-        fprintf(fff, "Realm: %s\n", realm_names[p_ptr->realm1]);
+        fprintf(fff, "[[[[r|Realm:| [[[[B|%s\n", realm_names[p_ptr->realm1]);
         t = temp;
         for (i = 0; i < 50; i++)
         {
@@ -4153,7 +4153,7 @@ void dump_yourself(FILE *fff)
     if (p_ptr->realm2)
     {
         roff_to_buf(realm_jouhou[technic2magic(p_ptr->realm2)-1], 78, temp, sizeof(temp));
-        fprintf(fff, "Realm: %s\n", realm_names[p_ptr->realm2]);
+        fprintf(fff, "[[[[r|Realm:| [[[[B|%s\n", realm_names[p_ptr->realm2]);
         t = temp;
         for (i = 0; i < 50; i++)
         {

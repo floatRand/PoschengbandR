@@ -4844,6 +4844,7 @@ errr make_character_dump(FILE *fff)
  * XXX XXX XXX Allow the "full" flag to dump additional info,
  * and trigger its usage from various places in the code.
  */
+bool character_dump_hack = FALSE;
 errr file_character(cptr name)
 {
     int        fd = -1;
@@ -4890,7 +4891,9 @@ errr file_character(cptr name)
         return (-1);
     }
 
+    character_dump_hack = TRUE;
     (void)make_character_dump(fff);
+    character_dump_hack = FALSE;
 
     /* Close it */
     my_fclose(fff);

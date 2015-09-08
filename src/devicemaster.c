@@ -440,7 +440,10 @@ static void _character_dump(FILE* file)
 {
     cptr desc = devicemaster_speciality_name(p_ptr->psubclass);
 
-    fprintf(file, "\n\n================================== Abilities ==================================\n\n");
+    if (character_dump_hack)
+        fprintf(file, "\n\n================================== Abilities ==================================\n\n");
+    else
+        fprintf(file, "\n[[[[r|Abilities\n");
     {
         int pow = p_ptr->lev / 10;
         if (pow)

@@ -5122,16 +5122,164 @@ static void do_cmd_knowledge_extra(void)
 }
 
 /*
- * Display weapon-exp
+ * Display weapon-exp.
+ * Since we are writing to a file, it is a bit more cumbersome to get a
+ * proper multi-column display. In the end, I decided to just hard-code
+ * the rows rather than dynamically inspecting k_info. Also, I tried
+ * hard to make 3 columns fit on an 80 column display, but this required
+ * abbreviating the skill levels.
  */
+struct _tval_sval_s
+{
+int tval;
+int sval;
+};
+typedef struct _tval_sval_s _tval_sval_t;
+
+struct _prof_row_s
+{
+    _tval_sval_t cols[3];
+};
+typedef struct _prof_row_s _prof_row_t;
+typedef struct _prof_row_s *_prof_row_ptr;
+
+#define _HEADING -1
+#define _MISC_PROF -2
+
+static _prof_row_t _prof_rows[] = {
+    {{{TV_SWORD, _HEADING},              {TV_POLEARM, _HEADING},             {TV_HAFTED, _HEADING}}},
+    {{{TV_SWORD, SV_BROKEN_DAGGER},      {TV_POLEARM, SV_HATCHET},           {TV_HAFTED, SV_CLUB}}},
+    {{{TV_SWORD, SV_BROKEN_SWORD},       {TV_POLEARM, SV_SPEAR},             {TV_HAFTED, SV_WHIP}}},
+    {{{TV_SWORD, SV_DAGGER},             {TV_POLEARM, SV_SICKLE},            {TV_HAFTED, SV_QUARTERSTAFF}}},
+    {{{TV_SWORD, SV_MAIN_GAUCHE},        {TV_POLEARM, SV_AWL_PIKE},          {TV_HAFTED, SV_NUNCHAKU}}},
+    {{{TV_SWORD, SV_TANTO},              {TV_POLEARM, SV_TRIDENT},           {TV_HAFTED, SV_MACE}}},
+    {{{TV_SWORD, SV_RAPIER},             {TV_POLEARM, SV_FAUCHARD},          {TV_HAFTED, SV_BALL_AND_CHAIN}}},
+    {{{TV_SWORD, SV_SMALL_SWORD},        {TV_POLEARM, SV_BROAD_SPEAR},       {TV_HAFTED, SV_JO_STAFF}}},
+    {{{TV_SWORD, SV_BASILLARD},          {TV_POLEARM, SV_PIKE},              {TV_HAFTED, SV_WAR_HAMMER}}},
+    {{{TV_SWORD, SV_SHORT_SWORD},        {TV_POLEARM, SV_NAGINATA},          {TV_HAFTED, SV_THREE_PIECE_ROD}}},
+    {{{TV_SWORD, SV_SABRE},              {TV_POLEARM, SV_BEAKED_AXE},        {TV_HAFTED, SV_MORNING_STAR}}},
+    {{{TV_SWORD, SV_CUTLASS},            {TV_POLEARM, SV_BROAD_AXE},         {TV_HAFTED, SV_FLAIL}}},
+    {{{TV_SWORD, SV_WAKIZASHI},          {TV_POLEARM, SV_LUCERNE_HAMMER},    {TV_HAFTED, SV_BO_STAFF}}},
+    {{{TV_SWORD, SV_KHOPESH},            {TV_POLEARM, SV_GLAIVE},            {TV_HAFTED, SV_LEAD_FILLED_MACE}}},
+    {{{TV_SWORD, SV_TULWAR},             {TV_POLEARM, SV_LAJATANG},          {TV_HAFTED, SV_TETSUBO}}},
+    {{{TV_SWORD, SV_BROAD_SWORD},        {TV_POLEARM, SV_HALBERD},           {TV_HAFTED, SV_TWO_HANDED_FLAIL}}},
+    {{{TV_SWORD, SV_LONG_SWORD},         {TV_POLEARM, SV_GUISARME},          {TV_HAFTED, SV_GREAT_HAMMER}}},
+    {{{TV_SWORD, SV_SCIMITAR},           {TV_POLEARM, SV_SCYTHE},            {TV_HAFTED, SV_MACE_OF_DISRUPTION}}},
+    {{{TV_SWORD, SV_NINJATO},            {TV_POLEARM, SV_LANCE},             {TV_HAFTED, SV_WIZSTAFF}}},
+    {{{TV_SWORD, SV_KATANA},             {TV_POLEARM, SV_BATTLE_AXE},        {TV_HAFTED, SV_GROND}}},
+    {{{TV_SWORD, SV_BASTARD_SWORD},      {TV_POLEARM, SV_GREAT_AXE},         {TV_HAFTED, SV_NAMAKE_HAMMER}}},
+    {{{TV_SWORD, SV_GREAT_SCIMITAR},     {TV_POLEARM, SV_TRIFURCATE_SPEAR},  {0, 0}}},
+    {{{TV_SWORD, SV_CLAYMORE},           {TV_POLEARM, SV_LOCHABER_AXE},      {TV_DIGGING, _HEADING}}},
+    {{{TV_SWORD, SV_ESPADON},            {TV_POLEARM, SV_HEAVY_LANCE},       {TV_DIGGING, SV_SHOVEL}}},
+    {{{TV_SWORD, SV_TWO_HANDED_SWORD},   {TV_POLEARM, SV_SCYTHE_OF_SLICING}, {TV_DIGGING, SV_GNOMISH_SHOVEL}}},
+    {{{TV_SWORD, SV_FLAMBERGE},          {TV_POLEARM, SV_TSURIZAO},          {TV_DIGGING, SV_DWARVEN_SHOVEL}}},
+    {{{TV_SWORD, SV_NO_DACHI},           {TV_POLEARM, SV_DEATH_SCYTHE},      {TV_DIGGING, SV_PICK}}},
+    {{{TV_SWORD, SV_EXECUTIONERS_SWORD}, {0, 0},                             {TV_DIGGING, SV_ORCISH_PICK}}},
+    {{{TV_SWORD, SV_ZWEIHANDER},         {TV_BOW, _HEADING},                 {TV_DIGGING, SV_DWARVEN_PICK}}},
+    {{{TV_SWORD, SV_BLADE_OF_CHAOS},     {TV_BOW, SV_SLING},                 {TV_DIGGING, SV_MATTOCK}}},
+    {{{TV_SWORD, SV_DIAMOND_EDGE},       {TV_BOW, SV_SHORT_BOW},             {0, 0}}},
+    {{{TV_SWORD, SV_DOKUBARI},           {TV_BOW, SV_LONG_BOW},              {_MISC_PROF, _HEADING}}},
+    {{{TV_SWORD, SV_HAYABUSA},           {TV_BOW, SV_LIGHT_XBOW},            {_MISC_PROF, SKILL_MARTIAL_ARTS}}},
+    {{{TV_SWORD, SV_RUNESWORD},          {TV_BOW, SV_HEAVY_XBOW},            {_MISC_PROF, SKILL_DUAL_WIELDING}}},
+    {{{TV_SWORD, SV_DRAGON_FANG},        {TV_BOW, SV_NAMAKE_BOW},            {_MISC_PROF, SKILL_RIDING}}},
+    {{{0, 0},                            {0, 0},                             {0,0}}}
+};
+
+cptr _exp_level_str[5]=
+{"[Un]", "[Be]", "[Sk]", "[Ex]", "[Ma]"};
+
+char _exp_level_color[5] = {'w', 'G', 'y', 'r', 'v'};
+
+static void _prof_aux(FILE *fff, int tval, int sval)
+{
+    /* Case 1: Skip this column.*/
+    if (!tval)
+    {
+        fprintf(fff, "%-19s  %-4s  ", "", "");
+    }
+
+    /* Case 2: Give a group heading for this column.*/
+    else if (sval == _HEADING)
+    {
+        cptr heading = "";
+        switch (tval)
+        {
+        case TV_SWORD: heading = "Swords"; break;
+        case TV_POLEARM: heading = "Polearms"; break;
+        case TV_HAFTED: heading = "Hafted"; break;
+        case TV_DIGGING: heading = "Diggers"; break;
+        case TV_BOW: heading = "Bows"; break;
+        case _MISC_PROF: heading = "Miscellaneous"; break;
+        }
+        fprintf(fff, "[[[[r|%-19s|  %-4s  ", heading, "");
+    }
+
+    /* Case 3: Miscellaneous Skills */
+    else if (tval == _MISC_PROF)
+    {
+        cptr name = "";
+        int  exp, max, idx;
+
+        switch (sval)
+        {
+        case SKILL_MARTIAL_ARTS:
+            name = "Martial Arts";
+            exp = skills_martial_arts_current();
+            max = skills_martial_arts_max();
+            idx = weapon_exp_level(exp);
+            break;
+        case SKILL_DUAL_WIELDING:
+            name = "Dual Wielding";
+            exp = skills_dual_wielding_current();
+            max = skills_dual_wielding_max();
+            idx = weapon_exp_level(exp);
+            break;
+        case SKILL_RIDING:
+            name = "Riding";
+            exp = skills_riding_current();
+            max = skills_riding_max();
+            idx = riding_exp_level(exp);
+            break;
+        }
+        fprintf(fff, "%-19s ", name);
+
+        if (exp >= max)
+            fprintf(fff, "!");
+        else
+            fprintf(fff, " ");
+
+        fprintf(fff, "[[[[%c|%-4s|  ", _exp_level_color[idx], _exp_level_str[idx]);
+    }
+
+    /* Case 4: Weapon Skills for a tval/sval*/
+    else
+    {
+        int  exp = skills_weapon_current(tval, sval);
+        int  max = skills_weapon_max(tval, sval);
+        int  k_idx = lookup_kind(tval, sval);
+        int  idx = weapon_exp_level(exp);
+        char name[MAX_NLEN];
+
+        strip_name(name, k_idx);
+        if (equip_find_object(tval, sval))
+            fprintf(fff, "[[[[B|%-19s| ", name);
+        else
+            fprintf(fff, "%-19s ", name);
+
+        if (exp >= max)
+            fprintf(fff, "!");
+        else
+            fprintf(fff, " ");
+
+        fprintf(fff, "[[[[%c|%-4s|  ", _exp_level_color[idx], _exp_level_str[idx]);
+    }
+}
+
 static void do_cmd_knowledge_weapon_exp(void)
 {
-    int i, j, num, weapon_exp, weapon_max;
-
+    int   i;
     FILE *fff;
-
-    char file_name[1024];
-    char tmp[30];
+    char  file_name[1024];
 
     /* Open a new file */
     fff = my_fopen_temp(file_name, 1024);
@@ -5141,46 +5289,24 @@ static void do_cmd_knowledge_weapon_exp(void)
         return;
     }
 
-    for (i = 0; i < 5; i++)
+    for (i = 0; ; i++)
     {
-        for (num = 0; num < 64; num++)
-        {
-            for (j = 0; j < max_k_idx; j++)
-            {
-                object_kind *k_ptr = &k_info[j];
+        _prof_row_ptr row_ptr = &_prof_rows[i];
 
-                if ((k_ptr->tval == TV_SWORD - i) && (k_ptr->sval == num))
-                {
-                    if ((k_ptr->tval == TV_BOW) && (k_ptr->sval == SV_CRIMSON)) continue;
-                    if ((k_ptr->tval == TV_BOW) && (k_ptr->sval == SV_RAILGUN)) continue;
-                    if ((k_ptr->tval == TV_BOW) && (k_ptr->sval == SV_HARP)) continue;
+        if (!row_ptr->cols[0].tval)
+            break;
 
-                    weapon_exp = skills_weapon_current(TV_SWORD - i, num);
-                    weapon_max = skills_weapon_max(TV_SWORD - i, num);
-                    
-                    strip_name(tmp, j);
-                    fprintf(fff, "%-25s ", tmp);
-
-                    if (weapon_exp >= weapon_max) 
-                        fprintf(fff, "!");
-                    else
-                        fprintf(fff, " ");
-
-                    fprintf(fff, "%s", exp_level_str[weapon_exp_level(weapon_exp)]);
-                    if (cheat_xtra) fprintf(fff, " %d", weapon_exp);
-                    fprintf(fff, "\n");
-                    break;
-                }
-            }
-        }
+        _prof_aux(fff, row_ptr->cols[0].tval, row_ptr->cols[0].sval);
+        _prof_aux(fff, row_ptr->cols[1].tval, row_ptr->cols[1].sval);
+        _prof_aux(fff, row_ptr->cols[2].tval, row_ptr->cols[2].sval);
+        fprintf(fff, "\n");
     }
 
     /* Close the file */
     my_fclose(fff);
 
     /* Display the file contents */
-    show_file(TRUE, file_name, "Weapon Proficiency", 0, 0);
-
+    show_file(TRUE, file_name, "Proficiency", 0, 0);
 
     /* Remove the file */
     fd_kill(file_name);
@@ -5192,11 +5318,7 @@ static void do_cmd_knowledge_weapon_exp(void)
  */
 static void do_cmd_knowledge_spell_exp(void)
 {
-    int i = 0, spell_exp, exp_level;
-
     FILE *fff;
-    magic_type *s_ptr;
-
     char file_name[1024];
 
     /* Open a new file */
@@ -5207,61 +5329,7 @@ static void do_cmd_knowledge_spell_exp(void)
         return;
     }
 
-    if (p_ptr->realm1 != REALM_NONE)
-    {
-        fprintf(fff, "%s Spellbook\n", realm_names[p_ptr->realm1]);
-        for (i = 0; i < 32; i++)
-        {
-            if (!is_magic(p_ptr->realm1))
-            {
-                s_ptr = &technic_info[p_ptr->realm1 - MIN_TECHNIC][i];
-            }
-            else
-            {
-                s_ptr = &mp_ptr->info[p_ptr->realm1 - 1][i];
-            }
-            if (s_ptr->slevel >= 99) continue;
-            spell_exp = p_ptr->spell_exp[i];
-            exp_level = spell_exp_level(spell_exp);
-            fprintf(fff, "%-25s ", do_spell(p_ptr->realm1, i, SPELL_NAME));
-            if (p_ptr->realm1 == REALM_HISSATSU)
-                fprintf(fff, "[--]");
-            else
-            {
-                if (exp_level >= EXP_LEVEL_MASTER) fprintf(fff, "!");
-                else fprintf(fff, " ");
-                fprintf(fff, "%s", exp_level_str[exp_level]);
-            }
-            if (cheat_xtra) fprintf(fff, " %d", spell_exp);
-            fprintf(fff, "\n");
-        }
-    }
-
-    if (p_ptr->realm2 != REALM_NONE)
-    {
-        fprintf(fff, "\n%s Spellbook\n", realm_names[p_ptr->realm2]);
-        for (i = 0; i < 32; i++)
-        {
-            if (!is_magic(p_ptr->realm1))
-            {
-                s_ptr = &technic_info[p_ptr->realm2 - MIN_TECHNIC][i];
-            }
-            else
-            {
-                s_ptr = &mp_ptr->info[p_ptr->realm2 - 1][i];
-            }
-            if (s_ptr->slevel >= 99) continue;
-
-            spell_exp = p_ptr->spell_exp[i + 32];
-            exp_level = spell_exp_level(spell_exp);
-            fprintf(fff, "%-25s ", do_spell(p_ptr->realm2, i, SPELL_NAME));
-            if (exp_level >= EXP_LEVEL_EXPERT) fprintf(fff, "!");
-            else fprintf(fff, " ");
-            fprintf(fff, "%s", exp_level_str[exp_level]);
-            if (cheat_xtra) fprintf(fff, " %d", spell_exp);
-            fprintf(fff, "\n");
-        }
-    }
+    spellbook_character_dump(fff);
 
     /* Close the file */
     my_fclose(fff);
@@ -5273,67 +5341,6 @@ static void do_cmd_knowledge_spell_exp(void)
     /* Remove the file */
     fd_kill(file_name);
 }
-
-
-/*
- * Display skill-exp
- */
-static void do_cmd_knowledge_skill_exp(void)
-{
-    int skill_exp, skill_max;
-    FILE *fff;
-    char file_name[1024];
-
-    fff = my_fopen_temp(file_name, 1024);
-    if (!fff) 
-    {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
-
-    fprintf(fff, "%-20s ", "Martial Arts    ");
-    skill_exp = skills_martial_arts_current();
-    skill_max = skills_martial_arts_max();
-    if (skill_exp >= skill_max)
-        fprintf(fff, "!");
-    else 
-        fprintf(fff, " ");
-
-    fprintf(fff, "%s", exp_level_str[weapon_exp_level(skill_exp)]);
-    if (cheat_xtra) fprintf(fff, " %d", skill_exp);
-    fprintf(fff, "\n");
-
-
-    fprintf(fff, "%-20s ", "Dual Wielding   ");
-    skill_exp = skills_dual_wielding_current();
-    skill_max = skills_dual_wielding_max();
-    if (skill_exp >= skill_max)
-        fprintf(fff, "!");
-    else 
-        fprintf(fff, " ");
-
-    fprintf(fff, "%s", exp_level_str[weapon_exp_level(skill_exp)]);
-    if (cheat_xtra) fprintf(fff, " %d", skill_exp);
-    fprintf(fff, "\n");
-
-    fprintf(fff, "%-20s ", "Riding          ");
-    skill_exp = skills_riding_current();
-    skill_max = skills_riding_max();
-    if (skill_exp >= skill_max)
-        fprintf(fff, "!");
-    else 
-        fprintf(fff, " ");
-
-    fprintf(fff, "%s", exp_level_str[riding_exp_level(skill_exp)]);
-    if (cheat_xtra) fprintf(fff, " %d", skill_exp);
-    fprintf(fff, "\n");
-
-    my_fclose(fff);
-    show_file(TRUE, file_name, "Miscellaneous Proficiency", 0, 0);
-    fd_kill(file_name);
-}
-
 
 /*
  * Pluralize a monster name
@@ -7607,6 +7614,18 @@ static void do_cmd_knowledge_kubi(void)
 /*
  * List virtues & status
  */
+static char _alignment_color(void)
+{
+    if (p_ptr->align > 150) return 'g';
+    else if (p_ptr->align > 50) return 'G';
+    else if (p_ptr->align > 10) return 'B';
+    else if (p_ptr->align > -11) return 'w';
+    else if (p_ptr->align > -51) return 'o';
+    else if (p_ptr->align > -151) return 'r';
+    else return 'v';
+}
+
+
 static void do_cmd_knowledge_virtues(void)
 {
     FILE *fff;
@@ -7623,7 +7642,7 @@ static void do_cmd_knowledge_virtues(void)
     
     if (fff)
     {
-        fprintf(fff, "Your alignment : %s\n\n", your_alignment());
+        fprintf(fff, "[[[[r|Your alignment:| [[[[%c|%s|\n\n", _alignment_color(), your_alignment());
         virtue_dump(fff);
     }
     
@@ -7706,14 +7725,16 @@ static void do_cmd_knowledge_stat(void)
     
     if (fff)
     {
-        if (p_ptr->knowledge & KNOW_HPRATE) fprintf(fff, "Your current Life Rating is %d/100.\n\n", life_rating());
-        else fprintf(fff, "Your current Life Rating is ???.\n\n");
-        fprintf(fff, "Limits of maximum stats\n\n");
+        if (p_ptr->knowledge & KNOW_HPRATE) fprintf(fff, "Your current Life Rating is [[[[G|%d/100|.\n\n", life_rating());
+        else fprintf(fff, "Your current Life Rating is [[[[y|???|.\n\n");
+        fprintf(fff, "[[[[r|Limits of maximum stats\n");
 
         for (v_nr = 0; v_nr < 6; v_nr++)
         {
-            if ((p_ptr->knowledge & KNOW_STAT) || p_ptr->stat_max[v_nr] == p_ptr->stat_max_max[v_nr]) fprintf(fff, "%s 18/%d\n", stat_names[v_nr], p_ptr->stat_max_max[v_nr]-18);
-            else fprintf(fff, "%s ???\n", stat_names[v_nr]);
+            if ((p_ptr->knowledge & KNOW_STAT) || p_ptr->stat_max[v_nr] == p_ptr->stat_max_max[v_nr])
+                fprintf(fff, "%s [[[[G|18/%d|\n", stat_names[v_nr], p_ptr->stat_max_max[v_nr]-18);
+            else
+                fprintf(fff, "%s [[[[y|???|\n", stat_names[v_nr]);
         }
     }
 
@@ -7737,7 +7758,10 @@ static void do_cmd_knowledge_quests_current(FILE *fff)
     int rand_level = 100;
     int total = 0;
 
-    fprintf(fff, "< Current Quest >\n");
+    if (character_dump_hack)
+        fprintf(fff, "< Current Quests >\n");
+    else
+        fprintf(fff, "  [[[[r|Current Quests\n");
 
     for (i = 1; i < max_quests; i++)
     {
@@ -7875,7 +7899,11 @@ void do_cmd_knowledge_quests_completed(FILE *fff, int quest_num[])
     int i;
     int total = 0;
 
-    fprintf(fff, "< Completed Quest >\n");
+    if (character_dump_hack)
+        fprintf(fff, "< Completed Quests >\n");
+    else
+        fprintf(fff, "  [[[[r|Completed Quests\n");
+
     for (i = 1; i < max_quests; i++)
     {
         int q_idx = quest_num[i];
@@ -7946,7 +7974,10 @@ void do_cmd_knowledge_quests_failed(FILE *fff, int quest_num[])
     int i;
     int total = 0;
 
-    fprintf(fff, "< Failed Quest >\n");
+    if (character_dump_hack)
+        fprintf(fff, "< Failed Quests >\n");
+    else
+        fprintf(fff, "  [[[[r|Failed Quests\n");
     for (i = 1; i < max_quests; i++)
     {
         int q_idx = quest_num[i];
@@ -8011,7 +8042,7 @@ static void do_cmd_knowledge_quests_wiz_random(FILE *fff, int quest_num[])
     int i;
     int total = 0;
 
-    fprintf(fff, "< Remaining Random Quest >\n");
+    fprintf(fff, "  [[[[r|Remaining Random Quest\n");
     for (i = 1; i < max_quests; i++)
     {
         int            q_idx = quest_num[i];
@@ -8140,60 +8171,138 @@ static void do_cmd_knowledge_quests(void)
 
 /*
  * List my home
+ * Code snagged from store.c, and probably should be shared.
  */
 static void do_cmd_knowledge_home(void)
 {
-    FILE *fff;
+    int         w, h, i;
+    int         page_size, page_top = 0;
+    int         max_width = show_weights ? 65 : 75;
+    store_type *st_ptr = &town[1].store[STORE_HOME];
+    bool        done = FALSE;
 
-    int i;
-    char file_name[1024];
-    store_type  *st_ptr;
-    char o_name[MAX_NLEN];
-    cptr        paren = ")";
+    Term_get_size(&w, &h);
+    Term_clear();
 
-    process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
+    page_size = h - 12;
 
-    /* Open a new file */
-    fff = my_fopen_temp(file_name, 1024);
-    if (!fff) {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
-
-    if (fff)
+    while (!done)
     {
-        /* Print all homes in the different towns */
-        st_ptr = &town[1].store[STORE_HOME];
+        int row, cmd;
+        int page_num = 1 + page_top / page_size;
 
-        /* Home -- if anything there */
-        if (st_ptr->stock_num)
+        clear_from(1);
+        put_str("Your Home", 3, 30);
+        put_str(format("Item Description (Page %d)", page_num), 5, 3);
+        if (show_weights)
+            put_str("Weight", 5, 70);
+
+        row = 6;
+
+        /* Draw the Inventory */
+        for (i = 0; i < page_size; i++, row++)
         {
-            /* Header with name of the town */
-            fprintf(fff, "  [Home Inventory]\n");
+            object_type *o_ptr;
+            char         buf[255];
+            char         o_name[MAX_NLEN];
+            int          col = 3;
 
-            /* Dump all available items */
-            for (i = 0; i < st_ptr->stock_num; i++)
+            col = 3;
+
+            if (page_top + i >= st_ptr->stock_num) break;
+            o_ptr = &st_ptr->stock[page_top + i];
+
+            sprintf(buf, "%c) ", ((i > 25) ? toupper(I2A(i - 26)) : I2A(i)));
+            prt(buf, row, 0);
+            if (show_item_graph)
             {
-                object_desc(o_name, &st_ptr->stock[i], 0);
-                fprintf(fff, "%c%s %s\n", I2A(i%12), paren, o_name);
+                byte a = object_attr(o_ptr);
+                char c = object_char(o_ptr);
 
+                Term_queue_bigchar(col, row, a, c, 0, 0);
+                if (use_bigtile) col++;
+
+                col += 2;
             }
 
-            /* Add an empty line */
-            fprintf(fff, "\n\n");
+            object_desc(o_name, o_ptr, 0);
+            o_name[max_width] = '\0';
+            c_put_str(tval_to_attr[o_ptr->tval], o_name, row, col);
+            if (show_weights)
+            {
+                int wgt = o_ptr->weight;
+                sprintf(buf, "%3d.%d lb", wgt / 10, wgt % 10);
+                put_str(buf, row, 68);
+
+            }
+        }
+
+        /* Commands */
+        row++;
+        prt(" ESC) Quit.", row, 0);
+        if (st_ptr->stock_num > page_size)
+        {
+            prt(" -) Previous page", row + 1, 0);
+            prt(" SPACE) Next page", row + 2, 0);
+        }
+        prt("x) eXamine an item", row, 27);
+
+        cmd = inkey_special(FALSE);
+
+        switch (cmd)
+        {
+        case ESCAPE:
+            done = TRUE;
+            break;
+
+        case '-':
+            if (st_ptr->stock_num <= page_size)
+                msg_print("Entire inventory is shown.");
+            else
+            {
+                page_top -= page_size;
+                if (page_top < 0)
+                    page_top = ((st_ptr->stock_num - 1)/page_size)*page_size;
+            }
+            break;
+
+        case ' ':
+            if (st_ptr->stock_num <= page_size)
+                msg_print("Entire inventory is shown.");
+            else
+            {
+                page_top += page_size;
+                if (page_top >= st_ptr->stock_num)
+                    page_top = 0;
+            }
+            break;
+
+        case 'x':
+            if (st_ptr->stock_num <= 0)
+                msg_print("Your home is empty.");
+            else
+            {
+                int cmd2, which = -1;
+                prt("Which item do you want to examine? ", 0, 0);
+                cmd2 = inkey_special(FALSE);
+                prt("", 0, 0);
+                if (islower(cmd2))
+                    which = A2I(cmd2);
+                else if (isupper(cmd2))
+                    which = A2I(tolower(cmd2)) + 26;
+
+                if (0 <= which && which < page_size && page_top + which < st_ptr->stock_num)
+                {
+                    object_type *o_ptr = &st_ptr->stock[page_top + which];
+                    if (!(o_ptr->ident & IDENT_MENTAL))
+                        msg_print("You have no special knowledge about that item.");
+                    else if (!screen_object(o_ptr, SCROBJ_FORCE_DETAIL))
+                        msg_print("You see nothing special.");
+                }
+            }
+            break;
         }
     }
-
-    /* Close the file */
-    my_fclose(fff);
-
-    /* Display the file contents */
-    show_file(TRUE, file_name, "Home Inventory", 0, 0);
-
-
-    /* Remove the file */
-    fd_kill(file_name);
 }
 
 
@@ -8271,63 +8380,61 @@ static void do_cmd_knowledge_autopick(void)
  */
 void do_cmd_knowledge(void)
 {
-    int i, p = 0;
+    int i, row, col;
     bool need_redraw = FALSE;
 
-    /* File type is "TEXT" */
-    FILE_TYPE(FILE_TYPE_TEXT);
-
-    /* Save the screen */
     screen_save();
 
-    /* Interact until done */
     while (1)
     {
-        /* Clear screen */
         Term_clear();
 
-        /* Ask for a choice */
-        prt(format("page %d/2", (p+1)), 2, 65);
-        prt("Display current knowledge", 3, 0);
+        prt("Display current knowledge", 2, 0);
 
         /* Give some choices */
-        if (p == 0)
-        {
-            int row = 6;
-            prt("(1) Display known artifacts", row++, 5);
-            prt("(2) Display known objects", row++, 5);
-            prt("(3) Display remaining uniques", row++, 5);
-            prt("(4) Display known monster", row++, 5);
-            prt("(5) Display kill count", row++, 5);
-            prt("(6) Display wanted monsters", row++, 5);
-            prt("(7) Display current pets", row++, 5);
-            prt("(8) Display home inventory", row++, 5);
-            prt("(9) Display *identified* equip.", row++, 5);
-            prt("(0) Display terrain symbols.", row++, 5);
-        }
-        else
-        {
-            int row = 6;
-            prt("(a) Display about yourself", row++, 5);
-            prt("(b) Display mutations", row++, 5);
-            prt("(c) Display weapon proficiency", row++, 5);
-            prt("(d) Display spell proficiency", row++, 5);
-            prt("(e) Display misc. proficiency", row++, 5);
-            prt("(f) Display dungeons", row++, 5);
-            prt("(g) Display current quests", row++, 5);
-            prt("(h) Display auto pick/destroy", row++, 5);
-            prt("(i) Display known egos", row++, 5);
-            if (enable_virtues)
-                prt("(v) Display virtues", row++, 5);
-            prt("(w) Display weapon effectiveness", row++, 5);
-            prt("(x) Display extra info", row++, 5);
-        }
+        row = 4;
+        col = 2;
+        c_prt(TERM_RED, "Object Knowledge", row++, col - 2);
+        prt("(a) Artifacts", row++, col);
+        prt("(o) Objects", row++, col);
+        prt("(e) Egos", row++, col);
+        prt("(h) Home Inventory", row++, col);
+        prt("(i) *Identified* Equip.", row++, col);
+        prt("(_) Auto Pick/Destroy", row++, col);
+        row++;
+
+        c_prt(TERM_RED, "Monster Knowledge", row++, col - 2);
+        prt("(m) Known Monsters", row++, col);
+        prt("(w) Wanted Monsters", row++, col);
+        prt("(u) Remaining Uniques", row++, col);
+        prt("(k) Kill Count", row++, col);
+        prt("(p) Pets", row++, col);
+        row++;
+
+        row = 4;
+        col = 30;
+
+        c_prt(TERM_RED, "Dungeon Knowledge", row++, col - 2);
+        prt("(d) Dungeons", row++, col);
+        prt("(q) Quests", row++, col);
+        prt("(t) Terrain Symbols.", row++, col);
+        row++;
+
+        c_prt(TERM_RED, "Self Knowledge", row++, col - 2);
+        prt("(@) About Yourself", row++, col);
+        prt("(M) Mutations", row++, col);
+        if (enable_virtues)
+            prt("(v) Virtues", row++, col);
+        prt("(x) Extra info", row++, col);
+        row++;
+
+        c_prt(TERM_RED, "Skills", row++, col - 2);
+        prt("(P) Proficiency", row++, col);
+        prt("(s) Spell Proficiency", row++, col);
+        row++;
 
         /* Prompt */
-        prt("-more-", 17, 8);
         prt("ESC) Exit menu", 21, 1);
-        prt("SPACE) Next page", 21, 30);
-        /*prt("-) Previous page", 21, 60);*/
         prt("Command: ", 20, 0);
 
         /* Prompt */
@@ -8337,70 +8444,63 @@ void do_cmd_knowledge(void)
         if (i == ESCAPE) break;
         switch (i)
         {
-        case ' ': /* Page change */
-        case '-':
-            p = 1 - p;
-            break;
-        case '1':
+        /* Object Knowledge */
+        case 'a':
             do_cmd_knowledge_artifacts();
             break;
-        case '2':
+        case 'o':
             do_cmd_knowledge_objects(&need_redraw, FALSE, -1);
             break;
-        case 'i':
+        case 'e':
             do_cmd_knowledge_egos(&need_redraw);
             break;
-        case '3':
-            do_cmd_knowledge_uniques();
-            break;
-        case '4':
-            do_cmd_knowledge_monsters(&need_redraw, FALSE, -1);
-            break;
-        case '5':
-            do_cmd_knowledge_kill_count();
-            break;
-        case '6':
-            do_cmd_knowledge_kubi();
-            break;
-        case '7':
-            do_cmd_knowledge_pets();
-            break;
-        case '8':
+        case 'h':
             do_cmd_knowledge_home();
             break;
-        case '9':
+        case 'i':
             do_cmd_knowledge_inven();
             break;
-        case '0':
+        case '_':
+            do_cmd_knowledge_autopick();
+            break;
+
+        /* Monster Knowledge */
+        case 'm':
+            do_cmd_knowledge_monsters(&need_redraw, FALSE, -1);
+            break;
+        case 'w':
+            do_cmd_knowledge_kubi();
+            break;
+        case 'u':
+            do_cmd_knowledge_uniques();
+            break;
+        case 'k':
+            do_cmd_knowledge_kill_count();
+            break;
+        case 'p':
+            do_cmd_knowledge_pets();
+            break;
+
+        /* Dungeon Knowledge */
+        case 'd':
+            do_cmd_knowledge_dungeon();
+            break;
+        case 'q':
+            do_cmd_knowledge_quests();
+            break;
+        case 't':
             {
                 int lighting_level = F_LIT_STANDARD;
                 do_cmd_knowledge_features(&need_redraw, FALSE, -1, &lighting_level);
             }
             break;
-        /* Next page */
-        case 'a':
+
+        /* Self Knowledge */
+        case '@':
             do_cmd_knowledge_stat();
             break;
-        case 'b':
+        case 'M':
             mut_do_cmd_knowledge();
-            break;
-        case 'c':
-            do_cmd_knowledge_weapon_exp();
-            break;
-        case 'd':
-            do_cmd_knowledge_spell_exp();
-            break;
-        case 'e':
-            do_cmd_knowledge_skill_exp();
-            break;
-        case 'f':
-            do_cmd_knowledge_dungeon();
-            break;
-        case 'g':
-            do_cmd_knowledge_quests();
-            break;
-        case 'h':
-            do_cmd_knowledge_autopick();
             break;
         case 'v':
             if (enable_virtues)
@@ -8408,12 +8508,18 @@ void do_cmd_knowledge(void)
             else
                 bell();
             break;
-        case 'w':
-            do_cmd_knowledge_weapon();
-            break;
         case 'x':
             do_cmd_knowledge_extra();
             break;
+
+        /* Skills */
+        case 'P':
+            do_cmd_knowledge_weapon_exp();
+            break;
+        case 's':
+            do_cmd_knowledge_spell_exp();
+            break;
+
         default:
             bell();
         }

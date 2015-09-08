@@ -1011,8 +1011,15 @@ void dump_spells_aux(FILE *fff, spell_info *table, int ct)
     var_init(&vc);
     var_init(&vfm);
 
-    fprintf(fff, "=================================== Spells ====================================\n\n");
-    fprintf(fff, "%-20.20s Lvl Cost Fail %-15.15s Cast Fail\n", "", "Desc");
+    if (character_dump_hack)
+    {
+        fprintf(fff, "=================================== Spells ====================================\n\n");
+        fprintf(fff, "%-20.20s Lvl Cost Fail %-15.15s Cast Fail\n", "", "Desc");
+    }
+    else
+    {
+        fprintf(fff, "\n[[[[r|%-20.20s Lvl Cost Fail %-15.15s Cast Fail\n", "Spells", "Desc");
+    }
     for (i = 0; i < ct; i++)
     {
         spell_info     *spell = &table[i];      
@@ -1087,9 +1094,15 @@ static void _dump_book(FILE *fff, int realm, int book)
     else if (realm == p_ptr->realm2) increment = 32;
 
     if (realm == REALM_HISSATSU)
+    {
+        if (!character_dump_hack)
+            fprintf(fff, "[[[[r|");
         fprintf(fff, "    %-25.25s Lvl  SP %-15.15s  Cast\n", k_name + k_info[k_idx].name, "Desc");
+    }
     else
     {
+        if (!character_dump_hack)
+            fprintf(fff, "[[[[r|");
         if (caster_ptr && (caster_ptr->options & CASTER_USE_HP))
             fprintf(fff, "    %-23.23s Profic Lvl  HP Fail %-15.15s  Cast Fail\n", k_name + k_info[k_idx].name, "Desc");
         else
@@ -1279,7 +1292,10 @@ static void _dump_realm(FILE *fff, int realm)
         {
             if (first)
             {
-                fprintf(fff, "Realm: %s\n\n", realm_names[realm]);
+                if (character_dump_hack)
+                    fprintf(fff, "Realm: %s\n\n", realm_names[realm]);
+                else
+                    fprintf(fff, "[[[[r|Realm:| [[[[B|%s|\n\n", realm_names[realm]);
                 first = FALSE;    
             }
             _dump_book(fff, realm, i);
@@ -1289,7 +1305,8 @@ static void _dump_realm(FILE *fff, int realm)
 
 void spellbook_character_dump(FILE *fff)
 {
-    fprintf(fff, "\n==================================== Spells ===================================\n\n");
+    if (character_dump_hack)
+        fprintf(fff, "\n==================================== Spells ===================================\n\n");
 
     if (p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_SORCERER)
     {
