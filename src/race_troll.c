@@ -95,6 +95,12 @@ static void _super_attack_spell(int cmd, variant *res)
     case SPELL_CAST:
         var_set_bool(res, do_blow(PY_POWER_ATTACK));
         break;
+    case SPELL_ON_BROWSE:
+        display_weapon_mode = PY_POWER_ATTACK;
+        do_cmd_knowledge_weapon();
+        display_weapon_mode = 0;
+        var_set_bool(res, TRUE);
+        break;
     default:
         default_spell(cmd, res);
         break;

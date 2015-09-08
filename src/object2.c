@@ -2925,7 +2925,8 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
         o_ptr->name2 = _get_random_ego(EGO_TYPE_AMULET);
         done = TRUE;
         if ( force_great
-          && o_ptr->name2 != EGO_AMULET_DEFENDER )
+          && o_ptr->name2 != EGO_AMULET_DEFENDER
+          && o_ptr->name2 != EGO_AMULET_HERO )
         {
             done = FALSE;
         }
@@ -3093,6 +3094,8 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
         o_ptr->to_d = randint1(3) + m_bonus(5, level);
         if (one_in_(3)) add_flag(o_ptr->art_flags, TR_SLOW_DIGEST);
         if (one_in_(3)) add_flag(o_ptr->art_flags, TR_SUST_CON);
+        if (one_in_(3)) add_flag(o_ptr->art_flags, TR_SUST_STR);
+        if (one_in_(3)) add_flag(o_ptr->art_flags, TR_SUST_DEX);
         if (one_in_(ACTIVATION_CHANCE))
             effect_add_random(o_ptr, BIAS_WARRIOR);
         break;

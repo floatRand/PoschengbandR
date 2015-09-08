@@ -3717,7 +3717,7 @@ static int collect_monsters(int grp_cur, s16b mon_idx[], byte mode)
  */
 static cptr object_group_text[] = 
 {
-    "Mushrooms",
+    "Food",
     "Potions",
 /*  "Flasks", */
     "Scrolls",

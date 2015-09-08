@@ -2166,6 +2166,9 @@ static void player_immunity(u32b flgs[TR_FLAG_SIZE])
     /* TODO: Move to warlock.c */
     if (p_ptr->pclass == CLASS_WARLOCK && p_ptr->psubclass == PACT_DEMON && p_ptr->lev > 49)
         add_flag(flgs, TR_RES_FIRE);
+
+    if (p_ptr->super_regenerate)
+        add_flag(flgs, TR_REGEN);
 }
 
 static void tim_player_immunity(u32b flgs[TR_FLAG_SIZE])

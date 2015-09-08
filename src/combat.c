@@ -480,6 +480,10 @@ int display_weapon_info(int hand, int row, int col)
         num_blow = 100;
         to_h -= 50;
         break;
+    case PY_POWER_ATTACK:
+        to_h += 10;
+        to_d += p_ptr->lev / 2;
+        break;
     }
 
     weapon_flags_known(hand, flgs);

@@ -48,22 +48,21 @@ acquirement#!*
 ?unidentified rings
 ?unidentified amulets
 
-rod: angelic healing#@zh
-?staff: healing#@uh
-?staff: speed#@us
-?staff: destruction#@ud
+rod: angelic healing#@zh!s!d!k
+?staff: healing#@uh!s!d!k
+?staff: speed#@us!s!d!k
+?staff: destruction#@ud!s!d!k
 ?wand: rocket#@ar!s!d!k
 ?wand: disintegrate#@ad!s!d!k
 
 ?:[OR [EQU $CLASS Mage High-Mage] [EQU $RACE Beholder Lich] ]
 wizardstaff
+?:1
 
-?:[EQU $CLASS Magic-Eater Devicemaster]
 unidentified magical devices:rod
 unidentified magical devices:staff
 unidentified magical devices:wand
 
-?:1
 
 #########################################
 # Armor
