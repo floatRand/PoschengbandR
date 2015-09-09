@@ -4120,7 +4120,7 @@ void do_cmd_load_screen(void)
 
 
 cptr inven_res_label = 
- "                               AcElFiCoPoLiDkShSoNtNxCaDi BlFeCfFaSeHlEpSdRgLv";
+ "                               AcElFiCoPoLiDkShSoNtNxCaDi BlFeCfFaSiHlEpSdRgLv";
 
 
 #define IM_FLAG_STR  "* "
@@ -6741,6 +6741,14 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
     }
     grp_idx[grp_cnt] = -1;
 
+    if (!grp_cnt)
+    {
+        prt("You haven't found any egos just yet. Press any key to continue.", 0, 0);
+        inkey();
+        prt("", 0, 0);
+        return;
+    }
+
     ego_cnt = 0;
 
     old_grp_cur = -1;
@@ -8177,9 +8185,9 @@ static void do_cmd_knowledge_home(void)
 {
     int         w, h, i;
     int         page_size, page_top = 0;
-    int         max_width = show_weights ? 65 : 75;
     store_type *st_ptr = &town[1].store[STORE_HOME];
     bool        done = FALSE;
+    bool        show_weights2 = show_weights;
 
     Term_get_size(&w, &h);
     Term_clear();
@@ -8190,11 +8198,12 @@ static void do_cmd_knowledge_home(void)
     {
         int row, cmd;
         int page_num = 1 + page_top / page_size;
+        int max_width = show_weights2 ? 65 : 75;
 
         clear_from(1);
         put_str("Your Home", 3, 30);
         put_str(format("Item Description (Page %d)", page_num), 5, 3);
-        if (show_weights)
+        if (show_weights2)
             put_str("Weight", 5, 70);
 
         row = 6;
@@ -8228,7 +8237,7 @@ static void do_cmd_knowledge_home(void)
             object_desc(o_name, o_ptr, 0);
             o_name[max_width] = '\0';
             c_put_str(tval_to_attr[o_ptr->tval], o_name, row, col);
-            if (show_weights)
+            if (show_weights2)
             {
                 int wgt = o_ptr->weight;
                 sprintf(buf, "%3d.%d lb", wgt / 10, wgt % 10);
@@ -8246,6 +8255,10 @@ static void do_cmd_knowledge_home(void)
             prt(" SPACE) Next page", row + 2, 0);
         }
         prt("x) eXamine an item", row, 27);
+        if (show_weights2)
+            prt("w) Hide Weights", row + 1, 27);
+        else
+            prt("w) Show Weights", row + 1, 27);
 
         cmd = inkey_special(FALSE);
 
@@ -8253,6 +8266,10 @@ static void do_cmd_knowledge_home(void)
         {
         case ESCAPE:
             done = TRUE;
+            break;
+
+        case 'w':
+            show_weights2 = show_weights2 ? FALSE : TRUE;
             break;
 
         case '-':

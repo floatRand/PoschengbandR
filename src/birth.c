@@ -431,6 +431,13 @@ static bool _valid_personality(int which)
 
 static int _prompt_personality(void)
 {
+    if (game_mode == GAME_MODE_BEGINNER)
+    {
+        p_ptr->personality = PERS_ORDINARY;
+        ap_ptr = &seikaku_info[p_ptr->personality]; /* TODO: Remove this ... */
+        return p_ptr->personality;
+    }
+
     for (;;)
     {
         char   tmp[80];
@@ -1901,7 +1908,7 @@ static bool _prompt_game_mode(void)
     for (;;)
     {
         int idx;
-        menu_t menu = { "Mode", "birth.txt", "Choose which kind of game to play.",
+        menu_t menu = { "Mode", "tang.txt", "Choose which kind of game to play.",
                             _game_mode_menu_fn,
                             NULL, GAME_MODE_MAX};
 
