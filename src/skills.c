@@ -172,6 +172,41 @@ bool skills_weapon_is_icky(int tval, int sval)
     return result;
 }
 
+int skills_weapon_calc_bonus(int tval, int sval)
+{
+    int current = skills_weapon_current(tval, sval);
+    int bonus = (current - WEAPON_EXP_BEGINNER) / 200; /* -20 to +20 */
+
+    return bonus;
+}
+
+cptr skills_weapon_describe_current(int tval, int sval)
+{
+    int         current = skills_weapon_current(tval, sval);
+    cptr        desc;
+    static char buf[MAX_NLEN];
+
+    buf[0] = '\0';
+
+    if (current < WEAPON_EXP_BEGINNER)
+        desc = "Unskilled";
+    else if (current < WEAPON_EXP_SKILLED)
+        desc = "Beginner";
+    else if (current < WEAPON_EXP_EXPERT)
+        desc = "Skilled";
+    else if (current < WEAPON_EXP_MASTER)
+        desc = "Expert";
+    else
+        desc = "Master";
+
+    if (current == skills_weapon_max(tval, sval))
+    {
+        sprintf(buf, "!%s", desc);
+        return buf;
+    }
+    return desc;
+}
+
 void skills_martial_arts_gain(void)
 {
     int current = p_ptr->skill_exp[SKILL_MARTIAL_ARTS];

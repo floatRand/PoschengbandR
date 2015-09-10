@@ -4722,9 +4722,9 @@ void calc_bonuses(void)
             }
             else
             {
-                int skill = skills_weapon_current(obj->tval, obj->sval);
-                p_ptr->weapon_info[i].to_h += (skill - WEAPON_EXP_BEGINNER) / 200;
-                p_ptr->weapon_info[i].dis_to_h += (skill - WEAPON_EXP_BEGINNER) / 200;
+                int bonus = skills_weapon_calc_bonus(obj->tval, obj->sval);
+                p_ptr->weapon_info[i].to_h += bonus;
+                p_ptr->weapon_info[i].dis_to_h += bonus;
                 if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC)
                 {
                     if (skills_weapon_is_icky(obj->tval, obj->sval))

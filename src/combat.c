@@ -561,6 +561,12 @@ int display_weapon_info(int hand, int row, int col)
     sprintf(buf, " %-7.7s: %d.%d lbs", "Weight", o_ptr->weight/10, o_ptr->weight%10);
     put_str(buf, r++, c);
 
+    sprintf(buf, " %-7.7s: %s (%+d To Hit)",
+                "Profic",
+                skills_weapon_describe_current(o_ptr->tval, o_ptr->sval),
+                skills_weapon_calc_bonus(o_ptr->tval, o_ptr->sval));
+    put_str(buf, r++, c);
+
     sprintf(buf, " %-7.7s: %d + %d = %d", "To Hit", to_h, p_ptr->weapon_info[hand].to_h, to_h + p_ptr->weapon_info[hand].to_h);
     put_str(buf, r++, c);
 
