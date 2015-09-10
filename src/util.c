@@ -1869,6 +1869,17 @@ static char inkey_aux(void)
      * in ncurses. Alas, the culprit is our macro processing system! */
     if (ch == 27)
         max_delay = 10;
+    else /* if (ch == SHIFT?) */
+    {
+        /* More Curses Problems: I'm finding these pauses unacceptable. By
+         * default, the curses port defines many macros that also begin with
+         * shift, among other things. This means that every time I run I
+         * get what seems like a 2s delay. I know the delay is only 550ms, but
+         * it feels like it lasts forever and makes the game unplayable! */
+        max_delay = 30; /* I can detect it at 40 which should be only a 100ms
+                         * delay. This is physiologically impossible, so there
+                         * must be a delay bug someplace in the curses port */
+    }
 #endif 
     
     /* Wait for a macro, or a timeout */
