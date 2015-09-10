@@ -1,68 +1,89 @@
-===  Command Descriptions ===
+  [[[[B|Command Descriptions
 
-The following command descriptions are listed as the command name plus
-the "underlying command" key. This is followed by the command name and
-"roguelike" keyset key, if different from the underlying command key.
-Then comes a brief description of the command, including information
-about alternative methods of specifying the command in each keyset,
-when needed. Several commands (tunnel, disarm, bash, open) are repeated
-99 times if the "always_repeat" option is set and no repeat count is
-given. Some commands use the "repeat count" to automatically repeat the
-command several times, while others use the "repeat count" as an
-"argument", for example, commands which need a "quantity" will use the
-"repeat count" instead of asking for a quantity, allowing the use of
-"0d" for "drop all". Commands which ask for a quantity will convert any
-"letters" into the maximal legal value.
+  The following command descriptions are listed as the command name plus
+  the "underlying command" key. This is followed by the command name and
+  "roguelike" keyset key, if different from the underlying command key.
+  Then comes a brief description of the command, including information
+  about alternative methods of specifying the command in each keyset,
+  when needed. Several commands (tunnel, disarm, bash, open) are repeated
+  99 times if the "always_repeat" option is set and no repeat count is
+  given. Some commands use the "repeat count" to automatically repeat the
+  command several times, while others use the "repeat count" as an
+  "argument", for example, commands which need a "quantity" will use the
+  "repeat count" instead of asking for a quantity, allowing the use of
+  "0d" for "drop all". Commands which ask for a quantity will convert any
+  "letters" into the maximal legal value.
 
 
 ***** <Inventory>
----  Inventory Commands ---
+  [[[[r|Inventory Commands
 
-Inventory list (i)
+  [[[[U|Inventory list (i)
      Displays a list of objects being carried but not equipped. You can
-     carry up to 23 different items, not counting those in your
+     carry up to 26 different items, not counting those in your
      equipment. Often, many identical objects can be "stacked" into a
      "pile" which will count as a single item. This is always true of
-     things like potions, scrolls, and food, but you may have to set
-     options to allow wands, staves, and other such objects to stack.
-     Each object has a weight, and if you carry more objects than your
-     strength permits, you will begin to slow down.
+     things like potions, scrolls, food, ammo and spellbooks. Basically,
+     if two objects are exactly the same, they will stack into a single
+     pile in your inventory. Each object also has a weight, and if you
+     carry more objects than your strength permits, you will begin to
+     slow down.
  
-Equipment list (e)
+  [[[[U|Equipment list (e)
      Use this command to display a list of the objects currently being
-     used by your character. Your character has 12 slots for equipment,
-     each corresponding to a different location on the body, and each
-     of which may contain only a single object at a time, and each of
-     which may only contain objects of the proper "type", and which
-     include WIELD (weapon), BOW (missile launcher), LEFT (ring), RIGHT
-     (ring), NECK (amulet), LITE (light source), BODY (armor), OUTER
-     (cloak), ARM (shield), HEAD (helmet), HANDS (gloves), FEET
-     (boots). You must be using an object to receive any of its special
-     powers.
+     used by your character. Your character typically has 12 slots for
+     equipment each corresponding to a different location on the body,
+     and each of which may contain only a single object at a time, and
+     each of which may only contain objects of the proper type. Note,
+     that some races and most monster forms have a different type from
+     the typical humanoid, so the number and types of your equipment slots
+     can vary. However, most of the time, your body will look something
+     like the following sample (Taken from a starting Warrior):
 
-Drop an item (d)
+     a) | Right Hand: a Broad Sword (2d5) (+0,+0)      15.0 lb
+     b) [[[[U|)| Left Hand : [[[[U|a Small Leather Shield [3,+0]|     5.0 lb
+     c) [[[[s|}| Shooting  : [[[[U|a Light Crossbow (x4) (+0,+0)|    11.0 lb
+     d)   Right Ring:
+     e)   Left Ring :
+     f)   Neck      :
+     g)   Light     :
+     h) [[[[s|[| Body      : [[[[s|Chain Mail (-2) [14,+0]|          22.0 lb
+     i)   Cloak     :
+     j)   Head      :
+     k)   Hands     :
+     l)   Feet      :
+
+     Each slot has a descriptive label, like "Right Hand" that determines
+     what type of object it may receive, like a weapon or shield. And yes,
+     you can wield a weapon in either hand, or even in both (Using the skill
+     of Dual Wielding). You can even wear two shields if you aren't using
+     melee fighting at all. The choice is yours! The types for each slot
+     should be easy to figure out: Helmets go on your "Head" slot and Gloves
+     go on your "Hands", etc.
+
+  [[[[U|Drop an item (d)
      This drops an item from your inventory or equipment onto the
      dungeon floor. If the floor spot you are standing on already has
-     an object in it, PosChengband will attempt to drop the item onto an
+     an object in it, the game will attempt to drop the item onto an
      adjacent space. Be warned that if the floor is full and you
      attempt to drop something, it may disappear and be destroyed.
      Doors and traps are considered objects for the purpose of
      determining if the space is occupied. If the selected pile
      contains multiple items, you may specify a quantity.
 
-Destroy an item (k) or Destroy an item (^D)
+  [[[[U|Destroy an item (k) or Destroy an item (^D)
      This destroys an item in your inventory or on the dungeon floor.
      If the selected pile contains multiple objects, you may specify
      a quantity. You must always (currently) verify this command.
 
-Wear/Wield equipment (w)
+  [[[[U|Wear/Wield equipment (w)
      To wear or wield an object in your inventory, use this command.
      Since only one object can be in each slot at a time, if you wear
      or wield an item into a slot which is already occupied, the old
      item will be first be taken off, and may in fact be dropped if
      there is no room for it in your inventory.
 
-Take off equipment (t) or Take off equipment (T)
+  [[[[U|Take off equipment (t) or Take off equipment (T)
      Use this command to take off a piece of equipment and return it
      to your inventory. Occasionally, you will run into a cursed item
      which cannot be removed. These items normally penalize you in some
@@ -72,10 +93,9 @@ Take off equipment (t) or Take off equipment (T)
 
 
 ***** <Movement>
----  Movement Commands ---
+  [[[[r|Movement Commands
 
-Walk (with pickup) (;)
-
+  [[[[U|Walk (with pickup) (;)
      Moves one step in the given direction. The square you are moving
      into must not be blocked by walls or doors. You will pick up any
      items in the destination grid if the "always_pickup" option is
@@ -86,7 +106,7 @@ Walk (with pickup) (;)
      walk in a direction. If object auto-picker/destroyer is set up,
      specified objects will be picked up or destroyed.
 
-Walk (flip pickup) (-)
+  [[[[U|Walk (flip pickup) (-)
      This is just like normal move, except that the "Pick things up"
      option is inverted. In other words, if you normally pick up
      anything you encounter (the default), you will not pick things up
@@ -95,7 +115,7 @@ Walk (flip pickup) (-)
      and requires a direction.  If object auto-picker/destroyer is set
      up, specified objects will be picked up or destroyed.
 
-Run (.) or Run (,)
+  [[[[U|Run (.) or Run (,)
      This command will move in the given direction, following any
      bends in the corridor, until you either have to make a "choice"
      between two directions or you are disturbed. You can configure
@@ -106,8 +126,7 @@ Run (.) or Run (,)
      in a direction. If object auto-picker/destroyer is set up,
      specified objects will be picked up or destroyed.
 
-
-Go up staircase (<)
+  [[[[U|Go up staircase (<)
      Climbs up when you are standing on an up staircase. In the
      wilderness, enter global map mode which grants you a view of all
      the world unless there are some monsters in the nearby area.
@@ -116,14 +135,13 @@ Go up staircase (<)
      except for the town level (this doesn't mean it's easy to
      find). Going up a staircase will take you to a new dungeon level
      unless you are at 50 feet (dungeon level 1), in which case you
-     will return to the town level. Note that whenever you leave a
-     level (not the town), you will never find it again. This means
-     that for all intents and purposes, any objects on that level are
-     destroyed. This includes artifacts unless the "Create characters
-     in preserve mode" option was set when your character was created,
-     in which case the artifacts may show up again later.
+     will return to the town level. Note that unlike many other variants,
+     levels are persistent. This means if you go back down the same stairs
+     you will re-enter the level you just left. Once you go back to town,
+     however, all of the previously visited floors are forgotten, and you
+     will need to explore anew.
 
-Go down staircase (>)
+  [[[[U|Go down staircase (>)
      Descends when you are standing on a down staircase. In the
      wilderness, return from global map mode to normal mode.
 
@@ -135,16 +153,16 @@ Go down staircase (>)
 
 
 ***** <Resting>
---- Resting Commands ---
+  [[[[r|Resting Commands
 
-Stay still (with pickup) (,) or Stay still (with pickup) (.)
+  [[[[U|Stay still (with pickup) (,) or Stay still (with pickup) (.)
      Stays in the same square for one move. If you normally pick up
      objects you encounter, you will pick up whatever you are standing
      on. This command can take a count. You may also use the "5" key
      (both keysets).  If object auto-picker/destroyer is set up,
      specified objects will be picked up or destroyed.
 
-Stay still (flip pickup) (g)
+  [[[[U|Stay still (flip pickup) (g)
      Stays in the same square for one move. If you normally pick up
      objects you encounter, you will not pick up whatever you are
      standing on. If you normally do not pick up objects, you will
@@ -153,7 +171,7 @@ Stay still (flip pickup) (g)
      take a count.  If object auto-picker/destroyer is set up,
      specified objects will be picked up or destroyed.
 
-Rest (R)
+  [[[[U|Rest (R)
      Resting is better for you than repeatedly staying still, and can
      be told to automatically stop after a certain amount of time, or
      when various conditions are met. In any case, you always wake up
@@ -166,9 +184,9 @@ Rest (R)
 
 
 ***** <Searching>
---- Searching Commands ---
+  [[[[B|Searching Commands
 
-Search (s)
+  [[[[U|Search (s)
      This command can be used to locate hidden traps and secret doors
      in the spaces adjacent to the player. More than a single turn of
      searching will be required in most cases. You should always search
@@ -177,7 +195,7 @@ Search (s)
      are fairly sure of finding something eventually, since the command
      stops as soon as anything is found. This command can take a count.
 
-Toggle search mode (S) or Toggle search mode (#)
+  [[[[U|Toggle search mode (S) or Toggle search mode (#)
      This command will take you into and out of search mode. When first
      pressed, the message "Searching" will appear at the bottom of the
      screen. You are now taking two turns for each command, one for the
@@ -189,9 +207,9 @@ Toggle search mode (S) or Toggle search mode (#)
 
 
 ***** <Alter>
----  Alter Commands ---
+  [[[[B|Alter Commands
 
-Tunnel (T) or Tunnel (^T)
+  [[[[U|Tunnel (T) or Tunnel (^T)
      Tunneling or mining is a very useful art. There are many kinds of
      rock, with varying hardness, including permanent rock (permanent),
      granite (very hard), quartz veins (hard), magma veins (soft), and
@@ -204,7 +222,7 @@ Tunnel (T) or Tunnel (^T)
      requires a direction, and is affected by the "always_repeat"
      option.
 
-Open a door or chest (o)
+  [[[[U|Open a door or chest (o)
      To open an object such as a door or chest, you must use this
      command. If the object is locked, you will attempt to pick the
      lock based on your disarming ability. If you open a trapped chest
@@ -214,14 +232,14 @@ Open a door or chest (o)
      requires a direction, and is affected by the "always_repeat"
      option.
 
-Close a door (c)
+  [[[[U|Close a door (c)
      Non-intelligent and some other creatures cannot open doors, so
      shutting doors can be quite valuable. Broken doors cannot be
      closed. Bashing a door open may break it. Close can take a count,
      requires a direction, and is affected by the "always_repeat"
      option.
 
-Jam a door (j) or Spike a door (S)
+  [[[[U|Jam a door (j) or Spike a door (S)
      Many monsters can simply open closed doors, and can eventually
      get through a locked door. You may therefore occasionally want
      to jam a door shut with iron spikes. Each spike used on the door
@@ -230,7 +248,7 @@ Jam a door (j) or Spike a door (S)
      use this command, you must be carrying iron spikes. Jam or Spike
      requires a direction.
 
-Bash a door (B) or Force a door (f)
+  [[[[U|Bash a door (B) or Force a door (f)
      This command allows you to bash down jammed doors. Your bashing
      ability increases with strength. Bashing open a door can (briefly)
      throw you off balance. Doors that are stuck, or which have been
@@ -240,14 +258,14 @@ Bash a door (B) or Force a door (f)
      Force can take a count, requires a direction, and is affected by
      the "always_repeat" option.
 
-Disarm a trap or chest (D)
+  [[[[U|Disarm a trap or chest (D)
      You can attempt to disarm traps on the floor or on chests. If you
      fail, there is a chance that you will blunder and set it off. You
      can only disarm a trap after you have found it (usually with the
      Search command). Disarm can take a count, requires a direction,
      and is affected by the "always_repeat" option.
 
-Alter (+)
+  [[[[U|Alter (+)
      This special command allows the use of a single keypress to select
      any of the "obvious" commands above (attack, tunnel, bash, open,
      disarm, close), and, by using macros or keymaps, to combine this
@@ -260,9 +278,9 @@ Alter (+)
 
 
 ***** <SpellPrayer>
----  Spell and Prayer Commands ---
+  [[[[B|Spell and Prayer Commands
 
-Browse magic list (b) or Peruse magic list (P)
+  [[[[U|Browse magic list (b) or Peruse magic list (P)
      All characters which can cast spells can use this command. When
      this command is used, all of the spells contained in the selected
      magic are displayed, along with such information as their level,
@@ -270,7 +288,7 @@ Browse magic list (b) or Peruse magic list (P)
      know the spell.  And when you select a spell from the list,
      description text of selected spell will be displayed.
 
-Gain new spells or prayers (G)
+  [[[[U|Gain new spells or prayers (G)
      Use this command to actually learn new spells or prayers. When you
      are able to learn new spells or prayers, the word "Study" will
      appear on the status line at the bottom of the screen. If you have
@@ -736,4 +754,5 @@ Updated    : (2.7.9) by Ben Harrison (benh@phial.com)
 Updated    : Zangband 2.2.0 through 2.2.6c by Robert Ruehlmann
 Updated    : Zangband DevTeam
 Updated    : Hengband 1.7.0
+Updated    : PosChengband 4.0.0
 

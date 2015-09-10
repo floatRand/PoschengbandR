@@ -268,14 +268,14 @@
 
   [[[[r|Inscription Effect
   [[[[r|=========== =====================================================
-  [[[[y|    @1|      Select this object whenever '1' is pressed in any cmd
-  [[[[y|   @w7|      Select this object whenever '7' is pressed after 'w'
-  [[[[y|    !*|      Verify using this object for all commands
-  [[[[y|    !q|      Verify using this object for the 'q' command.
-  [[[[y|    !!|      Notify when the item is fully recharged
-  [[[[y|    =g|      Always pickup (get) this objects. Useful for ammo.
-  [[[[y|     .|      Suppress prompt for random teleportation
-  [[[[y|     $|      Suppress prompt for warning
+  [[[[w|    @1|      Select this object whenever '1' is pressed in any cmd
+  [[[[w|   @w7|      Select this object whenever '7' is pressed after 'w'
+  [[[[w|    !*|      Verify using this object for all commands
+  [[[[w|    !q|      Verify using this object for the 'q' command.
+  [[[[w|    !!|      Notify when the item is fully recharged
+  [[[[w|    =g|      Always pickup (get) this objects. Useful for ammo.
+  [[[[w|     .|      Suppress prompt for random teleportation
+  [[[[w|     $|      Suppress prompt for warning
 
 -- 
 Original   : Alexander Cutler and Andy Astrand

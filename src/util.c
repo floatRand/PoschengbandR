@@ -2254,6 +2254,13 @@ char inkey(void)
             /* Strip this key */
             ch = 0;
 
+            /* Grab a screen dump to embed in documentation.
+               On curses, you can only use the ')' command at
+               certain points while I would ambitiously like
+               to document much much more :) This little hook
+               is awesome, btw! */
+            do_cmd_save_screen_doc();
+
             /* Continue */
             continue;
         }

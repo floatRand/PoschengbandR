@@ -4468,6 +4468,54 @@ static void do_cmd_save_screen_html(void)
     do_cmd_save_screen_html_aux(buf, 1);
 }
 
+/* This is for embedding screen shots in the help documentation.
+ * show_file() handles colors with embedded [[[[?| directives. */
+void do_cmd_save_screen_doc(void)
+{
+    int   y, x;
+    byte  a = 0;
+    char  c = ' ';
+    char  buf[1024];
+    FILE *fff;
+    int wid, hgt;
+
+    path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "screen.txt");
+    FILE_TYPE(FILE_TYPE_TEXT);
+    fff = my_fopen(buf, "w");
+    if (!fff)
+    {
+        msg_format("Failed to open file %s.", buf);
+        msg_print(NULL);
+        return;
+    }
+
+    Term_get_size(&wid, &hgt);
+
+    for (y = 0; y < hgt; y++)
+    {
+        int  current_a = -1;
+        char row[255];
+
+        row[0] = '\0';
+        for (x = 0; x < wid - 1; x++)
+        {
+
+            (void)(Term_what(x, y, &a, &c));
+
+            if (a != current_a)
+            {
+                if (current_a >= 0)
+                    strcat(row, "|"); /* I'm not sure this is necessary ... */
+                strcat(row, format("[[[[%c|", hack[a&0x0F]));
+                current_a = a;
+            }
+            strcat(row, format("%c", c));
+        }
+        fprintf(fff, "%s\n", row);
+    }
+
+    my_fclose(fff);
+}
 
 /*
  * Redefinable "save_screen" action
@@ -4482,10 +4530,11 @@ void do_cmd_save_screen(void)
 {
     bool old_use_graphics = use_graphics;
     bool html_dump = FALSE;
+    bool doc_dump = FALSE; /* For documentation: Embed attributes for a later show_file() */
 
     int wid, hgt;
 
-    prt("Save screen dump? [(y)es/(h)tml/(n)o] ", 0, 0);
+    prt("Save screen dump? [(y)es/(h)tml/(d)oc/(n)o] ", 0, 0);
     while(TRUE)
     {
         char c = inkey();
@@ -4494,6 +4543,11 @@ void do_cmd_save_screen(void)
         else if (c == 'H' || c == 'h')
         {
             html_dump = TRUE;
+            break;
+        }
+        else if (c == 'D' || c == 'd')
+        {
+            doc_dump = TRUE;
             break;
         }
         else
@@ -4522,7 +4576,11 @@ void do_cmd_save_screen(void)
         do_cmd_save_screen_html();
         do_cmd_redraw();
     }
-
+    else if (doc_dump)
+    {
+        do_cmd_save_screen_doc();
+        msg_print("Screen dump saved to screen.txt");
+    }
     /* Do we use a special screendump function ? */
     else if (screendump_aux)
     {
@@ -4586,7 +4644,7 @@ void do_cmd_save_screen(void)
         fprintf(fff, "\n");
 
 
-        /* Dump the screen */
+        /* Dump the attributes */
         for (y = 0; y < hgt; y++)
         {
             /* Dump each row */
@@ -5057,7 +5115,7 @@ void do_cmd_knowledge_weapon(void)
 
         if (r > 0 && h - r < 15)
         {
-            c_prt(TERM_WHITE, "Press Any Key to Display Additional Attacks", r, 0);
+            c_prt(TERM_WHITE, "Press Any Key to Display Additional Attacks", r, 1);
             flush();
             (void)inkey();
             Term_clear();
@@ -5074,7 +5132,7 @@ void do_cmd_knowledge_weapon(void)
     {
         if (r > 0 && h - r < 15)
         {
-            c_prt(TERM_WHITE, "Press Any Key to Display Additional Attacks", r, 0);
+            c_prt(TERM_WHITE, "Press Any Key to Display Additional Attacks", r, 1);
             flush();
             (void)inkey();
             Term_clear();
@@ -5086,7 +5144,7 @@ void do_cmd_knowledge_weapon(void)
 
     if (r > 0)
     {
-        c_prt(TERM_WHITE, "Press Any Key when Finished", r, 0);
+        c_prt(TERM_WHITE, "Press Any Key when Finished", r, 1);
         flush();
         (void)inkey();
         displayed = TRUE;
