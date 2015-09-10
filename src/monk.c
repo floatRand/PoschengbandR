@@ -130,7 +130,7 @@ int monk_get_attack_idx(void)
     return _get_attack_idx(p_ptr->lev, p_ptr->special_defense);
 }
 
-void monk_display_attack_info(int hand, int row, int col)
+int monk_display_attack_info(int hand, int row, int col)
 {
     _attack_t counts[MAX_MA];
     int i;
@@ -143,7 +143,9 @@ void monk_display_attack_info(int hand, int row, int col)
     int to_d = p_ptr->weapon_info[hand].to_d * 100;
     int r = row, c = col;
     critical_t crit;
+    int result = row;
 
+    /* First Column */
     sprintf(buf, "%-15s %6s %6s %7s", "Attack", "Dice", "Pct", "Dam");
     c_put_str(TERM_YELLOW, buf, r++, c);
 
@@ -156,7 +158,7 @@ void monk_display_attack_info(int hand, int row, int col)
         char tmp[20];
         int dam = dd * (ds + 1) * 100 * counts[i].count / (2 * tot);
 
-    /*    if (counts[i].count == 0) continue; */
+    /*  if (counts[i].count == 0) continue; */
 
         tot_dam += dam;
         tot_mul += counts[i].mul;
@@ -181,6 +183,9 @@ void monk_display_attack_info(int hand, int row, int col)
     sprintf(buf, "%20s %3d.%02d  +%3d.%02d", "One Strike:", tot_dam/100, tot_dam%100, to_d/100, to_d%100);
     put_str(buf, r++, c + 10);
 
+    result = MAX(result, r);
+
+    /* Second Column */
     r = row;
     c = col + 40;
 
@@ -239,6 +244,9 @@ void monk_display_attack_info(int hand, int row, int col)
         c_put_str(TERM_RED, "      Pois:", r, c+1);
         put_str(buf, r++, c+12);
     }
+    result = MAX(result, r);
+
+    return result;
 }
 
 static bool _monk_check_spell(void)

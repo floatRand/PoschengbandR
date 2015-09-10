@@ -5042,56 +5042,57 @@ static void do_cmd_knowledge_shooter(void)
 
 void do_cmd_knowledge_weapon(void)
 {
-    int i, r;
-    int used_hands[MAX_HANDS];
-    int ct = 0;
+    int  i, r;
+    int  w, h;
     bool displayed = FALSE;
 
-    screen_save();
+    Term_get_size(&w, &h);
 
+    screen_save();
+    Term_clear();
+    r = 0;
     for (i = 0; i < MAX_HANDS; i++)
     {
         if (p_ptr->weapon_info[i].wield_how == WIELD_NONE) continue;
-        used_hands[ct++] = i;
-    }
 
-    for (i = 0; i < ct;)
-    {
-        int hand = used_hands[i++];
-        Term_clear();
-        if (p_ptr->weapon_info[hand].bare_hands)
+        if (r > 0 && h - r < 15)
         {
-            monk_display_attack_info(hand, 0, 1);
+            c_prt(TERM_WHITE, "Press Any Key to Display Additional Attacks", r, 0);
+            flush();
+            (void)inkey();
+            Term_clear();
+            r = 0;
             displayed = TRUE;
         }
+        if (p_ptr->weapon_info[i].bare_hands)
+            r = monk_display_attack_info(i, r, 0) + 2;
         else
-        {
-            r = display_weapon_info(hand, 0, 1);
-            if (i < ct && r < 20 && !p_ptr->weapon_info[used_hands[i]].bare_hands)
-            {
-                hand = used_hands[i++];
-                display_weapon_info(hand, r+2, 1);
-            }
-            displayed = TRUE;
-        }
-
-        flush();
-        (void)inkey();
+            r = display_weapon_info(i, r, 0) + 2;
     }
 
-    for (i = 0; i < p_ptr->innate_attack_ct;)
+    for (i = 0; i < p_ptr->innate_attack_ct; i++)
     {
-        Term_clear();
-        r = display_innate_attack_info(i++, 0, 1);
-        if (i < p_ptr->innate_attack_ct && r < 20)
-            display_innate_attack_info(i++, r+2, 1);
-        displayed = TRUE;
+        if (r > 0 && h - r < 15)
+        {
+            c_prt(TERM_WHITE, "Press Any Key to Display Additional Attacks", r, 0);
+            flush();
+            (void)inkey();
+            Term_clear();
+            r = 0;
+            displayed = TRUE;
+        }
+        r = display_innate_attack_info(i, r, 0) + 2;
+    }
+
+    if (r > 0)
+    {
+        c_prt(TERM_WHITE, "Press Any Key when Finished", r, 0);
         flush();
         (void)inkey();
+        displayed = TRUE;
     }
 
     screen_load();
-
     if (!displayed)
         msg_print("You are not wielding any weapons.");
 }

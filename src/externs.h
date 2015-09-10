@@ -2219,7 +2219,7 @@ extern void monk_double_attack_spell(int cmd, variant *res);
 extern void monk_posture_spell(int cmd, variant *res);
 extern int  monk_get_attack_idx(void);
 extern critical_t monk_get_critical(martial_arts *ma_ptr, int hand, int mode);
-extern void monk_display_attack_info(int hand, int row, int col);
+extern int  monk_display_attack_info(int hand, int row, int col);
 
 /* mystic.c */
 extern class_t *mystic_get_class_t(void);
