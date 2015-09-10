@@ -1860,27 +1860,28 @@ static char inkey_aux(void)
     /* No macro pending */
     if (k < 0) return (ch);
 
-#ifdef USE_GCU
-    /* curses sends many single keystrokes as escape sequences, and we
-     * use macros to handle these (see pref-gcu.prf). For example, pressing '2'
-     * on the number pad comes as the three character sequence \e[B. If we
-     * aren't careful, then the game will pause when the user really just types
-     * escape. For the longest time, I was convinced this had to do with ESCDELAY
-     * in ncurses. Alas, the culprit is our macro processing system! */
-    if (ch == 27)
-        max_delay = 10;
-    else /* if (ch == SHIFT?) */
+    if (strcmp(ANGBAND_SYS, "gcu") == 0)
     {
-        /* More Curses Problems: I'm finding these pauses unacceptable. By
-         * default, the curses port defines many macros that also begin with
-         * shift, among other things. This means that every time I run I
-         * get what seems like a 2s delay. I know the delay is only 550ms, but
-         * it feels like it lasts forever and makes the game unplayable! */
-        max_delay = 30; /* I can detect it at 40 which should be only a 100ms
-                         * delay. This is physiologically impossible, so there
-                         * must be a delay bug someplace in the curses port */
+        /* curses sends many single keystrokes as escape sequences, and we
+         * use macros to handle these (see pref-gcu.prf). For example, pressing '2'
+         * on the number pad comes as the three character sequence \e[B. If we
+         * aren't careful, then the game will pause when the user really just types
+         * escape. For the longest time, I was convinced this had to do with ESCDELAY
+         * in ncurses. Alas, the culprit is our macro processing system! */
+        if (ch == 27)
+            max_delay = 10;
+        else /* if (ch == SHIFT?) */
+        {
+            /* More Curses Problems: I'm finding these pauses unacceptable. By
+             * default, the curses port defines many macros that also begin with
+             * shift, among other things. This means that every time I run I
+             * get what seems like a 2s delay. I know the delay is only 550ms, but
+             * it feels like it lasts forever and makes the game unplayable! */
+            max_delay = 30; /* I can detect it at 40 which should be only a 100ms
+                             * delay. This is physiologically impossible, so there
+                             * must be a delay bug someplace in the curses port */
+        }
     }
-#endif 
     
     /* Wait for a macro, or a timeout */
     while (TRUE)
