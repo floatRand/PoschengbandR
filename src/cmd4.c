@@ -4483,35 +4483,27 @@ void do_cmd_save_screen_doc(void)
     FILE_TYPE(FILE_TYPE_TEXT);
     fff = my_fopen(buf, "w");
     if (!fff)
-    {
-        msg_format("Failed to open file %s.", buf);
-        msg_print(NULL);
         return;
-    }
 
     Term_get_size(&wid, &hgt);
 
     for (y = 0; y < hgt; y++)
     {
         int  current_a = -1;
-        char row[255];
-
-        row[0] = '\0';
         for (x = 0; x < wid - 1; x++)
         {
-
             (void)(Term_what(x, y, &a, &c));
 
             if (a != current_a)
             {
                 if (current_a >= 0)
-                    strcat(row, "|"); /* I'm not sure this is necessary ... */
-                strcat(row, format("[[[[%c|", hack[a&0x0F]));
+                    fprintf(fff, "|"); /* I'm not sure this is necessary ... */
+                fprintf(fff, "[[[[%c|", hack[a&0x0F]);
                 current_a = a;
             }
-            strcat(row, format("%c", c));
+            fprintf(fff, "%c", c);
         }
-        fprintf(fff, "%s\n", row);
+        fprintf(fff, "\n");
     }
 
     my_fclose(fff);

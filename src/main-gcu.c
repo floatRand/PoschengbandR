@@ -185,7 +185,7 @@ struct term_data
    WINDOW *win;
 };
 
-#define MAX_TERM_DATA 4
+#define MAX_TERM_DATA 10
 
 static term_data data[MAX_TERM_DATA];
 
@@ -1293,6 +1293,37 @@ static void hook_quit(cptr str)
        endwin();
 }
 
+/* Parse 27,15,*x30 up to the 'x' and return "x30". * gets converted to a big number */
+int _parse_size_list(cptr arg, int sizes[], int max)
+{
+    int i = 0;
+    cptr start = arg;
+    cptr stop = arg;
+
+    for (;;)
+    {
+        if (!*stop || !isdigit(*stop))
+        {
+            if (i >= max) break;
+            if (*start == '*')
+                sizes[i] = 255;
+            else
+            {
+                /* rely on atoi("23,34,*") -> 23
+                   otherwise, copy [start, stop) into a new buffer first.*/
+                sizes[i] = atoi(start);
+            }
+            i++;
+            if (!*stop || *stop != ',') break;
+
+            stop++;
+            start = stop;
+        }
+        else
+            stop++;
+    }
+    return i;
+}
 
 /*
  * Prepare "curses" for use by the file "term.c"
@@ -1306,15 +1337,7 @@ errr init_gcu(int argc, char *argv[])
 {
    int i;
    char path[1024];
-   bool big_map = FALSE;
 
-   /* Parse Args */
-   for (i = 1; i < argc; i++)
-   {
-      if (strcmp(argv[i], "-b") == 0)
-         big_map = TRUE;
-   }
-   
 #ifdef USE_SOUND
 
    /* Build the "sound" path */
@@ -1451,64 +1474,199 @@ errr init_gcu(int argc, char *argv[])
    /* Extract the game keymap */
    keymap_game_prepare();
 
+   /* Parse Args and Prepare the Terminals. Rectangles are specified
+      as Width x Height, right? The game will allow you to have two
+      strips of extra terminals, one on the right and one on the bottom.
+      The map terminal will than fit in as big as possible in the remaining
+      space.
 
-    /*** Now prepare the term(s)
-         Sorry, but I prefer the map window to be as large as possible. This
-         requires me to hard-code the secondary term sizes based on my preferences.
-         Probably, they should be configurable. ***/
-    if (big_map)
+      Examples:
+        poschengband -mgcu -- -right 30x27,* -bottom *x7 will layout as
+
+        Term-0: Map (COLS-30)x(LINES-7) | Term-1: 30x27
+        --------------------------------|----------------------
+        <----Term-3: (COLS-30)x7------->| Term-2: 30x(LINES-27)
+
+        poschengband -mgcu -- -bottom *x7 -right 30x27,* will layout as
+
+        Term-0: Map (COLS-30)x(LINES-7) | Term-2: 30x27
+                                        |------------------------------
+                                        | Term-3: 30x(LINES-27)
+        ---------------------------------------------------------------
+        <----------Term-1: (COLS)x7----------------------------------->
+
+        Notice the effect on the bottom terminal by specifying its argument
+        second or first. Notice the sequence numbers for the various terminals
+        as you will have to blindly configure them in the window setup screen.
+    */
     {
-        term_data_init(&data[0], LINES, COLS, 0, 0);
-        angband_term[0] = Term;
-    }
-    else
-    {
-        const int desired_inv_cx = 60;
-        const int desired_msg_cy = 7;
-        const int spacer_cx = 1;
-        const int spacer_cy = 0;
-        const int inv_min = 30;
-        const int msg_min = 2;
+        int  spacer_cx = 1;
+        int  spacer_cy = 0;
+        int  min_cy = 3;
+        int  min_cx = 10;
+        int  right_cx = 0;
+        int  right_cys[10] = {0};
+        int  right_ct = 0;
+        int  bottom_cy = 0;
+        int  bottom_cxs[10] = {0};
+        int  bottom_ct = 0;
+        bool right_first = TRUE;
+        int  map_cx, map_cy;
+        int  next_win = 0;
 
-        int map_cx = MAX(80, COLS - (desired_inv_cx + spacer_cx));
-        int map_cy = MAX(27, LINES - (desired_msg_cy + spacer_cy));
-        int inv_cx = COLS - map_cx - spacer_cx;
-        int inv_cy = MIN(map_cy, 28);
-        int msg_cx = map_cx;
-        int msg_cy = LINES - map_cy - spacer_cy;
-        int recall_cx = inv_cx;
-        int recall_cy = LINES - inv_cy;
+        for (i = 1; i < argc; i++)
+        {
+            if (strcmp(argv[i], "-b") == 0)
+            {
+                term_data_init(&data[0], LINES, COLS, 0, 0);
+                angband_term[0] = Term;
+                break;
+            }
+            else if (strcmp(argv[i], "-right") == 0)
+            {
+                cptr arg, tmp;
 
-        int next_win = 0;
+                if (!bottom_cy)
+                    right_first = TRUE;
+
+                i++;
+                if (i >= argc)
+                    quit("Missing size specifier for -right");
+
+                arg = argv[i];
+                tmp = strchr(arg, 'x');
+                if (!tmp)
+                    quit("Expected something like -right 60x27,* for two right hand terminals of 60 columns, the first 27 lines and the second whatever is left.");
+                right_cx = atoi(arg);
+                tmp++;
+                right_ct = _parse_size_list(tmp, right_cys, 10);
+            }
+            else if (strcmp(argv[i], "-bottom") == 0)
+            {
+                cptr arg, tmp;
+
+                if (!right_cx)
+                    right_first = FALSE;
+
+                i++;
+                if (i >= argc)
+                    quit("Missing size specifier for -bottom");
+
+                arg = argv[i];
+                tmp = strchr(arg, 'x');
+                if (!tmp)
+                    quit("Expected something like -bottom *x7 for a single bottom terminal of 7 lines using as many columns as are available.");
+                tmp++;
+                bottom_cy = atoi(tmp);
+                bottom_ct = _parse_size_list(arg, bottom_cxs, 10);
+            }
+        }
+
+        if (right_cx)
+            map_cx = COLS - (right_cx + spacer_cx);
+        else
+            map_cx = COLS;
+
+        if (bottom_cy)
+            map_cy = LINES - (bottom_cy + spacer_cy);
+        else
+            map_cy = LINES;
+
+        if (map_cx < 80 || map_cy < 27)
+            quit(format("Failed: PosChengband needs an 80x27 map screen, not %dx%d", map_cx, map_cy));
 
         /* Map Window: Upper Left */
         term_data_init(&data[next_win], map_cy, map_cx, 0, 0);
         angband_term[next_win] = Term;
         next_win++;
 
-        /* Messages: Lower Left */
-        if (msg_cy >= msg_min)
+        /* Right Hand Strip */
+        if (right_first)
         {
-            term_data_init(&data[next_win], msg_cy, msg_cx, map_cy + spacer_cy, 0);
-            angband_term[next_win] = Term;
-            next_win++;
+            int cy_remaining = LINES;
+            int x = map_cx + spacer_cx;
+            int y = 0;
+
+            for (i = 0; i < right_ct; i++)
+            {
+                int cy = right_cys[i];
+
+                if (!cy) break;
+
+                if (cy > cy_remaining)
+                    cy = cy_remaining;
+
+                if (cy > min_cy)
+                {
+                    term_data_init(&data[next_win], cy, right_cx, y, x);
+                    angband_term[next_win] = Term;
+                    next_win++;
+
+                    y += cy + spacer_cy;
+                    cy_remaining -= cy + spacer_cy;
+                }
+            }
         }
-              
-        /* Inventory: Upper Right */
-        if (inv_cx >= inv_min)
+
+        /* Bottom Strip */
         {
-            term_data_init(&data[next_win], inv_cy, inv_cx, 0, map_cx + spacer_cx);
-            angband_term[next_win] = Term;
-            next_win++;
+            int cx_remaining = COLS;
+            int x = 0;
+            int y = map_cy + spacer_cy;
+
+            if (right_first)
+                cx_remaining -= (right_cx + spacer_cx);
+
+            for (i = 0; i < bottom_ct; i++)
+            {
+                int cx = bottom_cxs[i];
+
+                if (!cx) break;
+
+                if (cx > cx_remaining)
+                    cx = cx_remaining;
+
+                if (cx > min_cx)
+                {
+                    term_data_init(&data[next_win], bottom_cy, cx, y, x);
+                    angband_term[next_win] = Term;
+                    next_win++;
+
+                    x += cx + spacer_cx;
+                    cx_remaining -= cx + spacer_cx;
+                }
+            }
         }
-        
-        /* Recall: Lower Right */
-        if (inv_cx >= inv_min && msg_cy >= msg_min)
+
+        /* Right Hand Strip: TODO: Refactor this code duplication!
+           But note that if the user specifies -right before bottom,
+           then the terminal sequence numbers should reflect this fact! */
+        if (!right_first)
         {
-            term_data_init(&data[next_win], recall_cy, recall_cx, inv_cy + spacer_cy, map_cx + spacer_cx);
-            angband_term[next_win] = Term;
-            next_win++;
-        }        
+            int cy_remaining = LINES - bottom_cy;
+            int x = map_cx + spacer_cx;
+            int y = 0;
+
+            for (i = 0; i < right_ct; i++)
+            {
+                int cy = right_cys[i];
+
+                if (!cy) break;
+
+                if (cy > cy_remaining)
+                    cy = cy_remaining;
+
+                if (cy > min_cy)
+                {
+                    term_data_init(&data[next_win], cy, right_cx, y, x);
+                    angband_term[next_win] = Term;
+                    next_win++;
+
+                    y += cy + spacer_cy;
+                    cy_remaining -= cy + spacer_cy;
+                }
+            }
+        }
     }
 
    /* Activate the "Angband" window screen */
