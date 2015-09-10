@@ -5483,6 +5483,7 @@ bool show_file(bool show_version, cptr name, cptr what, int line, int mode)
             break;
 
         /* One page up */
+        case '9':
         case SKEY_PGUP:
             line = line - rows;
             if (line < 0) line = 0;
@@ -5514,6 +5515,7 @@ bool show_file(bool show_version, cptr name, cptr what, int line, int mode)
             break;
 
         /* One page down */
+        case '3':
         case SKEY_PGDOWN:
             line = line + rows;
             break;
