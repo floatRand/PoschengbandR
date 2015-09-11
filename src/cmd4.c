@@ -4522,11 +4522,10 @@ void do_cmd_save_screen(void)
 {
     bool old_use_graphics = use_graphics;
     bool html_dump = FALSE;
-    bool doc_dump = FALSE; /* For documentation: Embed attributes for a later show_file() */
 
     int wid, hgt;
 
-    prt("Save screen dump? [(y)es/(h)tml/(d)oc/(n)o] ", 0, 0);
+    prt("Save screen dump? [(y)es/(h)tml/(n)o] ", 0, 0);
     while(TRUE)
     {
         char c = inkey();
@@ -4535,11 +4534,6 @@ void do_cmd_save_screen(void)
         else if (c == 'H' || c == 'h')
         {
             html_dump = TRUE;
-            break;
-        }
-        else if (c == 'D' || c == 'd')
-        {
-            doc_dump = TRUE;
             break;
         }
         else
@@ -4567,11 +4561,6 @@ void do_cmd_save_screen(void)
     {
         do_cmd_save_screen_html();
         do_cmd_redraw();
-    }
-    else if (doc_dump)
-    {
-        do_cmd_save_screen_doc();
-        msg_print("Screen dump saved to screen.txt");
     }
     /* Do we use a special screendump function ? */
     else if (screendump_aux)
