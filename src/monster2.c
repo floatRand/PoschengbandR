@@ -2842,6 +2842,8 @@ void update_mon(int m_idx, bool full)
                 if (disturb_pets || is_hostile(m_ptr))
                     disturb(1, 0);
             }
+
+            p_ptr->window |= PW_MONSTER_LIST;
         }
     }
 
@@ -2867,6 +2869,7 @@ void update_mon(int m_idx, bool full)
                 if (disturb_pets || is_hostile(m_ptr))
                     disturb(1, 0);
             }
+            p_ptr->window |= PW_MONSTER_LIST;
         }
     }
 
@@ -2886,6 +2889,7 @@ void update_mon(int m_idx, bool full)
                 if (disturb_pets || is_hostile(m_ptr))
                     disturb(1, 0);
             }
+            p_ptr->window |= PW_MONSTER_LIST;
         }
     }
 
@@ -2904,6 +2908,7 @@ void update_mon(int m_idx, bool full)
                 if (disturb_pets || is_hostile(m_ptr))
                     disturb(1, 0);
             }
+            p_ptr->window |= PW_MONSTER_LIST;
         }
     }
 }

@@ -383,7 +383,7 @@ void do_cmd_redraw(void)
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER);
 
     /* Window stuff */
-    p_ptr->window |= (PW_MESSAGE | PW_OVERHEAD | PW_DUNGEON | PW_MONSTER | PW_OBJECT);
+    p_ptr->window |= (PW_MESSAGE | PW_OVERHEAD | PW_DUNGEON | PW_MONSTER | PW_MONSTER_LIST | PW_OBJECT);
 
     update_playtime();
 
@@ -1593,7 +1593,7 @@ void do_cmd_options(void)
                 /* Spawn */
                 do_cmd_options_win();
                 p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL |
-                          PW_PLAYER | PW_MESSAGE | PW_OVERHEAD |
+                          PW_PLAYER | PW_MONSTER_LIST | PW_MESSAGE | PW_OVERHEAD |
                           PW_MONSTER | PW_OBJECT | PW_SNAPSHOT |
                           PW_BORG_1 | PW_BORG_2 | PW_DUNGEON);
                 break;

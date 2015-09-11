@@ -2417,7 +2417,7 @@ enum _mimic_types {
 #define PW_SPELL        0x00000004     /* Display spell list */
 #define PW_PLAYER       0x00000008     /* Display character */
 /* xxx */
-/* xxx */
+#define PW_MONSTER_LIST 0x00000020     /* Display monster list */
 #define PW_MESSAGE      0x00000040     /* Display messages */
 #define PW_OVERHEAD     0x00000080     /* Display overhead view */
 #define PW_MONSTER      0x00000100     /* Display monster recall */

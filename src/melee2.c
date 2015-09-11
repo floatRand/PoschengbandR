@@ -3375,6 +3375,7 @@ static void process_monster(int m_idx)
                 /* Move the monster */
                 m_ptr->fy = ny;
                 m_ptr->fx = nx;
+                p_ptr->window |= PW_MONSTER_LIST; /* May have moved in our out of LOS */
 
                 /* Update the monster */
                 update_mon(m_idx, TRUE);
@@ -4071,6 +4072,8 @@ bool set_monster_csleep(int m_idx, int v)
     }
 
     if (r_info[m_ptr->r_idx].flags7 & RF7_HAS_LD_MASK) p_ptr->update |= (PU_MON_LITE);
+
+    p_ptr->window |= PW_MONSTER_LIST;
 
     return TRUE;
 }

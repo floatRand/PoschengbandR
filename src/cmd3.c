@@ -1401,12 +1401,15 @@ void do_cmd_query_symbol(void)
     prt(buf, 0, 0);
 }
 
+/* Display a List of Nearby Monsters
+   Idea from Vanilla 3.5, but recoded from scratch ... */
 struct _mon_list_info_s 
 {
     int r_idx;
     int ct_total;
     int ct_awake;
     int ct_los;
+    int dx, dy;
 };
 
 typedef struct _mon_list_info_s _mon_list_info_t;
@@ -1428,18 +1431,16 @@ static void _swap_int(vptr u, vptr v, int a, int b)
     order[b] = tmp;
 }
 
-/* Idea borrowed from Vanilla 3.5, but recoded from scratch ... */
-void do_cmd_list_monsters(void)
+static int_map_ptr _create_monster_list(void)
 {
-    int         i, ct_types, ct_total = 0;
+    int         i;
     int_map_ptr info = int_map_alloc(free);
-    
-    /* Collect */
+
     for (i = 0; i < max_m_idx; i++)
     {
         const monster_type *m_ptr = &m_list[i];
         _mon_list_info_ptr  info_ptr;
-        
+
         if (!m_ptr->ap_r_idx) continue;
         if (!m_ptr->ml) continue;
 
@@ -1451,93 +1452,211 @@ void do_cmd_list_monsters(void)
             info_ptr->ct_total = 0;
             info_ptr->ct_awake = 0;
             info_ptr->ct_los = 0;
-            
+            info_ptr->dy = m_ptr->fy - py;
+            info_ptr->dx = m_ptr->fx - px;
+
             int_map_add(info, m_ptr->ap_r_idx, info_ptr);
         }
 
         assert(info_ptr);
         info_ptr->ct_total++;
-        ct_total++;
 
         if (!MON_CSLEEP(m_ptr)) info_ptr->ct_awake++;
         if (projectable(py, px, m_ptr->fy, m_ptr->fx)) info_ptr->ct_los++;
     }
+
+    return info;
+}
+
+static int *_sort_monster_list(int_map_ptr info, int *ct_total, int *ct_los)
+{
+    int               ct = int_map_count(info);
+    int               i = 0;
+    int              *order;
+    int_map_iter_ptr  iter;
+
+    *ct_total = 0;
+    *ct_los = 0;
+
+    if (!ct)
+        return NULL;
+
+    C_MAKE(order, ct, int);
+
+    for (iter = int_map_iter_alloc(info);
+            int_map_iter_is_valid(iter);
+            int_map_iter_next(iter))
+    {
+        _mon_list_info_ptr info_ptr = int_map_iter_current(iter);
+        order[i++] = info_ptr->r_idx;
+        *ct_total += info_ptr->ct_total;
+        *ct_los += info_ptr->ct_los;
+    }
+    int_map_iter_free(iter);
+
+    ang_sort_comp = _compare_r_level;
+    ang_sort_swap = _swap_int;
+    ang_sort(order, NULL, ct);
+
+    return order;
+}
+
+static int _draw_monster_list(int_map_ptr info, int *order, int top, int count, int row, int col)
+{
+    int i;
+    for (i = 0; i < count; i++)
+    {
+        Term_erase(col, row + i, 53);
+    }
+    for (i = 0; i < count; i++)
+    {
+        int                 idx = top + i;
+        int                 r_idx;
+        const monster_race *r_ptr;
+        _mon_list_info_ptr  info_ptr;
+        byte                attr = TERM_WHITE;
+        char                buf[100];
+        char                loc[100];
+
+        if (idx >= int_map_count(info)) break;
+
+        r_idx = order[idx];
+        r_ptr = &r_info[r_idx];
+        info_ptr = int_map_find(info, r_idx);
+
+        assert(info_ptr);
+
+        if (r_ptr->flags1 & RF1_UNIQUE)
+            attr = TERM_VIOLET;
+        else if (!info_ptr->ct_awake)
+            attr = TERM_L_DARK;
+        else if (info_ptr->ct_los)
+            attr = TERM_YELLOW;
+
+        if (info_ptr->ct_total == 1)
+        {
+            sprintf(buf, "%s", r_name + r_ptr->name);
+            if ((r_ptr->flags1 & RF1_UNIQUE) && !info_ptr->ct_awake)
+                strcat(buf, " (asleep)");
+            sprintf(loc, "%c %2d %c %2d",
+                    (info_ptr->dy > 0) ? 'S' : 'N', abs(info_ptr->dy),
+                    (info_ptr->dx > 0) ? 'E' : 'W', abs(info_ptr->dx));
+        }
+        else if (!info_ptr->ct_awake)
+            sprintf(buf, "%s (%d asleep)", r_name + r_ptr->name, info_ptr->ct_total);
+        else if (info_ptr->ct_awake == info_ptr->ct_total)
+            sprintf(buf, "%s (%d awake)", r_name + r_ptr->name, info_ptr->ct_total);
+        else
+        {
+            sprintf(buf, "%s (%d awake, %d asleep)", r_name + r_ptr->name,
+                info_ptr->ct_awake, info_ptr->ct_total - info_ptr->ct_awake);
+        }
+
+        Term_queue_bigchar(col + 1, row + i, r_ptr->x_attr, r_ptr->x_char, 0, 0);
+        if (info_ptr->ct_total == 1)
+        {
+            c_put_str(attr, format(" %-40.40s", buf), row + i, col + 2);
+            c_put_str(TERM_WHITE, format(" %-9.9s", loc), row + i, col + 2 + 41);
+        }
+        else
+            c_put_str(attr, format(" %-50.50s", buf), row + i, col + 2);
+    }
+    return i;
+}
+
+void do_cmd_list_monsters(void)
+{
+    int         ct_types = 0, ct_total = 0, ct_los = 0;
+    int_map_ptr info = _create_monster_list();
     
     ct_types = int_map_count(info);
     if (ct_types)
     {
-        int_map_iter_ptr  iter;
-        int              *order;
-        int               cx, cy, row = 1, col;
+        int *order = _sort_monster_list(info, &ct_total, &ct_los);
+        int  top = 0, page_size, col, pos = 0;
+        int  cx, cy;
+        bool done = FALSE;
+        bool redraw = TRUE;
 
-        /* Sort */
-        C_MAKE(order, ct_types, int);
-
-        i = 0;
-        for (iter = int_map_iter_alloc(info); 
-                int_map_iter_is_valid(iter); 
-                int_map_iter_next(iter))
-        {
-            _mon_list_info_ptr info_ptr = int_map_iter_current(iter);
-            order[i++] = info_ptr->r_idx;
-        }
-        int_map_iter_free(iter);
-
-        ang_sort_comp = _compare_r_level;
-        ang_sort_swap = _swap_int;
-        ang_sort(order, NULL, ct_types);
-
-        /* Display */
         Term_get_size(&cx, &cy);
-        col = cx - 52;
+        page_size = cy - 2;
+        if (page_size > ct_types)
+            page_size = ct_types;
+        col = cx - 53;
+
         screen_save();
-        c_prt(TERM_WHITE, format("You see %d monster%s", ct_total, ct_total != 1 ? "s" : ""), 0, col);
-        for (i = 0; i < ct_types; i++)
+
+        while (!done)
         {
-            int                 r_idx = order[i];
-            const monster_race *r_ptr = &r_info[r_idx];
-            byte                attr = TERM_WHITE;
-            _mon_list_info_ptr  info_ptr = int_map_find(info, r_idx);
-            char                buf[100];
+            int cmd;
 
-            assert(info_ptr);
-
-            Term_erase(col - 1, row, 53);
-
-            if (row >= cy - 2) 
+            if (redraw)
             {
-                c_prt(TERM_YELLOW, "...", row++, col+2);
+                int ct;
+                c_prt(TERM_WHITE,
+                      format("%d monster%s, %d in view",
+                             ct_total, ct_total != 1 ? "s" : "", ct_los),
+                      0, col);
+                ct = _draw_monster_list(info, order, top, page_size, 1, col);
+                Term_erase(col - 1, 1 + ct, 53);
+                c_prt(TERM_L_BLUE, "UP, DOWN to move. ? for Recall. ESC to quit.", 1 + ct, col+3);
+                redraw = FALSE;
+            }
+            Term_gotoxy(col, 1 + pos);
+
+            cmd = inkey();
+            switch (cmd)
+            {
+            case ESCAPE:
+            case 'q':
+            case 'Q':
+                done = TRUE;
+                break;
+            case '?':
+            case 'r':
+            case 'R':
+            {
+                int idx = top + pos;
+                if (0 <= idx && idx < ct_types)
+                {
+                    int r_idx = order[idx];
+                    screen_roff(r_idx, 0);
+                    inkey();
+                    screen_load();
+                    screen_save();
+                    redraw = TRUE;
+                }
                 break;
             }
+            case '2':
+                if (top + pos < ct_types - 1)
+                    pos++;
 
-            if (r_ptr->flags1 & RF1_UNIQUE)
-                attr = TERM_VIOLET;
-            else if (r_ptr->level > base_level)
-                attr = TERM_RED;                
-            else if (!info_ptr->ct_awake)
-                attr = TERM_L_UMBER;
+                if (pos == page_size)
+                {
+                    /*pos = 0;
+                      top += page_size;*/
+                    pos--;
+                    top++;
+                    redraw = TRUE;
+                }
+                break;
+            case '8':
+                if (pos > 0)
+                    pos--;
 
-            if (info_ptr->ct_total == 1)
-                sprintf(buf, "%s", r_name + r_ptr->name);
-            else if (!info_ptr->ct_awake)
-                sprintf(buf, "%s (%d sleeping)", r_name + r_ptr->name, info_ptr->ct_total);
-            else if (info_ptr->ct_awake == info_ptr->ct_total)
-                sprintf(buf, "%s (%d awake)", r_name + r_ptr->name, info_ptr->ct_total);
-            else
-                sprintf(buf, "%s (%d awake, %d sleeping)", r_name + r_ptr->name, 
-                    info_ptr->ct_awake, info_ptr->ct_total - info_ptr->ct_awake);
-
-            Term_queue_bigchar(col, row, r_ptr->x_attr, r_ptr->x_char, 0, 0);
-            c_put_str(attr, format(" %-50.50s", buf), row++, col+1);
+                if (pos == 0 && top > 0)
+                {
+                    top--;
+                    redraw = TRUE;
+                }
+                break;
+            }
         }
-        Term_erase(col - 1, row, 53);
-        c_prt(TERM_YELLOW, "Hit any key.", row, col+2);
-        inkey();
+
         prt("", 0, 0);
-
-        screen_load();
-
         C_KILL(order, ct_types, int);
+        screen_load();
     }
     else
         msg_print("You see no visible monsters.");
@@ -1545,6 +1664,63 @@ void do_cmd_list_monsters(void)
     int_map_free(info);
 }
 
+void _fix_monster_list_aux(void)
+{
+    int         ct_types = 0, ct_total = 0, ct_los = 0;
+    int_map_ptr info = _create_monster_list();
+    int         cx, cy;
+
+    Term_get_size(&cx, &cy);
+
+    ct_types = int_map_count(info);
+    if (ct_types)
+    {
+        int *order = _sort_monster_list(info, &ct_total, &ct_los);
+
+        c_prt(TERM_WHITE,
+              format("%d monster%s, %d in view",
+                     ct_total, ct_total != 1 ? "s" : "", ct_los),
+              0, 0);
+
+        _draw_monster_list(info, order, 0, cy - 1, 1, 0);
+
+        C_KILL(order, ct_types, int);
+    }
+    else
+    {
+        int i;
+        c_prt(TERM_WHITE, "0 monsters, 0 in view", 0, 0);
+        /* Term_clear() is causing flickers on the main terminal
+           even though we are in a different terminal. Might be
+           a curses bug with TERM_XTRA_CLEAR ...
+         */
+        for (i = 1; i < cy; i++)
+            Term_erase(0, i, 53);
+    }
+    int_map_free(info);
+}
+
+void fix_monster_list(void)
+{
+    int j;
+    for (j = 0; j < 8; j++)
+    {
+        term *old = Term;
+
+        if (!angband_term[j]) continue;
+        if (!(window_flag[j] & PW_MONSTER_LIST)) continue;
+
+        Term_activate(angband_term[j]);
+
+        _fix_monster_list_aux();
+
+        Term_fresh();
+        Term_activate(old);
+    }
+}
+
+/* Display a List of Nearby Objects
+   Idea from Vanilla 3.5, but recoded from scratch ... */
 static bool _compare_obj_list_info(vptr u, vptr v, int a, int b)
 {
     int         *vec = (int*)u;

@@ -15,28 +15,24 @@ else
    #Dejavu has a problem with the 'R' character ... it leaves a ghost pixel when you type over or scroll!
    #export ANGBAND_X11_FONT_0='-misc-dejavu sans mono-medium-r-normal--20-0-0-0-m-0-iso8859-1'
     export ANGBAND_X11_FONT_0='-misc-liberation mono-medium-r-normal--22-0-0-0-m-0-iso8859-1'
-   #export ANGBAND_X11_FONT_0='-misc-liberation mono-medium-r-normal--19-0-0-0-m-0-iso8859-1'
-   #export ANGBAND_X11_COLS_0=151
     export ANGBAND_X11_AT_X_0=0
     export ANGBAND_X11_AT_Y_0=0
     export ANGBAND_X11_ROWS_0=150
-    #export ANGBAND_X11_COLS_0=94
-    export ANGBAND_X11_COLS_0=128
+    export ANGBAND_X11_COLS_0=86
 
-    export ANGBAND_X11_FONT_1='-misc-dejavu sans mono-medium-r-normal--18-0-0-0-m-0-iso8859-1'
+    export ANGBAND_X11_FONT_1='-misc-liberation mono-medium-r-normal--18-0-0-0-m-0-iso8859-1'
     export ANGBAND_X11_AT_X_1=1222
     export ANGBAND_X11_AT_Y_1=0
     export ANGBAND_X11_ROWS_1=30
     export ANGBAND_X11_COLS_1=50
 
-    export ANGBAND_X11_FONT_2='-misc-dejavu sans mono-medium-r-normal--18-0-0-0-m-0-iso8859-1'
+    export ANGBAND_X11_FONT_2='-misc-liberation mono-medium-r-normal--18-0-0-0-m-0-iso8859-1'
     export ANGBAND_X11_AT_X_2=1222
-    export ANGBAND_X11_AT_Y_2=800
-    export ANGBAND_X11_ROWS_2=16
+    export ANGBAND_X11_AT_Y_2=630
+    export ANGBAND_X11_ROWS_2=18
     export ANGBAND_X11_COLS_2=50
 
     #export ANGBAND_X11_GAMMA=185
 
-    #./poschengband -g -mx11 -u$1 -- -n3
-    ./poschengband -g -mx11 -u$1 -- -n1
+    ./poschengband -g -mx11 -u$1 -- -n3
 fi

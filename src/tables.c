@@ -3355,7 +3355,7 @@ cptr window_flag_desc[32] =
     "Display character",
 
     NULL,
-    NULL,
+    "Display monster list",
     "Display messages",
 
     "Display overhead view (*SLOW*)",

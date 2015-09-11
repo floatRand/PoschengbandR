@@ -5404,6 +5404,12 @@ void window_stuff(void)
         fix_monster();
     }
 
+    if (p_ptr->window & PW_MONSTER_LIST)
+    {
+        p_ptr->window &= ~(PW_MONSTER_LIST);
+        fix_monster_list();
+    }
+
     /* Display object recall */
     if (p_ptr->window & (PW_OBJECT))
     {
