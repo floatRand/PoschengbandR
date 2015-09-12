@@ -267,6 +267,7 @@ void delete_monster_idx(int i)
         p_ptr->duelist_target_idx = 0;
         p_ptr->redraw |= PR_STATUS;
     }
+    p_ptr->window |= PW_MONSTER_LIST;
 }
 
 

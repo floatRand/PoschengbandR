@@ -1034,7 +1034,6 @@ void monster_death(int m_idx, bool drop_item)
     {
         p_ptr->update |= (PU_MON_LITE);
     }
-    p_ptr->window |= PW_MONSTER_LIST;
 
     if (mut_present(MUT_INFERNAL_DEAL) && los(py, px, m_ptr->fy, m_ptr->fx) && !is_pet(m_ptr))
     {
