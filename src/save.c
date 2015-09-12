@@ -1170,8 +1170,9 @@ static bool wr_savefile_new(savefile_ptr file)
     savefile_write_u16b(file, tmp16u);
     for (i = tmp16u - 1; i >= 0; i--)
     {
-        savefile_write_byte(file, message_color((s16b)i));
-        savefile_write_string(file, message_str((s16b)i));
+        savefile_write_byte(file, message_color(i));
+        savefile_write_string(file, message_str(i));
+        savefile_write_s32b(file, message_turn(i));
     }
 
     tmp16u = max_r_idx;

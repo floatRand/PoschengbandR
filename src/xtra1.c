@@ -2152,10 +2152,19 @@ static void fix_message(void)
         {
             cptr msg = message_str(i);
             byte color = message_color(i);
+            int  msg_turn = message_turn(i);
             int  y = (h - 1) - i;
+
+            if (msg_turn < now_turn && color == TERM_WHITE)
+                color = TERM_SLATE;
 
             Term_erase(0, y, 255);
             display_message(0, y, strlen(msg), color, msg);
+          /*{
+                char testing[2048];
+                sprintf(testing, "%d %d %s", now_turn, msg_turn, msg);
+                display_message(0, y, strlen(testing), color, testing);
+            }*/
         }
 
         /* Fresh */

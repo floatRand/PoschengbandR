@@ -949,10 +949,14 @@ static void rd_messages(savefile_ptr file)
     for (i = 0; i < num; i++)
     {
         byte color = TERM_WHITE;
+        s32b old_turn = turn;
         if (!savefile_is_older_than(file, 4, 0, 0, 1))
             color = savefile_read_byte(file);
         savefile_read_string(file, buf, sizeof(buf));
+        if (!savefile_is_older_than(file, 4, 0, 0, 2))
+            turn = savefile_read_s32b(file);
         message_add(buf, color);
+        turn = old_turn;
     }
 }
 

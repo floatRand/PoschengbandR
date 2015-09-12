@@ -1944,7 +1944,7 @@ bool make_attack_normal(int m_idx)
                     disturb(1, 0);
 
                     /* Message */
-                    msg_format("%^s #Dmisses#w you.", m_name);
+                    msg_format("%^s #Dmisses#. you.", m_name);
 
                 }
                 damage = 0;

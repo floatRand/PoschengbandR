@@ -3530,7 +3530,7 @@ extern void do_cmd_debug(void);
  */
 static void process_command(void)
 {
-    int old_now_message = now_message;
+    int old_now_turn = now_turn;
 
 
 #ifdef ALLOW_REPEAT /* TNB */
@@ -3540,7 +3540,7 @@ static void process_command(void)
 
 #endif /* ALLOW_REPEAT -- TNB */
 
-    now_message = 0;
+    now_turn = turn;
 
     /* Sniper */
     if ((p_ptr->pclass == CLASS_SNIPER) && (p_ptr->concent))
@@ -4378,7 +4378,7 @@ static void process_command(void)
         /* Show previous messages */
         case KTRL('P'):
         {
-            do_cmd_messages(old_now_message);
+            do_cmd_messages(old_now_turn);
             break;
         }
 
@@ -4392,7 +4392,7 @@ static void process_command(void)
         /* Redraw the screen */
         case KTRL('R'):
         {
-            now_message = old_now_message;
+            now_turn = old_now_turn;
             do_cmd_redraw();
             break;
         }
@@ -4474,8 +4474,9 @@ static void process_command(void)
             break;
         }
     }
-    if (!energy_use && !now_message)
-        now_message = old_now_message;
+
+    if (!energy_use)
+        now_turn = old_now_turn;
 }
 
 
@@ -5852,7 +5853,7 @@ void play_game(bool new_game)
     p_ptr->sutemi = FALSE;
     world_monster = FALSE;
     now_damaged = FALSE;
-    now_message = 0;
+    now_turn = turn;
     start_time = time(NULL);
     record_o_name[0] = '\0';
 

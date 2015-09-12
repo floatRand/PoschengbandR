@@ -516,6 +516,7 @@ u16b *message__ptr;
 char *message__buf;
 byte *message__color;
 u16b *message__count;
+s32b *message__turn;
 
 /*
  * The array of normal options
@@ -1285,7 +1286,7 @@ s16b feat_wall_solid;
 s16b floor_type[100], fill_type[100];
 
 bool now_damaged;
-s16b now_message;
+s32b now_turn;
 bool use_menu;
 
 

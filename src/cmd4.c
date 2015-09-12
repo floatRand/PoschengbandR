@@ -530,7 +530,7 @@ void do_cmd_message_one(void)
  *
  * Attempt to only hilite the matching portions of the string.
  */
-void do_cmd_messages(int num_now)
+void do_cmd_messages(int old_now_turn)
 {
     int i, n;
 
@@ -577,11 +577,20 @@ void do_cmd_messages(int num_now)
         {
             cptr msg = message_str(i+j);
             byte color = message_color(i+j);
+            int  msg_turn = message_turn(i+j);
             int  y = num_lines + 1 - j;
+
+            if (msg_turn < old_now_turn && color == TERM_WHITE)
+                color = TERM_SLATE;
 
             /* Dump the messages, bottom to top */
             Term_erase(0, y, 255);
             display_message(0, y, strlen(msg), color, msg);
+          /*{
+                char testing[2048];
+                sprintf(testing, "%d %d %s", old_now_turn, msg_turn, msg);
+                display_message(0, y, strlen(testing), color, testing);
+            }*/
 
             /* Hilite "shower" */
             if (shower && shower[0])

@@ -2489,17 +2489,25 @@ byte message_color(int age)
     s16b x;
     byte color = TERM_WHITE;
 
-    /* Forgotten messages have no text */
-    if ((age < 0) || (age >= message_num())) return (TERM_WHITE);
+    if ((age < 0) || (age >= message_num()))
+        return TERM_WHITE;
 
-    /* Acquire the "logical" index */
     x = (message__next + MESSAGE_MAX - (age + 1)) % MESSAGE_MAX;
-
-    /* Get the "offset" for the message */
     color = message__color[x];
-
-    /* Return the message text */
     return (color);
+}
+
+s32b message_turn(int age)
+{
+    s16b x;
+    s32b turn = 0;
+
+    if ((age < 0) || (age >= message_num()))
+        return 0;
+
+    x = (message__next + MESSAGE_MAX - (age + 1)) % MESSAGE_MAX;
+    turn = message__turn[x];
+    return turn;
 }
 
 
@@ -2539,6 +2547,9 @@ void message_add(cptr str, byte color)
     {
         /* Increase the message count */
         message__count[x]++;
+
+        /* Repeated messages aquire the most recent game turn */
+        message__turn[x] = turn;
 
         /* Success */
         return;
@@ -2594,6 +2605,7 @@ void message_add(cptr str, byte color)
         message__ptr[x] = message__ptr[i];
         message__color[x] = color;
         message__count[x] = 1;
+        message__turn[x] = turn;
 
         /* Success */
         return;
@@ -2683,6 +2695,7 @@ void message_add(cptr str, byte color)
     message__ptr[x] = message__head;
     message__color[x] = color;
     message__count[x] = 1;
+    message__turn[x] = turn;
 
     /* Append the new part of the message */
     for (i = 0; i < n; i++)
@@ -2759,7 +2772,8 @@ static void msg_flush(int x)
 /* Display a message */
 void display_message(int x, int y, int split, byte color, cptr t)
 {
-    int i = 0, j = 0;
+    int  i = 0, j = 0;
+    byte base_color = color;
 
     while (i < split)
     {
@@ -2770,6 +2784,11 @@ void display_message(int x, int y, int split, byte color, cptr t)
                 Term_putstr(x + j, y, 1, color, "#");
                 i += 2;
                 j++;
+            }
+            else if (t[i + 1] == '.')
+            {
+                color = base_color;
+                i += 2;
             }
             else
             {

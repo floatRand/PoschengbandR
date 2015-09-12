@@ -1352,7 +1352,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         case TV_GOLD:
         {
             if (mode & OD_COLOR_CODED)
-                sprintf(buf, "#%c%s#w", tval_to_attr_char(o_ptr->tval), basenm);
+                sprintf(buf, "#%c%s#.", tval_to_attr_char(o_ptr->tval), basenm);
             else
                 strcpy(buf, basenm);
             return;
@@ -2204,7 +2204,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
 object_desc_done:
     if (mode & OD_COLOR_CODED)
-        snprintf(buf, MAX_NLEN, "#%c%s#w", tval_to_attr_char(o_ptr->tval), tmp_val);
+        snprintf(buf, MAX_NLEN, "#%c%s#.", tval_to_attr_char(o_ptr->tval), tmp_val);
     else
         my_strcpy(buf, tmp_val, MAX_NLEN);
 }

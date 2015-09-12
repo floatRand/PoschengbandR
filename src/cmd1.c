@@ -536,27 +536,27 @@ critical_t critical_norm(int weight, int plus, s16b meichuu, int mode, int hand)
 
         if (k < 400)
         {
-            result.desc = "It was a #ygood#w hit!";
+            result.desc = "It was a #ygood#. hit!";
             result.mul = 200;
         }
         else if (k < 700)
         {
-            result.desc = "It was a #Rgreat#w hit!";
+            result.desc = "It was a #Rgreat#. hit!";
             result.mul = 250;
         }
         else if (k < 900)
         {
-            result.desc = "It was a #rsuperb#w hit!";
+            result.desc = "It was a #rsuperb#. hit!";
             result.mul = 300;
         }
         else if (k < 1300)
         {
-            result.desc = "It was a #v*GREAT*#w hit!";
+            result.desc = "It was a #v*GREAT*#. hit!";
             result.mul = 350;
         }
         else
         {
-            result.desc = "It was a #v*SUPERB*#w hit!";
+            result.desc = "It was a #v*SUPERB*#. hit!";
             result.mul = 400;
         }
     }
@@ -2299,13 +2299,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     base_dam *= m;
                     switch (m)
                     {
-                    case 2: msg_format("You #Ugouge#w %s!", m_name); break;
-                    case 3: msg_format("You #ymaim#w %s!", m_name); break;
-                    case 4: msg_format("You #Rcarve#w %s!", m_name); break;
-                    case 5: msg_format("You #rcleave#w %s!", m_name); break;
-                    case 6: msg_format("You #vsmite#w %s!", m_name); break;
-                    case 7: msg_format("You #veviscerate#w %s!", m_name); break;
-                    default: msg_format("You #vshred#w %s!", m_name); break;
+                    case 2: msg_format("You #Ugouge#. %s!", m_name); break;
+                    case 3: msg_format("You #ymaim#. %s!", m_name); break;
+                    case 4: msg_format("You #Rcarve#. %s!", m_name); break;
+                    case 5: msg_format("You #rcleave#. %s!", m_name); break;
+                    case 6: msg_format("You #vsmite#. %s!", m_name); break;
+                    case 7: msg_format("You #veviscerate#. %s!", m_name); break;
+                    default: msg_format("You #vshred#. %s!", m_name); break;
                     }
                 }
                 base_dam += a->to_d;
@@ -2516,7 +2516,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                             }
                             else
                             {
-                                msg_format("You #Ddrain life#w from %s!", m_name);
+                                msg_format("You #Ddrain life#. from %s!", m_name);
                                 hp_player(amt);
                             }
                             drain_amt += amt;
@@ -2562,7 +2562,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
             else
             {
                 sound(SOUND_MISS);
-                msg_format("You #Dmiss#w %s.", m_name);
+                msg_format("You #Dmiss#. %s.", m_name);
             }
 
             if (mode == WEAPONMASTER_RETALIATION)
@@ -3225,9 +3225,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     }
 
                     if (o_ptr->name1 == ART_VORPAL_BLADE)
-                        msg_print("Your Vorpal Blade goes #ysnicker-snack#w!");
+                        msg_print("Your Vorpal Blade goes #ysnicker-snack#.!");
                     else
-                        msg_format("Your weapon #ycuts deep#w into %s!", m_name);
+                        msg_format("Your weapon #ycuts deep#. into %s!", m_name);
 
                     while (one_in_(vorpal_chance))
                         mult++;
@@ -3241,13 +3241,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         switch (mult)
                         {
-                        case 2: msg_format("You #Ugouge#w %s!", m_name); break;
-                        case 3: msg_format("You #ymaim#w %s!", m_name); break;
-                        case 4: msg_format("You #Rcarve#w %s!", m_name); break;
-                        case 5: msg_format("You #rcleave#w %s!", m_name); break;
-                        case 6: msg_format("You #vsmite#w %s!", m_name); break;
-                        case 7: msg_format("You #veviscerate#w %s!", m_name); break;
-                        default: msg_format("You #vshred#w %s!", m_name); break;
+                        case 2: msg_format("You #Ugouge#. %s!", m_name); break;
+                        case 3: msg_format("You #ymaim#. %s!", m_name); break;
+                        case 4: msg_format("You #Rcarve#. %s!", m_name); break;
+                        case 5: msg_format("You #rcleave#. %s!", m_name); break;
+                        case 6: msg_format("You #vsmite#. %s!", m_name); break;
+                        case 7: msg_format("You #veviscerate#. %s!", m_name); break;
+                        default: msg_format("You #vshred#. %s!", m_name); break;
                         }
                     }
                     drain_result = drain_result * 3 / 2;
@@ -4041,13 +4041,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
               && o_ptr->sval == SV_DEATH_SCYTHE 
               && one_in_(3) )
             {
-                msg_format("You #Dmiss#w %s.", m_name);
+                msg_format("You #Dmiss#. %s.", m_name);
                 death_scythe_miss(o_ptr, hand, mode);
             }
             else
             {
                 sound(SOUND_MISS);
-                msg_format("You #Dmiss#w %s.", m_name);
+                msg_format("You #Dmiss#. %s.", m_name);
             }
         }
         backstab = FALSE;
