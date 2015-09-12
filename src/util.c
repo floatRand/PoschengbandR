@@ -2456,6 +2456,7 @@ s16b message_num(void)
  */
 cptr message_str(int age)
 {
+    static char buf[1024];
     s16b x;
     s16b o;
     cptr s;
@@ -2472,22 +2473,46 @@ cptr message_str(int age)
     /* Access the message text */
     s = &message__buf[o];
 
+    /* Hack -- Handle repeated messages */
+    if (message__count[x] > 1)
+    {
+        strnfmt(buf, 1024, "%s <%dx>", s, message__count[x]);
+        s = buf;
+    }
+
     /* Return the message text */
     return (s);
 }
 
+byte message_color(int age)
+{
+    s16b x;
+    byte color = TERM_WHITE;
+
+    /* Forgotten messages have no text */
+    if ((age < 0) || (age >= message_num())) return (TERM_WHITE);
+
+    /* Acquire the "logical" index */
+    x = (message__next + MESSAGE_MAX - (age + 1)) % MESSAGE_MAX;
+
+    /* Get the "offset" for the message */
+    color = message__color[x];
+
+    /* Return the message text */
+    return (color);
+}
 
 
 /*
  * Add a new message, with great efficiency
+ *
+ * Coloring code from Tome2
  */
-void message_add(cptr str)
+void message_add(cptr str, byte color)
 {
-    int i, k, x, m, n;
+    int i, k, x, n;
+    cptr s;
 
-    char u[1024];
-    char splitted1[81];
-    cptr splitted2;
 
     /*** Step 1 -- Analyze the message ***/
 
@@ -2500,93 +2525,33 @@ void message_add(cptr str)
     /* Important Hack -- Ignore "long" messages */
     if (n >= MESSAGE_BUF / 4) return;
 
-    /* extra step -- split the message if n>80.   (added by Mogami) */
-    if (n > 80) {
-      for (n = 80; n > 60; n--)
-          if (str[n] == ' ') break;
-      if (n == 60)
-          n = 80;
-      splitted2 = str + n;
-      strncpy(splitted1, str ,n);
-      splitted1[n] = '\0';
-      str = splitted1;
-    } else {
-      splitted2 = NULL;
+
+    /*** Step 2 -- Handle repeated messages ***/
+
+    /* Acquire the "logical" last index */
+    x = (message__next + MESSAGE_MAX - 1) % MESSAGE_MAX;
+
+    /* Get the last message text */
+    s = &message__buf[message__ptr[x]];
+
+    /* Last message repeated? */
+    if (streq(str, s))
+    {
+        /* Increase the message count */
+        message__count[x]++;
+
+        /* Success */
+        return;
     }
 
-    /*** Step 2 -- Attempt to optimize ***/
+
+    /*** Step 3 -- Attempt to optimize ***/
 
     /* Limit number of messages to check */
-    m = message_num();
-
-    k = m / 4;
+    k = message_num() / 4;
 
     /* Limit number of messages to check */
     if (k > MESSAGE_MAX / 32) k = MESSAGE_MAX / 32;
-
-    /* Check previous message */
-    for (i = message__next; m; m--)
-    {
-        int j = 1;
-
-        char buf[1024];
-        char *t;
-
-        cptr old;
-
-        /* Back up and wrap if needed */
-        if (i-- == 0) i = MESSAGE_MAX - 1;
-
-        /* Access the old string */
-        old = &message__buf[message__ptr[i]];
-
-        /* Skip small messages */
-        if (!old) continue;
-
-        strcpy(buf, old);
-
-        /* Find multiple */
-        for (t = buf; *t && (*t != '<'); t++);
-
-        if (*t)
-        {
-            /* Message is too small */
-            if (strlen(buf) < 6) break;
-
-            /* Drop the space */
-            *(t - 1) = '\0';
-
-            /* Get multiplier */
-            j = atoi(t+2);
-        }
-
-        /* Limit the multiplier to 1000 */
-        if (streq(buf, str) && (j < 1000))
-        {
-            j++;
-
-            /* Overwrite */
-            message__next = i;
-
-            str = u;
-
-            /* Write it out */
-            sprintf(u, "%s <x%d>", buf, j);
-
-            /* Message length */
-            n = strlen(str);
-
-            if (!now_message) now_message++;
-        }
-        else
-        {
-            num_more++;
-            now_message++;
-        }
-
-        /* Done */
-        break;
-    }
 
     /* Check the last few messages (if any to count) */
     for (i = message__next; k; k--)
@@ -2627,15 +2592,15 @@ void message_add(cptr str)
 
         /* Assign the starting address */
         message__ptr[x] = message__ptr[i];
+        message__color[x] = color;
+        message__count[x] = 1;
 
         /* Success */
-        /* return; */
-        goto end_of_message_add;
-
+        return;
     }
 
 
-    /*** Step 3 -- Ensure space before end of buffer ***/
+    /*** Step 4 -- Ensure space before end of buffer ***/
 
     /* Kill messages and Wrap if needed */
     if (message__head + n + 1 >= MESSAGE_BUF)
@@ -2665,7 +2630,7 @@ void message_add(cptr str)
     }
 
 
-    /*** Step 4 -- Ensure space before next message ***/
+    /*** Step 5 -- Ensure space before next message ***/
 
     /* Kill messages if needed */
     if (message__head + n + 1 > message__tail)
@@ -2674,7 +2639,7 @@ void message_add(cptr str)
         message__tail = message__head + n + 1;
 
         /* Advance tail while possible past first "nul" */
-        while (message__buf[message__tail-1]) message__tail++;
+        while (message__buf[message__tail - 1]) message__tail++;
 
         /* Kill all "dead" messages */
         for (i = message__last; TRUE; i++)
@@ -2687,7 +2652,7 @@ void message_add(cptr str)
 
             /* Kill "dead" messages */
             if ((message__ptr[i] >= message__head) &&
-                (message__ptr[i] < message__tail))
+                            (message__ptr[i] < message__tail))
             {
                 /* Track oldest message */
                 message__last = i + 1;
@@ -2696,7 +2661,7 @@ void message_add(cptr str)
     }
 
 
-    /*** Step 5 -- Grab a new message index ***/
+    /*** Step 6 -- Grab a new message index ***/
 
     /* Get the next message index, advance */
     x = message__next++;
@@ -2712,10 +2677,12 @@ void message_add(cptr str)
 
 
 
-    /*** Step 6 -- Insert the message text ***/
+    /*** Step 7 -- Insert the message text ***/
 
     /* Assign the starting address */
     message__ptr[x] = message__head;
+    message__color[x] = color;
+    message__count[x] = 1;
 
     /* Append the new part of the message */
     for (i = 0; i < n; i++)
@@ -2729,14 +2696,7 @@ void message_add(cptr str)
 
     /* Advance the "head" pointer */
     message__head += n + 1;
-
-    /* recursively add splitted message (added by Mogami) */
- end_of_message_add:
-    if (splitted2 != NULL)
-      message_add(splitted2);
 }
-
-
 
 /*
  * Hack -- flush
@@ -2796,6 +2756,35 @@ static void msg_flush(int x)
     Term_erase(0, 0, 255);
 }
 
+/* Display a message */
+void display_message(int x, int y, int split, byte color, cptr t)
+{
+    int i = 0, j = 0;
+
+    while (i < split)
+    {
+        if (t[i] == '#')
+        {
+            if (t[i + 1] == '#')
+            {
+                Term_putstr(x + j, y, 1, color, "#");
+                i += 2;
+                j++;
+            }
+            else
+            {
+                color = color_char_to_attr(t[i + 1]);
+                i += 2;
+            }
+        }
+        else
+        {
+            Term_putstr(x + j, y, 1, color, t + i);
+            i++;
+            j++;
+        }
+    }
+}
 
 /*
  * Output a message to the top line of the screen.
@@ -2822,7 +2811,7 @@ static void msg_flush(int x)
  * XXX XXX XXX Note that "msg_print(NULL)" will clear the top line
  * even if no messages are pending.  This is probably a hack.
  */
-void msg_print(cptr msg)
+void cmsg_print(byte color, cptr msg)
 {
     static int p = 0;
 
@@ -2831,6 +2820,8 @@ void msg_print(cptr msg)
     char *t;
 
     char buf[1024];
+
+    int lim = Term->wid - 8;
 
     if (world_monster) return;
     if (statistics_hack) return;
@@ -2846,7 +2837,7 @@ void msg_print(cptr msg)
     n = (msg ? strlen(msg) : 0);
 
     /* Hack -- flush when requested or needed */
-    if (p && (!msg || ((p + n) > 72)))
+    if (p && (!msg || ((p + n) > lim)))
     {
         /* Flush */
         msg_flush(p);
@@ -2867,7 +2858,7 @@ void msg_print(cptr msg)
 
 
     /* Memorize the message */
-    if (character_generated) message_add(msg);
+    if (character_generated) message_add(msg, color);
 
 
     /* Copy it */
@@ -2877,13 +2868,13 @@ void msg_print(cptr msg)
     t = buf;
 
     /* Split message */
-    while (n > 72)
+    while (n > lim)
     {
         char oops;
-        int check, split = 72;
+        int check, split = lim;
 
         /* Find the "best" split point */
-        for (check = 40; check < 72; check++)
+        for (check = 40; check < lim; check++)
         {
             /* Found a valid split point */
             if (t[check] == ' ') split = check;
@@ -2896,7 +2887,7 @@ void msg_print(cptr msg)
         t[split] = '\0';
 
         /* Display part of the message */
-        Term_putstr(0, 0, split, TERM_WHITE, t);
+        display_message(0, 0, split, color, t);
 
         /* Flush it */
         msg_flush(split + 1);
@@ -2911,12 +2902,13 @@ void msg_print(cptr msg)
         t[--split] = ' ';
 
         /* Prepare to recurse on the rest of "buf" */
-        t += split; n -= split;
+        t += split;
+        n -= split;
     }
 
 
     /* Display the tail of the message */
-    Term_putstr(p, 0, n, TERM_WHITE, t);
+    display_message(p, 0, n, color, t);
 
     /* Memorize the tail */
     /* if (character_generated) message_add(t); */
@@ -2936,6 +2928,10 @@ void msg_print(cptr msg)
     if (fresh_message) Term_fresh();
 }
 
+void msg_print(cptr msg)
+{
+    cmsg_print(TERM_WHITE, msg);
+}
 
 /*
  * Hack -- prevent "accidents" in "screen_save()" or "screen_load()"
@@ -2998,9 +2994,27 @@ void msg_format(cptr fmt, ...)
     va_end(vp);
 
     /* Display */
-    msg_print(buf);
+    cmsg_print(TERM_WHITE, buf);
 }
 
+void cmsg_format(byte color, cptr fmt, ...)
+{
+    va_list vp;
+
+    char buf[1024];
+
+    /* Begin the Varargs Stuff */
+    va_start(vp, fmt);
+
+    /* Format the args, save the length */
+    (void)vstrnfmt(buf, 1024, fmt, vp);
+
+    /* End the Varargs Stuff */
+    va_end(vp);
+
+    /* Display */
+    cmsg_print(color, buf);
+}
 
 
 /*
@@ -3520,7 +3534,7 @@ bool get_check_strict(cptr prompt, int mode)
     if (!(mode & CHECK_NO_HISTORY) && p_ptr->playing)
     {
         /* HACK : Add the line to message buffer */
-        message_add(buf);
+        message_add(buf, TERM_WHITE);
         p_ptr->window |= (PW_MESSAGE);
         window_stuff();
     }

@@ -5237,7 +5237,6 @@ void disturb(int stop_search, int unused_flag)
         p_ptr->update |= (PU_FLOW);
     }
 
-#ifdef TRAVEL
     if (travel.run)
     {
         /* Cancel */
@@ -5249,7 +5248,6 @@ void disturb(int stop_search, int unused_flag)
         /* Calculate torch radius */
         p_ptr->update |= (PU_TORCH);
     }
-#endif
 
     /* Flush the input if requested */
     if (flush_disturb) flush();

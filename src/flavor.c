@@ -876,6 +876,13 @@ static void get_inscription(char *buff, object_type *o_ptr)
     *ptr = '\0';
 }
 
+char tval_to_attr_char(int tval)
+{
+    char hack[17] = "dwsorgbuDWvyRGBU";
+    byte a = tval_to_attr[tval % 128];
+    char c = hack[a&0x0F];
+    return c;
+}
 
 /*
  * Creates a description of the item "o_ptr", and stores it in "out_val".
@@ -1344,7 +1351,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         /* Hack -- Gold/Gems */
         case TV_GOLD:
         {
-            strcpy(buf, basenm);
+            if (mode & OD_COLOR_CODED)
+                sprintf(buf, "#%c%s#w", tval_to_attr_char(o_ptr->tval), basenm);
+            else
+                strcpy(buf, basenm);
             return;
         }
 
@@ -2193,7 +2203,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     }
 
 object_desc_done:
-    my_strcpy(buf, tmp_val, MAX_NLEN);
+    if (mode & OD_COLOR_CODED)
+        snprintf(buf, MAX_NLEN, "#%c%s#w", tval_to_attr_char(o_ptr->tval), tmp_val);
+    else
+        my_strcpy(buf, tmp_val, MAX_NLEN);
 }
 
 

@@ -256,7 +256,7 @@ void check_experience(void)
             p_ptr->max_plv = p_ptr->lev;
 
             sound(SOUND_LEVEL);
-            msg_format("Welcome to level %d.", p_ptr->lev);
+            cmsg_format(TERM_L_GREEN, "Welcome to level %d.", p_ptr->lev);
 
             if (class_ptr->gain_level != NULL)
                 (class_ptr->gain_level)(p_ptr->lev);
@@ -2225,7 +2225,7 @@ void monster_death(int m_idx, bool drop_item)
                 /* Drop it in the dungeon */
                 (void)drop_near(q_ptr, -1, y, x);
             }
-            msg_format("You have conquered %s!",d_name+d_info[dungeon_type].name);
+            cmsg_format(TERM_L_GREEN, "You have conquered %s!",d_name+d_info[dungeon_type].name);
             virtue_add(VIRTUE_VALOUR, 5);
         }
     }
@@ -2264,10 +2264,10 @@ void monster_death(int m_idx, bool drop_item)
         if (!one_in_(3))
         {
             mode = PM_FORCE_FRIENDLY;
-            msg_format("%^s is transformed in undeath!", m_name);
+            cmsg_format(TERM_RED, "%^s is transformed in undeath!", m_name);
         }
         else
-            msg_format("%^s rises to serve you!", m_name);
+            cmsg_format(TERM_RED, "%^s rises to serve you!", m_name);
 
         if (r_ptr->flags1 & RF1_UNIQUE)
             r_lvl += 10;
@@ -2830,7 +2830,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
             bool stop_ty = FALSE;
             int count = 0;
 
-            msg_format("%^s puts a terrible blood curse on you!", m_name);
+            cmsg_format(TERM_VIOLET, "%^s puts a terrible blood curse on you!", m_name);
 
             curse_equipment(100, 50);
 
@@ -2976,7 +2976,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
         /* Death by physical attack -- invisible monster */
         else if (!m_ptr->ml)
         {
-            msg_format("You have killed %s.", m_name);
+            cmsg_format(TERM_L_RED, "You have killed %s.", m_name);
         }
 
         /* Death by Physical attack -- non-living monster */
@@ -2992,14 +2992,14 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 
             /* Special note at death */
             if (explode)
-                msg_format("%^s explodes into tiny shreds.", m_name);
+                cmsg_format(TERM_L_RED, "%^s explodes into tiny shreds.", m_name);
             else
-                msg_format("You have destroyed %s.", m_name);
+                cmsg_format(TERM_L_RED, "You have destroyed %s.", m_name);
         }
 
         /* Death by Physical attack -- living monster */
         else
-            msg_format("You have slain %s.", m_name);
+            cmsg_format(TERM_L_RED, "You have slain %s.", m_name);
 
         if (_mon_is_wanted(m_idx))
         {

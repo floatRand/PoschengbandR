@@ -511,7 +511,7 @@ void do_cmd_change_name(void)
 void do_cmd_message_one(void)
 {
     /* Recall one message XXX XXX XXX */
-    prt(format("> %s", message_str(0)), 0, 0);
+    c_prt(message_color(0), format("> %s", message_str(0)), 0, 0);
 }
 
 
@@ -576,9 +576,12 @@ void do_cmd_messages(int num_now)
         for (j = 0; (j < num_lines) && (i + j < n); j++)
         {
             cptr msg = message_str(i+j);
+            byte color = message_color(i+j);
+            int  y = num_lines + 1 - j;
 
             /* Dump the messages, bottom to top */
-            c_prt((i + j < num_now ? TERM_WHITE : TERM_SLATE), msg, num_lines + 1 - j, 0);
+            Term_erase(0, y, 255);
+            display_message(0, y, strlen(msg), color, msg);
 
             /* Hilite "shower" */
             if (shower && shower[0])

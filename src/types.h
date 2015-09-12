@@ -1423,7 +1423,6 @@ struct player_type
 
     s16b today_mon;           /* Wanted monster */
 
-    bool dtrap;               /* Whether you are on trap-safe grids */
     s16b floor_id;            /* Current floor location */ 
 
     bool autopick_autoregister; /* auto register is in-use or not */
@@ -1964,7 +1963,6 @@ typedef struct
 } door_type;
 
 
-#ifdef TRAVEL
 /*
  *  A structure type for travel command
  */
@@ -1975,7 +1973,6 @@ typedef struct {
     int y;
     int dir;
 } travel_type;
-#endif
 
 /*
  * A new spell system, and some half baked ideas for refactoring

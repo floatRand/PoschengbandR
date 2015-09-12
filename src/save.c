@@ -1169,8 +1169,10 @@ static bool wr_savefile_new(savefile_ptr file)
     if (compress_savefile && (tmp16u > 40)) tmp16u = 40;
     savefile_write_u16b(file, tmp16u);
     for (i = tmp16u - 1; i >= 0; i--)
+    {
+        savefile_write_byte(file, message_color((s16b)i));
         savefile_write_string(file, message_str((s16b)i));
-
+    }
 
     tmp16u = max_r_idx;
     savefile_write_u16b(file, tmp16u);

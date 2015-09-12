@@ -3603,21 +3603,21 @@ static void bldg_process_command(building_type *bldg, int i)
         break;
     case BACT_REPUTATION:
         if (p_ptr->fame <= 0)
-            msg_format("Who the hell are you? (Fame = %d)", p_ptr->fame);
+            cmsg_print(TERM_WHITE, "Who the hell are you?");
         else if (p_ptr->fame < 20)
-            msg_format("I've never even heard of you! (Fame = %d)", p_ptr->fame);
+            cmsg_print(TERM_WHITE, "I've never even heard of you!");
         else if (p_ptr->fame < 40)
-            msg_format("Hmmm ... You've done a few minor notable deeds, but hardly anything worth bragging about! (Fame = %d)", p_ptr->fame);
+            cmsg_print(TERM_L_UMBER, "Hmmm ... You've done a few minor notable deeds, but hardly anything worth bragging about!");
         else if (p_ptr->fame < 60)
-            msg_format("Yes, I've heard of you. The townfolk are talking! (Fame = %d)", p_ptr->fame);
+            cmsg_print(TERM_YELLOW, "Yes, I've heard of you. The townfolk are talking!");
         else if (p_ptr->fame < 80)
-            msg_format("Ah, good sir. 'Tis an honor to see you again! (Fame = %d)", p_ptr->fame);
+            cmsg_print(TERM_ORANGE, "Ah, good sir. 'Tis an honor to see you again!");
         else if (p_ptr->fame < 100)
-            msg_format("You are a true hero! (Fame = %d)", p_ptr->fame);
+            cmsg_print(TERM_L_RED, "You are a true hero!");
         else if (p_ptr->fame < 150)
-            msg_format("You are the stuff of legends! (Fame = %d)", p_ptr->fame);
+            cmsg_print(TERM_RED, "You are the stuff of legends!");
         else
-            msg_format("The bards doth sing of ye: Heroic ballads both far 'n wide! (Fame = %d)", p_ptr->fame);
+            cmsg_print(TERM_VIOLET, "The bards doth sing of ye: Heroic ballads both far 'n wide!");
         paid = TRUE;
         break;
     }
@@ -3871,14 +3871,14 @@ void quest_discovery(int q_idx)
         }
         else
         {
-            msg_format("Beware, this level is protected by %s!", name);
+            cmsg_format(TERM_VIOLET, "Beware, this level is protected by %s!", name);
         }
     }
     else
     {
         /* Normal monsters */
         plural_aux(name);
-        msg_format("Be warned, this level is guarded by %d %s!", q_num, name);
+        cmsg_format(TERM_VIOLET, "Be warned, this level is guarded by %d %s!", q_num, name);
 
     }
 }

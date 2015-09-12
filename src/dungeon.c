@@ -4450,13 +4450,11 @@ static void process_command(void)
             break;
         }
 
-#ifdef TRAVEL
         case '`':
         {
             if (!p_ptr->wild_mode) do_cmd_travel();
             break;
         }
-#endif
 
         /* Hack -- Unknown command */
         default:
@@ -4939,14 +4937,12 @@ static void process_player(void)
             run_step(0);
         }
 
-#ifdef TRAVEL
         /* Traveling */
         else if (travel.run)
         {
             /* Take a step */
             travel_step();
         }
-#endif
 
         /* Repeated command */
         else if (command_rep)

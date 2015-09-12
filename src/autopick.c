@@ -1809,7 +1809,7 @@ static void autopick_delayed_alter_aux(int item)
             ring_absorb_object(o_ptr);
         else
         {
-            object_desc(o_name, o_ptr, 0);
+            object_desc(o_name, o_ptr, OD_COLOR_CODED);
             msg = TRUE;
         }
 

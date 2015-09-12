@@ -948,8 +948,11 @@ static void rd_messages(savefile_ptr file)
 
     for (i = 0; i < num; i++)
     {
+        byte color = TERM_WHITE;
+        if (!savefile_is_older_than(file, 4, 0, 0, 1))
+            color = savefile_read_byte(file);
         savefile_read_string(file, buf, sizeof(buf));
-        message_add(buf);
+        message_add(buf, color);
     }
 }
 

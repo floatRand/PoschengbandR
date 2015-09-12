@@ -19,7 +19,7 @@
 #define VER_MAJOR 4
 #define VER_MINOR 0
 #define VER_PATCH 0
-#define VER_EXTRA 0
+#define VER_EXTRA 1
 
 #define GAME_MODE_BEGINNER  0
 #define GAME_MODE_NORMAL    1
@@ -2193,7 +2193,6 @@ enum _mimic_types {
 #define CAVE_MASK (CAVE_FLOOR | CAVE_EXTRA | CAVE_INNER | CAVE_OUTER | CAVE_SOLID | CAVE_VAULT)
 
 /* Used only after cave generation */
-#define CAVE_DETECT_EDGE 0x0200
 #define CAVE_NOTE       0x0400    /* Flag for delayed visual update (needs note_spot()) */
 #define CAVE_REDRAW     0x0800    /* Flag for delayed visual update (needs lite_spot()) */
 #define CAVE_OBJECT     0x1000    /* Mirror, glyph, etc. */
@@ -2473,6 +2472,7 @@ enum _mimic_types {
 #define OD_NO_FLAVOR        0x00000040  /* Allow to hidden flavor */
 #define OD_FORCE_FLAVOR     0x00000080  /* Get un-shuffled flavor name */
 #define OD_NAME_AND_DICE    0x00000100
+#define OD_COLOR_CODED      0x00000200  /* For msg_print only */
 
 
 /*
@@ -5594,11 +5594,6 @@ enum mon_save_fields_e {
  */
 #define SCROBJ_FAKE_OBJECT  0x00000001
 #define SCROBJ_FORCE_DETAIL 0x00000002
-
-/*
- * For travel command (auto run)
- */
-#define TRAVEL
 
 /* Sniper */
 #define SP_NONE          0

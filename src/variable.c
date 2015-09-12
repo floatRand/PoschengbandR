@@ -514,7 +514,8 @@ u16b *message__ptr;
  * The array of chars, by offset [MESSAGE_BUF]
  */
 char *message__buf;
-
+byte *message__color;
+u16b *message__count;
 
 /*
  * The array of normal options
@@ -1288,10 +1289,7 @@ s16b now_message;
 bool use_menu;
 
 
-#ifdef TRAVEL
-/* for travel */
 travel_type travel;
-#endif
 
 /* for snipers */
 int snipe_type = SP_NONE;

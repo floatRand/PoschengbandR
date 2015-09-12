@@ -301,7 +301,7 @@ bool make_attack_normal(int m_idx)
                 !one_in_(3))
             {
                 if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_EVIL;
-                msg_format("%^s is repelled.", m_name);
+                cmsg_format(TERM_L_BLUE, "%^s is repelled.", m_name);
                 if (retaliation_hack) break;
                 continue;
             }
@@ -1944,7 +1944,7 @@ bool make_attack_normal(int m_idx)
                     disturb(1, 0);
 
                     /* Message */
-                    msg_format("%^s misses you.", m_name);
+                    msg_format("%^s #Dmisses#w you.", m_name);
 
                 }
                 damage = 0;

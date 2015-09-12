@@ -629,9 +629,7 @@ static void prt_status(void)
 
     if (!view_unsafe_grids && in_bounds(py, px))
     {
-        if (cave[py][px].info & CAVE_DETECT_EDGE)
-            ADD_FLG(BAR_DTRAP_EDGE);
-        else if (cave[py][px].info & CAVE_IN_DETECT)
+        if (cave[py][px].info & CAVE_IN_DETECT)
             ADD_FLG(BAR_DTRAP);
     }
 
@@ -2131,7 +2129,6 @@ static void fix_message(void)
 {
     int j, i;
     int w, h;
-    int x, y;
 
     /* Scan windows */
     for (j = 0; j < 8; j++)
@@ -2153,14 +2150,12 @@ static void fix_message(void)
         /* Dump messages */
         for (i = 0; i < h; i++)
         {
-            /* Dump the message on the appropriate line */
-            Term_putstr(0, (h - 1) - i, -1, (byte)((i < now_message) ? TERM_WHITE : TERM_SLATE), message_str((s16b)i));
+            cptr msg = message_str(i);
+            byte color = message_color(i);
+            int  y = (h - 1) - i;
 
-            /* Cursor */
-            Term_locate(&x, &y);
-
-            /* Clear to end of line */
-            Term_erase(x, y, 255);
+            Term_erase(0, y, 255);
+            display_message(0, y, strlen(msg), color, msg);
         }
 
         /* Fresh */

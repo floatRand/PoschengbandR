@@ -1130,9 +1130,6 @@ void change_floor(void)
     /* The dungeon is not ready */
     character_dungeon = FALSE;
 
-    /* No longer in the trap detecteded region */
-    p_ptr->dtrap = FALSE;
-
     /* Mega-Hack -- no panel yet */
     panel_row_min = 0;
     panel_row_max = 0;

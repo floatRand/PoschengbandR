@@ -1277,13 +1277,8 @@ static bool detect_feat_flag(int range, int flag, bool known)
                 /* Mark as detected */
                 if (dist <= range && known)
                 {
-                    if (dist <= range - 1) 
-                    {
-                        c_ptr->info &= ~CAVE_DETECT_EDGE;
+                    if (dist <= range - 1)
                         c_ptr->info |= CAVE_IN_DETECT;
-                    }
-                    else if (!(c_ptr->info & CAVE_IN_DETECT)) /* overlapping regions */
-                        c_ptr->info |= CAVE_DETECT_EDGE;
 
                     c_ptr->info &= ~CAVE_UNSAFE;
 
@@ -1324,8 +1319,6 @@ static bool detect_feat_flag(int range, int flag, bool known)
 bool detect_traps(int range, bool known)
 {
     bool detect = detect_feat_flag(range, FF_TRAP, known);
-
-    if (known) p_ptr->dtrap = TRUE;
 
     if (music_singing(MUSIC_DETECT) && p_ptr->magic_num1[2] > 0) detect = FALSE;
 
@@ -2724,7 +2717,7 @@ sprintf(buf, "%s ... align:%s HP:%d/%d AC:%d speed:%s%d exp:", m_name, align, m_
             prt(buf,0,0);
 
             /* HACK : Add the line to message buffer */
-            message_add(buf);
+            message_add(buf, TERM_WHITE);
             p_ptr->window |= (PW_MESSAGE);
             window_stuff();
 

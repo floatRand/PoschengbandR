@@ -4648,7 +4648,6 @@ void do_cmd_throw(void)
 }
 
 
-#ifdef TRAVEL
 /*
  * Hack: travel command
  */
@@ -4804,4 +4803,3 @@ void do_cmd_travel(void)
         if ((sx == ddx[i]) && (sy == ddy[i])) travel.dir = i;
     }
 }
-#endif

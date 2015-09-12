@@ -107,7 +107,7 @@ static bool _whip_fetch(int dir, int rng)
     /* Get the object */
     if (!inven_carry_okay(o_ptr))
     {
-        msg_format("You fail to fetch %^s since your pack is full.", o_name);
+        cmsg_format(TERM_VIOLET, "You fail to fetch %^s since your pack is full.", o_name);
         /* Leave the object where it is */
     }
     else

@@ -414,6 +414,8 @@ extern u16b message__head;
 extern u16b message__tail;
 extern u16b *message__ptr;
 extern char *message__buf;
+extern byte *message__color;
+extern u16b *message__count;
 extern u32b option_flag[8];
 extern u32b option_mask[8];
 extern u32b window_flag[8];
@@ -730,9 +732,7 @@ extern bool move_player_effect(int ny, int nx, u32b mpe_mode);
 extern bool trap_can_be_ignored(int feat);
 extern void move_player(int dir, bool do_pickup, bool break_trap);
 extern void run_step(int dir);
-#ifdef TRAVEL
 extern void travel_step(void);
-#endif
 
 /* cmd2.c */
 extern void do_cmd_go_up(void);
@@ -754,9 +754,7 @@ extern bool do_cmd_fire_aux1(int item, object_type *j_ptr); /* ammo already chos
 extern void do_cmd_fire_aux2(int item, object_type *j_ptr, int sx, int sy, int tx, int ty); /* ammo and target already chosen */
 extern void do_cmd_throw(void);
 extern bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken);
-#ifdef TRAVEL
 extern void do_cmd_travel(void);
-#endif
 
 /* cmd3.c */
 extern void do_cmd_inven(void);
@@ -968,6 +966,7 @@ extern void get_table_name(char *out_string);
 extern void get_table_sindarin_aux(char *out_string);
 extern void get_table_sindarin(char *out_string);
 extern void flavor_init(void);
+extern char tval_to_attr_char(int tval);
 extern char *object_desc_kosuu(char *t, object_type *o_ptr);
 extern void object_desc(char *buf, object_type *o_ptr, u32b mode);
 
@@ -1510,11 +1509,13 @@ extern void quark_init(void);
 extern s16b quark_add(cptr str);
 extern s16b message_num(void);
 extern cptr message_str(int age);
-extern void message_add(cptr msg);
+extern byte message_color(int age);
+extern void message_add(cptr msg, byte color);
+extern void display_message(int x, int y, int split, byte color, cptr t);
 extern void msg_print(cptr msg);
-#ifndef SWIG
+extern void cmsg_print(byte color, cptr msg);
 extern void msg_format(cptr fmt, ...);
-#endif /* SWIG */
+extern void cmsg_format(byte color, cptr fmt, ...);
 extern void screen_save(void);
 extern void screen_load(void);
 extern void c_put_str(byte attr, cptr str, int row, int col);
@@ -1975,10 +1976,7 @@ extern void virtue_add(int which, int amount);
 extern void virtue_init(void);
 extern void virtue_dump(FILE *file);
 
-#ifdef TRAVEL
-/* for travel */
 extern travel_type travel;
-#endif
 
 /* variable.c (for snipers) */
 extern int snipe_type;
