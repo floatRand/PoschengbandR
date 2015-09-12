@@ -2129,6 +2129,7 @@ static void fix_message(void)
 {
     int j, i;
     int w, h;
+    int y;
 
     /* Scan windows */
     for (j = 0; j < 8; j++)
@@ -2148,18 +2149,20 @@ static void fix_message(void)
         Term_get_size(&w, &h);
 
         /* Dump messages */
-        for (i = 0; i < h; i++)
+        y = h - 1;
+        for (i = 0; y >= 0; i++)
         {
             cptr msg = msg_str(i);
             byte color = msg_color(i);
             int  trn = msg_turn(i);
-            int  y = (h - 1) - i;
+            int  cy;
 
             if (trn < now_turn && color == TERM_WHITE)
                 color = TERM_SLATE;
 
-            Term_erase(0, y, 255);
-            cmsg_display(color, msg, 0, y, strlen(msg));
+            cy = cmsg_display_wrapped(color, msg, 0, y, w, FALSE);
+            cmsg_display_wrapped(color, msg, 0, y - cy + 1, w, TRUE);
+            y -= cy;
         }
 
         /* Fresh */

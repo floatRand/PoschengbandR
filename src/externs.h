@@ -1515,6 +1515,7 @@ extern s32b msg_turn(int age);
 extern void msg_add(cptr msg, byte color);
 extern int  msg_strlen(cptr msg);
 extern void cmsg_display(byte color, cptr msg, int x, int y, int num);
+extern int  cmsg_display_wrapped(int color, cptr msg, int x, int y, int width, bool draw);
 extern void msg_print(cptr msg);
 extern void cmsg_print(byte color, cptr msg);
 extern void msg_format(cptr fmt, ...);

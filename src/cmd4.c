@@ -518,47 +518,41 @@ void do_cmd_message_one(void)
 /*
  * Show previous messages to the user    -BEN-
  *
- * The screen format uses line 0 and 23 for headers and prompts,
- * skips line 1 and 22, and uses line 2 thru 21 for old messages.
- *
- * This command shows you which commands you are viewing, and allows
+ * This command shows you which messages you are viewing, and allows
  * you to "search" for strings in the recall.
  *
- * Note that messages may be longer than 80 characters, but they are
- * displayed using "infinite" length, with a special sub-command to
- * "slide" the virtual display to the left or right.
- *
- * Attempt to only hilite the matching portions of the string.
  */
+#define _DRAW_DOWN 0
+#define _DRAW_UP 1
 void do_cmd_messages(int old_now_turn)
 {
-    int i, n;
+    static bool show_msg_num = FALSE;
+    static bool show_msg_time = FALSE;
 
-    char shower_str[81];
+    int  top_idx, bottom_idx, max_idx, direction;
+    char msg_buf[1024];
     char finder_str[81];
     char back_str[81];
-    cptr shower = NULL;
-    int wid, hgt;
-    int num_lines;
-    bool done = FALSE;
+    int  wid, hgt;
+    int  max_y, min_y;
+    bool done = FALSE;    
 
     /* Get size */
     Term_get_size(&wid, &hgt);
 
-    /* Number of message lines in a screen */
-    num_lines = hgt - 4;
+    /* Restrict the message output lines */
+    min_y = 1;
+    max_y = hgt - 3;
 
     /* Wipe finder */
     strcpy(finder_str, "");
 
-    /* Wipe shower */
-    strcpy(shower_str, "");
-
     /* Total messages */
-    n = msg_num();
+    max_idx = msg_num();
 
-    /* Start on first message */
-    i = 0;
+    /* Start on first message at the bottom and draw upwards from there */
+    bottom_idx = 0;
+    direction = _DRAW_UP;
 
     /* Save the screen */
     screen_save();
@@ -569,85 +563,112 @@ void do_cmd_messages(int old_now_turn)
     /* Process requests until done */
     while (!done)
     {
-        int j;
         int skey;
 
-        /* Dump up to 20 lines of messages */
-        for (j = 0; (j < num_lines) && (i + j < n); j++)
+        /* Dump messages: Since we are word wrapping, we really need to handle
+           drawing in either direction to avoid scrolling issues. For example,
+           when we page down on a screen with no wrapped lines to a screen with
+           many, we might miss messages during the draw. All of this was figured
+           out by adding the message index to the display and I recommend this
+           for future debugging. */
+        if (direction == _DRAW_UP)
         {
-            cptr msg = msg_str(i+j);
-            byte color = msg_color(i+j);
-            int  trn = msg_turn(i+j);
-            int  y = num_lines + 1 - j;
+            int  y = max_y;
+            int  idx;
 
-            if (trn < old_now_turn && color == TERM_WHITE)
-                color = TERM_SLATE;
-
-            /* Dump the messages, bottom to top */
-            Term_erase(0, y, 255);
-            cmsg_display(color, msg, 0, y, strlen(msg));
-
-            /* Hilite "shower" */
-            if (shower && shower[0])
+            top_idx = bottom_idx;
+            for (idx = bottom_idx; idx < max_idx && y >= min_y; idx++)
             {
-                cptr str = msg;
+                cptr msg = msg_str(idx);
+                cptr which = msg;
+                byte color = msg_color(idx);
+                int  trn = msg_turn(idx);
+                int  cy;
 
-                /* Display matches */
-                while ((str = my_strstr(str, shower)) != NULL)
+                if (trn < old_now_turn && color == TERM_WHITE)
+                    color = TERM_SLATE;
+
+                msg_buf[0] = '\0';
+                if (show_msg_num)
+                    strcat(msg_buf, format("%d ", idx));
+                if (show_msg_time)
                 {
-                    int len = strlen(shower);
-
-                    /* Display the match */
-                    Term_putstr(str-msg, num_lines + 1 - j, len, TERM_YELLOW, shower);
-
-                    /* Advance */
-                    str += len;
+                    int d, h, m;
+                    extract_day_hour_min_imp(trn, &d, &h, &m);
+                    strcat(msg_buf, format("D%d %d:%2.2d ", d, h, m));
                 }
-            }
-        }
+                if (strlen(msg_buf))
+                {
+                    strcat(msg_buf, msg);
+                    which = msg_buf;
+                }
 
-        /* Erase remaining lines */
-        for (; j < num_lines; j++)
+                cy = cmsg_display_wrapped(color, which, 0, y, wid, FALSE);
+                if (y - (cy - 1) < min_y)
+                    break;
+
+                cmsg_display_wrapped(color, which, 0, y - (cy - 1), wid, TRUE);
+                y -= cy;
+                top_idx = idx;
+            }
+            for (; y >= min_y; y--)
+                Term_erase(0, y, 255);
+        }
+        else
         {
-            Term_erase(0, num_lines + 1 - j, 255);
+            int y = min_y;
+            int idx;
+
+            bottom_idx = top_idx;
+            for (idx = top_idx; idx >= 0 && y <= max_y; idx--)
+            {
+                cptr msg = msg_str(idx);
+                cptr which = msg;
+                byte color = msg_color(idx);
+                int  trn = msg_turn(idx);
+                int  cy;
+
+                if (trn < old_now_turn && color == TERM_WHITE)
+                    color = TERM_SLATE;
+
+                msg_buf[0] = '\0';
+                if (show_msg_num)
+                    strcat(msg_buf, format("%d ", idx));
+                if (show_msg_time)
+                {
+                    int d, h, m;
+                    extract_day_hour_min_imp(trn, &d, &h, &m);
+                    strcat(msg_buf, format("D%d %d:%2.2d ", d, h, m));
+                }
+                if (strlen(msg_buf))
+                {
+                    strcat(msg_buf, msg);
+                    which = msg_buf;
+                }
+
+                cy = cmsg_display_wrapped(color, which, 0, y, wid, FALSE);
+                if (y + (cy - 1) > max_y)
+                    break;
+
+                cmsg_display_wrapped(color, which, 0, y, wid, TRUE);
+                y += cy;
+                bottom_idx = idx;
+            }
+            for (; y <= max_y; y++)
+                Term_erase(0, y, 255);
         }
 
         /* Display header XXX XXX XXX */
         prt(format("Message Recall (%d-%d of %d)",
-               i, i + j - 1, n), 0, 0);
+               bottom_idx, top_idx, max_idx), 0, 0);
 
         /* Display prompt (not very informative) */
         prt("[Press 'p' for older, 'n' for newer, ..., or ESCAPE]", hgt - 1, 0);
 
         /* Get a command */
         skey = inkey_special(TRUE);
-
-        /* Exit on Escape */
-        if (skey == ESCAPE) break;
-
-        /* Hack -- Save the old index */
-        j = i;
-
         switch (skey)
         {
-        /* Hack -- handle show */
-        case '=':
-            /* Prompt */
-            prt("Show: ", hgt - 1, 0);
-
-            /* Get a "shower" string, or continue */
-            strcpy(back_str, shower_str);
-            if (askfor(shower_str, 80))
-            {
-                /* Show it */
-                shower = shower_str[0] ? shower_str : NULL;
-            }
-            else strcpy(shower_str, back_str);
-
-            /* Okay */
-            continue;
-
-        /* Hack -- handle find */
         case '/':
         case KTRL('s'):
             {
@@ -663,17 +684,9 @@ void do_cmd_messages(int old_now_turn)
                     strcpy(finder_str, back_str);
                     continue;
                 }
-                else if (!finder_str[0])
-                {
-                    shower = NULL; /* Stop showing */
-                    continue;
-                }
-
-                /* Show it */
-                shower = finder_str;
 
                 /* Scan messages */
-                for (z = i + 1; z < n; z++)
+                for (z = bottom_idx + 1; z < max_idx; z++)
                 {
                     cptr msg = msg_str(z);
 
@@ -681,7 +694,8 @@ void do_cmd_messages(int old_now_turn)
                     if (my_strstr(msg, finder_str))
                     {
                         /* New location */
-                        i = z;
+                        bottom_idx = z;
+                        direction = _DRAW_UP;
 
                         /* Done */
                         break;
@@ -690,70 +704,109 @@ void do_cmd_messages(int old_now_turn)
             }
             break;
 
-        /* Recall 1 older message */
         case SKEY_TOP:
-            /* Go to the oldest line */
-            i = n - num_lines;
+            top_idx = max_idx - 1;
+            direction = _DRAW_DOWN;
             break;
 
-        /* Recall 1 newer message */
         case SKEY_BOTTOM:
-            /* Go to the newest line */
-            i = 0;
+            bottom_idx = 0;
+            direction = _DRAW_UP;
             break;
 
-        /* Recall 1 older message */
+        /* 1 message scrolling */
         case '8':
         case SKEY_UP:
         case '\n':
         case '\r':
-            /* Go older if legal */
-            i = MIN(i + 1, n - num_lines);
+            if (top_idx < max_idx - 1)
+            {
+                top_idx++;
+                direction = _DRAW_DOWN;
+            }
+            break;
+        case '2':
+        case SKEY_DOWN:
+            if (bottom_idx > 0)
+            {
+                bottom_idx--;
+                direction = _DRAW_UP;
+            }
             break;
 
-        /* Recall 10 older messages */
-        case '+':
-            /* Go older if legal */
-            i = MIN(i + 10, n - num_lines);
-            break;
-
-        /* Recall 20 older messages */
+        /* Full Page scrolling */
         case 'p':
         case KTRL('P'):
         case ' ':
         case SKEY_PGUP:
-            /* Go older if legal */
-            i = MIN(i + num_lines, n - num_lines);
+        case '9': /* curses */
+            if (top_idx < max_idx - hgt/2)
+            {
+                bottom_idx = top_idx;
+                direction = _DRAW_UP;
+            }
+            else if (top_idx < max_idx - 1)
+            {
+                top_idx = max_idx - 1;
+                direction = _DRAW_DOWN;
+            }
             break;
 
-        /* Recall 20 newer messages */
         case 'n':
         case KTRL('N'):
         case SKEY_PGDOWN:
-            /* Go newer (if able) */
-            i = MAX(0, i - num_lines);
+        case '3': /* curses */
+            if (bottom_idx > hgt/2)
+            {
+                top_idx = bottom_idx;
+                direction = _DRAW_DOWN;
+            }
+            else if (bottom_idx > 0)
+            {
+                bottom_idx = 0;
+                direction = _DRAW_UP;
+            }
             break;
 
-        /* Recall 10 newer messages */
+        /* 10 message scrolling */
+        case '+':
+            if (top_idx < max_idx - 1)
+            {
+                top_idx += 10;
+                if (top_idx >= max_idx)
+                    top_idx = max_idx - 1;
+                direction = _DRAW_DOWN;
+            }
+            break;
+
         case '-':
-            /* Go newer (if able) */
-            i = MAX(0, i - 10);
+            if (bottom_idx > 0)
+            {
+                bottom_idx -= 10;
+                if (bottom_idx < 0)
+                    bottom_idx = 0;
+                direction = _DRAW_UP;
+            }
             break;
 
-        /* Recall 1 newer messages */
-        case '2':
-        case SKEY_DOWN:
-            /* Go newer (if able) */
-            i = MAX(0, i - 1);
+        /* Formatting Options */
+        case 'm':
+        case 'M':
+            show_msg_num = show_msg_num ? FALSE : TRUE;
             break;
 
-        default:
+        case 't':
+        case 'T':
+            show_msg_time = show_msg_time ? FALSE : TRUE;
+            break;
+
+        case ESCAPE:
+        case 'Q':
+        case 'q':
+        /*default:*/
             done = TRUE;
             break;
         }
-
-        /* Hack -- Error of some kind */
-        if (i == j) bell();
     }
 
     /* Restore the screen */

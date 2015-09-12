@@ -2831,6 +2831,84 @@ int msg_strlen(cptr msg)
     return ct;
 }
 
+/* Draw a Wrapped Message for PW_MESSAGE window and Ctrl+P previous messages
+   list. Call once with draw = FALSE to measure the number of lines required
+   and then call again with draw = TRUE to render */
+int cmsg_display_wrapped(int color, cptr msg, int x, int y, int width, bool draw)
+{
+    cptr pos = msg, seek;
+    byte base_color = color;
+    int current_y = y, current_x = x;
+    int len;
+
+    if (draw)
+        Term_erase(current_x, current_y, width);
+
+    while (*pos)
+    {
+        /* Handle color directives whitespace */
+        if (*pos == '#')
+        {
+            pos++;
+            if (*pos == '#')
+            {
+            }
+            else if (*pos == '.')
+            {
+                color = base_color;
+                pos++;
+                continue;
+            }
+            else
+            {
+                color = color_char_to_attr(*pos);
+                pos++;
+                continue;
+            }
+        }
+
+        if (*pos == ' ')
+        {
+            while (*pos && *pos == ' ')
+            {
+                current_x++;
+                pos++;
+            }
+            continue;
+        }
+
+        /* Get a word. We first check for a color escape sequence and
+           process that. On a double #, the word is simply #. */
+        seek = pos;
+        if (*seek == '#') /* Check for ## escape from above */
+            seek++;
+
+        while (*seek && *seek != ' ' && *seek != '#')
+            seek++;
+
+        /* Draw the current word */
+        len = seek - pos;
+        if (!len)
+            break; /* oops */
+
+        if (current_x + len - x > width)
+        {
+            current_y++;
+            current_x = x + 4; /* indent a bit */
+            if (draw)
+                Term_erase(x, current_y, width);
+        }
+
+        if (draw)
+            Term_putstr(current_x, current_y, len, color, pos);
+        current_x += len;
+
+        pos = seek;
+    }
+
+    return current_y - y + 1;
+}
+
 /*
  * Output a message to the top line of the screen.
  *
