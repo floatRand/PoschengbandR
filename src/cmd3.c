@@ -340,7 +340,7 @@ void do_cmd_destroy(void)
         msg_print(NULL);
 
         /* HACK : Add the line to message buffer */
-        message_add(out_val, TERM_YELLOW);
+        msg_add(out_val, TERM_YELLOW);
         p_ptr->window |= (PW_MESSAGE);
         window_stuff();
 

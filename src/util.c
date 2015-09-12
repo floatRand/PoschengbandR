@@ -2431,7 +2431,7 @@ cptr quark_str(s16b i)
 /*
  * How many messages are "available"?
  */
-s16b message_num(void)
+s16b msg_num(void)
 {
     int last, next, n;
 
@@ -2454,7 +2454,7 @@ s16b message_num(void)
 /*
  * Recall the "text" of a saved message
  */
-cptr message_str(int age)
+cptr msg_str(int age)
 {
     static char buf[1024];
     s16b x;
@@ -2462,7 +2462,7 @@ cptr message_str(int age)
     cptr s;
 
     /* Forgotten messages have no text */
-    if ((age < 0) || (age >= message_num())) return ("");
+    if ((age < 0) || (age >= msg_num())) return ("");
 
     /* Acquire the "logical" index */
     x = (message__next + MESSAGE_MAX - (age + 1)) % MESSAGE_MAX;
@@ -2484,12 +2484,12 @@ cptr message_str(int age)
     return (s);
 }
 
-byte message_color(int age)
+byte msg_color(int age)
 {
     s16b x;
     byte color = TERM_WHITE;
 
-    if ((age < 0) || (age >= message_num()))
+    if ((age < 0) || (age >= msg_num()))
         return TERM_WHITE;
 
     x = (message__next + MESSAGE_MAX - (age + 1)) % MESSAGE_MAX;
@@ -2497,12 +2497,12 @@ byte message_color(int age)
     return (color);
 }
 
-s32b message_turn(int age)
+s32b msg_turn(int age)
 {
     s16b x;
     s32b turn = 0;
 
-    if ((age < 0) || (age >= message_num()))
+    if ((age < 0) || (age >= msg_num()))
         return 0;
 
     x = (message__next + MESSAGE_MAX - (age + 1)) % MESSAGE_MAX;
@@ -2516,7 +2516,7 @@ s32b message_turn(int age)
  *
  * Coloring code from Tome2
  */
-void message_add(cptr str, byte color)
+void msg_add(cptr str, byte color)
 {
     int i, k, x, n;
     cptr s;
@@ -2559,7 +2559,7 @@ void message_add(cptr str, byte color)
     /*** Step 3 -- Attempt to optimize ***/
 
     /* Limit number of messages to check */
-    k = message_num() / 4;
+    k = msg_num() / 4;
 
     /* Limit number of messages to check */
     if (k > MESSAGE_MAX / 32) k = MESSAGE_MAX / 32;
@@ -2770,40 +2770,41 @@ static void msg_flush(int x)
 }
 
 /* Display a message */
-void display_message(int x, int y, int split, byte color, cptr t)
+void cmsg_display(byte color, cptr msg, int x, int y, int num)
 {
     int  i = 0, j = 0;
     byte base_color = color;
 
-    while (i < split)
+    while (i < num)
     {
-        if (t[i] == '#')
+        if (msg[i] == '#')
         {
-            if (t[i + 1] == '#')
+            if (msg[i + 1] == '#')
             {
                 Term_putstr(x + j, y, 1, color, "#");
                 i += 2;
                 j++;
             }
-            else if (t[i + 1] == '.')
+            else if (msg[i + 1] == '.')
             {
                 color = base_color;
                 i += 2;
             }
             else
             {
-                color = color_char_to_attr(t[i + 1]);
+                color = color_char_to_attr(msg[i + 1]);
                 i += 2;
             }
         }
         else
         {
-            Term_putstr(x + j, y, 1, color, t + i);
+            Term_putstr(x + j, y, 1, color, msg + i);
             i++;
             j++;
         }
     }
 }
+
 
 /*
  * Output a message to the top line of the screen.
@@ -2877,7 +2878,7 @@ void cmsg_print(byte color, cptr msg)
 
 
     /* Memorize the message */
-    if (character_generated) message_add(msg, color);
+    if (character_generated) msg_add(msg, color);
 
 
     /* Copy it */
@@ -2906,7 +2907,7 @@ void cmsg_print(byte color, cptr msg)
         t[split] = '\0';
 
         /* Display part of the message */
-        display_message(0, 0, split, color, t);
+        cmsg_display(color, t, 0, 0, split);
 
         /* Flush it */
         msg_flush(split + 1);
@@ -2927,7 +2928,7 @@ void cmsg_print(byte color, cptr msg)
 
 
     /* Display the tail of the message */
-    display_message(p, 0, n, color, t);
+    cmsg_display(color, t, p, 0, n);
 
     /* Memorize the tail */
     /* if (character_generated) message_add(t); */
@@ -3553,7 +3554,7 @@ bool get_check_strict(cptr prompt, int mode)
     if (!(mode & CHECK_NO_HISTORY) && p_ptr->playing)
     {
         /* HACK : Add the line to message buffer */
-        message_add(buf, TERM_WHITE);
+        msg_add(buf, TERM_WHITE);
         p_ptr->window |= (PW_MESSAGE);
         window_stuff();
     }

@@ -1502,7 +1502,7 @@ errr init_gcu(int argc, char *argv[])
     */
     {
         int  spacer_cx = 1;
-        int  spacer_cy = 0;
+        int  spacer_cy = 1;
         int  min_cy = 3;
         int  min_cx = 10;
         int  right_cx = 0;

@@ -511,7 +511,7 @@ void do_cmd_change_name(void)
 void do_cmd_message_one(void)
 {
     /* Recall one message XXX XXX XXX */
-    c_prt(message_color(0), format("> %s", message_str(0)), 0, 0);
+    c_prt(msg_color(0), format("> %s", msg_str(0)), 0, 0);
 }
 
 
@@ -555,7 +555,7 @@ void do_cmd_messages(int old_now_turn)
     strcpy(shower_str, "");
 
     /* Total messages */
-    n = message_num();
+    n = msg_num();
 
     /* Start on first message */
     i = 0;
@@ -575,22 +575,17 @@ void do_cmd_messages(int old_now_turn)
         /* Dump up to 20 lines of messages */
         for (j = 0; (j < num_lines) && (i + j < n); j++)
         {
-            cptr msg = message_str(i+j);
-            byte color = message_color(i+j);
-            int  msg_turn = message_turn(i+j);
+            cptr msg = msg_str(i+j);
+            byte color = msg_color(i+j);
+            int  trn = msg_turn(i+j);
             int  y = num_lines + 1 - j;
 
-            if (msg_turn < old_now_turn && color == TERM_WHITE)
+            if (trn < old_now_turn && color == TERM_WHITE)
                 color = TERM_SLATE;
 
             /* Dump the messages, bottom to top */
             Term_erase(0, y, 255);
-            display_message(0, y, strlen(msg), color, msg);
-          /*{
-                char testing[2048];
-                sprintf(testing, "%d %d %s", old_now_turn, msg_turn, msg);
-                display_message(0, y, strlen(testing), color, testing);
-            }*/
+            cmsg_display(color, msg, 0, y, strlen(msg));
 
             /* Hilite "shower" */
             if (shower && shower[0])
@@ -680,7 +675,7 @@ void do_cmd_messages(int old_now_turn)
                 /* Scan messages */
                 for (z = i + 1; z < n; z++)
                 {
-                    cptr msg = message_str(z);
+                    cptr msg = msg_str(z);
 
                     /* Search for it */
                     if (my_strstr(msg, finder_str))

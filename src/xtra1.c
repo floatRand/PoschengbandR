@@ -2150,21 +2150,16 @@ static void fix_message(void)
         /* Dump messages */
         for (i = 0; i < h; i++)
         {
-            cptr msg = message_str(i);
-            byte color = message_color(i);
-            int  msg_turn = message_turn(i);
+            cptr msg = msg_str(i);
+            byte color = msg_color(i);
+            int  trn = msg_turn(i);
             int  y = (h - 1) - i;
 
-            if (msg_turn < now_turn && color == TERM_WHITE)
+            if (trn < now_turn && color == TERM_WHITE)
                 color = TERM_SLATE;
 
             Term_erase(0, y, 255);
-            display_message(0, y, strlen(msg), color, msg);
-          /*{
-                char testing[2048];
-                sprintf(testing, "%d %d %s", now_turn, msg_turn, msg);
-                display_message(0, y, strlen(testing), color, testing);
-            }*/
+            cmsg_display(color, msg, 0, y, strlen(msg));
         }
 
         /* Fresh */

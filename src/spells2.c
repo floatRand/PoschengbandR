@@ -2717,7 +2717,7 @@ sprintf(buf, "%s ... align:%s HP:%d/%d AC:%d speed:%s%d exp:", m_name, align, m_
             prt(buf,0,0);
 
             /* HACK : Add the line to message buffer */
-            message_add(buf, TERM_WHITE);
+            msg_add(buf, TERM_WHITE);
             p_ptr->window |= (PW_MESSAGE);
             window_stuff();
 

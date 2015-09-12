@@ -4341,9 +4341,9 @@ static void dump_aux_last_message(FILE *fff)
             int i;
 
             fprintf(fff, "\n================================ Last Messages ================================\n\n");
-            for (i = MIN(message_num(), 30); i >= 0; i--)
+            for (i = MIN(msg_num(), 30); i >= 0; i--)
             {
-                fprintf(fff,"> %s\n",message_str((s16b)i));
+                fprintf(fff,"> %s\n",msg_str((s16b)i));
             }
             fputc('\n', fff);
         }

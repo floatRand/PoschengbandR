@@ -1165,14 +1165,14 @@ static bool wr_savefile_new(savefile_ptr file)
     wr_randomizer(file);
     wr_options(file);
 
-    tmp16u = message_num();
+    tmp16u = msg_num();
     if (compress_savefile && (tmp16u > 40)) tmp16u = 40;
     savefile_write_u16b(file, tmp16u);
     for (i = tmp16u - 1; i >= 0; i--)
     {
-        savefile_write_byte(file, message_color(i));
-        savefile_write_string(file, message_str(i));
-        savefile_write_s32b(file, message_turn(i));
+        savefile_write_byte(file, msg_color(i));
+        savefile_write_string(file, msg_str(i));
+        savefile_write_s32b(file, msg_turn(i));
     }
 
     tmp16u = max_r_idx;
