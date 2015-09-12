@@ -2805,6 +2805,31 @@ void cmsg_display(byte color, cptr msg, int x, int y, int num)
     }
 }
 
+int msg_strlen(cptr msg)
+{
+    int ct = 0;
+    int i = 0;
+    for (;;)
+    {
+        if (!msg[i]) break;
+        if (msg[i] == '#')
+        {
+            if (msg[i + 1] == '#')
+            {
+                ct++;
+                i += 2;
+            }
+            else
+                i += 2;
+        }
+        else
+        {
+            ct++;
+            i++;
+        }
+    }
+    return ct;
+}
 
 /*
  * Output a message to the top line of the screen.
@@ -2941,8 +2966,7 @@ void cmsg_print(byte color, cptr msg)
     msg_flag = TRUE;
 
     /* Remember the position */
-    p += n + 1;
-
+    p += msg_strlen(t) + 1;
 
     /* Optional refresh */
     if (fresh_message) Term_fresh();
