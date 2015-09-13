@@ -658,17 +658,18 @@ void do_cmd_messages(int old_now_turn)
                 Term_erase(0, y, 255);
         }
 
-        /* Display header XXX XXX XXX */
         prt(format("Message Recall (%d-%d of %d)",
                bottom_idx, top_idx, max_idx), 0, 0);
 
-        /* Display prompt (not very informative) */
-        prt("[Press 'p' for older, 'n' for newer, ..., or ESCAPE]", hgt - 1, 0);
+        prt("[Press ? for help]", hgt - 1, 0);
 
         /* Get a command */
         skey = inkey_special(TRUE);
         switch (skey)
         {
+        case '?':
+            show_file(TRUE, "context_message_recall.txt", NULL, 0, 0);
+            break;
         case '/':
         case KTRL('s'):
             {
@@ -705,11 +706,13 @@ void do_cmd_messages(int old_now_turn)
             break;
 
         case SKEY_TOP:
+        case '7': /* curses */
             top_idx = max_idx - 1;
             direction = _DRAW_DOWN;
             break;
 
         case SKEY_BOTTOM:
+        case '1': /* curses */
             bottom_idx = 0;
             direction = _DRAW_UP;
             break;

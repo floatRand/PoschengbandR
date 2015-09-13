@@ -2121,9 +2121,7 @@ static void fix_player(void)
 
 
 /*
- * Hack -- display recent messages in sub-windows
- *
- * XXX XXX XXX Adjust for width and split messages
+ * Display recent messages in sub-windows
  */
 static void fix_message(void)
 {
