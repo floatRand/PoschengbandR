@@ -2831,6 +2831,17 @@ int msg_strlen(cptr msg)
     return ct;
 }
 
+static bool _punctuation_hack(cptr pos)
+{
+    if ( *pos == '#'
+      && *(pos + 1) != '#'
+      && strchr(".,-)", *(pos + 2)) )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
 /* Draw a Wrapped Message for PW_MESSAGE window and Ctrl+P previous messages
    list. Call once with draw = FALSE to measure the number of lines required
    and then call again with draw = TRUE to render */
@@ -2839,14 +2850,14 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int width, bool draw
     cptr pos = msg, seek;
     byte base_color = color;
     int current_y = y, current_x = x;
-    int len;
+    int len, xtra;
 
     if (draw)
         Term_erase(current_x, current_y, width);
 
     while (*pos)
     {
-        /* Handle color directives whitespace */
+        /* Handle color directives and whitespace */
         if (*pos == '#')
         {
             pos++;
@@ -2877,8 +2888,7 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int width, bool draw
             continue;
         }
 
-        /* Get a word. We first check for a color escape sequence and
-           process that. On a double #, the word is simply #. */
+        /* Get current word */
         seek = pos;
         if (*seek == '#') /* Check for ## escape from above */
             seek++;
@@ -2888,13 +2898,15 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int width, bool draw
 
         /* Draw the current word */
         len = seek - pos;
+        xtra = _punctuation_hack(seek) ? 1 : 0;
+
         if (!len)
             break; /* oops */
 
-        if (current_x + len - x > width)
+        if ((current_x - x) + len + xtra > width)
         {
             current_y++;
-            current_x = x + 4; /* indent a bit */
+            current_x = x + 2; /* indent a bit */
             if (draw)
                 Term_erase(x, current_y, width);
         }
