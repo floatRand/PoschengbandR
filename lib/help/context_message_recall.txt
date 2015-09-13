@@ -96,7 +96,7 @@
 
   [[[[r|Formatting
 
-  You may have noticed the top line of the display refering to various numbers.
+  You may have noticed the top line of the display referring to various numbers.
   These are the message numbers, and you can display them if you like by
   pressing the [[[[y|m| key.
 

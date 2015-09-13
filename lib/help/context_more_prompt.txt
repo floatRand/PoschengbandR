@@ -1,0 +1,79 @@
+  [[[[B|The -more- Prompt
+
+  Note: If you are viewing this, it is because you pressed [[[[y|?| while the being
+  prompted for [[[[B|-more-| messages.
+
+  [[[[r|Quick Summary
+
+  [[[[y|SPACE|  Display next message.
+  [[[[y|ESC|    Dismiss all messages.
+  [[[[y|RETURN| Dismiss all messages.
+
+  [[[[r|For the Novice
+
+  As you play the game, you will receive messages when various things happen.
+  The messages are displayed on the top line of the screen. However, since this
+  space is rather limited (and since you will be receiving lots and lots of
+  messages), the game often needs to make sure you are finished reading the
+  current message before displaying more information.
+
+  For example:
+
+  [[[[w|You hit the Scruffy looking hobbit. |[[[[B|-more-|[[[[w|
+  [[[[B|Troll|[[[[w|             #....#
+  [[[[B|Monster|[[[[w|           |[[[[s|%|[[[[w|%#|[[[[s|%|[[[[w|.|[[[[s|%|[[[[w|
+  [[[[w|LEVEL |[[[[G|    42|[[[[w|         #.%%|[[[[o|*|[[[[s|%%%%%|[[[[w|
+  [[[[w|EXP |[[[[G|  376926|[[[[w|         #........#
+  [[[[w|AU |[[[[G|   625400|[[[[w|         |[[[[s|%%|[[[[w|##%|[[[[s|%%|[[[[w|%.%                    |[[[[s|%|[[[[U|'|[[[[w|#|[[[[s|%|[[[[w|%%|[[[[s|%|[[[[w|##%#.%##|[[[[s|%%|[[[[w|.##%%%
+  [[[[D|\|[[[[U|)|[[[[s|}|[[[[g|==|[[[[y|"|[[[[R|*|[[[[s|[|[[[[g|(|[[[[s|]|[[[[W|]]|[[[[w|                |[[[[s|%|[[[[w|.|[[[[s|%|[[[[w|                    %.....................|[[[[s|%|[[[[w|
+  [[[[w|STR : |[[[[G|18/***|[[[[w|                #.#                    ..............|[[[[o|,|[[[[w|.......|[[[[s|%|[[[[w|
+  [[[[w|INT : |[[[[G| 18/58|[[[[w|                %.|[[[[s|%|[[[[w|                    #.....................#
+  [[[[w|Wis : |[[[[y|     8|[[[[w|                %.|[[[[s|%|[[[[w|                    #...|[[[[s|h|[[[[y|T|[[[[w|................|[[[[s|%|[[[[w|
+  [[[[w|DEX : |[[[[G|18/183|[[[[w|                %.|[[[[s|%|[[[[w|                    |[[[[s|%|[[[[w|.....................|[[[[s|%|[[[[w|
+  [[[[w|CON : |[[[[G|18/213|[[[[w|                #.#                    |[[[[s|%|[[[[w|.....................#
+  [[[[w|CHR : |[[[[G|18/113|[[[[w|                #.#                    #.....................#
+  [[[[w|AC     |[[[[G|  213|[[[[w|                #.#                    #.....................#
+  [[[[w|HP |[[[[G| 939|[[[[w|/|[[[[G| 939|[[[[w|                #.##                   #.....................#
+  [[[[w|SP |[[[[G|   0|[[[[w|/|[[[[G|   0|[[[[w|                #..#  #..              ###############.#######
+  [[[[w|                            ##.#  #.#                            #.#
+  [[[[w|[|[[[[G|**********|[[[[w|]  ################.####.#                          ###.#
+  [[[[w|              #..................#..#                          #...#
+  [[[[w|              #..................|[[[[U|'|[[[[w|..#                          #.###
+  [[[[G|      |[[[[w|       ##..................##.#                       ####.#
+  [[[[w|              |[[[[U|'|[[[[w|..................##.#                       #....#
+  [[[[w|Day 22 18:51 ##..................##.#                       #.#.##
+  [[[[w| |[[[[U|Stronghold|[[[[w|   #..................##.#                       #.###
+  [[[[w|              #..................##.#                   .####.#
+  [[[[w|Food:         #####################.#                   :.....##
+  [[[[w|                                                        |[[[[G|Fast(+16)|[[[[w|       |[[[[s|  Lev 4
+
+  In this case I attacked a monster, and the game is telling me that my attack
+  landed. It also happens that this attack killed the monster, so the game
+  wants to tell me that as well but needs to make sure I am finished reading
+  the current prompt before continuing. Thus the [[[[B|-more-| prompt.
+
+  When you are finished reading, simply press [[[[y|SPACE| to continue and the
+  next line will be displayed. Keep pressing [[[[y|SPACE| until you have read
+  all of the current messages, at which time you may continue playing.
+
+  [[[[r|Options
+
+  The behavior of the [[[[B|-more-| prompt can be customized by various options.
+  First, you may not like having to press [[[[y|SPACE| to clear messages. With the
+  [[[[R|quick_messages| option (see [a]) any keypress will act as a [[[[y|SPACE|. This makes
+  it easy to plow through swarms of monsters with the arrow keys, but also
+  makes it easy to accidentally miss messages. Second, you may not like having
+  to deal with the [[[[B|-more-| prompt at all. Perhaps you think you already know
+  all the game has to say? Or, more likely, you have configured the game setup
+  to display message output in a separate terminal window. And there is always
+  the Message Recall command ([[[[y|Ctrl+P|) to show you recent messages all at once.
+  So if you do miss information displayed on the message line at the top of the
+  screen, you needn't worry. The game remembers what it has to say! To turn off
+  the [[[[B|-more-| prompt entirely, use the [[[[R|auto_more| option (see [b]). For
+  information on setting options in general, see [c].
+
+
+***** [a] option.txt#quick_messages
+***** [b] option.txt#auto_more
+***** [c] option.txt
+

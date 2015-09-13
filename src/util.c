@@ -15,6 +15,12 @@
 
 static int num_more = 0;
 
+/*
+ * Hack -- prevent "accidents" in "screen_save()" or "screen_load()"
+ */
+static int screen_depth = 0;
+
+
 /* Save macro trigger string for use in inkey_special() */
 static char inkey_macro_trigger_string[1024];
 
@@ -2404,6 +2410,49 @@ cptr quark_str(s16b i)
 
 
 
+/*
+ * Save the screen, and increase the "icky" depth.
+ *
+ * This function must match exactly one call to "screen_load()".
+ */
+static void _screen_save_aux(void)
+{
+    /* Save the screen (if legal) */
+    if (screen_depth++ == 0) Term_save();
+
+    /* Increase "icky" depth */
+    character_icky++;
+}
+
+void screen_save(void)
+{
+    /* Hack -- Flush messages */
+    msg_print(NULL);
+    _screen_save_aux();
+}
+
+
+/*
+ * Load the screen, and decrease the "icky" depth.
+ *
+ * This function must match exactly one call to "screen_save()".
+ */
+static void _screen_load_aux(void)
+{
+    /* Load the screen (if legal) */
+    if (--screen_depth == 0) Term_load();
+
+    /* Decrease "icky" depth */
+    character_icky--;
+}
+
+void screen_load(void)
+{
+    /* Hack -- Flush messages */
+    msg_print(NULL);
+    _screen_load_aux();
+}
+
 
 /*
  * Second try for the "message" handling routines.
@@ -2753,6 +2802,13 @@ static void msg_flush(int x)
             if (cmd == ESCAPE) {
                 num_more = -9999;
                 break;
+            } else if (cmd == '?') {
+                int old_num_more = num_more;
+                _screen_save_aux();
+                show_file(TRUE, "context_more_prompt.txt", NULL, 0, 0);
+                _screen_load_aux();
+                num_more = old_num_more;
+                continue;
             } else if (cmd == ' ') {
                 num_more = 0;
                 break;
@@ -3066,48 +3122,6 @@ void msg_print(cptr msg)
 {
     cmsg_print(TERM_WHITE, msg);
 }
-
-/*
- * Hack -- prevent "accidents" in "screen_save()" or "screen_load()"
- */
-static int screen_depth = 0;
-
-
-/*
- * Save the screen, and increase the "icky" depth.
- *
- * This function must match exactly one call to "screen_load()".
- */
-void screen_save(void)
-{
-    /* Hack -- Flush messages */
-    msg_print(NULL);
-
-    /* Save the screen (if legal) */
-    if (screen_depth++ == 0) Term_save();
-
-    /* Increase "icky" depth */
-    character_icky++;
-}
-
-
-/*
- * Load the screen, and decrease the "icky" depth.
- *
- * This function must match exactly one call to "screen_save()".
- */
-void screen_load(void)
-{
-    /* Hack -- Flush messages */
-    msg_print(NULL);
-
-    /* Load the screen (if legal) */
-    if (--screen_depth == 0) Term_load();
-
-    /* Decrease "icky" depth */
-    character_icky--;
-}
-
 
 /*
  * Display a formatted message, using "vstrnfmt()" and "msg_print()".
