@@ -626,7 +626,6 @@ extern s16b feat_wall_outer;
 extern s16b feat_wall_inner;
 extern s16b feat_wall_solid;
 extern s16b floor_type[100], fill_type[100];
-extern bool now_damaged;
 extern s32b now_turn;
 extern bool use_menu;
 
@@ -1513,6 +1512,7 @@ extern cptr msg_str(int age);
 extern byte msg_color(int age);
 extern s32b msg_turn(int age);
 extern void msg_add(cptr msg, byte color);
+extern void msg_boundary(void);
 extern int  msg_strlen(cptr msg);
 extern void cmsg_display(byte color, cptr msg, int x, int y, int num);
 extern int  cmsg_display_wrapped(int color, cptr msg, int x, int y, int width, bool draw);

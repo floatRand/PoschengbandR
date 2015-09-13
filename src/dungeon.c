@@ -4475,6 +4475,7 @@ static void process_command(void)
         }
     }
 
+    msg_boundary();
     if (!energy_use)
         now_turn = old_now_turn;
 }
@@ -4848,7 +4849,6 @@ static void process_player(void)
         p_ptr->window |= PW_PLAYER;
         p_ptr->sutemi = FALSE;
         p_ptr->counter = FALSE;
-        now_damaged = FALSE;
 
         /* Handle "p_ptr->notice" */
         notice_stuff();
@@ -5852,7 +5852,6 @@ void play_game(bool new_game)
     p_ptr->teleport_town = FALSE;
     p_ptr->sutemi = FALSE;
     world_monster = FALSE;
-    now_damaged = FALSE;
     now_turn = turn;
     start_time = time(NULL);
     record_o_name[0] = '\0';

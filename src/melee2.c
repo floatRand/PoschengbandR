@@ -3899,6 +3899,8 @@ void process_monsters(void)
 
         /* Process the monster */
         process_monster(i); 
+        msg_boundary();
+
 
         reset_target(m_ptr);
 

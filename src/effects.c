@@ -6001,10 +6001,6 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
     {
         /* Disturb */
         disturb(1, 0);
-        if (auto_more)
-        {
-            now_damaged = TRUE;
-        }
     }
 
     if (monspell >= 0) learn_spell(monspell);
@@ -6227,12 +6223,6 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
     if (p_ptr->chp < warning && !world_monster)
     {
         sound(SOUND_WARN);
-
-        if (auto_more)
-        {
-            /* stop auto_more even if DAMAGE_USELIFE */
-            now_damaged = TRUE;
-        }
 
         /* Hack -- stop the player on first crossing the threshold */
         if (old_chp >= warning) 

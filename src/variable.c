@@ -1285,7 +1285,6 @@ s16b feat_wall_inner;
 s16b feat_wall_solid;
 s16b floor_type[100], fill_type[100];
 
-bool now_damaged;
 s32b now_turn;
 bool use_menu;
 

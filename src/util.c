@@ -13,7 +13,13 @@
 #include "angband.h"
 
 
-static int num_more = 0;
+/* Stop using auto_more and use the new improved handling instead! */
+#define AUTO_MORE_PROMPT     0
+#define AUTO_MORE_SKIP_ONE   1   /* Skip to next message */
+#define AUTO_MORE_SKIP_BLOCK 2   /* Skip to next message boundary */
+#define AUTO_MORE_SKIP_ALL   3   /* Skip to next player action */
+
+static int auto_more_state = AUTO_MORE_PROMPT;
 
 /*
  * Hack -- prevent "accidents" in "screen_save()" or "screen_load()"
@@ -1825,7 +1831,7 @@ static char inkey_aux(void)
 
     char *buf = inkey_macro_trigger_string;
 
-    num_more = 0;
+    auto_more_state = AUTO_MORE_PROMPT;
 
     if (parse_macro)
     {
@@ -2765,64 +2771,54 @@ void msg_add(cptr str, byte color)
  */
 static void msg_flush(int x)
 {
-    byte a = TERM_L_BLUE;
-    bool nagasu = FALSE;
-
-    if ((auto_more /*&& !now_damaged*/) || num_more < 0)
-    {
-        nagasu = TRUE;
-    /*  I found this to be both very surprising and extremely annoying when
-        automore mysteriously stopped working one day ... Hmph!
-        int i;
-        for (i = 0; i < 8; i++)
-        {
-            if (angband_term[i] && (window_flag[i] & PW_MESSAGE)) break;
-        }
-        if (i < 8)
-        {
-            if (num_more < angband_term[i]->hgt) nagasu = TRUE;
-        }
-        else
-        {
-            nagasu = TRUE;
-        } */
-    }
-    now_damaged = FALSE;
-
-    if (!p_ptr->playing || !nagasu)
+    if (!auto_more && auto_more_state == AUTO_MORE_PROMPT)
     {
         /* Pause for response */
-        Term_putstr(x, 0, -1, a, "-more-");
-
+        Term_putstr(x, 0, -1, TERM_L_BLUE, "-more-");
 
         /* Get an acceptable keypress */
         while (1)
         {
             int cmd = inkey();
-            if (cmd == ESCAPE) {
-                num_more = -9999;
+            if (cmd == ESCAPE)
+            {
+                auto_more_state = AUTO_MORE_SKIP_ALL;
                 break;
-            } else if (cmd == '?') {
-                int old_num_more = num_more;
+            }
+            else if (cmd == '\n' || cmd == '\r' || cmd == 'n')
+            {
+                auto_more_state = AUTO_MORE_SKIP_BLOCK;
+                break;
+            }
+            else if (cmd == '?')
+            {
                 _screen_save_aux();
                 show_file(TRUE, "context_more_prompt.txt", NULL, 0, 0);
                 _screen_load_aux();
-                num_more = old_num_more;
                 continue;
-            } else if (cmd == ' ') {
-                num_more = 0;
-                break;
-            } else if ((cmd == '\n') || (cmd == '\r')) {
-                num_more--;
+            }
+            else if (cmd == ' ' || cmd == 'm' || quick_messages)
+            {
                 break;
             }
-            if (quick_messages) break;
             bell();
         }
     }
 
     /* Clear the line */
     Term_erase(0, 0, 255);
+}
+
+void msg_boundary(void)
+{
+    if (auto_more_state == AUTO_MORE_SKIP_BLOCK)
+    {
+        /* Flush before updating the state to skip
+           the remnants of the last message from the
+           previous message block */
+        msg_print(NULL);
+        auto_more_state = AUTO_MORE_PROMPT;
+    }
 }
 
 /* Display a message */
@@ -3051,7 +3047,6 @@ void cmsg_print(byte color, cptr msg)
     /* Memorize the message */
     if (character_generated) msg_add(msg, color);
 
-
     /* Copy it */
     strcpy(buf, msg);
 
@@ -3083,9 +3078,6 @@ void cmsg_print(byte color, cptr msg)
         /* Flush it */
         msg_flush(split + 1);
 
-        /* Memorize the piece */
-        /* if (character_generated) message_add(t); */
-
         /* Restore the split character */
         t[split] = oops;
 
@@ -3101,8 +3093,8 @@ void cmsg_print(byte color, cptr msg)
     /* Display the tail of the message */
     cmsg_display(color, t, p, 0, n);
 
-    /* Memorize the tail */
-    /* if (character_generated) message_add(t); */
+    if (auto_more_state == AUTO_MORE_SKIP_ONE)
+        auto_more_state = AUTO_MORE_PROMPT;
 
     /* Window stuff */
     p_ptr->window |= (PW_MESSAGE);
@@ -3649,8 +3641,8 @@ bool get_check_strict(cptr prompt, int mode)
     {
         p_ptr->window |= PW_MESSAGE;
         window_stuff();
-        num_more = 0;
     }
+    auto_more_state = AUTO_MORE_PROMPT;
 
     /* Paranoia XXX XXX XXX */
     msg_print(NULL);
@@ -4289,7 +4281,7 @@ void request_command(int shopping)
         {
             /* Hack -- no flush needed */
             msg_flag = FALSE;
-            num_more = 0;
+            auto_more_state = AUTO_MORE_PROMPT;
 
             /* Activate "command mode" */
             inkey_flag = TRUE;
