@@ -3335,98 +3335,32 @@ void verify_panel(void)
 }
 
 
-/*
- * Monster health description
- */
-cptr look_mon_desc(monster_type *m_ptr, u32b mode)
+cptr mon_health_desc(monster_type *m_ptr)
 {
     monster_race *ap_r_ptr = &r_info[m_ptr->ap_r_idx];
-    bool         living;
-    int          perc;
-    cptr desc;
-    cptr attitude;
-    cptr clone;
+    bool          living = monster_living(ap_r_ptr);
+    int           perc = 100 * m_ptr->hp / m_ptr->maxhp;
 
-    /* Determine if the monster is "living" */
-    living = monster_living(ap_r_ptr);
-
-    /* Calculate a health "percentage" */
-    perc = 100L * m_ptr->hp / m_ptr->maxhp;
-
-    /* Healthy monsters */
     if (m_ptr->hp >= m_ptr->maxhp)
-    {
-        /* No damage */
-        desc = living ? "unhurt" : "undamaged";
-
-    }
-
+        return living ? "unhurt" : "undamaged";
     else if (perc >= 60)
-    {
-        desc = living ? "somewhat wounded" : "somewhat damaged";
-
-    }
-
+        return living ? "somewhat wounded" : "somewhat damaged";
     else if (perc >= 25)
-    {
-        desc = living ? "wounded" : "damaged";
-
-    }
-
+        return living ? "wounded" : "damaged";
     else if (perc >= 10)
-    {
-        desc = living ? "badly wounded" : "badly damaged";
+        return living ? "badly wounded" : "badly damaged";
 
-    }
-
-    else 
-    {
-        desc = living ? "almost dead" : "almost destroyed";
-    }
-
-
-    /* Need attitude information? */
-    if (!(mode & 0x01))
-    {
-        /* Full information is not needed */
-        attitude = "";
-    }
-    else if (is_pet(m_ptr))
-    {
-        attitude = ", pet";
-    }
-    else if (is_friendly(m_ptr))
-    {
-        attitude = ", friendly";
-    }
-    else
-    {
-        attitude = "";
-    }
-
-
-    /* Clone monster? */
-    if (m_ptr->smart & SM_CLONED)
-    {
-        clone = ", clone";
-    }
-    else
-    {
-        clone = "";
-    }
-
-    /* Display monster's level --- idea borrowed from ToME */
-    if ((ap_r_ptr->r_tkills || p_ptr->wizard) && !(m_ptr->mflag2 & MFLAG2_KAGE))
-    {
-        return format("Level %d, %s%s%s", ap_r_ptr->level, desc, attitude, clone);
-    }
-    else 
-    {
-        return format("Level ???, %s%s%s", desc, attitude, clone);
-    }
+    return living ? "almost dead" : "almost destroyed";
 }
 
-
+cptr mon_allegiance_desc(monster_type *m_ptr)
+{
+    if (is_pet(m_ptr))
+        return "pet";
+    else if (is_friendly(m_ptr))
+        return "friendly";
+    return ""; /* Hostile is to be assumed! */
+}
 
 /*
  * Angband sorting algorithm -- quick sort in place
@@ -3884,59 +3818,6 @@ static void target_set_prepare(int mode)
 }
 
 
-/*
- * Evaluate number of kill needed to gain level
- */
-static void evaluate_monster_exp(char *buf, monster_type *m_ptr)
-{
-    monster_race *ap_r_ptr = &r_info[m_ptr->ap_r_idx];
-    u32b num;
-    s32b exp_mon, exp_adv;
-    u32b exp_mon_frac, exp_adv_frac;
-
-    if ((p_ptr->lev >= PY_MAX_LEVEL) || (p_ptr->prace == RACE_ANDROID))
-    {
-        sprintf(buf,"**");
-        return;
-    }
-    else if (!ap_r_ptr->r_tkills || (m_ptr->mflag2 & MFLAG2_KAGE))
-    {
-        if (!p_ptr->wizard)
-        {
-            sprintf(buf,"??");
-            return;
-        }
-    }
-
-
-    /* The monster's experience point (assuming average monster speed) */
-    exp_mon = ap_r_ptr->mexp * ap_r_ptr->level;
-    exp_mon_frac = 0;
-    s64b_div(&exp_mon, &exp_mon_frac, 0, (p_ptr->max_plv + 2));
-
-
-    /* Total experience value for next level */
-    exp_adv = exp_requirement(p_ptr->lev);
-
-    /* Experience value need to get */
-    s64b_sub(&exp_adv, &exp_adv_frac, p_ptr->exp, p_ptr->exp_frac);
-
-
-    /* You need to kill at least one monster to get any experience */
-    s64b_add(&exp_adv, &exp_adv_frac, exp_mon, exp_mon_frac);
-    s64b_sub(&exp_adv, &exp_adv_frac, 0, 1);
-
-    /* Extract number of monsters needed */
-    s64b_div(&exp_adv, &exp_adv_frac, exp_mon, exp_mon_frac);
-
-    /* If 999 or more monsters needed, only display "999". */
-    num = MIN(999, exp_adv_frac);
-
-    /* Display the number */
-    sprintf(buf,"%03u", num);
-}
-
-
 bool show_gold_on_floor = FALSE;
 
 /*
@@ -3998,7 +3879,15 @@ static int target_set_aux(int y, int x, int mode, cptr info)
     }
     else
     {
-        s1 = "Target:";
+        s1 = "Target: ";
+        /* Hack: I get confused about whether I am selecting a monster,
+           or the position that the monster happens to currently occupy.
+           This happens after a fat finger incident or a failed <dir>
+           navigation that really should have worked.*/
+        if (strstr(info, "o,"))
+            s1 = "Monster: ";
+        else if (strstr(info, "m,"))
+            s1 = "Position: ";
     }
 
     /* Hack -- hallucination */
@@ -4048,8 +3937,6 @@ static int target_set_aux(int y, int x, int mode, cptr info)
         /* Interact */
         while (1)
         {
-            char acount[10];
-
             /* Recall */
             if (recall)
             {
@@ -4081,9 +3968,14 @@ static int target_set_aux(int y, int x, int mode, cptr info)
             /*** Normal ***/
 
             /* Describe, and prompt for recall */
-            evaluate_monster_exp(acount, m_ptr);
-
-            sprintf(out_val, "[%s]%s%s%s%s(%s) [r, %s%s]", acount, s1, s2, s3, m_name, look_mon_desc(m_ptr, 0x01), x_info, info);
+            sprintf(out_val, "%s%s%s%s ", s1, s2, s3, m_name);
+            if (is_pet(m_ptr))
+                strcat(out_val, "(Pet) ");
+            else if (is_friendly(m_ptr))
+                strcat(out_val, "(Friendly) ");
+            else if (m_ptr->smart & SM_CLONED)
+                strcat(out_val, "(Clone) ");
+            sprintf(out_val + strlen(out_val), "[r,%s%s]", x_info, info);
 
             prt(out_val, 0, 0);
 
@@ -4545,14 +4437,14 @@ bool target_set(int mode)
             if ( target_able(c_ptr->m_idx) 
              || ((mode & (TARGET_MARK|TARGET_DISI)) && m_list[c_ptr->m_idx].ml))
             {
-                strcpy(info, "q,t,p,o,+,-,<dir>");
+                strcpy(info, "q,t,p,o,+,-,?,<dir>");
 
             }
 
             /* Dis-allow target */
             else
             {
-                strcpy(info, "q,p,o,+,-,<dir>");
+                strcpy(info, "q,p,o,+,-,?,<dir>");
 
             }
 
@@ -4573,6 +4465,11 @@ bool target_set(int mode)
             /* Analyze */
             switch (query)
             {
+                case '?':
+                    screen_save();
+                    show_file(TRUE, "context_targetting.txt", NULL, 0, 0);
+                    screen_load();
+                    break;
                 case ESCAPE:
                 case 'q':
                 {
@@ -4784,9 +4681,9 @@ bool target_set(int mode)
             c_ptr = &cave[y][x];
 
             if ((mode & TARGET_MARK) && !m_list[c_ptr->m_idx].ml)
-                strcpy(info, "q,p,o,+,-,<dir>");
+                strcpy(info, "q,p,o,+,-,?,<dir>");
             else
-                strcpy(info, "q,t,p,m,+,-,<dir>");
+                strcpy(info, "q,t,p,m,+,-,?,<dir>");
 
 
             /* Describe and Prompt (enable "TARGET_LOOK") */
@@ -4806,6 +4703,11 @@ bool target_set(int mode)
             /* Analyze the keypress */
             switch (query)
             {
+                case '?':
+                    screen_save();
+                    show_file(TRUE, "context_targetting.txt", NULL, 0, 0);
+                    screen_load();
+                    break;
                 case ESCAPE:
                 case 'q':
                 {

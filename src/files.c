@@ -5454,11 +5454,13 @@ bool show_file(bool show_version, cptr name, cptr what, int line, int mode)
 
         /* Hack -- go to the top line */
         case SKEY_TOP:
+        case '7': /* curses */
             line = 0;
             break;
 
         /* Hack -- go to the bottom line */
         case SKEY_BOTTOM:
+        case '1': /* curses */
             line = ((size - 1) / rows) * rows;
             break;
 

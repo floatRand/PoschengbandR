@@ -5583,6 +5583,7 @@ static void do_cmd_knowledge_pets(void)
     int             i;
     FILE            *fff;
     monster_type    *m_ptr;
+    monster_race    *r_ptr;
     char            pet_name[80];
     int             t_friends = 0;
     int             show_upkeep = 0;
@@ -5602,6 +5603,7 @@ static void do_cmd_knowledge_pets(void)
     {
         /* Access the monster */
         m_ptr = &m_list[i];
+        r_ptr = &r_info[m_ptr->r_idx];
 
         /* Ignore "dead" monsters */
         if (!m_ptr->r_idx) continue;
@@ -5611,7 +5613,10 @@ static void do_cmd_knowledge_pets(void)
         {
             t_friends++;
             monster_desc(pet_name, m_ptr, MD_ASSUME_VISIBLE | MD_INDEF_VISIBLE);
-            fprintf(fff, "%s (%s)\n", pet_name, look_mon_desc(m_ptr, 0x00));
+            fprintf(fff, "%s (", pet_name);
+            if (r_ptr->r_tkills)
+                fprintf(fff, "L%d, ", r_ptr->level);
+            fprintf(fff, "%s)\n", mon_health_desc(m_ptr));
         }
     }
 

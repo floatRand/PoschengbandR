@@ -917,8 +917,18 @@ void do_cmd_target(void)
     /* Target set */
     if (target_set(TARGET_KILL))
     {
-        msg_print("Target Selected.");
+        if (target_who > 0)
+        {
+            monster_type *m_ptr = &m_list[target_who];
+            char          m_name[MAX_NLEN];
 
+            monster_desc(m_name, m_ptr, MD_INDEF_VISIBLE);
+            msg_format("Targetting %s.", m_name);
+        }
+        else
+        {
+            msg_format("Targetting Position %d, %d.", target_row, target_col);
+        }
     }
 
     /* Target aborted */

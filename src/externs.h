@@ -1726,7 +1726,8 @@ extern bool change_panel(int dy, int dx);
 extern void verify_panel(void);
 extern void verify_panel_aux(u32b options);
 
-extern cptr look_mon_desc(monster_type *m_ptr, u32b mode);
+extern cptr mon_health_desc(monster_type *m_ptr);
+extern cptr mon_allegiance_desc(monster_type *m_ptr);
 extern void ang_sort_aux(vptr u, vptr v, int p, int q);
 extern void ang_sort(vptr u, vptr v, int n);
 extern bool target_able(int m_idx);
