@@ -2562,7 +2562,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
             else
             {
                 sound(SOUND_MISS);
-                msg_format("You #Dmiss#. %s.", m_name);
+                msg_format("You miss %s.", m_name);
             }
 
             if (mode == WEAPONMASTER_RETALIATION)
@@ -4041,13 +4041,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
               && o_ptr->sval == SV_DEATH_SCYTHE 
               && one_in_(3) )
             {
-                msg_format("You #Dmiss#. %s.", m_name);
+                msg_format("You miss %s.", m_name);
                 death_scythe_miss(o_ptr, hand, mode);
             }
             else
             {
                 sound(SOUND_MISS);
-                msg_format("You #Dmiss#. %s.", m_name);
+                msg_format("You miss %s.", m_name);
             }
         }
         backstab = FALSE;
@@ -4379,17 +4379,11 @@ bool py_attack(int y, int x, int mode)
                 int num_blow = _get_num_blow(i);
                 for (j = 0; j < num_blow; j++)
                 {
-                    if (p_ptr->wizard)
-                        msg_format("Attack #%d", j+1);
-
                     for (k = 0; k < ct; k++)
                     {
                         int nx, ny;
                         ny = GRID_Y(path[k]);
                         nx = GRID_X(path[k]);
-
-                        if (p_ptr->wizard)
-                            msg_format("  Step #%d", k+1);
 
                         if (!cave_have_flag_bold(ny, nx, FF_PROJECT)
                          && !cave[ny][nx].m_idx) 

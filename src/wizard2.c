@@ -589,7 +589,7 @@ static void do_cmd_wiz_hack_chris5(void)
             identify_item(&forge);
             forge.ident |= (IDENT_MENTAL); 
             object_desc(buf, &forge, 0);
-            msg_format("%s on Roll #%d", buf, ct_tries);
+            msg_format("%s on Roll ##%d", buf, ct_tries);
             /*drop_near(&forge, -1, py, px);*/
         }
     }
