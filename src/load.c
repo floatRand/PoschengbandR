@@ -955,7 +955,7 @@ static void rd_messages(savefile_ptr file)
         savefile_read_string(file, buf, sizeof(buf));
         if (!savefile_is_older_than(file, 4, 0, 0, 2))
             turn = savefile_read_s32b(file);
-        msg_add(buf, color);
+        cmsg_add(color, buf);
         turn = old_turn;
     }
 }

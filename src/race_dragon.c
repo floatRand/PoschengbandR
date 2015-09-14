@@ -1141,12 +1141,18 @@ static void _deadly_bite_spell(int cmd, variant *res)
         p_ptr->innate_attacks[1].effect[1] = 0;
         break;
     case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
         p_ptr->innate_attacks[1].effect[1] = _breath_effect();
         do_cmd_knowledge_weapon();
         p_ptr->innate_attacks[1].effect[1] = 0;
 
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
+    }
     default:
         default_spell(cmd, res);
         break;
@@ -1218,14 +1224,20 @@ static void _rapid_strike_spell(int cmd, variant *res)
         handle_stuff();
         break;
     case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
         p_ptr->innate_attacks[0].blows += 50;
         p_ptr->innate_attacks[1].blows += 25;
         do_cmd_knowledge_weapon();
         p_ptr->update |= PU_BONUS;
         handle_stuff();
 
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
+    }
     default:
         default_spell(cmd, res);
         break;
@@ -1251,14 +1263,20 @@ static void _power_strike_spell(int cmd, variant *res)
         break;
 
     case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
         p_ptr->innate_attacks[0].dd += 2;
         p_ptr->innate_attacks[1].dd += 2;
         do_cmd_knowledge_weapon();
         p_ptr->update |= PU_BONUS;
         handle_stuff();
 
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
+    }
     default:
         default_spell(cmd, res);
         break;

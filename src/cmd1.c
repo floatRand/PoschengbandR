@@ -1620,7 +1620,7 @@ void carry(bool pickup)
             /* Note that the pack is too full */
             else if (!inven_carry_okay(o_ptr))
             {
-                cmsg_format(TERM_VIOLET, "You have no room for %s.", o_name);
+                msg_format("You have no room for %s.", o_name);
 
             }
 

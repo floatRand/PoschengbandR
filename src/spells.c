@@ -489,13 +489,13 @@ static int _choose_spell(spell_info* spells, int ct, cptr desc, int max_cost)
 
     var_init(&name);
 
-    strnfmt(prompt1, 78, "Use which %s? (Type '?' to Browse) ", desc);
-    strnfmt(prompt2, 78, "Browse which %s? (Type '?' to Use)", desc);
-    _list_spells(spells, ct, max_cost);
-
     for (;;)
     {
         char ch = '\0';
+
+        strnfmt(prompt1, 78, "Use which %s? (Type '?' to Browse) ", desc);
+        strnfmt(prompt2, 78, "Browse which %s? (Type '?' to Use)", desc);
+        _list_spells(spells, ct, max_cost);
 
         /* Prompt User */
         choice = -1;

@@ -6931,12 +6931,8 @@ void inven_item_describe(int item)
     object_type *o_ptr = &inventory[item];
     char        o_name[MAX_NLEN];
 
-    /* Get a description */
-    object_desc(o_name, o_ptr, 0);
-
-    /* Print a message */
+    object_desc(o_name, o_ptr, OD_COLOR_CODED);
     msg_format("You have %s.", o_name);
-
 }
 
 
@@ -7068,12 +7064,8 @@ void floor_item_describe(int item)
     object_type *o_ptr = &o_list[item];
     char        o_name[MAX_NLEN];
 
-    /* Get a description */
-    object_desc(o_name, o_ptr, 0);
-
-    /* Print a message */
+    object_desc(o_name, o_ptr, OD_COLOR_CODED);
     msg_format("You see %s.", o_name);
-
 }
 
 
@@ -7444,12 +7436,11 @@ s16b inven_takeoff(int item, int amt)
  */
 void inven_drop(int item, int amt)
 {
-    object_type forge;
+    object_type  forge;
     object_type *q_ptr;
-
     object_type *o_ptr;
-
-    char o_name[MAX_NLEN];
+    int          old_number;
+    char         o_name[MAX_NLEN];
 
 
     /* Access original object */
@@ -7483,22 +7474,23 @@ void inven_drop(int item, int amt)
     distribute_charges(o_ptr, q_ptr, amt);
 
     /* Modify quantity */
+    old_number = q_ptr->number;
     q_ptr->number = amt;
     q_ptr->marked &= ~OM_WORN;
 
     /* Describe local object */
-    object_desc(o_name, q_ptr, 0);
+    object_desc(o_name, q_ptr, OD_COLOR_CODED);
 
     /* Message */
     msg_format("You drop %s (%c).", o_name, index_to_label(item));
-
 
     /* Drop it near the player */
     (void)drop_near(q_ptr, 0, py, px);
 
     /* Modify, Describe, Optimize */
     inven_item_increase(item, -amt);
-    inven_item_describe(item);
+    if (amt < old_number)
+        inven_item_describe(item);
     inven_item_optimize(item);
 
     /* Runes confer benefits even when in inventory */

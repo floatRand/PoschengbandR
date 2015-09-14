@@ -2459,6 +2459,12 @@ void screen_load(void)
     _screen_load_aux();
 }
 
+bool screen_is_saved(void)
+{
+    if (screen_depth > 0)
+        return TRUE;
+    return FALSE;
+}
 
 /*
  * Second try for the "message" handling routines.
@@ -2571,7 +2577,8 @@ s32b msg_turn(int age)
  *
  * Coloring code from Tome2
  */
-void msg_add(cptr str, byte color)
+void msg_add(cptr str) { cmsg_add(TERM_WHITE, str); }
+void cmsg_add(byte color, cptr str)
 {
     int i, k, x, n;
     cptr s;
@@ -2821,46 +2828,16 @@ void msg_boundary(void)
     }
 }
 
-/* Display a message */
-void cmsg_display(byte color, cptr msg, int x, int y, int num)
-{
-    int  i = 0, j = 0;
-    byte base_color = color;
-
-    while (i < num)
-    {
-        if (msg[i] == '#')
-        {
-            if (msg[i + 1] == '#')
-            {
-                Term_putstr(x + j, y, 1, color, "#");
-                i += 2;
-                j++;
-            }
-            else if (msg[i + 1] == '.')
-            {
-                color = base_color;
-                i += 2;
-            }
-            else
-            {
-                color = color_char_to_attr(msg[i + 1]);
-                i += 2;
-            }
-        }
-        else
-        {
-            Term_putstr(x + j, y, 1, color, msg + i);
-            i++;
-            j++;
-        }
-    }
-}
-
-int msg_strlen(cptr msg)
+/* Messages may now contain embedded formatting directives for
+   coloring. This routine returns the display length of the message. */
+int msg_display_len(cptr msg)
 {
     int ct = 0;
     int i = 0;
+
+    if (!msg)
+        return 0;
+
     for (;;)
     {
         if (!msg[i]) break;
@@ -2883,6 +2860,9 @@ int msg_strlen(cptr msg)
     return ct;
 }
 
+/* Helper for drawing routines: Punctuation directly following
+   a color escape sequence can produce annoying results, such
+   as a -more- prompt followed by a single period! */
 static bool _punctuation_hack(cptr pos)
 {
     if ( *pos == '#'
@@ -2894,18 +2874,26 @@ static bool _punctuation_hack(cptr pos)
     return FALSE;
 }
 
-/* Draw a Wrapped Message for PW_MESSAGE window and Ctrl+P previous messages
-   list. Call once with draw = FALSE to measure the number of lines required
-   and then call again with draw = TRUE to render */
-int cmsg_display_wrapped(int color, cptr msg, int x, int y, int width, bool draw)
+/* Display a Message on a single line (usually line 0).
+   The message is displayed, one word at a time, up until
+   the max_x (exclusive).
+
+   If the message is too long and more_prompt is specified,
+   then we issue the -more- prompt and continue drawing the
+   rest of the message, prompting again as needed. Note, we
+   make assumptions when more_prompt is true: namely, that
+   we are drawing on the top message line starting at x=0.
+
+   Returns the last x location printed, which cmsg_print
+   remembers for the next message to render. Other clients
+   typically ignore this.
+ */
+int cmsg_display(byte color, cptr msg, int x, int y, int max_x, bool more_prompt)
 {
     cptr pos = msg, seek;
     byte base_color = color;
-    int current_y = y, current_x = x;
+    int current_x = x;
     int len, xtra;
-
-    if (draw)
-        Term_erase(current_x, current_y, width);
 
     while (*pos)
     {
@@ -2955,12 +2943,93 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int width, bool draw
         if (!len)
             break; /* oops */
 
-        if ((current_x - x) + len + xtra > width)
+        if (current_x + len + xtra >= max_x)
+        {
+            if (!more_prompt)
+                return current_x;
+
+            msg_flush(current_x + 1);
+            current_x = 0;
+        }
+
+        Term_putstr(current_x, y, len, color, pos);
+        current_x += len;
+
+        pos = seek;
+    }
+
+    return current_x;
+}
+
+/* Draw/Measure a Wrapped Message. Returns number of lines.
+   (cf PW_MESSAGE window and Ctrl+P previous messages)
+
+   Call once with draw = FALSE to measure the number of lines required
+   and then call again with draw = TRUE to render*/
+int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw)
+{
+    cptr pos = msg, seek;
+    byte base_color = color;
+    int current_y = y, current_x = x;
+    int len, xtra;
+
+    if (draw)
+        Term_erase(current_x, current_y, max_x - current_x);
+
+    while (*pos)
+    {
+        /* Handle color directives and whitespace */
+        if (*pos == '#')
+        {
+            pos++;
+            if (*pos == '#')
+            {
+            }
+            else if (*pos == '.')
+            {
+                color = base_color;
+                pos++;
+                continue;
+            }
+            else
+            {
+                color = color_char_to_attr(*pos);
+                pos++;
+                continue;
+            }
+        }
+
+        if (*pos == ' ')
+        {
+            while (*pos && *pos == ' ')
+            {
+                current_x++;
+                pos++;
+            }
+            continue;
+        }
+
+        /* Get current word */
+        seek = pos;
+        if (*seek == '#') /* Check for ## escape from above */
+            seek++;
+
+        while (*seek && *seek != ' ' && *seek != '#')
+            seek++;
+
+        /* Draw the current word */
+        len = seek - pos;
+        xtra = _punctuation_hack(seek) ? 1 : 0;
+
+        if (!len)
+            break; /* oops */
+
+        if (current_x + len + xtra >= max_x)
         {
             current_y++;
             current_x = x + 2; /* indent a bit */
             if (draw)
-                Term_erase(x, current_y, width);
+                Term_erase(x, current_y, max_x - x);
         }
 
         if (draw)
@@ -3003,12 +3072,7 @@ void cmsg_print(byte color, cptr msg)
     static int p = 0;
 
     int n;
-
-    char *t;
-
-    char buf[1024];
-
-    int lim = Term->wid - 8;
+    int max_x = Term->wid - 6; /* "-more-" */
 
     if (world_monster) return;
     if (statistics_hack) return;
@@ -3020,22 +3084,14 @@ void cmsg_print(byte color, cptr msg)
         p = 0;
     }
 
-    /* Message Length */
-    n = (msg ? strlen(msg) : 0);
-
-    /* Hack -- flush when requested or needed */
-    if (p && (!msg || ((p + n) > lim)))
+    /* Flush when requested or needed */
+    n = msg_display_len(msg);
+    if (p && (!msg || p + n >= max_x))
     {
-        /* Flush */
         msg_flush(p);
-
-        /* Forget it */
         msg_flag = FALSE;
-
-        /* Reset */
         p = 0;
-    }
-
+    }    
 
     /* No message */
     if (!msg) return;
@@ -3043,55 +3099,11 @@ void cmsg_print(byte color, cptr msg)
     /* Paranoia */
     if (n > 1000) return;
 
-
     /* Memorize the message */
-    if (character_generated) msg_add(msg, color);
+    if (character_generated)
+        cmsg_add(color, msg);
 
-    /* Copy it */
-    strcpy(buf, msg);
-
-    /* Analyze the buffer */
-    t = buf;
-
-    /* Split message */
-    while (n > lim)
-    {
-        char oops;
-        int check, split = lim;
-
-        /* Find the "best" split point */
-        for (check = 40; check < lim; check++)
-        {
-            /* Found a valid split point */
-            if (t[check] == ' ') split = check;
-        }
-
-        /* Save the split character */
-        oops = t[split];
-
-        /* Split the message */
-        t[split] = '\0';
-
-        /* Display part of the message */
-        cmsg_display(color, t, 0, 0, split);
-
-        /* Flush it */
-        msg_flush(split + 1);
-
-        /* Restore the split character */
-        t[split] = oops;
-
-        /* Insert a space */
-        t[--split] = ' ';
-
-        /* Prepare to recurse on the rest of "buf" */
-        t += split;
-        n -= split;
-    }
-
-
-    /* Display the tail of the message */
-    cmsg_display(color, t, p, 0, n);
+    p = cmsg_display(color, msg, p, 0, max_x, TRUE) + 1;
 
     if (auto_more_state == AUTO_MORE_SKIP_ONE)
         auto_more_state = AUTO_MORE_PROMPT;
@@ -3102,9 +3114,6 @@ void cmsg_print(byte color, cptr msg)
 
     /* Remember the message */
     msg_flag = TRUE;
-
-    /* Remember the position */
-    p += msg_strlen(t) + 1;
 
     /* Optional refresh */
     if (fresh_message) Term_fresh();
@@ -3674,7 +3683,7 @@ bool get_check_strict(cptr prompt, int mode)
     if (!(mode & CHECK_NO_HISTORY) && p_ptr->playing)
     {
         /* HACK : Add the line to message buffer */
-        msg_add(buf, TERM_WHITE);
+        cmsg_add(TERM_YELLOW, buf);
         p_ptr->window |= (PW_MESSAGE);
         window_stuff();
     }

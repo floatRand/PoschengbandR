@@ -216,11 +216,18 @@ static void _critical_blow_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MAULER_CRITICAL_BLOW));
         break;
     case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
         display_weapon_mode = MAULER_CRITICAL_BLOW;
         do_cmd_knowledge_weapon();
         display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
+    }
     default:
         default_spell(cmd, res);
         break;
@@ -241,11 +248,18 @@ static void _crushing_blow_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MAULER_CRUSHING_BLOW));
         break;
     case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
         display_weapon_mode = MAULER_CRUSHING_BLOW;
         do_cmd_knowledge_weapon();
         display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
+    }
     default:
         default_spell(cmd, res);
         break;
@@ -328,11 +342,18 @@ static void _knockback_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MAULER_KNOCKBACK));
         break;
     case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
         display_weapon_mode = MAULER_KNOCKBACK;
         do_cmd_knowledge_weapon();
         display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
+    }
     default:
         default_spell(cmd, res);
         break;
@@ -353,11 +374,18 @@ static void _knockout_blow_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MAULER_KNOCKOUT_BLOW));
         break;
     case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
         display_weapon_mode = MAULER_KNOCKOUT_BLOW;
         do_cmd_knowledge_weapon();
         display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
+    }
     default:
         default_spell(cmd, res);
         break;
@@ -508,11 +536,18 @@ static void _stunning_blow_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(MAULER_STUNNING_BLOW));
         break;
     case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
         display_weapon_mode = MAULER_STUNNING_BLOW;
         do_cmd_knowledge_weapon();
         display_weapon_mode = 0;
+
+        if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
         break;
+    }
     default:
         default_spell(cmd, res);
         break;

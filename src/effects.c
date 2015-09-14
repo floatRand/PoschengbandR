@@ -5600,7 +5600,7 @@ bool do_inc_stat(int stat)
             virtue_add(VIRTUE_VITALITY, 1);
 
         /* Message */
-        msg_format("Wow!  You feel very %s!", desc_stat_pos[stat]);
+        msg_format("Wow! You feel very %s!", desc_stat_pos[stat]);
 
 
         /* Notice */

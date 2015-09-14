@@ -2555,10 +2555,9 @@ static bool purchase_haggle(object_type *o_ptr, s32b *price)
         /* No haggle option */
         else
         {
-            /* Message summary */
+            /* Message summary
             msg_print("You quickly agree upon the price.");
-
-            msg_print(NULL);
+            msg_print(NULL);*/
 
             /* Apply Sales Tax */
             final_ask += final_ask / 10;
@@ -2757,10 +2756,9 @@ static bool sell_haggle(object_type *o_ptr, s32b *price)
         /* No haggle option */
         else
         {
-            /* Message summary */
+            /* Message summary
             msg_print("You quickly agree upon the price.");
-
-            msg_print(NULL);
+            msg_print(NULL);*/
         }
 
         /* Final price */
@@ -3489,7 +3487,7 @@ static void store_sell(void)
 
             /* Take the item from the player, describe the result */
             inven_item_increase(item, -amt);
-            inven_item_describe(item);
+            /*inven_item_describe(item);*/
 
             /* If items remain, auto-inscribe before optimizing */
             if (o_ptr->number > 0)
@@ -3545,7 +3543,7 @@ static void store_sell(void)
 
         /* Take it from the players inventory */
         inven_item_increase(item, -amt);
-        inven_item_describe(item);
+        /*inven_item_describe(item);*/
         inven_item_optimize(item);
 
         /* Handle stuff */
@@ -3574,7 +3572,7 @@ static void store_sell(void)
 
         /* Take it from the players inventory */
         inven_item_increase(item, -amt);
-        inven_item_describe(item);
+        /*inven_item_describe(item);*/
         inven_item_optimize(item);
 
         /* Handle stuff */

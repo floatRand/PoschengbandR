@@ -330,7 +330,10 @@ void do_cmd_destroy(void)
     /* Verify unless quantity given beforehand */
     if (!force && (confirm_destroy || (object_value(o_ptr) > 0)))
     {
-        object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
+        int options = OD_COLOR_CODED;
+        if (o_ptr->number > 1)
+            options |= OD_OMIT_PREFIX;
+        object_desc(o_name, o_ptr, options);
 
         /* Make a verification */
         sprintf(out_val, 
@@ -340,7 +343,7 @@ void do_cmd_destroy(void)
         msg_print(NULL);
 
         /* HACK : Add the line to message buffer */
-        msg_add(out_val, TERM_YELLOW);
+        msg_add(out_val);
         p_ptr->window |= (PW_MESSAGE);
         window_stuff();
 
@@ -350,13 +353,9 @@ void do_cmd_destroy(void)
             char i;
 
             /* Prompt */
-            prt(out_val, 0, 0);
-
+            cmsg_display(TERM_WHITE, out_val, 0, 0, strlen(out_val), FALSE);
             i = inkey();
-
-            /* Erase the prompt */
             prt("", 0, 0);
-
 
             if (i == 'y' || i == 'Y')
             {
@@ -382,21 +381,18 @@ void do_cmd_destroy(void)
         } /* while (TRUE) */
     }
 
-    /* See how many items */
+    /* Get a quantity */
     if (o_ptr->number > 1)
     {
-        /* Get a quantity */
         amt = get_quantity(NULL, o_ptr->number);
-
-        /* Allow user abort */
-        if (amt <= 0) return;
+       if (amt <= 0) return;
     }
 
 
     /* Describe the object */
     old_number = o_ptr->number;
     o_ptr->number = amt;
-    object_desc(o_name, o_ptr, 0);
+    object_desc(o_name, o_ptr, OD_COLOR_CODED);
     o_ptr->number = old_number;
 
     /* Take a turn */
@@ -406,11 +402,7 @@ void do_cmd_destroy(void)
     if (!can_player_destroy_object(o_ptr))
     {
         energy_use = 0;
-
-        /* Message */
         msg_format("You cannot destroy %s.", o_name);
-
-        /* Done */
         return;
     }
 
@@ -425,7 +417,12 @@ void do_cmd_destroy(void)
     else if (prace_is_(RACE_MON_RING) && object_is_jewelry(o_ptr))
         ring_absorb_object(o_ptr);
     else
-        msg_format("You destroy %s.", o_name);
+    {
+        if (old_number == 1)
+            msg_print("Destroyed.");
+        else
+            msg_format("You destroy %s.", o_name);
+    }
 
     if (o_ptr->rune == RUNE_SACRIFICE)
     {
@@ -464,7 +461,8 @@ void do_cmd_destroy(void)
         if (!is_equipped)
         {
             inven_item_increase(item, -amt);
-            inven_item_describe(item);
+            if (amt < old_number)
+                inven_item_describe(item);
             inven_item_optimize(item);
         }
     }
@@ -473,7 +471,8 @@ void do_cmd_destroy(void)
     else
     {
         floor_item_increase(0 - item, -amt);
-        floor_item_describe(0 - item);
+        if (amt < old_number)
+            floor_item_describe(0 - item);
         floor_item_optimize(0 - item);
     }
 

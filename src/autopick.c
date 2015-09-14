@@ -1784,7 +1784,7 @@ static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
 /*
  *  Auto-destroy marked item
  */
-static void autopick_delayed_alter_aux(int item)
+static void autopick_delayed_alter_aux(int item, bool detailed_msg)
 {
     object_type *o_ptr;
 
@@ -1809,7 +1809,8 @@ static void autopick_delayed_alter_aux(int item)
             ring_absorb_object(o_ptr);
         else
         {
-            object_desc(o_name, o_ptr, OD_COLOR_CODED);
+            if (detailed_msg)
+                object_desc(o_name, o_ptr, OD_COLOR_CODED);
             msg = TRUE;
         }
 
@@ -1826,33 +1827,68 @@ static void autopick_delayed_alter_aux(int item)
             delete_object_idx(0 - item);
         }
 
-        /* Print a message */
+        /* Print a message, but let's decrease message spam.
+           For example:
+           > You see 16 Rounded Pebbles (1d2) (+0,+0).
+           > Auto-destroying 16 Rounded Pebbles (1d2) (+0,+0).
+           The second repeated description is unnecessary and
+           forces a -more- prompt. */
         if (msg)
-            msg_format("Auto-destroying %s.", o_name);
+        {
+            if (detailed_msg)
+                msg_format("Auto-destroying %s.", o_name);
+            else
+                msg_print("Auto-destroying.");
+        }
     }
 }
 
+static bool _show_detailed_msg(void)
+{
+    int  ct = 0;
+    int  item;
+
+    /* Always give details when destroying from the pack. */
+    for (item = INVEN_TOTAL - 1; item >= 0 ; item--)
+    {
+        if (inventory[item].marked & OM_AUTODESTROY)
+            return TRUE;
+    }
+
+    /* Only give details when destroying floor objects if there
+       are more than one possible object */
+    for (item = cave[py][px].o_idx; item; item = o_list[item].next_o_idx)
+    {
+        if (o_list[item].k_idx)
+            ct++;
+    }
+    if (ct > 1)
+        return TRUE;
+
+    return FALSE;
+}
 
 /*
- *  Auto-destroy marked items in inventry and on floor
+ *  Auto-destroy marked items in inventory and on floor
  */
 void autopick_delayed_alter(void)
 {
+    bool detailed_msg = _show_detailed_msg();
     int item;
 
-    /* 
+    /*
      * Scan inventry in reverse order to prevent
      * skipping after inven_item_optimize()
      */
     for (item = INVEN_TOTAL - 1; item >= 0 ; item--)
-        autopick_delayed_alter_aux(item);
+        autopick_delayed_alter_aux(item, detailed_msg);
 
     /* Scan the pile of objects */
     item = cave[py][px].o_idx;
     while (item)
     {
         int next = o_list[item].next_o_idx;
-        autopick_delayed_alter_aux(-item);
+        autopick_delayed_alter_aux(-item, detailed_msg);
         item = next;
     }
 }

@@ -1739,7 +1739,7 @@ void do_cmd_pet_dismiss(void)
 
             sprintf(buf, "Dismissed %s.", friend_name);
 
-            msg_add(buf, TERM_WHITE);
+            msg_add(buf);
             p_ptr->window |= (PW_MESSAGE);
             window_stuff();
 

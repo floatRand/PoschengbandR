@@ -4058,11 +4058,11 @@ void player_birth(void)
     }
 
     /* Note player birth in the message recall */
-    msg_add(" ", TERM_WHITE);
-    msg_add("  ", TERM_WHITE);
-    msg_add("====================", TERM_YELLOW);
-    msg_add(" ", TERM_WHITE);
-    msg_add("  ", TERM_WHITE);
+    msg_add(" ");
+    msg_add("  ");
+    cmsg_add(TERM_VIOLET, "====================");
+    msg_add(" ");
+    msg_add("  ");
 
     /* Init the shops */
     for (i = 1; i < max_towns; i++)
