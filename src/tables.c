@@ -3536,7 +3536,10 @@ option_type option_info[] =
 
     { &display_food_bar,            FALSE,  OPT_PAGE_TEXT, 1, 13,
     "display_food_bar",             "Display detailed food status" },
-    
+
+    { &display_hp_mana_bar,         FALSE,  OPT_PAGE_TEXT, 1, 1,
+    "display_hp_mana_bar",          "Display player hp and mana bars" },
+
     { &display_mutations,           FALSE, OPT_PAGE_TEXT, 5, 0,
     "display_mutations",            "Display mutations in 'C'haracter Display" },
 

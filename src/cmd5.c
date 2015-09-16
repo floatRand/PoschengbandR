@@ -2064,7 +2064,7 @@ bool do_riding(bool force)
     /* Redraw map */
     p_ptr->redraw |= (PR_MAP | PR_EXTRA);
 
-    p_ptr->redraw |= (PR_UHEALTH);
+    p_ptr->redraw |= (PR_UHEALTH | PR_HEALTH);
 
     /* Move the player */
     (void)move_player_effect(y, x, MPE_HANDLE_STUFF | MPE_ENERGY_USE | MPE_DONT_PICKUP | MPE_DONT_SWAP_MON);

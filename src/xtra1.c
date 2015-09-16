@@ -1241,32 +1241,47 @@ static void prt_hp(void)
   
     byte color;
   
-
-    put_str("HP", ROW_CURHP, COL_CURHP);
-
-    sprintf(tmp, "%4d", p_ptr->chp);
-
-    if (p_ptr->chp >= p_ptr->mhp)
+    if (display_hp_mana_bar)
     {
-        color = TERM_L_GREEN;
-    }
-    else if (p_ptr->chp > (p_ptr->mhp * hitpoint_warn) / 10)
-    {
-        color = TERM_YELLOW;
+        char c;
+        byte a;
+        int  pct, len;
+
+        py_get_display_char_attr(&c, &a);
+        Term_queue_bigchar(COL_CURHP, ROW_CURHP, a, c, 0, 0);
+
+        pct = 100 * p_ptr->chp / p_ptr->mhp;
+        len = MIN(9, 1 + p_ptr->chp * 9 / p_ptr->mhp);
+
+        if (pct >= 100) a = TERM_L_GREEN;
+        else if (pct > hitpoint_warn*10) a = TERM_YELLOW;
+        else a = TERM_RED;
+
+        Term_putstr(COL_CURHP + 1, ROW_CURHP, 11, TERM_WHITE, "[---------]");
+        Term_putstr(COL_CURHP + 2, ROW_CURHP, len, a, "*********");
     }
     else
     {
-        color = TERM_RED;
+        put_str("HP", ROW_CURHP, COL_CURHP);
+
+        sprintf(tmp, "%4d", p_ptr->chp);
+
+        if (p_ptr->chp >= p_ptr->mhp)
+            color = TERM_L_GREEN;
+        else if (p_ptr->chp > (p_ptr->mhp * hitpoint_warn) / 10)
+            color = TERM_YELLOW;
+        else
+            color = TERM_RED;
+
+        c_put_str(color, tmp, ROW_CURHP, COL_CURHP+3);
+
+        put_str( "/", ROW_CURHP, COL_CURHP + 7 );
+
+        sprintf(tmp, "%4d", p_ptr->mhp);
+        color = TERM_L_GREEN;
+
+        c_put_str(color, tmp, ROW_CURHP, COL_CURHP + 8 );
     }
-
-    c_put_str(color, tmp, ROW_CURHP, COL_CURHP+3);
-
-    put_str( "/", ROW_CURHP, COL_CURHP + 7 );
-
-    sprintf(tmp, "%4d", p_ptr->mhp);
-    color = TERM_L_GREEN;
-
-    c_put_str(color, tmp, ROW_CURHP, COL_CURHP + 8 );
 }
 
 
@@ -1278,29 +1293,55 @@ static void prt_sp(void)
     char tmp[32];
     byte color;
 
-    put_str("SP", ROW_CURSP, COL_CURSP);
-    sprintf(tmp, "%4d", p_ptr->csp);
-    if (p_ptr->csp >= p_ptr->msp)
+    if (p_ptr->msp == 0)
     {
-        color = TERM_L_GREEN;
+        Term_erase(COL_CURSP, ROW_CURSP, 12);
+        return;
     }
-    else if (p_ptr->csp > (p_ptr->msp * mana_warn) / 10)
+
+    if (display_hp_mana_bar)
     {
-        color = TERM_YELLOW;
+        byte a;
+        int  pct, len;
+        int  k_idx;
+        int  tval = TV_LIFE_BOOK;
+
+        if (p_ptr->realm1)
+            tval = TV_LIFE_BOOK + p_ptr->realm1 - 1;
+
+        k_idx = lookup_kind(tval, 0);
+        Term_queue_bigchar(COL_CURSP, ROW_CURSP, k_info[k_idx].x_attr, k_info[k_idx].x_char, 0, 0);
+
+        pct = 100 * p_ptr->csp / p_ptr->msp;
+        len = MIN(9, 1 + p_ptr->csp * 9 / p_ptr->msp);
+
+        if (pct >= 100) a = TERM_L_GREEN;
+        else if (pct > mana_warn*10) a = TERM_YELLOW;
+        else a = TERM_RED;
+
+        Term_putstr(COL_CURSP + 1, ROW_CURSP, 11, TERM_WHITE, "[---------]");
+        Term_putstr(COL_CURSP + 2, ROW_CURSP, len, a, "*********");
     }
     else
     {
-        color = TERM_RED;
+        put_str("SP", ROW_CURSP, COL_CURSP);
+        sprintf(tmp, "%4d", p_ptr->csp);
+        if (p_ptr->csp >= p_ptr->msp)
+            color = TERM_L_GREEN;
+        else if (p_ptr->csp > (p_ptr->msp * mana_warn) / 10)
+            color = TERM_YELLOW;
+        else
+            color = TERM_RED;
+
+        c_put_str(color, tmp, ROW_CURSP, COL_CURSP+3);
+
+        put_str( "/", ROW_CURSP, COL_CURSP + 7 );
+
+        sprintf(tmp, "%4d", p_ptr->msp);
+        color = TERM_L_GREEN;
+
+        c_put_str(color, tmp, ROW_CURSP, COL_CURSP + 8);
     }
-
-    c_put_str(color, tmp, ROW_CURSP, COL_CURSP+3);
-
-    put_str( "/", ROW_CURSP, COL_CURSP + 7 );
-
-    sprintf(tmp, "%4d", p_ptr->msp);
-    color = TERM_L_GREEN;
-
-    c_put_str(color, tmp, ROW_CURSP, COL_CURSP + 8);
 }
 
 static void prt_fear(void)
@@ -1384,16 +1425,19 @@ static void food_redraw(void)
     byte attr;
     int  pct;
     int  len;
+    int  k_idx;
 
     if (!display_food_bar) /* user might toggle option on and off ... */
     {
         Term_erase(COL_FOOD, ROW_FOOD, 12);
-        Term_erase(COL_FOOD, ROW_FOOD + 1, 12);
         return;
     }
 
+    k_idx = lookup_kind(TV_FOOD, SV_FOOD_RATION);
+    Term_queue_bigchar(COL_FOOD, ROW_FOOD, k_info[k_idx].x_attr, k_info[k_idx].x_char, 0, 0);
+
     pct = 100 * p_ptr->food / PY_FOOD_FULL;
-    len = (pct < 10) ? 1 : (pct < 90) ? (pct / 10 + 1) : 10;
+    len = MIN(9, 1 + p_ptr->food * 9 / PY_FOOD_FULL);
 
     if (pct >= 100) attr = TERM_L_GREEN;
     else if (pct >= 50) attr = TERM_WHITE;
@@ -1402,9 +1446,8 @@ static void food_redraw(void)
     else if (pct >= 10) attr = TERM_L_RED;
     else attr = TERM_VIOLET;
 
-    Term_putstr(COL_FOOD, ROW_FOOD, 5, TERM_WHITE, "Food:");
-    Term_putstr(COL_FOOD, ROW_FOOD + 1, 12, attr, "[----------]");
-    Term_putstr(COL_FOOD + 1, ROW_FOOD + 1, len, attr, "**********");
+    Term_putstr(COL_FOOD + 1, ROW_FOOD, 11, TERM_WHITE, "[---------]");
+    Term_putstr(COL_FOOD + 2, ROW_FOOD, len, attr, "*********");
 }
 
 
@@ -1824,21 +1867,32 @@ static void health_redraw(bool riding)
     s16b health_who;
     int row, col;
     monster_type *m_ptr;
+    byte base_attr = TERM_WHITE;
+
+    row = ROW_HEALTH_TRACK;
+    col = COL_HEALTH_TRACK;
 
     if (riding)
     {
         health_who = p_ptr->riding;
-        row = ROW_RIDING_INFO;
-        col = COL_RIDING_INFO;
+        if (!p_ptr->riding)
+            return;
     }
     else
     {
+        if (p_ptr->riding)
+            row++;
+        else
+        {
+            Term_erase(col, row+1, 12);
+        }
         health_who = p_ptr->health_who;
-        row = ROW_INFO;
-        col = COL_INFO;
     }
 
     m_ptr = &m_list[health_who];
+
+    if (health_who == target_who)
+        base_attr = TERM_L_RED;
 
     /* Not tracking */
     if (!health_who)
@@ -1850,22 +1904,26 @@ static void health_redraw(bool riding)
     /* Tracking an unseen monster */
     else if (!m_ptr->ml)
     {
+        const monster_race *r_ptr = &r_info[m_ptr->ap_r_idx];
+        Term_queue_bigchar(col, row, r_ptr->x_attr, r_ptr->x_char, 0, 0);
+
         /* Indicate that the monster health is "unknown" */
-        Term_putstr(col, row, 12, TERM_WHITE, "[----------]");
+        Term_putstr(col + 1, row, 11, base_attr, "[---------]");
     }
 
     /* Tracking a hallucinatory monster */
     else if (p_ptr->image)
     {
         /* Indicate that the monster health is "unknown" */
-        Term_putstr(col, row, 12, TERM_WHITE, "[----------]");
+        Term_putch(col, row, base_attr, ' ');
+        Term_putstr(col + 1, row, 11, base_attr, "[---------]");
     }
 
     /* Tracking a dead monster (???) */
     else if (m_ptr->hp < 0)
     {
-        /* Indicate that the monster health is "unknown" */
-        Term_putstr(col, row, 12, TERM_WHITE, "[----------]");
+        Term_putch(col, row, base_attr, ' ');
+        Term_putstr(col + 1, row, 11, base_attr, "[---------]");
     }
 
     /* Tracking a visible monster */
@@ -1873,13 +1931,16 @@ static void health_redraw(bool riding)
     {
         /* Extract the "percent" of health */
         int pct = 100L * m_ptr->hp / m_ptr->maxhp;
-        int pct2 = 100L * m_ptr->hp / m_ptr->max_maxhp;
+        /*int pct2 = 100L * m_ptr->hp / m_ptr->max_maxhp;*/
 
         /* Convert percent into "health" */
-        int len = (pct2 < 10) ? 1 : (pct2 < 90) ? (pct2 / 10 + 1) : 10;
+        int len = MIN(9, 1 + m_ptr->hp * 9 / m_ptr->max_maxhp);
 
         /* Default to almost dead */
         byte attr = TERM_RED;
+        const monster_race *r_ptr = &r_info[m_ptr->ap_r_idx];
+
+        Term_queue_bigchar(col, row, r_ptr->x_attr, r_ptr->x_char, 0, 0);
 
         if (MON_INVULNER(m_ptr)) attr = TERM_WHITE;
         else if (m_ptr->paralyzed) attr = TERM_BLUE;
@@ -1892,12 +1953,12 @@ static void health_redraw(bool riding)
         else if (pct >= 25) attr = TERM_ORANGE;
         else if (pct >= 10) attr = TERM_L_RED;
 
-        Term_putstr(col, row, 12, TERM_WHITE, "[----------]");
+        Term_putstr(col+1, row, 11, base_attr, "[---------]");
 
         if (m_ptr->ego_whip_ct)
-            Term_putstr(col + 1, row, len, attr, "wwwwwwwwww");
+            Term_putstr(col + 2, row, len, attr, "wwwwwwwww");
         else
-            Term_putstr(col + 1, row, len, attr, "**********");
+            Term_putstr(col + 2, row, len, attr, "*********");
     }
 }
 

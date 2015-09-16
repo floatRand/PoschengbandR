@@ -1722,7 +1722,10 @@ errr macro_add(cptr pat, cptr act)
         /* Free the old macro action */
         string_free(macro__act[n]);
     }
-
+    else if (macro__num >= MACRO_MAX - 1)
+    {
+        return -1;
+    }
     /* Create a new macro */
     else
     {

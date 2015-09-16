@@ -1242,6 +1242,7 @@ static errr init_other(void)
     C_MAKE(macro__pat, MACRO_MAX, cptr);
     C_MAKE(macro__act, MACRO_MAX, cptr);
     C_MAKE(macro__cmd, MACRO_MAX, bool);
+    macro__num = 0;
 
     /* Macro action buffer */
     C_MAKE(macro__buf, 1024, char);

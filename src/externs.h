@@ -267,6 +267,7 @@ extern bool show_discounts;
 extern bool show_item_graph;    /* Show items graphics */
 extern bool equippy_chars;    /* Display 'equippy' chars */
 extern bool display_food_bar;    /* Like the monster health bar, only tastier! */
+extern bool display_hp_mana_bar; /* Display player HP/SP just like the monster health bar */
 extern bool display_mutations;    /* Display mutations in 'C'haracter Display */
 extern bool compress_savefile;    /* Compress messages in savefiles */
 extern bool abbrev_extra;    /* Describe obj's extra resistances by abbreviation */
@@ -704,6 +705,7 @@ extern void monster_race_track(int r_idx);
 extern void object_kind_track(int k_idx);
 extern void disturb(int stop_search, int flush_output);
 extern void glow_deep_lava_and_bldg(void);
+extern void py_get_display_char_attr(char *c, byte *a);
 
 /* cmd1.c */
 extern void rune_sword_kill(object_type *o_ptr, monster_race *r_ptr);
