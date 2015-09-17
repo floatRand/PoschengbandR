@@ -652,8 +652,7 @@ bool make_attack_normal(int m_idx)
                             m_ptr->hp = m_ptr->maxhp;
 
                         /* Redraw (later) if needed */
-                        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-                        if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+                        check_mon_health_redraw(m_idx);
 
                         /* Combine / Reorder the pack */
                         p_ptr->notice |= (PN_COMBINE | PN_REORDER);
@@ -1451,8 +1450,7 @@ bool make_attack_normal(int m_idx)
                         if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
 
                         /* Redraw (later) if needed */
-                        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-                        if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+                        check_mon_health_redraw(m_idx);
 
                         /* Special message */
                         if (m_ptr->ml && did_heal)

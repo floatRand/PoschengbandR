@@ -114,7 +114,7 @@ bool fear_set_p(int v)
     }
 
     p_ptr->afraid = v;
-    p_ptr->redraw |= PR_FEAR;
+    p_ptr->redraw |= PR_EFFECTS;
     if (!notice) return FALSE;
     if (disturb_state) disturb(0, 0);
     handle_stuff();

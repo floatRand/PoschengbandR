@@ -3629,8 +3629,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             if (!dam)
             {
                 /* Redraw (later) if needed */
-                if (p_ptr->health_who == c_ptr->m_idx) p_ptr->redraw |= (PR_HEALTH);
-                if (p_ptr->riding == c_ptr->m_idx) p_ptr->redraw |= (PR_UHEALTH);
+                check_mon_health_redraw(c_ptr->m_idx);
                 break;
             }
 
@@ -3695,8 +3694,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             }
 
             /* Redraw (later) if needed */
-            if (p_ptr->health_who == c_ptr->m_idx) p_ptr->redraw |= (PR_HEALTH);
-            if (p_ptr->riding == c_ptr->m_idx) p_ptr->redraw |= (PR_UHEALTH);
+            check_mon_health_redraw(c_ptr->m_idx);
 
             /* Message */
             note = " looks healthier.";
@@ -5085,8 +5083,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                         if (caster_ptr->hp > caster_ptr->maxhp) caster_ptr->hp = caster_ptr->maxhp;
 
                         /* Redraw (later) if needed */
-                        if (p_ptr->health_who == who) p_ptr->redraw |= (PR_HEALTH);
-                        if (p_ptr->riding == who) p_ptr->redraw |= (PR_UHEALTH);
+                        check_mon_health_redraw(who);
 
                         /* Special message */
                         if (see_s_msg)
@@ -5155,7 +5152,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             (void)set_monster_csleep(c_ptr->m_idx, 0);
             m_ptr->ego_whip_ct = 5;
             m_ptr->ego_whip_pow = dam;
-            p_ptr->redraw |= PR_HEALTH;
+            p_ptr->redraw |= PR_HEALTH_BARS;
             return TRUE;
             break;
         }
@@ -6005,8 +6002,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
     else if (who)
     {
         /* Redraw (later) if needed */
-        if (p_ptr->health_who == c_ptr->m_idx) p_ptr->redraw |= (PR_HEALTH);
-        if (p_ptr->riding == c_ptr->m_idx) p_ptr->redraw |= (PR_UHEALTH);
+        check_mon_health_redraw(c_ptr->m_idx);
 
         /* Wake the monster up */
         (void)set_monster_csleep(c_ptr->m_idx, 0);
@@ -6277,7 +6273,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
     if (p_ptr->inside_battle)
     {
         p_ptr->health_who = c_ptr->m_idx;
-        p_ptr->redraw |= (PR_HEALTH);
+        p_ptr->redraw |= PR_HEALTH_BARS;
         redraw_stuff();
     }
 
@@ -7131,8 +7127,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
                         if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
 
                         /* Redraw (later) if needed */
-                        if (p_ptr->health_who == who) p_ptr->redraw |= (PR_HEALTH);
-                        if (p_ptr->riding == who) p_ptr->redraw |= (PR_UHEALTH);
+                        check_mon_health_redraw(who);
 
                         /* Special message */
                         if (m_ptr->ml)

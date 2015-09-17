@@ -209,8 +209,7 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
     /* Redraw (later) if needed */
     if (m_ptr->ml)
     {
-        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-        if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+        check_mon_health_redraw(m_idx);
     }
 
     /* Wake it up */
@@ -1605,8 +1604,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
             if (t_ptr->ml)
             {
                 /* Redraw the health bar */
-                if (p_ptr->health_who == t_idx) p_ptr->redraw |= (PR_HEALTH);
-                if (p_ptr->riding == t_idx) p_ptr->redraw |= (PR_UHEALTH);
+                check_mon_health_redraw(t_idx);
             }
 
             /* Describe the attack method */
@@ -1954,8 +1952,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                         if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
 
                         /* Redraw (later) if needed */
-                        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-                        if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+                        check_mon_health_redraw(m_idx);
 
                         /* Special message */
                         if (see_m && did_heal)
@@ -4021,8 +4018,7 @@ bool set_monster_paralyzed(int m_idx, int v)
     {
         if (m_ptr->ml)
         {
-            if (p_ptr->health_who == m_idx) p_ptr->redraw |= PR_HEALTH;
-            if (p_ptr->riding == m_idx) p_ptr->redraw |= PR_UHEALTH;
+            check_mon_health_redraw(m_idx);
         }
 
         if (r_info[m_ptr->r_idx].flags7 & RF7_HAS_LD_MASK) p_ptr->update |= PU_MON_LITE;
@@ -4069,8 +4065,7 @@ bool set_monster_csleep(int m_idx, int v)
     if (m_ptr->ml)
     {
         /* Update health bar as needed */
-        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-        if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+        check_mon_health_redraw(m_idx);
     }
 
     if (r_info[m_ptr->r_idx].flags7 & RF7_HAS_LD_MASK) p_ptr->update |= (PU_MON_LITE);
@@ -4201,7 +4196,7 @@ bool set_monster_stunned(int m_idx, int v)
 
     if (m_ptr->ml)
     {
-        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
+        check_mon_health_redraw(m_idx);
     }
 
     return notice;
@@ -4244,7 +4239,7 @@ bool set_monster_confused(int m_idx, int v)
 
     if (m_ptr->ml)
     {
-        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
+        check_mon_health_redraw(m_idx);
     }
 
     return notice;
@@ -4289,9 +4284,7 @@ bool set_monster_monfear(int m_idx, int v)
 
     if (m_ptr->ml)
     {
-        /* Update health bar as needed */
-        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-        if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+        check_mon_health_redraw(m_idx);
     }
 
     return TRUE;
@@ -4337,9 +4330,7 @@ bool set_monster_invulner(int m_idx, int v, bool energy_need)
 
     if (m_ptr->ml)
     {
-        /* Update health bar as needed */
-        if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-        if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+        check_mon_health_redraw(m_idx);
     }
 
     return TRUE;

@@ -12,6 +12,14 @@
 
 #include "angband.h"
 #include "equip.h"
+
+#ifdef SIGSTOP
+
+/* OK, what header is this in? */
+extern int kill(int, int);
+
+#endif
+
 /*
  * You may or may not want to use the following "#undef".
  */

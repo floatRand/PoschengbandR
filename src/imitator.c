@@ -910,7 +910,7 @@ bool imitator_cast(bool revenge)
     }
 
     energy_use = 100;
-    p_ptr->redraw |= (PR_IMITATION);
+    p_ptr->redraw |= PR_EFFECTS;
     p_ptr->window |= (PW_PLAYER);
     p_ptr->window |= (PW_SPELL);
     return TRUE;

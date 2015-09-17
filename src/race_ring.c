@@ -1772,7 +1772,7 @@ bool ring_dominate_m(int m_idx)
             p_ptr->update |= PU_UN_VIEW | PU_UN_LITE;
             p_ptr->update |= PU_BONUS;
             p_ptr->redraw |= PR_MAP | PR_EXTRA;
-            p_ptr->redraw |= PR_UHEALTH;
+            p_ptr->redraw |= PR_HEALTH_BARS;
             move_player_effect(m_ptr->fy, m_ptr->fx, MPE_HANDLE_STUFF | MPE_ENERGY_USE | MPE_DONT_PICKUP | MPE_DONT_SWAP_MON);
         
             return TRUE;
@@ -1843,7 +1843,7 @@ void ring_process_m(int m_idx)
                 p_ptr->update |= PU_BONUS | PU_VIEW | PU_LITE | PU_FLOW | PU_MON_LITE | PU_MONSTERS;
                 p_ptr->window |= PW_OVERHEAD | PW_DUNGEON;
                 p_ptr->redraw |= PR_EXTRA;
-                p_ptr->redraw |= PR_UHEALTH;
+                p_ptr->redraw |= PR_HEALTH_BARS;
 
                 move_player_effect(py, px, MPE_DONT_PICKUP | MPE_DONT_SWAP_MON);
                 handle_stuff();

@@ -2815,8 +2815,7 @@ void update_mon(int m_idx, bool full)
             lite_spot(fy, fx);
 
             /* Update health bar as needed */
-            if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-            if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+            check_mon_health_redraw(m_idx);
 
             /* Hack -- Count "fresh" sightings */
             if (!p_ptr->image)
@@ -2861,8 +2860,7 @@ void update_mon(int m_idx, bool full)
             lite_spot(fy, fx);
 
             /* Update health bar as needed */
-            if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-            if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+            check_mon_health_redraw(m_idx);
 
             /* Disturb on disappearance */
             if (do_disturb)

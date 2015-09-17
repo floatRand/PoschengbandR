@@ -243,7 +243,7 @@ bool psion_process_monster(int m_idx)
         if (psion_mon_save_p(m_ptr->r_idx, m_ptr->ego_whip_pow))
         {
             msg_format("%^s shakes off your ego whip!", m_name);
-            p_ptr->redraw |= PR_HEALTH;
+            p_ptr->redraw |= PR_HEALTH_BARS;
             m_ptr->ego_whip_ct = 0;
             m_ptr->ego_whip_pow = 0;
         }
@@ -257,7 +257,7 @@ bool psion_process_monster(int m_idx)
             if (!m_ptr->ego_whip_ct)
             {
                 msg_format("Your ego whip on %s disappears.", m_name);
-                p_ptr->redraw |= PR_HEALTH;
+                p_ptr->redraw |= PR_HEALTH_BARS;
             }
         }
     }
@@ -1839,7 +1839,7 @@ static void _study(int level)
             {
                 screen_load();
                 p_ptr->spell_order[_num_spells_learned()] = spell->id;
-                p_ptr->redraw |= PR_STUDY;
+                p_ptr->redraw |= PR_EFFECTS;
                 msg_format("You have gained %s.", spell->name);
                 break;
             }

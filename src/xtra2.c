@@ -231,7 +231,7 @@ void check_experience(void)
         p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
 
         /* Redraw some stuff */
-        p_ptr->redraw |= (PR_LEV | PR_TITLE);
+        p_ptr->redraw |= (PR_LEV);
 
         /* Window stuff */
         p_ptr->window |= (PW_PLAYER);
@@ -286,7 +286,7 @@ void check_experience(void)
         p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
 
         /* Redraw some stuff */
-        p_ptr->redraw |= (PR_LEV | PR_TITLE | PR_EXP);
+        p_ptr->redraw |= (PR_LEV | PR_EXP);
 
         /* Window stuff */
         p_ptr->window |= (PW_PLAYER | PW_SPELL | PW_INVEN);
@@ -304,7 +304,7 @@ void check_experience(void)
                 gain_chosen_stat();
         }
         p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
-        p_ptr->redraw |= (PR_LEV | PR_TITLE);
+        p_ptr->redraw |= (PR_LEV);
         p_ptr->window |= (PW_PLAYER | PW_SPELL);
         handle_stuff();
     }
@@ -2296,8 +2296,6 @@ void monster_death(int m_idx, bool drop_item)
         p_ptr->total_winner = TRUE;
 
         /* Redraw the "title" */
-        p_ptr->redraw |= (PR_TITLE);
-
         if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || mut_present(MUT_CHAOS_GIFT))
         {
             msg_format("The voice of %s booms out:", chaos_patrons[p_ptr->chaos_patron]);
@@ -2669,8 +2667,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
     }
 
     /* Redraw (later) if needed */
-    if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-    if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+    check_mon_health_redraw(m_idx);
 
     /* Wake it up */
     if (shoot_hack != SHOOT_TRANQUILIZE)

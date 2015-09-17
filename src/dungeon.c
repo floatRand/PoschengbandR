@@ -995,8 +995,7 @@ static void regen_monsters(void)
             if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
 
             /* Redraw (later) if needed */
-            if (p_ptr->health_who == i) p_ptr->redraw |= (PR_HEALTH);
-            if (p_ptr->riding == i) p_ptr->redraw |= (PR_UHEALTH);
+            check_mon_health_redraw(i);
         }
     }
 }
@@ -3582,11 +3581,8 @@ static void process_command(void)
             }
 
             /* Update monsters */
-            p_ptr->update |= (PU_MONSTERS);
-
-            /* Redraw "title" */
-            p_ptr->redraw |= (PR_TITLE);
-
+            p_ptr->update |= PU_MONSTERS;
+            p_ptr->redraw |= PR_EFFECTS;
             break;
         }
 
@@ -5080,8 +5076,7 @@ static void process_player(void)
                             m_ptr->mflag2 &= ~(MFLAG2_MARK);
                             m_ptr->ml = FALSE;
                             update_mon(i, FALSE);
-                            if (p_ptr->health_who == i) p_ptr->redraw |= (PR_HEALTH);
-                            if (p_ptr->riding == i) p_ptr->redraw |= (PR_UHEALTH);
+                            check_mon_health_redraw(i);
                             lite_spot(m_ptr->fy, m_ptr->fx);
                         }
                     }
@@ -5099,7 +5094,7 @@ static void process_player(void)
                     }
                 }
                 new_mane = FALSE;
-                p_ptr->redraw |= (PR_IMITATION);
+                p_ptr->redraw |= PR_EFFECTS;
             }
             if (p_ptr->action == ACTION_LEARN)
             {

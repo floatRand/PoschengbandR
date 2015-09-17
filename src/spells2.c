@@ -3548,7 +3548,7 @@ bool earthquake_aux(int cy, int cx, int r, int m_idx)
         p_ptr->update |= PU_BONUS;
 
     /* Update the health bar */
-    p_ptr->redraw |= (PR_HEALTH | PR_UHEALTH);
+    p_ptr->redraw |= PR_HEALTH_BARS;
 
     /* Redraw map */
     p_ptr->redraw |= (PR_MAP);

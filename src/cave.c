@@ -5153,7 +5153,7 @@ void health_track(int m_idx)
     p_ptr->health_who = m_idx;
 
     /* Redraw (later) */
-    p_ptr->redraw |= (PR_HEALTH);
+    p_ptr->redraw |= PR_HEALTH_BARS;
 }
 
 

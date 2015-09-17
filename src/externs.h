@@ -267,7 +267,8 @@ extern bool show_discounts;
 extern bool show_item_graph;    /* Show items graphics */
 extern bool equippy_chars;    /* Display 'equippy' chars */
 extern bool display_food_bar;    /* Like the monster health bar, only tastier! */
-extern bool display_hp_mana_bar; /* Display player HP/SP just like the monster health bar */
+extern bool display_hp_bar; /* Display player HP just like the monster health bar */
+extern bool display_sp_bar; /* Display player SP just like the monster health bar */
 extern bool display_mutations;    /* Display mutations in 'C'haracter Display */
 extern bool compress_savefile;    /* Compress messages in savefiles */
 extern bool abbrev_extra;    /* Describe obj's extra resistances by abbreviation */
@@ -1588,6 +1589,7 @@ extern int  py_prorata_level(int amt);
 extern int  py_prorata_level_aux(int amt, int w1, int w2, int w3);
 extern int  big_num_round(int num, int sig_figs);
 extern void big_num_display(int num, char *buf);
+extern void check_mon_health_redraw(int m_idx);
 
 /* effects.c */
 extern void set_action(int typ);

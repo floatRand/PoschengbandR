@@ -1734,7 +1734,7 @@ void do_cmd_pet_dismiss(void)
                 msg_format("You have got off %s. ", friend_name);
                 p_ptr->riding = 0;
                 p_ptr->update |= (PU_BONUS | PU_MONSTERS);
-                p_ptr->redraw |= (PR_EXTRA | PR_UHEALTH);
+                p_ptr->redraw |= (PR_EXTRA | PR_HEALTH_BARS);
             }
 
             sprintf(buf, "Dismissed %s.", friend_name);
@@ -1913,7 +1913,7 @@ bool rakuba(int dam, bool force)
     p_ptr->redraw |= (PR_EXTRA);
 
     /* Update health track of mount */
-    p_ptr->redraw |= (PR_UHEALTH);
+    p_ptr->redraw |= PR_HEALTH_BARS;
 
     if (p_ptr->levitation && !force)
     {
@@ -2064,7 +2064,7 @@ bool do_riding(bool force)
     /* Redraw map */
     p_ptr->redraw |= (PR_MAP | PR_EXTRA);
 
-    p_ptr->redraw |= (PR_UHEALTH | PR_HEALTH);
+    p_ptr->redraw |= PR_HEALTH_BARS;
 
     /* Move the player */
     (void)move_player_effect(y, x, MPE_HANDLE_STUFF | MPE_ENERGY_USE | MPE_DONT_PICKUP | MPE_DONT_SWAP_MON);

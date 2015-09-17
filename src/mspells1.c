@@ -2921,8 +2921,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             }
 
             /* Redraw (later) if needed */
-            if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
-            if (p_ptr->riding == m_idx) p_ptr->redraw |= (PR_UHEALTH);
+            check_mon_health_redraw(m_idx);
 
             /* Cancel fear */
             if (MON_MONFEAR(m_ptr))
@@ -4101,7 +4100,7 @@ msg_format("They say 'The %d meets! We are the Ring-Ranger!'.", count);
             p_ptr->mane_num++;
             new_mane = TRUE;
 
-            p_ptr->redraw |= (PR_IMITATION);
+            p_ptr->redraw |= PR_EFFECTS;
         }
     }
 

@@ -3534,11 +3534,14 @@ option_type option_info[] =
     { &equippy_chars,               TRUE,  OPT_PAGE_TEXT, 1, 12,
     "equippy_chars",                "Display 'equippy' chars" },
 
+    { &display_hp_bar,              FALSE,  OPT_PAGE_TEXT, 1, 1,
+    "display_hp_bar",               "Display player hp bar" },
+
+    { &display_sp_bar,              FALSE,  OPT_PAGE_TEXT, 1, 2,
+    "display_sp_bar",               "Display player sp bar" },
+
     { &display_food_bar,            FALSE,  OPT_PAGE_TEXT, 1, 13,
     "display_food_bar",             "Display detailed food status" },
-
-    { &display_hp_mana_bar,         FALSE,  OPT_PAGE_TEXT, 1, 1,
-    "display_hp_mana_bar",          "Display player hp and mana bars" },
 
     { &display_mutations,           FALSE, OPT_PAGE_TEXT, 5, 0,
     "display_mutations",            "Display mutations in 'C'haracter Display" },

@@ -3499,7 +3499,7 @@ static void bldg_process_command(building_type *bldg, int i)
 
             if (m_ptr->hp < 30000) m_ptr->hp += amt;
             if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
-            p_ptr->redraw |= PR_UHEALTH;
+            p_ptr->redraw |= PR_HEALTH_BARS;
         }
 
         paid = TRUE;

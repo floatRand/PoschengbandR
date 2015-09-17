@@ -119,6 +119,8 @@ char *XSetIMValues(XIM, ...); /* Hack for XFree86 4.0 */
  */
 #include "maid-x11.c"
 
+/* Which header?? */
+extern void usleep(int);
 
 /*
  * Hack -- avoid some compiler warnings

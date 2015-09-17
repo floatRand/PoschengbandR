@@ -24,7 +24,7 @@ void set_action(int typ)
         {
         case ACTION_SEARCH:
             msg_print("You no longer walk carefully.");
-            p_ptr->redraw |= (PR_SPEED);
+            p_ptr->redraw |= PR_EFFECTS;
             break;
         case ACTION_REST:
             resting = 0;
@@ -66,7 +66,7 @@ void set_action(int typ)
     {
     case ACTION_SEARCH:
         msg_print("You begin to walk carefully.");
-        p_ptr->redraw |= (PR_SPEED);
+        p_ptr->redraw |= PR_EFFECTS;
         break;
     case ACTION_LEARN:
         msg_print("You begin Learning");
@@ -767,7 +767,7 @@ bool set_blind(int v, bool do_dec)
     p_ptr->blind = v;
 
     /* Redraw status bar */
-    p_ptr->redraw |= (PR_STATUS);
+    p_ptr->redraw |= (PR_EFFECTS);
 
     /* Nothing to notice */
     if (!notice) return (FALSE);
@@ -867,8 +867,7 @@ bool set_confused(int v, bool do_dec)
     /* Use the value */
     p_ptr->confused = v;
 
-    /* Redraw status bar */
-    p_ptr->redraw |= (PR_STATUS);
+    p_ptr->redraw |= PR_EFFECTS;
 
     /* Nothing to notice */
     if (!notice) return (FALSE);
@@ -921,8 +920,7 @@ bool set_poisoned(int v, bool do_dec)
     /* Use the value */
     p_ptr->poisoned = v;
 
-    /* Redraw status bar */
-    p_ptr->redraw |= (PR_STATUS);
+    p_ptr->redraw |= PR_EFFECTS;
 
     /* Nothing to notice */
     if (!notice) return (FALSE);
@@ -1017,17 +1015,13 @@ bool set_paralyzed(int v, bool do_dec)
     /* Use the value */
     p_ptr->paralyzed = v;
 
-    /* Redraw status bar */
-    p_ptr->redraw |= (PR_STATUS);
+    p_ptr->redraw |= (PR_EFFECTS);
 
     /* Nothing to notice */
     if (!notice) return (FALSE);
 
     /* Disturb */
     if (disturb_state) disturb(0, 0);
-
-    /* Redraw the state */
-    p_ptr->redraw |= (PR_STATE);
 
     /* Handle stuff */
     handle_stuff();
@@ -1088,7 +1082,7 @@ bool set_image(int v, bool do_dec)
     p_ptr->image = v;
 
     /* Redraw status bar */
-    p_ptr->redraw |= (PR_STATUS);
+    p_ptr->redraw |= PR_EFFECTS;
 
     /* Nothing to notice */
     if (!notice) return (FALSE);
@@ -1100,7 +1094,7 @@ bool set_image(int v, bool do_dec)
     p_ptr->redraw |= (PR_MAP);
 
     /* Update the health bar */
-    p_ptr->redraw |= (PR_HEALTH | PR_UHEALTH);
+    p_ptr->redraw |= PR_HEALTH_BARS;
 
     /* Update monsters */
     p_ptr->update |= (PU_MONSTERS);
@@ -4682,7 +4676,7 @@ bool set_stun(int v, bool do_dec)
     p_ptr->update |= (PU_BONUS);
 
     /* Redraw the "stun" */
-    p_ptr->redraw |= (PR_STUN);
+    p_ptr->redraw |= PR_EFFECTS;
 
     /* Handle stuff */
     handle_stuff();
@@ -4893,7 +4887,7 @@ bool set_cut(int v, bool do_dec)
     p_ptr->update |= (PU_BONUS);
 
     /* Redraw the "cut" */
-    p_ptr->redraw |= (PR_CUT);
+    p_ptr->redraw |= PR_EFFECTS;
 
     /* Handle stuff */
     handle_stuff();
@@ -5130,7 +5124,9 @@ bool set_food(int v)
     }
 
     /* Redraw hunger */
-    p_ptr->redraw |= (PR_HUNGER);
+    p_ptr->redraw |= PR_EFFECTS;
+    if (display_food_bar)
+        p_ptr->redraw |= PR_HEALTH_BARS;
 
     /* Handle stuff */
     handle_stuff();
