@@ -103,10 +103,13 @@ static void clear_bldg(int min_row, int max_row)
 
 static void building_prt_gold(void)
 {
+    char tmp[10];
     char tmp_str[80];
 
     prt("Gold Remaining: ", 23, 53);
-    sprintf(tmp_str, "%9d", p_ptr->au);
+
+    big_num_display(p_ptr->au, tmp);
+    sprintf(tmp_str, "%6.6s", tmp);
     prt(tmp_str, 23, 68);
 }
 
@@ -188,6 +191,9 @@ static void show_building(building_type* bldg)
                     sprintf(buff, "(%dgp)", cost);
                 }
             }
+
+            if (cost > p_ptr->au)
+                action_color = TERM_L_DARK;
 
             sprintf(tmp_str," %c) %s %s", bldg->letters[i], bldg->act_names[i], buff);
             c_put_str(action_color, tmp_str, 19+(i/2), 35*(i%2));
@@ -3766,11 +3772,11 @@ void do_cmd_bldg(void)
     command_rep = 0;
     command_new = 0;
 
-    show_building(bldg);
     leave_bldg = FALSE;
 
     while (!leave_bldg)
     {
+        show_building(bldg);
         validcmd = FALSE;
         prt("", 1, 0);
 
@@ -3799,7 +3805,10 @@ void do_cmd_bldg(void)
         }
 
         if (validcmd)
+        {
             bldg_process_command(bldg, i);
+            msg_print(NULL);
+        }
 
         /* Notice stuff */
         notice_stuff();

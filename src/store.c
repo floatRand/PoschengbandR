@@ -2026,23 +2026,33 @@ static void display_entry(int pos)
         /* Display a "fixed" cost */
         if (o_ptr->ident & (IDENT_FIXED))
         {
+            byte attr = TERM_WHITE;
+
             /* Extract the "minimum" price */
             x = price_item(o_ptr, ot_ptr->min_inflate, FALSE);
+
+            if (x > p_ptr->au)
+                attr = TERM_L_DARK;
 
             /* Actually draw the price (not fixed) */
             (void)sprintf(out_val, "%9d F", x);
 
-            put_str(out_val, i+6, 68);
+            c_put_str(attr, out_val, i+6, 68);
         }
 
         /* Display a "taxed" cost */
         else if (!manual_haggle)
         {
+            byte attr = TERM_WHITE;
+
             /* Extract the "minimum" price */
             x = price_item(o_ptr, ot_ptr->min_inflate, FALSE);
 
             /* Hack -- Apply Sales Tax if needed
             if (!noneedtobargain(x)) x += x / 10; */
+
+            if (x > p_ptr->au)
+                attr = TERM_L_DARK;
 
             /* Actually draw the price (with tax) */
             if (p_ptr->wizard)
@@ -2052,18 +2062,23 @@ static void display_entry(int pos)
             }
             else
                 (void)sprintf(out_val, "%9d  ", x);
-            put_str(out_val, i+6, 68);
+            c_put_str(attr, out_val, i+6, 68);
         }
 
         /* Display a "haggle" cost */
         else
         {
+            byte attr = TERM_WHITE;
+
             /* Extrect the "maximum" price */
             x = price_item(o_ptr, ot_ptr->max_inflate, FALSE);
 
+            if (x > p_ptr->au)
+                attr = TERM_L_DARK;
+
             /* Actually draw the price (not fixed) */
             (void)sprintf(out_val, "%9d  ", x);
-            put_str(out_val, i+6, 68);
+            c_put_str(attr, out_val, i+6, 68);
         }
     }
 }
@@ -2122,12 +2137,13 @@ static void display_inventory(void)
  */
 static void store_prt_gold(void)
 {
+    char tmp[10];
     char out_val[64];
 
     prt("Gold Remaining: ", 19 + xtra_stock, 53);
 
-
-    sprintf(out_val, "%9d", p_ptr->au);
+    big_num_display(p_ptr->au, tmp);
+    sprintf(out_val, "%6.6s", tmp);
     prt(out_val, 19 + xtra_stock, 68);
 }
 
@@ -3104,6 +3120,7 @@ static void store_purchase(void)
 
                 /* Spend the money */
                 p_ptr->au -= price;
+                p_ptr->redraw |= PR_GOLD;
                 if (prace_is_(RACE_MON_LEPRECHAUN))
                     p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
 
@@ -3463,7 +3480,7 @@ static void store_sell(void)
 
             /* Get some money */
             p_ptr->au += price;
-
+            p_ptr->redraw |= PR_GOLD;
             if (prace_is_(RACE_MON_LEPRECHAUN))
                 p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
 
@@ -4340,6 +4357,7 @@ void do_cmd_store(void)
                     _restock(st_ptr, TRUE);
                     need_redraw_store_inv = TRUE;
                     p_ptr->au -= 5000;
+                    p_ptr->redraw |= PR_GOLD;
                     store_prt_gold(); 
                 }
                 break;
@@ -4365,6 +4383,7 @@ void do_cmd_store(void)
                         {
                             o_ptr->marked |= OM_RESERVED;
                             p_ptr->au -= 10000;
+                            p_ptr->redraw |= PR_GOLD;
                             store_prt_gold();
 
                             need_redraw_store_inv = TRUE;
@@ -4386,6 +4405,9 @@ void do_cmd_store(void)
          * If player's charisma changes, or if player changes a bow, PU_BONUS is set
          */
          if (p_ptr->update & PU_BONUS)
+            need_redraw_store_inv = TRUE;
+
+         if (p_ptr->redraw & PR_GOLD)
             need_redraw_store_inv = TRUE;
 
         /* Hack -- Character is still in "icky" mode */
@@ -4818,6 +4840,7 @@ static void _buyout(void)
             sound(SOUND_BUY);
             decrease_insults();
             p_ptr->au -= price;
+            p_ptr->redraw |= PR_GOLD;
             total_price += price;
             store_prt_gold();
 
