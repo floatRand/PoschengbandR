@@ -14,6 +14,126 @@
 #include "angband.h"
 #include "equip.h"
 
+#include <assert.h>
+
+static int _npow(int x, int y)
+{
+    int r = 1;
+    int i;
+    for (i = 0; i < y; i++)
+        r *= x;
+    return r;
+}
+
+/* This is mostly for shops/services when the pricing grows
+   too large. For example, when attempting to enchant Aglarang,
+   I get the following prompt of pricing (up to the ->, of course):
+                  Amt      Cost
+               a) + 1     67589gp -> 67.6k
+               b) + 2    139103gp ->  139k
+               c) + 3    214674gp ->  215k
+               d) + 4    294399gp ->  294k
+               e) + 5    378409gp ->  378k
+               f) + 6    466782gp ->  467k
+               g) + 7    559689gp ->  560k
+               h) + 8    657187gp ->  657k
+               i) + 9    759447gp ->  759k
+               j) +10    866527gp ->  867k
+               k) +11   1176810gp -> 1.18M
+*/
+int big_num_round(int num, int sig_figs)
+{
+    assert (1 <= sig_figs);
+    assert (sig_figs <= 10); /* 32-bit */
+
+    if (num < 0)
+    {
+        int tmp = big_num_round(-num, sig_figs);
+        return -tmp;
+    }
+    else
+    {
+        int m, q, r, t;
+
+        /* division algorithm: n = q*m + r
+           we scale m up until q has desired number of significant figures */
+        t = _npow(10, sig_figs);
+        for (m = 1; ; m *= 10)
+        {
+            q = num / m;
+            if (q < t)
+                break;
+        }
+        r = num % m;
+
+        /* if r/m >= 1/2, then round up */
+        if (2*r >= m)
+            q++;
+
+        return q*m;
+    }
+
+}
+
+/* Convert a large number into something we humans can read.
+   For example, I don't care if I have 143798124gp. I'd rather
+   just know I have 144Mgp.
+
+   123     -> 123
+   1234    -> 1.23k
+   12345   -> 12.3k
+   123456  -> 123k
+   1234567 -> 1.23M, etc */
+void big_num_display(int num, char *buf)
+{
+    if (num < 0)
+    {
+        char tmp[10];
+        big_num_display(-num, tmp);
+        sprintf(buf, "-%s", tmp);
+    }
+    else if (num < 1000)
+        sprintf(buf, "%d", num);
+    else
+    {
+        const char _prefix[4] = { ' ', 'k', 'M', 'G' };
+        int digits[10];
+        int n = big_num_round(num, 3);
+        int s = 0;
+        int i, j;
+
+        /* Get all the digits */
+        for (;;)
+        {
+            int d = n % 10;
+            assert(0 <= s && s < 10);
+            digits[s] = d;
+            n /= 10;
+            if (n == 0)
+                break;
+            s++;
+        }
+        assert(s >= 3);
+
+        /* Display 3 Significant Figures */
+        for (i = 0, j = 0; i < 3; i++)
+        {
+            int p = s-i;
+            int d = digits[p];
+
+            buf[j++] = '0' + d;
+
+            /* Check for decimal place except on last digit */
+            if ((p % 3) == 0 && i < 2)
+                buf[j++] = '.';
+        }
+
+        assert(1 <= s/3 && s/3 < 4);
+        buf[j++] = _prefix[s/3];
+        buf[j] = '\0';
+    }
+}
+
 /*
  * Wrap calculation of AC bonuses from Dex
  */
@@ -1167,7 +1287,6 @@ static void prt_level(void)
     }
 }
 
-
 /*
  * Display the experience
  */
@@ -1175,19 +1294,22 @@ static void prt_exp(void)
 {
     char out_val[32];
 
-    if ((!exp_need)||(p_ptr->prace == RACE_ANDROID))
+    if (!exp_need || p_ptr->prace == RACE_ANDROID)
     {
-    (void)sprintf(out_val, "%8d", p_ptr->exp);
+        char tmp[10];
+        big_num_display(p_ptr->exp, tmp);
+        sprintf(out_val, "%8.8s", tmp);
     }
     else
     {
         if (p_ptr->lev >= PY_MAX_LEVEL)
-        {
             (void)sprintf(out_val, "********");
-        }
         else
         {
-            (void)sprintf(out_val, "%8d", exp_requirement(p_ptr->lev) - p_ptr->exp);
+            char tmp[10];
+            int  diff = exp_requirement(p_ptr->lev) - p_ptr->exp;
+            big_num_display(diff, tmp);
+            sprintf(out_val, "%8.8s", tmp);
         }
     }
 
@@ -1209,12 +1331,15 @@ static void prt_exp(void)
  */
 static void prt_gold(void)
 {
-    char tmp[32];
+    char tmp[10];
+    char out_val[32];
+
+    big_num_display(p_ptr->au, tmp);
+    sprintf(out_val, "%8.8s", tmp);
+
 
     put_str("AU ", ROW_GOLD, COL_GOLD);
-
-    sprintf(tmp, "%9d", p_ptr->au);
-    c_put_str(TERM_L_GREEN, tmp, ROW_GOLD, COL_GOLD + 3);
+    c_put_str(TERM_L_GREEN, out_val, ROW_GOLD, COL_GOLD + 4);
 }
 
 

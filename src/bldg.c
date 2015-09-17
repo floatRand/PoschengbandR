@@ -131,8 +131,8 @@ static void show_building(building_type* bldg)
         if (bldg->letters[i])
         {
             int factor = store_calc_price_factor(100);
-            int member_cost = (bldg->member_costs[i] * factor + 50) / 100;
-            int other_cost = (bldg->other_costs[i] * factor + 50) / 100;
+            int member_cost = store_calc_sell_price(bldg->member_costs[i], factor);
+            int other_cost = store_calc_sell_price(bldg->other_costs[i], factor);
             bool owner = is_owner(bldg);
             bool member = is_member(bldg);
             int cost = owner ? member_cost : other_cost;
@@ -2690,27 +2690,6 @@ static bool _gamble_shop_artifact(void)
     return _gamble_shop_aux(&forge);
 }
 
-typedef struct _enchant_choice_s { int amt; int cost; } _enchant_choice_t;
-static void _enchant_menu_fn(int cmd, int which, vptr cookie, variant *res)
-{
-    _enchant_choice_t *ptr = (_enchant_choice_t *)cookie;
-    ptr += which;
-    switch (cmd)
-    {
-    case MENU_TEXT:
-        var_set_string(res, format("+%2d %9dgp", ptr->amt, ptr->cost));
-        break;
-    case MENU_COLOR:
-        if (ptr->cost > p_ptr->au) 
-        {
-            var_set_int(res, TERM_L_DARK);
-            break;
-        }
-    default:
-        default_menu(cmd, which, cookie, res);
-    }
-}
-
 static bool _reforge_artifact(void)
 {
     int src_idx, dest_idx, cost;
@@ -2839,6 +2818,35 @@ static bool _reforge_artifact(void)
     return TRUE;
 }
 
+typedef struct _enchant_choice_s { int amt; int cost; } _enchant_choice_t;
+static void _enchant_menu_fn(int cmd, int which, vptr cookie, variant *res)
+{
+    _enchant_choice_t *ptr = (_enchant_choice_t *)cookie;
+    ptr += which;
+    switch (cmd)
+    {
+    case MENU_TEXT:
+    {
+        char tmp[255];
+        if (ptr->cost >= 10000)
+            big_num_display(ptr->cost, tmp);
+        else
+            sprintf(tmp, "%d", ptr->cost);
+
+        var_set_string(res, format("+%2d %9.9s", ptr->amt, tmp));
+        break;
+    }
+    case MENU_COLOR:
+        if (ptr->cost > p_ptr->au)
+        {
+            var_set_int(res, TERM_L_DARK);
+            break;
+        }
+    default:
+        default_menu(cmd, which, cookie, res);
+    }
+}
+
 static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_guild)
 {
     int         i, item;
@@ -2850,7 +2858,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     int         store_factor = store_calc_price_factor(100);
 
     if (cost == 0)
-        cost = (1500 * store_factor + 50)/100;
+        cost = store_calc_sell_price(1500, store_factor);
 
     if (p_ptr->prace == RACE_MON_SWORD)
     {
@@ -2933,7 +2941,8 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
                 int min_cost = (i+1)*cost;
 
                 unit_cost *= m;
-                unit_cost = (unit_cost * store_factor + 50) / 100;
+
+                unit_cost = store_calc_sell_price(unit_cost, store_factor);
 
                 if (unit_cost < min_cost)
                     unit_cost = min_cost;
@@ -2941,7 +2950,10 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
                 if (is_guild)
                     unit_cost = (unit_cost + 1)/2;
 
-                choices[i].cost = unit_cost;
+                if (unit_cost >= 10000)
+                    choices[i].cost = big_num_round(unit_cost, 3);
+                else
+                    choices[i].cost = unit_cost;
             }
         }
         if (!i)
@@ -3377,7 +3389,7 @@ static void bldg_process_command(building_type *bldg, int i)
         bcost = bldg->other_costs[i];
 
     /* Adjst price for race, charisma and fame */
-    bcost = (bcost * store_calc_price_factor(100) + 50) / 100;
+    bcost = store_calc_sell_price(bcost, store_calc_price_factor(100));
 
     /* action restrictions */
     if (((bldg->action_restr[i] == 1) && !is_member(bldg)) ||

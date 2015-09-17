@@ -379,6 +379,32 @@ int store_calc_price_factor(int greed)
     return factor;
 }
 
+int store_calc_sell_price(int price, int factor)
+{
+    if (price > 1000*1000)
+        price = (price / 100) * factor;
+    else
+        price = (price * factor + 50) / 100;
+
+    if (price > 1000)
+        price = big_num_round(price, 3);
+
+    return price;
+}
+
+int store_calc_purchase_price(int price, int factor)
+{
+    if (price > 1000*1000)
+        price = (price / factor) * 100;
+    else
+        price = (price * 100) / factor;
+
+    if (price > 1000)
+        price = big_num_round(price, 3);
+
+    return price;
+}
+
 /*
  * Determine the price of an item (qty one) in a store.
  *
@@ -417,7 +443,8 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
         if (cur_store_num == STORE_BLACK)
             price = price * (625 - virtue_current(VIRTUE_JUSTICE)) / 625;
 
-        price = price * 100 / factor;
+        price = store_calc_purchase_price(price, factor);
+        /*price = price * 100 / factor;*/
     }
     /* Shop is selling */
     else
@@ -431,7 +458,8 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
         if (cur_store_num == STORE_BLACK)
             price = price * (625 + virtue_current(VIRTUE_JUSTICE)) / 625;
 
-        price = price * factor / 100;
+        price = store_calc_sell_price(price, factor);
+        /*price = price * factor / 100;*/
     }
 
     /* Note -- Never become "free" */
@@ -2013,8 +2041,8 @@ static void display_entry(int pos)
             /* Extract the "minimum" price */
             x = price_item(o_ptr, ot_ptr->min_inflate, FALSE);
 
-            /* Hack -- Apply Sales Tax if needed */
-            if (!noneedtobargain(x)) x += x / 10;
+            /* Hack -- Apply Sales Tax if needed
+            if (!noneedtobargain(x)) x += x / 10; */
 
             /* Actually draw the price (with tax) */
             if (p_ptr->wizard)
@@ -2559,8 +2587,8 @@ static bool purchase_haggle(object_type *o_ptr, s32b *price)
             msg_print("You quickly agree upon the price.");
             msg_print(NULL);*/
 
-            /* Apply Sales Tax */
-            final_ask += final_ask / 10;
+            /* Apply Sales Tax
+            final_ask += final_ask / 10;*/
         }
 
         /* Final price */
@@ -2726,11 +2754,11 @@ static bool sell_haggle(object_type *o_ptr, s32b *price)
     /* No need to haggle */
     if (noneed || !manual_haggle || (final_ask >= purse))
     {
-        /* Apply Sales Tax (if needed) */
+        /* Apply Sales Tax (if needed)
         if (!manual_haggle && !noneed)
         {
             final_ask -= final_ask / 10;
-        }
+        } */
 
         /* No reason to haggle */
         if (final_ask >= purse)

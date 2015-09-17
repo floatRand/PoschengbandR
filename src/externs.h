@@ -1452,6 +1452,8 @@ enum { STORE_MAINT_CULL = 1, STORE_MAINT_NORMAL };
 extern void store_maint(int town_num, int store_num, int options);
 extern void store_init(int town_num, int store_num);
 extern int  store_calc_price_factor(int greed);
+extern int  store_calc_sell_price(int price, int factor);
+extern int  store_calc_purchase_price(int price, int factor);
 extern void move_to_black_market(object_type * o_ptr);
 extern void mass_produce(object_type *o_ptr);
 
@@ -1584,6 +1586,8 @@ extern void handle_stuff(void);
 extern bool heavy_armor(void);
 extern int  py_prorata_level(int amt);
 extern int  py_prorata_level_aux(int amt, int w1, int w2, int w3);
+extern int  big_num_round(int num, int sig_figs);
+extern void big_num_display(int num, char *buf);
 
 /* effects.c */
 extern void set_action(int typ);
