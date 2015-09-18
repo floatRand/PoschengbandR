@@ -4352,15 +4352,23 @@ bool py_attack(int y, int x, int mode)
                 {
                     if (o_ptr) /* paranoia */
                     {
-                        char c = object_char(o_ptr);
-                        byte a = object_attr(o_ptr);
+                        if (panel_contains(y, x) && player_can_see_bold(y, x))
+                        {
+                            char c = object_char(o_ptr);
+                            byte a = object_attr(o_ptr);
 
-                        print_rel(c, a, y, x);
-                        move_cursor_relative(y, x);
-                        Term_fresh();
-                        Term_xtra(TERM_XTRA_DELAY, msec);
-                        lite_spot(y, x);
-                        Term_fresh();
+                            print_rel(c, a, y, x);
+                            move_cursor_relative(y, x);
+                            Term_fresh();
+                            Term_xtra(TERM_XTRA_DELAY, msec);
+                            lite_spot(y, x);
+                            Term_fresh();
+                        }
+                        else
+                        {
+                            /* Pause anyway, for consistancy */
+                            Term_xtra(TERM_XTRA_DELAY, msec);
+                        }
                     }
                     py_attack_aux(y, x, &fear, &mdeath, i, WEAPONMASTER_MANY_STRIKE);
                     if (fear_stop || !random_opponent(&y, &x))

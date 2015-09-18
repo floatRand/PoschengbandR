@@ -3895,9 +3895,8 @@ void process_monsters(void)
         hack_m_spell = 0;
 
         /* Process the monster */
-        process_monster(i); 
         msg_boundary();
-
+        process_monster(i);
 
         reset_target(m_ptr);
 

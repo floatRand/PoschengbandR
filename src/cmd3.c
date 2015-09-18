@@ -330,7 +330,7 @@ void do_cmd_destroy(void)
     /* Verify unless quantity given beforehand */
     if (!force && (confirm_destroy || (object_value(o_ptr) > 0)))
     {
-        int options = OD_COLOR_CODED;
+        int options = 0 /*OD_COLOR_CODED*/;
         if (o_ptr->number > 1)
             options |= OD_OMIT_PREFIX;
         object_desc(o_name, o_ptr, options);
@@ -353,7 +353,8 @@ void do_cmd_destroy(void)
             char i;
 
             /* Prompt */
-            cmsg_display(TERM_WHITE, out_val, 0, 0, strlen(out_val), FALSE);
+            /*cmsg_display(TERM_WHITE, out_val, 0, 0, strlen(out_val), FALSE);*/
+            prt(out_val, 0, 0);
             i = inkey();
             prt("", 0, 0);
 

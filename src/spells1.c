@@ -9015,7 +9015,8 @@ bool binding_field( int dam )
                 centersign*( (point_x[2]-x)*(point_y[0]-y)
                      -(point_y[2]-y)*(point_x[0]-x)) >=0 )
             {
-                if (player_has_los_bold(y, x) && projectable(py, px, y, x)) {
+                if (player_has_los_bold(y, x) && projectable(py, px, y, x))
+                {
                     /* Visual effects */
                     if(!(p_ptr->blind)
                        && panel_contains(y,x)){

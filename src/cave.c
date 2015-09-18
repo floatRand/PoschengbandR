@@ -1404,7 +1404,7 @@ void move_cursor_relative(int row, int col)
 void print_rel(char c, byte a, int y, int x)
 {
     /* Only do "legal" locations */
-    if (panel_contains(y, x))
+    if (panel_contains(y, x) && !msg_line_contains(y-panel_row_prt, panel_col_of(x)))
     {
         /* Hack -- fake monochrome */
         if (!use_graphics)
@@ -1614,6 +1614,9 @@ void display_dungeon(void)
  */
 void lite_spot(int y, int x)
 {
+    if (msg_line_contains(y-panel_row_prt, panel_col_of(x)))
+        return;
+
     /* Redraw if on screen */
     if (panel_contains(y, x) && in_bounds2(y, x))
     {
@@ -1682,8 +1685,10 @@ void prt_map(void)
     /* Bottom section of screen */
     for (y = 1; y <= ymin - panel_row_prt; y++)
     {
-        /* Erase the section */
-        Term_erase(COL_MAP, y, wid);
+        if (msg_line_contains(y, -1))
+            Term_erase(msg_max_col + 1, y, wid);
+        else
+            Term_erase(COL_MAP, y, wid);
     }
 
     /* Top section of screen */
@@ -1704,6 +1709,9 @@ void prt_map(void)
 
             byte ta;
             char tc;
+
+            if (msg_line_contains(y-panel_row_prt, panel_col_of(x)))
+                continue;
 
             /* Determine what is there */
             map_info(y, x, &a, &c, &ta, &tc);

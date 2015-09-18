@@ -2776,61 +2776,6 @@ void cmsg_add(byte color, cptr str)
     message__head += n + 1;
 }
 
-/*
- * Hack -- flush
- */
-static void msg_flush(int x)
-{
-    if (!auto_more && auto_more_state == AUTO_MORE_PROMPT)
-    {
-        /* Pause for response */
-        Term_putstr(x, 0, -1, TERM_L_BLUE, "-more-");
-
-        /* Get an acceptable keypress */
-        while (1)
-        {
-            int cmd = inkey();
-            if (cmd == ESCAPE)
-            {
-                auto_more_state = AUTO_MORE_SKIP_ALL;
-                break;
-            }
-            else if (cmd == '\n' || cmd == '\r' || cmd == 'n')
-            {
-                auto_more_state = AUTO_MORE_SKIP_BLOCK;
-                break;
-            }
-            else if (cmd == '?')
-            {
-                _screen_save_aux();
-                show_file(TRUE, "context_more_prompt.txt", NULL, 0, 0);
-                _screen_load_aux();
-                continue;
-            }
-            else if (cmd == ' ' || cmd == 'm' || quick_messages)
-            {
-                break;
-            }
-            bell();
-        }
-    }
-
-    /* Clear the line */
-    Term_erase(0, 0, 255);
-}
-
-void msg_boundary(void)
-{
-    if (auto_more_state == AUTO_MORE_SKIP_BLOCK)
-    {
-        /* Flush before updating the state to skip
-           the remnants of the last message from the
-           previous message block */
-        msg_print(NULL);
-        auto_more_state = AUTO_MORE_PROMPT;
-    }
-}
-
 /* Messages may now contain embedded formatting directives for
    coloring. This routine returns the display length of the message. */
 int msg_display_len(cptr msg)
@@ -2875,93 +2820,6 @@ static bool _punctuation_hack(cptr pos)
         return TRUE;
     }
     return FALSE;
-}
-
-/* Display a Message on a single line (usually line 0).
-   The message is displayed, one word at a time, up until
-   the max_x (exclusive).
-
-   If the message is too long and more_prompt is specified,
-   then we issue the -more- prompt and continue drawing the
-   rest of the message, prompting again as needed. Note, we
-   make assumptions when more_prompt is true: namely, that
-   we are drawing on the top message line starting at x=0.
-
-   Returns the last x location printed, which cmsg_print
-   remembers for the next message to render. Other clients
-   typically ignore this.
- */
-int cmsg_display(byte color, cptr msg, int x, int y, int max_x, bool more_prompt)
-{
-    cptr pos = msg, seek;
-    byte base_color = color;
-    int current_x = x;
-    int len, xtra;
-
-    while (*pos)
-    {
-        /* Handle color directives and whitespace */
-        if (*pos == '#')
-        {
-            pos++;
-            if (*pos == '#')
-            {
-            }
-            else if (*pos == '.')
-            {
-                color = base_color;
-                pos++;
-                continue;
-            }
-            else
-            {
-                color = color_char_to_attr(*pos);
-                pos++;
-                continue;
-            }
-        }
-
-        if (*pos == ' ')
-        {
-            while (*pos && *pos == ' ')
-            {
-                current_x++;
-                pos++;
-            }
-            continue;
-        }
-
-        /* Get current word */
-        seek = pos;
-        if (*seek == '#') /* Check for ## escape from above */
-            seek++;
-
-        while (*seek && *seek != ' ' && *seek != '#')
-            seek++;
-
-        /* Draw the current word */
-        len = seek - pos;
-        xtra = _punctuation_hack(seek) ? 1 : 0;
-
-        if (!len)
-            break; /* oops */
-
-        if (current_x + len + xtra >= max_x)
-        {
-            if (!more_prompt)
-                return current_x;
-
-            msg_flush(current_x + 1);
-            current_x = 0;
-        }
-
-        Term_putstr(current_x, y, len, color, pos);
-        current_x += len;
-
-        pos = seek;
-    }
-
-    return current_x;
 }
 
 /* Draw/Measure a Wrapped Message. Returns number of lines.
@@ -3045,6 +2903,200 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw
     return current_y - y + 1;
 }
 
+/* State of the "Message Line" */
+int msg_current_row = 0;
+int msg_current_col = 0;
+int msg_min_col = 13;
+int msg_min_row = 0;
+int msg_max_col = 100;
+int msg_max_row = 0;
+int msg_max_max_row = 10;
+static const char * msg_more_prompt = "-more-";
+
+void msg_boundary(void)
+{
+    /* Force a line break (display only) */
+    if (msg_current_col > msg_min_col)
+    {
+        if (msg_current_row == msg_max_max_row)
+            msg_current_col = msg_max_col - strlen(msg_more_prompt);
+        else
+            msg_current_col = msg_max_col + 1;
+    }
+
+    if (auto_more_state == AUTO_MORE_SKIP_BLOCK)
+    {
+        /* Flush before updating the state to skip
+           the remnants of the last message from the
+           previous message block */
+        msg_print(NULL);
+        auto_more_state = AUTO_MORE_PROMPT;
+    }
+}
+
+bool msg_line_contains(int row, int col)
+{
+    if (msg_min_row <= row && row <= msg_max_row)
+    {
+        if (col < 0)
+            return TRUE;
+        if (msg_min_col <= col && col <= msg_max_col)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+bool msg_line_is_empty(void)
+{
+    if (msg_current_row == msg_min_row && msg_current_col == msg_min_col)
+        return TRUE;
+    return FALSE;
+}
+
+void msg_line_clear(bool close_drop_down)
+{
+    int i;
+    for (i = msg_min_row; i <= msg_max_row; i++)
+        Term_erase(msg_min_col, i, msg_max_col - msg_min_col + 1);
+
+    if (close_drop_down)
+    {
+        if (msg_max_row)
+        {
+            p_ptr->redraw |= PR_MAP;
+            if (msg_min_col <= 12)
+                p_ptr->redraw |= PR_BASIC | PR_EQUIPPY;
+        }
+        msg_max_row = msg_min_row;
+    }
+    msg_current_row = msg_min_row;
+    msg_current_col = msg_min_col;
+}
+
+static void msg_flush(void)
+{
+    if (!auto_more && auto_more_state == AUTO_MORE_PROMPT)
+    {
+        /* Pause for response */
+        Term_putstr(msg_current_col, msg_current_row, -1, TERM_L_BLUE, msg_more_prompt);
+
+        /* Get an acceptable keypress */
+        while (1)
+        {
+            int cmd = inkey();
+            if (cmd == ESCAPE)
+            {
+                auto_more_state = AUTO_MORE_SKIP_ALL;
+                break;
+            }
+            else if (cmd == '\n' || cmd == '\r' || cmd == 'n')
+            {
+                auto_more_state = AUTO_MORE_SKIP_BLOCK;
+                break;
+            }
+            else if (cmd == '?')
+            {
+                _screen_save_aux();
+                show_file(TRUE, "context_more_prompt.txt", NULL, 0, 0);
+                _screen_load_aux();
+                continue;
+            }
+            else if (cmd == ' ' || cmd == 'm' || quick_messages)
+            {
+                break;
+            }
+            bell();
+        }
+    }
+
+    msg_line_clear(FALSE);
+}
+
+/* Display another message on the "Message Line" */
+static void cmsg_display(byte color, cptr msg)
+{
+    cptr pos = msg, seek;
+    byte base_color = color;
+    int len, xtra;
+
+    while (*pos)
+    {
+        /* Handle color directives and whitespace */
+        if (*pos == '#')
+        {
+            pos++;
+            if (*pos == '#')
+            {
+            }
+            else if (*pos == '.')
+            {
+                color = base_color;
+                pos++;
+                continue;
+            }
+            else
+            {
+                color = color_char_to_attr(*pos);
+                pos++;
+                continue;
+            }
+        }
+
+        if (*pos == ' ')
+        {
+            while (*pos && *pos == ' ')
+            {
+                Term_putch(msg_current_col++, msg_current_row, color, ' ');
+                pos++;
+            }
+            continue;
+        }
+
+        /* Get current word */
+        seek = pos;
+        if (*seek == '#') /* Check for ## escape from above */
+            seek++;
+
+        while (*seek && *seek != ' ' && *seek != '#')
+            seek++;
+
+        /* Draw the current word */
+        len = seek - pos;
+
+        if (!len)
+            break; /* oops */
+
+        if (_punctuation_hack(seek))
+            xtra = 1;
+        else if (msg_current_row == msg_max_max_row && !*seek)
+            xtra += strlen(msg_more_prompt);
+        else
+            xtra = 0;
+
+        if (msg_current_col + len + xtra > msg_max_col)
+        {
+            if (msg_current_row >= msg_max_max_row)
+                msg_flush();
+            else
+            {
+                Term_erase(msg_current_col, msg_current_row, msg_max_col - msg_current_col + 1);
+                msg_current_row++;
+                if (msg_current_row > msg_max_row)
+                    msg_max_row = msg_current_row;
+                msg_current_col = msg_min_col;
+                Term_erase(msg_current_col, msg_current_row, msg_max_col - msg_current_col + 1);
+            }
+        }
+
+        Term_putstr(msg_current_col, msg_current_row, len, color, pos);
+        msg_current_col += len;
+
+        pos = seek;
+    }
+
+    Term_putch(msg_current_col++, msg_current_row, color, ' ');
+}
+
 /*
  * Output a message to the top line of the screen.
  *
@@ -3072,32 +3124,34 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw
  */
 void cmsg_print(byte color, cptr msg)
 {
-    static int p = 0;
-
     int n;
-    int max_x = Term->wid - 6; /* "-more-" */
+
+    msg_max_col = MIN(msg_min_col + 80, Term->wid -1);
 
     if (world_monster) return;
     if (statistics_hack) return;
 
-    /* Hack -- Reset */
-    if (!msg_flag) {
-        /* Clear the line */
-        Term_erase(0, 0, 255);
-        p = 0;
-    }
+    /* Hack -- Reset ... Why is this needed? */
+    if (!msg_flag)
+        msg_line_clear(FALSE);
 
     /* Flush when requested or needed */
-    n = msg_display_len(msg);
-    if (p && (!msg || p + n >= max_x))
+    if (!msg)
     {
-        msg_flush(p);
-        msg_flag = FALSE;
-        p = 0;
-    }    
+        if (!msg_line_is_empty())
+        {
+            msg_flush();
+            msg_flag = FALSE;
+        }
+        return;
+    }
 
-    /* No message */
-    if (!msg) return;
+    n = msg_display_len(msg);
+    if (msg_current_row == msg_max_max_row && msg_current_col + n + (int)strlen(" -more-") > msg_max_col)
+    {
+        msg_flush();
+        msg_flag = FALSE;
+    }    
 
     /* Paranoia */
     if (n > 1000) return;
@@ -3106,7 +3160,7 @@ void cmsg_print(byte color, cptr msg)
     if (character_generated)
         cmsg_add(color, msg);
 
-    p = cmsg_display(color, msg, p, 0, max_x, TRUE) + 1;
+    cmsg_display(color, msg);
 
     if (auto_more_state == AUTO_MORE_SKIP_ONE)
         auto_more_state = AUTO_MORE_PROMPT;
@@ -4240,7 +4294,7 @@ static char inkey_from_menu(void)
  */
 void request_command(int shopping)
 {
-    int i;
+    int i,ct;
 
     char cmd;
     int mode;
@@ -4273,7 +4327,7 @@ void request_command(int shopping)
 
 
     /* Get command */
-    while (1)
+    for (ct = 0;;ct++)
     {
         /* Hack -- auto-commands */
         if (command_new)
@@ -4306,9 +4360,9 @@ void request_command(int shopping)
                 cmd = inkey_from_menu();
         }
 
-        /* Clear top line */
-        prt("", 0, 0);
-
+        /* Clear top line
+        prt("", 0, 0);*/
+        msg_line_clear(TRUE);
 
         /* Command Count */
         if (cmd == '0')

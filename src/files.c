@@ -2128,6 +2128,8 @@ static void display_player_equippy(int y, int x, u16b mode)
 
 void print_equippy(void)
 {
+    if (msg_line_contains(ROW_EQUIPPY, COL_EQUIPPY + 12))
+        return;
     display_player_equippy(ROW_EQUIPPY, COL_EQUIPPY, EQUIPPY_MAIN);
 }
 

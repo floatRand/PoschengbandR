@@ -3540,6 +3540,7 @@ static void process_command(void)
 #endif /* ALLOW_REPEAT -- TNB */
 
     now_turn = turn;
+    msg_boundary();
 
     /* Sniper */
     if ((p_ptr->pclass == CLASS_SNIPER) && (p_ptr->concent))
@@ -3549,18 +3550,11 @@ static void process_command(void)
     switch (command_cmd)
     {
         /* Ignore */
-        case ESCAPE:
         case ' ':
-        {
-            break;
-        }
-
-        /* Ignore return */
         case '\r':
         case '\n':
-        {
+        case ESCAPE:
             break;
-        }
 
         /*** Wizard Commands ***/
 
@@ -4471,7 +4465,6 @@ static void process_command(void)
         }
     }
 
-    msg_boundary();
     if (!energy_use)
         now_turn = old_now_turn;
 }
@@ -4956,8 +4949,9 @@ static void process_player(void)
             /* Hack -- Assume messages were seen */
             msg_flag = FALSE;
 
-            /* Clear the top line */
-            prt("", 0, 0);
+            /* Clear the top line
+            prt("", 0, 0);*/
+            msg_line_clear(FALSE);
 
             /* Process the command */
             process_command();

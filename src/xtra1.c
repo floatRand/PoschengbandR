@@ -358,6 +358,9 @@ static void prt_stat(int stat)
 {
     char tmp[32];
 
+    if (msg_line_contains(ROW_STAT + stat, COL_STAT + 12))
+        return;
+
     /* Display "injured" stat */
     if (p_ptr->stat_cur[stat] < p_ptr->stat_max[stat])
     {
@@ -1232,6 +1235,9 @@ static void prt_level(void)
 {
     char tmp[32];
 
+    if (msg_line_contains(ROW_LEVEL, COL_LEVEL + 12))
+        return;
+
     sprintf(tmp, "%6d", p_ptr->lev);
 
 
@@ -1255,6 +1261,9 @@ static void prt_level(void)
 static void prt_exp(void)
 {
     char out_val[32];
+
+    if (msg_line_contains(ROW_EXP, COL_EXP + 12))
+        return;
 
     if (!exp_need || p_ptr->prace == RACE_ANDROID)
     {
@@ -1295,6 +1304,9 @@ static void prt_gold(void)
 {
     char tmp[10];
     char out_val[32];
+
+    if (msg_line_contains(ROW_GOLD, COL_GOLD + 12))
+        return;
 
     big_num_display(p_ptr->au, tmp);
     sprintf(out_val, "%8.8s", tmp);
