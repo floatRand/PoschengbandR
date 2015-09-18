@@ -95,17 +95,16 @@ int check_hit(int power, int level, int stun, int m_idx)
  */
 static cptr desc_insult[] =
 {
-    "insults you!",
-    "insults your mother!",
-    "gives you the finger!",
-    "humiliates you!",
-    "defiles you!",
-    "dances around you!",
-    "makes obscene gestures!",
-    "moons you!!!",
-    "calls you a parasite!",
-    "calls you a cyborg!"
-
+    "insults you",
+    "insults your mother",
+    "gives you the finger",
+    "humiliates you",
+    "defiles you",
+    "dances around you",
+    "makes obscene gestures",
+    "moons you",
+    "calls you a parasite",
+    "calls you a cyborg"
 };
 
 
@@ -115,10 +114,10 @@ static cptr desc_insult[] =
  */
 static cptr desc_moan[] =
 {
-    "seems sad about something.",
-    "asks if you have seen his dogs.",
-    "tells you to get off his land.",
-    "mumbles something about mushrooms."
+    "seems sad about something",
+    "asks if you have seen his dogs",
+    "tells you to get off his land",
+    "mumbles something about mushrooms"
 
 };
 
@@ -207,6 +206,10 @@ bool make_attack_normal(int m_idx)
         if (kawarimi(TRUE)) return TRUE;
     }
 
+    if (!retaliation_hack)
+        cmsg_format(TERM_GREEN, "%^s attacks you:", m_name);
+    monster_desc(m_name, m_ptr, MD_PRON_VISIBLE);
+
     /* Assume no blink */
     blinked = FALSE;
 
@@ -277,7 +280,7 @@ bool make_attack_normal(int m_idx)
         if (retaliation_hack)
         {
             if (m_ptr->ml)
-                msg_format("%^s retaliates!", m_name);
+                cmsg_format(TERM_GREEN, "(%^s retaliates:", m_name);
             if (is_original_ap_and_seen(m_ptr))
                 r_ptr->r_flags2 |= RF2_AURA_REVENGE;
         }
@@ -313,106 +316,106 @@ bool make_attack_normal(int m_idx)
             switch (method)
             {
             case RBM_HIT:
-                act = "hits you.";
+                act = "hits";
                 do_cut = do_stun = 1;
                 touched = TRUE;
                 sound(SOUND_HIT);
                 break;
             case RBM_TOUCH:
-                act = "touches you.";
+                act = "touches";
                 touched = TRUE;
                 sound(SOUND_TOUCH);
                 break;
             case RBM_PUNCH:
-                act = "punches you.";
+                act = "punches";
                 touched = TRUE;
                 do_stun = 1;
                 sound(SOUND_HIT);
                 break;
             case RBM_KICK:
-                act = "kicks you.";
+                act = "kicks";
                 touched = TRUE;
                 do_stun = 1;
                 sound(SOUND_HIT);
                 break;
             case RBM_CLAW:
-                act = "claws you.";
+                act = "claws";
                 touched = TRUE;
                 do_cut = 1;
                 sound(SOUND_CLAW);
                 break;
             case RBM_BITE:
-                act = "bites you.";
+                act = "bites";
                 do_cut = 1;
                 touched = TRUE;
                 sound(SOUND_BITE);
                 break;
             case RBM_STING:
-                act = "stings you.";
+                act = "stings";
                 touched = TRUE;
                 sound(SOUND_STING);
                 break;
             case RBM_SLASH:
-                act = "slashes you.";
+                act = "slashes";
                 touched = TRUE;
                 do_cut = 1;
                 sound(SOUND_CLAW);
                 break;
             case RBM_BUTT:
-                act = "butts you.";
+                act = "butts";
                 do_stun = 1;
                 touched = TRUE;
                 sound(SOUND_HIT);
                 break;
             case RBM_CRUSH:
-                act = "crushes you.";
+                act = "crushes";
                 do_stun = 1;
                 touched = TRUE;
                 sound(SOUND_CRUSH);
                 break;
             case RBM_ENGULF:
-                act = "engulfs you.";
+                act = "engulfs";
                 touched = TRUE;
                 sound(SOUND_CRUSH);
                 break;
             case RBM_CHARGE:
-                act = "charges you.";
+                act = "charges";
                 touched = TRUE;
                 sound(SOUND_BUY); /* Note! This is "charges", not "charges at". */
                 break;
             case RBM_CRAWL:
-                act = "crawls on you.";
+                act = "crawls";
                 touched = TRUE;
                 sound(SOUND_SLIME);
                 break;
             case RBM_DROOL:
-                act = "drools on you.";
+                act = "drools";
                 sound(SOUND_SLIME);
                 break;
             case RBM_SPIT:
-                act = "spits on you.";
+                act = "spits";
                 sound(SOUND_SLIME);
                 break;
             case RBM_EXPLODE:
-                act = "explodes.";
+                act = "explodes";
                 explode = TRUE;
                 break;
             case RBM_GAZE:
-                act = "gazes at you.";
+                act = "gazes";
                 break;
             case RBM_WAIL:
-                act = "wails at you.";
+                act = "wails";
                 sound(SOUND_WAIL);
                 break;
             case RBM_SPORE:
-                act = "releases spores at you.";
+                act = "releases spores";
                 sound(SOUND_SLIME);
                 break;
             case RBM_XXX4:
-                act = "projects XXX4's at you.";
+                act = "projects XXX4's at you";
                 break;
             case RBM_BEG:
-                act = "begs you for money.";
+                act = "begs";
                 sound(SOUND_MOAN);
                 break;
             case RBM_INSULT:
@@ -444,7 +447,7 @@ bool make_attack_normal(int m_idx)
                 {
                     act = silly_attacks[randint0(MAX_SILLY_ATTACK)];
                 }
-                msg_format("%^s %s%s", m_name, act, do_silly_attack ? " you." : "");
+                msg_format("%^s %s%s%s", m_name, act, do_silly_attack ? " you" : "", retaliation_hack ? ".#g)#." : ".");
             }
 
             /* Hack -- assume all attacks are obvious */
@@ -1646,7 +1649,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is suddenly very hot!", m_name);
+                        msg_format("%^s is #rburned#.!", m_name);
 
                         if (mon_take_hit(m_idx, dam, &fear,
                             " turns into a pile of ash."))
@@ -1672,7 +1675,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s gets zapped!", m_name);
+                        msg_format("%^s is #bzapped#.!", m_name);
 
                         if (mon_take_hit(m_idx, dam, &fear,
                             " turns into a pile of cinder."))
@@ -1698,7 +1701,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is very cold!", m_name);
+                        msg_format("%^s is #wfrozen#.!", m_name);
 
                         if (mon_take_hit(m_idx, dam, &fear,
                             " was frozen."))
@@ -1723,7 +1726,7 @@ bool make_attack_normal(int m_idx)
                         int dam = _aura_dam_p();
 
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
-                        msg_format("%^s gets shredded!", m_name);
+                        msg_format("%^s is #ushredded#.!", m_name);
                         if (mon_take_hit(m_idx, dam, &fear," was torn to pieces."))
                         {
                             blinked = FALSE;
@@ -1765,13 +1768,13 @@ bool make_attack_normal(int m_idx)
                         switch (randint1(3))
                         {
                         case 1:
-                            msg_format("%^s gets chronosmashed!", m_name);
+                            msg_format("%^s gets #Bchronosmashed#.!", m_name);
                             break;
                         case 2:
-                            msg_format("%^s gets flux capacitated!", m_name);
+                            msg_format("%^s gets #Bflux capacitated#.!", m_name);
                             break;
                         case 3:
-                            msg_format("%^s withers!", m_name);
+                            msg_format("%^s #Bwithers#.!", m_name);
                             break;
                         }
                         project(0, 0, m_ptr->fy, m_ptr->fx, dam, GF_TIME, PROJECT_STOP | PROJECT_KILL | PROJECT_GRID, -1);
@@ -1942,7 +1945,7 @@ bool make_attack_normal(int m_idx)
                     disturb(1, 0);
 
                     /* Message */
-                    msg_format("%^s misses you.", m_name);
+                    msg_format("%^s misses%s", m_name, retaliation_hack ? ".#g)#." : ".");
 
                 }
                 damage = 0;

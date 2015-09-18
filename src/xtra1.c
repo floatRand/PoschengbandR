@@ -1780,6 +1780,16 @@ static void prt_effects(void)
 
     if (prt_speed(row, col))
         row++;
+    if (p_ptr->cursed & 0x0000000F)
+    {
+        byte a = TERM_L_DARK;
+        if (p_ptr->cursed & TRC_PERMA_CURSE)
+            c_put_str(a, "*CURSED*", row++, col);
+        else if (p_ptr->cursed & TRC_HEAVY_CURSE)
+            c_put_str(a, "CURSED", row++, col);
+        else
+            c_put_str(a, "Cursed", row++, col);
+    }
     if (p_ptr->cut)
         prt_cut(row++, col);
     if (p_ptr->stun)

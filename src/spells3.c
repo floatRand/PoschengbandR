@@ -1706,6 +1706,7 @@ static int remove_curse_aux(int all)
         o_ptr->feeling = FEEL_NONE;
         p_ptr->update |= (PU_BONUS);
         p_ptr->window |= (PW_EQUIP);
+        p_ptr->redraw |= PR_EFFECTS;
         ct++;
     }
 

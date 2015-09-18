@@ -1093,7 +1093,9 @@ void equip_calc_bonuses(void)
 
         object_flags(o_ptr, flgs);
 
-        p_ptr->cursed |= (o_ptr->curse_flags & (0xFFFFFFF0L));
+        p_ptr->cursed |= (o_ptr->curse_flags & (0xFFFFFFFFL));
+        if (p_ptr->cursed)
+            p_ptr->redraw |= PR_EFFECTS;
         if (o_ptr->name1 == ART_CHAINSWORD) p_ptr->cursed |= TRC_CHAINSWORD;
 
         if (o_ptr->name1 == ART_MAUL_OF_VICE)

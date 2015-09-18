@@ -2123,7 +2123,6 @@ void touch_zap_player(int m_idx)
     {
         if (p_ptr->lightning_reflexes)
         {
-            msg_print("You strike so fast that you avoid a retaliatory strike.");
         }
         else
         {
@@ -2134,72 +2133,60 @@ void touch_zap_player(int m_idx)
         }
     }
 
-    if (r_ptr->flags2 & RF2_AURA_FIRE)
+    if ((r_ptr->flags2 & (RF2_AURA_FIRE | RF2_AURA_ELEC)) || (r_ptr->flags3 & RF3_AURA_COLD))
     {
         if (p_ptr->lightning_reflexes)
         {
-            msg_print("You strike so fast that you avoid getting burned.");
         }
         else
         {
-            int dam = damroll(1 + (r_ptr->level / 26), 1 + (r_ptr->level / 17));
-            dam = res_calc_dam(RES_FIRE, dam);
-            if (dam > 0)
-            {
-                char buf[80];
-                
+            int dd = 1 + r_ptr->level/26;
+            int ds = 1 + r_ptr->level/17;
+            int fire_dam = 0, cold_dam = 0, elec_dam = 0;
 
-                monster_desc(buf, m_ptr, MD_IGNORE_HALLU | MD_ASSUME_VISIBLE | MD_INDEF_VISIBLE);
-                msg_print("You are suddenly very hot!");
-                take_hit(DAMAGE_NOESCAPE, dam, buf, -1);
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= RF2_AURA_FIRE;
-                handle_stuff();
+            if (r_ptr->flags2 & RF2_AURA_FIRE)
+            {
+                fire_dam = res_calc_dam(RES_FIRE, damroll(dd, ds));
+                if (fire_dam > 0 && is_original_ap_and_seen(m_ptr))
+                    r_ptr->r_flags2 |= RF2_AURA_FIRE;
             }
-        }
-    }
-
-    if (r_ptr->flags3 & RF3_AURA_COLD)
-    {
-        if (p_ptr->lightning_reflexes)
-        {
-            msg_print("You strike so fast that you avoid getting frozen.");
-        }
-        else
-        {
-            int dam = damroll(1 + (r_ptr->level / 26), 1 + (r_ptr->level / 17));
-            dam = res_calc_dam(RES_COLD, dam);
-            if (dam > 0)
+            if (r_ptr->flags3 & RF3_AURA_COLD)
             {
-                char buf[80];
-
-                monster_desc(buf, m_ptr, MD_IGNORE_HALLU | MD_ASSUME_VISIBLE | MD_INDEF_VISIBLE);
-                msg_print("You are suddenly very cold!");
-                take_hit(DAMAGE_NOESCAPE, dam, buf, -1);
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_AURA_COLD;
-                handle_stuff();
+                cold_dam = res_calc_dam(RES_COLD, damroll(dd, ds));
+                if (cold_dam > 0 && is_original_ap_and_seen(m_ptr))
+                    r_ptr->r_flags3 |= RF3_AURA_COLD;
             }
-        }
-    }
-
-    if (r_ptr->flags2 & RF2_AURA_ELEC)
-    {
-        if (p_ptr->lightning_reflexes)
-        {
-            msg_print("You strike so fast that you avoid getting zapped.");
-        }
-        else
-        {
-            int dam = damroll(1 + (r_ptr->level / 26), 1 + (r_ptr->level / 17));
-            dam = res_calc_dam(RES_ELEC, dam);
-
-            if (dam > 0)
+            if (r_ptr->flags2 & RF2_AURA_ELEC)
             {
-                char buf[80];
+                elec_dam = res_calc_dam(RES_ELEC, damroll(dd, ds));
+                if (elec_dam > 0 && is_original_ap_and_seen(m_ptr))
+                    r_ptr->r_flags2 |= RF2_AURA_ELEC;
+            }
 
-                monster_desc(buf, m_ptr, MD_IGNORE_HALLU | MD_ASSUME_VISIBLE | MD_INDEF_VISIBLE);
-                msg_print("You get zapped!");
-                take_hit(DAMAGE_NOESCAPE, dam, buf, -1);
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= RF2_AURA_ELEC;
+            if (fire_dam + cold_dam + elec_dam)
+            {
+                char m_name[MAX_NLEN];
+                char buf[100];
+
+                buf[0] = '\0';
+                if (fire_dam)
+                    strcat(buf, "#rburned#.");
+                if (cold_dam)
+                {
+                    if (strlen(buf))
+                        strcat(buf, elec_dam ? ", " : " and ");
+                    strcat(buf, "#wfrozen#.");
+                }
+                if (elec_dam)
+                {
+                    if (strlen(buf))
+                        strcat(buf, " and ");
+                    strcat(buf, "#bshocked#.");
+                }
+
+                msg_format("You are %s.", buf);
+                monster_desc(m_name, m_ptr, MD_IGNORE_HALLU | MD_ASSUME_VISIBLE | MD_INDEF_VISIBLE);
+                take_hit(DAMAGE_NOESCAPE, fire_dam + cold_dam + elec_dam, m_name, -1);
                 handle_stuff();
             }
         }
@@ -2684,7 +2671,7 @@ static cptr py_attack_desc(int mode)
     switch (mode)
     {
     case PY_POWER_ATTACK:
-        return " powerfully";
+        return " #Rpowerfully#.";
     }
     return "";
 }
@@ -4332,7 +4319,7 @@ bool py_attack(int y, int x, int mode)
     melee_hack = TRUE;
     fear_stop = FALSE;
 
-    msg_format("You attack %s%s.", m_name, py_attack_desc(mode));
+    cmsg_format(TERM_L_UMBER, "You attack %s%s:", m_name, py_attack_desc(mode));
 
     if (weaponmaster_get_toggle() == TOGGLE_MANY_STRIKE && mode == 0)
     {
