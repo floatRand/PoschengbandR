@@ -65,7 +65,7 @@ static void _calc_innate_attacks(void)
         }
 
         calc_innate_blows(&a, 400);
-        a.msg = "You gaze at %s.";
+        a.msg = "You gaze.";
         a.name = "Gaze";
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;

@@ -5152,10 +5152,8 @@ void redraw_stuff(void)
     /* Redraw stuff */
     if (!p_ptr->redraw) return;
 
-
     /* Character is not ready yet, no screen updates */
     if (!character_generated) return;
-
 
     /* Character is in "icky" mode, no screen updates */
     if (character_icky) return;
@@ -5165,6 +5163,8 @@ void redraw_stuff(void)
         p_ptr->redraw |= PR_HEALTH_BARS;
     if ((p_ptr->redraw & PR_MANA) && display_sp_bar)
         p_ptr->redraw |= PR_HEALTH_BARS;
+    if (p_ptr->redraw & (PR_DEPTH|PR_BASIC))
+        p_ptr->redraw |= PR_STATUS;
 
     /* Hack -- clear the screen */
     if (p_ptr->redraw & (PR_WIPE))

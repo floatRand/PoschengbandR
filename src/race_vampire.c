@@ -745,7 +745,7 @@ static void _bat_calc_innate_attacks(void)
     a.effect[0] = GF_OLD_DRAIN;
     calc_innate_blows(&a, 400);
 
-    a.msg = "You bite %s.";
+    a.msg = "You bite.";
     a.name = "Bite";
 
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;

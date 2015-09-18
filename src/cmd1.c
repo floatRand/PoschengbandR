@@ -2562,7 +2562,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
             else
             {
                 sound(SOUND_MISS);
-                msg_format("You miss %s.", m_name);
+                msg_format("You miss.", m_name);
             }
 
             if (mode == WEAPONMASTER_RETALIATION)
@@ -2678,6 +2678,15 @@ static void do_monster_knockback(int x, int y, int dist)
                 break;
         }
     }
+}
+static cptr py_attack_desc(int mode)
+{
+    switch (mode)
+    {
+    case PY_POWER_ATTACK:
+        return " powerfully";
+    }
+    return "";
 }
 
 static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int mode)
@@ -2894,9 +2903,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             if (!fear_allow_melee(c_ptr->m_idx))
             {
                 if (m_ptr->ml)
-                    cmsg_format(TERM_VIOLET, "You are too afraid to attack %s!", m_name);
+                    msg_format("You are too afraid to attack %s!", m_name);
                 else
-                    cmsg_format(TERM_VIOLET, "There is something scary in your way!");
+                    msg_format("There is something scary in your way!");
 
                 fear_stop = TRUE;
                 break;
@@ -2968,7 +2977,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name);
             else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You backstab %s!",  m_name);
             else if (perfect_strike) cmsg_format(TERM_L_GREEN, "You land a perfect strike against %s.", m_name);
-            else if (!monk_attack) msg_format("You hit %s.", m_name);
+            else if (!monk_attack) msg_format("You hit.", m_name);
 
             /* Hack -- bare hands do one damage */
             k = 1;
@@ -4041,13 +4050,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
               && o_ptr->sval == SV_DEATH_SCYTHE 
               && one_in_(3) )
             {
-                msg_format("You miss %s.", m_name);
+                msg_format("You miss.", m_name);
                 death_scythe_miss(o_ptr, hand, mode);
             }
             else
             {
                 sound(SOUND_MISS);
-                msg_format("You miss %s.", m_name);
+                msg_format("You miss.", m_name);
             }
         }
         backstab = FALSE;
@@ -4294,7 +4303,6 @@ bool py_attack(int y, int x, int mode)
         if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) virtue_add(VIRTUE_HONOUR, -1);
     }
 
-    /* Check for dual wielding skill ... Personally, I think skills should only increase on a hit.*/
     for (i = 0; i < MAX_ARMS; i++)
     {
         int rhand = 2*i;
@@ -4323,6 +4331,8 @@ bool py_attack(int y, int x, int mode)
     retaliation_count = 0;
     melee_hack = TRUE;
     fear_stop = FALSE;
+
+    msg_format("You attack %s%s.", m_name, py_attack_desc(mode));
 
     if (weaponmaster_get_toggle() == TOGGLE_MANY_STRIKE && mode == 0)
     {

@@ -330,112 +330,112 @@ void possessor_calc_innate_attacks(void)
         switch (blow_ptr->method)
         {
         case RBM_HIT:
-            a.msg = "You hit %s.";
+            a.msg = "You hit.";
             a.name = "Hit";
             a.weight = MIN(r_ptr->weight / 2, 400);
             break;
         case RBM_TOUCH:
-            a.msg = "You touch %s.";
+            a.msg = "You touch.";
             a.name = "Touch";
             a.weight = MIN(r_ptr->weight / 10, 100);
             break;
         case RBM_PUNCH:
-            a.msg = "You punch %s.";
+            a.msg = "You punch.";
             a.name = "Punch";
             a.weight = MIN(r_ptr->weight / 2, 300);
             break;
         case RBM_KICK:
-            a.msg = "You kick %s.";
+            a.msg = "You kick.";
             a.name = "Kick";
             a.weight = MIN(r_ptr->weight, 400);
             break;
         case RBM_CLAW:
-            a.msg = "You claw %s.";
+            a.msg = "You claw.";
             a.name = "Claw";
             a.weight = MIN(r_ptr->weight / 2, 300);
             break;
         case RBM_BITE:
-            a.msg = "You bite %s.";
+            a.msg = "You bite.";
             a.name = "Bite";
             a.weight = MIN(r_ptr->weight, 500);
             break;
         case RBM_STING:
-            a.msg = "You sting %s.";
+            a.msg = "You sting.";
             a.name = "Sting";
             a.weight = MIN(r_ptr->weight, 250);
             break;
         case RBM_SLASH:
-            a.msg = "You slash %s.";
+            a.msg = "You slash.";
             a.name = "Slash";
             a.weight = MIN(r_ptr->weight, 300);
             break;
         case RBM_BUTT:
-            a.msg = "You butt %s.";
+            a.msg = "You butt.";
             a.name = "Butt"; /* :) */
             a.weight = MIN(r_ptr->weight * 2, 500);
             break;
         case RBM_CRUSH:
-            a.msg = "You crush %s.";
+            a.msg = "You crush.";
             a.name = "Crush";
             a.weight = MIN(r_ptr->weight * 2, 500);
             break;
         case RBM_ENGULF:
-            a.msg = "You engulf %s.";
+            a.msg = "You engulf.";
             a.name = "Engulf";
             a.weight = MIN(r_ptr->weight * 2, 400);
             break;
         case RBM_CHARGE:
-            a.msg = "You charge %s.";
+            a.msg = "You charge.";
             a.name = "Charge";
             a.weight = MIN(r_ptr->weight * 2, 500);
             break;
         case RBM_CRAWL:
-            a.msg = "You crawl %s.";
+            a.msg = "You crawl.";
             a.name = "Crawl";
             a.weight = MIN(r_ptr->weight, 400);
             break;
         case RBM_DROOL:
-            a.msg = "You drool on %s.";
+            a.msg = "You drool.";
             a.name = "Drool";
             a.weight = MIN(r_ptr->weight / 10, 100);
             break;
         case RBM_SPIT:
-            a.msg = "You spit %s.";
+            a.msg = "You spit.";
             a.name = "Spit";
             a.weight = MIN(r_ptr->weight / 20, 100);
             break;
         case RBM_GAZE:
-            a.msg = "You gaze at %s.";
+            a.msg = "You gaze.";
             a.name = "Gaze";
             a.weight = MIN(r_ptr->weight / 20, 100);
             break;
         case RBM_WAIL:
-            a.msg = "You wail at %s.";
+            a.msg = "You wail.";
             a.name = "Wail";
             a.weight = MIN(r_ptr->weight / 20, 100);
             break;
         case RBM_SPORE:
-            a.msg = "You release spores at %s.";
+            a.msg = "You release spores.";
             a.name = "Spores";
             a.weight = MIN(r_ptr->weight / 20, 100);
             break;
         case RBM_BEG:
-            a.msg = "You beg %s for money.";
+            a.msg = "You beg.";
             a.name = "Beg";
             a.weight = MIN(r_ptr->weight / 10, 100);
             break;
         case RBM_INSULT:
-            a.msg = "You insult %s.";
+            a.msg = "You insult.";
             a.name = "Wit";
             a.weight = MIN(r_ptr->weight / 20, 100);
             break;
         case RBM_MOAN:
-            a.msg = "You moan at %s.";
+            a.msg = "You moan.";
             a.name = "Moan";
             a.weight = MIN(r_ptr->weight / 20, 100);
             break;
         case RBM_SHOW:
-            a.msg = "You sing to %s.";
+            a.msg = "You sing.";
             a.name = "Voice";
             a.weight = MIN(r_ptr->weight / 20, 100);
             break;
