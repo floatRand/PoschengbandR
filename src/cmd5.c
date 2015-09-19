@@ -2502,7 +2502,6 @@ void do_cmd_pet(void)
                 pet_t_m_idx = 0;
             else
             {
-                msg_flag = FALSE; /* Bug ... we get an extra -more- prompt after target_set() ... */
                 if (target_who > 0)
                     pet_t_m_idx = target_who;
                 else

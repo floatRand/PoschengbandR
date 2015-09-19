@@ -3131,18 +3131,11 @@ void cmsg_print(byte color, cptr msg)
     if (world_monster) return;
     if (statistics_hack) return;
 
-    /* Hack -- Reset ... Why is this needed? */
-    if (!msg_flag)
-        msg_line_clear(TRUE);
-
     /* Flush when requested or needed */
     if (!msg)
     {
         if (!msg_line_is_empty())
-        {
             msg_flush();
-            msg_flag = FALSE;
-        }
         return;
     }
 
@@ -3150,7 +3143,6 @@ void cmsg_print(byte color, cptr msg)
     if (msg_current_row == msg_max_max_row && msg_current_col + n + (int)strlen(" -more-") > msg_max_col)
     {
         msg_flush();
-        msg_flag = FALSE;
     }    
 
     /* Paranoia */
@@ -3168,9 +3160,6 @@ void cmsg_print(byte color, cptr msg)
     /* Window stuff */
     p_ptr->window |= (PW_MESSAGE);
     window_stuff();
-
-    /* Remember the message */
-    msg_flag = TRUE;
 
     /* Optional refresh */
     if (fresh_message) Term_fresh();
@@ -4345,8 +4334,6 @@ void request_command(int shopping)
         /* Get a keypress in "command" mode */
         else
         {
-            /* Hack -- no flush needed */
-            msg_flag = FALSE;
             auto_more_state = AUTO_MORE_PROMPT;
 
             /* Activate "command mode" */

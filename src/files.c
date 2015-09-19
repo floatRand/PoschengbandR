@@ -6619,11 +6619,8 @@ void exit_game_panic(void)
     /* If nothing important has happened, just quit */
     if (!character_generated || character_saved) quit("panic");
 
-    /* Mega-Hack -- see "msg_print()" */
-    msg_flag = FALSE;
-
     /* Clear the top line */
-    prt("", 0, 0);
+    msg_line_clear(TRUE);
 
     /* Hack -- turn off some things */
     disturb(1, 0);

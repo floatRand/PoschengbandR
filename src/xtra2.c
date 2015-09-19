@@ -4859,8 +4859,7 @@ bool target_set(int mode)
     /* Forget */
     temp_n = 0;
 
-    /* Clear the top line */
-    prt("", 0, 0);
+    msg_line_clear(TRUE);
 
     /* Recenter the map around the player */
     verify_panel();
@@ -5356,8 +5355,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
         n = 0;
     }
 
-    msg_print("Select a point and press space.");
-    msg_flag = FALSE; /* prevents "-more-" message. */
+    msg_print("Select a point and press #yspace#..");
 
     while ((ch != ESCAPE) && !success)
     {
@@ -5517,8 +5515,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
         }
     }
 
-    /* Clear the top line */
-    prt("", 0, 0);
+    msg_line_clear(TRUE);
 
     /* Recenter the map around the player */
     verify_panel();

@@ -1185,15 +1185,14 @@ static bool _dagger_toss(int hand)
 
         if (TRUE) /* This is a showstopper, so force the player to notice! */
         {
-            msg_print("Press Space to continue.");
+            msg_print("Press #ySpace#. to continue.");
             flush();
             for (;;)
             {
                 char ch = inkey();
                 if (ch == ' ') break;
             }
-            prt("", 0, 0);
-            msg_flag = FALSE; /* prevents "-more-" message. */
+            msg_line_clear(TRUE);
         }
 
         object_copy(&copy, info.o_ptr);

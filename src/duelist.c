@@ -65,7 +65,6 @@ bool duelist_issue_challenge(void)
 
     if (target_set(TARGET_MARK))
     {
-        msg_flag = FALSE; /* Bug ... we get an extra -more- prompt after target_set() ... */
         if (target_who > 0)
             m_idx = target_who;
         else

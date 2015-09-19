@@ -4947,10 +4947,6 @@ static void process_player(void)
             redraw_stuff();
 
             /* Hack -- Assume messages were seen */
-            msg_flag = FALSE;
-
-            /* Clear the top line
-            prt("", 0, 0);*/
             msg_line_clear(TRUE);
 
             /* Process the command */

@@ -689,15 +689,14 @@ static bool _generate_special_encounter(room_template_t *room_ptr, int x, int y,
         }
         if (room_ptr->type == ROOM_AMBUSH)
         {
-            msg_print("Press Space to continue.");
+            msg_print("Press #ySpace#. to continue.");
             flush();
             for (;;)
             {
                 char ch = inkey();
                 if (ch == ' ') break;
             }
-            prt("", 0, 0);
-            msg_flag = FALSE; /* prevents "-more-" message. */
+            msg_line_clear(TRUE);
         }
         return TRUE;
     }

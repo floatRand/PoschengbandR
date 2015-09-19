@@ -729,18 +729,6 @@ static void cast_shuffle(void)
 
         do_cmd_rerate(FALSE);
         mut_lose_all();
-
-        {
-            msg_print("Press Space to continue.");
-            flush();
-            for (;;)
-            {
-                char ch = inkey();
-                if (ch == ' ') break;
-            }
-            prt("", 0, 0);
-            msg_flag = FALSE;
-        }
     }
     else if (die < 120)
     {
@@ -8951,7 +8939,6 @@ static cptr _rogue_negotiate(void)
 
     if (target_set(TARGET_MARK))
     {
-        msg_flag = FALSE; /* Bug ... we get an extra -more- prompt after target_set() ... */
         if (target_who > 0)
             m_idx = target_who;
         else

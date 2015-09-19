@@ -3117,7 +3117,6 @@ bool do_cmd_fire_aux1(int item, object_type *bow)
     {
         if (target_set(TARGET_DISI))
         {
-            msg_flag = FALSE; /* Bug ... we get an extra -more- prompt after target_set() ... */
             if (target_who > 0)
             {
                 tx = m_list[target_who].fx;

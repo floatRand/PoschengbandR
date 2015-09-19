@@ -1828,7 +1828,7 @@ void ring_process_m(int m_idx)
             }
             if (sn && sy && sx)
             {
-                msg_format("%^s removes you in disgust.", m_name);
+                cmsg_format(TERM_VIOLET, "%^s removes you in disgust.", m_name);
                 oy = py;
                 ox = px;
                 py = sy;
@@ -1856,8 +1856,7 @@ void ring_process_m(int m_idx)
                     char ch = inkey();
                     if (ch == ' ') break;
                 }
-                prt("", 0, 0);
-                msg_flag = FALSE; /* prevents "-more-" message. */
+                msg_line_clear(TRUE);
            }
         }
     }

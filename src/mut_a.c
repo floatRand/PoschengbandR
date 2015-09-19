@@ -1380,7 +1380,7 @@ void fumbling_mut(int cmd, variant *res)
                 object_type *o_ptr = equip_obj(slot);
                 if (!object_is_cursed(o_ptr))
                 {
-                    msg_print("You drop your weapon!");
+                    cmsg_print(TERM_VIOLET, "You drop your weapon!");
                     inven_drop(slot, 1);
                     msg_print("Press 'Y' to continue.");
                     flush();
@@ -1389,8 +1389,7 @@ void fumbling_mut(int cmd, variant *res)
                         char ch = inkey();
                         if (ch == 'Y') break;
                     }
-                    prt("", 0, 0);
-                    msg_flag = FALSE;
+                    msg_line_clear(TRUE);
                 }
             }
         }

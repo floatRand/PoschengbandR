@@ -3383,7 +3383,6 @@ static void bldg_process_command(building_type *bldg, int i)
     bool is_guild = FALSE;
 
     /* Flush messages XXX XXX XXX */
-    msg_flag = FALSE;
     msg_print(NULL);
 
     if (is_owner(bldg))
@@ -3818,7 +3817,6 @@ void do_cmd_bldg(void)
     }
 
     /* Flush messages XXX XXX XXX */
-    msg_flag = FALSE;
     msg_print(NULL);
 
     /* Reinit wilderness to activate quests ... */

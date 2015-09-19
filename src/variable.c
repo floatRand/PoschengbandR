@@ -110,8 +110,6 @@ s16b command_new;        /* Command chaining from inven/equip view */
 
 s16b energy_use;        /* Energy use this turn */
 
-bool msg_flag;            /* Used in msg_print() for "buffering" */
-
 s16b running;            /* Current counter for running, if any */
 s16b resting;            /* Current counter for resting, if any */
 
