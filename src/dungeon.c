@@ -5958,7 +5958,17 @@ void play_game(bool new_game)
         class_t *class_ptr = get_class_t();
         race_t *race_ptr = get_race_t();
         
-        do_cmd_redraw(); /* Not sure why this is required?! */
+        do_cmd_redraw();  /* Not sure why this is required?! */
+
+        cmsg_print(TERM_VIOLET, "=========================================\n");
+        msg_print("#BWelcome#.! You begin life in the town where you may purchase "
+                  "supplies for the dangers that await you.\n"
+                  "This is the message line where important information is "
+                  "communicated to you while you play the game. "
+                  "Press #ySPACE#. every time you see a #B-more-#. prompt and "
+                  "you are finished reading the current messages.\n"
+                  "You may press #y?#. at any time for help.\n\n");
+
         player_outfit();
         
         if (class_ptr && class_ptr->birth)
@@ -6043,10 +6053,6 @@ void play_game(bool new_game)
         /* Erase the old cave */
         wipe_o_list();
         if (!p_ptr->is_dead) wipe_m_list();
-
-
-        /* XXX XXX XXX */
-        msg_print(NULL);
 
         load_game = FALSE;
 

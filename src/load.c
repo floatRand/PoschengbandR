@@ -943,7 +943,7 @@ static errr rd_inventory(savefile_ptr file)
 static void rd_messages(savefile_ptr file)
 {
     int i;
-    char buf[128];
+    char buf[1024];
     s16b num = savefile_read_s16b(file);
 
     for (i = 0; i < num; i++)

@@ -4057,13 +4057,6 @@ void player_birth(void)
             p_ptr->birth_mutation = mut_gain_random_aux(mut_good_pred);
     }
 
-    /* Note player birth in the message recall */
-    msg_add(" ");
-    msg_add("  ");
-    cmsg_add(TERM_VIOLET, "====================");
-    msg_add(" ");
-    msg_add("  ");
-
     /* Init the shops */
     for (i = 1; i < max_towns; i++)
     {

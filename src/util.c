@@ -2870,27 +2870,39 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw
             continue;
         }
 
-        /* Get current word */
+        /* Get current word: [pos, seek) */
         seek = pos;
-        if (*seek == '#') /* Check for ## escape from above */
+        switch (*seek)
+        {
+        case '#': /* Check for ## escape from above */
+        case '\n':
             seek++;
+            break;
+        default:
+            while (*seek && *seek != ' ' && *seek != '#' && *seek != '\n')
+                seek++;
+        }
 
-        while (*seek && *seek != ' ' && *seek != '#')
-            seek++;
-
-        /* Draw the current word */
+        /* Measure the current word and check for a line break */
         len = seek - pos;
-        xtra = _punctuation_hack(seek) ? 1 : 0;
-
         if (!len)
             break; /* oops */
 
-        if (current_x + len + xtra >= max_x)
+        xtra = _punctuation_hack(seek) ? 1 : 0;
+
+        if (*pos == '\n' || current_x + len + xtra >= max_x)
         {
             current_y++;
-            current_x = x + 2; /* indent a bit */
+            current_x = x;
             if (draw)
                 Term_erase(x, current_y, max_x - x);
+            if (*pos == '\n')
+            {
+                pos++;
+                continue;
+            }
+            else
+                current_x += 2;
         }
 
         if (draw)
@@ -2903,14 +2915,25 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw
     return current_y - y + 1;
 }
 
-/* State of the "Message Line" */
-int msg_current_row = 0;
-int msg_current_col = 0;
-int msg_min_col = 13;
+/* State of the "Message Line":
+   We have currently reserved (min_row, min_col, max_row, max_col)
+   We can reserve up to (min_row, min_col, max_max_row, max_col)
+   In other words, the message region expands dynamically, as needed,
+   until cleared with the option to close the "drop down".
+
+   msg_max_col gets reset in cmsg_print to respect the current terminal width.
+*/
 int msg_min_row = 0;
-int msg_max_col = 100;
+int msg_min_col = 13;
+
 int msg_max_row = 0;
+int msg_max_col = 100;
+
 int msg_max_max_row = 10;
+
+int msg_current_row = 0;  /* = msg_min_row; */
+int msg_current_col = 13; /* = msg_min_col; */
+
 static const char * msg_more_prompt = "-more-";
 
 void msg_boundary(void)
@@ -2963,6 +2986,7 @@ void msg_line_clear(bool close_drop_down)
     {
         if (msg_max_row)
         {
+            /* Note: We need not redraw the entire map if this proves too slow */
             p_ptr->redraw |= PR_MAP;
             if (msg_min_col <= 12)
                 p_ptr->redraw |= PR_BASIC | PR_EQUIPPY;
@@ -3052,17 +3076,21 @@ static void cmsg_display(byte color, cptr msg)
             continue;
         }
 
-        /* Get current word */
+        /* Get current word: [pos, seek) */
         seek = pos;
-        if (*seek == '#') /* Check for ## escape from above */
+        switch (*seek)
+        {
+        case '#': /* Check for ## escape from above */
+        case '\n':
             seek++;
+            break;
+        default:
+            while (*seek && *seek != ' ' && *seek != '#' && *seek != '\n')
+                seek++;
+        }
 
-        while (*seek && *seek != ' ' && *seek != '#')
-            seek++;
-
-        /* Draw the current word */
+        /* Measure the current word and check for a line break */
         len = seek - pos;
-
         if (!len)
             break; /* oops */
 
@@ -3073,7 +3101,7 @@ static void cmsg_display(byte color, cptr msg)
         else
             xtra = 0;
 
-        if (msg_current_col + len + xtra > msg_max_col)
+        if (*pos == '\n' || msg_current_col + len + xtra > msg_max_col)
         {
             if (msg_current_row >= msg_max_max_row)
                 msg_flush();
@@ -3086,15 +3114,23 @@ static void cmsg_display(byte color, cptr msg)
                 msg_current_col = msg_min_col;
                 Term_erase(msg_current_col, msg_current_row, msg_max_col - msg_current_col + 1);
             }
+            if (*pos == '\n')
+            {
+                pos++;
+                continue;
+            }
         }
 
+        /* Draw the current word */
         Term_putstr(msg_current_col, msg_current_row, len, color, pos);
         msg_current_col += len;
 
         pos = seek;
     }
 
-    Term_putch(msg_current_col++, msg_current_row, color, ' ');
+    /* Add a space to separate consecutive messages */
+    if (msg_current_col > msg_min_col)
+        Term_putch(msg_current_col++, msg_current_row, color, ' ');
 }
 
 /* Prompt the user for a choice:
@@ -3707,10 +3743,17 @@ bool get_string(cptr prompt, char *buf, int len)
  * The "prompt" should take the form "Query? "
  *
  * Note that "[y/n]" is appended to the prompt.
+
+ TODO: Remove this routine
  */
 bool get_check(cptr prompt)
 {
-    return get_check_strict(prompt, 0);
+/*  return get_check_strict(prompt, 0);*/
+    char buf[255];
+    sprintf(buf, "%s#y[y/n]", prompt);
+    if (msg_prompt(buf, "ny", PROMPT_DEFAULT) == 'y')
+        return TRUE;
+    return FALSE;
 }
 
 /*

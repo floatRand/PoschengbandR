@@ -291,11 +291,11 @@ static void _evacuation_spell(int cmd, variant *res)
         var_set_string(res, "Escape Rope");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Danger!  Abandon this expedition and escape to a new level.");
+        var_set_string(res, "Danger! Abandon this expedition and escape to a new level.");
         break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);
-        if (get_check("Are you sure? (Escape Rope)"))
+        if (msg_prompt("You are about to flee the current level. Are you sure? #y[y,n]#.", "ny", PROMPT_DEFAULT) == 'y')
         {
             teleport_level(0);
             var_set_bool(res, TRUE);
