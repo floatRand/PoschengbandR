@@ -3647,9 +3647,6 @@ option_type option_info[] =
 
     /*** Birth Options ***/
 
-    { &manual_haggle,               FALSE, OPT_PAGE_BIRTH, 1, 0,
-    "manual_haggle",                "Manually haggle in stores" },
-
     { &easy_band,                   FALSE, OPT_PAGE_BIRTH, 6, 31,
     "easy_band",                    "Easy Mode (*)" },
 

@@ -126,7 +126,7 @@ static void show_building(building_type* bldg)
 
     Term_clear();
     sprintf(tmp_str, "%s (%s) %35s", bldg->owner_name, bldg->owner_race, bldg->name);
-    prt(tmp_str, 2, 1);
+    prt(tmp_str, 3, 1);
 
 
     for (i = 0; i < 8; i++)
@@ -226,9 +226,7 @@ static void arena_comm(int cmd)
                 prt("", 10, 0);
                 prt("", 11, 0);
                 p_ptr->au += 1000000L;
-                msg_print("Press the space bar to continue");
-
-                msg_print(NULL);
+                msg_prompt("Press the space bar to continue", " ", PROMPT_NEW_LINE | PROMPT_FORCE_CHOICE);
                 p_ptr->arena_number++;
             }
             else if (p_ptr->arena_number > MAX_ARENA_MONS)
@@ -236,8 +234,6 @@ static void arena_comm(int cmd)
                 if (p_ptr->arena_number < MAX_ARENA_MONS+2)
                 {
                     msg_print("The strongest challenger is waiting for you.");
-
-                    msg_print(NULL);
                     if (get_check("Do you fight? "))
                     {
                         p_ptr->exit_bldg = FALSE;
@@ -258,15 +254,11 @@ static void arena_comm(int cmd)
                 else
                 {
                     msg_print("You enter the arena briefly and bask in your glory.");
-
-                    msg_print(NULL);
                 }
             }
             else if (p_ptr->riding && p_ptr->pclass != CLASS_BEASTMASTER && p_ptr->pclass != CLASS_CAVALRY && p_ptr->prace != RACE_MON_RING)
             {
                 msg_print("You don't have permission to enter with pet.");
-
-                msg_print(NULL);
             }
             else
             {
@@ -926,7 +918,6 @@ static bool gamble_comm(int cmd)
         if (p_ptr->au < 1)
         {
             msg_print("Hey! You don't have gold - get out of here!");
-
             msg_print(NULL);
             screen_load();
             return FALSE;
@@ -2140,8 +2131,6 @@ static bool inn_comm(int cmd)
             if ((p_ptr->poisoned) || (p_ptr->cut))
             {
                 msg_print("You need a healer, not a room.");
-
-                msg_print(NULL);
                 msg_print("Sorry, but I don't want anyone dying in here.");
             }
             else
@@ -3071,7 +3060,6 @@ bool tele_town(void)
     if (!num)
     {
         msg_print("You have not yet visited any town.");
-
         msg_print(NULL);
         screen_load();
         return FALSE;
@@ -3383,7 +3371,7 @@ static void bldg_process_command(building_type *bldg, int i)
     bool is_guild = FALSE;
 
     /* Flush messages XXX XXX XXX */
-    msg_print(NULL);
+    msg_line_clear(TRUE);
 
     if (is_owner(bldg))
     {
@@ -3563,7 +3551,6 @@ static void bldg_process_command(building_type *bldg, int i)
         else
         {
             msg_print("You have no mutations that I can cure.");
-            msg_print(NULL);
         }
         break;
     case BACT_BATTLE:
@@ -3778,7 +3765,6 @@ void do_cmd_bldg(void)
     while (!leave_bldg)
     {
         validcmd = FALSE;
-        prt("", 1, 0);
 
         building_prt_gold();
 
@@ -3807,7 +3793,6 @@ void do_cmd_bldg(void)
         if (validcmd)
         {
             bldg_process_command(bldg, i);
-            msg_print(NULL);
         }
 
         /* Notice stuff */
@@ -3817,8 +3802,7 @@ void do_cmd_bldg(void)
         handle_stuff();
     }
 
-    /* Flush messages XXX XXX XXX */
-    msg_print(NULL);
+    msg_line_clear(TRUE);
 
     /* Reinit wilderness to activate quests ... */
     if (reinit_wilderness)

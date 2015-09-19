@@ -2966,7 +2966,7 @@ static const char * msg_more_prompt = "-more-";
 static int _msg_max_max_row(void)
 {
     if (store_hack)
-        return msg_min_row;
+        return 2;
     return msg_max_max_row;
 }
 
