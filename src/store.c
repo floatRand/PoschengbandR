@@ -4081,13 +4081,6 @@ static void store_process_command(void)
             break;
         }
 
-        /* Show previous message */
-        case KTRL('O'):
-        {
-            do_cmd_message_one();
-            break;
-        }
-
         /* Show previous messages */
         case KTRL('P'):
         {

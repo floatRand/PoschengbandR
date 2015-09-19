@@ -506,16 +506,6 @@ void do_cmd_change_name(void)
 
 
 /*
- * Recall the most recent message
- */
-void do_cmd_message_one(void)
-{
-    /* Recall one message XXX XXX XXX */
-    c_prt(msg_color(0), format("> %s", msg_str(0)), 0, 0);
-}
-
-
-/*
  * Show previous messages to the user    -BEN-
  *
  * This command shows you which messages you are viewing, and allows
@@ -579,7 +569,7 @@ void do_cmd_messages(int old_now_turn)
             top_idx = bottom_idx;
             for (idx = bottom_idx; idx < max_idx && y >= min_y; idx++)
             {
-                cptr msg = msg_str(idx);
+                cptr msg = msg_text(idx);
                 cptr which = msg;
                 byte color = msg_color(idx);
                 int  trn = msg_turn(idx);
@@ -622,7 +612,7 @@ void do_cmd_messages(int old_now_turn)
             bottom_idx = top_idx;
             for (idx = top_idx; idx >= 0 && y <= max_y; idx--)
             {
-                cptr msg = msg_str(idx);
+                cptr msg = msg_text(idx);
                 cptr which = msg;
                 byte color = msg_color(idx);
                 int  trn = msg_turn(idx);
@@ -689,7 +679,7 @@ void do_cmd_messages(int old_now_turn)
                 /* Scan messages */
                 for (z = bottom_idx + 1; z < max_idx; z++)
                 {
-                    cptr msg = msg_str(z);
+                    cptr msg = msg_text(z);
 
                     /* Search for it */
                     if (my_strstr(msg, finder_str))

@@ -2515,10 +2515,7 @@ s16b msg_num(void)
 
 
 
-/*
- * Recall the "text" of a saved message
- */
-cptr msg_str(int age)
+cptr msg_text(int age)
 {
     static char buf[1024];
     s16b x;
@@ -2546,6 +2543,35 @@ cptr msg_str(int age)
 
     /* Return the message text */
     return (s);
+}
+
+int msg_plain_text(int age, char *buffer, int max)
+{
+    cptr pos;
+    int  ct = 0;
+    for (pos = msg_text(age); *pos; pos++)
+    {
+        if (*pos == '\n')
+        {
+            buffer[ct++] = ' ';
+            continue;
+        }
+        if (*pos == '#')
+        {
+            pos++;
+            if (*pos != '#') continue;
+        }
+        if (ct >= max - 4)
+        {
+            buffer[ct++] = '.';
+            buffer[ct++] = '.';
+            buffer[ct++] = '.';
+            break;
+        }
+        buffer[ct++] = *pos;
+    }
+    buffer[ct] = '\0';
+    return ct;
 }
 
 byte msg_color(int age)

@@ -4358,13 +4358,6 @@ static void process_command(void)
             break;
         }
 
-        /* Show previous message */
-        case KTRL('O'):
-        {
-            do_cmd_message_one();
-            break;
-        }
-
         /* Show previous messages */
         case KTRL('P'):
         {
@@ -4454,12 +4447,13 @@ static void process_command(void)
             {
                 char error_m[1024];
                 sound(SOUND_ILLEGAL);
-                if (!get_rnd_line("error.txt", 0, error_m))
-
+                if (get_rnd_line("error.txt", 0, error_m) == ERROR_SUCCESS)
                     msg_print(error_m);
+                else
+                    msg_print("Unknown command. Type #y?#. for help.");
             }
             else
-                prt("Type '?' for help.", 0, 0);
+                msg_print("Unknown command. Type #y?#. for help.");
 
             break;
         }
@@ -5961,12 +5955,13 @@ void play_game(bool new_game)
         do_cmd_redraw();  /* Not sure why this is required?! */
 
         cmsg_print(TERM_VIOLET, "=========================================\n");
-        msg_print("#BWelcome#.! You begin life in the town where you may purchase "
+        msg_print("#BWelcome!#. You begin life in the town where you may purchase "
                   "supplies for the dangers that await you.\n"
                   "This is the message line where important information is "
                   "communicated to you while you play the game. "
                   "Press #ySPACE#. every time you see a #B-more-#. prompt and "
-                  "you are finished reading the current messages.\n"
+                  "you are finished reading the current messages. "
+                  "Press #yCTRL+P#. to review recent messages. "
                   "You may press #y?#. at any time for help.\n\n");
 
         player_outfit();

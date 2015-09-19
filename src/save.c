@@ -1171,7 +1171,7 @@ static bool wr_savefile_new(savefile_ptr file)
     for (i = tmp16u - 1; i >= 0; i--)
     {
         savefile_write_byte(file, msg_color(i));
-        savefile_write_string(file, msg_str(i));
+        savefile_write_string(file, msg_text(i));
         savefile_write_s32b(file, msg_turn(i));
     }
 

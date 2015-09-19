@@ -4349,11 +4349,13 @@ static void dump_aux_last_message(FILE *fff)
         if (!p_ptr->total_winner)
         {
             int i;
+            char buf[78]; /* TODO: We could wordwrap the output ... */
 
             fprintf(fff, "\n================================ Last Messages ================================\n\n");
             for (i = MIN(msg_num(), 30); i >= 0; i--)
             {
-                fprintf(fff,"> %s\n",msg_str((s16b)i));
+                msg_plain_text(i, buf, sizeof(buf));
+                fprintf(fff, "> %s\n", buf);
             }
             fputc('\n', fff);
         }

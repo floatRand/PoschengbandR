@@ -58,6 +58,7 @@ typedef double real;
 
 /* Error codes for function return values */
 /* Success = 0, Failure = -N, Problem = +N */
+#define ERROR_SUCCESS 0
 typedef int errr;
 
 

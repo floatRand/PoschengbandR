@@ -2198,7 +2198,7 @@ static void fix_message(void)
         y = h - 1;
         for (i = 0; y >= 0; i++)
         {
-            cptr msg = msg_str(i);
+            cptr msg = msg_text(i);
             byte color = msg_color(i);
             int  trn = msg_turn(i);
             int  cy;
