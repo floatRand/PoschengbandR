@@ -1479,10 +1479,24 @@ static int *_sort_monster_list(int_map_ptr info, int *ct_total, int *ct_los)
 
 static int _draw_monster_list(int_map_ptr info, int *order, int top, int count, int row, int col)
 {
-    int i;
+    int  i, w, h;
+    int  cx;
+    int  cx_monster;
+    char mon_fmt[50];
+    char mon_fmt_ex[50];
+
+    Term_get_size(&w, &h);
+
+    cx = w - col;
+    cx_monster = cx - 13;
+    if (cx_monster < 10)
+        cx_monster = 10;
+    sprintf(mon_fmt, "%%-%d.%ds", cx_monster, cx_monster);
+    sprintf(mon_fmt_ex, "%%-%d.%ds ", cx_monster + 10, cx_monster + 10);
+
     for (i = 0; i < count; i++)
     {
-        Term_erase(col, row + i, 53);
+        Term_erase(col, row + i, cx);
     }
     for (i = 0; i < count; i++)
     {
@@ -1531,11 +1545,11 @@ static int _draw_monster_list(int_map_ptr info, int *order, int top, int count, 
         Term_queue_bigchar(col + 1, row + i, r_ptr->x_attr, r_ptr->x_char, 0, 0);
         if (info_ptr->ct_total == 1)
         {
-            c_put_str(attr, format(" %-40.40s", buf), row + i, col + 2);
-            c_put_str(TERM_WHITE, format(" %-9.9s", loc), row + i, col + 2 + 41);
+            c_put_str(attr, format(mon_fmt, buf), row + i, col + 3);
+            c_put_str(TERM_WHITE, format("%-9.9s", loc), row + i, col + 3 + cx_monster + 1);
         }
         else
-            c_put_str(attr, format(" %-50.50s", buf), row + i, col + 2);
+            c_put_str(attr, format(mon_fmt_ex, buf), row + i, col + 3);
     }
     return i;
 }

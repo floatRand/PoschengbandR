@@ -1592,7 +1592,6 @@ extern bool is_daytime(void);
 extern void extract_day_hour_min(int *day, int *hour, int *min);
 extern void extract_day_hour_min_imp(int turn, int *day, int *hour, int *min);
 extern void prt_time(void);
-extern cptr map_name(void);
 extern u32b weight_limit(void);
 extern void calc_bonuses(void);
 extern void calc_innate_blows(innate_attack_ptr a, int max);

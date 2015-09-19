@@ -551,6 +551,8 @@ void check_quest_completion(monster_type *m_ptr)
                 {
                     /* completed quest */
                     quest[i].status = QUEST_STATUS_COMPLETED;
+                    p_ptr->redraw |= PR_DEPTH;
+
                     quest[i].complev = (byte)p_ptr->lev;
                     virtue_add(VIRTUE_VALOUR, 2);
                     p_ptr->fame += randint1(2);
@@ -588,6 +590,7 @@ void check_quest_completion(monster_type *m_ptr)
                     else
                     {
                         quest[i].status = QUEST_STATUS_COMPLETED;
+                        p_ptr->redraw |= PR_DEPTH;
                         quest[i].complev = (byte)p_ptr->lev;
                         virtue_add(VIRTUE_VALOUR, 2);
                         p_ptr->fame += randint1(2);
@@ -610,6 +613,7 @@ void check_quest_completion(monster_type *m_ptr)
                 {
                     /* completed quest */
                     quest[i].status = QUEST_STATUS_COMPLETED;
+                    p_ptr->redraw |= PR_DEPTH;
                     quest[i].complev = (byte)p_ptr->lev;
                     virtue_add(VIRTUE_VALOUR, 2);
                     p_ptr->fame += randint1(2);
@@ -647,6 +651,7 @@ void check_quest_completion(monster_type *m_ptr)
                 {
                      /* completed quest */
                     quest[i].status = QUEST_STATUS_COMPLETED;
+                    p_ptr->redraw |= PR_DEPTH;
                     quest[i].complev = (byte)p_ptr->lev;
                     virtue_add(VIRTUE_VALOUR, 2);
                     p_ptr->fame += randint1(2);

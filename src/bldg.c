@@ -3410,7 +3410,6 @@ static void bldg_process_command(building_type *bldg, int i)
         return;
     }
 
-    msg_line_clear(TRUE);
     store_hack = TRUE;
     switch (bact)
     {
@@ -3774,10 +3773,10 @@ void do_cmd_bldg(void)
     command_new = 0;
 
     leave_bldg = FALSE;
+    show_building(bldg);
 
     while (!leave_bldg)
     {
-        show_building(bldg);
         validcmd = FALSE;
         prt("", 1, 0);
 

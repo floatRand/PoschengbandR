@@ -1925,31 +1925,45 @@ bool make_attack_normal(int m_idx)
             /* Analyze failed attacks */
             switch (method)
             {
-                case RBM_HIT:
-                case RBM_TOUCH:
-                case RBM_PUNCH:
-                case RBM_KICK:
-                case RBM_CLAW:
-                case RBM_BITE:
-                case RBM_STING:
-                case RBM_SLASH:
-                case RBM_BUTT:
-                case RBM_CRUSH:
-                case RBM_ENGULF:
-                case RBM_CHARGE:
-
-                /* Visible monsters */
+            case RBM_HIT:
+            case RBM_TOUCH:
+            case RBM_PUNCH:
+            case RBM_KICK:
+            case RBM_CLAW:
+            case RBM_BITE:
+            case RBM_STING:
+            case RBM_SLASH:
+            case RBM_BUTT:
+            case RBM_CRUSH:
+            case RBM_ENGULF:
+            case RBM_CHARGE:
+            case RBM_CRAWL:
+            case RBM_SPIT:
+            case RBM_EXPLODE:
                 if (m_ptr->ml)
                 {
-                    /* Disturbing */
                     disturb(1, 0);
-
-                    /* Message */
                     msg_format("%^s misses%s", m_name, retaliation_hack ? ".#g)#." : ".");
-
                 }
                 damage = 0;
-
+                break;
+            case RBM_DROOL:
+                if (m_ptr->ml)
+                {
+                    disturb(1, 0);
+                    msg_format("%^s slobbers ineffectually%s", m_name, retaliation_hack ? ".#g)#." : ".");
+                }
+                damage = 0;
+                break;
+            case RBM_GAZE:
+                if (m_ptr->ml)
+                {
+                    char tmp[MAX_NLEN];
+                    disturb(1, 0);
+                    monster_desc(tmp, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
+                    msg_format("You avoid %s gaze%s", tmp, retaliation_hack ? ".#g)#." : ".");
+                }
+                damage = 0;
                 break;
             }
         }

@@ -4362,6 +4362,22 @@ static void dump_aux_last_message(FILE *fff)
     }
 }
 
+static cptr map_name(void)
+{
+    if (p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest)
+        && (quest[p_ptr->inside_quest].flags & QUEST_FLAG_PRESET))
+        return "Quest";
+    else if (p_ptr->wild_mode)
+        return "Surface";
+    else if (p_ptr->inside_arena)
+        return "Arena";
+    else if (p_ptr->inside_battle)
+        return "Monster Arena";
+    else if (!dun_level && p_ptr->town_num)
+        return town[p_ptr->town_num].name;
+    else
+        return d_name+d_info[dungeon_type].name;
+}
 
 static void dump_aux_recall(FILE *fff)
 {

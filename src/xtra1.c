@@ -1394,23 +1394,6 @@ static void prt_sp(void)
     c_put_str(color, tmp, ROW_CURSP, COL_CURSP + 8);
 }
 
-cptr map_name(void)
-{
-    if (p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest)
-        && (quest[p_ptr->inside_quest].flags & QUEST_FLAG_PRESET))
-        return "Quest";
-    else if (p_ptr->wild_mode)
-        return "Surface";
-    else if (p_ptr->inside_arena)
-        return "Arena";
-    else if (p_ptr->inside_battle)
-        return "Monster Arena";
-    else if (!dun_level && p_ptr->town_num)
-        return town[p_ptr->town_num].name;
-    else
-        return d_name+d_info[dungeon_type].name;
-}
-
 static void prt_depth(void)
 {
     char buf[100];
@@ -1419,18 +1402,30 @@ static void prt_depth(void)
 
     if (!dun_level)
     {
-        sprintf(buf, "%s", map_name());
+        if (p_ptr->wild_mode)
+            sprintf(buf, "%s", "Surface");
+        else if (p_ptr->inside_arena)
+            sprintf(buf, "%s", "Arena");
+        else if (p_ptr->inside_battle)
+            sprintf(buf, "%s", "Monster Arena");
+        else if (p_ptr->town_num)
+            sprintf(buf, "%s", town[p_ptr->town_num].name);
+        else
+            sprintf(buf, "Wilderness: L%d", base_level);
     }
     else if (p_ptr->inside_quest && !dungeon_type)
     {
-        sprintf(buf, "%s: L%d", map_name(), dun_level);
+        sprintf(buf, "Quest: L%d", dun_level);
+        /* Level is "special" until completed */
+        if (quest[p_ptr->inside_quest].status != QUEST_STATUS_COMPLETED)
+            attr = TERM_L_BLUE;
     }
     else
     {
         if (depth_in_feet)
-            sprintf(buf, "%s: %d ft", map_name(), dun_level * 50);
+            sprintf(buf, "%s: %d ft", d_name+d_info[dungeon_type].name, dun_level * 50);
         else
-            sprintf(buf, "%s: L%d", map_name(), dun_level);
+            sprintf(buf, "%s: L%d", d_name+d_info[dungeon_type].name, dun_level);
 
         /* Get color of level based on feeling  -JSV- */
         switch (p_ptr->feeling)
