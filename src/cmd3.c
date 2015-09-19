@@ -330,56 +330,22 @@ void do_cmd_destroy(void)
     /* Verify unless quantity given beforehand */
     if (!force && (confirm_destroy || (object_value(o_ptr) > 0)))
     {
-        int options = 0 /*OD_COLOR_CODED*/;
+        char ch;
+        int options = OD_COLOR_CODED;
+
         if (o_ptr->number > 1)
             options |= OD_OMIT_PREFIX;
         object_desc(o_name, o_ptr, options);
+        sprintf(out_val, "Really destroy %s? #y[y/n/Auto]", o_name);
 
-        /* Make a verification */
-        sprintf(out_val, 
-            "Really destroy %s? [y/n/Auto]",
-            o_name);
-
-        msg_print(NULL);
-
-        /* HACK : Add the line to message buffer */
-        msg_add(out_val);
-        p_ptr->window |= (PW_MESSAGE);
-        window_stuff();
-
-        /* Get an acceptable answer */
-        while (TRUE)
+        ch = msg_prompt(out_val, "nyA", PROMPT_DEFAULT);
+        if (ch == 'n') return;
+        if (ch == 'A')
         {
-            char i;
-
-            /* Prompt */
-            /*cmsg_display(TERM_WHITE, out_val, 0, 0, strlen(out_val), FALSE);*/
-            prt(out_val, 0, 0);
-            i = inkey();
-            prt("", 0, 0);
-
-            if (i == 'y' || i == 'Y')
-            {
-                break;
-            }
-            if (i == ESCAPE || i == 'n' || i == 'N')
-            {
-                /* Cancel */
-                return;
-            }
-            if (i == 'A')
-            {
-                /* Add an auto-destroy preference line */
-                if (autopick_autoregister(o_ptr))
-                {
-                    /* Auto-destroy it */
-                    autopick_alter_item(item, TRUE);
-                }
-
-                /* The object is already destroyed. */
-                return;
-            }
-        } /* while (TRUE) */
+            if (autopick_autoregister(o_ptr))
+                autopick_alter_item(item, TRUE); /* destroyed! */
+            return;
+        }
     }
 
     /* Get a quantity */

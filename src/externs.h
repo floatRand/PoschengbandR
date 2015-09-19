@@ -1535,6 +1535,13 @@ extern bool msg_line_is_empty(void);
 extern void cmsg_print(byte color, cptr msg);
 extern void msg_format(cptr fmt, ...);
 extern void cmsg_format(byte color, cptr fmt, ...);
+#define PROMPT_FORCE_CHOICE   0x01 /* ignore quick_messages */
+#define PROMPT_CASE_SENSITIVE 0x02
+#define PROMPT_NEW_LINE       0x04
+#define PROMPT_ESCAPE_DEFAULT 0x08
+#define PROMPT_DEFAULT (PROMPT_NEW_LINE | PROMPT_ESCAPE_DEFAULT)
+extern char msg_prompt(cptr prompt, char keys[], int options);
+extern char cmsg_prompt(byte color, cptr prompt, char keys[], int options);
 
 extern void screen_save(void);
 extern void screen_load(void);

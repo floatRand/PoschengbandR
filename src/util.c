@@ -3097,31 +3097,66 @@ static void cmsg_display(byte color, cptr msg)
     Term_putch(msg_current_col++, msg_current_row, color, ' ');
 }
 
-/*
- * Output a message to the top line of the screen.
- *
- * Break long messages into multiple pieces (40-72 chars).
- *
- * Allow multiple short messages to "share" the top line.
- *
- * Prompt the user to make sure he has a chance to read them.
- *
- * These messages are memorized for later reference (see above).
- *
- * We could do "Term_fresh()" to provide "flicker" if needed.
- *
- * The global "msg_flag" variable can be cleared to tell us to
- * "erase" any "pending" messages still on the screen.
- *
- * XXX XXX XXX Note that we must be very careful about using the
- * "msg_print()" functions without explicitly calling the special
- * "msg_print(NULL)" function, since this may result in the loss
- * of information if the screen is cleared, or if anything is
- * displayed on the top line.
- *
- * XXX XXX XXX Note that "msg_print(NULL)" will clear the top line
- * even if no messages are pending.  This is probably a hack.
- */
+/* Prompt the user for a choice:
+   [1] keys[0] is the default choice if quick_messages and PROMPT_FORCE_CHOICE is not set.
+   [2] keys[0] is returned on ESC if PROMPT_ESCAPE_DEFAULT is set.
+   [3] You get back the char in the keys prompt, not the actual character pressed.
+       This makes a difference if PROMPT_CASE_SENSITIVE is not set (and simplifies
+       your coding).
+
+   Sample Usage:
+   char ch = cmsg_prompt(TERM_VIOLET, "Really commit suicide? [Y,n]", "nY", PROMPT_NEW_LINE | PROMPT_CASE_SENSITIVE);
+   if (ch == 'Y') {...}
+*/
+static char cmsg_prompt_imp(byte color, cptr prompt, char keys[], int options)
+{
+    if (options & PROMPT_NEW_LINE)
+        msg_boundary();
+
+    /* TODO: Make sure the entire prompt will fit. -more- prompts are very
+       rare these days, so I'm lazily omitting this check */
+    auto_more_state = AUTO_MORE_PROMPT;
+    cmsg_print(color, prompt);
+
+    for (;;)
+    {
+        char ch = inkey();
+        int  i;
+
+        if (ch == ESCAPE && (options & PROMPT_ESCAPE_DEFAULT))
+            return keys[0];
+
+        for (i = 0; ; i++)
+        {
+            char choice = keys[i];
+            if (!choice) break;
+            if (ch == choice) return choice;
+            if (!(options & PROMPT_CASE_SENSITIVE))
+            {
+                if (tolower(ch) == tolower(choice)) return choice;
+            }
+        }
+
+        if (!(options & PROMPT_FORCE_CHOICE) && quick_messages)
+            return keys[0];
+    }
+}
+
+char cmsg_prompt(byte color, cptr prompt, char keys[], int options)
+{
+    char ch = cmsg_prompt_imp(color, prompt, keys, options);
+    msg_line_clear(TRUE);
+    return ch;
+}
+
+char msg_prompt(cptr prompt, char keys[], int options)
+{
+    return cmsg_prompt(TERM_WHITE, prompt, keys, options);
+}
+
+
+/* Add a new message to the message 'line', and memorize this
+   message in the message history. */
 void cmsg_print(byte color, cptr msg)
 {
     int n;
