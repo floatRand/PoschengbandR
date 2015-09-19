@@ -2962,12 +2962,20 @@ int msg_current_col = 13; /* = msg_min_col; */
 
 static const char * msg_more_prompt = "-more-";
 
+/* TODO: Fix store and building code ... */
+static int msg_get_max_max_row(void)
+{
+    if (store_hack)
+        return msg_min_row;
+    return msg_max_max_row;
+}
+
 void msg_boundary(void)
 {
     /* Force a line break (display only) */
     if (msg_current_col > msg_min_col)
     {
-        if (msg_current_row == msg_max_max_row)
+        if (msg_current_row == msg_get_max_max_row())
             msg_current_col = msg_max_col - strlen(msg_more_prompt);
         else
             msg_current_col = msg_max_col + 1;
@@ -3122,14 +3130,14 @@ static void cmsg_display(byte color, cptr msg)
 
         if (_punctuation_hack(seek))
             xtra = 1;
-        else if (msg_current_row == msg_max_max_row && !*seek)
+        else if (msg_current_row == msg_get_max_max_row() && !*seek)
             xtra += strlen(msg_more_prompt);
         else
             xtra = 0;
 
         if (*pos == '\n' || msg_current_col + len + xtra > msg_max_col)
         {
-            if (msg_current_row >= msg_max_max_row)
+            if (msg_current_row >= msg_get_max_max_row())
                 msg_flush();
             else
             {
@@ -3237,7 +3245,7 @@ void cmsg_print(byte color, cptr msg)
     }
 
     n = msg_display_len(msg);
-    if (msg_current_row == msg_max_max_row && msg_current_col + n + (int)strlen(" -more-") > msg_max_col)
+    if (msg_current_row == msg_get_max_max_row() && msg_current_col + n + (int)strlen(" -more-") > msg_max_col)
     {
         msg_flush();
     }    

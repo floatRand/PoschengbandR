@@ -3409,6 +3409,8 @@ static void bldg_process_command(building_type *bldg, int i)
         msg_print("You do not have the gold!");
         return;
     }
+
+    msg_line_clear(TRUE);
     store_hack = TRUE;
     switch (bact)
     {

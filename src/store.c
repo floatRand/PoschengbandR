@@ -4195,6 +4195,7 @@ void do_cmd_store(void)
         return;
     }
 
+    msg_line_clear(TRUE);
     store_hack = TRUE;
     
     /* Calculate the number of store maintainances since the last visit */
