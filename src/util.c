@@ -3009,7 +3009,7 @@ static void msg_flush(void)
         }
     }
 
-    msg_line_clear(FALSE);
+    msg_line_clear(TRUE);
 }
 
 /* Display another message on the "Message Line" */
@@ -3133,7 +3133,7 @@ void cmsg_print(byte color, cptr msg)
 
     /* Hack -- Reset ... Why is this needed? */
     if (!msg_flag)
-        msg_line_clear(FALSE);
+        msg_line_clear(TRUE);
 
     /* Flush when requested or needed */
     if (!msg)

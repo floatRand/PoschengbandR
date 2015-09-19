@@ -1406,7 +1406,8 @@ bool make_attack_spell(int m_idx, bool ticked_off)
     u32b            f4, f5, f6;
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
-    char            m_name[80];
+    char            tmp[MAX_NLEN];
+    char            m_name[MAX_NLEN];
     char            m_poss[80];
     bool            no_inate = FALSE;
     bool            do_spell = DO_SPELL_NONE;
@@ -1809,7 +1810,9 @@ bool make_attack_spell(int m_idx, bool ticked_off)
     if (p_ptr->leaving) return (FALSE);
 
     /* Get the monster name (or "it") */
-    monster_desc(m_name, m_ptr, 0x00);
+    monster_desc(tmp, m_ptr, 0x00);
+    tmp[0] = toupper(tmp[0]);
+    sprintf(m_name, "#g%s#.", tmp);
 
     /* Get the monster possessive ("his"/"her"/"its") */
     monster_desc(m_poss, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);

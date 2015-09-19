@@ -4951,7 +4951,7 @@ static void process_player(void)
 
             /* Clear the top line
             prt("", 0, 0);*/
-            msg_line_clear(FALSE);
+            msg_line_clear(TRUE);
 
             /* Process the command */
             process_command();
