@@ -2134,7 +2134,7 @@ void autopick_pickup_items(cave_type *c_ptr)
                 }
 
                 /* Describe the object */
-                object_desc(o_name, o_ptr, 0);
+                object_desc(o_name, o_ptr, OD_COLOR_CODED);
 
                 sprintf(out_val, "Pick up %s? ", o_name);
 

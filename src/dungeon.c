@@ -3457,10 +3457,6 @@ static bool enter_wizard_mode(void)
         /* Mention effects */
         msg_print("Wizard mode is for debugging and experimenting.");
         msg_print("The game will not be scored if you enter wizard mode.");
-
-        msg_print(NULL);
-
-        /* Verify request */
         if (!get_check("Are you sure you want to enter wizard mode? "))
         {
             return (FALSE);
@@ -3495,10 +3491,6 @@ static bool enter_debug_mode(void)
         /* Mention effects */
         msg_print("The debug commands are for debugging and experimenting.");
         msg_print("The game will not be scored if you use debug commands.");
-
-        msg_print(NULL);
-
-        /* Verify request */
         if (!get_check("Are you sure you want to use debug commands? "))
         {
             return (FALSE);

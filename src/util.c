@@ -3769,8 +3769,6 @@ bool get_string(cptr prompt, char *buf, int len)
  * The "prompt" should take the form "Query? "
  *
  * Note that "[y/n]" is appended to the prompt.
-
- TODO: Remove this routine
  */
 bool get_check(cptr prompt)
 {
