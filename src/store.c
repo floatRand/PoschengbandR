@@ -3102,7 +3102,7 @@ void do_cmd_store(void)
         return;
     }
 
-    msg_display_rect = rect_create(0, 0, 3, 80);
+    msg_display_rect = rect_create(0, 0, 80, 3);
     msg_line_init(&msg_display_rect);
     store_hack = TRUE;
     

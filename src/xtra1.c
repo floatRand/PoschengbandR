@@ -2206,20 +2206,22 @@ static void fix_message(void)
         /* Get size */
         Term_get_size(&w, &h);
 
-        /* Dump messages */
+        /* Dump messages from bottom to top */
         y = h - 1;
         for (i = 0; y >= 0; i++)
         {
-            cptr msg = msg_text(i);
-            byte color = msg_color(i);
-            int  trn = msg_turn(i);
-            int  cy;
+            cptr   msg = msg_text(i);
+            byte   color = msg_color(i);
+            int    trn = msg_turn(i);
+            int    cy;
+            rect_t r = rect_create(0, y, w, h);
 
             if (trn < now_turn && color == TERM_WHITE)
                 color = TERM_SLATE;
 
-            cy = cmsg_display_wrapped(color, msg, 0, y, w, FALSE);
-            cmsg_display_wrapped(color, msg, 0, y - cy + 1, w, TRUE);
+            cy = cmsg_display_wrapped(color, msg, &r, FALSE);
+            r.y -= (cy - 1);
+            cmsg_display_wrapped(color, msg, &r, TRUE);
             y -= cy;
         }
 

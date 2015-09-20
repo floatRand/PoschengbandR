@@ -569,11 +569,12 @@ void do_cmd_messages(int old_now_turn)
             top_idx = bottom_idx;
             for (idx = bottom_idx; idx < max_idx && y >= min_y; idx++)
             {
-                cptr msg = msg_text(idx);
-                cptr which = msg;
-                byte color = msg_color(idx);
-                int  trn = msg_turn(idx);
-                int  cy;
+                cptr   msg = msg_text(idx);
+                cptr   which = msg;
+                byte   color = msg_color(idx);
+                int    trn = msg_turn(idx);
+                int    cy;
+                rect_t r = rect_create(0, y, wid, hgt);
 
                 if (trn < old_now_turn && color == TERM_WHITE)
                     color = TERM_SLATE;
@@ -593,11 +594,12 @@ void do_cmd_messages(int old_now_turn)
                     which = msg_buf;
                 }
 
-                cy = cmsg_display_wrapped(color, which, 0, y, wid, FALSE);
-                if (y - (cy - 1) < min_y)
+                cy = cmsg_display_wrapped(color, which, &r, FALSE);
+                r.y -= (cy - 1);
+                if (r.y < min_y)
                     break;
 
-                cmsg_display_wrapped(color, which, 0, y - (cy - 1), wid, TRUE);
+                cmsg_display_wrapped(color, which, &r, TRUE);
                 y -= cy;
                 top_idx = idx;
             }
@@ -612,11 +614,12 @@ void do_cmd_messages(int old_now_turn)
             bottom_idx = top_idx;
             for (idx = top_idx; idx >= 0 && y <= max_y; idx--)
             {
-                cptr msg = msg_text(idx);
-                cptr which = msg;
-                byte color = msg_color(idx);
-                int  trn = msg_turn(idx);
-                int  cy;
+                cptr   msg = msg_text(idx);
+                cptr   which = msg;
+                byte   color = msg_color(idx);
+                int    trn = msg_turn(idx);
+                int    cy;
+                rect_t r = rect_create(0, y, wid, hgt);
 
                 if (trn < old_now_turn && color == TERM_WHITE)
                     color = TERM_SLATE;
@@ -636,11 +639,11 @@ void do_cmd_messages(int old_now_turn)
                     which = msg_buf;
                 }
 
-                cy = cmsg_display_wrapped(color, which, 0, y, wid, FALSE);
+                cy = cmsg_display_wrapped(color, which, &r, FALSE);
                 if (y + (cy - 1) > max_y)
                     break;
 
-                cmsg_display_wrapped(color, which, 0, y, wid, TRUE);
+                cmsg_display_wrapped(color, which, &r, TRUE);
                 y += cy;
                 bottom_idx = idx;
             }
@@ -4550,12 +4553,22 @@ void do_cmd_save_screen_doc(void)
 
             if (a != current_a)
             {
-                if (current_a >= 0)
-                    fprintf(fff, "|"); /* I'm not sure this is necessary ... */
-                fprintf(fff, "[[[[%c|", hack[a&0x0F]);
+                if (current_a >= 0 && current_a != TERM_WHITE)
+                {
+                    /*fprintf(fff, "|");*/
+                    fprintf(fff, "#.");
+                }
+                if (a != TERM_WHITE)
+                {
+                    /*fprintf(fff, "[[[[%c|", hack[a&0x0F]);*/
+                    fprintf(fff, "#%c", hack[a&0x0F]);
+                }
                 current_a = a;
             }
-            fprintf(fff, "%c", c);
+            if (c == '#')
+                fprintf(fff, "##");
+            else
+                fprintf(fff, "%c", c);
         }
         fprintf(fff, "\n");
     }

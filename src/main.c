@@ -771,9 +771,6 @@ int main(int argc, char *argv[])
 	/* Initialize */
 	init_angband();
 
-	/* Wait for response */
-	pause_line(23);
-
         /* Play the game */
 	play_game(new_game);
 

@@ -3761,7 +3761,7 @@ void do_cmd_bldg(void)
     leave_bldg = FALSE;
     show_building(bldg);
 
-    msg_display_rect = rect_create(0, 0, 3, 80);
+    msg_display_rect = rect_create(0, 0, 80, 3);
     msg_line_init(&msg_display_rect);
     store_hack = TRUE;
 

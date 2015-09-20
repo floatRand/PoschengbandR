@@ -2852,16 +2852,25 @@ static bool _punctuation_hack(cptr pos)
    (cf PW_MESSAGE window and Ctrl+P previous messages)
 
    Call once with draw = FALSE to measure the number of lines required
-   and then call again with draw = TRUE to render*/
-int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw)
+   and then call again with draw = TRUE to render
+
+   No more than rect->cy lines will be drawn.
+*/
+int cmsg_display_wrapped(int color, cptr msg, const rect_t *rect, bool draw)
 {
     cptr pos = msg, seek;
     byte base_color = color;
-    int current_y = y, current_x = x;
+    int current_y, current_x;
     int len, xtra;
 
+    if (!rect || !rect_is_valid(rect))
+        return 0;
+
+    current_x = rect->x;
+    current_y = rect->y;
+
     if (draw)
-        Term_erase(current_x, current_y, max_x - current_x);
+        Term_erase(current_x, current_y, rect->cx);
 
     while (*pos)
     {
@@ -2916,12 +2925,15 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw
 
         xtra = _punctuation_hack(seek) ? 1 : 0;
 
-        if (*pos == '\n' || current_x + len + xtra >= max_x)
+        if (*pos == '\n' || current_x + len + xtra >= rect->x + rect->cx)
         {
+            if (current_y + 1 >= rect->y + rect->cy)
+                break;
+
             current_y++;
-            current_x = x;
+            current_x = rect->x;
             if (draw)
-                Term_erase(x, current_y, max_x - x);
+                Term_erase(rect->x, current_y, rect->cx);
             if (*pos == '\n')
             {
                 pos++;
@@ -2938,7 +2950,7 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw
         pos = seek;
     }
 
-    return current_y - y + 1;
+    return current_y - rect->y + 1;
 }
 
 /* State of the "Message Line":
@@ -2988,7 +3000,7 @@ void msg_line_init(const rect_t *display_rect)
     }
     else
     {
-        rect_t r = rect_create(13, 0, 10, 80);
+        rect_t r = rect_create(13, 0, 80, 10);
         msg_line_init(&r);
     }
 }
@@ -3092,7 +3104,7 @@ static void msg_flush(void)
 }
 
 /* Display another message on the "Message Line" */
-static void cmsg_display(byte color, cptr msg)
+static void msg_line_display(byte color, cptr msg)
 {
     cptr pos = msg, seek;
     byte base_color = color;
@@ -3278,7 +3290,7 @@ void cmsg_print(byte color, cptr msg)
     if (character_generated)
         cmsg_add(color, msg);
 
-    cmsg_display(color, msg);
+    msg_line_display(color, msg);
 
     if (auto_more_state == AUTO_MORE_SKIP_ONE)
         auto_more_state = AUTO_MORE_PROMPT;
@@ -4074,6 +4086,13 @@ void pause_line_aux(cptr prompt, int row, int col)
 
 void pause_line(int row)
 {
+    if (row < 0)
+    {
+        int w, h;
+        Term_get_size(&w, &h);
+        row = h - 1;
+    }
+
     pause_line_aux("[Press any key to continue]", row, 23);
 }
 

@@ -1644,6 +1644,49 @@ static void init_angband_aux(cptr why)
 
 }
 
+void display_news(void)
+{
+    FILE *fp;
+    char buf[1024];
+
+    /* Clear screen */
+    Term_clear();
+
+    /* Build the filename */
+    path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, "news.txt");
+
+    /* Open the News file */
+    fp = my_fopen(buf, "r");
+
+    /* Dump */
+    if (fp)
+    {
+        int w, h;
+        rect_t r;
+
+        Term_get_size(&w, &h);
+        r = rect_create(0, 0, w, 1);
+
+        /* Dump the file to the screen */
+        while (0 == my_fgets(fp, buf, sizeof(buf)))
+        {
+            /* Display and advance
+            Term_putstr(0, i++, -1, TERM_WHITE, buf);*/
+            cmsg_display_wrapped(TERM_WHITE, buf, &r, TRUE);
+            r.y++;
+            if (r.y >= h)
+                break;
+        }
+
+        /* Close */
+        my_fclose(fp);
+    }
+
+    /* Flush it */
+    Term_fresh();
+
+    inkey();
+}
 
 /*
  * Hack -- main Angband initialization entry point
@@ -1695,13 +1738,8 @@ static void init_angband_aux(cptr why)
 void init_angband(void)
 {
     int fd = -1;
-
     int mode = 0664;
-
-    FILE *fp;
-
     char buf[1024];
-
 
     /*** Verify the "news" file ***/
 
@@ -1730,36 +1768,6 @@ void init_angband(void)
 
 
     /*** Display the "news" file ***/
-
-    /* Clear screen */
-    Term_clear();
-
-    /* Build the filename */
-    path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, "news.txt");
-
-
-    /* Open the News file */
-    fp = my_fopen(buf, "r");
-
-    /* Dump */
-    if (fp)
-    {
-        int i = 0;
-
-        /* Dump the file to the screen */
-        while (0 == my_fgets(fp, buf, sizeof(buf)))
-        {
-            /* Display and advance */
-            Term_putstr(0, i++, -1, TERM_WHITE, buf);
-        }
-
-        /* Close */
-        my_fclose(fp);
-    }
-
-    /* Flush it */
-    Term_fresh();
-
 
     /*** Verify (or create) the "high score" file ***/
 

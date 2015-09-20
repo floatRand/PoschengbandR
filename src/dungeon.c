@@ -5650,9 +5650,12 @@ void play_game(bool new_game)
         }
     }
 
+    /* On X11, you need to flush() before Term->hgt is accurate! */
+    Term_flush();
+    display_news();
+
     /* Hack -- turn off the cursor */
     (void)Term_set_cursor(0);
-
 
     /* Attempt to load */
     if (!load_player())
@@ -5851,7 +5854,6 @@ void play_game(bool new_game)
 
     /* Flush the message */
     Term_fresh();
-
 
     /* Hack -- Enter wizard mode */
     if (arg_wizard)

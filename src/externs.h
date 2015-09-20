@@ -1001,6 +1001,7 @@ extern errr init_v_info(void);
 extern errr init_buildings(void);
 extern s16b f_tag_to_index_in_init(cptr str);
 extern void init_angband(void);
+extern void display_news(void);
 extern cptr get_check_sum(void);
 
 /* load.c */
@@ -1525,7 +1526,7 @@ extern void msg_add(cptr msg);
 extern void cmsg_add(byte color, cptr msg);
 extern void msg_boundary(void);
 extern int  msg_display_len(cptr msg);
-extern int  cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw);
+extern int  cmsg_display_wrapped(int color, cptr msg, const rect_t *rect, bool draw);
 extern void msg_print(cptr msg);
 extern void msg_line_clear(bool close_drop_down);
 extern void msg_line_init(const rect_t *display_rect);
