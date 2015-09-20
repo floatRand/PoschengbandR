@@ -1724,7 +1724,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
             if (known && (o_ptr->marked & OM_FOUND))
             {
                 obvious = TRUE;
-                object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+                object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY | OD_COLOR_CODED));
             }
 
             /* Artifacts, and other objects, get to resist */
@@ -6057,7 +6057,10 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             /* Hack -- Pain message */
             else if (see_s_msg)
             {
-                message_pain(c_ptr->m_idx, dam);
+                /*When monsters fight each other in melee, this is nothing
+                  more than an annoying source of message spam! Of course, it
+                  might be nice to see for spells ...
+                  message_pain(c_ptr->m_idx, dam);*/
             }
             else
             {

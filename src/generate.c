@@ -1279,6 +1279,19 @@ static void build_battle(void)
     x_left = xval - 32;
     x_right = xval + 32;
 
+    /* Hack: Move the arena down 5 lines so that messages do not
+       obstruct the battle. Couldn't this be read from a file just
+       like vaults/rooms in v_info?*/
+    y_height += 5;
+    y_depth += 5;
+    for (i = 0; i < y_height; i++)
+        for (j = x_left; j <= x_right; j++)
+        {
+            place_extra_perm_bold(i, j);
+            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK);
+        }
+
+
     for (i = y_height; i <= y_height + 5; i++)
         for (j = x_left; j <= x_right; j++)
         {

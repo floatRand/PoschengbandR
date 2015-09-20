@@ -1496,7 +1496,6 @@ static bool monst_attack_monst(int m_idx, int t_idx)
     int             ap_cnt;
     int             ac, rlev, pt;
     char            m_name[80], t_name[80];
-    char            temp[MAX_NLEN];
     bool            blinked;
     bool            explode = FALSE, touched = FALSE, fear = FALSE;
     int             y_saver = t_ptr->fy;
@@ -1544,6 +1543,11 @@ static bool monst_attack_monst(int m_idx, int t_idx)
     if (!retaliation_hack)
         retaliation_count = 0;
 
+    if (!retaliation_hack)
+        cmsg_format(TERM_GREEN, "#B%^s#. attacks #o%s#.:", m_name, t_name);
+    monster_desc(m_name, m_ptr, MD_PRON_VISIBLE);
+    monster_desc(t_name, t_ptr, MD_PRON_VISIBLE);
+
     /* Scan through all four blows */
     for (ap_cnt = 0; ap_cnt < 4; ap_cnt++)
     {
@@ -1589,7 +1593,9 @@ static bool monst_attack_monst(int m_idx, int t_idx)
         if (retaliation_hack)
         {
             if (m_ptr->ml)
-                msg_format("%^s retaliates!", m_name);
+                cmsg_format(TERM_GREEN, "(#o%^s#. retaliates:", m_name);
+            if (is_original_ap_and_seen(m_ptr))
+                r_ptr->r_flags2 |= RF2_AURA_REVENGE;
         }
 
         /* Extract the attack "power" */
@@ -1612,83 +1618,83 @@ static bool monst_attack_monst(int m_idx, int t_idx)
             {
             case RBM_HIT:
                 {
-                    act = "hits %s.";
+                    act = "hits";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_TOUCH:
                 {
-                    act = "touches %s.";
+                    act = "touches";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_PUNCH:
                 {
-                    act = "punches %s.";
+                    act = "punches";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_KICK:
                 {
-                    act = "kicks %s.";
+                    act = "kicks";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_CLAW:
                 {
-                    act = "claws %s.";
+                    act = "claws";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_BITE:
                 {
-                    act = "bites %s.";
+                    act = "bites";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_STING:
                 {
-                    act = "stings %s.";
+                    act = "stings";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_SLASH:
                 {
-                    act = "slashes %s.";
+                    act = "slashes";
                     break;
                 }
 
             case RBM_BUTT:
                 {
-                    act = "butts %s.";
+                    act = "butts";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_CRUSH:
                 {
-                    act = "crushes %s.";
+                    act = "crushes";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_ENGULF:
                 {
-                    act = "engulfs %s.";
+                    act = "engulfs";
                     touched = TRUE;
                     break;
                 }
 
             case RBM_CHARGE:
                 {
-                    act = "charges %s.";
+                    act = "charges";
 
                     touched = TRUE;
                     break;
@@ -1696,7 +1702,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_CRAWL:
                 {
-                    act = "crawls on %s.";
+                    act = "crawls";
 
                     touched = TRUE;
                     break;
@@ -1704,7 +1710,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_DROOL:
                 {
-                    act = "drools on %s.";
+                    act = "drools";
 
                     touched = FALSE;
                     break;
@@ -1712,7 +1718,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_SPIT:
                 {
-                    act = "spits on %s.";
+                    act = "spits";
 
                     touched = FALSE;
                     break;
@@ -1721,7 +1727,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
             case RBM_EXPLODE:
                 {
                     if (see_either) disturb(1, 0);
-                    act = "explodes.";
+                    act = "explodes";
 
                     explode = TRUE;
                     touched = FALSE;
@@ -1730,7 +1736,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_GAZE:
                 {
-                    act = "gazes at %s.";
+                    act = "gazes";
 
                     touched = FALSE;
                     break;
@@ -1738,7 +1744,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_WAIL:
                 {
-                    act = "wails at %s.";
+                    act = "wails";
 
                     touched = FALSE;
                     break;
@@ -1746,7 +1752,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_SPORE:
                 {
-                    act = "releases spores at %s.";
+                    act = "releases spores";
 
                     touched = FALSE;
                     break;
@@ -1762,7 +1768,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_BEG:
                 {
-                    act = "begs %s for money.";
+                    act = "begs";
 
                     touched = FALSE;
                     break;
@@ -1770,7 +1776,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_INSULT:
                 {
-                    act = "insults %s.";
+                    act = "insults";
 
                     touched = FALSE;
                     break;
@@ -1778,7 +1784,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_MOAN:
                 {
-                    act = "moans at %s.";
+                    act = "moans";
 
                     touched = FALSE;
                     break;
@@ -1786,7 +1792,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
             case RBM_SHOW:
                 {
-                    act = "sings to %s.";
+                    act = "sings";
 
                     touched = FALSE;
                     break;
@@ -1799,10 +1805,11 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                 if (do_silly_attack)
                 {
                     act = silly_attacks[randint0(MAX_SILLY_ATTACK)];
-                    strfmt(temp, "%s %s.", act, t_name);
+                    msg_format("#B%^s#. %s #o%s#.%s", m_name, act, t_name, retaliation_hack ? ".#g)#." : ".");
                 }
-                else strfmt(temp, act, t_name);
-                msg_format("%^s %s", m_name, temp);
+                else
+                    msg_format("%^s %s%s", m_name, act, retaliation_hack ? ".#g)#." : ".");
+
             }
 
             /* Hack -- assume all attacks are obvious */
@@ -1980,7 +1987,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                         {
                             if (see_either)
                             {
-                                msg_format("%^s is suddenly very hot!", m_name);
+                                msg_format("%^s is #rburned#.!", m_name);
                             }
                             if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags2 |= RF2_AURA_FIRE;
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
@@ -2001,7 +2008,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                         {
                             if (see_either)
                             {
-                                msg_format("%^s is suddenly very cold!", m_name);
+                                msg_format("%^s is #wfrozen#.!", m_name);
                             }
                             if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags3 |= RF3_AURA_COLD;
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
@@ -2022,7 +2029,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                         {
                             if (see_either)
                             {
-                                msg_format("%^s gets zapped!", m_name);
+                                msg_format("%^s is #bzapped#.!", m_name);
                             }
                             if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags2 |= RF2_AURA_ELEC;
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
@@ -2057,19 +2064,29 @@ static bool monst_attack_monst(int m_idx, int t_idx)
             case RBM_CRUSH:
             case RBM_ENGULF:
             case RBM_CHARGE:
+            case RBM_CRAWL:
+            case RBM_SPIT:
+            case RBM_EXPLODE:
+                set_monster_csleep(t_idx, 0);
+                if (see_m)
+                    msg_format("%^s misses%s", m_name, retaliation_hack ? ".#g)#." : ".");
+                break;
+            case RBM_DROOL:
+                if (see_m)
+                    msg_format("%^s slobbers ineffectually%s", m_name, retaliation_hack ? ".#g)#." : ".");
+                break;
+            case RBM_WAIL:
+                if (see_m)
+                    msg_format("%^s wails ineffectually%s", m_name, retaliation_hack ? ".#g)#." : ".");
+                break;
+            case RBM_GAZE:
+                if (see_m)
                 {
-                    /* Wake it up */
-                    (void)set_monster_csleep(t_idx, 0);
-
-                    /* Visible monsters */
-                    if (see_m)
-                    {
-                        /* Message */
-                        msg_format("%^s misses %s.", m_name, t_name);
-                    }
-
-                    break;
+                    char tmp[MAX_NLEN];
+                    monster_desc(tmp, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
+                    msg_format("#o%^s#. avoids #B%s#. gaze%s", t_name, tmp, retaliation_hack ? ".#g)#." : ".");
                 }
+                break;
             }
         }
 

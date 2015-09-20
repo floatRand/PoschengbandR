@@ -19,7 +19,7 @@
 #define AUTO_MORE_SKIP_BLOCK 2   /* Skip to next message boundary */
 #define AUTO_MORE_SKIP_ALL   3   /* Skip to next player action */
 
-static int auto_more_state = AUTO_MORE_PROMPT;
+int auto_more_state = AUTO_MORE_PROMPT;
 
 /*
  * Hack -- prevent "accidents" in "screen_save()" or "screen_load()"
@@ -2841,7 +2841,7 @@ static bool _punctuation_hack(cptr pos)
 {
     if ( *pos == '#'
       && *(pos + 1) != '#'
-      && strchr(".,-)", *(pos + 2)) )
+      && strchr(".,-):", *(pos + 2)) )
     {
         return TRUE;
     }

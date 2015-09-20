@@ -294,10 +294,10 @@ bool monst_spell_monst(int m_idx)
 
     byte spell[96], num = 0;
 
-    char m_name[160];
-    char t_name[160];
-
-    char m_poss[160];
+    char m_name[MAX_NLEN];
+    char t_name[MAX_NLEN];
+    char tmp[MAX_NLEN];
+    char m_poss[MAX_NLEN];
 
     monster_type *m_ptr = &m_list[m_idx];
     monster_type *t_ptr = NULL;
@@ -729,13 +729,16 @@ bool monst_spell_monst(int m_idx)
     if (p_ptr->leaving) return (FALSE);
 
     /* Get the monster name (or "it") */
-    monster_desc(m_name, m_ptr, 0x00);
+    monster_desc(tmp, m_ptr, 0x00);
+    tmp[0] = toupper(tmp[0]);
+    sprintf(m_name, "#B%s#.", tmp);
 
     /* Get the monster possessive ("his"/"her"/"its") */
     monster_desc(m_poss, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
 
     /* Get the target's name (or "it") */
-    monster_desc(t_name, t_ptr, 0x00);
+    monster_desc(tmp, t_ptr, 0x00);
+    sprintf(t_name, "#o%s#.", tmp);
 
     /* Choose a spell to cast */
     thrown_spell = spell[randint0(num)];
@@ -2955,7 +2958,7 @@ bool monst_spell_monst(int m_idx)
         {
             if (see_either)
             {
-                msg_format("%^s throw a Psycho-spear at %s.", m_name, t_name);
+                msg_format("%^s throws a Psycho-spear at %s.", m_name, t_name);
 
             }
             else

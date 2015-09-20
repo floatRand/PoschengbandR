@@ -197,11 +197,13 @@ void big_num_display(int num, char *buf)
 
 void check_mon_health_redraw(int m_idx)
 {
-    if (p_ptr->health_who == m_idx)
+    if (p_ptr->inside_battle)
         p_ptr->redraw |= PR_HEALTH_BARS;
-    if (p_ptr->riding == m_idx)
+    else if (p_ptr->health_who == m_idx)
         p_ptr->redraw |= PR_HEALTH_BARS;
-    if (target_who == m_idx)
+    else if (p_ptr->riding == m_idx)
+        p_ptr->redraw |= PR_HEALTH_BARS;
+    else if (target_who == m_idx)
         p_ptr->redraw |= PR_HEALTH_BARS;
 }
 
@@ -1967,18 +1969,33 @@ static void prt_health_bars(void)
     for (i = 0; i < COUNT_HEALTH_BARS; i++)
         Term_erase(col, row + i, 12);
 
-    if (display_hp_bar)
-        prt_hp_bar(row++, col);
-    if (display_sp_bar && p_ptr->msp)
-        prt_sp_bar(row++, col);
-    if (display_food_bar)
-        prt_food_bar(row++, col);
-    if (p_ptr->riding)
-        prt_mon_health_bar(p_ptr->riding, row++, col);
-    if (p_ptr->health_who && p_ptr->health_who != p_ptr->riding)
-        prt_mon_health_bar(p_ptr->health_who, row++, col);
-    if (target_who > 0 && target_who != p_ptr->riding && target_who != p_ptr->health_who)
-        prt_mon_health_bar(target_who, row++, col);
+    if (p_ptr->inside_battle)
+    {
+        for (i = 0; i < max_m_idx; i++)
+        {
+            monster_type *m_ptr = &m_list[i];
+            if (!m_ptr->r_idx) continue;
+            prt_mon_health_bar(i, row++, col);
+
+            /* sanity ... there should only be 4 monsters */
+            if (row >= ROW_HEALTH_BARS + COUNT_HEALTH_BARS) break;
+        }
+    }
+    else
+    {
+        if (display_hp_bar)
+            prt_hp_bar(row++, col);
+        if (display_sp_bar && p_ptr->msp)
+            prt_sp_bar(row++, col);
+        if (display_food_bar)
+            prt_food_bar(row++, col);
+        if (p_ptr->riding)
+            prt_mon_health_bar(p_ptr->riding, row++, col);
+        if (p_ptr->health_who && p_ptr->health_who != p_ptr->riding)
+            prt_mon_health_bar(p_ptr->health_who, row++, col);
+        if (target_who > 0 && target_who != p_ptr->riding && target_who != p_ptr->health_who)
+            prt_mon_health_bar(target_who, row++, col);
+    }
 }
 
 /*

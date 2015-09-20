@@ -551,7 +551,7 @@ void equip_wield(void)
     /* Double Check */
     if (object_is_cursed(&inventory[slot]))
     {
-        object_desc(o_name, &inventory[slot], (OD_OMIT_PREFIX | OD_NAME_ONLY));
+        object_desc(o_name, &inventory[slot], (OD_OMIT_PREFIX | OD_NAME_ONLY | OD_COLOR_CODED));
         msg_format("The %s you are wearing appears to be cursed.", o_name);
         return;
     }
@@ -579,7 +579,7 @@ void equip_wield(void)
 		if (do_prompt)
 		{
 			char dummy[MAX_NLEN+80];
-			object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+            object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY | OD_COLOR_CODED));
 			sprintf(dummy, "Really use the %s {cursed}? ", o_name);
 			if (!get_check(dummy)) return;
 		}
@@ -606,6 +606,7 @@ void equip_wield(void)
             (quest[i].k_idx == o_ptr->name1 || quest[i].k_idx == o_ptr->name3))
         {
             quest[i].status = QUEST_STATUS_COMPLETED;
+            p_ptr->redraw |= PR_DEPTH;
             quest[i].complev = (byte)p_ptr->lev;
             msg_print("You completed the quest!");
             msg_print(NULL);
@@ -656,7 +657,7 @@ void equip_wield_aux(object_type *src, int slot)
     p_ptr->update |= PU_BONUS;
     handle_stuff();
 
-    object_desc(o_name, dest, 0);
+    object_desc(o_name, dest, OD_COLOR_CODED);
     if (p_ptr->prace == RACE_MON_SWORD || p_ptr->prace == RACE_MON_RING)
         msg_format("You are %s.", o_name);
     else
@@ -758,7 +759,7 @@ void equip_takeoff_aux(int slot)
         char o_name[MAX_NLEN];
 
         object_copy(&copy, o_ptr);
-        object_desc(o_name, &copy, 0);
+        object_desc(o_name, &copy, OD_COLOR_CODED);
         inven_item_increase(slot, -1);
         inven_item_optimize(slot);
 

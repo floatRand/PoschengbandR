@@ -1955,6 +1955,14 @@ bool make_attack_normal(int m_idx)
                 }
                 damage = 0;
                 break;
+            case RBM_WAIL:
+                if (m_ptr->ml)
+                {
+                    disturb(1, 0);
+                    msg_format("%^s wails ineffectually%s", m_name, retaliation_hack ? ".#g)#." : ".");
+                }
+                damage = 0;
+                break;
             case RBM_GAZE:
                 if (m_ptr->ml)
                 {

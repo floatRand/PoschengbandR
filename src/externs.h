@@ -1510,6 +1510,12 @@ extern cptr quark_str(s16b num);
 extern void quark_init(void);
 extern s16b quark_add(cptr str);
 
+/* Stop using auto_more and use the new improved handling instead! */
+#define AUTO_MORE_PROMPT     0
+#define AUTO_MORE_SKIP_ONE   1   /* Skip to next message */
+#define AUTO_MORE_SKIP_BLOCK 2   /* Skip to next message boundary */
+#define AUTO_MORE_SKIP_ALL   3   /* Skip to next player action */
+extern int auto_more_state;
 extern int msg_current_row;
 extern int msg_current_col;
 extern int msg_min_col;

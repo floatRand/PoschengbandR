@@ -3394,7 +3394,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             if (blind) msg_format("%^s mumbles.", m_name);
 
-            else msg_format("%^s throw a Psycho-Spear.", m_name);
+            else msg_format("%^s throws a Psycho-Spear.", m_name);
 
             dam = (r_ptr->flags2 & RF2_POWERFUL) ? (randint1(rlev * 2) + 150) : (randint1(rlev * 3 / 2) + 100);
             beam(m_idx, GF_PSY_SPEAR, dam, MS_PSY_SPEAR, learnable);

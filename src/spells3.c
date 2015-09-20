@@ -3789,7 +3789,7 @@ int inven_damage(inven_func typ, int p1, int which)
             if (amt)
             {
                 /* Get a description */
-                object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
+                object_desc(o_name, o_ptr, OD_OMIT_PREFIX | OD_COLOR_CODED);
 
                 msg_format("%d of your %s (%c) %s destroyed!", 
                             amt, o_name, index_to_label(i), (amt > 1) ? "were" : "was");

@@ -1925,7 +1925,7 @@ void monster_desc(char *desc, monster_type *m_ptr, int mode)
                  !(p_ptr->riding && (&m_list[p_ptr->riding] == m_ptr)))
             {
                 /* It is a fake unique monster */
-                (void)sprintf(desc, "fake %s", name);
+                (void)sprintf(desc, "%s (clone)", name);
             }
 
             else
