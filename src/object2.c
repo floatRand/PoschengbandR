@@ -7342,7 +7342,7 @@ s16b inven_carry(object_type *o_ptr)
     j_ptr->iy = j_ptr->ix = 0;
 
     /* Player touches it, and no longer marked */
-    j_ptr->marked &= (OM_WORN | OM_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);  /* Ah, but remember the "worn" status ... */
+    j_ptr->marked &= (OM_WORN | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);  /* Ah, but remember the "worn" status ... */
     j_ptr->marked |= OM_TOUCHED;
 
     /* Increase the weight */

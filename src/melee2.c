@@ -3525,7 +3525,7 @@ static void process_monster(int m_idx)
                         excise_object_idx(this_o_idx);
 
                         /* Forget mark */
-                        o_ptr->marked &= (OM_TOUCHED | OM_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);
+                        o_ptr->marked &= (OM_TOUCHED | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);
 
                         /* Forget location */
                         o_ptr->iy = o_ptr->ix = 0;
