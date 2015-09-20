@@ -536,27 +536,27 @@ critical_t critical_norm(int weight, int plus, s16b meichuu, int mode, int hand)
 
         if (k < 400)
         {
-            result.desc = "It was a #ygood#. hit!";
+            result.desc = "It was a <color:y>good<color:*> hit!";
             result.mul = 200;
         }
         else if (k < 700)
         {
-            result.desc = "It was a #Rgreat#. hit!";
+            result.desc = "It was a <color:R>great<color:*> hit!";
             result.mul = 250;
         }
         else if (k < 900)
         {
-            result.desc = "It was a #rsuperb#. hit!";
+            result.desc = "It was a <color:r>superb<color:*> hit!";
             result.mul = 300;
         }
         else if (k < 1300)
         {
-            result.desc = "It was a #v*GREAT*#. hit!";
+            result.desc = "It was a <color:v>*GREAT*<color:*> hit!";
             result.mul = 350;
         }
         else
         {
-            result.desc = "It was a #v*SUPERB*#. hit!";
+            result.desc = "It was a <color:v>*SUPERB*<color:*> hit!";
             result.mul = 400;
         }
     }
@@ -2170,18 +2170,18 @@ void touch_zap_player(int m_idx)
 
                 buf[0] = '\0';
                 if (fire_dam)
-                    strcat(buf, "#rburned#.");
+                    strcat(buf, "<color:r>burned<color:*>");
                 if (cold_dam)
                 {
                     if (strlen(buf))
                         strcat(buf, elec_dam ? ", " : " and ");
-                    strcat(buf, "#wfrozen#.");
+                    strcat(buf, "<color:w>frozen<color:*>");
                 }
                 if (elec_dam)
                 {
                     if (strlen(buf))
                         strcat(buf, " and ");
-                    strcat(buf, "#bshocked#.");
+                    strcat(buf, "<color:b>shocked<color:*>");
                 }
 
                 msg_format("You are %s.", buf);
@@ -2286,13 +2286,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     base_dam *= m;
                     switch (m)
                     {
-                    case 2: msg_format("You #Ugouge#. %s!", m_name); break;
-                    case 3: msg_format("You #ymaim#. %s!", m_name); break;
-                    case 4: msg_format("You #Rcarve#. %s!", m_name); break;
-                    case 5: msg_format("You #rcleave#. %s!", m_name); break;
-                    case 6: msg_format("You #vsmite#. %s!", m_name); break;
-                    case 7: msg_format("You #veviscerate#. %s!", m_name); break;
-                    default: msg_format("You #vshred#. %s!", m_name); break;
+                    case 2: msg_format("You <color:U>gouge<color:*> %s!", m_name); break;
+                    case 3: msg_format("You <color:y>maim<color:*> %s!", m_name); break;
+                    case 4: msg_format("You <color:R>carve<color:*> %s!", m_name); break;
+                    case 5: msg_format("You <color:r>cleave<color:*> %s!", m_name); break;
+                    case 6: msg_format("You <color:v>smite<color:*> %s!", m_name); break;
+                    case 7: msg_format("You <color:v>eviscerate<color:*> %s!", m_name); break;
+                    default: msg_format("You <color:v>shred<color:*> %s!", m_name); break;
                     }
                 }
                 base_dam += a->to_d;
@@ -2503,7 +2503,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                             }
                             else
                             {
-                                msg_format("You #Ddrain life#. from %s!", m_name);
+                                msg_format("You <color:D>drain life<color:*> from %s!", m_name);
                                 hp_player(amt);
                             }
                             drain_amt += amt;
@@ -2671,7 +2671,7 @@ static cptr py_attack_desc(int mode)
     switch (mode)
     {
     case PY_POWER_ATTACK:
-        return " #Rpowerfully#.";
+        return " <color:R>powerfully<color:*>";
     }
     return "";
 }
@@ -3221,9 +3221,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     }
 
                     if (o_ptr->name1 == ART_VORPAL_BLADE)
-                        msg_print("Your Vorpal Blade goes #ysnicker-snack#.!");
+                        msg_print("Your Vorpal Blade goes <color:y>snicker-snack<color:*>!");
                     else
-                        msg_format("Your weapon #ycuts deep#. into %s!", m_name);
+                        msg_format("Your weapon <color:y>cuts deep<color:*> into %s!", m_name);
 
                     while (one_in_(vorpal_chance))
                         mult++;
@@ -3237,13 +3237,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         switch (mult)
                         {
-                        case 2: msg_format("You #Ugouge#. %s!", m_name); break;
-                        case 3: msg_format("You #ymaim#. %s!", m_name); break;
-                        case 4: msg_format("You #Rcarve#. %s!", m_name); break;
-                        case 5: msg_format("You #rcleave#. %s!", m_name); break;
-                        case 6: msg_format("You #vsmite#. %s!", m_name); break;
-                        case 7: msg_format("You #veviscerate#. %s!", m_name); break;
-                        default: msg_format("You #vshred#. %s!", m_name); break;
+                        case 2: msg_format("You <color:U>gouge<color:*> %s!", m_name); break;
+                        case 3: msg_format("You <color:y>maim<color:*> %s!", m_name); break;
+                        case 4: msg_format("You <color:R>carve<color:*> %s!", m_name); break;
+                        case 5: msg_format("You <color:r>cleave<color:*> %s!", m_name); break;
+                        case 6: msg_format("You <color:v>smite<color:*> %s!", m_name); break;
+                        case 7: msg_format("You <color:v>eviscerate<color:*> %s!", m_name); break;
+                        default: msg_format("You <color:v>shred<color:*> %s!", m_name); break;
                         }
                     }
                     drain_result = drain_result * 3 / 2;

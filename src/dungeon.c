@@ -3451,7 +3451,7 @@ static bool enter_wizard_mode(void)
         else
         {
 #ifndef ALLOW_WIZARD
-            msg_print("Wizard mode is only permitted in special builds (##define ALLOW_WIZARD in z-config.h).");
+            msg_print("Wizard mode is only permitted in special builds (#define ALLOW_WIZARD in z-config.h).");
             return FALSE;
 #endif
         }
@@ -4444,10 +4444,10 @@ static void process_command(void)
                 if (get_rnd_line("error.txt", 0, error_m) == ERROR_SUCCESS)
                     msg_print(error_m);
                 else
-                    msg_print("Unknown command. Type #y?#. for help.");
+                    msg_print("Unknown command. Type <color:y>?<color:*> for help.");
             }
             else
-                msg_print("Unknown command. Type #y?#. for help.");
+                msg_print("Unknown command. Type <color:y>?<color:*> for help.");
 
             break;
         }
@@ -5953,14 +5953,14 @@ void play_game(bool new_game)
         do_cmd_redraw();  /* Not sure why this is required?! */
 
         cmsg_print(TERM_VIOLET, "=========================================\n");
-        msg_print("#BWelcome!#. You begin life in the town where you may purchase "
+        msg_print("<color:B>Welcome!<color:*> You begin life in the town where you may purchase "
                   "supplies for the dangers that await you.\n"
                   "This is the message line where important information is "
                   "communicated to you while you play the game. "
-                  "Press #ySPACE#. every time you see a #B-more-#. prompt and "
+                  "Press <color:y>SPACE<color:*> every time you see a <color:B>-more-<color:*> prompt and "
                   "you are finished reading the current messages. "
-                  "Press #yCTRL+P#. to review recent messages. "
-                  "You may press #y?#. at any time for help.\n\n");
+                  "Press <color:y>CTRL+P<color:*> to review recent messages. "
+                  "You may press <color:y>?<color:*> at any time for help.\n\n");
 
         player_outfit();
         

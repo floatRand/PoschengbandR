@@ -2198,7 +2198,7 @@ void monster_death(int m_idx, bool drop_item)
 
                 if (ego_index)
                 {
-                    if (object_is_device)
+                    if (object_is_device(q_ptr))
                     {
                         /* Hack: There is only a single k_idx for each class of devices, so
                          * we use the ego index to pick an effect. This means there is no way
@@ -5360,7 +5360,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
         n = 0;
     }
 
-    msg_print("Select a point and press #yspace#..");
+    msg_print("Select a point and press <color:y>space<color:*>.");
 
     while ((ch != ESCAPE) && !success)
     {

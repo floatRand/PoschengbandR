@@ -4546,7 +4546,7 @@ void do_cmd_save_screen_doc(void)
     for (y = 0; y < hgt; y++)
     {
         int  current_a = -1;
-        fprintf(fff, "  ");
+        /*fprintf(fff, "  ");*/
         for (x = 0; x < wid - 1; x++)
         {
             (void)(Term_what(x, y, &a, &c));
@@ -4556,19 +4556,16 @@ void do_cmd_save_screen_doc(void)
                 if (current_a >= 0 && current_a != TERM_WHITE)
                 {
                     /*fprintf(fff, "|");*/
-                    fprintf(fff, "#.");
+                    fprintf(fff, "<color:*>");
                 }
                 if (a != TERM_WHITE)
                 {
                     /*fprintf(fff, "[[[[%c|", hack[a&0x0F]);*/
-                    fprintf(fff, "#%c", hack[a&0x0F]);
+                    fprintf(fff, "<color:%c>", hack[a&0x0F]);
                 }
                 current_a = a;
             }
-            if (c == '#')
-                fprintf(fff, "##");
-            else
-                fprintf(fff, "%c", c);
+            fprintf(fff, "%c", c);
         }
         fprintf(fff, "\n");
     }

@@ -1812,7 +1812,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
     /* Get the monster name (or "it") */
     monster_desc(tmp, m_ptr, 0x00);
     tmp[0] = toupper(tmp[0]);
-    sprintf(m_name, "#g%s#.", tmp);
+    sprintf(m_name, "<color:g>%s<color:*>", tmp);
 
     /* Get the monster possessive ("his"/"her"/"its") */
     monster_desc(m_poss, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);

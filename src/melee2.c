@@ -1544,7 +1544,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
         retaliation_count = 0;
 
     if (!retaliation_hack)
-        cmsg_format(TERM_GREEN, "#B%^s#. attacks #o%s#.:", m_name, t_name);
+        cmsg_format(TERM_GREEN, "<color:B>%^s<color:*> attacks <color:o>%s<color:*>:", m_name, t_name);
     monster_desc(m_name, m_ptr, MD_PRON_VISIBLE);
     monster_desc(t_name, t_ptr, MD_PRON_VISIBLE);
 
@@ -1593,7 +1593,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
         if (retaliation_hack)
         {
             if (m_ptr->ml)
-                cmsg_format(TERM_GREEN, "(#o%^s#. retaliates:", m_name);
+                cmsg_format(TERM_GREEN, "(<color:o>%^s<color:*> retaliates:", m_name);
             if (is_original_ap_and_seen(m_ptr))
                 r_ptr->r_flags2 |= RF2_AURA_REVENGE;
         }
@@ -1805,10 +1805,10 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                 if (do_silly_attack)
                 {
                     act = silly_attacks[randint0(MAX_SILLY_ATTACK)];
-                    msg_format("#B%^s#. %s #o%s#.%s", m_name, act, t_name, retaliation_hack ? ".#g)#." : ".");
+                    msg_format("<color:B>%^s<color:*> %s <color:o>%s<color:*>%s", m_name, act, t_name, retaliation_hack ? ".<color:g>)<color:*>" : ".");
                 }
                 else
-                    msg_format("%^s %s%s", m_name, act, retaliation_hack ? ".#g)#." : ".");
+                    msg_format("%^s %s%s", m_name, act, retaliation_hack ? ".<color:g>)<color:*>" : ".");
 
             }
 
@@ -1987,7 +1987,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                         {
                             if (see_either)
                             {
-                                msg_format("%^s is #rburned#.!", m_name);
+                                msg_format("%^s is <color:r>burned<color:*>!", m_name);
                             }
                             if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags2 |= RF2_AURA_FIRE;
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
@@ -2008,7 +2008,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                         {
                             if (see_either)
                             {
-                                msg_format("%^s is #wfrozen#.!", m_name);
+                                msg_format("%^s is <color:w>frozen<color:*>!", m_name);
                             }
                             if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags3 |= RF3_AURA_COLD;
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
@@ -2029,7 +2029,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                         {
                             if (see_either)
                             {
-                                msg_format("%^s is #bzapped#.!", m_name);
+                                msg_format("%^s is <color:b>zapped<color:*>!", m_name);
                             }
                             if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags2 |= RF2_AURA_ELEC;
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
@@ -2069,22 +2069,22 @@ static bool monst_attack_monst(int m_idx, int t_idx)
             case RBM_EXPLODE:
                 set_monster_csleep(t_idx, 0);
                 if (see_m)
-                    msg_format("%^s misses%s", m_name, retaliation_hack ? ".#g)#." : ".");
+                    msg_format("%^s misses%s", m_name, retaliation_hack ? ".<color:g>)<color:*>" : ".");
                 break;
             case RBM_DROOL:
                 if (see_m)
-                    msg_format("%^s slobbers ineffectually%s", m_name, retaliation_hack ? ".#g)#." : ".");
+                    msg_format("%^s slobbers ineffectually%s", m_name, retaliation_hack ? ".<color:g>)<color:*>" : ".");
                 break;
             case RBM_WAIL:
                 if (see_m)
-                    msg_format("%^s wails ineffectually%s", m_name, retaliation_hack ? ".#g)#." : ".");
+                    msg_format("%^s wails ineffectually%s", m_name, retaliation_hack ? ".<color:g>)<color:*>" : ".");
                 break;
             case RBM_GAZE:
                 if (see_m)
                 {
                     char tmp[MAX_NLEN];
                     monster_desc(tmp, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
-                    msg_format("#o%^s#. avoids #B%s#. gaze%s", t_name, tmp, retaliation_hack ? ".#g)#." : ".");
+                    msg_format("<color:o>%^s<color:*> avoids <color:B>%s<color:*> gaze%s", t_name, tmp, retaliation_hack ? ".<color:g>)<color:*>" : ".");
                 }
                 break;
             }

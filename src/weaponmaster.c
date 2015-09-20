@@ -1185,7 +1185,7 @@ static bool _dagger_toss(int hand)
 
         if (TRUE) /* This is a showstopper, so force the player to notice! */
         {
-            msg_print("Press #ySpace#. to continue.");
+            msg_print("Press <color:y>Space<color:*> to continue.");
             flush();
             for (;;)
             {

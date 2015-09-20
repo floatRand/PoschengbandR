@@ -12,6 +12,7 @@
 
 #include "angband.h"
 
+#include <assert.h>
 
 /* Stop using auto_more and use the new improved handling instead! */
 #define AUTO_MORE_PROMPT     0
@@ -2848,111 +2849,6 @@ static bool _punctuation_hack(cptr pos)
     return FALSE;
 }
 
-/* Draw/Measure a Wrapped Message. Returns number of lines.
-   (cf PW_MESSAGE window and Ctrl+P previous messages)
-
-   Call once with draw = FALSE to measure the number of lines required
-   and then call again with draw = TRUE to render
-
-   No more than rect->cy lines will be drawn.
-*/
-int cmsg_display_wrapped(int color, cptr msg, const rect_t *rect, bool draw)
-{
-    cptr pos = msg, seek;
-    byte base_color = color;
-    int current_y, current_x;
-    int len, xtra;
-
-    if (!rect || !rect_is_valid(rect))
-        return 0;
-
-    current_x = rect->x;
-    current_y = rect->y;
-
-    if (draw)
-        Term_erase(current_x, current_y, rect->cx);
-
-    while (*pos)
-    {
-        /* Handle color directives and whitespace */
-        if (*pos == '#')
-        {
-            pos++;
-            if (*pos == '#')
-            {
-            }
-            else if (*pos == '.')
-            {
-                color = base_color;
-                pos++;
-                continue;
-            }
-            else
-            {
-                color = color_char_to_attr(*pos);
-                pos++;
-                continue;
-            }
-        }
-
-        if (*pos == ' ')
-        {
-            while (*pos && *pos == ' ')
-            {
-                current_x++;
-                pos++;
-            }
-            continue;
-        }
-
-        /* Get current word: [pos, seek) */
-        seek = pos;
-        switch (*seek)
-        {
-        case '#': /* Check for ## escape from above */
-        case '\n':
-            seek++;
-            break;
-        default:
-            while (*seek && *seek != ' ' && *seek != '#' && *seek != '\n')
-                seek++;
-        }
-
-        /* Measure the current word and check for a line break */
-        len = seek - pos;
-        if (!len)
-            break; /* oops */
-
-        xtra = _punctuation_hack(seek) ? 1 : 0;
-
-        if (*pos == '\n' || current_x + len + xtra >= rect->x + rect->cx)
-        {
-            if (current_y + 1 >= rect->y + rect->cy)
-                break;
-
-            current_y++;
-            current_x = rect->x;
-            if (draw)
-                Term_erase(rect->x, current_y, rect->cx);
-            if (*pos == '\n')
-            {
-                pos++;
-                continue;
-            }
-            else
-                current_x += 2;
-        }
-
-        if (draw)
-            Term_putstr(current_x, current_y, len, color, pos);
-        current_x += len;
-
-        pos = seek;
-    }
-
-    return current_y - rect->y + 1;
-}
-
 /* State of the "Message Line":
    We have currently reserved (min_row, min_col, max_row, max_col)
    We can reserve up to (min_row, min_col, max_max_row, max_col)
@@ -3103,6 +2999,87 @@ static void msg_flush(void)
     msg_line_clear(TRUE);
 }
 
+/* Tags
+   <style:heading>Welcome to PosChengband<style:normal>
+   Prepare to be <color:r>dazzled<color:*>!
+*/
+enum doc_tag_e
+{
+    DOC_TAG_NONE,
+    DOC_TAG_COLOR,
+    DOC_TAG_STYLE,
+    DOC_TAG_TOPIC,
+    DOC_TAG_LINK,
+};
+struct doc_tag_s
+{
+    int  type;
+    cptr arg;
+    int  arg_size;
+};
+typedef struct doc_tag_s doc_tag_t;
+typedef struct doc_tag_s *doc_tag_ptr;
+
+cptr doc_tag_parse(cptr pos, doc_tag_ptr tag)
+{
+    /* prepare to fail! */
+    tag->type = DOC_TAG_NONE;
+    tag->arg = NULL;
+    tag->arg_size = 0;
+
+    /* <name:arg> where name in {"color", "style", "topic", "link"} */
+    if (*pos == '<')
+    {
+        doc_tag_t result = {0};
+        cptr seek = pos + 1;
+        char name[MAX_NLEN];
+        int  ct = 0;
+        for (;;)
+        {
+            if (!*seek || strchr(" <>\r\n\t", *seek)) return pos;
+            if (*seek == ':') break;
+            name[ct++] = *seek;
+            if (ct >= MAX_NLEN) return pos;
+            seek++;
+        }
+        name[ct] = '\0';
+
+        /* [pos,seek) is the name of the tag */
+        if (strcmp(name, "color") == 0)
+            result.type = DOC_TAG_COLOR;
+        else if (strcmp(name, "style") == 0)
+            result.type = DOC_TAG_STYLE;
+        else if (strcmp(name, "topic") == 0)
+            result.type = DOC_TAG_TOPIC;
+        else if (strcmp(name, "link") == 0)
+            result.type = DOC_TAG_LINK;
+        else
+            return pos;
+
+        assert(*seek == ':');
+        seek++;
+        result.arg = seek;
+
+        ct = 0;
+        for (;;)
+        {
+            if (!*seek || strchr(" <\r\n\t", *seek)) return pos;
+            if (*seek == '>') break;
+            ct++;
+            seek++;
+        }
+        result.arg_size = ct;
+
+        assert(*seek == '>');
+        seek++;
+
+        *tag = result;
+        return seek;
+    }
+
+    return pos;
+}
+
 /* Display another message on the "Message Line" */
 static void msg_line_display(byte color, cptr msg)
 {
@@ -3112,27 +3089,6 @@ static void msg_line_display(byte color, cptr msg)
 
     while (*pos)
     {
-        /* Handle color directives and whitespace */
-        if (*pos == '#')
-        {
-            pos++;
-            if (*pos == '#')
-            {
-            }
-            else if (*pos == '.')
-            {
-                color = base_color;
-                pos++;
-                continue;
-            }
-            else
-            {
-                color = color_char_to_attr(*pos);
-                pos++;
-                continue;
-            }
-        }
-
         if (*pos == ' ')
         {
             while (*pos && *pos == ' ')
@@ -3142,17 +3098,36 @@ static void msg_line_display(byte color, cptr msg)
             }
             continue;
         }
+        else if (*pos == '<') /* Perhaps a tag? */
+        {
+            doc_tag_t tag = {0};
+
+            pos = doc_tag_parse(pos, &tag);
+            if (tag.type != DOC_TAG_NONE)
+            {
+                if (tag.type == DOC_TAG_COLOR)
+                {
+                    assert(tag.arg);
+                    if (tag.arg[0] == '*')
+                        color = base_color;
+                    else
+                        color = color_char_to_attr(tag.arg[0]);
+                }
+                continue;
+            }
+            /* Perhaps not! Draw it normally! */
+        }
 
         /* Get current word: [pos, seek) */
         seek = pos;
         switch (*seek)
         {
-        case '#': /* Check for ## escape from above */
+        case '<':
         case '\n':
             seek++;
             break;
         default:
-            while (*seek && *seek != ' ' && *seek != '#' && *seek != '\n')
+            while (*seek && !strchr(" <\n", *seek))
                 seek++;
         }
 
@@ -3198,6 +3173,109 @@ static void msg_line_display(byte color, cptr msg)
     /* Add a space to separate consecutive messages */
     if (msg_current_col > msg_min_col)
         Term_putch(msg_current_col++, msg_current_row, color, ' ');
+}
+
+/* Draw/Measure a Wrapped Message. Returns number of lines.
+   (cf PW_MESSAGE window and Ctrl+P previous messages)
+
+   Call once with draw = FALSE to measure the number of lines required
+   and then call again with draw = TRUE to render
+
+   No more than rect->cy lines will be drawn.
+*/
+int cmsg_display_wrapped(int color, cptr msg, const rect_t *rect, bool draw)
+{
+    cptr pos = msg, seek;
+    byte base_color = color;
+    int current_y, current_x;
+    int len, xtra;
+
+    if (!rect || !rect_is_valid(rect))
+        return 0;
+
+    current_x = rect->x;
+    current_y = rect->y;
+
+    if (draw)
+        Term_erase(current_x, current_y, rect->cx);
+
+    while (*pos)
+    {
+        if (*pos == ' ')
+        {
+            while (*pos && *pos == ' ')
+            {
+                current_x++;
+                pos++;
+            }
+            continue;
+        }
+        else if (*pos == '<') /* Perhaps a tag? */
+        {
+            doc_tag_t tag = {0};
+
+            pos = doc_tag_parse(pos, &tag);
+            if (tag.type != DOC_TAG_NONE)
+            {
+                if (tag.type == DOC_TAG_COLOR)
+                {
+                    assert(tag.arg);
+                    if (tag.arg[0] == '*')
+                        color = base_color;
+                    else
+                        color = color_char_to_attr(tag.arg[0]);
+                }
+                continue;
+            }
+            /* Perhaps not! Draw it normally! */
+        }
+
+        /* Get current word: [pos, seek) */
+        seek = pos;
+        switch (*seek)
+        {
+        case '<':
+        case '\n':
+            seek++;
+            break;
+        default:
+            while (*seek && !strchr(" <\n", *seek))
+                seek++;
+        }
+
+        /* Measure the current word and check for a line break */
+        len = seek - pos;
+        if (!len)
+            break; /* oops */
+
+        xtra = _punctuation_hack(seek) ? 1 : 0;
+
+        if (*pos == '\n' || current_x + len + xtra >= rect->x + rect->cx)
+        {
+            if (current_y + 1 >= rect->y + rect->cy)
+                break;
+
+            current_y++;
+            current_x = rect->x;
+            if (draw)
+                Term_erase(rect->x, current_y, rect->cx);
+            if (*pos == '\n')
+            {
+                pos++;
+                continue;
+            }
+            else
+                current_x += 2;
+        }
+
+        if (draw)
+            Term_putstr(current_x, current_y, len, color, pos);
+        current_x += len;
+
+        pos = seek;
+    }
+
+    return current_y - rect->y + 1;
 }
 
 /* Prompt the user for a choice:
@@ -3815,7 +3893,7 @@ bool get_check(cptr prompt)
 {
 /*  return get_check_strict(prompt, 0);*/
     char buf[255];
-    sprintf(buf, "%s#y[y/n]", prompt);
+    sprintf(buf, "%s<color:y>[y/n]", prompt);
     if (msg_prompt(buf, "ny", PROMPT_DEFAULT) == 'y')
         return TRUE;
     return FALSE;
