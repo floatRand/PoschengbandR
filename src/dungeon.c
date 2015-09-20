@@ -5929,6 +5929,8 @@ void play_game(bool new_game)
     /* Start game */
     p_ptr->playing = TRUE;
 
+    msg_line_init(NULL);
+
     /* Reset the visual mappings */
     reset_visuals();
 

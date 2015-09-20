@@ -2949,25 +2949,48 @@ int cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw
 
    msg_max_col gets reset in cmsg_print to respect the current terminal width.
 */
-int msg_min_row = 0;
-int msg_min_col = 13;
+static int msg_min_row = 0;
+static int msg_min_col = 13;
 
-int msg_max_row = 0;
-int msg_max_col = 100;
+static int msg_max_row = 0;
+static int msg_max_col = 100;
 
-int msg_max_max_row = 10;
+static int msg_max_max_row = 10;
 
-int msg_current_row = 0;  /* = msg_min_row; */
-int msg_current_col = 13; /* = msg_min_col; */
+static int msg_current_row = 0;  /* = msg_min_row; */
+static int msg_current_col = 13; /* = msg_min_col; */
 
 static const char * msg_more_prompt = "-more-";
 
-/* TODO: Fix store and building code ... */
-static int _msg_max_max_row(void)
+rect_t msg_line_rect(void)
 {
-    if (store_hack)
-        return 2;
-    return msg_max_max_row;
+    return rect_create(
+        msg_min_col,
+        msg_min_row,
+        msg_max_col - msg_min_col + 1,
+        msg_max_row - msg_min_row + 1
+    );
+}
+
+void msg_line_init(const rect_t *display_rect)
+{
+    if (display_rect && rect_is_valid(display_rect))
+    {
+        msg_line_clear(TRUE);
+        msg_min_row = display_rect->y;
+        msg_min_col = display_rect->x;
+        msg_max_row = msg_min_row;
+        msg_max_max_row = msg_min_row + display_rect->cy - 1;
+        msg_max_col = msg_min_col + display_rect->cx - 1;
+
+        msg_current_row = msg_min_row;
+        msg_current_col = msg_min_col;
+    }
+    else
+    {
+        rect_t r = rect_create(13, 0, 10, 80);
+        msg_line_init(&r);
+    }
 }
 
 void msg_boundary(void)
@@ -2975,7 +2998,7 @@ void msg_boundary(void)
     /* Force a line break (display only) */
     if (msg_current_col > msg_min_col)
     {
-        if (msg_current_row == _msg_max_max_row())
+        if (msg_current_row == msg_max_max_row)
             msg_current_col = msg_max_col - strlen(msg_more_prompt);
         else
             msg_current_col = msg_max_col + 1;
@@ -2993,14 +3016,12 @@ void msg_boundary(void)
 
 bool msg_line_contains(int row, int col)
 {
-    if (msg_min_row <= row && row <= msg_max_row)
-    {
-        if (col < 0)
-            return TRUE;
-        if (msg_min_col <= col && col <= msg_max_col)
-            return TRUE;
-    }
-    return FALSE;
+    rect_t r = msg_line_rect();
+    if (col < 0)
+        col = r.x;
+    if (row < 0)
+        row = r.y;
+    return rect_contains_pt(&r, col, row);
 }
 
 bool msg_line_is_empty(void)
@@ -3130,14 +3151,14 @@ static void cmsg_display(byte color, cptr msg)
 
         if (_punctuation_hack(seek))
             xtra = 1;
-        else if (msg_current_row == _msg_max_max_row() && !*seek)
+        else if (msg_current_row == msg_max_max_row && !*seek)
             xtra += strlen(msg_more_prompt);
         else
             xtra = 0;
 
         if (*pos == '\n' || msg_current_col + len + xtra > msg_max_col)
         {
-            if (msg_current_row >= _msg_max_max_row())
+            if (msg_current_row >= msg_max_max_row)
                 msg_flush();
             else
             {
@@ -3245,7 +3266,7 @@ void cmsg_print(byte color, cptr msg)
     }
 
     n = msg_display_len(msg);
-    if (msg_current_row == _msg_max_max_row() && msg_current_col + n + (int)strlen(" -more-") > msg_max_col)
+    if (msg_current_row == msg_max_max_row && msg_current_col + n + (int)strlen(" -more-") > msg_max_col)
     {
         msg_flush();
     }    

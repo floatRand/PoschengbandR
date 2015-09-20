@@ -3398,7 +3398,6 @@ static void bldg_process_command(building_type *bldg, int i)
         return;
     }
 
-    store_hack = TRUE;
     switch (bact)
     {
     case BACT_NOTHING:
@@ -3634,7 +3633,6 @@ static void bldg_process_command(building_type *bldg, int i)
             p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
     }
 
-    store_hack = FALSE;
 }
 
 
@@ -3678,6 +3676,7 @@ void do_cmd_bldg(void)
     char            command;
     bool            validcmd;
     building_type   *bldg;
+    rect_t          msg_display_rect;
 
 
     energy_use = 100;
@@ -3762,6 +3761,10 @@ void do_cmd_bldg(void)
     leave_bldg = FALSE;
     show_building(bldg);
 
+    msg_display_rect = rect_create(0, 0, 3, 80);
+    msg_line_init(&msg_display_rect);
+    store_hack = TRUE;
+
     while (!leave_bldg)
     {
         validcmd = FALSE;
@@ -3802,7 +3805,8 @@ void do_cmd_bldg(void)
         handle_stuff();
     }
 
-    msg_line_clear(TRUE);
+    store_hack = FALSE;
+    msg_line_init(NULL);
 
     /* Reinit wilderness to activate quests ... */
     if (reinit_wilderness)

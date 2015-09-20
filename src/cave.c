@@ -1657,6 +1657,7 @@ void prt_map(void)
 {
     int     x, y;
     int     v;
+    rect_t  msg_rect = msg_line_rect();
 
     /* map bounds */
     s16b xmin, xmax, ymin, ymax;
@@ -1686,7 +1687,7 @@ void prt_map(void)
     for (y = 1; y <= ymin - panel_row_prt; y++)
     {
         if (msg_line_contains(y, -1))
-            Term_erase(msg_max_col + 1, y, wid);
+            Term_erase(msg_rect.x + msg_rect.cx, y, wid);
         else
             Term_erase(COL_MAP, y, wid);
     }

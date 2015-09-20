@@ -3053,6 +3053,7 @@ void do_cmd_store(void)
     int         w, h;
     bool        friend_hack = FALSE;
     int         options = STORE_MAINT_NORMAL;
+    rect_t      msg_display_rect;
 
 
     /* Get term size */
@@ -3101,7 +3102,8 @@ void do_cmd_store(void)
         return;
     }
 
-    msg_line_clear(TRUE);
+    msg_display_rect = rect_create(0, 0, 3, 80);
+    msg_line_init(&msg_display_rect);
     store_hack = TRUE;
     
     /* Calculate the number of store maintainances since the last visit */
@@ -3441,6 +3443,7 @@ void do_cmd_store(void)
     p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
 
     store_hack = FALSE;
+    msg_line_init(NULL);
 }
 
 

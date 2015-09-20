@@ -1516,13 +1516,6 @@ extern s16b quark_add(cptr str);
 #define AUTO_MORE_SKIP_BLOCK 2   /* Skip to next message boundary */
 #define AUTO_MORE_SKIP_ALL   3   /* Skip to next player action */
 extern int auto_more_state;
-extern int msg_current_row;
-extern int msg_current_col;
-extern int msg_min_col;
-extern int msg_min_row;
-extern int msg_max_col;
-extern int msg_max_row;
-extern int msg_max_max_row;
 extern s16b msg_num(void);
 extern cptr msg_text(int age);
 extern int  msg_plain_text(int age, char *buffer, int max);
@@ -1535,8 +1528,10 @@ extern int  msg_display_len(cptr msg);
 extern int  cmsg_display_wrapped(int color, cptr msg, int x, int y, int max_x, bool draw);
 extern void msg_print(cptr msg);
 extern void msg_line_clear(bool close_drop_down);
+extern void msg_line_init(const rect_t *display_rect);
 extern bool msg_line_contains(int row, int col);
 extern bool msg_line_is_empty(void);
+extern rect_t msg_line_rect(void);
 extern void cmsg_print(byte color, cptr msg);
 extern void msg_format(cptr fmt, ...);
 extern void cmsg_format(byte color, cptr fmt, ...);
