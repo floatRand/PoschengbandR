@@ -5,28 +5,9 @@
 
 #include <assert.h>
 
-doc_buffer_ptr _buffer_alloc(int width, int height)
-{
-    int            cb = width * height * sizeof(doc_char_t);
-    doc_buffer_ptr res = malloc(sizeof(doc_buffer_t));
-
-    res->cx = width;
-    res->cy = height;
-    res->y = 0;
-
-    res->data = malloc(cb);
-    memset(res->data, 0, cb);
-
-    res->next = NULL;
-
-    return res;
-}
-
-void _buffer_free(doc_buffer_ptr buf)
-{
-    free(buf->data);
-    free(buf);
-}
+#define PAGE_HEIGHT 128
+#define PAGE_NUM(a) ((a)>>7)
+#define PAGE_OFFSET(a) ((a)%128)
 
 doc_ptr doc_alloc(int width)
 {
@@ -35,7 +16,7 @@ doc_ptr doc_alloc(int width)
     res->cursor.x = 0;
     res->cursor.y = 0;
     res->width = width;
-    res->buffer = _buffer_alloc(width, 100);
+    res->pages = vec_alloc(free);
     res->styles = str_map_alloc(free);
     res->topics = str_map_alloc(free);
     res->links = int_map_alloc(free);
@@ -48,19 +29,10 @@ doc_ptr doc_alloc(int width)
 
 void doc_free(doc_ptr doc)
 {
-    doc_buffer_ptr buf = doc->buffer;
-
+    vec_free(doc->pages);
     str_map_free(doc->styles);
     str_map_free(doc->topics);
     int_map_free(doc->links);
-
-    while (buf)
-    {
-        doc_buffer_ptr next = buf->next;
-        _buffer_free(buf);
-        buf = next;
-    }
-    doc->buffer = NULL;
 
     free(doc);
 }
@@ -437,32 +409,21 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
 
 doc_char_ptr doc_char(doc_ptr doc, doc_pos_t pos)
 {
-    doc_buffer_ptr buffer = doc->buffer;
-    doc_pos_t      page_pos;
-    int            offset;
+    int            page_num = PAGE_NUM(pos.y);
+    int            offset = PAGE_OFFSET(pos.y);
+    doc_char_ptr   page = NULL;
 
-    while (pos.y >= buffer->y + buffer->cy)
+    while (page_num >= vec_length(doc->pages))
     {
-        if (!buffer->next)
-        {
-            doc_buffer_ptr page = _buffer_alloc(doc->width, buffer->cy * 2);
-            page->y = buffer->y + buffer->cy;
-            buffer->next = page;
-        }
-        buffer = buffer->next;
+        int  cb = doc->width * PAGE_HEIGHT * sizeof(doc_char_t);
+
+        page = malloc(cb);
+        memset(page, 0, cb);
+        vec_add(doc->pages, page);
     }
 
-    assert(buffer);
-    assert(buffer->cx == doc->width);
-
-    page_pos.y = pos.y - buffer->y;
-    page_pos.x = pos.x;
-
-    assert(0 <= page_pos.y && page_pos.y < buffer->cy);
-    assert(0 <= page_pos.x && page_pos.x < buffer->cx);
-
-    offset = page_pos.y * buffer->cx + page_pos.x;
-    return buffer->data + offset;
+    page = vec_get(doc->pages, page_num);
+    return page + offset * doc->width + pos.x;
 }
 
 doc_pos_t doc_read_file(doc_ptr doc, FILE *fp)

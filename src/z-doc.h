@@ -5,6 +5,7 @@
 
 #include "str-map.h"
 #include "int-map.h"
+#include "c-vec.h"
 
 /* Utilities for Formatted Text Processing
    We support the ability to render rich text to a "virtual terminal",
@@ -66,22 +67,13 @@ struct doc_style_s
 };
 typedef struct doc_style_s doc_style_t, *doc_style_ptr;
 
-struct doc_buffer_s
-{
-    int y;
-    int cx;
-    int cy;
-    doc_char_ptr data;
-    struct doc_buffer_s *next;
-};
-typedef struct doc_buffer_s doc_buffer_t, *doc_buffer_ptr;
 
 struct doc_s
 {
     doc_pos_t      cursor;
     int            width;
     doc_style_t    current_style;
-    doc_buffer_ptr buffer;
+    vec_ptr        pages;
     str_map_ptr    styles; /* name -> style */
     str_map_ptr    topics; /* name -> region */
     int_map_ptr    links;  /* char -> file#topic */

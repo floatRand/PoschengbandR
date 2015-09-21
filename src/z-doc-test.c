@@ -31,19 +31,12 @@ int main(int argc, char *argv[])
 }
 
 /*
-gcc -g c-string.c str-map.c int-map.c z-doc.c z-doc-test.c
-cat ../lib/help/tang.txt | ./a.out --width 80 | less
+> gcc -O2 c-string.c c-vec.c str-map.c int-map.c z-doc.c z-doc-test.c
+> time cat ../lib/help/* | ./a.out --width 80 > foo.txt; ls -lah foo.txt
 
-> time cat *.c | ./a.out --width 80 > foo.txt; ls -lah foo.txt
-real    0m1.011s
-user    0m0.954s
-sys     0m0.120s
--rw-r--r-- 1 chris chris 25M Sep 21 14:22 foo.txt
-
-> time cat *.c > foo.txt; ls -lah foo.txt
-real    0m0.030s
-user    0m0.000s
-sys     0m0.032s
--rw-r--r-- 1 chris chris 8.1M Sep 21 14:26 foo.txt
+real    0m0.071s
+user    0m0.075s
+sys     0m0.005s
+-rw-r--r-- 1 chris chris 1.5M Sep 21 15:55 foo.txt
 */
 
