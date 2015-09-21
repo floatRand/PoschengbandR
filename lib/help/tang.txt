@@ -1,21 +1,12 @@
-  [[[[B|The Newbie Guide
+<style:heading>The Newbie Guide<style:normal>
 
-  Welcome to PosChengband! This guide will attempt to give you a quick overview
-  of the game and get you started on your path to slay the dreaded Serpent of
-  Chaos.
+Welcome to PosChengband! This guide will attempt to give you a quick overview of the game and get you started on your path to slay the dreaded Serpent of Chaos.
 
-***** <Overview>
-  [[[[r|Overview
+<topic:Overview><style:heading>Overview<style:normal>
 
-  PosChengband is a single player role playing game where you, the brave
-  adventurer, attempt to save the world by defeating evil monsters including,
-  eventually, the Serpent of Chaos. The road is long, and the path is
-  treacherous. Many have tried and failed, and the dungeons are littered with
-  the bones of would be heroes. Do you have what it takes to succeed where so
-  many others have failed? If so, read on.
+PosChengband is a single player role playing game where you, the brave adventurer, attempt to save the world by defeating evil monsters including, eventually, the Serpent of Chaos. The road is long, and the path is treacherous. Many have tried and failed, and the dungeons are littered with the bones of would be heroes. Do you have what it takes to succeed where so many others have failed? If so, read on.
 
-***** <CreatingACharacter>
-  [[[[r|Creating a Character
+<topic:CreatingACharacter><style:heading>Creating a Character<style:normal>
 
   Your first step will be to create your character. Since you are new to the
   game, I suggest you choose 'Beginner' at the initial prompt. This will greatly

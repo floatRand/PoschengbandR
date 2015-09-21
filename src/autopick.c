@@ -397,9 +397,9 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
     }
 
     /* Save this auto-picker entry line */
-    entry->name = string_make(ptr);
+    entry->name = z_string_make(ptr);
     entry->action = act;
-    entry->insc = string_make(insc);
+    entry->insc = z_string_make(insc);
 
     return TRUE;
 }
@@ -418,7 +418,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
     /* Initialize name string */
     name_str[0] = '\0';
 
-    entry->insc = string_make(quark_str(o_ptr->inscription));
+    entry->insc = z_string_make(quark_str(o_ptr->inscription));
     entry->action = DO_AUTOPICK | DO_DISPLAY;
     entry->flag[0] = entry->flag[1] = 0L;
     entry->dice = 0;
@@ -643,7 +643,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
 
     /* Register the name in lowercase */
     str_tolower(name_str);
-    entry->name = string_make(name_str);
+    entry->name = z_string_make(name_str);
 
     return;
 }
@@ -654,8 +654,8 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
  */
 static void autopick_free_entry(autopick_type *entry)
 {
-    string_free(entry->name);
-    string_free(entry->insc);
+    z_string_free(entry->name);
+    z_string_free(entry->insc);
     entry->name = NULL;
     entry->insc = NULL;
 }
@@ -947,7 +947,7 @@ cptr autopick_line_from_entry(autopick_type *entry)
         buf[i] = '\0';
     }
 
-    return string_make(buf);
+    return z_string_make(buf);
 }
 
 
@@ -2410,7 +2410,7 @@ bool autopick_autoregister(object_type *o_ptr)
     /* Don't kill "entry" */
     line = autopick_line_from_entry(entry);
     fprintf(pref_fff, "%s\n", line);
-    string_free(line);
+    z_string_free(line);
 
     /* Close the file */
     fclose(pref_fff);
@@ -2889,11 +2889,11 @@ static cptr *read_text_lines(cptr filename)
         /* Parse it */
         while (0 == my_fgets(fff, buf, sizeof(buf)))
         {
-            lines_list[lines++] = string_make(buf);
+            lines_list[lines++] = z_string_make(buf);
             if (lines >= MAX_LINES - 1) break;
         }
         if (lines == 0)
-            lines_list[0] = string_make("");
+            lines_list[0] = z_string_make("");
 
         my_fclose(fff);
     }
@@ -3004,7 +3004,7 @@ static cptr *read_pickpref_text_lines(int *filename_mode_p)
     {
         /* Allocate list of pointers */
         C_MAKE(lines_list, MAX_LINES, cptr);
-        lines_list[0] = string_make("");
+        lines_list[0] = z_string_make("");
     }
     return lines_list;
 }
@@ -3046,7 +3046,7 @@ static void free_text_lines(cptr *lines_list)
     int lines;
 
     for (lines = 0; lines_list[lines]; lines++)
-        string_free(lines_list[lines]);
+        z_string_free(lines_list[lines]);
 
     /* free list of pointers */
     C_FREE((char **)lines_list, MAX_LINES, char *);
@@ -3083,7 +3083,7 @@ static void toggle_keyword(text_body_type *tb, int flg)
 
         if (!autopick_new_entry(entry, tb->lines_list[y], !fixed)) continue;
 
-        string_free(tb->lines_list[y]);
+        z_string_free(tb->lines_list[y]);
 
         if (!fixed)
         {
@@ -3172,7 +3172,7 @@ static void toggle_command_letter(text_body_type *tb, byte flg)
 
         if (!autopick_new_entry(entry, tb->lines_list[y], FALSE)) continue;
 
-        string_free(tb->lines_list[y]);
+        z_string_free(tb->lines_list[y]);
 
         if (!fixed)
         {
@@ -3265,7 +3265,7 @@ static void add_keyword(text_body_type *tb, int flg)
             continue;
         }
         
-        string_free(tb->lines_list[y]);
+        z_string_free(tb->lines_list[y]);
         
         /* Remove all noun flag */
         if (FLG_NOUN_BEGIN <= flg && flg <= FLG_NOUN_END)
@@ -3322,7 +3322,7 @@ static bool add_empty_line(text_body_type *tb)
     if (!tb->lines_list[k-1][0]) return FALSE;
 
     /* Create new empty line */
-    tb->lines_list[k] = string_make("");
+    tb->lines_list[k] = z_string_make("");
 
     /* Expressions need re-evaluation */
     tb->dirty_flags |= DIRTY_EXPRESSION;
@@ -3362,9 +3362,9 @@ static bool insert_return_code(text_body_type *tb)
         buf[j++] = tb->lines_list[tb->cy][i];
     }
     buf[j] = '\0';
-    tb->lines_list[tb->cy+1] = string_make(&tb->lines_list[tb->cy][i]);
-    string_free(tb->lines_list[tb->cy]);
-    tb->lines_list[tb->cy] = string_make(buf);
+    tb->lines_list[tb->cy+1] = z_string_make(&tb->lines_list[tb->cy][i]);
+    z_string_free(tb->lines_list[tb->cy]);
+    tb->lines_list[tb->cy] = z_string_make(buf);
 
     /* Expressions need re-evaluation */
     tb->dirty_flags |= DIRTY_EXPRESSION;
@@ -3429,9 +3429,9 @@ static byte get_object_for_search(object_type **o_handle, cptr *search_strp)
 
     *o_handle = o_ptr;
 
-    string_free(*search_strp);
+    z_string_free(*search_strp);
     object_desc(buf, *o_handle, (OD_NO_FLAVOR | OD_OMIT_PREFIX | OD_NO_PLURAL));
-    *search_strp = string_make(format("<%s>", buf));
+    *search_strp = z_string_make(format("<%s>", buf));
     return 1;
 }
 
@@ -3447,9 +3447,9 @@ static byte get_destroyed_object_for_search(object_type **o_handle, cptr *search
 
     *o_handle = &autopick_last_destroyed_object;
 
-    string_free(*search_strp);
+    z_string_free(*search_strp);
     object_desc(buf, *o_handle, (OD_NO_FLAVOR | OD_OMIT_PREFIX | OD_NO_PLURAL));
-    *search_strp = string_make(format("<%s>", buf));
+    *search_strp = z_string_make(format("<%s>", buf));
     return 1;
 }
 
@@ -3558,8 +3558,8 @@ static byte get_string_for_search(object_type **o_handle, cptr *search_strp)
         case '\r':
         case KTRL('s'):
             if (*o_handle) return (back ? -1 : 1);
-            string_free(*search_strp);
-            *search_strp = string_make(buf);
+            z_string_free(*search_strp);
+            *search_strp = z_string_make(buf);
             *o_handle = NULL;
             return (back ? -1 : 1);
 
@@ -3651,7 +3651,7 @@ static byte get_string_for_search(object_type **o_handle, cptr *search_strp)
                     *o_handle = NULL;
 
                     /* Remove indicating string */
-                    string_free(*search_strp);
+                    z_string_free(*search_strp);
                     *search_strp = NULL;
                 }
 
@@ -3692,7 +3692,7 @@ static byte get_string_for_search(object_type **o_handle, cptr *search_strp)
 
             /* Remove indicating string */
             buf[0] = '\0';
-            string_free(*search_strp);
+            z_string_free(*search_strp);
             *search_strp = NULL;
 
         }
@@ -4538,7 +4538,7 @@ static void draw_text_editor(text_body_type *tb)
                 state |= LSTAT_AUTOREGISTER;
 
             s_len = strlen(s);
-            ss = (char *)string_make(s);
+            ss = (char *)z_string_make(s);
             s_keep = ss;
 
             /* Parse the expr */
@@ -4548,7 +4548,7 @@ static void draw_text_editor(text_body_type *tb)
             if (streq(v, "0")) state |= LSTAT_BYPASS;
             else state &= ~LSTAT_BYPASS;
 
-            /* Cannot use string_free() because the string was "destroyed" */
+            /* Cannot use z_string_free() because the string was "destroyed" */
             C_FREE(s_keep, s_len + 1, char);
 
             /* Re-update this line's state */
@@ -4780,7 +4780,7 @@ static void kill_line_segment(text_body_type *tb, int y, int x0, int x1, bool wh
     {
         int i;
 
-        string_free(tb->lines_list[y]);
+        z_string_free(tb->lines_list[y]);
 
         /* Shift lines up */
         for (i = y; tb->lines_list[i+1]; i++)
@@ -4807,8 +4807,8 @@ static void kill_line_segment(text_body_type *tb, int y, int x0, int x1, bool wh
     *d = '\0';
 
     /* Replace */
-    string_free(tb->lines_list[y]);
-    tb->lines_list[y] = string_make(buf);
+    z_string_free(tb->lines_list[y]);
+    tb->lines_list[y] = z_string_make(buf);
 
     /* Expressions may need re-evaluation */
     check_expression_line(tb, y);
@@ -4868,8 +4868,8 @@ static bool insert_macro_line(text_body_type *tb)
 
     /* Insert preference string */
     insert_return_code(tb);
-    string_free(tb->lines_list[tb->cy]);
-    tb->lines_list[tb->cy] = string_make(format("P:%s", tmp));
+    z_string_free(tb->lines_list[tb->cy]);
+    tb->lines_list[tb->cy] = z_string_make(format("P:%s", tmp));
 
     /* Acquire action */
     i = macro_find_exact(buf);
@@ -4887,8 +4887,8 @@ static bool insert_macro_line(text_body_type *tb)
 
     /* Insert blank action preference line */
     insert_return_code(tb);
-    string_free(tb->lines_list[tb->cy]);
-    tb->lines_list[tb->cy] = string_make(format("A:%s", tmp));
+    z_string_free(tb->lines_list[tb->cy]);
+    tb->lines_list[tb->cy] = z_string_make(format("A:%s", tmp));
 
     return TRUE;
 }
@@ -4936,8 +4936,8 @@ static bool insert_keymap_line(text_body_type *tb)
 
     /* Insert preference string */
     insert_return_code(tb);
-    string_free(tb->lines_list[tb->cy]);
-    tb->lines_list[tb->cy] = string_make(format("C:%d:%s", mode, tmp));
+    z_string_free(tb->lines_list[tb->cy]);
+    tb->lines_list[tb->cy] = z_string_make(format("C:%d:%s", mode, tmp));
 
     /* Look up the keymap */
     act = keymap_act[mode][(byte)(buf[0])];
@@ -4956,8 +4956,8 @@ static bool insert_keymap_line(text_body_type *tb)
 
     /* Insert blank action preference line */
     insert_return_code(tb);
-    string_free(tb->lines_list[tb->cy]);
-    tb->lines_list[tb->cy] = string_make(format("A:%s", tmp));
+    z_string_free(tb->lines_list[tb->cy]);
+    tb->lines_list[tb->cy] = z_string_make(format("A:%s", tmp));
 
     return TRUE;
 }
@@ -5299,8 +5299,8 @@ static bool do_editor_command(text_body_type *tb, int com_id)
                 insert_return_code(tb);
 
                 /* Replace this line with new one */
-                string_free(tb->lines_list[tb->cy]);
-                tb->lines_list[tb->cy] = string_make(buf);
+                z_string_free(tb->lines_list[tb->cy]);
+                tb->lines_list[tb->cy] = z_string_make(buf);
 
                 /* Move to next line */
                 tb->cx = 0;
@@ -5323,8 +5323,8 @@ static bool do_editor_command(text_body_type *tb, int com_id)
             buf[i] = '\0';
 
             /* Replace this line with new one */
-            string_free(tb->lines_list[tb->cy]);
-            tb->lines_list[tb->cy] = string_make(buf);
+            z_string_free(tb->lines_list[tb->cy]);
+            tb->lines_list[tb->cy] = z_string_make(buf);
 
             /* Finish */
             break;
@@ -5498,9 +5498,9 @@ static bool do_editor_command(text_body_type *tb, int com_id)
             tb->cx = strlen(tb->lines_list[tb->cy-1]);
             strcpy(buf, tb->lines_list[tb->cy-1]);
             strcat(buf, tb->lines_list[tb->cy]);
-            string_free(tb->lines_list[tb->cy-1]);
-            string_free(tb->lines_list[tb->cy]);
-            tb->lines_list[tb->cy-1] = string_make(buf);
+            z_string_free(tb->lines_list[tb->cy-1]);
+            z_string_free(tb->lines_list[tb->cy]);
+            tb->lines_list[tb->cy-1] = z_string_make(buf);
 
             for (i = tb->cy; tb->lines_list[i+1]; i++)
                 tb->lines_list[i] = tb->lines_list[i+1];
@@ -5533,8 +5533,8 @@ static bool do_editor_command(text_body_type *tb, int com_id)
         for (; tb->lines_list[tb->cy][i]; i++)
             buf[j++] = tb->lines_list[tb->cy][i];
         buf[j] = '\0';
-        string_free(tb->lines_list[tb->cy]);
-        tb->lines_list[tb->cy] = string_make(buf);
+        z_string_free(tb->lines_list[tb->cy]);
+        tb->lines_list[tb->cy] = z_string_make(buf);
 
         /* Now dirty */
         tb->dirty_line = tb->cy;
@@ -5630,7 +5630,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
 
         tb->cx = 0;
         insert_return_code(tb);
-        string_free(tb->lines_list[tb->cy]);
+        z_string_free(tb->lines_list[tb->cy]);
         tb->lines_list[tb->cy] = autopick_line_from_entry_kill(entry);
 
         /* Now dirty because of item/equip menu */
@@ -5645,8 +5645,8 @@ static bool do_editor_command(text_body_type *tb, int com_id)
         {
             tb->cx = 0;
             insert_return_code(tb);
-            string_free(tb->lines_list[tb->cy]);
-            tb->lines_list[tb->cy] = string_make(tb->last_destroyed);
+            z_string_free(tb->lines_list[tb->cy]);
+            tb->lines_list[tb->cy] = z_string_make(tb->last_destroyed);
 
             /* Now dirty */
             tb->dirty_flags |= DIRTY_ALL;
@@ -5669,12 +5669,12 @@ static bool do_editor_command(text_body_type *tb, int com_id)
 
         tb->cx = 0;
         insert_return_code(tb);
-        string_free(tb->lines_list[tb->cy]);
-        tb->lines_list[tb->cy] = string_make(expression);
+        z_string_free(tb->lines_list[tb->cy]);
+        tb->lines_list[tb->cy] = z_string_make(expression);
         tb->cy++;
         insert_return_code(tb);
-        string_free(tb->lines_list[tb->cy]);
-        tb->lines_list[tb->cy] = string_make("?:1");
+        z_string_free(tb->lines_list[tb->cy]);
+        tb->lines_list[tb->cy] = z_string_make("?:1");
 
         /* Now dirty */
         tb->dirty_flags |= DIRTY_ALL;
@@ -5837,8 +5837,8 @@ static void insert_single_letter(text_body_type *tb, int key)
     buf[j] = '\0';
 
     /* Replace current line with new line */
-    string_free(tb->lines_list[tb->cy]);
-    tb->lines_list[tb->cy] = string_make(buf);
+    z_string_free(tb->lines_list[tb->cy]);
+    tb->lines_list[tb->cy] = z_string_make(buf);
 
     /* Move to correct collumn */
     len = strlen(tb->lines_list[tb->cy]);
@@ -6099,8 +6099,8 @@ void do_cmd_edit_autopick(void)
 
     free_text_lines(tb->lines_list);
 
-    string_free(tb->search_str);
-    string_free(tb->last_destroyed);
+    z_string_free(tb->search_str);
+    z_string_free(tb->last_destroyed);
 
     /* Destroy string chain */
     kill_yank_chain(tb);

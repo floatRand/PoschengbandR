@@ -92,26 +92,26 @@ void init_file_paths(const char *configpath, const char *libpath, const char *da
     /*** Free everything ***/
 
     /* Free the main path */
-    string_free(ANGBAND_DIR);
+    z_string_free(ANGBAND_DIR);
 
     /* Free the sub-paths */
-    string_free(ANGBAND_DIR_APEX);
-    string_free(ANGBAND_DIR_BONE);
-    string_free(ANGBAND_DIR_DATA);
-    string_free(ANGBAND_DIR_EDIT);
-    string_free(ANGBAND_DIR_SCRIPT);
-    string_free(ANGBAND_DIR_FILE);
-    string_free(ANGBAND_DIR_HELP);
-    string_free(ANGBAND_DIR_INFO);
-    string_free(ANGBAND_DIR_SAVE);
-    string_free(ANGBAND_DIR_USER);
-    string_free(ANGBAND_DIR_XTRA);
+    z_string_free(ANGBAND_DIR_APEX);
+    z_string_free(ANGBAND_DIR_BONE);
+    z_string_free(ANGBAND_DIR_DATA);
+    z_string_free(ANGBAND_DIR_EDIT);
+    z_string_free(ANGBAND_DIR_SCRIPT);
+    z_string_free(ANGBAND_DIR_FILE);
+    z_string_free(ANGBAND_DIR_HELP);
+    z_string_free(ANGBAND_DIR_INFO);
+    z_string_free(ANGBAND_DIR_SAVE);
+    z_string_free(ANGBAND_DIR_USER);
+    z_string_free(ANGBAND_DIR_XTRA);
 
 
     /*** Prepare the "path" ***/
 
     /* Hack -- save the main directory */
-    ANGBAND_DIR = string_make(libpath);
+    ANGBAND_DIR = z_string_make(libpath);
 
 #ifdef NeXT  
     /* Prepare to append to the Base Path */
@@ -124,29 +124,29 @@ void init_file_paths(const char *configpath, const char *libpath, const char *da
     /*** Use "flat" paths with VM/ESA ***/
 
     /* Use "blank" path names */
-    ANGBAND_DIR_APEX = string_make("");
-    ANGBAND_DIR_BONE = string_make("");
-    ANGBAND_DIR_DATA = string_make("");
-    ANGBAND_DIR_EDIT = string_make("");
-    ANGBAND_DIR_SCRIPT = string_make("");
-    ANGBAND_DIR_FILE = string_make("");
-    ANGBAND_DIR_HELP = string_make("");
-    ANGBAND_DIR_INFO = string_make("");
-    ANGBAND_DIR_SAVE = string_make("");
-    ANGBAND_DIR_USER = string_make("");
-    ANGBAND_DIR_XTRA = string_make("");
+    ANGBAND_DIR_APEX = z_string_make("");
+    ANGBAND_DIR_BONE = z_string_make("");
+    ANGBAND_DIR_DATA = z_string_make("");
+    ANGBAND_DIR_EDIT = z_string_make("");
+    ANGBAND_DIR_SCRIPT = z_string_make("");
+    ANGBAND_DIR_FILE = z_string_make("");
+    ANGBAND_DIR_HELP = z_string_make("");
+    ANGBAND_DIR_INFO = z_string_make("");
+    ANGBAND_DIR_SAVE = z_string_make("");
+    ANGBAND_DIR_USER = z_string_make("");
+    ANGBAND_DIR_XTRA = z_string_make("");
 
 
 #else /* VM */
 
 
     /* Build path names */
-    ANGBAND_DIR_EDIT = string_make(format("%sedit", configpath));
-    ANGBAND_DIR_FILE = string_make(format("%sfile", libpath));
-    ANGBAND_DIR_HELP = string_make(format("%shelp", libpath));
-    ANGBAND_DIR_INFO = string_make(format("%sinfo", libpath));
-    ANGBAND_DIR_PREF = string_make(format("%spref", configpath));
-    ANGBAND_DIR_XTRA = string_make(format("%sxtra", libpath));
+    ANGBAND_DIR_EDIT = z_string_make(format("%sedit", configpath));
+    ANGBAND_DIR_FILE = z_string_make(format("%sfile", libpath));
+    ANGBAND_DIR_HELP = z_string_make(format("%shelp", libpath));
+    ANGBAND_DIR_INFO = z_string_make(format("%sinfo", libpath));
+    ANGBAND_DIR_PREF = z_string_make(format("%spref", configpath));
+    ANGBAND_DIR_XTRA = z_string_make(format("%sxtra", libpath));
 
     /*** Build the sub-directory names ***/
 
@@ -156,32 +156,32 @@ void init_file_paths(const char *configpath, const char *libpath, const char *da
     path_build(buf, sizeof(buf), PRIVATE_USER_PATH, VERSION_NAME);
 
     /* Build a relative path name */
-    ANGBAND_DIR_USER = string_make(buf);
+    ANGBAND_DIR_USER = z_string_make(buf);
 
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "scores");
-    ANGBAND_DIR_APEX = string_make(buf);
+    ANGBAND_DIR_APEX = z_string_make(buf);
 
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "bone");
-    ANGBAND_DIR_BONE = string_make(buf);
+    ANGBAND_DIR_BONE = z_string_make(buf);
 
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "data");
-    ANGBAND_DIR_DATA = string_make(buf);
+    ANGBAND_DIR_DATA = z_string_make(buf);
 
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "script");
-    ANGBAND_DIR_SCRIPT = string_make(buf);
+    ANGBAND_DIR_SCRIPT = z_string_make(buf);
 
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "save");
-    ANGBAND_DIR_SAVE = string_make(buf);
+    ANGBAND_DIR_SAVE = z_string_make(buf);
 
 #else /* PRIVATE_USER_PATH */
 
     /* Build pathnames */
-    ANGBAND_DIR_USER = string_make(format("%suser", datapath));
-    ANGBAND_DIR_APEX = string_make(format("%sapex", datapath));
-    ANGBAND_DIR_BONE = string_make(format("%sbone", datapath));
-    ANGBAND_DIR_DATA = string_make(format("%sdata", datapath));
-    ANGBAND_DIR_SCRIPT = string_make(format("%sscript", datapath));
-    ANGBAND_DIR_SAVE = string_make(format("%ssave", datapath));
+    ANGBAND_DIR_USER = z_string_make(format("%suser", datapath));
+    ANGBAND_DIR_APEX = z_string_make(format("%sapex", datapath));
+    ANGBAND_DIR_BONE = z_string_make(format("%sbone", datapath));
+    ANGBAND_DIR_DATA = z_string_make(format("%sdata", datapath));
+    ANGBAND_DIR_SCRIPT = z_string_make(format("%sscript", datapath));
+    ANGBAND_DIR_SAVE = z_string_make(format("%ssave", datapath));
 
 #endif /* PRIVATE_USER_PATH */
 
@@ -215,11 +215,11 @@ void init_file_paths(const char *configpath, const char *libpath, const char *da
         if (next)
         {
             /* Forget the old path name */
-            string_free(ANGBAND_DIR_DATA);
+            z_string_free(ANGBAND_DIR_DATA);
 
             /* Build a new path name */
             sprintf(tail, "data-%s", next);
-            ANGBAND_DIR_DATA = string_make(libpath);
+            ANGBAND_DIR_DATA = z_string_make(libpath);
         }
     }
 

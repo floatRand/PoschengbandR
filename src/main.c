@@ -177,43 +177,43 @@ static void change_path(cptr info)
 	{
 		case 'a':
 		{
-			string_free(ANGBAND_DIR_APEX);
-			ANGBAND_DIR_APEX = string_make(s+1);
+            z_string_free(ANGBAND_DIR_APEX);
+            ANGBAND_DIR_APEX = z_string_make(s+1);
 			break;
 		}
 
 		case 'f':
 		{
-			string_free(ANGBAND_DIR_FILE);
-			ANGBAND_DIR_FILE = string_make(s+1);
+            z_string_free(ANGBAND_DIR_FILE);
+            ANGBAND_DIR_FILE = z_string_make(s+1);
 			break;
 		}
 
 		case 'h':
 		{
-			string_free(ANGBAND_DIR_HELP);
-			ANGBAND_DIR_HELP = string_make(s+1);
+            z_string_free(ANGBAND_DIR_HELP);
+            ANGBAND_DIR_HELP = z_string_make(s+1);
 			break;
 		}
 
 		case 'i':
 		{
-			string_free(ANGBAND_DIR_INFO);
-			ANGBAND_DIR_INFO = string_make(s+1);
+            z_string_free(ANGBAND_DIR_INFO);
+            ANGBAND_DIR_INFO = z_string_make(s+1);
 			break;
 		}
 
 		case 'u':
 		{
-			string_free(ANGBAND_DIR_USER);
-			ANGBAND_DIR_USER = string_make(s+1);
+            z_string_free(ANGBAND_DIR_USER);
+            ANGBAND_DIR_USER = z_string_make(s+1);
 			break;
 		}
 
 		case 'x':
 		{
-			string_free(ANGBAND_DIR_XTRA);
-			ANGBAND_DIR_XTRA = string_make(s+1);
+            z_string_free(ANGBAND_DIR_XTRA);
+            ANGBAND_DIR_XTRA = z_string_make(s+1);
 			break;
 		}
 
@@ -231,36 +231,36 @@ static void change_path(cptr info)
 
 		case 'b':
 		{
-			string_free(ANGBAND_DIR_BONE);
-			ANGBAND_DIR_BONE = string_make(s+1);
+            z_string_free(ANGBAND_DIR_BONE);
+            ANGBAND_DIR_BONE = z_string_make(s+1);
 			break;
 		}
 
 		case 'd':
 		{
-			string_free(ANGBAND_DIR_DATA);
-			ANGBAND_DIR_DATA = string_make(s+1);
+            z_string_free(ANGBAND_DIR_DATA);
+            ANGBAND_DIR_DATA = z_string_make(s+1);
 			break;
 		}
 
 		case 'e':
 		{
-			string_free(ANGBAND_DIR_EDIT);
-			ANGBAND_DIR_EDIT = string_make(s+1);
+            z_string_free(ANGBAND_DIR_EDIT);
+            ANGBAND_DIR_EDIT = z_string_make(s+1);
 			break;
 		}
 
 		case 's':
 		{
-			string_free(ANGBAND_DIR_SAVE);
-			ANGBAND_DIR_SAVE = string_make(s+1);
+            z_string_free(ANGBAND_DIR_SAVE);
+            ANGBAND_DIR_SAVE = z_string_make(s+1);
 			break;
 		}
 
 		case 'z':
 		{
-			string_free(ANGBAND_DIR_SCRIPT);
-			ANGBAND_DIR_SCRIPT = string_make(s+1);
+            z_string_free(ANGBAND_DIR_SCRIPT);
+            ANGBAND_DIR_SCRIPT = z_string_make(s+1);
 			break;
 		}
 

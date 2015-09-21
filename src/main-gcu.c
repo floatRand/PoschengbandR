@@ -675,7 +675,7 @@ static bool init_sound(void)
 	 path_build(buf, sizeof(buf), ANGBAND_DIR_XTRA_SOUND, wav);
 
 	 /* Save the sound filename, if it exists */
-	 if (check_file(buf)) sound_file[i] = string_make(buf);
+     if (check_file(buf)) sound_file[i] = z_string_make(buf);
       }
 
       /* Sound available */
@@ -1345,7 +1345,7 @@ errr init_gcu(int argc, char *argv[])
    path_build(path, sizeof(path), ANGBAND_DIR_XTRA, "sound");
 
    /* Allocate the path */
-   ANGBAND_DIR_XTRA_SOUND = string_make(path);
+   ANGBAND_DIR_XTRA_SOUND = z_string_make(path);
 
 #endif
 

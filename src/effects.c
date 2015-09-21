@@ -6175,7 +6175,7 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
             flush();
 
             /* Initialize "last message" buffer */
-            if (p_ptr->last_message) string_free(p_ptr->last_message);
+            if (p_ptr->last_message) z_string_free(p_ptr->last_message);
             p_ptr->last_message = NULL;
 
             /* Hack -- Note death */
@@ -6205,7 +6205,7 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
                 {
                     strcpy(death_message, android ? "You are broken." : "You die.");
                 }
-                else p_ptr->last_message = string_make(death_message);
+                else p_ptr->last_message = z_string_make(death_message);
                 
                 msg_print(death_message);
             }

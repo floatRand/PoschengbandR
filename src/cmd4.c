@@ -2383,10 +2383,10 @@ void do_cmd_macros(void)
                 text_to_ascii(macro__buf, tmp);
 
                 /* Free old keymap */
-                string_free(keymap_act[mode][(byte)(buf[0])]);
+                z_string_free(keymap_act[mode][(byte)(buf[0])]);
 
                 /* Make new keymap */
-                keymap_act[mode][(byte)(buf[0])] = string_make(macro__buf);
+                keymap_act[mode][(byte)(buf[0])] = z_string_make(macro__buf);
 
                 /* Prompt */
                 msg_print("Added a keymap.");
@@ -2409,7 +2409,7 @@ void do_cmd_macros(void)
             do_cmd_macro_aux_keymap(buf);
 
             /* Free old keymap */
-            string_free(keymap_act[mode][(byte)(buf[0])]);
+            z_string_free(keymap_act[mode][(byte)(buf[0])]);
 
             /* Make new keymap */
             keymap_act[mode][(byte)(buf[0])] = NULL;
@@ -8488,7 +8488,7 @@ static void do_cmd_knowledge_autopick(void)
 
         tmp = autopick_line_from_entry(&autopick_list[k]);
         fprintf(fff, " %s", tmp);
-        string_free(tmp);
+        z_string_free(tmp);
         fprintf(fff, "\n");
     }
     /* Close the file */

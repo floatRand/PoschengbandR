@@ -570,7 +570,7 @@ static void rd_extra(savefile_ptr file)
     savefile_read_string(file, p_ptr->died_from, sizeof(p_ptr->died_from));
 
     savefile_read_string(file, buf, sizeof buf);
-    if (buf[0]) p_ptr->last_message = string_make(buf);
+    if (buf[0]) p_ptr->last_message = z_string_make(buf);
 
     rd_quick_start(file);
 
@@ -1586,7 +1586,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     {
         char buf[SCREEN_BUF_SIZE];
         savefile_read_string(file, buf, sizeof(buf));
-        if (buf[0]) screen_dump = string_make(buf);
+        if (buf[0]) screen_dump = z_string_make(buf);
     }
 
     if (p_ptr->is_dead)

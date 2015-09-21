@@ -1202,7 +1202,7 @@ static errr Infofnt_nuke(void)
 	if (ifnt->name)
 	{
 		/* Free the name */
-		string_free(ifnt->name);
+        z_string_free(ifnt->name);
 	}
 
 
@@ -1380,7 +1380,7 @@ static void Infofnt_init_data(cptr name)
 	}
 
 	/* Save a copy of the font name */
-	Infofnt->name = string_make(name);
+    Infofnt->name = z_string_make(name);
 
 	/* Mark it as nukable */
 	Infofnt->nuke = 1;
@@ -2117,7 +2117,7 @@ static bool paste_x11_send_text(XSelectionRequestEvent *rq)
 		/* End of string */
 		buf[l] = '\0';
 
-		list[n++] = (char *)string_make(buf);
+        list[n++] = (char *)z_string_make(buf);
 	}
 
 	/* End of the list */
@@ -2166,7 +2166,7 @@ static bool paste_x11_send_text(XSelectionRequestEvent *rq)
 	/* Free the list of strings */
 	for (n = 0; list[n]; n++)
 	{
-		string_free(list[n]);
+        z_string_free(list[n]);
 	}
 
 	return TRUE;
@@ -2606,7 +2606,7 @@ static void init_sound(void)
 		path_build(buf, sizeof(buf), dir_xtra_sound, wav);
 		
 		/* Save the sound filename, if it exists */
-		if (check_file(buf)) sound_file[i] = string_make(buf);
+        if (check_file(buf)) sound_file[i] = z_string_make(buf);
 	}
 	use_sound = TRUE;
 	return;

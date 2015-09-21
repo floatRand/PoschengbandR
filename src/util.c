@@ -11,6 +11,7 @@
 /* Purpose: Angband utilities -BEN- */
 
 #include "angband.h"
+#include "z-doc.h"
 
 #include <assert.h>
 
@@ -1721,7 +1722,7 @@ errr macro_add(cptr pat, cptr act)
     if (n >= 0)
     {
         /* Free the old macro action */
-        string_free(macro__act[n]);
+        z_string_free(macro__act[n]);
     }
     else if (macro__num >= MACRO_MAX - 1)
     {
@@ -1734,11 +1735,11 @@ errr macro_add(cptr pat, cptr act)
         n = macro__num++;
 
         /* Save the pattern */
-        macro__pat[n] = string_make(pat);
+        macro__pat[n] = z_string_make(pat);
     }
 
     /* Save the action */
-    macro__act[n] = string_make(act);
+    macro__act[n] = z_string_make(act);
 
     /* Efficiency */
     macro__use[(byte)(pat[0])] = TRUE;
@@ -2366,7 +2367,7 @@ void quark_init(void)
     C_MAKE(quark__str, QUARK_MAX, cptr);
 
     /* Prepare first quark, which is used when quark_add() is failed */
-    quark__str[1] = string_make("");
+    quark__str[1] = z_string_make("");
 
     /* There is one quark (+ NULL) */
     quark__num = 2;
@@ -2394,7 +2395,7 @@ s16b quark_add(cptr str)
     quark__num = i + 1;
 
     /* Add a new quark */
-    quark__str[i] = string_make(str);
+    quark__str[i] = z_string_make(str);
 
     /* Return the index */
     return (i);
@@ -2999,86 +3000,6 @@ static void msg_flush(void)
     msg_line_clear(TRUE);
 }
 
-/* Tags
-   <style:heading>Welcome to PosChengband<style:normal>
-   Prepare to be <color:r>dazzled<color:*>!
-*/
-enum doc_tag_e
-{
-    DOC_TAG_NONE,
-    DOC_TAG_COLOR,
-    DOC_TAG_STYLE,
-    DOC_TAG_TOPIC,
-    DOC_TAG_LINK,
-};
-struct doc_tag_s
-{
-    int  type;
-    cptr arg;
-    int  arg_size;
-};
-typedef struct doc_tag_s doc_tag_t;
-typedef struct doc_tag_s *doc_tag_ptr;
-
-cptr doc_tag_parse(cptr pos, doc_tag_ptr tag)
-{
-    /* prepare to fail! */
-    tag->type = DOC_TAG_NONE;
-    tag->arg = NULL;
-    tag->arg_size = 0;
-
-    /* <name:arg> where name in {"color", "style", "topic", "link"} */
-    if (*pos == '<')
-    {
-        doc_tag_t result = {0};
-        cptr seek = pos + 1;
-        char name[MAX_NLEN];
-        int  ct = 0;
-        for (;;)
-        {
-            if (!*seek || strchr(" <>\r\n\t", *seek)) return pos;
-            if (*seek == ':') break;
-            name[ct++] = *seek;
-            if (ct >= MAX_NLEN) return pos;
-            seek++;
-        }
-        name[ct] = '\0';
-
-        /* [pos,seek) is the name of the tag */
-        if (strcmp(name, "color") == 0)
-            result.type = DOC_TAG_COLOR;
-        else if (strcmp(name, "style") == 0)
-            result.type = DOC_TAG_STYLE;
-        else if (strcmp(name, "topic") == 0)
-            result.type = DOC_TAG_TOPIC;
-        else if (strcmp(name, "link") == 0)
-            result.type = DOC_TAG_LINK;
-        else
-            return pos;
-
-        assert(*seek == ':');
-        seek++;
-        result.arg = seek;
-
-        ct = 0;
-        for (;;)
-        {
-            if (!*seek || strchr(" <\r\n\t", *seek)) return pos;
-            if (*seek == '>') break;
-            ct++;
-            seek++;
-        }
-        result.arg_size = ct;
-
-        assert(*seek == '>');
-        seek++;
-
-        *tag = result;
-        return seek;
-    }
-
-    return pos;
-}
 
 /* Display another message on the "Message Line" */
 static void msg_line_display(byte color, cptr msg)
@@ -3102,7 +3023,7 @@ static void msg_line_display(byte color, cptr msg)
         {
             doc_tag_t tag = {0};
 
-            pos = doc_tag_parse(pos, &tag);
+            pos = doc_parse_tag(pos, &tag);
             if (tag.type != DOC_TAG_NONE)
             {
                 if (tag.type == DOC_TAG_COLOR)
@@ -3214,7 +3135,7 @@ int cmsg_display_wrapped(int color, cptr msg, const rect_t *rect, bool draw)
         {
             doc_tag_t tag = {0};
 
-            pos = doc_tag_parse(pos, &tag);
+            pos = doc_parse_tag(pos, &tag);
             if (tag.type != DOC_TAG_NONE)
             {
                 if (tag.type == DOC_TAG_COLOR)

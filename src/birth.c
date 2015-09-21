@@ -2425,7 +2425,7 @@ static void player_wipe(void)
     int i;
 
     /* Hack -- free the "last message" string */
-    if (p_ptr->last_message) string_free(p_ptr->last_message);
+    if (p_ptr->last_message) z_string_free(p_ptr->last_message);
 
     /* Hack -- zero the struct */
     (void)WIPE(p_ptr, player_type);

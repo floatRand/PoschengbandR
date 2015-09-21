@@ -645,9 +645,9 @@ errr process_pref_file_command(char *buf)
         if (!tmp[0] || tmp[1]) return 1;
         i = (byte)(tmp[0]);
 
-        string_free(keymap_act[mode][i]);
+        z_string_free(keymap_act[mode][i]);
 
-        keymap_act[mode][i] = string_make(macro__buf);
+        keymap_act[mode][i] = z_string_make(macro__buf);
 
         return 0;
     }
@@ -753,24 +753,24 @@ errr process_pref_file_command(char *buf)
                 num = strlen(macro_modifier_chr);
 
                 /* Kill the template string */
-                string_free(macro_template);
+                z_string_free(macro_template);
                 macro_template = NULL;
 
                 /* Kill flag characters of modifier keys */
-                string_free(macro_modifier_chr);
+                z_string_free(macro_modifier_chr);
 
                 /* Kill corresponding modifier names */
                 for (i = 0; i < num; i++)
                 {
-                    string_free(macro_modifier_name[i]);
+                    z_string_free(macro_modifier_name[i]);
                 }
 
                 /* Kill trigger name strings */
                 for (i = 0; i < max_macrotrigger; i++)
                 {
-                    string_free(macro_trigger_name[i]);
-                    string_free(macro_trigger_keycode[0][i]);
-                    string_free(macro_trigger_keycode[1][i]);
+                    z_string_free(macro_trigger_name[i]);
+                    z_string_free(macro_trigger_keycode[0][i]);
+                    z_string_free(macro_trigger_keycode[1][i]);
                 }
 
                 max_macrotrigger = 0;
@@ -788,15 +788,15 @@ errr process_pref_file_command(char *buf)
             if (2 + num != tok) return 1;
 
             /* Get a template string */
-            macro_template = string_make(zz[0]);
+            macro_template = z_string_make(zz[0]);
 
             /* Get flag characters of modifier keys */
-            macro_modifier_chr = string_make(zz[1]);
+            macro_modifier_chr = z_string_make(zz[1]);
 
             /* Get corresponding modifier names */
             for (i = 0; i < num; i++)
             {
-                macro_modifier_name[i] = string_make(zz[2+i]);
+                macro_modifier_name[i] = z_string_make(zz[2+i]);
             }
         }
 
@@ -825,19 +825,19 @@ errr process_pref_file_command(char *buf)
             *t = '\0';
 
             /* Get a trigger name */
-            macro_trigger_name[m] = string_make(buf);
+            macro_trigger_name[m] = z_string_make(buf);
 
             /* Get the corresponding key code */
-            macro_trigger_keycode[0][m] = string_make(zz[1]);
+            macro_trigger_keycode[0][m] = z_string_make(zz[1]);
 
             if (tok == 3)
             {
                 /* Key code of a combination of it with the shift key */
-                macro_trigger_keycode[1][m] = string_make(zz[2]);
+                macro_trigger_keycode[1][m] = z_string_make(zz[2]);
             }
             else
             {
-                macro_trigger_keycode[1][m] = string_make(zz[1]);
+                macro_trigger_keycode[1][m] = z_string_make(zz[1]);
             }
         }
 
@@ -5878,7 +5878,7 @@ void do_cmd_suicide(void)
     }
 
     /* Initialize "last message" buffer */
-    if (p_ptr->last_message) string_free(p_ptr->last_message);
+    if (p_ptr->last_message) z_string_free(p_ptr->last_message);
     p_ptr->last_message = NULL;
 
     /* Hack -- Note *winning* message */
@@ -5894,7 +5894,7 @@ void do_cmd_suicide(void)
 
         if (buf[0])
         {
-            p_ptr->last_message = string_make(buf);
+            p_ptr->last_message = z_string_make(buf);
             msg_print(p_ptr->last_message);
         }
     }

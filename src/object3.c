@@ -1365,6 +1365,6 @@ s32b new_object_cost(object_type *o_ptr)
     else if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr);
     else if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr);
     else if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr);
-    else if (object_is_device) return device_value(o_ptr);
+    else if (object_is_device(o_ptr)) return device_value(o_ptr);
     return 0;
 }

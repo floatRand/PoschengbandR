@@ -28,7 +28,6 @@
 #include "z-rand.h"
 #include "z-term.h"
 
-
 /*
  * Include the "Angband" configuration header
  */
