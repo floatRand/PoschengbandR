@@ -1,18 +1,22 @@
 <style:title>Online Help Commands<style:normal>
 
-You can move cursor using <color:y>the arrow keys<color:*>.        <color:B>Movement commands<color:*>
-Press the indicated letter <style:link>[a-z]<style:normal> to        <color:y>   'q'    <color:*>(Leave the help system)
-activate a link.                           <color:y>   ESC    <color:*>(Return to the prev file)
+<style:heading>Movement Commands<style:normal>
+<color:keypress>   'q'    <color:*>(Leave the help system)
+<color:keypress>   ESC    <color:*>(Return to the prev file)
 
-For example, press <color:y>the j key<color:*> when you see  <color:y>   Home   <color:*>(Go to the top)
-"(see monster.txt#Pets [j])" etc.          <color:y>  PageUp  <color:*>(Go up 1 page)
-Pressing <color:y>the ESC key<color:*> takes you back to     <color:y> Up Arrow <color:*>(Go up 1 line)
-the previous location.                     <color:y>Down Arrow<color:*>(Go down 1 line)
-                                           <color:y> PageDown <color:*>(Go down 1 page)
-                                           <color:y>   End    <color:*>(Go to the bottom)
+<color:keypress>   Home   <color:*>(Go to the top)
+<color:keypress>  PageUp  <color:*>(Go up 1 page)
+<color:keypress> Up Arrow <color:*>(Go up 1 line)
+<color:keypress>Down Arrow<color:*>(Go down 1 line)
+<color:keypress> PageDown <color:*>(Go down 1 page)
+<color:keypress>   End    <color:*>(Go to the bottom)
 
-                                           <color:y>   '#'    <color:*>(Jump to a specific line)
-      <color:B>Other commands<color:*>                       <color:y>   '%'    <color:*>(Jump to a specific file)
-<color:y>'/'<color:*> or <color:y>'^S'<color:*> (Search for a string)
-    <color:y>'='<color:*>     (Highlight lines containing a string)
-    <color:y>'|'<color:*>     (Save current document to a file)
+<color:keypress>    >     <color:*>(Go to next section)
+<color:keypress>    <     <color:*>(Go to previous section)
+
+<style:heading>Other Commands<style:normal>
+<color:keypress>   '/'    <color:*>(Search for a string)
+<color:keypress>   '|'    <color:*>(Copy to file)
+
+<style:heading>Links<style:normal>
+Press the indicated letter <color:link>[a-z]<color:*> to activate a link. For example, press the <color:keypress>a<color:*> key when you see "(see <link:monster.txt#Pets>)" etc.

@@ -64,22 +64,29 @@ struct doc_region_s
 };
 typedef struct doc_region_s doc_region_t, *doc_region_ptr;
 
+doc_region_t doc_region_invalid(void);
 bool doc_region_is_valid(doc_region_ptr region);
 bool doc_region_contains(doc_region_ptr region, doc_pos_t pos);
 
 struct doc_char_s
 {
     char c;
-    byte a;
+    byte a; /* attribute */
 };
 typedef struct doc_char_s doc_char_t, *doc_char_ptr;
 
 struct doc_style_s
 {
-    byte a;
-    int  indent;
+    byte color;
+    int  left;
+    int  right;
+    int  options;
 };
 typedef struct doc_style_s doc_style_t, *doc_style_ptr;
+enum doc_style_options_e
+{
+    DOC_STYLE_NO_WORDWRAP = 0x0001,
+};
 
 struct doc_bookmark_s
 {
@@ -98,6 +105,7 @@ typedef struct doc_link_s doc_link_t, *doc_link_ptr;
 struct doc_s
 {
     doc_pos_t      cursor;
+    doc_region_t   selection;
     int            width;
     doc_style_t    current_style;
     byte           current_color;
@@ -124,6 +132,8 @@ doc_pos_t     doc_cursor(doc_ptr doc);
 doc_pos_t     doc_next_bookmark(doc_ptr doc, doc_pos_t pos);
 doc_pos_t     doc_prev_bookmark(doc_ptr doc, doc_pos_t pos);
 doc_pos_t     doc_find_bookmark(doc_ptr doc, cptr name);
+
+doc_pos_t     doc_find_string(doc_ptr doc, cptr text, doc_pos_t start);
 
 doc_style_ptr doc_style(doc_ptr doc, cptr name);
 

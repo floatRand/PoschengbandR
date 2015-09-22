@@ -38,13 +38,24 @@ int doc_pos_compare(doc_pos_t left, doc_pos_t right)
     return 0;
 }
 
+doc_region_t doc_region_invalid(void)
+{
+    doc_region_t result;
+    result.start = doc_pos_invalid();
+    result.stop = doc_pos_invalid();
+    return result;
+}
 
 bool doc_region_is_valid(doc_region_ptr region)
 {
     if (region)
     {
-        if (doc_pos_compare(region->start, region->stop) <= 0)
+        if ( doc_pos_is_valid(region->start)
+          && doc_pos_is_valid(region->stop)
+          && doc_pos_compare(region->start, region->stop) <= 0 )
+        {
             return TRUE;
+        }
     }
     return FALSE;
 }
@@ -84,22 +95,54 @@ static void _doc_link_free(vptr pv)
 doc_ptr doc_alloc(int width)
 {
     doc_ptr res = malloc(sizeof(doc_t));
+    doc_style_ptr style;
 
     res->cursor.x = 0;
     res->cursor.y = 0;
+    res->selection = doc_region_invalid();
     res->width = width;
     res->pages = vec_alloc(free);
     res->styles = str_map_alloc(free);
     res->bookmarks = vec_alloc(_doc_bookmark_free);
     res->links = int_map_alloc(_doc_link_free);
 
-    /* Default Styles */
-    res->current_style = *doc_style(res, "normal");
-    res->current_color = res->current_style.a;
-    doc_style(res, "title")->a = TERM_L_BLUE;
-    doc_style(res, "heading")->a = TERM_RED;
-    doc_style(res, "key_press")->a = TERM_YELLOW;
-    doc_style(res, "link")->a = TERM_L_GREEN;
+    /* Default Styles:
+       We currently lack a way to define styles inside a document.
+       Perhaps these should be globally available as well, an initialized
+       from a preference file for the entire document system. */
+    style = doc_style(res, "normal");
+    style->right = 72;
+    res->current_style = *style;
+    res->current_color = style->color;
+
+    style = doc_style(res, "note");
+    style->color = TERM_L_GREEN;
+    style->left = 4;
+    style->right = 60;
+
+    style = doc_style(res, "title");
+    style->color = TERM_L_BLUE;
+
+    style = doc_style(res, "heading");
+    style->color = TERM_RED;
+
+    style = doc_style(res, "keyword");
+    style->right = 72;
+    style->color = TERM_L_RED;
+
+    style = doc_style(res, "keypress");
+    style->right = 72;
+    style->color = TERM_YELLOW;
+
+    style = doc_style(res, "link");
+    style->right = 72;
+    style->color = TERM_L_GREEN;
+
+    style = doc_style(res, "screenshot");
+    style->options |= DOC_STYLE_NO_WORDWRAP;
+
+    style = doc_style(res, "selection");
+    style->color = TERM_YELLOW;
 
     return res;
 }
@@ -169,14 +212,61 @@ doc_pos_t doc_find_bookmark(doc_ptr doc, cptr name)
     return doc_pos_invalid();
 }
 
+doc_pos_t doc_find_string(doc_ptr doc, cptr text, doc_pos_t start)
+{
+    doc_pos_t pos = start;
+    int       cb = strlen(text);
+
+    for (; pos.y <= doc->cursor.y; pos.y++, pos.x = 0)
+    {
+        int          cx = doc->width;
+        doc_char_ptr cell = doc_char(doc, pos);
+
+        if (pos.y == doc->cursor.y)
+            cx = doc->cursor.x;
+
+        for (; pos.x < cx;)
+        {
+            int i;
+
+            for (i = 0; i < cb; i++)
+            {
+                doc_char_ptr cell2;
+                char         c;
+                if (pos.x + i == cx) break;
+                cell2 = cell + i;
+                c = cell2->c;
+                if (!c) c = ' '; /* TODO: Start drawing spaces! */
+                if (c != text[i]) break;
+            }
+
+            if (i == cb)
+            {
+                doc->selection.start = pos;
+                doc->selection.stop.x = pos.x + i;
+                doc->selection.stop.y = pos.y;
+                return pos;
+            }
+
+            cell++;
+            pos.x++;
+        }
+   }
+
+    doc->selection = doc_region_invalid();
+    return doc_pos_invalid();
+}
+
 doc_style_ptr doc_style(doc_ptr doc, cptr name)
 {
     doc_style_ptr result = str_map_find(doc->styles, name);
     if (!result)
     {
         result = malloc(sizeof(doc_style_t));
-        result->a = TERM_WHITE;
-        result->indent = 0;
+        result->color = TERM_WHITE;
+        result->left = 0;
+        result->right = doc->width;
+        result->options = 0;
         str_map_add(doc->styles, name, result);
     }
     return result;
@@ -185,7 +275,7 @@ doc_style_ptr doc_style(doc_ptr doc, cptr name)
 doc_pos_t doc_newline(doc_ptr doc)
 {
     doc->cursor.y++;
-    doc->cursor.x = 0 + doc->current_style.indent;
+    doc->cursor.x = doc->current_style.left;
     return doc->cursor;
 }
 
@@ -244,16 +334,16 @@ cptr doc_parse_tag(cptr pos, doc_tag_ptr tag)
         assert(*seek == '>');
         seek++;
 
-        if (result.type == DOC_TAG_COLOR)
+        if (!result.arg_size)
+            return pos;
+        else if (result.type == DOC_TAG_COLOR)
         {
-            if ( result.arg_size != 1
-              || !strchr("dwsorgbuDWvyRGBU*", result.arg[0]) )
+            if ( result.arg_size == 1
+              && !strchr("dwsorgbuDWvyRGBU*", result.arg[0]) )
             {
                 return pos;
             }
         }
-        else if (!result.arg_size)
-            return pos;
 
         *tag = result;
         return seek;
@@ -350,7 +440,7 @@ doc_pos_t doc_measure(doc_ptr doc, cptr text)
         if (token.type == DOC_TOKEN_NEWLINE)
         {
             cursor.y++;
-            cursor.x = 0 + style.indent;
+            cursor.x = style.left;
             continue;
         }
 
@@ -361,10 +451,10 @@ doc_pos_t doc_measure(doc_ptr doc, cptr text)
         }
 
         assert(token.type == DOC_TOKEN_WORD);
-        if (cursor.x + token.size >= doc->width)
+        if (cursor.x + token.size >= style.right && !(style.options & DOC_STYLE_NO_WORDWRAP))
         {
             cursor.y++;
-            cursor.x = 0 + style.indent;
+            cursor.x = style.left;
         }
         cursor.x += token.size;
     }
@@ -375,8 +465,8 @@ static void _doc_process_var(doc_ptr doc, cptr name)
 {
     if (strcmp(name, "version") == 0)
     {
-        string_ptr s = string_alloc();
-        string_format(s, "%d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
+        string_ptr s = string_alloc(NULL);
+        string_printf(s, "%d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
         doc_insert(doc, string_buffer(s));
         string_free(s);
     }
@@ -387,39 +477,49 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
     if (tag->type == DOC_TAG_COLOR)
     {
         assert(tag->arg);
-        assert(tag->arg_size == 1);
-        switch (tag->arg[0])
+        if (tag->arg_size == 1)
         {
-        case '*': doc->current_color = doc->current_style.a; break;
-        case 'd': doc->current_color = TERM_DARK; break;
-        case 'w': doc->current_color = TERM_WHITE; break;
-        case 's': doc->current_color = TERM_SLATE; break;
-        case 'o': doc->current_color = TERM_ORANGE; break;
-        case 'r': doc->current_color = TERM_RED; break;
-        case 'g': doc->current_color = TERM_GREEN; break;
-        case 'b': doc->current_color = TERM_BLUE; break;
-        case 'u': doc->current_color = TERM_UMBER; break;
-        case 'D': doc->current_color = TERM_L_DARK; break;
-        case 'W': doc->current_color = TERM_L_WHITE; break;
-        case 'v': doc->current_color = TERM_VIOLET; break;
-        case 'y': doc->current_color = TERM_YELLOW; break;
-        case 'R': doc->current_color = TERM_L_RED; break;
-        case 'G': doc->current_color = TERM_L_GREEN; break;
-        case 'B': doc->current_color = TERM_L_BLUE; break;
-        case 'U': doc->current_color = TERM_L_UMBER; break;
+            switch (tag->arg[0])
+            {
+            case '*': doc->current_color = doc->current_style.color; break;
+            case 'd': doc->current_color = TERM_DARK; break;
+            case 'w': doc->current_color = TERM_WHITE; break;
+            case 's': doc->current_color = TERM_SLATE; break;
+            case 'o': doc->current_color = TERM_ORANGE; break;
+            case 'r': doc->current_color = TERM_RED; break;
+            case 'g': doc->current_color = TERM_GREEN; break;
+            case 'b': doc->current_color = TERM_BLUE; break;
+            case 'u': doc->current_color = TERM_UMBER; break;
+            case 'D': doc->current_color = TERM_L_DARK; break;
+            case 'W': doc->current_color = TERM_L_WHITE; break;
+            case 'v': doc->current_color = TERM_VIOLET; break;
+            case 'y': doc->current_color = TERM_YELLOW; break;
+            case 'R': doc->current_color = TERM_L_RED; break;
+            case 'G': doc->current_color = TERM_L_GREEN; break;
+            case 'B': doc->current_color = TERM_L_BLUE; break;
+            case 'U': doc->current_color = TERM_L_UMBER; break;
+            }
+        }
+        else
+        {
+            string_ptr arg = string_nalloc(tag->arg, tag->arg_size);
+            doc_style_ptr style = str_map_find(doc->styles, string_buffer(arg));
+            if (style)
+                doc->current_color = style->color;
+            string_free(arg);
         }
     }
     else
     {
-        string_ptr arg = string_alloc();
-
-        string_nappend(arg, tag->arg, tag->arg_size);
+        string_ptr arg = string_nalloc(tag->arg, tag->arg_size);
 
         switch (tag->type)
         {
         case DOC_TAG_STYLE:
             doc->current_style = *doc_style(doc, string_buffer(arg));
-            doc->current_color = doc->current_style.a;
+            doc->current_color = doc->current_style.color;
+            if (doc->cursor.x < doc->current_style.left)
+                doc->cursor.x = doc->current_style.left;
             break;
         case DOC_TAG_VAR:
             _doc_process_var(doc, string_buffer(arg));
@@ -436,15 +536,16 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         case DOC_TAG_LINK:
         {
             doc_link_ptr link = malloc(sizeof(doc_link_t));
-            cptr         pos = strchr(string_buffer(arg), '#');
+            int          split = string_chr(arg, '#');
             int          ch = 'a' + int_map_count(doc->links);
 
-            if (pos)
+            if (split >= 0)
             {
-                link->file = string_alloc();
-                string_nappend(link->file, tag->arg, pos - tag->arg);
-                link->topic = string_alloc();
-                string_nappend(link->topic, pos + 1, tag->arg_size - 1 - (pos - tag->arg));
+                substring_t left = string_left(arg, split);
+                substring_t right = string_right(arg, string_length(arg) - split - 1);
+
+                link->file = string_ssalloc(&left);
+                link->topic = string_ssalloc(&right);
             }
             else
             {
@@ -454,8 +555,8 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             }
             int_map_add(doc->links, ch, link);
             {
-                string_ptr s = string_alloc();
-                string_format(s, "<style:link>[%c]<style:normal>", ch);
+                string_ptr s = string_alloc(NULL);
+                string_printf(s, "<style:link>[%c]<style:normal>", ch);
                 doc_insert(doc, string_buffer(s));
                 string_free(s);
             }
@@ -502,13 +603,13 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
         assert(token.type == DOC_TOKEN_WORD);
         assert(token.size > 0);
 
-        if (doc->cursor.x + token.size >= doc->width)
+        if ( doc->cursor.x + token.size >= doc->current_style.right
+         && !(doc->current_style.options & DOC_STYLE_NO_WORDWRAP) )
         {
-            /* TODO: This should be a style check. Allow the user
-               to turn off wordwrapping */
             doc_newline(doc);
         }
 
+        if (doc->cursor.x < doc->width)
         {
             doc_char_ptr cell = doc_char(doc, doc->cursor);
             assert(cell);
@@ -521,12 +622,8 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
                 doc->cursor.x++;
                 if (doc->cursor.x >= doc->width)
                 {
-                    /* Wrap inside a word ... this is unexpected, but
-                       we may be drawing a screen dump or something where
-                       the words aren't really words after all.
-                       TODO: Check the style to see if we should wrap here.
-                       It might be best to just forget the rest of this word.
-                       TODO: Fix doc_measure() for consistency.*/
+                    if (doc->current_style.options & DOC_STYLE_NO_WORDWRAP)
+                        break;
                     doc_newline(doc);
                     cell = doc_char(doc, doc->cursor);
                 }
@@ -559,7 +656,7 @@ doc_char_ptr doc_char(doc_ptr doc, doc_pos_t pos)
 
 doc_pos_t doc_read_file(doc_ptr doc, FILE *fp)
 {
-    string_ptr s = string_alloc();
+    string_ptr s = string_alloc(NULL);
 
     while (!feof(fp))
     {
@@ -596,10 +693,18 @@ void doc_write_file(doc_ptr doc, FILE *fp)
    }
 }
 
+#define _INVALID_COLOR 255
 void doc_copy_to_term(doc_ptr doc, doc_pos_t term_pos, int row, int ct)
 {
     doc_pos_t pos;
     int       i, j;
+    byte      selection_color = _INVALID_COLOR;
+
+    if (doc_region_is_valid(&doc->selection))
+    {
+        doc_style_ptr style = str_map_find(doc->styles, "selection");
+        selection_color = style->color;
+    }
 
     for (i = 0; i < ct; i++)
     {
@@ -616,8 +721,16 @@ void doc_copy_to_term(doc_ptr doc, doc_pos_t term_pos, int row, int ct)
 
             for (j = 0; j < cx; j++)
             {
+                byte color = cell->a;
+
+                if ( selection_color != _INVALID_COLOR
+                  && doc_region_contains(&doc->selection, pos) )
+                {
+                    color = selection_color;
+                }
+
                 if (cell->c)
-                    Term_putch(term_pos.x + j, term_pos.y + i, cell->a, cell->c);
+                    Term_putch(term_pos.x + j, term_pos.y + i, color, cell->c);
 
                 cell++;
                 pos.x++;
@@ -638,6 +751,10 @@ int doc_display_help(cptr file_name, cptr topic)
     int     cx, cy;
     int     top = 0, page_size;
     bool    done = FALSE;
+    char    finder_str[81];
+    char    back_str[81];
+
+    strcpy(finder_str, "");
 
     sprintf(caption, "Help file '%s'", file_name);
     path_build(path, sizeof(path), ANGBAND_DIR_HELP, file_name);
@@ -667,11 +784,8 @@ int doc_display_help(cptr file_name, cptr topic)
         int cmd;
 
         prt(format("[%s, Line %d/%d]", caption, top, doc->cursor.y), 0, 0);
-        if (doc->cursor.y < cy)
-            prt("[Press ESC to exit.]", cy - 1, 0);
-        else
-            prt("[Press Return, Space, -, =, /, |, or ESC to exit.]", cy - 1, 0);
         doc_copy_to_term(doc, doc_pos_create(0, 2), top, cy - 4);
+        prt("[Press ESC to exit. Press ? for help]", cy - 1, 0);
 
         cmd = inkey_special(TRUE);
 
@@ -710,7 +824,7 @@ int doc_display_help(cptr file_name, cptr topic)
             break;
         case SKEY_BOTTOM:
         case '1':
-            top = doc->cursor.y - page_size;
+            top = MAX(0, doc->cursor.y - page_size);
             break;
         case SKEY_PGUP:
         case '9':
@@ -721,7 +835,7 @@ int doc_display_help(cptr file_name, cptr topic)
         case '3':
             top += page_size;
             if (top > doc->cursor.y - page_size)
-                top = doc->cursor.y - page_size;
+                top = MAX(0, doc->cursor.y - page_size);
             break;
         case SKEY_UP:
         case '8':
@@ -732,7 +846,71 @@ int doc_display_help(cptr file_name, cptr topic)
         case '2':
             top++;
             if (top > doc->cursor.y - page_size)
-                top = doc->cursor.y - page_size;
+                top = MAX(0, doc->cursor.y - page_size);
+            break;
+        case '>':
+        {
+            doc_pos_t pos = doc_next_bookmark(doc, doc_pos_create(0, top));
+            if (doc_pos_is_valid(pos))
+            {
+                top = pos.y;
+                if (top > doc->cursor.y - page_size)
+                    top = MAX(0, doc->cursor.y - page_size);
+            }
+            break;
+        }
+        case '<':
+        {
+            doc_pos_t pos = doc_prev_bookmark(doc, doc_pos_create(0, top));
+            if (doc_pos_is_valid(pos))
+                top = pos.y;
+            else
+                top = 0;
+            break;
+        }
+        case '|':
+        {
+            FILE *fp2;
+            char buf[1024];
+            char name[82];
+
+            strcpy(name, "");
+
+            if (!get_string("File name: ", name, 80)) break;
+            path_build(buf, sizeof(buf), ANGBAND_DIR_USER, name);
+            fp2 = my_fopen(buf, "w");
+            if (!fp2)
+            {
+                msg_format("Failed to open file: %s", buf);
+                break;
+            }
+            doc_write_file(doc, fp2);
+            my_fclose(fp2);
+            msg_format("Created file: %s", buf);
+            msg_print(NULL);
+            break;
+        }
+        case '/':
+        case KTRL('s'):
+            prt("Find: ", cy - 1, 0);
+            strcpy(back_str, finder_str);
+            if (askfor(finder_str, 80))
+            {
+                if (finder_str[0])
+                {
+                    doc_pos_t pos = doc->selection.stop;
+                    if (!doc_pos_is_valid(pos))
+                        pos = doc_pos_create(0, top);
+                    pos = doc_find_string(doc, finder_str, pos);
+                    if (doc_pos_is_valid(pos))
+                    {
+                        top = pos.y;
+                        if (top > doc->cursor.y - page_size)
+                            top = MAX(0, doc->cursor.y - page_size);
+                    }
+                }
+            }
+            else strcpy(finder_str, back_str);
             break;
         }
     }

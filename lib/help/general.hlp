@@ -1,18 +1,11 @@
-An Introduction to PosChengband and general information.
+<style:title>An Introduction and General Information.<style:normal>
 
 Please choose one of the following online help files:
 
-    (a) General Information
-    (b) First Place to Go
-    (c) Winning the Game
-    (d) Upon Death and Dying
-    (e) The Newbie Guide
+    <link:general.txt> General Information
+    <link:general.txt#First> First Place to Go
+    <link:general.txt#Winning> Winning the Game
+    <link:general.txt#UponDeath> Upon Death and Dying
+    <link:tang.hlp> The Newbie Guide
 
-    (?) Help System Commands
-
-
-***** [a] general.txt
-***** [b] general.txt#First
-***** [c] general.txt#Winning
-***** [d] general.txt#UponDeath
-***** [e] tang.hlp
+    <color:y>(?) Help System Commands<color:*>

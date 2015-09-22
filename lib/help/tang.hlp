@@ -1,25 +1,16 @@
-The Newbie Guide: A Tutorial and Survival Guide
+<style:title>The Newbie Guide: A Tutorial and Survival Guide<style:normal>
 
 Please choose one of the following sections:
 
-    (a) Overview
-    (b) Creating a Character
-    (c) Equipping for Danger
-    (d) My First Trip Down
-    (e) On Weapons and Multiple Blows
-    (f) On Armor and Resistance
-    (g) On Important Magical Items
-    (h) On Weapons, Armor and Slays
-    (i) On Dungeon Exploration
+    <link:tang.txt> Overview
+    <link:tang.txt#CreatingACharacter> Creating a Character
+    <link:tang.txt#EquippingForDanger> Equipping for Danger
+    <link:tang.txt#MyFirstTripDown> My First Trip Down
+    <link:tang.txt#MultipleBlows> On Weapons and Multiple Blows
+    <link:tang.txt#OnArmorAndResistance> On Armor and Resistance
+    <link:tang.txt#OnMagicalItems> On Important Magical Items
+    <link:tang.txt#OnWeapons> On Weapons, Armor and Slays
+    <link:tang.txt#OnExploration> On Dungeon Exploration
 
-    (?) Help System Commands
+    <color:y>(?) Help System Commands<color:*>
 
-***** [a] tang.txt
-***** [b] tang.txt#CreatingACharacter
-***** [c] tang.txt#EquippingForDanger
-***** [d] tang.txt#MyFirstTripDown
-***** [e] tang.txt#MultipleBlows
-***** [f] tang.txt#OnArmorAndResistance
-***** [g] tang.txt#OnMagicalItems
-***** [h] tang.txt#OnWeapons
-***** [i] tang.txt#OnExploration
