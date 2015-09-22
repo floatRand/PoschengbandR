@@ -33,10 +33,9 @@ int main(int argc, char *argv[])
 /*
 > gcc -O2 c-string.c c-vec.c str-map.c int-map.c z-doc.c z-doc-test.c
 > time cat ../lib/help/* | ./a.out --width 80 > foo.txt; ls -lah foo.txt
-
-real    0m0.071s
-user    0m0.075s
-sys     0m0.005s
+real    0m0.057s (35ms reading/parsing, 22ms output)
+user    0m0.066s
+sys     0m0.000s
 -rw-r--r-- 1 chris chris 1.5M Sep 21 15:55 foo.txt
 */
 

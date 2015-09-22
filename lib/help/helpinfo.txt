@@ -1,23 +1,18 @@
-[[[[G|=== Online Help Commands ===
+<style:title>Online Help Commands<style:normal>
 
-You can move cursor using [[[[y|the arrow keys|.        [[[[B|Movement commands|
-Press the indicated letter [a-z] to        [[[[y|   'q'    |(Leave the help system)
-activate a link.                           [[[[y|   ESC    |(Return to the prev file)
+You can move cursor using <color:y>the arrow keys<color:*>.        <color:B>Movement commands<color:*>
+Press the indicated letter <style:link>[a-z]<style:normal> to        <color:y>   'q'    <color:*>(Leave the help system)
+activate a link.                           <color:y>   ESC    <color:*>(Return to the prev file)
 
-For example, press [[[[y|the j key| when you see  [[[[y|   Home   |(Go to the top)
-"(see monster.txt#Pets [j])" etc.          [[[[y|  PageUp  |(Go up 1 page)
-Pressing [[[[y|the ESC key| takes you back to     [[[[y| Up Arrow |(Go up 1 line)
-the previous location.                     [[[[y|Down Arrow|(Go down 1 line)
-                                           [[[[y| PageDown |(Go down 1 page)
-                                           [[[[y|   End    |(Go to the bottom)
+For example, press <color:y>the j key<color:*> when you see  <color:y>   Home   <color:*>(Go to the top)
+"(see monster.txt#Pets [j])" etc.          <color:y>  PageUp  <color:*>(Go up 1 page)
+Pressing <color:y>the ESC key<color:*> takes you back to     <color:y> Up Arrow <color:*>(Go up 1 line)
+the previous location.                     <color:y>Down Arrow<color:*>(Go down 1 line)
+                                           <color:y> PageDown <color:*>(Go down 1 page)
+                                           <color:y>   End    <color:*>(Go to the bottom)
 
-                                           [[[[y|   '#'    |(Jump to a specific line)
-      [[[[B|Other commands|                       [[[[y|   '%'    |(Jump to a specific file)
-[[[[y|'/'| or [[[[y|'^S'| (Search for a string)                
-    [[[[y|'='|     (Highlight lines containing a string)
-    [[[[y]'|']     (Save current document to a file)
-
---
-Updated    : Hengband 1.7.0
-
-***** [j] monster.txt#Pets
+                                           <color:y>   '#'    <color:*>(Jump to a specific line)
+      <color:B>Other commands<color:*>                       <color:y>   '%'    <color:*>(Jump to a specific file)
+<color:y>'/'<color:*> or <color:y>'^S'<color:*> (Search for a string)
+    <color:y>'='<color:*>     (Highlight lines containing a string)
+    <color:y>'|'<color:*>     (Save current document to a file)

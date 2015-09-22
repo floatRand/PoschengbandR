@@ -4546,7 +4546,6 @@ void do_cmd_save_screen_doc(void)
     for (y = 0; y < hgt; y++)
     {
         int  current_a = -1;
-        /*fprintf(fff, "  ");*/
         for (x = 0; x < wid - 1; x++)
         {
             (void)(Term_what(x, y, &a, &c));
@@ -4567,9 +4566,8 @@ void do_cmd_save_screen_doc(void)
             }
             fprintf(fff, "%c", c);
         }
-        fprintf(fff, "\n");
+        fprintf(fff, "<color:*>\n");
     }
-
     my_fclose(fff);
 }
 

@@ -12,6 +12,7 @@
 
 #include "angband.h"
 #include "equip.h"
+#include "z-doc.h"
 
 #ifdef SIGSTOP
 
@@ -5641,9 +5642,9 @@ void do_cmd_help(void)
     /* Save screen */
     screen_save();
 
-    /* Peruse the main help file */
-    (void)show_file(TRUE, "help.hlp", NULL, 0, 0);
-
+    /* Peruse the main help file
+    (void)show_file(TRUE, "help.hlp", NULL, 0, 0);*/
+    doc_display_help("help.hlp", NULL);
 
     /* Load screen */
     screen_load();

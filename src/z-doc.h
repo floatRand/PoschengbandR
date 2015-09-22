@@ -6,6 +6,7 @@
 #include "str-map.h"
 #include "int-map.h"
 #include "c-vec.h"
+#include "c-string.h"
 
 /* Utilities for Formatted Text Processing
    We support the ability to render rich text to a "virtual terminal",
@@ -16,20 +17,32 @@
    named bookmarks (called topics).
 
    The virtual terminal is a fixed width beast, but can grow its height
-   dynamically. This is the way a normal "document" behaves: It grows as
-   you type in new content.
+   dynamically. This is the way a normal "document" behaves: It grows downward
+   as you type in new content.
 
    We support tags to control output and provide help features:
-     <color:x> where x is one of the color codes:dwsorgbuDWvyRGBU
+     <color:x> where x is one of the color codes:dwsorgbuDWvyRGBU*
      <style:name>
      <topic:name>
      <link:file#topic>
-     <$:var> where var is a valid variable reference (TODO: e.g. <$:version>)
+     <$:var> where var is a valid variable reference (e.g. <$:version> for news.txt)
 */
 
 /* The Datatypes
    Key concepts are a position (for the cursor), a region (for transfers),
-   a character (for contents and color), and a buffer chain.
+   a character (for contents and color), a style (for named formatting) and,
+   of course, a document.
+
+   Sample Usage:
+    void test(int width)
+    {
+        doc_ptr doc = doc_alloc(width);
+
+        doc_read_file(doc, stdin);
+        doc_write_file(doc, stdout);
+
+        doc_free(doc);
+    }
 */
 
 struct doc_pos_s
@@ -39,9 +52,10 @@ struct doc_pos_s
 };
 typedef struct doc_pos_s doc_pos_t;
 
-bool doc_pos_is_valid(doc_pos_t pos);
-int  doc_pos_compare(doc_pos_t left, doc_pos_t right);
-
+doc_pos_t doc_pos_create(int x, int y);
+doc_pos_t doc_pos_invalid(void);
+bool      doc_pos_is_valid(doc_pos_t pos);
+int       doc_pos_compare(doc_pos_t left, doc_pos_t right);
 
 struct doc_region_s
 {/* [start, stop) */
@@ -67,16 +81,30 @@ struct doc_style_s
 };
 typedef struct doc_style_s doc_style_t, *doc_style_ptr;
 
+struct doc_bookmark_s
+{
+    string_ptr name;
+    doc_pos_t  pos;
+};
+typedef struct doc_bookmark_s doc_bookmark_t, *doc_bookmark_ptr;
+
+struct doc_link_s
+{
+    string_ptr file;
+    string_ptr topic;
+};
+typedef struct doc_link_s doc_link_t, *doc_link_ptr;
 
 struct doc_s
 {
     doc_pos_t      cursor;
     int            width;
     doc_style_t    current_style;
+    byte           current_color;
     vec_ptr        pages;
-    str_map_ptr    styles; /* name -> style */
-    str_map_ptr    topics; /* name -> region */
-    int_map_ptr    links;  /* char -> file#topic */
+    str_map_ptr    styles;
+    vec_ptr        bookmarks;
+    int_map_ptr    links;
 };
 typedef struct doc_s doc_t, *doc_ptr;
 
@@ -88,25 +116,26 @@ typedef struct doc_s doc_t, *doc_ptr;
    on the current scroll position.
 */
 
-doc_ptr      doc_alloc(int width);
-void         doc_free(doc_ptr doc);
+doc_ptr       doc_alloc(int width);
+void          doc_free(doc_ptr doc);
 
-doc_pos_t    doc_cursor(doc_ptr doc);
+doc_pos_t     doc_cursor(doc_ptr doc);
 
-doc_pos_t    doc_current_topic(doc_ptr doc, doc_pos_t pos);
-doc_pos_t    doc_next_topic(doc_ptr doc, doc_pos_t pos);
-doc_pos_t    doc_prev_topic(doc_ptr doc, doc_pos_t pos);
-doc_pos_t    doc_find_topic(doc_ptr doc, cptr name);
+doc_pos_t     doc_next_bookmark(doc_ptr doc, doc_pos_t pos);
+doc_pos_t     doc_prev_bookmark(doc_ptr doc, doc_pos_t pos);
+doc_pos_t     doc_find_bookmark(doc_ptr doc, cptr name);
 
-doc_pos_t    doc_insert(doc_ptr doc, cptr text);
-doc_pos_t    doc_newline(doc_ptr doc);
-doc_pos_t    doc_measure(doc_ptr doc, cptr text);
+doc_style_ptr doc_style(doc_ptr doc, cptr name);
 
-doc_pos_t    doc_read_file(doc_ptr doc, FILE *fp);
-void         doc_write_file(doc_ptr doc, FILE *fp);
+doc_pos_t     doc_insert(doc_ptr doc, cptr text);
+doc_pos_t     doc_newline(doc_ptr doc);
+doc_pos_t     doc_measure(doc_ptr doc, cptr text);
 
-doc_char_ptr doc_char(doc_ptr doc, doc_pos_t pos);
-void         doc_copy_to_term(doc_ptr doc, doc_pos_t term_pos, int row, int ct);
+doc_pos_t     doc_read_file(doc_ptr doc, FILE *fp);
+void          doc_write_file(doc_ptr doc, FILE *fp);
+
+doc_char_ptr  doc_char(doc_ptr doc, doc_pos_t pos);
+void          doc_copy_to_term(doc_ptr doc, doc_pos_t term_pos, int row, int ct);
 
 /* Parsing */
 enum doc_tag_e
@@ -116,6 +145,7 @@ enum doc_tag_e
     DOC_TAG_STYLE,
     DOC_TAG_TOPIC,
     DOC_TAG_LINK,
+    DOC_TAG_VAR,
 };
 struct doc_tag_s
 {
@@ -144,5 +174,8 @@ typedef struct doc_token_s doc_token_t, *doc_token_ptr;
 
 cptr doc_parse_tag(cptr pos, doc_tag_ptr tag);
 cptr doc_lex(cptr pos, doc_token_ptr token);
+
+
+int doc_display_help(cptr file_name, cptr topic);
 
 #endif

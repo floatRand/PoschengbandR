@@ -13,6 +13,7 @@
 #include "angband.h"
 
 #include "init.h"
+#include "z-doc.h"
 
 #ifndef MACINTOSH
 //#ifdef CHECK_MODIFICATION_TIME
@@ -1658,6 +1659,21 @@ void display_news(void)
     /* Open the News file */
     fp = my_fopen(buf, "r");
 
+#if 1
+    /* Dump */
+    if (fp)
+    {
+        int w, h;
+        doc_ptr doc;
+
+        Term_get_size(&w, &h);
+        doc = doc_alloc(w);
+        doc_read_file(doc, fp);
+        doc_copy_to_term(doc, doc_pos_create(0, 0), 0, h);
+        doc_free(doc);
+        my_fclose(fp);
+    }
+#else
     /* Dump */
     if (fp)
     {
@@ -1681,7 +1697,7 @@ void display_news(void)
         /* Close */
         my_fclose(fp);
     }
-
+#endif
     /* Flush it */
     Term_fresh();
 

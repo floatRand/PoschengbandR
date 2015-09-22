@@ -34,9 +34,12 @@ string_ptr string_alloc(void)
 
 void string_free(string_ptr str)
 {
-    if (str->buf)
-        free(str->buf);
-    free(str);
+    if (str)
+    {
+        if (str->buf)
+            free(str->buf);
+        free(str);
+    }
 }
 
 void string_append(string_ptr str, const char *val)
@@ -71,14 +74,20 @@ void string_append_char(string_ptr str, char ch)
 
 void string_fgets(string_ptr str, FILE* fp)
 {
-    string_set(str, "");
+    str->len = 0;
+    if (!str->buf)
+        string_grow(str, 100);
+
     for (;;)
     {
         int c = fgetc(fp);
         if (c == EOF) break;
-        if (c == '\n') break; /* unlike fgets, omit the line break */
-        string_append_char(str, (char)c);
+        if (c == '\n') break;
+        if (str->len >= str->size - 1)
+            string_grow(str, str->size * 2);
+        str->buf[str->len++] = c;
     }
+    str->buf[str->len] = '\0';
 }
 
 int string_compare(const string_ptr left, const string_ptr right)
@@ -280,6 +289,8 @@ int string_length(string_ptr str)
 
 const char *string_buffer(string_ptr str)
 {
-    return str->buf;
+    if (str)
+        return str->buf;
+    return NULL;
 }
 
