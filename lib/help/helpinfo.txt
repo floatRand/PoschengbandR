@@ -15,7 +15,8 @@
 <color:keypress>    <     <color:*>(Go to previous section)
 
 <style:heading>Other Commands<style:normal>
-<color:keypress>   '/'    <color:*>(Search for a string)
+<color:keypress>   '/'    <color:*>(Search forward for a string)
+<color:keypress>   '\'    <color:*>(Search backward for a string)
 <color:keypress>   '|'    <color:*>(Copy to file)
 
 <style:heading>Links<style:normal>

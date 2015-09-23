@@ -130,7 +130,7 @@ doc_ptr doc_alloc(int width)
 
     style = doc_style(res, "keypress");
     style->right = MIN(72, width);
-    style->color = TERM_YELLOW;
+    style->color = TERM_ORANGE;
 
     style = doc_style(res, "link");
     style->right = MIN(72, width);
@@ -211,44 +211,86 @@ doc_pos_t doc_find_bookmark(doc_ptr doc, cptr name)
     return doc_pos_invalid();
 }
 
-doc_pos_t doc_find_string(doc_ptr doc, cptr text, doc_pos_t start)
+static bool _row_test_str(doc_char_ptr cell, int ncell, cptr what, int nwhat)
 {
-    doc_pos_t pos = start;
-    int       cb = strlen(text);
+    int i;
 
-    for (; pos.y <= doc->cursor.y; pos.y++, pos.x = 0)
+    if (ncell < nwhat)
+        return FALSE;
+
+    for (i = 0; i < nwhat; i++, cell++)
     {
-        int          cx = doc->width;
-        doc_char_ptr cell = doc_char(doc, pos);
+        char c = cell->c ? cell->c : ' ';
+        assert(i < ncell);
+        if (c != what[i]) break;
+    }
 
-        if (pos.y == doc->cursor.y)
-            cx = doc->cursor.x;
+    if (i == nwhat)
+        return TRUE;
 
-        for (; pos.x < cx;)
+    return FALSE;
+}
+
+static int _row_find_str(doc_char_ptr cell, int ncell, cptr what)
+{
+    int i;
+    int nwhat = strlen(what);
+
+    for (i = 0; i < ncell - nwhat; i++)
+    {
+        if (_row_test_str(cell + i, ncell - i, what, nwhat))
+            return i;
+    }
+
+    return -1;
+}
+
+doc_pos_t doc_find_next(doc_ptr doc, cptr text, doc_pos_t start)
+{
+    int y;
+
+    for (y = start.y; y <= doc->cursor.y; y++)
+    {
+        int          x = (y == start.y) ? start.x : 0;
+        int          ncell = doc->width - x;
+        doc_char_ptr cell = doc_char(doc, doc_pos_create(x, y));
+        int          i = _row_find_str(cell, ncell, text);
+
+        if (i >= 0)
         {
-            int i;
+            doc->selection.start.x = x + i;
+            doc->selection.start.y = y;
 
-            for (i = 0; i < cb; i++)
-            {
-                doc_char_ptr cell2;
-                char         c;
-                if (pos.x + i == cx) break;
-                cell2 = cell + i;
-                c = cell2->c;
-                if (!c) c = ' '; /* TODO: Start drawing spaces! */
-                if (c != text[i]) break;
-            }
+            doc->selection.stop.x = x + i + strlen(text);
+            doc->selection.stop.y = y;
 
-            if (i == cb)
-            {
-                doc->selection.start = pos;
-                doc->selection.stop.x = pos.x + i;
-                doc->selection.stop.y = pos.y;
-                return pos;
-            }
+            return doc->selection.start;
+        }
+   }
 
-            cell++;
-            pos.x++;
+    doc->selection = doc_region_invalid();
+    return doc_pos_invalid();
+}
+
+doc_pos_t doc_find_prev(doc_ptr doc, cptr text, doc_pos_t start)
+{
+    int y;
+
+    for (y = start.y; y >= 0; y--)
+    {
+        int          ncell = (y == start.y) ? start.x - 1 : doc->width;
+        doc_char_ptr cell = doc_char(doc, doc_pos_create(0, y));
+        int          i = _row_find_str(cell, ncell, text);
+
+        if (i >= 0)
+        {
+            doc->selection.start.x = i;
+            doc->selection.start.y = y;
+
+            doc->selection.stop.x = i + strlen(text);
+            doc->selection.stop.y = y;
+
+            return doc->selection.start;
         }
    }
 
@@ -882,7 +924,6 @@ int doc_display(doc_ptr doc, cptr caption, int top)
             break;
         }
         case '/':
-        case KTRL('s'):
             prt("Find: ", cy - 1, 0);
             strcpy(back_str, finder_str);
             if (askfor(finder_str, 80))
@@ -892,7 +933,28 @@ int doc_display(doc_ptr doc, cptr caption, int top)
                     doc_pos_t pos = doc->selection.stop;
                     if (!doc_pos_is_valid(pos))
                         pos = doc_pos_create(0, top);
-                    pos = doc_find_string(doc, finder_str, pos);
+                    pos = doc_find_next(doc, finder_str, pos);
+                    if (doc_pos_is_valid(pos))
+                    {
+                        top = pos.y;
+                        if (top > doc->cursor.y - page_size)
+                            top = MAX(0, doc->cursor.y - page_size);
+                    }
+                }
+            }
+            else strcpy(finder_str, back_str);
+            break;
+        case '\\':
+            prt("Find: ", cy - 1, 0);
+            strcpy(back_str, finder_str);
+            if (askfor(finder_str, 80))
+            {
+                if (finder_str[0])
+                {
+                    doc_pos_t pos = doc->selection.start;
+                    if (!doc_pos_is_valid(pos))
+                        pos = doc_pos_create(doc->width, top + page_size);
+                    pos = doc_find_prev(doc, finder_str, pos);
                     if (doc_pos_is_valid(pos))
                     {
                         top = pos.y;
