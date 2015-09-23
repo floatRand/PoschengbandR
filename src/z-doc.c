@@ -771,28 +771,37 @@ void doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos)
             selection_color = style->color;
     }
 
-    for (pos = range.start; doc_pos_compare(pos, range.stop) < 0; pos = doc_pos_next(doc, pos))
+    for (pos.y = range.start.y; pos.y <= range.stop.y; pos.y++)
     {
-        int          term_x = term_pos.x + pos.x;
-        int          term_y = term_pos.y + pos.y - range.start.y;
-        char         c = ' ';
-        byte         a = TERM_DARK;
+        int term_y = term_pos.y + (pos.y - range.start.y);
+        int max_x = doc->width;
 
-        if (doc_pos_compare(pos, doc->cursor) < 0)
+        pos.x = 0;
+        if (pos.y == range.start.y)
+            pos.x = range.start.x;
+        if (pos.y == range.stop.y)
+            max_x = range.stop.x;
+
+        Term_erase(term_pos.x + pos.x, term_y, doc->width - pos.x);
+        if (pos.y <= doc->cursor.y)
         {
             doc_char_ptr cell = doc_char(doc, pos);
-
-            a = cell->a;
-            if (cell->c)
-                c = cell->c;
-
-            if ( selection_color != _INVALID_COLOR
-              && doc_region_contains(&doc->selection, pos) )
+            for (; pos.x < max_x; pos.x++, cell++)
             {
-                a = selection_color;
+                if (cell->c)
+                {
+                    int term_x = term_pos.x + pos.x;
+                    byte         a = cell->a;
+
+                    if ( selection_color != _INVALID_COLOR
+                      && doc_region_contains(&doc->selection, pos) )
+                    {
+                        a = selection_color;
+                    }
+                    Term_putch(term_x, term_y, a, cell->c);
+                }
             }
         }
-        Term_putch(term_x, term_y, a, c);
     }
 }
 
@@ -824,7 +833,7 @@ int doc_display(doc_ptr doc, cptr caption, int top)
         int cmd;
 
         prt(format("[%s, Line %d/%d]", caption, top, doc->cursor.y), 0, 0);
-        doc_sync_term(doc, doc_region_create(0, top, doc->width, top + page_size), doc_pos_create(0, 2));
+        doc_sync_term(doc, doc_region_create(0, top, doc->width, top + page_size - 1), doc_pos_create(0, 2));
         prt("[Press ESC to exit. Press ? for help]", cy - 1, 0);
 
         cmd = inkey_special(TRUE);
