@@ -38,6 +38,16 @@ int doc_pos_compare(doc_pos_t left, doc_pos_t right)
     return 0;
 }
 
+doc_region_t doc_region_create(int x1, int y1, int x2, int y2)
+{
+    doc_region_t result;
+    result.start.x = x1;
+    result.start.y = y1;
+    result.stop.x = x2;
+    result.stop.y = y2;
+    return result;
+}
+
 doc_region_t doc_region_invalid(void)
 {
     doc_region_t result;
@@ -162,6 +172,14 @@ void doc_free(doc_ptr doc)
 doc_pos_t doc_cursor(doc_ptr doc)
 {
     return doc->cursor;
+}
+
+doc_region_t doc_all(doc_ptr doc)
+{
+    doc_region_t result;
+    result.start = doc_pos_create(0, 0);
+    result.stop = doc->cursor;
+    return result;
 }
 
 doc_pos_t doc_next_bookmark(doc_ptr doc, doc_pos_t pos)
@@ -448,60 +466,6 @@ cptr doc_lex(cptr pos, doc_token_ptr token)
     return pos;
 }
 
-doc_pos_t doc_measure(doc_ptr doc, cptr text)
-{
-    doc_pos_t   cursor = doc->cursor;
-    doc_token_t token;
-    doc_style_t style = doc->current_style;
-    cptr        pos = text;
-    for (;;)
-    {
-        pos = doc_lex(pos, &token);
-        if (token.type == DOC_TOKEN_EOF)
-            break;
-
-        assert(pos != token.pos);
-
-        if (token.type == DOC_TOKEN_TAG)
-        {
-            char buf[80];
-            switch (token.tag.type)
-            {
-            case DOC_TAG_STYLE:
-                assert(token.tag.arg);
-                assert(token.tag.arg_size < 80);
-                memcpy(buf, token.tag.arg, token.tag.arg_size);
-                buf[token.tag.arg_size] = '\0';
-                style = *doc_style(doc, buf);
-                break;
-            }
-            continue;
-        }
-
-        if (token.type == DOC_TOKEN_NEWLINE)
-        {
-            cursor.y++;
-            cursor.x = style.left;
-            continue;
-        }
-
-        if (token.type == DOC_TOKEN_WHITESPACE)
-        {
-            cursor.x += token.size;
-            continue;
-        }
-
-        assert(token.type == DOC_TOKEN_WORD);
-        if (cursor.x + token.size >= style.right && !(style.options & DOC_STYLE_NO_WORDWRAP))
-        {
-            cursor.y++;
-            cursor.x = style.left;
-        }
-        cursor.x += token.size;
-    }
-    return cursor;
-}
-
 static void _doc_process_var(doc_ptr doc, cptr name)
 {
     if (strcmp(name, "version") == 0)
@@ -692,9 +656,11 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
             assert(cell);
             if (current->type == DOC_TOKEN_TAG)
             {
+                assert(current->tag.type == DOC_TAG_COLOR);
                 _doc_process_tag(doc, &current->tag);
                 continue;
             }
+            assert(current->type == DOC_TOKEN_WORD);
             for (j = 0; j < current->size; j++)
             {
                 cell->a = doc->current_color;
@@ -778,49 +744,55 @@ void doc_write_file(doc_ptr doc, FILE *fp)
    }
 }
 
+doc_pos_t doc_pos_next(doc_ptr doc, doc_pos_t pos)
+{
+    doc_pos_t result = pos;
+    result.x++;
+    if (result.x >= doc->width)
+    {
+        result.x = 0;
+        result.y++;
+    }
+    return result;
+}
+
 #define _INVALID_COLOR 255
-void doc_copy_to_term(doc_ptr doc, doc_pos_t term_pos, int row, int ct)
+void doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos)
 {
     doc_pos_t pos;
-    int       i, j;
     byte      selection_color = _INVALID_COLOR;
+
+    assert(doc_region_is_valid(&range));
 
     if (doc_region_is_valid(&doc->selection))
     {
         doc_style_ptr style = str_map_find(doc->styles, "selection");
-        selection_color = style->color;
+        if (style)
+            selection_color = style->color;
     }
 
-    for (i = 0; i < ct; i++)
+    for (pos = range.start; doc_pos_compare(pos, range.stop) < 0; pos = doc_pos_next(doc, pos))
     {
-        pos.x = 0;
-        pos.y = row + i;
-        Term_erase(term_pos.x, term_pos.y + i, doc->width);
+        int          term_x = term_pos.x + pos.x;
+        int          term_y = term_pos.y + pos.y - range.start.y;
+        char         c = ' ';
+        byte         a = TERM_DARK;
+
         if (doc_pos_compare(pos, doc->cursor) < 0)
         {
             doc_char_ptr cell = doc_char(doc, pos);
-            int          cx = doc->width;
 
-            if (pos.y == doc->cursor.y)
-                cx = doc->cursor.x;
+            a = cell->a;
+            if (cell->c)
+                c = cell->c;
 
-            for (j = 0; j < cx; j++)
+            if ( selection_color != _INVALID_COLOR
+              && doc_region_contains(&doc->selection, pos) )
             {
-                byte color = cell->a;
-
-                if ( selection_color != _INVALID_COLOR
-                  && doc_region_contains(&doc->selection, pos) )
-                {
-                    color = selection_color;
-                }
-
-                if (cell->c)
-                    Term_putch(term_pos.x + j, term_pos.y + i, color, cell->c);
-
-                cell++;
-                pos.x++;
+                a = selection_color;
             }
         }
+        Term_putch(term_x, term_y, a, c);
     }
 }
 
@@ -852,7 +824,7 @@ int doc_display(doc_ptr doc, cptr caption, int top)
         int cmd;
 
         prt(format("[%s, Line %d/%d]", caption, top, doc->cursor.y), 0, 0);
-        doc_copy_to_term(doc, doc_pos_create(0, 2), top, cy - 4);
+        doc_sync_term(doc, doc_region_create(0, top, doc->width, top + page_size), doc_pos_create(0, 2));
         prt("[Press ESC to exit. Press ? for help]", cy - 1, 0);
 
         cmd = inkey_special(TRUE);

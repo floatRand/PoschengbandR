@@ -2206,11 +2206,10 @@ static void _fix_message_aux(void)
         doc_insert(doc, msg);
         doc_newline(doc);
     }
-    doc_copy_to_term(
+    doc_sync_term(
         doc,
-        doc_pos_create(0, 0),
-        MAX(0, doc->cursor.y - h),
-        h
+        doc_region_create(0, doc->cursor.y - h, doc->width, doc->cursor.y),
+        doc_pos_create(0, 0)
     );
     doc_free(doc);
 }

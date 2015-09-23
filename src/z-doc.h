@@ -64,6 +64,7 @@ struct doc_region_s
 };
 typedef struct doc_region_s doc_region_t, *doc_region_ptr;
 
+doc_region_t doc_region_create(int x1, int y1, int x2, int y2);
 doc_region_t doc_region_invalid(void);
 bool doc_region_is_valid(doc_region_ptr region);
 bool doc_region_contains(doc_region_ptr region, doc_pos_t pos);
@@ -128,6 +129,7 @@ doc_ptr       doc_alloc(int width);
 void          doc_free(doc_ptr doc);
 
 doc_pos_t     doc_cursor(doc_ptr doc);
+doc_region_t  doc_all(doc_ptr doc);
 
 doc_pos_t     doc_next_bookmark(doc_ptr doc, doc_pos_t pos);
 doc_pos_t     doc_prev_bookmark(doc_ptr doc, doc_pos_t pos);
@@ -141,13 +143,13 @@ void          doc_change_style(doc_ptr doc, cptr name);
 
 doc_pos_t     doc_insert(doc_ptr doc, cptr text);
 doc_pos_t     doc_newline(doc_ptr doc);
-doc_pos_t     doc_measure(doc_ptr doc, cptr text);
+void          doc_rollback(doc_ptr doc, doc_pos_t pos);
 
 doc_pos_t     doc_read_file(doc_ptr doc, FILE *fp);
 void          doc_write_file(doc_ptr doc, FILE *fp);
 
 doc_char_ptr  doc_char(doc_ptr doc, doc_pos_t pos);
-void          doc_copy_to_term(doc_ptr doc, doc_pos_t term_pos, int row, int ct);
+void          doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos);
 
 /* Parsing */
 enum doc_tag_e

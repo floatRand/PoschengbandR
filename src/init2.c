@@ -1659,7 +1659,7 @@ void display_news(void)
         Term_get_size(&w, &h);
         doc = doc_alloc(w);
         doc_read_file(doc, fp);
-        doc_copy_to_term(doc, doc_pos_create(0, 0), 0, h);
+        doc_sync_term(doc, doc_all(doc), doc_pos_create(0, 0));
         doc_free(doc);
         my_fclose(fp);
     }
