@@ -621,12 +621,15 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
 doc_pos_t doc_insert(doc_ptr doc, cptr text)
 {
     doc_token_t token;
+    doc_token_t queue[10];
+    int         qidx = 0;
     cptr        pos = text;
-    int         i;
+    int         i, j, cb;
 
     for (;;)
     {
         pos = doc_lex(pos, &token);
+
         if (token.type == DOC_TOKEN_EOF)
             break;
 
@@ -653,27 +656,59 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
         assert(token.type == DOC_TOKEN_WORD);
         assert(token.size > 0);
 
-        if ( doc->cursor.x + token.size >= doc->current_style.right
-         && !(doc->current_style.options & DOC_STYLE_NO_WORDWRAP) )
+        /* Queue Complexity is for "<color:R>difficult<color:*>!" which is actually a bit common! */
+        qidx = 0;
+        cb = token.size;
+        queue[qidx++] = token;
+        while (qidx < 10)
+        {
+            cptr peek = doc_lex(pos, &token);
+            if (token.type == DOC_TOKEN_WORD)
+            {
+                cb += token.size;
+            }
+            else if (token.type == DOC_TOKEN_TAG && token.tag.type == DOC_TAG_COLOR)
+            {
+            }
+            else
+            {
+                break;
+            }
+            queue[qidx++] = token;
+            pos = peek;
+        }
+
+        if ( doc->cursor.x + cb >= doc->current_style.right
+          && !(doc->current_style.options & DOC_STYLE_NO_WORDWRAP) )
         {
             doc_newline(doc);
         }
 
-        if (doc->cursor.x < doc->width)
+        for (i = 0; i < qidx; i++)
         {
-            doc_char_ptr cell = doc_char(doc, doc->cursor);
+            doc_token_ptr current = &queue[i];
+            doc_char_ptr  cell = doc_char(doc, doc->cursor);
+
             assert(cell);
-            for (i = 0; i < token.size; i++)
+            if (current->type == DOC_TOKEN_TAG)
+            {
+                _doc_process_tag(doc, &current->tag);
+                continue;
+            }
+            for (j = 0; j < current->size; j++)
             {
                 cell->a = doc->current_color;
-                cell->c = token.pos[i];
+                cell->c = current->pos[j];
                 if (cell->c == '\t')
                     cell->c = ' ';
                 doc->cursor.x++;
                 if (doc->cursor.x >= doc->width)
                 {
                     if (doc->current_style.options & DOC_STYLE_NO_WORDWRAP)
+                    {
+                        i = qidx;
                         break;
+                    }
                     doc_newline(doc);
                     cell = doc_char(doc, doc->cursor);
                 }

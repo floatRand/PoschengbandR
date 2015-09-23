@@ -200,7 +200,7 @@ Hopefully, you managed all of this without too much trouble from the locals (<co
 
 Since this is the 'Beginner' mode, there is only one dungeon to enter. The <color:v>><color:*> character represents the entrance to a dungeon. >, in general refers to stairs down, but dungeon entrances <color:v>><color:*> and quest entrances <color:y>><color:*> are color coded to stand out. Similarly, < refers to stairs up. By some cosmic accident, these are also the keys you press to take the stairs: <color:keypress>><color:*> to go down and <color:keypress><<color:*> to go up. What could be easier to remember? So move to the stairs down to <color:keyword>Angband<color:*> and enter the dungeon!
 
-You might see something like this. As you walk about, beware of monsters and use the look command <color:keypress>l<color:*> together with the recall option <color:keypress>r<color:*> to get a verbose monster description. (I think I can step on that ant!):
+You might see something like this. As you walk about, beware of monsters and use the look command (<color:keypress>l<color:*>) together with the recall option (<color:keypress>r<color:*>) to get a verbose monster description. (I think I can step on that ant!):
 <style:screenshot>
 The Soldier ant ('<color:u>a<color:*>')/('<color:u>a<color:*>'):  [r,q,t,p,o,+,-,?,<dir>]                          <color:*>
 Your ancestors have killed at least 1 of these creatures.                      <color:*>
