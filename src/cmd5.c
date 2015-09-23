@@ -1393,7 +1393,7 @@ msg_print("An infernal sound echoed.");
                Note: One still might be able to macro up a cast followed by a rest command.
             */
             if ( last_pexp != p_ptr->exp 
-              || (!p_ptr->inside_quest && turn > last_turn + 50 + randint1(50)) )
+              || (!p_ptr->inside_quest && game_turn > last_turn + 50 + randint1(50)) )
             {
                 if (cur_exp < SPELL_EXP_BEGINNER)
                     exp_gain += 60;
@@ -1415,7 +1415,7 @@ msg_print("An infernal sound echoed.");
                 p_ptr->spell_exp[(increment ? 32 : 0) + spell] += exp_gain;
             }
             last_pexp = p_ptr->exp;
-            p_ptr->spell_turn[(increment ? 32 : 0)+spell] = turn;
+            p_ptr->spell_turn[(increment ? 32 : 0)+spell] = game_turn;
         }
     }
 

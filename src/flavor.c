@@ -876,12 +876,16 @@ static void get_inscription(char *buff, object_type *o_ptr)
     *ptr = '\0';
 }
 
-char tval_to_attr_char(int tval)
+char attr_to_attr_char(byte a)
 {
     char hack[17] = "dwsorgbuDWvyRGBU";
-    byte a = tval_to_attr[tval % 128];
     char c = hack[a&0x0F];
     return c;
+}
+
+char tval_to_attr_char(int tval)
+{
+    return attr_to_attr_char(tval_to_attr[tval % 128]);
 }
 
 /*

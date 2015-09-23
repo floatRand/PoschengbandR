@@ -1486,7 +1486,7 @@ void py_pickup_aux(int o_idx)
         }
     }
 
-    record_turn = turn;
+    record_turn = game_turn;
 
 
     /* Check if completed a quest */

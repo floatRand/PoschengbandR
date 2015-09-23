@@ -512,28 +512,24 @@ void do_cmd_change_name(void)
  */
 void do_cmd_messages(int old_now_turn)
 {
+    int     i;
     doc_ptr doc;
-    doc_style_ptr style;
-    int     i, cx, cy;
+    int     current_turn = 0;
+    int     current_row = 0;
 
-    Term_get_size(&cx, &cy);
-
-    doc = doc_alloc(cx);
-
-    style = doc_style(doc, "normal");
-    style->right = cx;
-
-    for (i = msg_num(); i >= 0; i--)
+    doc = doc_alloc(80);
+    for (i = msg_count() - 1; i >= 0; i--)
     {
         cptr   msg = msg_text(i);
-        byte   color = msg_color(i);
-        int    trn = msg_turn(i);
+        int    turn = msg_turn(i);
 
-        if (trn < old_now_turn && color == TERM_WHITE)
-            color = TERM_SLATE;
-
-        style->color = color;
-        doc_change_style(doc, "normal");
+        if (turn != current_turn)
+        {
+            if (doc->cursor.y > current_row + 1)
+                doc_newline(doc);
+            current_turn = turn;
+            current_row = doc->cursor.y;
+        }
 
         doc_insert(doc, msg);
         doc_newline(doc);

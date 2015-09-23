@@ -3090,7 +3090,7 @@ void do_cmd_store(void)
     {
         /* New: Home is always open! */
     }
-    else if (town[p_ptr->town_num].store[which].store_open >= turn || ironman_shops)
+    else if (town[p_ptr->town_num].store[which].store_open >= game_turn || ironman_shops)
     {
         msg_print("The doors are locked.");
         p_ptr->town_num = old_town_num;
@@ -3102,7 +3102,7 @@ void do_cmd_store(void)
     store_hack = TRUE;
     
     /* Calculate the number of store maintainances since the last visit */
-    maintain_num = (turn - town[p_ptr->town_num].store[which].last_visit) / (TURNS_PER_TICK * STORE_TICKS);
+    maintain_num = (game_turn - town[p_ptr->town_num].store[which].last_visit) / (TURNS_PER_TICK * STORE_TICKS);
 
     /* Maintain the store max. 10 times */
     if (maintain_num > 10) maintain_num = 10;
@@ -3129,7 +3129,7 @@ void do_cmd_store(void)
         /* Save the visit if we actually restocked any */
         if (options == STORE_MAINT_NORMAL)
         {
-            town[p_ptr->town_num].store[which].last_visit = turn;
+            town[p_ptr->town_num].store[which].last_visit = game_turn;
             town[p_ptr->town_num].store[which].last_lev = p_ptr->max_plv;
             town[p_ptr->town_num].store[which].last_exp = p_ptr->max_exp;
         }
@@ -3396,7 +3396,7 @@ void do_cmd_store(void)
         if (need_redraw_store_inv) display_inventory();
 
         /* Hack -- get kicked out of the store */
-        if (st_ptr->store_open >= turn) leave_store = TRUE;
+        if (st_ptr->store_open >= game_turn) leave_store = TRUE;
     }
 
     p_ptr->town_num = old_town_num;

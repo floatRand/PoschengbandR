@@ -163,8 +163,9 @@ extern s16b num_repro_kill;
 extern s16b object_level;
 extern s16b monster_level;
 extern s16b base_level;
-extern s32b turn;
-extern s32b turn_limit;
+extern s32b game_turn;
+extern s32b game_turn_limit;
+extern s32b player_turn;
 extern s32b dungeon_turn;
 extern s32b dungeon_turn_limit;
 extern s32b old_turn;
@@ -408,15 +409,6 @@ extern bool *macro__cmd;
 extern char *macro__buf;
 extern s16b quark__num;
 extern cptr *quark__str;
-extern u16b message__next;
-extern u16b message__last;
-extern u16b message__head;
-extern u16b message__tail;
-extern u16b *message__ptr;
-extern char *message__buf;
-extern byte *message__color;
-extern u16b *message__count;
-extern s32b *message__turn;
 extern u32b option_flag[8];
 extern u32b option_mask[8];
 extern u32b window_flag[8];
@@ -967,6 +959,7 @@ extern void get_table_sindarin_aux(char *out_string);
 extern void get_table_sindarin(char *out_string);
 extern void flavor_init(void);
 extern char tval_to_attr_char(int tval);
+extern char attr_to_attr_char(byte a);
 extern char *object_desc_kosuu(char *t, object_type *o_ptr);
 extern void object_desc(char *buf, object_type *o_ptr, u32b mode);
 
@@ -1511,41 +1504,10 @@ extern cptr quark_str(s16b num);
 extern void quark_init(void);
 extern s16b quark_add(cptr str);
 
-/* Stop using auto_more and use the new improved handling instead! */
-#define AUTO_MORE_PROMPT     0
-#define AUTO_MORE_SKIP_ONE   1   /* Skip to next message */
-#define AUTO_MORE_SKIP_BLOCK 2   /* Skip to next message boundary */
-#define AUTO_MORE_SKIP_ALL   3   /* Skip to next player action */
-extern int auto_more_state;
-extern s16b msg_num(void);
-extern cptr msg_text(int age);
-extern int  msg_plain_text(int age, char *buffer, int max);
-extern byte msg_color(int age);
-extern s32b msg_turn(int age);
-extern void msg_add(cptr msg);
-extern void cmsg_add(byte color, cptr msg);
-extern void msg_boundary(void);
-extern int  msg_display_len(cptr msg);
-extern int  cmsg_display_wrapped(int color, cptr msg, const rect_t *rect, bool draw);
-extern void msg_print(cptr msg);
-extern void msg_line_clear(bool close_drop_down);
-extern void msg_line_init(const rect_t *display_rect);
-extern bool msg_line_contains(int row, int col);
-extern bool msg_line_is_empty(void);
-extern rect_t msg_line_rect(void);
-extern void cmsg_print(byte color, cptr msg);
-extern void msg_format(cptr fmt, ...);
-extern void cmsg_format(byte color, cptr fmt, ...);
-#define PROMPT_FORCE_CHOICE   0x01 /* ignore quick_messages */
-#define PROMPT_CASE_SENSITIVE 0x02
-#define PROMPT_NEW_LINE       0x04
-#define PROMPT_ESCAPE_DEFAULT 0x08
-#define PROMPT_DEFAULT (PROMPT_NEW_LINE | PROMPT_ESCAPE_DEFAULT)
-extern char msg_prompt(cptr prompt, char keys[], int options);
-extern char cmsg_prompt(byte color, cptr prompt, char keys[], int options);
-
 extern void screen_save(void);
+extern void screen_save_aux(void);
 extern void screen_load(void);
+extern void screen_load_aux(void);
 extern bool screen_is_saved(void);
 extern void c_put_str(byte attr, cptr str, int row, int col);
 extern void put_str(cptr str, int row, int col);

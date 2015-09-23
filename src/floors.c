@@ -1093,7 +1093,7 @@ void leave_floor(void)
         get_out_monster();
 
         /* Record the last visit turn of current floor */
-        sf_ptr->last_visit = turn;
+        sf_ptr->last_visit = game_turn;
 
         /* Forget the lite */
         forget_lite();
@@ -1232,8 +1232,8 @@ void change_floor(void)
             int alloc_chance = d_info[dungeon_type].max_m_alloc_chance;
             int alloc_times;
 
-            while (tmp_last_visit > turn) tmp_last_visit -= TURNS_PER_TICK * TOWN_DAWN;
-            absence_ticks = (turn - tmp_last_visit) / TURNS_PER_TICK;
+            while (tmp_last_visit > game_turn) tmp_last_visit -= TURNS_PER_TICK * TOWN_DAWN;
+            absence_ticks = (game_turn - tmp_last_visit) / TURNS_PER_TICK;
 
             /* Maintain monsters */
             for (i = 1; i < m_max; i++)
@@ -1349,7 +1349,7 @@ void change_floor(void)
             }
 
             /* Record last visit turn */
-            sf_ptr->last_visit = turn;
+            sf_ptr->last_visit = game_turn;
 
             /* Set correct dun_level value */
             sf_ptr->dun_level = dun_level;
@@ -1430,7 +1430,7 @@ void change_floor(void)
         wiz_lite((bool)(p_ptr->pclass == CLASS_NINJA));
 
     /* Remember when this level was "created" */
-    old_turn = turn;
+    old_turn = game_turn;
 
     /* No dungeon feeling yet */
     p_ptr->feeling_turn = old_turn;

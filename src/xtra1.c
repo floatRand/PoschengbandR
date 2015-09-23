@@ -13,6 +13,7 @@
 
 #include "angband.h"
 #include "equip.h"
+#include "z-doc.h"
 
 #include <assert.h>
 
@@ -302,7 +303,7 @@ s16b modify_stat_value(int value, int amount)
 bool is_daytime(void)
 {
     s32b len = TURNS_PER_TICK * TOWN_DAWN;
-    if ((turn % len) < (len / 2))
+    if ((game_turn % len) < (len / 2))
         return TRUE;
     else
         return FALSE;
@@ -313,7 +314,7 @@ bool is_daytime(void)
  */
 void extract_day_hour_min(int *day, int *hour, int *min)
 {
-    extract_day_hour_min_imp(turn, day, hour, min);
+    extract_day_hour_min_imp(game_turn, day, hour, min);
 }
 void extract_day_hour_min_imp(int turn, int *day, int *hour, int *min)
 {
@@ -2179,15 +2180,46 @@ static void fix_player(void)
 }
 
 
+static void _fix_message_aux(void)
+{
+    int     i;
+    doc_ptr doc;
+    int     current_turn = 0;
+    int     current_row = 0;
+    int     w, h;
 
+    Term_get_size(&w, &h);
+    doc = doc_alloc(w);
+
+    for (i = MIN(h, msg_count() - 1); i >= 0; i--)
+    {
+        cptr   msg = msg_text(i);
+        int    turn = msg_turn(i);
+
+        if (turn != current_turn)
+        {
+            if (doc->cursor.y > current_row + 1)
+                doc_newline(doc);
+            current_turn = turn;
+            current_row = doc->cursor.y;
+        }
+        doc_insert(doc, msg);
+        doc_newline(doc);
+    }
+    doc_copy_to_term(
+        doc,
+        doc_pos_create(0, 0),
+        MAX(0, doc->cursor.y - h),
+        h
+    );
+    doc_free(doc);
+}
 /*
  * Display recent messages in sub-windows
  */
 static void fix_message(void)
 {
-    int j, i;
-    int w, h;
-    int y;
+    int j;
 
     /* Scan windows */
     for (j = 0; j < 8; j++)
@@ -2202,33 +2234,8 @@ static void fix_message(void)
 
         /* Activate */
         Term_activate(angband_term[j]);
-
-        /* Get size */
-        Term_get_size(&w, &h);
-
-        /* Dump messages from bottom to top */
-        y = h - 1;
-        for (i = 0; y >= 0; i++)
-        {
-            cptr   msg = msg_text(i);
-            byte   color = msg_color(i);
-            int    trn = msg_turn(i);
-            int    cy;
-            rect_t r = rect_create(0, y, w, h);
-
-            if (trn < now_turn && color == TERM_WHITE)
-                color = TERM_SLATE;
-
-            cy = cmsg_display_wrapped(color, msg, &r, FALSE);
-            r.y -= (cy - 1);
-            cmsg_display_wrapped(color, msg, &r, TRUE);
-            y -= cy;
-        }
-
-        /* Fresh */
+        _fix_message_aux();
         Term_fresh();
-
-        /* Restore */
         Term_activate(old);
     }
 }

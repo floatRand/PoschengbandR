@@ -2296,7 +2296,7 @@ bool identify_item(object_type *o_ptr)
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
 
     strcpy(record_o_name, o_name);
-    record_turn = turn;
+    record_turn = game_turn;
 
     /* Description */
     object_desc(o_name, o_ptr, OD_NAME_ONLY);

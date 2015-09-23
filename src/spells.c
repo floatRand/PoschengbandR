@@ -121,7 +121,7 @@ void spell_stats_gain_skill(spell_info *spell)
        Note: One still might be able to macro up a cast followed by a rest command.
     */
     if ( last_pexp != p_ptr->exp 
-      || (!p_ptr->inside_quest && turn > stats->last_turn + 50 + randint1(50)) )
+      || (!p_ptr->inside_quest && game_turn > stats->last_turn + 50 + randint1(50)) )
     {
         int skill = 0;
         int dlvl = MAX(base_level, dun_level);
@@ -148,7 +148,7 @@ void spell_stats_gain_skill(spell_info *spell)
             stats->skill = stats->max_skill;
     }
     last_pexp = p_ptr->exp;
-    stats->last_turn = turn;
+    stats->last_turn = game_turn;
 }
 
 void spell_stats_on_fail(spell_info *spell)

@@ -4353,7 +4353,7 @@ static void dump_aux_last_message(FILE *fff)
             char buf[78]; /* TODO: We could wordwrap the output ... */
 
             fprintf(fff, "\n================================ Last Messages ================================\n\n");
-            for (i = MIN(msg_num(), 30); i >= 0; i--)
+            for (i = MIN(msg_count() - 1, 30); i >= 0; i--)
             {
                 msg_plain_text(i, buf, sizeof(buf));
                 fprintf(fff, "> %s\n", buf);

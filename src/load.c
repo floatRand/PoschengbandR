@@ -861,17 +861,22 @@ static void rd_extra(savefile_ptr file)
     case RACE_SKELETON:
     case RACE_ZOMBIE:
     case RACE_SPECTRE:
-        turn_limit = TURNS_PER_TICK * TOWN_DAWN * MAX_DAYS + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
+        game_turn_limit = TURNS_PER_TICK * TOWN_DAWN * MAX_DAYS + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
         break;
     default:
-        turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
+        game_turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
         break;
     }
     dungeon_turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
 
     old_turn = savefile_read_s32b(file);
     p_ptr->feeling_turn = savefile_read_s32b(file);
-    turn = savefile_read_s32b(file);
+    game_turn = savefile_read_s32b(file);
+    if (savefile_is_older_than(file, 4, 0, 0, 4))
+        player_turn = 0;
+    else
+        player_turn = savefile_read_s32b(file);
+
     dungeon_turn = savefile_read_s32b(file);
     old_battle = savefile_read_s32b(file);
     today_mon = savefile_read_s16b(file);
@@ -938,26 +943,6 @@ static errr rd_inventory(savefile_ptr file)
         }
     }
     return 0;
-}
-
-static void rd_messages(savefile_ptr file)
-{
-    int i;
-    char buf[1024];
-    s16b num = savefile_read_s16b(file);
-
-    for (i = 0; i < num; i++)
-    {
-        byte color = TERM_WHITE;
-        s32b old_turn = turn;
-        if (!savefile_is_older_than(file, 4, 0, 0, 1))
-            color = savefile_read_byte(file);
-        savefile_read_string(file, buf, sizeof(buf));
-        if (!savefile_is_older_than(file, 4, 0, 0, 2))
-            turn = savefile_read_s32b(file);
-        cmsg_add(color, buf);
-        turn = old_turn;
-    }
 }
 
 /*
@@ -1313,7 +1298,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     rd_options(file);
     if (arg_fiddle) note("Loaded Option Flags");
 
-    rd_messages(file);
+    msg_on_load(file);
     if (arg_fiddle) note("Loaded Messages");
 
     for (i = 0; i < max_r_idx; i++)

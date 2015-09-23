@@ -93,7 +93,7 @@ static void _history_on_possess(int r_idx)
         }
 
         p->p_lvl = p_ptr->lev;
-        p->turn = turn;
+        p->turn = game_turn;
 
         p->next = _history;
         _history = p;

@@ -44,6 +44,7 @@
 #include "types.h"
 #include "externs.h"
 
+#include "message.h"
 #include "mut.h"
 #include "spells.h"
 #include "menu.h"

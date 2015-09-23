@@ -761,7 +761,8 @@ static void wr_extra(savefile_ptr file)
     savefile_write_byte(file, p_ptr->feeling);
     savefile_write_s32b(file, old_turn);
     savefile_write_s32b(file, p_ptr->feeling_turn);
-    savefile_write_s32b(file, turn);
+    savefile_write_s32b(file, game_turn);
+    savefile_write_s32b(file, player_turn);
     savefile_write_s32b(file, dungeon_turn);
     savefile_write_s32b(file, old_battle);
     savefile_write_s16b(file, today_mon);
@@ -1165,15 +1166,7 @@ static bool wr_savefile_new(savefile_ptr file)
     wr_randomizer(file);
     wr_options(file);
 
-    tmp16u = msg_num();
-    if (compress_savefile && (tmp16u > 40)) tmp16u = 40;
-    savefile_write_u16b(file, tmp16u);
-    for (i = tmp16u - 1; i >= 0; i--)
-    {
-        savefile_write_byte(file, msg_color(i));
-        savefile_write_string(file, msg_text(i));
-        savefile_write_s32b(file, msg_turn(i));
-    }
+    msg_on_save(file);
 
     tmp16u = max_r_idx;
     savefile_write_u16b(file, tmp16u);
@@ -1495,7 +1488,8 @@ bool load_player(void)
 
 
     /* Paranoia */
-    turn = 0;
+    game_turn = 0;
+    player_turn = 0;
 
     /* Paranoia */
     p_ptr->is_dead = FALSE;
@@ -1628,7 +1622,7 @@ bool load_player(void)
     if (!err)
     {
         /* Invalid turn */
-        if (!turn) err = -1;
+        if (!game_turn) err = -1;
 
         /* Message (below) */
         if (err) what = "Broken savefile";

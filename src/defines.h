@@ -19,7 +19,7 @@
 #define VER_MAJOR 4
 #define VER_MINOR 0
 #define VER_PATCH 0
-#define VER_EXTRA 2
+#define VER_EXTRA 4
 
 #define GAME_MODE_BEGINNER  0
 #define GAME_MODE_NORMAL    1
@@ -5421,7 +5421,7 @@ enum mon_save_fields_e {
 #define IS_WRAITH() (p_ptr->wraith_form || wild_has_power(WILD_WRAITH))
 
 /* Multishadow effects is determined by turn */
-#define CHECK_MULTISHADOW() (p_ptr->multishadow && (turn & 1))
+#define CHECK_MULTISHADOW() (p_ptr->multishadow && (game_turn & 1))
 
 /* Is "teleport level" ineffective to this target? */
 #define TELE_LEVEL_IS_INEFF(TARGET) \

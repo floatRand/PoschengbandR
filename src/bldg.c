@@ -1470,10 +1470,10 @@ static bool kakutoujou(void)
     char out_val[160], tmp_str[80];
     cptr p;
 
-    if ((turn - old_battle) > TURNS_PER_TICK*250)
+    if ((game_turn - old_battle) > TURNS_PER_TICK*250)
     {
         battle_monsters();
-        old_battle = turn;
+        old_battle = game_turn;
     }
 
     screen_save();
@@ -2135,14 +2135,14 @@ static bool inn_comm(int cmd)
             }
             else
             {
-                s32b oldturn = turn;
+                s32b oldturn = game_turn;
                 int prev_day, prev_hour, prev_min;
 
                 extract_day_hour_min(&prev_day, &prev_hour, &prev_min);
-                turn = (turn / (TURNS_PER_TICK*TOWN_DAWN/2) + 1) * (TURNS_PER_TICK*TOWN_DAWN/2);
+                game_turn = (game_turn / (TURNS_PER_TICK*TOWN_DAWN/2) + 1) * (TURNS_PER_TICK*TOWN_DAWN/2);
                 if (dungeon_turn < dungeon_turn_limit)
                 {
-                    dungeon_turn += MIN(turn - oldturn, TURNS_PER_TICK*250);
+                    dungeon_turn += MIN(game_turn - oldturn, TURNS_PER_TICK*250);
                     if (dungeon_turn > dungeon_turn_limit) dungeon_turn = dungeon_turn_limit;
                 }
 

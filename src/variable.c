@@ -123,12 +123,13 @@ s16b object_level;        /* Current object creation level */
 s16b monster_level;        /* Current monster creation level */
 s16b base_level;        /* Base dungeon level */
 
-s32b turn;                /* Current game turn */
-s32b turn_limit;        /* Limit of game turn */
+s32b game_turn;                /* Current game turn */
+s32b game_turn_limit;        /* Limit of game turn */
 s32b dungeon_turn;            /* Game turn in dungeon */
 s32b dungeon_turn_limit;    /* Limit of game turn in dungeon */
 s32b old_turn;            /* Turn when level began */
 s32b old_battle;
+s32b player_turn;
 
 bool use_sound;            /* The "sound" mode is enabled */
 bool use_graphics;        /* The "graphics" mode is enabled */
@@ -482,40 +483,6 @@ s16b quark__num;
  * The pointers to the quarks [QUARK_MAX]
  */
 cptr *quark__str;
-
-
-/*
- * The next "free" index to use
- */
-u16b message__next;
-
-/*
- * The index of the oldest message (none yet)
- */
-u16b message__last;
-
-/*
- * The next "free" offset
- */
-u16b message__head;
-
-/*
- * The offset to the oldest used char (none yet)
- */
-u16b message__tail;
-
-/*
- * The array of offsets, by index [MESSAGE_MAX]
- */
-u16b *message__ptr;
-
-/*
- * The array of chars, by offset [MESSAGE_BUF]
- */
-char *message__buf;
-byte *message__color;
-u16b *message__count;
-s32b *message__turn;
 
 /*
  * The array of normal options
