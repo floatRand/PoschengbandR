@@ -111,14 +111,12 @@ doc_ptr doc_alloc(int width)
        Perhaps these should be globally available as well, an initialized
        from a preference file for the entire document system. */
     style = doc_style(res, "normal");
-    style->right = 72;
-    res->current_style = *style;
-    res->current_color = style->color;
+    style->right = MIN(72, width);
 
     style = doc_style(res, "note");
     style->color = TERM_L_GREEN;
     style->left = 4;
-    style->right = 60;
+    style->right = MIN(60, width);
 
     style = doc_style(res, "title");
     style->color = TERM_L_BLUE;
@@ -127,15 +125,15 @@ doc_ptr doc_alloc(int width)
     style->color = TERM_RED;
 
     style = doc_style(res, "keyword");
-    style->right = 72;
+    style->right = MIN(72, width);
     style->color = TERM_L_RED;
 
     style = doc_style(res, "keypress");
-    style->right = 72;
+    style->right = MIN(72, width);
     style->color = TERM_YELLOW;
 
     style = doc_style(res, "link");
-    style->right = 72;
+    style->right = MIN(72, width);
     style->color = TERM_L_GREEN;
 
     style = doc_style(res, "screenshot");
@@ -144,6 +142,7 @@ doc_ptr doc_alloc(int width)
     style = doc_style(res, "selection");
     style->color = TERM_YELLOW;
 
+    doc_change_style(res, "normal");
     return res;
 }
 
@@ -472,6 +471,18 @@ static void _doc_process_var(doc_ptr doc, cptr name)
     }
 }
 
+void doc_change_style(doc_ptr doc, cptr name)
+{
+    doc_style_ptr style = doc_style(doc, name);
+    if (style)
+    {
+        doc->current_style = *style;
+        doc->current_color = doc->current_style.color;
+        if (doc->cursor.x < doc->current_style.left)
+            doc->cursor.x = doc->current_style.left;
+    }
+}
+
 static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
 {
     if (tag->type == DOC_TAG_COLOR)
@@ -516,10 +527,7 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         switch (tag->type)
         {
         case DOC_TAG_STYLE:
-            doc->current_style = *doc_style(doc, string_buffer(arg));
-            doc->current_color = doc->current_style.color;
-            if (doc->cursor.x < doc->current_style.left)
-                doc->cursor.x = doc->current_style.left;
+            doc_change_style(doc, string_buffer(arg));
             break;
         case DOC_TAG_VAR:
             _doc_process_var(doc, string_buffer(arg));
@@ -741,42 +749,25 @@ void doc_copy_to_term(doc_ptr doc, doc_pos_t term_pos, int row, int ct)
 
 #define _UNWIND 1
 #define _OK 0
-int doc_display_help(cptr file_name, cptr topic)
+int doc_display(doc_ptr doc, cptr caption, int top)
 {
     int     rc = _OK;
-    FILE   *fp = NULL;
-    char    path[1024];
-    char    caption[1024];
-    doc_ptr doc = NULL;
-    int     cx, cy;
-    int     top = 0, page_size;
-    bool    done = FALSE;
     char    finder_str[81];
     char    back_str[81];
+    int     cx, cy;
+    int     page_size;
+    bool    done = FALSE;
 
     strcpy(finder_str, "");
 
-    sprintf(caption, "Help file '%s'", file_name);
-    path_build(path, sizeof(path), ANGBAND_DIR_HELP, file_name);
-    fp = my_fopen(path, "r");
-    if (!fp)
-    {
-        cmsg_format(TERM_VIOLET, "Cannot open '%s'.", file_name);
-        msg_print(NULL);
-        return _OK;
-    }
 
     Term_get_size(&cx, &cy);
     page_size = cy - 4;
-    doc = doc_alloc(80); /* Note: We include screen dumps of 80x27, so don't go below 80 */
-    doc_read_file(doc, fp);
 
-    if (topic)
-    {
-        doc_pos_t pos = doc_find_bookmark(doc, topic);
-        if (doc_pos_is_valid(pos))
-            top = pos.y;
-    }
+    if (top < 0)
+        top = 0;
+    if (top > doc->cursor.y - page_size)
+        top = MAX(0, doc->cursor.y - page_size);
 
     Term_clear();
     while (!done)
@@ -804,7 +795,7 @@ int doc_display_help(cptr file_name, cptr topic)
         switch (cmd)
         {
         case '?':
-            if (strcmp(file_name, "helpinfo.txt") != 0)
+            if (!strstr(caption, "helpinfo.txt"))
             {
                 rc = doc_display_help("helpinfo.txt", NULL);
                 if (rc == _UNWIND)
@@ -914,7 +905,39 @@ int doc_display_help(cptr file_name, cptr topic)
             break;
         }
     }
+    return rc;
+}
 
+int doc_display_help(cptr file_name, cptr topic)
+{
+    int     rc = _OK;
+    FILE   *fp = NULL;
+    char    path[1024];
+    char    caption[1024];
+    doc_ptr doc = NULL;
+    int     top = 0;
+
+    sprintf(caption, "Help file '%s'", file_name);
+    path_build(path, sizeof(path), ANGBAND_DIR_HELP, file_name);
+    fp = my_fopen(path, "r");
+    if (!fp)
+    {
+        cmsg_format(TERM_VIOLET, "Cannot open '%s'.", file_name);
+        msg_print(NULL);
+        return _OK;
+    }
+
+    doc = doc_alloc(80); /* Note: We include screen dumps of 80x27, so don't go below 80 */
+    doc_read_file(doc, fp);
+
+    if (topic)
+    {
+        doc_pos_t pos = doc_find_bookmark(doc, topic);
+        if (doc_pos_is_valid(pos))
+            top = pos.y;
+    }
+
+    rc = doc_display(doc, caption, top);
     doc_free(doc);
     return rc;
 }

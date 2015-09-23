@@ -136,6 +136,7 @@ doc_pos_t     doc_find_bookmark(doc_ptr doc, cptr name);
 doc_pos_t     doc_find_string(doc_ptr doc, cptr text, doc_pos_t start);
 
 doc_style_ptr doc_style(doc_ptr doc, cptr name);
+void          doc_change_style(doc_ptr doc, cptr name);
 
 doc_pos_t     doc_insert(doc_ptr doc, cptr text);
 doc_pos_t     doc_newline(doc_ptr doc);
@@ -187,5 +188,6 @@ cptr doc_lex(cptr pos, doc_token_ptr token);
 
 
 int doc_display_help(cptr file_name, cptr topic);
+int doc_display(doc_ptr doc, cptr caption, int top);
 
 #endif

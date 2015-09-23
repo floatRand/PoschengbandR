@@ -2549,28 +2549,28 @@ cptr msg_text(int age)
 
 int msg_plain_text(int age, char *buffer, int max)
 {
-    cptr pos;
-    int  ct = 0;
-    for (pos = msg_text(age); *pos; pos++)
+    int         ct = 0, i;
+    doc_token_t token;
+    cptr        pos = msg_text(age);
+    bool        done = FALSE;
+
+    while (!done)
     {
-        if (*pos == '\n')
+        pos = doc_lex(pos, &token);
+        if (token.type == DOC_TOKEN_EOF) break;
+        if (token.type == DOC_TOKEN_TAG) continue; /* assume only color tags */
+        for (i = 0; i < token.size; i++)
         {
-            buffer[ct++] = ' ';
-            continue;
+            if (ct >= max - 4)
+            {
+                buffer[ct++] = '.';
+                buffer[ct++] = '.';
+                buffer[ct++] = '.';
+                done = TRUE;
+                break;
+            }
+            buffer[ct++] = token.pos[i];
         }
-        if (*pos == '#')
-        {
-            pos++;
-            if (*pos != '#') continue;
-        }
-        if (ct >= max - 4)
-        {
-            buffer[ct++] = '.';
-            buffer[ct++] = '.';
-            buffer[ct++] = '.';
-            break;
-        }
-        buffer[ct++] = *pos;
     }
     buffer[ct] = '\0';
     return ct;
@@ -2808,30 +2808,20 @@ void cmsg_add(byte color, cptr str)
    coloring. This routine returns the display length of the message. */
 int msg_display_len(cptr msg)
 {
-    int ct = 0;
-    int i = 0;
+    int         ct = 0;
+    doc_token_t token;
+    cptr        pos = msg;
 
     if (!msg)
         return 0;
 
     for (;;)
     {
-        if (!msg[i]) break;
-        if (msg[i] == '#')
-        {
-            if (msg[i + 1] == '#')
-            {
-                ct++;
-                i += 2;
-            }
-            else
-                i += 2;
-        }
-        else
-        {
-            ct++;
-            i++;
-        }
+        pos = doc_lex(pos, &token);
+        if (token.type == DOC_TOKEN_EOF) break;
+        if (token.type == DOC_TOKEN_TAG) continue; /* assume only color tags */
+        if (token.type == DOC_TOKEN_NEWLINE) continue; /* unexpected */
+        ct += token.size;
     }
     return ct;
 }

@@ -4865,6 +4865,7 @@ bool target_set(int mode)
     temp_n = 0;
 
     msg_line_clear(TRUE);
+    prt("", 0, 0);
 
     /* Recenter the map around the player */
     verify_panel();

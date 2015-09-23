@@ -13,6 +13,7 @@
 #include "angband.h"
 #include "equip.h"
 #include "int-map.h"
+#include "z-doc.h"
 
 static void do_cmd_knowledge_shooter(void);
 
@@ -508,307 +509,40 @@ void do_cmd_change_name(void)
 /*
  * Show previous messages to the user    -BEN-
  *
- * This command shows you which messages you are viewing, and allows
- * you to "search" for strings in the recall.
- *
  */
-#define _DRAW_DOWN 0
-#define _DRAW_UP 1
 void do_cmd_messages(int old_now_turn)
 {
-    static bool show_msg_num = FALSE;
-    static bool show_msg_time = FALSE;
+    doc_ptr doc;
+    doc_style_ptr style;
+    int     i, cx, cy;
 
-    int  top_idx, bottom_idx, max_idx, direction;
-    char msg_buf[1024];
-    char finder_str[81];
-    char back_str[81];
-    int  wid, hgt;
-    int  max_y, min_y;
-    bool done = FALSE;    
+    Term_get_size(&cx, &cy);
 
-    /* Get size */
-    Term_get_size(&wid, &hgt);
+    doc = doc_alloc(cx);
 
-    /* Restrict the message output lines */
-    min_y = 1;
-    max_y = hgt - 3;
+    style = doc_style(doc, "normal");
+    style->right = cx;
 
-    /* Wipe finder */
-    strcpy(finder_str, "");
-
-    /* Total messages */
-    max_idx = msg_num();
-
-    /* Start on first message at the bottom and draw upwards from there */
-    bottom_idx = 0;
-    direction = _DRAW_UP;
-
-    /* Save the screen */
-    screen_save();
-
-    /* Clear screen */
-    Term_clear();
-
-    /* Process requests until done */
-    while (!done)
+    for (i = msg_num(); i >= 0; i--)
     {
-        int skey;
+        cptr   msg = msg_text(i);
+        byte   color = msg_color(i);
+        int    trn = msg_turn(i);
 
-        /* Dump messages: Since we are word wrapping, we really need to handle
-           drawing in either direction to avoid scrolling issues. For example,
-           when we page down on a screen with no wrapped lines to a screen with
-           many, we might miss messages during the draw. All of this was figured
-           out by adding the message index to the display and I recommend this
-           for future debugging. */
-        if (direction == _DRAW_UP)
-        {
-            int  y = max_y;
-            int  idx;
+        if (trn < old_now_turn && color == TERM_WHITE)
+            color = TERM_SLATE;
 
-            top_idx = bottom_idx;
-            for (idx = bottom_idx; idx < max_idx && y >= min_y; idx++)
-            {
-                cptr   msg = msg_text(idx);
-                cptr   which = msg;
-                byte   color = msg_color(idx);
-                int    trn = msg_turn(idx);
-                int    cy;
-                rect_t r = rect_create(0, y, wid, hgt);
+        style->color = color;
+        doc_change_style(doc, "normal");
 
-                if (trn < old_now_turn && color == TERM_WHITE)
-                    color = TERM_SLATE;
-
-                msg_buf[0] = '\0';
-                if (show_msg_num)
-                    strcat(msg_buf, format("%d ", idx));
-                if (show_msg_time)
-                {
-                    int d, h, m;
-                    extract_day_hour_min_imp(trn, &d, &h, &m);
-                    strcat(msg_buf, format("D%d %d:%2.2d ", d, h, m));
-                }
-                if (strlen(msg_buf))
-                {
-                    strcat(msg_buf, msg);
-                    which = msg_buf;
-                }
-
-                cy = cmsg_display_wrapped(color, which, &r, FALSE);
-                r.y -= (cy - 1);
-                if (r.y < min_y)
-                    break;
-
-                cmsg_display_wrapped(color, which, &r, TRUE);
-                y -= cy;
-                top_idx = idx;
-            }
-            for (; y >= min_y; y--)
-                Term_erase(0, y, 255);
-        }
-        else
-        {
-            int y = min_y;
-            int idx;
-
-            bottom_idx = top_idx;
-            for (idx = top_idx; idx >= 0 && y <= max_y; idx--)
-            {
-                cptr   msg = msg_text(idx);
-                cptr   which = msg;
-                byte   color = msg_color(idx);
-                int    trn = msg_turn(idx);
-                int    cy;
-                rect_t r = rect_create(0, y, wid, hgt);
-
-                if (trn < old_now_turn && color == TERM_WHITE)
-                    color = TERM_SLATE;
-
-                msg_buf[0] = '\0';
-                if (show_msg_num)
-                    strcat(msg_buf, format("%d ", idx));
-                if (show_msg_time)
-                {
-                    int d, h, m;
-                    extract_day_hour_min_imp(trn, &d, &h, &m);
-                    strcat(msg_buf, format("D%d %d:%2.2d ", d, h, m));
-                }
-                if (strlen(msg_buf))
-                {
-                    strcat(msg_buf, msg);
-                    which = msg_buf;
-                }
-
-                cy = cmsg_display_wrapped(color, which, &r, FALSE);
-                if (y + (cy - 1) > max_y)
-                    break;
-
-                cmsg_display_wrapped(color, which, &r, TRUE);
-                y += cy;
-                bottom_idx = idx;
-            }
-            for (; y <= max_y; y++)
-                Term_erase(0, y, 255);
-        }
-
-        prt(format("Message Recall (%d-%d of %d)",
-               bottom_idx, top_idx, max_idx), 0, 0);
-
-        prt("[Press ? for help]", hgt - 1, 0);
-
-        /* Get a command */
-        skey = inkey_special(TRUE);
-        switch (skey)
-        {
-        case '?':
-            show_file(TRUE, "context_message_recall.txt", NULL, 0, 0);
-            break;
-        case '/':
-        case KTRL('s'):
-            {
-                int z;
-
-                /* Prompt */
-                prt("Find: ", hgt - 1, 0);
-
-                /* Get a "finder" string, or continue */
-                strcpy(back_str, finder_str);
-                if (!askfor(finder_str, 80))
-                {
-                    strcpy(finder_str, back_str);
-                    continue;
-                }
-
-                /* Scan messages */
-                for (z = bottom_idx + 1; z < max_idx; z++)
-                {
-                    cptr msg = msg_text(z);
-
-                    /* Search for it */
-                    if (my_strstr(msg, finder_str))
-                    {
-                        /* New location */
-                        bottom_idx = z;
-                        direction = _DRAW_UP;
-
-                        /* Done */
-                        break;
-                    }
-                }
-            }
-            break;
-
-        case SKEY_TOP:
-        case '7': /* curses */
-            top_idx = max_idx - 1;
-            direction = _DRAW_DOWN;
-            break;
-
-        case SKEY_BOTTOM:
-        case '1': /* curses */
-            bottom_idx = 0;
-            direction = _DRAW_UP;
-            break;
-
-        /* 1 message scrolling */
-        case '8':
-        case SKEY_UP:
-        case '\n':
-        case '\r':
-            if (top_idx < max_idx - 1)
-            {
-                top_idx++;
-                direction = _DRAW_DOWN;
-            }
-            break;
-        case '2':
-        case SKEY_DOWN:
-            if (bottom_idx > 0)
-            {
-                bottom_idx--;
-                direction = _DRAW_UP;
-            }
-            break;
-
-        /* Full Page scrolling */
-        case 'p':
-        case KTRL('P'):
-        case ' ':
-        case SKEY_PGUP:
-        case '9': /* curses */
-            if (top_idx < max_idx - hgt/2)
-            {
-                bottom_idx = top_idx;
-                direction = _DRAW_UP;
-            }
-            else if (top_idx < max_idx - 1)
-            {
-                top_idx = max_idx - 1;
-                direction = _DRAW_DOWN;
-            }
-            break;
-
-        case 'n':
-        case KTRL('N'):
-        case SKEY_PGDOWN:
-        case '3': /* curses */
-            if (bottom_idx > hgt/2)
-            {
-                top_idx = bottom_idx;
-                direction = _DRAW_DOWN;
-            }
-            else if (bottom_idx > 0)
-            {
-                bottom_idx = 0;
-                direction = _DRAW_UP;
-            }
-            break;
-
-        /* 10 message scrolling */
-        case '+':
-            if (top_idx < max_idx - 1)
-            {
-                top_idx += 10;
-                if (top_idx >= max_idx)
-                    top_idx = max_idx - 1;
-                direction = _DRAW_DOWN;
-            }
-            break;
-
-        case '-':
-            if (bottom_idx > 0)
-            {
-                bottom_idx -= 10;
-                if (bottom_idx < 0)
-                    bottom_idx = 0;
-                direction = _DRAW_UP;
-            }
-            break;
-
-        /* Formatting Options */
-        case 'm':
-        case 'M':
-            show_msg_num = show_msg_num ? FALSE : TRUE;
-            break;
-
-        case 't':
-        case 'T':
-            show_msg_time = show_msg_time ? FALSE : TRUE;
-            break;
-
-        case ESCAPE:
-        case 'Q':
-        case 'q':
-        /*default:*/
-            done = TRUE;
-            break;
-        }
+        doc_insert(doc, msg);
+        doc_newline(doc);
     }
-
-    /* Restore the screen */
+    screen_save();
+    doc_display(doc, "Previous Messages", doc->cursor.y);
     screen_load();
+    doc_free(doc);
 }
-
 
 #ifdef ALLOW_WIZARD
 
