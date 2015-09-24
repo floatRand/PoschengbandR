@@ -3371,7 +3371,7 @@ static void bldg_process_command(building_type *bldg, int i)
     bool is_guild = FALSE;
 
     /* Flush messages XXX XXX XXX */
-    msg_line_clear(TRUE);
+    msg_line_clear();
 
     if (is_owner(bldg))
     {

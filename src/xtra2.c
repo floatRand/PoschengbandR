@@ -4864,7 +4864,7 @@ bool target_set(int mode)
     /* Forget */
     temp_n = 0;
 
-    msg_line_clear(TRUE);
+    msg_line_clear();
     prt("", 0, 0);
 
     /* Recenter the map around the player */
@@ -5521,7 +5521,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
         }
     }
 
-    msg_line_clear(TRUE);
+    msg_line_clear();
 
     /* Recenter the map around the player */
     verify_panel();

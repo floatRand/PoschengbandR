@@ -1639,12 +1639,15 @@ void display_news(void)
 {
     FILE *fp;
     char buf[1024];
+    char name[100];
+
+    sprintf(name, "news%d.txt", 1/*TODO: (rand() % 4) + 1*/);
 
     /* Clear screen */
     Term_clear();
 
     /* Build the filename */
-    path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, "news3.txt");
+    path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, name);
 
     /* Open the News file */
     fp = my_fopen(buf, "r");

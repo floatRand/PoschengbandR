@@ -4,6 +4,17 @@
 
 #include <assert.h>
 
+/* The Message Queue */
+static int      _msg_max = 2048;
+static int      _msg_count = 0;
+static msg_ptr *_msgs = NULL;
+static int      _msg_head = 0;
+static bool     _msg_append = FALSE;
+
+/* The Message "Line" */
+static rect_t   _msg_line_rect;
+static doc_ptr  _msg_line_doc = NULL;
+
 msg_ptr _msg_alloc(cptr s)
 {
     msg_ptr m = malloc(sizeof(msg_t));
@@ -22,12 +33,6 @@ void _msg_free(msg_ptr m)
     }
 }
 
-static int _msg_max = 2048;
-static int _msg_count = 0;
-static msg_ptr *_msgs = NULL;
-static int _msg_head = 0;
-static bool _msg_append = FALSE;
-
 void msg_on_startup(void)
 {
     int cb = _msg_max * sizeof(msg_ptr);
@@ -36,6 +41,8 @@ void msg_on_startup(void)
     _msg_count = 0;
     _msg_head = 0;
     _msg_append = FALSE;
+
+    msg_line_init(NULL);
 }
 
 void msg_on_shutdown(void)
@@ -180,34 +187,14 @@ int msg_display_len(cptr msg)
     return ct;
 }
 
-/* State of the "Message Line":
-   We have currently reserved (min_row, min_col, max_row, max_col)
-   We can reserve up to (min_row, min_col, max_max_row, max_col)
-   In other words, the message region expands dynamically, as needed,
-   until cleared with the option to close the "drop down".
-
-   msg_max_col gets reset in cmsg_print to respect the current terminal width.
-*/
-static int msg_min_row = 0;
-static int msg_min_col = 13;
-
-static int msg_max_row = 0;
-static int msg_max_col = 100;
-
-static int msg_max_max_row = 10;
-
-static int msg_current_row = 0;  /* = msg_min_row; */
-static int msg_current_col = 13; /* = msg_min_col; */
-
-static const char * msg_more_prompt = "-more-";
-
 rect_t msg_line_rect(void)
 {
+    assert(_msg_line_doc); /* call msg_on_startup()! */
     return rect_create(
-        msg_min_col,
-        msg_min_row,
-        msg_max_col - msg_min_col + 1,
-        msg_max_row - msg_min_row + 1
+        _msg_line_rect.x,
+        _msg_line_rect.y,
+        _msg_line_rect.cx,
+        _msg_line_doc->cursor.y
     );
 }
 
@@ -215,19 +202,19 @@ void msg_line_init(const rect_t *display_rect)
 {
     if (display_rect && rect_is_valid(display_rect))
     {
-        msg_line_clear(TRUE);
-        msg_min_row = display_rect->y;
-        msg_min_col = display_rect->x;
-        msg_max_row = msg_min_row;
-        msg_max_max_row = msg_min_row + display_rect->cy - 1;
-        msg_max_col = msg_min_col + display_rect->cx - 1;
-
-        msg_current_row = msg_min_row;
-        msg_current_col = msg_min_col;
+        if (_msg_line_doc)
+        {
+            msg_line_clear();
+            doc_free(_msg_line_doc);
+        }
+        _msg_line_rect = *display_rect;
+        if (_msg_line_rect.x + _msg_line_rect.cx > Term->wid)
+            _msg_line_rect.cx = Term->wid - _msg_line_rect.x;
+        _msg_line_doc = doc_alloc(_msg_line_rect.cx);
     }
     else
     {
-        rect_t r = rect_create(13, 0, 80, 10);
+        rect_t r = rect_create(13, 0, 72, 10);
         msg_line_init(&r);
     }
 }
@@ -235,15 +222,6 @@ void msg_line_init(const rect_t *display_rect)
 void msg_boundary(void)
 {
     _msg_append = FALSE;
-    /* Force a line break (display only) */
-    if (msg_current_col > msg_min_col)
-    {
-        if (msg_current_row == msg_max_max_row)
-            msg_current_col = msg_max_col - strlen(msg_more_prompt);
-        else
-            msg_current_col = msg_max_col + 1;
-    }
-
     if (auto_more_state == AUTO_MORE_SKIP_BLOCK)
     {
         /* Flush before updating the state to skip
@@ -266,41 +244,51 @@ bool msg_line_contains(int row, int col)
 
 bool msg_line_is_empty(void)
 {
-    if (msg_current_row == msg_min_row && msg_current_col == msg_min_col)
+    if (_msg_line_doc->cursor.x == 0 && _msg_line_doc->cursor.y == 0)
         return TRUE;
     return FALSE;
 }
 
-void msg_line_clear(bool close_drop_down)
+void msg_line_clear(void)
 {
     int i;
-    for (i = msg_min_row; i <= msg_max_row; i++)
-        Term_erase(msg_min_col, i, msg_max_col - msg_min_col + 1);
+    for (i = 0; i <= _msg_line_doc->cursor.y; i++)
+        Term_erase(_msg_line_rect.x, _msg_line_rect.y + i, _msg_line_rect.cx);
 
-    if (close_drop_down)
+    if (_msg_line_doc->cursor.y > 0)
     {
-        if (msg_max_row)
-        {
-            /* Note: We need not redraw the entire map if this proves too slow */
-            p_ptr->redraw |= PR_MAP;
-            if (msg_min_col <= 12)
-                p_ptr->redraw |= PR_BASIC | PR_EQUIPPY;
-        }
-        msg_max_row = msg_min_row;
+        /* Note: We need not redraw the entire map if this proves too slow */
+        p_ptr->redraw |= PR_MAP;
+        if (_msg_line_rect.x <= 12)
+            p_ptr->redraw |= PR_BASIC | PR_EQUIPPY;
     }
-    msg_current_row = msg_min_row;
-    msg_current_col = msg_min_col;
+
+    doc_rollback(_msg_line_doc, doc_pos_create(0, 0));
 }
 
-static void msg_flush(void)
+void msg_line_redraw(void)
+{
+    doc_sync_term(
+        _msg_line_doc,
+        doc_all(_msg_line_doc),
+        doc_pos_create(_msg_line_rect.x, _msg_line_rect.y)
+    );
+}
+
+static void msg_line_sync(void)
+{
+    /* TODO */
+    msg_line_redraw();
+}
+
+static void msg_line_flush(void)
 {
     if (auto_more_state == AUTO_MORE_PROMPT)
     {
-        /* Pause for response */
-        Term_putstr(msg_current_col, msg_current_row, -1, TERM_L_BLUE, msg_more_prompt);
+        doc_insert(_msg_line_doc, "<color:B>-more-<color:*>");
+        msg_line_sync();
 
-        /* Get an acceptable keypress */
-        while (1)
+        for(;;)
         {
             int cmd = inkey();
             if (cmd == ESCAPE)
@@ -327,104 +315,34 @@ static void msg_flush(void)
             bell();
         }
     }
-
-    msg_line_clear(TRUE);
+    msg_line_clear();
 }
 
 
-/* Display another message on the "Message Line" */
 static void msg_line_display(byte color, cptr msg)
 {
-    cptr pos = msg, seek;
-    byte base_color = color;
-    int len, xtra;
+    /* Quick and dirty test for -more- ... This means _msg_line_display_rect
+       is just a suggested limit, and we'll surpass this for long messages. */
+    if (_msg_line_doc->cursor.y >= _msg_line_rect.cy)
+        msg_line_flush();
 
-    while (*pos)
+    /* Append this message to the last? */
+    else if (!_msg_append && !msg_line_is_empty())
+        doc_newline(_msg_line_doc);
+
+    if (color != TERM_WHITE)
     {
-        if (*pos == ' ')
-        {
-            while (*pos && *pos == ' ')
-            {
-                Term_putch(msg_current_col++, msg_current_row, color, ' ');
-                pos++;
-            }
-            continue;
-        }
-        else if (*pos == '<') /* Perhaps a tag? */
-        {
-            doc_tag_t tag = {0};
-
-            pos = doc_parse_tag(pos, &tag);
-            if (tag.type != DOC_TAG_NONE)
-            {
-                if (tag.type == DOC_TAG_COLOR)
-                {
-                    assert(tag.arg);
-                    if (tag.arg[0] == '*')
-                        color = base_color;
-                    else
-                        color = color_char_to_attr(tag.arg[0]);
-                }
-                continue;
-            }
-            /* Perhaps not! Draw it normally! */
-        }
-
-        /* Get current word: [pos, seek) */
-        seek = pos;
-        switch (*seek)
-        {
-        case '<':
-        case '\n':
-            seek++;
-            break;
-        default:
-            while (*seek && !strchr(" <\n", *seek))
-                seek++;
-        }
-
-        /* Measure the current word and check for a line break */
-        len = seek - pos;
-        if (!len)
-            break; /* oops */
-
-        if (0 /*_punctuation_hack(seek)*/)
-            xtra = 1;
-        else if (msg_current_row == msg_max_max_row && !*seek)
-            xtra += strlen(msg_more_prompt);
-        else
-            xtra = 0;
-
-        if (*pos == '\n' || msg_current_col + len + xtra > msg_max_col)
-        {
-            if (msg_current_row >= msg_max_max_row)
-                msg_flush();
-            else
-            {
-                Term_erase(msg_current_col, msg_current_row, msg_max_col - msg_current_col + 1);
-                msg_current_row++;
-                if (msg_current_row > msg_max_row)
-                    msg_max_row = msg_current_row;
-                msg_current_col = msg_min_col;
-                Term_erase(msg_current_col, msg_current_row, msg_max_col - msg_current_col + 1);
-            }
-            if (*pos == '\n')
-            {
-                pos++;
-                continue;
-            }
-        }
-
-        /* Draw the current word */
-        Term_putstr(msg_current_col, msg_current_row, len, color, pos);
-        msg_current_col += len;
-
-        pos = seek;
+        string_ptr s = string_alloc(NULL);
+        string_printf(s, "<color:%c>%s<color:*> ", attr_to_attr_char(color), msg);
+        doc_insert(_msg_line_doc, string_buffer(s));
+        string_free(s);
     }
-
-    /* Add a space to separate consecutive messages */
-    if (msg_current_col > msg_min_col)
-        Term_putch(msg_current_col++, msg_current_row, color, ' ');
+    else
+    {
+        doc_insert(_msg_line_doc, msg);
+        _msg_line_doc->cursor.x++;
+    }
+    msg_line_sync();
 }
 
 /* Prompt the user for a choice:
@@ -475,7 +393,7 @@ static char cmsg_prompt_imp(byte color, cptr prompt, char keys[], int options)
 char cmsg_prompt(byte color, cptr prompt, char keys[], int options)
 {
     char ch = cmsg_prompt_imp(color, prompt, keys, options);
-    msg_line_clear(TRUE);
+    msg_line_clear();
     return ch;
 }
 
@@ -484,35 +402,19 @@ char msg_prompt(cptr prompt, char keys[], int options)
     return cmsg_prompt(TERM_WHITE, prompt, keys, options);
 }
 
-/* Add a new message to the message 'line', and memorize this
-   message in the message history. */
 void cmsg_print(byte color, cptr msg)
 {
-    int n;
-
-    msg_max_col = MIN(msg_min_col + 80, Term->wid -1);
-
     if (world_monster) return;
     if (statistics_hack) return;
 
-    /* Flush when requested or needed */
+    /* Hack: msg_print(NULL) requests a flush if needed */
     if (!msg)
     {
         if (!msg_line_is_empty())
-            msg_flush();
+            msg_line_flush();
         return;
     }
 
-    n = msg_display_len(msg);
-    if (msg_current_row == msg_max_max_row && msg_current_col + n + (int)strlen(" -more-") > msg_max_col)
-    {
-        msg_flush();
-    }
-
-    /* Paranoia */
-    if (n > 1000) return;
-
-    /* Memorize the message */
     if (character_generated)
     {
         if (_msg_append && _msg_count)
@@ -526,12 +428,10 @@ void cmsg_print(byte color, cptr msg)
     if (auto_more_state == AUTO_MORE_SKIP_ONE)
         auto_more_state = AUTO_MORE_PROMPT;
 
-    /* Window stuff */
     p_ptr->window |= (PW_MESSAGE);
     window_stuff();
-
-    /* Optional refresh */
-    if (fresh_message) Term_fresh();
+    if (fresh_message) /* ?? */
+        Term_fresh();
 
     _msg_append = TRUE;
 }
@@ -541,44 +441,27 @@ void msg_print(cptr msg)
     cmsg_print(TERM_WHITE, msg);
 }
 
-/*
- * Display a formatted message, using "vstrnfmt()" and "msg_print()".
- */
 void msg_format(cptr fmt, ...)
 {
     va_list vp;
-
     char buf[1024];
 
-    /* Begin the Varargs Stuff */
     va_start(vp, fmt);
-
-    /* Format the args, save the length */
     (void)vstrnfmt(buf, 1024, fmt, vp);
-
-    /* End the Varargs Stuff */
     va_end(vp);
 
-    /* Display */
     cmsg_print(TERM_WHITE, buf);
 }
 
 void cmsg_format(byte color, cptr fmt, ...)
 {
     va_list vp;
-
     char buf[1024];
 
-    /* Begin the Varargs Stuff */
     va_start(vp, fmt);
-
-    /* Format the args, save the length */
     (void)vstrnfmt(buf, 1024, fmt, vp);
-
-    /* End the Varargs Stuff */
     va_end(vp);
 
-    /* Display */
     cmsg_print(color, buf);
 }
 

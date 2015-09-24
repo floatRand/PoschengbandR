@@ -756,6 +756,47 @@ doc_pos_t doc_pos_next(doc_ptr doc, doc_pos_t pos)
     return result;
 }
 
+typedef void (*_doc_char_fn)(doc_pos_t pos, doc_char_ptr cell);
+static void _doc_for_each(doc_ptr doc, doc_region_t range, _doc_char_fn f)
+{
+    doc_pos_t pos;
+
+    assert(doc_region_is_valid(&range));
+
+    for (pos.y = range.start.y; pos.y <= range.stop.y; pos.y++)
+    {
+        int max_x = doc->width;
+
+        pos.x = 0;
+        if (pos.y == range.start.y)
+            pos.x = range.start.x;
+        if (pos.y == range.stop.y)
+            max_x = range.stop.x;
+
+        if (pos.y <= doc->cursor.y)
+        {
+            doc_char_ptr cell = doc_char(doc, pos);
+            for (; pos.x < max_x; pos.x++, cell++)
+            {
+                f(pos, cell);
+            }
+        }
+    }
+}
+static void _doc_clear_char(doc_pos_t pos, doc_char_ptr cell)
+{
+    cell->c = '\0';
+    cell->a = TERM_DARK;
+}
+void doc_rollback(doc_ptr doc, doc_pos_t pos)
+{
+    doc_region_t r;
+    r.start = pos;
+    r.stop = doc->cursor;
+    _doc_for_each(doc, r, _doc_clear_char);
+    doc->cursor = pos;
+}
+
 #define _INVALID_COLOR 255
 void doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos)
 {

@@ -6223,15 +6223,7 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
         /* Hack -- stop the player on first crossing the threshold */
         if (old_chp >= warning) 
         {
-            msg_print("<color:v>*** LOW HITPOINT WARNING! ***<color:*> Press <color:y>Space<color:*> to continue.");
-            flush();
-            for (;;)
-            {
-                char ch = inkey();
-                if (ch == ' ') break;
-            }
-            /*prt("", 0, 0);*/
-            /*msg_flag = FALSE;  prevents "-more-" message. */
+            msg_prompt("<color:v>*** LOW HITPOINT WARNING! ***<color:*> Press <color:y>Space<color:*> to continue.", " ", PROMPT_FORCE_CHOICE);
         }
         else
         {

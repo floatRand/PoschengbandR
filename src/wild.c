@@ -696,7 +696,7 @@ static bool _generate_special_encounter(room_template_t *room_ptr, int x, int y,
                 char ch = inkey();
                 if (ch == ' ') break;
             }
-            msg_line_clear(TRUE);
+            msg_line_clear();
         }
         return TRUE;
     }

@@ -2303,6 +2303,7 @@ enum _mimic_types {
 #define PR_BASIC            0x00004000     /* Display Basic Info */
 #define PR_MAP              0x00008000     /* Display Map */
 #define PR_WIPE             0x00010000     /* Hack -- Total Redraw */
+#define PR_MSG_LINE         0x00020000
 
 /* xxx */
 /* xxx */

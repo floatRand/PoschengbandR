@@ -5213,11 +5213,12 @@ void redraw_stuff(void)
     if (p_ptr->redraw & (PR_DEPTH|PR_BASIC))
         p_ptr->redraw |= PR_STATUS;
 
-    /* Hack -- clear the screen */
+    /* Hack -- clear the screen *FIRST* */
     if (p_ptr->redraw & (PR_WIPE))
     {
         p_ptr->redraw &= ~(PR_WIPE);
-        msg_print(NULL);
+        if (!(p_ptr->redraw & PR_MSG_LINE)) /* ?? */
+            msg_print(NULL);
         Term_clear();
     }
 
@@ -5329,6 +5330,12 @@ void redraw_stuff(void)
         prt_state();
     }
 
+    /* *LAST* */
+    if (p_ptr->redraw & PR_MSG_LINE)
+    {
+        p_ptr->redraw &= ~PR_MSG_LINE;
+        msg_line_redraw();
+    }
 }
 
 

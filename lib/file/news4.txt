@@ -1,0 +1,45 @@
+<color:y>PosChengband <$:version><color:*>
+<style:screenshot>
+             <color:U>You<color:*> <color:U>attack<color:*> <color:U>the<color:*> <color:U>Great<color:*> <color:U>Wyrm<color:*> <color:U>of<color:*> <color:U>Many<color:*> <color:U>Colours<color:*> <color:R>powerfully<color:*>: You miss. You         <color:*>
+LEVEL <color:G>    48<color:*> hit. You are <color:r>burned<color:*>, frozen and <color:b>shocked<color:*>. <color:v>*Ouch!*<color:*> You hit. You are       <color:G>####<color:*>
+EXP <color:G>    509k<color:*> <color:r>burned<color:*>, frozen and <color:b>shocked<color:*>. <color:v>*Ouch!*<color:*> You hit. You are <color:r>burned<color:*>, frozen and <color:G>####<color:*>
+AU  <color:G>    629k<color:*> <color:b>shocked<color:*>. <color:v>*Ouch!*<color:*> You miss. You bite. You are <color:r>burned<color:*>, frozen and         <color:G>####<color:*>
+<color:W>|<color:*><color:U>)<color:*><color:s>}<color:*><color:g>==<color:*><color:y>"<color:*><color:R>*<color:*><color:s>[<color:*><color:g>(<color:*><color:s>]<color:*><color:W>]]<color:*> <color:b>shocked<color:*>. <color:v>*Ouch!*<color:*> <color:v>*Ouch!*<color:*>                                                <color:G>####<color:*>
+STR : <color:G>18/***<color:*> <color:g>The<color:*> <color:g>Great<color:*> <color:g>Wyrm<color:*> <color:g>of<color:*> <color:g>Many<color:*> <color:g>Colours<color:*> breathes fire. The Lance burns up! The   <color:G>####<color:*>
+INT : <color:G> 18/65<color:*> Mace burns up! The <color:U>Pair<color:*> <color:U>of<color:*> <color:U>Soft<color:*> <color:U>Leather<color:*> <color:U>Boots<color:*> burns up! The <color:W>Soft<color:*>        <color:G>#<color:*>...<color:*>
+WIS : <color:G>    12<color:*> <color:W>Leather<color:*> <color:W>Armour<color:*> burns up! The <color:W>Leather<color:*> <color:W>Scale<color:*> <color:W>Mail<color:*> <color:W>of<color:*> <color:W>Elvenkind<color:*> is         ..<color:G>##<color:*>
+DEX : <color:G>18/183<color:*> unaffected! The <color:U>Arrows<color:*> burn up! The Sickle burns up! The <color:W>Rhino<color:*> <color:W>Hide<color:*>     <color:G>####<color:*>
+CON : <color:G>18/187<color:*> <color:W>Armour<color:*> burns up! You stand your ground! <color:v>*Ouch!*<color:*>                         <color:G>####<color:*>
+CHR : <color:G>18/117<color:*> ...............................................<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>...<color:*><color:G>####################<color:*>
+AC     <color:G>  230<color:*> ...<color:U>####<color:*><color:b>5<color:*><color:U>####<color:*>.<color:W>]]<color:*><color:r>!<color:*>.<color:u>\<color:*>............<color:U>#####+######<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>#####################<color:*>
+HP <color:r> 412<color:*>/<color:G> 977<color:*> ...<color:U>#########<color:*>...<color:W>|<color:*><color:v>~<color:*>.<color:U>####<color:*><color:r>6<color:*><color:U>####<color:*>...<color:U>############<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>#####################<color:*>
+             ...<color:U>#########<color:*>.<color:s>]<color:*><color:U>)<color:*><color:y>"<color:*>.<color:U>(#########<color:*>...<color:U>############<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>#####################<color:*>
+             ...<color:U>#########<color:*>.<color:G>|<color:*><color:y>T<color:*><color:W>|<color:*><color:y>"<color:*>.<color:U>#########<color:*>...<color:U>############<color:*>.....<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>#####################<color:*>
+<color:y>T<color:*>[<color:r>****<color:*>-----] ...<color:U>#########<color:*><color:W>|<color:*><color:g>D<color:*>.<color:s>[<color:*>..<color:U>#########<color:*>....................<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>#####################<color:*>
+<color:U>,<color:*>[<color:G>*********<color:*>] .............<color:W>|<color:*>....<color:U>#########<color:*>....................<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>..<color:*><color:G>#####################<color:*>
+<color:v>D<color:*><color:R>[<color:*><color:o>****<color:*><color:R>-----]<color:*> <color:U>######<color:*>.......<color:U>(<color:*>.................................<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>...<color:*><color:G>####################<color:*>
+             <color:U>######<color:*>....<color:U>###<color:*><color:v>0<color:*><color:U>###<color:*>...................<color:U>####<color:*>.......<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>....<color:*><color:G>##################<color:*>.<color:*>
+             <color:D>7<color:*><color:U>#####<color:*>....<color:U>#######<color:*>.....<color:U>#######<color:*>.......<color:U>###<color:*><color:y>8<color:*>.......<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>....<color:*><color:G>#####<color:*>.............<color:G>#<color:*>
+             ..........<color:U>#######<color:*>.....<color:U>#######<color:*>.......<color:U>####<color:*>.......<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>..........<color:G>##############<color:*>
+<color:G>Fast (+29)<color:*>   ...............................................<color:U>###<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>....<color:*><color:G>###################<color:*>
+<color:D>Cursed<color:*>       <color:U>##################################################<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>...<color:*><color:G>####################<color:*>
+<color:G>Full<color:*>         <color:U>##################################################<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>...<color:*><color:G>####################<color:*>
+             <color:b>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<color:*><color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>...<color:*><color:G>####################<color:*>
+             <color:b>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<color:*><color:u>.<color:*>.<color:g>....<color:*><color:G>###################<color:*>
+             <color:u>....................................................<color:*>.<color:g>....<color:*><color:G>###################<color:*>
+             .....................................................<color:g>....<color:*><color:G>###################<color:*>
+             <color:g>.........................................................<color:*><color:G>###################<color:*>
+             <color:G>####################################################<color:*><color:g>.....<color:*><color:G>###################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+             <color:G>############################################################################<color:*>
+                            <color:g>Acid<color:*> <color:b>Elec<color:*> <color:r>Fire<color:*> <color:s>Cold<color:*> <color:g>Pois<color:*>                              Outpost<color:*>
+<style:normal>
+              [Press <style:keypress>?<style:normal> for Credits. Press Any Other Key to Play]

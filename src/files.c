@@ -6639,7 +6639,7 @@ void exit_game_panic(void)
     if (!character_generated || character_saved) quit("panic");
 
     /* Clear the top line */
-    msg_line_clear(TRUE);
+    msg_line_clear();
 
     /* Hack -- turn off some things */
     disturb(1, 0);

@@ -1192,7 +1192,7 @@ static bool _dagger_toss(int hand)
                 char ch = inkey();
                 if (ch == ' ') break;
             }
-            msg_line_clear(TRUE);
+            msg_line_clear();
         }
 
         object_copy(&copy, info.o_ptr);

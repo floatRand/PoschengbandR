@@ -4937,7 +4937,7 @@ static void process_player(void)
             redraw_stuff();
 
             /* Hack -- Assume messages were seen */
-            msg_line_clear(TRUE);
+            msg_line_clear();
 
             /* Process the command */
             process_command();
@@ -5934,8 +5934,6 @@ void play_game(bool new_game)
 
     /* Start game */
     p_ptr->playing = TRUE;
-
-    msg_line_init(NULL);
 
     /* Reset the visual mappings */
     reset_visuals();

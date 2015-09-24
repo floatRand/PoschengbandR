@@ -1,0 +1,27 @@
+<color:y>PosChengband <$:version><color:*>
+<style:screenshot>
+<color:U>You<color:*> <color:U>attack<color:*> <color:U>the<color:*> <color:U>Ultimate<color:*> <color:U>beholder<color:*> <color:R>powerfully<color:*>: You hit. It was a <color:y>good<color:*>                      <color:*>
+hit! You hit. You hit. You hit. You hit. You hit. You peck. You bite.                    <color:*>
+<color:g>The<color:*> <color:g>Ultimate<color:*> <color:g>beholder<color:*> <color:g>attacks<color:*> <color:g>you:<color:*> She gazes. You keep hold of your                      <color:*>
+life force! You avoid her gaze. You avoid her gaze. You avoid her gaze.                  <color:*>
+                                                                                         <color:*>
+<color:U>You<color:*> <color:U>attack<color:*> <color:U>the<color:*> <color:U>Ultimate<color:*> <color:U>beholder<color:*> <color:R>powerfully<color:*>: You hit. You hit. You hit.                  <color:*>
+You hit. You hit. You hit. It was a <color:R>great<color:*> hit! You peck. You bite.                       <color:*>
+<color:g>The<color:*> <color:g>Ultimate<color:*> <color:g>beholder<color:*> magically summons her kin.                                         <color:*>
+<color:g>The<color:*> <color:g>Internet<color:*> <color:g>Exploder<color:*> <color:g>attacks<color:*> <color:g>you:<color:*> It misses.                                            <color:*>
+The Internet Exploder requests a reboot, gets tired of asking nicely,                    <color:*>
+and shuts down your PC. <color:g>The<color:*> <color:g>Internet<color:*> <color:g>Exploder<color:*> <color:g>attacks<color:*> <color:g>you:<color:*> It explodes.                  <color:*>
+You feel weak for a moment, but the feeling passes. You feel clumsy for                  <color:*>
+a moment, but the feeling passes. You feel sickly for a moment, but the                  <color:*>
+feeling passes. You feel very stupid. You feel very naive. You feel                      <color:*>
+very insecure. The Internet Exploder was deprecated. <color:R>The<color:*> <color:R>Internet<color:*>                        <color:*>
+<color:R>Exploder<color:*> <color:R>explodes<color:*> <color:R>into<color:*> <color:R>tiny<color:*> <color:R>shreds.<color:*>                                                      <color:*>
+<color:g>The<color:*> <color:g>Internet<color:*> <color:g>Exploder<color:*> <color:g>attacks<color:*> <color:g>you:<color:*> It misses.                                            <color:*>
+                                                                                         <color:*>
+<color:U>You<color:*> <color:U>attack<color:*> <color:U>the<color:*> <color:U>Ultimate<color:*> <color:U>beholder<color:*> <color:R>powerfully<color:*>: You miss. You hit. It was                   <color:*>
+a <color:y>good<color:*> hit! You hit. You hit. You hit. You hit. <color:R>You<color:*> <color:R>have<color:*> <color:R>slain<color:*> <color:R>the<color:*>                       <color:*>
+<color:R>Ultimate<color:*> <color:R>beholder.<color:*>                                                                       <color:*>
+<color:g>The<color:*> <color:g>Ultimate<color:*> <color:g>beholder<color:*> <color:g>attacks<color:*> <color:g>you:<color:*> You avoid her gaze. You avoid her                     <color:*>
+gaze. You avoid her gaze. You avoid her gaze.                                            <color:*>
+<style:normal>
+              [Press <style:keypress>?<style:normal> for Credits. Press Any Other Key to Play]

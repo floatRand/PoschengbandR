@@ -1858,7 +1858,7 @@ static int get_stock(int *com_val, cptr pmt, int i, int j)
 
 #endif /* ALLOW_REPEAT -- TNB */
 
-    msg_line_clear(TRUE);
+    msg_line_clear();
 
     /* Assume failure */
     *com_val = (-1);
@@ -3418,7 +3418,7 @@ void do_cmd_store(void)
     /* Allow expanding macros */
     get_com_no_macros = FALSE;
 
-    msg_line_clear(TRUE);
+    msg_line_clear();
 
     /* Clear the screen */
     Term_clear();

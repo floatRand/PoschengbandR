@@ -1389,7 +1389,7 @@ void fumbling_mut(int cmd, variant *res)
                         char ch = inkey();
                         if (ch == 'Y') break;
                     }
-                    msg_line_clear(TRUE);
+                    msg_line_clear();
                 }
             }
         }

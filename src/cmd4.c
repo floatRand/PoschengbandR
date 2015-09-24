@@ -378,7 +378,7 @@ void do_cmd_redraw(void)
     p_ptr->update |= (PU_MONSTERS);
 
     /* Redraw everything */
-    p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY);
+    p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY | PR_MSG_LINE);
 
     /* Window stuff */
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER);
@@ -4284,13 +4284,9 @@ void do_cmd_save_screen_doc(void)
         use_graphics = FALSE;
         reset_visuals();
 
-        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY);
+        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY | PR_MSG_LINE);
         redraw_stuff();
     }
-
-/* Temp Hack for documentation!*/
-hgt = 27;
-wid = 80;
 
     for (y = 0; y < hgt; y++)
     {
@@ -4324,7 +4320,7 @@ wid = 80;
         use_graphics = TRUE;
         reset_visuals();
 
-        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY);
+        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY | PR_MSG_LINE);
         redraw_stuff();
     }
 }

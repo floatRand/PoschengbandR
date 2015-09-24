@@ -1856,7 +1856,7 @@ void ring_process_m(int m_idx)
                     char ch = inkey();
                     if (ch == ' ') break;
                 }
-                msg_line_clear(TRUE);
+                msg_line_clear();
            }
         }
     }
