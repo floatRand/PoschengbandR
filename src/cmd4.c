@@ -520,18 +520,23 @@ void do_cmd_messages(int old_now_turn)
     doc = doc_alloc(80);
     for (i = msg_count() - 1; i >= 0; i--)
     {
-        cptr   msg = msg_text(i);
-        int    turn = msg_turn(i);
+        msg_ptr m = msg_get(i);
 
-        if (turn != current_turn)
+        if (m->turn != current_turn)
         {
             if (doc->cursor.y > current_row + 1)
                 doc_newline(doc);
-            current_turn = turn;
+            current_turn = m->turn;
             current_row = doc->cursor.y;
         }
 
-        doc_insert(doc, msg);
+        doc_insert(doc, string_buffer(m->msg));
+        if (m->count > 1)
+        {
+            char buf[10];
+            sprintf(buf, " <x%d>", m->count);
+            doc_insert(doc, buf);
+        }
         doc_newline(doc);
     }
     screen_save();
@@ -4258,6 +4263,7 @@ static void do_cmd_save_screen_html(void)
  * show_file() handles colors with embedded [[[[?| directives. */
 void do_cmd_save_screen_doc(void)
 {
+    bool old_use_graphics = use_graphics;
     int   y, x;
     byte  a = 0;
     char  c = ' ';
@@ -4272,6 +4278,19 @@ void do_cmd_save_screen_doc(void)
         return;
 
     Term_get_size(&wid, &hgt);
+
+    if (old_use_graphics)
+    {
+        use_graphics = FALSE;
+        reset_visuals();
+
+        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY);
+        redraw_stuff();
+    }
+
+/* Temp Hack for documentation!*/
+hgt = 27;
+wid = 80;
 
     for (y = 0; y < hgt; y++)
     {
@@ -4299,6 +4318,15 @@ void do_cmd_save_screen_doc(void)
         fprintf(fff, "<color:*>\n");
     }
     my_fclose(fff);
+
+    if (old_use_graphics)
+    {
+        use_graphics = TRUE;
+        reset_visuals();
+
+        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY);
+        redraw_stuff();
+    }
 }
 
 /*

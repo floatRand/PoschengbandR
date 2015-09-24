@@ -1644,7 +1644,7 @@ void display_news(void)
     Term_clear();
 
     /* Build the filename */
-    path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, "news.txt");
+    path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, "news3.txt");
 
     /* Open the News file */
     fp = my_fopen(buf, "r");

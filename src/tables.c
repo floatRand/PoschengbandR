@@ -3413,9 +3413,6 @@ option_type option_info[] =
     { &quick_messages,              TRUE,  OPT_PAGE_INPUT, 0, 1,
     "quick_messages",               "Activate quick messages" },
 
-    { &auto_more,                   FALSE, OPT_PAGE_INPUT, 2, 6,
-    "auto_more",                    "Automatically clear '-more-' prompts" },
-
     { &command_menu,                TRUE,  OPT_PAGE_INPUT, 2, 7,
     "command_menu",                 "Enable command selection menu" },
 

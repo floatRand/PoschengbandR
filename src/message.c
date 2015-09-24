@@ -1,28 +1,19 @@
 #include "angband.h"
 
-#include "c-string.h"
 #include "z-doc.h"
 
 #include <assert.h>
 
-struct _msg_s
+msg_ptr _msg_alloc(cptr s)
 {
-    string_ptr msg;
-    int        turn;
-    int        count;
-};
-typedef struct _msg_s _msg_t, *_msg_ptr;
-
-_msg_ptr _msg_alloc(cptr s)
-{
-    _msg_ptr m = malloc(sizeof(_msg_t));
+    msg_ptr m = malloc(sizeof(msg_t));
     m->msg = string_alloc(s);
     m->turn = 0;
     m->count = 1;
     return m;
 }
 
-void _msg_free(_msg_ptr m)
+void _msg_free(msg_ptr m)
 {
     if (m)
     {
@@ -33,13 +24,13 @@ void _msg_free(_msg_ptr m)
 
 static int _msg_max = 2048;
 static int _msg_count = 0;
-static _msg_ptr *_msgs = NULL;
+static msg_ptr *_msgs = NULL;
 static int _msg_head = 0;
 static bool _msg_append = FALSE;
 
 void msg_on_startup(void)
 {
-    int cb = _msg_max * sizeof(_msg_ptr);
+    int cb = _msg_max * sizeof(msg_ptr);
     _msgs = malloc(cb);
     memset(_msgs, 0, cb);
     _msg_count = 0;
@@ -66,18 +57,18 @@ int msg_count(void)
     return _msg_count;
 }
 
-cptr msg_text(int age)
+msg_ptr msg_get(int age)
 {
     int i = _msg_index(age);
-    _msg_ptr m = _msgs[i];
-    return string_buffer(m->msg);
+    return _msgs[i];
 }
 
-int msg_plain_text(int age, char *buffer, int max)
+int msg_get_plain_text(int age, char *buffer, int max)
 {
     int         ct = 0, i;
     doc_token_t token;
-    cptr        pos = msg_text(age);
+    msg_ptr     msg = msg_get(age);
+    cptr        pos = string_buffer(msg->msg);
     bool        done = FALSE;
 
     while (!done)
@@ -102,13 +93,6 @@ int msg_plain_text(int age, char *buffer, int max)
     return ct;
 }
 
-s32b msg_turn(int age)
-{
-    int i = _msg_index(age);
-    _msg_ptr m = _msgs[i];
-    return m->turn;
-}
-
 void msg_add(cptr str)
 {
     cmsg_add(TERM_WHITE, str);
@@ -120,8 +104,7 @@ void cmsg_append(byte color, cptr str)
         cmsg_add(color, str);
     else
     {
-        int      i = _msg_index(0);
-        _msg_ptr m = _msgs[i];
+        msg_ptr m = msg_get(0);
 
         assert(m);
         if (string_length(m->msg))
@@ -135,8 +118,21 @@ void cmsg_append(byte color, cptr str)
 
 void _cmsg_add_aux(byte color, cptr str, int turn)
 {
-    _msg_ptr m = _msgs[_msg_head];
+    msg_ptr m;
 
+    /* Repeat last message? */
+    if (_msg_count)
+    {
+        m = msg_get(0);
+        if (strcmp(string_buffer(m->msg), str) == 0)
+        {
+            m->count++;
+            m->turn = turn;
+            return;
+        }
+    }
+
+    m = _msgs[_msg_head];
     if (!m)
     {
         m = _msg_alloc(NULL);
@@ -154,7 +150,7 @@ void _cmsg_add_aux(byte color, cptr str, int turn)
         string_append(m->msg, str);
 
     m->turn = turn;
-    m->count = 1; /* TODO: Think about counts later ... */
+    m->count = 1;
 
     _msg_head = (_msg_head + 1) % _msg_max;
 }
@@ -298,7 +294,7 @@ void msg_line_clear(bool close_drop_down)
 
 static void msg_flush(void)
 {
-    if (!auto_more && auto_more_state == AUTO_MORE_PROMPT)
+    if (auto_more_state == AUTO_MORE_PROMPT)
     {
         /* Pause for response */
         Term_putstr(msg_current_col, msg_current_row, -1, TERM_L_BLUE, msg_more_prompt);
@@ -617,8 +613,9 @@ void msg_on_save(savefile_ptr file)
     savefile_write_u16b(file, count);
     for (i = count - 1; i >= 0; i--)
     {
-        savefile_write_string(file, msg_text(i));
-        savefile_write_s32b(file, msg_turn(i));
+        msg_ptr m = msg_get(i);
+        savefile_write_string(file, string_buffer(m->msg));
+        savefile_write_s32b(file, m->turn);
     }
 }
 

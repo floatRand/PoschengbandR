@@ -2193,17 +2193,22 @@ static void _fix_message_aux(void)
 
     for (i = MIN(h, msg_count() - 1); i >= 0; i--)
     {
-        cptr   msg = msg_text(i);
-        int    turn = msg_turn(i);
+        msg_ptr m = msg_get(i);
 
-        if (turn != current_turn)
+        if (m->turn != current_turn)
         {
             if (doc->cursor.y > current_row + 1)
                 doc_newline(doc);
-            current_turn = turn;
+            current_turn = m->turn;
             current_row = doc->cursor.y;
         }
-        doc_insert(doc, msg);
+        doc_insert(doc, string_buffer(m->msg));
+        if (m->count > 1)
+        {
+            char buf[10];
+            sprintf(buf, " <x%d>", m->count);
+            doc_insert(doc, buf);
+        }
         doc_newline(doc);
     }
     doc_sync_term(

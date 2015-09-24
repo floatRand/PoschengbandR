@@ -1,6 +1,8 @@
 #ifndef INCLUDED_MESSAGE_H
 #define INCLUDED_MESSAGE_H
 
+#include "c-string.h"
+
 /* Stop using auto_more and use the new improved handling instead! */
 #define AUTO_MORE_PROMPT     0
 #define AUTO_MORE_SKIP_ONE   1   /* Skip to next message */
@@ -9,17 +11,23 @@
 extern int auto_more_state;
 
 
-extern void msg_on_startup(void);
-extern void msg_on_shutdown(void);
-extern void msg_on_load(savefile_ptr file);
-extern void msg_on_save(savefile_ptr file);
+struct msg_s
+{
+    string_ptr msg;
+    int        turn;
+    int        count;
+};
+typedef struct msg_s msg_t, *msg_ptr;
 
 
-extern int  msg_count(void);
+extern void     msg_on_startup(void);
+extern void     msg_on_shutdown(void);
+extern void     msg_on_load(savefile_ptr file);
+extern void     msg_on_save(savefile_ptr file);
 
-extern cptr msg_text(int age);
-extern int  msg_plain_text(int age, char *buffer, int max);
-extern int  msg_turn(int age);
+extern int      msg_count(void);
+extern msg_ptr  msg_get(int age);
+extern int      msg_get_plain_text(int age, char *buffer, int max);
 
 extern void msg_add(cptr msg);
 extern void cmsg_add(byte color, cptr msg);

@@ -211,7 +211,6 @@ extern bool rogue_like_commands;    /* Rogue-like commands */
 extern bool always_pickup;    /* Pick things up by default */
 extern bool carry_query_flag;    /* Prompt before picking things up */
 extern bool quick_messages;    /* Activate quick messages */
-extern bool auto_more;    /* Automatically clear '-more-' prompts */
 extern bool command_menu;    /* Enable command selection menu */
 extern bool other_query_flag;    /* Prompt for floor item selection */
 extern bool use_old_target;    /* Use old target by default */

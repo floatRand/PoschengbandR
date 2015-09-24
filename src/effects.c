@@ -6235,8 +6235,7 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
         }
         else
         {
-            cmsg_print(TERM_VIOLET, "*** LOW HITPOINT WARNING! ***");
-            /*msg_print(NULL);*/
+            cmsg_print(TERM_VIOLET, "*Ouch!*");
             flush();
         }
     }
