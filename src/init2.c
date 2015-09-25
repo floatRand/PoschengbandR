@@ -1641,7 +1641,8 @@ void display_news(void)
     char buf[1024];
     char name[100];
 
-    sprintf(name, "news%d.txt", 1/*TODO: (rand() % 4) + 1*/);
+    srand(time(NULL));
+    sprintf(name, "news%d.txt", (rand() % 4) + 1);
 
     /* Clear screen */
     Term_clear();
@@ -1652,7 +1653,6 @@ void display_news(void)
     /* Open the News file */
     fp = my_fopen(buf, "r");
 
-#if 1
     /* Dump */
     if (fp)
     {
@@ -1666,31 +1666,7 @@ void display_news(void)
         doc_free(doc);
         my_fclose(fp);
     }
-#else
-    /* Dump */
-    if (fp)
-    {
-        int w, h;
-        rect_t r;
 
-        Term_get_size(&w, &h);
-        r = rect_create(0, 0, w, 1);
-
-        /* Dump the file to the screen */
-        while (0 == my_fgets(fp, buf, sizeof(buf)))
-        {
-            /* Display and advance
-            Term_putstr(0, i++, -1, TERM_WHITE, buf);*/
-            cmsg_display_wrapped(TERM_WHITE, buf, &r, TRUE);
-            r.y++;
-            if (r.y >= h)
-                break;
-        }
-
-        /* Close */
-        my_fclose(fp);
-    }
-#endif
     /* Flush it */
     Term_fresh();
 
