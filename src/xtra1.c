@@ -1788,6 +1788,13 @@ static void prt_effects(void)
         else
             c_put_str(a, "Cursed", row++, col);
     }
+    if (p_ptr->mimic_form != MIMIC_NONE)
+    {
+        char buf[MAX_NLEN];
+        race_t *race_ptr = get_race_t();
+        sprintf(buf, "[%.10s]", race_ptr->name);
+        c_put_str(TERM_RED, buf, row++, col);
+    }
     if (p_ptr->cut)
         prt_cut(row++, col);
     if (p_ptr->stun)
