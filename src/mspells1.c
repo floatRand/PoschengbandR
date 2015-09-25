@@ -2033,6 +2033,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
                         which = randint0(MAX_RACES);
                         if ( which != RACE_HUMAN 
                           && which != RACE_DEMIGOD 
+                          && which != RACE_DRACONIAN
                           && which != RACE_ANDROID 
                           && p_ptr->prace != which 
                           && !(get_race_t_aux(which, 0)->flags & RACE_IS_MONSTER) )
