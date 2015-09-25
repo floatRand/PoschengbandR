@@ -2213,7 +2213,7 @@ static void _fix_message_aux(void)
     }
     doc_sync_term(
         doc,
-        doc_range_bottom_rows(doc, h),
+        doc_range_bottom_lines(doc, h),
         doc_pos_create(0, 0)
     );
     doc_free(doc);

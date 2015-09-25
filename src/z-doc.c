@@ -96,6 +96,18 @@ bool doc_region_contains(doc_region_ptr region, doc_pos_t pos)
     return FALSE;
 }
 
+int doc_region_line_count(doc_region_ptr region)
+{
+    int result = 0;
+    if (doc_region_is_valid(region))
+    {
+        result = region->stop.y - region->start.y;
+        if (region->stop.x > 0)
+            result++;
+    }
+    return result;
+}
+
 static void _doc_bookmark_free(vptr pv)
 {
     doc_bookmark_ptr mark = pv;
@@ -187,6 +199,12 @@ doc_pos_t doc_cursor(doc_ptr doc)
     return doc->cursor;
 }
 
+int doc_line_count(doc_ptr doc)
+{
+    doc_region_t r = doc_range_all(doc);
+    return doc_region_line_count(&r);
+}
+
 doc_region_t doc_range_all(doc_ptr doc)
 {
     doc_region_t result;
@@ -211,7 +229,7 @@ doc_region_t doc_range_top(doc_ptr doc, doc_pos_t stop)
     return result;
 }
 
-doc_region_t doc_range_top_rows(doc_ptr doc, int count)
+doc_region_t doc_range_top_lines(doc_ptr doc, int count)
 {
     doc_region_t result;
     result.start.x = 0;
@@ -233,11 +251,10 @@ doc_region_t doc_range_bottom(doc_ptr doc, doc_pos_t start)
     return result;
 }
 
-doc_region_t doc_range_bottom_rows(doc_ptr doc, int count)
+doc_region_t doc_range_bottom_lines(doc_ptr doc, int count)
 {
     doc_region_t result;
     result.start.x = 0;
-    /* Include cursor row in count? */
     if (doc->cursor.x > 0)
         result.start.y = MAX(0, doc->cursor.y - (count - 1));
     else
@@ -258,13 +275,13 @@ doc_region_t doc_range_middle(doc_ptr doc, doc_pos_t start, doc_pos_t stop)
     return result;
 }
 
-doc_region_t doc_range_middle_rows(doc_ptr doc, int start_row, int stop_row)
+doc_region_t doc_range_middle_lines(doc_ptr doc, int start_line, int stop_line)
 {
     doc_region_t result;
     result.start.x = 0;
-    result.start.y = start_row;
-    result.stop.x = 0;
-    result.stop.y = stop_row + 1; /* include (width, stop_row) in [start, stop)! */
+    result.start.y = start_line;
+    result.stop.x = doc->width;
+    result.stop.y = stop_line ;
 
     if (doc_pos_compare(doc->cursor, result.start) < 0)
         return doc_region_invalid();
@@ -320,7 +337,7 @@ doc_pos_t doc_find_bookmark(doc_ptr doc, cptr name)
     return doc_pos_invalid();
 }
 
-static bool _row_test_str(doc_char_ptr cell, int ncell, cptr what, int nwhat)
+static bool _line_test_str(doc_char_ptr cell, int ncell, cptr what, int nwhat)
 {
     int i;
 
@@ -340,14 +357,14 @@ static bool _row_test_str(doc_char_ptr cell, int ncell, cptr what, int nwhat)
     return FALSE;
 }
 
-static int _row_find_str(doc_char_ptr cell, int ncell, cptr what)
+static int _line_find_str(doc_char_ptr cell, int ncell, cptr what)
 {
     int i;
     int nwhat = strlen(what);
 
     for (i = 0; i < ncell - nwhat; i++)
     {
-        if (_row_test_str(cell + i, ncell - i, what, nwhat))
+        if (_line_test_str(cell + i, ncell - i, what, nwhat))
             return i;
     }
 
@@ -363,7 +380,7 @@ doc_pos_t doc_find_next(doc_ptr doc, cptr text, doc_pos_t start)
         int          x = (y == start.y) ? start.x : 0;
         int          ncell = doc->width - x;
         doc_char_ptr cell = doc_char(doc, doc_pos_create(x, y));
-        int          i = _row_find_str(cell, ncell, text);
+        int          i = _line_find_str(cell, ncell, text);
 
         if (i >= 0)
         {
@@ -389,7 +406,7 @@ doc_pos_t doc_find_prev(doc_ptr doc, cptr text, doc_pos_t start)
     {
         int          ncell = (y == start.y) ? start.x - 1 : doc->width;
         doc_char_ptr cell = doc_char(doc, doc_pos_create(0, y));
-        int          i = _row_find_str(cell, ncell, text);
+        int          i = _line_find_str(cell, ncell, text);
 
         if (i >= 0)
         {

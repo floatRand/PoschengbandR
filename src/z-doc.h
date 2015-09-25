@@ -68,6 +68,7 @@ doc_region_t doc_region_create(int x1, int y1, int x2, int y2);
 doc_region_t doc_region_invalid(void);
 bool doc_region_is_valid(doc_region_ptr region);
 bool doc_region_contains(doc_region_ptr region, doc_pos_t pos);
+int  doc_region_line_count(doc_region_ptr region);
 
 struct doc_char_s
 {
@@ -121,11 +122,13 @@ doc_pos_t     doc_cursor(doc_ptr doc);
 doc_region_t  doc_range_all(doc_ptr doc);
 doc_region_t  doc_range_selection(doc_ptr doc);
 doc_region_t  doc_range_top(doc_ptr doc, doc_pos_t stop);
-doc_region_t  doc_range_top_rows(doc_ptr doc, int count);
+doc_region_t  doc_range_top_lines(doc_ptr doc, int count);
 doc_region_t  doc_range_bottom(doc_ptr doc, doc_pos_t start);
-doc_region_t  doc_range_bottom_rows(doc_ptr doc, int count);
+doc_region_t  doc_range_bottom_lines(doc_ptr doc, int count);
 doc_region_t  doc_range_middle(doc_ptr doc, doc_pos_t start, doc_pos_t stop);
-doc_region_t  doc_range_middle_rows(doc_ptr doc, int start_row, int stop_row);
+doc_region_t  doc_range_middle_lines(doc_ptr doc, int start_line, int stop_line);
+
+int           doc_line_count(doc_ptr docs);
 
 doc_pos_t     doc_next_bookmark(doc_ptr doc, doc_pos_t pos);
 doc_pos_t     doc_prev_bookmark(doc_ptr doc, doc_pos_t pos);
