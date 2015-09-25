@@ -195,7 +195,7 @@ rect_t msg_line_rect(void)
         _msg_line_rect.x,
         _msg_line_rect.y,
         _msg_line_rect.cx,
-        doc_cursor(_msg_line_doc).y
+        doc_cursor(_msg_line_doc).y + 1
     );
 }
 
@@ -269,7 +269,7 @@ void msg_line_clear(void)
         p_ptr->redraw |= PR_MAP;
         if (_msg_line_rect.x <= 12)
             p_ptr->redraw |= PR_BASIC | PR_EQUIPPY;
-        redraw_stuff(); /* There's a timing bug I can't seem to track down ... sigh */
+        /*redraw_stuff();  There's a timing bug I can't seem to track down ... sigh */
     }
 }
 
