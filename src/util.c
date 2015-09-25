@@ -3615,7 +3615,8 @@ void request_command(int shopping)
 
         /* Clear top line
         prt("", 0, 0);*/
-        msg_line_clear();
+        if (cmd != KTRL('R'))
+            msg_line_clear();
 
         /* Command Count */
         if (cmd == '0')
