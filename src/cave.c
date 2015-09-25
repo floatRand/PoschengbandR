@@ -1801,9 +1801,8 @@ void prt_path(int y, int x)
             }
 
             c = '*';
-
-            /* Hack -- Queue it */
-            Term_queue_bigchar(panel_col_of(nx), ny-panel_row_prt, a, c, ta, tc);
+            if (!msg_line_contains(ny-panel_row_prt, panel_col_of(nx)))
+                Term_queue_bigchar(panel_col_of(nx), ny-panel_row_prt, a, c, ta, tc);
         }
 
         /* Known Wall */

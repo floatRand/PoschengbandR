@@ -1020,7 +1020,8 @@ void doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos)
         if (pos.y == range.stop.y)
             max_x = range.stop.x;
 
-        Term_erase(term_pos.x + pos.x, term_y, doc->width - pos.x);
+        if (max_x > 0)
+            Term_erase(term_pos.x + pos.x, term_y, doc->width - pos.x);
         if (pos.y <= doc->cursor.y)
         {
             doc_char_ptr cell = doc_char(doc, pos);

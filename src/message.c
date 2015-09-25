@@ -5,15 +5,16 @@
 #include <assert.h>
 
 /* The Message Queue */
-static int      _msg_max = 2048;
-static int      _msg_count = 0;
-static msg_ptr *_msgs = NULL;
-static int      _msg_head = 0;
-static bool     _msg_append = FALSE;
+static int       _msg_max = 2048;
+static int       _msg_count = 0;
+static msg_ptr  *_msgs = NULL;
+static int       _msg_head = 0;
+static bool      _msg_append = FALSE;
 
 /* The Message "Line" */
-static rect_t   _msg_line_rect;
-static doc_ptr  _msg_line_doc = NULL;
+static rect_t    _msg_line_rect;
+static doc_ptr   _msg_line_doc = NULL;
+static doc_pos_t _msg_line_sync_pos;
 
 msg_ptr _msg_alloc(cptr s)
 {
@@ -211,6 +212,7 @@ void msg_line_init(const rect_t *display_rect)
         if (_msg_line_rect.x + _msg_line_rect.cx > Term->wid)
             _msg_line_rect.cx = Term->wid - _msg_line_rect.x;
         _msg_line_doc = doc_alloc(_msg_line_rect.cx);
+        _msg_line_sync_pos = doc_cursor(_msg_line_doc);
     }
     else
     {
@@ -258,15 +260,17 @@ void msg_line_clear(void)
     for (i = 0; i <= y; i++)
         Term_erase(_msg_line_rect.x, _msg_line_rect.y + i, _msg_line_rect.cx);
 
+    doc_rollback(_msg_line_doc, doc_pos_create(0, 0));
+    _msg_line_sync_pos = doc_cursor(_msg_line_doc);
+
     if (y > 0)
     {
         /* Note: We need not redraw the entire map if this proves too slow */
         p_ptr->redraw |= PR_MAP;
         if (_msg_line_rect.x <= 12)
             p_ptr->redraw |= PR_BASIC | PR_EQUIPPY;
+        redraw_stuff(); /* There's a timing bug I can't seem to track down ... sigh */
     }
-
-    doc_rollback(_msg_line_doc, doc_pos_create(0, 0));
 }
 
 void msg_line_redraw(void)
@@ -276,12 +280,18 @@ void msg_line_redraw(void)
         doc_range_all(_msg_line_doc),
         doc_pos_create(_msg_line_rect.x, _msg_line_rect.y)
     );
+    _msg_line_sync_pos = doc_cursor(_msg_line_doc);
 }
 
 static void msg_line_sync(void)
 {
-    /* TODO */
-    msg_line_redraw();
+    doc_sync_term(
+        _msg_line_doc,
+        doc_range_bottom(_msg_line_doc, _msg_line_sync_pos),
+        doc_pos_create(_msg_line_rect.x, _msg_line_rect.y + _msg_line_sync_pos.y)
+    );
+    _msg_line_sync_pos = doc_cursor(_msg_line_doc);
+/*  inkey(); */
 }
 
 static void msg_line_flush(void)
@@ -335,7 +345,6 @@ static void msg_line_display(byte color, cptr msg)
 
     doc_insert_text(_msg_line_doc, color, msg);
     doc_insert_char(_msg_line_doc, color, ' ');
-
     msg_line_sync();
 }
 
@@ -355,8 +364,6 @@ static char cmsg_prompt_imp(byte color, cptr prompt, char keys[], int options)
     if (options & PROMPT_NEW_LINE)
         msg_boundary();
 
-    /* TODO: Make sure the entire prompt will fit. -more- prompts are very
-       rare these days, so I'm lazily omitting this check */
     auto_more_state = AUTO_MORE_PROMPT;
     cmsg_print(color, prompt);
 
