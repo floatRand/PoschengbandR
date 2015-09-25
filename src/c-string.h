@@ -9,11 +9,13 @@ typedef string_t *string_ptr;
 extern string_ptr string_alloc(const char *val);
 extern string_ptr string_nalloc(const char *val, int cb);
 extern string_ptr string_salloc(string_ptr str);
+extern string_ptr string_falloc(FILE *fp);
 extern void string_free(string_ptr str);
 
 extern void string_clear(string_ptr str);
 extern void string_append(string_ptr str, const char *val);
-extern void string_fgets(string_ptr str, FILE *fp);
+extern void string_read_line(string_ptr str, FILE *fp);
+extern void string_read_file(string_ptr str, FILE *fp);
 extern void string_append_char(string_ptr str, char ch);
 extern void string_nappend(string_ptr str, const char *val, int cb);
 extern void string_printf(string_ptr str, const char *fmt, ...);

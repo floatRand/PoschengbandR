@@ -103,18 +103,6 @@ struct doc_link_s
 };
 typedef struct doc_link_s doc_link_t, *doc_link_ptr;
 
-struct doc_s
-{
-    doc_pos_t      cursor;
-    doc_region_t   selection;
-    int            width;
-    doc_style_t    current_style;
-    byte           current_color;
-    vec_ptr        pages;
-    str_map_ptr    styles;
-    vec_ptr        bookmarks;
-    int_map_ptr    links;
-};
 typedef struct doc_s doc_t, *doc_ptr;
 
 
@@ -129,7 +117,15 @@ doc_ptr       doc_alloc(int width);
 void          doc_free(doc_ptr doc);
 
 doc_pos_t     doc_cursor(doc_ptr doc);
-doc_region_t  doc_all(doc_ptr doc);
+
+doc_region_t  doc_range_all(doc_ptr doc);
+doc_region_t  doc_range_selection(doc_ptr doc);
+doc_region_t  doc_range_top(doc_ptr doc, doc_pos_t stop);
+doc_region_t  doc_range_top_rows(doc_ptr doc, int count);
+doc_region_t  doc_range_bottom(doc_ptr doc, doc_pos_t start);
+doc_region_t  doc_range_bottom_rows(doc_ptr doc, int count);
+doc_region_t  doc_range_middle(doc_ptr doc, doc_pos_t start, doc_pos_t stop);
+doc_region_t  doc_range_middle_rows(doc_ptr doc, int start_row, int stop_row);
 
 doc_pos_t     doc_next_bookmark(doc_ptr doc, doc_pos_t pos);
 doc_pos_t     doc_prev_bookmark(doc_ptr doc, doc_pos_t pos);
@@ -142,6 +138,7 @@ doc_style_ptr doc_style(doc_ptr doc, cptr name);
 void          doc_change_style(doc_ptr doc, cptr name);
 
 doc_pos_t     doc_insert(doc_ptr doc, cptr text);
+doc_pos_t     doc_insert_char(doc_ptr doc, byte a, char c);
 doc_pos_t     doc_newline(doc_ptr doc);
 void          doc_rollback(doc_ptr doc, doc_pos_t pos);
 

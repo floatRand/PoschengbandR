@@ -5,6 +5,19 @@
 
 #include <assert.h>
 
+struct doc_s
+{
+    doc_pos_t      cursor;
+    doc_region_t   selection;
+    int            width;
+    doc_style_t    current_style;
+    byte           current_color;
+    vec_ptr        pages;
+    str_map_ptr    styles;
+    vec_ptr        bookmarks;
+    int_map_ptr    links;
+};
+
 doc_pos_t doc_pos_create(int x, int y)
 {
     doc_pos_t result;
@@ -174,11 +187,89 @@ doc_pos_t doc_cursor(doc_ptr doc)
     return doc->cursor;
 }
 
-doc_region_t doc_all(doc_ptr doc)
+doc_region_t doc_range_all(doc_ptr doc)
 {
     doc_region_t result;
     result.start = doc_pos_create(0, 0);
     result.stop = doc->cursor;
+    return result;
+}
+
+doc_region_t doc_range_selection(doc_ptr doc)
+{
+    return doc->selection;
+}
+
+doc_region_t doc_range_top(doc_ptr doc, doc_pos_t stop)
+{
+    doc_region_t result;
+    result.start.x = 0;
+    result.start.y = 0;
+    result.stop = stop;
+    if (doc_pos_compare(doc->cursor, result.stop) < 0)
+        result.stop = doc->cursor;
+    return result;
+}
+
+doc_region_t doc_range_top_rows(doc_ptr doc, int count)
+{
+    doc_region_t result;
+    result.start.x = 0;
+    result.start.y = 0;
+    result.stop.x = 0;
+    result.stop.y = count; /* Remember: [start, stop)! */
+    if (doc_pos_compare(doc->cursor, result.stop) < 0)
+        result.stop = doc->cursor;
+    return result;
+}
+
+doc_region_t doc_range_bottom(doc_ptr doc, doc_pos_t start)
+{
+    doc_region_t result;
+    if (doc_pos_compare(doc->cursor, start) < 0)
+        return doc_region_invalid();
+    result.start = start;
+    result.stop = doc->cursor;
+    return result;
+}
+
+doc_region_t doc_range_bottom_rows(doc_ptr doc, int count)
+{
+    doc_region_t result;
+    result.start.x = 0;
+    /* Include cursor row in count? */
+    if (doc->cursor.x > 0)
+        result.start.y = MAX(0, doc->cursor.y - (count - 1));
+    else
+        result.start.y = MAX(0, doc->cursor.y - count);
+    result.stop = doc->cursor;
+    return result;
+}
+
+doc_region_t doc_range_middle(doc_ptr doc, doc_pos_t start, doc_pos_t stop)
+{
+    doc_region_t result;
+    if (doc_pos_compare(doc->cursor, start) < 0)
+        return doc_region_invalid();
+    result.start = start;
+    result.stop = stop;
+    if (doc_pos_compare(doc->cursor, result.stop) < 0)
+        result.stop = doc->cursor;
+    return result;
+}
+
+doc_region_t doc_range_middle_rows(doc_ptr doc, int start_row, int stop_row)
+{
+    doc_region_t result;
+    result.start.x = 0;
+    result.start.y = start_row;
+    result.stop.x = 0;
+    result.stop.y = stop_row + 1; /* include (width, stop_row) in [start, stop)! */
+
+    if (doc_pos_compare(doc->cursor, result.start) < 0)
+        return doc_region_invalid();
+    if (doc_pos_compare(doc->cursor, result.stop) < 0)
+        result.stop = doc->cursor;
     return result;
 }
 
@@ -686,6 +777,20 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
     return doc->cursor;
 }
 
+doc_pos_t doc_insert_char(doc_ptr doc, byte a, char c)
+{
+    doc_char_ptr cell = doc_char(doc, doc->cursor);
+
+    cell->a = a;
+    cell->c = c;
+
+    doc->cursor.x++;
+    if (doc->cursor.x >= doc->width)
+        doc_newline(doc);
+
+    return doc->cursor;
+}
+
 doc_char_ptr doc_char(doc_ptr doc, doc_pos_t pos)
 {
     int            cb = doc->width * PAGE_HEIGHT * sizeof(doc_char_t);
@@ -707,15 +812,8 @@ doc_char_ptr doc_char(doc_ptr doc, doc_pos_t pos)
 
 doc_pos_t doc_read_file(doc_ptr doc, FILE *fp)
 {
-    string_ptr s = string_alloc(NULL);
-
-    while (!feof(fp))
-    {
-        string_fgets(s, fp);
-        doc_insert(doc, string_buffer(s));
-        doc_newline(doc);
-    }
-
+    string_ptr s = string_falloc(fp);
+    doc_insert(doc, string_buffer(s));
     string_free(s);
     return doc->cursor;
 }

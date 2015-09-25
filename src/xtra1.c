@@ -2197,10 +2197,11 @@ static void _fix_message_aux(void)
 
         if (m->turn != current_turn)
         {
-            if (doc->cursor.y > current_row + 1)
+            int y = doc_cursor(doc).y;
+            if (y > current_row + 1)
                 doc_newline(doc);
             current_turn = m->turn;
-            current_row = doc->cursor.y;
+            current_row = y;
         }
         doc_insert(doc, string_buffer(m->msg));
         if (m->count > 1)
@@ -2213,7 +2214,7 @@ static void _fix_message_aux(void)
     }
     doc_sync_term(
         doc,
-        doc_region_create(0, doc->cursor.y - h, doc->width, doc->cursor.y),
+        doc_range_bottom_rows(doc, h),
         doc_pos_create(0, 0)
     );
     doc_free(doc);

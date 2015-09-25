@@ -524,10 +524,11 @@ void do_cmd_messages(int old_now_turn)
 
         if (m->turn != current_turn)
         {
-            if (doc->cursor.y > current_row + 1)
+            int y = doc_cursor(doc).y;
+            if (y > current_row + 1)
                 doc_newline(doc);
             current_turn = m->turn;
-            current_row = doc->cursor.y;
+            current_row = y;
         }
 
         doc_insert(doc, string_buffer(m->msg));
@@ -540,7 +541,7 @@ void do_cmd_messages(int old_now_turn)
         doc_newline(doc);
     }
     screen_save();
-    doc_display(doc, "Previous Messages", doc->cursor.y);
+    doc_display(doc, "Previous Messages", doc_cursor(doc).y);
     screen_load();
     doc_free(doc);
 }

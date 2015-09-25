@@ -194,7 +194,7 @@ rect_t msg_line_rect(void)
         _msg_line_rect.x,
         _msg_line_rect.y,
         _msg_line_rect.cx,
-        _msg_line_doc->cursor.y
+        doc_cursor(_msg_line_doc).y
     );
 }
 
@@ -244,7 +244,8 @@ bool msg_line_contains(int row, int col)
 
 bool msg_line_is_empty(void)
 {
-    if (_msg_line_doc->cursor.x == 0 && _msg_line_doc->cursor.y == 0)
+    doc_pos_t cursor = doc_cursor(_msg_line_doc);
+    if (cursor.x == 0 && cursor.y == 0)
         return TRUE;
     return FALSE;
 }
@@ -252,10 +253,12 @@ bool msg_line_is_empty(void)
 void msg_line_clear(void)
 {
     int i;
-    for (i = 0; i <= _msg_line_doc->cursor.y; i++)
+    int y = doc_cursor(_msg_line_doc).y;
+
+    for (i = 0; i <= y; i++)
         Term_erase(_msg_line_rect.x, _msg_line_rect.y + i, _msg_line_rect.cx);
 
-    if (_msg_line_doc->cursor.y > 0)
+    if (y > 0)
     {
         /* Note: We need not redraw the entire map if this proves too slow */
         p_ptr->redraw |= PR_MAP;
@@ -270,7 +273,7 @@ void msg_line_redraw(void)
 {
     doc_sync_term(
         _msg_line_doc,
-        doc_all(_msg_line_doc),
+        doc_range_all(_msg_line_doc),
         doc_pos_create(_msg_line_rect.x, _msg_line_rect.y)
     );
 }
@@ -323,7 +326,7 @@ static void msg_line_display(byte color, cptr msg)
 {
     /* Quick and dirty test for -more- ... This means _msg_line_display_rect
        is just a suggested limit, and we'll surpass this for long messages. */
-    if (_msg_line_doc->cursor.y >= _msg_line_rect.cy)
+    if (doc_cursor(_msg_line_doc).y >= _msg_line_rect.cy)
         msg_line_flush();
 
     /* Append this message to the last? */
@@ -340,7 +343,7 @@ static void msg_line_display(byte color, cptr msg)
     else
     {
         doc_insert(_msg_line_doc, msg);
-        _msg_line_doc->cursor.x++;
+        doc_insert_char(_msg_line_doc, TERM_WHITE, ' ');
     }
     msg_line_sync();
 }

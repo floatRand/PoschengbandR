@@ -47,6 +47,13 @@ string_ptr string_salloc(string_ptr str)
     return string_nalloc(str->buf, str->len);
 }
 
+string_ptr string_falloc(FILE *fp)
+{
+    string_ptr res = string_alloc(NULL);
+    string_read_file(res, fp);
+    return res;
+}
+
 void string_free(string_ptr str)
 {
     if (str)
@@ -86,7 +93,7 @@ void string_append_char(string_ptr str, char ch)
     str->buf[str->len] = '\0';
 }
 
-void string_fgets(string_ptr str, FILE *fp)
+void string_read_line(string_ptr str, FILE *fp)
 {
     string_clear(str);
     for (;;)
@@ -94,6 +101,21 @@ void string_fgets(string_ptr str, FILE *fp)
         int c = fgetc(fp);
         if (c == EOF) break;
         if (c == '\n') break;
+        if (str->len >= str->size - 1)
+            string_grow(str, str->size * 2);
+        str->buf[str->len++] = c;
+    }
+    str->buf[str->len] = '\0';
+}
+
+void string_read_file(string_ptr str, FILE *fp)
+{
+    string_clear(str);
+    for (;;)
+    {
+        int c = fgetc(fp);
+        if (c == EOF) break;
+        if (c == '\r') continue; /* \r\n -> \n */
         if (str->len >= str->size - 1)
             string_grow(str, str->size * 2);
         str->buf[str->len++] = c;
