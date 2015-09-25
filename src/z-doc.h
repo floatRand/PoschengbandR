@@ -137,13 +137,18 @@ doc_pos_t     doc_find_prev(doc_ptr doc, cptr text, doc_pos_t start);
 doc_style_ptr doc_style(doc_ptr doc, cptr name);
 void          doc_change_style(doc_ptr doc, cptr name);
 
+              /* Build a document from a text file */
 doc_pos_t     doc_insert(doc_ptr doc, cptr text);
-doc_pos_t     doc_insert_char(doc_ptr doc, byte a, char c);
-doc_pos_t     doc_newline(doc_ptr doc);
-void          doc_rollback(doc_ptr doc, doc_pos_t pos);
-
 doc_pos_t     doc_read_file(doc_ptr doc, FILE *fp);
 void          doc_write_file(doc_ptr doc, FILE *fp);
+
+              /* Build a document in code */
+doc_pos_t     doc_insert_char(doc_ptr doc, byte a, char c);
+doc_pos_t     doc_insert_text(doc_ptr doc, byte a, cptr text);
+doc_pos_t     doc_insert_doc(doc_ptr dest_doc, doc_ptr src_doc, int indent);
+doc_pos_t     doc_insert_cols(doc_ptr dest_doc, doc_ptr src_cols[], int col_count, int spacing);
+doc_pos_t     doc_newline(doc_ptr doc);
+void          doc_rollback(doc_ptr doc, doc_pos_t pos);
 
 doc_char_ptr  doc_char(doc_ptr doc, doc_pos_t pos);
 void          doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos);

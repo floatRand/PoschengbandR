@@ -524,11 +524,10 @@ void do_cmd_messages(int old_now_turn)
 
         if (m->turn != current_turn)
         {
-            int y = doc_cursor(doc).y;
-            if (y > current_row + 1)
+            if (doc_cursor(doc).y > current_row + 1)
                 doc_newline(doc);
             current_turn = m->turn;
-            current_row = y;
+            current_row = doc_cursor(doc).y;
         }
 
         doc_insert(doc, string_buffer(m->msg));

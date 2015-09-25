@@ -2197,11 +2197,10 @@ static void _fix_message_aux(void)
 
         if (m->turn != current_turn)
         {
-            int y = doc_cursor(doc).y;
-            if (y > current_row + 1)
+            if (doc_cursor(doc).y > current_row + 1)
                 doc_newline(doc);
             current_turn = m->turn;
-            current_row = y;
+            current_row = doc_cursor(doc).y;
         }
         doc_insert(doc, string_buffer(m->msg));
         if (m->count > 1)

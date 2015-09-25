@@ -288,7 +288,7 @@ static void msg_line_flush(void)
 {
     if (auto_more_state == AUTO_MORE_PROMPT)
     {
-        doc_insert(_msg_line_doc, "<color:B>-more-<color:*>");
+        doc_insert_text(_msg_line_doc, TERM_L_BLUE, "-more-");
         msg_line_sync();
 
         for(;;)
@@ -333,18 +333,9 @@ static void msg_line_display(byte color, cptr msg)
     else if (!_msg_append && !msg_line_is_empty())
         doc_newline(_msg_line_doc);
 
-    if (color != TERM_WHITE)
-    {
-        string_ptr s = string_alloc(NULL);
-        string_printf(s, "<color:%c>%s<color:*> ", attr_to_attr_char(color), msg);
-        doc_insert(_msg_line_doc, string_buffer(s));
-        string_free(s);
-    }
-    else
-    {
-        doc_insert(_msg_line_doc, msg);
-        doc_insert_char(_msg_line_doc, TERM_WHITE, ' ');
-    }
+    doc_insert_text(_msg_line_doc, color, msg);
+    doc_insert_char(_msg_line_doc, color, ' ');
+
     msg_line_sync();
 }
 

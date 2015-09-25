@@ -791,6 +791,117 @@ doc_pos_t doc_insert_char(doc_ptr doc, byte a, char c)
     return doc->cursor;
 }
 
+doc_pos_t doc_insert_text(doc_ptr doc, byte a, cptr text)
+{
+    doc->current_style.color = a;
+    doc->current_color = a;
+    doc_insert(doc, text);
+    return doc->cursor;
+}
+
+doc_pos_t doc_insert_doc(doc_ptr dest_doc, doc_ptr src_doc, int indent)
+{
+    doc_pos_t src_pos = doc_pos_create(0, 0);
+    doc_pos_t dest_pos;
+
+    if (dest_doc->cursor.x > 0)
+        doc_newline(dest_doc);
+
+    dest_pos = dest_doc->cursor;
+
+    while (src_pos.y <= src_doc->cursor.y)
+    {
+        doc_char_ptr src = doc_char(src_doc, src_pos);
+        doc_char_ptr dest;
+        int          count = src_doc->width;
+        int          i;
+
+        dest_pos.x += indent;
+        dest = doc_char(dest_doc, dest_pos);
+
+        if (count > dest_doc->width - dest_pos.x)
+            count = dest_doc->width - dest_pos.x;
+        if (src_pos.y == src_doc->cursor.y && count > src_doc->cursor.x)
+            count = src_doc->cursor.x;
+
+        for (i = 0; i < count; i++)
+        {
+            dest->a = src->a;
+            dest->c = src->c;
+
+            dest++;
+            src++;
+        }
+
+        dest_pos.x = 0;
+        dest_pos.y++;
+
+        src_pos.x = 0;
+        src_pos.y++;
+    }
+
+    dest_doc->cursor = dest_pos;
+    return dest_doc->cursor;
+}
+
+doc_pos_t doc_insert_cols(doc_ptr dest_doc, doc_ptr src_cols[], int col_count, int spacing)
+{
+    int       src_y = 0;
+    int       max_src_y = 0;
+    doc_pos_t dest_pos;
+    int       i;
+
+    if (dest_doc->cursor.x > 0)
+        doc_newline(dest_doc);
+
+    dest_pos = dest_doc->cursor;
+
+    for (i = 0; i < col_count; i++)
+    {
+        doc_ptr src_col = src_cols[i];
+        max_src_y = MAX(src_col->cursor.y, max_src_y);
+    }
+
+    while (src_y <= max_src_y)
+    {
+        for (i = 0; i < col_count; i++)
+        {
+            doc_ptr src_col = src_cols[i];
+            int     count = src_col->width;
+
+            if (count > dest_doc->width - dest_pos.x)
+                count = dest_doc->width - dest_pos.x;
+
+            if (src_y <= src_col->cursor.y && count > 0)
+            {
+                doc_char_ptr dest = doc_char(dest_doc, dest_pos);
+                doc_char_ptr src = doc_char(src_col, doc_pos_create(0, src_y));
+                int          j;
+
+                for (j = 0; j < count; j++)
+                {
+                    dest->a = src->a;
+                    dest->c = src->c;
+
+                    dest++;
+                    src++;
+                }
+            }
+
+            dest_pos.x += src_col->width;
+            dest_pos.x += spacing;
+        }
+
+        dest_pos.x = 0;
+        dest_pos.y++;
+
+        src_y++;
+    }
+
+    dest_doc->cursor = dest_pos;
+    return dest_doc->cursor;
+}
+
 doc_char_ptr doc_char(doc_ptr doc, doc_pos_t pos)
 {
     int            cb = doc->width * PAGE_HEIGHT * sizeof(doc_char_t);
@@ -840,18 +951,6 @@ void doc_write_file(doc_ptr doc, FILE *fp)
         }
         fputc('\n', fp);
    }
-}
-
-doc_pos_t doc_pos_next(doc_ptr doc, doc_pos_t pos)
-{
-    doc_pos_t result = pos;
-    result.x++;
-    if (result.x >= doc->width)
-    {
-        result.x = 0;
-        result.y++;
-    }
-    return result;
 }
 
 typedef void (*_doc_char_fn)(doc_pos_t pos, doc_char_ptr cell);
