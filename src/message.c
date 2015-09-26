@@ -339,11 +339,12 @@ static void msg_line_display(byte color, cptr msg)
         msg_line_flush();
 
     /* Append this message to the last? */
-    else if (!_msg_append && !msg_line_is_empty())
+    else if (!_msg_append && !msg_line_is_empty() && doc_cursor(_msg_line_doc).x > 0)
         doc_newline(_msg_line_doc);
 
     doc_insert_text(_msg_line_doc, color, msg);
-    doc_insert_char(_msg_line_doc, color, ' ');
+    if (doc_cursor(_msg_line_doc).x > 0)
+        doc_insert_char(_msg_line_doc, color, ' ');
     msg_line_sync();
 }
 
