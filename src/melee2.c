@@ -1543,7 +1543,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
     if (!retaliation_hack)
         retaliation_count = 0;
 
-    if (!retaliation_hack)
+    if (!retaliation_hack && see_either)
         cmsg_format(TERM_GREEN, "<color:B>%^s<color:*> attacks <color:o>%s<color:*>:", m_name, t_name);
     monster_desc(m_name, m_ptr, MD_PRON_VISIBLE);
     monster_desc(t_name, t_ptr, MD_PRON_VISIBLE);
