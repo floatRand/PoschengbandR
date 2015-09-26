@@ -1590,10 +1590,9 @@ static bool monst_attack_monst(int m_idx, int t_idx)
              continue;
         }
 
-        if (retaliation_hack)
+        if (retaliation_hack && see_either)
         {
-            if (m_ptr->ml)
-                cmsg_format(TERM_GREEN, "(<color:o>%^s<color:*> retaliates:", m_name);
+            cmsg_format(TERM_GREEN, "(<color:o>%^s<color:*> retaliates:", m_name);
             if (is_original_ap_and_seen(m_ptr))
                 r_ptr->r_flags2 |= RF2_AURA_REVENGE;
         }
@@ -1800,7 +1799,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
             }
 
             /* Message */
-            if (act && see_either)
+            if (act && see_m)
             {
                 if (do_silly_attack)
                 {
@@ -2046,7 +2045,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
             }
         }
 
-        /* Monster missed player */
+        /* Monster missed monster */
         else
         {
             /* Analyze failed attacks */
