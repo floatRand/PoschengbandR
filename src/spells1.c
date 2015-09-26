@@ -6477,7 +6477,12 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
     /* Reduce damage by distance */
     dam = (dam + r) / (r + 1);
 
-    /* Yes, it is as ugly as this ... sigh */
+    /* Yes, it is as ugly as this ... sigh
+       These attacks (Breathe * and Throw Boulder) are considered
+       innate attacks, and are non-magical. Evasion and Nimble Dodge
+       only work on innate attacks. Magic Resistance works on everything
+       else.
+     */
     if ( (hack_m_spell >= 96+7 && hack_m_spell <= 96+31)
       || hack_m_spell == 96+1 )
     {
@@ -6500,20 +6505,22 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
             dam -= dam * (10 + randint1(10))/100;
         }        
     }
+    else
+    {
+        if (p_ptr->magic_resistance)
+        {
+            int x = dam * p_ptr->magic_resistance / 100;
+            dam -= x;
+            if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
+                sp_player(MAX(x, 3 + p_ptr->lev/5));
+        }
+    }
 
 
     if ( p_ptr->pclass == CLASS_DUELIST
       && p_ptr->duelist_target_idx == who )
     {
         dam -= dam/3;
-    }
-
-    if (p_ptr->magic_resistance)
-    {
-        int x = dam * p_ptr->magic_resistance / 100;
-        dam -= x;
-        if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
-            sp_player(MAX(x, 3 + p_ptr->lev/5));
     }
 
     if (psion_drain())

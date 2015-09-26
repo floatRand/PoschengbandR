@@ -1083,6 +1083,8 @@ bool screen_object(object_type *o_ptr, u32b mode)
         info[i++] = "It produces a sheath of coldness.";
     if (have_flag(flgs, TR_NO_MAGIC))
         info[i++] = "It produces an anti-magic shell.";
+    if (have_flag(flgs, TR_MAGIC_RESISTANCE))
+        info[i++] = "It reduces damage from magical attacks.";
     if (have_flag(flgs, TR_NO_SUMMON))
         info[i++] = "It disrupts summoning spells.";
     if (have_flag(flgs, TR_NO_TELE))
