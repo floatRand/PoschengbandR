@@ -16,6 +16,7 @@ struct msg_s
     string_ptr msg;
     int        turn;
     int        count;
+    byte       color;
 };
 typedef struct msg_s msg_t, *msg_ptr;
 
@@ -32,7 +33,6 @@ extern int      msg_get_plain_text(int age, char *buffer, int max);
 extern void msg_add(cptr msg);
 extern void cmsg_add(byte color, cptr msg);
 extern void msg_boundary(void);
-extern int  msg_display_len(cptr msg);
 extern void msg_print(cptr msg);
 extern void msg_line_clear(void);
 extern void msg_line_redraw(void);

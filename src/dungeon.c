@@ -5954,8 +5954,8 @@ void play_game(bool new_game)
         
         do_cmd_redraw();  /* Not sure why this is required?! */
 
-        cmsg_print(TERM_VIOLET, "=========================================\n");
-        msg_print("<color:B>Welcome!<color:*> You begin life in the town where you may purchase "
+        msg_print("<color:v>=========================================<color:*>\n"
+                  "<color:B>Welcome!<color:*> You begin life in the town where you may purchase "
                   "supplies for the dangers that await you.\n"
                   "This is the message line where important information is "
                   "communicated to you while you play the game. "
@@ -5963,7 +5963,7 @@ void play_game(bool new_game)
                   "you are finished reading the current messages. "
                   "Press <color:y>CTRL+P<color:*> to review recent messages. "
                   "You may press <color:y>?<color:*> at any time for help.\n\n");
-
+        msg_boundary();
         player_outfit();
         
         if (class_ptr && class_ptr->birth)

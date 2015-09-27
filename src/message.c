@@ -22,6 +22,7 @@ msg_ptr _msg_alloc(cptr s)
     m->msg = string_alloc(s);
     m->turn = 0;
     m->count = 1;
+    m->color = TERM_WHITE;
     return m;
 }
 
@@ -117,14 +118,14 @@ void cmsg_append(byte color, cptr str)
         assert(m);
         if (string_length(m->msg))
             string_append_char(m->msg, ' ');
-        if (color != TERM_WHITE)
+        if (color != m->color)
             string_printf(m->msg, "<color:%c>%s<color:*>", attr_to_attr_char(color), str);
         else
             string_append(m->msg, str);
     }
 }
 
-void _cmsg_add_aux(byte color, cptr str, int turn)
+void _cmsg_add_aux(byte color, cptr str, int turn, int count)
 {
     msg_ptr m;
 
@@ -134,8 +135,9 @@ void _cmsg_add_aux(byte color, cptr str, int turn)
         m = msg_get(0);
         if (strcmp(string_buffer(m->msg), str) == 0)
         {
-            m->count++;
+            m->count += count;
             m->turn = turn;
+            m->color = color;
             return;
         }
     }
@@ -152,40 +154,18 @@ void _cmsg_add_aux(byte color, cptr str, int turn)
         string_clear(m->msg);
         string_shrink(m->msg, 128);
     }
-    if (color != TERM_WHITE)
-        string_printf(m->msg, "<color:%c>%s<color:*>", attr_to_attr_char(color), str);
-    else
-        string_append(m->msg, str);
+    string_append(m->msg, str);
 
     m->turn = turn;
-    m->count = 1;
+    m->count = count;
+    m->color = color;
 
     _msg_head = (_msg_head + 1) % _msg_max;
 }
 
 void cmsg_add(byte color, cptr str)
 {
-    _cmsg_add_aux(color, str, player_turn);
-}
-
-int msg_display_len(cptr msg)
-{
-    int         ct = 0;
-    doc_token_t token;
-    cptr        pos = msg;
-
-    if (!msg)
-        return 0;
-
-    for (;;)
-    {
-        pos = doc_lex(pos, &token);
-        if (token.type == DOC_TOKEN_EOF) break;
-        if (token.type == DOC_TOKEN_TAG) continue; /* assume only color tags */
-        if (token.type == DOC_TOKEN_NEWLINE) continue; /* unexpected */
-        ct += token.size;
-    }
-    return ct;
+    _cmsg_add_aux(color, str, player_turn, 1);
 }
 
 rect_t msg_line_rect(void)
@@ -429,7 +409,7 @@ void cmsg_print(byte color, cptr msg)
     if (auto_more_state == AUTO_MORE_SKIP_ONE)
         auto_more_state = AUTO_MORE_PROMPT;
 
-    p_ptr->window |= (PW_MESSAGE);
+    p_ptr->window |= PW_MESSAGE;
     window_stuff();
     if (fresh_message) /* ?? */
         Term_fresh();
@@ -475,16 +455,15 @@ void msg_on_load(savefile_ptr file)
     for (i = 0; i < count; i++)
     {
         s32b turn = 0;
-        if (!savefile_is_older_than(file, 4, 0, 0, 1) && savefile_is_older_than(file, 4, 0, 0, 3))
-            savefile_read_byte(file);
+        s32b count = 0;
+        byte color = TERM_WHITE;
+
         savefile_read_string(file, buf, sizeof(buf));
-        if (!savefile_is_older_than(file, 4, 0, 0, 2))
-        {
-            turn = savefile_read_s32b(file);
-            if (savefile_is_older_than(file, 4, 0, 0, 3))
-                turn = 0; /* used to be game_turn, not player_turn! */
-        }
-        _cmsg_add_aux(TERM_WHITE, buf, turn);
+        turn = savefile_read_s32b(file);
+        count = savefile_read_s32b(file);
+        color = savefile_read_byte(file);
+
+        _cmsg_add_aux(color, buf, turn, count);
     }
 }
 
@@ -500,6 +479,8 @@ void msg_on_save(savefile_ptr file)
         msg_ptr m = msg_get(i);
         savefile_write_string(file, string_buffer(m->msg));
         savefile_write_s32b(file, m->turn);
+        savefile_write_s32b(file, m->count);
+        savefile_write_byte(file, m->color);
     }
 }
 

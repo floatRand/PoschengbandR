@@ -2209,12 +2209,12 @@ static void _fix_message_aux(void)
             current_turn = m->turn;
             current_row = doc_cursor(doc).y;
         }
-        doc_insert(doc, string_buffer(m->msg));
+        doc_insert_text(doc, m->color, string_buffer(m->msg));
         if (m->count > 1)
         {
             char buf[10];
             sprintf(buf, " <x%d>", m->count);
-            doc_insert(doc, buf);
+            doc_insert_text(doc, m->color, buf);
         }
         doc_newline(doc);
     }

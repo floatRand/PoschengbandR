@@ -872,10 +872,7 @@ static void rd_extra(savefile_ptr file)
     old_turn = savefile_read_s32b(file);
     p_ptr->feeling_turn = savefile_read_s32b(file);
     game_turn = savefile_read_s32b(file);
-    if (savefile_is_older_than(file, 4, 0, 0, 4))
-        player_turn = 0;
-    else
-        player_turn = savefile_read_s32b(file);
+    player_turn = savefile_read_s32b(file);
 
     dungeon_turn = savefile_read_s32b(file);
     old_battle = savefile_read_s32b(file);
@@ -1281,7 +1278,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
              "Loading a %d.%d.%d savefile...",
              (z_major > 9) ? z_major - 10 : z_major, z_minor, z_patch));
 
-    if (savefile_is_older_than(file, 4, 0, 0, 0))
+    if (savefile_is_older_than(file, 4, 0, 0, 5))
     {
         note("Old savefiles are not supported!");
         return 1;
