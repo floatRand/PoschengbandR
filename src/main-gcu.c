@@ -176,6 +176,9 @@
 # include <curses.h>
 #endif
 
+void usleep(int);
+void putenv(const char*);
+
 typedef struct term_data term_data;
 
 struct term_data
@@ -755,6 +758,7 @@ static void Term_nuke_gcu(term *t)
 
 #ifdef USE_GETCH
 
+/*
 static int _getstr(char *buf, int cb)
 {
     int   ct = 0, j;
@@ -786,7 +790,7 @@ static void _ungetstr(const char *buf, int cb)
         char ch = buf[pos];
         ungetch(ch);
     }
-}
+}*/
 
 /*
  * Process events, with optional wait

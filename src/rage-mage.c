@@ -527,11 +527,12 @@ static void _resist_disenchantment_spell(int cmd, variant *res)
     }
 }
 
+/*
 static bool _object_is_(object_type *o_ptr, int tv, int sv)
 {
     if (o_ptr->tval == tv && o_ptr->sval == sv) return TRUE;
     return FALSE;
-}
+}*/
 
 static int _object_dam_type(object_type *o_ptr)
 {            

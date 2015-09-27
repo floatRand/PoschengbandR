@@ -327,11 +327,12 @@ static void _test_specific_k_idx(void)
 
 static void do_cmd_wiz_hack_chris2(void)
 {
-    /* 
-    _test_frequencies(_is_foo);
-    _test_frequencies(_is_stat_potion);
-    _test_frequencies(_is_rune_sword);
-    */
+    if (0)
+    {
+        _test_frequencies(_is_foo);
+        _test_frequencies(_is_stat_potion);
+        _test_frequencies(_is_rune_sword);
+    }
     _test_specific_k_idx();
 }
 

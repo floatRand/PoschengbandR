@@ -1456,7 +1456,7 @@ static errr init_alloc(void)
     for (i = 1; i < max_r_idx; i++)
     {
         elements[i].tag = r_info[i].level;
-        elements[i].pointer = (void*)i;
+        elements[i].value = i;
     }
 
     tag_sort(elements, max_r_idx);
@@ -1473,7 +1473,7 @@ static errr init_alloc(void)
     for (i = 1; i < max_r_idx; i++)
     {
         /* Get the i'th race */
-        r_ptr = &r_info[(int)elements[i].pointer];
+        r_ptr = &r_info[elements[i].value];
 
         /* Count valid pairs */
         if (r_ptr->rarity)
@@ -1484,7 +1484,7 @@ static errr init_alloc(void)
             p = (100 / r_ptr->rarity);
 
             /* Load the entry */
-            alloc_race_table[i].index = (int)elements[i].pointer;
+            alloc_race_table[i].index = elements[i].value;
             alloc_race_table[i].level = r_ptr->level;
             alloc_race_table[i].max_level = r_ptr->max_level;
             alloc_race_table[i].prob1 = p;

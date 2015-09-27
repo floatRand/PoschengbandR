@@ -4067,13 +4067,13 @@ static void swap(tag_type *a, tag_type *b)
     tag_type temp;
 
     temp.tag = a->tag;
-    temp.pointer = a->pointer;
+    temp.value = a->value;
 
     a->tag = b->tag;
-    a->pointer = b->pointer;
+    a->value = b->value;
 
     b->tag = temp.tag;
-    b->pointer = temp.pointer;
+    b->value = temp.value;
 }
 
 

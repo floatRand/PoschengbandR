@@ -2135,7 +2135,8 @@ static void load_prev_data(bool swap)
     /*** Save the previous data ***/
     if (swap)
     {
-        COPY(&previous_char, &temp, birther);
+        (void*)COPY(&previous_char, &temp, birther);
+        /* The (void*) cast is to shutup gcc ... */
     }
 }
 
