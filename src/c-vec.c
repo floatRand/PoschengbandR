@@ -132,28 +132,82 @@ static void swap(vptr vec[], int i, int j)
     vec[j] = t;
 }
 
+static int _is_valid_partition(vptr vec[], int left, int right, int pivot, vec_cmp_f f)
+{
+    int i;
+    if (left >= right)
+        return 0;
+    if (left > pivot)
+        return 0;
+    if (right < pivot)
+        return 0;
+    for (i = left; i < pivot; i++)
+    {
+        if (f(vec[i], vec[pivot]) > 0)
+            return 0;
+    }
+    for (i = pivot + 1; i <= right; i++)
+    {
+        if (f(vec[i], vec[pivot]) < 0)
+            return 0;
+    }
+    return 1;
+}
+
 static int _partition(vptr vec[], int left, int right, vec_cmp_f f)
 {
+#if 0
+    /* Here is CLRS's version of partition. It takes 41.5s to execute.
+       Switching to the version below takes 0.68s to execute:
+       time cat *.c | ./a.out > /dev/null
+       where a.out is my version of sort
+       I left this in here 'cause I'm puzzled by the performance discrepency ...
+
+       BTW, time cat *.c | sort > /dev/null takes 2.23s*/
     vptr pivot = vec[right];
-    int  i = left-1;
-    int  j = right;
+    int  i = left - 1;
+    int  j;
+    for (j = left; j < right; j++)
+    {
+        if (f(vec[j], pivot) <= 0)
+        {
+            i++;
+            swap(vec, i, j);
+        }
+    }
+    swap(vec, i+1, right);
+    assert(_is_valid_partition(vec, left, right, i+1, f));
+    return i+1;
+#else
+    vptr pivot = vec[right];
+    int  i = left;
+    int  j = right - 1;
     while (1)
     {
-        while (f(vec[++i], pivot) < 0);
-        while (f(vec[--j], pivot) > 0);
+        while (i < right && f(vec[i], pivot) < 0) i++;
+        while (left < j && f(vec[j], pivot) > 0) j--;
+
+        assert(left <= i && i <= right);
+        assert(left <= j && j <= right);
 
         if (i < j)
             swap(vec, i, j);
         else
             break;
+
+        i++;
+        j--;
     }
     swap(vec, i, right);
+    assert(_is_valid_partition(vec, left, right, i, f));
     return i;
+#endif
 }
 
 static int _median3_partition(vptr vec[], int left, int right, vec_cmp_f f)
 {
     int center = (left + right) / 2;
+    int i;
 
     /* sort <v[l], v[c], v[r]> in place */
     if (f(vec[left], vec[center]) > 0)
@@ -167,7 +221,10 @@ static int _median3_partition(vptr vec[], int left, int right, vec_cmp_f f)
     swap(vec, center, right - 1);
 
     /* we know v[l] <= v[r-1] <= v[r] so we can shorten our call to partition */
-    return _partition(vec, left + 1, right - 1, f);
+    i = _partition(vec, left + 1, right - 1, f);
+    assert(_is_valid_partition(vec, left, right, i, f));
+
+    return i;
 }
 
 static void _quick_sort(vptr vec[], int left, int right, vec_cmp_f f)
@@ -199,3 +256,13 @@ void vec_sort(vec_ptr vec, vec_cmp_f f)
     assert(_is_sorted(vec, f));
 }
 
+/* Notes on Sorting:
+   [1] Median of 3 Partioning is crucial if data is already sorted. A simple test
+       of double sorting some files takes 86ms with median of 3, 10,552ms with naive
+       partitioning! Note: ang_sort uses naive partitioning.
+   [2] Setting the insertion sort cutoff to 20 seems just fine. I took this advice
+       from Skiena p238 even though 20 seemed high at first glance.
+   [3] Swapping in _partition seems the best tuning opportunity. A naive version
+       from CLRS is *much* slower than what ang_sort uses, so I switched, although
+       it seems that ang_sort might be reading out of bounds on occasion.
+*/

@@ -326,12 +326,12 @@ vec_ptr string_split(string_ptr str, char sep)
     const char *pos = str->buf;
     int         done = 0;
 
-    while (!done)
+    while (!done && *pos)
     {
         const char *next = strchr(pos, sep);
         string_ptr  s;
 
-        if (!next)
+        if (!next && *pos)
         {
             next = strchr(pos, '\0');
             assert(next);
