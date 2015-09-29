@@ -20,4 +20,7 @@ extern int     vec_length(vec_ptr vec);
 extern void    vec_for_each(vec_ptr vec, vec_item_f f);
 extern void    vec_sort(vec_ptr vec, vec_cmp_f f);
 
+extern void    vec_quick_sort(vec_ptr vec, vec_cmp_f f);
+extern void    vec_merge_sort(vec_ptr vec, vec_cmp_f f);
+
 #endif

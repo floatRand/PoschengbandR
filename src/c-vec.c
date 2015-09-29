@@ -239,6 +239,50 @@ static void _quick_sort(vptr vec[], int left, int right, vec_cmp_f f)
     }
 }
 
+static void _merge(vptr vec[], int p, int q, int r, vec_cmp_f f)
+{
+    int n1 = q - p + 1;
+    int n2 = r - q;
+    vptr *ls = malloc(n1 * sizeof(vptr));
+    vptr *rs = malloc(n2 * sizeof(vptr));
+    int i1 = 0, i2 = 0, i;
+
+    for (i1 = 0; i1 < n1; i1++)
+        ls[i1] = vec[p + i1];
+    for (i2 = 0; i2 < n2; i2++)
+        rs[i2] = vec[q + 1 + i2];
+
+    i1 = 0; i2 = 0;
+    for (i = p; i <= r; i++)
+    {
+        vptr l = i1 < n1 ? ls[i1] : 0;
+        vptr r = i2 < n2 ? rs[i2] : 0;
+        vptr c;
+
+        if (!l) { c = r; i2++; }
+        else if (!r) { c = l; i1++; }
+        else if (f(l, r) <= 0) { c = l; i1++; }
+        else { c = r; i2++; }
+
+        assert (c);
+        vec[i] = c;
+    }
+
+    free(ls);
+    free(rs);
+}
+
+static void _merge_sort(vptr vec[], int left, int right, vec_cmp_f f)
+{
+    if (left < right)
+    {
+        int middle = (left + right) / 2;
+        _merge_sort(vec, left, middle, f);
+        _merge_sort(vec, middle + 1, right, f);
+        _merge(vec, left, middle, right, f);
+    }
+}
+
 static int _is_sorted(vec_ptr vec, vec_cmp_f f)
 {
     int i;
@@ -250,10 +294,21 @@ static int _is_sorted(vec_ptr vec, vec_cmp_f f)
     return 1;
 }
 
-void vec_sort(vec_ptr vec, vec_cmp_f f)
+void vec_quick_sort(vec_ptr vec, vec_cmp_f f)
 {
     _quick_sort(vec->objs, 0, vec->len - 1, f);
     assert(_is_sorted(vec, f));
+}
+
+void vec_merge_sort(vec_ptr vec, vec_cmp_f f)
+{
+    _merge_sort(vec->objs, 0, vec->len - 1, f);
+    assert(_is_sorted(vec, f));
+}
+
+void vec_sort(vec_ptr vec, vec_cmp_f f)
+{
+    vec_quick_sort(vec, f);
 }
 
 /* Notes on Sorting:
@@ -265,4 +320,6 @@ void vec_sort(vec_ptr vec, vec_cmp_f f)
    [3] Swapping in _partition seems the best tuning opportunity. A naive version
        from CLRS is *much* slower than what ang_sort uses, so I switched, although
        it seems that ang_sort might be reading out of bounds on occasion.
+   [4] Quick Sort took me all day to write and debug. Merge Sort took about 10 minutes
+       and is almost is fast (w/in 5% or 10%). Double sorting is actually faster with Merge Sort!
 */
