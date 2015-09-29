@@ -109,6 +109,34 @@ void vec_for_each(vec_ptr vec, vec_item_f f)
         f(vec->objs[i]);
 }
 
+int vec_compare(vec_ptr left, vec_ptr right, vec_cmp_f f)
+{
+    int i;
+    int cl = left->len;
+    int cr = right->len;
+    for (i = 0; i < cl && i < cr; i++)
+    {
+        vptr l = left->objs[i];
+        vptr r = right->objs[i];
+        int  n = f(l, r);
+
+        if (n != 0)
+            return n;
+    }
+
+    if (i < cr)
+    {
+        assert(i >= cl);
+        return -1;
+    }
+    if (i < cl)
+    {
+        assert(i >= cr);
+        return 1;
+    }
+    return 0;
+}
+
 static void _insertion_sort(vptr vec[], int left, int right, vec_cmp_f f)
 {
     int j;
@@ -125,7 +153,7 @@ static void _insertion_sort(vptr vec[], int left, int right, vec_cmp_f f)
     }
 }
 
-static void swap(vptr vec[], int i, int j)
+static void _swap(vptr vec[], int i, int j)
 {
     vptr t = vec[i];
     vec[i] = vec[j];
@@ -157,13 +185,6 @@ static int _is_valid_partition(vptr vec[], int left, int right, int pivot, vec_c
 static int _partition(vptr vec[], int left, int right, vec_cmp_f f)
 {
 #if 0
-    /* Here is CLRS's version of partition. It takes 41.5s to execute.
-       Switching to the version below takes 0.68s to execute:
-       time cat *.c | ./a.out > /dev/null
-       where a.out is my version of sort
-       I left this in here 'cause I'm puzzled by the performance discrepency ...
-
-       BTW, time cat *.c | sort > /dev/null takes 2.23s*/
     vptr pivot = vec[right];
     int  i = left - 1;
     int  j;
@@ -172,10 +193,10 @@ static int _partition(vptr vec[], int left, int right, vec_cmp_f f)
         if (f(vec[j], pivot) <= 0)
         {
             i++;
-            swap(vec, i, j);
+            _swap(vec, i, j);
         }
     }
-    swap(vec, i+1, right);
+    _swap(vec, i+1, right);
     assert(_is_valid_partition(vec, left, right, i+1, f));
     return i+1;
 #else
@@ -191,14 +212,14 @@ static int _partition(vptr vec[], int left, int right, vec_cmp_f f)
         assert(left <= j && j <= right);
 
         if (i < j)
-            swap(vec, i, j);
+            _swap(vec, i, j);
         else
             break;
 
         i++;
         j--;
     }
-    swap(vec, i, right);
+    _swap(vec, i, right);
     assert(_is_valid_partition(vec, left, right, i, f));
     return i;
 #endif
@@ -211,14 +232,14 @@ static int _median3_partition(vptr vec[], int left, int right, vec_cmp_f f)
 
     /* sort <v[l], v[c], v[r]> in place */
     if (f(vec[left], vec[center]) > 0)
-        swap(vec, left, center);
+        _swap(vec, left, center);
     if (f(vec[left], vec[right]) > 0)
-        swap(vec, left, right);
+        _swap(vec, left, right);
     if (f(vec[center], vec[right]) > 0)
-        swap(vec, center, right);
+        _swap(vec, center, right);
 
     /* v[c] is the median, put it in v[r-1] */
-    swap(vec, center, right - 1);
+    _swap(vec, center, right - 1);
 
     /* we know v[l] <= v[r-1] <= v[r] so we can shorten our call to partition */
     i = _partition(vec, left + 1, right - 1, f);
@@ -318,8 +339,16 @@ void vec_sort(vec_ptr vec, vec_cmp_f f)
    [2] Setting the insertion sort cutoff to 20 seems just fine. I took this advice
        from Skiena p238 even though 20 seemed high at first glance.
    [3] Swapping in _partition seems the best tuning opportunity. A naive version
-       from CLRS is *much* slower than what ang_sort uses, so I switched, although
-       it seems that ang_sort might be reading out of bounds on occasion.
+       from CLRS is *much* slower than what ang_sort uses, at least for data with
+       many duplicate keys. But, it turns out the CLRS partioning is faster for a vector
+       of random numbers with few duplicates. Skiena recommends the CLRS version.
    [4] Quick Sort took me all day to write and debug. Merge Sort took about 10 minutes
-       and is almost is fast (w/in 5% or 10%). Double sorting is actually faster with Merge Sort!
+       and is almost is fast (w/in 5% or 10%) for sorting files.
+   [5] Quick Sort is of course much, much better if you have a vector of integers rather than objects, e.g.
+            for (i = 0; i < count; i++)
+            {
+                long n = rand();
+                vec_add(v, (vptr) n);
+            }
+   [6] And be sure to compile with -DNDEBUG to remove those heavy asserts!!! :)
 */

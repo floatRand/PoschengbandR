@@ -23,4 +23,6 @@ extern void    vec_sort(vec_ptr vec, vec_cmp_f f);
 extern void    vec_quick_sort(vec_ptr vec, vec_cmp_f f);
 extern void    vec_merge_sort(vec_ptr vec, vec_cmp_f f);
 
+extern int     vec_compare(vec_ptr left, vec_ptr right, vec_cmp_f f);
+
 #endif
