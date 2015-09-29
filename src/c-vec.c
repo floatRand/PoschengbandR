@@ -351,4 +351,20 @@ void vec_sort(vec_ptr vec, vec_cmp_f f)
                 vec_add(v, (vptr) n);
             }
    [6] And be sure to compile with -DNDEBUG to remove those heavy asserts!!! :)
+   [7] Here's a simple test program:
+        void test(void)
+        {
+            string_ptr input = string_falloc(stdin);
+            vec_ptr    lines = string_split(input, '\n');
+            string_ptr output;
+
+            vec_merge_sort(lines, (vec_cmp_f)string_compare);
+
+            output = string_join(lines, '\n');
+            string_write_file(output, stdout);
+
+            string_free(input);
+            string_free(output);
+            vec_free(lines);
+        }
 */
