@@ -123,6 +123,13 @@ void string_read_file(string_ptr str, FILE *fp)
     str->buf[str->len] = '\0';
 }
 
+void string_write_file(string_ptr str, FILE *fp)
+{
+    int i;
+    for (i = 0; i < str->len; i++)
+        fputc(str->buf[i], fp);
+}
+
 int string_compare(const string_ptr left, const string_ptr right)
 {
     return strcmp(left->buf, right->buf);
@@ -221,6 +228,26 @@ void string_shrink(string_ptr str, int size)
     }
 }
 
+void string_strip(string_ptr str)
+{
+    int i, j, k;
+    for (i = 0; i < str->len; i++)
+    {
+        if (str->buf[i] != ' ') break;
+    }
+    for (j = str->len - 1; j > i; j--)
+    {
+        if (str->buf[j] != ' ') break;
+    }
+    if (0 < i || j < str->len - 1)
+    {
+        str->len = j - i + 1;
+        for (k = 0; k < str->len; k++)
+            str->buf[k] = str->buf[i+k];
+        str->buf[str->len] = '\0';
+    }
+}
+
 void string_trim(string_ptr str)
 {
     string_shrink(str, 0);
@@ -291,4 +318,44 @@ const char *string_ssbuffer(substring_ptr ss)
 string_ptr string_ssalloc(substring_ptr ss)
 {
     return string_nalloc(string_ssbuffer(ss), ss->len);
+}
+
+vec_ptr string_split(string_ptr str, char sep)
+{
+    vec_ptr     v = vec_alloc((vec_free_f)string_free);
+    const char *pos = str->buf;
+    int         done = 0;
+
+    while (!done)
+    {
+        const char *next = strchr(pos, sep);
+        string_ptr  s;
+
+        if (!next)
+        {
+            next = strchr(pos, '\0');
+            assert(next);
+            done = 1;
+        }
+
+        s = string_nalloc(pos, next - pos);
+        vec_add(v, s);
+        pos = next + 1;
+    }
+    return v;
+}
+
+string_ptr string_join(vec_ptr vec, char sep)
+{
+    int        i;
+    string_ptr result = string_alloc(NULL);
+
+    for (i = 0; i < vec_length(vec); i++)
+    {
+        string_ptr s = vec_get(vec, i);
+        if (i > 0)
+            string_append_char(result, sep);
+        string_nappend(result, s->buf, s->len);
+    }
+    return result;
 }

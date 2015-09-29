@@ -917,7 +917,7 @@ extern void recharged_notice(object_type *o_ptr);
 extern void safe_setuid_drop(void);
 extern void safe_setuid_grab(void);
 extern s16b tokenize(char *buf, s16b num, char **tokens, int mode);
-extern int string_split(char *buf, char **tokens, int max, cptr delim);
+extern int z_string_split(char *buf, char **tokens, int max, cptr delim);
 extern int parse_args(char *buf, char **name, char **args, int max);
 extern void trim_tokens(char **tokens, int ct);
 extern void display_player(int mode);

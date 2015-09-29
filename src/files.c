@@ -194,7 +194,7 @@ s16b tokenize(char *buf, s16b num, char **tokens, int mode)
 }
 
 /* tokenize, but with user supplied delimiters and no special backslash/quote handling */
-int string_split(char *buf, char **tokens, int max, cptr delim)
+int z_string_split(char *buf, char **tokens, int max, cptr delim)
 {
     int i = 0;
     char *s = buf;
@@ -274,7 +274,7 @@ int parse_args(char *buf, char **name, char **args, int max)
     }
 
     *t++ = '\0';
-    ct = string_split(s, args, max, ",");
+    ct = z_string_split(s, args, max, ",");
 
     trim_tokens(args, ct);
     return ct;

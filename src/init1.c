@@ -1298,7 +1298,7 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_t *grid_
     if (arg_ct >= 2)
     {
         char *flags[10];
-        int   flag_ct = string_split(args[1], flags, 10, "|");
+        int   flag_ct = z_string_split(args[1], flags, 10, "|");
         int   i;
                 
         trim_tokens(flags, flag_ct);
@@ -1422,7 +1422,7 @@ static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_t *grid_p
     case 2:
     {
         char *flags[10];
-        int   flag_ct = string_split(args[1], flags, 10, "|");
+        int   flag_ct = z_string_split(args[1], flags, 10, "|");
         int   i;
                 
         trim_tokens(flags, flag_ct);
@@ -1598,7 +1598,7 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
     if (arg_ct >= 1)
     {
         char *flags[10];
-        int   flag_ct = string_split(args[0], flags, 10, "|");
+        int   flag_ct = z_string_split(args[0], flags, 10, "|");
         int   i;
                 
         trim_tokens(flags, flag_ct);
@@ -1631,7 +1631,7 @@ errr parse_room_grid(char *buf, room_grid_t *grid_ptr)
 {
     errr  result = 0;
     char *commands[10];
-    int   command_ct = string_split(buf, commands, 10, ":");
+    int   command_ct = z_string_split(buf, commands, 10, ":");
     int   i;
     bool  found_feature = FALSE;
 
@@ -1709,7 +1709,7 @@ errr parse_room_grid(char *buf, room_grid_t *grid_ptr)
 static errr _parse_room_flags(char* buf, room_template_t *room_ptr)
 {
     char *flags[10];
-    int   flag_ct = string_split(buf, flags, 10, "|");
+    int   flag_ct = z_string_split(buf, flags, 10, "|");
     int   i;
                 
     trim_tokens(flags, flag_ct);
