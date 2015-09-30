@@ -2678,7 +2678,7 @@ static cptr py_attack_desc(int mode)
 
 static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int mode)
 {
-    int             num = 0, k, k2, dam_tot = 0, bonus, chance;
+    int             num = 0, k, k2 = 0, dam_tot = 0, bonus, chance;
     int             to_h = 0, to_d = 0;
     int             touch_ct = 0;
     critical_t      crit;

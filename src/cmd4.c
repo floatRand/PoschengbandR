@@ -5091,6 +5091,7 @@ static void _prof_aux(FILE *fff, int tval, int sval)
             idx = weapon_exp_level(exp);
             break;
         case SKILL_RIDING:
+        default: /* gcc warnings ... */
             name = "Riding";
             exp = skills_riding_current();
             max = skills_riding_max();

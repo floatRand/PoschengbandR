@@ -955,9 +955,9 @@ static errr Term_xtra_gcu_sound(int v)
    if (!sound_file[v]) return (1);
 
    sprintf(buf,"./gcusound.sh %s\n", sound_file[v]);
-   system(buf);
-   
-   return (0);
+   if (system(buf) == EXIT_SUCCESS)
+     return (0);
+   return -1;
 
 #if 0
    char *argv[4];
@@ -1068,8 +1068,9 @@ static errr Term_xtra_gcu(int n, int v)
 
       /* Make a noise */
       case TERM_XTRA_NOISE:
-      (void)write(1, "\007", 1);
-      return (0);
+      if (write(1, "\007", 1) == 1)
+        return (0);
+      return -1;
 
 #ifdef USE_SOUND
       /* Make a special sound */

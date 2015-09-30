@@ -2144,7 +2144,7 @@ void do_cmd_pet(void)
     int            powers[36];
     cptr            power_desc[36];
     bool            flag, redraw;
-    int            ask;
+    int            ask = FALSE;
     char            choice;
     char            out_val[160];
     int            pet_ctr;

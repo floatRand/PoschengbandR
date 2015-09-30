@@ -510,7 +510,8 @@ cptr do_necromancy_spell(int spell, int mode)
                 case 1: what = SUMMON_LICH; break;
                 case 2: what = SUMMON_WIGHT; break;
                 case 3: what = SUMMON_VAMPIRE; break;
-                case 4: what = SUMMON_GHOST; break;
+                case 4:
+                default: what = SUMMON_GHOST; break;
                 }
                 summon_specific(-1, my, mx, power, what, (PM_ALLOW_GROUP | PM_FORCE_PET | PM_HASTE));
             }

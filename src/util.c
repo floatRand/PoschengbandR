@@ -746,6 +746,7 @@ errr fd_move(cptr file, cptr what)
  */
 errr fd_copy(cptr file, cptr what)
 {
+    errr rc = ERROR_SUCCESS;
     char buf[1024];
     char aux[1024];
     int read_num;
@@ -768,7 +769,14 @@ errr fd_copy(cptr file, cptr what)
     /* Copy */
     while ((read_num = read(src_fd, buf, 1024)) > 0)
     {
-        write(dst_fd, buf, read_num);
+        int write_num = write(dst_fd, buf, read_num);
+        /* "For writing, the return value is the number of bytes written; an error
+            has occurred if this isn't equal to the number requested." */
+        if (write_num != read_num)
+        {
+            rc = ERROR_UNKOWN_FAILURE;
+            break;
+        }
     }
 
     /* Close files */
@@ -776,7 +784,7 @@ errr fd_copy(cptr file, cptr what)
     fd_close(dst_fd);
 
     /* XXX XXX XXX */
-    return (0);
+    return rc;
 }
 
 

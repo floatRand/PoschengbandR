@@ -668,6 +668,7 @@ s32b lite_cost(object_type *o_ptr)
         j = 30;
         break;
     case SV_LITE_FEANOR:
+    default:
         j = 250;
         break;
     }
