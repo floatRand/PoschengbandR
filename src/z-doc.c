@@ -672,10 +672,13 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         {
             string_ptr arg = string_nalloc(tag->arg, tag->arg_size);
             doc_style_ptr style = str_map_find(doc->styles, string_buffer(arg));
-            if (style)
+
             {/* We don't copy the named style, just its color. */
+             /* Also, we damn well better push a style or we'll be upset
+                when the good little user pops! */
                 doc_style_t copy = *doc_current_style(doc);
-                copy.color = style->color;
+                if (style)
+                    copy.color = style->color;
                 doc_push_style(doc, &copy);
             }
             string_free(arg);
@@ -1114,6 +1117,16 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
    }
    fprintf(fp, "</font>");
    fprintf(fp, "</pre></body></html>\n");
+
+/* Hmmm ... I wonder if we couldn't handle links somehow.
+   Imagine a commandline to read our helpfiles and output them
+   as html (this is trivial to build). If, in the process, it
+   inserted html links with filerefs, then that would be sweet.
+   Users could then browse our help system in their browsers.
+
+   This is a big TODO! I'm offline now and don't have an html
+   reference.
+*/
 }
 
 void doc_write_file(doc_ptr doc, FILE *fp, int format)
