@@ -448,7 +448,12 @@ doc_style_ptr doc_style(doc_ptr doc, cptr name)
 doc_pos_t doc_newline(doc_ptr doc)
 {
     doc->cursor.y++;
-    doc->cursor.x = doc->current_style.left;
+    doc->cursor.x = 0;
+    if (doc->cursor.x < doc->current_style.left)
+    {
+        doc_insert_space(doc, doc->current_style.left);
+        assert(doc->cursor.x == doc->current_style.left);
+    }
     return doc->cursor;
 }
 
@@ -599,7 +604,10 @@ void doc_change_style(doc_ptr doc, cptr name)
         doc->current_style = *style;
         doc->current_color = doc->current_style.color;
         if (doc->cursor.x < doc->current_style.left)
-            doc->cursor.x = doc->current_style.left;
+        {
+            doc_insert_space(doc, doc->current_style.left - doc->cursor.x);
+            assert(doc->cursor.x == doc->current_style.left);
+        }
         vec_clear(doc->color_stack);
     }
 }
@@ -741,7 +749,7 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
 
         if (token.type == DOC_TOKEN_WHITESPACE)
         {
-            doc->cursor.x += token.size;
+            doc_insert_space(doc, token.size);
             continue;
         }
 
@@ -825,6 +833,23 @@ doc_pos_t doc_insert_char(doc_ptr doc, byte a, char c)
     if (doc->cursor.x >= doc->width)
         doc_newline(doc);
 
+    return doc->cursor;
+}
+
+doc_pos_t doc_insert_space(doc_ptr doc, int count)
+{
+    int          i;
+    doc_char_ptr cell = doc_char(doc, doc->cursor);
+
+    for (i = 0; i < count; i++)
+    {
+        cell->a = doc->current_color;
+        cell->c = ' ';
+        if (doc->cursor.x == doc->width - 1)
+            break;
+        doc->cursor.x++;
+        cell++;
+    }
     return doc->cursor;
 }
 
@@ -981,10 +1006,8 @@ static void _doc_write_text_file(doc_ptr doc, FILE *fp)
         cell = doc_char(doc, pos);
         for (; pos.x < cx; pos.x++)
         {
-            if (cell->c)
-                fputc(cell->c, fp);
-            else
-                fputc(' ', fp);
+            if (!cell->c) break;
+            fputc(cell->c, fp);
             cell++;
         }
         fputc('\n', fp);
@@ -1009,8 +1032,10 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
 
         for (; pos.x < cx; pos.x++)
         {
-            char c = cell->c ? cell->c : ' ';
+            char c = cell->c;
             byte a = cell->a & 0x0F;
+
+            if (!c) break;
 
             if (a != old_a && c != ' ')
             {
