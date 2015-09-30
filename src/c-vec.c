@@ -46,6 +46,7 @@ vec_ptr vec_alloc(vec_free_f free)
 void vec_free(vec_ptr vec)
 {
     vec_clear(vec);
+    free(vec->objs);
     free(vec);
 }
 
