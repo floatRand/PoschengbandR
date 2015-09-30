@@ -138,7 +138,11 @@ doc_pos_t     doc_find_next(doc_ptr doc, cptr text, doc_pos_t start);
 doc_pos_t     doc_find_prev(doc_ptr doc, cptr text, doc_pos_t start);
 
 doc_style_ptr doc_style(doc_ptr doc, cptr name);
-void          doc_change_style(doc_ptr doc, cptr name);
+
+              /* <style:foo>Some Text<style:*> */
+void          doc_push_style(doc_ptr doc, doc_style_ptr style);
+void          doc_pop_style(doc_ptr doc);
+doc_style_ptr doc_current_style(doc_ptr doc);
 
               /* Build a document from a text file */
 doc_pos_t     doc_insert(doc_ptr doc, cptr text);
@@ -147,7 +151,7 @@ doc_pos_t     doc_read_file(doc_ptr doc, FILE *fp);
 void          doc_write_file(doc_ptr doc, FILE *fp, int format);
 
               /* Build a document in code */
-doc_pos_t     doc_insert_char(doc_ptr doc, byte a, char c);
+doc_pos_t     doc_insert_char(doc_ptr doc, char c);
 doc_pos_t     doc_insert_text(doc_ptr doc, byte a, cptr text);
 doc_pos_t     doc_insert_doc(doc_ptr dest_doc, doc_ptr src_doc, int indent);
 doc_pos_t     doc_insert_cols(doc_ptr dest_doc, doc_ptr src_cols[], int col_count, int spacing);

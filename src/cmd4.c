@@ -4311,7 +4311,9 @@ void do_cmd_save_screen_doc(void)
             }
             fprintf(fff, "%c", c);
         }
-        fprintf(fff, "<color:*>\n");
+        if (current_a >= 0 && current_a != TERM_WHITE)
+            fprintf(fff, "<color:*>");
+        fprintf(fff, "\n");
     }
     my_fclose(fff);
 

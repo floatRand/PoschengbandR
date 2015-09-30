@@ -13,13 +13,11 @@ struct doc_s
     doc_pos_t      cursor;
     doc_region_t   selection;
     int            width;
-    doc_style_t    current_style;
-    byte           current_color;
     vec_ptr        pages;
     str_map_ptr    styles;
     vec_ptr        bookmarks;
     int_map_ptr    links;
-    vec_ptr        color_stack;
+    vec_ptr        style_stack;
 };
 
 doc_pos_t doc_pos_create(int x, int y)
@@ -144,14 +142,15 @@ doc_ptr doc_alloc(int width)
     res->styles = str_map_alloc(free);
     res->bookmarks = vec_alloc(_doc_bookmark_free);
     res->links = int_map_alloc(_doc_link_free);
-    res->color_stack = vec_alloc(NULL);
+    res->style_stack = vec_alloc(free);
 
     /* Default Styles:
        We currently lack a way to define styles inside a document.
-       Perhaps these should be globally available as well, an initialized
+       Perhaps these should be globally available as well, and initialized
        from a preference file for the entire document system. */
     style = doc_style(res, "normal");
     style->right = MIN(72, width);
+    doc_push_style(res, style); /* bottom of the style stack is *always* "normal" */
 
     style = doc_style(res, "note");
     style->color = TERM_L_GREEN;
@@ -182,7 +181,6 @@ doc_ptr doc_alloc(int width)
     style = doc_style(res, "selection");
     style->color = TERM_YELLOW;
 
-    doc_change_style(res, "normal");
     return res;
 }
 
@@ -194,7 +192,7 @@ void doc_free(doc_ptr doc)
         str_map_free(doc->styles);
         vec_free(doc->bookmarks);
         int_map_free(doc->links);
-        vec_free(doc->color_stack);
+        vec_free(doc->style_stack);
 
         free(doc);
     }
@@ -445,14 +443,54 @@ doc_style_ptr doc_style(doc_ptr doc, cptr name)
     return result;
 }
 
+void doc_push_style(doc_ptr doc, doc_style_ptr style)
+{
+    doc_style_ptr copy = malloc(sizeof(doc_style_t));
+
+    *copy = *style;
+    vec_push(doc->style_stack, copy);
+
+    if (doc->cursor.x < copy->left)
+    {
+        doc_insert_space(doc, copy->left - doc->cursor.x);
+        assert(doc->cursor.x == copy->left);
+    }
+}
+
+void doc_pop_style(doc_ptr doc)
+{
+    assert(vec_length(doc->style_stack) > 0);
+
+    /* the style stack can never empty, and the bottom is always "normal" */
+    if (vec_length(doc->style_stack) > 1)
+    {
+        doc_style_ptr style = vec_pop(doc->style_stack);
+        free(style);
+    }
+}
+
+doc_style_ptr doc_current_style(doc_ptr doc)
+{
+    int           ct = vec_length(doc->style_stack);
+    doc_style_ptr style = NULL;
+
+    if (ct > 0)
+        style = vec_get(doc->style_stack, ct - 1);
+
+    assert(style);
+    return style;
+}
+
 doc_pos_t doc_newline(doc_ptr doc)
 {
+    doc_style_ptr style = doc_current_style(doc);
+
     doc->cursor.y++;
     doc->cursor.x = 0;
-    if (doc->cursor.x < doc->current_style.left)
+    if (doc->cursor.x < style->left)
     {
-        doc_insert_space(doc, doc->current_style.left);
-        assert(doc->cursor.x == doc->current_style.left);
+        doc_insert_space(doc, style->left);
+        assert(doc->cursor.x == style->left);
     }
     return doc->cursor;
 }
@@ -596,22 +634,6 @@ static void _doc_process_var(doc_ptr doc, cptr name)
     }
 }
 
-void doc_change_style(doc_ptr doc, cptr name)
-{
-    doc_style_ptr style = doc_style(doc, name);
-    if (style)
-    {
-        doc->current_style = *style;
-        doc->current_color = doc->current_style.color;
-        if (doc->cursor.x < doc->current_style.left)
-        {
-            doc_insert_space(doc, doc->current_style.left - doc->cursor.x);
-            assert(doc->cursor.x == doc->current_style.left);
-        }
-        vec_clear(doc->color_stack);
-    }
-}
-
 static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
 {
     if (tag->type == DOC_TAG_COLOR)
@@ -620,34 +642,30 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         if (tag->arg_size == 1)
         {
             if (tag->arg[0] == '*')
-            {
-                if (vec_length(doc->color_stack))
-                    doc->current_color = (byte)(intptr_t)vec_pop(doc->color_stack);
-                else
-                    doc->current_color = doc->current_style.color;
-            }
+                doc_pop_style(doc);
             else
             {
-                vec_push(doc->color_stack, (vptr)(intptr_t)doc->current_color);
+                doc_style_t style = *doc_current_style(doc); /* copy */
                 switch (tag->arg[0])
                 {
-                case 'd': doc->current_color = TERM_DARK; break;
-                case 'w': doc->current_color = TERM_WHITE; break;
-                case 's': doc->current_color = TERM_SLATE; break;
-                case 'o': doc->current_color = TERM_ORANGE; break;
-                case 'r': doc->current_color = TERM_RED; break;
-                case 'g': doc->current_color = TERM_GREEN; break;
-                case 'b': doc->current_color = TERM_BLUE; break;
-                case 'u': doc->current_color = TERM_UMBER; break;
-                case 'D': doc->current_color = TERM_L_DARK; break;
-                case 'W': doc->current_color = TERM_L_WHITE; break;
-                case 'v': doc->current_color = TERM_VIOLET; break;
-                case 'y': doc->current_color = TERM_YELLOW; break;
-                case 'R': doc->current_color = TERM_L_RED; break;
-                case 'G': doc->current_color = TERM_L_GREEN; break;
-                case 'B': doc->current_color = TERM_L_BLUE; break;
-                case 'U': doc->current_color = TERM_L_UMBER; break;
+                case 'd': style.color = TERM_DARK; break;
+                case 'w': style.color = TERM_WHITE; break;
+                case 's': style.color = TERM_SLATE; break;
+                case 'o': style.color = TERM_ORANGE; break;
+                case 'r': style.color = TERM_RED; break;
+                case 'g': style.color = TERM_GREEN; break;
+                case 'b': style.color = TERM_BLUE; break;
+                case 'u': style.color = TERM_UMBER; break;
+                case 'D': style.color = TERM_L_DARK; break;
+                case 'W': style.color = TERM_L_WHITE; break;
+                case 'v': style.color = TERM_VIOLET; break;
+                case 'y': style.color = TERM_YELLOW; break;
+                case 'R': style.color = TERM_L_RED; break;
+                case 'G': style.color = TERM_L_GREEN; break;
+                case 'B': style.color = TERM_L_BLUE; break;
+                case 'U': style.color = TERM_L_UMBER; break;
                 }
+                doc_push_style(doc, &style);
             }
         }
         else
@@ -655,9 +673,10 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             string_ptr arg = string_nalloc(tag->arg, tag->arg_size);
             doc_style_ptr style = str_map_find(doc->styles, string_buffer(arg));
             if (style)
-            {
-                vec_push(doc->color_stack, (vptr)(intptr_t)doc->current_color);
-                doc->current_color = style->color;
+            {/* We don't copy the named style, just its color. */
+                doc_style_t copy = *doc_current_style(doc);
+                copy.color = style->color;
+                doc_push_style(doc, &copy);
             }
             string_free(arg);
         }
@@ -669,7 +688,14 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         switch (tag->type)
         {
         case DOC_TAG_STYLE:
-            doc_change_style(doc, string_buffer(arg));
+            if (tag->arg_size == 1 && tag->arg[0] == '*')
+                doc_pop_style(doc);
+            else
+            {/* Better add one if name doesn't exist ... */
+                doc_style_ptr style = doc_style(doc, string_buffer(arg));
+                assert(style);
+                doc_push_style(doc, style);
+            }
             break;
         case DOC_TAG_VAR:
             _doc_process_var(doc, string_buffer(arg));
@@ -706,7 +732,7 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             int_map_add(doc->links, ch, link);
             {
                 string_ptr s = string_alloc(NULL);
-                string_printf(s, "<style:link>[%c]<style:normal>", ch);
+                string_printf(s, "<style:link>[%c]<style:*>", ch);
                 doc_insert(doc, string_buffer(s));
                 string_free(s);
             }
@@ -725,6 +751,7 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
     int         qidx = 0;
     cptr        pos = text;
     int         i, j, cb;
+    doc_style_ptr style = NULL;
 
     for (;;)
     {
@@ -778,8 +805,9 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
             pos = peek;
         }
 
-        if ( doc->cursor.x + cb >= doc->current_style.right
-          && !(doc->current_style.options & DOC_STYLE_NO_WORDWRAP) )
+        style = doc_current_style(doc); /* be careful ... this changes on <color:_> tags! */
+        if ( doc->cursor.x + cb >= style->right
+          && !(style->options & DOC_STYLE_NO_WORDWRAP) )
         {
             doc_newline(doc);
         }
@@ -794,19 +822,19 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
             {
                 assert(current->tag.type == DOC_TAG_COLOR);
                 _doc_process_tag(doc, &current->tag);
+                style = doc_current_style(doc);
                 continue;
             }
             assert(current->type == DOC_TOKEN_WORD);
             for (j = 0; j < current->size; j++)
             {
-                cell->a = doc->current_color;
+                cell->a = style->color;
                 cell->c = current->pos[j];
                 if (cell->c == '\t')
                     cell->c = ' ';
-                doc->cursor.x++;
-                if (doc->cursor.x >= doc->width)
+                if (doc->cursor.x >= style->right - 1)
                 {
-                    if (doc->current_style.options & DOC_STYLE_NO_WORDWRAP)
+                    if (style->options & DOC_STYLE_NO_WORDWRAP)
                     {
                         i = qidx;
                         break;
@@ -815,24 +843,34 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
                     cell = doc_char(doc, doc->cursor);
                 }
                 else
+                {
+                    doc->cursor.x++;
                     cell++;
+                }
             }
         }
     }
+    assert(0 <= doc->cursor.x && doc->cursor.x < doc->width);
     return doc->cursor;
 }
 
-doc_pos_t doc_insert_char(doc_ptr doc, byte a, char c)
+doc_pos_t doc_insert_char(doc_ptr doc, char c)
 {
     doc_char_ptr cell = doc_char(doc, doc->cursor);
+    doc_style_ptr style = doc_current_style(doc);
 
-    cell->a = a;
+    cell->a = style->color;
     cell->c = c;
 
-    doc->cursor.x++;
-    if (doc->cursor.x >= doc->width)
-        doc_newline(doc);
+    if (doc->cursor.x >= style->right - 1)
+    {
+        if (!(style->options & DOC_STYLE_NO_WORDWRAP))
+            doc_newline(doc);
+    }
+    else
+        doc->cursor.x++;
 
+    assert(0 <= doc->cursor.x && doc->cursor.x < doc->width);
     return doc->cursor;
 }
 
@@ -840,25 +878,36 @@ doc_pos_t doc_insert_space(doc_ptr doc, int count)
 {
     int          i;
     doc_char_ptr cell = doc_char(doc, doc->cursor);
+    doc_style_ptr style = doc_current_style(doc);
 
     for (i = 0; i < count; i++)
     {
-        cell->a = doc->current_color;
+        cell->a = style->color;
         cell->c = ' ';
-        if (doc->cursor.x == doc->width - 1)
+        if (doc->cursor.x >= style->right - 1)
             break;
         doc->cursor.x++;
         cell++;
     }
+    assert(0 <= doc->cursor.x && doc->cursor.x < doc->width);
     return doc->cursor;
 }
 
 doc_pos_t doc_insert_text(doc_ptr doc, byte a, cptr text)
 {
-    vec_clear(doc->color_stack);
-    doc->current_style.color = a;
-    doc->current_color = a;
-    doc_insert(doc, text);
+    doc_style_ptr style = doc_current_style(doc);
+    if (style->color != a)
+    {
+        doc_style_t copy = *style;
+        copy.color = a;
+        doc_push_style(doc, &copy);
+        doc_insert(doc, text);
+        doc_pop_style(doc);
+    }
+    else
+        doc_insert(doc, text);
+
+    assert(0 <= doc->cursor.x && doc->cursor.x < doc->width);
     return doc->cursor;
 }
 
@@ -980,7 +1029,10 @@ doc_char_ptr doc_char(doc_ptr doc, doc_pos_t pos)
     }
 
     page = vec_get(doc->pages, page_num);
+
+    assert(0 <= doc->cursor.x && doc->cursor.x < doc->width);
     assert(offset * doc->width + pos.x < cb);
+
     return page + offset * doc->width + pos.x;
 }
 

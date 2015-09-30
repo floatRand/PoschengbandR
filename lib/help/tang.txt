@@ -1,12 +1,12 @@
-<style:title>The Newbie Guide<style:normal>
+<style:title>The Newbie Guide<style:*>
 
 Welcome to <color:keyword>PosChengband<color:*>! This guide will attempt to give you a quick overview of the game and get you started on your path to slay the dreaded Serpent of Chaos.
 
-<topic:Overview><style:heading>Overview<style:normal>
+<topic:Overview><style:heading>Overview<style:*>
 
 PosChengband is a single player role playing game where you, the brave adventurer, attempt to save the world by defeating evil monsters including, eventually, the <color:keyword>Serpent of Chaos<color:*>. The road is long, and the path is treacherous. Many have tried and failed, and the dungeons are littered with the bones of would be heroes. Do you have what it takes to succeed where so many others have failed? If so, read on.
 
-<topic:CreatingACharacter><style:heading>Creating a Character<style:normal>
+<topic:CreatingACharacter><style:heading>Creating a Character<style:*>
 
 Your first step will be to create your character. Since you are new to the game, I suggest you choose <color:keyword>Beginner Mode<color:*> at the initial prompt. This will greatly limit the complexity of the character creation process and also remove the wilderness option. After playing a few characters to get an idea of how to play, you can start a new character in <color:keyword>Normal Mode<color:*> to view all the options as well as enable the wilderness. Hey, it's not like your first character is going to win anyway!
 
@@ -20,15 +20,15 @@ Finally, you can play with Magic as your forte as a mage. Gnomes and High-Elves 
 
 We'll discuss these three styles more as we proceed through this guide.
 
-<topic:EquippingForDanger><style:heading>Equipping for Danger<style:normal>
+<topic:EquippingForDanger><style:heading>Equipping for Danger<style:*>
 
 Once you have completed the birth process, you will find yourself in the town on the surface. Since you picked 'Beginner', there will be no wilderness to explore. In this case, the only reason to return to the surface is to buy and sell equipment in the town. When you start, you have some initial gear that varies with your class, and it should already be equipped for your. You also have a small amount of gold which you can use to augment your supplies for that first trip into danger.
 
 So, what do you see at first?
 <style:screenshot>
-LEVEL <color:G>     1<color:*> ..................................................................<color:*>
-EXP <color:G>       6<color:*> ..................................................................<color:*>
-AU  <color:G>     228<color:*> <color:U>################################<color:*>.<color:U>################################<color:*>.<color:*>
+LEVEL <color:G>     1<color:*> ..................................................................
+EXP <color:G>       6<color:*> ..................................................................
+AU  <color:G>     228<color:*> <color:U>################################<color:*>.<color:U>################################<color:*>.
 <color:d>            <color:*> <color:U>################################<color:*>.<color:U>#################################<color:*>
 STR : <color:G> 18/10<color:*> <color:U>#####<color:*>.......................................................<color:U>######<color:*>
 INT : <color:G> 18/30<color:*> <color:U>####<color:*><color:u>+<color:*>.......................................................<color:B>+<color:*><color:U>#####<color:*>
@@ -40,7 +40,7 @@ AC     <color:G>    7<color:*> ......<color:U>##+##<color:*>..<color:U>###<color
 HP <color:G>  43<color:*>/<color:G>  43<color:*> .................................................................<color:U>#<color:*>
              ......................................<color:U>f<color:*>..........................<color:U>#<color:*>
              .................................................................<color:U>#<color:*>
-@[<color:G>*********<color:*>] ................................<color:v>><color:*>@................................<color:*>
+@[<color:G>*********<color:*>] ................................<color:v>><color:*>@................................
 <color:U>,<color:*>[*********] .................................................................<color:U>#<color:*>
              .................................................................<color:U>#<color:*>
              .................................................................<color:U>#<color:*>
@@ -51,8 +51,8 @@ HP <color:G>  43<color:*>/<color:G>  43<color:*> ...............................
              <color:U>#####<color:*>.......................................................<color:U>######<color:*>
              <color:U>#####<color:*>.......................................................<color:v>+<color:*><color:U>#####<color:*>
              <color:U>#####<color:*>.......................................................<color:U>######<color:*>
-                                                                           Town<color:*>
-<style:normal>
+                                                                           Town
+<style:*>
 Well, that @ in the center of the screen is you for starters. Also, those <color:U>#<color:*> characters are walls and you can see they are shaped into buildings for the various shops. Each building has a number or '+' character that you may enter by moving onto that square. Each number stands for a different type of shop. You can move about with the arrow keys and look about with the <color:keypress>l<color:*> command followed by the arrow keys. That <color:U>f<color:*> is a monster and you should look at it with the <color:keypress>l<color:*> command to see if it seems threatening:
 <style:screenshot>
 The Scrawny cat ('<color:U>f<color:*>')/('<color:U>f<color:*>'):  [r,q,t,p,o,+,-,<dir>]

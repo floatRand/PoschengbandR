@@ -324,7 +324,7 @@ static void msg_line_display(byte color, cptr msg)
 
     doc_insert_text(_msg_line_doc, color, msg);
     if (doc_cursor(_msg_line_doc).x > 0)
-        doc_insert_char(_msg_line_doc, color, ' ');
+        doc_insert_char(_msg_line_doc, ' ');
     msg_line_sync();
 }
 
