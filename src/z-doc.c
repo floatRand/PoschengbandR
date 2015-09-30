@@ -4,6 +4,7 @@
 #include "c-string.h"
 
 #include <assert.h>
+#include <stdint.h>
 
 struct doc_s
 {
@@ -16,6 +17,7 @@ struct doc_s
     str_map_ptr    styles;
     vec_ptr        bookmarks;
     int_map_ptr    links;
+    vec_ptr        color_stack;
 };
 
 doc_pos_t doc_pos_create(int x, int y)
@@ -140,6 +142,7 @@ doc_ptr doc_alloc(int width)
     res->styles = str_map_alloc(free);
     res->bookmarks = vec_alloc(_doc_bookmark_free);
     res->links = int_map_alloc(_doc_link_free);
+    res->color_stack = vec_alloc(NULL);
 
     /* Default Styles:
        We currently lack a way to define styles inside a document.
@@ -189,6 +192,7 @@ void doc_free(doc_ptr doc)
         str_map_free(doc->styles);
         vec_free(doc->bookmarks);
         int_map_free(doc->links);
+        vec_free(doc->color_stack);
 
         free(doc);
     }
@@ -594,6 +598,7 @@ void doc_change_style(doc_ptr doc, cptr name)
         doc->current_color = doc->current_style.color;
         if (doc->cursor.x < doc->current_style.left)
             doc->cursor.x = doc->current_style.left;
+        vec_clear(doc->color_stack);
     }
 }
 
@@ -604,25 +609,35 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         assert(tag->arg);
         if (tag->arg_size == 1)
         {
-            switch (tag->arg[0])
+            if (tag->arg[0] == '*')
             {
-            case '*': doc->current_color = doc->current_style.color; break;
-            case 'd': doc->current_color = TERM_DARK; break;
-            case 'w': doc->current_color = TERM_WHITE; break;
-            case 's': doc->current_color = TERM_SLATE; break;
-            case 'o': doc->current_color = TERM_ORANGE; break;
-            case 'r': doc->current_color = TERM_RED; break;
-            case 'g': doc->current_color = TERM_GREEN; break;
-            case 'b': doc->current_color = TERM_BLUE; break;
-            case 'u': doc->current_color = TERM_UMBER; break;
-            case 'D': doc->current_color = TERM_L_DARK; break;
-            case 'W': doc->current_color = TERM_L_WHITE; break;
-            case 'v': doc->current_color = TERM_VIOLET; break;
-            case 'y': doc->current_color = TERM_YELLOW; break;
-            case 'R': doc->current_color = TERM_L_RED; break;
-            case 'G': doc->current_color = TERM_L_GREEN; break;
-            case 'B': doc->current_color = TERM_L_BLUE; break;
-            case 'U': doc->current_color = TERM_L_UMBER; break;
+                if (vec_length(doc->color_stack))
+                    doc->current_color = (byte)(intptr_t)vec_pop(doc->color_stack);
+                else
+                    doc->current_color = doc->current_style.color;
+            }
+            else
+            {
+                vec_push(doc->color_stack, (vptr)(intptr_t)doc->current_color);
+                switch (tag->arg[0])
+                {
+                case 'd': doc->current_color = TERM_DARK; break;
+                case 'w': doc->current_color = TERM_WHITE; break;
+                case 's': doc->current_color = TERM_SLATE; break;
+                case 'o': doc->current_color = TERM_ORANGE; break;
+                case 'r': doc->current_color = TERM_RED; break;
+                case 'g': doc->current_color = TERM_GREEN; break;
+                case 'b': doc->current_color = TERM_BLUE; break;
+                case 'u': doc->current_color = TERM_UMBER; break;
+                case 'D': doc->current_color = TERM_L_DARK; break;
+                case 'W': doc->current_color = TERM_L_WHITE; break;
+                case 'v': doc->current_color = TERM_VIOLET; break;
+                case 'y': doc->current_color = TERM_YELLOW; break;
+                case 'R': doc->current_color = TERM_L_RED; break;
+                case 'G': doc->current_color = TERM_L_GREEN; break;
+                case 'B': doc->current_color = TERM_L_BLUE; break;
+                case 'U': doc->current_color = TERM_L_UMBER; break;
+                }
             }
         }
         else
@@ -630,7 +645,10 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             string_ptr arg = string_nalloc(tag->arg, tag->arg_size);
             doc_style_ptr style = str_map_find(doc->styles, string_buffer(arg));
             if (style)
+            {
+                vec_push(doc->color_stack, (vptr)(intptr_t)doc->current_color);
                 doc->current_color = style->color;
+            }
             string_free(arg);
         }
     }
@@ -810,6 +828,7 @@ doc_pos_t doc_insert_char(doc_ptr doc, byte a, char c)
 
 doc_pos_t doc_insert_text(doc_ptr doc, byte a, cptr text)
 {
+    vec_clear(doc->color_stack);
     doc->current_style.color = a;
     doc->current_color = a;
     doc_insert(doc, text);

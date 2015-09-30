@@ -102,6 +102,23 @@ int vec_length(vec_ptr vec)
     return vec->len;
 }
 
+void vec_push(vec_ptr vec, vptr obj)
+{
+    vec_add(vec, obj);
+}
+
+vptr vec_pop(vec_ptr vec)
+{
+    vptr result = NULL;
+    assert(vec->len);
+    if (vec->len)
+    {
+        vec->len--;
+        result = vec->objs[vec->len];
+    }
+    return result;
+}
+
 void vec_for_each(vec_ptr vec, vec_item_f f)
 {
     int i;

@@ -17,6 +17,9 @@ extern vptr    vec_get(vec_ptr vec, int i);
 extern void    vec_set(vec_ptr vec, int i, vptr obj);
 extern int     vec_length(vec_ptr vec);
 
+extern void    vec_push(vec_ptr vec, vptr obj);
+extern vptr    vec_pop(vec_ptr vec);
+
 extern void    vec_for_each(vec_ptr vec, vec_item_f f);
 extern void    vec_sort(vec_ptr vec, vec_cmp_f f);
 
