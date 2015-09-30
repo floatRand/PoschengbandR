@@ -4300,7 +4300,7 @@ void do_cmd_save_screen_doc(void)
                 if (current_a >= 0 && current_a != TERM_WHITE)
                 {
                     /*fprintf(fff, "|");*/
-                    fprintf(fff, "<color:*>");
+                    fprintf(fff, "</color>");
                 }
                 if (a != TERM_WHITE)
                 {
@@ -4312,7 +4312,7 @@ void do_cmd_save_screen_doc(void)
             fprintf(fff, "%c", c);
         }
         if (current_a >= 0 && current_a != TERM_WHITE)
-            fprintf(fff, "<color:*>");
+            fprintf(fff, "</color>");
         fprintf(fff, "\n");
     }
     my_fclose(fff);

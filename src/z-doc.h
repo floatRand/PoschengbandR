@@ -167,10 +167,14 @@ enum doc_tag_e
 {
     DOC_TAG_NONE,
     DOC_TAG_COLOR,
+    DOC_TAG_CLOSE_COLOR,
     DOC_TAG_STYLE,
+    DOC_TAG_CLOSE_STYLE,
     DOC_TAG_TOPIC,
     DOC_TAG_LINK,
     DOC_TAG_VAR,
+    DOC_TAG_INDENT,
+    DOC_TAG_CLOSE_INDENT,
 };
 struct doc_tag_s
 {

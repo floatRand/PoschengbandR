@@ -511,8 +511,8 @@ cptr doc_parse_tag(cptr pos, doc_tag_ptr tag)
         int  ct = 0;
         for (;;)
         {
-            if (!*seek || strchr(" <>\r\n\t", *seek)) return pos;
-            if (*seek == ':') break;
+            if (!*seek || strchr(" <\r\n\t", *seek)) return pos;
+            if (*seek == ':' || *seek == '>') break;
             name[ct++] = *seek;
             if (ct >= MAX_NLEN) return pos;
             seek++;
@@ -522,16 +522,31 @@ cptr doc_parse_tag(cptr pos, doc_tag_ptr tag)
         /* [pos,seek) is the name of the tag */
         if (strcmp(name, "color") == 0)
             result.type = DOC_TAG_COLOR;
+        else if (strcmp(name, "/color") == 0)
+            result.type = DOC_TAG_CLOSE_COLOR;
         else if (strcmp(name, "style") == 0)
             result.type = DOC_TAG_STYLE;
+        else if (strcmp(name, "/style") == 0)
+            result.type = DOC_TAG_CLOSE_STYLE;
         else if (strcmp(name, "topic") == 0)
             result.type = DOC_TAG_TOPIC;
         else if (strcmp(name, "link") == 0)
             result.type = DOC_TAG_LINK;
         else if (strcmp(name, "$") == 0 || strcmp(name, "var") == 0)
             result.type = DOC_TAG_VAR;
+        else if (strcmp(name, "indent") == 0)
+            result.type = DOC_TAG_INDENT;
+        else if (strcmp(name, "/indent") == 0)
+            result.type = DOC_TAG_CLOSE_INDENT;
         else
             return pos;
+
+        if (*seek == '>')
+        {
+            seek++;
+            *tag = result;
+            return seek;
+        }
 
         assert(*seek == ':');
         seek++;
@@ -636,7 +651,13 @@ static void _doc_process_var(doc_ptr doc, cptr name)
 
 static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
 {
-    if (tag->type == DOC_TAG_COLOR)
+    if ( tag->type == DOC_TAG_CLOSE_COLOR
+      || tag->type == DOC_TAG_CLOSE_STYLE
+      || tag->type == DOC_TAG_CLOSE_INDENT )
+    {
+        doc_pop_style(doc);
+    }
+    else if (tag->type == DOC_TAG_COLOR)
     {
         assert(tag->arg);
         if (tag->arg_size == 1)
@@ -683,6 +704,12 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             }
             string_free(arg);
         }
+    }
+    else if (tag->type == DOC_TAG_INDENT)
+    {
+        doc_style_t style = *doc_current_style(doc);
+        style.left = doc->cursor.x;
+        doc_push_style(doc, &style);
     }
     else
     {
