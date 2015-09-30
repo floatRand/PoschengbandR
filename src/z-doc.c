@@ -6,6 +6,8 @@
 #include <assert.h>
 #include <stdint.h>
 
+#define _INVALID_COLOR 255
+
 struct doc_s
 {
     doc_pos_t      cursor;
@@ -965,7 +967,7 @@ doc_pos_t doc_read_file(doc_ptr doc, FILE *fp)
     return doc->cursor;
 }
 
-void doc_write_file(doc_ptr doc, FILE *fp)
+static void _doc_write_text_file(doc_ptr doc, FILE *fp)
 {
     doc_pos_t    pos;
     doc_char_ptr cell;
@@ -987,6 +989,66 @@ void doc_write_file(doc_ptr doc, FILE *fp)
         }
         fputc('\n', fp);
    }
+}
+
+static void _doc_write_html_file(doc_ptr doc, FILE *fp)
+{
+    doc_pos_t    pos;
+    doc_char_ptr cell;
+    byte         old_a = _INVALID_COLOR;
+
+    fprintf(fp, "<html>\n<body text=\"#ffffff\" bgcolor=\"#000000\"><pre>\n");
+
+    for (pos.y = 0; pos.y <= doc->cursor.y; pos.y++)
+    {
+        int cx = doc->width;
+        pos.x = 0;
+        if (pos.y == doc->cursor.y)
+            cx = doc->cursor.x;
+        cell = doc_char(doc, pos);
+
+        for (; pos.x < cx; pos.x++)
+        {
+            char c = cell->c ? cell->c : ' ';
+            byte a = cell->a & 0x0F;
+
+            if (a != old_a && c != ' ')
+            {
+                if (old_a != _INVALID_COLOR)
+                    fprintf(fp, "</font>");
+                fprintf(fp,
+                    "<font color=\"#%02x%02x%02x\">",
+                    angband_color_table[a][1],
+                    angband_color_table[a][2],
+                    angband_color_table[a][3]
+                );
+                old_a = a;
+            }
+            switch (c)
+            {
+            case '&': fprintf(fp, "&amp;"); break;
+            case '<': fprintf(fp, "&lt;"); break;
+            case '>': fprintf(fp, "&gt;"); break;
+            default:  fprintf(fp, "%c", c); break;
+            }
+            cell++;
+        }
+        fputc('\n', fp);
+   }
+   fprintf(fp, "</font>");
+   fprintf(fp, "</pre></body></html>\n");
+}
+
+void doc_write_file(doc_ptr doc, FILE *fp, int format)
+{
+    switch (format)
+    {
+    case DOC_FORMAT_HTML:
+        _doc_write_html_file(doc, fp);
+        break;
+    default:
+        _doc_write_text_file(doc, fp);
+    }
 }
 
 typedef void (*_doc_char_fn)(doc_pos_t pos, doc_char_ptr cell);
@@ -1030,7 +1092,6 @@ void doc_rollback(doc_ptr doc, doc_pos_t pos)
     doc->cursor = pos;
 }
 
-#define _INVALID_COLOR 255
 void doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos)
 {
     doc_pos_t pos;
@@ -1197,6 +1258,8 @@ int doc_display(doc_ptr doc, cptr caption, int top)
             FILE *fp2;
             char buf[1024];
             char name[82];
+            int  cb;
+            int  format = DOC_FORMAT_TEXT;
 
             strcpy(name, "");
 
@@ -1208,7 +1271,14 @@ int doc_display(doc_ptr doc, cptr caption, int top)
                 msg_format("Failed to open file: %s", buf);
                 break;
             }
-            doc_write_file(doc, fp2);
+
+            cb = strlen(buf);
+            if (cb > 5 && strcmp(buf + cb - 5, ".html") == 0)
+                format = DOC_FORMAT_HTML;
+            else if (cb > 4 && strcmp(buf + cb - 4, ".htm") == 0)
+                format = DOC_FORMAT_HTML;
+
+            doc_write_file(doc, fp2, format);
             my_fclose(fp2);
             msg_format("Created file: %s", buf);
             msg_print(NULL);
