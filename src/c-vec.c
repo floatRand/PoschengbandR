@@ -233,10 +233,14 @@ static int _median3_partition(vptr vec[], int left, int right, vec_cmp_f f)
     /* sort <v[l], v[c], v[r]> in place */
     if (f(vec[left], vec[center]) > 0)
         _swap(vec, left, center);
-    if (f(vec[left], vec[right]) > 0)
-        _swap(vec, left, right);
     if (f(vec[center], vec[right]) > 0)
+    {
         _swap(vec, center, right);
+        if (f(vec[left], vec[center]) > 0)
+            _swap(vec, left, center);
+    }
+    assert(f(vec[left], vec[center]) <= 0);
+    assert(f(vec[center], vec[right]) <= 0);
 
     /* v[c] is the median, put it in v[r-1] */
     _swap(vec, center, right - 1);
@@ -343,7 +347,7 @@ void vec_sort(vec_ptr vec, vec_cmp_f f)
        many duplicate keys. But, it turns out the CLRS partioning is faster for a vector
        of random numbers with few duplicates. Skiena recommends the CLRS version.
    [4] Quick Sort took me all day to write and debug. Merge Sort took about 10 minutes
-       and is almost is fast (w/in 5% or 10%) for sorting files.
+       and is almost as fast (w/in 5% or 10%) for sorting files.
    [5] Quick Sort is of course much, much better if you have a vector of integers rather than objects, e.g.
             for (i = 0; i < count; i++)
             {
