@@ -409,8 +409,8 @@ Updated    : Zangband DevTeam
 Updated    : Hengband 1.5.2
 Updated    : PosChengband 1.0.0
 
-***** [a] raceclas.hlp
-***** [b] magic.hlp
+***** [a] raceclass_contents.txt
+***** [b] magic_contents.txt
 ***** [c] birth.txt#PrimaryStats
 ***** [d] birth.txt#PrimarySkills
 ***** [e] option.txt#Birth

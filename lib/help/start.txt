@@ -1,10 +1,10 @@
-<style:title>Welcome to the PosChengband Online Help System.<style:normal>
+<style:title>Welcome to the Online Help System.</style>
 
 Please choose one of the following online help files:
 
-    <link:general.hlp> General Information
-    <link:birth.hlp> Creating a Character
-    <link:raceclas.hlp> Races, Classes and Personalities
+    <link:general_contents.txt> General Information
+    <link:birth_contents.txt> Creating a Character
+    <link:raceclass_contents.txt> Races, Classes and Personalities
     <link:town.hlp> The Town and Wilderness
     <link:dungeon.hlp> The Dungeon
     <link:objects.hlp> Objects
@@ -17,4 +17,4 @@ Please choose one of the following online help files:
     <link:pref.hlp> User Preference Files
     <link:editor.hlp> Auto-picker/destroyer
 
-    <color:y>(?) Help System Commands<color:*>
+    <color:y>(?) Help System Commands</color>

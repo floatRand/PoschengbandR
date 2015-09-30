@@ -1,0 +1,85 @@
+On branch develop
+Your branch is ahead of 'origin/develop' by 157 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	deleted:    attack.hlp
+	deleted:    birth.hlp
+	modified:   birth.txt
+	deleted:    command.hlp
+	deleted:    commdesc.hlp
+	deleted:    defend.hlp
+	deleted:    dungeon.hlp
+	deleted:    general.hlp
+	modified:   general.txt
+	deleted:    magic.hlp
+	deleted:    monster.hlp
+	deleted:    objects.hlp
+	deleted:    option.hlp
+	deleted:    pref.hlp
+	deleted:    raceclas.hlp
+	deleted:    raceclas.txt
+	deleted:    start.hlp
+	deleted:    tang.hlp
+	deleted:    town.hlp
+	modified:   ../../src/files.c
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	../../big_diff.txt
+	../../changes.txt
+	../../design/.todo.txt.kate-swp
+	../../design/cannibal.ods
+	../../design/combat.ods
+	../../design/fame.ods
+	../../design/health_track.ods
+	../../design/monk_blows.ods
+	../../design/monsters.ods
+	../../design/todo.txt
+	../../fonts.txt
+	../../little_diff.txt
+	../../src/.kateproject
+	../../src/.kateproject.d/
+	../../src/PosChengband.config
+	../../src/PosChengband.creator
+	../../src/PosChengband.files
+	../../src/PosChengband.includes
+	../../src/a.out
+	../../src/build
+	../../src/debug.c
+	../../src/fast.txt
+	../../src/fast2.txt
+	../../src/foo.txt
+	../../src/gmon.out
+	../../src/leak.c
+	../../src/less
+	../../src/slow.txt
+	../../src/slow2.txt
+	../../src/test_str_sort.c
+	../../temp.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+
+git add attack_contents.txt;
+git add birth_contents.txt;
+git add command_contents.txt;
+git add commdesc_contents.txt;
+git add defend_contents.txt;
+git add dungeon_contents.txt;
+git add foo.txt;
+git add general_contents.txt;
+git add magic_contents.txt;
+git add monster_contents.txt;
+git add objects_contents.txt;
+git add option_contents.txt;
+git add pref_contents.txt;
+git add raceclass.txt;
+git add raceclass_contents.txt;
+git add start.txt;
+git add tang_contents.txt;
+git add town_contents.txt;
