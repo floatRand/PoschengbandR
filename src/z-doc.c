@@ -742,7 +742,7 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         case DOC_TAG_LINK:
         {
             doc_link_ptr link = malloc(sizeof(doc_link_t));
-            int          split = string_chr(arg, '#');
+            int          split = string_chr(arg, 0, '#');
             int          ch = 'a' + int_map_count(doc->links);
 
             if (split >= 0)
@@ -759,12 +759,15 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
                 arg = NULL;
                 link->topic = NULL;
             }
+            link->location.start = doc->cursor;
             int_map_add(doc->links, ch, link);
             {
                 string_ptr s = string_alloc(NULL);
                 string_printf(s, "<style:link>[%c]<style:*>", ch);
                 doc_insert(doc, string_buffer(s));
                 string_free(s);
+
+                link->location.stop = doc->cursor;
             }
             break;
         }
@@ -1096,11 +1099,38 @@ static void _doc_write_text_file(doc_ptr doc, FILE *fp)
    }
 }
 
+static int _compare_links(doc_link_ptr left, doc_link_ptr right)
+{
+    return doc_pos_compare(left->location.start, right->location.start);
+}
+
 static void _doc_write_html_file(doc_ptr doc, FILE *fp)
 {
-    doc_pos_t    pos;
-    doc_char_ptr cell;
-    byte         old_a = _INVALID_COLOR;
+    doc_pos_t        pos;
+    doc_char_ptr     cell;
+    byte             old_a = _INVALID_COLOR;
+    int              bookmark_idx = 0;
+    doc_bookmark_ptr next_bookmark = NULL;
+    vec_ptr          links = vec_alloc(NULL);
+    int              link_idx = 0;
+    doc_link_ptr     next_link = NULL;
+
+    if (bookmark_idx < vec_length(doc->bookmarks))
+        next_bookmark = vec_get(doc->bookmarks, bookmark_idx);
+
+    {
+        int_map_iter_ptr iter;
+        for (iter = int_map_iter_alloc(doc->links);
+                int_map_iter_is_valid(iter);
+                int_map_iter_next(iter) )
+        {
+            doc_link_ptr link = int_map_iter_current(iter);
+            vec_add(links, link);
+        }
+        vec_sort(links, (vec_cmp_f)_compare_links);
+        if (link_idx < vec_length(links))
+            next_link = vec_get(links, link_idx);
+    }
 
     fprintf(fp, "<html>\n<body text=\"#ffffff\" bgcolor=\"#000000\"><pre>\n");
 
@@ -1112,10 +1142,53 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
             cx = doc->cursor.x;
         cell = doc_char(doc, pos);
 
+        if (next_bookmark && pos.y == next_bookmark->pos.y)
+        {
+            fprintf(fp, "<a name=\"%s\"></a>", string_buffer(next_bookmark->name));
+            bookmark_idx++;
+            if (bookmark_idx < vec_length(doc->bookmarks))
+                next_bookmark = vec_get(doc->bookmarks, bookmark_idx);
+            else
+                next_bookmark = NULL;
+        }
+
         for (; pos.x < cx; pos.x++)
         {
             char c = cell->c;
             byte a = cell->a & 0x0F;
+
+            if (next_link)
+            {
+                if (doc_pos_compare(next_link->location.start, pos) == 0)
+                {
+                    string_ptr s;
+                    int        pos = string_last_chr(next_link->file, '.');
+
+                    if (pos >= 0)
+                    {
+                        s = string_nalloc(string_buffer(next_link->file), pos + 1);
+                        string_append(s, "html");
+                    }
+                    else
+                        s = string_salloc(next_link->file);
+
+                    fprintf(fp, "<a href=\"%s", string_buffer(s));
+                    if (next_link->topic)
+                        fprintf(fp, "#%s", string_buffer(next_link->topic));
+                    fprintf(fp, "\">");
+
+                    string_free(s);
+                }
+                if (doc_pos_compare(next_link->location.stop, pos) == 0)
+                {
+                    fprintf(fp, "</a>");
+                    link_idx++;
+                    if (link_idx < vec_length(links))
+                        next_link = vec_get(links, link_idx);
+                    else
+                        next_link = NULL;
+                }
+            }
 
             if (!c) break;
 
@@ -1144,16 +1217,6 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
    }
    fprintf(fp, "</font>");
    fprintf(fp, "</pre></body></html>\n");
-
-/* Hmmm ... I wonder if we couldn't handle links somehow.
-   Imagine a commandline to read our helpfiles and output them
-   as html (this is trivial to build). If, in the process, it
-   inserted html links with filerefs, then that would be sweet.
-   Users could then browse our help system in their browsers.
-
-   This is a big TODO! I'm offline now and don't have an html
-   reference.
-*/
 }
 
 void doc_write_file(doc_ptr doc, FILE *fp, int format)

@@ -99,8 +99,9 @@ typedef struct doc_bookmark_s doc_bookmark_t, *doc_bookmark_ptr;
 
 struct doc_link_s
 {
-    string_ptr file;
-    string_ptr topic;
+    string_ptr   file;
+    string_ptr   topic;
+    doc_region_t location;
 };
 typedef struct doc_link_s doc_link_t, *doc_link_ptr;
 

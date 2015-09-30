@@ -612,9 +612,9 @@ We'll close this Newbie guide with some various tips on exploring the dungeon.
 
 Throughout the dungeon, many doors are hidden from view. To find them, use the (S)earch command, which toggles on and off the Searching mode. However, it is often difficult enough just knowing where to search. Usually, situations like this will have secret doors (walls containing secret doors are marked by *s):
  
-  #*###  ###'###  ####*#    ###*###
-  *@...  ..'@'..  ..@'.*    ..'@...
-  #*###  ###*###  ####'#    #######
+#*###  ###'###  ####*#    ###*###
+*@...  ..'@'..  ..@'.*    ..'@...
+#*###  ###*###  ####'#    #######
  
 In general, if you see a door by itself in a corridor, there are usually others nearby. If you find a corner in a corridor with two doors, look for more. Intersections often have some secret doors. Finally, secret doors will never be in a situation where you have to move diagonally to open them. The dead-end situation (the first one) usually does have a secret door, but not always. If you search for a while and don't find anything, just give up and move on. Sometimes a dead end will occur near the end of a map, where there is no room to have a continuing corridor, and so no secret door is generated.
 </indent>

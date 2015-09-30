@@ -5416,9 +5416,12 @@ bool show_file(bool show_version, cptr name, cptr what, int line, int mode)
         {
         /* Show the help for the help */
         case '?':
-            /* Hack - prevent silly recursion */
+            /* Hack - prevent silly recursion
+               TODO: I stole this file (helpinfo.txt) for the new help
+               system (doc_display_help in z-doc.c). It is no longer accurate
+               for show_file(), which I am in the process of replacing.
             if (strcmp(name, "helpinfo.txt") != 0)
-                show_file(TRUE, "helpinfo.txt", NULL, 0, mode);
+                show_file(TRUE, "helpinfo.txt", NULL, 0, mode);*/
             break;
 
         /* Hack -- try showing */
@@ -5644,7 +5647,7 @@ void do_cmd_help(void)
 
     /* Peruse the main help file
     (void)show_file(TRUE, "help.hlp", NULL, 0, 0);*/
-    doc_display_help("help.hlp", NULL);
+    doc_display_help("start.hlp", NULL);
 
     /* Load screen */
     screen_load();

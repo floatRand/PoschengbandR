@@ -266,14 +266,33 @@ const char *string_buffer(string_ptr str)
     return NULL;
 }
 
-int string_chr(string_ptr str, char ch)
+int string_chr(string_ptr str, int start, char ch)
 {
-    const char *pos = strchr(str->buf, ch);
-
-    if (pos)
-        return pos - str->buf;
-
+    if (start < str->len)
+    {
+        const char *pos = strchr(str->buf + start, ch);
+        if (pos)
+            return pos - str->buf;
+    }
     return -1;
+}
+
+int string_last_chr(string_ptr str, char ch)
+{
+    int pos = 0;
+    int result = -1;
+    for (;;)
+    {
+        pos = string_chr(str, pos, ch);
+        if (pos >= 0)
+        {
+            result = pos;
+            pos++;
+        }
+        else
+            break;
+    }
+    return result;
 }
 
 substring_t string_left(string_ptr str, int len)
