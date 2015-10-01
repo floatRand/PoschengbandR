@@ -2107,7 +2107,7 @@ void have_nightmare(int r_idx)
  * Note that resting for the night was a perfect way to avoid player
  * ghosts in the town *if* you could only make it to the inn in time (-:
  * Now that the ghosts are temporarily disabled in 2.8.X, this function
- * will not be that useful.  I will keep it in the hopes the player
+ * will not be that useful. I will keep it in the hopes the player
  * ghost code does become a reality again. Does help to avoid filthy urchins.
  * Resting at night is also a quick way to restock stores -KMW-
  */
@@ -2397,7 +2397,7 @@ static bool eval_ac(int iAC)
         "'attack' and 'shatter' type melee attacks, "
         "and has no effect against any other types such as 'poison'.\n \n"
         "'Dodge Rate' indicates the success rate on dodging the "
-        "monster's melee attacks.  "
+        "monster's melee attacks. "
         "It is depend on the level of the monster and your AC.\n \n"
         "'Average Damage' indicates the expected amount of damage "
         "when you are attacked by normal melee attacks with power=60.";
@@ -3704,7 +3704,7 @@ void do_cmd_bldg(void)
     {
         if (!p_ptr->exit_bldg)
         {
-            prt("The gates are closed.  The monster awaits!", 0, 0);
+            prt("The gates are closed. The monster awaits!", 0, 0);
         }
         else
         {

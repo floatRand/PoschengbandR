@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Spoiler generation -BEN- */
@@ -467,7 +467,7 @@ struct flag_desc
 /*
  * These are used for "+3 to STR, DEX", etc. These are separate from
  * the other pval affected traits to simplify the case where an object
- * affects all stats.  In this case, "All stats" is used instead of
+ * affects all stats. In this case, "All stats" is used instead of
  * listing each stat individually.
  */
 
@@ -649,7 +649,7 @@ typedef struct
 
     /*
      * A list of various player traits affected by an object's pval such
-     * as stats, speed, stealth, etc.  "Extra attacks" is NOT included in
+     * as stats, speed, stealth, etc. "Extra attacks" is NOT included in
      * this list since it will probably be desirable to format its
      * description differently.
      *

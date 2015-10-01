@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: misc code for monsters */
@@ -491,8 +491,8 @@ void wipe_m_list(void)
     if (p_ptr->duelist_target_idx)
     {
         /* This is unfortunate, but the monster list gets wiped every time the
-           game is saved, sometimes multiple times.  I think to create a save file,
-           we continually write out and read in "saved floors".  The result is that
+           game is saved, sometimes multiple times. I think to create a save file,
+           we continually write out and read in "saved floors". The result is that
            the current duel will unfortunately be canceled until I can think of a
            way to cope with this. */
         p_ptr->duelist_target_idx = 0;
@@ -1511,7 +1511,7 @@ static int mysqrt(int n)
  * a small amount (up to four levels), except in the town.
  *
  * It is (slightly) more likely to acquire a monster of the given level
- * than one of a lower level.  This is done by choosing several monsters
+ * than one of a lower level. This is done by choosing several monsters
  * appropriate to the given level and keeping the "hardest" one.
  *
  * Note that if no monsters are "appropriate", then this function will
@@ -1737,7 +1737,7 @@ s16b get_mon_num(int level)
  *
  * Pronominalization involves the gender whenever possible and allowed,
  * so that by cleverly requesting pronominalization / visibility, you
- * can get messages like "You hit someone.  She screams in agony!".
+ * can get messages like "You hit someone. She screams in agony!".
  *
  * Reflexives are acquired by requesting Objective plus Possessive.
  *
@@ -2059,7 +2059,7 @@ void monster_desc(char *desc, monster_type *m_ptr, int mode)
 /*
  * Learn about a monster (by "probing" it)
  *
- * Return the number of new flags learnt.  -Mogami-
+ * Return the number of new flags learnt. -Mogami-
  */
 int lore_do_probe(int r_idx)
 {
@@ -2177,7 +2177,7 @@ int lore_do_probe(int r_idx)
  *
  * This "indirect" method is used to prevent the player from learning
  * exactly how much treasure a monster can drop from observing only
- * a single example of a drop.  This method actually observes how much
+ * a single example of a drop. This method actually observes how much
  * gold and items are dropped, and remembers that information to be
  * described later by the monster recall code.
  */
@@ -2371,17 +2371,17 @@ void sanity_blast(monster_type *m_ptr, bool necro)
                     }
                     else
                     {
-                        /* Tone down the Moron.  For characters who resist fear and chaos, it
+                        /* Tone down the Moron. For characters who resist fear and chaos, it
                            becomes a guaranteed mutation if we get this far (which requires FMMMMF on
-                           saving throws, btw).  I think the FMMMMF sequence penalizes characters with
+                           saving throws, btw). I think the FMMMMF sequence penalizes characters with
                            relatively high saves, as they are more likely to make 4 in a row than
-                           characters with poor saves.  Perhaps, that would be a better level of redress.
+                           characters with poor saves. Perhaps, that would be a better level of redress.
                            So, one initial save to avoid noticing the eldritch horror, and then a random
                            dice roll to pick the effect?  As it used to stand, the moron mutation was a gimme
                            unless you had a very high save (like with a patient sorceror), and would generally
-                           occur every 5 to 10 minutes of play.  So you could fight it, running to Zul after
+                           occur every 5 to 10 minutes of play. So you could fight it, running to Zul after
                            every trip down to the dungeon, or you could just try to find more Int/Wis to
-                           compensate.  A guaranteed 12% fail rate penalty on spells is a bit too harsh ...
+                           compensate. A guaranteed 12% fail rate penalty on spells is a bit too harsh ...
                            */
                         msg_print("You feel like a moron for a moment, but it passes.");
                         happened = TRUE;
@@ -2459,9 +2459,9 @@ void sanity_blast(monster_type *m_ptr, bool necro)
  * this is only needed when the monster (or the player) has moved.
  *
  * Every time a monster moves, we must call this function for that
- * monster, and update the distance, and the visibility.  Every time
+ * monster, and update the distance, and the visibility. Every time
  * the player moves, we must call this function for every monster, and
- * update the distance, and the visibility.  Whenever the player "state"
+ * update the distance, and the visibility. Whenever the player "state"
  * changes in certain ways ("blindness", "infravision", "telepathy",
  * and "see invisible"), we must call this function for every monster,
  * and update the visibility.
@@ -2471,7 +2471,7 @@ void sanity_blast(monster_type *m_ptr, bool necro)
  * monsters may be based on the illumination of their grid.
  *
  * Note that this function is called once per monster every time the
- * player moves.  When the player is running, this function is one
+ * player moves. When the player is running, this function is one
  * of the primary bottlenecks, along with "update_view()" and the
  * "process_monsters()" code, so efficiency is important.
  *
@@ -2486,13 +2486,13 @@ void sanity_blast(monster_type *m_ptr, bool necro)
  *
  * Monsters which are not on the current panel may be "visible" to
  * the player, and their descriptions will include an "offscreen"
- * reference.  Currently, offscreen monsters cannot be targetted
- * or viewed directly, but old targets will remain set.  XXX XXX
+ * reference. Currently, offscreen monsters cannot be targetted
+ * or viewed directly, but old targets will remain set. XXX XXX
  *
  * The player can choose to be disturbed by several things, including
  * "disturb_move" (monster which is viewable moves in some way), and
  * "disturb_near" (monster which is "easily" viewable moves in some
- * way).  Note that "moves" includes "appears" and "disappears".
+ * way). Note that "moves" includes "appears" and "disappears".
  */
 void update_mon(int m_idx, bool full)
 {
@@ -4252,7 +4252,7 @@ static bool summon_specific_okay(int r_idx)
 
 /*
  * Place a monster (of the specified "type") near the given
- * location.  Return TRUE if a monster was actually summoned.
+ * location. Return TRUE if a monster was actually summoned.
  *
  * We will attempt to place the monster up to 10 times before giving up.
  *
@@ -4260,11 +4260,11 @@ static bool summon_specific_okay(int r_idx)
  * Note: SUMMON_HI_UNDEAD and SUMMON_HI_DRAGON may summon Unique's
  * Note: None of the other summon codes will ever summon Unique's.
  *
- * This function has been changed.  We now take the "monster level"
+ * This function has been changed. We now take the "monster level"
  * of the summoning monster as a parameter, and use that, along with
  * the current dungeon level, to help determine the level of the
- * desired monster.  Note that this is an upper bound, and also
- * tends to "prefer" monsters of that level.  Currently, we use
+ * desired monster. Note that this is an upper bound, and also
+ * tends to "prefer" monsters of that level. Currently, we use
  * the average of the dungeon and monster levels, and then add
  * five to allow slight increases in monster power.
  *

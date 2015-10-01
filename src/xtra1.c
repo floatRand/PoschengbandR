@@ -6,7 +6,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: misc code */
@@ -2736,7 +2736,7 @@ static void calc_spells(void)
 
 
 /*
- * Calculate maximum mana.  You do not need to know any spells.
+ * Calculate maximum mana. You do not need to know any spells.
  * Note that mana is lowered by heavy (or inappropriate) armor.
  *
  * This function induces status messages.
@@ -2922,7 +2922,7 @@ static void calc_mana(void)
         if (p_ptr->pclass == CLASS_BLOOD_MAGE)
         {
             /* No more free ride for Blood Mages. They will get increased fail rates
-               instead.  See mod_spell_chance_* in spells3.c for details */
+               instead. See mod_spell_chance_* in spells3.c for details */
             _calc_encumbrance();
             _report_encumbrance();
         }
@@ -3069,7 +3069,7 @@ int py_prorata_level_aux(int amt, int w1, int w2, int w3)
 }
 
 /* Experimental: Adjust the non-linearity of extra hp distribution based on class.
-   It's probably best to have all this in one place. See also the hp.ods design doc.  */
+   It's probably best to have all this in one place. See also the hp.ods design doc. */
 static int _calc_xtra_hp(int amt)
 {
     int w1 = 0, w2 = 0, w3 = 0;
@@ -3295,12 +3295,12 @@ u32b weight_limit(void)
  * Take note of the new "speed code", in particular, a very strong
  * player will start slowing down as soon as he reaches 150 pounds,
  * but not until he reaches 450 pounds will he be half as fast as
- * a normal kobold.  This both hurts and helps the player, hurts
+ * a normal kobold. This both hurts and helps the player, hurts
  * because in the old days a player could just avoid 300 pounds,
  * and helps because now carrying 300 pounds is not very painful.
  *
  * The "weapon" and "bow" do *not* add to the bonuses to hit or to
- * damage, since that would affect non-combat things.  These values
+ * damage, since that would affect non-combat things. These values
  * are actually added in later, at the appropriate place.
  *
  * This function induces various "status" messages.

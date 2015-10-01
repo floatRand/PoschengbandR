@@ -95,7 +95,7 @@ bool do_blow(int type)
     int dir;
     int m_idx = 0;
 
-    /* For ergonomics sake, use currently targeted monster.  This allows
+    /* For ergonomics sake, use currently targeted monster. This allows
        a macro of \e*tmaa or similar to pick an adjacent foe, while
        \emaa*t won't work, since get_rep_dir2() won't allow a target. */
     if (use_old_target && target_okay())
@@ -625,7 +625,7 @@ static void _calc_bonuses(void)
             p_ptr->dis_to_a += a;
         }
 
-        /* TODO: This should cost more energy too ...  */
+        /* TODO: This should cost more energy too ... */
         if (_get_toggle() == MAULER_TOGGLE_TUNNEL)
             p_ptr->kill_wall = TRUE;
 

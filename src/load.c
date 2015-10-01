@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: support for loading savefiles -BEN- */
@@ -453,7 +453,7 @@ static void rd_randomizer(savefile_ptr file)
  *
  * Note that the normal options are now stored as a set of 256 bit flags,
  * plus a set of 256 bit masks to indicate which bit flags were defined
- * at the time the savefile was created.  This will allow new options
+ * at the time the savefile was created. This will allow new options
  * to be added, and old options to be removed, at any time, without
  * hurting old savefiles.
  *
@@ -1130,7 +1130,7 @@ static errr rd_saved_floor(savefile_ptr file, saved_floor_type *sf_ptr)
             ptr->distance = savefile_read_s16b(file);
 
             /* I make no effort to keep the same pack_info index on a reload, so
-               patch things up.  I'm pretty sure, but not certain, that monster
+               patch things up. I'm pretty sure, but not certain, that monster
                and object indices won't change after a save and reload. */
             for (j = 1; j < max_m_idx; ++j)
             {

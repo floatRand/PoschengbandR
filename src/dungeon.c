@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Angband game engine */
@@ -20,7 +20,7 @@ static bool load = TRUE;
 static int wild_regen = 20;
 
 /*
- * Return a "feeling" (or NULL) about an item.  Method 1 (Heavy).
+ * Return a "feeling" (or NULL) about an item. Method 1 (Heavy).
  *
  * For strong sensing, we have now have (3.0.3 and later):
  *
@@ -71,7 +71,7 @@ static byte value_check_aux1(object_type *o_ptr)
 
 
 /*
- * Return a "feeling" (or NULL) about an item.  Method 2 (Light).
+ * Return a "feeling" (or NULL) about an item. Method 2 (Light).
  *
  * For weak sensing, we have:
  *
@@ -5740,7 +5740,7 @@ void play_game(bool new_game)
         init_saved_floors(FALSE);
     }
 
-    /* Old game is loaded.  But new game is requested. */
+    /* Old game is loaded. But new game is requested. */
     else if (new_game)
     {
         /* Initialize the saved floors data */
@@ -5913,7 +5913,7 @@ void play_game(bool new_game)
             /* No player?  -- Try to regenerate floor */
             if (!py || !px)
             {
-                msg_print("What a strange player location.  Regenerate the dungeon floor.");
+                msg_print("What a strange player location. Regenerate the dungeon floor.");
                 change_floor();
             }
 

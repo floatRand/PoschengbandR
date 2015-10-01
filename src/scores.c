@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Highscores handling */
@@ -356,7 +356,7 @@ bool send_world_score(bool do_send)
             {
                 return FALSE;
             }
-            prt("Completed.  Hit any key.", 0, 0);
+            prt("Completed. Hit any key.", 0, 0);
             (void)inkey();
         }
         else return FALSE;

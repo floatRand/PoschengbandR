@@ -99,8 +99,8 @@ static void create_user_dir(void)
  * DEFAULT_PATH, and in either case, branch off appropriately.
  *
  * First, we'll look for the ANGBAND_PATH environment variable,
- * and then look for the files in there.  If that doesn't work,
- * we'll try the DEFAULT_PATH constant.  So be sure that one of
+ * and then look for the files in there. If that doesn't work,
+ * we'll try the DEFAULT_PATH constant. So be sure that one of
  * these two things works...
  *
  * We must ensure that the path ends with "PATH_SEP" if needed,
@@ -110,7 +110,7 @@ static void create_user_dir(void)
  * Note that the "path" must be "Angband:" for the Amiga, and it
  * is ignored for "VM/ESA", so I just combined the two.
  *
- * Make sure that the path doesn't overflow the buffer.  We have
+ * Make sure that the path doesn't overflow the buffer. We have
  * to leave enough space for the path separator, directory, and
  * filenames.
  */
@@ -278,7 +278,7 @@ static void change_path(cptr info)
  * Simple "main" function for multiple platforms.
  *
  * Note the special "--" option which terminates the processing of
- * standard options.  All non-standard options (if any) are passed
+ * standard options. All non-standard options (if any) are passed
  * directly to the "init_xxx()" function.
  */
 int main(int argc, char *argv[])

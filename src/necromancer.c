@@ -90,7 +90,7 @@ static bool _necro_do_touch(int type, int dice, int sides, int base)
 
     if (!_necro_check_touch()) return FALSE;
 
-    /* For ergonomics sake, use currently targeted monster.  This allows
+    /* For ergonomics sake, use currently targeted monster. This allows
        a macro of \e*tmaa or similar to pick an adjacent foe, while
        \emaa*t won't work, since get_rep_dir2() won't allow a target. */
     if (use_old_target && target_okay())
@@ -351,7 +351,7 @@ cptr do_necromancy_spell(int spell, int mode)
 
     case 14:
         if (name) return "Dread of Night";
-        if (desc) return "Summons Dread to do your bidding.  Beware of failure!";
+        if (desc) return "Summons Dread to do your bidding. Beware of failure!";
         if (cast || fail) _necro_do_summon(SUMMON_DREAD, 1 + randint0(3), fail);
         break;
 
@@ -407,7 +407,7 @@ cptr do_necromancy_spell(int spell, int mode)
 
     case 22:
         if (name) return "Unholy Word";
-        if (desc) return "Utter an unspeakable word.  The morale of your visible evil pets is temporarily boosted and they will serve you with renewed enthusiasm.";
+        if (desc) return "Utter an unspeakable word. The morale of your visible evil pets is temporarily boosted and they will serve you with renewed enthusiasm.";
         if (cast) project_hack(GF_UNHOLY_WORD, p_ptr->lev * 6);
         break;
 
@@ -455,7 +455,7 @@ cptr do_necromancy_spell(int spell, int mode)
 
     case 28:
         if (name) return "Repose of the Dead";
-        if (desc) return "Sleep the sleep of the dead for a few rounds, during which time nothing can awaken you, except perhaps death.  When (if?) you wake up, you will be thoroughly refreshed!";
+        if (desc) return "Sleep the sleep of the dead for a few rounds, during which time nothing can awaken you, except perhaps death. When (if?) you wake up, you will be thoroughly refreshed!";
         if (cast)
         {
             if (!get_check("You will enter a deep slumber. Are you sure?")) return NULL;
@@ -466,7 +466,7 @@ cptr do_necromancy_spell(int spell, int mode)
 
     case 29:
         if (name) return "Sepulchral Wind";
-        if (desc) return "You call forth the wind of the dead.  All nearby monsters are blown away!";
+        if (desc) return "You call forth the wind of the dead. All nearby monsters are blown away!";
         {
             int power = spell_power(plev * 4);
             if (info) return info_power(power);

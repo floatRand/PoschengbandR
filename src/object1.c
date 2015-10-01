@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Object code, part 1 */
@@ -24,12 +24,12 @@
  *
  * If the "prefs" flag is TRUE, then we will also load the appropriate
  * "user pref file" based on the current setting of the "use_graphics"
- * flag.  This is useful for switching "graphics" on/off.
+ * flag. This is useful for switching "graphics" on/off.
  *
  * The features, objects, and monsters, should all be encoded in the
- * relevant "font.pref" and/or "graf.prf" files.  XXX XXX XXX
+ * relevant "font.pref" and/or "graf.prf" files. XXX XXX XXX
  *
- * The "prefs" parameter is no longer meaningful.  XXX XXX XXX
+ * The "prefs" parameter is no longer meaningful. XXX XXX XXX
  */
 void reset_visuals(void)
 {
@@ -1605,7 +1605,7 @@ void display_equip(void)
  * Find the "first" inventory object with the given "tag".
  *
  * A "tag" is a numeral "n" appearing as "@n" anywhere in the
- * inscription of an object.  Alphabetical characters don't work as a
+ * inscription of an object. Alphabetical characters don't work as a
  * tag in this form.
  *
  * Also, the tag "@xn" will work as well, where "n" is a any tag-char,
@@ -1724,7 +1724,7 @@ static bool get_tag(int *cp, char tag, int mode)
  * Find the "first" floor object with the given "tag".
  *
  * A "tag" is a numeral "n" appearing as "@n" anywhere in the
- * inscription of an object.  Alphabetical characters don't work as a
+ * inscription of an object. Alphabetical characters don't work as a
  * tag in this form.
  *
  * Also, the tag "@xn" will work as well, where "n" is a any tag-char,
@@ -2424,7 +2424,7 @@ bool can_get_item(void)
  * also to induce "auto-enter" of stores, and other such stuff.
  *
  * Global "p_ptr->command_see" may be set before calling this function to start
- * out in "browse" mode.  It is cleared before this function returns.
+ * out in "browse" mode. It is cleared before this function returns.
  *
  * Global "p_ptr->command_wrk" is used to choose between equip/inven listings.
  * If it is TRUE then we are viewing inventory, else equipment.

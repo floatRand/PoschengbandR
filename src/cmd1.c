@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Movement commands (part 1) */
@@ -3762,7 +3762,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     hp_player(MIN(k, 150));
                 }
             
-                /* Clubmaster Hacks.  We do these effects *after* the monster takes damage. */
+                /* Clubmaster Hacks. We do these effects *after* the monster takes damage. */
                 if (weaponmaster_is_(WEAPONMASTER_CLUBS) && p_ptr->speciality_equip)
                 {
                     int odds = 5;
@@ -4127,7 +4127,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
     /* Sleep counter ticks down in energy units ... Also, *lots* of code
        will just wake the monster back up, so we need to be very careful
-       about when we call this.  */
+       about when we call this. */
     if (knock_out && !(*mdeath))
         set_monster_csleep(c_ptr->m_idx, MON_CSLEEP(m_ptr) + 500);
 
@@ -5094,7 +5094,7 @@ bool trap_can_be_ignored(int feat)
  * This routine should (probably) always induce energy expenditure.
  *
  * Note that moving will *always* take a turn, and will *always* hit
- * any monster which might be in the destination grid.  Previously,
+ * any monster which might be in the destination grid. Previously,
  * moving into walls was "free" and did NOT hit invisible monsters.
  */
 void move_player(int dir, bool do_pickup, bool break_trap)
@@ -5752,12 +5752,12 @@ static int see_nothing(int dir, int y, int x)
  * #.?
  *
  * If they are both seen to be closed, then it is seen that no benefit
- * is gained from moving straight. It is a known corner.  To cut the
+ * is gained from moving straight. It is a known corner. To cut the
  * corner, go diagonally, otherwise go straight, but pretend you
  * stepped diagonally into that next location for a full view next
  * time. Conversely, if one of the ? squares is not seen to be closed,
  * then there is a potential choice. We check to see whether it is a
- * potential corner or an intersection/room entrance.  If the square
+ * potential corner or an intersection/room entrance. If the square
  * two spaces straight ahead, and the space marked with 's' are both
  * unknown space, then it is a potential corner and enter if
  * find_examine is set, otherwise must stop because it is not a
@@ -5814,7 +5814,7 @@ static bool find_breakleft;
  * Diagonal Corridor    Blunt Corridor (?)
  *       # #                  #
  *       #x#                 @x#
- *       @p.                  p
+ *       @p.                 p
  */
 static void run_init(int dir)
 {
@@ -6042,7 +6042,7 @@ static bool run_test(void)
                 return (TRUE);
             }
 
-            /* Two non-adjacent new directions.  Stop running. */
+            /* Two non-adjacent new directions. Stop running. */
             else if (option != cycle[chome[prev_dir] + i - 1])
             {
                 return (TRUE);

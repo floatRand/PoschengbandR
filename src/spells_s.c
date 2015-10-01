@@ -694,7 +694,7 @@ void stop_time_spell(int cmd, variant *res)
         msg_print("You yell 'Time!'");
         msg_print(NULL);
 
-        /* Note: We pay the casting cost up front these days.  So, add back the 150
+        /* Note: We pay the casting cost up front these days. So, add back the 150
            to figure the starting sp, and then bash sp down to 0. We can't use the 
            SPELL_COST_EXTRA mechanism here ... */
         p_ptr->energy_need -= 1000 + (100 + (p_ptr->csp + 150) - 50)*TURNS_PER_TICK/10;
@@ -1342,7 +1342,7 @@ void super_stealth_spell(int cmd, variant *res)
         var_set_string(res, "Hide in Darkness");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Grants the stealth of the Ninja!  You may hide in shadows and see in the dark.  Your light radius is decreased by 3.");
+        var_set_string(res, "Grants the stealth of the Ninja!  You may hide in shadows and see in the dark. Your light radius is decreased by 3.");
         break;
     case SPELL_CAST:
         if (p_ptr->tim_superstealth)
@@ -1933,7 +1933,7 @@ void wraithform_spell(int cmd, variant *res)
         var_set_string(res, "Wraithform");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Leave the world of the living and travel the shadows of the underwold.  You gain passwall and great resistance to damage.");
+        var_set_string(res, "Leave the world of the living and travel the shadows of the underwold. You gain passwall and great resistance to damage.");
         break;
     case SPELL_INFO:
         var_set_string(res, info_duration(spell_power(p_ptr->lev/2), spell_power(p_ptr->lev/2)));

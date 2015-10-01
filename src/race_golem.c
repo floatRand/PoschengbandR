@@ -353,7 +353,7 @@ void _breathe_disintegration_spell(int cmd, variant *res)
         var_set_string(res, "Breathe Disintegration");
         break;
     case SPELL_DESC:
-        var_set_string(res, "A disintegration breath.  Not even the dungeon walls can withstand its power!");
+        var_set_string(res, "A disintegration breath. Not even the dungeon walls can withstand its power!");
         break;
     case SPELL_INFO:
         var_set_string(res, info_damage(0, 0, p_ptr->chp / 4));

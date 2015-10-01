@@ -2100,7 +2100,7 @@ void autopick_pickup_items(cave_type *c_ptr)
             }
         }
 
-        /* Item index for floor -1,-2,-3,...  */
+        /* Item index for floor -1,-2,-3,... */
         auto_inscribe_item(o_ptr, idx); /* after auto-id, please! */
 
         if (idx >= 0 &&
@@ -2245,7 +2245,7 @@ static bool clear_auto_register(void)
     if (num)
     {
         msg_format("Auto registered lines (%d lines) for previous character are remaining.", num);
-        strcpy(buf, "These lines will be deleted.  Are you sure? ");
+        strcpy(buf, "These lines will be deleted. Are you sure? ");
 
         /* You can cancel it */
         if (!get_check(buf))

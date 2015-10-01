@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Initialization (part 1) -BEN- */
@@ -15,7 +15,7 @@
 
 /*
  * This file is used to initialize various variables and arrays for the
- * Angband game.  Note the use of "fd_read()" and "fd_write()" to bypass
+ * Angband game. Note the use of "fd_read()" and "fd_write()" to bypass
  * the common limitation of "read()" and "write()" to only 32767 bytes
  * at a time.
  *
@@ -25,13 +25,13 @@
  * directory, or if those files become obsolete, if we are allowed.
  *
  * Warning -- the "ascii" file parsers use a minor hack to collect the
- * name and text information in a single pass.  Thus, the game will not
+ * name and text information in a single pass. Thus, the game will not
  * be able to load any template file with more than 20K of names or 60K
  * of text, even though technically, up to 64K should be legal.
  *
  * Note that if "ALLOW_TEMPLATES" is not defined, then a lot of the code
  * in this file is compiled out, and the game will not run unless valid
- * "binary template files" already exist in "lib/data".  Thus, one can
+ * "binary template files" already exist in "lib/data". Thus, one can
  * compile Angband with ALLOW_TEMPLATES defined, run once to create the
  * "*.raw" files in "lib/data", and then quit, and recompile without
  * defining ALLOW_TEMPLATES, which will both save 20K and prevent people
@@ -5366,7 +5366,7 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
             /* Random 
                OLD: $RANDOM7 evaluated as seed_town % 7
                NEW: [MOD $RANDOM37 7] where 37 refers to the seed
-               for quest 37.  Every quest gets assigned a new seed 
+               for quest 37. Every quest gets assigned a new seed 
                when it is accepted in bldg.c.
             */
             else if (prefix(b+1, "RANDOM"))

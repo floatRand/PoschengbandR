@@ -933,7 +933,7 @@ void detect_menace_spell(int cmd, variant *res)
         var_set_string(res, "Detect Ferocity");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Detects nearby menacing monsters.  Only intelligent monsters are detected.");
+        var_set_string(res, "Detects nearby menacing monsters. Only intelligent monsters are detected.");
         break;
     case SPELL_CAST:
         detect_monsters_mind(DETECT_RAD_DEFAULT);

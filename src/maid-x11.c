@@ -200,7 +200,7 @@ static void rd_u32b(FILE *fff, u32b *ip)
  * This function replaces the old ReadRaw and RemapColors functions.
  *
  * Assumes that the bitmap has a size such that no padding is needed in
- * various places.  Currently only handles bitmaps with 3 to 256 colors.
+ * various places. Currently only handles bitmaps with 3 to 256 colors.
  */
 static XImage *ReadBMP(Display *dpy, char *Name)
 {

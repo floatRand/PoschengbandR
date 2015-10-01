@@ -1,7 +1,7 @@
 /*
  * Mutations that cannot be activated as normal spells.
  * These mutations might be timed effects, or just things
- * like "Horns" that you simply have.  They might be augmentations
+ * like "Horns" that you simply have. They might be augmentations
  * like "Super Human He-man".
  *
  * We are still implementing all mutations as spells for

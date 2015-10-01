@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: effects of various "objects" */
@@ -2610,7 +2610,7 @@ void mon_check_kill_unique(int m_idx)
  *
  * Only "physical attacks" can induce the "You have slain" message.
  * Missile and Spell attacks will induce the "dies" message, or
- * various "specialized" messages.  Note that "You have destroyed"
+ * various "specialized" messages. Note that "You have destroyed"
  * and "is destroyed" are synonyms for "You have slain" and "dies".
  *
  * Hack -- unseen monsters yield "You have killed it." message.
@@ -2626,7 +2626,7 @@ void mon_check_kill_unique(int m_idx)
  * XXX XXX XXX Consider decreasing monster experience over time, say,
  * by using "(m_exp * m_lev * (m_lev)) / (p_lev * (m_lev + n_killed))"
  * instead of simply "(m_exp * m_lev) / (p_lev)", to make the first
- * monster worth more than subsequent monsters.  This would also need
+ * monster worth more than subsequent monsters. This would also need
  * to induce changes in the monster recall code.
  */
 bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
@@ -3441,7 +3441,7 @@ void ang_sort(vptr u, vptr v, int n)
  *
  * Currently, a monster is "target_able" if it is visible, and if
  * the player can hit it with a projection, and the player is not
- * hallucinating.  This allows use of "use closest target" macros.
+ * hallucinating. This allows use of "use closest target" macros.
  *
  * Future versions may restrict the ability to target "trappers"
  * and "mimics", but the semantics is a little bit weird.
@@ -3827,12 +3827,12 @@ bool show_gold_on_floor = FALSE;
  *
  * The "mode" argument contains the "TARGET_LOOK" bit flag, which
  * indicates that the "space" key should scan through the contents
- * of the grid, instead of simply returning immediately.  This lets
+ * of the grid, instead of simply returning immediately. This lets
  * the "look" command get complete information, without making the
  * "target" command annoying.
  *
  * The "info" argument contains the "commands" which should be shown
- * inside the "[xxx]" text.  This string must never be empty, or grids
+ * inside the "[xxx]" text. This string must never be empty, or grids
  * containing monsters will be displayed with an extra comma.
  *
  * Note that if a monster is in the grid, we update both the monster
@@ -4345,11 +4345,11 @@ static int target_set_aux(int y, int x, int mode, cptr info)
  *
  * Note that this code can be called from "get_aim_dir()".
  *
- * All locations must be on the current panel.  Consider the use of
+ * All locations must be on the current panel. Consider the use of
  * "panel_bounds()" to allow "off-panel" targets, perhaps by using
- * some form of "scrolling" the map around the cursor.  XXX XXX XXX
+ * some form of "scrolling" the map around the cursor. XXX XXX XXX
  * That is, consider the possibility of "auto-scrolling" the screen
- * while the cursor moves around.  This may require changes in the
+ * while the cursor moves around. This may require changes in the
  * "update_mon()" code to allow "visibility" even if off panel, and
  * may require dynamic recalculation of the "temp" grid set.
  *
@@ -4360,7 +4360,7 @@ static int target_set_aux(int y, int x, int mode, cptr info)
  * grids in a heuristic manner, or the "space", "+", and "-" keys to
  * move through the "interesting" grids in a sequential manner, or
  * can enter "location" mode, and use the direction keys to move one
- * grid at a time in any direction.  The "t" (set target) command will
+ * grid at a time in any direction. The "t" (set target) command will
  * only target a monster (as opposed to a location) if the monster is
  * target_able and the "interesting" mode is being used.
  *
@@ -4369,7 +4369,7 @@ static int target_set_aux(int y, int x, int mode, cptr info)
  * "TARGET_LOOK" bit flag is set (or if we are in "location" mode,
  * where "space" has no obvious meaning) then "space" will scan
  * through the description of the current grid until done, instead
- * of immediately jumping to the next "interesting" grid.  This
+ * of immediately jumping to the next "interesting" grid. This
  * allows the "target" command to retain its old semantics.
  *
  * The "*", "+", and "-" keys may always be used to jump immediately
@@ -5045,7 +5045,7 @@ bool get_aim_dir(int *dp)
  * This function should be used for all "repeatable" commands, such as
  * run, walk, open, close, bash, disarm, spike, tunnel, etc, as well
  * as all commands which must reference a grid adjacent to the player,
- * and which may not reference the grid under the player.  Note that,
+ * and which may not reference the grid under the player. Note that,
  * for example, it is no longer possible to "disarm" or "open" chests
  * in the same grid as the player.
  *

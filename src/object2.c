@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Object code, part 2 */
@@ -431,7 +431,7 @@ void compact_objects(int size)
  *
  * Hack -- we clear the "c_ptr->o_idx" field for every grid,
  * and the "m_ptr->next_o_idx" field for every monster, since
- * we know we are clearing every object.  Technically, we only
+ * we know we are clearing every object. Technically, we only
  * clear those fields for grids/monsters containing objects,
  * and we clear it once for every such object.
  */
@@ -682,7 +682,7 @@ s16b get_obj_num(int level)
      * > Staves: 486 4.8%
      * > Rods:   747 7.4%
      * Adding duplicate allocation entries helped, but the distribution was still unacceptably
-     * skewed and this "feature" seemed more like a bug to me.  -CTK
+     * skewed and this "feature" seemed more like a bug to me. -CTK
      */
 
     /* Result */
@@ -699,7 +699,7 @@ bool object_is_aware(object_type *o_ptr)
  * These include tohit, todam, toac, cost, and pval (charges).
  *
  * Note that "knowing" an object gives you everything that an "awareness"
- * gives you, and much more.  In fact, the player is always "aware" of any
+ * gives you, and much more. In fact, the player is always "aware" of any
  * item of which he has full "knowledge".
  *
  * But having full knowledge of, say, one "wand of wonder", does not, by
@@ -1280,7 +1280,7 @@ s32b flag_cost(object_type *o_ptr, int plusses, bool hack)
  *
  * Missiles are only worth 5 gold per bonus point, since they
  * usually appear in groups of 20, and we want the player to get
- * the same amount of cash for any "equivalent" item.  Note that
+ * the same amount of cash for any "equivalent" item. Note that
  * missiles never have any of the "pval" flags, and in fact, they
  * only have a few of the available flags, primarily of the "slay"
  * and "brand" and "ignore" variety.
@@ -1310,9 +1310,9 @@ s32b object_value_real(object_type *o_ptr)
 
     /* OK, here's the old pricing algorithm :( 
        Note this algorithm cheats for artifacts by relying on cost
-       data from a_info.txt.  The result was that rand-arts get scored
-       poorly.  Also, try comparing the code calculated cost to
-       the human one in a_info.txt some time.  The new algorithms
+       data from a_info.txt. The result was that rand-arts get scored
+       poorly. Also, try comparing the code calculated cost to
+       the human one in a_info.txt some time. The new algorithms
        are much nicer. */
 
     /* Hack -- "worthless" items */
@@ -1602,7 +1602,7 @@ void distribute_charges(object_type *o_ptr, object_type *q_ptr, int amt)
 {
     /*
      * Hack -- If rods or wands are dropped, the total maximum timeout or
-     * charges need to be allocated between the two stacks.  If all the items
+     * charges need to be allocated between the two stacks. If all the items
      * are being dropped, it makes for a neater message to leave the original
      * stack's pval alone. -LM-
      */
@@ -1611,7 +1611,7 @@ void distribute_charges(object_type *o_ptr, object_type *q_ptr, int amt)
         q_ptr->pval = o_ptr->pval * amt / o_ptr->number;
         if (amt < o_ptr->number) o_ptr->pval -= q_ptr->pval;
 
-        /* Hack -- Rods also need to have their timeouts distributed.  The
+        /* Hack -- Rods also need to have their timeouts distributed. The
          * dropped stack will accept all time remaining to charge up to its
          * maximum.
          */
@@ -2049,7 +2049,7 @@ void object_prep(object_type *o_ptr, int k_idx)
  * we simply round the results of division in such a way as to "average" the
  * correct floating point value.
  *
- * This function has been changed.  It uses "randnor()" to choose values from
+ * This function has been changed. It uses "randnor()" to choose values from
  * a normal distribution, whose mean moves from zero towards the max as the
  * level increases, and whose standard deviation is equal to 1/4 of the max,
  * and whose values are forced to lie between zero and the max, inclusive.
@@ -4882,23 +4882,23 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
  *
  * The base "chance" of the item being "good" increases with the "level"
  * parameter, which is usually derived from the dungeon level, being equal
- * to the level plus 10, up to a maximum of 75.  If "good" is true, then
- * the object is guaranteed to be "good".  If an object is "good", then
+ * to the level plus 10, up to a maximum of 75. If "good" is true, then
+ * the object is guaranteed to be "good". If an object is "good", then
  * the chance that the object will be "great" (ego-item or artifact), also
  * increases with the "level", being equal to half the level, plus 5, up to
- * a maximum of 20.  If "great" is true, then the object is guaranteed to be
- * "great".  At dungeon level 65 and below, 15/100 objects are "great".
+ * a maximum of 20. If "great" is true, then the object is guaranteed to be
+ * "great". At dungeon level 65 and below, 15/100 objects are "great".
  *
  * If the object is not "good", there is a chance it will be "cursed", and
- * if it is "cursed", there is a chance it will be "broken".  These chances
+ * if it is "cursed", there is a chance it will be "broken". These chances
  * are related to the "good" / "great" chances above.
  *
  * Otherwise "normal" rings and amulets will be "good" half the time and
  * "cursed" half the time, unless the ring/amulet is always good or cursed.
  *
  * If "okay" is true, and the object is going to be "great", then there is
- * a chance that an artifact will be created.  This is true even if both the
- * "good" and "great" arguments are false.  As a total hack, if "great" is
+ * a chance that an artifact will be created. This is true even if both the
+ * "good" and "great" arguments are false. As a total hack, if "great" is
  * true, then the item gets 3 extra "attempts" to become an artifact.
  */
 bool apply_magic(object_type *o_ptr, int lev, u32b mode)
@@ -6392,15 +6392,15 @@ void place_gold(int y, int x)
  *
  * The initial location is assumed to be "in_bounds()".
  *
- * This function takes a parameter "chance".  This is the percentage
- * chance that the item will "disappear" instead of drop.  If the object
+ * This function takes a parameter "chance". This is the percentage
+ * chance that the item will "disappear" instead of drop. If the object
  * has been thrown, then this is the chance of disappearance on contact.
  *
  * Hack -- this function uses "chance" to determine if it should produce
  * some form of "description" of the drop event (under the player).
  *
  * We check several locations to see if we can find a location at which
- * the object can combine, stack, or be placed.  Artifacts will try very
+ * the object can combine, stack, or be placed. Artifacts will try very
  * hard to be placed, including "teleporting" to a useful grid if needed.
  */
 s16b drop_near(object_type *j_ptr, int chance, int y, int x)
@@ -7236,7 +7236,7 @@ bool object_sort_comp(object_type *o_ptr, s32b o_value, object_type *j_ptr)
  * Note that when the pack is being "over-filled", the new item must be
  * placed into the "overflow" slot, and the "overflow" must take place
  * before the pack is reordered, but (optionally) after the pack is
- * combined.  This may be tricky.  See "dungeon.c" for info.
+ * combined. This may be tricky. See "dungeon.c" for info.
  *
  * Note that this code must remove any location/stack information
  * from the object once it is placed into the inventory.

@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 #include "angband.h"
@@ -225,11 +225,11 @@ static void shuffle_flavors(byte tval)
  * The first 4 entries for potions are fixed (Water, Apple Juice,
  * Slime Mold Juice, Unused Potion).
  *
- * Scroll titles are always between 6 and 14 letters long.  This is
+ * Scroll titles are always between 6 and 14 letters long. This is
  * ensured because every title is composed of whole words, where every
  * word is from 1 to 8 letters long (one or two syllables of 1 to 4
  * letters each), and that no scroll is finished until it attempts to
- * grow beyond 15 letters.  The first time this can happen is when the
+ * grow beyond 15 letters. The first time this can happen is when the
  * current title has 6 letters and the new word has 8 letters, which
  * would result in a 6 letter scroll title.
  *
@@ -239,7 +239,7 @@ static void shuffle_flavors(byte tval)
  *
  * Hack -- make sure everything stays the same for each saved game
  * This is accomplished by the use of a saved "random seed", as in
- * "town_gen()".  Since no other functions are called while the special
+ * "town_gen()". Since no other functions are called while the special
  * seed is in effect, so this function is pretty "safe".
  *
  * Note that the "hacked seed" may provide an RNG with alternating parity!
@@ -917,7 +917,7 @@ char tval_to_attr_char(int tval)
  *
  * Special Ring's and Amulet's, if not "aware", use the same code as normal
  * rings and amulets, and if "aware", use the "k_info" base-name (Ring or
- * Amulet or Necklace).  They will NEVER "append" the "k_info" name.  But,
+ * Amulet or Necklace). They will NEVER "append" the "k_info" name. But,
  * they will append the artifact name, just like any artifact, if known.
  *
  * Hack -- Display "The One Ring" as "a Plain Gold Ring" until aware.

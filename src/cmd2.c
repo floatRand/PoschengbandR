@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Movement commands (part 2) */
@@ -402,8 +402,8 @@ static s16b chest_check(int y, int x)
  * Disperse treasures from the given chest, centered at (x,y).
  *
  * Small chests often contain "gold", while Large chests always contain
- * items.  Wooden chests contain 2 items, Iron chests contain 4 items,
- * and Steel chests contain 6 items.  The "value" of the items in a
+ * items. Wooden chests contain 2 items, Iron chests contain 4 items,
+ * and Steel chests contain 6 items. The "value" of the items in a
  * chest is based on the "power" of the chest, which is in turn based
  * on the level on which the chest is generated.
  */
@@ -2488,7 +2488,7 @@ void do_cmd_run(void)
 
 
 /*
- * Stay still.  Search.  Enter stores.
+ * Stay still. Search. Enter stores.
  * Pick up treasure if "pickup" is true.
  */
 void do_cmd_stay(bool pickup)
@@ -3281,8 +3281,8 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
 
         bonus -= 20;
         /* In this mode, whenever the player fires, all of their shots go
-           at a single target in rapid succession.  Full energy is consumed, and
-           the player gets a slight bonus to the number of shots.  Think of
+           at a single target in rapid succession. Full energy is consumed, and
+           the player gets a slight bonus to the number of shots. Think of
            a rapid fire machine gun :) */
         no_energy = TRUE;
         energy_use = 100;
@@ -3344,7 +3344,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
         {
             if (inventory[item].tval != p_ptr->shooter_info.tval_ammo)
             {
-                msg_print("Your ammo has run out.  Time to reload!");
+                msg_print("Your ammo has run out. Time to reload!");
                 break;
             }
         }

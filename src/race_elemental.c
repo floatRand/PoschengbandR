@@ -14,7 +14,7 @@ static cptr _desc =
     "Air Elementals are shockingly fast, but perhaps that is just the "
     "crackle of their electrified bodies? They may hurl bolts and balls "
     "electricity at their enemies and may even imbue their weapons with "
-    "deadly lightning.  However, being surrounded by lightning, rings, "
+    "deadly lightning. However, being surrounded by lightning, rings, "
     "amulets, wands and rods are quickly destroyed!\n \n"
     "Fire Elementals are somewhat fast (They definitely run circles around "
     "their earthen brethren) and are cloaked in fire. Of course, they may attack "

@@ -7,14 +7,14 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 #include "angband.h"
 
 
 /*
- * Critical blow.  All hits that do 95% of total possible damage,
+ * Critical blow. All hits that do 95% of total possible damage,
  * and which also do at least 20 damage, or, sometimes, N damage.
  * This is used only to determine "cuts" and "stuns".
  */
@@ -232,9 +232,9 @@ bool make_attack_normal(int m_idx)
 
         /* Revenge aura only gives a single retaliatory attempt per player strike 
            We'll cycle thru monster attacks on each revenge strike, and the revenge
-           will stop after the monster runs out of attacks.  So 20 attack players need
-           not fear insta-death (as much).  All the hackery is communicated between
-           here, py_attack_* and touch_zap_player().  Enjoy! 
+           will stop after the monster runs out of attacks. So 20 attack players need
+           not fear insta-death (as much). All the hackery is communicated between
+           here, py_attack_* and touch_zap_player(). Enjoy! 
            (Note: If I had a mon_attack_p(int m_idx, int blow_idx), we could
            avoid all this nonsense ... )
          */

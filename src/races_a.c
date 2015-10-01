@@ -150,10 +150,10 @@ race_t *android_get_race_t(void)
         me.desc = "An android is a artificial creation with a body of machinery. Over the millenia, artificial "
                     "intelligence has improved to the point where androids are nearly as smart as humans, though "
                     "perhaps not so wise. Of course, their mechanical body offers great physical advantages, far "
-                    "surpassing the powers of man.  Androids don't acquire experience like other "
+                    "surpassing the powers of man. Androids don't acquire experience like other "
                     "races, but rather gain in power as they attach new equipment to their frame. "
-                    "Rings, amulets, and lights do not influence growth.  Androids are resistant to "
-                    "poison, can move freely, and are immune to life-draining attacks.  Moreover, "
+                    "Rings, amulets, and lights do not influence growth. Androids are resistant to "
+                    "poison, can move freely, and are immune to life-draining attacks. Moreover, "
                     "because of their hard metallic bodies, they get a bonus to AC. Androids have "
                     "electronic circuits throughout their body and must beware of electric shocks. "
                     "They gain very little nutrition from the food of mortals, but they can use flasks "
@@ -1717,7 +1717,7 @@ race_t *half_ogre_get_race_t(void)
                     "For warriors, they have all the necessary attributes, and they can even "
                     "become wizards: after all, they are related to Ogre Magi, from whom they "
                     "have learned the skill of setting trapped runes once their level is high "
-                    "enough.  Like Half-Orcs, they resist darkness, and like Half-Trolls, they "
+                    "enough. Like Half-Orcs, they resist darkness, and like Half-Trolls, they "
                     "have their strength sustained.";
 
         me.stats[A_STR] =  3;

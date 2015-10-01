@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: code dealing with files (and death) */
@@ -121,7 +121,7 @@ void safe_setuid_grab(void)
  *
  * This function uses "colon" and "slash" as the delimeter characters.
  *
- * We never extract more than "num" tokens.  The "last" token may include
+ * We never extract more than "num" tokens. The "last" token may include
  * "delimeter" characters, allowing the buffer to include a "string" token.
  *
  * We save pointers to the tokens in "tokens", and return the number found.
@@ -1732,7 +1732,7 @@ static void player_flags(u32b flgs[TR_FLAG_SIZE])
             add_flag(flgs, TR_RES_FIRE);
             if (p_ptr->lev > 14) add_flag(flgs, TR_HOLD_LIFE);
             if (p_ptr->lev > 4) add_flag(flgs, TR_INT);
-            /* This is firing, but not working.  Note, DEMON LORD Mimic does work????? 
+            /* This is firing, but not working. Note, DEMON LORD Mimic does work????? 
                Oh, see player_immunity() */
             if (p_ptr->lev > 49) add_flag(flgs, TR_IM_FIRE);
             break;
@@ -2694,7 +2694,7 @@ static void display_player_stat_info(void)
             c_put_str(TERM_WHITE, stat_names[i], row + i+1, stat_col+1);
 
 
-        /* Internal "natural" max value.  Maxes at 18/100 */
+        /* Internal "natural" max value. Maxes at 18/100 */
         /* This is useful to see if you are maxed out */
         cnv_stat(p_ptr->stat_max[i], buf);
         if (p_ptr->stat_max[i] == p_ptr->stat_max_max[i])
@@ -5806,7 +5806,7 @@ void process_player_name(bool sf)
  * Perhaps we should NOT ask for a name (at "birth()") on
  * Unix machines?  XXX XXX
  *
- * What a horrible name for a global function.  XXX XXX XXX
+ * What a horrible name for a global function. XXX XXX XXX
  */
 void get_name(void)
 {
@@ -6977,7 +6977,7 @@ static void handle_signal_suspend(int sig)
  * Handle signals -- simple (interrupt and quit)
  *
  * This function was causing a *huge* number of problems, so it has
- * been simplified greatly.  We keep a global variable which counts
+ * been simplified greatly. We keep a global variable which counts
  * the number of times the user attempts to kill the process, and
  * we commit suicide if the user does this a certain number of times.
  *

@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Initialization (part 2) -BEN- */
@@ -24,7 +24,7 @@
 
 /*
  * This file is used to initialize various variables and arrays for the
- * Angband game.  Note the use of "fd_read()" and "fd_write()" to bypass
+ * Angband game. Note the use of "fd_read()" and "fd_write()" to bypass
  * the common limitation of "read()" and "write()" to only 32767 bytes
  * at a time.
  *
@@ -34,14 +34,14 @@
  * directory, or if those files become obsolete, if we are allowed.
  *
  * Warning -- the "ascii" file parsers use a minor hack to collect the
- * name and text information in a single pass.  Thus, the game will not
+ * name and text information in a single pass. Thus, the game will not
  * be able to load any template file with more than 20K of names or 60K
  * of text, even though technically, up to 64K should be legal.
  *
  * The "init1.c" file is used only to parse the ascii template files,
- * to create the binary image files.  If you include the binary image
+ * to create the binary image files. If you include the binary image
  * files instead of the ascii template files, then you can undefine
- * "ALLOW_TEMPLATES", saving about 20K by removing "init1.c".  Note
+ * "ALLOW_TEMPLATES", saving about 20K by removing "init1.c". Note
  * that the binary image files are extremely system dependant.
  */
 
@@ -57,7 +57,7 @@
  *
  * This function takes a writable buffer, initially containing the
  * "path" to the "lib" directory, for example, "/pkg/lib/angband/",
- * or a system dependant string, for example, ":lib:".  The buffer
+ * or a system dependant string, for example, ":lib:". The buffer
  * must be large enough to contain at least 32 more characters.
  *
  * Various command line options may allow some of the important
@@ -66,7 +66,7 @@
  * but this is done after this function, see "main.c".
  *
  * In general, the initial path should end in the appropriate "PATH_SEP"
- * string.  All of the "sub-directory" paths (created below or supplied
+ * string. All of the "sub-directory" paths (created below or supplied
  * by the user) will NOT end in the "PATH_SEP" string, see the special
  * "path_build()" function in "util.c" for more information.
  *
@@ -76,7 +76,7 @@
  *
  * Hack -- first we free all the strings, since this is known
  * to succeed even if the strings have not been allocated yet,
- * as long as the variables start out as "NULL".  This allows
+ * as long as the variables start out as "NULL". This allows
  * this function to be called multiple times, for example, to
  * try several base "path" values until a good one is found.
  */
@@ -1690,7 +1690,7 @@ void display_news(void)
  * Note that this function attempts to verify the "news" file,
  * and the game aborts (cleanly) on failure, since without the
  * "news" file, it is likely that the "lib" folder has not been
- * correctly located.  Otherwise, the news file is displayed for
+ * correctly located. Otherwise, the news file is displayed for
  * the user.
  *
  * Note that this function attempts to verify (or create) the
@@ -1711,7 +1711,7 @@ void display_news(void)
  * in the "lib/data" and sometimes the "lib/edit" directories.
  *
  * Note that the "template" files are initialized first, since they
- * often contain errors.  This means that macros and message recall
+ * often contain errors. This means that macros and message recall
  * and things like that are not available until after they are done.
  *
  * We load the default "user pref files" here in case any "color"

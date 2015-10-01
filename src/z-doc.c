@@ -178,6 +178,9 @@ doc_ptr doc_alloc(int width)
     style = doc_style(res, "screenshot");
     style->options |= DOC_STYLE_NO_WORDWRAP;
 
+    style = doc_style(res, "table");
+    style->options |= DOC_STYLE_NO_WORDWRAP;
+
     style = doc_style(res, "selection");
     style->color = TERM_YELLOW;
 

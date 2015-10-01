@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Spell code (part 2) */
@@ -15,10 +15,10 @@
 
 
 /*
- * self-knowledge... idea from nethack.  Useful for determining powers and
- * resistences of items.  It saves the screen, clears it, then starts listing
- * attributes, a screenful at a time.  (There are a LOT of attributes to
- * list.  It will probably take 2 or 3 screens for a powerful character whose
+ * self-knowledge... idea from nethack. Useful for determining powers and
+ * resistences of items. It saves the screen, clears it, then starts listing
+ * attributes, a screenful at a time. (There are a LOT of attributes to
+ * list. It will probably take 2 or 3 screens for a powerful character whose
  * using several artifacts...) -CFT
  *
  * It is now a lot more efficient. -BEN-
@@ -2187,7 +2187,7 @@ bool detect_all(int range)
     if (detect_doors(range)) detect = TRUE;
     if (detect_stairs(range)) detect = TRUE;
 
-    /* There are too many hidden treasure.  So... */
+    /* There are too many hidden treasure. So... */
     /* if (detect_treasure(range)) detect = TRUE; */
 
     if (detect_objects_gold(range)) detect = TRUE;
@@ -4112,7 +4112,7 @@ bool fire_ball_aux(int typ, int dir, int dam, int rad, int xtra_flgs)
         ty = target_row;
     }
 
-    /* Analyze the "dir" and the "target".  Hurt items on floor. */
+    /* Analyze the "dir" and the "target". Hurt items on floor. */
     return (project(0, rad, ty, tx, dam, typ, flg, -1));
 }
 
@@ -4140,7 +4140,7 @@ bool fire_rocket(int typ, int dir, int dam, int rad)
         ty = target_row;
     }
 
-    /* Analyze the "dir" and the "target".  Hurt items on floor. */
+    /* Analyze the "dir" and the "target". Hurt items on floor. */
     return (project(0, rad, ty, tx, dam, typ, flg, -1));
 }
 
@@ -4169,7 +4169,7 @@ bool fire_ball_hide(int typ, int dir, int dam, int rad)
         ty = target_row;
     }
 
-    /* Analyze the "dir" and the "target".  Hurt items on floor. */
+    /* Analyze the "dir" and the "target". Hurt items on floor. */
     return (project(0, rad, ty, tx, dam, typ, flg, -1));
 }
 
@@ -4177,7 +4177,7 @@ bool fire_ball_hide(int typ, int dir, int dam, int rad)
 /*
  * Cast a meteor spell, defined as a ball spell cast by an arbitary monster, 
  * player, or outside source, that starts out at an arbitrary location, and 
- * leaving no trail from the "caster" to the target.  This function is 
+ * leaving no trail from the "caster" to the target. This function is 
  * especially useful for bombardments and similar. -LM-
  *
  * Option to hurt the player.

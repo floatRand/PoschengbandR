@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Interface commands */
@@ -36,16 +36,16 @@ static void do_cmd_knowledge_shooter(void);
  * point.
  *
  *     These three functions automatically delete old dumped lines 
- * before adding new ones.  Since there are various kinds of automatic 
+ * before adding new ones. Since there are various kinds of automatic 
  * dumps in a single file, we add a header and a footer with a type 
  * name for every automatic dump, and kill old lines only when the 
  * lines have the correct type of header and footer.
  *
  *     We need to be quite paranoid about correctness; the user might 
  * (mistakenly) edit the file by hand, and see all their work come
- * to nothing on the next auto dump otherwise.  The current code only 
+ * to nothing on the next auto dump otherwise. The current code only 
  * detects changes by noting inconsistencies between the actual number 
- * of lines and the number written in the footer.  Note that this will 
+ * of lines and the number written in the footer. Note that this will 
  * not catch single-line edits.
  */
 
@@ -172,7 +172,7 @@ static void remove_auto_dump(cptr orig_file)
                  * If there is an inconsistency between
                  * actual number of lines and the
                  * number here, the automatic dump
-                 * might be edited by hand.  So it's
+                 * might be edited by hand. So it's
                  * dangerous to kill these lines.
                  * Seek back to the next line of the
                  * (pseudo) header, and read again.
@@ -1656,8 +1656,8 @@ static void do_cmd_macro_aux(char *buf)
 /*
  * Hack -- ask for a keymap "trigger" (see below)
  *
- * Note that both "flush()" calls are extremely important.  This may
- * no longer be true, since "util.c" is much simpler now.  XXX XXX XXX
+ * Note that both "flush()" calls are extremely important. This may
+ * no longer be true, since "util.c" is much simpler now. XXX XXX XXX
  */
 static void do_cmd_macro_aux_keymap(char *buf)
 {
@@ -1761,7 +1761,7 @@ static errr keymap_dump(cptr fname)
  *
  * Note that the macro "action" must be defined before the trigger.
  *
- * Could use some helpful instructions on this page.  XXX XXX XXX
+ * Could use some helpful instructions on this page. XXX XXX XXX
  */
 void do_cmd_macros(void)
 {
@@ -5399,7 +5399,7 @@ static void do_cmd_knowledge_pets(void)
 /*
  * Total kill count
  *
- * Note that the player ghosts are ignored.  XXX XXX XXX
+ * Note that the player ghosts are ignored. XXX XXX XXX
  */
 static void do_cmd_knowledge_kill_count(void)
 {

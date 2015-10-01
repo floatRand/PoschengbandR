@@ -70,7 +70,7 @@ vptr rnfree(vptr p, huge len)
 vptr (*rpanic_aux)(huge) = NULL;
 
 /*
- * The system is out of memory, so panic.  If "rpanic_aux" is set,
+ * The system is out of memory, so panic. If "rpanic_aux" is set,
  * it can be used to free up some memory and do a new "ralloc()",
  * or if not, it can be used to save things, clean up, and exit.
  * By default, this function simply crashes the computer.

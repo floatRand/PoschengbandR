@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Monster spells and movement */
@@ -377,11 +377,11 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
 /*
  * Returns whether a given monster will try to run from the player.
  *
- * Monsters will attempt to avoid very powerful players.  See below.
+ * Monsters will attempt to avoid very powerful players. See below.
  *
  * Because this function is called so often, little details are important
- * for efficiency.  Like not using "mod" or "div" when possible.  And
- * attempting to check the conditions in an optimal order.  Note that
+ * for efficiency. Like not using "mod" or "div" when possible. And
+ * attempting to check the conditions in an optimal order. Note that
  * "(x << 2) == (x * 4)" if "x" has enough bits to hold the result.
  *
  * Note that this function is responsible for about one to five percent
@@ -552,7 +552,7 @@ static bool get_moves_aux2(int m_idx, int *yp, int *xp)
  * to angle slightly towards the player's actual location.
  *
  * Allow very perceptive monsters to track old "spoor" left by
- * previous locations occupied by the player.  This will tend
+ * previous locations occupied by the player. This will tend
  * to have monsters end up either near the player or on a grid
  * recently occupied by the player (and left via "teleport").
  *
@@ -561,7 +561,7 @@ static bool get_moves_aux2(int m_idx, int *yp, int *xp)
  * Also note that teleporting away from a location will cause
  * the monsters who were chasing you to converge on that location
  * as long as you are still near enough to "annoy" them without
- * being close enough to chase directly.  I have no idea what will
+ * being close enough to chase directly. I have no idea what will
  * happen if you combine "smell" with low "aaf" values.
  */
 static bool get_moves_aux(int m_idx, int *yp, int *xp, bool no_flow)
@@ -765,14 +765,14 @@ static bool get_fear_moves_aux(int m_idx, int *yp, int *xp)
  *
  * It is probably better to replace these arrays with code to compute
  * the relevant arrays, even if the storage is pre-allocated in hard
- * coded sizes.  At the very least, code should be included which is
- * able to generate and dump these arrays (ala "los()").  XXX XXX XXX
+ * coded sizes. At the very least, code should be included which is
+ * able to generate and dump these arrays (ala "los()"). XXX XXX XXX
  *
- * Also, the storage needs could be halved by using bytes.  XXX XXX XXX
+ * Also, the storage needs could be halved by using bytes. XXX XXX XXX
  *
  * These arrays could be combined into two big arrays, using sub-arrays
  * to hold the offsets and lengths of each portion of the sub-arrays, and
- * this could perhaps also be used somehow in the "look" code.  XXX XXX XXX
+ * this could perhaps also be used somehow in the "look" code. XXX XXX XXX
  */
 
 
@@ -891,8 +891,8 @@ static sint *dist_offsets_x[10] =
 * Choose a "safe" location near a monster for it to run toward.
 *
 * A location is "safe" if it can be reached quickly and the player
-* is not able to fire into it (it isn't a "clean shot").  So, this will
-* cause monsters to "duck" behind walls.  Hopefully, monsters will also
+* is not able to fire into it (it isn't a "clean shot"). So, this will
+* cause monsters to "duck" behind walls. Hopefully, monsters will also
 * try to run towards corridor openings if they are in a room.
 *
 * This function may take lots of CPU time if lots of monsters are
@@ -2169,13 +2169,13 @@ static bool check_hp_for_feat_destruction(feature_type *f_ptr, monster_type *m_p
  *
  * Note that a monster is only allowed to "reproduce" if there
  * are a limited number of "reproducing" monsters on the current
- * level.  This should prevent the level from being "swamped" by
- * reproducing monsters.  It also allows a large mass of mice to
+ * level. This should prevent the level from being "swamped" by
+ * reproducing monsters. It also allows a large mass of mice to
  * prevent a louse from multiplying, but this is a small price to
  * pay for a simple multiplication method.
  *
  * XXX Monster fear is slightly odd, in particular, monsters will
- * fixate on opening a door even if they cannot open it.  Actually,
+ * fixate on opening a door even if they cannot open it. Actually,
  * the same thing happens to normal monsters when they hit a door
  *
  * XXX XXX XXX In addition, monsters which *cannot* open or bash
@@ -2674,8 +2674,8 @@ static void process_monster(int m_idx)
             char m_name[80];
             monster_desc(m_name, m_ptr, 0);
 
-            /* Monsters that spell 1 in 1 get a save on each action.  Make the
-               save and the spell is broken.  Fail, and a turn is lost. */
+            /* Monsters that spell 1 in 1 get a save on each action. Make the
+               save and the spell is broken. Fail, and a turn is lost. */
             if (r_ptr->freq_spell == 100)
             {
                 if (!mon_save_p(m_ptr->r_idx, A_STR))
@@ -2794,7 +2794,7 @@ static void process_monster(int m_idx)
         mm[0] = mm[1] = mm[2] = mm[3] = 5;
 
         /* Look for an enemy */
-#if 0  /* Hack - Too slow.  Mimic pits are horrible with this on. */
+#if 0  /* Hack - Too slow. Mimic pits are horrible with this on. */
         get_enemy_dir(m_idx, mm);
 #endif /* 0 */
     }
@@ -3166,7 +3166,7 @@ static void process_monster(int m_idx)
                 }
             }
 
-            /* The player is in the way.  Attack him. */
+            /* The player is in the way. Attack him. */
             if (do_move)
             {
                 if (!p_ptr->riding || one_in_(2))
@@ -3688,7 +3688,7 @@ static void process_monster(int m_idx)
  * especially when the player is running.
  *
  * Note the special "MFLAG_BORN" flag, which allows us to ignore "fresh"
- * monsters while they are still being "born".  A monster is "fresh" only
+ * monsters while they are still being "born". A monster is "fresh" only
  * during the turn in which it is created, and we use the "hack_m_idx" to
  * determine if the monster is yet to be processed during the current turn.
  *

@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Spell/Prayer commands */
@@ -502,7 +502,7 @@ void do_cmd_browse(void)
     /* Clear the top line */
     prt("", 0, 0);
 
-    /* Keep browsing spells.  Exit browsing on cancel. */
+    /* Keep browsing spells. Exit browsing on cancel. */
     while(TRUE)
     {
         /* Ask for a spell, allow cancel */
@@ -1419,7 +1419,7 @@ msg_print("An infernal sound echoed.");
         }
     }
 
-    /* In general, we already charged the players sp.  However, in the event the 
+    /* In general, we already charged the players sp. However, in the event the 
        player knowingly exceeded their csp, then, well, they get what they deserve!
     */
     if (take_mana == 0)

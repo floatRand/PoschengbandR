@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Wizard commands */
@@ -239,7 +239,7 @@ static void do_cmd_wiz_hack_chris1(void)
         /*value = object_value_real(&forge);*/
     }
 
-    msg_format("Generated %d artifacts.  %d had immunity.  %d had speed.  %d had extra attacks.", ct, ct_immunity, ct_speed, ct_blows);
+    msg_format("Generated %d artifacts. %d had immunity. %d had speed. %d had extra attacks.", ct, ct_immunity, ct_speed, ct_blows);
     msg_format("%d had telepathy. %d had aggravation.", ct_telepathy, ct_aggravate);
 /*    msg_format("%d had darkness. %d had spell power.", ct_darkness, ct_spell_power); */
     msg_format("%d would be immunities created.", ct_would_be_immunities);
@@ -1149,7 +1149,7 @@ static void do_cmd_wiz_bamf(void)
 
 
 /*
- * Aux function for "do_cmd_wiz_change()".    -RAK-
+ * Aux function for "do_cmd_wiz_change()".   -RAK-
  */
 static void do_cmd_wiz_change_aux(void)
 {
@@ -1328,7 +1328,7 @@ static void do_cmd_wiz_change(void)
  * must apply magic, or you will get "broken" or "uncharged" objects.
  *
  * Note -- Redefining artifacts via "do_cmd_wiz_play()" may destroy
- * the artifact.  Be careful.
+ * the artifact. Be careful.
  *
  * Hack -- this function will allow you to create multiple artifacts.
  * This "feature" may induce crashes or other nasty effects.
@@ -1403,7 +1403,7 @@ static void wiz_display_item(object_type *o_ptr)
     prt_binary(flgs[2], 16, j+32);
 
     prt("+------------FLAGS4------------+", 17, j+32);
-    prt("KILL....ESP.........            ", 18, j+32);
+    prt("KILL....ESP.........           ", 18, j+32);
     prt("aeud tghaud tgdhegnu            ", 19, j+32);
     prt("nvneoriunneoriruvoon            ", 20, j+32);
     prt("iidmroamidmroagmionq            ", 21, j+32);
@@ -1768,12 +1768,12 @@ static void wiz_reroll_item(object_type *o_ptr)
 
 
 /*
- * Try to create an item again. Output some statistics.    -Bernd-
+ * Try to create an item again. Output some statistics.   -Bernd-
  *
- * The statistics are correct now.  We acquire a clean grid, and then
+ * The statistics are correct now. We acquire a clean grid, and then
  * repeatedly place an object in this grid, copying it into an item
- * holder, and then deleting the object.  We fiddle with the artifact
- * counter flags to prevent weirdness.  We use the items to collect
+ * holder, and then deleting the object. We fiddle with the artifact
+ * counter flags to prevent weirdness. We use the items to collect
  * statistics on item creation relative to the initial item.
  */
 static void wiz_statistics(object_type *o_ptr)

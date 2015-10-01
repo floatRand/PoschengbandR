@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: interact with savefiles */
@@ -862,10 +862,10 @@ static void wr_saved_floor(savefile_ptr file, saved_floor_type *sf_ptr)
     /*********** Make template for cave_type **********/
 
     /*
-     * Usually number of templates are fewer than 255.  Even if
+     * Usually number of templates are fewer than 255. Even if
      * more than 254 are exist, the occurrence of each template
      * with larger ID is very small when we sort templates by
-     * occurrence.  So we will use two (or more) bytes for
+     * occurrence. So we will use two (or more) bytes for
      * templete ID larger than 254.
      *
      * Ex: 256 will be "0xff" "0x01".

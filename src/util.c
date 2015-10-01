@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Angband utilities -BEN- */
@@ -139,7 +139,7 @@ void user_name(char *buf, int id)
         return;
     }
 
-    /* Oops.  Hack -- default to "PLAYER" */
+    /* Oops. Hack -- default to "PLAYER" */
     strcpy(buf, "PLAYER");
 }
 
@@ -157,7 +157,7 @@ void user_name(char *buf, int id)
  * In fact, perhaps we should use the "path_parse()" routine below to convert
  * from "canonical" filenames (optional leading tilde's, internal wildcards,
  * slash as the path seperator, etc) to "system" filenames (no special symbols,
- * system-specific path seperator, etc).  This would allow the program itself
+ * system-specific path seperator, etc). This would allow the program itself
  * to assume that all filenames are "Unix" filenames, and explicitly "extract"
  * such filenames if needed (by "path_parse()", or perhaps "path_canon()").
  *
@@ -1062,7 +1062,7 @@ errr fd_close(int fd)
  *
  * The following info is from "Torbjorn Lindgren" (see "main-xaw.c").
  *
- * These values are NOT gamma-corrected.  On most machines (with the
+ * These values are NOT gamma-corrected. On most machines (with the
  * Macintosh being an important exception), you must "gamma-correct"
  * the given values, that is, "correct for the intrinsic non-linearity
  * of the phosphor", by converting the given intensity levels based
@@ -1073,7 +1073,7 @@ errr fd_close(int fd)
  *
  * So, on most machines, simply convert the values based on the "gamma"
  * of the target screen, which is usually in the range 1.5 to 1.7, and
- * usually is closest to 1.7.  The converted value for each of the five
+ * usually is closest to 1.7. The converted value for each of the five
  * different "quarter" values is given below:
  *
  *  Given     Gamma 1.0       Gamma 1.5       Gamma 1.7     Hex 1.7
@@ -1274,8 +1274,8 @@ static void trigger_text_to_ascii(char **bufptr, cptr *strptr)
  * Hack -- convert a printable string into real ascii
  *
  * I have no clue if this function correctly handles, for example,
- * parsing "\xFF" into a (signed) char.  Whoever thought of making
- * the "sign" of a "char" undefined is a complete moron.  Oh well.
+ * parsing "\xFF" into a (signed) char. Whoever thought of making
+ * the "sign" of a "char" undefined is a complete moron. Oh well.
  */
 void text_to_ascii(char *buf, cptr str)
 {
@@ -1704,15 +1704,15 @@ static sint macro_find_ready(cptr pat)
  * Add a macro definition (or redefinition).
  *
  * We should use "act == NULL" to "remove" a macro, but this might make it
- * impossible to save the "removal" of a macro definition.  XXX XXX XXX
+ * impossible to save the "removal" of a macro definition. XXX XXX XXX
  *
  * We should consider refusing to allow macros which contain existing macros,
  * or which are contained in existing macros, because this would simplify the
- * macro analysis code.  XXX XXX XXX
+ * macro analysis code. XXX XXX XXX
  *
  * We should consider removing the "command macro" crap, and replacing it
  * with some kind of "powerful keymap" ability, but this might make it hard
- * to change the "roguelike" option from inside the game.  XXX XXX XXX
+ * to change the "roguelike" option from inside the game. XXX XXX XXX
  */
 errr macro_add(cptr pat, cptr act)
 {
@@ -1774,7 +1774,7 @@ static bool parse_under = FALSE;
 
 
 /*
- * Flush all input chars.  Actually, remember the flush,
+ * Flush all input chars. Actually, remember the flush,
  * and do a "special flush" before the next "inkey()".
  *
  * This is not only more efficient, but also necessary to make sure
@@ -1825,14 +1825,14 @@ void sound(int val)
  * We use the "Term_key_push()" function to handle "failed" macros, as well
  * as "extra" keys read in while choosing the proper macro, and also to hold
  * the action for the macro, plus a special "ascii 30" character indicating
- * that any macro action in progress is complete.  Embedded macros are thus
+ * that any macro action in progress is complete. Embedded macros are thus
  * illegal, unless a macro action includes an explicit "ascii 30" character,
  * which would probably be a massive hack, and might break things.
  *
  * Only 500 (0+1+2+...+29+30) milliseconds may elapse between each key in
- * the macro trigger sequence.  If a key sequence forms the "prefix" of a
+ * the macro trigger sequence. If a key sequence forms the "prefix" of a
  * macro trigger, 500 milliseconds must pass before the key sequence is
- * known not to be that macro trigger.  XXX XXX XXX
+ * known not to be that macro trigger. XXX XXX XXX
  */
 static char inkey_aux(void)
 {
@@ -2032,11 +2032,11 @@ static void forget_macro_action(void)
 
 
 /*
- * Mega-Hack -- special "inkey_next" pointer.  XXX XXX XXX
+ * Mega-Hack -- special "inkey_next" pointer. XXX XXX XXX
  *
  * This special pointer allows a sequence of keys to be "inserted" into
- * the stream of keys returned by "inkey()".  This key sequence will not
- * trigger any macros, and cannot be bypassed by the Borg.  It is used
+ * the stream of keys returned by "inkey()". This key sequence will not
+ * trigger any macros, and cannot be bypassed by the Borg. It is used
  * in Angband to handle "keymaps".
  */
 static cptr inkey_next = NULL;
@@ -2045,7 +2045,7 @@ static cptr inkey_next = NULL;
 #ifdef ALLOW_BORG
 
 /*
- * Mega-Hack -- special "inkey_hack" hook.  XXX XXX XXX
+ * Mega-Hack -- special "inkey_hack" hook. XXX XXX XXX
  *
  * This special function hook allows the "Borg" (see elsewhere) to take
  * control of the "inkey()" function, and substitute in fake keypresses.
@@ -2059,14 +2059,14 @@ char (*inkey_hack)(int flush_first) = NULL;
 /*
  * Get a keypress from the user.
  *
- * This function recognizes a few "global parameters".  These are variables
+ * This function recognizes a few "global parameters". These are variables
  * which, if set to TRUE before calling this function, will have an effect
  * on this function, and which are always reset to FALSE by this function
- * before this function returns.  Thus they function just like normal
+ * before this function returns. Thus they function just like normal
  * parameters, except that most calls to this function can ignore them.
  *
  * If "inkey_xtra" is TRUE, then all pending keypresses will be flushed,
- * and any macro processing in progress will be aborted.  This flag is
+ * and any macro processing in progress will be aborted. This flag is
  * set by the "flush()" function, which does not actually flush anything
  * itself, but rather, triggers delayed input flushing via "inkey_xtra".
  *
@@ -2077,12 +2077,12 @@ char (*inkey_hack)(int flush_first) = NULL;
  * If "inkey_base" and "inkey_scan" are both TRUE, then this function will
  * not return immediately, but will wait for a keypress for as long as the
  * normal macro matching code would, allowing the direct entry of macro
- * triggers.  The "inkey_base" flag is extremely dangerous!
+ * triggers. The "inkey_base" flag is extremely dangerous!
  *
  * If "inkey_flag" is TRUE, then we will assume that we are waiting for a
  * normal command, and we will only show the cursor if "hilite_player" is
  * TRUE (or if the player is in a store), instead of always showing the
- * cursor.  The various "main-xxx.c" files should avoid saving the game
+ * cursor. The various "main-xxx.c" files should avoid saving the game
  * in response to a "menu item" request unless "inkey_flag" is TRUE, to
  * prevent savefile corruption.
  *
@@ -2090,20 +2090,20 @@ char (*inkey_hack)(int flush_first) = NULL;
  * refresh (once) the window which was active when this function was called.
  *
  * Note that "back-quote" is automatically converted into "escape" for
- * convenience on machines with no "escape" key.  This is done after the
+ * convenience on machines with no "escape" key. This is done after the
  * macro matching, so the user can still make a macro for "backquote".
  *
  * Note the special handling of "ascii 30" (ctrl-caret, aka ctrl-shift-six)
  * and "ascii 31" (ctrl-underscore, aka ctrl-shift-minus), which are used to
- * provide support for simple keyboard "macros".  These keys are so strange
- * that their loss as normal keys will probably be noticed by nobody.  The
+ * provide support for simple keyboard "macros". These keys are so strange
+ * that their loss as normal keys will probably be noticed by nobody. The
  * "ascii 30" key is used to indicate the "end" of a macro action, which
- * allows recursive macros to be avoided.  The "ascii 31" key is used by
+ * allows recursive macros to be avoided. The "ascii 31" key is used by
  * some of the "main-xxx.c" files to introduce macro trigger sequences.
  *
  * Hack -- we use "ascii 29" (ctrl-right-bracket) as a special "magic" key,
  * which can be used to give a variety of "sub-commands" which can be used
- * any time.  These sub-commands could include commands to take a picture of
+ * any time. These sub-commands could include commands to take a picture of
  * the current screen, to start/stop recording a macro action, etc.
  *
  * If "angband_term[0]" is not active, we will make it active during this
@@ -2352,12 +2352,12 @@ char inkey(void)
 
 /*
  * We use a global array for all inscriptions to reduce the memory
- * spent maintaining inscriptions.  Of course, it is still possible
+ * spent maintaining inscriptions. Of course, it is still possible
  * to run out of inscription memory, especially if too many different
  * inscriptions are used, but hopefully this will be rare.
  *
  * We use dynamic string allocation because otherwise it is necessary
- * to pre-guess the amount of quark activity.  We limit the total
+ * to pre-guess the amount of quark activity. We limit the total
  * number of quarks, but this is much easier to "expand" as needed.
  *
  * Any two items with the same inscription will have the same "quark"
@@ -2483,7 +2483,7 @@ bool screen_is_saved(void)
  * Display a string on the screen using an attribute.
  *
  * At the given location, using the given attribute, if allowed,
- * add the given string.  Do not clear the line.
+ * add the given string. Do not clear the line.
  */
 void c_put_str(byte attr, cptr str, int row, int col)
 {
@@ -2531,8 +2531,8 @@ void prt(cptr str, int row, int col)
  * Print some (colored) text to the screen at the current cursor position,
  * automatically "wrapping" existing text (at spaces) when necessary to
  * avoid placing any text into the last column, and clearing every line
- * before placing any text in that line.  Also, allow "newline" to force
- * a "wrap" to the next line.  Advance the cursor as needed so sequential
+ * before placing any text in that line. Also, allow "newline" to force
+ * a "wrap" to the next line. Advance the cursor as needed so sequential
  * calls to this function will work correctly.
  *
  * Once this function has been called, the cursor should not be moved
@@ -2680,7 +2680,7 @@ void clear_from(int row)
  * Assume the buffer is initialized to a default string.
  *
  * The default buffer is in Overwrite mode and displayed in yellow at
- * first.  Normal chars clear the yellow text and append the char in
+ * first. Normal chars clear the yellow text and append the char in
  * white text.
  *
  * LEFT (^B) and RIGHT (^F) movement keys move the cursor position.
@@ -3540,20 +3540,20 @@ static char inkey_from_menu(void)
  * Request a command from the user.
  *
  * Sets p_ptr->command_cmd, p_ptr->command_dir, p_ptr->command_rep,
- * p_ptr->command_arg.  May modify p_ptr->command_new.
+ * p_ptr->command_arg. May modify p_ptr->command_new.
  *
  * Note that "caret" ("^") is treated specially, and is used to
- * allow manual input of control characters.  This can be used
+ * allow manual input of control characters. This can be used
  * on many machines to request repeated tunneling (Ctrl-H) and
  * on the Macintosh to request "Control-Caret".
  *
  * Note that "backslash" is treated specially, and is used to bypass any
- * keymap entry for the following character.  This is useful for macros.
+ * keymap entry for the following character. This is useful for macros.
  *
  * Note that this command is used both in the dungeon and in
  * stores, and must be careful to work in both situations.
  *
- * Note that "p_ptr->command_new" may not work any more.  XXX XXX XXX
+ * Note that "p_ptr->command_new" may not work any more. XXX XXX XXX
  */
 void request_command(int shopping)
 {
@@ -4215,7 +4215,7 @@ static s16b gamma_helper[256] =
 /* 
  * Build the gamma table so that floating point isn't needed.
  * 
- * Note gamma goes from 0->256.  The old value of 100 is now 128.
+ * Note gamma goes from 0->256. The old value of 100 is now 128.
  */
 void build_gamma_table(int gamma)
 {
@@ -4265,7 +4265,7 @@ void build_gamma_table(int gamma)
              *
              * Note that everything is scaled by 256 for accuracy,
              * plus another factor of 256 for the final result to
-             * be from 0-255.  Thus gamma_helper[] * gamma must be
+             * be from 0-255. Thus gamma_helper[] * gamma must be
              * divided by 256*256 each itteration, to get back to
              * the original power series.
              */
@@ -4388,11 +4388,11 @@ void roff_to_buf(cptr str, int maxlen, char *tbuf, size_t bufsize)
 
 /*
  * The my_strcpy() function copies up to 'bufsize'-1 characters from 'src'
- * to 'buf' and NUL-terminates the result.  The 'buf' and 'src' strings may
+ * to 'buf' and NUL-terminates the result. The 'buf' and 'src' strings may
  * not overlap.
  *
- * my_strcpy() returns strlen(src).  This makes checking for truncation
- * easy.  Example: if (my_strcpy(buf, src, sizeof(buf)) >= sizeof(buf)) ...;
+ * my_strcpy() returns strlen(src). This makes checking for truncation
+ * easy. Example: if (my_strcpy(buf, src, sizeof(buf)) >= sizeof(buf)) ...;
  *
  * This function should be equivalent to the strlcpy() function in BSD.
  */
@@ -4421,10 +4421,10 @@ size_t my_strcpy(char *buf, const char *src, size_t bufsize)
 /*
  * The my_strcat() tries to append a string to an existing NUL-terminated string.
  * It never writes more characters into the buffer than indicated by 'bufsize' and
- * NUL-terminates the buffer.  The 'buf' and 'src' strings may not overlap.
+ * NUL-terminates the buffer. The 'buf' and 'src' strings may not overlap.
  *
- * my_strcat() returns strlen(buf) + strlen(src).  This makes checking for
- * truncation easy.  Example:
+ * my_strcat() returns strlen(buf) + strlen(src). This makes checking for
+ * truncation easy. Example:
  * if (my_strcat(buf, src, sizeof(buf)) >= sizeof(buf)) ...;
  *
  * This function should be equivalent to the strlcat() function in BSD.

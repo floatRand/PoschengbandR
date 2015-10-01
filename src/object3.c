@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-/* New code for object values.  Designed by Dave.
+/* New code for object values. Designed by Dave.
    p is price
    q is ???
    y is ???
@@ -197,7 +197,7 @@ static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
     double cost = 0.0;
     int count = 0;
 
-    /*  Sorry, Dave.  Chris is going berserk again ...
+    /*  Sorry, Dave. Chris is going berserk again ...
         These are what I would expect to pay 
     */
     cost += _check_flag_and_score(flgs, TR_THROW, 100, &count);
@@ -234,7 +234,7 @@ static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
     cost += _check_flag_and_score(flgs, TR_TELEPATHY, 25000, &count);
     cost += _check_flag_and_score(flgs, TR_WEAPONMASTERY, 25000, &count);
 
-    /* Code later inflates based on item quality.  This factor is pure fudge */
+    /* Code later inflates based on item quality. This factor is pure fudge */
     cost /= 1.0;
 
     return (u32b) cost;
@@ -299,7 +299,7 @@ static s32b _resistances_q(u32b flgs[TR_FLAG_SIZE])
 
     q = 1000*y/10 + (20*y/10)*(y*y/100);
     return q;
-    I'm confused by the cubic.  Let's try something completely different;
+    I'm confused by the cubic. Let's try something completely different;
     */
     double cost = 0.0;
     int count = 0;

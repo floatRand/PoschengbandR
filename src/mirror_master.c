@@ -121,7 +121,7 @@ static void _break_mirrors_spell(int cmd, variant *res)
         var_set_string(res, "Break Mirrors");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Destroys all mirrors on the current levels.  Monsters close to a mirror take damage.");
+        var_set_string(res, "Destroys all mirrors on the current levels. Monsters close to a mirror take damage.");
         break;
     case SPELL_CAST:
         remove_all_mirrors(TRUE);

@@ -9,7 +9,7 @@ static cptr _desc =
     "divine powers which function like spells but need not be learned or cast from books. "
     "These powers can be used while blinded, but not while confused and they are also "
     "blocked by Anti-magic. The divine powers of the angel are quite powerful offering good "
-    "offense combined with detection, healing and melee enhancement.  Wisdom is the "
+    "offense combined with detection, healing and melee enhancement. Wisdom is the "
     "primary spell stat.\n \n"
     "Angels use the same equipment slots as normal player races and have no innate attacks.";
 

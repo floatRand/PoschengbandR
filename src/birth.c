@@ -3164,6 +3164,8 @@ void add_outfit(object_type *o_ptr)
 {
     int slot;
 
+    if (spoiler_hack) return;
+
     object_aware(o_ptr);
     ego_aware(o_ptr);
     object_known(o_ptr);

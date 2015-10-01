@@ -20,7 +20,7 @@ static u32b latest_visit_mark;  /* Max number of visit_mark */
 
 
 /*
- * Initialize saved_floors array.  Make sure that old temporal files
+ * Initialize saved_floors array. Make sure that old temporal files
  * are not remaining as gurbages.
  */
 void init_saved_floors(bool force)
@@ -217,7 +217,7 @@ static void kill_saved_floor(saved_floor_type *sf_ptr)
 
 
 /*
- * Initialize new saved floor and get its floor id.  If number of
+ * Initialize new saved floor and get its floor id. If number of
  * saved floors are already MAX_SAVED_FLOORS, kill the oldest one.
  */
 s16b get_new_floor_id(void)
@@ -846,7 +846,7 @@ static void locate_connected_stairs(saved_floor_type *sf_ptr)
         /* No stairs found! -- No return */
         prepare_change_floor_mode(CFM_RAND_PLACE | CFM_NO_RETURN);
 
-        /* Mega Hack -- It's not the stairs you enter.  Disable it.  */
+        /* Mega Hack -- It's not the stairs you enter. Disable it. */
         if (!feat_uses_special(cave[py][px].feat)) cave[py][px].special = 0;
     }
     else
@@ -968,7 +968,7 @@ void leave_floor(void)
         /* Get back to old saved floor? */
         if (c_ptr->special && !have_flag(f_ptr->flags, FF_SPECIAL) && get_sf_ptr(c_ptr->special))
         {
-            /* Saved floor is exist.  Use it. */
+            /* Saved floor is exist. Use it. */
             new_floor_id = c_ptr->special;
         }
 
@@ -1118,8 +1118,8 @@ void leave_floor(void)
 
 
 /*
- * Enter new floor.  If the floor is an old saved floor, it will be
- * restored from the temporal file.  If the floor is new one, new cave
+ * Enter new floor. If the floor is an old saved floor, it will be
+ * restored from the temporal file. If the floor is new one, new cave
  * will be generated.
  */
 void change_floor(void)
@@ -1406,7 +1406,7 @@ void change_floor(void)
          * Update visit mark
          *
          * The "turn" is not always different number because
-         * the level teleport doesn't take any turn.  Use
+         * the level teleport doesn't take any turn. Use
          * visit mark instead of last visit turn to find the
          * oldest saved floor.
          */

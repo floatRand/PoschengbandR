@@ -240,9 +240,9 @@ bool trump_summoning(int num, bool pet, int y, int x, int lev, int type, u32b mo
 
 /*
  * This spell should become more useful (more controlled) as the
- * player gains experience levels.  Thus, add 1/5 of the player's
- * level to the die roll.  This eliminates the worst effects later on,
- * while keeping the results quite random.  It also allows some potent
+ * player gains experience levels. Thus, add 1/5 of the player's
+ * level to the die roll. This eliminates the worst effects later on,
+ * while keeping the results quite random. It also allows some potent
  * effects only at high level.
  */
 void cast_wonder(int dir)
@@ -1433,7 +1433,7 @@ static cptr do_life_spell(int spell, int mode)
 
     case 26:
         if (name) return "Annihilate Undead";
-        if (desc) return "Eliminates all nearby undead monsters, exhausting you.  Powerful or unique monsters may be able to resist.";
+        if (desc) return "Eliminates all nearby undead monsters, exhausting you. Powerful or unique monsters may be able to resist.";
     
         {
             int power = spell_power(plev + 50);
@@ -3746,7 +3746,7 @@ static cptr do_death_spell(int spell, int mode)
 
     case 15:
         if (name) return "Genocide";
-        if (desc) return "Eliminates an entire class of monster, exhausting you.  Powerful or unique monsters may resist.";
+        if (desc) return "Eliminates an entire class of monster, exhausting you. Powerful or unique monsters may resist.";
     
         {
             int power = spell_power(plev*3);
@@ -4015,7 +4015,7 @@ static cptr do_death_spell(int spell, int mode)
 
     case 29:
         if (name) return "Mass Genocide";
-        if (desc) return "Eliminates all nearby monsters, exhausting you.  Powerful or unique monsters may be able to resist.";
+        if (desc) return "Eliminates all nearby monsters, exhausting you. Powerful or unique monsters may be able to resist.";
     
         {
             int power = spell_power(plev*3);
@@ -7318,7 +7318,7 @@ static cptr do_music_spell(int spell, int mode)
                 }
                 if (count >= 6)
                 {
-                    /* There are too many hidden treasure.  So... */
+                    /* There are too many hidden treasure. So... */
                     /* detect_treasure(rad); */
                     detect_objects_gold(rad);
                     detect_objects_normal(rad);

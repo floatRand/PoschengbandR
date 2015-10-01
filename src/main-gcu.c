@@ -12,7 +12,7 @@
 
 /*
  * This file has been modified to use multiple text windows if your screen
- * is larger than 80x25.  By Keldon Jones (keldon@umr.edu).
+ * is larger than 80x25. By Keldon Jones (keldon@umr.edu).
  *
  * Also included is Keldon Jones patch to get better colors. To switch to
  * a term that supports this, see this posting:
@@ -51,7 +51,7 @@
  * > "right" for Angband.
  *
  *    I've noticed this myself, so I spent the evening fixing it.
- * Well, sorta fixing it.  It's not perfect yet, and it may not be
+ * Well, sorta fixing it. It's not perfect yet, and it may not be
  * possible to get it perfect with VGA hardware and/or the current
  * Linux kernel.
  *
@@ -59,12 +59,12 @@
  *
  * >    Color Handling
  * >        Most color terminals are either `Tektronix-like'  or  `HP-
- * >        like'.   Tektronix-like terminals have a predefined set of
+ * >        like'.  Tektronix-like terminals have a predefined set of
  * >        N colors (where N usually 8), and can  set  character-cell
  * >        foreground and background characters independently, mixing
- * >        them into N * N color-pairs.  On  HP-like  terminals,  the
+ * >        them into N * N color-pairs. On  HP-like  terminals,  the
  * >        use must set each color pair up separately (foreground and
- * >        background are  not  independently  settable).   Up  to  M
+ * >        background are  not  independently  settable).  Up  to  M
  * >        color-pairs  may  be  set  up  from  2*M different colors.
  * >        ANSI-compatible terminals are Tektronix-like.
  *
@@ -82,11 +82,11 @@
  * >              cyan      COLOR_CYAN        6     0,max,max
  * >              white     COLOR_WHITE       7     max,max,max
  *
- *    Well, not quite.  Using certain escape sequences, an
+ *    Well, not quite. Using certain escape sequences, an
  * application (or better yet, curses) can redefine the colors (at
- * least some of them) and then those are used.  Read the
+ * least some of them) and then those are used. Read the
  * curs_color manpage, and the part about "ccc" and "initc" in the
- * terminfo manpage.  This is what the part of main-gcu inside the
+ * terminfo manpage. This is what the part of main-gcu inside the
  * "if (can_fix_color)" code does.
  *
  * > So, what does this mean to the Angband player?  Well, it means that
@@ -95,9 +95,9 @@
  * > I'm not clever enough to figure out how to do it.
  *
  *    Well, it is possible, though you have to patch main-gcu
- * and edit a terminfo entry.  Apparently the relevant code in
+ * and edit a terminfo entry. Apparently the relevant code in
  * main-gcu was never tested (it's broken in at least one major
- * way).  Apply the patch at the end of this message (notice that
+ * way). Apply the patch at the end of this message (notice that
  * we need to define REDEFINE_COLORS at some point near the
  * beginning of the file).
  *    Next, write this termcap entry to a file:
@@ -110,24 +110,24 @@
  *         use=linux,
  *
  * and run "tic" on it to produce a new terminfo entry called
- * "linux-c".  Especially note the "ccc" flag which says that we
- * can redefine colors.  The ugly "initc" string is what tells
- * the console how to redefine a color.  Now, just set your TERM
- * variable to "linux-c" and try Angband again.  If I've
+ * "linux-c". Especially note the "ccc" flag which says that we
+ * can redefine colors. The ugly "initc" string is what tells
+ * the console how to redefine a color. Now, just set your TERM
+ * variable to "linux-c" and try Angband again. If I've
  * remembered to tell you everything that I've done, you should
  * get the weird light-blue slate changed to a gray.
  *    Now, there are still lots of problems with this.
  * Something (I don't think it's curses, either the kernel or
  * the hardware itself) seems to be ignoring my color changes to
- * colors 6 and 7, which is annoying.  Also, the normal "white"
+ * colors 6 and 7, which is annoying. Also, the normal "white"
  * color is now way too bright, but it's now necessary to
  * distinguish it from the other grays.
  *    The kernel seems to support 16 colors, but you can
  * only switch to 8 of those, due to VT102 compatibility, it
- * seems.  I think it would be possible to patch the kernel and
+ * seems. I think it would be possible to patch the kernel and
  * allow all 16 colors to be used, but I haven't built up the
  * nerve to try that yet.
- *    Let me know if you can improve on this any.  Some of
+ *    Let me know if you can improve on this any. Some of
  * this may actually work differently on other hardware (ugh).
  *
  *    Keldon

@@ -7,7 +7,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 #include "angband.h"
@@ -319,7 +319,7 @@ void do_cmd_destroy(void)
     }
 
     /* Hack for Rune Knight: They can destroy worn equipment, but only
-       if it has the Sacrifice rune.  get_item() is not smart enough
+       if it has the Sacrifice rune. get_item() is not smart enough
        to handle this restriction ... */
     if (is_equipped && o_ptr->rune != RUNE_SACRIFICE)
     {
@@ -962,7 +962,7 @@ void do_cmd_locate(void)
 
         /* Prepare to ask which way to look */
         sprintf(out_val,
-            "Map sector [%d(%02d),%d(%02d)], which is%s your sector.  Direction?",
+            "Map sector [%d(%02d),%d(%02d)], which is%s your sector. Direction?",
 
             y2 / (hgt / 2), y2 % (hgt / 2),
             x2 / (wid / 2), x2 % (wid / 2), tmp_val);

@@ -2102,7 +2102,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     while (powers > 0)
     {
         powers--;
-        /* Attempt to craft artifacts by appropriate to type.  For example, arrows should
+        /* Attempt to craft artifacts by appropriate to type. For example, arrows should
            not grant extra blows or +3 strength :)  More realistically, weapons should
            preferentially get slays while armor should favor resists */
         switch (o_ptr->tval)

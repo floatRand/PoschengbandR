@@ -6,7 +6,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Spell projection */
@@ -265,12 +265,12 @@ u16b bolt_pict(int y, int x, int ny, int nx, int typ)
  * actually has an "octagon of projection" not a "circle of projection".
  *
  * The path grids are saved into the grid array pointed to by "gp", and
- * there should be room for at least "range" grids in "gp".  Note that
+ * there should be room for at least "range" grids in "gp". Note that
  * due to the way in which distance is calculated, this function normally
  * uses fewer than "range" grids for the projection path, so the result
- * of this function should never be compared directly to "range".  Note
+ * of this function should never be compared directly to "range". Note
  * that the initial grid (y1,x1) is never saved into the grid array, not
- * even if the initial grid is also the final grid.  XXX XXX XXX
+ * even if the initial grid is also the final grid. XXX XXX XXX
  *
  * The "flg" flags can be used to modify the behavior of this function.
  *
@@ -284,9 +284,9 @@ u16b bolt_pict(int y, int x, int ny, int nx, int typ)
  * that the path should be "angled" slightly if needed to avoid any wall
  * grids, allowing the player to "target" any grid which is in "view".
  * This flag is non-trivial and has not yet been implemented, but could
- * perhaps make use of the "vinfo" array (above).  XXX XXX XXX
+ * perhaps make use of the "vinfo" array (above). XXX XXX XXX
  *
- * This function returns the number of grids (if any) in the path.  This
+ * This function returns the number of grids (if any) in the path. This
  * function will return zero if and only if (y1,x1) and (y2,x2) are equal.
  *
  * This algorithm is similar to, but slightly different from, the one used
@@ -614,9 +614,9 @@ static bool _path_continue(int n, int y, int x, int flg)
 
 /* Try a given projection with horizontal major axis 
    These projections handle arbitrary rational slope values by the use of integer
-   counters.  The steps are always +-1 along the major axis, but may be any of -1,0,+1
-   along the minor axis.  The start values are used to select different tile paths between
-   the end points whenever there might be any ambiguity.  We return whether or not the
+   counters. The steps are always +-1 along the major axis, but may be any of -1,0,+1
+   along the minor axis. The start values are used to select different tile paths between
+   the end points whenever there might be any ambiguity. We return whether or not the
    desired endpoint was reached, but note that the path may extend beyond this point.
 */
 static bool _project_path_x(u16b *path, int* ct, int range, int y1, int x1, int y2, int x2, 
@@ -723,9 +723,9 @@ static void _copy_path(u16b* dest, u16b* src, int ct)
         dest[i] = src[i];
 }
 
-/* Lots of attempts have been made to fix asymmetrical targeting.  Here is my
-   attempt.  Simply put, there are multiple ways to discretize a line into a
-   sequence of grids.  We will simply try alternate discretizations should a
+/* Lots of attempts have been made to fix asymmetrical targeting. Here is my
+   attempt. Simply put, there are multiple ways to discretize a line into a
+   sequence of grids. We will simply try alternate discretizations should a
    given one fail. */
 static int project_path_new(u16b *path, int range, int y1, int x1, int y2, int x2, int flg)
 {
@@ -1788,12 +1788,12 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
  * Note that this routine can handle "no damage" attacks (like teleport) by
  * taking a "zero" damage, and can even take "parameters" to attacks (like
  * confuse) by accepting a "damage", using it to calculate the effect, and
- * then setting the damage to zero.  Note that the "damage" parameter is
+ * then setting the damage to zero. Note that the "damage" parameter is
  * divided by the radius, so monsters not at the "epicenter" will not take
  * as much damage (or whatever)...
  *
  * Note that "polymorph" is dangerous, since a failure in "place_monster()"'
- * may result in a dereference of an invalid pointer.  XXX XXX XXX
+ * may result in a dereference of an invalid pointer. XXX XXX XXX
  *
  * Various messages are produced, and damage is applied.
  *
@@ -1804,7 +1804,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
  * to plasma.
  *
  * We assume "Nether" is an evil, necromantic force, so it doesn't hurt undead,
- * and hurts evil less.  If can breath nether, then it resists it as well.
+ * and hurts evil less. If can breath nether, then it resists it as well.
  *
  * Damage reductions use the following formulas:
  *   Note that "dam = dam * 6 / (randint1(6) + 6);"
@@ -1819,8 +1819,8 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
  *     gives something simple.
  *
  * In this function, "result" messages are postponed until the end, where
- * the "note" string is appended to the monster name, if not NULL.  So,
- * to make a spell have "no effect" just set "note" to NULL.  You should
+ * the "note" string is appended to the monster name, if not NULL. So,
+ * to make a spell have "no effect" just set "note" to NULL. You should
  * also set "notice" to FALSE, or the player will learn what the spell does.
  *
  * We attempt to return "TRUE" if the player saw anything "useful" happen.
@@ -6354,17 +6354,17 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
  * Handle a beam/bolt/ball causing damage to the player.
  *
  * This routine takes a "source monster" (by index), a "distance", a default
- * "damage", and a "damage type".  See "project_m()" above.
+ * "damage", and a "damage type". See "project_m()" above.
  *
  * If "rad" is non-zero, then the blast was centered elsewhere, and the damage
- * is reduced (see "project_m()" above).  This can happen if a monster breathes
+ * is reduced (see "project_m()" above). This can happen if a monster breathes
  * at the player and hits a wall instead.
  *
  * NOTE (Zangband): 'Bolt' attacks can be reflected back, so we need
  * to know if this is actually a ball or a bolt spell
  *
  *
- * We return "TRUE" if any "obvious" effects were observed.  XXX XXX Actually,
+ * We return "TRUE" if any "obvious" effects were observed. XXX XXX Actually,
  * we just assume that the effects were obvious, for historical reasons.
  */
 static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int typ, int flg, int monspell)
@@ -7791,7 +7791,7 @@ void breath_shape(u16b *path_g, int dist, int *pgrids, byte *gx, byte *gy, byte 
  * Bolts and Beams explode INSIDE walls, so that they can destroy doors.
  *
  * Balls must explode BEFORE hitting walls, or they would affect monsters
- * on both sides of a wall.  Some bug reports indicate that this is still
+ * on both sides of a wall. Some bug reports indicate that this is still
  * happening in 2.7.8 for Windows, though it appears to be impossible.
  *
  * We "pre-calculate" the blast area only in part for efficiency.
@@ -7813,7 +7813,7 @@ void breath_shape(u16b *path_g, int dist, int *pgrids, byte *gx, byte *gy, byte 
  * This allows walls to be removed before checking the object or monster
  * in the wall, and protects objects which are dropped by monsters killed
  * in the blast, and allows the player to see all affects before he is
- * killed or teleported away.  The semantics of this method are open to
+ * killed or teleported away. The semantics of this method are open to
  * various interpretations, but they seem to work well in practice.
  *
  * We process the blast area from ground-zero outwards to allow for better
@@ -7823,7 +7823,7 @@ void breath_shape(u16b *path_g, int dist, int *pgrids, byte *gx, byte *gy, byte 
  * Note that the damage done by "ball" explosions decreases with distance.
  * This decrease is rapid, grids at radius "dist" take "1/dist" damage.
  *
- * Notice the "napalm" effect of "beam" weapons.  First they "project" to
+ * Notice the "napalm" effect of "beam" weapons. First they "project" to
  * the target, and then the damage "flows" along this beam of destruction.
  * The damage at every grid is the same as at the "center" of a "ball"
  * explosion, since the "beam" grids are treated as if they ARE at the
@@ -7832,19 +7832,19 @@ void breath_shape(u16b *path_g, int dist, int *pgrids, byte *gx, byte *gy, byte 
  * Currently, specifying "beam" plus "ball" means that locations which are
  * covered by the initial "beam", and also covered by the final "ball", except
  * for the final grid (the epicenter of the ball), will be "hit twice", once
- * by the initial beam, and once by the exploding ball.  For the grid right
- * next to the epicenter, this results in 150% damage being done.  The center
+ * by the initial beam, and once by the exploding ball. For the grid right
+ * next to the epicenter, this results in 150% damage being done. The center
  * does not have this problem, for the same reason the final grid in a "beam"
- * plus "bolt" does not -- it is explicitly removed.  Simply removing "beam"
+ * plus "bolt" does not -- it is explicitly removed. Simply removing "beam"
  * grids which are covered by the "ball" will NOT work, as then they will
- * receive LESS damage than they should.  Do not combine "beam" with "ball".
+ * receive LESS damage than they should. Do not combine "beam" with "ball".
  *
  * The array "gy[],gx[]" with current size "grids" is used to hold the
  * collected locations of all grids in the "blast area" plus "beam path".
  *
- * Note the rather complex usage of the "gm[]" array.  First, gm[0] is always
- * zero.  Second, for N>1, gm[N] is always the index (in gy[],gx[]) of the
- * first blast grid (see above) with radius "N" from the blast center.  Note
+ * Note the rather complex usage of the "gm[]" array. First, gm[0] is always
+ * zero. Second, for N>1, gm[N] is always the index (in gy[],gx[]) of the
+ * first blast grid (see above) with radius "N" from the blast center. Note
  * that only the first gm[1] grids in the blast area thus take full damage.
  * Also, note that gm[rad+1] is always equal to "grids", which is the total
  * number of blast grids.
@@ -7854,16 +7854,16 @@ void breath_shape(u16b *path_g, int dist, int *pgrids, byte *gx, byte *gy, byte 
  *
  * Note also that "rad" specifies the "inclusive" radius of projection blast,
  * so that a "rad" of "one" actually covers 5 or 9 grids, depending on the
- * implementation of the "distance" function.  Also, a bolt can be properly
+ * implementation of the "distance" function. Also, a bolt can be properly
  * viewed as a "ball" with a "rad" of "zero".
  *
  * Note that if no "target" is reached before the beam/bolt/ball travels the
- * maximum distance allowed (MAX_RANGE), no "blast" will be induced.  This
+ * maximum distance allowed (MAX_RANGE), no "blast" will be induced. This
  * may be relevant even for bolts, since they have a "1x1" mini-blast.
  *
  * Note that for consistency, we "pretend" that the bolt actually takes "time"
  * to move from point A to point B, even if the player cannot see part of the
- * projection path.  Note that in general, the player will *always* see part
+ * projection path. Note that in general, the player will *always* see part
  * of the path, since it either starts at the player or ends on the player.
  *
  * Hack -- we assume that every "projection" is "self-illuminating".
@@ -7872,7 +7872,7 @@ void breath_shape(u16b *path_g, int dist, int *pgrids, byte *gx, byte *gy, byte 
  * (and recall) that monster, unless "PROJECT_JUMP" is used.
  *
  * Note that all projections now "explode" at their final destination, even
- * if they were being projected at a more distant destination.  This means
+ * if they were being projected at a more distant destination. This means
  * that "ball" spells will *always* explode.
  *
  * Note that we must call "handle_stuff()" after affecting terrain features
@@ -8787,7 +8787,7 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
                  */
                 /*
                  * A beam or bolt will hit either
-                 * player or mount.  Choose randomly.
+                 * player or mount. Choose randomly.
                  */
                 else if (flg & (PROJECT_BEAM | PROJECT_REFLECTABLE))
                 {

@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: effects of various "objects" */
@@ -1638,7 +1638,7 @@ bool set_tim_no_device(int v, bool do_dec)
     {
         if (!p_ptr->tim_no_device)
         {
-        /*  Hack: No message.  This always comes with tim_no_spells as an added evil effect */ 
+        /*  Hack: No message. This always comes with tim_no_spells as an added evil effect */ 
         /*    msg_print("You feel surrounded by powerful antimagic."); */
             notice = TRUE;
         }
@@ -1648,7 +1648,7 @@ bool set_tim_no_device(int v, bool do_dec)
     {
         if (p_ptr->tim_no_device)
         {
-        /*  Hack: No message.  This always comes with tim_no_spells as an added evil effect */ 
+        /*  Hack: No message. This always comes with tim_no_spells as an added evil effect */ 
         /*    msg_print("You feel the antimagic forces leave you."); */
             notice = TRUE;
         }
@@ -4076,7 +4076,7 @@ bool set_tsuyoshi(int v, bool do_dec)
 
 
 /*
- * Set a temporary elemental brand.  Clear all other brands.  Print status 
+ * Set a temporary elemental brand. Clear all other brands. Print status 
  * messages. -LM-
  */
 bool set_ele_attack(u32b attack_type, int v)
@@ -4145,7 +4145,7 @@ bool set_ele_attack(u32b attack_type, int v)
 
 
 /*
- * Set a temporary elemental brand.  Clear all other brands.  Print status 
+ * Set a temporary elemental brand. Clear all other brands. Print status 
  * messages. -LM-
  */
 bool set_ele_immune(u32b immune_type, int v)
@@ -4905,7 +4905,7 @@ bool set_cut(int v, bool do_dec)
  * 7500 food units, without overflowing the 32767 maximum limit.
  *
  * Perhaps we should disturb the player with various messages,
- * especially messages about hunger status changes.  XXX XXX XXX
+ * especially messages about hunger status changes. XXX XXX XXX
  *
  * Digestion of food is handled in "dungeon.c", in which, normally,
  * the player digests about 20 food units per 100 game turns, more
@@ -5205,10 +5205,10 @@ bool inc_stat(int stat)
  * Decreases a stat by an amount indended to vary from 0 to 100 percent.
  *
  * Amount could be a little higher in extreme cases to mangle very high
- * stats from massive assaults.  -CWS
+ * stats from massive assaults. -CWS
  *
  * Note that "permanent" means that the *given* amount is permanent,
- * not that the new value becomes permanent.  This may not work exactly
+ * not that the new value becomes permanent. This may not work exactly
  * as expected, due to "weirdness" in the algorithm, but in general,
  * if your stat is already drained, the "max" value will not drop all
  * the way down to the "cur" value.
@@ -5328,7 +5328,7 @@ bool dec_stat(int stat, int amount, int permanent)
 
 
 /*
- * Restore a stat.  Return TRUE only if this actually makes a difference.
+ * Restore a stat. Return TRUE only if this actually makes a difference.
  */
 bool res_stat(int stat)
 {
@@ -6109,7 +6109,7 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
     p_ptr->window |= (PW_PLAYER);
 
     /* This might slow things down a bit ... 
-       But, Blood Knight power varies with hp.  */
+       But, Blood Knight power varies with hp. */
     if (p_ptr->pclass == CLASS_BLOOD_KNIGHT)
         p_ptr->update |= (PU_BONUS);
 

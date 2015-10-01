@@ -506,7 +506,7 @@ void pattern_mindwalk_spell(int cmd, variant *res)
         var_set_string(res, "Pattern Mindwalking");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Walk the pattern in your mind.  Restores life and stats.");
+        var_set_string(res, "Walk the pattern in your mind. Restores life and stats.");
         break;
     case SPELL_CAST:
         msg_print("You picture the Pattern in your mind and walk it...");
@@ -785,7 +785,7 @@ void polymorph_self_spell(int cmd, variant *res)
         var_set_string(res, "Polymorph");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Mutates yourself.  This can be dangerous!");
+        var_set_string(res, "Mutates yourself. This can be dangerous!");
         break;
     case SPELL_GAIN_MUT:
         msg_print("Your body seems mutable.");
@@ -872,7 +872,7 @@ void protection_from_evil_spell(int cmd, variant *res)
         var_set_string(res, "Protection from Evil");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Attempts to prevent evil monsters from attacking you.  When a weak evil monster melees you, it may be repelled by the forces of good.");
+        var_set_string(res, "Attempts to prevent evil monsters from attacking you. When a weak evil monster melees you, it may be repelled by the forces of good.");
         break;
     case SPELL_CAST:
         set_protevil(randint1(3 * p_ptr->lev) + 25, FALSE);
@@ -1091,7 +1091,7 @@ void remove_curse_II_spell(int cmd, variant *res)
         var_set_string(res, "*Remove Curse*");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Uncurses an item so that you may remove it.  Even heavily cursed items can be removed.");
+        var_set_string(res, "Uncurses an item so that you may remove it. Even heavily cursed items can be removed.");
         break;
     case SPELL_CAST:
         if (remove_all_curse())

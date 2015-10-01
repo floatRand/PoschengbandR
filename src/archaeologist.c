@@ -5,9 +5,9 @@
 #include "angband.h"
 #include "equip.h"
 
-/* Confirm 1 or 2 whip weapons for whip techniques.  Fail if no whip
-   is worn, or if a non-whip weapon is warn.  Do not fail if shields
-   or capture balls are equipped.  Handle empty inventory slots. */
+/* Confirm 1 or 2 whip weapons for whip techniques. Fail if no whip
+   is worn, or if a non-whip weapon is warn. Do not fail if shields
+   or capture balls are equipped. Handle empty inventory slots. */
 static bool _whip_check(void)
 {
     bool result = FALSE;
@@ -451,22 +451,22 @@ static void _first_aid_spell(int cmd, variant *res)
         if (p_ptr->lev < 8)
             var_set_string(res, "Heals HP and Stun.");
         else if (p_ptr->lev < 12)
-            var_set_string(res, "Heals HP and Stun.  Cures cuts.");
+            var_set_string(res, "Heals HP and Stun. Cures cuts.");
         else if (p_ptr->lev < 16)
-            var_set_string(res, "Heals HP and Stun.  Cures cuts and slows poison.");
+            var_set_string(res, "Heals HP and Stun. Cures cuts and slows poison.");
         else if (p_ptr->lev < 20)
-            var_set_string(res, "Heals HP and Stun.  Cures cuts and poison.");
+            var_set_string(res, "Heals HP and Stun. Cures cuts and poison.");
         else if (p_ptr->lev < 30)
-            var_set_string(res, "Heals HP and Stun.  Cures cuts, poison and blindness.");
+            var_set_string(res, "Heals HP and Stun. Cures cuts, poison and blindness.");
         else if (p_ptr->lev < 40)
-            var_set_string(res, "Heals HP and Stun.  Cures cuts, poison and blindness.  Restores Con.");
+            var_set_string(res, "Heals HP and Stun. Cures cuts, poison and blindness. Restores Con.");
         else if (p_ptr->lev < 45)
-            var_set_string(res, "Heals HP and Stun.  Cures cuts, poison and blindness.  Restores Con and Chr.");
+            var_set_string(res, "Heals HP and Stun. Cures cuts, poison and blindness. Restores Con and Chr.");
         else
-            var_set_string(res, "Heals HP and Stun.  Cures cuts, poison and blindness.  Restores Con, Chr and Str.");
+            var_set_string(res, "Heals HP and Stun. Cures cuts, poison and blindness. Restores Con, Chr and Str.");
         break;
     case SPELL_SPOIL_DESC:
-        var_set_string(res, "Heals HP and Stun.  Slows Poison (L12).  Cures cuts (L8), poison (L16) and blindness (L20).  Restores Con (L30), Chr (L40) and Str (L45).");
+        var_set_string(res, "Heals HP and Stun. Slows Poison (L12). Cures cuts (L8), poison (L16) and blindness (L20). Restores Con (L30), Chr (L40) and Str (L45).");
         break;
     case SPELL_INFO:
         var_set_string(res, info_heal(0, 0, spell_power(p_ptr->lev)));
@@ -715,7 +715,7 @@ static spell_info _spells[] =
     { 35,  80, 70, _ancient_protection_spell },
     { 40, 150, 80, polish_shield_spell },
     { 42,  30, 50, _evacuation_spell },
-    { 45,  50, 75, _pharaohs_curse_spell }, /* No wizardstaff.  No spell skills! So, 3% best possible fail.*/
+    { 45,  50, 75, _pharaohs_curse_spell }, /* No wizardstaff. No spell skills! So, 3% best possible fail.*/
     { -1,  -1, -1, NULL }
 };
 

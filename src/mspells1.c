@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Monster spells (attack player) */
@@ -24,15 +24,15 @@
  * the monster to "cheat" and know the player status.
  *
  * Maintain an idea of the player status, and use that information
- * to occasionally eliminate "ineffective" spell attacks.  We could
+ * to occasionally eliminate "ineffective" spell attacks. We could
  * also eliminate ineffective normal attacks, but there is no reason
  * for the monster to do this, since he gains no benefit.
  * Note that MINDLESS monsters are not allowed to use this code.
  * And non-INTELLIGENT monsters only use it partially effectively.
  *
  * Actually learn what the player resists, and use that information
- * to remove attacks or spells before using them.  This will require
- * much less space, if I am not mistaken.  Thus, each monster gets a
+ * to remove attacks or spells before using them. This will require
+ * much less space, if I am not mistaken. Thus, each monster gets a
  * set of 32 bit flags, "smart", build from the various "SM_*" flags.
  *
  * This has the added advantage that attacks and spells are related.
@@ -1022,9 +1022,9 @@ bool dispel_check(int m_idx)
  *
  * Note that this list does NOT include spells that will just hit
  * other monsters, and the list is restricted when the monster is
- * "desperate".  Should that be the job of this function instead?
+ * "desperate". Should that be the job of this function instead?
  *
- * Stupid monsters will just pick a spell randomly.  Smart monsters
+ * Stupid monsters will just pick a spell randomly. Smart monsters
  * will choose more "intelligently".
  *
  * Use the helper functions above to put spells into categories.
@@ -1356,7 +1356,7 @@ static bool adjacent_grid_check(monster_type *m_ptr, int *yp, int *xp,
  * Verify the various "blind-ness" checks in the code.
  *
  * XXX XXX XXX Note that several effects should really not be "seen"
- * if the player is blind.  See also "effects.c" for other "mistakes".
+ * if the player is blind. See also "effects.c" for other "mistakes".
  *
  * Perhaps monsters should breathe at locations *near* the player,
  * since this would allow them to inflict "partial" damage.
@@ -1377,23 +1377,23 @@ static bool adjacent_grid_check(monster_type *m_ptr, int *yp, int *xp,
  * the player, but which in fact is nowhere near the player, since this
  * might induce all sorts of messages about the attack itself, and about
  * the effects of the attack, which the player might or might not be in
- * a position to observe.  Thus, for simplicity, it is probably best to
+ * a position to observe. Thus, for simplicity, it is probably best to
  * only allow "faulty" attacks by a monster if one of the important grids
  * (probably the initial or final grid) is in fact in view of the player.
  * It may be necessary to actually prevent spell attacks except when the
- * monster actually has line of sight to the player.  Note that a monster
+ * monster actually has line of sight to the player. Note that a monster
  * could be left in a bizarre situation after the player ducked behind a
  * pillar and then teleported away, for example.
  *
  * Note that certain spell attacks do not use the "project()" function
  * but "simulate" it via the "direct" variable, which is always at least
- * as restrictive as the "project()" function.  This is necessary to
+ * as restrictive as the "project()" function. This is necessary to
  * prevent "blindness" attacks and such from bending around walls, etc,
  * and to allow the use of the "track_target" option in the future.
  *
  * Note that this function attempts to optimize the use of spells for the
  * cases in which the monster has no spells, or has spells but cannot use
- * them, or has spells but they will have no "useful" effect.  Note that
+ * them, or has spells but they will have no "useful" effect. Note that
  * this function has been an efficiency bottleneck in the past.
  *
  * Note the special "MFLAG_NICE" flag, which prevents a monster from using
@@ -3319,7 +3319,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             msg_format("%^s commands you to return.", m_name);
 
             /* Only powerful monsters can choose this spell when the player is not in 
-               los.  In this case, it is nasty enough to warrant a saving throw. */
+               los. In this case, it is nasty enough to warrant a saving throw. */
             if (!projectable(m_ptr->fy, m_ptr->fx, py, px) 
               && randint1(100) <= duelist_skill_sav(m_idx) - r_ptr->level/2 )
             {
@@ -3349,7 +3349,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
               && p_ptr->duelist_target_idx == m_idx
               && p_ptr->lev >= 30 )
             {
-                if (get_check(format("%^s is attempting to teleport you.  Prevent? ", m_name)))
+                if (get_check(format("%^s is attempting to teleport you. Prevent? ", m_name)))
                 {
                     if (one_in_(3))
                         msg_print("Failed!");

@@ -124,7 +124,7 @@ void _blood_shield_spell(int cmd, variant *res)
         var_set_string(res, "Blood Shield");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Gives bonus to AC depending on how wounded you are.  Grants reflection if you are really hurting.");
+        var_set_string(res, "Gives bonus to AC depending on how wounded you are. Grants reflection if you are really hurting.");
         break;
 
     case SPELL_SPOIL_DESC:
@@ -175,7 +175,7 @@ void _blood_rage_spell(int cmd, variant *res)
         var_set_string(res, "Blood Rage");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Enter a blood frenzy.  Gives speed and big bonuses to hit and damage.");
+        var_set_string(res, "Enter a blood frenzy. Gives speed and big bonuses to hit and damage.");
         break;
     case SPELL_SPOIL_DESC:
         var_set_string(res, "For L/2+d(L/2) rounds, player is hasted and berserk.");
@@ -236,7 +236,7 @@ void _blood_revenge_spell(int cmd, variant *res)
         var_set_string(res, "Blood Revenge");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Gives an aura of bloody revenge.  Monsters take damaged based on your cut status.");
+        var_set_string(res, "Gives an aura of bloody revenge. Monsters take damaged based on your cut status.");
         break;
     case SPELL_SPOIL_DESC:
         var_set_string(res, "For 5+d5 rounds, any foe that does X melee damage to the player takes X*C/100 damage in revenge, where C is the player's current cut status. However, this retaliatory damage is bounded between C/10 and 50 per strike.");
@@ -291,7 +291,7 @@ void _blood_pool_spell(int cmd, variant *res)
 
         if (ct >= 30)
         {
-            msg_print("You have too many blood potions at the moment.  Why not drink some?");
+            msg_print("You have too many blood potions at the moment. Why not drink some?");
             var_set_bool(res, FALSE);
             return;
         }

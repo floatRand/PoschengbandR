@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Spell code (part 3) */
@@ -452,7 +452,7 @@ void teleport_player(int dis, u32b mode)
                 monster_type *m_ptr = &m_list[tmp_m_idx];
                 monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
-                /* Hack: Duelist Disengage.  Marked foe can never follow */
+                /* Hack: Duelist Disengage. Marked foe can never follow */
                 if ((mode & TELEPORT_DISENGAGE) && tmp_m_idx == p_ptr->duelist_target_idx)
                     continue;
 
@@ -1877,12 +1877,12 @@ static void break_curse(object_type *o_ptr)
  * Enchants a plus onto an item. -RAK-
  *
  * Revamped!  Now takes item pointer, number of times to try enchanting,
- * and a flag of what to try enchanting.  Artifacts resist enchantment
+ * and a flag of what to try enchanting. Artifacts resist enchantment
  * some of the time, and successful enchantment to at least +0 might
  * break a curse on the item. -CFT-
  *
  * Note that an item can technically be enchanted all the way to +15 if
- * you wait a very, very, long time.  Going from +9 to +10 only works
+ * you wait a very, very, long time. Going from +9 to +10 only works
  * about 5% of the time, and from +10 to +11 only about 1% of the time.
  *
  * Note that this function can now be used on "piles" of items, and
@@ -3527,7 +3527,7 @@ void print_spells(int target_spell, byte *spells, int num, int y, int x, int use
 
 /*
  * Note that amulets, rods, and high-level spell books are immune
- * to "inventory damage" of any kind.  Also sling ammo and shovels.
+ * to "inventory damage" of any kind. Also sling ammo and shovels.
  */
 
 

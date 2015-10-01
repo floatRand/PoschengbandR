@@ -767,7 +767,7 @@ static void _psionic_clarity_spell(int power, int cmd, variant *res)
         var_set_string(res, format("Clarity %s", _roman_numeral[power]));
         break;
     case SPELL_DESC:
-        var_set_string(res, "For the duration of this power, you gain increased mental focus.  Your psionic powers become cheaper to cast.");
+        var_set_string(res, "For the duration of this power, you gain increased mental focus. Your psionic powers become cheaper to cast.");
         break;
     case SPELL_INFO:
         var_set_string(res, format("Costs: %d%%", 85-7*power));
@@ -1134,9 +1134,9 @@ static void _psionic_seeing_spell(int power, int cmd, variant *res)
         const cptr _descriptions[_MAX_POWER] = {
             "Detects monsters.", 
             "Detects monsters, doors, stairs, traps and objects.",
-            "Detects monsters, doors, stairs, traps and objects.  Maps nearby area.",
-            "Detects monsters, doors, stairs, traps and objects.  Maps nearby area and grants temporary telepathy.",
-            "Detects monsters, doors, stairs, traps and objects.  Maps entire level and grants temporary telepathy.",
+            "Detects monsters, doors, stairs, traps and objects. Maps nearby area.",
+            "Detects monsters, doors, stairs, traps and objects. Maps nearby area and grants temporary telepathy.",
+            "Detects monsters, doors, stairs, traps and objects. Maps entire level and grants temporary telepathy.",
             };
         var_set_string(res, _descriptions[power-1]);
         break;
@@ -1834,7 +1834,7 @@ static void _study(int level)
             for (t = desc, j = 0; t[0]; t += strlen(t) + 1, j++)
                 prt(t, 2+j, 13);
 
-            sprintf(prompt, "You will learn %s.  Are you sure?", spell->name);
+            sprintf(prompt, "You will learn %s. Are you sure?", spell->name);
             if (get_check(prompt))
             {
                 screen_load();

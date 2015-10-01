@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Object commands */
@@ -22,25 +22,25 @@
  *
  * In all cases, if the player becomes "aware" of the item's use
  * by testing it, mark it as "aware" and reward some experience
- * based on the object's level, always rounding up.  If the player
+ * based on the object's level, always rounding up. If the player
  * remains "unaware", mark that object "kind" as "tried".
  *
  * This code now correctly handles the unstacking of wands, staffs,
- * and rods.  Note the overly paranoid warning about potential pack
+ * and rods. Note the overly paranoid warning about potential pack
  * overflow, which allows the player to use and drop a stacked item.
  *
  * In all "unstacking" scenarios, the "used" object is "carried" as if
- * the player had just picked it up.  In particular, this means that if
+ * the player had just picked it up. In particular, this means that if
  * the use of an item induces pack overflow, that item will be dropped.
  *
  * For simplicity, these routines induce a full "pack reorganization"
  * which not only combines similar items, but also reorganizes various
- * items to obey the current "sorting" method.  This may require about
+ * items to obey the current "sorting" method. This may require about
  * 400 item comparisons, but only occasionally.
  *
  * There may be a BIG problem with any "effect" that can cause "changes"
- * to the inventory.  For example, a "scroll of recharging" can cause
- * a wand/staff to "disappear", moving the inventory up.  Luckily, the
+ * to the inventory. For example, a "scroll of recharging" can cause
+ * a wand/staff to "disappear", moving the inventory up. Luckily, the
  * scrolls all appear BEFORE the staffs/wands, so this is not a problem.
  * But, for example, a "staff of recharging" could cause MAJOR problems.
  * In such a case, it will be best to either (1) "postpone" the effect
@@ -441,7 +441,7 @@ static void do_cmd_eat_food_aux(int item)
 
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
-        msg_format("%^s is burnt to ashes.  You absorb its vitality!", o_name);
+        msg_format("%^s is burnt to ashes. You absorb its vitality!", o_name);
         (void)set_food(PY_FOOD_MAX - 1);
     }
     else if (prace_is_(RACE_SKELETON))
@@ -842,9 +842,9 @@ void do_cmd_quaff_potion(void)
 /*
  * Read a scroll (from the pack or floor).
  *
- * Certain scrolls can be "aborted" without losing the scroll.  These
+ * Certain scrolls can be "aborted" without losing the scroll. These
  * include scrolls with no effects but recharge or identify, which are
- * cancelled before use.  XXX Reading them still takes a turn, though.
+ * cancelled before use. XXX Reading them still takes a turn, though.
  */
 static void do_cmd_read_scroll_aux(int item, bool known)
 {
@@ -1517,12 +1517,12 @@ static void _do_capture_ball(object_type *o_ptr)
             }
         }
         if (!success)
-            msg_print("Oops.  You failed to release your pet.");
+            msg_print("Oops. You failed to release your pet.");
     }
 }
 
 /*
- * Activate a wielded object.  Wielded objects never stack.
+ * Activate a wielded object. Wielded objects never stack.
  * And even if they did, activatable objects never stack.
  *
  * Currently, only (some) artifacts, and Dragon Scale Mail, can be activated.

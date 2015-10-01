@@ -295,7 +295,7 @@ static void _crusaders_strike_spell(int cmd, variant *res)
         var_set_string(res, "Crusaders Strike");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Attack an adjacent opponent with a single blow.  You regain hp.");
+        var_set_string(res, "Attack an adjacent opponent with a single blow. You regain hp.");
         break;
     case SPELL_CAST:
         var_set_bool(res, _do_blow(WEAPONMASTER_CRUSADERS_STRIKE));
@@ -967,7 +967,7 @@ static void _trade_blows_spell(int cmd, variant *res)
         var_set_string(res, "Trade Blows");
         break;
     case SPELL_DESC:
-        var_set_string(res, "When using this technique, you are somewhat exposed.  However, you will retaliate whenever a monster hits you.");
+        var_set_string(res, "When using this technique, you are somewhat exposed. However, you will retaliate whenever a monster hits you.");
         break;
     default:
         _toggle_spell(TOGGLE_TRADE_BLOWS, cmd, res);
@@ -1432,7 +1432,7 @@ static void _flying_dagger_spell(int cmd, variant *res)
         var_set_string(res, "Flying Dagger Stance");
         break;
     case SPELL_DESC:
-        var_set_string(res, "When using this technique, you gain great prowess with the Dagger Toss.  Thrown weapons return more often and damage is greatly increased.  However, this stance leaves you somewhat exposed to your enemies.");
+        var_set_string(res, "When using this technique, you gain great prowess with the Dagger Toss. Thrown weapons return more often and damage is greatly increased. However, this stance leaves you somewhat exposed to your enemies.");
         break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);
@@ -1486,7 +1486,7 @@ static void _frenzy_spell(int cmd, variant *res)
         var_set_string(res, "Frenzy Stance");
         break;
     case SPELL_DESC:
-        var_set_string(res, "In this posture, you attack foes with great power in melee.  However, your rage exposes you to your enemies!");
+        var_set_string(res, "In this posture, you attack foes with great power in melee. However, your rage exposes you to your enemies!");
         break;
     default:
         _toggle_spell(TOGGLE_FRENZY_STANCE, cmd, res);
@@ -1502,7 +1502,7 @@ static void _shadow_stance_spell(int cmd, variant *res)
         var_set_string(res, "Shadow Stance");
         break;
     case SPELL_DESC:
-        var_set_string(res, "When using this technique, you walk quickly and stealthily.  On attacking a foe, you will swap positions.");
+        var_set_string(res, "When using this technique, you walk quickly and stealthily. On attacking a foe, you will swap positions.");
         break;
     default:
         _toggle_spell(TOGGLE_SHADOW_STANCE, cmd, res);
@@ -2068,7 +2068,7 @@ static void _bouncing_pebble_spell(int cmd, variant *res)
         var_set_string(res, "Bouncing Pebble");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires a pebble or shot at an opponent.  If you hit, the pebble or shot will ricochet in a random direction.");
+        var_set_string(res, "Fires a pebble or shot at an opponent. If you hit, the pebble or shot will ricochet in a random direction.");
         break;
     default:
         _fire_spell(SHOOT_BOUNCE, cmd, res);
@@ -2137,7 +2137,7 @@ static void _many_shot_spell(int cmd, variant *res)
         var_set_string(res, "Many Shot");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires pebbles at all visible monsters.  You need to have a direct line of fire to each target, though.");
+        var_set_string(res, "Fires pebbles at all visible monsters. You need to have a direct line of fire to each target, though.");
         break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);
@@ -2463,7 +2463,7 @@ static void _circle_kick_spell(int cmd, variant *res)
         var_set_string(res, "Circle Kick");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Kicks all adjacent opponents, stunning them.  Damage depends on your boots!");
+        var_set_string(res, "Kicks all adjacent opponents, stunning them. Damage depends on your boots!");
         break;
     case SPELL_INFO:
     {
@@ -2745,7 +2745,7 @@ static void _wild_blade_spell(int cmd, variant *res)
         var_set_string(res, "Wild Blade");
         break;
     case SPELL_DESC:
-        var_set_string(res, "This is too crazy to describe.  You wouldn't believe me anyway!");
+        var_set_string(res, "This is too crazy to describe. You wouldn't believe me anyway!");
         break;
     default:
         _toggle_spell(TOGGLE_WILD_BLADE, cmd, res);
@@ -2936,7 +2936,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { TV_SWORD, SV_DAGGER },
     },
     { "Polearms",
-        "You don a grim face before setting out to reap your harvest of death.  You will swing "
+        "You don a grim face before setting out to reap your harvest of death. You will swing "
         "your weapon wide often affecting multiple surrounding opponents.",
         _WEAPONMASTER_MELEE,
         { 
@@ -3014,7 +3014,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         },
         { "Staves",
           "Monkey King!  You will battle opponents with a flurry of blows from your mighty "
-          "staff.  You may eventually clone yourself at great cost.",
+          "staff. You may eventually clone yourself at great cost.",
           _WEAPONMASTER_MELEE,
           { 
             { TV_HAFTED, SV_BO_STAFF },
@@ -3077,7 +3077,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { TV_SWORD, SV_LONG_SWORD } ,
     },
     { "Diggers",
-      "A master of digging.  You prefer rocky enclosures and don't mind "
+      "A master of digging. You prefer rocky enclosures and don't mind "
       "lugging around a corpse or two.",
       _WEAPONMASTER_MELEE,
       { 
@@ -3216,7 +3216,7 @@ static int _get_spells(spell_info* spells, int max)
     }
 
     if (ct == 0)
-        msg_print("You need more experience.  Why not kill something?");
+        msg_print("You need more experience. Why not kill something?");
 
     return ct;
 }
@@ -3295,7 +3295,7 @@ void weaponmaster_adjust_skills(void)
     int i, j;
     _object_kind kind;
 
-    /* Fix up skills for Speciality.  This needs to be called every time the game is loaded! */
+    /* Fix up skills for Speciality. This needs to be called every time the game is loaded! */
     /* Bang everything in class (melee, bows, shields) down to unskilled max */
     switch (_specialities[p_ptr->psubclass].kind)
     {
@@ -3311,7 +3311,7 @@ void weaponmaster_adjust_skills(void)
         break;
 
     case _WEAPONMASTER_SHIELDS:
-        /* TODO: We do not keep skills for shields.  Probably never will, either ... */
+        /* TODO: We do not keep skills for shields. Probably never will, either ... */
         break;
     }
 
@@ -3944,9 +3944,9 @@ static void _move_player(void)
 
         for (i = 0; i < num_shots; i++)
         {
-            /* End the technique when the ammo runs out.   Note that "return ammo"
-               might not consume the current shot.  Note that we will intentionally spill
-               over into the next stack of shots, provided they are legal for this shooter.  */
+            /* End the technique when the ammo runs out.  Note that "return ammo"
+               might not consume the current shot. Note that we will intentionally spill
+               over into the next stack of shots, provided they are legal for this shooter. */
             if (shoot_item != INVEN_UNLIMITED_QUIVER)
             {
                 if (inventory[shoot_item].tval != p_ptr->shooter_info.tval_ammo)
@@ -3957,7 +3957,7 @@ static void _move_player(void)
                     shoot_item = _find_ammo_slot();
                     if (shoot_item < 0)
                     {
-                        msg_print("Your ammo has run out.  Time to reload!");
+                        msg_print("Your ammo has run out. Time to reload!");
                         _set_toggle(TOGGLE_NONE);
                         return;
                     }

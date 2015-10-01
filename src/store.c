@@ -5,7 +5,7 @@
  *
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.  Other copyrights may also apply.
+ * are included in all such copies. Other copyrights may also apply.
  */
 
 /* Purpose: Store commands */
@@ -300,7 +300,7 @@ static void store_object_absorb(object_type *o_ptr, object_type *j_ptr)
 /*
  * Check to see if the shop will be carrying too many objects    -RAK-
  * Note that the shop, just like a player, will not accept things
- * it cannot hold.    Before, one could "nuke" potions this way.
+ * it cannot hold.   Before, one could "nuke" potions this way.
  *
  * Return value is now int:
  *  0 : No space
@@ -864,7 +864,7 @@ static int home_carry(object_type *o_ptr)
  * If the item is "worthless", it is thrown away (except in the home).
  *
  * If the item cannot be combined with an object already in the inventory,
- * make a new slot for it, and calculate its "per item" price.    Note that
+ * make a new slot for it, and calculate its "per item" price.   Note that
  * this price will be negative, since the price will not be "fixed" yet.
  * Adding an item to a "fixed" price stack will not change the fixed price.
  *
@@ -961,7 +961,7 @@ static int store_carry(object_type *o_ptr)
 
 /*
  * Increase, by a given amount, the number of a certain item
- * in a certain store.    This can result in zero items.
+ * in a certain store.   This can result in zero items.
  */
 static void store_item_increase(int item, int num)
 {
@@ -1678,7 +1678,7 @@ static void display_entry(int pos)
 
 /*
  * Displays a store's inventory         -RAK-
- * All prices are listed as "per individual object".  -BEN-
+ * All prices are listed as "per individual object". -BEN-
  */
 static void display_inventory(void)
 {

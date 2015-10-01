@@ -19,7 +19,7 @@
  *
  * Part of this file provides a user interface package composed of several
  * pseudo-objects, including "metadpy" (a display), "infowin" (a window),
- * "infoclr" (a color), and "infofnt" (a font).  Actually, the package was
+ * "infoclr" (a color), and "infofnt" (a font). Actually, the package was
  * originally much more interesting, but it was bastardized to keep this
  * file simple.
  *
@@ -33,7 +33,7 @@
  * it was extracted into "~/Angband", and compiled using "USE_X11", on a
  * Linux machine, with a 1280x1024 screen, using 6 windows (with the given
  * characteristics), with gamma correction of 1.8 -> (1 / 1.8) * 256 = 142,
- * and without graphics (add "-g" for graphics).  Just copy this comment
+ * and without graphics (add "-g" for graphics). Just copy this comment
  * into a file, remove the leading " * " characters (and the head/tail of
  * this comment), and make the file executable.
  * 
@@ -133,7 +133,7 @@ extern void usleep(int);
  *
  *   1) On a monochrome (or "fake-monochrome") display, all colors
  *   will be "cast" to "fg," except for the bg color, which is,
- *   obviously, cast to "bg".  Thus, one can ignore this setting.
+ *   obviously, cast to "bg". Thus, one can ignore this setting.
  *
  *   2) Because of the inner functioning of the color allocation
  *   routines, colors may be specified as (a) a typical color name,
@@ -141,7 +141,7 @@ extern void usleep(int);
  *   or (c) by strings such as "fg", "bg", "zg".
  *
  *   3) Due to the workings of the init routines, many colors
- *   may also be dealt with by their actual pixel values.  Note that
+ *   may also be dealt with by their actual pixel values. Note that
  *   the pixel with all bits set is "zg = (1<<metadpy->depth)-1", which
  *   is not necessarily either black or white.
  */
@@ -527,7 +527,7 @@ static errr Metadpy_init_2(Display *dpy, cptr name)
 	m->bg = m->black;
 	m->fg = m->white;
 
-	/* Calculate the Maximum allowed Pixel value.  */
+	/* Calculate the Maximum allowed Pixel value. */
 	m->zg = (1 << m->depth) - 1;
 
 	/* Save various default Flag Settings */
@@ -984,7 +984,7 @@ static int Infoclr_Opcode(cptr str)
 #ifndef IGNORE_UNUSED_FUNCTIONS
 
 /*
- * Request a Pixell by name.  Note: uses 'Metadpy'.
+ * Request a Pixell by name. Note: uses 'Metadpy'.
  *
  * Inputs:
  *      name: The name of the color to try to load (see below)
@@ -2751,7 +2751,7 @@ static errr Term_xtra_x11(int n, int v)
 /*
  * Draw the cursor as an inverted rectangle.
  *
- * Consider a rectangular outline like "main-mac.c".  XXX XXX
+ * Consider a rectangular outline like "main-mac.c". XXX XXX
  */
 static errr Term_curs_x11(int x, int y)
 {

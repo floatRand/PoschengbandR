@@ -407,7 +407,7 @@ static void _mana_clash_spell(int cmd, variant *res)
         var_set_string(res, "Mana Clash");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires a ball at chosen target.  Only spellcasters will be damaged.");
+        var_set_string(res, "Fires a ball at chosen target. Only spellcasters will be damaged.");
         break;
     case SPELL_CAST:
     {
@@ -847,7 +847,7 @@ static void _whirlwind_attack_spell(int cmd, variant *res)
 }
 
 /* The Rage Mage uses spellbooks to learn spells
-   like other magic classes.  However, learning a 
+   like other magic classes. However, learning a 
    spell destroys the book, and casting a spell
    does not require the book (cf The Samurai).
    Rage is a class specific realm.
@@ -941,9 +941,9 @@ static bool _gain_spell(int book)
     int            which;
     int         ct = 0, i;
 
-    /* Build a list of learnable spells.  Spells can only be
+    /* Build a list of learnable spells. Spells can only be
        learned once (no spell skills) and we only display spells
-       if the user is of high enough level.  This is rather 
+       if the user is of high enough level. This is rather 
        different than how the system normally behaves, but why spoil
        the nature of future higher level spells to the player?
     */    

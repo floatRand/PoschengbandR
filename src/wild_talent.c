@@ -87,7 +87,7 @@ spell_info    spell;
 } talent_t;
 
 /*
- * Talents are grouped.  Each group of talent will contain abilities
+ * Talents are grouped. Each group of talent will contain abilities
  * of a similar kind, such as offense, defense, detection.
  */
 #define _MAX_TALENTS 25
@@ -368,8 +368,8 @@ static int _get_spells_imp(spell_info* spells, int max, int start, int stop)
 }
 
 /*
- * We now group wild talents.  Its hard to pick from a large list of seemingly unsorted
- * choices.  Also, there is wide variety in monitor sizes and resolutions, so attempting
+ * We now group wild talents. Its hard to pick from a large list of seemingly unsorted
+ * choices. Also, there is wide variety in monitor sizes and resolutions, so attempting
  * to prompt for more than 15 or so choices at a time is a bad idea anyway.
  */
 typedef struct {
@@ -381,9 +381,9 @@ typedef struct {
 } group_choice;
 
 group_choice _groups[] =  {
-    { "Wild Beginnings", "Your early wild talents.  Perhaps these are not so awe inspiring, but they will allow you to survive early on.", 0, 7, TERM_GREEN},
+    { "Wild Beginnings", "Your early wild talents. Perhaps these are not so awe inspiring, but they will allow you to survive early on.", 0, 7, TERM_GREEN},
     { "Wild Musings", "Your middle powers, more useful and destructive.", 8, 16, TERM_L_UMBER},
-    { "Wild Destructions", "Your most powerful wild talents.  Death!  Destruction!  Devastation!  Monsters tremble in fear before the awesomeness of your power!", 17, _MAX_TALENTS - 1, TERM_RED},
+    { "Wild Destructions", "Your most powerful wild talents. Death!  Destruction!  Devastation!  Monsters tremble in fear before the awesomeness of your power!", 17, _MAX_TALENTS - 1, TERM_RED},
 };
 
 static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
@@ -652,9 +652,9 @@ class_t *wild_talent_get_class_t(void)
 
         me.name = "Wild-Talent";
         me.desc = "The Wild-Talent gains random talents and abilities as they "
-                  "level up.  They are good fighters, and decent with magical devices, "
+                  "level up. They are good fighters, and decent with magical devices, "
                   "but their true forte is their vast array of potential random "
-                  "powers.  Except you never know what those might be!";
+                  "powers. Except you never know what those might be!";
         
         me.stats[A_STR] = -1;
         me.stats[A_INT] =  2;

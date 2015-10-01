@@ -241,7 +241,7 @@ race_t *mindflayer_get_race_t(void)
                     "be older than any other on our planet, and their intelligence and wisdom are "
                     "naturally sustained, and are so great that they enable Mindflayers to become more "
                     "powerful spellcasters than any other race, even if their physical attributes are "
-                    "a good deal less admirable.  As they advance levels, they gain the powers of "
+                    "a good deal less admirable. As they advance levels, they gain the powers of "
                     "See Invisible and Telepathy.";
 
         me.stats[A_STR] = -3;

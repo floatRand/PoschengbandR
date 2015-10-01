@@ -182,7 +182,7 @@ void spell_stats_on_fail_old(int realm, int spell)
  * New Spell System ... Spells are objects (implemented as functions)
  * and can now be stored other data types (spell books, scrolls, etc).
  *
- * 'Spell' is misleading.  This will be used by spells, racial powers,
+ * 'Spell' is misleading. This will be used by spells, racial powers,
  * mutations, potions, scrolls, etc.
  *
  * I'm attempting a grand unification of all player effects to allow
@@ -339,7 +339,7 @@ cptr get_spell_spoiler_name(ang_spell spell)
 /****************************************************************************************
  * UI Utilities
  *   choose_spell - prompt user with a list of spells, they choose one.
- *   browse_spell - show spell list, user picks spells repeatedly.  describe each spell.
+ *   browse_spell - show spell list, user picks spells repeatedly. describe each spell.
  ****************************************************************************************/
 
 static int _col_height(int ct)
@@ -762,7 +762,7 @@ void do_cmd_spell(void)
         }
 
         /* Verify Cost ... Note, I'm removing options for over exertion 
-           Also note we now pay casting costs up front for mana casters.  
+           Also note we now pay casting costs up front for mana casters. 
            If the user cancels, then we return the cost below.
         */
         if (caster->options & CASTER_USE_HP)

@@ -1529,7 +1529,7 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_MADNESS:
-        if (desc) return "It seems to be the hurried scribblings of a mad wizard on the verge of some great arcane discovery.  You can't make heads or tails of it. Do you read it to see what happens?";
+        if (desc) return "It seems to be the hurried scribblings of a mad wizard on the verge of some great arcane discovery. You can't make heads or tails of it. Do you read it to see what happens?";
         if (cast)
         {
             int item;
@@ -1546,7 +1546,7 @@ static cptr _do_scroll(int sval, int mode)
 
             if (o_ptr->number > 1)
             {
-                msg_print("Don't be greedy.  Just try it out on a single object at a time.");
+                msg_print("Don't be greedy. Just try it out on a single object at a time.");
                 return NULL;
             }
             
@@ -1703,7 +1703,7 @@ cptr do_device(object_type *o_ptr, int mode, int boost)
 /* Effects: We are following the do_spell() pattern which is quick and dirty,
    but not my preferred approach ... Also, we could conceivably merge all
    devices into effects, handling rods, staves, wands, potions, scrolls and
-   activations uniformly.  For the moment, effects are *just* activations, 
+   activations uniformly. For the moment, effects are *just* activations, 
    and I should mention that each type of effect has its own little quirky
    fail rate calculation ... sigh.
 

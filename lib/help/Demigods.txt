@@ -1,201 +1,177 @@
-[[[[B|  Demigod Parentage
+<style:title>Demigod Parentage</style>
 
-***** <Minor God>
-[[[[r|  Minor God
+<color:heading>Minor-God</color>
 
-  Fathered by a minor god, you gain no starting powers.
+Fathered by a minor god, you gain no starting powers.
 
+<color:heading>Zeus</color>
 
-***** <Zeus>
-[[[[r|  Zeus
+Zeus, King of the gods and ruler of Mount Olympus, is god of the Sky and Thunder, and nominal husband of Hera. You inherit increased stature and your divine birth will be marked by your aura of electricity. You also resist lightning.
 
-  Zeus, King of the gods and ruler of Mount Olympus, is god of the Sky and
-  Thunder, and nominal husband of Hera.  You inherit increased stature and your
-  divine birth will be marked by your aura of electricity. You also resist
-  lightning.
+<color:heading>Poseidon</color>
 
+Poseidon, Brother of Zeus, is Lord of the Seas and Storm. You inherit elemental protection and corrosive attacks that melt the armor of your foes.
 
-***** <Poseidon>
-[[[[r|  Poseidon
+<color:heading>Hades</color>
 
-  Poseidon, Brother of Zeus, is Lord of the Seas and Storm.  You inherit
-  elemental protection and corrosive attacks that melt the armor of your foes.
+Hades is Ruler of the Underworld. You gain resistance to nether forces, increased fortitude and have a firm grasp on your life and health.
 
+<color:heading>Athena</color>
 
-***** <Hades>
-[[[[r|  Hades
+Athena is the great goddess of wisdom and the protector of Athens. She was born of Zeus and the Titan Metis, and her cunning far surpasses that of the other deities. You inherit great clarity of thought and magic and will be able to cast spells more reliably than other mortals. And should you fail to cast a spell, you will pay a reduced casting cost rather than the full amount. You have a firm grip on your mental prowess.
 
-  Hades is Ruler of the Underworld.  You gain resistance to nether forces,
-  increased fortitude and have a firm grasp on your life and health.
+<color:heading>Ares</color>
 
+Ares is the bold son of Zeus and Hera, whose very name is feared and respected by warriors and citizens alike. His legendary combat prowess exceeds that of Zeus and Poseidon, but he is less skilled in wiles than the other Olympians. You inherit exceptional bonuses to combat and have a firm grip on your strength. Later in life, you will be able to fly into a berserk rage on command. However, your lust for combat decreases your stealth as you call out challenges to all that you meet. And your resistance to magic is suspect.
 
-***** <Athena>
-[[[[r|  Athena
+<color:heading>Hermes</color>
 
-  Athena is the great goddess of wisdom and the protector of Athens. She was
-  born of Zeus and the Titan Metis, and her cunning far surpasses that of the
-  other deities.  You inherit great clarity of thought and magic and will be
-  able to cast spells more reliably than other mortals. And should you fail to
-  cast a spell, you will pay a reduced casting cost rather than the full
-  amount. You have a firm grip on your mental prowess.
+Hermes, the Messenger, is the extremely cunning diplomat used by the Olympians to negotiate truces. With his Winged Sandals and his powerful magic, there is no place barred from him, and there is no way to detain him. You inherit great powers of motion and will never become slowed. Your stealth is better than your brethren and your speed will increase with experience.
 
+<color:heading>Apollo</color>
 
-***** <Ares>
-[[[[r|  Ares
+Apollo has been variously recognized as a god of light and the sun, truth and prophecy, medicine, healing, plague, music, poetry, arts, archery, and more. You inherit powers of illumination and are completely immune to light based attacks. You are seldom blinded.
 
-  Ares is the bold son of Zeus and Hera, whose very name is feared and
-  respected by warriors and citizens alike. His legendary combat prowess
-  exceeds that of Zeus and Poseidon, but he is less skilled in wiles than the
-  other Olympians.  You inherit exceptional bonuses to combat and have a firm
-  grip on your strength. Later in life, you will be able to fly into a berserk
-  rage on command. However, your lust for combat decreases your stealth as you
-  call out challenges to all that you meet. And your resistance to magic is
-  suspect.
+<color:heading>Artemis</color>
 
+Artemis was often described as the daughter of Zeus and Leto, and the twin sister of Apollo. She was the Hellenic goddess of the hunt, wild animals, wilderness, childbirth, virginity and young girls, bringing and relieving disease in women; she often was depicted as a huntress carrying a bow and arrows. You inherit powers of archery and are very nimble. Your skills with the bow are unmatched and you shoot arrows with increased range and deadliness.
 
-***** <Hermes>
-[[[[r|  Hermes
+<color:heading>Hephaestus</color>
 
-  Hermes, the Messenger, is the extremely cunning diplomat used by the
-  Olympians to negotiate truces. With his Winged Sandals and his powerful
-  magic, there is no place barred from him, and there is no way to detain him. 
-  You inherit great powers of motion and will never become slowed. Your stealth
-  is better than your brethren and your speed will increase with experience.
+Hephaestus was the god of technology, blacksmiths, craftsmen, artisans, sculptors, metals, metallurgy, fire and volcanoes. Like other mythic smiths but unlike most other gods, Hephaestus was lame, which gave him a grotesque appearance in Greek eyes. He served as the blacksmith of the gods. You inherit powers of enchantment and protection. Your equipment will not suffer diminution by corrosion or magical attack.
 
+<color:heading>Hera</color>
 
-***** <Apollo>
-[[[[r|  Apollo
+Hera was the wife and one of three sisters of Zeus. Her chief function was as the goddess of women and marriage. You inherit great clarity of mind and capacity for magic. You are very wise and have a firm grasp on your magical energy, which is even augmented.
 
-  Apollo has been variously recognized as a god of light and the sun, truth and
-  prophecy, medicine, healing, plague, music, poetry, arts, archery, and more. 
-  You inherit powers of illumination and are completely immune to light based
-  attacks. You are seldom blinded.
+<color:heading>Demeter</color>
 
+Demeter is the goddess of the harvest, who presided over grains, the fertility of the earth, and the seasons. You gain powers of regeneration, healing, and temperance. Eventually, you will become resistant to the ravages of time.
 
-***** <Artemis>
-[[[[r|  Artemis
+<color:heading>Aphrodite</color>
 
-  Artemis was often described as the daughter of Zeus and Leto, and the twin
-  sister of Apollo. She was the Hellenic goddess of the hunt, wild animals,
-  wilderness, childbirth, virginity and young girls, bringing and relieving
-  disease in women; she often was depicted as a huntress carrying a bow and
-  arrows.  You inherit powers of archery and are very nimble. Your skills with
-  the bow are unmatched and you shoot arrows with increased range and
-  deadliness.
+Aphrodite is the Greek goddess of love, beauty, pleasure, and procreation. You inherit her sex appeal. As such, your pets are more obedient and shopkeepers fawn over you in their efforts to please you. You may kiss monsters and they might even decide to follow you with slavish devotion, though sometimes this just angers them.
 
+<topic:Tables><style:heading>Table 1 - Demigod Statistic Bonus Table</style>
 
-***** <Hephaestus>
-[[[[r|  Hephaestus
+<style:table><color:U>               STR  INT  WIS  DEX  CON  CHR  Life  Exp  Shop</color>
+Minor-God       +1   +1   +1   +1   +1   +1  100%  180%  100%
+Zeus            +2   +2   +2   +2   +2   +2  100%  250%   90%
+Poseidon        +2   +1   +1   +2   +1   +1  100%  240%  100%
+Hades           +1   +1   +1   +1   +3   +1  107%  240%  100%
+Athena          +1   +3   +1   +1   +1   +1  100%  240%  100%
+Ares            +3   +1   +1   +1   +1   +1  100%  240%  100%
+Hermes          +1   +1   +1   +1   +1   +1  100%  240%  100%
+Apollo          +1   +1   +1   +1   +1   +1  100%  230%  100%
+Artemis         +1   +1   +1   +3   +1   +1  100%  230%  100%
+Hephaestus      +1   +1   +1   +1   +1   +1  100%  230%  100%
+Hera            +1   +1   +3   +1   +1   +1  100%  220%  100%
+Demeter         +1   +1   +1   +1   +1   +1  100%  220%  100%
+Aphrodite       +1   +1   +1   +1   +1   +3  100%  220%   70%
 
-  Hephaestus was the god of technology, blacksmiths, craftsmen, artisans,
-  sculptors, metals, metallurgy, fire and volcanoes. Like other mythic smiths
-  but unlike most other gods, Hephaestus was lame, which gave him a grotesque
-  appearance in Greek eyes. He served as the blacksmith of the gods.  You
-  inherit powers of enchantment and protection. Your equipment will not suffer
-  diminution by corrosion or magical attack.
+</style>
+<style:heading>Table 2 - Demigod Skill Bonus Table</style>
 
+<style:table><color:U>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows  Infra</color>
+Minor-God        +2    +3    +1    -1    +0    +7    +10    +5     0'
+Zeus             +4    +8    +6    -1    +0    +7    +20   +10     0'
+Poseidon         +2    +3    +1    -1    +0    +7    +17    +5     0'
+Hades            +2    +3   +11    +0    +0    +7    +15    +5     0'
+Athena           +2   +13    +3    -1    +0    +7    +10    +5     0'
+Ares             +2    +0    -4    -2    +0    +7    +25    +5     0'
+Hermes          +12    +3    +1    +2    +5   +12    +10    +5     0'
+Apollo           +2    +6    +1    -1    +0    +7    +10    +5     0'
+Artemis          +2    +3    +1    -1    +0    +7    +10   +20     0'
+Hephaestus       +2    +3    +3    -1    +0    +7    +20    +5     0'
+Hera             +2    +8    +6    -1    +0    +7    +10    +5     0'
+Demeter          +2    +3    +6    -1    +0    +7    +10    +5     0'
+Aphrodite        +2    +5    +1    -1    +0    +7    +10    +5     0'
 
-***** <Hera>
-[[[[r|  Hera
+</style>
+<style:heading>Table 3 - Demigod Special Powers</style>
 
-  Hera was the wife and one of three sisters of Zeus.  Her chief function was
-  as the goddess of women and marriage.  You inherit great clarity of mind and
-  capacity for magic. You are very wise and have a firm grasp on your magical
-  energy, which is even augmented.
+All demigods have access to special powers. When they reach level 20, they may choose a single power from the following list. When they reach level, 40, they may choose another. These powers can never be removed or changed, so you might want to study this list to decide which powers you will choose for your character.
 
+  <indent><color:B>Ambidexterity</color>
+You will be able to dual wield more effectively.</indent>
 
-***** <Demeter>
-[[[[r|  Demeter
+  <indent><color:B>Arcane Mastery</color>
+Your spells will fail less often.</indent>
 
-  Demeter is the goddess of the harvest, who presided over grains, the
-  fertility of the earth, and the seasons.  You gain powers of regeneration,
-  healing, and temperance. Eventually, you will become resistant to the ravages
-  of time.
+  <indent><color:B>Astral Guide</color>
+Teleportation costs less energy.</indent>
 
+  <indent><color:B>Black Marketeer</color>
+You will gain favorable pricing in the black market.</indent>
 
-***** <Aphrodite>
-[[[[r|  Aphrodite
+  <indent><color:B>Cult of Personality</color>
+Summoned monsters may sometimes switch alliances.</indent>
 
-  Aphrodite is the Greek goddess of love, beauty, pleasure, and procreation. 
-  You inherit her sex appeal. As such, your pets are more obedient and
-  shopkeepers fawn over you in their efforts to please you. You may kiss
-  monsters and they might even decide to follow you with slavish devotion,
-  though sometimes this just angers them.
+  <indent><color:B>Demonic Grasp</color>
+You resist charge draining.</indent>
 
+  <indent><color:B>Evasion</color>
+You will dodge enemy breath attacks and have better odds for avoiding earthquakes.</indent>
 
-***** <Tables>
-[[[[y|  Table 1 - Race Statistic Bonus Table ---
+  <indent><color:B>Fantastic Frenzy</color>
+You kill weak monsters more efficiently.</indent>
 
-[[[[r|                 STR  INT  WIS  DEX  CON  CHR  Life  Exp  Shop
-  Minor God       +1   +1   +1   +1   +1   +1  100%  180%  100%
-  Zeus            +2   +2   +2   +2   +2   +2  100%  250%   90%
-  Poseidon        +2   +1   +1   +2   +1   +1  100%  240%  100%
-  Hades           +1   +1   +1   +1   +3   +1  107%  240%  100%
-  Athena          +1   +3   +1   +1   +1   +1  100%  240%  100%
-  Ares            +3   +1   +1   +1   +1   +1  100%  240%  100%
-  Hermes          +1   +1   +1   +1   +1   +1  100%  240%  100%
-  Apollo          +1   +1   +1   +1   +1   +1  100%  230%  100%
-  Artemis         +1   +1   +1   +3   +1   +1  100%  230%  100%
-  Hephaestus      +1   +1   +1   +1   +1   +1  100%  230%  100%
-  Hera            +1   +1   +3   +1   +1   +1  100%  220%  100%
-  Demeter         +1   +1   +1   +1   +1   +1  100%  220%  100%
-  Aphrodite       +1   +1   +1   +1   +1   +3  100%  220%   70%
+  <indent><color:B>Fast Learner</color>
+You will gain a bonus to experience for each monster slain.</indent>
 
+  <indent><color:B>Fell Sorcery</color>
+Your spells will grow more powerful.</indent>
 
-[[[[y|  Table 2 - Race Skill Bonus Table
+  <indent><color:B>Fleet of Foot</color>
+Movement costs less energy.</indent>
 
-[[[[r|                 Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows  Infra
-  Minor God        +2    +3    +1    -1    +0    +7    +10    +5     0'
-  Zeus             +4    +8    +6    -1    +0    +7    +20   +10     0'
-  Poseidon         +2    +3    +1    -1    +0    +7    +17    +5     0'
-  Hades            +2    +3   +11    +0    +0    +7    +15    +5     0'
-  Athena           +2   +13    +3    -1    +0    +7    +10    +5     0'
-  Ares             +2    +0    -4    -2    +0    +7    +25    +5     0'
-  Hermes          +12    +3    +1    +2    +5   +12    +10    +5     0'
-  Apollo           +2    +6    +1    -1    +0    +7    +10    +5     0'
-  Artemis          +2    +3    +1    -1    +0    +7    +10   +20     0'
-  Hephaestus       +2    +3    +3    -1    +0    +7    +20    +5     0'
-  Hera             +2    +8    +6    -1    +0    +7    +10    +5     0'
-  Demeter          +2    +3    +6    -1    +0    +7    +10    +5     0'
-  Aphrodite        +2    +5    +1    -1    +0    +7    +10    +5     0'
+  <indent><color:B>Infernal Deal</color>
+You will regain hp and sp whenever a nearby enemy monster is slain.</indent>
 
+  <indent><color:B>Loremaster</color>
+Items will automatically identify as you pick them up.</indent>
 
-[[[[y|  Table 3 - Demigod Special Powers
+  <indent><color:B>Merchant's Friend</color>
+You will gain new powers of shopping.</indent>
 
-  All demigods have access to special powers. When they reach level 20, they
-  may choose a single power from the following list. When they reach level, 40,
-  they may choose another. These powers can never be removed or changed, so you
-  might want to study this list to decide which powers you will choose for your
-  character.
+  <indent><color:B>One with Magic</color>
+You will have a chance of resisting Dispel Magic.</indent>
 
-  [[[[r|Fast Learner       | You will gain a bonus to experience for each monster slain.
-  [[[[r|Weapon Versatility | You will be able to master any weapon.
-  [[[[r|Subtle Casting     | Damaging a monster with distance magic no longer provokes a retaliation.
-  [[[[r|Peerless Sniper    | Damaging a monster with a missile weapon no longer provokes a retaliation.
-  [[[[r|Unyielding         | You will gain a bonus to hitpoints.
-  [[[[r|Ambidexterity      | You will be able to dual wield more effectively.
-  [[[[r|Untouchable        | You will gain a bonus to armor class.
-  [[[[r|Loremaster         | Items will automatically identify as you pick them up.
-  [[[[r|Arcane Mastery     | Your spells will fail less often.
-  [[[[r|Evasion            | You will dodge enemy breath attacks and have better odds for avoiding earthquakes.
-  [[[[r|Potion Chugger     | You will be able to chug potions much faster than normal.
-  [[[[r|One with Magic     | You will have a chance of resisting Dispel Magic.
-  [[[[r|Peerless Tracker   | You will gain the ability to map your surroundings.
-  [[[[r|Infernal Deal      | You will regain hp and sp whenever a nearby enemy monster is slain.
-  [[[[r|Merchant's Friend  | You will gain new powers of shopping.
-  [[[[r|Sacred Vitality    | You will gain a bonus to all healing effects.
-  [[[[r|Cult of Personality| Summoned monsters may sometimes switch alliances.
-  [[[[r|Fleet of Foot      | Movement costs less energy.
-  [[[[r|Astral Guide       | Teleportation costs less energy.
-  [[[[r|Demonic Grasp      | You resist charge draining.
-  [[[[r|Weird Mind         | You resist the Eldritch Horror.
-  [[[[r|Fantastic Frenzy   | You kill weak monsters more efficiently.
-  [[[[r|Black Marketeer    | You will gain favorable pricing in the black market.
-  [[[[r|Speed Reader       | You will be able to read scrolls much faster than normal.
-  [[[[r|Fell Sorcery       | Your spells will grow more powerful.
-  [[[[r|Tread Softly       | Your stealth will increase.
+  <indent><color:B>Peerless Sniper</color>
+Damaging a monster with a missile weapon no longer provokes a retaliation.</indent>
+
+  <indent><color:B>Peerless Tracker</color>
+You will gain the ability to map your surroundings.</indent>
+
+  <indent><color:B>Potion Chugger</color>
+You will be able to chug potions much faster than normal.</indent>
+
+  <indent><color:B>Sacred Vitality</color>
+You will gain a bonus to all healing effects.</indent>
+
+  <indent><color:B>Speed Reader</color>
+You will be able to read scrolls much faster than normal.</indent>
+
+  <indent><color:B>Subtle Casting</color>
+Damaging a monster with distance magic no longer provokes a retaliation.</indent>
+
+  <indent><color:B>Tread Softly</color>
+Your stealth will increase.</indent>
+
+  <indent><color:B>Untouchable</color>
+You will gain a bonus to armor class.</indent>
+
+  <indent><color:B>Unyielding</color>
+You will gain a bonus to hitpoints.</indent>
+
+  <indent><color:B>Weapon Versatility</color>
+You will be able to master any weapon.</indent>
+
+  <indent><color:B>Weird Mind</color>
+You resist the Eldritch Horror.</indent>
 
 
 
 
-[[[[s|  Automatically generated for PosChengband 4.0.0.
+
+<color:s>Automatically generated for PosChengband 4.0.0.</color>

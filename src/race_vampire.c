@@ -383,7 +383,7 @@ void _repose_of_the_dead_spell(int cmd, variant *res)
         var_set_string(res, "Repose of the Dead");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Sleep the sleep of the dead for a few rounds, during which time nothing can awaken you, except perhaps death.  When (if?) you wake up, you will be thoroughly refreshed!");
+        var_set_string(res, "Sleep the sleep of the dead for a few rounds, during which time nothing can awaken you, except perhaps death. When (if?) you wake up, you will be thoroughly refreshed!");
         break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);

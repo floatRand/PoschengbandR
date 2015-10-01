@@ -5,9 +5,9 @@
  ****************************************************************/
 
 /* Finding what monster to evolve into is trivial, since the monster_race type
-   keeps a pointer in that direction.  However, we would like to reverse evolution
-   turning harder monsters into easier ones.  This fn will scan the monster race
-   table looking for a monster that evolves into this one.  Of course, we assume
+   keeps a pointer in that direction. However, we would like to reverse evolution
+   turning harder monsters into easier ones. This fn will scan the monster race
+   table looking for a monster that evolves into this one. Of course, we assume
    there is at most one such race to be found (Not True!)
    Returns 0 if no such race can be found.
 */
@@ -36,7 +36,7 @@ static int _find_devolution_idx(int r_idx)
     return 0;
 }
 
-/*    Evolve or Devolve a Monster.  I spiked this from monster_gain_exp() in melee2.c without
+/*    Evolve or Devolve a Monster. I spiked this from monster_gain_exp() in melee2.c without
     any great understanding on my part.
 */
 static void _change_monster_race(int m_idx, int new_r_idx)

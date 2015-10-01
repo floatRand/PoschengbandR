@@ -1139,13 +1139,13 @@ class_t *magic_eater_get_class_t(void)
 
         me.name = "Magic-Eater";
         me.desc = "Magic-Eaters can absorb magic devices, and use these magics as "
-                    "their spells.  They are middling-poor at fighting.  A "
+                    "their spells. They are middling-poor at fighting. A "
                     "Magic-Eater's prime statistic is intelligence.\n \n"
                     "Magic-Eaters can absorb the energy of wands, staffs, and rods, and "
                     "can then use these magics as if they were carrying all of these "
-                    "absorbed devices.  Mana and changes of absorbed devices are "
+                    "absorbed devices. Mana and changes of absorbed devices are "
                     "regenerated naturally by a Magic-Eater's power, and speed of "
-                    "regeneration is influenced by their intelligence.  They have a "
+                    "regeneration is influenced by their intelligence. They have a "
                     "class power - 'Absorb Magic' - which is used to absorb magic "
                     "devices.\n \n"
                     "Note: Magic-Eaters may now use the resting commands (R* or R&) "
