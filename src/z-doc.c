@@ -762,6 +762,13 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             link->location.start = doc->cursor;
             int_map_add(doc->links, ch, link);
             {
+                /* TODO: This is flawed. Here's a real world example:
+                   "(see below <link:birth.txt#PrimaryStats>)."
+                   Can you see the problem? We might line break after "[a]" right
+                   before ").". Instead, "[a])." should be treated as the current
+                   word. To fix this, we'll need a parser with a token queue
+                   that we can push onto, but this raises storage issues.
+                */
                 string_ptr s = string_alloc(NULL);
                 string_printf(s, "<style:link>[%c]<style:*>", ch);
                 doc_insert(doc, string_buffer(s));
@@ -1127,6 +1134,7 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
             doc_link_ptr link = int_map_iter_current(iter);
             vec_add(links, link);
         }
+        int_map_iter_free(iter);
         vec_sort(links, (vec_cmp_f)_compare_links);
         if (link_idx < vec_length(links))
             next_link = vec_get(links, link_idx);
@@ -1217,6 +1225,8 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
    }
    fprintf(fp, "</font>");
    fprintf(fp, "</pre></body></html>\n");
+
+   vec_free(links);
 }
 
 void doc_write_file(doc_ptr doc, FILE *fp, int format)
