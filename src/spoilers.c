@@ -154,7 +154,7 @@ static void _monster_races_help(FILE* fp)
 
             race_ptr = get_race_t();
 
-            fputs("<style:table><color:U>%21s STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", fp);
+            fprintf(fp, "<style:table><color:U>%21s STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "");
             if (race_ptr->birth)
                 race_ptr->birth();
 
@@ -191,7 +191,7 @@ static void _monster_races_help(FILE* fp)
 
             race_ptr = get_race_t();
 
-            fputs("<style:table><color:U>%-21s Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>\n", fp);
+            fprintf(fp, "<style:table><color:U>%-21s Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>\n", "");
             if (race_ptr->birth)
                 race_ptr->birth();
 
