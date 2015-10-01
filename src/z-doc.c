@@ -546,9 +546,18 @@ cptr doc_parse_tag(cptr pos, doc_tag_ptr tag)
 
         if (*seek == '>')
         {
-            seek++;
-            *tag = result;
-            return seek;
+            switch(result.type)
+            {
+            case DOC_TAG_CLOSE_COLOR:
+            case DOC_TAG_CLOSE_STYLE:
+            case DOC_TAG_INDENT:
+            case DOC_TAG_CLOSE_INDENT:
+                seek++;
+                *tag = result;
+                return seek;
+            default:
+                return pos;
+            }
         }
 
         assert(*seek == ':');
@@ -649,6 +658,27 @@ static void _doc_process_var(doc_ptr doc, cptr name)
         string_printf(s, "%d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
         doc_insert(doc, string_buffer(s));
         string_free(s);
+    }
+    else if (strlen(name) > 3 && strncmp(name, "FF_", 3) == 0)
+    {
+        char buf[100];
+        int  f_idx;
+
+        sprintf(buf, "%s", name + 3);
+        f_idx = f_tag_to_index(buf);
+
+        if (0 <= f_idx && f_idx < max_f_idx)
+        {
+            string_ptr s = string_alloc(NULL);
+            feature_type *feat = &f_info[f_idx];
+
+            string_printf(s, "<color:%c>%c</color>",
+                attr_to_attr_char(feat->d_attr[F_LIT_STANDARD]),
+                feat->d_char[F_LIT_STANDARD]);
+
+            doc_insert(doc, string_buffer(s));
+            string_free(s);
+        }
     }
 }
 

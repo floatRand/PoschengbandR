@@ -1,34 +1,17 @@
-The Town and Wilderness.
+<style:title>The Town and Wilderness</style>
 
 Please choose one of the following online help files:
 
-    (a) The Town and Wilderness            (town.txt)
-    (b) Town and Wilderness Symbols        (town.txt#MapSymbols)
-    (c) The Town Level                     (town.txt#TownLevel)
-    (d) The Standard Town                  (town.txt#StandardTown)
-    (e) The 'Lite' Town                    (town.txt#LiteTown)
-    (f) The 'Vanilla' Town                 (town.txt#VanillaTown)
-    (g) Townspeople                        (town.txt#Townspeople)
-    (h) Shopping in Town                   (town.txt#Shopping)
-    (i) Bartering                          (town.txt#Bartering)
-    (j) Object Pricing                     (town.txt#ObjectPricing)
-    (k) List of Shops                      (town.txt#TheShops)
-    (l) Special Buildings                  (town.txt#Buildings)
-    (m) Fixed Quests                       (town.txt#FixedQuests)
+    <link:town.txt> The Town and Wilderness
+    <link:town.txt#MapSymbols> Town and Wilderness Symbols
+    <link:town.txt#TownLevel> The Town Level
+    <link:town.txt#Wilderness> The Wilderness Option
+    <link:town.txt#NoWilderness> The No Wilderness Option
+    <link:town.txt#Townspeople> Townspeople
+    <link:town.txt#Shopping> Shopping in Town
+    <link:town.txt#ObjectPricing> Object Pricing
+    <link:town.txt#TheShops> List of Shops
+    <link:town.txt#Buildings> Special Buildings
+    <link:town.txt#FixedQuests> Fixed Quests
 
-    (?) Help System Commands               (helpinfo.txt)
-
-
-***** [a] town.txt
-***** [b] town.txt#MapSymbols
-***** [c] town.txt#TownLevel
-***** [d] town.txt#StandardTown
-***** [e] town.txt#LiteTown
-***** [f] town.txt#VanillaTown
-***** [g] town.txt#Townspeople
-***** [h] town.txt#Shopping
-***** [i] town.txt#Bartering
-***** [j] town.txt#ObjectPricing
-***** [k] town.txt#TheShops
-***** [l] town.txt#Buildings
-***** [m] town.txt#FixedQuests
+    <color:y>(?) Help System Commands</color>

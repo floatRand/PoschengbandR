@@ -5,7 +5,7 @@ Please choose one of the following online help files:
     <link:general_contents.txt> General Information
     <link:birth_contents.txt> Creating a Character
     <link:raceclass_contents.txt> Races, Classes and Personalities
-    <link:town.hlp> The Town and Wilderness
+    <link:town_contents.txt> The Town and Wilderness
     <link:dungeon.hlp> The Dungeon
     <link:objects.hlp> Objects
     <link:monster.hlp> Monsters and Pets
