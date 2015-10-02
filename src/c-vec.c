@@ -178,75 +178,11 @@ static void _swap(vptr vec[], int i, int j)
     vec[j] = t;
 }
 
-static int _is_valid_partition(vptr vec[], int left, int right, int pivot, vec_cmp_f f)
-{
-    int i;
-    if (left >= right)
-        return 0;
-    if (left > pivot)
-        return 0;
-    if (right < pivot)
-        return 0;
-    for (i = left; i < pivot; i++)
-    {
-        if (f(vec[i], vec[pivot]) > 0)
-            return 0;
-    }
-    for (i = pivot + 1; i <= right; i++)
-    {
-        if (f(vec[i], vec[pivot]) < 0)
-            return 0;
-    }
-    return 1;
-}
-
-static int _partition(vptr vec[], int left, int right, vec_cmp_f f)
-{
-#if 0
-    vptr pivot = vec[right];
-    int  i = left - 1;
-    int  j;
-    for (j = left; j < right; j++)
-    {
-        if (f(vec[j], pivot) <= 0)
-        {
-            i++;
-            _swap(vec, i, j);
-        }
-    }
-    _swap(vec, i+1, right);
-    assert(_is_valid_partition(vec, left, right, i+1, f));
-    return i+1;
-#else
-    vptr pivot = vec[right];
-    int  i = left;
-    int  j = right - 1;
-    while (1)
-    {
-        while (i < right && f(vec[i], pivot) < 0) i++;
-        while (left < j && f(vec[j], pivot) > 0) j--;
-
-        assert(left <= i && i <= right);
-        assert(left <= j && j <= right);
-
-        if (i < j)
-            _swap(vec, i, j);
-        else
-            break;
-
-        i++;
-        j--;
-    }
-    _swap(vec, i, right);
-    assert(_is_valid_partition(vec, left, right, i, f));
-    return i;
-#endif
-}
-
 static int _median3_partition(vptr vec[], int left, int right, vec_cmp_f f)
 {
     int center = (left + right) / 2;
-    int i;
+
+    assert(right - left + 1 >= 3);
 
     /* sort <v[l], v[c], v[r]> in place */
     if (f(vec[left], vec[center]) > 0)
@@ -257,17 +193,51 @@ static int _median3_partition(vptr vec[], int left, int right, vec_cmp_f f)
         if (f(vec[left], vec[center]) > 0)
             _swap(vec, left, center);
     }
-    assert(f(vec[left], vec[center]) <= 0);
-    assert(f(vec[center], vec[right]) <= 0);
 
     /* v[c] is the median, put it in v[r-1] */
     _swap(vec, center, right - 1);
 
-    /* we know v[l] <= v[r-1] <= v[r] so we can shorten our call to partition */
-    i = _partition(vec, left + 1, right - 1, f);
-    assert(_is_valid_partition(vec, left, right, i, f));
+    /* Note: Median of 3 partioning allows us to remove the bounds checking
+       in the while loops below since we know:
+       v[l] <= v[r-1] <= v[r]
 
-    return i;
+       i will run from l+1 up, but will stop on r-1 at the worst since
+       v[r-1] = v[r-1]. IOW, the pivot always guards sliding from the left
+
+       j will run from r-2 down, but will stop on l at the worst since
+       v[l] <= v[r-1]
+
+       Otherwise, this is Sedgewick's partition routine, which "burns the
+       candle at both ends". You can see Knuth for a good discussion, but
+       the tricky part is coding without sentinels.
+
+       Note: This partition is much better than the "leftwall" approach when
+       large numbers of duplicate keys are present. Just mentally think what
+       happens when A[l..r] contains a single key. (See Cormen for this
+       partition version).
+
+       Finally, Median of Three is a must in case the data is already sorted.*/
+    {
+        vptr pivot = vec[right - 1];
+        int  i = left + 1;
+        int  j = right - 2;
+        while (1)
+        {
+            while (f(vec[i], pivot) < 0) i++;
+            while (f(vec[j], pivot) > 0) j--;
+
+            if (i < j)
+                _swap(vec, i, j);
+            else
+                break;
+
+            i++;
+            j--;
+        }
+        _swap(vec, i, right - 1);
+
+        return i;
+    }
 }
 
 static void _quick_sort(vptr vec[], int left, int right, vec_cmp_f f)
@@ -326,67 +296,30 @@ static void _merge_sort(vptr vec[], int left, int right, vec_cmp_f f)
     }
 }
 
-static int _is_sorted(vec_ptr vec, vec_cmp_f f)
+bool vec_is_sorted(vec_ptr vec, vec_cmp_f f)
 {
     int i;
     for (i = 0; i < vec->len - 1; i++)
     {
         if (f(vec->objs[i], vec->objs[i+1]) > 0)
-            return 0;
+            return FALSE;
     }
-    return 1;
+    return TRUE;
 }
 
 void vec_quick_sort(vec_ptr vec, vec_cmp_f f)
 {
     _quick_sort(vec->objs, 0, vec->len - 1, f);
-    assert(_is_sorted(vec, f));
+    assert(vec_is_sorted(vec, f));
 }
 
 void vec_merge_sort(vec_ptr vec, vec_cmp_f f)
 {
     _merge_sort(vec->objs, 0, vec->len - 1, f);
-    assert(_is_sorted(vec, f));
+    assert(vec_is_sorted(vec, f));
 }
 
 void vec_sort(vec_ptr vec, vec_cmp_f f)
 {
     vec_quick_sort(vec, f);
 }
-
-/* Notes on Sorting:
-   [1] Median of 3 Partioning is crucial if data is already sorted. A simple test
-       of double sorting some files takes 86ms with median of 3, 10,552ms with naive
-       partitioning! Note: ang_sort uses naive partitioning.
-   [2] Setting the insertion sort cutoff to 20 seems just fine. I took this advice
-       from Skiena p238 even though 20 seemed high at first glance.
-   [3] Swapping in _partition seems the best tuning opportunity. A naive version
-       from CLRS is *much* slower than what ang_sort uses, at least for data with
-       many duplicate keys. But, it turns out the CLRS partioning is faster for a vector
-       of random numbers with few duplicates. Skiena recommends the CLRS version.
-   [4] Quick Sort took me all day to write and debug. Merge Sort took about 10 minutes
-       and is almost as fast (w/in 5% or 10%) for sorting files.
-   [5] Quick Sort is of course much, much better if you have a vector of integers rather than objects, e.g.
-            for (i = 0; i < count; i++)
-            {
-                long n = rand();
-                vec_add(v, (vptr) n);
-            }
-   [6] And be sure to compile with -DNDEBUG to remove those heavy asserts!!! :)
-   [7] Here's a simple test program:
-        void test(void)
-        {
-            string_ptr input = string_falloc(stdin);
-            vec_ptr    lines = string_split(input, '\n');
-            string_ptr output;
-
-            vec_merge_sort(lines, (vec_cmp_f)string_compare);
-
-            output = string_join(lines, '\n');
-            string_write_file(output, stdout);
-
-            string_free(input);
-            string_free(output);
-            vec_free(lines);
-        }
-*/
