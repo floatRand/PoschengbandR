@@ -2126,12 +2126,14 @@ static void display_player_equippy(int y, int x, u16b mode)
     }
 }
 
+#define ROW_EQUIPPY             3
+#define COL_EQUIPPY             0       /* equippy chars */
+
 
 void print_equippy(void)
 {
-    if (msg_line_contains(ROW_EQUIPPY, COL_EQUIPPY + 12))
-        return;
-    display_player_equippy(ROW_EQUIPPY, COL_EQUIPPY, EQUIPPY_MAIN);
+    rect_t r = ui_char_info_rect();
+    display_player_equippy(r.y + ROW_EQUIPPY, r.x + COL_EQUIPPY, EQUIPPY_MAIN);
 }
 
 static void known_obj_immunity(u32b flgs[TR_FLAG_SIZE])

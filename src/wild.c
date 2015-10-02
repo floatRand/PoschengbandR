@@ -28,7 +28,50 @@ monster_hook_type wilderness_mon_hook = NULL;
    of course). To get encounters, the player must seek them by traveling about. */
 bool no_encounters_hack = FALSE;
 
+point_t point_create(int x, int y)
+{
+    point_t result;
+    result.x = x;
+    result.y = y;
+    return result;
+}
+point_t point_add(point_t p1, point_t p2)
+{
+    return point_create(
+        p1.x + p2.x,
+        p1.y + p2.y
+    );
+}
+point_t point_subtract(point_t p1, point_t p2)
+{
+    return point_create(
+        p1.x - p2.x,
+        p1.y - p2.y
+    );
+}
+int point_compare(point_t p1, point_t p2)
+{
+    if (p1.y < p2.y)
+        return -1;
+    if (p1.y > p2.y)
+        return 1;
+    if (p1.x < p2.x)
+        return -1;
+    if (p1.x > p2.x)
+        return 1;
+    return 0;
+}
+
 /* Trivial rectangle utility to make code a bit more readable */
+point_t rect_topleft(const rect_t *r)
+{
+    return point_create(r->x, r->y);
+}
+
+point_t rect_center(const rect_t *r)
+{
+    return point_create(r->x + r->cx/2, r->y + r->cy/2);
+}
 
 rect_t rect_create(int x, int y, int cx, int cy)
 {
@@ -172,25 +215,21 @@ static void _unset_boundary(void)
 static bool _scroll_panel(int dx, int dy)
 {
     int y, x;
-    int wid, hgt;
+    rect_t r = ui_map_rect();
 
-    get_screen_size(&wid, &hgt);
+    y = viewport_origin.y + dy;
+    x = viewport_origin.x + dx;
 
-    y = panel_row_min + dy;
-    x = panel_col_min + dx;
-
-    if (y > cur_hgt - hgt) y = cur_hgt - hgt;
+    if (y > cur_hgt - r.cy) y = cur_hgt - r.cy;
     if (y < 0) y = 0;
 
-    if (x > cur_wid - wid) x = cur_wid - wid;
+    if (x > cur_wid - r.cx) x = cur_wid - r.cx;
     if (x < 0) x = 0;
 
-    if (y != panel_row_min || x != panel_col_min)
+    if (y != viewport_origin.y || x != viewport_origin.x)
     {
-        panel_row_min = y;
-        panel_col_min = x;
-
-        panel_bounds_center();
+        viewport_origin.x = x;
+        viewport_origin.y = y;
 
         p_ptr->update |= PU_MONSTERS;
         p_ptr->redraw |= PR_MAP;
@@ -1181,10 +1220,6 @@ void wilderness_gen(void)
     cur_hgt = MAX_HGT;
     cur_wid = MAX_WID;
 
-    /* Assume illegal panel */
-    panel_row_min = cur_hgt;
-    panel_col_min = cur_wid;
-
     /* Init the wilderness */
     process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
 
@@ -1303,10 +1338,6 @@ void wilderness_gen_small(void)
 
     if (cur_hgt > MAX_HGT) cur_hgt = MAX_HGT;
     if (cur_wid > MAX_WID) cur_wid = MAX_WID;
-
-    /* Assume illegal panel */
-    panel_row_min = cur_hgt;
-    panel_col_min = cur_wid;
 
     /* Place the player */
     px = p_ptr->wilderness_x;

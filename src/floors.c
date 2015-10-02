@@ -1130,12 +1130,6 @@ void change_floor(void)
     /* The dungeon is not ready */
     character_dungeon = FALSE;
 
-    /* Mega-Hack -- no panel yet */
-    panel_row_min = 0;
-    panel_row_max = 0;
-    panel_col_min = 0;
-    panel_col_max = 0;
-
     /* No saved floors (On the surface etc.) */
     if (!(change_floor_mode & CFM_SAVE_FLOORS) &&
         !(change_floor_mode & CFM_FIRST_FLOOR))

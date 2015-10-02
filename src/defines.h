@@ -902,12 +902,8 @@ enum _mimic_types {
 #define PERS_HASTY        13
 #define MAX_PERSONALITIES 14
 
-#define ROW_MAP                        0
-#define COL_MAP                  12
-
-#define ROW_EQUIPPY             4
-#define COL_EQUIPPY             0       /* equippy chars */
-
+#define ROW_MAP                  0
+#define COL_MAP                  0
 
 /*
  * Number of feats we change to (Excluding default). Used in f_info.txt.
@@ -3908,9 +3904,7 @@ enum summon_specific_e {
  * Note that "panel_contains(Y,X)" always implies "in_bounds2(Y,X)".
  */
 #define panel_contains(Y,X) \
-  (((Y) >= panel_row_min) && ((Y) <= panel_row_max) && \
-   ((X) >= panel_col_min) && ((X) <= panel_col_max))
-
+    (cave_xy_is_visible((X), (Y)))
 
 /*
  * Determine if player is on this grid

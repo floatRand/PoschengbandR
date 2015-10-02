@@ -3404,8 +3404,8 @@ static char inkey_from_menu(void)
     int menu = 0;
     bool kisuu;
 
-    if (py - panel_row_min > 10) basey = 2;
-    else basey = 13;
+    /*if (py - panel_row_min > 10) basey = 2;
+    else*/ basey = 13;
     basex = 15;
 
     /* Clear top line */

@@ -116,6 +116,13 @@ void cmsg_append(byte color, cptr str)
         msg_ptr m = msg_get(0);
 
         assert(m);
+        /* You tunnel into the granite wall. <x17> The heroism wears off.
+           Not: You tunnel into the granite wall. The heroism wears off. <x17> */
+        if (m->count > 1)
+        {
+            cmsg_add(color, str);
+            return;
+        }
         if (string_length(m->msg))
             string_append_char(m->msg, ' ');
         if (color != m->color)
@@ -196,7 +203,7 @@ void msg_line_init(const rect_t *display_rect)
     }
     else
     {
-        rect_t r = rect_create(13, 0, 72, 10);
+        rect_t r = rect_create(0, 0, 72, 10);
         msg_line_init(&r);
     }
 }
@@ -238,8 +245,11 @@ void msg_line_clear(void)
     int y = doc_cursor(_msg_line_doc).y;
 
     for (i = 0; i <= y; i++)
-        Term_erase(_msg_line_rect.x, _msg_line_rect.y + i, _msg_line_rect.cx);
-
+    {
+        int row = _msg_line_rect.y + i;
+        int cx = row ? _msg_line_rect.cx : 255; /* Hack */
+        Term_erase(_msg_line_rect.x, row, cx);
+    }
     doc_rollback(_msg_line_doc, doc_pos_create(0, 0));
     _msg_line_sync_pos = doc_cursor(_msg_line_doc);
 

@@ -1374,26 +1374,12 @@ void py_get_display_char_attr(char *c, byte *a)
 }
 
 /*
- * Calculate panel colum of a location in the map
- */
-static int panel_col_of(int col)
-{
-    col -= panel_col_min;
-    if (use_bigtile) col *= 2;
-    return col + 13; 
-}
-
-
-/*
  * Moves the cursor to a given MAP (y,x) location
  */
 void move_cursor_relative(int row, int col)
 {
-    /* Real co-ords convert to screen positions */
-    row -= panel_row_prt;
-
-    /* Go there */
-    Term_gotoxy(panel_col_of(col), row);
+    point_t ui = cave_xy_to_ui_pt(col, row);
+    Term_gotoxy(ui.x, ui.y);
 }
 
 
@@ -1403,25 +1389,21 @@ void move_cursor_relative(int row, int col)
  */
 void print_rel(char c, byte a, int y, int x)
 {
-    /* Only do "legal" locations */
-    if (panel_contains(y, x) && !msg_line_contains(y-panel_row_prt, panel_col_of(x)))
+    if (cave_xy_is_visible(y, x))
     {
-        /* Hack -- fake monochrome */
-        if (!use_graphics)
+        point_t ui = cave_xy_to_ui_pt(x, y);
+        if (!msg_line_contains(ui.y, ui.x))
         {
-            if (world_monster) a = TERM_DARK;
-            else if (IS_INVULN() || world_player) a = TERM_WHITE;
-            else if (IS_WRAITH()) a = TERM_L_DARK;
+            if (!use_graphics)/* Hack -- fake monochrome */
+            {
+                if (world_monster) a = TERM_DARK;
+                else if (IS_INVULN() || world_player) a = TERM_WHITE;
+                else if (IS_WRAITH()) a = TERM_L_DARK;
+            }
+            Term_queue_bigchar(ui.x, ui.y, a, c, 0, 0);
         }
-
-        /* Draw the char using the attr */
-        Term_queue_bigchar(panel_col_of(x), y-panel_row_prt, a, c, 0, 0);
     }
 }
-
-
-
-
 
 /*
  * Memorize interesting viewable object/features in the given grid
@@ -1614,37 +1596,29 @@ void display_dungeon(void)
  */
 void lite_spot(int y, int x)
 {
-    if (msg_line_contains(y-panel_row_prt, panel_col_of(x)))
-        return;
-
-    /* Redraw if on screen */
-    if (panel_contains(y, x) && in_bounds2(y, x))
+    if (cave_xy_is_visible(x, y))
     {
-        byte a;
-        char c;
+        point_t ui = cave_xy_to_ui_pt(x, y);
 
-        byte ta;
-        char tc;
+        if (msg_line_contains(ui.y, ui.x)) return;
 
-        /* Examine the grid */
-        map_info(y, x, &a, &c, &ta, &tc);
-
-        /* Hack -- fake monochrome */
-        if (!use_graphics)
+        if (in_bounds2(y, x))
         {
-            if (world_monster) a = TERM_DARK;
-            else if (IS_INVULN() || world_player) a = TERM_WHITE;
-            else if (IS_WRAITH()) a = TERM_L_DARK;
+            byte a, ta;
+            char c, tc;
+
+            map_info(y, x, &a, &c, &ta, &tc);
+            if (!use_graphics)/* Hack -- fake monochrome */
+            {
+                if (world_monster) a = TERM_DARK;
+                else if (IS_INVULN() || world_player) a = TERM_WHITE;
+                else if (IS_WRAITH()) a = TERM_L_DARK;
+            }
+            Term_queue_bigchar(ui.x, ui.y, a, c, ta, tc);
+            p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
         }
-
-        /* Hack -- Queue it */
-        Term_queue_bigchar(panel_col_of(x), y-panel_row_prt, a, c, ta, tc);
-
-        /* Update sub-windows */
-        p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
     }
 }
-
 
 /*
  * Prints the map of the dungeon
@@ -1655,21 +1629,10 @@ void lite_spot(int y, int x)
  */
 void prt_map(void)
 {
-    int     x, y;
+    point_t uip;
     int     v;
     rect_t  msg_rect = msg_line_rect();
-
-    /* map bounds */
-    s16b xmin, xmax, ymin, ymax;
-
-    int wid, hgt;
-
-    /* Get size */
-    Term_get_size(&wid, &hgt);
-
-    /* Remove map offset */
-    wid -= COL_MAP + 2;
-    hgt -= ROW_MAP + 2;
+    rect_t  map_rect = ui_map_rect();
 
     /* Access the cursor state */
     (void)Term_get_cursor(&v);
@@ -1677,56 +1640,36 @@ void prt_map(void)
     /* Hide the cursor */
     (void)Term_set_cursor(0);
 
-    /* Get bounds */
-    xmin = (0 < panel_col_min) ? panel_col_min : 0;
-    xmax = (cur_wid - 1 > panel_col_max) ? panel_col_max : cur_wid - 1;
-    ymin = (0 < panel_row_min) ? panel_row_min : 0;
-    ymax = (cur_hgt - 1 > panel_row_max) ? panel_row_max : cur_hgt - 1;
-
-    /* Bottom section of screen */
-    for (y = 1; y <= ymin - panel_row_prt; y++)
+    for (uip = rect_topleft(&map_rect); uip.y < map_rect.y + map_rect.cy; uip.y++)
     {
-        if (msg_line_contains(y, -1))
-            Term_erase(msg_rect.x + msg_rect.cx, y, wid);
-        else
-            Term_erase(COL_MAP, y, wid);
-    }
-
-    /* Top section of screen */
-    for (y = ymax - panel_row_prt; y <= hgt; y++)
-    {
-        /* Erase the section */
-        Term_erase(COL_MAP, y, wid);
-    }
-
-    /* Dump the map */
-    for (y = ymin; y <= ymax; y++)
-    {
-        /* Scan the columns of row "y" */
-        for (x = xmin; x <= xmax; x++)
+        if (msg_line_contains(uip.y, -1))
         {
-            byte a;
-            char c;
+            int x = msg_rect.x + msg_rect.cx;
+            Term_erase(x, uip.y, map_rect.cx - x);
+        }
+        else
+            Term_erase(uip.x, uip.y, map_rect.cx);
+    }
 
-            byte ta;
-            char tc;
+    for (uip.y = map_rect.y; uip.y < map_rect.y + map_rect.cy; uip.y++)
+    {
+        for (uip.x = map_rect.x; uip.x < map_rect.x + map_rect.cx; uip.x++)
+        {
+            point_t cp = ui_pt_to_cave_pt(uip);
+            byte a, ta;
+            char c, tc;
 
-            if (msg_line_contains(y-panel_row_prt, panel_col_of(x)))
-                continue;
+            if (msg_line_contains(uip.y, uip.x)) continue;
+            if (!in_bounds2(cp.y, cp.x)) continue;
 
-            /* Determine what is there */
-            map_info(y, x, &a, &c, &ta, &tc);
-
-            /* Hack -- fake monochrome */
-            if (!use_graphics)
+            map_info(cp.y, cp.x, &a, &c, &ta, &tc);
+            if (!use_graphics) /* Hack -- fake monochrome */
             {
                 if (world_monster) a = TERM_DARK;
                 else if (IS_INVULN() || world_player) a = TERM_WHITE;
                 else if (IS_WRAITH()) a = TERM_L_DARK;
             }
-
-            /* Efficiency -- Redraw that grid of the map */
-            Term_queue_bigchar(panel_col_of(x), y-panel_row_prt, a, c, ta, tc);
+            Term_queue_bigchar(uip.x, uip.y, a, c, ta, tc);
         }
     }
 
@@ -1771,8 +1714,9 @@ void prt_path(int y, int x)
         int ny = GRID_Y(path_g[i]);
         int nx = GRID_X(path_g[i]);
         cave_type *c_ptr = &cave[ny][nx];
+        point_t ui = cave_xy_to_ui_pt(nx, ny);
 
-        if (panel_contains(ny, nx))
+        if (ui_pt_is_visible(ui) && !msg_line_contains(ui.y, ui.x))
         {
             byte a = default_color;
             char c;
@@ -1801,8 +1745,7 @@ void prt_path(int y, int x)
             }
 
             c = '*';
-            if (!msg_line_contains(ny-panel_row_prt, panel_col_of(nx)))
-                Term_queue_bigchar(panel_col_of(nx), ny-panel_row_prt, a, c, ta, tc);
+            Term_queue_bigchar(ui.x, ui.y, a, c, ta, tc);
         }
 
         /* Known Wall */

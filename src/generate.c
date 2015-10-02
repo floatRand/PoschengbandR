@@ -1461,10 +1461,6 @@ static bool level_gen(cptr *why)
         cur_hgt = level_height * SCREEN_HGT;
         cur_wid = level_width * SCREEN_WID;
 
-        /* Assume illegal panel */
-        panel_row_min = cur_hgt;
-        panel_col_min = cur_wid;
-
         if (cheat_room)
           msg_format("X:%d, Y:%d.", cur_wid, cur_hgt);
     }
@@ -1473,10 +1469,6 @@ static bool level_gen(cptr *why)
         /* Big dungeon */
         cur_hgt = MAX_HGT;
         cur_wid = MAX_WID;
-
-        /* Assume illegal panel */
-        panel_row_min = cur_hgt;
-        panel_col_min = cur_wid;
     }
 
     /* Make a dungeon */

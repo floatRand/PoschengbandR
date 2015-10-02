@@ -44,6 +44,11 @@
  * and increase the complexity of the code.
  */
 
+struct point_s
+{
+    int x, y;
+};
+typedef struct point_s point_t;
 
 struct rect_s
 {

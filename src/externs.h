@@ -371,9 +371,9 @@ extern s16b autosave_freq;
 extern bool autosave_t;
 extern bool autosave_l;
 extern bool closing_flag;
-extern s16b panel_row_min, panel_row_max;
-extern s16b panel_col_min, panel_col_max;
-extern s16b panel_col_prt, panel_row_prt;
+
+extern point_t viewport_origin;
+
 extern int py;
 extern int px;
 extern s16b target_who;
@@ -1569,6 +1569,19 @@ extern int  big_num_round(int num, int sig_figs);
 extern void big_num_display(int num, char *buf);
 extern void check_mon_health_redraw(int m_idx);
 
+extern point_t ui_pt_to_cave_pt(point_t pt);
+extern point_t ui_xy_to_cave_pt(int x, int y);
+extern point_t cave_pt_to_ui_pt(point_t pt);
+extern point_t cave_xy_to_ui_pt(int x, int y);
+extern bool cave_pt_is_visible(point_t pt);
+extern bool cave_xy_is_visible(int x, int y);
+extern bool ui_pt_is_visible(point_t pt);
+extern bool ui_xy_is_visible(int x, int y);
+
+extern rect_t ui_map_rect(void);
+extern rect_t ui_status_bar_rect(void);
+extern rect_t ui_char_info_rect(void);
+
 /* effects.c */
 extern void set_action(int typ);
 extern void reset_tim_flags(void);
@@ -1704,8 +1717,6 @@ extern bool get_monster_drop(int m_idx, object_type *o_ptr);
 extern byte get_monster_drop_ct(monster_type *m_ptr);
 extern bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note);
 extern void mon_check_kill_unique(int m_idx);
-extern void get_screen_size(int *wid_p, int *hgt_p);
-extern void panel_bounds_center(void);
 extern void resize_map(void);
 extern void redraw_window(void);
 extern bool change_panel(int dy, int dx);
@@ -1931,6 +1942,13 @@ extern bool object_is_nameless(object_type *o_ptr);
 extern bool object_allow_two_hands_wielding(object_type *o_ptr);
 
 /* wild.c */
+extern point_t point_create(int x, int y);
+extern point_t point_add(point_t p1, point_t p2);
+extern point_t point_subtract(point_t p1, point_t p2);
+extern int point_compare(point_t p1, point_t p2);
+
+extern point_t rect_topleft(const rect_t *r);
+extern point_t rect_center(const rect_t *r);
 extern rect_t rect_create(int x, int y, int cx, int cy);
 extern bool rect_is_valid(const rect_t *r);
 extern bool rect_contains_pt(const rect_t *r, int x, int y);

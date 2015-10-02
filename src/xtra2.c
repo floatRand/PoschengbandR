@@ -3061,36 +3061,6 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
     return (FALSE);
 }
 
-
-/*
- * Get term size and calculate screen size
- */
-void get_screen_size(int *wid_p, int *hgt_p)
-{
-    Term_get_size(wid_p, hgt_p);
-    *hgt_p -= ROW_MAP + 2;
-    *wid_p -= COL_MAP + 2;
-    if (use_bigtile) *wid_p /= 2;
-}
-
-
-/*
- * Calculates current boundaries
- * Called below and from "do_cmd_locate()".
- */
-void panel_bounds_center(void)
-{
-    int wid, hgt;
-
-    get_screen_size(&wid, &hgt);
-
-    panel_row_max = panel_row_min + hgt - 1;
-    panel_row_prt = panel_row_min - 1;
-    panel_col_max = panel_col_min + wid - 1;
-    panel_col_prt = panel_col_min - 13;
-}
-
-
 /*
  * Map resizing whenever the main term changes size
  */
@@ -3099,14 +3069,6 @@ void resize_map(void)
     /* Only if the dungeon exists */
     if (!character_dungeon) return;
     
-    /* Mega-Hack -- no panel yet */
-    panel_row_max = 0;
-    panel_col_max = 0;
-
-    /* Reset the panels */
-    panel_row_min = cur_hgt;
-    panel_col_min = cur_wid;
-                
     verify_panel();
 
     /* Update stuff */
@@ -3172,48 +3134,34 @@ void redraw_window(void)
 bool change_panel(int dy, int dx)
 {
     int y, x;
-    int wid, hgt;
-
-    /* Get size */
-    get_screen_size(&wid, &hgt);
+    rect_t r = ui_map_rect();
 
     /* Apply the motion */
-    y = panel_row_min + dy * hgt / 2;
-    x = panel_col_min + dx * wid / 2;
+    y = viewport_origin.y + dy * r.cy / 2;
+    x = viewport_origin.x + dx * r.cx / 2;
 
     /* Verify the row */
-    if (y > cur_hgt - hgt) y = cur_hgt - hgt;
+    if (y > cur_hgt - r.cy) y = cur_hgt - r.cy;
     if (y < 0) y = 0;
 
     /* Verify the col */
-    if (x > cur_wid - wid) x = cur_wid - wid;
+    if (x > cur_wid - r.cx) x = cur_wid - r.cx;
     if (x < 0) x = 0;
 
     /* Handle "changes" */
-    if ((y != panel_row_min) || (x != panel_col_min))
+    if ((y != viewport_origin.y) || (x != viewport_origin.x))
     {
-        /* Save the new panel info */
-        panel_row_min = y;
-        panel_col_min = x;
+        viewport_origin.y = y;
+        viewport_origin.x = x;
 
-        /* Recalculate the boundaries */
-        panel_bounds_center();
-
-        /* Update stuff */
         p_ptr->update |= (PU_MONSTERS);
-
-        /* Redraw map */
         p_ptr->redraw |= (PR_MAP);
-
-        /* Handle stuff */
         handle_stuff();
-
-        /* Success */
-        return (TRUE);
+        return TRUE;
     }
 
     /* No change */
-    return (FALSE);
+    return FALSE;
 }
 
 
@@ -3227,105 +3175,39 @@ bool change_panel(int dy, int dx)
  */
 void verify_panel_aux(u32b options)
 {
-    int y = py;
-    int x = px;
-    int wid, hgt;
+    point_t p = cave_xy_to_ui_pt(px, py);
+    rect_t  r = ui_map_rect();
+    point_t o = viewport_origin;
 
-    int prow_min;
-    int pcol_min;
-    int max_prow_min;
-    int max_pcol_min;
-
-    /* Get size */
-    get_screen_size(&wid, &hgt);
-
-    max_prow_min = cur_hgt - hgt;
-    max_pcol_min = cur_wid - wid;
-
-    /* Bounds checking */
-    if (max_prow_min < 0) max_prow_min = 0;
-    if (max_pcol_min < 0) max_pcol_min = 0;
-
-    /* Center on player */
-    if (options & PANEL_FORCE_CENTER)
+    if ((options & PANEL_FORCE_CENTER) || !rect_contains_pt(&r, p.x, p.y))
     {
-        /* Center vertically */
-        prow_min = y - hgt / 2;
-        if (prow_min < 0) prow_min = 0;
-        else if (prow_min > max_prow_min) prow_min = max_prow_min;
-
-        /* Center horizontally */
-        pcol_min = x - wid / 2;
-        if (pcol_min < 0) pcol_min = 0;
-        else if (pcol_min > max_pcol_min) pcol_min = max_pcol_min;
+        point_t c = rect_center(&r);
+        point_t d = point_subtract(p, c);
+        o = point_add(o, d);
     }
     else
     {
-        prow_min = panel_row_min;
-        pcol_min = panel_col_min;
-
-        /* Scroll screen when 2 grids from top/bottom edge */
-        if (y > panel_row_max - 2)
-        {
-            while (y > prow_min + hgt-1 - 2)
-            {
-                prow_min += (hgt / 2);
-            }
-        }
-
-        if (y < panel_row_min + 2)
-        {
-            while (y < prow_min + 2)
-            {
-                prow_min -= (hgt / 2);
-            }
-        }
-
-        if (prow_min > max_prow_min) prow_min = max_prow_min;
-        if (prow_min < 0) prow_min = 0;
-
-        /* Scroll screen when 4 grids from left/right edge */
-        if (x > panel_col_max - 4)
-        {
-            while (x > pcol_min + wid-1 - 4)
-            {
-                pcol_min += (wid / 2);
-            }
-        }
-        
-        if (x < panel_col_min + 4)
-        {
-            while (x < pcol_min + 4)
-            {
-                pcol_min -= (wid / 2);
-            }
-        }
-
-        if (pcol_min > max_pcol_min) pcol_min = max_pcol_min;
-        if (pcol_min < 0) pcol_min = 0;
+        if (p.y > r.y + r.cy - 2)
+            o.y += r.cy/2;
+        else if (p.y < r.y + 2)
+            o.y -= r.cy/2;
+        if (p.x > r.x + r.cx - 4)
+            o.x += r.cx/2;
+        else if (p.x < r.x + 4)
+            o.x -= r.cx/2;
     }
-
-    /* Check for "no change" */
-    if ((prow_min == panel_row_min) && (pcol_min == panel_col_min)) return;
-
-    /* Save the new panel info */
-    panel_row_min = prow_min;
-    panel_col_min = pcol_min;
-
-    /* Hack -- optional disturb on "panel change" */
-    if (disturb_panel && !center_player) disturb(0, 0);
-
-    /* Recalculate the boundaries */
-    panel_bounds_center();
-
-    /* Update stuff */
-    p_ptr->update |= (PU_MONSTERS);
-
-    /* Redraw map */
-    p_ptr->redraw |= (PR_MAP);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
+    if (o.x > cur_wid - r.cx) o.x = cur_wid - r.cx;
+    if (o.y > cur_hgt - r.cy) o.y = cur_hgt - r.cy;
+    if (o.x < 0) o.x = 0;
+    if (o.y < 0) o.y = 0;
+    if (point_compare(viewport_origin, o) != 0)
+    {
+        viewport_origin = o;
+        if (disturb_panel && !center_player) disturb(0, 0);
+        p_ptr->update |= PU_MONSTERS;
+        p_ptr->redraw |= PR_MAP;
+        p_ptr->window |= PW_OVERHEAD | PW_DUNGEON;
+    }
 }
 
 void verify_panel(void)
@@ -3753,22 +3635,23 @@ static bool target_set_accept(int y, int x)
  */
 static void target_set_prepare(int mode)
 {
-    int y, x;
+    rect_t map_rect = ui_map_rect();
+    point_t uip;
 
     /* Reset "temp" array */
     temp_n = 0;
 
     /* Scan the current panel */
-    for (y = panel_row_min; y <= panel_row_max; y++)
+    for (uip.y = map_rect.y; uip.y < map_rect.y + map_rect.cy; uip.y++)
     {
-        for (x = panel_col_min; x <= panel_col_max; x++)
+        for (uip.x = map_rect.x; uip.x < map_rect.x + map_rect.cx; uip.x++)
         {
+            point_t cp = ui_pt_to_cave_pt(uip);
             cave_type *c_ptr;
 
-            /* Require "interesting" contents */
-            if (!target_set_accept(y, x)) continue;
+            if (!target_set_accept(cp.y, cp.x)) continue;
 
-            c_ptr = &cave[y][x];
+            c_ptr = &cave[cp.y][cp.x];
 
             /* Require target_able monsters for "TARGET_KILL" */
             if ((mode & (TARGET_KILL)) && !target_able(c_ptr->m_idx)) continue;
@@ -3783,8 +3666,8 @@ static void target_set_prepare(int mode)
             }
 
             /* Save the location */
-            temp_x[temp_n] = x;
-            temp_y[temp_n] = y;
+            temp_x[temp_n] = cp.x;
+            temp_y[temp_n] = cp.y;
             temp_n++;
         }
     }
@@ -4386,22 +4269,14 @@ bool target_set(int mode)
     int        i, d, m, t, bd;
     int        y = py;
     int        x = px;
+    bool       done = FALSE;
+    bool       flag = TRUE;
+    char       query;
+    char       info[80];
 
-    bool    done = FALSE;
+    cave_type *c_ptr;
+    rect_t     map_rect = ui_map_rect();
 
-    bool    flag = TRUE;
-
-    char    query;
-
-    char    info[80];
-
-    cave_type        *c_ptr;
-
-    int wid, hgt;
-
-
-    /* Get size */
-    get_screen_size(&wid, &hgt);
 
     /* Cancel target */
     target_who = 0;
@@ -4571,8 +4446,8 @@ bool target_set(int mode)
             if (d)
             {
                 /* Modified to scroll to monster */
-                int y2 = panel_row_min;
-                int x2 = panel_col_min;
+                int y2 = viewport_origin.y;
+                int x2 = viewport_origin.x;
 
                 /* Find a new monster */
                 i = target_pick(temp_y[m], temp_x[m], ddy[d], ddx[d]);
@@ -4606,9 +4481,8 @@ bool target_set(int mode)
                         int dy = ddy[d];
 
                         /* Restore previous position */
-                        panel_row_min = y2;
-                        panel_col_min = x2;
-                        panel_bounds_center();
+                        viewport_origin.y = y2;
+                        viewport_origin.x = x2;
 
                         /* Update stuff */
                         p_ptr->update |= (PU_MONSTERS);
@@ -4633,22 +4507,21 @@ bool target_set(int mode)
                         y += dy;
 
                         /* Do not move horizontally if unnecessary */
-                        if (((x < panel_col_min + wid / 2) && (dx > 0)) ||
-                             ((x > panel_col_min + wid / 2) && (dx < 0)))
+                        if (((x < viewport_origin.x + map_rect.cx / 2) && (dx > 0)) ||
+                             ((x > viewport_origin.x + map_rect.cx / 2) && (dx < 0)))
                         {
                             dx = 0;
                         }
 
                         /* Do not move vertically if unnecessary */
-                        if (((y < panel_row_min + hgt / 2) && (dy > 0)) ||
-                             ((y > panel_row_min + hgt / 2) && (dy < 0)))
+                        if (((y < viewport_origin.y + map_rect.cy / 2) && (dy > 0)) ||
+                             ((y > viewport_origin.y + map_rect.cy / 2) && (dy < 0)))
                         {
                             dy = 0;
                         }
 
                         /* Apply the motion */
-                        if ((y >= panel_row_min+hgt) || (y < panel_row_min) ||
-                            (x >= panel_col_min+wid) || (x < panel_col_min))
+                        if (!cave_xy_is_visible(x, y))
                         {
                             if (change_panel(dy, dx)) target_set_prepare(mode);
                         }
@@ -4819,7 +4692,7 @@ bool target_set(int mode)
                 /* XTRA HACK MOVEFAST */
                 if (move_fast)
                 {
-                    int mag = MIN(wid / 2, hgt / 2);
+                    int mag = MIN(map_rect.cx / 2, map_rect.cy / 2);
                     x += dx * mag;
                     y += dy * mag;
                 }
@@ -4830,22 +4703,21 @@ bool target_set(int mode)
                 }
 
                 /* Do not move horizontally if unnecessary */
-                if (((x < panel_col_min + wid / 2) && (dx > 0)) ||
-                     ((x > panel_col_min + wid / 2) && (dx < 0)))
+                if (((x < viewport_origin.x + map_rect.cx / 2) && (dx > 0)) ||
+                     ((x > viewport_origin.x + map_rect.cx / 2) && (dx < 0)))
                 {
                     dx = 0;
                 }
 
                 /* Do not move vertically if unnecessary */
-                if (((y < panel_row_min + hgt / 2) && (dy > 0)) ||
-                     ((y > panel_row_min + hgt / 2) && (dy < 0)))
+                if (((y < viewport_origin.y + map_rect.cy / 2) && (dy > 0)) ||
+                     ((y > viewport_origin.y + map_rect.cy / 2) && (dy < 0)))
                 {
                     dy = 0;
                 }
 
                 /* Apply the motion */
-                if ((y >= panel_row_min + hgt) || (y < panel_row_min) ||
-                     (x >= panel_col_min + wid) || (x < panel_col_min))
+                if (!cave_xy_is_visible(x, y))
                 {
                     if (change_panel(dy, dx)) target_set_prepare(mode);
                 }
@@ -5346,11 +5218,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
     char ch = 0;
     int d, x, y, n = 0;
     bool success = FALSE;
-
-    int wid, hgt;
-
-    /* Get size */
-    get_screen_size(&wid, &hgt);
+    rect_t map_rect = ui_map_rect();
 
     x = px;
     y = py;
@@ -5392,8 +5260,8 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
             if (expand_list && temp_n)
             {
                 int dx, dy;
-                int cx = (panel_col_min + panel_col_max) / 2;
-                int cy = (panel_row_min + panel_row_max) / 2;
+                int cx = map_rect.cy / 2;
+                int cy = map_rect.cx / 2;
 
                 n++;
 
@@ -5443,8 +5311,8 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
                     y = temp_y[n];
                     x = temp_x[n];
 
-                    dy = 2 * (y - cy) / hgt;
-                    dx = 2 * (x - cx) / wid;
+                    dy = 2 * (y - cy) / map_rect.cy;
+                    dx = 2 * (x - cx) / map_rect.cx;
                     if (dy || dx) change_panel(dy, dx);
                 }
             }
@@ -5468,7 +5336,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
                 /* XTRA HACK MOVEFAST */
                 if (move_fast)
                 {
-                    int mag = MIN(wid / 2, hgt / 2);
+                    int mag = MIN(map_rect.cx / 2, map_rect.cy / 2);
                     x += dx * mag;
                     y += dy * mag;
                 }
@@ -5487,22 +5355,21 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
                 }
 
                 /* Do not move horizontally if unnecessary */
-                if (((x < panel_col_min + wid / 2) && (dx > 0)) ||
-                     ((x > panel_col_min + wid / 2) && (dx < 0)))
+                if (((x < viewport_origin.x + map_rect.cx / 2) && (dx > 0)) ||
+                     ((x > viewport_origin.x + map_rect.cx / 2) && (dx < 0)))
                 {
                     dx = 0;
                 }
 
                 /* Do not move vertically if unnecessary */
-                if (((y < panel_row_min + hgt / 2) && (dy > 0)) ||
-                     ((y > panel_row_min + hgt / 2) && (dy < 0)))
+                if (((y < viewport_origin.y + map_rect.cy / 2) && (dy > 0)) ||
+                     ((y > viewport_origin.y + map_rect.cy / 2) && (dy < 0)))
                 {
                     dy = 0;
                 }
 
                 /* Apply the motion */
-                if ((y >= panel_row_min + hgt) || (y < panel_row_min) ||
-                     (x >= panel_col_min + wid) || (x < panel_col_min))
+                if (!cave_xy_is_visible(x, y))
                 {
                     /* if (change_panel(dy, dx)) target_set_prepare(mode); */
                     change_panel(dy, dx);

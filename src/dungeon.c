@@ -5192,9 +5192,6 @@ static void dungeon(bool load_game)
 
     (void)calculate_upkeep();
 
-    /* Validate the panel */
-    panel_bounds_center();
-
     /* Verify the panel */
     verify_panel();
 
@@ -5835,10 +5832,6 @@ void play_game(bool new_game)
     now_turn = game_turn;
     start_time = time(NULL);
     record_o_name[0] = '\0';
-
-    /* Reset map panel */
-    panel_row_min = cur_hgt;
-    panel_col_min = cur_wid;
 
     /* Sexy gal gets bonus to maximum weapon skill of whip */
     if (p_ptr->personality == PERS_SEXY)

@@ -927,30 +927,22 @@ void do_cmd_look(void)
  */
 void do_cmd_locate(void)
 {
-    int        dir, y1, x1, y2, x2;
-
+    int     dir, y1, x1, y2, x2;
     char    tmp_val[80];
-
     char    out_val[160];
-
-    int wid, hgt;
-
-    /* Get size */
-    get_screen_size(&wid, &hgt);
-
+    rect_t  map_rect = ui_map_rect();
 
     /* Start at current panel */
-    y2 = y1 = panel_row_min;
-    x2 = x1 = panel_col_min;
+    y2 = y1 = viewport_origin.y;
+    x2 = x1 = viewport_origin.x;
 
     /* Show panels until done */
     while (1)
     {
         /* Describe the location */
-        if ((y2 == y1) && (x2 == x1))
+        if (y2 == y1 && x2 == x1)
         {
             tmp_val[0] = '\0';
-
         }
         else
         {
@@ -964,8 +956,8 @@ void do_cmd_locate(void)
         sprintf(out_val,
             "Map sector [%d(%02d),%d(%02d)], which is%s your sector. Direction?",
 
-            y2 / (hgt / 2), y2 % (hgt / 2),
-            x2 / (wid / 2), x2 % (wid / 2), tmp_val);
+            y2 / (map_rect.cy / 2), y2 % (map_rect.cy / 2),
+            x2 / (map_rect.cx / 2), x2 % (map_rect.cx / 2), tmp_val);
 
         /* Assume no direction */
         dir = 0;
@@ -992,25 +984,16 @@ void do_cmd_locate(void)
         /* Apply the motion */
         if (change_panel(ddy[dir], ddx[dir]))
         {
-            y2 = panel_row_min;
-            x2 = panel_col_min;
+            y2 = viewport_origin.y;
+            x2 = viewport_origin.x;
         }
     }
 
-
-    /* Recenter the map around the player */
     verify_panel();
 
-    /* Update stuff */
-    p_ptr->update |= (PU_MONSTERS);
-
-    /* Redraw map */
-    p_ptr->redraw |= (PR_MAP);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
-
-    /* Handle stuff */
+    p_ptr->update |= PU_MONSTERS;
+    p_ptr->redraw |= PR_MAP;
+    p_ptr->window |= PW_OVERHEAD | PW_DUNGEON;
     handle_stuff();
 }
 

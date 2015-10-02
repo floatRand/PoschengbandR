@@ -25,13 +25,13 @@
  * That leaves a "border" around the "stat" values.
  */
 
-#define ROW_LEVEL               1
+#define ROW_LEVEL               0
 #define COL_LEVEL               0       /* "LEVEL xxxxxx" */
 
-#define ROW_EXP                 2
+#define ROW_EXP                 1
 #define COL_EXP                 0       /* "EXP xxxxxxxx" */
 
-#define ROW_GOLD                3
+#define ROW_GOLD                2
 #define COL_GOLD                0       /* "AU xxxxxxxxx" */
 
 /* From defines.h
@@ -39,44 +39,31 @@
 #define COL_EQUIPPY             0
 */
 
-#define ROW_STAT                5       /* Str = 5 ... Chr = 10 */
+#define ROW_STAT                4       /* Str = 5 ... Chr = 10 */
 #define COL_STAT                0
 
-#define ROW_AC                  11
+#define ROW_AC                  10
 #define COL_AC                  0       /* "Cur AC xxxxx" */
 
-#define ROW_CURHP               12
+#define ROW_CURHP               11
 #define COL_CURHP               0       /* "Cur HP xxxxx" */
 
-#define ROW_CURSP               13
+#define ROW_CURSP               12
 #define COL_CURSP               0       /* "Cur SP xxxxx" */
 
-#define ROW_STATE               14
+#define ROW_STATE               13
 #define COL_STATE               7
 
-#define ROW_HEALTH_BARS         15
+#define ROW_HEALTH_BARS         14
 #define COL_HEALTH_BARS         0
 #define COUNT_HEALTH_BARS       6       /* HP, SP, Food, Riding, Monster Track, Target */
 
-#define ROW_EFFECTS            21
+#define ROW_EFFECTS            20
 #define COL_EFFECTS             0
 #define COUNT_EFFECTS          11       /* Could be off screen ... */
 
-
-/* This should go on the bottom with the depth
-#define ROW_DUNGEON             27
-#define COL_DUNGEON             0
-*/
-
-
 #define ROW_DEPTH               (-1)
 #define COL_DEPTH               (-8)      /* "Lev NNN" / "NNNN ft" */
-
-#define ROW_STATBAR             (-1)
-#define COL_STATBAR              0
-
-static int MAX_COL_STATBAR = -26;
-
 
 static int _npow(int x, int y)
 {
@@ -360,30 +347,29 @@ void prt_time(void)
 static void prt_stat(int stat)
 {
     char tmp[32];
+    rect_t r = ui_char_info_rect();
 
-    if (msg_line_contains(ROW_STAT + stat, COL_STAT + 12))
-        return;
 
     /* Display "injured" stat */
     if (p_ptr->stat_cur[stat] < p_ptr->stat_max[stat])
     {
-        put_str(stat_names_reduced[stat], ROW_STAT + stat, 0);
+        put_str(stat_names_reduced[stat], r.y + ROW_STAT + stat, r.x + COL_STAT);
         cnv_stat(p_ptr->stat_use[stat], tmp);
-        c_put_str(TERM_YELLOW, tmp, ROW_STAT + stat, COL_STAT + 6);
+        c_put_str(TERM_YELLOW, tmp, r.y + ROW_STAT + stat, r.x + COL_STAT + 6);
     }
 
     /* Display "healthy" stat */
     else
     {
-        put_str(stat_names[stat], ROW_STAT + stat, 0);
+        put_str(stat_names[stat], r.y + ROW_STAT + stat, r.x + COL_STAT);
         cnv_stat(p_ptr->stat_use[stat], tmp);
-        c_put_str(TERM_L_GREEN, tmp, ROW_STAT + stat, COL_STAT + 6);
+        c_put_str(TERM_L_GREEN, tmp, r.y + ROW_STAT + stat, r.x + COL_STAT + 6);
     }
 
     /* Indicate natural maximum */
     if (p_ptr->stat_max[stat] == p_ptr->stat_max_max[stat])
     {
-        put_str("!", ROW_STAT + stat, 3);
+        put_str("!", r.y + ROW_STAT + stat, r.x + 3);
 
     }
 }
@@ -751,15 +737,11 @@ static struct {
 static void prt_status(void)
 {
     u32b bar_flags[7];
-    int wid, hgt, row_statbar, max_col_statbar;
     int i, col = 0, num = 0;
     int space = 2;
+    rect_t r = ui_status_bar_rect();
 
-    Term_get_size(&wid, &hgt);
-    row_statbar = hgt + ROW_STATBAR;
-    max_col_statbar = MAX_COL_STATBAR;
-
-    Term_erase(0, row_statbar, max_col_statbar);
+    Term_erase(r.x, r.y, r.cx);
 
     for (i = 0; i < 7; i++)
         bar_flags[i] = 0L;
@@ -1189,7 +1171,7 @@ static void prt_status(void)
     }
 
     /* If there are not excess spaces for long strings, use short one */
-    if (col - 1 > max_col_statbar)
+    if (col - 1 > r.cx)
     {
         space = 0;
         col = 0;
@@ -1203,7 +1185,7 @@ static void prt_status(void)
         }
 
         /* If there are excess spaces for short string, use more */
-        if (col - 1 <= max_col_statbar - (num-1))
+        if (col - 1 <= r.cx - (num-1))
         {
             space = 1;
             col += num - 1;
@@ -1212,7 +1194,7 @@ static void prt_status(void)
 
 
     /* Centering display column */
-    col = (max_col_statbar - col) / 2;
+    col = (r.cx - col) / 2;
 
     /* Display status bar */
     for (i = 0; bar[i].sstr; i++)
@@ -1223,10 +1205,10 @@ static void prt_status(void)
             if (space == 2) str = bar[i].lstr;
             else str = bar[i].sstr;
 
-            c_put_str(bar[i].attr, str, row_statbar, col);
+            c_put_str(bar[i].attr, str, r.y, r.x + col);
             col += strlen(str);
             if (space > 0) col++;
-            if (col > max_col_statbar) break;
+            if (col > r.cx) break;
         }
     }
 }
@@ -1237,23 +1219,20 @@ static void prt_status(void)
 static void prt_level(void)
 {
     char tmp[32];
-
-    if (msg_line_contains(ROW_LEVEL, COL_LEVEL + 12))
-        return;
+    rect_t r = ui_char_info_rect();
 
     sprintf(tmp, "%6d", p_ptr->lev);
 
-
     if (p_ptr->lev >= p_ptr->max_plv)
     {
-        put_str("LEVEL ", ROW_LEVEL, 0);
-        c_put_str(TERM_L_GREEN, tmp, ROW_LEVEL, COL_LEVEL + 6);
+        put_str("LEVEL ", r.y + ROW_LEVEL, r.x + COL_LEVEL);
+        c_put_str(TERM_L_GREEN, tmp, r.y + ROW_LEVEL, r.x + COL_LEVEL + 6);
 
     }
     else
     {
-        put_str("Level ", ROW_LEVEL, 0);
-        c_put_str(TERM_YELLOW, tmp, ROW_LEVEL, COL_LEVEL + 6);
+        put_str("Level ", r.y + ROW_LEVEL, r.x + COL_LEVEL);
+        c_put_str(TERM_YELLOW, tmp, r.y + ROW_LEVEL, r.x + COL_LEVEL + 6);
 
     }
 }
@@ -1264,9 +1243,7 @@ static void prt_level(void)
 static void prt_exp(void)
 {
     char out_val[32];
-
-    if (msg_line_contains(ROW_EXP, COL_EXP + 12))
-        return;
+    rect_t r = ui_char_info_rect();
 
     if (!exp_need || p_ptr->prace == RACE_ANDROID)
     {
@@ -1289,14 +1266,14 @@ static void prt_exp(void)
 
     if (p_ptr->exp >= p_ptr->max_exp)
     {
-        if (p_ptr->prace == RACE_ANDROID) put_str("Cst ", ROW_EXP, 0);
-        else put_str("EXP ", ROW_EXP, 0);
-        c_put_str(TERM_L_GREEN, out_val, ROW_EXP, COL_EXP + 4);
+        if (p_ptr->prace == RACE_ANDROID) put_str("Cst ", r.y + ROW_EXP, r.x + COL_EXP);
+        else put_str("EXP ", r.y + ROW_EXP, r.x + COL_EXP);
+        c_put_str(TERM_L_GREEN, out_val, r.y + ROW_EXP, r.x + COL_EXP + 4);
     }
     else
     {
-        put_str("Exp ", ROW_EXP, 0);
-        c_put_str(TERM_YELLOW, out_val, ROW_EXP, COL_EXP + 4);
+        put_str("Exp ", r.y + ROW_EXP, r.x + COL_EXP);
+        c_put_str(TERM_YELLOW, out_val, r.y + ROW_EXP, r.x + COL_EXP + 4);
     }
 }
 
@@ -1307,16 +1284,14 @@ static void prt_gold(void)
 {
     char tmp[10];
     char out_val[32];
-
-    if (msg_line_contains(ROW_GOLD, COL_GOLD + 12))
-        return;
+    rect_t r = ui_char_info_rect();
 
     big_num_display(p_ptr->au, tmp);
     sprintf(out_val, "%8.8s", tmp);
 
 
-    put_str("AU ", ROW_GOLD, COL_GOLD);
-    c_put_str(TERM_L_GREEN, out_val, ROW_GOLD, COL_GOLD + 4);
+    put_str("AU ", r.y + ROW_GOLD, r.x + COL_GOLD);
+    c_put_str(TERM_L_GREEN, out_val, r.y + ROW_GOLD, r.x + COL_GOLD + 4);
 }
 
 
@@ -1327,10 +1302,11 @@ static void prt_gold(void)
 static void prt_ac(void)
 {
     char tmp[32];
+    rect_t r = ui_char_info_rect();
 
-    put_str("AC ", ROW_AC, COL_AC);
+    put_str("AC ", r.y + ROW_AC, r.x + COL_AC);
     sprintf(tmp, "%5d", p_ptr->dis_ac + p_ptr->dis_to_a);
-    c_put_str(TERM_L_GREEN, tmp, ROW_AC, COL_AC + 7);
+    c_put_str(TERM_L_GREEN, tmp, r.y + ROW_AC, r.x + COL_AC + 7);
 
 }
 
@@ -1340,10 +1316,11 @@ static void prt_ac(void)
 static void prt_hp(void)
 {
     char tmp[32];
+    rect_t r = ui_char_info_rect();
   
     byte color;
   
-    put_str("HP", ROW_CURHP, COL_CURHP);
+    put_str("HP", r.y + ROW_CURHP, r.x + COL_CURHP);
 
     sprintf(tmp, "%4d", p_ptr->chp);
 
@@ -1354,14 +1331,14 @@ static void prt_hp(void)
     else
         color = TERM_RED;
 
-    c_put_str(color, tmp, ROW_CURHP, COL_CURHP+3);
+    c_put_str(color, tmp, r.y + ROW_CURHP, r.x + COL_CURHP + 3);
 
-    put_str( "/", ROW_CURHP, COL_CURHP + 7 );
+    put_str( "/", r.y + ROW_CURHP, r.x + COL_CURHP + 7 );
 
     sprintf(tmp, "%4d", p_ptr->mhp);
     color = TERM_L_GREEN;
 
-    c_put_str(color, tmp, ROW_CURHP, COL_CURHP + 8 );
+    c_put_str(color, tmp, r.y + ROW_CURHP, r.x + COL_CURHP + 8 );
 }
 
 /*
@@ -1371,14 +1348,15 @@ static void prt_sp(void)
 {
     char tmp[32];
     byte color;
+    rect_t r = ui_char_info_rect();
 
     if (p_ptr->msp == 0)
     {
-        Term_erase(COL_CURSP, ROW_CURSP, 12);
+        Term_erase(r.y + COL_CURSP, r.x + ROW_CURSP, r.cx);
         return;
     }
 
-    put_str("SP", ROW_CURSP, COL_CURSP);
+    put_str("SP", r.y + ROW_CURSP, r.x + COL_CURSP);
     sprintf(tmp, "%4d", p_ptr->csp);
     if (p_ptr->csp >= p_ptr->msp)
         color = TERM_L_GREEN;
@@ -1387,14 +1365,14 @@ static void prt_sp(void)
     else
         color = TERM_RED;
 
-    c_put_str(color, tmp, ROW_CURSP, COL_CURSP+3);
+    c_put_str(color, tmp, r.y + ROW_CURSP, r.x + COL_CURSP + 3);
 
-    put_str( "/", ROW_CURSP, COL_CURSP + 7 );
+    put_str( "/", r.y + ROW_CURSP, r.x + COL_CURSP + 7 );
 
     sprintf(tmp, "%4d", p_ptr->msp);
     color = TERM_L_GREEN;
 
-    c_put_str(color, tmp, ROW_CURSP, COL_CURSP + 8);
+    c_put_str(color, tmp, r.y + ROW_CURSP, r.x + COL_CURSP + 8);
 }
 
 static void prt_depth(void)
@@ -1451,9 +1429,10 @@ static void prt_depth(void)
     col = wid - 1 - strlen(buf);
     row = hgt - 1;
 
+/* TODO
     Term_erase(MAX_COL_STATBAR + 1, row, 255);
     c_put_str(attr, buf, row, col);
-    MAX_COL_STATBAR = col - 1;
+    MAX_COL_STATBAR = col - 1;*/
 }
 
 /*
@@ -1466,6 +1445,7 @@ static void prt_depth(void)
 static void prt_state(void)
 {
     byte attr = TERM_WHITE;
+    rect_t r = ui_char_info_rect();
 
     char text[20];
 
@@ -1618,7 +1598,7 @@ static void prt_state(void)
     }
 
     /* Display the info (or blanks) */
-    c_put_str(attr, format("%5.5s",text), ROW_STATE, COL_STATE);
+    c_put_str(attr, format("%5.5s",text), r.y + ROW_STATE, r.x + COL_STATE);
 }
 
 
@@ -1769,12 +1749,13 @@ static void prt_food(int row, int col)
 static void prt_effects(void)
 {
     int i, row, col;
+    rect_t r = ui_char_info_rect();
 
-    row = ROW_EFFECTS;
-    col = COL_EFFECTS;
+    row = r.y + ROW_EFFECTS;
+    col = r.x + COL_EFFECTS;
 
     for (i = 0; i < COUNT_EFFECTS; i++)
-        Term_erase(col, row + i, 12);
+        Term_erase(col, row + i, r.cx);
 
     if (prt_speed(row, col))
         row++;
@@ -1970,12 +1951,13 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
 static void prt_health_bars(void)
 {
     int i, row, col;
+    rect_t r = ui_char_info_rect();
 
-    row = ROW_HEALTH_BARS;
-    col = COL_HEALTH_BARS;
+    row = r.y + ROW_HEALTH_BARS;
+    col = r.x + COL_HEALTH_BARS;
 
     for (i = 0; i < COUNT_HEALTH_BARS; i++)
-        Term_erase(col, row + i, 12);
+        Term_erase(col, row + i, r.cx);
 
     if (p_ptr->inside_battle)
     {
@@ -5197,6 +5179,83 @@ void update_stuff(void)
     }
 }
 
+point_t ui_pt_to_cave_pt(point_t pt)
+{
+    rect_t  r = ui_map_rect();
+    point_t v = point_subtract(pt, rect_topleft(&r));
+    return point_add(viewport_origin, v);
+}
+
+point_t ui_xy_to_cave_pt(int x, int y)
+{
+    return ui_pt_to_cave_pt(point_create(x, y));
+}
+
+point_t cave_pt_to_ui_pt(point_t pt)
+{
+    rect_t  r = ui_map_rect();
+    point_t v = point_subtract(pt, viewport_origin);
+    return point_add(rect_topleft(&r), v);
+}
+
+point_t cave_xy_to_ui_pt(int x, int y)
+{
+    return cave_pt_to_ui_pt(point_create(x, y));
+}
+
+bool cave_pt_is_visible(point_t pt)
+{
+    point_t ui = cave_pt_to_ui_pt(pt);
+    rect_t  r = ui_map_rect();
+    return rect_contains_pt(&r, ui.x, ui.y);
+}
+
+bool cave_xy_is_visible(int x, int y)
+{
+    return cave_pt_is_visible(point_create(x, y));
+}
+
+bool ui_pt_is_visible(point_t pt)
+{
+    rect_t  r = ui_map_rect();
+    return rect_contains_pt(&r, pt.x, pt.y);
+}
+
+bool ui_xy_is_visible(int x, int y)
+{
+    rect_t  r = ui_map_rect();
+    return rect_contains_pt(&r, x, y);
+}
+
+rect_t ui_map_rect(void)
+{
+    return rect_create(
+        0,
+        1,
+        Term->wid - 12 - 1,
+        Term->hgt - 1 - 1
+    );
+}
+
+rect_t ui_status_bar_rect(void)
+{
+    return rect_create(
+        0,
+        Term->hgt - 1,
+        Term->wid - 1,
+        1
+    );
+}
+
+rect_t ui_char_info_rect(void)
+{
+    return rect_create(
+        Term->wid - 12,
+        1,
+        12,
+        Term->hgt - 1
+    );
+}
 
 /*
  * Handle "p_ptr->redraw"
