@@ -197,8 +197,8 @@ When you inscribe {%all} on an *identified* object, the '%all' will automaticall
 
 On the other hand, when you inscribe {%} on an *identified* object, the {%} will transform to a string which describes only its extra resistances. In the example above, the inscription will become {Nt}, meaning the extra resistance of Nether.
 
+<topic:abbrev><color:o>List of abbreviations:</color>
 <style:table>
-<topic:abbrev>  <color:o>List of abbreviations:</color>
   At : extra blows                    Ac : resistance to acid
   Sp : affects speed                  El : resistance to electricity
   St : affects strength               Fi : resistance to fire

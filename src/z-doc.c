@@ -1458,7 +1458,7 @@ int doc_display(doc_ptr doc, cptr caption, int top)
             break;
         case '>':
         {
-            doc_pos_t pos = doc_next_bookmark(doc, doc_pos_create(0, top));
+            doc_pos_t pos = doc_next_bookmark(doc, doc_pos_create(doc->width - 1, top));
             if (doc_pos_is_valid(pos))
             {
                 top = pos.y;
