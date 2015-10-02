@@ -372,8 +372,6 @@ extern bool autosave_t;
 extern bool autosave_l;
 extern bool closing_flag;
 
-extern point_t viewport_origin;
-
 extern int py;
 extern int px;
 extern s16b target_who;
@@ -1569,19 +1567,6 @@ extern int  big_num_round(int num, int sig_figs);
 extern void big_num_display(int num, char *buf);
 extern void check_mon_health_redraw(int m_idx);
 
-extern point_t ui_pt_to_cave_pt(point_t pt);
-extern point_t ui_xy_to_cave_pt(int x, int y);
-extern point_t cave_pt_to_ui_pt(point_t pt);
-extern point_t cave_xy_to_ui_pt(int x, int y);
-extern bool cave_pt_is_visible(point_t pt);
-extern bool cave_xy_is_visible(int x, int y);
-extern bool ui_pt_is_visible(point_t pt);
-extern bool ui_xy_is_visible(int x, int y);
-
-extern rect_t ui_map_rect(void);
-extern rect_t ui_status_bar_rect(void);
-extern rect_t ui_char_info_rect(void);
-
 /* effects.c */
 extern void set_action(int typ);
 extern void reset_tim_flags(void);
@@ -1719,11 +1704,56 @@ extern bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note);
 extern void mon_check_kill_unique(int m_idx);
 extern void resize_map(void);
 extern void redraw_window(void);
-extern bool change_panel(int dy, int dx);
 
-#define PANEL_FORCE_CENTER 0x01
-extern void verify_panel(void);
-extern void verify_panel_aux(u32b options);
+/* Display
+   Various regions of the terminal are reserved for different things.
+   For example, msgs are drawn near the top, the map is (now) leftmost, a
+   status bar is on the bottom, and quick character info is (now) on the
+   right. You can query the placement with: */
+extern rect_t ui_map_rect(void);
+extern rect_t ui_status_bar_rect(void);
+extern rect_t ui_char_info_rect(void);
+/* cf msg_line_rect() in message.h and note that the message "line" is
+   really a drop down box of sorts. It may drop on top of whatever is beneath
+   it (currently the map region). */
+
+/* Previously, the map drawing/scrolling code was a confusing mess, so I
+   cleaned things up. Here is how it works:
+   [1] ui_map_rect() is the region of the terminal for display. Points
+       inside this region are "ui points". These are the points you use
+       for Term_putch, etc.
+   [2] But, we display tiles from the cave. This is the current map. Think
+       of the map_rect as a tiny window unto a much larger map that is the
+       current dungeon level. Traditionally, this is called a "viewport",
+       not a "panel".
+   [3] The position of the "viewport" into the dungeon (i.e., the cave array)
+       is given by the viewport_origin: */
+extern point_t viewport_origin;
+
+/* Now, you can translate points back and forth between the "ui" and the
+   "cave". This is nothing more than computing displacement vectors and
+   adding them to a new origin for the target coordinate system. Easy peasy: */
+extern point_t ui_pt_to_cave_pt(point_t pt);
+extern point_t ui_xy_to_cave_pt(int x, int y);
+extern point_t cave_pt_to_ui_pt(point_t pt);
+extern point_t cave_xy_to_ui_pt(int x, int y);
+
+/* And you can query whether or not a "ui"/"cave" point is currently visible:*/
+extern bool cave_pt_is_visible(point_t pt);
+extern bool cave_xy_is_visible(int x, int y);
+extern bool ui_pt_is_visible(point_t pt);
+extern bool ui_xy_is_visible(int x, int y);
+
+/* As well as make sure the player is currently visible, or slide the viewport
+   around to display other areas of the map: */
+#define VIEWPORT_FORCE_CENTER 0x01
+extern void viewport_verify(void);
+extern void viewport_verify_aux(u32b options);
+extern bool viewport_scroll(int dy, int dx);
+
+/* If you like, you should be able to alter the result of ui_map_rect() and
+   things should just work. */
+
 
 extern cptr mon_health_desc(monster_type *m_ptr);
 extern cptr mon_allegiance_desc(monster_type *m_ptr);

@@ -418,7 +418,7 @@ static void _scroll_cave(int dx, int dy)
            fails to actually center the player as they approach
            the boundary of the cave. Shrink your display window
            enough and you will gain a very smooth scrolling experience! */
-        verify_panel_aux(PANEL_FORCE_CENTER);
+        viewport_verify_aux(VIEWPORT_FORCE_CENTER);
     }
     else
         _scroll_panel(dx, dy);
@@ -1288,7 +1288,7 @@ void wilderness_gen(void)
 
     /* Force scroll after wilderness travel since we are typically
        placed in a boundary "quadrant" */
-    verify_panel();
+    viewport_verify();
     wilderness_move_player(p_ptr->oldpx, p_ptr->oldpy);
 }
 

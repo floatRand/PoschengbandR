@@ -3069,7 +3069,7 @@ void resize_map(void)
     /* Only if the dungeon exists */
     if (!character_dungeon) return;
     
-    verify_panel();
+    viewport_verify();
 
     /* Update stuff */
     p_ptr->update |= (PU_TORCH | PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
@@ -3124,14 +3124,93 @@ void redraw_window(void)
 }
 
 
+point_t ui_pt_to_cave_pt(point_t pt)
+{
+    rect_t  r = ui_map_rect();
+    point_t v = point_subtract(pt, rect_topleft(&r));
+    return point_add(viewport_origin, v);
+}
+
+point_t ui_xy_to_cave_pt(int x, int y)
+{
+    return ui_pt_to_cave_pt(point_create(x, y));
+}
+
+point_t cave_pt_to_ui_pt(point_t pt)
+{
+    rect_t  r = ui_map_rect();
+    point_t v = point_subtract(pt, viewport_origin);
+    return point_add(rect_topleft(&r), v);
+}
+
+point_t cave_xy_to_ui_pt(int x, int y)
+{
+    return cave_pt_to_ui_pt(point_create(x, y));
+}
+
+bool cave_pt_is_visible(point_t pt)
+{
+    point_t ui = cave_pt_to_ui_pt(pt);
+    rect_t  r = ui_map_rect();
+    return rect_contains_pt(&r, ui.x, ui.y);
+}
+
+bool cave_xy_is_visible(int x, int y)
+{
+    return in_bounds2(y, x) /* This is for legacy code ... */
+        && cave_pt_is_visible(point_create(x, y));
+}
+
+bool ui_pt_is_visible(point_t pt)
+{
+    rect_t  r = ui_map_rect();
+    return rect_contains_pt(&r, pt.x, pt.y);
+}
+
+bool ui_xy_is_visible(int x, int y)
+{
+    rect_t  r = ui_map_rect();
+    return rect_contains_pt(&r, x, y);
+}
+
+rect_t ui_map_rect(void)
+{
+    return rect_create(
+        0,
+        1,
+        Term->wid - 12 - 1,
+        Term->hgt - 1 - 1
+    );
+}
+
+rect_t ui_status_bar_rect(void)
+{
+    return rect_create(
+        0,
+        Term->hgt - 1,
+        Term->wid - 1,
+        1
+    );
+}
+
+rect_t ui_char_info_rect(void)
+{
+    return rect_create(
+        Term->wid - 12,
+        1,
+        12,
+        Term->hgt - 1
+    );
+}
+
 /*
- * Handle a request to change the current panel
+ * Handle a request to change the current viewport
  *
  * Return TRUE if the panel was changed.
  *
  * Also used in do_cmd_locate
  */
-bool change_panel(int dy, int dx)
+bool viewport_scroll(int dy, int dx)
 {
     int y, x;
     rect_t r = ui_map_rect();
@@ -3164,7 +3243,6 @@ bool change_panel(int dy, int dx)
     return FALSE;
 }
 
-
 /*
  * Given an row (y) and col (x), this routine detects when a move
  * off the screen has occurred and figures new borders. -RAK-
@@ -3173,13 +3251,13 @@ bool change_panel(int dy, int dx)
  *
  * The map is reprinted if necessary.
  */
-void verify_panel_aux(u32b options)
+void viewport_verify_aux(u32b options)
 {
     point_t p = cave_xy_to_ui_pt(px, py);
     rect_t  r = ui_map_rect();
     point_t o = viewport_origin;
 
-    if ((options & PANEL_FORCE_CENTER) || !rect_contains_pt(&r, p.x, p.y))
+    if ((options & VIEWPORT_FORCE_CENTER) || !rect_contains_pt(&r, p.x, p.y))
     {
         point_t c = rect_center(&r);
         point_t d = point_subtract(p, c);
@@ -3210,12 +3288,12 @@ void verify_panel_aux(u32b options)
     }
 }
 
-void verify_panel(void)
+void viewport_verify(void)
 {
     int options = 0;
     if (center_player && (center_running || !running))
-        options |= PANEL_FORCE_CENTER;
-    verify_panel_aux(options);
+        options |= VIEWPORT_FORCE_CENTER;
+    viewport_verify_aux(options);
 }
 
 
@@ -4400,7 +4478,7 @@ bool target_set(int mode)
                 case 'p':
                 {
                     /* Recenter the map around the player */
-                    verify_panel();
+                    viewport_verify();
 
                     /* Update stuff */
                     p_ptr->update |= (PU_MONSTERS);
@@ -4456,7 +4534,7 @@ bool target_set(int mode)
                 while (flag && (i < 0))
                 {
                     /* Note the change */
-                    if (change_panel(ddy[d], ddx[d]))
+                    if (viewport_scroll(ddy[d], ddx[d]))
                     {
                         int v = temp_y[m];
                         int u = temp_x[m];
@@ -4523,7 +4601,7 @@ bool target_set(int mode)
                         /* Apply the motion */
                         if (!cave_xy_is_visible(x, y))
                         {
-                            if (change_panel(dy, dx)) target_set_prepare(mode);
+                            if (viewport_scroll(dy, dx)) target_set_prepare(mode);
                         }
 
                         /* Slide into legality */
@@ -4614,7 +4692,7 @@ bool target_set(int mode)
                 case 'p':
                 {
                     /* Recenter the map around the player */
-                    verify_panel();
+                    viewport_verify();
 
                     /* Update stuff */
                     p_ptr->update |= (PU_MONSTERS);
@@ -4719,7 +4797,7 @@ bool target_set(int mode)
                 /* Apply the motion */
                 if (!cave_xy_is_visible(x, y))
                 {
-                    if (change_panel(dy, dx)) target_set_prepare(mode);
+                    if (viewport_scroll(dy, dx)) target_set_prepare(mode);
                 }
 
                 /* Slide into legality */
@@ -4740,7 +4818,7 @@ bool target_set(int mode)
     prt("", 0, 0);
 
     /* Recenter the map around the player */
-    verify_panel();
+    viewport_verify();
 
     /* Update stuff */
     p_ptr->update |= (PU_MONSTERS);
@@ -5292,7 +5370,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
                     n = 0;
                     y = py;
                     x = px;
-                    verify_panel();    /* Move cursor to player */
+                    viewport_verify();    /* Move cursor to player */
 
                     /* Update stuff */
                     p_ptr->update |= (PU_MONSTERS);
@@ -5313,7 +5391,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
 
                     dy = 2 * (y - cy) / map_rect.cy;
                     dx = 2 * (x - cx) / map_rect.cx;
-                    if (dy || dx) change_panel(dy, dx);
+                    if (dy || dx) viewport_scroll(dy, dx);
                 }
             }
             break;
@@ -5372,7 +5450,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
                 if (!cave_xy_is_visible(x, y))
                 {
                     /* if (change_panel(dy, dx)) target_set_prepare(mode); */
-                    change_panel(dy, dx);
+                    viewport_scroll(dy, dx);
                 }
 
                 /* Slide into legality */
@@ -5391,7 +5469,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
     msg_line_clear();
 
     /* Recenter the map around the player */
-    verify_panel();
+    viewport_verify();
 
     /* Update stuff */
     p_ptr->update |= (PU_MONSTERS);

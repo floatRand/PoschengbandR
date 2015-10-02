@@ -5178,7 +5178,7 @@ void disturb(int stop_search, int unused_flag)
         running = 0;
 
         /* Check for new panel if appropriate */
-        if (center_player && !center_running) verify_panel();
+        if (center_player && !center_running) viewport_verify();
 
         /* Calculate torch radius */
         p_ptr->update |= (PU_TORCH);
@@ -5193,7 +5193,7 @@ void disturb(int stop_search, int unused_flag)
         travel.run = 0;
 
         /* Check for new panel if appropriate */
-        if (center_player && !center_running) verify_panel();
+        if (center_player && !center_running) viewport_verify();
 
         /* Calculate torch radius */
         p_ptr->update |= (PU_TORCH);

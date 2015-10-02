@@ -1519,7 +1519,7 @@ void carry(bool pickup)
     char    o_name[MAX_NLEN];
 
     /* Recenter the map around the player */
-    verify_panel();
+    viewport_verify();
 
     /* Update stuff */
     p_ptr->update |= (PU_MONSTERS);
@@ -4848,7 +4848,7 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
         lite_spot(ny, nx);
 
         /* Check for new panel (redraw map) */      
-        verify_panel();
+        viewport_verify();
 
         /* Check detection status */
         if (old_dtrap && !new_dtrap)

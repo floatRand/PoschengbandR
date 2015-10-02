@@ -1835,7 +1835,7 @@ void ring_process_m(int m_idx)
                 px = sx;
                 lite_spot(oy, ox);
                 lite_spot(py, px);
-                verify_panel();
+                viewport_verify();
                 set_hostile(m_ptr);
                 p_ptr->riding = 0;
                 calc_bonuses();

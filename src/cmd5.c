@@ -1893,7 +1893,7 @@ bool rakuba(int dam, bool force)
         lite_spot(py, px);
 
         /* Check for new panel */
-        verify_panel();
+        viewport_verify();
     }
 
     p_ptr->riding = 0;

@@ -4208,7 +4208,7 @@ static void process_command(void)
 
         case KTRL('L'):
         {
-            verify_panel_aux(PANEL_FORCE_CENTER);
+            viewport_verify_aux(VIEWPORT_FORCE_CENTER);
             break;
         }
 
@@ -5193,7 +5193,7 @@ static void dungeon(bool load_game)
     (void)calculate_upkeep();
 
     /* Verify the panel */
-    verify_panel();
+    viewport_verify();
 
     /* Flush messages */
     msg_print(NULL);

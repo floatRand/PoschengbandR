@@ -982,14 +982,14 @@ void do_cmd_locate(void)
         if (!dir) break;
 
         /* Apply the motion */
-        if (change_panel(ddy[dir], ddx[dir]))
+        if (viewport_scroll(ddy[dir], ddx[dir]))
         {
             y2 = viewport_origin.y;
             x2 = viewport_origin.x;
         }
     }
 
-    verify_panel();
+    viewport_verify();
 
     p_ptr->update |= PU_MONSTERS;
     p_ptr->redraw |= PR_MAP;
