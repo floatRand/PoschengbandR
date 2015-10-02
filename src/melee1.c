@@ -447,7 +447,7 @@ bool make_attack_normal(int m_idx)
                 {
                     act = silly_attacks[randint0(MAX_SILLY_ATTACK)];
                 }
-                msg_format("%^s %s%s%s", m_name, act, do_silly_attack ? " you" : "", retaliation_hack ? ".<color:g>)<color:*>" : ".");
+                msg_format("%^s %s%s%s", m_name, act, do_silly_attack ? " you" : "", retaliation_hack ? ".<color:g>)</color>" : ".");
             }
 
             /* Hack -- assume all attacks are obvious */
@@ -1649,7 +1649,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is <color:r>burned<color:*>!", m_name);
+                        msg_format("%^s is <color:r>burned</color>!", m_name);
 
                         if (mon_take_hit(m_idx, dam, &fear,
                             " turns into a pile of ash."))
@@ -1675,7 +1675,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is <color:b>zapped<color:*>!", m_name);
+                        msg_format("%^s is <color:b>zapped</color>!", m_name);
 
                         if (mon_take_hit(m_idx, dam, &fear,
                             " turns into a pile of cinder."))
@@ -1701,7 +1701,7 @@ bool make_attack_normal(int m_idx)
                         /* Modify the damage */
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
 
-                        msg_format("%^s is <color:w>frozen<color:*>!", m_name);
+                        msg_format("%^s is <color:w>frozen</color>!", m_name);
 
                         if (mon_take_hit(m_idx, dam, &fear,
                             " was frozen."))
@@ -1726,7 +1726,7 @@ bool make_attack_normal(int m_idx)
                         int dam = _aura_dam_p();
 
                         dam = mon_damage_mod(m_ptr, dam, FALSE);
-                        msg_format("%^s is <color:u>shredded<color:*>!", m_name);
+                        msg_format("%^s is <color:u>shredded</color>!", m_name);
                         if (mon_take_hit(m_idx, dam, &fear," was torn to pieces."))
                         {
                             blinked = FALSE;
@@ -1768,13 +1768,13 @@ bool make_attack_normal(int m_idx)
                         switch (randint1(3))
                         {
                         case 1:
-                            msg_format("%^s gets <color:B>chronosmashed<color:*>!", m_name);
+                            msg_format("%^s gets <color:B>chronosmashed</color>!", m_name);
                             break;
                         case 2:
-                            msg_format("%^s gets <color:B>flux capacitated<color:*>!", m_name);
+                            msg_format("%^s gets <color:B>flux capacitated</color>!", m_name);
                             break;
                         case 3:
-                            msg_format("%^s <color:B>withers<color:*>!", m_name);
+                            msg_format("%^s <color:B>withers</color>!", m_name);
                             break;
                         }
                         project(0, 0, m_ptr->fy, m_ptr->fx, dam, GF_TIME, PROJECT_STOP | PROJECT_KILL | PROJECT_GRID, -1);
@@ -1943,7 +1943,7 @@ bool make_attack_normal(int m_idx)
                 if (m_ptr->ml)
                 {
                     disturb(1, 0);
-                    msg_format("%^s misses%s", m_name, retaliation_hack ? ".<color:g>)<color:*>" : ".");
+                    msg_format("%^s misses%s", m_name, retaliation_hack ? ".<color:g>)</color>" : ".");
                 }
                 damage = 0;
                 break;
@@ -1951,7 +1951,7 @@ bool make_attack_normal(int m_idx)
                 if (m_ptr->ml)
                 {
                     disturb(1, 0);
-                    msg_format("%^s slobbers ineffectually%s", m_name, retaliation_hack ? ".<color:g>)<color:*>" : ".");
+                    msg_format("%^s slobbers ineffectually%s", m_name, retaliation_hack ? ".<color:g>)</color>" : ".");
                 }
                 damage = 0;
                 break;
@@ -1959,7 +1959,7 @@ bool make_attack_normal(int m_idx)
                 if (m_ptr->ml)
                 {
                     disturb(1, 0);
-                    msg_format("%^s wails ineffectually%s", m_name, retaliation_hack ? ".<color:g>)<color:*>" : ".");
+                    msg_format("%^s wails ineffectually%s", m_name, retaliation_hack ? ".<color:g>)</color>" : ".");
                 }
                 damage = 0;
                 break;
@@ -1969,7 +1969,7 @@ bool make_attack_normal(int m_idx)
                     char tmp[MAX_NLEN];
                     disturb(1, 0);
                     monster_desc(tmp, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
-                    msg_format("You avoid %s gaze%s", tmp, retaliation_hack ? ".<color:g>)<color:*>" : ".");
+                    msg_format("You avoid %s gaze%s", tmp, retaliation_hack ? ".<color:g>)</color>" : ".");
                 }
                 damage = 0;
                 break;

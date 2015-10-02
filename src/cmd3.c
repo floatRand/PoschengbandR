@@ -336,7 +336,7 @@ void do_cmd_destroy(void)
         if (o_ptr->number > 1)
             options |= OD_OMIT_PREFIX;
         object_desc(o_name, o_ptr, options);
-        sprintf(out_val, "Really destroy %s? <color:y>[y/n/Auto]<color:*>", o_name);
+        sprintf(out_val, "Really destroy %s? <color:y>[y/n/Auto]</color>", o_name);
 
         ch = msg_prompt(out_val, "nyA", PROMPT_DEFAULT);
         if (ch == 'n') return;

@@ -2944,7 +2944,7 @@ bool get_check(cptr prompt)
 {
 /*  return get_check_strict(prompt, 0);*/
     char buf[255];
-    sprintf(buf, "%s<color:y>[y/n]<color:*>", prompt);
+    sprintf(buf, "%s<color:y>[y/n]</color>", prompt);
     if (msg_prompt(buf, "ny", PROMPT_DEFAULT) == 'y')
         return TRUE;
     return FALSE;

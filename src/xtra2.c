@@ -5361,7 +5361,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
         n = 0;
     }
 
-    msg_print("Select a point and press <color:y>space<color:*>.");
+    msg_print("Select a point and press <color:y>space</color>.");
 
     while ((ch != ESCAPE) && !success)
     {

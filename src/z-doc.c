@@ -803,7 +803,7 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
                    that we can push onto, but this raises storage issues.
                 */
                 string_ptr s = string_alloc(NULL);
-                string_printf(s, "<style:link>[%c]<style:*>", ch);
+                string_printf(s, "<style:link>[%c]</style>", ch);
                 doc_insert(doc, string_buffer(s));
                 string_free(s);
 
@@ -856,7 +856,7 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
         assert(token.type == DOC_TOKEN_WORD);
         assert(token.size > 0);
 
-        /* Queue Complexity is for "<color:R>difficult<color:*>!" which is actually a bit common! */
+        /* Queue Complexity is for "<color:R>difficult</color>!" which is actually a bit common! */
         qidx = 0;
         cb = token.size;
         queue[qidx++] = token;

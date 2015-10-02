@@ -295,7 +295,7 @@ static void _evacuation_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);
-        if (msg_prompt("You are about to flee the current level. Are you sure? <color:y>[y/n]<color:*>", "ny", PROMPT_DEFAULT) == 'y')
+        if (msg_prompt("You are about to flee the current level. Are you sure? <color:y>[y/n]</color>", "ny", PROMPT_DEFAULT) == 'y')
         {
             teleport_level(0);
             var_set_bool(res, TRUE);

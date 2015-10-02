@@ -4444,10 +4444,10 @@ static void process_command(void)
                 if (get_rnd_line("error.txt", 0, error_m) == ERROR_SUCCESS)
                     msg_print(error_m);
                 else
-                    msg_print("Unknown command. Type <color:y>?<color:*> for help.");
+                    msg_print("Unknown command. Type <color:y>?</color> for help.");
             }
             else
-                msg_print("Unknown command. Type <color:y>?<color:*> for help.");
+                msg_print("Unknown command. Type <color:y>?</color> for help.");
 
             break;
         }
@@ -5955,14 +5955,14 @@ void play_game(bool new_game)
         do_cmd_redraw();  /* Not sure why this is required?! */
 
         cmsg_print(TERM_VIOLET, "=========================================");
-        msg_print("\n<color:B>Welcome!<color:*> You begin life in the town where you may purchase "
+        msg_print("\n<color:B>Welcome!</color> You begin life in the town where you may purchase "
                   "supplies for the dangers that await you.\n"
                   "This is the message line where important information is "
                   "communicated to you while you play the game. "
-                  "Press <color:y>SPACE<color:*> every time you see a <color:B>-more-<color:*> prompt and "
+                  "Press <color:y>SPACE</color> every time you see a <color:B>-more-</color> prompt and "
                   "you are finished reading the current messages. "
-                  "Press <color:y>CTRL+P<color:*> to review recent messages. "
-                  "You may press <color:y>?<color:*> at any time for help.\n\n");
+                  "Press <color:y>CTRL+P</color> to review recent messages. "
+                  "You may press <color:y>?</color> at any time for help.\n\n");
         msg_boundary();
         player_outfit();
         

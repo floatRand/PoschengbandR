@@ -119,7 +119,7 @@ void cmsg_append(byte color, cptr str)
         if (string_length(m->msg))
             string_append_char(m->msg, ' ');
         if (color != m->color)
-            string_printf(m->msg, "<color:%c>%s<color:*>", attr_to_attr_char(color), str);
+            string_printf(m->msg, "<color:%c>%s</color>", attr_to_attr_char(color), str);
         else
             string_append(m->msg, str);
     }

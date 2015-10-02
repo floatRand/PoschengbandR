@@ -2045,7 +2045,7 @@ static void store_purchase(void)
         char prompt[255];
         price = (best * j_ptr->number);
         object_desc(o_name, j_ptr, OD_COLOR_CODED);
-        sprintf(prompt, "Really purchase %s (%c) for <color:R>%d<color:*> gp? <color:y>[y/n]<color:*>", o_name, I2A(item), price);
+        sprintf(prompt, "Really purchase %s (%c) for <color:R>%d</color> gp? <color:y>[y/n]</color>", o_name, I2A(item), price);
         if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'y')
         {
             if (p_ptr->au >= price)
@@ -2385,7 +2385,7 @@ static void store_sell(void)
             price = ot_ptr->max_cost;
         price *= q_ptr->number;
 
-        sprintf(prompt, "Really sell %s (%c) for <color:R>%d<color:*> gp? <color:y>[y/n]<color:*>", o_name, index_to_label(item), price);
+        sprintf(prompt, "Really sell %s (%c) for <color:R>%d</color> gp? <color:y>[y/n]</color>", o_name, index_to_label(item), price);
         if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'y')
         {
             if (cur_store_num == STORE_BLACK) /* The black market is illegal! */
@@ -2424,7 +2424,7 @@ static void store_sell(void)
             object_desc(o_name, q_ptr, OD_COLOR_CODED);
 
             /* Describe the result (in message buffer) */
-            msg_format("You sold %s for <color:R>%d<color:*> gold.", o_name, price);
+            msg_format("You sold %s for <color:R>%d</color> gold.", o_name, price);
 
             /*
              * Hack -- Allocate charges between those wands or rods sold

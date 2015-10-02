@@ -731,14 +731,14 @@ bool monst_spell_monst(int m_idx)
     /* Get the monster name (or "it") */
     monster_desc(tmp, m_ptr, 0x00);
     tmp[0] = toupper(tmp[0]);
-    sprintf(m_name, "<color:B>%s<color:*>", tmp);
+    sprintf(m_name, "<color:B>%s</color>", tmp);
 
     /* Get the monster possessive ("his"/"her"/"its") */
     monster_desc(m_poss, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
 
     /* Get the target's name (or "it") */
     monster_desc(tmp, t_ptr, 0x00);
-    sprintf(t_name, "<color:o>%s<color:*>", tmp);
+    sprintf(t_name, "<color:o>%s</color>", tmp);
 
     /* Choose a spell to cast */
     thrown_spell = spell[randint0(num)];
