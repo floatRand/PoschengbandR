@@ -34,8 +34,8 @@
 #define ROW_GOLD                2
 #define COL_GOLD                0       /* "AU xxxxxxxxx" */
 
-/* From defines.h
-#define ROW_EQUIPPY             4
+/*
+#define ROW_EQUIPPY             3
 #define COL_EQUIPPY             0
 */
 
@@ -61,9 +61,6 @@
 #define ROW_EFFECTS            20
 #define COL_EFFECTS             0
 #define COUNT_EFFECTS          11       /* Could be off screen ... */
-
-#define ROW_DEPTH               (-1)
-#define COL_DEPTH               (-8)      /* "Lev NNN" / "NNNN ft" */
 
 static int _npow(int x, int y)
 {
@@ -1375,11 +1372,28 @@ static void prt_sp(void)
     c_put_str(color, tmp, r.y + ROW_CURSP, r.x + COL_CURSP + 8);
 }
 
+static int _depth_width = 0;
+rect_t ui_status_bar_rect(void)
+{
+    return rect_create(
+        _depth_width,
+        Term->hgt - 1,
+        Term->wid - _depth_width,
+        1
+    );
+}
+
 static void prt_depth(void)
 {
     char buf[100];
-    int wid, hgt, row, col;
     byte attr = TERM_WHITE;
+    rect_t r;
+
+    /* Hack: We share space with the statusbar, and we
+       are always drawn first. ui_status_bar_rect() will
+       adjust the result depending on the value of _depth_width.*/
+    _depth_width = 0;
+    r = ui_status_bar_rect();
 
     if (!dun_level)
     {
@@ -1425,14 +1439,9 @@ static void prt_depth(void)
         }
     }
 
-    Term_get_size(&wid, &hgt);
-    col = wid - 1 - strlen(buf);
-    row = hgt - 1;
-
-/* TODO
-    Term_erase(MAX_COL_STATBAR + 1, row, 255);
-    c_put_str(attr, buf, row, col);
-    MAX_COL_STATBAR = col - 1;*/
+    Term_erase(r.x, r.y, r.cx);
+    c_put_str(attr, buf, r.y, r.x);
+    _depth_width = strlen(buf) + 1;
 }
 
 /*

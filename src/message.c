@@ -203,7 +203,7 @@ void msg_line_init(const rect_t *display_rect)
     }
     else
     {
-        rect_t r = rect_create(0, 0, 72, 10);
+        rect_t r = rect_create(0, 0, MIN(72, Term->wid - 13), 10);
         msg_line_init(&r);
     }
 }

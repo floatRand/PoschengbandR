@@ -4291,7 +4291,7 @@ void do_cmd_save_screen_doc(void)
     for (y = 0; y < hgt; y++)
     {
         int  current_a = -1;
-        for (x = 0; x < wid - 1; x++)
+        for (x = 0; x < wid; x++)
         {
             (void)(Term_what(x, y, &a, &c));
 

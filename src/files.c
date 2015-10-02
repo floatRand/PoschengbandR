@@ -2129,7 +2129,6 @@ static void display_player_equippy(int y, int x, u16b mode)
 #define ROW_EQUIPPY             3
 #define COL_EQUIPPY             0       /* equippy chars */
 
-
 void print_equippy(void)
 {
     rect_t r = ui_char_info_rect();

@@ -3070,6 +3070,7 @@ void resize_map(void)
     if (!character_dungeon) return;
     
     viewport_verify();
+    msg_line_clear();
 
     /* Update stuff */
     p_ptr->update |= (PU_TORCH | PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
@@ -3097,6 +3098,8 @@ void resize_map(void)
      * Place the cursor on the player
      */
     if (can_save) move_cursor_relative(py, px);
+
+    msg_line_init(NULL);
 
     /* Refresh */
     Term_fresh();
@@ -3180,16 +3183,6 @@ rect_t ui_map_rect(void)
         1,
         Term->wid - 12 - 1,
         Term->hgt - 1 - 1
-    );
-}
-
-rect_t ui_status_bar_rect(void)
-{
-    return rect_create(
-        0,
-        Term->hgt - 1,
-        Term->wid - 1,
-        1
     );
 }
 
