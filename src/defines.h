@@ -902,9 +902,6 @@ enum _mimic_types {
 #define PERS_HASTY        13
 #define MAX_PERSONALITIES 14
 
-#define ROW_MAP                  0
-#define COL_MAP                  0
-
 /*
  * Number of feats we change to (Excluding default). Used in f_info.txt.
  */

@@ -2271,7 +2271,7 @@ static void fix_overhead(void)
 
         /* Full map in too small window is useless  */
         Term_get_size(&wid, &hgt);
-        if (wid > COL_MAP + 2 && hgt > ROW_MAP + 2)
+        /*??if (wid > COL_MAP + 2 && hgt > ROW_MAP + 2)*/
         {
             /* Redraw map */
             display_map(&cy, &cx);

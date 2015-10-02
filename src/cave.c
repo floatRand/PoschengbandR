@@ -1864,6 +1864,10 @@ static void display_shortened_item_name(object_type *o_ptr, int y)
 /*
  * Display a "small-scale" map of the dungeon in the active Term
  */
+#define _ROW_MAP                  0
+#define _COL_MAP                  12
+
+
 void display_map(int *cy, int *cx)
 {
     int i, j, x, y;
@@ -2051,7 +2055,7 @@ void display_map(int *cy, int *cx)
     for (y = 0; y < hgt + 2; ++y)
     {
         /* Start a new line */
-        Term_gotoxy(COL_MAP, y);
+        Term_gotoxy(_COL_MAP, y);
 
         /* Display the line */
         for (x = 0; x < wid + 2; ++x)
@@ -2103,11 +2107,11 @@ void display_map(int *cy, int *cx)
     }
 
     /* Player location */
-        (*cy) = py / yrat + 1 + ROW_MAP;
+        (*cy) = py / yrat + 1 + _ROW_MAP;
     if (!use_bigtile)
-        (*cx) = px / xrat + 1 + COL_MAP;
+        (*cx) = px / xrat + 1 + _COL_MAP;
     else
-        (*cx) = (px / xrat + 1) * 2 + COL_MAP;
+        (*cx) = (px / xrat + 1) * 2 + _COL_MAP;
 
     /* Restore lighting effects */
     view_special_lite = old_view_special_lite;
