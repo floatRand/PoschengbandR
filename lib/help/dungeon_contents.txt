@@ -1,24 +1,14 @@
-The Town and Dungeon.
+<style:title>The Town and Dungeon</style>
 
 Please choose one of the following online help files:
 
-    (a) Town and Dungeon                      (dungeon.txt)
-    (b) Symbols on Your Map                   (dungeon.txt#MapSymbols)
-    (c) Within the Dungeon                    (dungeon.txt#WithinDungeon)
-    (d) Objects in the Dungeon                (dungeon.txt#Objects)
-    (e) Mining                                (dungeon.txt#Mining)
-    (f) Staircases, Doors, Passages & Rooms   (dungeon.txt#StairsDoorsEtc)
-    (g) Level Feelings                        (dungeon.txt#Feelings)
-    (h) Random Quests                         (dungeon.txt#RandomQuests)
+    <link:dungeon.txt> Town and Dungeon
+    <link:dungeon.txt#MapSymbols> Symbols on Your Map
+    <link:dungeon.txt#WithinDungeon> Within the Dungeon
+    <link:dungeon.txt#Objects> Objects in the Dungeon
+    <link:dungeon.txt#Mining> Mining
+    <link:dungeon.txt#StairsDoorsEtc> Staircases, Doors, Passages & Rooms
+    <link:dungeon.txt#Feelings> Level Feelings
+    <link:dungeon.txt#RandomQuests> Random Quests
 
-    (?) Help System Commands                  (helpinfo.txt)
-
-
-***** [a] dungeon.txt
-***** [b] dungeon.txt#MapSymbols
-***** [c] dungeon.txt#WithinDungeon
-***** [d] dungeon.txt#Objects
-***** [e] dungeon.txt#Mining
-***** [f] dungeon.txt#StairsDoorsEtc
-***** [g] dungeon.txt#Feelings
-***** [h] dungeon.txt#RandomQuests
+    <color:y>(?) Help System Commands</color>
