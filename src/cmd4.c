@@ -15,6 +15,8 @@
 #include "int-map.h"
 #include "z-doc.h"
 
+#include <assert.h>
+
 static void do_cmd_knowledge_shooter(void);
 
 /*
@@ -3100,34 +3102,40 @@ void do_cmd_version(void)
 /*
  * Array of feeling strings
  */
-static cptr do_cmd_feeling_text[11] =
+struct _feeling_info_s
 {
-    "Looks like any other level.",
-    "You feel there is something special about this level.",
-    "You nearly faint as horrible visions of death fill your mind!",
-    "This level looks very dangerous.",
-    "You have a very bad feeling...",
-    "You have a bad feeling...",
-    "You feel nervous.",
-    "You feel your luck is turning...",
-    "You don't like the look of this place.",
-    "This level looks reasonably safe.",
-    "What a boring place..."
+    byte color;
+    cptr msg;
+};
+typedef struct _feeling_info_s _feeling_info_t;
+static _feeling_info_t _level_feelings[11] =
+{
+    {TERM_SLATE, "Looks like any other level."},
+    {TERM_L_BLUE, "You feel there is something special about this level."},
+    {TERM_VIOLET, "You nearly faint as horrible visions of death fill your mind!"},
+    {TERM_RED, "This level looks very dangerous."},
+    {TERM_L_RED, "You have a very bad feeling..."},
+    {TERM_ORANGE, "You have a bad feeling..."},
+    {TERM_YELLOW, "You feel nervous."},
+    {TERM_L_UMBER, "You feel your luck is turning..."},
+    {TERM_L_WHITE, "You don't like the look of this place."},
+    {TERM_WHITE, "This level looks reasonably safe."},
+    {TERM_WHITE, "What a boring place..."},
 };
 
-static cptr do_cmd_feeling_text_lucky[11] =
+static _feeling_info_t _level_feelings_lucky[11] =
 {
-    "Looks like any other level.",
-    "You feel there is something special about this level.",
-    "You have a superb feeling about this level.",
-    "You have an excellent feeling...",
-    "You have a very good feeling...",
-    "You have a good feeling...",
-    "You feel strangely lucky...",
-    "You feel your luck is turning...",
-    "You like the look of this place...",
-    "This level can't be all bad...",
-    "What a boring place..."
+    {TERM_SLATE, "Looks like any other level."},
+    {TERM_L_BLUE, "You feel there is something special about this level."},
+    {TERM_VIOLET, "You have a superb feeling about this level."},
+    {TERM_RED, "You have an excellent feeling..."},
+    {TERM_L_RED, "You have a very good feeling..."},
+    {TERM_ORANGE, "You have a good feeling..."},
+    {TERM_YELLOW, "You feel strangely lucky..."},
+    {TERM_L_UMBER, "You feel your luck is turning..."},
+    {TERM_L_WHITE, "You like the look of this place..."},
+    {TERM_WHITE, "This level can't be all bad..."},
+    {TERM_WHITE, "What a boring place..."},
 };
 
 
@@ -3141,8 +3149,6 @@ void do_cmd_feeling(void)
     if (p_ptr->inside_quest && !random_quest_number(dun_level))
     {
         msg_print("Looks like a typical quest level.");
-
-        return;
     }
 
     /* No useful feeling in town */
@@ -3151,14 +3157,10 @@ void do_cmd_feeling(void)
         if (!strcmp(town[p_ptr->town_num].name, "wilderness"))
         {
             msg_print("Looks like a strange wilderness.");
-
-            return;
         }
         else
         {
             msg_print("Looks like a typical town.");
-
-            return;
         }
     }
 
@@ -3166,15 +3168,19 @@ void do_cmd_feeling(void)
     else if (!dun_level)
     {
         msg_print("Looks like a typical wilderness.");
-
-        return;
     }
 
     /* Display the feeling */
-    if (p_ptr->good_luck || p_ptr->pclass == CLASS_ARCHAEOLOGIST)
-        msg_print(do_cmd_feeling_text_lucky[p_ptr->feeling]);
     else
-        msg_print(do_cmd_feeling_text[p_ptr->feeling]);
+    {
+        _feeling_info_t feeling;
+        assert(/*0 <= p_ptr->feeling &&*/ p_ptr->feeling < 11);
+        if (p_ptr->good_luck || p_ptr->pclass == CLASS_ARCHAEOLOGIST)
+            feeling = _level_feelings_lucky[p_ptr->feeling];
+        else
+            feeling = _level_feelings[p_ptr->feeling];
+        cmsg_print(feeling.color, feeling.msg);
+    }
 }
 
 
