@@ -559,8 +559,7 @@ void check_quest_completion(monster_type *m_ptr)
 
                     if (!(quest[i].flags & QUEST_FLAG_SILENT))
                     {
-                        msg_print("You just completed your quest!");
-                        msg_print(NULL);
+                        cmsg_print(TERM_L_BLUE, "You just completed your quest!");
                     }
 
                     quest[i].cur_num = 0;
@@ -594,8 +593,7 @@ void check_quest_completion(monster_type *m_ptr)
                         quest[i].complev = (byte)p_ptr->lev;
                         virtue_add(VIRTUE_VALOUR, 2);
                         p_ptr->fame += randint1(2);
-                        msg_print("You just completed your quest!");
-                        msg_print(NULL);
+                        cmsg_print(TERM_L_BLUE, "You just completed your quest!");
                     }
                 }
                 break;
@@ -625,8 +623,7 @@ void check_quest_completion(monster_type *m_ptr)
 
                     if (!(quest[i].flags & QUEST_FLAG_SILENT))
                     {
-                        msg_print("You just completed your quest!");
-                        msg_print(NULL);
+                        cmsg_print(TERM_L_BLUE, "You just completed your quest!");
                     }
 
                     /* Finish the two main quests without rewarding */
@@ -658,8 +655,7 @@ void check_quest_completion(monster_type *m_ptr)
 
                     if (!(quest[i].flags & QUEST_FLAG_SILENT))
                     {
-                        msg_print("You just completed your quest!");
-                        msg_print(NULL);
+                        cmsg_print(TERM_L_BLUE, "You just completed your quest!");
                     }
                     quest[i].cur_num = 0;
                 }
