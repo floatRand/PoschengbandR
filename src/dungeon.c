@@ -5195,8 +5195,8 @@ static void dungeon(bool load_game)
     /* Verify the panel */
     viewport_verify();
 
-    /* Flush messages */
-    msg_print(NULL);
+    /* Flush messages
+    msg_print(NULL);*/
 
 
     /* Enter "xtra" mode */
@@ -5206,7 +5206,7 @@ static void dungeon(bool load_game)
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER | PW_MONSTER_LIST | PW_MONSTER | PW_OVERHEAD | PW_DUNGEON);
 
     /* Redraw dungeon */
-    p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_EQUIPPY);
+    p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_EQUIPPY | PR_MSG_LINE);
 
     /* Redraw map */
     p_ptr->redraw |= (PR_MAP);

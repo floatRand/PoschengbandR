@@ -5214,8 +5214,8 @@ void redraw_stuff(void)
     if (p_ptr->redraw & (PR_WIPE))
     {
         p_ptr->redraw &= ~(PR_WIPE);
-        if (!(p_ptr->redraw & PR_MSG_LINE)) /* ?? */
-            msg_print(NULL);
+        if (!(p_ptr->redraw & PR_MSG_LINE))
+            msg_line_clear();
         Term_clear();
     }
 
