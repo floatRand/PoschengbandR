@@ -867,7 +867,8 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
             {
                 cb += token.size;
             }
-            else if (token.type == DOC_TOKEN_TAG && token.tag.type == DOC_TAG_COLOR)
+            else if ( token.type == DOC_TOKEN_TAG
+                   && (token.tag.type == DOC_TAG_COLOR || token.tag.type == DOC_TAG_CLOSE_COLOR) )
             {
             }
             else
@@ -888,37 +889,38 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
         for (i = 0; i < qidx; i++)
         {
             doc_token_ptr current = &queue[i];
-            doc_char_ptr  cell = doc_char(doc, doc->cursor);
 
-            assert(cell);
             if (current->type == DOC_TOKEN_TAG)
             {
-                assert(current->tag.type == DOC_TAG_COLOR);
+                assert(current->tag.type == DOC_TAG_COLOR || current->tag.type == DOC_TAG_CLOSE_COLOR);
                 _doc_process_tag(doc, &current->tag);
                 style = doc_current_style(doc);
-                continue;
             }
-            assert(current->type == DOC_TOKEN_WORD);
-            for (j = 0; j < current->size; j++)
+            else if (doc->cursor.x < style->right)
             {
-                cell->a = style->color;
-                cell->c = current->pos[j];
-                if (cell->c == '\t')
-                    cell->c = ' ';
-                if (doc->cursor.x >= style->right - 1)
+                doc_char_ptr cell = doc_char(doc, doc->cursor);
+
+                assert(current->type == DOC_TOKEN_WORD);
+                assert(cell);
+
+                for (j = 0; j < current->size; j++)
                 {
-                    if (style->options & DOC_STYLE_NO_WORDWRAP)
+                    cell->a = style->color;
+                    cell->c = current->pos[j];
+                    if (cell->c == '\t')
+                        cell->c = ' ';
+                    if (doc->cursor.x == style->right - 1)
                     {
-                        i = qidx;
-                        break;
+                        if (style->options & DOC_STYLE_NO_WORDWRAP)
+                            break;
+                        doc_newline(doc);
+                        cell = doc_char(doc, doc->cursor);
                     }
-                    doc_newline(doc);
-                    cell = doc_char(doc, doc->cursor);
-                }
-                else
-                {
-                    doc->cursor.x++;
-                    cell++;
+                    else
+                    {
+                        doc->cursor.x++;
+                        cell++;
+                    }
                 }
             }
         }

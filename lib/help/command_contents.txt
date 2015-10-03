@@ -1,20 +1,12 @@
-PosChengband Commands.
+<style:title>Commands</style>
 
 Please choose one of the following online help files:
 
-    (a) PosChengband Commands
-    (b) Original Keyset
-    (c) Roguelike Keyset
-    (d) Command Counts
-    (e) Selecting Objects
-    (f) Command Descriptions
+    <link:command.txt> Commands
+    <link:command.txt#OriginalKeyset> Original Keyset
+    <link:command.txt#RogueKeyset> Roguelike Keyset
+    <link:command.txt#CommandCounts> Command Counts
+    <link:command.txt#SelectingObjects> Selecting Objects
+    <link:commdesc_contents.txt> Command Descriptions
 
-    (?) Help System Commands
-
-
-***** [a] command.txt
-***** [b] command.txt#OriginalKeyset
-***** [c] command.txt#RogueKeyset
-***** [d] command.txt#CommandCounts
-***** [e] command.txt#SelectingObjects
-***** [f] commdesc.txt
+    <color:y>(?) Help System Commands</color>
