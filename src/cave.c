@@ -1389,7 +1389,7 @@ void move_cursor_relative(int row, int col)
  */
 void print_rel(char c, byte a, int y, int x)
 {
-    if (cave_xy_is_visible(y, x))
+    if (cave_xy_is_visible(x, y))
     {
         point_t ui = cave_xy_to_ui_pt(x, y);
         if (!msg_line_contains(ui.y, ui.x))

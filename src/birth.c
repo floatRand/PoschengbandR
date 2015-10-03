@@ -9,6 +9,7 @@
  */
 
 #include "angband.h"
+#include "z-doc.h"
 
 /*
  * Returns adjusted stat -JK-  Algorithm by -JWT-
@@ -2033,7 +2034,8 @@ static void birth_quit(void)
 static void show_help(cptr helpfile)
 {
     screen_save();
-    (void)show_file(TRUE, helpfile, NULL, 0, 0);
+    /*(void)show_file(TRUE, helpfile, NULL, 0, 0);*/
+    doc_display_help(helpfile, NULL);
     screen_load();
 }
 

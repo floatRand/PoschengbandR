@@ -38,7 +38,7 @@ static void _race_help(FILE *fp, int idx)
 {
     race_t *race_ptr = get_race_t_aux(idx, 0);
 
-    fprintf(fp, "<style:heading>%s</style>\n\n", race_ptr->name);
+    fprintf(fp, "<topic:%s><style:heading>%s</style>\n\n", race_ptr->name, race_ptr->name);
     fprintf(fp, "%s\n", race_ptr->desc);
     switch(idx)
     {

@@ -1,6 +1,6 @@
 <style:title>Monster Races</style>
 
-<style:heading>Jelly</style>
+<topic:Jelly><style:heading>Jelly</style>
 
 Jellies are acidic creatures, quietly patrolling their surroundings in search of objects to absorb. They are quite stealthy for most of their lives. They don't wear equipment on their bodies the way normal races do. Instead, they are capable of absorbing objects into their gelatinous frames. In fact, each equipment slot (except their pseudopod) is capable of holding any type of equipment whatsoever, and the number of slots increases with experience. For attacking, jellies are capable of forming a single pseudopod which they may either use for grasping a normal melee weapon, or leave empty to use their innate acid based attacks.
  
@@ -23,7 +23,7 @@ Acidic Cytoplasm      25+12  18+7   37+11   7+0  14+0   7+0  70+30  30+7
 Shoggoth              25+12  18+7   37+11   2+0  14+0   7+0  70+30  30+7 
 </style>
 
-<style:heading>Spider</style>
+<topic:Spider><style:heading>Spider</style>
 
 Spiders are stealthy monsters that prefer to wait for their prey. They have poisonous attacks and can weave sticky webs to entangle their enemies. They have 8 legs, 4 of which may wear rings and the remaining may equip 2 pairs of boots. They are unable to wield weapons or bows, but may wear a helmet, an amulet, a cloak and even a suit of body armor (after slight adjustments, of course). They cannot wield a light source, but this is not an issue as spiders have grown accustomed to the dark.
  
@@ -54,7 +54,7 @@ Aranea                25+8   30+10  35+10   6+0  20+0  15+0  65+20  30+7
 Elder Aranea          25+8   30+10  35+10   6+0  20+0  15+0  65+20  30+7 
 </style>
 
-<style:heading>Dragon</style>
+<topic:Dragon><style:heading>Dragon</style>
 
 Dragons are powerful winged serpents. They are the strongest fighters with razor sharp claws and a bone crushing bite. Each dragon has a unique type of breath that becomes more deadly as the dragon grows and matures.
  
@@ -217,7 +217,7 @@ Stone Dragon          28+8   18+7   40+15   0+0  10+0   7+0  75+30  30+7
 Steel Dragon          28+8   18+7   40+15   0+0  10+0   7+0  75+30  30+7 
 </style>
 
-<style:heading>Lich</style>
+<topic:Lich><style:heading>Lich</style>
 
 Liches are the undead forms of former sorcerers. Their magic is strong but their fighting is weak. As undead, they quickly gain resistance to cold, poison and nether, and these resistances increase as the lich evolves.
  
@@ -238,7 +238,7 @@ Demilich              30+7   45+15  38+12   7+0  20+0  30+0  34+6   20+7
 Archlich              30+7   45+15  38+12   7+0  20+0  30+0  34+6   20+7 
 </style>
 
-<style:heading>Xorn</style>
+<topic:Xorn><style:heading>Xorn</style>
 
 Xorn are huge creatures of the element earth. They begin life as an Umber Hulk which is a bizarre creature with glaring eyes capable of confusing their foes, and large mandibles capable of slicing through rock. At this stage in their evolution, their body is vaguely humanoid allowing them to wear a helmet, an amulet, a cloak and even a pair of boots. However, once the Umber Hulk evolves it can no longer wear these items. Instead, it can use its four massive arms for weapons, shields, rings and gloves. At this stage, the Xorn can pass effortlessly through rock.
  
@@ -255,7 +255,7 @@ Xorn                  25+12  20+8   31+10   2+0  14+0   5+0  56+20  30+7
 Xaren                 25+12  20+8   31+10   2+0  14+0   5+0  56+20  30+7 
 </style>
 
-<style:heading>Angel</style>
+<topic:Angel><style:heading>Angel</style>
 
 Angels are heavenly beings on a holy mission. They are winged creatures able to fly over chasms and pits. They also become resistant to the elements as they mature and are not fooled by invisibility. Their stats are truly awe-inspiring making them one of the most powerful monster races.
  
@@ -282,7 +282,7 @@ Planetar              25+7   35+13  40+15   3+0  18+0  12+0  48+18  35+13
 Solar                 25+7   35+13  40+15   3+0  18+0  12+0  48+18  35+13
 </style>
 
-<style:heading>Hound</style>
+<topic:Hound><style:heading>Hound</style>
 
 While Hounds typically hunt in packs, you have chosen to go it alone. You will begin life in the weak form of a Clear Hound. As you mature you will take a number of evolutionary steps. At each such step, the form you evolve into will be randomly determined. But each tier offers more powerful choices than the last and who knows? You may even evolve into an Aether Hound some day.
  
@@ -310,7 +310,7 @@ Hound of Tindalos     25+8   20+8   31+10   4+1  20+0  15+0  56+20  30+7
 </style>
 Evolution in each tier is actually random. All of the possible forms in each tier are not displayed.
 
-<style:heading>Giant</style>
+<topic:Giant><style:heading>Giant</style>
 
 Giants are humanoids of immense stature. There are several types of giants. Fire, Frost and Storm giants are elemental giants and gain extra resistance, elementals slays and even elemental attacks of their respective element. Titans are powerful immortal beings of legend. Their attacks often confuse their foes and they rarely fight alone.
  
@@ -381,7 +381,7 @@ Rock Giant            25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
 Hru                   25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
 </style>
 
-<style:heading>Beholder</style>
+<topic:Beholder><style:heading>Beholder</style>
 
 Beholders are floating orbs of flesh with a single central eye surrounded by numerous smaller eyestalks. They attack with their gaze which often confuses or even paralyzes their foes. They are unable to wield normal weapons or armor, but may equip a single ring on each of their eyestalks, and the number of eyestalks increases as the beholder evolves.
  
@@ -402,7 +402,7 @@ Undead Beholder       30+10  50+20  47+15   7+1  20+20 20+20 40+16  20+7
 Ultimate Beholder     30+10  50+20  47+15   7+1  20+20 20+20 40+16  20+7 
 </style>
 
-<style:heading>Demon</style>
+<topic:Demon><style:heading>Demon</style>
 
 Demons are powerful servants of evil and come in many forms. Being monsters, they may not choose a normal class. Instead, they rely on their devilish powers or their brutish strength to survive.
  
@@ -457,7 +457,7 @@ Cyberdemon             +5  -10  -10   -3   +5   +0  120%  +50  275%  140%
 Cyberdemon            20+12  18+6   31+9   -1+0  13+0   7+0  75+35  30+7 
 </style>
 
-<style:heading>Hydra</style>
+<topic:Hydra><style:heading>Hydra</style>
 
 Hydras are monsters with multiple heads. As they evolve, they grow additional heads granting the potential for extra attacks as well as the ability to wear more equipment (helmets and amulets). While not every head may wear a helmet and an amulet (This would be too powerful), each head is capable of attacking. So the 11-headed hydra can attack up to 11 times per round, provided it has enough strength and dexterity to command such a fearsome arsenal.
  
@@ -480,7 +480,7 @@ Hydras are monsters so do not choose a normal class. Instead, they play much lik
 11-headed hydra       25+12  21+10  35+10   1+0  10+0   7+0  62+25  30+7 
 </style>
 
-<style:heading>Leprechaun</style>
+<topic:Leprechaun><style:heading>Leprechaun</style>
 
 Leprechauns are small, mischevous creatures, always scheming for gold. They are weak, but quick and stealthy. For combat, they prefer not to use weapons at all. Rather, by keeping at least one hand free, they may pilfer objects or gold from their foes and flee to safety, all in a single action. However, they are capable of fighting with normal weapons should the need arise, but one seldom hears of leprechauns inspiring fear in combat!
  
@@ -499,7 +499,7 @@ Malicious Leprechaun  30+12  45+18  38+11  10+1  24+0  16+0  48+13  60+28
 Death Leprechaun      30+12  45+18  38+11  10+1  24+0  16+0  48+13  60+28
 </style>
 
-<style:heading>Troll</style>
+<topic:Troll><style:heading>Troll</style>
 
 Trolls are disgusting creatures: Big, strong and stupid. They make excellent warriors but are hopeless with magical devices. Trolls have incredible powers of regeneration.
 
@@ -568,7 +568,7 @@ Olog                  25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
 Troll king            25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
 </style>
 
-<style:heading>Elemental</style>
+<topic:Elemental><style:heading>Elemental</style>
 
 Elementals are mindless creatures animated from a single elemental form. As a species, elementals can never be confused or cut, and they are immune to the eldritch horror (being virtually mindless). They rarely feel fear and are resistant to poison. In addition, they gain specific powers and abilities depending on their form.
  
@@ -615,11 +615,11 @@ Fire Elemental        28+8   25+10  35+9    4+0  25+0  16+0  65+25  35+15
 Magma Elemental       28+8   25+10  35+9    4+0  25+0  16+0  65+25  35+15
 </style>
 
-<style:heading>Death-Sword</style>
+<topic:Death-Sword><style:heading>Death-Sword</style>
 
 Death Swords are mighty weapons animated by magical means. As such, they are unable to use equipment the way other players can. Instead, they simply are a weapon of their current form. But never fear, Death Swords have the power to absorb magical essences from the weapons they find, gaining power in the process.
 
-<style:heading>Golem</style>
+<topic:Golem><style:heading>Golem</style>
 
 Golems are creatures animated by powerful magics: living stone conjured to serve their creators. But you have broken loose and are running amok!
  
@@ -676,7 +676,7 @@ Eog golem             25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
 Spellwarp Automaton   25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
 </style>
 
-<style:heading>Quylthulg</style>
+<topic:Quylthulg><style:heading>Quylthulg</style>
 
 Quylthulgs are disgusting, quivering mounds of pulsating flesh, scarcely able to move about. Physically, they are pathetic. However, their ability to control others to do their bidding is legendary, and they are quite capable of fleeing when the going gets tough. Quylthulgs have no physical attacks.
 
@@ -695,7 +695,7 @@ Greater rotting quylt 30+7   45+15  40+12   7+0  20+0  30+0   0+0    0+0
 Master quylthulg      30+7   45+15  40+12   7+0  20+0  30+0   0+0    0+0 
 </style>
 
-<style:heading>Possessor</style>
+<topic:Possessor><style:heading>Possessor</style>
 
 The Possessor is an odd creature, completely harmless in its natural form. However, they are capable of possessing the corpses of monsters they have slain, and gain powers and abilities based on their current body. As such, they can become quite powerful indeed! Unfortunately, not every type of monster will drop a corpse, and getting suitable corspes to inhabit can be difficult. If the possessor ever leaves their current body (and they must do so to inhabit a new form) then all of their equipment will be removed (except a light source) and they will temporarily be in their native, vulnerable state. Finally, leaving their current body will destroy that corpse most of the time, so the possessor should only do so if they have a better corpse on hand (and also only if there are no monsters nearby!).
  
@@ -708,7 +708,7 @@ Soul                   -3   +0   -3   +0   -3   -7   60%  +15  250%  110%
 Soul                  17+5   22+7   34+9   11+0  17+0  17+0  43+13  15+11
 </style>
 
-<style:heading>Vampire</style>
+<topic:Vampire><style:heading>Vampire</style>
 
 One of the mightier undead creatures, the Vampire is an awe-inspiring sight. Yet this dread creature has a serious weakness: the bright rays of sun are its bane, and it will need to flee the surface to the deep recesses of earth until the sun finally sets. Darkness, on the other hand, (eventually) only makes the Vampire stronger. As undead, the Vampire has a firm hold on its life force, and resists nether attacks. The Vampire also resists cold and poison based attacks. It is, however, susceptible to its perpetual hunger for fresh blood, which can only be satiated by sucking the blood from a nearby monster.
  
@@ -727,7 +727,7 @@ Vampire Lord          25+7   37+12  36+10   9+0  32+0  25+0  60+21  35+11
 Elder Vampire         25+7   37+12  36+10  11+0  32+0  25+0  60+21  35+11
 </style>
 
-<style:heading>Ring</style>
+<topic:Ring><style:heading>Ring</style>
 
 Rings are sentient creatures animated by magical means.
  
@@ -739,7 +739,7 @@ Rings have no physical attacks. Instead, they may blast enemies with mighty spel
 
 See <link:rings.txt> for more details on rings.
 
-<style:heading>Mimic</style>
+<topic:Mimic><style:heading>Mimic</style>
 
 Mimics are similar to possessors but instead of controlling the corpses of the vanquished, the mimic imitates those about them. This allows the mimic to assume the forms of foes they have yet to conquer and is quite useful. However, there is a small catch: The mimic can only copy what they see! This limitation forces the mimic to change forms much more often than the possessor would as knowledge of their current body rapidly fades when the original is no longer about. Occasionally, the mimic is able to memorize a particular form well enough to use it again without the original body to imitate, though this does not happen very often and the mimic can only memorize a small number of forms. To have a chance of this, the mimic must be in the desired form when slaying the original.
  
@@ -752,7 +752,7 @@ Mimic                  +0   +1   -1   +2   +0   -1  108%  +15  250%  110%
 Mimic                 25+7   30+10  36+10   2+0  18+0  26+0  60+18  50+20
 </style>
 
-<style:heading>Centipede</style>
+<topic:Centipede><style:heading>Centipede</style>
 
 Centipedes are natural creatures with many legs. As they evolve, they change colors, but not much else seems to differentiate the various forms. Perhaps you prefer blue to red or green? Eventually, once you have evolved into your ultimate evolutionary form, you will be able to change colors at will and thereby become very powerful indeed.
  

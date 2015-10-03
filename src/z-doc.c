@@ -1563,6 +1563,20 @@ int doc_display_help(cptr file_name, cptr topic)
     doc_ptr doc = NULL;
     int     top = 0;
 
+    /* Check for file_name#topic from a lazy client */
+    if (!topic)
+    {
+        cptr pos = strchr(file_name, '#');
+        if (pos)
+        {
+            string_ptr name = string_nalloc(file_name, pos - file_name);
+            int        result = doc_display_help(string_buffer(name), pos + 1);
+
+            string_free(name);
+            return result;
+        }
+    }
+
     sprintf(caption, "Help file '%s'", file_name);
     path_build(path, sizeof(path), ANGBAND_DIR_HELP, file_name);
     fp = my_fopen(path, "r");
