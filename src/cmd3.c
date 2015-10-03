@@ -578,8 +578,8 @@ void do_cmd_observe(void)
     /* Description */
     object_desc(o_name, o_ptr, 0);
 
-    /* Describe */
-    msg_format("Examining %s...", o_name);
+    /* Describe
+    msg_format("Examining %s...", o_name);*/
 
     /* Describe it fully */
     if (!screen_object(o_ptr, SCROBJ_FORCE_DETAIL)) msg_print("You see nothing special.");

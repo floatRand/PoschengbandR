@@ -2599,8 +2599,8 @@ static void store_examine(void)
     /* Description */
     object_desc(o_name, o_ptr, 0);
 
-    /* Describe */
-    msg_format("Examining %s...", o_name);
+    /* Describe
+    msg_format("Examining %s...", o_name);*/
 
 
     /* Describe it fully */
