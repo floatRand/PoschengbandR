@@ -4206,7 +4206,7 @@ static void process_command(void)
             break;
         }
 
-        case KTRL('L'):
+        case KTRL('V'):
         {
             viewport_verify_aux(VIEWPORT_FORCE_CENTER);
             break;

@@ -234,6 +234,9 @@ If object auto-picker/destroyer is set up, specified objects can be displayed in
   <indent><color:U>Locate Player on Map (<color:keypress>L</color>) or Where is the Player? (<color:keypress>W</color>)</color>
 This command lets you scroll your map around, looking at all sectors of the current dungeon level, until you press escape, at which point the map will be re-centered on the player if necessary. To scroll the map around, simply press any of the "direction" keys. The top line will display the sector location, and the offset from your current sector. This command takes no time.</indent>
 
+  <indent><color:U>Recenter Viewport (<color:keypress>^V</color>)</color>
+This command re-centers the viewport on the player, and is very useful when you approach the edge of the screen. The game will adjust the viewport automatically as you move, but it currently only does so when you approach within 2 squares of the top or bottom, or within 4 squares of the left or right. This command is a quicker alternative to the <color:U>Locate Player on Map</color> command just discussed.</indent>
+
   <indent><color:U>Look Around (<color:keypress>l</color>) or Examine Things (<color:keypress>x</color>)</color>
 This command is used to look around at nearby monsters (to determine their type and health) and objects (to determine their type). It is also used to find out what objects (if any) are under monsters, and if a monster is currently inside a wall. This command takes no time.
 
@@ -347,7 +350,7 @@ This command will tell you what version of the game you are using. For more info
 
 <topic:Extra><style:heading>Extra Commands</style>
 
-  <indent><color:U>Repeat Last Command (<color:keypress>n</color>) or (<color:keypress>^V</color>)</color>
+  <indent><color:U>Repeat Last Command (<color:keypress>n</color>) or (<color:keypress>X</color>)</color>
 This command repeat previously executed command with all its arguments. Very useful to repeat casting, for example, magic missile to same opponent.</indent>
 
   <indent><color:U>Toggle Choice Window (<color:keypress>^I</color>)</color>
@@ -434,6 +437,7 @@ If you have pets then this command allows you to give orders to your pets. You c
   Full Screen Map             <color:keypress>M                 </color>
   Locate Player on Map        <color:keypress>L                W</color>
   Look Around                 <color:keypress>l                x</color>
+  Recenter Viewport          <color:keypress>^V                 </color>
   Inspect Item                <color:keypress>I                 </color>
 
 <color:U>Message Commands           Original        Roguelike</color>
@@ -465,7 +469,7 @@ If you have pets then this command allows you to give orders to your pets. You c
   Game Version                <color:keypress>V</color>
 
 <color:U>Extra Commands             Original        Roguelike</color>
-  Repeat Last Command         <color:keypress>n               ^V</color>
+  Repeat Last Command         <color:keypress>n                X</color>
   Toggle Choice Window       <color:keypress>^I                 </color>
   Redraw Screen              <color:keypress>^R                 </color>
   Load Screen Dump            <color:keypress>(                 </color>

@@ -52,7 +52,7 @@ Don't be overwhelmed by the sheer number of commands. Many are not often used or
    (  Load screen dump                    ^I  Toggle Choice Window
    )  Dump screen dump                    ^J  (special - linefeed)
    {  Inscribe an object                  <color:D>^K  (unused)</color>
-   }  Uninscribe an object                ^L  Recenter Player on Map
+   }  Uninscribe an object                <color:D>^L  (unused)</color>
    [  Display monster list                ^M  (special - return)
    ]  Display object list                 <color:D>^N  (unused)</color>
    -  Walk (flip pickup)                  <color:D>^O  (unused)</color>
@@ -62,7 +62,7 @@ Don't be overwhelmed by the sheer number of commands. Many are not often used or
    ;  Walk (with pickup)                  ^S  Save and don't quit
    :  Take notes                          ^T  Display game time
    <color:D>'  (unused)</color>                            <color:D>^U  (unused)</color>
-   "  Enter a user pref command           <color:D>^V  (unused)</color>
+   "  Enter a user pref command           ^V  Recenter Viewport
    ,  Stay still (with pickup)            ^W  (special - wizard mode)
    <color:y><</color>  Go up staircase (Enter global map)  <color:y>^X</color>  Save and quit
    .  Run                                 <color:D>^Y  (unused)</color>
@@ -102,7 +102,7 @@ Don't be overwhelmed by the sheer number of commands. Many are not often used or
    u  (walk - north east)                  U  (run - north east)
    v  Throw an item                        V  Version info
    <color:y>w</color>  Wear/wield equipment                 W  Locate player on map
-   <color:y>x</color>  Look around                          <color:D>X  (unused)</color>
+   <color:y>x</color>  Look around                          X  Repeat Last Command
    y  (walk - north west)                  Y  (run - north west)
    <color:y>z</color>  Aim a wand (Zap)                     Z  Use a staff (Zap)
    <color:D>!  (unused)</color>                            ^A  (special - wizard command)
@@ -126,7 +126,7 @@ Don't be overwhelmed by the sheer number of commands. Many are not often used or
    ;  Walk (with pickup)                  ^S  Save and don't quit
    :  Take notes                          ^T  Dig a Tunnel
    '  Display game time                   ^U  (tunnel - north east)
-   "  Enter a user pref command           ^V  Repeat last command
+   "  Enter a user pref command           ^V  Recenter Viewport
    ,  Run                                 ^W  (special - wizard mode)
    <color:y><</color>  Go up staircase (Enter global map)  <color:y>^X</color>  Save and quit
    .  Stay still (with pickup)            ^Y  (tunnel - north west)
