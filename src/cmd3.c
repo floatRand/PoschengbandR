@@ -1689,6 +1689,8 @@ void do_cmd_list_monsters(void)
             case ESCAPE:
             case 'q':
             case 'Q':
+            case '\n':
+            case '\r':
                 done = TRUE;
                 break;
             case 'r':

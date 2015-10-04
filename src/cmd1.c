@@ -6290,16 +6290,14 @@ void run_step(int dir)
 }
 
 
-/*
- * Test for traveling
- */
-static bool travel_test(void)
+static bool travel_abort(void)
 {
     int prev_dir, new_dir;
     int row, col;
     int i, max;
     bool stop = TRUE;
     cave_type *c_ptr;
+    bool old_dtrap = FALSE;
 
     /* Where we came from */
     prev_dir = find_prevdir;
@@ -6321,6 +6319,9 @@ static bool travel_test(void)
         return (TRUE);
     }
 
+    if (cave[py][px].info & CAVE_IN_DETECT)
+        old_dtrap = TRUE;
+
     /* Look at every newly adjacent square. */
     for (i = -max; i <= max; i++)
     {
@@ -6331,9 +6332,23 @@ static bool travel_test(void)
         row = py + ddy[new_dir];
         col = px + ddx[new_dir];
 
+        if (!in_bounds(row, col)) continue;
+
         /* Access grid */
         c_ptr = &cave[row][col];
 
+        if (disturb_trap_detect)
+        {
+            bool new_dtrap = FALSE;
+            if (c_ptr->info & CAVE_IN_DETECT)
+                new_dtrap = TRUE;
+
+            if (old_dtrap && !new_dtrap)
+            {
+                cmsg_print(TERM_VIOLET, "You are about to leave a trap detected zone.");
+                return TRUE;
+            }
+        }
 
         /* Visible monsters abort running */
         if (c_ptr->m_idx)
@@ -6341,12 +6356,11 @@ static bool travel_test(void)
             monster_type *m_ptr = &m_list[c_ptr->m_idx];
 
             /* Visible monster */
-            if (m_ptr->ml) return (TRUE);
+            if (m_ptr->ml) return TRUE;
         }
     }
 
-    /* Failure */
-    return (FALSE);
+    return FALSE;
 }
 
 
@@ -6361,13 +6375,10 @@ void travel_step(void)
 
     find_prevdir = dir;
 
-    /* disturb */
-    if (travel_test())
+    if (travel_abort())
     {
         if (travel.run == 255)
-        {
             msg_print("No route is found!");
-        }
         disturb(0, 0);
         return;
     }
@@ -6393,8 +6404,6 @@ void travel_step(void)
 
     travel.dir = dir;
     move_player(dir, always_pickup, easy_disarm);
-    /*??if (!travel.run)
-        return;*/
     Term_xtra(TERM_XTRA_DELAY, delay_factor * delay_factor * delay_factor);
     Term_fresh();
     travel.run = old_run;
