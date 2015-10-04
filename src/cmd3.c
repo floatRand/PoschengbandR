@@ -1427,7 +1427,7 @@ static int _int_comp(int l, int r)
     return 0;
 }
 
-static int _map_info_comp(_mon_list_info_ptr left, _mon_list_info_ptr right)
+static int _mon_list_comp(_mon_list_info_ptr left, _mon_list_info_ptr right)
 {
     if (left->level < 0 && right->level < 0)
         return _int_comp(left->level, right->level);
@@ -1546,7 +1546,7 @@ static _mon_list_ptr _create_monster_list(void)
     int_map_iter_free(iter);
     int_map_free(map);
 
-    vec_sort(result->list, (vec_cmp_f)_map_info_comp);
+    vec_sort(result->list, (vec_cmp_f)_mon_list_comp);
     return result;
 }
 
@@ -1790,8 +1790,6 @@ void do_cmd_list_monsters(void)
 
                 if (pos == page_size)
                 {
-                    /*pos = 0;
-                      top += page_size;*/
                     pos--;
                     top++;
                     redraw = TRUE;
@@ -1808,6 +1806,8 @@ void do_cmd_list_monsters(void)
                     redraw = TRUE;
                 }
                 break;
+            default:
+                done = TRUE;
             }
         }
         screen_load();
@@ -1856,108 +1856,352 @@ void fix_monster_list(void)
 
 /* Display a List of Nearby Objects
    Idea from Vanilla 3.5, but recoded from scratch ... */
-static bool _compare_obj_list_info(vptr u, vptr v, int a, int b)
+
+struct _obj_list_info_s
 {
-    int         *vec = (int*)u;
-    int          left_idx = vec[a];
-    int          right_idx = vec[b];
-    object_type *left_obj = &o_list[left_idx];
-    object_type *right_obj = &o_list[right_idx];
+    int group;
+    int o_idx;
+    int  x,  y;
+    int dx, dy;
+    int score;
+    int count;
+    bool heading;
+};
+typedef struct _obj_list_info_s _obj_list_info_t, *_obj_list_info_ptr;
 
-    /* Hack -- readable books always come first */
-    if (left_obj->tval == REALM1_BOOK && right_obj->tval != REALM1_BOOK) return TRUE;
-    if (right_obj->tval == REALM1_BOOK && left_obj->tval != REALM1_BOOK) return FALSE;
-
-    if (left_obj->tval == REALM2_BOOK && right_obj->tval != REALM2_BOOK) return TRUE;
-    if (right_obj->tval == REALM2_BOOK && left_obj->tval != REALM2_BOOK) return FALSE;
-
-    /* Objects sort by decreasing type */
-    if (left_obj->tval > right_obj->tval) return TRUE;
-    if (left_obj->tval < right_obj->tval) return FALSE;
-
-    /* Objects sort by increasing sval */
-    if (left_obj->sval < right_obj->sval) return TRUE;
-    if (left_obj->sval > right_obj->sval) return FALSE;
-
-    return TRUE;
+static _obj_list_info_ptr _obj_list_info_alloc(void)
+{
+    _obj_list_info_ptr result = malloc(sizeof(_obj_list_info_t));
+    memset(result, 0, sizeof(_obj_list_info_t));
+    return result;
 }
 
-#define _MAX_OBJ_LIST 100
-static void _swap_int(vptr u, vptr v, int a, int b)
+struct _obj_list_s
 {
-    int *order = (int*)u;
-    int tmp = order[a];
-    order[a] = order[b];
-    order[b] = tmp;
+    vec_ptr list;
+    int     ct_autopick;
+    int     ct_total;
+};
+
+typedef struct _obj_list_s _obj_list_t, *_obj_list_ptr;
+
+static _obj_list_ptr _obj_list_alloc(void)
+{
+    _obj_list_ptr result = malloc(sizeof(_obj_list_t));
+    result->list = vec_alloc(free);
+    result->ct_autopick = 0;
+    result->ct_total = 0;
+    return result;
 }
 
-void do_cmd_list_objects(void)
+static void _obj_list_free(_obj_list_ptr list)
 {
-    int list[_MAX_OBJ_LIST];
-    int i, ct = 0;
-    int cx, cy, row = 1, col;
+    vec_free(list->list);
+    list->list = NULL;
+    free(list);
+}
+
+#define _GROUP_AUTOPICK 1
+#define _GROUP_OTHER    2
+
+static int _obj_list_comp(_obj_list_info_ptr left, _obj_list_info_ptr right)
+{
+    if (left->group < right->group)
+        return -1;
+    if (left->group > right->group)
+        return 1;
+
+    if (left->heading && right->heading)
+        return 0;
+
+    if (left->heading && !right->heading)
+        return -1;
+
+    if (!left->heading && right->heading)
+        return 1;
+
+    if (left->score > right->score)
+        return -1;
+    if (left->score < right->score)
+        return 1;
+    return 0;
+}
+
+static _obj_list_ptr _create_obj_list(void)
+{
+    _obj_list_ptr list = _obj_list_alloc();
+    int i;
 
     for (i = 0; i < max_o_idx; i++)
     {
-        object_type *o_ptr = &o_list[i];
-        int          auto_pick_idx;
+        object_type       *o_ptr = &o_list[i];
+        _obj_list_info_ptr info;
+        int                auto_pick_idx;
 
         if (!o_ptr->k_idx) continue;
         if (!(o_ptr->marked & OM_FOUND)) continue;
         if (o_ptr->tval == TV_GOLD) continue;
-        if (ct >= _MAX_OBJ_LIST) break;
+
+        info = _obj_list_info_alloc();
+        info->o_idx = i;
+        info->x = o_ptr->ix;
+        info->y = o_ptr->iy;
+        info->dy = info->y - py;
+        info->dx = info->x - px;
+        info->score = object_value_real(o_ptr);
+        info->count = o_ptr->number;
 
         auto_pick_idx = is_autopick(o_ptr);
-
-        if (!p_ptr->wizard)
+        if ( auto_pick_idx >= 0
+          && (autopick_list[auto_pick_idx].action & (DO_AUTOPICK | DO_QUERY_AUTOPICK)) )
         {
-            if (auto_pick_idx < 0) continue;
-            if (!(autopick_list[auto_pick_idx].action & DO_DISPLAY)) continue;
-            if (!(autopick_list[auto_pick_idx].action & (DO_AUTOPICK | DO_QUERY_AUTOPICK | DONT_AUTOPICK))) continue;
+            info->group = _GROUP_AUTOPICK;
+            list->ct_autopick += o_ptr->number;
         }
-        list[ct++] = i;
+        else
+            info->group = _GROUP_OTHER;
+
+        vec_add(list->list, info);
+        list->ct_total += o_ptr->number;
     }
 
-    if (!ct)
+    /* Add Headings and Sort */
+    if (list->ct_autopick)
     {
-        msg_print("No objects match your pickup preferences.");
-        return;
+        _obj_list_info_ptr info = _obj_list_info_alloc();
+        info->group = _GROUP_AUTOPICK;
+        info->heading = TRUE;
+        info->count = list->ct_autopick;
+        vec_add(list->list, info);
     }
-
-    ang_sort_comp = _compare_obj_list_info;
-    ang_sort_swap = _swap_int;
-    ang_sort(list, NULL, ct);
-
-    Term_get_size(&cx, &cy);
-    col = cx - 52;
-    screen_save();
-    c_prt(TERM_WHITE, format("%d object%s match your pickup preferences", ct, ct != 1 ? "s" : ""), 0, col);
-    for (i = 0; i < ct; i++)
+    if (list->ct_total - list->ct_autopick)
     {
-        char         o_name[MAX_NLEN];
-        object_type *o_ptr = &o_list[list[i]];
-        byte         a = object_attr(o_ptr);
-        char         c = object_char(o_ptr);
-        byte         attr = TERM_WHITE;
+        _obj_list_info_ptr info = _obj_list_info_alloc();
+        info->group = _GROUP_OTHER;
+        info->heading = TRUE;
+        info->count = list->ct_total - list->ct_autopick;
+        vec_add(list->list, info);
+    }
+    vec_sort(list->list, (vec_cmp_f)_obj_list_comp);
 
-        Term_erase(col - 1, row, 53);
+    return list;
+}
 
-        if (row >= cy - 2) 
+static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
+{
+    int     i;
+    int     cx_obj;
+    char    obj_fmt[50];
+
+    cx_obj = rect.cx - 14;
+    if (cx_obj < 10)
+        cx_obj = 10;
+    sprintf(obj_fmt, "%%-%d.%ds", cx_obj, cx_obj);
+
+    for (i = 0; i < rect.cy; i++)
+    {
+        int                 idx = top + i;
+        _obj_list_info_ptr  info_ptr;
+
+        if (i >= vec_length(list->list)) break;
+
+        Term_erase(rect.x, rect.y + i, rect.cx);
+
+        info_ptr = vec_get(list->list, idx);
+        assert(info_ptr);
+
+        if (info_ptr->heading)
         {
-            c_prt(TERM_YELLOW, "...", row++, col+2);
-            break;
+            if (info_ptr->group == _GROUP_AUTOPICK)
+            {
+                c_put_str(TERM_YELLOW,
+                      format("There %s %d wanted object%s",
+                             info_ptr->count != 1 ? "are" : "is",
+                             info_ptr->count,
+                             info_ptr->count != 1 ? "s" : ""),
+                      rect.y + i, rect.x);
+            }
+            else
+            {
+                c_put_str(TERM_YELLOW,
+                      format("There %s %d other object%s",
+                             info_ptr->count != 1 ? "are" : "is",
+                             info_ptr->count,
+                             info_ptr->count != 1 ? "s" : ""),
+                      rect.y + i, rect.x);
+            }
         }
+        else
+        {
+            object_type *o_ptr = &o_list[info_ptr->o_idx];
+            char         o_name[MAX_NLEN];
+            char         loc[100];
+            byte         attr = tval_to_attr[o_ptr->tval % 128];
+            byte         a = object_attr(o_ptr);
+            char         c = object_char(o_ptr);
 
-        object_desc(o_name, o_ptr, 0);
-        attr = tval_to_attr[o_ptr->tval % 128];
+            object_desc(o_name, o_ptr, 0);
+            sprintf(loc, "%c %2d %c %2d",
+                    (info_ptr->dy > 0) ? 'S' : 'N', abs(info_ptr->dy),
+                    (info_ptr->dx > 0) ? 'E' : 'W', abs(info_ptr->dx));
 
-        Term_queue_bigchar(col, row, a, c, 0, 0);
-        c_put_str(attr, format(" %-50.50s", o_name), row++, col+1);
+            Term_queue_bigchar(rect.x + 1, rect.y + i, a, c, 0, 0);
+            c_put_str(attr, format(obj_fmt, o_name), rect.y + i, rect.x + 3);
+            c_put_str(TERM_WHITE, format("%-9.9s ", loc), rect.y + i, rect.x + 3 + cx_obj + 1);
+        }
     }
-    Term_erase(col - 1, row, 53);
-    c_prt(TERM_YELLOW, "Hit any key.", row, col+2);
-    inkey();
-    prt("", 0, 0);
+    return i;
+}
 
-    screen_load();
+void do_cmd_list_objects(void)
+{
+    _obj_list_ptr list = _create_obj_list();
+    rect_t        display_rect = ui_map_rect();
+
+    if (display_rect.cx > 50)
+        display_rect.cx = 50;
+
+    if (list->ct_total)
+    {
+        int  top = 0, page_size, pos = 1;
+        int  ct_types = vec_length(list->list);
+        bool done = FALSE;
+        bool redraw = TRUE;
+
+        page_size = display_rect.cy;
+        if (page_size > ct_types)
+            page_size = ct_types;
+
+        msg_line_clear();
+        screen_save();
+
+        while (!done)
+        {
+            int cmd;
+
+            if (redraw)
+            {
+                int ct;
+                ct = _draw_obj_list(list, top, display_rect);
+                Term_erase(display_rect.x, display_rect.y + ct, display_rect.cx);
+                c_put_str(TERM_L_BLUE, "[Press ESC to exit. Press ? for help]",
+                        display_rect.y + ct, display_rect.x + 3);
+                redraw = FALSE;
+            }
+            Term_gotoxy(display_rect.x, display_rect.y + pos);
+
+            cmd = inkey_special(TRUE);
+            switch (cmd)
+            {
+            case ESCAPE:
+            case 'q':
+            case 'Q':
+            case '\n':
+            case '\r':
+                done = TRUE;
+                break;
+            case 'x':
+            case 'I':
+            {
+                int idx = top + pos;
+                if (0 <= idx && idx < ct_types)
+                {
+                    _obj_list_info_ptr info_ptr = vec_get(list->list, idx);
+                    assert(info_ptr);
+                    if (info_ptr->o_idx)
+                    {
+                        object_type *o_ptr = &o_list[info_ptr->o_idx];
+                        if (object_is_weapon_armour_ammo(o_ptr) || object_is_known(o_ptr))
+                        {
+                            screen_object(o_ptr, SCROBJ_FORCE_DETAIL);
+                            /*inkey();*/
+                            screen_load();
+                            screen_save();
+                            redraw = TRUE;
+                        }
+                    }
+                }
+                break;
+            }
+            case '`':
+            {
+                int idx = top + pos;
+                if (0 <= idx && idx < ct_types)
+                {
+                    _obj_list_info_ptr info_ptr = vec_get(list->list, idx);
+                    assert(info_ptr);
+                    if (info_ptr->o_idx)
+                    {
+                        do_cmd_travel_xy(info_ptr->x, info_ptr->y);
+                        done = TRUE;
+                    }
+                }
+                break;
+            }
+            case SKEY_TOP:
+            case '7':
+                top = 0;
+                pos = 0;
+                redraw = TRUE;
+                break;
+            case SKEY_BOTTOM:
+            case '1':
+                top = MAX(0, ct_types - page_size);
+                pos = 0;
+                redraw = TRUE;
+                break;
+            case SKEY_PGUP:
+            case '9':
+                top -= page_size;
+                if (top < 0)
+                {
+                    top = 0;
+                    pos = 0;
+                }
+                redraw = TRUE;
+                break;
+            case SKEY_PGDOWN:
+            case '3':
+                top += page_size;
+                if (top > ct_types - page_size)
+                {
+                    top = MAX(0, ct_types - page_size);
+                    pos = 0;
+                }
+                redraw = TRUE;
+                break;
+            case SKEY_DOWN:
+            case '2':
+                if (top + pos < ct_types - 1)
+                    pos++;
+
+                if (pos == page_size)
+                {
+                    pos--;
+                    top++;
+                    redraw = TRUE;
+                }
+                break;
+            case SKEY_UP:
+            case '8':
+                if (pos > 0)
+                    pos--;
+
+                if (pos == 0 && top > 0)
+                {
+                    top--;
+                    redraw = TRUE;
+                }
+                break;
+
+            default:
+                done = TRUE;
+            }
+        }
+        screen_load();
+    }
+    else
+        msg_print("You see no objects.");
+
+    _obj_list_free(list);
 }
