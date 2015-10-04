@@ -745,6 +745,7 @@ extern void do_cmd_fire_aux2(int item, object_type *j_ptr, int sx, int sy, int t
 extern void do_cmd_throw(void);
 extern bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken);
 extern void do_cmd_travel(void);
+extern void do_cmd_travel_xy(int x, int y);
 
 /* cmd3.c */
 extern void do_cmd_inven(void);

@@ -4813,10 +4813,10 @@ bool target_set(int mode)
     p_ptr->update |= (PU_MONSTERS);
 
     /* Redraw map */
-    p_ptr->redraw |= (PR_MAP);
+    p_ptr->redraw |= (PR_MAP | PR_HEALTH_BARS);
 
     /* Window stuff */
-    p_ptr->window |= (PW_OVERHEAD);
+    p_ptr->window |= (PW_OVERHEAD | PW_MONSTER_LIST);
 
     /* Handle stuff */
     handle_stuff();

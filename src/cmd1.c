@@ -6393,8 +6393,8 @@ void travel_step(void)
 
     travel.dir = dir;
     move_player(dir, always_pickup, easy_disarm);
-    if (!travel.run)
-        return;
+    /*??if (!travel.run)
+        return;*/
     Term_xtra(TERM_XTRA_DELAY, delay_factor * delay_factor * delay_factor);
     Term_fresh();
     travel.run = old_run;

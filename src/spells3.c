@@ -4313,22 +4313,23 @@ bool dimension_door_aux(int x, int y, int rng)
     if (!mut_present(MUT_ASTRAL_GUIDE))
         p_ptr->energy_need += (s16b)((s32b)(60 - plev) * ENERGY_NEED() / 100L);
 
-    if (!cave_player_teleportable_bold(y, x, 0L) ||
-        (distance(y, x, py, px) > rng) ||
-        (!randint0(plev / 10 + 10)))
+    if (p_ptr->wizard)
+    {
+        teleport_player_to(y, x, 0L);
+        return TRUE;
+    }
+    else if ( !cave_player_teleportable_bold(y, x, 0L)
+           || distance(y, x, py, px) > rng
+           || !randint0(plev / 10 + 10) )
     {
         if (!mut_present(MUT_ASTRAL_GUIDE))
             p_ptr->energy_need += (s16b)((s32b)(60 - plev) * ENERGY_NEED() / 100L);
         teleport_player((plev + 2) * 2, TELEPORT_PASSIVE);
-
-        /* Failed */
         return FALSE;
     }
     else
     {
         teleport_player_to(y, x, 0L);
-
-        /* Success */
         return TRUE;
     }
 }

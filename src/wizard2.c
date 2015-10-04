@@ -2961,7 +2961,8 @@ void do_cmd_debug(void)
 
     /* Teleport */
     case 't':
-        teleport_player(100, 0L);
+        dimension_door(255);
+        /*teleport_player(100, 0L);*/
         break;
 
     /* Make every dungeon square "known" to test streamers -KMW- */

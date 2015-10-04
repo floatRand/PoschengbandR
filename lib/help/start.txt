@@ -15,6 +15,6 @@ Please choose one of the following online help files:
     <link:command_contents.txt> Commands
     <link:option.hlp> Options
     <link:pref.hlp> User Preference Files
-    <link:editor.hlp> Auto-picker/destroyer
+    <link:editor.hlp> Pickup Preferences
 
     <color:y>(?) Help System Commands</color>

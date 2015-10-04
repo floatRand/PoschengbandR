@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 struct vec_s
@@ -11,6 +12,32 @@ struct vec_s
     int        len;
     vec_free_f free;
 };
+
+/* For vectors, it is common to want a vec<int> and the speed difference
+   between vec<int> and vec<int*> can be significant (as much as 3x). Since
+   time immemorial, it has been the practice to stuff ints into pointer fields
+   so that a vec<void*> could be a vec<int> or a vec<my_type*> as needed (and
+   only coded once!).
+
+   However, gcc whines about converting int <-> void* on 64 bit architectures,
+   and as far as I could figure out, the only way to shut up this warning is to
+   convert intptr_t <-> void*. Since I have a sinking feeling that this will not
+   port to Windows, I added some routines to hide this conversion until I can
+   figure out what Windows will handle.
+
+   All we really need for the correctness of this long standing, traditional
+   idiom is sizeof(int) <= sizeof(void*), and I really wish gcc would lighten
+   up a bit ;)
+*/
+
+int vec_compare_int(const void *left, const void *right)
+{
+    intptr_t l = (intptr_t)left;
+    intptr_t r = (intptr_t)right;
+    if (l < r) return -1;
+    if (r < l) return 1;
+    return 0;
+}
 
 static void _grow(vec_ptr vec, int size)
 {
@@ -61,6 +88,11 @@ void vec_add(vec_ptr vec, vptr obj)
     vec->objs[i] = obj;
 }
 
+void vec_add_int(vec_ptr vec, int val)
+{
+    vec_add(vec, (vptr)(intptr_t)val);
+}
+
 void vec_clear(vec_ptr vec)
 {
     if (vec->len)
@@ -86,6 +118,12 @@ vptr vec_get(vec_ptr vec, int i)
         res = vec->objs[i];
     }
     return res;
+}
+
+int vec_get_int(vec_ptr vec, int i)
+{
+    vptr pv = vec_get(vec, i);
+    return (int)(intptr_t)pv;
 }
 
 void vec_set(vec_ptr vec, int i, vptr obj)

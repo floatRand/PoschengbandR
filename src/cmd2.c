@@ -4754,13 +4754,11 @@ static void travel_flow(int ty, int tx)
     flow_head = flow_tail = 0;
 }
 
-void do_cmd_travel(void)
+void do_cmd_travel_xy(int x, int y)
 {
-    int x, y, i;
+    int i;
     int dx, dy, sx, sy;
     feature_type *f_ptr;
-
-    if (!tgt_pt(&x, &y, -1)) return;
 
     if ((x == px) && (y == py))
     {
@@ -4801,4 +4799,11 @@ void do_cmd_travel(void)
     {
         if ((sx == ddx[i]) && (sy == ddy[i])) travel.dir = i;
     }
+}
+
+void do_cmd_travel(void)
+{
+    int x, y;
+    if (!tgt_pt(&x, &y, -1)) return;
+    do_cmd_travel_xy(x, y);
 }
