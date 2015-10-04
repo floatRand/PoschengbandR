@@ -4778,6 +4778,39 @@ bool player_can_enter(s16b feature, u16b mode)
     return TRUE;
 }
 
+static bool _auto_detect_traps(void)
+{
+    int i;
+    if (p_ptr->pclass == CLASS_BERSERKER) return FALSE;
+
+    i = pack_find(TV_SCROLL, SV_SCROLL_DETECT_TRAP);
+    if (i >= 0 && !p_ptr->blind && !(get_race_t()->flags & RACE_IS_ILLITERATE))
+    {
+        detect_traps(DETECT_RAD_DEFAULT, TRUE);
+        inven_item_increase(i, -1);
+        inven_item_describe(i);
+        inven_item_optimize(i);
+        return TRUE;
+    }
+    i = pack_find_device(EFFECT_DETECT_TRAPS);
+    if (i >= 0)
+    {
+        detect_traps(DETECT_RAD_DEFAULT, TRUE);
+        device_decrease_sp(&inventory[i], inventory[i].activation.cost);
+        inven_item_charges(i);
+        return TRUE;
+    }
+    i = pack_find_device(EFFECT_DETECT_ALL);
+    if (i >= 0)
+    {
+        detect_all(DETECT_RAD_DEFAULT);
+        device_decrease_sp(&inventory[i], inventory[i].activation.cost);
+        inven_item_charges(i);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 
 /*
  * Move the player
@@ -4796,7 +4829,7 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
     /* Stop running if leaving a trap detected zone */
     if (!(mpe_mode & MPE_STAYING) && (running || travel.run) && disturb_trap_detect)
     {
-        if (old_dtrap && !new_dtrap)
+        if (old_dtrap && !new_dtrap && !_auto_detect_traps())
         {
             disturb(0, 0);
             energy_use = 0;
@@ -4804,6 +4837,11 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
             return FALSE;
         }
     }
+
+    if (cave[py][px].info & CAVE_IN_DETECT)
+        old_dtrap = TRUE;
+    if (cave[ny][nx].info & CAVE_IN_DETECT)
+        new_dtrap = TRUE;
 
     if (!(mpe_mode & MPE_STAYING))
     {
@@ -6297,7 +6335,6 @@ static bool travel_abort(void)
     int i, max;
     bool stop = TRUE;
     cave_type *c_ptr;
-    bool old_dtrap = FALSE;
 
     /* Where we came from */
     prev_dir = find_prevdir;
@@ -6319,9 +6356,6 @@ static bool travel_abort(void)
         return (TRUE);
     }
 
-    if (cave[py][px].info & CAVE_IN_DETECT)
-        old_dtrap = TRUE;
-
     /* Look at every newly adjacent square. */
     for (i = -max; i <= max; i++)
     {
@@ -6339,11 +6373,16 @@ static bool travel_abort(void)
 
         if (disturb_trap_detect)
         {
+            bool old_dtrap = FALSE;
             bool new_dtrap = FALSE;
+
+            if (cave[py][px].info & CAVE_IN_DETECT)
+                old_dtrap = TRUE;
+
             if (c_ptr->info & CAVE_IN_DETECT)
                 new_dtrap = TRUE;
 
-            if (old_dtrap && !new_dtrap)
+            if (old_dtrap && !new_dtrap && !_auto_detect_traps())
             {
                 cmsg_print(TERM_VIOLET, "You are about to leave a trap detected zone.");
                 return TRUE;

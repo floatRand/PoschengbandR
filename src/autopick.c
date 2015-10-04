@@ -1983,7 +1983,7 @@ static void _sense_object_floor(object_type *o_ptr)
     o_ptr->feeling = _get_object_feeling(o_ptr);
 }
 
-static int _pack_find_device(int effect)
+int pack_find_device(int effect)
 {
     int i;
     for (i = 0; i < INVEN_PACK; i++)
@@ -2000,13 +2000,15 @@ static int _pack_find_device(int effect)
     return -1;
 }
 
-static int _pack_find(int tval, int sval)
+int pack_find(int tval, int sval)
 {
     int i;
     for (i = 0; i < INVEN_PACK; i++)
     {
-        if (!inventory[i].k_idx) continue; /* tval and sval are probably 0 too ... */
-        if (inventory[i].tval == tval && inventory[i].sval == sval) return i;
+        object_type *o_ptr = &inventory[i];
+        if (!o_ptr->k_idx) continue; /* tval and sval are probably 0 too ... */
+        if (!object_is_known(o_ptr)) continue;
+        if (o_ptr->tval == tval && o_ptr->sval == sval) return i;
     }
     return -1;
 }
@@ -2026,7 +2028,7 @@ bool autopick_auto_id(object_type *o_ptr)
 
     if (!object_is_known(o_ptr) && class_idx != CLASS_BERSERKER)
     {
-        int i = _pack_find(TV_SCROLL, SV_SCROLL_IDENTIFY);
+        int i = pack_find(TV_SCROLL, SV_SCROLL_IDENTIFY);
 
         if (i >= 0 && !p_ptr->blind && !(race->flags & RACE_IS_ILLITERATE))
         {
@@ -2038,7 +2040,7 @@ bool autopick_auto_id(object_type *o_ptr)
             return TRUE;
         }
 
-        i = _pack_find_device(EFFECT_IDENTIFY);
+        i = pack_find_device(EFFECT_IDENTIFY);
         if (i >= 0)
         {
             identify_item(o_ptr);
