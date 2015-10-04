@@ -844,7 +844,7 @@ extern void device_decrease_sp(object_type *o_ptr, int amt);
 extern void device_increase_sp(object_type *o_ptr, int amt);
 extern int  device_max_sp(object_type *o_ptr);
 extern void device_regen_sp(object_type *o_ptr);
-extern int  device_value(object_type *o_ptr);
+extern int  device_value(object_type *o_ptr, int options);
 extern void device_stats_reset(void);
 extern void device_stats_on_find(object_type *o_ptr);
 extern void device_stats_on_use(object_type *o_ptr, int num);
@@ -1221,12 +1221,13 @@ extern counts_t stats_rand_art_counts;
 /* object3.c */
 typedef void (*debug_hook)(cptr msg);
 extern debug_hook cost_calc_hook;
-extern s32b weapon_cost(object_type *o_ptr);
-extern s32b bow_cost(object_type *o_ptr);
-extern s32b armor_cost(object_type *o_ptr);
-extern s32b jewelry_cost(object_type *o_ptr);
-extern s32b lite_cost(object_type *o_ptr);
-extern s32b new_object_cost(object_type *o_ptr);
+enum { COST_REAL = 0x01 };
+extern s32b weapon_cost(object_type *o_ptr, int options);
+extern s32b bow_cost(object_type *o_ptr, int options);
+extern s32b armor_cost(object_type *o_ptr, int options);
+extern s32b jewelry_cost(object_type *o_ptr, int options);
+extern s32b lite_cost(object_type *o_ptr, int options);
+extern s32b new_object_cost(object_type *o_ptr, int options);
 
 /* racial.c */
 extern bool can_do_cmd_cast(void);

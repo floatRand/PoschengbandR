@@ -1602,7 +1602,7 @@ static void display_entry(int pos)
         }
         if (cur_store_num == STORE_HOME)
         {
-            int score = new_object_cost(o_ptr);
+            int score = new_object_cost(o_ptr, COST_REAL);
             if (score)
             {
                 (void)sprintf(out_val, "%9d ", score);
@@ -1665,7 +1665,7 @@ static void display_entry(int pos)
             /* Actually draw the price (with tax) */
             if (p_ptr->wizard)
             {
-                 int score = new_object_cost(o_ptr);
+                 int score = new_object_cost(o_ptr, COST_REAL);
                  (void)sprintf(out_val, "%9d %9d ", x, score);
             }
             else

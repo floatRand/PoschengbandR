@@ -467,7 +467,7 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
             forge.ident |= (IDENT_MENTAL); 
             object_desc(buf, &forge, 0);
 
-            new_score = new_object_cost(&forge);
+            new_score = new_object_cost(&forge, COST_REAL);
             old_score = object_value_real(&forge);
 
 
@@ -502,7 +502,7 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
                 forge.ident |= (IDENT_MENTAL); 
                 object_desc(buf, &forge, 0);
 
-                new_score = new_object_cost(&forge);
+                new_score = new_object_cost(&forge, COST_REAL);
                 old_score = object_value_real(&forge);
 
                 fprintf(file, "%d\t%d\t%d\t%s\n", 
@@ -3137,7 +3137,7 @@ void do_cmd_debug(void)
             object_desc(buf, &forge, 0);
             fail = device_calc_fail_rate(&forge);
             msg_format("%d) %s $:%d F:%d.%d%% C:%d L:%d I:%s",
-                i, buf, device_value(&forge),
+                i, buf, device_value(&forge, COST_REAL),
                 fail/10, fail%10,
                 forge.activation.cost,
                 device_level(&forge),

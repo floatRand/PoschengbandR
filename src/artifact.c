@@ -2674,7 +2674,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     if (object_is_melee_weapon(o_ptr))
         adjust_weapon_weight(o_ptr);
 
-    total_flags = new_object_cost(o_ptr);
+    total_flags = new_object_cost(o_ptr, COST_REAL);
     if (cheat_peek) msg_format("Score: %d", total_flags);
 
     if (object_is_jewelry(o_ptr))
@@ -2745,7 +2745,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             curse_object(o_ptr);
             if (has_pval && !o_ptr->pval)
                 o_ptr->pval = randint1(5);
-            total_flags = new_object_cost(o_ptr);
+            total_flags = new_object_cost(o_ptr, COST_REAL);
         }
     }
 

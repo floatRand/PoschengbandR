@@ -1924,6 +1924,17 @@ static int _obj_list_comp(_obj_list_info_ptr left, _obj_list_info_ptr right)
         return -1;
     if (left->score < right->score)
         return 1;
+
+    {
+        object_type *left_obj = &o_list[left->o_idx];
+        object_type *right_obj = &o_list[right->o_idx];
+
+        if (left_obj->tval < right_obj->tval)
+            return -1;
+        if (left_obj->tval > right_obj->tval)
+            return 1;
+    }
+
     return 0;
 }
 
@@ -1948,7 +1959,7 @@ static _obj_list_ptr _create_obj_list(void)
         info->y = o_ptr->iy;
         info->dy = info->y - py;
         info->dx = info->x - px;
-        info->score = object_value_real(o_ptr);
+        info->score = object_value(o_ptr);
         info->count = o_ptr->number;
 
         auto_pick_idx = is_autopick(o_ptr);
@@ -2044,10 +2055,12 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
             sprintf(loc, "%c %2d %c %2d",
                     (info_ptr->dy > 0) ? 'S' : 'N', abs(info_ptr->dy),
                     (info_ptr->dx > 0) ? 'E' : 'W', abs(info_ptr->dx));
-
             Term_queue_bigchar(rect.x + 1, rect.y + i, a, c, 0, 0);
             c_put_str(attr, format(obj_fmt, o_name), rect.y + i, rect.x + 3);
-            c_put_str(TERM_WHITE, format("%-9.9s ", loc), rect.y + i, rect.x + 3 + cx_obj + 1);
+            if (p_ptr->wizard)
+                c_put_str(TERM_WHITE, format("%6d %6d ", info_ptr->score, object_value_real(o_ptr)), rect.y + i, rect.x + 3 + cx_obj + 1);
+            else
+                c_put_str(TERM_WHITE, format("%-9.9s ", loc), rect.y + i, rect.x + 3 + cx_obj + 1);
         }
     }
     return i;

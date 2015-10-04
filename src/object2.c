@@ -1301,12 +1301,12 @@ s32b object_value_real(object_type *o_ptr)
     /* Dave has been kind enough to come up with much better scoring.
        So use the new algorithms whenever possible.
     */
-    if (object_is_melee_weapon(o_ptr)) return weapon_cost(o_ptr);
-    if (o_ptr->tval == TV_BOW) return bow_cost(o_ptr);
-    if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr);
-    if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr);
-    if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr);
-    if (object_is_device(o_ptr)) return device_value(o_ptr);
+    if (object_is_melee_weapon(o_ptr)) return weapon_cost(o_ptr, COST_REAL);
+    if (o_ptr->tval == TV_BOW) return bow_cost(o_ptr, COST_REAL);
+    if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr, COST_REAL);
+    if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr, COST_REAL);
+    if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr, COST_REAL);
+    if (object_is_device(o_ptr)) return device_value(o_ptr, COST_REAL);
 
     /* OK, here's the old pricing algorithm :( 
        Note this algorithm cheats for artifacts by relying on cost
@@ -1544,7 +1544,9 @@ s32b object_value(object_type *o_ptr)
         value = object_value_real(o_ptr);
     else
     {
-        value = object_value_base(o_ptr);
+        value = new_object_cost(o_ptr, 0);
+        if (!value)
+            value = object_value_base(o_ptr);
         if ((o_ptr->ident & IDENT_SENSE) && object_is_cursed(o_ptr))
             value /= 3;
     }

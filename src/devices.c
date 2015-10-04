@@ -2653,68 +2653,85 @@ int device_max_sp(object_type *o_ptr)
     return 0;
 }
 
-int device_value(object_type *o_ptr)
+int device_value(object_type *o_ptr, int options)
 {
     int  result = 0;
     u32b flgs[TR_FLAG_SIZE];
+    int  pval = 0;
 
     if (!_is_valid_device(o_ptr))
         return 0;
 
-    if (o_ptr->activation.type)
+    switch (o_ptr->tval)
     {
-        result = effect_value(&o_ptr->activation);
+    case TV_WAND: result = 100; break;
+    case TV_STAFF: result = 100; break;
+    case TV_ROD: result = 250; break;
+    }
 
-        if (o_ptr->activation.cost)
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+    {
+        pval = o_ptr->pval;
+        if (o_ptr->activation.type)
         {
-            device_effect_info_ptr entry = device_get_effect_info(o_ptr->tval, o_ptr->activation.type);
-            int                    base_cost = o_ptr->activation.cost;
-            int                    base_level = o_ptr->activation.difficulty;
-            int                    base_charges;
-            int                    charges;
+            result += effect_value(&o_ptr->activation);
 
-            /* Use info from the effect table (if available), but note that low level
-               effects would quickly grow too costly when we scale by charges below.
-               For example, a L1 magic missile was overpriced at power L10. */
-            if (entry)
+            if (o_ptr->activation.cost)
             {
-                base_cost = entry->cost;
-                base_level = MAX(10, entry->level);
+                device_effect_info_ptr entry = device_get_effect_info(o_ptr->tval, o_ptr->activation.type);
+                int                    base_cost = o_ptr->activation.cost;
+                int                    base_level = o_ptr->activation.difficulty;
+                int                    base_charges;
+                int                    charges;
+
+                /* Use info from the effect table (if available), but note that low level
+                   effects would quickly grow too costly when we scale by charges below.
+                   For example, a L1 magic missile was overpriced at power L10. */
+                if (entry)
+                {
+                    base_cost = entry->cost;
+                    base_level = MAX(10, entry->level);
+                }
+
+                base_charges = 3 * base_level / MAX(1, base_cost);
+                charges = device_max_sp(o_ptr) / o_ptr->activation.cost;
+
+                if (o_ptr->tval == TV_ROD)
+                    base_charges /= 3; /* s/b 2, but rods should value slightly higher than wands/staves */
+
+                /* More charges than base gives more value */
+                result = result * charges / MAX(1, base_charges);
+
+                /* More difficult than base gives less value, but the effect is small */
+                result -= result * (o_ptr->activation.difficulty - base_level) * 3 / 100;
             }
-
-            base_charges = 3 * base_level / MAX(1, base_cost);
-            charges = device_max_sp(o_ptr) / o_ptr->activation.cost;
-
-            if (o_ptr->tval == TV_ROD)
-                base_charges /= 3; /* s/b 2, but rods should value slightly higher than wands/staves */
-
-            /* More charges than base gives more value */
-            result = result * charges / MAX(1, base_charges);
-
-            /* More difficult than base gives less value, but the effect is small */
-            result -= result * (o_ptr->activation.difficulty - base_level) * 3 / 100;
         }
     }
 
-    object_flags(o_ptr, flgs);
+    if (options & COST_REAL)
+        object_flags(o_ptr, flgs);
+    else
+        object_flags_known(o_ptr, flgs);
 
-    if (o_ptr->name2 == EGO_DEVICE_RESISTANCE) /* I don't want artifacts to get an extra boost for TR_IGNORE_* */
-        result += result * 25 / 100;
-
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+    {
+        if (o_ptr->name2 == EGO_DEVICE_RESISTANCE) /* I don't want artifacts to get an extra boost for TR_IGNORE_* */
+            result += result * 25 / 100;
+    }
     if (have_flag(flgs, TR_REGEN))
-        result += result * 20 * o_ptr->pval / 100;
+        result += result * 20 * pval / 100;
 
     if (have_flag(flgs, TR_EASY_SPELL))
-        result += result * 10 * o_ptr->pval / 100;
+        result += result * 10 * pval / 100;
 
     if (have_flag(flgs, TR_DEVICE_POWER))
-        result += result * 25 * o_ptr->pval / 100;
+        result += result * 25 * pval / 100;
 
     if (have_flag(flgs, TR_HOLD_LIFE))
         result += result * 30 / 100;
 
     if (have_flag(flgs, TR_SPEED))
-        result += result * 25 * o_ptr->pval / 100;
+        result += result * 25 * pval / 100;
 
     return result;
 }

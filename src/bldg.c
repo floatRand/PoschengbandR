@@ -2895,7 +2895,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
         remove_flag(copy.art_flags, TR_NO_MAGIC);
         remove_flag(copy.art_flags, TR_DRAIN_EXP);
         remove_flag(copy.art_flags, TR_TY_CURSE);
-        old_cost = new_object_cost(&copy);
+        old_cost = new_object_cost(&copy, COST_REAL);
                 
         for (i = 0; i < 25; i++) /* TODO: Option for max. But +25 a pop is enough perhaps? */
         {
@@ -2931,7 +2931,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
             }
             else
             {
-                int new_cost = new_object_cost(&copy);
+                int new_cost = new_object_cost(&copy, COST_REAL);
                 int unit_cost = new_cost - old_cost;
                 int min_cost = (i+1)*cost;
 

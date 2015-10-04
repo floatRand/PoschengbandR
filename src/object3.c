@@ -462,13 +462,25 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_SIZE], object_type *o_ptr)
     return p;
 }
 
-s32b jewelry_cost(object_type *o_ptr)
+s32b jewelry_cost(object_type *o_ptr, int options)
 {
     s32b j, y, q, p;
+    int  to_h = 0, to_d = 0, to_a = 0, pval = 0;
     u32b flgs[TR_FLAG_SIZE];
     char dbg_msg[512];
 
-    object_flags(o_ptr, flgs);
+    if (options & COST_REAL)
+        object_flags(o_ptr, flgs);
+    else
+        object_flags_known(o_ptr, flgs);
+
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+    {
+        to_h = o_ptr->to_h;
+        to_d = o_ptr->to_d;
+        to_a = o_ptr->to_a;
+        pval = o_ptr->pval;
+    }
 
     if (cost_calc_hook)
     {
@@ -541,7 +553,7 @@ s32b jewelry_cost(object_type *o_ptr)
 
     if (y != 0)
     {
-        q = y*o_ptr->pval;
+        q = y*pval;
         p += q;
         if (cost_calc_hook)
         {
@@ -553,7 +565,7 @@ s32b jewelry_cost(object_type *o_ptr)
     /* Speed */
     if (have_flag(flgs, TR_SPEED))
     {
-        p += _speed_p(o_ptr->pval);
+        p += _speed_p(pval);
 
         if (cost_calc_hook)
         {
@@ -564,7 +576,7 @@ s32b jewelry_cost(object_type *o_ptr)
 
     if (have_flag(flgs, TR_BLOWS))
     {
-        p += 45 * 1000 * o_ptr->pval;
+        p += 45 * 1000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Blows: p = %d", p);
@@ -574,7 +586,7 @@ s32b jewelry_cost(object_type *o_ptr)
 
     if (have_flag(flgs, TR_XTRA_SHOTS))
     {
-        p += 5000 * o_ptr->pval;
+        p += 5000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Shots: p = %d", p);
@@ -583,7 +595,7 @@ s32b jewelry_cost(object_type *o_ptr)
     }
     if (have_flag(flgs, TR_XTRA_MIGHT))
     {
-        p += 5000 * o_ptr->pval;
+        p += 5000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Extra Might: p = %d", p);
@@ -592,7 +604,7 @@ s32b jewelry_cost(object_type *o_ptr)
     }
 
     /* Stats */
-    q = _stats_q(flgs, o_ptr->pval);
+    q = _stats_q(flgs, pval);
     if (q != 0)
     {
         p += q;
@@ -616,9 +628,9 @@ s32b jewelry_cost(object_type *o_ptr)
     }
 
     /* +AC */
-    if (o_ptr->to_a)
+    if (to_a)
     {
-        double x = o_ptr->to_a * ABS(o_ptr->to_a);
+        double x = to_a * ABS(to_a);
         double p2 = p;
 
         p2 = p2*(1000.0+x)/1000.0 + 20.0*x;
@@ -632,10 +644,10 @@ s32b jewelry_cost(object_type *o_ptr)
     }
 
     /* (+x,+y) */
-    if (o_ptr->to_h != 0 || o_ptr->to_d != 0)
+    if (to_h != 0 || to_d != 0)
     {
-        int x = o_ptr->to_h * ABS(o_ptr->to_h);
-        int y = o_ptr->to_d * ABS(o_ptr->to_d);
+        int x = to_h * ABS(to_h);
+        int y = to_d * ABS(to_d);
 
         p += 50 * x;
         p += 100 * y;
@@ -647,17 +659,25 @@ s32b jewelry_cost(object_type *o_ptr)
         }
     }
 
-    p = _finalize_p(p, flgs, o_ptr);
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+        p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
-s32b lite_cost(object_type *o_ptr)
+s32b lite_cost(object_type *o_ptr, int options)
 {
     s32b j, y, q, p;
+    int  pval = 0;
     u32b flgs[TR_FLAG_SIZE];
     char dbg_msg[512];
 
-    object_flags(o_ptr, flgs);
+    if (options & COST_REAL)
+        object_flags(o_ptr, flgs);
+    else
+        object_flags_known(o_ptr, flgs);
+
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+        pval = o_ptr->pval;
 
     switch (o_ptr->sval)
     {
@@ -680,11 +700,13 @@ s32b lite_cost(object_type *o_ptr)
     }
 
     /* These egos don't use flags for their effects ... sigh. */
-    if (o_ptr->name2 == EGO_LITE_DURATION) 
-        j += 100;
-    if (o_ptr->name2 == EGO_LITE_EXTRA_LIGHT) 
-        j += 250;
-
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+    {
+        if (o_ptr->name2 == EGO_LITE_DURATION)
+            j += 100;
+        if (o_ptr->name2 == EGO_LITE_EXTRA_LIGHT)
+            j += 250;
+    }
 
     /* Resistances */
     q = _resistances_q(flgs);
@@ -712,7 +734,7 @@ s32b lite_cost(object_type *o_ptr)
     /* Speed */
     if (have_flag(flgs, TR_SPEED))
     {
-        p += _speed_p(o_ptr->pval);
+        p += _speed_p(pval);
 
         if (cost_calc_hook)
         {
@@ -722,7 +744,7 @@ s32b lite_cost(object_type *o_ptr)
     }
 
     /* Stats */
-    q = _stats_q(flgs, o_ptr->pval);
+    q = _stats_q(flgs, pval);
     if (q != 0)
     {
         p += q;
@@ -740,7 +762,7 @@ s32b lite_cost(object_type *o_ptr)
 
     if (y != 0)
     {
-        q = y*o_ptr->pval;
+        q = y*pval;
         p += q;
         if (cost_calc_hook)
         {
@@ -750,7 +772,7 @@ s32b lite_cost(object_type *o_ptr)
     }
 
     /* Stats */
-    q = _stats_q(flgs, o_ptr->pval);
+    q = _stats_q(flgs, pval);
     if (q != 0)
     {
         p += q;
@@ -773,17 +795,30 @@ s32b lite_cost(object_type *o_ptr)
         }
     }
 
-    p = _finalize_p(p, flgs, o_ptr);
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+        p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
-s32b armor_cost(object_type *o_ptr)
+s32b armor_cost(object_type *o_ptr, int options)
 {
     s32b a, y, q, p;
+    int  to_h = 0, to_d = 0, to_a = 0, pval = 0;
     u32b flgs[TR_FLAG_SIZE];
     char dbg_msg[512];
 
-    object_flags(o_ptr, flgs);
+    if (options & COST_REAL)
+        object_flags(o_ptr, flgs);
+    else
+        object_flags_known(o_ptr, flgs);
+
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+    {
+        to_h = o_ptr->to_h;
+        to_d = o_ptr->to_d;
+        to_a = o_ptr->to_a;
+        pval = o_ptr->pval;
+    }
 
     if (cost_calc_hook)
     {
@@ -798,9 +833,17 @@ s32b armor_cost(object_type *o_ptr)
     /* Base Cost */
     y = o_ptr->ac;
     a = y * y * 15;
-    if (o_ptr->to_a <= 3 && !object_is_artifact(o_ptr) && !object_is_ego(o_ptr))
-        a /= 3;
-
+    if (to_a <= 3)
+    {
+        bool is_art = FALSE, is_ego = FALSE;
+        if ((options & COST_REAL) || object_is_known(o_ptr))
+        {
+            is_art = object_is_artifact(o_ptr);
+            is_ego = object_is_ego(o_ptr);
+        }
+        if (!is_art && !is_ego)
+            a /= 3;
+    }
     if (cost_calc_hook)
     {
         sprintf(dbg_msg, "  * Base Cost: a = %d", a);
@@ -808,7 +851,7 @@ s32b armor_cost(object_type *o_ptr)
     }
 
     /* +AC ... Note, negative ac should decrease the cost! */
-    a += 500*o_ptr->to_a + 20 * o_ptr->to_a * ABS(o_ptr->to_a);
+    a += 500*to_a + 20 * to_a * ABS(to_a);
 
     if (cost_calc_hook)
     {
@@ -873,7 +916,7 @@ s32b armor_cost(object_type *o_ptr)
     /* Speed */
     if (have_flag(flgs, TR_SPEED))
     {
-        p += _speed_p(o_ptr->pval);
+        p += _speed_p(pval);
 
         if (cost_calc_hook)
         {
@@ -883,7 +926,7 @@ s32b armor_cost(object_type *o_ptr)
     }
 
     /* Stats */
-    q = _stats_q(flgs, o_ptr->pval);
+    q = _stats_q(flgs, pval);
     if (q != 0)
     {
         p += q;
@@ -909,8 +952,8 @@ s32b armor_cost(object_type *o_ptr)
     /* Extra Attacks */
     if (have_flag(flgs, TR_BLOWS))
     {
-        p += 50 * 1000 * o_ptr->pval; /* Just for show ... Shiva's Jacket and Ares */
-                                       /* With Reforging, this is relevant: Biffed! */
+        p += 50 * 1000 * pval; /* Just for show ... Shiva's Jacket and Ares */
+                               /* With Reforging, this is relevant: Biffed! */
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Blows: p = %d", p);
@@ -919,21 +962,23 @@ s32b armor_cost(object_type *o_ptr)
     }
 
     /* Genji? This will become TR_2WEAPON someday ... */
-    if (o_ptr->name2 == EGO_GLOVES_GENJI || o_ptr->name1 == ART_MASTER_TONBERRY || o_ptr->name1 == ART_MEPHISTOPHELES)
+    if ((options & COST_REAL) || object_is_known(o_ptr))
     {
-        p += 20000;
-        if (cost_calc_hook)
+        if (o_ptr->name2 == EGO_GLOVES_GENJI || o_ptr->name1 == ART_MASTER_TONBERRY || o_ptr->name1 == ART_MEPHISTOPHELES)
         {
-            sprintf(dbg_msg, "  * Genji: p = %d", p);
-            cost_calc_hook(dbg_msg);
+            p += 20000;
+            if (cost_calc_hook)
+            {
+                sprintf(dbg_msg, "  * Genji: p = %d", p);
+                cost_calc_hook(dbg_msg);
+            }
         }
     }
-
     /* (+x,+y) */
-    if (o_ptr->to_h != 0 || o_ptr->to_d != 0)
+    if (to_h != 0 || to_d != 0)
     {
-        int x = o_ptr->to_h * ABS(o_ptr->to_h);
-        int y = o_ptr->to_d * ABS(o_ptr->to_d);
+        int x = to_h * ABS(to_h);
+        int y = to_d * ABS(to_d);
 
         p += 100 * x;
         p += 200 * y;
@@ -945,23 +990,36 @@ s32b armor_cost(object_type *o_ptr)
         }
     }
 
-    p = _finalize_p(p, flgs, o_ptr);
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+        p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
-s32b weapon_cost(object_type *o_ptr)
+s32b weapon_cost(object_type *o_ptr, int options)
 {
     s32b y, w, p, q;
+    int  to_h = 0, to_d = 0, to_a = 0, pval = 0;
     u32b flgs[TR_FLAG_SIZE];
     char dbg_msg[512];
-
-    object_flags(o_ptr, flgs);
 
     /* Hacks for objects with "hidden" powers */
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_DOKUBARI)
         return 10000;
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD)
-        return 100000;
+        return 1;
+
+    if (options & COST_REAL)
+        object_flags(o_ptr, flgs);
+    else
+        object_flags_known(o_ptr, flgs);
+
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+    {
+        to_h = o_ptr->to_h;
+        to_d = o_ptr->to_d;
+        to_a = o_ptr->to_a;
+        pval = o_ptr->pval;
+    }
 
     if (cost_calc_hook)
     {
@@ -1029,12 +1087,12 @@ s32b weapon_cost(object_type *o_ptr)
         if (have_flag(flgs, TR_STUN))
             s *= 1.10;
 
-        d = d*s + (double)o_ptr->to_d;
+        d = d*s + (double)to_d;
         if (d < 1.0)
             d = 1.0;
 
         if (have_flag(flgs, TR_BLOWS))
-            d += (d + 15.0)*o_ptr->pval/10.0;
+            d += (d + 15.0)*pval/10.0;
 
         if (have_flag(flgs, TR_VAMPIRIC)) 
             d *= 1.1;
@@ -1061,10 +1119,10 @@ s32b weapon_cost(object_type *o_ptr)
         cost_calc_hook(dbg_msg);
     }
 
-    if (o_ptr->to_h <= 10)
-        w += 100 * o_ptr->to_h;
+    if (to_h <= 10)
+        w += 100 * to_h;
     else
-        w += 10 * o_ptr->to_h * o_ptr->to_h;
+        w += 10 * to_h * to_h;
 
 
     /* Resistances */
@@ -1090,7 +1148,7 @@ s32b weapon_cost(object_type *o_ptr)
     /* Speed */
     if (have_flag(flgs, TR_SPEED))
     {
-        p += _speed_p(o_ptr->pval);
+        p += _speed_p(pval);
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Speed: p = %d", p);
@@ -1099,7 +1157,7 @@ s32b weapon_cost(object_type *o_ptr)
     }
 
     /* Stats */
-    q = _stats_q(flgs, o_ptr->pval)/2;
+    q = _stats_q(flgs, pval)/2;
     if (q != 0)
     {
         p += q;
@@ -1116,7 +1174,7 @@ s32b weapon_cost(object_type *o_ptr)
     if (have_flag(flgs, TR_INFRA)) y += 500;
     if (have_flag(flgs, TR_TUNNEL)) 
     {
-        if (o_ptr->tval == TV_DIGGING && o_ptr->pval == 1)
+        if (o_ptr->tval == TV_DIGGING && pval == 1)
         {
             /* ?? Shovels and picks ... */
             y += 150;
@@ -1127,7 +1185,7 @@ s32b weapon_cost(object_type *o_ptr)
 
     if (y != 0)
     {
-        q = y*o_ptr->pval;
+        q = y*pval;
         p += q;
         if (cost_calc_hook)
         {
@@ -1149,10 +1207,10 @@ s32b weapon_cost(object_type *o_ptr)
     }
 
     /* AC Bonus */
-    if (o_ptr->to_a != 0)
+    if (to_a != 0)
     {
     /*    p += 500*o_ptr->to_a + o_ptr->to_a * ABS(o_ptr->to_a) * 30; */
-        p += 500*o_ptr->to_a;
+        p += 500*to_a;
 
         if (cost_calc_hook)
         {
@@ -1166,39 +1224,44 @@ s32b weapon_cost(object_type *o_ptr)
 
     p += o_ptr->weight;
     
-    p = _finalize_p(p, flgs, o_ptr);
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+        p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
-static s32b _avg_dam_bow(object_type *o_ptr)
+static s32b _avg_dam_bow(object_type *o_ptr, int options)
 {
     s32b d = 0;
     s32b m = o_ptr->mult;
+    int  to_d = 0;
+
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+        to_d = o_ptr->to_d;
 
     switch (o_ptr->sval)
     {
     case SV_SLING:
-        d = m*(2 + o_ptr->to_d) / 100;
+        d = m*(2 + to_d) / 100;
         break;
 
     case SV_SHORT_BOW:
-        d = m*(2 + o_ptr->to_d) / 100;
+        d = m*(2 + to_d) / 100;
         break;
 
     case SV_LONG_BOW:
-        d = m*(3 + o_ptr->to_d) / 100;
+        d = m*(3 + to_d) / 100;
         break;
 
     case SV_NAMAKE_BOW:
-        d = m*(18 + o_ptr->to_d) / 100;
+        d = m*(18 + to_d) / 100;
         break;
 
     case SV_LIGHT_XBOW:
-        d = m*(3 + o_ptr->to_d) / 100;
+        d = m*(3 + to_d) / 100;
         break;
 
     case SV_HEAVY_XBOW:
-        d = m*(4 + o_ptr->to_d) / 100;
+        d = m*(4 + to_d) / 100;
         break;
 
     case SV_HARP:
@@ -1212,13 +1275,24 @@ static s32b _avg_dam_bow(object_type *o_ptr)
     return MAX(0, d);
 }
 
-s32b bow_cost(object_type *o_ptr)
+s32b bow_cost(object_type *o_ptr, int options)
 {
     s32b y, w, p, q, t;
+    int  to_h = 0, to_a = 0, pval = 0;
     u32b flgs[TR_FLAG_SIZE];
     char dbg_msg[512];
 
-    object_flags(o_ptr, flgs);
+    if (options & COST_REAL)
+        object_flags(o_ptr, flgs);
+    else
+        object_flags_known(o_ptr, flgs);
+
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+    {
+        to_h = o_ptr->to_h;
+        to_a = o_ptr->to_a;
+        pval = o_ptr->pval;
+    }
 
     if (cost_calc_hook)
     {
@@ -1231,7 +1305,7 @@ s32b bow_cost(object_type *o_ptr)
     }
 
     /* Base Cost calculated from expected damage output */
-    t = _avg_dam_bow(o_ptr);
+    t = _avg_dam_bow(o_ptr, options);
     if (have_flag(flgs, TR_BRAND_POIS)) t = t * 5 / 4;
     if (have_flag(flgs, TR_BRAND_ACID)) t = t * 5 / 4;
     if (have_flag(flgs, TR_BRAND_ELEC)) t = t * 5 / 4;
@@ -1242,7 +1316,7 @@ s32b bow_cost(object_type *o_ptr)
     if (have_flag(flgs, TR_XTRA_SHOTS))
     {
         int i;
-        for (i = 0; i < o_ptr->pval; i++)
+        for (i = 0; i < pval; i++)
             w = w * 11 / 10;
     }
 
@@ -1253,12 +1327,12 @@ s32b bow_cost(object_type *o_ptr)
     }
 
     /* (+x,+y) */
-    if (o_ptr->to_h < 0) {}
-    else if (o_ptr->to_h <= 10)
-        w += 100 * o_ptr->to_h;
+    if (to_h < 0) {}
+    else if (to_h <= 10)
+        w += 100 * to_h;
     else
     {
-        w += 100 * o_ptr->to_h;
+        w += 100 * to_h;
         /*w += 10 * o_ptr->to_h * o_ptr->to_h;*/
     }
 
@@ -1293,7 +1367,7 @@ s32b bow_cost(object_type *o_ptr)
     /* Speed */
     if (have_flag(flgs, TR_SPEED))
     {
-        p += _speed_p(o_ptr->pval);
+        p += _speed_p(pval);
 
         if (cost_calc_hook)
         {
@@ -1303,7 +1377,7 @@ s32b bow_cost(object_type *o_ptr)
     }
 
     /* Stats */
-    q = _stats_q(flgs, o_ptr->pval);
+    q = _stats_q(flgs, pval);
     if (q != 0)
     {
         p += q + (q/100)*w/100;
@@ -1321,7 +1395,7 @@ s32b bow_cost(object_type *o_ptr)
     if (have_flag(flgs, TR_INFRA)) y += 500;
     if (y != 0)
     {
-        q = y*o_ptr->pval;
+        q = y*pval;
         p += q + (q/100)*w/300;
         /*p += q*(1 + w/30000);*/
         if (cost_calc_hook)
@@ -1344,9 +1418,9 @@ s32b bow_cost(object_type *o_ptr)
     }
 
     /* AC Bonus */
-    if (o_ptr->to_a != 0)
+    if (to_a != 0)
     {
-        p += 500*o_ptr->to_a + o_ptr->to_a * ABS(o_ptr->to_a) * 30;
+        p += 500*to_a + to_a * ABS(to_a) * 30;
 
         if (cost_calc_hook)
         {
@@ -1355,17 +1429,18 @@ s32b bow_cost(object_type *o_ptr)
         }
     }
 
-    p = _finalize_p(p, flgs, o_ptr);
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+        p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
-s32b new_object_cost(object_type *o_ptr)
+s32b new_object_cost(object_type *o_ptr, int options)
 {
-    if (object_is_melee_weapon(o_ptr)) return weapon_cost(o_ptr);
-    else if (o_ptr->tval == TV_BOW) return bow_cost(o_ptr);
-    else if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr);
-    else if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr);
-    else if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr);
-    else if (object_is_device(o_ptr)) return device_value(o_ptr);
+    if (object_is_melee_weapon(o_ptr)) return weapon_cost(o_ptr, options);
+    else if (o_ptr->tval == TV_BOW) return bow_cost(o_ptr, options);
+    else if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr, options);
+    else if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr, options);
+    else if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr, options);
+    else if (object_is_device(o_ptr)) return device_value(o_ptr, options);
     return 0;
 }
