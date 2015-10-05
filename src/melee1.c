@@ -1608,7 +1608,7 @@ bool make_attack_normal(int m_idx)
                     if (weaponmaster_get_toggle() == TOGGLE_TRADE_BLOWS)
                         msg_format("You trade blows with %^s.", m_name);
                     else
-                        cmsg_print(TERM_L_UMBER, "( You retaliate:");
+                        cmsg_print(TERM_L_UMBER, "(You retaliate:");
 
                     py_attack(m_ptr->fy, m_ptr->fx, WEAPONMASTER_RETALIATION);
                     cmsg_print(TERM_L_UMBER, ")");

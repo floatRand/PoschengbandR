@@ -1,45 +1,27 @@
 <color:y>PosChengband <$:version><color:*>
 <style:screenshot>
-             <color:U>You<color:*> <color:U>attack<color:*> <color:U>Ithaqua<color:*> <color:U>the<color:*> <color:U>Windwalker<color:*> <color:R>powerfully<color:*><color:U>: <color:*>You hit. It was a <color:r>superb<color:*>      <color:*>
-LEVEL <color:G>    50<color:*> hit! You are frozen and <color:b>shocked<color:*>. <color:v>*Ouch!* <color:*>You hit. It was a <color:y>good<color:*> hit!        <color:*>
-EXP <color:G>   15.7M<color:*> You are frozen and <color:b>shocked<color:*>. <color:v>*Ouch!* <color:*>You hit. You are frozen and             <color:*>
-AU  <color:G>   6.54M<color:*> <color:b>shocked<color:*>. <color:v>*Ouch!* <color:*>You miss. You hit. You are frozen and <color:b>shocked<color:*>. <color:v>*Ouch!* <color:*>    <color:*>
-<color:d>            <color:*> You hit. You are frozen and <color:b>shocked<color:*>. <color:v>*Ouch!* <color:*>You peck. You are frozen       <color:*>
-STR!: <color:G>18/***<color:*> and <color:b>shocked<color:*>. <color:v>*Ouch!* <color:*>You bite. Ithaqua the Windwalker shouts,               <color:*>
-Int!: <color:y> 18/74<color:*> 'AAAARRRGGGHHH!!!' <color:R>You<color:*> <color:R>have<color:*> <color:R>destroyed<color:*> <color:R>Ithaqua<color:*> <color:R>the<color:*> <color:R>Windwalker. <color:*>You feel      <color:*>
-Wis : <color:y> 18/01<color:*> something roll beneath your feet. You feel something roll beneath your      <color:*>
-DEX!: <color:G>18/***<color:*> feet. <color:v>*Ouch!* <color:*>                                                              <color:*>
-CON!: <color:G>18/***<color:*>               ###<color:b>~<color:*>####            ##<color:B>~<color:*>##<color:B>~~~<color:*>#     #<color:b>~<color:*> <color:B>~<color:*>#<color:b>~<color:*>#<color:W>|<color:*># # # #             <color:*>
-Chr!: <color:y>18/105<color:*>              ##.#.<color:B>~<color:*>.<color:B>~<color:*>#             #####<color:U>+<color:*>###    #<color:U>'<color:*>#<color:B>~<color:*>#########<color:U>+<color:*>#             <color:*>
-AC     <color:G>  214<color:*>              #.#<color:b>~<color:*>###.#             #<color:B>~~<color:*><color:r>UU<color:*>  <color:B>~<color:*>#    #<color:B>~<color:*>#<color:D>g<color:*> <color:r>-<color:*>#<color:b>~<color:*>#<color:b>~<color:*>#<color:B>~<color:*># #             <color:*>
-HP <color:r> 484<color:*>/<color:G>1170<color:*>              #.### #<color:b>~<color:*>#           #####<color:b>~<color:*>### #    #<color:B>~<color:*>#<color:U>+<color:*>#<color:B>~<color:*>#<color:U>+<color:*>#<color:U>+<color:*>#<color:U>+<color:*>#<color:B>~<color:*>#             <color:*>
-                          ###   #.#           #  <color:b>~<color:*><color:r>U<color:*><color:b>~<color:*>##  ######<color:B>~<color:*> <color:B>~~~<color:*> <color:b>~<color:*><color:B>~<color:*>     #             <color:*>
-                                #<color:B>~<color:*>#          ##<color:U>><color:*>###### <color:b>~<color:*>  <color:y>p<color:*>   <color:B>~<color:*>#<color:U>'<color:*>#<color:U>+<color:*># #<color:U>+<color:*>#<color:U>+<color:*>#<color:B>~<color:*>#             <color:*>
-<color:y>T<color:*>[<color:r>****<color:*>-----]                    #>#   ########.<color:B>~<color:*>#    ######### #<color:U>}<color:*># <color:B>~<color:*><color:G>l<color:*>#<color:u>H<color:*>#<color:v>?<color:*>#<color:b>~<color:*>#             <color:*>
-<color:U>,<color:*>[<color:y>*****<color:*>----]                    #<color:b>~<color:*>#   #.<color:b>~<color:*>>.....##            #<color:U>'<color:*>###<color:B>~<color:*>#####<color:U>}<color:*>#<color:U>+<color:*>#             <color:*>
-                         #####  #<#   #.########             #<color:B>~<color:*>  ...<color:B>~<color:*>.<color:B>~<color:*>.<color:B>~<color:*>..#             <color:*>
-                        ##.#<color:B>~<color:*>####<color:b>~<color:*>#####.##                   #<color:u>'<color:*># ###<color:U>'<color:*># #####             <color:*>
-                        #<color:B>~<color:*>#<color:B>~<color:*>#<color:b>~<color:*><color:B>~<color:*><color:b>~~<color:*>.<color:B>~~<color:*>..<color:B>~<color:*>.<color:b>~<color:*>#                   #<color:b>~~<color:*>   #. ##                 <color:*>
-                        #.###<color:B>~~<color:*>..<color:b>~~<color:*>..<color:b>~<color:*><color:B>~~~<color:*>#                   # #####<color:B>~<color:*>##                  <color:*>
-<color:G>Fast (+27)<color:*>              ### #..########<color:b>~~<color:*>#                   <color:b>~<color:*> <color:B>~<color:*> <color:B>~<color:*>. <color:U>'<color:*>#####               <color:*>
-                            #.<color:B>~<color:*>#      #<color:B>~<color:*>.#              ####.#####..<color:B>~<color:*><color:U>'<color:*>.<color:B>~~<color:*>#               <color:*>
-                            #..#      #..#              #..<color:b>~<color:*>#  ##.######<color:B>~<color:*>#               <color:*>
-                            #<color:B>~~<color:*>########<color:B>~~<color:*>#              ##.## ##.##  ###<color:U>'<color:*>#####           <color:*>
-                            #..<color:b>~<color:*><color:B>~<color:*>..<color:B>~<color:*><.<color:o>^<color:*><color:B>~<color:*>.#              ##.# ##.##   #<color:b>~<color:*>....# #           <color:*>
-                            #.<color:B>~<color:*>....<color:b>~<color:*>.<color:b>~<color:*>.<color:b>~<color:*>.##             #<color:g>(<color:*>####.##    #...<color:b>~<color:*>.<color:b>~~<color:*>#           <color:*>
-              <color:D>x<color:*>             #############.##            ##<color:y>T<color:*>##<color:B>~<color:*>##     #...... #           <color:*>
-              <color:D>xx<color:*>                        ##<color:B>~<color:*>##           #.##<color:b>~<color:*>##      #.....<color:b>~<color:*> #           <color:*>
-              <color:D>xxxx<color:*>                       ##<color:b>~<color:*>##          ##.<color:B>~<color:*>##       #<color:b>~<color:*>.....<color:b>~<color:*>#           <color:*>
-              <color:D>xxxxx<color:*>                       ##<color:b>~<color:*>#############.##        ##<color:b>~<color:*>.<color:b>~~<color:*>. #           <color:*>
-              <color:D>xxxxxxx<color:*>                      ##.#<color:b>~<color:*>#.#.#<color:B>~<color:*>#.#<color:b>~<color:*>#.#       ##<color:b>~<color:*>.... <color:b>~<color:*>#           <color:*>
-              <color:D>xxxxxxxx<color:*>                      ##<color:b>~<color:*>#<color:b>~<color:*>#.#<color:B>~<color:*>#<color:b>~<color:*>#<color:B>~<color:*>#<color:B>~<color:*>##       #<color:B>~<color:*>########           <color:*>
-              <color:D>xxxxxxxxxxx<color:*>                    ###############        ##<color:B>~<color:*>#                 <color:*>
-              <color:D>xxxxxxxxxxxxxx<color:*>                                        # ##                 <color:*>
-              <color:D>xxxxxxxxxxxxxxxx<color:*>                                      ##<color:B>~<color:*>#                 <color:*>
-              <color:D>xxxxxxxxxxxxxxxx<color:*>                                      #<color:B>~<color:*>##                 <color:*>
-              <color:D>xxxxxxxxxxxxxxxx<color:*>                                      ## #                 <color:*>
-              <color:D>xxxxxxxxxxxxxxxx<color:*>                                      #<color:B>~<color:*>##                 <color:*>
-              <color:D>xxxxxxxxxxxxxxxxx<color:*>                                     ## #                 <color:*>
-                       <color:g>Acid<color:*> <color:b>Elec<color:*> <color:r>Fire<color:*> <color:s>Cold<color:*> <color:g>Pois<color:*> Hero                          <color:y>R'lyeh: L80<color:*>
+<color:U>You attack the Warg:</color> You butt the Warg. How heroic! <color:R>You have slain </color>
+<color:R>the Warg.</color> How heroic! <color:B>You just completed your quest!</color> A magical      LEVEL <color:G>    10</color>
+staircase appears...                                                EXP <color:G>      36</color>
+<color:g>The Green naga attacks you:</color> She crushes. <color:U>(You retaliate:</color> You        AU  <color:G>     120</color>
+strike the Green naga. <color:R>You have slain the Green naga.</color> You feel      <color:d>      </color><color:U>~</color><color:d>   </color><color:U>]]</color>
+something roll beneath your feet.<color:U>)</color>                                  STR : <color:G>    18</color>
+    #...............<color:D>~</color><color:U>~</color>.....<color:o>*</color>     <color:s>%</color>..<color:U>'</color>........................#      INT : <color:G>    11</color>
+    <color:s>%</color>......................<color:s>%</color>     %<color:s>%%%</color>........................#      WIS : <color:G> 18/10</color>
+    %......................<color:s>%</color>        #........................#      DEX : <color:G> 18/74</color>
+    ####<color:s>%%%%%%%</color>#<color:U>+</color>%##<color:s>%</color>.#<color:s>%</color>#<color:s>%%%</color>        %........................<color:s>%</color>      CON : <color:G>    17</color>
+                    <color:s>%</color>.#             #........................<color:s>%</color>      CHR : <color:G>    12</color>
+                    #.#             <color:s>%</color>........................#      AC     <color:G>   24</color>
+                 <color:s>%</color>#<color:s>%</color>#.#             #......<color:U><</color>.................#      HP <color:y> 126</color>/<color:G> 146</color>
+                 <color:s>%</color><color:U>(</color>>@.#             %........................#      SP <color:y>  23</color>/<color:G>  37</color>
+                 <color:s>%</color>.####             #........................#
+                 #.#                #........................<color:s>%</color>      @[<color:y>********</color>-]
+                                    ###%#%#%#################<color:s>%</color>      <color:G>?</color>[<color:y>******</color>---]
+                                                                    <color:U>,</color>[******---]
+
+
+
+                                                                    <color:G>Fast (+1)</color>
+<color:W>Stronghold: L5</color>
 <style:normal>
               [Press <style:keypress>?<style:normal> for Credits. Press Any Other Key to Play]

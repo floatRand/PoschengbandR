@@ -123,7 +123,7 @@ void cmsg_append(byte color, cptr str)
             cmsg_add(color, str);
             return;
         }
-        if (string_length(m->msg))
+        if (string_length(m->msg) && strlen(str) > 1)
             string_append_char(m->msg, ' ');
         if (color != m->color)
             string_printf(m->msg, "<color:%c>%s</color>", attr_to_attr_char(color), str);
@@ -332,9 +332,9 @@ static void msg_line_display(byte color, cptr msg)
     else if (!_msg_append && !msg_line_is_empty() && doc_cursor(_msg_line_doc).x > 0)
         doc_newline(_msg_line_doc);
 
-    doc_insert_text(_msg_line_doc, color, msg);
-    if (doc_cursor(_msg_line_doc).x > 0)
+    if (doc_cursor(_msg_line_doc).x > 0 && strlen(msg) > 1)
         doc_insert_char(_msg_line_doc, ' ');
+    doc_insert_text(_msg_line_doc, color, msg);
     msg_line_sync();
 }
 
