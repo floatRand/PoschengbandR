@@ -2046,7 +2046,7 @@ static void store_purchase(void)
         price = (best * j_ptr->number);
         object_desc(o_name, j_ptr, OD_COLOR_CODED);
         sprintf(prompt, "Really purchase %s (%c) for <color:R>%d</color> gp? <color:y>[y/n]</color>", o_name, I2A(item), price);
-        if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'y')
+        if (msg_prompt(prompt, "ny", PROMPT_YES_NO) == 'y')
         {
             if (p_ptr->au >= price)
             {
@@ -2386,7 +2386,7 @@ static void store_sell(void)
         price *= q_ptr->number;
 
         sprintf(prompt, "Really sell %s (%c) for <color:R>%d</color> gp? <color:y>[y/n]</color>", o_name, index_to_label(item), price);
-        if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'y')
+        if (msg_prompt(prompt, "ny", PROMPT_YES_NO) == 'y')
         {
             if (cur_store_num == STORE_BLACK) /* The black market is illegal! */
                 virtue_add(VIRTUE_JUSTICE, -1);

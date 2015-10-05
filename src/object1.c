@@ -12,6 +12,8 @@
 
 #include "angband.h"
 
+#include <assert.h>
+
 #if defined(MACINTOSH) || defined(MACH_O_CARBON)
 #ifdef verify
 #undef verify
@@ -1879,7 +1881,7 @@ static void prepare_label_string_floor(char *label, int floor_list[], int floor_
 int show_inven(int target_item, int mode)
 {
     int             i, j, k, l, z = 0;
-    int             col, cur_col, len;
+    int             cur_col, len = 0, padding, max_o_len;
     object_type     *o_ptr;
     char            o_name[MAX_NLEN];
     char            tmp_val[80];
@@ -1887,17 +1889,19 @@ int show_inven(int target_item, int mode)
     byte            out_color[INVEN_PACK];
     char            out_desc[INVEN_PACK][MAX_NLEN];
     int             target_item_label = 0;
-    int             wid, hgt;
+    rect_t          rect = ui_map_rect();
     char            inven_label[52 + 1];
 
-    /* Starting column */
-    col = command_gap;
-
-    /* Get size */
-    Term_get_size(&wid, &hgt);
-
-    /* Default "max-length" */
-    len = wid - col - 1;
+    /* Compute Padding */
+    padding = 5; /* " a) " + trailing " " */
+    if (mode & SHOW_FAIL_RATES) padding += 12;  /* " Fail: 23.2%" */
+    else if (mode & SHOW_VALUE) padding += 13;  /* " Pow: 1234567" */
+    else if (show_weights) padding += 9;        /* " 123.0 lb" */
+    if (show_item_graph)
+    {
+        padding += 2;
+        if (use_bigtile) padding++;
+    }
 
     /* Find the "final" slot */
     for (i = 0; i < INVEN_PACK; i++)
@@ -1913,18 +1917,12 @@ int show_inven(int target_item, int mode)
 
     prepare_label_string(inven_label, USE_INVEN);
 
-    /* Display the inventory */
+    /* Compute/Measure Display Strings */
     for (k = 0, i = 0; i < z; i++)
     {
         o_ptr = &inventory[i];
-
-        /* Is this item acceptable? */
         if (!item_tester_okay(o_ptr)) continue;
-
-        /* Describe the object */
         object_desc(o_name, o_ptr, 0);
-
-        /* Save the object index, color, and description */
         out_index[k] = i;
         out_color[k] = tval_to_attr[o_ptr->tval % 128];
 
@@ -1949,37 +1947,39 @@ int show_inven(int target_item, int mode)
                 out_color[k] = TERM_L_DARK;
         }
 
-        (void)strcpy(out_desc[k], o_name);
+        strcpy(out_desc[k], o_name);
 
-        /* Find the predicted "line length" */
-        l = strlen(out_desc[k]) + 5;
+        l = strlen(out_desc[k]);
+        if (l > len)
+            len = l;
 
-        /* Be sure to account for the weight */
-        if (mode & SHOW_FAIL_RATES) l += 12;
-        else if (mode & SHOW_VALUE) l += 12;
-        else if (show_weights) l += 9;
-
-        /* Account for icon if displayed */
-        if (show_item_graph)
-        {
-            l += 2;
-            if (use_bigtile) l++;
-        }
-
-        /* Maintain the maximum length */
-        if (l > len) len = l;
-
-        /* Advance to next "line" */
         k++;
     }
 
-    /* Find the column to start in */
-    col = (len > wid - 4) ? 0 : (wid - len - 1);
+    /* Shorten Display Strings if Too Long */
+    max_o_len = rect.cx - padding;
+    if (len > max_o_len)
+    {
+        for (j = 0; j < k; j++)
+        {
+            l = strlen(out_desc[j]);
+            if (l > max_o_len)
+            {
+                assert(max_o_len >= 3);
+                out_desc[j][max_o_len - 3] = '.';
+                out_desc[j][max_o_len - 2] = '.';
+                out_desc[j][max_o_len - 1] = '.';
+                out_desc[j][max_o_len] = '\0';
+            }
+        }
+    }
+    else
+        rect.cx = padding + len;
 
-    /* Output each entry */
+    /* Display */
     for (j = 0; j < k; j++)
     {
-        if (j + 1 >= hgt) break; /* out of bounds on the terminal currently = GPF! */
+        if (j >= rect.cy) break; /* out of bounds on the terminal currently = GPF! */
 
         /* Get the index */
         i = out_index[j];
@@ -1988,8 +1988,9 @@ int show_inven(int target_item, int mode)
         o_ptr = &inventory[i];
 
         /* Clear the line */
-        prt("", j + 1, col ? col - 2 : col);
+        Term_erase(rect.x, rect.y + j, rect.cx);
 
+        /* " a) " */
         if (use_menu && target_item)
         {
             if (j == (target_item-1))
@@ -2009,11 +2010,9 @@ int show_inven(int target_item, int mode)
             /* Prepare an index --(-- */
             sprintf(tmp_val, "%c)", index_to_label(i));
         }
+        put_str(tmp_val, rect.y + j, rect.x + 1);
 
-        /* Clear the line with the (possibly indented) index */
-        put_str(tmp_val, j + 1, col);
-
-        cur_col = col + 3;
+        cur_col = rect.x + 4;
 
         /* Display graphics for object, if desired */
         if (show_item_graph)
@@ -2025,7 +2024,7 @@ int show_inven(int target_item, int mode)
             if (a & 0x80) a |= 0x40;
 #endif
 
-            Term_queue_bigchar(cur_col, j + 1, a, c, 0, 0);
+            Term_queue_bigchar(cur_col, rect.y + j, a, c, 0, 0);
             if (use_bigtile) cur_col++;
 
             cur_col += 2;
@@ -2033,34 +2032,35 @@ int show_inven(int target_item, int mode)
 
 
         /* Display the entry itself */
-        c_put_str(out_color[j], out_desc[j], j + 1, cur_col);
+        c_put_str(out_color[j], out_desc[j], rect.y + j, cur_col);
 
         /* Display the weight if needed */
         if (mode & SHOW_FAIL_RATES)
         {
             int fail = device_calc_fail_rate(o_ptr);
-            sprintf(tmp_val, "Fail: %2d.%d%%", fail/10, fail%10);
-            prt(tmp_val, j + 1, wid - 12);
+            if (fail == 1000)
+                sprintf(tmp_val, "Fail: %3d%%", fail/10);
+            else
+                sprintf(tmp_val, "Fail: %2d.%d%%", fail/10, fail%10);
+            put_str(tmp_val, rect.y + j, rect.x + rect.cx - 12);
         }
         else if (mode & SHOW_VALUE)
         {
             int value = object_value_real(o_ptr);
             sprintf(tmp_val, "Pow: %7d", value);
-            prt(tmp_val, j + 1, wid - 12);
+            put_str(tmp_val, rect.y + j, rect.x + rect.cx - 13);
         }
         else if (show_weights)
         {
             int wgt = o_ptr->weight * o_ptr->number;
             (void)sprintf(tmp_val, "%3d.%1d lb", wgt / 10, wgt % 10);
-            prt(tmp_val, j + 1, wid - 9);
+            put_str(tmp_val, rect.y + j, rect.x + rect.cx - 9);
         }
     }
 
     /* Make a "shadow" below the list (only if needed) */
-    if (j && (j < INVEN_PACK)) prt("", j + 1, col ? col - 2 : col);
-
-    /* Save the new column */
-    /*command_gap = col;*/
+    if (j && j < rect.cy)
+        Term_erase(rect.x, rect.y + j, rect.cx);
 
     return target_item_label;
 }
@@ -2073,26 +2073,29 @@ int show_inven(int target_item, int mode)
 int show_equip(int target_item, int mode)
 {
     int             i, j, k, l;
-    int             col, cur_col, len;
+    int             cur_col, o_len = 0, lbl_len = 0, padding, max_o_len;
     object_type     *o_ptr;
     char            tmp_val[80];
     int             out_index[EQUIP_MAX_SLOTS];
     byte            out_color[EQUIP_MAX_SLOTS];
+    char            out_label[EQUIP_MAX_SLOTS][MAX_NLEN];
     char            out_desc[EQUIP_MAX_SLOTS][MAX_NLEN];
     int             target_item_label = 0;
-    int             wid, hgt;
+    rect_t          rect = ui_map_rect();
     char            equip_label[52 + 1];
 
-    /* Starting column */
-    col = command_gap;
+    /* Compute Padding */
+    padding = 5; /* " a) " + trailing " " */
+    if (mode & SHOW_FAIL_RATES) padding += 12;  /* " Fail: 23.2%" */
+    else if (mode & SHOW_VALUE) padding += 13;  /* " Pow: 1234567" */
+    else if (show_weights) padding += 9;        /* " 123.0 lb" */
+    if (show_item_graph)
+    {
+        padding += 2;
+        if (use_bigtile) padding++;
+    }
 
-    /* Get size */
-    Term_get_size(&wid, &hgt);
-
-    /* Maximal length */
-    len = wid - col - 1;
-
-    /* Scan the equipment list */
+    /* Compute/Measure Display Strings */
     for (k = 0, i = EQUIP_BEGIN; i < EQUIP_BEGIN + equip_count(); i++)
     {
         o_ptr = equip_obj(i);
@@ -2111,32 +2114,58 @@ int show_equip(int target_item, int mode)
         else
             sprintf(out_desc[k], "%s", "");
 
+        if (show_labels)
+            sprintf(out_label[k], "%-10.10s: ", equip_describe_slot(i));
+        else
+            sprintf(out_label[k], "%s", "");
+
         out_index[k] = i;
 
         /* Extract the maximal length (see below) */
-        l = strlen(out_desc[k]) + (2 + 3);
-        if (show_labels) l += (10 + 2);
-        if (mode & SHOW_FAIL_RATES) l += 12;
-        else if (mode & SHOW_VALUE) l += 12;
-        else if (show_weights) l += 9;
-        if (show_item_graph) l += 2;
-        if (l > len) len = l;
+        l = strlen(out_desc[k]);
+        if (l > o_len)
+            o_len = l;
+
+        l = strlen(out_label[k]);
+        if (l > lbl_len)
+            lbl_len = l;
 
         k++;
     }
 
-    /* Hack -- Find a column to start in */
-    col = (len > wid - 4) ? 0 : (wid - len - 1);
+    /* Shorten Display Strings if Too Long */
+    padding += lbl_len;
+    max_o_len = rect.cx - padding;
+    if (o_len > max_o_len)
+    {
+        for (j = 0; j < k; j++)
+        {
+            l = strlen(out_desc[j]);
+            if (l > max_o_len)
+            {
+                assert(max_o_len >= 3);
+                out_desc[j][max_o_len - 3] = '.';
+                out_desc[j][max_o_len - 2] = '.';
+                out_desc[j][max_o_len - 1] = '.';
+                out_desc[j][max_o_len] = '\0';
+            }
+        }
+        o_len = max_o_len;
+    }
+    else
+        rect.cx = padding + o_len;
 
     prepare_label_string(equip_label, USE_EQUIP);
 
-    /* Output each entry */
+    /* Display */
     for (j = 0; j < k; j++)
     {
+        if (j >= rect.cy) break; /* out of bounds on the terminal currently = GPF! */
+
         i = out_index[j];
         o_ptr = equip_obj(i);
 
-        prt("", j + 1, col ? col - 2 : col);
+        Term_erase(rect.x, rect.y + j, rect.cx);
 
         if (use_menu && target_item)
         {
@@ -2153,9 +2182,9 @@ int show_equip(int target_item, int mode)
         }
 
         /* Clear the line with the (possibly indented) index */
-        put_str(tmp_val, j+1, col);
+        put_str(tmp_val, rect.y + j, rect.x + 1);
 
-        cur_col = col + 3;
+        cur_col = rect.x + 4;
 
         /* Display graphics for object, if desired */
         if (show_item_graph)
@@ -2169,20 +2198,19 @@ int show_equip(int target_item, int mode)
                 if (use_bigtile) cur_col++;
             }
             else
-                put_str(" ", j+1, cur_col);
+                put_str(" ", rect.y + j, cur_col);
 
             cur_col += 2;
         }
 
         if (show_labels)
         {
-            (void)sprintf(tmp_val, "%-10.10s: ", equip_describe_slot(i));
-            put_str(tmp_val, j+1, cur_col);
-            c_put_str(out_color[j], out_desc[j], j+1, cur_col + 12);
+            put_str(out_label[j], rect.y + j, cur_col);
+            c_put_str(out_color[j], out_desc[j], rect.y + j, cur_col + lbl_len);
         }
         else
         {
-            c_put_str(out_color[j], out_desc[j], j+1, cur_col);
+            c_put_str(out_color[j], out_desc[j], rect.y + j, cur_col);
         }
 
         if (!o_ptr) continue;
@@ -2190,33 +2218,33 @@ int show_equip(int target_item, int mode)
         {
             effect_t e = obj_get_effect(o_ptr);
             int      fail = effect_calc_fail_rate(&e);
-            sprintf(tmp_val, "Fail: %2d.%d%%", fail/10, fail%10);
-            prt(tmp_val, j + 1, wid - 12);
+
+            if (fail == 1000)
+                sprintf(tmp_val, "Fail: %3d%%", fail/10);
+            else
+                sprintf(tmp_val, "Fail: %2d.%d%%", fail/10, fail%10);
+            put_str(tmp_val, rect.y + j, rect.x + rect.cx - 12);
         }
         else if (mode & SHOW_VALUE)
         {
             int value = object_value_real(o_ptr);
             sprintf(tmp_val, "Pow: %7d", value);
-            prt(tmp_val, j + 1, wid - 12);
+            put_str(tmp_val, rect.y + j, rect.cx - 13);
         }
         else if (show_weights)
         {
             int wgt = o_ptr->weight * o_ptr->number;
             (void)sprintf(tmp_val, "%3d.%d lb", wgt / 10, wgt % 10);
-            prt(tmp_val, j + 1, wid - 9);
+            put_str(tmp_val, rect.y + j, rect.cx - 9);
         }
     }
 
     /* Make a "shadow" below the list (only if needed) */
-    if (j && (j < EQUIP_MAX_SLOTS)) prt("", j + 1, col ? col - 2 : col);
-
-    /* Save the new column */
-    /*command_gap = col;*/
+    if (j && j < rect.cy)
+        Term_erase(rect.x, rect.y + j, rect.cx);
 
     return target_item_label;
 }
-
-
 
 
 /*

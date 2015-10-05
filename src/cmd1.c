@@ -3026,12 +3026,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     if (r_ptr->flags1 & RF1_MALE)
                     {
-                        cmsg_format(TERM_VIOLET, "You hit %s in the groin with your knee!", m_name);
+                        msg_format("You hit %s in the groin with your knee!", m_name);
                         sound(SOUND_PAIN);
                         special_effect = MA_KNEE;
                     }
                     else
-                        cmsg_format(TERM_L_GREEN, ma_ptr->desc, m_name);
+                        msg_format(ma_ptr->desc, m_name);
                 }
 
                 else if (ma_ptr->effect == MA_SLOW)
@@ -3039,10 +3039,10 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     if (!((r_ptr->flags1 & RF1_NEVER_MOVE) ||
                         my_strchr("~#{}.UjmeEv$,DdsbBFIJQSXclnw!=?", r_ptr->d_char)))
                     {
-                        cmsg_format(TERM_L_GREEN, "You kick %s in the ankle.", m_name);
+                        msg_format("You kick %s in the ankle.", m_name);
                         special_effect = MA_SLOW;
                     }
-                    else cmsg_format(TERM_L_GREEN, ma_ptr->desc, m_name);
+                    else msg_format(ma_ptr->desc, m_name);
                 }
                 else
                 {
@@ -3050,7 +3050,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         stun_effect = (ma_ptr->effect / 2) + randint1(ma_ptr->effect / 2);
                     if (mode == MYSTIC_STUN)
                         stun_effect *= 2;
-                    cmsg_format(TERM_L_GREEN, ma_ptr->desc, m_name);
+                    msg_format(ma_ptr->desc, m_name);
                 }
 
                 crit = monk_get_critical(ma_ptr, hand, mode);
@@ -4319,7 +4319,8 @@ bool py_attack(int y, int x, int mode)
     melee_hack = TRUE;
     fear_stop = FALSE;
 
-    cmsg_format(TERM_L_UMBER, "You attack %s%s:", m_name, py_attack_desc(mode));
+    if (mode != WEAPONMASTER_RETALIATION)
+        cmsg_format(TERM_L_UMBER, "You attack %s%s:", m_name, py_attack_desc(mode));
 
     if (weaponmaster_get_toggle() == TOGGLE_MANY_STRIKE && mode == 0)
     {

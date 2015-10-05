@@ -365,6 +365,9 @@ static char cmsg_prompt_imp(byte color, cptr prompt, char keys[], int options)
         if (ch == ESCAPE && (options & PROMPT_ESCAPE_DEFAULT))
             return keys[0];
 
+        if (ch == '\r' && (options & PROMPT_RETURN_1))
+            return keys[1];
+
         for (i = 0; ; i++)
         {
             char choice = keys[i];

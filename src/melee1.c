@@ -1608,9 +1608,10 @@ bool make_attack_normal(int m_idx)
                     if (weaponmaster_get_toggle() == TOGGLE_TRADE_BLOWS)
                         msg_format("You trade blows with %^s.", m_name);
                     else
-                        msg_print("You retaliate.");
+                        cmsg_print(TERM_L_UMBER, "( You retaliate:");
 
                     py_attack(m_ptr->fy, m_ptr->fx, WEAPONMASTER_RETALIATION);
+                    cmsg_print(TERM_L_UMBER, ")");
                     if (mystic_get_toggle() == MYSTIC_TOGGLE_RETALIATE)
                         sp_player(-7);
                 }
