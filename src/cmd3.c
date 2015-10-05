@@ -650,22 +650,15 @@ void do_cmd_uninscribe(void)
  */
 void do_cmd_inscribe(void)
 {
-    int            item;
-
-    object_type        *o_ptr;
-
-    char        o_name[MAX_NLEN];
-
-    char        out_val[80];
-
-    cptr q, s;
+    int          item;
+    object_type *o_ptr;
+    char         o_name[MAX_NLEN];
+    char         out_val[80];
 
     item_tester_no_ryoute = TRUE;
     /* Get an item */
-    q = "Inscribe which item? ";
-    s = "You have nothing to inscribe.";
 
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR))) return;
+    if (!get_item(&item, "Inscribe which item? ", "You have nothing to inscribe.", (USE_EQUIP | USE_INVEN | USE_FLOOR))) return;
 
     /* Get the item (in the pack) */
     if (item >= 0)
@@ -680,12 +673,10 @@ void do_cmd_inscribe(void)
     }
 
     /* Describe the activity */
-    object_desc(o_name, o_ptr, OD_OMIT_INSCRIPTION);
+    object_desc(o_name, o_ptr, OD_OMIT_INSCRIPTION | OD_COLOR_CODED);
 
     /* Message */
     msg_format("Inscribing %s.", o_name);
-
-    msg_print(NULL);
 
     /* Start with nothing */
     strcpy(out_val, "");
@@ -698,7 +689,7 @@ void do_cmd_inscribe(void)
     }
 
     /* Get a new inscription (possibly empty) */
-    if (get_string("Inscription: ", out_val, 80))
+    if (cmsg_input(TERM_YELLOW, "Inscription: ", out_val, 80))
     {
         /* Save the inscription */
         o_ptr->inscription = quark_add(out_val);

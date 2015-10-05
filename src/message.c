@@ -396,6 +396,48 @@ char msg_prompt(cptr prompt, char keys[], int options)
     return cmsg_prompt(TERM_WHITE, prompt, keys, options);
 }
 
+bool cmsg_input(byte color, cptr prompt, char *buf, int len)
+{
+    bool result = FALSE;
+    msg_boundary();
+    auto_more_state = AUTO_MORE_PROMPT;
+    cmsg_print(color, prompt);
+    result = askfor(buf, len);
+    if (result)
+        msg_print(buf);
+    else
+        cmsg_print(TERM_L_RED, "Cancelled");
+    msg_line_clear();
+    return result;
+}
+
+bool cmsg_input_num(byte color, cptr prompt, int *num, int min, int max)
+{
+    bool result = FALSE;
+    char buf[10];
+
+    msg_boundary();
+    auto_more_state = AUTO_MORE_PROMPT;
+    cmsg_print(color, prompt);
+    result = askfor_aux(buf, 10, FALSE);
+    if (result)
+    {
+        if (isalpha(buf[0]))
+            *num = max;
+        else
+            *num = atoi(buf);
+
+        if (*num > max) *num = max;
+        if (*num < min) *num = min;
+
+        msg_format("%d", *num);
+    }
+    else
+        cmsg_print(TERM_L_RED, "Cancelled");
+    msg_line_clear();
+    return result;
+}
+
 void cmsg_print(byte color, cptr msg)
 {
     if (world_monster) return;

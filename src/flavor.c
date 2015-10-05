@@ -1850,9 +1850,9 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         avgdam += p_ptr->shooter_info.to_d;
 
         if (avgdam < 0) avgdam = 0;
-
+#if 0
         /* Display (shot damage/ avg damage) */
-        t = object_desc_chr(t, ' ');
+        t = object_desc_chr(t, ' ');       
         t = object_desc_chr(t, p1);
         t = object_desc_num(t, avgdam);
         t = object_desc_chr(t, '/');
@@ -1870,6 +1870,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         }
 
         t = object_desc_chr(t, p2);
+#endif
     }
     else if ((p_ptr->pclass == CLASS_NINJA) && (o_ptr->tval == TV_SPIKE))
     {

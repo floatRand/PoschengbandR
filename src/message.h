@@ -53,6 +53,8 @@ extern void cmsg_format(byte color, cptr fmt, ...);
 #define PROMPT_YES_NO  (PROMPT_NEW_LINE | PROMPT_ESCAPE_DEFAULT | PROMPT_RETURN_1)
 extern char msg_prompt(cptr prompt, char keys[], int options);
 extern char cmsg_prompt(byte color, cptr prompt, char keys[], int options);
+extern bool cmsg_input(byte color, cptr prompt, char *buf, int len);
+extern bool cmsg_input_num(byte color, cptr prompt, int *num, int min, int max);
 
 
 #endif

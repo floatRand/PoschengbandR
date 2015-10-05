@@ -11,14 +11,18 @@
 
    Anyway, the spec is here: http://code.google.com/p/chengband/wiki/ArtifactScoring
    I named variables to match.
+
+   Update: Inspired by Dave, but I've mangled so much at this point that all the
+   blame rightly belongs to me!
 */
 
 debug_hook cost_calc_hook = NULL;
 
 static double _calc_cost(double cost, int count)
 {
+    int c = count - 1;
     /* It gets harder to add new stuff to an enchanted item */
-    return cost * (1.0 + count/10.0);
+    return cost * (1.0 + c/10.0 + c*c/50.0);
 }
 
 static double _check_flag_and_score(u32b flgs[TR_FLAG_SIZE], u32b flg, u32b score, int *count)
@@ -150,89 +154,45 @@ static s32b _speed_p(int pval)
 
 static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
 {
-/*
-    s32b y,q;
-    y = 0;
-
-    if (have_flag(flgs, TR_SLOW_DIGEST)) y += 7;
-    if (have_flag(flgs, TR_REGEN)) y += 25;
-    if (have_flag(flgs, TR_WARNING)) y += 10;
-    if (have_flag(flgs, TR_LITE)) y += 5;
-     
-    if (have_flag(flgs, TR_SUST_STR)) y += 20;
-    if (have_flag(flgs, TR_SUST_INT)) y += 20;
-    if (have_flag(flgs, TR_SUST_WIS)) y += 20;
-    if (have_flag(flgs, TR_SUST_DEX)) y += 20;
-    if (have_flag(flgs, TR_SUST_CON)) y += 30;
-    if (have_flag(flgs, TR_SUST_CHR)) y += 20;
-
-    if (have_flag(flgs, TR_RES_FEAR)) y += 15;
-    if (have_flag(flgs, TR_FREE_ACT)) y += 20;
-    if (have_flag(flgs, TR_HOLD_LIFE)) y += 20;
-    if (have_flag(flgs, TR_SEE_INVIS)) y += 15;
-    if (have_flag(flgs, TR_LEVITATION)) y += 30;
-
-    if (have_flag(flgs, TR_TELEPATHY)) y += 150;
-    if (have_flag(flgs, TR_ESP_ANIMAL)) y += 10;
-    if (have_flag(flgs, TR_ESP_UNDEAD)) y += 10;
-    if (have_flag(flgs, TR_ESP_DEMON)) y += 10;
-    if (have_flag(flgs, TR_ESP_ORC)) y += 7;
-    if (have_flag(flgs, TR_ESP_TROLL)) y += 7;
-    if (have_flag(flgs, TR_ESP_GIANT)) y += 7;
-    if (have_flag(flgs, TR_ESP_DRAGON)) y += 10;
-    if (have_flag(flgs, TR_ESP_HUMAN)) y += 12;
-    if (have_flag(flgs, TR_ESP_EVIL)) y += 55;
-    if (have_flag(flgs, TR_ESP_GOOD)) y += 6;
-    if (have_flag(flgs, TR_ESP_NONLIVING)) y += 12;
-    if (have_flag(flgs, TR_ESP_UNIQUE)) y += 20;
-
-    if (have_flag(flgs, TR_EASY_SPELL)) y += 10;
-    if (have_flag(flgs, TR_DEC_MANA)) y += 120;
-    if (have_flag(flgs, TR_THROW)) y += 2;
-    if (have_flag(flgs, TR_REFLECT)) y += 90;
-
-    q = 100*y + 2*y*y;
-    return q;
-*/
     double cost = 0.0;
     int count = 0;
 
-    /*  Sorry, Dave. Chris is going berserk again ...
-        These are what I would expect to pay 
-    */
     cost += _check_flag_and_score(flgs, TR_THROW, 100, &count);
     cost += _check_flag_and_score(flgs, TR_LITE, 300, &count);
     cost += _check_flag_and_score(flgs, TR_SLOW_DIGEST, 500, &count);
     cost += _check_flag_and_score(flgs, TR_WARNING, 700, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_FEAR, 5000, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_ORC, 700, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_TROLL, 700, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_GIANT, 700, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_GOOD, 700, &count);
     cost += _check_flag_and_score(flgs, TR_SEE_INVIS, 800, &count);
+    cost += _check_flag_and_score(flgs, TR_ESP_ANIMAL, 1000, &count);
+    cost += _check_flag_and_score(flgs, TR_ESP_UNDEAD, 1000, &count);
+    cost += _check_flag_and_score(flgs, TR_ESP_DEMON, 1000, &count);
+    cost += _check_flag_and_score(flgs, TR_ESP_DRAGON, 1000, &count);
+    cost += _check_flag_and_score(flgs, TR_ESP_HUMAN, 1000, &count);
+    cost += _check_flag_and_score(flgs, TR_EASY_SPELL, 1000, &count);
+    cost += _check_flag_and_score(flgs, TR_ESP_NONLIVING, 1200, &count);
+
+    /* Don't let lots of weak attributes get out of hand ... */
+    count = 0;
+
     cost += _check_flag_and_score(flgs, TR_SUST_STR, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_INT, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_WIS, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_DEX, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_CHR, 1000, &count);
-    cost += _check_flag_and_score(flgs, TR_ESP_ANIMAL, 2000, &count);
-    cost += _check_flag_and_score(flgs, TR_ESP_UNDEAD, 2000, &count);
-    cost += _check_flag_and_score(flgs, TR_ESP_DEMON, 2000, &count);
-    cost += _check_flag_and_score(flgs, TR_ESP_DRAGON, 2000, &count);
-    cost += _check_flag_and_score(flgs, TR_ESP_HUMAN, 2000, &count);
-    cost += _check_flag_and_score(flgs, TR_EASY_SPELL, 2000, &count);
-    cost += _check_flag_and_score(flgs, TR_ESP_NONLIVING, 2200, &count);
-    cost += _check_flag_and_score(flgs, TR_SUST_CON, 3000, &count);
-    cost += _check_flag_and_score(flgs, TR_LEVITATION, 4000, &count);
-    cost += _check_flag_and_score(flgs, TR_HOLD_LIFE, 5000, &count);
-    cost += _check_flag_and_score(flgs, TR_FREE_ACT, 5000, &count);
-    cost += _check_flag_and_score(flgs, TR_REGEN, 5000, &count);
+    cost += _check_flag_and_score(flgs, TR_SUST_CON, 1000, &count);
+    cost += _check_flag_and_score(flgs, TR_LEVITATION, 2500, &count);
+    cost += _check_flag_and_score(flgs, TR_HOLD_LIFE, 2500, &count);
+    cost += _check_flag_and_score(flgs, TR_FREE_ACT, 2500, &count);
+    cost += _check_flag_and_score(flgs, TR_REGEN, 2500, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_FEAR, 3000, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_UNIQUE, 5000, &count);
-    cost += _check_flag_and_score(flgs, TR_ESP_EVIL, 15000, &count);
-    cost += _check_flag_and_score(flgs, TR_REFLECT, 15000, &count);
-    cost += _check_flag_and_score(flgs, TR_DEC_MANA, 20000, &count);
-    cost += _check_flag_and_score(flgs, TR_TELEPATHY, 25000, &count);
-    cost += _check_flag_and_score(flgs, TR_WEAPONMASTERY, 25000, &count);
+    cost += _check_flag_and_score(flgs, TR_REFLECT, 7500, &count);
+    cost += _check_flag_and_score(flgs, TR_ESP_EVIL, 8000, &count);
+    cost += _check_flag_and_score(flgs, TR_DEC_MANA, 10000, &count);
+    cost += _check_flag_and_score(flgs, TR_TELEPATHY, 10000, &count);
 
     /* Code later inflates based on item quality. This factor is pure fudge */
     cost /= 1.0;
@@ -247,80 +207,36 @@ static s32b _brands_q(u32b flgs[TR_FLAG_SIZE])
     int count = 0;
 
     /* These are what I would expect to pay */
-    cost += _check_flag_and_score(flgs, TR_BRAND_ACID, 12000, &count);
-    cost += _check_flag_and_score(flgs, TR_BRAND_ELEC, 15000, &count);
     cost += _check_flag_and_score(flgs, TR_BRAND_FIRE, 8000, &count);
     cost += _check_flag_and_score(flgs, TR_BRAND_COLD, 8000, &count);
+    cost += _check_flag_and_score(flgs, TR_BRAND_ACID, 12000, &count);
+    cost += _check_flag_and_score(flgs, TR_BRAND_ELEC, 15000, &count);
 
     return (u32b) cost;
 }
 
 static s32b _resistances_q(u32b flgs[TR_FLAG_SIZE])
 {
-    /*
-    s32b y, q;
-
-    y = 0;
-
-    if (have_flag(flgs, TR_RES_ACID)) y += 10;
-    if (have_flag(flgs, TR_RES_ELEC)) y += 10;
-    if (have_flag(flgs, TR_RES_FIRE)) y += 10;
-    if (have_flag(flgs, TR_RES_COLD)) y += 10;
-
-    if ( have_flag(flgs, TR_RES_ACID)
-      && have_flag(flgs, TR_RES_ELEC)
-      && have_flag(flgs, TR_RES_FIRE)
-      && have_flag(flgs, TR_RES_COLD) ) 
-    {
-        y += 20;
-    }
-
-    if (have_flag(flgs, TR_RES_LITE)) y += 15;
-    if (have_flag(flgs, TR_RES_DARK)) y += 15;
-    if (have_flag(flgs, TR_RES_BLIND)) y += 15;
-
-    if (have_flag(flgs, TR_RES_POIS)) y += 20;
-    if (have_flag(flgs, TR_RES_CONF)) y += 20;
-    if (have_flag(flgs, TR_RES_NEXUS)) y += 20;
-
-    if (have_flag(flgs, TR_RES_NETHER)) y += 25;
-    if (have_flag(flgs, TR_RES_CHAOS)) y += 25;
-    if (have_flag(flgs, TR_RES_SOUND)) y += 25;
-
-    if (have_flag(flgs, TR_RES_SHARDS)) y += 30;
-    if (have_flag(flgs, TR_RES_DISEN)) y += 30;
-
-    if (have_flag(flgs, TR_IM_ACID)) y += 70;
-    if (have_flag(flgs, TR_IM_ELEC)) y += 90;
-    if (have_flag(flgs, TR_IM_FIRE)) y += 70;
-    if (have_flag(flgs, TR_IM_COLD)) y += 90;
-
-    if (have_flag(flgs, TR_RES_TIME)) y += 40;
-
-    q = 1000*y/10 + (20*y/10)*(y*y/100);
-    return q;
-    I'm confused by the cubic. Let's try something completely different;
-    */
     double cost = 0.0;
     int count = 0;
 
     /* These are what I would expect to pay */
-    cost += _check_flag_and_score(flgs, TR_RES_ACID, 5000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_ELEC, 6000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_FIRE, 5000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_COLD, 6000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_POIS, 10000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_LITE, 8000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_DARK, 8000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_BLIND, 5000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_CONF, 8000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_NETHER, 10000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_NEXUS, 8000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_CHAOS, 10000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_SOUND, 10000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_SHARDS, 20000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_DISEN, 15000, &count);
-    cost += _check_flag_and_score(flgs, TR_RES_TIME, 25000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_BLIND, 2500, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_ACID, 3000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_ELEC, 3000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_FIRE, 3000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_COLD, 3000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_LITE, 3000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_DARK, 3000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_CONF, 3000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_NETHER, 4500, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_NEXUS, 4500, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_POIS, 5000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_CHAOS, 6000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_SOUND, 6000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_SHARDS, 7000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_DISEN, 6000, &count);
+    cost += _check_flag_and_score(flgs, TR_RES_TIME, 10000, &count);
 
     cost += _check_flag_and_score(flgs, TR_IM_ACID,  80000, &count);
     cost += _check_flag_and_score(flgs, TR_IM_ELEC, 130000, &count);
@@ -328,21 +244,21 @@ static s32b _resistances_q(u32b flgs[TR_FLAG_SIZE])
     cost += _check_flag_and_score(flgs, TR_IM_COLD, 140000, &count);
 
     count = 0;
-    cost -= _check_flag_and_score(flgs, TR_VULN_ACID, 15000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_ELEC, 16000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_FIRE, 15000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_COLD, 16000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_POIS, 20000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_LITE, 18000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_DARK, 18000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_BLIND, 15000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_CONF, 18000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_NETHER, 20000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_NEXUS, 18000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_CHAOS, 20000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_SOUND, 20000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_SHARDS, 30000, &count);
-    cost -= _check_flag_and_score(flgs, TR_VULN_DISEN, 25000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_ACID, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_ELEC, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_FIRE, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_COLD, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_POIS, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_LITE, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_DARK, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_BLIND, 2000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_CONF, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_NETHER, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_NEXUS, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_CHAOS, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_SOUND, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_SHARDS, 5000, &count);
+    cost -= _check_flag_and_score(flgs, TR_VULN_DISEN, 5000, &count);
 
     return (u32b) cost;
 }
@@ -574,9 +490,14 @@ s32b jewelry_cost(object_type *o_ptr, int options)
         }
     }
 
+    if (have_flag(flgs, TR_WEAPONMASTERY))
+    {
+        p += 5000 * pval;
+    }
+
     if (have_flag(flgs, TR_BLOWS))
     {
-        p += 45 * 1000 * pval;
+        p += 5000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Blows: p = %d", p);
@@ -832,18 +753,7 @@ s32b armor_cost(object_type *o_ptr, int options)
 
     /* Base Cost */
     y = o_ptr->ac;
-    a = y * y * 15;
-    if (to_a <= 3)
-    {
-        bool is_art = FALSE, is_ego = FALSE;
-        if ((options & COST_REAL) || object_is_known(o_ptr))
-        {
-            is_art = object_is_artifact(o_ptr);
-            is_ego = object_is_ego(o_ptr);
-        }
-        if (!is_art && !is_ego)
-            a /= 3;
-    }
+    a = y * y * 12;
     if (cost_calc_hook)
     {
         sprintf(dbg_msg, "  * Base Cost: a = %d", a);
@@ -851,7 +761,10 @@ s32b armor_cost(object_type *o_ptr, int options)
     }
 
     /* +AC ... Note, negative ac should decrease the cost! */
-    a += 500*to_a + 20 * to_a * ABS(to_a);
+    if (have_flag(flgs, TR_IGNORE_ACID))
+        a += 200*to_a + 20 * to_a * ABS(to_a);
+    else
+        a += 100*to_a + 10 * to_a * ABS(to_a);
 
     if (cost_calc_hook)
     {
@@ -859,29 +772,10 @@ s32b armor_cost(object_type *o_ptr, int options)
         cost_calc_hook(dbg_msg);
     }
 
-    /* Weight
-    {
-        double wgt = o_ptr->weight;
-        double tmp = 0.0;
-        double factor = 0.0;
-
-        wgt /= 10.0;
-        tmp = sqrt(wgt);
-        if (tmp > 3.0) tmp = 3.0;
-
-        factor = (115.0 - 15.0 * tmp)/100.0;
-        tmp = a;
-
-        a = (int)(tmp * factor);
-        if (a < 0)
-            a = 0;
-    }
-
-    if (cost_calc_hook)
-    {
-        sprintf(dbg_msg, "  * Weight: a = %d", a);
-        cost_calc_hook(dbg_msg);
-    } */
+    if (object_is_(o_ptr, TV_CROWN, SV_GOLDEN_CROWN))
+        a += 1000;
+    else if (object_is_(o_ptr, TV_CROWN, SV_JEWELED_CROWN))
+        a += 2000;
 
     /* Resistances */
     q = _resistances_q(flgs);
