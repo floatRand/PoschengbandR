@@ -1649,7 +1649,7 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
 void do_cmd_list_monsters(void)
 {
     _mon_list_ptr list = _create_monster_list();
-    rect_t        display_rect = ui_map_rect();
+    rect_t        display_rect = ui_menu_rect();
 
     if (display_rect.cx > 50)
         display_rect.cx = 50;
@@ -2069,7 +2069,7 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
 void do_cmd_list_objects(void)
 {
     _obj_list_ptr list = _create_obj_list();
-    rect_t        display_rect = ui_map_rect();
+    rect_t        display_rect = ui_menu_rect();
 
     if (display_rect.cx > 50)
         display_rect.cx = 50;

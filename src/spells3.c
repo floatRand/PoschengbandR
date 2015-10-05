@@ -3351,10 +3351,10 @@ bool spell_okay(int spell, bool learned, bool study_pray, int use_realm)
 /*
  * Print a list of spells (for browsing or casting or viewing)
  */
-void print_spells(int target_spell, byte *spells, int num, int y, int x, int use_realm)
+void print_spells(int target_spell, byte *spells, int num, rect_t display, int use_realm)
 {
     int             i, spell, exp_level, increment = 64;
-    magic_type      *s_ptr;
+    magic_type     *s_ptr;
     cptr            comment;
     char            info[80];
     char            out_val[160];
@@ -3362,8 +3362,8 @@ void print_spells(int target_spell, byte *spells, int num, int y, int x, int use
     int             need_mana;
     char            ryakuji[15];
     char            buf[256];
-    bool max = FALSE;
-    caster_info        *caster_ptr = get_caster_info();
+    bool            max = FALSE;
+    caster_info    *caster_ptr = get_caster_info();
 
 
     if (((use_realm <= REALM_NONE) || (use_realm > MAX_REALM)) && p_ptr->wizard)
@@ -3371,7 +3371,6 @@ void print_spells(int target_spell, byte *spells, int num, int y, int x, int use
 
 
     /* Title the list */
-    prt("", y, x);
     if (use_realm == REALM_HISSATSU)
         strcpy(buf,"  Lvl  SP");
     else
@@ -3382,8 +3381,9 @@ void print_spells(int target_spell, byte *spells, int num, int y, int x, int use
             strcpy(buf,"Profic Lvl  SP Fail Desc");
     }
 
-    put_str("Name", y, x + 5);
-    put_str(buf, y, x + 29);
+    Term_erase(display.x, display.y, display.cx);
+    put_str("Name", display.y, display.x + 5);
+    put_str(buf, display.y, display.x + 29);
 
     if ((p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE)) increment = 0;
     else if (use_realm == p_ptr->realm1) increment = 0;
@@ -3392,6 +3392,8 @@ void print_spells(int target_spell, byte *spells, int num, int y, int x, int use
     /* Dump the spells */
     for (i = 0; i < num; i++)
     {
+        Term_erase(display.x, display.y + i + 1, display.cx);
+
         /* Access the spell */
         spell = spells[i];
 
@@ -3441,7 +3443,7 @@ void print_spells(int target_spell, byte *spells, int num, int y, int x, int use
         {
                 strcat(out_val, format("%-30s", "(illegible)"));
 
-                c_prt(TERM_L_DARK, out_val, y + i + 1, x);
+                c_prt(TERM_L_DARK, out_val, display.y + i + 1, display.x);
                 continue;
         }
 
@@ -3517,11 +3519,11 @@ void print_spells(int target_spell, byte *spells, int num, int y, int x, int use
                 (max ? '!' : ' '), ryakuji,
                 s_ptr->slevel, need_mana, spell_chance(spell, use_realm), comment));
         }
-        c_prt(line_attr, out_val, y + i + 1, x);
+        c_put_str(line_attr, out_val, display.y + i + 1, display.x);
     }
 
     /* Clear the bottom line */
-    prt("", y + i + 1, x);
+    Term_erase(display.x, display.y + i + 1, display.cx);
 }
 
 

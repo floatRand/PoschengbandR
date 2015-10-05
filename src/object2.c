@@ -7693,8 +7693,14 @@ void display_koff(int k_idx)
     object_type *q_ptr;
     int         sval;
     int         use_realm;
+    rect_t      display = {0};
 
     char o_name[MAX_NLEN];
+
+    display.x = 0;
+    display.y = 2;
+    display.cy = Term->hgt - 2;
+    display.cx = Term->wid;
 
 
     /* Erase the window */
@@ -7753,7 +7759,7 @@ void display_koff(int k_idx)
         }
 
         /* Print spells */
-        print_spells(0, spells, num, 2, 0, use_realm);
+        print_spells(0, spells, num, display, use_realm);
     }
 }
 

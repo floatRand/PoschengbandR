@@ -53,6 +53,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
     magic_type  *s_ptr;
     char        out_val[160];
     cptr        p;
+    rect_t      display = ui_menu_rect();
     int menu_line = (use_menu ? 1 : 0);
 
 #ifdef ALLOW_REPEAT /* TNB */
@@ -167,7 +168,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
             }
             if (menu_line > num) menu_line -= num;
             /* Display a list of spells */
-            print_spells(menu_line, spells, num, 1, 15, use_realm);
+            print_spells(menu_line, spells, num, display, use_realm);
             if (ask) continue;
         }
         else
@@ -185,7 +186,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
                     screen_save();
 
                     /* Display a list of spells */
-                    print_spells(menu_line, spells, num, 1, 15, use_realm);
+                    print_spells(menu_line, spells, num, display, use_realm);
                 }
 
                 /* Hide the list */
@@ -407,9 +408,9 @@ void do_cmd_browse(void)
     int        item, sval, use_realm = 0, j, line;
     int        spell = -1;
     int        num = 0;
-
-    byte        spells[64];
-    char            temp[62*4];
+    rect_t     display = ui_menu_rect();
+    byte       spells[64];
+    char       temp[62*4];
 
     object_type    *o_ptr;
 
@@ -512,7 +513,7 @@ void do_cmd_browse(void)
             if (spell == -1) break;
 
             /* Display a list of spells */
-            print_spells(0, spells, num, 1, 15, use_realm);
+            print_spells(0, spells, num, display, use_realm);
 
             /* Notify that there's nothing to see, and wait. */
             if (use_realm == REALM_HISSATSU)
@@ -529,17 +530,17 @@ void do_cmd_browse(void)
         }
 
         /* Clear lines, position cursor  (really should use strlen here) */
-        Term_erase(14, 14, 255);
-        Term_erase(14, 13, 255);
-        Term_erase(14, 12, 255);
-        Term_erase(14, 11, 255);
+        line = display.y + num + 1;
+        Term_erase(display.x, line, display.cx);
+        Term_erase(display.x, line + 1, display.cx);
+        Term_erase(display.x, line + 2, display.cx);
+        Term_erase(display.x, line + 3, display.cx);
 
         roff_to_buf(do_spell(use_realm, spell, SPELL_DESC), 62, temp, sizeof(temp));
 
-        for (j = 0, line = 11; temp[j]; j += 1 + strlen(&temp[j]))
+        for (j = 0; temp[j]; j += 1 + strlen(&temp[j]))
         {
-            prt(&temp[j], line, 15);
-            line++;
+            put_str(&temp[j], ++line, display.x);
         }
     }
 

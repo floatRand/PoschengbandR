@@ -1414,7 +1414,7 @@ extern int mod_spell_chance_1(int chance, int realm);
 extern int mod_spell_chance_2(int chance, int realm);
 extern s16b spell_chance(int spell,int realm);
 extern bool spell_okay(int spell, bool learned, bool study_pray, int realm);
-extern void print_spells(int target_spell, byte *spells, int num, int y, int x, int realm);
+extern void print_spells(int target_spell, byte *spells, int num, rect_t display, int use_realm);
 extern bool hates_acid(object_type *o_ptr);
 extern bool hates_elec(object_type *o_ptr);
 extern bool hates_fire(object_type *o_ptr);
@@ -1715,6 +1715,7 @@ extern void redraw_window(void);
    status bar is on the bottom, and quick character info is (now) on the
    right. You can query the placement with: */
 extern rect_t ui_map_rect(void);
+extern rect_t ui_menu_rect(void);
 extern rect_t ui_status_bar_rect(void);
 extern rect_t ui_char_info_rect(void);
 /* cf msg_line_rect() in message.h and note that the message "line" is

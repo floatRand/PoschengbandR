@@ -1889,7 +1889,7 @@ int show_inven(int target_item, int mode)
     byte            out_color[INVEN_PACK];
     char            out_desc[INVEN_PACK][MAX_NLEN];
     int             target_item_label = 0;
-    rect_t          rect = ui_map_rect();
+    rect_t          rect = ui_menu_rect();
     char            inven_label[52 + 1];
 
     /* Compute Padding */
@@ -2081,7 +2081,7 @@ int show_equip(int target_item, int mode)
     char            out_label[EQUIP_MAX_SLOTS][MAX_NLEN];
     char            out_desc[EQUIP_MAX_SLOTS][MAX_NLEN];
     int             target_item_label = 0;
-    rect_t          rect = ui_map_rect();
+    rect_t          rect = ui_menu_rect();
     char            equip_label[52 + 1];
 
     /* Compute Padding */
