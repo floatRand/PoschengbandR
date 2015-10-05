@@ -582,6 +582,8 @@ s32b jewelry_cost(object_type *o_ptr, int options)
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
         p = _finalize_p(p, flgs, o_ptr);
+    else
+        p = p * 3 / 4; /* assume not artifact */
     return p;
 }
 
@@ -886,6 +888,8 @@ s32b armor_cost(object_type *o_ptr, int options)
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
         p = _finalize_p(p, flgs, o_ptr);
+    else
+        p = p * 3 / 4; /* assume not artifact */
     return p;
 }
 
@@ -1120,6 +1124,8 @@ s32b weapon_cost(object_type *o_ptr, int options)
     
     if ((options & COST_REAL) || object_is_known(o_ptr))
         p = _finalize_p(p, flgs, o_ptr);
+    else
+        p = p * 3 / 4; /* assume not artifact */
     return p;
 }
 
@@ -1325,6 +1331,8 @@ s32b bow_cost(object_type *o_ptr, int options)
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
         p = _finalize_p(p, flgs, o_ptr);
+    else
+        p = p * 3 / 4; /* assume not artifact */
     return p;
 }
 

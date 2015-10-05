@@ -1602,7 +1602,7 @@ static void display_entry(int pos)
         }
         if (cur_store_num == STORE_HOME)
         {
-            int score = new_object_cost(o_ptr, COST_REAL);
+            int score = object_value(o_ptr);
             if (score)
             {
                 (void)sprintf(out_val, "%9d ", score);
