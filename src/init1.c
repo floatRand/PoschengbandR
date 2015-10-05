@@ -4578,6 +4578,8 @@ void drop_here(object_type *j_ptr, int y, int x)
 
     /* Place the object */
     c_ptr->o_idx = o_idx;
+
+    p_ptr->window |= PW_OBJECT_LIST;
 }
 
 

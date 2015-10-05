@@ -240,7 +240,7 @@ void do_cmd_drop(void)
     if (equip_is_valid_slot(item))
         calc_android_exp();
 
-    p_ptr->redraw |= (PR_EQUIPPY);
+    p_ptr->redraw |= PR_EQUIPPY;
 }
 
 
@@ -1368,6 +1368,7 @@ void do_cmd_query_symbol(void)
    You can change the current target. */
 struct _mon_list_info_s 
 {
+    int group;
     int r_idx;
     int level;
     int m_idx;   /* Allows Targetting for Groups of One */
@@ -1379,6 +1380,7 @@ struct _mon_list_info_s
     bool target; /* Current target is in this group, in which case, m_idx is the target.
                     Otherwise, m_idx is the monster in this group that is closest to
                     the player. */
+    bool heading;
 };
 
 typedef struct _mon_list_info_s _mon_list_info_t, *_mon_list_info_ptr;
@@ -1417,26 +1419,36 @@ static void _mon_list_free(_mon_list_ptr list)
     free(list);
 }
 
-#define _HEADING_LOS   -10000
-#define _HEADING_AWARE 10000
-
-static int _int_comp(int l, int r)
-{
-    if (l < r) return -1;
-    if (r < l) return 1;
-    return 0;
-}
+#define _GROUP_LOS   1
+#define _GROUP_AWARE 2
 
 static int _mon_list_comp(_mon_list_info_ptr left, _mon_list_info_ptr right)
 {
-    if (left->level < 0 && right->level < 0)
-        return _int_comp(left->level, right->level);
-    else if (left->level >= 0 && right->level >= 0)
-        return _int_comp(right->level, left->level);
-    else if (left->level < 0)
+    if (left->group < right->group)
         return -1;
-    else if (right->level < 0)
+    if (left->group > right->group)
         return 1;
+
+    if (left->heading && right->heading)
+        return 0;
+
+    if (left->heading && !right->heading)
+        return -1;
+
+    if (!left->heading && right->heading)
+        return 1;
+
+
+    if (left->level > right->level)
+        return -1;
+    else if (left->level < right->level)
+        return 1;
+
+    if (left->dis < right->dis)
+        return -1;
+    else if (left->dis > right->dis)
+        return 1;
+
     return 0;
 }
 
@@ -1448,8 +1460,7 @@ static _mon_list_ptr _create_monster_list(void)
     int_map_iter_ptr iter;
     int              ct_los_awake = 0, ct_other_awake = 0;
 
-    /* Group all aware monsters by kind. Visible monsters get higher sort
-       priority by storing key as -r_idx. */
+    /* Group all aware monsters by kind. */
     for (i = 0; i < max_m_idx; i++)
     {
         const monster_type *m_ptr = &m_list[i];
@@ -1470,9 +1481,11 @@ static _mon_list_ptr _create_monster_list(void)
             monster_race *r_ptr = &r_info[r_idx];
 
             info_ptr = _mon_list_info_alloc();
+
+            info_ptr->group = los ? _GROUP_LOS : _GROUP_AWARE;
             info_ptr->r_idx = r_idx;
             info_ptr->m_idx = i;
-            info_ptr->level = los ? -r_ptr->level : r_ptr->level;
+            info_ptr->level = r_ptr->level;
             info_ptr->dy = m_ptr->fy - py;
             info_ptr->dx = m_ptr->fx - px;
             info_ptr->dis = m_ptr->cdis;
@@ -1520,8 +1533,8 @@ static _mon_list_ptr _create_monster_list(void)
     if (result->ct_los)
     {
         _mon_list_info_ptr info_ptr = _mon_list_info_alloc();
-        info_ptr->r_idx = 0;
-        info_ptr->level = _HEADING_LOS;
+        info_ptr->group = _GROUP_LOS;
+        info_ptr->heading = TRUE;
         info_ptr->ct_total = result->ct_los;
         info_ptr->ct_los = result->ct_los;
         info_ptr->ct_awake = ct_los_awake;
@@ -1530,8 +1543,8 @@ static _mon_list_ptr _create_monster_list(void)
     if (result->ct_total - result->ct_los)
     {
         _mon_list_info_ptr info_ptr = _mon_list_info_alloc();
-        info_ptr->r_idx = 0;
-        info_ptr->level = _HEADING_AWARE;
+        info_ptr->group = _GROUP_AWARE;
+        info_ptr->heading = TRUE;
         info_ptr->ct_total = result->ct_total - result->ct_los;
         info_ptr->ct_awake = ct_other_awake;
         vec_add(result->list, info_ptr);
@@ -1579,29 +1592,31 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
         info_ptr = vec_get(list->list, idx);
         assert(info_ptr);
 
-        if (info_ptr->level == _HEADING_LOS)
+        if (info_ptr->heading)
         {
-            c_put_str(TERM_YELLOW,
-                  format("You see %d monster%s, %d %s awake",
-                         info_ptr->ct_los,
-                         info_ptr->ct_los != 1 ? "s" : "",
-                         info_ptr->ct_awake,
-                         info_ptr->ct_awake == 1 ? "is" : "are"),
-                  rect.y + i, rect.x);
+            if (info_ptr->group == _GROUP_LOS)
+            {
+                c_put_str(TERM_YELLOW,
+                      format("You see %d monster%s, %d %s awake",
+                             info_ptr->ct_los,
+                             info_ptr->ct_los != 1 ? "s" : "",
+                             info_ptr->ct_awake,
+                             info_ptr->ct_awake == 1 ? "is" : "are"),
+                      rect.y + i, rect.x);
+            }
+            else if (info_ptr->group == _GROUP_AWARE)
+            {
+                c_put_str(TERM_L_BLUE,
+                      format("You are aware of %d %smonster%s, %d %s awake",
+                             info_ptr->ct_total,
+                             list->ct_los ? "other " : "",
+                             info_ptr->ct_total != 1 ? "s" : "",
+                             info_ptr->ct_awake,
+                             info_ptr->ct_awake == 1 ? "is" : "are"),
+                      rect.y + i, rect.x);
+            }
             continue;
         }
-        if (info_ptr->level == _HEADING_AWARE)
-        {
-            c_put_str(TERM_L_BLUE,
-                  format("You are aware of %d other monster%s, %d %s awake",
-                         info_ptr->ct_total,
-                         info_ptr->ct_total != 1 ? "s" : "",
-                         info_ptr->ct_awake,
-                         info_ptr->ct_awake == 1 ? "is" : "are"),
-                  rect.y + i, rect.x);
-            continue;
-        }
-
         assert(info_ptr->r_idx > 0);
         r_ptr = &r_info[info_ptr->r_idx];
 
@@ -2034,10 +2049,11 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
             }
             else
             {
-                c_put_str(TERM_YELLOW,
-                      format("There %s %d other object%s",
+                c_put_str(TERM_L_BLUE,
+                      format("There %s %d %sobject%s",
                              info_ptr->count != 1 ? "are" : "is",
                              info_ptr->count,
+                             list->ct_autopick ? "other " : "",
                              info_ptr->count != 1 ? "s" : ""),
                       rect.y + i, rect.x);
             }
@@ -2217,4 +2233,40 @@ void do_cmd_list_objects(void)
         msg_print("You see no objects.");
 
     _obj_list_free(list);
+}
+
+void _fix_object_list_aux(void)
+{
+    _obj_list_ptr list = _create_obj_list();
+    rect_t        display_rect = {0};
+    int           ct = 0, i;
+
+    Term_get_size(&display_rect.cx, &display_rect.cy);
+
+    if (list->ct_total)
+        ct = _draw_obj_list(list, 0, display_rect);
+
+    for (i = ct; i < display_rect.cy; i++)
+        Term_erase(display_rect.x, display_rect.y + i, display_rect.cx);
+
+    _obj_list_free(list);
+}
+
+void fix_object_list(void)
+{
+    int j;
+    for (j = 0; j < 8; j++)
+    {
+        term *old = Term;
+
+        if (!angband_term[j]) continue;
+        if (!(window_flag[j] & PW_OBJECT_LIST)) continue;
+
+        Term_activate(angband_term[j]);
+
+        _fix_object_list_aux();
+
+        Term_fresh();
+        Term_activate(old);
+    }
 }

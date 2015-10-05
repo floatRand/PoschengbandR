@@ -5419,6 +5419,12 @@ void window_stuff(void)
         fix_monster();
     }
 
+    if (p_ptr->window & PW_OBJECT_LIST)
+    {
+        p_ptr->window &= ~(PW_OBJECT_LIST);
+        fix_object_list();
+    }
+
     if (p_ptr->window & PW_MONSTER_LIST)
     {
         p_ptr->window &= ~(PW_MONSTER_LIST);

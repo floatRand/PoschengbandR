@@ -1491,6 +1491,7 @@ bool detect_objects_normal(int range)
         {
             /* Hack -- memorize it */
             o_ptr->marked |= OM_FOUND;
+            p_ptr->window |= PW_OBJECT_LIST;
 
             /* Redraw */
             lite_spot(y, x);
@@ -1587,6 +1588,7 @@ bool detect_objects_magic(int range)
         {
             /* Memorize the item */
             o_ptr->marked |= OM_FOUND;
+            p_ptr->window |= PW_OBJECT_LIST;
 
             /* Redraw */
             lite_spot(y, x);

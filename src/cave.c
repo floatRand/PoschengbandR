@@ -1479,6 +1479,7 @@ void note_spot(int y, int x)
 
         /* Memorize objects */
         o_ptr->marked |= OM_FOUND;
+        p_ptr->window |= PW_OBJECT_LIST;
     }
 
 
@@ -4339,6 +4340,7 @@ void wiz_lite(bool ninja)
 
         /* Memorize */
         o_ptr->marked |= OM_FOUND;
+        p_ptr->window |= PW_OBJECT_LIST;
     }
 
     /* Scan all normal grids */

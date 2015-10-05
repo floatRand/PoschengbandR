@@ -768,6 +768,7 @@ extern void ang_sort_swap_hook(vptr u, vptr v, int a, int b);
 extern void do_cmd_list_monsters(void);
 extern void do_cmd_list_objects(void);
 extern void fix_monster_list(void);
+extern void fix_object_list(void);
 
 /* cmd4.c */
 extern cptr get_ordinal_number_suffix(int num);

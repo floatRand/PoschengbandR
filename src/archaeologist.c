@@ -154,6 +154,7 @@ static bool _sense_great_discovery(int range)
 
         /* Hack -- memorize it */
         o_ptr->marked |= OM_FOUND;
+        p_ptr->window |= PW_OBJECT_LIST;
 
         /* Redraw */
         lite_spot(y, x);

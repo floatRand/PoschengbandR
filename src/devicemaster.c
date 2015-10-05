@@ -76,6 +76,7 @@ bool _detect_devices(int range)
         case TV_SCROLL:
         case TV_POTION:
             o_ptr->marked |= OM_FOUND;
+            p_ptr->window |= PW_OBJECT_LIST;
             lite_spot(y, x);
             result = TRUE;
         }

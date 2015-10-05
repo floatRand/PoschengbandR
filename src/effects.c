@@ -5686,7 +5686,7 @@ bool lose_all_info(void)
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER | PW_OBJECT_LIST);
 
     /* Mega-Hack -- Forget the map */
     wiz_dark();

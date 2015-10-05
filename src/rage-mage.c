@@ -179,6 +179,7 @@ static bool _detect_objects_ego(int range)
             object_is_ego(o_ptr) )
         {
             o_ptr->marked |= OM_FOUND;
+            p_ptr->window |= PW_OBJECT_LIST;
             lite_spot(y, x);
             detect = TRUE;
         }

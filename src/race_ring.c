@@ -598,6 +598,7 @@ static void _detect_spell(int cmd, variant *res)
             if (distance(py, px, y, x) > rng) continue;
             if (!object_is_jewelry(o_ptr)) continue;
             o_ptr->marked |= OM_FOUND;
+            p_ptr->window |= PW_OBJECT_LIST;
             lite_spot(y, x);
             detect = TRUE;
         }

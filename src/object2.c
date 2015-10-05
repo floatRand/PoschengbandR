@@ -142,6 +142,7 @@ void excise_object_idx(int o_idx)
             prev_o_idx = this_o_idx;
         }
     }
+    p_ptr->window |= PW_OBJECT_LIST;
 }
 
 
@@ -178,6 +179,8 @@ void delete_object_idx(int o_idx)
 
     /* Count objects */
     o_cnt--;
+
+    p_ptr->window |= PW_OBJECT_LIST;
 }
 
 
@@ -221,6 +224,8 @@ void delete_object(int y, int x)
 
     /* Visual update */
     lite_spot(y, x);
+
+    p_ptr->window |= PW_OBJECT_LIST;
 }
 
 
@@ -6749,6 +6754,7 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
     }
 
     /* XXX XXX XXX */
+    p_ptr->window |= PW_OBJECT_LIST;
 
     /* Result */
     return (o_idx);
