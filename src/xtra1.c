@@ -2707,10 +2707,10 @@ static void calc_spells(void)
         /* Message if needed */
         if (p_ptr->new_spells && p_ptr->pclass != CLASS_RAGE_MAGE)
         {
-            /* Message */
+            /* Message
             msg_format("You can learn %d more %s%s.",
                    p_ptr->new_spells, p,
-                   (p_ptr->new_spells != 1) ? "s" : "");
+                   (p_ptr->new_spells != 1) ? "s" : "");*/
 
         }
 

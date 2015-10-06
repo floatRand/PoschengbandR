@@ -1360,6 +1360,7 @@ void do_cmd_query_symbol(void)
 struct _mon_list_info_s 
 {
     int group;
+    int subgroup;
     int r_idx;
     int level;
     int m_idx;   /* Allows Targetting for Groups of One */
@@ -1371,7 +1372,6 @@ struct _mon_list_info_s
     bool target; /* Current target is in this group, in which case, m_idx is the target.
                     Otherwise, m_idx is the monster in this group that is closest to
                     the player. */
-    bool heading;
 };
 
 typedef struct _mon_list_info_s _mon_list_info_t, *_mon_list_info_ptr;
@@ -1413,6 +1413,10 @@ static void _mon_list_free(_mon_list_ptr list)
 #define _GROUP_LOS   1
 #define _GROUP_AWARE 2
 
+#define _SUBGROUP_HEADER 1
+#define _SUBGROUP_DATA   2
+#define _SUBGROUP_FOOTER 3
+
 static int _mon_list_comp(_mon_list_info_ptr left, _mon_list_info_ptr right)
 {
     if (left->group < right->group)
@@ -1420,15 +1424,10 @@ static int _mon_list_comp(_mon_list_info_ptr left, _mon_list_info_ptr right)
     if (left->group > right->group)
         return 1;
 
-    if (left->heading && right->heading)
-        return 0;
-
-    if (left->heading && !right->heading)
+    if (left->subgroup < right->subgroup)
         return -1;
-
-    if (!left->heading && right->heading)
+    if (left->subgroup > right->subgroup)
         return 1;
-
 
     if (left->level > right->level)
         return -1;
@@ -1474,6 +1473,7 @@ static _mon_list_ptr _create_monster_list(void)
             info_ptr = _mon_list_info_alloc();
 
             info_ptr->group = los ? _GROUP_LOS : _GROUP_AWARE;
+            info_ptr->subgroup = _SUBGROUP_DATA;
             info_ptr->r_idx = r_idx;
             info_ptr->m_idx = i;
             info_ptr->level = r_ptr->level;
@@ -1525,17 +1525,22 @@ static _mon_list_ptr _create_monster_list(void)
     {
         _mon_list_info_ptr info_ptr = _mon_list_info_alloc();
         info_ptr->group = _GROUP_LOS;
-        info_ptr->heading = TRUE;
+        info_ptr->subgroup = _SUBGROUP_HEADER;
         info_ptr->ct_total = result->ct_los;
         info_ptr->ct_los = result->ct_los;
         info_ptr->ct_awake = ct_los_awake;
+        vec_add(result->list, info_ptr);
+
+        info_ptr = _mon_list_info_alloc();
+        info_ptr->group = _GROUP_LOS;
+        info_ptr->subgroup = _SUBGROUP_FOOTER;
         vec_add(result->list, info_ptr);
     }
     if (result->ct_total - result->ct_los)
     {
         _mon_list_info_ptr info_ptr = _mon_list_info_alloc();
         info_ptr->group = _GROUP_AWARE;
-        info_ptr->heading = TRUE;
+        info_ptr->subgroup = _SUBGROUP_HEADER;
         info_ptr->ct_total = result->ct_total - result->ct_los;
         info_ptr->ct_awake = ct_other_awake;
         vec_add(result->list, info_ptr);
@@ -1570,11 +1575,7 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
     for (i = 0; i < rect.cy; i++)
     {
         int                 idx = top + i;
-        const monster_race *r_ptr;
         _mon_list_info_ptr  info_ptr;
-        byte                attr = TERM_WHITE;
-        char                buf[100];
-        char                loc[100];
 
         if (i >= vec_length(list->list)) break;
 
@@ -1583,12 +1584,12 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
         info_ptr = vec_get(list->list, idx);
         assert(info_ptr);
 
-        if (info_ptr->heading)
+        if (info_ptr->subgroup == _SUBGROUP_HEADER)
         {
             if (info_ptr->group == _GROUP_LOS)
             {
                 c_put_str(TERM_YELLOW,
-                      format("You see %d monster%s, %d %s awake",
+                      format("You see %d monster%s, %d %s awake:",
                              info_ptr->ct_los,
                              info_ptr->ct_los != 1 ? "s" : "",
                              info_ptr->ct_awake,
@@ -1598,7 +1599,7 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
             else if (info_ptr->group == _GROUP_AWARE)
             {
                 c_put_str(TERM_L_BLUE,
-                      format("You are aware of %d %smonster%s, %d %s awake",
+                      format("You are aware of %d %smonster%s, %d %s awake:",
                              info_ptr->ct_total,
                              list->ct_los ? "other " : "",
                              info_ptr->ct_total != 1 ? "s" : "",
@@ -1606,48 +1607,58 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
                              info_ptr->ct_awake == 1 ? "is" : "are"),
                       rect.y + i, rect.x);
             }
-            continue;
         }
-        assert(info_ptr->r_idx > 0);
-        r_ptr = &r_info[info_ptr->r_idx];
-
-        if (r_ptr->flags1 & RF1_UNIQUE)
-            attr = TERM_VIOLET;
-        else if (!info_ptr->ct_awake)
-            attr = TERM_L_DARK;
-
-        if (info_ptr->ct_total == 1)
+        else if (info_ptr->subgroup == _SUBGROUP_FOOTER)
         {
-            sprintf(buf, "%s", r_name + r_ptr->name);
-            if ((r_ptr->flags1 & RF1_UNIQUE) && !info_ptr->ct_awake)
-                strcat(buf, " (asleep)");
-            sprintf(loc, "%c %2d %c %2d",
-                    (info_ptr->dy > 0) ? 'S' : 'N', abs(info_ptr->dy),
-                    (info_ptr->dx > 0) ? 'E' : 'W', abs(info_ptr->dx));
         }
-        else if (!info_ptr->ct_awake)
-            sprintf(buf, "%s (%d asleep)", r_name + r_ptr->name, info_ptr->ct_total);
-        else if (info_ptr->ct_awake == info_ptr->ct_total)
-            sprintf(buf, "%s (%d awake)", r_name + r_ptr->name, info_ptr->ct_total);
         else
         {
-            sprintf(buf, "%s (%d awake, %d asleep)", r_name + r_ptr->name,
-                info_ptr->ct_awake, info_ptr->ct_total - info_ptr->ct_awake);
-        }
+            const monster_race *r_ptr;
+            byte                attr = TERM_WHITE;
+            char                buf[100];
+            char                loc[100];
 
-        Term_queue_bigchar(rect.x + 1, rect.y + i, r_ptr->x_attr, r_ptr->x_char, 0, 0);
-        if (info_ptr->ct_total == 1)
-        {
-            c_put_str(attr, format(mon_fmt, buf), rect.y + i, rect.x + 3);
-            c_put_str(TERM_WHITE, format("%-9.9s ", loc), rect.y + i, rect.x + 3 + cx_monster + 1);
-        }
-        else
-            c_put_str(attr, format(mon_fmt_ex, buf), rect.y + i, rect.x + 3);
+            assert(info_ptr->r_idx > 0);
+            r_ptr = &r_info[info_ptr->r_idx];
 
-        if (info_ptr->target)
-            Term_putch(rect.x, rect.y + i, TERM_L_RED, '*');
-        else
-            Term_putch(rect.x, rect.y + i, TERM_WHITE, ' ');
+            if (r_ptr->flags1 & RF1_UNIQUE)
+                attr = TERM_VIOLET;
+            else if (!info_ptr->ct_awake)
+                attr = TERM_L_DARK;
+
+            if (info_ptr->ct_total == 1)
+            {
+                sprintf(buf, "%s", r_name + r_ptr->name);
+                if ((r_ptr->flags1 & RF1_UNIQUE) && !info_ptr->ct_awake)
+                    strcat(buf, " (asleep)");
+                sprintf(loc, "%c %2d %c %2d",
+                        (info_ptr->dy > 0) ? 'S' : 'N', abs(info_ptr->dy),
+                        (info_ptr->dx > 0) ? 'E' : 'W', abs(info_ptr->dx));
+            }
+            else if (!info_ptr->ct_awake)
+                sprintf(buf, "%s (%d asleep)", r_name + r_ptr->name, info_ptr->ct_total);
+            else if (info_ptr->ct_awake == info_ptr->ct_total)
+                sprintf(buf, "%s (%d awake)", r_name + r_ptr->name, info_ptr->ct_total);
+            else
+            {
+                sprintf(buf, "%s (%d awake, %d asleep)", r_name + r_ptr->name,
+                    info_ptr->ct_awake, info_ptr->ct_total - info_ptr->ct_awake);
+            }
+
+            Term_queue_bigchar(rect.x + 1, rect.y + i, r_ptr->x_attr, r_ptr->x_char, 0, 0);
+            if (info_ptr->ct_total == 1)
+            {
+                c_put_str(attr, format(mon_fmt, buf), rect.y + i, rect.x + 3);
+                c_put_str(TERM_WHITE, format("%-9.9s ", loc), rect.y + i, rect.x + 3 + cx_monster + 1);
+            }
+            else
+                c_put_str(attr, format(mon_fmt_ex, buf), rect.y + i, rect.x + 3);
+
+            if (info_ptr->target)
+                Term_putch(rect.x, rect.y + i, TERM_L_RED, '*');
+            else
+                Term_putch(rect.x, rect.y + i, TERM_WHITE, ' ');
+        }
     }
     return i;
 }
@@ -1866,12 +1877,12 @@ void fix_monster_list(void)
 struct _obj_list_info_s
 {
     int group;
+    int subgroup;
     int o_idx;
     int  x,  y;
     int dx, dy;
     int score;
     int count;
-    bool heading;
 };
 typedef struct _obj_list_info_s _obj_list_info_t, *_obj_list_info_ptr;
 
@@ -1917,13 +1928,9 @@ static int _obj_list_comp(_obj_list_info_ptr left, _obj_list_info_ptr right)
     if (left->group > right->group)
         return 1;
 
-    if (left->heading && right->heading)
-        return 0;
-
-    if (left->heading && !right->heading)
+    if (left->subgroup < right->subgroup)
         return -1;
-
-    if (!left->heading && right->heading)
+    if (left->subgroup > right->subgroup)
         return 1;
 
     if (left->score > right->score)
@@ -1960,6 +1967,7 @@ static _obj_list_ptr _create_obj_list(void)
         if (o_ptr->tval == TV_GOLD) continue;
 
         info = _obj_list_info_alloc();
+        info->subgroup = _SUBGROUP_DATA;
         info->o_idx = i;
         info->x = o_ptr->ix;
         info->y = o_ptr->iy;
@@ -1987,15 +1995,20 @@ static _obj_list_ptr _create_obj_list(void)
     {
         _obj_list_info_ptr info = _obj_list_info_alloc();
         info->group = _GROUP_AUTOPICK;
-        info->heading = TRUE;
+        info->subgroup = _SUBGROUP_HEADER;
         info->count = list->ct_autopick;
+        vec_add(list->list, info);
+
+        info = _obj_list_info_alloc();
+        info->group = _GROUP_AUTOPICK;
+        info->subgroup = _SUBGROUP_FOOTER;
         vec_add(list->list, info);
     }
     if (list->ct_total - list->ct_autopick)
     {
         _obj_list_info_ptr info = _obj_list_info_alloc();
         info->group = _GROUP_OTHER;
-        info->heading = TRUE;
+        info->subgroup = _SUBGROUP_HEADER;
         info->count = list->ct_total - list->ct_autopick;
         vec_add(list->list, info);
     }
@@ -2027,12 +2040,12 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
         info_ptr = vec_get(list->list, idx);
         assert(info_ptr);
 
-        if (info_ptr->heading)
+        if (info_ptr->subgroup == _SUBGROUP_HEADER)
         {
             if (info_ptr->group == _GROUP_AUTOPICK)
             {
                 c_put_str(TERM_YELLOW,
-                      format("There %s %d wanted object%s",
+                      format("There %s %d wanted object%s:",
                              info_ptr->count != 1 ? "are" : "is",
                              info_ptr->count,
                              info_ptr->count != 1 ? "s" : ""),
@@ -2041,13 +2054,16 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
             else
             {
                 c_put_str(TERM_L_BLUE,
-                      format("There %s %d %sobject%s",
+                      format("There %s %d %sobject%s:",
                              info_ptr->count != 1 ? "are" : "is",
                              info_ptr->count,
                              list->ct_autopick ? "other " : "",
                              info_ptr->count != 1 ? "s" : ""),
                       rect.y + i, rect.x);
             }
+        }
+        else if (info_ptr->subgroup == _SUBGROUP_FOOTER)
+        {
         }
         else
         {
