@@ -1546,7 +1546,22 @@ s32b object_value(object_type *o_ptr)
 {
     s32b value;
     if (object_is_known(o_ptr))
-        value = object_value_real(o_ptr);
+    {
+        if (object_is_melee_weapon(o_ptr))
+            value = weapon_cost(o_ptr, 0);
+        else if (o_ptr->tval == TV_BOW)
+            value = bow_cost(o_ptr, 0);
+        else if (object_is_armour(o_ptr) || object_is_shield(o_ptr))
+            value = armor_cost(o_ptr, 0);
+        else if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr)))
+            value = jewelry_cost(o_ptr, 0);
+        else if (o_ptr->tval == TV_LITE)
+            value = lite_cost(o_ptr, 0);
+        else if (object_is_device(o_ptr))
+            value = device_value(o_ptr, 0);
+        else
+            value = object_value_real(o_ptr);
+    }
     else
     {
         value = new_object_cost(o_ptr, 0);
