@@ -273,7 +273,6 @@ void object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
  */
 void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
 {
-    bool spoil = FALSE;
     int i;
 
     object_kind *k_ptr = &k_info[o_ptr->k_idx];
@@ -296,7 +295,7 @@ void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
     {
         ego_item_type *e_ptr = &e_info[o_ptr->name2];
 
-        if (ego_is_aware(o_ptr->name2))
+        if (ego_is_aware(o_ptr->name2) || (o_ptr->ident & IDENT_STORE))
         {
             for (i = 0; i < TR_FLAG_SIZE; i++)
                 flgs[i] |= e_ptr->flags[i];
@@ -318,7 +317,7 @@ void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
     }
 
     /* Need full knowledge or spoilers */
-    if (spoil || (o_ptr->ident & IDENT_MENTAL))
+    if (o_ptr->ident & (IDENT_STORE | IDENT_MENTAL))
     {
         /* Artifact */
         if (object_is_fixed_artifact(o_ptr))
