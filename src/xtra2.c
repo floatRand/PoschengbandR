@@ -3842,7 +3842,7 @@ static int target_set_aux(int y, int x, int mode, cptr info)
            This happens after a fat finger incident or a failed <dir>
            navigation that really should have worked.*/
         if (strstr(info, "o,"))
-            s1 = "Monster: ";
+            s1 = (mode == TARGET_LOOK) ? "Feature: " : "Monster: ";
         else if (strstr(info, "m,"))
             s1 = "Position: ";
     }
