@@ -1706,7 +1706,7 @@ static bool kankin(void)
         if ((o_ptr->tval == TV_CAPTURE) && (o_ptr->pval == MON_TSUCHINOKO))
         {
             char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, 0);
+            object_desc(o_name, o_ptr, OD_COLOR_CODED);
             sprintf(buf, "Convert %s into money? ",o_name);
             if (get_check(buf))
             {
@@ -1729,7 +1729,7 @@ static bool kankin(void)
         if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval == SV_CORPSE) && (o_ptr->pval == MON_TSUCHINOKO))
         {
             char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, 0);
+            object_desc(o_name, o_ptr, OD_COLOR_CODED);
             sprintf(buf, "Convert %s into money? ",o_name);
             if (get_check(buf))
             {
@@ -1752,7 +1752,7 @@ static bool kankin(void)
         if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval == SV_SKELETON) && (o_ptr->pval == MON_TSUCHINOKO))
         {
             char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, 0);
+            object_desc(o_name, o_ptr, OD_COLOR_CODED);
             sprintf(buf, "Convert %s into money? ",o_name);
             if (get_check(buf))
             {
@@ -1773,7 +1773,7 @@ static bool kankin(void)
         if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval == SV_CORPSE) && (streq(r_name + r_info[o_ptr->pval].name, r_name + r_info[today_mon].name)))
         {
             char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, 0);
+            object_desc(o_name, o_ptr, OD_COLOR_CODED);
             sprintf(buf, "Convert %s into money? ",o_name);
             if (get_check(buf))
             {
@@ -1795,7 +1795,7 @@ static bool kankin(void)
         if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval == SV_SKELETON) && (streq(r_name + r_info[o_ptr->pval].name, r_name + r_info[today_mon].name)))
         {
             char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, 0);
+            object_desc(o_name, o_ptr, OD_COLOR_CODED);
             sprintf(buf, "Convert %s into money? ",o_name);
             if (get_check(buf))
             {
@@ -1822,7 +1822,7 @@ static bool kankin(void)
                 int num, k, item_new;
                 object_type forge;
 
-                object_desc(o_name, o_ptr, 0);
+                object_desc(o_name, o_ptr, OD_COLOR_CODED);
                 sprintf(buf, "Hand %s over? ",o_name);
                 if (!get_check(buf)) continue;
 
@@ -1860,7 +1860,7 @@ static bool kankin(void)
                 item_new = inven_carry(&forge);
 
                 /* Describe the object */
-                object_desc(o_name, &forge, 0);
+                object_desc(o_name, &forge, OD_COLOR_CODED);
                 msg_format("You get %s (%c). ", o_name, index_to_label(item_new));
 
                 /* Auto-inscription */
@@ -2564,7 +2564,7 @@ static bool _gamble_shop_aux(object_type *o_ptr)
     identify_item(o_ptr);
     ego_aware(o_ptr);
     o_ptr->ident |= (IDENT_MENTAL);
-    object_desc(buf, o_ptr, 0);
+    object_desc(buf, o_ptr, OD_COLOR_CODED);
 
     clear_bldg(5, 10);
     
@@ -2589,7 +2589,7 @@ static bool _gamble_shop_aux(object_type *o_ptr)
         return TRUE;
     }
     slot = inven_carry(o_ptr);
-    object_desc(buf, &inventory[slot], 0);
+    object_desc(buf, &inventory[slot], OD_COLOR_CODED);
     msg_format("You have %s (%c).", buf, index_to_label(slot));
     handle_stuff();
     return TRUE;
@@ -2739,7 +2739,7 @@ static bool _reforge_artifact(void)
         return FALSE;
     }
 
-    object_desc(o_name, src, OD_NAME_ONLY);
+    object_desc(o_name, src, OD_NAME_ONLY | OD_COLOR_CODED);
     if (!get_check(format("Really use %s? (It will be destroyed!) ", o_name))) 
         return FALSE;
 
@@ -2953,7 +2953,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
         }
         if (!i)
         {
-            object_desc(tmp_str, o_ptr, 0);
+            object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
             msg_format("%^s can not be further improved.", tmp_str);
             return FALSE;
         }
@@ -2971,7 +2971,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     /* Check if the player has enough money */
     if (p_ptr->au < cost)
     {
-        object_desc(tmp_str, o_ptr, OD_NAME_ONLY);
+        object_desc(tmp_str, o_ptr, OD_NAME_ONLY | OD_COLOR_CODED);
         msg_format("You do not have the gold to improve %s!", tmp_str);
         return FALSE;
     }
@@ -3014,7 +3014,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     }
     else
     {
-        object_desc(tmp_str, o_ptr, OD_NAME_AND_ENCHANT);
+        object_desc(tmp_str, o_ptr, OD_NAME_AND_ENCHANT | OD_COLOR_CODED);
         msg_format("Improved into %s for %d gold.", tmp_str, cost);
 
         p_ptr->au -= cost;

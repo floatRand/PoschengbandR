@@ -2688,7 +2688,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     object_type    *o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
     char            o_name[MAX_NLEN];
     u32b            flgs[TR_FLAG_SIZE] = {0};
-    char            m_name[MAX_NLEN];
+    char            m_name_subject[MAX_NLEN];
+    char            m_name_object[MAX_NLEN];
     bool            success_hit = FALSE;
     bool            backstab = FALSE;
     bool            vorpal_cut = FALSE;
@@ -2839,7 +2840,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
     /* Wake up monster */
     set_monster_csleep(c_ptr->m_idx, 0);
-    monster_desc(m_name, m_ptr, 0);
+    monster_desc(m_name_subject, m_ptr, MD_PRON_VISIBLE);
+    monster_desc(m_name_object, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
 
     if (mode == PY_POWER_ATTACK)
     {
@@ -2890,7 +2892,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             if (!fear_allow_melee(c_ptr->m_idx))
             {
                 if (m_ptr->ml)
-                    msg_format("You are too afraid to attack %s!", m_name);
+                    msg_format("You are too afraid to attack %s!", m_name_object);
                 else
                     msg_format("There is something scary in your way!");
 
@@ -2960,11 +2962,11 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 }
             }
 
-            if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly stab %s!", m_name);
-            else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name);
-            else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You backstab %s!",  m_name);
-            else if (perfect_strike) cmsg_format(TERM_L_GREEN, "You land a perfect strike against %s.", m_name);
-            else if (!monk_attack) msg_format("You hit.", m_name);
+            if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly stab %s!", m_name_object);
+            else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name_object);
+            else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You backstab %s!",  m_name_object);
+            else if (perfect_strike) cmsg_format(TERM_L_GREEN, "You land a perfect strike against %s.", m_name_object);
+            else if (!monk_attack) msg_format("You hit.", m_name_object);
 
             /* Hack -- bare hands do one damage */
             k = 1;
@@ -3026,12 +3028,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     if (r_ptr->flags1 & RF1_MALE)
                     {
-                        msg_format("You hit %s in the groin with your knee!", m_name);
+                        msg_format("You hit %s in the groin with your knee!", m_name_object);
                         sound(SOUND_PAIN);
                         special_effect = MA_KNEE;
                     }
                     else
-                        msg_format(ma_ptr->desc, m_name);
+                        msg_format(ma_ptr->desc, m_name_object);
                 }
 
                 else if (ma_ptr->effect == MA_SLOW)
@@ -3039,10 +3041,10 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     if (!((r_ptr->flags1 & RF1_NEVER_MOVE) ||
                         my_strchr("~#{}.UjmeEv$,DdsbBFIJQSXclnw!=?", r_ptr->d_char)))
                     {
-                        msg_format("You kick %s in the ankle.", m_name);
+                        msg_format("You kick %s in the ankle.", m_name_object);
                         special_effect = MA_SLOW;
                     }
-                    else msg_format(ma_ptr->desc, m_name);
+                    else msg_format(ma_ptr->desc, m_name_object);
                 }
                 else
                 {
@@ -3050,7 +3052,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         stun_effect = (ma_ptr->effect / 2) + randint1(ma_ptr->effect / 2);
                     if (mode == MYSTIC_STUN)
                         stun_effect *= 2;
-                    msg_format(ma_ptr->desc, m_name);
+                    msg_format(ma_ptr->desc, m_name_object);
                 }
 
                 crit = monk_get_critical(ma_ptr, hand, mode);
@@ -3062,7 +3064,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                 if ((special_effect == MA_KNEE) && ((k + p_ptr->weapon_info[hand].to_d) < m_ptr->hp))
                 {
-                    msg_format("%^s moans in agony!", m_name);
+                    msg_format("%^s moans in agony!", m_name_subject);
                     stun_effect = 7 + randint1(13);
                     resist_stun /= 3;
                 }
@@ -3073,7 +3075,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         (randint1(p_ptr->lev) > r_ptr->level) &&
                         m_ptr->mspeed > 60)
                     {
-                        msg_format("%^s starts limping slower.", m_name);
+                        msg_format("%^s starts limping slower.", m_name_subject);
                         m_ptr->mspeed -= 10;
                     }
                 }
@@ -3101,9 +3103,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                             /* No message */
                         }
                         else if (set_monster_stunned(c_ptr->m_idx, stun_effect + MON_STUNNED(m_ptr)))
-                            msg_format("%^s is stunned.", m_name);
+                            msg_format("%^s is stunned.", m_name_subject);
                         else
-                            msg_format("%^s is more stunned.", m_name);
+                            msg_format("%^s is more stunned.", m_name_subject);
                     }
                 }
                 if (mode == MYSTIC_KNOCKOUT)
@@ -3111,15 +3113,15 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
-                        msg_format("%^s is immune.", m_name);
+                        msg_format("%^s is immune.", m_name_subject);
                     }
                     else if (mon_save_p(m_ptr->r_idx, A_DEX))
                     {
-                        msg_format("%^s resists.", m_name);
+                        msg_format("%^s resists.", m_name_subject);
                     }
                     else
                     {
-                        cmsg_format(TERM_VIOLET, "%^s is knocked out.", m_name);
+                        cmsg_format(TERM_VIOLET, "%^s is knocked out.", m_name_subject);
                         knock_out++;        
                         /* No more retaliation this round! */                    
                         retaliation_count = 100; /* Any number >= 4 will do ... */
@@ -3170,7 +3172,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     }
                     else
                     {
-                        msg_format("%^s is stunned.", m_name);
+                        msg_format("%^s is stunned.", m_name_subject);
                         set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 3 + randint1(3)));
                     }
                 }
@@ -3184,7 +3186,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     }
                     else
                     {
-                        msg_format("%^s is stunned.", m_name);
+                        msg_format("%^s is stunned.", m_name_subject);
                         set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 3 + randint1(3)));
                     }
                 }
@@ -3223,7 +3225,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     if (o_ptr->name1 == ART_VORPAL_BLADE)
                         msg_print("Your Vorpal Blade goes <color:y>snicker-snack</color>!");
                     else
-                        msg_format("Your weapon <color:y>cuts deep</color> into %s!", m_name);
+                        msg_format("Your weapon <color:y>cuts deep</color> into %s!", m_name_object);
 
                     while (one_in_(vorpal_chance))
                         mult++;
@@ -3232,18 +3234,18 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                     /* Ouch! */
                     if (((r_ptr->flagsr & RFR_RES_ALL) ? k/100 : k) > m_ptr->hp)
-                        cmsg_format(TERM_VIOLET, "You cut %s in half!", m_name);
+                        cmsg_format(TERM_VIOLET, "You cut %s in half!", m_name_object);
                     else
                     {
                         switch (mult)
                         {
-                        case 2: msg_format("You <color:U>gouge</color> %s!", m_name); break;
-                        case 3: msg_format("You <color:y>maim</color> %s!", m_name); break;
-                        case 4: msg_format("You <color:R>carve</color> %s!", m_name); break;
-                        case 5: msg_format("You <color:r>cleave</color> %s!", m_name); break;
-                        case 6: msg_format("You <color:v>smite</color> %s!", m_name); break;
-                        case 7: msg_format("You <color:v>eviscerate</color> %s!", m_name); break;
-                        default: msg_format("You <color:v>shred</color> %s!", m_name); break;
+                        case 2: msg_format("You <color:U>gouge</color> %s!", m_name_object); break;
+                        case 3: msg_format("You <color:y>maim</color> %s!", m_name_object); break;
+                        case 4: msg_format("You <color:R>carve</color> %s!", m_name_object); break;
+                        case 5: msg_format("You <color:r>cleave</color> %s!", m_name_object); break;
+                        case 6: msg_format("You <color:v>smite</color> %s!", m_name_object); break;
+                        case 7: msg_format("You <color:v>eviscerate</color> %s!", m_name_object); break;
+                        default: msg_format("You <color:v>shred</color> %s!", m_name_object); break;
                         }
                     }
                     drain_result = drain_result * 3 / 2;
@@ -3289,18 +3291,18 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     if (MON_STUNNED(m_ptr))
                     {
-                        msg_format("%s is more dazed.", m_name);
+                        msg_format("%s is more dazed.", m_name_subject);
                         tmp /= 2;
                     }
                     else
                     {
-                        msg_format("%s is dazed.", m_name);
+                        msg_format("%s is dazed.", m_name_subject);
                     }
                     (void)set_monster_stunned(c_ptr->m_idx, MON_STUNNED(m_ptr) + tmp);
                 }
                 else
                 {
-                    msg_format("%s is not effected.", m_name);
+                    msg_format("%s is not effected.", m_name_subject);
                 }
             }
 
@@ -3326,13 +3328,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     && !(r_ptr->flags1 & (RF1_UNIQUE))
                     && !mon_save_p(m_ptr->r_idx, A_DEX) )
                 {
-                    msg_format("You hamstring %s.", m_name);
+                    msg_format("You hamstring %s.", m_name_object);
                     set_monster_slow(c_ptr->m_idx, MON_SLOW(m_ptr) + 50);
                 }
                 if ( p_ptr->lev >= 20    /* Wounding Strike */
                     && !mon_save_p(m_ptr->r_idx, A_DEX) )
                 {
-                    msg_format("%^s is dealt a wounding strike.", m_name);
+                    msg_format("%^s is dealt a wounding strike.", m_name_subject);
                     k += MIN(m_ptr->hp / 5, randint1(3) * d);
                     drain_result = k;
                 }
@@ -3340,13 +3342,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     && !(r_ptr->flags3 & (RF3_NO_STUN))
                     && !mon_save_p(m_ptr->r_idx, A_DEX) )
                 {
-                    msg_format("%^s is dealt a stunning blow.", m_name);
+                    msg_format("%^s is dealt a stunning blow.", m_name_subject);
                     set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 2));
                 }
                 if ( p_ptr->lev >= 40    /* Greater Wounding Strike */
                     && !mon_save_p(m_ptr->r_idx, A_DEX) )
                 {
-                    msg_format("%^s is dealt a *WOUNDING* strike.", m_name);
+                    msg_format("%^s is dealt a *WOUNDING* strike.", m_name_subject);
                     k += MIN(m_ptr->hp * 2 / 5, rand_range(2, 10) * d);
                     drain_result = k;
                 }
@@ -3364,7 +3366,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                   && !(r_ptr->flags7 & RF7_UNIQUE2))
                 {
                     k = m_ptr->hp + 1;
-                    msg_format("You hit %s on a fatal spot!", m_name);
+                    msg_format("You hit %s on a fatal spot!", m_name_object);
                 }
                 else k = 1;
             }
@@ -3378,7 +3380,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     k *= 5;
                     drain_result *= 2;
-                    msg_format("You critically injured %s!", m_name);
+                    msg_format("You critically injured %s!", m_name_object);
                 }
                 else if ( (m_ptr->hp < maxhp/2 && one_in_(num_blow*10)) 
                        || ( (one_in_(666) || ((backstab || fuiuchi) && one_in_(11)))
@@ -3389,12 +3391,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         k = MAX(k*5, m_ptr->hp/2);
                         drain_result *= 2;
-                        msg_format("You fatally injured %s!", m_name);
+                        msg_format("You fatally injured %s!", m_name_object);
                     }
                     else
                     {
                         k = m_ptr->hp + 1;
-                        msg_format("You hit %s on a fatal spot!", m_name);
+                        msg_format("You hit %s on a fatal spot!", m_name_object);
                     }
                 }
             }
@@ -3413,12 +3415,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     k = MAX(k*5, m_ptr->hp/2);
                     drain_result *= 2;
-                    msg_format("You fatally injured %s!", m_name);
+                    msg_format("You fatally injured %s!", m_name_object);
                 }
                 else
                 {
                     k = m_ptr->hp + 1;
-                    msg_format("You hit %s on a fatal spot!", m_name);
+                    msg_format("You hit %s on a fatal spot!", m_name_object);
                 }
             }
 
@@ -3435,20 +3437,20 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         if (r_ptr->flagsr & RFR_RES_ALL)
                         {
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
-                            msg_format("%^s is immune.", m_name);
+                            msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (r_ptr->flags3 & RF3_NO_STUN)
                         {
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
-                            msg_format("%^s is immune.", m_name);
+                            msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (mon_save_p(m_ptr->r_idx, A_STR))
                         {
-                            msg_format("%^s resists.", m_name);
+                            msg_format("%^s resists.", m_name_subject);
                         }
                         else
                         {
-                            msg_format("%^s is stunned.", m_name);
+                            msg_format("%^s is stunned.", m_name_subject);
                             set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 2));
                         }
                     }
@@ -3457,19 +3459,19 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 case TOGGLE_BURNING_BLADE:
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
-                        msg_format("%^s is immune.", m_name);
+                        msg_format("%^s is immune.", m_name_subject);
                         k = 0;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
                     }
                     else if (r_ptr->flagsr & RFR_IM_FIRE)
                     {
-                        msg_format("%^s resists alot.", m_name);
+                        msg_format("%^s resists alot.", m_name_subject);
                         k /= 9;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_FIRE);
                     }
                     else if (r_ptr->flags3 & (RF3_HURT_FIRE))
                     {
-                        msg_format("%^s is hit hard.", m_name);
+                        msg_format("%^s is hit hard.", m_name_subject);
                         k *= 2;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_FIRE);
                     }
@@ -3477,13 +3479,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 case TOGGLE_ICE_BLADE:
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
-                        msg_format("%^s is immune.", m_name);
+                        msg_format("%^s is immune.", m_name_subject);
                         k = 0;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
                     }
                     else if (r_ptr->flagsr & RFR_IM_COLD)
                     {
-                        msg_format("%^s resists alot.", m_name);
+                        msg_format("%^s resists alot.", m_name_subject);
                         k /= 9;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_COLD);
                     }
@@ -3491,7 +3493,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         if (r_ptr->flags3 & (RF3_HURT_COLD))
                         {
-                            msg_format("%^s is hit hard.", m_name);
+                            msg_format("%^s is hit hard.", m_name_subject);
                             k *= 2;
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_COLD);
                         }
@@ -3499,7 +3501,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                             && !(r_ptr->flags1 & (RF1_UNIQUE))
                             && !mon_save_p(m_ptr->r_idx, A_STR) )
                         {
-                            msg_format("%^s is slowed by the cold.", m_name);
+                            msg_format("%^s is slowed by the cold.", m_name_subject);
                             set_monster_slow(c_ptr->m_idx, MON_SLOW(m_ptr) + 50);
                         }
                     }
@@ -3507,13 +3509,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 case TOGGLE_THUNDER_BLADE:
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
-                        msg_format("%^s is immune.", m_name);
+                        msg_format("%^s is immune.", m_name_subject);
                         k = 0;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
                     }
                     else if (r_ptr->flagsr & RFR_IM_ELEC)
                     {
-                        msg_format("%^s resists alot.", m_name);
+                        msg_format("%^s resists alot.", m_name_subject);
                         k /= 9;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_ELEC);
                     }
@@ -3523,7 +3525,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                           && !(r_ptr->flags3 & RF3_NO_STUN)
                           && !mon_save_p(m_ptr->r_idx, A_STR) )
                         {
-                            msg_format("%^s is shocked convulsively.", m_name);
+                            msg_format("%^s is shocked convulsively.", m_name_subject);
                             set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 4));
                         }
                     }
@@ -3644,27 +3646,27 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     int amt = (k+2)/3;
                     m_ptr->maxhp -= amt;
-                    msg_format("%^s seems weakened.", m_name);
+                    msg_format("%^s seems weakened.", m_name_subject);
                 }
                 if (mode == MAULER_STUNNING_BLOW || mode == DRACONIAN_STRIKE_STUN)
                 {
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
-                        msg_format("%^s is immune.", m_name);
+                        msg_format("%^s is immune.", m_name_subject);
                     }
                     else if (r_ptr->flags3 & RF3_NO_STUN)
                     {
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
-                        msg_format("%^s is immune.", m_name);
+                        msg_format("%^s is immune.", m_name_subject);
                     }
                     else if ((r_ptr->flags1 & RF1_UNIQUE) && mon_save_p(m_ptr->r_idx, A_STR))
                     {
-                        msg_format("%^s resists.", m_name);
+                        msg_format("%^s resists.", m_name_subject);
                     }
                     else
                     {
-                        msg_format("%^s is stunned.", m_name);
+                        msg_format("%^s is stunned.", m_name_subject);
                         set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 3 + randint1(3)));
                     }
                 }
@@ -3673,15 +3675,15 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
-                        msg_format("%^s is immune.", m_name);
+                        msg_format("%^s is immune.", m_name_subject);
                     }
                     else if (mon_save_p(m_ptr->r_idx, A_STR))
                     {
-                        msg_format("%^s resists.", m_name);
+                        msg_format("%^s resists.", m_name_subject);
                     }
                     else
                     {
-                        msg_format("%^s is knocked out.", m_name);
+                        msg_format("%^s is knocked out.", m_name_subject);
                         set_monster_paralyzed(c_ptr->m_idx, randint1(3));
                         /* No more retaliation this round! */                    
                         retaliation_count = 100; /* Any number >= 4 will do ... */
@@ -3724,7 +3726,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                                 {
                                     dam = 25;
                                 }
-                                msg_format("%^s is wounded.", m_name);                            
+                                msg_format("%^s is wounded.", m_name_subject);
                                 mon_take_hit(m_idx, dam * (max - ct), fear, NULL);
                                 break;
                             }
@@ -3758,7 +3760,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     
                 if (mode == WEAPONMASTER_CRUSADERS_STRIKE)
                 {
-                    msg_format("Your Crusader's Strike drains life from %s!", m_name);
+                    msg_format("Your Crusader's Strike drains life from %s!", m_name_object);
                     hp_player(MIN(k, 150));
                 }
             
@@ -3775,20 +3777,20 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         if (r_ptr->flagsr & RFR_RES_ALL)
                         {
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
-                            msg_format("%^s is immune.", m_name);
+                            msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (r_ptr->flags3 & RF3_NO_CONF)
                         {
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_CONF;
-                            msg_format("%^s is immune.", m_name);
+                            msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (mon_save_p(m_ptr->r_idx, A_STR))
                         {
-                            msg_format("%^s resists.", m_name);
+                            msg_format("%^s resists.", m_name_subject);
                         }
                         else
                         {
-                            msg_format("%^s appears confused.", m_name);
+                            msg_format("%^s appears confused.", m_name_subject);
                             set_monster_confused(c_ptr->m_idx, MON_CONFUSED(m_ptr) + 10 + randint0(p_ptr->lev) / 5);
                         }
                     }
@@ -3798,20 +3800,20 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         if (r_ptr->flagsr & RFR_RES_ALL)
                         {
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
-                            msg_format("%^s is immune.", m_name);
+                            msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (r_ptr->flags3 & RF3_NO_SLEEP)
                         {
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_SLEEP;
-                            msg_format("%^s is immune.", m_name);
+                            msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (mon_save_p(m_ptr->r_idx, A_STR))
                         {
-                            msg_format("%^s resists.", m_name);
+                            msg_format("%^s resists.", m_name_subject);
                         }
                         else
                         {
-                            msg_format("%^s is knocked out.", m_name);
+                            msg_format("%^s is knocked out.", m_name_subject);
                             knock_out++;        
                             /* No more retaliation this round! */                    
                             retaliation_count = 100; /* Any number >= 4 will do ... */
@@ -3824,20 +3826,20 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         if (r_ptr->flagsr & RFR_RES_ALL)
                         {
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
-                            msg_format("%^s is immune.", m_name);
+                            msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (r_ptr->flags3 & RF3_NO_STUN)
                         {
                             if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
-                            msg_format("%^s is immune.", m_name);
+                            msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (mon_save_p(m_ptr->r_idx, A_STR))
                         {
-                            msg_format("%^s resists.", m_name);
+                            msg_format("%^s resists.", m_name_subject);
                         }
                         else
                         {
-                            msg_format("%^s is stunned.", m_name);
+                            msg_format("%^s is stunned.", m_name_subject);
                             set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 2));
                         }
                     }
@@ -3897,7 +3899,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                             if (drain_msg)
                             {
-                                msg_format("Your weapon drains life from %s!", m_name);
+                                msg_format("Your weapon drains life from %s!", m_name_object);
                                 drain_msg = FALSE;
                             }
                             drain_heal = (drain_heal * mutant_regenerate_mod) / 100;
@@ -3935,13 +3937,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 if (r_ptr->flags3 & RF3_NO_CONF)
                 {
                     if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_CONF;
-                    msg_format("%^s is unaffected.", m_name);
+                    msg_format("%^s is unaffected.", m_name_subject);
                 }
                 else if (randint0(100) < r_ptr->level)
-                    msg_format("%^s is unaffected.", m_name);
+                    msg_format("%^s is unaffected.", m_name_subject);
                 else
                 {
-                    msg_format("%^s appears confused.", m_name);
+                    msg_format("%^s appears confused.", m_name_subject);
                     (void)set_monster_confused(c_ptr->m_idx, MON_CONFUSED(m_ptr) + 10 + randint0(p_ptr->lev) / 5);
                 }
 
@@ -3959,20 +3961,20 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     if (r_ptr->flags1 & RF1_UNIQUE)
                     {
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
-                        msg_format("%^s is unaffected!", m_name);
+                        msg_format("%^s is unaffected!", m_name_subject);
                         resists_tele = TRUE;
                     }
                     else if (r_ptr->level > randint1(100))
                     {
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
-                        msg_format("%^s resists!", m_name);
+                        msg_format("%^s resists!", m_name_subject);
                         resists_tele = TRUE;
                     }
                 }
 
                 if (!resists_tele)
                 {
-                    msg_format("%^s disappears!", m_name);
+                    msg_format("%^s disappears!", m_name_subject);
                     teleport_away(c_ptr->m_idx, 50, TELEPORT_PASSIVE);
                     num = num_blow + 1; /* Can't hit it anymore! */
                     *mdeath = TRUE;
@@ -3986,15 +3988,16 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     if (polymorph_monster(y, x))
                     {
-                        msg_format("%^s changes!", m_name);
+                        msg_format("%^s changes!", m_name_subject);
                         *fear = FALSE;
                         weak = FALSE;
                     }
                     else
-                        msg_format("%^s is unaffected.", m_name);
+                        msg_format("%^s is unaffected.", m_name_subject);
 
                     m_ptr = &m_list[c_ptr->m_idx];
-                    monster_desc(m_name, m_ptr, 0);
+                    monster_desc(m_name_subject, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+                    monster_desc(m_name_object, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
                     r_ptr = &r_info[m_ptr->r_idx];
                 }
             }
@@ -4037,13 +4040,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
               && o_ptr->sval == SV_DEATH_SCYTHE 
               && one_in_(3) )
             {
-                msg_format("You miss.", m_name);
+                msg_format("You miss.", m_name_object);
                 death_scythe_miss(o_ptr, hand, mode);
             }
             else
             {
                 sound(SOUND_MISS);
-                msg_format("You miss.", m_name);
+                msg_format("You miss.", m_name_object);
             }
         }
         backstab = FALSE;
@@ -4136,22 +4139,22 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         if (test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml))
         {
             if (m_ptr->mflag2 & MFLAG2_TRIPPED)
-                msg_format("%^s is already tripped up.", m_name);
+                msg_format("%^s is already tripped up.", m_name_subject);
             else if ( !(r_ptr->flags1 & RF1_UNIQUE)
                    || !mon_save_p(m_ptr->r_idx, A_STR) )
             {
-                msg_format("%^s cries 'Help! I've fallen and I can't get up!'", m_name);
+                msg_format("%^s cries 'Help! I've fallen and I can't get up!'", m_name_subject);
                 m_ptr->mflag2 |= MFLAG2_TRIPPED;
             }
             else
-                msg_format("%^s nimbly dodges your attempt to trip.", m_name);
+                msg_format("%^s nimbly dodges your attempt to trip.", m_name_subject);
         }
         else
-            msg_format("You attempt to trip %^s but miss.", m_name);
+            msg_format("You attempt to trip %^s but miss.", m_name_object);
     }
 
     if (weak && !(*mdeath))
-        msg_format("%^s seems weakened.", m_name);
+        msg_format("%^s seems weakened.", m_name_subject);
 
     if (drain_left != _max_vampiric_drain())
     {
