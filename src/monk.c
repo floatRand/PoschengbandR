@@ -273,7 +273,11 @@ static bool choose_kamae(void)
     char choice;
     int new_kamae = 0;
     int i;
+    rect_t display = ui_menu_rect();
     char buf[80];
+
+    if (display.cx > 40)
+        display.cx = 40;
 
     if (p_ptr->confused)
     {
@@ -283,18 +287,21 @@ static bool choose_kamae(void)
 
     screen_save();
 
-    prt(" a) No form", 2, 20);
+    Term_erase(display.x, display.y, display.cx);
+    put_str("Choose Form: ", display.y, display.x + 1);
+
+    Term_erase(display.x, display.y + 1, display.cx);
+    put_str(" a) No form", display.y + 1, display.x + 1);
+
     for (i = 0; i < MAX_KAMAE; i++)
     {
         if (p_ptr->lev >= kamae_shurui[i].min_level)
         {
             sprintf(buf," %c) %-12s  %s",I2A(i+1), kamae_shurui[i].desc, kamae_shurui[i].info);
-            prt(buf, 3+i, 20);
+            Term_erase(display.x, display.y + 2 + i, display.cx);
+            put_str(buf, display.y + 2 + i, display.x + 1);
         }
     }
-
-    prt("", 1, 0);
-    prt("        Choose Form: ", 1, 14);
 
     while(1)
     {

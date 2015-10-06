@@ -2538,7 +2538,7 @@ void do_cmd_rest(void)
     /* Prompt for time if needed */
     if (command_arg <= 0)
     {
-        cptr p = "Rest (0-9999, '*' for HP/SP, '&' as needed): ";
+        cptr p = "<color:y>Rest</color> (0-9999, '*' for HP/SP, '&' as needed): ";
 
 
         char out_val[80];
@@ -2546,8 +2546,9 @@ void do_cmd_rest(void)
         /* Default */
         strcpy(out_val, "&");
 
-        /* Ask for duration */
-        if (!get_string(p, out_val, 4)) return;
+        /* Ask for duration
+        if (!get_string(p, out_val, 4)) return;*/
+        if (!msg_input(p, out_val, 4)) return;
 
         /* Rest until done */
         if (out_val[0] == '&')

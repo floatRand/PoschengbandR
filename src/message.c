@@ -411,6 +411,11 @@ bool cmsg_input(byte color, cptr prompt, char *buf, int len)
     return result;
 }
 
+bool msg_input(cptr prompt, char *buf, int len)
+{
+    return cmsg_input(TERM_WHITE, prompt, buf, len);
+}
+
 bool cmsg_input_num(byte color, cptr prompt, int *num, int min, int max)
 {
     bool result = FALSE;
@@ -539,4 +544,7 @@ void msg_on_save(savefile_ptr file)
     }
 }
 
-
+bool msg_input_num(cptr prompt, int *num, int min, int max)
+{
+    return cmsg_input_num(TERM_WHITE, prompt, num, min, max);
+}

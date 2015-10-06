@@ -2467,9 +2467,8 @@ void screen_load_aux(void)
 
 void screen_load(void)
 {
-    /* Hack -- Flush messages */
-    msg_print(NULL);
     screen_load_aux();
+    msg_line_redraw();
 }
 
 bool screen_is_saved(void)

@@ -1785,6 +1785,8 @@ static void prt_effects(void)
         sprintf(buf, "[%.10s]", race_ptr->name);
         c_put_str(TERM_RED, buf, row++, col);
     }
+    if (monk_armour_aux)
+        c_put_str(TERM_RED, "Heavy Armor", row++, col);
     if (p_ptr->cut)
         prt_cut(row++, col);
     if (p_ptr->stun)
@@ -5016,6 +5018,7 @@ void calc_bonuses(void)
             msg_print("You regain your balance.");
 
         monk_notify_aux = monk_armour_aux;
+        p_ptr->redraw |= PR_EFFECTS;
     }
 
     /* Can someone please explain the purpose of this?
