@@ -98,8 +98,10 @@ static byte value_check_aux2(object_type *o_ptr)
     /* Good weapon bonuses */
     if (o_ptr->to_h + o_ptr->to_d > 0) return FEEL_ENCHANTED;
 
-    /* No feeling */
-    return FEEL_NONE;
+    if (p_ptr->lev < 30)
+        return FEEL_NONE;
+    else
+        return FEEL_AVERAGE;
 }
 
 

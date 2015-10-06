@@ -2075,7 +2075,7 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
             char         c = object_char(o_ptr);
 
             object_desc(o_name, o_ptr, 0);
-            sprintf(loc, "%c %2d %c %2d",
+            sprintf(loc, "%c%3d %c%3d",
                     (info_ptr->dy > 0) ? 'S' : 'N', abs(info_ptr->dy),
                     (info_ptr->dx > 0) ? 'E' : 'W', abs(info_ptr->dx));
             Term_queue_bigchar(rect.x + 1, rect.y + i, a, c, 0, 0);

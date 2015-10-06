@@ -16,6 +16,8 @@
 
 #define MAX_LINELEN 1024
 
+bool autopick_auto_id(object_type *o_ptr);
+
 /*
  * Macros for Keywords
  */
@@ -1281,6 +1283,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
             switch (o_ptr->feeling)
             {
             case FEEL_GOOD:
+            case FEEL_ENCHANTED:
                 /* It's good */
                 break;
 
@@ -1913,6 +1916,17 @@ void autopick_alter_item(int item, bool destroy)
 
     /* Get the index in the auto-pick/destroy list */
     idx = is_autopick(o_ptr);
+
+    /* Auto-id: Try "?unidentified good" for a L30 monk ... */
+    if (idx >= 0 && autopick_list[idx].action & DO_AUTO_ID)
+    {
+        if (autopick_auto_id(o_ptr))
+        {
+            int new_idx = is_autopick(o_ptr); /* requery for destroy/pickup/inscribe once known */
+            if (new_idx >= 0)
+                idx = new_idx;
+        }
+    }
 
     /* Do auto-inscription */
     auto_inscribe_item(o_ptr, idx);

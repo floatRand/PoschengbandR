@@ -4922,7 +4922,7 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
 
         /* Update stuff */
         p_ptr->update |= (PU_VIEW | PU_LITE | PU_FLOW | PU_MON_LITE | PU_DISTANCE);
-        p_ptr->window |= PW_MONSTER_LIST;
+        p_ptr->window |= PW_MONSTER_LIST | PW_OBJECT_LIST;
 
         if (!view_unsafe_grids)
             p_ptr->redraw |= PR_STATUS;

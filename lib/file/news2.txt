@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version><color:*>
+<color:y>PosChengband <$:version></color>
 <style:screenshot>
 <color:U>You attack the Frost giant:</color> You miss. You hit. You are frozen. You
 hit. You are frozen. You hit. You are frozen. You hit. You are      LEVEL <color:G>    22</color>
@@ -27,5 +27,5 @@ was destroyed!                                                      WIS : <color
                 <color:o>*</color>  <color:o>*</color> #   #  ..........<color:o>*</color><color:s>%</color>#<color:s>%%%</color>%<color:o>*</color>#   #%    ## # <color:s>%</color> <color:o>*</color> #
         ###       <color:o>**</color> %   #<color:o>*</color>   .......<color:s>%%</color>       ##<color:o>*</color> ##<color:o>*</color>#% ## ###   #
 <color:s>Angband: 1500 ft</color>                             <color:G>DTrap</color>
-<style:normal>
-              [Press <style:keypress>?<style:normal> for Credits. Press Any Other Key to Play]
+</style>
+              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]

@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version><color:*>
+<color:y>PosChengband <$:version></color>
 <style:screenshot>
 You have The Long Sword 'Ringil' (5d5) (+22,+25) (+5) (p).
                                                                     LEVEL <color:G>    23</color>
@@ -25,5 +25,5 @@ You have The Long Sword 'Ringil' (5d5) (+22,+25) (+5) (p).
   <color:U>###</color>      <color:U>###</color>                <color:U>#####</color>                                 <color:D>Cursed</color>
                                                                     <color:B>Study (3)</color>
 <color:W>Labyrinth: L28</color>
-<style:normal>
-              [Press <style:keypress>?<style:normal> for Credits. Press Any Other Key to Play]
+</style>
+              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]

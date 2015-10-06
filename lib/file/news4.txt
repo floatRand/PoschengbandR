@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version><color:*>
+<color:y>PosChengband <$:version></color>
 <style:screenshot>
 <color:U>You attack the Warg:</color> You butt the Warg. How heroic! <color:R>You have slain </color>
 <color:R>the Warg.</color> How heroic! <color:B>You just completed your quest!</color> A magical      LEVEL <color:G>    10</color>
@@ -23,5 +23,5 @@ something roll beneath your feet.<color:U>)</color>                             
 
                                                                     <color:G>Fast (+1)</color>
 <color:W>Stronghold: L5</color>
-<style:normal>
-              [Press <style:keypress>?<style:normal> for Credits. Press Any Other Key to Play]
+</style>
+              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]

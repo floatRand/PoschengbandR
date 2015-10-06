@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version><color:*>
+<color:y>PosChengband <$:version></color>
 <style:screenshot>
 <color:U>You attack the Druid:</color> You kick. You <color:y>double-kick</color>. He is stunned.
 You <color:y>double-kick</color>. You kick him in the ankle. He starts limping       LEVEL <color:G>    23</color>
@@ -24,5 +24,5 @@ slower. The Druid flees in terror!                                  EXP <color:G
 <color:U>##################################################################</color>  <color:G>Fast (+3)</color>
 <color:U>##################################################################</color>  <color:B>Study (3)</color>
 Arena
-<style:normal>
-              [Press <style:keypress>?<style:normal> for Credits. Press Any Other Key to Play]
+</style>
+              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]
