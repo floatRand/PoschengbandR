@@ -1588,7 +1588,7 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
         {
             if (info_ptr->group == _GROUP_LOS)
             {
-                c_put_str(TERM_YELLOW,
+                c_put_str(TERM_WHITE,
                       format("You see %d monster%s, %d %s awake:",
                              info_ptr->ct_los,
                              info_ptr->ct_los != 1 ? "s" : "",
@@ -1598,7 +1598,7 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
             }
             else if (info_ptr->group == _GROUP_AWARE)
             {
-                c_put_str(TERM_L_BLUE,
+                c_put_str(TERM_WHITE,
                       format("You are aware of %d %smonster%s, %d %s awake:",
                              info_ptr->ct_total,
                              list->ct_los ? "other " : "",
@@ -2044,7 +2044,7 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
         {
             if (info_ptr->group == _GROUP_AUTOPICK)
             {
-                c_put_str(TERM_YELLOW,
+                c_put_str(TERM_WHITE,
                       format("There %s %d wanted object%s:",
                              info_ptr->count != 1 ? "are" : "is",
                              info_ptr->count,
@@ -2053,7 +2053,7 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
             }
             else
             {
-                c_put_str(TERM_L_BLUE,
+                c_put_str(TERM_WHITE,
                       format("There %s %d %sobject%s:",
                              info_ptr->count != 1 ? "are" : "is",
                              info_ptr->count,
