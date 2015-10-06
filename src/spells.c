@@ -344,13 +344,11 @@ cptr get_spell_spoiler_name(ang_spell spell)
 
 static int _col_height(int ct)
 {
-    int  w, h;
-    int result = ct;
+    int    result = ct;
+    rect_t display = ui_menu_rect();
 
-    Term_get_size(&w, &h);
-
-    h -= 5; /* Room for browsing */
-    if (result > h)
+    display.cy -= 5; /* Room for browsing */
+    if (result > display.cy)
     {
         result = (ct + 1)/2;
     }
@@ -362,8 +360,7 @@ static void _list_spells(spell_info* spells, int ct, int max_cost)
 {
     char temp[140];
     int  i;
-    int  y = 1;
-    int  x = 13;
+    rect_t display = ui_menu_rect();
     int  col_height = _col_height(ct);
     int  col_width;
     variant name, info, color;
@@ -372,20 +369,16 @@ static void _list_spells(spell_info* spells, int ct, int max_cost)
     var_init(&info);
     var_init(&color);
 
-    Term_erase(x, y, 255);
-
+    Term_erase(display.x, display.y, display.cx);
     if (col_height == ct)
     {
-        Term_erase(x, y, 255);
-        put_str("Lvl Cost Fail Desc", y, x + 29);
+        put_str("Lvl Cost Fail Desc", display.y, display.x + 29);
     }
     else
     {
         col_width = 42;
-        x = 1;
-        Term_erase(x, y, 255);
-        put_str("Lvl Cost Fail", y, x + 29);
-        put_str("Lvl Cost Fail", y, x + col_width + 29);
+        put_str("Lvl Cost Fail", display.y, display.x + 29);
+        put_str("Lvl Cost Fail", display.y, display.x + col_width + 29);
     }
 
     for (i = 0; i < ct; i++)
@@ -431,14 +424,15 @@ static void _list_spells(spell_info* spells, int ct, int max_cost)
 
         if (i < col_height)
         {
-            c_prt(attr, temp, y + i + 1, x);
+            Term_erase(display.x, display.y + i + 1, display.cx);
+            c_put_str(attr, temp, display.y + i + 1, display.x);
         }
         else
         {
-            c_prt(attr, temp, y + (i - col_height) + 1, (x + col_width));
+            c_put_str(attr, temp, display.y + (i - col_height) + 1, display.x + col_width);
         }
     }
-    Term_erase(x, y + col_height + 1, 255);
+    Term_erase(display.x, display.y + col_height + 1, display.cx);
     var_clear(&name);
     var_clear(&info);
     var_clear(&color);
@@ -456,23 +450,25 @@ static bool _describe_spell(spell_info *spell, int col_height)
     {
         char tmp[62*5];
         int i, line;
+        rect_t display = ui_menu_rect();
 
         /* 2 lines below list of spells, 5 lines for description */
         for (i = 0; i < 7; i++)
-            Term_erase(13, col_height + i + 2, 255);
+            Term_erase(display.x, display.y + col_height + i + 2, display.cx);
 
         /* Get the description, and line break it (max 5 lines) */
         (spell->fn)(SPELL_DESC, &info);
         roff_to_buf(var_get_string(&info), 62, tmp, sizeof(tmp));
 
-        for(i = 0, line = col_height + 3; tmp[i]; i += 1+strlen(&tmp[i]))
+        line = display.y + col_height + 3;
+        for(i = 0; tmp[i]; i += 1+strlen(&tmp[i]))
         {
-            prt(&tmp[i], line, 15);
+            put_str(&tmp[i], line, display.x + 2);
             line++;
         }
 
         (spell->fn)(SPELL_INFO, &info);
-        prt(format("%^s", var_get_string(&info)), line, 15);
+        put_str(format("%^s", var_get_string(&info)), line, display.x + 2);
         result = FALSE;
     }
     var_clear(&info);
