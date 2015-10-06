@@ -131,7 +131,7 @@ static void _do_identify_aux(int item)
         o_ptr = &o_list[-item];
 
     old_known = identify_item(o_ptr);
-    object_desc(o_name, o_ptr, 0);
+    object_desc(o_name, o_ptr, OD_COLOR_CODED);
 
     if (equip_is_valid_slot(item))
         msg_format("%^s: %s (%c).", equip_describe_slot(item), o_name, index_to_label(item));
@@ -3249,7 +3249,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (cast)
         {
             device_noticed = TRUE;
-            if (!ident_spell(NULL)) return NULL;
+            if (!_do_identify()) return NULL;
         }
         break;
     case EFFECT_IDENTIFY_FULL:

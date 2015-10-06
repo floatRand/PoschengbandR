@@ -3786,7 +3786,7 @@ martial_arts ma_blows[MAX_MA] =
     { "Kick",          "You <color:U>kick</color>.",                 11, 10, 3, 4, MA_SLOW },
     { "Uppercut",      "You <color:U>uppercut</color>.",             13, 12, 4, 4, 6 },
     { "Double Kick",   "You <color:y>double-kick</color>.",          16, 15, 5, 4, 8 },
-    { "Cat's Claw",    "You land a <color:y>Cat's Claw<color>.",     20, 20, 5, 5, 0 },
+    { "Cat's Claw",    "You land a <color:y>Cat's Claw</color>.",     20, 20, 5, 5, 0 },
     { "Jump Kick",     "You <color:y>jump kick</color>.",            25, 25, 5, 6, 10 },
     { "Eagle's Claw",  "You land an <color:o>Eagle's Claw</color>.", 29, 25, 6, 6, 0 },
     { "Circle Kick",   "You <color:o>circle kick</color>.",          33, 30, 6, 8, 10 },

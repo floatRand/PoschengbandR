@@ -1199,8 +1199,14 @@ static void do_cmd_device_aux(int item)
         }
     }
 
+    if (o_ptr->activation.type == EFFECT_IDENTIFY)
+        device_available_charges = device_sp(o_ptr) / o_ptr->activation.cost;
+
     sound(SOUND_ZAP);
     used = device_use(o_ptr, boost);
+
+    if (o_ptr->activation.type == EFFECT_IDENTIFY)
+        charges = device_used_charges;
 
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
     object_tried(o_ptr);
