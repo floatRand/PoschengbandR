@@ -2845,6 +2845,7 @@ enum summon_specific_e {
 #define add_flag(ARRAY, INDEX) ((ARRAY)[(INDEX)/32] |= (1L << ((INDEX)%32)))
 #define remove_flag(ARRAY, INDEX) ((ARRAY)[(INDEX)/32] &= ~(1L << ((INDEX)%32)))
 
+#define TR_INVALID            -1
 #define TR_STR                 0
 #define TR_INT                 1
 #define TR_WIS                 2

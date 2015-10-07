@@ -541,6 +541,8 @@ cptr doc_parse_tag(cptr pos, doc_tag_ptr tag)
             result.type = DOC_TAG_INDENT;
         else if (strcmp(name, "/indent") == 0)
             result.type = DOC_TAG_CLOSE_INDENT;
+        else if (strcmp(name, "tab") == 0)
+            result.type = DOC_TAG_TAB;
         else
             return pos;
 
@@ -763,6 +765,13 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         case DOC_TAG_VAR:
             _doc_process_var(doc, string_buffer(arg));
             break;
+        case DOC_TAG_TAB:
+        {
+            int pos = atoi(string_buffer(arg));
+            if (pos > doc->cursor.x)
+                doc_insert_space(doc, pos - doc->cursor.x);
+            break;
+        }
         case DOC_TAG_TOPIC:
         {
             doc_bookmark_ptr mark = malloc(sizeof(doc_bookmark_t));
@@ -984,6 +993,30 @@ doc_pos_t doc_insert_text(doc_ptr doc, byte a, cptr text)
 
     assert(0 <= doc->cursor.x && doc->cursor.x < doc->width);
     return doc->cursor;
+}
+
+doc_pos_t doc_printf(doc_ptr doc, const char *fmt, ...)
+{
+    va_list vp;
+    char buf[1024];
+
+    va_start(vp, fmt);
+    (void)vstrnfmt(buf, 1024, fmt, vp);
+    va_end(vp);
+
+    return doc_insert(doc, buf);
+}
+
+doc_pos_t doc_cprintf(doc_ptr doc, byte a, const char *fmt, ...)
+{
+    va_list vp;
+    char buf[1024];
+
+    va_start(vp, fmt);
+    (void)vstrnfmt(buf, 1024, fmt, vp);
+    va_end(vp);
+
+    return doc_insert_text(doc, a, buf);
 }
 
 doc_pos_t doc_insert_doc(doc_ptr dest_doc, doc_ptr src_doc, int indent)
@@ -1370,32 +1403,40 @@ void doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos)
 #define _OK 0
 int doc_display(doc_ptr doc, cptr caption, int top)
 {
+    rect_t display = {0};
+    Term_get_size(&display.cx, &display.cy);
+    return doc_display_aux(doc, caption, top, display);
+}
+int doc_display_aux(doc_ptr doc, cptr caption, int top, rect_t display)
+{
     int     rc = _OK;
+    int     i;
     char    finder_str[81];
     char    back_str[81];
-    int     cx, cy;
     int     page_size;
     bool    done = FALSE;
 
     strcpy(finder_str, "");
 
-
-    Term_get_size(&cx, &cy);
-    page_size = cy - 4;
+    page_size = display.cy - 4;
 
     if (top < 0)
         top = 0;
     if (top > doc->cursor.y - page_size)
         top = MAX(0, doc->cursor.y - page_size);
 
-    Term_clear();
+    for (i = 0; i < display.cy; i++)
+        Term_erase(display.x, display.y + i, display.cx);
+
     while (!done)
     {
         int cmd;
 
-        prt(format("[%s, Line %d/%d]", caption, top, doc->cursor.y), 0, 0);
-        doc_sync_term(doc, doc_region_create(0, top, doc->width, top + page_size - 1), doc_pos_create(0, 2));
-        prt("[Press ESC to exit. Press ? for help]", cy - 1, 0);
+        Term_erase(display.x, display.y, display.cx);
+        put_str(format("[%s, Line %d/%d]", caption, top, doc->cursor.y), display.y, display.x);
+        doc_sync_term(doc, doc_region_create(0, top, doc->width, top + page_size - 1), doc_pos_create(display.x, display.y + 2));
+        Term_erase(display.x, display.y + display.cy - 1, display.cx);
+        put_str("[Press ESC to exit. Press ? for help]", display.y + display.cy - 1, display.x);
 
         cmd = inkey_special(TRUE);
 
@@ -1404,7 +1445,7 @@ int doc_display(doc_ptr doc, cptr caption, int top)
             doc_link_ptr link = int_map_find(doc->links, cmd);
             if (link)
             {
-                rc = doc_display_help(string_buffer(link->file), string_buffer(link->topic));
+                rc = doc_display_help_aux(string_buffer(link->file), string_buffer(link->topic), display);
                 if (rc == _UNWIND)
                     done = TRUE;
                 continue;
@@ -1416,7 +1457,7 @@ int doc_display(doc_ptr doc, cptr caption, int top)
         case '?':
             if (!strstr(caption, "helpinfo.txt"))
             {
-                rc = doc_display_help("helpinfo.txt", NULL);
+                rc = doc_display_help_aux("helpinfo.txt", NULL, display);
                 if (rc == _UNWIND)
                     done = TRUE;
             }
@@ -1510,7 +1551,8 @@ int doc_display(doc_ptr doc, cptr caption, int top)
             break;
         }
         case '/':
-            prt("Find: ", cy - 1, 0);
+            Term_erase(display.x, display.y + display.cy - 1, display.cx);
+            put_str("Find: ", display.y + display.cy - 1, display.x);
             strcpy(back_str, finder_str);
             if (askfor(finder_str, 80))
             {
@@ -1531,7 +1573,8 @@ int doc_display(doc_ptr doc, cptr caption, int top)
             else strcpy(finder_str, back_str);
             break;
         case '\\':
-            prt("Find: ", cy - 1, 0);
+            Term_erase(display.x, display.y + display.cy - 1, display.cx);
+            put_str("Find: ", display.y + display.cy - 1, display.x);
             strcpy(back_str, finder_str);
             if (askfor(finder_str, 80))
             {
@@ -1558,6 +1601,12 @@ int doc_display(doc_ptr doc, cptr caption, int top)
 
 int doc_display_help(cptr file_name, cptr topic)
 {
+    rect_t display = {0};
+    Term_get_size(&display.cx, &display.cy);
+    return doc_display_help_aux(file_name, topic, display);
+}
+int doc_display_help_aux(cptr file_name, cptr topic, rect_t display)
+{
     int     rc = _OK;
     FILE   *fp = NULL;
     char    path[1024];
@@ -1572,7 +1621,7 @@ int doc_display_help(cptr file_name, cptr topic)
         if (pos)
         {
             string_ptr name = string_nalloc(file_name, pos - file_name);
-            int        result = doc_display_help(string_buffer(name), pos + 1);
+            int        result = doc_display_help_aux(string_buffer(name), pos + 1, display);
 
             string_free(name);
             return result;
@@ -1589,7 +1638,7 @@ int doc_display_help(cptr file_name, cptr topic)
         return _OK;
     }
 
-    doc = doc_alloc(80); /* Note: We include screen dumps of 80x27, so don't go below 80 */
+    doc = doc_alloc(MIN(80, display.cx));
     doc_read_file(doc, fp);
 
     if (topic)
@@ -1599,7 +1648,7 @@ int doc_display_help(cptr file_name, cptr topic)
             top = pos.y;
     }
 
-    rc = doc_display(doc, caption, top);
+    rc = doc_display_aux(doc, caption, top, display);
     doc_free(doc);
     return rc;
 }

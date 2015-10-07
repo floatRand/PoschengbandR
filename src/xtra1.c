@@ -602,7 +602,7 @@ static struct {
     {TERM_L_RED, "If", "Infr"},
     {TERM_UMBER, "Sl", "Stealth"},
     {TERM_YELLOW, "Stlt", "Stealth"},
-    {TERM_WHITE, "Rc", "Recall"},
+    {TERM_L_BLUE, "Rc", "Recall"},
     {TERM_WHITE, "Al", "Alter"},
     /* Hex */
     {TERM_WHITE, "SCo", "SCold"},

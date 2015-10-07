@@ -1824,7 +1824,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     {
         int avgdam;        
         int tmul = bow_mult(bow_ptr);
-        s16b energy_fire = bow_energy(bow_ptr->sval);
+        /*s16b energy_fire = bow_energy(bow_ptr->sval);*/
 
         if (p_ptr->big_shot && o_ptr->tval == p_ptr->shooter_info.tval_ammo)
             avgdam = o_ptr->dd * 2 * (o_ptr->ds + 1) * 10 / 2;

@@ -382,48 +382,136 @@ void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
     }
 }
 
-/*
- * Describe a "fully identified" item
+/* Describe an Object for Display to the User
+   Displays detailed description as well as information
+   for each known flag. Output is word wrapped and color
+   formatted.
  */
-bool screen_object(object_type *o_ptr, u32b mode)
+static int _obj_desc_calc_net(int pval, u32b flgs[TR_FLAG_SIZE], int which, int which_dec)
 {
-    int  i = 0, j, k;
-    u32b flgs[TR_FLAG_SIZE];
-    char block1[70 * 20]; /* TODO: Rewrite me! */
-    char block3[70 * 20];
-    cptr info[128]; /* Might point into blockX or be a static string */
-    char o_name[MAX_NLEN];
-    char replacement_name[MAX_NLEN];
-    int  wid, hgt;
+    int net = 0;
 
-    int trivial_info = 0;
+    if (which != TR_INVALID && have_flag(flgs, which))
+        net += pval;
+    if (which_dec != TR_INVALID && have_flag(flgs, which_dec))
+        net -= pval;
 
-    /* Extract the flags */
+    return net;
+}
+
+static string_ptr _obj_desc_sustain(u32b flgs[TR_FLAG_SIZE], int which)
+{
+    string_ptr result = NULL;
+    if (have_flag(flgs, TR_SUST_STR + which))
+    {
+        result = string_alloc(NULL);
+        string_printf(result, "<color:G>%s</color>", stat_name_true[which]);
+    }
+    return result;
+}
+
+static string_ptr _obj_desc_stat(int pval, u32b flgs[TR_FLAG_SIZE], int which)
+{
+    string_ptr result = NULL;
+    int  net = _obj_desc_calc_net(pval, flgs, TR_STR + which, TR_DEC_STR + which);
+
+    if (net)
+    {
+        result = string_alloc(NULL);
+        string_printf(result, "<color:%c>%s</color>",
+            (net > 0) ? 'G' : 'R', stat_name_true[which]);
+    }
+
+    return result;
+}
+
+static void _obj_desc_print_list(doc_ptr doc, vec_ptr v)
+{
+    int ct = vec_length(v);
+    int i;
+    for (i = 0; i < ct; i++)
+    {
+        string_ptr s = vec_get(v, i);
+        if (i < ct - 1)
+            doc_printf(doc, "%s, ", string_buffer(s));
+        else
+            doc_insert(doc, string_buffer(s));
+    }
+}
+
+static void _obj_desc_add_list(vec_ptr v, string_ptr s)
+{
+    if (s)
+        vec_add(v, s);
+}
+
+static string_ptr _obj_desc_ability(int pval, u32b flgs[TR_FLAG_SIZE], int which, int which_dec, cptr name)
+{
+    string_ptr result = NULL;
+    int        net = _obj_desc_calc_net(pval, flgs, which, which_dec);
+
+    if (net)
+    {
+        result = string_alloc(NULL);
+        string_printf(result, "<color:%c>%s</color>", (net > 0) ? 'B' : 'R', name);
+    }
+    return result;
+}
+
+static string_ptr _obj_desc_resist(u32b flgs[TR_FLAG_SIZE], int which)
+{
+    string_ptr result = NULL;
+    if (have_flag(flgs, res_get_object_immune_flag(which)))
+    {
+        result = string_alloc(NULL);
+        string_printf(result, "<color:y>*%s*</color>", res_name(which));
+    }
+    else
+    {
+        int net = 0;
+        if (have_flag(flgs, res_get_object_flag(which)))
+            net++;
+        if (have_flag(flgs, res_get_object_vuln_flag(which)))
+            net--;
+
+        if (net < 0)
+        {
+            result = string_alloc(NULL);
+            string_printf(result, "<color:R>!%s!</color>", res_name(which));
+        }
+        if (net > 0)
+        {
+            result = string_alloc(NULL);
+            string_printf(result, "<color:G>%s</color>", res_name(which));
+        }
+    }
+    return result;
+}
+
+void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
+{
+    u32b      flgs[TR_FLAG_SIZE];
+    int       i, net;
+    doc_pos_t pos;
+    vec_ptr   v = vec_alloc((vec_free_f)string_free);
+
     object_flags_known(o_ptr, flgs);
 
-    /* Extract the description */
+    /* Description */
     if (o_ptr->tval == TV_SCROLL || o_ptr->tval == TV_POTION)
     {
-        char scratch[70 * 20];
-        cptr res = do_device(o_ptr, SPELL_DESC, 0);
-        strcpy(scratch, res);
+        doc_printf(doc, "\n%s\n\n", do_device(o_ptr, SPELL_DESC, 0));
         if (o_ptr->ident & IDENT_MENTAL)
         {
-            res = do_device(o_ptr, SPELL_INFO, 0);
-            if (res && strlen(res))
-            {   /* Here is a classic case where calling format() leads to bugs ... sigh */
-                strcat(scratch, "\nInfo: ");
-                strcat(scratch, res);
-            }   /* But format() here is fine ... Obvious, huh? */
+            cptr info = do_device(o_ptr, SPELL_INFO, 0);
+            if (info && strlen(info))
+                doc_printf(doc, "<color:U>Info: </color>%s\n", info);
             if (o_ptr->tval == TV_SCROLL)
             {
                 int fail = device_calc_fail_rate(o_ptr);
-                strcat(scratch, format("\nFail: %d.%d%%", fail/10, fail%10));    
+                doc_printf(doc, "<color:U>Fail: </color>%d.%d%%\n", fail/10, fail%10);
             }
         }
-        roff_to_buf(scratch, 77-15, block1, sizeof(block1));
-        for (j = 0; block1[j]; j += 1 + strlen(&block1[j]))
-        { info[i] = &block1[j]; i++;}
     }
     else
     {
@@ -434,16 +522,13 @@ bool screen_object(object_type *o_ptr, u32b mode)
             text = k_text + k_info[o_ptr->k_idx].text;
         if (strlen(text))
         {
-            roff_to_buf(text, 77 - 15, block1, sizeof(block1));
-            for (j = 0; block1[j]; j += 1 + strlen(&block1[j]))
-            { info[i] = &block1[j]; i++;}
-            info[i++] = "";
+            doc_printf(doc, "\n%s\n\n", text);
         }
     }
+
+    /* Activations */
     if (obj_has_effect(o_ptr) && object_is_known(o_ptr))
     {
-        char scratch[70 * 20];
-
         switch (o_ptr->tval)
         {
         case TV_WAND: case TV_ROD: case TV_STAFF:
@@ -457,24 +542,24 @@ bool screen_object(object_type *o_ptr, u32b mode)
                 boost = device_power(100) - 100;
 
             res = do_device(o_ptr, SPELL_DESC, boost);
-            strcpy(scratch, res);
-            strcat(scratch, "\n ");
+            if (res && strlen(res))
+            {
+                doc_insert(doc, res);
+                doc_newline(doc);
+            }
             if (o_ptr->ident & IDENT_MENTAL)
             {
                 int fail = device_calc_fail_rate(o_ptr);
 
                 res = do_device(o_ptr, SPELL_INFO, boost);
                 if (res && strlen(res))
-                {
-                    strcat(scratch, "\nInfo: ");
-                    strcat(scratch, res);
-                }
-                strcat(scratch, format("\nFail: %d.%d%%", fail/10, fail%10));
-                strcat(scratch, "\n ");
-                strcat(scratch, format("\nIt has a power rating of %d.", device_level(o_ptr)));
-                strcat(scratch, format("\nIt has a difficulty rating of %d.", o_ptr->activation.difficulty));
-                strcat(scratch, format("\nIt currently has %d out of %d sp.", device_sp(o_ptr), device_max_sp(o_ptr)));
-                strcat(scratch, format("\nEach charge costs %d sp.", o_ptr->activation.cost));
+                    doc_printf(doc, "<color:U>Info: </color>%s\n", res);
+                doc_printf(doc, "<color:U>Fail: </color>%d.%d%%\n\n", fail/10, fail%10);
+
+                doc_printf(doc, "It has a power rating of %d.", device_level(o_ptr));
+                doc_printf(doc, "It has a difficulty rating of %d.\n", o_ptr->activation.difficulty);
+                doc_printf(doc, "It currently has %d out of %d sp.\n", device_sp(o_ptr), device_max_sp(o_ptr));
+                doc_printf(doc, "Each charge costs %d sp.\n", o_ptr->activation.cost);
             }
             break;
         }
@@ -483,8 +568,7 @@ bool screen_object(object_type *o_ptr, u32b mode)
             effect_t e = obj_get_effect(o_ptr);
             cptr     res = do_effect(&e, SPELL_NAME, 0);
 
-            strcpy(scratch, "Activation: ");
-            strcat(scratch, res);
+            doc_printf(doc, "<color:U>Activation:</color><tab:12><color:B>%s</color>\n", res);
 
             if (o_ptr->ident & IDENT_MENTAL)
             {
@@ -492,327 +576,216 @@ bool screen_object(object_type *o_ptr, u32b mode)
 
                 res = do_effect(&e, SPELL_INFO, 0);
                 if (res && strlen(res))
-                {
-                    strcat(scratch, "\n      Info: ");
-                    strcat(scratch, res);
-                }
-                strcat(scratch, format("\n      Fail: %d.%d%%", fail/10, fail%10));
+                    doc_printf(doc, "<color:U>Info:</color><tab:12>%s\n", res);
+                doc_printf(doc, "<color:U>Fail:</color><tab:12>%d.%d%%\n", fail/10, fail%10);
                 if (e.cost)
-                {
-                    strcat(scratch, "\n   Timeout: ");
-                    strcat(scratch, format("%d", e.cost));
-                }
+                    doc_printf(doc, "<color:U>Timeout:</color><tab:12>%d\n", e.cost);
             }
         }
         }
 
-        strcat(scratch, "\n ");
-
-        roff_to_buf(scratch, 77-15, block3, sizeof(block3));
-        for (j = 0; block3[j]; j += 1 + strlen(&block3[j]))
-        { info[i] = &block3[j]; i++;}
+        doc_newline(doc);
     }
 
-    if (object_is_equipment(o_ptr))
+    /* Stats */
+    vec_clear(v);
+    for (i = A_STR; i < MAX_STATS; i++)
+        _obj_desc_add_list(v, _obj_desc_stat(o_ptr->pval, flgs, i));
+    if (vec_length(v))
     {
-        /* Descriptions of a basic equipment is just a flavor */
-        trivial_info = i;
+        doc_insert(doc, "<color:U>Stats:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
     }
 
-    /* Figurines, a hack */
+    /* Sustains */
+    vec_clear(v);
+    for (i = A_STR; i < MAX_STATS; i++)
+        _obj_desc_add_list(v, _obj_desc_sustain(flgs, i));
+    if (vec_length(v))
+    {
+        doc_insert(doc, "<color:U>Sustains:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
+    }
+
+    /* Brands */
+    vec_clear(v);
+    if (have_flag(flgs, TR_BRAND_ACID))
+        vec_add(v, string_alloc("<color:D>Acid</color>"));
+    if (have_flag(flgs, TR_BRAND_ELEC))
+        vec_add(v, string_alloc("<color:b>Electricity</color>"));
+    if (have_flag(flgs, TR_BRAND_FIRE))
+        vec_add(v, string_alloc("<color:R>Fire</color>"));
+    if (have_flag(flgs, TR_BRAND_COLD))
+        vec_add(v, string_alloc("<color:W>Cold</color>"));
+    if (have_flag(flgs, TR_BRAND_POIS))
+        vec_add(v, string_alloc("<color:g>Poison</color>"));
+    if (have_flag(flgs, TR_CHAOTIC))
+        vec_add(v, string_alloc("<color:v>Chaos</color>"));
+    if (have_flag(flgs, TR_VAMPIRIC))
+        vec_add(v, string_alloc("<color:D>Vampiric</color>"));
+    if (have_flag(flgs, TR_IMPACT))
+        vec_add(v, string_alloc("<color:U>Earthquake</color>"));
+    if (have_flag(flgs, TR_VORPAL2))
+        vec_add(v, string_alloc("<color:v>*Sharpness*</color>"));
+    else if (have_flag(flgs, TR_VORPAL))
+        vec_add(v, string_alloc("<color:R>Sharpness</color>"));
+    if (have_flag(flgs, TR_STUN))
+        vec_add(v, string_alloc("<color:B>Stunning</color>"));
+    if (vec_length(v))
+    {
+        doc_insert(doc, "<color:U>Brands:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
+    }
+
+    /* Slays */
+    pos = doc_cursor(doc);
+    /* ...  */
+    if (doc_pos_compare(doc_cursor(doc), pos) > 0)
+        doc_newline(doc);
+
+    /* Resists */
+    vec_clear(v);
+    for (i = 0; i < RES_MAX; i++)
+        _obj_desc_add_list(v, _obj_desc_resist(flgs, i));
+    if (vec_length(v))
+    {
+        doc_insert(doc, "<color:U>Resists:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
+    }
+
+    /* Abilities */
+    vec_clear(v);
+    if (!object_is_device(o_ptr))
+    {
+        _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_SPEED, TR_DEC_SPEED, "Speed"));
+        _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_DEVICE_POWER, TR_INVALID, "Device Power"));
+    }
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_MAGIC_MASTERY, TR_DEC_MAGIC_MASTERY, "Device Skill"));
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_STEALTH, TR_DEC_STEALTH, "Stealth"));
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_SEARCH, TR_INVALID, "Searching"));
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_INFRA, TR_INVALID, "Infravision"));
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_TUNNEL, TR_INVALID, "Tunneling"));
+
+    if (vec_length(v))
+    {
+        doc_insert(doc, "<color:U>Abilities:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
+    }
+
+    /* Misc */
+    doc_newline(doc);
+    if (object_is_device(o_ptr))
+    {
+        net = _obj_desc_calc_net(o_ptr->pval, flgs, TR_SPEED, TR_DEC_SPEED);
+        if (net)
+            doc_printf(doc, "It may be used %s quickly than normal.", (net > 0) ? "more" : "<color:R>less</color>");
+
+        net = _obj_desc_calc_net(o_ptr->pval, flgs, TR_DEVICE_POWER, TR_INVALID);
+        if (net)
+            doc_printf(doc, "It is %s powerful than normal.\n", (net > 0) ? "more" : "<color:R>less</color>");
+
+        net = _obj_desc_calc_net(o_ptr->pval, flgs, TR_EASY_SPELL, TR_INVALID);
+        if (net)
+            doc_printf(doc, "It is %s than normal to use.\n", (net > 0) ? "easier" : "<color:R>harder</color>");
+    }
+    else
+    {
+        if (have_flag(flgs, TR_EASY_SPELL))
+            doc_insert(doc, "It affects your ability to cast spells.\n");
+    }
+    net = _obj_desc_calc_net(o_ptr->pval, flgs, TR_WEAPONMASTERY, TR_INVALID);
+    if (net)
+    {
+        doc_printf(doc, "It %s the damage dice of your melee weapon.\n",
+            (net > 0) ? "increases" : "<color:R>decreases</color>");
+    }
+
     if (o_ptr->tval == TV_FIGURINE)
-    {
-        info[i++] = "It will transform into a pet when thrown.";
+        doc_insert(doc, "It will transform into a pet when thrown.\n");
 
+    switch (o_ptr->name1)
+    {
+    case ART_STONE_OF_NATURE:
+        doc_insert(doc, "It greatly enhances Nature magic.\n");
+        break;
+    case ART_STONE_OF_LIFE:
+        doc_insert(doc, "It greatly enhances Life magic.\n");
+        break;
+    case ART_STONE_OF_SORCERY:
+        doc_insert(doc, "It greatly enhances Sorcery magic.\n");
+        break;
+    case ART_STONE_OF_CHAOS:
+        doc_insert(doc, "It greatly enhances Chaos magic.\n");
+        break;
+    case ART_STONE_OF_DEATH:
+        doc_insert(doc, "It greatly enhances Death magic.\n");
+        break;
+    case ART_STONE_OF_TRUMP:
+        doc_insert(doc, "It greatly enhances Trump magic.\n");
+        break;
+    case ART_STONE_OF_DAEMON:
+        doc_insert(doc, "It greatly enhances Daemon magic.\n");
+        break;
+    case ART_STONE_OF_CRUSADE:
+        doc_insert(doc, "It greatly enhances Crusade magic.\n");
+        break;
+    case ART_STONE_OF_CRAFT:
+        doc_insert(doc, "It greatly enhances Craft magic.\n");
+        break;
+    case ART_STONE_OF_ARMAGEDDON:
+        doc_insert(doc, "It greatly enhances Armageddon magic.\n");
+        break;
+    case ART_STONEMASK:
+        doc_insert(doc, "It makes you turn into a vampire permanently.\n");
+        break;
     }
 
-    if (o_ptr->name1 == ART_STONE_OF_NATURE)
-        info[i++] = "It greatly enhances Nature magic.";
-    if (o_ptr->name1 == ART_STONE_OF_LIFE)
-        info[i++] = "It greatly enhances Life magic.";
-    if (o_ptr->name1 == ART_STONE_OF_SORCERY)
-        info[i++] = "It greatly enhances Sorcery magic.";
-    if (o_ptr->name1 == ART_STONE_OF_CHAOS)
-        info[i++] = "It greatly enhances Chaos magic.";
-    if (o_ptr->name1 == ART_STONE_OF_DEATH)
-        info[i++] = "It greatly enhances Death magic.";
-    if (o_ptr->name1 == ART_STONE_OF_TRUMP)
-        info[i++] = "It greatly enhances Trump magic.";
-    if (o_ptr->name1 == ART_STONE_OF_DAEMON)
-        info[i++] = "It greatly enhances Daemon magic.";
-    if (o_ptr->name1 == ART_STONE_OF_CRUSADE)
-        info[i++] = "It greatly enhances Crusade magic.";
-    if (o_ptr->name1 == ART_STONE_OF_CRAFT)
-        info[i++] = "It greatly enhances Craft magic.";
-    if (o_ptr->name1 == ART_STONE_OF_ARMAGEDDON)
-        info[i++] = "It greatly enhances Armageddon magic.";
+    if (object_is_(o_ptr, TV_SWORD, SV_POISON_NEEDLE))
+        doc_insert(doc, "It will attempt to kill a monster instantly.\n");
 
-    if (o_ptr->name1 == ART_STONEMASK)
-    {
-        info[i++] = "It makes you turn into a vampire permanently.";
-
-    }
-
-    if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_DOKUBARI))
-    {
-        info[i++] = "It will attempt to kill a monster instantly.";
-
-    }
-
-    if ((o_ptr->tval == TV_POLEARM) && (o_ptr->sval == SV_DEATH_SCYTHE))
-    {
-        info[i++] = "It causes you to strike yourself sometimes.";
-
-        info[i++] = "It always penetrates invulnerability barriers.";
-    }
+    if (object_is_(o_ptr, TV_POLEARM, SV_DEATH_SCYTHE))
+        doc_insert(doc, "It causes you to strike yourself sometimes.\nIt always penetrates invulnerability barriers.\n");
 
     if (o_ptr->name2 == EGO_GLOVES_GENJI || o_ptr->name1 == ART_MASTER_TONBERRY || o_ptr->name1 == ART_MEPHISTOPHELES)
-        info[i++] = "It affects your ability to hit when you are wielding two weapons.";
-
-    if (have_flag(flgs, TR_WEAPONMASTERY))
-        info[i++] = "It increases the damage dice of your melee weapon.";
-
-    if (have_flag(flgs, TR_EASY_SPELL))
-    {
-        if (object_is_device(o_ptr))
-            info[i++] = "It is easier to use.";
-        else
-        {
-            caster_info *caster_ptr = get_caster_info();
-            if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
-                info[i++] = "It affects your ability to cast spells.";
-        }
-    }
+        doc_insert(doc, "It affects your ability to hit when you are wielding two weapons.\n");
 
     if (o_ptr->tval == TV_STATUE)
     {
-        monster_race *r_ptr = &r_info[o_ptr->pval];
-
         if (o_ptr->pval == MON_BULLGATES)
-            info[i++] = "It is shameful.";
-        else if ( r_ptr->flags2 & (RF2_ELDRITCH_HORROR))
-            info[i++] = "It is fearful.";
+            doc_insert(doc, "It is shameful.\n");
+        else if (r_info[o_ptr->pval].flags2 & RF2_ELDRITCH_HORROR)
+            doc_insert(doc, "It is fearful.\n");
         else
-            info[i++] = "It is cheerful.";
+            doc_insert(doc, "It is cheerful.\n");
     }
-    
-    /* Hack -- describe lite's */
-    if (o_ptr->tval == TV_LITE)
-    {
-        if (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->art_flags, TR_DARKNESS))
-        {
-            info[i++] = "It provides no light.";
-
-            if (o_ptr->sval == SV_LITE_LANTERN)
-            {
-                info[i++] = "It decreases radius of light source by 2.";
-            }
-            else if (o_ptr->sval == SV_LITE_TORCH)
-            {
-                info[i++] = "It decreases radius of light source by 1.";
-            }
-            else
-            {
-                info[i++] = "It decreases radius of light source by 3.";
-            }
-        }
-        else if (o_ptr->name1 || o_ptr->art_name)
-        {
-            if (o_ptr->name1 == ART_EYE_OF_VECNA)
-            {
-                info[i++] = "It allows you to see in the dark.";
-            }
-            else
-            {
-                info[i++] = "It provides light (radius 3) forever.";
-            }
-        }
-        else if (o_ptr->name2 == EGO_LITE_EXTRA_LIGHT)
-        {
-            if (o_ptr->sval == SV_LITE_FEANOR)
-            {
-                info[i++] = "It provides light (radius 3) forever.";
-
-            }
-            else if (o_ptr->sval == SV_LITE_LANTERN)
-            {
-                info[i++] = "It provides light (radius 3) when fueled.";
-
-            }
-            else
-            {
-                info[i++] = "It provides light (radius 2) when fueled.";
-
-            }
-        }
-        else
-        {
-            if (o_ptr->sval == SV_LITE_FEANOR)
-            {
-                info[i++] = "It provides light (radius 2) forever.";
-
-            }
-            else if (o_ptr->sval == SV_LITE_LANTERN)
-            {
-                info[i++] = "It provides light (radius 2) when fueled.";
-
-            }
-            else
-            {
-                info[i++] = "It provides light (radius 1) when fueled.";
-
-            }
-        }
-        if (o_ptr->name2 == EGO_LITE_DURATION)
-        {
-            info[i++] = "It provides light for much longer time.";
-        }
-    }
-
-
-    /* And then describe it fully */
 
     if (have_flag(flgs, TR_RIDING))
     {
-        if ((o_ptr->tval == TV_POLEARM) && ((o_ptr->sval == SV_LANCE) || (o_ptr->sval == SV_HEAVY_LANCE)))
-            info[i++] = "It is made for use while riding.";
+        if ( object_is_(o_ptr, TV_POLEARM, SV_LANCE)
+          || object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE) )
+        {
+            doc_insert(doc, "It is made for use while riding.\n");
+        }
         else
         {
-            info[i++] = "It is suitable for use while riding.";
-            /* This information is not important enough */
-            trivial_info++;
+            doc_insert(doc, "It is suitable for use while riding.\n");
         }
     }
-    if (have_flag(flgs, TR_STR))
-    {
-        if (o_ptr->pval > 0)
-            info[i++] = "It increases your strength.";
-        else if (o_ptr->pval < 0)
-            info[i++] = "It decreases your strength.";
-    }
-    if (have_flag(flgs, TR_DEC_STR))
-       info[i++] = "It decreases your strength.";
-    
-    if (have_flag(flgs, TR_INT))
-    {
-        if (o_ptr->pval > 0)
-            info[i++] = "It increases your intelligence.";
-        else if (o_ptr->pval < 0)
-            info[i++] = "It decreases your intelligence.";
-    }
-    if (have_flag(flgs, TR_DEC_INT))
-       info[i++] = "It decreases your intelligence.";
-    
-    if (have_flag(flgs, TR_WIS))
-    {
-        if (o_ptr->pval > 0)
-            info[i++] = "It increases your wisdom.";
-        else if (o_ptr->pval < 0)
-            info[i++] = "It decreases your wisdom.";
-    }
-    if (have_flag(flgs, TR_DEC_WIS))
-       info[i++] = "It decreases your wisdom.";
 
-    if (have_flag(flgs, TR_DEX))
-    {
-        if (o_ptr->pval > 0)
-            info[i++] = "It increases your dexterity.";
-        else if (o_ptr->pval < 0)
-            info[i++] = "It decreases your dexterity.";
-    }
-    if (have_flag(flgs, TR_DEC_DEX))
-       info[i++] = "It decreases your dexterity.";
-
-    if (have_flag(flgs, TR_CON))
-    {
-        if (o_ptr->pval > 0)
-            info[i++] = "It increases your constitution.";
-        else if (o_ptr->pval < 0)
-            info[i++] = "It decreases your constitution.";
-    }
-    if (have_flag(flgs, TR_DEC_CON))
-       info[i++] = "It decreases your constitution.";
-
-    if (have_flag(flgs, TR_CHR))
-    {
-        if (o_ptr->pval > 0)
-            info[i++] = "It increases your charisma.";
-        else if (o_ptr->pval < 0)
-            info[i++] = "It decreases your charisma.";
-    }
-    if (have_flag(flgs, TR_DEC_CHR))
-       info[i++] = "It decreases your charisma.";
-
-    if (have_flag(flgs, TR_MAGIC_MASTERY))
-        info[i++] = "It affects your ability to use magic devices.";
-    if (have_flag(flgs, TR_DEC_MAGIC_MASTERY))
-        info[i++] = "It decreases your ability to use magic devices.";
-
-    if (have_flag(flgs, TR_DEVICE_POWER))
-    {
-        if (object_is_device(o_ptr))
-            info[i++] = "It is more powerful than normal.";
-        else
-            info[i++] = "It increases the power of your magic devices.";
-    }
-    if (have_flag(flgs, TR_STEALTH))
-    {
-        if (o_ptr->pval > 0)
-            info[i++] = "It increases your stealth.";
-        else if (o_ptr->pval < 0)
-            info[i++] = "It decreases your stealth.";
-    }
-    if (have_flag(flgs, TR_DEC_STEALTH))
-       info[i++] = "It decreases your stealth.";
+    vec_free(v);
 
 
-    if (have_flag(flgs, TR_SEARCH))
-        info[i++] = "It affects your searching.";
-    if (have_flag(flgs, TR_INFRA))
-        info[i++] = "It affects your infravision.";
-    if (have_flag(flgs, TR_TUNNEL))
-        info[i++] = "It affects your ability to tunnel.";
+#if 0
 
-    if (have_flag(flgs, TR_SPEED))
-    {
-        if (object_is_device(o_ptr))
-            info[i++] = "It may be used more quickly than normal.";
-        else
-            info[i++] = "It affects your speed.";
-    }
-    if (have_flag(flgs, TR_DEC_SPEED))
-        info[i++] = "It decreases your speed.";
+    /* And then describe it fully */
 
     if (have_flag(flgs, TR_BLOWS))
         info[i++] = "It affects your attack speed.";
-    if (have_flag(flgs, TR_BRAND_ACID))
-        info[i++] = "It does extra damage from acid.";
-    if (have_flag(flgs, TR_BRAND_ELEC))
-        info[i++] = "It does extra damage from electricity.";
-    if (have_flag(flgs, TR_BRAND_FIRE))
-        info[i++] = "It does extra damage from fire.";
-    if (have_flag(flgs, TR_BRAND_COLD))
-        info[i++] = "It does extra damage from frost.";
-    if (have_flag(flgs, TR_BRAND_POIS))
-        info[i++] = "It poisons your foes.";
-
-    if (have_flag(flgs, TR_CHAOTIC))
-        info[i++] = "It produces chaotic effects.";
-
-    if (have_flag(flgs, TR_VAMPIRIC))
-        info[i++] = "It drains life from your foes.";
-
-    if (have_flag(flgs, TR_IMPACT))
-        info[i++] = "It can cause earthquakes.";
-
-    if (have_flag(flgs, TR_VORPAL2))
-        info[i++] = "It is extremely sharp and can cut your foes.";
-
-    else if (have_flag(flgs, TR_VORPAL))
-        info[i++] = "It is very sharp and can cut your foes.";
-
-    if (have_flag(flgs, TR_STUN))
-        info[i++] = "It stuns your enemies.";
 
     if (have_flag(flgs, TR_ORDER))
         info[i++] = "It is a weapon of order.";
@@ -895,19 +868,6 @@ bool screen_object(object_type *o_ptr, u32b mode)
     if (have_flag(flgs, TR_DEC_LIFE))
         info[i++] = "It decreases your hitpoints.";
 
-    if (have_flag(flgs, TR_SUST_STR))
-        info[i++] = "It sustains your strength.";
-    if (have_flag(flgs, TR_SUST_INT))
-        info[i++] = "It sustains your intelligence.";
-    if (have_flag(flgs, TR_SUST_WIS))
-        info[i++] = "It sustains your wisdom.";
-    if (have_flag(flgs, TR_SUST_DEX))
-        info[i++] = "It sustains your dexterity.";
-    if (have_flag(flgs, TR_SUST_CON))
-        info[i++] = "It sustains your constitution.";
-    if (have_flag(flgs, TR_SUST_CHR))
-        info[i++] = "It sustains your charisma.";
-
     if (have_flag(flgs, TR_THROW))
         info[i++] = "It is perfectly balanced for throwing.";
     if (have_flag(flgs, TR_FREE_ACT))
@@ -919,97 +879,6 @@ bool screen_object(object_type *o_ptr, u32b mode)
         else
             info[i++] = "It provides resistance to life draining.";
     }
-    if (have_flag(flgs, TR_RES_FEAR))
-        info[i++] = "It provides resistance to fear.";
-    if (have_flag(flgs, TR_VULN_FEAR))
-        info[i++] = "It makes you vulnerable to fear.";
-
-    if (have_flag(flgs, TR_IM_ACID))
-        info[i++] = "It provides immunity to acid.";
-    if (have_flag(flgs, TR_RES_ACID))
-        info[i++] = "It provides resistance to acid.";
-    if (have_flag(flgs, TR_VULN_ACID))
-        info[i++] = "It makes you vulnerable to acid.";
-
-    if (have_flag(flgs, TR_IM_ELEC))
-        info[i++] = "It provides immunity to electricity.";
-    if (have_flag(flgs, TR_RES_ELEC))
-        info[i++] = "It provides resistance to electricity.";
-    if (have_flag(flgs, TR_VULN_ELEC))
-        info[i++] = "It makes you vulnerable to electricity.";
-
-    if (have_flag(flgs, TR_IM_FIRE))
-        info[i++] = "It provides immunity to fire.";
-    if (have_flag(flgs, TR_RES_FIRE))
-        info[i++] = "It provides resistance to fire.";
-    if (have_flag(flgs, TR_VULN_FIRE))
-        info[i++] = "It makes you vulnerable to fire.";
-
-    if (have_flag(flgs, TR_IM_COLD))
-        info[i++] = "It provides immunity to cold.";
-    if (have_flag(flgs, TR_RES_COLD))
-        info[i++] = "It provides resistance to cold.";
-    if (have_flag(flgs, TR_VULN_COLD))
-        info[i++] = "It makes you vulnerable to cold.";
-
-    if (have_flag(flgs, TR_RES_POIS))
-        info[i++] = "It provides resistance to poison.";
-    if (have_flag(flgs, TR_VULN_POIS))
-        info[i++] = "It makes you vulnerable to poison.";
-
-    if (have_flag(flgs, TR_RES_LITE))
-        info[i++] = "It provides resistance to light.";
-    if (have_flag(flgs, TR_VULN_LITE))
-        info[i++] = "It makes you vulnerable to light.";
-
-    if (have_flag(flgs, TR_RES_DARK))
-        info[i++] = "It provides resistance to darkness.";
-    if (have_flag(flgs, TR_VULN_DARK))
-        info[i++] = "It makes you vulnerable to darkness.";
-
-    if (have_flag(flgs, TR_RES_BLIND))
-        info[i++] = "It provides resistance to blindness.";
-    if (have_flag(flgs, TR_VULN_BLIND))
-        info[i++] = "It makes you vulnerable to blindness.";
-
-    if (have_flag(flgs, TR_RES_CONF))
-        info[i++] = "It provides resistance to confusion.";
-    if (have_flag(flgs, TR_VULN_CONF))
-        info[i++] = "It makes you vulnerable to confusion.";
-
-    if (have_flag(flgs, TR_RES_SOUND))
-        info[i++] = "It provides resistance to sound.";
-    if (have_flag(flgs, TR_VULN_SOUND))
-        info[i++] = "It makes you vulnerable to sound.";
-
-    if (have_flag(flgs, TR_RES_SHARDS))
-        info[i++] = "It provides resistance to shards.";
-    if (have_flag(flgs, TR_VULN_SHARDS))
-        info[i++] = "It makes you vulnerable to shards.";
-
-    if (have_flag(flgs, TR_RES_NETHER))
-        info[i++] = "It provides resistance to nether.";
-    if (have_flag(flgs, TR_VULN_NETHER))
-        info[i++] = "It makes you vulnerable to nether.";
-
-    if (have_flag(flgs, TR_RES_TIME))
-        info[i++] = "It provides resistance to time.";
-
-    if (have_flag(flgs, TR_RES_NEXUS))
-        info[i++] = "It provides resistance to nexus.";
-    if (have_flag(flgs, TR_VULN_NEXUS))
-        info[i++] = "It makes you vulnerable to nexus.";
-
-    if (have_flag(flgs, TR_RES_CHAOS))
-        info[i++] = "It provides resistance to chaos.";
-    if (have_flag(flgs, TR_VULN_CHAOS))
-        info[i++] = "It makes you vulnerable to chaos.";
-
-    if (have_flag(flgs, TR_RES_DISEN))
-        info[i++] = "It provides resistance to disenchantment.";
-    if (have_flag(flgs, TR_VULN_DISEN))
-        info[i++] = "It makes you vulnerable to disenchantment.";
-
     if (have_flag(flgs, TR_LEVITATION))
         info[i++] = "It allows you to levitate.";
     if (have_flag(flgs, TR_LITE))
@@ -1116,6 +985,80 @@ bool screen_object(object_type *o_ptr, u32b mode)
             }
         }
     }
+
+    /* Hack -- describe lite's */
+    if (o_ptr->tval == TV_LITE)
+    {
+        if (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->art_flags, TR_DARKNESS))
+        {
+            info[i++] = "It provides no light.";
+
+            if (o_ptr->sval == SV_LITE_LANTERN)
+            {
+                info[i++] = "It decreases radius of light source by 2.";
+            }
+            else if (o_ptr->sval == SV_LITE_TORCH)
+            {
+                info[i++] = "It decreases radius of light source by 1.";
+            }
+            else
+            {
+                info[i++] = "It decreases radius of light source by 3.";
+            }
+        }
+        else if (o_ptr->name1 || o_ptr->art_name)
+        {
+            if (o_ptr->name1 == ART_EYE_OF_VECNA)
+            {
+                info[i++] = "It allows you to see in the dark.";
+            }
+            else
+            {
+                info[i++] = "It provides light (radius 3) forever.";
+            }
+        }
+        else if (o_ptr->name2 == EGO_LITE_EXTRA_LIGHT)
+        {
+            if (o_ptr->sval == SV_LITE_FEANOR)
+            {
+                info[i++] = "It provides light (radius 3) forever.";
+
+            }
+            else if (o_ptr->sval == SV_LITE_LANTERN)
+            {
+                info[i++] = "It provides light (radius 3) when fueled.";
+
+            }
+            else
+            {
+                info[i++] = "It provides light (radius 2) when fueled.";
+
+            }
+        }
+        else
+        {
+            if (o_ptr->sval == SV_LITE_FEANOR)
+            {
+                info[i++] = "It provides light (radius 2) forever.";
+
+            }
+            else if (o_ptr->sval == SV_LITE_LANTERN)
+            {
+                info[i++] = "It provides light (radius 2) when fueled.";
+
+            }
+            else
+            {
+                info[i++] = "It provides light (radius 1) when fueled.";
+
+            }
+        }
+        if (o_ptr->name2 == EGO_LITE_DURATION)
+        {
+            info[i++] = "It provides light for much longer time.";
+        }
+    }
+
 
     if ((have_flag(flgs, TR_TY_CURSE)) || (o_ptr->curse_flags & TRC_TY_CURSE))
     {
@@ -1246,30 +1189,51 @@ bool screen_object(object_type *o_ptr, u32b mode)
         if (i) info[i++] = "";
         info[i++] = "This object may have additional powers.";
     }
+#endif
+}
 
-    if (mode & SCROBJ_FORCE_DETAIL) trivial_info = 0;
+/*
+ * Describe a "fully identified" item
+ */
+bool screen_object(object_type *o_ptr, u32b mode)
+{
+    char        o_name[MAX_NLEN];
+    rect_t      display = ui_menu_rect();
+    doc_ptr     doc = doc_alloc(MIN(display.cx, 72));
+    doc_pos_t   pos;
 
-    /* No relevant informations */
-    if (i <= trivial_info) return (FALSE);
+    if (display.cx > 80)
+        display.cx = 80;
 
-    /* Save the screen */
-    screen_save();
-
-    /* Get size */
-    Term_get_size(&wid, &hgt);
-
-    /* Display Item name */
     if (!(mode & SCROBJ_FAKE_OBJECT))
-        object_desc(o_name, o_ptr, 0);
+        object_desc(o_name, o_ptr, OD_COLOR_CODED | OD_OMIT_INSCRIPTION);
     else
-        object_desc(o_name, o_ptr, (OD_NAME_ONLY | OD_STORE));
+        object_desc(o_name, o_ptr, OD_NAME_ONLY | OD_STORE | OD_COLOR_CODED | OD_OMIT_INSCRIPTION);
 
-    prt(o_name, 0, 0);
+    doc_insert(doc, o_name);
+    pos = doc_newline(doc);
 
-    /* Erase the screen */
-    for (k = 1; k < hgt; k++) prt("", k, 13);
+    obj_describe_to_doc(o_ptr, doc);
+    if (doc_pos_compare(pos, doc_cursor(doc)) == 0)
+        return FALSE;
 
-    /* Label the information */
+    pos = doc_cursor(doc);
+    screen_save();
+    if (pos.y < display.cy - 3)
+    {
+        doc_insert(doc, "\n\n[Press Any Key to Continue]\n\n");
+        doc_sync_term(doc, doc_range_all(doc), doc_pos_create(display.x, display.y));
+        inkey();
+    }
+    else
+    {
+        doc_display_aux(doc, "Object Info", 0, display);
+    }
+    screen_load();
+    doc_free(doc);
+    return TRUE;
+
+    /* TODO
     if ((o_ptr->tval == TV_STATUE) && (o_ptr->sval == SV_PHOTO))
     {
         monster_race *r_ptr = &r_info[o_ptr->pval];
@@ -1277,36 +1241,8 @@ bool screen_object(object_type *o_ptr, u32b mode)
         prt(format("%s: '", r_name + r_ptr->name), 1, 15);
         Term_queue_bigchar(18 + namelen, 1, r_ptr->x_attr, r_ptr->x_char, 0, 0);
         prt("'", 1, (use_bigtile ? 20 : 19) + namelen);
-    }
-
-    /* We will print on top of the map (column 13) */
-    for (k = 2, j = 0; j < i; j++)
-    {
-        /* Show the info */
-        prt(info[j], k++, 15);
-
-        /* Every 20 entries (lines 2 to 21), start over */
-        if ((k == hgt - 2) && (j+1 < i))
-        {
-            prt("-- more --", k, 15);
-            inkey();
-            for (; k > 2; k--) prt("", k, 15);
-        }
-    }
-
-    /* Wait for it */
-    prt("[Press any key to continue]", k, 15);
-
-    inkey();
-
-    /* Restore the screen */
-    screen_load();
-
-    /* Gave knowledge */
-    return (TRUE);
+    }*/
 }
-
-
 
 /*
  * Convert an inventory index into a one character label

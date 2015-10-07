@@ -1978,21 +1978,6 @@ extern bool object_is_nameless(object_type *o_ptr);
 extern bool object_allow_two_hands_wielding(object_type *o_ptr);
 
 /* wild.c */
-extern point_t point_create(int x, int y);
-extern point_t point_add(point_t p1, point_t p2);
-extern point_t point_subtract(point_t p1, point_t p2);
-extern int point_compare(point_t p1, point_t p2);
-
-extern point_t rect_topleft(const rect_t *r);
-extern point_t rect_center(const rect_t *r);
-extern rect_t rect_create(int x, int y, int cx, int cy);
-extern bool rect_is_valid(const rect_t *r);
-extern bool rect_contains_pt(const rect_t *r, int x, int y);
-extern bool rect_contains(const rect_t *r1, const rect_t *r2);
-extern rect_t rect_intersect(const rect_t *r1, const rect_t *r2);
-extern rect_t rect_translate(const rect_t *r, int dx, int dy);
-extern int rect_area(const rect_t *r);
-
 extern void set_floor_and_wall(byte type);
 extern void wilderness_gen(void);
 extern monster_hook_type wilderness_mon_hook;

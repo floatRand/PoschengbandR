@@ -903,14 +903,14 @@ bool recall_player(int turns)
         p_ptr->word_recall = turns;
         p_ptr->leaving_method = LEAVING_RECALL;
 
-        msg_print("The air about you becomes charged...");
+        cmsg_print(TERM_L_BLUE, "The air about you becomes charged...");
 
         p_ptr->redraw |= (PR_STATUS);
     }
     else
     {
         p_ptr->word_recall = 0;
-        msg_print("A tension leaves the air around you...");
+        cmsg_print(TERM_L_BLUE, "A tension leaves the air around you...");
 
         p_ptr->leaving_method = LEAVING_UNKOWN;
         p_ptr->redraw |= (PR_STATUS);

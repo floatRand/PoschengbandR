@@ -1295,7 +1295,7 @@ void recharged_notice(object_type *o_ptr)
         if (s[1] == '!')
         {
             /* Describe (briefly) */
-            object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
+            object_desc(o_name, o_ptr, OD_OMIT_PREFIX | OD_OMIT_INSCRIPTION | OD_COLOR_CODED);
 
             /* Notify the player */
             if (o_ptr->number > 1)
@@ -2593,7 +2593,7 @@ void process_world_aux_movement(void)
             /* Determine the level */
             if (dun_level || p_ptr->inside_quest)
             {
-                msg_print("You feel yourself yanked upwards!");
+                cmsg_print(TERM_YELLOW, "You feel yourself yanked upwards!");
                 if (dungeon_type) p_ptr->recall_dungeon = dungeon_type;
 
                 dun_level = 0;
@@ -2604,7 +2604,7 @@ void process_world_aux_movement(void)
             }
             else
             {
-                msg_print("You feel yourself yanked downwards!");
+                cmsg_print(TERM_YELLOW, "You feel yourself yanked downwards!");
                 dungeon_type = p_ptr->recall_dungeon;
                 dun_level = max_dlv[dungeon_type];
                 if (dun_level < 1) dun_level = 1;

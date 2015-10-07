@@ -12,6 +12,7 @@
 
 #include "angband.h"
 #include "int-map.h"
+#include "z-doc.h"
 
 #include <assert.h>
 
@@ -2129,6 +2130,12 @@ void do_cmd_list_objects(void)
             cmd = inkey_special(TRUE);
             switch (cmd)
             {
+            case '?':
+                doc_display_help("context_object_list.txt", NULL);
+                screen_load();
+                screen_save();
+                redraw = TRUE;
+                break;
             case ESCAPE:
             case 'q':
             case 'Q':

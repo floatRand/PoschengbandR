@@ -53,58 +53,32 @@ bool res_is_low(int which)
 
 
 typedef struct {
-    int flg;
     int res;
+    int flg;
+    int vuln_flg;
+    int im_flg;
 } _map_t;
 
 static _map_t _resist_map[] = {
-    { TR_RES_ACID, RES_ACID },
-    { TR_RES_ELEC, RES_ELEC },
-    { TR_RES_FIRE, RES_FIRE },
-    { TR_RES_COLD, RES_COLD },
-    { TR_RES_POIS, RES_POIS },
-    { TR_RES_LITE, RES_LITE },
-    { TR_RES_DARK, RES_DARK },
-    { TR_RES_CONF, RES_CONF },
-    { TR_RES_NETHER, RES_NETHER },
-    { TR_RES_NEXUS, RES_NEXUS },
-    { TR_RES_SOUND, RES_SOUND },
-    { TR_RES_SHARDS, RES_SHARDS },
-    { TR_RES_CHAOS, RES_CHAOS },
-    { TR_RES_DISEN, RES_DISEN }, 
-    { TR_RES_TIME, RES_TIME },
-    { TR_RES_BLIND, RES_BLIND },
-    { TR_RES_FEAR, RES_FEAR },
-    { TR_NO_TELE, RES_TELEPORT },
-    { -1, -1 }
-};
-
-static _map_t _immunity_map[] = {
-    { TR_IM_ACID, RES_ACID },
-    { TR_IM_ELEC, RES_ELEC },
-    { TR_IM_FIRE, RES_FIRE },
-    { TR_IM_COLD, RES_COLD },
-    { -1, -1 }
-};
-
-static _map_t _vulnerability_map[] = {
-    { TR_VULN_ACID, RES_ACID },
-    { TR_VULN_ELEC, RES_ELEC },
-    { TR_VULN_FIRE, RES_FIRE },
-    { TR_VULN_COLD, RES_COLD },
-    { TR_VULN_POIS, RES_POIS },
-    { TR_VULN_FEAR, RES_FEAR },
-    { TR_VULN_CONF, RES_CONF },
-    { TR_VULN_SOUND, RES_SOUND },
-    { TR_VULN_LITE, RES_LITE },
-    { TR_VULN_DARK, RES_DARK },
-    { TR_VULN_CHAOS, RES_CHAOS },
-    { TR_VULN_DISEN, RES_DISEN }, 
-    { TR_VULN_SHARDS, RES_SHARDS },
-    { TR_VULN_NEXUS, RES_NEXUS },
-    { TR_VULN_BLIND, RES_BLIND },
-    { TR_VULN_NETHER, RES_NETHER },
-    { -1, -1 }
+    { RES_ACID,     TR_RES_ACID,    TR_VULN_ACID,   TR_IM_ACID },
+    { RES_ELEC,     TR_RES_ELEC,    TR_VULN_ELEC,   TR_IM_ELEC },
+    { RES_FIRE,     TR_RES_FIRE,    TR_VULN_FIRE,   TR_IM_FIRE },
+    { RES_COLD,     TR_RES_COLD,    TR_VULN_COLD,   TR_IM_COLD },
+    { RES_POIS,     TR_RES_POIS,    TR_VULN_POIS,   TR_INVALID },
+    { RES_LITE,     TR_RES_LITE,    TR_VULN_LITE,   TR_INVALID },
+    { RES_DARK,     TR_RES_DARK,    TR_VULN_DARK,   TR_INVALID },
+    { RES_CONF,     TR_RES_CONF,    TR_VULN_CONF,   TR_INVALID },
+    { RES_NETHER,   TR_RES_NETHER,  TR_VULN_NETHER, TR_INVALID },
+    { RES_NEXUS,    TR_RES_NEXUS,   TR_VULN_NEXUS,  TR_INVALID },
+    { RES_SOUND,    TR_RES_SOUND,   TR_VULN_SOUND,  TR_INVALID },
+    { RES_SHARDS,   TR_RES_SHARDS,  TR_VULN_SHARDS, TR_INVALID },
+    { RES_CHAOS,    TR_RES_CHAOS,   TR_VULN_CHAOS,  TR_INVALID },
+    { RES_DISEN,    TR_RES_DISEN,   TR_VULN_DISEN,  TR_INVALID },
+    { RES_TIME,     TR_RES_TIME,    TR_INVALID,     TR_INVALID },
+    { RES_BLIND,    TR_RES_BLIND,   TR_VULN_BLIND,  TR_INVALID },
+    { RES_FEAR,     TR_RES_FEAR,    TR_VULN_FEAR,   TR_INVALID },
+    { RES_TELEPORT, TR_NO_TELE,     TR_INVALID,     TR_INVALID },
+    { RES_INVALID,  TR_INVALID,     TR_INVALID,     TR_INVALID  }
 };
 
 void res_calc_bonuses(u32b flgs[TR_FLAG_SIZE])
@@ -113,24 +87,34 @@ void res_calc_bonuses(u32b flgs[TR_FLAG_SIZE])
     for (i = 0; ; i++)
     {
         _map_t m = _resist_map[i];
-        if (m.flg < 0) break;
-        if (have_flag(flgs, m.flg))
+        if (m.res == RES_INVALID) break;
+        if (m.flg != TR_INVALID && have_flag(flgs, m.flg))
             res_add(m.res);
-    }
-    for (i = 0; ; i++)
-    {
-        _map_t m = _immunity_map[i];
-        if (m.flg < 0) break;
-        if (have_flag(flgs, m.flg))
+        if (m.vuln_flg != TR_INVALID && have_flag(flgs, m.vuln_flg))
+            res_add_vuln(m.res);
+        if (m.im_flg != TR_INVALID && have_flag(flgs, m.im_flg))
             res_add_immune(m.res);
     }
+}
+
+bool res_has_bonus(u32b flgs[TR_FLAG_SIZE])
+{
+    int i;
     for (i = 0; ; i++)
     {
-        _map_t m = _vulnerability_map[i];
-        if (m.flg < 0) break;
-        if (have_flag(flgs, m.flg))
-            res_add_vuln(m.res);
+        _map_t m = _resist_map[i];
+        int    net = 0;
+        if (m.res == RES_INVALID) break;
+        if (m.im_flg != TR_INVALID && have_flag(flgs, m.im_flg))
+            return TRUE;
+        if (m.flg != TR_INVALID && have_flag(flgs, m.flg))
+            net++;
+        if (m.vuln_flg != TR_INVALID && have_flag(flgs, m.vuln_flg))
+            net--;
+        if (net)
+            return TRUE;
     }
+    return FALSE;
 }
 
 int  res_get_object_flag(int which)
@@ -139,8 +123,32 @@ int  res_get_object_flag(int which)
     for (i = 0; ; i++)
     {
         _map_t m = _resist_map[i];
-        if (m.flg < 0) break;
+        if (m.res == RES_INVALID) break;
         if (m.res == which) return m.flg;
+    }
+    return -1;
+}
+
+int  res_get_object_vuln_flag(int which)
+{
+    int i;
+    for (i = 0; ; i++)
+    {
+        _map_t m = _resist_map[i];
+        if (m.res == RES_INVALID) break;
+        if (m.res == which) return m.vuln_flg;
+    }
+    return -1;
+}
+
+int  res_get_object_immune_flag(int which)
+{
+    int i;
+    for (i = 0; ; i++)
+    {
+        _map_t m = _resist_map[i];
+        if (m.res == RES_INVALID) break;
+        if (m.res == which) return m.im_flg;
     }
     return -1;
 }
@@ -177,24 +185,24 @@ void res_clear(void)
 }
 
 static cptr _names[RES_MAX] = {
-    "acid",
-    "lightning",
-    "fire",
-    "cold",
-    "poison",
-    "light",
-    "dark",
-    "confusion",
-    "nether",
-    "nexus",
-    "sound",
-    "shards",
-    "chaos",
-    "disenchantment",
-    "time",
-    "blindness",
-    "fear",
-    "teleportation",
+    "Acid",
+    "Electricity",
+    "Fire",
+    "Cold",
+    "Poison",
+    "Light",
+    "Dark",
+    "Confusion",
+    "Nether",
+    "Nexus",
+    "Sound",
+    "Shards",
+    "Chaos",
+    "Disenchantment",
+    "Time",
+    "Blindness",
+    "Fear",
+    "Teleportation",
 };
 
 cptr res_name(int which)

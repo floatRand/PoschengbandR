@@ -2,6 +2,7 @@
 #define INCLUDED_Z_DOC_H
 
 #include "h-basic.h"
+#include "rect.h"
 
 #include "str-map.h"
 #include "int-map.h"
@@ -160,6 +161,9 @@ doc_pos_t     doc_insert_space(doc_ptr dest_doc, int count);
 doc_pos_t     doc_newline(doc_ptr doc);
 void          doc_rollback(doc_ptr doc, doc_pos_t pos);
 
+doc_pos_t     doc_printf(doc_ptr doc, const char *fmt, ...);
+doc_pos_t     doc_cprintf(doc_ptr doc, byte a, const char *fmt, ...);
+
 doc_char_ptr  doc_char(doc_ptr doc, doc_pos_t pos);
 void          doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos);
 
@@ -176,6 +180,7 @@ enum doc_tag_e
     DOC_TAG_VAR,
     DOC_TAG_INDENT,
     DOC_TAG_CLOSE_INDENT,
+    DOC_TAG_TAB,
 };
 struct doc_tag_s
 {
@@ -207,6 +212,8 @@ cptr doc_lex(cptr pos, doc_token_ptr token);
 
 
 int doc_display_help(cptr file_name, cptr topic);
+int doc_display_help_aux(cptr file_name, cptr topic, rect_t display);
 int doc_display(doc_ptr doc, cptr caption, int top);
+int doc_display_aux(doc_ptr doc, cptr caption, int top, rect_t display);
 
 #endif
