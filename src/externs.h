@@ -1114,6 +1114,7 @@ extern void weapon_flags_known(int hand, u32b flgs[TR_FLAG_SIZE]);
 extern void missile_flags(object_type *arrow, u32b flgs[TR_FLAG_SIZE]);
 extern void missile_flags_known(object_type *arrow, u32b flgs[TR_FLAG_SIZE]);
 extern void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE]);
+extern void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc);
 extern bool screen_object(object_type *o_ptr, u32b mode);
 extern char index_to_label(int i);
 extern s16b label_to_inven(int c);

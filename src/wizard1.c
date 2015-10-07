@@ -1281,6 +1281,7 @@ static void spoil_artifact(cptr fname)
     object_type *q_ptr;
 
     obj_desc_list artifact;
+    doc_ptr     doc = NULL;
 
     char buf[1024];
 
@@ -1300,6 +1301,7 @@ static void spoil_artifact(cptr fname)
         msg_print("Cannot create spoiler file.");
         return;
     }
+    doc = doc_alloc(80);
 
     /* Dump the header */
     print_header();
@@ -1337,8 +1339,24 @@ static void spoil_artifact(cptr fname)
 
             /* Write out the artifact description to the spoiler file */
             spoiler_print_art(&artifact);
+
+            {
+                char  o_name[MAX_NLEN];
+
+                identify_item(q_ptr);
+                q_ptr->ident |= IDENT_MENTAL;
+
+                object_desc(o_name, q_ptr, OD_COLOR_CODED | OD_OMIT_INSCRIPTION);
+                doc_insert(doc, o_name);
+                doc_printf(doc, "\n    <indent>\n");
+                obj_describe_to_doc(q_ptr, doc);
+                doc_printf(doc, "</indent>\n\n");
+            }
         }
     }
+
+    doc_display(doc, "Artifact Spoilers", 0);
+    doc_free(doc);
 
     /* Check for errors */
     if (ferror(fff) || my_fclose(fff))

@@ -935,7 +935,7 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
     if (have_flag(flgs, TR_LITE))
     {
         if (o_ptr->name2 == EGO_HELMET_VAMPIRE || o_ptr->name1 == ART_NIGHT)
-            doc_insert(doc, "It <color:R>decreases<color> the radius of your light source.\n");
+            doc_insert(doc, "It <color:R>decreases</color> the radius of your light source.\n");
         else
             doc_insert(doc, "It increases the radius of your light source.\n");
     }

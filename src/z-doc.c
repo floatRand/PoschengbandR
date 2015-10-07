@@ -767,7 +767,7 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             break;
         case DOC_TAG_TAB:
         {
-            int pos = atoi(string_buffer(arg));
+            int pos = atoi(string_buffer(arg)) + doc_current_style(doc)->left;
             if (pos > doc->cursor.x)
                 doc_insert_space(doc, pos - doc->cursor.x);
             break;
