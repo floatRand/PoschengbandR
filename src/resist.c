@@ -51,60 +51,57 @@ bool res_is_low(int which)
     return FALSE;
 }
 
-
 typedef struct {
-    int res;
+    cptr name;
+    byte color;
     int flg;
     int vuln_flg;
     int im_flg;
-} _map_t;
+} _res_info_t;
 
-static _map_t _resist_map[] = {
-    { RES_ACID,     TR_RES_ACID,    TR_VULN_ACID,   TR_IM_ACID },
-    { RES_ELEC,     TR_RES_ELEC,    TR_VULN_ELEC,   TR_IM_ELEC },
-    { RES_FIRE,     TR_RES_FIRE,    TR_VULN_FIRE,   TR_IM_FIRE },
-    { RES_COLD,     TR_RES_COLD,    TR_VULN_COLD,   TR_IM_COLD },
-    { RES_POIS,     TR_RES_POIS,    TR_VULN_POIS,   TR_INVALID },
-    { RES_LITE,     TR_RES_LITE,    TR_VULN_LITE,   TR_INVALID },
-    { RES_DARK,     TR_RES_DARK,    TR_VULN_DARK,   TR_INVALID },
-    { RES_CONF,     TR_RES_CONF,    TR_VULN_CONF,   TR_INVALID },
-    { RES_NETHER,   TR_RES_NETHER,  TR_VULN_NETHER, TR_INVALID },
-    { RES_NEXUS,    TR_RES_NEXUS,   TR_VULN_NEXUS,  TR_INVALID },
-    { RES_SOUND,    TR_RES_SOUND,   TR_VULN_SOUND,  TR_INVALID },
-    { RES_SHARDS,   TR_RES_SHARDS,  TR_VULN_SHARDS, TR_INVALID },
-    { RES_CHAOS,    TR_RES_CHAOS,   TR_VULN_CHAOS,  TR_INVALID },
-    { RES_DISEN,    TR_RES_DISEN,   TR_VULN_DISEN,  TR_INVALID },
-    { RES_TIME,     TR_RES_TIME,    TR_INVALID,     TR_INVALID },
-    { RES_BLIND,    TR_RES_BLIND,   TR_VULN_BLIND,  TR_INVALID },
-    { RES_FEAR,     TR_RES_FEAR,    TR_VULN_FEAR,   TR_INVALID },
-    { RES_TELEPORT, TR_NO_TELE,     TR_INVALID,     TR_INVALID },
-    { RES_INVALID,  TR_INVALID,     TR_INVALID,     TR_INVALID  }
+static _res_info_t _resist_map[RES_MAX] = {
+    { "Acid",           TERM_GREEN,   TR_RES_ACID,    TR_VULN_ACID,   TR_IM_ACID },
+    { "Electricity",    TERM_BLUE,    TR_RES_ELEC,    TR_VULN_ELEC,   TR_IM_ELEC },
+    { "Fire",           TERM_RED,     TR_RES_FIRE,    TR_VULN_FIRE,   TR_IM_FIRE },
+    { "Cold",           TERM_L_WHITE, TR_RES_COLD,    TR_VULN_COLD,   TR_IM_COLD },
+    { "Poison",         TERM_L_GREEN, TR_RES_POIS,    TR_VULN_POIS,   TR_INVALID },
+    { "Light",          TERM_YELLOW,  TR_RES_LITE,    TR_VULN_LITE,   TR_INVALID },
+    { "Dark",           TERM_L_DARK,  TR_RES_DARK,    TR_VULN_DARK,   TR_INVALID },
+    { "Confusion",      TERM_L_RED,   TR_RES_CONF,    TR_VULN_CONF,   TR_INVALID },
+    { "Nether",         TERM_L_DARK,  TR_RES_NETHER,  TR_VULN_NETHER, TR_INVALID },
+    { "Nexus",          TERM_VIOLET,  TR_RES_NEXUS,   TR_VULN_NEXUS,  TR_INVALID },
+    { "Sound",          TERM_ORANGE,  TR_RES_SOUND,   TR_VULN_SOUND,  TR_INVALID },
+    { "Shards",         TERM_L_UMBER, TR_RES_SHARDS,  TR_VULN_SHARDS, TR_INVALID },
+    { "Chaos",          TERM_VIOLET,  TR_RES_CHAOS,   TR_VULN_CHAOS,  TR_INVALID },
+    { "Disenchantment", TERM_VIOLET,  TR_RES_DISEN,   TR_VULN_DISEN,  TR_INVALID },
+    { "Time",           TERM_L_BLUE,  TR_RES_TIME,    TR_INVALID,     TR_INVALID },
+    { "Blindness",      TERM_L_DARK,  TR_RES_BLIND,   TR_VULN_BLIND,  TR_INVALID },
+    { "Fear",           TERM_L_RED,   TR_RES_FEAR,    TR_VULN_FEAR,   TR_INVALID },
+    { "Teleportation",  TERM_ORANGE,  TR_NO_TELE,     TR_INVALID,     TR_INVALID }
 };
 
 void res_calc_bonuses(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
-    for (i = 0; ; i++)
+    for (i = RES_BEGIN; i < RES_END; i++)
     {
-        _map_t m = _resist_map[i];
-        if (m.res == RES_INVALID) break;
+        _res_info_t m = _resist_map[i];
         if (m.flg != TR_INVALID && have_flag(flgs, m.flg))
-            res_add(m.res);
+            res_add(i);
         if (m.vuln_flg != TR_INVALID && have_flag(flgs, m.vuln_flg))
-            res_add_vuln(m.res);
+            res_add_vuln(i);
         if (m.im_flg != TR_INVALID && have_flag(flgs, m.im_flg))
-            res_add_immune(m.res);
+            res_add_immune(i);
     }
 }
 
 bool res_has_bonus(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
-    for (i = 0; ; i++)
+    for (i = RES_BEGIN; i < RES_END; i++)
     {
-        _map_t m = _resist_map[i];
+        _res_info_t m = _resist_map[i];
         int    net = 0;
-        if (m.res == RES_INVALID) break;
         if (m.im_flg != TR_INVALID && have_flag(flgs, m.im_flg))
             return TRUE;
         if (m.flg != TR_INVALID && have_flag(flgs, m.flg))
@@ -119,38 +116,17 @@ bool res_has_bonus(u32b flgs[TR_FLAG_SIZE])
 
 int  res_get_object_flag(int which)
 {
-    int i;
-    for (i = 0; ; i++)
-    {
-        _map_t m = _resist_map[i];
-        if (m.res == RES_INVALID) break;
-        if (m.res == which) return m.flg;
-    }
-    return -1;
+    return _resist_map[which].flg;
 }
 
 int  res_get_object_vuln_flag(int which)
 {
-    int i;
-    for (i = 0; ; i++)
-    {
-        _map_t m = _resist_map[i];
-        if (m.res == RES_INVALID) break;
-        if (m.res == which) return m.vuln_flg;
-    }
-    return -1;
+    return _resist_map[which].vuln_flg;
 }
 
 int  res_get_object_immune_flag(int which)
 {
-    int i;
-    for (i = 0; ; i++)
-    {
-        _map_t m = _resist_map[i];
-        if (m.res == RES_INVALID) break;
-        if (m.res == which) return m.im_flg;
-    }
-    return -1;
+    return _resist_map[which].im_flg;
 }
 
 static int _randomize(int pct)
@@ -184,33 +160,16 @@ void res_clear(void)
         p_ptr->resist[i] = 0;
 }
 
-static cptr _names[RES_MAX] = {
-    "Acid",
-    "Electricity",
-    "Fire",
-    "Cold",
-    "Poison",
-    "Light",
-    "Dark",
-    "Confusion",
-    "Nether",
-    "Nexus",
-    "Sound",
-    "Shards",
-    "Chaos",
-    "Disenchantment",
-    "Time",
-    "Blindness",
-    "Fear",
-    "Teleportation",
-};
-
 cptr res_name(int which)
 {
-    if (which >= 0 && which < RES_MAX)
-        return _names[which];
-    return "";
+    return _resist_map[which].name;
 }
+
+byte res_color(int which)
+{
+    return _resist_map[which].color;
+}
+
 
 #define _MAX_PCTS 29
 static int _lo_pcts[_MAX_PCTS] = {

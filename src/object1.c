@@ -418,8 +418,10 @@ static string_ptr _obj_desc_stat(int pval, u32b flgs[TR_FLAG_SIZE], int which)
     if (net)
     {
         result = string_alloc(NULL);
-        string_printf(result, "<color:%c>%s</color>",
-            (net > 0) ? 'G' : 'R', stat_name_true[which]);
+        if (net < 0)
+            string_printf(result, "<color:R>-%s</color>", stat_name_true[which]);
+        else
+            string_printf(result, "<color:G>%s</color>", stat_name_true[which]);
     }
 
     return result;
@@ -453,7 +455,7 @@ static string_ptr _obj_desc_ability(int pval, u32b flgs[TR_FLAG_SIZE], int which
     if (net)
     {
         result = string_alloc(NULL);
-        string_printf(result, "<color:%c>%s</color>", (net > 0) ? 'B' : 'R', name);
+        string_printf(result, "<color:%c>%c%s</color>", (net > 0) ? 'B' : 'R', (net > 0) ? '+' : '-', name);
     }
     return result;
 }
@@ -464,7 +466,7 @@ static string_ptr _obj_desc_resist(u32b flgs[TR_FLAG_SIZE], int which)
     if (have_flag(flgs, res_get_object_immune_flag(which)))
     {
         result = string_alloc(NULL);
-        string_printf(result, "<color:y>*%s*</color>", res_name(which));
+        string_printf(result, "<color:%c>*%s*</color>", attr_to_attr_char(res_color(which)), res_name(which));
     }
     else
     {
@@ -477,12 +479,12 @@ static string_ptr _obj_desc_resist(u32b flgs[TR_FLAG_SIZE], int which)
         if (net < 0)
         {
             result = string_alloc(NULL);
-            string_printf(result, "<color:R>!%s!</color>", res_name(which));
+            string_printf(result, "<color:R>-%s</color>", res_name(which));
         }
         if (net > 0)
         {
             result = string_alloc(NULL);
-            string_printf(result, "<color:G>%s</color>", res_name(which));
+            string_printf(result, "<color:%c>%s</color>", attr_to_attr_char(res_color(which)), res_name(which));
         }
     }
     return result;
@@ -492,15 +494,15 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
 {
     u32b      flgs[TR_FLAG_SIZE];
     int       i, net;
-    doc_pos_t pos;
     vec_ptr   v = vec_alloc((vec_free_f)string_free);
+    doc_pos_t pos;
 
     object_flags_known(o_ptr, flgs);
 
     /* Description */
     if (o_ptr->tval == TV_SCROLL || o_ptr->tval == TV_POTION)
     {
-        doc_printf(doc, "\n%s\n\n", do_device(o_ptr, SPELL_DESC, 0));
+        doc_printf(doc, "%s\n\n", do_device(o_ptr, SPELL_DESC, 0));
         if (o_ptr->ident & IDENT_MENTAL)
         {
             cptr info = do_device(o_ptr, SPELL_INFO, 0);
@@ -522,7 +524,7 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
             text = k_text + k_info[o_ptr->k_idx].text;
         if (strlen(text))
         {
-            doc_printf(doc, "\n%s\n\n", text);
+            doc_printf(doc, "%s\n\n", text);
         }
     }
 
@@ -556,7 +558,7 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
                     doc_printf(doc, "<color:U>Info: </color>%s\n", res);
                 doc_printf(doc, "<color:U>Fail: </color>%d.%d%%\n\n", fail/10, fail%10);
 
-                doc_printf(doc, "It has a power rating of %d.", device_level(o_ptr));
+                doc_printf(doc, "It has a power rating of %d.\n", device_level(o_ptr));
                 doc_printf(doc, "It has a difficulty rating of %d.\n", o_ptr->activation.difficulty);
                 doc_printf(doc, "It currently has %d out of %d sp.\n", device_sp(o_ptr), device_max_sp(o_ptr));
                 doc_printf(doc, "Each charge costs %d sp.\n", o_ptr->activation.cost);
@@ -586,6 +588,8 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
 
         doc_newline(doc);
     }
+
+    pos = doc_cursor(doc);
 
     /* Stats */
     vec_clear(v);
@@ -633,6 +637,12 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
         vec_add(v, string_alloc("<color:R>Sharpness</color>"));
     if (have_flag(flgs, TR_STUN))
         vec_add(v, string_alloc("<color:B>Stunning</color>"));
+    if (have_flag(flgs, TR_ORDER))
+        vec_add(v, string_alloc("<color:W>Order</color>"));
+    if (have_flag(flgs, TR_WILD))
+        vec_add(v, string_alloc("<color:R>Wild</color>"));
+    if (have_flag(flgs, TR_FORCE_WEAPON))
+        vec_add(v, string_alloc("<color:B>Force</color>"));
     if (vec_length(v))
     {
         doc_insert(doc, "<color:U>Brands:</color><tab:12><indent>");
@@ -641,14 +651,68 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
     }
 
     /* Slays */
-    pos = doc_cursor(doc);
-    /* ...  */
-    if (doc_pos_compare(doc_cursor(doc), pos) > 0)
-        doc_newline(doc);
+    vec_clear(v);
+    if (have_flag(flgs, TR_KILL_EVIL))
+        vec_add(v, string_alloc("<color:v>*Evil*</color>"));
+    else if (have_flag(flgs, TR_SLAY_EVIL))
+        vec_add(v, string_alloc("<color:R>Evil</color>"));
+
+    if (have_flag(flgs, TR_SLAY_GOOD))
+        vec_add(v, string_alloc("<color:R>Good</color>"));
+
+    if (have_flag(flgs, TR_SLAY_LIVING))
+        vec_add(v, string_alloc("<color:R>Living</color>"));
+
+    if (have_flag(flgs, TR_KILL_DRAGON))
+        vec_add(v, string_alloc("<color:v>*Dragons*</color>"));
+    else if (have_flag(flgs, TR_SLAY_DRAGON))
+        vec_add(v, string_alloc("<color:R>Dragons</color>"));
+
+    if (have_flag(flgs, TR_KILL_DEMON))
+        vec_add(v, string_alloc("<color:v>*Demons*</color>"));
+    else if (have_flag(flgs, TR_SLAY_DEMON))
+        vec_add(v, string_alloc("<color:R>Demons</color>"));
+
+    if (have_flag(flgs, TR_KILL_UNDEAD))
+        vec_add(v, string_alloc("<color:v>*Undead*</color>"));
+    else if (have_flag(flgs, TR_SLAY_UNDEAD))
+        vec_add(v, string_alloc("<color:R>Undead</color>"));
+
+    if (have_flag(flgs, TR_KILL_ANIMAL))
+        vec_add(v, string_alloc("<color:v>*Animals*</color>"));
+    else if (have_flag(flgs, TR_SLAY_ANIMAL))
+        vec_add(v, string_alloc("<color:R>Animals</color>"));
+
+    if (have_flag(flgs, TR_KILL_HUMAN))
+        vec_add(v, string_alloc("<color:v>*Humans*</color>"));
+    else if (have_flag(flgs, TR_SLAY_HUMAN))
+        vec_add(v, string_alloc("<color:R>Humans</color>"));
+
+    if (have_flag(flgs, TR_KILL_ORC))
+        vec_add(v, string_alloc("<color:v>*Orcs*</color>"));
+    else if (have_flag(flgs, TR_SLAY_ORC))
+        vec_add(v, string_alloc("<color:R>Orcs</color>"));
+
+    if (have_flag(flgs, TR_KILL_TROLL))
+        vec_add(v, string_alloc("<color:v>*Trolls*</color>"));
+    else if (have_flag(flgs, TR_SLAY_TROLL))
+        vec_add(v, string_alloc("<color:R>Trolls</color>"));
+
+    if (have_flag(flgs, TR_KILL_GIANT))
+        vec_add(v, string_alloc("<color:v>*Giants*</color>"));
+    else if (have_flag(flgs, TR_SLAY_GIANT))
+        vec_add(v, string_alloc("<color:R>Giants</color>"));
+
+    if (vec_length(v))
+    {
+        doc_insert(doc, "<color:U>Slays:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
+    }
 
     /* Resists */
     vec_clear(v);
-    for (i = 0; i < RES_MAX; i++)
+    for (i = 0; i < RES_TELEPORT; i++)
         _obj_desc_add_list(v, _obj_desc_resist(flgs, i));
     if (vec_length(v))
     {
@@ -657,18 +721,69 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
         doc_insert(doc, "</indent>\n");
     }
 
+    /* Auras */
+    vec_clear(v);
+    if (have_flag(flgs, TR_SH_FIRE))
+        vec_add(v, string_alloc("<color:R>Fire</color>"));
+    if (have_flag(flgs, TR_SH_COLD))
+        vec_add(v, string_alloc("<color:W>Cold</color>"));
+    if (have_flag(flgs, TR_SH_ELEC))
+        vec_add(v, string_alloc("<color:b>Electricity</color>"));
+    if (have_flag(flgs, TR_SH_SHARDS))
+        vec_add(v, string_alloc("<color:U>Shards</color>"));
+    if (have_flag(flgs, TR_SH_REVENGE))
+        vec_add(v, string_alloc("<color:v>Retaliation</color>"));
+    if (vec_length(v))
+    {
+        doc_insert(doc, "<color:U>Auras:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
+    }
+
     /* Abilities */
     vec_clear(v);
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_BLOWS, TR_INVALID, "Attacks"));
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_XTRA_SHOTS, TR_INVALID, "Shots"));
     if (!object_is_device(o_ptr))
     {
         _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_SPEED, TR_DEC_SPEED, "Speed"));
         _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_DEVICE_POWER, TR_INVALID, "Device Power"));
+        if (have_flag(flgs, TR_REGEN))
+            vec_add(v, string_alloc("<color:g>Regeneration</color>"));
+        if (have_flag(flgs, TR_HOLD_LIFE))
+            vec_add(v, string_alloc("<color:y>Hold Life</color>"));
     }
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_MAGIC_RESISTANCE, TR_INVALID, "Magic Resistance"));
     _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_MAGIC_MASTERY, TR_DEC_MAGIC_MASTERY, "Device Skill"));
     _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_STEALTH, TR_DEC_STEALTH, "Stealth"));
     _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_SEARCH, TR_INVALID, "Searching"));
     _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_INFRA, TR_INVALID, "Infravision"));
     _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_TUNNEL, TR_INVALID, "Tunneling"));
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_SPELL_POWER, TR_DEC_SPELL_POWER, "Spell Power"));
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_SPELL_CAP, TR_DEC_SPELL_CAP, "Spell Capacity"));
+    _obj_desc_add_list(v, _obj_desc_ability(o_ptr->pval, flgs, TR_LIFE, TR_DEC_LIFE, "Life Rating"));
+
+    if (have_flag(flgs, TR_REFLECT))
+        vec_add(v, string_alloc("<color:o>Reflection</color>"));
+    if (have_flag(flgs, TR_FREE_ACT))
+        vec_add(v, string_alloc("<color:R>Free Action</color>"));
+    if (have_flag(flgs, TR_SEE_INVIS))
+        vec_add(v, string_alloc("<color:B>See Invisible</color>"));
+    if (have_flag(flgs, TR_LEVITATION))
+        vec_add(v, string_alloc("<color:B>Levitation</color>"));
+    if (have_flag(flgs, TR_SLOW_DIGEST))
+        vec_add(v, string_alloc("<color:g>Slow Digestion</color>"));
+    if (have_flag(flgs, TR_WARNING))
+        vec_add(v, string_alloc("<color:y>Warning</color>"));
+
+    if (have_flag(flgs, TR_NO_MAGIC))
+        vec_add(v, string_alloc("<color:r>Anti-Magic</color>"));
+    if (have_flag(flgs, TR_NO_SUMMON))
+        vec_add(v, string_alloc("<color:v>Anti-Summoning</color>"));
+    if (have_flag(flgs, TR_NO_TELE))
+        vec_add(v, string_alloc("<color:r>Anti-Teleportation</color>"));
+    if (have_flag(flgs, TR_BLESSED))
+        vec_add(v, string_alloc("<color:B>Blessed</color>"));
 
     if (vec_length(v))
     {
@@ -677,8 +792,106 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
         doc_insert(doc, "</indent>\n");
     }
 
+    /* ESP */
+    vec_clear(v);
+    if (have_flag(flgs, TR_TELEPATHY))
+        vec_add(v, string_alloc("<color:y>Telepathy</color>"));
+    if (have_flag(flgs, TR_ESP_ANIMAL))
+        vec_add(v, string_alloc("<color:B>Animals</color>"));
+    if (have_flag(flgs, TR_ESP_UNDEAD))
+        vec_add(v, string_alloc("<color:D>Undead</color>"));
+    if (have_flag(flgs, TR_ESP_DEMON))
+        vec_add(v, string_alloc("<color:R>Demons</color>"));
+    if (have_flag(flgs, TR_ESP_ORC))
+        vec_add(v, string_alloc("<color:U>Orcs</color>"));
+    if (have_flag(flgs, TR_ESP_TROLL))
+        vec_add(v, string_alloc("<color:g>Trolls</color>"));
+    if (have_flag(flgs, TR_ESP_GIANT))
+        vec_add(v, string_alloc("<color:u>Giants</color>"));
+    if (have_flag(flgs, TR_ESP_DRAGON))
+        vec_add(v, string_alloc("<color:r>Dragons</color>"));
+    if (have_flag(flgs, TR_ESP_HUMAN))
+        vec_add(v, string_alloc("<color:s>Humans</color>"));
+    if (have_flag(flgs, TR_ESP_EVIL))
+        vec_add(v, string_alloc("<color:y>Evil</color>"));
+    if (have_flag(flgs, TR_ESP_GOOD))
+        vec_add(v, string_alloc("<color:w>Good</color>"));
+    if (have_flag(flgs, TR_ESP_NONLIVING))
+        vec_add(v, string_alloc("<color:B>Nonliving</color>"));
+    if (have_flag(flgs, TR_ESP_UNIQUE))
+        vec_add(v, string_alloc("<color:v>Uniques</color>"));
+    if (vec_length(v))
+    {
+        doc_insert(doc, "<color:U>Telepathy:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
+    }
+
+    /* Curses */
+    vec_clear(v);
+    if (object_is_cursed(o_ptr))
+    {
+        if (o_ptr->curse_flags & TRC_PERMA_CURSE)
+            vec_add(v, string_alloc("<color:v>*Permanent Curse*</color>"));
+        else if (o_ptr->curse_flags & TRC_HEAVY_CURSE)
+            vec_add(v, string_alloc("<color:r>*Heavy Curse*</color>"));
+        else
+        {
+            if (object_is_device(o_ptr) && !(o_ptr->ident & IDENT_MENTAL))
+            {
+                /* Hide cursed status of devices until *Identified* */
+            }
+            else
+            {
+                vec_add(v, string_alloc("<color:D>Cursed</color>"));
+            }
+        }
+    }
+    if (have_flag(flgs, TR_TY_CURSE) || o_ptr->curse_flags & TRC_TY_CURSE)
+        vec_add(v, string_alloc("<color:v>*Ancient Foul Curse*</color>"));
+    if (have_flag(flgs, TR_AGGRAVATE) || o_ptr->curse_flags & TRC_AGGRAVATE)
+        vec_add(v, string_alloc("<color:r>Aggravate</color>"));
+    if (have_flag(flgs, TR_DRAIN_EXP) || o_ptr->curse_flags & TRC_DRAIN_EXP)
+        vec_add(v, string_alloc("<color:y>Drain Experience</color>"));
+    if (o_ptr->curse_flags & TRC_SLOW_REGEN)
+        vec_add(v, string_alloc("<color:o>Slow Regen</color>"));
+    if (o_ptr->curse_flags & TRC_ADD_L_CURSE)
+        vec_add(v, string_alloc("<color:w>Adds Weak Curses</color>"));
+    if (o_ptr->curse_flags & TRC_ADD_H_CURSE)
+        vec_add(v, string_alloc("<color:b>Adds Heavy Curses</color>"));
+    if (o_ptr->curse_flags & TRC_CALL_ANIMAL)
+        vec_add(v, string_alloc("<color:g>Attracts Animals</color>"));
+    if (o_ptr->curse_flags & TRC_CALL_DEMON)
+        vec_add(v, string_alloc("<color:R>Attracts Demons</color>"));
+    if (o_ptr->curse_flags & TRC_CALL_DRAGON)
+        vec_add(v, string_alloc("<color:r>Attracts Dragons</color>"));
+    if (o_ptr->curse_flags & TRC_COWARDICE)
+        vec_add(v, string_alloc("<color:y>Cowardice</color>"));
+    if (have_flag(flgs, TR_TELEPORT) || o_ptr->curse_flags & TRC_TELEPORT)
+        vec_add(v, string_alloc("<color:B>Random Teleport</color>"));
+    if (o_ptr->curse_flags & TRC_LOW_MELEE)
+        vec_add(v, string_alloc("<color:G>Miss Blows</color>"));
+    if (o_ptr->curse_flags & TRC_LOW_AC)
+        vec_add(v, string_alloc("<color:R>Low AC</color>"));
+    if (o_ptr->curse_flags & TRC_LOW_MAGIC)
+        vec_add(v, string_alloc("<color:y>Increased Fail Rates</color>"));
+    if (o_ptr->curse_flags & TRC_FAST_DIGEST)
+        vec_add(v, string_alloc("<color:r>Fast Digestion</color>"));
+    if (o_ptr->curse_flags & TRC_DRAIN_HP)
+        vec_add(v, string_alloc("<color:o>Drains You</color>"));
+    if (o_ptr->curse_flags & TRC_DRAIN_MANA)
+        vec_add(v, string_alloc("<color:B>Drains Mana</color>"));
+    if (vec_length(v))
+    {
+        doc_insert(doc, "<color:U>Curses:</color><tab:12><indent>");
+        _obj_desc_print_list(doc, v);
+        doc_insert(doc, "</indent>\n");
+    }
+
     /* Misc */
-    doc_newline(doc);
+    if (doc_pos_compare(doc_cursor(doc), pos) > 0)
+        doc_newline(doc);
+
     if (object_is_device(o_ptr))
     {
         net = _obj_desc_calc_net(o_ptr->pval, flgs, TR_SPEED, TR_DEC_SPEED);
@@ -692,12 +905,26 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
         net = _obj_desc_calc_net(o_ptr->pval, flgs, TR_EASY_SPELL, TR_INVALID);
         if (net)
             doc_printf(doc, "It is %s than normal to use.\n", (net > 0) ? "easier" : "<color:R>harder</color>");
+
+        net = _obj_desc_calc_net(o_ptr->pval, flgs, TR_REGEN, TR_INVALID);
+        if (net)
+            doc_printf(doc, "It regenerates charges more %s than normal.\n", (net > 0) ? "quickly" : "<color:R>slowly</color>");
+
+        if (have_flag(flgs, TR_HOLD_LIFE))
+            doc_insert(doc, "It is immune to charge draining.\n");
     }
     else
     {
         if (have_flag(flgs, TR_EASY_SPELL))
             doc_insert(doc, "It affects your ability to cast spells.\n");
     }
+    if (have_flag(flgs, TR_DEC_MANA))
+    {
+        caster_info *caster_ptr = get_caster_info();
+        if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
+            doc_insert(doc, "It decreases your mana consumption.\n");
+    }
+
     net = _obj_desc_calc_net(o_ptr->pval, flgs, TR_WEAPONMASTERY, TR_INVALID);
     if (net)
     {
@@ -705,8 +932,13 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
             (net > 0) ? "increases" : "<color:R>decreases</color>");
     }
 
-    if (o_ptr->tval == TV_FIGURINE)
-        doc_insert(doc, "It will transform into a pet when thrown.\n");
+    if (have_flag(flgs, TR_LITE))
+    {
+        if (o_ptr->name2 == EGO_HELMET_VAMPIRE || o_ptr->name1 == ART_NIGHT)
+            doc_insert(doc, "It <color:R>decreases<color> the radius of your light source.\n");
+        else
+            doc_insert(doc, "It increases the radius of your light source.\n");
+    }
 
     switch (o_ptr->name1)
     {
@@ -764,6 +996,9 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
             doc_insert(doc, "It is cheerful.\n");
     }
 
+    if (o_ptr->tval == TV_FIGURINE)
+        doc_insert(doc, "It will transform into a pet when thrown.\n");
+
     if (have_flag(flgs, TR_RIDING))
     {
         if ( object_is_(o_ptr, TV_POLEARM, SV_LANCE)
@@ -776,379 +1011,49 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
             doc_insert(doc, "It is suitable for use while riding.\n");
         }
     }
-
-    vec_free(v);
-
-
-#if 0
-
-    /* And then describe it fully */
-
-    if (have_flag(flgs, TR_BLOWS))
-        info[i++] = "It affects your attack speed.";
-
-    if (have_flag(flgs, TR_ORDER))
-        info[i++] = "It is a weapon of order.";
-
-    if (have_flag(flgs, TR_WILD))
-        info[i++] = "It is a wild weapon.";
-
-    if (have_flag(flgs, TR_KILL_DRAGON))
-        info[i++] = "It is a great bane of dragons.";
-    else if (have_flag(flgs, TR_SLAY_DRAGON))
-        info[i++] = "It is especially deadly against dragons.";
-
-    if (have_flag(flgs, TR_KILL_ORC))
-        info[i++] = "It is a great bane of orcs.";
-    else if (have_flag(flgs, TR_SLAY_ORC))
-        info[i++] = "It is especially deadly against orcs.";
-
-    if (have_flag(flgs, TR_KILL_TROLL))
-        info[i++] = "It is a great bane of trolls.";
-    else if (have_flag(flgs, TR_SLAY_TROLL))
-        info[i++] = "It is especially deadly against trolls.";
-
-    if (have_flag(flgs, TR_KILL_GIANT))
-        info[i++] = "It is a great bane of giants.";
-    else if (have_flag(flgs, TR_SLAY_GIANT))
-        info[i++] = "It is especially deadly against giants.";
-
-    if (have_flag(flgs, TR_KILL_DEMON))
-        info[i++] = "It is a great bane of demons.";
-    else if (have_flag(flgs, TR_SLAY_DEMON))
-        info[i++] = "It strikes at demons with holy wrath.";
-
-    if (have_flag(flgs, TR_KILL_UNDEAD))
-        info[i++] = "It is a great bane of undead.";
-    else if (have_flag(flgs, TR_SLAY_UNDEAD))
-        info[i++] = "It strikes at undead with holy wrath.";
-
-    if (have_flag(flgs, TR_KILL_EVIL))
-        info[i++] = "It is a great bane of evil monsters.";
-    else if (have_flag(flgs, TR_SLAY_EVIL))
-        info[i++] = "It fights against evil with holy fury.";
-
-    if (have_flag(flgs, TR_SLAY_GOOD))
-        info[i++] = "It fights against good with hellish glee.";
-
-    if (have_flag(flgs, TR_SLAY_LIVING))
-        info[i++] = "It destroys living creatures.";
-
-    if (have_flag(flgs, TR_KILL_ANIMAL))
-        info[i++] = "It is a great bane of natural creatures.";
-    else if (have_flag(flgs, TR_SLAY_ANIMAL))
-        info[i++] = "It is especially deadly against natural creatures.";
-
-    if (have_flag(flgs, TR_KILL_HUMAN))
-        info[i++] = "It is a great bane of humans.";
-    else if (have_flag(flgs, TR_SLAY_HUMAN))
-        info[i++] = "It is especially deadly against humans.";
-
-    if (have_flag(flgs, TR_FORCE_WEAPON))
-        info[i++] = "It powerfully strikes at a monster using your mana.";
-
-    if (have_flag(flgs, TR_DEC_MANA))
-    {
-        caster_info *caster_ptr = get_caster_info();
-        if (caster_ptr && (caster_ptr->options & CASTER_ALLOW_DEC_MANA))
-            info[i++] = "It decreases your mana consumption.";
-    }
-    if (have_flag(flgs, TR_SPELL_POWER))
-        info[i++] = "It increases your spell power.";
-    if (have_flag(flgs, TR_DEC_SPELL_POWER))
-        info[i++] = "It decreases your spell power.";
-
-    if (have_flag(flgs, TR_SPELL_CAP))
-        info[i++] = "It increases your spell capacity.";
-    if (have_flag(flgs, TR_DEC_SPELL_CAP))
-        info[i++] = "It decreases your spell capacity.";
-
-    if (have_flag(flgs, TR_LIFE))
-        info[i++] = "It increases your hitpoints.";
-    if (have_flag(flgs, TR_DEC_LIFE))
-        info[i++] = "It decreases your hitpoints.";
-
     if (have_flag(flgs, TR_THROW))
-        info[i++] = "It is perfectly balanced for throwing.";
-    if (have_flag(flgs, TR_FREE_ACT))
-        info[i++] = "It provides immunity to paralysis.";
-    if (have_flag(flgs, TR_HOLD_LIFE))
-    {
-        if (object_is_device(o_ptr))
-            info[i++] = "It is immune to charge draining.";
-        else
-            info[i++] = "It provides resistance to life draining.";
-    }
-    if (have_flag(flgs, TR_LEVITATION))
-        info[i++] = "It allows you to levitate.";
-    if (have_flag(flgs, TR_LITE))
-    {
-        if ((o_ptr->name2 == EGO_HELMET_VAMPIRE) || (o_ptr->name1 == ART_NIGHT))
-            info[i++] = "It decreases radius of your light source by 1.";
-        else
-            info[i++] = "It provides permanent light. (radius +1)";
+        doc_insert(doc, "It is perfectly balanced for throwing.\n");
 
-    }
-    if (have_flag(flgs, TR_SEE_INVIS))
-        info[i++] = "It allows you to see invisible monsters.";
-    if (have_flag(flgs, TR_TELEPATHY))
-        info[i++] = "It gives telepathic powers.";
-    if (have_flag(flgs, TR_ESP_ANIMAL))
-        info[i++] = "It senses natural creatures.";
-    if (have_flag(flgs, TR_ESP_UNDEAD))
-        info[i++] = "It senses undead.";
-    if (have_flag(flgs, TR_ESP_DEMON))
-        info[i++] = "It senses demons.";
-    if (have_flag(flgs, TR_ESP_ORC))
-        info[i++] = "It senses orcs.";
-    if (have_flag(flgs, TR_ESP_TROLL))
-        info[i++] = "It senses trolls.";
-    if (have_flag(flgs, TR_ESP_GIANT))
-        info[i++] = "It senses giants.";
-    if (have_flag(flgs, TR_ESP_DRAGON))
-        info[i++] = "It senses dragons.";
-    if (have_flag(flgs, TR_ESP_HUMAN))
-        info[i++] = "It senses humans.";
-    if (have_flag(flgs, TR_ESP_EVIL))
-        info[i++] = "It senses evil creatures.";
-    if (have_flag(flgs, TR_ESP_GOOD))
-        info[i++] = "It senses good creatures.";
-    if (have_flag(flgs, TR_ESP_NONLIVING))
-        info[i++] = "It senses non-living creatures.";
-    if (have_flag(flgs, TR_ESP_UNIQUE))
-        info[i++] = "It senses unique monsters.";
-    if (have_flag(flgs, TR_SLOW_DIGEST))
-        info[i++] = "It slows your metabolism.";
-    if (have_flag(flgs, TR_REGEN))
-    {
-        if (object_is_device(o_ptr))
-            info[i++] = "It regenerates charges more quickly.";
-        else
-            info[i++] = "It speeds your regenerative powers.";
-    }
-    if (have_flag(flgs, TR_WARNING))
-        info[i++] = "It warns you of danger";
-    if (have_flag(flgs, TR_REFLECT))
-        info[i++] = "It reflects bolts and arrows.";
-    if (have_flag(flgs, TR_SH_FIRE))
-        info[i++] = "It produces a fiery sheath.";
-    if (have_flag(flgs, TR_SH_SHARDS))
-        info[i++] = "It produces a shard aura.";
-    if (have_flag(flgs, TR_SH_REVENGE))
-        info[i++] = "It produces an aura of retaliation.";
-    if (have_flag(flgs, TR_SH_ELEC))
-        info[i++] = "It produces an electric sheath.";
-    if (have_flag(flgs, TR_SH_COLD))
-        info[i++] = "It produces a sheath of coldness.";
-    if (have_flag(flgs, TR_NO_MAGIC))
-        info[i++] = "It produces an anti-magic shell.";
-    if (have_flag(flgs, TR_MAGIC_RESISTANCE))
-        info[i++] = "It reduces damage from magical attacks.";
-    if (have_flag(flgs, TR_NO_SUMMON))
-        info[i++] = "It disrupts summoning spells.";
-    if (have_flag(flgs, TR_NO_TELE))
-        info[i++] = "It prevents teleportation.";
-    if (have_flag(flgs, TR_XTRA_MIGHT))
-        info[i++] = "It fires missiles with extra might.";
-    if (have_flag(flgs, TR_XTRA_SHOTS))
-        info[i++] = "It fires missiles excessively fast.";
-    if (have_flag(flgs, TR_BLESSED))
-        info[i++] = "It has been blessed by the gods.";
-
-    if (object_is_cursed(o_ptr))
-    {
-        if (o_ptr->curse_flags & TRC_PERMA_CURSE)
-        {
-            info[i++] = "It is permanently cursed.";
-
-        }
-        else if (o_ptr->curse_flags & TRC_HEAVY_CURSE)
-        {
-            info[i++] = "It is heavily cursed.";
-
-        }
-        else
-        {
-            if (object_is_device(o_ptr) && !(o_ptr->ident & IDENT_MENTAL))
-            {
-                /* Hide cursed status of devices until *Identified* */
-            }
-            else
-            {
-                info[i++] = "It is cursed.";
-
-                /*
-                 * It's a trivial infomation since there is
-                 * fake inscription {cursed}
-                 */
-                trivial_info++;
-            }
-        }
-    }
-
-    /* Hack -- describe lite's */
     if (o_ptr->tval == TV_LITE)
     {
         if (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->art_flags, TR_DARKNESS))
         {
-            info[i++] = "It provides no light.";
+            doc_insert(doc, "It provides no light.\n");
 
             if (o_ptr->sval == SV_LITE_LANTERN)
-            {
-                info[i++] = "It decreases radius of light source by 2.";
-            }
+                doc_insert(doc, "It decreases radius of light source by 2.\n");
             else if (o_ptr->sval == SV_LITE_TORCH)
-            {
-                info[i++] = "It decreases radius of light source by 1.";
-            }
+                doc_insert(doc, "It decreases radius of light source by 1.\n");
             else
-            {
-                info[i++] = "It decreases radius of light source by 3.";
-            }
+                doc_insert(doc, "It decreases radius of light source by 3.\n");
         }
         else if (o_ptr->name1 || o_ptr->art_name)
         {
             if (o_ptr->name1 == ART_EYE_OF_VECNA)
-            {
-                info[i++] = "It allows you to see in the dark.";
-            }
+                doc_insert(doc, "It allows you to see in the dark.\n");
             else
-            {
-                info[i++] = "It provides light (radius 3) forever.";
-            }
+                doc_insert(doc, "It provides light (radius 3) forever.\n");
         }
         else if (o_ptr->name2 == EGO_LITE_EXTRA_LIGHT)
         {
             if (o_ptr->sval == SV_LITE_FEANOR)
-            {
-                info[i++] = "It provides light (radius 3) forever.";
-
-            }
+                doc_insert(doc, "It provides light (radius 3) forever.\n");
             else if (o_ptr->sval == SV_LITE_LANTERN)
-            {
-                info[i++] = "It provides light (radius 3) when fueled.";
-
-            }
+                doc_insert(doc, "It provides light (radius 3) when fueled.\n");
             else
-            {
-                info[i++] = "It provides light (radius 2) when fueled.";
-
-            }
+                doc_insert(doc, "It provides light (radius 2) when fueled.\n");
         }
         else
         {
             if (o_ptr->sval == SV_LITE_FEANOR)
-            {
-                info[i++] = "It provides light (radius 2) forever.";
-
-            }
+                doc_insert(doc, "It provides light (radius 2) forever.\n");
             else if (o_ptr->sval == SV_LITE_LANTERN)
-            {
-                info[i++] = "It provides light (radius 2) when fueled.";
-
-            }
+                doc_insert(doc, "It provides light (radius 2) when fueled.\n");
             else
-            {
-                info[i++] = "It provides light (radius 1) when fueled.";
-
-            }
+                doc_insert(doc, "It provides light (radius 1) when fueled.\n");
         }
         if (o_ptr->name2 == EGO_LITE_DURATION)
-        {
-            info[i++] = "It provides light for much longer time.";
-        }
-    }
-
-
-    if ((have_flag(flgs, TR_TY_CURSE)) || (o_ptr->curse_flags & TRC_TY_CURSE))
-    {
-        info[i++] = "It carries an ancient foul curse.";
-
-    }
-    if ((have_flag(flgs, TR_AGGRAVATE)) || (o_ptr->curse_flags & TRC_AGGRAVATE))
-    {
-        info[i++] = "It aggravates nearby creatures.";
-
-    }
-    if ((have_flag(flgs, TR_DRAIN_EXP)) || (o_ptr->curse_flags & TRC_DRAIN_EXP))
-    {
-        info[i++] = "It drains experience.";
-
-    }
-    if (o_ptr->curse_flags & TRC_SLOW_REGEN)
-    {
-        info[i++] = "It slows your regenerative powers.";
-
-    }
-    if (o_ptr->curse_flags & TRC_ADD_L_CURSE)
-    {
-        info[i++] = "It adds weak curses.";
-
-    }
-    if (o_ptr->curse_flags & TRC_ADD_H_CURSE)
-    {
-        info[i++] = "It adds heavy curses.";
-
-    }
-    if (o_ptr->curse_flags & TRC_CALL_ANIMAL)
-    {
-        info[i++] = "It attracts animals.";
-
-    }
-    if (o_ptr->curse_flags & TRC_CALL_DEMON)
-    {
-        info[i++] = "It attracts demons.";
-
-    }
-    if (o_ptr->curse_flags & TRC_CALL_DRAGON)
-    {
-        info[i++] = "It attracts dragons.";
-
-    }
-    if (o_ptr->curse_flags & TRC_COWARDICE)
-    {
-        info[i++] = "It makes you subject to cowardice.";
-
-    }
-    if ((have_flag(flgs, TR_TELEPORT)) || (o_ptr->curse_flags & TRC_TELEPORT))
-    {
-        info[i++] = "It induces random teleportation.";
-
-    }
-    if (o_ptr->curse_flags & TRC_LOW_MELEE)
-    {
-        info[i++] = "It causes you to miss blows.";
-
-    }
-    if (o_ptr->curse_flags & TRC_LOW_AC)
-    {
-        info[i++] = "It helps your enemies' blows.";
-
-    }
-    if (o_ptr->curse_flags & TRC_LOW_MAGIC)
-    {
-        info[i++] = "It encumbers you while spellcasting.";
-
-    }
-    if (o_ptr->curse_flags & TRC_FAST_DIGEST)
-    {
-        info[i++] = "It speeds your metabolism.";
-
-    }
-    if (o_ptr->curse_flags & TRC_DRAIN_HP)
-    {
-        info[i++] = "It drains you.";
-
-    }
-    if (o_ptr->curse_flags & TRC_DRAIN_MANA)
-    {
-        info[i++] = "It drains your mana.";
-
-    }
-
-    /* Describe about this kind of object instead of THIS fake object */
-    if (mode & SCROBJ_FAKE_OBJECT)
-    {
+            doc_insert(doc, "It provides light for much longer time.\n");
     }
 
     if (have_flag(flgs, TR_IGNORE_ACID) &&
@@ -1156,40 +1061,27 @@ void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc)
         have_flag(flgs, TR_IGNORE_FIRE) &&
         have_flag(flgs, TR_IGNORE_COLD))
     {
-        info[i++] = "It cannot be harmed by the elements.";
+        doc_insert(doc, "It cannot be harmed by the elements.\n");
     }
     else
     {
         if (have_flag(flgs, TR_IGNORE_ACID))
-        {
-            info[i++] = "It cannot be harmed by acid.";
-        }
+            doc_insert(doc, "It cannot be harmed by acid.\n");
         if (have_flag(flgs, TR_IGNORE_ELEC))
-        {
-            info[i++] = "It cannot be harmed by electricity.";
-        }
+            doc_insert(doc, "It cannot be harmed by electricity.\n");
         if (have_flag(flgs, TR_IGNORE_FIRE))
-        {
-            info[i++] = "It cannot be harmed by fire.";
-        }
+            doc_insert(doc, "It cannot be harmed by fire.\n");
         if (have_flag(flgs, TR_IGNORE_COLD))
-        {
-            info[i++] = "It cannot be harmed by cold.";
-        }
+            doc_insert(doc, "It cannot be harmed by cold.\n");
     }
 
     if (o_ptr->name3)
-    {
-        sprintf(replacement_name, "It reminds you of the artifact %s.", a_name + a_info[o_ptr->name3].name);
-        info[i++] = replacement_name;
-    }
+        doc_printf(doc, "It reminds you of the artifact <color:R>%s</color>.\n", a_name + a_info[o_ptr->name3].name);
 
     if (!(o_ptr->ident & IDENT_MENTAL))
-    {
-        if (i) info[i++] = "";
-        info[i++] = "This object may have additional powers.";
-    }
-#endif
+        doc_printf(doc, "This object may have additional powers.\n");
+
+    vec_free(v);
 }
 
 /*
@@ -1211,6 +1103,7 @@ bool screen_object(object_type *o_ptr, u32b mode)
         object_desc(o_name, o_ptr, OD_NAME_ONLY | OD_STORE | OD_COLOR_CODED | OD_OMIT_INSCRIPTION);
 
     doc_insert(doc, o_name);
+    doc_newline(doc);
     pos = doc_newline(doc);
 
     obj_describe_to_doc(o_ptr, doc);
@@ -1221,7 +1114,7 @@ bool screen_object(object_type *o_ptr, u32b mode)
     screen_save();
     if (pos.y < display.cy - 3)
     {
-        doc_insert(doc, "\n\n[Press Any Key to Continue]\n\n");
+        doc_insert(doc, "\n[Press Any Key to Continue]\n\n");
         doc_sync_term(doc, doc_range_all(doc), doc_pos_create(display.x, display.y));
         inkey();
     }

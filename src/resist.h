@@ -3,6 +3,7 @@
 
 enum {
     RES_INVALID = -1,
+    RES_BEGIN = 0,
     RES_ACID = 0,
     RES_ELEC,
     RES_FIRE,
@@ -21,7 +22,8 @@ enum {
     RES_BLIND,
     RES_FEAR,
     RES_TELEPORT,
-    RES_MAX
+    RES_MAX,
+    RES_END = RES_TELEPORT,
 };
 
 extern void res_add(int which);
@@ -37,6 +39,7 @@ extern void res_clear(void);
 extern bool res_is_high(int which);
 extern bool res_is_low(int which);
 extern cptr res_name(int which);
+extern byte res_color(int which);
 extern int  res_pct(int which);
 extern int  res_pct_aux(int which, int count);
 extern bool res_save(int which, int power);

@@ -2985,6 +2985,7 @@ void do_cmd_debug(void)
                 ct += o_list[i].number;
                 identify_item(&o_list[i]);
                 o_list[i].ident |= IDENT_MENTAL;
+                ego_aware(&o_list[i]);
                 if (o_list[i].name1 || o_list[i].name2)
                 {
                     object_desc(buf, &o_list[i], 0);
