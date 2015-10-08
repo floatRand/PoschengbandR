@@ -6506,11 +6506,7 @@ static void desc_obj_fake(int k_idx)
     /* Hack -- Handle stuff */
     handle_stuff();
 
-    if (!screen_object(o_ptr, SCROBJ_FAKE_OBJECT | SCROBJ_FORCE_DETAIL))
-    {
-        msg_print("You see nothing special.");
-        msg_print(NULL);
-    }
+    obj_display(o_ptr);
 }
 
 
@@ -8184,8 +8180,8 @@ static void do_cmd_knowledge_home(void)
                     object_type *o_ptr = &st_ptr->stock[page_top + which];
                     if (!(o_ptr->ident & IDENT_MENTAL))
                         msg_print("You have no special knowledge about that item.");
-                    else if (!screen_object(o_ptr, SCROBJ_FORCE_DETAIL))
-                        msg_print("You see nothing special.");
+                    else
+                        obj_display(o_ptr);
                 }
             }
             break;

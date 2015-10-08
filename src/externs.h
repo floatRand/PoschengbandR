@@ -1104,6 +1104,12 @@ extern byte get_mspeed(monster_race *r_ptr);
 extern bool player_place(int y, int x);
 extern void monster_drop_carried_objects(monster_type *m_ptr);
 
+/* obj_display.c */
+extern void obj_display(object_type *o_ptr);
+extern void obj_display_rect(object_type *o_ptr, rect_t display);
+extern void obj_display_doc(object_type *o_ptr, doc_ptr doc);
+extern void device_display_doc(object_type *o_ptr, doc_ptr doc);
+
 /* object1.c */
 extern s16b m_bonus(int max, int level);
 
@@ -1114,8 +1120,6 @@ extern void weapon_flags_known(int hand, u32b flgs[TR_FLAG_SIZE]);
 extern void missile_flags(object_type *arrow, u32b flgs[TR_FLAG_SIZE]);
 extern void missile_flags_known(object_type *arrow, u32b flgs[TR_FLAG_SIZE]);
 extern void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE]);
-extern void obj_describe_to_doc(object_type *o_ptr, doc_ptr doc);
-extern bool screen_object(object_type *o_ptr, u32b mode);
 extern char index_to_label(int i);
 extern s16b label_to_inven(int c);
 extern s16b label_to_equip(int c);

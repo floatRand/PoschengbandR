@@ -2806,7 +2806,7 @@ static bool _reforge_artifact(void)
     p_ptr->window |= (PW_INVEN | PW_EQUIP);
     handle_stuff();
 
-    screen_object(dest, 0);
+    obj_display(dest);
 
     inven_item_optimize(src_idx);
 

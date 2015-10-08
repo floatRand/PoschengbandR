@@ -1285,7 +1285,6 @@ static void spoil_artifact_doc(void)
         {
             artifact_type *a_ptr = &a_info[j];
             object_type    forge = {0};
-            char           o_name[MAX_NLEN];
 
             if (a_ptr->tval != group_artifact[i].tval) continue;
 
@@ -1294,11 +1293,8 @@ static void spoil_artifact_doc(void)
             identify_item(&forge);
             forge.ident |= IDENT_MENTAL;
 
-            object_desc(o_name, &forge, OD_NAME_AND_ENCHANT | OD_COLOR_CODED | OD_OMIT_INSCRIPTION);
-            doc_insert(doc, o_name);
-            doc_printf(doc, "\n  <indent>\n");
-            obj_describe_to_doc(&forge, doc);
-            doc_printf(doc, "</indent>\n\n");
+            obj_display_doc(&forge, doc);
+            doc_newline(doc);
         }
     }
 

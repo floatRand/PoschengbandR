@@ -184,6 +184,9 @@ doc_ptr doc_alloc(int width)
     style = doc_style(res, "selection");
     style->color = TERM_YELLOW;
 
+    style = doc_style(res, "indent");
+    style->indent = 4;
+
     return res;
 }
 
@@ -440,6 +443,7 @@ doc_style_ptr doc_style(doc_ptr doc, cptr name)
         result->color = TERM_WHITE;
         result->left = 0;
         result->right = doc->width;
+        result->indent = 0;
         result->options = 0;
         str_map_add(doc->styles, name, result);
     }
@@ -893,6 +897,8 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
           && !(style->options & DOC_STYLE_NO_WORDWRAP) )
         {
             doc_newline(doc);
+            if (style->indent)
+                doc_insert_space(doc, style->indent);
         }
 
         for (i = 0; i < qidx; i++)
@@ -923,6 +929,8 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
                         if (style->options & DOC_STYLE_NO_WORDWRAP)
                             break;
                         doc_newline(doc);
+                        if (style->indent)
+                            doc_insert_space(doc, style->indent);
                         cell = doc_char(doc, doc->cursor);
                     }
                     else

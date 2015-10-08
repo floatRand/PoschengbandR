@@ -544,8 +544,6 @@ void do_cmd_observe(void)
 
     object_type        *o_ptr;
 
-    char        o_name[MAX_NLEN];
-
     cptr q, s;
 
     item_tester_no_ryoute = TRUE;
@@ -577,14 +575,7 @@ void do_cmd_observe(void)
         return;
     }
 
-    /* Description */
-    object_desc(o_name, o_ptr, 0);
-
-    /* Describe
-    msg_format("Examining %s...", o_name);*/
-
-    /* Describe it fully */
-    if (!screen_object(o_ptr, SCROBJ_FORCE_DETAIL)) msg_print("You see nothing special.");
+    obj_display(o_ptr);
 }
 
 
@@ -2156,8 +2147,7 @@ void do_cmd_list_objects(void)
                         object_type *o_ptr = &o_list[info_ptr->o_idx];
                         if (object_is_weapon_armour_ammo(o_ptr) || object_is_known(o_ptr))
                         {
-                            screen_object(o_ptr, SCROBJ_FORCE_DETAIL);
-                            /*inkey();*/
+                            obj_display(o_ptr);
                             screen_load();
                             screen_save();
                             redraw = TRUE;

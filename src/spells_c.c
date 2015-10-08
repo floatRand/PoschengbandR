@@ -361,7 +361,7 @@ void crafting_spell(int cmd, variant *res)
             ego_aware(o_ptr);
             object_known(o_ptr);
             o_ptr->ident |= (IDENT_MENTAL);
-            screen_object(o_ptr, 0L);
+            obj_display(o_ptr);
         }
         var_set_bool(res, TRUE);
         break;

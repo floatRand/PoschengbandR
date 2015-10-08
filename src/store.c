@@ -2605,9 +2605,7 @@ static void store_examine(void)
 
     /* Describe it fully */
     ego_aware(o_ptr);
-    if (!screen_object(o_ptr, SCROBJ_FORCE_DETAIL))
-        msg_print("You see nothing special.");
-
+    obj_display(o_ptr);
 
     return;
 }

@@ -84,6 +84,7 @@ struct doc_style_s
     int  left;
     int  right;
     int  options;
+    int  indent;
 };
 typedef struct doc_style_s doc_style_t, *doc_style_ptr;
 enum doc_style_options_e

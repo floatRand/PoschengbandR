@@ -992,7 +992,7 @@ static void _reforging_spell(int cmd, variant *res)
         p_ptr->window |= (PW_INVEN | PW_EQUIP);
         handle_stuff();
 
-        screen_object(dest, 0);
+        obj_display(dest);
 
         inven_item_optimize(src_idx);
 

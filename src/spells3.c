@@ -2503,7 +2503,7 @@ bool identify_fully(object_p p)
         lore_do_probe(o_ptr->pval);
     }
 
-    (void)screen_object(o_ptr, 0L);
+    obj_display(o_ptr);
     autopick_alter_item(item, (bool)(destroy_identify && !old_known));
     return TRUE;
 }

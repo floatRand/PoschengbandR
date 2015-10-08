@@ -2724,7 +2724,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         /* Mark the item as fully known */
         o_ptr->ident |= (IDENT_MENTAL);
 
-        (void)screen_object(o_ptr, 0L);
+        obj_display(o_ptr);
 
         if (!get_string(ask_msg, dummy_name, sizeof dummy_name)
             || !dummy_name[0])
