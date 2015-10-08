@@ -1,25 +1,22 @@
 <color:y>PosChengband <$:version></color>
 <style:screenshot>
-The Mace of Disruption 'Deathwreaker' (7d8) (+18,+18) (+6)          LEVEL <color:G>    40</color>
+The Mace of Disruption 'Deathwreaker' (7d8) (+18,+18)               LEVEL <color:G>    40</color>
                                                                     EXP <color:G>    243k</color>
-A weapon so massive it seems beyond the strength of mortals, yet    AU  <color:G>   99.6M</color>
-you feel the might of giants within you as you heft it. As you      <color:W>|</color><color:d> </color><color:s>}</color><color:g>==</color><color:y>"*</color><color:v>[</color><color:G>(</color><color:d>  </color><color:U>]</color>
-grip the handle of ebony and steel, coronas of fire blaze and       STR!: <color:G>18/200</color>
-mighty spells to preserve magic activate around you. You wield the  INT!: <color:G>18/100</color>
-Fear of Dragons and the Despair of the Undead!                      WIS!: <color:G>18/140</color>
+    A weapon so massive it seems beyond the strength of mortals,    AU  <color:G>   99.6M</color>
+    yet you feel the might of giants within you as you heft it. As  <color:W>|</color><color:d> </color><color:s>}</color><color:g>==</color><color:y>"*</color><color:v>[</color><color:G>(</color><color:d>  </color><color:U>]</color>
+    you grip the handle of ebony and steel, coronas of fire blaze   STR!: <color:G>18/200</color>
+    and mighty spells to preserve magic activate around you. You    INT!: <color:G>18/100</color>
+    wield the Fear of Dragons and the Despair of the Undead!        WIS!: <color:G>18/140</color>
                                                                     DEX!: <color:G>18/150</color>
-<color:U>Stats:</color>      <color:G>Strength</color>                                                CON!: <color:G>18/170</color>
-<color:U>Brands:</color>     <color:R>Fire</color>, <color:g>Poison</color>, <color:D>Vampiric</color>                                  CHR : <color:G>    17</color>
-<color:U>Slays:</color>      <color:R>Evil</color>, <color:R>Dragons</color>, <color:R>Undead</color>, <color:R>Animals</color>, <color:R>Humans</color>                  AC     <color:G>   95</color>
-<color:U>Resists:</color>    <color:r>*Fire*</color>, <color:D>Dark</color>, <color:R>Confusion</color>, <color:v>Chaos</color>, <color:v>Disenchantment</color>          HP <color:G> 806</color>/<color:G> 806</color>
-<color:U>Abilities:</color>  <color:B>+Tunneling</color>, <color:r>Anti-Teleportation</color>
-<color:U>Curses:</color>     <color:r>Aggravate</color>
-                                                                    @[<color:G>*********</color>]
-It increases the radius of your light source.                       <color:U>,</color>[*******--]
-It is suitable for use while riding.
-It cannot be harmed by the elements.
+    <color:G>+6</color> to STR, Digging                                              CON!: <color:G>18/170</color>
+    Slay <color:y>Evil</color>, <color:r>Dragons</color>, <color:D>Undead</color>, <color:g>Animals</color>, <color:s>Humans</color>                     CHR : <color:G>    17</color>
+    <color:r>Flame Tongue</color>; <color:G>Poisoned</color>; <color:D>Vampiric</color>                                AC     <color:G>   95</color>
+    Immunity to <color:r>Fire</color>                                                HP <color:G> 806</color>/<color:G> 806</color>
+    Resist <color:D>Dark</color>, <color:R>Confusion</color>, <color:v>Chaos</color>, <color:v>Disenchantment</color>
+    <color:r>Prevents Teleportation</color>; <color:o>Riding</color>; <color:y>Permanent Light (1)</color>
+    <color:r>Aggravates</color>                                                      @[<color:G>*********</color>]
+    <color:B>It cannot be harmed by the elements.</color>                            <color:U>,</color>[*******--]
 
-[Press Any Key to Continue]
-                                                                    <color:G>Fast (+11)</color>
+
 </style>
               [Press <color:keypress>c</color> for Credits. Press Any Other Key to Play]

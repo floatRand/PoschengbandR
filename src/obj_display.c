@@ -831,13 +831,9 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     object_flags_known(o_ptr, flgs);
 
     _display_name(o_ptr, doc);
-
-    doc_current_style(doc)->left = 4;
-    doc_newline(doc);
-
+    doc_insert(doc, "    <indent>\n");
     _display_desc(o_ptr, doc);
-
-    doc_current_style(doc)->indent = 4; /* Indent a bit when word wrapping long lines */
+    doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
 
     if (o_ptr->tval == TV_LITE)
         _lite_display_doc(o_ptr, doc);
@@ -858,24 +854,18 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     if (!(o_ptr->ident & IDENT_MENTAL))
         doc_printf(doc, "This object may have additional powers.\n");
 
-    doc_current_style(doc)->left = 0;
-    doc_current_style(doc)->indent = 0;
+    doc_insert(doc, "</style></indent>\n");
 }
 
 extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
 {
     u32b flgs[TR_FLAG_SIZE];
     int  net = 0;
-    doc_pos_t pos;
 
     _display_name(o_ptr, doc);
-
-    doc_current_style(doc)->left = 4;
-    doc_newline(doc);
-
+    doc_insert(doc, "    <indent>\n");
     _display_desc(o_ptr, doc);
-
-    doc_current_style(doc)->indent = 4; /* Indent a bit when word wrapping long lines */
+    doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
 
     if (o_ptr->tval == TV_SCROLL || o_ptr->tval == TV_POTION)
     {
@@ -929,7 +919,6 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
         }
     }
 
-    pos = doc_cursor(doc);
     net = _calc_net_bonus(o_ptr->pval, flgs, TR_SPEED, TR_DEC_SPEED);
     if (net)
         doc_printf(doc, "It may be used %s quickly than normal.", (net > 0) ? "more" : "<color:R>less</color>");
@@ -952,8 +941,7 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     if (!(o_ptr->ident & IDENT_MENTAL))
         doc_printf(doc, "This object may have additional powers.\n");
 
-    if (doc_pos_compare(doc_cursor(doc), pos) > 0)
-        doc_newline(doc);
-
     _display_ignore(o_ptr, flgs, doc);
+
+    doc_insert(doc, "</style></indent>\n");
 }

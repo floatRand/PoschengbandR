@@ -83,14 +83,16 @@ struct doc_style_s
     byte color;
     int  left;
     int  right;
-    int  options;
     int  indent;
+    int  options;
 };
 typedef struct doc_style_s doc_style_t, *doc_style_ptr;
 enum doc_style_options_e
 {
     DOC_STYLE_NO_WORDWRAP = 0x0001,
 };
+
+typedef void (*doc_style_f)(doc_style_ptr style);
 
 struct doc_bookmark_s
 {
@@ -140,10 +142,9 @@ doc_pos_t     doc_find_bookmark(doc_ptr doc, cptr name);
 doc_pos_t     doc_find_next(doc_ptr doc, cptr text, doc_pos_t start);
 doc_pos_t     doc_find_prev(doc_ptr doc, cptr text, doc_pos_t start);
 
-doc_style_ptr doc_style(doc_ptr doc, cptr name);
-
               /* <style:foo>Some Text<style:*> */
 void          doc_push_style(doc_ptr doc, doc_style_ptr style);
+void          doc_push_named_style(doc_ptr doc, cptr name);
 void          doc_pop_style(doc_ptr doc);
 doc_style_ptr doc_current_style(doc_ptr doc);
 

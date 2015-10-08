@@ -129,10 +129,87 @@ static void _doc_link_free(vptr pv)
 #define PAGE_NUM(a) ((a)>>7)
 #define PAGE_OFFSET(a) ((a)%128)
 
+static void _normal_style(doc_style_ptr style)
+{
+    style->color = TERM_WHITE;
+    style->right = 72;
+}
+
+static void _note_style(doc_style_ptr style)
+{
+    style->color = TERM_L_GREEN;
+    style->left = 4;
+    style->right = 60;
+}
+
+static void _title_style(doc_style_ptr style)
+{
+    style->color = TERM_L_BLUE;
+}
+
+static void _heading_style(doc_style_ptr style)
+{
+    style->color = TERM_RED;
+}
+
+static void _keyword_style(doc_style_ptr style)
+{
+    style->color = TERM_L_RED;
+}
+
+static void _keypress_style(doc_style_ptr style)
+{
+    style->color = TERM_ORANGE;
+}
+
+static void _link_style(doc_style_ptr style)
+{
+    style->color = TERM_L_GREEN;
+}
+
+static void _screenshot_style(doc_style_ptr style)
+{
+    style->right = 255;
+    style->options |= DOC_STYLE_NO_WORDWRAP;
+}
+
+static void _table_style(doc_style_ptr style)
+{
+    style->right = 255;
+    style->options |= DOC_STYLE_NO_WORDWRAP;
+}
+
+static void _selection_style(doc_style_ptr style)
+{
+    style->color = TERM_YELLOW;
+}
+
+static void _indent_style(doc_style_ptr style)
+{
+    style->indent = 4;
+}
+
+/* doc_style_f <-> void * is forbidden in ISO C ... I'm not sure
+   what the correct idiom is for a table of function pointers? */
+static void _add_doc_style_f(doc_ptr doc, cptr name, doc_style_f f)
+{
+    doc_style_f *pf = malloc(sizeof(doc_style_f));
+    *pf = f;
+    str_map_add(doc->styles, name, pf);
+}
+
+static doc_style_f _get_doc_style_f(doc_ptr doc, cptr name)
+{
+    doc_style_f *pf = str_map_find(doc->styles, name);
+    if (pf)
+        return *pf;
+    return NULL;
+}
+
 doc_ptr doc_alloc(int width)
 {
-    doc_ptr res = malloc(sizeof(doc_t));
-    doc_style_ptr style;
+    doc_ptr     res = malloc(sizeof(doc_t));
+    doc_style_t style = {0};
 
     res->cursor.x = 0;
     res->cursor.y = 0;
@@ -144,48 +221,22 @@ doc_ptr doc_alloc(int width)
     res->links = int_map_alloc(_doc_link_free);
     res->style_stack = vec_alloc(free);
 
-    /* Default Styles:
-       We currently lack a way to define styles inside a document.
-       Perhaps these should be globally available as well, and initialized
-       from a preference file for the entire document system. */
-    style = doc_style(res, "normal");
-    style->right = MIN(72, width);
-    doc_push_style(res, style); /* bottom of the style stack is *always* "normal" */
+    /* Default Styles */
+    _add_doc_style_f(res, "normal", _normal_style);
+    _add_doc_style_f(res, "note", _note_style);
+    _add_doc_style_f(res, "title", _title_style);
+    _add_doc_style_f(res, "heading", _heading_style);
+    _add_doc_style_f(res, "keyword", _keyword_style);
+    _add_doc_style_f(res, "keypress", _keypress_style);
+    _add_doc_style_f(res, "link", _link_style);
+    _add_doc_style_f(res, "screenshot", _screenshot_style);
+    _add_doc_style_f(res, "table", _table_style);
+    _add_doc_style_f(res, "selection", _selection_style);
+    _add_doc_style_f(res, "indent", _indent_style);
 
-    style = doc_style(res, "note");
-    style->color = TERM_L_GREEN;
-    style->left = 4;
-    style->right = MIN(60, width);
-
-    style = doc_style(res, "title");
-    style->color = TERM_L_BLUE;
-
-    style = doc_style(res, "heading");
-    style->color = TERM_RED;
-
-    style = doc_style(res, "keyword");
-    style->right = MIN(72, width);
-    style->color = TERM_L_RED;
-
-    style = doc_style(res, "keypress");
-    style->right = MIN(72, width);
-    style->color = TERM_ORANGE;
-
-    style = doc_style(res, "link");
-    style->right = MIN(72, width);
-    style->color = TERM_L_GREEN;
-
-    style = doc_style(res, "screenshot");
-    style->options |= DOC_STYLE_NO_WORDWRAP;
-
-    style = doc_style(res, "table");
-    style->options |= DOC_STYLE_NO_WORDWRAP;
-
-    style = doc_style(res, "selection");
-    style->color = TERM_YELLOW;
-
-    style = doc_style(res, "indent");
-    style->indent = 4;
+    /* bottom of the style stack is *always* "normal" and can never be popped */
+    _normal_style(&style);
+    doc_push_style(res, &style);
 
     return res;
 }
@@ -434,34 +485,31 @@ doc_pos_t doc_find_prev(doc_ptr doc, cptr text, doc_pos_t start)
     return doc_pos_invalid();
 }
 
-doc_style_ptr doc_style(doc_ptr doc, cptr name)
-{
-    doc_style_ptr result = str_map_find(doc->styles, name);
-    if (!result)
-    {
-        result = malloc(sizeof(doc_style_t));
-        result->color = TERM_WHITE;
-        result->left = 0;
-        result->right = doc->width;
-        result->indent = 0;
-        result->options = 0;
-        str_map_add(doc->styles, name, result);
-    }
-    return result;
-}
-
 void doc_push_style(doc_ptr doc, doc_style_ptr style)
 {
     doc_style_ptr copy = malloc(sizeof(doc_style_t));
 
     *copy = *style;
-    vec_push(doc->style_stack, copy);
+    if (copy->right > doc->width)
+        copy->right = doc->width;
 
+    vec_push(doc->style_stack, copy);
     if (doc->cursor.x < copy->left)
     {
         doc_insert_space(doc, copy->left - doc->cursor.x);
         assert(doc->cursor.x == copy->left);
     }
+}
+
+void doc_push_named_style(doc_ptr doc, cptr name)
+{
+    doc_style_t copy = *doc_current_style(doc);
+    doc_style_f f = _get_doc_style_f(doc, name);
+
+    if (f)
+        f(&copy);
+
+    doc_push_style(doc, &copy);
 }
 
 void doc_pop_style(doc_ptr doc)
@@ -730,15 +778,18 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         }
         else
         {
-            string_ptr arg = string_nalloc(tag->arg, tag->arg_size);
-            doc_style_ptr style = str_map_find(doc->styles, string_buffer(arg));
+            string_ptr  arg = string_nalloc(tag->arg, tag->arg_size);
+            doc_style_t style = *doc_current_style(doc); /* copy */
+            doc_style_f f = _get_doc_style_f(doc, string_buffer(arg));
+
+            if (f)
+                f(&style);
 
             {/* We don't copy the named style, just its color. */
              /* Also, we damn well better push a style or we'll be upset
                 when the good little user pops! */
                 doc_style_t copy = *doc_current_style(doc);
-                if (style)
-                    copy.color = style->color;
+                copy.color = style.color;
                 doc_push_style(doc, &copy);
             }
             string_free(arg);
@@ -760,10 +811,13 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             if (tag->arg_size == 1 && tag->arg[0] == '*')
                 doc_pop_style(doc);
             else
-            {/* Better add one if name doesn't exist ... */
-                doc_style_ptr style = doc_style(doc, string_buffer(arg));
-                assert(style);
-                doc_push_style(doc, style);
+            {/* Better silently add one if name doesn't exist ... */
+                doc_style_t copy = *doc_current_style(doc);
+                doc_style_f f = _get_doc_style_f(doc, string_buffer(arg));
+
+                if (f)
+                    f(&copy);
+                doc_push_style(doc, &copy);
             }
             break;
         case DOC_TAG_VAR:
