@@ -1755,8 +1755,8 @@ static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
     /* Not to be destroyed */
     if (!destroy) return;
 
-    /* Now decided to destroy */
-    disturb(0,0);
+    /* Now decided to destroy
+    disturb(0,0);*/
 
     /* Artifact? */
     if (!can_player_destroy_object(o_ptr))

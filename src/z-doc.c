@@ -186,7 +186,7 @@ static void _selection_style(doc_style_ptr style)
 
 static void _indent_style(doc_style_ptr style)
 {
-    style->indent = 4;
+    style->indent = 2;
 }
 
 /* doc_style_f <-> void * is forbidden in ISO C ... I'm not sure
@@ -1421,9 +1421,13 @@ void doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos)
 
     if (doc_region_is_valid(&doc->selection))
     {
-        doc_style_ptr style = str_map_find(doc->styles, "selection");
-        if (style)
-            selection_color = style->color;
+        doc_style_t style = *doc_current_style(doc);
+        doc_style_f f = _get_doc_style_f(doc, "selection");
+        if (f)
+        {
+            f(&style);
+            selection_color = style.color;
+        }
     }
 
     for (pos.y = range.start.y; pos.y <= range.stop.y; pos.y++)

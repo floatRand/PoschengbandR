@@ -977,8 +977,8 @@ F:ESP_ORC | ESP_TROLL | ESP_GIANT
 E:BALL_COLD:20:200:100
 E:Your sword glows an intense blue...
 D:The weapon of Fingolfin, High King of the Noldor; it shines like a column 
-D:of ice lit by light unquenchable. Morgoth came but unwillingly to meet it
-D:of old; his lame foot will remind him of its might should be meet it again.
+D:of ice lit by light unquenchable. Morgoth came unwillingly to meet it
+D:of old; his lame foot will remind him of its might should he meet it again.
 
 # The Long Sword 'Anduril'
 

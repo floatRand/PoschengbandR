@@ -2487,13 +2487,14 @@ bool identify_fully(object_p p)
     handle_stuff();
     object_desc(o_name, o_ptr, 0);
 
+/*  Message seems redundant ...
     if (equip_is_valid_slot(item))
         msg_format("%^s: %s (%c).", equip_describe_slot(item), o_name, index_to_label(item));
     else if (item >= 0)
         msg_format("In your pack: %s (%c).", o_name, index_to_label(item));
     else
         msg_format("On the ground: %s.", o_name);
-
+*/
     if ( p_ptr->prace == RACE_MON_POSSESSOR 
       && o_ptr->tval == TV_CORPSE 
       && o_ptr->sval == SV_CORPSE )

@@ -2839,7 +2839,16 @@ void update_mon(int m_idx, bool full)
               && projectable(m_ptr->fy, m_ptr->fx, py, px) 
               && projectable(py, px, m_ptr->fy, m_ptr->fx) )
             {
-                if (disturb_pets || is_hostile(m_ptr))
+                if ( town_no_disturb
+                  && !dun_level
+                  && p_ptr->town_num
+                  && !p_ptr->inside_arena
+                  && !p_ptr->inside_battle
+                  && !p_ptr->inside_quest
+                  && r_ptr->level == 0 )
+                {
+                }
+                else if (disturb_pets || is_hostile(m_ptr))
                     disturb(1, 0);
             }
 

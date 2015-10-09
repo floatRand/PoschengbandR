@@ -3899,7 +3899,10 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                             if (drain_msg)
                             {
-                                msg_format("Your weapon drains life from %s!", m_name_object);
+                                if (o_ptr)
+                                    msg_format("Your weapon drains life from %s!", m_name_object);
+                                else
+                                    msg_format("You drain life from %s!", m_name_object);
                                 drain_msg = FALSE;
                             }
                             drain_heal = (drain_heal * mutant_regenerate_mod) / 100;

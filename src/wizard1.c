@@ -414,6 +414,7 @@ static grouper group_artifact[] =
 
 /*
  * Hack -- Create a "forged" artifact
+ * Compare to create_named_art_aux() in artifact.c
  */
 static bool make_fake_artifact(object_type *o_ptr, int name1)
 {
@@ -455,6 +456,8 @@ static void spoil_artifact_doc(void)
 {
     int i,j;
     doc_ptr doc = doc_alloc(80);
+
+    spoiler_hack = TRUE;
     for (i = 0; group_artifact[i].tval; i++)
     {
         if (group_artifact[i].name)
@@ -483,6 +486,7 @@ static void spoil_artifact_doc(void)
 
     doc_display(doc, "Artifact Spoilers", 0);
     doc_free(doc);
+    spoiler_hack = FALSE;
 }
 
 /*
@@ -1168,6 +1172,8 @@ extern void do_cmd_spoilers(void);
 
 /*
  * Create Spoiler files -BEN-
+ * Converted from File Creation to Document Creation, with online
+ * viewing (as well as the option for HTML output).  -CHRIS-
  */
 void do_cmd_spoilers(void)
 {
@@ -1181,11 +1187,11 @@ void do_cmd_spoilers(void)
         Term_clear();
 
         /* Info */
-        prt("Create a spoiler file.", 2, 0);
+        prt("View Spoilers", 2, 0);
 
         /* Prompt for a file */
         prt("(1) Brief Object Info (obj-desc.spo)", 5, 5);
-        prt("(2) Brief Artifact Info (artifact.spo)", 6, 5);
+        prt("(2) Brief Artifact Info", 6, 5);
         prt("(3) Brief Monster Info (mon-desc.spo)", 7, 5);
         prt("(4) Full Monster Info (mon-info.spo)", 8, 5);
         prt("(5) Monster Evolution Info (mon-evol.spo)", 9, 5);
