@@ -1059,26 +1059,30 @@ doc_pos_t doc_insert_text(doc_ptr doc, byte a, cptr text)
 
 doc_pos_t doc_printf(doc_ptr doc, const char *fmt, ...)
 {
+    string_ptr s = string_alloc(NULL);
     va_list vp;
-    char buf[1024];
 
     va_start(vp, fmt);
-    (void)vstrnfmt(buf, 1024, fmt, vp);
+    string_vprintf(s, fmt, vp);
     va_end(vp);
 
-    return doc_insert(doc, buf);
+    doc_insert(doc, string_buffer(s));
+    string_free(s);
+    return doc->cursor;
 }
 
 doc_pos_t doc_cprintf(doc_ptr doc, byte a, const char *fmt, ...)
 {
+    string_ptr s = string_alloc(NULL);
     va_list vp;
-    char buf[1024];
 
     va_start(vp, fmt);
-    (void)vstrnfmt(buf, 1024, fmt, vp);
+    string_vprintf(s, fmt, vp);
     va_end(vp);
 
-    return doc_insert_text(doc, a, buf);
+    doc_insert_text(doc, a, string_buffer(s));
+    string_free(s);
+    return doc->cursor;
 }
 
 doc_pos_t doc_insert_doc(doc_ptr dest_doc, doc_ptr src_doc, int indent)

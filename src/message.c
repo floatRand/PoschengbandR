@@ -482,6 +482,9 @@ void msg_print(cptr msg)
     cmsg_print(TERM_WHITE, msg);
 }
 
+/* Note: Angband uses proprietary format strings, like %^s
+   that string_vprintf() won't handle. So, let's hope 1024
+   is enough for every message! (It should be ...) */
 void msg_format(cptr fmt, ...)
 {
     va_list vp;

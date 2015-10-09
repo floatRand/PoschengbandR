@@ -6,13 +6,19 @@
 #include <stdarg.h>
 
 #ifdef _WIN32
-#pragma warning(disable:4996)
-#define vsnprintf _vsnprintf
+#   pragma warning(disable:4996)
+#   define vsnprintf _vsnprintf
 #endif
 
 #ifdef _MSC_VER
-/* Release code is 4x slower than debug code without the following! */
-#pragma function(memset, strlen)
+    /* Release code is 4x slower than debug code without the following! */
+#   pragma function(memset, strlen)
+    /* From latest Vanilla:
+     * "MSVC doesn't have va_copy (which is C99) or an alternative, so we'll just
+     *  copy the SRC pointer. In other cases we'll use va_copy() as we should." */
+#   define VA_COPY(DST, SRC) (DST) = (SRC)
+#else
+#   define VA_COPY(DST, SRC) va_copy(DST, SRC)
 #endif
 
 struct string_s
@@ -138,15 +144,29 @@ int string_compare(const string_ptr left, const string_ptr right)
 void string_printf(string_ptr str, const char *fmt, ...)
 {
     va_list vp;
+    va_start(vp, fmt);
+    string_vprintf(str, fmt, vp);
+    va_end(vp);
+}
 
+void string_vprintf(string_ptr str, const char *fmt, va_list vp)
+{
     for (;;)
     {
-        int cb = str->len;
-        int res;
+        va_list args;
+        int     cb = str->len;
+        int     res;
 
-        va_start(vp, fmt);
-        res = vsnprintf(str->buf + cb, str->size - cb, fmt, vp);
-        va_end(vp);
+        /* Note: va_copy allows vsnprintf to work on linux. Otherwise,
+           we would have to va_start before each call, forcing the size
+           growing code from string_vprintf() to string_printf(fmt, ...).
+           Now consider something like doc_printf(fmt, ...) that wants
+           to reuse this, but can't call string_printf(fmt, ...)!
+           va_copy is C99 so won't work on M$. Yet, _vsnprintf doesn't
+           mutate the va_list arg the way linux does, so it just works.*/
+        VA_COPY(args, vp);
+        res = vsnprintf(str->buf + cb, str->size - cb, fmt, args);
+        va_end(args);
 
         if (res >= str->size - cb)
         {

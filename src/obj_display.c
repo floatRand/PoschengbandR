@@ -831,7 +831,7 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     object_flags_known(o_ptr, flgs);
 
     _display_name(o_ptr, doc);
-    doc_insert(doc, "    <indent>\n");
+    doc_insert(doc, "  <indent>\n");
     _display_desc(o_ptr, doc);
     doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
 
@@ -863,7 +863,7 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     int  net = 0;
 
     _display_name(o_ptr, doc);
-    doc_insert(doc, "    <indent>\n");
+    doc_insert(doc, "  <indent>\n");
     _display_desc(o_ptr, doc);
     doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
 

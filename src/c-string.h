@@ -21,6 +21,7 @@ extern void string_write_file(string_ptr str, FILE *fp);
 extern void string_append_char(string_ptr str, char ch);
 extern void string_nappend(string_ptr str, const char *val, int cb);
 extern void string_printf(string_ptr str, const char *fmt, ...);
+extern void string_vprintf(string_ptr str, const char *fmt, va_list vp);
 extern void string_strip(string_ptr str);
 
 extern int string_compare(const string_ptr left, const string_ptr right);
