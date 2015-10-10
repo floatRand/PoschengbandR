@@ -631,10 +631,11 @@ void do_cmd_study(void)
         set_action(ACTION_NONE);
     }
 
+/*  Please, no more -more-!
     msg_format("You can learn %d new %s%s.", p_ptr->new_spells, p,
         (p_ptr->new_spells == 1?"":"s"));
 
-    msg_print(NULL);
+    msg_print(NULL);*/
 
 
     /* Restrict choices to "useful" books */

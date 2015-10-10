@@ -8306,6 +8306,7 @@ void do_cmd_knowledge(void)
 
         c_prt(TERM_RED, "Self Knowledge", row++, col - 2);
         prt("(@) About Yourself", row++, col);
+        prt("(W) Weapon Damage", row++, col);
         prt("(M) Mutations", row++, col);
         if (enable_virtues)
             prt("(v) Virtues", row++, col);
@@ -8382,6 +8383,9 @@ void do_cmd_knowledge(void)
         /* Self Knowledge */
         case '@':
             do_cmd_knowledge_stat();
+            break;
+        case 'W':
+            do_cmd_knowledge_weapon();
             break;
         case 'M':
             mut_do_cmd_knowledge();

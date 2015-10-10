@@ -973,6 +973,7 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
         }
         else
         {
+            doc_insert(doc, "<color:U>This device is loaded with a spell:</color>\n");
             doc_printf(doc, "Spell: <color:B>%s</color>\n", do_device(o_ptr, SPELL_NAME, boost));
             doc_printf(doc, "Desc : <indent>%s</indent>\n\n", do_device(o_ptr, SPELL_DESC, boost));
         }

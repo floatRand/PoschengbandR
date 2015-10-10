@@ -1,24 +1,14 @@
-PosChengband Monsters.
+<style:title>Monsters</style>
 
 Please choose one of the following online help files:
 
-    (a) PosChengband Monsters        (monster.txt)
-    (b) Monster Symbols              (monster.txt#MonsterSymbols)
-    (c) Monster Color                (monster.txt#MonsterColors)
-    (d) Monster Memory               (monster.txt#MonsterMemory)
-    (e) Unique Monsters              (monster.txt#Uniques)
-    (f) Eldritch Horrors             (monster.txt#EldritchHorror)
-    (g) Pets and Riding              (monster.txt#Pets)
-    (h) Friendly Monsters            (monster.txt#Friendly)
+    <link:monster.txt> PosChengband Monsters
+    <link:monster.txt#MonsterSymbols> Monster Symbols
+    <link:monster.txt#MonsterColors> Monster Color
+    <link:monster.txt#MonsterMemory> Monster Memory
+    <link:monster.txt#Uniques> Unique Monsters
+    <link:monster.txt#EldritchHorror> Eldritch Horrors
+    <link:monster.txt#Pets> Pets and Riding
+    <link:monster.txt#Friendly> Friendly Monsters
 
-    (?) Help System Commands         (helpinfo.txt)
-
-
-***** [a] monster.txt
-***** [b] monster.txt#MonsterSymbols
-***** [c] monster.txt#MonsterColors
-***** [d] monster.txt#MonsterMemory
-***** [e] monster.txt#Uniques
-***** [f] monster.txt#EldritchHorror
-***** [g] monster.txt#Pets
-***** [h] monster.txt#Friendly
+    <color:y>(?) Help System Commands</color>

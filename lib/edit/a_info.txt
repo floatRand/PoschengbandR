@@ -2861,7 +2861,7 @@ I:17:1:0
 W:35:35:2:2000
 P:0:1d4:0:0:0
 F:SHOW_MODS
-D:This arrow is traditionally shot only by fat, scantly clad babies.
+D:This arrow is traditionally shot only by fat, scantily clad babies.
 
 N:271:'Ballista'
 I:19:24:3

@@ -1,4 +1,4 @@
-<style:title>Welcome to the Online Help System.</style>
+<style:title>Welcome to the Online Help System</style>
 
 Please choose one of the following online help files:
 
@@ -8,8 +8,8 @@ Please choose one of the following online help files:
     <link:town_contents.txt> The Town and Wilderness
     <link:dungeon_contents.txt> The Dungeon
     <link:objects_contents.txt> Objects
-    <link:monster.hlp> Monsters and Pets
-    <link:attack.hlp> Attacking and Weapons
+    <link:monster_contents.txt> Monsters and Pets
+    <link:attack_contents.txt> Attacking and Weapons
     <link:defend.hlp> Defending and Armor
     <link:magic.hlp> Magic Realms
     <link:command_contents.txt> Commands
