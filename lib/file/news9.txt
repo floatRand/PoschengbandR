@@ -1,22 +1,31 @@
 <color:y>PosChengband <$:version></color>
 <style:screenshot>
-The Mace of Disruption 'Deathwreaker' (7d8) (+18,+18)               LEVEL <color:G>    40</color>
-                                                                    EXP <color:G>    243k</color>
-    A weapon so massive it seems beyond the strength of mortals,    AU  <color:G>   99.6M</color>
-    yet you feel the might of giants within you as you heft it. As  <color:W>|</color><color:d> </color><color:s>}</color><color:g>==</color><color:y>"*</color><color:v>[</color><color:G>(</color><color:d>  </color><color:U>]</color>
-    you grip the handle of ebony and steel, coronas of fire blaze   STR!: <color:G>18/200</color>
-    and mighty spells to preserve magic activate around you. You    INT!: <color:G>18/100</color>
-    wield the Fear of Dragons and the Despair of the Undead!        WIS!: <color:G>18/140</color>
-                                                                    DEX!: <color:G>18/150</color>
-    <color:G>+6</color> to STR, Digging                                              CON!: <color:G>18/170</color>
-    Slay <color:y>Evil</color>, <color:r>Dragons</color>, <color:D>Undead</color>, <color:g>Animals</color>, <color:s>Humans</color>                     CHR : <color:G>    17</color>
-    <color:r>Flame Tongue</color>; <color:G>Poisoned</color>; <color:D>Vampiric</color>                                AC     <color:G>   95</color>
-    Immunity to <color:r>Fire</color>                                                HP <color:G> 806</color>/<color:G> 806</color>
-    Resist <color:D>Dark</color>, <color:R>Confusion</color>, <color:v>Chaos</color>, <color:v>Disenchantment</color>
-    <color:r>Prevents Teleportation</color>; <color:o>Riding</color>; <color:y>Permanent Light (1)</color>
-    <color:r>Aggravates</color>                                                      @[<color:G>*********</color>]
-    <color:B>It cannot be harmed by the elements.</color>                            <color:U>,</color>[*******--]
-
-
+<color:U>You attack Glaurung, Father of the Dragons:</color> You land an <color:o>Eagle's </color>
+<color:o>Claw</color>. You drain life from him! You feel a little better. You        LEVEL <color:G>    36</color>
+<color:y>double-kick</color>. You feel a little better. You miss. You <color:y>double-kick</color>.   EXP <color:G>    215k</color>
+You feel a little better. You miss. You <color:o>circle kick</color>. It was a <color:y>good</color>  AU  <color:G>   1.11M</color>
+hit! You feel better. He seems weakened.                            <color:d>  </color><color:u>}</color><color:g>==</color><color:y>"!</color><color:U>(</color><color:g>(</color><color:u>]</color><color:U>]]</color>
+<color:g>Glaurung, Father of the Dragons attacks you:</color> He claws. He claws.    STR : <color:G>18/131</color>
+<color:U>(You retaliate:</color> You land an <color:o>Eagle's Claw</color>.<color:U>)</color> He bites. <color:U>(You </color>          INT : <color:G> 18/10</color>
+<color:U>retaliate:</color> You <color:y>double-kick</color>.<color:U>)</color> He bites. You feel uneasy. You feel    WIS : <color:G>18/205</color>
+very insecure. <color:U>(You retaliate:</color> You are too afraid to attack him!<color:U>)</color>   DEX : <color:G>18/193</color>
+Your fears finally subside.                                         CON : <color:G> 18/94</color>
+                                    <color:U>##</color>..<color:U>#</color>       <color:U>##</color>     <color:U>#</color> <color:U>#</color>  <color:U>#</color>  :<color:U>##</color>  Chr : <color:y> 18/20</color>
+                              <color:U>####</color>  <color:U>#</color>..<color:U>##</color>       <color:U>#</color>       <color:U>###########</color> AC     <color:G>  161</color>
+                      <color:U>###</color>     <color:U>#</color><color:G>##</color><color:U>####</color>.<color:U>##</color>        <color:U>#</color>       <color:U>#</color>     <color:U>###</color>   HP <color:y> 397</color>/<color:G> 547</color>
+                    <color:U>###</color> <color:U>###</color> <color:U>###</color><color:G>##</color>@<color:G>#</color><color:U>##</color>.<color:U>#</color>         <color:U>#</color>       <color:U>#</color>     <color:U>#</color>  <color:U>##</color> SP <color:y> 212</color>/<color:G> 315</color>
+                 <color:U>####</color>   ..<color:U>###</color>..<color:G>#</color><color:U>##</color><color:r>D</color>...<color:U>#</color>         <color:U>##</color>     <color:U>##</color>    <color:U>##</color> <color:U>#+</color>
+                <color:U>##</color>..  <color:U>###</color>.....<color:U>#########</color>          <color:U>##</color>   <color:U>##</color>   <color:U>###</color> :<color:U>#</color>   @[<color:y>*******</color>--]
+                <color:U>#</color>..<color:U>####</color> <color:U>##</color>..<color:U>#</color>.....<color:U>####</color>            <color:U>#####</color>   <color:U>##</color>   <color:U>#</color>    <color:G>?</color>[<color:y>*******</color>--]
+           <color:U>######</color>.<color:U>##</color>     <color:U>####</color>..<color:U>##</color>.<color:U>#</color>..<color:U>#</color>      <color:U>########</color>      <color:U>#</color>  <color:U>#</color> <color:U>#</color>    <color:U>,</color>[******---]
+<color:U>##</color>         <color:U>#</color>..<color:U>#</color>...<color:U>#</color>        <color:U>##</color>.<color:U>###</color>....<color:U>###</color>   <color:U>##</color>.<color:G>#</color>....<color:U>#</color>   <color:U>####</color>.<color:U>##</color>      <color:r>D</color><color:R>[</color><color:o>****</color><color:R>-----]</color>
+.<color:U>###</color>       <color:U>#</color>..<color:u>'</color>..<color:U>##</color>      <color:U>###</color>..<color:U>#</color> <color:U>####</color>...<color:U>#####</color><color:G>##</color><color:U>####</color>.<color:U>#####</color><color:G>###</color>.<color:U>####</color>
+...<color:U>###</color>   <color:U>###</color>.<color:U>###</color>.<color:U>##</color>    <color:U>###</color>...<color:U>##</color>    <color:U>###</color>....<color:U>##</color>.<color:U>##</color>  <color:U>#</color>.<color:U>#</color>...<color:G>##</color><color:U>#</color><color:G>#</color>.<color:U>#</color>  <color:U>##</color>
+<color:U>##</color>...<color:U>#####</color>...<color:U>#</color> <color:U>#</color>..<color:U>#</color>    <color:U>#</color>...<color:U>###</color>       <color:U>####</color>....<color:U>#</color>   <color:U>#</color>...<color:U>########</color>   <color:U>#</color>   <color:G>Fast (+22)</color>
+ <color:U>###</color>.......<color:U>###</color> <color:U>#</color>..<color:U>######</color>.<color:U>###</color>            <color:U>######</color>   <color:U>#####</color>          <color:U>##</color>  <color:B>Study (9)</color>
+   <color:U>#########</color>   <color:U>#</color>..<color:U>#</color>......<color:U>#</color>                                       <color:U>##</color>
+               <color:U>##</color>...<color:U>######</color>
+                <color:U>#####</color>
+<color:U>Arena: L50</color>                   StnSkn <color:g>Acid</color> <color:b>Elec</color> <color:r>Fire</color> <color:s>Cold</color> <color:g>Pois</color>
 </style>
               [Press <color:keypress>c</color> for Credits. Press Any Other Key to Play]

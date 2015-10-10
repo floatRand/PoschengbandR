@@ -271,7 +271,7 @@ static void _display_brands(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr
     if (have_flag(flgs, TR_BRAND_COLD))
         vec_add(v, string_alloc("<color:W>Frost Brand</color>"));
     if (have_flag(flgs, TR_BRAND_POIS))
-        vec_add(v, string_alloc("<color:G>Poisoned</color>"));
+        vec_add(v, string_alloc("<color:G>Viper's Fang</color>"));
     if (have_flag(flgs, TR_CHAOTIC))
         vec_add(v, string_alloc("<color:v>Mark of Chaos</color>"));
     if (have_flag(flgs, TR_VAMPIRIC))
@@ -351,9 +351,9 @@ static void _display_slays(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr 
         vec_add(v, string_alloc("<color:g>Trolls</color>"));
 
     if (have_flag(flgs, TR_KILL_GIANT))
-        vec_add(v, string_alloc("<color:B>*Giants*</color>"));
+        vec_add(v, string_alloc("<color:u>*Giants*</color>"));
     else if (have_flag(flgs, TR_SLAY_GIANT))
-        vec_add(v, string_alloc("<color:B>Giants</color>"));
+        vec_add(v, string_alloc("<color:u>Giants</color>"));
 
     if (vec_length(v))
     {

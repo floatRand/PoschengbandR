@@ -97,8 +97,7 @@ static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
         if (pval < 0)
             y /= 3;
 
-        /*q = 2*(400 + y * ABS(y))*(1 + pval * ABS(pval));*/
-        q = 2*(400 + y * ABS(y))*(1 + pval * ABS(pval));
+        q = (200 + y * ABS(y))*(1 + pval * ABS(pval));
     }
 
     if (have_flag(flgs, TR_SPELL_CAP))
@@ -995,7 +994,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
         if (have_flag(flgs, TR_VAMPIRIC)) 
             d *= 1.1;
 
-        w = (s32b)(d * d * d);
+        w = (s32b)(d * d * d)/2;
 
         if (have_flag(flgs, TR_VAMPIRIC)) 
             w += 5000;
@@ -1212,7 +1211,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     if (have_flag(flgs, TR_BRAND_FIRE)) t = t * 5 / 4;
     if (have_flag(flgs, TR_BRAND_COLD)) t = t * 5 / 4;
 
-    w = t * t * 3;
+    w = t * t * 2;
     if (have_flag(flgs, TR_XTRA_SHOTS))
     {
         int i;
@@ -1280,7 +1279,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     q = _stats_q(flgs, pval);
     if (q != 0)
     {
-        p += q + (q/100)*w/100;
+        p += q;
         /*p += q*(1 + w/10000);*/
         if (cost_calc_hook)
         {
