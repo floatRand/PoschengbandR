@@ -23,14 +23,48 @@ struct string_s
     char *buf;
 };
 
-string_ptr string_alloc(const char *val)
+string_ptr string_alloc(void)
+{
+    return string_copy_sn("", 0);
+}
+
+string_ptr string_alloc_format(const char *fmt, ...)
+{
+    string_ptr res = string_alloc_size(128);
+    va_list vp;
+
+    va_start(vp, fmt);
+    string_vprintf(res, fmt, vp);
+    va_end(vp);
+
+    return res;
+}
+
+string_ptr string_alloc_size(int size)
+{
+    string_ptr res = malloc(sizeof(string_t));
+
+    res->buf = malloc(size + 1);
+    res->len = 0;
+    res->buf[0] = '\0';
+    res->size = size + 1;
+
+    return res;
+}
+
+string_ptr string_copy(string_ptr str)
+{
+    return string_copy_sn(str->buf, str->len);
+}
+
+string_ptr string_copy_s(const char *val)
 {
     if (!val)
         val = "";
-    return string_nalloc(val, strlen(val));
+    return string_copy_sn(val, strlen(val));
 }
 
-string_ptr string_nalloc(const char *val, int cb)
+string_ptr string_copy_sn(const char *val, int cb)
 {
     string_ptr res = malloc(sizeof(string_t));
 
@@ -43,18 +77,6 @@ string_ptr string_nalloc(const char *val, int cb)
     return res;
 }
 
-string_ptr string_salloc(string_ptr str)
-{
-    return string_nalloc(str->buf, str->len);
-}
-
-string_ptr string_falloc(FILE *fp)
-{
-    string_ptr res = string_alloc(NULL);
-    string_read_file(res, fp);
-    return res;
-}
-
 void string_free(string_ptr str)
 {
     if (str)
@@ -64,15 +86,27 @@ void string_free(string_ptr str)
     }
 }
 
-void string_append(string_ptr str, const char *val)
+void string_append(string_ptr str, string_ptr to_append)
+{
+    string_append_sn(str, to_append->buf, to_append->len);
+}
+
+void string_append_c(string_ptr str, char ch)
+{
+    string_grow(str, str->len + 2);
+    str->buf[str->len++] = ch;
+    str->buf[str->len] = '\0';
+}
+
+void string_append_s(string_ptr str, const char *val)
 {
     if (!val)
         return;
 
-    string_nappend(str, val, strlen(val));
+    string_append_sn(str, val, strlen(val));
 }
 
-void string_nappend(string_ptr str, const char *val, int cb)
+void string_append_sn(string_ptr str, const char *val, int cb)
 {
     int cbl;  /* left += right */
 
@@ -84,13 +118,6 @@ void string_nappend(string_ptr str, const char *val, int cb)
     string_grow(str, cbl + cb + 1);
     memcpy(str->buf + cbl, val, cb);
     str->len += cb;
-    str->buf[str->len] = '\0';
-}
-
-void string_append_char(string_ptr str, char ch)
-{
-    string_grow(str, str->len + 2);
-    str->buf[str->len++] = ch;
     str->buf[str->len] = '\0';
 }
 
@@ -109,9 +136,15 @@ void string_read_line(string_ptr str, FILE *fp)
     str->buf[str->len] = '\0';
 }
 
-void string_read_file(string_ptr str, FILE *fp)
+string_ptr string_read_file(FILE *fp)
 {
-    string_clear(str);
+    string_ptr result = string_alloc();
+    string_append_file(result, fp);
+    return result;
+}
+
+void string_append_file(string_ptr str, FILE *fp)
+{
     for (;;)
     {
         int c = fgetc(fp);
@@ -201,6 +234,12 @@ void string_grow(string_ptr str, int size)
     }
 }
 
+/* <quibble> These aren't really hash functions. The hash function
+   is the composite string->int->int where the second arrow
+   is modulo some well chosen prime. This "hash" is just mapping
+   from strings to integers in preparation for the real hashing.
+   Still, we need to be as "injective" as possible in the first
+   arrow. </quibble> */
 int string_hash_imp(const char *str) /* djb2 hash algorithm */
 {
     int hash = 5381;
@@ -343,15 +382,15 @@ substring_t string_right(string_ptr str, int len)
     return result;
 }
 
-const char *string_ssbuffer(substring_ptr ss)
+const char *substring_buffer(substring_ptr ss)
 {
     assert(ss->pos + ss->len <= ss->str->len);
     return ss->str->buf + ss->pos;
 }
 
-string_ptr string_ssalloc(substring_ptr ss)
+string_ptr substring_copy(substring_ptr ss)
 {
-    return string_nalloc(string_ssbuffer(ss), ss->len);
+    return string_copy_sn(substring_buffer(ss), ss->len);
 }
 
 vec_ptr string_split(string_ptr str, char sep)
@@ -372,7 +411,7 @@ vec_ptr string_split(string_ptr str, char sep)
             done = 1;
         }
 
-        s = string_nalloc(pos, next - pos);
+        s = string_copy_sn(pos, next - pos);
         vec_add(v, s);
         pos = next + 1;
     }
@@ -382,14 +421,14 @@ vec_ptr string_split(string_ptr str, char sep)
 string_ptr string_join(vec_ptr vec, char sep)
 {
     int        i;
-    string_ptr result = string_alloc(NULL);
+    string_ptr result = string_alloc();
 
     for (i = 0; i < vec_length(vec); i++)
     {
         string_ptr s = vec_get(vec, i);
         if (i > 0)
-            string_append_char(result, sep);
-        string_nappend(result, s->buf, s->len);
+            string_append_c(result, sep);
+        string_append(result, s);
     }
     return result;
 }

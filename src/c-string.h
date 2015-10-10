@@ -7,21 +7,35 @@
 typedef struct string_s string_t;
 typedef string_t *string_ptr;
 
-extern string_ptr string_alloc(const char *val);
-extern string_ptr string_nalloc(const char *val, int cb);
-extern string_ptr string_salloc(string_ptr str);
-extern string_ptr string_falloc(FILE *fp);
+/* Create a new string object (You must string_free()) */
+extern string_ptr string_alloc(void);
+extern string_ptr string_alloc_format(const char *fmt, ...);
+extern string_ptr string_alloc_size(int size);
+
+extern string_ptr string_copy(string_ptr str);
+extern string_ptr string_copy_s(const char *val);
+extern string_ptr string_copy_sn(const char *val, int cb);
+
+extern string_ptr string_read_file(FILE *fp);
+
+/* Destroy a string object */
 extern void string_free(string_ptr str);
 
+
 extern void string_clear(string_ptr str);
-extern void string_append(string_ptr str, const char *val);
-extern void string_read_line(string_ptr str, FILE *fp);
-extern void string_read_file(string_ptr str, FILE *fp);
-extern void string_write_file(string_ptr str, FILE *fp);
-extern void string_append_char(string_ptr str, char ch);
-extern void string_nappend(string_ptr str, const char *val, int cb);
+
+/* String Building */
+extern void string_append(string_ptr str, string_ptr to_append);
+extern void string_append_c(string_ptr str, char ch);
+extern void string_append_s(string_ptr str, const char *val);
+extern void string_append_sn(string_ptr str, const char *val, int cb);
+extern void string_append_file(string_ptr str, FILE *fp);
 extern void string_printf(string_ptr str, const char *fmt, ...);
 extern void string_vprintf(string_ptr str, const char *fmt, va_list vp);
+
+extern void string_read_line(string_ptr str, FILE *fp);
+extern void string_write_file(string_ptr str, FILE *fp);
+
 extern void string_strip(string_ptr str);
 
 extern int string_compare(const string_ptr left, const string_ptr right);
@@ -50,7 +64,8 @@ extern int string_chr(string_ptr str, int start, char ch);
 extern int string_last_chr(string_ptr str, char ch);
 extern substring_t string_left(string_ptr str, int length);
 extern substring_t string_right(string_ptr str, int length);
-extern string_ptr  string_ssalloc(substring_ptr ss);
-extern const char *string_ssbuffer(substring_ptr ss);
+
+extern string_ptr  substring_copy(substring_ptr ss);
+extern const char *substring_buffer(substring_ptr ss);
 
 #endif

@@ -249,8 +249,8 @@ static void _name_desc_free(_name_desc_ptr p) {
 }
 static _name_desc_ptr _name_desc_alloc(void) {
     _name_desc_ptr result = malloc(sizeof(_name_desc_t));
-    result->name = string_alloc(NULL);
-    result->desc = string_alloc(NULL);
+    result->name = string_alloc();
+    result->desc = string_alloc();
     return result;
 }
 
@@ -314,10 +314,10 @@ static void _demigods_help(FILE* fp)
                 _name_desc_ptr nd = _name_desc_alloc();
 
                 mut_name(i, buf);
-                string_append(nd->name, buf);
+                string_append_s(nd->name, buf);
 
                 mut_help_desc(i, buf);
-                string_append(nd->desc, buf);
+                string_append_s(nd->desc, buf);
                 vec_add(vec, nd);
             }
         }
@@ -395,10 +395,10 @@ static void _draconians_help(FILE* fp)
                 _name_desc_ptr nd = _name_desc_alloc();
 
                 mut_name(i, buf);
-                string_append(nd->name, buf);
+                string_append_s(nd->name, buf);
 
                 mut_help_desc(i, buf);
-                string_append(nd->desc, buf);
+                string_append_s(nd->desc, buf);
                 vec_add(vec, nd);
             }
         }

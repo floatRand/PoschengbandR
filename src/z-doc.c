@@ -708,8 +708,7 @@ static void _doc_process_var(doc_ptr doc, cptr name)
 {
     if (strcmp(name, "version") == 0)
     {
-        string_ptr s = string_alloc(NULL);
-        string_printf(s, "%d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
+        string_ptr s = string_alloc_format("%d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
         doc_insert(doc, string_buffer(s));
         string_free(s);
     }
@@ -723,7 +722,7 @@ static void _doc_process_var(doc_ptr doc, cptr name)
 
         if (0 <= f_idx && f_idx < max_f_idx)
         {
-            string_ptr s = string_alloc(NULL);
+            string_ptr s = string_alloc();
             feature_type *feat = &f_info[f_idx];
 
             string_printf(s, "<color:%c>%c</color>",
@@ -778,7 +777,7 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
         }
         else
         {
-            string_ptr  arg = string_nalloc(tag->arg, tag->arg_size);
+            string_ptr  arg = string_copy_sn(tag->arg, tag->arg_size);
             doc_style_t style = *doc_current_style(doc); /* copy */
             doc_style_f f = _get_doc_style_f(doc, string_buffer(arg));
 
@@ -803,7 +802,7 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
     }
     else
     {
-        string_ptr arg = string_nalloc(tag->arg, tag->arg_size);
+        string_ptr arg = string_copy_sn(tag->arg, tag->arg_size);
 
         switch (tag->type)
         {
@@ -850,8 +849,8 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
                 substring_t left = string_left(arg, split);
                 substring_t right = string_right(arg, string_length(arg) - split - 1);
 
-                link->file = string_ssalloc(&left);
-                link->topic = string_ssalloc(&right);
+                link->file = substring_copy(&left);
+                link->topic = substring_copy(&right);
             }
             else
             {
@@ -869,8 +868,7 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
                    word. To fix this, we'll need a parser with a token queue
                    that we can push onto, but this raises storage issues.
                 */
-                string_ptr s = string_alloc(NULL);
-                string_printf(s, "<style:link>[%c]</style>", ch);
+                string_ptr s = string_alloc_format("<style:link>[%c]</style>", ch);
                 doc_insert(doc, string_buffer(s));
                 string_free(s);
 
@@ -1059,7 +1057,7 @@ doc_pos_t doc_insert_text(doc_ptr doc, byte a, cptr text)
 
 doc_pos_t doc_printf(doc_ptr doc, const char *fmt, ...)
 {
-    string_ptr s = string_alloc(NULL);
+    string_ptr s = string_alloc();
     va_list vp;
 
     va_start(vp, fmt);
@@ -1073,7 +1071,7 @@ doc_pos_t doc_printf(doc_ptr doc, const char *fmt, ...)
 
 doc_pos_t doc_cprintf(doc_ptr doc, byte a, const char *fmt, ...)
 {
-    string_ptr s = string_alloc(NULL);
+    string_ptr s = string_alloc();
     va_list vp;
 
     va_start(vp, fmt);
@@ -1212,7 +1210,7 @@ doc_char_ptr doc_char(doc_ptr doc, doc_pos_t pos)
 
 doc_pos_t doc_read_file(doc_ptr doc, FILE *fp)
 {
-    string_ptr s = string_falloc(fp);
+    string_ptr s = string_read_file(fp);
     doc_insert(doc, string_buffer(s));
     string_free(s);
     return doc->cursor;
@@ -1308,11 +1306,11 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
 
                     if (pos >= 0)
                     {
-                        s = string_nalloc(string_buffer(next_link->file), pos + 1);
-                        string_append(s, "html");
+                        s = string_copy_sn(string_buffer(next_link->file), pos + 1);
+                        string_append_s(s, "html");
                     }
                     else
-                        s = string_salloc(next_link->file);
+                        s = string_copy(next_link->file);
 
                     fprintf(fp, "<a href=\"%s", string_buffer(s));
                     if (next_link->topic)
@@ -1690,7 +1688,7 @@ int doc_display_help_aux(cptr file_name, cptr topic, rect_t display)
         cptr pos = strchr(file_name, '#');
         if (pos)
         {
-            string_ptr name = string_nalloc(file_name, pos - file_name);
+            string_ptr name = string_copy_sn(file_name, pos - file_name);
             int        result = doc_display_help_aux(string_buffer(name), pos + 1, display);
 
             string_free(name);

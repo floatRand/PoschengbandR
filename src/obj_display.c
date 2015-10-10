@@ -65,9 +65,11 @@ static void _print_list(vec_ptr v, doc_ptr doc, char sep, char term)
 
 string_ptr _get_res_name(int res)
 {
-    string_ptr s = string_alloc(NULL);
-    string_printf(s, "<color:%c>%s</color>", attr_to_attr_char(res_color(res)), res_name(res));
-    return s;
+    return string_alloc_format(
+        "<color:%c>%s</color>",
+        attr_to_attr_char(res_color(res)),
+        res_name(res)
+    );
 }
 
 /* Mid level helpers. Output one block of information at a time. */
@@ -124,7 +126,7 @@ static void _build_bonus_list(int pval, u32b flgs[TR_FLAG_SIZE], _flag_info_ptr 
     {
         int net = _calc_net_bonus(pval, flgs, table->flg, table->flg_dec);
         if (net > 0)
-            vec_add(v, string_alloc(table->name));
+            vec_add(v, string_copy_s(table->name));
 
         table++;
     }
@@ -136,7 +138,7 @@ static void _build_penalty_list(int pval, u32b flgs[TR_FLAG_SIZE], _flag_info_pt
     {
         int net = _calc_net_bonus(pval, flgs, table->flg, table->flg_dec);
         if (net < 0)
-            vec_add(v, string_alloc(table->name));
+            vec_add(v, string_copy_s(table->name));
 
         table++;
     }
@@ -263,33 +265,33 @@ static void _display_brands(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr
     vec_ptr v = vec_alloc((vec_free_f)string_free);
 
     if (have_flag(flgs, TR_BRAND_ACID))
-        vec_add(v, string_alloc("<color:g>Acid Brand</color>"));
+        vec_add(v, string_copy_s("<color:g>Acid Brand</color>"));
     if (have_flag(flgs, TR_BRAND_ELEC))
-        vec_add(v, string_alloc("<color:b>Lightning Brand</color>"));
+        vec_add(v, string_copy_s("<color:b>Lightning Brand</color>"));
     if (have_flag(flgs, TR_BRAND_FIRE))
-        vec_add(v, string_alloc("<color:r>Flame Tongue</color>"));
+        vec_add(v, string_copy_s("<color:r>Flame Tongue</color>"));
     if (have_flag(flgs, TR_BRAND_COLD))
-        vec_add(v, string_alloc("<color:W>Frost Brand</color>"));
+        vec_add(v, string_copy_s("<color:W>Frost Brand</color>"));
     if (have_flag(flgs, TR_BRAND_POIS))
-        vec_add(v, string_alloc("<color:G>Viper's Fang</color>"));
+        vec_add(v, string_copy_s("<color:G>Viper's Fang</color>"));
     if (have_flag(flgs, TR_CHAOTIC))
-        vec_add(v, string_alloc("<color:v>Mark of Chaos</color>"));
+        vec_add(v, string_copy_s("<color:v>Mark of Chaos</color>"));
     if (have_flag(flgs, TR_VAMPIRIC))
-        vec_add(v, string_alloc("<color:D>Vampiric</color>"));
+        vec_add(v, string_copy_s("<color:D>Vampiric</color>"));
     if (have_flag(flgs, TR_IMPACT))
-        vec_add(v, string_alloc("<color:U>Earthquakes</color>"));
+        vec_add(v, string_copy_s("<color:U>Earthquakes</color>"));
     if (have_flag(flgs, TR_VORPAL2))
-        vec_add(v, string_alloc("<color:v>*Sharpness*</color>"));
+        vec_add(v, string_copy_s("<color:v>*Sharpness*</color>"));
     else if (have_flag(flgs, TR_VORPAL))
-        vec_add(v, string_alloc("<color:R>Sharpness</color>"));
+        vec_add(v, string_copy_s("<color:R>Sharpness</color>"));
     if (have_flag(flgs, TR_STUN))
-        vec_add(v, string_alloc("<color:o>Stuns</color>"));
+        vec_add(v, string_copy_s("<color:o>Stuns</color>"));
     if (have_flag(flgs, TR_ORDER))
-        vec_add(v, string_alloc("<color:W>Weapon of Order</color>"));
+        vec_add(v, string_copy_s("<color:W>Weapon of Order</color>"));
     if (have_flag(flgs, TR_WILD))
-        vec_add(v, string_alloc("<color:o>Wild Weapon</color>"));
+        vec_add(v, string_copy_s("<color:o>Wild Weapon</color>"));
     if (have_flag(flgs, TR_FORCE_WEAPON))
-        vec_add(v, string_alloc("<color:B>Mana Brand</color>"));
+        vec_add(v, string_copy_s("<color:B>Mana Brand</color>"));
 
     if (vec_length(v))
     {
@@ -305,55 +307,55 @@ static void _display_slays(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr 
     vec_ptr v = vec_alloc((vec_free_f)string_free);
 
     if (have_flag(flgs, TR_KILL_EVIL))
-        vec_add(v, string_alloc("<color:y>*Evil*</color>"));
+        vec_add(v, string_copy_s("<color:y>*Evil*</color>"));
     else if (have_flag(flgs, TR_SLAY_EVIL))
-        vec_add(v, string_alloc("<color:y>Evil</color>"));
+        vec_add(v, string_copy_s("<color:y>Evil</color>"));
 
     if (have_flag(flgs, TR_SLAY_GOOD))
-        vec_add(v, string_alloc("<color:W>Good</color>"));
+        vec_add(v, string_copy_s("<color:W>Good</color>"));
 
     if (have_flag(flgs, TR_SLAY_LIVING))
-        vec_add(v, string_alloc("<color:o>Living</color>"));
+        vec_add(v, string_copy_s("<color:o>Living</color>"));
 
     if (have_flag(flgs, TR_KILL_DRAGON))
-        vec_add(v, string_alloc("<color:r>*Dragons*</color>"));
+        vec_add(v, string_copy_s("<color:r>*Dragons*</color>"));
     else if (have_flag(flgs, TR_SLAY_DRAGON))
-        vec_add(v, string_alloc("<color:r>Dragons</color>"));
+        vec_add(v, string_copy_s("<color:r>Dragons</color>"));
 
     if (have_flag(flgs, TR_KILL_DEMON))
-        vec_add(v, string_alloc("<color:R>*Demons*</color>"));
+        vec_add(v, string_copy_s("<color:R>*Demons*</color>"));
     else if (have_flag(flgs, TR_SLAY_DEMON))
-        vec_add(v, string_alloc("<color:R>Demons</color>"));
+        vec_add(v, string_copy_s("<color:R>Demons</color>"));
 
     if (have_flag(flgs, TR_KILL_UNDEAD))
-        vec_add(v, string_alloc("<color:D>*Undead*</color>"));
+        vec_add(v, string_copy_s("<color:D>*Undead*</color>"));
     else if (have_flag(flgs, TR_SLAY_UNDEAD))
-        vec_add(v, string_alloc("<color:D>Undead</color>"));
+        vec_add(v, string_copy_s("<color:D>Undead</color>"));
 
     if (have_flag(flgs, TR_KILL_ANIMAL))
-        vec_add(v, string_alloc("<color:g>*Animals*</color>"));
+        vec_add(v, string_copy_s("<color:g>*Animals*</color>"));
     else if (have_flag(flgs, TR_SLAY_ANIMAL))
-        vec_add(v, string_alloc("<color:g>Animals</color>"));
+        vec_add(v, string_copy_s("<color:g>Animals</color>"));
 
     if (have_flag(flgs, TR_KILL_HUMAN))
-        vec_add(v, string_alloc("<color:s>*Humans*</color>"));
+        vec_add(v, string_copy_s("<color:s>*Humans*</color>"));
     else if (have_flag(flgs, TR_SLAY_HUMAN))
-        vec_add(v, string_alloc("<color:s>Humans</color>"));
+        vec_add(v, string_copy_s("<color:s>Humans</color>"));
 
     if (have_flag(flgs, TR_KILL_ORC))
-        vec_add(v, string_alloc("<color:U>*Orcs*</color>"));
+        vec_add(v, string_copy_s("<color:U>*Orcs*</color>"));
     else if (have_flag(flgs, TR_SLAY_ORC))
-        vec_add(v, string_alloc("<color:U>Orcs</color>"));
+        vec_add(v, string_copy_s("<color:U>Orcs</color>"));
 
     if (have_flag(flgs, TR_KILL_TROLL))
-        vec_add(v, string_alloc("<color:g>*Trolls*</color>"));
+        vec_add(v, string_copy_s("<color:g>*Trolls*</color>"));
     else if (have_flag(flgs, TR_SLAY_TROLL))
-        vec_add(v, string_alloc("<color:g>Trolls</color>"));
+        vec_add(v, string_copy_s("<color:g>Trolls</color>"));
 
     if (have_flag(flgs, TR_KILL_GIANT))
-        vec_add(v, string_alloc("<color:u>*Giants*</color>"));
+        vec_add(v, string_copy_s("<color:u>*Giants*</color>"));
     else if (have_flag(flgs, TR_SLAY_GIANT))
-        vec_add(v, string_alloc("<color:u>Giants</color>"));
+        vec_add(v, string_copy_s("<color:u>Giants</color>"));
 
     if (vec_length(v))
     {
@@ -430,39 +432,39 @@ static void _display_abilities(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_
     vec_ptr v = vec_alloc((vec_free_f)string_free);
 
     if (have_flag(flgs, TR_FREE_ACT))
-        vec_add(v, string_alloc("<color:R>Free Action</color>"));
+        vec_add(v, string_copy_s("<color:R>Free Action</color>"));
     if (have_flag(flgs, TR_SEE_INVIS))
-        vec_add(v, string_alloc("<color:B>See Invisible</color>"));
+        vec_add(v, string_copy_s("<color:B>See Invisible</color>"));
     if (have_flag(flgs, TR_REGEN))
-        vec_add(v, string_alloc("<color:g>Regeneration</color>"));
+        vec_add(v, string_copy_s("<color:g>Regeneration</color>"));
     if (have_flag(flgs, TR_HOLD_LIFE))
-        vec_add(v, string_alloc("<color:y>Hold Life</color>"));
+        vec_add(v, string_copy_s("<color:y>Hold Life</color>"));
     if (have_flag(flgs, TR_REFLECT))
-        vec_add(v, string_alloc("<color:o>Reflection</color>"));
+        vec_add(v, string_copy_s("<color:o>Reflection</color>"));
     if (have_flag(flgs, TR_LEVITATION))
-        vec_add(v, string_alloc("<color:B>Levitation</color>"));
+        vec_add(v, string_copy_s("<color:B>Levitation</color>"));
     if (have_flag(flgs, TR_SLOW_DIGEST))
-        vec_add(v, string_alloc("<color:g>Slow Digestion</color>"));
+        vec_add(v, string_copy_s("<color:g>Slow Digestion</color>"));
     if (have_flag(flgs, TR_WARNING))
-        vec_add(v, string_alloc("<color:y>Warning</color>"));
+        vec_add(v, string_copy_s("<color:y>Warning</color>"));
     if (have_flag(flgs, TR_NO_MAGIC))
-        vec_add(v, string_alloc("<color:r>Anti-Magic</color>"));
+        vec_add(v, string_copy_s("<color:r>Anti-Magic</color>"));
     if (have_flag(flgs, TR_NO_SUMMON))
-        vec_add(v, string_alloc("<color:v>Prevents Summoning</color>"));
+        vec_add(v, string_copy_s("<color:v>Prevents Summoning</color>"));
     if (have_flag(flgs, TR_NO_TELE))
-        vec_add(v, string_alloc("<color:r>Prevents Teleportation</color>"));
+        vec_add(v, string_copy_s("<color:r>Prevents Teleportation</color>"));
     if (have_flag(flgs, TR_THROW))
-        vec_add(v, string_alloc("<color:D>Throwing</color>"));
+        vec_add(v, string_copy_s("<color:D>Throwing</color>"));
     if (have_flag(flgs, TR_BLESSED))
-        vec_add(v, string_alloc("<color:B>Blessed</color>"));
+        vec_add(v, string_copy_s("<color:B>Blessed</color>"));
     if (have_flag(flgs, TR_RIDING))
-        vec_add(v, string_alloc("<color:o>Riding</color>"));
+        vec_add(v, string_copy_s("<color:o>Riding</color>"));
     if (have_flag(flgs, TR_LITE))
     {
         if (o_ptr->name2 == EGO_HELMET_VAMPIRE || o_ptr->name1 == ART_NIGHT)
-            vec_add(v, string_alloc("<color:D>Permanent Darkness (1)</color>"));
+            vec_add(v, string_copy_s("<color:D>Permanent Darkness (1)</color>"));
         else
-            vec_add(v, string_alloc("<color:y>Permanent Light (1)</color>"));
+            vec_add(v, string_copy_s("<color:y>Permanent Light (1)</color>"));
     }
     if (vec_length(v))
     {
@@ -472,31 +474,31 @@ static void _display_abilities(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_
 
     vec_clear(v);
     if (have_flag(flgs, TR_TELEPATHY))
-        vec_add(v, string_alloc("<color:y>Telepathy</color>"));
+        vec_add(v, string_copy_s("<color:y>Telepathy</color>"));
     if (have_flag(flgs, TR_ESP_ANIMAL))
-        vec_add(v, string_alloc("<color:B>Sense Animals</color>"));
+        vec_add(v, string_copy_s("<color:B>Sense Animals</color>"));
     if (have_flag(flgs, TR_ESP_UNDEAD))
-        vec_add(v, string_alloc("<color:D>Sense Undead</color>"));
+        vec_add(v, string_copy_s("<color:D>Sense Undead</color>"));
     if (have_flag(flgs, TR_ESP_DEMON))
-        vec_add(v, string_alloc("<color:R>Sense Demons</color>"));
+        vec_add(v, string_copy_s("<color:R>Sense Demons</color>"));
     if (have_flag(flgs, TR_ESP_ORC))
-        vec_add(v, string_alloc("<color:U>Sense Orcs</color>"));
+        vec_add(v, string_copy_s("<color:U>Sense Orcs</color>"));
     if (have_flag(flgs, TR_ESP_TROLL))
-        vec_add(v, string_alloc("<color:g>Sense Trolls</color>"));
+        vec_add(v, string_copy_s("<color:g>Sense Trolls</color>"));
     if (have_flag(flgs, TR_ESP_GIANT))
-        vec_add(v, string_alloc("<color:u>Sense Giants</color>"));
+        vec_add(v, string_copy_s("<color:u>Sense Giants</color>"));
     if (have_flag(flgs, TR_ESP_DRAGON))
-        vec_add(v, string_alloc("<color:r>Sense Dragons</color>"));
+        vec_add(v, string_copy_s("<color:r>Sense Dragons</color>"));
     if (have_flag(flgs, TR_ESP_HUMAN))
-        vec_add(v, string_alloc("<color:s>Sense Humans</color>"));
+        vec_add(v, string_copy_s("<color:s>Sense Humans</color>"));
     if (have_flag(flgs, TR_ESP_EVIL))
-        vec_add(v, string_alloc("<color:y>Sense Evil</color>"));
+        vec_add(v, string_copy_s("<color:y>Sense Evil</color>"));
     if (have_flag(flgs, TR_ESP_GOOD))
-        vec_add(v, string_alloc("<color:w>Sense Good</color>"));
+        vec_add(v, string_copy_s("<color:w>Sense Good</color>"));
     if (have_flag(flgs, TR_ESP_NONLIVING))
-        vec_add(v, string_alloc("<color:B>Sense Nonliving</color>"));
+        vec_add(v, string_copy_s("<color:B>Sense Nonliving</color>"));
     if (have_flag(flgs, TR_ESP_UNIQUE))
-        vec_add(v, string_alloc("<color:v>Sense Uniques</color>"));
+        vec_add(v, string_copy_s("<color:v>Sense Uniques</color>"));
 
     if (vec_length(v))
     {
@@ -518,9 +520,9 @@ static void _display_auras(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr 
     if (have_flag(flgs, TR_SH_ELEC))
         vec_add(v, _get_res_name(RES_ELEC));
     if (have_flag(flgs, TR_SH_SHARDS))
-        vec_add(v, string_alloc("<color:U>Shards</color>"));
+        vec_add(v, string_copy_s("<color:U>Shards</color>"));
     if (have_flag(flgs, TR_SH_REVENGE))
-        vec_add(v, string_alloc("<color:v>Retaliation</color>"));
+        vec_add(v, string_copy_s("<color:v>Retaliation</color>"));
 
     if (vec_length(v))
     {
@@ -640,39 +642,39 @@ static void _display_curses(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr
     }
 
     if (have_flag(flgs, TR_TY_CURSE) || o_ptr->curse_flags & TRC_TY_CURSE)
-        vec_add(v, string_alloc("<color:v>*Ancient Foul Curse*</color>"));
+        vec_add(v, string_copy_s("<color:v>*Ancient Foul Curse*</color>"));
     if (have_flag(flgs, TR_AGGRAVATE) || o_ptr->curse_flags & TRC_AGGRAVATE)
-        vec_add(v, string_alloc("<color:r>Aggravates</color>"));
+        vec_add(v, string_copy_s("<color:r>Aggravates</color>"));
     if (have_flag(flgs, TR_DRAIN_EXP) || o_ptr->curse_flags & TRC_DRAIN_EXP)
-        vec_add(v, string_alloc("<color:y>Drains Experience</color>"));
+        vec_add(v, string_copy_s("<color:y>Drains Experience</color>"));
     if (o_ptr->curse_flags & TRC_SLOW_REGEN)
-        vec_add(v, string_alloc("<color:o>Slow Regeneration</color>"));
+        vec_add(v, string_copy_s("<color:o>Slow Regeneration</color>"));
     if (o_ptr->curse_flags & TRC_ADD_L_CURSE)
-        vec_add(v, string_alloc("<color:w>Adds Weak Curses</color>"));
+        vec_add(v, string_copy_s("<color:w>Adds Weak Curses</color>"));
     if (o_ptr->curse_flags & TRC_ADD_H_CURSE)
-        vec_add(v, string_alloc("<color:b>Adds Heavy Curses</color>"));
+        vec_add(v, string_copy_s("<color:b>Adds Heavy Curses</color>"));
     if (o_ptr->curse_flags & TRC_CALL_ANIMAL)
-        vec_add(v, string_alloc("<color:g>Attracts Animals</color>"));
+        vec_add(v, string_copy_s("<color:g>Attracts Animals</color>"));
     if (o_ptr->curse_flags & TRC_CALL_DEMON)
-        vec_add(v, string_alloc("<color:R>Attracts Demons</color>"));
+        vec_add(v, string_copy_s("<color:R>Attracts Demons</color>"));
     if (o_ptr->curse_flags & TRC_CALL_DRAGON)
-        vec_add(v, string_alloc("<color:r>Attracts Dragons</color>"));
+        vec_add(v, string_copy_s("<color:r>Attracts Dragons</color>"));
     if (o_ptr->curse_flags & TRC_COWARDICE)
-        vec_add(v, string_alloc("<color:y>Cowardice</color>"));
+        vec_add(v, string_copy_s("<color:y>Cowardice</color>"));
     if (have_flag(flgs, TR_TELEPORT) || o_ptr->curse_flags & TRC_TELEPORT)
-        vec_add(v, string_alloc("<color:B>Random Teleportation</color>"));
+        vec_add(v, string_copy_s("<color:B>Random Teleportation</color>"));
     if (o_ptr->curse_flags & TRC_LOW_MELEE)
-        vec_add(v, string_alloc("<color:G>Miss Blows</color>"));
+        vec_add(v, string_copy_s("<color:G>Miss Blows</color>"));
     if (o_ptr->curse_flags & TRC_LOW_AC)
-        vec_add(v, string_alloc("<color:R>Low AC</color>"));
+        vec_add(v, string_copy_s("<color:R>Low AC</color>"));
     if (o_ptr->curse_flags & TRC_LOW_MAGIC)
-        vec_add(v, string_alloc("<color:y>Increased Fail Rates</color>"));
+        vec_add(v, string_copy_s("<color:y>Increased Fail Rates</color>"));
     if (o_ptr->curse_flags & TRC_FAST_DIGEST)
-        vec_add(v, string_alloc("<color:r>Fast Digestion</color>"));
+        vec_add(v, string_copy_s("<color:r>Fast Digestion</color>"));
     if (o_ptr->curse_flags & TRC_DRAIN_HP)
-        vec_add(v, string_alloc("<color:o>Drains You</color>"));
+        vec_add(v, string_copy_s("<color:o>Drains You</color>"));
     if (o_ptr->curse_flags & TRC_DRAIN_MANA)
-        vec_add(v, string_alloc("<color:B>Drains Mana</color>"));
+        vec_add(v, string_copy_s("<color:B>Drains Mana</color>"));
     if (vec_length(v))
     {
         _print_list(v, doc, ';', '\0');

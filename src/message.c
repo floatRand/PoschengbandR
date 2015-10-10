@@ -19,7 +19,7 @@ static doc_pos_t _msg_line_sync_pos;
 msg_ptr _msg_alloc(cptr s)
 {
     msg_ptr m = malloc(sizeof(msg_t));
-    m->msg = string_alloc(s);
+    m->msg = string_copy_s(s);
     m->turn = 0;
     m->count = 1;
     m->color = TERM_WHITE;
@@ -124,11 +124,11 @@ void cmsg_append(byte color, cptr str)
             return;
         }
         if (string_length(m->msg) && strlen(str) > 1)
-            string_append_char(m->msg, ' ');
+            string_append_c(m->msg, ' ');
         if (color != m->color)
             string_printf(m->msg, "<color:%c>%s</color>", attr_to_attr_char(color), str);
         else
-            string_append(m->msg, str);
+            string_append_s(m->msg, str);
     }
 }
 
@@ -161,7 +161,7 @@ void _cmsg_add_aux(byte color, cptr str, int turn, int count)
         string_clear(m->msg);
         string_shrink(m->msg, 128);
     }
-    string_append(m->msg, str);
+    string_append_s(m->msg, str);
 
     m->turn = turn;
     m->count = count;
