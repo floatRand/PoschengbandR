@@ -70,7 +70,7 @@ static s32b _aura_p(u32b flgs[TR_FLAG_SIZE])
 
 static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
 {
-    s32b y = 0, ct = 0, q = 0;
+    s32b y = 0, q = 0;
 
     pval = MIN(pval, 10); /* Iron Crown of the Serpent is +125 */
 
@@ -78,23 +78,30 @@ static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
         return 5000 * pval; /* Hack! */
     else
     {
-        if (have_flag(flgs, TR_STR)) {y += 12; ct++;}
-        if (have_flag(flgs, TR_DEX)) {y += 12; ct++;}
-        if (have_flag(flgs, TR_CON)) {y += 12; ct++;}
+        if (have_flag(flgs, TR_STR)) {y += 12;}
+        if (have_flag(flgs, TR_DEX)) {y += 12;}
+        if (have_flag(flgs, TR_CON)) {y += 12;}
     }
 
-    ct = 0;
-    if (have_flag(flgs, TR_INT)) {y += 12; ct++;}
-    if (have_flag(flgs, TR_WIS)) {y += 12; ct++;}
-    if (have_flag(flgs, TR_CHR)) {y += 12; ct++;}
+    if (have_flag(flgs, TR_INT)) {y += 12;}
+    if (have_flag(flgs, TR_WIS)) {y += 12;}
+    if (have_flag(flgs, TR_CHR)) {y += 12;}
 
+    if (have_flag(flgs, TR_DEC_STR)) {y -= 6;}
+    if (have_flag(flgs, TR_DEC_INT)) {y -= 6;}
+    if (have_flag(flgs, TR_DEC_WIS)) {y -= 6;}
+    if (have_flag(flgs, TR_DEC_DEX)) {y -= 6;}
+    if (have_flag(flgs, TR_DEC_CON)) {y -= 6;}
+    if (have_flag(flgs, TR_DEC_CHR)) {y -= 6;}
 
     if (have_flag(flgs, TR_MAGIC_MASTERY)) y += 9;
+    if (have_flag(flgs, TR_DEC_MAGIC_MASTERY)) y -= 4;
     if (have_flag(flgs, TR_STEALTH)) y += 6;
+    if (have_flag(flgs, TR_DEC_STEALTH)) y -= 3;
 
     if (y != 0)
     {
-        if (pval < 0)
+        if (pval < 0) /* TODO: Remove negative pvals ... */
             y /= 3;
 
         q = (200 + y * ABS(y))*(1 + pval * ABS(pval));
@@ -108,24 +115,8 @@ static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
     if (have_flag(flgs, TR_DEC_LIFE))
         q -= 5000 * pval;
 
-    if (have_flag(flgs, TR_DEC_STR))
-        q -= 2000 * pval;
-    if (have_flag(flgs, TR_DEC_INT))
-        q -= 2000 * pval;
-    if (have_flag(flgs, TR_DEC_WIS))
-        q -= 2000 * pval;
-    if (have_flag(flgs, TR_DEC_DEX))
-        q -= 2000 * pval;
-    if (have_flag(flgs, TR_DEC_CON))
-        q -= 2000 * pval;
-    if (have_flag(flgs, TR_DEC_CHR))
-        q -= 2000 * pval;
-    if (have_flag(flgs, TR_DEC_STEALTH))
-        q -= 1000 * pval;
     if (have_flag(flgs, TR_DEC_SPEED))
         q -= 10000 * pval;
-    if (have_flag(flgs, TR_DEC_MAGIC_MASTERY))
-        q -= 2000 * pval;
     if (have_flag(flgs, TR_DEC_SPELL_CAP))
         q -= 2000 * pval;
     if (have_flag(flgs, TR_DEC_SPELL_POWER))
