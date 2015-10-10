@@ -861,13 +861,14 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
 
 extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
 {
-    u32b flgs[TR_FLAG_SIZE];
-    int  net = 0;
+    u32b    flgs[TR_FLAG_SIZE];
+    int     net = 0;
+    int     boost = 0;
+    vec_ptr v = NULL;
 
     _display_name(o_ptr, doc);
-    doc_insert(doc, "  <indent>\n");
+    doc_insert(doc, "  <indent>");
     _display_desc(o_ptr, doc);
-    doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
 
     if (o_ptr->tval == TV_SCROLL || o_ptr->tval == TV_POTION)
     {
@@ -890,56 +891,94 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     if (!object_is_known(o_ptr)) return;
 
     object_flags_known(o_ptr, flgs);
+    if (devicemaster_is_speciality(o_ptr))
+        boost = device_power_aux(100, p_ptr->device_power + p_ptr->lev/10) - 100;
+    else
+        boost = device_power(100) - 100;
 
-    if (o_ptr->activation.type != EFFECT_NONE)
+    if (o_ptr->ident & IDENT_MENTAL)
     {
-        cptr res;
-        int  boost = 0;
+        int sp = device_sp(o_ptr);
+        int max_sp = device_max_sp(o_ptr);
 
-        if (devicemaster_is_speciality(o_ptr))
-            boost = device_power_aux(100, p_ptr->device_power + p_ptr->lev/10) - 100;
-        else
-            boost = device_power(100) - 100;
-
-        res = do_device(o_ptr, SPELL_DESC, boost);
-        if (res && strlen(res))
-            doc_printf(doc, "%s\n\n", res);
-
-        if (o_ptr->ident & IDENT_MENTAL)
-        {
-            int fail = device_calc_fail_rate(o_ptr);
-
-            res = do_device(o_ptr, SPELL_INFO, boost);
-            if (res && strlen(res))
-                doc_printf(doc, "<color:U>Info: </color>%s\n", res);
-            doc_printf(doc, "<color:U>Fail: </color>%d.%d%%\n\n", fail/10, fail%10);
-
-            doc_printf(doc, "It has a power rating of %d.\n", device_level(o_ptr));
-            doc_printf(doc, "It has a difficulty rating of %d.\n", o_ptr->activation.difficulty);
-            doc_printf(doc, "It currently has %d out of %d sp.\n", device_sp(o_ptr), device_max_sp(o_ptr));
-            doc_printf(doc, "Each charge costs %d sp.\n\n", o_ptr->activation.cost);
-        }
+        doc_insert(doc, "<color:U>This device has the following magical strength:</color>\n");
+        doc_printf(doc, "Power  : <color:G>%d</color>\n", device_level(o_ptr));
+        doc_printf(doc, "Mana   : <color:%c>%d</color>/<color:G>%d</color>\n",
+                    (sp < max_sp) ? 'y' : 'G', sp, max_sp);
+    }
+    else
+    {
+        doc_insert(doc, "<color:U>This device has the following magical strength:</color>\n");
+        doc_insert(doc, "Power  : <color:G>?</color>\n");
+        doc_insert(doc, "Mana   : <color:G>?</color>/<color:G>?</color>\n");
     }
 
+    v = vec_alloc((vec_free_f)string_free);
     net = _calc_net_bonus(o_ptr->pval, flgs, TR_SPEED, TR_DEC_SPEED);
     if (net)
-        doc_printf(doc, "It may be used %s quickly than normal.", (net > 0) ? "more" : "<color:R>less</color>");
+        vec_add(v, string_alloc_format("<color:%c>%+d Quickness</color>", (net > 0) ? 'G' : 'r', net));
 
     net = _calc_net_bonus(o_ptr->pval, flgs, TR_DEVICE_POWER, TR_INVALID);
     if (net)
-        doc_printf(doc, "It is %s powerful than normal.\n", (net > 0) ? "more" : "<color:R>less</color>");
+    {
+        int        pct = device_power_aux(100, net) - 100;
+        string_ptr s = string_alloc_format("<color:%c>%+d%% to Power</color>", (net > 0) ? 'G' : 'r', pct);
+        vec_add(v, s);
+    }
 
     net = _calc_net_bonus(o_ptr->pval, flgs, TR_EASY_SPELL, TR_INVALID);
-    if (net)
-        doc_printf(doc, "It is %s than normal to use.\n", (net > 0) ? "easier" : "<color:R>harder</color>");
+    if (net > 0)
+        vec_add(v, string_copy_s("<color:G>Easy Use</color>"));
+    else if (net < 0)
+        vec_add(v, string_copy_s("<color:r>Hard Use</color>"));
 
     net = _calc_net_bonus(o_ptr->pval, flgs, TR_REGEN, TR_INVALID);
     if (net)
-        doc_printf(doc, "It regenerates charges more %s than normal.\n", (net > 0) ? "quickly" : "<color:R>slowly</color>");
+        vec_add(v, string_alloc_format("<color:%c>%+d to Regeneration</color>", (net > 0) ? 'G' : 'r', net));
 
     if (have_flag(flgs, TR_HOLD_LIFE))
-        doc_insert(doc, "It is immune to charge draining.\n");
+        vec_add(v, string_copy_s("<color:y>Hold Charges</color>"));
 
+    if (vec_length(v))
+    {
+        doc_insert(doc, "Extra  : <indent>");
+        _print_list(v, doc, ';', '\0');
+        doc_insert(doc, "</indent>\n\n");
+    }
+    else
+        doc_newline(doc);
+
+    vec_free(v);
+
+    if (o_ptr->activation.type != EFFECT_NONE)
+    {
+        if (o_ptr->ident & IDENT_MENTAL)
+        {
+            int  fail = device_calc_fail_rate(o_ptr);
+            int  charges = device_sp(o_ptr) / o_ptr->activation.cost;
+            int  max_charges = device_max_sp(o_ptr) / o_ptr->activation.cost;
+            cptr desc;
+
+            doc_insert(doc, "<color:U>This device is loaded with a spell:</color>\n");
+            doc_printf(doc, "Spell  : <color:B>%s</color>\n", do_device(o_ptr, SPELL_NAME, boost));
+            desc = do_device(o_ptr, SPELL_INFO, boost);
+            if (desc && strlen(desc))
+                doc_printf(doc, "Info   : <color:w>%s</color>\n", desc);
+            doc_printf(doc, "Level  : <color:G>%d</color>\n", o_ptr->activation.difficulty);
+            doc_printf(doc, "Cost   : <color:G>%d</color>\n", o_ptr->activation.cost);
+            doc_printf(doc, "Charges: <color:%c>%d</color>/<color:G>%d</color>\n",
+                        (charges < max_charges) ? 'y' : 'G', charges, max_charges);
+            doc_printf(doc, "Fail   : <color:G>%d.%d%%</color>\n", fail/10, fail%10);
+            doc_printf(doc, "Desc   : <indent>%s</indent>\n\n", do_device(o_ptr, SPELL_DESC, boost));
+        }
+        else
+        {
+            doc_printf(doc, "Spell: <color:B>%s</color>\n", do_device(o_ptr, SPELL_NAME, boost));
+            doc_printf(doc, "Desc : <indent>%s</indent>\n\n", do_device(o_ptr, SPELL_DESC, boost));
+        }
+    }
+
+    doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
     if (!(o_ptr->ident & IDENT_MENTAL))
         doc_printf(doc, "This object may have additional powers.\n");
 
