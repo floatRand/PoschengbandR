@@ -79,7 +79,7 @@ Not recommended since monsters move at irregular speeds. Monsters will also "spl
 
 Shoot'n Scoot
 -------------
-Requires a large room, Phase Door, and some type of missile weapon. Stand at one end of the room, your enemy at the other. Fire your missile weapon at him until he gets close, and then Phase Door. Fire again, until he gets close, and repeat. By the time you run out of ammunition, he should be dead or weak enough for you to finish him HTH (Hand to Hand).
+Requires a large room, Phase Door, and some type of missile weapon. Stand at one end of the room, your enemy at the other. Fire your missile weapon at him until he gets close, and then Phase Door. Fire again, until he gets close, and repeat. By the time you run out of ammunition, he should be dead or weak enough for you to finish him HTH (Hand to Hand). However, note that monsters get angry when players use this tactic, and will cast spells/breathe more often as a result. Sometimes your best course of action, even as a spellcaster, is to attack while next to the monster. Try things out to see what works best as results will vary from monster type to monster type.
 
 
 Wail'n Bail
@@ -89,7 +89,7 @@ Requires Teleport items. Fight the monster until you're almost dead, teleport ou
 
 The Anti-Summoning Corridor
 ---------------------------
-Requires a little time to set up. This can be done just about anywhere. Dig a twisting corridor into the rock, and station yourself at one end of it. When your opponent arrives, he won't be able to summon any monsters next to you. This is a very important technique for fighting many higher-end monsters which very quickly bring in a horde of other monsters.
+Requires a little time to set up. This can be done just about anywhere. Dig a twisting corridor into the rock, and station yourself at one end of it. However, most monsters that summon are smart about this as well, and will refuse to approach if they detect the player using this tactic. If you are quick enough, you can bull rush them and still fight in somewhat contained quarters. Hey, getting a stray summon or two behind your back is still much better than fighting in large open rooms, right?
 
 
 <color:D>

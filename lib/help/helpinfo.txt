@@ -1,7 +1,7 @@
 <style:title>Online Help Commands</style>
 
 <style:heading>Movement Commands</style>
-<color:keypress>   'q'    </color>(Leave the help system)
+<color:keypress>    q     </color>(Leave the help system)
 <color:keypress>   ESC    </color>(Return to the prev file)
 
 <color:keypress>   Home   </color>(Go to the top)
@@ -15,9 +15,9 @@
 <color:keypress>    <     </color>(Go to previous section)
 
 <style:heading>Other Commands</style>
-<color:keypress>   '/'    </color>(Search forward for a string)
-<color:keypress>   '\'    </color>(Search backward for a string)
-<color:keypress>   '|'    </color>(Copy to file)
+<color:keypress>    /     </color>(Search forward for a string)
+<color:keypress>    \     </color>(Search backward for a string)
+<color:keypress>    |     </color>(Copy to file)
           <color:note>(<indent>Note: You can save as html by giving the file an htm or html extension. Otherwise, color formatting will be removed.)</indent></color>
 
 <style:heading>Links</style>

@@ -78,8 +78,8 @@ Each time your character happens upon a new Unique, this is recorded in your mon
 <style:screenshot>
 Knowledge - Monsters
 
-Group                  Name                                         Sym  Kills
-==============================================================================
+Group                  Name                                       Sym  Kills
+============================================================================
 <color:B>Uniques</color>              | Sangahyando of Umbar                         <color:o>p</color>  <color:D> dead</color>
 Ridable monsters     | It                                           <color:W>.</color>  <color:D> dead</color>
 Wanted monsters      | <color:B>Azog, King of the Uruk-Hai</color>                   <color:r>o</color>  <color:D> dead</color>

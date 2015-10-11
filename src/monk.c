@@ -158,7 +158,7 @@ int monk_display_attack_info(int hand, int row, int col)
         char tmp[20];
         int dam = dd * (ds + 1) * 100 * counts[i].count / (2 * tot);
 
-    /*  if (counts[i].count == 0) continue; */
+        if (counts[i].count == 0) continue;
 
         tot_dam += dam;
         tot_mul += counts[i].mul;
