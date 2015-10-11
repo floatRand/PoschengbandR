@@ -98,7 +98,7 @@ In addition to these, there are other forms of attacks that you will encounter t
 
 <topic:Immunities><style:heading>Immunities</style>
 
-It is also possible that you may find items which grant immunity to one or (very occasionally) more of the low resistances (Acid, Fire, Cold and Electricity).  In this case, when wielded, you will take no damage from attacks of the relevant kind and, in addition, your equipment and inventory are safe from being damaged or destroyed by the attack.
+It is also possible that you may find items which grant immunity to one or (very occasionally) more of the low resistances (Acid, Fire, Cold and Electricity). In this case, when wielded, you will take no damage from attacks of the relevant kind and, in addition, your equipment and inventory are safe from being damaged or destroyed by the attack.
 
 <topic:Miscellaneous><style:heading>Miscellaneous</style>
 

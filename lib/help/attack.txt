@@ -45,7 +45,7 @@ Long Bow              1.00             3         Full
 Light Crossbow        0.83             4         Reduced
 Heavy Crossbow        0.75             4         Full
 </style>
-Bows tend to be good at dealing constant streams of damage.  A sling is good for killing many small monsters - it even does more damage per round than a short bow if you can carry enough ammunition.  Crossbows deal enormous amounts of damage in one shot.  However, the reload time is such that a longbow will deal more damage over time.
+Bows tend to be good at dealing constant streams of damage. A sling is good for killing many small monsters - it even does more damage per round than a short bow if you can carry enough ammunition. Crossbows deal enormous amounts of damage in one shot. However, the reload time is such that a longbow will deal more damage over time.
 
 Certain classes automatically receive additional shots as they become more experienced. Rangers and Cavalry receive some additional shots with a bow. Rogues receive some extra shots with a sling. Archers and Warriors receive some additional shots with any missile launcher.
 

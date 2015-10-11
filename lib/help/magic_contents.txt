@@ -1,18 +1,12 @@
-PosChengband Magic System.
+<style:title>The Magic System</style>
 
 Please choose one of the following online help files:
 
-    (a) PosChengband Magic System         (magic.txt)
-    (b) The Magic Realms                  (magic.txt#MagicRealms)
-    (c) On Casting Spells ...             (magic.txt#CastingSpells)
-    (d) Spell Types                       (magic.txt#SpellTypes)
-    (e) Hints and Tips                    (magic.txt#Hints)
+    <link:magic.txt> The Magic System
+    <link:magic.txt#Spellbook> Spellbook Magic
+    <link:magic.txt#MagicRealms> General Realms of Spellbook Magic
+    <link:magic.txt#OtherMagicRealms> Class Specific Realms of Spellbook Magic
+    <link:magic.txt#CastingSpells> On Casting Spells
+    <link:magic.txt#SpellTypes> Spell Types
 
-    (?) Help System Commands              (helpinfo.txt)
-
-
-***** [a] magic.txt
-***** [b] magic.txt#MagicRealms
-***** [c] magic.txt#CastingSpells
-***** [d] magic.txt#SpellTypes
-***** [e] magic.txt#Hints
+    <color:y>(?) Help System Commands</color>
