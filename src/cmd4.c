@@ -1191,7 +1191,7 @@ static void do_cmd_options_win(void)
 
 
 
-#define OPT_NUM 15
+#define OPT_NUM 14
 
 static struct opts
 {
@@ -1247,7 +1247,7 @@ void do_cmd_options(void)
         Term_clear();
 
         /* Why are we here */
-        prt("PosChengband options", 1, 0);
+        prt("PosChengband Options", 1, 0);
 
         while(1)
         {

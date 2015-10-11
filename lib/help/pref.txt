@@ -203,7 +203,7 @@ Colors can be specified in user pref files as lines of the form
 "V:<N>:<V>:<R>:<G>:<B>".
 
 
-***** <Options>
+<topic:Options>
 --- User Pref Files (Options) ---
 
 The "Interact with options" command allows you to turn options on or
