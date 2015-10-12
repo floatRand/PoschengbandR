@@ -690,10 +690,7 @@ static void do_cmd_options_cheat(cptr info)
 
             case '?':
             {
-                strnfmt(buf, sizeof(buf), "option.txt#%s", cheat_info[k].o_text);
-                /* Peruse the help file */
-                (void)show_file(TRUE, buf, NULL, 0, 0);
-
+                doc_display_help("option.txt", cheat_info[k].o_text);
                 Term_clear(); 
                 break;
             }
@@ -842,8 +839,7 @@ static void do_cmd_options_autosave(cptr info)
 
             case '?':
             {
-                (void)show_file(TRUE, "option.txt#Autosave", NULL, 0, 0);
-
+                doc_display_help("option.txt", "Autosave");
 
                 Term_clear(); 
                 break;
@@ -989,10 +985,7 @@ void do_cmd_options_aux(int page, cptr info)
 
             case '?':
             {
-                strnfmt(buf, sizeof(buf), "option.txt#%s", option_info[opt[k]].o_text);
-                /* Peruse the help file */
-                (void)show_file(TRUE, buf, NULL, 0, 0);
-
+                doc_display_help("option.txt", option_info[opt[k]].o_text);
                 Term_clear();
                 break;
             }
@@ -1145,9 +1138,7 @@ static void do_cmd_options_win(void)
 
             case '?':
             {
-                (void)show_file(TRUE, "option.txt#Window", NULL, 0, 0);
-
-
+                doc_display_help("option.txt", "Window");
                 Term_clear(); 
                 break;
             }
@@ -1422,7 +1413,7 @@ void do_cmd_options(void)
                     if (k == ESCAPE) break;
                     else if (k == '?')
                     {
-                        (void)show_file(TRUE, "option.txt#BaseDelay", NULL, 0, 0);
+                        doc_display_help("option.txt", "BaseDelay");
                         Term_clear(); 
                     }
                     else if (isdigit(k)) delay_factor = D2I(k);
@@ -1452,7 +1443,7 @@ void do_cmd_options(void)
                     if (k == ESCAPE) break;
                     else if (k == '?')
                     {
-                        (void)show_file(TRUE, "option.txt#Hitpoint", NULL, 0, 0);
+                        doc_display_help("option.txt", "HitPoint");
                         Term_clear(); 
                     }
                     else if (isdigit(k)) hitpoint_warn = D2I(k);
@@ -1482,7 +1473,7 @@ void do_cmd_options(void)
                     if (k == ESCAPE) break;
                     else if (k == '?')
                     {
-                        (void)show_file(TRUE, "option.txt#Manapoint", NULL, 0, 0);
+                        doc_display_help("option.txt", "Manapoint");
                         Term_clear(); 
                     }
                     else if (isdigit(k)) mana_warn = D2I(k);
@@ -1493,7 +1484,7 @@ void do_cmd_options(void)
             }
 
             case '?':
-                (void)show_file(TRUE, "option.txt", NULL, 0, 0);
+                doc_display_help("option.txt", NULL);
                 Term_clear(); 
                 break;
 
@@ -4266,8 +4257,7 @@ static void do_cmd_save_screen_html(void)
     do_cmd_save_screen_html_aux(buf, 1);
 }
 
-/* This is for embedding screen shots in the help documentation.
- * show_file() handles colors with embedded [[[[?| directives. */
+/* This is for embedding screen shots in the help documentation.*/
 void do_cmd_save_screen_doc(void)
 {
     bool old_use_graphics = use_graphics;

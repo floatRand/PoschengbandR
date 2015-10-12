@@ -292,7 +292,9 @@ static void msg_line_flush(void)
 
         for(;;)
         {
-            int cmd = inkey();
+            int cmd;
+            flush();
+            cmd = inkey();
             if (cmd == ESCAPE)
             {
                 auto_more_state = AUTO_MORE_SKIP_ALL;
