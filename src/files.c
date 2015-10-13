@@ -3121,10 +3121,6 @@ void display_player(int mode)
             else
                 _print_field(5, 1, "Subrace    :", format("%-27.27s", race_ptr->subname), TERM_L_BLUE, 0);
         }
-        else if (p_ptr->prace == RACE_DEMIGOD)
-            _print_field(5, 1, "Subrace    :", demigod_info[p_ptr->psubrace].name, TERM_L_BLUE, 0);
-        else if (p_ptr->prace == RACE_DRACONIAN)
-            _print_field(5, 1, "Subrace    :", race_ptr->subname, TERM_L_BLUE, 0);
         else
             _print_field(5, 1, "Subrace    :", "None", TERM_L_BLUE, 0);
 

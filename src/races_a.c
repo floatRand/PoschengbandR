@@ -1151,7 +1151,6 @@ race_t *draconian_get_race_t(int psubrace)
                     "draconian power.";
         
         me.base_hp = 22;
-        me.infra = 2;
 
         me.calc_bonuses = _draconian_calc_bonuses;
         me.get_powers = _draconian_get_powers;
@@ -1163,10 +1162,9 @@ race_t *draconian_get_race_t(int psubrace)
 
     if (subrace_init != psubrace)
     {
-        cptr names[DRACONIAN_MAX] = {"Red", "White", "Blue", "Black", "Green", "Bronze", "Crystal", "Gold", "Shadow"};
-
         /* Reset to baseline */
-        me.subname = "";
+        me.subname = NULL;
+        me.subdesc = NULL;
         me.stats[A_STR] =  1;
         me.stats[A_INT] =  1;
         me.stats[A_WIS] =  1;
@@ -1183,38 +1181,97 @@ race_t *draconian_get_race_t(int psubrace)
         me.skills.thn = 5;
         me.skills.thb = 5;
 
+        me.infra = 2;
+
         me.exp = 160;
         me.life = 103;
         me.shop_adjust = 105;
 
 
         /* Override with New Type */
-        if (psubrace >= 0 && psubrace < DRACONIAN_MAX)
-            me.subname = names[psubrace];
-
         switch (psubrace)
         {
         case DRACONIAN_RED:
+            me.subname = "Red";
+            me.subdesc = "Red Draconians have an affinity for fire, which they both breathe at will and resist. "
+                         "Together with their White kin, they are the strongest in combat of the draconians. "
+                         "But they are not so good with magic and their stealth is quite poor. Should they choose "
+                         "the power of Dragon Skin, they will gain a fiery aura as well. Should they choose the "
+                         "power of Dragon Strike, their blows will burn their enemies.";
+            me.stats[A_STR] += 2;
+            me.skills.dev -= 5;
+            me.skills.stl -= 2;
+            me.skills.thn += 10;
+            me.life += 3;
+            me.shop_adjust = 115;
+            break;
         case DRACONIAN_WHITE:
+            me.subname = "White";
+            me.subdesc = "White Draconians have an affinity for frost, which they both breathe at will and resist. "
+                         "Together with their Red kin, they are the strongest in combat of the draconians. "
+                         "But they are not so good with magic and their stealth is quite poor. Should they choose "
+                         "the power of Dragon Skin, they will gain an aura of cold as well. Should they choose the "
+                         "power of Dragon Strike, their blows will freeze their enemies.";
+            me.stats[A_STR] += 2;
+            me.skills.dev -= 5;
+            me.skills.stl -= 2;
+            me.skills.thn += 9;
+            me.life += 3;
+            me.shop_adjust = 115;
+            break;
         case DRACONIAN_BLUE:
-        case DRACONIAN_BLACK:
+            me.subname = "Blue";
+            me.subdesc = "Blue Draconians have an affinity for lightning, which they both breathe at will "
+                         "and resist. They are strong in combat but not so good with magic or stealth. "
+                         "Should they choose the power of Dragon Skin, they will gain a shocking aura as well. "
+                         "Should they choose the power of Dragon Strike, their blows will electrocute "
+                         "their enemies.";
             me.stats[A_STR] += 1;
-            me.skills.dev -= 3;
+            me.skills.dev -= 4;
             me.skills.stl -= 1;
-            me.skills.thn += 5;
-            me.life += 1;
+            me.skills.thn += 7;
+            me.life += 2;
+            me.shop_adjust = 110;
+            break;
+        case DRACONIAN_BLACK:
+            me.subname = "Black";
+            me.subdesc = "Black Draconians have an affinity for acid, which they both breathe at will "
+                         "and resist. They are strong in combat but not so good with magic or stealth. "
+                         "With the power of Dragon Strike, their blows will corrode their enemies.";
+            me.stats[A_STR] += 1;
+            me.skills.dev -= 4;
+            me.skills.stl -= 1;
+            me.skills.thn += 8;
+            me.life += 2;
             me.shop_adjust = 110;
             break;
         case DRACONIAN_GREEN:
+            me.subname = "Green";
+            me.subdesc = "Green Draconians have an affinity for poison, which they both breathe at will "
+                         "and resist. They are average in all respects among the draconians. With the "
+                         "power of Dragon Strike, their blows will poison their enemies.";
             me.exp += 15;
             break;
         case DRACONIAN_BRONZE:
+            me.subname = "Bronze";
+            me.subdesc = "Bronze Draconians are the most intelligent of their kind, and the best with "
+                         "magic as well. They are seldom confused, though the same may not be said of "
+                         "their enemies. With the power of Dragon Strike, even the melee attacks of "
+                         "the Bronze Draconian will baffle their enemies.";
             me.stats[A_INT] += 1;
+            me.skills.sav += 1;
+            me.skills.thn -= 2;
             me.skills.dev += 7;
             me.exp += 25;
             me.shop_adjust = 100;
             break;
         case DRACONIAN_CRYSTAL:
+            me.subname = "Crystal";
+            me.subdesc = "Hard of skin, the Crystal Draconian is difficult to hit in melee. But their agility "
+                         "suffers and they are not the brightest of their kind. They resist shards, which they "
+                         "may also breathe on command. With the power of Dragon Skin, they gain an aura of "
+                         "shards as well. With the power of Dragon Strike, even their melee attacks will shred "
+                         "their enemies.";
             me.stats[A_INT] -= 1;
             me.stats[A_DEX] -= 1;
             me.stats[A_CON] += 1;
@@ -1225,6 +1282,11 @@ race_t *draconian_get_race_t(int psubrace)
             me.exp += 60;
             break;
         case DRACONIAN_GOLD:
+            me.subname = "Gold";
+            me.subdesc = "The wisest of their kind, Gold Draconians are resilient in the face of magical "
+                         "attacks. They are resistant to sound which they may also breathe at will, stunning "
+                         "their enemies. With the power of Dragon Strike, even their melee attacks will "
+                         "stun their enemies.";
             me.stats[A_WIS] += 1;
             me.skills.dev += 5;
             me.skills.sav += 3;
@@ -1233,6 +1295,12 @@ race_t *draconian_get_race_t(int psubrace)
             me.shop_adjust = 95;
             break;
         case DRACONIAN_SHADOW:
+            me.subname = "Shadow";
+            me.subdesc = "Lithe, stealthy and nimble, the Shadow Draconian is seldom seen in this world. "
+                         "They are resistant to the forces of nether which they may also breathe. They are the "
+                         "weakest of the draconians, and the poorest in melee. But they are better than average "
+                         "with magic. With the power of Dragon Strike, they may steal life from their enemies "
+                         "in melee.";
             me.stats[A_STR] -= 1;
             me.stats[A_DEX] += 2;
             me.skills.dev += 3;
@@ -1240,6 +1308,7 @@ race_t *draconian_get_race_t(int psubrace)
             me.skills.thn -= 5;
             me.life -= 1;
             me.exp += 35;
+            me.infra += 2;
             break;
         }
         subrace_init = psubrace;

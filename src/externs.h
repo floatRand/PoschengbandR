@@ -85,7 +85,6 @@ extern owner_type owners[MAX_STORES][MAX_OWNERS];
 extern byte extract_energy[200];
 extern player_sex sex_info[MAX_SEXES];
 extern player_pact pact_info[MAX_PACTS];
-extern demigod_type demigod_info[MAX_DEMIGOD_TYPES];
 extern magic_type technic_info[NUM_TECHNIC][32];
 extern player_seikaku seikaku_info[MAX_PERSONALITIES];
 extern u32b fake_spell_flags[4];

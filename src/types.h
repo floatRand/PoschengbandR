@@ -2056,6 +2056,7 @@ typedef struct {
     cptr                    name;
     cptr                    subname;
     cptr                    desc;
+    cptr                    subdesc;
     s16b                    stats[MAX_STATS];
     skills_t                base_skills;
     skills_t                extra_skills; /* Prorata every 10 levels */
@@ -2089,6 +2090,7 @@ typedef struct {
     cptr                    name;
     cptr                    subname;
     cptr                    desc;
+    cptr                    subdesc;
     s16b                    stats[MAX_STATS];
     skills_t                skills;
     skills_t                extra_skills; /* Prorata every 10 levels (Monster Races) */
@@ -2122,11 +2124,6 @@ typedef struct {
     s16b                    pseudo_class_idx; /* For the "Monster" class ... */
     s16b                    shop_adjust;
 } race_t;
-
-typedef struct {
-    cptr name;
-    cptr desc;
-} demigod_type;
 
 typedef struct {
     int  type;

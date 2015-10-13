@@ -232,7 +232,7 @@ static int _menu_choose(menu_ptr menu, int start_choice)
     /* Choose */
     k = -1;
     cs = start_choice;
-    os = start_choice;
+    os = /*start_choice? ... but I want the initial MENU_ON_BROWSE to display, so:*/-1;
     for (;;)
     {
         if (cs != os)
@@ -332,7 +332,24 @@ static int _menu_choose(menu_ptr menu, int start_choice)
         }
         if (c == '?')
         {
-            show_help(menu->browse_prompt);
+            /* Race and Class helpfiles should have appropriately named topics */
+            if (!strchr(menu->browse_prompt, '#'))
+            {
+                char    helpfile[255];
+                variant text;
+
+                var_init(&text);
+                menu->fn(MENU_TEXT, cs, menu->cookie, &text);
+
+                strcpy(helpfile, menu->browse_prompt);
+                if (!var_is_null(&text))
+                    sprintf(helpfile + strlen(helpfile), "#%s", var_get_string(&text));
+
+                show_help(helpfile);
+                var_clear(&text);
+            }
+            else
+                show_help(menu->browse_prompt);
         }
         else if (c == '=')
         {
@@ -786,7 +803,7 @@ static int _prompt_class_beginner(void)
     for (;;)
     {
     class_t *class_ptr = NULL;
-    menu_t menu = { "Class", "Classes.txt#Tables", "Note: Your 'class' determines various intrinsic factors and bonuses.",
+    menu_t menu = { "Class", "Classes.txt", "Note: Your 'class' determines various intrinsic factors and bonuses.",
                         _class_menu_fn,
                         _beginner_classes, _count_ids(_beginner_classes)};
 
@@ -843,7 +860,7 @@ static int _prompt_class(void)
         c_put_str(TERM_WHITE, "              ", 6, 14);
         for (;;)
         {
-            menu_t menu1 = { "Class Type", "Classes.txt#Tables", "",
+            menu_t menu1 = { "Class Type", "Classes.txt", "",
                                 _class_group_menu_fn, 
                                 NULL, _MAX_CLASS_GROUPS};
             idx = _menu_choose(&menu1, group_id);
@@ -854,7 +871,7 @@ static int _prompt_class(void)
             int      choices[_MAX_CLASSES_PER_GROUP];
             int      ct = 0, i;
             class_t *class_ptr = NULL;
-            menu_t   menu2 = { "Class", "Classes.txt#Tables", "Note: Your 'class' determines various intrinsic factors and bonuses.",
+            menu_t   menu2 = { "Class", "Classes.txt", "Note: Your 'class' determines various intrinsic factors and bonuses.",
                                 _class_menu_fn, 
                                 choices, 0};
 
@@ -973,22 +990,22 @@ typedef struct _race_group_s {
     int ids[_MAX_RACES_PER_GROUP];
 } _race_group_t;
 static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
-    { "Human", "Races.txt#Tables", 
+    { "Human", "Races.txt",
         {RACE_AMBERITE, RACE_BARBARIAN, RACE_DEMIGOD, RACE_DUNADAN, RACE_HUMAN, -1} },
-    { "Elf", "Races.txt#Tables", 
+    { "Elf", "Races.txt",
         {RACE_DARK_ELF, RACE_HIGH_ELF, RACE_WOOD_ELF, -1} },
-    { "Hobbit/Dwarf", "Races.txt#Tables", 
+    { "Hobbit/Dwarf", "Races.txt",
         {RACE_DWARF, RACE_GNOME, RACE_HOBBIT, RACE_NIBELUNG, -1} },
-    { "Fairy", "Races.txt#Tables", 
+    { "Fairy", "Races.txt",
         {RACE_SHADOW_FAIRY, RACE_SPRITE, -1} },
-    { "Angel/Demon",  "Races.txt#Tables", 
+    { "Angel/Demon",  "Races.txt",
         {RACE_ARCHON, RACE_BALROG, RACE_IMP, -1} },
-    { "Orc/Troll/Giant", "Races.txt#Tables", 
-        {RACE_CYCLOPS, RACE_KOBOLD, RACE_HALF_GIANT, RACE_HALF_OGRE, 
-         RACE_HALF_TITAN, RACE_HALF_TROLL, RACE_SNOTLING, -1} },
-    { "Undead", "Races.txt#Tables", 
+    { "Orc/Troll/Giant", "Races.txt",
+        {RACE_CYCLOPS, RACE_HALF_GIANT, RACE_HALF_OGRE,
+         RACE_HALF_TITAN, RACE_HALF_TROLL, RACE_KOBOLD, RACE_SNOTLING, -1} },
+    { "Undead", "Races.txt",
         {RACE_SKELETON, RACE_SPECTRE, RACE_VAMPIRE, RACE_ZOMBIE, -1} },
-    { "Other", "Races.txt#Tables", 
+    { "Other", "Races.txt",
         {RACE_ANDROID, RACE_BEASTMAN, RACE_CENTAUR, RACE_DRACONIAN, RACE_DOPPELGANGER, RACE_ENT, 
          RACE_GOLEM, RACE_KLACKON, RACE_KUTAR, RACE_MIND_FLAYER, RACE_TONBERRY, RACE_YEEK,-1 } },
 };
@@ -1072,15 +1089,18 @@ static void _demigod_menu_fn(int cmd, int which, vptr cookie, variant *res)
     switch (cmd)
     {
     case MENU_TEXT:
-        var_set_string(res, demigod_info[which].name);
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, which);
+        var_set_string(res, race_ptr->subname);
         break;
+    }
     case MENU_ON_BROWSE:
     {
         char buf[100];
         race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, which);
 
-        c_put_str(TERM_L_BLUE, demigod_info[which].name, 3, 40);
-        put_str(": Race modification", 3, 40+strlen(demigod_info[which].name));
+        c_put_str(TERM_L_BLUE, race_ptr->subname, 3, 40);
+        put_str(": Race modification", 3, 40+strlen(race_ptr->subname));
         put_str("Str  Int  Wis  Dex  Con  Chr   EXP ", 4, 40);
         sprintf(buf, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d %+4d%% ",
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
@@ -1502,7 +1522,7 @@ static int _prompt_race_beginner(void)
     for (;;)
     {
     race_t *race_ptr = NULL;
-    menu_t menu = { "Race", "Races.txt#Tables", "Note: Your 'race' determines various intrinsic factors and bonuses.",
+    menu_t menu = { "Race", "Races.txt", "Note: Your 'race' determines various intrinsic factors and bonuses.",
                         _race_menu_fn,
                         _beginner_races, _count_ids(_beginner_races)};
 
@@ -1540,7 +1560,7 @@ static int _prompt_race(void)
         c_put_str(TERM_WHITE, "                   ", 5, 14);
         for (;;)
         {
-            menu_t menu1 = { "Race Type", "Races.txt#Tables", "",
+            menu_t menu1 = { "Race Type", "Races.txt", "",
                                 _race_group_menu_fn, 
                                 NULL, _MAX_RACE_GROUPS};
             idx = _menu_choose(&menu1, group_id);
@@ -1572,7 +1592,7 @@ static int _prompt_race(void)
                 {
                     for (;;)
                     {
-                    menu_t menu3 = { "Parentage", "Demigods.txt#Tables", "Unlike in real life, you get to choose your parent.",
+                    menu_t menu3 = { "Parentage", "Demigods.txt", "Unlike in real life, you get to choose your parent.",
                                         _demigod_menu_fn, 
                                         NULL, MAX_DEMIGOD_TYPES};
 
@@ -1581,8 +1601,9 @@ static int _prompt_race(void)
                         if (idx == _BIRTH_ESCAPE) break;
                         if (idx < 0) return idx;
                         p_ptr->psubrace = idx;
-                        c_put_str(TERM_L_BLUE, format("%-19s", demigod_info[p_ptr->psubrace].name), 5, 14);
-                        if (!_confirm_choice(demigod_info[p_ptr->psubrace].desc, menu3.count)) continue;
+                        race_ptr = get_race_t();
+                        c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
+                        if (!_confirm_choice(race_ptr->subdesc, menu3.count)) continue;
                         idx = _prompt_class();
                         if (idx == _BIRTH_ESCAPE) continue;
                         return idx;
@@ -1592,7 +1613,7 @@ static int _prompt_race(void)
                 {
                     for (;;)
                     {
-                    menu_t menu3 = { "Subrace", "Draconians.txt#Tables", "Choose your subrace",
+                    menu_t menu3 = { "Subrace", "Draconians.txt", "Choose your subrace",
                                         _draconian_menu_fn,
                                         NULL, DRACONIAN_MAX};
 
@@ -1942,7 +1963,8 @@ static bool _prompt_game_mode(void)
             if (p_ptr->prace == RACE_DEMIGOD)
             {
                 p_ptr->psubrace = randint0(MAX_DEMIGOD_TYPES);
-                c_put_str(TERM_L_BLUE, format("%-19s", demigod_info[p_ptr->psubrace].name), 5, 14);
+                race_ptr = get_race_t();
+                c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
             }
             else if (p_ptr->prace == RACE_DRACONIAN)
             {

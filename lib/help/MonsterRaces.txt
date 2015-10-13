@@ -1,7 +1,6 @@
 <style:title>Monster Races</style>
 
-<topic:Jelly><style:heading>Jelly</style>
-
+<topic:Jelly><color:o>Jelly</color>
 Jellies are acidic creatures, quietly patrolling their surroundings in search of objects to absorb. They are quite stealthy for most of their lives. They don't wear equipment on their bodies the way normal races do. Instead, they are capable of absorbing objects into their gelatinous frames. In fact, each equipment slot (except their pseudopod) is capable of holding any type of equipment whatsoever, and the number of slots increases with experience. For attacking, jellies are capable of forming a single pseudopod which they may either use for grasping a normal melee weapon, or leave empty to use their innate acid based attacks.
  
 Jellies are monsters and cannot pick a normal player class. Rather than relying on sight, jellies use a little understood sense of their surroundings which allows them to see in the dark with neither light nor infravision. So while jellies can equip a torch or lantern, there is little reason for them to do so.
@@ -10,6 +9,17 @@ Jellies feed off the objects they find gaining nutrition in proportion to the we
  
 Like all monster races, jellies begin as weak monster of their race and evolve to better forms as they gain experience. Jellies begin life as a small puddle of black ooze with very little carrying capacity for equipment. However, they quickly evolve into a Gelatinous Cube and then into an Acidic Cytoplasm. Jellies take one additional powerful evolutionary step late in life.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +1        Disarming    +25
+Intelligence  -5        Device       +18
+Wisdom        -5        Save         +37
+Dexterity     +1        Stealth       +8
+Constitution  +1        Searching    +14
+Charisma      -2        Perception    +7
+Life Rating   90%       Melee        +70
+Base HP       40        Bows         +30
+Experience   150%       Infravision    0'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Black Ooze             +1   -5   -5   +1   +1   -2   90%  +40  150%  125%
 Gelatinous Cube        +2  -10  -10   +2   +2   -2  100%  +40  150%  125%
@@ -23,14 +33,24 @@ Acidic Cytoplasm      25+12  18+7   37+11   7+0  14+0   7+0  70+30  30+7
 Shoggoth              25+12  18+7   37+11   2+0  14+0   7+0  70+30  30+7 
 </style>
 
-<topic:Spider><style:heading>Spider</style>
-
+<topic:Spider><color:o>Spider</color>
 Spiders are stealthy monsters that prefer to wait for their prey. They have poisonous attacks and can weave sticky webs to entangle their enemies. They have 8 legs, 4 of which may wear rings and the remaining may equip 2 pairs of boots. They are unable to wield weapons or bows, but may wear a helmet, an amulet, a cloak and even a suit of body armor (after slight adjustments, of course). They cannot wield a light source, but this is not an issue as spiders have grown accustomed to the dark.
  
 There are two paths of evolution for the spider: The Phase Spider and The Aranea. The former is somewhat weaker than the latter in fortitude, stats and melee, but this is compensated by the Phase Spider's amazing powers of teleportation. However, the Elder Aranea's poison touch is more powerful than that of the Phase Spider and often paralyzes its opponents.
  
 All spiders begin in the very weak form of the Cave Spider. Lacking any special talents, the cave spider must play carefully if it is to survive.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -2        Disarming    +25
+Intelligence  -1        Device       +40
+Wisdom        -1        Save         +38
+Dexterity     +2        Stealth       +6
+Constitution  -2        Searching    +20
+Charisma      -3        Perception   +15
+Life Rating   70%       Melee        +56
+Base HP       25        Bows         +30
+Experience   200%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Cave Spider            -2   -1   -1   +2   -2   -3   70%  +25  200%  115%
 Giant Spider           +0   -1   -1   +2   +1   -1  100%  +25  200%  115%
@@ -54,8 +74,7 @@ Aranea                25+8   30+10  35+10   6+0  20+0  15+0  65+20  30+7
 Elder Aranea          25+8   30+10  35+10   6+0  20+0  15+0  65+20  30+7 
 </style>
 
-<topic:Dragon><style:heading>Dragon</style>
-
+<topic:Dragon><color:o>Dragon</color>
 Dragons are powerful winged serpents. They are the strongest fighters with razor sharp claws and a bone crushing bite. Each dragon has a unique type of breath that becomes more deadly as the dragon grows and matures.
  
 Due to their non-humanoid bodies, dragons are unable to wear armor, gloves or boots. However, being creatures of magic, they are able to wear 6 rings. They can also wear a helmet, a light source, a cloak and an amulet. Because of these equipment restrictions, dragons may have a difficult time covering all resistances despite the fact that each dragon has one or more innate resistances (or even immunities).
@@ -66,6 +85,17 @@ Dragons are magical creatures, and each dragon may choose to specialize in a spe
 
 See <link:DragonRealms.txt> for more details on dragons.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +5        Disarming    +28
+Intelligence  +3        Device       +35
+Wisdom        +2        Save         +38
+Dexterity     +2        Stealth       +2
+Constitution  +4        Searching    +25
+Charisma      +3        Perception   +26
+Life Rating  120%       Melee        +70
+Base HP       40        Bows         +30
+Experience   250%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Baby Red Dragon        +1   -1   -2   -2   +0   -1  100%  +40  250%  130%
 Young Red Dragon       +2   +0   -1   -1   +1   +0  105%  +40  250%  130%
@@ -217,14 +247,24 @@ Stone Dragon          28+8   18+7   40+15   0+0  10+0   7+0  75+30  30+7
 Steel Dragon          28+8   18+7   40+15   0+0  10+0   7+0  75+30  30+7 
 </style>
 
-<topic:Lich><style:heading>Lich</style>
-
+<topic:Lich><color:o>Lich</color>
 Liches are the undead forms of former sorcerers. Their magic is strong but their fighting is weak. As undead, they quickly gain resistance to cold, poison and nether, and these resistances increase as the lich evolves.
  
 Liches are monsters and cannot choose a normal class. Instead, they are born with magical powers and gain additional powers as they advance. Of all the monster races, none can surpass the firepower of an Archlich, but managing to evolve that far can be a challenge. Intelligence is the primary spell stat.
  
 Liches are humanoid so use the standard set of equipment items. Should they forgo the use of a normal weapon, they may touch their opponents for various powerful effects. However, melee is not the strong suit of the Lich and even their deadly touch is often not enough.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -5        Disarming    +30
+Intelligence  +6        Device       +45
+Wisdom        -6        Save         +38
+Dexterity     +4        Stealth       +7
+Constitution  -2        Searching    +20
+Charisma      +3        Perception   +30
+Life Rating   94%       Melee        +34
+Base HP       20        Bows         +20
+Experience   275%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Lich                   +0   +3   -3   +1   +0   +0  100%  +20  275%  135%
 Master Lich            -2   +4   -4   +2   -1   +1   98%  +20  275%  135%
@@ -238,12 +278,22 @@ Demilich              30+7   45+15  38+12   7+0  20+0  30+0  34+6   20+7
 Archlich              30+7   45+15  38+12   7+0  20+0  30+0  34+6   20+7 
 </style>
 
-<topic:Xorn><style:heading>Xorn</style>
-
+<topic:Xorn><color:o>Xorn</color>
 Xorn are huge creatures of the element earth. They begin life as an Umber Hulk which is a bizarre creature with glaring eyes capable of confusing their foes, and large mandibles capable of slicing through rock. At this stage in their evolution, their body is vaguely humanoid allowing them to wear a helmet, an amulet, a cloak and even a pair of boots. However, once the Umber Hulk evolves it can no longer wear these items. Instead, it can use its four massive arms for weapons, shields, rings and gloves. At this stage, the Xorn can pass effortlessly through rock.
  
 Xorns are monsters so cannot choose a normal class. They have no active powers but instead rely on their ability to hide in rocks combined with their ability to attack with up to four weapons. They play like warriors and are strong as such.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +4        Disarming    +25
+Intelligence  -4        Device       +20
+Wisdom        -2        Save         +31
+Dexterity     -1        Stealth       +2
+Constitution  +3        Searching    +14
+Charisma      -1        Perception    +5
+Life Rating  108%       Melee        +56
+Base HP       30        Bows         +30
+Experience   150%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Umber Hulk             +2   -4   -2   -3   +1   -1  100%  +30  150%  120%
 Xorn                   +3   -4   -2   -2   +2   -1  104%  +30  150%  120%
@@ -255,14 +305,24 @@ Xorn                  25+12  20+8   31+10   2+0  14+0   5+0  56+20  30+7
 Xaren                 25+12  20+8   31+10   2+0  14+0   5+0  56+20  30+7 
 </style>
 
-<topic:Angel><style:heading>Angel</style>
-
+<topic:Angel><color:o>Angel</color>
 Angels are heavenly beings on a holy mission. They are winged creatures able to fly over chasms and pits. They also become resistant to the elements as they mature and are not fooled by invisibility. Their stats are truly awe-inspiring making them one of the most powerful monster races.
  
 Angels are monsters so cannot choose a normal class. Instead, they rely on their divine powers which function like spells but need not be learned or cast from books. These powers can be used while blinded, but not while confused and they are also blocked by Anti-magic. The divine powers of the angel are quite powerful offering good offense combined with detection, healing and melee enhancement. Wisdom is the primary spell stat.
  
 Angels use the same equipment slots as normal player races and have no innate attacks.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +4        Disarming    +25
+Intelligence  +4        Device       +35
+Wisdom        +7        Save         +40
+Dexterity     +4        Stealth       +3
+Constitution  +4        Searching    +18
+Charisma      +7        Perception   +12
+Life Rating  108%       Melee        +48
+Base HP       26        Bows         +35
+Experience   325%       Infravision   30'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Angel                  +1   +1   +4   +1   +1   +1   90%  +26  325%   90%
 Archangel              +1   +1   +4   +1   +1   +2   93%  +26  325%   90%
@@ -282,14 +342,24 @@ Planetar              25+7   35+13  40+15   3+0  18+0  12+0  48+18  35+13
 Solar                 25+7   35+13  40+15   3+0  18+0  12+0  48+18  35+13
 </style>
 
-<topic:Hound><style:heading>Hound</style>
-
+<topic:Hound><color:o>Hound</color>
 While Hounds typically hunt in packs, you have chosen to go it alone. You will begin life in the weak form of a Clear Hound. As you mature you will take a number of evolutionary steps. At each such step, the form you evolve into will be randomly determined. But each tier offers more powerful choices than the last and who knows? You may even evolve into an Aether Hound some day.
  
 Hounds are monsters so cannot choose a normal class. They are not magical so cannot cast spells. However, they are fantastic hunters so learn a small number of abilities to aid in this endeavor. And of course, you are probably aware that hounds love to breathe!
  
 The body of the Hound is canine, so they cannot wield weapons. Instead, they attack with their vicious bite and razor sharp claws. They are not so powerful in melee as are dragons, but they are not that bad either. Hounds can wear four rings on their front paws, a pair of boots on their hind legs, an amulet around their neck and even a cloak and a suit of body armor.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +5        Disarming    +25
+Intelligence  -3        Device       +20
+Wisdom        -5        Save         +31
+Dexterity     +5        Stealth       +4
+Constitution  +4        Searching    +20
+Charisma      +2        Perception   +15
+Life Rating  100%       Melee        +56
+Base HP       22        Bows         +30
+Experience   150%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Clear hound            +1   -3   -5   +2   +1   +0  100%  +22  150%  110%
 Light hound            +1   -3   -5   +2   +1   +0  100%  +22  150%  110%
@@ -310,14 +380,24 @@ Hound of Tindalos     25+8   20+8   31+10   4+1  20+0  15+0  56+20  30+7
 </style>
 Evolution in each tier is actually random. All of the possible forms in each tier are not displayed.
 
-<topic:Giant><style:heading>Giant</style>
-
+<topic:Giant><color:o>Giant</color>
 Giants are humanoids of immense stature. There are several types of giants. Fire, Frost and Storm giants are elemental giants and gain extra resistance, elementals slays and even elemental attacks of their respective element. Titans are powerful immortal beings of legend. Their attacks often confuse their foes and they rarely fight alone.
  
 Giants are monsters so cannot choose a normal class. Instead, they must rely on their superior physical stature to pummel their opponents with mighty blows. Against a distant foe, giants are capable of hurling large boulders with devastating effect.
  
 Giants use the same equipment slots as normal player races and have no innate attacks.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +8        Disarming    +25
+Intelligence  +0        Device       +18
+Wisdom        -3        Save         +30
+Dexterity     +1        Stealth       +0
+Constitution  +8        Searching    +13
+Charisma      +3        Perception    +7
+Life Rating  121%       Melee        +75
+Base HP       46        Bows         +55
+Experience   200%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Hill Giant             +3   -3   -6   -2   +3   +0  100%  +46  200%  130%
 Stone Giant            +4   -2   -5   -1   +4   +1  107%  +46  200%  130%
@@ -381,12 +461,22 @@ Rock Giant            25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
 Hru                   25+10  18+7   30+10   0+0  13+0   7+0  75+34  55+31
 </style>
 
-<topic:Beholder><style:heading>Beholder</style>
-
+<topic:Beholder><color:o>Beholder</color>
 Beholders are floating orbs of flesh with a single central eye surrounded by numerous smaller eyestalks. They attack with their gaze which often confuses or even paralyzes their foes. They are unable to wield normal weapons or armor, but may equip a single ring on each of their eyestalks, and the number of eyestalks increases as the beholder evolves.
  
 Beholders are monsters so cannot choose a normal class. Instead, they gain powers as they evolve, including some limited offensive capabilities. But the beholders primary offense will always be their powerful gaze. Intelligence is the primary spell stat and beholders are quite intelligent indeed. Their searching and perception are legendary and they are quite capable with magical devices. However, they are not very strong and won't be able to stand long against multiple foes.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -3        Disarming    +30
+Intelligence  +8        Device       +50
+Wisdom        +0        Save         +47
+Dexterity     +3        Stealth       +7
+Constitution  +0        Searching    +20
+Charisma      +2        Perception   +20
+Life Rating  100%       Melee        +40
+Base HP       20        Bows         +20
+Experience   250%       Infravision   80'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Gazer                  -3   +4   +0   +1   +0   +0  100%  +20  250%  140%
 Spectator              -3   +5   +0   +1   +0   +0  100%  +20  250%  140%
@@ -402,8 +492,7 @@ Undead Beholder       30+10  50+20  47+15   7+1  20+20 20+20 40+16  20+7
 Ultimate Beholder     30+10  50+20  47+15   7+1  20+20 20+20 40+16  20+7 
 </style>
 
-<topic:Demon><style:heading>Demon</style>
-
+<topic:Demon><color:o>Demon</color>
 Demons are powerful servants of evil and come in many forms. Being monsters, they may not choose a normal class. Instead, they rely on their devilish powers or their brutish strength to survive.
  
 Balrogs are powerful in melee and have access to a wide array of demonic spells of great power. Their devilish offense is unrivaled among all the monster races and at high levels they may unleash deadly hellfire upon their foes. Their summoning talents are also very good, but summoning a high demon requires a human sacrifice. Intelligence determines their casting abilities. Eventually, balrogs become immune to the charge draining attacks of their enemies.
@@ -416,6 +505,17 @@ Servants of Khorne come in many forms and are powerful demons in melee. They lac
  
 All demon races cannot eat normal food, but must feast upon the remains of their human enemies. They are unaffected by the Eldritch Horror.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +7        Disarming    +20
+Intelligence  +3        Device       +35
+Wisdom       -10        Save         +40
+Dexterity     +3        Stealth       -2
+Constitution  +6        Searching    +10
+Charisma      +3        Perception    +7
+Life Rating  115%       Melee        +75
+Base HP       45        Bows         +30
+Experience   300%       Infravision  150'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Lesser Balrog          +4   +1  -10   +1   +4   +2  105%  +45  300%  140%
 Greater Balrog         +7   +3  -10   +3   +6   +3  115%  +45  300%  140%
@@ -457,12 +557,22 @@ Cyberdemon             +5  -10  -10   -3   +5   +0  120%  +50  275%  140%
 Cyberdemon            20+12  18+6   31+9   -1+0  13+0   7+0  75+35  30+7 
 </style>
 
-<topic:Hydra><style:heading>Hydra</style>
-
+<topic:Hydra><color:o>Hydra</color>
 Hydras are monsters with multiple heads. As they evolve, they grow additional heads granting the potential for extra attacks as well as the ability to wear more equipment (helmets and amulets). While not every head may wear a helmet and an amulet (This would be too powerful), each head is capable of attacking. So the 11-headed hydra can attack up to 11 times per round, provided it has enough strength and dexterity to command such a fearsome arsenal.
  
 Hydras are monsters so do not choose a normal class. Instead, they play much like warriors with a few limited abilities. All hydras regenerate quickly and 5 and 7-headed hydras resist poison and gain a few poison based attacks. 9 and 11-headed hydras are creatures of flame: Their attacks burn and they are capable of breathing fire among other flame based attacks. They resist fire as well.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +5        Disarming    +25
+Intelligence  -2        Device       +21
+Wisdom        -2        Save         +35
+Dexterity     +3        Stealth       +1
+Constitution  +5        Searching    +10
+Charisma      +0        Perception    +7
+Life Rating  115%       Melee        +62
+Base HP       45        Bows         +30
+Experience   130%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 2-headed hydra         +0   -2   -2   +0   +0   +0  100%  +45  130%  130%
 4-headed hydra         +1   -2   -2   +1   +1   +0  103%  +45  130%  130%
@@ -480,14 +590,24 @@ Hydras are monsters so do not choose a normal class. Instead, they play much lik
 11-headed hydra       25+12  21+10  35+10   1+0  10+0   7+0  62+25  30+7 
 </style>
 
-<topic:Leprechaun><style:heading>Leprechaun</style>
-
+<topic:Leprechaun><color:o>Leprechaun</color>
 Leprechauns are small, mischevous creatures, always scheming for gold. They are weak, but quick and stealthy. For combat, they prefer not to use weapons at all. Rather, by keeping at least one hand free, they may pilfer objects or gold from their foes and flee to safety, all in a single action. However, they are capable of fighting with normal weapons should the need arise, but one seldom hears of leprechauns inspiring fear in combat!
  
 Leprechauns value riches above all else and even begin the game with their legendary pot of gold. Leprechauns also have the luck of the Irish, and good drops are more common for them. For magic, the leprechaun has a few talents and even a bit of cursing offense (Malicious and Death Leprechauns are vile, evil creatures, after all). They are masters of teleportation and detection. And while one never fears their combat (though one despises their thievery, of course), they are great masters of bow and device alike. At high levels, they move with incredible speed and seem to be in multiple places at once. Dexterity determines the leprechaun's skill with their magic.
  
 Leprechauns are monsters so can not choose a normal class. Instead, being small, they should spend their initial pot of gold wisely and then enter the dungeons in search of new treasure. Since gold is so important to the leprechaun, much of their strength depends on possessing a large hoard of wealth, and various leprechaun attributes are directly affected by the amount of gold on hand.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -6        Disarming    +30
+Intelligence  +1        Device       +45
+Wisdom        +1        Save         +38
+Dexterity     +7        Stealth      +10
+Constitution  -2        Searching    +24
+Charisma      -2        Perception   +16
+Life Rating   80%       Melee        +48
+Base HP       15        Bows         +60
+Experience   150%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Cheerful Leprechaun    -2   +1   +1   +3   -2   -2   80%  +15  150%   85%
 Malicious Leprechaun   -4   +1   +1   +5   -2   -2   80%  +15  150%   85%
@@ -499,10 +619,20 @@ Malicious Leprechaun  30+12  45+18  38+11  10+1  24+0  16+0  48+13  60+28
 Death Leprechaun      30+12  45+18  38+11  10+1  24+0  16+0  48+13  60+28
 </style>
 
-<topic:Troll><style:heading>Troll</style>
-
+<topic:Troll><color:o>Troll</color>
 Trolls are disgusting creatures: Big, strong and stupid. They make excellent warriors but are hopeless with magical devices. Trolls have incredible powers of regeneration.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +7        Disarming    +25
+Intelligence  -5        Device       +18
+Wisdom        -5        Save         +30
+Dexterity     +0        Stealth       +1
+Constitution  +6        Searching    +13
+Charisma      +0        Perception    +7
+Life Rating  120%       Melee        +65
+Base HP       50        Bows         +30
+Experience   150%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Forest troll           +3   -5   -5   -2   +3   +0  100%  +50  150%  135%
 Stone troll            +3   -5   -5   -2   +3   +0  104%  +50  150%  135%
@@ -568,8 +698,7 @@ Olog                  25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
 Troll king            25+7   18+7   30+10   1+0  13+0   7+0  65+28  30+10
 </style>
 
-<topic:Elemental><style:heading>Elemental</style>
-
+<topic:Elemental><color:o>Elemental</color>
 Elementals are mindless creatures animated from a single elemental form. As a species, elementals can never be confused or cut, and they are immune to the eldritch horror (being virtually mindless). They rarely feel fear and are resistant to poison. In addition, they gain specific powers and abilities depending on their form.
  
 For example, Earth Elementals are slow but gain bonuses to AC due to their tough skins. They are resistant to shards and may even turn their skins to stone. At home in elemental earth, they may travel freely through rocky confines. However, being made of earth, their potions frequently turn to mud!
@@ -580,6 +709,17 @@ Fire Elementals are somewhat fast (They definitely run circles around their eart
  
 Finally, there are the Water Elementals, creatures able to conjure deadly water bolts. They are immune to stunning. Their attacks can be quite corrosive, but, alas, sometimes their armor corrodes as well!
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +5        Disarming    +28
+Intelligence  -5        Device       +18
+Wisdom        -5        Save         +40
+Dexterity     -4        Stealth       +5
+Constitution  +6        Searching    +25
+Charisma      +0        Perception   +16
+Life Rating  120%       Melee        +70
+Base HP       30        Bows         +25
+Experience   170%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Earth Spirit           +2   -5   -5   -2   +2   +0  105%  +30  170%  120%
 Earth Elemental        +5   -5   -5   -4   +6   +0  120%  +30  170%  120%
@@ -615,18 +755,38 @@ Fire Elemental        28+8   25+10  35+9    4+0  25+0  16+0  65+25  35+15
 Magma Elemental       28+8   25+10  35+9    4+0  25+0  16+0  65+25  35+15
 </style>
 
-<topic:Death-Sword><style:heading>Death-Sword</style>
-
+<topic:Death-Sword><color:o>Death-Sword</color>
 Death Swords are mighty weapons animated by magical means. As such, they are unable to use equipment the way other players can. Instead, they simply are a weapon of their current form. But never fear, Death Swords have the power to absorb magical essences from the weapons they find, gaining power in the process.
 
-<topic:Golem><style:heading>Golem</style>
-
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +5        Disarming    +25
+Intelligence  -5        Device       +37
+Wisdom        -5        Save         +40
+Dexterity     +2        Stealth       +4
+Constitution  +5        Searching    +14
+Charisma      +0        Perception    +5
+Life Rating  105%       Melee        +56
+Base HP       30        Bows         +20
+Experience   150%       Infravision   30'
+</style></indent>
+<topic:Golem><color:o>Golem</color>
 Golems are creatures animated by powerful magics: living stone conjured to serve their creators. But you have broken loose and are running amok!
  
 Golems are very slow when it comes to moving about, but this slowness does not affect their non-movement actions. Except for melee, where they are limited to just a single (but mighty) blow. They fight best with their powerful fists. Golems have a very high armor class, possess good resistances and saving throws, and are very strong in melee. They are also resistant to magic, and become more resistant as they evolve. This resistance is quite powerful, reducing the damage taken from all magical attacks.
  
 There are several varieties of golem, all sharing a common evolutionary heritage. First there is the mighty Colossus, the biggest (and slowest) of their kind. Next is the Sky Golem, a creature of powerful magic, resistant to the ravages of time. Finally, there is the Spellwarp Automaton, a creature of utter destruction, almost completely immune to magic. This last form takes nearly forever to build, unfortunately.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +6        Disarming    +25
+Intelligence  -5        Device       +18
+Wisdom        -5        Save         +40
+Dexterity     -4        Stealth       +0
+Constitution  +6        Searching    +10
+Charisma      +3        Perception    +7
+Life Rating  125%       Melee        +70
+Base HP       50        Bows         +30
+Experience   200%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Clay golem             +1   -2   -2   -1   +1   +0  100%  +50  200%  130%
 Stone golem            +2   -3   -3   -2   +2   +1  105%  +50  200%  130%
@@ -676,10 +836,20 @@ Eog golem             25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
 Spellwarp Automaton   25+10  18+7   40+15   0+0  10+0   7+0  70+30  30+10
 </style>
 
-<topic:Quylthulg><style:heading>Quylthulg</style>
-
+<topic:Quylthulg><color:o>Quylthulg</color>
 Quylthulgs are disgusting, quivering mounds of pulsating flesh, scarcely able to move about. Physically, they are pathetic. However, their ability to control others to do their bidding is legendary, and they are quite capable of fleeing when the going gets tough. Quylthulgs have no physical attacks.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -1        Disarming    +30
+Intelligence  -1        Device       +45
+Wisdom        -1        Save         +40
+Dexterity     -1        Stealth       +7
+Constitution  -1        Searching    +20
+Charisma     +10        Perception   +30
+Life Rating   95%       Melee         +0
+Base HP        0        Bows          +0
+Experience   150%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Quylthulg              -5   -5   -5   -5   -5   +6   95%   +0  150%  120%
 Nexus quylthulg        -4   -4   -4   -4   -4   +7   95%   +0  150%  120%
@@ -695,12 +865,22 @@ Greater rotting quylt 30+7   45+15  40+12   7+0  20+0  30+0   0+0    0+0
 Master quylthulg      30+7   45+15  40+12   7+0  20+0  30+0   0+0    0+0 
 </style>
 
-<topic:Possessor><style:heading>Possessor</style>
-
+<topic:Possessor><color:o>Possessor</color>
 The Possessor is an odd creature, completely harmless in its natural form. However, they are capable of possessing the corpses of monsters they have slain, and gain powers and abilities based on their current body. As such, they can become quite powerful indeed! Unfortunately, not every type of monster will drop a corpse, and getting suitable corspes to inhabit can be difficult. If the possessor ever leaves their current body (and they must do so to inhabit a new form) then all of their equipment will be removed (except a light source) and they will temporarily be in their native, vulnerable state. Finally, leaving their current body will destroy that corpse most of the time, so the possessor should only do so if they have a better corpse on hand (and also only if there are no monsters nearby!).
  
 Possessors are monsters and do not choose a normal class. Their stats, skills, resistances and spells are completely determined by the body they inhabit. Their current body also determines their spell stat (e.g. a novice priest uses wisdom, a novice mage uses intelligence). Their current body may offer innate powers (e.g. breath weapons or rockets) in addition to or in lieu of magical powers (e.g. mana storms and frost bolts). Be sure to check both the racial power command ('U') and the magic command ('m') after possessing a new body.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -5        Disarming    +30
+Intelligence  +0        Device       +48
+Wisdom        -2        Save         +75
+Dexterity     +2        Stealth       +2
+Constitution  +0        Searching    +12
+Charisma     +16        Perception   +32
+Life Rating   65%       Melee         +0
+Base HP       15        Bows          +0
+Experience   250%       Infravision    0'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Soul                   -3   +0   -3   +0   -3   -7   60%  +15  250%  110%
 </style>
@@ -708,12 +888,22 @@ Soul                   -3   +0   -3   +0   -3   -7   60%  +15  250%  110%
 Soul                  17+5   22+7   34+9   11+0  17+0  17+0  43+13  15+11
 </style>
 
-<topic:Vampire><style:heading>Vampire</style>
-
+<topic:Vampire><color:o>Vampire</color>
 One of the mightier undead creatures, the Vampire is an awe-inspiring sight. Yet this dread creature has a serious weakness: the bright rays of sun are its bane, and it will need to flee the surface to the deep recesses of earth until the sun finally sets. Darkness, on the other hand, (eventually) only makes the Vampire stronger. As undead, the Vampire has a firm hold on its life force, and resists nether attacks. The Vampire also resists cold and poison based attacks. It is, however, susceptible to its perpetual hunger for fresh blood, which can only be satiated by sucking the blood from a nearby monster.
  
 The Vampire is a monster race and cannot choose a normal class. Instead, the vampire gains access to various dark powers as they evolve. Of course, they gain a vampiric bite at a very early stage, as they must use this power to feed on the living. Killing humans with this power also is a means of perpetuating the vampire species, and many are the servants of true prince of darkness! Vampires are also rumored to have limited shapeshifting abilities and a powerful, hypnotic gaze.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +5        Disarming    +25
+Intelligence  +1        Device       +37
+Wisdom        -4        Save         +36
+Dexterity     +3        Stealth      +11
+Constitution  -2        Searching    +32
+Charisma      +5        Perception   +25
+Life Rating   99%       Melee        +60
+Base HP       20        Bows         +35
+Experience   250%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Vampire                +2   +1   -1   +0   -2   +1   90%  +20  250%  130%
 Master Vampire         +3   +1   -2   +1   -2   +2   93%  +20  250%  130%
@@ -727,8 +917,7 @@ Vampire Lord          25+7   37+12  36+10   9+0  32+0  25+0  60+21  35+11
 Elder Vampire         25+7   37+12  36+10  11+0  32+0  25+0  60+21  35+11
 </style>
 
-<topic:Ring><style:heading>Ring</style>
-
+<topic:Ring><color:o>Ring</color>
 Rings are sentient creatures animated by magical means.
  
 Rings cannot wear normal equipment. Rather, they simply are a ring, magically enchanted. They gain resistances, attributes and spells by absorbing the magic from jewelry they find (rings or amulets).
@@ -739,12 +928,33 @@ Rings have no physical attacks. Instead, they may blast enemies with mighty spel
 
 See <link:rings.txt> for more details on rings.
 
-<topic:Mimic><style:heading>Mimic</style>
-
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -3        Disarming    +30
+Intelligence  +4        Device       +40
+Wisdom        +1        Save         +38
+Dexterity     +0        Stealth       +5
+Constitution  -1        Searching    +16
+Charisma      +3        Perception   +20
+Life Rating   85%       Melee        +34
+Base HP       10        Bows         +20
+Experience   150%       Infravision   50'
+</style></indent>
+<topic:Mimic><color:o>Mimic</color>
 Mimics are similar to possessors but instead of controlling the corpses of the vanquished, the mimic imitates those about them. This allows the mimic to assume the forms of foes they have yet to conquer and is quite useful. However, there is a small catch: The mimic can only copy what they see! This limitation forces the mimic to change forms much more often than the possessor would as knowledge of their current body rapidly fades when the original is no longer about. Occasionally, the mimic is able to memorize a particular form well enough to use it again without the original body to imitate, though this does not happen very often and the mimic can only memorize a small number of forms. To have a chance of this, the mimic must be in the desired form when slaying the original.
  
 Mimics are monsters and do not choose a normal class. Their stats, skills, resistances and spells are determined by the form they assume. Their current body also determines their spell stat (e.g. a novice priest uses wisdom, a novice mage uses intelligence). Their current body may offer innate powers (e.g. breath weapons or rockets) in addition to or in lieu of magical powers (e.g. mana storms and frost bolts). Be sure to check both the racial power command ('U') and the magic command ('m') after assuming a new body.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +5        Disarming    +49
+Intelligence  +4        Device       +45
+Wisdom        -2        Save         +42
+Dexterity     +2        Stealth       +9
+Constitution  +2        Searching    +33
+Charisma      +3        Perception   +32
+Life Rating  112%       Melee        +65
+Base HP       15        Bows         +66
+Experience   250%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Mimic                  +0   +1   -1   +2   +0   -1  108%  +15  250%  110%
 </style>
@@ -752,12 +962,22 @@ Mimic                  +0   +1   -1   +2   +0   -1  108%  +15  250%  110%
 Mimic                 25+7   30+10  36+10   2+0  18+0  26+0  60+18  50+20
 </style>
 
-<topic:Centipede><style:heading>Centipede</style>
-
+<topic:Centipede><color:o>Centipede</color>
 Centipedes are natural creatures with many legs. As they evolve, they change colors, but not much else seems to differentiate the various forms. Perhaps you prefer blue to red or green? Eventually, once you have evolved into your ultimate evolutionary form, you will be able to change colors at will and thereby become very powerful indeed.
  
 As a centipede, your main survival attribute will be the many pairs of boots you can wear. Hopefully, this will be enough.
 
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +0        Disarming    +25
+Intelligence  -3        Device       +21
+Wisdom        -3        Save         +35
+Dexterity     +0        Stealth       +5
+Constitution  +0        Searching    +10
+Charisma      -3        Perception    +7
+Life Rating   90%       Melee        +45
+Base HP       15        Bows         +10
+Experience   100%       Infravision   50'
+</style></indent>
 <style:table><color:U>                      STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>
 Giant white centipede  +0   -3   -3   +0   +0   -3   90%  +15  100%  120%
 Metallic green centip  +0   -3   -3   +1   +1   -3   92%  +15  100%  120%
