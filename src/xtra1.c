@@ -3127,15 +3127,14 @@ static void calc_hitpoints(void)
     int      mhp;
     race_t  *race_ptr = get_race_t();
     class_t *class_ptr = get_class_t();
-/*  pers_t  *pers_ptr = get_pers_t(); */
+    personality_ptr pers_ptr = get_personality();
 
     mhp = p_ptr->player_hp[p_ptr->lev - 1] * 10 / 100; /* 255 hp total */
     mhp += _calc_xtra_hp(300);
 
     mhp = mhp * race_ptr->life / 100;
     mhp = mhp * class_ptr->life / 100;
-/*  mhp = mhp * pers_ptr->life / 100; */
-    mhp = mhp * ap_ptr->life / 100;
+    mhp = mhp * pers_ptr->life / 100;
     mhp = mhp * p_ptr->life / 100;
     
     if (p_ptr->prace == RACE_MON_DRAGON)
@@ -3309,6 +3308,7 @@ void calc_bonuses(void)
 
     class_t *class_ptr = get_class_t();
     race_t *race_ptr = get_race_t();
+    personality_ptr pers_ptr = get_personality();
 
     /* Save the old vision stuff */
     bool old_telepathy = p_ptr->telepathy;
@@ -3568,7 +3568,7 @@ void calc_bonuses(void)
     {
         skills_t c_extra = class_ptr->extra_skills;
         skills_t r_extra = race_ptr->extra_skills;
-        skills_t a_extra = ap_ptr->skills;
+        skills_t a_extra = pers_ptr->skills;
 
         skills_scale(&c_extra, p_ptr->lev, 10);
         skills_scale(&r_extra, p_ptr->lev, 10);
@@ -3581,7 +3581,7 @@ void calc_bonuses(void)
         skills_add(&p_ptr->skills, &c_extra);
         skills_add(&p_ptr->skills, &race_ptr->skills);
         skills_add(&p_ptr->skills, &r_extra);
-        skills_add(&p_ptr->skills, &ap_ptr->skills);
+        skills_add(&p_ptr->skills, &pers_ptr->skills);
         skills_add(&p_ptr->skills, &a_extra);
 
         if (p_ptr->prace == RACE_MON_DRAGON)
@@ -3715,37 +3715,11 @@ void calc_bonuses(void)
     }
 
     /* Personalities */
-    if (p_ptr->personality == PERS_SEXY) p_ptr->cursed |= TRC_AGGRAVATE;
-    if (p_ptr->personality == PERS_LAZY) p_ptr->to_m_chance += 10;
-    if (p_ptr->personality == PERS_SHREWD) p_ptr->to_m_chance -= 3;
-    if (p_ptr->personality == PERS_PATIENT || p_ptr->personality == PERS_MIGHTY) p_ptr->to_m_chance++;
-    if (p_ptr->personality == PERS_FEARLESS) res_add(RES_FEAR);
-    if (p_ptr->personality == PERS_HASTY)
-    {
-        p_ptr->pspeed += 2;
-        p_ptr->to_m_chance += 1;
-    }
-
-    if ( p_ptr->personality == PERS_LUCKY
-      && !mut_present(MUT_GOOD_LUCK) )
-    {
-        mut_gain(MUT_GOOD_LUCK);
-        mut_lock(MUT_GOOD_LUCK);
-    }
+    if (pers_ptr->calc_bonuses)
+        pers_ptr->calc_bonuses();
 
     if (mut_present(MUT_GOOD_LUCK))
         p_ptr->good_luck = TRUE;
-
-    if (p_ptr->personality == PERS_MUNCHKIN)
-    {
-        res_add(RES_BLIND);
-        res_add(RES_CONF);
-        p_ptr->hold_life = TRUE;
-        if (p_ptr->pclass != CLASS_NINJA) p_ptr->lite = TRUE;
-
-        if (p_ptr->prace != RACE_KLACKON && p_ptr->prace != RACE_SPRITE)
-            p_ptr->pspeed += (p_ptr->lev) / 10 + 5;
-    }
 
     if (music_singing(MUSIC_WALL))
         p_ptr->kill_wall = TRUE;
@@ -3754,7 +3728,7 @@ void calc_bonuses(void)
     /* Apply the racial modifiers */
     for (i = 0; i < 6; i++)
     {
-        p_ptr->stat_add[i] += (race_ptr->stats[i] + class_ptr->stats[i] + ap_ptr->a_adj[i]);
+        p_ptr->stat_add[i] += (race_ptr->stats[i] + class_ptr->stats[i] + pers_ptr->stats[i]);
     }
 
 

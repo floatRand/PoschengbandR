@@ -734,10 +734,21 @@ static void _classes_help(FILE* fp)
 
 static void _personality_help(FILE *fp, int idx)
 {
-    player_seikaku *a_ptr = &seikaku_info[idx];
-    fprintf(fp, "<style:heading>%s</style>\n\n", a_ptr->title);
-    fputs(birth_get_personality_desc(idx), fp);
-    fputs("\n\n", fp);
+    personality_ptr pers_ptr = get_personality_aux(idx);
+
+    fprintf(fp, "<topic:%s><color:o>%s</color>\n", pers_ptr->name, pers_ptr->name);
+    fprintf(fp, "%s\n\n", pers_ptr->desc);
+
+    fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
+    fprintf(fp, "Strength     %+3d        Disarming   %+4d\n", pers_ptr->stats[A_STR], pers_ptr->skills.dis);
+    fprintf(fp, "Intelligence %+3d        Device      %+4d\n", pers_ptr->stats[A_INT], pers_ptr->skills.dev);
+    fprintf(fp, "Wisdom       %+3d        Save        %+4d\n", pers_ptr->stats[A_WIS], pers_ptr->skills.sav);
+    fprintf(fp, "Dexterity    %+3d        Stealth     %+4d\n", pers_ptr->stats[A_DEX], pers_ptr->skills.stl);
+    fprintf(fp, "Constitution %+3d        Searching   %+4d\n", pers_ptr->stats[A_CON], pers_ptr->skills.srh);
+    fprintf(fp, "Charisma     %+3d        Perception  %+4d\n", pers_ptr->stats[A_CHR], pers_ptr->skills.fos);
+    fprintf(fp, "Life Rating  %3d%%       Melee       %+4d\n", pers_ptr->life, pers_ptr->skills.thn);
+    fprintf(fp, "Experience   %3d%%       Bows        %+4d\n", pers_ptr->exp, pers_ptr->skills.thb);
+    fputs("</style></indent>\n", fp);
 }
 
 static void _personalities_help(FILE* fp)
@@ -751,32 +762,32 @@ static void _personalities_help(FILE* fp)
     }
 
     fputs("<topic:Tables><style:heading>Table 1 - Personality Statistic Bonus Table</style>\n\n", fp);
-    fputs("<style:table><color:U>               STR  INT  WIS  DEX  CON  CHR  Life  Exp</color>\n", fp);
+    fputs("<style:table><color:G>               STR  INT  WIS  DEX  CON  CHR  Life  Exp</color>\n", fp);
 
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {
-        player_seikaku *a_ptr = &seikaku_info[i];
+        personality_ptr pers_ptr = get_personality_aux(i);
 
         fprintf(fp, "%-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%%\n",
-            a_ptr->title,
-            a_ptr->a_adj[0], a_ptr->a_adj[1], a_ptr->a_adj[2], 
-            a_ptr->a_adj[3], a_ptr->a_adj[4], a_ptr->a_adj[5], 
-            a_ptr->life, a_ptr->a_exp
+            pers_ptr->name,
+            pers_ptr->stats[0], pers_ptr->stats[1], pers_ptr->stats[2],
+            pers_ptr->stats[3], pers_ptr->stats[4], pers_ptr->stats[5],
+            pers_ptr->life, pers_ptr->exp
         );
     }
     fputs("\n</style>\n", fp);
 
     fputs("<style:heading>Table 2 - Personality Skill Bonus Table</style>\n\n", fp);
-    fputs("<style:table><color:U>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows</color>\n", fp);
+    fputs("<style:table><color:G>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows</color>\n", fp);
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {
-        player_seikaku *a_ptr = &seikaku_info[i];
+        personality_ptr pers_ptr = get_personality_aux(i);
 
         fprintf(fp, "%-14s %+4d  %+4d  %+4d  %+4d  %+4d  %+4d  %+5d  %+4d\n",
-            a_ptr->title,
-            a_ptr->skills.dis, a_ptr->skills.dev, a_ptr->skills.sav,
-            a_ptr->skills.stl, a_ptr->skills.srh, a_ptr->skills.fos,
-            a_ptr->skills.thn, a_ptr->skills.thb
+            pers_ptr->name,
+            pers_ptr->skills.dis, pers_ptr->skills.dev, pers_ptr->skills.sav,
+            pers_ptr->skills.stl, pers_ptr->skills.srh, pers_ptr->skills.fos,
+            pers_ptr->skills.thn, pers_ptr->skills.thb
         );
     }
     fputs("\n</style>\n", fp);

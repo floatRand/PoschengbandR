@@ -1636,16 +1636,20 @@ static void player_flags(u32b flgs[TR_FLAG_SIZE])
     int i;
     class_t *class_ptr = get_class_t();
     race_t *race_ptr = get_race_t();
+    personality_ptr pers_ptr = get_personality();
 
     /* Clear */
     for (i = 0; i < TR_FLAG_SIZE; i++)
         flgs[i] = 0L;
 
-    if (class_ptr != NULL && class_ptr->get_flags)
+    if (class_ptr->get_flags)
         class_ptr->get_flags(flgs);
 
-    if (race_ptr != NULL && race_ptr->get_flags)
+    if (race_ptr->get_flags)
         race_ptr->get_flags(flgs);
+
+    if (pers_ptr->get_flags)
+        pers_ptr->get_flags(flgs);
 
     /* Classes */
     switch (p_ptr->pclass)
@@ -1854,26 +1858,6 @@ static void player_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_REGEN);
     }
 
-    if (p_ptr->personality == PERS_SEXY)
-        add_flag(flgs, TR_AGGRAVATE);
-    if (p_ptr->personality == PERS_MUNCHKIN)
-    {
-        add_flag(flgs, TR_RES_BLIND);
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_HOLD_LIFE);
-        if (p_ptr->pclass != CLASS_NINJA) 
-            add_flag(flgs, TR_LITE);
-        if (p_ptr->lev > 9)
-            add_flag(flgs, TR_SPEED);
-    }
-    if (p_ptr->personality == PERS_FEARLESS)
-    {
-        add_flag(flgs, TR_RES_FEAR);
-    }
-    if (p_ptr->personality == PERS_HASTY)
-    {
-        add_flag(flgs, TR_SPEED);
-    }
     if (p_ptr->special_defense & KATA_FUUJIN)
         add_flag(flgs, TR_REFLECT);
     if (p_ptr->special_defense & KAMAE_GENBU)
@@ -2644,6 +2628,7 @@ static void display_player_stat_info(void)
     u32b flgs[TR_FLAG_SIZE];
     race_t *race_ptr = get_race_t();
     class_t *class_ptr = get_class_t();
+    personality_ptr pers_ptr = get_personality();
 
     byte a;
     char c;
@@ -2687,7 +2672,7 @@ static void display_player_stat_info(void)
 
         e_adj -= r_adj;
         e_adj -= c_adj;
-        e_adj -= ap_ptr->a_adj[i];
+        e_adj -= pers_ptr->stats[i];
 
         if (p_ptr->stat_cur[i] < p_ptr->stat_max[i])
             c_put_str(TERM_WHITE, stat_names_reduced[i], row + i+1, stat_col+1);
@@ -2709,7 +2694,7 @@ static void display_player_stat_info(void)
         c_put_str(TERM_L_BLUE, buf, row + i+1, stat_col + equip_count() + 13 + 2);
         (void)sprintf(buf, "%3d", c_adj);
         c_put_str(TERM_L_BLUE, buf, row + i+1, stat_col + equip_count() + 16 + 2);
-        (void)sprintf(buf, "%3d", (int)ap_ptr->a_adj[i]);
+        (void)sprintf(buf, "%3d", (int)pers_ptr->stats[i]);
         c_put_str(TERM_L_BLUE, buf, row + i+1, stat_col + equip_count() + 19 + 2);
         (void)sprintf(buf, "%3d", e_adj);
         c_put_str(TERM_L_BLUE, buf, row + i+1, stat_col + equip_count() + 22 + 2);
@@ -3090,7 +3075,7 @@ void display_player(int mode)
     char    tmp[255], buf[255];
     race_t *race_ptr = get_race_t();
     class_t *class_ptr = get_class_t();
-
+    personality_ptr pers_ptr = get_personality();
 
     mode = (mode % 4);
 
@@ -3104,7 +3089,7 @@ void display_player(int mode)
         /* Column 1 */
         _print_field(1, 1, "Name       :", player_name, TERM_L_BLUE, 0);
         _print_field(2, 1, "Sex        :", sp_ptr->title, TERM_L_BLUE, 0);
-        _print_field(3, 1, "Personality:", ap_ptr->title, TERM_L_BLUE, 0);
+        _print_field(3, 1, "Personality:", pers_ptr->name, TERM_L_BLUE, 0);
         _print_field(4, 1, "Race       :", race_ptr->mimic ? format("[%s]", race_ptr->name) : race_ptr->name, TERM_L_BLUE, 0);
 
         if (race_ptr->subname)

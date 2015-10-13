@@ -1525,7 +1525,6 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
     /* Important -- Initialize stuff */
     sp_ptr = &sex_info[p_ptr->psex];
-    ap_ptr = &seikaku_info[p_ptr->personality];
     mp_ptr = &m_info[p_ptr->pclass];
 
     /* Read spell info */

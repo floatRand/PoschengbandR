@@ -999,24 +999,6 @@ struct player_pact
     cptr alliance;
 };
 
-typedef struct player_seikaku player_seikaku;
-struct player_seikaku
-{
-    cptr title;            /* Type of seikaku */
-
-    s16b a_adj[6];        /* seikaku stat bonuses */
-
-    skills_t skills;
-
-    s16b life;
-
-    byte XXX;            
-    byte sex;            /* seibetu seigen */
-
-    s16b a_exp;
-};
-
-
 /*
  * Most of the "player" information goes here.
  *
@@ -2163,3 +2145,22 @@ struct device_effect_info_s
 
 typedef struct device_effect_info_s  device_effect_info_t;
 typedef struct device_effect_info_s *device_effect_info_ptr;
+
+#define PERSONALITY_IS_MALE     0x01  /* Lucky */
+#define PERSONALITY_IS_FEMALE   0x02  /* Sexy */
+
+struct personality_s
+{
+    cptr            name;
+    cptr            desc;
+    s16b            stats[MAX_STATS];
+    skills_t        skills;
+    s16b            life;
+    s16b            exp;
+    int             flags;
+    birth_fn        birth;
+    calc_bonuses_fn calc_bonuses;
+    flags_fn        get_flags;
+};
+
+typedef struct personality_s personality_t, *personality_ptr;

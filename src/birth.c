@@ -89,24 +89,6 @@ static cptr pact_desc[MAX_PACTS] =
         "own ammo. At high levels, they gain the power of Dimension Door. Making a pact with Aberrations "
         "will reduce damage done to all humanoids (h) and people (p) by a substantial amount.",
 };
-static cptr seikaku_jouhou[MAX_PERSONALITIES] =
-{
-"\"Ordinary\" is a personality with no special skills or talents, with unmodified stats and skills.",
-"\"Mighty\" raises your physical stats and skills, but reduces stats and skills which influence magic. It makes your stats suitable for a warrior. Also it directly influences your hit-points and spell fail rate.",
-"\"Shrewd\" reduces your physical stats, and raises your intelligence and magical skills. It makes your stats suitable for a mage. Also it directly influences your hit-points and spell fail rate.",
-"\"Pious\" deepens your faith in your God. It makes your physical ability average, and your stats suitable for priest. ",
-"\"Nimble\" renders you highly skilled comparatively well, but reduces your physical ability. ",
-"\"Fearless\" raises your melee skills and force of personality. Stats such as magic defense and constitution are reduced. Also it has a direct bad influence on your hit-points.",
-"\"Combat\" gives you comparatively high melee and shooting abilities, and average constitution. Other skills such as stealth, magic defence, and magical devices are weakened. All \"Combat\" people have great respect for the legendary \"Combat Echizen\".\n\
-(See \"Death Crimson\" / Ecole Software Corp.)",
-"A \"Lazy\" person has no good stats and can do no action well. Also it has a direct bad influence on your spell fail rate.",
-"\"Sexy\" rises all of your abilities, but your haughty attitude will aggravate all monsters. Only females can choose this personality.",
-"A \"Lucky\" man has poor stats, equivalent to a \"Lazy\" person. Mysteriously, however, he can do all things well. Only males can choose this personality.",
-"A \"Patient\" person does things carefully. Patient people have high constitution, and high resilience, but poor abilities in most other skills. Also it directly influences your hit-points.",
-"\"Munchkin\" is a personality for beginners. It raises all your stats and skills. With this personality, you can win the game easily, but gain little honor in doing so.",
-"A \"Craven\" person is a coward, preferring to avoid a fight at any cost. Craven adventurers shoot and use devices well, and their stealth is impressive. But their stats and other skills are somewhat wanting.",
-"A \"Hasty\" person edeavors to do all things quickly. Speed, rather than skill and patience, are paramount, and the Hasty adventure moves quickly through the dungeon, bungling much."
-};
 static cptr realm_jouhou[VALID_REALM] =
 {
 "Life magic is very good for healing; it relies mostly on healing, protection and detection spells. Also life magic have a few attack spells as well. It said that some high level spell of life magic can disintegrate Undead monsters into ash.",
@@ -419,21 +401,21 @@ static void _personality_menu_fn(int cmd, int which, vptr cookie, variant *res)
 {
     int  idx = ((int*)cookie)[which];
     char buf[100];
-    player_seikaku *pers_ptr = &seikaku_info[idx];
+    personality_ptr pers_ptr = get_personality_aux(idx);
 
     switch (cmd)
     {
     case MENU_TEXT:
-        var_set_string(res, pers_ptr->title);
+        var_set_string(res, pers_ptr->name);
         break;
     case MENU_ON_BROWSE:
-        c_put_str(TERM_L_BLUE, pers_ptr->title, 3, 40);
-        put_str(": Personality modification", 3, 40+strlen(pers_ptr->title));
+        c_put_str(TERM_L_BLUE, pers_ptr->name, 3, 40);
+        put_str(": Personality modification", 3, 40+strlen(pers_ptr->name));
         put_str("Str  Int  Wis  Dex  Con  Chr   EXP ", 4, 40);
         sprintf(buf, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d %4d%% ",
-            pers_ptr->a_adj[A_STR], pers_ptr->a_adj[A_INT], pers_ptr->a_adj[A_WIS], 
-            pers_ptr->a_adj[A_DEX], pers_ptr->a_adj[A_CON], pers_ptr->a_adj[A_CHR], 
-            pers_ptr->a_exp);
+            pers_ptr->stats[A_STR], pers_ptr->stats[A_INT], pers_ptr->stats[A_WIS],
+            pers_ptr->stats[A_DEX], pers_ptr->stats[A_CON], pers_ptr->stats[A_CHR],
+            pers_ptr->exp);
         c_put_str(TERM_L_BLUE, buf, 5, 40);
         var_set_bool(res, TRUE);
         break;
@@ -452,7 +434,6 @@ static int _prompt_personality(void)
     if (game_mode == GAME_MODE_BEGINNER)
     {
         p_ptr->personality = PERS_ORDINARY;
-        ap_ptr = &seikaku_info[p_ptr->personality]; /* TODO: Remove this ... */
         return p_ptr->personality;
     }
 
@@ -461,7 +442,8 @@ static int _prompt_personality(void)
         char   tmp[80];
         int    idx, ct = 0, i;
         int    choices[MAX_PERSONALITIES];
-        menu_t menu = { "Personality", "Personalities.txt#Tables", "Note: Your personality determines various intrinsic abilities and bonuses.",
+        personality_ptr pers_ptr = NULL;
+        menu_t menu = { "Personality", "Personalities.txt", "Note: Your personality determines various intrinsic abilities and bonuses.",
                             _personality_menu_fn, 
                             choices, 0};
 
@@ -480,11 +462,11 @@ static int _prompt_personality(void)
         if (idx < 0) return idx;
 
         p_ptr->personality = choices[idx];
-        ap_ptr = &seikaku_info[p_ptr->personality]; /* TODO: Remove this ... */
+        pers_ptr = get_personality();
         
-        c_put_str(TERM_L_BLUE, format("%-14s", ap_ptr->title), 3, 14);
+        c_put_str(TERM_L_BLUE, format("%-14s", pers_ptr->name), 3, 14);
 
-        if (!_confirm_choice(seikaku_jouhou[p_ptr->personality], menu.count)) continue;
+        if (!_confirm_choice(pers_ptr->desc, menu.count)) continue;
         return p_ptr->personality;
     }
     /*return _BIRTH_ESCAPE;  unreachable */
@@ -2271,7 +2253,7 @@ int calc_exp_factor(void)
     int exp;
     int r_exp = _race_exp_factor();
     int c_exp = get_class_t()->exp;
-    int a_exp = ap_ptr->a_exp;
+    int a_exp = get_personality()->exp;
 
     if (p_ptr->prace == RACE_ANDROID) 
         return r_exp;
@@ -2309,8 +2291,6 @@ static void get_extra(bool roll_hitdie)
         else if (p_ptr->pclass == CLASS_RED_MAGE) p_ptr->spell_exp[i] = SPELL_EXP_SKILLED;
         else p_ptr->spell_exp[i] = SPELL_EXP_UNSKILLED;
     }
-
-    skills_on_birth();
 
     /* Roll for hit point unless quick-start */
     if (roll_hitdie) do_cmd_rerate_aux();
@@ -2369,7 +2349,7 @@ static void birth_put_stats(void)
     char buf[80];
     race_t  *race_ptr = get_race_t();
     class_t *class_ptr = get_class_t();
-
+    personality_ptr pers_ptr = get_personality();
 
     if (autoroller)
     {
@@ -2378,7 +2358,7 @@ static void birth_put_stats(void)
         for (i = 0; i < 6; i++)
         {
             /* Race/Class bonus */
-            j = race_ptr->stats[i] + class_ptr->stats[i] + ap_ptr->a_adj[i];
+            j = race_ptr->stats[i] + class_ptr->stats[i] + pers_ptr->stats[i];
 
             /* Obtain the current stat */
             m = adjust_stat(p_ptr->stat_max[i], j);
@@ -3383,12 +3363,6 @@ void player_outfit(void)
         _birth_object(TV_BOLT, SV_AMMO_NORMAL, rand_range(15, 20));
     }
 
-    if(p_ptr->personality == PERS_SEXY && p_ptr->pclass != CLASS_MAULER && p_ptr->prace != RACE_MON_SWORD)
-    {
-        player_init[p_ptr->pclass][2][0] = TV_HAFTED;
-        player_init[p_ptr->pclass][2][1] = SV_WHIP;
-    }
-
     /* Hack -- Give the player three useful objects */
     for (i = 0; i < 3; i++)
     {
@@ -3424,16 +3398,8 @@ void player_outfit(void)
             }
 
             /* Hack: Rune-Knights begin with an Absorption Rune on their broad sword (or whip if sexy) */
-            if(p_ptr->personality == PERS_SEXY)
-            {
-                if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_HAFTED && sv == SV_WHIP)
-                    rune_add(&forge, RUNE_ABSORPTION, FALSE);
-            }
-            else
-            {
-                if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_SWORD && sv == SV_BROAD_SWORD)
-                    rune_add(&forge, RUNE_ABSORPTION, FALSE);
-            }
+            if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_SWORD && sv == SV_BROAD_SWORD)
+                rune_add(&forge, RUNE_ABSORPTION, FALSE);
 
             add_outfit(&forge);
         }
@@ -3452,6 +3418,7 @@ static bool get_stat_limits(void)
     char inp[80];
     race_t *race_ptr = get_race_t();
     class_t *class_ptr = get_class_t();
+    personality_ptr pers_ptr = get_personality();
 
     /* Clean up */
     clear_from(10);
@@ -3469,7 +3436,7 @@ static bool get_stat_limits(void)
         cval[i] = 3;
 
         /* Race/Class bonus */
-        j = race_ptr->stats[i] + class_ptr->stats[i] + ap_ptr->a_adj[i];
+        j = race_ptr->stats[i] + class_ptr->stats[i] + pers_ptr->stats[i];
 
         /* Obtain the "maximal" stat */
         m = adjust_stat(17, j);
@@ -3489,7 +3456,7 @@ static bool get_stat_limits(void)
 
         sprintf(buf, "%6s       %2d   %+3d  %+3d  %+3d  =  %6s  %6s",
             stat_names[i], cval[i], race_ptr->stats[i], class_ptr->stats[i],
-            ap_ptr->a_adj[i], inp, cur);
+            pers_ptr->stats[i], inp, cur);
         
         put_str(buf, 14 + i, 10);
     }
@@ -3512,7 +3479,7 @@ static bool get_stat_limits(void)
             else
             {
                 /* Race/Class bonus */
-                j = race_ptr->stats[cs] + class_ptr->stats[cs] + ap_ptr->a_adj[cs];
+                j = race_ptr->stats[cs] + class_ptr->stats[cs] + pers_ptr->stats[cs];
 
                 /* Obtain the current stat */
                 m = adjust_stat(cval[cs], j);
@@ -3524,7 +3491,7 @@ static bool get_stat_limits(void)
                 
                 sprintf(cur, "%6s       %2d   %+3d  %+3d  %+3d  =  %6s",
                     stat_names[cs], cval[cs], race_ptr->stats[cs],
-                    class_ptr->stats[cs], ap_ptr->a_adj[cs], inp);
+                    class_ptr->stats[cs], pers_ptr->stats[cs], inp);
                 c_put_str(TERM_YELLOW, cur, 14 + cs, 10);
             }
             os = cs;
@@ -3624,11 +3591,6 @@ static bool get_stat_limits(void)
     }
 
     return TRUE;
-}
-
-cptr birth_get_personality_desc(int i)
-{
-    return seikaku_jouhou[i];
 }
 
 cptr birth_get_realm_desc(int i)
@@ -3738,6 +3700,9 @@ auto_roller_barf:
         if (use_autoroller)
         {
             class_t *class_ptr = get_class_t();
+            race_t  *race_ptr = get_race_t();
+            personality_ptr pers_ptr = get_personality();
+
             put_str(" Limit", 2, col+5);
             put_str("  Freq", 2, col+13);
             put_str("  Roll", 2, col+24);
@@ -3751,7 +3716,7 @@ auto_roller_barf:
                 put_str(stat_names[i], 3+i, col);
 
                 /* Race/Class bonus */
-                j = get_race_t()->stats[i] + class_ptr->stats[i] + ap_ptr->a_adj[i];
+                j = race_ptr->stats[i] + class_ptr->stats[i] + pers_ptr->stats[i];
 
                 /* Obtain the current stat */
                 m = adjust_stat(stat_limit[i], j);
@@ -4026,7 +3991,6 @@ static bool ask_quick_start(void)
 
     sp_ptr = &sex_info[p_ptr->psex];
     mp_ptr = &m_info[p_ptr->pclass];
-    ap_ptr = &seikaku_info[p_ptr->personality];
 
     /* Calc hitdie, but don't roll */
     get_extra(FALSE);
@@ -4121,6 +4085,7 @@ void dump_yourself(FILE *fff)
     cptr t;
     race_t *race_ptr = get_race_t();
     class_t *class_ptr = get_class_t();
+    personality_ptr pers_ptr = get_personality();
 
     if (!fff) return;
 
@@ -4150,9 +4115,9 @@ void dump_yourself(FILE *fff)
             t += strlen(t) + 1;
         }
     }
-    roff_to_buf(seikaku_jouhou[p_ptr->personality], 78, temp, sizeof(temp));
+    roff_to_buf(pers_ptr->desc, 78, temp, sizeof(temp));
     fprintf(fff, "\n");
-    fprintf(fff, "[[[[r|Pesonality:| [[[[B|%s\n", seikaku_info[p_ptr->personality].title);
+    fprintf(fff, "[[[[r|Pesonality:| [[[[B|%s\n", pers_ptr->name);
     t = temp;
     for (i = 0; i < 50; i++)
     {

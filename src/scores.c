@@ -246,7 +246,7 @@ void display_scores_aux(int from, int to, int note, high_score *score)
             /* Dump some info */
             sprintf(out_val, "%3d.%9s  %s %s the %s %s, Level %d",
                 place, the_score.pts,
-                seikaku_info[pa].title,
+                get_personality_aux(pa)->name,
                 the_score.who, get_race_t_aux(pr, 0)->name, get_class_t_aux(pc, 0)->name,
                 clev);
 

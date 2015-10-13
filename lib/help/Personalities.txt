@@ -1,65 +1,191 @@
 <style:title>The Personalities</style>
 
-<style:heading>Ordinary</style>
+<topic:Ordinary><color:o>Ordinary</color>
+An ordinary person is average in every respect, gaining neither skills, talents nor stat adjustments.
 
-"Ordinary" is a personality with no special skills or talents, with unmodified stats and skills.
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +0        Disarming     +0
+Intelligence  +0        Device        +0
+Wisdom        +0        Save          +0
+Dexterity     +0        Stealth       +0
+Constitution  +0        Searching     +0
+Charisma      +0        Perception    +0
+Life Rating  100%       Melee         +0
+Experience   100%       Bows          +0
+</style></indent>
+<topic:Mighty><color:o>Mighty</color>
+Mighty raises your physical stats and skills, but reduces stats and skills which influence magic. It makes your stats suitable for a warrior. Also it directly influences your hit-points and spell fail rate.
 
-<style:heading>Mighty</style>
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +2        Disarming     -5
+Intelligence  -2        Device        -5
+Wisdom        -2        Save          -3
+Dexterity     +0        Stealth       -1
+Constitution  +1        Searching     -2
+Charisma      +1        Perception    -2
+Life Rating  102%       Melee        +10
+Experience   100%       Bows          +0
+</style></indent>
+<topic:Shrewd><color:o>Shrewd</color>
+Shrewd reduces your physical stats, and raises your intelligence and magical skills. It makes your stats suitable for a mage. Also it directly influences your hit-points and spell fail rate.
 
-"Mighty" raises your physical stats and skills, but reduces stats and skills which influence magic. It makes your stats suitable for a warrior. Also it directly influences your hit-points and spell fail rate.
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -2        Disarming     +3
+Intelligence  +2        Device        +8
+Wisdom        +0        Save          +2
+Dexterity     +1        Stealth       +0
+Constitution  -1        Searching     -2
+Charisma      -1        Perception    +5
+Life Rating   97%       Melee         -8
+Experience   100%       Bows          -5
+</style></indent>
+<topic:Pious><color:o>Pious</color>
+Pious deepens your faith in your God. It makes your physical ability average, and your stats suitable for priest.
 
-<style:heading>Shrewd</style>
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +0        Disarming     -5
+Intelligence  -1        Device        +2
+Wisdom        +2        Save          +4
+Dexterity     -1        Stealth       -1
+Constitution  +0        Searching     +3
+Charisma      +0        Perception    -2
+Life Rating  100%       Melee         -3
+Experience   100%       Bows          -6
+</style></indent>
+<topic:Nimble><color:o>Nimble</color>
+Nimble renders you highly skilled comparatively well, but reduces your physical ability.
 
-"Shrewd" reduces your physical stats, and raises your intelligence and magical skills. It makes your stats suitable for a mage. Also it directly influences your hit-points and spell fail rate.
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -1        Disarming     +7
+Intelligence  +1        Device        +3
+Wisdom        -1        Save          -1
+Dexterity     +2        Stealth       +1
+Constitution  -1        Searching     +5
+Charisma      +0        Perception    +5
+Life Rating   99%       Melee         +0
+Experience   100%       Bows         +10
+</style></indent>
+<topic:Fearless><color:o>Fearless</color>
+Fearless raises your melee skills and force of personality. Stats such as magic defense and constitution are reduced. Also it has a direct bad influence on your hit-points.
 
-<style:heading>Pious</style>
-
-"Pious" deepens your faith in your God. It makes your physical ability average, and your stats suitable for priest. 
-
-<style:heading>Nimble</style>
-
-"Nimble" renders you highly skilled comparatively well, but reduces your physical ability. 
-
-<style:heading>Fearless</style>
-
-"Fearless" raises your melee skills and force of personality. Stats such as magic defense and constitution are reduced. Also it has a direct bad influence on your hit-points.
-
-<style:heading>Combat</style>
-
-"Combat" gives you comparatively high melee and shooting abilities, and average constitution. Other skills such as stealth, magic defence, and magical devices are weakened. All "Combat" people have great respect for the legendary "Combat Echizen".
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +1        Disarming     -5
+Intelligence  +0        Device        +2
+Wisdom        +0        Save          -2
+Dexterity     -1        Stealth       +0
+Constitution  -1        Searching     +2
+Charisma      +1        Perception    -2
+Life Rating   98%       Melee         +5
+Experience   100%       Bows          +0
+</style></indent>
+<topic:Combat><color:o>Combat</color>
+Combat gives you comparatively high melee and shooting abilities, and average constitution. Other skills such as stealth, magic defence, and magical devices are weakened. All Combat people have great respect for the legendary "Combat Echizen".
 (See "Death Crimson" / Ecole Software Corp.)
 
-<style:heading>Lazy</style>
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +1        Disarming     -2
+Intelligence  -1        Device        -3
+Wisdom        -1        Save          -3
+Dexterity     +1        Stealth       +0
+Constitution  +0        Searching     -1
+Charisma      +0        Perception    +2
+Life Rating  100%       Melee         +5
+Experience   100%       Bows          +5
+</style></indent>
+<topic:Lazy><color:o>Lazy</color>
+A Lazy person has no good stats and can do no action well. Also it has a direct bad influence on your spell fail rate.
 
-A "Lazy" person has no good stats and can do no action well. Also it has a direct bad influence on your spell fail rate.
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -2        Disarming     -5
+Intelligence  -2        Device        -5
+Wisdom        -2        Save          -3
+Dexterity     -2        Stealth       -1
+Constitution  -2        Searching     -4
+Charisma      -2        Perception    -2
+Life Rating   95%       Melee         -8
+Experience   100%       Bows          -8
+</style></indent>
+<topic:Sexy><color:o>Sexy</color>
+Sexy rises all of your stats and skills, but your haughty attitude will aggravate all monsters. Only females can choose this personality.
 
-<style:heading>Sexy</style>
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +1        Disarming    +10
+Intelligence  +1        Device        +5
+Wisdom        +1        Save          +3
+Dexterity     +1        Stealth       +0
+Constitution  +1        Searching     +4
+Charisma      +1        Perception    +2
+Life Rating  100%       Melee        +10
+Experience   100%       Bows         +10
+</style></indent>
+<topic:Lucky><color:o>Lucky</color>
+A Lucky man has poor stats, equivalent to a Lazy person. Mysteriously, however, he can do all things well. Only males can choose this personality.
 
-"Sexy" rises all of your abilities, but your haughty attitude will aggravate all monsters. Only females can choose this personality.
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -2        Disarming    +10
+Intelligence  -2        Device        +7
+Wisdom        -2        Save          +3
+Dexterity     -2        Stealth       +2
+Constitution  -2        Searching    +10
+Charisma      -2        Perception    +8
+Life Rating  100%       Melee        +15
+Experience   100%       Bows         +15
+</style></indent>
+<topic:Patient><color:o>Patient</color>
+A Patient person does things carefully. Patient people have high constitution, and high resilience, but poor abilities in most other skills. Also it directly influences your life rating.
 
-<style:heading>Lucky</style>
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -1        Disarming     -5
+Intelligence  -1        Device        -3
+Wisdom        +1        Save          +3
+Dexterity     -2        Stealth       +1
+Constitution  +2        Searching     +0
+Charisma      +0        Perception    -3
+Life Rating  102%       Melee         -6
+Experience   100%       Bows          -6
+</style></indent>
+<topic:Munchkin><color:o>Munchkin</color>
+The Munchkin personality is for beginners. It raises all your stats and skills. With this personality, you can win the game easily, but gain little honor in doing so.
 
-A "Lucky" man has poor stats, equivalent to a "Lazy" person. Mysteriously, however, he can do all things well. Only males can choose this personality.
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +3        Disarming    +10
+Intelligence  +3        Device       +20
+Wisdom        +3        Save         +15
+Dexterity     +3        Stealth       +5
+Constitution  +3        Searching    +20
+Charisma      +3        Perception   +20
+Life Rating  150%       Melee        +40
+Experience    50%       Bows         +40
+</style></indent>
+<topic:Craven><color:o>Craven</color>
+A Craven person is a coward, preferring to avoid a fight at any cost. Craven adventurers shoot and use devices well, and their stealth is impressive. But their stats and other skills are somewhat wanting.
 
-<style:heading>Patient</style>
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      -1        Disarming     +5
+Intelligence  +1        Device        +6
+Wisdom        +1        Save          -1
+Dexterity     -1        Stealth       +3
+Constitution  -1        Searching     +0
+Charisma      -3        Perception    +0
+Life Rating   99%       Melee        -10
+Experience   100%       Bows         +10
+</style></indent>
+<topic:Hasty><color:o>Hasty</color>
+A Hasty person edeavors to do all things quickly. Speed, rather than skill and patience, are paramount, and the Hasty adventurer moves quickly through the dungeon, bungling much.
 
-A "Patient" person does things carefully. Patient people have high constitution, and high resilience, but poor abilities in most other skills. Also it directly influences your hit-points.
-
-<style:heading>Munchkin</style>
-
-"Munchkin" is a personality for beginners. It raises all your stats and skills. With this personality, you can win the game easily, but gain little honor in doing so.
-
-<style:heading>Craven</style>
-
-A "Craven" person is a coward, preferring to avoid a fight at any cost. Craven adventurers shoot and use devices well, and their stealth is impressive. But their stats and other skills are somewhat wanting.
-
-<style:heading>Hasty</style>
-
-A "Hasty" person edeavors to do all things quickly. Speed, rather than skill and patience, are paramount, and the Hasty adventure moves quickly through the dungeon, bungling much.
-
+  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>
+Strength      +0        Disarming     -5
+Intelligence  -1        Device        -5
+Wisdom        -2        Save          -3
+Dexterity     +2        Stealth       -1
+Constitution  -1        Searching     -4
+Charisma      +0        Perception    -2
+Life Rating  100%       Melee         -5
+Experience   100%       Bows          -5
+</style></indent>
 <topic:Tables><style:heading>Table 1 - Personality Statistic Bonus Table</style>
 
-<style:table><color:U>               STR  INT  WIS  DEX  CON  CHR  Life  Exp</color>
+<style:table><color:G>               STR  INT  WIS  DEX  CON  CHR  Life  Exp</color>
 Ordinary        +0   +0   +0   +0   +0   +0  100%  100%
 Mighty          +2   -2   -2   +0   +1   +1  102%  100%
 Shrewd          -2   +2   +0   +1   -1   -1   97%  100%
@@ -78,7 +204,7 @@ Hasty           +0   -1   -2   +2   -1   +0  100%  100%
 </style>
 <style:heading>Table 2 - Personality Skill Bonus Table</style>
 
-<style:table><color:U>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows</color>
+<style:table><color:G>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows</color>
 Ordinary         +0    +0    +0    +0    +0    +0     +0    +0
 Mighty           -5    -5    -3    -1    -2    -2    +10    +0
 Shrewd           +3    +8    +2    +0    -2    +5     -8    -5

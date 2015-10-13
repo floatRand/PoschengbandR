@@ -86,7 +86,6 @@ extern byte extract_energy[200];
 extern player_sex sex_info[MAX_SEXES];
 extern player_pact pact_info[MAX_PACTS];
 extern magic_type technic_info[NUM_TECHNIC][32];
-extern player_seikaku seikaku_info[MAX_PERSONALITIES];
 extern u32b fake_spell_flags[4];
 extern s32b realm_choices1[];
 extern s32b realm_choices2[];
@@ -442,7 +441,6 @@ extern char tval_to_char[128];
 extern cptr keymap_act[KEYMAP_MODES][256];
 extern player_type *p_ptr;
 extern player_sex *sp_ptr;
-extern player_seikaku *ap_ptr;
 extern player_magic *mp_ptr;
 extern birther previous_char;
 extern room_template_t *room_info;
@@ -634,7 +632,6 @@ extern int pack_find(int tval, int sval);
 extern void add_history_from_pref_line(cptr t);
 extern void add_outfit(object_type *o_ptr);
 extern cptr birth_get_class_desc(int i);
-extern cptr birth_get_personality_desc(int i);
 extern cptr birth_get_realm_desc(int i);
 extern void player_birth(void);
 extern void get_max_stats(void);
@@ -2038,6 +2035,10 @@ extern void revenge_store(int dam);
 extern bool teleport_barrier(int m_idx);
 extern bool magic_barrier(int m_idx);
 extern bool multiply_barrier(int m_idx);
+
+/* personalities.c */
+extern personality_ptr get_personality_aux(int index);
+extern personality_ptr get_personality(void);
 
 /* races.c */
 extern int get_race_idx(cptr name);

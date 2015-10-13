@@ -5835,10 +5835,6 @@ void play_game(bool new_game)
     start_time = time(NULL);
     record_o_name[0] = '\0';
 
-    /* Sexy gal gets bonus to maximum weapon skill of whip */
-    if (p_ptr->personality == PERS_SEXY)
-        s_info[p_ptr->pclass].w_max[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP] = WEAPON_EXP_MASTER;
-
     if (p_ptr->prace == RACE_TONBERRY)
         s_info[p_ptr->pclass].w_max[TV_HAFTED-TV_WEAPON_BEGIN][SV_SABRE] = WEAPON_EXP_MASTER;
 
@@ -5946,6 +5942,7 @@ void play_game(bool new_game)
     {
         class_t *class_ptr = get_class_t();
         race_t *race_ptr = get_race_t();
+        personality_ptr pers_ptr = get_personality();
         
         do_cmd_redraw();  /* Not sure why this is required?! */
 
@@ -5959,15 +5956,20 @@ void play_game(bool new_game)
                   "Press <color:y>CTRL+P</color> to review recent messages. "
                   "You may press <color:y>?</color> at any time for help.\n\n");
         msg_boundary();
+
+        if (pers_ptr->birth) /* Hack: Personality goes first for the Sexy Whip! */
+            pers_ptr->birth();
+
         player_outfit();
-        
-        if (class_ptr && class_ptr->birth)
+
+        if (class_ptr->birth)
             class_ptr->birth();
 
-        if (race_ptr && race_ptr->birth)
+        if (race_ptr->birth)
             race_ptr->birth();
 
         spell_stats_on_birth();
+        skills_on_birth();
 
         if (game_mode == GAME_MODE_BEGINNER)
         {
