@@ -4195,7 +4195,7 @@ static void dump_aux_object_counts(FILE *fff)
 
     fprintf(fff, "\n  Wands                Found Bought  Used  Dest  Fail\n");
     fprintf(fff,   "  ---------------------------------------------------\n");
-    if (p_ptr->wizard)
+    if (p_ptr->wizard || 1)
     {
         for (i = 0; ; i++)
         {
@@ -4222,7 +4222,7 @@ static void dump_aux_object_counts(FILE *fff)
 
     fprintf(fff, "\n  Staves               Found Bought  Used  Dest  Fail\n");
     fprintf(fff,   "  ---------------------------------------------------\n");
-    if (p_ptr->wizard)
+    if (p_ptr->wizard || 1)
     {
         for (i = 0; ; i++)
         {
@@ -4251,7 +4251,7 @@ static void dump_aux_object_counts(FILE *fff)
 
     fprintf(fff, "\n  Rods                 Found Bought  Used  Dest  Fail\n");
     fprintf(fff,   "  ---------------------------------------------------\n");
-    if (p_ptr->wizard)
+    if (p_ptr->wizard || 1)
     {
         for (i = 0; ; i++)
         {

@@ -3061,9 +3061,8 @@ enum summon_specific_e {
 #define TRC_FAST_DIGEST         0x00040000
 #define TRC_DRAIN_HP            0x00080000
 #define TRC_DRAIN_MANA          0x00100000
-
-#define TRC_TELEPORT_SELF       0x00000001
-#define TRC_CHAINSWORD          0x00000002
+#define TRC_TELEPORT_SELF       0x00200000
+#define TRC_CHAINSWORD          0x00400000
 
 #define TRC_SPECIAL_MASK \
     (TRC_TY_CURSE | TRC_AGGRAVATE)

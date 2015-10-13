@@ -2278,9 +2278,9 @@ device_effect_info_t rod_effect_table[] =
     {EFFECT_BALL_ACID,             44,  29,     1,  80,     0, 0},
     {EFFECT_BOLT_MANA,             45,  30,     3,  80,     0, _DROP_GOOD},
     {EFFECT_BALL_NETHER,           45,  31,     1,  80,     0, 0},
-    {EFFECT_BALL_DISEN,            47,  32,     1,  80,     0, 0},
-    {EFFECT_ENLIGHTENMENT,         50,  33,     1,  80,     0, _DROP_GOOD},
-    {EFFECT_BALL_SOUND,            52,  35,     2,   0,     0, 0},
+    {EFFECT_BALL_DISEN,            47,  32,     1,  80,     0, _DROP_GOOD},
+    {EFFECT_ENLIGHTENMENT,         50,  33,     1,  80,     0, 0},
+    {EFFECT_BALL_SOUND,            52,  35,     2,   0,     0, _DROP_GOOD},
     {EFFECT_BEAM_DISINTEGRATE,     60,  37,     2,   0,     0, _DROP_GOOD},
     {EFFECT_SPEED_HERO,            70,  40,     2,   0,     0, _DROP_GOOD | _DROP_GREAT},
     {EFFECT_GREAT_CLARITY,         80,  60,     4,   0,     0, _DROP_GOOD | _DROP_GREAT},
@@ -2475,7 +2475,7 @@ bool device_init(object_type *o_ptr, int level, int mode)
         level = 100;
 
     /* device_level */
-    o_ptr->xtra3 = _bounds_check(_rand_normal(level*85/100, 10), 1, 100);
+    o_ptr->xtra3 = _bounds_check(_rand_normal(level*90/100, 10), 1, 100);
 
     switch (o_ptr->tval)
     {
@@ -5696,7 +5696,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             stun_monsters(pow);
             confuse_monsters(pow);
             turn_monsters(pow);
-            stasis_monsters(pow);
+            stasis_monsters(pow/3);
             device_noticed = TRUE; /* You see the dazzling lights, no? */
         }
         break;
