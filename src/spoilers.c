@@ -44,7 +44,7 @@ static cptr _skill_desc(int amt, int div)
 
 static void _race_help_table(FILE *fp, race_t *race_ptr)
 {
-    fputs("  <indent><style:table><color:G>Stat Modifiers          Skills</color>\n", fp);
+    fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
     fprintf(fp, "Strength     %+3d        Disarming   %s\n",
         race_ptr->stats[A_STR],
         _skill_desc(race_ptr->skills.dis + 10, 2));
@@ -273,43 +273,38 @@ static void _mon_race_help(FILE *fp, int idx)
         break;
     }
 
-    fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
-    fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %2d+%-2d\n",
+    fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
+    fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %s\n",
         (caster_ptr && caster_ptr->which_stat == A_STR) ? 'v' : 'w',
         race_ptr->stats[A_STR],
-        race_ptr->skills.dis,
-        race_ptr->extra_skills.dis);
-    fprintf(fp, "Intelligence <color:%c>%+3d</color>        Device      %2d+%-2d\n",
+        _skill_desc(race_ptr->skills.dis + 5*race_ptr->extra_skills.dis, 8));
+    fprintf(fp, "Intelligence <color:%c>%+3d</color>        Device      %s\n",
         (caster_ptr && caster_ptr->which_stat == A_INT) ? 'v' : 'w',
         race_ptr->stats[A_INT],
-        race_ptr->skills.dev,
-        race_ptr->extra_skills.dev);
-    fprintf(fp, "Wisdom       <color:%c>%+3d</color>        Save        %2d+%-2d\n",
+        _skill_desc(race_ptr->skills.dev + 5*race_ptr->extra_skills.dev, 6));
+    fprintf(fp, "Wisdom       <color:%c>%+3d</color>        Save        %s\n",
         (caster_ptr && caster_ptr->which_stat == A_WIS) ? 'v' : 'w',
         race_ptr->stats[A_WIS],
-        race_ptr->skills.sav,
-        race_ptr->extra_skills.sav);
-    fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %2d\n",
+        _skill_desc(race_ptr->skills.sav + 5*race_ptr->extra_skills.sav, 7));
+    fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %s\n",
         (caster_ptr && caster_ptr->which_stat == A_DEX) ? 'v' : 'w',
         race_ptr->stats[A_DEX],
-        race_ptr->skills.stl);
-    fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %2d\n",
+        _skill_desc(3*(race_ptr->skills.stl + 5*race_ptr->extra_skills.stl)/2, 1));
+    fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %s\n",
         (caster_ptr && caster_ptr->which_stat == A_CON) ? 'v' : 'w',
         race_ptr->stats[A_CON],
-        race_ptr->skills.srh);
-    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %2d\n",
+        _skill_desc(race_ptr->skills.srh + 5*race_ptr->extra_skills.srh, 6));
+    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %s\n",
         (caster_ptr && caster_ptr->which_stat == A_CHR) ? 'v' : 'w',
         race_ptr->stats[A_CHR],
-        race_ptr->skills.fos);
-    fprintf(fp, "Life Rating  %3d%%       Melee       %2d+%-2d\n",
+        _skill_desc(race_ptr->skills.fos + 5*race_ptr->extra_skills.fos, 6));
+    fprintf(fp, "Life Rating  %3d%%       Melee       %s\n",
         race_ptr->life,
-        race_ptr->skills.thn,
-        race_ptr->extra_skills.thn);
-    fprintf(fp, "Base HP      %3d        Bows        %2d+%-2d\n",
+        _skill_desc(race_ptr->skills.thn + 5*race_ptr->extra_skills.thn, 12));
+    fprintf(fp, "Base HP      %3d        Bows        %s\n",
         race_ptr->base_hp,
-        race_ptr->skills.thb,
-        race_ptr->extra_skills.thb);
-    fprintf(fp, "Experience   %3d%%     Infravision %4d'\n", race_ptr->exp, race_ptr->infra*10);
+        _skill_desc(race_ptr->skills.thb + 5*race_ptr->extra_skills.thb, 12));
+    fprintf(fp, "Experience   %3d%%       Infravision %d'\n", race_ptr->exp, race_ptr->infra*10);
     fputs("</style></indent>\n", fp);
 }
 
@@ -358,11 +353,9 @@ static void _monster_races_help(FILE* fp)
     }
 
     fputs("<topic:Tables><style:heading>Table 1 - Race Statistic Bonus Table</style>\n<style:table>\n", fp);
-
+    fprintf(fp, "<color:G>%-12.12s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "");
     for (i = 0; i < _MAX_MON_RACE_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%s</color>\n", _mon_race_groups[i].name);
-        fprintf(fp, "<color:G>%-14.14s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "Race");
         for (j = 0; ; j++)
         {
             int     race_idx = _mon_race_groups[i].ids[j];
@@ -370,23 +363,20 @@ static void _monster_races_help(FILE* fp)
 
             if (race_idx == -1) break;
             race_ptr = get_race_t_aux(race_idx, 0);
-            fprintf(fp, "%-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
+            fprintf(fp, "%-12.12s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
                 race_ptr->name,
                 race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
                 race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
                 race_ptr->life, race_ptr->base_hp, race_ptr->exp, race_ptr->shop_adjust
             );
         }
-        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 
-    fputs("<style:heading>Table 2 - Race Skill Bonus Table</style>\n<style:table>\n", fp);
-
+    fputs("<topic:Skills1><style:heading>Table 2 - Race Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < _MAX_MON_RACE_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%s</color>\n", _mon_race_groups[i].name);
-        fprintf(fp, "<color:G>%-14.14s</color> <color:G>Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows  Infra</color>\n", "Race");
         for (j = 0; ; j++)
         {
             int     race_idx = _mon_race_groups[i].ids[j];
@@ -394,14 +384,35 @@ static void _monster_races_help(FILE* fp)
 
             if (race_idx == -1) break;
             race_ptr = get_race_t_aux(race_idx, 0);
-            fprintf(fp, "%-14s %+4d  %+4d  %+4d  %+4d  %+4d  %+4d  %+5d  %+4d  %4d'\n",
-                race_ptr->name,
-                race_ptr->skills.dis, race_ptr->skills.dev, race_ptr->skills.sav,
-                race_ptr->skills.stl, race_ptr->skills.srh, race_ptr->skills.fos,
-                race_ptr->skills.thn, race_ptr->skills.thb, race_ptr->infra*10
-            );
+            fprintf(fp, "%-12.12s", race_ptr->name);
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 5*race_ptr->extra_skills.dis, 8));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5*race_ptr->extra_skills.dev, 6));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5*race_ptr->extra_skills.sav, 7));
+            fprintf(fp, " %s", _skill_desc(3*(race_ptr->skills.stl + 5*race_ptr->extra_skills.stl)/2, 1));
+            fputc('\n', fp);
         }
-        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills2><style:heading>Table 3 - Race Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
+    for (i = 0; i < _MAX_MON_RACE_GROUPS; i++)
+    {
+        for (j = 0; ; j++)
+        {
+            int     race_idx = _mon_race_groups[i].ids[j];
+            race_t *race_ptr;
+
+            if (race_idx == -1) break;
+            race_ptr = get_race_t_aux(race_idx, 0);
+            fprintf(fp, "%-12.12s", race_ptr->name);
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh + 5*race_ptr->extra_skills.srh, 6));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos + 5*race_ptr->extra_skills.fos, 6));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 5*race_ptr->extra_skills.thn, 12));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 5*race_ptr->extra_skills.thb, 12));
+            fprintf(fp, " %4d'", race_ptr->infra * 10);
+            fputc('\n', fp);
+        }
     }
     fputs("\n</style>\n", fp);
 }
@@ -702,7 +713,7 @@ static void _class_help(FILE *fp, int idx)
     fputs(class_ptr->desc, fp);
     fputs("\n\n", fp);
 
-    fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
+    fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
     fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %s\n",
         (caster_ptr && caster_ptr->which_stat == A_STR) ? 'v' : 'w',
         class_ptr->stats[A_STR],
@@ -878,15 +889,38 @@ static void _personality_help(FILE *fp, int idx)
     fprintf(fp, "<topic:%s><color:o>%s</color>\n", pers_ptr->name, pers_ptr->name);
     fprintf(fp, "%s\n\n", pers_ptr->desc);
 
-    fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
-    fprintf(fp, "Strength     %+3d        Disarming   %+4d\n", pers_ptr->stats[A_STR], pers_ptr->skills.dis);
-    fprintf(fp, "Intelligence %+3d        Device      %+4d\n", pers_ptr->stats[A_INT], pers_ptr->skills.dev);
-    fprintf(fp, "Wisdom       %+3d        Save        %+4d\n", pers_ptr->stats[A_WIS], pers_ptr->skills.sav);
-    fprintf(fp, "Dexterity    %+3d        Stealth     %+4d\n", pers_ptr->stats[A_DEX], pers_ptr->skills.stl);
-    fprintf(fp, "Constitution %+3d        Searching   %+4d\n", pers_ptr->stats[A_CON], pers_ptr->skills.srh);
-    fprintf(fp, "Charisma     %+3d        Perception  %+4d\n", pers_ptr->stats[A_CHR], pers_ptr->skills.fos);
-    fprintf(fp, "Life Rating  %3d%%       Melee       %+4d\n", pers_ptr->life, pers_ptr->skills.thn);
-    fprintf(fp, "Experience   %3d%%       Bows        %+4d\n", pers_ptr->exp, pers_ptr->skills.thb);
+    fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
+    fprintf(fp, "Strength     %+3d        Disarming   %s\n",
+        pers_ptr->stats[A_STR],
+        _skill_desc(pers_ptr->skills.dis + 10, 2));
+
+    fprintf(fp, "Intelligence %+3d        Device      %s\n",
+        pers_ptr->stats[A_INT],
+        _skill_desc(pers_ptr->skills.dev + 5, 1));
+
+    fprintf(fp, "Wisdom       %+3d        Save        %s\n",
+        pers_ptr->stats[A_WIS],
+        _skill_desc(pers_ptr->skills.sav + 5, 1));
+
+    fprintf(fp, "Dexterity    %+3d        Stealth     %s\n",
+        pers_ptr->stats[A_DEX],
+        _skill_desc(pers_ptr->skills.stl * 3, 1));
+
+    fprintf(fp, "Constitution %+3d        Searching   %s\n",
+        pers_ptr->stats[A_CON],
+        _skill_desc(pers_ptr->skills.srh, 1));
+
+    fprintf(fp, "Charisma     %+3d        Perception  %s\n",
+        pers_ptr->stats[A_CHR],
+        _skill_desc(pers_ptr->skills.fos, 1));
+
+    fprintf(fp, "Life Rating  %3d%%       Melee       %s\n",
+        pers_ptr->life,
+        _skill_desc(pers_ptr->skills.thn + 10, 2));
+
+    fprintf(fp, "Experience   %3d%%       Bows        %s\n",
+        pers_ptr->exp,
+        _skill_desc(pers_ptr->skills.thb + 10, 2));
     fputs("</style></indent>\n", fp);
 }
 
@@ -895,6 +929,20 @@ static void _personalities_help(FILE* fp)
     int i;
 
     fprintf(fp, "<style:title>The Personalities</style>\n\n");
+    fputs("Your personality is the way you see and act in the world, and has "
+            "a small but significant effect on your stats and skills. In general "
+            "you should pick a personality that complements the strengths and "
+            "weaknesses inherent in your race and class. Your choice of personality "
+            "is the least important decision you make when creating your "
+            "character (after gender).\n\n"
+            "For details on the <color:keyword>Primary Statistics</color>, see "
+            "<link:birth.txt#PrimaryStats>. For information about the various <color:keyword>Skills</color>, see "
+            "<link:birth.txt#PrimarySkills>. "
+            "The skill descriptions in this document are for comparison purposes only. "
+            "For example, your fledgling munchkin will not be born with <color:v>Legendary[20]</color> "
+            "melee skill. In general, skills are also influenced by level, race, class, stats and equipment. "
+            "To compare the various personalities, you might want to take a look "
+            "at <link:Personalities.txt#Tables> the personality tables below.\n\n", fp);
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         _personality_help(fp, i);
@@ -916,18 +964,31 @@ static void _personalities_help(FILE* fp)
     }
     fputs("\n</style>\n", fp);
 
-    fputs("<style:heading>Table 2 - Personality Skill Bonus Table</style>\n\n", fp);
-    fputs("<style:table><color:G>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows</color>\n", fp);
+    fputs("<topic:Skills1><style:heading>Table 2 - Personality Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         personality_ptr pers_ptr = get_personality_aux(i);
+        fprintf(fp, "%-12.12s", pers_ptr->name);
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.dis + 10, 2));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.dev + 5, 1));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.sav + 5, 1));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.stl * 3, 1));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
 
-        fprintf(fp, "%-14s %+4d  %+4d  %+4d  %+4d  %+4d  %+4d  %+5d  %+4d\n",
-            pers_ptr->name,
-            pers_ptr->skills.dis, pers_ptr->skills.dev, pers_ptr->skills.sav,
-            pers_ptr->skills.stl, pers_ptr->skills.srh, pers_ptr->skills.fos,
-            pers_ptr->skills.thn, pers_ptr->skills.thb
-        );
+    fputs("<topic:Skills2><style:heading>Table 3 - Personality Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Bows");
+    for (i = 0; i < MAX_PERSONALITIES; i++)
+    {
+        personality_ptr pers_ptr = get_personality_aux(i);
+        fprintf(fp, "%-12.12s", pers_ptr->name);
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.srh, 1));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.fos, 1));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.thn + 10, 2));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.thb + 10, 2));
+        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 }

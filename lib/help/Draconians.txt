@@ -5,7 +5,7 @@ Draconians are a humanoid race with dragon-like attributes. There are several su
 <topic:Red><color:o>Red</color>
 Red Draconians have an affinity for fire, which they both breathe at will and resist. Together with their White kin, they are the strongest in combat of the draconians. But they are not so good with magic and their stealth is quite poor. Should they choose the power of Dragon Skin, they will gain a fiery aura as well. Should they choose the power of Dragon Strike, their blows will burn their enemies.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +3        Disarming   <color:o>Fair         </color>
 Intelligence  +1        Device      <color:y>Good         </color>
 Wisdom        +1        Save        <color:G>Excellent    </color>
@@ -19,7 +19,7 @@ Experience   160%       Infravision 20'
 <topic:White><color:o>White</color>
 White Draconians have an affinity for frost, which they both breathe at will and resist. Together with their Red kin, they are the strongest in combat of the draconians. But they are not so good with magic and their stealth is quite poor. Should they choose the power of Dragon Skin, they will gain an aura of cold as well. Should they choose the power of Dragon Strike, their blows will freeze their enemies.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +3        Disarming   <color:o>Fair         </color>
 Intelligence  +1        Device      <color:y>Good         </color>
 Wisdom        +1        Save        <color:G>Excellent    </color>
@@ -33,7 +33,7 @@ Experience   160%       Infravision 20'
 <topic:Blue><color:o>Blue</color>
 Blue Draconians have an affinity for lightning, which they both breathe at will and resist. They are strong in combat but not so good with magic or stealth. Should they choose the power of Dragon Skin, they will gain a shocking aura as well. Should they choose the power of Dragon Strike, their blows will electrocute their enemies.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +2        Disarming   <color:o>Fair         </color>
 Intelligence  +1        Device      <color:y>Very Good    </color>
 Wisdom        +1        Save        <color:G>Excellent    </color>
@@ -47,7 +47,7 @@ Experience   160%       Infravision 20'
 <topic:Black><color:o>Black</color>
 Black Draconians have an affinity for acid, which they both breathe at will and resist. They are strong in combat but not so good with magic or stealth. With the power of Dragon Strike, their blows will corrode their enemies.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +2        Disarming   <color:o>Fair         </color>
 Intelligence  +1        Device      <color:y>Very Good    </color>
 Wisdom        +1        Save        <color:G>Excellent    </color>
@@ -61,7 +61,7 @@ Experience   160%       Infravision 20'
 <topic:Green><color:o>Green</color>
 Green Draconians have an affinity for poison, which they both breathe at will and resist. They are average in all respects among the draconians. With the power of Dragon Strike, their blows will poison their enemies.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +1        Disarming   <color:o>Fair         </color>
 Intelligence  +1        Device      <color:g>Superb       </color>
 Wisdom        +1        Save        <color:G>Excellent    </color>
@@ -75,7 +75,7 @@ Experience   175%       Infravision 20'
 <topic:Bronze><color:o>Bronze</color>
 Bronze Draconians are the most intelligent of their kind, and the best with magic as well. They are seldom confused, though the same may not be said of their enemies. With the power of Dragon Strike, even the melee attacks of the Bronze Draconian will baffle their enemies.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +1        Disarming   <color:o>Fair         </color>
 Intelligence  +2        Device      <color:b>Heroic       </color>
 Wisdom        +1        Save        <color:G>Excellent    </color>
@@ -89,7 +89,7 @@ Experience   185%       Infravision 20'
 <topic:Crystal><color:o>Crystal</color>
 Hard of skin, the Crystal Draconian is difficult to hit in melee. But their agility suffers and they are not the brightest of their kind. They resist shards, which they may also breathe on command. With the power of Dragon Skin, they gain an aura of shards as well. With the power of Dragon Strike, even their melee attacks will shred their enemies.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +1        Disarming   <color:o>Fair         </color>
 Intelligence  +0        Device      <color:y>Good         </color>
 Wisdom        +1        Save        <color:G>Excellent    </color>
@@ -103,7 +103,7 @@ Experience   220%       Infravision 20'
 <topic:Gold><color:o>Gold</color>
 The wisest of their kind, Gold Draconians are resilient in the face of magical attacks. They are resistant to sound which they may also breathe at will, stunning their enemies. With the power of Dragon Strike, even their melee attacks will stun their enemies.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +1        Disarming   <color:o>Fair         </color>
 Intelligence  +1        Device      <color:b>Heroic       </color>
 Wisdom        +2        Save        <color:g>Superb       </color>
@@ -117,7 +117,7 @@ Experience   190%       Infravision 20'
 <topic:Shadow><color:o>Shadow</color>
 Lithe, stealthy and nimble, the Shadow Draconian is seldom seen in this world. They are resistant to the forces of nether which they may also breathe. They are the weakest of the draconians, and the poorest in melee. But they are better than average with magic. With the power of Dragon Strike, they may steal life from their enemies in melee.
 
-  <indent><style:table><color:G>Stat Modifiers          Skills</color>
+  <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +0        Disarming   <color:o>Fair         </color>
 Intelligence  +1        Device      <color:g>Superb       </color>
 Wisdom        +1        Save        <color:G>Excellent    </color>
