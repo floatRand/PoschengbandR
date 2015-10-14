@@ -1,7 +1,7 @@
 <style:title>The Races</style>
 There are many races in the world, each, for the most part, with both strengths and weaknesses. Humans are the base race, and serve as the benchmark of comparison for all the others. In general, the stronger a race is relative to humans, the higher the <color:keyword>Experience Penalty</color> and the longer it will take to gain levels.
 
-For details on the <color:keyword>Primary Statistics</color>, see <link:birth.txt#PrimaryStats>. For information about the various <color:keyword>Skills</color>, see <link:birth.txt#PrimarySkills>. To compare the various races, you might want to take a look at <link:Races.txt#Tables> the race tables below.
+For details on the <color:keyword>Primary Statistics</color>, see <link:birth.txt#PrimaryStats>. For information about the various <color:keyword>Skills</color>, see <link:birth.txt#PrimarySkills>. The skill descriptions in this document are for comparison purposes only. For example, your fledgling high-elf will not be born with <color:v>Legendary[2]</color> device skill. In general, skills are influenced by level, race, class, stats and equipment. To compare the various races, you might want to take a look at <link:Races.txt#Tables> the race tables below.
 
 <style:heading>Humans</style>
   <indent><topic:Amberite><color:o>Amberite</color>

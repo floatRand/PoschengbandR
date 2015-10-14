@@ -170,7 +170,11 @@ static void _races_help(FILE* fp)
           "it will take to gain levels.\n\n"
           "For details on the <color:keyword>Primary Statistics</color>, see "
           "<link:birth.txt#PrimaryStats>. For information about the various <color:keyword>Skills</color>, see "
-          "<link:birth.txt#PrimarySkills>. To compare the various races, you might want to take a look "
+          "<link:birth.txt#PrimarySkills>. "
+          "The skill descriptions in this document are for comparison purposes only. "
+          "For example, your fledgling high-elf will not be born with <color:v>Legendary[2]</color> "
+          "device skill. In general, skills are influenced by level, race, class, stats and equipment. "
+          "To compare the various races, you might want to take a look "
           "at <link:Races.txt#Tables> the race tables below.\n\n", fp);
     for (i = 0; i < _MAX_RACE_GROUPS; i++)
     {
@@ -699,41 +703,36 @@ static void _class_help(FILE *fp, int idx)
     fputs("\n\n", fp);
 
     fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
-    fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %2d+%-2d\n",
+    fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %s\n",
         (caster_ptr && caster_ptr->which_stat == A_STR) ? 'v' : 'w',
         class_ptr->stats[A_STR],
-        class_ptr->base_skills.dis,
-        class_ptr->extra_skills.dis);
-    fprintf(fp, "Intelligence <color:%c>%+3d</color>        Device      %2d+%-2d\n",
+        _skill_desc(class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis, 8));
+    fprintf(fp, "Intelligence <color:%c>%+3d</color>        Device      %s\n",
         (caster_ptr && caster_ptr->which_stat == A_INT) ? 'v' : 'w',
         class_ptr->stats[A_INT],
-        class_ptr->base_skills.dev,
-        class_ptr->extra_skills.dev);
-    fprintf(fp, "Wisdom       <color:%c>%+3d</color>        Save        %2d+%-2d\n",
+        _skill_desc(class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev, 6));
+    fprintf(fp, "Wisdom       <color:%c>%+3d</color>        Save        %s\n",
         (caster_ptr && caster_ptr->which_stat == A_WIS) ? 'v' : 'w',
         class_ptr->stats[A_WIS],
-        class_ptr->base_skills.sav,
-        class_ptr->extra_skills.sav);
-    fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %2d\n",
+        _skill_desc(class_ptr->base_skills.sav + 5*class_ptr->extra_skills.sav, 7));
+    fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %s\n",
         (caster_ptr && caster_ptr->which_stat == A_DEX) ? 'v' : 'w',
         class_ptr->stats[A_DEX],
-        class_ptr->base_skills.stl);
-    fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %2d\n",
+        _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl), 1));
+    fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %s\n",
         (caster_ptr && caster_ptr->which_stat == A_CON) ? 'v' : 'w',
         class_ptr->stats[A_CON],
-        class_ptr->base_skills.srh);
-    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %2d\n",
+        _skill_desc(class_ptr->base_skills.srh + 5*class_ptr->extra_skills.srh, 6));
+    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %s\n",
         (caster_ptr && caster_ptr->which_stat == A_CHR) ? 'v' : 'w',
         class_ptr->stats[A_CHR],
-        class_ptr->base_skills.fos);
-    fprintf(fp, "Life Rating  %3d%%       Melee       %2d+%-2d\n",
+        _skill_desc(class_ptr->base_skills.fos + 5*class_ptr->extra_skills.fos, 6));
+    fprintf(fp, "Life Rating  %3d%%       Melee       %s\n",
         class_ptr->life,
-        class_ptr->base_skills.thn,
-        class_ptr->extra_skills.thn);
-    fprintf(fp, "Base HP      %3d        Bows        %2d+%-2d\n",
+        _skill_desc(class_ptr->base_skills.thn + 5*class_ptr->extra_skills.thn, 12));
+    fprintf(fp, "Base HP      %3d        Bows        %s\n",
         class_ptr->base_hp,
-        class_ptr->base_skills.thb,
-        class_ptr->extra_skills.thb);
+        _skill_desc(class_ptr->base_skills.thb + 5*class_ptr->extra_skills.thb, 12));
     fprintf(fp, "Experience   %3d%%\n", class_ptr->exp);
     fputs("</style></indent>\n", fp);
 }
@@ -778,6 +777,9 @@ static void _classes_help(FILE* fp)
             "For details on the <color:keyword>Primary Statistics</color>, see "
             "<link:birth.txt#PrimaryStats>. For information about the various "
             "<color:keyword>Skills</color>, see <link:birth.txt#PrimarySkills>. "
+            "The skill descriptions in this document are for comparison purposes only. "
+            "For example, your fledgling berserker will not be born with <color:v>Legendary[32]</color> "
+            "melee skill. In general, skills are influenced by level, race, class, stats and equipment. "
             "To compare the various classes at a glance, you might want to take "
             "a look at <link:Classes.txt#Tables> the class tables below.\n\n", fp);
 
@@ -794,10 +796,9 @@ static void _classes_help(FILE* fp)
     }
 
     fputs("<topic:Tables><style:heading>Table 1 - Class Statistic Bonus Table</style>\n<style:table>\n", fp);
-
+    fprintf(fp, "%-13.13s <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n", "");
     for (i = 0; i < _MAX_CLASS_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%-14.14s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n", _class_groups[i].name);
         for (j = 0; ; j++)
         {
             int          class_idx = _class_groups[i].ids[j];
@@ -811,7 +812,7 @@ static void _classes_help(FILE* fp)
             if (class_ptr->caster_info)
                 caster_ptr = class_ptr->caster_info();
 
-            sprintf(line, "%-14s", class_ptr->name);
+            sprintf(line, "%-13.13s", class_ptr->name);
             for (k = 0; k < 6; k++)
             {
                 if (caster_ptr && k == caster_ptr->which_stat && class_idx != CLASS_PSION)
@@ -824,37 +825,48 @@ static void _classes_help(FILE* fp)
             strcat(line, tmp);
             fprintf(fp, "%s\n", line);
         }
-        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 
-    fputs("<style:heading>Table 2 - Class Skill Bonus Table</style>\n<style:table>\n", fp);
-
+    fputs("<topic:Skills1><style:heading>Table 2 - Class Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-13.13s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < _MAX_CLASS_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%-14.14s</color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>\n", _class_groups[i].name);
         for (j = 0; ; j++)
         {
-            int          class_idx = _class_groups[i].ids[j];
-            class_t     *class_ptr;
+            int     class_idx = _class_groups[i].ids[j];
+            class_t *class_ptr;
 
             if (class_idx == -1) break;
-            if (class_idx == CLASS_BERSERKER) continue;
             class_ptr = get_class_t_aux(class_idx, 0);
-
-            fprintf(fp, "%-14s %2d+%-2d  %2d+%-2d  %2d+%-2d  %4d  %4d  %4d  %2d+%-2d  %2d+%-2d\n",
-                class_ptr->name,
-                class_ptr->base_skills.dis, class_ptr->extra_skills.dis,
-                class_ptr->base_skills.dev, class_ptr->extra_skills.dev,
-                class_ptr->base_skills.sav, class_ptr->extra_skills.sav,
-                class_ptr->base_skills.stl,
-                class_ptr->base_skills.srh,
-                class_ptr->base_skills.fos,
-                class_ptr->base_skills.thn, class_ptr->extra_skills.thn,
-                class_ptr->base_skills.thb, class_ptr->extra_skills.thb
-            );
+            fprintf(fp, "%-13.13s", class_ptr->name);
+            fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis, 8));
+            fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev, 6));
+            fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.sav + 5*class_ptr->extra_skills.sav, 7));
+            fprintf(fp, " %s", _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl), 1));
+            fputc('\n', fp);
         }
-        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills2><style:heading>Table 3 - Class Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-13.13s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Bows");
+    for (i = 0; i < _MAX_CLASS_GROUPS; i++)
+    {
+        for (j = 0; ; j++)
+        {
+            int     class_idx = _class_groups[i].ids[j];
+            class_t *class_ptr;
+
+            if (class_idx == -1) break;
+            class_ptr = get_class_t_aux(class_idx, 0);
+            fprintf(fp, "%-13.13s", class_ptr->name);
+            fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.srh + 5*class_ptr->extra_skills.srh, 6));
+            fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.fos + 5*class_ptr->extra_skills.fos, 6));
+            fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.thn + 5*class_ptr->extra_skills.thn, 12));
+            fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.thb + 5*class_ptr->extra_skills.thb, 12));
+            fputc('\n', fp);
+        }
     }
     fputs("\n</style>\n", fp);
 }
