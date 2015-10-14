@@ -1642,7 +1642,7 @@ void display_news(void)
     char name[100];
 
     srand(time(NULL));
-    sprintf(name, "news%d.txt", 10/*(rand() % 10) + 1*/);
+    sprintf(name, "news%d.txt", 11/*(rand() % 11) + 1*/);
 
     /* Clear screen */
     Term_clear();
