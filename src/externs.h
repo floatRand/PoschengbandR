@@ -2374,6 +2374,8 @@ extern skill_table *s_info; /* deprecated ... in process of removing naked table
 extern void skills_add(skills_t *dest, skills_t *src);
 extern void skills_scale(skills_t *dest, int num, int denom); 
 extern void skills_init(skills_t *dest);
+typedef struct { cptr desc; byte color; } skill_desc_t;
+extern skill_desc_t skills_describe(int amt, int div);
 
 extern int skills_bow_current(int sval);
 extern int skills_bow_max(int sval);

@@ -34,6 +34,14 @@ static void _text_file(cptr name, _file_fn fn)
     msg_format("Created %s", buf);
 }
 
+static cptr _skill_desc(int amt, int div)
+{
+    static char buf[255];
+    skill_desc_t desc = skills_describe(amt, div);
+    sprintf(buf, "<color:%c>%-15.15s</color>", attr_to_attr_char(desc.color), desc.desc);
+    return buf;
+}
+
 static void _race_help(FILE *fp, int idx)
 {
     race_t *race_ptr = get_race_t_aux(idx, 0);
@@ -48,24 +56,42 @@ static void _race_help(FILE *fp, int idx)
     case RACE_DRACONIAN:
         fputs("See <link:Draconians.txt> for more details on draconians.\n\n", fp);
         break;
-    case RACE_MON_RING:
-        fputs("See <link:rings.txt> for more details on rings.\n\n", fp);
-        break;
-    case RACE_MON_DRAGON:
-        fputs("See <link:DragonRealms.txt> for more details on dragons.\n\n", fp);
-        break;
     }
 
-    fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
-    fprintf(fp, "Strength     %+3d        Disarming   %+4d\n", race_ptr->stats[A_STR], race_ptr->skills.dis);
-    fprintf(fp, "Intelligence %+3d        Device      %+4d\n", race_ptr->stats[A_INT], race_ptr->skills.dev);
-    fprintf(fp, "Wisdom       %+3d        Save        %+4d\n", race_ptr->stats[A_WIS], race_ptr->skills.sav);
-    fprintf(fp, "Dexterity    %+3d        Stealth     %+4d\n", race_ptr->stats[A_DEX], race_ptr->skills.stl);
-    fprintf(fp, "Constitution %+3d        Searching   %+4d\n", race_ptr->stats[A_CON], race_ptr->skills.srh);
-    fprintf(fp, "Charisma     %+3d        Perception  %+4d\n", race_ptr->stats[A_CHR], race_ptr->skills.fos);
-    fprintf(fp, "Life Rating  %3d%%       Melee       %+4d\n", race_ptr->life, race_ptr->skills.thn);
-    fprintf(fp, "Base HP      %3d        Bows        %+4d\n", race_ptr->base_hp, race_ptr->skills.thb);
-    fprintf(fp, "Experience   %3d%%       Infravision %4d'\n", race_ptr->exp, race_ptr->infra*10);
+    fputs("  <indent><style:table><color:G>Stat Modifiers          Skills</color>\n", fp);
+    fprintf(fp, "Strength     %+3d        Disarming   %s\n",
+        race_ptr->stats[A_STR],
+        _skill_desc(race_ptr->skills.dis + 10, 2));
+
+    fprintf(fp, "Intelligence %+3d        Device      %s\n",
+        race_ptr->stats[A_INT],
+        _skill_desc(race_ptr->skills.dev + 5, 1));
+
+    fprintf(fp, "Wisdom       %+3d        Save        %s\n",
+        race_ptr->stats[A_WIS],
+        _skill_desc(race_ptr->skills.sav + 5, 1));
+
+    fprintf(fp, "Dexterity    %+3d        Stealth     %s\n",
+        race_ptr->stats[A_DEX],
+        _skill_desc(race_ptr->skills.stl * 3, 1));
+
+    fprintf(fp, "Constitution %+3d        Searching   %s\n",
+        race_ptr->stats[A_CON],
+        _skill_desc(race_ptr->skills.srh, 1));
+
+    fprintf(fp, "Charisma     %+3d        Perception  %s\n",
+        race_ptr->stats[A_CHR],
+        _skill_desc(race_ptr->skills.fos, 1));
+
+    fprintf(fp, "Life Rating  %3d%%       Melee       %s\n",
+        race_ptr->life,
+        _skill_desc(race_ptr->skills.thn + 10, 2));
+
+    fprintf(fp, "Base HP      %3d        Bows        %s\n",
+        race_ptr->base_hp,
+        _skill_desc(race_ptr->skills.thb + 10, 2));
+
+    fprintf(fp, "Experience   %3d%%       Infravision %d'\n", race_ptr->exp, race_ptr->infra*10);
     fputs("</style></indent>\n", fp);
 }
 
@@ -82,13 +108,13 @@ static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
         {RACE_AMBERITE, RACE_BARBARIAN, RACE_DEMIGOD, RACE_DUNADAN, RACE_HUMAN, -1} },
     { "Elves",
         {RACE_DARK_ELF, RACE_HIGH_ELF, RACE_WOOD_ELF, -1} },
-    { "Hobbits and Dwarves",
+    { "Hobbits/Dwarves",
         {RACE_DWARF, RACE_GNOME, RACE_HOBBIT, RACE_NIBELUNG, -1} },
     { "Fairies",
         {RACE_SHADOW_FAIRY, RACE_SPRITE, -1} },
-    { "Angels and Demons",
+    { "Angels/Demons",
         {RACE_ARCHON, RACE_BALROG, RACE_IMP, -1} },
-    { "Orcs, Trolls and Giants",
+    { "Orcs/Trolls/Giants",
         {RACE_CYCLOPS, RACE_HALF_GIANT, RACE_HALF_OGRE,
          RACE_HALF_TITAN, RACE_HALF_TROLL, RACE_KOBOLD, RACE_SNOTLING, -1} },
     { "The Undead",
@@ -96,6 +122,35 @@ static _race_group_t _race_groups[_MAX_RACE_GROUPS] = {
     { "Other Races",
         {RACE_ANDROID, RACE_BEASTMAN, RACE_CENTAUR, RACE_DRACONIAN, RACE_DOPPELGANGER, RACE_ENT,
          RACE_GOLEM, RACE_KLACKON, RACE_KUTAR, RACE_MIND_FLAYER, RACE_TONBERRY, RACE_YEEK,-1 } },
+};
+
+#define _MAX_MON_RACE_GROUPS      12
+static _race_group_t _mon_race_groups[_MAX_MON_RACE_GROUPS] = {
+    { "Animal",
+        {/*RACE_MON_ANT, RACE_MON_BEETLE, RACE_MON_BIRD, RACE_MON_CAT,*/ RACE_MON_CENTIPEDE,
+            RACE_MON_HOUND, /*RACE_MON_HORSE, */ RACE_MON_HYDRA, RACE_MON_SPIDER, -1} },
+    { "Angel/Demon",
+        {RACE_MON_ANGEL, RACE_MON_DEMON, -1} },
+    { "Beholder",
+        {RACE_MON_BEHOLDER, -1} },
+    { "Dragon",
+        {RACE_MON_DRAGON, -1} },
+    { "Elemental",
+        {RACE_MON_ELEMENTAL, -1} },
+    { "Golem",
+        {RACE_MON_GOLEM, -1} },
+    { "Jelly",
+        {RACE_MON_JELLY, /*RACE_MON_MOLD,*/ RACE_MON_QUYLTHULG, -1} },
+    { "Leprechaun",
+        {RACE_MON_LEPRECHAUN, -1} },
+    { "Mimic/Possessor",
+        {RACE_MON_SWORD, /*RACE_MON_ARMOR,*/ RACE_MON_MIMIC, RACE_MON_POSSESSOR, RACE_MON_RING, -1} },
+    { "Orc/Troll/Giant",
+        {RACE_MON_GIANT, /*RACE_MON_KOBOLD, RACE_MON_ORC,*/ RACE_MON_TROLL, -1} },
+    { "Undead",
+        {/*RACE_MON_GHOST,*/ RACE_MON_LICH, RACE_MON_VAMPIRE, /*RACE_MON_WRAITH, RACE_MON_ZOMBIE,*/ -1 } },
+    { "Xorn",
+        {RACE_MON_XORN, -1} },
 };
 
 static void _races_help(FILE* fp)
@@ -125,14 +180,204 @@ static void _races_help(FILE* fp)
     }
 
     fputs("<topic:Tables><style:heading>Table 1 - Race Statistic Bonus Table</style>\n<style:table>\n", fp);
-
     for (i = 0; i < _MAX_RACE_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%s</color>\n", _race_groups[i].name);
-        fprintf(fp, "<color:G>%-14.14s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "Race");
+        fprintf(fp, "<color:o>%-18.18s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", _race_groups[i].name);
         for (j = 0; ; j++)
         {
             int     race_idx = _race_groups[i].ids[j];
+            race_t *race_ptr;
+
+            if (race_idx == -1) break;
+            race_ptr = get_race_t_aux(race_idx, 0);
+            fprintf(fp, "%-18.18s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
+                race_ptr->name,
+                race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
+                race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
+                race_ptr->life, race_ptr->base_hp, race_ptr->exp, race_ptr->shop_adjust
+            );
+        }
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills1><style:heading>Table 2 - Race Skill Bonus Table I</style>\n<style:table>\n", fp);
+
+    for (i = 0; i < _MAX_RACE_GROUPS; i++)
+    {
+        fprintf(fp, "<color:o>%-18.18s</color> <color:w>%-15.15s %-15.15s %-15.15s</color>\n", _race_groups[i].name, "Disarming", "Devices", "Saving Throws");
+        for (j = 0; ; j++)
+        {
+            int     race_idx = _race_groups[i].ids[j];
+            race_t *race_ptr;
+
+            if (race_idx == -1) break;
+            race_ptr = get_race_t_aux(race_idx, 0);
+            fprintf(fp, "%-18.18s", race_ptr->name);
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
+            fprintf(fp, " %s\n", _skill_desc(race_ptr->skills.sav + 5, 1));
+        }
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills2><style:heading>Table 3 - Race Skill Bonus Table II</style>\n<style:table>\n", fp);
+
+    for (i = 0; i < _MAX_RACE_GROUPS; i++)
+    {
+        fprintf(fp, "<color:o>%-18.18s</color> <color:w>%-15.15s %-15.15s %-15.15s</color>\n", _race_groups[i].name, "Stealth", "Searching", "Perception");
+        for (j = 0; ; j++)
+        {
+            int     race_idx = _race_groups[i].ids[j];
+            race_t *race_ptr;
+
+            if (race_idx == -1) break;
+            race_ptr = get_race_t_aux(race_idx, 0);
+            fprintf(fp, "%-18.18s", race_ptr->name);
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
+            fprintf(fp, " %s\n", _skill_desc(race_ptr->skills.fos, 1));
+        }
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills3><style:heading>Table 4 - Race Skill Bonus Table III</style>\n<style:table>\n", fp);
+
+    for (i = 0; i < _MAX_RACE_GROUPS; i++)
+    {
+        fprintf(fp, "<color:o>%-18.18s</color> <color:w>%-15.15s %-15.15s %-15.15s</color>\n", _race_groups[i].name, "Melee", "Bows", "Infravision");
+        for (j = 0; ; j++)
+        {
+            int     race_idx = _race_groups[i].ids[j];
+            race_t *race_ptr;
+
+            if (race_idx == -1) break;
+            race_ptr = get_race_t_aux(race_idx, 0);
+            fprintf(fp, "%-18.18s", race_ptr->name);
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 10, 2));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 10, 2));
+            fprintf(fp, "     %2d'\n", race_ptr->infra * 10);
+        }
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+}
+
+static void _mon_race_help(FILE *fp, int idx)
+{
+    race_t *race_ptr = get_race_t_aux(idx, 0);
+    caster_info *caster_ptr = NULL;
+
+    if (race_ptr->caster_info)
+        caster_ptr = race_ptr->caster_info();
+
+    fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->name, race_ptr->name);
+    fprintf(fp, "%s\n\n", race_ptr->desc);
+    switch(idx)
+    {
+    case RACE_MON_RING:
+        fputs("See <link:rings.txt> for more details on rings.\n\n", fp);
+        break;
+    case RACE_MON_DRAGON:
+        fputs("See <link:DragonRealms.txt> for more details on dragons.\n\n", fp);
+        break;
+    }
+
+    fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
+    fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %2d+%-2d\n",
+        (caster_ptr && caster_ptr->which_stat == A_STR) ? 'v' : 'w',
+        race_ptr->stats[A_STR],
+        race_ptr->skills.dis,
+        race_ptr->extra_skills.dis);
+    fprintf(fp, "Intelligence <color:%c>%+3d</color>        Device      %2d+%-2d\n",
+        (caster_ptr && caster_ptr->which_stat == A_INT) ? 'v' : 'w',
+        race_ptr->stats[A_INT],
+        race_ptr->skills.dev,
+        race_ptr->extra_skills.dev);
+    fprintf(fp, "Wisdom       <color:%c>%+3d</color>        Save        %2d+%-2d\n",
+        (caster_ptr && caster_ptr->which_stat == A_WIS) ? 'v' : 'w',
+        race_ptr->stats[A_WIS],
+        race_ptr->skills.sav,
+        race_ptr->extra_skills.sav);
+    fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %2d\n",
+        (caster_ptr && caster_ptr->which_stat == A_DEX) ? 'v' : 'w',
+        race_ptr->stats[A_DEX],
+        race_ptr->skills.stl);
+    fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %2d\n",
+        (caster_ptr && caster_ptr->which_stat == A_CON) ? 'v' : 'w',
+        race_ptr->stats[A_CON],
+        race_ptr->skills.srh);
+    fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %2d\n",
+        (caster_ptr && caster_ptr->which_stat == A_CHR) ? 'v' : 'w',
+        race_ptr->stats[A_CHR],
+        race_ptr->skills.fos);
+    fprintf(fp, "Life Rating  %3d%%       Melee       %2d+%-2d\n",
+        race_ptr->life,
+        race_ptr->skills.thn,
+        race_ptr->extra_skills.thn);
+    fprintf(fp, "Base HP      %3d        Bows        %2d+%-2d\n",
+        race_ptr->base_hp,
+        race_ptr->skills.thb,
+        race_ptr->extra_skills.thb);
+    fprintf(fp, "Experience   %3d%%     Infravision %4d'\n", race_ptr->exp, race_ptr->infra*10);
+    fputs("</style></indent>\n", fp);
+}
+
+static void _monster_races_help(FILE* fp)
+{
+    int i, j;
+
+    fprintf(fp, "<style:title>Monster Races</style>\n\n");
+    fputs("So, you have decided to play as a monster. There are many options "
+            "to choose from and the various types of monsters are loosely grouped "
+            "by type below: Animals, Dragons, Demons, etc.\n\n"
+            "As a monster, you won't be able to choose a class the way normal "
+            "players do. Rather, most monster types gain abilities and powers "
+            "as they gain experience. For example, dragons can breathe fire as "
+            "well as access magical abilities. So you will want to check out both "
+            "the magic command (<color:keypress>m</color>) as well as the racial "
+            "power command (<color:keypress>U</color> or <color:keypress>O</color>) "
+            "to see what powers are available as you play.\n\n"
+            "In addition, most monsters have custom body types, and this will "
+            "severely constrain the amount and kind of equipment you may wear. "
+            "For example, a beholder cannot wear armor or wield a sword ... That "
+            "would be an odd sight indeed! Instead, they may wear rings on their "
+            "numerous eyestalks. Details of this kind should be described below.\n\n"
+            "Finally, all monsters evolve. When they gain enough experience, they "
+            "will assume a more powerful form. To continue with our example of dragons, "
+            "you might evolve from Baby to Young to Mature and finally Ancient forms, "
+            "becoming vastly more powerful in the process. The stats and skills listed "
+            "in this document only apply to the starting form, which is usually "
+            "very weak.\n\n"
+            "For details on the <color:keyword>Primary Statistics</color>, see "
+            "<link:birth.txt#PrimaryStats>. For information about the various "
+            "<color:keyword>Skills</color>, see <link:birth.txt#PrimarySkills>. "
+            "To compare the various races at a glance, you might want to take a "
+            "look at <link:MonsterRaces.txt#Tables> the race tables below.\n\n", fp);
+
+    for (i = 0; i < _MAX_MON_RACE_GROUPS; i++)
+    {
+        fprintf(fp, "<style:heading>%s</style>\n  <indent>", _mon_race_groups[i].name);
+        for (j = 0; ; j++)
+        {
+            int race_idx = _mon_race_groups[i].ids[j];
+            if (race_idx == -1) break;
+            _mon_race_help(fp, race_idx);
+        }
+        fputs("</indent>\n", fp);
+    }
+
+    fputs("<topic:Tables><style:heading>Table 1 - Race Statistic Bonus Table</style>\n<style:table>\n", fp);
+
+    for (i = 0; i < _MAX_MON_RACE_GROUPS; i++)
+    {
+        fprintf(fp, "<color:o>%s</color>\n", _mon_race_groups[i].name);
+        fprintf(fp, "<color:G>%-14.14s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "Race");
+        for (j = 0; ; j++)
+        {
+            int     race_idx = _mon_race_groups[i].ids[j];
             race_t *race_ptr;
 
             if (race_idx == -1) break;
@@ -150,13 +395,13 @@ static void _races_help(FILE* fp)
 
     fputs("<style:heading>Table 2 - Race Skill Bonus Table</style>\n<style:table>\n", fp);
 
-    for (i = 0; i < _MAX_RACE_GROUPS; i++)
+    for (i = 0; i < _MAX_MON_RACE_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%s</color>\n", _race_groups[i].name);
+        fprintf(fp, "<color:o>%s</color>\n", _mon_race_groups[i].name);
         fprintf(fp, "<color:G>%-14.14s</color> <color:G>Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows  Infra</color>\n", "Race");
         for (j = 0; ; j++)
         {
-            int     race_idx = _race_groups[i].ids[j];
+            int     race_idx = _mon_race_groups[i].ids[j];
             race_t *race_ptr;
 
             if (race_idx == -1) break;
@@ -171,130 +416,6 @@ static void _races_help(FILE* fp)
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
-}
-
-static void _monster_races_help(FILE* fp)
-{
-    int i;
-    player_type old = *p_ptr;
-
-    fprintf(fp, "<style:title>Monster Races</style>\n\n");
-    for (i = 0; i < MAX_RACES; i++)
-    {
-        int max = 1, j;
-        race_t *race_ptr = get_race_t_aux(i, 0);
-
-        if (!(race_ptr->flags & RACE_IS_MONSTER)) continue;
-
-        _race_help(fp, i);
-
-        if (i == RACE_MON_SWORD) continue;
-        if (i == RACE_MON_RING) continue;
-
-        switch (i)
-        {
-        case RACE_MON_SPIDER: max = SPIDER_MAX; break;
-        case RACE_MON_DEMON: max = DEMON_MAX; break;
-        case RACE_MON_DRAGON: max = DRAGON_MAX; break;
-        case RACE_MON_GIANT: max = GIANT_MAX; break;
-        case RACE_MON_TROLL: max = TROLL_MAX; break;
-        case RACE_MON_ELEMENTAL: max = ELEMENTAL_MAX; break;
-        case RACE_MON_GOLEM: max = GOLEM_MAX; break;
-        }
-
-        for (j = 0; j < max; j++)
-        {
-            race_t *race_ptr;
-            int     current_r_idx = 0;
-
-            p_ptr->lev = 1;
-            p_ptr->exp = 0;
-            p_ptr->prace = i;
-            p_ptr->psubrace = j;
-
-            race_ptr = get_race_t();
-
-            fprintf(fp, "<style:table><color:U>%21s STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "");
-            if (race_ptr->birth)
-                race_ptr->birth();
-
-            for (;;)
-            {
-                p_ptr->lev++;
-                if (race_ptr->gain_level)
-                    race_ptr->gain_level(p_ptr->lev);
-
-                if (p_ptr->current_r_idx != current_r_idx)
-                {
-                    race_ptr = get_race_t();
-
-                    fprintf(fp, "%-21.21s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
-                        race_ptr->subname,
-                        race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
-                        race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR], 
-                        race_ptr->life, race_ptr->base_hp, race_ptr->exp, race_ptr->shop_adjust
-                    );
-
-                    current_r_idx = p_ptr->current_r_idx;
-                }
-
-                if (p_ptr->lev >= PY_MAX_LEVEL)
-                    break;
-            }
-            fputs("</style>\n", fp);
-
-            current_r_idx = 0;
-            p_ptr->lev = 1;
-            p_ptr->exp = 0;
-            p_ptr->prace = i;
-            p_ptr->psubrace = j;
-
-            race_ptr = get_race_t();
-
-            fprintf(fp, "<style:table><color:U>%-21s Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>\n", "");
-            if (race_ptr->birth)
-                race_ptr->birth();
-
-            for (;;)
-            {
-                p_ptr->lev++;
-                if (race_ptr->gain_level)
-                    race_ptr->gain_level(p_ptr->lev);
-
-                if (p_ptr->current_r_idx != current_r_idx)
-                {
-                    race_ptr = get_race_t();
-
-                    fprintf(fp,
-                        "%-21.21s %2d+%-2d  %2d+%-2d  %2d+%-2d  %2d+%-2d %2d+%-2d %2d+%-2d %2d+%-2d  %2d+%-2d\n",
-                        race_ptr->subname,
-                        race_ptr->skills.dis, race_ptr->extra_skills.dis, 
-                        race_ptr->skills.dev, race_ptr->extra_skills.dev, 
-                        race_ptr->skills.sav, race_ptr->extra_skills.sav,
-                        race_ptr->skills.stl, race_ptr->extra_skills.stl,
-                        race_ptr->skills.srh, race_ptr->extra_skills.srh,
-                        race_ptr->skills.fos, race_ptr->extra_skills.fos,
-                        race_ptr->skills.thn, race_ptr->extra_skills.thn, 
-                        race_ptr->skills.thb, race_ptr->extra_skills.thb
-                    );
-
-                    current_r_idx = p_ptr->current_r_idx;
-                }
-
-                if (p_ptr->lev >= PY_MAX_LEVEL)
-                    break;
-            }
-            fputs("</style>\n", fp);
-        }
-        if (i == RACE_MON_HOUND)
-        {
-            fputs("Evolution in each tier is actually random. All of the possible forms in each tier are not displayed.\n", fp);
-        }
-        fputc('\n', fp);
-    }
-    fputs("\n\n", fp);
-    *p_ptr = old;
-    do_cmd_redraw();
 }
 
 struct _name_desc_s { string_ptr name; string_ptr desc; };
@@ -651,6 +772,17 @@ static void _classes_help(FILE* fp)
     int i, j, k;
 
     fputs("<style:title>The Classes</style>\n\n", fp);
+    fputs("No decision is so important as which class to play. Below, the many "
+            "available classes are loosely grouped by their principle playstyle: "
+            "Melee, Archery, Martial Arts, Magic, Devices, etc. The hybrid classes "
+            "generally combine melee with a bit of magic and are a good option for "
+            "a balanced playstyle. In this document, the primary spell stat for "
+            "each class is <color:v>highlighted</color>.\n\n"
+            "For details on the <color:keyword>Primary Statistics</color>, see "
+            "<link:birth.txt#PrimaryStats>. For information about the various "
+            "<color:keyword>Skills</color>, see <link:birth.txt#PrimarySkills>. "
+            "To compare the various classes at a glance, you might want to take "
+            "a look at <link:Classes.txt#Tables> the class tables below.\n\n", fp);
 
     for (i = 0; i < _MAX_CLASS_GROUPS; i++)
     {
@@ -668,8 +800,7 @@ static void _classes_help(FILE* fp)
 
     for (i = 0; i < _MAX_CLASS_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%s</color>\n", _class_groups[i].name);
-        fprintf(fp, "<color:G>%-14.14s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n", "Class");
+        fprintf(fp, "<color:o>%-14.14s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n", _class_groups[i].name);
         for (j = 0; ; j++)
         {
             int          class_idx = _class_groups[i].ids[j];
@@ -704,8 +835,7 @@ static void _classes_help(FILE* fp)
 
     for (i = 0; i < _MAX_CLASS_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%s</color>\n", _class_groups[i].name);
-        fprintf(fp, "<color:G>%-14.14s</color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>\n", "Class");
+        fprintf(fp, "<color:o>%-14.14s</color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>\n", _class_groups[i].name);
         for (j = 0; ; j++)
         {
             int          class_idx = _class_groups[i].ids[j];

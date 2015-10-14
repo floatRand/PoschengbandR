@@ -1,5 +1,9 @@
 <style:title>The Classes</style>
 
+No decision is so important as which class to play. Below, the many available classes are loosely grouped by their principle playstyle: Melee, Archery, Martial Arts, Magic, Devices, etc. The hybrid classes generally combine melee with a bit of magic and are a good option for a balanced playstyle. In this document, the primary spell stat for each class is <color:v>highlighted</color>.
+
+For details on the <color:keyword>Primary Statistics</color>, see <link:birth.txt#PrimaryStats>. For information about the various <color:keyword>Skills</color>, see <link:birth.txt#PrimarySkills>. To compare the various classes at a glance, you might want to take a look at <link:Classes.txt#Tables> the class tables below.
+
 <style:heading>Melee</style>
   <indent><topic:Berserker><color:o>Berserker</color>
 A Berserker is a fearful fighter indeed, immune to fear and paralysis. At high levels, Berserkers can reflect bolt spells with their tough flesh. Furthermore, they can fight without weapons, can remove cursed equipment by force, and can even use their special combat techniques when surrounded by an anti-magic barrier. Berserkers, however, cannot use any magical devices or read any scrolls, and are hopeless at all non-combat skills. Since Berserker Spectres are quite easy to *win* with, their scores are lowered.
@@ -704,8 +708,7 @@ Experience   110%
 </indent>
 <topic:Tables><style:heading>Table 1 - Class Statistic Bonus Table</style>
 <style:table>
-<color:o>Melee</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Melee         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Berserker     <color:v>  +8 </color> -20  -20   +4   +4   +4  200%  +22  160%
 Blood-Knight    +2   -2   -2   +0 <color:v>  +3 </color>  +2  120%  +20  150%
 Duelist       <color:v>  +2 </color>  +1   -2   +2   -3   +2  100%   +4  150%
@@ -716,19 +719,16 @@ Warrior         +4   -2   -2   +2   +2   +1  115%  +18  100%
 Weaponmaster  <color:v>  +3 </color>  -1   -1   +1   +1   +1  109%  +12  135%
 Weaponsmith     +3   -1   -1   +1   +0   +0  111%  +12  130%
 
-<color:o>Archery</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Archery       </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Archer          +2   -1   -1   +2   +1   +0  111%  +12  110%
 Sniper          +2   -1   -1   +2   +1   +0  100%   +4  110%
 
-<color:o>Martial Arts</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Martial Arts  </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Force-Trainer   +0   -1 <color:v>  +3 </color>  +2   +1   +0  100%   +4  135%
 Monk            +2   -1 <color:v>  +1 </color>  +3   +2   +1  110%  +12  130%
 Mystic          +2   -1   -2   +3   +1 <color:v>  +2 </color> 100%   +4  130%
 
-<color:o>Magic</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Magic         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Blood-Mage      -4 <color:v>  +3 </color>  -2   +1   +2   -2  108%  +10  135%
 Blue-Mage       -4 <color:v>  +4 </color>  -1   +1   -2   -2  100%   +4  130%
 High-Mage       -4 <color:v>  +4 </color>  +0   +0   -2   -2   94%   +0  130%
@@ -736,43 +736,36 @@ Mage            -4 <color:v>  +3 </color>  +0   +1   -2   -2   95%   +0  130%
 Necromancer     -2 <color:v>  +3 </color>  -4   +1   -1   -2   95%   +2  125%
 Sorcerer        -5   +0   -2   +2   +0 <color:v>  +6 </color>  65%   +0  160%
 
-<color:o>Devices</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Devices       </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Devicemaster    -1 <color:v>  +2 </color>  +1   +2   -2   -2  101%   +6  130%
 
-<color:o>Prayer</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Prayer        </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Priest          -1   -3 <color:v>  +3 </color>  -1   +0   +2  100%   +4  120%
 
-<color:o>Stealth</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Stealth       </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Ninja           +0   -1   -1 <color:v>  +3 </color>  +2   +2  100%   +4  120%
 Rogue           +2 <color:v>  +1 </color>  -1   +3   +1   +1  110%  +12  125%
 Scout           +1   -1 <color:v>  +2 </color>  +3   +0   +0  104%   +8  130%
 
-<color:o>Hybrid</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Hybrid        </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Chaos-Warrior   +2 <color:v>  +1 </color>  -1   +0   +2   +1  111%  +12  125%
 Paladin         +3   -3 <color:v>  +1 </color>  +0   +2   +2  111%  +12  135%
 Ranger          +2   +0 <color:v>  +2 </color>  +1   +1   +0  106%   +8  140%
 Red-Mage        +2 <color:v>  +2 </color>  -1   +1   +0   -1  106%   +8  140%
 Warrior-Mage    +2 <color:v>  +2 </color>  +0   +1   +0   +1  106%   +8  140%
 
-<color:o>Riding</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Riding        </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Beastmaster     +1   -1   -1   +1   +0 <color:v>  +2 </color> 103%   +6  120%
 Cavalry         +2   -2   -2   +2   +2   +1  111%  +10  120%
 
-<color:o>Mind</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Mind          </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Mindcrafter     -1   +0 <color:v>  +3 </color>  -1   -1   +2  100%   +4  125%
 Mirror-Master   -2 <color:v>  +3 </color>  +1   -1   -2   -2  100%   +4  130%
 Psion           -1   +2   +2   -1   -1   +2  100%   +4  150%
 Time-Lord       -1   +0 <color:v>  +3 </color>  -1   -1   +0   96%   +0  125%
 Warlock         -2   +1   +2   -1   -2 <color:v>  +4 </color> 100%   +4  125%
 
-<color:o>Other</color>
-<color:G>Class         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+<color:o>Other         </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Archaeologist   -1   +1 <color:v>  +2 </color>  +1   -1   +0  106%   +8  120%
 Bard            -2   +1   +2   -1   -2 <color:v>  +4 </color> 100%   +4  140%
 Imitator        +0   +1   -1   +2   +0   -1  108%  +10  110%
@@ -784,8 +777,7 @@ Wild-Talent     -1 <color:v>  +2 </color>  -1   +2   -2   +1  100%   +4  110%
 </style>
 <style:heading>Table 2 - Class Skill Bonus Table</style>
 <style:table>
-<color:o>Melee</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Melee         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Blood-Knight   25+12  18+7   32+10     2    16     6  70+23  20+15
 Duelist        30+10  33+11  23+10     3    22    16  50+14   0+0 
 Mauler         25+12  25+11  35+12     0    14     2  70+30  20+7 
@@ -795,19 +787,16 @@ Warrior        25+12  18+7   31+10     1    14     2  70+30  55+30
 Weaponmaster   30+10  28+10  28+10     1    20    10  60+21  45+15
 Weaponsmith    30+10  28+10  28+10     1    20    10  60+21  45+15
 
-<color:o>Archery</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Archery       </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Archer         38+12  24+10  35+10     4    24    16  56+18  82+36
 Sniper         25+12  24+10  28+10     5    32    18  35+12  72+28
 
-<color:o>Martial Arts</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Martial Arts  </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Force-Trainer  30+10  34+11  38+11     4    32    24  50+14  40+15
 Monk           45+15  34+11  36+10     5    32    24  64+18  60+18
 Mystic         45+15  34+11  36+10     5    32    24  64+18  60+18
 
-<color:o>Magic</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Magic         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Blood-Mage     30+7   40+15  38+11     3    16    20  34+6   20+7 
 Blue-Mage      30+7   40+16  36+11     3    20    16  40+6   25+7 
 High-Mage      30+7   40+15  38+11     3    16    20  34+6   20+7 
@@ -815,43 +804,36 @@ Mage           30+7   40+15  38+11     3    16    20  34+6   20+7
 Necromancer    30+7   40+15  38+11     4    16    20  34+6   20+7 
 Sorcerer       30+7   48+18  75+13     2    12    22   0+0    0+0 
 
-<color:o>Devices</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Devices       </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Devicemaster   25+7   42+16  36+10     2    20    16  48+13  35+11
 
-<color:o>Prayer</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Prayer        </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Priest         25+7   35+11  40+12     2    16     8  48+13  35+11
 
-<color:o>Stealth</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Stealth       </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Ninja          45+15  24+10  36+10     8    48    32  70+25  66+18
 Rogue          45+15  37+12  36+10     5    32    24  60+21  66+18
 Scout          30+15  33+11  34+10     6    50    24  50+20  50+20
 
-<color:o>Hybrid</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Hybrid        </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Chaos-Warrior  20+7   25+11  34+10     1    14    12  65+20  40+17
 Paladin        20+7   24+10  34+11     1    12     2  68+21  40+18
 Ranger         30+8   37+11  36+10     3    24    16  56+18  72+28
 Red-Mage       20+7   34+11  34+11     1    16    10  56+18  25+11
 Warrior-Mage   30+7   35+10  36+10     2    18    16  50+15  25+11
 
-<color:o>Riding</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Riding        </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Beastmaster    20+7   25+10  32+10     2    18    16  52+14  63+25
 Cavalry        20+10  18+7   32+10     1    16    10  60+22  66+26
 
-<color:o>Mind</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Mind          </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Mindcrafter    30+10  33+11  38+10     3    22    16  50+14  40+18
 Mirror-Master  30+10  33+11  40+12     3    14    16  34+6   30+10
 Psion          25+7   35+11  40+12     2    16     8  48+13  35+11
 Time-Lord      25+7   35+11  35+10     2    16     8  48+13  20+13
 Warlock        20+8   24+10  34+11     1    16    20  34+10  20+8 
 
-<color:o>Other</color>
-<color:G>Class         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
+<color:o>Other         </color> <color:G>Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows</color>
 Archaeologist  45+15  40+12  36+10     4    50    32  56+18  35+11
 Bard           20+8   33+13  34+11    -5    16    20  34+10  20+8 
 Imitator       25+7   30+10  36+10     2    18    16  60+18  50+20

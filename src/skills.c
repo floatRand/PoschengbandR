@@ -52,6 +52,75 @@ void skills_init(skills_t *dest)
     dest->thb = 0;
 }
 
+skill_desc_t skills_describe(int amt, int div)
+{
+    skill_desc_t result = {0};
+
+    if (div <= 0) div = 1;
+    if (amt < 0)
+    {
+        result.desc = "Very Bad";
+        result.color = TERM_L_DARK;
+    }
+    else
+    {
+        int n = amt / div;
+        switch (n)
+        {
+        case 0:
+        case 1:
+            result.desc = "Bad";
+            result.color = TERM_RED;
+            break;
+        case 2:
+            result.desc = "Poor";
+            result.color = TERM_L_RED;
+            break;
+        case 3:
+        case 4:
+            result.desc = "Fair";
+            result.color = TERM_ORANGE;
+            break;
+        case 5:
+            result.desc = "Good";
+            result.color = TERM_YELLOW;
+            break;
+        case 6:
+            result.desc = "Very Good";
+            result.color = TERM_YELLOW;
+            break;
+        case 7:
+        case 8:
+            result.desc = "Excellent";
+            result.color = TERM_L_GREEN;
+            break;
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+            result.desc = "Superb";
+            result.color = TERM_GREEN;
+            break;
+        case 14:
+        case 15:
+        case 16:
+        case 17:
+            result.desc = "Heroic";
+            result.color = TERM_BLUE;
+            break;
+        default:
+        {
+            int k = (n - 17) * 5 / 2;
+            result.desc = format("Legendary[%d]", k);
+            result.color = TERM_VIOLET;
+            break;
+        }
+        }
+    }
+    return result;
+}
+
 int skills_bow_current(int sval)
 {
     int max = skills_bow_max(sval);
