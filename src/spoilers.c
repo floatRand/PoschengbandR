@@ -38,26 +38,12 @@ static cptr _skill_desc(int amt, int div)
 {
     static char buf[255];
     skill_desc_t desc = skills_describe(amt, div);
-    sprintf(buf, "<color:%c>%-15.15s</color>", attr_to_attr_char(desc.color), desc.desc);
+    sprintf(buf, "<color:%c>%-13.13s</color>", attr_to_attr_char(desc.color), desc.desc);
     return buf;
 }
 
-static void _race_help(FILE *fp, int idx)
+static void _race_help_table(FILE *fp, race_t *race_ptr)
 {
-    race_t *race_ptr = get_race_t_aux(idx, 0);
-
-    fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->name, race_ptr->name);
-    fprintf(fp, "%s\n\n", race_ptr->desc);
-    switch(idx)
-    {
-    case RACE_DEMIGOD:
-        fputs("See <link:Demigods.txt> for more details on demigod parentage.\n\n", fp);
-        break;
-    case RACE_DRACONIAN:
-        fputs("See <link:Draconians.txt> for more details on draconians.\n\n", fp);
-        break;
-    }
-
     fputs("  <indent><style:table><color:G>Stat Modifiers          Skills</color>\n", fp);
     fprintf(fp, "Strength     %+3d        Disarming   %s\n",
         race_ptr->stats[A_STR],
@@ -93,6 +79,25 @@ static void _race_help(FILE *fp, int idx)
 
     fprintf(fp, "Experience   %3d%%       Infravision %d'\n", race_ptr->exp, race_ptr->infra*10);
     fputs("</style></indent>\n", fp);
+}
+
+static void _race_help(FILE *fp, int idx)
+{
+    race_t *race_ptr = get_race_t_aux(idx, 0);
+
+    fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->name, race_ptr->name);
+    fprintf(fp, "%s\n\n", race_ptr->desc);
+    switch(idx)
+    {
+    case RACE_DEMIGOD:
+        fputs("See <link:Demigods.txt> for more details on demigod parentage.\n\n", fp);
+        break;
+    case RACE_DRACONIAN:
+        fputs("See <link:Draconians.txt> for more details on draconians.\n\n", fp);
+        break;
+    }
+
+    _race_help_table(fp, race_ptr);
 }
 
 /* TODO: This is copied/duplicated in birth.txt ... Spoiler generation is a convenience
@@ -180,9 +185,9 @@ static void _races_help(FILE* fp)
     }
 
     fputs("<topic:Tables><style:heading>Table 1 - Race Statistic Bonus Table</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "");
     for (i = 0; i < _MAX_RACE_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%-18.18s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", _race_groups[i].name);
         for (j = 0; ; j++)
         {
             int     race_idx = _race_groups[i].ids[j];
@@ -190,22 +195,20 @@ static void _races_help(FILE* fp)
 
             if (race_idx == -1) break;
             race_ptr = get_race_t_aux(race_idx, 0);
-            fprintf(fp, "%-18.18s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
+            fprintf(fp, "%-12.12s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
                 race_ptr->name,
                 race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
                 race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
                 race_ptr->life, race_ptr->base_hp, race_ptr->exp, race_ptr->shop_adjust
             );
         }
-        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills1><style:heading>Table 2 - Race Skill Bonus Table I</style>\n<style:table>\n", fp);
-
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < _MAX_RACE_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%-18.18s</color> <color:w>%-15.15s %-15.15s %-15.15s</color>\n", _race_groups[i].name, "Disarming", "Devices", "Saving Throws");
         for (j = 0; ; j++)
         {
             int     race_idx = _race_groups[i].ids[j];
@@ -213,20 +216,20 @@ static void _races_help(FILE* fp)
 
             if (race_idx == -1) break;
             race_ptr = get_race_t_aux(race_idx, 0);
-            fprintf(fp, "%-18.18s", race_ptr->name);
+            fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
-            fprintf(fp, " %s\n", _skill_desc(race_ptr->skills.sav + 5, 1));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5, 1));
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
+            fputc('\n', fp);
         }
-        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 
     fputs("<topic:Skills2><style:heading>Table 3 - Race Skill Bonus Table II</style>\n<style:table>\n", fp);
-
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
     for (i = 0; i < _MAX_RACE_GROUPS; i++)
     {
-        fprintf(fp, "<color:o>%-18.18s</color> <color:w>%-15.15s %-15.15s %-15.15s</color>\n", _race_groups[i].name, "Stealth", "Searching", "Perception");
         for (j = 0; ; j++)
         {
             int     race_idx = _race_groups[i].ids[j];
@@ -234,33 +237,14 @@ static void _races_help(FILE* fp)
 
             if (race_idx == -1) break;
             race_ptr = get_race_t_aux(race_idx, 0);
-            fprintf(fp, "%-18.18s", race_ptr->name);
-            fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
+            fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
-            fprintf(fp, " %s\n", _skill_desc(race_ptr->skills.fos, 1));
-        }
-        fputc('\n', fp);
-    }
-    fputs("\n</style>\n", fp);
-
-    fputs("<topic:Skills3><style:heading>Table 4 - Race Skill Bonus Table III</style>\n<style:table>\n", fp);
-
-    for (i = 0; i < _MAX_RACE_GROUPS; i++)
-    {
-        fprintf(fp, "<color:o>%-18.18s</color> <color:w>%-15.15s %-15.15s %-15.15s</color>\n", _race_groups[i].name, "Melee", "Bows", "Infravision");
-        for (j = 0; ; j++)
-        {
-            int     race_idx = _race_groups[i].ids[j];
-            race_t *race_ptr;
-
-            if (race_idx == -1) break;
-            race_ptr = get_race_t_aux(race_idx, 0);
-            fprintf(fp, "%-18.18s", race_ptr->name);
+            fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 10, 2));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 10, 2));
-            fprintf(fp, "     %2d'\n", race_ptr->infra * 10);
+            fprintf(fp, " %4d'", race_ptr->infra * 10);
+            fputc('\n', fp);
         }
-        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 }
@@ -440,6 +424,9 @@ static void _demigods_help(FILE* fp)
     int i;
 
     fputs("<style:title>Demigod Parentage</style>\n\n", fp);
+    fputs(get_race_t_aux(RACE_DEMIGOD, 0)->desc, fp);
+    fputs("\n\n", fp);
+
     for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
     {
         race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
@@ -447,17 +434,7 @@ static void _demigods_help(FILE* fp)
         fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->subname, race_ptr->subname);
         fprintf(fp, "%s\n\n", race_ptr->subdesc);
 
-        fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
-        fprintf(fp, "Strength     %+3d        Disarming   %+4d\n", race_ptr->stats[A_STR], race_ptr->skills.dis);
-        fprintf(fp, "Intelligence %+3d        Device      %+4d\n", race_ptr->stats[A_INT], race_ptr->skills.dev);
-        fprintf(fp, "Wisdom       %+3d        Save        %+4d\n", race_ptr->stats[A_WIS], race_ptr->skills.sav);
-        fprintf(fp, "Dexterity    %+3d        Stealth     %+4d\n", race_ptr->stats[A_DEX], race_ptr->skills.stl);
-        fprintf(fp, "Constitution %+3d        Searching   %+4d\n", race_ptr->stats[A_CON], race_ptr->skills.srh);
-        fprintf(fp, "Charisma     %+3d        Perception  %+4d\n", race_ptr->stats[A_CHR], race_ptr->skills.fos);
-        fprintf(fp, "Life Rating  %3d%%       Melee       %+4d\n", race_ptr->life, race_ptr->skills.thn);
-        fprintf(fp, "Base HP      %3d        Bows        %+4d\n", race_ptr->base_hp, race_ptr->skills.thb);
-        fprintf(fp, "Experience   %3d%%       Infravision %4d'\n", race_ptr->exp, race_ptr->infra*10);
-        fputs("</style></indent>\n", fp);
+        _race_help_table(fp, race_ptr);
     }
 
     fputs("<topic:Tables><style:heading>Table 1 - Demigod Statistic Bonus Table</style>\n\n", fp);
@@ -476,25 +453,39 @@ static void _demigods_help(FILE* fp)
     }
     fputs("\n</style>\n", fp);
 
-    fputs("<style:heading>Table 2 - Demigod Skill Bonus Table</style>\n\n", fp);
-    fputs("<style:table><color:G>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows  Infra</color>\n", fp);
+    fputs("<topic:Skills1><style:heading>Table 2 - Demigod Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
     {
         race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
+        fprintf(fp, "%-12.12s", race_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5, 1));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
 
-        fprintf(fp, "%-14s %+4d  %+4d  %+4d  %+4d  %+4d  %+4d  %+5d  %+4d  %4d'\n",
-            race_ptr->subname,
-            race_ptr->skills.dis, race_ptr->skills.dev, race_ptr->skills.sav,
-            race_ptr->skills.stl, race_ptr->skills.srh, race_ptr->skills.fos,
-            race_ptr->skills.thn, race_ptr->skills.thb, race_ptr->infra*10
-        );
+    fputs("<topic:Skills2><style:heading>Table 3 - Demigod Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
+    for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
+        fprintf(fp, "%-12.12s", race_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 10, 2));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 10, 2));
+        fprintf(fp, " %4d'", race_ptr->infra * 10);
+        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 
     {
         vec_ptr vec = vec_alloc((vec_free_f)_name_desc_free);
 
-        fputs("<style:heading>Table 3 - Demigod Special Powers</style>\n\n", fp);
+        fputs("<topic:Powers><style:heading>Table 4 - Demigod Special Powers</style>\n\n", fp);
         fputs("All demigods have access to special powers. When they reach level 20, they may choose "
                     "a single power from the following list. When they reach level, 40, they may choose another. "
                     "These powers can never be removed or changed, so you might want to study this list to "
@@ -536,6 +527,9 @@ static void _draconians_help(FILE* fp)
     int i;
 
     fputs("<style:title>Draconians</style>\n\n", fp);
+    fputs(get_race_t_aux(RACE_DRACONIAN, 0)->desc, fp);
+    fputs("\n\n", fp);
+
     for (i = 0; i < DRACONIAN_MAX; i++)
     {
         race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
@@ -543,17 +537,7 @@ static void _draconians_help(FILE* fp)
         fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->subname, race_ptr->subname);
         fprintf(fp, "%s\n\n", race_ptr->subdesc);
 
-        fputs("  <indent><style:table><color:G>Stat Modifiers          Skill Modifiers</color>\n", fp);
-        fprintf(fp, "Strength     %+3d        Disarming   %+4d\n", race_ptr->stats[A_STR], race_ptr->skills.dis);
-        fprintf(fp, "Intelligence %+3d        Device      %+4d\n", race_ptr->stats[A_INT], race_ptr->skills.dev);
-        fprintf(fp, "Wisdom       %+3d        Save        %+4d\n", race_ptr->stats[A_WIS], race_ptr->skills.sav);
-        fprintf(fp, "Dexterity    %+3d        Stealth     %+4d\n", race_ptr->stats[A_DEX], race_ptr->skills.stl);
-        fprintf(fp, "Constitution %+3d        Searching   %+4d\n", race_ptr->stats[A_CON], race_ptr->skills.srh);
-        fprintf(fp, "Charisma     %+3d        Perception  %+4d\n", race_ptr->stats[A_CHR], race_ptr->skills.fos);
-        fprintf(fp, "Life Rating  %3d%%       Melee       %+4d\n", race_ptr->life, race_ptr->skills.thn);
-        fprintf(fp, "Base HP      %3d        Bows        %+4d\n", race_ptr->base_hp, race_ptr->skills.thb);
-        fprintf(fp, "Experience   %3d%%       Infravision %4d'\n", race_ptr->exp, race_ptr->infra*10);
-        fputs("</style></indent>\n", fp);
+        _race_help_table(fp, race_ptr);
     }
 
     fputs("<topic:Tables><style:heading>Table 1 - Draconian Statistic Bonus Table</style>\n\n", fp);
@@ -572,26 +556,39 @@ static void _draconians_help(FILE* fp)
     }
     fputs("\n</style>\n", fp);
 
-    fputs("<style:heading>Table 2 - Draconian Skill Bonus Table</style>\n\n", fp);
-    fputs("<style:table><color:G>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Bows  Infra</color>\n", fp);
-
+    fputs("<topic:Skills1><style:heading>Table 2 - Draconian Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < DRACONIAN_MAX; i++)
     {
         race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
+        fprintf(fp, "%-12.12s", race_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5, 1));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
 
-        fprintf(fp, "%-14s %+4d  %+4d  %+4d  %+4d  %+4d  %+4d  %+5d  %+4d  %4d'\n",
-            race_ptr->subname,
-            race_ptr->skills.dis, race_ptr->skills.dev, race_ptr->skills.sav,
-            race_ptr->skills.stl, race_ptr->skills.srh, race_ptr->skills.fos,
-            race_ptr->skills.thn, race_ptr->skills.thb, race_ptr->infra*10
-        );
+    fputs("<topic:Skills2><style:heading>Table 3 - Draconian Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
+    for (i = 0; i < DRACONIAN_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
+        fprintf(fp, "%-12.12s", race_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 10, 2));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 10, 2));
+        fprintf(fp, " %4d'", race_ptr->infra * 10);
+        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 
     {
         vec_ptr vec = vec_alloc((vec_free_f)_name_desc_free);
 
-        fputs("<style:heading>Table 3 - Draconian Special Powers</style>\n\n", fp);
+        fputs("<topic:Powers><style:heading>Table 4 - Draconian Special Powers</style>\n\n", fp);
         fputs("All draconians have access to special powers. When they reach level 35, they may choose "
                 "a single power from the following list. "
                 "These powers can never be removed or changed, so you might want to study this list to "
