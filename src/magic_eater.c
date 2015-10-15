@@ -443,9 +443,34 @@ bool magic_eater_can_regen(void)
 }
 
 /* Character Dump */
-static void _character_dump(FILE* fff)
+static void _dump_list(FILE* fp, object_type *which_list)
 {
-    /* TODO */
+    int i;
+    char o_name[MAX_NLEN];
+    for (i = 0; i < _MAX_SLOTS; i++)
+    {
+        object_type *o_ptr = which_list + i;
+        if (o_ptr->k_idx)
+        {
+            object_desc(o_name, o_ptr, 0);
+            fprintf(fp, "%c) %s\n", I2A(i), o_name);
+        }
+        else
+            fprintf(fp, "%c) (Empty)\n", I2A(i));
+    }
+    fprintf(fp, "\n");
+}
+
+static void _character_dump(FILE* fp)
+{
+
+    fprintf(fp, "================================ Absorbed Magic ===============================\n\n");
+
+    _dump_list(fp, _which_list(TV_WAND));
+    _dump_list(fp, _which_list(TV_STAFF));
+    _dump_list(fp, _which_list(TV_ROD));
+
+    fprintf(fp, "\n");
 }
 
 static void _load_list(savefile_ptr file, object_type *which_list)
