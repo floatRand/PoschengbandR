@@ -2622,9 +2622,11 @@ void do_cmd_rest(void)
         !p_ptr->stun && !p_ptr->cut &&
         !p_ptr->slow && !p_ptr->paralyzed &&
         !p_ptr->image && !p_ptr->word_recall &&
-        !p_ptr->alter_reality)
-            virtue_add(VIRTUE_DILIGENCE, -1);
-
+        !p_ptr->alter_reality &&
+        !magic_eater_can_regen())
+    {
+        virtue_add(VIRTUE_DILIGENCE, -1);
+    }
     /* Save the rest code */
     resting = command_arg;
     p_ptr->action = ACTION_REST;

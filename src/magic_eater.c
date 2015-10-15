@@ -8,7 +8,16 @@ static object_type _wands[_MAX_SLOTS];
 static object_type _staves[_MAX_SLOTS];
 static object_type _rods[_MAX_SLOTS];
 
-typedef bool (*_object_f)(object_type *o_ptr);
+static void _birth(void)
+{
+    int i;
+    for (i = 0; i < _MAX_SLOTS; i++)
+    {
+        memset(&_wands[i], 0, sizeof(object_type));
+        memset(&_staves[i], 0, sizeof(object_type));
+        memset(&_rods[i], 0, sizeof(object_type));
+    }
+}
 
 static object_type *_which_list(int tval)
 {
@@ -199,6 +208,7 @@ void _use_object(object_type *o_ptr)
     int  boost = spell_power(100) - 100;
     u32b flgs[TR_FLAG_SIZE];
     bool used = FALSE;
+    int  charges = 1;
 
     energy_use = 100;
 
@@ -227,12 +237,19 @@ void _use_object(object_type *o_ptr)
         return;
     }
 
+    if (o_ptr->activation.type == EFFECT_IDENTIFY)
+        device_available_charges = device_sp(o_ptr) / o_ptr->activation.cost;
+
     sound(SOUND_ZAP);
     used = device_use(o_ptr, boost);
+
+    if (o_ptr->activation.type == EFFECT_IDENTIFY)
+        charges = device_used_charges;
+
     if (used)
     {
-        stats_on_use(o_ptr, 1);
-        device_decrease_sp(o_ptr, o_ptr->activation.cost);
+        stats_on_use(o_ptr, charges);
+        device_decrease_sp(o_ptr, o_ptr->activation.cost * charges);
     }
     else
         energy_use = 0;
@@ -577,6 +594,7 @@ class_t *magic_eater_get_class_t(void)
         me.exp = 130;
         me.pets = 30;
 
+        me.birth = _birth;
         me.get_powers = _get_powers;
         me.character_dump = _character_dump;
         me.load_player = _load_player;

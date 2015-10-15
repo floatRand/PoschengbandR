@@ -695,15 +695,17 @@ void check_quest_completion(monster_type *m_ptr)
     {
         for (j = 0; j < (dun_level / 15)+1; j++)
         {
-            /* Get local object */
-            q_ptr = &forge;
-
-            /* Wipe the object */
-            object_wipe(q_ptr);
-
-            /* Make a great object */
-            if (make_object(q_ptr, AM_GOOD | AM_GREAT | AM_TAILORED))
-                (void)drop_near(q_ptr, -1, y, x);
+            /* Make a great object ... make_object can fail, you know! */
+            while (1)
+            {
+                q_ptr = &forge;
+                object_wipe(q_ptr);
+                if (make_object(q_ptr, AM_GOOD | AM_GREAT | AM_TAILORED))
+                {
+                    (void)drop_near(q_ptr, -1, y, x);
+                    break;
+                }
+            }
         }
     }
 }
