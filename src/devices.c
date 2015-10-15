@@ -2612,28 +2612,10 @@ void device_increase_sp(object_type *o_ptr, int amt)
 }
 
 /* Note: Rods fire every 10 game turns; wands and staves fire every 100 game turns.*/
-void device_regen_sp(object_type *o_ptr)
+void device_regen_sp_aux(object_type *o_ptr, int pct)
 {
-    int  mult;
     int  div = 100;
-    int  amt;
-    u32b flgs[TR_FLAG_SIZE];
-
-    if (!_is_valid_device(o_ptr))
-        return;
-
-    if (o_ptr->xtra5 == o_ptr->xtra4)
-        return;
-
-    mult = 1;
-    if (devicemaster_is_speciality(o_ptr))
-        mult++;
-
-    object_flags(o_ptr, flgs);
-    if (have_flag(flgs, TR_REGEN))
-        mult += o_ptr->pval;
-
-    amt = o_ptr->xtra4 * mult;
+    int  amt = o_ptr->xtra4 * pct;
 
     o_ptr->xtra5 += amt / div;
     if (randint0(div) < (amt % div))
@@ -2644,6 +2626,28 @@ void device_regen_sp(object_type *o_ptr)
 
     if (o_ptr->xtra5 == o_ptr->xtra4)
         recharged_notice(o_ptr);
+}
+
+void device_regen_sp(object_type *o_ptr)
+{
+    int  pct;
+    u32b flgs[TR_FLAG_SIZE];
+
+    if (!_is_valid_device(o_ptr))
+        return;
+
+    if (o_ptr->xtra5 == o_ptr->xtra4)
+        return;
+
+    pct = 1;
+    if (devicemaster_is_speciality(o_ptr))
+        pct++;
+
+    object_flags(o_ptr, flgs);
+    if (have_flag(flgs, TR_REGEN))
+        pct += o_ptr->pval;
+
+    device_regen_sp_aux(o_ptr, pct);
 }
 
 int device_max_sp(object_type *o_ptr)

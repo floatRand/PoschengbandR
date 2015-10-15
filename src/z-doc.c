@@ -827,6 +827,8 @@ static void _doc_process_tag(doc_ptr doc, doc_tag_ptr tag)
             int pos = atoi(string_buffer(arg)) + doc_current_style(doc)->left;
             if (pos > doc->cursor.x)
                 doc_insert_space(doc, pos - doc->cursor.x);
+            else
+                doc_rollback(doc, doc_pos_create(pos, doc->cursor.y));
             break;
         }
         case DOC_TAG_TOPIC:

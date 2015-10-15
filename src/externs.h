@@ -841,6 +841,7 @@ extern void device_decrease_sp(object_type *o_ptr, int amt);
 extern void device_increase_sp(object_type *o_ptr, int amt);
 extern int  device_max_sp(object_type *o_ptr);
 extern void device_regen_sp(object_type *o_ptr);
+extern void device_regen_sp_aux(object_type *o_ptr, int pct);
 extern int  device_value(object_type *o_ptr, int options);
 extern void device_stats_reset(void);
 extern void device_stats_on_find(object_type *o_ptr);
@@ -997,6 +998,8 @@ extern cptr get_check_sum(void);
 /* load.c */
 extern errr rd_savefile_new(void);
 extern bool load_floor(saved_floor_type *sf_ptr, u32b mode);
+extern void rd_item(savefile_ptr file, object_type *o_ptr);
+extern void wr_item(savefile_ptr file, object_type *o_ptr); /* save.c */
 
 /* melee1.c */
 int check_hit(int power, int level, int stun, int m_idx);

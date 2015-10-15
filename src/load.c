@@ -31,7 +31,7 @@ static void note(cptr msg)
     Term_fresh();
 }
 
-static void rd_item(savefile_ptr file, object_type *o_ptr)
+void rd_item(savefile_ptr file, object_type *o_ptr)
 {
     object_kind *k_ptr;
     char         buf[128];

@@ -1955,7 +1955,15 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
                 t = object_desc_chr(t, ' ');
                 t = object_desc_chr(t, p1);
-                t = object_desc_str(t, format("%d/%d charges", charges, max_charges));
+                if ((mode & OD_COLOR_CODED) && charges < max_charges)
+                {
+                    if (!charges)
+                        t = object_desc_str(t, format("<color:r>%d/%d charges</color>", charges, max_charges));
+                    else
+                        t = object_desc_str(t, format("<color:y>%d/%d charges</color>", charges, max_charges));
+                }
+                else
+                    t = object_desc_str(t, format("%d/%d charges", charges, max_charges));
                 t = object_desc_chr(t, p2);
             }
         }

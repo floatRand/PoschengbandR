@@ -12,7 +12,7 @@
 
 #include "angband.h"
 
-static void wr_item(savefile_ptr file, object_type *o_ptr)
+void wr_item(savefile_ptr file, object_type *o_ptr)
 {
     savefile_write_s16b(file, o_ptr->k_idx);
     savefile_write_byte(file, o_ptr->iy);
