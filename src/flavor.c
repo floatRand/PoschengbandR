@@ -1595,7 +1595,17 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         if (o_ptr->activation.type)
         {
             char buf[255];
-            sprintf(buf, ": %s", do_effect(&o_ptr->activation, SPELL_NAME, 0));
+            if (mode & OD_COLOR_CODED)
+            {
+                byte color = effect_color(&o_ptr->activation);
+                sprintf(buf, ": <color:%c>%s</color>",
+                        attr_to_attr_char(color),
+                        do_effect(&o_ptr->activation, SPELL_NAME, 0));
+            }
+            else
+            {
+                sprintf(buf, ": %s", do_effect(&o_ptr->activation, SPELL_NAME, 0));
+            }
             t = object_desc_str(t, buf);
         }
     }
@@ -1822,7 +1832,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     /* If have a firing weapon + ammo matches bow */
     if (bow_ptr && o_ptr->tval == p_ptr->shooter_info.tval_ammo)
     {
-        int avgdam;        
+#if 0
+        int avgdam;
         int tmul = bow_mult(bow_ptr);
         /*s16b energy_fire = bow_energy(bow_ptr->sval);*/
 
@@ -1850,7 +1861,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         avgdam += p_ptr->shooter_info.to_d;
 
         if (avgdam < 0) avgdam = 0;
-#if 0
+
         /* Display (shot damage/ avg damage) */
         t = object_desc_chr(t, ' ');       
         t = object_desc_chr(t, p1);

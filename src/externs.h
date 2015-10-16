@@ -870,6 +870,7 @@ extern bool     effect_try(effect_t *effect_ptr);
 extern bool     effect_use(effect_t *effect_ptr, int boost);
 extern errr     effect_parse(char *line, effect_t *effect);
 extern int      effect_value(effect_t *effect);
+extern byte     effect_color(effect_t *effect);
 extern cptr     do_effect(effect_t *effect_ptr, int mode, int boost);
 
 
