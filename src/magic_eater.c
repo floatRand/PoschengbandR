@@ -438,12 +438,12 @@ void magic_eater_gain(void)
 bool magic_eater_regen(int pct)
 {
     int i;
-    int base = 5;
+    int base = 3;
     if (p_ptr->pclass != CLASS_MAGIC_EATER) return FALSE;
     if (p_ptr->regenerate)
-        base += 5;
+        base += 3;
     if (p_ptr->super_regenerate)
-        base += 10;
+        base += 6;
     for (i = 0; i < _MAX_SLOTS; i++)
     {
         object_type *o_ptr = _which_obj(TV_WAND, i);
