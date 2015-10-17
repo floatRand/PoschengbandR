@@ -12,6 +12,8 @@
 
 #include "angband.h"
 
+#include <assert.h>
+
 /*
  * Hack -- Show information on the screen, one line at a time.
  *
@@ -141,8 +143,16 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
         case SAVE_ITEM_XTRA4:
             o_ptr->xtra4 = savefile_read_s16b(file);
             break;
-        case SAVE_ITEM_XTRA5:
+        case SAVE_ITEM_XTRA5_OLD:
             o_ptr->xtra5 = savefile_read_s16b(file);
+            if (savefile_is_older_than(file, 4, 0, 0, 6) && object_is_device(o_ptr))
+            {
+                o_ptr->xtra5 *= 100;
+                assert(o_ptr->xtra5 > 0);
+            }
+            break;
+        case SAVE_ITEM_XTRA5:
+            o_ptr->xtra5 = savefile_read_s32b(file);
             break;
         case SAVE_ITEM_FEELING:
             o_ptr->feeling = savefile_read_byte(file);

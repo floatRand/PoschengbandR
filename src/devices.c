@@ -2512,6 +2512,7 @@ bool device_init(object_type *o_ptr, int level, int mode)
     }
     /* device_sp */
     o_ptr->xtra5 = _bounds_check(_rand_normal(o_ptr->xtra4/2, 25), o_ptr->activation.cost, o_ptr->xtra4);
+    o_ptr->xtra5 *= 100; /* scale current sp by 100 for smoother regeneration */
 
     /* cf _create_device in object2.c for egos */
     return TRUE;
@@ -2568,6 +2569,7 @@ bool device_init_fixed(object_type *o_ptr, int effect)
     else
         o_ptr->xtra4 = 3 * o_ptr->xtra3;
     o_ptr->xtra5 = o_ptr->xtra4; /* Fully Charged */
+    o_ptr->xtra5 *= 100; /* scale current sp by 100 for smoother regeneration */
 
     o_ptr->activation.type = e_ptr->type;
     o_ptr->activation.power = o_ptr->xtra3;
@@ -2596,7 +2598,7 @@ int device_level(object_type *o_ptr)
 int device_sp(object_type *o_ptr)
 {
     if (_is_valid_device(o_ptr))
-        return o_ptr->xtra5;
+        return o_ptr->xtra5 / 100;
     return 0;
 }
 
@@ -2604,7 +2606,7 @@ void device_decrease_sp(object_type *o_ptr, int amt)
 {
     if (_is_valid_device(o_ptr))
     {
-        o_ptr->xtra5 -= amt;
+        o_ptr->xtra5 -= amt * 100;
         if (o_ptr->xtra5 < 0)
             o_ptr->xtra5 = 0;
     }
@@ -2614,48 +2616,60 @@ void device_increase_sp(object_type *o_ptr, int amt)
 {
     if (_is_valid_device(o_ptr))
     {
-        o_ptr->xtra5 += amt;
-        if (o_ptr->xtra5 > o_ptr->xtra4)
-            o_ptr->xtra5 = o_ptr->xtra4;
+        o_ptr->xtra5 += amt * 100;
+        if (o_ptr->xtra5 > o_ptr->xtra4 * 100)
+            o_ptr->xtra5 = o_ptr->xtra4 * 100;
     }
 }
 
+bool device_is_fully_charged(object_type *o_ptr)
+{
+    if (_is_valid_device(o_ptr))
+    {
+        if (o_ptr->xtra5 == o_ptr->xtra4 * 100)
+            return TRUE;
+        else
+            return FALSE;
+    }
+    return FALSE; /* ?? */
+}
+
 /* Note: Rods fire every 10 game turns; wands and staves fire every 100 game turns.*/
-void device_regen_sp_aux(object_type *o_ptr, int pct)
+void device_regen_sp_aux(object_type *o_ptr, int per_mill)
 {
     int  div = 1000;
-    int  amt = o_ptr->xtra4 * pct;
+    int  amt = o_ptr->xtra4 * 100 * per_mill;
 
     o_ptr->xtra5 += amt / div;
     if (randint0(div) < (amt % div))
         o_ptr->xtra5++;
 
-    if (o_ptr->xtra5 > o_ptr->xtra4)
-        o_ptr->xtra5 = o_ptr->xtra4;
+    if (o_ptr->xtra5 > o_ptr->xtra4 * 100)
+        o_ptr->xtra5 = o_ptr->xtra4 * 100;
 
-    if (o_ptr->xtra5 == o_ptr->xtra4)
+    if (device_is_fully_charged(o_ptr))
         recharged_notice(o_ptr);
 }
 
-void device_regen_sp(object_type *o_ptr, int base_pct)
+void device_regen_sp(object_type *o_ptr, int base_per_mill)
 {
-    int  pct = base_pct;
+    int  per_mill = base_per_mill;
     u32b flgs[TR_FLAG_SIZE];
 
     if (!_is_valid_device(o_ptr))
         return;
 
-    if (o_ptr->xtra5 == o_ptr->xtra4)
+    if (device_is_fully_charged(o_ptr))
         return;
 
     if (devicemaster_is_speciality(o_ptr))
-        pct += base_pct;
+        per_mill += base_per_mill;
 
     object_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_REGEN))
-        pct += o_ptr->pval * base_pct;
+        per_mill += o_ptr->pval * base_per_mill;
 
-    device_regen_sp_aux(o_ptr, pct);
+    device_regen_sp_aux(o_ptr, per_mill);
 }
 
 int device_max_sp(object_type *o_ptr)

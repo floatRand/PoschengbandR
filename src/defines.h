@@ -19,7 +19,7 @@
 #define VER_MAJOR 4
 #define VER_MINOR 0
 #define VER_PATCH 0
-#define VER_EXTRA 5
+#define VER_EXTRA 6
 
 #define GAME_MODE_BEGINNER  0
 #define GAME_MODE_NORMAL    1
@@ -5347,10 +5347,11 @@ enum object_save_fields_e {
     SAVE_ITEM_XTRA2,
     SAVE_ITEM_XTRA3,
     SAVE_ITEM_XTRA4,
-    SAVE_ITEM_XTRA5,
+    SAVE_ITEM_XTRA5_OLD,
     SAVE_ITEM_ACTIVATION,
     SAVE_ITEM_MULT,
     SAVE_ITEM_MARKED,
+    SAVE_ITEM_XTRA5
 };
 
 /*

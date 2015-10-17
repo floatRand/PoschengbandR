@@ -154,7 +154,7 @@ void wr_item(savefile_ptr file, object_type *o_ptr)
     if (o_ptr->xtra5)
     {
         savefile_write_byte(file, SAVE_ITEM_XTRA5);
-        savefile_write_s16b(file, o_ptr->xtra5);
+        savefile_write_s32b(file, o_ptr->xtra5);
     }
     if (o_ptr->feeling)
     {
