@@ -841,7 +841,7 @@ extern int  device_sp(object_type *o_ptr);
 extern void device_decrease_sp(object_type *o_ptr, int amt);
 extern void device_increase_sp(object_type *o_ptr, int amt);
 extern int  device_max_sp(object_type *o_ptr);
-extern void device_regen_sp(object_type *o_ptr);
+extern void device_regen_sp(object_type *o_ptr, int base_pct);
 extern void device_regen_sp_aux(object_type *o_ptr, int pct);
 extern int  device_value(object_type *o_ptr, int options);
 extern void device_stats_reset(void);

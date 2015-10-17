@@ -438,19 +438,20 @@ void magic_eater_gain(void)
 bool magic_eater_regen(int pct)
 {
     int i;
+    int base = 5;
     if (p_ptr->pclass != CLASS_MAGIC_EATER) return FALSE;
+    if (p_ptr->regenerate)
+        base += 5;
+    if (p_ptr->super_regenerate)
+        base += 10;
     for (i = 0; i < _MAX_SLOTS; i++)
     {
         object_type *o_ptr = _which_obj(TV_WAND, i);
-        if (o_ptr->k_idx && one_in_(2)) device_regen_sp(o_ptr);
+        if (o_ptr->k_idx) device_regen_sp(o_ptr, base);
         o_ptr = _which_obj(TV_STAFF, i);
-        if (o_ptr->k_idx && one_in_(2)) device_regen_sp(o_ptr);
+        if (o_ptr->k_idx) device_regen_sp(o_ptr, base);
         o_ptr = _which_obj(TV_ROD, i);
-        if (o_ptr->k_idx)
-        {
-            device_regen_sp(o_ptr);
-            device_regen_sp(o_ptr);
-        }
+        if (o_ptr->k_idx) device_regen_sp(o_ptr, 10*base);
     }
     return TRUE;
 }
@@ -462,11 +463,11 @@ void magic_eater_restore(void)
     for (i = 0; i < _MAX_SLOTS; i++)
     {
         object_type *o_ptr = _which_obj(TV_WAND, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 35);
+        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 350);
         o_ptr = _which_obj(TV_STAFF, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 35);
+        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 350);
         o_ptr = _which_obj(TV_ROD, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 70);
+        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 700);
     }
 
     p_ptr->window |= PW_PLAYER;
@@ -479,11 +480,11 @@ void magic_eater_restore_all(void)
     for (i = 0; i < _MAX_SLOTS; i++)
     {
         object_type *o_ptr = _which_obj(TV_WAND, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 100);
+        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 1000);
         o_ptr = _which_obj(TV_STAFF, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 100);
+        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 1000);
         o_ptr = _which_obj(TV_ROD, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 100);
+        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 1000);
     }
 }
 

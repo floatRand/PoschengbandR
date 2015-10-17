@@ -2520,12 +2520,12 @@ static void process_world_aux_recharge(void)
         switch (o_ptr->tval)
         {
         case TV_ROD:
-            device_regen_sp(o_ptr);
+            device_regen_sp(o_ptr, 10);
             break;
         case TV_WAND:
         case TV_STAFF:
             if ((game_turn % (TURNS_PER_TICK*10)) == 0)
-                device_regen_sp(o_ptr);
+                device_regen_sp(o_ptr, 10);
             break;
         }
 
