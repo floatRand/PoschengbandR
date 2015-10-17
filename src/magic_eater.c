@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #define _MAX_SLOTS 10
+#define _INVALID_SLOT -1
 
 static object_type _wands[_MAX_SLOTS];
 static object_type _staves[_MAX_SLOTS];
@@ -107,8 +108,9 @@ static void _display(object_type *list, rect_t display)
     doc_free(doc);
 }
 
-#define _ALLOW_EMPTY  0x01 /* Absorb */
-#define _ALLOW_SWITCH 0x02 /* Browse/Use */
+#define _ALLOW_EMPTY    0x01 /* Absorb */
+#define _ALLOW_SWITCH   0x02 /* Browse/Use */
+#define _ALLOW_EXCHANGE 0x04
 object_type *_choose(cptr verb, int tval, int options)
 {
     object_type *result = NULL;
@@ -118,6 +120,8 @@ object_type *_choose(cptr verb, int tval, int options)
     int          which_tval = tval;
     string_ptr   prompt = NULL;
     bool         done = FALSE;
+    bool         exchange = FALSE;
+    int          slot1 = _INVALID_SLOT, slot2 = _INVALID_SLOT;
 
     if ((options & _ALLOW_SWITCH) && REPEAT_PULL(&cmd))
     {
@@ -144,20 +148,33 @@ object_type *_choose(cptr verb, int tval, int options)
     while (!done)
     {
         string_clear(prompt);
-        string_printf(prompt, "%s which %s", verb, _which_name(which_tval));
-        if (options & _ALLOW_SWITCH)
+
+        if (exchange)
         {
-            switch (which_tval)
-            {
-            case TV_WAND: string_append_s(prompt, " [Press 'S' for Staves, 'R' for Rods]:"); break;
-            case TV_STAFF: string_append_s(prompt, " [Press 'W' for Wands, 'R' for Rods]:"); break;
-            case TV_ROD: string_append_s(prompt, " [Press 'W' for Wands, 'S' for Staves]:"); break;
-            }
+            if (slot1 == _INVALID_SLOT)
+                string_printf(prompt, "Select the first %s:", _which_name(which_tval));
+            else
+                string_printf(prompt, "Select the second %s:", _which_name(which_tval));
         }
         else
-            string_append_c(prompt, ':');
-
-        put_str(string_buffer(prompt), 0, 0);
+        {
+            string_printf(prompt, "%s which %s", verb, _which_name(which_tval));
+            if (options & _ALLOW_SWITCH)
+            {
+                switch (which_tval)
+                {
+                case TV_WAND: string_append_s(prompt, " [Press 'S' for Staves, 'R' for Rods"); break;
+                case TV_STAFF: string_append_s(prompt, " [Press 'W' for Wands, 'R' for Rods"); break;
+                case TV_ROD: string_append_s(prompt, " [Press 'W' for Wands, 'S' for Staves"); break;
+                }
+                if (options & _ALLOW_EXCHANGE)
+                    string_append_s(prompt, ", 'X' to Exchange");
+                string_append_s(prompt, "]:");
+            }
+            else
+                string_append_c(prompt, ':');
+        }
+        prt(string_buffer(prompt), 0, 0);
         _display(_which_list(which_tval), display);
 
         cmd = inkey_special(FALSE);
@@ -174,15 +191,47 @@ object_type *_choose(cptr verb, int tval, int options)
             else if (cmd == 'r' || cmd == 'R')
                 which_tval = TV_ROD;
         }
-        if ('a' <= cmd && cmd < 'a' + _MAX_SLOTS)
+
+        if (options & _ALLOW_EXCHANGE)
         {
-            object_type *o_ptr;
-            slot = A2I(cmd);
-            o_ptr = _which_obj(which_tval, slot);
-            if (o_ptr->k_idx || (options & _ALLOW_EMPTY))
+            if (!exchange && (cmd == 'x' || cmd == 'X'))
             {
-                result = o_ptr;
-                done = TRUE;
+                exchange = TRUE;
+                slot1 = slot2 = _INVALID_SLOT;
+            }
+        }
+
+        if ('a' <= cmd && cmd < 'a' + _MAX_SLOTS)
+        {            
+            slot = A2I(cmd);
+            if (exchange)
+            {
+                if (slot1 == _INVALID_SLOT)
+                    slot1 = slot;
+                else
+                {
+                    slot2 = slot;
+                    if (slot1 != slot2)
+                    {
+                        object_type  tmp = *_which_obj(which_tval, slot1);
+                        object_type *obj1 = _which_obj(which_tval, slot1);
+                        object_type *obj2 = _which_obj(which_tval, slot2);
+
+                        *obj1 = *obj2;
+                        *obj2 = tmp;
+                    }
+                    exchange = FALSE;
+                    slot1 = slot2 = _INVALID_SLOT;
+                }
+            }
+            else
+            {
+                object_type *o_ptr = _which_obj(which_tval, slot);
+                if (o_ptr->k_idx || (options & _ALLOW_EMPTY))
+                {
+                    result = o_ptr;
+                    done = TRUE;
+                }
             }
         }
     }
@@ -205,7 +254,7 @@ object_type *_choose(cptr verb, int tval, int options)
 
 void _use_object(object_type *o_ptr)
 {
-    int  boost = spell_power(100) - 100;
+    int  boost = device_power(100) - 100;
     u32b flgs[TR_FLAG_SIZE];
     bool used = FALSE;
     int  charges = 1;
@@ -257,7 +306,7 @@ void _use_object(object_type *o_ptr)
 
 void magic_eater_browse(void)
 {
-    object_type *o_ptr = _choose("Browse", TV_WAND, _ALLOW_SWITCH);
+    object_type *o_ptr = _choose("Browse", TV_WAND, _ALLOW_SWITCH | _ALLOW_EXCHANGE);
     if (o_ptr)
         obj_display(o_ptr);
 }
@@ -393,9 +442,9 @@ bool magic_eater_regen(int pct)
     for (i = 0; i < _MAX_SLOTS; i++)
     {
         object_type *o_ptr = _which_obj(TV_WAND, i);
-        if (o_ptr->k_idx) device_regen_sp(o_ptr);
+        if (o_ptr->k_idx && one_in_(2)) device_regen_sp(o_ptr);
         o_ptr = _which_obj(TV_STAFF, i);
-        if (o_ptr->k_idx) device_regen_sp(o_ptr);
+        if (o_ptr->k_idx && one_in_(2)) device_regen_sp(o_ptr);
         o_ptr = _which_obj(TV_ROD, i);
         if (o_ptr->k_idx)
         {

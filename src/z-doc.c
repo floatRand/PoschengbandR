@@ -621,7 +621,7 @@ cptr doc_parse_tag(cptr pos, doc_tag_ptr tag)
         ct = 0;
         for (;;)
         {
-            if (!*seek || strchr(" <\r\n\t", *seek)) return pos;
+            if (!*seek || strchr("<\r\n\t", *seek)) return pos;
             if (*seek == '>') break;
             ct++;
             seek++;

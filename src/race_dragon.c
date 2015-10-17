@@ -2177,24 +2177,45 @@ static int _dragon_get_powers(spell_info* spells, int max) {
     int  r_idx[5];
     cptr r_name[5];
     int  which_res;
+    cptr name; /* For Birth and Helpfiles ... */
+    cptr desc;
 } _elemental_info_t;
 
 static _elemental_info_t _elemental_info[5] = { /* relies on #define DRAGON_RED 0 ... */
     { {167, 563, 589, 644, 756},
       {"Baby Red Dragon", "Young Red Dragon", "Mature Red Dragon", "Ancient Red Dragon", "Great Hell Wyrm"},
-      RES_FIRE },
+      RES_FIRE, "Red Dragon",
+        "Red Dragons are elemental dragons of fire and are the second strongest fighters among "
+        "dragons. Their fiery breaths are the stuff of legends with damage unsurpassed. Even their "
+        "bites are likely to burn their opponents rendering their melee damage quite impressive. "
+        "As the Red Dragon matures, it becomes more and more resistant to fire, eventually gaining "
+        "total immunity." },
     { {164, 460, 549, 617, 741},
       {"Baby White Dragon", "Young White Dragon", "Mature White Dragon", "Ancient White Dragon", "Great Ice Wyrm"},
-      RES_COLD},
+      RES_COLD, "White Dragon",
+        "White Dragons are to cold what Red Dragons are to fire. Their melee is truly awe-inspiring "
+        "and their icy breath can be felt even in their bite. Like Red Dragons, White Dragons "
+        "have the most deadly breath possible among dragonkind and they too become more and more "
+        "resistant to cold as they mature." },
     { {163, 459, 560, 601, 728},
       {"Baby Blue Dragon", "Young Blue Dragon", "Mature Blue Dragon", "Ancient Blue Dragon", "Great Storm Wyrm"},
-      RES_ELEC},
+      RES_ELEC, "Blue Dragon",
+        "Blue Dragons are elemental dragons of lightning. Their melee and breaths are not so "
+        "strong as their Red and White brethren, but lightning is a bit more useful than fire or "
+        "cold. Their bites eventually shock their foes. Blue Dragons become more and more resistant "
+        "to lightning as they mature." },
     { {166, 546, 592, 624, 1066},
       {"Baby Black Dragon", "Young Black Dragon", "Mature Black Dragon", "Ancient Black Dragon", "Great Bile Wyrm"},
-      RES_ACID},
+      RES_ACID, "Black Dragon",
+        "Black Dragons are to acid what Blue Dragons are to lightning. Like the Blue Dragon, their "
+        "breaths and melee fall short of their Red and White brethren. As they mature, their bites "
+        "corrode their enemies and the Black Dragon also becomes more and more resistant to acid." },
     { {165, 461, 561, 618, 890},
       {"Baby Green Dragon", "Young Green Dragon", "Mature Green Dragon", "Ancient Green Dragon", "Great Venom Wyrm"},
-      RES_POIS},
+      RES_POIS, "Green Dragon",
+        "Green Dragons are elemental dragons of poison. They are not so strong as Red or White dragons, "
+        "but are still fearsome opponents. As they mature, their bites poison their enemies. Also, "
+        "Green Dragons become more and more resistant to poison." },
 };
 
 static void _elemental_calc_bonuses(void) {
@@ -2316,7 +2337,11 @@ static race_t *_elemental_get_race_t(int subrace)
         init = TRUE;
     }
 
-    me.subname = _elemental_info[subrace].r_name[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = _elemental_info[subrace].name;
+    else
+        me.subname = _elemental_info[subrace].r_name[rank];
+    me.subdesc = _elemental_info[subrace].desc;
     me.stats[A_STR] =  1 + rank;
     me.stats[A_INT] = -1 + rank;
     me.stats[A_WIS] = -2 + rank;
@@ -2421,6 +2446,12 @@ static race_t *_nether_get_race_t(void)
     skills_t bs = { 28,  35,  38,   4,  25,  26,  50,  30};
     skills_t xs = {  8,  10,  11,   0,   0,   0,  15,   7};
 
+        me.subdesc = "Shadow Drakes are bit more stealthy than your average dragon. They are creatures of nether "
+            "and eventually evolve into Death Drakes. Their melee is the weakest among dragonkind and "
+            "their breaths also are lacking, but they still make fearsome opponents. As they advance, "
+            "these dragons eventually gain the ability to pass through walls and also become more and "
+            "more resistant to nether.";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -2436,7 +2467,10 @@ static race_t *_nether_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Shadow Drake";
+    else
+        me.subname = titles[rank];
     me.stats[A_STR] =  0 + 2*rank;
     me.stats[A_INT] = -1 + 2*rank;
     me.stats[A_WIS] = -2 + rank;
@@ -2510,6 +2544,12 @@ static race_t *_law_get_race_t(void)
     skills_t bs = { 28,  40,  40,   2,  25,  26,  55,  30};
     skills_t xs = {  8,  11,  11,   0,   0,   0,  15,   7};
 
+        me.subdesc = "Law Drakes are powerful dragons of order. They can breathe sound or shards and eventually "
+                    "evolve into Great Wyrms of Law, though not so quickly as you might hope. Their breaths "
+                    "are much weaker than those of the elemental dragons but very few monsters resist sound "
+                    "or shards. Their melee is among the weakest of all dragonkind but they still fight rather "
+                    "well ... What dragon doesn't?";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -2525,7 +2565,11 @@ static race_t *_law_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Law Drake";
+    else
+        me.subname = titles[rank];
+
     me.stats[A_STR] =  0 + 5*rank;
     me.stats[A_INT] = -1 + 5*rank;
     me.stats[A_WIS] = -2 + 2*rank;
@@ -2599,6 +2643,12 @@ static race_t *_chaos_get_race_t(void)
     skills_t bs = { 28,  40,  40,   2,  25,  26,  55,  30};
     skills_t xs = {  8,  11,  11,   0,   0,   0,  15,   7};
 
+        me.subdesc = "Chaos Drakes are powerful dragons of chaos. They can breathe chaos or disenchantment and eventually "
+        "evolve into Great Wyrms of Chaos, though not so quickly as you might hope. Their breaths "
+        "are much weaker than those of the elemental dragons but fewer monsters resist chaos "
+        "or disenchantment. Their melee is among the weakest of all dragonkind but they still fight rather "
+        "well ... What dragon doesn't?";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -2614,7 +2664,10 @@ static race_t *_chaos_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Chaos Drake";
+    else
+        me.subname = titles[rank];
     me.stats[A_STR] =  0 + 5*rank;
     me.stats[A_INT] = -1 + 5*rank;
     me.stats[A_WIS] = -2 + 2*rank;
@@ -2688,6 +2741,12 @@ static race_t *_balance_get_race_t(void)
     skills_t bs = { 28,  35,  35,   2,  25,  26,  50,  30};
     skills_t xs = {  8,  10,  10,   0,   0,   0,  15,   7};
 
+        me.subdesc = "Balance Drakes are a blend of Chaos and Law Drakes. They can breathe sound, shards, "
+        "chaos or disenchantment and eventually evolve into Great Wyrms of Balance, though not "
+        "so quickly as you might hope. Their breaths are much weaker than those of the elemental "
+        "dragons and they are weaker than either of Chaos or Law Drakes, though not by much.";
+
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -2703,7 +2762,10 @@ static race_t *_balance_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Balance Drake";
+    else
+        me.subname = titles[rank];
     me.stats[A_STR] =  0 + 4*rank;
     me.stats[A_INT] = -1 + 4*rank;
     me.stats[A_WIS] = -2 + 2*rank;
@@ -2788,6 +2850,13 @@ static race_t *_ethereal_get_race_t(void)
     skills_t bs = { 28,  35,  37,   4,  25,  26,  52,  30};
     skills_t xs = {  8,  10,  11,   0,   0,   0,  15,   7};
 
+        me.subdesc =
+        "Ethereal Drakes are dragons of light and darkness. They actually begin life as Pseudo "
+        "Dragons but quickly evolve into Ethereal Drakes and then Ethereal Dragons. As they "
+        "mature, they gain the ability to pass through walls and become more and more resistant "
+        "to light, darkness and confusion. They are fairly weak fighters and have the weakest "
+        "breaths in all of dragonkind (except for Steel Dragons which cannot breathe at all).";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -2803,7 +2872,11 @@ static race_t *_ethereal_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Ethereal Drake";
+    else
+        me.subname = titles[rank];
+
     me.stats[A_STR] =  0 + 2*rank;
     me.stats[A_INT] = -1 + 2*rank;
     me.stats[A_WIS] = -2 + rank;
@@ -2890,6 +2963,11 @@ static race_t *_crystal_get_race_t(void)
     skills_t bs = { 28,  35,  40,   1,  25,  26,  70,  30};
     skills_t xs = {  8,   7,  12,   0,   0,   0,  22,   7};
 
+        me.subdesc =
+        "Crystal Drakes are dragons of a strange crystalline form. They breathe shards and melee "
+        "powerfully with razor sharp claws and teeth. At high levels, they gain the power of "
+        "reflection.";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -2905,7 +2983,11 @@ static race_t *_crystal_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Crystal Drake";
+    else
+        me.subname = titles[rank];
+
     me.stats[A_STR] =  1 + 5*rank;
     me.stats[A_INT] = -1 + 5*rank;
     me.stats[A_WIS] = -2 + 2*rank;
@@ -2984,6 +3066,11 @@ static race_t *_bronze_get_race_t(void)
     skills_t bs = { 28,  35,  38,   3,  25,  26,  55,  30};
     skills_t xs = {  8,  10,  11,   0,   0,   0,  15,   7};
 
+        me.subdesc =
+        "Bronze Dragons are wyrms of confusion. While they are not quite as strong as most other "
+        "dragons, they eventually confuse monsters with their bite attack. Also, they become "
+        "more and more resistant to confusion as they mature.";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -2999,7 +3086,11 @@ static race_t *_bronze_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Bronze Dragon";
+    else
+        me.subname = titles[rank];
+
     me.stats[A_STR] =  0 + 2*rank;
     me.stats[A_INT] = -1 + 2*rank;
     me.stats[A_WIS] = -2 + rank;
@@ -3079,6 +3170,11 @@ static race_t *_gold_get_race_t(void)
     skills_t bs = { 28,  35,  38,   2,  25,  26,  55,  30};
     skills_t xs = {  8,   9,  11,   0,   0,   0,  20,   7};
 
+        me.subdesc =
+        "Gold Dragons are wyrms of sound. While they are not quite as strong as most other "
+        "dragons, they are able to breathe sound on command, stunning their foes. Also, they become "
+        "more and more resistant to sound as they mature.";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -3094,7 +3190,11 @@ static race_t *_gold_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Gold Dragon";
+    else
+        me.subname = titles[rank];
+
     me.stats[A_STR] =  0 + 2*rank;
     me.stats[A_INT] = -1 + 2*rank;
     me.stats[A_WIS] = -2 + rank;
@@ -3182,6 +3282,15 @@ static race_t *_steel_get_race_t(void)
     skills_t bs = { 28,  18,  40,   0,  10,   7,  75,  30};
     skills_t xs = {  8,   7,  15,   0,   0,   0,  30,   7};
 
+        me.subdesc =
+        "Steel Dragons are magical dragons formed from rock. As they mature, their form hardens "
+        "from stone into steel. Needless to say, their armor class is phenomenal, but their "
+        "dexterity actually decreases with maturity. Steel dragons begin life being susceptible "
+        "to cold damage, though they will eventually outgrow this vulnerability. They are not "
+        "as fast as other dragons and they have no powers whatsoever, not even the ubiquitous "
+        "dragon breath! But their fighting is impossibly strong, putting all the other dragons "
+        "to complete and utter shame. They also have the most hitpoints of all dragons.";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -3198,7 +3307,11 @@ static race_t *_steel_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Steel Dragon";
+    else
+        me.subname = titles[rank];
+
     me.stats[A_STR] =  5 + (p_ptr->lev / 10);
     me.stats[A_INT] = -6;
     me.stats[A_WIS] = -6;

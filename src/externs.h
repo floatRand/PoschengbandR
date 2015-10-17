@@ -629,6 +629,7 @@ extern int pack_find_device(int effect);
 extern int pack_find(int tval, int sval);
 
 /* birth.c */
+extern bool birth_hack;
 extern void add_history_from_pref_line(cptr t);
 extern void add_outfit(object_type *o_ptr);
 extern cptr birth_get_class_desc(int i);

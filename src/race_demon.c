@@ -4,19 +4,10 @@ static cptr _desc =
     "Demons are powerful servants of evil and come in many forms. Being monsters, they "
     "may not choose a normal class. Instead, they rely on their devilish powers or their "
     "brutish strength to survive.\n \n"
-    "Balrogs are powerful in melee and have access to a wide array of demonic spells "
-    "of great power. Their devilish offense is unrivaled among all the monster races and "
-    "at high levels they may unleash deadly hellfire upon their foes. Their summoning talents "
-    "are also very good, but summoning a high demon requires a human sacrifice. "
-    "Intelligence determines their casting abilities. Eventually, balrogs become "
-    "immune to the charge draining attacks of their enemies.\n \n"
-    "Tanar'ri are a bit weaker then Balrogs, but eventually evolve into multi-armed demons "
-    "capable of attacking their enemies with many weapons. Their devilish powers are influenced "
-    "by their intelligence.\n \n"
-    "Cyberdemons are evil constructions. Big, slow and stupid, they possess unsurpassable firepower. "
-    "Their cyberpowers are influenced by their constitution.\n \n"
-    "Servants of Khorne come in many forms and are powerful demons in melee. They lack special "
-    "powers.\n \n"
+    "The various demonic races include the Balrog, powerful demons of fire; the Sevants "
+    "of Khorne, mighty warriors of destruction; the Tanar'ri, weaker demons whose ultimate "
+    "form has three sets of arms, but prefers to fight naked; and Cyberdemons, whose firepower "
+    "is unsurpassable.\n \n"
     "All demon races cannot eat normal food, but must feast upon the remains of their human "
     "enemies. They are unaffected by the Eldritch Horror.";
 
@@ -301,6 +292,9 @@ static race_t *_khorne_get_race_t(void)
     skills_t bs = { 20,  20,  40,  -1,  13,   7,  70,  30};
     skills_t xs = { 12,   8,  10,   0,   0,   0,  32,   7};
 
+        me.subdesc = "Khorne's servants come in many forms and are powerful forces of melee. They know nothing "
+        "save melee, and strike at all that dare oppose the will of their master. As they gain "
+        "experience, Khorne rewards his servants with new and more powerful forms.";
 
         me.skills = bs;
         me.extra_skills = xs;
@@ -319,7 +313,10 @@ static race_t *_khorne_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Servant of Khorne";
+    else
+        me.subname = titles[rank];
     me.stats[A_STR] =  3 + rank;
     me.stats[A_INT] = -5;
     me.stats[A_WIS] = -5;
@@ -528,6 +525,10 @@ static race_t *_marilith_get_race_t(void)
     skills_t bs = { 20,  35,  36,   3,  16,  10,  56,  35};
     skills_t xs = { 12,  11,  10,   0,   0,   0,  20,  11};
 
+        me.subdesc = "Tanar'ri were originally slave demons, but rose up to overthrow their masters. "
+        "They generally take on a humanoid form and are classic demons full of malice and "
+        "cruelty. The ultimate form for this demon is the Marilith, a female demon with "
+        "three sets of arms and a serpent body capable of attacking with six melee weapons!";
 
         me.skills = bs;
         me.extra_skills = xs;
@@ -547,7 +548,10 @@ static race_t *_marilith_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Tanar'ri";
+    else
+        me.subname = titles[rank];
     me.stats[A_STR] =  rank;
     me.stats[A_INT] =  rank/2;
     me.stats[A_WIS] = -5;
@@ -688,6 +692,11 @@ static race_t *_balrog_get_race_t(void)
     skills_t bs = { 20,  35,  40,  -2,  10,   7,  75,  30};
     skills_t xs = { 12,  11,  15,   0,   0,   0,  35,   7};
 
+
+        me.subdesc = "Balrogs are demons of shadow and flame. Their evil knows no bounds. Their spells are "
+        "the most powerful of all demonkind and at very high levels they may even call forth "
+        "fires directly from hell.";
+
         me.skills = bs;
         me.extra_skills = xs;
 
@@ -705,7 +714,10 @@ static race_t *_balrog_get_race_t(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (spoiler_hack || birth_hack)
+        me.subname = "Balrog";
+    else
+        me.subname = titles[rank];
     me.stats[A_STR] =  4 + 3*rank;
     me.stats[A_INT] =  1 + 2*rank;
     me.stats[A_WIS] = -10;
@@ -856,7 +868,9 @@ static race_t *_cyber_get_race_t(void)
     skills_t xs = { 12,   6,   9,   0,   0,   0,  35,   7};
 
         me.subname = "Cyberdemon";
-
+        me.subdesc = "Cyberdemons are giant humanoid forms, half demon and half machine. They are a bit "
+        "slow and move erratically, but their immense bodies and unsurpassable firepower "
+        "more than make up for this. The walls of the dungeon reverberate with their heavy steps!";
         me.skills = bs;
         me.extra_skills = xs;
 

@@ -253,25 +253,12 @@ static void _races_help(FILE* fp)
     fputs("\n</style>\n", fp);
 }
 
-static void _mon_race_help(FILE *fp, int idx)
+static void _mon_race_help_table(FILE *fp, race_t *race_ptr)
 {
-    race_t *race_ptr = get_race_t_aux(idx, 0);
     caster_info *caster_ptr = NULL;
 
     if (race_ptr->caster_info)
         caster_ptr = race_ptr->caster_info();
-
-    fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->name, race_ptr->name);
-    fprintf(fp, "%s\n\n", race_ptr->desc);
-    switch(idx)
-    {
-    case RACE_MON_RING:
-        fputs("See <link:rings.txt> for more details on rings.\n\n", fp);
-        break;
-    case RACE_MON_DRAGON:
-        fputs("See <link:DragonRealms.txt> for more details on dragons.\n\n", fp);
-        break;
-    }
 
     fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
     fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %s\n",
@@ -307,6 +294,30 @@ static void _mon_race_help(FILE *fp, int idx)
     fprintf(fp, "Experience   %3d%%       Infravision %d'\n", race_ptr->exp, race_ptr->infra*10);
     fputs("</style></indent>\n", fp);
 }
+
+static void _mon_race_help(FILE *fp, int idx)
+{
+    race_t *race_ptr = get_race_t_aux(idx, 0);
+
+    fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->name, race_ptr->name);
+    fprintf(fp, "%s\n\n", race_ptr->desc);
+    switch(idx)
+    {
+    case RACE_MON_RING:
+        fputs("See <link:rings.txt> for more details on rings.\n\n", fp);
+        break;
+    case RACE_MON_DRAGON:
+        fputs("See <link:Dragons.txt> for more details on dragons.\n", fp);
+        fputs("See <link:DragonRealms.txt> for more details on dragon realms.\n\n", fp);
+        break;
+    case RACE_MON_DEMON:
+        fputs("See <link:Demons.txt> for more details on demons.\n\n", fp);
+        return;
+    }
+
+    _mon_race_help_table(fp, race_ptr);
+}
+
 
 static void _monster_races_help(FILE* fp)
 {
@@ -362,6 +373,8 @@ static void _monster_races_help(FILE* fp)
             race_t *race_ptr;
 
             if (race_idx == -1) break;
+            if (race_idx == RACE_MON_DEMON) continue;
+
             race_ptr = get_race_t_aux(race_idx, 0);
             fprintf(fp, "%-12.12s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
                 race_ptr->name,
@@ -383,6 +396,8 @@ static void _monster_races_help(FILE* fp)
             race_t *race_ptr;
 
             if (race_idx == -1) break;
+            if (race_idx == RACE_MON_DEMON) continue;
+
             race_ptr = get_race_t_aux(race_idx, 0);
             fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 5*race_ptr->extra_skills.dis, 8));
@@ -404,6 +419,8 @@ static void _monster_races_help(FILE* fp)
             race_t *race_ptr;
 
             if (race_idx == -1) break;
+            if (race_idx == RACE_MON_DEMON) continue;
+
             race_ptr = get_race_t_aux(race_idx, 0);
             fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh + 5*race_ptr->extra_skills.srh, 6));
@@ -640,6 +657,127 @@ static void _draconians_help(FILE* fp)
     fputs("\n\n", fp);
 }
 
+static void _demons_help(FILE* fp)
+{
+    int i;
+    fputs("<style:title>Demons</style>\n\n", fp);
+    fputs(get_race_t_aux(RACE_MON_DEMON, 0)->desc, fp);
+    fputs("\n\n", fp);
+
+    for (i = 0; i < DEMON_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, i);
+
+        fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->subname, race_ptr->subname);
+        fprintf(fp, "%s\n\n", race_ptr->subdesc);
+        _mon_race_help_table(fp, race_ptr);
+    }
+
+    fputs("<topic:Tables><style:heading>Table 1 - Demon Statistic Bonus Table</style>\n<style:table>\n", fp);
+    fprintf(fp, "<color:G>%-17.17s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "");
+    for (i = 0; i < DEMON_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, i);
+        fprintf(fp, "%-17.17s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
+            race_ptr->subname,
+            race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
+            race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
+            race_ptr->life, race_ptr->base_hp, race_ptr->exp, race_ptr->shop_adjust
+        );
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills1><style:heading>Table 2 - Demon Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
+    for (i = 0; i < DEMON_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, i);
+        fprintf(fp, "%-17.17s", race_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 5*race_ptr->extra_skills.dis, 8));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5*race_ptr->extra_skills.dev, 6));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5*race_ptr->extra_skills.sav, 7));
+        fprintf(fp, " %s", _skill_desc(3*(race_ptr->skills.stl + 5*race_ptr->extra_skills.stl)/2, 1));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills2><style:heading>Table 3 - Demon Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
+    for (i = 0; i < DEMON_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, i);
+        fprintf(fp, "%-17.17s", race_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh + 5*race_ptr->extra_skills.srh, 6));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos + 5*race_ptr->extra_skills.fos, 6));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 5*race_ptr->extra_skills.thn, 12));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 5*race_ptr->extra_skills.thb, 12));
+        fprintf(fp, " %4d'", race_ptr->infra * 10);
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+}
+
+static void _dragons_help(FILE* fp)
+{
+    int i;
+    fputs("<style:title>Dragons</style>\n\n", fp);
+    fputs(get_race_t_aux(RACE_MON_DRAGON, 0)->desc, fp);
+    fputs("\n\n", fp);
+    fputs("For more information on <color:keyword>Dragon Realms</color>, see <link:DragonRealms.txt>.\n\n", fp);
+
+    for (i = 0; i < DRAGON_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, i);
+
+        fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->subname, race_ptr->subname);
+        fprintf(fp, "%s\n\n", race_ptr->subdesc);
+        _mon_race_help_table(fp, race_ptr);
+    }
+
+    fputs("<topic:Tables><style:heading>Table 1 - Dragon Statistic Bonus Table</style>\n<style:table>\n", fp);
+    fprintf(fp, "<color:G>%-17.17s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "");
+    for (i = 0; i < DRAGON_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, i);
+        fprintf(fp, "%-17.17s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
+            race_ptr->subname,
+            race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
+            race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
+            race_ptr->life, race_ptr->base_hp, race_ptr->exp, race_ptr->shop_adjust
+        );
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills1><style:heading>Table 2 - Dragon Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
+    for (i = 0; i < DRAGON_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, i);
+        fprintf(fp, "%-17.17s", race_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 5*race_ptr->extra_skills.dis, 8));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5*race_ptr->extra_skills.dev, 6));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5*race_ptr->extra_skills.sav, 7));
+        fprintf(fp, " %s", _skill_desc(3*(race_ptr->skills.stl + 5*race_ptr->extra_skills.stl)/2, 1));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills2><style:heading>Table 3 - Dragon Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
+    for (i = 0; i < DRAGON_MAX; i++)
+    {
+        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, i);
+        fprintf(fp, "%-17.17s", race_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh + 5*race_ptr->extra_skills.srh, 6));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos + 5*race_ptr->extra_skills.fos, 6));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 5*race_ptr->extra_skills.thn, 12));
+        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 5*race_ptr->extra_skills.thb, 12));
+        fprintf(fp, " %4d'", race_ptr->infra * 10);
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+}
+
 static void _dragon_realms_help(FILE* fp)
 {
     int i, j;
@@ -652,53 +790,97 @@ static void _dragon_realms_help(FILE* fp)
     for (i = 1; i < DRAGON_REALM_MAX; i++)
     {
         dragon_realm_ptr realm = dragon_get_realm(i);
-        fprintf(fp, "<style:heading>%s</style>\n\n", realm->name);
+        fprintf(fp, "<topic:%s><color:o>%s</color>\n", realm->name, realm->name);
         fputs(realm->desc, fp);
         fputs("\n\n", fp);
+
+        fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
+        fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %s\n",
+            (realm->spell_stat == A_STR) ? 'v' : 'w',
+            realm->stats[A_STR],
+            _skill_desc(realm->skills.dis + 10, 2));
+        fprintf(fp, "Intelligence <color:%c>%+3d</color>        Device      %s\n",
+            (realm->spell_stat == A_INT) ? 'v' : 'w',
+            realm->stats[A_INT],
+            _skill_desc(realm->skills.dev + 5, 1));
+        fprintf(fp, "Wisdom       <color:%c>%+3d</color>        Save        %s\n",
+            (realm->spell_stat == A_WIS) ? 'v' : 'w',
+            realm->stats[A_WIS],
+            _skill_desc(realm->skills.sav + 5, 1));
+        fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %s\n",
+            (realm->spell_stat == A_DEX) ? 'v' : 'w',
+            realm->stats[A_DEX],
+            _skill_desc(realm->skills.stl * 3, 1));
+        fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %s\n",
+            (realm->spell_stat == A_CON) ? 'v' : 'w',
+            realm->stats[A_CON],
+            _skill_desc(realm->skills.srh, 1));
+        fprintf(fp, "Charisma     <color:%c>%+3d</color>        Perception  %s\n",
+            (realm->spell_stat == A_CHR) ? 'v' : 'w',
+            realm->stats[A_CHR],
+            _skill_desc(realm->skills.fos, 1));
+        fprintf(fp, "Life Rating  %3d%%       Melee       %s\n",
+            realm->life,
+            _skill_desc(realm->skills.thn + 10, 2));
+        fprintf(fp, "Experience   %3d%%       Bows        %s\n",
+            realm->exp,
+            _skill_desc(realm->skills.thb + 10, 2));
+        fprintf(fp, "Attack       %3d%%\n", realm->attack);
+        fprintf(fp, "Breath       %3d%%\n", realm->breath);
+        fputs("</style></indent>\n", fp);
     }
 
     fputs("<topic:Tables><style:heading>Table 1 - Dragon Realm Statistic Bonus Table</style>\n\n", fp);
-    fputs("<style:table><color:U>               STR  INT  WIS  DEX  CON  CHR  Life  Exp</color>\n", fp);
+    fprintf(fp, "<style:table><color:G>%-14.14s STR  INT  WIS  DEX  CON  CHR  Life  Exp  Attack  Breath</color>\n", "");
     for (i = 1; i < DRAGON_REALM_MAX; i++)
     {
         dragon_realm_ptr realm = dragon_get_realm(i);
         char             line[255];
         char             tmp[255];
 
-        sprintf(line, "%-14s", realm->name);
+        sprintf(line, "%-14.14s", realm->name);
         for (j = 0; j < 6; j++)
         {
             if (j == realm->spell_stat)
-                sprintf(tmp, "<color:G> %+3d </color>", realm->stats[j]);
+                sprintf(tmp, "<color:v> %+3d </color>", realm->stats[j]);
             else
                 sprintf(tmp, " %+3d ", realm->stats[j]);
             strcat(line, tmp);
         }
-        sprintf(tmp, " %3d%%  %3d%%", realm->life, realm->exp);
+        sprintf(tmp, " %3d%%  %3d%% %5d%%  %5d%%", realm->life, realm->exp, realm->attack, realm->breath);
         strcat(line, tmp);
         fprintf(fp, "%s\n", line);
     }
     fputs("\n</style>\n", fp);
 
-    fputs("<style:heading>Table 2 - Dragon Realm Skill Bonus Table</style>\n\n", fp);
-    fputs("<style:table><color:U>               Dsrm  Dvce  Save  Stlh  Srch  Prcp  Melee  Attack  Breath</color>\n", fp);
+    fputs("<topic:Skills1><style:heading>Table 2 - Dragon Realm Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-14.14s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 1; i < DRAGON_REALM_MAX; i++)
     {
         dragon_realm_ptr realm = dragon_get_realm(i);
-        fprintf(fp, "%-14s %+4d  %+4d  %+4d  %+4d  %+4d  %+4d  %+5d  %5d%%  %5d%%\n",
-            realm->name,
-            realm->skills.dis, 
-            realm->skills.dev,
-            realm->skills.sav,
-            realm->skills.stl, 
-            realm->skills.srh, 
-            realm->skills.fos,
-            realm->skills.thn,
-            realm->attack,
-            realm->breath
-        );
+        fprintf(fp, "%-14.14s", realm->name);
+        fprintf(fp, " %s", _skill_desc(realm->skills.dis + 10, 2));
+        fprintf(fp, " %s", _skill_desc(realm->skills.dev + 5, 1));
+        fprintf(fp, " %s", _skill_desc(realm->skills.sav + 5, 1));
+        fprintf(fp, " %s", _skill_desc(realm->skills.stl * 3, 1));
+        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills2><style:heading>Table 3 - Dragon Realm Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-14.14s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Bows");
+    for (i = 1; i < DRAGON_REALM_MAX; i++)
+    {
+        dragon_realm_ptr realm = dragon_get_realm(i);
+        fprintf(fp, "%-14.14s", realm->name);
+        fprintf(fp, " %s", _skill_desc(realm->skills.srh, 1));
+        fprintf(fp, " %s", _skill_desc(realm->skills.fos, 1));
+        fprintf(fp, " %s", _skill_desc(realm->skills.thn + 10, 2));
+        fprintf(fp, " %s", _skill_desc(realm->skills.thb + 10, 2));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
 }
 
 static void _class_help(FILE *fp, int idx)
@@ -1115,14 +1297,21 @@ void generate_spoilers(void)
     spoiler_hack = TRUE;
 
     _text_file("Races.txt", _races_help);
-    _text_file("MonsterRaces.txt", _monster_races_help);
     _text_file("Demigods.txt", _demigods_help);
     _text_file("Draconians.txt", _draconians_help);
+
     _text_file("Classes.txt", _classes_help);
+
     _text_file("Personalities.txt", _personalities_help);
+
+    _text_file("MonsterRaces.txt", _monster_races_help);
+    _text_file("Demons.txt", _demons_help);
+    _text_file("Dragons.txt", _dragons_help);
+    _text_file("DragonRealms.txt", _dragon_realms_help);
+
+
     _text_file("PossessorStats.csv", _possessor_stats_help);
     _text_file("MonsterDam.csv", _mon_dam_help);
-    _text_file("DragonRealms.txt", _dragon_realms_help);
     spoiler_hack = FALSE;
 }
 

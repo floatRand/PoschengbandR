@@ -315,7 +315,7 @@ static int _menu_choose(menu_ptr menu, int start_choice)
         if (c == '?')
         {
             /* Race and Class helpfiles should have appropriately named topics */
-            if (!strchr(menu->browse_prompt, '#'))
+            if (cs < menu->count && !strchr(menu->browse_prompt, '#'))
             {
                 char    helpfile[255];
                 variant text;
@@ -588,7 +588,7 @@ static int _prompt_realm1(void)
             {
                 int    idx, ct = 0;
                 int    choices[DRAGON_REALM_MAX];
-                menu_t menu = { "Dragon Realm", "DragonRealms.txt#Tables", "", _dragon_realm_menu_fn, choices, 0 };
+                menu_t menu = { "Dragon Realm", "DragonRealms.txt", "", _dragon_realm_menu_fn, choices, 0 };
                 dragon_realm_ptr realm = NULL;
                 
                 /* TODO: Subracial restrictions? */
@@ -1234,95 +1234,20 @@ static void _spider_menu_fn(int cmd, int which, vptr cookie, variant *res)
     }
 }
 
-static _name_desc_t _dragon_info[DRAGON_MAX] = {
-    { "Red Dragon", 
-        "Red Dragons are elemental dragons of fire and are the second strongest fighters among "
-        "dragons. Their fiery breaths are the stuff of legends with damage unsurpassed. Even their "
-        "bites are likely to burn their opponents rendering their melee damage quite impressive. "
-        "As the Red Dragon matures, it becomes more and more resistant to fire, eventually gaining "
-        "total immunity." },
-    { "White Dragon", 
-        "White Dragons are to cold what Red Dragons are to fire. Their melee is truly awe-inspiring "
-        "and their icy breath can be felt even in their bite. Like Red Dragons, White Dragons "
-        "have the most deadly breath possible among dragonkind and they too become more and more "
-        "resistant to cold as they mature." },
-    { "Blue Dragon", 
-        "Blue Dragons are elemental dragons of lightning. Their melee and breaths are not so "
-        "strong as their Red and White brethren, but lightning is a bit more useful than fire or "
-        "cold. Their bites eventually shock their foes. Blue Dragons become more and more resistant "
-        "to lightning as they mature." },
-    { "Black Dragon", 
-        "Black Dragons are to acid what Blue Dragons are to lightning. Like the Blue Dragon, their "
-        "breaths and melee fall short of their Red and White brethren. As they mature, their bites "
-        "corrode their enemies and the Black Dragon also becomes more and more resistant to acid." },
-    { "Green Dragon", 
-        "Green Dragons are elemental dragons of poison. They are not so strong as Red or White dragons, "
-        "but are still fearsome opponents. As they mature, their bites poison their enemies. Also, "
-        "Green Dragons become more and more resistant to poison." },
-    { "Shadow Drake", 
-        "Shadow Drakes are bit more stealthy than your average dragon. They are creatures of nether "
-        "and eventually evolve into Death Drakes. Their melee is the weakest among dragonkind and "
-        "their breaths also are lacking, but they still make fearsome opponents. As they advance, "
-        "these dragons eventually gain the ability to pass through walls and also become more and "
-        "more resistant to nether." }, 
-    { "Law Drake", 
-        "Law Drakes are powerful dragons of order. They can breathe sound or shards and eventually "
-        "evolve into Great Wyrms of Law, though not so quickly as you might hope. Their breaths "
-        "are much weaker than those of the elemental dragons but very few monsters resist sound "
-        "or shards. Their melee is among the weakest of all dragonkind but they still fight rather "
-        "well ... What dragon doesn't?" },
-    { "Chaos Drake", 
-        "Chaos Drakes are powerful dragons of chaos. They can breathe chaos or disenchantment and eventually "
-        "evolve into Great Wyrms of Chaos, though not so quickly as you might hope. Their breaths "
-        "are much weaker than those of the elemental dragons but fewer monsters resist chaos "
-        "or disenchantment. Their melee is among the weakest of all dragonkind but they still fight rather "
-        "well ... What dragon doesn't?" },
-    { "Balance Drake", 
-        "Balance Drakes are a blend of Chaos and Law Drakes. They can breathe sound, shards, "
-        "chaos or disenchantment and eventually evolve into Great Wyrms of Balance, though not "
-        "so quickly as you might hope. Their breaths are much weaker than those of the elemental "
-        "dragons and they are weaker than either of Chaos or Law Drakes, though not by much." },
-    { "Ethereal Drake",
-        "Ethereal Drakes are dragons of light and darkness. They actually begin life as Pseudo "
-        "Dragons but quickly evolve into Ethereal Drakes and then Ethereal Dragons. As they "
-        "mature, they gain the ability to pass through walls and become more and more resistant "
-        "to light, darkness and confusion. They are fairly weak fighters and have the weakest "
-        "breaths in all of dragonkind (except for Steel Dragons which cannot breathe at all)." },
-    { "Crystal Drake",
-        "Crystal Drakes are dragons of a strange crystalline form. They breathe shards and melee "
-        "powerfully with razor sharp claws and teeth. At high levels, they gain the power of "
-        "reflection." },
-    { "Bronze Dragon",
-        "Bronze Dragons are wyrms of confusion. While they are not quite as strong as most other "
-        "dragons, they eventually confuse monsters with their bite attack. Also, they become "
-        "more and more resistant to confusion as they mature." },
-    { "Gold Dragon",
-        "Gold Dragons are wyrms of sound. While they are not quite as strong as most other "
-        "dragons, they are able to breathe sound on command, stunning their foes. Also, they become "
-        "more and more resistant to sound as they mature." },
-    { "Steel Dragon",
-        "Steel Dragons are magical dragons formed from rock. As they mature, their form hardens "
-        "from stone into steel. Needless to say, their armor class is phenomenal, but their "
-        "dexterity actually decreases with maturity. Steel dragons begin life being susceptible "
-        "to cold damage, though they will eventually outgrow this vulnerability. They are not "
-        "as fast as other dragons and they have no powers whatsoever, not even the ubiquitous "
-        "dragon breath! But their fighting is impossibly strong, putting all the other dragons "
-        "to complete and utter shame. They also have the most hitpoints of all dragons." },
-};
 static void _dragon_menu_fn(int cmd, int which, vptr cookie, variant *res)
 {
     switch (cmd)
     {
     case MENU_TEXT:
-        var_set_string(res, _dragon_info[which].name);
+        var_set_string(res, get_race_t_aux(RACE_MON_DRAGON, which)->subname);
         break;
     case MENU_ON_BROWSE:
     {
         char buf[100];
         race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, which);
 
-        c_put_str(TERM_L_BLUE, _dragon_info[which].name, 3, 40);
-        put_str(": Race modification", 3, 40+strlen(_dragon_info[which].name));
+        c_put_str(TERM_L_BLUE, race_ptr->subname, 3, 40);
+        put_str(": Race modification", 3, 40+strlen(race_ptr->subname));
         put_str("Str  Int  Wis  Dex  Con  Chr   EXP ", 4, 40);
         sprintf(buf, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d %+4d%% ",
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
@@ -1391,39 +1316,20 @@ static void _draconian_menu_fn(int cmd, int which, vptr cookie, variant *res)
     }
     }
 }
-static _name_desc_t _demon_info[DEMON_MAX] = {
-    { "Balrog", 
-        "Balrogs are demons of shadow and flame. Their evil knows no bounds. Their spells are "
-        "the most powerful of all demonkind and at very high levels they may even call forth "
-        "fires directly from hell." },
-    { "Tanar'ri", 
-        "Tanar'ri were originally slave demons, but rose up to overthrow their masters. "
-        "They generally take on a humanoid form and are classic demons full of malice and "
-        "cruelty. The ultimate form for this demon is the Marilith, a female demon with "
-        "three sets of arms and a serpent body capable of attacking with six melee weapons!" },
-    { "Servant of Khorne",
-        "Khorne's servants come in many forms and are powerful forces of melee. They know nothing "
-        "save melee, and strike at all that dare oppose the will of their master. As they gain "
-        "experience, Khorne rewards his servants with new and more powerful forms." },
-    { "Cyberdemon",
-        "Cyberdemons are giant humanoid forms, half demon and half machine. They are a bit "
-        "slow and susceptible to confusion, but their immense bodies and unsurpassable firepower "
-        "more than make up for this. The walls of the dungeon reverberate with their heavy steps!" },
-};
 static void _demon_menu_fn(int cmd, int which, vptr cookie, variant *res)
 {
     switch (cmd)
     {
     case MENU_TEXT:
-        var_set_string(res, _demon_info[which].name);
+        var_set_string(res, get_race_t_aux(RACE_MON_DEMON, which)->subname);
         break;
     case MENU_ON_BROWSE:
     {
         char buf[100];
         race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, which);
 
-        c_put_str(TERM_L_BLUE, _demon_info[which].name, 3, 40);
-        put_str(": Race modification", 3, 40+strlen(_demon_info[which].name));
+        c_put_str(TERM_L_BLUE, race_ptr->subname, 3, 40);
+        put_str(": Race modification", 3, 40+strlen(race_ptr->subname));
         put_str("Str  Int  Wis  Dex  Con  Chr   EXP ", 4, 40);
         sprintf(buf, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d %+4d%% ",
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS], 
@@ -1745,7 +1651,7 @@ static int _prompt_mon_race(void)
                 {
                     for (;;)
                     {
-                        menu_t menu3 = { "Subrace", "MonsterRaces.txt#Dragon", "",
+                        menu_t menu3 = { "Subrace", "Dragons.txt", "",
                                             _dragon_menu_fn,
                                             NULL, DRAGON_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
@@ -1753,8 +1659,9 @@ static int _prompt_mon_race(void)
                         if (idx == _BIRTH_ESCAPE) break;
                         if (idx < 0) return idx;
                         p_ptr->psubrace = idx;
-                        c_put_str(TERM_L_BLUE, format("%-19s", _dragon_info[p_ptr->psubrace].name), 5, 14);
-                        if (!_confirm_choice(_dragon_info[p_ptr->psubrace].desc, menu3.count)) continue;
+                        race_ptr = get_race_t();
+                        c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
+                        if (!_confirm_choice(race_ptr->subdesc, menu3.count)) continue;
                         idx = _prompt_class();
                         if (idx == _BIRTH_ESCAPE) continue;
                         return idx;
@@ -1764,7 +1671,7 @@ static int _prompt_mon_race(void)
                 {
                     for (;;)
                     {
-                        menu_t menu3 = { "Subrace", "MonsterRaces.txt#Demon", "",
+                        menu_t menu3 = { "Subrace", "Demons.txt", "",
                                             _demon_menu_fn,
                                             NULL, DEMON_MAX};
                         c_put_str(TERM_WHITE, "                   ", 5, 14);
@@ -1772,8 +1679,9 @@ static int _prompt_mon_race(void)
                         if (idx == _BIRTH_ESCAPE) break;
                         if (idx < 0) return idx;
                         p_ptr->psubrace = idx;
-                        c_put_str(TERM_L_BLUE, format("%-19s", _demon_info[p_ptr->psubrace].name), 5, 14);
-                        if (!_confirm_choice(_demon_info[p_ptr->psubrace].desc, menu3.count)) continue;
+                        race_ptr = get_race_t();
+                        c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
+                        if (!_confirm_choice(race_ptr->subdesc, menu3.count)) continue;
                         idx = _prompt_class();
                         if (idx == _BIRTH_ESCAPE) continue;
                         return idx;
@@ -4020,10 +3928,12 @@ static bool ask_quick_start(void)
  * Note that we may be called with "junk" leftover in the various
  * fields, so we must be sure to clear them first.
  */
+bool birth_hack = FALSE;
 void player_birth(void)
 {
     int i, j;
 
+    birth_hack = TRUE;
     playtime = 0;
     
     wipe_m_list();
@@ -4068,6 +3978,8 @@ void player_birth(void)
     /* Set the inv/equip window flag as default */
     if (!window_flag[2])
         window_flag[2] |= PW_INVEN;
+
+    birth_hack = FALSE;
 
     /* Hack: Gain CL1 */
     {
