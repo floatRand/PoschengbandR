@@ -288,7 +288,7 @@ static void _gain_level(int new_level)
 /**********************************************************************
  * Public Methods
  **********************************************************************/
-race_t *mon_hydra_get_race_t(void)
+race_t *mon_hydra_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

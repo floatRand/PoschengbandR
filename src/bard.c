@@ -169,7 +169,7 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_SOUND);
 }
 
-class_t *bard_get_class_t(void)
+class_t *bard_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

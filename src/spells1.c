@@ -7073,7 +7073,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
         {
             if (fuzzy) msg_print("You are hit by something extremely cold!");
 
-            if (get_race_t()->flags & RACE_IS_NONLIVING)
+            if (get_race()->flags & RACE_IS_NONLIVING)
                 dam = 0;
             else
                 get_damage = take_hit(DAMAGE_ATTACK, dam, killer, monspell);

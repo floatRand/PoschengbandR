@@ -1970,7 +1970,7 @@ void have_nightmare(int r_idx)
     }
     else
     {
-        race_t *race_ptr = get_race_t();
+        race_t *race_ptr = get_race();
         /* Demons may make a saving throw */
         if (race_ptr->flags & RACE_IS_DEMON)
         {

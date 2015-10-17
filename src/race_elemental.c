@@ -1287,7 +1287,7 @@ static race_t *_fire_get_race_t(void)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_elemental_get_race_t(int psubrace)
+race_t *mon_elemental_get_race(int psubrace)
 {
     race_t *result = NULL;
 

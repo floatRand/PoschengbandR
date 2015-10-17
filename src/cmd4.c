@@ -4955,8 +4955,8 @@ static void do_cmd_knowledge_extra(void)
 {
     FILE *fff;
     char file_name[1024];
-    class_t *class_ptr = get_class_t();
-    race_t  *race_ptr = get_race_t();
+    class_t *class_ptr = get_class();
+    race_t  *race_ptr = get_race();
 
     fff = my_fopen_temp(file_name, 1024);
     if (!fff) {
@@ -6049,7 +6049,7 @@ static void display_monster_list(int col, int row, int per_page, s16b mon_idx[],
 
                         sprintf(buf, "%3d  %3d  %+5d  %+4d  %s", 
                             r_ptr->level, MAX(15, r_ptr->level + 5), speed, ac,
-                            get_class_t_aux(r_ptr->body.class_idx, 0)->name
+                            get_class_aux(r_ptr->body.class_idx, 0)->name
                         );
                         c_put_str(TERM_WHITE, buf, row + i, 80);
                     }

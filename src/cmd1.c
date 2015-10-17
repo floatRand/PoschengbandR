@@ -4791,7 +4791,7 @@ static bool _auto_detect_traps(void)
     if (p_ptr->pclass == CLASS_BERSERKER) return FALSE;
 
     i = pack_find(TV_SCROLL, SV_SCROLL_DETECT_TRAP);
-    if (i >= 0 && !p_ptr->blind && !(get_race_t()->flags & RACE_IS_ILLITERATE))
+    if (i >= 0 && !p_ptr->blind && !(get_race()->flags & RACE_IS_ILLITERATE))
     {
         detect_traps(DETECT_RAD_DEFAULT, TRUE);
         inven_item_increase(i, -1);
@@ -4931,8 +4931,8 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
             p_ptr->redraw |= PR_STATUS;
 
         {
-            class_t *class_ptr = get_class_t();
-            race_t  *race_ptr = get_race_t();
+            class_t *class_ptr = get_class();
+            race_t  *race_ptr = get_race();
             if (class_ptr->move_player)
                 class_ptr->move_player();
             if (race_ptr->move_player)

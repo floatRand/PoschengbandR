@@ -283,7 +283,7 @@ static caster_info * _caster_info(void)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_lich_get_race_t(void)
+race_t *mon_lich_get_race(void)
 {
     race_t *result = NULL;
 

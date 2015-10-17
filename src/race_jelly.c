@@ -349,7 +349,7 @@ static void _birth(void)
     add_outfit(&forge);
 }
 
-race_t *mon_jelly_get_race_t(void)
+race_t *mon_jelly_get_race(void)
 {
     race_t *result = NULL;
 

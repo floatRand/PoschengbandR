@@ -39,7 +39,7 @@ int store_calc_price_factor(int greed)
        Effects are now multiplicative. Also, a shopkeeper that doubles the
        price on sale pays half when purchasing. A shopkeeper that triples
        on sale pays a third when purchasing. Etc. */
-    factor = get_race_t()->shop_adjust;
+    factor = get_race()->shop_adjust;
     if (factor == 0)
         factor = 110;
 
@@ -1800,7 +1800,7 @@ static void display_store(void)
     {
         cptr store_name = (f_name + f_info[cur_store_feat].name);
         cptr owner_name = (ot_ptr->owner_name);
-        cptr race_name = get_race_t_aux(ot_ptr->owner_race, 0)->name;
+        cptr race_name = get_race_aux(ot_ptr->owner_race, 0)->name;
 
         /* Put the owner name and race */
         sprintf(buf, "%s (%s)", owner_name, race_name);
@@ -2121,7 +2121,7 @@ static void store_purchase(void)
 
                         prt("",3,0);
                         sprintf(buf, "%s (%s)",
-                            ot_ptr->owner_name, get_race_t_aux(ot_ptr->owner_race, 0)->name);
+                            ot_ptr->owner_name, get_race_aux(ot_ptr->owner_race, 0)->name);
                         put_str(buf, 3, 10);
                         sprintf(buf, "%s (%d)",
                             (f_name + f_info[cur_store_feat].name), (int)ot_ptr->max_cost);
@@ -3759,7 +3759,7 @@ static void _buyout(void)
                     store_shuffle(cur_store_num);
                     prt("",3,0);
                     sprintf(buf, "%s (%s)",
-                        ot_ptr->owner_name, get_race_t_aux(ot_ptr->owner_race, 0)->name);
+                        ot_ptr->owner_name, get_race_aux(ot_ptr->owner_race, 0)->name);
                     put_str(buf, 3, 10);
                     sprintf(buf, "%s (%d)",
                         (f_name + f_info[cur_store_feat].name), (int)(ot_ptr->max_cost));

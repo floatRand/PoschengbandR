@@ -335,7 +335,7 @@ static void _list(_choice_array_t *choices)
 
                     sprintf(buf, "%3d  %3d  %+5d  %+4d  %s", 
                         r_ptr->level, MAX(15, r_ptr->level + 5), speed, ac,
-                        get_class_t_aux(r_ptr->body.class_idx, 0)->name
+                        get_class_aux(r_ptr->body.class_idx, 0)->name
                     );
                     c_put_str(TERM_WHITE, buf, row, extra_col);
                 }
@@ -899,7 +899,7 @@ void _character_dump(FILE* file)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_mimic_get_race_t(void)
+race_t *mon_mimic_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

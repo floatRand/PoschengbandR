@@ -681,8 +681,8 @@ static void _add_extra_costs_powers(spell_info* spells, int max)
 static int _get_spell_table(spell_info* spells, int max)
 {
     int ct = 0;
-    class_t *class_ptr = get_class_t();
-    race_t  *race_ptr = get_race_t();
+    class_t *class_ptr = get_class();
+    race_t  *race_ptr = get_race();
 
     if (race_ptr->get_spells != NULL) /* Monster Races ... */
         ct = (race_ptr->get_spells)(spells, max);
@@ -824,8 +824,8 @@ void do_cmd_power(void)
     spell_info spells[MAX_SPELLS];
     int ct = 0; 
     int choice = 0;
-    race_t *race_ptr = get_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t *race_ptr = get_race();
+    class_t *class_ptr = get_class();
     
     if (p_ptr->confused)
     {
@@ -839,7 +839,7 @@ void do_cmd_power(void)
        Also, add Mimic power back first so it always stays in the 'a' slot. */
     if (race_ptr->mimic && p_ptr->prace == RACE_DOPPELGANGER)
     {
-        ct += (get_true_race_t()->get_powers)(spells + ct, MAX_SPELLS - ct);
+        ct += (get_true_race()->get_powers)(spells + ct, MAX_SPELLS - ct);
     }
     
     if (race_ptr->get_powers != NULL)

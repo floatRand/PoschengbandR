@@ -729,7 +729,7 @@ static void _character_dump(FILE* file)
     }
 }
 
-class_t *mauler_get_class_t(void)
+class_t *mauler_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

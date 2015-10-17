@@ -505,7 +505,7 @@ static void _character_dump(FILE* file)
 
     dump_spells_aux(file, spells, ct);
 }
-class_t *mystic_get_class_t(void)
+class_t *mystic_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

@@ -932,7 +932,7 @@ bool dispel_check(int m_idx)
        so will always trigger a dispel. */
     if (p_ptr->mimic_form != MIMIC_NONE)
     {
-        if (randint1(500) < get_race_t()->exp) return TRUE;
+        if (randint1(500) < get_race()->exp) return TRUE;
     }
 
     if (p_ptr->tim_shrike) return TRUE;
@@ -2036,7 +2036,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
                           && which != RACE_DRACONIAN
                           && which != RACE_ANDROID 
                           && p_ptr->prace != which 
-                          && !(get_race_t_aux(which, 0)->flags & RACE_IS_MONSTER) )
+                          && !(get_race_aux(which, 0)->flags & RACE_IS_MONSTER) )
                         {
                             break;
                         }

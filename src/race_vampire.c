@@ -526,7 +526,7 @@ static void _move_player(void)
 /******************************************************************************
  * Public
  ******************************************************************************/
-race_t *mon_vampire_get_race_t(void)
+race_t *mon_vampire_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -773,7 +773,7 @@ static void _bat_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_POIS);
     add_flag(flgs, TR_HOLD_LIFE);
 }
-race_t *bat_get_race_t(void)
+race_t *bat_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -849,7 +849,7 @@ static void _mist_get_flags(u32b flgs[TR_FLAG_SIZE])
 
     add_flag(flgs, TR_MAGIC_RESISTANCE);
 }
-race_t *mist_get_race_t(void)
+race_t *mist_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -919,7 +919,7 @@ static void _wolf_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_SPEED);
 }
-race_t *wolf_get_race_t(void)
+race_t *wolf_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;

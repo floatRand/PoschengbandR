@@ -886,8 +886,8 @@ static void rd_extra(savefile_ptr file)
     p_ptr->count = savefile_read_u32b(file);
 
     {
-    race_t  *race_ptr = get_true_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t  *race_ptr = get_true_race();
+    class_t *class_ptr = get_class();
 
         if (race_ptr->load_player)
             race_ptr->load_player(file);

@@ -176,7 +176,7 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
 /**********************************************************************
  * Public Methods
  **********************************************************************/
-race_t *mon_centipede_get_race_t(void)
+race_t *mon_centipede_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

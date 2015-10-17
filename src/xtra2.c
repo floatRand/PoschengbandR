@@ -251,7 +251,7 @@ void check_experience(void)
         /* Save the highest level */
         if (p_ptr->lev > p_ptr->max_plv)
         {
-            class_t *class_ptr = get_class_t();
+            class_t *class_ptr = get_class();
 
             p_ptr->max_plv = p_ptr->lev;
 
@@ -268,10 +268,10 @@ void check_experience(void)
                change (stupid Chaos-Warriors), so we better always requery the player's 
                race to make sure the correct racial hook is called. */
             {
-                race_t *race_ptr = get_true_race_t(); /* So players don't miss if they Polymorph Demon, etc */
+                race_t *race_ptr = get_true_race(); /* So players don't miss if they Polymorph Demon, etc */
 
                 if (p_ptr->prace == RACE_DOPPELGANGER) /* But a doppelganger should use the mimicked race! */
-                    race_ptr = get_race_t();
+                    race_ptr = get_race();
 
                 if (race_ptr->gain_level != NULL)
                     (race_ptr->gain_level)(p_ptr->lev);
@@ -311,10 +311,10 @@ void check_experience(void)
 
     if (old_lev != p_ptr->lev) 
     {
-        race_t *race_ptr = get_true_race_t(); /* So players don't miss if they Polymorph Demon, etc */
+        race_t *race_ptr = get_true_race(); /* So players don't miss if they Polymorph Demon, etc */
 
         if (p_ptr->prace == RACE_DOPPELGANGER) /* But a doppelganger should use the mimicked race! */
-            race_ptr = get_race_t();
+            race_ptr = get_race();
 
         if (race_ptr->change_level)
             race_ptr->change_level(old_lev, p_ptr->lev);
@@ -1641,7 +1641,7 @@ void monster_death(int m_idx, bool drop_item)
     {
         int a_idx = 0;
         int chance = 0;
-        race_t *race_ptr = get_race_t();
+        race_t *race_ptr = get_race();
 
         switch (m_ptr->r_idx)
         {

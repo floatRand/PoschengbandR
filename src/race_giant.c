@@ -1130,7 +1130,7 @@ bool giant_is_favorite(object_type *o_ptr)
     return FALSE;
 }
 
-race_t *mon_giant_get_race_t(int psubrace)
+race_t *mon_giant_get_race(int psubrace)
 {
     race_t *result = NULL;
 

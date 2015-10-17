@@ -62,7 +62,7 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
-class_t *tourist_get_class_t(void)
+class_t *tourist_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

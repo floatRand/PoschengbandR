@@ -102,7 +102,7 @@ static void _gain_level(int new_level) {
         p_ptr->redraw |= PR_MAP;
     }
 }
-race_t *mon_xorn_get_race_t(void)
+race_t *mon_xorn_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

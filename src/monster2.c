@@ -2276,12 +2276,12 @@ void sanity_blast(monster_type *m_ptr, bool necro)
         r_ptr->r_flags2 |= RF2_ELDRITCH_HORROR;
 
         /* Demon characters are unaffected */
-        if (get_race_t()->flags & RACE_IS_DEMON) return;
+        if (get_race()->flags & RACE_IS_DEMON) return;
 
         if (p_ptr->wizard) return;
 
         /* Undead characters are 50% likely to be unaffected */
-        if (get_race_t()->flags & RACE_IS_UNDEAD)
+        if (get_race()->flags & RACE_IS_UNDEAD)
         {
             if (saving_throw(25 + p_ptr->lev)) return;
         }

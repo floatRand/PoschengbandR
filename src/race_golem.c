@@ -546,7 +546,7 @@ static int _get_powers(spell_info* spells, int max)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_golem_get_race_t(int psubrace)
+race_t *mon_golem_get_race(int psubrace)
 {
     static race_t me = {0};
     static bool   init = FALSE;

@@ -285,7 +285,7 @@ static cptr _do_potion(int sval, int mode)
         if (desc) return "It makes you nearly faint from hunger and paralyzes you, but it cures poison when you quaff it.";
         if (cast)
         {
-            if ( !(get_race_t()->flags & RACE_IS_NONLIVING)
+            if ( !(get_race()->flags & RACE_IS_NONLIVING)
               && !prace_is_(RACE_MON_JELLY) )
             {
                 msg_print("The potion makes you vomit!");

@@ -962,7 +962,7 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
-class_t *warlock_get_class_t(int psubclass)
+class_t *warlock_get_class(int psubclass)
 {
     static class_t me = {0};
     static bool init = FALSE;

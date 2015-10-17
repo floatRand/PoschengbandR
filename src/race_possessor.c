@@ -1255,7 +1255,7 @@ caster_info *possessor_caster_info(void)
 
     if (r_ptr->body.class_idx)
     {
-        class_t *class_ptr = get_class_t_aux(r_ptr->body.class_idx, 0);
+        class_t *class_ptr = get_class_aux(r_ptr->body.class_idx, 0);
         if (class_ptr && class_ptr->caster_info)
         {
             info = *class_ptr->caster_info();
@@ -1732,7 +1732,7 @@ int           r_idx = p_ptr->current_r_idx, i;
         race_ptr->subname = mon_name(r_idx);
     }
 }
-race_t *mon_possessor_get_race_t(void)
+race_t *mon_possessor_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

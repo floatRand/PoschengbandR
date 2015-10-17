@@ -588,7 +588,7 @@ void equip_wield(void)
       && object_is_known(o_ptr) 
       && p_ptr->prace != RACE_VAMPIRE 
       && p_ptr->prace != RACE_ANDROID 
-      && !(get_race_t()->flags & RACE_IS_MONSTER)
+      && !(get_race()->flags & RACE_IS_MONSTER)
       && p_ptr->pclass != CLASS_BLOOD_KNIGHT)
     {
         char dummy[MAX_NLEN+80];
@@ -1488,7 +1488,7 @@ void equip_calc_bonuses(void)
 
 void equip_on_init(void)
 {
-    race_t *race_ptr = get_race_t();
+    race_t *race_ptr = get_race();
     if (race_ptr->equip_template)
         _template = race_ptr->equip_template;
     else
@@ -1554,7 +1554,7 @@ void equip_on_load(void)
 void equip_on_change_race(void)
 {
     equip_template_ptr old_template = _template;
-    equip_template_ptr new_template = get_race_t()->equip_template;
+    equip_template_ptr new_template = get_race()->equip_template;
 
     if (!new_template)
         new_template = &b_info[0];

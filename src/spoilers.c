@@ -83,7 +83,7 @@ static void _race_help_table(FILE *fp, race_t *race_ptr)
 
 static void _race_help(FILE *fp, int idx)
 {
-    race_t *race_ptr = get_race_t_aux(idx, 0);
+    race_t *race_ptr = get_race_aux(idx, 0);
 
     fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->name, race_ptr->name);
     fprintf(fp, "%s\n\n", race_ptr->desc);
@@ -198,7 +198,7 @@ static void _races_help(FILE* fp)
             race_t *race_ptr;
 
             if (race_idx == -1) break;
-            race_ptr = get_race_t_aux(race_idx, 0);
+            race_ptr = get_race_aux(race_idx, 0);
             fprintf(fp, "%-12.12s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
                 race_ptr->name,
                 race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
@@ -219,7 +219,7 @@ static void _races_help(FILE* fp)
             race_t *race_ptr;
 
             if (race_idx == -1) break;
-            race_ptr = get_race_t_aux(race_idx, 0);
+            race_ptr = get_race_aux(race_idx, 0);
             fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
@@ -240,7 +240,7 @@ static void _races_help(FILE* fp)
             race_t *race_ptr;
 
             if (race_idx == -1) break;
-            race_ptr = get_race_t_aux(race_idx, 0);
+            race_ptr = get_race_aux(race_idx, 0);
             fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
@@ -297,7 +297,7 @@ static void _mon_race_help_table(FILE *fp, race_t *race_ptr)
 
 static void _mon_race_help(FILE *fp, int idx)
 {
-    race_t *race_ptr = get_race_t_aux(idx, 0);
+    race_t *race_ptr = get_race_aux(idx, 0);
 
     fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->name, race_ptr->name);
     fprintf(fp, "%s\n\n", race_ptr->desc);
@@ -375,7 +375,7 @@ static void _monster_races_help(FILE* fp)
             if (race_idx == -1) break;
             if (race_idx == RACE_MON_DEMON) continue;
 
-            race_ptr = get_race_t_aux(race_idx, 0);
+            race_ptr = get_race_aux(race_idx, 0);
             fprintf(fp, "%-12.12s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
                 race_ptr->name,
                 race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
@@ -398,7 +398,7 @@ static void _monster_races_help(FILE* fp)
             if (race_idx == -1) break;
             if (race_idx == RACE_MON_DEMON) continue;
 
-            race_ptr = get_race_t_aux(race_idx, 0);
+            race_ptr = get_race_aux(race_idx, 0);
             fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 5*race_ptr->extra_skills.dis, 8));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5*race_ptr->extra_skills.dev, 6));
@@ -421,7 +421,7 @@ static void _monster_races_help(FILE* fp)
             if (race_idx == -1) break;
             if (race_idx == RACE_MON_DEMON) continue;
 
-            race_ptr = get_race_t_aux(race_idx, 0);
+            race_ptr = get_race_aux(race_idx, 0);
             fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh + 5*race_ptr->extra_skills.srh, 6));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos + 5*race_ptr->extra_skills.fos, 6));
@@ -456,12 +456,12 @@ static void _demigods_help(FILE* fp)
     int i;
 
     fputs("<style:title>Demigod Parentage</style>\n\n", fp);
-    fputs(get_race_t_aux(RACE_DEMIGOD, 0)->desc, fp);
+    fputs(get_race_aux(RACE_DEMIGOD, 0)->desc, fp);
     fputs("\n\n", fp);
 
     for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
+        race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
 
         fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->subname, race_ptr->subname);
         fprintf(fp, "%s\n\n", race_ptr->subdesc);
@@ -474,7 +474,7 @@ static void _demigods_help(FILE* fp)
 
     for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
+        race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
 
         fprintf(fp, "%-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%% %4d%%\n",
             race_ptr->subname,
@@ -489,7 +489,7 @@ static void _demigods_help(FILE* fp)
     fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
+        race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
         fprintf(fp, "%-12.12s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
@@ -503,7 +503,7 @@ static void _demigods_help(FILE* fp)
     fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
     for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, i);
+        race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
         fprintf(fp, "%-12.12s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
@@ -559,12 +559,12 @@ static void _draconians_help(FILE* fp)
     int i;
 
     fputs("<style:title>Draconians</style>\n\n", fp);
-    fputs(get_race_t_aux(RACE_DRACONIAN, 0)->desc, fp);
+    fputs(get_race_aux(RACE_DRACONIAN, 0)->desc, fp);
     fputs("\n\n", fp);
 
     for (i = 0; i < DRACONIAN_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
+        race_t *race_ptr = get_race_aux(RACE_DRACONIAN, i);
 
         fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->subname, race_ptr->subname);
         fprintf(fp, "%s\n\n", race_ptr->subdesc);
@@ -577,7 +577,7 @@ static void _draconians_help(FILE* fp)
 
     for (i = 0; i < DRACONIAN_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
+        race_t *race_ptr = get_race_aux(RACE_DRACONIAN, i);
 
         fprintf(fp, "%-14s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %3d%% %4d%%\n",
             race_ptr->subname,
@@ -592,7 +592,7 @@ static void _draconians_help(FILE* fp)
     fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < DRACONIAN_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
+        race_t *race_ptr = get_race_aux(RACE_DRACONIAN, i);
         fprintf(fp, "%-12.12s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
@@ -606,7 +606,7 @@ static void _draconians_help(FILE* fp)
     fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
     for (i = 0; i < DRACONIAN_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, i);
+        race_t *race_ptr = get_race_aux(RACE_DRACONIAN, i);
         fprintf(fp, "%-12.12s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
@@ -661,12 +661,12 @@ static void _demons_help(FILE* fp)
 {
     int i;
     fputs("<style:title>Demons</style>\n\n", fp);
-    fputs(get_race_t_aux(RACE_MON_DEMON, 0)->desc, fp);
+    fputs(get_race_aux(RACE_MON_DEMON, 0)->desc, fp);
     fputs("\n\n", fp);
 
     for (i = 0; i < DEMON_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, i);
+        race_t *race_ptr = get_race_aux(RACE_MON_DEMON, i);
 
         fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->subname, race_ptr->subname);
         fprintf(fp, "%s\n\n", race_ptr->subdesc);
@@ -677,7 +677,7 @@ static void _demons_help(FILE* fp)
     fprintf(fp, "<color:G>%-17.17s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "");
     for (i = 0; i < DEMON_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, i);
+        race_t *race_ptr = get_race_aux(RACE_MON_DEMON, i);
         fprintf(fp, "%-17.17s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
             race_ptr->subname,
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
@@ -691,7 +691,7 @@ static void _demons_help(FILE* fp)
     fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < DEMON_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, i);
+        race_t *race_ptr = get_race_aux(RACE_MON_DEMON, i);
         fprintf(fp, "%-17.17s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 5*race_ptr->extra_skills.dis, 8));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5*race_ptr->extra_skills.dev, 6));
@@ -705,7 +705,7 @@ static void _demons_help(FILE* fp)
     fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
     for (i = 0; i < DEMON_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, i);
+        race_t *race_ptr = get_race_aux(RACE_MON_DEMON, i);
         fprintf(fp, "%-17.17s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh + 5*race_ptr->extra_skills.srh, 6));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos + 5*race_ptr->extra_skills.fos, 6));
@@ -721,13 +721,13 @@ static void _dragons_help(FILE* fp)
 {
     int i;
     fputs("<style:title>Dragons</style>\n\n", fp);
-    fputs(get_race_t_aux(RACE_MON_DRAGON, 0)->desc, fp);
+    fputs(get_race_aux(RACE_MON_DRAGON, 0)->desc, fp);
     fputs("\n\n", fp);
     fputs("For more information on <color:keyword>Dragon Realms</color>, see <link:DragonRealms.txt>.\n\n", fp);
 
     for (i = 0; i < DRAGON_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, i);
+        race_t *race_ptr = get_race_aux(RACE_MON_DRAGON, i);
 
         fprintf(fp, "<topic:%s><color:o>%s</color>\n", race_ptr->subname, race_ptr->subname);
         fprintf(fp, "%s\n\n", race_ptr->subdesc);
@@ -738,7 +738,7 @@ static void _dragons_help(FILE* fp)
     fprintf(fp, "<color:G>%-17.17s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop</color>\n", "");
     for (i = 0; i < DRAGON_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, i);
+        race_t *race_ptr = get_race_aux(RACE_MON_DRAGON, i);
         fprintf(fp, "%-17.17s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%% %4d%%\n",
             race_ptr->subname,
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
@@ -752,7 +752,7 @@ static void _dragons_help(FILE* fp)
     fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
     for (i = 0; i < DRAGON_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, i);
+        race_t *race_ptr = get_race_aux(RACE_MON_DRAGON, i);
         fprintf(fp, "%-17.17s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 5*race_ptr->extra_skills.dis, 8));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5*race_ptr->extra_skills.dev, 6));
@@ -766,7 +766,7 @@ static void _dragons_help(FILE* fp)
     fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
     for (i = 0; i < DRAGON_MAX; i++)
     {
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, i);
+        race_t *race_ptr = get_race_aux(RACE_MON_DRAGON, i);
         fprintf(fp, "%-17.17s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh + 5*race_ptr->extra_skills.srh, 6));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos + 5*race_ptr->extra_skills.fos, 6));
@@ -885,7 +885,7 @@ static void _dragon_realms_help(FILE* fp)
 
 static void _class_help(FILE *fp, int idx)
 {
-    class_t     *class_ptr = get_class_t_aux(idx, 0);
+    class_t     *class_ptr = get_class_aux(idx, 0);
     caster_info *caster_ptr = NULL;
 
     if (class_ptr->caster_info && idx != CLASS_PSION)
@@ -1001,7 +1001,7 @@ static void _classes_help(FILE* fp)
             char         tmp[255];
 
             if (class_idx == -1) break;
-            class_ptr = get_class_t_aux(class_idx, 0);
+            class_ptr = get_class_aux(class_idx, 0);
             if (class_ptr->caster_info)
                 caster_ptr = class_ptr->caster_info();
 
@@ -1031,7 +1031,7 @@ static void _classes_help(FILE* fp)
             class_t *class_ptr;
 
             if (class_idx == -1) break;
-            class_ptr = get_class_t_aux(class_idx, 0);
+            class_ptr = get_class_aux(class_idx, 0);
             fprintf(fp, "%-13.13s", class_ptr->name);
             fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis, 8));
             fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev, 6));
@@ -1052,7 +1052,7 @@ static void _classes_help(FILE* fp)
             class_t *class_ptr;
 
             if (class_idx == -1) break;
-            class_ptr = get_class_t_aux(class_idx, 0);
+            class_ptr = get_class_aux(class_idx, 0);
             fprintf(fp, "%-13.13s", class_ptr->name);
             fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.srh + 5*class_ptr->extra_skills.srh, 6));
             fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.fos + 5*class_ptr->extra_skills.fos, 6));

@@ -10,7 +10,7 @@ static int _class_idx(void)
     int result = p_ptr->pclass;
     if (result == CLASS_MONSTER)
     {
-        race_t *race_ptr = get_race_t();
+        race_t *race_ptr = get_race();
         result = race_ptr->pseudo_class_idx;
     }
     return result;

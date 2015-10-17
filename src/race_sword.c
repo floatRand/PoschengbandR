@@ -921,7 +921,7 @@ static void _character_dump(FILE* fff)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_sword_get_race_t(void)
+race_t *mon_sword_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

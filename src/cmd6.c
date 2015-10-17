@@ -465,7 +465,7 @@ static void do_cmd_eat_food_aux(int item)
             msg_print("The food falls through your jaws and vanishes!");
         }
     }
-    else if ((get_race_t()->flags & RACE_IS_NONLIVING) || prace_is_(RACE_ENT))
+    else if ((get_race()->flags & RACE_IS_NONLIVING) || prace_is_(RACE_ENT))
     {
         msg_print("The food of mortals is poor sustenance for you.");
         set_food(p_ptr->food + ((o_ptr->pval) / 20));
@@ -899,7 +899,7 @@ static void do_cmd_read_scroll_aux(int item, bool known)
         return;
     }
 
-    if (p_ptr->pclass == CLASS_BERSERKER || (get_race_t()->flags & RACE_IS_ILLITERATE))
+    if (p_ptr->pclass == CLASS_BERSERKER || (get_race()->flags & RACE_IS_ILLITERATE))
     {
         msg_print("You cannot read.");
         return;

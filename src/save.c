@@ -774,8 +774,8 @@ static void wr_extra(savefile_ptr file)
     savefile_write_u32b(file, p_ptr->count);
 
     {
-    race_t  *race_ptr = get_true_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t  *race_ptr = get_true_race();
+    class_t *class_ptr = get_class();
 
         if (race_ptr->save_player)
             race_ptr->save_player(file);

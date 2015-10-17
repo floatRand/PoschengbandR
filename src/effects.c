@@ -4701,7 +4701,7 @@ bool set_cut(int v, bool do_dec)
 
     if (p_ptr->is_dead) return FALSE;
 
-    if (get_race_t()->flags & RACE_IS_NONLIVING)
+    if (get_race()->flags & RACE_IS_NONLIVING)
         v = 0;
 
     if (p_ptr->no_cut)
@@ -5728,13 +5728,13 @@ void do_poly_wounds(void)
  */
 void change_race(int new_race, cptr effect_msg)
 {
-    cptr title = get_race_t_aux(new_race, 0)->name;
+    cptr title = get_race_aux(new_race, 0)->name;
     int  old_race = p_ptr->prace;
     static bool _lock = FALSE; /* This effect is not re-entrant! */
 
     if (_lock) return;
-    if (get_race_t()->flags & RACE_IS_MONSTER) return;
-    if (get_race_t_aux(new_race, 0)->flags & RACE_IS_MONSTER) return;
+    if (get_race()->flags & RACE_IS_MONSTER) return;
+    if (get_race_aux(new_race, 0)->flags & RACE_IS_MONSTER) return;
     if (old_race == RACE_ANDROID) return;
     if (new_race == old_race) return;
 
@@ -5794,7 +5794,7 @@ void change_race(int new_race, cptr effect_msg)
 
     if (p_ptr->prace == RACE_HUMAN || p_ptr->prace == RACE_DEMIGOD || p_ptr->prace == RACE_DRACONIAN)
     {
-        race_t *race_ptr = get_true_race_t();
+        race_t *race_ptr = get_true_race();
         if (race_ptr != NULL && race_ptr->gain_level != NULL)
             race_ptr->gain_level(p_ptr->lev);    /* This is OK ... Just make sure we get to choose racial powers on poly */
     }
@@ -5908,7 +5908,7 @@ void do_poly_self(void)
         do
         {
             new_race = randint0(36); /* Hack: Skip monster races and androids ... */
-            expfact = get_race_t_aux(new_race, 0)->exp;
+            expfact = get_race_aux(new_race, 0)->exp;
         }
         while (((new_race == p_ptr->prace) && (expfact > goalexpfact)) || (new_race == RACE_ANDROID));
 

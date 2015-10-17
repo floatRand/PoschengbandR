@@ -1145,7 +1145,7 @@ static int _get_spells(spell_info* spells, int max)
     return ct;
 }
 
-class_t *rage_mage_get_class_t(void)
+class_t *rage_mage_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

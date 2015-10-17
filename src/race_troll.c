@@ -435,7 +435,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 /******************************************************************************
  * Troll Public API
  ******************************************************************************/
-race_t *mon_troll_get_race_t(void)
+race_t *mon_troll_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

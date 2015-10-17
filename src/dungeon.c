@@ -205,7 +205,7 @@ static int _class_idx(void)
     int result = p_ptr->pclass;
     if (result == CLASS_MONSTER)
     {
-        race_t *race_ptr = get_race_t();
+        race_t *race_ptr = get_race();
         result = race_ptr->pseudo_class_idx;
     }
     return result;
@@ -2764,7 +2764,7 @@ static byte get_dungeon_feeling(void)
     const int base = 10;
     int rating = 0;
     int i;
-    const race_t *race_ptr = get_race_t();
+    const race_t *race_ptr = get_race();
 
     /* Hack -- no feeling in the town */
     if (!dun_level) return 0;
@@ -3428,7 +3428,7 @@ static void process_world(void)
     process_world_aux_movement();
 
     {
-        race_t *race_ptr = get_race_t();
+        race_t *race_ptr = get_race();
         if (race_ptr->process_world)
             race_ptr->process_world();
     }
@@ -4745,7 +4745,7 @@ static void process_player(void)
 
     if (!load)
     {
-    class_t *class_ptr = get_class_t();
+    class_t *class_ptr = get_class();
 
         if (class_ptr != NULL && class_ptr->process_player != NULL)
             class_ptr->process_player();
@@ -4969,8 +4969,8 @@ static void process_player(void)
         /* Significant */
         if (energy_use)
         {
-            class_t *class_ptr = get_class_t();
-            race_t  *race_ptr = get_race_t();
+            class_t *class_ptr = get_class();
+            race_t  *race_ptr = get_race();
             
             if (class_ptr->player_action)
                 class_ptr->player_action(energy_use);
@@ -5457,13 +5457,13 @@ static void load_all_pref_files(void)
     process_pref_file(buf);
 
     /* Access the "race" pref file */
-    sprintf(buf, "%s.prf", get_true_race_t()->name);
+    sprintf(buf, "%s.prf", get_true_race()->name);
 
     /* Process that file */
     process_pref_file(buf);
 
     /* Access the "class" pref file */
-    sprintf(buf, "%s.prf", get_class_t()->name);
+    sprintf(buf, "%s.prf", get_class()->name);
 
     /* Process that file */
     process_pref_file(buf);
@@ -5940,8 +5940,8 @@ void play_game(bool new_game)
     /* Give startup outfit (after loading pref files) */
     if (new_game)
     {
-        class_t *class_ptr = get_class_t();
-        race_t *race_ptr = get_race_t();
+        class_t *class_ptr = get_class();
+        race_t *race_ptr = get_race();
         personality_ptr pers_ptr = get_personality();
         
         do_cmd_redraw();  /* Not sure why this is required?! */

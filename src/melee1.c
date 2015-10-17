@@ -668,7 +668,7 @@ bool make_attack_normal(int m_idx)
                     }
 
                     if ( !drained 
-                      && !(get_race_t()->flags & RACE_IS_NONLIVING)
+                      && !(get_race()->flags & RACE_IS_NONLIVING)
                       && !prace_is_(RACE_MON_JELLY) )
                     {
                         msg_print("Food drains from your belly!");
@@ -1439,7 +1439,7 @@ bool make_attack_normal(int m_idx)
                     resist_drain = !drain_exp(d, d / 10, 50);
 
                     /* Heal the attacker? */
-                    if (get_race_t()->flags & RACE_IS_NONLIVING)
+                    if (get_race()->flags & RACE_IS_NONLIVING)
                         resist_drain = TRUE;
 
                     if ((damage > 5) && !resist_drain)

@@ -33,7 +33,7 @@ static void _calc_bonuses(void)
         p_ptr->dec_mana = TRUE;
 }
 
-class_t *rogue_get_class_t(void)
+class_t *rogue_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

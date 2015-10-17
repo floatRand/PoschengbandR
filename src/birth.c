@@ -702,7 +702,7 @@ static void _class_menu_fn(int cmd, int which, vptr cookie, variant *res)
 {
     int idx = ((int *)cookie)[which];
     char buf[100];
-    class_t *class_ptr = get_class_t_aux(idx, 0);
+    class_t *class_ptr = get_class_aux(idx, 0);
 
     switch (cmd)
     {
@@ -757,7 +757,7 @@ static bool _valid_class(int which)
 {
     if (which == CLASS_BLOOD_KNIGHT || which == CLASS_BLOOD_MAGE)
     {
-        if (get_race_t()->flags & RACE_IS_NONLIVING)
+        if (get_race()->flags & RACE_IS_NONLIVING)
             return FALSE;
     }
     if (which == CLASS_BEASTMASTER || which == CLASS_CAVALRY)
@@ -804,7 +804,7 @@ static int _prompt_class_beginner(void)
             p_ptr->dragon_realm = 0;
         }
         mp_ptr = &m_info[p_ptr->pclass];
-        class_ptr = get_class_t();
+        class_ptr = get_class();
 
         c_put_str(TERM_L_BLUE, format("%-14s", class_ptr->name), 6, 14);
         if (!_confirm_choice(class_ptr->desc, menu.count)) continue;
@@ -819,7 +819,7 @@ static int _prompt_class_beginner(void)
 
 static int _prompt_class(void)
 {
-    if (get_race_t()->flags & RACE_IS_MONSTER)
+    if (get_race()->flags & RACE_IS_MONSTER)
     {
         p_ptr->pclass = CLASS_MONSTER;
         mp_ptr = &m_info[p_ptr->pclass];
@@ -885,7 +885,7 @@ static int _prompt_class(void)
                     p_ptr->dragon_realm = 0;
                 }
                 mp_ptr = &m_info[p_ptr->pclass];
-                class_ptr = get_class_t();
+                class_ptr = get_class();
 
                 c_put_str(TERM_L_BLUE, format("%-14s", class_ptr->name), 6, 14);
                 if (!_confirm_choice(class_ptr->desc, menu2.count)) continue;
@@ -1045,7 +1045,7 @@ static void _race_menu_fn(int cmd, int which, vptr cookie, variant *res)
 {
     int idx = ((int *)cookie)[which];
     char buf[100];
-    race_t *race_ptr = get_race_t_aux(idx, 0);
+    race_t *race_ptr = get_race_aux(idx, 0);
 
     switch (cmd)
     {
@@ -1072,14 +1072,14 @@ static void _demigod_menu_fn(int cmd, int which, vptr cookie, variant *res)
     {
     case MENU_TEXT:
     {
-        race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, which);
+        race_t *race_ptr = get_race_aux(RACE_DEMIGOD, which);
         var_set_string(res, race_ptr->subname);
         break;
     }
     case MENU_ON_BROWSE:
     {
         char buf[100];
-        race_t *race_ptr = get_race_t_aux(RACE_DEMIGOD, which);
+        race_t *race_ptr = get_race_aux(RACE_DEMIGOD, which);
 
         c_put_str(TERM_L_BLUE, race_ptr->subname, 3, 40);
         put_str(": Race modification", 3, 40+strlen(race_ptr->subname));
@@ -1118,7 +1118,7 @@ static void _troll_menu_fn(int cmd, int which, vptr cookie, variant *res)
     case MENU_ON_BROWSE:
     {
         char buf[100];
-        race_t *race_ptr = get_race_t_aux(RACE_MON_TROLL, which);
+        race_t *race_ptr = get_race_aux(RACE_MON_TROLL, which);
 
         c_put_str(TERM_L_BLUE, _troll_info[which].name, 3, 40);
         put_str(": Race modification", 3, 40+strlen(_troll_info[which].name));
@@ -1165,7 +1165,7 @@ static void _giant_menu_fn(int cmd, int which, vptr cookie, variant *res)
     case MENU_ON_BROWSE:
     {
         char buf[100];
-        race_t *race_ptr = get_race_t_aux(RACE_MON_GIANT, which);
+        race_t *race_ptr = get_race_aux(RACE_MON_GIANT, which);
 
         c_put_str(TERM_L_BLUE, _giant_info[which].name, 3, 40);
         put_str(": Race modification", 3, 40+strlen(_giant_info[which].name));
@@ -1203,7 +1203,7 @@ static void _golem_menu_fn(int cmd, int which, vptr cookie, variant *res)
     case MENU_ON_BROWSE:
     {
         char buf[100];
-        race_t *race_ptr = get_race_t_aux(RACE_MON_GOLEM, which);
+        race_t *race_ptr = get_race_aux(RACE_MON_GOLEM, which);
 
         c_put_str(TERM_L_BLUE, _golem_info[which].name, 3, 40);
         put_str(": Race modification", 3, 40+strlen(_golem_info[which].name));
@@ -1239,12 +1239,12 @@ static void _dragon_menu_fn(int cmd, int which, vptr cookie, variant *res)
     switch (cmd)
     {
     case MENU_TEXT:
-        var_set_string(res, get_race_t_aux(RACE_MON_DRAGON, which)->subname);
+        var_set_string(res, get_race_aux(RACE_MON_DRAGON, which)->subname);
         break;
     case MENU_ON_BROWSE:
     {
         char buf[100];
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DRAGON, which);
+        race_t *race_ptr = get_race_aux(RACE_MON_DRAGON, which);
 
         c_put_str(TERM_L_BLUE, race_ptr->subname, 3, 40);
         put_str(": Race modification", 3, 40+strlen(race_ptr->subname));
@@ -1300,7 +1300,7 @@ static void _draconian_menu_fn(int cmd, int which, vptr cookie, variant *res)
     case MENU_ON_BROWSE:
     {
         char buf[100];
-        race_t *race_ptr = get_race_t_aux(RACE_DRACONIAN, which);
+        race_t *race_ptr = get_race_aux(RACE_DRACONIAN, which);
 
         c_put_str(TERM_L_BLUE, _draconian_info[which].name, 3, 40);
         put_str(": Race modification", 3, 40+strlen(_draconian_info[which].name));
@@ -1321,12 +1321,12 @@ static void _demon_menu_fn(int cmd, int which, vptr cookie, variant *res)
     switch (cmd)
     {
     case MENU_TEXT:
-        var_set_string(res, get_race_t_aux(RACE_MON_DEMON, which)->subname);
+        var_set_string(res, get_race_aux(RACE_MON_DEMON, which)->subname);
         break;
     case MENU_ON_BROWSE:
     {
         char buf[100];
-        race_t *race_ptr = get_race_t_aux(RACE_MON_DEMON, which);
+        race_t *race_ptr = get_race_aux(RACE_MON_DEMON, which);
 
         c_put_str(TERM_L_BLUE, race_ptr->subname, 3, 40);
         put_str(": Race modification", 3, 40+strlen(race_ptr->subname));
@@ -1376,7 +1376,7 @@ static void _elemental_menu_fn(int cmd, int which, vptr cookie, variant *res)
     case MENU_ON_BROWSE:
     {
         char buf[100];
-        race_t *race_ptr = get_race_t_aux(RACE_MON_ELEMENTAL, which);
+        race_t *race_ptr = get_race_aux(RACE_MON_ELEMENTAL, which);
 
         c_put_str(TERM_L_BLUE, _elemental_info[which].name, 3, 40);
         put_str(": Race modification", 3, 40+strlen(_elemental_info[which].name));
@@ -1424,7 +1424,7 @@ static int _prompt_race_beginner(void)
             p_ptr->prace = _beginner_races[idx];
             p_ptr->psubrace = 0;
         }
-        race_ptr = get_race_t();
+        race_ptr = get_race();
 
         c_put_str(TERM_L_BLUE, format("%-14s", race_ptr->name), 4, 14);
         if (!_confirm_choice(race_ptr->desc, menu.count)) continue;
@@ -1472,7 +1472,7 @@ static int _prompt_race(void)
                     p_ptr->prace = _race_groups[group_id].ids[idx];
                     p_ptr->psubrace = 0;
                 }
-                race_ptr = get_race_t();
+                race_ptr = get_race();
 
                 c_put_str(TERM_L_BLUE, format("%-14s", race_ptr->name), 4, 14);
                 if (!_confirm_choice(race_ptr->desc, menu2.count)) continue;
@@ -1489,7 +1489,7 @@ static int _prompt_race(void)
                         if (idx == _BIRTH_ESCAPE) break;
                         if (idx < 0) return idx;
                         p_ptr->psubrace = idx;
-                        race_ptr = get_race_t();
+                        race_ptr = get_race();
                         c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
                         if (!_confirm_choice(race_ptr->subdesc, menu3.count)) continue;
                         idx = _prompt_class();
@@ -1567,7 +1567,7 @@ static int _prompt_mon_race(void)
                     p_ptr->prace = _mon_race_groups[group_id].ids[idx];
                     p_ptr->psubrace = 0;
                 }
-                race_ptr = get_race_t();
+                race_ptr = get_race();
 
                 c_put_str(TERM_L_BLUE, format("%-14s", race_ptr->name), 4, 14);
                 if (!_confirm_choice(race_ptr->desc, menu2.count)) continue;
@@ -1659,7 +1659,7 @@ static int _prompt_mon_race(void)
                         if (idx == _BIRTH_ESCAPE) break;
                         if (idx < 0) return idx;
                         p_ptr->psubrace = idx;
-                        race_ptr = get_race_t();
+                        race_ptr = get_race();
                         c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
                         if (!_confirm_choice(race_ptr->subdesc, menu3.count)) continue;
                         idx = _prompt_class();
@@ -1679,7 +1679,7 @@ static int _prompt_mon_race(void)
                         if (idx == _BIRTH_ESCAPE) break;
                         if (idx < 0) return idx;
                         p_ptr->psubrace = idx;
-                        race_ptr = get_race_t();
+                        race_ptr = get_race();
                         c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
                         if (!_confirm_choice(race_ptr->subdesc, menu3.count)) continue;
                         idx = _prompt_class();
@@ -1846,14 +1846,14 @@ static bool _prompt_game_mode(void)
             idx = randint0(_count_ids(_real_life_races));
             p_ptr->prace = _real_life_races[idx];
             p_ptr->psubrace = 0;
-            race_ptr = get_race_t();
+            race_ptr = get_race();
 
             c_put_str(TERM_L_BLUE, format("%-14s", race_ptr->name), 4, 14);
 
             if (p_ptr->prace == RACE_DEMIGOD)
             {
                 p_ptr->psubrace = randint0(MAX_DEMIGOD_TYPES);
-                race_ptr = get_race_t();
+                race_ptr = get_race();
                 c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
             }
             else if (p_ptr->prace == RACE_DRACONIAN)
@@ -2153,14 +2153,14 @@ void get_max_stats(void)
 int _race_exp_factor(void)
 {
     if (p_ptr->prace == RACE_DOPPELGANGER)
-        return get_race_t()->exp;
-    return get_true_race_t()->exp;
+        return get_race()->exp;
+    return get_true_race()->exp;
 }
 int calc_exp_factor(void)
 {
     int exp;
     int r_exp = _race_exp_factor();
-    int c_exp = get_class_t()->exp;
+    int c_exp = get_class()->exp;
     int a_exp = get_personality()->exp;
 
     if (p_ptr->prace == RACE_ANDROID) 
@@ -2255,8 +2255,8 @@ static void birth_put_stats(void)
     int col;
     byte attr;
     char buf[80];
-    race_t  *race_ptr = get_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t  *race_ptr = get_race();
+    class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
     if (autoroller)
@@ -3324,8 +3324,8 @@ static bool get_stat_limits(void)
     char c;
     char buf[80], cur[80];
     char inp[80];
-    race_t *race_ptr = get_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t *race_ptr = get_race();
+    class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
     /* Clean up */
@@ -3607,8 +3607,8 @@ auto_roller_barf:
 
         if (use_autoroller)
         {
-            class_t *class_ptr = get_class_t();
-            race_t  *race_ptr = get_race_t();
+            class_t *class_ptr = get_class();
+            race_t  *race_ptr = get_race();
             personality_ptr pers_ptr = get_personality();
 
             put_str(" Limit", 2, col+5);
@@ -3983,7 +3983,7 @@ void player_birth(void)
 
     /* Hack: Gain CL1 */
     {
-        class_t *class_ptr = get_class_t();
+        class_t *class_ptr = get_class();
         if (class_ptr != NULL && class_ptr->gain_level != NULL)
             (class_ptr->gain_level)(p_ptr->lev);
     }
@@ -3995,8 +3995,8 @@ void dump_yourself(FILE *fff)
     char temp[80*50];
     int i;
     cptr t;
-    race_t *race_ptr = get_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t *race_ptr = get_race();
+    class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
     if (!fff) return;

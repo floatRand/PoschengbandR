@@ -906,7 +906,7 @@ static race_t *_cyber_get_race_t(void)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_demon_get_race_t(int psubrace)
+race_t *mon_demon_get_race(int psubrace)
 {
     race_t *result = NULL;
 

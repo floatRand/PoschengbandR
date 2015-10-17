@@ -23,7 +23,7 @@ static void _amberite_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_SUST_CON);
     add_flag(flgs, TR_REGEN);
 }
-race_t *amberite_get_race_t(void)
+race_t *amberite_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -139,7 +139,7 @@ static void _android_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
 {
     /*add_flag(flgs, TR_RES_ELEC); cf resists.c res_pct_aux() for an alternative*/
 }
-race_t *android_get_race_t(void)
+race_t *android_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -208,7 +208,7 @@ static void _archon_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_LEVITATION);
     add_flag(flgs, TR_SEE_INVIS);
 }
-race_t *archon_get_race_t(void)
+race_t *archon_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -281,7 +281,7 @@ static void _balrog_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 10)
         add_flag(flgs, TR_SEE_INVIS);
 }
-race_t *balrog_get_race_t(void)
+race_t *balrog_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -348,7 +348,7 @@ static void _barbarian_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_FEAR);
 }
-race_t *barbarian_get_race_t(void)
+race_t *barbarian_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -413,7 +413,7 @@ static void _beastman_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_SOUND);
     add_flag(flgs, TR_RES_CONF);
 }
-race_t *beastman_get_race_t(void)
+race_t *beastman_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -569,7 +569,7 @@ static void _centaur_calc_innate_attacks(void)
     p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
 }
 
-race_t *centaur_get_race_t(void)
+race_t *centaur_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -642,7 +642,7 @@ static void _cyclops_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_SOUND);
 }
-race_t *cyclops_get_race_t(void)
+race_t *cyclops_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -711,7 +711,7 @@ static void _dark_elf_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 20)
         add_flag(flgs, TR_SEE_INVIS);
 }
-race_t *dark_elf_get_race_t(void)
+race_t *dark_elf_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1134,7 +1134,7 @@ static void _draconian_gain_level(int new_level)
     if (new_level >= 35)
         _draconian_gain_power();
 }
-race_t *draconian_get_race_t(int psubrace)
+race_t *draconian_get_race(int psubrace)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1334,7 +1334,7 @@ static void _dunadan_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_SUST_CON);
 }
-race_t *dunadan_get_race_t(void)
+race_t *dunadan_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1399,7 +1399,7 @@ static void _dwarf_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_BLIND);
 }
-race_t *dwarf_get_race_t(void)
+race_t *dwarf_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1469,7 +1469,7 @@ static void _ent_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
 {
     /*add_flag(flgs, TR_RES_FIRE);  cf resists.c res_pct_aux() for an alternative*/
 }
-race_t *ent_get_race_t(void)
+race_t *ent_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1550,7 +1550,7 @@ static void _gnome_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_FREE_ACT);
 }
-race_t *gnome_get_race_t(void)
+race_t *gnome_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1634,7 +1634,7 @@ static void _golem_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 16)
         add_flag(flgs, TR_SPEED);
 }
-race_t *golem_get_race_t(void)
+race_t *golem_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1708,7 +1708,7 @@ static void _half_giant_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_SHARDS);
     add_flag(flgs, TR_SUST_STR);
 }
-race_t *half_giant_get_race_t(void)
+race_t *half_giant_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1774,7 +1774,7 @@ static void _half_ogre_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_SUST_STR);
     add_flag(flgs, TR_RES_DARK);
 }
-race_t *half_ogre_get_race_t(void)
+race_t *half_ogre_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1840,7 +1840,7 @@ static void _half_titan_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_CHAOS);
 }
-race_t *half_titan_get_race_t(void)
+race_t *half_titan_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1909,7 +1909,7 @@ static void _half_troll_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 15)
         add_flag(flgs, TR_REGEN);
 }
-race_t *half_troll_get_race_t(void)
+race_t *half_troll_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1967,7 +1967,7 @@ static void _high_elf_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_LITE);
     add_flag(flgs, TR_SEE_INVIS);
 }
-race_t *high_elf_get_race_t(void)
+race_t *high_elf_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -2024,7 +2024,7 @@ static int _hobbit_get_powers(spell_info* spells, int max)
 {
     return get_powers_aux(spells, max, _hobbit_powers);
 }
-race_t *hobbit_get_race_t(void)
+race_t *hobbit_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -2088,7 +2088,7 @@ race_t *hobbit_get_race_t(void)
     }
 }
 
-race_t *human_get_race_t(void)
+race_t *human_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -2155,7 +2155,7 @@ static void _imp_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 10)
         add_flag(flgs, TR_SEE_INVIS);
 }
-race_t *imp_get_race_t(void)
+race_t *imp_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;

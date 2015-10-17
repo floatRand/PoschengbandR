@@ -2162,7 +2162,7 @@ static void _player_action(int energy_use)
     psion_do_mindspring(energy_use);
 }
 
-class_t *psion_get_class_t(void)
+class_t *psion_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

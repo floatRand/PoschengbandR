@@ -25,7 +25,7 @@ static void _klackon_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev > 9)
         add_flag(flgs, TR_SPEED);
 }
-race_t *klackon_get_race_t(void)
+race_t *klackon_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -90,7 +90,7 @@ static void _kobold_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_POIS);
 }
-race_t *kobold_get_race_t(void)
+race_t *kobold_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -154,7 +154,7 @@ static void _kutar_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_CONF);
 }
-race_t *kutar_get_race_t(void)
+race_t *kutar_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -229,7 +229,7 @@ static void _mindflayer_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 30)
         add_flag(flgs, TR_TELEPATHY);
 }
-race_t *mindflayer_get_race_t(void)
+race_t *mindflayer_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -299,7 +299,7 @@ static void _nibelung_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_DISEN);
     add_flag(flgs, TR_RES_DARK);
 }
-race_t *nibelung_get_race_t(void)
+race_t *nibelung_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -359,7 +359,7 @@ static void _shadow_fairy_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_LITE);
 }
-race_t *shadow_fairy_get_race_t(void)
+race_t *shadow_fairy_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -436,7 +436,7 @@ static void _skeleton_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 10)
         add_flag(flgs, TR_RES_COLD);
 }
-race_t *skeleton_get_race_t(void)
+race_t *skeleton_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -529,7 +529,7 @@ static void _snotling_calc_bonuses(void)
 static void _snotling_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
 }
-race_t *snotling_get_race_t(void)
+race_t *snotling_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -607,7 +607,7 @@ static void _spectre_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_POIS);
     add_flag(flgs, TR_SLOW_DIGEST);
 }
-race_t *spectre_get_race_t(void)
+race_t *spectre_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -681,7 +681,7 @@ static void _sprite_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 10)
         add_flag(flgs, TR_SPEED);
 }
-race_t *sprite_get_race_t(void)
+race_t *sprite_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -768,7 +768,7 @@ static void _tonberry_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_FEAR);
     add_flag(flgs, TR_SPEED);
 }
-race_t *tonberry_get_race_t(void)
+race_t *tonberry_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -853,7 +853,7 @@ static void _vampire_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_LITE);
 }
-race_t *vampire_get_race_t(void)
+race_t *vampire_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -916,7 +916,7 @@ static int _wood_elf_get_powers(spell_info* spells, int max)
 {
     return get_powers_aux(spells, max, _wood_elf_powers);
 }
-race_t *wood_elf_get_race_t(void)
+race_t *wood_elf_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -983,7 +983,7 @@ static void _yeek_get_immunities(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 20) 
         add_flag(flgs, TR_RES_ACID);
 }
-race_t *yeek_get_race_t(void)
+race_t *yeek_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;
@@ -1059,7 +1059,7 @@ static void _zombie_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 5)
         add_flag(flgs, TR_RES_COLD);
 }
-race_t *zombie_get_race_t(void)
+race_t *zombie_get_race(void)
 {
     static race_t me = {0};
     static bool init = FALSE;

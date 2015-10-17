@@ -954,7 +954,7 @@ static void _gain_level(int new_level)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_quylthulg_get_race_t(void)
+race_t *mon_quylthulg_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

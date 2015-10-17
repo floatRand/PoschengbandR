@@ -5391,7 +5391,7 @@ static bool _is_device_class(void)
     int class_idx = p_ptr->pclass;
 
     if (class_idx == CLASS_MONSTER)
-        return get_race_t()->pseudo_class_idx;
+        return get_race()->pseudo_class_idx;
 
     switch (class_idx)
     {
@@ -7892,7 +7892,7 @@ static void spell_damcalc(monster_type *m_ptr, int typ, int dam, int limit, int 
         break;
 
     case GF_DEATH_RAY:
-        if (get_race_t()->flags & RACE_IS_NONLIVING)
+        if (get_race()->flags & RACE_IS_NONLIVING)
         {
             dam = 0;
             ignore_wraith_form = TRUE;

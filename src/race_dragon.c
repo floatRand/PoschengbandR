@@ -3326,7 +3326,7 @@ static race_t *_steel_get_race_t(void)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_dragon_get_race_t(int psubrace)
+race_t *mon_dragon_get_race(int psubrace)
 {
     race_t *result = NULL;
 

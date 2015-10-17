@@ -1045,15 +1045,15 @@ cptr process_pref_file_expr(char **sp, char *fp)
             else if (streq(b+1, "RACE"))
             {
                 if (p_ptr->prace == RACE_DOPPELGANGER) /* Use appropriate visuals for mimicked race */
-                    v = get_race_t()->name;
+                    v = get_race()->name;
                 else
-                    v = get_true_race_t()->name;
+                    v = get_true_race()->name;
             }
 
             /* Class */
             else if (streq(b+1, "CLASS"))
             {
-                v = get_class_t()->name;
+                v = get_class()->name;
             }
 
             /* Player */
@@ -1634,8 +1634,8 @@ static cptr likert(int x, int y)
 static void player_flags(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
-    class_t *class_ptr = get_class_t();
-    race_t *race_ptr = get_race_t();
+    class_t *class_ptr = get_class();
+    race_t *race_ptr = get_race();
     personality_ptr pers_ptr = get_personality();
 
     /* Clear */
@@ -2146,8 +2146,8 @@ static void known_obj_immunity(u32b flgs[TR_FLAG_SIZE])
 static void player_immunity(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
-    race_t  *race_ptr = get_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t  *race_ptr = get_race();
+    class_t *class_ptr = get_class();
 
     /* Clear */
     for (i = 0; i < TR_FLAG_SIZE; i++)
@@ -2190,7 +2190,7 @@ static void tim_player_immunity(u32b flgs[TR_FLAG_SIZE])
 static void player_vuln_flags(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
-    race_t *race_ptr = get_race_t();
+    race_t *race_ptr = get_race();
 
     /* Clear */
     for (i = 0; i < TR_FLAG_SIZE; i++)
@@ -2626,8 +2626,8 @@ static void display_player_stat_info(void)
     int stat_col, stat;
     int row, col;
     u32b flgs[TR_FLAG_SIZE];
-    race_t *race_ptr = get_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t *race_ptr = get_race();
+    class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
     byte a;
@@ -3073,8 +3073,8 @@ static int _artifacts(void)
 void display_player(int mode)
 {
     char    tmp[255], buf[255];
-    race_t *race_ptr = get_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t *race_ptr = get_race();
+    class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
     mode = (mode % 4);
@@ -3452,8 +3452,8 @@ static void dump_aux_display_player(FILE *fff)
     {
         spell_info spells[MAX_SPELLS];
         int        ct = 0; 
-        race_t    *race_ptr = get_race_t();
-        class_t   *class_ptr = get_class_t();
+        race_t    *race_ptr = get_race();
+        class_t   *class_ptr = get_class();
 
         if (race_ptr->get_powers)
             ct += (race_ptr->get_powers)(spells + ct, MAX_SPELLS - ct);
@@ -3470,7 +3470,7 @@ static void dump_aux_display_player(FILE *fff)
     {
         spell_info spells[MAX_SPELLS];
         int        ct = 0; 
-        race_t    *race_ptr = get_race_t();
+        race_t    *race_ptr = get_race();
         /*class_t   *class_ptr = get_class_t();*/
 
         if (race_ptr->get_spells)
@@ -3484,8 +3484,8 @@ static void dump_aux_display_player(FILE *fff)
     }
 
     {
-        class_t *class_ptr = get_class_t();
-        race_t  *race_ptr = get_race_t();
+        class_t *class_ptr = get_class();
+        race_t  *race_ptr = get_race();
         if (class_ptr->character_dump != NULL)
             (class_ptr->character_dump)(fff);
         if (race_ptr && race_ptr->character_dump)
@@ -4677,7 +4677,7 @@ static void dump_aux_race_history(FILE *fff)
     {
         int i;
 
-        fprintf(fff, "\n\n You were born as %s.", get_race_t_aux(p_ptr->start_race, 0)->name);
+        fprintf(fff, "\n\n You were born as %s.", get_race_aux(p_ptr->start_race, 0)->name);
         for (i = 0; i < MAX_RACES; i++)
         {
             if (p_ptr->start_race == i) continue;
@@ -4689,7 +4689,7 @@ static void dump_aux_race_history(FILE *fff)
             {
                 if (!(p_ptr->old_race2 & 1L << (i-32))) continue;
             }
-            fprintf(fff, "\n You were a %s before.", get_race_t_aux(i, 0)->name);
+            fprintf(fff, "\n You were a %s before.", get_race_aux(i, 0)->name);
         }
 
         fputc('\n', fff);
@@ -6205,7 +6205,7 @@ static void print_tomb(void)
         center_string(buf, p);
         put_str(buf, 8, 11);
 
-        center_string(buf, get_class_t()->name);
+        center_string(buf, get_class()->name);
         put_str(buf, 10, 11);
 
         (void)sprintf(tmp, "Level: %d", (int)p_ptr->lev);

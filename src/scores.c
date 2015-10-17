@@ -247,7 +247,7 @@ void display_scores_aux(int from, int to, int note, high_score *score)
             sprintf(out_val, "%3d.%9s  %s %s the %s %s, Level %d",
                 place, the_score.pts,
                 get_personality_aux(pa)->name,
-                the_score.who, get_race_t_aux(pr, 0)->name, get_class_t_aux(pc, 0)->name,
+                the_score.who, get_race_aux(pr, 0)->name, get_class_aux(pc, 0)->name,
                 clev);
 
 
@@ -608,7 +608,7 @@ void show_highclass(void)
         clev = atoi(the_score.cur_lev);
 
         sprintf(out_val, "%3d) %s the %s (Level %2d)",
-            (m + 1), the_score.who, get_race_t_aux(pr, 0)->name, clev);
+            (m + 1), the_score.who, get_race_aux(pr, 0)->name, clev);
 
         prt(out_val, (m + 7), 0);
         m++;
@@ -616,7 +616,7 @@ void show_highclass(void)
     }
 
     sprintf(out_val, "You) %s the %s (Level %2d)",
-        player_name, get_race_t_aux(p_ptr->prace, p_ptr->psubrace)->name, p_ptr->lev);
+        player_name, get_race_aux(p_ptr->prace, p_ptr->psubrace)->name, p_ptr->lev);
 
     prt(out_val, (m + 8), 0);
 
@@ -645,7 +645,7 @@ void race_score(int race_num)
     lastlev = 0;
 
     /* rr9: TODO - pluralize the race */
-    sprintf(tmp_str,"The Greatest of all the %s", get_race_t_aux(race_num, 0)->name);
+    sprintf(tmp_str,"The Greatest of all the %s", get_race_aux(race_num, 0)->name);
 
     prt(tmp_str, 5, 15);
 
@@ -683,7 +683,7 @@ void race_score(int race_num)
         {
             sprintf(out_val, "%3d) %s the %s (Level %3d)",
                 (m + 1), the_score.who,
-            get_race_t_aux(pr, 0)->name, clev);
+            get_race_aux(pr, 0)->name, clev);
 
             prt(out_val, (m + 7), 0);
             m++;
@@ -696,7 +696,7 @@ void race_score(int race_num)
     if ((p_ptr->prace == race_num) && (p_ptr->lev >= lastlev))
     {
         sprintf(out_val, "You) %s the %s (Level %3d)",
-            player_name, get_race_t_aux(p_ptr->prace, p_ptr->psubrace)->name, p_ptr->lev);
+            player_name, get_race_aux(p_ptr->prace, p_ptr->psubrace)->name, p_ptr->lev);
 
         prt(out_val, (m + 8), 0);
     }

@@ -603,7 +603,7 @@ static int _get_powers(spell_info* spells, int max)
     return ct;
 }
 
-class_t *magic_eater_get_class_t(void)
+class_t *magic_eater_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

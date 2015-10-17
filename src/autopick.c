@@ -2035,7 +2035,7 @@ int pack_find(int tval, int sval)
 bool autopick_auto_id(object_type *o_ptr)
 {
     int     class_idx = p_ptr->pclass;
-    race_t *race = get_race_t();
+    race_t *race = get_race();
     
     if (class_idx == CLASS_MONSTER)
         class_idx = race->pseudo_class_idx;
@@ -5676,8 +5676,8 @@ static bool do_editor_command(text_body_type *tb, int com_id)
     {
         /* Insert a conditinal expression line */
         char expression[80];
-        race_t *race_ptr = get_race_t();
-        class_t *class_ptr = get_class_t();
+        race_t *race_ptr = get_race();
+        class_t *class_ptr = get_class();
 
         /* Conditional Expression for Class and Race */
         sprintf(expression, "?:[AND [EQU $RACE %s] [EQU $CLASS %s] [GEQ $LEVEL %02d]]", 

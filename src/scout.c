@@ -438,7 +438,7 @@ static void _move_player(void)
     p_ptr->update |= PU_BONUS;
 }
 
-class_t *scout_get_class_t(void)
+class_t *scout_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

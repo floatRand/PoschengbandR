@@ -1781,7 +1781,7 @@ static void prt_effects(void)
     if (p_ptr->mimic_form != MIMIC_NONE)
     {
         char buf[MAX_NLEN];
-        race_t *race_ptr = get_race_t();
+        race_t *race_ptr = get_race();
         sprintf(buf, "[%.10s]", race_ptr->name);
         c_put_str(TERM_RED, buf, row++, col);
     }
@@ -2741,10 +2741,10 @@ static int _racial_mana_adjust(int i)
 
     /* When doppelgangers mimic, their assumed form affects their mana */
     if (p_ptr->prace == RACE_DOPPELGANGER)
-        race_ptr = get_race_t();
+        race_ptr = get_race();
     /* but when anybody else mimics, we continue to use their true original race */
     else
-        race_ptr = get_true_race_t();
+        race_ptr = get_true_race();
     
     /* psion's best racial modifier wins */
     if (p_ptr->pclass == CLASS_PSION)
@@ -3125,8 +3125,8 @@ static int _calc_xtra_hp(int amt)
 static void calc_hitpoints(void)
 {
     int      mhp;
-    race_t  *race_ptr = get_race_t();
-    class_t *class_ptr = get_class_t();
+    race_t  *race_ptr = get_race();
+    class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
 
     mhp = p_ptr->player_hp[p_ptr->lev - 1] * 10 / 100; /* 255 hp total */
@@ -3306,8 +3306,8 @@ void calc_bonuses(void)
     u32b flgs[TR_FLAG_SIZE];
     bool            riding_levitation = FALSE;
 
-    class_t *class_ptr = get_class_t();
-    race_t *race_ptr = get_race_t();
+    class_t *class_ptr = get_class();
+    race_t *race_ptr = get_race();
     personality_ptr pers_ptr = get_personality();
 
     /* Save the old vision stuff */

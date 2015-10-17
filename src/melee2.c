@@ -2191,7 +2191,7 @@ static void process_monster(int m_idx)
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
     monster_race    *ap_r_ptr = &r_info[m_ptr->ap_r_idx];
-    class_t         *class_ptr = get_class_t();
+    class_t         *class_ptr = get_class();
 
     int             i, d, oy, ox, ny, nx;
 

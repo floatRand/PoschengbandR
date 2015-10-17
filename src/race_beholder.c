@@ -293,7 +293,7 @@ static caster_info * _caster_info(void)
 /**********************************************************************
  * Public
  **********************************************************************/
-race_t *mon_beholder_get_race_t(void)
+race_t *mon_beholder_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

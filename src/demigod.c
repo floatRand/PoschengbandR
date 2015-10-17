@@ -429,7 +429,7 @@ static void _zeus_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_SH_ELEC);
 }
 
-race_t *demigod_get_race_t(int psubrace)
+race_t *demigod_get_race(int psubrace)
 {
     static race_t me = {0};
     static bool init = FALSE;

@@ -1611,7 +1611,7 @@ int calculate_upkeep(void)
     if (total_friends)
     {
         int upkeep_factor;
-        int div = get_class_t()->pets;
+        int div = get_class()->pets;
 
         /* Lower divs are better ... I think. */
         if (prace_is_(RACE_DEMIGOD) && p_ptr->psubrace == DEMIGOD_APHRODITE)

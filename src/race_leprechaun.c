@@ -400,7 +400,7 @@ bool leprechaun_steal(int m_idx)
     return result;
 }
 
-race_t *mon_leprechaun_get_race_t(void)
+race_t *mon_leprechaun_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;

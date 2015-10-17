@@ -2048,9 +2048,9 @@ extern personality_ptr get_personality(void);
 /* races.c */
 extern int get_race_idx(cptr name);
 extern bool prace_is_(int which);
-extern race_t *get_race_t(void);      /* Actual Race (cf Mimics) */
-extern race_t *get_true_race_t(void); /* True Race */
-extern race_t *get_race_t_aux(int prace, int psubrace);
+extern race_t *get_race(void);      /* Actual Race (cf Mimics) */
+extern race_t *get_true_race(void); /* True Race */
+extern race_t *get_race_aux(int prace, int psubrace);
 
 /* Player Races */
 extern void mimic_race(int new_race, const char *msg);
@@ -2059,73 +2059,73 @@ extern bool mimic_no_regen(void);
 
 extern cptr gf_name(int which);
 
-extern race_t *amberite_get_race_t(void);
-extern race_t *android_get_race_t(void);
-extern race_t *archon_get_race_t(void);
-extern race_t *balrog_get_race_t(void);
-extern race_t *barbarian_get_race_t(void);
-extern race_t *beastman_get_race_t(void);
-extern race_t *centaur_get_race_t(void);
-extern race_t *cyclops_get_race_t(void);
-extern race_t *dark_elf_get_race_t(void);
-extern race_t *demigod_get_race_t(int psubrace);
+extern race_t *amberite_get_race(void);
+extern race_t *android_get_race(void);
+extern race_t *archon_get_race(void);
+extern race_t *balrog_get_race(void);
+extern race_t *barbarian_get_race(void);
+extern race_t *beastman_get_race(void);
+extern race_t *centaur_get_race(void);
+extern race_t *cyclops_get_race(void);
+extern race_t *dark_elf_get_race(void);
+extern race_t *demigod_get_race(int psubrace);
 extern void    demigod_rechoose_powers(void);
-extern race_t *doppelganger_get_race_t(void);
-extern race_t *draconian_get_race_t(int psubrace);
-extern race_t *dunadan_get_race_t(void);
-extern race_t *dwarf_get_race_t(void);
-extern race_t *ent_get_race_t(void);
-extern race_t *gnome_get_race_t(void);
-extern race_t *golem_get_race_t(void);
-extern race_t *half_giant_get_race_t(void);
-extern race_t *half_ogre_get_race_t(void);
-extern race_t *half_titan_get_race_t(void);
-extern race_t *half_troll_get_race_t(void);
-extern race_t *high_elf_get_race_t(void);
-extern race_t *hobbit_get_race_t(void);
-extern race_t *human_get_race_t(void);
-extern race_t *imp_get_race_t(void);
-extern race_t *klackon_get_race_t(void);
-extern race_t *kobold_get_race_t(void);
-extern race_t *kutar_get_race_t(void);
-extern race_t *mindflayer_get_race_t(void);
-extern race_t *nibelung_get_race_t(void);
-extern race_t *shadow_fairy_get_race_t(void);
-extern race_t *skeleton_get_race_t(void);
-extern race_t *snotling_get_race_t(void);
-extern race_t *spectre_get_race_t(void);
-extern race_t *sprite_get_race_t(void);
-extern race_t *tonberry_get_race_t(void);
-extern race_t *vampire_get_race_t(void);
-extern race_t *wood_elf_get_race_t(void);
-extern race_t *yeek_get_race_t(void);
-extern race_t *zombie_get_race_t(void);
+extern race_t *doppelganger_get_race(void);
+extern race_t *draconian_get_race(int psubrace);
+extern race_t *dunadan_get_race(void);
+extern race_t *dwarf_get_race(void);
+extern race_t *ent_get_race(void);
+extern race_t *gnome_get_race(void);
+extern race_t *golem_get_race(void);
+extern race_t *half_giant_get_race(void);
+extern race_t *half_ogre_get_race(void);
+extern race_t *half_titan_get_race(void);
+extern race_t *half_troll_get_race(void);
+extern race_t *high_elf_get_race(void);
+extern race_t *hobbit_get_race(void);
+extern race_t *human_get_race(void);
+extern race_t *imp_get_race(void);
+extern race_t *klackon_get_race(void);
+extern race_t *kobold_get_race(void);
+extern race_t *kutar_get_race(void);
+extern race_t *mindflayer_get_race(void);
+extern race_t *nibelung_get_race(void);
+extern race_t *shadow_fairy_get_race(void);
+extern race_t *skeleton_get_race(void);
+extern race_t *snotling_get_race(void);
+extern race_t *spectre_get_race(void);
+extern race_t *sprite_get_race(void);
+extern race_t *tonberry_get_race(void);
+extern race_t *vampire_get_race(void);
+extern race_t *wood_elf_get_race(void);
+extern race_t *yeek_get_race(void);
+extern race_t *zombie_get_race(void);
 
 extern void equip_shuffle(cptr tag); /* For shapeshifters ... */
 
 /* Monster Races */
-extern race_t *mon_angel_get_race_t(void);
-extern race_t *mon_beholder_get_race_t(void);
-extern race_t *mon_centipede_get_race_t(void);
-extern race_t *mon_demon_get_race_t(int psubrace);
-extern race_t *mon_dragon_get_race_t(int psubrace);
-extern race_t *mon_elemental_get_race_t(int psubrace);
-extern race_t *mon_giant_get_race_t(int psubrace);
-extern race_t *mon_golem_get_race_t(int psubrace);
-extern race_t *mon_hound_get_race_t(void);
-extern race_t *mon_hydra_get_race_t(void);
-extern race_t *mon_jelly_get_race_t(void);
-extern race_t *mon_leprechaun_get_race_t(void);
-extern race_t *mon_lich_get_race_t(void);
-extern race_t *mon_mimic_get_race_t(void);
-extern race_t *mon_possessor_get_race_t(void);
-extern race_t *mon_quylthulg_get_race_t(void);
-extern race_t *mon_ring_get_race_t(void);
-extern race_t *mon_spider_get_race_t(void);
-extern race_t *mon_sword_get_race_t(void);
-extern race_t *mon_troll_get_race_t(void);
-extern race_t *mon_vampire_get_race_t(void);
-extern race_t *mon_xorn_get_race_t(void);
+extern race_t *mon_angel_get_race(void);
+extern race_t *mon_beholder_get_race(void);
+extern race_t *mon_centipede_get_race(void);
+extern race_t *mon_demon_get_race(int psubrace);
+extern race_t *mon_dragon_get_race(int psubrace);
+extern race_t *mon_elemental_get_race(int psubrace);
+extern race_t *mon_giant_get_race(int psubrace);
+extern race_t *mon_golem_get_race(int psubrace);
+extern race_t *mon_hound_get_race(void);
+extern race_t *mon_hydra_get_race(void);
+extern race_t *mon_jelly_get_race(void);
+extern race_t *mon_leprechaun_get_race(void);
+extern race_t *mon_lich_get_race(void);
+extern race_t *mon_mimic_get_race(void);
+extern race_t *mon_possessor_get_race(void);
+extern race_t *mon_quylthulg_get_race(void);
+extern race_t *mon_ring_get_race(void);
+extern race_t *mon_spider_get_race(void);
+extern race_t *mon_sword_get_race(void);
+extern race_t *mon_troll_get_race(void);
+extern race_t *mon_vampire_get_race(void);
+extern race_t *mon_xorn_get_race(void);
 
 extern bool dragon_vamp_hack;
 extern int dragon_vamp_amt;
@@ -2191,23 +2191,23 @@ extern void    vampire_take_light_damage(int amt);
 extern void    vampire_take_dark_damage(int amt);
 
 /* Mimic Forms */
-extern race_t *bat_get_race_t(void);
-extern race_t *clay_golem_get_race_t(void);
-extern race_t *colossus_get_race_t(void);
-extern race_t *demon_get_race_t(void);
-extern race_t *demon_lord_get_race_t(void);
-extern race_t *iron_golem_get_race_t(void);
-extern race_t *mist_get_race_t(void);
-extern race_t *mithril_golem_get_race_t(void);
-extern race_t *vampire_lord_get_race_t(void);
-extern race_t *small_kobold_get_race_t(void);
-extern race_t *mangy_leper_get_race_t(void);
-extern race_t *wolf_get_race_t(void);
+extern race_t *bat_get_race(void);
+extern race_t *clay_golem_get_race(void);
+extern race_t *colossus_get_race(void);
+extern race_t *demon_get_race(void);
+extern race_t *demon_lord_get_race(void);
+extern race_t *iron_golem_get_race(void);
+extern race_t *mist_get_race(void);
+extern race_t *mithril_golem_get_race(void);
+extern race_t *vampire_lord_get_race(void);
+extern race_t *small_kobold_get_race(void);
+extern race_t *mangy_leper_get_race(void);
+extern race_t *wolf_get_race(void);
 
 
 /* classes.c */
-extern class_t *get_class_t(void);
-extern class_t *get_class_t_aux(int pclass, int psubclass);
+extern class_t *get_class(void);
+extern class_t *get_class_aux(int pclass, int psubclass);
 extern int lookup_class_idx(cptr name);
 extern int get_class_idx(void);
 extern caster_info *get_caster_info(void);
@@ -2221,7 +2221,7 @@ extern void dump_spells_aux(FILE *fff, spell_info *table, int ct);
 
 /* duelist.c */
 extern cptr duelist_current_challenge(void);
-extern class_t *duelist_get_class_t(void);
+extern class_t *duelist_get_class(void);
 extern bool duelist_issue_challenge(void);
 extern int duelist_skill_sav(int m_idx);
 extern void strafing_spell(int cmd, variant *res);
@@ -2229,7 +2229,7 @@ extern bool nemesis_hack;    /* Actually, its in melee1.c */
 
 
 /* magic_eater.c */
-extern class_t *magic_eater_get_class_t(void);
+extern class_t *magic_eater_get_class(void);
 extern bool magic_eater_regen(int percent);
 extern void magic_eater_restore(void);
 extern void magic_eater_restore_all(void);
@@ -2241,17 +2241,17 @@ extern void magic_eater_gain(void);
 extern bool magic_eater_hack;
 
 /* mauler.c */
-extern class_t *mauler_get_class_t(void);
+extern class_t *mauler_get_class(void);
 extern bool do_blow(int type);
 extern int mauler_get_toggle(void);
 extern void process_maul_of_vice(void);
 
 /* mindcrafter.c */
-extern class_t *mindcrafter_get_class_t(void);
+extern class_t *mindcrafter_get_class(void);
 extern void psycho_spear_spell(int cmd, variant *res);
 
 /* mirror_master.c */
-extern class_t *mirror_master_get_class_t(void);
+extern class_t *mirror_master_get_class(void);
 extern bool is_mirror_grid(cave_type *c_ptr);
 extern void remove_all_mirrors(bool explode);
 extern void remove_mirror(int y, int x);
@@ -2264,50 +2264,50 @@ extern critical_t monk_get_critical(martial_arts *ma_ptr, int hand, int mode);
 extern int  monk_display_attack_info(int hand, int row, int col);
 
 /* mystic.c */
-extern class_t *mystic_get_class_t(void);
+extern class_t *mystic_get_class(void);
 extern int mystic_get_toggle(void);
 
 /* ninja.c */
 extern void quick_walk_spell(int cmd, variant *res);
 
-extern class_t *archaeologist_get_class_t(void);
+extern class_t *archaeologist_get_class(void);
 extern bool     archaeologist_is_favored_weapon(object_type *o_ptr);
 extern int      archaeologist_spell_stat_idx(void);
-extern class_t *archer_get_class_t(void);
-extern class_t *bard_get_class_t(void);
+extern class_t *archer_get_class(void);
+extern class_t *bard_get_class(void);
 extern void     bard_check_music(void);
 extern void     bard_start_singing(int spell, int song);
 extern void     bard_stop_singing(void);
-extern class_t *beastmaster_get_class_t(void);
-extern class_t *berserker_get_class_t(void);
-extern class_t *blood_knight_get_class_t(void);
-extern class_t *blood_mage_get_class_t(void);
-extern class_t *blue_mage_get_class_t(void);
-extern class_t *cavalry_get_class_t(void);
-extern class_t *chaos_warrior_get_class_t(void);
+extern class_t *beastmaster_get_class(void);
+extern class_t *berserker_get_class(void);
+extern class_t *blood_knight_get_class(void);
+extern class_t *blood_mage_get_class(void);
+extern class_t *blue_mage_get_class(void);
+extern class_t *cavalry_get_class(void);
+extern class_t *chaos_warrior_get_class(void);
 extern void     chaos_warrior_reward(void);
-extern class_t *devicemaster_get_class_t(void);
+extern class_t *devicemaster_get_class(void);
 extern bool     devicemaster_desperation;
 extern cptr     devicemaster_speciality_name(int psubclass);
 extern cptr     devicemaster_speciality_desc(int psubclass);
 extern bool     devicemaster_is_speciality(object_type *o_ptr);
-extern class_t *force_trainer_get_class_t(void);
-extern class_t *high_mage_get_class_t(void);
+extern class_t *force_trainer_get_class(void);
+extern class_t *high_mage_get_class(void);
 extern bool     imitator_cast(bool revenge);
-extern class_t *imitator_get_class_t(void);
+extern class_t *imitator_get_class(void);
 extern void     spellbook_character_dump(FILE *fff);
-extern class_t *mage_get_class_t(void);
+extern class_t *mage_get_class(void);
 extern equip_template_ptr mon_get_equip_template(void);
 extern cptr     mon_name(int r_idx);
-extern class_t *monk_get_class_t(void);
+extern class_t *monk_get_class(void);
 extern void     monk_posture_calc_bonuses(void);
 extern void     monk_ac_bonus(void);
-extern class_t *monster_get_class_t(void);
-extern class_t *ninja_get_class_t(void);
-extern class_t *paladin_get_class_t(void);
+extern class_t *monster_get_class(void);
+extern class_t *ninja_get_class(void);
+extern class_t *paladin_get_class(void);
 extern bool     player_is_monster_king(void);
-extern class_t *priest_get_class_t(void);
-extern class_t *psion_get_class_t(void);
+extern class_t *priest_get_class(void);
+extern class_t *psion_get_class(void);
 extern int      psion_backlash_dam(int dam);
 extern void     psion_decrement_counters(void);
 extern void     psion_do_mindspring(int energy);
@@ -2341,37 +2341,37 @@ extern int      psion_do_drain(int spell_idx, int dam);
 
 extern void     rage_mage_browse_spell(void);
 extern void     rage_mage_gain_spell(void);
-extern class_t *rage_mage_get_class_t(void);
+extern class_t *rage_mage_get_class(void);
 extern void     rage_mage_blood_lust(int dam);
 extern void     rage_mage_rage_fueled(int dam);
-extern class_t *ranger_get_class_t(void);
-extern class_t *red_mage_get_class_t(void);
-extern class_t *rogue_get_class_t(void);
+extern class_t *ranger_get_class(void);
+extern class_t *red_mage_get_class(void);
+extern class_t *rogue_get_class(void);
 extern bool     rune_add(object_type *o_ptr, int which, bool prompt);
 extern cptr     rune_desc(int which);
 extern void     rune_calc_bonuses(object_type *o_ptr);
-extern class_t *rune_knight_get_class_t(void);
+extern class_t *rune_knight_get_class(void);
 extern void     samurai_concentration_spell(int cmd, variant *res);
 extern void     samurai_on_rest(void);
 extern bool     samurai_can_concentrate(void);
-extern class_t *samurai_get_class_t(void);
+extern class_t *samurai_get_class(void);
 extern void     samurai_posture_spell(int cmd, variant *res);
-extern class_t *tourist_get_class_t(void);
-extern class_t *scout_get_class_t(void);
-extern class_t *sniper_get_class_t(void);
-extern class_t *sorcerer_get_class_t(void);
-extern class_t *warlock_get_class_t(int psubclass);
+extern class_t *tourist_get_class(void);
+extern class_t *scout_get_class(void);
+extern class_t *sniper_get_class(void);
+extern class_t *sorcerer_get_class(void);
+extern class_t *warlock_get_class(int psubclass);
 extern bool     warlock_is_pact_monster(monster_race *r_ptr);
-extern class_t *warrior_get_class_t(void);
-extern class_t *warrior_mage_get_class_t(void);
-extern class_t *weaponsmith_get_class_t(void);
+extern class_t *warrior_get_class(void);
+extern class_t *warrior_mage_get_class(void);
+extern class_t *weaponsmith_get_class(void);
 
 extern cptr do_hissatsu_spell(int spell, int mode);
 
 /* necromancer.c */
 extern bool     repose_of_the_dead;
 extern cptr     do_necromancy_spell(int spell, int mode);
-extern class_t *necromancer_get_class_t(void);
+extern class_t *necromancer_get_class(void);
 extern void     on_p_hit_m(int m_idx);
 
 /* skills.c */
@@ -2420,14 +2420,14 @@ extern void skills_on_save(savefile_ptr file);
 
 
 /* time_lord.c */
-extern class_t *time_lord_get_class_t(void);
+extern class_t *time_lord_get_class(void);
 extern bool check_foresight(void);
 extern bool devolve_monster(int m_idx, bool msg);
 extern bool evolve_monster(int m_idx, bool msg);
 extern bool mon_amnesia(int m_idx);
 
 /* weaponmaster.c */
-extern class_t *weaponmaster_get_class_t(void);
+extern class_t *weaponmaster_get_class(void);
 extern int weaponmaster_get_toggle(void);
 extern void weaponmaster_set_toggle(int toggle);
 extern void weaponmaster_adjust_skills(void);
@@ -2447,7 +2447,7 @@ extern void generate_spoilers(void);
 
 
 /* wild_talent.c */
-extern class_t *wild_talent_get_class_t(void);
+extern class_t *wild_talent_get_class(void);
 extern void wild_talent_scramble(void);
 extern void wild_talent_new_life(void);
 extern void wild_talent_fix_up(void);

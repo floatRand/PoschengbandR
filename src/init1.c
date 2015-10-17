@@ -3536,7 +3536,7 @@ errr parse_r_info(char *buf, header *head)
                 idx = get_race_idx(zz[1]);
                 if (idx >= 0)
                 {
-                    race_t *race_ptr = get_race_t_aux(idx, 0);
+                    race_t *race_ptr = get_race_aux(idx, 0);
                     for (i = 0; i < MAX_STATS; i++)
                         r_ptr->body.stats[i] = race_ptr->stats[i];
                     r_ptr->body.skills = race_ptr->skills;
@@ -3550,7 +3550,7 @@ errr parse_r_info(char *buf, header *head)
                 idx = lookup_class_idx(zz[2]);
                 if (idx >= 0)
                 {
-                    class_t *class_ptr = get_class_t_aux(idx, 0);
+                    class_t *class_ptr = get_class_aux(idx, 0);
                     r_ptr->body.class_idx = idx;
                     for (i = 0; i < MAX_STATS; i++)
                         r_ptr->body.stats[i] += class_ptr->stats[i];
@@ -5295,13 +5295,13 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
 
             else if (streq(b+1, "RACE"))
             {
-                v = get_true_race_t()->name;
+                v = get_true_race()->name;
             }
 
             /* Class */
             else if (streq(b+1, "CLASS"))
             {
-                v = get_class_t()->name;
+                v = get_class()->name;
             }
 
             /* First realm */
