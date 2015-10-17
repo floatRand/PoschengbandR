@@ -6767,19 +6767,22 @@ void acquirement(int y1, int x1, int num, bool great, bool known)
     object_type *i_ptr;
     object_type object_type_body;
     u32b mode = AM_GOOD | (great ? (AM_GREAT | AM_TAILORED) : 0L);
+    int  attempt = 0;
 
     /* Acquirement */
-    while (num--)
+    while (num && attempt < 1000)
     {
         /* Get local object */
         i_ptr = &object_type_body;
 
         /* Wipe the object */
         object_wipe(i_ptr);
+        attempt++;
 
         /* Make a good (or great) object (if possible) */
         if (!make_object(i_ptr, mode)) continue;
 
+        num--;
         if (known)
         {
             object_aware(i_ptr);
