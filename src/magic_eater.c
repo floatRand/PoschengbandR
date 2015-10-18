@@ -94,13 +94,13 @@ static void _display(object_type *list, rect_t display)
 
             object_desc(buf, o_ptr, OD_COLOR_CODED);
             doc_insert(doc, buf);
-/*
+
             if (fail == 1000)
                 doc_printf(doc, "<tab:%d>Fail: %3d%%\n", display.cx - 12, fail/10);
             else
                 doc_printf(doc, "<tab:%d>Fail: %2d.%d%%\n", display.cx - 12, fail/10, fail%10);
-*/
-doc_printf(doc, "<tab:%d>SP: %3d.%2.2d\n", display.cx - 12, o_ptr->xtra5 / 100, o_ptr->xtra5 % 100);
+
+            /*doc_printf(doc, "<tab:%d>SP: %3d.%2.2d\n", display.cx - 12, o_ptr->xtra5 / 100, o_ptr->xtra5 % 100);*/
         }
         else
             doc_insert_text(doc, TERM_L_DARK, "(Empty)\n");

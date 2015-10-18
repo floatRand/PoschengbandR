@@ -3270,10 +3270,10 @@ void viewport_verify_aux(u32b options)
         else if (p.x < r.x + 4)
             o.x -= r.cx/2;
     }
-    if (o.x > cur_wid - r.cx) o.x = cur_wid - r.cx;
-    if (o.y > cur_hgt - r.cy) o.y = cur_hgt - r.cy;
-    if (o.x < 0) o.x = 0;
-    if (o.y < 0) o.y = 0;
+    if (o.x > cur_wid - 3*r.cx/4) o.x = cur_wid - 3*r.cx/4;
+    if (o.y > cur_hgt - 3*r.cy/4) o.y = cur_hgt - 3*r.cy/4;
+    if (o.x < -r.cx/4) o.x = -r.cx/4;
+    if (o.y < -r.cy/4) o.y = -r.cy/4;
     if (point_compare(viewport_origin, o) != 0)
     {
         viewport_origin = o;
