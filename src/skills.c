@@ -574,7 +574,7 @@ void skills_on_load(savefile_ptr file)
         char            name[255];
         _skill_info_ptr info = malloc(sizeof(_skill_info_t));
 
-        savefile_read_string(file, name, sizeof(name));
+        savefile_read_cptr(file, name, sizeof(name));
         info->current = savefile_read_s32b(file);
         info->max = savefile_read_s32b(file);
 
@@ -599,7 +599,7 @@ void skills_on_save(savefile_ptr file)
         cptr            name = str_map_iter_current_key(iter);
         _skill_info_ptr info = (_skill_info_ptr)str_map_iter_current(iter);
 
-        savefile_write_string(file, name);
+        savefile_write_cptr(file, name);
         savefile_write_s32b(file, info->current);
         savefile_write_s32b(file, info->max);
     }

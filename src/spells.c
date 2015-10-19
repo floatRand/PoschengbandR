@@ -54,7 +54,7 @@ void spell_stats_on_load(savefile_ptr file)
 
         memset(stats, 0, sizeof(spell_stats_t));
 
-        savefile_read_string(file, name, sizeof(name));
+        savefile_read_cptr(file, name, sizeof(name));
         stats->flags = savefile_read_u32b(file);
         stats->ct_cast = savefile_read_s32b(file);
         stats->ct_fail = savefile_read_s32b(file);
@@ -79,7 +79,7 @@ void spell_stats_on_save(savefile_ptr file)
     {
         spell_stats_ptr stats = str_map_iter_current(iter);
 
-        savefile_write_string(file, str_map_iter_current_key(iter));
+        savefile_write_cptr(file, str_map_iter_current_key(iter));
         savefile_write_u32b(file, stats->flags);
         savefile_write_s32b(file, stats->ct_cast);
         savefile_write_s32b(file, stats->ct_fail);

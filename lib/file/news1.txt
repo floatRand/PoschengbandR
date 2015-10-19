@@ -28,4 +28,4 @@ damaged! It bites. It misses. You are no longer bleeding.           INT : <color
 <color:U>########</color>......<color:U>#########</color>...<color:U>############</color>.....<color:U>##</color><color:b>~~</color><color:u>.</color>.<color:g>..</color><color:G>################</color>
 Outpost
 </style>
-              [Press <color:keypress>c</color> for Credits. Press Any Other Key to Play]
+              [Press <color:keypress>?</color> for Credits. Press Any Other Key to Play]

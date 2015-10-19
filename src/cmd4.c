@@ -3060,12 +3060,72 @@ void do_cmd_colors(void)
 }
 
 
+string_ptr _tiny_screenshot(int cx, int cy)
+{
+    string_ptr s = string_alloc_size(cx * cy);
+    bool       old_use_graphics = use_graphics;
+    int        y1, y2, x1, x2, y, x;
+
+    y1 = py - cy/2;
+    y2 = py + cy/2;
+    if (y1 < 0) y1 = 0;
+    if (y2 > cur_hgt) y2 = cur_hgt;
+
+    x1 = px - cx/2;
+    x2 = px + cx/2;
+    if (x1 < 0) x1 = 0;
+    if (x2 > cur_wid) x2 = cur_wid;
+
+    if (old_use_graphics)
+    {
+        use_graphics = FALSE;
+        reset_visuals();
+    }
+
+    for (y = y1; y < y2; y++)
+    {
+        int  current_a = -1;
+        for (x = x1; x < x2; x++)
+        {
+            byte a, ta;
+            char c, tc;
+
+            assert(in_bounds2(y, x));
+            map_info(y, x, &a, &c, &ta, &tc);
+
+            if (a != current_a)
+            {
+                if (current_a >= 0 && current_a != TERM_WHITE)
+                {
+                    string_append_s(s, "</color>");
+                }
+                if (a != TERM_WHITE)
+                {
+                    string_printf(s, "<color:%c>", attr_to_attr_char(a));
+                }
+                current_a = a;
+            }
+            string_append_c(s, c);
+        }
+        if (current_a >= 0 && current_a != TERM_WHITE)
+            string_append_s(s, "</color>");
+        string_append_c(s, '\n');
+    }
+    if (old_use_graphics)
+    {
+        use_graphics = TRUE;
+        reset_visuals();
+    }
+    return s;
+}
+
 /*
  * Note something in the message recall
  */
 void do_cmd_note(void)
 {
     char buf[80];
+    string_ptr s = _tiny_screenshot(60, 30);
 
     /* Default */
     strcpy(buf, "");
@@ -3077,7 +3137,9 @@ void do_cmd_note(void)
     if (!buf[0] || (buf[0] == ' ')) return;
 
     /* Add the note to the message recall */
-    msg_format("<color:y>Note:</color> %s", buf);
+    msg_format("<color:y>Note:</color> %s\n", buf);
+    msg_add(string_buffer(s));
+    string_free(s);
 }
 
 

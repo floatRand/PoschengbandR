@@ -164,12 +164,12 @@ void wr_item(savefile_ptr file, object_type *o_ptr)
     if (o_ptr->inscription)
     {
         savefile_write_byte(file, SAVE_ITEM_INSCRIPTION);
-        savefile_write_string(file, quark_str(o_ptr->inscription));
+        savefile_write_cptr(file, quark_str(o_ptr->inscription));
     }
     if (o_ptr->art_name)
     {
         savefile_write_byte(file, SAVE_ITEM_ART_NAME);
-        savefile_write_string(file, quark_str(o_ptr->art_name));
+        savefile_write_cptr(file, quark_str(o_ptr->art_name));
     }
     if (o_ptr->activation.type)
     {
@@ -244,7 +244,7 @@ static void wr_monster(savefile_ptr file, monster_type *m_ptr)
     if (m_ptr->nickname)
     {
         savefile_write_byte(file, SAVE_MON_NICKNAME);
-        savefile_write_string(file, quark_str(m_ptr->nickname));
+        savefile_write_cptr(file, quark_str(m_ptr->nickname));
     }
     if (m_ptr->parent_m_idx)
     {
@@ -493,9 +493,9 @@ static void wr_extra(savefile_ptr file)
     int i,j;
     byte tmp8u;
 
-    savefile_write_string(file, player_name);
-    savefile_write_string(file, p_ptr->died_from);
-    savefile_write_string(file, p_ptr->last_message ? p_ptr->last_message : "");
+    savefile_write_cptr(file, player_name);
+    savefile_write_cptr(file, p_ptr->died_from);
+    savefile_write_cptr(file, p_ptr->last_message ? p_ptr->last_message : "");
     wr_quick_start(file);
 
     savefile_write_s32b(file, game_mode);
@@ -1274,9 +1274,9 @@ static bool wr_savefile_new(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->pet_extra_flags);
 
     if (screen_dump && (p_ptr->wait_report_score || !p_ptr->is_dead))
-        savefile_write_string(file, screen_dump);
+        savefile_write_cptr(file, screen_dump);
     else
-        savefile_write_string(file, "");
+        savefile_write_cptr(file, "");
 
     spell_stats_on_save(file);
     skills_on_save(file);

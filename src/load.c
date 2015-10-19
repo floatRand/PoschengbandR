@@ -158,11 +158,11 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
             o_ptr->feeling = savefile_read_byte(file);
             break;
         case SAVE_ITEM_INSCRIPTION:
-            savefile_read_string(file, buf, sizeof(buf));
+            savefile_read_cptr(file, buf, sizeof(buf));
             o_ptr->inscription = quark_add(buf);
             break;
         case SAVE_ITEM_ART_NAME:
-            savefile_read_string(file, buf, sizeof(buf));
+            savefile_read_cptr(file, buf, sizeof(buf));
             o_ptr->art_name = quark_add(buf);
             break;
         case SAVE_ITEM_ACTIVATION:
@@ -229,7 +229,7 @@ static void rd_monster(savefile_ptr file, monster_type *m_ptr)
             m_ptr->mflag2 = savefile_read_u32b(file);
             break;
         case SAVE_MON_NICKNAME:
-            savefile_read_string(file, buf, sizeof(buf));
+            savefile_read_cptr(file, buf, sizeof(buf));
             m_ptr->nickname = quark_add(buf);
             break;
         case SAVE_MON_PARENT:
@@ -576,10 +576,10 @@ static void rd_extra(savefile_ptr file)
     int i,j;
     char buf[1024];
 
-    savefile_read_string(file, player_name, sizeof(player_name));
-    savefile_read_string(file, p_ptr->died_from, sizeof(p_ptr->died_from));
+    savefile_read_cptr(file, player_name, sizeof(player_name));
+    savefile_read_cptr(file, p_ptr->died_from, sizeof(p_ptr->died_from));
 
-    savefile_read_string(file, buf, sizeof buf);
+    savefile_read_cptr(file, buf, sizeof buf);
     if (buf[0]) p_ptr->last_message = z_string_make(buf);
 
     rd_quick_start(file);
@@ -1576,7 +1576,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     if (1)
     {
         char buf[SCREEN_BUF_SIZE];
-        savefile_read_string(file, buf, sizeof(buf));
+        savefile_read_cptr(file, buf, sizeof(buf));
         if (buf[0]) screen_dump = z_string_make(buf);
     }
 

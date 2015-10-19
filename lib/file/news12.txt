@@ -24,4 +24,4 @@
                           # #        <color:U>#</color> <color:U>##</color>#                          <color:y>Fast (+23)</color>
                     ###   # #<color:U>##</color>####<color:U>#</color>#<color:U>#</color> ##                           <color:G>Full</color>
 </style>
-              [Press <color:keypress>c</color> for Credits. Press Any Other Key to Play]
+              [Press <color:keypress>?</color> for Credits. Press Any Other Key to Play]

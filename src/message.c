@@ -514,7 +514,6 @@ void cmsg_format(byte color, cptr fmt, ...)
 void msg_on_load(savefile_ptr file)
 {
     int i;
-    char buf[1024];
     int count = savefile_read_s16b(file);
 
     for (i = 0; i < count; i++)
@@ -522,13 +521,15 @@ void msg_on_load(savefile_ptr file)
         s32b turn = 0;
         s32b count = 0;
         byte color = TERM_WHITE;
+        string_ptr msg = 0;
 
-        savefile_read_string(file, buf, sizeof(buf));
+        msg = savefile_read_string(file);
         turn = savefile_read_s32b(file);
         count = savefile_read_s32b(file);
         color = savefile_read_byte(file);
 
-        _cmsg_add_aux(color, buf, turn, count);
+        _cmsg_add_aux(color, string_buffer(msg), turn, count);
+        string_free(msg);
     }
 }
 
@@ -542,7 +543,7 @@ void msg_on_save(savefile_ptr file)
     for (i = count - 1; i >= 0; i--)
     {
         msg_ptr m = msg_get(i);
-        savefile_write_string(file, string_buffer(m->msg));
+        savefile_write_cptr(file, string_buffer(m->msg));
         savefile_write_s32b(file, m->turn);
         savefile_write_s32b(file, m->count);
         savefile_write_byte(file, m->color);
