@@ -1635,25 +1635,14 @@ static void init_angband_aux(cptr why)
 
 }
 
-void display_news(void)
+static void _display_file(cptr name)
 {
     FILE *fp;
     char buf[1024];
-    char name[100];
-
-    srand(time(NULL));
-    sprintf(name, "news%d.txt", (rand() % 12) + 1);
-
-    /* Clear screen */
     Term_clear();
-
-    /* Build the filename */
     path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, name);
-
-    /* Open the News file */
     fp = my_fopen(buf, "r");
 
-    /* Dump */
     if (fp)
     {
         int w, h;
@@ -1665,12 +1654,48 @@ void display_news(void)
         doc_sync_term(doc, doc_range_all(doc), doc_pos_create(0, 0));
         doc_free(doc);
         my_fclose(fp);
+        Term_fresh();
     }
+}
 
-    /* Flush it */
-    Term_fresh();
+void display_news(void)
+{
+    const int max_n = 12;
+    int n;
+    bool done = FALSE;
 
-    inkey();
+    srand(time(NULL));
+    n = (rand() % max_n) + 1;
+
+    while (!done)
+    {
+        char name[100];
+        int  cmd;
+        sprintf(name, "news%d.txt", n);
+        _display_file(name);
+        cmd = inkey_special(TRUE);
+        switch (cmd)
+        {
+        case '?':
+            _display_file("credits.txt");
+            inkey();
+            break;
+        case SKEY_DOWN:
+        case '2':
+            n++;
+            if (n > max_n)
+                n = 1;
+            break;
+        case SKEY_UP:
+        case '8':
+            n--;
+            if (n == 0)
+                n = max_n;
+            break;
+        default:
+            done = TRUE;
+        }
+    }
 }
 
 /*
