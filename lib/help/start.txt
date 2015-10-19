@@ -1,9 +1,10 @@
 <style:title>Welcome to the Online Help System</style>
 
-Please choose one of the following online help files:
-
+    <color:R>Getting Started:</color>
     <link:general_contents.txt> General Information
-    <link:birth_contents.txt> Creating a Character
+    <link:birth_contents.txt> Creating a Character    
+
+    <color:R>Core Concepts:</color>
     <link:raceclass_contents.txt> Races, Classes and Personalities
     <link:town_contents.txt> The Town and Wilderness
     <link:dungeon_contents.txt> The Dungeon
@@ -13,8 +14,9 @@ Please choose one of the following online help files:
     <link:defend_contents.txt> Defending and Armor
     <link:magic_contents.txt> Magic Realms
     <link:command_contents.txt> Commands
-    <link:option_contents.txt> Options
 
+    <color:R>Advanced Topics:</color>
+    <link:option_contents.txt> Options
     <link:pref.hlp> User Preference Files
     <link:editor.hlp> Pickup Preferences
 

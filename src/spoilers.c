@@ -1086,15 +1086,15 @@ static void _personality_help(FILE *fp, int idx)
 
     fprintf(fp, "Dexterity    %+3d        Stealth     %s\n",
         pers_ptr->stats[A_DEX],
-        _skill_desc(pers_ptr->skills.stl * 3, 1));
+        _skill_desc(pers_ptr->skills.stl*3 + 3, 1));
 
     fprintf(fp, "Constitution %+3d        Searching   %s\n",
         pers_ptr->stats[A_CON],
-        _skill_desc(pers_ptr->skills.srh, 1));
+        _skill_desc(pers_ptr->skills.srh + 3, 1));
 
     fprintf(fp, "Charisma     %+3d        Perception  %s\n",
         pers_ptr->stats[A_CHR],
-        _skill_desc(pers_ptr->skills.fos, 1));
+        _skill_desc(pers_ptr->skills.fos + 3, 1));
 
     fprintf(fp, "Life Rating  %3d%%       Melee       %s\n",
         pers_ptr->life,
@@ -1155,7 +1155,7 @@ static void _personalities_help(FILE* fp)
         fprintf(fp, " %s", _skill_desc(pers_ptr->skills.dis + 10, 2));
         fprintf(fp, " %s", _skill_desc(pers_ptr->skills.dev + 5, 1));
         fprintf(fp, " %s", _skill_desc(pers_ptr->skills.sav + 5, 1));
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.stl * 3, 1));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.stl*3 + 3, 1));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -1166,8 +1166,8 @@ static void _personalities_help(FILE* fp)
     {
         personality_ptr pers_ptr = get_personality_aux(i);
         fprintf(fp, "%-12.12s", pers_ptr->name);
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.srh, 1));
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.fos, 1));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.srh + 3, 1));
+        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.fos + 3, 1));
         fprintf(fp, " %s", _skill_desc(pers_ptr->skills.thn + 10, 2));
         fprintf(fp, " %s", _skill_desc(pers_ptr->skills.thb + 10, 2));
         fputc('\n', fp);
