@@ -3927,6 +3927,8 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
                 }
                 break;
             case EGO_WEAPON_TRUMP:
+                if (one_in_(3))
+                    add_flag(o_ptr->art_flags, TR_CHR);
                 if (one_in_(5))
                     add_flag(o_ptr->art_flags, TR_SLAY_DEMON);
                 if (one_in_(7))
