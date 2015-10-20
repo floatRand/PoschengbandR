@@ -629,6 +629,7 @@ extern int pack_find_device(int effect);
 extern int pack_find(int tval, int sval);
 
 /* birth.c */
+extern cptr realm_jouhou[VALID_REALM];
 extern bool birth_hack;
 extern void add_history_from_pref_line(cptr t);
 extern void add_outfit(object_type *o_ptr);
@@ -638,7 +639,6 @@ extern void player_birth(void);
 extern void get_max_stats(void);
 extern void determine_random_questor(quest_type *q_ptr);
 extern void player_outfit(void);
-extern void dump_yourself(FILE *fff);
 extern int calc_exp_factor(void);
 
 /* cave.c */
@@ -795,6 +795,7 @@ extern void do_cmd_knowledge(void);
 extern void plural_aux(char * Name);
 extern void do_cmd_checkquest(void);
 extern void do_cmd_time(void);
+extern string_ptr get_tiny_screenshot(int cx, int cy);
 
 /* cmd5.c */
 extern cptr spell_category_name(int tval);

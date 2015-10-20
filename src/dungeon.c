@@ -5957,6 +5957,7 @@ void play_game(bool new_game)
                   "You may press <color:y>?</color> at any time for help.\n\n");
         msg_boundary();
 
+        skills_on_birth();   /* Hack: Skills must init before racial birth for monster race innate proficiency! */
         if (pers_ptr->birth) /* Hack: Personality goes first for the Sexy Whip! */
             pers_ptr->birth();
 
@@ -5969,7 +5970,6 @@ void play_game(bool new_game)
             race_ptr->birth();
 
         spell_stats_on_birth();
-        skills_on_birth();
 
         if (game_mode == GAME_MODE_BEGINNER)
         {

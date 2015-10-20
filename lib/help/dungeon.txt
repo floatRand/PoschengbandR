@@ -8,9 +8,9 @@ Symbols on your map can be broken down into three categories: Features of the du
 
 Some symbols are used to represent more than one type of entity, and some symbols are used to represent entities in more than one category. The "@" symbol (by default) is used to represent the character.
 
-It will not be necessary to remember all of the symbols and their meanings. The "slash" command ("/") will identify any character appearing on your map.
+It will not be necessary to remember all of the symbols and their meanings. The "slash" command (<color:keypress>/</color>) will identify any character appearing on your map.
 
-<style:note>Note that you can use a "user pref file" to change any of these symbols to something you are more comfortable with.</style>
+<style:note>Note that you can use a <color:keyword>user pref file</color> to change any of these symbols to something you are more comfortable with.</style>
 
   <color:U>Features that do not block line of sight</color><style:table>
   <$:FF_FLOOR>   Floor                       <$:FF_MIRROR>   A Mirror
@@ -45,7 +45,7 @@ It will not be necessary to remember all of the symbols and their meanings. The 
 
 <topic:WithinDungeon><style:heading>Within The Dungeon</style>
 
-Once your character is adequately supplied with food, light, armor, and weapons, he is ready to enter the dungeon. Move on top of the <$:FF_ENTRANCE> symbol and use the "Down" command (">").
+Once your character is adequately supplied with food, light, armor, and weapons, he is ready to enter the dungeon. Move on top of the <$:FF_ENTRANCE> symbol and use the <color:keyword>Down</color> command (<color:keypress>></color>).
 
 Your character will enter a maze of interconnecting staircases and finally arrive somewhere on the first level of the dungeon. Each level of the dungeon is fifty feet high (thus dungeon level "Lev 1" is often called "50 ft"), and is divided into (large) rectangular regions (several times larger than the screen) by titanium walls. Once you leave a level by a staircase, you will never again find your way back to that region of that level, but there are an infinite number of other regions at that same "depth" that you can explore later. So be careful that you have found all the treasure before you leave a level, or you may never find it again! The monsters, of course, can use the stairs, and you may eventually encounter them again.
 

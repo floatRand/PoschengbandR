@@ -4989,6 +4989,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         if ( power == -1
           && o_ptr->tval != TV_RING
           && o_ptr->tval != TV_AMULET
+          && !object_is_device(o_ptr)
           && randint1(lev) > 10 )
         {
             power = 0;

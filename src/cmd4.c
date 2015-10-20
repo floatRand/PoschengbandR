@@ -3060,7 +3060,7 @@ void do_cmd_colors(void)
 }
 
 
-string_ptr _tiny_screenshot(int cx, int cy)
+string_ptr get_tiny_screenshot(int cx, int cy)
 {
     string_ptr s = string_alloc_size(cx * cy);
     bool       old_use_graphics = use_graphics;
@@ -3125,7 +3125,7 @@ string_ptr _tiny_screenshot(int cx, int cy)
 void do_cmd_note(void)
 {
     char buf[80];
-    string_ptr s = _tiny_screenshot(60, 30);
+    string_ptr s = get_tiny_screenshot(50, 24);
 
     /* Default */
     strcpy(buf, "");
@@ -7631,46 +7631,62 @@ static void do_cmd_knowledge_dungeon(void)
     fd_kill(file_name);
 }
 
-/*
-* List virtues & status
-*
-*/
 static void do_cmd_knowledge_stat(void)
 {
-    FILE *fff;
-    
-    char file_name[1024];
-    int v_nr;
-    
-    fff = my_fopen_temp(file_name, 1024);
-    if (!fff) 
-    {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
-    
-    if (fff)
-    {
-        if (p_ptr->knowledge & KNOW_HPRATE) fprintf(fff, "Your current Life Rating is [[[[G|%d/100|.\n\n", life_rating());
-        else fprintf(fff, "Your current Life Rating is [[[[y|???|.\n\n");
-        fprintf(fff, "[[[[r|Limits of maximum stats\n");
+    doc_ptr          doc = doc_alloc(80);
+    race_t          *race_ptr = get_race();
+    class_t         *class_ptr = get_class();
+    personality_ptr  pers_ptr = get_personality();
+    int              i;
 
-        for (v_nr = 0; v_nr < 6; v_nr++)
-        {
-            if ((p_ptr->knowledge & KNOW_STAT) || p_ptr->stat_max[v_nr] == p_ptr->stat_max_max[v_nr])
-                fprintf(fff, "%s [[[[G|18/%d|\n", stat_names[v_nr], p_ptr->stat_max_max[v_nr]-18);
-            else
-                fprintf(fff, "%s [[[[y|???|\n", stat_names[v_nr]);
-        }
+    if (p_ptr->knowledge & KNOW_HPRATE)
+        doc_printf(doc, "Your current Life Rating is <color:G>%d%%</color>.\n\n", life_rating());
+    else
+        doc_insert(doc, "Your current Life Rating is <color:y>\?\?\?%</color>.\n\n");
+
+    doc_insert(doc, "<color:r>Limits of maximum stats</color>\n");
+
+    for (i = 0; i < MAX_STATS; i++)
+    {
+        if ((p_ptr->knowledge & KNOW_STAT) || p_ptr->stat_max[i] == p_ptr->stat_max_max[i])
+            doc_printf(doc, "%s <color:G>18/%d</color>\n", stat_names[i], p_ptr->stat_max_max[i]-18);
+        else
+            doc_printf(doc, "%s <color:y>\?\?\?</color>\n", stat_names[i]);
+    }
+    doc_insert(doc, "\n\n");
+
+    doc_printf(doc, "<color:r>Race:</color> <color:B>%s</color>\n", race_ptr->name);
+    doc_insert(doc, race_ptr->desc);
+    doc_printf(doc, " For more information, see <link:Races.txt#%s>.\n\n", race_ptr->name);
+
+    if (p_ptr->pclass != CLASS_MONSTER)
+    {
+        doc_printf(doc, "<color:r>Class:</color> <color:B>%s</color>\n", class_ptr->name);
+        doc_insert(doc, class_ptr->desc);
+        doc_printf(doc, " For more information, see <link:Classes.txt#%s>.\n\n", class_ptr->name);
     }
 
-    dump_yourself(fff);
-    my_fclose(fff);
-    show_file(TRUE, file_name, "HP-rate & Max stat", 0, 0);
-    fd_kill(file_name);
+    doc_printf(doc, "<color:r>Personality:</color> <color:B>%s</color>\n", pers_ptr->name);
+    doc_insert(doc, pers_ptr->desc);
+    doc_printf(doc, " For more information, see <link:Personalities.txt#%s>.\n\n", pers_ptr->name);
+
+    if (p_ptr->realm1)
+    {
+        doc_printf(doc, "<color:r>Realm:</color> <color:B>%s</color>\n", realm_names[p_ptr->realm1]);
+        doc_insert(doc, realm_jouhou[technic2magic(p_ptr->realm1)-1]);
+        doc_insert(doc, "\n\n");
+    }
+
+    if (p_ptr->realm2)
+    {
+        doc_printf(doc, "<color:r>Realm:</color> <color:B>%s</color>\n", realm_names[p_ptr->realm2]);
+        doc_insert(doc, realm_jouhou[technic2magic(p_ptr->realm2)-1]);
+        doc_insert(doc, "\n\n");
+    }
+
+    doc_display(doc, "Self Knowledge", 0);
+    doc_free(doc);
 }
-
 
 /*
  * Print all active quests

@@ -89,7 +89,7 @@ static cptr pact_desc[MAX_PACTS] =
         "own ammo. At high levels, they gain the power of Dimension Door. Making a pact with Aberrations "
         "will reduce damage done to all humanoids (h) and people (p) by a substantial amount.",
 };
-static cptr realm_jouhou[VALID_REALM] =
+cptr realm_jouhou[VALID_REALM] =
 {
 "Life magic is very good for healing; it relies mostly on healing, protection and detection spells. Also life magic have a few attack spells as well. It said that some high level spell of life magic can disintegrate Undead monsters into ash.",
 "Sorcery is a `meta` realm, including enchantment and general spells. It provides superb protection spells, spells to enhance your odds in combat and, most importantly, a vast selection of spells for gathering information. However, Sorcery has one weakness: it has no spells to deal direct damage to your enemies.",
@@ -3986,85 +3986,6 @@ void player_birth(void)
         class_t *class_ptr = get_class();
         if (class_ptr != NULL && class_ptr->gain_level != NULL)
             (class_ptr->gain_level)(p_ptr->lev);
-    }
-}
-
-
-void dump_yourself(FILE *fff)
-{
-    char temp[80*50];
-    int i;
-    cptr t;
-    race_t *race_ptr = get_race();
-    class_t *class_ptr = get_class();
-    personality_ptr pers_ptr = get_personality();
-
-    if (!fff) return;
-
-    roff_to_buf(race_ptr->desc, 78, temp, sizeof(temp));
-    fprintf(fff, "\n\n");
-    fprintf(fff, "[[[[r|Race:| [[[[B|%s\n", race_ptr->name);
-    t = temp;
-    for (i = 0; i < 50; i++)
-    {
-        if(t[0] == 0)
-            break; 
-        fprintf(fff, "%s\n",t);
-        t += strlen(t) + 1;
-    }
-
-    if (p_ptr->pclass != CLASS_MONSTER)
-    {
-        roff_to_buf(class_ptr->desc, 78, temp, sizeof(temp));
-        fprintf(fff, "\n");
-        fprintf(fff, "[[[[r|Class:| [[[[B|%s\n", class_ptr->name);
-        t = temp;
-        for (i = 0; i < 50; i++)
-        {
-            if(t[0] == 0)
-                break; 
-            fprintf(fff, "%s\n",t);
-            t += strlen(t) + 1;
-        }
-    }
-    roff_to_buf(pers_ptr->desc, 78, temp, sizeof(temp));
-    fprintf(fff, "\n");
-    fprintf(fff, "[[[[r|Pesonality:| [[[[B|%s\n", pers_ptr->name);
-    t = temp;
-    for (i = 0; i < 50; i++)
-    {
-        if(t[0] == 0)
-            break; 
-        fprintf(fff, "%s\n",t);
-        t += strlen(t) + 1;
-    }
-    fprintf(fff, "\n");
-    if (p_ptr->realm1)
-    {
-        roff_to_buf(realm_jouhou[technic2magic(p_ptr->realm1)-1], 78, temp, sizeof(temp));
-        fprintf(fff, "[[[[r|Realm:| [[[[B|%s\n", realm_names[p_ptr->realm1]);
-        t = temp;
-        for (i = 0; i < 50; i++)
-        {
-            if(t[0] == 0)
-                break; 
-            fprintf(fff, "%s\n",t);
-            t += strlen(t) + 1;
-        }
-    }
-    fprintf(fff, "\n");
-    if (p_ptr->realm2)
-    {
-        roff_to_buf(realm_jouhou[technic2magic(p_ptr->realm2)-1], 78, temp, sizeof(temp));
-        fprintf(fff, "[[[[r|Realm:| [[[[B|%s\n", realm_names[p_ptr->realm2]);
-        t = temp;
-        for (i = 0; i < 50; i++)
-        {
-            if(t[0] == 0)
-                break; 
-            fprintf(fff, "%s\n",t);
-            t += strlen(t) + 1;
-        }
     }
 }
 

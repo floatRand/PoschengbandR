@@ -254,18 +254,34 @@ Repeats the current feeling about the dungeon level.</indent>
 This command shows you all the recent messages. You can scroll through them, or exit with ESCAPE. This command takes no time.</indent>
 
   <indent><color:U>Take notes (<color:keypress>:</color>)</color>
-This command allows you to take notes, which will then appear in your message list (prefixed with "Note:"). This command takes no time.
+This command allows you to take notes, which will then appear in your message list (prefixed with "Note:"). This command takes no time. It also adds a tiny screenshot to your message log. For example:
+<style:screenshot>
+  <indent><color:y>Note:</color> These bats are <color:v>so</color> dead!!
+              #.################.#
+              #..........<.......#
+              #.##############<color:U>></color>#.#
+          #####.#              #.######
+          #.....#              #.......
+          #.#####              ########
+          #.#                         #
+  #########<color:U>'</color>########
+  #................#
+  #...........@....#
+  #.......<color:v>b</color>........#
+  #................#
+  #.........<color:v>b</color>......<color:u>'</color>
+  #................#
+  #................#
+  #................#
+  #................#
+  <color:U>##################</color>
 
-  <indent>[Previous Messages, Line 244/267]
-<color:D>...</color>
-You failed to pick the lock.
-<color:g>The Insect swarm attacks you: </color>It bites.<color:g> </color>It misses.
+Targetting a Fruit bat.
+The Fruit bat dies.
 
-<color:y>Note:</color> Insect swarms are so annoying! I <color:G>hate</color> them!
-<color:U>You attack the Insect swarm: </color>You claw.<color:U> </color><color:R>You have slain the Insect swarm.</color>
-
-[Press ESC to exit. Press ? for help]</indent>
-</indent>
+Targetting a Fruit bat.
+The Fruit bat dies.
+</style></indent>
 <topic:GameStatus><style:heading>Game Status Commands</style>
 
   <indent><color:U>Character Description (<color:keypress>C</color>)</color>

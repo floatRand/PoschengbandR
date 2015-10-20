@@ -21,6 +21,9 @@ Allow monsters to learn what spell attacks you are resistant to, and to use this
 <topic:smart_cheat><color:U>Monsters exploit players weaknesses</color> <color:D>(smart_cheat)</color>
 Allow monsters to know what spell attacks you are resistant to, and to use this information to choose the best attacks.
 
+<topic:no_wilderness><color:U>Play without a wilderness</color> <color:D>(no_wilderness)</color>
+This option disables the wilderness, forcing you to play with a single special town level. As a result, the only dungeon that will be available is the <color:keyword>Pits of Angband</color>. However, the town is relatively well serviced and many, if not most, of the various fixed quests will be available for your pleasure (see <link:town.txt#NoWilderness>).
+
 <topic:ironman_shops><color:U>Stores are permanently closed</color> <color:D>(ironman_shops)</color>
 This option closes all shops. Try to survive in the deeps of the dungeon without supplies from town. Your Home still functions normally, and various town services are still available.
 
