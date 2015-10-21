@@ -1904,7 +1904,7 @@ void object_absorb(object_type *o_ptr, object_type *j_ptr)
     }
 
     /* Hack -- blend "mental" status */
-    if (j_ptr->ident & (IDENT_MENTAL)) o_ptr->ident |= (IDENT_MENTAL);
+    if (j_ptr->ident & (IDENT_FULL)) o_ptr->ident |= (IDENT_FULL);
 
     /* Hack -- blend "inscriptions" */
     if (j_ptr->inscription) o_ptr->inscription = j_ptr->inscription;
@@ -8527,7 +8527,7 @@ static void drain_essence(void)
     o_ptr->number = number;
     if (o_ptr->tval == TV_DRAG_ARMOR) o_ptr->timeout = old_timeout;
     if (item >= 0) p_ptr->total_weight += (o_ptr->weight*o_ptr->number - weight*number);
-    o_ptr->ident |= (IDENT_MENTAL);
+    o_ptr->ident |= (IDENT_FULL);
     object_aware(o_ptr);
     object_known(o_ptr);
 

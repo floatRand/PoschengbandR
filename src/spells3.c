@@ -2264,7 +2264,7 @@ bool identify_item(object_type *o_ptr)
     if (o_ptr->ident & IDENT_KNOWN)
         old_known = TRUE;
 
-    if (!(o_ptr->ident & (IDENT_MENTAL)))
+    if (!(o_ptr->ident & (IDENT_FULL)))
     {
         if (object_is_artifact(o_ptr) || one_in_(5))
             virtue_add(VIRTUE_KNOWLEDGE, 1);
@@ -2279,7 +2279,7 @@ bool identify_item(object_type *o_ptr)
     /* Experimental: Jewelry is a bit tedious to *id*, and id often reveals very little. */
     if (object_is_jewelry(o_ptr) && !object_is_artifact(o_ptr))
     {
-        o_ptr->ident |= IDENT_MENTAL;
+        o_ptr->ident |= IDENT_FULL;
         ego_aware(o_ptr);
     }
 
@@ -2437,7 +2437,7 @@ bool mundane_spell(bool only_equip)
 
 static bool item_tester_hook_identify_fully(object_type *o_ptr)
 {
-    if ( (!object_is_known(o_ptr) || !(o_ptr->ident & IDENT_MENTAL))
+    if ( (!object_is_known(o_ptr) || !(o_ptr->ident & IDENT_FULL))
       && (!_hack_obj_p || _hack_obj_p(o_ptr)) )
     {
         return TRUE;
@@ -2481,7 +2481,7 @@ bool identify_fully(object_p p)
         o_ptr = &o_list[0 - item];
 
     old_known = identify_item(o_ptr);
-    o_ptr->ident |= (IDENT_MENTAL);
+    o_ptr->ident |= (IDENT_FULL);
     ego_aware(o_ptr);
 
     handle_stuff();

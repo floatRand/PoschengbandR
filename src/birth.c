@@ -3081,7 +3081,7 @@ void add_outfit(object_type *o_ptr)
     object_aware(o_ptr);
     ego_aware(o_ptr);
     object_known(o_ptr);
-    o_ptr->ident |= IDENT_MENTAL;
+    o_ptr->ident |= IDENT_FULL;
 
     slot = equip_first_empty_slot(o_ptr);
     if (slot && o_ptr->number == 1) /* Fix later for torches ... */
@@ -3119,7 +3119,7 @@ static void _birth_object(int tv, int sv, int qty)
 
     forge.number = qty;
     identify_item(&forge);
-    forge.ident |= IDENT_MENTAL;
+    forge.ident |= IDENT_FULL;
     add_outfit(&forge);
 }
  

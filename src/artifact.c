@@ -2722,7 +2722,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         object_known(o_ptr);
 
         /* Mark the item as fully known */
-        o_ptr->ident |= (IDENT_MENTAL);
+        o_ptr->ident |= (IDENT_FULL);
 
         obj_display(o_ptr);
 

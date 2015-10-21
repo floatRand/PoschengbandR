@@ -825,7 +825,7 @@ static void get_inscription(char *buff, object_type *o_ptr)
     char *ptr = buff;
 
     /* Not fully identified */
-    if (!(o_ptr->ident & IDENT_MENTAL))
+    if (!(o_ptr->ident & IDENT_FULL))
     {
         /* Copy until end of line or '#' */
         while (*insc)
@@ -2062,7 +2062,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     tmp_val2[0] = '\0';
 
     /* Auto abbreviation inscribe */
-    if ((abbrev_extra || abbrev_all) && (o_ptr->ident & IDENT_MENTAL))
+    if ((abbrev_extra || abbrev_all) && (o_ptr->ident & IDENT_FULL))
     {
         if (!o_ptr->inscription || !my_strchr(quark_str(o_ptr->inscription), '%'))
         {
@@ -2076,7 +2076,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     }
 
     if ( (abbrev_extra || abbrev_all)
-      && (o_ptr->ident & IDENT_MENTAL)
+      && (o_ptr->ident & IDENT_FULL)
       && obj_has_effect(o_ptr)
       && !device )
     {
@@ -2152,7 +2152,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     /* Note "cursed" if the item is known to be cursed */
     else if (object_is_cursed(o_ptr) && (known || (o_ptr->ident & IDENT_SENSE)))
     {
-        if (object_is_device(o_ptr) && !(o_ptr->ident & IDENT_MENTAL))
+        if (object_is_device(o_ptr) && !(o_ptr->ident & IDENT_FULL))
         {
             /* Hide cursed status of devices until *Identified* */
         }

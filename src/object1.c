@@ -317,7 +317,7 @@ void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
     }
 
     /* Need full knowledge or spoilers */
-    if (o_ptr->ident & (IDENT_STORE | IDENT_MENTAL))
+    if (o_ptr->ident & (IDENT_STORE | IDENT_FULL))
     {
         /* Artifact */
         if (object_is_fixed_artifact(o_ptr))

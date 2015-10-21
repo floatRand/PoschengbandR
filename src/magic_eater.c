@@ -391,7 +391,7 @@ static bool gain_magic(void)
 
     dest_ptr->inscription = 0;
     identify_item(dest_ptr);
-    dest_ptr->ident |= IDENT_MENTAL;
+    dest_ptr->ident |= IDENT_FULL;
     ego_aware(dest_ptr);
 
     /* Eliminate the item (from the pack) */

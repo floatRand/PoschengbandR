@@ -360,7 +360,7 @@ void crafting_spell(int cmd, variant *res)
             object_aware(o_ptr);
             ego_aware(o_ptr);
             object_known(o_ptr);
-            o_ptr->ident |= (IDENT_MENTAL);
+            o_ptr->ident |= (IDENT_FULL);
             obj_display(o_ptr);
         }
         var_set_bool(res, TRUE);

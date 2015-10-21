@@ -392,7 +392,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
     {
         char buf[MAX_NLEN];
         identify_item(o_ptr); /* Well, let's assume a developer is debugging :) */
-        o_ptr->ident |= (IDENT_MENTAL); 
+        o_ptr->ident |= (IDENT_FULL); 
         object_desc(buf, o_ptr, 0);
         sprintf(dbg_msg, "Scoring `%s` ...", buf);
         cost_calc_hook(dbg_msg);
@@ -737,7 +737,7 @@ s32b armor_cost(object_type *o_ptr, int options)
     {
         char buf[MAX_NLEN];
         identify_item(o_ptr); /* Well, let's assume a developer is debugging :) */
-        o_ptr->ident |= (IDENT_MENTAL); 
+        o_ptr->ident |= (IDENT_FULL); 
         object_desc(buf, o_ptr, 0);
         sprintf(dbg_msg, "Scoring `%s` ...", buf);
         cost_calc_hook(dbg_msg);
@@ -913,7 +913,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
     {
         char buf[MAX_NLEN];
         identify_item(o_ptr); /* Well, let's assume a developer is debugging :) */
-        o_ptr->ident |= (IDENT_MENTAL); 
+        o_ptr->ident |= (IDENT_FULL); 
         object_desc(buf, o_ptr, 0);
         sprintf(dbg_msg, "Scoring `%s` ...", buf);
         cost_calc_hook(dbg_msg);
@@ -1188,7 +1188,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     {
         char buf[MAX_NLEN];
         identify_item(o_ptr); /* Well, let's assume a developer is debugging :) */
-        o_ptr->ident |= (IDENT_MENTAL); 
+        o_ptr->ident |= (IDENT_FULL); 
         object_desc(buf, o_ptr, 0);
         sprintf(dbg_msg, "Scoring `%s` ...", buf);
         cost_calc_hook(dbg_msg);

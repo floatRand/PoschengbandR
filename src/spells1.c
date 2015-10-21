@@ -6332,7 +6332,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         q_ptr->pval = photo;
 
         /* Mark the item as fully known */
-        q_ptr->ident |= (IDENT_MENTAL);
+        q_ptr->ident |= (IDENT_FULL);
 
         /* Drop it in the dungeon */
         (void)drop_near(q_ptr, -1, py, px);

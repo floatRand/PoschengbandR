@@ -2762,7 +2762,7 @@ enum summon_specific_e {
 #define IDENT_EMPTY     0x04    /* Item charges are known */
 #define IDENT_KNOWN     0x08    /* Item abilities are known */
 #define IDENT_STORE     0x10    /* Item is storebought !!!! */
-#define IDENT_MENTAL    0x20    /* Item information is known */
+#define IDENT_FULL      0x20    /* Item information is known */
 #if 0
 #define IDENT_CURSED    0x40    /* Item is temporarily cursed */
 #endif

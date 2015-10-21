@@ -477,7 +477,7 @@ static void spoil_artifact_doc(void)
             if (!make_fake_artifact(&forge, j)) continue;
 
             identify_item(&forge);
-            forge.ident |= IDENT_MENTAL;
+            forge.ident |= IDENT_FULL;
 
             obj_display_doc(&forge, doc);
             doc_newline(doc);

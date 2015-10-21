@@ -5664,7 +5664,7 @@ bool lose_all_info(void)
         if (!o_ptr->k_idx) continue;
 
         /* Allow "protection" by the MENTAL flag */
-        if (o_ptr->ident & (IDENT_MENTAL)) continue;
+        if (o_ptr->ident & (IDENT_FULL)) continue;
 
         /* Remove "default inscriptions" */
         o_ptr->feeling = FEEL_NONE;

@@ -2563,7 +2563,7 @@ static bool _gamble_shop_aux(object_type *o_ptr)
 
     identify_item(o_ptr);
     ego_aware(o_ptr);
-    o_ptr->ident |= (IDENT_MENTAL);
+    o_ptr->ident |= (IDENT_FULL);
     object_desc(buf, o_ptr, OD_COLOR_CODED);
 
     clear_bldg(5, 10);
@@ -2800,7 +2800,7 @@ static bool _reforge_artifact(void)
 
     object_aware(dest);
     object_known(dest);
-    dest->ident |= IDENT_MENTAL;
+    dest->ident |= IDENT_FULL;
 
     p_ptr->update |= PU_BONUS;
     p_ptr->window |= (PW_INVEN | PW_EQUIP);

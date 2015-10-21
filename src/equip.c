@@ -1394,7 +1394,7 @@ void equip_calc_bonuses(void)
             {
             case EQUIP_SLOT_BOW:
                 p_ptr->shooter_info.to_h += penalty;
-                if (o_ptr->ident & IDENT_MENTAL)
+                if (o_ptr->ident & IDENT_FULL)
                     p_ptr->shooter_info.dis_to_h += penalty;
                 break;                
             case EQUIP_SLOT_WEAPON_SHIELD:
@@ -1402,7 +1402,7 @@ void equip_calc_bonuses(void)
             {
                 int hand = _template->slots[i].hand;
                 p_ptr->weapon_info[hand].to_h += penalty;
-                if (o_ptr->ident & IDENT_MENTAL)
+                if (o_ptr->ident & IDENT_FULL)
                     p_ptr->weapon_info[hand].dis_to_h += penalty;
                 break;
             }
@@ -1413,12 +1413,12 @@ void equip_calc_bonuses(void)
             if (o_ptr->curse_flags & TRC_HEAVY_CURSE)
             {
                 p_ptr->to_a -= 30;
-                if (o_ptr->ident & IDENT_MENTAL) p_ptr->dis_to_a -= 30;
+                if (o_ptr->ident & IDENT_FULL) p_ptr->dis_to_a -= 30;
             }
             else
             {
                 p_ptr->to_a -= 10;
-                if (o_ptr->ident & IDENT_MENTAL) p_ptr->dis_to_a -= 10;
+                if (o_ptr->ident & IDENT_FULL) p_ptr->dis_to_a -= 10;
             }
         }
 

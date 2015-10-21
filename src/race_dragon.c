@@ -986,7 +986,7 @@ static void _reforging_spell(int cmd, variant *res)
 
         object_aware(dest);
         object_known(dest);
-        dest->ident |= IDENT_MENTAL;
+        dest->ident |= IDENT_FULL;
 
         p_ptr->update |= PU_BONUS;
         p_ptr->window |= (PW_INVEN | PW_EQUIP);

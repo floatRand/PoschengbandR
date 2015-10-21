@@ -4029,7 +4029,7 @@ static void do_cmd_knowledge_inven_aux(FILE *fff, object_type *o_ptr, int *j, by
 
         fprintf(fff, "%s %s", where, o_name);
 
-        if (!(o_ptr->ident & (IDENT_MENTAL)))
+        if (!(o_ptr->ident & (IDENT_FULL)))
         {
             fputs("-------unknown------------ -------unknown------\n", fff);
         }
@@ -8256,7 +8256,7 @@ static void do_cmd_knowledge_home(void)
                 if (0 <= which && which < page_size && page_top + which < st_ptr->stock_num)
                 {
                     object_type *o_ptr = &st_ptr->stock[page_top + which];
-                    if (!(o_ptr->ident & IDENT_MENTAL))
+                    if (!(o_ptr->ident & IDENT_FULL))
                         msg_print("You have no special knowledge about that item.");
                     else
                         obj_display(o_ptr);

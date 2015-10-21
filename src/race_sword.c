@@ -739,7 +739,7 @@ static void _upgrade_weapon(int tval, int sval)
     add_flag(o_ptr->art_flags, TR_NO_REMOVE);
     object_aware(o_ptr);
     object_known(o_ptr);
-    o_ptr->ident |= IDENT_MENTAL;
+    o_ptr->ident |= IDENT_FULL;
 
     p_ptr->update |= PU_BONUS;
     p_ptr->window |= PW_INVEN | PW_EQUIP | PW_PLAYER;

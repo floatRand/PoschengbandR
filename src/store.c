@@ -884,7 +884,7 @@ static int store_carry(object_type *o_ptr)
     if (value <= 0) return (-1);
 
     /* All store items are fully *identified* */
-    o_ptr->ident |= IDENT_MENTAL;
+    o_ptr->ident |= IDENT_FULL;
 
     /* Erase the inscription */
     o_ptr->inscription = 0;
@@ -2480,7 +2480,7 @@ static void store_sell(void)
         /* Identify it */
         stats_on_sell(o_ptr); /* before identify, please! */
         identify_item(q_ptr);
-        q_ptr->ident |= IDENT_MENTAL;
+        q_ptr->ident |= IDENT_FULL;
         ego_aware(q_ptr);
 
         /* Distribute charges of wands/rods */
@@ -2588,7 +2588,7 @@ static void store_examine(void)
     o_ptr = &st_ptr->stock[item];
 
     /* Require full knowledge */
-    if (!(o_ptr->ident & IDENT_MENTAL))
+    if (!(o_ptr->ident & IDENT_FULL))
     {
         /* This can only happen in the home */
         msg_print("You have no special knowledge about that item.");
