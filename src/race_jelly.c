@@ -53,7 +53,6 @@ static void _divide_spell(int cmd, variant *res)
 }
 static power_info _jelly_powers[] = {
     { A_CON, { 1, 10, 0, _divide_spell}},
-    { A_DEX, {10, 10, 70, recall_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
 static int _jelly_get_powers(spell_info* spells, int max) {
@@ -393,7 +392,7 @@ void jelly_eat_object(object_type *o_ptr)
     char o_name[MAX_NLEN];
     object_type copy = *o_ptr;
     copy.number = 1;
-    object_desc(o_name, &copy, 0);
+    object_desc(o_name, &copy, OD_COLOR_CODED);
     set_food(MIN(PY_FOOD_FULL - 1, p_ptr->food + o_ptr->weight * 50));
     msg_format("You assimilate %s into your gelatinous frame.", o_name);
     /* TODO: Consider giving timed benefits based on what is absorbed.

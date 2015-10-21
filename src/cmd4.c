@@ -7657,7 +7657,17 @@ static void do_cmd_knowledge_stat(void)
 
     doc_printf(doc, "<color:r>Race:</color> <color:B>%s</color>\n", race_ptr->name);
     doc_insert(doc, race_ptr->desc);
-    doc_printf(doc, " For more information, see <link:Races.txt#%s>.\n\n", race_ptr->name);
+    if (p_ptr->pclass == CLASS_MONSTER)
+        doc_printf(doc, " For more information, see <link:MonsterRaces.txt#%s>.\n\n", race_ptr->name);
+    else
+        doc_printf(doc, " For more information, see <link:Races.txt#%s>.\n\n", race_ptr->name);
+
+    if (race_ptr->subdesc && strlen(race_ptr->subdesc))
+    {
+        doc_printf(doc, "<color:r>Subace:</color> <color:B>%s</color>\n", race_ptr->subname);
+        doc_insert(doc, race_ptr->subdesc);
+        doc_insert(doc, "\n\n");
+    }
 
     if (p_ptr->pclass != CLASS_MONSTER)
     {
