@@ -2672,6 +2672,8 @@ static cptr py_attack_desc(int mode)
     {
     case PY_POWER_ATTACK:
         return " <color:R>powerfully</color>";
+    case DRAGON_DEADLY_BITE:
+        return " with a <color:R>deadly</color> bite";
     }
     return "";
 }

@@ -1256,6 +1256,7 @@ struct player_type
 
     counter_t wild_counters[MAX_WILD_COUNTERS];    /* Wild Weapons */
 
+    bool            innate_attack_lock;
     innate_attack_t innate_attacks[MAX_INNATE_ATTACKS];
     int             innate_attack_ct;
 

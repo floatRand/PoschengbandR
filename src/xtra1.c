@@ -3398,12 +3398,16 @@ void calc_bonuses(void)
         p_ptr->weapon_info[i].info_attr = TERM_WHITE;
         p_ptr->weapon_info[i].info = 0;
     }
-    p_ptr->innate_attack_ct = 0;
-    p_ptr->innate_attack_info.to_dd = 0;
-    p_ptr->innate_attack_info.xtra_blow = 0;
-    for (i = 0; i < TR_FLAG_SIZE; i++)
-        p_ptr->innate_attack_info.flags[i] = 0;
-
+    if (!p_ptr->innate_attack_lock)
+    {
+        p_ptr->innate_attack_ct = 0;
+        for (i = 0; i < MAX_INNATE_ATTACKS; i++)
+            memset(&p_ptr->innate_attacks[i], 0, sizeof(innate_attack_t));
+        p_ptr->innate_attack_info.to_dd = 0;
+        p_ptr->innate_attack_info.xtra_blow = 0;
+        for (i = 0; i < TR_FLAG_SIZE; i++)
+            p_ptr->innate_attack_info.flags[i] = 0;
+    }
     /* Start with "normal" speed */
     p_ptr->pspeed = 110;
 
@@ -4621,7 +4625,7 @@ void calc_bonuses(void)
     }
 
     /* Stats need to be set for proper blows calculation. */
-    if (race_ptr->calc_innate_attacks)
+    if (race_ptr->calc_innate_attacks && !p_ptr->innate_attack_lock)
         race_ptr->calc_innate_attacks();
 
     /* Adjust Innate Attacks for Proficiency */

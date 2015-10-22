@@ -1136,9 +1136,12 @@ static void _deadly_bite_spell(int cmd, variant *res)
         var_set_string(res, "Attack an adjacent opponent as usual, but augment your bite attacks with your breath element.");
         break;
     case SPELL_CAST:
+        p_ptr->innate_attack_lock = TRUE;
         p_ptr->innate_attacks[1].effect[1] = _breath_effect();
         var_set_bool(res, do_blow(DRAGON_DEADLY_BITE));
-        p_ptr->innate_attacks[1].effect[1] = 0;
+        p_ptr->innate_attack_lock = FALSE;
+        p_ptr->update |= PU_BONUS;
+        handle_stuff();
         break;
     case SPELL_ON_BROWSE:
     {
@@ -1170,9 +1173,12 @@ static void _snatch_spell(int cmd, variant *res)
         var_set_string(res, "Attempt to snatch an adjacent opponent in your jaws. If successful, you may toss the monster away from you.");
         break;
     case SPELL_CAST:
+        p_ptr->innate_attack_lock = TRUE;
         p_ptr->innate_attacks[0].flags |= INNATE_SKIP;
         var_set_bool(res, do_blow(DRAGON_SNATCH));
-        p_ptr->innate_attacks[0].flags &= ~INNATE_SKIP;
+        p_ptr->innate_attack_lock = FALSE;
+        p_ptr->update |= PU_BONUS;
+        handle_stuff();
         break;
     default:
         default_spell(cmd, res);
@@ -1210,16 +1216,11 @@ static void _rapid_strike_spell(int cmd, variant *res)
         var_set_string(res, "Attack an adjacent opponent with extra blows.");
         break;
     case SPELL_CAST:
+        p_ptr->innate_attack_lock = TRUE;
         p_ptr->innate_attacks[0].blows += 50;
         p_ptr->innate_attacks[1].blows += 25;
         var_set_bool(res, do_blow(DRAGON_RAPID_STRIKE));
-        /* Bug Note (Applies below as well):
-         * p_ptr->innate_attacks[0].blows -= 50;
-         * p_ptr->innate_attacks[1].blows -= 25;
-         * Would seem to be correct, but alas, if any code triggers a calc_bonuses() call during
-         * do_blow(), then the player would end up with fewer blows than normal. Alas, this *is*
-         * actually happening in some situations, but I haven't been able to track down the cause.
-         */
+        p_ptr->innate_attack_lock = FALSE;
         p_ptr->update |= PU_BONUS;
         handle_stuff();
         break;
@@ -1255,9 +1256,11 @@ static void _power_strike_spell(int cmd, variant *res)
         var_set_string(res, "Attack an adjacent opponent with more powerful blows.");
         break;
     case SPELL_CAST:
+        p_ptr->innate_attack_lock = TRUE;
         p_ptr->innate_attacks[0].dd += 2;
         p_ptr->innate_attacks[1].dd += 2;
         var_set_bool(res, do_blow(DRAGON_POWER_STRIKE));
+        p_ptr->innate_attack_lock = FALSE;
         p_ptr->update |= PU_BONUS;
         handle_stuff();
         break;
@@ -1483,11 +1486,13 @@ static void _smite_evil_spell(int cmd, variant *res)
         var_set_string(res, "Attack an adjacent evil opponent with holy fury!");
         break;
     case SPELL_CAST:
+        p_ptr->innate_attack_lock = TRUE;
         p_ptr->innate_attacks[0].effect[1] = GF_HOLY_FIRE;
         p_ptr->innate_attacks[1].effect[1] = GF_HOLY_FIRE;
         var_set_bool(res, do_blow(DRAGON_SMITE_EVIL));
-        p_ptr->innate_attacks[0].effect[1] = 0;
-        p_ptr->innate_attacks[1].effect[1] = 0;
+        p_ptr->innate_attack_lock = FALSE;
+        p_ptr->update |= PU_BONUS;
+        handle_stuff();
         break;
     default:
         default_spell(cmd, res);
@@ -2101,6 +2106,7 @@ static void _tail_sweep_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
         /* Hack: Replace normal tooth and claw attacks with a tail attack */
+        p_ptr->innate_attack_lock = TRUE;
         p_ptr->innate_attack_ct = 0;
         {
             int             l = _attack_level();
@@ -2118,6 +2124,7 @@ static void _tail_sweep_spell(int cmd, variant *res)
             p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
         }     
         var_set_bool(res, do_blow(DRAGON_TAIL_SWEEP));
+        p_ptr->innate_attack_lock = FALSE;
         /* Hack: Restore normal attacks */
         p_ptr->innate_attack_ct = 0;
         _calc_innate_attacks();
