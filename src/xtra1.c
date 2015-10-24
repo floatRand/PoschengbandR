@@ -3018,7 +3018,9 @@ static void calc_mana(void)
         p_ptr->msp = msp;
 
         /* Preserve the amount of used up mana whenever the total changes */
-        if (p_ptr->csp > 0 && csp >= 0)
+        if (csp < 0)
+            p_ptr->csp = 0;
+        else if (p_ptr->csp > 0 && csp >= 0)
             p_ptr->csp = csp;
 
         if (p_ptr->csp >= msp && p_ptr->pclass != CLASS_SAMURAI && p_ptr->pclass != CLASS_MYSTIC)
