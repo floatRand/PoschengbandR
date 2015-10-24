@@ -213,6 +213,9 @@ The list of abbreviations for each resistances and abilities are described in <l
 
 <topic:exp_need><color:U>Show the experience needed for the next level</color> <color:D>(exp_need)</color>
 Setting this option to yes alters the display of experience on the left of the main screen to the experience needed to reach the next character level, instead of the character's current total experience.
+
+<topic:ignore_unview><color:U>Ignore actions of out of sight monsters</color> <color:D>(ignore_unview)</color>
+With this option, you won't receive messages when out of sight monsters fight one another. This is useful if you are playing with lots of pets and don't wish to read a blow by blow account of the battle raging around you.
 </indent>
 <topic:GamePlay><style:heading>Game Play Options</style>
   <indent>
