@@ -75,8 +75,8 @@ static byte value_check_aux1(object_type *o_ptr)
  *
  * For weak sensing, we have:
  *
- * FEEL_NONE -> enchanted
- *           -> cursed
+ * average -> enchanted
+ *         -> cursed
  */
 static byte value_check_aux2(object_type *o_ptr)
 {
@@ -98,10 +98,7 @@ static byte value_check_aux2(object_type *o_ptr)
     /* Good weapon bonuses */
     if (o_ptr->to_h + o_ptr->to_d > 0) return FEEL_ENCHANTED;
 
-    if (p_ptr->lev < 30)
-        return FEEL_NONE;
-    else
-        return FEEL_AVERAGE;
+    return FEEL_AVERAGE;
 }
 
 
