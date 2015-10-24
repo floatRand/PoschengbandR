@@ -181,6 +181,18 @@ Displays small icons of the items in your inventory list, equipment list and sto
 <topic:equippy_chars><color:U>Display 'equippy' chars</color> <color:D>(equippy_chars)</color>
 This option will show you a graphical representation of your worn equipment on the main screen. The 'equippy' chars will use the standard symbols of the respective items.
 
+<topic:display_hp_bar><color:U>Display player hp bar</color> <color:D>(display_hp_bar)</color>
+This option will display a status bar on the main screen that details your current health. For example:
+  @[<color:y>*******</color>--]
+
+<topic:display_sp_bar><color:U>Display player sp bar</color> <color:D>(display_sp_bar)</color>
+This option will display a status bar on the main screen that details your current mana. For example:
+  <color:W>?</color>[<color:r>***</color>------]
+
+<topic:display_food_bar><color:U>Display detailed food status</color> <color:D>(display_food_bar)</color>
+This option will display a status bar on the main screen that details your current state of hunger. For example:
+  <color:U>,</color>[<color:R>**</color>-------]
+
 <topic:display_mutations><color:U>Display mutations in 'C'haracter Display</color> <color:D>(display_mutations)</color>
 Normally, if your character has gained mutations, they will be displayed in an extra 'h' mode window under the 'C'haracter Description command. Some players may wish to view mutations only via the knowledge command ('~' or '|') and do not want any extra screens in the Character Description: they should set this option.
 
