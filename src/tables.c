@@ -3379,7 +3379,7 @@ option_type option_info[] =
     "exp_need",                     "Show the experience needed for next level" },
 
     { &ignore_unview,               FALSE, OPT_PAGE_TEXT, 2, 13,
-    "ignore_unview",                "Ignore whenever any monster does" },
+    "ignore_unview",                "Ignore actions of out of sight monsters" },
 
     /*** Game-Play ***/
 
