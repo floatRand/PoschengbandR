@@ -702,7 +702,7 @@ bool set_mimic(int v, int p, bool do_dec)
     p_ptr->redraw |= (PR_BASIC | PR_STATUS | PR_MAP | PR_EQUIPPY | PR_EFFECTS);
 
     /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS | PU_HP);
+    p_ptr->update |= (PU_BONUS | PU_HP | PU_TORCH);
     handle_stuff();
 
     /* Result */
