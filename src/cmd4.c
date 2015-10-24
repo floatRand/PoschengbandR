@@ -3119,6 +3119,63 @@ string_ptr get_tiny_screenshot(int cx, int cy)
     return s;
 }
 
+/* Note: This will not work if the screen is "icky" */
+string_ptr get_screenshot(void)
+{
+    string_ptr s = string_alloc_size(80 * 27);
+    bool       old_use_graphics = use_graphics;
+    int        wid, hgt, x, y;
+
+    Term_get_size(&wid, &hgt);
+
+    if (old_use_graphics)
+    {
+        use_graphics = FALSE;
+        reset_visuals();
+
+        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY | PR_MSG_LINE);
+        redraw_stuff();
+    }
+
+    for (y = 0; y < hgt; y++)
+    {
+        int  current_a = -1;
+        for (x = 0; x < wid; x++)
+        {
+            byte a;
+            char c;
+
+            Term_what(x, y, &a, &c);
+
+            if (a != current_a)
+            {
+                if (current_a >= 0 && current_a != TERM_WHITE)
+                {
+                    string_append_s(s, "</color>");
+                }
+                if (a != TERM_WHITE)
+                {
+                    string_printf(s, "<color:%c>", attr_to_attr_char(a));
+                }
+                current_a = a;
+            }
+            string_append_c(s, c);
+        }
+        if (current_a >= 0 && current_a != TERM_WHITE)
+            string_append_s(s, "</color>");
+        string_append_c(s, '\n');
+    }
+    if (old_use_graphics)
+    {
+        use_graphics = TRUE;
+        reset_visuals();
+
+        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY | PR_MSG_LINE);
+        redraw_stuff();
+    }
+    return s;
+}
+
 /*
  * Note something in the message recall
  */
@@ -3847,129 +3904,6 @@ static int collect_artifacts(int grp_cur, int object_idx[])
 }
 #endif /* 0 */
 
-
-/*
- * Encode the screen colors
- */
-static char hack[17] = "dwsorgbuDWvyRGBU";
-
-
-/*
- * Hack -- load a screen dump from a file
- */
-void do_cmd_load_screen(void)
-{
-    int i, y, x;
-
-    byte a = 0;
-    char c = ' ';
-
-    bool okay = TRUE;
-
-    FILE *fff;
-
-    char buf[1024];
-
-    int wid, hgt;
-
-    Term_get_size(&wid, &hgt);
-
-    /* Build the filename */
-    path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "dump.txt");
-
-    /* Append to the file */
-    fff = my_fopen(buf, "r");
-
-    /* Oops */
-    if (!fff) {
-        msg_format("Failed to open %s.", buf);
-        msg_print(NULL);
-        return;
-    }
-
-
-    /* Save the screen */
-    screen_save();
-
-    /* Clear the screen */
-    Term_clear();
-
-
-    /* Load the screen */
-    for (y = 0; okay; y++)
-    {
-        /* Get a line of data including control code */
-        if (!fgets(buf, 1024, fff)) okay = FALSE;
-
-        /* Get the blank line */
-        if (buf[0] == '\n' || buf[0] == '\0') break;
-
-        /* Ignore too large screen image */
-        if (y >= hgt) continue;
-
-        /* Show each row */
-        for (x = 0; x < wid - 1; x++)
-        {
-            /* End of line */
-            if (buf[x] == '\n' || buf[x] == '\0') break;
-
-            /* Put the attr/char */
-            Term_draw(x, y, TERM_WHITE, buf[x]);
-        }
-    }
-
-    /* Dump the screen */
-    for (y = 0; okay; y++)
-    {
-        /* Get a line of data including control code */
-        if (!fgets(buf, 1024, fff)) okay = FALSE;
-
-        /* Get the blank line */
-        if (buf[0] == '\n' || buf[0] == '\0') break;
-
-        /* Ignore too large screen image */
-        if (y >= hgt) continue;
-
-        /* Dump each row */
-        for (x = 0; x < wid - 1; x++)
-        {
-            /* End of line */
-            if (buf[x] == '\n' || buf[x] == '\0') break;
-
-            /* Get the attr/char */
-            (void)(Term_what(x, y, &a, &c));
-
-            /* Look up the attr */
-            for (i = 0; i < 16; i++)
-            {
-                /* Use attr matches */
-                if (hack[i] == buf[x]) a = i;
-            }
-
-            /* Put the attr/char */
-            Term_draw(x, y, a, c);
-        }
-    }
-
-
-    /* Close it */
-    my_fclose(fff);
-
-
-    /* Message */
-    msg_print("Screen dump loaded.");
-
-    flush();
-    inkey();
-
-
-    /* Restore the screen */
-    screen_load();
-}
-
-
-
-
 cptr inven_res_label = 
  "                               AcElFiCoPoLiDkShSoNtNxCaDi BlFeCfFaSiHlEpSdRgLv";
 
@@ -4144,191 +4078,11 @@ static void do_cmd_knowledge_inven(void)
     fd_kill(file_name);
 }
 
-
-void do_cmd_save_screen_html_aux(char *filename, int message)
-{
-    int y, x, i;
-
-    byte a = 0, old_a = 0;
-    char c = ' ';
-
-    FILE *fff, *tmpfff;
-    char buf[2048];
-
-    int yomikomu = 0;
-    cptr tags[4] = {
-        "HEADER_START:",
-        "HEADER_END:",
-        "FOOTER_START:",
-        "FOOTER_END:",
-    };
-
-    cptr html_head[] = {
-        "<html>\n<body text=\"#ffffff\" bgcolor=\"#000000\">\n",
-        "<pre>",
-        0,
-    };
-    cptr html_foot[] = {
-        "</pre>\n",
-        "</body>\n</html>\n",
-        0,
-    };
-
-    int wid, hgt;
-
-    Term_get_size(&wid, &hgt);
-
-    /* File type is "TEXT" */
-    FILE_TYPE(FILE_TYPE_TEXT);
-
-    /* Append to the file */
-    fff = my_fopen(filename, "w");
-
-    /* Oops */
-    if (!fff) {
-        if (message) {
-            msg_format("Failed to open file %s.", filename);
-            msg_print(NULL);
-        }
-        
-        return;
-    }
-
-    /* Save the screen */
-    if (message)
-        screen_save();
-
-    /* Build the filename */
-    path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "htmldump.prf");
-    tmpfff = my_fopen(buf, "r");
-    if (!tmpfff) {
-        for (i = 0; html_head[i]; i++)
-            fprintf(fff, "%s", html_head[i]);
-    }
-    else {
-        yomikomu = 0;
-        while (!my_fgets(tmpfff, buf, sizeof(buf))) {
-            if (!yomikomu) {
-                if (strncmp(buf, tags[0], strlen(tags[0])) == 0)
-                    yomikomu = 1;
-            }
-            else {
-                if (strncmp(buf, tags[1], strlen(tags[1])) == 0)
-                    break;
-                fprintf(fff, "%s\n", buf);
-            }
-        }
-    }
-
-    /* Dump the screen */
-    for (y = 0; y < hgt; y++)
-    {
-        /* Start the row */
-        if (y != 0)
-            fprintf(fff, "\n");
-
-        /* Dump each row */
-        for (x = 0; x < wid - 1; x++)
-        {
-            int rv, gv, bv;
-            cptr cc = NULL;
-            /* Get the attr/char */
-            (void)(Term_what(x, y, &a, &c));
-
-            switch (c)
-            {
-            case '&': cc = "&amp;"; break;
-            case '<': cc = "&lt;"; break;
-            case '>': cc = "&gt;"; break;
-#ifdef WINDOWS
-            case 0x1f: c = '.'; break;
-            case 0x7f: c = (a == 0x09) ? '%' : '#'; break;
-#endif
-            }
-
-            a = a & 0x0F;
-            if ((y == 0 && x == 0) || a != old_a) {
-                rv = angband_color_table[a][1];
-                gv = angband_color_table[a][2];
-                bv = angband_color_table[a][3];
-                fprintf(fff, "%s<font color=\"#%02x%02x%02x\">", 
-                    ((y == 0 && x == 0) ? "" : "</font>"), rv, gv, bv);
-                old_a = a;
-            }
-            if (cc)
-                fprintf(fff, "%s", cc);
-            else
-                fprintf(fff, "%c", c);
-        }
-    }
-    fprintf(fff, "</font>");
-
-    if (!tmpfff) {
-        for (i = 0; html_foot[i]; i++)
-            fprintf(fff, "%s", html_foot[i]);
-    }
-    else {
-        rewind(tmpfff);
-        yomikomu = 0;
-        while (!my_fgets(tmpfff, buf, sizeof(buf))) {
-            if (!yomikomu) {
-                if (strncmp(buf, tags[2], strlen(tags[2])) == 0)
-                    yomikomu = 1;
-            }
-            else {
-                if (strncmp(buf, tags[3], strlen(tags[3])) == 0)
-                    break;
-                fprintf(fff, "%s\n", buf);
-            }
-        }
-        my_fclose(tmpfff);
-    }
-
-    /* Skip a line */
-    fprintf(fff, "\n");
-
-    /* Close it */
-    my_fclose(fff);
-
-    /* Message */
-    if (message) {
-        msg_print("Screen dump saved.");
-        msg_print(NULL);
-    }
-
-    /* Restore the screen */
-    if (message)
-        screen_load();
-}
-
-/*
- * Hack -- save a screen dump to a file
- */
-static void do_cmd_save_screen_html(void)
-{
-    char buf[1024], tmp[256] = "screen.html";
-
-    if (!get_string("File name: ", tmp, 80))
-        return;
-
-    /* Build the filename */
-    path_build(buf, sizeof(buf), ANGBAND_DIR_USER, tmp);
-
-    msg_print(NULL);
-
-    do_cmd_save_screen_html_aux(buf, 1);
-}
-
-/* This is for embedding screen shots in the help documentation.*/
 void do_cmd_save_screen_doc(void)
 {
-    bool old_use_graphics = use_graphics;
-    int   y, x;
-    byte  a = 0;
-    char  c = ' ';
-    char  buf[1024];
-    FILE *fff;
-    int wid, hgt;
+    string_ptr s = get_screenshot();
+    char       buf[1024];
+    FILE      *fff;
 
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "screen.txt");
     FILE_TYPE(FILE_TYPE_TEXT);
@@ -4336,222 +4090,26 @@ void do_cmd_save_screen_doc(void)
     if (!fff)
         return;
 
-    Term_get_size(&wid, &hgt);
-
-    if (old_use_graphics)
-    {
-        use_graphics = FALSE;
-        reset_visuals();
-
-        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY | PR_MSG_LINE);
-        redraw_stuff();
-    }
-
-    for (y = 0; y < hgt; y++)
-    {
-        int  current_a = -1;
-        for (x = 0; x < wid; x++)
-        {
-            (void)(Term_what(x, y, &a, &c));
-
-            if (a != current_a)
-            {
-                if (current_a >= 0 && current_a != TERM_WHITE)
-                {
-                    /*fprintf(fff, "|");*/
-                    fprintf(fff, "</color>");
-                }
-                if (a != TERM_WHITE)
-                {
-                    /*fprintf(fff, "[[[[%c|", hack[a&0x0F]);*/
-                    fprintf(fff, "<color:%c>", hack[a&0x0F]);
-                }
-                current_a = a;
-            }
-            fprintf(fff, "%c", c);
-        }
-        if (current_a >= 0 && current_a != TERM_WHITE)
-            fprintf(fff, "</color>");
-        fprintf(fff, "\n");
-    }
+    string_write_file(s, fff);
     my_fclose(fff);
-
-    if (old_use_graphics)
-    {
-        use_graphics = TRUE;
-        reset_visuals();
-
-        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY | PR_MSG_LINE);
-        redraw_stuff();
-    }
+    string_free(s);
 }
 
-/*
- * Redefinable "save_screen" action
- */
-void (*screendump_aux)(void) = NULL;
-
-
-/*
- * Hack -- save a screen dump to a file
- */
 void do_cmd_save_screen(void)
 {
-    bool old_use_graphics = use_graphics;
-    bool html_dump = FALSE;
+    string_ptr s = get_screenshot();
+    doc_ptr    doc = doc_alloc(Term->wid);
 
-    int wid, hgt;
+    doc_insert(doc, "<style:screenshot>");
+    doc_insert(doc, string_buffer(s));
+    doc_insert(doc, "</style>");
+    screen_save();
+    doc_display(doc, "Current Screenshot", 0);
+    screen_load();
 
-    prt("Save screen dump? [(y)es/(h)tml/(n)o] ", 0, 0);
-    while(TRUE)
-    {
-        char c = inkey();
-        if (c == 'Y' || c == 'y')
-            break;
-        else if (c == 'H' || c == 'h')
-        {
-            html_dump = TRUE;
-            break;
-        }
-        else
-        {
-            prt("", 0, 0);
-            return;
-        }
-    }
-
-    Term_get_size(&wid, &hgt);
-
-    if (old_use_graphics)
-    {
-        use_graphics = FALSE;
-        reset_visuals();
-
-        /* Redraw everything */
-        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY);
-
-        /* Hack -- update */
-        handle_stuff();
-    }
-
-    if (html_dump)
-    {
-        do_cmd_save_screen_html();
-        do_cmd_redraw();
-    }
-    /* Do we use a special screendump function ? */
-    else if (screendump_aux)
-    {
-        /* Dump the screen to a graphics file */
-        (*screendump_aux)();
-    }
-    else /* Dump the screen as text */
-    {
-        int y, x;
-
-        byte a = 0;
-        char c = ' ';
-
-        FILE *fff;
-
-        char buf[1024];
-
-        /* Build the filename */
-        path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "dump.txt");
-
-        /* File type is "TEXT" */
-        FILE_TYPE(FILE_TYPE_TEXT);
-
-        /* Append to the file */
-        fff = my_fopen(buf, "w");
-
-        /* Oops */
-        if (!fff)
-        {
-            msg_format("Failed to open file %s.", buf);
-            msg_print(NULL);
-            return;
-        }
-
-
-        /* Save the screen */
-        screen_save();
-
-
-        /* Dump the screen */
-        for (y = 0; y < hgt; y++)
-        {
-            /* Dump each row */
-            for (x = 0; x < wid - 1; x++)
-            {
-                /* Get the attr/char */
-                (void)(Term_what(x, y, &a, &c));
-
-                /* Dump it */
-                buf[x] = c;
-            }
-
-            /* Terminate */
-            buf[x] = '\0';
-
-            /* End the row */
-            fprintf(fff, "%s\n", buf);
-        }
-
-        /* Skip a line */
-        fprintf(fff, "\n");
-
-
-        /* Dump the attributes */
-        for (y = 0; y < hgt; y++)
-        {
-            /* Dump each row */
-            for (x = 0; x < wid - 1; x++)
-            {
-                /* Get the attr/char */
-                (void)(Term_what(x, y, &a, &c));
-
-                /* Dump it */
-                buf[x] = hack[a&0x0F];
-            }
-
-            /* Terminate */
-            buf[x] = '\0';
-
-            /* End the row */
-            fprintf(fff, "%s\n", buf);
-        }
-
-        /* Skip a line */
-        fprintf(fff, "\n");
-
-
-        /* Close it */
-        my_fclose(fff);
-
-        /* Message */
-        msg_print("Screen dump saved.");
-
-        msg_print(NULL);
-
-
-        /* Restore the screen */
-        screen_load();
-    }
-
-    if (old_use_graphics)
-    {
-        use_graphics = TRUE;
-        reset_visuals();
-
-        /* Redraw everything */
-        p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY);
-
-        /* Hack -- update */
-        handle_stuff();
-    }
+    string_free(s);
+    doc_free(doc);
 }
-
 
 /*
  * Sorting hook -- Comp function -- see below

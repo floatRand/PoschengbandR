@@ -375,11 +375,8 @@ Toggles the display in the choice window (if available) between your inventory a
   <indent><color:U>Redraw Screen (<color:keypress>^R</color>)</color>
 This command adapts to various changes in global options, and redraws all of the windows. This command should be used after changing various global properties (options, attr/char mappings, color definitions, etc). When in doubt, use it.</indent>
         
-  <indent><color:U>Load screen dump (<color:keypress>(</color>)</color>
-This command loads a "snap-shot" of the current screen from the file "dump.txt", and displays it on the screen.</indent>
-        
-  <indent><color:U>Save screen dump (<color:keypress>)</color>)</color>
-This command dumps a "snap-shot" of the current screen to the file "dump.txt", including encoded color information.</indent>
+  <indent><color:U>Create screen dump (<color:keypress>)</color>)</color>
+This command creates a document of the current screen and then displays that document to you in the game's internal file viewer. You may then save the document as either plaintext or as html, using the <color:keypress>|</color> command. To create an html file, simply give the file an html extension. Note that if you are playing with graphics enabled, then this command will attempt to convert to normal textual display before creating the screen dump.</indent>
 
   <indent><color:U>Command your pets (<color:keypress>p</color>)</color>
 If you have pets then this command allows you to give orders to your pets. You can call them to you, send them out to kill other monsters, dismiss them, and allow/disallow opening of door and picking up items. Your pets will drop all picked up items when you disallow them to pick up anything.</indent>
@@ -488,8 +485,7 @@ If you have pets then this command allows you to give orders to your pets. You c
   Repeat Last Command         <color:keypress>n                X</color>
   Toggle Choice Window       <color:keypress>^I                 </color>
   Redraw Screen              <color:keypress>^R                 </color>
-  Load Screen Dump            <color:keypress>(                 </color>
-  Save Screen Dump            <color:keypress>)                 </color>
+  Create Screen Dump          <color:keypress>)                 </color>
   Command Pets                <color:keypress>p                 </color>
 </style>
 <color:D>

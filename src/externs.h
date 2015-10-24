@@ -783,8 +783,6 @@ extern void do_cmd_colors(void);
 extern void do_cmd_note(void);
 extern void do_cmd_version(void);
 extern void do_cmd_feeling(void);
-extern void do_cmd_load_screen(void);
-extern void do_cmd_save_screen_html_aux(char *filename, int message);
 extern void do_cmd_save_screen(void);
 extern void do_cmd_save_screen_doc(void);
 extern void do_cmd_knowledge_quests_completed(FILE *fff, int quest_num[]);
@@ -796,6 +794,7 @@ extern void plural_aux(char * Name);
 extern void do_cmd_checkquest(void);
 extern void do_cmd_time(void);
 extern string_ptr get_tiny_screenshot(int cx, int cy);
+extern string_ptr get_screenshot(void);
 
 /* cmd5.c */
 extern cptr spell_category_name(int tval);

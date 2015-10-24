@@ -49,8 +49,8 @@ Don't be overwhelmed by the sheer number of commands. Many are not often used or
    ^  (special - control key)             ^F  Repeat level feeling
    &  Interact with colors                <color:D>^G  (unused)</color>
    <color:y>*</color>  Target monster or location          <color:D>^H  (unused)</color>
-   (  Load screen dump                    ^I  Toggle Choice Window
-   )  Dump screen dump                    ^J  (special - linefeed)
+   <color:D>(  (unused)</color>                            ^I  Toggle Choice Window
+   )  Create screen dump                  ^J  (special - linefeed)
    {  Inscribe an object                  <color:D>^K  (unused)</color>
    }  Uninscribe an object                <color:D>^L  (unused)</color>
    [  Display monster list                ^M  (special - return)
@@ -113,8 +113,8 @@ Don't be overwhelmed by the sheer number of commands. Many are not often used or
    ^  (special - control key)             ^F  Repeat level feeling
    &  Interact with colors                <color:D>^G  (unused)</color>
    <color:y>*</color>  Target monster or location          ^H  (tunnel - west)
-   (  Load screen dump                    ^I  Toggle Choice Window
-   )  Dump screen dump                    ^J  (tunnel - south)
+   <color:D>(  (unused)</color>                            ^I  Toggle Choice Window
+   )  Create screen dump                  ^J  (tunnel - south)
    {  Inscribe an object                  ^K  (tunnel - north)
    }  Uninscribe an object                ^L  (tunnel - east)
    [  Display monster list                ^M  (tunnel - south)
