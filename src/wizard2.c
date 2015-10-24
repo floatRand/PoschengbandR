@@ -938,8 +938,8 @@ static bool do_cmd_wiz_hack_chris9(void)
         reforge_artifact(src, &forge, p_ptr->fame);
         identify_item(&forge);
         forge.ident |= (IDENT_FULL); 
-        object_desc(buf, &forge, 0);
-        msg_format(" %d) %s", i+1, buf);
+        object_desc(buf, &forge, OD_COLOR_CODED);
+        msg_format(" %d) %s\n", i+1, buf);
     }
 
     return TRUE;
