@@ -383,8 +383,8 @@ static void _calc_innate_attacks(void)
         a.msg = "You claw.";
         a.name = "Claw";
 
-        if (p_ptr->dragon_realm == DRAGON_REALM_ATTACK && p_ptr->lev >= 40)
-            a.flags |= INNATE_VORPAL;
+        /*if (p_ptr->dragon_realm == DRAGON_REALM_ATTACK && p_ptr->lev >= 40)
+            a.flags |= INNATE_VORPAL;*/
 
         if (p_ptr->dragon_realm == DRAGON_REALM_DEATH && p_ptr->lev >= 45)
             a.effect[1] = GF_OLD_DRAIN;
@@ -411,8 +411,8 @@ static void _calc_innate_attacks(void)
         a.msg = "You bite.";
         a.name = "Bite";
 
-        if (p_ptr->dragon_realm == DRAGON_REALM_ATTACK && p_ptr->lev >= 40)
-            a.flags |= INNATE_VORPAL;
+        /*if (p_ptr->dragon_realm == DRAGON_REALM_ATTACK && p_ptr->lev >= 40)
+            a.flags |= INNATE_VORPAL;*/
 
         if (p_ptr->dragon_realm == DRAGON_REALM_DEATH && p_ptr->lev >= 45)
             a.effect[1] = GF_OLD_DRAIN;
@@ -1051,8 +1051,28 @@ static void _rend_spell(int cmd, variant *res)
         var_set_string(res, "Attack an adjacent opponent with cutting blows.");
         break;
     case SPELL_CAST:
+        p_ptr->innate_attack_lock = TRUE;
+        p_ptr->innate_attacks[0].flags |= INNATE_VORPAL;
+        p_ptr->innate_attacks[1].flags |= INNATE_VORPAL;
         var_set_bool(res, do_blow(DRAGON_REND));
+        p_ptr->innate_attack_lock = FALSE;
+        p_ptr->update |= PU_BONUS;
         break;
+    case SPELL_ON_BROWSE:
+    {
+        bool screen_hack = screen_is_saved();
+        if (screen_hack) screen_load();
+
+        p_ptr->innate_attacks[0].flags |= INNATE_VORPAL;
+        p_ptr->innate_attacks[1].flags |= INNATE_VORPAL;
+        do_cmd_knowledge_weapon();
+        p_ptr->innate_attacks[0].flags &= ~INNATE_VORPAL;
+        p_ptr->innate_attacks[1].flags &= ~INNATE_VORPAL;
+
+        if (screen_hack) screen_save();
+        var_set_bool(res, TRUE);
+        break;
+    }
     default:
         default_spell(cmd, res);
         break;
@@ -1141,7 +1161,6 @@ static void _deadly_bite_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(DRAGON_DEADLY_BITE));
         p_ptr->innate_attack_lock = FALSE;
         p_ptr->update |= PU_BONUS;
-        handle_stuff();
         break;
     case SPELL_ON_BROWSE:
     {
@@ -1178,7 +1197,6 @@ static void _snatch_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(DRAGON_SNATCH));
         p_ptr->innate_attack_lock = FALSE;
         p_ptr->update |= PU_BONUS;
-        handle_stuff();
         break;
     default:
         default_spell(cmd, res);
@@ -1222,7 +1240,6 @@ static void _rapid_strike_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(DRAGON_RAPID_STRIKE));
         p_ptr->innate_attack_lock = FALSE;
         p_ptr->update |= PU_BONUS;
-        handle_stuff();
         break;
     case SPELL_ON_BROWSE:
     {
@@ -1233,7 +1250,6 @@ static void _rapid_strike_spell(int cmd, variant *res)
         p_ptr->innate_attacks[1].blows += 25;
         do_cmd_knowledge_weapon();
         p_ptr->update |= PU_BONUS;
-        handle_stuff();
 
         if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
@@ -1262,7 +1278,6 @@ static void _power_strike_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(DRAGON_POWER_STRIKE));
         p_ptr->innate_attack_lock = FALSE;
         p_ptr->update |= PU_BONUS;
-        handle_stuff();
         break;
 
     case SPELL_ON_BROWSE:
@@ -1274,7 +1289,6 @@ static void _power_strike_spell(int cmd, variant *res)
         p_ptr->innate_attacks[1].dd += 2;
         do_cmd_knowledge_weapon();
         p_ptr->update |= PU_BONUS;
-        handle_stuff();
 
         if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
@@ -1492,7 +1506,6 @@ static void _smite_evil_spell(int cmd, variant *res)
         var_set_bool(res, do_blow(DRAGON_SMITE_EVIL));
         p_ptr->innate_attack_lock = FALSE;
         p_ptr->update |= PU_BONUS;
-        handle_stuff();
         break;
     default:
         default_spell(cmd, res);

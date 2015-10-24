@@ -2276,8 +2276,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                 msg_format(a->msg, m_name);
 
                 base_dam = damroll(dd, a->ds);
-                if ( ((a->flags & INNATE_VORPAL) || mode == DRAGON_REND) 
-                  && one_in_(6) )
+                if ((a->flags & INNATE_VORPAL) && one_in_(6))
                 {
                     int m = 2;
                     while (one_in_(4))
