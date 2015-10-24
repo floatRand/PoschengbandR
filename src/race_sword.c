@@ -271,6 +271,7 @@ static _flag_info_t _slay_flag_info[] = {
     { TR_SLAY_ORC, 4, "Slay Orc" },
     { TR_SLAY_TROLL, 8, "Slay Troll" },
     { TR_SLAY_GIANT, 8, "Slay Giant" },
+    { TR_SLAY_LIVING, 8, "Slay Living" },
 
     { TR_BRAND_ACID, 24, "Brand Acid" },
     { TR_BRAND_ELEC, 24, "Brand Elec" },
