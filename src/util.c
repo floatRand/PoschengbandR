@@ -3622,7 +3622,7 @@ void request_command(int shopping)
 
         /* Clear top line
         prt("", 0, 0);*/
-        if (cmd != KTRL('R'))
+        if (cmd != KTRL('R') && cmd != ')')
             msg_line_clear();
 
         /* Command Count */
