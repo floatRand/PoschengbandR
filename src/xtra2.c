@@ -216,9 +216,8 @@ void check_experience(void)
     /* Redraw experience */
     p_ptr->redraw |= (PR_EXP);
 
-    /* Handle stuff */
-    handle_stuff();
-
+    /* <strikeout>Handle</strikeout> redraw stuff */
+    redraw_stuff();
 
     /* Lose levels while possible */
     while ((p_ptr->lev > 1) &&

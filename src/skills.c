@@ -191,6 +191,18 @@ int skills_weapon_max(int tval, int sval)
     return s_info[_class_idx()].w_max[tval-TV_WEAPON_BEGIN][sval];
 }
 
+static int _weapon_calc_bonus_aux(int skill)
+{
+    int bonus = (skill - WEAPON_EXP_BEGINNER) / 200; /* -20 to +20 */
+    return bonus;
+}
+
+int skills_weapon_calc_bonus(int tval, int sval)
+{
+    int current = skills_weapon_current(tval, sval);
+    return _weapon_calc_bonus_aux(current);
+}
+
 void skills_weapon_gain(int tval, int sval)
 {
     int max = skills_weapon_max(tval, sval);
@@ -207,11 +219,15 @@ void skills_weapon_gain(int tval, int sval)
 
         if (add > 0)
         {
+            int old_bonus = _weapon_calc_bonus_aux(cur);
+            int new_bonus;
             cur += add;
             if (cur > max)
                 cur = max;
+            new_bonus = _weapon_calc_bonus_aux(cur);
             p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval] += add;
-            p_ptr->update |= (PU_BONUS);
+            if (old_bonus != new_bonus)
+                p_ptr->update |= PU_BONUS;
         }
     }
 }
@@ -239,14 +255,6 @@ bool skills_weapon_is_icky(int tval, int sval)
         break;
     }
     return result;
-}
-
-int skills_weapon_calc_bonus(int tval, int sval)
-{
-    int current = skills_weapon_current(tval, sval);
-    int bonus = (current - WEAPON_EXP_BEGINNER) / 200; /* -20 to +20 */
-
-    return bonus;
 }
 
 cptr skills_weapon_describe_current(int tval, int sval)
@@ -478,6 +486,18 @@ int skills_innate_current(cptr name)
     return result;
 }
 
+static int _innate_calc_bonus_aux(int skill)
+{
+    int bonus = (skill - WEAPON_EXP_BEGINNER) / 200; /* -20 to +20 */
+    return bonus;
+}
+
+int skills_innate_calc_bonus(cptr name)
+{
+    int current = skills_innate_current(name);
+    return _innate_calc_bonus_aux(current);
+}
+
 void skills_innate_gain(cptr name)
 {
     _skill_info_ptr info = _innate_info(name);
@@ -502,19 +522,16 @@ void skills_innate_gain(cptr name)
 
         if (add > 0)
         {
+            int old_bonus = _innate_calc_bonus_aux(info->current);
+            int new_bonus;
             info->current += add;
             if (info->current > info->max)
                 info->current = info->max;
-            p_ptr->update |= PU_BONUS;
+            new_bonus = _innate_calc_bonus_aux(info->current);
+            if (old_bonus != new_bonus)
+                p_ptr->update |= PU_BONUS;
         }
     }
-}
-
-int skills_innate_calc_bonus(cptr name)
-{
-    int current = skills_innate_current(name);
-    int bonus = (current - WEAPON_EXP_BEGINNER) / 200; /* -20 to +20 */
-    return bonus;
 }
 
 cptr skills_innate_calc_name(innate_attack_ptr attack)
