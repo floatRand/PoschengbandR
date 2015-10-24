@@ -3641,7 +3641,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 if (o_ptr && o_ptr->name1 == ART_ETERNAL_BLADE)
                 {
                     /* Hack: Time Brand. Effectively a 2x slay ... k2 is damage from dice alone.*/
-                    project(0, 0, y, x, k2, GF_TIME, PROJECT_STOP | PROJECT_KILL | PROJECT_GRID, -1);
+                    project(0, 0, y, x, k2, GF_TIME, PROJECT_HIDE | PROJECT_STOP | PROJECT_KILL | PROJECT_GRID, -1);
+                    *mdeath = (m_ptr->r_idx == 0);
+                    if (*mdeath) break;
                 }
 
                 if (mauler_get_toggle() == MAULER_TOGGLE_DRAIN)
