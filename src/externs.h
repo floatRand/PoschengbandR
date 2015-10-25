@@ -950,6 +950,14 @@ extern void signals_handle_tstp(void);
 extern void signals_init(void);
 extern errr get_rnd_line(cptr file_name, int entry, char *output);
 
+extern void player_flags(u32b flgs[TR_FLAG_SIZE]);
+extern void tim_player_flags(u32b flgs[TR_FLAG_SIZE]);
+
+extern int ct_kills(void);
+extern int ct_kills_all(void);
+extern int ct_uniques(void);
+extern int ct_artifacts(void);
+
 extern errr counts_write(int where, u32b count);
 extern u32b counts_read(int where);
 
@@ -1111,6 +1119,9 @@ extern void obj_display(object_type *o_ptr);
 extern void obj_display_rect(object_type *o_ptr, rect_t display);
 extern void obj_display_doc(object_type *o_ptr, doc_ptr doc);
 extern void device_display_doc(object_type *o_ptr, doc_ptr doc);
+
+/* py_display.c */
+extern void py_display(void);
 
 /* object1.c */
 extern s16b m_bonus(int max, int level);

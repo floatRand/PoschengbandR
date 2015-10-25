@@ -64,11 +64,11 @@ static _res_info_t _resist_map[RES_MAX] = {
     { "Electricity",    TERM_BLUE,    TR_RES_ELEC,    TR_VULN_ELEC,   TR_IM_ELEC },
     { "Fire",           TERM_RED,     TR_RES_FIRE,    TR_VULN_FIRE,   TR_IM_FIRE },
     { "Cold",           TERM_L_WHITE, TR_RES_COLD,    TR_VULN_COLD,   TR_IM_COLD },
-    { "Poison",         TERM_L_GREEN, TR_RES_POIS,    TR_VULN_POIS,   TR_INVALID },
-    { "Light",          TERM_YELLOW,  TR_RES_LITE,    TR_VULN_LITE,   TR_INVALID },
-    { "Dark",           TERM_L_DARK,  TR_RES_DARK,    TR_VULN_DARK,   TR_INVALID },
+    { "Poison",         TERM_L_GREEN, TR_RES_POIS,    TR_VULN_POIS,   TR_IM_POIS },
+    { "Light",          TERM_YELLOW,  TR_RES_LITE,    TR_VULN_LITE,   TR_IM_LITE },
+    { "Dark",           TERM_L_DARK,  TR_RES_DARK,    TR_VULN_DARK,   TR_IM_DARK },
     { "Confusion",      TERM_L_RED,   TR_RES_CONF,    TR_VULN_CONF,   TR_INVALID },
-    { "Nether",         TERM_L_DARK,  TR_RES_NETHER,  TR_VULN_NETHER, TR_INVALID },
+    { "Nether",         TERM_L_DARK,  TR_RES_NETHER,  TR_VULN_NETHER, TR_IM_NETHER },
     { "Nexus",          TERM_VIOLET,  TR_RES_NEXUS,   TR_VULN_NEXUS,  TR_INVALID },
     { "Sound",          TERM_ORANGE,  TR_RES_SOUND,   TR_VULN_SOUND,  TR_INVALID },
     { "Shards",         TERM_L_UMBER, TR_RES_SHARDS,  TR_VULN_SHARDS, TR_INVALID },
@@ -76,7 +76,7 @@ static _res_info_t _resist_map[RES_MAX] = {
     { "Disenchantment", TERM_VIOLET,  TR_RES_DISEN,   TR_VULN_DISEN,  TR_INVALID },
     { "Time",           TERM_L_BLUE,  TR_RES_TIME,    TR_INVALID,     TR_INVALID },
     { "Blindness",      TERM_L_DARK,  TR_RES_BLIND,   TR_VULN_BLIND,  TR_INVALID },
-    { "Fear",           TERM_L_RED,   TR_RES_FEAR,    TR_VULN_FEAR,   TR_INVALID },
+    { "Fear",           TERM_L_RED,   TR_RES_FEAR,    TR_VULN_FEAR,   TR_IM_FEAR },
     { "Teleportation",  TERM_ORANGE,  TR_NO_TELE,     TR_INVALID,     TR_INVALID }
 };
 
@@ -256,6 +256,38 @@ int  res_pct_aux(int which, int count)
 int res_pct(int which)
 {
     int ct = p_ptr->resist[which];
+    return res_pct_aux(which, ct);
+}
+
+int res_pct_known(int which)
+{
+    int ct = p_ptr->resist[which];
+    int hidden = 0;
+    int flg = res_get_object_flag(which);
+    int i;
+
+    /* Life is a bit hard at the moment since "player flags"
+       may account for multiple resistances. Really, the entire
+       flag based approach to resistance is just wrong, but I'm
+       too lazy to fix ...
+    */
+    for (i = 0; i < equip_count(); i++)
+    {
+        int          slot = EQUIP_BEGIN + i;
+        object_type *o_ptr = equip_obj(slot);
+        u32b         flgs[TR_FLAG_SIZE];
+        u32b         flgs_known[TR_FLAG_SIZE];
+
+        if (!o_ptr) continue;
+        object_flags(o_ptr, flgs);
+        object_flags_known(o_ptr, flgs_known);
+
+        if (have_flag(flgs, flg) && !have_flag(flgs_known, flg))
+            hidden++;
+    }
+
+    ct -= hidden;
+
     return res_pct_aux(which, ct);
 }
 

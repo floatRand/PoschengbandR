@@ -155,7 +155,7 @@ doc_pos_t     doc_read_file(doc_ptr doc, FILE *fp);
 void          doc_write_file(doc_ptr doc, FILE *fp, int format);
 
               /* Build a document in code */
-doc_pos_t     doc_insert_char(doc_ptr doc, char c);
+doc_pos_t     doc_insert_char(doc_ptr doc, byte a, char c);
 doc_pos_t     doc_insert_text(doc_ptr doc, byte a, cptr text);
 doc_pos_t     doc_insert_doc(doc_ptr dest_doc, doc_ptr src_doc, int indent);
 doc_pos_t     doc_insert_cols(doc_ptr dest_doc, doc_ptr src_cols[], int col_count, int spacing);

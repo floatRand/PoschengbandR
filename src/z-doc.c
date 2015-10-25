@@ -189,6 +189,11 @@ static void _indent_style(doc_style_ptr style)
     style->indent = 2;
 }
 
+static void _wide_style(doc_style_ptr style)
+{
+    style->right = 255;
+}
+
 /* doc_style_f <-> void * is forbidden in ISO C ... I'm not sure
    what the correct idiom is for a table of function pointers? */
 static void _add_doc_style_f(doc_ptr doc, cptr name, doc_style_f f)
@@ -233,6 +238,7 @@ doc_ptr doc_alloc(int width)
     _add_doc_style_f(res, "table", _table_style);
     _add_doc_style_f(res, "selection", _selection_style);
     _add_doc_style_f(res, "indent", _indent_style);
+    _add_doc_style_f(res, "wide", _wide_style);
 
     /* bottom of the style stack is *always* "normal" and can never be popped */
     _normal_style(&style);
@@ -708,7 +714,7 @@ static void _doc_process_var(doc_ptr doc, cptr name)
 {
     if (strcmp(name, "version") == 0)
     {
-        string_ptr s = string_alloc_format("%d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
+        string_ptr s = string_alloc_format("%d.%d.%d", VER_MAJOR, VER_MINOR, VER_PATCH);
         doc_insert(doc, string_buffer(s));
         string_free(s);
     }
@@ -1000,12 +1006,12 @@ doc_pos_t doc_insert(doc_ptr doc, cptr text)
     return doc->cursor;
 }
 
-doc_pos_t doc_insert_char(doc_ptr doc, char c)
+doc_pos_t doc_insert_char(doc_ptr doc, byte a, char c)
 {
     doc_char_ptr cell = doc_char(doc, doc->cursor);
     doc_style_ptr style = doc_current_style(doc);
 
-    cell->a = style->color;
+    cell->a = a;
     cell->c = c;
 
     if (doc->cursor.x >= style->right - 1)

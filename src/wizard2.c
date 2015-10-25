@@ -3176,6 +3176,9 @@ void do_cmd_debug(void)
 */
         break;
     }
+    case ';':
+        py_display();
+        break;
     default:
         msg_print("That is not a valid debug command.");
         break;

@@ -3013,8 +3013,13 @@ enum summon_specific_e {
 
 #define TR_STUN                160
 #define TR_DEVICE_POWER        161
+#define TR_IM_POIS             162
+#define TR_IM_LITE             163
+#define TR_IM_DARK             164
+#define TR_IM_NETHER           165
+#define TR_IM_FEAR             166
 
-#define TR_FLAG_MAX            162
+#define TR_FLAG_MAX            167
 /*#define TR_LAST_FLAG!!!!     191  (6 * 32 - 1)*/
 #define TR_FLAG_SIZE           6  
 

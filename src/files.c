@@ -1631,7 +1631,7 @@ static cptr likert(int x, int y)
 /*
  * Obtain the "flags" for the player as if he was an item
  */
-static void player_flags(u32b flgs[TR_FLAG_SIZE])
+void player_flags(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
     class_t *class_ptr = get_class();
@@ -1911,7 +1911,7 @@ static void player_flags(u32b flgs[TR_FLAG_SIZE])
 }
 
 
-static void tim_player_flags(u32b flgs[TR_FLAG_SIZE])
+void tim_player_flags(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
 
@@ -2959,7 +2959,7 @@ static void display_player_stat_info(void)
  * Mode 2 = summary of various things (part 2)
  * Mode 3 = mutations
  */
-static int _kills(void)
+int ct_kills(void)
 {
     int i;
     int result = 0;
@@ -2979,7 +2979,7 @@ static int _kills(void)
 
     return result;
 }
-static int _kills_all(void)
+int ct_kills_all(void)
 {
     int i;
     int result = 0;
@@ -3000,7 +3000,7 @@ static int _kills_all(void)
     return result;
 }
 
-static int _uniques(void)
+int ct_uniques(void)
 {
     int i;
     int result = 0;
@@ -3017,7 +3017,7 @@ static int _uniques(void)
     return result;
 }
 
-static int _artifacts(void)
+int ct_artifacts(void)
 {
     int i, y, x;
     int result = 0;
@@ -3152,10 +3152,10 @@ void display_player(int mode)
                                 TERM_L_GREEN, 21);
 
         _print_field(15, 1, "Gold       :", format("%d", p_ptr->au), TERM_L_GREEN, 21);
-        _print_field(16, 1, "Kills      :", format("%d", _kills()), TERM_L_GREEN, 21);
-        _print_field(17, 1, "Uniques    :", format("%d", _uniques()), TERM_L_GREEN, 21);
+        _print_field(16, 1, "Kills      :", format("%d", ct_kills()), TERM_L_GREEN, 21);
+        _print_field(17, 1, "Uniques    :", format("%d", ct_uniques()), TERM_L_GREEN, 21);
         _print_field(18, 1, "Artifacts  :", 
-                                no_artifacts ? "N/A" : format("%d+%d" , _artifacts(), stats_rand_art_counts.found),
+                                no_artifacts ? "N/A" : format("%d+%d" , ct_artifacts(), stats_rand_art_counts.found),
                                 TERM_L_GREEN, 21);
 
         {
@@ -4081,7 +4081,7 @@ static void dump_aux_kill_counts_imp(FILE *fff, _mon_p p, cptr text, int total)
 
 static void dump_aux_object_counts(FILE *fff)
 {
-    int i, total_kills = _kills_all();
+    int i, total_kills = ct_kills_all();
     counts_t totals = {0};
 
     fprintf(fff, "\n================================== Statistics =================================\n\n");
