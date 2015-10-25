@@ -206,10 +206,10 @@ D:powers so great that it inevitably twists and masters any earthly being
 D:who wears it.
 
 N:14:of Cower (Darnya)
-I:45:0:-5
+I:45:0:5
 W:100:50:2:0
 P:0:1d1:-15:-15:0
-F:STR | INT | WIS | DEX | CON | CHR | SPEED | HIDE_TYPE |
+F:DEC_STR | DEC_INT | DEC_WIS | DEC_DEX | DEC_CON | DEC_CHR | DEC_SPEED | HIDE_TYPE |
 F:CURSED | HEAVY_CURSE | PERMA_CURSE |
 F:AGGRAVATE | DRAIN_EXP | TY_CURSE |
 E:ONE_RING:50:500
@@ -502,10 +502,10 @@ D:awareness.
 # The Iron Helm of Gorlim -> Terror Mask (for warriors only...)
 
 N:41:'Terror Mask'
-I:32:5:-1
+I:32:5:3
 W:50:3:75:200000
 P:5:1d3:18:18:10
-F:INT | WIS | SEARCH | HIDE_TYPE | SHOW_MODS |
+F:DEC_INT | DEC_WIS | HIDE_TYPE | SHOW_MODS |
 F:SEE_INVIS | NO_MAGIC |
 F:RES_DISEN | RES_FEAR | FREE_ACT | RES_ACID | RES_COLD | RES_POIS |
 F:TELEPORT
@@ -1654,11 +1654,11 @@ D:The legendary shield of Gil-Galad, who fought his way to the gates of
 D: the Dark Tower, and with whom came light even to Gorgoroth.
 
 N:139:'Winblows'
-I:21:13:-4
+I:21:13:4
 W:30:20:500:0
 P:0:8d6:0:30:0
-F:STEALTH | INT | WIS | AGGRAVATE | CURSED | HEAVY_CURSE |
-F:SHOW_MODS | CHAOTIC | IMPACT | SPEED
+F:DEC_STEALTH | DEC_INT | DEC_WIS | AGGRAVATE | CURSED | HEAVY_CURSE |
+F:SHOW_MODS | CHAOTIC | IMPACT | DEC_SPEED
 F:RANDOM_CURSE0
 
 N:140:'Silver Chariot'
@@ -1875,10 +1875,10 @@ F:BLESSED | SHOW_MODS | RIDING | ESP_ANIMAL
 E:SUMMON_HOUNDS:30:300
 
 N:165:Pair~ of Glass Slippers
-I:30:2:-3
+I:30:2:3
 W:40:40:20:40000
 P:0:1d1:0:0:0
-F:DEX | HIDE_TYPE | SUST_CHR | STEALTH | SPEED |
+F:DEC_DEX | HIDE_TYPE | SUST_CHR | DEC_STEALTH | DEC_SPEED | CHR
 F:RES_LITE | RES_DARK | RES_NEXUS |
 F:RES_NETHER | RES_CHAOS | LITE | FULL_NAME | VULN_SHARDS
 
@@ -1898,10 +1898,10 @@ F:SLAY_EVIL | KILL_DRAGON | ESP_DRAGON |
 F:SHOW_MODS
 
 N:168:of Giles
-I:37:2:-2
+I:37:2:2
 W:20:20:200:30000
 P:12:1d4:-2:0:18
-F:STEALTH | 
+F:DEC_STEALTH |
 F:RES_FIRE | RES_CHAOS | RES_NEXUS | RES_COLD
 F:HIDE_TYPE
 
@@ -1937,10 +1937,10 @@ D:It is the wakizashi of the famed creator of the dual sword technique,
 D:Miyamoto Musashi, and wielded with his left hand in combat.
 
 N:173:'Iron ball'
-I:21:6:-6
+I:21:6:6
 W:45:40:666:66666
 P:0:25d4:-30:0:20
-F:SPEED | STEALTH | WIS | IMPACT | SHOW_MODS | HIDE_TYPE |
+F:DEC_SPEED | DEC_STEALTH | DEC_WIS | STR | IMPACT | SHOW_MODS | HIDE_TYPE |
 F:CURSED | HEAVY_CURSE
 
 N:174:'Quickthorn'
@@ -1968,10 +1968,10 @@ F:RES_SHARDS | RES_FEAR | BLESSED | HOLD_LIFE |
 F:SEE_INVIS | WARNING | SHOW_MODS
 
 N:177:'Excalipur'
-I:23:17:-3
+I:23:17:3
 W:50:15:130:0
 P:0:5d5:-50:-50:-5
-F:WIS | CHR | VULN_FEAR
+F:DEC_WIS | DEC_CHR | VULN_FEAR
 F:TY_CURSE | AGGRAVATE | DRAIN_EXP | SHOW_MODS | THROW
 
 N:178:of Samson
@@ -2156,10 +2156,10 @@ E:BLOODY_MOON:30:3333
 E:Your scythe glows brightly!
 
 N:200:'Dasai'
-I:36:8:-10
+I:36:8:10
 W:20:3:110:0
 P:8:1d1:-1:0:64
-F:AGGRAVATE | SUST_CHR | CHR
+F:AGGRAVATE | SUST_CHR | DEC_CHR
 
 N:201:'Elemental of Ching-Rong'
 I:38:2:0
@@ -2245,10 +2245,10 @@ E:PROT_EVIL:35:225
 E:The whip lets out a shrill wail...
 
 N:210:'Tetsu-geta of Flame'
-I:30:6:-1
+I:30:6:1
 W:20:15:150:40000
 P:6:1d1:-5:10:20
-F:INT | WIS | CHR | STEALTH | SPEED | RES_FIRE |
+F:DEC_INT | DEC_WIS | DEC_CHR | DEC_STEALTH | DEC_SPEED | RES_FIRE |
 F:SUST_STR | SUST_CON | SH_FIRE | REGEN | RES_FEAR
 
 N:211:of Nain
@@ -2328,10 +2328,10 @@ E:SACRED_KNIGHTS:25
 E:Your amulet exhibits the truth...
 
 N:218:Harness of the Hell
-I:40:0:-2
+I:40:0:2
 W:50:20:30:66666
 P:0:0d0:15:15:-5
-F:INT | WIS | CHR | STEALTH | SPEED | HIDE_TYPE | FULL_NAME
+F:DEC_INT | DEC_WIS | CHR | DEC_STEALTH | DEC_SPEED | HIDE_TYPE | FULL_NAME
 F:RES_DARK | RES_NETHER |
 F:SEE_INVIS | AGGRAVATE | ESP_UNDEAD |
 E:BALL_DARK:50:100:250
@@ -2612,11 +2612,11 @@ D:and only Maglor son of Feanor is said to come close to his skill.
 #(http://en.wikipedia.org/wiki/Daeron#Daeron)
 
 N:247:of the Master Tonberry
-I:31:2:-2
+I:31:2:2
 W:99:150:25:200000
 P:2:0d0:10:100:0
-F:FREE_ACT | SUST_STR | SUST_CON | RES_TIME | RES_DISEN
-F:BLOWS | SPEED | VULN_CONF
+F:FREE_ACT | SUST_STR | SUST_CON | STR | CON | RES_TIME | RES_DISEN
+F:DEC_BLOWS | DEC_SPEED | VULN_CONF
 
 N:248:of the Duelist
 I:23:7:4
@@ -2837,7 +2837,7 @@ D:all laid claim to it. When the Trojan Prince gave the apple to
 D:Aphrodite, he received Helen of Troy, which sparked the Trojan War.
 
 N:268:of Vecna
-I:31:6:-2
+I:31:6:2
 W:66:222:1:666666
 P:0:1d1:0:0:0
 F:CHR
@@ -3206,14 +3206,14 @@ F:STR | CON | CHR
 F:RES_ACID | RES_ELEC | RES_FIRE | RES_COLD | RES_POIS | RES_SHARDS | RES_CONF
 
 N:312:'Bloodthirster'
-I:23:30:-3
+I:23:30:3
 W:70:25:666:250000
 P:0:50d1:-6:-16:-26
 F:QUESTITEM | SHOW_MODS | PERMA_CURSE
 F:FREE_ACT | SEE_INVIS | RES_CONF | RES_CHAOS | AGGRAVATE
 F:SLAY_DRAGON | SLAY_EVIL | SLAY_HUMAN
 F:BRAND_ACID | BRAND_ELEC
-F:STR | INT | WIS | DEX | CON | SPEED | LIFE
+F:DEC_STR | DEC_INT | DEC_WIS | DEC_DEX | DEC_CON | DEC_SPEED | DEC_LIFE
 
 N:313:of Mephistopheles
 I:31:1:2
@@ -3270,11 +3270,11 @@ F:RES_BLIND | RES_CONF | RES_CHAOS | SEE_INVIS | REGEN
 F:XTRA_H_RES
 
 N:320:of the Destroyer
-I:31:5:-2
+I:31:5:2
 W:99:150:25:200000
 P:5:0d0:-15:125:0
 F:QUESTITEM
-F:SPEED | REFLECT
+F:DEC_SPEED | REFLECT
 
 N:321:of Atlas
 I:21:50:9

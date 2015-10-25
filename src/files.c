@@ -1651,6 +1651,9 @@ void player_flags(u32b flgs[TR_FLAG_SIZE])
     if (pers_ptr->get_flags)
         pers_ptr->get_flags(flgs);
 
+    if (race_ptr->infra)
+        add_flag(flgs, TR_INFRA);
+
     /* Classes */
     switch (p_ptr->pclass)
     {

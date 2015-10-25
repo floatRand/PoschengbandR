@@ -259,7 +259,7 @@ int res_pct(int which)
     return res_pct_aux(which, ct);
 }
 
-int res_pct_known(int which)
+int res_ct_known(int which)
 {
     int ct = p_ptr->resist[which];
     int hidden = 0;
@@ -287,8 +287,12 @@ int res_pct_known(int which)
     }
 
     ct -= hidden;
+    return ct;
+}
 
-    return res_pct_aux(which, ct);
+int res_pct_known(int which)
+{
+    return res_pct_aux(which, res_ct_known(which));
 }
 
 bool res_save(int which, int power)

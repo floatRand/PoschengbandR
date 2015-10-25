@@ -821,6 +821,12 @@ static cptr k_info_flags[TR_FLAG_MAX] =
 
     "STUN",
     "DEVICE_POWER",
+    "IM_POIS",
+    "IM_LITE",
+    "IM_DARK",
+    "IM_NETHER",
+    "IM_FEAR",
+    "DEC_BLOWS",
 };
 
 

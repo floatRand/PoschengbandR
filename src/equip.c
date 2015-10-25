@@ -1157,10 +1157,18 @@ void equip_calc_bonuses(void)
         if (have_flag(flgs, TR_SPEED)) p_ptr->pspeed += o_ptr->pval;
         if (have_flag(flgs, TR_DEC_SPEED)) p_ptr->pspeed -= o_ptr->pval;
 
-        if (have_flag(flgs, TR_BLOWS) && (p_ptr->pclass != CLASS_MAULER || o_ptr->pval < 0))
+        if (have_flag(flgs, TR_BLOWS) || have_flag(flgs, TR_DEC_BLOWS))
         {
             int hand = _template->slots[i].hand;
-            int amt = o_ptr->pval * 50;
+            int amt = 0;
+
+            if (have_flag(flgs, TR_BLOWS))
+                amt += o_ptr->pval * 50;
+            if (have_flag(flgs, TR_DEC_BLOWS))
+                amt -= o_ptr->pval * 100;
+            if (p_ptr->pclass == CLASS_MAULER && amt > 0)
+                amt = 0;
+
             switch (_template->slots[i].type)
             {
             case EQUIP_SLOT_GLOVES:

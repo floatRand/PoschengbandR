@@ -42,6 +42,7 @@ extern cptr res_name(int which);
 extern byte res_color(int which);
 extern int  res_pct(int which);
 extern int  res_pct_known(int which);
+extern int  res_ct_known(int which);
 extern int  res_pct_aux(int which, int count);
 extern bool res_save(int which, int power);
 extern bool res_save_default(int which);
