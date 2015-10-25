@@ -325,16 +325,18 @@ static void msg_line_flush(void)
 
 static void msg_line_display(byte color, cptr msg)
 {
+    int len = strlen(msg);
+
     /* Quick and dirty test for -more- ... This means _msg_line_display_rect
        is just a suggested limit, and we'll surpass this for long messages. */
-    if (doc_cursor(_msg_line_doc).y >= _msg_line_rect.cy)
+    if (doc_cursor(_msg_line_doc).y >= _msg_line_rect.cy && len > 1)
         msg_line_flush();
 
     /* Append this message to the last? */
     else if (!_msg_append && !msg_line_is_empty() && doc_cursor(_msg_line_doc).x > 0)
         doc_newline(_msg_line_doc);
 
-    if (doc_cursor(_msg_line_doc).x > 0 && strlen(msg) > 1)
+    if (doc_cursor(_msg_line_doc).x > 0 && len > 1)
         doc_insert_char(_msg_line_doc, TERM_WHITE, ' ');
     doc_insert_text(_msg_line_doc, color, msg);
     msg_line_sync();
