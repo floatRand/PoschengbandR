@@ -615,6 +615,7 @@ void monk_posture_get_flags(u32b flgs[TR_FLAG_SIZE])
 
 static void _calc_bonuses(void)
 {
+    monk_posture_calc_bonuses();
     if (!heavy_armor())
     {
         p_ptr->pspeed += p_ptr->lev/10;
@@ -625,8 +626,14 @@ static void _calc_bonuses(void)
     monk_ac_bonus();
 }
 
+static void _calc_stats(s16b stats[MAX_STATS])
+{
+    monk_posture_calc_stats(stats);
+}
+
 static void _get_flags(u32b flgs[TR_FLAG_SIZE])
 {
+    monk_posture_get_flags(flgs);
     if (!heavy_armor())
     {
         if (p_ptr->lev >= 10)
@@ -693,6 +700,7 @@ class_t *monk_get_class(void)
         me.pets = 35;
         
         me.calc_bonuses = _calc_bonuses;
+        me.calc_stats = _calc_stats;
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL

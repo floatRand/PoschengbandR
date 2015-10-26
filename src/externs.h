@@ -1875,9 +1875,6 @@ extern void set_rf_masks(s32b *f4, s32b *f5, s32b *f6, int mode);
 
 /* hissatsu.c */
 extern void hissatsu_info(char *p, int power);
-extern void hissatsu_get_flags(u32b flgs[TR_FLAG_SIZE]);
-extern void hissatsu_calc_stats(s16b stats[MAX_STATS]);
-extern void hissatsu_calc_bonuses(void);
 extern void do_cmd_hissatsu(void);
 extern void do_cmd_hissatsu_browse(void);
 extern void do_cmd_gain_hissatsu(void);
@@ -2278,7 +2275,7 @@ extern void monk_posture_spell(int cmd, variant *res);
 extern int  monk_get_attack_idx(void);
 extern critical_t monk_get_critical(martial_arts *ma_ptr, int hand, int mode);
 extern int  monk_display_attack_info(int hand, int row, int col);
-extern void monk_posture_get_flags(u32b flgs[TR_FLAG_SIZE]);
+
 
 /* mystic.c */
 extern class_t *mystic_get_class(void);
@@ -2316,9 +2313,12 @@ extern void     spellbook_character_dump(FILE *fff);
 extern class_t *mage_get_class(void);
 extern equip_template_ptr mon_get_equip_template(void);
 extern cptr     mon_name(int r_idx);
+
 extern class_t *monk_get_class(void);
 extern void     monk_posture_calc_bonuses(void);
 extern void     monk_posture_calc_stats(s16b stats[MAX_STATS]);
+extern void     monk_posture_get_flags(u32b flgs[TR_FLAG_SIZE]);
+
 extern void     monk_ac_bonus(void);
 extern class_t *monster_get_class(void);
 extern class_t *ninja_get_class(void);
@@ -2370,11 +2370,16 @@ extern cptr     rune_desc(int which);
 extern void     rune_calc_bonuses(object_type *o_ptr);
 extern void     rune_calc_stats(object_type *o_ptr, s16b stats[MAX_STATS]);
 extern class_t *rune_knight_get_class(void);
+
 extern void     samurai_concentration_spell(int cmd, variant *res);
 extern void     samurai_on_rest(void);
 extern bool     samurai_can_concentrate(void);
 extern class_t *samurai_get_class(void);
 extern void     samurai_posture_spell(int cmd, variant *res);
+extern void     samurai_posture_get_flags(u32b flgs[TR_FLAG_SIZE]);
+extern void     samurai_posture_calc_stats(s16b stats[MAX_STATS]);
+extern void     samurai_posture_calc_bonuses(void);
+
 extern class_t *tourist_get_class(void);
 extern class_t *scout_get_class(void);
 extern class_t *sniper_get_class(void);

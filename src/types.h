@@ -2029,12 +2029,10 @@ typedef void(*change_level_fn)(int old_level, int new_level);
 typedef void(*file_dump_fn)(FILE* file);
 typedef void(*player_action_fn)(int energy_use);
 typedef void(*flags_fn)(u32b flgs[TR_FLAG_SIZE]);
+typedef void(*stats_fn)(s16b stats[MAX_STATS]);
 typedef void(*load_fn)(savefile_ptr file);
 typedef void(*save_fn)(savefile_ptr file);
 
-/* Note: Most of this info is still not being used.  Be sure to
-   double maintain tables in tables.c until I can get around to
-   converting all the classes */
 typedef struct {
     cptr                    name;
     cptr                    subname;
@@ -2053,7 +2051,8 @@ typedef struct {
     player_action_fn        player_action;  /* Called once per player action, so long as the action consumes energy */
     move_player_fn          move_player;    /* Called every time the player actually moves */
     move_monster_fn         move_monster;    /* Called whenever a monster moves */
-    calc_bonuses_fn         calc_bonuses;
+    calc_bonuses_fn         calc_bonuses;    /* Do flag related bonuses here ... */
+    stats_fn                calc_stats;      /* ... and stat related stuff here */
     calc_weapon_bonuses_fn  calc_weapon_bonuses;
     calc_shooter_bonuses_fn calc_shooter_bonuses;
     caster_info_fn          caster_info;
@@ -2081,7 +2080,8 @@ typedef struct {
     s16b                    exp;
     s16b                    infra;
     birth_fn                birth;
-    calc_bonuses_fn         calc_bonuses;
+    calc_bonuses_fn         calc_bonuses;    /* Do flag related bonuses here ... */
+    stats_fn                calc_stats;      /* ... and stat related stuff here */
     calc_weapon_bonuses_fn  calc_weapon_bonuses;
     calc_shooter_bonuses_fn calc_shooter_bonuses;
     calc_innate_attacks_fn  calc_innate_attacks;

@@ -1655,8 +1655,6 @@ void player_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_INFRA);
 
     mut_get_flags(flgs);
-    hissatsu_get_flags(flgs);
-    monk_posture_get_flags(flgs);
 }
 
 void tim_player_flags(u32b flgs[TR_FLAG_SIZE])

@@ -3765,12 +3765,15 @@ void calc_bonuses(void)
     }
     mut_calc_stats(stats); /* mut goes first for MUT_ILL_NORM, which masks charisma mods of other mutations */
     tim_player_stats(stats);
-    monk_posture_calc_stats(stats); /* after equip_calc_bonuses, which might dismiss the current posture */
-    hissatsu_calc_stats(stats);
+
+    if (class_ptr->calc_stats)
+        class_ptr->calc_stats(stats); /* after equip_calc_bonuses, which might dismiss the current posture */
+
+    if (race_ptr->calc_stats)
+        race_ptr->calc_stats(stats);
+
     for (i = 0; i < MAX_STATS; i++)
-    {
         p_ptr->stat_add[i] += stats[i];
-    }
 
     if (old_mighty_throw != p_ptr->mighty_throw)
     {
@@ -4003,10 +4006,10 @@ void calc_bonuses(void)
         p_ptr->update |= PU_MONSTERS;
 
     /* Call the class hook after scanning equipment but before calculating encumbrance, et. al.*/
-    if (class_ptr->calc_bonuses != NULL)
+    if (class_ptr->calc_bonuses)
         class_ptr->calc_bonuses();
 
-    if (race_ptr->calc_bonuses != NULL)
+    if (race_ptr->calc_bonuses)
         race_ptr->calc_bonuses();
 
     /* Temporary "Hero" ... moved after class processing for the Swordmaster */
@@ -4636,9 +4639,6 @@ void calc_bonuses(void)
             }
         }
     }
-
-    monk_posture_calc_bonuses();
-    hissatsu_calc_bonuses();
 
     if (p_ptr->riding && p_ptr->prace != RACE_MON_RING) 
         p_ptr->levitation = riding_levitation;

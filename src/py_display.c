@@ -3,11 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-/* Build & Display the "Character Sheet"
-   At the moment, I'm simply re-creating what files.c builds directly to the screen.
-   We can discuss formatting changes later. Keep in mind that angband.oook.cz will
-   rely on the exact location of certain fields, though!
- */
+/* Build & Display the "Character Sheet" */
 
 extern void py_display(void);
 
@@ -15,30 +11,7 @@ static void _build_character_sheet(doc_ptr doc);
 static void _build_page1(doc_ptr doc);
 static void _build_equipment(doc_ptr doc); /* Formerly Pages 2-4 */
 
-/*
- Name       : Dominator                    ========== Stats ==========
- Sex        : Male                               STR! :    18/220
- Personality: Lucky                              INT! :    18/120
- Race       : Demigod                            WIS! :    18/220
- Subrace    : Ares                               DEX! :    18/220
- Class      : Mindcrafter                        CON! :    18/220
-                                                 CHR  :    18/220
-
- Level      :       50                           HP   :   976/976
- Cur Exp    : 30816512                           SP   :   359/394
- Max Exp    : 30816512                           AC   :       304
- Adv Exp    :    *****                           Speed:    +26+10
-
-                                           ========== Skills =========
- Gold       : 14819446                     Melee      : Legendary[35]
- Kills      :    13450                     Ranged     : Legendary[27]
- Uniques    :      268                     SavingThrow: Heroic
- Artifacts  :      193                     Stealth    : Superb
-                                           Perception : Very Good
- Game Day   :       84                     Searching  : Excellent
- Game Time  :     7:53                     Disarming  : Heroic
- Play Time  :    22:41                     Device     : Legendary[5]
-*/
+/********************************** Page 1 ************************************/
 static void _build_general1(doc_ptr doc)
 {
     race_t          *race_ptr = get_race();
@@ -300,87 +273,7 @@ static void _build_page1(doc_ptr doc)
     doc_free(cols[1]);
 }
 
-
-/*
-============================= Character Equipment =============================
-
-a) The Long Sword 'Vorpal Blade' (7d5) (+32,+32) (+2) {cursed}
-b) The Small Metal Shield of Thorin [5,+21] (+4) {Dk}
-c) The Harp of Daeron (+4) {A:Angelic Healing, !!}
-d) The Ring of Power (Nenya) (+2) {Wr A:Frost Ball, $}
-e) a Ring of Speed (+13)
-f) The Amulet of Aphrodite [+25] (+5) {cursed, A:Summon Monsters}
-g) The Jewel of Judgement (+3) {A:Clairvoyance and Recall}
-h) The Balance Dragon Scale Mail 'Dominator' (-2) [40,+30] (+3) {CnIf;Bl A:Breathe}
-i) The Pair of Dragon Wings 'Dominator' [4,+30] (+4) {WiDxCnSl;CoPoLiCfNtNx}
-j) The Iron Helm of Ares (+12,+12) [5,+12] (+2) {cursed, A:Berserk, $}
-k) The Set of Leather Gloves 'Cambeleg' (+8,+8) [1,+15] (+2)
-l) The Pair of Soft Leather Boots of Shiva's Avatar (+5,+5) [4,+16] (+4)
-
-
-                }     (                                   }     (
-              abcdefghijkl@                             abcdefghijkl@
- Acid       : .*..........# 100%           Speed      : +..++.+..+.+#
- Elec       : ..+.........#  65%           Free Act   : ++.+.+....++.
- Fire       : ..+.........#  65%           See Invis  : +.++.++......
- Cold       : ...*....+...# 100%           Warning    : ...+.....+...
- Poison     : ..+..+..+...#  75%           SlowDigest : +............
- Light      : ..+.....+....  65%           Regenerate : +..+.........
- Dark       : .+...........  50%           Levitation : ...+.+..+..+.
- Confusion  : ......+.+...+  72%           Perm Lite  : +............
- Nether     : ........+....  50%           Reflection : ..+..+...+...
- Nexus      : .....+..+..+.  72%           Hold Life  : ...+..+......
- Sound      : .+.....+.....  65%           Sust Str   : ............+
- Shards     : .......+.....  50%           Sust Int   : ...+.........
- Chaos      : .+...+++.....  75%           Sust Wis   : ..++........+
- Disenchant : .....+.+.....  65%           Sust Dex   : ...........+.
- Time       : .............   0%           Sust Con   : ..+..........
- Blindness  : .....+.+.....  65%           Sust Chr   : ..+..+.......
- Fear       : ............#                Dec Mana   : .............
- Aura Fire  : .............                Easy Spell : .............
- Aura Elec  : .............                Anti Magic : .............
- Aura Cold  : .............                Telepathy  : .....+......+
-
-
-                }     (                                   }     (
-              abcdefghijkl@                             abcdefghijkl
- Slay Evil  : +............                Telepathy  : .....+......+
- Slay Undead: .............                ESP Evil   : .............
- Slay Demon : .............                ESP Noliv. : .............
- Slay Dragon: .............                ESP Good   : .............
- Slay Human : .............                ESP Undead : .............
- Slay Animal: .............                ESP Demon  : .............
- Slay Orc   : .............                ESP Dragon : .............
- Slay Troll : .............                ESP Human  : .............
- Slay Giant : .............                ESP Animal : .............
- Slay Good  : .............                ESP Orc    : .............
- Acid Brand : .............                ESP Troll  : .............
- Elec Brand : .............                ESP Giant  : .............
- Fire Brand : .............                Magic Skill: .............
- Cold Brand : ...+.........                Spell Pow  : .............
- Pois Brand : .............                Spell Cap  : .............
- Mana Brand : .............                Magic Res  : .............
- Sharpness  : *............                Infravision: .......+.....  30'
- Quake      : .............                Stealth    : ........+....
- Vampiric   : .............                Searching  : .............
- Chaotic    : .............                Cursed     : +....*...*...
- Add Blows  : .........+...                Rnd Tele   : .............
- Blessed    : .............                No Tele    : .............
- Riding     : .............                Drain Exp  : .............
- Tunnel     : .............                Aggravate  : .....+...+...
- Throw      : .............                TY Curse   : .............
-
-
-                }     (
-              abcdefghijkl@   Base  R  C  P  E  Total
-        STR!: 24.2.....22.s 18/100  3 -1 -2 12 18/220
-        INT!: ...2..3......  18/80  1  0 -2  5 18/120
-        WIS!: ..42..3.4...s  18/80  1  3 -2 13 18/220
-        DEX!: 2..2....42.4. 18/110  1 -1 -2 14 18/220
-        CON!: .442...3422.. 18/110  1 -1 -2 21 18/220
-        CHR : 2.42.5....... 18/104  1  2 -2 13 18/220
-
-*/
+/********************************** Equipment *********************************/
 void _equippy_chars(doc_ptr doc, int col)
 {
     if (equippy_chars)
@@ -781,8 +674,11 @@ void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
     s16b             tim_stats[MAX_STATS] = {0};
 
     mut_calc_stats(stats);
-    monk_posture_calc_stats(stats);
-    hissatsu_calc_stats(stats);
+    if (race_ptr->calc_stats)
+        race_ptr->calc_stats(stats);
+    if (class_ptr->calc_stats)
+        class_ptr->calc_stats(stats);
+
     tim_player_stats(tim_stats);
 
     _equippy_chars(doc, 14);
@@ -979,6 +875,7 @@ void _build_equipment(doc_ptr doc)
     }
 }
 
+/****************************** Character Sheet ************************************/
 static void _build_character_sheet(doc_ptr doc)
 {
     doc_insert(doc, "<style:wide>  [PosChengband <$:version> Character Dump]\n");
@@ -992,7 +889,6 @@ static void _build_character_sheet(doc_ptr doc)
 
     _build_page1(doc);
     _build_equipment(doc);
-
 
     doc_insert(doc, "</style>");
 }

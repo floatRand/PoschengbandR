@@ -577,8 +577,22 @@ void wild_talent_new_life(void)
 
 static void _calc_bonuses(void)
 {
+    samurai_posture_calc_bonuses();
+    monk_posture_calc_bonuses();
     if (p_ptr->lev >= 30)
         p_ptr->regenerate = TRUE;
+}
+static void _calc_stats(s16b stats[MAX_STATS])
+{
+    samurai_posture_calc_stats(stats);
+    monk_posture_calc_stats(stats);
+}
+static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    samurai_posture_get_flags(flgs);
+    monk_posture_get_flags(flgs);
+    if (p_ptr->lev >= 30)
+        add_flag(flgs, TR_REGEN);
 }
 
 static void _character_dump(FILE* file)
@@ -672,6 +686,8 @@ class_t *wild_talent_get_class(void)
         me.pets = 35;
         
         me.calc_bonuses = _calc_bonuses;
+        me.calc_stats = _calc_stats;
+        me.get_flags = _get_flags;
         me.get_spells = _get_spells;
         me.caster_info = _caster_info;
         me.gain_level = _gain_level;
