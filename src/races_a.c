@@ -134,10 +134,7 @@ static void _android_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_POIS);
     add_flag(flgs, TR_SLOW_DIGEST);
     add_flag(flgs, TR_HOLD_LIFE);
-}
-static void _android_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    /*add_flag(flgs, TR_RES_ELEC); cf resists.c res_pct_aux() for an alternative*/
+    /*add_flag(flgs, TR_VULN_ELEC);*/
 }
 race_t *android_get_race(void)
 {
@@ -185,7 +182,6 @@ race_t *android_get_race(void)
         me.calc_bonuses = _android_calc_bonuses;
         me.get_powers = _android_get_powers;
         me.get_flags = _android_get_flags;
-        me.get_vulnerabilities = _android_get_vulnerabilities;
         me.flags = RACE_IS_NONLIVING;
 
         init = TRUE;
@@ -1464,10 +1460,7 @@ static void _ent_calc_bonuses(void)
 }
 static void _ent_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
-}
-static void _ent_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    /*add_flag(flgs, TR_RES_FIRE);  cf resists.c res_pct_aux() for an alternative*/
+    /*add_flag(flgs, TR_VULN_FIRE);*/
 }
 race_t *ent_get_race(void)
 {
@@ -1501,7 +1494,6 @@ race_t *ent_get_race(void)
         me.calc_bonuses = _ent_calc_bonuses;
         me.get_powers = _ent_get_powers;
         me.get_flags = _ent_get_flags;
-        me.get_vulnerabilities = _ent_get_vulnerabilities;
         init = TRUE;
     }
 

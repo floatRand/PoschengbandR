@@ -662,13 +662,9 @@ static void _balrog_get_flags(u32b flgs[TR_FLAG_SIZE]) {
     if (p_ptr->lev >= 10)
         add_flag(flgs, TR_SEE_INVIS);
     if (p_ptr->lev >= 30)
-    {
         add_flag(flgs, TR_RES_CHAOS);
-    }
-}
-static void _balrog_get_immunities(u32b flgs[TR_FLAG_SIZE]) {
     if (p_ptr->lev >= 40)
-        add_flag(flgs, TR_RES_FIRE);
+        add_flag(flgs, TR_IM_FIRE);
 }
 static void _balrog_gain_level(int new_level) {
     if (p_ptr->current_r_idx == MON_LESSER_BALROG && new_level >= 40)
@@ -707,7 +703,6 @@ static race_t *_balrog_get_race_t(void)
         me.get_spells = _balrog_get_spells;
         me.calc_bonuses = _balrog_calc_bonuses;
         me.get_flags = _balrog_get_flags;
-        me.get_immunities = _balrog_get_immunities;
         me.gain_level = _balrog_gain_level;
         me.caster_info = _caster_info;
         me.pseudo_class_idx = CLASS_CHAOS_WARRIOR;
@@ -830,11 +825,6 @@ static void _cyber_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_FREE_ACT);
 }
 
-static void _cyber_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]) 
-{
-/*    add_flag(flgs, TR_RES_CONF); */
-}
-
 static void _cyber_move_player(void)
 {
     /* Cyberdemons move erratically (cf get_rep_dir()) and make a lot of noise */
@@ -884,7 +874,6 @@ static race_t *_cyber_get_race_t(void)
         me.get_powers = _cyber_get_powers;
         me.calc_bonuses = _cyber_calc_bonuses;
         me.get_flags = _cyber_get_flags;
-        me.get_vulnerabilities = _cyber_get_vulnerabilities;
         me.move_player = _cyber_move_player;
         me.pseudo_class_idx = CLASS_WARRIOR;
 

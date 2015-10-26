@@ -260,22 +260,13 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
     case MON_MALICIOUS_LEPRECHAUN:
         add_flag(flgs, TR_SPEED);
         add_flag(flgs, TR_LEVITATION);
+        add_flag(flgs, TR_VULN_LITE);
         break;
     case MON_DEATH_LEPRECHAUN:
         add_flag(flgs, TR_SPEED);
         add_flag(flgs, TR_LEVITATION);
         add_flag(flgs, TR_RES_NETHER);
-        break;
-    }
-}
-
-static void _get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]) 
-{
-    switch (p_ptr->current_r_idx)
-    {
-    case MON_MALICIOUS_LEPRECHAUN:
-    case MON_DEATH_LEPRECHAUN:
-        add_flag(flgs, TR_RES_LITE);
+        add_flag(flgs, TR_VULN_LITE);
         break;
     }
 }
@@ -433,7 +424,6 @@ race_t *mon_leprechaun_get_race(void)
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;
         me.get_flags = _get_flags;
-        me.get_vulnerabilities = _get_vulnerabilities;
         me.gain_level = _gain_level;
         me.birth = _birth;
         me.player_action = _player_action;

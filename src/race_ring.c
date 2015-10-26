@@ -1357,28 +1357,12 @@ static void _calc_bonuses(void)
         p_ptr->sh_cold = TRUE;
 }
 
-static void _get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]) 
-{
-    add_flag(flgs, TR_RES_ELEC);
-}
-
-static void _get_immunities(u32b flgs[TR_FLAG_SIZE]) 
-{
-    if (_essences[TR_IM_ACID] >= 3)
-        add_flag(flgs, TR_RES_ACID);
-    if (_essences[TR_IM_ELEC] >= 3)
-        add_flag(flgs, TR_RES_ELEC);
-    if (_essences[TR_IM_FIRE] >= 3)
-        add_flag(flgs, TR_RES_FIRE);
-    if (_essences[TR_IM_COLD] >= 3)
-        add_flag(flgs, TR_RES_COLD);
-}
-
 static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
 {
     int i;
 
     add_flag(flgs, TR_LITE);
+    add_flag(flgs, TR_VULN_ELEC);
 
     for (i = 0; i < 6; i++) /* Assume in order */
     {
@@ -1445,6 +1429,15 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_SH_ELEC);
     if (_essences[TR_SH_COLD] >= 7)
         add_flag(flgs, TR_SH_COLD);
+
+    if (_essences[TR_IM_ACID] >= 3)
+        add_flag(flgs, TR_IM_ACID);
+    if (_essences[TR_IM_ELEC] >= 3)
+        add_flag(flgs, TR_IM_ELEC);
+    if (_essences[TR_IM_FIRE] >= 3)
+        add_flag(flgs, TR_IM_FIRE);
+    if (_essences[TR_IM_COLD] >= 3)
+        add_flag(flgs, TR_IM_COLD);
 }
 
 /**********************************************************************
@@ -1640,8 +1633,6 @@ race_t *mon_ring_get_race(void)
 
         me.character_dump = _character_dump;
         me.get_flags = _get_flags;
-        me.get_immunities = _get_immunities;
-        me.get_vulnerabilities = _get_vulnerabilities;
         me.gain_level = _gain_level;
         me.birth = _birth;
 

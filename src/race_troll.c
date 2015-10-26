@@ -337,16 +337,22 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
     switch (p_ptr->current_r_idx)
     {
     case MON_FOREST_TROLL:
+        add_flag(flgs, TR_VULN_LITE);
         break;
     case MON_STONE_TROLL:
+        add_flag(flgs, TR_VULN_LITE);
         break;
     case MON_ICE_TROLL:
         add_flag(flgs, TR_RES_COLD);
         add_flag(flgs, TR_BRAND_COLD);
+        add_flag(flgs, TR_VULN_LITE);
+        add_flag(flgs, TR_VULN_FIRE);
         break;
     case MON_FIRE_TROLL:
         add_flag(flgs, TR_RES_FIRE);
         add_flag(flgs, TR_BRAND_FIRE);
+        add_flag(flgs, TR_VULN_LITE);
+        add_flag(flgs, TR_VULN_COLD);
         break;
     case MON_ALGROTH:
         add_flag(flgs, TR_BRAND_POIS);
@@ -386,27 +392,6 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_RES_CONF);
         break;
     }
-}
-
-static void _get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]) 
-{
-    switch (p_ptr->current_r_idx)
-    {
-    case MON_FOREST_TROLL:
-        add_flag(flgs, TR_RES_LITE);
-        break;
-    case MON_STONE_TROLL:
-        add_flag(flgs, TR_RES_LITE);
-        break;
-    case MON_ICE_TROLL:
-        add_flag(flgs, TR_RES_LITE);
-        add_flag(flgs, TR_RES_FIRE);
-        break;
-    case MON_FIRE_TROLL:
-        add_flag(flgs, TR_RES_LITE);
-        add_flag(flgs, TR_RES_COLD);
-        break;
-    }    
 }
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
@@ -463,7 +448,6 @@ race_t *mon_troll_get_race(void)
         me.calc_innate_attacks = _calc_innate_attacks;
         me.get_powers = _get_powers;
         me.get_flags = _get_flags;
-        me.get_vulnerabilities = _get_vulnerabilities;
         me.gain_level = _gain_level;
         me.birth = _birth;
 

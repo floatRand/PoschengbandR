@@ -544,12 +544,15 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE]) {
         break;
     case MON_SHADOW_HOUND:
         add_flag(flgs, TR_RES_DARK);
+        add_flag(flgs, TR_VULN_LITE);
         break;
     case MON_FIRE_HOUND:
         add_flag(flgs, TR_RES_FIRE);
+        add_flag(flgs, TR_VULN_COLD);
         break;
     case MON_COLD_HOUND:
         add_flag(flgs, TR_RES_COLD);
+        add_flag(flgs, TR_VULN_FIRE);
         break;
     case MON_ENERGY_HOUND:
         add_flag(flgs, TR_RES_ELEC);
@@ -657,20 +660,6 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE]) {
         break;
     }
 }
-static void _get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]) {
-    switch (p_ptr->current_r_idx)
-    {
-    case MON_SHADOW_HOUND:
-        add_flag(flgs, TR_RES_LITE);
-        break;
-    case MON_FIRE_HOUND:
-        add_flag(flgs, TR_RES_COLD);
-        break;
-    case MON_COLD_HOUND:
-        add_flag(flgs, TR_RES_FIRE);
-        break;
-    }
-}
 static void _gain_level(int new_level) {
     int tier = _find_tier(p_ptr->current_r_idx);
     if (tier < 0 || tier == _MAX_TIERS - 1) return;
@@ -723,7 +712,6 @@ race_t *mon_hound_get_race(void)
         me.calc_bonuses = _calc_bonuses;
         me.get_powers = _get_powers;
         me.get_flags = _get_flags;
-        me.get_vulnerabilities = _get_vulnerabilities;
         me.gain_level = _gain_level;
         me.birth = _birth;
 

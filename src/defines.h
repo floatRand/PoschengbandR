@@ -3019,8 +3019,9 @@ enum summon_specific_e {
 #define TR_IM_NETHER           165
 #define TR_IM_FEAR             166
 #define TR_DEC_BLOWS           167
+#define TR_IM_BLIND            168
 
-#define TR_FLAG_MAX            168
+#define TR_FLAG_MAX            169
 /*#define TR_LAST_FLAG!!!!     191  (6 * 32 - 1)*/
 #define TR_FLAG_SIZE           6  
 

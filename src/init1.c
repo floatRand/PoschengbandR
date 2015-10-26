@@ -827,6 +827,7 @@ static cptr k_info_flags[TR_FLAG_MAX] =
     "IM_NETHER",
     "IM_FEAR",
     "DEC_BLOWS",
+    "IM_BLIND",
 };
 
 

@@ -1120,7 +1120,11 @@ void equip_calc_bonuses(void)
                 p_ptr->weapon_info[lhand].giant_wield = TRUE;
         }
 
-        rune_calc_bonuses(o_ptr);
+        if (o_ptr->rune)
+        {
+            rune_calc_bonuses(o_ptr);
+            rune_calc_stats(o_ptr, p_ptr->stat_add);
+        }
 
         if (have_flag(flgs, TR_STR)) p_ptr->stat_add[A_STR] += o_ptr->pval;
         if (have_flag(flgs, TR_INT)) p_ptr->stat_add[A_INT] += o_ptr->pval;

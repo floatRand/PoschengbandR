@@ -492,6 +492,8 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 
 static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
 {
+    add_flag(flgs, TR_VULN_LITE);
+
     add_flag(flgs, TR_RES_NETHER);
     add_flag(flgs, TR_RES_COLD);
     add_flag(flgs, TR_RES_POIS);
@@ -503,19 +505,8 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_SPEED);
         add_flag(flgs, TR_REGEN);
     }
-}
-
-static void _get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
     if (p_ptr->lev >= 45)
-    {
-        add_flag(flgs, TR_RES_DARK);
-    }
-}
-
-static void _get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_LITE);
+        add_flag(flgs, TR_IM_DARK);
 }
 
 static void _move_player(void)
@@ -562,8 +553,6 @@ race_t *mon_vampire_get_race(void)
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.get_flags = _get_flags;
-        me.get_immunities = _get_immunities;
-        me.get_vulnerabilities = _get_vulnerabilities;
 
         me.flags = RACE_IS_NONLIVING | RACE_IS_UNDEAD | RACE_IS_MONSTER;
         me.pseudo_class_idx = CLASS_ROGUE;

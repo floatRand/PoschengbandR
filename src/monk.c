@@ -503,12 +503,18 @@ void monk_ac_bonus(void)
 void monk_posture_calc_bonuses(void)
 {
     int i;
-    if (!heavy_armor() && p_ptr->pclass != CLASS_WILD_TALENT)
+    if (!heavy_armor() || p_ptr->pclass == CLASS_WILD_TALENT)
     {
         if (p_ptr->special_defense & KAMAE_BYAKKO)
         {
             p_ptr->to_a -= 40;
             p_ptr->dis_to_a -= 40;
+            if (p_ptr->pclass == CLASS_WILD_TALENT)
+            {
+                /* Hack: This should "strengthen your attacks" */
+                for (i = 0; i < MAX_HANDS; i++)
+                    p_ptr->weapon_info[i].xtra_blow += 100;
+            }
         }
         else if (p_ptr->special_defense & KAMAE_SEIRYU)
         {
@@ -538,6 +544,7 @@ void monk_posture_calc_bonuses(void)
         }
         else if (p_ptr->special_defense & KAMAE_SUZAKU)
         {
+            p_ptr->pspeed += 10;
             for (i = 0; i < MAX_HANDS; i++)
             {
                 p_ptr->weapon_info[i].to_h -= (p_ptr->lev / 3);
@@ -549,6 +556,60 @@ void monk_posture_calc_bonuses(void)
             }
             p_ptr->levitation = TRUE;
         }
+    }
+}
+
+void monk_posture_calc_stats(s16b stats[MAX_STATS])
+{
+    if (!heavy_armor() || p_ptr->pclass == CLASS_WILD_TALENT)
+    {
+        if (p_ptr->special_defense & KAMAE_BYAKKO)
+        {
+            stats[A_STR] += 2;
+            stats[A_DEX] += 2;
+            stats[A_CON] -= 3;
+        }
+        else if (p_ptr->special_defense & KAMAE_SEIRYU)
+        {
+        }
+        else if (p_ptr->special_defense & KAMAE_GENBU)
+        {
+            stats[A_INT] -= 1;
+            stats[A_WIS] -= 1;
+            stats[A_DEX] -= 2;
+            stats[A_CON] += 3;
+        }
+        else if (p_ptr->special_defense & KAMAE_SUZAKU)
+        {
+            stats[A_STR] -= 2;
+            stats[A_INT] += 1;
+            stats[A_WIS] += 1;
+            stats[A_DEX] += 2;
+            stats[A_CON] -= 2;
+        }
+    }
+}
+
+void monk_posture_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->special_defense & KAMAE_GENBU)
+        add_flag(flgs, TR_REFLECT);
+    if (p_ptr->special_defense & KAMAE_SUZAKU)
+    {
+        add_flag(flgs, TR_LEVITATION);
+        add_flag(flgs, TR_SPEED);
+    }
+    if (p_ptr->special_defense & KAMAE_SEIRYU)
+    {
+        add_flag(flgs, TR_RES_FIRE);
+        add_flag(flgs, TR_RES_COLD);
+        add_flag(flgs, TR_RES_ACID);
+        add_flag(flgs, TR_RES_ELEC);
+        add_flag(flgs, TR_RES_POIS);
+        add_flag(flgs, TR_LEVITATION);
+        add_flag(flgs, TR_SH_FIRE);
+        add_flag(flgs, TR_SH_ELEC);
+        add_flag(flgs, TR_SH_COLD);
     }
 }
 

@@ -701,9 +701,9 @@ class_t *chaos_warrior_get_class(void)
         me.pets = 40;
         
         me.calc_bonuses = _calc_bonuses;
+        me.get_flags = _get_flags;
         me.caster_info = _caster_info;
         me.get_powers = _get_powers;
-        me.get_flags = _get_flags;
         me.gain_level = _gain_level;
         me.character_dump = spellbook_character_dump;
         init = TRUE;

@@ -2062,7 +2062,6 @@ typedef struct {
     gain_level_fn           gain_level; /* Only ever called when a new max level is achieved */
     file_dump_fn            character_dump;
     flags_fn                get_flags;
-    flags_fn                get_immunities;
     load_fn                 load_player;
     save_fn                 save_player;
 } class_t;
@@ -2093,8 +2092,6 @@ typedef struct {
     change_level_fn         change_level;
     file_dump_fn            character_dump;
     flags_fn                get_flags;
-    flags_fn                get_immunities;
-    flags_fn                get_vulnerabilities;
     u32b                    flags;
     bool                    mimic;
     struct equip_template_s *equip_template;

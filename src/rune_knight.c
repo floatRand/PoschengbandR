@@ -7,18 +7,10 @@
 /****************************************************************
  * Public Helpers
  ****************************************************************/
-
 void rune_calc_bonuses(object_type *o_ptr)
 {
     if (o_ptr->rune == RUNE_ABSORPTION)
         p_ptr->magic_resistance += 15;
-    if (o_ptr->rune == RUNE_UNDERSTANDING)
-    {
-        if (o_ptr->tval == TV_LITE)
-            p_ptr->stat_add[A_INT] += 1;
-        else
-            p_ptr->stat_add[A_INT] += 2;
-    }
     if (o_ptr->rune == RUNE_SHADOW)
     {
         if (object_is_body_armour(o_ptr) || o_ptr->tval == TV_CLOAK)
@@ -26,27 +18,41 @@ void rune_calc_bonuses(object_type *o_ptr)
     }
     if (o_ptr->rune == RUNE_HASTE)
     {
-        if (o_ptr->tval == TV_GLOVES)
-            p_ptr->stat_add[A_DEX] += 2;
         if (o_ptr->tval == TV_BOOTS)
             p_ptr->pspeed += 3 * p_ptr->lev / 50;
+    }
+}
+
+void rune_calc_stats(object_type *o_ptr, s16b stats[MAX_STATS])
+{
+    if (o_ptr->rune == RUNE_UNDERSTANDING)
+    {
+        if (o_ptr->tval == TV_LITE)
+            stats[A_INT] += 1;
+        else
+            stats[A_INT] += 2;
+    }
+    if (o_ptr->rune == RUNE_HASTE)
+    {
+        if (o_ptr->tval == TV_GLOVES)
+            stats[A_DEX] += 2;
     }
     if (o_ptr->rune == RUNE_LIFE)
     {
         if (object_is_body_armour(o_ptr))
-            p_ptr->stat_add[A_CON] += 1;
+            stats[A_CON] += 1;
     }
     if (o_ptr->rune == RUNE_MIND)
     {
         if (o_ptr->tval == TV_HELM)
-            p_ptr->stat_add[A_INT] += 2;
+            stats[A_INT] += 2;
     }
     if (o_ptr->rune == RUNE_MIGHT)
     {
-        p_ptr->stat_add[A_STR] += 2;
-        p_ptr->stat_add[A_CON] += 2;
+        stats[A_STR] += 2;
+        stats[A_CON] += 2;
         if (object_is_body_armour(o_ptr))
-            p_ptr->stat_add[A_DEX] += 2;
+            stats[A_DEX] += 2;
     }
 }
 

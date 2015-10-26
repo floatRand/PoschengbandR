@@ -13,9 +13,6 @@ extern void py_display(void);
 
 static void _build_character_sheet(doc_ptr doc);
 static void _build_page1(doc_ptr doc);
-static void _build_general1(doc_ptr doc);
-static void _build_general2(doc_ptr doc);
-
 static void _build_equipment(doc_ptr doc); /* Formerly Pages 2-4 */
 
 /*
@@ -42,21 +39,6 @@ static void _build_equipment(doc_ptr doc); /* Formerly Pages 2-4 */
  Game Time  :     7:53                     Disarming  : Heroic
  Play Time  :    22:41                     Device     : Legendary[5]
 */
-static void _build_page1(doc_ptr doc)
-{
-    doc_ptr cols[2];
-
-    cols[0] = doc_alloc(40);
-    cols[1] = doc_alloc(40);
-
-    _build_general1(cols[0]);
-    _build_general2(cols[1]);
-    doc_insert_cols(doc, cols, 2, 0);
-
-    doc_free(cols[0]);
-    doc_free(cols[1]);
-}
-
 static void _build_general1(doc_ptr doc)
 {
     race_t          *race_ptr = get_race();
@@ -302,6 +284,22 @@ static void _build_general2(doc_ptr doc)
 
     string_free(s);
 }
+
+static void _build_page1(doc_ptr doc)
+{
+    doc_ptr cols[2];
+
+    cols[0] = doc_alloc(40);
+    cols[1] = doc_alloc(40);
+
+    _build_general1(cols[0]);
+    _build_general2(cols[1]);
+    doc_insert_cols(doc, cols, 2, 0);
+
+    doc_free(cols[0]);
+    doc_free(cols[1]);
+}
+
 
 /*
 ============================= Character Equipment =============================
@@ -779,6 +777,11 @@ void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
     race_t          *race_ptr = get_race();
     class_t         *class_ptr = get_class();
     personality_ptr  pers_ptr = get_personality();
+    s16b             mut_stats[MAX_STATS] = {0};
+    s16b             tim_stats[MAX_STATS] = {0};
+
+    mut_calc_stats(mut_stats);
+    tim_player_stats(tim_stats);
 
     _equippy_chars(doc, 14);
     _equippy_heading_aux(doc, "", 14);
@@ -801,6 +804,7 @@ void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
         else
             doc_insert(doc, "  : ");
 
+        /* abcdefghijkl */
         for (j = 0; j < equip_count(); j++)
         {
             int          slot = EQUIP_BEGIN + j;
@@ -808,52 +812,104 @@ void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
 
             if (o_ptr)
             {
-                byte a = TERM_WHITE;
-                int  adj = 0;
+                int adj = 0;
 
+                if (o_ptr->rune)
+                {
+                    s16b stats[MAX_STATS] = {0};
+                    rune_calc_stats(o_ptr, stats);
+                    adj += stats[i];
+                }
                 if (have_flag(flagzilla->obj_flgs[j], dec_flg))
-                {
-                    a = TERM_RED;
                     adj = -o_ptr->pval;
-                }
-                else
+                else if (have_flag(flagzilla->obj_flgs[j], flg))
+                    adj += o_ptr->pval;
+
+                if (adj)
                 {
-                    if (have_flag(flagzilla->obj_flgs[j], flg))
-                    {
-                        a = TERM_L_GREEN;
-                        adj += o_ptr->pval;
-                    }
-                    if (have_flag(flagzilla->obj_flgs[j], sust_flg))
-                        a = TERM_GREEN;
-                }
-                if (a != TERM_WHITE)
-                {
-                    char c = 's';
-                    if (abs(adj) >= 10)
-                        c = '*';
-                    else if (abs(adj) > 0)
+                    byte a = TERM_WHITE;
+                    char c = '*';
+                    if (abs(adj) < 10)
                         c = '0' + abs(adj);
 
+                    if (adj < 0)
+                        a = TERM_RED;
+                    else
+                    {
+                        a = TERM_L_GREEN;
+                        if (have_flag(flagzilla->obj_flgs[j], sust_flg))
+                            a = TERM_GREEN;
+                    }
                     doc_insert_char(doc, a, c);
                 }
                 else
-                    doc_insert_char(doc, TERM_L_DARK, '.');
+                {
+                    byte a = TERM_L_DARK;
+                    char c = '.';
 
+                    if (have_flag(flagzilla->obj_flgs[j], sust_flg))
+                    {
+                        a = TERM_GREEN;
+                        c = 's';
+                    }
+                    doc_insert_char(doc, a, c);
+                }
                 e_adj += adj;
             }
             else
                 doc_insert_char(doc, TERM_L_DARK, '.');
         }
-        /* TODO: Player Flags ... */
-        doc_insert_char(doc, TERM_L_DARK, '.');
+        /* @ */
+        if (mut_stats[i] + tim_stats[i] != 0)
+        {
+            byte a = TERM_WHITE;
+            char c = '*';
+            int  adj = mut_stats[i] + tim_stats[i];
 
+            if (abs(adj) < 10)
+                c = '0' + abs(adj);
+
+            if (tim_stats[i])
+                a = TERM_YELLOW;
+            else if (adj > 0)
+            {
+                a = TERM_L_GREEN;
+                if (have_flag(flagzilla->tim_py_flgs, sust_flg) || have_flag(flagzilla->py_flgs, sust_flg))
+                    a = TERM_GREEN;
+            }
+            else if (adj < 0)
+                a = TERM_RED;
+
+            doc_insert_char(doc, a, c);
+        }
+        else
+        {
+            byte a = TERM_L_DARK;
+            char c = '.';
+
+            if (have_flag(flagzilla->tim_py_flgs, sust_flg))
+            {
+                a = TERM_YELLOW;
+                c = 's';
+            }
+            else if (have_flag(flagzilla->py_flgs, sust_flg))
+            {
+                a = TERM_GREEN;
+                c = 's';
+            }
+            doc_insert_char(doc, a, c);
+        }
+
+        /* Base R C P E */
         cnv_stat(p_ptr->stat_max[i], buf);
         doc_printf(doc, " <color:B>%6.6s%3d%3d%3d%3d</color>",
                     buf, race_ptr->stats[i], class_ptr->stats[i], pers_ptr->stats[i], e_adj);
 
+        /* Total */
         cnv_stat(p_ptr->stat_top[i], buf);
         doc_printf(doc, " <color:G>%6.6s</color>", buf);
 
+        /* Current */
         if (p_ptr->stat_use[i] < p_ptr->stat_top[i])
         {
             cnv_stat(p_ptr->stat_use[i], buf);

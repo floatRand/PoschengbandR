@@ -540,6 +540,14 @@ static void _calc_bonuses(void)
     if (p_ptr->lev >= 35) res_add(RES_POIS);
 }
 
+static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->lev >= 5) add_flag(flgs, TR_RES_COLD);
+    if (p_ptr->lev >= 15) add_flag(flgs, TR_SEE_INVIS);
+    if (p_ptr->lev >= 25) add_flag(flgs, TR_HOLD_LIFE);
+    if (p_ptr->lev >= 35) add_flag(flgs, TR_RES_POIS);
+}
+
 static int _get_powers(spell_info* spells, int max)
 {
     int ct = 0;
@@ -611,6 +619,7 @@ class_t *necromancer_get_class(void)
 
         me.caster_info = _caster_info;
         me.calc_bonuses = _calc_bonuses;
+        me.get_flags = _get_flags;
         me.get_powers = _get_powers;
         me.character_dump = spellbook_character_dump;
         init = TRUE;

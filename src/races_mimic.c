@@ -257,10 +257,8 @@ static void _demon_lord_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_TELEPATHY);
     add_flag(flgs, TR_LEVITATION);
     add_flag(flgs, TR_SPEED);
-}
-static void _demon_lord_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_FIRE);
+
+    add_flag(flgs, TR_IM_FIRE);
 }
 race_t *demon_lord_get_race(void)
 {
@@ -297,7 +295,6 @@ race_t *demon_lord_get_race(void)
         me.calc_bonuses = _demon_lord_calc_bonuses;
         me.get_powers = _demon_lord_get_powers;
         me.get_flags = _demon_lord_get_flags;
-        me.get_immunities = _demon_lord_get_immunities;
         init = TRUE;
     }
 
@@ -553,6 +550,9 @@ static void _vampire_lord_calc_bonuses(void)
 }
 static void _vampire_lord_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
+    add_flag(flgs, TR_VULN_LITE);
+    add_flag(flgs, TR_IM_DARK);
+
     add_flag(flgs, TR_HOLD_LIFE);
     add_flag(flgs, TR_RES_DARK);
     add_flag(flgs, TR_RES_NETHER);
@@ -561,14 +561,6 @@ static void _vampire_lord_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_COLD);
     add_flag(flgs, TR_SEE_INVIS);
     add_flag(flgs, TR_SPEED);
-}
-static void _vampire_lord_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_DARK);
-}
-static void _vampire_lord_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_LITE);
 }
 race_t *vampire_lord_get_race(void)
 {
@@ -605,8 +597,6 @@ race_t *vampire_lord_get_race(void)
         me.calc_bonuses = _vampire_lord_calc_bonuses;
         me.get_powers = _vampire_lord_get_powers;
         me.get_flags = _vampire_lord_get_flags;
-        me.get_immunities = _vampire_lord_get_immunities;
-        me.get_vulnerabilities = _vampire_lord_get_vulnerabilities;
         init = TRUE;
     }
 

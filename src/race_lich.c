@@ -177,6 +177,9 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE]) {
     add_flag(flgs, TR_RES_POIS);
     add_flag(flgs, TR_RES_NETHER);
 
+    if (p_ptr->lev < 25)
+        add_flag(flgs, TR_VULN_LITE);
+
     if (p_ptr->lev >= 25)
     {
         add_flag(flgs, TR_SPEED);
@@ -190,15 +193,8 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE]) {
     if (p_ptr->lev >= 50)
     {
         add_flag(flgs, TR_LEVITATION);
+        add_flag(flgs, TR_IM_NETHER);
     }
-}
-static void _get_immunities(u32b flgs[TR_FLAG_SIZE]) {
-    if (p_ptr->lev >= 50)
-        add_flag(flgs, TR_RES_NETHER);
-}
-static void _get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]) {
-    if (p_ptr->lev < 25)
-        add_flag(flgs, TR_RES_LITE);
 }
 static void _gain_level(int new_level) {
     if (p_ptr->current_r_idx == MON_LICH && new_level >= 25)
@@ -247,8 +243,6 @@ static race_t *_archlich_get_race_t(void)
         me.get_powers = _get_powers;
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
-        me.get_immunities = _get_immunities;
-        me.get_vulnerabilities = _get_vulnerabilities;
         me.gain_level = _gain_level;
         init = TRUE;
     }

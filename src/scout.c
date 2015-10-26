@@ -344,7 +344,11 @@ static void _calc_bonuses(void)
     if (!disrupt && p_ptr->lev >= 50)
         p_ptr->peerless_stealth = TRUE;
 }
-
+static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->lev >= 35)
+        add_flag(flgs, TR_TELEPATHY);
+}
 static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 {
     if ( !p_ptr->shooter_info.heavy_shoot
@@ -471,6 +475,7 @@ class_t *scout_get_class(void)
         me.pets = 40;
 
         me.calc_bonuses = _calc_bonuses;
+        me.get_flags = _get_flags;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;

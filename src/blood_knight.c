@@ -488,6 +488,11 @@ static void _calc_bonuses(void)
     }
 }
 
+static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_REGEN);
+}
+
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
     int frac = p_ptr->chp * 100 / p_ptr->mhp;
@@ -566,6 +571,7 @@ class_t *blood_knight_get_class(void)
         me.pets = 40;
 
         me.calc_bonuses = _calc_bonuses;
+        me.get_flags = _get_flags;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;

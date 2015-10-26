@@ -769,6 +769,14 @@ static void _calc_bonuses(void)
         res_add(RES_DARK);
 }
 
+static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->lev >= 20)
+        add_flag(flgs, TR_SEE_INVIS);
+    if (p_ptr->lev >= 38)
+        add_flag(flgs, TR_RES_DARK);
+}
+
 static caster_info * _caster_info(void)
 {
     static caster_info me = {0};
@@ -823,6 +831,7 @@ class_t *archaeologist_get_class(void)
         me.pets = 40;
 
         me.calc_bonuses = _calc_bonuses;
+        me.get_flags = _get_flags;
         me.process_player = _process_player;
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;

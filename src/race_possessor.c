@@ -1654,33 +1654,24 @@ void possessor_get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_RES_DISEN);
         add_flag(flgs, TR_RES_TIME);
     }
-}
 
-void possessor_get_immunities(u32b flgs[TR_FLAG_SIZE]) 
-{
-    monster_race *r_ptr = &r_info[p_ptr->current_r_idx];
     if (r_ptr->flagsr & RFR_IM_ACID)
-        add_flag(flgs, TR_RES_ACID);
+        add_flag(flgs, TR_IM_ACID);
     if (r_ptr->flagsr & RFR_IM_ELEC)
-        add_flag(flgs, TR_RES_ELEC);
+        add_flag(flgs, TR_IM_ELEC);
     if (r_ptr->flagsr & RFR_IM_FIRE)
-        add_flag(flgs, TR_RES_FIRE);
+        add_flag(flgs, TR_IM_FIRE);
     if (r_ptr->flagsr & RFR_IM_COLD)
-        add_flag(flgs, TR_RES_COLD);
+        add_flag(flgs, TR_IM_COLD);
     if (r_ptr->flagsr & RFR_IM_POIS)
-        add_flag(flgs, TR_RES_POIS);
-}
-
-void possessor_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]) 
-{
-    monster_race *r_ptr = &r_info[p_ptr->current_r_idx];
+        add_flag(flgs, TR_IM_POIS);
 
     if (r_ptr->flags3 & RF3_HURT_LITE)
-        add_flag(flgs, TR_RES_LITE);
+        add_flag(flgs, TR_VULN_LITE);
     if (r_ptr->flags3 & RF3_HURT_FIRE)
-        add_flag(flgs, TR_RES_FIRE);
+        add_flag(flgs, TR_VULN_FIRE);
     if (r_ptr->flags3 & RF3_HURT_COLD)
-        add_flag(flgs, TR_RES_COLD);
+        add_flag(flgs, TR_VULN_COLD);
 }
 
 /**********************************************************************
@@ -1767,8 +1758,6 @@ race_t *mon_possessor_get_race(void)
         me.calc_bonuses = possessor_calc_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;
         me.get_flags = possessor_get_flags;
-        me.get_immunities = possessor_get_immunities;
-        me.get_vulnerabilities = possessor_get_vulnerabilities;
         me.player_action = _player_action;
         me.save_player = possessor_on_save;
         me.load_player = possessor_on_load;

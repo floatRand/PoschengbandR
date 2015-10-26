@@ -1654,265 +1654,10 @@ void player_flags(u32b flgs[TR_FLAG_SIZE])
     if (race_ptr->infra)
         add_flag(flgs, TR_INFRA);
 
-    /* Classes */
-    switch (p_ptr->pclass)
-    {
-    case CLASS_SCOUT:
-        if (p_ptr->lev >= 35)
-            add_flag(flgs, TR_TELEPATHY);
-        break;
-
-    case CLASS_PSION:
-        if (psion_blending()) add_flag(flgs, TR_STEALTH);
-        if (psion_shielding()) add_flag(flgs, TR_FREE_ACT);
-        if (psion_speed()) add_flag(flgs, TR_SPEED);
-        break;
-
-    case CLASS_NECROMANCER:
-        if (p_ptr->lev >= 5) add_flag(flgs, TR_RES_COLD);
-        if (p_ptr->lev >= 15) add_flag(flgs, TR_SEE_INVIS);
-        if (p_ptr->lev >= 25) add_flag(flgs, TR_HOLD_LIFE);
-        if (p_ptr->lev >= 35) add_flag(flgs, TR_RES_POIS);
-        break;
-    case CLASS_BLOOD_MAGE:
-        add_flag(flgs, TR_REGEN);
-        break;
-    case CLASS_CHAOS_WARRIOR:
-        if (p_ptr->lev > 29)
-            add_flag(flgs, TR_RES_CHAOS);
-        if (p_ptr->lev > 39)
-            add_flag(flgs, TR_RES_FEAR);
-        break;
-    case CLASS_MINDCRAFTER:
-        if (p_ptr->lev > 9)
-            add_flag(flgs, TR_RES_FEAR);
-        if (p_ptr->lev > 19)
-            add_flag(flgs, TR_SUST_WIS);
-        if (p_ptr->lev > 29)
-            add_flag(flgs, TR_RES_CONF);
-        if (p_ptr->lev > 39)
-            add_flag(flgs, TR_TELEPATHY);
-        break;
-    case CLASS_BLOOD_KNIGHT:
-        add_flag(flgs, TR_REGEN);
-        break;
-    case CLASS_ARCHAEOLOGIST:
-        if (p_ptr->lev >= 20)
-            add_flag(flgs, TR_SEE_INVIS);
-        if (p_ptr->lev >= 38)
-            add_flag(flgs, TR_RES_DARK);
-        break;
-    case CLASS_WARLOCK:
-        switch(p_ptr->psubclass)
-        {
-        case PACT_UNDEAD:
-            add_flag(flgs, TR_RES_COLD);
-            if (p_ptr->lev > 9) add_flag(flgs, TR_STEALTH);
-            if (p_ptr->lev > 14) add_flag(flgs, TR_RES_POIS);
-            if (p_ptr->lev > 4) add_flag(flgs, TR_CON);
-            if (p_ptr->lev > 29) 
-            {
-                add_flag(flgs, TR_RES_NETHER);
-                add_flag(flgs, TR_HOLD_LIFE);
-            }
-            if (p_ptr->lev > 34) 
-            {
-                add_flag(flgs, TR_RES_DARK);
-                add_flag(flgs, TR_RES_BLIND);
-            }
-            if (p_ptr->lev > 44) add_flag(flgs, TR_RES_SHARDS);
-            break;        
-        case PACT_DRAGON:
-            add_flag(flgs, TR_RES_FEAR);
-        /*    if (p_ptr->lev > 14) add_flag(flgs, TR_LEVITATION); */
-        /*    Giving TR_STR flags the player as cursed?  Not sure what might break if I fix that seeming bug ...
-            if (p_ptr->lev > 4) add_flag(flgs, TR_STR); */
-            if (p_ptr->lev > 29) add_flag(flgs, TR_SUST_CON);
-            break;
-        case PACT_ANGEL:
-            add_flag(flgs, TR_LEVITATION);
-            if (p_ptr->lev > 14) add_flag(flgs, TR_SEE_INVIS);
-            if (p_ptr->lev > 4) add_flag(flgs, TR_WIS);
-            if (p_ptr->lev > 34) add_flag(flgs, TR_REFLECT);
-            break;
-        case PACT_DEMON:
-            add_flag(flgs, TR_RES_FIRE);
-            if (p_ptr->lev > 14) add_flag(flgs, TR_HOLD_LIFE);
-            if (p_ptr->lev > 4) add_flag(flgs, TR_INT);
-            /* This is firing, but not working. Note, DEMON LORD Mimic does work????? 
-               Oh, see player_immunity() */
-            if (p_ptr->lev > 49) add_flag(flgs, TR_IM_FIRE);
-            break;
-        case PACT_ABERRATION:
-            add_flag(flgs, TR_RES_CHAOS);
-            if (p_ptr->lev > 4) add_flag(flgs, TR_DEX);
-            if (p_ptr->lev > 34) add_flag(flgs, TR_TELEPATHY);
-            break;
-        }
-        break;
-    case CLASS_WEAPONMASTER:
-        if (p_ptr->psubclass == WEAPONMASTER_DAGGERS)
-        {
-            if (p_ptr->speciality_equip)
-            {
-                if (p_ptr->lev >= 10) add_flag(flgs, TR_STEALTH);
-            }
-        }
-        else if (p_ptr->psubclass == WEAPONMASTER_SHIELDS)
-        {
-            if (p_ptr->speciality_equip)
-            {
-                if (p_ptr->lev >= 45)
-                {
-                    add_flag(flgs, TR_RES_ACID);
-                    add_flag(flgs, TR_RES_COLD);
-                    add_flag(flgs, TR_RES_FIRE);
-                    add_flag(flgs, TR_RES_ELEC);
-                    add_flag(flgs, TR_REFLECT);
-                }
-            }
-        }
-        else if (p_ptr->psubclass == WEAPONMASTER_STAVES)
-        {
-            if (p_ptr->speciality_equip)
-            {
-                if (p_ptr->lev >= 20) add_flag(flgs, TR_SPEED);
-            }
-        }
-    default:
-        break; /* Do nothing */
-    }
-
-    /* Mutations */
-    if (mut_present(MUT_FLESH_ROT))
-    {
-        remove_flag(flgs, TR_REGEN);
-    }
-
-    if (mut_present(MUT_XTRA_FAT) ||
-        mut_present(MUT_XTRA_LEGS) ||
-        mut_present(MUT_SHORT_LEG))
-    {
-        add_flag(flgs, TR_SPEED);
-    }
-
-    if (mut_present(MUT_ELEC_AURA))
-    {
-        add_flag(flgs, TR_SH_ELEC);
-    }
-
-    if (mut_present(MUT_FIRE_AURA))
-    {
-        add_flag(flgs, TR_SH_FIRE);
-        add_flag(flgs, TR_LITE);
-    }
-
-    if (mut_present(MUT_WINGS))
-    {
-        add_flag(flgs, TR_LEVITATION);
-    }
-
-    if (mut_present(MUT_FEARLESS))
-    {
-        add_flag(flgs, TR_RES_FEAR);
-    }
-
-    if (mut_present(MUT_REGEN))
-    {
-        add_flag(flgs, TR_REGEN);
-    }
-
-    if (mut_present(MUT_ESP))
-    {
-        add_flag(flgs, TR_TELEPATHY);
-    }
-
-    if (mut_present(MUT_MOTION))
-    {
-        add_flag(flgs, TR_FREE_ACT);
-    }
-
-    if (mut_present(MUT_TREAD_SOFTLY))
-    {
-        add_flag(flgs, TR_STEALTH);
-    }
-
-    if (mut_present(MUT_DRACONIAN_SHIELD))
-    {
-        switch (p_ptr->psubrace)
-        {
-        case DRACONIAN_RED:
-            add_flag(flgs, TR_SH_FIRE);
-            break;
-        case DRACONIAN_WHITE:
-            add_flag(flgs, TR_SH_COLD);
-            break;
-        case DRACONIAN_BLUE:
-            add_flag(flgs, TR_SH_ELEC);
-            break;
-        case DRACONIAN_CRYSTAL:
-            add_flag(flgs, TR_SH_SHARDS);
-            break;
-        }
-    }
-
-    if (mut_present(MUT_DRACONIAN_REGEN))
-    {
-        add_flag(flgs, TR_REGEN);
-    }
-
-    if (p_ptr->special_defense & KATA_FUUJIN)
-        add_flag(flgs, TR_REFLECT);
-    if (p_ptr->special_defense & KAMAE_GENBU)
-        add_flag(flgs, TR_REFLECT);
-    if (p_ptr->special_defense & KAMAE_SUZAKU)
-        add_flag(flgs, TR_LEVITATION);
-    if (p_ptr->special_defense & KAMAE_SEIRYU)
-    {
-        add_flag(flgs, TR_RES_FIRE);
-        add_flag(flgs, TR_RES_COLD);
-        add_flag(flgs, TR_RES_ACID);
-        add_flag(flgs, TR_RES_ELEC);
-        add_flag(flgs, TR_RES_POIS);
-        add_flag(flgs, TR_LEVITATION);
-        add_flag(flgs, TR_SH_FIRE);
-        add_flag(flgs, TR_SH_ELEC);
-        add_flag(flgs, TR_SH_COLD);
-    }
-    if (p_ptr->special_defense & KATA_MUSOU)
-    {
-        add_flag(flgs, TR_RES_FEAR);
-        add_flag(flgs, TR_RES_LITE);
-        add_flag(flgs, TR_RES_DARK);
-        add_flag(flgs, TR_RES_BLIND);
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_SOUND);
-        add_flag(flgs, TR_RES_SHARDS);
-        add_flag(flgs, TR_RES_NETHER);
-        add_flag(flgs, TR_RES_NEXUS);
-        add_flag(flgs, TR_RES_CHAOS);
-        add_flag(flgs, TR_RES_DISEN);
-        add_flag(flgs, TR_REFLECT);
-        add_flag(flgs, TR_HOLD_LIFE);
-        add_flag(flgs, TR_FREE_ACT);
-        add_flag(flgs, TR_SH_FIRE);
-        add_flag(flgs, TR_SH_ELEC);
-        add_flag(flgs, TR_SH_COLD);
-        add_flag(flgs, TR_LEVITATION);
-        add_flag(flgs, TR_LITE);
-        add_flag(flgs, TR_SEE_INVIS);
-        add_flag(flgs, TR_TELEPATHY);
-        add_flag(flgs, TR_SLOW_DIGEST);
-        add_flag(flgs, TR_REGEN);
-        add_flag(flgs, TR_SUST_STR);
-        add_flag(flgs, TR_SUST_INT);
-        add_flag(flgs, TR_SUST_WIS);
-        add_flag(flgs, TR_SUST_DEX);
-        add_flag(flgs, TR_SUST_CON);
-        add_flag(flgs, TR_SUST_CHR);
-    }
+    mut_get_flags(flgs);
+    hissatsu_get_flags(flgs);
+    monk_posture_get_flags(flgs);
 }
-
 
 void tim_player_flags(u32b flgs[TR_FLAG_SIZE])
 {
@@ -1971,8 +1716,13 @@ void tim_player_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_IM_FIRE);
     if (p_ptr->special_defense & DEFENSE_COLD)
         add_flag(flgs, TR_IM_COLD);
+
     if (IS_WRAITH())
+    {
         add_flag(flgs, TR_REFLECT);
+        add_flag(flgs, TR_IM_DARK);
+        add_flag(flgs, TR_VULN_LITE);
+    }
     /* by henkma */
     if (p_ptr->tim_reflect)
         add_flag(flgs, TR_REFLECT);
@@ -1985,9 +1735,7 @@ void tim_player_flags(u32b flgs[TR_FLAG_SIZE])
     }
 
     if (p_ptr->tim_blood_seek)
-    {
-        /* TODO: Slay Living? */
-    }
+        add_flag(flgs, TR_SLAY_LIVING);
 
     if (p_ptr->magicdef)
     {
@@ -2068,6 +1816,31 @@ void tim_player_flags(u32b flgs[TR_FLAG_SIZE])
     }
 }
 
+void tim_player_stats(s16b stats[MAX_STATS])
+{
+    if (p_ptr->tsuyoshi)
+    {
+        stats[A_STR] += 4;
+        stats[A_CON] += 4;
+    }
+    if (p_ptr->tim_building_up)
+    {
+        int amt = 4 * p_ptr->lev / 50; /* 13, 25, 38, 50 */
+        stats[A_STR] += amt;
+        stats[A_DEX] += amt;
+        stats[A_CON] += amt;
+    }
+    if (p_ptr->realm1 == REALM_HEX)
+    {
+        if (hex_spelling(HEX_XTRA_MIGHT)) p_ptr->stat_add[A_STR] += 4;
+        if (hex_spelling(HEX_BUILDING))
+        {
+            p_ptr->stat_add[A_STR] += 4;
+            p_ptr->stat_add[A_DEX] += 4;
+            p_ptr->stat_add[A_CON] += 4;
+        }
+    }
+}
 
 /* Mode flags for displaying player flags */
 #define DP_CURSE   0x01
@@ -2149,22 +1922,10 @@ static void known_obj_immunity(u32b flgs[TR_FLAG_SIZE])
 static void player_immunity(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
-    race_t  *race_ptr = get_race();
-    class_t *class_ptr = get_class();
 
     /* Clear */
     for (i = 0; i < TR_FLAG_SIZE; i++)
         flgs[i] = 0L;
-
-    if (race_ptr->get_immunities)
-        race_ptr->get_immunities(flgs);
-
-    if (class_ptr && class_ptr->get_immunities)
-        class_ptr->get_immunities(flgs);
-
-    /* TODO: Move to warlock.c */
-    if (p_ptr->pclass == CLASS_WARLOCK && p_ptr->psubclass == PACT_DEMON && p_ptr->lev > 49)
-        add_flag(flgs, TR_RES_FIRE);
 
     if (p_ptr->super_regenerate)
         add_flag(flgs, TR_REGEN);
@@ -2177,41 +1938,16 @@ static void tim_player_immunity(u32b flgs[TR_FLAG_SIZE])
     /* Clear */
     for (i = 0; i < TR_FLAG_SIZE; i++)
         flgs[i] = 0L;
-
-    if (p_ptr->special_defense & DEFENSE_ACID)
-        add_flag(flgs, TR_RES_ACID);
-    if (p_ptr->special_defense & DEFENSE_ELEC)
-        add_flag(flgs, TR_RES_ELEC);
-    if (p_ptr->special_defense & DEFENSE_FIRE)
-        add_flag(flgs, TR_RES_FIRE);
-    if (p_ptr->special_defense & DEFENSE_COLD)
-        add_flag(flgs, TR_RES_COLD);
-    if (IS_WRAITH())
-        add_flag(flgs, TR_RES_DARK);
 }
 
 static void player_vuln_flags(u32b flgs[TR_FLAG_SIZE])
 {
     int i;
-    race_t *race_ptr = get_race();
 
     /* Clear */
     for (i = 0; i < TR_FLAG_SIZE; i++)
         flgs[i] = 0L;
 
-    if (race_ptr->get_vulnerabilities)
-        race_ptr->get_vulnerabilities(flgs);
-
-    if (mut_present(MUT_VULN_ELEM) || (p_ptr->special_defense & KATA_KOUKIJIN))
-    {
-        add_flag(flgs, TR_RES_ACID);
-        add_flag(flgs, TR_RES_ELEC);
-        add_flag(flgs, TR_RES_FIRE);
-        add_flag(flgs, TR_RES_COLD);
-    }        
-
-    if (IS_WRAITH())
-        add_flag(flgs, TR_RES_LITE);
 }
 
 
@@ -2720,7 +2456,6 @@ static void display_player_stat_info(void)
     for (i = 0; i < equip_count(); i++)
     {
         int slot = EQUIP_BEGIN + i;
-        int slot_type = equip_slot_type(slot);
         object_type *o_ptr = equip_obj(slot);
 
         if (o_ptr)
@@ -2742,33 +2477,6 @@ static void display_player_stat_info(void)
 
                 if (have_flag(flgs, TR_DEC_STR + stat))
                     adj = -o_ptr->pval;
-
-                /* Gargantuan hack for runes ... */
-                switch (stat)
-                {
-                case A_STR: case A_CON:
-                    if (o_ptr->rune == RUNE_MIGHT)
-                        adj += 2;
-                    break;
-                case A_DEX: 
-                    if (o_ptr->rune == RUNE_MIGHT && slot_type == EQUIP_SLOT_BODY_ARMOR)
-                        adj += 2;
-                    if (o_ptr->rune == RUNE_HASTE && slot_type == EQUIP_SLOT_GLOVES)
-                        adj += 2;
-                    break;
-
-                case A_INT:
-                    if (o_ptr->rune == RUNE_MIND)
-                        adj += 2;
-                    if (o_ptr->rune == RUNE_UNDERSTANDING)
-                    {
-                        if (slot_type == EQUIP_SLOT_HELMET)
-                            adj += 2;
-                        if (slot_type == EQUIP_SLOT_LITE)
-                            adj += 1;
-                    }
-                    break;
-                }
 
                 if (adj != 0)
                 {
@@ -2827,106 +2535,6 @@ static void display_player_stat_info(void)
         /* Default */
         a = TERM_SLATE;
         c = '.';
-
-        /* Mutations ... */
-        if (1)
-        {
-            int dummy = 0;
-
-            if (stat == A_STR)
-            {
-                if (mut_present(MUT_HYPER_STR)) dummy += 4;
-                if (mut_present(MUT_PUNY)) dummy -= 4;
-                if (p_ptr->tsuyoshi) dummy += 4;
-                if (mut_present(MUT_FELL_SORCERY)) dummy--;
-            }
-            else if (stat == A_WIS || stat == A_INT)
-            {
-                if (mut_present(MUT_HYPER_INT)) dummy += 4;
-                if (mut_present(MUT_MORONIC)) dummy -= 4;
-            }
-            else if (stat == A_DEX)
-            {
-                if (mut_present(MUT_STEEL_SKIN)) dummy -= 1;
-                if (mut_present(MUT_LIMBER)) dummy += 3;
-                if (mut_present(MUT_ARTHRITIS)) dummy -= 3;
-                if (mut_present(MUT_FELL_SORCERY)) dummy--;
-            }
-            else if (stat == A_CON)
-            {
-                if (mut_present(MUT_RESILIENT)) dummy += 4;
-                if (mut_present(MUT_XTRA_FAT)) dummy += 2;
-                if (mut_present(MUT_ALBINO)) dummy -= 4;
-                if (mut_present(MUT_FLESH_ROT)) dummy -= 2;
-                if (p_ptr->tsuyoshi) dummy += 4;
-                if (mut_present(MUT_FELL_SORCERY)) dummy--;
-            }
-            else if (stat == A_CHR)
-            {
-                if (mut_present(MUT_SILLY_VOICE)) dummy -= 4;
-                if (mut_present(MUT_BLANK_FACE)) dummy -= 1;
-                if (mut_present(MUT_FLESH_ROT)) dummy -= 1;
-                if (mut_present(MUT_SCALES)) dummy -= 1;
-                if (mut_present(MUT_WARTS)) dummy -= 2;
-                if (mut_present(MUT_ILL_NORM)) dummy = 0;
-            }
-            
-            if (p_ptr->pclass == CLASS_WARLOCK)
-            {
-                switch (stat)
-                {
-                case A_STR:
-                    if (p_ptr->psubclass == PACT_DRAGON)
-                        dummy += 5 * p_ptr->lev / 50;
-                    break;
-                case A_INT:
-                    if (p_ptr->psubclass == PACT_DEMON)
-                        dummy += 5 * p_ptr->lev / 50;
-                    break;
-                case A_WIS:
-                    if (p_ptr->psubclass == PACT_ANGEL)
-                        dummy += 5 * p_ptr->lev / 50;
-                    break;
-                case A_DEX:
-                    if (p_ptr->psubclass == PACT_ABERRATION)
-                        dummy += 5 * p_ptr->lev / 50;
-                    break;
-                case A_CON:
-                    if (p_ptr->psubclass == PACT_UNDEAD)
-                        dummy += 5 * p_ptr->lev / 50;
-                    break;
-                }
-            }
-
-
-            /* Boost */
-            if (dummy)
-            {
-                /* Default */
-                c = '*';
-
-                /* Good */
-                if (dummy > 0)
-                {
-                    /* Good */
-                    a = TERM_L_GREEN;
-
-                    /* Label boost */
-                    if (dummy < 10) c = '0' + dummy;
-                }
-
-                /* Bad */
-                if (dummy < 0)
-                {
-                    /* Bad */
-                    a = TERM_RED;
-
-                    /* Label boost */
-                    if (dummy > -10) c = '0' - dummy;
-                }
-            }
-        }
-
 
         /* Sustain */
         if (have_flag(flgs, stat + TR_SUST_STR))

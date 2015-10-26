@@ -3334,6 +3334,8 @@ void calc_bonuses(void)
     s16b old_dis_ac = p_ptr->dis_ac;
     s16b old_dis_to_a = p_ptr->dis_to_a;
 
+    s16b stats[MAX_STATS] = {0};
+
     /* Clear the stat modifiers */
     for (i = 0; i < 6; i++) p_ptr->stat_add[i] = 0;
 
@@ -3651,7 +3653,7 @@ void calc_bonuses(void)
         }
     }
 
-    if (p_ptr->ult_res || (p_ptr->special_defense & KATA_MUSOU))
+    if (p_ptr->ult_res)
     {
         p_ptr->see_inv = TRUE;
         p_ptr->free_act = TRUE;
@@ -3684,8 +3686,11 @@ void calc_bonuses(void)
     else if (p_ptr->tsubureru || IS_STONE_SKIN() || p_ptr->magicdef)
     {
         int bonus = 10 + 40*p_ptr->lev/50;
-        p_ptr->to_a += bonus;
-        p_ptr->dis_to_a += bonus;
+        if (!(p_ptr->special_defense & KATA_MUSOU))
+        {
+            p_ptr->to_a += bonus;
+            p_ptr->dis_to_a += bonus;
+        }
     }
 
     if (IS_OPPOSE_ACID()) res_add(RES_ACID);
@@ -3697,7 +3702,7 @@ void calc_bonuses(void)
     if (p_ptr->tim_res_disenchantment) res_add(RES_DISEN);
     if (p_ptr->tim_res_time) res_add(RES_TIME);
 
-    if (mut_present(MUT_VULN_ELEM) || (p_ptr->special_defense & KATA_KOUKIJIN))
+    if (mut_present(MUT_VULN_ELEM))
     {
         res_add_vuln(RES_ACID);
         res_add_vuln(RES_ELEC);
@@ -3732,21 +3737,9 @@ void calc_bonuses(void)
 
     /* Hack -- apply racial/class stat maxes */
     /* Apply the racial modifiers */
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < MAX_STATS; i++)
     {
         p_ptr->stat_add[i] += (race_ptr->stats[i] + class_ptr->stats[i] + pers_ptr->stats[i]);
-    }
-
-
-    /* I'm adding the mutations here for the lack of a better place... */
-    mut_calc_bonuses();
-    if (mut_present(MUT_ILL_NORM))
-        p_ptr->stat_add[A_CHR] = 0;
-
-    if (p_ptr->tsuyoshi)
-    {
-        p_ptr->stat_add[A_STR] += 4;
-        p_ptr->stat_add[A_CON] += 4;
     }
 
     /* Some Runes work when placed in Inventory */
@@ -3762,12 +3755,21 @@ void calc_bonuses(void)
             p_ptr->good_luck = TRUE;
     }
 
+    mut_calc_bonuses();  /* Process before equip for MUT_FLESH_ROT */
     equip_calc_bonuses();
 
     if (p_ptr->special_defense & KAMAE_MASK)
     {
         if (p_ptr->pclass != CLASS_WILD_TALENT && !p_ptr->weapon_info[0].bare_hands)
             set_action(ACTION_NONE);
+    }
+    mut_calc_stats(stats); /* mut goes first for MUT_ILL_NORM, which masks charisma mods of other mutations */
+    tim_player_stats(stats);
+    monk_posture_calc_stats(stats); /* after equip_calc_bonuses, which might dismiss the current posture */
+    hissatsu_calc_stats(stats);
+    for (i = 0; i < MAX_STATS; i++)
+    {
+        p_ptr->stat_add[i] += stats[i];
     }
 
     if (old_mighty_throw != p_ptr->mighty_throw)
@@ -3778,100 +3780,17 @@ void calc_bonuses(void)
 
     if (p_ptr->cursed & TRC_TELEPORT) p_ptr->cursed &= ~(TRC_TELEPORT_SELF);
 
-    if ( (p_ptr->pclass == CLASS_MONK && !heavy_armor())
-      || p_ptr->pclass == CLASS_WILD_TALENT)
-    {
-        /* Massive Hacks:  The Wild Talent gets monk posture benefits without monk
-           restrictions, so we duplicate a bunch of code here that is set later for monks
-           after checking weapon status */
-        if (p_ptr->special_defense & KAMAE_BYAKKO)
-        {
-            p_ptr->stat_add[A_STR] += 2;
-            p_ptr->stat_add[A_DEX] += 2;
-            p_ptr->stat_add[A_CON] -= 3;
-            
-            if (p_ptr->pclass == CLASS_WILD_TALENT)
-            {
-                p_ptr->to_a -= 40;
-                p_ptr->dis_to_a -= 40;
-            }
-        }
-        else if (p_ptr->special_defense & KAMAE_SEIRYU)
-        {
-            if (p_ptr->pclass == CLASS_WILD_TALENT)
-            {
-                p_ptr->to_a -= 50;
-                p_ptr->dis_to_a -= 50;
-                res_add(RES_ACID);
-                res_add(RES_FIRE);
-                res_add(RES_ELEC);
-                res_add(RES_COLD);
-                res_add(RES_POIS);
-                p_ptr->sh_fire = TRUE;
-                p_ptr->sh_elec = TRUE;
-                p_ptr->sh_cold = TRUE;
-                p_ptr->levitation = TRUE;
-            }
-        }
-        else if (p_ptr->special_defense & KAMAE_GENBU)
-        {
-            p_ptr->stat_add[A_INT] -= 1;
-            p_ptr->stat_add[A_WIS] -= 1;
-            p_ptr->stat_add[A_DEX] -= 2;
-            p_ptr->stat_add[A_CON] += 3;
-
-            if (p_ptr->pclass == CLASS_WILD_TALENT)
-            {
-                p_ptr->to_a += (p_ptr->lev*p_ptr->lev)/50;
-                p_ptr->dis_to_a += (p_ptr->lev*p_ptr->lev)/50;
-                p_ptr->reflect = TRUE;
-            }
-        }
-        else if (p_ptr->special_defense & KAMAE_SUZAKU)
-        {
-            p_ptr->stat_add[A_STR] -= 2;
-            p_ptr->stat_add[A_INT] += 1;
-            p_ptr->stat_add[A_WIS] += 1;
-            p_ptr->stat_add[A_DEX] += 2;
-            p_ptr->stat_add[A_CON] -= 2;
-            if (p_ptr->pclass == CLASS_WILD_TALENT)
-                p_ptr->levitation = TRUE;
-        }
-    }
-
-
-    if (p_ptr->special_defense & KATA_KOUKIJIN)
-    {
-        for (i = 0; i < 6; i++)
-            p_ptr->stat_add[i] += 5;
-        p_ptr->to_a -= 50;
-        p_ptr->dis_to_a -= 50;
-    }
-
     /* Hack -- aura of fire also provides light */
     if (p_ptr->sh_fire) p_ptr->lite = TRUE;
 
     if (p_ptr->tim_building_up)
-    {
-        int amt = 4 * p_ptr->lev / 50; /* 13, 25, 38, 50 */
-        p_ptr->stat_add[A_STR] += amt;
-        p_ptr->stat_add[A_DEX] += amt;
-        p_ptr->stat_add[A_CON] += amt;
         p_ptr->skills.thn += 60*p_ptr->lev/50;
-    }
 
     /* Hex bonuses */
     if (p_ptr->realm1 == REALM_HEX)
     {
         if (hex_spelling_any()) p_ptr->skills.stl -= (1 + p_ptr->magic_num2[0]);
         if (hex_spelling(HEX_DETECT_EVIL)) p_ptr->esp_evil = TRUE;
-        if (hex_spelling(HEX_XTRA_MIGHT)) p_ptr->stat_add[A_STR] += 4;
-        if (hex_spelling(HEX_BUILDING))
-        {
-            p_ptr->stat_add[A_STR] += 4;
-            p_ptr->stat_add[A_DEX] += 4;
-            p_ptr->stat_add[A_CON] += 4;
-        }
         if (hex_spelling(HEX_DEMON_AURA))
         {
             p_ptr->sh_fire = TRUE;
@@ -4107,7 +4026,7 @@ void calc_bonuses(void)
         res_add(RES_FEAR);
 
     /* Calculate stats after calling class hook */
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < MAX_STATS; i++)
     {
         int top, use, ind;
 
@@ -4159,8 +4078,6 @@ void calc_bonuses(void)
 
     /* Bloating slows the player down (a little) */
     if (p_ptr->food >= PY_FOOD_MAX) p_ptr->pspeed -= 10;
-
-    if (p_ptr->special_defense & KAMAE_SUZAKU) p_ptr->pspeed += 10;
 
     /* Barehanded Combat */
     for (i = 0; i < MAX_HANDS; i++)
@@ -4353,7 +4270,9 @@ void calc_bonuses(void)
     /* XXX XXX XXX Apply "encumbrance" from weight */
     if (j > i) p_ptr->pspeed -= ((j - i) / (i / 5));
 
-    /* Searching slows the player down */
+    /* Searching slows the player down
+       TODO: This is dumb. Increase the energy used on movement instead! Also,
+       only search as the player moves. */
     if (p_ptr->action == ACTION_SEARCH) p_ptr->pspeed -= 10;
 
 
@@ -4719,34 +4638,7 @@ void calc_bonuses(void)
     }
 
     monk_posture_calc_bonuses();
-
-    /* Hack for Wild Talents assuming Monk Postures */
-    if (p_ptr->pclass == CLASS_WILD_TALENT)
-    {
-        if (p_ptr->special_defense & KAMAE_GENBU)
-        {
-            for (i = 0; i < MAX_HANDS; i++)
-                p_ptr->weapon_info[0].xtra_blow -= 200;
-        }
-        else if (p_ptr->special_defense & KAMAE_BYAKKO)
-        {
-            /* Hack: This should "strengthen your attacks" */
-            for (i = 0; i < MAX_HANDS; i++)
-                p_ptr->weapon_info[i].xtra_blow += 100;
-        }
-        else if (p_ptr->special_defense & KAMAE_SUZAKU)
-        {
-            for (i = 0; i < MAX_HANDS; i++)
-            {
-                p_ptr->weapon_info[i].to_h -= (p_ptr->lev / 3);
-                p_ptr->weapon_info[i].to_d -= (p_ptr->lev / 6);
-
-                p_ptr->weapon_info[i].dis_to_h -= (p_ptr->lev / 3);
-                p_ptr->weapon_info[i].dis_to_d -= (p_ptr->lev / 6);
-                p_ptr->weapon_info[i].base_blow /= 2;
-            }
-        }
-    }
+    hissatsu_calc_bonuses();
 
     if (p_ptr->riding && p_ptr->prace != RACE_MON_RING) 
         p_ptr->levitation = riding_levitation;

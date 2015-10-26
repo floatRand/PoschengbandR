@@ -2022,17 +2022,8 @@ static void _realm_get_flags(u32b flgs[TR_FLAG_SIZE])
         break;
     case DRAGON_REALM_DOMINATION:
         add_flag(flgs, TR_RES_FEAR);
-        break;
-    }
-}
-
-static void _realm_get_immunities(u32b flgs[TR_FLAG_SIZE]) 
-{
-    switch (p_ptr->dragon_realm)
-    {
-    case DRAGON_REALM_DOMINATION:
         if (p_ptr->lev >= 50)
-            add_flag(flgs, TR_RES_FEAR);
+            add_flag(flgs, TR_IM_FEAR);
         break;
     }
 }
@@ -2287,14 +2278,9 @@ static void _elemental_get_flags(u32b flgs[TR_FLAG_SIZE]) {
         case RES_COLD: add_flag(flgs, TR_SH_COLD); break;
         case RES_ELEC: add_flag(flgs, TR_SH_ELEC); break;
         }
+        add_flag(flgs, res_get_object_immune_flag(res));
     }
     _dragon_get_flags(flgs);
-}
-static void _elemental_get_immunities(u32b flgs[TR_FLAG_SIZE]) {
-    int res = _elemental_info[p_ptr->psubrace].which_res;
-    if (p_ptr->lev >= 40)
-        add_flag(flgs, res_get_object_flag(res));
-    _realm_get_immunities(flgs);
 }
 static void _elemental_birth(void) { 
     p_ptr->current_r_idx = _elemental_info[p_ptr->psubrace].r_idx[0]; 
@@ -2352,7 +2338,6 @@ static race_t *_elemental_get_race_t(int subrace)
         me.get_powers = _dragon_get_powers;
         me.calc_bonuses = _elemental_calc_bonuses;
         me.get_flags = _elemental_get_flags;
-        me.get_immunities = _elemental_get_immunities;
         me.gain_level = _elemental_gain_level;
         init = TRUE;
     }
@@ -2423,13 +2408,9 @@ static void _nether_get_flags(u32b flgs[TR_FLAG_SIZE]) {
         add_flag(flgs, TR_RES_POIS);
         add_flag(flgs, TR_RES_NEXUS);
         add_flag(flgs, TR_RES_DISEN);
+        add_flag(flgs, TR_IM_NETHER);
     }
     _dragon_get_flags(flgs);
-}
-static void _nether_get_immunities(u32b flgs[TR_FLAG_SIZE]) {
-    if (p_ptr->lev >= 45)
-        add_flag(flgs, TR_RES_NETHER);
-    _realm_get_immunities(flgs);
 }
 static void _nether_birth(void) { 
     p_ptr->current_r_idx = MON_SHADOW_DRAKE; 
@@ -2482,7 +2463,6 @@ static race_t *_nether_get_race_t(void)
         me.get_powers = _dragon_get_powers;
         me.calc_bonuses = _nether_calc_bonuses;
         me.get_flags = _nether_get_flags;
-        me.get_immunities = _nether_get_immunities;
         me.gain_level = _nether_gain_level;
         init = TRUE;
     }
@@ -2578,7 +2558,6 @@ static race_t *_law_get_race_t(void)
 
         me.birth = _law_birth;
         me.get_powers = _dragon_get_powers;
-        me.get_immunities = _realm_get_immunities;
         me.calc_bonuses = _law_calc_bonuses;
         me.get_flags = _law_get_flags;
         me.gain_level = _law_gain_level;
@@ -2679,7 +2658,6 @@ static race_t *_chaos_get_race_t(void)
         me.get_powers = _dragon_get_powers;
         me.calc_bonuses = _chaos_calc_bonuses;
         me.get_flags = _chaos_get_flags;
-        me.get_immunities = _realm_get_immunities;
         me.gain_level = _chaos_gain_level;
         init = TRUE;
     }
@@ -2777,7 +2755,6 @@ static race_t *_balance_get_race_t(void)
         me.get_powers = _dragon_get_powers;
         me.calc_bonuses = _balance_calc_bonuses;
         me.get_flags = _balance_get_flags;
-        me.get_immunities = _realm_get_immunities;
         me.gain_level = _balance_gain_level;
         init = TRUE;
     }
@@ -2887,7 +2864,6 @@ static race_t *_ethereal_get_race_t(void)
         me.get_powers = _dragon_get_powers;
         me.calc_bonuses = _ethereal_calc_bonuses;
         me.get_flags = _ethereal_get_flags;
-        me.get_immunities = _realm_get_immunities;
         me.gain_level = _ethereal_gain_level;
         init = TRUE;
     }
@@ -2998,7 +2974,6 @@ static race_t *_crystal_get_race_t(void)
         me.get_powers = _dragon_get_powers;
         me.calc_bonuses = _crystal_calc_bonuses;
         me.get_flags = _crystal_get_flags;
-        me.get_immunities = _realm_get_immunities;
         me.gain_level = _crystal_gain_level;
         init = TRUE;
     }
@@ -3101,7 +3076,6 @@ static race_t *_bronze_get_race_t(void)
         me.get_powers = _dragon_get_powers;
         me.calc_bonuses = _bronze_calc_bonuses;
         me.get_flags = _bronze_get_flags;
-        me.get_immunities = _realm_get_immunities;
         me.gain_level = _bronze_gain_level;
         init = TRUE;
     }
@@ -3205,7 +3179,6 @@ static race_t *_gold_get_race_t(void)
         me.get_powers = _dragon_get_powers;
         me.calc_bonuses = _gold_calc_bonuses;
         me.get_flags = _gold_get_flags;
-        me.get_immunities = _realm_get_immunities;
         me.gain_level = _gold_gain_level;
         init = TRUE;
     }
@@ -3270,11 +3243,10 @@ static void _steel_get_flags(u32b flgs[TR_FLAG_SIZE]) {
         add_flag(flgs, TR_RES_SHARDS);
         add_flag(flgs, TR_SPEED);
     }
-    _dragon_get_flags(flgs);
-}
-static void _steel_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]) {
     if (p_ptr->lev < 40)
-        add_flag(flgs, TR_RES_COLD);
+        add_flag(flgs, TR_VULN_COLD);
+
+    _dragon_get_flags(flgs);
 }
 static void _steel_birth(void) { 
     p_ptr->current_r_idx = MON_STONE_DRAGON; 
@@ -3321,8 +3293,6 @@ static race_t *_steel_get_race_t(void)
         me.calc_bonuses = _steel_calc_bonuses;
         me.get_flags = _steel_get_flags;
         me.get_powers = _dragon_get_powers;
-        me.get_vulnerabilities = _steel_get_vulnerabilities;
-    /*  me.get_immunities = _realm_get_immunities; Steel Dragons don't currently have a realm */
         me.gain_level = _steel_gain_level;
         init = TRUE;
     }

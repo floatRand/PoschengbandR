@@ -933,8 +933,6 @@ race_t *mon_mimic_get_race(void)
 
         me.calc_bonuses = possessor_calc_bonuses;
         me.get_flags = possessor_get_flags;
-        me.get_immunities = possessor_get_immunities;
-        me.get_vulnerabilities = possessor_get_vulnerabilities;
         me.player_action = _player_action;
         me.character_dump = _character_dump;
 

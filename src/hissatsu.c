@@ -471,3 +471,104 @@ void do_cmd_gain_hissatsu(void)
 
     p_ptr->update |= (PU_SPELLS);
 }
+
+void hissatsu_calc_bonuses(void)
+{
+    if (p_ptr->special_defense & KATA_FUUJIN)
+    {
+        /* see project_p for special handling ... review?
+        if (!p_ptr->blind)
+            p_ptr->reflect = TRUE; */
+    }
+    if (p_ptr->special_defense & KATA_KOUKIJIN)
+    {
+        p_ptr->to_a -= 50;
+        p_ptr->dis_to_a -= 50;
+        res_add_vuln(RES_ACID);
+        res_add_vuln(RES_ELEC);
+        res_add_vuln(RES_FIRE);
+        res_add_vuln(RES_COLD);
+    }
+
+    if (p_ptr->special_defense & KATA_MUSOU)
+    {
+        p_ptr->see_inv = TRUE;
+        p_ptr->free_act = TRUE;
+        p_ptr->slow_digest = TRUE;
+        p_ptr->regenerate = TRUE;
+        p_ptr->levitation = TRUE;
+        p_ptr->hold_life = TRUE;
+        p_ptr->sustain_str = TRUE;
+        p_ptr->sustain_int = TRUE;
+        p_ptr->sustain_wis = TRUE;
+        p_ptr->sustain_con = TRUE;
+        p_ptr->sustain_dex = TRUE;
+        p_ptr->sustain_chr = TRUE;
+        p_ptr->telepathy = TRUE;
+        p_ptr->lite = TRUE;
+        res_add_all();
+        p_ptr->reflect = TRUE;
+        p_ptr->sh_fire = TRUE;
+        p_ptr->sh_elec = TRUE;
+        p_ptr->sh_cold = TRUE;
+        p_ptr->to_a += 100;
+        p_ptr->dis_to_a += 100;
+    }
+}
+
+void hissatsu_calc_stats(s16b stats[MAX_STATS])
+{
+    if (p_ptr->special_defense & KATA_KOUKIJIN)
+    {
+        int i;
+        for (i = 0; i < MAX_STATS; i++)
+            p_ptr->stat_add[i] += 5;
+    }
+}
+
+void hissatsu_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->special_defense & KATA_FUUJIN)
+        add_flag(flgs, TR_REFLECT);
+
+    if (p_ptr->special_defense & KATA_MUSOU)
+    {
+        add_flag(flgs, TR_RES_FEAR);
+        add_flag(flgs, TR_RES_LITE);
+        add_flag(flgs, TR_RES_DARK);
+        add_flag(flgs, TR_RES_BLIND);
+        add_flag(flgs, TR_RES_CONF);
+        add_flag(flgs, TR_RES_SOUND);
+        add_flag(flgs, TR_RES_SHARDS);
+        add_flag(flgs, TR_RES_NETHER);
+        add_flag(flgs, TR_RES_NEXUS);
+        add_flag(flgs, TR_RES_CHAOS);
+        add_flag(flgs, TR_RES_DISEN);
+        add_flag(flgs, TR_REFLECT);
+        add_flag(flgs, TR_HOLD_LIFE);
+        add_flag(flgs, TR_FREE_ACT);
+        add_flag(flgs, TR_SH_FIRE);
+        add_flag(flgs, TR_SH_ELEC);
+        add_flag(flgs, TR_SH_COLD);
+        add_flag(flgs, TR_LEVITATION);
+        add_flag(flgs, TR_LITE);
+        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, TR_TELEPATHY);
+        add_flag(flgs, TR_SLOW_DIGEST);
+        add_flag(flgs, TR_REGEN);
+        add_flag(flgs, TR_SUST_STR);
+        add_flag(flgs, TR_SUST_INT);
+        add_flag(flgs, TR_SUST_WIS);
+        add_flag(flgs, TR_SUST_DEX);
+        add_flag(flgs, TR_SUST_CON);
+        add_flag(flgs, TR_SUST_CHR);
+    }
+
+    if (p_ptr->special_defense & KATA_KOUKIJIN)
+    {
+        add_flag(flgs, TR_VULN_ACID);
+        add_flag(flgs, TR_VULN_ELEC);
+        add_flag(flgs, TR_VULN_FIRE);
+        add_flag(flgs, TR_VULN_COLD);
+    }
+}

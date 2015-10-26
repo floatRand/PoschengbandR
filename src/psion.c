@@ -1995,6 +1995,28 @@ static void _calc_bonuses(void)
     }
 }
 
+static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->magic_num1[_BLENDING])
+        add_flag(flgs, TR_STEALTH);
+    if (p_ptr->magic_num1[_SHIELDING])
+        add_flag(flgs, TR_FREE_ACT);
+    if (p_ptr->magic_num1[_SPEED])
+        add_flag(flgs, TR_SPEED);
+    if (p_ptr->magic_num1[_FORTRESS])
+    {
+        add_flag(flgs, TR_SPELL_POWER);
+        add_flag(flgs, TR_RES_TIME);
+        add_flag(flgs, TR_SUST_STR);
+        add_flag(flgs, TR_SUST_INT);
+        add_flag(flgs, TR_SUST_WIS);
+        add_flag(flgs, TR_SUST_DEX);
+        add_flag(flgs, TR_SUST_CON);
+        add_flag(flgs, TR_SUST_CHR);
+        add_flag(flgs, TR_HOLD_LIFE);
+    }
+}
+
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
     if (p_ptr->magic_num1[_WEAPON_GRAFT])
@@ -2199,6 +2221,7 @@ class_t *psion_get_class(void)
         me.pets = 35;
 
         me.calc_bonuses = _calc_bonuses;
+        me.get_flags = _get_flags;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;
         me.caster_info = _caster_info;

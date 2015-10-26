@@ -231,11 +231,7 @@ static int _apollo_get_powers(spell_info* spells, int max)
 static void _apollo_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_BLIND);
-    add_flag(flgs, TR_LITE);
-}
-static void _apollo_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_LITE);
+    add_flag(flgs, TR_IM_LITE);
 }
 
 /****************************************************************
@@ -479,7 +475,6 @@ race_t *demigod_get_race(int psubrace)
         me.calc_bonuses = NULL;
         me.get_powers = NULL;
         me.get_flags = NULL;
-        me.get_immunities = NULL;
 
         me.subname = NULL;
         me.subdesc = NULL;
@@ -518,7 +513,6 @@ race_t *demigod_get_race(int psubrace)
             me.calc_bonuses = _apollo_calc_bonuses;
             me.get_powers = _apollo_get_powers;
             me.get_flags = _apollo_get_flags;
-            me.get_immunities = _apollo_get_immunities;
             break;
         case DEMIGOD_ARES:
             me.subname = "Ares";

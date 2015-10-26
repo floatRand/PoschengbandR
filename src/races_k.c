@@ -354,10 +354,7 @@ static void _shadow_fairy_calc_bonuses(void)
 static void _shadow_fairy_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_LEVITATION);
-}
-static void _shadow_fairy_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_LITE);
+    add_flag(flgs, TR_VULN_LITE);
 }
 race_t *shadow_fairy_get_race(void)
 {
@@ -399,7 +396,6 @@ race_t *shadow_fairy_get_race(void)
 
         me.calc_bonuses = _shadow_fairy_calc_bonuses;
         me.get_flags = _shadow_fairy_get_flags;
-        me.get_vulnerabilities = _shadow_fairy_get_vulnerabilities;
         init = TRUE;
     }
 
@@ -839,19 +835,14 @@ static void _vampire_calc_bonuses(void)
 }
 static void _vampire_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
+    add_flag(flgs, TR_VULN_LITE);
+
     add_flag(flgs, TR_HOLD_LIFE);
     add_flag(flgs, TR_RES_DARK);
     add_flag(flgs, TR_RES_NETHER);
     if (p_ptr->pclass != CLASS_NINJA) add_flag(flgs, TR_LITE);
     add_flag(flgs, TR_RES_POIS);
     add_flag(flgs, TR_RES_COLD);
-}
-static void _vampire_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-}
-static void _vampire_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_LITE);
 }
 race_t *vampire_get_race(void)
 {
@@ -896,8 +887,6 @@ race_t *vampire_get_race(void)
         me.calc_bonuses = _vampire_calc_bonuses;
         me.get_powers = _vampire_get_powers;
         me.get_flags = _vampire_get_flags;
-        me.get_immunities = _vampire_get_immunities;
-        me.get_vulnerabilities = _vampire_get_vulnerabilities;
         init = TRUE;
     }
 
@@ -972,16 +961,14 @@ static int _yeek_get_powers(spell_info* spells, int max)
 static void _yeek_calc_bonuses(void)
 {
     res_add(RES_ACID);
-    if (p_ptr->lev >= 20) res_add_immune(RES_ACID);
+    if (p_ptr->lev >= 20)
+        res_add_immune(RES_ACID);
 }
 static void _yeek_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_ACID);
-}
-static void _yeek_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    if (p_ptr->lev >= 20) 
-        add_flag(flgs, TR_RES_ACID);
+    if (p_ptr->lev >= 20)
+        add_flag(flgs, TR_IM_ACID);
 }
 race_t *yeek_get_race(void)
 {
@@ -1021,7 +1008,6 @@ race_t *yeek_get_race(void)
         me.calc_bonuses = _yeek_calc_bonuses;
         me.get_powers = _yeek_get_powers;
         me.get_flags = _yeek_get_flags;
-        me.get_immunities = _yeek_get_immunities;
         init = TRUE;
     }
 

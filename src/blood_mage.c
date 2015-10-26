@@ -45,6 +45,11 @@ static void _calc_bonuses(void)
     p_ptr->regenerate = TRUE;
 }
 
+static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_REGEN);
+}
+
 static void _on_cast(const spell_info *spell)
 {
     int cut = spell->level - p_ptr->lev/2;
@@ -102,6 +107,7 @@ class_t *blood_mage_get_class(void)
         me.pets = 30;
 
         me.calc_bonuses = _calc_bonuses;
+        me.get_flags = _get_flags;
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL
         me.get_spells = _get_spells;*/

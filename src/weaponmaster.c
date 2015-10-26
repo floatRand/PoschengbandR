@@ -3693,6 +3693,61 @@ static void _calc_bonuses(void)
     }
 }
 
+static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->psubclass == WEAPONMASTER_DAGGERS)
+    {
+        if (p_ptr->speciality_equip)
+        {
+            if (p_ptr->lev >= 10) add_flag(flgs, TR_STEALTH);
+        }
+    }
+    else if (p_ptr->psubclass == WEAPONMASTER_SWORDS)
+    {
+        if (p_ptr->speciality_equip)
+        {
+            if (p_ptr->lev >= 45) add_flag(flgs, TR_VORPAL);
+        }
+    }
+    else if (p_ptr->psubclass == WEAPONMASTER_SHIELDS)
+    {
+        if (p_ptr->speciality_equip)
+        {
+            if (p_ptr->lev >= 45)
+            {
+                add_flag(flgs, TR_RES_ACID);
+                add_flag(flgs, TR_RES_COLD);
+                add_flag(flgs, TR_RES_FIRE);
+                add_flag(flgs, TR_RES_ELEC);
+                add_flag(flgs, TR_REFLECT);
+            }
+        }
+    }
+    else if (p_ptr->psubclass == WEAPONMASTER_STAVES)
+    {
+        if (p_ptr->speciality_equip)
+        {
+            if (p_ptr->lev >= 10) add_flag(flgs, TR_SH_REVENGE);
+            if (p_ptr->lev >= 20) add_flag(flgs, TR_SPEED);
+        }
+    }
+    else if (p_ptr->psubclass == WEAPONMASTER_STAVES)
+    {
+        if (p_ptr->speciality_equip)
+        {
+            switch (_get_toggle())
+            {
+            case TOGGLE_STOICISM:
+                add_flag(flgs, TR_STEALTH);
+                break;
+            case TOGGLE_INDUSTRIOUS_MORTICIAN:
+                add_flag(flgs, TR_SPEED);
+                break;
+            }
+        }
+    }
+}
+
 static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 {
     int spec = _check_speciality_aux(o_ptr);
@@ -4177,6 +4232,7 @@ class_t *weaponmaster_get_class(void)
         me.get_spells = _get_spells;
         me.birth = _on_birth;
         me.calc_bonuses = _calc_bonuses;
+        me.get_flags = _get_flags;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;
         me.move_player = _move_player;

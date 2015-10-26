@@ -482,18 +482,6 @@ static void _calc_bonuses(void)
         p_ptr->sh_cold = TRUE;
 }
 
-static void _get_immunities(u32b flgs[TR_FLAG_SIZE]) 
-{
-    if (_essences[TR_IM_ACID] >= 3)
-        add_flag(flgs, TR_RES_ACID);
-    if (_essences[TR_IM_ELEC] >= 3)
-        add_flag(flgs, TR_RES_ELEC);
-    if (_essences[TR_IM_FIRE] >= 3)
-        add_flag(flgs, TR_RES_FIRE);
-    if (_essences[TR_IM_COLD] >= 3)
-        add_flag(flgs, TR_RES_COLD);
-}
-
 static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
 {
     int i;
@@ -561,6 +549,15 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_SH_ELEC);
     if (_essences[TR_SH_COLD] >= 7)
         add_flag(flgs, TR_SH_COLD);
+
+    if (_essences[TR_IM_ACID] >= 3)
+        add_flag(flgs, TR_IM_ACID);
+    if (_essences[TR_IM_ELEC] >= 3)
+        add_flag(flgs, TR_IM_ELEC);
+    if (_essences[TR_IM_FIRE] >= 3)
+        add_flag(flgs, TR_IM_FIRE);
+    if (_essences[TR_IM_COLD] >= 3)
+        add_flag(flgs, TR_IM_COLD);
 }
 
 /**********************************************************************
@@ -954,7 +951,6 @@ race_t *mon_sword_get_race(void)
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.character_dump = _character_dump;
         me.get_flags = _get_flags;
-        me.get_immunities = _get_immunities;
         me.gain_level = _gain_level;
         me.get_powers = _get_powers;
         me.birth = _birth;

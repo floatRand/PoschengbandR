@@ -75,7 +75,7 @@ static _res_info_t _resist_map[RES_MAX] = {
     { "Chaos",          TERM_VIOLET,  TR_RES_CHAOS,   TR_VULN_CHAOS,  TR_INVALID },
     { "Disenchantment", TERM_VIOLET,  TR_RES_DISEN,   TR_VULN_DISEN,  TR_INVALID },
     { "Time",           TERM_L_BLUE,  TR_RES_TIME,    TR_INVALID,     TR_INVALID },
-    { "Blindness",      TERM_L_DARK,  TR_RES_BLIND,   TR_VULN_BLIND,  TR_INVALID },
+    { "Blindness",      TERM_L_DARK,  TR_RES_BLIND,   TR_VULN_BLIND,  TR_IM_BLIND },
     { "Fear",           TERM_L_RED,   TR_RES_FEAR,    TR_VULN_FEAR,   TR_IM_FEAR },
     { "Teleportation",  TERM_ORANGE,  TR_NO_TELE,     TR_INVALID,     TR_INVALID }
 };

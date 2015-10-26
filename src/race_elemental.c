@@ -636,13 +636,10 @@ static void _air_get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_SH_ELEC);
     }
 
-    _get_flags(flgs);
-}
-
-static void _air_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
     if (p_ptr->lev >= 50)
-        add_flag(flgs, TR_RES_ELEC);
+        add_flag(flgs, TR_IM_ELEC);
+
+    _get_flags(flgs);
 }
 
 static bool _air_p(object_type *o_ptr)
@@ -690,7 +687,6 @@ static race_t *_air_get_race_t(void)
         me.get_powers = _air_get_powers;
         me.calc_bonuses = _air_calc_bonuses;
         me.get_flags = _air_get_flags;
-        me.get_immunities = _air_get_immunities;
         me.gain_level = _air_gain_level;
         me.process_world = _air_process_world;
         init = TRUE;
@@ -882,13 +878,10 @@ static void _water_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 25)
         add_flag(flgs, TR_SPEED);
 
-    _get_flags(flgs);
-}
-
-static void _water_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
     if (p_ptr->lev >= 50)
-        add_flag(flgs, TR_RES_ACID);
+        add_flag(flgs, TR_IM_ACID);
+
+    _get_flags(flgs);
 }
 
 static void _water_process_world(void)
@@ -956,7 +949,6 @@ static race_t *_water_get_race_t(void)
 
         me.birth = _water_birth;
         me.get_powers = _water_get_powers;
-        me.get_immunities = _water_get_immunities;
         me.calc_bonuses = _water_calc_bonuses;
         me.get_flags = _water_get_flags;
         me.gain_level = _water_gain_level;
@@ -1201,6 +1193,7 @@ static void _fire_calc_bonuses(void)
 
 static void _fire_get_flags(u32b flgs[TR_FLAG_SIZE]) 
 {
+    add_flag(flgs, TR_VULN_COLD);
     add_flag(flgs, TR_RES_FIRE);
     add_flag(flgs, TR_SH_FIRE);
 
@@ -1210,18 +1203,10 @@ static void _fire_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 40)
         add_flag(flgs, TR_RES_ELEC);
 
-    _get_flags(flgs);
-}
-
-static void _fire_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
     if (p_ptr->lev >= 50)
-        add_flag(flgs, TR_RES_FIRE);
-}
+        add_flag(flgs, TR_IM_FIRE);
 
-static void _fire_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_COLD);
+    _get_flags(flgs);
 }
 
 static bool _fire_p(object_type *o_ptr)
@@ -1264,8 +1249,6 @@ static race_t *_fire_get_race_t(void)
         me.get_powers = _fire_get_powers;
         me.calc_bonuses = _fire_calc_bonuses;
         me.get_flags = _fire_get_flags;
-        me.get_immunities = _fire_get_immunities;
-        me.get_vulnerabilities = _fire_get_vulnerabilities;
         me.gain_level = _fire_gain_level;
         me.process_world = _fire_process_world;
         init = TRUE;

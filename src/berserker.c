@@ -127,19 +127,14 @@ static void _calc_bonuses(void)
 
 static void _get_flags(u32b flgs[TR_FLAG_SIZE])
 {
+    add_flag(flgs, TR_IM_FEAR);
     add_flag(flgs, TR_SUST_STR);
     add_flag(flgs, TR_SUST_DEX);
     add_flag(flgs, TR_SUST_CON);
     add_flag(flgs, TR_REGEN);
     add_flag(flgs, TR_FREE_ACT);
     add_flag(flgs, TR_SPEED);
-    add_flag(flgs, TR_RES_FEAR);
     if (p_ptr->lev >= 40) add_flag(flgs, TR_REFLECT);
-}
-
-static void _get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_FEAR);
 }
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
@@ -232,7 +227,6 @@ class_t *berserker_get_class(void)
         
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
-        me.get_immunities = _get_immunities;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.get_powers = _get_powers;
         me.get_spells = _get_spells;

@@ -56,9 +56,6 @@ void albino_mut(int cmd, variant *res)
     case SPELL_MUT_DESC:
         var_set_string(res, "You are albino (-4 CON).");
         break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_CON] -= 4;
-        break;
     default:
         default_spell(cmd, res);
         break;
@@ -186,9 +183,6 @@ void arthritis_mut(int cmd, variant *res)
         break;
     case SPELL_MUT_DESC:
         var_set_string(res, "Your joints ache constantly (-3 DEX).");
-        break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_DEX] -= 3;
         break;
     default:
         default_spell(cmd, res);
@@ -376,9 +370,6 @@ void blank_face_mut(int cmd, variant *res)
         break;
     case SPELL_MUT_DESC:
         var_set_string(res, "Your face is featureless (-1 CHR).");
-        break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_CHR] -= 1;
         break;
     default:
         default_spell(cmd, res);
@@ -997,10 +988,6 @@ void einstein_mut(int cmd, variant *res)
     case SPELL_MUT_DESC:
         var_set_string(res, "Your brain is a living computer (+4 INT/WIS).");
         break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_INT] += 4;
-        p_ptr->stat_add[A_WIS] += 4;
-        break;
     default:
         default_spell(cmd, res);
         break;
@@ -1200,7 +1187,6 @@ void fat_mut(int cmd, variant *res)
         var_set_string(res, "You are extremely fat (+2 CON, -2 speed).");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_CON] += 2;
         p_ptr->pspeed -= 2;
         break;
     default:
@@ -1256,9 +1242,6 @@ void fell_sorcery_mut(int cmd, variant *res)
         break;
     case SPELL_CALC_BONUS:
         p_ptr->spell_power++;
-        p_ptr->stat_add[A_STR]--;
-        p_ptr->stat_add[A_DEX]--;
-        p_ptr->stat_add[A_CON]--;
         break;
     default:
         default_spell(cmd, res);
@@ -1470,9 +1453,6 @@ void he_man_mut(int cmd, variant *res)
     case SPELL_MUT_DESC:
         var_set_string(res, "You are superhumanly strong (+4 STR).");
         break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_STR] += 4;
-        break;
     default:
         default_spell(cmd, res);
         break;
@@ -1635,9 +1615,6 @@ void limber_mut(int cmd, variant *res)
     case SPELL_MUT_DESC:
         var_set_string(res, "Your body is very limber (+3 DEX).");
         break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_DEX] += 3;
-        break;
     default:
         default_spell(cmd, res);
         break;
@@ -1738,10 +1715,6 @@ void moron_mut(int cmd, variant *res)
         break;
     case SPELL_MUT_DESC:
         var_set_string(res, "You are moronic (-4 INT/WIS).");
-        break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_INT] -= 4;
-        p_ptr->stat_add[A_WIS] -= 4;
         break;
     default:
         default_spell(cmd, res);
@@ -2032,9 +2005,6 @@ void puny_mut(int cmd, variant *res)
     case SPELL_MUT_DESC:
         var_set_string(res, "You are puny (-4 STR).");
         break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_STR] -= 4;
-        break;
     default:
         default_spell(cmd, res);
         break;
@@ -2193,9 +2163,6 @@ void resilient_mut(int cmd, variant *res)
     case SPELL_MUT_DESC:
         var_set_string(res, "You are very resilient (+4 CON).");
         break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_CON] += 4;
-        break;
     default:
         default_spell(cmd, res);
         break;
@@ -2221,8 +2188,6 @@ void rotting_flesh_mut(int cmd, variant *res)
         var_set_string(res, "Your flesh is rotting (-2 CON, -1 CHR).");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_CON] -= 2;
-        p_ptr->stat_add[A_CHR] -= 1;
         p_ptr->regenerate = FALSE; /* Equip and spells processed later ... */
         break;
     default:
@@ -2274,7 +2239,6 @@ void scales_mut(int cmd, variant *res)
         var_set_string(res, "Your skin has turned into scales (-1 CHR, +10 AC).");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_CHR] -= 1;
         p_ptr->to_a += 10;
         p_ptr->dis_to_a += 10;
         break;
@@ -2386,9 +2350,6 @@ void silly_voice_mut(int cmd, variant *res)
     case SPELL_MUT_DESC:
         var_set_string(res, "Your voice is a silly squeak (-4 CHR).");
         break;
-    case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_CHR] -= 4;        
-        break;
     default:
         default_spell(cmd, res);
         break;
@@ -2486,7 +2447,6 @@ void steel_skin_mut(int cmd, variant *res)
         var_set_string(res, "Your skin is made of steel (-1 DEX, +25 AC).");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_DEX] -= 1;
         p_ptr->to_a += 25;
         p_ptr->dis_to_a += 25;
         break;
@@ -2798,7 +2758,6 @@ void warts_mut(int cmd, variant *res)
         var_set_string(res, "Your skin is covered with warts (-2 CHR, +5 AC).");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->stat_add[A_CHR] -= 2;
         p_ptr->to_a += 5;
         p_ptr->dis_to_a += 5;
         break;

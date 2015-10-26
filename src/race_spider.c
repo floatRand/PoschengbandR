@@ -146,10 +146,7 @@ static void _cave_spider_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_POIS);
     add_flag(flgs, TR_RES_DARK);
-}
-static void _cave_spider_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_LITE);
+    add_flag(flgs, TR_VULN_LITE);
 }
 race_t *_cave_spider_get_race_t(void)
 {
@@ -178,7 +175,6 @@ race_t *_cave_spider_get_race_t(void)
         me.get_powers = _cave_spider_get_powers;
         me.calc_bonuses = _cave_spider_calc_bonuses;
         me.get_flags = _cave_spider_get_flags;
-        me.get_vulnerabilities = _cave_spider_get_vulnerabilities;
         me.calc_innate_attacks = _cave_spider_calc_innate_attacks;
         init = TRUE;
     }
@@ -320,10 +316,8 @@ static void _phase_spider_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_NEXUS);
     add_flag(flgs, TR_RES_CONF);
     add_flag(flgs, TR_FREE_ACT);
-}
-static void _phase_spider_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_POIS);
+
+    add_flag(flgs, TR_IM_POIS);
 }
 race_t *_phase_spider_get_race_t(void)
 {
@@ -352,7 +346,6 @@ race_t *_phase_spider_get_race_t(void)
         me.get_powers = _phase_spider_get_powers;
         me.calc_bonuses = _phase_spider_calc_bonuses;
         me.get_flags = _phase_spider_get_flags;
-        me.get_immunities = _phase_spider_get_immunities;
         me.calc_innate_attacks = _phase_spider_calc_innate_attacks;
         init = TRUE;
     }
@@ -405,10 +398,8 @@ static void _aranea_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_CONF);
     add_flag(flgs, TR_RES_FEAR);
     add_flag(flgs, TR_FREE_ACT);
-}
-static void _aranea_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_POIS);
+
+    add_flag(flgs, TR_IM_POIS);
 }
 race_t *_aranea_get_race_t(void)
 {
@@ -437,7 +428,6 @@ race_t *_aranea_get_race_t(void)
         me.get_powers = _aranea_get_powers;
         me.calc_bonuses = _aranea_calc_bonuses;
         me.get_flags = _aranea_get_flags;
-        me.get_immunities = _aranea_get_immunities;
         me.calc_innate_attacks = _aranea_calc_innate_attacks;
         init = TRUE;
     }
@@ -497,14 +487,9 @@ static void _elder_aranea_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_FREE_ACT);
     add_flag(flgs, TR_SEE_INVIS);
     add_flag(flgs, TR_REGEN);
-}
-static void _elder_aranea_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_POIS);
-}
-static void _elder_aranea_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_LITE);
+
+    add_flag(flgs, TR_IM_POIS);
+    add_flag(flgs, TR_VULN_LITE);
 }
 race_t *_elder_aranea_get_race_t(void)
 {
@@ -533,8 +518,6 @@ race_t *_elder_aranea_get_race_t(void)
         me.get_powers = _aranea_get_powers;
         me.calc_bonuses = _elder_aranea_calc_bonuses;
         me.get_flags = _elder_aranea_get_flags;
-        me.get_immunities = _elder_aranea_get_immunities;
-        me.get_vulnerabilities = _elder_aranea_get_vulnerabilities;
         me.calc_innate_attacks = _elder_aranea_calc_innate_attacks;
         init = TRUE;
     }

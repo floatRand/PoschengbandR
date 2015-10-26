@@ -852,7 +852,6 @@ static void _undead_calc_bonuses(void)
     res_add(RES_COLD);
     p_ptr->skills.stl += 7 * p_ptr->lev/50;
     if (p_ptr->lev > 14) res_add(RES_POIS);
-    p_ptr->stat_add[A_CON] += 5 * p_ptr->lev/50;
     if (p_ptr->lev > 29) 
     {
         res_add(RES_NETHER);
@@ -865,13 +864,29 @@ static void _undead_calc_bonuses(void)
     }
     if (p_ptr->lev > 44) res_add(RES_SHARDS);
 }
+static void _undead_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_RES_COLD);
+    if (p_ptr->lev > 7) add_flag(flgs, TR_STEALTH);
+    if (p_ptr->lev > 14) add_flag(flgs, TR_RES_POIS);
+    if (p_ptr->lev > 29)
+    {
+        add_flag(flgs, TR_RES_NETHER);
+        add_flag(flgs, TR_HOLD_LIFE);
+    }
+    if (p_ptr->lev > 34)
+    {
+        add_flag(flgs, TR_RES_DARK);
+        add_flag(flgs, TR_RES_BLIND);
+    }
+    if (p_ptr->lev > 44) add_flag(flgs, TR_RES_SHARDS);
+}
 
 static void _dragon_calc_bonuses(void)
 {
     res_add(RES_FEAR);
     p_ptr->skills.thn += 100 * p_ptr->lev / 50;
     /*if (p_ptr->lev > 14) p_ptr->levitation = TRUE; */
-    p_ptr->stat_add[A_STR] += 5 * p_ptr->lev / 50;
     p_ptr->weapon_info[0].to_h += 10 * p_ptr->lev / 50;
     p_ptr->weapon_info[0].dis_to_h +=  10 * p_ptr->lev / 50;
     p_ptr->weapon_info[0].to_d += 10 * p_ptr->lev / 50;
@@ -912,14 +927,25 @@ static void _dragon_calc_bonuses(void)
         mut_lose(MUT_BERSERK);
     }
 }
+static void _dragon_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_RES_FEAR);
+    /*if (p_ptr->lev > 14) add_flag(flgs, TR_LEVITATION); */
+    if (p_ptr->lev > 29) add_flag(flgs, TR_SUST_CON);
+}
 
 static void _angel_calc_bonuses(void)
 {
     p_ptr->levitation = TRUE;
     p_ptr->skills.sav += 30 * p_ptr->lev/50;
     if (p_ptr->lev > 14) p_ptr->see_inv = TRUE;
-    p_ptr->stat_add[A_WIS] += 5 * p_ptr->lev/50;
     if (p_ptr->lev > 34) p_ptr->reflect = TRUE;
+}
+static void _angel_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_LEVITATION);
+    if (p_ptr->lev > 14) add_flag(flgs, TR_SEE_INVIS);
+    if (p_ptr->lev > 34) add_flag(flgs, TR_REFLECT);
 }
 
 static void _demon_calc_bonuses(void)
@@ -928,7 +954,6 @@ static void _demon_calc_bonuses(void)
     p_ptr->skills.dev += 50 * p_ptr->lev/50;
     p_ptr->device_power += 5 * p_ptr->lev/50;
     if (p_ptr->lev > 14) p_ptr->hold_life = TRUE;
-    p_ptr->stat_add[A_INT] += 5 * p_ptr->lev/50;
     if (p_ptr->lev >= 30)
         p_ptr->no_eldritch = TRUE;
     if (p_ptr->lev >= 40)
@@ -938,13 +963,24 @@ static void _demon_calc_bonuses(void)
     if (p_ptr->lev > 49)
         res_add_immune(RES_FIRE);
 }
+static void _demon_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_RES_FIRE);
+    if (p_ptr->lev > 9) add_flag(flgs, TR_DEVICE_POWER);
+    if (p_ptr->lev > 14) add_flag(flgs, TR_HOLD_LIFE);
+    if (p_ptr->lev > 49) add_flag(flgs, TR_IM_FIRE);
+}
 
 static void _aberration_calc_bonuses(void)
 {
     res_add(RES_CHAOS);
     p_ptr->skills.thb += 100 * p_ptr->lev/50;
-    p_ptr->stat_add[A_DEX] += 5 * p_ptr->lev/50;
     if (p_ptr->lev > 34) p_ptr->telepathy = TRUE;    /* Easier then granting MUT3_ESP :) */
+}
+static void _aberration_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_RES_CHAOS);
+    if (p_ptr->lev > 34) add_flag(flgs, TR_TELEPATHY);
 }
 
 static caster_info * _caster_info(void)
@@ -996,14 +1032,6 @@ class_t *warlock_get_class(int psubclass)
                   "strong melee (Warlocks are generally poor fighters otherwise). In addition, each "
                   "pact gives a unique high level offensive power when using their Eldritch Blast.";
 
-
-        me.stats[A_STR] = -2;
-        me.stats[A_INT] =  1;
-        me.stats[A_WIS] =  2;
-        me.stats[A_DEX] = -1;
-        me.stats[A_CON] = -2;
-        me.stats[A_CHR] =  4;
-
         me.base_skills = bs;
         me.extra_skills = xs;
 
@@ -1017,28 +1045,45 @@ class_t *warlock_get_class(int psubclass)
         init = TRUE;
     }
 
-    if (pact_init != psubclass)
+    me.stats[A_STR] = -2;
+    me.stats[A_INT] =  1;
+    me.stats[A_WIS] =  2;
+    me.stats[A_DEX] = -1;
+    me.stats[A_CON] = -2;
+    me.stats[A_CHR] =  4;
+
+    if (!spoiler_hack && !birth_hack && pact_init != psubclass)
     {
         switch (psubclass)
         {
         case PACT_UNDEAD:
+            me.stats[A_CON] += 5 * p_ptr->lev/50;
             me.calc_bonuses = _undead_calc_bonuses;
+            me.get_flags = _undead_get_flags;
             me.get_powers = _undead_get_powers;
             break;
         case PACT_DRAGON:
+            me.stats[A_STR] += 5 * p_ptr->lev/50;
             me.calc_bonuses = _dragon_calc_bonuses;
+            me.get_flags = _dragon_get_flags;
             me.get_powers = _dragon_get_powers;
             break;
         case PACT_ANGEL:
+            me.stats[A_WIS] += 5 * p_ptr->lev/50;
             me.calc_bonuses = _angel_calc_bonuses;
+            me.get_flags = _angel_get_flags;
             me.get_powers = _angel_get_powers;
             break;
         case PACT_DEMON:
+            me.stats[A_INT] += 5 * p_ptr->lev/50;
             me.calc_bonuses = _demon_calc_bonuses;
+            me.get_flags = _demon_get_flags;
             me.get_powers = _demon_get_powers;
             break;
         case PACT_ABERRATION:
+            me.stats[A_DEX] += 5 * p_ptr->lev/50;
             me.calc_bonuses = _aberration_calc_bonuses;
+            me.get_flags = _aberration_get_flags;
             me.get_powers = _aberration_get_powers;
             break;
         }

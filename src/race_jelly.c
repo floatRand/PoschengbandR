@@ -93,10 +93,7 @@ static void _black_ooze_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     add_flag(flgs, TR_RES_ACID);
     add_flag(flgs, TR_RES_POIS);
-}
-static void _black_ooze_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_BLIND);
+    add_flag(flgs, TR_IM_BLIND);
 }
 race_t *_black_ooze_get_race_t(void)
 {
@@ -124,7 +121,6 @@ race_t *_black_ooze_get_race_t(void)
 
         me.calc_bonuses = _black_ooze_calc_bonuses;
         me.get_flags = _black_ooze_get_flags;
-        me.get_immunities = _black_ooze_get_immunities;
 
         init = TRUE;
     }
@@ -175,7 +171,6 @@ race_t *_gelatinous_cube_get_race_t(void)
 
         me.calc_bonuses = _gelatinous_cube_calc_bonuses;
         me.get_flags = _gelatinous_cube_get_flags;
-        me.get_immunities = _black_ooze_get_immunities;
 
         init = TRUE;
     }
@@ -203,13 +198,10 @@ static void _acidic_cytoplasm_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_RES_CONF);
     add_flag(flgs, TR_BRAND_ACID);
 
+    add_flag(flgs, TR_IM_ACID);
+    add_flag(flgs, TR_IM_FEAR);
+
     _gelatinous_cube_get_flags(flgs);
-}
-static void _acidic_cytoplasm_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_ACID);
-    add_flag(flgs, TR_RES_FEAR);
-    _black_ooze_get_immunities(flgs);
 }
 
 race_t *_acidic_cytoplasm_get_race_t(void)
@@ -238,7 +230,6 @@ race_t *_acidic_cytoplasm_get_race_t(void)
 
         me.calc_bonuses = _acidic_cytoplasm_calc_bonuses;
         me.get_flags = _acidic_cytoplasm_get_flags;
-        me.get_immunities = _acidic_cytoplasm_get_immunities;
 
         init = TRUE;
     }
@@ -262,10 +253,6 @@ static void _shoggoth_get_flags(u32b flgs[TR_FLAG_SIZE])
     add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_REGEN);
     _acidic_cytoplasm_get_flags(flgs);
-}
-static void _shoggoth_get_immunities(u32b flgs[TR_FLAG_SIZE])
-{
-    _acidic_cytoplasm_get_immunities(flgs);
 }
 race_t *_shoggoth_get_race_t(void)
 {
@@ -293,7 +280,6 @@ race_t *_shoggoth_get_race_t(void)
 
         me.calc_bonuses = _shoggoth_calc_bonuses;
         me.get_flags = _shoggoth_get_flags;
-        me.get_immunities = _shoggoth_get_immunities;
 
         init = TRUE;
     }
