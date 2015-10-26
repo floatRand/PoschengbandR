@@ -1175,13 +1175,15 @@ doc_pos_t doc_insert_cols(doc_ptr dest_doc, doc_ptr src_cols[], int col_count, i
                     dest->a = src->a;
                     dest->c = src->c;
 
+                    if (!dest->c)
+                        dest->c = ' ';
+
                     dest++;
                     src++;
                 }
             }
-
-            dest_pos.x += src_col->width;
-            dest_pos.x += spacing;
+            dest_pos.x += count;
+            doc_insert_space(dest_doc, spacing);
         }
 
         dest_pos.x = 0;
