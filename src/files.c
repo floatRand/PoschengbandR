@@ -1832,12 +1832,12 @@ void tim_player_stats(s16b stats[MAX_STATS])
     }
     if (p_ptr->realm1 == REALM_HEX)
     {
-        if (hex_spelling(HEX_XTRA_MIGHT)) p_ptr->stat_add[A_STR] += 4;
+        if (hex_spelling(HEX_XTRA_MIGHT)) stats[A_STR] += 4;
         if (hex_spelling(HEX_BUILDING))
         {
-            p_ptr->stat_add[A_STR] += 4;
-            p_ptr->stat_add[A_DEX] += 4;
-            p_ptr->stat_add[A_CON] += 4;
+            stats[A_STR] += 4;
+            stats[A_DEX] += 4;
+            stats[A_CON] += 4;
         }
     }
 }

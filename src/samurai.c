@@ -1004,7 +1004,7 @@ static int _max_sp(void)
     return MAX(p_ptr->msp*4, p_ptr->lev*5+5);
 }
 
-static void _concentrate(void)
+static void _concentrate(bool noisy)
 {
     int max_csp = _max_sp();
     if (total_friends)
@@ -1012,7 +1012,8 @@ static void _concentrate(void)
     if (p_ptr->special_defense & KATA_MASK)
         return;
         
-    msg_print("You concentrate to charge your power.");
+    if (noisy)
+        msg_print("You concentrate to charge your power.");
 
     p_ptr->csp += p_ptr->msp / 2;
     if (p_ptr->csp >= max_csp)
@@ -1048,7 +1049,7 @@ void samurai_concentration_spell(int cmd, variant *res)
             return;
         }
 
-        _concentrate();        
+        _concentrate(TRUE);
 
         var_set_bool(res, TRUE);
         break;
@@ -1189,7 +1190,7 @@ class_t *samurai_get_class(void)
 void samurai_on_rest(void)
 {
     if (p_ptr->pclass == CLASS_SAMURAI)
-        _concentrate();
+        _concentrate(FALSE);
 }
 
 bool samurai_can_concentrate(void)

@@ -175,7 +175,7 @@ static void _build_general2(doc_ptr doc)
                         p_ptr->csp > (p_ptr->msp * mana_warn) / 10 ? 'y' : 'r',
                     string_buffer(s));
 
-    doc_printf(doc, "<tab:9>SP   : <color:G>%9d</color>\n", p_ptr->dis_ac + p_ptr->dis_to_a);
+    doc_printf(doc, "<tab:9>AC   : <color:G>%9d</color>\n", p_ptr->dis_ac + p_ptr->dis_to_a);
 
     /* Dump speed ... What a monster! */
     {
@@ -777,10 +777,12 @@ void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
     race_t          *race_ptr = get_race();
     class_t         *class_ptr = get_class();
     personality_ptr  pers_ptr = get_personality();
-    s16b             mut_stats[MAX_STATS] = {0};
+    s16b             stats[MAX_STATS] = {0};
     s16b             tim_stats[MAX_STATS] = {0};
 
-    mut_calc_stats(mut_stats);
+    mut_calc_stats(stats);
+    monk_posture_calc_stats(stats);
+    hissatsu_calc_stats(stats);
     tim_player_stats(tim_stats);
 
     _equippy_chars(doc, 14);
@@ -860,11 +862,11 @@ void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
                 doc_insert_char(doc, TERM_L_DARK, '.');
         }
         /* @ */
-        if (mut_stats[i] + tim_stats[i] != 0)
+        if (stats[i] + tim_stats[i] != 0)
         {
             byte a = TERM_WHITE;
             char c = '*';
-            int  adj = mut_stats[i] + tim_stats[i];
+            int  adj = stats[i] + tim_stats[i];
 
             if (abs(adj) < 10)
                 c = '0' + abs(adj);

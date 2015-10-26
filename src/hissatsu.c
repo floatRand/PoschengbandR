@@ -522,7 +522,7 @@ void hissatsu_calc_stats(s16b stats[MAX_STATS])
     {
         int i;
         for (i = 0; i < MAX_STATS; i++)
-            p_ptr->stat_add[i] += 5;
+            stats[i] += 5;
     }
 }
 
@@ -544,6 +544,7 @@ void hissatsu_get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_RES_NEXUS);
         add_flag(flgs, TR_RES_CHAOS);
         add_flag(flgs, TR_RES_DISEN);
+        add_flag(flgs, TR_RES_TIME);
         add_flag(flgs, TR_REFLECT);
         add_flag(flgs, TR_HOLD_LIFE);
         add_flag(flgs, TR_FREE_ACT);
