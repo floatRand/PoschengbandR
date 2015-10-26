@@ -1123,6 +1123,8 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc);
 
 /* py_display.c */
 extern void py_display(void);
+extern void py_display_spells(doc_ptr doc, spell_info *table, int ct);
+extern void py_display_powers(doc_ptr doc, spell_info *table, int ct);
 
 /* object1.c */
 extern s16b m_bonus(int max, int level);
@@ -2168,7 +2170,7 @@ extern int     possessor_r_ac(int r_idx);
 extern void    possessor_get_flags(u32b flgs[TR_FLAG_SIZE]);
 extern void    possessor_get_immunities(u32b flgs[TR_FLAG_SIZE]);
 extern void    possessor_get_vulnerabilities(u32b flgs[TR_FLAG_SIZE]);
-extern void    possessor_character_dump(FILE *file);
+extern void    possessor_character_dump(doc_ptr doc);
 extern void    possessor_on_load(savefile_ptr file);
 extern void    possessor_on_save(savefile_ptr file);
 extern void    possessor_set_current_r_idx(int r_idx);
@@ -2225,7 +2227,6 @@ extern int lookup_class_idx(cptr name);
 extern int get_class_idx(void);
 extern caster_info *get_caster_info(void);
 extern int get_powers_aux(spell_info* spells, int max, power_info* table);
-extern void dump_powers_aux(FILE *fff, spell_info *table, int ct);
 extern int get_spells_aux(spell_info* spells, int max, spell_info* table);
 extern void dump_spells_aux(FILE *fff, spell_info *table, int ct);
 
@@ -2309,7 +2310,7 @@ extern class_t *force_trainer_get_class(void);
 extern class_t *high_mage_get_class(void);
 extern bool     imitator_cast(bool revenge);
 extern class_t *imitator_get_class(void);
-extern void     spellbook_character_dump(FILE *fff);
+extern void     spellbook_character_dump(doc_ptr doc);
 extern class_t *mage_get_class(void);
 extern equip_template_ptr mon_get_equip_template(void);
 extern cptr     mon_name(int r_idx);

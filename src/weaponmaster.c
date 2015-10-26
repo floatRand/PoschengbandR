@@ -4065,133 +4065,133 @@ static void _move_player(void)
     }
 }
 
-static void _character_dump(FILE* file)
+static void _character_dump(doc_ptr doc)
 {
-    fprintf(file, "\n\n================================== Abilities ==================================\n\n");
+    doc_printf(doc, "<topic:Weaponmaster>================================== Abilities ==================================\n\n");
     
     if (p_ptr->psubclass == WEAPONMASTER_AXES)
     {
         if (p_ptr->lev >= 45)
-            fprintf(file, "  * You gain a huge bonus to damage when wielding an axe.\n");    
+            doc_printf(doc, "  * You gain a huge bonus to damage when wielding an axe.\n");
         else if (p_ptr->lev >= 20)
-            fprintf(file, "  * You gain a large bonus to damage when wielding an axe.\n");    
+            doc_printf(doc, "  * You gain a large bonus to damage when wielding an axe.\n");
         else
-            fprintf(file, "  * You gain a small bonus to damage when wielding an axe.\n");    
+            doc_printf(doc, "  * You gain a small bonus to damage when wielding an axe.\n");
         
-        fprintf(file, "  * You gain +1 max attack when wielding an axe with two hands.\n");
+        doc_printf(doc, "  * You gain +1 max attack when wielding an axe with two hands.\n");
 
         if (p_ptr->lev >= 5)
-            fprintf(file, "  * You gain a bonus to tunneling when wielding an axe.\n");
+            doc_printf(doc, "  * You gain a bonus to tunneling when wielding an axe.\n");
 
         if (p_ptr->lev >= 30)
-            fprintf(file, "  * You occasionally attack an adjacent opponent after killing a foe when wielding an axe.\n");
+            doc_printf(doc, "  * You occasionally attack an adjacent opponent after killing a foe when wielding an axe.\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_CLUBS)
     {
-        fprintf(file, "  * Your attacks have a chance to confuse when wielding a club.\n");    
+        doc_printf(doc, "  * Your attacks have a chance to confuse when wielding a club.\n");
         
         if (p_ptr->lev >= 20)
-            fprintf(file, "  * Your attacks have a chance to knock out when wielding a club.\n");    
+            doc_printf(doc, "  * Your attacks have a chance to knock out when wielding a club.\n");
         
         if (p_ptr->lev >= 45)
-            fprintf(file, "  * Your attacks have a chance to stun when wielding a club.\n");    
+            doc_printf(doc, "  * Your attacks have a chance to stun when wielding a club.\n");
 
         if (p_ptr->lev >= 25)
-            fprintf(file, "  * You gain a bonus to hit when wielding a club.\n");
+            doc_printf(doc, "  * You gain a bonus to hit when wielding a club.\n");
 
         if (p_ptr->lev >= 40)
-            fprintf(file, "  * You gain crushing blows when wielding a club.\n");
+            doc_printf(doc, "  * You gain crushing blows when wielding a club.\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_DAGGERS)
     {
-        fprintf(file, "  * You pay reduced energy costs when equipping a dagger.\n");    
-        fprintf(file, "  * You dual wield very effectively with daggers.\n");    
+        doc_printf(doc, "  * You pay reduced energy costs when equipping a dagger.\n");
+        doc_printf(doc, "  * You dual wield very effectively with daggers.\n");
         if (p_ptr->lev >= 20)
-            fprintf(file, "  * You gain a bonus to AC when wielding a dagger.\n");
+            doc_printf(doc, "  * You gain a bonus to AC when wielding a dagger.\n");
         if (p_ptr->lev >= 12)
-            fprintf(file, "  * You gain a bonus to stealth when wielding a dagger.\n");
+            doc_printf(doc, "  * You gain a bonus to stealth when wielding a dagger.\n");
         if (p_ptr->lev >= 30)
-            fprintf(file, "  * You gain sneak attack and backstab when wielding a dagger.\n");
+            doc_printf(doc, "  * You gain sneak attack and backstab when wielding a dagger.\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_DIGGERS)
     {
-        fprintf(file, "  * You gain a bonus to tunneling when wielding a digger.\n");
+        doc_printf(doc, "  * You gain a bonus to tunneling when wielding a digger.\n");
         if (p_ptr->lev >= 45)
-            fprintf(file, "  * Your steps break walls when wielding a digger.\n");
+            doc_printf(doc, "  * Your steps break walls when wielding a digger.\n");
 
         if (p_ptr->lev >= 15)
-            fprintf(file, "  * You gain an AC bonus depending on the number of adjacent walls when wielding a digger.\n");
+            doc_printf(doc, "  * You gain an AC bonus depending on the number of adjacent walls when wielding a digger.\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_POLEARMS)
     {
-        fprintf(file, "  * You occasionally get a free round of attacks after moving when wielding a polearm.\n");
+        doc_printf(doc, "  * You occasionally get a free round of attacks after moving when wielding a polearm.\n");
         if (p_ptr->lev >= 20)
-            fprintf(file, "  * You automatically attack any enemy that steps next to you when wielding a polearm.\n");
+            doc_printf(doc, "  * You automatically attack any enemy that steps next to you when wielding a polearm.\n");
         if (p_ptr->lev >= 45)
-            fprintf(file, "  * You occasionally strike all adjacent foes when wielding a polearm.\n");
+            doc_printf(doc, "  * You occasionally strike all adjacent foes when wielding a polearm.\n");
 
         if (p_ptr->lev >= 30)
-            fprintf(file, "  * You gain a bonus to hit and to AC when you don't move for 3 rounds when wielding a polearm.\n");
+            doc_printf(doc, "  * You gain a bonus to hit and to AC when you don't move for 3 rounds when wielding a polearm.\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_SLINGS)
     {
-        fprintf(file, "  * Your ammo often returns to you when wielding a sling.\n");
+        doc_printf(doc, "  * Your ammo often returns to you when wielding a sling.\n");
         if (p_ptr->lev >= 20)
-            fprintf(file, "  * Your ammo gains extra damage dice when wielding a sling.\n");
+            doc_printf(doc, "  * Your ammo gains extra damage dice when wielding a sling.\n");
         if (p_ptr->lev >= 45)
-            fprintf(file, "  * You have access to an unlimited quiver when wielding a sling.\n");
+            doc_printf(doc, "  * You have access to an unlimited quiver when wielding a sling.\n");
 
         if (p_ptr->lev >= 10)
-            fprintf(file, "  * Your shots never miss your target once you score 3 consecutive hits when wielding a sling.\n");
+            doc_printf(doc, "  * Your shots never miss your target once you score 3 consecutive hits when wielding a sling.\n");
         if (p_ptr->lev >= 40)
-            fprintf(file, "  * You gain extra shots when wielding a sling.\n");
+            doc_printf(doc, "  * You gain extra shots when wielding a sling.\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_SHIELDS)
     {
-        fprintf(file, "  * You gain two handed wielding bonuses even when wielding a shield.\n");
+        doc_printf(doc, "  * You gain two handed wielding bonuses even when wielding a shield.\n");
         if (p_ptr->lev >= 20)
-            fprintf(file, "  * Your inventory items are somewhat protected from destruction when wielding a shield.\n");
+            doc_printf(doc, "  * Your inventory items are somewhat protected from destruction when wielding a shield.\n");
         if (p_ptr->lev >= 45)
-            fprintf(file, "  * You gain basic resistance and reflection when wielding a shield.\n");
+            doc_printf(doc, "  * You gain basic resistance and reflection when wielding a shield.\n");
 
         if (p_ptr->lev >= 5)
-            fprintf(file, "  * You gain double the AC benefit when wielding a shield.\n");
+            doc_printf(doc, "  * You gain double the AC benefit when wielding a shield.\n");
 
         if (p_ptr->lev >= 25)
-            fprintf(file, "  * You gain a bonus to saving throws when wielding a shield.\n");
+            doc_printf(doc, "  * You gain a bonus to saving throws when wielding a shield.\n");
     
     }
     else if (p_ptr->psubclass == WEAPONMASTER_STAVES)
     {
-        fprintf(file, "  * You gain a bonus to AC until your next turn after any successful hit when wielding a staff.\n");
-        fprintf(file, "  * You suffer a penalty to speed when wielding a shield.\n");
+        doc_printf(doc, "  * You gain a bonus to AC until your next turn after any successful hit when wielding a staff.\n");
+        doc_printf(doc, "  * You suffer a penalty to speed when wielding a shield.\n");
         if (p_ptr->lev >= 5)
-            fprintf(file, "  * You gain a bonus AC after moving until your next turn when wielding a staff.\n");
+            doc_printf(doc, "  * You gain a bonus AC after moving until your next turn when wielding a staff.\n");
         if (p_ptr->lev >= 10)
-            fprintf(file, "  * You retaliate when struck when wielding a staff.\n");
+            doc_printf(doc, "  * You retaliate when struck when wielding a staff.\n");
         if (p_ptr->lev >= 20)
-            fprintf(file, "  * You gain a bonus to speed when wielding a staff.\n");
+            doc_printf(doc, "  * You gain a bonus to speed when wielding a staff.\n");
         if (p_ptr->lev >= 30)
-            fprintf(file, "  * You gain an extra attack when you are at full health and wielding a staff.\n");
+            doc_printf(doc, "  * You gain an extra attack when you are at full health and wielding a staff.\n");
         if (p_ptr->lev >= 35)
-            fprintf(file, "  * You are unaffected by monster auras when wielding a staff.\n");
+            doc_printf(doc, "  * You are unaffected by monster auras when wielding a staff.\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_SWORDS)
     {
-        fprintf(file, "  * You gain a bonus to hit when wielding a sword.\n");
+        doc_printf(doc, "  * You gain a bonus to hit when wielding a sword.\n");
         if (p_ptr->lev >= 20)
-            fprintf(file, "  * You gain constant heroism when wielding a sword.\n");
+            doc_printf(doc, "  * You gain constant heroism when wielding a sword.\n");
         if (p_ptr->lev >= 45)
-            fprintf(file, "  * You gain vorpal attacks when wielding a sword.\n");
+            doc_printf(doc, "  * You gain vorpal attacks when wielding a sword.\n");
     }
 
-    fprintf(file, "\n");
+    doc_newline(doc);
 
     {
         spell_info spells[MAX_SPELLS];
         int        ct = _get_spells(spells, MAX_SPELLS);
 
-        dump_spells_aux(file, spells, ct);
+        py_display_spells(doc, spells, ct);
     }
 }
 

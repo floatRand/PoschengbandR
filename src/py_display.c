@@ -6,12 +6,16 @@
 /* Build & Display the "Character Sheet" */
 
 extern void py_display(void);
+extern void py_display_spells(doc_ptr doc, spell_info *table, int ct);
+extern void py_display_powers(doc_ptr doc, spell_info *table, int ct);
 
 static void _build_character_sheet(doc_ptr doc);
 static void _build_page1(doc_ptr doc);
 static void _build_equipment(doc_ptr doc); /* Formerly Pages 2-4 */
 static void _build_melee(doc_ptr doc);
 static void _build_shooting(doc_ptr doc);
+static void _build_powers(doc_ptr doc);
+static void _build_spells(doc_ptr doc);
 
 /********************************** Page 1 ************************************/
 static void _build_general1(doc_ptr doc)
@@ -276,7 +280,7 @@ static void _build_page1(doc_ptr doc)
 }
 
 /********************************** Equipment *********************************/
-void _equippy_chars(doc_ptr doc, int col)
+static void _equippy_chars(doc_ptr doc, int col)
 {
     if (equippy_chars)
     {
@@ -304,7 +308,7 @@ void _equippy_chars(doc_ptr doc, int col)
     }
 }
 
-void _equippy_heading_aux(doc_ptr doc, cptr heading, int col)
+static void _equippy_heading_aux(doc_ptr doc, cptr heading, int col)
 {
     int i;
     doc_printf(doc, " <color:G>%-11.11s</color><tab:%d>", heading, col);
@@ -313,7 +317,7 @@ void _equippy_heading_aux(doc_ptr doc, cptr heading, int col)
     doc_insert_char(doc, TERM_WHITE, '@');
 }
 
-void _equippy_heading(doc_ptr doc, cptr heading, int col)
+static void _equippy_heading(doc_ptr doc, cptr heading, int col)
 {
     _equippy_heading_aux(doc, heading, col);
     doc_newline(doc);
@@ -325,7 +329,7 @@ typedef struct {
     u32b obj_flgs[EQUIP_MAX_SLOTS][TR_FLAG_SIZE];
 } _flagzilla_t, *_flagzilla_ptr;
 
-_flagzilla_ptr _flagzilla_alloc(void)
+static _flagzilla_ptr _flagzilla_alloc(void)
 {
     _flagzilla_ptr flagzilla = malloc(sizeof(_flagzilla_t));
     int            i;
@@ -346,12 +350,12 @@ _flagzilla_ptr _flagzilla_alloc(void)
     return flagzilla;
 }
 
-void _flagzilla_free(_flagzilla_ptr flagzilla)
+static void _flagzilla_free(_flagzilla_ptr flagzilla)
 {
     free(flagzilla);
 }
 
-void _build_res_flags(doc_ptr doc, int which, _flagzilla_ptr flagzilla)
+static void _build_res_flags(doc_ptr doc, int which, _flagzilla_ptr flagzilla)
 {
     int i;
     int flg = res_get_object_flag(which);
@@ -422,7 +426,7 @@ void _build_res_flags(doc_ptr doc, int which, _flagzilla_ptr flagzilla)
     doc_newline(doc);
 }
 
-void _build_curse_flags(doc_ptr doc, cptr name)
+static void _build_curse_flags(doc_ptr doc, cptr name)
 {
     int i;
     doc_printf(doc, " %-11.11s: ", name);
@@ -449,7 +453,7 @@ void _build_curse_flags(doc_ptr doc, cptr name)
     doc_newline(doc);
 }
 
-void _build_slays_imp(doc_ptr doc, cptr name, int flg, int kill_flg, _flagzilla_ptr flagzilla)
+static void _build_slays_imp(doc_ptr doc, cptr name, int flg, int kill_flg, _flagzilla_ptr flagzilla)
 {
     int i;
     doc_printf(doc, " %-11.11s: ", name);
@@ -476,7 +480,7 @@ void _build_slays_imp(doc_ptr doc, cptr name, int flg, int kill_flg, _flagzilla_
     doc_newline(doc);
 }
 
-int _build_flags_imp(doc_ptr doc, cptr name, int flg, int dec_flg, _flagzilla_ptr flagzilla)
+static int _build_flags_imp(doc_ptr doc, cptr name, int flg, int dec_flg, _flagzilla_ptr flagzilla)
 {
     int result = 0;
     int i;
@@ -512,7 +516,7 @@ int _build_flags_imp(doc_ptr doc, cptr name, int flg, int dec_flg, _flagzilla_pt
     return result;
 }
 
-void _build_flags_aura(doc_ptr doc, cptr name, int flg, _flagzilla_ptr flagzilla)
+static void _build_flags_aura(doc_ptr doc, cptr name, int flg, _flagzilla_ptr flagzilla)
 {
     if (_build_flags_imp(doc, name, flg, TR_INVALID, flagzilla))
     {
@@ -521,13 +525,13 @@ void _build_flags_aura(doc_ptr doc, cptr name, int flg, _flagzilla_ptr flagzilla
     doc_newline(doc);
 }
 
-void _build_flags(doc_ptr doc, cptr name, int flg, int dec_flg, _flagzilla_ptr flagzilla)
+static void _build_flags(doc_ptr doc, cptr name, int flg, int dec_flg, _flagzilla_ptr flagzilla)
 {
     _build_flags_imp(doc, name, flg, dec_flg, flagzilla);
     doc_newline(doc);
 }
 
-void _build_flags1(doc_ptr doc, _flagzilla_ptr flagzilla)
+static void _build_flags1(doc_ptr doc, _flagzilla_ptr flagzilla)
 {
     int i;
     _equippy_chars(doc, 14);
@@ -576,7 +580,7 @@ void _build_flags1(doc_ptr doc, _flagzilla_ptr flagzilla)
     _build_flags(doc, "Throwing", TR_THROW, TR_INVALID, flagzilla);
 }
 
-void _build_flags2(doc_ptr doc, _flagzilla_ptr flagzilla)
+static void _build_flags2(doc_ptr doc, _flagzilla_ptr flagzilla)
 {
     _equippy_chars(doc, 14);
     _equippy_heading(doc, "Abilities", 14);
@@ -665,7 +669,7 @@ void _build_flags2(doc_ptr doc, _flagzilla_ptr flagzilla)
     _build_flags(doc, "TY Curse", TR_TY_CURSE, TR_INVALID, flagzilla);
 }
 
-void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
+static void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
 {
     int              i, j;
     char             buf[255];
@@ -821,7 +825,7 @@ void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
     doc_newline(doc);
 }
 
-void _build_equipment(doc_ptr doc)
+static void _build_equipment(doc_ptr doc)
 {
     bool old_use_graphics = use_graphics;
 
@@ -877,8 +881,8 @@ void _build_equipment(doc_ptr doc)
     }
 }
 
-/****************************** Melee ************************************/
-void _build_melee(doc_ptr doc)
+/****************************** Combat ************************************/
+static void _build_melee(doc_ptr doc)
 {
     if (p_ptr->prace != RACE_MON_RING)
     {
@@ -900,13 +904,131 @@ void _build_melee(doc_ptr doc)
     }
 }
 
-void _build_shooting(doc_ptr doc)
+static void _build_shooting(doc_ptr doc)
 {
     if (equip_find_object(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
     {
         doc_insert(doc, "<topic:Shooting>=================================== Shooting ==================================\n\n");
         display_shooter_info(doc);
     }
+}
+
+/****************************** Magic ************************************/
+void py_display_powers(doc_ptr doc, spell_info *table, int ct)
+{
+    int i;
+    variant vn, vd, vc, vfm;
+    if (!ct) return;
+
+    var_init(&vn);
+    var_init(&vd);
+    var_init(&vc);
+    var_init(&vfm);
+
+    doc_printf(doc, "<topic:Powers>=================================== Powers ====================================\n\n");
+    doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
+    for (i = 0; i < ct; i++)
+    {
+        spell_info     *spell = &table[i];
+        spell_stats_ptr stats = spell_stats(spell);
+
+        spell->fn(SPELL_NAME, &vn);
+        spell->fn(SPELL_INFO, &vd);
+        spell->fn(SPELL_COST_EXTRA, &vc);
+        spell->fn(SPELL_FAIL_MIN, &vfm);
+
+        doc_printf(doc, "%-20.20s %3d %4d %3d%% %-15.15s %4d %4d %3d%%\n",
+            var_get_string(&vn),
+            spell->level, calculate_cost(spell->cost + var_get_int(&vc)), MAX(spell->fail, var_get_int(&vfm)),
+            var_get_string(&vd),
+            stats->ct_cast, stats->ct_fail,
+            spell_stats_fail(stats)
+        );
+    }
+
+    var_clear(&vn);
+    var_clear(&vd);
+    var_clear(&vc);
+    var_clear(&vfm);
+
+    doc_newline(doc);
+}
+
+static void _build_powers(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = 0;
+    race_t    *race_ptr = get_race();
+    class_t   *class_ptr = get_class();
+
+    if (race_ptr->get_powers)
+        ct += (race_ptr->get_powers)(spells + ct, MAX_SPELLS - ct);
+
+    if (class_ptr->get_powers)
+        ct += (class_ptr->get_powers)(spells + ct, MAX_SPELLS - ct);
+
+    ct += mut_get_powers(spells + ct, MAX_SPELLS - ct);
+
+    py_display_powers(doc, spells, ct);
+}
+
+void py_display_spells(doc_ptr doc, spell_info *table, int ct)
+{
+    int i;
+    variant vn, vd, vc, vfm;
+
+    if (!ct) return;
+
+    var_init(&vn);
+    var_init(&vd);
+    var_init(&vc);
+    var_init(&vfm);
+
+    doc_printf(doc, "<topic:Spells>=================================== Spells ====================================\n\n");
+    doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
+
+    for (i = 0; i < ct; i++)
+    {
+        spell_info     *spell = &table[i];
+        spell_stats_ptr stats = spell_stats(spell);
+
+        spell->fn(SPELL_NAME, &vn);
+        spell->fn(SPELL_INFO, &vd);
+        spell->fn(SPELL_COST_EXTRA, &vc);
+        spell->fn(SPELL_FAIL_MIN, &vfm);
+
+        doc_printf(doc, "%-20.20s %3d %4d %3d%% %-15.15s %4d %4d %3d%%\n",
+            var_get_string(&vn),
+            spell->level, calculate_cost(spell->cost + var_get_int(&vc)), MAX(spell->fail, var_get_int(&vfm)),
+            var_get_string(&vd),
+            stats->ct_cast, stats->ct_fail,
+            spell_stats_fail(stats)
+        );
+    }
+
+    var_clear(&vn);
+    var_clear(&vd);
+    var_clear(&vc);
+    var_clear(&vfm);
+
+    doc_newline(doc);
+}
+
+static void _build_spells(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = 0;
+    race_t    *race_ptr = get_race();
+    /*class_t   *class_ptr = get_class_t();*/
+
+    if (race_ptr->get_spells)
+        ct += (race_ptr->get_spells)(spells + ct, MAX_SPELLS - ct);
+
+    /* TODO: Some classes prompt the user at this point ...
+    if (class_ptr->get_spells)
+        ct += (class_ptr->get_spells)(spells + ct, MAX_SPELLS - ct); */
+
+    py_display_spells(doc, spells, ct);
 }
 
 /****************************** Character Sheet ************************************/
@@ -925,6 +1047,17 @@ static void _build_character_sheet(doc_ptr doc)
     _build_equipment(doc);
     _build_melee(doc);
     _build_shooting(doc);
+    _build_powers(doc);
+    _build_spells(doc);
+
+    {
+        class_t *class_ptr = get_class();
+        race_t  *race_ptr = get_race();
+        if (class_ptr->character_dump)
+            (class_ptr->character_dump)(doc);
+        if (race_ptr && race_ptr->character_dump)
+            race_ptr->character_dump(doc);
+    }
 
     doc_insert(doc, "</style>");
 }

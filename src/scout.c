@@ -360,7 +360,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
     }
 }
 
-static void _character_dump(FILE* file)
+static void _character_dump(doc_ptr doc)
 {
     int ct = _count_open_terrain();
     bool disrupt = heavy_armor();
@@ -370,26 +370,26 @@ static void _character_dump(FILE* file)
         spell_info spells[MAX_SPELLS];
         int        ct = _get_spells(spells, MAX_SPELLS);
 
-        dump_spells_aux(file, spells, ct);
+        py_display_spells(doc, spells, ct);
     }
 
-    fprintf(file, "\n\n================================== Abilities ==================================\n\n");
+    doc_printf(doc, "<topic:Scout>================================== Abilities ==================================\n\n");
 
     /* Hack: Heavy Armor negates advantages of being in the open, and
        actually incurs penalties for being entrenched! */
     if (disrupt)
     {
-        fprintf(file, "  * Your talents are disrupted by the weight of your armor.\n");
+        doc_printf(doc, "  * Your talents are disrupted by the weight of your armor.\n");
         ct = 0;
     }
     else
     {
         if (ct >= 6)
-            fprintf(file, "  * You are out in the open (%d adjacent open squares).\n", ct);
+            doc_printf(doc, "  * You are out in the open (%d adjacent open squares).\n", ct);
         else if (ct >= 3)
-            fprintf(file, "  * You are somewhat confined (%d adjacent open squares).\n", ct);
+            doc_printf(doc, "  * You are somewhat confined (%d adjacent open squares).\n", ct);
         else
-            fprintf(file, "  * You are very confined (%d adjacent open squares).\n", ct);
+            doc_printf(doc, "  * You are very confined (%d adjacent open squares).\n", ct);
     }
 
     /* Unfettered Body */
@@ -397,9 +397,9 @@ static void _character_dump(FILE* file)
     {
         int amt = _unfettered_body(ct);
         if (amt > 0)
-            fprintf(file, "  * You gain %+d to your AC being out in the open.\n", amt);
+            doc_printf(doc, "  * You gain %+d to your AC being out in the open.\n", amt);
         else if (amt < 0)
-            fprintf(file, "  * You lose %+d to your AC being so confined.\n", amt);
+            doc_printf(doc, "  * You lose %+d to your AC being so confined.\n", amt);
     }
 
     /* Unfettered Mind */
@@ -407,19 +407,19 @@ static void _character_dump(FILE* file)
     {
         int amt = _unfettered_mind(ct);
         if (amt > 0)
-            fprintf(file, "  * You gain %+d to your Saving Throws being out in the open.\n", amt);
+            doc_printf(doc, "  * You gain %+d to your Saving Throws being out in the open.\n", amt);
         else if (amt < 0)
-            fprintf(file, "  * You lose %+d to your Saving Throws being so confined.\n", amt);
+            doc_printf(doc, "  * You lose %+d to your Saving Throws being so confined.\n", amt);
     }
 
     if (!disrupt && p_ptr->lev >= 20)
-        fprintf(file, "  * You ambush sleeping monsters for extra damage.\n");
+        doc_printf(doc, "  * You ambush sleeping monsters for extra damage.\n");
 
     if (!disrupt && p_ptr->lev >= 35)
         p_ptr->telepathy = TRUE;
 
     if (!disrupt && p_ptr->lev >= 50)
-        fprintf(file, "  * You have Peerless Stealth and will never aggravate monsters.\n");
+        doc_printf(doc, "  * You have Peerless Stealth and will never aggravate monsters.\n");
 
 }
 

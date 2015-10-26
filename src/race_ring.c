@@ -1443,12 +1443,12 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
 /**********************************************************************
  * Character Dump
  **********************************************************************/
-static void _dump_ability_flag(FILE* fff, int which, int threshold, cptr name)
+static void _dump_ability_flag(doc_ptr doc, int which, int threshold, cptr name)
 {
     int n = _essences[which];
     if (n > 0)
     {
-        fprintf(fff, "   %-22.22s %5d %5d %5.5s\n", 
+        doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
             name,
             n, 
             threshold,
@@ -1456,12 +1456,12 @@ static void _dump_ability_flag(FILE* fff, int which, int threshold, cptr name)
         );
     }
 }
-static void _dump_bonus_flag(FILE* fff, int which, int power, int rep, cptr name)
+static void _dump_bonus_flag(doc_ptr doc, int which, int power, int rep, cptr name)
 {
     int n = _essences[which];
     if (n > 0)
     {
-        fprintf(fff, "   %-22.22s %5d %5d %+5d\n", 
+        doc_printf(doc, "   %-22.22s %5d %5d %+5d\n",
             name,
             n, 
             _calc_needed(n, power, rep),
@@ -1470,7 +1470,7 @@ static void _dump_bonus_flag(FILE* fff, int which, int power, int rep, cptr name
     }
 }
 
-static void _dump_effects(FILE* fff)
+static void _dump_effects(doc_ptr doc)
 {
     int i, j;
     for (i = 0; ; i++)
@@ -1503,85 +1503,79 @@ static void _dump_effects(FILE* fff)
 
                 if (!ct)
                 {
-                    fprintf(fff, "\n   %-30.30s  Ct Lvl Cst Fail Info\n", g->name);
-                    fprintf(fff, "   ------------------------------ --- --- --- ---- ----------------\n");
+                    doc_printf(doc, "\n   <color:G>%-30.30s  Ct Lvl Cst Fail Info</color>\n", g->name);
                 }
-                fprintf(fff, "   %s\n", buf);
+                doc_printf(doc, "   %s\n", buf);
                 ct++;
             }
         }
     }
 }
 
-static void _character_dump(FILE* fff)
+static void _character_dump(doc_ptr doc)
 {
     int i;
-    fprintf(fff, "\n\n=================================== Essences ==================================\n");
-    fprintf(fff, "\n   %-22.22s Total  Need Bonus\n", "Stats");
-    fprintf(fff, "   ---------------------- ----- ----- -----\n");
+    doc_printf(doc, "<topic:Ring>=================================== Essences ==================================\n\n");
+    doc_printf(doc, "   <color:G>%-22.22s Total  Need Bonus</color>\n", "Stats");
     for (i = 0; i < 6; i++) /* Assume in order */
-        _dump_bonus_flag(fff, TR_STR + i, 2, 1, stat_name_true[A_STR + i]);
+        _dump_bonus_flag(doc, TR_STR + i, 2, 1, stat_name_true[A_STR + i]);
 
-    fprintf(fff, "\n   %-22.22s Total  Need Bonus\n", "Skills");
-    fprintf(fff, "   ---------------------- ----- ----- -----\n");
-    _dump_bonus_flag(fff, TR_ES_AC, 1, 15, "To AC");
-    _dump_bonus_flag(fff, TR_STEALTH, 2, 1, "Stealth");
-    _dump_bonus_flag(fff, TR_SPEED, 1, 5, "Speed");
-    _dump_bonus_flag(fff, TR_LIFE, 7, 1, "Life");
-    _dump_bonus_flag(fff, TR_SEARCH, 2, 1, "Searching");
-    _dump_bonus_flag(fff, TR_INFRA, 2, 1, "Infravision");
-    _dump_bonus_flag(fff, TR_TUNNEL, 2, 1, "Digging");
-    _dump_bonus_flag(fff, TR_LITE, 1, 1, "Light");
-    _dump_bonus_flag(fff, TR_MAGIC_MASTERY, 2, 1, "Magic Mastery");
-    _dump_bonus_flag(fff, TR_DEVICE_POWER, 2, 1, "Device Power");
-    _dump_bonus_flag(fff, TR_SPELL_POWER, 2, 1, "Spell Power");
-    _dump_bonus_flag(fff, TR_SPELL_CAP, 2, 1, "Spell Capacity");
+    doc_printf(doc, "\n   <color:G>%-22.22s Total  Need Bonus</color>\n", "Skills");
+    _dump_bonus_flag(doc, TR_ES_AC, 1, 15, "To AC");
+    _dump_bonus_flag(doc, TR_STEALTH, 2, 1, "Stealth");
+    _dump_bonus_flag(doc, TR_SPEED, 1, 5, "Speed");
+    _dump_bonus_flag(doc, TR_LIFE, 7, 1, "Life");
+    _dump_bonus_flag(doc, TR_SEARCH, 2, 1, "Searching");
+    _dump_bonus_flag(doc, TR_INFRA, 2, 1, "Infravision");
+    _dump_bonus_flag(doc, TR_TUNNEL, 2, 1, "Digging");
+    _dump_bonus_flag(doc, TR_LITE, 1, 1, "Light");
+    _dump_bonus_flag(doc, TR_MAGIC_MASTERY, 2, 1, "Magic Mastery");
+    _dump_bonus_flag(doc, TR_DEVICE_POWER, 2, 1, "Device Power");
+    _dump_bonus_flag(doc, TR_SPELL_POWER, 2, 1, "Spell Power");
+    _dump_bonus_flag(doc, TR_SPELL_CAP, 2, 1, "Spell Capacity");
  
-    fprintf(fff, "\n   %-22.22s Total  Need Bonus\n", "Resistances");
-    fprintf(fff, "   ---------------------- ----- ----- -----\n");
+    doc_printf(doc, "\n   <color:G>%-22.22s Total  Need Bonus</color>\n", "Resistances");
     for (i = 0; i < RES_MAX; i++)
-        _dump_bonus_flag(fff, res_get_object_flag(i), _res_power(i), 1, format("%^s", res_name(i)));
+        _dump_bonus_flag(doc, res_get_object_flag(i), _res_power(i), 1, format("%^s", res_name(i)));
 
-    _dump_ability_flag(fff, TR_IM_ACID, 2, "Immune Acid");
-    _dump_ability_flag(fff, TR_IM_ELEC, 2, "Immune Elec");
-    _dump_ability_flag(fff, TR_IM_FIRE, 2, "Immune Fire");
-    _dump_ability_flag(fff, TR_IM_COLD, 2, "Immune Cold");
+    _dump_ability_flag(doc, TR_IM_ACID, 2, "Immune Acid");
+    _dump_ability_flag(doc, TR_IM_ELEC, 2, "Immune Elec");
+    _dump_ability_flag(doc, TR_IM_FIRE, 2, "Immune Fire");
+    _dump_ability_flag(doc, TR_IM_COLD, 2, "Immune Cold");
 
-    fprintf(fff, "\n   %-22.22s Total  Need Bonus\n", "Abilities");
-    fprintf(fff, "   ---------------------- ----- ----- -----\n");
-    _dump_ability_flag(fff, TR_FREE_ACT, 1, "Free Action");
-    _dump_ability_flag(fff, TR_SEE_INVIS, 1, "See Invisible");
-    _dump_ability_flag(fff, TR_LEVITATION, 2, "Levitation");
-    _dump_ability_flag(fff, TR_SLOW_DIGEST, 2, "Slow Digestion");
-    _dump_ability_flag(fff, TR_HOLD_LIFE, 7, "Hold Life");
-    _dump_ability_flag(fff, TR_REGEN, 7, "Regeneration");
-    _dump_bonus_flag(fff, TR_DEC_MANA, 1, 1, "Economical Mana");
-    _dump_ability_flag(fff, TR_EASY_SPELL, 7, "Wizardry");
-    _dump_ability_flag(fff, TR_REFLECT, 7, "Reflection");
-    _dump_ability_flag(fff, TR_SH_FIRE, 7, "Aura Fire");
-    _dump_ability_flag(fff, TR_SH_ELEC, 7, "Aura Elec");
-    _dump_ability_flag(fff, TR_SH_COLD, 7, "Aura Cold");
+    doc_printf(doc, "\n   <color:G>%-22.22s Total  Need Bonus</color>\n", "Abilities");
+    _dump_ability_flag(doc, TR_FREE_ACT, 1, "Free Action");
+    _dump_ability_flag(doc, TR_SEE_INVIS, 1, "See Invisible");
+    _dump_ability_flag(doc, TR_LEVITATION, 2, "Levitation");
+    _dump_ability_flag(doc, TR_SLOW_DIGEST, 2, "Slow Digestion");
+    _dump_ability_flag(doc, TR_HOLD_LIFE, 7, "Hold Life");
+    _dump_ability_flag(doc, TR_REGEN, 7, "Regeneration");
+    _dump_bonus_flag(doc, TR_DEC_MANA, 1, 1, "Economical Mana");
+    _dump_ability_flag(doc, TR_EASY_SPELL, 7, "Wizardry");
+    _dump_ability_flag(doc, TR_REFLECT, 7, "Reflection");
+    _dump_ability_flag(doc, TR_SH_FIRE, 7, "Aura Fire");
+    _dump_ability_flag(doc, TR_SH_ELEC, 7, "Aura Elec");
+    _dump_ability_flag(doc, TR_SH_COLD, 7, "Aura Cold");
     for (i = 0; i < 6; i++) /* Assume in order */
-        _dump_ability_flag(fff, TR_SUST_STR + i, 5, format("Sustain %s", stat_name_true[A_STR + i]));
+        _dump_ability_flag(doc, TR_SUST_STR + i, 5, format("Sustain %s", stat_name_true[A_STR + i]));
 
-    fprintf(fff, "\n   %-22.22s Total  Need Bonus\n", "ESP");
-    fprintf(fff, "   ---------------------- ----- ----- -----\n");
-    _dump_ability_flag(fff, TR_TELEPATHY, 2, "Telepathy");
-    _dump_ability_flag(fff, TR_ESP_ANIMAL, 2, "ESP Animals");
-    _dump_ability_flag(fff, TR_ESP_UNDEAD, 2, "ESP Undead");
-    _dump_ability_flag(fff, TR_ESP_DEMON, 2, "ESP Demon");
-    _dump_ability_flag(fff, TR_ESP_ORC, 2, "ESP Orc");
-    _dump_ability_flag(fff, TR_ESP_TROLL, 2, "ESP Troll");
-    _dump_ability_flag(fff, TR_ESP_GIANT, 2, "ESP Giant");
-    _dump_ability_flag(fff, TR_ESP_DRAGON, 2, "ESP Dragon");
-    _dump_ability_flag(fff, TR_ESP_HUMAN, 2, "ESP Human");
-    _dump_ability_flag(fff, TR_ESP_EVIL, 2, "ESP Evil");
-    _dump_ability_flag(fff, TR_ESP_GOOD, 2, "ESP Good");
-    _dump_ability_flag(fff, TR_ESP_NONLIVING, 2, "ESP Nonliving");
-    _dump_ability_flag(fff, TR_ESP_UNIQUE, 2, "ESP Unique");
+    doc_printf(doc, "\n   <color:G>%-22.22s Total  Need Bonus</color>\n", "ESP");
+    _dump_ability_flag(doc, TR_TELEPATHY, 2, "Telepathy");
+    _dump_ability_flag(doc, TR_ESP_ANIMAL, 2, "ESP Animals");
+    _dump_ability_flag(doc, TR_ESP_UNDEAD, 2, "ESP Undead");
+    _dump_ability_flag(doc, TR_ESP_DEMON, 2, "ESP Demon");
+    _dump_ability_flag(doc, TR_ESP_ORC, 2, "ESP Orc");
+    _dump_ability_flag(doc, TR_ESP_TROLL, 2, "ESP Troll");
+    _dump_ability_flag(doc, TR_ESP_GIANT, 2, "ESP Giant");
+    _dump_ability_flag(doc, TR_ESP_DRAGON, 2, "ESP Dragon");
+    _dump_ability_flag(doc, TR_ESP_HUMAN, 2, "ESP Human");
+    _dump_ability_flag(doc, TR_ESP_EVIL, 2, "ESP Evil");
+    _dump_ability_flag(doc, TR_ESP_GOOD, 2, "ESP Good");
+    _dump_ability_flag(doc, TR_ESP_NONLIVING, 2, "ESP Nonliving");
+    _dump_ability_flag(doc, TR_ESP_UNIQUE, 2, "ESP Unique");
 
-    fprintf(fff, "\n\n==================================== Spells ===================================\n");
-    _dump_effects(fff);
+    doc_printf(doc, "\n\n==================================== Spells ===================================\n");
+    _dump_effects(doc);
 }
 
 /**********************************************************************

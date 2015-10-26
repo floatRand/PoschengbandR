@@ -437,33 +437,31 @@ static void _birth(void)
     }
 }
 
-static void _character_dump(FILE* file)
+static void _character_dump(doc_ptr doc)
 {
     cptr desc = devicemaster_speciality_name(p_ptr->psubclass);
 
-    if (character_dump_hack)
-        fprintf(file, "\n\n================================== Abilities ==================================\n\n");
-    else
-        fprintf(file, "\n[[[[r|Abilities\n");
+    doc_printf(doc, "<topic:Devicemaster>================================== Abilities ==================================\n\n");
+
     {
         int pow = p_ptr->lev / 10;
         if (pow)
-            fprintf(file, " * You gain +%d%% power when using %s.\n", device_power_aux(100, pow) - 100, desc);
+            doc_printf(doc, " * You gain +%d%% power when using %s.\n", device_power_aux(100, pow) - 100, desc);
     }
-    fprintf(file, " * You use %s more quickly.\n", desc);    
+    doc_printf(doc, " * You use %s more quickly.\n", desc);
     if (p_ptr->psubclass != DEVICEMASTER_POTIONS && p_ptr->psubclass != DEVICEMASTER_SCROLLS)
-        fprintf(file, " * You have a chance of not consuming a charge when using %s.\n", desc);
+        doc_printf(doc, " * You have a chance of not consuming a charge when using %s.\n", desc);
     else
-        fprintf(file, " * You have a chance of not consuming an item when using %s.\n", desc);
+        doc_printf(doc, " * You have a chance of not consuming an item when using %s.\n", desc);
     if (p_ptr->psubclass != DEVICEMASTER_POTIONS && p_ptr->psubclass != DEVICEMASTER_SCROLLS)
-        fprintf(file, " * You may use %s even when frightened.\n", desc);
-    fprintf(file, " * You are resistant to charge draining (Power=%d).\n\n", p_ptr->lev);    
+        doc_printf(doc, " * You may use %s even when frightened.\n", desc);
+    doc_printf(doc, " * You are resistant to charge draining (Power=%d).\n\n", p_ptr->lev);
 
     {
         spell_info spells[MAX_SPELLS];
         int        ct = _get_spells(spells, MAX_SPELLS);
 
-        dump_spells_aux(file, spells, ct);
+        py_display_spells(doc, spells, ct);
     }
 }
 

@@ -718,14 +718,14 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
-static void _character_dump(FILE* file)
+static void _character_dump(doc_ptr doc)
 {
     if (_weapon_check() && p_ptr->lev >= 5)
     {
         spell_info spells[MAX_SPELLS];
         int        ct = _get_spells(spells, MAX_SPELLS);
 
-        dump_spells_aux(file, spells, ct);
+        py_display_spells(doc, spells, ct);
     }
 }
 

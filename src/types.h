@@ -2026,7 +2026,7 @@ typedef caster_info*(*caster_info_fn)(void);
 typedef int(*get_spells_fn)(spell_info* spells, int max);
 typedef void(*gain_level_fn)(int new_level);
 typedef void(*change_level_fn)(int old_level, int new_level);
-typedef void(*file_dump_fn)(FILE* file);
+typedef void(*character_dump_fn)(doc_ptr doc);
 typedef void(*player_action_fn)(int energy_use);
 typedef void(*flags_fn)(u32b flgs[TR_FLAG_SIZE]);
 typedef void(*stats_fn)(s16b stats[MAX_STATS]);
@@ -2059,7 +2059,7 @@ typedef struct {
     get_spells_fn           get_spells;
     get_spells_fn           get_powers;
     gain_level_fn           gain_level; /* Only ever called when a new max level is achieved */
-    file_dump_fn            character_dump;
+    character_dump_fn       character_dump;
     flags_fn                get_flags;
     load_fn                 load_player;
     save_fn                 save_player;
@@ -2090,7 +2090,7 @@ typedef struct {
     get_spells_fn           get_powers;
     gain_level_fn           gain_level;
     change_level_fn         change_level;
-    file_dump_fn            character_dump;
+    character_dump_fn       character_dump;
     flags_fn                get_flags;
     u32b                    flags;
     bool                    mimic;

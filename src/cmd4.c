@@ -4567,12 +4567,13 @@ static void do_cmd_knowledge_extra(void)
         return;
     }
 
+/*
     if (class_ptr && class_ptr->character_dump)
         class_ptr->character_dump(fff);
 
     if (race_ptr && race_ptr->character_dump)
         race_ptr->character_dump(fff);
-
+*/
     my_fclose(fff);
     show_file(TRUE, file_name, "Extra", 0, 0);
     fd_kill(file_name);
@@ -4786,9 +4787,9 @@ static void do_cmd_knowledge_spell_exp(void)
         msg_print(NULL);
         return;
     }
-
+/*
     spellbook_character_dump(fff);
-
+*/
     /* Close the file */
     my_fclose(fff);
 

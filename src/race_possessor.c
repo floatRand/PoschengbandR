@@ -1895,16 +1895,15 @@ void possessor_explode(int dam)
     }
 }
 
-void possessor_character_dump(FILE *file)
+void possessor_character_dump(doc_ptr doc)
 {
     _history_ptr p = _history;
     int          ct = 0;
     char         lvl[80];
     char         loc[255];
     
-    fprintf(file, "\n\n================================ Recent Forms =================================\n");
-    fprintf(file, "\n%-33.33s CL Day  Time  DL %-28.28s\n", "Most Recent Forms", "Location");
-    fprintf(file, "--------------------------------- -- --- ----- --- ----------------------------\n");
+    doc_printf(doc, "<topic:Possessor>================================ Recent Forms =================================\n\n");
+    doc_printf(doc, "<color:G>%-33.33s CL Day  Time  DL %-28.28s</color>\n", "Most Recent Forms", "Location");
 
     while (p && ct < 100)
     {
@@ -1951,7 +1950,7 @@ void possessor_character_dump(FILE *file)
                 sprintf(lvl, "%s", "   ");
             break;
         }
-        fprintf(file, "%-33.33s %2d %3d %2d:%02d %s %-15.15s\n", 
+        doc_printf(doc, "%-33.33s %2d %3d %2d:%02d %s %-15.15s\n",
             mon_name(p->r_idx), 
             p->p_lvl, 
             day, hour, min,
@@ -1960,6 +1959,7 @@ void possessor_character_dump(FILE *file)
         p = p->next;
         ct++;
     }
+    doc_newline(doc);
 }
 
 void possessor_on_save(savefile_ptr file)

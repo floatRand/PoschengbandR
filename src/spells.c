@@ -28,7 +28,7 @@ spell_stats_ptr spell_stats_aux(cptr name)
     return result;
 }
 
-static spell_stats_ptr _spell_stats(spell_info *spell)
+spell_stats_ptr spell_stats(spell_info *spell)
 {
     cptr name = get_spell_name(spell->fn);
     return spell_stats_aux(name);
@@ -92,7 +92,7 @@ void spell_stats_on_save(savefile_ptr file)
 
 void spell_stats_on_learn(spell_info *spell, int max_skill)
 {
-    spell_stats_ptr stats = _spell_stats(spell);
+    spell_stats_ptr stats = spell_stats(spell);
 
     stats->flags |= SPELL_FLAG_LEARNED;
     stats->max_skill = max_skill;
@@ -100,7 +100,7 @@ void spell_stats_on_learn(spell_info *spell, int max_skill)
 
 void spell_stats_on_cast(spell_info *spell)
 {
-    spell_stats_ptr stats = _spell_stats(spell);
+    spell_stats_ptr stats = spell_stats(spell);
 
     stats->ct_cast++;
 }
@@ -108,7 +108,7 @@ void spell_stats_on_cast(spell_info *spell)
 void spell_stats_gain_skill(spell_info *spell)
 {
     static int      last_pexp = 0;
-    spell_stats_ptr stats = _spell_stats(spell);
+    spell_stats_ptr stats = spell_stats(spell);
 
     /* Hack: Try to eliminate spell spamming for experience.
        The experience check is for blasting monsters with consecutive Mana Bursts
@@ -153,12 +153,12 @@ void spell_stats_gain_skill(spell_info *spell)
 
 void spell_stats_on_fail(spell_info *spell)
 {
-    spell_stats_ptr stats = _spell_stats(spell);
+    spell_stats_ptr stats = spell_stats(spell);
     stats->ct_fail++;
 }
 
 /* Legacy Spell System */
-static spell_stats_ptr _spell_stats_old(int realm, int spell)
+spell_stats_ptr spell_stats_old(int realm, int spell)
 {
     cptr name = do_spell(realm, spell, SPELL_NAME);
     return spell_stats_aux(name);
@@ -167,13 +167,13 @@ static spell_stats_ptr _spell_stats_old(int realm, int spell)
 
 void spell_stats_on_cast_old(int realm, int spell)
 {
-    spell_stats_ptr stats = _spell_stats_old(realm, spell);
+    spell_stats_ptr stats = spell_stats_old(realm, spell);
     stats->ct_cast++;
 }
 
 void spell_stats_on_fail_old(int realm, int spell)
 {
-    spell_stats_ptr stats = _spell_stats_old(realm, spell);
+    spell_stats_ptr stats = spell_stats_old(realm, spell);
     stats->ct_fail++;
 }
 
@@ -1019,7 +1019,7 @@ void dump_spells_aux(FILE *fff, spell_info *table, int ct)
     for (i = 0; i < ct; i++)
     {
         spell_info     *spell = &table[i];      
-        spell_stats_ptr stats = _spell_stats(spell);
+        spell_stats_ptr stats = spell_stats(spell);
 
         spell->fn(SPELL_NAME, &vn);
         spell->fn(SPELL_INFO, &vd);
@@ -1041,45 +1041,7 @@ void dump_spells_aux(FILE *fff, spell_info *table, int ct)
     var_clear(&vfm);
 }
 
-void dump_powers_aux(FILE *fff, spell_info *table, int ct)
-{        
-    int i;
-    variant vn, vd, vc, vfm;
-    if (!ct) return;
-
-    var_init(&vn);
-    var_init(&vd);
-    var_init(&vc);
-    var_init(&vfm);
-
-    fprintf(fff, "=================================== Powers ====================================\n\n");
-    fprintf(fff, "%-20.20s Lvl Cost Fail %-15.15s Cast Fail\n", "", "Desc");
-    for (i = 0; i < ct; i++)
-    {
-        spell_info     *spell = &table[i];        
-        spell_stats_ptr stats = _spell_stats(spell);
-
-        spell->fn(SPELL_NAME, &vn);
-        spell->fn(SPELL_INFO, &vd);
-        spell->fn(SPELL_COST_EXTRA, &vc);
-        spell->fn(SPELL_FAIL_MIN, &vfm);
-
-        fprintf(fff, "%-20.20s %3d %4d %3d%% %-15.15s %4d %4d %3d%%\n", 
-            var_get_string(&vn), 
-            spell->level, calculate_cost(spell->cost + var_get_int(&vc)), MAX(spell->fail, var_get_int(&vfm)), 
-            var_get_string(&vd),
-            stats->ct_cast, stats->ct_fail, 
-            spell_stats_fail(stats)
-        );
-    }
-
-    var_clear(&vn);
-    var_clear(&vd);
-    var_clear(&vc);
-    var_clear(&vfm);
-}
-
-static void _dump_book(FILE *fff, int realm, int book)
+static void _dump_book(doc_ptr doc, int realm, int book)
 {
     int          k_idx = lookup_kind(realm2tval(realm), book);
     int          i, increment = 64;
@@ -1091,18 +1053,14 @@ static void _dump_book(FILE *fff, int realm, int book)
 
     if (realm == REALM_HISSATSU)
     {
-        if (!character_dump_hack)
-            fprintf(fff, "[[[[r|");
-        fprintf(fff, "    %-25.25s Lvl  SP %-15.15s  Cast\n", k_name + k_info[k_idx].name, "Desc");
+        doc_printf(doc, "<color:G>    %-25.25s Lvl  SP %-15.15s  Cast</color>\n", k_name + k_info[k_idx].name, "Desc");
     }
     else
     {
-        if (!character_dump_hack)
-            fprintf(fff, "[[[[r|");
         if (caster_ptr && (caster_ptr->options & CASTER_USE_HP))
-            fprintf(fff, "    %-23.23s Profic Lvl  HP Fail %-15.15s  Cast Fail\n", k_name + k_info[k_idx].name, "Desc");
+            doc_printf(doc, "<color:G>    %-23.23s Profic Lvl  HP Fail %-15.15s  Cast Fail</color>\n", k_name + k_info[k_idx].name, "Desc");
         else
-            fprintf(fff, "    %-23.23s Profic Lvl  SP Fail %-15.15s  Cast Fail\n", k_name + k_info[k_idx].name, "Desc");
+            doc_printf(doc, "<color:G>    %-23.23s Profic Lvl  SP Fail %-15.15s  Cast Fail</color>\n", k_name + k_info[k_idx].name, "Desc");
     }
 
     for (i = 0; i < 8; i++)
@@ -1115,6 +1073,7 @@ static void _dump_book(FILE *fff, int realm, int book)
         char        info[80];
         cptr        comment;
         char        line[160];
+        char        color = 'w';
 
         if (is_magic(realm))
             s_ptr = &mp_ptr->info[realm - 1][s_idx];
@@ -1148,21 +1107,32 @@ static void _dump_book(FILE *fff, int realm, int book)
         if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE)
         {
             if (s_ptr->slevel > p_ptr->max_plv)
+            {
                 comment = "unknown";
+                color = 'D';
+            }
             else if (s_ptr->slevel > p_ptr->lev)
+            {
                 comment = "forgotten";
+                color = 'y';
+            }
         }
         else if ((realm == p_ptr->realm1) ?
             ((p_ptr->spell_forgotten1 & (1L << s_idx))) :
             ((p_ptr->spell_forgotten2 & (1L << s_idx))))
         {
             comment = "forgotten";
+            color = 'y';
         }
         else if (!((realm == p_ptr->realm1) ?
             (p_ptr->spell_learned1 & (1L << s_idx)) :
             (p_ptr->spell_learned2 & (1L << s_idx))))
         {
             comment = "unknown";
+            if (s_ptr->slevel > p_ptr->lev)
+                color = 'D';
+            else
+                color = 'B';
         }
         else if (!((realm == p_ptr->realm1) ?
             (p_ptr->spell_worked1 & (1L << s_idx)) :
@@ -1174,11 +1144,12 @@ static void _dump_book(FILE *fff, int realm, int book)
         sprintf(line, " %c) ", I2A(i));
         if (realm == REALM_HISSATSU)
         {
-            spell_stats_ptr stats = _spell_stats_old(realm, s_idx);
+            spell_stats_ptr stats = spell_stats_old(realm, s_idx);
             strcat(
                 line, 
                 format(
-                    "%-25s %3d %3d %-15.15s %5d",
+                    "<color:%c>%-25s %3d %3d %-15.15s %5d</color>",
+                    color,
                     do_spell(realm, s_idx, SPELL_NAME),
                     s_ptr->slevel, 
                     cost, 
@@ -1189,11 +1160,12 @@ static void _dump_book(FILE *fff, int realm, int book)
         }
         else
         {
-            spell_stats_ptr stats = _spell_stats_old(realm, s_idx);
+            spell_stats_ptr stats = spell_stats_old(realm, s_idx);
             strcat(
                 line, 
                 format(
-                    "%-25s%c%-4s %3d %3d %3d%% %-15.15s %5d %4d %3d%%",
+                    "<color:%c>%-25s%c%-4s %3d %3d %3d%% %-15.15s %5d %4d %3d%%</color>",
+                    color,
                     do_spell(realm, s_idx, SPELL_NAME),
                     (max ? '!' : ' '), 
                     proficiency,
@@ -1208,9 +1180,9 @@ static void _dump_book(FILE *fff, int realm, int book)
             );
         }
 
-        fprintf(fff, "%s\n", line);
+        doc_printf(doc, "%s\n", line);
     }
-    fprintf(fff, "\n");
+    doc_newline(doc);
 }
 
 static bool _has_spells(int realm, int book)
@@ -1263,7 +1235,7 @@ static bool _has_book(int realm, int book)
     return FALSE;
 }
 
-static void _dump_realm(FILE *fff, int realm)
+static void _dump_realm(doc_ptr doc, int realm)
 {
     int i;
     bool first = TRUE;
@@ -1288,34 +1260,30 @@ static void _dump_realm(FILE *fff, int realm)
         {
             if (first)
             {
-                if (character_dump_hack)
-                    fprintf(fff, "Realm: %s\n\n", realm_names[realm]);
-                else
-                    fprintf(fff, "[[[[r|Realm:| [[[[B|%s|\n\n", realm_names[realm]);
+                doc_printf(doc, "<color:r>Realm:</color> <color:B>%s</color>\n\n", realm_names[realm]);
                 first = FALSE;    
             }
-            _dump_book(fff, realm, i);
+            _dump_book(doc, realm, i);
         }
     }
 }
 
-void spellbook_character_dump(FILE *fff)
+void spellbook_character_dump(doc_ptr doc)
 {
-    if (character_dump_hack)
-        fprintf(fff, "\n==================================== Spells ===================================\n\n");
+    doc_printf(doc, "<topic:Spells>==================================== Spells ===================================\n\n");
 
     if (p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_SORCERER)
     {
         int realm;
         for (realm = REALM_LIFE; realm <= MAX_MAGIC; realm++)
-            _dump_realm(fff, realm);
+            _dump_realm(doc, realm);
     }
     else
     {
         if (p_ptr->realm1)
-            _dump_realm(fff, p_ptr->realm1);
+            _dump_realm(doc, p_ptr->realm1);
         if (p_ptr->realm2)
-            _dump_realm(fff, p_ptr->realm2);
+            _dump_realm(doc, p_ptr->realm2);
     }
 
     if (p_ptr->old_realm)
@@ -1324,9 +1292,9 @@ void spellbook_character_dump(FILE *fff)
         for (i = 0; i < MAX_MAGIC; i++)
         {
             if (!(p_ptr->old_realm & 1L << i)) continue;
-            fprintf(fff, "\n You were able to use %s magic before.", realm_names[i+1]);
+            doc_printf(doc, " You were able to use %s magic before.\n", realm_names[i+1]);
         }
-        fputc('\n', fff);
+        doc_newline(doc);
     }
 }
 

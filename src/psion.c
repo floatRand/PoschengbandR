@@ -2121,7 +2121,7 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
-static void _character_dump(FILE* file)
+static void _character_dump(doc_ptr doc)
 {
     int     i, j;
     int     stat = _spell_stat_idx();
@@ -2131,13 +2131,13 @@ static void _character_dump(FILE* file)
     var_init(&name);
     var_init(&info);
 
-    fprintf(file, "\n=================================== Spells ====================================\n");
+    doc_printf(doc, "<topic:Psion>=================================== Spells ====================================\n");
 
     for (i = 0; i < num_learned; i++)
     {
         _spell_t *power = _get_spell(p_ptr->spell_order[i]);
 
-        fprintf(file, "\n%-23.23s Cost Fail %-15.15s Cast Fail\n", power->name, "Info");
+        doc_printf(doc, "\n<color:G>%-23.23s Cost Fail %-15.15s Cast Fail</color>\n", power->name, "Info");
         for (j = 0; j < _MAX_POWER; j++)
         {
             _spell_info_t  *spell = &power->info[j];
@@ -2163,7 +2163,7 @@ static void _character_dump(FILE* file)
             stats = spell_stats_aux(var_get_string(&name));
 
             (spell->fn)(SPELL_INFO, &info);
-            fprintf(file, "%-23.23s %4d %3d%% %-15.15s %4d %4d %3d%%\n", 
+            doc_printf(doc, "%-23.23s %4d %3d%% %-15.15s %4d %4d %3d%%\n",
                             var_get_string(&name),
                             cost,
                             fail,
@@ -2177,6 +2177,7 @@ static void _character_dump(FILE* file)
 
     var_clear(&name);
     var_clear(&info);
+    doc_newline(doc);
 }
 
 static void _player_action(int energy_use)

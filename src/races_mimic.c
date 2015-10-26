@@ -536,6 +536,7 @@ static int _vampire_lord_get_powers(spell_info* spells, int max)
 static void _vampire_lord_calc_bonuses(void)
 {
     res_add(RES_DARK);
+    res_add_immune(RES_DARK);
     p_ptr->hold_life = TRUE;
     res_add(RES_NETHER);
     res_add(RES_COLD);

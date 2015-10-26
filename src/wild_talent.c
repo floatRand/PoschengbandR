@@ -595,7 +595,7 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_REGEN);
 }
 
-static void _character_dump(FILE* file)
+static void _character_dump(doc_ptr doc)
 {
     int i;
     spell_info spells[MAX_SPELLS];
@@ -616,8 +616,8 @@ static void _character_dump(FILE* file)
         var_init(&name);
         var_init(&info);
 
-        fprintf(file, "\n\n================================= Wild Talents ================================\n\n");
-        fprintf(file, "%-23.23s Lv Stat Cost Fail Info\n", "");
+        doc_printf(doc, "<topic:WildTalent>================================= Wild Talents ================================\n\n");
+        doc_printf(doc, "<color:G>%-23.23s Lv Stat Cost Fail Info</color>\n", "");
         for (i = 0; i < ct; ++i)
         {
             spell_info *spell = &spells[i];
@@ -625,7 +625,7 @@ static void _character_dump(FILE* file)
             (spell->fn)(SPELL_NAME, &name);
             (spell->fn)(SPELL_INFO, &info);
 
-            fprintf(file, "%-23.23s %2d %4.4s %4d %3d%% %s\n", 
+            doc_printf(doc, "%-23.23s %2d %4.4s %4d %3d%% %s\n",
                             var_get_string(&name),
                             spell->level,
                             stat_abbrev_true[_which_stat(i)],
@@ -636,6 +636,8 @@ static void _character_dump(FILE* file)
 
         var_clear(&name);
         var_clear(&info);
+
+        doc_newline(doc);
     }
 }
 

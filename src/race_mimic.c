@@ -876,7 +876,7 @@ static int _get_powers(spell_info* spells, int max)
     return ct;
 }
 
-void _character_dump(FILE* file)
+void _character_dump(doc_ptr doc)
 {
     int i;
     bool first = TRUE;
@@ -887,13 +887,14 @@ void _character_dump(FILE* file)
         {
             if (first)
             {
-                fprintf(file, "\n================================ Learned Forms ================================\n\n");
+                doc_printf(doc, "<topic:Mimic>================================ Learned Forms ================================\n\n");
                 first = FALSE;
             }
-            fprintf(file, " %s\n", r_name + r_info[_forms[i]].name);
+            doc_printf(doc, " %s\n", r_name + r_info[_forms[i]].name);
         }
     }
-    possessor_character_dump(file);
+    doc_newline(doc);
+    possessor_character_dump(doc);
 }
 
 /**********************************************************************

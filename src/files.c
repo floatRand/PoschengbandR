@@ -3072,7 +3072,7 @@ static void dump_aux_display_player(FILE *fff)
 
         ct += mut_get_powers(spells + ct, MAX_SPELLS - ct);
 
-        dump_powers_aux(fff, spells, ct);
+        /*dump_powers_aux(fff, spells, ct);*/
         fprintf(fff, "\n");
     }
 
@@ -3089,10 +3089,10 @@ static void dump_aux_display_player(FILE *fff)
         if (class_ptr->get_spells)
             ct += (class_ptr->get_spells)(spells + ct, MAX_SPELLS - ct); */
 
-        dump_spells_aux(fff, spells, ct);
+        /*dump_spells_aux(fff, spells, ct);*/
     }
 
-    {
+/*    {
         class_t *class_ptr = get_class();
         race_t  *race_ptr = get_race();
         if (class_ptr->character_dump != NULL)
@@ -3100,6 +3100,7 @@ static void dump_aux_display_player(FILE *fff)
         if (race_ptr && race_ptr->character_dump)
             race_ptr->character_dump(fff);
     }
+*/
 }
 
 

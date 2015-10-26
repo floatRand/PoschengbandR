@@ -512,7 +512,7 @@ bool magic_eater_can_regen(void)
 }
 
 /* Character Dump */
-static void _dump_list(FILE* fp, object_type *which_list)
+static void _dump_list(doc_ptr doc, object_type *which_list)
 {
     int i;
     char o_name[MAX_NLEN];
@@ -522,24 +522,23 @@ static void _dump_list(FILE* fp, object_type *which_list)
         if (o_ptr->k_idx)
         {
             object_desc(o_name, o_ptr, 0);
-            fprintf(fp, "%c) %s\n", I2A(i), o_name);
+            doc_printf(doc, "%c) %s\n", I2A(i), o_name);
         }
         else
-            fprintf(fp, "%c) (Empty)\n", I2A(i));
+            doc_printf(doc, "%c) (Empty)\n", I2A(i));
     }
-    fprintf(fp, "\n");
+    doc_newline(doc);
 }
 
-static void _character_dump(FILE* fp)
+static void _character_dump(doc_ptr doc)
 {
+    doc_printf(doc, "<topic:MagicEater>================================ Absorbed Magic ===============================\n\n");
 
-    fprintf(fp, "================================ Absorbed Magic ===============================\n\n");
+    _dump_list(doc, _which_list(TV_WAND));
+    _dump_list(doc, _which_list(TV_STAFF));
+    _dump_list(doc, _which_list(TV_ROD));
 
-    _dump_list(fp, _which_list(TV_WAND));
-    _dump_list(fp, _which_list(TV_STAFF));
-    _dump_list(fp, _which_list(TV_ROD));
-
-    fprintf(fp, "\n");
+    doc_newline(doc);
 }
 
 static void _load_list(savefile_ptr file, object_type *which_list)
