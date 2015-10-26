@@ -3034,10 +3034,10 @@ static void dump_aux_display_player(FILE *fff)
             if (p_ptr->weapon_info[i].wield_how == WIELD_NONE) continue;
 
             Term_clear();
-            if (p_ptr->weapon_info[i].bare_hands)
+            /*if (p_ptr->weapon_info[i].bare_hands)
                 monk_display_attack_info(i, 0, 0);
             else
-                display_weapon_info(i, 0, 0);
+                display_weapon_info(i, 0, 0);*/
 
             dump_screen(fff);
         }
@@ -3045,7 +3045,7 @@ static void dump_aux_display_player(FILE *fff)
         for (i = 0; i < p_ptr->innate_attack_ct; i++)
         {
             Term_clear();
-            display_innate_attack_info(i, 0, 0);
+            /*display_innate_attack_info(i, 0, 0);*/
             dump_screen(fff);
         }
     }
@@ -3054,7 +3054,7 @@ static void dump_aux_display_player(FILE *fff)
     {
         fprintf(fff, "=================================== Shooting ==================================\n\n");
         Term_clear();
-        display_shooter_info(0, 0);
+        /*display_shooter_info(0, 0);*/
         dump_screen(fff);
     }
 

@@ -1487,10 +1487,10 @@ extern int hit_chance(int hand, int to_h, int ac);
 extern int bow_energy(int sval);
 extern int bow_range(object_type *o_ptr);
 extern int bow_mult(object_type *o_ptr);
-extern int display_weapon_info(int hand, int row, int col);
+extern void display_weapon_info(doc_ptr doc, int hand);
 extern int display_weapon_mode;
-extern int display_innate_attack_info(int which, int row, int col);
-extern int display_shooter_info(int row, int col);
+extern void display_innate_attack_info(doc_ptr doc, int which);
+extern void display_shooter_info(doc_ptr doc);
 extern int calculate_base_blows(int hand, int str_idx, int dex_idx);
 
 /* util.c */
@@ -2274,7 +2274,7 @@ extern void monk_double_attack_spell(int cmd, variant *res);
 extern void monk_posture_spell(int cmd, variant *res);
 extern int  monk_get_attack_idx(void);
 extern critical_t monk_get_critical(martial_arts *ma_ptr, int hand, int mode);
-extern int  monk_display_attack_info(int hand, int row, int col);
+extern void monk_display_attack_info(doc_ptr, int hand);
 
 
 /* mystic.c */

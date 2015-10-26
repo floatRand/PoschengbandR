@@ -130,24 +130,24 @@ int monk_get_attack_idx(void)
     return _get_attack_idx(p_ptr->lev, p_ptr->special_defense);
 }
 
-int monk_display_attack_info(int hand, int row, int col)
+void monk_display_attack_info(doc_ptr doc, int hand)
 {
     _attack_t counts[MAX_MA];
     int i;
-    const int tot = 10 * 1000;
-    char buf[128];
+    const int tot = 1000;
     int tot_dam = 0;
     int tot_mul = 0;
     int tot_to_d = 0;
     int blows = NUM_BLOWS(hand);
-    int to_d = p_ptr->weapon_info[hand].to_d * 100;
-    int r = row, c = col;
+    int to_d = p_ptr->weapon_info[hand].to_d * 10;
     critical_t crit;
-    int result = row;
+    doc_ptr cols[2] = {0};
+
+    cols[0] = doc_alloc(45);
+    cols[1] = doc_alloc(35);
 
     /* First Column */
-    sprintf(buf, "%-15s %6s %6s %7s", "Attack", "Dice", "Pct", "Dam");
-    c_put_str(TERM_YELLOW, buf, r++, c);
+    doc_printf(cols[0], "<color:G>%-14.14s %6s %5s %6s</color>\n", "Attack", "Dice", "Pct", "Dam");
 
     _get_attack_counts(tot, counts, hand);
     for (i = 0; i < MAX_MA; i++)
@@ -156,7 +156,7 @@ int monk_display_attack_info(int hand, int row, int col)
         int dd = ma_ptr->dd + p_ptr->weapon_info[hand].to_dd;
         int ds = ma_ptr->ds + p_ptr->weapon_info[hand].to_ds;
         char tmp[20];
-        int dam = dd * (ds + 1) * 100 * counts[i].count / (2 * tot);
+        int dam = dd * (ds + 1) * 10 * counts[i].count / (2 * tot);
 
         if (counts[i].count == 0) continue;
 
@@ -165,39 +165,29 @@ int monk_display_attack_info(int hand, int row, int col)
         tot_to_d += counts[i].to_d;
 
         sprintf(tmp, "%dd%d", dd, ds);
-        sprintf(buf, "%-15s %6s %3d.%02d%% %3d.%02d", ma_ptr->name, tmp, counts[i].count/100, counts[i].count%100, dam/100, dam%100);
-        put_str(buf, r++, c);
+        doc_printf(cols[0], "%-14.14s %6s %3d.%1d%% %3d.%1d\n",
+                                ma_ptr->name, tmp,
+                                counts[i].count/10, counts[i].count%10,
+                                dam/10, dam%10);
     }
 
-    sprintf(buf, "%20s %3d.%02d  +%3d", "Total:", tot_dam/100, tot_dam%100, to_d/100);
-    put_str(buf, r++, c + 10);
+    doc_printf(cols[0], "<tab:8>%20s %3d.%1d\n", "Total:", tot_dam/10, tot_dam%10);
 
     crit.mul = tot_mul/tot;
-    crit.to_d = tot_to_d*100/tot;
-    sprintf(buf, "%20s %3d.%02dx +%3d.%02d", "Criticals:", crit.mul/100, crit.mul%100, crit.to_d/100, crit.to_d%100);
-    put_str(buf, r++, c + 10);
+    crit.to_d = tot_to_d*10/tot;
+    doc_printf(cols[0], "<tab:8>%20s %3d.%02dx\n", "Criticals:", crit.mul/100, crit.mul%100);
 
     /* Account for criticals in all that follows ... */
     tot_dam = tot_dam * crit.mul/100;
     to_d = to_d + crit.to_d;
-    sprintf(buf, "%20s %3d.%02d  +%3d.%02d", "One Strike:", tot_dam/100, tot_dam%100, to_d/100, to_d%100);
-    put_str(buf, r++, c + 10);
-
-    result = MAX(result, r);
+    doc_printf(cols[0], "<tab:8>%20s %3d.%1d +%3d\n", "One Strike:", tot_dam/10, tot_dam%10, to_d/10);
 
     /* Second Column */
-    r = row;
-    c = col + 40;
+    doc_insert(cols[1], "<color:y>Your Fists</color>\n");
 
-    c_put_str(TERM_YELLOW, "Your Fists", r++, c);
-
-    sprintf(buf, "Number of Blows: %d.%2.2d", blows/100, blows%100);
-    put_str(buf, r++, c);
-
-    sprintf(buf, "To Hit:  0  50 100 150 200 (AC)");
-    put_str(buf, r++, c);
-
-    sprintf(buf, "        %2d  %2d  %2d  %2d  %2d (%%)", 
+    doc_printf(cols[1], "Number of Blows: %d.%2.2d\n", blows/100, blows%100);
+    doc_printf(cols[1], "To Hit:  0  50 100 150 200 (AC)\n");
+    doc_printf(cols[1], "        %2d  %2d  %2d  %2d  %2d (%%)\n",
         hit_chance(0, 0, 0), 
         hit_chance(0, 0, 50), 
         hit_chance(0, 0, 100), 
@@ -205,48 +195,45 @@ int monk_display_attack_info(int hand, int row, int col)
         hit_chance(0, 0, 200)
     );
 
-    put_str(buf, r++, c);
-
-    r++;
-    c_put_str(TERM_YELLOW, "Average Damage:", r++, c);
-    sprintf(buf, "One Strike: %d.%02d", (tot_dam + to_d)/100, (tot_dam + to_d)%100);
-    put_str(buf, r++, c+1);
-    sprintf(buf, "One Attack: %d.%02d", blows*(tot_dam + to_d)/10000, ((blows*(tot_dam + to_d))/100)%100);
-    put_str(buf, r++, c+1);
+    doc_newline(cols[1]);
+    doc_insert(cols[1], "<color:y>Average Damage:</color>\n");
+    doc_printf(cols[1], " One Strike: %d.%1d\n", (tot_dam + to_d)/10, (tot_dam + to_d)%10);
+    doc_printf(cols[1], " One Attack: %d.%1d\n", blows*(tot_dam + to_d)/1000, ((blows*(tot_dam + to_d))/100)%10);
 
     if (have_flag(p_ptr->weapon_info[hand].flags, TR_BRAND_ACID))
     {
-        sprintf(buf, " %d.%02d", blows*(tot_dam*17/10 + to_d)/10000, ((blows*(tot_dam*17/10 + to_d))/100)%100);
-        c_put_str(TERM_RED, "      Acid:", r, c+1);
-        put_str(buf, r++, c+12);
+        doc_printf(cols[1], " <color:r>      Acid</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d)/1000,
+            ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
     if (have_flag(p_ptr->weapon_info[hand].flags, TR_BRAND_ELEC))
     {
-        sprintf(buf, " %d.%02d", blows*(tot_dam*17/10 + to_d)/10000, ((blows*(tot_dam*17/10 + to_d))/100)%100);
-        c_put_str(TERM_RED, "      Elec:", r, c+1);
-        put_str(buf, r++, c+12);
+        doc_printf(cols[1], " <color:r>      Elec</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d)/1000,
+            ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
     if (have_flag(p_ptr->weapon_info[hand].flags, TR_BRAND_FIRE))
     {
-        sprintf(buf, " %d.%02d", blows*(tot_dam*17/10 + to_d)/10000, ((blows*(tot_dam*17/10 + to_d))/100)%100);
-        c_put_str(TERM_RED, "      Fire:", r, c+1);
-        put_str(buf, r++, c+12);
+        doc_printf(cols[1], " <color:r>      Fire</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d)/1000,
+            ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
     if (have_flag(p_ptr->weapon_info[hand].flags, TR_BRAND_COLD))
     {
-        sprintf(buf, " %d.%02d", blows*(tot_dam*17/10 + to_d)/10000, ((blows*(tot_dam*17/10 + to_d))/100)%100);
-        c_put_str(TERM_RED, "      Cold:", r, c+1);
-        put_str(buf, r++, c+12);
+        doc_printf(cols[1], " <color:r>      Cold</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d)/1000,
+            ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
     if (have_flag(p_ptr->weapon_info[hand].flags, TR_BRAND_POIS))
     {
-        sprintf(buf, " %d.%02d", blows*(tot_dam*17/10 + to_d)/10000, ((blows*(tot_dam*17/10 + to_d))/100)%100);
-        c_put_str(TERM_RED, "      Pois:", r, c+1);
-        put_str(buf, r++, c+12);
+        doc_printf(cols[1], " <color:r>      Pois</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d)/1000,
+            ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
-    result = MAX(result, r);
 
-    return result;
+    doc_insert_cols(doc, cols, 2, 0);
+    doc_free(cols[0]);
+    doc_free(cols[1]);
 }
 
 static bool _monk_check_spell(void)
@@ -636,6 +623,7 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
     monk_posture_get_flags(flgs);
     if (!heavy_armor())
     {
+        add_flag(flgs, TR_SH_REVENGE);
         if (p_ptr->lev >= 10)
             add_flag(flgs, TR_SPEED);
         if (p_ptr->lev >= 25)

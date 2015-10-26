@@ -1249,7 +1249,8 @@ static void _rapid_strike_spell(int cmd, variant *res)
         p_ptr->innate_attacks[0].blows += 50;
         p_ptr->innate_attacks[1].blows += 25;
         do_cmd_knowledge_weapon();
-        p_ptr->update |= PU_BONUS;
+        p_ptr->innate_attacks[0].blows -= 50;
+        p_ptr->innate_attacks[1].blows -= 25;
 
         if (screen_hack) screen_save();
         var_set_bool(res, TRUE);
@@ -1288,7 +1289,8 @@ static void _power_strike_spell(int cmd, variant *res)
         p_ptr->innate_attacks[0].dd += 2;
         p_ptr->innate_attacks[1].dd += 2;
         do_cmd_knowledge_weapon();
-        p_ptr->update |= PU_BONUS;
+        p_ptr->innate_attacks[0].dd -= 2;
+        p_ptr->innate_attacks[1].dd -= 2;
 
         if (screen_hack) screen_save();
         var_set_bool(res, TRUE);

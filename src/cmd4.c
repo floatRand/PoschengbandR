@@ -4506,69 +4506,51 @@ static void do_cmd_knowledge_uniques(void)
 
 static void do_cmd_knowledge_shooter(void)
 {
-    screen_save();
-    Term_clear();
-    display_shooter_info(0, 0);
-    flush();
-    (void)inkey();
-    screen_load();
+    doc_ptr doc = doc_alloc(80);
+
+    display_shooter_info(doc);
+    if (doc_line_count(doc))
+    {
+        screen_save();
+        doc_display(doc, "Shooting", 0);
+        screen_load();
+    }
+    else
+        msg_print("You are not wielding a bow.");
+
+    doc_free(doc);
 }
 
 void do_cmd_knowledge_weapon(void)
 {
-    int  i, r;
-    int  w, h;
-    bool displayed = FALSE;
+    int i;
+    doc_ptr doc = doc_alloc(80);
 
-    Term_get_size(&w, &h);
-
-    screen_save();
-    Term_clear();
-    r = 0;
     for (i = 0; i < MAX_HANDS; i++)
     {
         if (p_ptr->weapon_info[i].wield_how == WIELD_NONE) continue;
 
-        if (r > 0 && h - r < 15)
-        {
-            c_prt(TERM_WHITE, "Press Any Key to Display Additional Attacks", r, 1);
-            flush();
-            (void)inkey();
-            Term_clear();
-            r = 0;
-            displayed = TRUE;
-        }
         if (p_ptr->weapon_info[i].bare_hands)
-            r = monk_display_attack_info(i, r, 0) + 2;
+            monk_display_attack_info(doc, i);
         else
-            r = display_weapon_info(i, r, 0) + 2;
+            display_weapon_info(doc, i);
     }
 
     for (i = 0; i < p_ptr->innate_attack_ct; i++)
     {
-        if (r > 0 && h - r < 15)
-        {
-            c_prt(TERM_WHITE, "Press Any Key to Display Additional Attacks", r, 1);
-            flush();
-            (void)inkey();
-            Term_clear();
-            r = 0;
-            displayed = TRUE;
-        }
-        r = display_innate_attack_info(i, r, 0) + 2;
+        display_innate_attack_info(doc, i);
     }
 
-    if (r > 0)
+    if (doc_line_count(doc))
     {
-        c_prt(TERM_WHITE, "Press Any Key when Finished", r, 1);
-        flush();
-        (void)inkey();
-        displayed = TRUE;
+        screen_save();
+        doc_display(doc, "Melee", 0);
+        screen_load();
     }
+    else
+        msg_print("You have no melee attacks.");
 
-    screen_load();
-    if (!displayed)
-        msg_print("You are not wielding any weapons.");
+    doc_free(doc);
 }
 
 static void do_cmd_knowledge_extra(void)

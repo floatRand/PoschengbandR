@@ -10,6 +10,8 @@ extern void py_display(void);
 static void _build_character_sheet(doc_ptr doc);
 static void _build_page1(doc_ptr doc);
 static void _build_equipment(doc_ptr doc); /* Formerly Pages 2-4 */
+static void _build_melee(doc_ptr doc);
+static void _build_shooting(doc_ptr doc);
 
 /********************************** Page 1 ************************************/
 static void _build_general1(doc_ptr doc)
@@ -875,6 +877,38 @@ void _build_equipment(doc_ptr doc)
     }
 }
 
+/****************************** Melee ************************************/
+void _build_melee(doc_ptr doc)
+{
+    if (p_ptr->prace != RACE_MON_RING)
+    {
+        int i;
+        doc_insert(doc, "<topic:Melee>==================================== Melee ====================================\n\n");
+        for (i = 0; i < MAX_HANDS; i++)
+        {
+            if (p_ptr->weapon_info[i].wield_how == WIELD_NONE) continue;
+            if (p_ptr->weapon_info[i].bare_hands)
+                monk_display_attack_info(doc, i);
+            else
+                display_weapon_info(doc, i);
+        }
+
+        for (i = 0; i < p_ptr->innate_attack_ct; i++)
+        {
+            display_innate_attack_info(doc, i);
+        }
+    }
+}
+
+void _build_shooting(doc_ptr doc)
+{
+    if (equip_find_object(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
+    {
+        doc_insert(doc, "<topic:Shooting>=================================== Shooting ==================================\n\n");
+        display_shooter_info(doc);
+    }
+}
+
 /****************************** Character Sheet ************************************/
 static void _build_character_sheet(doc_ptr doc)
 {
@@ -889,6 +923,8 @@ static void _build_character_sheet(doc_ptr doc)
 
     _build_page1(doc);
     _build_equipment(doc);
+    _build_melee(doc);
+    _build_shooting(doc);
 
     doc_insert(doc, "</style>");
 }
