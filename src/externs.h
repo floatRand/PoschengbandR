@@ -916,6 +916,7 @@ extern void fame_on_failure(void);
 extern void recharged_notice(object_type *o_ptr);
 
 /* files.c */
+extern cptr map_name(void);
 extern void safe_setuid_drop(void);
 extern void safe_setuid_grab(void);
 extern s16b tokenize(char *buf, s16b num, char **tokens, int mode);

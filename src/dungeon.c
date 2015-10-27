@@ -4263,7 +4263,8 @@ static void process_command(void)
         /* Character description */
         case 'C':
         {
-            do_cmd_change_name();
+            py_display();
+            /*do_cmd_change_name();*/
             break;
         }
 

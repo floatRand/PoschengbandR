@@ -18,6 +18,7 @@ struct doc_s
     vec_ptr        bookmarks;
     int_map_ptr    links;
     vec_ptr        style_stack;
+    string_ptr     name;
 };
 
 doc_pos_t doc_pos_create(int x, int y)
@@ -225,6 +226,7 @@ doc_ptr doc_alloc(int width)
     res->bookmarks = vec_alloc(_doc_bookmark_free);
     res->links = int_map_alloc(_doc_link_free);
     res->style_stack = vec_alloc(free);
+    res->name = string_alloc();
 
     /* Default Styles */
     _add_doc_style_f(res, "normal", _normal_style);
@@ -256,9 +258,16 @@ void doc_free(doc_ptr doc)
         vec_free(doc->bookmarks);
         int_map_free(doc->links);
         vec_free(doc->style_stack);
+        string_free(doc->name);
 
         free(doc);
     }
+}
+
+void doc_change_name(doc_ptr doc, cptr name)
+{
+    string_clear(doc->name);
+    string_append_s(doc->name, name);
 }
 
 doc_pos_t doc_cursor(doc_ptr doc)
@@ -1622,7 +1631,7 @@ int doc_display_aux(doc_ptr doc, cptr caption, int top, rect_t display)
             int  cb;
             int  format = DOC_FORMAT_TEXT;
 
-            strcpy(name, "");
+            strcpy(name, string_buffer(doc->name));
 
             if (!get_string("File name: ", name, 80)) break;
             path_build(buf, sizeof(buf), ANGBAND_DIR_USER, name);

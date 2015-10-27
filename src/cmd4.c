@@ -3194,7 +3194,7 @@ void do_cmd_note(void)
     if (!buf[0] || (buf[0] == ' ')) return;
 
     /* Add the note to the message recall */
-    msg_format("<color:y>Note:</color> %s\n", buf);
+    msg_format("<color:R>Note:</color> %s\n", buf);
     msg_add(string_buffer(s));
     string_free(s);
 }

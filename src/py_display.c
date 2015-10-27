@@ -16,6 +16,20 @@ static void _build_melee(doc_ptr doc);
 static void _build_shooting(doc_ptr doc);
 static void _build_powers(doc_ptr doc);
 static void _build_spells(doc_ptr doc);
+static void _build_dungeons(doc_ptr doc);
+
+static void _build_quests(doc_ptr doc);
+static void _build_uniques(doc_ptr doc);
+static void _build_virtues(doc_ptr doc);
+static void _build_mutations(doc_ptr doc);
+static void _build_pets(doc_ptr doc);
+static void _build_inventory(doc_ptr doc);
+static void _build_home(doc_ptr doc);
+static void _build_museum(doc_ptr doc);
+static void _build_statistics(doc_ptr doc);
+
+static void _build_messages(doc_ptr doc);
+static void _build_options(doc_ptr doc);
 
 /********************************** Page 1 ************************************/
 static void _build_general1(doc_ptr doc)
@@ -1031,6 +1045,854 @@ static void _build_spells(doc_ptr doc)
     py_display_spells(doc, spells, ct);
 }
 
+/****************************** Miscellaneous ************************************/
+static void _build_quests(doc_ptr doc)
+{
+}
+
+static void _build_uniques(doc_ptr doc)
+{
+}
+
+static void _build_virtues(doc_ptr doc)
+{
+}
+
+static void _build_mutations(doc_ptr doc)
+{
+}
+
+static void _build_pets(doc_ptr doc)
+{
+}
+
+/****************************** Objects ************************************/
+static void _build_inventory(doc_ptr doc)
+{
+    int i;
+    char o_name[MAX_NLEN];
+
+    doc_printf(doc, "<topic:Inventory>============================= Character Inventory =============================\n\n");
+
+    for (i = 0; i < INVEN_PACK; i++)
+    {
+        if (!inventory[i].k_idx) break;
+
+        object_desc(o_name, &inventory[i], OD_COLOR_CODED);
+        doc_printf(doc, "%c) %s\n", index_to_label(i), o_name);
+    }
+
+    doc_newline(doc);
+}
+
+static void _build_home(doc_ptr doc)
+{
+    char o_name[MAX_NLEN];
+    store_type  *st_ptr = &town[1].store[STORE_HOME];
+
+    if (st_ptr->stock_num)
+    {
+        int i;
+        int page = 1;
+
+        doc_printf(doc, "<topic:Home>================================ Home Inventory ===============================\n");
+
+        for (i = 0; i < st_ptr->stock_num; i++)
+        {
+            if ((i % 12) == 0)
+                doc_printf(doc, "\n ( page %d )\n", page++);
+            object_desc(o_name, &st_ptr->stock[i], OD_COLOR_CODED);
+            doc_printf(doc, "%c) %s\n", I2A(i%12), o_name);
+        }
+
+        doc_newline(doc);
+    }
+}
+
+static void _build_museum(doc_ptr doc)
+{
+    char o_name[MAX_NLEN];
+    store_type  *st_ptr = &town[1].store[STORE_MUSEUM];
+
+    if (st_ptr->stock_num)
+    {
+        int i;
+        int page = 1;
+
+        doc_printf(doc, "<topic:Museum>==================================== Museum ===================================\n");
+
+        for (i = 0; i < st_ptr->stock_num; i++)
+        {
+            if ((i % 12) == 0)
+                doc_printf(doc, "\n ( page %d )\n", page++);
+            object_desc(o_name, &st_ptr->stock[i], OD_COLOR_CODED);
+            doc_printf(doc, "%c) %s\n", I2A(i%12), o_name);
+        }
+
+        doc_newline(doc);
+    }
+}
+
+/****************************** Statistics ************************************/
+static void _object_counts_imp(doc_ptr doc, int tval, int sval)
+{
+    int          k_idx = lookup_kind(tval, sval);
+    object_kind *k_ptr = &k_info[k_idx];
+
+    if (k_ptr->counts.found || k_ptr->counts.bought || k_ptr->counts.used || k_ptr->counts.destroyed)
+    {
+        doc_printf(
+            doc,
+            "  %-20.20s %5d %6d %5d %5d",
+            k_name + k_ptr->name,
+            k_ptr->counts.found,
+            k_ptr->counts.bought,
+            k_ptr->counts.used,
+            k_ptr->counts.destroyed
+        );
+
+        switch (tval)
+        {
+        case TV_WAND: case TV_ROD: case TV_STAFF: case TV_SCROLL:
+        {
+            int         fail;
+            object_type forge;
+            object_prep(&forge, lookup_kind(tval, sval));
+            fail = device_calc_fail_rate(&forge);
+            doc_printf(doc, " %3d.%1d%%", fail / 10, fail % 10);
+            break;
+        }
+        }
+
+        doc_newline(doc);
+    }
+}
+
+static void _device_counts_imp(doc_ptr doc, int tval, int effect)
+{
+    device_effect_info_ptr entry = device_get_effect_info(tval, effect);
+
+    if (!entry)
+        return;
+
+    if (entry->counts.found || entry->counts.bought || entry->counts.used || entry->counts.destroyed)
+    {
+        effect_t effect;
+        int      fail;
+
+        effect.power = entry->level;
+        effect.difficulty = entry->level;
+        effect.type = entry->type;
+
+        doc_printf(
+            doc,
+            "  %-20.20s %5d %6d %5d %5d",
+            do_effect(&effect, SPELL_NAME, 0),
+            entry->counts.found,
+            entry->counts.bought,
+            entry->counts.used,
+            entry->counts.destroyed
+        );
+
+        fail = effect_calc_fail_rate(&effect);
+        doc_printf(doc, " %3d.%1d%%", fail / 10, fail % 10);
+        doc_newline(doc);
+    }
+}
+
+typedef bool (*_kind_p)(int k_idx);
+bool _kind_is_third_book(int k_idx) {
+    if (k_info[k_idx].tval == TV_ARCANE_BOOK) return FALSE;
+    if ( TV_LIFE_BOOK <= k_info[k_idx].tval
+      && k_info[k_idx].tval <= TV_BURGLARY_BOOK
+      && k_info[k_idx].sval == 2 )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+bool _kind_is_fourth_book(int k_idx) {
+    if (k_info[k_idx].tval == TV_ARCANE_BOOK) return FALSE;
+    if ( TV_LIFE_BOOK <= k_info[k_idx].tval
+      && k_info[k_idx].tval <= TV_BURGLARY_BOOK
+      && k_info[k_idx].sval == 3 )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _kind_is_equipment(int i) {
+    int tval = k_info[i].tval;
+    if ( kind_is_weapon(i)
+      || tval == TV_SHIELD
+      || tval == TV_BOW
+      || tval == TV_RING
+      || tval == TV_AMULET
+      || tval == TV_LITE
+      || kind_is_body_armor(i)
+      || tval == TV_HELM
+      || tval == TV_CLOAK
+      || kind_is_helm(i)
+      || tval == TV_GLOVES
+      || tval == TV_BOOTS )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _kind_is_device(int i) {
+    int tval = k_info[i].tval;
+    if ( tval == TV_WAND
+      || tval == TV_ROD
+      || tval == TV_STAFF
+      || tval == TV_POTION
+      || tval == TV_SCROLL )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_corpse(int k_idx) {
+    if (k_info[k_idx].tval == TV_CORPSE && k_info[k_idx].sval == SV_CORPSE)
+        return TRUE;
+    return FALSE;
+}
+static bool _kind_is_skeleton(int k_idx) {
+    if (k_info[k_idx].tval == TV_CORPSE && k_info[k_idx].sval == SV_SKELETON)
+        return TRUE;
+    return FALSE;
+}
+static bool _kind_is_spellbook(int k_idx) {
+    if ( TV_LIFE_BOOK <= k_info[k_idx].tval
+      && k_info[k_idx].tval <= TV_BURGLARY_BOOK )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_is_other(int k_idx) {
+    int tval = k_info[k_idx].tval;
+    if ( tval == TV_FOOD
+      || _kind_is_corpse(k_idx)
+      || _kind_is_skeleton(k_idx)
+      || _kind_is_spellbook(k_idx)
+      || tval == TV_SHOT
+      || tval == TV_ARROW
+      || tval == TV_BOLT )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static void _group_counts_imp(doc_ptr doc, _kind_p p, cptr text)
+{
+    int i;
+    counts_t totals = {0};
+    for (i = 0; i < max_k_idx; i++)
+    {
+        if (p(i))
+        {
+            totals.generated += k_info[i].counts.generated;
+            totals.found += k_info[i].counts.found;
+            totals.bought += k_info[i].counts.bought;
+            totals.used += k_info[i].counts.used;
+            totals.destroyed += k_info[i].counts.destroyed;
+        }
+    }
+
+    if (totals.found || totals.bought || totals.used || totals.destroyed)
+    {
+        doc_printf(
+            doc,
+            "  %-20.20s %5d %6d %5d %5d\n",
+            text,
+            totals.found,
+            totals.bought,
+            totals.used,
+            totals.destroyed
+        );
+    }
+}
+
+static void _group_counts_tval_imp(doc_ptr doc, int tval, cptr text)
+{
+    int i;
+    counts_t totals = {0};
+    for (i = 0; i < max_k_idx; i++)
+    {
+        if (k_info[i].tval == tval)
+        {
+            totals.generated += k_info[i].counts.generated;
+            totals.found += k_info[i].counts.found;
+            totals.bought += k_info[i].counts.bought;
+            totals.used += k_info[i].counts.used;
+            totals.destroyed += k_info[i].counts.destroyed;
+        }
+    }
+
+    if (totals.found || totals.bought || totals.used || totals.destroyed)
+    {
+        doc_printf(
+            doc,
+            "  %-20.20s %5d %6d %5d %5d\n",
+            text,
+            totals.found,
+            totals.bought,
+            totals.used,
+            totals.destroyed
+        );
+    }
+}
+
+static void _ego_counts_imp(doc_ptr doc, int idx, cptr text)
+{
+    ego_item_type *e_ptr = &e_info[idx];
+
+    if (e_ptr->counts.found || e_ptr->counts.bought || e_ptr->counts.destroyed)
+    {
+        doc_printf(
+            doc,
+            "  %-20.20s %5d %6d %5d\n",
+            text,
+            e_ptr->counts.found,
+            e_ptr->counts.bought,
+            e_ptr->counts.destroyed
+        );
+    }
+}
+
+typedef bool (*_mon_p)(int r_idx);
+static bool _mon_drops_good(int r_idx)
+{
+    if (r_info[r_idx].flags1 & RF1_DROP_GOOD)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_drops_great(int r_idx)
+{
+    if (r_info[r_idx].flags1 & RF1_DROP_GREAT)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_animal(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_ANIMAL)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_breeder(int r_idx)
+{
+    if (r_info[r_idx].flags2 & RF2_MULTIPLY)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_demon(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_DEMON)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_dragon(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_DRAGON)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_evil(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_EVIL)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_giant(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_GIANT)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_good(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_GOOD)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_hound(int r_idx)
+{
+    if (r_info[r_idx].d_char == 'Z')
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_human(int r_idx)
+{
+    if (r_info[r_idx].flags2 & RF2_HUMAN)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_neutral(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_GOOD)
+        return FALSE;
+    if (r_info[r_idx].flags3 & RF3_EVIL)
+        return FALSE;
+    return TRUE;
+}
+static bool _mon_is_orc(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_ORC)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_troll(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_TROLL)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_undead(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_UNDEAD)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_is_unique(int r_idx)
+{
+    if (r_info[r_idx].flags1 & RF1_UNIQUE)
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_acid(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_ACID | RFR_IM_ACID))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_elec(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_ELEC | RFR_IM_ELEC))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_fire(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_FIRE | RFR_IM_FIRE))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_cold(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_COLD | RFR_IM_COLD))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_pois(int r_idx)
+{
+    if (r_info[r_idx].flagsr & (RFR_RES_POIS | RFR_IM_POIS))
+        return TRUE;
+    return FALSE;
+}
+static bool _mon_res_conf(int r_idx)
+{
+    if (r_info[r_idx].flags3 & RF3_NO_CONF)
+        return TRUE;
+    return FALSE;
+}
+static void _kill_counts_imp(doc_ptr doc, _mon_p p, cptr text, int total)
+{
+    int i;
+    int kills = 0;
+    for (i = 0; i < max_r_idx; i++)
+    {
+        if (p(i))
+        {
+            if (_mon_is_unique(i))
+            {
+                if (r_info[i].max_num == 0)
+                    kills++;   /* Perhaps The Cloning Pits is messing up r_akills? */
+            }
+            else
+                kills += r_info[i].r_akills;
+        }
+    }
+
+    if (kills)
+    {
+        doc_printf(
+            doc,
+            "  %-20.20s %5d %3d.%1d%%\n",
+            text,
+            kills,
+            kills*100/total,
+            (kills*1000/total)%10
+        );
+    }
+}
+
+static void _build_statistics(doc_ptr doc)
+{
+    int i, total_kills = ct_kills_all();
+    counts_t totals = {0};
+
+    doc_printf(doc, "<topic:Statistics>================================== Statistics =================================\n\n");
+
+    /* Objects */
+    for (i = 0; i < max_k_idx; i++)
+    {
+        totals.generated += k_info[i].counts.generated;
+        totals.found += k_info[i].counts.found;
+        totals.bought += k_info[i].counts.bought;
+        totals.used += k_info[i].counts.used;
+        totals.destroyed += k_info[i].counts.destroyed;
+    }
+
+    doc_printf(doc, "  <color:R>Objects Found    :</color> %6d\n", totals.found);
+    doc_printf(doc, "  <color:R>Objects Bought   :</color> %6d\n", totals.bought);
+    doc_printf(doc, "  <color:R>Objects Destroyed:</color> %6d\n", totals.destroyed);
+
+
+    doc_printf(doc, "\n  <color:G>Equipment            Found Bought  Used  Dest</color>\n");
+    _group_counts_imp(doc, kind_is_weapon, "Weapons");
+    _group_counts_tval_imp(doc, TV_SHIELD, "Shields");
+    _group_counts_tval_imp(doc, TV_BOW, "Bows");
+    _group_counts_tval_imp(doc, TV_RING, "Rings");
+    _group_counts_tval_imp(doc, TV_AMULET, "Amulets");
+    _group_counts_tval_imp(doc, TV_LITE, "Lights");
+    _group_counts_imp(doc, kind_is_body_armor, "Body Armor");
+    _group_counts_tval_imp(doc, TV_CLOAK, "Cloaks");
+    _group_counts_imp(doc, kind_is_helm, "Helmets");
+    _group_counts_tval_imp(doc, TV_GLOVES, "Gloves");
+    _group_counts_tval_imp(doc, TV_BOOTS, "Boots");
+    _group_counts_imp(doc, _kind_is_equipment, "Totals");
+
+    doc_printf(doc, "\n  <color:G>Devices              Found Bought  Used  Dest</color>\n");
+    _group_counts_tval_imp(doc, TV_WAND, "Wands");
+    _group_counts_tval_imp(doc, TV_STAFF, "Staves");
+    _group_counts_tval_imp(doc, TV_ROD, "Rods");
+    _group_counts_tval_imp(doc, TV_POTION, "Potions");
+    _group_counts_tval_imp(doc, TV_SCROLL, "Scolls");
+    _group_counts_imp(doc, _kind_is_device, "Totals");
+
+    doc_printf(doc, "\n  <color:G>Other                Found Bought  Used  Dest</color>\n");
+    _group_counts_tval_imp(doc, TV_SHOT, "Shots");
+    _group_counts_tval_imp(doc, TV_ARROW, "Arrows");
+    _group_counts_tval_imp(doc, TV_BOLT, "Bolts");
+    _group_counts_imp(doc, _kind_is_spellbook, "Spellbooks");
+    _group_counts_tval_imp(doc, TV_FOOD, "Food");
+    _group_counts_imp(doc, _kind_is_corpse, "Corpses");
+    _group_counts_imp(doc, _kind_is_skeleton, "Skeletons");
+    _group_counts_imp(doc, _kind_is_other, "Totals");
+
+    doc_printf(doc, "\n  <color:G>Potions              Found Bought  Used  Dest</color>\n");
+    _object_counts_imp(doc, TV_POTION, SV_POTION_CURE_CRITICAL);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_CURING);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_SPEED);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_HEALING);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_STAR_HEALING);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_LIFE);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_RESTORE_MANA);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_RESTORE_EXP);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_INC_STR);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_INC_INT);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_INC_WIS);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_INC_DEX);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_INC_CON);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_INC_CHR);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_NEW_LIFE);
+    _object_counts_imp(doc, TV_POTION, SV_POTION_EXPERIENCE);
+    _group_counts_tval_imp(doc, TV_POTION, "Totals");
+
+    doc_printf(doc, "\n  <color:G>Scrolls              Found Bought  Used  Dest  Fail</color>\n");
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_IDENTIFY);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_REMOVE_CURSE);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_TELEPORT);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_TELEPORT_LEVEL);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_DESTRUCTION);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_GENOCIDE);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_MASS_GENOCIDE);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_FOREST_CREATION);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_ACQUIREMENT);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_ACQUIREMENT);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_ARTIFACT);
+    _group_counts_tval_imp(doc, TV_SCROLL, "Totals");
+
+    doc_printf(doc, "\n  <color:G>Wands                Found Bought  Used  Dest  Fail</color>\n");
+    if (p_ptr->wizard || 1)
+    {
+        for (i = 0; ; i++)
+        {
+        device_effect_info_ptr entry = &wand_effect_table[i];
+
+            if (!entry->type) break;
+            _device_counts_imp(doc, TV_WAND, entry->type);
+        }
+    }
+    else
+    {
+        _device_counts_imp(doc, TV_WAND, EFFECT_STONE_TO_MUD);
+        _device_counts_imp(doc, TV_WAND, EFFECT_TELEPORT_AWAY);
+        _device_counts_imp(doc, TV_WAND, EFFECT_BREATHE_COLD);
+        _device_counts_imp(doc, TV_WAND, EFFECT_BREATHE_FIRE);
+        _device_counts_imp(doc, TV_WAND, EFFECT_BREATHE_ONE_MULTIHUED);
+        _device_counts_imp(doc, TV_WAND, EFFECT_METEOR);
+        _device_counts_imp(doc, TV_WAND, EFFECT_BALL_WATER);
+        _device_counts_imp(doc, TV_WAND, EFFECT_BALL_DISINTEGRATE);
+        _device_counts_imp(doc, TV_WAND, EFFECT_ROCKET);
+        _device_counts_imp(doc, TV_WAND, EFFECT_WALL_BUILDING);
+    }
+    _group_counts_tval_imp(doc, TV_WAND, "Totals");
+
+    doc_printf(doc, "\n  <color:G>Staves               Found Bought  Used  Dest  Fail</color>\n");
+    if (p_ptr->wizard || 1)
+    {
+        for (i = 0; ; i++)
+        {
+        device_effect_info_ptr entry = &staff_effect_table[i];
+
+            if (!entry->type) break;
+            _device_counts_imp(doc, TV_STAFF, entry->type);
+        }
+    }
+    else
+    {
+        _device_counts_imp(doc, TV_STAFF, EFFECT_IDENTIFY);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_ENLIGHTENMENT);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_TELEPATHY);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_SPEED);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_IDENTIFY_FULL);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_DESTRUCTION);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_HEAL_CURING);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_GENOCIDE);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_MANA_STORM);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_STARBURST);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_DARKNESS_STORM);
+        _device_counts_imp(doc, TV_STAFF, EFFECT_RESTORE_MANA);
+    }
+    _group_counts_tval_imp(doc, TV_STAFF, "Totals");
+
+    doc_printf(doc, "\n  <color:G>Rods                 Found Bought  Used  Dest  Fail</color>\n");
+    if (p_ptr->wizard || 1)
+    {
+        for (i = 0; ; i++)
+        {
+        device_effect_info_ptr entry = &rod_effect_table[i];
+
+            if (!entry->type) break;
+            _device_counts_imp(doc, TV_ROD, entry->type);
+        }
+    }
+    else
+    {
+        _device_counts_imp(doc, TV_ROD, EFFECT_DETECT_TRAPS);
+        _device_counts_imp(doc, TV_ROD, EFFECT_DETECT_DOOR_STAIRS);
+        _device_counts_imp(doc, TV_ROD, EFFECT_DETECT_MONSTERS);
+        _device_counts_imp(doc, TV_ROD, EFFECT_LITE_AREA);
+        _device_counts_imp(doc, TV_ROD, EFFECT_RECALL);
+        _device_counts_imp(doc, TV_ROD, EFFECT_DETECT_ALL);
+        _device_counts_imp(doc, TV_ROD, EFFECT_ENLIGHTENMENT);
+        _device_counts_imp(doc, TV_ROD, EFFECT_BALL_SOUND);
+        _device_counts_imp(doc, TV_ROD, EFFECT_SPEED_HERO);
+        _device_counts_imp(doc, TV_ROD, EFFECT_HEAL_CURING_HERO);
+        _device_counts_imp(doc, TV_ROD, EFFECT_RESTORING);
+        _device_counts_imp(doc, TV_ROD, EFFECT_BALL_MANA);
+        _device_counts_imp(doc, TV_ROD, EFFECT_BALL_SHARDS);
+        _device_counts_imp(doc, TV_ROD, EFFECT_BALL_CHAOS);
+        _device_counts_imp(doc, TV_ROD, EFFECT_CLAIRVOYANCE);
+        _device_counts_imp(doc, TV_ROD, EFFECT_BALL_LITE);
+    }
+    _group_counts_tval_imp(doc, TV_ROD, "Totals");
+
+    doc_printf(doc, "\n  <color:G>Spellbooks           Found Bought  Used  Dest</color>\n");
+    _group_counts_imp(doc, _kind_is_third_book, "Third Spellbooks");
+    _group_counts_imp(doc, _kind_is_fourth_book, "Fourth Spellbooks");
+    _group_counts_imp(doc, kind_is_book, "Totals");
+
+    /* Egos */
+    WIPE(&totals, counts_t);
+    for (i = 0; i < max_e_idx; i++)
+    {
+        totals.generated += e_info[i].counts.generated;
+        totals.found += e_info[i].counts.found;
+        totals.bought += e_info[i].counts.bought;
+        totals.destroyed += e_info[i].counts.destroyed;
+    }
+
+    doc_printf(doc, "\n  <color:R>Egos Found    :</color> %6d\n", totals.found);
+    doc_printf(doc,   "  <color:R>Egos Bought   :</color> %6d\n", totals.bought);
+    doc_printf(doc,   "  <color:R>Egos Destroyed:</color> %6d\n", totals.destroyed);
+
+    doc_printf(doc, "\n  <color:G>Egos                 Found Bought  Dest</color>\n");
+    _ego_counts_imp(doc, EGO_RING_SPEED, "Ring of Speed");
+    _ego_counts_imp(doc, EGO_RING_DEFENDER, "Ring (Defender)");
+    _ego_counts_imp(doc, EGO_AMULET_DEFENDER, "Amulet (Defender)");
+    _ego_counts_imp(doc, EGO_BOOTS_ELVENKIND, "Boots of Elvenkind");
+    _ego_counts_imp(doc, EGO_BOOTS_SPEED, "Boots of Speed");
+    _ego_counts_imp(doc, EGO_BOOTS_FEANOR, "Boots of Feanor");
+
+    /* Monsters */
+    doc_printf(doc, "\n  <color:G>Monsters             Kills   Pct</color>\n");
+    _kill_counts_imp(doc, _mon_is_animal, "Animals", total_kills);
+    _kill_counts_imp(doc, _mon_is_breeder, "Breeders", total_kills);
+    _kill_counts_imp(doc, _mon_is_demon, "Demons", total_kills);
+    _kill_counts_imp(doc, _mon_is_dragon, "Dragons", total_kills);
+    _kill_counts_imp(doc, _mon_is_giant, "Giants", total_kills);
+    _kill_counts_imp(doc, _mon_is_hound, "Hounds", total_kills);
+    _kill_counts_imp(doc, _mon_is_human, "Humans", total_kills);
+    _kill_counts_imp(doc, _mon_is_orc, "Orcs", total_kills);
+    _kill_counts_imp(doc, _mon_is_troll, "Trolls", total_kills);
+    _kill_counts_imp(doc, _mon_is_undead, "Undead", total_kills);
+    _kill_counts_imp(doc, _mon_is_unique, "Uniques", total_kills);
+    doc_newline(doc);
+    _kill_counts_imp(doc, _mon_is_evil, "Evil Monsters", total_kills);
+    _kill_counts_imp(doc, _mon_is_good, "Good Monsters", total_kills);
+    _kill_counts_imp(doc, _mon_is_neutral, "Neutral Monsters", total_kills);
+    doc_newline(doc);
+    _kill_counts_imp(doc, _mon_drops_good, "Good Droppers", total_kills);
+    _kill_counts_imp(doc, _mon_drops_great, "Great Droppers", total_kills);
+    doc_newline(doc);
+    _kill_counts_imp(doc, _mon_res_acid, "Resist Acid", total_kills);
+    _kill_counts_imp(doc, _mon_res_elec, "Resist Elec", total_kills);
+    _kill_counts_imp(doc, _mon_res_fire, "Resist Fire", total_kills);
+    _kill_counts_imp(doc, _mon_res_cold, "Resist Cold", total_kills);
+    _kill_counts_imp(doc, _mon_res_pois, "Resist Pois", total_kills);
+    _kill_counts_imp(doc, _mon_res_conf, "Resist Conf", total_kills);
+    doc_printf(doc, "\n  %-20.20s %5d\n", "Totals", total_kills);
+
+    doc_newline(doc);
+}
+
+/****************************** Dungeons ************************************/
+static void _build_dungeons(doc_ptr doc)
+{
+    int i;
+
+    doc_printf(doc, "<topic:Dungeons>=================================== Dungeons ==================================\n\n");
+    for (i = 1; i < max_d_idx; i++)
+    {
+        bool conquered = FALSE;
+
+        if (!d_info[i].maxdepth) continue;
+        if (!max_dlv[i]) continue;
+        if (d_info[i].final_guardian)
+        {
+            if (!r_info[d_info[i].final_guardian].max_num) conquered = TRUE;
+        }
+        else if (max_dlv[i] == d_info[i].maxdepth) conquered = TRUE;
+
+        if (conquered)
+            doc_printf(doc, "!<color:R>%-16s</color>: level %3d\n", d_name+d_info[i].name, max_dlv[i]);
+        else
+            doc_printf(doc, " %-16s: level %3d\n", d_name+d_info[i].name, max_dlv[i]);
+    }
+    doc_newline(doc);
+
+    if (p_ptr->is_dead)
+    {
+        if (p_ptr->total_winner)
+        {
+            doc_printf(doc, "<color:v>You %s after winning.</color>\n",
+                streq(p_ptr->died_from, "Seppuku") ? "did Seppuku" : "retired from the adventure");
+        }
+        else if (!dun_level)
+        {
+            doc_printf(doc, "You were killed by %s in %s.\n", p_ptr->died_from, map_name());
+        }
+        else if (p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest))
+        {
+            /* Get the quest text */
+            /* Bewere that INIT_ASSIGN resets the cur_num. */
+            init_flags = INIT_ASSIGN;
+
+            process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+            doc_printf(doc, "You were killed by %s in the quest '%s'.\n",
+                p_ptr->died_from, quest[p_ptr->inside_quest].name);
+        }
+        else
+        {
+            doc_printf(doc, "You were killed by %s on level %d of %s.\n",
+                p_ptr->died_from, dun_level, map_name());
+        }
+    }
+    else if (character_dungeon)
+    {
+        if (!dun_level)
+        {
+            doc_printf(doc, "Now, you are in %s.\n", map_name());
+        }
+        else if (p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest))
+        {
+            /* Clear the text */
+            /* Must be done before doing INIT_SHOW_TEXT */
+            for (i = 0; i < 10; i++)
+            {
+                quest_text[i][0] = '\0';
+            }
+            quest_text_line = 0;
+
+            /* Get the quest text */
+            init_flags = INIT_SHOW_TEXT;
+
+            process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+            doc_printf(doc, "Now, you are in the quest '%s'.\n", quest[p_ptr->inside_quest].name);
+        }
+        else
+        {
+            doc_printf(doc, "Now, you are exploring level %d of %s.\n", dun_level, map_name());
+        }
+    }
+
+    if (p_ptr->last_message)
+    {
+        if (p_ptr->is_dead)
+            doc_printf(doc, "\n Last Message: %s\n", p_ptr->last_message);
+        else if (p_ptr->total_winner)
+            doc_printf(doc, "\n *Winning* Message: %s\n", p_ptr->last_message);
+    }
+    doc_newline(doc);
+}
+
+/****************************** Messages ************************************/
+static void _build_messages(doc_ptr doc)
+{
+    int i;
+    int current_turn = 0;
+    int current_row = 0;
+
+    doc_insert(doc, "<topic:Messages>================================ Last Messages ================================\n");
+    doc_insert(doc, "<style:normal>");
+    for (i = MIN(msg_count() - 1, 30); i >= 0; i--)
+    {
+        msg_ptr m = msg_get(i);
+
+        if (m->turn != current_turn)
+        {
+            if (doc_cursor(doc).y > current_row + 1)
+                doc_newline(doc);
+            current_turn = m->turn;
+            current_row = doc_cursor(doc).y;
+        }
+
+        doc_insert_text(doc, m->color, string_buffer(m->msg));
+        if (m->count > 1)
+        {
+            char buf[10];
+            sprintf(buf, " <x%d>", m->count);
+            doc_insert_text(doc, m->color, buf);
+        }
+        doc_newline(doc);
+    }
+    doc_insert(doc, "</style>\n");
+}
+
+/******************************** Options ************************************/
+static void _build_options(doc_ptr doc)
+{
+}
+
 /****************************** Character Sheet ************************************/
 static void _build_character_sheet(doc_ptr doc)
 {
@@ -1059,17 +1921,36 @@ static void _build_character_sheet(doc_ptr doc)
             race_ptr->character_dump(doc);
     }
 
+    _build_dungeons(doc);
+    _build_quests(doc);
+    _build_uniques(doc);
+    _build_virtues(doc);
+    /*TODO: dump_aux_race_history(fff);
+    dump_aux_class_special(fff); <=== Blue Mage*/
+    _build_mutations(doc);
+    _build_pets(doc);
+    _build_inventory(doc);
+    _build_home(doc);
+    _build_museum(doc);
+    _build_statistics(doc);
+    _build_messages(doc);
+    _build_options(doc);
+
     doc_insert(doc, "</style>");
 }
 
 void py_display(void)
 {
-    doc_ptr d = doc_alloc(80);
+    doc_ptr    d = doc_alloc(80);
+    string_ptr s = string_alloc_format("%s.txt", player_name);
 
+    doc_change_name(d, string_buffer(s));
     _build_character_sheet(d);
 
     screen_save();
     doc_display(d, "Character Sheet", 0);
     screen_load();
+
     doc_free(d);
+    string_free(s);
 }
