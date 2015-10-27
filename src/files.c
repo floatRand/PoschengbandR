@@ -3498,9 +3498,12 @@ errr file_character(cptr name)
         return (-1);
     }
 
-    character_dump_hack = TRUE;
-    (void)make_character_dump(fff);
-    character_dump_hack = FALSE;
+    {
+        doc_ptr doc = doc_alloc(80);
+        py_build_character_sheet(doc);
+        doc_write_file(doc, fff, DOC_FORMAT_TEXT);
+        doc_free(doc);
+    }
 
     /* Close it */
     my_fclose(fff);
@@ -4378,16 +4381,10 @@ void process_player_name(bool sf)
 
 /*
  * Gets a name for the character, reacting to name changes.
- *
- * Assumes that "display_player(0)" has just been called
- *
- * Perhaps we should NOT ask for a name (at "birth()") on
- * Unix machines?  XXX XXX
- *
- * What a horrible name for a global function. XXX XXX XXX
  */
-void get_name(void)
+bool py_get_name(void)
 {
+    bool result = FALSE;
     char tmp[64];
 
     /* Save the player name */
@@ -4398,20 +4395,17 @@ void get_name(void)
     {
         /* Use the name */
         strcpy(player_name, tmp);
+        result = TRUE;
     }
 
     if (0 == strlen(player_name))
     {
         /* Use default name */
         strcpy(player_name, "PLAYER");
+        result = TRUE;
     }
 
-    /* Re-Draw the name (in light blue) */
-    Term_erase(34, 1, 255);
-    c_put_str(TERM_L_BLUE, player_name, 1, 14);
-
-    /* Erase the prompt, etc */
-    clear_from(22);
+    return result;
 }
 
 
@@ -4850,7 +4844,7 @@ static void print_tomb(void)
  */
 static void show_info(void)
 {
-    int             i, j, k, l;
+    int             i, j;
     object_type        *o_ptr;
     store_type        *st_ptr;
 
@@ -4934,81 +4928,7 @@ static void show_info(void)
     update_playtime();
 
     /* Display player */
-    display_player(0);
-
-    /* Prompt for inventory */
-    prt("Hit any key to see more information (ESC to abort): ", 23, 0);
-
-
-    /* Allow abort at this point */
-    if (inkey() == ESCAPE) return;
-
-
-    /* Show equipment and inventory */
-
-    /* Equipment -- if any */
-    if (equip_count_used())
-    {
-        Term_clear();
-        item_tester_full = TRUE;
-        (void)show_equip(0, 0);
-        prt("You are using: -more-", 0, 0);
-
-        if (inkey() == ESCAPE) return;
-    }
-
-    /* Inventory -- if any */
-    if (inven_cnt)
-    {
-        Term_clear();
-        item_tester_full = TRUE;
-        (void)show_inven(0, 0);
-        prt("You are carrying: -more-", 0, 0);
-
-        if (inkey() == ESCAPE) return;
-    }
-
-    /* Homes in the different towns */
-    for (l = 1; l < max_towns; l++)
-    {
-        st_ptr = &town[l].store[STORE_HOME];
-
-        /* Home -- if anything there */
-        if (st_ptr->stock_num)
-        {
-            /* Display contents of the home */
-            for (k = 0, i = 0; i < st_ptr->stock_num; k++)
-            {
-                /* Clear screen */
-                Term_clear();
-
-                /* Show 12 items */
-                for (j = 0; (j < 12) && (i < st_ptr->stock_num); j++, i++)
-                {
-                    char o_name[MAX_NLEN];
-                    char tmp_val[80];
-
-                    /* Acquire item */
-                    o_ptr = &st_ptr->stock[i];
-
-                    /* Print header, clear line */
-                    sprintf(tmp_val, "%c) ", I2A(j));
-                    prt(tmp_val, j+2, 4);
-
-                    /* Display object description */
-                    object_desc(o_name, o_ptr, 0);
-                    c_put_str(tval_to_attr[o_ptr->tval], o_name, j+2, 7);
-                }
-
-                /* Caption */
-                prt(format("Your home contains (page %d): -more-", k+1), 0, 0);
-
-
-                /* Wait for it */
-                if (inkey() == ESCAPE) return;
-            }
-        }
-    }
+    py_display();
 }
 
 

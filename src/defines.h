@@ -4313,6 +4313,7 @@ extern int PlayerUID;
 #define BACT_GAMBLE_SHOP_ARTIFACT   54
 #define BACT_REPUTATION             55
 #define BACT_REFORGE_ARTIFACT       56
+#define BACT_CHANGE_NAME            57
 
 /*
  * Quest status

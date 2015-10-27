@@ -8,8 +8,8 @@
 extern void py_display(void);
 extern void py_display_spells(doc_ptr doc, spell_info *table, int ct);
 extern void py_display_powers(doc_ptr doc, spell_info *table, int ct);
+extern void py_build_character_sheet(doc_ptr doc);
 
-static void _build_character_sheet(doc_ptr doc);
 static void _build_page1(doc_ptr doc);
 static void _build_equipment(doc_ptr doc); /* Formerly Pages 2-4 */
 static void _build_melee(doc_ptr doc);
@@ -1894,7 +1894,7 @@ static void _build_options(doc_ptr doc)
 }
 
 /****************************** Character Sheet ************************************/
-static void _build_character_sheet(doc_ptr doc)
+void py_build_character_sheet(doc_ptr doc)
 {
     doc_insert(doc, "<style:wide>  [PosChengband <$:version> Character Dump]\n");
     if (p_ptr->total_winner)
@@ -1942,10 +1942,10 @@ static void _build_character_sheet(doc_ptr doc)
 void py_display(void)
 {
     doc_ptr    d = doc_alloc(80);
-    string_ptr s = string_alloc_format("%s.txt", player_name);
+    string_ptr s = string_alloc_format("%s.txt", player_base);
 
     doc_change_name(d, string_buffer(s));
-    _build_character_sheet(d);
+    py_build_character_sheet(d);
 
     screen_save();
     doc_display(d, "Character Sheet", 0);

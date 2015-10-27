@@ -3605,6 +3605,13 @@ static void bldg_process_command(building_type *bldg, int i)
     case BACT_REFORGE_ARTIFACT:
         paid = _reforge_artifact();
         break;
+    case BACT_CHANGE_NAME:
+        if (py_get_name())
+        {
+            process_player_name(FALSE);
+            paid = TRUE;
+        }
+        break;
     case BACT_REPUTATION:
         if (p_ptr->fame <= 0)
             cmsg_print(TERM_WHITE, "Who the hell are you?");

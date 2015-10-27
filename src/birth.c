@@ -3816,7 +3816,14 @@ auto_roller_barf:
     clear_from(23);
 
     /* Get a name, recolor it, prepare savefile */
-    get_name();
+    py_get_name();
+
+    /* Re-Draw the name (in light blue) */
+    Term_erase(34, 1, 255);
+    c_put_str(TERM_L_BLUE, player_name, 1, 14);
+
+    /* Erase the prompt, etc */
+    clear_from(22);
 
     /* Process the player name */
     process_player_name(creating_savefile);
