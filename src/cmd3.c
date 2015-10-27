@@ -572,7 +572,7 @@ void do_cmd_inspect(void)
         for (i = 0; i < INVEN_PACK; i++)
         {
             if (!inventory[i].k_idx) break;
-
+            if (!object_is_weapon_armour_ammo(&inventory[i]) && !object_is_known(&inventory[i])) continue;
             obj_display_doc(&inventory[i], doc);
             doc_newline(doc);
         }

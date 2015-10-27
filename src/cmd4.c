@@ -7676,6 +7676,7 @@ static void do_cmd_knowledge_home(void)
                     doc_ptr doc = doc_alloc(80);
                     for (i = 0; i < st_ptr->stock_num; i++, row++)
                     {
+                        if (!object_is_weapon_armour_ammo(&st_ptr->stock[i]) && !object_is_known(&st_ptr->stock[i])) continue;
                         obj_display_doc(&st_ptr->stock[i], doc);
                         doc_newline(doc);
                     }
