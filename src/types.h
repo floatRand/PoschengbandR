@@ -863,6 +863,7 @@ typedef struct quest_type quest_type;
 
 struct quest_type
 {
+    s16b id;
     s16b status;            /* Is the quest taken, completed, finished? */
 
     s16b type;              /* The quest type */
@@ -883,8 +884,8 @@ struct quest_type
     byte complev;           /* player level (complete) */
 
     u32b seed;                /* For $RANDOM_ in quest files ... using seed_town is really */
-};                            /* not a good idea, as it correlates quest results unless you are careful */
-
+                              /* not a good idea, as it correlates quest results unless you are careful */
+};
 
 /*
  * A store owner

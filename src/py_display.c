@@ -603,7 +603,7 @@ static void _build_flags2(doc_ptr doc, _flagzilla_ptr flagzilla)
     _build_flags(doc, "Free Act", TR_FREE_ACT, TR_INVALID, flagzilla);
     _build_flags(doc, "See Invis", TR_SEE_INVIS, TR_INVALID, flagzilla);
     _build_flags(doc, "Warning", TR_WARNING, TR_INVALID, flagzilla);
-    _build_flags(doc, "SlowDigest", TR_SLOW_DIGEST, TR_INVALID, flagzilla);
+    _build_flags(doc, "Slow Digest", TR_SLOW_DIGEST, TR_INVALID, flagzilla);
     _build_flags(doc, "Regenerate", TR_REGEN, TR_INVALID, flagzilla);
     _build_flags(doc, "Levitation", TR_LEVITATION, TR_INVALID, flagzilla);
     _build_flags(doc, "Perm Lite", TR_LITE, TR_INVALID, flagzilla);
@@ -1046,24 +1046,366 @@ static void _build_spells(doc_ptr doc)
 }
 
 /****************************** Miscellaneous ************************************/
-static void _build_quests(doc_ptr doc)
+static int _compare_quests(quest_type *left, quest_type *right)
 {
+    if (left->complev < right->complev)
+        return -1;
+    if (left->complev > right->complev)
+        return 1;
+    if (left->level < right->level)
+        return -1;
+    if (left->level > right->level)
+        return 1;
+    return 0;
 }
 
+static void _build_quests(doc_ptr doc)
+{
+    int     i, ct;
+    vec_ptr v = vec_alloc(NULL);
+
+    doc_printf(doc, "<topic:Quests>==================================== Quests ===================================\n\n");
+
+    /* Completed */
+    for (i = 1; i < max_quests; i++)
+    {
+        quest_type *q_ptr = &quest[i];
+
+        if (q_ptr->status == QUEST_STATUS_FINISHED)
+        {
+            q_ptr->id = i; /* You'll see why in a minute ... */
+            vec_add(v, q_ptr);
+        }
+    }
+    if (vec_length(v))
+    {
+        vec_sort(v, (vec_cmp_f)_compare_quests);
+
+        doc_printf(doc, "  <color:G>Completed Quests</color>\n");
+        ct = 0;
+        for (i = 0; i < vec_length(v); i++)
+        {
+            quest_type *q_ptr = vec_get(v, i);
+            if (is_fixed_quest_idx(q_ptr->id))
+            {
+                int old_quest = p_ptr->inside_quest;
+
+                p_ptr->inside_quest = q_ptr->id;
+                init_flags = INIT_ASSIGN;
+                process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+                p_ptr->inside_quest = old_quest;
+
+                if (q_ptr->flags & QUEST_FLAG_SILENT) continue;
+            }
+
+            ct++;
+
+            if (!is_fixed_quest_idx(q_ptr->id) && q_ptr->r_idx)
+            {
+                if (q_ptr->complev == 0)
+                {
+                    doc_printf(doc, "  %-40s (Dungeon level: %3d) - (Cancelled)\n",
+                        r_name + r_info[q_ptr->r_idx].name,
+                        q_ptr->level);
+                }
+                else
+                {
+                    doc_printf(doc, "  %-40s (Dungeon level: %3d) - level %2d\n",
+                        r_name + r_info[q_ptr->r_idx].name,
+                        q_ptr->level,
+                        q_ptr->complev);
+                }
+            }
+            else
+            {
+                doc_printf(doc, "  %-40s (Danger  level: %3d) - level %2d\n",
+                    q_ptr->name, q_ptr->level, q_ptr->complev);
+            }
+        }
+        if (!ct)
+            doc_printf(doc, "  Nothing.\n");
+
+        doc_newline(doc);
+    }
+
+    /* Failed */
+    vec_clear(v);
+    for (i = 1; i < max_quests; i++)
+    {
+        quest_type *q_ptr = &quest[i];
+
+        if ( q_ptr->status == QUEST_STATUS_FAILED_DONE
+          || q_ptr->status == QUEST_STATUS_FAILED )
+        {
+            q_ptr->id = i; /* You'll see why in a minute ... */
+            vec_add(v, q_ptr);
+        }
+    }
+
+    if (vec_length(v))
+    {
+        vec_sort(v, (vec_cmp_f)_compare_quests);
+
+        doc_printf(doc, "  <color:R>Failed Quests</color>\n");
+        ct = 0;
+        for (i = 0; i < vec_length(v); i++)
+        {
+            quest_type *q_ptr = vec_get(v, i);
+            if (is_fixed_quest_idx(q_ptr->id))
+            {
+                int old_quest = p_ptr->inside_quest;
+
+                p_ptr->inside_quest = q_ptr->id;
+                init_flags = INIT_ASSIGN;
+                process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+                p_ptr->inside_quest = old_quest;
+
+                if (q_ptr->flags & QUEST_FLAG_SILENT) continue;
+            }
+
+            ct++;
+
+            if (!is_fixed_quest_idx(q_ptr->id) && q_ptr->r_idx)
+            {
+                monster_race *r_ptr = &r_info[q_ptr->r_idx];
+                if (r_ptr->flags1 & RF1_UNIQUE)
+                {
+                    doc_printf(doc, "  %-40s (Dungeon level: %3d) - level %2d\n",
+                        r_name + r_ptr->name, q_ptr->level, q_ptr->complev);
+                }
+                else
+                {
+                    doc_printf(doc, "  %-40s (Kill %d) (Dungeon level: %3d) - level %2d\n",
+                        r_name + r_ptr->name, q_ptr->max_num,
+                        q_ptr->level, q_ptr->complev);
+                }
+            }
+            else
+            {
+                doc_printf(doc, "  %-40s (Danger  level: %3d) - level %2d\n",
+                    q_ptr->name, q_ptr->level, q_ptr->complev);
+            }
+        }
+        if (!ct)
+            doc_printf(doc, "  Nothing.\n");
+
+        doc_newline(doc);
+    }
+
+    doc_newline(doc);
+    vec_free(v);
+
+    if (p_ptr->arena_number < 0)
+    {
+        if (p_ptr->arena_number <= ARENA_DEFEATED_OLD_VER)
+        {
+            doc_printf(doc, "  <color:G>Arena</color>: <color:v>Defeated</color>\n");
+        }
+        else
+        {
+            doc_printf(doc, "  <color:G>Arena</color>: <color:v>Defeated</color> by %s in the %d%s fight\n",
+                r_name + r_info[arena_info[-1 - p_ptr->arena_number].r_idx].name,
+                -p_ptr->arena_number, get_ordinal_number_suffix(-p_ptr->arena_number));
+        }
+    }
+    else if (p_ptr->arena_number > MAX_ARENA_MONS + 2)
+    {
+        doc_printf(doc, "  <color:G>Arena</color>: <color:B>True Champion</color>\n");
+    }
+    else if (p_ptr->arena_number > MAX_ARENA_MONS - 1)
+    {
+        doc_printf(doc, "  <color:G>Arena</color>: <color:R>Champion</color>\n");
+    }
+    else
+    {
+        doc_printf(doc, "  <color:G>Arena</color>: %2d Victor%s\n",
+            p_ptr->arena_number > MAX_ARENA_MONS ? MAX_ARENA_MONS : p_ptr->arena_number,
+            p_ptr->arena_number > 1 ? "ies" : "y");
+    }
+
+    doc_newline(doc);
+}
+
+static int _compare_monsters_counts(monster_race *left, monster_race *right)
+{
+    if (left->r_pkills < right->r_pkills)
+        return -1;
+    if (left->r_pkills > right->r_pkills)
+        return 1;
+    if (left->level < right->level)
+        return -1;
+    if (left->level > right->level)
+        return 1;
+    if (left->mexp < right->mexp)
+        return -1;
+    if (left->mexp > right->mexp)
+        return 1;
+    return 0;
+}
+static int _compare_monsters(monster_race *left, monster_race *right)
+{
+    if (left->level < right->level)
+        return -1;
+    if (left->level > right->level)
+        return 1;
+    if (left->mexp < right->mexp)
+        return -1;
+    if (left->mexp > right->mexp)
+        return 1;
+    if (left->r_pkills < right->r_pkills)
+        return -1;
+    if (left->r_pkills > right->r_pkills)
+        return 1;
+    return 0;
+}
 static void _build_uniques(doc_ptr doc)
 {
+    int ct = ct_kills();
+
+    if (ct)
+    {
+        int     i;
+        vec_ptr v = vec_alloc(NULL);
+        int     ctu;
+
+        doc_printf(doc, "<topic:Kills>============================== Defeated Monsters ==============================\n\n");
+
+        for (i = 0; i < max_r_idx; i++)
+        {
+            monster_race *r_ptr = &r_info[i];
+            if (r_ptr->flags1 & RF1_UNIQUE)
+            {
+                if (r_ptr->max_num == 0)
+                    vec_add(v, r_ptr);
+            }
+        }
+
+        ctu = vec_length(v);
+        if (ctu)
+        {
+            doc_printf(doc, "You have defeated %d %s including %d unique monster%s in total.\n\n",
+                ct, ct == 1 ? "enemy" : "enemies",
+                ctu, ctu == 1 ? "" : "s");
+
+            vec_sort(v, (vec_cmp_f)_compare_monsters);
+
+            doc_printf(doc, "  <color:G>%-40.40s <color:R>%3s</color></color>\n", "Uniques", "Lvl");
+            for (i = ctu - 1; i >= 0 && i >= ctu - 20; i--)
+            {
+                monster_race *r_ptr = vec_get(v, i);
+                doc_printf(doc, "  %-40.40s %3d\n", (r_name + r_ptr->name), r_ptr->level);
+            }
+        }
+        else
+            doc_printf(doc,"You have defeated %d %s.\n", ct, ct == 1 ? "enemy" : "enemies");
+
+        doc_newline(doc);
+
+
+        vec_clear(v);
+        for (i = 0; i < max_r_idx; i++)
+        {
+            monster_race *r_ptr = &r_info[i];
+            if (!(r_ptr->flags1 & RF1_UNIQUE))
+            {
+                if (r_ptr->r_pkills)
+                    vec_add(v, r_ptr);
+            }
+        }
+        ct = vec_length(v);
+        if (ct)
+        {
+            doc_ptr cols[2] = {0};
+
+            cols[0] = doc_alloc(40);
+            cols[1] = doc_alloc(40);
+
+            vec_sort(v, (vec_cmp_f)_compare_monsters);
+
+            doc_printf(cols[0], "  <color:G>%-25.25s <color:R>%3s</color> %5s</color>\n", "Non-uniques", "Lvl", "Count");
+            for (i = ct - 1; i >= 0 && i >= ct - 20; i--)
+            {
+                monster_race *r_ptr = vec_get(v, i);
+                doc_printf(cols[0], "  %-25.25s %3d %5d\n", (r_name + r_ptr->name), r_ptr->level, r_ptr->r_pkills);
+            }
+            doc_newline(cols[0]);
+
+            vec_sort(v, (vec_cmp_f)_compare_monsters_counts);
+            doc_printf(cols[1], "  <color:G>%-25.25s %3s <color:R>%5s</color></color>\n", "Non-uniques", "Lvl", "Count");
+            for (i = ct - 1; i >= 0 && i >= ct - 20; i--)
+            {
+                monster_race *r_ptr = vec_get(v, i);
+                doc_printf(cols[1], "  %-25.25s %3d %5d\n", (r_name + r_ptr->name), r_ptr->level, r_ptr->r_pkills);
+            }
+            doc_newline(cols[1]);
+
+            doc_insert_cols(doc, cols, 2, 0);
+            doc_free(cols[0]);
+            doc_free(cols[1]);
+        }
+
+        vec_free(v);
+    }
 }
 
 static void _build_virtues(doc_ptr doc)
 {
+    if (enable_virtues)
+    {
+        doc_printf(doc, "<topic:Virtues>=================================== Virtues ===================================\n\n");
+        virtue_display(doc);
+        doc_newline(doc);
+    }
 }
 
 static void _build_mutations(doc_ptr doc)
 {
+    if (mut_count(NULL))
+    {
+        doc_printf(doc, "<topic:Mutations>================================== Mutations ==================================\n\n");
+        mut_display(doc);
+        doc_newline(doc);
+    }
 }
 
 static void _build_pets(doc_ptr doc)
 {
+    int i;
+    bool pet = FALSE;
+    bool pet_settings = FALSE;
+    char pet_name[MAX_NLEN];
+
+    for (i = m_max - 1; i >= 1; i--)
+    {
+        monster_type *m_ptr = &m_list[i];
+
+        if (!m_ptr->r_idx) continue;
+        if (!is_pet(m_ptr)) continue;
+
+        pet_settings = TRUE;
+        /*if (!m_ptr->nickname && (p_ptr->riding != i)) continue;*/
+        if (!pet)
+        {
+            doc_printf(doc, "<topic:Pets>==================================== Pets =====================================\n\n");
+            doc_printf(doc, "  <color:G>Leading Pets</color>\n");
+            pet = TRUE;
+        }
+        monster_desc(pet_name, m_ptr, MD_ASSUME_VISIBLE | MD_INDEF_VISIBLE | MD_NO_PET_ABBREV);
+        doc_printf(doc, "  <indent><style:indent>%s</style></indent>\n", pet_name);
+    }
+
+    if (pet_settings)
+    {
+        doc_printf(doc, "\n  <color:G>Options</color>\n");
+        doc_printf(doc, "  Pets open doors:                    %s\n", (p_ptr->pet_extra_flags & PF_OPEN_DOORS) ? "ON" : "OFF");
+        doc_printf(doc, "  Pets pick up items:                 %s\n", (p_ptr->pet_extra_flags & PF_PICKUP_ITEMS) ? "ON" : "OFF");
+        doc_printf(doc, "  Allow teleport:                     %s\n", (p_ptr->pet_extra_flags & PF_TELEPORT) ? "ON" : "OFF");
+        doc_printf(doc, "  Allow cast attack spell:            %s\n", (p_ptr->pet_extra_flags & PF_ATTACK_SPELL) ? "ON" : "OFF");
+        doc_printf(doc, "  Allow cast summon spell:            %s\n", (p_ptr->pet_extra_flags & PF_SUMMON_SPELL) ? "ON" : "OFF");
+        doc_printf(doc, "  Allow involve player in area spell: %s\n", (p_ptr->pet_extra_flags & PF_BALL_SPELL) ? "ON" : "OFF");
+
+        doc_newline(doc);
+    }
 }
 
 /****************************** Objects ************************************/
@@ -1079,7 +1421,7 @@ static void _build_inventory(doc_ptr doc)
         if (!inventory[i].k_idx) break;
 
         object_desc(o_name, &inventory[i], OD_COLOR_CODED);
-        doc_printf(doc, "%c) %s\n", index_to_label(i), o_name);
+        doc_printf(doc, "%c) <indent><style:indent>%s</style></indent>\n", index_to_label(i), o_name);
     }
 
     doc_newline(doc);
@@ -1102,7 +1444,7 @@ static void _build_home(doc_ptr doc)
             if ((i % 12) == 0)
                 doc_printf(doc, "\n ( page %d )\n", page++);
             object_desc(o_name, &st_ptr->stock[i], OD_COLOR_CODED);
-            doc_printf(doc, "%c) %s\n", I2A(i%12), o_name);
+            doc_printf(doc, "%c) <indent><style:indent>%s</style></indent>\n", I2A(i%12), o_name);
         }
 
         doc_newline(doc);
@@ -1126,7 +1468,7 @@ static void _build_museum(doc_ptr doc)
             if ((i % 12) == 0)
                 doc_printf(doc, "\n ( page %d )\n", page++);
             object_desc(o_name, &st_ptr->stock[i], OD_COLOR_CODED);
-            doc_printf(doc, "%c) %s\n", I2A(i%12), o_name);
+            doc_printf(doc, "%c) <indent><style:indent>%s</style></indent>\n", I2A(i%12), o_name);
         }
 
         doc_newline(doc);
@@ -1784,7 +2126,7 @@ static void _build_dungeons(doc_ptr doc)
         else if (max_dlv[i] == d_info[i].maxdepth) conquered = TRUE;
 
         if (conquered)
-            doc_printf(doc, "!<color:R>%-16s</color>: level %3d\n", d_name+d_info[i].name, max_dlv[i]);
+            doc_printf(doc, "!<color:G>%-16s</color>: level %3d\n", d_name+d_info[i].name, max_dlv[i]);
         else
             doc_printf(doc, " %-16s: level %3d\n", d_name+d_info[i].name, max_dlv[i]);
     }
@@ -1889,8 +2231,61 @@ static void _build_messages(doc_ptr doc)
 }
 
 /******************************** Options ************************************/
+static cptr _game_mode_text[GAME_MODE_MAX] = {
+    "<color:G>Beginner</color>",
+    "Normal",
+    "<color:R>Real Life</color>",
+    "<color:r>Monster</color>"
+};
 static void _build_options(doc_ptr doc)
 {
+    doc_printf(doc, "<topic:Options>=================================== Options ===================================\n\n");
+
+    if (game_mode != GAME_MODE_NORMAL)
+        doc_printf(doc, " Game Mode:          %s\n", _game_mode_text[game_mode]);
+
+    doc_printf(doc, " Preserve Mode:      %s\n", preserve_mode ? "On" : "Off");
+
+    doc_printf(doc, " Small Levels:       %s\n", ironman_small_levels ? "*Always*" :
+                                                    always_small_levels ? "Always" :
+                                                    small_levels ? "Sometimes" : "Never");
+
+    if (no_wilderness)
+        doc_printf(doc, " Wilderness:         Off\n");
+
+    if (ironman_shops)
+        doc_printf(doc, " No Shops:           On\n");
+
+    if (ironman_downward)
+        doc_printf(doc, " Diving Only:        On\n");
+
+    if (ironman_rooms)
+        doc_printf(doc, " Unusual Rooms:      On\n");
+
+    if (ironman_nightmare)
+        doc_printf(doc, " Nightmare Mode:     O\n");
+
+    doc_printf(doc, " Arena Levels:       %s\n", ironman_empty_levels ? "*Always*" :
+                                                    empty_levels ? "Sometimes" : "Never");
+
+    if (ironman_quests)
+        doc_printf(doc, " Ironman Quests:     Enabled\n");
+
+    if (no_artifacts)
+        doc_printf(doc, " No Artifacts:       Enabled\n");
+    else if (random_artifacts)
+        doc_printf(doc, " Random Artifacts:   Enabled\n");
+
+    if (no_egos)
+        doc_printf(doc, " No Egos:            Enabled\n");
+
+    if (no_selling)
+        doc_printf(doc, " No Selling:         Enabled\n");
+
+    if (p_ptr->noscore)
+        doc_printf(doc, "\n <color:v>You have done something illegal.</color>\n");
+
+    doc_newline(doc);
 }
 
 /****************************** Character Sheet ************************************/

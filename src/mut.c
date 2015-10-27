@@ -426,26 +426,13 @@ int mut_count(mut_pred pred)
 
 void mut_do_cmd_knowledge(void)
 {
-    FILE *fff;
-    char file_name[1024];
-
-    /* Open a new file */
-    fff = my_fopen_temp(file_name, 1024);
-
-    /* Dump the mutations to file */
-    if (fff) mut_dump_file(fff);
-
-    /* Close the file */
-    my_fclose(fff);
-
-    /* Display the file contents */
-    show_file(TRUE, file_name, "Mutations", 0, 0);
-
-    /* Remove the file */
-    fd_kill(file_name);
+    doc_ptr doc = doc_alloc(80);
+    mut_display(doc);
+    doc_display(doc, "Mutations", 0);
+    doc_free(doc);
 }
 
-void mut_dump_file(FILE* file)
+void mut_display(doc_ptr doc)
 {
     int i;
     variant desc;
@@ -455,7 +442,7 @@ void mut_dump_file(FILE* file)
         if (mut_present(i))
         {
             (_mutations[i].spell.fn)(SPELL_MUT_DESC, &desc);
-            fprintf(file, "%s\n", var_get_string(&desc));
+            doc_printf(doc, "%s\n", var_get_string(&desc));
         }
     }
     var_clear(&desc);

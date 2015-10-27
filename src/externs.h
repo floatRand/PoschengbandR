@@ -924,8 +924,6 @@ extern int z_string_split(char *buf, char **tokens, int max, cptr delim);
 extern int parse_args(char *buf, char **name, char **args, int max);
 extern void trim_tokens(char **tokens, int ct);
 extern void display_player(int mode);
-extern errr make_character_dump(FILE *fff);
-extern errr file_character(cptr name);
 extern errr process_pref_file_command(char *buf);
 extern cptr process_pref_file_expr(char **sp, char *fp);
 extern errr process_pref_file(cptr name);
@@ -2029,7 +2027,7 @@ extern bool virtue_present(int which);
 extern int virtue_current(int which);
 extern void virtue_add(int which, int amount);
 extern void virtue_init(void);
-extern void virtue_dump(FILE *file);
+extern void virtue_display(doc_ptr doc);
 
 extern travel_type travel;
 

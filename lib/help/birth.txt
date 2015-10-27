@@ -142,6 +142,10 @@ If you select not to use the auto-roller, the computer will roll one random char
 
 Once an existing character dies you may create a new one from the same savefile. If so, you will be asked whether you want to use quick start or not at start up. If you choose to use quick start, you get new character with exactly same race, class, stats, and personality as your last character. Since it is common to die early on, this option can save you the tedium of re-rolling a new character from scratch.
 
+<topic:Name><style:heading>Your Character's Name</style>
+
+During the birth process, you will be asked to name your character. This name will be used for your savefile (unless you created this character inside an existing, already named savefile) and any options and preferences you may set. So choose your name carefully. Changing your name, as you may imagine, is a complicated legal process involving much paperwork (and a hefty fee). Should you decide to change your name in the future, inquire at the Mayor's office and he will direct you how to proceed.
+
 <color:D>
 Original : (??)
 Updated  : (??)

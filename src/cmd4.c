@@ -6996,46 +6996,14 @@ static void do_cmd_knowledge_kubi(void)
 /*
  * List virtues & status
  */
-static char _alignment_color(void)
-{
-    if (p_ptr->align > 150) return 'g';
-    else if (p_ptr->align > 50) return 'G';
-    else if (p_ptr->align > 10) return 'B';
-    else if (p_ptr->align > -11) return 'w';
-    else if (p_ptr->align > -51) return 'o';
-    else if (p_ptr->align > -151) return 'r';
-    else return 'v';
-}
-
 
 static void do_cmd_knowledge_virtues(void)
 {
-    FILE *fff;
-    
-    char file_name[1024];
-    
-    /* Open a new file */
-    fff = my_fopen_temp(file_name, 1024);
-    if (!fff) {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
-    
-    if (fff)
-    {
-        fprintf(fff, "[[[[r|Your alignment:| [[[[%c|%s|\n\n", _alignment_color(), your_alignment());
-        virtue_dump(fff);
-    }
-    
-    /* Close the file */
-    my_fclose(fff);
-    
-    /* Display the file contents */
-    show_file(TRUE, file_name, "Virtues", 0, 0);
-    
-    /* Remove the file */
-    fd_kill(file_name);
+    doc_ptr doc = doc_alloc(80);
+
+    virtue_display(doc);
+    doc_display(doc, "Virtues", 0);
+    doc_free(doc);
 }
 
 /*

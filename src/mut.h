@@ -168,7 +168,7 @@ extern void mut_calc_stats(s16b stats[MAX_STATS]);
 extern int  mut_gain_random_aux(mut_pred pred);
 extern int  mut_count(mut_pred pred);
 extern void mut_do_cmd_knowledge(void);
-extern void mut_dump_file(FILE* file);
+extern void mut_display(doc_ptr doc);
 extern bool mut_gain(int mut_idx);
 extern int mut_gain_choice(mut_pred pred);
 extern bool mut_gain_random(mut_pred pred);
