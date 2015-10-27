@@ -7668,21 +7668,35 @@ static void do_cmd_knowledge_home(void)
             else
             {
                 int cmd2, which = -1;
-                prt("Which item do you want to examine? ", 0, 0);
+                prt("Which item do you want to examine? (* for All)", 0, 0);
                 cmd2 = inkey_special(FALSE);
                 prt("", 0, 0);
-                if (islower(cmd2))
-                    which = A2I(cmd2);
-                else if (isupper(cmd2))
-                    which = A2I(tolower(cmd2)) + 26;
-
-                if (0 <= which && which < page_size && page_top + which < st_ptr->stock_num)
+                if (cmd2 == '*')
                 {
-                    object_type *o_ptr = &st_ptr->stock[page_top + which];
-                    if (!(o_ptr->ident & IDENT_FULL))
-                        msg_print("You have no special knowledge about that item.");
-                    else
-                        obj_display(o_ptr);
+                    doc_ptr doc = doc_alloc(80);
+                    for (i = 0; i < st_ptr->stock_num; i++, row++)
+                    {
+                        obj_display_doc(&st_ptr->stock[i], doc);
+                        doc_newline(doc);
+                    }
+                    doc_display(doc, "Your Home", 0);
+                    doc_free(doc);
+                }
+                else
+                {
+                    if (islower(cmd2))
+                        which = A2I(cmd2);
+                    else if (isupper(cmd2))
+                        which = A2I(tolower(cmd2)) + 26;
+
+                    if (0 <= which && which < page_size && page_top + which < st_ptr->stock_num)
+                    {
+                        object_type *o_ptr = &st_ptr->stock[page_top + which];
+                        if (!(o_ptr->ident & IDENT_FULL))
+                            msg_print("You have no special knowledge about that item.");
+                        else
+                            obj_display(o_ptr);
+                    }
                 }
             }
             break;

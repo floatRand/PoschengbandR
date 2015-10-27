@@ -884,11 +884,15 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
                 doc_printf(doc, "<color:U>Fail: </color>%d.%d%%\n", fail/10, fail%10);
             }
         }
+        doc_insert(doc, "</indent>\n");
         return;
     }
 
-    if (!object_is_device(o_ptr)) return;
-    if (!object_is_known(o_ptr)) return;
+    if (!object_is_device(o_ptr) || !object_is_known(o_ptr))
+    {
+        doc_insert(doc, "</indent>\n");
+        return;
+    }
 
     object_flags_known(o_ptr, flgs);
     if (devicemaster_is_speciality(o_ptr))

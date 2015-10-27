@@ -538,7 +538,7 @@ void do_cmd_destroy(void)
 /*
  * Observe an item which has been *identify*-ed
  */
-void do_cmd_observe(void)
+void do_cmd_inspect(void)
 {
     int            item;
 
@@ -551,31 +551,63 @@ void do_cmd_observe(void)
     q = "Examine which item? ";
     s = "You have nothing to examine.";
 
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR))) return;
+    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | OPTION_ALL))) return;
 
-    /* Get the item (in the pack) */
-    if (item >= 0)
+    if (item == INVEN_ALL)
     {
-        o_ptr = &inventory[item];
-    }
+        int     slot, i;
+        doc_ptr doc = doc_alloc(80);
 
-    /* Get the item (on the floor) */
+        doc_insert(doc, "<topic:Equipment><style:heading>Equipment</style>\n\n");
+        for (slot = EQUIP_BEGIN, i = 0; slot < EQUIP_BEGIN + equip_count(); slot++, i++)
+        {
+            object_type *o_ptr = equip_obj(slot);
+            if (!o_ptr) continue;
+
+            obj_display_doc(o_ptr, doc);
+            doc_newline(doc);
+        }
+
+        doc_insert(doc, "<topic:Equipment><style:heading>Inventory</style>\n\n");
+        for (i = 0; i < INVEN_PACK; i++)
+        {
+            if (!inventory[i].k_idx) break;
+
+            obj_display_doc(&inventory[i], doc);
+            doc_newline(doc);
+        }
+
+        screen_save();
+        doc_display(doc, "Equipment", 0);
+        screen_load();
+        doc_free(doc);
+    }
     else
     {
-        o_ptr = &o_list[0 - item];
+        /* Get the item (in the pack) */
+        if (item >= 0)
+        {
+            o_ptr = &inventory[item];
+        }
+
+        /* Get the item (on the floor) */
+        else
+        {
+            o_ptr = &o_list[0 - item];
+        }
+
+
+        /* Note, descriptions for potions, scrolls, wands, staves and rods all spoil
+           the object's effects. Some of the light and jewelry descriptions are also TMI.
+           Descriptions for weapons and armor should always be displayed. */
+        if (!object_is_weapon_armour_ammo(o_ptr) && !object_is_known(o_ptr))
+        {
+            msg_print("You have no special knowledge about that item.");
+            return;
+        }
+
+        obj_display(o_ptr);
     }
-
-
-    /* Note, descriptions for potions, scrolls, wands, staves and rods all spoil 
-       the object's effects. Some of the light and jewelry descriptions are also TMI.
-       Descriptions for weapons and armor should always be displayed. */
-    if (!object_is_weapon_armour_ammo(o_ptr) && !object_is_known(o_ptr))
-    {
-        msg_print("You have no special knowledge about that item.");
-        return;
-    }
-
-    obj_display(o_ptr);
 }
 
 

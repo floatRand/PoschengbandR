@@ -3658,7 +3658,7 @@ static void process_command(void)
         /* Identify an object */
         case 'I':
         {
-            do_cmd_observe();
+            do_cmd_inspect();
             break;
         }
 
