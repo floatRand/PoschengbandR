@@ -6129,7 +6129,6 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
     {
         bool android = (p_ptr->prace == RACE_ANDROID ? TRUE : FALSE);
 
-
         /* Sound */
         sound(SOUND_DEATH);
 
@@ -6163,6 +6162,8 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
                 sprintf(dummy, "%s%s", hit_from, !p_ptr->paralyzed ? "" : " while helpless");
                 my_strcpy(p_ptr->died_from, dummy, sizeof p_ptr->died_from);
             }
+
+            msg_add_tiny_screenshot(50, 24);
 
             p_ptr->total_winner = FALSE;
             flush();

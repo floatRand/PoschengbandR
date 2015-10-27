@@ -536,7 +536,7 @@ void display_weapon_info(doc_ptr doc, int hand)
     cols[1] = doc_alloc(10);
 
     /* Column #1 */
-    object_desc(o_name, o_ptr, OD_OMIT_INSCRIPTION | OD_COLOR_CODED);
+    object_desc(o_name, o_ptr, OD_COLOR_CODED | OD_NAME_AND_ENCHANT);
     if (prace_is_(RACE_MON_SWORD))
         doc_printf(cols[0], "<color:y> You    :</color> <indent><style:indent>%s</style></indent>\n", o_name);
     else

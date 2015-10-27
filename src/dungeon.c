@@ -5937,8 +5937,7 @@ void play_game(bool new_game)
         
         do_cmd_redraw();  /* Not sure why this is required?! */
 
-        cmsg_print(TERM_VIOLET, "=========================================");
-        msg_print("\n<color:B>Welcome!</color> You begin life in the town where you may purchase "
+        msg_print("<color:B>Welcome!</color> You begin life in the town where you may purchase "
                   "supplies for the dangers that await you.\n"
                   "This is the message line where important information is "
                   "communicated to you while you play the game. "

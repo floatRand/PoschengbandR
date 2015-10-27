@@ -636,6 +636,7 @@ void check_quest_completion(monster_type *m_ptr)
                     {
                         reward = TRUE;
                         quest[i].status = QUEST_STATUS_FINISHED;
+                        msg_add_tiny_screenshot(50, 24);
                     }
                 }
                 break;
@@ -2075,6 +2076,8 @@ void monster_death(int m_idx, bool drop_item)
             /* Centipedes can only take the final evolutionary step if the boss is dead */
             if (p_ptr->prace == RACE_MON_CENTIPEDE && p_ptr->lev >= 35)
                 race_ptr->gain_level(p_ptr->lev);
+
+            msg_add_tiny_screenshot(50, 24);
         }
 
         if ((a_idx > 0) && ((randint0(100) < chance) || p_ptr->wizard))
@@ -2228,6 +2231,7 @@ void monster_death(int m_idx, bool drop_item)
             }
             cmsg_format(TERM_L_GREEN, "You have conquered %s!",d_name+d_info[dungeon_type].name);
             virtue_add(VIRTUE_VALOUR, 5);
+            msg_add_tiny_screenshot(50, 24);
         }
     }
 
@@ -2308,6 +2312,7 @@ void monster_death(int m_idx, bool drop_item)
         msg_print("*** CONGRATULATIONS ***");
         msg_print("You have won the game!");
         msg_print("You may retire (commit suicide) when you are ready.");
+        msg_add_tiny_screenshot(50, 24);
     }
 }
 

@@ -1787,6 +1787,22 @@ static void prt_effects(void)
     }
     if (monk_armour_aux)
         c_put_str(TERM_RED, "Heavy Armor", row++, col);
+    for (i = 0; i < MAX_HANDS; i++)
+    {
+        if (p_ptr->weapon_info[i].heavy_wield)
+        {
+            c_put_str(TERM_RED, "Heavy Wield", row++, col);
+            break;
+        }
+    }
+    for (i = 0; i < MAX_HANDS; i++)
+    {
+        if (p_ptr->weapon_info[i].icky_wield)
+        {
+            c_put_str(TERM_GREEN, "Icky Wield", row++, col);
+            break;
+        }
+    }
     if (p_ptr->cut)
         prt_cut(row++, col);
     if (p_ptr->stun)
@@ -4833,6 +4849,7 @@ void calc_bonuses(void)
                 msg_print("You feel relieved to put down your heavy weapon.");
 
             p_ptr->old_heavy_wield[i] = p_ptr->weapon_info[i].heavy_wield;
+            p_ptr->redraw |= PR_EFFECTS;
         }
 
         if (p_ptr->old_riding_wield[i] != p_ptr->weapon_info[i].riding_wield)
@@ -4861,6 +4878,7 @@ void calc_bonuses(void)
                 msg_print("You feel more comfortable after removing your weapon.");
 
             p_ptr->old_icky_wield[i] = p_ptr->weapon_info[i].icky_wield;
+            p_ptr->redraw |= PR_EFFECTS;
         }
     }
 

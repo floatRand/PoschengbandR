@@ -794,6 +794,7 @@ extern void do_cmd_checkquest(void);
 extern void do_cmd_time(void);
 extern string_ptr get_tiny_screenshot(int cx, int cy);
 extern string_ptr get_screenshot(void);
+extern void msg_add_tiny_screenshot(int cx, int cy);
 
 /* cmd5.c */
 extern cptr spell_category_name(int tval);
