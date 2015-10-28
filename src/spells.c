@@ -814,7 +814,6 @@ void do_cmd_spell(void)
 
         p_ptr->redraw |= (PR_MANA);
         p_ptr->redraw |= (PR_HP);
-        p_ptr->window |= (PW_PLAYER);
         p_ptr->window |= (PW_SPELL);
     }
 }
@@ -916,7 +915,6 @@ void do_cmd_power(void)
 
         p_ptr->redraw |= (PR_MANA);
         p_ptr->redraw |= (PR_HP);
-        p_ptr->window |= (PW_PLAYER);
         p_ptr->window |= (PW_SPELL);
     }
 }
@@ -1270,7 +1268,7 @@ static void _dump_realm(doc_ptr doc, int realm)
 
 void spellbook_character_dump(doc_ptr doc)
 {
-    doc_printf(doc, "<topic:Spells>==================================== Spells ===================================\n\n");
+    doc_printf(doc, "<style:wide><topic:Spells>==================================== Spells ===================================\n\n");
 
     if (p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_SORCERER)
     {
@@ -1296,5 +1294,6 @@ void spellbook_character_dump(doc_ptr doc)
         }
         doc_newline(doc);
     }
+    doc_insert(doc, "</style>");
 }
 

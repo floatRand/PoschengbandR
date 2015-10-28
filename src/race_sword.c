@@ -740,7 +740,7 @@ static void _upgrade_weapon(int tval, int sval)
     o_ptr->ident |= IDENT_FULL;
 
     p_ptr->update |= PU_BONUS;
-    p_ptr->window |= PW_INVEN | PW_EQUIP | PW_PLAYER;
+    p_ptr->window |= PW_INVEN | PW_EQUIP;
 }
 
 static void _gain_level(int new_level) 

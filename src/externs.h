@@ -923,13 +923,11 @@ extern s16b tokenize(char *buf, s16b num, char **tokens, int mode);
 extern int z_string_split(char *buf, char **tokens, int max, cptr delim);
 extern int parse_args(char *buf, char **name, char **args, int max);
 extern void trim_tokens(char **tokens, int ct);
-extern void display_player(int mode);
 extern errr process_pref_file_command(char *buf);
 extern cptr process_pref_file_expr(char **sp, char *fp);
 extern errr process_pref_file(cptr name);
 extern errr process_autopick_file(cptr name);
 extern errr process_histpref_file(cptr name);
-extern void print_equippy(void);
 extern errr check_time_init(void);
 extern errr check_load_init(void);
 extern errr check_time(void);
@@ -1122,9 +1120,11 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc);
 
 /* py_display.c */
 extern void py_display(void);
+extern void py_display_birth(void);
 extern void py_display_spells(doc_ptr doc, spell_info *table, int ct);
 extern void py_display_powers(doc_ptr doc, spell_info *table, int ct);
-extern void py_build_character_sheet(doc_ptr doc);
+extern void py_display_character_sheet(doc_ptr doc);
+extern void py_display_dungeons(doc_ptr doc);
 
 /* object1.c */
 extern s16b m_bonus(int max, int level);

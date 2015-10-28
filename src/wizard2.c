@@ -83,7 +83,6 @@ void do_cmd_rerate(bool display)
 
     p_ptr->update |= (PU_HP);
     p_ptr->redraw |= (PR_HP);
-    p_ptr->window |= (PW_PLAYER);
     handle_stuff();
 
     if (display)
@@ -1761,7 +1760,7 @@ static void wiz_reroll_item(object_type *o_ptr)
         p_ptr->notice |= (PN_COMBINE | PN_REORDER);
 
         /* Window stuff */
-        p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER);
+        p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL);
     }
 }
 
@@ -2129,7 +2128,7 @@ static void do_cmd_wiz_play(void)
         p_ptr->notice |= (PN_COMBINE | PN_REORDER);
 
         /* Window stuff */
-        p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER);
+        p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL);
     }
 
     /* Ignore change */
@@ -2254,9 +2253,6 @@ static void do_cmd_wiz_cure_all(void)
 
         /* Redraw */
         p_ptr->redraw |= (PR_HP);
-
-        /* Window stuff */
-        p_ptr->window |= (PW_PLAYER);
     }
 
     /* Restore mana */
@@ -2266,7 +2262,6 @@ static void do_cmd_wiz_cure_all(void)
         p_ptr->csp_frac = 0;
 
         p_ptr->redraw |= (PR_MANA);
-        p_ptr->window |= (PW_PLAYER);
         p_ptr->window |= (PW_SPELL);
     }
 

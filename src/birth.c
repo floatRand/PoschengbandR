@@ -3509,7 +3509,6 @@ cptr birth_get_realm_desc(int i)
 static bool player_birth_aux(void)
 {
     int i;
-    int mode = 0;
 
     bool stop = FALSE;
     bool flag = FALSE;
@@ -3725,9 +3724,6 @@ auto_roller_barf:
 
         /*** Display ***/
 
-        /* Mode */
-        mode = 0;
-
         /* Roll for base hitpoints */
         get_extra(TRUE);
 
@@ -3756,7 +3752,7 @@ auto_roller_barf:
             p_ptr->csp = p_ptr->msp;
 
             /* Display the player */
-            display_player(mode);
+            py_display_birth();
 
             if (p_ptr->prace == RACE_BEASTMAN)
             {

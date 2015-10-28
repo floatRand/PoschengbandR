@@ -455,7 +455,6 @@ void do_cmd_snipe(void)
     if (!cast) return;
 
     p_ptr->redraw |= (PR_HP | PR_MANA);
-    p_ptr->window |= (PW_PLAYER);
     p_ptr->window |= (PW_SPELL);
 }
 

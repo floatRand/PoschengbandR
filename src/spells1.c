@@ -7124,7 +7124,6 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
                 p_ptr->redraw |= (PR_MANA);
 
                 /* Window stuff */
-                p_ptr->window |= (PW_PLAYER);
                 p_ptr->window |= (PW_SPELL);
 
                 if (who > 0)

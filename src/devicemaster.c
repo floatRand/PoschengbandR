@@ -240,7 +240,7 @@ static bool _transfer_effect(void)
     inven_item_optimize(src_idx);
 
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
     return TRUE;
 }
 
@@ -312,7 +312,7 @@ static bool _transfer_essence(void)
     inven_item_optimize(src_idx);
 
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
     return TRUE;
 }
 void _transfer_charges_spell(int cmd, variant *res)

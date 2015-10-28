@@ -6,21 +6,23 @@
 /* Build & Display the "Character Sheet" */
 
 extern void py_display(void);
+extern void py_display_birth(void);
 extern void py_display_spells(doc_ptr doc, spell_info *table, int ct);
 extern void py_display_powers(doc_ptr doc, spell_info *table, int ct);
-extern void py_build_character_sheet(doc_ptr doc);
+extern void py_display_character_sheet(doc_ptr doc);
+extern void py_display_dungeons(doc_ptr doc);
 
-static void _build_page1(doc_ptr doc);
+static void _build_general(doc_ptr doc);
 static void _build_equipment(doc_ptr doc); /* Formerly Pages 2-4 */
 static void _build_melee(doc_ptr doc);
 static void _build_shooting(doc_ptr doc);
 static void _build_powers(doc_ptr doc);
 static void _build_spells(doc_ptr doc);
 static void _build_dungeons(doc_ptr doc);
-
 static void _build_quests(doc_ptr doc);
 static void _build_uniques(doc_ptr doc);
 static void _build_virtues(doc_ptr doc);
+static void _build_race_history(doc_ptr doc);
 static void _build_mutations(doc_ptr doc);
 static void _build_pets(doc_ptr doc);
 static void _build_inventory(doc_ptr doc);
@@ -278,7 +280,7 @@ static void _build_general2(doc_ptr doc)
     string_free(s);
 }
 
-static void _build_page1(doc_ptr doc)
+static void _build_general(doc_ptr doc)
 {
     doc_ptr cols[2];
 
@@ -856,7 +858,7 @@ static void _build_equipment(doc_ptr doc)
         char o_name[MAX_NLEN];
         _flagzilla_ptr flagzilla = 0;
 
-        doc_insert(doc, "<topic:Equipment>============================= Character Equipment =============================\n\n");
+        doc_insert(doc, "<topic:Equipment>============================= Character <color:keypress>E</color>quipment =============================\n\n");
         for (slot = EQUIP_BEGIN, i = 0; slot < EQUIP_BEGIN + equip_count(); slot++, i++)
         {
             object_type *o_ptr = equip_obj(slot);
@@ -901,7 +903,7 @@ static void _build_melee(doc_ptr doc)
     if (p_ptr->prace != RACE_MON_RING)
     {
         int i;
-        doc_insert(doc, "<topic:Melee>==================================== Melee ====================================\n\n");
+        doc_insert(doc, "<topic:Melee>==================================== <color:keypress>M</color>elee ====================================\n\n");
         for (i = 0; i < MAX_HANDS; i++)
         {
             if (p_ptr->weapon_info[i].wield_how == WIELD_NONE) continue;
@@ -922,7 +924,7 @@ static void _build_shooting(doc_ptr doc)
 {
     if (equip_find_object(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
     {
-        doc_insert(doc, "<topic:Shooting>=================================== Shooting ==================================\n\n");
+        doc_insert(doc, "<topic:Shooting>=================================== <color:keypress>S</color>hooting ==================================\n\n");
         display_shooter_info(doc);
     }
 }
@@ -939,7 +941,7 @@ void py_display_powers(doc_ptr doc, spell_info *table, int ct)
     var_init(&vc);
     var_init(&vfm);
 
-    doc_printf(doc, "<topic:Powers>=================================== Powers ====================================\n\n");
+    doc_printf(doc, "<topic:Powers>=================================== <color:keypress>P</color>owers ====================================\n\n");
     doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
     for (i = 0; i < ct; i++)
     {
@@ -998,7 +1000,7 @@ void py_display_spells(doc_ptr doc, spell_info *table, int ct)
     var_init(&vc);
     var_init(&vfm);
 
-    doc_printf(doc, "<topic:Spells>=================================== Spells ====================================\n\n");
+    doc_printf(doc, "<topic:Spells>=================================== <color:keypress>S</color>pells ====================================\n\n");
     doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
 
     for (i = 0; i < ct; i++)
@@ -1046,6 +1048,30 @@ static void _build_spells(doc_ptr doc)
 }
 
 /****************************** Miscellaneous ************************************/
+static void _build_race_history(doc_ptr doc)
+{
+    if (p_ptr->old_race1 || p_ptr->old_race2)
+    {
+        int i;
+
+        doc_printf(doc, "\n You were born as %s.\n", get_race_aux(p_ptr->start_race, 0)->name);
+        for (i = 0; i < MAX_RACES; i++)
+        {
+            if (p_ptr->start_race == i) continue;
+            if (i < 32)
+            {
+                if (!(p_ptr->old_race1 & 1L << i)) continue;
+            }
+            else
+            {
+                if (!(p_ptr->old_race2 & 1L << (i-32))) continue;
+            }
+            doc_printf(doc, " You were a %s before.\n", get_race_aux(i, 0)->name);
+        }
+        doc_newline(doc);
+    }
+}
+
 static int _compare_quests(quest_type *left, quest_type *right)
 {
     if (left->complev < right->complev)
@@ -1064,7 +1090,7 @@ static void _build_quests(doc_ptr doc)
     int     i, ct;
     vec_ptr v = vec_alloc(NULL);
 
-    doc_printf(doc, "<topic:Quests>==================================== Quests ===================================\n\n");
+    doc_printf(doc, "<topic:uQuests>==================================== Q<color:keypress>u</color>ests ===================================\n\n");
 
     /* Completed */
     for (i = 1; i < max_quests; i++)
@@ -1268,7 +1294,7 @@ static void _build_uniques(doc_ptr doc)
         vec_ptr v = vec_alloc(NULL);
         int     ctu;
 
-        doc_printf(doc, "<topic:Kills>============================== Defeated Monsters ==============================\n\n");
+        doc_printf(doc, "<topic:Kills>================================ Monster <color:keypress>K</color>ills ================================\n\n");
 
         for (i = 0; i < max_r_idx; i++)
         {
@@ -1352,7 +1378,7 @@ static void _build_virtues(doc_ptr doc)
 {
     if (enable_virtues)
     {
-        doc_printf(doc, "<topic:Virtues>=================================== Virtues ===================================\n\n");
+        doc_printf(doc, "<topic:Virtues>=================================== <color:keypress>V</color>irtues ===================================\n\n");
         virtue_display(doc);
         doc_newline(doc);
     }
@@ -1362,7 +1388,7 @@ static void _build_mutations(doc_ptr doc)
 {
     if (mut_count(NULL))
     {
-        doc_printf(doc, "<topic:Mutations>================================== Mutations ==================================\n\n");
+        doc_printf(doc, "<topic:Mutations>================================== <color:keypress>M</color>utations ==================================\n\n");
         mut_display(doc);
         doc_newline(doc);
     }
@@ -1386,7 +1412,7 @@ static void _build_pets(doc_ptr doc)
         /*if (!m_ptr->nickname && (p_ptr->riding != i)) continue;*/
         if (!pet)
         {
-            doc_printf(doc, "<topic:Pets>==================================== Pets =====================================\n\n");
+            doc_printf(doc, "<topic:Pets>==================================== <color:keypress>P</color>ets =====================================\n\n");
             doc_printf(doc, "  <color:G>Leading Pets</color>\n");
             pet = TRUE;
         }
@@ -1414,7 +1440,7 @@ static void _build_inventory(doc_ptr doc)
     int i;
     char o_name[MAX_NLEN];
 
-    doc_printf(doc, "<topic:Inventory>============================= Character Inventory =============================\n\n");
+    doc_printf(doc, "<topic:Inventory>============================= Character <color:keypress>I</color>nventory =============================\n\n");
 
     for (i = 0; i < INVEN_PACK; i++)
     {
@@ -1437,7 +1463,7 @@ static void _build_home(doc_ptr doc)
         int i;
         int page = 1;
 
-        doc_printf(doc, "<topic:Home>================================ Home Inventory ===============================\n");
+        doc_printf(doc, "<topic:Home>================================ <color:keypress>H</color>ome Inventory ===============================\n");
 
         for (i = 0; i < st_ptr->stock_num; i++)
         {
@@ -1461,7 +1487,7 @@ static void _build_museum(doc_ptr doc)
         int i;
         int page = 1;
 
-        doc_printf(doc, "<topic:Museum>==================================== Museum ===================================\n");
+        doc_printf(doc, "<topic:Museum>==================================== <color:keypress>M</color>useum ===================================\n");
 
         for (i = 0; i < st_ptr->stock_num; i++)
         {
@@ -1877,7 +1903,7 @@ static void _build_statistics(doc_ptr doc)
     int i, total_kills = ct_kills_all();
     counts_t totals = {0};
 
-    doc_printf(doc, "<topic:Statistics>================================== Statistics =================================\n\n");
+    doc_printf(doc, "<topic:Statistics>================================== <color:keypress>S</color>tatistics =================================\n\n");
 
     /* Objects */
     for (i = 0; i < max_k_idx; i++)
@@ -2108,11 +2134,9 @@ static void _build_statistics(doc_ptr doc)
 }
 
 /****************************** Dungeons ************************************/
-static void _build_dungeons(doc_ptr doc)
+void py_display_dungeons(doc_ptr doc)
 {
     int i;
-
-    doc_printf(doc, "<topic:Dungeons>=================================== Dungeons ==================================\n\n");
     for (i = 1; i < max_d_idx; i++)
     {
         bool conquered = FALSE;
@@ -2197,6 +2221,12 @@ static void _build_dungeons(doc_ptr doc)
     doc_newline(doc);
 }
 
+static void _build_dungeons(doc_ptr doc)
+{
+    doc_printf(doc, "<topic:Dungeons>=================================== <color:keypress>D</color>ungeons ==================================\n\n");
+    py_display_dungeons(doc);
+}
+
 /****************************** Messages ************************************/
 static void _build_messages(doc_ptr doc)
 {
@@ -2204,7 +2234,7 @@ static void _build_messages(doc_ptr doc)
     int current_turn = 0;
     int current_row = 0;
 
-    doc_insert(doc, "<topic:Messages>================================ Last Messages ================================\n");
+    doc_insert(doc, "<topic:LastMessages>================================ <color:keypress>L</color>ast Messages ================================\n");
     doc_insert(doc, "<style:normal>");
     for (i = MIN(msg_count() - 1, 30); i >= 0; i--)
     {
@@ -2239,7 +2269,7 @@ static cptr _game_mode_text[GAME_MODE_MAX] = {
 };
 static void _build_options(doc_ptr doc)
 {
-    doc_printf(doc, "<topic:Options>=================================== Options ===================================\n\n");
+    doc_printf(doc, "<topic:Options>=================================== <color:keypress>O</color>ptions ===================================\n\n");
 
     if (game_mode != GAME_MODE_NORMAL)
         doc_printf(doc, " Game Mode:          %s\n", _game_mode_text[game_mode]);
@@ -2289,7 +2319,7 @@ static void _build_options(doc_ptr doc)
 }
 
 /****************************** Character Sheet ************************************/
-void py_build_character_sheet(doc_ptr doc)
+void py_display_character_sheet(doc_ptr doc)
 {
     doc_insert(doc, "<style:wide>  [PosChengband <$:version> Character Dump]\n");
     if (p_ptr->total_winner)
@@ -2300,7 +2330,7 @@ void py_build_character_sheet(doc_ptr doc)
         doc_newline(doc);
     doc_newline(doc);
 
-    _build_page1(doc);
+    _build_general(doc);
     _build_equipment(doc);
     _build_melee(doc);
     _build_shooting(doc);
@@ -2320,8 +2350,7 @@ void py_build_character_sheet(doc_ptr doc)
     _build_quests(doc);
     _build_uniques(doc);
     _build_virtues(doc);
-    /*TODO: dump_aux_race_history(fff);
-    dump_aux_class_special(fff); <=== Blue Mage*/
+    _build_race_history(doc);
     _build_mutations(doc);
     _build_pets(doc);
     _build_inventory(doc);
@@ -2340,7 +2369,7 @@ void py_display(void)
     string_ptr s = string_alloc_format("%s.txt", player_base);
 
     doc_change_name(d, string_buffer(s));
-    py_build_character_sheet(d);
+    py_display_character_sheet(d);
 
     screen_save();
     doc_display(d, "Character Sheet", 0);
@@ -2348,4 +2377,15 @@ void py_display(void)
 
     doc_free(d);
     string_free(s);
+}
+
+/* This is used by the birth process ... Note that there
+   is birth code that assumes the location of fields on the screen,
+   and probably that should be cleaned up some day */
+void py_display_birth(void)
+{
+    doc_ptr d = doc_alloc(80);
+    _build_general(d);
+    doc_sync_term(d, doc_range_all(d), doc_pos_create(0, 1));
+    doc_free(d);
 }

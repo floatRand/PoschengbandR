@@ -693,7 +693,7 @@ void equip_wield_aux(object_type *src, int slot)
     p_ptr->update |= PU_TORCH;
     p_ptr->update |= PU_MANA;
     p_ptr->redraw |= PR_EQUIPPY;
-    p_ptr->window |= PW_INVEN | PW_EQUIP | PW_PLAYER;
+    p_ptr->window |= PW_INVEN | PW_EQUIP;
     calc_android_exp();
 }
 
@@ -770,7 +770,7 @@ void equip_takeoff_aux(int slot)
         p_ptr->update |= PU_TORCH;
         p_ptr->update |= PU_MANA;
         p_ptr->redraw |= PR_EQUIPPY;
-        p_ptr->window |= PW_INVEN | PW_EQUIP | PW_PLAYER;
+        p_ptr->window |= PW_INVEN | PW_EQUIP;
     }
 }
 
@@ -1658,7 +1658,7 @@ void equip_on_change_race(void)
         p_ptr->update |= PU_TORCH;
         p_ptr->update |= PU_MANA;
         p_ptr->redraw |= PR_EQUIPPY;
-        p_ptr->window |= PW_INVEN | PW_EQUIP | PW_PLAYER;
+        p_ptr->window |= PW_INVEN | PW_EQUIP;
         calc_android_exp();
     }
 }

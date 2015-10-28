@@ -5402,9 +5402,6 @@ bool hp_player_aux(int num)
         /* Redraw */
         p_ptr->redraw |= (PR_HP);
 
-        /* Window stuff */
-        p_ptr->window |= (PW_PLAYER);
-
         /* Heal 0-4 */
         if (num < 5)
         {
@@ -5686,7 +5683,7 @@ bool lose_all_info(void)
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER | PW_OBJECT_LIST);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_OBJECT_LIST);
 
     /* Mega-Hack -- Forget the map */
     wiz_dark();
@@ -6104,9 +6101,6 @@ int take_hit(int damage_type, int damage, cptr hit_from, int monspell)
 
     /* Display the hitpoints */
     p_ptr->redraw |= (PR_HP);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_PLAYER);
 
     /* This might slow things down a bit ... 
        But, Blood Knight power varies with hp. */

@@ -358,9 +358,6 @@ Display the player inventory (and sometimes the equipment). Note that you can to
 <color:U>Display equip/inven</color>
 Display the player equipment (and sometimes the inventory). Note that you can toggle between Inventory and Equipment by pressing <color:keypress>^I</color>.
 
-<color:U>Display character</color>
-This option displays the first page of your character sheet. The display is rather wide and you will need at least 80 columns in your subwindow in order to be able to view it all. But hey, maybe your monitor is huge?
-
 <color:U>Display Object List</color>
 This option displays the results of the <color:keyword>Object List</color> command (<color:keypress>]</color>). For example:
 <style:screenshot>

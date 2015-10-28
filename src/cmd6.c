@@ -84,7 +84,6 @@ bool restore_mana(void)
 
         p_ptr->csp_frac = 0;
         p_ptr->redraw |= (PR_MANA);
-        p_ptr->window |= (PW_PLAYER);
         p_ptr->window |= (PW_SPELL);
         result = TRUE;
     }
@@ -377,7 +376,7 @@ static void do_cmd_eat_food_aux(int item)
     }
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
 
     /* Food can feed the player */
@@ -717,7 +716,7 @@ static void do_cmd_quaff_potion_aux(int item)
     }
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
     /* Potions can feed the player */
     switch (p_ptr->mimic_form)
@@ -990,7 +989,7 @@ static void do_cmd_read_scroll_aux(int item, bool known)
     }
 
     p_ptr->notice |= PN_COMBINE | PN_REORDER;
-    p_ptr->window |= PW_INVEN | PW_EQUIP | PW_PLAYER;
+    p_ptr->window |= PW_INVEN | PW_EQUIP;
 
     if (!used_up)
         return;
@@ -1215,7 +1214,7 @@ static void do_cmd_device_aux(int item)
         identify_item(o_ptr);
         autopick_alter_item(item, destroy_identify);
     }
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
     if (used)
     {

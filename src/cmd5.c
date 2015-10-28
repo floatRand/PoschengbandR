@@ -1500,7 +1500,6 @@ msg_print("An infernal sound echoed.");
     p_ptr->redraw |= (PR_MANA);
 
     /* Window stuff */
-    p_ptr->window |= (PW_PLAYER);
     p_ptr->window |= (PW_SPELL);
 }
 

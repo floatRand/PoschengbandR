@@ -380,6 +380,27 @@ doc_pos_t doc_next_bookmark(doc_ptr doc, doc_pos_t pos)
     return doc_pos_invalid();
 }
 
+doc_pos_t doc_next_bookmark_char(doc_ptr doc, doc_pos_t pos, int c)
+{
+    int i;
+    for (i = 0; i < vec_length(doc->bookmarks); i++)
+    {
+        doc_bookmark_ptr mark = vec_get(doc->bookmarks, i);
+        cptr             name;
+
+        assert(mark->name);
+        name = string_buffer(mark->name);
+
+        if ( doc_pos_compare(pos, mark->pos) < 0
+          && string_length(mark->name) > 0
+          && tolower(name[0]) == tolower(c) )
+        {
+            return mark->pos;
+        }
+    }
+    return doc_pos_invalid();
+}
+
 doc_pos_t doc_prev_bookmark(doc_ptr doc, doc_pos_t pos)
 {
     int i;
@@ -1698,6 +1719,20 @@ int doc_display_aux(doc_ptr doc, cptr caption, int top, rect_t display)
             }
             else strcpy(finder_str, back_str);
             break;
+        default:
+        {   /* BETA: Any unhandled keystroke will navigate to the next topic based
+                     upon a comparison of the first letter. This is nice, say, for
+                     viewing the Character Sheet and navigating to the various sections */
+            doc_pos_t pos = doc_next_bookmark_char(doc, doc_pos_create(1, top), cmd);
+            if (!doc_pos_is_valid(pos)) /* wrap */
+                pos = doc_next_bookmark_char(doc, doc_pos_create(0, 0), cmd);
+            if (doc_pos_is_valid(pos))
+            {
+                top = pos.y;
+                if (top > doc->cursor.y - page_size)
+                    top = MAX(0, doc->cursor.y - page_size);
+            }
+        }
         }
     }
     return rc;

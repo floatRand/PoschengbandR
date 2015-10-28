@@ -841,9 +841,6 @@ static void regenhp(int percent)
         /* Redraw */
         p_ptr->redraw |= (PR_HP);
 
-        /* Window stuff */
-        p_ptr->window |= (PW_PLAYER);
-
         /* Blood Knights get extra attacks depending on how wounded they are */
         if (p_ptr->pclass == CLASS_BLOOD_KNIGHT)
             p_ptr->update |= PU_BONUS;
@@ -941,7 +938,6 @@ static void regenmana(int percent)
         p_ptr->redraw |= (PR_MANA);
 
         /* Window stuff */
-        p_ptr->window |= (PW_PLAYER);
         p_ptr->window |= (PW_SPELL);
 
         wild_regen = 20;
@@ -1230,7 +1226,7 @@ bool psychometry(void)
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
     /* Valid "tval" codes */
     switch (o_ptr->tval)
@@ -4816,7 +4812,6 @@ static void process_player(void)
     /* Repeat until out of energy */
     while (p_ptr->energy_need <= 0)
     {    
-        p_ptr->window |= PW_PLAYER;
         p_ptr->sutemi = FALSE;
         p_ptr->counter = FALSE;
 
@@ -5196,7 +5191,7 @@ static void dungeon(bool load_game)
     character_xtra = TRUE;
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER | PW_MONSTER_LIST | PW_OBJECT_LIST | PW_MONSTER | PW_OVERHEAD | PW_DUNGEON);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_MONSTER_LIST | PW_OBJECT_LIST | PW_MONSTER | PW_OVERHEAD | PW_DUNGEON);
 
     /* Redraw dungeon */
     p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_EQUIPPY | PR_MSG_LINE);
@@ -5924,7 +5919,7 @@ void play_game(bool new_game)
     load_all_pref_files();
 
     Term_xtra(TERM_XTRA_REACT, 0);
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL);
     p_ptr->window |= (PW_MESSAGE | PW_OVERHEAD | PW_DUNGEON | PW_MONSTER_LIST | PW_OBJECT_LIST | PW_MONSTER | PW_OBJECT);
     window_stuff();
 

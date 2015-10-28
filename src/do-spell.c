@@ -8863,7 +8863,6 @@ static cptr _rogue_pick_pocket(void)
                 sound(SOUND_SELL);
                 p_ptr->au += loot.pval;
                 p_ptr->redraw |= (PR_GOLD);
-                p_ptr->window |= (PW_PLAYER);
             }
             else if (!inven_carry_okay(&loot))
             {
@@ -8993,7 +8992,6 @@ static cptr _rogue_negotiate(void)
                 sound(SOUND_SELL);
                 p_ptr->au -= cost;
                 p_ptr->redraw |= PR_GOLD;
-                p_ptr->window |= PW_PLAYER;
 
                 if (mon_save_p(m_ptr->r_idx, A_CHR))
                 {

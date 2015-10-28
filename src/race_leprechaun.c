@@ -370,7 +370,6 @@ bool leprechaun_steal(int m_idx)
                 sound(SOUND_SELL);
                 p_ptr->au += loot.pval;
                 p_ptr->redraw |= (PR_GOLD);
-                p_ptr->window |= (PW_PLAYER);
                 if (prace_is_(RACE_MON_LEPRECHAUN))
                     p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
             }

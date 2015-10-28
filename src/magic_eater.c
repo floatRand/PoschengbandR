@@ -471,8 +471,6 @@ void magic_eater_restore(void)
         o_ptr = _which_obj(TV_ROD, i);
         if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 700);
     }
-
-    p_ptr->window |= PW_PLAYER;
 }
 
 void magic_eater_restore_all(void)

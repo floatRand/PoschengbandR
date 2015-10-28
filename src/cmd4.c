@@ -383,7 +383,7 @@ void do_cmd_redraw(void)
     p_ptr->redraw |= (PR_WIPE | PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIPPY | PR_MSG_LINE);
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL);
 
     /* Window stuff */
     p_ptr->window |= (PW_MESSAGE | PW_OVERHEAD | PW_DUNGEON |
@@ -1286,7 +1286,7 @@ void do_cmd_options(void)
                 /* Spawn */
                 do_cmd_options_win();
                 p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL |
-                          PW_PLAYER | PW_MONSTER_LIST | PW_OBJECT_LIST | PW_MESSAGE | PW_OVERHEAD |
+                          PW_MONSTER_LIST | PW_OBJECT_LIST | PW_MESSAGE | PW_OVERHEAD |
                           PW_MONSTER | PW_OBJECT | PW_SNAPSHOT |
                           PW_BORG_1 | PW_BORG_2 | PW_DUNGEON);
                 break;
@@ -4469,28 +4469,18 @@ void do_cmd_knowledge_weapon(void)
 
 static void do_cmd_knowledge_extra(void)
 {
-    FILE *fff;
-    char file_name[1024];
+    doc_ptr  doc = doc_alloc(80);
     class_t *class_ptr = get_class();
     race_t  *race_ptr = get_race();
 
-    fff = my_fopen_temp(file_name, 1024);
-    if (!fff) {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
+    if (race_ptr->character_dump)
+        race_ptr->character_dump(doc);
 
-/*
-    if (class_ptr && class_ptr->character_dump)
-        class_ptr->character_dump(fff);
+    if (class_ptr->character_dump)
+        class_ptr->character_dump(doc);
 
-    if (race_ptr && race_ptr->character_dump)
-        race_ptr->character_dump(fff);
-*/
-    my_fclose(fff);
-    show_file(TRUE, file_name, "Extra", 0, 0);
-    fd_kill(file_name);
+    doc_display(doc, "Race/Class Extra Information", 0);
+    doc_free(doc);
 }
 
 /*
@@ -7012,46 +7002,11 @@ static void do_cmd_knowledge_virtues(void)
 */
 static void do_cmd_knowledge_dungeon(void)
 {
-    FILE *fff;
-    
-    char file_name[1024];
-    int i;
-    
-    
-    /* Open a new file */
-    fff = my_fopen_temp(file_name, 1024);
-    if (!fff) {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
-    
-    if (fff)
-    {
-        for (i = 1; i < max_d_idx; i++)
-        {
-            bool seiha = FALSE;
+    doc_ptr doc = doc_alloc(80);
 
-            if (!d_info[i].maxdepth) continue;
-            if (!max_dlv[i]) continue;
-            if (d_info[i].final_guardian)
-            {
-                if (!r_info[d_info[i].final_guardian].max_num) seiha = TRUE;
-            }
-            else if (max_dlv[i] == d_info[i].maxdepth) seiha = TRUE;
-            fprintf(fff,"%c%-16s :  level %3d\n", seiha ? '!' : ' ', d_name + d_info[i].name, max_dlv[i]);
-        }
-    }
-    
-    /* Close the file */
-    my_fclose(fff);
-    
-    /* Display the file contents */
-    show_file(TRUE, file_name, "Dungeon", 0, 0);
-
-    
-    /* Remove the file */
-    fd_kill(file_name);
+    py_display_dungeons(doc);
+    doc_display(doc, "Dungeons", 0);
+    doc_free(doc);
 }
 
 static void do_cmd_knowledge_stat(void)
@@ -7780,8 +7735,10 @@ static void do_cmd_knowledge_autopick(void)
  */
 void do_cmd_knowledge(void)
 {
-    int i, row, col;
-    bool need_redraw = FALSE;
+    int      i, row, col;
+    bool     need_redraw = FALSE;
+    class_t *class_ptr = get_class();
+    race_t  *race_ptr = get_race();
 
     screen_save();
 
@@ -7822,11 +7779,16 @@ void do_cmd_knowledge(void)
 
         c_prt(TERM_RED, "Self Knowledge", row++, col - 2);
         prt("(@) About Yourself", row++, col);
-        prt("(W) Weapon Damage", row++, col);
-        prt("(M) Mutations", row++, col);
+        if (p_ptr->prace != RACE_MON_RING)
+            prt("(W) Weapon Damage", row++, col);
+        if (equip_find_object(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
+            prt("(S) Shooter Damage", row++, col);
+        if (mut_count(NULL))
+            prt("(M) Mutations", row++, col);
         if (enable_virtues)
             prt("(v) Virtues", row++, col);
-        prt("(x) Extra info", row++, col);
+        if (class_ptr->character_dump || race_ptr->character_dump)
+            prt("(x) Extra info", row++, col);
         row++;
 
         c_prt(TERM_RED, "Skills", row++, col - 2);
@@ -7901,10 +7863,22 @@ void do_cmd_knowledge(void)
             do_cmd_knowledge_stat();
             break;
         case 'W':
-            do_cmd_knowledge_weapon();
+            if (p_ptr->prace != RACE_MON_RING)
+                do_cmd_knowledge_weapon();
+            else
+                bell();
+            break;
+        case 'S':
+            if (equip_find_object(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
+                do_cmd_knowledge_shooter();
+            else
+                bell();
             break;
         case 'M':
-            mut_do_cmd_knowledge();
+            if (mut_count(NULL))
+                mut_do_cmd_knowledge();
+            else
+                bell();
             break;
         case 'v':
             if (enable_virtues)
@@ -7913,7 +7887,10 @@ void do_cmd_knowledge(void)
                 bell();
             break;
         case 'x':
-            do_cmd_knowledge_extra();
+            if (class_ptr->character_dump || race_ptr->character_dump)
+                do_cmd_knowledge_extra();
+            else
+                bell();
             break;
 
         /* Skills */

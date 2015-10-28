@@ -1188,7 +1188,6 @@ void ring_cast(void)
     energy_use = 100;
     p_ptr->redraw |= PR_MANA;
     p_ptr->redraw |= PR_HP;
-    p_ptr->window |= PW_PLAYER;
     p_ptr->window |= PW_SPELL;
 }
 

@@ -1033,7 +1033,7 @@ bool apply_disenchant(int mode)
             virtue_add(VIRTUE_ENCHANTMENT, -2);
 
             p_ptr->update |= (PU_BONUS);
-            p_ptr->window |= (PW_EQUIP | PW_PLAYER);
+            p_ptr->window |= (PW_EQUIP);
             calc_android_exp();
         }
         return TRUE;
@@ -1827,9 +1827,6 @@ bool alchemy(void)
         /* Redraw gold */
         p_ptr->redraw |= (PR_GOLD);
 
-        /* Window stuff */
-        p_ptr->window |= (PW_PLAYER);
-
         if (prace_is_(RACE_MON_LEPRECHAUN))
             p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
 
@@ -2022,7 +2019,7 @@ bool enchant(object_type *o_ptr, int n, int eflag)
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
     calc_android_exp();
 
@@ -2293,7 +2290,7 @@ bool identify_item(object_type *o_ptr)
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
     strcpy(record_o_name, o_name);
     record_turn = game_turn;
@@ -2832,7 +2829,7 @@ bool bless_weapon(void)
     p_ptr->update |= (PU_BONUS);
 
     /* Window stuff */
-    p_ptr->window |= (PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= PW_EQUIP;
 
     calc_android_exp();
 
@@ -3854,8 +3851,8 @@ static int minus_ac(void)
 
         msg_format("Your %s is damaged!", o_name);
         o_ptr->to_a--;
-        p_ptr->update |= (PU_BONUS);
-        p_ptr->window |= (PW_EQUIP | PW_PLAYER);
+        p_ptr->update |= PU_BONUS;
+        p_ptr->window |= PW_EQUIP;
         calc_android_exp();
         return TRUE;
     }
@@ -4096,7 +4093,7 @@ void blast_object(object_type *o_ptr)
 
     p_ptr->update |= (PU_BONUS);
     p_ptr->update |= (PU_MANA);
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP);
 }
 
 /*

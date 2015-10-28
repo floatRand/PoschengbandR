@@ -1857,7 +1857,7 @@ void possessor_set_current_r_idx(int r_idx)
             p_ptr->csp = p_ptr->msp * mana_ratio / 100;
             p_ptr->csp_frac = 0;
             p_ptr->redraw |= PR_MANA;
-            p_ptr->window |= PW_PLAYER | PW_SPELL;
+            p_ptr->window |= PW_SPELL;
 
             if (p_ptr->current_r_idx != MON_MIMIC)
                 _history_on_possess(r_idx);

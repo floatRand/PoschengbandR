@@ -338,6 +338,54 @@ void prt_time(void)
 }
 
 
+
+#define EQUIPPY_MAIN 1
+
+/*
+ * Equippy chars
+ */
+static void display_player_equippy(int y, int x, u16b mode)
+{
+    int i;
+
+    byte a;
+    char c;
+
+    object_type *o_ptr;
+
+    Term_erase(x, y, 12);
+
+    /* Dump equippy chars */
+    for (i = 0; i < equip_count(); i++)
+    {
+        int slot = EQUIP_BEGIN + i;
+        o_ptr = equip_obj(slot);
+
+        if (mode == EQUIPPY_MAIN && i >= 12) break; /* Hack: This will overwrite the map display otherwise ... */
+
+        if (o_ptr && equippy_chars)
+        {
+            a = object_attr(o_ptr);
+            c = object_char(o_ptr);
+        }
+        else
+        {
+            c = ' ';
+            a = TERM_DARK;
+        }
+        Term_putch(x + i, y, a, c);
+    }
+}
+
+#define ROW_EQUIPPY             3
+#define COL_EQUIPPY             0       /* equippy chars */
+
+static void print_equippy(void)
+{
+    rect_t r = ui_char_info_rect();
+    display_player_equippy(r.y + ROW_EQUIPPY, r.x + COL_EQUIPPY, EQUIPPY_MAIN);
+}
+
 /*
  * Print character stat in given row, column
  */
@@ -2161,41 +2209,6 @@ static void fix_spell(void)
 }
 
 
-/*
- * Hack -- display character in sub-windows
- */
-static void fix_player(void)
-{
-    int j;
-
-    /* Scan windows */
-    for (j = 0; j < 8; j++)
-    {
-        term *old = Term;
-
-        /* No window */
-        if (!angband_term[j]) continue;
-
-        /* No relevant flags */
-        if (!(window_flag[j] & (PW_PLAYER))) continue;
-
-        /* Activate */
-        Term_activate(angband_term[j]);
-
-        update_playtime();
-
-        /* Display player */
-        display_player(0);
-
-        /* Fresh */
-        Term_fresh();
-
-        /* Restore */
-        Term_activate(old);
-    }
-}
-
-
 static void _fix_message_aux(void)
 {
     int     i;
@@ -3046,7 +3059,6 @@ static void calc_mana(void)
         }
 
         p_ptr->redraw |= (PR_MANA);
-        p_ptr->window |= (PW_PLAYER);
         p_ptr->window |= (PW_SPELL);
     }
 
@@ -3186,7 +3198,6 @@ static void calc_hitpoints(void)
         p_ptr->chp_frac = 0;
         p_ptr->mhp = mhp;
         p_ptr->redraw |= (PR_HP);
-        p_ptr->window |= (PW_PLAYER);
     }
 }
 
@@ -4054,7 +4065,6 @@ void calc_bonuses(void)
         {
             p_ptr->stat_top[i] = top;
             p_ptr->redraw |= (PR_STATS);
-            p_ptr->window |= (PW_PLAYER);
         }
 
         use = modify_stat_value(p_ptr->stat_cur[i], p_ptr->stat_add[i]);
@@ -4068,7 +4078,6 @@ void calc_bonuses(void)
         {
             p_ptr->stat_use[i] = use;
             p_ptr->redraw |= (PR_STATS);
-            p_ptr->window |= (PW_PLAYER);
         }
 
         /* Values: 3, 4, ..., 17 */
@@ -4087,7 +4096,6 @@ void calc_bonuses(void)
                 p_ptr->update |= (PU_HP);
             else if (mp_ptr->spell_stat == i)
                 p_ptr->update |= (PU_MANA | PU_SPELLS);
-            p_ptr->window |= (PW_PLAYER);
         }
     }
 
@@ -4726,7 +4734,6 @@ void calc_bonuses(void)
     if (p_ptr->dis_ac != old_dis_ac || p_ptr->dis_to_a != old_dis_to_a)
     {
         p_ptr->redraw |= PR_ARMOR;
-        p_ptr->window |= PW_PLAYER;
     }
 
     /* Affect Skill -- stealth (bonus one) */
@@ -5275,13 +5282,6 @@ void window_stuff(void)
     {
         p_ptr->window &= ~(PW_SPELL);
         fix_spell();
-    }
-
-    /* Display player */
-    if (p_ptr->window & (PW_PLAYER))
-    {
-        p_ptr->window &= ~(PW_PLAYER);
-        fix_player();
     }
 
     /* Display overhead view */

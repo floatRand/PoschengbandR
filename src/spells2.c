@@ -2491,9 +2491,6 @@ bool genocide_aux(int m_idx, int power, bool player_cast, int dam_side, cptr spe
     /* Redraw */
     p_ptr->redraw |= (PR_HP);
 
-    /* Window stuff */
-    p_ptr->window |= (PW_PLAYER);
-
     /* Handle */
     handle_stuff();
 

@@ -232,9 +232,6 @@ void check_experience(void)
         /* Redraw some stuff */
         p_ptr->redraw |= (PR_LEV);
 
-        /* Window stuff */
-        p_ptr->window |= (PW_PLAYER);
-
         /* Handle stuff */
         handle_stuff();
     }
@@ -288,7 +285,7 @@ void check_experience(void)
         p_ptr->redraw |= (PR_LEV | PR_EXP);
 
         /* Window stuff */
-        p_ptr->window |= (PW_PLAYER | PW_SPELL | PW_INVEN);
+        p_ptr->window |= (PW_SPELL | PW_INVEN);
 
         level_up = 1;
 
@@ -304,7 +301,7 @@ void check_experience(void)
         }
         p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
         p_ptr->redraw |= (PR_LEV);
-        p_ptr->window |= (PW_PLAYER | PW_SPELL);
+        p_ptr->window |= (PW_SPELL);
         handle_stuff();
     }
 
@@ -3116,7 +3113,7 @@ void redraw_window(void)
     if (!character_dungeon) return;
 
     /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER);
+    p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL);
 
     /* Window stuff */
     p_ptr->window |= (PW_MESSAGE | PW_OVERHEAD | PW_DUNGEON | PW_MONSTER | PW_OBJECT);

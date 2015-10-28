@@ -3813,9 +3813,6 @@ void py_pickup_floor(bool pickup)
             /* Redraw gold */
             p_ptr->redraw |= (PR_GOLD);
 
-            /* Window stuff */
-            p_ptr->window |= (PW_PLAYER);
-
             if (prace_is_(RACE_MON_LEPRECHAUN))
                 p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
 

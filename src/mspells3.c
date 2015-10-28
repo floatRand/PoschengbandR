@@ -1594,7 +1594,6 @@ bool do_cmd_cast_learned(void)
 
     /* Window stuff */
     p_ptr->redraw |= (PR_MANA);
-    p_ptr->window |= (PW_PLAYER);
     p_ptr->window |= (PW_SPELL);
 
     return TRUE;

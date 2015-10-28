@@ -162,7 +162,7 @@ static void _elemental_pack_destroy(object_p p, cptr destroy_fmt, int chance)
         p_ptr->update |= PU_TORCH;
         p_ptr->update |= PU_MANA;
         p_ptr->redraw |= PR_EQUIPPY;
-        p_ptr->window |= PW_EQUIP | PW_PLAYER;
+        p_ptr->window |= PW_EQUIP;
     }
     if (inven_ct)
         p_ptr->window |= PW_INVEN;
@@ -920,7 +920,7 @@ static void _water_process_world(void)
     if (equip_ct)
     {
         p_ptr->update |= PU_BONUS;
-        p_ptr->window |= PW_EQUIP | PW_PLAYER;
+        p_ptr->window |= PW_EQUIP;
     }
 
     if (equip_ct + inven_ct)

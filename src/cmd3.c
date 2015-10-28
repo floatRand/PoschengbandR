@@ -406,7 +406,6 @@ void do_cmd_destroy(void)
         p_ptr->csp_frac = 0;
 
         p_ptr->redraw |= (PR_MANA);
-        p_ptr->window |= (PW_PLAYER);
         p_ptr->window |= (PW_SPELL);
         p_ptr->redraw |= (PR_HP);
 
