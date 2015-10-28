@@ -4681,28 +4681,11 @@ static void do_cmd_knowledge_weapon_exp(void)
  */
 static void do_cmd_knowledge_spell_exp(void)
 {
-    FILE *fff;
-    char file_name[1024];
+    doc_ptr doc = doc_alloc(80);
 
-    /* Open a new file */
-    fff = my_fopen_temp(file_name, 1024);
-    if (!fff) {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
-/*
-    spellbook_character_dump(fff);
-*/
-    /* Close the file */
-    my_fclose(fff);
-
-    /* Display the file contents */
-    show_file(TRUE, file_name, "Spell Proficiency", 0, 0);
-
-
-    /* Remove the file */
-    fd_kill(file_name);
+    spellbook_character_dump(doc);
+    doc_display(doc, "Spell Proficiency", 0);
+    doc_free(doc);
 }
 
 /*

@@ -941,7 +941,7 @@ void py_display_powers(doc_ptr doc, spell_info *table, int ct)
     var_init(&vc);
     var_init(&vfm);
 
-    doc_printf(doc, "<topic:Powers>=================================== <color:keypress>P</color>owers ====================================\n\n");
+    doc_printf(doc, "<style:wide><topic:Powers>=================================== <color:keypress>P</color>owers ====================================\n\n");
     doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
     for (i = 0; i < ct; i++)
     {
@@ -967,7 +967,7 @@ void py_display_powers(doc_ptr doc, spell_info *table, int ct)
     var_clear(&vc);
     var_clear(&vfm);
 
-    doc_newline(doc);
+    doc_insert(doc, "</style>\n");
 }
 
 static void _build_powers(doc_ptr doc)
@@ -1000,7 +1000,7 @@ void py_display_spells(doc_ptr doc, spell_info *table, int ct)
     var_init(&vc);
     var_init(&vfm);
 
-    doc_printf(doc, "<topic:Spells>=================================== <color:keypress>S</color>pells ====================================\n\n");
+    doc_printf(doc, "<style:wide><topic:Spells>=================================== <color:keypress>S</color>pells ====================================\n\n");
     doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
 
     for (i = 0; i < ct; i++)
@@ -1027,7 +1027,7 @@ void py_display_spells(doc_ptr doc, spell_info *table, int ct)
     var_clear(&vc);
     var_clear(&vfm);
 
-    doc_newline(doc);
+    doc_insert(doc, "</style>\n");
 }
 
 static void _build_spells(doc_ptr doc)
@@ -1089,7 +1089,7 @@ static void _build_quests(doc_ptr doc)
 {
     int     i, ct;
     vec_ptr v = vec_alloc(NULL);
-
+                          /*v--- 'q' and 'Q' are used to quit the document viewer, and take precedence over navigation keys */
     doc_printf(doc, "<topic:uQuests>==================================== Q<color:keypress>u</color>ests ===================================\n\n");
 
     /* Completed */
@@ -1939,7 +1939,7 @@ static void _build_statistics(doc_ptr doc)
     _group_counts_tval_imp(doc, TV_STAFF, "Staves");
     _group_counts_tval_imp(doc, TV_ROD, "Rods");
     _group_counts_tval_imp(doc, TV_POTION, "Potions");
-    _group_counts_tval_imp(doc, TV_SCROLL, "Scolls");
+    _group_counts_tval_imp(doc, TV_SCROLL, "Scrolls");
     _group_counts_imp(doc, _kind_is_device, "Totals");
 
     doc_printf(doc, "\n  <color:G>Other                Found Bought  Used  Dest</color>\n");
@@ -1989,7 +1989,7 @@ static void _build_statistics(doc_ptr doc)
     _group_counts_tval_imp(doc, TV_SCROLL, "Totals");
 
     doc_printf(doc, "\n  <color:G>Wands                Found Bought  Used  Dest  Fail</color>\n");
-    if (p_ptr->wizard || 1)
+    if (p_ptr->wizard)
     {
         for (i = 0; ; i++)
         {
@@ -2015,7 +2015,7 @@ static void _build_statistics(doc_ptr doc)
     _group_counts_tval_imp(doc, TV_WAND, "Totals");
 
     doc_printf(doc, "\n  <color:G>Staves               Found Bought  Used  Dest  Fail</color>\n");
-    if (p_ptr->wizard || 1)
+    if (p_ptr->wizard)
     {
         for (i = 0; ; i++)
         {
@@ -2043,7 +2043,7 @@ static void _build_statistics(doc_ptr doc)
     _group_counts_tval_imp(doc, TV_STAFF, "Totals");
 
     doc_printf(doc, "\n  <color:G>Rods                 Found Bought  Used  Dest  Fail</color>\n");
-    if (p_ptr->wizard || 1)
+    if (p_ptr->wizard)
     {
         for (i = 0; ; i++)
         {

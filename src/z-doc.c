@@ -391,7 +391,7 @@ doc_pos_t doc_next_bookmark_char(doc_ptr doc, doc_pos_t pos, int c)
         assert(mark->name);
         name = string_buffer(mark->name);
 
-        if ( doc_pos_compare(pos, mark->pos) < 0
+        if ( doc_pos_compare(pos, mark->pos) <= 0 /* Subtle: So I can wrap and start at (0,0) *and* pick up an initial topic */
           && string_length(mark->name) > 0
           && tolower(name[0]) == tolower(c) )
         {

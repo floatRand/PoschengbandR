@@ -1023,10 +1023,10 @@ static void _war_cry_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "War Cry");
+        var_set_string(res, "Dragon's Roar");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Aggravate nearby monsters.");
+        var_set_string(res, "You will roar out mightily, alerting all nearby monsters of your presence.");
         break;
     case SPELL_CAST:
         msg_print("You roar out!");
@@ -1970,6 +1970,8 @@ static void _realm_calc_bonuses(void)
         p_ptr->align += 200;
         if (p_ptr->lev >= 15)
             p_ptr->hold_life = TRUE;
+        if (p_ptr->lev >= 30)
+            res_add(RES_FEAR);
         break;
     case DRAGON_REALM_DEATH:
         p_ptr->align -= 200;
@@ -2021,6 +2023,8 @@ static void _realm_get_flags(u32b flgs[TR_FLAG_SIZE])
     case DRAGON_REALM_CRUSADE:
         if (p_ptr->lev >= 15)
             add_flag(flgs, TR_HOLD_LIFE);
+        if (p_ptr->lev >= 30)
+            add_flag(flgs, TR_RES_FEAR);
         break;
     case DRAGON_REALM_DOMINATION:
         add_flag(flgs, TR_RES_FEAR);
@@ -2045,7 +2049,7 @@ static void _dragon_calc_bonuses(void)
     if (p_ptr->lev >= 30)
     {
         res_add(RES_CONF);
-        res_add(RES_FEAR);
+        /*Attack, Crusade, and Domination Realms: res_add(RES_FEAR);*/
     }
     _realm_calc_bonuses();
 }
@@ -2061,7 +2065,7 @@ static void _dragon_get_flags(u32b flgs[TR_FLAG_SIZE])
     if (p_ptr->lev >= 30)
     {
         add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_FEAR);
+        /*Attack, Crusade, and Domination Realms: add_flag(flgs, TR_RES_FEAR);*/
     }
     _realm_get_flags(flgs);
 }

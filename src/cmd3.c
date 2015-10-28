@@ -567,7 +567,7 @@ void do_cmd_inspect(void)
             doc_newline(doc);
         }
 
-        doc_insert(doc, "<topic:Equipment><style:heading>Inventory</style>\n\n");
+        doc_insert(doc, "<topic:Inventory><style:heading>Inventory</style>\n\n");
         for (i = 0; i < INVEN_PACK; i++)
         {
             if (!inventory[i].k_idx) break;
