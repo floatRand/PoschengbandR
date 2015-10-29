@@ -3625,7 +3625,7 @@ void calc_bonuses(void)
             skills_t         extra = realm->skills;
 
             extra.stl = 0;
-            skills_scale(&extra, p_ptr->lev, 10);
+            skills_scale(&extra, p_ptr->lev, 50);
 
             skills_add(&p_ptr->skills, &realm->skills);
             skills_add(&p_ptr->skills, &extra);
