@@ -3007,6 +3007,9 @@ string_ptr get_tiny_screenshot(int cx, int cy)
             assert(in_bounds2(y, x));
             map_info(y, x, &a, &c, &ta, &tc);
 
+            if (c == 127) /* Hack for special wall characters on Windows. See font-win.prf and main-win.c */
+                c = '#';
+
             if (a != current_a)
             {
                 if (current_a >= 0 && current_a != TERM_WHITE)
@@ -3060,6 +3063,9 @@ string_ptr get_screenshot(void)
             char c;
 
             Term_what(x, y, &a, &c);
+
+            if (c == 127) /* Hack for special wall characters on Windows. See font-win.prf and main-win.c */
+                c = '#';
 
             if (a != current_a)
             {
