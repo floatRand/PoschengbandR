@@ -2232,7 +2232,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
 object_desc_done:
     if (mode & OD_COLOR_CODED)
-        snprintf(buf, MAX_NLEN, "<color:%c>%s</color>", tval_to_attr_char(o_ptr->tval), tmp_val);
+        sprintf(buf, "<color:%c>%s</color>", tval_to_attr_char(o_ptr->tval), tmp_val);
     else
         my_strcpy(buf, tmp_val, MAX_NLEN);
 }

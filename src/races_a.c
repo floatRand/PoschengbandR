@@ -1104,7 +1104,7 @@ static void _draconian_calc_innate_attacks(void)
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
     }
 }
-static void _draconian_gain_power()
+static void _draconian_gain_power(void)
 {
     if (p_ptr->draconian_power < 0)
     {
