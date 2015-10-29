@@ -1292,6 +1292,136 @@ static void _possessor_stats_help(FILE* fp)
     }
 }
 
+typedef struct {
+    string_ptr dir;
+    string_ptr base;
+    string_ptr ext;
+} _file_parts_t, *_file_parts_ptr;
+static _file_parts_ptr _file_parts_alloc(void)
+{
+    _file_parts_ptr result = malloc(sizeof(_file_parts_t));
+    result->dir = string_alloc();
+    result->base = string_alloc();
+    result->ext = string_alloc();
+    return result;
+}
+static void _file_parts_free(_file_parts_ptr fp)
+{
+    if (fp)
+    {
+        string_free(fp->dir);
+        string_free(fp->base);
+        string_free(fp->ext);
+        free(fp);
+    }
+}
+static string_ptr _file_parts_build_fullname(_file_parts_ptr fp)
+{
+    string_ptr result = string_copy(fp->dir);
+
+    string_append_s(result, PATH_SEP);
+    string_append(result, fp->base);
+    if (string_length(fp->ext))
+    {
+        string_append_c(result, '.');
+        string_append(result, fp->ext);
+    }
+    return result;
+}
+static void _file_parts_change_name(_file_parts_ptr fp, cptr filename)
+{
+    string_ptr s = string_copy_s(filename);
+    int        pos = string_last_chr(s, '.');
+
+    string_clear(fp->base);
+    string_clear(fp->ext);
+
+    if (pos >= 0)
+    {
+        string_append_sn(fp->base, string_buffer(s), pos);
+        string_append_s(fp->ext, string_buffer(s) + pos + 1);
+    }
+    else
+    {
+        string_append(fp->base, s);
+    }
+    string_free(s);
+}
+static void _file_parts_change_extension(_file_parts_ptr fp, cptr ext)
+{
+    string_clear(fp->ext);
+    string_append_s(fp->ext, ext);
+}
+static void _file_parts_extend_path(_file_parts_ptr fp, cptr dirname)
+{
+    char buf[1024];
+    path_build(buf, sizeof(buf), string_buffer(fp->dir), dirname);
+    string_clear(fp->dir);
+    string_append_s(fp->dir, buf);
+}
+
+static void _generate_html_help_aux(cptr name, str_map_ptr prev, int format)
+{
+    if (!str_map_contains(prev, name))
+    {
+        int              i;
+        doc_ptr          doc;
+        FILE            *fff;
+        _file_parts_ptr  dfp;
+        string_ptr       dest_path;
+        char             src_path[1024];
+        vec_ptr          links;
+
+        /* Read Source Document*/
+        path_build(src_path, sizeof(src_path), ANGBAND_DIR_HELP, name);
+        str_map_add(prev, name, 0); /* optimism */
+
+        fff = my_fopen(src_path, "r");
+        if (!fff)
+            return;
+
+        doc = doc_alloc(80);
+        doc_read_file(doc, fff);
+        my_fclose(fff);
+
+        /* Output Dest Document */
+        dfp = _file_parts_alloc();
+        string_append_s(dfp->dir, ANGBAND_DIR_HELP);
+        _file_parts_extend_path(dfp, "html");
+        _file_parts_change_name(dfp, name);
+        _file_parts_change_extension(dfp, "html");
+        dest_path = _file_parts_build_fullname(dfp);
+
+        fff = my_fopen(string_buffer(dest_path), "w");
+        if (fff)
+        {
+            doc_write_file(doc, fff, format);
+            my_fclose(fff);
+        }
+        _file_parts_free(dfp);
+        string_free(dest_path);
+
+        /* Recurse On Links */
+        links = doc_get_links(doc);
+        for (i = 0; i < vec_length(links); i++)
+        {
+            doc_link_ptr link = vec_get(links, i);
+            _generate_html_help_aux(string_buffer(link->file), prev, format);
+        }
+        vec_free(links);
+
+        doc_free(doc);
+    }
+}
+
+static void _generate_html_help(void)
+{
+    str_map_ptr prev = str_map_alloc(NULL);
+    _generate_html_help_aux("start.txt", prev, DOC_FORMAT_HTML);
+    /* TODO: Support DOC_FORMAT_TEXT! */
+    str_map_free(prev);
+}
+
 void generate_spoilers(void)
 {
     spoiler_hack = TRUE;
@@ -1312,6 +1442,8 @@ void generate_spoilers(void)
 
     _text_file("PossessorStats.csv", _possessor_stats_help);
     _text_file("MonsterDam.csv", _mon_dam_help);
+
+    _generate_html_help();
     spoiler_hack = FALSE;
 }
 

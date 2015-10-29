@@ -1300,6 +1300,23 @@ static int _compare_links(doc_link_ptr left, doc_link_ptr right)
     return doc_pos_compare(left->location.start, right->location.start);
 }
 
+vec_ptr doc_get_links(doc_ptr doc)
+{
+    vec_ptr          links = vec_alloc(NULL);
+    int_map_iter_ptr iter;
+
+    for (iter = int_map_iter_alloc(doc->links);
+            int_map_iter_is_valid(iter);
+            int_map_iter_next(iter) )
+    {
+        doc_link_ptr link = int_map_iter_current(iter);
+        vec_add(links, link);
+    }
+    int_map_iter_free(iter);
+    vec_sort(links, (vec_cmp_f)_compare_links);
+    return links;
+}
+
 static void _doc_write_html_file(doc_ptr doc, FILE *fp)
 {
     doc_pos_t        pos;
@@ -1307,27 +1324,15 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
     byte             old_a = _INVALID_COLOR;
     int              bookmark_idx = 0;
     doc_bookmark_ptr next_bookmark = NULL;
-    vec_ptr          links = vec_alloc(NULL);
+    vec_ptr          links = doc_get_links(doc);
     int              link_idx = 0;
     doc_link_ptr     next_link = NULL;
 
     if (bookmark_idx < vec_length(doc->bookmarks))
         next_bookmark = vec_get(doc->bookmarks, bookmark_idx);
 
-    {
-        int_map_iter_ptr iter;
-        for (iter = int_map_iter_alloc(doc->links);
-                int_map_iter_is_valid(iter);
-                int_map_iter_next(iter) )
-        {
-            doc_link_ptr link = int_map_iter_current(iter);
-            vec_add(links, link);
-        }
-        int_map_iter_free(iter);
-        vec_sort(links, (vec_cmp_f)_compare_links);
-        if (link_idx < vec_length(links))
-            next_link = vec_get(links, link_idx);
-    }
+    if (link_idx < vec_length(links))
+        next_link = vec_get(links, link_idx);
 
     fprintf(fp, "<html>\n<body text=\"#ffffff\" bgcolor=\"#000000\"><pre>\n");
 
@@ -1779,6 +1784,7 @@ int doc_display_help_aux(cptr file_name, cptr topic, rect_t display)
 
     doc = doc_alloc(MIN(80, display.cx));
     doc_read_file(doc, fp);
+    my_fclose(fp);
 
     if (topic)
     {
