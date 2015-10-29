@@ -1,0 +1,20 @@
+PosChengband Objects
+
+Please choose one of the following online help files:
+
+    [a] PosChengband Objects
+    [b] Object Symbols
+    [c] Equipment and Inventory
+    [d] Objects Generation
+    [e] Cursed Objects
+    [f] The Ancient and Foul Curse
+    [g] Object Flavors
+    [h] Pseudo-ID
+    [i] Identifying Objects
+    [j] Ego Objects
+    [k] Artifacts
+    [l] Object Inscriptions
+    [m] Object Types
+
+    (?) Help System Commands
+

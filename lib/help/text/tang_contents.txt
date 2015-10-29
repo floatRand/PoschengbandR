@@ -1,0 +1,17 @@
+The Newbie Guide: A Tutorial and Survival Guide
+
+Please choose one of the following sections:
+
+    [a] Overview
+    [b] Creating a Character
+    [c] Equipping for Danger
+    [d] My First Trip Down
+    [e] On Weapons and Multiple Blows
+    [f] On Armor and Resistance
+    [g] On Important Magical Items
+    [h] On Weapons, Armor and Slays
+    [i] On Dungeon Exploration
+
+    (?) Help System Commands
+
+

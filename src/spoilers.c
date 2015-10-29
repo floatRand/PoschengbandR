@@ -1387,9 +1387,18 @@ static void _generate_html_help_aux(cptr name, str_map_ptr prev, int format)
         /* Output Dest Document */
         dfp = _file_parts_alloc();
         string_append_s(dfp->dir, ANGBAND_DIR_HELP);
-        _file_parts_extend_path(dfp, "html");
-        _file_parts_change_name(dfp, name);
-        _file_parts_change_extension(dfp, "html");
+        if (format == DOC_FORMAT_HTML)
+        {
+            _file_parts_extend_path(dfp, "html");
+            _file_parts_change_name(dfp, name);
+            _file_parts_change_extension(dfp, "html");
+        }
+        else
+        {
+            _file_parts_extend_path(dfp, "text");
+            _file_parts_change_name(dfp, name);
+            _file_parts_change_extension(dfp, "txt");
+        }
         dest_path = _file_parts_build_fullname(dfp);
 
         fff = my_fopen(string_buffer(dest_path), "w");
@@ -1418,7 +1427,13 @@ static void _generate_html_help(void)
 {
     str_map_ptr prev = str_map_alloc(NULL);
     _generate_html_help_aux("start.txt", prev, DOC_FORMAT_HTML);
-    /* TODO: Support DOC_FORMAT_TEXT! */
+    str_map_free(prev);
+}
+
+static void _generate_text_help(void)
+{
+    str_map_ptr prev = str_map_alloc(NULL);
+    _generate_html_help_aux("start.txt", prev, DOC_FORMAT_TEXT);
     str_map_free(prev);
 }
 
@@ -1444,6 +1459,7 @@ void generate_spoilers(void)
     _text_file("MonsterDam.csv", _mon_dam_help);
 
     _generate_html_help();
+    _generate_text_help();
     spoiler_hack = FALSE;
 }
 
