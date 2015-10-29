@@ -6157,7 +6157,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 msg_format("%^s%s", m_name, note);
 
             /* Hack -- Pain message */
-            else if (known && (dam || !do_fear))
+            else if (known && (dam || !do_fear) && !(flg & PROJECT_NO_PAIN))
             {
                 message_pain(c_ptr->m_idx, dam);
             }

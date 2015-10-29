@@ -1931,7 +1931,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                 if (!explode)
                 {
                     project(m_idx, 0, t_ptr->fy, t_ptr->fx,
-                        damage, pt, PROJECT_KILL | PROJECT_STOP | PROJECT_AIMED, -1);
+                        damage, pt, PROJECT_KILL | PROJECT_STOP | PROJECT_AIMED | PROJECT_NO_PAIN, -1);
                 }
 
                 switch (effect_type)
@@ -1992,7 +1992,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
                                 damroll (1 + ((tr_ptr->level) / 26),
                                 1 + ((tr_ptr->level) / 17)),
-                                GF_FIRE, PROJECT_KILL | PROJECT_STOP | PROJECT_AIMED, -1);
+                                GF_FIRE, PROJECT_KILL | PROJECT_STOP | PROJECT_AIMED | PROJECT_NO_PAIN, -1);
                         }
                         else
                         {
@@ -2013,7 +2013,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
                                 damroll (1 + ((tr_ptr->level) / 26),
                                 1 + ((tr_ptr->level) / 17)),
-                                GF_COLD, PROJECT_KILL | PROJECT_STOP | PROJECT_AIMED, -1);
+                                GF_COLD, PROJECT_KILL | PROJECT_STOP | PROJECT_AIMED | PROJECT_NO_PAIN, -1);
                         }
                         else
                         {
@@ -2034,7 +2034,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
                                 damroll (1 + ((tr_ptr->level) / 26),
                                 1 + ((tr_ptr->level) / 17)),
-                                GF_ELEC, PROJECT_KILL | PROJECT_STOP | PROJECT_AIMED, -1);
+                                GF_ELEC, PROJECT_KILL | PROJECT_STOP | PROJECT_AIMED | PROJECT_NO_PAIN, -1);
                         }
                         else
                         {

@@ -2484,13 +2484,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     case GF_DRAIN_MANA:
                     {
                         int amt = MIN(effect_pow, max_drain_amt - drain_amt);
-                        if (amt && project(0, 0, m_ptr->fy, m_ptr->fx, amt, e, PROJECT_KILL|PROJECT_HIDE, -1))
+                        if (amt && project(0, 0, m_ptr->fy, m_ptr->fx, amt, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN, -1))
                             drain_amt += amt;
                         *mdeath = (m_ptr->r_idx == 0);
                         break;
                     }
                     case GF_OLD_DRAIN:
-                        if (monster_living(r_ptr) && project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE, -1))
+                        if (monster_living(r_ptr) && project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN, -1))
                         {
                             int amt = MIN(effect_pow, max_drain_amt - drain_amt);
                             if (prace_is_(MIMIC_BAT))
@@ -2514,11 +2514,11 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                         if (base_dam > 50 || one_in_(7))
                         {
                             delay_quake = TRUE;
-                            project(0, 0, m_ptr->fy, m_ptr->fx, base_dam, GF_STUN, PROJECT_KILL|PROJECT_HIDE, -1);
+                            project(0, 0, m_ptr->fy, m_ptr->fx, base_dam, GF_STUN, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN, -1);
                         }
                         break;
                     default:
-                        project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE, -1);
+                        project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN, -1);
                         *mdeath = (m_ptr->r_idx == 0);
                     }
                 }
@@ -3637,7 +3637,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 if (o_ptr && o_ptr->name1 == ART_ETERNAL_BLADE)
                 {
                     /* Hack: Time Brand. Effectively a 2x slay ... k2 is damage from dice alone.*/
-                    project(0, 0, y, x, k2, GF_TIME, PROJECT_HIDE | PROJECT_STOP | PROJECT_KILL | PROJECT_GRID, -1);
+                    project(0, 0, y, x, k2, GF_TIME, PROJECT_HIDE | PROJECT_STOP | PROJECT_KILL | PROJECT_GRID | PROJECT_NO_PAIN, -1);
                     *mdeath = (m_ptr->r_idx == 0);
                     if (*mdeath) break;
                 }

@@ -2144,6 +2144,7 @@ enum _mimic_types {
 #define PROJECT_FAST        0x4000
 #define PROJECT_LOS         0x8000
 #define PROJECT_FULL_DAM    0x10000
+#define PROJECT_NO_PAIN     0x20000  /* Omit the pain messages. Note: Mon vs Mon melee is implemented with project()! */
 
 
 /*
