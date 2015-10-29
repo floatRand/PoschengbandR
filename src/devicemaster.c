@@ -441,7 +441,7 @@ static void _character_dump(doc_ptr doc)
 {
     cptr desc = devicemaster_speciality_name(p_ptr->psubclass);
 
-    doc_printf(doc, "<topic:Devicemaster>================================== Abilities ==================================\n\n");
+    doc_printf(doc, "<topic:Abilities>================================== <color:keypress>A</color>bilities ==================================\n\n");
 
     {
         int pow = p_ptr->lev / 10;

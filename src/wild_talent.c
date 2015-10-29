@@ -616,7 +616,7 @@ static void _character_dump(doc_ptr doc)
         var_init(&name);
         var_init(&info);
 
-        doc_printf(doc, "<topic:WildTalent>================================= Wild Talents ================================\n\n");
+        doc_printf(doc, "<topic:WildTalent>================================= <color:keypress>W</color>ild Talents ================================\n\n");
         doc_printf(doc, "<color:G>%-23.23s Lv Stat Cost Fail Info</color>\n", "");
         for (i = 0; i < ct; ++i)
         {

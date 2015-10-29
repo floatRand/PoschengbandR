@@ -4473,11 +4473,15 @@ static void do_cmd_knowledge_extra(void)
     class_t *class_ptr = get_class();
     race_t  *race_ptr = get_race();
 
+    doc_insert(doc, "<style:wide>");
+
     if (race_ptr->character_dump)
         race_ptr->character_dump(doc);
 
     if (class_ptr->character_dump)
         class_ptr->character_dump(doc);
+
+    doc_insert(doc, "</style>");
 
     doc_display(doc, "Race/Class Extra Information", 0);
     doc_free(doc);
@@ -4683,7 +4687,9 @@ static void do_cmd_knowledge_spell_exp(void)
 {
     doc_ptr doc = doc_alloc(80);
 
+    doc_insert(doc, "<style:wide>");
     spellbook_character_dump(doc);
+    doc_insert(doc, "</style>");
     doc_display(doc, "Spell Proficiency", 0);
     doc_free(doc);
 }

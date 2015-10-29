@@ -2131,7 +2131,7 @@ static void _character_dump(doc_ptr doc)
     var_init(&name);
     var_init(&info);
 
-    doc_printf(doc, "<topic:Psion>=================================== Spells ====================================\n");
+    doc_printf(doc, "<topic:Spells>=================================== <color:keypress>S</color>pells ====================================\n");
 
     for (i = 0; i < num_learned; i++)
     {

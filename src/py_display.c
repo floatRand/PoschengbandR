@@ -941,7 +941,7 @@ void py_display_powers(doc_ptr doc, spell_info *table, int ct)
     var_init(&vc);
     var_init(&vfm);
 
-    doc_printf(doc, "<style:wide><topic:Powers>=================================== <color:keypress>P</color>owers ====================================\n\n");
+    doc_printf(doc, "<topic:Powers>=================================== <color:keypress>P</color>owers ====================================\n\n");
     doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
     for (i = 0; i < ct; i++)
     {
@@ -967,7 +967,7 @@ void py_display_powers(doc_ptr doc, spell_info *table, int ct)
     var_clear(&vc);
     var_clear(&vfm);
 
-    doc_insert(doc, "</style>\n");
+    doc_newline(doc);
 }
 
 static void _build_powers(doc_ptr doc)
@@ -1000,7 +1000,7 @@ void py_display_spells(doc_ptr doc, spell_info *table, int ct)
     var_init(&vc);
     var_init(&vfm);
 
-    doc_printf(doc, "<style:wide><topic:Spells>=================================== <color:keypress>S</color>pells ====================================\n\n");
+    doc_printf(doc, "<topic:Spells>=================================== <color:keypress>S</color>pells ====================================\n\n");
     doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
 
     for (i = 0; i < ct; i++)
@@ -1027,7 +1027,7 @@ void py_display_spells(doc_ptr doc, spell_info *table, int ct)
     var_clear(&vc);
     var_clear(&vfm);
 
-    doc_insert(doc, "</style>\n");
+    doc_newline(doc);
 }
 
 static void _build_spells(doc_ptr doc)

@@ -887,7 +887,7 @@ void _character_dump(doc_ptr doc)
         {
             if (first)
             {
-                doc_printf(doc, "<topic:Mimic>================================ Learned Forms ================================\n\n");
+                doc_printf(doc, "<topic:LearnedForms>================================ <color:keypress>L</color>earned Forms ================================\n\n");
                 first = FALSE;
             }
             doc_printf(doc, " %s\n", r_name + r_info[_forms[i]].name);

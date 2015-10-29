@@ -1268,7 +1268,7 @@ static void _dump_realm(doc_ptr doc, int realm)
 
 void spellbook_character_dump(doc_ptr doc)
 {
-    doc_printf(doc, "<style:wide><topic:Spells>==================================== <color:keypress>S</color>pells ===================================\n\n");
+    doc_printf(doc, "<topic:Spells>==================================== <color:keypress>S</color>pells ===================================\n\n");
 
     if (p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_SORCERER)
     {
@@ -1293,7 +1293,6 @@ void spellbook_character_dump(doc_ptr doc)
             doc_printf(doc, " You were able to use %s magic before.\n", realm_names[i+1]);
         }
         doc_newline(doc);
-    }
-    doc_insert(doc, "</style>");
+    }    
 }
 

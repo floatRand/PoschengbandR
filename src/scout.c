@@ -373,7 +373,7 @@ static void _character_dump(doc_ptr doc)
         py_display_spells(doc, spells, ct);
     }
 
-    doc_printf(doc, "<topic:Scout>================================== Abilities ==================================\n\n");
+    doc_printf(doc, "<topic:Abilities>================================== <color:keypress>A</color>bilities ==================================\n\n");
 
     /* Hack: Heavy Armor negates advantages of being in the open, and
        actually incurs penalties for being entrenched! */

@@ -1769,7 +1769,7 @@ static void _stoicism_spell(int cmd, variant *res)
         var_set_string(res, "Stoicism");
         break;
     case SPELL_DESC:
-        var_set_string(res, "You gain additional constitution based on the quality of your digger.");
+        var_set_string(res, "You gain additional constitution and stealth based on the quality of your digger.");
         break;
     default:
         _toggle_spell(TOGGLE_STOICISM, cmd, res);
@@ -1785,7 +1785,7 @@ static void _industrious_mortician_spell(int cmd, variant *res)
         var_set_string(res, "Industrious Mortician");
         break;
     case SPELL_DESC:
-        var_set_string(res, "You gain additional attacks when using this technique based on the quality of your digger.");
+        var_set_string(res, "You gain additional attacks and speed when using this technique based on the quality of your digger.");
         break;
     default:
         _toggle_spell(TOGGLE_INDUSTRIOUS_MORTICIAN, cmd, res);
@@ -3424,10 +3424,6 @@ static void _calc_bonuses(void)
 
             switch (_get_toggle())
             {
-            case TOGGLE_FLYING_DAGGER_STANCE:
-                p_ptr->stat_add[A_CON] -= 4;
-                break;
-
             case TOGGLE_SHADOW_STANCE:
                 p_ptr->shooter_info.to_d -= 10;
                 p_ptr->shooter_info.dis_to_d -= 10;
@@ -3627,11 +3623,7 @@ static void _calc_bonuses(void)
             }
             switch (_get_toggle())
             {
-            case TOGGLE_STRENGTH_OF_THE_UNDERTAKER:
-                p_ptr->stat_add[A_STR] += pval;
-                break;
             case TOGGLE_STOICISM:
-                p_ptr->stat_add[A_CON] += pval;
                 p_ptr->skills.stl += pval;
                 break;
             case TOGGLE_INDUSTRIOUS_MORTICIAN:
@@ -3693,6 +3685,42 @@ static void _calc_bonuses(void)
     }
 }
 
+static void _calc_stats(s16b stats[MAX_STATS])
+{
+    /* Note: _calc_stats() gets called before _calc_bonuses, so p_ptr->speciality_equip
+       won't be set yet. I suppose we could take over setting this field, but I don't like
+       relying on the non-obvious ordering of callbacks */
+    if (p_ptr->psubclass == WEAPONMASTER_DAGGERS)
+    {
+        if (_check_speciality_equip())
+        {
+            switch (_get_toggle())
+            {
+            case TOGGLE_FLYING_DAGGER_STANCE:
+                stats[A_CON] -= 4;
+                break;
+            }
+        }
+    }
+    else if (p_ptr->psubclass == WEAPONMASTER_DIGGERS)
+    {
+        if (_check_speciality_equip())
+        {
+            int pval = _max_pval();
+
+            switch (_get_toggle())
+            {
+            case TOGGLE_STRENGTH_OF_THE_UNDERTAKER:
+                stats[A_STR] += pval;
+                break;
+            case TOGGLE_STOICISM:
+                stats[A_CON] += pval;
+                break;
+            }
+        }
+    }
+}
+
 static void _get_flags(u32b flgs[TR_FLAG_SIZE])
 {
     if (p_ptr->psubclass == WEAPONMASTER_DAGGERS)
@@ -3731,7 +3759,7 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
             if (p_ptr->lev >= 20) add_flag(flgs, TR_SPEED);
         }
     }
-    else if (p_ptr->psubclass == WEAPONMASTER_STAVES)
+    else if (p_ptr->psubclass == WEAPONMASTER_DIGGERS)
     {
         if (p_ptr->speciality_equip)
         {
@@ -4067,7 +4095,7 @@ static void _move_player(void)
 
 static void _character_dump(doc_ptr doc)
 {
-    doc_printf(doc, "<topic:Weaponmaster>================================== Abilities ==================================\n\n");
+    doc_printf(doc, "<topic:Abilities>================================== <color:keypress>A</color>bilities ==================================\n\n");
     
     if (p_ptr->psubclass == WEAPONMASTER_AXES)
     {
@@ -4084,7 +4112,7 @@ static void _character_dump(doc_ptr doc)
             doc_printf(doc, "  * You gain a bonus to tunneling when wielding an axe.\n");
 
         if (p_ptr->lev >= 30)
-            doc_printf(doc, "  * You occasionally attack an adjacent opponent after killing a foe when wielding an axe.\n");
+            doc_printf(doc, "  * <indent>You occasionally attack an adjacent opponent after killing a foe when wielding an axe.</indent>\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_CLUBS)
     {
@@ -4120,7 +4148,7 @@ static void _character_dump(doc_ptr doc)
             doc_printf(doc, "  * Your steps break walls when wielding a digger.\n");
 
         if (p_ptr->lev >= 15)
-            doc_printf(doc, "  * You gain an AC bonus depending on the number of adjacent walls when wielding a digger.\n");
+            doc_printf(doc, "  * <indent>You gain an AC bonus depending on the number of adjacent walls when wielding a digger.</indent>\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_POLEARMS)
     {
@@ -4131,7 +4159,7 @@ static void _character_dump(doc_ptr doc)
             doc_printf(doc, "  * You occasionally strike all adjacent foes when wielding a polearm.\n");
 
         if (p_ptr->lev >= 30)
-            doc_printf(doc, "  * You gain a bonus to hit and to AC when you don't move for 3 rounds when wielding a polearm.\n");
+            doc_printf(doc, "  * <indent>You gain a bonus to hit and to AC when you don't move for 3 rounds when wielding a polearm.</indent>\n");
     }
     else if (p_ptr->psubclass == WEAPONMASTER_SLINGS)
     {
@@ -4142,7 +4170,7 @@ static void _character_dump(doc_ptr doc)
             doc_printf(doc, "  * You have access to an unlimited quiver when wielding a sling.\n");
 
         if (p_ptr->lev >= 10)
-            doc_printf(doc, "  * Your shots never miss your target once you score 3 consecutive hits when wielding a sling.\n");
+            doc_printf(doc, "  * <indent>Your shots never miss your target once you score 3 consecutive hits when wielding a sling.</indent>\n");
         if (p_ptr->lev >= 40)
             doc_printf(doc, "  * You gain extra shots when wielding a sling.\n");
     }
@@ -4150,7 +4178,7 @@ static void _character_dump(doc_ptr doc)
     {
         doc_printf(doc, "  * You gain two handed wielding bonuses even when wielding a shield.\n");
         if (p_ptr->lev >= 20)
-            doc_printf(doc, "  * Your inventory items are somewhat protected from destruction when wielding a shield.\n");
+            doc_printf(doc, "  * <indent>Your inventory items are somewhat protected from destruction when wielding a shield.</indent>\n");
         if (p_ptr->lev >= 45)
             doc_printf(doc, "  * You gain basic resistance and reflection when wielding a shield.\n");
 
@@ -4163,7 +4191,7 @@ static void _character_dump(doc_ptr doc)
     }
     else if (p_ptr->psubclass == WEAPONMASTER_STAVES)
     {
-        doc_printf(doc, "  * You gain a bonus to AC until your next turn after any successful hit when wielding a staff.\n");
+        doc_printf(doc, "  * <indent>You gain a bonus to AC until your next turn after any successful hit when wielding a staff.</indent>\n");
         doc_printf(doc, "  * You suffer a penalty to speed when wielding a shield.\n");
         if (p_ptr->lev >= 5)
             doc_printf(doc, "  * You gain a bonus AC after moving until your next turn when wielding a staff.\n");
@@ -4232,6 +4260,7 @@ class_t *weaponmaster_get_class(void)
         me.get_spells = _get_spells;
         me.birth = _on_birth;
         me.calc_bonuses = _calc_bonuses;
+        me.calc_stats = _calc_stats;
         me.get_flags = _get_flags;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;

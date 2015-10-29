@@ -530,7 +530,7 @@ static void _dump_list(doc_ptr doc, object_type *which_list)
 
 static void _character_dump(doc_ptr doc)
 {
-    doc_printf(doc, "<topic:MagicEater>================================ Absorbed Magic ===============================\n\n");
+    doc_printf(doc, "<topic:MagicEater>================================ Absorbed <color:keypress>M</color>agic ===============================\n\n");
 
     _dump_list(doc, _which_list(TV_WAND));
     _dump_list(doc, _which_list(TV_STAFF));

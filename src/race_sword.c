@@ -390,9 +390,6 @@ static void _calc_bonuses(void)
         p_ptr->sh_retaliation = TRUE;
     }
 
-    for (i = 0; i < 6; i++) /* Assume in order */
-        p_ptr->stat_add[A_STR + i] += _calc_stat_bonus(TR_STR + i);
-
     for (i = 0; i < RES_MAX; i++)
     {
         int j = res_get_object_flag(i);
@@ -480,6 +477,13 @@ static void _calc_bonuses(void)
         p_ptr->sh_elec = TRUE;
     if (_essences[TR_SH_COLD] >= 7)
         p_ptr->sh_cold = TRUE;
+}
+
+static void _calc_stats(s16b stats[MAX_STATS])
+{
+    int i;
+    for (i = 0; i < 6; i++)
+        stats[i] += _calc_stat_bonus(TR_STR + i);
 }
 
 static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
@@ -833,7 +837,7 @@ static void _dump_bonus_flag(doc_ptr doc, int which, int power, int rep, cptr na
 static void _character_dump(doc_ptr doc)
 {
     int i;
-    doc_printf(doc, "<topic:Swords>=================================== Essences ==================================\n\n");
+    doc_printf(doc, "<topic:Essences>=================================== <color:keypress>E</color>ssences ==================================\n\n");
     doc_printf(doc, "   <color:G>%-22.22s Total  Need Bonus</color>\n", "Stats");
     for (i = 0; i < 6; i++) /* Assume in order */
         _dump_bonus_flag(doc, TR_STR + i, 3, 1, stat_name_true[A_STR + i]);
@@ -908,6 +912,8 @@ static void _character_dump(doc_ptr doc)
     _dump_ability_flag(doc, TR_ESP_GOOD, 2, "ESP Good");
     _dump_ability_flag(doc, TR_ESP_NONLIVING, 2, "ESP Nonliving");
     _dump_ability_flag(doc, TR_ESP_UNIQUE, 2, "ESP Unique");
+
+    doc_newline(doc);
 }
 
 /**********************************************************************
@@ -942,6 +948,7 @@ race_t *mon_sword_get_race(void)
         me.shop_adjust = 110; /* I think shopkeepers are puzzled, more than anything else! */
 
         me.calc_bonuses = _calc_bonuses;
+        me.calc_stats = _calc_stats;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.character_dump = _character_dump;
         me.get_flags = _get_flags;

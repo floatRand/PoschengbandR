@@ -1902,7 +1902,7 @@ void possessor_character_dump(doc_ptr doc)
     char         lvl[80];
     char         loc[255];
     
-    doc_printf(doc, "<topic:Possessor>================================ Recent Forms =================================\n\n");
+    doc_printf(doc, "<topic:RecentForms>================================ <color:keypress>R</color>ecent Forms =================================\n\n");
     doc_printf(doc, "<color:G>%-33.33s CL Day  Time  DL %-28.28s</color>\n", "Most Recent Forms", "Location");
 
     while (p && ct < 100)

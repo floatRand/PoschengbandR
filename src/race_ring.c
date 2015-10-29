@@ -435,7 +435,7 @@ static void _birth(void)
     forge.number = 10;
     add_outfit(&forge);
 
-    show_file(TRUE, "rings.txt", NULL, 0, 0);
+    doc_display_help("rings.txt", NULL);
 }
 
 static bool _drain_essences(int div)
@@ -1255,9 +1255,6 @@ static void _calc_bonuses(void)
     /* Speed rings come very late, and very unreliably ... */
     p_ptr->pspeed += p_ptr->lev / 10;
 
-    for (i = 0; i < 6; i++) /* Assume in order */
-        p_ptr->stat_add[A_STR + i] += _calc_stat_bonus(TR_STR + i);
-
     for (i = 0; i < RES_MAX; i++)
     {
         int j = res_get_object_flag(i);
@@ -1354,6 +1351,13 @@ static void _calc_bonuses(void)
         p_ptr->sh_elec = TRUE;
     if (_essences[TR_SH_COLD] >= 7)
         p_ptr->sh_cold = TRUE;
+}
+
+static void _calc_stats(s16b stats[MAX_STATS])
+{
+    int i;
+    for (i = 0; i < 6; i++)
+        stats[i] += _calc_stat_bonus(TR_STR + i);
 }
 
 static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
@@ -1514,7 +1518,7 @@ static void _dump_effects(doc_ptr doc)
 static void _character_dump(doc_ptr doc)
 {
     int i;
-    doc_printf(doc, "<topic:Ring>=================================== Essences ==================================\n\n");
+    doc_printf(doc, "<topic:Essences>=================================== <color:keypress>E</color>ssences ==================================\n\n");
     doc_printf(doc, "   <color:G>%-22.22s Total  Need Bonus</color>\n", "Stats");
     for (i = 0; i < 6; i++) /* Assume in order */
         _dump_bonus_flag(doc, TR_STR + i, 2, 1, stat_name_true[A_STR + i]);
@@ -1573,8 +1577,10 @@ static void _character_dump(doc_ptr doc)
     _dump_ability_flag(doc, TR_ESP_NONLIVING, 2, "ESP Nonliving");
     _dump_ability_flag(doc, TR_ESP_UNIQUE, 2, "ESP Unique");
 
-    doc_printf(doc, "\n\n==================================== Spells ===================================\n");
+    doc_printf(doc, "\n<topic:Spells>==================================== <color:keypress>S</color>pells ===================================\n");
     _dump_effects(doc);
+
+    doc_newline(doc);
 }
 
 /**********************************************************************
@@ -1620,6 +1626,7 @@ race_t *mon_ring_get_race(void)
         me.shop_adjust = 110; /* Really should depend on current bearer */
 
         me.calc_bonuses = _calc_bonuses;
+        me.calc_stats = _calc_stats;
 
         me.get_powers = _get_powers;
         me.caster_info = _caster_info;
