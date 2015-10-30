@@ -1,6 +1,6 @@
 /* File: autopick.c */
 
-/* Purpose: Object Auto-picker/Destroyer */
+/* Purpose: The Mogaminator! */
 
 /*
  * Copyright (c) 2002  Mogami
@@ -52,20 +52,25 @@ enum _keyword_e {
     FLG_FOURTH,
     FLG_CURSED,
     FLG_SPECIAL,
+    FLG_UNUSABLE,  /* For example, a Dragon cannot wear boots! */
 
     FLG_ITEMS,
     FLG_WEAPONS,
+    FLG_SHOOTERS,
+    FLG_AMMO,
     FLG_FAVORITE_WEAPONS,
     FLG_ARMORS,
-    FLG_MISSILES,
-    FLG_DEVICES,
+    FLG_WANDS,
+    FLG_STAVES,
+    FLG_RODS,
+    FLG_POTIONS,
+    FLG_SCROLLS,
     FLG_LIGHTS,
     FLG_JUNKS,
     FLG_CORPSES,
     FLG_SPELLBOOKS,
     FLG_HAFTED,
     FLG_SHIELDS,
-    FLG_BOWS,
     FLG_RINGS,
     FLG_AMULETS,
     FLG_SUITS,
@@ -92,6 +97,7 @@ static char KEY_EGO[] = "ego";
 static char KEY_GOOD[] = "good";
 static char KEY_CURSED[] = "cursed";
 static char KEY_SPECIAL[] = "special";
+static char KEY_UNUSABLE[] = "unusable";
 static char KEY_NAMELESS[] = "nameless";
 static char KEY_AVERAGE[] = "average";
 static char KEY_WORTHLESS[] = "worthless";
@@ -101,7 +107,6 @@ static char KEY_BOOSTED[] = "dice boosted";
 static char KEY_MORE_THAN[] =  "more than";
 static char KEY_DICE[] =  " dice";
 static char KEY_MORE_BONUS[] =  "more bonus than";
-static char KEY_MORE_BONUS2[] =  "";
 static char KEY_MORE_LEVEL[] =  "more level than";
 static char KEY_WANTED[] = "wanted";
 static char KEY_UNIQUE[] = "unique monster's";
@@ -115,10 +120,15 @@ static char KEY_THIRD[] = "third";
 static char KEY_FOURTH[] = "fourth";
 static char KEY_ITEMS[] = "items";
 static char KEY_WEAPONS[] = "weapons";
+static char KEY_SHOOTERS[] = "shooters";
+static char KEY_AMMO[] = "ammo";
 static char KEY_FAVORITE_WEAPONS[] = "favorite weapons";
 static char KEY_ARMORS[] = "armors";
-static char KEY_MISSILES[] = "missiles";
-static char KEY_DEVICES[] = "magical devices";
+static char KEY_WANDS[] = "wands";
+static char KEY_STAVES[] = "staves";
+static char KEY_RODS[] = "rods";
+static char KEY_POTIONS[] = "potions";
+static char KEY_SCROLLS[] = "scrolls";
 static char KEY_LIGHTS[] = "lights";
 static char KEY_JUNKS[] = "junks";
 static char KEY_CORPSES[] = "corpses";
@@ -126,7 +136,6 @@ static char KEY_SKELETONS[] = "skeletons";
 static char KEY_SPELLBOOKS[] = "spellbooks";
 static char KEY_HAFTED[] = "hafted weapons";
 static char KEY_SHIELDS[] = "shields";
-static char KEY_BOWS[] = "bows";
 static char KEY_RINGS[] = "rings";
 static char KEY_AMULETS[] = "amulets";
 static char KEY_SUITS[] = "suits";
@@ -140,9 +149,6 @@ static char KEY_BOOTS[] = "boots";
      ? (ptr += sizeof(KEY)-1, (' '==*ptr) ? ptr++ : 0, TRUE) : FALSE)
 #define MATCH_KEY2(KEY) (!strncmp(ptr, KEY, sizeof(KEY)-1)\
      ? (prev_ptr = ptr, ptr += sizeof(KEY)-1, (' '==*ptr) ? ptr++ : 0, TRUE) : FALSE)
-
-#define ADD_KEY(KEY) (strcat(ptr, KEY), strcat(ptr, " "))
-#define ADD_KEY2(KEY) strcat(ptr, KEY)
 
 #define ADD_FLG(FLG) (entry->flag[FLG / 32] |= (1L << (FLG % 32)))
 #define REM_FLG(FLG) (entry->flag[FLG / 32] &= ~(1L << (FLG % 32)))
@@ -255,6 +261,7 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
         if (MATCH_KEY(KEY_GOOD)) ADD_FLG(FLG_GOOD);
 		if (MATCH_KEY(KEY_CURSED)) ADD_FLG(FLG_CURSED);
         if (MATCH_KEY(KEY_SPECIAL)) ADD_FLG(FLG_SPECIAL);
+        if (MATCH_KEY(KEY_UNUSABLE)) ADD_FLG(FLG_UNUSABLE);
         if (MATCH_KEY(KEY_NAMELESS)) ADD_FLG(FLG_NAMELESS);
         if (MATCH_KEY(KEY_AVERAGE)) ADD_FLG(FLG_AVERAGE);
         if (MATCH_KEY(KEY_RARE)) ADD_FLG(FLG_RARE);
@@ -278,10 +285,15 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
 
     if (MATCH_KEY2(KEY_ITEMS)) ADD_FLG_NOUN(FLG_ITEMS);
     else if (MATCH_KEY2(KEY_WEAPONS)) ADD_FLG_NOUN(FLG_WEAPONS);
+    else if (MATCH_KEY2(KEY_SHOOTERS)) ADD_FLG_NOUN(FLG_SHOOTERS);
+    else if (MATCH_KEY2(KEY_AMMO)) ADD_FLG_NOUN(FLG_AMMO);
     else if (MATCH_KEY2(KEY_FAVORITE_WEAPONS)) ADD_FLG_NOUN(FLG_FAVORITE_WEAPONS);
     else if (MATCH_KEY2(KEY_ARMORS)) ADD_FLG_NOUN(FLG_ARMORS);
-    else if (MATCH_KEY2(KEY_MISSILES)) ADD_FLG_NOUN(FLG_MISSILES);
-    else if (MATCH_KEY2(KEY_DEVICES)) ADD_FLG_NOUN(FLG_DEVICES);
+    else if (MATCH_KEY2(KEY_WANDS)) ADD_FLG_NOUN(FLG_WANDS);
+    else if (MATCH_KEY2(KEY_STAVES)) ADD_FLG_NOUN(FLG_STAVES);
+    else if (MATCH_KEY2(KEY_RODS)) ADD_FLG_NOUN(FLG_RODS);
+    else if (MATCH_KEY2(KEY_POTIONS)) ADD_FLG_NOUN(FLG_POTIONS);
+    else if (MATCH_KEY2(KEY_SCROLLS)) ADD_FLG_NOUN(FLG_SCROLLS);
     else if (MATCH_KEY2(KEY_LIGHTS)) ADD_FLG_NOUN(FLG_LIGHTS);
     else if (MATCH_KEY2(KEY_JUNKS)) ADD_FLG_NOUN(FLG_JUNKS);
     else if (MATCH_KEY2(KEY_CORPSES)) ADD_FLG_NOUN(FLG_CORPSES);
@@ -289,7 +301,6 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
     else if (MATCH_KEY2(KEY_SPELLBOOKS)) ADD_FLG_NOUN(FLG_SPELLBOOKS);
     else if (MATCH_KEY2(KEY_HAFTED)) ADD_FLG_NOUN(FLG_HAFTED);
     else if (MATCH_KEY2(KEY_SHIELDS)) ADD_FLG_NOUN(FLG_SHIELDS);
-    else if (MATCH_KEY2(KEY_BOWS)) ADD_FLG_NOUN(FLG_BOWS);
     else if (MATCH_KEY2(KEY_RINGS)) ADD_FLG_NOUN(FLG_RINGS);
     else if (MATCH_KEY2(KEY_AMULETS)) ADD_FLG_NOUN(FLG_AMULETS);
     else if (MATCH_KEY2(KEY_SUITS)) ADD_FLG_NOUN(FLG_SUITS);
@@ -595,11 +606,22 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
     if (o_ptr->tval >= TV_LIFE_BOOK && 3 == o_ptr->sval)
         ADD_FLG(FLG_FOURTH);
 
-    if (object_is_ammo(o_ptr))
-        ADD_FLG(FLG_MISSILES);
-    else if (o_ptr->tval == TV_SCROLL || o_ptr->tval == TV_STAFF
-         || o_ptr->tval == TV_WAND || o_ptr->tval == TV_ROD)
-        ADD_FLG(FLG_DEVICES);
+    if (object_is_melee_weapon(o_ptr))
+        ADD_FLG(FLG_WEAPONS);
+    else if (o_ptr->tval == TV_BOW)
+        ADD_FLG(FLG_SHOOTERS);
+    else if (object_is_ammo(o_ptr))
+        ADD_FLG(FLG_AMMO);
+    else if (o_ptr->tval == TV_WAND)
+        ADD_FLG(FLG_WANDS);
+    else if (o_ptr->tval == TV_STAFF)
+        ADD_FLG(FLG_STAVES);
+    else if (o_ptr->tval == TV_ROD)
+        ADD_FLG(FLG_RODS);
+    else if (o_ptr->tval == TV_POTION)
+        ADD_FLG(FLG_POTIONS);
+    else if (o_ptr->tval == TV_SCROLL)
+        ADD_FLG(FLG_SCROLLS);
     else if (o_ptr->tval == TV_LITE)
         ADD_FLG(FLG_LIGHTS);
     else if (o_ptr->tval == TV_SKELETON || o_ptr->tval == TV_BOTTLE
@@ -611,13 +633,8 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         ADD_FLG(FLG_SKELETONS);
     else if (o_ptr->tval >= TV_LIFE_BOOK)
         ADD_FLG(FLG_SPELLBOOKS);
-    else if (o_ptr->tval == TV_POLEARM || o_ptr->tval == TV_SWORD
-         || o_ptr->tval == TV_DIGGING || o_ptr->tval == TV_HAFTED)
-        ADD_FLG(FLG_WEAPONS);
     else if (o_ptr->tval == TV_SHIELD)
         ADD_FLG(FLG_SHIELDS);
-    else if (o_ptr->tval == TV_BOW)
-        ADD_FLG(FLG_BOWS);
     else if (o_ptr->tval == TV_RING)
         ADD_FLG(FLG_RINGS);
     else if (o_ptr->tval == TV_AMULET)
@@ -833,123 +850,129 @@ errr process_autopick_file_command(char *buf)
 /*
  * Reconstruct preference line from entry
  */
-cptr autopick_line_from_entry(autopick_type *entry)
+string_ptr autopick_line_from_entry(autopick_type *entry, int options)
 {
-    char buf[MAX_LINELEN];
-    char *ptr;
+    string_ptr s = string_alloc();
     bool sepa_flag = TRUE;
 
-    *buf = '\0';
-    if (!(entry->action & DO_DISPLAY)) strcat(buf, "(");
-    if (entry->action & DO_QUERY_AUTOPICK) strcat(buf, ";");
-    if (entry->action & DO_AUTODESTROY) strcat(buf, "!");
-    if (entry->action & DONT_AUTOPICK) strcat(buf, "~");
-    if (entry->action & DO_AUTO_ID) strcat(buf, "?");
+    if (!(entry->action & DO_DISPLAY)) string_append_c(s, '(');
+    if (entry->action & DO_QUERY_AUTOPICK) string_append_c(s, ';');
+    if (entry->action & DO_AUTODESTROY) string_append_c(s, '!');
+    if (entry->action & DONT_AUTOPICK) string_append_c(s, '~');
+    if (entry->action & DO_AUTO_ID) string_append_c(s, '?');
 
-    ptr = buf;
+    if (options & AUTOPICK_COLOR_CODED)
+        string_append_s(s, "<color:G>");
 
-    if (IS_FLG(FLG_ALL)) ADD_KEY(KEY_ALL);
-    if (IS_FLG(FLG_COLLECTING)) ADD_KEY(KEY_COLLECTING);
-    if (IS_FLG(FLG_UNAWARE)) ADD_KEY(KEY_UNAWARE);
-    if (IS_FLG(FLG_UNIDENTIFIED)) ADD_KEY(KEY_UNIDENTIFIED);
-    if (IS_FLG(FLG_IDENTIFIED)) ADD_KEY(KEY_IDENTIFIED);
-    if (IS_FLG(FLG_STAR_IDENTIFIED)) ADD_KEY(KEY_STAR_IDENTIFIED);
-    if (IS_FLG(FLG_BOOSTED)) ADD_KEY(KEY_BOOSTED);
+    if (IS_FLG(FLG_ALL)) string_printf(s, "%s ", KEY_ALL);
+    if (IS_FLG(FLG_COLLECTING)) string_printf(s, "%s ", KEY_COLLECTING);
+    if (IS_FLG(FLG_UNAWARE)) string_printf(s, "%s ", KEY_UNAWARE);
+    if (IS_FLG(FLG_UNIDENTIFIED)) string_printf(s, "%s ", KEY_UNIDENTIFIED);
+    if (IS_FLG(FLG_IDENTIFIED)) string_printf(s, "%s ", KEY_IDENTIFIED);
+    if (IS_FLG(FLG_STAR_IDENTIFIED)) string_printf(s, "%s ", KEY_STAR_IDENTIFIED);
+    if (IS_FLG(FLG_BOOSTED)) string_printf(s, "%s ", KEY_BOOSTED);
+    if (IS_FLG(FLG_UNREADABLE)) string_printf(s, "%s ", KEY_UNREADABLE);
+    if (IS_FLG(FLG_REALM1)) string_printf(s, "%s ", KEY_REALM1);
+    if (IS_FLG(FLG_REALM2)) string_printf(s, "%s ", KEY_REALM2);
+    if (IS_FLG(FLG_FIRST)) string_printf(s, "%s ", KEY_FIRST);
+    if (IS_FLG(FLG_SECOND)) string_printf(s, "%s ", KEY_SECOND);
+    if (IS_FLG(FLG_THIRD)) string_printf(s, "%s ", KEY_THIRD);
+    if (IS_FLG(FLG_FOURTH)) string_printf(s, "%s ", KEY_FOURTH);
+    if (IS_FLG(FLG_WANTED)) string_printf(s, "%s ", KEY_WANTED);
+    if (IS_FLG(FLG_UNIQUE)) string_printf(s, "%s ", KEY_UNIQUE);
+    if (IS_FLG(FLG_HUMAN)) string_printf(s, "%s ", KEY_HUMAN);
+    if (IS_FLG(FLG_WORTHLESS)) string_printf(s, "%s ", KEY_WORTHLESS);
+    if (IS_FLG(FLG_GOOD)) string_printf(s, "%s ", KEY_GOOD);
+    if (IS_FLG(FLG_CURSED)) string_printf(s, "%s ", KEY_CURSED);
+    if (IS_FLG(FLG_SPECIAL)) string_printf(s, "%s ", KEY_SPECIAL);
+    if (IS_FLG(FLG_UNUSABLE)) string_printf(s, "%s ", KEY_UNUSABLE);
+    if (IS_FLG(FLG_NAMELESS)) string_printf(s, "%s ", KEY_NAMELESS);
+    if (IS_FLG(FLG_AVERAGE)) string_printf(s, "%s ", KEY_AVERAGE);
+    if (IS_FLG(FLG_RARE)) string_printf(s, "%s ", KEY_RARE);
+    if (IS_FLG(FLG_COMMON)) string_printf(s, "%s ", KEY_COMMON);
+    if (IS_FLG(FLG_EGO)) string_printf(s, "%s ", KEY_EGO);
+    if (IS_FLG(FLG_ARTIFACT)) string_printf(s, "%s ", KEY_ARTIFACT);
 
-    if (IS_FLG(FLG_UNREADABLE)) ADD_KEY(KEY_UNREADABLE);
-    if (IS_FLG(FLG_REALM1)) ADD_KEY(KEY_REALM1);
-    if (IS_FLG(FLG_REALM2)) ADD_KEY(KEY_REALM2);
-    if (IS_FLG(FLG_FIRST)) ADD_KEY(KEY_FIRST);
-    if (IS_FLG(FLG_SECOND)) ADD_KEY(KEY_SECOND);
-    if (IS_FLG(FLG_THIRD)) ADD_KEY(KEY_THIRD);
-    if (IS_FLG(FLG_FOURTH)) ADD_KEY(KEY_FOURTH);
-    if (IS_FLG(FLG_WANTED)) ADD_KEY(KEY_WANTED);
-    if (IS_FLG(FLG_UNIQUE)) ADD_KEY(KEY_UNIQUE);
-    if (IS_FLG(FLG_HUMAN)) ADD_KEY(KEY_HUMAN);
-    if (IS_FLG(FLG_WORTHLESS)) ADD_KEY(KEY_WORTHLESS);
-    if (IS_FLG(FLG_GOOD)) ADD_KEY(KEY_GOOD);
-	if (IS_FLG(FLG_CURSED)) ADD_KEY(KEY_CURSED);
-    if (IS_FLG(FLG_SPECIAL)) ADD_KEY(KEY_SPECIAL);
-    if (IS_FLG(FLG_NAMELESS)) ADD_KEY(KEY_NAMELESS);
-    if (IS_FLG(FLG_AVERAGE)) ADD_KEY(KEY_AVERAGE);
-    if (IS_FLG(FLG_RARE)) ADD_KEY(KEY_RARE);
-    if (IS_FLG(FLG_COMMON)) ADD_KEY(KEY_COMMON);
-    if (IS_FLG(FLG_EGO)) ADD_KEY(KEY_EGO);
+    if (options & AUTOPICK_COLOR_CODED)
+        string_append_s(s, "</color><color:R>");
 
-    if (IS_FLG(FLG_ARTIFACT)) ADD_KEY(KEY_ARTIFACT);
-
-    if (IS_FLG(FLG_ITEMS)) ADD_KEY2(KEY_ITEMS);
-    else if (IS_FLG(FLG_WEAPONS)) ADD_KEY2(KEY_WEAPONS);
-    else if (IS_FLG(FLG_FAVORITE_WEAPONS)) ADD_KEY2(KEY_FAVORITE_WEAPONS);
-    else if (IS_FLG(FLG_ARMORS)) ADD_KEY2(KEY_ARMORS);
-    else if (IS_FLG(FLG_MISSILES)) ADD_KEY2(KEY_MISSILES);
-    else if (IS_FLG(FLG_DEVICES)) ADD_KEY2(KEY_DEVICES);
-    else if (IS_FLG(FLG_LIGHTS)) ADD_KEY2(KEY_LIGHTS);
-    else if (IS_FLG(FLG_JUNKS)) ADD_KEY2(KEY_JUNKS);
-    else if (IS_FLG(FLG_CORPSES)) ADD_KEY2(KEY_CORPSES);
-    else if (IS_FLG(FLG_SKELETONS)) ADD_KEY2(KEY_SKELETONS);
-    else if (IS_FLG(FLG_SPELLBOOKS)) ADD_KEY2(KEY_SPELLBOOKS);
-    else if (IS_FLG(FLG_HAFTED)) ADD_KEY2(KEY_HAFTED);
-    else if (IS_FLG(FLG_SHIELDS)) ADD_KEY2(KEY_SHIELDS);
-    else if (IS_FLG(FLG_BOWS)) ADD_KEY2(KEY_BOWS);
-    else if (IS_FLG(FLG_RINGS)) ADD_KEY2(KEY_RINGS);
-    else if (IS_FLG(FLG_AMULETS)) ADD_KEY2(KEY_AMULETS);
-    else if (IS_FLG(FLG_SUITS)) ADD_KEY2(KEY_SUITS);
-    else if (IS_FLG(FLG_CLOAKS)) ADD_KEY2(KEY_CLOAKS);
-    else if (IS_FLG(FLG_HELMS)) ADD_KEY2(KEY_HELMS);
-    else if (IS_FLG(FLG_GLOVES)) ADD_KEY2(KEY_GLOVES);
-    else if (IS_FLG(FLG_BOOTS)) ADD_KEY2(KEY_BOOTS);
+    if (IS_FLG(FLG_ITEMS)) string_append_s(s, KEY_ITEMS);
+    else if (IS_FLG(FLG_WEAPONS)) string_append_s(s, KEY_WEAPONS);
+    else if (IS_FLG(FLG_SHOOTERS)) string_append_s(s, KEY_SHOOTERS);
+    else if (IS_FLG(FLG_AMMO)) string_append_s(s, KEY_AMMO);
+    else if (IS_FLG(FLG_FAVORITE_WEAPONS)) string_append_s(s, KEY_FAVORITE_WEAPONS);
+    else if (IS_FLG(FLG_ARMORS)) string_append_s(s, KEY_ARMORS);
+    else if (IS_FLG(FLG_WANDS)) string_append_s(s, KEY_WANDS);
+    else if (IS_FLG(FLG_STAVES)) string_append_s(s, KEY_STAVES);
+    else if (IS_FLG(FLG_RODS)) string_append_s(s, KEY_RODS);
+    else if (IS_FLG(FLG_POTIONS)) string_append_s(s, KEY_POTIONS);
+    else if (IS_FLG(FLG_SCROLLS)) string_append_s(s, KEY_SCROLLS);
+    else if (IS_FLG(FLG_LIGHTS)) string_append_s(s, KEY_LIGHTS);
+    else if (IS_FLG(FLG_JUNKS)) string_append_s(s, KEY_JUNKS);
+    else if (IS_FLG(FLG_CORPSES)) string_append_s(s, KEY_CORPSES);
+    else if (IS_FLG(FLG_SKELETONS)) string_append_s(s, KEY_SKELETONS);
+    else if (IS_FLG(FLG_SPELLBOOKS)) string_append_s(s, KEY_SPELLBOOKS);
+    else if (IS_FLG(FLG_HAFTED)) string_append_s(s, KEY_HAFTED);
+    else if (IS_FLG(FLG_SHIELDS)) string_append_s(s, KEY_SHIELDS);
+    else if (IS_FLG(FLG_RINGS)) string_append_s(s, KEY_RINGS);
+    else if (IS_FLG(FLG_AMULETS)) string_append_s(s, KEY_AMULETS);
+    else if (IS_FLG(FLG_SUITS)) string_append_s(s, KEY_SUITS);
+    else if (IS_FLG(FLG_CLOAKS)) string_append_s(s, KEY_CLOAKS);
+    else if (IS_FLG(FLG_HELMS)) string_append_s(s, KEY_HELMS);
+    else if (IS_FLG(FLG_GLOVES)) string_append_s(s, KEY_GLOVES);
+    else if (IS_FLG(FLG_BOOTS)) string_append_s(s, KEY_BOOTS);
     else if (!IS_FLG(FLG_ARTIFACT))
         sepa_flag = FALSE;
 
+    if (options & AUTOPICK_COLOR_CODED)
+        string_append_s(s, "</color>");
+
     if (IS_FLG(FLG_MORE_DICE))
     {
-        ADD_KEY(KEY_MORE_THAN);
-        strcat(ptr, format("%d", entry->dice));
-        ADD_KEY(KEY_DICE);
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "<color:o>");
+        string_printf(s, "%s %d %s ", KEY_MORE_THAN, entry->dice, KEY_DICE);
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "</color>");
     }
 
     if (IS_FLG(FLG_MORE_BONUS))
     {
-        ADD_KEY(KEY_MORE_BONUS);
-        strcat(ptr, format("%d", entry->bonus));
-        ADD_KEY(KEY_MORE_BONUS2);
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "<color:o>");
+        string_printf(s, "%s %d ", KEY_MORE_BONUS, entry->bonus);
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "</color>");
     }
 
     if (IS_FLG(FLG_MORE_LEVEL))
     {
-        ADD_KEY(KEY_MORE_LEVEL);
-        strcat(ptr, format("%d ", entry->bonus));
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "<color:o>");
+        string_printf(s, "%s %d ", KEY_MORE_LEVEL, entry->bonus);
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "</color>");
     }
 
     if (entry->name && entry->name[0])
     {
-        int i, j = 0;
+        if (sepa_flag)
+            string_append_c(s, ':');
 
-        if (sepa_flag) strcat(buf, ":");
-
-        i = strlen(buf);
-        while (entry->name[j] && i < MAX_LINELEN - 2 - 1)
-        {
-            buf[i++] = entry->name[j++];
-        }
-        buf[i] = '\0';
+        string_append_s(s, entry->name);
     }
 
     if (entry->insc)
     {
-        int i, j = 0;
-        strcat(buf, "#");
-        i = strlen(buf);
-
-        while (entry->insc[j] && i < MAX_LINELEN - 2)
-        {
-            buf[i++] = entry->insc[j++];
-        }
-        buf[i] = '\0';
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "<color:U>");
+        string_append_c(s, '#');
+        string_append_s(s, entry->insc);
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "</color>");
     }
 
-    return z_string_make(buf);
+    return s;
 }
 
 
@@ -958,12 +981,13 @@ cptr autopick_line_from_entry(autopick_type *entry)
  */
 static cptr autopick_line_from_entry_kill(autopick_type *entry)
 {
-    cptr ptr = autopick_line_from_entry(entry);
+    string_ptr s = autopick_line_from_entry(entry, 0);
+    cptr       result = z_string_make(string_buffer(s));
 
-    /* Free memory for original entry */
     autopick_free_entry(entry);
 
-    return ptr;
+    string_free(s); /*TODO: The editor structure needs conversion ... */
+    return result;
 }
 
 
@@ -1184,7 +1208,6 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
 		else
 			return FALSE;
     }
-
     if (IS_FLG(FLG_SPECIAL)) /* leave_special ... I'm trying to obsolesce the easy destroyer. */
     {
         bool is_special = FALSE;
@@ -1231,6 +1254,14 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         }
 
         if (!is_special)
+            return FALSE;
+    }
+
+    if (IS_FLG(FLG_UNUSABLE))
+    {
+        if (!object_is_wearable(o_ptr))
+            return FALSE;
+        if (equip_can_wield_kind(o_ptr->tval, o_ptr->sval))
             return FALSE;
     }
 
@@ -1450,8 +1481,17 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     /*** Items ***/
     if (IS_FLG(FLG_WEAPONS))
     {
-        if (!object_is_weapon(o_ptr))
+        if (!object_is_melee_weapon(o_ptr))
             return FALSE;
+    }
+    else if (IS_FLG(FLG_SHOOTERS))
+    {
+        if (o_ptr->tval != TV_BOW)
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_AMMO))
+    {
+        if (!object_is_ammo(o_ptr)) return FALSE;
     }
     else if (IS_FLG(FLG_FAVORITE_WEAPONS))
     {
@@ -1463,18 +1503,30 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         if (!object_is_armour(o_ptr))
             return FALSE;
     }
-    else if (IS_FLG(FLG_MISSILES))
+    else if (IS_FLG(FLG_WANDS))
     {
-        if (!object_is_ammo(o_ptr)) return FALSE;
+        if (o_ptr->tval != TV_WAND)
+            return FALSE;
     }
-    else if (IS_FLG(FLG_DEVICES))
+    else if (IS_FLG(FLG_STAVES))
     {
-        switch(o_ptr->tval)
-        {
-        case TV_SCROLL: case TV_STAFF: case TV_WAND: case TV_ROD:
-            break;
-        default: return FALSE;
-        }
+        if (o_ptr->tval != TV_STAFF)
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_RODS))
+    {
+        if (o_ptr->tval != TV_ROD)
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_POTIONS))
+    {
+        if (o_ptr->tval != TV_POTION)
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_SCROLLS))
+    {
+        if (o_ptr->tval != TV_SCROLL)
+            return FALSE;
     }
     else if (IS_FLG(FLG_LIGHTS))
     {
@@ -1517,11 +1569,6 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     else if (IS_FLG(FLG_SHIELDS))
     {
         if (!(o_ptr->tval == TV_SHIELD))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_BOWS))
-    {
-        if (!(o_ptr->tval == TV_BOW))
             return FALSE;
     }
     else if (IS_FLG(FLG_RINGS))
@@ -1598,6 +1645,17 @@ int is_autopick(object_type *o_ptr)
     char o_name[MAX_NLEN];
 
     if (o_ptr->tval == TV_GOLD) return -1;
+
+    if (o_ptr->inscription && my_strstr(quark_str(o_ptr->inscription), "=g"))
+    {
+        /* see init_autopick ... I think at some point I broke this line: we
+           no longer include the inscription in the match logic. Indeed, doing
+           so would cause problems with the new end of string match character.
+           For example: "^wand of light$" won't match if there is an inscription!
+           But having that example match "wand of lightning balls" too was just
+           plain intolerable! */
+        return 0;
+    }
 
     /* Prepare object name string first */
     object_desc(o_name, o_ptr, (OD_NAME_ONLY | OD_NO_FLAVOR | OD_OMIT_PREFIX | OD_NO_PLURAL));
@@ -2306,7 +2364,7 @@ bool autopick_autoregister(object_type *o_ptr)
     char pref_file[1024];
     FILE *pref_fff;
     autopick_type an_entry, *entry = &an_entry;
-    cptr line;
+    string_ptr line = 0;
 
     int match_autopick = is_autopick(o_ptr);
 
@@ -2425,9 +2483,9 @@ bool autopick_autoregister(object_type *o_ptr)
 
     /* Add a line to the file */
     /* Don't kill "entry" */
-    line = autopick_line_from_entry(entry);
-    fprintf(pref_fff, "%s\n", line);
-    z_string_free(line);
+    line = autopick_line_from_entry(entry, 0);
+    fprintf(pref_fff, "%s\n", string_buffer(line));
+    string_free(line);
 
     /* Close the file */
     fclose(pref_fff);
@@ -2600,6 +2658,12 @@ static void describe_autopick(char *buff, autopick_type *entry)
         which_str[which_n++] = "your race/class needs";
     }
 
+    if (IS_FLG(FLG_UNUSABLE))
+    {
+        body_str = "equipment";
+        which_str[which_n++] = "you cannot wear";
+    }
+
     /*** Nameless ***/
     if (IS_FLG(FLG_NAMELESS))
     {
@@ -2726,15 +2790,25 @@ static void describe_autopick(char *buff, autopick_type *entry)
     if (IS_FLG(FLG_ITEMS))
         ; /* Nothing to do */
     else if (IS_FLG(FLG_WEAPONS))
-        body_str = "weapons";
+        body_str = "melee weapons";
+    else if (IS_FLG(FLG_SHOOTERS))
+        body_str = "slings, bows or crossbows";
+    else if (IS_FLG(FLG_AMMO))
+        body_str = "shots, arrows or bolts";
     else if (IS_FLG(FLG_FAVORITE_WEAPONS))
         body_str = "favorite weapons";
     else if (IS_FLG(FLG_ARMORS))
         body_str = "armors";
-    else if (IS_FLG(FLG_MISSILES))
-        body_str = "shots, arrows or crossbow bolts";
-    else if (IS_FLG(FLG_DEVICES))
-        body_str = "scrolls, wands, staves or rods";
+    else if (IS_FLG(FLG_WANDS))
+        body_str = "wands";
+    else if (IS_FLG(FLG_STAVES))
+        body_str = "staves";
+    else if (IS_FLG(FLG_RODS))
+        body_str = "rods";
+    else if (IS_FLG(FLG_POTIONS))
+        body_str = "potions";
+    else if (IS_FLG(FLG_SCROLLS))
+        body_str = "scrolls";
     else if (IS_FLG(FLG_LIGHTS))
         body_str = "light sources";
     else if (IS_FLG(FLG_JUNKS))
@@ -2749,8 +2823,6 @@ static void describe_autopick(char *buff, autopick_type *entry)
         body_str = "hafted weapons";
     else if (IS_FLG(FLG_SHIELDS))
         body_str = "shields";
-    else if (IS_FLG(FLG_BOWS))
-        body_str = "slings, bows or crossbows";
     else if (IS_FLG(FLG_RINGS))
         body_str = "rings";
     else if (IS_FLG(FLG_AMULETS))
@@ -3890,91 +3962,99 @@ static void search_for_string(text_body_type *tb, cptr search_str, bool forward)
 /*
  * Editor command id's
  */
-#define EC_QUIT                1 
-#define EC_SAVEQUIT            2     
-#define EC_REVERT           3 
-#define EC_HELP                4 
-#define EC_RETURN           5        
-#define EC_LEFT               6 
-#define EC_DOWN               7 
-#define EC_UP               8 
-#define EC_RIGHT           9 
-#define EC_BOL               10
-#define EC_EOL               11
-#define EC_PGUP               12
-#define EC_PGDOWN           13
-#define EC_TOP               14
-#define EC_BOTTOM           15
-#define EC_CUT               16
-#define EC_COPY               17
-#define EC_PASTE           18
-#define EC_BLOCK           19
-#define EC_KILL_LINE           20
-#define EC_DELETE_CHAR           21
-#define EC_BACKSPACE           22
-#define EC_SEARCH_STR           23
-#define EC_SEARCH_FORW         24
-#define EC_SEARCH_BACK         25
-#define EC_SEARCH_OBJ           26
-#define EC_SEARCH_DESTROYED    27
-#define EC_INSERT_OBJECT       28
-#define EC_INSERT_DESTROYED    29
-#define EC_INSERT_BLOCK           30
-#define EC_INSERT_MACRO           31
-#define EC_INSERT_KEYMAP       32
-#define EC_CL_AUTOPICK           33
-#define EC_CL_DESTROY           34
-#define EC_CL_LEAVE           35
-#define EC_CL_QUERY           36
-#define EC_CL_NO_DISP           37
-#define EC_OK_COLLECTING       38
-#define EC_IK_UNAWARE           39
-#define EC_IK_UNIDENTIFIED     40
-#define EC_IK_IDENTIFIED       41
-#define EC_IK_STAR_IDENTIFIED  42
-#define EC_OK_BOOSTED           43
-#define EC_OK_MORE_DICE           44
-#define EC_OK_MORE_BONUS       45
-#define EC_OK_WORTHLESS           46
-#define EC_OK_ARTIFACT           47
-#define EC_OK_EGO           48
-#define EC_OK_GOOD           49
-#define EC_OK_NAMELESS           50
-#define EC_OK_AVERAGE           51
-#define EC_OK_RARE           52       
-#define EC_OK_COMMON           53
-#define EC_OK_WANTED           54
-#define EC_OK_UNIQUE           55
-#define EC_OK_HUMAN           56
-#define EC_OK_UNREADABLE       57
-#define EC_OK_REALM1           58
-#define EC_OK_REALM2           59
-#define EC_OK_FIRST           60
-#define EC_OK_SECOND           61
-#define EC_OK_THIRD           62
-#define EC_OK_FOURTH           63
-#define EC_KK_WEAPONS           64
-#define EC_KK_FAVORITE_WEAPONS 65
-#define EC_KK_ARMORS           66
-#define EC_KK_MISSILES           67
-#define EC_KK_DEVICES           68
-#define EC_KK_LIGHTS           69
-#define EC_KK_JUNKS           70
-#define EC_KK_CORPSES           71
-#define EC_KK_SPELLBOOKS       72
-#define EC_KK_SHIELDS           73
-#define EC_KK_BOWS            74
-#define EC_KK_RINGS           75
-#define EC_KK_AMULETS         76
-#define EC_KK_SUITS           77
-#define EC_KK_CLOAKS          78
-#define EC_KK_HELMS           79
-#define EC_KK_GLOVES          80
-#define EC_KK_BOOTS           81
-#define EC_KK_SKELETONS       82
-#define EC_OK_CURSED          83
-#define EC_OK_SPECIAL         84
+enum {
+    EC_QUIT = 1,
+    EC_SAVEQUIT,
+    EC_REVERT,
+    EC_HELP,
+    EC_RETURN,
+    EC_LEFT,
+    EC_DOWN,
+    EC_UP,
+    EC_RIGHT,
+    EC_BOL,
+    EC_EOL,
+    EC_PGUP,
+    EC_PGDOWN,
+    EC_TOP,
+    EC_BOTTOM,
+    EC_CUT,
+    EC_COPY,
+    EC_PASTE,
+    EC_BLOCK,
+    EC_KILL_LINE,
+    EC_DELETE_CHAR,
+    EC_BACKSPACE,
+    EC_SEARCH_STR,
+    EC_SEARCH_FORW,
+    EC_SEARCH_BACK,
+    EC_SEARCH_OBJ,
+    EC_SEARCH_DESTROYED,
+    EC_INSERT_OBJECT,
+    EC_INSERT_DESTROYED,
+    EC_INSERT_BLOCK,
+    EC_INSERT_MACRO,
+    EC_INSERT_KEYMAP,
+    EC_CL_AUTOPICK,
+    EC_CL_DESTROY,
+    EC_CL_LEAVE,
+    EC_CL_QUERY,
+    EC_CL_NO_DISP,
 
+    EC_OK_COLLECTING,
+    EC_IK_UNAWARE,
+    EC_IK_UNIDENTIFIED,
+    EC_IK_IDENTIFIED,
+    EC_IK_STAR_IDENTIFIED,
+    EC_OK_BOOSTED,
+    EC_OK_MORE_DICE,
+    EC_OK_MORE_BONUS,
+    EC_OK_WORTHLESS,
+    EC_OK_ARTIFACT,
+    EC_OK_EGO,
+    EC_OK_GOOD,
+    EC_OK_NAMELESS,
+    EC_OK_AVERAGE,
+    EC_OK_CURSED,
+    EC_OK_SPECIAL,
+    EC_OK_UNUSABLE,
+    EC_OK_RARE,
+    EC_OK_COMMON,
+    EC_OK_WANTED,
+    EC_OK_UNIQUE,
+    EC_OK_HUMAN,
+    EC_OK_UNREADABLE,
+    EC_OK_REALM1,
+    EC_OK_REALM2,
+    EC_OK_FIRST,
+    EC_OK_SECOND,
+    EC_OK_THIRD,
+    EC_OK_FOURTH,
+
+    EC_KK_WEAPONS,
+    EC_KK_SHOOTERS,
+    EC_KK_AMMO,
+    EC_KK_FAVORITE_WEAPONS,
+    EC_KK_ARMORS,
+    EC_KK_WANDS,
+    EC_KK_STAVES,
+    EC_KK_RODS,
+    EC_KK_POTIONS,
+    EC_KK_SCROLLS,
+    EC_KK_LIGHTS,
+    EC_KK_JUNKS,
+    EC_KK_CORPSES,
+    EC_KK_SPELLBOOKS,
+    EC_KK_SHIELDS,
+    EC_KK_RINGS,
+    EC_KK_AMULETS,
+    EC_KK_SUITS,
+    EC_KK_CLOAKS,
+    EC_KK_HELMS,
+    EC_KK_GLOVES,
+    EC_KK_BOOTS,
+    EC_KK_SKELETONS,
+};
 
 /* Manu names */
 
@@ -4112,6 +4192,7 @@ command_menu_type menu_data[] =
     {KEY_GOOD, 1, -1, EC_OK_GOOD},
 	{KEY_CURSED, 1, -1, EC_OK_CURSED},
     {KEY_SPECIAL, 1, -1, EC_OK_SPECIAL},
+    {KEY_UNUSABLE, 1, -1, EC_OK_UNUSABLE},
     {KEY_NAMELESS, 1, -1, EC_OK_NAMELESS},
     {KEY_AVERAGE, 1, -1, EC_OK_AVERAGE},
     {KEY_WORTHLESS, 1, -1, EC_OK_WORTHLESS},
@@ -4135,17 +4216,21 @@ command_menu_type menu_data[] =
 
      {MN_NOUN, 0, -1, -1},
     {KEY_WEAPONS, 1, -1, EC_KK_WEAPONS},
+    {KEY_SHOOTERS, 1, -1, EC_KK_SHOOTERS},
+    {KEY_AMMO, 1, -1, EC_KK_AMMO},
     {KEY_FAVORITE_WEAPONS, 1, -1, EC_KK_FAVORITE_WEAPONS},
     {KEY_ARMORS, 1, -1, EC_KK_ARMORS},
-    {KEY_MISSILES, 1, -1, EC_KK_MISSILES},
-    {KEY_DEVICES, 1, -1, EC_KK_DEVICES},
+    {KEY_WANDS, 1, -1, EC_KK_WANDS},
+    {KEY_STAVES, 1, -1, EC_KK_STAVES},
+    {KEY_RODS, 1, -1, EC_KK_RODS},
+    {KEY_POTIONS, 1, -1, EC_KK_POTIONS},
+    {KEY_SCROLLS, 1, -1, EC_KK_SCROLLS},
     {KEY_LIGHTS, 1, -1, EC_KK_LIGHTS},
     {KEY_JUNKS, 1, -1, EC_KK_JUNKS},
     {KEY_CORPSES, 1, -1, EC_KK_CORPSES},
     {KEY_SKELETONS, 1, -1, EC_KK_SKELETONS},
     {KEY_SPELLBOOKS, 1, -1, EC_KK_SPELLBOOKS},
     {KEY_SHIELDS, 1, -1, EC_KK_SHIELDS},
-    {KEY_BOWS, 1, -1, EC_KK_BOWS},
     {KEY_RINGS, 1, -1, EC_KK_RINGS},
     {KEY_AMULETS, 1, -1, EC_KK_AMULETS},
     {KEY_SUITS, 1, -1, EC_KK_SUITS},
@@ -4528,7 +4613,7 @@ static void draw_text_editor(text_body_type *tb)
             buf[i] = '-';
         buf[i] = '\0';
 
-        Term_putstr(0, tb->hgt + 1, sepa_length, TERM_WHITE, buf);
+        Term_putstr(0, tb->hgt + 1, sepa_length, TERM_L_BLUE, buf);
     }
 
     if (tb->dirty_flags & DIRTY_EXPRESSION)
@@ -4615,8 +4700,9 @@ static void draw_text_editor(text_body_type *tb)
         }
         else
         {
-            /* Bypassed line will be displayed by darker color */
-            if (tb->states[y] & LSTAT_BYPASS) color = TERM_SLATE;
+            if (msg[0] == '#') color = TERM_L_GREEN;
+            else if (msg[0] == '?' && msg[1] == ':') color = TERM_VIOLET;
+            else if (tb->states[y] & LSTAT_BYPASS) color = TERM_L_DARK;
             else color = TERM_WHITE;
         }
 
@@ -5013,7 +5099,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
 
     case EC_HELP:
         /* Peruse the main help file */
-        (void)show_file(TRUE, "editor.txt", NULL, 0, 0);
+        doc_display_help("editor.txt", NULL);
         /* Redraw all */
         tb->dirty_flags |= DIRTY_SCREEN;
 
@@ -5759,17 +5845,21 @@ static bool do_editor_command(text_body_type *tb, int com_id)
     case EC_IK_IDENTIFIED: toggle_keyword(tb, FLG_IDENTIFIED); break;
     case EC_IK_STAR_IDENTIFIED: toggle_keyword(tb, FLG_STAR_IDENTIFIED); break;
     case EC_KK_WEAPONS: toggle_keyword(tb, FLG_WEAPONS); break;
+    case EC_KK_SHOOTERS: toggle_keyword(tb, FLG_SHOOTERS); break;
+    case EC_KK_AMMO: toggle_keyword(tb, FLG_AMMO); break;
     case EC_KK_FAVORITE_WEAPONS: toggle_keyword(tb, FLG_FAVORITE_WEAPONS); break;
     case EC_KK_ARMORS: toggle_keyword(tb, FLG_ARMORS); break;
-    case EC_KK_MISSILES: toggle_keyword(tb, FLG_MISSILES); break;
-    case EC_KK_DEVICES: toggle_keyword(tb, FLG_DEVICES); break;
+    case EC_KK_WANDS: toggle_keyword(tb, FLG_WANDS); break;
+    case EC_KK_STAVES: toggle_keyword(tb, FLG_STAVES); break;
+    case EC_KK_RODS: toggle_keyword(tb, FLG_RODS); break;
+    case EC_KK_POTIONS: toggle_keyword(tb, FLG_POTIONS); break;
+    case EC_KK_SCROLLS: toggle_keyword(tb, FLG_SCROLLS); break;
     case EC_KK_LIGHTS: toggle_keyword(tb, FLG_LIGHTS); break;
     case EC_KK_JUNKS: toggle_keyword(tb, FLG_JUNKS); break;
     case EC_KK_CORPSES: toggle_keyword(tb, FLG_CORPSES); break;
     case EC_KK_SKELETONS: toggle_keyword(tb, FLG_SKELETONS); break;
     case EC_KK_SPELLBOOKS: toggle_keyword(tb, FLG_SPELLBOOKS); break;
     case EC_KK_SHIELDS: toggle_keyword(tb, FLG_SHIELDS); break;
-    case EC_KK_BOWS: toggle_keyword(tb, FLG_BOWS); break;
     case EC_KK_RINGS: toggle_keyword(tb, FLG_RINGS); break;
     case EC_KK_AMULETS: toggle_keyword(tb, FLG_AMULETS); break;
     case EC_KK_SUITS: toggle_keyword(tb, FLG_SUITS); break;
@@ -5787,6 +5877,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
     case EC_OK_GOOD: toggle_keyword(tb, FLG_GOOD); break;
 	case EC_OK_CURSED: toggle_keyword(tb, FLG_CURSED); break;
     case EC_OK_SPECIAL: toggle_keyword(tb, FLG_SPECIAL); break;
+    case EC_OK_UNUSABLE: toggle_keyword(tb, FLG_UNUSABLE); break;
     case EC_OK_NAMELESS: toggle_keyword(tb, FLG_NAMELESS); break;
     case EC_OK_AVERAGE: toggle_keyword(tb, FLG_AVERAGE); break;
     case EC_OK_RARE: toggle_keyword(tb, FLG_RARE); break;
@@ -6029,7 +6120,7 @@ void do_cmd_edit_autopick(void)
     {
         int com_id = 0;
 
-        /* Draw_everythig */
+        /* Draw_everything */
         draw_text_editor(tb);
 
         /* Display header line */

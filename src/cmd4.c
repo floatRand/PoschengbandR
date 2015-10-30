@@ -7662,66 +7662,57 @@ static void do_cmd_knowledge_home(void)
 static void do_cmd_knowledge_autopick(void)
 {
     int k;
-    FILE *fff;
-    char file_name[1024];
-
-    /* Open a new file */
-    fff = my_fopen_temp(file_name, 1024);
-
-    if (!fff)
-    {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
+    doc_ptr doc = doc_alloc(80);
 
     if (!max_autopick)
     {
-        fprintf(fff, "No preference for auto picker/destroyer.");
+        doc_insert(doc, "There are no preferences for automatic pickup/destruction.");
     }
     else
     {
-        fprintf(fff, "   There are %d registered lines for auto picker/destroyer.\n\n", max_autopick);
+        doc_printf(doc, "There are %d registered lines for automatic pickup/destruction.\n", max_autopick);
     }
+    doc_insert(doc, "For help on the auto-picker, see <link:editor.txt>\n\n");
 
     for (k = 0; k < max_autopick; k++)
     {
         cptr tmp;
+        string_ptr line = 0;
+        char color = 'w';
         byte act = autopick_list[k].action;
         if (act & DONT_AUTOPICK)
         {
             tmp = "Leave";
+            color = 'U';
         }
         else if (act & DO_AUTODESTROY)
         {
             tmp = "Destroy";
+            color = 'r';
         }
         else if (act & DO_AUTOPICK)
         {
             tmp = "Pickup";
+            color = 'B';
         }
         else /* if (act & DO_QUERY_AUTOPICK) */ /* Obvious */
         {
             tmp = "Query";
+            color = 'y';
         }
 
         if (act & DO_DISPLAY)
-            fprintf(fff, "%11s", format("[%s]", tmp));
+            doc_printf(doc, "<color:%c>%-9.9s</color>", color, format("[%s]", tmp));
         else
-            fprintf(fff, "%11s", format("(%s)", tmp));
+            doc_printf(doc, "<color:%c>%-9.9s</color>", color, format("(%s)", tmp));
 
-        tmp = autopick_line_from_entry(&autopick_list[k]);
-        fprintf(fff, " %s", tmp);
-        z_string_free(tmp);
-        fprintf(fff, "\n");
+        line = autopick_line_from_entry(&autopick_list[k], AUTOPICK_COLOR_CODED);
+        doc_printf(doc, " <indent><style:indent>%s</style></indent>\n", string_buffer(line));
+        string_free(line);
     }
-    /* Close the file */
-    my_fclose(fff);
-    /* Display the file contents */
-    show_file(TRUE, file_name, "Auto-picker/Destroyer", 0, 0);
 
-    /* Remove the file */
-    fd_kill(file_name);
+    doc_display(doc, "Automatic Pickup and Destroy Preferences", 0);
+    doc_free(doc);
 }
 
 

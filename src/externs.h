@@ -618,7 +618,8 @@ extern bool use_menu;
 /* autopick.c */
 extern void autopick_load_pref(bool disp_mes);
 extern errr process_autopick_file_command(char *buf);
-extern cptr autopick_line_from_entry(autopick_type *entry);
+#define AUTOPICK_COLOR_CODED 0x01
+extern string_ptr autopick_line_from_entry(autopick_type *entry, int options);
 extern int is_autopick(object_type *o_ptr);
 extern void autopick_alter_item(int item, bool destroy);
 extern void autopick_delayed_alter(void);
