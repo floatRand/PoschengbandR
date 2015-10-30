@@ -7222,12 +7222,10 @@ bool object_sort_comp(object_type *o_ptr, s32b o_value, object_type *j_ptr)
     case TV_ROD:
     case TV_WAND:
     case TV_STAFF:
-        /* Devices sort by level of effect ... */
-        if (o_ptr->activation.difficulty < j_ptr->activation.difficulty) return TRUE;
-        if (o_ptr->activation.difficulty > j_ptr->activation.difficulty) return FALSE;
-        /* ... and then by effect type. */
         if (o_ptr->activation.type < j_ptr->activation.type) return TRUE;
         if (o_ptr->activation.type > j_ptr->activation.type) return FALSE;
+        if (device_level(o_ptr) < device_level(j_ptr)) return TRUE;
+        if (device_level(o_ptr) > device_level(j_ptr)) return FALSE;
         break;
     }
 

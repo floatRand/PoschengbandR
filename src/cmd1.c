@@ -4794,6 +4794,7 @@ static bool _auto_detect_traps(void)
     if (i >= 0 && !p_ptr->blind && !(get_race()->flags & RACE_IS_ILLITERATE))
     {
         detect_traps(DETECT_RAD_DEFAULT, TRUE);
+        stats_on_use(&inventory[i], 1);
         inven_item_increase(i, -1);
         inven_item_describe(i);
         inven_item_optimize(i);
@@ -4803,6 +4804,7 @@ static bool _auto_detect_traps(void)
     if (i >= 0)
     {
         detect_traps(DETECT_RAD_DEFAULT, TRUE);
+        stats_on_use(&inventory[i], 1);
         device_decrease_sp(&inventory[i], inventory[i].activation.cost);
         inven_item_charges(i);
         return TRUE;
@@ -4811,6 +4813,7 @@ static bool _auto_detect_traps(void)
     if (i >= 0)
     {
         detect_all(DETECT_RAD_DEFAULT);
+        stats_on_use(&inventory[i], 1);
         device_decrease_sp(&inventory[i], inventory[i].activation.cost);
         inven_item_charges(i);
         return TRUE;
