@@ -23,6 +23,7 @@ static void _display_extra(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr 
 static void _display_curses(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr doc);
 static void _display_activation(object_type *o_ptr, doc_ptr doc);
 static void _display_ignore(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr doc);
+static void _display_autopick(object_type *o_ptr, doc_ptr doc);
 static void _lite_display_doc(object_type *o_ptr, doc_ptr doc);
 
 static int _calc_net_bonus(int amt, u32b flgs[TR_FLAG_SIZE], int flg, int flg_dec);
@@ -743,6 +744,17 @@ static void _display_ignore(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr
     }
 }
 
+static void _display_autopick(object_type *o_ptr, doc_ptr doc)
+{
+    int idx = is_autopick(o_ptr);
+    if (idx >= 0)
+    {
+        string_ptr s = autopick_line_from_entry(&autopick_list[idx], AUTOPICK_COLOR_CODED);
+        doc_printf(doc, "\n<color:r>Autopick:</color> <indent><style:indent>%s</style></indent>\n", string_buffer(s));
+        string_free(s);
+    }
+}
+
 static void _lite_display_doc(object_type *o_ptr, doc_ptr doc)
 {
     if (o_ptr->tval != TV_LITE) return;
@@ -856,6 +868,8 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     if (!(o_ptr->ident & IDENT_FULL))
         doc_printf(doc, "This object may have additional powers.\n");
 
+    _display_autopick(o_ptr, doc);
+
     doc_insert(doc, "</style></indent>\n");
 }
 
@@ -884,12 +898,14 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
                 doc_printf(doc, "<color:U>Fail: </color>%d.%d%%\n", fail/10, fail%10);
             }
         }
+        _display_autopick(o_ptr, doc);
         doc_insert(doc, "</indent>\n");
         return;
     }
 
     if (!object_is_device(o_ptr) || !object_is_known(o_ptr))
     {
+        _display_autopick(o_ptr, doc);
         doc_insert(doc, "</indent>\n");
         return;
     }
@@ -989,5 +1005,6 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
 
     _display_ignore(o_ptr, flgs, doc);
 
+    _display_autopick(o_ptr, doc);
     doc_insert(doc, "</style></indent>\n");
 }

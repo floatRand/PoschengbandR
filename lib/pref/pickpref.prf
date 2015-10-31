@@ -12,12 +12,12 @@ potions:giant strength#!k
 
 potions:enlightenment
 
-potions:strength#!k
-potions:intelligence#!k
-potions:wisdom#!k
-potions:dexterity#!k
-potions:constitution#!k
-potions:charisma#!k
+potions:of strength#!k
+potions:of intelligence#!k
+potions:of wisdom#!k
+potions:of dexterity#!k
+potions:of constitution#!k
+potions:of charisma#!k
 potions:augmentation#!k
 
 potions:experience
@@ -27,7 +27,7 @@ potions:self knowledge#!k
 
 potions:curing
 potions:healing#!k!q
-potions:life#!k!q
+potions:of life#!k!q
 potions:*healing*#!k!q
 potions:restore mana#!k!q
 
@@ -56,7 +56,7 @@ rods:heroic speed#@zs!s!d!k
 ?wands:rocket#@ar!s!d!k
 ?wands:disintegrate#@ad!s!d!k
 
-?:[OR [EQU $CLASS Mage High-Mage] [EQU $RACE Beholder Lich] ]
+?:[OR [EQU $CLASS Mage High-Mage Sorcerer] [EQU $RACE Beholder Lich] ]
 wizardstaff
 ?:1
 
@@ -154,8 +154,8 @@ collecting scrolls
 #########################################
 
 ?:[EQU $CLASS Archer]
-junks:^broken skull
-junks:^broken bone
+junk:^broken skull
+junk:^broken bone
 skeletons
 
 ?:[EQU $CLASS Ninja]
@@ -164,7 +164,7 @@ feanorian
 Iron Spike#@v0
 ?:1
 
-!potion of apple juice
+!potions:apple juice
 #!statue
 #!figurine
 

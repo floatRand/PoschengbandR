@@ -104,8 +104,7 @@ static char KEY_WORTHLESS[] = "worthless";
 static char KEY_RARE[] = "rare";
 static char KEY_COMMON[] = "common";
 static char KEY_BOOSTED[] = "dice boosted";
-static char KEY_MORE_THAN[] =  "more than";
-static char KEY_DICE[] =  " dice";
+static char KEY_MORE_DICE[] =  "more dice than";
 static char KEY_MORE_BONUS[] =  "more bonus than";
 static char KEY_MORE_LEVEL[] =  "more level than";
 static char KEY_WANTED[] = "wanted";
@@ -130,7 +129,7 @@ static char KEY_RODS[] = "rods";
 static char KEY_POTIONS[] = "potions";
 static char KEY_SCROLLS[] = "scrolls";
 static char KEY_LIGHTS[] = "lights";
-static char KEY_JUNKS[] = "junks";
+static char KEY_JUNKS[] = "junk";
 static char KEY_CORPSES[] = "corpses";
 static char KEY_SKELETONS[] = "skeletons";
 static char KEY_SPELLBOOKS[] = "spellbooks";
@@ -310,7 +309,7 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
     else if (MATCH_KEY2(KEY_BOOTS)) ADD_FLG_NOUN(FLG_BOOTS);
 
     /*** Weapons whose dd*ds is more than nn ***/
-    if (MATCH_KEY2(KEY_MORE_THAN))
+    if (MATCH_KEY2(KEY_MORE_DICE))
     {
         int k = 0;
         entry->dice = 0;
@@ -328,7 +327,7 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
 
         if (k > 0 && k <= 2)
         {
-            (void)MATCH_KEY(KEY_DICE);
+            if (' ' == *ptr) ptr++;
             ADD_FLG(FLG_MORE_DICE);
         }
         else
@@ -541,10 +540,17 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         else
         {
             /* Wearable nameless object */
-            if (object_is_equipment(o_ptr))
+            if (object_is_equipment(o_ptr) || object_is_device(o_ptr))
                 ADD_FLG(FLG_NAMELESS);
         }
 
+        /*Devices work better if we just use the effect name */
+        if (object_is_device(o_ptr))
+        {
+            strcpy(name_str, do_device(o_ptr, SPELL_NAME, 0));
+            strcat(name_str, "$");
+            name = FALSE;
+        }
     }
 
     /* Melee weapon with boosted dice */
@@ -931,7 +937,7 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     {
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "<color:o>");
-        string_printf(s, "%s %d %s ", KEY_MORE_THAN, entry->dice, KEY_DICE);
+        string_printf(s, " %s %d ", KEY_MORE_DICE, entry->dice);
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "</color>");
     }
@@ -940,7 +946,7 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     {
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "<color:o>");
-        string_printf(s, "%s %d ", KEY_MORE_BONUS, entry->bonus);
+        string_printf(s, " %s %d ", KEY_MORE_BONUS, entry->bonus);
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "</color>");
     }
@@ -949,7 +955,7 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     {
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "<color:o>");
-        string_printf(s, "%s %d ", KEY_MORE_LEVEL, entry->bonus);
+        string_printf(s, " %s %d ", KEY_MORE_LEVEL, entry->bonus);
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "</color>");
     }
@@ -1335,7 +1341,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     /*** Nameless ***/
     if (IS_FLG(FLG_NAMELESS))
     {
-        if (!object_is_equipment(o_ptr)) return FALSE;
+        if (!object_is_equipment(o_ptr) && !object_is_device(o_ptr)) return FALSE;
 
         /* Identified */
         if (object_is_known(o_ptr))
@@ -2373,14 +2379,16 @@ bool autopick_autoregister(object_type *o_ptr)
     {
         cptr what;
         byte act = autopick_list[match_autopick].action;
+        string_ptr s = autopick_line_from_entry(&autopick_list[match_autopick], AUTOPICK_COLOR_CODED);
 
         if (act & DO_AUTOPICK) what = "auto-pickup";
         else if (act & DO_AUTODESTROY) what = "auto-destroy";
         else if (act & DONT_AUTOPICK) what = "leave on floor";
         else /* if (act & DO_QUERY_AUTOPICK) */ what = "query auto-pickup";
 
-        msg_format("The object is already registered to %s.", what);
+        msg_format("The object is already registered to %s by the rule %s.", what, string_buffer(s));
         
+        string_free(s);
         return FALSE;
     }
 
@@ -5948,7 +5956,7 @@ static void insert_single_letter(text_body_type *tb, int key)
     z_string_free(tb->lines_list[tb->cy]);
     tb->lines_list[tb->cy] = z_string_make(buf);
 
-    /* Move to correct collumn */
+    /* Move to correct column */
     len = strlen(tb->lines_list[tb->cy]);
     if (len < tb->cx) tb->cx = len;
 

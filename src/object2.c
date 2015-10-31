@@ -682,7 +682,8 @@ s16b get_obj_num(int level)
      *   Wand:  A:1/1
      *   Staff: A:5/1
      *   Rod:   A:10/1
-     * gave the following allocation distribution (10,000 objects, devices are 15%, below DL10):
+     * gave the following allocation distribution (10,000 objects, devices are 15%, deeper than DL10
+     * so I would expect 5% allocation to each):
      * > Wands:  286 2.8%
      * > Staves: 486 4.8%
      * > Rods:   747 7.4%

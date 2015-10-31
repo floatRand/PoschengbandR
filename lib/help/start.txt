@@ -18,6 +18,6 @@
     <color:R>Advanced Topics:</color>
     <link:option_contents.txt> Options
     <link:pref.hlp> User Preference Files
-    <link:editor.hlp> Pickup Preferences
+    <link:editor_contents.txt> The Mogaminator
 
     <color:y>(?) Help System Commands</color>

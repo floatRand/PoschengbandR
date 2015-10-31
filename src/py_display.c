@@ -13,7 +13,7 @@ extern void py_display_character_sheet(doc_ptr doc);
 extern void py_display_dungeons(doc_ptr doc);
 
 static void _build_general(doc_ptr doc);
-static void _build_equipment(doc_ptr doc); /* Formerly Pages 2-4 */
+static void _build_equipment(doc_ptr doc);
 static void _build_melee(doc_ptr doc);
 static void _build_shooting(doc_ptr doc);
 static void _build_powers(doc_ptr doc);
