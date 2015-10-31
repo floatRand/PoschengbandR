@@ -557,23 +557,23 @@ void do_cmd_inspect(void)
         int     slot, i;
         doc_ptr doc = doc_alloc(80);
 
-        doc_insert(doc, "<topic:Equipment><style:heading>Equipment</style>\n\n");
+        doc_insert(doc, "<style:wide><topic:Equipment>============================= Character <color:keypress>E</color>quipment =============================</style>\n\n");
         for (slot = EQUIP_BEGIN, i = 0; slot < EQUIP_BEGIN + equip_count(); slot++, i++)
         {
             object_type *o_ptr = equip_obj(slot);
             if (!o_ptr) continue;
 
             obj_display_doc(o_ptr, doc);
-            doc_newline(doc);
+            /*doc_newline(doc);*/
         }
 
-        doc_insert(doc, "<topic:Inventory><style:heading>Inventory</style>\n\n");
+        doc_printf(doc, "<style:wide><topic:Inventory>============================= Character <color:keypress>I</color>nventory =============================</style>\n\n");
         for (i = 0; i < INVEN_PACK; i++)
         {
             if (!inventory[i].k_idx) break;
             if (!object_is_weapon_armour_ammo(&inventory[i]) && !object_is_known(&inventory[i])) continue;
             obj_display_doc(&inventory[i], doc);
-            doc_newline(doc);
+            /*doc_newline(doc);*/
         }
 
         screen_save();

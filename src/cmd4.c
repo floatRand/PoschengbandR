@@ -7628,7 +7628,7 @@ static void do_cmd_knowledge_home(void)
                     {
                         if (!object_is_weapon_armour_ammo(&st_ptr->stock[i]) && !object_is_known(&st_ptr->stock[i])) continue;
                         obj_display_doc(&st_ptr->stock[i], doc);
-                        doc_newline(doc);
+                        /*doc_newline(doc);*/
                     }
                     doc_display(doc, "Your Home", 0);
                     doc_free(doc);

@@ -750,7 +750,7 @@ static void _display_autopick(object_type *o_ptr, doc_ptr doc)
     if (idx >= 0)
     {
         string_ptr s = autopick_line_from_entry(&autopick_list[idx], AUTOPICK_COLOR_CODED);
-        doc_printf(doc, "\n<color:r>Autopick:</color> <indent><style:indent>%s</style></indent>\n", string_buffer(s));
+        doc_printf(doc, "<color:r>Autopick:</color> <indent><style:indent>%s</style></indent>\n", string_buffer(s));
         string_free(s);
     }
 }
