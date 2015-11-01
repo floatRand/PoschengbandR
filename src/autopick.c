@@ -19,30 +19,39 @@
 bool autopick_auto_id(object_type *o_ptr);
 
 /*
+  Rules have one of the following two syntactic forms:
+  [Commands] Adjective* Noun [Special-Clause] [:Search-String] [#Inscription-String]
+  [Commands] Search-String [#Inscription-String]
+*/
+
+/*
  * Macros for Keywords
  */
 enum _keyword_e {
+/* Adjectives */
     FLG_ALL = 0,
-    FLG_UNAWARE,
+
+    /* Object Knowledge */
     FLG_UNIDENTIFIED,
     FLG_IDENTIFIED,
     FLG_STAR_IDENTIFIED,
-    FLG_COLLECTING,
-    FLG_ARTIFACT,
-    FLG_EGO,
-    FLG_MORE_LEVEL,
-    FLG_GOOD,
-    FLG_NAMELESS,
+    FLG_UNAWARE,
+
+    /* Object Quality */
     FLG_AVERAGE,
-    FLG_WORTHLESS,
+    FLG_GOOD,
+    FLG_EGO,
+    FLG_ARTIFACT,
+    FLG_NAMELESS,
     FLG_RARE,
     FLG_COMMON,
+    FLG_CURSED,
+    FLG_WORTHLESS,
+
+    /* Object Attributes */
     FLG_BOOSTED,
-    FLG_MORE_DICE,
-    FLG_MORE_BONUS,
-    FLG_WANTED,
-    FLG_UNIQUE,
-    FLG_HUMAN,
+
+    /* Spellbooks */
     FLG_UNREADABLE,
     FLG_REALM1,
     FLG_REALM2,
@@ -50,66 +59,89 @@ enum _keyword_e {
     FLG_SECOND,
     FLG_THIRD,
     FLG_FOURTH,
-    FLG_CURSED,
+
+    /* Miscellaneous */
+    FLG_COLLECTING,
     FLG_SPECIAL,
     FLG_UNUSABLE,  /* For example, a Dragon cannot wear boots! */
+    FLG_WANTED,
+    FLG_UNIQUE,
+    FLG_HUMAN,
 
+/* Special Forms */
+    FLG_MORE_DICE,
+    FLG_MORE_BONUS,
+    FLG_MORE_LEVEL,
+    FLG_MORE_WEIGHT,
+
+/* Nouns */
     FLG_ITEMS,
+
+    /* Wearable Items */
     FLG_WEAPONS,
+        FLG_FAVORITE_WEAPONS,
+        FLG_HAFTED,
+        FLG_DIGGERS,
     FLG_SHOOTERS,
     FLG_AMMO,
-    FLG_FAVORITE_WEAPONS,
     FLG_ARMORS,
+        FLG_SHIELDS,
+        FLG_SUITS,
+        FLG_CLOAKS,
+        FLG_HELMS,
+        FLG_GLOVES,
+        FLG_BOOTS,
+    FLG_LIGHTS,
+    FLG_RINGS,
+    FLG_AMULETS,
+
+    FLG_SPELLBOOKS,
+
+    /* Devices */
     FLG_WANDS,
     FLG_STAVES,
     FLG_RODS,
     FLG_POTIONS,
     FLG_SCROLLS,
-    FLG_LIGHTS,
+
     FLG_JUNKS,
     FLG_CORPSES,
-    FLG_SPELLBOOKS,
-    FLG_HAFTED,
-    FLG_SHIELDS,
-    FLG_RINGS,
-    FLG_AMULETS,
-    FLG_SUITS,
-    FLG_CLOAKS,
-    FLG_HELMS,
-    FLG_GLOVES,
-    FLG_BOOTS,
     FLG_SKELETONS,
+
     FLG_MAX,
 };
 
-#define FLG_NOUN_BEGIN      FLG_ITEMS
-#define FLG_NOUN_END        (FLG_MAX - 1)
+#define FLG_ADJECTIVE_BEGIN     FLG_ALL
+#define FLG_ADJECTIVE_END       FLG_HUMAN
+#define FLG_KNOWLEDGE_BEGIN     FLG_UNIDENTIFIED
+#define FLG_KNOWLEDGE_END       FLG_UNAWARE
+#define FLG_QUALITY_BEGIN       FLG_AVERAGE
+#define FLG_QUALITY_END         FLG_NAMELESS
+#define FLG_SPECIAL_FORM_BEGIN  FLG_MORE_DICE
+#define FLG_SPECIAL_FORM_END    FLG_MORE_WEIGHT
+#define FLG_NOUN_BEGIN          FLG_ITEMS
+#define FLG_NOUN_END            (FLG_MAX - 1)
 
 
 static char KEY_ALL[] = "all";
-static char KEY_UNAWARE[] = "unaware";
+
 static char KEY_UNIDENTIFIED[] = "unidentified";
 static char KEY_IDENTIFIED[] = "identified";
 static char KEY_STAR_IDENTIFIED[] = "*identified*";
-static char KEY_COLLECTING[] = "collecting";
-static char KEY_ARTIFACT[] = "artifact";
-static char KEY_EGO[] = "ego";
+static char KEY_UNAWARE[] = "unaware";
+
+static char KEY_AVERAGE[] = "average";
 static char KEY_GOOD[] = "good";
 static char KEY_CURSED[] = "cursed";
-static char KEY_SPECIAL[] = "special";
-static char KEY_UNUSABLE[] = "unusable";
+static char KEY_EGO[] = "ego";
+static char KEY_ARTIFACT[] = "artifact";
 static char KEY_NAMELESS[] = "nameless";
-static char KEY_AVERAGE[] = "average";
-static char KEY_WORTHLESS[] = "worthless";
 static char KEY_RARE[] = "rare";
 static char KEY_COMMON[] = "common";
+static char KEY_WORTHLESS[] = "worthless";
+
 static char KEY_BOOSTED[] = "dice boosted";
-static char KEY_MORE_DICE[] =  "more dice than";
-static char KEY_MORE_BONUS[] =  "more bonus than";
-static char KEY_MORE_LEVEL[] =  "more level than";
-static char KEY_WANTED[] = "wanted";
-static char KEY_UNIQUE[] = "unique monster's";
-static char KEY_HUMAN[] = "human";
+
 static char KEY_UNREADABLE[] = "unreadable";
 static char KEY_REALM1[] = "first realm's";
 static char KEY_REALM2[] = "second realm's";
@@ -117,31 +149,52 @@ static char KEY_FIRST[] = "first";
 static char KEY_SECOND[] = "second";
 static char KEY_THIRD[] = "third";
 static char KEY_FOURTH[] = "fourth";
+
+static char KEY_COLLECTING[] = "collecting";
+static char KEY_SPECIAL[] = "special";
+static char KEY_UNUSABLE[] = "unusable";
+static char KEY_WANTED[] = "wanted";
+static char KEY_UNIQUE[] = "unique";
+static char KEY_HUMAN[] = "human";
+
+static char KEY_MORE_DICE[] =  "more dice than";
+static char KEY_MORE_BONUS[] =  "more bonus than";
+static char KEY_MORE_LEVEL[] =  "more level than";
+static char KEY_MORE_WEIGHT[] =  "more weight than";
+
 static char KEY_ITEMS[] = "items";
+
 static char KEY_WEAPONS[] = "weapons";
+    static char KEY_FAVORITE_WEAPONS[] = "favorite weapons";
+    static char KEY_HAFTED[] = "hafted weapons";
+    static char KEY_DIGGERS[] = "diggers";
+
 static char KEY_SHOOTERS[] = "shooters";
 static char KEY_AMMO[] = "ammo";
-static char KEY_FAVORITE_WEAPONS[] = "favorite weapons";
+
 static char KEY_ARMORS[] = "armors";
+    static char KEY_SHIELDS[] = "shields";
+    static char KEY_SUITS[] = "suits";
+    static char KEY_CLOAKS[] = "cloaks";
+    static char KEY_HELMS[] = "helms";
+    static char KEY_GLOVES[] = "gloves";
+    static char KEY_BOOTS[] = "boots";
+
+static char KEY_LIGHTS[] = "lights";
+static char KEY_RINGS[] = "rings";
+static char KEY_AMULETS[] = "amulets";
+
+static char KEY_SPELLBOOKS[] = "spellbooks";
+
 static char KEY_WANDS[] = "wands";
 static char KEY_STAVES[] = "staves";
 static char KEY_RODS[] = "rods";
 static char KEY_POTIONS[] = "potions";
 static char KEY_SCROLLS[] = "scrolls";
-static char KEY_LIGHTS[] = "lights";
+
 static char KEY_JUNKS[] = "junk";
 static char KEY_CORPSES[] = "corpses";
 static char KEY_SKELETONS[] = "skeletons";
-static char KEY_SPELLBOOKS[] = "spellbooks";
-static char KEY_HAFTED[] = "hafted weapons";
-static char KEY_SHIELDS[] = "shields";
-static char KEY_RINGS[] = "rings";
-static char KEY_AMULETS[] = "amulets";
-static char KEY_SUITS[] = "suits";
-static char KEY_CLOAKS[] = "cloaks";
-static char KEY_HELMS[] = "helms";
-static char KEY_GLOVES[] = "gloves";
-static char KEY_BOOTS[] = "boots";
 
 
 #define MATCH_KEY(KEY) (!strncmp(ptr, KEY, sizeof(KEY)-1)\
@@ -153,7 +206,6 @@ static char KEY_BOOTS[] = "boots";
 #define REM_FLG(FLG) (entry->flag[FLG / 32] &= ~(1L << (FLG % 32)))
 #define ADD_FLG_NOUN(FLG) (ADD_FLG(FLG), prev_flg = FLG)
 #define IS_FLG(FLG) (entry->flag[FLG / 32] & (1L << (FLG % 32)))
-
 
 
 /*
@@ -242,32 +294,31 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
     ptr = prev_ptr = buf;
     old_ptr = NULL;
 
+    /* Adjective* */
     while (old_ptr != ptr)
     {
         /* Save current location */
         old_ptr = ptr;
 
         if (MATCH_KEY(KEY_ALL)) ADD_FLG(FLG_ALL);
-        if (MATCH_KEY(KEY_COLLECTING)) ADD_FLG(FLG_COLLECTING);
-        if (MATCH_KEY(KEY_UNAWARE)) ADD_FLG(FLG_UNAWARE);
+
         if (MATCH_KEY(KEY_UNIDENTIFIED)) ADD_FLG(FLG_UNIDENTIFIED);
         if (MATCH_KEY(KEY_IDENTIFIED)) ADD_FLG(FLG_IDENTIFIED);
         if (MATCH_KEY(KEY_STAR_IDENTIFIED)) ADD_FLG(FLG_STAR_IDENTIFIED);
-        if (MATCH_KEY(KEY_BOOSTED)) ADD_FLG(FLG_BOOSTED);
+        if (MATCH_KEY(KEY_UNAWARE)) ADD_FLG(FLG_UNAWARE);
 
-        if (MATCH_KEY(KEY_WORTHLESS)) ADD_FLG(FLG_WORTHLESS);
-        if (MATCH_KEY(KEY_EGO)) ADD_FLG(FLG_EGO);
-        if (MATCH_KEY(KEY_GOOD)) ADD_FLG(FLG_GOOD);
-		if (MATCH_KEY(KEY_CURSED)) ADD_FLG(FLG_CURSED);
-        if (MATCH_KEY(KEY_SPECIAL)) ADD_FLG(FLG_SPECIAL);
-        if (MATCH_KEY(KEY_UNUSABLE)) ADD_FLG(FLG_UNUSABLE);
-        if (MATCH_KEY(KEY_NAMELESS)) ADD_FLG(FLG_NAMELESS);
         if (MATCH_KEY(KEY_AVERAGE)) ADD_FLG(FLG_AVERAGE);
+        if (MATCH_KEY(KEY_GOOD)) ADD_FLG(FLG_GOOD);
+        if (MATCH_KEY(KEY_EGO)) ADD_FLG(FLG_EGO);
+        if (MATCH_KEY(KEY_ARTIFACT)) ADD_FLG(FLG_ARTIFACT);
+        if (MATCH_KEY(KEY_CURSED)) ADD_FLG(FLG_CURSED);
+        if (MATCH_KEY(KEY_NAMELESS)) ADD_FLG(FLG_NAMELESS);
         if (MATCH_KEY(KEY_RARE)) ADD_FLG(FLG_RARE);
         if (MATCH_KEY(KEY_COMMON)) ADD_FLG(FLG_COMMON);
-        if (MATCH_KEY(KEY_WANTED)) ADD_FLG(FLG_WANTED);
-        if (MATCH_KEY(KEY_UNIQUE)) ADD_FLG(FLG_UNIQUE);
-        if (MATCH_KEY(KEY_HUMAN)) ADD_FLG(FLG_HUMAN);
+        if (MATCH_KEY(KEY_WORTHLESS)) ADD_FLG(FLG_WORTHLESS);
+
+        if (MATCH_KEY(KEY_BOOSTED)) ADD_FLG(FLG_BOOSTED);
+
         if (MATCH_KEY(KEY_UNREADABLE)) ADD_FLG(FLG_UNREADABLE);
         if (MATCH_KEY(KEY_REALM1)) ADD_FLG(FLG_REALM1);
         if (MATCH_KEY(KEY_REALM2)) ADD_FLG(FLG_REALM2);
@@ -275,39 +326,54 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
         if (MATCH_KEY(KEY_SECOND)) ADD_FLG(FLG_SECOND);
         if (MATCH_KEY(KEY_THIRD)) ADD_FLG(FLG_THIRD);
         if (MATCH_KEY(KEY_FOURTH)) ADD_FLG(FLG_FOURTH);
+
+        if (MATCH_KEY(KEY_COLLECTING)) ADD_FLG(FLG_COLLECTING);
+        if (MATCH_KEY(KEY_SPECIAL)) ADD_FLG(FLG_SPECIAL);
+        if (MATCH_KEY(KEY_UNUSABLE)) ADD_FLG(FLG_UNUSABLE);
+        if (MATCH_KEY(KEY_WANTED)) ADD_FLG(FLG_WANTED);
+        if (MATCH_KEY(KEY_UNIQUE)) ADD_FLG(FLG_UNIQUE);
+        if (MATCH_KEY(KEY_HUMAN)) ADD_FLG(FLG_HUMAN);
     }
 
     /* Not yet found any noun */
     prev_flg = -1;
 
-    if (MATCH_KEY2(KEY_ARTIFACT)) ADD_FLG_NOUN(FLG_ARTIFACT);
-
+    /* Noun */
     if (MATCH_KEY2(KEY_ITEMS)) ADD_FLG_NOUN(FLG_ITEMS);
+
     else if (MATCH_KEY2(KEY_WEAPONS)) ADD_FLG_NOUN(FLG_WEAPONS);
+    else if (MATCH_KEY2(KEY_FAVORITE_WEAPONS)) ADD_FLG_NOUN(FLG_FAVORITE_WEAPONS);
+    else if (MATCH_KEY2(KEY_HAFTED)) ADD_FLG_NOUN(FLG_HAFTED);
+    else if (MATCH_KEY2(KEY_DIGGERS)) ADD_FLG_NOUN(FLG_DIGGERS);
+
     else if (MATCH_KEY2(KEY_SHOOTERS)) ADD_FLG_NOUN(FLG_SHOOTERS);
     else if (MATCH_KEY2(KEY_AMMO)) ADD_FLG_NOUN(FLG_AMMO);
-    else if (MATCH_KEY2(KEY_FAVORITE_WEAPONS)) ADD_FLG_NOUN(FLG_FAVORITE_WEAPONS);
+
     else if (MATCH_KEY2(KEY_ARMORS)) ADD_FLG_NOUN(FLG_ARMORS);
-    else if (MATCH_KEY2(KEY_WANDS)) ADD_FLG_NOUN(FLG_WANDS);
-    else if (MATCH_KEY2(KEY_STAVES)) ADD_FLG_NOUN(FLG_STAVES);
-    else if (MATCH_KEY2(KEY_RODS)) ADD_FLG_NOUN(FLG_RODS);
-    else if (MATCH_KEY2(KEY_POTIONS)) ADD_FLG_NOUN(FLG_POTIONS);
-    else if (MATCH_KEY2(KEY_SCROLLS)) ADD_FLG_NOUN(FLG_SCROLLS);
-    else if (MATCH_KEY2(KEY_LIGHTS)) ADD_FLG_NOUN(FLG_LIGHTS);
-    else if (MATCH_KEY2(KEY_JUNKS)) ADD_FLG_NOUN(FLG_JUNKS);
-    else if (MATCH_KEY2(KEY_CORPSES)) ADD_FLG_NOUN(FLG_CORPSES);
-    else if (MATCH_KEY2(KEY_SKELETONS)) ADD_FLG_NOUN(FLG_SKELETONS);
-    else if (MATCH_KEY2(KEY_SPELLBOOKS)) ADD_FLG_NOUN(FLG_SPELLBOOKS);
-    else if (MATCH_KEY2(KEY_HAFTED)) ADD_FLG_NOUN(FLG_HAFTED);
     else if (MATCH_KEY2(KEY_SHIELDS)) ADD_FLG_NOUN(FLG_SHIELDS);
-    else if (MATCH_KEY2(KEY_RINGS)) ADD_FLG_NOUN(FLG_RINGS);
-    else if (MATCH_KEY2(KEY_AMULETS)) ADD_FLG_NOUN(FLG_AMULETS);
     else if (MATCH_KEY2(KEY_SUITS)) ADD_FLG_NOUN(FLG_SUITS);
     else if (MATCH_KEY2(KEY_CLOAKS)) ADD_FLG_NOUN(FLG_CLOAKS);
     else if (MATCH_KEY2(KEY_HELMS)) ADD_FLG_NOUN(FLG_HELMS);
     else if (MATCH_KEY2(KEY_GLOVES)) ADD_FLG_NOUN(FLG_GLOVES);
     else if (MATCH_KEY2(KEY_BOOTS)) ADD_FLG_NOUN(FLG_BOOTS);
 
+    else if (MATCH_KEY2(KEY_LIGHTS)) ADD_FLG_NOUN(FLG_LIGHTS);
+    else if (MATCH_KEY2(KEY_RINGS)) ADD_FLG_NOUN(FLG_RINGS);
+    else if (MATCH_KEY2(KEY_AMULETS)) ADD_FLG_NOUN(FLG_AMULETS);
+
+    else if (MATCH_KEY2(KEY_SPELLBOOKS)) ADD_FLG_NOUN(FLG_SPELLBOOKS);
+
+    else if (MATCH_KEY2(KEY_WANDS)) ADD_FLG_NOUN(FLG_WANDS);
+    else if (MATCH_KEY2(KEY_STAVES)) ADD_FLG_NOUN(FLG_STAVES);
+    else if (MATCH_KEY2(KEY_RODS)) ADD_FLG_NOUN(FLG_RODS);
+    else if (MATCH_KEY2(KEY_POTIONS)) ADD_FLG_NOUN(FLG_POTIONS);
+    else if (MATCH_KEY2(KEY_SCROLLS)) ADD_FLG_NOUN(FLG_SCROLLS);
+
+    else if (MATCH_KEY2(KEY_JUNKS)) ADD_FLG_NOUN(FLG_JUNKS);
+    else if (MATCH_KEY2(KEY_CORPSES)) ADD_FLG_NOUN(FLG_CORPSES);
+    else if (MATCH_KEY2(KEY_SKELETONS)) ADD_FLG_NOUN(FLG_SKELETONS);
+
+    /* Special-Clause */
     /*** Weapons whose dd*ds is more than nn ***/
     if (MATCH_KEY2(KEY_MORE_DICE))
     {
@@ -385,6 +451,30 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
             ptr = prev_ptr;
     }
 
+    if (MATCH_KEY2(KEY_MORE_WEIGHT))
+    {
+        int k = 0;
+        entry->weight = 0;
+
+        /* Drop leading spaces */
+        while (' ' == *ptr) ptr++;
+
+        /* Read number */
+        while ('0' <= *ptr && *ptr <= '9')
+        {
+            entry->weight = 10 * entry->weight + (*ptr - '0');
+            ptr++;
+            k++;
+        }
+
+        if (k > 0 && k <= 2)
+        {
+            if (' ' == *ptr) ptr++;
+            ADD_FLG(FLG_MORE_WEIGHT);
+        }
+        else
+            ptr = prev_ptr;
+    }
 
     /* Last 'keyword' must be at the correct location */
     if (*ptr == ':')
@@ -612,7 +702,9 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
     if (o_ptr->tval >= TV_LIFE_BOOK && 3 == o_ptr->sval)
         ADD_FLG(FLG_FOURTH);
 
-    if (object_is_melee_weapon(o_ptr))
+    if (o_ptr->tval == TV_DIGGING)
+        ADD_FLG(FLG_DIGGERS);
+    else if (object_is_melee_weapon(o_ptr))
         ADD_FLG(FLG_WEAPONS);
     else if (o_ptr->tval == TV_BOW)
         ADD_FLG(FLG_SHOOTERS);
@@ -694,7 +786,7 @@ static void autopick_free_entry(autopick_type *entry)
 static void init_autopick(void)
 {
     static const char easy_autopick_inscription[] = "(:=g";
-    autopick_type entry;
+    autopick_type entry = {0};
     int i;
 
     if (!autopick_list)
@@ -823,7 +915,7 @@ static void add_autopick_list(autopick_type *entry)
  */
 errr process_autopick_file_command(char *buf)
 {
-    autopick_type an_entry, *entry = &an_entry;
+    autopick_type an_entry = {0}, *entry = &an_entry;
     int i;
 
     /* Nuke illegal char */
@@ -842,7 +934,8 @@ errr process_autopick_file_command(char *buf)
            && entry->flag[0] == autopick_list[i].flag[0]
            && entry->flag[1] == autopick_list[i].flag[1]
            && entry->dice == autopick_list[i].dice
-           && entry->bonus == autopick_list[i].bonus)
+           && entry->bonus == autopick_list[i].bonus
+           && entry->weight == autopick_list[i].weight)
         {
             autopick_free_entry(entry);
             return 0;
@@ -867,16 +960,29 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     if (entry->action & DONT_AUTOPICK) string_append_c(s, '~');
     if (entry->action & DO_AUTO_ID) string_append_c(s, '?');
 
+    /* Adjective* */
     if (options & AUTOPICK_COLOR_CODED)
         string_append_s(s, "<color:G>");
 
     if (IS_FLG(FLG_ALL)) string_printf(s, "%s ", KEY_ALL);
-    if (IS_FLG(FLG_COLLECTING)) string_printf(s, "%s ", KEY_COLLECTING);
-    if (IS_FLG(FLG_UNAWARE)) string_printf(s, "%s ", KEY_UNAWARE);
+
     if (IS_FLG(FLG_UNIDENTIFIED)) string_printf(s, "%s ", KEY_UNIDENTIFIED);
     if (IS_FLG(FLG_IDENTIFIED)) string_printf(s, "%s ", KEY_IDENTIFIED);
     if (IS_FLG(FLG_STAR_IDENTIFIED)) string_printf(s, "%s ", KEY_STAR_IDENTIFIED);
+    if (IS_FLG(FLG_UNAWARE)) string_printf(s, "%s ", KEY_UNAWARE);
+
+    if (IS_FLG(FLG_AVERAGE)) string_printf(s, "%s ", KEY_AVERAGE);
+    if (IS_FLG(FLG_GOOD)) string_printf(s, "%s ", KEY_GOOD);
+    if (IS_FLG(FLG_EGO)) string_printf(s, "%s ", KEY_EGO);
+    if (IS_FLG(FLG_ARTIFACT)) string_printf(s, "%s ", KEY_ARTIFACT);
+    if (IS_FLG(FLG_CURSED)) string_printf(s, "%s ", KEY_CURSED);
+    if (IS_FLG(FLG_NAMELESS)) string_printf(s, "%s ", KEY_NAMELESS);
+    if (IS_FLG(FLG_RARE)) string_printf(s, "%s ", KEY_RARE);
+    if (IS_FLG(FLG_COMMON)) string_printf(s, "%s ", KEY_COMMON);
+    if (IS_FLG(FLG_WORTHLESS)) string_printf(s, "%s ", KEY_WORTHLESS);
+
     if (IS_FLG(FLG_BOOSTED)) string_printf(s, "%s ", KEY_BOOSTED);
+
     if (IS_FLG(FLG_UNREADABLE)) string_printf(s, "%s ", KEY_UNREADABLE);
     if (IS_FLG(FLG_REALM1)) string_printf(s, "%s ", KEY_REALM1);
     if (IS_FLG(FLG_REALM2)) string_printf(s, "%s ", KEY_REALM2);
@@ -884,52 +990,54 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     if (IS_FLG(FLG_SECOND)) string_printf(s, "%s ", KEY_SECOND);
     if (IS_FLG(FLG_THIRD)) string_printf(s, "%s ", KEY_THIRD);
     if (IS_FLG(FLG_FOURTH)) string_printf(s, "%s ", KEY_FOURTH);
+
+    if (IS_FLG(FLG_COLLECTING)) string_printf(s, "%s ", KEY_COLLECTING);
+    if (IS_FLG(FLG_SPECIAL)) string_printf(s, "%s ", KEY_SPECIAL);
+    if (IS_FLG(FLG_UNUSABLE)) string_printf(s, "%s ", KEY_UNUSABLE);
     if (IS_FLG(FLG_WANTED)) string_printf(s, "%s ", KEY_WANTED);
     if (IS_FLG(FLG_UNIQUE)) string_printf(s, "%s ", KEY_UNIQUE);
     if (IS_FLG(FLG_HUMAN)) string_printf(s, "%s ", KEY_HUMAN);
-    if (IS_FLG(FLG_WORTHLESS)) string_printf(s, "%s ", KEY_WORTHLESS);
-    if (IS_FLG(FLG_GOOD)) string_printf(s, "%s ", KEY_GOOD);
-    if (IS_FLG(FLG_CURSED)) string_printf(s, "%s ", KEY_CURSED);
-    if (IS_FLG(FLG_SPECIAL)) string_printf(s, "%s ", KEY_SPECIAL);
-    if (IS_FLG(FLG_UNUSABLE)) string_printf(s, "%s ", KEY_UNUSABLE);
-    if (IS_FLG(FLG_NAMELESS)) string_printf(s, "%s ", KEY_NAMELESS);
-    if (IS_FLG(FLG_AVERAGE)) string_printf(s, "%s ", KEY_AVERAGE);
-    if (IS_FLG(FLG_RARE)) string_printf(s, "%s ", KEY_RARE);
-    if (IS_FLG(FLG_COMMON)) string_printf(s, "%s ", KEY_COMMON);
-    if (IS_FLG(FLG_EGO)) string_printf(s, "%s ", KEY_EGO);
-    if (IS_FLG(FLG_ARTIFACT)) string_printf(s, "%s ", KEY_ARTIFACT);
 
+    /* Noun */
     if (options & AUTOPICK_COLOR_CODED)
         string_append_s(s, "</color><color:R>");
 
     if (IS_FLG(FLG_ITEMS)) string_append_s(s, KEY_ITEMS);
+
     else if (IS_FLG(FLG_WEAPONS)) string_append_s(s, KEY_WEAPONS);
+    else if (IS_FLG(FLG_FAVORITE_WEAPONS)) string_append_s(s, KEY_FAVORITE_WEAPONS);
+    else if (IS_FLG(FLG_HAFTED)) string_append_s(s, KEY_HAFTED);
+    else if (IS_FLG(FLG_DIGGERS)) string_append_s(s, KEY_DIGGERS);
+
     else if (IS_FLG(FLG_SHOOTERS)) string_append_s(s, KEY_SHOOTERS);
     else if (IS_FLG(FLG_AMMO)) string_append_s(s, KEY_AMMO);
-    else if (IS_FLG(FLG_FAVORITE_WEAPONS)) string_append_s(s, KEY_FAVORITE_WEAPONS);
+
     else if (IS_FLG(FLG_ARMORS)) string_append_s(s, KEY_ARMORS);
-    else if (IS_FLG(FLG_WANDS)) string_append_s(s, KEY_WANDS);
-    else if (IS_FLG(FLG_STAVES)) string_append_s(s, KEY_STAVES);
-    else if (IS_FLG(FLG_RODS)) string_append_s(s, KEY_RODS);
-    else if (IS_FLG(FLG_POTIONS)) string_append_s(s, KEY_POTIONS);
-    else if (IS_FLG(FLG_SCROLLS)) string_append_s(s, KEY_SCROLLS);
-    else if (IS_FLG(FLG_LIGHTS)) string_append_s(s, KEY_LIGHTS);
-    else if (IS_FLG(FLG_JUNKS)) string_append_s(s, KEY_JUNKS);
-    else if (IS_FLG(FLG_CORPSES)) string_append_s(s, KEY_CORPSES);
-    else if (IS_FLG(FLG_SKELETONS)) string_append_s(s, KEY_SKELETONS);
-    else if (IS_FLG(FLG_SPELLBOOKS)) string_append_s(s, KEY_SPELLBOOKS);
-    else if (IS_FLG(FLG_HAFTED)) string_append_s(s, KEY_HAFTED);
     else if (IS_FLG(FLG_SHIELDS)) string_append_s(s, KEY_SHIELDS);
-    else if (IS_FLG(FLG_RINGS)) string_append_s(s, KEY_RINGS);
-    else if (IS_FLG(FLG_AMULETS)) string_append_s(s, KEY_AMULETS);
     else if (IS_FLG(FLG_SUITS)) string_append_s(s, KEY_SUITS);
     else if (IS_FLG(FLG_CLOAKS)) string_append_s(s, KEY_CLOAKS);
     else if (IS_FLG(FLG_HELMS)) string_append_s(s, KEY_HELMS);
     else if (IS_FLG(FLG_GLOVES)) string_append_s(s, KEY_GLOVES);
     else if (IS_FLG(FLG_BOOTS)) string_append_s(s, KEY_BOOTS);
-    else if (!IS_FLG(FLG_ARTIFACT))
-        sepa_flag = FALSE;
 
+    else if (IS_FLG(FLG_LIGHTS)) string_append_s(s, KEY_LIGHTS);
+    else if (IS_FLG(FLG_RINGS)) string_append_s(s, KEY_RINGS);
+    else if (IS_FLG(FLG_AMULETS)) string_append_s(s, KEY_AMULETS);
+
+    else if (IS_FLG(FLG_SPELLBOOKS)) string_append_s(s, KEY_SPELLBOOKS);
+
+    else if (IS_FLG(FLG_WANDS)) string_append_s(s, KEY_WANDS);
+    else if (IS_FLG(FLG_STAVES)) string_append_s(s, KEY_STAVES);
+    else if (IS_FLG(FLG_RODS)) string_append_s(s, KEY_RODS);
+    else if (IS_FLG(FLG_POTIONS)) string_append_s(s, KEY_POTIONS);
+    else if (IS_FLG(FLG_SCROLLS)) string_append_s(s, KEY_SCROLLS);
+
+    else if (IS_FLG(FLG_JUNKS)) string_append_s(s, KEY_JUNKS);
+    else if (IS_FLG(FLG_CORPSES)) string_append_s(s, KEY_CORPSES);
+    else if (IS_FLG(FLG_SKELETONS)) string_append_s(s, KEY_SKELETONS);
+    else sepa_flag = FALSE;
+
+    /* Special-Clause */
     if (options & AUTOPICK_COLOR_CODED)
         string_append_s(s, "</color>");
 
@@ -937,7 +1045,7 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     {
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "<color:o>");
-        string_printf(s, " %s %d ", KEY_MORE_DICE, entry->dice);
+        string_printf(s, " %s %d", KEY_MORE_DICE, entry->dice);
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "</color>");
     }
@@ -946,7 +1054,7 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     {
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "<color:o>");
-        string_printf(s, " %s %d ", KEY_MORE_BONUS, entry->bonus);
+        string_printf(s, " %s %d", KEY_MORE_BONUS, entry->bonus);
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "</color>");
     }
@@ -955,11 +1063,21 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     {
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "<color:o>");
-        string_printf(s, " %s %d ", KEY_MORE_LEVEL, entry->bonus);
+        string_printf(s, " %s %d", KEY_MORE_LEVEL, entry->bonus);
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "</color>");
     }
 
+    if (IS_FLG(FLG_MORE_WEIGHT))
+    {
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "<color:o>");
+        string_printf(s, " %s %d", KEY_MORE_WEIGHT, entry->weight);
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "</color>");
+    }
+
+    /* Search-String */
     if (entry->name && entry->name[0])
     {
         if (sepa_flag)
@@ -968,6 +1086,7 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
         string_append_s(s, entry->name);
     }
 
+    /* Inscription-String */
     if (entry->insc)
     {
         if (options & AUTOPICK_COLOR_CODED)
@@ -1166,6 +1285,12 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
                 return FALSE;
         }
     }                
+
+    if (IS_FLG(FLG_MORE_WEIGHT))
+    {
+        if (o_ptr->weight <= entry->weight * 10)
+            return FALSE;
+    }
 
     /*** Worthless items ***/
     if (IS_FLG(FLG_WORTHLESS) && object_value(o_ptr) > 0)
@@ -1490,6 +1615,21 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         if (!object_is_melee_weapon(o_ptr))
             return FALSE;
     }
+    else if (IS_FLG(FLG_FAVORITE_WEAPONS))
+    {
+        if (!object_is_favorite(o_ptr))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_HAFTED))
+    {
+        if (!(o_ptr->tval == TV_HAFTED))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_DIGGERS))
+    {
+        if (!(o_ptr->tval == TV_DIGGING))
+            return FALSE;
+    }
     else if (IS_FLG(FLG_SHOOTERS))
     {
         if (o_ptr->tval != TV_BOW)
@@ -1499,14 +1639,56 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     {
         if (!object_is_ammo(o_ptr)) return FALSE;
     }
-    else if (IS_FLG(FLG_FAVORITE_WEAPONS))
-    {
-        if (!object_is_favorite(o_ptr))
-            return FALSE;
-    }
     else if (IS_FLG(FLG_ARMORS))
     {
         if (!object_is_armour(o_ptr))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_SHIELDS))
+    {
+        if (!(o_ptr->tval == TV_SHIELD))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_SUITS))
+    {
+        if (!(o_ptr->tval == TV_DRAG_ARMOR ||
+              o_ptr->tval == TV_HARD_ARMOR ||
+              o_ptr->tval == TV_SOFT_ARMOR))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_CLOAKS))
+    {
+        if (!(o_ptr->tval == TV_CLOAK))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_HELMS))
+    {
+        if (!(o_ptr->tval == TV_CROWN || o_ptr->tval == TV_HELM))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_GLOVES))
+    {
+        if (!(o_ptr->tval == TV_GLOVES))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_BOOTS))
+    {
+        if (!(o_ptr->tval == TV_BOOTS))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_LIGHTS))
+    {
+        if (!(o_ptr->tval == TV_LITE))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_RINGS))
+    {
+        if (!(o_ptr->tval == TV_RING))
+            return FALSE;
+    }
+    else if (IS_FLG(FLG_AMULETS))
+    {
+        if (!(o_ptr->tval == TV_AMULET))
             return FALSE;
     }
     else if (IS_FLG(FLG_WANDS))
@@ -1532,11 +1714,6 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     else if (IS_FLG(FLG_SCROLLS))
     {
         if (o_ptr->tval != TV_SCROLL)
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_LIGHTS))
-    {
-        if (!(o_ptr->tval == TV_LITE))
             return FALSE;
     }
     else if (IS_FLG(FLG_JUNKS))
@@ -1567,55 +1744,8 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         if (!(o_ptr->tval >= TV_LIFE_BOOK))
             return FALSE;
     }
-    else if (IS_FLG(FLG_HAFTED))
-    {
-        if (!(o_ptr->tval == TV_HAFTED))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_SHIELDS))
-    {
-        if (!(o_ptr->tval == TV_SHIELD))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_RINGS))
-    {
-        if (!(o_ptr->tval == TV_RING))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_AMULETS))
-    {
-        if (!(o_ptr->tval == TV_AMULET))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_SUITS))
-    {
-        if (!(o_ptr->tval == TV_DRAG_ARMOR ||
-              o_ptr->tval == TV_HARD_ARMOR ||
-              o_ptr->tval == TV_SOFT_ARMOR))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_CLOAKS))
-    {
-        if (!(o_ptr->tval == TV_CLOAK))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_HELMS))
-    {
-        if (!(o_ptr->tval == TV_CROWN || o_ptr->tval == TV_HELM))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_GLOVES))
-    {
-        if (!(o_ptr->tval == TV_GLOVES))
-            return FALSE;
-    }
-    else if (IS_FLG(FLG_BOOTS))
-    {
-        if (!(o_ptr->tval == TV_BOOTS))
-            return FALSE;
-    }
 
-    /* Keyword don't match */
+    /* Search-String */
     if (!_string_match(o_name, entry->name))
         return FALSE;
 
@@ -2697,7 +2827,7 @@ static void describe_autopick(char *buff, autopick_type *entry)
     if (IS_FLG(FLG_MORE_DICE))
     {
         static char more_than_desc_str[] =
-            "maximum damage from dice is bigger than __";
+            "maximum damage from dice is more than __";
         body_str = "weapons";
             
         sprintf(more_than_desc_str + sizeof(more_than_desc_str) - 3,
@@ -2709,7 +2839,7 @@ static void describe_autopick(char *buff, autopick_type *entry)
     if (IS_FLG(FLG_MORE_BONUS))
     {
         static char more_bonus_desc_str[] =
-            "magical bonus is bigger than (+__)";
+            "magical bonus is larger than (+__)";
             
         sprintf(more_bonus_desc_str + sizeof(more_bonus_desc_str) - 4,
             "%d)", entry->bonus);
@@ -2721,6 +2851,12 @@ static void describe_autopick(char *buff, autopick_type *entry)
         static char more_level_desc_str[50];
         sprintf(more_level_desc_str, "level is bigger than %d", entry->bonus);
         whose_str[whose_n++] = more_level_desc_str;
+    }
+    if (IS_FLG(FLG_MORE_WEIGHT))
+    {
+        static char more_weight_desc_str[50];
+        sprintf(more_weight_desc_str, "weight is more than %d lbs", entry->weight);
+        whose_str[whose_n++] = more_weight_desc_str;
     }
 
     /*** Wanted monster's corpse/skeletons ***/
@@ -2799,12 +2935,16 @@ static void describe_autopick(char *buff, autopick_type *entry)
         ; /* Nothing to do */
     else if (IS_FLG(FLG_WEAPONS))
         body_str = "melee weapons";
+    else if (IS_FLG(FLG_FAVORITE_WEAPONS))
+        body_str = "favorite weapons";
+    else if (IS_FLG(FLG_HAFTED))
+        body_str = "hafted weapons";
+    else if (IS_FLG(FLG_DIGGERS))
+        body_str = "digging implements";
     else if (IS_FLG(FLG_SHOOTERS))
         body_str = "slings, bows or crossbows";
     else if (IS_FLG(FLG_AMMO))
         body_str = "shots, arrows or bolts";
-    else if (IS_FLG(FLG_FAVORITE_WEAPONS))
-        body_str = "favorite weapons";
     else if (IS_FLG(FLG_ARMORS))
         body_str = "armors";
     else if (IS_FLG(FLG_WANDS))
@@ -2827,8 +2967,6 @@ static void describe_autopick(char *buff, autopick_type *entry)
         body_str = "skeletons";
     else if (IS_FLG(FLG_SPELLBOOKS))
         body_str = "spellbooks";
-    else if (IS_FLG(FLG_HAFTED))
-        body_str = "hafted weapons";
     else if (IS_FLG(FLG_SHIELDS))
         body_str = "shields";
     else if (IS_FLG(FLG_RINGS))
@@ -3176,7 +3314,7 @@ static void toggle_keyword(text_body_type *tb, int flg)
     /* Set/Reset flag of each line */
     for (y = by1; y <= by2; y++)
     {
-        autopick_type an_entry, *entry = &an_entry;
+        autopick_type an_entry = {0}, *entry = &an_entry;
 
         if (!autopick_new_entry(entry, tb->lines_list[y], !fixed)) continue;
 
@@ -3201,18 +3339,18 @@ static void toggle_keyword(text_body_type *tb, int flg)
         }
         
         /* You can use only one identify state flag */
-        else if (FLG_UNAWARE <= flg && flg <= FLG_STAR_IDENTIFIED)
+        else if (FLG_KNOWLEDGE_BEGIN <= flg && flg <= FLG_KNOWLEDGE_END)
         {
             int i;
-            for (i = FLG_UNAWARE; i <= FLG_STAR_IDENTIFIED; i++)
+            for (i = FLG_KNOWLEDGE_BEGIN; i <= FLG_KNOWLEDGE_END; i++)
                 REM_FLG(i);
         }
         
         /* You can use only one flag in artifact/ego/nameless */
-        else if (FLG_ARTIFACT <= flg && flg <= FLG_AVERAGE)
+        else if (FLG_QUALITY_BEGIN <= flg && flg <= FLG_QUALITY_END)
         {
             int i;
-            for (i = FLG_ARTIFACT; i <= FLG_AVERAGE; i++)
+            for (i = FLG_QUALITY_BEGIN; i <= FLG_QUALITY_END; i++)
                 REM_FLG(i);
         }
         
@@ -3225,7 +3363,12 @@ static void toggle_keyword(text_body_type *tb, int flg)
         }
         
         if (add) ADD_FLG(flg);
-        else REM_FLG(flg);
+        else
+        {
+            REM_FLG(flg);
+            if (FLG_NOUN_BEGIN <= flg && flg <= FLG_NOUN_END)
+                ADD_FLG(FLG_ITEMS);
+        }
         
         tb->lines_list[y] = autopick_line_from_entry_kill(entry);
         
@@ -3243,7 +3386,7 @@ static void toggle_keyword(text_body_type *tb, int flg)
  */
 static void toggle_command_letter(text_body_type *tb, byte flg)
 {
-    autopick_type an_entry, *entry = &an_entry;
+    autopick_type an_entry = {0}, *entry = &an_entry;
     int by1, by2, y;
     bool add = TRUE;
     bool fixed = FALSE;
@@ -3290,16 +3433,21 @@ static void toggle_command_letter(text_body_type *tb, byte flg)
         if (!(entry->action & DO_DISPLAY)) wid--;
 
         /* Set/Reset the flag */
-        if (flg != DO_DISPLAY)
+        if (flg == DO_DISPLAY)
+        {
+            entry->action &= ~(DO_DISPLAY);
+            if (add) entry->action |= flg;
+        }
+        else if (flg == DO_AUTO_ID)
+        {
+            entry->action &= ~(DO_AUTO_ID);
+            if (add) entry->action |= flg;
+        }
+        else
         {
             entry->action &= ~(DO_AUTOPICK | DONT_AUTOPICK | DO_AUTODESTROY | DO_QUERY_AUTOPICK);
             if (add) entry->action |= flg;
             else entry->action |= DO_AUTOPICK;
-        }
-        else
-        {
-            entry->action &= ~(DO_DISPLAY);
-            if (add) entry->action |= flg;
         }
 
         /* Correct cursor location */
@@ -3349,7 +3497,7 @@ static void add_keyword(text_body_type *tb, int flg)
     /* Set/Reset flag of each line */
     for (y = by1; y <= by2; y++)
     {
-        autopick_type an_entry, *entry = &an_entry;
+        autopick_type an_entry = {0}, *entry = &an_entry;
 
         if (!autopick_new_entry(entry, tb->lines_list[y], FALSE)) continue;
 
@@ -3804,7 +3952,7 @@ static byte get_string_for_search(object_type **o_handle, cptr *search_strp)
  */
 static void search_for_object(text_body_type *tb, object_type *o_ptr, bool forward)
 {
-    autopick_type an_entry, *entry = &an_entry;
+    autopick_type an_entry = {0}, *entry = &an_entry;
     char o_name[MAX_NLEN];
     int bypassed_cy = -1;
 
@@ -4008,6 +4156,7 @@ enum {
     EC_CL_LEAVE,
     EC_CL_QUERY,
     EC_CL_NO_DISP,
+    EC_CL_AUTO_ID,
 
     EC_OK_COLLECTING,
     EC_IK_UNAWARE,
@@ -4017,6 +4166,8 @@ enum {
     EC_OK_BOOSTED,
     EC_OK_MORE_DICE,
     EC_OK_MORE_BONUS,
+    EC_OK_MORE_LEVEL,
+    EC_OK_MORE_WEIGHT,
     EC_OK_WORTHLESS,
     EC_OK_ARTIFACT,
     EC_OK_EGO,
@@ -4040,9 +4191,10 @@ enum {
     EC_OK_FOURTH,
 
     EC_KK_WEAPONS,
+    EC_KK_FAVORITE_WEAPONS,
+    EC_KK_DIGGERS,
     EC_KK_SHOOTERS,
     EC_KK_AMMO,
-    EC_KK_FAVORITE_WEAPONS,
     EC_KK_ARMORS,
     EC_KK_WANDS,
     EC_KK_STAVES,
@@ -4113,6 +4265,7 @@ static char MN_CL_DESTROY[] = "'!' (Auto destroy)";
 static char MN_CL_LEAVE[] = "'~' (Leave it on the floor)";
 static char MN_CL_QUERY[] = "';' (Query to pick up)";
 static char MN_CL_NO_DISP[] = "'(' (No display on the large map)";
+static char MN_CL_AUTO_ID[] = "'?' (Auto identify)";
 
 static char MN_ADJECTIVE_GEN[] = "Adjective (general)";
 static char MN_RARE[] = "rare (equipments)";
@@ -4120,8 +4273,10 @@ static char MN_COMMON[] = "common (equipments)";
 
 static char MN_ADJECTIVE_SPECIAL[] = "Adjective (special)";
 static char MN_BOOSTED[] = "dice boosted (weapons)";
-static char MN_MORE_DICE[] = "more than # dice (weapons)";
+static char MN_MORE_DICE[] = "more dice than # (weapons/shooters)";
 static char MN_MORE_BONUS[] = "more bonus than # (rings etc.)";
+static char MN_MORE_LEVEL[] = "more level than # (corpses)";
+static char MN_MORE_WEIGHT[] = "more weight than #";
 static char MN_WANTED[] = "wanted (corpse)";
 static char MN_UNIQUE[] = "unique (corpse)";
 static char MN_HUMAN[] = "human (corpse)";
@@ -4211,6 +4366,8 @@ command_menu_type menu_data[] =
     {MN_BOOSTED, 1, -1, EC_OK_BOOSTED},
     {MN_MORE_DICE, 1, -1, EC_OK_MORE_DICE},
     {MN_MORE_BONUS, 1, -1, EC_OK_MORE_BONUS},
+    {MN_MORE_LEVEL, 1, -1, EC_OK_MORE_LEVEL},
+    {MN_MORE_WEIGHT, 1, -1, EC_OK_MORE_WEIGHT},
     {MN_WANTED, 1, -1, EC_OK_WANTED},
     {MN_UNIQUE, 1, -1, EC_OK_UNIQUE},
     {MN_HUMAN, 1, -1, EC_OK_HUMAN},
@@ -4224,28 +4381,35 @@ command_menu_type menu_data[] =
 
      {MN_NOUN, 0, -1, -1},
     {KEY_WEAPONS, 1, -1, EC_KK_WEAPONS},
+    {KEY_FAVORITE_WEAPONS, 1, -1, EC_KK_FAVORITE_WEAPONS},
+    {KEY_DIGGERS, 1, -1, EC_KK_DIGGERS},
+
     {KEY_SHOOTERS, 1, -1, EC_KK_SHOOTERS},
     {KEY_AMMO, 1, -1, EC_KK_AMMO},
-    {KEY_FAVORITE_WEAPONS, 1, -1, EC_KK_FAVORITE_WEAPONS},
+
     {KEY_ARMORS, 1, -1, EC_KK_ARMORS},
-    {KEY_WANDS, 1, -1, EC_KK_WANDS},
-    {KEY_STAVES, 1, -1, EC_KK_STAVES},
-    {KEY_RODS, 1, -1, EC_KK_RODS},
-    {KEY_POTIONS, 1, -1, EC_KK_POTIONS},
-    {KEY_SCROLLS, 1, -1, EC_KK_SCROLLS},
-    {KEY_LIGHTS, 1, -1, EC_KK_LIGHTS},
-    {KEY_JUNKS, 1, -1, EC_KK_JUNKS},
-    {KEY_CORPSES, 1, -1, EC_KK_CORPSES},
-    {KEY_SKELETONS, 1, -1, EC_KK_SKELETONS},
-    {KEY_SPELLBOOKS, 1, -1, EC_KK_SPELLBOOKS},
     {KEY_SHIELDS, 1, -1, EC_KK_SHIELDS},
-    {KEY_RINGS, 1, -1, EC_KK_RINGS},
-    {KEY_AMULETS, 1, -1, EC_KK_AMULETS},
     {KEY_SUITS, 1, -1, EC_KK_SUITS},
     {KEY_CLOAKS, 1, -1, EC_KK_CLOAKS},
     {KEY_HELMS, 1, -1, EC_KK_HELMS},
     {KEY_GLOVES, 1, -1, EC_KK_GLOVES},
     {KEY_BOOTS, 1, -1, EC_KK_BOOTS},
+
+    {KEY_LIGHTS, 1, -1, EC_KK_LIGHTS},
+    {KEY_RINGS, 1, -1, EC_KK_RINGS},
+    {KEY_AMULETS, 1, -1, EC_KK_AMULETS},
+
+    {KEY_SPELLBOOKS, 1, -1, EC_KK_SPELLBOOKS},
+
+    {KEY_WANDS, 1, -1, EC_KK_WANDS},
+    {KEY_STAVES, 1, -1, EC_KK_STAVES},
+    {KEY_RODS, 1, -1, EC_KK_RODS},
+    {KEY_POTIONS, 1, -1, EC_KK_POTIONS},
+    {KEY_SCROLLS, 1, -1, EC_KK_SCROLLS},
+
+    {KEY_JUNKS, 1, -1, EC_KK_JUNKS},
+    {KEY_CORPSES, 1, -1, EC_KK_CORPSES},
+    {KEY_SKELETONS, 1, -1, EC_KK_SKELETONS},
 
      {MN_COMMAND_LETTER, 0, -1, -1},
     {MN_CL_AUTOPICK, 1, -1, EC_CL_AUTOPICK},
@@ -4253,6 +4417,7 @@ command_menu_type menu_data[] =
     {MN_CL_LEAVE, 1, -1, EC_CL_LEAVE},
     {MN_CL_QUERY, 1, -1, EC_CL_QUERY},
     {MN_CL_NO_DISP, 1, -1, EC_CL_NO_DISP},
+    {MN_CL_AUTO_ID, 1, -1, EC_CL_AUTO_ID},
 
     {MN_DELETE_CHAR, -1, 0x7F, EC_DELETE_CHAR},
 
@@ -4339,7 +4504,7 @@ static int do_command_menu(int level, int start)
             int row1 = row0 + 1;
 
             /* Draw top line */
-            Term_putstr(col0, row0, -1, TERM_WHITE, linestr);
+            Term_putstr(col0, row0, -1, TERM_BLUE, linestr);
 
             /* Draw menu items */
             menu_key = 0;
@@ -4366,20 +4531,23 @@ static int do_command_menu(int level, int start)
                     com_key_str[0] = '\0';
                 }
 
-                str = format("| %c) %-*s %2s | ", menu_key + 'a', max_len, menu_data[i].name, com_key_str);
+                str = format(" %c) %-*s %2s ", menu_key + 'a', max_len, menu_data[i].name, com_key_str);
 
-                Term_putstr(col0, row1++, -1, TERM_WHITE, str);
+                Term_putch(col0, row1, TERM_BLUE, '|');
+                Term_putstr(col0 + 1, row1, -1, TERM_L_BLUE, str);
+                Term_addch(TERM_BLUE, '|');
+                row1++;
 
                 menu_key++;
             }
 
             /* Draw bottom line */
-            Term_putstr(col0, row1, -1, TERM_WHITE, linestr);
+            Term_putstr(col0, row1, -1, TERM_BLUE, linestr);
 
             /* The menu was shown */
             redraw = FALSE;
         }
-        prt(format("(a-%c) Command:", menu_key + 'a' - 1), 0, 0);
+        c_prt(TERM_L_BLUE, format("(a-%c) Command:", menu_key + 'a' - 1), 0, 0);
         key = inkey();
 
         if (key == ESCAPE) return 0;
@@ -4571,9 +4739,12 @@ static void draw_text_editor(text_body_type *tb)
 {
     int i;
     int by1 = 0, by2 = 0;
+    doc_ptr doc = 0;
 
     /* Get size */
     Term_get_size(&tb->wid, &tb->hgt);
+    doc = doc_alloc(tb->wid);
+    doc_insert(doc, "<style:screenshot>"); /* No linebreak and as wide as possible ... */
 
     /*
      * Top line (-1), description line (-3), separator (-1)
@@ -4718,7 +4889,24 @@ static void draw_text_editor(text_body_type *tb)
         if (!tb->mark || (y < by1 || by2 < y))
         {
             /* Dump the messages, bottom to top */
-            Term_putstr(leftcol, i + 1, tb->wid - 1, color, msg);
+            /* This is a difficult hack, but syntax coloring is *very* useful! */
+            /*                         v--- Only Color Lines for Rules
+                                                          v--- Don't color while the user (possibly) edits */
+            if (color == TERM_WHITE && strlen(msg) > 0 && y != tb->cy)
+            {
+                autopick_type entry = {0};
+                string_ptr s = 0;
+
+                autopick_new_entry(&entry, msg, FALSE);
+                s = autopick_line_from_entry(&entry, AUTOPICK_COLOR_CODED);
+                doc_rollback(doc, doc_pos_create(0, 0));
+                doc_insert(doc, string_buffer(s));
+                doc_sync_term(doc, doc_range_top_lines(doc, 1), doc_pos_create(leftcol, i+1));
+                autopick_free_entry(&entry);
+                string_free(s);
+            }
+            else
+                Term_putstr(leftcol, i + 1, tb->wid - 1, color, msg);
         }
 
         /* Multiple lines selected */
@@ -4755,7 +4943,7 @@ static void draw_text_editor(text_body_type *tb)
     /* Display information when updated */
     if (tb->old_cy != tb->cy || (tb->dirty_flags & (DIRTY_ALL | DIRTY_NOT_FOUND | DIRTY_NO_SEARCH)) || tb->dirty_line == tb->cy)
     {
-        autopick_type an_entry, *entry = &an_entry;
+        autopick_type an_entry = {0}, *entry = &an_entry;
         cptr str1 = NULL, str2 = NULL;
 
 
@@ -4873,6 +5061,7 @@ static void draw_text_editor(text_body_type *tb)
         /* Draw the second line */
         if (str2) prt(str2, tb->hgt +1 + 2, 0);
     }
+    doc_free(doc);
 }
 
 
@@ -5162,13 +5351,18 @@ static bool do_editor_command(text_body_type *tb, int com_id)
         }
 
         /* Go down */
+        tb->dirty_line = tb->cy; /* Hack for Syntax Coloring: Redraw old current line in case it was edited */
         tb->cy++;
 
         break;
 
     case EC_UP:
         /* Previous line */
-        if (tb->cy > 0) tb->cy--;
+        if (tb->cy > 0)
+        {
+            tb->dirty_line = tb->cy; /* Hack for Syntax Coloring: Redraw old current line in case it was edited */
+            tb->cy--;
+        }
         break;
 
     case EC_RIGHT:
@@ -5191,6 +5385,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
             }
 
             /* Move to the beginning of next line */
+            tb->dirty_line = tb->cy; /* Hack for Syntax Coloring: Redraw old current line in case it was edited */
             tb->cy++;
             tb->cx = 0;
         }
@@ -5847,6 +6042,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
     case EC_CL_LEAVE: toggle_command_letter(tb, DONT_AUTOPICK); break;
     case EC_CL_QUERY: toggle_command_letter(tb, DO_QUERY_AUTOPICK); break;
     case EC_CL_NO_DISP: toggle_command_letter(tb, DO_DISPLAY); break;
+    case EC_CL_AUTO_ID: toggle_command_letter(tb, DO_AUTO_ID); break;
 
     case EC_IK_UNAWARE: toggle_keyword(tb, FLG_UNAWARE); break;
     case EC_IK_UNIDENTIFIED: toggle_keyword(tb, FLG_UNIDENTIFIED); break;
@@ -5856,6 +6052,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
     case EC_KK_SHOOTERS: toggle_keyword(tb, FLG_SHOOTERS); break;
     case EC_KK_AMMO: toggle_keyword(tb, FLG_AMMO); break;
     case EC_KK_FAVORITE_WEAPONS: toggle_keyword(tb, FLG_FAVORITE_WEAPONS); break;
+    case EC_KK_DIGGERS: toggle_keyword(tb, FLG_DIGGERS); break;
     case EC_KK_ARMORS: toggle_keyword(tb, FLG_ARMORS); break;
     case EC_KK_WANDS: toggle_keyword(tb, FLG_WANDS); break;
     case EC_KK_STAVES: toggle_keyword(tb, FLG_STAVES); break;
@@ -5879,6 +6076,8 @@ static bool do_editor_command(text_body_type *tb, int com_id)
     case EC_OK_BOOSTED: toggle_keyword(tb, FLG_BOOSTED); break;
     case EC_OK_MORE_DICE: toggle_keyword(tb, FLG_MORE_DICE); break;
     case EC_OK_MORE_BONUS: toggle_keyword(tb, FLG_MORE_BONUS); break;
+    case EC_OK_MORE_LEVEL: toggle_keyword(tb, FLG_MORE_LEVEL); break;
+    case EC_OK_MORE_WEIGHT: toggle_keyword(tb, FLG_MORE_WEIGHT); break;
     case EC_OK_WORTHLESS: toggle_keyword(tb, FLG_WORTHLESS); break;
     case EC_OK_ARTIFACT: toggle_keyword(tb, FLG_ARTIFACT); break;
     case EC_OK_EGO: toggle_keyword(tb, FLG_EGO); break;
@@ -6132,16 +6331,19 @@ void do_cmd_edit_autopick(void)
         draw_text_editor(tb);
 
         /* Display header line */
-        prt("(^Q:Quit, ^W:Save&Quit, ESC:Menu, Other:Input text)", 0, 0);
+        c_prt(TERM_L_BLUE, "(^Q:Quit, ^W:Save&Quit, ESC:Menu, Other:Input text)", 0, 0);
+        if (tb->changed)
+            c_prt(TERM_YELLOW, "*", 0, 58);
+
         if (!tb->mark)
         {
             /* Display current position */
-            prt (format("(%d,%d)", tb->cx, tb->cy), 0, 60);
+            prt(format("(%d,%d)", tb->cx, tb->cy), 0, 60);
         }
         else
         {
             /* Display current position and mark position */
-            prt (format("(%d,%d)-(%d,%d)", tb->mx, tb->my, tb->cx, tb->cy), 0, 60);
+            prt(format("(%d,%d)-(%d,%d)", tb->mx, tb->my, tb->cx, tb->cy), 0, 60);
         }
 
         /* Place cursor */

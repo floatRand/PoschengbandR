@@ -77,67 +77,34 @@ One of the game options allows the player to switch to 'plain' object descriptio
 
 <topic:PseudoID><style:heading>Pseudo-ID</style>
 
-Occasionally, as you wander around the dungeon you will sense something about the quality of an item or items you are wielding or carrying in your backpack. This sensing ability is called 'pseudo-id'. The speed and accuracy of your pseudo-id ability depends on a number of factors but the primary considerations are your class and level. Pseudo-id speed can be 'slow', 'medium' or 'fast' and might give more or less detailed information about object quality.
-
-Table 1 - Pseudo-Id ability of the Classes
-
-                       Weapons and Armors       Others
-    Class              Method     Speed         Speed
-    --------------------------------------------------------
-    Warrior            Strong     Very Fast     Impossible
-    Mage               Weak       Slow          Very Fast
-    Priest             Weak       Very Fast     Fast
-    Rogue              Strong     Fast          Fast
-    Ranger             Strong     Medium        Medium
-    Paladin            Strong     Medium        Slow
-    Warrior-Mage       Weak       Medium        Medium
-    Chaos-Warrior      Strong     Medium        Slow
-    Monk               Weak       Fast          Medium
-    Mindcrafter        Weak       Medium        Fast
-    High-Mage          Weak       Slow          Very Fast
-    Tourist            Strong     Extr. Fast    Extr. Fast
-    Imitator           Weak       Medium        Slow
-    BeastMaster        Weak       Medium        Slow
-    Sorcerer           Weak       Slow          Very Fast
-    Archer             Strong     Very Fast     Impossible
-    Magic-Eater        Weak       Slow          Very Fast
-    Bard               Weak       Very Fast     Fast
-    Red-Mage           Weak       Medium        Medium
-    Samurai            Strong     Very Fast     Impossible
-    ForceTrainer       Weak       Fast          Fast
-    Blue-Mage          Weak       Medium        Very Fast
-    Cavalry            Strong     Very Fast     Impossible
-    Berserker          Strong     Extr. Fast    Impossible
-    Weaponsmith        Strong     Very Fast     Slow
-    Mirror-Master      Weak       Medium        Very Fast
-    Ninja              Strong     Fast          Slow
-    Sniper             Strong     Medium        Impossible
-
+Occasionally, as you wander around the dungeon you will sense something about the quality of an item or items you are wielding or carrying in your backpack. This sensing ability is called 'pseudo-id'. The speed and accuracy of your pseudo-id ability depends on a number of factors but the primary considerations are your class and level. Pseudo-id speed can be 'slow', 'medium' or 'fast' and, in addition, might be either 'strong' or 'weak'.
 
 When you pseudo-id an item, it will be inscribed (see <link:objects.txt#Inscriptions> below) with the quality level you have determined it to be of. This inscription will remain until you identify it (see <link:objects.txt#Identifying> below) at which time it will be removed. The various inscriptions and their meanings are as follows:
+  <indent>
+<color:B>Table 1 - Strong Pseudo-Id</color>
+<color:G>Inscription    Meaning</color>
+Terrible       a cursed artifact
+Awful          a cursed ego item
+Bad            a cursed nameless item
+Average        an average item
+Good           an enchanted item
+Excellent      a good ego item
+Special        an non-cursed artifact
+
+Or, to put this another way:
+
+                   <color:G>Egos         Artifacts</color>
+Average -> Good -> Excellent -> Special
+        -> Bad  -> Awful     -> Terrible
 
 
-Table 2 - Strong Pseudo-Id
-
-    Inscription    Meaning
-    -------------------------------------------------
-    terrible       a cursed artifact
-    worthless      a cursed ego item
-    cursed         a cursed item
-    average        an average item
-    good           an enchanted item
-    excellent      a good ego item
-    special        an non-cursed artifact
-
-
-Table 3 - Weak Pseudo-Id
-
-    Inscription    Meaning
-    ------------------------------------------------
-    cursed         a cursed item (includes bad ego
-                   items and artifacts)
-    uncursed       an enchanted item (includes good
-                   ego items and artifacts)
+<color:B>Table 2 - Weak Pseudo-Id</color>
+<color:G>Inscription    Meaning</color>
+Average        an average item
+Cursed         <indent>a cursed item (includes cursed ego items and artifacts)</indent>
+Enchanted      <indent>an enchanted item (includes good ego items and artifacts)</indent>
+</indent>
+Early in the game, pseudo-id is your first line of defense against the onslaught of junk objects. Pick stuff up, wait a bit (while continuing to play, of course), and learn which objects are junk and which might be worthy of further investigation. At this point, you will want to Identify the object.
 
 <topic:Identifying><style:heading>Identifying Objects</style>
 

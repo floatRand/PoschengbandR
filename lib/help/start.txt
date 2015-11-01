@@ -18,6 +18,6 @@
     <color:R>Advanced Topics:</color>
     <link:option_contents.txt> Options
     <link:pref.hlp> User Preference Files
-    <link:editor_contents.txt> The Mogaminator
+    <link:editor_contents.txt> The <color:U>Mo</color><color:y>g</color><color:o>am</color><color:R>in</color><color:r>at</color><color:v>or</color>
 
     <color:y>(?) Help System Commands</color>

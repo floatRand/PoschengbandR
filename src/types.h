@@ -307,7 +307,7 @@ struct object_type
 
     byte number;        /* Number of items */
 
-    s16b weight;        /* Item weight */
+    s16b weight;        /* Item weight in decipounds */
 
     s16b name1;            /* Artifact type, if any */
     s16b name2;            /* Ego-Item type, if any */
@@ -1882,6 +1882,7 @@ typedef struct {
     byte action;        /* Auto-pickup or Destroy or Leave items */
     byte dice;          /* Weapons which have more than 'dice' dice match */
     byte bonus;         /* Items which have more than 'bonus' magical bonus match */
+    byte weight;
 } autopick_type;
 
 
