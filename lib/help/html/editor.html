@@ -911,6 +911,15 @@ Here, you can clearly see what commands to use to move the cursor about
 arrow keys don't work so you'll need to learn the control key 
 alternatives).
 
+One comment I will make on the editor is that it colors each rule line 
+according to the syntax of the expression. I personally find this 
+rather useful. However, sometimes the text displayed is not the same as 
+the rule you actually typed in, even though the meaning is the same. 
+For example, if you use multiple adjectives, then they might get 
+reordered when they are drawn with syntax coloring. In order to avoid 
+confusion, the current line (viz. the line under the cursor) is never 
+syntax colored and always displays exactly what you typed.
+
 <a name="Reference"></a></font><font color="#c00000">Reference Tables
 
 </font><font color="#ffffff">This section will give all the nitty gritty syntax details for </font><font color="#ff4040">The 
@@ -1039,7 +1048,7 @@ they are. Enjoy!
   Every rule must have one Primary action. It can have 0 or more 
   secondary actions, and the sole Terminal action is also optional.
   
-</font><font color="#00c8ff">Table III: Rules: Nouns
+</font><font color="#00c8ff">Table IV: Rules: Nouns
   </font><font color="#00ff00">Noun       Explanation
   </font><font color="#ff4040">Items      </font><font color="#ffffff">Applies to everything. This is useful for very general 
              rules, such as ~?</font><font color="#00ff00">Unidentified </font><font color="#ff4040">Items </font><font color="#ffffff">to automatically 
@@ -1052,7 +1061,7 @@ they are. Enjoy!
              recently changed the semantics to accomodate archers who 
              are very interested in </font><font color="#00ff00">Dice Boosted </font><font color="#ff4040">Shooters </font><font color="#ffffff">but could 
              usually care less about </font><font color="#00ff00">Dice Boosted </font><font color="#ff4040">Weapons</font><font color="#ffffff">. Also, monks 
-             may want to !</font><font color="#ff4040">weapons </font><font color="#ffffff">since they usually fight bare-handed, 
+             may want to !</font><font color="#ff4040">Weapons </font><font color="#ffffff">since they usually fight bare-handed, 
              and having this rule also destroy shooters is quite 
              annoying.
   
@@ -1084,8 +1093,8 @@ they are. Enjoy!
   </font><font color="#ff4040">Diggers    </font><font color="#ffffff">Applies to all digging implements, such as shovels and 
              picks. Digging is fun, but eventually you will probably 
              want to destroy these objects. Perhaps, you would like the 
-             rule ~</font><font color="#00ff00">dice boosted </font><font color="#ff4040">diggers</font><font color="#ffffff">:mattock followed by the rule 
-             !</font><font color="#ff4040">diggers</font><font color="#ffffff">?
+             rule ~</font><font color="#00ff00">Dice Boosted </font><font color="#ff4040">Diggers</font><font color="#ffffff">:Mattock followed by the rule 
+             !</font><font color="#ff4040">Diggers</font><font color="#ffffff">?
   
   </font><font color="#ff4040">Shooters   </font><font color="#ffffff">Applies to all missile weapons, including bows, slings and 
              crossbows. It also includes harps and guns. If you are a 
@@ -1126,18 +1135,18 @@ they are. Enjoy!
   
   </font><font color="#ff4040">Potions    </font><font color="#ffffff">Applies to potions. There are many useful potions. If you 
              are trying to get stat potions, you might consider 
-             </font><font color="#ff4040">potions</font><font color="#ffffff">:of Strength rather than just </font><font color="#ff4040">potions</font><font color="#ffffff">:Strength, 
+             </font><font color="#ff4040">Potions</font><font color="#ffffff">:of Strength rather than just </font><font color="#ff4040">Potions</font><font color="#ffffff">:Strength, 
              since the latter will also match potions of restore 
              strength.
   
   </font><font color="#ff4040">Scrolls    </font><font color="#ffffff">Applies to scrolls
   
   </font><font color="#ff4040">Rings      </font><font color="#ffffff">Applies to jewelry that are rings. Since rings are so 
-             useful, I like the rule ?</font><font color="#00ff00">unidentified </font><font color="#ff4040">rings </font><font color="#ffffff">for all of my 
+             useful, I like the rule ?</font><font color="#00ff00">Unidentified </font><font color="#ff4040">Rings </font><font color="#ffffff">for all of my 
              characters.
   
   </font><font color="#ff4040">Amulets    </font><font color="#ffffff">Applies to jewelry that are amulets. Like rings, I prefer 
-             to keep the rule ?</font><font color="#00ff00">unidentified </font><font color="#ff4040">amulets </font><font color="#ffffff">for all of my 
+             to keep the rule ?</font><font color="#00ff00">Unidentified </font><font color="#ff4040">Amulets </font><font color="#ffffff">for all of my 
              characters.
   
   </font><font color="#ff4040">Lights     </font><font color="#ffffff">These are torches, lanterns and feanorian lamps, as well 
@@ -1176,7 +1185,7 @@ they are. Enjoy!
   specify exactly one noun. But you may use as many adjectives as you 
   like.
   
-</font><font color="#00c8ff">Table IV: Rules: Adjectives
+</font><font color="#00c8ff">Table V: Rules: Adjectives
   </font><font color="#ffffff">There are many adjectives, and perhaps it might be useful to group 
   them by kind?
   
@@ -1194,12 +1203,20 @@ they are. Enjoy!
                won't destroy rare objects like Blades of Chaos and 
                won't destroy egos either).
   
-  </font><font color="#00ff00">*Identified* </font><font color="#ffffff">Applies to fully identified objects, and is another 
-               adjective you will probably never need. I searched a 
-               very old pref file from Hengband and found the rule 
-               similar to ~</font><font color="#00ff00">*identified* artifact </font><font color="#ff4040">items</font><font color="#ffcc80">#%all</font><font color="#ffffff">, but this 
-               now happens automatically with the abbrev_all option 
-               (see <a href="option.html#abbrev_all"></font><font color="#00ff00">[i]</a></font><font color="#ffffff">).
+  </font><font color="#00ff00">*Identified* </font><font color="#ffffff">Applies to fully identified objects, and is rarely 
+               needed. Perhaps you might consider a block of rules 
+               like:
+               ~</font><font color="#00ff00">*identified* </font><font color="#ff4040">rings </font><font color="#ff9200">more value than 5000
+               </font><font color="#ffffff">~</font><font color="#00ff00">*identified* </font><font color="#ff4040">amulets </font><font color="#ff9200">more value than 5000
+               </font><font color="#ffffff">~?</font><font color="#00ff00">unidentified </font><font color="#ff4040">rings
+               </font><font color="#ffffff">~?</font><font color="#00ff00">unidentified </font><font color="#ff4040">amulets
+               </font><font color="#ffffff">!</font><font color="#00ff00">identified </font><font color="#ff4040">rings
+               </font><font color="#ffffff">!</font><font color="#00ff00">identified </font><font color="#ff4040">amulets
+               </font><font color="#ffffff">But this requires you to have a good sense of the value 
+               threshold for jewelry you might want. Also note that 
+               this rule set is safe because, in the current version, 
+               identifying jewelry also *identifies* it. Do not try 
+               this pattern with other types of objects!
   
   </font><font color="#00ff00">Unaware      </font><font color="#ffffff">Applies to objects that the player is unaware of. In 
                practice, this currently only includes mushrooms, 
@@ -1226,7 +1243,7 @@ they are. Enjoy!
                might still be useful, even if they are only Average or 
                Good (e.g. Dragon Scale Mail).
   
-  </font><font color="#00ff00">Ego          </font><font color="#ffffff">Applies to all excellent objects. See <a href="objects.html#EgoObjects"></font><font color="#00ff00">[j]</a> </font><font color="#ffffff">for more 
+  </font><font color="#00ff00">Ego          </font><font color="#ffffff">Applies to all excellent objects. See <a href="objects.html#EgoObjects"></font><font color="#00ff00">[i]</a> </font><font color="#ffffff">for more 
                information.
   
   </font><font color="#00ff00">Artifact     </font><font color="#ffffff">Artifacts are special items and are unique. Think of 
@@ -1318,6 +1335,28 @@ they are. Enjoy!
                  </font><font color="#ffffff">adjectives discussed above in order to get your 
                  inscriptions setup properly (see </font><font color="#00c8ff">Scenario #3 </font><font color="#ffffff">above).
   
+  </font><font color="#ff9200">Corpse Adjectives
+  </font><font color="#00ff00">Wanted       </font><font color="#ffffff">Combine with </font><font color="#ff4040">Corpses </font><font color="#ffffff">or </font><font color="#ff4040">Skeletons </font><font color="#ffffff">to indicate that the 
+               corpse or skeleton belongs to a wanted monster. These 
+               may be turned in at the Hunter's Office for a prize.
+  
+  </font><font color="#00ff00">Unique       </font><font color="#ffffff">Combine with </font><font color="#ff4040">Corpses </font><font color="#ffffff">or </font><font color="#ff4040">Skeletons </font><font color="#ffffff">to indicate that the 
+               corpse or skeleton belongs to a unique monster. Not all 
+               unique monsters are </font><font color="#00ff00">Wanted</font><font color="#ffffff">, so many players would 
+               consider them to be junk (They are destroyed by the 
+               default rule !</font><font color="#00ff00">Worthless </font><font color="#ff4040">Items</font><font color="#ffffff">). However, other players 
+               enjoy collecting the corpses of unique monsters, and 
+               placing them on display at the museum. For these 
+               (strange?) folks, adding a rule like ~</font><font color="#00ff00">Unique </font><font color="#ff4040">Corpses 
+               </font><font color="#ffffff">before the !</font><font color="#00ff00">Worthless </font><font color="#ff4040">Items </font><font color="#ffffff">will protect them from 
+               default destruction.
+  
+  </font><font color="#00ff00">Human        </font><font color="#ffffff">And then there are those character's that require the 
+               corpses of humans for either food, or as part of a 
+               ritual to summon a powerful demonic ally. For these 
+               situations, add a rule like ~</font><font color="#00ff00">Human </font><font color="#ff4040">Corpses </font><font color="#ffffff">to your 
+               preferences, though ~</font><font color="#00ff00">Special </font><font color="#ff4040">Items </font><font color="#ffffff">also works.
+  
   </font><font color="#ff9200">Miscellaneous
   </font><font color="#00ff00">Collecting   Collecting </font><font color="#ff4040">Items </font><font color="#ffffff">are stackable objects that you happen 
                to currently be carrying in your pack. Use this broad 
@@ -1353,34 +1392,56 @@ they are. Enjoy!
                !</font><font color="#00ff00">Unusable Nameless </font><font color="#ff4040">Items </font><font color="#ffffff">if they wanted to keep egos for 
                resale purposes).
   
-  </font><font color="#00ff00">Wanted       </font><font color="#ffffff">Combine with </font><font color="#ff4040">Corpses </font><font color="#ffffff">or </font><font color="#ff4040">Skeletons </font><font color="#ffffff">to indicate that the 
-               corpse or skeleton belongs to a wanted monster. These 
-               may be turned in at the Hunter's Office for a prize.
+</font><font color="#00c8ff">Table VI: Rules: Special Clauses
+  </font><font color="#ffffff">In the following clauses, N refers to a numerical digit, 0 through 9. 
+  The sequence NN means you may type one or two digits, and can 
+  therefore enter any number between 0 and 99.  The sequence NNNNNN 
+  means you may type from one to six digits, and can therefore enter 
+  any number between 0 and 999999. If you enter too many digits, then 
+  the parser will not recognize your special clause, and you will get 
+  unsatisfactory results from your rule.
   
-  </font><font color="#00ff00">Unique       </font><font color="#ffffff">Combine with </font><font color="#ff4040">Corpses </font><font color="#ffffff">or </font><font color="#ff4040">Skeletons </font><font color="#ffffff">to indicate that the 
-               corpse or skeleton belongs to a unique monster. Not all 
-               unique monsters are </font><font color="#00ff00">Wanted</font><font color="#ffffff">, so many players would 
-               consider them to be junk (They are destroyed by the 
-               default rule !</font><font color="#00ff00">Worthless </font><font color="#ff4040">Items</font><font color="#ffffff">). However, other players 
-               enjoy collecting the corpses of unique monsters, and 
-               placing them on display at the museum. For these 
-               (strange?) folks, adding a rule like ~</font><font color="#00ff00">Unique </font><font color="#ff4040">Corpses 
-               </font><font color="#ffffff">before the !</font><font color="#00ff00">Worthless </font><font color="#ff4040">Items </font><font color="#ffffff">will protect them from 
-               default destruction.
+  </font><font color="#00ff00">Special Clause          Explanation
+  </font><font color="#ff9200">More Dice Than NN       </font><font color="#ffffff">This clause applies to </font><font color="#ff4040">Weapons </font><font color="#ffffff">only, and is 
+                          true whenever the maximum possible damage 
+                          exceeds the number you enter. For example a 
+                          (2d5) weapon will match </font><font color="#ff9200">More Dice Than 9 </font><font color="#ffffff">but 
+                          will fail to match </font><font color="#ff9200">More Dice Than 10</font><font color="#ffffff">.
   
-  </font><font color="#00ff00">Human        </font><font color="#ffffff">And then there are those character's that require the 
-               corpses of humans for either food, or as part of a 
-               ritual to summon a powerful demonic ally. For these 
-               situations, add a rule like ~</font><font color="#00ff00">Human </font><font color="#ff4040">Corpses </font><font color="#ffffff">to your 
-               preferences, though ~</font><font color="#00ff00">Special </font><font color="#ff4040">Items </font><font color="#ffffff">also works.
+  </font><font color="#ff9200">More Bonus Than NN      </font><font color="#ffffff">An object's bonus is the largest of its </font><font color="#ff4040">pval</font><font color="#ffffff">, 
+                          its bonus to hit, to damage and to armor 
+                          class. Confused? Well, the rule </font><font color="#ff4040">Rings </font><font color="#ff9200">More 
+                          Bonus Than 9</font><font color="#ffffff">:Speed will pickup rings of speed 
+                          (+10) or better, but will not match other 
+                          rings of speed. Another (sarcastic) example: 
+                          </font><font color="#ff4040">Suits </font><font color="#ff9200">More Bonus Than 19</font><font color="#ffffff">:Power Dragon says 
+                          that you would like Power Dragon Scale Mail, 
+                          but only if its bonus to armor class is +20 
+                          or better!
   
-</font><font color="#00c8ff">Table V: Rules: Special Clauses
-</font><font color="#ffffff">More Dice Than NN
-More Bonus Than NN
-More Level Than NN
-More Weight Than NN
-
-</font><font color="#00c8ff">Table VI: Conditional Lines: Syntax
+  </font><font color="#ff9200">More Level Than NN      </font><font color="#ffffff">This clause is intended to be used on </font><font color="#ff4040">Corpses 
+                          </font><font color="#ffffff">so that Possessors can manage the mountains 
+                          of dead bodies they create. You can also use 
+                          it with other objects, in which case it 
+                          corresponds to the level of the object, or 
+                          its ego type. For devices, it matches against 
+                          the power level of the device.
+  
+  </font><font color="#ff9200">More Weight Than NN     </font><font color="#ffffff">Some classes have weight restrictions on 
+                          armor, like Monks, Scouts and Ninjas. Other 
+                          classes, like Maulers, prefer very heavy 
+                          weapons. This clause matches against the 
+                          weight of the object, in pounds. So </font><font color="#ff4040">Weapons 
+                          </font><font color="#ff9200">More Weight Than 39 </font><font color="#ffffff">will match weapons at 
+                          least 39.1 lbs in weight (In practice, this 
+                          means at least 40.0 lbs in weight).
+  
+  </font><font color="#ff9200">More Value Than NNNNNN </font><font color="#ffffff">This clause matches against the known value of 
+                         the object. Use it with care, since unknown, 
+                         or even un-*identified* objects may have 
+                         disturbingly low known values.
+  
+</font><font color="#00c8ff">Table VII: Conditional Lines: Syntax
   </font><font color="#ffffff">Conditional Lines have the following syntactic form:
   
   ?:</font><font color="#00c8ff">Expression
@@ -1403,9 +1464,9 @@ More Weight Than NN
   evaluates to TRUE or non-zero, then any subsequent rules will be 
   applied.
   
-  If none of this makes sense, see <a href="editor.html#Conditionals"></font><font color="#00ff00">[k]</a> </font><font color="#ffffff">above.
+  If none of this makes sense, see <a href="editor.html#Conditionals"></font><font color="#00ff00">[j]</a> </font><font color="#ffffff">above.
   
-</font><font color="#00c8ff">Table VII: Conditional Lines: Functions
+</font><font color="#00c8ff">Table VIII: Conditional Lines: Functions
   </font><font color="#00ff00">Function  Explanation
     </font><font color="#ff4040">IOR     </font><font color="#ffffff">Inclusive Or: [IOR a b c ...] is TRUE if the value of </font><font color="#ff9200">any 
             </font><font color="#ffffff">subexpression a, b, c, ... is TRUE.
@@ -1434,7 +1495,7 @@ More Weight Than NN
             numbers. For example, use </font><font color="#a500ff">[GEQ $LEVEL 20] </font><font color="#ffffff">to test if the 
             player's current level is greater than, or equal to 20.
   
-</font><font color="#00c8ff">Table VIII: Conditional Lines: Variables
+</font><font color="#00c8ff">Table IX: Conditional Lines: Variables
   </font><font color="#00ff00">Variable  Explanation
   </font><font color="#ff4040">$RACE     </font><font color="#ffffff">Returns the name of the player's race. For example, 
             </font><font color="#ff4040">Snotling </font><font color="#ffffff">or </font><font color="#ff4040">High-Elf</font><font color="#ffffff">.
@@ -1460,7 +1521,7 @@ More Weight Than NN
   distinguish them from string literals. Also, note there are other 
   variables like $SYS and $KEYBOARD which I haven't documented.
   
-</font><font color="#00c8ff">Table IX: Conditional Lines: Literals
+</font><font color="#00c8ff">Table X: Conditional Lines: Literals
   </font><font color="#00ff00">Literal   Explanation
   </font><font color="#ff4040">Number    </font><font color="#ffffff">Numbers are written like </font><font color="#ff4040">105 </font><font color="#ffffff">or </font><font color="#ff4040">32</font><font color="#ffffff">.
   </font><font color="#ff4040">String    </font><font color="#ffffff">Strings are written like </font><font color="#ff4040">High-Mage </font><font color="#ffffff">or </font><font color="#ff4040">Beholder</font><font color="#ffffff">. Note that 
@@ -1469,6 +1530,19 @@ More Weight Than NN
   
 
 <a name="EasyDestroyer"></a></font><font color="#c00000">The Easy Destroyer
+
+</font><font color="#ffffff">If, after reading all of the above, you decide that The Mogaminator is 
+too much for you to handle, you may, instead, use a simpler system to 
+manage objects: The Easy Destroyer. I don't recommend this, but the 
+choice is yours. This system is configured via options (see <a href="option.html#AutoDestroyer"></font><font color="#00ff00">[k]</a></font><font color="#ffffff">). The 
+option destroy_items turns The Easy Destroyer on and off. If you are 
+using The Mogaminator, be sure to turn off The Easy Destroyer, and vice 
+versa. (BTW, you "turn off" The Mogaminator but closing the game and 
+deleting the pickpref-</font><font color="#ff9200">NAME</font><font color="#ffffff">.prf file whose location was indicated in the 
+reference section).
+
+
+</font><font color="#8a8a8a">Original   : PosChengband 4.0.0
 
 
 </font></pre></body></html>

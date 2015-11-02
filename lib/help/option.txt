@@ -299,33 +299,33 @@ This option alerts you with message when the player is moving out of the trap-de
 <topic:AutoDestroyer><style:heading>Easy Auto-Destroyer Options</style>
   <indent>
 <topic:destroy_items><color:U>Use easy auto-destroyer</color> <color:D>(destroy_items)</color>
-If this option is set, the game will automatically destroy all objects which you touch unless the object is protected by various 'leave_...' options below.
+This option turns The Easy Destroyer on and off. If enabled, The Easy Destroyer will destroy all objects unless the object is protected by one or more of the leave_* options discussed below.
 
-<style:note>Note: The <color:keyword>Easy Auto-Destroyer</color> is a simpler to use version of the full featured Auto-Destroyer discussed in <link:editor.txt>. It is designed for those who feel the full version is too complicated to use. However, you really should only use one or the other. So if you are using the full version, then you should not also enable the easy version.</style>
+<style:note>Note: The <color:keyword>Easy Auto-Destroyer</color> is a simpler to use version of the full featured <color:keyword>Mogaminator</color> discussed in <link:editor.txt>. It is designed for those who feel the full version is too complicated to use. However, you really should only use one or the other. So if you are using the full version, then you should not also enable the easy version.</style>
 
 <topic:destroy_feeling><color:U>Apply auto-destroy as sense feeling</color> <color:D>(destroy_feeling)</color>
-If this option is set, PosChengband will apply auto-destroyer on an item just when you sensed its feeling. Typically it will destroy {cursed} items just after the sensing.
+If this option is turned on, both The Mogaminator and The Easy Destroyer will take actions whenever the player senses the quality of an object (i.e., whenever pseudo-id kicks in).
 
 <topic:destroy_identify><color:U>Apply auto-destroy as identify an item</color> <color:D>(destroy_identify)</color>
-If this option is set, PosChengband will apply auto-destroyer on an item just when you identified it using magical items or spells. Typically it will destroy {cursed} items and other useless items which you set up to be auto-destroyed.
+If this option is turned on, both The Mogaminator and The Easy Destroyer will take actions whenever the player identifies an object, whether with a spell or with a magical device (but, alas, not via a town service).
 
 <topic:leave_worth><color:U>Auto-destroyer leaves known worthy items</color> <color:D>(leave_worth)</color>
-This option protects known objects that can be sold in stores from auto-destruction by the destroy_items option.
+This option protects known objects that can be sold in stores from auto-destruction by The Easy Destroyer.
 
 <topic:leave_equip><color:U>Auto-destroyer leaves weapons and armour</color> <color:D>(leave_equip)</color>
-This option protects all weapons and armour from auto-destruction by the destroy_items option.
+This option protects all weapons and armour from auto-destruction by The Easy Destroyer.
 
 <topic:leave_chest><color:U>Auto-destroyer leaves closed chests</color> <color:D>(leave_chest)</color>
-This option protects all chests which are not yet opened from auto-destruction by the destroy_items option.
+This option protects all chests which are not yet opened from auto-destruction by The Easy Destroyer.
 
 <topic:leave_wanted><color:U>Auto-destroyer leaves wanted corpses</color> <color:D>(leave_wanted)</color>
-This option protects corpses of monsters wanted at the Hunter's office from auto-destruction by the destroy_items option.
+This option protects corpses of monsters wanted at the Hunter's office from auto-destruction by The Easy Destroyer.
 
 <topic:leave_corpse><color:U>Auto-destroyer leaves corpses and skeletons</color> <color:D>(leave_corpse)</color>
-This option protects all corpses and skeletons from auto-destruction by the destroy_items option.
+This option protects all corpses and skeletons from auto-destruction by The Easy Destroyer.
 
 <topic:leave_junk><color:U>Auto-destroyer leaves junk</color> <color:D>(leave_junk)</color>
-This option protects all 'junk', such as Shards of Pottery or Broken Stick, from auto-destruction by the destroy_items option. This is especially helpful for Archers.
+This option protects all 'junk', such as Shards of Pottery or Broken Stick, from auto-destruction by The Easy Destroyer. This is especially helpful for Archers.
 
 <topic:leave_special><color:U>Auto-destroyer leaves items your race/class needs</color> <color:D>(leave_special)</color>
 This option protects specific items which are normally worthless, but very important for specific classes or races. These include bones for Archers, ego light sources of darkness for Ninja, Wands of Heal Monster for BeastMaster and Cavalry, and humanoid corpses for Balrogs, etc...

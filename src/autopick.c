@@ -73,6 +73,7 @@ enum _keyword_e {
     FLG_MORE_BONUS,
     FLG_MORE_LEVEL,
     FLG_MORE_WEIGHT,
+    FLG_MORE_VALUE,
 
 /* Nouns */
     FLG_ITEMS,
@@ -161,6 +162,7 @@ static char KEY_MORE_DICE[] =  "more dice than";
 static char KEY_MORE_BONUS[] =  "more bonus than";
 static char KEY_MORE_LEVEL[] =  "more level than";
 static char KEY_MORE_WEIGHT[] =  "more weight than";
+static char KEY_MORE_VALUE[] =  "more value than";
 
 static char KEY_ITEMS[] = "items";
 
@@ -429,7 +431,7 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
     if (MATCH_KEY2(KEY_MORE_LEVEL))
     {
         int k = 0;
-        entry->bonus = 0;
+        entry->level = 0;
 
         /* Drop leading spaces */
         while (' ' == *ptr) ptr++;
@@ -437,7 +439,7 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
         /* Read number */
         while ('0' <= *ptr && *ptr <= '9')
         {
-            entry->bonus = 10 * entry->bonus + (*ptr - '0');
+            entry->level = 10 * entry->level + (*ptr - '0');
             ptr++;
             k++;
         }
@@ -471,6 +473,31 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
         {
             if (' ' == *ptr) ptr++;
             ADD_FLG(FLG_MORE_WEIGHT);
+        }
+        else
+            ptr = prev_ptr;
+    }
+
+    if (MATCH_KEY2(KEY_MORE_VALUE))
+    {
+        int k = 0;
+        entry->value = 0;
+
+        /* Drop leading spaces */
+        while (' ' == *ptr) ptr++;
+
+        /* Read number */
+        while ('0' <= *ptr && *ptr <= '9')
+        {
+            entry->value = 10 * entry->value + (*ptr - '0');
+            ptr++;
+            k++;
+        }
+
+        if (k > 0 && k <= 6)
+        {
+            if (' ' == *ptr) ptr++;
+            ADD_FLG(FLG_MORE_VALUE);
         }
         else
             ptr = prev_ptr;
@@ -1063,7 +1090,7 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
     {
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "<color:o>");
-        string_printf(s, " %s %d", KEY_MORE_LEVEL, entry->bonus);
+        string_printf(s, " %s %d", KEY_MORE_LEVEL, entry->level);
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "</color>");
     }
@@ -1073,6 +1100,15 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "<color:o>");
         string_printf(s, " %s %d", KEY_MORE_WEIGHT, entry->weight);
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "</color>");
+    }
+
+    if (IS_FLG(FLG_MORE_VALUE))
+    {
+        if (options & AUTOPICK_COLOR_CODED)
+            string_append_s(s, "<color:o>");
+        string_printf(s, " %s %d", KEY_MORE_VALUE, entry->value);
         if (options & AUTOPICK_COLOR_CODED)
             string_append_s(s, "</color>");
     }
@@ -1254,17 +1290,12 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     {
         if (!object_is_known(o_ptr)) return FALSE;
 
-        if (o_ptr->pval)
+        if (o_ptr->to_h <= entry->bonus &&
+            o_ptr->to_d <= entry->bonus &&
+            o_ptr->to_a <= entry->bonus &&
+            o_ptr->pval <= entry->bonus)
         {
-            if (o_ptr->pval <= entry->bonus) return FALSE;
-        }
-        else
-        {
-            if (o_ptr->to_h <= entry->bonus &&
-                o_ptr->to_d <= entry->bonus &&
-                o_ptr->to_a <= entry->bonus &&
-                o_ptr->pval <= entry->bonus)
-                return FALSE;
+            return FALSE;
         }
     }
 
@@ -1275,13 +1306,24 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         if (o_ptr->tval == TV_CORPSE)
         {
             monster_race *r_ptr = &r_info[o_ptr->pval];
-            if (r_ptr->level <= entry->bonus)
+            if (r_ptr->level <= entry->level)
+                return FALSE;
+        }
+        /* ... but perhaps it might also be useful for other kinds of objects? */
+        else if (object_is_known(o_ptr) && object_is_device(o_ptr))
+        {             /* v--- This is leaking information, since normally, the object must be *Identified* first.*/
+            int level = device_level(o_ptr);
+            if (level <= entry->level)
                 return FALSE;
         }
         else
         {
-            object_kind *k_ptr = &k_info[o_ptr->k_idx];
-            if (k_ptr->level <= entry->bonus)
+            int level = k_info[o_ptr->k_idx].level;
+
+            if (object_is_known(o_ptr) && o_ptr->name2 && e_info[o_ptr->name2].level > level)
+                level = e_info[o_ptr->name2].level;
+
+            if (level <= entry->level)
                 return FALSE;
         }
     }                
@@ -1289,6 +1331,13 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     if (IS_FLG(FLG_MORE_WEIGHT))
     {
         if (o_ptr->weight <= entry->weight * 10)
+            return FALSE;
+    }
+
+    if (IS_FLG(FLG_MORE_VALUE))
+    {
+        int value = object_value(o_ptr);
+        if (value <= entry->value)
             return FALSE;
     }
 
@@ -2849,7 +2898,7 @@ static void describe_autopick(char *buff, autopick_type *entry)
     if (IS_FLG(FLG_MORE_LEVEL))
     {
         static char more_level_desc_str[50];
-        sprintf(more_level_desc_str, "level is bigger than %d", entry->bonus);
+        sprintf(more_level_desc_str, "level is bigger than %d", entry->level);
         whose_str[whose_n++] = more_level_desc_str;
     }
     if (IS_FLG(FLG_MORE_WEIGHT))
@@ -2857,6 +2906,12 @@ static void describe_autopick(char *buff, autopick_type *entry)
         static char more_weight_desc_str[50];
         sprintf(more_weight_desc_str, "weight is more than %d lbs", entry->weight);
         whose_str[whose_n++] = more_weight_desc_str;
+    }
+    if (IS_FLG(FLG_MORE_VALUE))
+    {
+        static char more_value_desc_str[50];
+        sprintf(more_value_desc_str, "known value is more than %d", entry->value);
+        whose_str[whose_n++] = more_value_desc_str;
     }
 
     /*** Wanted monster's corpse/skeletons ***/
@@ -4168,6 +4223,7 @@ enum {
     EC_OK_MORE_BONUS,
     EC_OK_MORE_LEVEL,
     EC_OK_MORE_WEIGHT,
+    EC_OK_MORE_VALUE,
     EC_OK_WORTHLESS,
     EC_OK_ARTIFACT,
     EC_OK_EGO,
@@ -4277,6 +4333,7 @@ static char MN_MORE_DICE[] = "more dice than # (weapons/shooters)";
 static char MN_MORE_BONUS[] = "more bonus than # (rings etc.)";
 static char MN_MORE_LEVEL[] = "more level than # (corpses)";
 static char MN_MORE_WEIGHT[] = "more weight than #";
+static char MN_MORE_VALUE[] = "more value than #";
 static char MN_WANTED[] = "wanted (corpse)";
 static char MN_UNIQUE[] = "unique (corpse)";
 static char MN_HUMAN[] = "human (corpse)";
@@ -4368,6 +4425,7 @@ command_menu_type menu_data[] =
     {MN_MORE_BONUS, 1, -1, EC_OK_MORE_BONUS},
     {MN_MORE_LEVEL, 1, -1, EC_OK_MORE_LEVEL},
     {MN_MORE_WEIGHT, 1, -1, EC_OK_MORE_WEIGHT},
+    {MN_MORE_VALUE, 1, -1, EC_OK_MORE_VALUE},
     {MN_WANTED, 1, -1, EC_OK_WANTED},
     {MN_UNIQUE, 1, -1, EC_OK_UNIQUE},
     {MN_HUMAN, 1, -1, EC_OK_HUMAN},
@@ -4856,8 +4914,9 @@ static void draw_text_editor(text_body_type *tb)
         byte color;
         int y = tb->upper+i;
 
-        /* clean or dirty? */
-        if (!(tb->dirty_flags & DIRTY_ALL) && (tb->dirty_line != y))
+        /* clean or dirty?                                              v--- Never syntax color the current line
+                                                                             At least until we improve the parser! */
+        if (!(tb->dirty_flags & DIRTY_ALL) && (tb->dirty_line != y) && (tb->cy != y))
             continue;
 
         msg = tb->lines_list[y];
@@ -6078,6 +6137,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
     case EC_OK_MORE_BONUS: toggle_keyword(tb, FLG_MORE_BONUS); break;
     case EC_OK_MORE_LEVEL: toggle_keyword(tb, FLG_MORE_LEVEL); break;
     case EC_OK_MORE_WEIGHT: toggle_keyword(tb, FLG_MORE_WEIGHT); break;
+    case EC_OK_MORE_VALUE: toggle_keyword(tb, FLG_MORE_VALUE); break;
     case EC_OK_WORTHLESS: toggle_keyword(tb, FLG_WORTHLESS); break;
     case EC_OK_ARTIFACT: toggle_keyword(tb, FLG_ARTIFACT); break;
     case EC_OK_EGO: toggle_keyword(tb, FLG_EGO); break;

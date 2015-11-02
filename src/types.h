@@ -1882,7 +1882,9 @@ typedef struct {
     byte action;        /* Auto-pickup or Destroy or Leave items */
     byte dice;          /* Weapons which have more than 'dice' dice match */
     byte bonus;         /* Items which have more than 'bonus' magical bonus match */
+    byte level;
     byte weight;
+    int  value;
 } autopick_type;
 
 

@@ -909,6 +909,15 @@ Here, you can clearly see what commands to use to move the cursor about
 arrow keys don't work so you'll need to learn the control key 
 alternatives).
 
+One comment I will make on the editor is that it colors each rule line 
+according to the syntax of the expression. I personally find this 
+rather useful. However, sometimes the text displayed is not the same as 
+the rule you actually typed in, even though the meaning is the same. 
+For example, if you use multiple adjectives, then they might get 
+reordered when they are drawn with syntax coloring. In order to avoid 
+confusion, the current line (viz. the line under the cursor) is never 
+syntax colored and always displays exactly what you typed.
+
 Reference Tables
 
 This section will give all the nitty gritty syntax details for The 
@@ -1037,7 +1046,7 @@ Table III: Rules: Command Letters
   Every rule must have one Primary action. It can have 0 or more 
   secondary actions, and the sole Terminal action is also optional.
   
-Table III: Rules: Nouns
+Table IV: Rules: Nouns
   Noun       Explanation
   Items      Applies to everything. This is useful for very general 
              rules, such as ~?Unidentified Items to automatically 
@@ -1050,7 +1059,7 @@ Table III: Rules: Nouns
              recently changed the semantics to accomodate archers who 
              are very interested in Dice Boosted Shooters but could 
              usually care less about Dice Boosted Weapons. Also, monks 
-             may want to !weapons since they usually fight bare-handed, 
+             may want to !Weapons since they usually fight bare-handed, 
              and having this rule also destroy shooters is quite 
              annoying.
   
@@ -1082,8 +1091,8 @@ Table III: Rules: Nouns
   Diggers    Applies to all digging implements, such as shovels and 
              picks. Digging is fun, but eventually you will probably 
              want to destroy these objects. Perhaps, you would like the 
-             rule ~dice boosted diggers:mattock followed by the rule 
-             !diggers?
+             rule ~Dice Boosted Diggers:Mattock followed by the rule 
+             !Diggers?
   
   Shooters   Applies to all missile weapons, including bows, slings and 
              crossbows. It also includes harps and guns. If you are a 
@@ -1124,18 +1133,18 @@ Table III: Rules: Nouns
   
   Potions    Applies to potions. There are many useful potions. If you 
              are trying to get stat potions, you might consider 
-             potions:of Strength rather than just potions:Strength, 
+             Potions:of Strength rather than just Potions:Strength, 
              since the latter will also match potions of restore 
              strength.
   
   Scrolls    Applies to scrolls
   
   Rings      Applies to jewelry that are rings. Since rings are so 
-             useful, I like the rule ?unidentified rings for all of my 
+             useful, I like the rule ?Unidentified Rings for all of my 
              characters.
   
   Amulets    Applies to jewelry that are amulets. Like rings, I prefer 
-             to keep the rule ?unidentified amulets for all of my 
+             to keep the rule ?Unidentified Amulets for all of my 
              characters.
   
   Lights     These are torches, lanterns and feanorian lamps, as well 
@@ -1174,7 +1183,7 @@ Table III: Rules: Nouns
   specify exactly one noun. But you may use as many adjectives as you 
   like.
   
-Table IV: Rules: Adjectives
+Table V: Rules: Adjectives
   There are many adjectives, and perhaps it might be useful to group 
   them by kind?
   
@@ -1192,12 +1201,20 @@ Table IV: Rules: Adjectives
                won't destroy rare objects like Blades of Chaos and 
                won't destroy egos either).
   
-  *Identified* Applies to fully identified objects, and is another 
-               adjective you will probably never need. I searched a 
-               very old pref file from Hengband and found the rule 
-               similar to ~*identified* artifact items#%all, but this 
-               now happens automatically with the abbrev_all option 
-               (see [i]).
+  *Identified* Applies to fully identified objects, and is rarely 
+               needed. Perhaps you might consider a block of rules 
+               like:
+               ~*identified* rings more value than 5000
+               ~*identified* amulets more value than 5000
+               ~?unidentified rings
+               ~?unidentified amulets
+               !identified rings
+               !identified amulets
+               But this requires you to have a good sense of the value 
+               threshold for jewelry you might want. Also note that 
+               this rule set is safe because, in the current version, 
+               identifying jewelry also *identifies* it. Do not try 
+               this pattern with other types of objects!
   
   Unaware      Applies to objects that the player is unaware of. In 
                practice, this currently only includes mushrooms, 
@@ -1224,7 +1241,7 @@ Table IV: Rules: Adjectives
                might still be useful, even if they are only Average or 
                Good (e.g. Dragon Scale Mail).
   
-  Ego          Applies to all excellent objects. See [j] for more 
+  Ego          Applies to all excellent objects. See [i] for more 
                information.
   
   Artifact     Artifacts are special items and are unique. Think of 
@@ -1316,6 +1333,28 @@ Table IV: Rules: Adjectives
                  adjectives discussed above in order to get your 
                  inscriptions setup properly (see Scenario #3 above).
   
+  Corpse Adjectives
+  Wanted       Combine with Corpses or Skeletons to indicate that the 
+               corpse or skeleton belongs to a wanted monster. These 
+               may be turned in at the Hunter's Office for a prize.
+  
+  Unique       Combine with Corpses or Skeletons to indicate that the 
+               corpse or skeleton belongs to a unique monster. Not all 
+               unique monsters are Wanted, so many players would 
+               consider them to be junk (They are destroyed by the 
+               default rule !Worthless Items). However, other players 
+               enjoy collecting the corpses of unique monsters, and 
+               placing them on display at the museum. For these 
+               (strange?) folks, adding a rule like ~Unique Corpses 
+               before the !Worthless Items will protect them from 
+               default destruction.
+  
+  Human        And then there are those character's that require the 
+               corpses of humans for either food, or as part of a 
+               ritual to summon a powerful demonic ally. For these 
+               situations, add a rule like ~Human Corpses to your 
+               preferences, though ~Special Items also works.
+  
   Miscellaneous
   Collecting   Collecting Items are stackable objects that you happen 
                to currently be carrying in your pack. Use this broad 
@@ -1351,34 +1390,56 @@ Table IV: Rules: Adjectives
                !Unusable Nameless Items if they wanted to keep egos for 
                resale purposes).
   
-  Wanted       Combine with Corpses or Skeletons to indicate that the 
-               corpse or skeleton belongs to a wanted monster. These 
-               may be turned in at the Hunter's Office for a prize.
+Table VI: Rules: Special Clauses
+  In the following clauses, N refers to a numerical digit, 0 through 9. 
+  The sequence NN means you may type one or two digits, and can 
+  therefore enter any number between 0 and 99.  The sequence NNNNNN 
+  means you may type from one to six digits, and can therefore enter 
+  any number between 0 and 999999. If you enter too many digits, then 
+  the parser will not recognize your special clause, and you will get 
+  unsatisfactory results from your rule.
   
-  Unique       Combine with Corpses or Skeletons to indicate that the 
-               corpse or skeleton belongs to a unique monster. Not all 
-               unique monsters are Wanted, so many players would 
-               consider them to be junk (They are destroyed by the 
-               default rule !Worthless Items). However, other players 
-               enjoy collecting the corpses of unique monsters, and 
-               placing them on display at the museum. For these 
-               (strange?) folks, adding a rule like ~Unique Corpses 
-               before the !Worthless Items will protect them from 
-               default destruction.
+  Special Clause          Explanation
+  More Dice Than NN       This clause applies to Weapons only, and is 
+                          true whenever the maximum possible damage 
+                          exceeds the number you enter. For example a 
+                          (2d5) weapon will match More Dice Than 9 but 
+                          will fail to match More Dice Than 10.
   
-  Human        And then there are those character's that require the 
-               corpses of humans for either food, or as part of a 
-               ritual to summon a powerful demonic ally. For these 
-               situations, add a rule like ~Human Corpses to your 
-               preferences, though ~Special Items also works.
+  More Bonus Than NN      An object's bonus is the largest of its pval, 
+                          its bonus to hit, to damage and to armor 
+                          class. Confused? Well, the rule Rings More 
+                          Bonus Than 9:Speed will pickup rings of speed 
+                          (+10) or better, but will not match other 
+                          rings of speed. Another (sarcastic) example: 
+                          Suits More Bonus Than 19:Power Dragon says 
+                          that you would like Power Dragon Scale Mail, 
+                          but only if its bonus to armor class is +20 
+                          or better!
   
-Table V: Rules: Special Clauses
-More Dice Than NN
-More Bonus Than NN
-More Level Than NN
-More Weight Than NN
-
-Table VI: Conditional Lines: Syntax
+  More Level Than NN      This clause is intended to be used on Corpses 
+                          so that Possessors can manage the mountains 
+                          of dead bodies they create. You can also use 
+                          it with other objects, in which case it 
+                          corresponds to the level of the object, or 
+                          its ego type. For devices, it matches against 
+                          the power level of the device.
+  
+  More Weight Than NN     Some classes have weight restrictions on 
+                          armor, like Monks, Scouts and Ninjas. Other 
+                          classes, like Maulers, prefer very heavy 
+                          weapons. This clause matches against the 
+                          weight of the object, in pounds. So Weapons 
+                          More Weight Than 39 will match weapons at 
+                          least 39.1 lbs in weight (In practice, this 
+                          means at least 40.0 lbs in weight).
+  
+  More Value Than NNNNNN This clause matches against the known value of 
+                         the object. Use it with care, since unknown, 
+                         or even un-*identified* objects may have 
+                         disturbingly low known values.
+  
+Table VII: Conditional Lines: Syntax
   Conditional Lines have the following syntactic form:
   
   ?:Expression
@@ -1401,9 +1462,9 @@ Table VI: Conditional Lines: Syntax
   evaluates to TRUE or non-zero, then any subsequent rules will be 
   applied.
   
-  If none of this makes sense, see [k] above.
+  If none of this makes sense, see [j] above.
   
-Table VII: Conditional Lines: Functions
+Table VIII: Conditional Lines: Functions
   Function  Explanation
     IOR     Inclusive Or: [IOR a b c ...] is TRUE if the value of any 
             subexpression a, b, c, ... is TRUE.
@@ -1432,7 +1493,7 @@ Table VII: Conditional Lines: Functions
             numbers. For example, use [GEQ $LEVEL 20] to test if the 
             player's current level is greater than, or equal to 20.
   
-Table VIII: Conditional Lines: Variables
+Table IX: Conditional Lines: Variables
   Variable  Explanation
   $RACE     Returns the name of the player's race. For example, 
             Snotling or High-Elf.
@@ -1458,7 +1519,7 @@ Table VIII: Conditional Lines: Variables
   distinguish them from string literals. Also, note there are other 
   variables like $SYS and $KEYBOARD which I haven't documented.
   
-Table IX: Conditional Lines: Literals
+Table X: Conditional Lines: Literals
   Literal   Explanation
   Number    Numbers are written like 105 or 32.
   String    Strings are written like High-Mage or Beholder. Note that 
@@ -1467,5 +1528,18 @@ Table IX: Conditional Lines: Literals
   
 
 The Easy Destroyer
+
+If, after reading all of the above, you decide that The Mogaminator is 
+too much for you to handle, you may, instead, use a simpler system to 
+manage objects: The Easy Destroyer. I don't recommend this, but the 
+choice is yours. This system is configured via options (see [k]). The 
+option destroy_items turns The Easy Destroyer on and off. If you are 
+using The Mogaminator, be sure to turn off The Easy Destroyer, and vice 
+versa. (BTW, you "turn off" The Mogaminator but closing the game and 
+deleting the pickpref-NAME.prf file whose location was indicated in the 
+reference section).
+
+
+Original   : PosChengband 4.0.0
 
 

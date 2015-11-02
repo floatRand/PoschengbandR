@@ -474,6 +474,8 @@ This line is a comment.
 </style>
 Here, you can clearly see what commands to use to move the cursor about (And if you are running on the <color:keyword>Curses</color> platform, you'll notice that arrow keys don't work so you'll need to learn the control key alternatives).
 
+One comment I will make on the editor is that it colors each rule line according to the syntax of the expression. I personally find this rather useful. However, sometimes the text displayed is not the same as the rule you actually typed in, even though the meaning is the same. For example, if you use multiple adjectives, then they might get reordered when they are drawn with syntax coloring. In order to avoid confusion, the current line (viz. the line under the cursor) is never syntax colored and always displays exactly what you typed.
+
 <topic:Reference><style:heading>Reference Tables</style>
 
 This section will give all the nitty gritty syntax details for <color:keyword>The Mogaminator</color>. But first, where are those preference files located anyway? The default preferences are initialized from lib/pref/pickpref.prf which is located in your game's directory structure. If you don't like the defaults that I have provided and would like to use your own, then this is the file to edit. Once you enable the system, your preferences are stored in a separate file in a system dependant location. On Windows, they will be stored in lib/user/pickpref-<color:o>NAME</color>.prf inside the game's directory structure, while on Linux, they can be found in ~/.angband/PosChengband/pickpref-<color:o>NAME</color>.prf (outside the game's directory structure). Here, <color:o>NAME</color> is replaced with your player's current name. So if you want to edit your preferences using some other text editor, this is the file you need to change. If you do edit preferences outside of the game while you are playing, then be sure to use the <color:keypress>$</color> command to force the game to reload the preference file.
@@ -523,11 +525,11 @@ If you didn't understand some of that, you should probably review the tutorial s
 
 Every rule must have one Primary action. It can have 0 or more secondary actions, and the sole Terminal action is also optional.
 </indent>
-<color:B>Table III: Rules: Nouns</color>
+<color:B>Table IV: Rules: Nouns</color>
   <indent><color:G>Noun       Explanation</color>
 <color:R>Items</color>      <indent>Applies to everything. This is useful for very general rules, such as ~?<color:G>Unidentified</color> <color:R>Items</color> to automatically identify, but leave on the ground, everything not yet identified.</indent>
 
-<color:R>Weapons</color>    <indent>Applies to all melees weapons, but not to missile weapons. If you are a veteran player, then read that description again. This noun used to include shooters, but I just recently changed the semantics to accomodate archers who are very interested in <color:G>Dice Boosted</color> <color:R>Shooters</color> but could usually care less about <color:G>Dice Boosted</color> <color:R>Weapons</color>. Also, monks may want to !<color:R>weapons</color> since they usually fight bare-handed, and having this rule also destroy shooters is quite annoying.</indent>
+<color:R>Weapons</color>    <indent>Applies to all melees weapons, but not to missile weapons. If you are a veteran player, then read that description again. This noun used to include shooters, but I just recently changed the semantics to accomodate archers who are very interested in <color:G>Dice Boosted</color> <color:R>Shooters</color> but could usually care less about <color:G>Dice Boosted</color> <color:R>Weapons</color>. Also, monks may want to !<color:R>Weapons</color> since they usually fight bare-handed, and having this rule also destroy shooters is quite annoying.</indent>
 
 <color:R>Favorite Weapons</color>
            <indent>Applies to all weapons, including shooters, that are desired by your class. For example, Weaponmasters specialize in a given class of weapons, such as Axes or Crossbows. Whatever their speciality, this "noun" will apply to these preferred items. Calling this "keyword" a noun is a bit of a misnomer, but it will help you to think of <color:R>Favorite Weapons</color> as a single word that is a <color:R>Noun</color>, since the code treats it that way! For example, saying <color:G>Ego</color> <color:R>Favorite Weapons</color> is syntactically correct, while <color:G>Favorite Ego</color> <color:R>Weapons</color> is not. (There is no adjective called <color:G>Favorite</color>).</indent>
@@ -535,7 +537,7 @@ Every rule must have one Primary action. It can have 0 or more secondary actions
 <color:R>Hafted Weapons</color>
            <indent>Applies to all hafted weapons like Maces, Flails and War Hammers. These weapons are preferred by Priests who disdain other kinds of weapons, such as Swords or Polearms. Like the <color:R>Favorite Weapons</color> "noun" above, it helps to think of <color:R>Hafted Weapons</color> as a single word that is a <color:R>Noun</color>, since the code treats it that way (There is no adjective <color:G>Hafted</color>). If you are a priest interested in excellent and artifact hafted weapons, you need to say <color:G>Ego</color> <color:R>Hafted Weapons</color> or <color:G>Artifact</color> <color:R>Hafted Weapons</color> to get the job done.</indent>
 
-<color:R>Diggers</color>    <indent>Applies to all digging implements, such as shovels and picks. Digging is fun, but eventually you will probably want to destroy these objects. Perhaps, you would like the rule ~<color:G>dice boosted </color><color:R>diggers</color>:mattock followed by the rule !<color:R>diggers</color>?</indent>
+<color:R>Diggers</color>    <indent>Applies to all digging implements, such as shovels and picks. Digging is fun, but eventually you will probably want to destroy these objects. Perhaps, you would like the rule ~<color:G>Dice Boosted </color><color:R>Diggers</color>:Mattock followed by the rule !<color:R>Diggers</color>?</indent>
 
 <color:R>Shooters</color>   <indent>Applies to all missile weapons, including bows, slings and crossbows. It also includes harps and guns. If you are a Bard, then you might consider <color:R>Shooters</color>:Harp as a pickup preference, while if you are ignoring archery altogether, try <color:R>Shooters</color>:Gun instead since the guns are quite useful for resistances and boosting stats.</indent>
 
@@ -556,13 +558,13 @@ Consider using <color:R>Armors</color>:Dragon to pickup all the various forms of
 
 <color:R>Rods</color>       Applies to magical devices that are rods.
 
-<color:R>Potions</color>    <indent>Applies to potions. There are many useful potions. If you are trying to get stat potions, you might consider <color:R>potions</color>:of Strength rather than just <color:R>potions</color>:Strength, since the latter will also match potions of restore strength.</indent>
+<color:R>Potions</color>    <indent>Applies to potions. There are many useful potions. If you are trying to get stat potions, you might consider <color:R>Potions</color>:of Strength rather than just <color:R>Potions</color>:Strength, since the latter will also match potions of restore strength.</indent>
 
 <color:R>Scrolls</color>    Applies to scrolls
 
-<color:R>Rings</color>      <indent>Applies to jewelry that are rings. Since rings are so useful, I like the rule ?<color:G>unidentified</color> <color:R>rings</color> for all of my characters.</indent>
+<color:R>Rings</color>      <indent>Applies to jewelry that are rings. Since rings are so useful, I like the rule ?<color:G>Unidentified</color> <color:R>Rings</color> for all of my characters.</indent>
 
-<color:R>Amulets</color>    <indent>Applies to jewelry that are amulets. Like rings, I prefer to keep the rule ?<color:G>unidentified</color> <color:R>amulets</color> for all of my characters.</indent>
+<color:R>Amulets</color>    <indent>Applies to jewelry that are amulets. Like rings, I prefer to keep the rule ?<color:G>Unidentified</color> <color:R>Amulets</color> for all of my characters.</indent>
 
 <color:R>Lights</color>     <indent>These are torches, lanterns and feanorian lamps, as well as the various artifact light sources. If you are looking for the Jewel of Judgment, try using <color:R>Lights</color>:Jewel.</indent>
 
@@ -576,7 +578,7 @@ Consider using <color:R>Armors</color>:Dragon to pickup all the various forms of
 
 If you are using keywords to build a match predicate, then you must specify exactly one noun. But you may use as many adjectives as you like.
 </indent>
-<color:B>Table IV: Rules: Adjectives</color>
+<color:B>Table V: Rules: Adjectives</color>
   <indent>There are many adjectives, and perhaps it might be useful to group them by kind?
 
 <color:o>Object Knowledge</color>
@@ -584,7 +586,14 @@ If you are using keywords to build a match predicate, then you must specify exac
 
 <color:G>Identified</color>   <indent>Applies all objects that have been identified. You might use this with a rule like !<color:G>Identified</color> <color:R>Weapons</color>, preceded by rules to protect weapons you actually care about, like dice boosted ego items, for example. But I think it is almost always preferable to use a !<color:G>Nameless Common</color> <color:R>Weapons</color> rule instead, since it is much safer (e.g. It won't destroy rare objects like Blades of Chaos and won't destroy egos either).</indent>
 
-<color:G>*Identified*</color> <indent>Applies to fully identified objects, and is another adjective you will probably never need. I searched a very old pref file from Hengband and found the rule similar to ~<color:G>*identified* artifact</color> <color:R>items</color><color:U>#%all</color>, but this now happens automatically with the abbrev_all option (see <link:option.txt#abbrev_all>).</indent>
+<color:G>*Identified*</color> <indent>Applies to fully identified objects, and is rarely needed. Perhaps you might consider a block of rules like:
+~<color:G>*identified* </color><color:R>rings</color><color:o> more value than 5000</color>
+~<color:G>*identified* </color><color:R>amulets</color><color:o> more value than 5000</color>
+~?<color:G>unidentified </color><color:R>rings</color>
+~?<color:G>unidentified </color><color:R>amulets</color>
+!<color:G>identified </color><color:R>rings</color>
+!<color:G>identified </color><color:R>amulets</color>
+But this requires you to have a good sense of the value threshold for jewelry you might want. Also note that this rule set is safe because, in the current version, identifying jewelry also *identifies* it. Do not try this pattern with other types of objects!</indent>
 
 <color:G>Unaware</color>      <indent>Applies to objects that the player is unaware of. In practice, this currently only includes mushrooms, potions and scrolls that the player has not yet encountered. A rule like ?<color:G>Unaware</color> <color:R>Items</color> will help you learn all those flavors in the early game.</indent>
 
@@ -624,26 +633,35 @@ See the <color:o>Special Clauses</color> below for more information about matchi
 <color:G>Third</color>
 <color:G>Fourth</color>         <indent>Each realm of magic has four possible spellbooks. These adjectives refer to each of these possibilities. For every school except Arcane, only the first and second spellbooks are available in town, while the third and fourth spellbooks must be found in the dungeon. They can be quite rare, and are also valuable objects, so one typically wants to distinguish between first and second spellbooks on the one hand, and third and fourth on the other. Also, combine these adjectives with the <color:G>First Realm's</color> and <color:G>Second Realm's</color> adjectives discussed above in order to get your inscriptions setup properly (see <color:B>Scenario #3</color> above).</indent>
 
+<color:o>Corpse Adjectives</color>
+<color:G>Wanted</color>       <indent>Combine with <color:R>Corpses</color> or <color:R>Skeletons</color> to indicate that the corpse or skeleton belongs to a wanted monster. These may be turned in at the Hunter's Office for a prize.</indent>
+
+<color:G>Unique</color>       <indent>Combine with <color:R>Corpses</color> or <color:R>Skeletons</color> to indicate that the corpse or skeleton belongs to a unique monster. Not all unique monsters are <color:G>Wanted</color>, so many players would consider them to be junk (They are destroyed by the default rule !<color:G>Worthless</color> <color:R>Items</color>). However, other players enjoy collecting the corpses of unique monsters, and placing them on display at the museum. For these (strange?) folks, adding a rule like ~<color:G>Unique</color> <color:R>Corpses</color> before the !<color:G>Worthless</color> <color:R>Items</color> will protect them from default destruction.</indent>
+
+<color:G>Human</color>        <indent>And then there are those character's that require the corpses of humans for either food, or as part of a ritual to summon a powerful demonic ally. For these situations, add a rule like ~<color:G>Human</color> <color:R>Corpses</color> to your preferences, though ~<color:G>Special</color> <color:R>Items</color> also works.</indent>
+
 <color:o>Miscellaneous</color>
 <color:G>Collecting</color>   <indent><color:G>Collecting</color> <color:R>Items</color> are stackable objects that you happen to currently be carrying in your pack. Use this broad adjective when you don't feel like adding a more specific rule. For example, you might currently be carrying Potions of Cure Serious Wounds, and would like to collect those if you happen to find them. But since these objects are only useful for a very small portion of the game, you don't want to use a conditional rule to handle this.</color>
 
 <color:G>Special</color>      <indent><color:G>Special</color> <color:R>Items</color> are objects your race or class needs; objects that are usually considered junk by default. For example, some players cannot eat normal food, but must consume the corpses of humans (Yuk!). Other players use corpses for various spells, and need to keep them around. Archers use skeletons to make their own ammo. And classes that ride pets into battle actually enjoy using devices that haste monsters. All of these special scenarios are handled with this adjective.</color>
 
 <color:G>Unusable</color>     <indent>This adjective applies to wearable items that your current character is unable to wear. Doe this sound strange? It is, but remember that you have the option to play the game as a <color:r>Monster</color>, and monsters often have unusual body types. For example, a Dragon can wear rings, amulets, lights, cloaks and helmets, but nothing else. So weapons, shooters, body armor, shields, gloves, and boots are all considered <color:G>Unusable</color>. Adding a rule like !<color:G>Unusable</color> <color:R>Items</color> makes the game much more pleasant, at least once the player is past the point of worrying too much about gold. (They could also use a rule like !<color:G>Unusable Nameless</color> <color:R>Items</color> if they wanted to keep egos for resale purposes).</color>
-
-<color:G>Wanted</color>       <indent>Combine with <color:R>Corpses</color> or <color:R>Skeletons</color> to indicate that the corpse or skeleton belongs to a wanted monster. These may be turned in at the Hunter's Office for a prize.</indent>
-
-<color:G>Unique</color>       <indent>Combine with <color:R>Corpses</color> or <color:R>Skeletons</color> to indicate that the corpse or skeleton belongs to a unique monster. Not all unique monsters are <color:G>Wanted</color>, so many players would consider them to be junk (They are destroyed by the default rule !<color:G>Worthless</color> <color:R>Items</color>). However, other players enjoy collecting the corpses of unique monsters, and placing them on display at the museum. For these (strange?) folks, adding a rule like ~<color:G>Unique</color> <color:R>Corpses</color> before the !<color:G>Worthless</color> <color:R>Items</color> will protect them from default destruction.</indent>
-
-<color:G>Human</color>        <indent>And then there are those character's that require the corpses of humans for either food, or as part of a ritual to summon a powerful demonic ally. For these situations, add a rule like ~<color:G>Human</color> <color:R>Corpses</color> to your preferences, though ~<color:G>Special</color> <color:R>Items</color> also works.</indent>
 </indent>
-<color:B>Table V: Rules: Special Clauses</color>
-More Dice Than NN
-More Bonus Than NN
-More Level Than NN
-More Weight Than NN
+<color:B>Table VI: Rules: Special Clauses</color>
+  <indent>In the following clauses, N refers to a numerical digit, 0 through 9. The sequence NN means you may type one or two digits, and can therefore enter any number between 0 and 99.  The sequence NNNNNN means you may type from one to six digits, and can therefore enter any number between 0 and 999999. If you enter too many digits, then the parser will not recognize your special clause, and you will get unsatisfactory results from your rule.
 
-<color:B>Table VI: Conditional Lines: Syntax</color>
+<color:G>Special Clause          Explanation</color>
+<color:o>More Dice Than NN</color>       <indent>This clause applies to <color:R>Weapons</color> only, and is true whenever the maximum possible damage exceeds the number you enter. For example a (2d5) weapon will match <color:o>More Dice Than 9</color> but will fail to match <color:o>More Dice Than 10</color>.</indent>
+
+<color:o>More Bonus Than NN</color>      <indent>An object's bonus is the largest of its <color:keyword>pval</color>, its bonus to hit, to damage and to armor class. Confused? Well, the rule <color:R>Rings</color> <color:o>More Bonus Than 9</color>:Speed will pickup rings of speed (+10) or better, but will not match other rings of speed. Another (sarcastic) example: <color:R>Suits</color> <color:o>More Bonus Than 19</color>:Power Dragon says that you would like Power Dragon Scale Mail, but only if its bonus to armor class is +20 or better!</indent>
+
+<color:o>More Level Than NN</color>      <indent>This clause is intended to be used on <color:R>Corpses</color> so that Possessors can manage the mountains of dead bodies they create. You can also use it with other objects, in which case it corresponds to the level of the object, or its ego type. For devices, it matches against the power level of the device.</indent>
+
+<color:o>More Weight Than NN</color>     <indent>Some classes have weight restrictions on armor, like Monks, Scouts and Ninjas. Other classes, like Maulers, prefer very heavy weapons. This clause matches against the weight of the object, in pounds. So <color:R>Weapons</color> <color:o>More Weight Than 39</color> will match weapons at least 39.1 lbs in weight (In practice, this means at least 40.0 lbs in weight).</indent>
+
+<color:o>More Value Than NNNNNN</color> <indent>This clause matches against the known value of the object. Use it with care, since unknown, or even un-*identified* objects may have disturbingly low known values.</indent>
+</indent>
+<color:B>Table VII: Conditional Lines: Syntax</color>
   <indent>Conditional Lines have the following syntactic form:
 
 ?:<color:B>Expression</color>
@@ -661,7 +679,7 @@ When the expression on a conditional line evaluates to FALSE or 0, then any subs
 
 If none of this makes sense, see <link:editor.txt#Conditionals> above.
 </indent>
-<color:B>Table VII: Conditional Lines: Functions</color>
+<color:B>Table VIII: Conditional Lines: Functions</color>
   <indent><color:G>Function  Explanation</color>
   <color:keyword>IOR</color>     <indent>Inclusive Or: [IOR a b c ...] is TRUE if the value of <color:o>any</color> subexpression a, b, c, ... is TRUE.</indent>
   <color:keyword>OR</color>      <indent>Same as IOR. One day I was puzzled why my [OR ...] expression wasn't working. Also, if you are going to have IOR, it suggests you will have XOR (Exclusive Or) as well, and we don't!</indent>
@@ -671,7 +689,7 @@ If none of this makes sense, see <link:editor.txt#Conditionals> above.
   <color:keyword>LEQ</color>     <indent>[LEQ v a] is TRUE when the integer value of v is <color:o>less than or equal to</color> the integer value of a. Note that while EQU treats its arguments as strings, LEQ treats them as numbers.</indent>
   <color:keyword>GEQ</color>     <indent>[GEQ v a] is TRUE when the integer value of v is <color:o>greater than or equal to</color> the integer value of a. Note that while EQU treats its arguments as strings, GEQ treats them as numbers. For example, use <color:v>[GEQ $LEVEL 20]</color> to test if the player's current level is greater than, or equal to 20.</indent>
 </indent>
-<color:B>Table VIII: Conditional Lines: Variables</color>
+<color:B>Table IX: Conditional Lines: Variables</color>
   <indent><color:G>Variable  Explanation</color>
 <color:keyword>$RACE</color>     <indent>Returns the name of the player's race. For example, <color:keyword>Snotling</color> or <color:keyword>High-Elf</color>.</indent>
 <color:keyword>$CLASS</color>    <indent>Returns the name of the player's class. For example, <color:keyword>Warrior-Mage</color> or <color:keyword>Mindcrafter</color>. Note, if you are playing in <color:r>Monster</color> mode, then this variable always returns <color:keyword>Monster</color>, while $RACE returns the actual monster race you are playing, such as <color:keyword>Lich</color> or <color:keyword>Dragon</color>.</indent>
@@ -682,7 +700,7 @@ If none of this makes sense, see <link:editor.txt#Conditionals> above.
 
 As mentioned before, all variables begin with a <color:keypress>$</color> character to distinguish them from string literals. Also, note there are other variables like $SYS and $KEYBOARD which I haven't documented.
 </indent>
-<color:B>Table IX: Conditional Lines: Literals</color>
+<color:B>Table X: Conditional Lines: Literals</color>
   <indent><color:G>Literal   Explanation</color>
 <color:keyword>Number</color>    <indent>Numbers are written like <color:keyword>105</color> or <color:keyword>32</color>.</indent>
 <color:keyword>String</color>    <indent>Strings are written like <color:keyword>High-Mage</color> or <color:keyword>Beholder</color>. Note that string literals are not quoted and therefore may not contain spaces.</indent>
@@ -690,3 +708,8 @@ As mentioned before, all variables begin with a <color:keypress>$</color> charac
 
 <topic:EasyDestroyer><style:heading>The Easy Destroyer</style>
 
+If, after reading all of the above, you decide that The Mogaminator is too much for you to handle, you may, instead, use a simpler system to manage objects: The Easy Destroyer. I don't recommend this, but the choice is yours. This system is configured via options (see <link:option.txt#AutoDestroyer>). The option destroy_items turns The Easy Destroyer on and off. If you are using The Mogaminator, be sure to turn off The Easy Destroyer, and vice versa. (BTW, you "turn off" The Mogaminator but closing the game and deleting the pickpref-<color:o>NAME</color>.prf file whose location was indicated in the reference section).
+
+<color:D>
+Original   : PosChengband 4.0.0
+</color>

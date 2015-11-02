@@ -557,52 +557,52 @@ Disturbance Options
 Easy Auto-Destroyer Options
   
   Use easy auto-destroyer (destroy_items)
-  If this option is set, the game will automatically destroy all 
-  objects which you touch unless the object is protected by various 
-  'leave_...' options below.
+  This option turns The Easy Destroyer on and off. If enabled, The Easy 
+  Destroyer will destroy all objects unless the object is protected by 
+  one or more of the leave_* options discussed below.
   
     Note: The Easy Auto-Destroyer is a simpler to use 
-    version of the full featured Auto-Destroyer discussed 
-    in [g]. It is designed for those who feel the full 
-    version is too complicated to use. However, you really 
-    should only use one or the other. So if you are using 
-    the full version, then you should not also enable the 
-    easy version.
+    version of the full featured Mogaminator discussed in 
+    [g]. It is designed for those who feel the full version 
+    is too complicated to use. However, you really should 
+    only use one or the other. So if you are using the full 
+    version, then you should not also enable the easy 
+    version.
   
   Apply auto-destroy as sense feeling (destroy_feeling)
-  If this option is set, PosChengband will apply auto-destroyer on an 
-  item just when you sensed its feeling. Typically it will destroy 
-  {cursed} items just after the sensing.
+  If this option is turned on, both The Mogaminator and The Easy 
+  Destroyer will take actions whenever the player senses the quality of 
+  an object (i.e., whenever pseudo-id kicks in).
   
   Apply auto-destroy as identify an item (destroy_identify)
-  If this option is set, PosChengband will apply auto-destroyer on an 
-  item just when you identified it using magical items or spells. 
-  Typically it will destroy {cursed} items and other useless items 
-  which you set up to be auto-destroyed.
+  If this option is turned on, both The Mogaminator and The Easy 
+  Destroyer will take actions whenever the player identifies an object, 
+  whether with a spell or with a magical device (but, alas, not via a 
+  town service).
   
   Auto-destroyer leaves known worthy items (leave_worth)
   This option protects known objects that can be sold in stores from 
-  auto-destruction by the destroy_items option.
+  auto-destruction by The Easy Destroyer.
   
   Auto-destroyer leaves weapons and armour (leave_equip)
   This option protects all weapons and armour from auto-destruction by 
-  the destroy_items option.
+  The Easy Destroyer.
   
   Auto-destroyer leaves closed chests (leave_chest)
   This option protects all chests which are not yet opened from 
-  auto-destruction by the destroy_items option.
+  auto-destruction by The Easy Destroyer.
   
   Auto-destroyer leaves wanted corpses (leave_wanted)
   This option protects corpses of monsters wanted at the Hunter's 
-  office from auto-destruction by the destroy_items option.
+  office from auto-destruction by The Easy Destroyer.
   
   Auto-destroyer leaves corpses and skeletons (leave_corpse)
   This option protects all corpses and skeletons from auto-destruction 
-  by the destroy_items option.
+  by The Easy Destroyer.
   
   Auto-destroyer leaves junk (leave_junk)
   This option protects all 'junk', such as Shards of Pottery or Broken 
-  Stick, from auto-destruction by the destroy_items option. This is 
+  Stick, from auto-destruction by The Easy Destroyer. This is 
   especially helpful for Archers.
   
   Auto-destroyer leaves items your race/class needs (leave_special)
