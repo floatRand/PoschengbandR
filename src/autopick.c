@@ -769,7 +769,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         ADD_FLG(FLG_SUITS);
     else if (o_ptr->tval == TV_CLOAK)
         ADD_FLG(FLG_CLOAKS);
-    else if (o_ptr->tval == TV_HELM)
+    else if (o_ptr->tval == TV_HELM || o_ptr->tval == TV_CROWN)
         ADD_FLG(FLG_HELMS);
     else if (o_ptr->tval == TV_GLOVES)
         ADD_FLG(FLG_GLOVES);
@@ -1965,6 +1965,18 @@ static bool is_opt_confirm_destroy(object_type *o_ptr)
     return TRUE;
 }
 
+static void msg_autopick(int idx, cptr action)
+{
+    if (idx >= 0)
+    {
+        string_ptr s = autopick_line_from_entry(&autopick_list[idx], AUTOPICK_COLOR_CODED);
+        if (action)
+            msg_format("<color:B>(%s:</color>%s<color:B>)</color>", action, string_buffer(s));
+        else
+            msg_print(string_buffer(s));
+        string_free(s);
+    }
+}
 
 /*
  * Automatically destroy an item if it is to be destroyed
@@ -1996,8 +2008,12 @@ static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
     }
 
     /* Not to be destroyed */
-    if (!destroy) return;
-
+    if (!destroy)
+    {
+        if (destroy_debug && autopick_idx >= 0 && (autopick_list[autopick_idx].action & DONT_AUTOPICK))
+            msg_autopick(autopick_idx, "Leave");
+        return;
+    }
     /* Now decided to destroy
     disturb(0,0);*/
 
@@ -2024,19 +2040,6 @@ static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
     p_ptr->notice |= PN_AUTODESTROY;
 
     return;
-}
-
-static void msg_autopick(int idx, cptr action)
-{
-    if (idx >= 0)
-    {
-        string_ptr s = autopick_line_from_entry(&autopick_list[idx], AUTOPICK_COLOR_CODED);
-        if (action)
-            msg_format("<color:B>(%s:</color>%s<color:B>)</color>", action, string_buffer(s));
-        else
-            msg_print(string_buffer(s));
-        string_free(s);
-    }
 }
 
 /*
