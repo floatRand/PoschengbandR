@@ -6,11 +6,12 @@ Please choose one of the following sections:
     [b] Creating a Character
     [c] Equipping for Danger
     [d] My First Trip Down
-    [e] On Weapons and Multiple Blows
-    [f] On Armor and Resistance
-    [g] On Important Magical Items
-    [h] On Weapons, Armor and Slays
-    [i] On Dungeon Exploration
+    [e] Tidbits
+    [f] On Weapons and Multiple Blows
+    [g] On Armor and Resistance
+    [h] On Important Magical Items
+    [i] On Weapons, Armor and Slays
+    [j] On Dungeon Exploration
 
     (?) Help System Commands
 

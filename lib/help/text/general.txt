@@ -1,7 +1,7 @@
 General Information
 
 This document gives a brief introduction to the game. You will probably 
-want to browse through all the "help files", especially the sections on 
+want to browse through all the help files, especially the sections on 
 available commands (see [a] and [b]), before beginning any serious 
 adventuring. There is also a Newbie guide (see [c]) and I'll leave it 
 you to decide if that is the best place to start reading. (Aside: 
@@ -36,24 +36,23 @@ dungeons (other than Angband).
 
 The game also offers a few different ways to play. First, there is a 
 Beginner Mode that limits the number of races and classes available and 
-also turns off the wilderness. I'm working on a separate guide for this 
-case ... Hopefully, it will be done shortly. Playing in beginner mode 
-is designed to simplify the birth process and get you playing as soon 
-as possible so that you may more quickly learn the game. Eventually, 
-you will want to upgrade to Normal Mode, the usual and expected way to 
-play. This mode has a wilderness by default (though you may still turn 
-it off with a birth option) and also offers the full repertoire of 
-racial and class choices. Prepare to be overwhelmed! Also, as you read 
-the help files, you will find that most of the documentation is written 
-for this mode. Finally, you may decide you are tired of playing the 
-game as a normal player, constantly dying to myriad powerful monsters, 
-and decide to play as a monster yourself in Monster Mode. With this 
-style, you can pick one of many types of monsters to play and will 
-evolve into more powerful forms as you gain experience. Many monsters 
-have unique body types so the equipment game will prove interesting. 
-Most also have some forms of innate attacks and may not be able to 
-wield weapons at all (e.g. Dragons can claw and bite, but it would be 
-funny to see one wielding a sword). Truly, there is much to try!
+also turns off the wilderness. Playing in beginner mode is designed to 
+simplify the birth process and get you playing as soon as possible so 
+that you may more quickly learn the game. Eventually, you will want to 
+upgrade to Normal Mode, the usual and expected way to play. This mode 
+has a wilderness by default (though you may still turn it off with a 
+birth option) and also offers the full repertoire of racial and class 
+choices. Prepare to be overwhelmed! Also, as you read the help files, 
+you will find that most of the documentation is written for this mode. 
+Finally, you may decide you are tired of playing the game as a normal 
+player, constantly dying to myriad powerful monsters, and decide to 
+play as a monster yourself in Monster Mode. With this style, you can 
+pick one of many types of monsters to play and will evolve into more 
+powerful forms as you gain experience. Many monsters have unique body 
+types so the equipment game will prove interesting. Most also have some 
+forms of innate attacks and may not be able to wield weapons at all 
+(e.g. Dragons can claw and bite, but it would be funny to see one 
+wielding a sword). Truly, there is much to try!
 
 First Place to Go
 
@@ -92,7 +91,7 @@ of Outpost. But beware, even inside the town walls the wilderness is
 not far off. Dangerous monsters do occasionally wander in to town!
 
 When you are ready to begin exploring the wilderness, you will need 
-ample supplies of light and food. Also, if you intent is to journey to 
+ample supplies of light and food. Also, if your intent is to journey to 
 another town or to locate a new dungeon entrance, you will want to use 
 the special global map mode for wilderness travel. Entering and leaving 
 this special mode uses the "stair climbing" keys as an abstraction:
@@ -118,6 +117,42 @@ of Morivant, near the center of the map, is the dread dungeon of
 Angband. It is home to the Serpent of Chaos, whom you must kill in 
 order to win the game. (For more information, see [e])
 
+~~~~~~~~~~.............~~~~~~~~~.................#~...........~~~~#
+~~~~~~~~~..................~~~~...............#~~~~#######...~~..~#
+~~~~~~~~.......#........>...................>.#~###########..~...~#
+~~~~~~~~.....###..............................~~##########~~.~...~~
+~~~~~~~~....#####...................###.......~###########~#.......
+~~~~~~~~.....#####...................###......~~############.......
+~~~~~~~~......####..................#.#........~~~>##########......
+~~~~~~~~....#####>................>..............#~~###########....
+~~~~......####...................................##############>#..
+..~~...~....................................~~....################.
+......~~..................................~~~~...##################
+.....~~~~.......~~~......................~~~~~.....################
+#....~~~~~~~~~~~~~~~.............@*.....~~~~~........##############
+##.#..~~~~~~.....~~~~~~~~~~~.~~~......~~.......#......#############
+~##....~~~~........~~~~~~~~..~~~~~.........#######.....###########~
+>##....~~~...#......~~~~........~~~~~~############>#......########~
+~##.#..~~..###.......~~...........~~~~~##############........####~~
+##.#.~~~..###..............####....~~#################..~~~....###~
+#.#..~~~...............#########...~##################..~~~......##
+...#..~~..........>....#########..~~###################~~~~.......#
+#.....~~...............######>####.~###################~~~.........
+.#.....~.................#########.~~###############~~~~~~~........
+.......~~~.......~~~~~~...#######..~~~###############~~~~~~~~~~~~~~
+.....~~~~~~....~~~~~~~~~~~~.........~~~##############~~~~~~~~~~~~~~
+.....~~~~~~~~~~~~~~~~~~~~~~~~~~~..~~~~~~~~#########~~~~~~~~~~~~~~~~
+Surface
+
+From time to time, I will include screenshots in the documentation to 
+better explain stuff. In the picture above, the player (that's me) has 
+entered the Wilderness Travel mode by pressing <, and then walked from 
+the starting town of Outpost (located far off in the west) to the town 
+of Morivant, which he is currently standing next to (it is the * on the 
+map, while the player, in case you didn't know, is the @). The entrance 
+to Angband is marked as >.
+
+As you can see, there are many, many other dungeons to explore as well! 
 Each dungeon in the wilderness has a starting level which is shown to 
 you when prompted if you really wish to enter. Think of this as a 
 difficulty level, and indeed, many of the dungeons are quite difficult 
@@ -132,9 +167,9 @@ in that way lurks death.
 A final note on the Wilderness. To penetrate the mountains, you will 
 need a source of levitation. Several of the dungeon entrances are 
 buried in the mountains, so you won't be able to get to them otherwise. 
-And as for the deep waters of the vast oceans, best to stay away. But 
-again, without levitation, you will be swimming, and should your pack 
-be too heavy, well, you may quickly find yourself drowning! So be 
+And as for the deep waters of the vast oceans, best to stay away. 
+Furthermore, without levitation, you will be swimming, and should your 
+pack be too heavy, well, you may quickly find yourself drowning! So be 
 prepared before setting out off the beaten paths of the wilderness.
 
 Winning The Game
@@ -155,33 +190,25 @@ foes are patient and will await your return. (You may have noticed that
 if you flee any of the earlier random quests, you actually fail the 
 quest and are not allowed to try again).
 
-The Serpent of Chaos cannot be killed by some of the easier methods 
-used on normal creatures. The Serpent of Chaos, like all other "Unique" 
-monsters, will not be killed by destruction. Instead, he will simply be 
-removed from the level. But since he is a boss and you are on a quest, 
-he will be regenerated someplace else on the level, and with full 
-health too boot. Also, The Serpent of Chaos cannot be polymorphed, 
-slept, charmed, or genocided. Magical spells like Mana Storm and Orb of 
-Draining are effective against it, as are some of the more powerful 
-weapons, but it is difficult to kill and if allowed to escape for a 
-time it will heal itself rapidly. Oh, one more thing: the final boss 
-loves to summon other unique monsters for assistance, even various 
-dungeon guardians. So it is a good strategy to kill as many unique 
-monsters and conquer as many dungeons as possible before facing the 
-final boss.
+The Serpent of Chaos is a very difficult foe and you will need to 
+garner all of your resources in order to stand a decent chance of 
+success. This typically means lots and lots (and lots more besides 
+that) of Healing and *Healing*. And you will need plenty of destruction 
+besides to deal with his summons. I won't give any more hints than 
+that, since figuring out how to win is part of the fun, right?
 
 If you should actually survive the attempt of killing the Serpent of 
 Chaos, you will receive the status of WINNER. You may continue to 
 explore, and may even save the game and play more later, but since you 
 have defeated the toughest creature alive, there is really not much 
 point. Unless you wish to listen to the rumors of a powerful ring 
-buried somewhere in the dungeon. And some monsters have been rumored to 
-come back from the dead!
+buried somewhere in the dungeon. And then some monsters have been 
+rumored to come back from the dead!
 
-When you are ready to retire, simply "commit suicide" ("^K") to have 
-your character entered into the high score list as a winner. Note that 
-until you retire, you can still be killed, so you may want to retire 
-before wandering into a hoard of Cyberdemons...
+When you are ready to retire, simply "commit suicide" (^K) to have your 
+character entered into the high score list as a winner. Note that until 
+you retire, you can still be killed, so you may want to retire before 
+wandering into a hoard of Cyberdemons...
 
 Upon Death and Dying
 

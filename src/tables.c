@@ -3547,6 +3547,9 @@ option_type option_info[] =
     { &destroy_identify,            FALSE, OPT_PAGE_AUTODESTROY, 7, 9,
     "destroy_identify",             "Apply auto-destroy as identify an item" },
 
+    { &destroy_debug,               FALSE, OPT_PAGE_AUTODESTROY, 7, 10,
+    "destroy_debug",                "List the rule used when applying the Mogaminator" },
+
     { &leave_worth,                 TRUE,  OPT_PAGE_AUTODESTROY, 7, 2,
     "leave_worth",                  "Auto-destroyer leaves known worthy items" },
 

@@ -17,8 +17,8 @@ of Dragon Strike, their blows will burn their enemies.
 
   Stats                   Skills
   Strength      +3        Disarming   Fair         
-  Intelligence  +1        Device      Good         
-  Wisdom        +1        Save        Excellent    
+  Intelligence  +0        Device      Good         
+  Wisdom        +0        Save        Excellent    
   Dexterity     +1        Stealth     Very Bad     
   Constitution  +2        Searching   Bad          
   Charisma      +2        Perception  Superb       
@@ -36,8 +36,8 @@ Dragon Strike, their blows will freeze their enemies.
 
   Stats                   Skills
   Strength      +3        Disarming   Fair         
-  Intelligence  +1        Device      Good         
-  Wisdom        +1        Save        Excellent    
+  Intelligence  +0        Device      Good         
+  Wisdom        +0        Save        Excellent    
   Dexterity     +1        Stealth     Very Bad     
   Constitution  +2        Searching   Bad          
   Charisma      +2        Perception  Superb       
@@ -124,7 +124,7 @@ enemies.
 
   Stats                   Skills
   Strength      +1        Disarming   Fair         
-  Intelligence  +0        Device      Good         
+  Intelligence  -1        Device      Good         
   Wisdom        +1        Save        Excellent    
   Dexterity     +0        Stealth     Bad          
   Constitution  +3        Searching   Bad          
@@ -171,13 +171,13 @@ Dragon Strike, they may steal life from their enemies in melee.
 Table 1 - Draconian Statistic Bonus Table
 
                STR  INT  WIS  DEX  CON  CHR  Life  Exp  Shop
-Red             +3   +1   +1   +1   +2   +2  106%  160%  115%
-White           +3   +1   +1   +1   +2   +2  106%  160%  115%
+Red             +3   +0   +0   +1   +2   +2  106%  160%  115%
+White           +3   +0   +0   +1   +2   +2  106%  160%  115%
 Blue            +2   +1   +1   +1   +2   +2  105%  160%  110%
 Black           +2   +1   +1   +1   +2   +2  105%  160%  110%
 Green           +1   +1   +1   +1   +2   +2  103%  175%  105%
 Bronze          +1   +2   +1   +1   +2   +2  103%  185%  100%
-Crystal         +1   +0   +1   +0   +3   +2  105%  220%  105%
+Crystal         +1   -1   +1   +0   +3   +2  105%  220%  105%
 Gold            +1   +1   +2   +1   +2   +2  104%  190%   95%
 Shadow          +0   +1   +1   +3   +2   +2  102%  195%  105%
 

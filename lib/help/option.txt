@@ -109,7 +109,7 @@ Makes it easy for your character disarms a trap: simply by walking into it! Also
 Lets you select an item from a stack on the floor by browsing a list. Also the look command will describe floor stack as "You see a stack of n items.", when there is more than one item on a floor grid, and display a list of items when you press 'x' at that time.
 
 <topic:over_exert><color:U>Allow casting spells when short of mana</color> <color:D>(over_exert)</color>
-Normally, PosChengband restricts you from casting spells when you don't have enough mana. If this option is set, the program allow you to cast spells at such dangerous situation.
+Normally, you are prevented from casting spells when you don't have enough mana since accidentally doing so can have very nasty consequences, including death. If this option is set, then you are permitted to cast spells at such dangerous times, with a warning prompt, of course!
 
 <topic:numpad_as_cursorkey><color:U>Use numpad keys as cursor keys in editor mode</color> <color:D>(numpad_as_cursorkey)</color>
 This option makes numpad keys work as cursor movement keys while text editing mode. Which include auto-picker editor, inputing an inscription, a macro action, and etc.
@@ -309,6 +309,12 @@ If this option is turned on, both The Mogaminator and The Easy Destroyer will ta
 <topic:destroy_identify><color:U>Apply auto-destroy as identify an item</color> <color:D>(destroy_identify)</color>
 If this option is turned on, both The Mogaminator and The Easy Destroyer will take actions whenever the player identifies an object, whether with a spell or with a magical device (but, alas, not via a town service).
 
+<topic:destroy_debug><color:U>List the rule used when applying the Mogaminator</color> <color:D>(destroy_debug)</color>
+This is a debugging option when using the full-featured Mogaminator. Enabling this option results in the reporting of the rule used whenever an action is taken, such as pickup, auto-identify or destroy. The rule in question will appear in the message line. For example:<style:screenshot>
+  <indent>You have 26 charges remaining. <color:B>(AutoID</color><color:B>:</color>~?<color:G>unidentified </color><color:R>rods</color><color:B>)</color> You see <color:v>a </color>
+<color:v>Rod: </color><color:W>Frost Ball</color><color:v> (</color><color:y>1/3 charges</color><color:v>)</color>. <color:B>(Destroy:</color>(!<color:R>rods</color>:frost ball$<color:B>)</color>
+Auto-destroying.</indent>
+</style>
 <topic:leave_worth><color:U>Auto-destroyer leaves known worthy items</color> <color:D>(leave_worth)</color>
 This option protects known objects that can be sold in stores from auto-destruction by The Easy Destroyer.
 

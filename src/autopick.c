@@ -2026,6 +2026,18 @@ static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
     return;
 }
 
+static void msg_autopick(int idx, cptr action)
+{
+    if (idx >= 0)
+    {
+        string_ptr s = autopick_line_from_entry(&autopick_list[idx], AUTOPICK_COLOR_CODED);
+        if (action)
+            msg_format("<color:B>(%s:</color>%s<color:B>)</color>", action, string_buffer(s));
+        else
+            msg_print(string_buffer(s));
+        string_free(s);
+    }
+}
 
 /*
  *  Auto-destroy marked item
@@ -2045,6 +2057,11 @@ static void autopick_delayed_alter_aux(int item, bool detailed_msg)
         char o_name[MAX_NLEN];
         bool msg = FALSE;
 
+        if (destroy_debug)
+        {
+            int idx = is_autopick(o_ptr);
+            msg_autopick(idx, "Destroy");
+        }
         stats_on_p_destroy(o_ptr, o_ptr->number);
 
         if (prace_is_(RACE_MON_JELLY))
@@ -2355,6 +2372,8 @@ void autopick_pickup_items(cave_type *c_ptr)
             if (autopick_auto_id(o_ptr))
             {
                 int new_idx = is_autopick(o_ptr); /* requery for destroy/pickup/inscribe once known */
+                if (destroy_debug)
+                    msg_autopick(idx, "AutoID");
                 if (new_idx >= 0)
                     idx = new_idx;
             }
@@ -2367,6 +2386,9 @@ void autopick_pickup_items(cave_type *c_ptr)
             (autopick_list[idx].action & (DO_AUTOPICK | DO_QUERY_AUTOPICK)))
         {
             disturb(0,0);
+
+            if (destroy_debug)
+                msg_autopick(idx, "Pickup");
 
             if (!inven_carry_okay(o_ptr))
             {

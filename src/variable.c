@@ -322,6 +322,7 @@ bool enable_virtues;
 /*** Easy Object Auto-Destroyer ***/
 
 bool destroy_items;    /* Use easy auto-destroyer */
+bool destroy_debug;
 bool destroy_feeling;    /* Apply auto-destroy as sense feeling */
 bool destroy_identify;    /* Apply auto-destroy as identify an item */
 bool leave_worth;    /* Auto-destroyer leaves known worthy items */

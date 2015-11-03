@@ -1195,6 +1195,8 @@ race_t *draconian_get_race(int psubrace)
                          "the power of Dragon Skin, they will gain a fiery aura as well. Should they choose the "
                          "power of Dragon Strike, their blows will burn their enemies.";
             me.stats[A_STR] += 2;
+            me.stats[A_INT] -= 1;
+            me.stats[A_WIS] -= 1;
             me.skills.dev -= 5;
             me.skills.stl -= 2;
             me.skills.thn += 10;
@@ -1209,6 +1211,8 @@ race_t *draconian_get_race(int psubrace)
                          "the power of Dragon Skin, they will gain an aura of cold as well. Should they choose the "
                          "power of Dragon Strike, their blows will freeze their enemies.";
             me.stats[A_STR] += 2;
+            me.stats[A_INT] -= 1;
+            me.stats[A_WIS] -= 1;
             me.skills.dev -= 5;
             me.skills.stl -= 2;
             me.skills.thn += 9;
@@ -1268,7 +1272,7 @@ race_t *draconian_get_race(int psubrace)
                          "may also breathe on command. With the power of Dragon Skin, they gain an aura of "
                          "shards as well. With the power of Dragon Strike, even their melee attacks will shred "
                          "their enemies.";
-            me.stats[A_INT] -= 1;
+            me.stats[A_INT] -= 2;
             me.stats[A_DEX] -= 1;
             me.stats[A_CON] += 1;
             me.skills.dev -= 5;
