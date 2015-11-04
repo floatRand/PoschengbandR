@@ -315,6 +315,13 @@ This is a debugging option when using the full-featured Mogaminator. Enabling th
 <color:v>Rod: </color><color:W>Frost Ball</color><color:v> (</color><color:y>1/3 charges</color><color:v>)</color>. <color:B>(Destroy:</color>(!<color:R>rods</color>:frost ball$<color:B>)</color>
 Auto-destroying.</indent>
 </style>
+In addition, the matching rule will be displayed when inspecting objects. For example:<style:screenshot>
+  <indent><color:o>an Amulet (Defender) [+12]</color>
+  Resist <color:g>Acid</color>, <color:b>Electricity</color>, <color:r>Fire</color>, <color:W>Cold</color>, <color:G>Poison</color>
+  <color:R>Free Action</color>; <color:B>See Invisible</color>; <color:B>Levitation</color>
+  <color:B>It cannot be harmed by the elements.</color>
+  <color:r>Autopick:</color> ~<color:G>*identified* </color><color:R>amulets</color><color:o> more value than 10000</color>
+</style>
 <topic:leave_worth><color:U>Auto-destroyer leaves known worthy items</color> <color:D>(leave_worth)</color>
 This option protects known objects that can be sold in stores from auto-destruction by The Easy Destroyer.
 

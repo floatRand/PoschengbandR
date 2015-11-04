@@ -1105,7 +1105,7 @@ option_fields[OPT_NUM] =
     { '3', "Text Display Options", 5 },
     { '4', "Game-Play Options", 6 },
     { '5', "Disturbance Options", 7 },
-    { '6', "Easy Auto-Destroyer Options", 8 },
+    { '6', "Auto-Destroyer Options", 8 },
 
     { 'p', "Auto-picker/destroyer editor", 11 },
     { 'd', "Base Delay Factor", 12 },
@@ -1241,7 +1241,7 @@ void do_cmd_options(void)
             case '6':
             {
                 /* Spawn */
-                do_cmd_options_aux(OPT_PAGE_AUTODESTROY, "Easy Auto-Destroyer Options");
+                do_cmd_options_aux(OPT_PAGE_AUTODESTROY, "Auto-Destroyer Options");
                 break;
             }
 

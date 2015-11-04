@@ -746,12 +746,15 @@ static void _display_ignore(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr
 
 static void _display_autopick(object_type *o_ptr, doc_ptr doc)
 {
-    int idx = is_autopick(o_ptr);
-    if (idx >= 0)
+    if (destroy_debug)
     {
-        string_ptr s = autopick_line_from_entry(&autopick_list[idx], AUTOPICK_COLOR_CODED);
-        doc_printf(doc, "<color:r>Autopick:</color> <indent><style:indent>%s</style></indent>\n", string_buffer(s));
-        string_free(s);
+        int idx = is_autopick(o_ptr);
+        if (idx >= 0)
+        {
+            string_ptr s = autopick_line_from_entry(&autopick_list[idx], AUTOPICK_COLOR_CODED);
+            doc_printf(doc, "<color:r>Autopick:</color> <indent><style:indent>%s</style></indent>\n", string_buffer(s));
+            string_free(s);
+        }
     }
 }
 
