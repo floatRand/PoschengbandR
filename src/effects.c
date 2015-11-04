@@ -5733,6 +5733,7 @@ void change_race(int new_race, cptr effect_msg)
     if (get_race()->flags & RACE_IS_MONSTER) return;
     if (get_race_aux(new_race, 0)->flags & RACE_IS_MONSTER) return;
     if (old_race == RACE_ANDROID) return;
+    if (old_race == RACE_DOPPELGANGER) return;
     if (new_race == old_race) return;
 
     _lock = TRUE;

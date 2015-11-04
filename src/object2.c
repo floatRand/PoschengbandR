@@ -3775,6 +3775,8 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
                     add_flag(o_ptr->art_flags, TR_AGGRAVATE);
                 else
                     add_flag(o_ptr->art_flags, TR_DEC_STEALTH);
+                if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DAEMON || p_ptr->realm2 == REALM_DAEMON))
+                    add_flag(o_ptr->art_flags, TR_BLESSED);
                 break;
             case EGO_WEAPON_DEATH:
                 if (one_in_(6))
@@ -3794,6 +3796,12 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
                 }
                 if (one_in_(ACTIVATION_CHANCE))
                     effect_add_random(o_ptr, BIAS_NECROMANTIC);
+                if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DEATH || p_ptr->realm2 == REALM_DEATH))
+                    add_flag(o_ptr->art_flags, TR_BLESSED);
+                break;
+            case EGO_WEAPON_MORGUL:
+                if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DEATH || p_ptr->realm2 == REALM_DEATH))
+                    add_flag(o_ptr->art_flags, TR_BLESSED);
                 break;
             case EGO_WEAPON_DEFENDER:
                 o_ptr->to_a = 5;

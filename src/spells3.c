@@ -2123,6 +2123,7 @@ bool item_tester_hook_nameless_weapon_armour(object_type *o_ptr)
         return FALSE;
 
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD) return FALSE;
+    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE) return FALSE;
 
     return TRUE;
 }

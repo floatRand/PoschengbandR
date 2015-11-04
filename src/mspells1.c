@@ -1994,7 +1994,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
         {
             if (blind) msg_format("%^s mumbles powerfully.", m_name);
             else msg_format("%^s invokes polymorph other.", m_name);
-            if (prace_is_(RACE_ANDROID) || p_ptr->pclass == CLASS_MONSTER)
+            if (prace_is_(RACE_ANDROID) || p_ptr->pclass == CLASS_MONSTER || p_ptr->prace == RACE_DOPPELGANGER)
                 msg_print("You are unaffected!");
             else if (mut_present(MUT_DRACONIAN_METAMORPHOSIS))
                 msg_print("You are unaffected!");
