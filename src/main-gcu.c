@@ -156,6 +156,12 @@
  * XXX XXX XXX Consider the use of "savetty()" and "resetty()".
  */
 
+/* Sorry, but I cannot get QtCreator to recognize that this *is* actually being set, probably
+   because it doesn't know to check out CFLAGS in ../mk/buildsys.mk where HAVE_CONFIG_H is defined
+   so that h-basic.h knows to #include "autoconf.h" so that USE_GCU gets defined. Unbelievable! :)
+   If you are having compile problems, just comment this out.
+#define USE_GCU */
+
 #include "angband.h"
 #include <assert.h>
 
@@ -369,6 +375,11 @@ static int can_fix_color = FALSE;
  * Simple Angband to Curses color conversion table
  */
 static int colortable[16];
+
+/**
+ * Background color we should draw with; either BLACK or DEFAULT
+ */
+static int bg_color = COLOR_BLACK;
 
 #endif
 
@@ -1038,7 +1049,7 @@ static errr Term_xtra_gcu_react(void)
         for (i = 0; i < 16; i++)
         {
             int fg = create_color(i, scale);
-            init_pair(i + 1, fg, COLOR_BLACK);
+            init_pair(i + 1, fg, bg_color);
             colortable[i] = COLOR_PAIR(i + 1) | A_NORMAL;
         }
     }
@@ -1391,19 +1402,24 @@ errr init_gcu(int argc, char *argv[])
 			 (COLORS >= 16) && (COLOR_PAIRS > 8));
 #endif
 
+#ifdef HAVE_USE_DEFAULT_COLORS
+    /* Should we use curses' "default color" */
+    if (use_default_colors() == OK) bg_color = -1;
+#endif
+
    /* Attempt to use colors */
    if (can_use_color)
    {
 		/* Color-pair 0 is *always* WHITE on BLACK */
 
 		/* Prepare the color pairs */
-		init_pair(1, COLOR_RED,     COLOR_BLACK);
-		init_pair(2, COLOR_GREEN,   COLOR_BLACK);
-		init_pair(3, COLOR_YELLOW,  COLOR_BLACK);
-		init_pair(4, COLOR_BLUE,    COLOR_BLACK);
-		init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
-		init_pair(6, COLOR_CYAN,    COLOR_BLACK);
-		init_pair(7, COLOR_BLACK,   COLOR_BLACK);
+        init_pair(1, COLOR_RED,     bg_color);
+        init_pair(2, COLOR_GREEN,   bg_color);
+        init_pair(3, COLOR_YELLOW,  bg_color);
+        init_pair(4, COLOR_BLUE,    bg_color);
+        init_pair(5, COLOR_MAGENTA, bg_color);
+        init_pair(6, COLOR_CYAN,    bg_color);
+        init_pair(7, COLOR_BLACK,   bg_color);
 
 		/* Prepare the "Angband Colors" -- Bright white is too bright */
 		/* Changed in Drangband. Cyan as grey sucks -- -TM- */
