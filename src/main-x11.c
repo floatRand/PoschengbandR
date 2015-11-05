@@ -92,6 +92,11 @@
  *
  */
 
+/* Sorry, but I cannot get QtCreator to recognize that this *is* actually being set, probably
+   because it doesn't know to check out CFLAGS in ../mk/buildsys.mk where HAVE_CONFIG_H is defined
+   so that h-basic.h knows to #include "autoconf.h" so that USE_X11 gets defined. Unbelievable! :)
+   If you are having compile problems, just comment this out.
+#define USE_X11 */
 
 #include "angband.h"
 
