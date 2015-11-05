@@ -1,5 +1,174 @@
 <style:title>Objects</style>
 
+Objects are one of the most important elements in the game, and much of your effort will be devoted to getting better, and then even better, stuff. Whether they are potions to heal you during a difficult fight, scrolls to teleport you out of danger, armor to protect you from fire breathing dragons, or swords to slay the minions of evil, objects permeate every aspect of your journey from the safety of town to the halls of Oberon and finally to the lair of the dreaded Serpent of Chaos. Naked, you are nothing. Well equipped, and perhaps, just maybe, you will stand a chance.
+
+There are various types of objects, each with its own symbol for display, and generally with its own command for use. These will be described fully in the reference section near the end of this document. For now, here is an informal introduction.
+
+First, there are objects you may wield or wear as equipment. This includes melee weapons such as swords, axes, polearms (pikes, spears, glaives) and hafted weapons (flails, hammers, maces); armor such as suits of chain mail, shields, helmets, cloaks, gloves and boots; jewelry such as rings and amulets; and finally light sources, such as torches and lanterns. All of these sorts of objects must be equipped with the <color:keypress>w</color> command to wield or wear them. For much of the game, you will be trying to find better and better gear to wear: more deadly weapons, more protective armor, magic rings and artifacts of rare and mighty enchantments. Whatever you have at the moment, no matter how good, you can be relatively sure that something even better could be found if only you were lucky, or bold, enough to find it.
+
+Next, there are objects you carry around in your pack for utility purposes, or as provisions. Of course, you need to eat: killing stuff is hard work! And so food is a staple of the well prepared adventurer. And, equally obvious, you need to be able to see in those dark, dank places where evil lurks, so you need oil to refuel your lantern, or spare torches should your current one run out. But even more that this, you will need magical objects to survive. These include spellbooks, if you are playing a magical class, scrolls which all but the stupidest may read, potions which any may drink, and magical devices. Potions, scrolls and magical devices (wands, rods and staves) each contain a single magical spell or effect which they may perform. Generally, these can be quite useful, such as healing you in a pinch, or teleporting you out of danger. Or they might be offensive powers (for devices) that destroy your enemies. Or the effects may be bad, placed there to thwart adventurers at the outset of their journies, just when they are the most vulnerable and most easily dispatched.
+
+Finally, there is gold or treasure. If you are a dwarf, you will barely resist singing of your longing for the lost, ancient treasures of yore. Other players will find these objects just as useful, for gold is the currency of the realm, accepted by shopkeepers the whole world over. You can dig for gold, but don't lose sight of the real purpose of your quest: The enemies lie deeper, ever deeper. And should you linger too long in the shallow safety, their forces may grow to the point where none may challenge them.
+
+Now, it is time to explain all you will need to know about objects during your adventures. We will begin with how you get objects, then discuss how you learn about their powers, and finally discuss how to use them. At the end, we will give a table of all the types of objects you might encounter, at a broad level. This is a helpfile, and not a spoiler page, so we won't be telling you all the objects that exist, and will scarcely even mention the artifacts and other excellent items you are likely to encounter ... should you survive long enough.
+
+<topic:Acquisition><style:heading>Where Can I Get More Stuff?</style>
+
+Every player is born with a few objects to get them started on their quest. Exactly what these objects are depends upon which class they are playing. For example, Warriors begin with a sword and some nice armor, while Mages begin with their starting spellbooks and a pitiful looking dagger. But every player starts with a small amount of gold as well. Since the game begins in town, the first place to look for stuff is in the various shops.
+
+Each store in town sells a particular class of objects, from weapons and bows at the Weapon Smiths, to shields and suits of armor at the Armory, to spellbooks, wands and staves at the Magic Shop. And then there is the Black Market, an unregulated forum to buy and sell just about any object imaginable, but at highly exorbitant prices. Often, you can simply buy a really great object here, but you need to be quite rich indeed!
+
+So shopping is the first place you will find new stuff. But you are on a quest, after all, and it is time to begin your adventures. And it is in the various dungeons of the world that the best treasures can be found (Where do you think the Black Market gets all its stuff, after all?). If you are lucky, or stealthy, you can find quite a few objects just laying on the ground in the various dungeon levels you explore. How did they get there? Perhaps they were dropped by other adventurers who no longer found them useful? Or perhaps, noticing the various skeletons lying about, you realize they once belonged to other adventurers like yourself? At any rate, there are not that many objects just laying about anyways, and truly good objects won't be left lying around for long. For, players are not the only creatures with a lust for treasure, and monsters too, have a taste for gold.
+
+Many monsters you meet will be carrying one or more items about their person which you may retrieve from their corpse should you be skillful enough to defeat them. You may pick up objects by moving on top of them and using the <color:keypress>g</color>et command. By setting various options (see <link:option.txt#UserInterface>) you may choose to pick up items automatically or to be prompted before picking up objects. There is also a powerful, rule based object management system called The Mogaminator that you may want to learn about later in the game. This system allows you to more easily manage all the objects you encounter, either by destroying objects you have registered as junk, or by picking up objects you have registered as desirable (see <link:editor.txt>). In your quest to defeat The Serpent, should you succeed, you will likely find tens of thousands of objects along the way and it is nice to have an efficient, automatic way to deal with them.
+
+Finally, perhaps the best way to get really good objects is to find a treasure vault. There are many types of vaults, and they are usually well guarded, both with traps and with monsters. The better the treasure, the more difficult it will be for you to defeat the guardian monsters, and many a brave adventurer learned too late that bravery, if foolish, can be deadly as well. (Of course, vaults can be burgled as well, as any hobbit can tell you).
+
+<topic:Knowledge><style:heading>OK, I Found Something. What Does It Do?</style>
+
+When you find an object, you won't know much about it. For example, you might find a "long sword (2d5)" (see the section on weapons below for an explanation of the 2d5). Here, you know the type of object, that it is a weapon, and that tells you that you can wield it, if so inclined. And since you've seen long swords before (they are quite common), you know roughly how deadly the average long sword is. But, is this one any good? Is it magical? Cursed? What other bonuses might it have? This object is what we call <color:keyword>Unidentified</color>, and you will usually want to learn more about it before deciding to use it, or even carry it about with you as you continue to explore (It is a bit heavy, after all).
+
+Every character will eventually get a sense of the quality of unidentified objects in their pack. This ability is called <color:keyword>Pseudo-ID</color> and its speed (i.e., how long it takes to kick in) and strength (i.e., how much information it reveals) will depend upon your class and your wisdom. Early in the game, pseudo-id is your first line of defense against the onslaught of junk objects. Pick stuff up, wait a bit (while continuing to play, of course), and learn which objects are junk and which might be worthy of further investigation. See <link:objects.txt#Pseudo-ID> in the reference section below for more information about pseudo-id.
+
+If you sense that an object might be useful, you will probably want to Identify the object. This requires magic to do, either as a spell if you are a Mage, or as an effect from a magical device such as a scroll or perhaps a staff. In the former case, you can afford to be less selective in the objects you identify, since you can always rest to regain mana, and then recast the spell as needed. In fact, as a Mage, you can often just identify everything you find, as you find it, and skip the potentially long wait for (not to mention the hassle of) pseudo-id. But for everybody else, it will usually require a scroll of identify to learn about an object. These are available in town, and are generally quite common. Still, they are not so common (or cheap) that you can afford to waste them on every object you find. You need to be a bit more selective than that!
+
+Identifying an object reveals its full name, as well as its more obvious bonuses. This includes combat bonuses in accuracy and deadliness as well as armor bonuses in protectiveness (i.e., AC). The object's name tells you whether it is an ego item or even an artifact, and also (usually) tells you if the object is cursed or not. But Identify doesn't tell you everything about an object.
+
+For many excellent and special objects, you will want to *Identify* the object as well. This reveals everything, absolutely everything, about an object, including any hidden bonuses and powers it may or may not have. And here too, there is a spell for this, but it is high level and rare, so unlikely to be available even for a Mage until much later in the game. Devices with this effect are also very rare and only found in the deep depths of the dungeon. And Scrolls of *Identify* are quite expensive, even if you can buy them in town. Fortunately, there is a town service to research an object in all of the towns except Outpost. It too, is rather pricey, but at least it is available as needed. If you are too poor for this, or are just starting out on your adventures, then you can always sell the object to learn about it. Of course, then you won't have the object, and might not be able to buy it back if you decide you want it after all, so this approach is not recommended. (Try a little patience, and stash the object in your home until you have more gold!).
+
+Object Knowledge and Object Quality are related concepts (You gain kowledge about an object's quality). We've been discussing knowledge, so now it is time to turn our attention to quality.
+
+<topic:Quality><style:heading>How Good is this Object, Anyway?</style>
+
+The broad quality of a wearable object (i.e., equipment) is given by the strong version of psuedo-id. Objects are, in increasing/decreasing order of quality, one of average, good/bad, excellent/awful or special/terrible. What does this mean?
+
+If you did some shopping, then you probably saw what average equipment looks like. For example, the Weapon Smiths might have inventory like the following:
+<style:screenshot>
+          Fasgul (Zombie)                         Weapon Smiths (30000)
+
+   Item Description                                         Weight      Price
+   ...
+c) <color:W>|</color> a Cutlass (1d7) (+0,+0)                                  11.0  <color:D>      228  </color>
+d) <color:W>|</color> a Tulwar (2d4) (+0,+0)                                   10.0  <color:D>      250  </color>
+e) <color:W>|</color> a Broad Sword (2d5) (+0,+0)                              15.0  <color:D>      351  </color>
+f) <color:W>|</color> a Scimitar (2d5) (+0,+0)                                 13.0  <color:D>      330  </color>
+g) <color:W>|</color> a Katana (3d4) (+0,+0)                                   12.0  <color:D>      427  </color>
+h) <color:W>|</color> a Bastard Sword (3d4) (+0,+0)                            14.0  <color:D>      448  </color>
+i) <color:s>/</color> a Spear (1d6) (+0,+0)                                     5.0  <color:D>      154  </color>
+j) <color:s>/</color> a Beaked Axe (2d6) (+0,+0)                               12.0  <color:D>      386  </color>
+k) <color:B>/</color> a Lucerne Hammer (2d5) (+0,+0)                           12.0  <color:D>      320  </color>
+l) <color:s>/</color> a Glaive (2d6) (+0,+0)                                   19.0  <color:D>      461  </color>
+m) <color:u>}</color> <color:u>3 Slings (x2) (+0,+0)</color>                                     0.5         34
+n) <color:U>}</color> <color:u>a Short Bow (x3) (+3,+6)</color>                                  3.0  <color:D>     1540  </color>
+o) <color:U>}</color> <color:u>3 Short Bows (x3) (+0,+0)</color>                                 3.0         76
+p) <color:s>}</color> <color:u>3 Light Crossbows (x4) (+0,+0)</color>                           11.0  <color:D>      305  </color>
+q) <color:s>{</color> <color:U>3 Rounded Pebbles (1d2) (+5,+6) {90% off}</color>                 0.4          8
+r) <color:s>{</color> <color:U>49 Rounded Pebbles (1d2) (+0,+0)</color>                          0.4          1
+</style>
+Here, we see a bunch of different types of weapons, each of which is fully *Identified* (Objects in the town shops are always automatically *Identified*). But, they don't look very impressive! First of all, you can notice that each type of weapon has different damage dice, which means nothing more than that, for example, a 3d4 Bastard Sword is more deadly than a 1d7 Cutlass, since 3d4 (which means roll three four-sided dice) will give an average of 7.5 damage per strike, while 1d7 (which means roll a single seven-sided die, if such a thing could be imagined!) gives an average of 4 damage per strike. Each class of weapon has its own damage dice.
+
+Next, you may notice that (+0,+0) is repeated over and over again. That's because all of these objects are <color:keyword>average</color>. Hey, the Weapon Smith is no wizard. He just forges weapons of average quality, but he might occasionally buy a magical weapon from some intrepid adventurer (like yourself!). The (+0,+0) simply gives the magical bonus to melee accuracy (the first number), which affects your ability to hit a monster with that weapon, and the magical bonus to damage (the second number), which gets added to the damage total rolled by the damage dice, should you actually land a blow with that weapon.
+
+Objects can be magically enhanced, at which point they become <color:keyword>good</color> objects. This means nothing more than that (+0,+0) becomes something non-zero, giving you bonuses either to hit, or to damage, or both. For example, you might have noticed that <color:u>Short Bow (x3) (+3,+6)</color>. The (x3) is part of every average bow, and is called the <color:keyword>damage multiplier</color>. We'll discuss its meaning later when we discuss archery. But bows too have <color:keyword>combat bonuses</color> just like melee weapons, and they mean the same thing. Here, the bow gives +3 to hit (making you more skilled with archery), and +6 to damage (making you more deadly as well). That would be a nice starting bow to have, but, alas, it costs 1540 gp which is more than I have.
+
+So, we've discussed average and good objects. What about excellent objects? And special objects? Excellent objects are called <color:keyword>ego items</color>, a term that has been around for a long time but whose origin I cannot guess. Let's just say they are magical objects of a certain broad class. For example, I'll break my normal rules about spoilers, and say that there exists an ego class of weapons of Slay Orc. They aren't particularly good ego items, so I haven't completely ruined the game by mentioning them (I hope). They are simply more deadly against orcs. For example, our 3d4 Bastard Sword, were it a weapon of slay orc, would do three times as much damage from the base damage roll against orcs. In other words, roll a four-sided die three times, add up the result, and multiply by three if the monster is an orc. Then add in the bonus to damage. This illustrates that ego weapons often give targetted slays that make the weapon more deadly against a certain class of monsters. Ego items in general can do lots of things, like boost your stats, give you resistances or other important abilities, or even activate for various magical effects.
+
+Ego items, as I said, come as a single instance of a broad class of objects, each of which will have the same set of bonuses, and perhaps a random bonus as well just to keep egos interesting. In this respect, they behave like flavored objects (discussed in the next section). Initially, your character will not know anything about the various ego item types (even if *you* do, though some obvious ones like Slay Orc are known to all right off the bat). Instead, the character needs to *identify* an instance of a particular ego type in order to become aware of that type, learning the stock bonuses shared by all objects of that ego type (but not the random bonuses). So *identify* is an important way to learn the various ego types, and you usually only need to do it on the first one you find. (This is one case where selling an object to learn its ego type is actually a useful strategy, provided you don't think you would otherwise want the object).
+
+<color:keyword>Special</color> objects are artifacts. Think of these as unique super-ego objects: You can only find them once in a particular game and they tend to be substantially more powerful than ordinary ego items. Like egos, they typically give bonuses to combat as well as slays (if they are a weapon), or bonuses to armor class and resistances (if they are armor) as well as possible bonuses to your stats and other abilities. You will generally want to *identify* every artifact you find, unless you happen to be a veteran player who has already memorized all of the artifacts. But even then, like egos, artifacts sometimes common with additional random bonuses like an extra resistance, or an extra ability. *Identify* is your friend.
+
+Finally, we've talked about the good end of the spectrum (average -> good -> excellent -> special). What about the evil end of the spectrum (average -> bad -> awful -> terrible)? These objects are <color:keyword>cursed</color>, but they need not be junk. Unlike other variants, cursed objects work a little differently in this game. Well, bad objects are just the opposite of good ones, so they really are junk most of the time. But awful objects are excellent items (i.e., ego items) that happen to have some bad attributes added in as well. And terrible items are special items (i.e., artifacts) that similarly add bad attributes on top of the good. Whether or not these items remain useful is up to you to decide, since they always blend good attributes with bad attributes. Sometimes they are junk, and other times the good outweighs the bad. In either case, you will need *identify* to discover this information. Oh, and cursed items also usually have a <color:keyword>gotcha</color> mechanic, that I suppose I better not mention. I'll just caution you to be careful around cursed objects.
+
+We've talked a lot about equipment, but what about other kinds of objects? Their quality too might vary. Let's discuss some of these other object types first.
+
+<topic:Flavors><style:heading>Object Flavors</style>
+
+Some objects come in <color:keyword>flavors</color>. For example, you might find a Black Spotted mushroom, or a Bubbling potion. The description of the unidentified object is termed its flavor, and all objects of a given kind have the same flavor for the duration of a given game. For example, that Black Spotted mushroom might cause hallucinations, as some mushrooms have been known to do. Next time you find a Black Spotted mushroom, you will know to avoid it since it too will cause hallucinations. But the flavors <color:keyword>shuffle</color> each game you play. If they didn't then once you learned the flavor of hallucination mushrooms in one game, you'd know it for all time, and where would the fun be in that?
+
+Currently, the only flavored objects are mushrooms, potions and scrolls (We used to have more, including rings, amulets, wands, rods and staves, but I've waged a sort of mini-crusade against flavors for a number of reasons which I won't discuss). Each instance of a flavor is exactly like every other instance of the flavor, and typically, you only need Identify to learn the flavor (though you can also try to use the object to learn what it is ... This can be risky!). You won't find <color:keyword>good</color> or <color:keyword>excellent</color> or <color:keyword>special</color> objects here. Each instance of a flavor is exactly like every other instance. The early game is heavily dominated by learning many, many different flavors of marginally useful or even downright useless objects. This is one reason for junk management tools like The Mogaminator.
+
+<topic:Flavors><style:heading>Jewelry</style>
+
+While rings and amulets are wearable objects, they behave a little bit differently than weapons and armor. For one thing, there is no such thing as <color:keyword>good</color> jewelry. Either an item is average (in which case you might consider it junk, unless you plan on reforging artifacts later in the game) or it is excellent/awful. Excellent rings and amulets are like ordinary ego items in that they are instances of a broad class: the ego type. However, they are a bit different in that the ego type determines the theme of the object: its set of allowed attributes. But each piece of jewelry is almost entirely random, generated with one or more attributes from the allowed set. This means the quality of the item is highly variable, and generally increases the deeper you descend.
+
+Another difference with jewelry is that identify actually *identifies* the item as well. This is because the there are no stock attributes for each ego type, so that normal identify semantics would do very little more than reveal the objects name (and combat/ac bonuses, if any). You would almost always need *identify* anyway, and this can be a bit tedious to do for every single piece of jewelry you find.
+
+The final difference is that you won't find random artifact jewelry. Instead, there are a small number of fixed standard artifacts available. However, the various ego types can become amazingly powerful so you don't really need artifacts here. And given the themed nature of the egos, they are really behaving like mini-rand-arts anyway.
+
+<topic:Flavors><style:heading>Devices</style>
+
+Magical devices include wands, staves and rods. I highly recommend you head on over to the Magic Store and e<color:keypress>x</color>amine a few to get a feel for how devices work, as this area of the game has been extensively modified for the current release (4.0.0).
+
+Since these are available in town, I'll talk you through one example in detail without much of a guilty conscience over spoilers. For example, I examined the following wand:
+<style:screenshot>
+<color:g>a Wand: </color><color:G>Stinking Cloud</color>
+  <color:U>This device has the following magical strength:</color>
+  Power  : <color:G>13</color>
+  Mana   : <color:y>10</color>/<color:G>39</color>
+
+  <color:U>This device is loaded with a spell:</color>
+  Spell  : <color:B>Stinking Cloud</color>
+  Info   : dam 15
+  Level  : <color:G>8</color>
+  Cost   : <color:G>4</color>
+  Charges: <color:y>2</color>/<color:G>9</color>
+  Fail   : <color:G>2.4%</color>
+  Desc   : It fires a ball of poison.
+</style>
+It will help a little bit if you are already familiar with spellcasters and the magic system, since the best way to think of devices is as spellcasters that may cast a single spell. The device has a casting level (labelled as <color:keyword>Power</color>) and <color:keyword>Mana</color>, just like a normal spellcaster. And the single spell they are loaded with has a <color:keyword>spell level</color> and <color:keyword>casting cost</color> just like normal spells. The power of the effect, damage in this case, is solely determined by the power level of the device and has nothing whatsoever to do with the player's level.
+
+<topic:Flavors><style:heading>Spellbooks</style>
+
+<topic:Pseudo-ID><style:heading>Reference: Pseudo-ID</style>
+
+To review, pseudo-id is the ability to get a rough idea of the quality of objects you carry in your pack (or wield, if you are truly intrepid!). The speed and strength of the sensing varies with class, wisdom, and virtue of the player. Also, once a player reaches CL35, they automatically sense the quality of objects underfoot, and this automatic sensing is always strong regardless of class. So pseudo-id is really only relevant in the early to mid-game.
+
+Pseudo-id communicates the quality of an object via a fake inscription on that object. For example, you might have a Long Sword (2d5) {excellent} or Hard Studded Leather [7] {terrible}. The meaning of these adjectives depends on whether the sensing is strong or weak, and is given in the following two tables.
+  <indent>
+<color:o>Table 1 - Strong Pseudo-Id</color>
+<color:G>Inscription    Meaning</color>
+Terrible       a cursed artifact
+Awful          a cursed ego item
+Bad            a cursed nameless item
+Average        an average item
+Good           an enchanted item
+Excellent      a good ego item
+Special        an non-cursed artifact
+
+Or, to put this another way:
+
+                   <color:G>Egos         Artifacts</color>
+Average -> Good -> Excellent -> Special
+        -> Bad  -> Awful     -> Terrible
+
+
+<color:o>Table 2 - Weak Pseudo-Id</color>
+<color:G>Inscription    Meaning</color>
+Average        an average item
+Cursed         <indent>a cursed item (includes cursed ego items and artifacts)</indent>
+Enchanted      <indent>an enchanted item (includes good ego items and artifacts)</indent>
+</indent>
+
+
+WHAT ARE OBJECTS, AND WHY SHOULD YOU CARE?
+WHAT ARE THE TYPES OF OBJECTS? PERHAPS A SECTION ON EACH. FOR WEAPONS, EXPLAIN THE DICE. FOR ARMORS, EXPLAIN THE AC BONUSES.
+THEN, A SUMMARY TABLE OF OBJECT SYMBOLS.
+EXPLAIN INVENTORY VS EQUIPMENT
+
+GETTING OBJECTS: SHOPPING, FIND ON FLOOR, KILL MONSTER
+OBJECT KNOWLEDGE
+  * EXPLAIN THE SEQUENCE PSEUDO-ID, ID, *ID*
+  * EXPLAIN FLAVORS
+  * EXPLAIN LEARNING THE EGOS
+  * TIPS FOR THE EARLY GAME: SELLING AN OBJECT TO LEARN ABOUT IT
+OBJECT QUALITY: EGOS, ARTIFACTS AND CURSES
+
+REFERENCE
+ * INSCRIPTIONS (AN ADVANCED TOPIC)
+ * AUTOINSCRIPTIONS (%all)
+
+
+
 The dungeons are full of objects and many monsters you meet will be carrying one or more items about their person which you may retrieve from their corpse should you be skillful enough to defeat them. You may pick up objects by moving on top of them. By setting various options (see <link:option.txt#UserInterface>) you may choose to pick up items automatically or to be prompted before picking up objects.
 
 Many objects found within the dungeon have special commands for their use. Wands must be 'a'imed, staves must be 'u'sed, scrolls must be 'r'ead, and potions must be 'q'uaffed. You may, in general, not only use items in your pack, but also items on the ground, if you are standing on top of them.
