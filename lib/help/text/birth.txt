@@ -13,7 +13,8 @@ Character creation, or birth, is controlled through a variety of
 choices. You must choose your character's race (Human, Elf, Hobbit, 
 Orc, Undead, Demon, etc), your character's class (Warrior, Mage, 
 Priest, Rogue, etc) and you character's personality (Mighty, Shrewd, 
-Patient, etc). Each of these choices are described in the help files.
+Patient, etc). Each of these choices are described in the help files 
+(see [a]).
 
 You may start the entire process over at any time by pressing S at any 
 prompt. Also, you can press ESC to back up to the previous option. 
@@ -58,8 +59,8 @@ If you have selected a spellcasting class, you will also be prompted
 for your choice of magic realm(s). Your character's sex has a minimal 
 effect on game play, but some personalities are restricted to male only 
 or female only. More details of attributes are found in the Races, 
-Classes and Personalities section (see [a]) and the Magic System 
-section (see [b]).
+Classes and Personalities section (see [b]) and the Magic System 
+section (see [c]).
 
 In addition to these attributes, there are several statistics which are 
 used to determine your character's relative skills and abilities as 
@@ -72,7 +73,7 @@ follows:
   For example, strength affects your carrying capacity, the amount of 
   damage you do to a monster when you hit it and the number of blows 
   per round you get with a weapon. A more complete discussion of the 
-  primary statistics is contained later in this document (see [c] 
+  primary statistics is contained later in this document (see [d] 
   below).
   
   Experience
@@ -132,7 +133,7 @@ follows:
   have fairly obvious effects, but will be described more completely 
   below. The starting abilities of a character are based upon race and 
   class. Abilities may be adjusted by high or low stats, and may 
-  increase with the level of the character (see [d] below for details).
+  increase with the level of the character (see [e] below for details).
   
   Speed
   Speed is arguably the most important attribute of any character. In 
@@ -343,13 +344,13 @@ combat.
 
 For the proficiency level of the Riding, you need to attack in melee or 
 shoot with missile weapon when riding. And your speed increases up to 
-the mount's speed when the proficiency level increases. (see [e])
+the mount's speed when the proficiency level increases. (see [f])
 
 Birth Options
 
 During character generation you may press '=' at any time to access the 
 birth options. A more detailed description of the various birth options 
-can be found in the section on the Options Page (see [f]). Feel free to 
+can be found in the section on the Options Page (see [g]). Feel free to 
 ignore these options if you are new to the game. In fact, if you chose 
 the Beginner startup option as suggested, then the birth options won't 
 even be displayed to you (i.e., you will play with the default 
@@ -357,15 +358,15 @@ options).
 
 Perhaps one of the most important features of the birth options is the 
 ability to decide what type of town level you want. The various town 
-options are discussed on the Town page (see [g]).
+options are discussed on the Town page (see [h]).
 
 The Auto-Roller
 
 The auto-roller is a quick means of generating start-up characters 
 based on a set of user-selected criteria. If you choose to use the 
 auto-roller, you will be presented with a column giving the maximum 
-possible statistics (see [h] below) for your choice of race, class and 
-personality (see [i]). Then you can specify your desired statistics 
+possible statistics (see [i] below) for your choice of race, class and 
+personality (see [j]). Then you can specify your desired statistics 
 using keypad or cursor keys.
 
 Once you have specified your desired statistics, the computer will then 
@@ -373,8 +374,8 @@ randomly roll successive start-up characters and compare them to your
 specified criteria. Each stat is rolled as a number from 8 to 17, with 
 a normal distribution, and is then immediately modified based upon the 
 race, class and personality which you have chosen. The exact quantum of 
-this modification can be found in the stat bonus table (see [j], [k] 
-and [l]).
+this modification can be found in the stat bonus table (see [k], [l] 
+and [m]).
 
 Once a character that matches or exceeds your expectations has been 
 rolled, the Auto-Roller stops to ask you whether you accept or not. If 

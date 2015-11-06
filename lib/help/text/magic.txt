@@ -50,9 +50,9 @@ also has access to class specific spells of the force.
 
 Finally, there are non-magical classes that learn techniques and 
 function like spellcasters that use magic directly. These include the 
-Ninja, the Weaponmaster and the Mauler, among others. While there 
+Ninja, the Weaponmaster and the Mauler, among others. While their 
 powers are not necessarily magical, many of the rules of spellcasters 
-apply to them as well (e.g., casting costs, fail rates, etc).
+apply to them as well (e.g., casting costs, fail rates, etc.).
 
 Spellbook Magic
 
@@ -71,7 +71,7 @@ and some only one. If you can choose a second realm, note that you
 won't be as proficient with its spells as you are in your first, or 
 primary realm. You will have increased fail rates for one thing. 
 However, players with a secondary realm gain the strong advantage of 
-being able to change that realm during the game. To do so, simple Gain 
+being able to change that realm during the game. To do so, simply Gain 
 a spell from a book of the realm you wish to switch to. You will forget 
 any spells you learned in the old realm, and you can only learn a fixed 
 (though large) number of spells during the game, so use this power 
@@ -103,17 +103,17 @@ Life
   towards evil.
 
 Sorcery
-  Sorcery is a `meta` realm, including enchantment and general spells. 
-  It provides superb protection spells (such as Teleport spells for 
+  Sorcery is a utility realm, including enchantment and general spells. 
+  It provides superb utility spells (such as Teleport spells for 
   fleeing and even Globe of Invulnerability), spells to enhance your 
   odds in combat (Slow Monster, Haste Self, Confuse Monster) and, most 
   importantly, a vast selection of spells for gathering information: in 
   addition to the usual detection and identify spells, one of the 
   standard spellbooks has a spell called Identify True, which gives you 
   full knowledge of a given object! In the rare books, there are spells 
-  with which you can enchant your items or turn unwanted items to gold. 
-  However, Sorcery has one weakness: it has no spells to deal direct 
-  damage to your enemies.
+  with which you can protect your inventory items or even turn unwanted 
+  items to gold. However, Sorcery has one weakness: it has no spells to 
+  deal direct damage to your enemies.
 
 Nature
   Nature magic makes you a master of the elements; it provides 
@@ -127,11 +127,11 @@ Nature
 Chaos
   Chaos is the very element of unmaking, and Chaos spells are the most 
   terrible weapons of destruction imaginable. From Magic Missile and 
-  Acid Bolt to the medium level Fire Ball and Doom Bolt, and finally to 
+  Fire Bolt to the medium level Fire Ball and Doom Bolt, and finally to 
   the awesome spells of Invoke Logrus, Mana Storm and Call the Void, 
-  Chaos offers an unsurpassable arsenal of attack spells. Chaos is the 
-  only realm which provides the *Destruction* spell. The caster can 
-  also call on the primal forces of Chaos to induce mutations in 
+  Chaos offers an unsurpassable arsenal of attack spells. Chaos is one 
+  of the two realms which provides the Destruction spell. The caster 
+  can also call on the primal forces of Chaos to induce mutations in 
   his/her opponents and even him/herself, but otherwise, Chaos has no 
   protective spells. Beware! Chaos spells are known to backfire easily 
   and produce undesired effects.
@@ -292,17 +292,21 @@ Kendo
 On Casting Spells
 
 Players who select spellcasting characters may notice a few unusual 
-phenomena during the course of the game. Here are a few hints and hints 
+phenomena during the course of the game. Here are a few tips and hints 
 on what may be happening.
 
 Armor and Spell Casting
-  Most spellcasting classes are penalized for wielding armor above a 
-  certain total combined weight. The threshold varies between 30lbs for 
-  a mage and 40lbs for a paladin. Typically, the more reliant on 
+  Most spellcasting classes are penalized for wielding armor and 
+  weapons above a certain total combined weight. The Mage is most 
+  sensitive to encumbrance since the weight calculation also includes 
+  the full weight of their melee weapon. Paladins, on the other hand, 
+  can "armor up" since their encumbrance calculation all but ignores 
+  the weight of their melee weapon. Typically, the more reliant on 
   spells/prayers your class is deemed to be, the lower your weight 
   allowance. If you exceed your weight limit, your mana will drop. This 
   penalty is fairly stiff for low level characters but can generally be 
-  ignored by high level ones.
+  ignored by high level ones ... Unless your end game priest attempts 
+  to weild a 40lb Mace of Disruption!
 
 Mage-Types and Gloves
   Spellcasters who cast spells from spellbooks using INT as the stat 
@@ -321,13 +325,14 @@ Casting Spells With Insufficient Mana
   Occasionally, you may try (either by accident or in desperation) to 
   cast a spell when you have insufficient mana to do so. In these 
   circumstances you will be told by the game that you do not have 
-  enough mana to cast the spell and then asked if you want to anyway. 
-  Casting the spell under these conditions has a drastically reduced 
-  chance of success and may also result in your constitution being 
-  damaged. It may also cause you to faint from the effort which will 
-  effectively paralyze you for several turns (even with free action). 
-  The CON drain and the paralyzation may happen regardless of whether 
-  the casting was successful or not.
+  enough mana to cast the spell and then asked if you want to anyway 
+  (depending on your options settings: see [a]). Casting the spell 
+  under these conditions has a drastically reduced chance of success 
+  and may also result in your constitution being damaged. It may also 
+  cause you to faint from the effort which will effectively paralyze 
+  you for several turns (even with free action). The CON drain and the 
+  paralyzation may happen regardless of whether the casting was 
+  successful or not.
 
 Spell Durations
   Some spells such as Haste-Self or Resistance grant an effect which 
@@ -352,14 +357,14 @@ Bolts and Beams
 
 Balls
   There are two things to remember about ball spells. Firstly, unlike 
-  bolt spells, they can be aimed at a specific target which allows you 
-  to target a specific monster as opposed to the first one in the 
-  direction you are aiming. Secondly, they have a radius (which varies 
-  from spell to spell). A radius value of one or more will result in 
-  the spell affecting monsters (and possibly objects, etc) around the 
-  target in addition to the target itself. When ball spells are 
-  directed at monsters in walls, the ball will blow up at the front of 
-  the wall, and the monster will take only half damage.
+  bolt spells, they will always hit the specified target as opposed to 
+  the first one in the direction you are aiming. Secondly, they have a 
+  radius (which varies from spell to spell). A radius value of one or 
+  more will result in the spell affecting monsters (and possibly 
+  objects, etc) around the target in addition to the target itself. 
+  When ball spells are directed at monsters in walls, the ball will 
+  blow up at the front of the wall, and the monster will take only half 
+  damage.
 
 Line-of-Sight
   Line-of-sight spells affect all monsters that that are currently in 

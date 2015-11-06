@@ -486,16 +486,16 @@ static flag_insc_table flag_insc_resistance[] =
     { "Po", TR_RES_POIS, -1 },
     { "Li", TR_RES_LITE, -1 },
     { "Dk", TR_RES_DARK, -1 },
-    { "Sh", TR_RES_SHARDS, -1 },
-    { "Bl", TR_RES_BLIND, -1 },
     { "Cf", TR_RES_CONF, -1 },
-    { "So", TR_RES_SOUND, -1 },
     { "Nt", TR_RES_NETHER, -1 },
     { "Nx", TR_RES_NEXUS, -1 },
+    { "So", TR_RES_SOUND, -1 },
+    { "Sh", TR_RES_SHARDS, -1 },
     { "Ca", TR_RES_CHAOS, -1 },
     { "Di", TR_RES_DISEN, -1 },
-    { "Fe", TR_RES_FEAR, -1 },
     { "Ti", TR_RES_TIME, -1 },
+    { "Bl", TR_RES_BLIND, -1 },
+    { "Fe", TR_RES_FEAR, -1 },
     { NULL, 0, -1 }
 };
 
@@ -508,14 +508,14 @@ static flag_insc_table flag_insc_vulnerability[] =
     { "Po", TR_VULN_POIS, -1 },
     { "Li", TR_VULN_LITE, -1 },
     { "Dk", TR_VULN_DARK, -1 },
-    { "Sh", TR_VULN_SHARDS, -1 },
-    { "Bl", TR_VULN_BLIND, -1 },
-    { "Cf", TR_VULN_CONF, -1 },
-    { "So", TR_VULN_SOUND, -1 },
     { "Nt", TR_VULN_NETHER, -1 },
     { "Nx", TR_VULN_NEXUS, -1 },
+    { "Cf", TR_VULN_CONF, -1 },
+    { "So", TR_VULN_SOUND, -1 },
+    { "Sh", TR_VULN_SHARDS, -1 },
     { "Ca", TR_VULN_CHAOS, -1 },
     { "Di", TR_VULN_DISEN, -1 },
+    { "Bl", TR_VULN_BLIND, -1 },
     { "Fe", TR_VULN_FEAR, -1 },
     { NULL, 0, -1 }
 };
@@ -600,7 +600,7 @@ static flag_insc_table flag_insc_slay[] =
     { "U", TR_SLAY_DEMON, TR_KILL_DEMON },
     { "L", TR_SLAY_UNDEAD, TR_KILL_UNDEAD },
     { "Z", TR_SLAY_ANIMAL, TR_KILL_ANIMAL },
-    { "Good", TR_SLAY_GOOD, -1 },
+    { "A", TR_SLAY_GOOD, -1 },
     { "Lv", TR_SLAY_LIVING, -1 },
     { NULL, 0, -1 }
 };

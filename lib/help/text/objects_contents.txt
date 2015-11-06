@@ -1,20 +1,26 @@
-PosChengband Objects
+Objects
 
 Please choose one of the following online help files:
 
-    [a] PosChengband Objects
-    [b] Object Symbols
-    [c] Equipment and Inventory
-    [d] Objects Generation
-    [e] Cursed Objects
-    [f] The Ancient and Foul Curse
-    [g] Object Flavors
-    [h] Pseudo-ID
-    [i] Identifying Objects
-    [j] Ego Objects
-    [k] Artifacts
-    [l] Object Inscriptions
-    [m] Object Types
+  The following topics are in tutorial format:
+    [a] Objects
+    [b] Where Can I Get More Stuff?
+    [c] OK, I Found Something. What Does It Do?
+    [d] How Good is this Object, Anyway?
+    [e] Object Flavors
+    [f] Jewelry
+    [g] Devices
+    [h] Spellbooks
+    [i] Object Inscriptions
+
+  The following topics are boring reference material:
+    [j] Object Symbols
+    [k] Commands for Using Objects
+    [l] Equipment
+    [m] Inventory
+    [n] Pseudo-ID
+    [o] Inscriptions: List of Abbreviations
+    [p] Inscriptions: Summary
 
     (?) Help System Commands
 

@@ -175,6 +175,9 @@ Display the labels for objects in the equipment list, and in any special window 
 <topic:show_weights><color:U>Show weights in object listings</color> <color:D>(show_weights)</color>
 Display the weights of objects in the inventory and equipment lists, and in stores, and in any special window which is displaying any of these lists.
 
+<topic:show_discounts><color:U>Show discounts in object listings</color> <color:D>(show_discounts)</color>
+Display the discount of the object, if any, as part of its inscription. Disabling this option won't remove the object's discount. Rather, this information will no longer be displayed to the player.
+
 <topic:show_item_graph><color:U>Show items graphics</color> <color:D>(show_item_graph)</color>
 Displays small icons of the items in your inventory list, equipment list and stores.
 
@@ -204,12 +207,12 @@ When an *identified* equipment is displayed, an abbreviation string for the obje
 
 A word "EXTRA" means that the ability must not be obvious from the objects name. For example, a pair of boots of Levitation sometimes has EXTRA shard resistance. But fire resistance of an armor of Resist Fire is not an EXTRA resistance.
 
-The list of abbreviations for each resistances and abilities are described in <link:objects.txt#abbrev>.
+The list of abbreviations for each resistances and abilities are described in <link:objects.txt#InscriptionAbbrev>.
 
 <topic:abbrev_all><color:U>Describe obj's all resistances by abbreviation</color> <color:D>(abbrev_all)</color>
 When an *identified* equipment is displayed, an abbreviation string for all the object's resitances and abilities are added as fake inscriptions of the object.
 
-The list of abbreviations for each resistances and abilities are described in <link:objects.txt#abbrev>.
+The list of abbreviations for each resistances and abilities are described in <link:objects.txt#InscriptionAbbrev>.
 
 <topic:exp_need><color:U>Show the experience needed for the next level</color> <color:D>(exp_need)</color>
 Setting this option to yes alters the display of experience on the left of the main screen to the experience needed to reach the next character level, instead of the character's current total experience.

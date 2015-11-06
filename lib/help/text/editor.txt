@@ -691,8 +691,8 @@ multiple rules to accomplish common tasks. Ready?
 Which Rule is Being Used?
 
 If you are ever unsure about which rule is being applied in a given 
-situation, you can use the Inspect command for more information. For 
-example:
+situation, turn on the destroy_debug option (see [g]). With this option 
+you can use the Inspect command for more information. For example:
 
   a Thieves' Guide [Burglar's Handbook]
 
@@ -708,6 +708,16 @@ In the first case, this is a line automatically added when I destroyed
 an unreadable spellbook using the k command. In the second case, this 
 is a line that comes as a default setting. I may or may not like this 
 behavior, and if I don't, now I know which line to change!
+
+In addition, with debugging turned on, the rules used are printed in 
+the message log as actions are taken, so you can see exactly why 
+objects are being destroyed, picked up, left on the ground or 
+auto-identified. For example:
+
+
+  You have 26 charges remaining. (AutoID:~?unidentified rods) You see a 
+  Rod: Frost Ball (1/3 charges). (Destroy:(!rods:frost ball$)
+  Auto-destroying.
 
 Also, you might want to check out the ~_ Knowledge Option. Like the 
 editor, it displays the rules for you in the order they are processed. 
@@ -957,7 +967,7 @@ Table I: Line Types in the Editor
               Conditional Lines so that your rule base adapts to the 
               variety of classes and situations that you encounter. If 
               this is gibberish to you, then you probably skipped the 
-              section [g] above!
+              section [h] above!
   
   Rule        Every other line, unless it is blank, is a rule. The 
               syntax of a rule is described in the following 5 tables.
@@ -1019,7 +1029,7 @@ Table II: Rules: Syntax
                      this rule.
   
   If you didn't understand some of that, you should probably review the 
-  tutorial sections above, starting with [h]. The examples section 
+  tutorial sections above, starting with [i]. The examples section 
   above, in particular, is probably the best way to learn what is going 
   on.
   
@@ -1241,7 +1251,7 @@ Table V: Rules: Adjectives
                might still be useful, even if they are only Average or 
                Good (e.g. Dragon Scale Mail).
   
-  Ego          Applies to all excellent objects. See [i] for more 
+  Ego          Applies to all excellent objects. See [j] for more 
                information.
   
   Artifact     Artifacts are special items and are unique. Think of 
@@ -1462,7 +1472,7 @@ Table VII: Conditional Lines: Syntax
   evaluates to TRUE or non-zero, then any subsequent rules will be 
   applied.
   
-  If none of this makes sense, see [j] above.
+  If none of this makes sense, see [k] above.
   
 Table VIII: Conditional Lines: Functions
   Function  Explanation
@@ -1532,7 +1542,7 @@ The Easy Destroyer
 If, after reading all of the above, you decide that The Mogaminator is 
 too much for you to handle, you may, instead, use a simpler system to 
 manage objects: The Easy Destroyer. I don't recommend this, but the 
-choice is yours. This system is configured via options (see [k]). The 
+choice is yours. This system is configured via options (see [l]). The 
 option destroy_items turns The Easy Destroyer on and off. If you are 
 using The Mogaminator, be sure to turn off The Easy Destroyer, and vice 
 versa. (BTW, you "turn off" The Mogaminator but closing the game and 

@@ -192,9 +192,11 @@ Input Options
   display a list of items when you press 'x' at that time.
   
   Allow casting spells when short of mana (over_exert)
-  Normally, PosChengband restricts you from casting spells when you 
-  don't have enough mana. If this option is set, the program allow you 
-  to cast spells at such dangerous situation.
+  Normally, you are prevented from casting spells when you don't have 
+  enough mana since accidentally doing so can have very nasty 
+  consequences, including death. If this option is set, then you are 
+  permitted to cast spells at such dangerous times, with a warning 
+  prompt, of course!
   
   Use numpad keys as cursor keys in editor mode (numpad_as_cursorkey)
   This option makes numpad keys work as cursor movement keys while text 
@@ -342,6 +344,12 @@ Text Display Options
   Display the weights of objects in the inventory and equipment lists, 
   and in stores, and in any special window which is displaying any of 
   these lists.
+  
+  Show discounts in object listings (show_discounts)
+  Display the discount of the object, if any, as part of its 
+  inscription. Disabling this option won't remove the object's 
+  discount. Rather, this information will no longer be displayed to the 
+  player.
   
   Show items graphics (show_item_graph)
   Displays small icons of the items in your inventory list, equipment 
@@ -580,175 +588,183 @@ Easy Auto-Destroyer Options
   whether with a spell or with a magical device (but, alas, not via a 
   town service).
   
+  List the rule used when applying the Mogaminator (destroy_debug)
+  This is a debugging option when using the full-featured Mogaminator. 
+  Enabling this option results in the reporting of the rule used 
+  whenever an action is taken, such as pickup, auto-identify or 
+  destroy. The rule in question will appear in the message line. For 
+  example:
+    You have 26 charges remaining. (AutoID:~?unidentified rods) You see a 
+    Rod: Frost Ball (1/3 charges). (Destroy:(!rods:frost ball$)
+    Auto-destroying.
+  
+  In addition, the matching rule will be displayed when inspecting 
+  objects. For example:
+    an Amulet (Defender) [+12]
+      Resist Acid, Electricity, Fire, Cold, Poison
+      Free Action; See Invisible; Levitation
+      It cannot be harmed by the elements.
+      Autopick: ~*identified* amulets more value than 10000
+    
   Auto-destroyer leaves known worthy items (leave_worth)
-  This option protects known objects that can be sold in stores from 
-  auto-destruction by The Easy Destroyer.
+  This option protects known objects that can be sold in stores from auto-destrD
   
   Auto-destroyer leaves weapons and armour (leave_equip)
-  This option protects all weapons and armour from auto-destruction by 
-  The Easy Destroyer.
+  This option protects all weapons and armour from auto-destruction by The EasyD
   
   Auto-destroyer leaves closed chests (leave_chest)
-  This option protects all chests which are not yet opened from 
-  auto-destruction by The Easy Destroyer.
+  This option protects all chests which are not yet opened from auto-destructioD
   
   Auto-destroyer leaves wanted corpses (leave_wanted)
-  This option protects corpses of monsters wanted at the Hunter's 
-  office from auto-destruction by The Easy Destroyer.
+  This option protects corpses of monsters wanted at the Hunter's office from aD
   
   Auto-destroyer leaves corpses and skeletons (leave_corpse)
-  This option protects all corpses and skeletons from auto-destruction 
-  by The Easy Destroyer.
+  This option protects all corpses and skeletons from auto-destruction by The ED
   
   Auto-destroyer leaves junk (leave_junk)
-  This option protects all 'junk', such as Shards of Pottery or Broken 
-  Stick, from auto-destruction by The Easy Destroyer. This is 
-  especially helpful for Archers.
+  This option protects all 'junk', such as Shards of Pottery or Broken Stick, fA
   
   Auto-destroyer leaves items your race/class needs (leave_special)
-  This option protects specific items which are normally worthless, but 
-  very important for specific classes or races. These include bones for 
-  Archers, ego light sources of darkness for Ninja, Wands of Heal 
-  Monster for BeastMaster and Cavalry, and humanoid corpses for 
-  Balrogs, etc...
+  This option protects specific items which are normally worthless, but very ime
   
-Base Delay Factor
-
-The delay_factor value, if non-zero, is used to slow down the game, 
-which is useful to allow you to observe the animations of bolt, beam, 
-and ball attacks. The actual delay is equal to delay_factor cubed, in 
-milliseconds.
-
-Hitpoint Warning
-
-The hitpoint_warn value, if non-zero, is the percentage of maximal 
-hitpoints at which the player is warned that he may die. It is also 
-used as the cut-off for using red to display both hitpoints and mana.
-
-Autosave Options
-
-Ideally, the game should be so stable that these options are not needed 
-at all. However, even if the game were 100% reliable (which it, to be 
-frank, probably is not), the user might forget to save and his hardware 
-could fail him. For all of these reasons, you may want to use these 
-options:
+  Base Delay Factor
   
-  Autosave when entering new levels (autosave_l)
-  If this option is set, the program will attempt to save your 
-  character every time before creating a new dungeon level.
+  The delay_factor value, if non-zero, is used to slow down the game, 
+  which is useful to allow you to observe the animations of bolt, beam, 
+  and ball attacks. The actual delay is equal to delay_factor cubed, in 
+  milliseconds.
   
-  Timed autosave (autosave_t)
-  If this option is set, the program will attempt to save your 
-  character every n game turns, where n is the "frequency". To set the 
-  frequency press F. It will increase the frequency to the next 
-  category (and from 25000 to 0), the categories being every 50, 100, 
-  250, 500, 1000, 2500, 5000, 10000 and 25000 turns. Note that the 
-  frequency must be higher than 0 and the "Timed autosave" set to "yes" 
-  for timed autosaves to take place.
+  Hitpoint Warning
   
-Window Flags
-
-These options select what kind of information is displayed in which 
-window. Some platforms support "sub-windows", which are windows which 
-can be used to display useful information generally available through 
-other means. The best thing about these windows is that they are 
-updated automatically (usually) to reflect the current state of the 
-world. The "window options" can be used to specify what should be 
-displayed in each window. The possible choices should be pretty 
-obvious.
+  The hitpoint_warn value, if non-zero, is the percentage of maximal 
+  hitpoints at which the player is warned that he may die. It is also 
+  used as the cut-off for using red to display both hitpoints and mana.
   
-  Display inven/equip
-  Display the player inventory (and sometimes the equipment). Note that 
-  you can toggle between Inventory and Equipment by pressing ^I.
+  Autosave Options
   
-  Display equip/inven
-  Display the player equipment (and sometimes the inventory). Note that 
-  you can toggle between Inventory and Equipment by pressing ^I.
+  Ideally, the game should be so stable that these options are not 
+  needed at all. However, even if the game were 100% reliable (which 
+  it, to be frank, probably is not), the user might forget to save and 
+  his hardware could fail him. For all of these reasons, you may want 
+  to use these options:
+    
+    Autosave when entering new levels (autosave_l)
+    If this option is set, the program will attempt to save your 
+    character every time before creating a new dungeon level.
+    
+    Timed autosave (autosave_t)
+    If this option is set, the program will attempt to save your 
+    character every n game turns, where n is the "frequency". To set 
+    the frequency press F. It will increase the frequency to the next 
+    category (and from 25000 to 0), the categories being every 50, 100, 
+    250, 500, 1000, 2500, 5000, 10000 and 25000 turns. Note that the 
+    frequency must be higher than 0 and the "Timed autosave" set to 
+    "yes" for timed autosaves to take place.
+    
+  Window Flags
   
-  Display Object List
-  This option displays the results of the Object List command (]). For 
-  example:
+  These options select what kind of information is displayed in which 
+  window. Some platforms support "sub-windows", which are windows which 
+  can be used to display useful information generally available through 
+  other means. The best thing about these windows is that they are 
+  updated automatically (usually) to reflect the current state of the 
+  world. The "window options" can be used to specify what should be 
+  displayed in each window. The possible choices should be pretty 
+  obvious.
+    
+    Display inven/equip
+    Display the player inventory (and sometimes the equipment). Note 
+    that you can toggle between Inventory and Equipment by pressing ^I.
+    
+    Display equip/inven
+    Display the player equipment (and sometimes the inventory). Note 
+    that you can toggle between Inventory and Equipment by pressing ^I.
+    
+    Display Object List
+    This option displays the results of the Object List command (]). 
+    For example:
+    
+      There is 1 wanted object:
+       ! a Potion of Resistance               S 17 E 29
+    
+      There are 4 other objects:
+       | a Two-Handed Sword (3d6)             S 18 E 30
+       \ a Lead-Filled Mace (3d4)             S 18 E 28
+       ] a Pair of Metal Shod Boots [6]       S 18 E 29
+       / an Awl-Pike (1d8)                    S 19 E 29
+    
+    Display Monster List
+    This option displays the results of the Monster List command ([). 
+    For example:
+    
+      You are aware of 4 monsters, 4 are awake:
+       t Aimless looking merchant (2 awake)
+       t Agent of black market                N  9 W 54
+       t Singing, happy drunk                 S 22 E 72
+    
+    Display messages
+    Display the most recently generated messages (cf The ^P command).
+    
+    Display overhead view
+    Display an overhead view of the entire dungeon. This is very slow 
+    and gives the same results as the M command.
+    
+    Display monster recall
+    Display a description of the most monster which has been most 
+    recently attacked, targeted, or examined in some way.
+    
+    Display object recall
+    Display a description of the most recently selected object. 
+    Currently this only affects spellbooks and prayerbooks. This window 
+    flag may be usefully combined with others, such as "monster 
+    recall".
+    
+    Display dungeon view
+    Display a copy of dungeon map.
+    
+    Display borg messages
+    This window flag is currently used only by the Borg which is not 
+    currently supported in this variant.
+    
+    Display borg status
+    This window flag is currently used only by the Borg which is not 
+    currently supported in this variant.
+    
+  Cheating Options
   
-    There is 1 wanted object:
-     ! a Potion of Resistance               S 17 E 29
+  Using the cheating options marks your character as "Cheater" and you 
+  won't get into the high-score list. Turning off the cheating options 
+  later does NOT allow your character to get a highscore entry, so 
+  think twice before using any cheat.
+    
+    Peek into object creation (cheat_peek)
+    Cheaters never win. But they can peek at object creation.
+    
+    Peek into monster creation (cheat_hear)
+    Cheaters never win. But they can peek at monster creation.
+    
+    Peek into dungeon creation (cheat_room)
+    Cheaters never win. But they can peek at room creation.
+    
+    Peek into something else (cheat_xtra)
+    Cheaters never win. But they can see debugging messages.
+    
+    Know complete monster info (cheat_know)
+    Cheaters never win. But they can know all about monsters.
+    
+    Allow player to avoid death (cheat_live)
+    Cheaters never win. But they can cheat death.
+    
+    Ask for saving death (cheat_save)
+    Cheaters never win. But they can choose whether they save dead 
+    character data or not when they die.
+    
   
-    There are 4 other objects:
-     | a Two-Handed Sword (3d6)             S 18 E 30
-     \ a Lead-Filled Mace (3d4)             S 18 E 28
-     ] a Pair of Metal Shod Boots [6]       S 18 E 29
-     / an Awl-Pike (1d8)                    S 19 E 29
+  Original   : Ben Harrison
+  Updated    : Zangband 2.1.* by Topi Ylinen
+  Updated    : Zangband 2.2.0 through 2.2.6c by Robert Ruehlmann
+  Updated    : Zangband DevTeam
+  Updated    : Hengband 1.5.2
+  Updated    : PosChengband 4.0.0
   
-  Display Monster List
-  This option displays the results of the Monster List command ([). For 
-  example:
   
-    You are aware of 4 monsters, 4 are awake:
-     t Aimless looking merchant (2 awake)
-     t Agent of black market                N  9 W 54
-     t Singing, happy drunk                 S 22 E 72
-  
-  Display messages
-  Display the most recently generated messages (cf The ^P command).
-  
-  Display overhead view
-  Display an overhead view of the entire dungeon. This is very slow and 
-  gives the same results as the M command.
-  
-  Display monster recall
-  Display a description of the most monster which has been most 
-  recently attacked, targeted, or examined in some way.
-  
-  Display object recall
-  Display a description of the most recently selected object. Currently 
-  this only affects spellbooks and prayerbooks. This window flag may be 
-  usefully combined with others, such as "monster recall".
-  
-  Display dungeon view
-  Display a copy of dungeon map.
-  
-  Display borg messages
-  This window flag is currently used only by the Borg which is not 
-  currently supported in this variant.
-  
-  Display borg status
-  This window flag is currently used only by the Borg which is not 
-  currently supported in this variant.
-  
-Cheating Options
-
-Using the cheating options marks your character as "Cheater" and you 
-won't get into the high-score list. Turning off the cheating options 
-later does NOT allow your character to get a highscore entry, so think 
-twice before using any cheat.
-  
-  Peek into object creation (cheat_peek)
-  Cheaters never win. But they can peek at object creation.
-  
-  Peek into monster creation (cheat_hear)
-  Cheaters never win. But they can peek at monster creation.
-  
-  Peek into dungeon creation (cheat_room)
-  Cheaters never win. But they can peek at room creation.
-  
-  Peek into something else (cheat_xtra)
-  Cheaters never win. But they can see debugging messages.
-  
-  Know complete monster info (cheat_know)
-  Cheaters never win. But they can know all about monsters.
-  
-  Allow player to avoid death (cheat_live)
-  Cheaters never win. But they can cheat death.
-  
-  Ask for saving death (cheat_save)
-  Cheaters never win. But they can choose whether they save dead 
-  character data or not when they die.
-  
-
-Original   : Ben Harrison
-Updated    : Zangband 2.1.* by Topi Ylinen
-Updated    : Zangband 2.2.0 through 2.2.6c by Robert Ruehlmann
-Updated    : Zangband DevTeam
-Updated    : Hengband 1.5.2
-Updated    : PosChengband 4.0.0
-
-
