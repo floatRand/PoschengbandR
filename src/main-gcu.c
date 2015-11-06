@@ -1311,7 +1311,7 @@ static void hook_quit(cptr str)
 
 /* Parse 27,15,*x30 up to the 'x'. * gets converted to a big number
    Parse 32,* until the end. Return count of numbers parsed */
-int _parse_size_list(cptr arg, int sizes[], int max)
+static int _parse_size_list(cptr arg, int sizes[], int max)
 {
     int i = 0;
     cptr start = arg;
