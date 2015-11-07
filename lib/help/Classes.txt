@@ -125,14 +125,14 @@ The weaponmaster is great with a single class of weapons. The character gets com
 See <link:Weaponmasters.txt> for more details on weaponmasters.
 
   <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
-Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
-Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
-Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Strength     <color:w> +4</color>        Disarming   <color:G>Excellent    </color>
+Intelligence <color:w> -3</color>        Device      <color:G>Excellent    </color>
+Wisdom       <color:w> -2</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:r>Bad          </color>
+Constitution <color:w> +2</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
-Life Rating  109%       Melee       <color:g>Superb       </color>
-Base HP       12        Bows        <color:g>Superb       </color>
+Life Rating  109%       Melee       <color:v>Legendary[2] </color>
+Base HP       12        Bows        <color:y>Very Good    </color>
 Experience   135%
 </style></indent>
 <topic:Weaponsmith><color:o>Weaponsmith</color>
@@ -732,7 +732,7 @@ Mauler       <color:v>  +5 </color>  -2   -2   -1   +3   +2  111%  +18  120%
 Rune-Knight    +2 <color:v>  +2 </color>  +0   +1   +0   +1  107%   +6  150%
 Samurai        +3   -2 <color:v>  +1 </color>  +2   +1   +1  111%  +12  130%
 Warrior        +4   -2   -2   +2   +2   +1  115%  +18  100%
-Weaponmaster <color:v>  +3 </color>  -1   -1   +1   +1   +1  109%  +12  135%
+Weaponmaster <color:v>  +4 </color>  -3   -2   -1   +2   +1  109%  +12  135%
 Weaponsmith    +3   -1   -1   +1   +0   +0  111%  +12  130%
 Archer         +2   -1   -1   +2   +1   +0  111%  +12  110%
 Sniper         +2   -1   -1   +2   +1   +0  100%   +4  110%
@@ -781,7 +781,7 @@ Mauler        <color:g>Superb       </color> <color:g>Superb       </color> <col
 Rune-Knight   <color:G>Excellent    </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Samurai       <color:g>Superb       </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Warrior       <color:g>Superb       </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:o>Fair         </color>
-Weaponmaster  <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:o>Fair         </color>
+Weaponmaster  <color:G>Excellent    </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:r>Bad          </color>
 Weaponsmith   <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:o>Fair         </color>
 Archer        <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color>
 Sniper        <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:b>Heroic       </color>
@@ -830,7 +830,7 @@ Mauler        <color:R>Poor         </color> <color:r>Bad          </color> <col
 Rune-Knight   <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Samurai       <color:R>Poor         </color> <color:r>Bad          </color> <color:b>Heroic       </color> <color:g>Superb       </color>
 Warrior       <color:R>Poor         </color> <color:r>Bad          </color> <color:v>Legendary[2] </color> <color:b>Heroic       </color>
-Weaponmaster  <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Weaponmaster  <color:o>Fair         </color> <color:r>Bad          </color> <color:v>Legendary[2] </color> <color:y>Very Good    </color>
 Weaponsmith   <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
 Archer        <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:v>Legendary[10]</color>
 Sniper        <color:y>Good         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:b>Heroic       </color>

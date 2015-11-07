@@ -213,14 +213,14 @@ Melee
   See [d] for more details on weaponmasters.
   
     Stats                   Skills
-    Strength      +3        Disarming   Superb       
-    Intelligence  -1        Device      Superb       
-    Wisdom        -1        Save        Superb       
-    Dexterity     +1        Stealth     Fair         
-    Constitution  +1        Searching   Fair         
+    Strength      +4        Disarming   Excellent    
+    Intelligence  -3        Device      Excellent    
+    Wisdom        -2        Save        Superb       
+    Dexterity     -1        Stealth     Bad          
+    Constitution  +2        Searching   Fair         
     Charisma      +1        Perception  Bad          
-    Life Rating  109%       Melee       Superb       
-    Base HP       12        Bows        Superb       
+    Life Rating  109%       Melee       Legendary[2] 
+    Base HP       12        Bows        Very Good    
     Experience   135%
     
   Weaponsmith
@@ -1202,7 +1202,7 @@ Mauler         +5   -2   -2   -1   +3   +2  111%  +18  120%
 Rune-Knight    +2   +2   +0   +1   +0   +1  107%   +6  150%
 Samurai        +3   -2   +1   +2   +1   +1  111%  +12  130%
 Warrior        +4   -2   -2   +2   +2   +1  115%  +18  100%
-Weaponmaster   +3   -1   -1   +1   +1   +1  109%  +12  135%
+Weaponmaster   +4   -3   -2   -1   +2   +1  109%  +12  135%
 Weaponsmith    +3   -1   -1   +1   +0   +0  111%  +12  130%
 Archer         +2   -1   -1   +2   +1   +0  111%  +12  110%
 Sniper         +2   -1   -1   +2   +1   +0  100%   +4  110%
@@ -1251,7 +1251,7 @@ Mauler        Superb        Superb        Superb        Bad
 Rune-Knight   Excellent     Heroic        Superb        Very Good    
 Samurai       Superb        Excellent     Superb        Very Good    
 Warrior       Superb        Excellent     Superb        Fair         
-Weaponmaster  Superb        Superb        Superb        Fair         
+Weaponmaster  Excellent     Excellent     Superb        Bad          
 Weaponsmith   Superb        Superb        Superb        Fair         
 Archer        Superb        Superb        Superb        Superb       
 Sniper        Superb        Superb        Superb        Heroic       
@@ -1300,7 +1300,7 @@ Mauler        Poor          Bad           Legendary[2]  Fair
 Rune-Knight   Fair          Poor          Superb        Very Good    
 Samurai       Poor          Bad           Heroic        Superb       
 Warrior       Poor          Bad           Legendary[2]  Heroic       
-Weaponmaster  Fair          Bad           Superb        Superb       
+Weaponmaster  Fair          Bad           Legendary[2]  Very Good    
 Weaponsmith   Fair          Bad           Superb        Superb       
 Archer        Fair          Poor          Superb        Legendary[10]
 Sniper        Good          Fair          Excellent     Heroic       

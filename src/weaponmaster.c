@@ -413,7 +413,7 @@ static void _readied_shot_spell(int cmd, variant *res)
             return;
         }
         if (_get_toggle() == TOGGLE_READIED_SHOT)
-            _set_toggle(TOGGLE_READIED_SHOT);
+            _set_toggle(TOGGLE_NONE);
         else
         {
             /* Prompt for ammo to use, but disallow choosing from the floor since
@@ -2792,6 +2792,9 @@ typedef struct {
     cptr name;
     cptr help;
     int kind;
+    int stats[MAX_STATS];
+    skills_t base_skills;
+    skills_t extra_skills;
     _object_kind objects[_MAX_OBJECTS_PER_SPECIALITY];    /* There is always a sentinel at the end */
     spell_info spells[_MAX_SPELLS_PER_SPECIALITY];        /* There is always a sentinel at the end */
     _object_kind birth_obj;
@@ -2811,6 +2814,9 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "your axe is wielded with two hands. However, this speciality offers "
       "little in the way of utility. Kill quickly as your life depends on it!",
       _WEAPONMASTER_MELEE,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {+3, -2, -1, -2, +1,  0}, {  -5,  -7,  -3,  -1,  -2,  -2, 22,-10},
+                                {  -1,  -3,   0,   0,   0,   0, 17,  0},
       { { TV_POLEARM, SV_BATTLE_AXE },
         { TV_POLEARM, SV_BEAKED_AXE },
         { TV_POLEARM, SV_BROAD_AXE },
@@ -2835,6 +2841,9 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "single arrow and much more. As a shooter, your missile prowess will be quite "
       "formidable, though your melee will be somewhat lacking.",
       _WEAPONMASTER_BOWS,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      { 0,  0,  0, +2, -1,  0}, {   3,   5,   1,   3,   3,   3,-10, 37},
+                                {   0,   1,   0,   0,   0,   0,  0, 17},
       { { TV_BOW, SV_SHORT_BOW },
         { TV_BOW, SV_LONG_BOW },
         { TV_BOW, SV_NAMAKE_BOW },
@@ -2857,6 +2866,9 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         "you will gain some limited utility techniques. At high levels, your weapons will "
         "become more likely to score devastating, crushing blows against your hapless enemies.",
         _WEAPONMASTER_MELEE,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {+2, -1, -1, -2, +1,  0}, {  -3,  -3,  -1,   0,   0,   0, 20,  5},
+                                {   0,  -2,   0,   0,   0,   0, 15,  2},
         { { TV_HAFTED, SV_BALL_AND_CHAIN },
           { TV_HAFTED, SV_CLUB },
           { TV_HAFTED, SV_FLAIL },
@@ -2887,6 +2899,9 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "powerfully damaging nearby monsters. Also, they may shoot so hard as to knock "
       "their opponents backwards!",
       _WEAPONMASTER_BOWS,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {+1, -1, -1, +1, +1,  0}, {   0,   2,   0,   1,   2,   2,-10, 37},
+                                {   0,   1,   0,   0,   0,   0,  0, 17},
       { { TV_BOW, SV_LIGHT_XBOW },
         { TV_BOW, SV_HEAVY_XBOW },
         { 0, 0 },
@@ -2903,186 +2918,204 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       { TV_BOW, SV_LIGHT_XBOW },
     },
     { "Daggers",
-        "A knife in the back! This speciality favors dual wielding and rogue-like behavior. "
-        "The daggermaster can even assume the posture of The Flying Dagger which greatly "
-        "enhances their low level dagger toss capability. Indeed, their prowess with the "
-        "dagger toss is legendary and appears almost magical! At high levels, you will also "
-        "gain formidable melee prowess with the Frenzy Stance. Finally, daggermasters have "
-        "very strong short ranged teleport techniques that synergize well with their toss "
-        "abilities.",
-        _WEAPONMASTER_MELEE,
-        { { TV_SWORD, SV_BASILLARD },
-          { TV_SWORD, SV_BROKEN_DAGGER },
-          { TV_SWORD, SV_DAGGER },
-          { TV_SWORD, SV_FALCON_SWORD },
-          { TV_SWORD, SV_MAIN_GAUCHE },
-          { TV_SWORD, SV_NINJATO },
-          { TV_SWORD, SV_RAPIER },
-          { TV_SWORD, SV_SABRE },
-          { TV_SWORD, SV_TANTO },
-          { TV_SWORD, SV_DRAGON_FANG },
-          { 0, 0 },
-        },
-        {
-          {  5,   5,  0, _dagger_toss_spell },
-          { 10,   5, 40, strafing_spell },
-          { 15,   0,  0, _flying_dagger_spell },
-          { 25,  20, 50, _judge_spell },
-          { 30,  10,  0, _elusive_strike_spell },
-          { 35,   0,  0, _shadow_stance_spell },
-          { 45,   0,  0, _frenzy_spell },
-          { -1,   0,  0, NULL },
-        },
+      "A knife in the back! This speciality favors dual wielding and rogue-like behavior. "
+      "The daggermaster can even assume the posture of The Flying Dagger which greatly "
+      "enhances their low level dagger toss capability. Indeed, their prowess with the "
+      "dagger toss is legendary and appears almost magical! At high levels, you will also "
+      "gain formidable melee prowess with the Frenzy Stance. Finally, daggermasters have "
+      "very strong short ranged teleport techniques that synergize well with their toss "
+      "abilities.",
+      _WEAPONMASTER_MELEE,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      { 0, +1,  0, +3, -1,  0}, {   5,   4,   1,   3,   3,   3, 15, 15},
+                                {   3,   3,   0,   0,   0,   0, 10, 10},
+      { { TV_SWORD, SV_BASILLARD },
+        { TV_SWORD, SV_BROKEN_DAGGER },
         { TV_SWORD, SV_DAGGER },
+        { TV_SWORD, SV_FALCON_SWORD },
+        { TV_SWORD, SV_MAIN_GAUCHE },
+        { TV_SWORD, SV_NINJATO },
+        { TV_SWORD, SV_RAPIER },
+        { TV_SWORD, SV_SABRE },
+        { TV_SWORD, SV_TANTO },
+        { TV_SWORD, SV_DRAGON_FANG },
+        { 0, 0 },
+      },
+      {
+        {  5,   5,  0, _dagger_toss_spell },
+        { 10,   5, 40, strafing_spell },
+        { 15,   0,  0, _flying_dagger_spell },
+        { 25,  20, 50, _judge_spell },
+        { 30,  10,  0, _elusive_strike_spell },
+        { 35,   0,  0, _shadow_stance_spell },
+        { 45,   0,  0, _frenzy_spell },
+        { -1,   0,  0, NULL },
+      },
+      { TV_SWORD, SV_DAGGER },
     },
     { "Polearms",
-        "You don a grim face before setting out to reap your harvest of death. You will swing "
-        "your weapon wide often affecting multiple surrounding opponents.",
-        _WEAPONMASTER_MELEE,
-        { 
-          { TV_POLEARM, SV_AWL_PIKE },
-          { TV_POLEARM, SV_BROAD_SPEAR },
-          { TV_POLEARM, SV_DEATH_SCYTHE },
-          { TV_POLEARM, SV_HALBERD },
-          { TV_POLEARM, SV_FAUCHARD },
-          { TV_POLEARM, SV_GLAIVE },
-          { TV_POLEARM, SV_GUISARME },
-          { TV_POLEARM, SV_LUCERNE_HAMMER },
-          { TV_POLEARM, SV_NAGINATA },
-          { TV_POLEARM, SV_PIKE },
-          { TV_POLEARM, SV_SCYTHE },
-          { TV_POLEARM, SV_SCYTHE_OF_SLICING },
-          { TV_POLEARM, SV_SPEAR },
-          { TV_POLEARM, SV_TRIDENT },
-          { TV_POLEARM, SV_LANCE },
-          { TV_POLEARM, SV_HEAVY_LANCE },
-          { TV_POLEARM, SV_TRIFURCATE_SPEAR },
-          { 0, 0 },
-        },
-        {
-          {  5,   0,  0, _many_strike_spell },
-          { 10,   5,  0, _reach_spell },
-          { 15,  15,  0, _knock_back_spell },
-          { 25,  20, 50, _judge_spell },
-          { 25,   0,  0, _piercing_strike_spell },
-          { 35,   0,  0, _trip_spell },
-          { 40,  40,  0, _reaping_spell },
-          { -1,   0,  0, NULL },
-        },
+      "You don a grim face before setting out to reap your harvest of death. You will swing "
+      "your weapon wide often affecting multiple surrounding opponents.",
+      _WEAPONMASTER_MELEE,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {+2, -1, -1,  0, +1,  0}, {  -3,  -2,  -1,  -1,  -2,  -2, 20,-10},
+                                {  -1,  -1,   0,   0,   0,   0, 15,  0},
+      {
+        { TV_POLEARM, SV_AWL_PIKE },
+        { TV_POLEARM, SV_BROAD_SPEAR },
+        { TV_POLEARM, SV_DEATH_SCYTHE },
+        { TV_POLEARM, SV_HALBERD },
+        { TV_POLEARM, SV_FAUCHARD },
+        { TV_POLEARM, SV_GLAIVE },
+        { TV_POLEARM, SV_GUISARME },
+        { TV_POLEARM, SV_LUCERNE_HAMMER },
+        { TV_POLEARM, SV_NAGINATA },
+        { TV_POLEARM, SV_PIKE },
+        { TV_POLEARM, SV_SCYTHE },
+        { TV_POLEARM, SV_SCYTHE_OF_SLICING },
         { TV_POLEARM, SV_SPEAR },
+        { TV_POLEARM, SV_TRIDENT },
+        { TV_POLEARM, SV_LANCE },
+        { TV_POLEARM, SV_HEAVY_LANCE },
+        { TV_POLEARM, SV_TRIFURCATE_SPEAR },
+        { 0, 0 },
+      },
+      {
+        {  5,   0,  0, _many_strike_spell },
+        { 10,   5,  0, _reach_spell },
+        { 15,  15,  0, _knock_back_spell },
+        { 25,  20, 50, _judge_spell },
+        { 25,   0,  0, _piercing_strike_spell },
+        { 35,   0,  0, _trip_spell },
+        { 40,  40,  0, _reaping_spell },
+        { -1,   0,  0, NULL },
+      },
+      { TV_POLEARM, SV_SPEAR },
     },
-        { "Shields",
-          "Specializing in shields gives excellent powers of defense and retaliation. In addition, "
-          "you can even choose to melee with your shield rather than a normal weapon, bashing your "
-          "opponents senseless. This form of combat is known as Shield Bashing and is unique to this "
-          "speciality.",
-          _WEAPONMASTER_SHIELDS,
-          { 
-            { TV_SHIELD, SV_DRAGON_SHIELD },
-            { TV_SHIELD, SV_KNIGHT_SHIELD },
-            { TV_SHIELD, SV_LARGE_LEATHER_SHIELD },
-            { TV_SHIELD, SV_LARGE_METAL_SHIELD },
-            { TV_SHIELD, SV_MIRROR_SHIELD },
-            { TV_SHIELD, SV_SMALL_LEATHER_SHIELD },
-            { TV_SHIELD, SV_SMALL_METAL_SHIELD },
-            { 0, 0 },
-          },
-          {
-            { 10,  0,  0, _shield_bash_spell },
-            { 15, 10,  0, _desperation_spell },
-            { 25,  20, 50, _judge_spell },
-            { 30,  0,  0, _bulwark_spell },
-            { 35, 50,  0, _sanctuary_spell },
-            { 40,  0,  0, _shield_revenge_spell },
-            { -1,  0,  0, NULL },
-          },
-          { TV_SHIELD, SV_SMALL_LEATHER_SHIELD },
-        },
-        { "Slings",
-          "Watch out, Goliath! As a master of slings you will shoot pebbles with uncanny speed. Your "
-          "shots may even ricochet off other monsters to score multiple hits. As with other archery "
-          "specializations, your ammo will break less often and, at high levels you will gain access "
-          "to an 'unlimited quiver' which allows you to shoot an infinite amount of (average) ammo.",
-          _WEAPONMASTER_BOWS,
-          { { TV_BOW, SV_SLING },
-            { 0, 0 },
-          },
-          {
-            {  5,   5,  0, _bouncing_pebble_spell },
-            { 15,  15,  0, _many_shot_spell },
-            { 25,  20, 50, _judge_spell },
-            { 25,   0,  0, _shot_on_the_run_spell },
-            { 30,  15,  0, _greater_many_shot_spell },
-            { 35,   0,  0, _rapid_shot_spell },
-            { -1,   0,  0, NULL },
-          },
-          { TV_BOW, SV_SLING },
-        },
-        { "Staves",
-          "Monkey King! You will battle opponents with a flurry of blows from your mighty "
-          "staff and will be prepared to counter the attacks of your enemies. You can vault into "
-          "battle and circle kick enemies for stunning effects, attacking them with your boots! "
-          "You may even eventually clone yourself at great cost.",
-          _WEAPONMASTER_MELEE,
-          { 
-            { TV_HAFTED, SV_BO_STAFF },
-            { TV_HAFTED, SV_JO_STAFF },
-            { TV_HAFTED, SV_QUARTERSTAFF },
-            { TV_HAFTED, SV_WIZSTAFF },
-            { TV_HAFTED, SV_THREE_PIECE_ROD },
-            { 0, 0 },
-          },
-          {
-            { 15, 15, 0, _vault_attack_spell },
-            { 25, 20,50, _judge_spell },
-            { 25, 25, 0, _circle_kick_spell },
-            { 40,  0, 0, _monkey_king_spell },
-            { 45, 80, 0, _flurry_of_blows_spell },
-            { -1,  0, 0, NULL },
-          },
-          { TV_HAFTED, SV_QUARTERSTAFF },
-        },
+    { "Shields",
+      "Specializing in shields gives excellent powers of defense and retaliation. In addition, "
+      "you can even choose to melee with your shield rather than a normal weapon, bashing your "
+      "opponents senseless. This form of combat is known as Shield Bashing and is unique to this "
+      "speciality.",
+      _WEAPONMASTER_SHIELDS,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {+2,  0, +1,  0, +2,  0}, {  -3,  -3,  -1,  -1,  -2,  -2, 18,  0},
+                                {  -1,  -1,   0,   0,   0,   0, 13,  0},
+      {
+        { TV_SHIELD, SV_DRAGON_SHIELD },
+        { TV_SHIELD, SV_KNIGHT_SHIELD },
+        { TV_SHIELD, SV_LARGE_LEATHER_SHIELD },
+        { TV_SHIELD, SV_LARGE_METAL_SHIELD },
+        { TV_SHIELD, SV_MIRROR_SHIELD },
+        { TV_SHIELD, SV_SMALL_LEATHER_SHIELD },
+        { TV_SHIELD, SV_SMALL_METAL_SHIELD },
+        { 0, 0 },
+      },
+      {
+        { 10,  0,  0, _shield_bash_spell },
+        { 15, 10,  0, _desperation_spell },
+        { 25,  20, 50, _judge_spell },
+        { 30,  0,  0, _bulwark_spell },
+        { 35, 50,  0, _sanctuary_spell },
+        { 40,  0,  0, _shield_revenge_spell },
+        { -1,  0,  0, NULL },
+      },
+      { TV_SHIELD, SV_SMALL_LEATHER_SHIELD },
+    },
+    { "Slings",
+      "Watch out, Goliath! As a master of slings you will shoot pebbles with uncanny speed. Your "
+      "shots may even ricochet off other monsters to score multiple hits. As with other archery "
+      "specializations, your ammo will break less often and, at high levels you will gain access "
+      "to an 'unlimited quiver' which allows you to shoot an infinite amount of (average) ammo.",
+      _WEAPONMASTER_BOWS,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {-1, +1, +1, +3, -1,  0}, {   3,   5,   1,   3,   3,   3,-10, 37},
+                                {   2,   3,   0,   0,   0,   0,  0, 17},
+      { { TV_BOW, SV_SLING },
+        { 0, 0 },
+      },
+      {
+        {  5,   5,  0, _bouncing_pebble_spell },
+        { 15,  15,  0, _many_shot_spell },
+        { 25,  20, 50, _judge_spell },
+        { 25,   0,  0, _shot_on_the_run_spell },
+        { 30,  15,  0, _greater_many_shot_spell },
+        { 35,   0,  0, _rapid_shot_spell },
+        { -1,   0,  0, NULL },
+      },
+      { TV_BOW, SV_SLING },
+    },
+    { "Staves",
+      "Monkey King! You will battle opponents with a flurry of blows from your mighty "
+      "staff and will be prepared to counter the attacks of your enemies. You can vault into "
+      "battle and circle kick enemies for stunning effects, attacking them with your boots! "
+      "You may even eventually clone yourself at great cost.",
+      _WEAPONMASTER_MELEE,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      { 0,  0,  0, +2, +1,  0}, {  -3,  -5,   0,  +1,   0,   0, 18,-10},
+                                {  -2,  -2,   0,   0,   0,   0, 13,  0},
+      {
+        { TV_HAFTED, SV_BO_STAFF },
+        { TV_HAFTED, SV_JO_STAFF },
+        { TV_HAFTED, SV_QUARTERSTAFF },
+        { TV_HAFTED, SV_WIZSTAFF },
+        { TV_HAFTED, SV_THREE_PIECE_ROD },
+        { 0, 0 },
+      },
+      {
+        { 15, 15, 0, _vault_attack_spell },
+        { 25, 20,50, _judge_spell },
+        { 25, 25, 0, _circle_kick_spell },
+        { 40,  0, 0, _monkey_king_spell },
+        { 45, 80, 0, _flurry_of_blows_spell },
+        { -1,  0, 0, NULL },
+      },
+      { TV_HAFTED, SV_QUARTERSTAFF },
+    },
     { "Swords",
-        "You will become a true swordmaster! Mastery of the blade will augment "
-        "your weapon with elemental, vorpal or vampiric powers.",
-        _WEAPONMASTER_MELEE,
-        { { TV_SWORD, SV_BASTARD_SWORD } ,
-          { TV_SWORD, SV_BROKEN_SWORD } ,
-          { TV_SWORD, SV_BLADE_OF_CHAOS } ,
-          { TV_SWORD, SV_BROAD_SWORD } ,
-          { TV_SWORD, SV_CLAYMORE } ,
-          { TV_SWORD, SV_CUTLASS } ,
-          { TV_SWORD, SV_DIAMOND_EDGE } ,
-          { TV_SWORD, SV_ESPADON } ,
-          { TV_SWORD, SV_EXECUTIONERS_SWORD } ,
-          { TV_SWORD, SV_FLAMBERGE } ,
-          { TV_SWORD, SV_GREAT_SCIMITAR } , /* Falchion */
-          { TV_SWORD, SV_KATANA } ,
-          { TV_SWORD, SV_LONG_SWORD } ,
-          { TV_SWORD, SV_KHOPESH } ,
-          { TV_SWORD, SV_NO_DACHI },
-          { TV_SWORD, SV_SCIMITAR } ,
-          { TV_SWORD, SV_SHORT_SWORD } ,
-          { TV_SWORD, SV_SMALL_SWORD } ,
-          { TV_SWORD, SV_TULWAR } ,
-          { TV_SWORD, SV_TWO_HANDED_SWORD } ,
-          { TV_SWORD, SV_WAKIZASHI } ,
-          { TV_SWORD, SV_ZWEIHANDER } ,
-          { TV_SWORD, SV_RUNESWORD } ,
-          { 0, 0 },
-        },
-        {
-          {  5,   0,  0, _burning_blade_spell },
-          { 10,   0,  0, _ice_blade_spell },
-          { 15,   0,  0, _thunder_blade_spell },
-          { 25,  20, 50, _judge_spell },
-          { 25,   0,  0, _blood_blade_spell },
-          { 30,   0,  0, _holy_blade_spell },
-          { 35,   0,  0, _order_blade_spell },
-          { 40,   0,  0, _wild_blade_spell },
-          { -1,   0,  0, NULL },
-        },
+      "You will become a true swordmaster! Mastery of the blade will augment "
+      "your weapon with elemental, vorpal or vampiric powers.",
+      _WEAPONMASTER_MELEE,
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {+1, -1, -1, +1, +1,  0}, {  -3,  -3,  -1,   0,   0,   0, 20,-10},
+                                {  -1,  -1,   0,   0,   0,   0, 15,  0},
+      { { TV_SWORD, SV_BASTARD_SWORD } ,
+        { TV_SWORD, SV_BROKEN_SWORD } ,
+        { TV_SWORD, SV_BLADE_OF_CHAOS } ,
+        { TV_SWORD, SV_BROAD_SWORD } ,
+        { TV_SWORD, SV_CLAYMORE } ,
+        { TV_SWORD, SV_CUTLASS } ,
+        { TV_SWORD, SV_DIAMOND_EDGE } ,
+        { TV_SWORD, SV_ESPADON } ,
+        { TV_SWORD, SV_EXECUTIONERS_SWORD } ,
+        { TV_SWORD, SV_FLAMBERGE } ,
+        { TV_SWORD, SV_GREAT_SCIMITAR } , /* Falchion */
+        { TV_SWORD, SV_KATANA } ,
         { TV_SWORD, SV_LONG_SWORD } ,
+        { TV_SWORD, SV_KHOPESH } ,
+        { TV_SWORD, SV_NO_DACHI },
+        { TV_SWORD, SV_SCIMITAR } ,
+        { TV_SWORD, SV_SHORT_SWORD } ,
+        { TV_SWORD, SV_SMALL_SWORD } ,
+        { TV_SWORD, SV_TULWAR } ,
+        { TV_SWORD, SV_TWO_HANDED_SWORD } ,
+        { TV_SWORD, SV_WAKIZASHI } ,
+        { TV_SWORD, SV_ZWEIHANDER } ,
+        { TV_SWORD, SV_RUNESWORD } ,
+        { 0, 0 },
+      },
+      {
+        {  5,   0,  0, _burning_blade_spell },
+        { 10,   0,  0, _ice_blade_spell },
+        { 15,   0,  0, _thunder_blade_spell },
+        { 25,  20, 50, _judge_spell },
+        { 25,   0,  0, _blood_blade_spell },
+        { 30,   0,  0, _holy_blade_spell },
+        { 35,   0,  0, _order_blade_spell },
+        { 40,   0,  0, _wild_blade_spell },
+        { -1,   0,  0, NULL },
+      },
+      { TV_SWORD, SV_LONG_SWORD } ,
     },
     { "Diggers",
       "A master of digging. You prefer rocky enclosures and don't mind "
@@ -3092,7 +3125,10 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "bonus, such as increased strength, constitution, or even speed! So keep "
       "your eye open for those +8 diggers!",
       _WEAPONMASTER_MELEE,
-      { 
+    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {+2, -1, -1,  0, +1,  0}, {  -3,  -3,  -1,  +2,  -2,  -2, 18,-10},
+                                {  -1,  -1,   0,   0,   0,   0, 13,  0},
+      {
         { TV_DIGGING, SV_SHOVEL},
         { TV_DIGGING, SV_GNOMISH_SHOVEL},
         { TV_DIGGING, SV_DWARVEN_SHOVEL},
@@ -3207,7 +3243,7 @@ int weaponmaster_get_max_blows(object_type *o_ptr, int hand)
     return num;
 }
 
-static int _get_spells(spell_info* spells, int max)
+static int _get_spells_aux(spell_info* spells, int max)
 {
     int i;
     int ct = 0;
@@ -3223,9 +3259,16 @@ static int _get_spells(spell_info* spells, int max)
             current->fn = base->fn;
             current->level = base->level;
             current->cost = base->cost;
-            current->fail = calculate_fail_rate(base->level, base->fail, p_ptr->stat_ind[A_STR]);            
+            current->fail = calculate_fail_rate(base->level, base->fail, p_ptr->stat_ind[A_STR]);
         }
     }
+
+    return ct;
+}
+
+static int _get_spells(spell_info* spells, int max)
+{
+    int ct = _get_spells_aux(spells, max);
 
     if (ct == 0)
         msg_print("You need more experience. Why not kill something?");
@@ -4229,9 +4272,10 @@ static void _character_dump(doc_ptr doc)
 
     {
         spell_info spells[MAX_SPELLS];
-        int        ct = _get_spells(spells, MAX_SPELLS);
+        int        ct = _get_spells_aux(spells, MAX_SPELLS);
 
-        py_display_spells(doc, spells, ct);
+        if (ct)
+            py_display_spells(doc, spells, ct);
     }
 }
 
@@ -4242,10 +4286,7 @@ class_t *weaponmaster_get_class(int subclass)
 
     /* static info never changes */
     if (!init)
-    {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 30,  28,  28,   1,  20,  10,  60,  45};
-    skills_t xs = { 10,  10,  10,   0,   0,   0,  21,  15};
-
+    {
         me.name = "Weaponmaster";
         me.desc = "The weaponmaster is great with a single class of weapons. "
                   "The character gets combat bonuses and special powers "
@@ -4253,16 +4294,6 @@ class_t *weaponmaster_get_class(int subclass)
                   "weaponmaster is truly lousy when using any weapon "
                   "outside their chosen specialty so focus is key.";
 
-        me.stats[A_STR] =  3;
-        me.stats[A_INT] = -1;
-        me.stats[A_WIS] = -1;
-        me.stats[A_DEX] =  1;
-        me.stats[A_CON] =  1;
-        me.stats[A_CHR] =  1;
-
-        me.base_skills = bs;
-        me.extra_skills = xs;
-        
         me.life = 109;
         me.base_hp = 12;
         me.exp = 135;
@@ -4282,29 +4313,35 @@ class_t *weaponmaster_get_class(int subclass)
         me.character_dump = _character_dump;
         init = TRUE;
     }
+    /* Reset Stats and Skills each time for birth and helpfile generation */
+    {           /* dis, dev, sav, stl, srh, fos, thn, thb */
+    skills_t bs = { 30,  25,  28,   1,  20,  10,  48,  35};
+    skills_t xs = { 10,   9,  10,   0,   0,   0,  13,  11};
+
+        me.stats[A_STR] =  1;
+        me.stats[A_INT] = -1;
+        me.stats[A_WIS] = -1;
+        me.stats[A_DEX] =  1;
+        me.stats[A_CON] =  1;
+        me.stats[A_CHR] =  1;
+
+        me.base_skills = bs;
+        me.extra_skills = xs;
+
+    }
     if (0 <= subclass && subclass < WEAPONMASTER_MAX)
     {
         _speciality *ptr = &_specialities[subclass];
+        int          i;
+
+        for (i = 0; i < MAX_STATS; i++)
+            me.stats[i] += ptr->stats[i];
+
+        skills_add(&me.base_skills, &ptr->base_skills);
+        skills_add(&me.extra_skills, &ptr->extra_skills);
 
         me.subname = ptr->name;
         me.subdesc = ptr->help;
-
-        if (ptr->kind == _WEAPONMASTER_BOWS)
-        {
-            me.base_skills.thb = 60;
-            me.extra_skills.thb = 21;
-
-            me.base_skills.thn = 45;
-            me.extra_skills.thn = 15;
-        }
-        else
-        {
-            me.base_skills.thb = 45;
-            me.extra_skills.thb = 15;
-
-            me.base_skills.thn = 60;
-            me.extra_skills.thn = 21;
-        }
     }
     else
     {

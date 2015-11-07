@@ -12,14 +12,14 @@ your axe is wielded with two hands. However, this speciality offers
 little in the way of utility. Kill quickly as your life depends on it!
 
   Stats                   Skills
-  Strength      +3        Disarming   Superb       
-  Intelligence  -1        Device      Superb       
-  Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
+  Strength      +4        Disarming   Excellent    
+  Intelligence  -3        Device      Excellent    
+  Wisdom        -2        Save        Superb       
+  Dexterity     -1        Stealth     Bad          
+  Constitution  +2        Searching   Fair         
   Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Life Rating  109%       Melee       Legendary[2] 
+  Base HP       12        Bows        Very Good    
   Experience   135%
   
 Bows
@@ -31,14 +31,14 @@ missile prowess will be quite formidable, though your melee will be
 somewhat lacking.
 
   Stats                   Skills
-  Strength      +3        Disarming   Superb       
+  Strength      +1        Disarming   Superb       
   Intelligence  -1        Device      Superb       
   Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Dexterity     +3        Stealth     Superb       
+  Constitution  +0        Searching   Fair         
+  Charisma      +1        Perception  Poor         
+  Life Rating  109%       Melee       Excellent    
+  Base HP       12        Bows        Heroic       
   Experience   135%
   
 Clubs
@@ -50,13 +50,13 @@ crushing blows against your hapless enemies.
 
   Stats                   Skills
   Strength      +3        Disarming   Superb       
-  Intelligence  -1        Device      Superb       
-  Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
+  Intelligence  -2        Device      Superb       
+  Wisdom        -2        Save        Superb       
+  Dexterity     -1        Stealth     Fair         
+  Constitution  +2        Searching   Fair         
   Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Life Rating  109%       Melee       Heroic       
+  Base HP       12        Bows        Excellent    
   Experience   135%
   
 Crossbows
@@ -65,14 +65,14 @@ may explode powerfully damaging nearby monsters. Also, they may shoot
 so hard as to knock their opponents backwards!
 
   Stats                   Skills
-  Strength      +3        Disarming   Superb       
-  Intelligence  -1        Device      Superb       
-  Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Strength      +2        Disarming   Superb       
+  Intelligence  -2        Device      Superb       
+  Wisdom        -2        Save        Superb       
+  Dexterity     +2        Stealth     Very Good    
+  Constitution  +2        Searching   Fair         
+  Charisma      +1        Perception  Poor         
+  Life Rating  109%       Melee       Excellent    
+  Base HP       12        Bows        Heroic       
   Experience   135%
   
 Daggers
@@ -86,13 +86,13 @@ strong short ranged teleport techniques that synergize well with their
 toss abilities.
 
   Stats                   Skills
-  Strength      +3        Disarming   Superb       
-  Intelligence  -1        Device      Superb       
+  Strength      +1        Disarming   Superb       
+  Intelligence  +0        Device      Heroic       
   Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
+  Dexterity     +4        Stealth     Superb       
+  Constitution  +0        Searching   Fair         
+  Charisma      +1        Perception  Poor         
+  Life Rating  109%       Melee       Heroic       
   Base HP       12        Bows        Superb       
   Experience   135%
   
@@ -103,13 +103,13 @@ opponents.
 
   Stats                   Skills
   Strength      +3        Disarming   Superb       
-  Intelligence  -1        Device      Superb       
-  Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
+  Intelligence  -2        Device      Superb       
+  Wisdom        -2        Save        Superb       
+  Dexterity     +1        Stealth     Bad          
+  Constitution  +2        Searching   Fair         
   Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Life Rating  109%       Melee       Heroic       
+  Base HP       12        Bows        Very Good    
   Experience   135%
   
 Shields
@@ -122,12 +122,12 @@ speciality.
   Stats                   Skills
   Strength      +3        Disarming   Superb       
   Intelligence  -1        Device      Superb       
-  Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
+  Wisdom        +0        Save        Superb       
+  Dexterity     +1        Stealth     Bad          
+  Constitution  +3        Searching   Fair         
   Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Life Rating  109%       Melee       Heroic       
+  Base HP       12        Bows        Excellent    
   Experience   135%
   
 Slings
@@ -139,14 +139,14 @@ break less often and, at high levels you will gain access to an
 (average) ammo.
 
   Stats                   Skills
-  Strength      +3        Disarming   Superb       
-  Intelligence  -1        Device      Superb       
-  Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Strength      +0        Disarming   Superb       
+  Intelligence  +0        Device      Heroic       
+  Wisdom        +0        Save        Superb       
+  Dexterity     +4        Stealth     Superb       
+  Constitution  +0        Searching   Fair         
+  Charisma      +1        Perception  Poor         
+  Life Rating  109%       Melee       Excellent    
+  Base HP       12        Bows        Heroic       
   Experience   135%
   
 Staves
@@ -157,14 +157,14 @@ effects, attacking them with your boots! You may even eventually clone
 yourself at great cost.
 
   Stats                   Skills
-  Strength      +3        Disarming   Superb       
+  Strength      +1        Disarming   Excellent    
   Intelligence  -1        Device      Superb       
   Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
+  Dexterity     +3        Stealth     Very Good    
+  Constitution  +2        Searching   Fair         
   Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Life Rating  109%       Melee       Heroic       
+  Base HP       12        Bows        Very Good    
   Experience   135%
   
 Swords
@@ -172,14 +172,14 @@ You will become a true swordmaster! Mastery of the blade will augment
 your weapon with elemental, vorpal or vampiric powers.
 
   Stats                   Skills
-  Strength      +3        Disarming   Superb       
-  Intelligence  -1        Device      Superb       
-  Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
+  Strength      +2        Disarming   Superb       
+  Intelligence  -2        Device      Superb       
+  Wisdom        -2        Save        Superb       
+  Dexterity     +2        Stealth     Fair         
+  Constitution  +2        Searching   Fair         
   Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Life Rating  109%       Melee       Heroic       
+  Base HP       12        Bows        Very Good    
   Experience   135%
   
 Diggers
@@ -192,61 +192,61 @@ open for those +8 diggers!
 
   Stats                   Skills
   Strength      +3        Disarming   Superb       
-  Intelligence  -1        Device      Superb       
-  Wisdom        -1        Save        Superb       
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +1        Searching   Fair         
+  Intelligence  -2        Device      Superb       
+  Wisdom        -2        Save        Superb       
+  Dexterity     +1        Stealth     Superb       
+  Constitution  +2        Searching   Fair         
   Charisma      +1        Perception  Bad          
-  Life Rating  109%       Melee       Superb       
-  Base HP       12        Bows        Superb       
+  Life Rating  109%       Melee       Heroic       
+  Base HP       12        Bows        Very Good    
   Experience   135%
   
 Table 1 - Weaponmaster Statistic Bonus Table
 
                   STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp
-Axes               +3   -1   -1   +1   +1   +1  109%  +12  135%
-Bows               +3   -1   -1   +1   +1   +1  109%  +12  135%
-Clubs              +3   -1   -1   +1   +1   +1  109%  +12  135%
-Crossbows          +3   -1   -1   +1   +1   +1  109%  +12  135%
-Daggers            +3   -1   -1   +1   +1   +1  109%  +12  135%
-Polearms           +3   -1   -1   +1   +1   +1  109%  +12  135%
-Shields            +3   -1   -1   +1   +1   +1  109%  +12  135%
-Slings             +3   -1   -1   +1   +1   +1  109%  +12  135%
-Staves             +3   -1   -1   +1   +1   +1  109%  +12  135%
-Swords             +3   -1   -1   +1   +1   +1  109%  +12  135%
-Diggers            +3   -1   -1   +1   +1   +1  109%  +12  135%
+Axes               +4   -3   -2   -1   +2   +1  109%  +12  135%
+Bows               +1   -1   -1   +3   +0   +1  109%  +12  135%
+Clubs              +3   -2   -2   -1   +2   +1  109%  +12  135%
+Crossbows          +2   -2   -2   +2   +2   +1  109%  +12  135%
+Daggers            +1   +0   -1   +4   +0   +1  109%  +12  135%
+Polearms           +3   -2   -2   +1   +2   +1  109%  +12  135%
+Shields            +3   -1   +0   +1   +3   +1  109%  +12  135%
+Slings             +0   +0   +0   +4   +0   +1  109%  +12  135%
+Staves             +1   -1   -1   +3   +2   +1  109%  +12  135%
+Swords             +2   -2   -2   +2   +2   +1  109%  +12  135%
+Diggers            +3   -2   -2   +1   +2   +1  109%  +12  135%
 
 
 Table 2 - Weaponmaster Skill Bonus Table I
 
                   Disarming     Device        Save          Stealth      
-Axes              Superb        Superb        Superb        Bad          
-Bows              Superb        Superb        Superb        Bad          
+Axes              Excellent     Excellent     Superb        Bad          
+Bows              Superb        Superb        Superb        Very Good    
 Clubs             Superb        Superb        Superb        Bad          
-Crossbows         Superb        Superb        Superb        Bad          
-Daggers           Superb        Superb        Superb        Bad          
+Crossbows         Superb        Superb        Superb        Fair         
+Daggers           Superb        Heroic        Superb        Very Good    
 Polearms          Superb        Superb        Superb        Bad          
 Shields           Superb        Superb        Superb        Bad          
-Slings            Superb        Superb        Superb        Bad          
-Staves            Superb        Superb        Superb        Bad          
+Slings            Superb        Heroic        Superb        Very Good    
+Staves            Excellent     Superb        Superb        Fair         
 Swords            Superb        Superb        Superb        Bad          
-Diggers           Superb        Superb        Superb        Bad          
+Diggers           Superb        Superb        Superb        Fair         
 
 
 Table 3 - Weaponmaster Skill Bonus Table II
 
                   Searching     Perception    Melee         Bows         
-Axes              Fair          Bad           Superb        Superb       
-Bows              Fair          Bad           Superb        Superb       
-Clubs             Fair          Bad           Superb        Superb       
-Crossbows         Fair          Bad           Superb        Superb       
-Daggers           Fair          Bad           Superb        Superb       
-Polearms          Fair          Bad           Superb        Superb       
-Shields           Fair          Bad           Superb        Superb       
-Slings            Fair          Bad           Superb        Superb       
-Staves            Fair          Bad           Superb        Superb       
-Swords            Fair          Bad           Superb        Superb       
-Diggers           Fair          Bad           Superb        Superb       
+Axes              Fair          Bad           Legendary[2]  Very Good    
+Bows              Fair          Poor          Excellent     Heroic       
+Clubs             Fair          Bad           Heroic        Excellent    
+Crossbows         Fair          Poor          Excellent     Heroic       
+Daggers           Fair          Poor          Heroic        Superb       
+Polearms          Fair          Bad           Heroic        Very Good    
+Shields           Fair          Bad           Heroic        Excellent    
+Slings            Fair          Poor          Excellent     Heroic       
+Staves            Fair          Bad           Heroic        Very Good    
+Swords            Fair          Bad           Heroic        Very Good    
+Diggers           Fair          Bad           Heroic        Very Good    
 
 
 
