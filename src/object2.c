@@ -2358,7 +2358,7 @@ static int _get_random_ego(int type)
                 if (e_ptr->max_level && object_level > e_ptr->max_level)
                     rarity += 3*(object_level - e_ptr->max_level)/4;
                 else if (e_ptr->level && object_level < e_ptr->level)
-                    rarity += 3*(e_ptr->level - object_level)/4;
+                    rarity += 3*rarity*(e_ptr->level - object_level)/4;
                 total += MAX(255 / rarity, 1);
             }
         }
@@ -2378,7 +2378,7 @@ static int _get_random_ego(int type)
                 if (e_ptr->max_level && object_level > e_ptr->max_level)
                     rarity += 3*(object_level - e_ptr->max_level)/4;
                 else if (e_ptr->level && object_level < e_ptr->level)
-                    rarity += 3*(e_ptr->level - object_level)/4;
+                    rarity += 3*rarity*(e_ptr->level - object_level)/4;
                 value -= MAX(255 / rarity, 1);
                 if (value <= 0) 
                     return i;
@@ -4939,10 +4939,6 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
     /* Base chance of being "good" */
     f1 = lev + 10;
 
-    /* Temp Hack: It's a bit too hard to find good rings early on */
-    if (o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET)
-        f1 += 30;
-
     /* Maximal chance of being "good" */
     if (f1 > d_info[dungeon_type].obj_good) f1 = d_info[dungeon_type].obj_good;
 
@@ -4952,6 +4948,14 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
     /* Maximal chance of being "great" */
     if ((p_ptr->personality != PERS_MUNCHKIN) && (f2 > d_info[dungeon_type].obj_great))
         f2 = d_info[dungeon_type].obj_great;
+
+    /* Temp Hack: It's a bit too hard to find good rings early on. Note we hack after
+       calculating f2! */
+    if (o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET)
+    {
+        f1 += 30;
+        if (f1 > d_info[dungeon_type].obj_good) f1 = d_info[dungeon_type].obj_good;
+    }
 
     if (p_ptr->good_luck)
     {

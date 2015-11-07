@@ -2969,9 +2969,12 @@ void do_cmd_colors(void)
 
 void msg_add_tiny_screenshot(int cx, int cy)
 {
-    string_ptr s = get_tiny_screenshot(cx, cy);
-    msg_add(string_buffer(s));
-    string_free(s);
+    if (!statistics_hack)
+    {
+        string_ptr s = get_tiny_screenshot(cx, cy);
+        msg_add(string_buffer(s));
+        string_free(s);
+    }
 }
 
 string_ptr get_tiny_screenshot(int cx, int cy)
