@@ -117,14 +117,11 @@ bool object_is_shoukinkubi(object_type *o_ptr)
  */
 bool object_is_favorite(object_type *o_ptr)
 {
-    /* Only melee weapons match */
-    if (!(o_ptr->tval == TV_POLEARM ||
-          o_ptr->tval == TV_SWORD ||
-          o_ptr->tval == TV_DIGGING ||
-          o_ptr->tval == TV_HAFTED))
-    {
+    if (p_ptr->pclass == CLASS_WEAPONMASTER)
+        return weaponmaster_is_favorite(o_ptr);
+
+    if (!object_is_melee_weapon(o_ptr) && !object_is_bow(o_ptr))
         return FALSE;
-    }
 
     /* Favorite weapons are varied depend on the class */
     switch (p_ptr->pclass)
@@ -164,15 +161,15 @@ bool object_is_favorite(object_type *o_ptr)
         break;
     }
 
-    case CLASS_WEAPONMASTER:
-        return weaponmaster_is_favorite(o_ptr);
-
-
     case CLASS_MAULER:
         return o_ptr->weight >= 280;
 
     case CLASS_ARCHAEOLOGIST:
         return archaeologist_is_favored_weapon(o_ptr);
+
+    case CLASS_ARCHER:
+    case CLASS_RANGER:
+        return object_is_bow(o_ptr);
 
     default:
         /* All weapons are okay for non-special classes */

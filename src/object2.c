@@ -2516,7 +2516,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
     bool done = FALSE;
     bool force_great = FALSE;
 
-    if (!apply_magic_ego && level > 30)
+    if (!apply_magic_ego && level > 35)
     {
         if ( ((mode & AM_GREAT) && randint0(50) < level)
           || ((mode & AM_GOOD) && randint0(150) < level) )
@@ -3345,7 +3345,7 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
             effect_add_random(o_ptr, BIAS_DEMON);
         break;
     case EGO_AMULET_ELEMENTAL:
-        if (abs(power) >= 2)
+        if (abs(power) >= 2 && randint1(level) > 30)
         {
             add_flag(o_ptr->art_flags, TR_RES_COLD);
             add_flag(o_ptr->art_flags, TR_RES_FIRE);
@@ -6470,6 +6470,7 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
         /* Debug */
         if (p_ptr->wizard) msg_print("(breakage)");
 
+        stats_on_m_destroy(j_ptr, 1);
 
         /* Failure */
         return (0);
