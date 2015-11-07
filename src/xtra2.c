@@ -2221,8 +2221,29 @@ void monster_death(int m_idx, bool drop_item)
                     }
                 }
                 else
-                    apply_magic(q_ptr, object_level, AM_NO_FIXED_ART | AM_GOOD);
+                {
+#if 0
+                    if (p_ptr->wizard)
+                    {
+                        int iii;
+                        char buf[MAX_NLEN];
+                        for (iii = 0; iii < 100; )
+                        {
+                            object_type forge = {0};
+                            object_prep(&forge, k_idx);
+                            if (!apply_magic(&forge, object_level, AM_NO_FIXED_ART | AM_GOOD)) continue;
+                            iii++;
+                            identify_item(&forge);
+                            forge.ident |= IDENT_FULL;
+                            ego_aware(&forge);
 
+                            object_desc(buf, &forge, OD_COLOR_CODED);
+                            msg_format("%d) %s\n", iii, buf);
+                        }
+                    }
+#endif
+                    apply_magic(q_ptr, object_level, AM_NO_FIXED_ART | AM_GOOD);
+                }
                 /* Drop it in the dungeon */
                 (void)drop_near(q_ptr, -1, y, x);
             }

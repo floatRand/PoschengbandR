@@ -2433,7 +2433,7 @@ static void _create_defender(object_type *o_ptr, int level, int power)
 {
     add_flag(o_ptr->art_flags, TR_FREE_ACT);
     add_flag(o_ptr->art_flags, TR_SEE_INVIS);
-    if (abs(power) >= 2)
+    if (abs(power) >= 2 && level > 50)
     {
         if (one_in_(2))
             add_flag(o_ptr->art_flags, TR_LEVITATION);
@@ -2516,10 +2516,9 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
     bool done = FALSE;
     bool force_great = FALSE;
 
-    if (!apply_magic_ego && level > 35)
+    if (!apply_magic_ego && level > 50)
     {
-        if ( ((mode & AM_GREAT) && randint0(50) < level)
-          || ((mode & AM_GOOD) && randint0(150) < level) )
+        if ((mode & (AM_GOOD | AM_GREAT)) && randint0(150) < level)
         {
             force_great = TRUE;
         }
@@ -2929,10 +2928,9 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
     bool force_great = FALSE;
     bool done = FALSE;
 
-    if (!apply_magic_ego && level > 30)
+    if (!apply_magic_ego && level > 50)
     {
-        if ( ((mode & AM_GREAT) && randint0(75) < level)
-          || ((mode & AM_GOOD) && randint0(300) < level) )
+        if ((mode & (AM_GOOD | AM_GREAT)) && randint0(300) < level)
         {
             force_great = TRUE;
         }
