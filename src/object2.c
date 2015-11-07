@@ -1545,6 +1545,14 @@ s32b object_value(object_type *o_ptr)
             value = device_value(o_ptr, 0);
         else
             value = object_value_real(o_ptr);
+
+        if (!(o_ptr->ident & IDENT_FULL))
+        {
+            if (o_ptr->name2 && !e_info[o_ptr->name2].aware)
+                value += 500;
+            else if (object_is_artifact(o_ptr))
+                value += 1000;
+        }
     }
     else
     {
