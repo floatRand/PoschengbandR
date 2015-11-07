@@ -920,8 +920,9 @@ static int _prompt_class(void)
                         if (idx == _BIRTH_ESCAPE) break;
                         if (idx < 0) return idx;
                         p_ptr->psubclass = idx;
-                        c_put_str(TERM_L_BLUE, format("%-14s", weaponmaster_speciality_name(p_ptr->psubclass)), 7, 14);
-                        if (!_confirm_choice(weaponmaster_speciality_desc(p_ptr->psubclass), menu3.count)) continue;
+                        class_ptr = get_class();
+                        c_put_str(TERM_L_BLUE, format("%-14s", class_ptr->subname), 7, 14);
+                        if (!_confirm_choice(class_ptr->subdesc, menu3.count)) continue;
                         idx = _prompt_personality();
                         if (idx == _BIRTH_ESCAPE) continue;
                         return idx;

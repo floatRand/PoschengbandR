@@ -2454,7 +2454,7 @@ extern bool evolve_monster(int m_idx, bool msg);
 extern bool mon_amnesia(int m_idx);
 
 /* weaponmaster.c */
-extern class_t *weaponmaster_get_class(void);
+extern class_t *weaponmaster_get_class(int subclass);
 extern int weaponmaster_get_toggle(void);
 extern void weaponmaster_set_toggle(int toggle);
 extern void weaponmaster_adjust_skills(void);
@@ -2467,7 +2467,6 @@ extern int shoot_hack;
 extern int shoot_count;
 extern int shoot_item;
 extern cptr weaponmaster_speciality_name(int psubclass);
-extern cptr weaponmaster_speciality_desc(int psubclass);
 
 /* spoilers.c */
 extern void generate_spoilers(void);

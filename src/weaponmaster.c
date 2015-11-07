@@ -200,7 +200,7 @@ static bool _do_blow(int type)
 {
     if (!_check_speciality_equip())
     {
-        msg_print("Failed!  You do not feel comfortable with your weapon.");
+        msg_print("Failed! You do not feel comfortable with your weapon.");
         return FALSE;
     }
     return do_blow(type);
@@ -217,7 +217,7 @@ static void _fire_spell(int which, int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your shooter.");
+            msg_print("Failed! You do not feel comfortable with your shooter.");
             return;
         }
         if (_fire(which))
@@ -240,7 +240,7 @@ static void _toggle_spell(int which, int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         if (_get_toggle() == which)
@@ -573,7 +573,7 @@ static void _smash_ground_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         msg_print("You smash your weapon mightily on the ground.");
@@ -938,7 +938,7 @@ static void _throw_weapon_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         for (hand = 0; hand < MAX_HANDS; hand++)
@@ -1403,7 +1403,7 @@ static void _dagger_toss_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         for (hand = 0; hand < MAX_HANDS; hand++)
@@ -1438,7 +1438,7 @@ static void _flying_dagger_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         if (_get_toggle() == TOGGLE_FLYING_DAGGER_STANCE)
@@ -1527,7 +1527,7 @@ static void _tunnel_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         if (!cave_valid_bold(py, px))
@@ -1561,7 +1561,7 @@ static void _calamity_of_the_living_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         if (p_ptr->lev >= 50 || one_in_(3))
@@ -1609,7 +1609,7 @@ static void _bury_dead_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
 
@@ -1689,7 +1689,7 @@ static void _barricade_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         
@@ -1870,7 +1870,7 @@ static void _reach_spell(int cmd, variant *res)
         }
         else
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             var_set_bool(res, FALSE);
         }
         break;
@@ -1940,13 +1940,13 @@ static void _desperation_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do need a shield.");
+            msg_print("Failed! You do need a shield.");
             return;
         }
         slot = equip_random_slot(object_is_melee_weapon);
         if (!slot)
         {
-            msg_print("Failed!  You do need a weapon to disenchant.");
+            msg_print("Failed! You do need a weapon to disenchant.");
             return;
         }
         o_ptr = equip_obj(slot);
@@ -1997,7 +1997,7 @@ static void _sanctuary_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do need a shield.");
+            msg_print("Failed! You do need a shield.");
             return;
         }
         set_sanctuary(TRUE);
@@ -2089,7 +2089,7 @@ static void _greater_many_shot_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your shooter.");
+            msg_print("Failed! You do not feel comfortable with your shooter.");
             return;
         }
         else
@@ -2143,7 +2143,7 @@ static void _many_shot_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your shooter.");
+            msg_print("Failed! You do not feel comfortable with your shooter.");
             return;
         }
         else
@@ -2213,7 +2213,7 @@ static void _shot_on_the_run_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your shooter.");
+            msg_print("Failed! You do not feel comfortable with your shooter.");
             return;
         }
         if (_get_toggle() == TOGGLE_SHOT_ON_THE_RUN)
@@ -2371,7 +2371,7 @@ static void _monkey_king_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         if (_design_monkey_clone() && summon_named_creature(0, py, px, MON_MONKEY_CLONE, PM_FORCE_PET))
@@ -2482,7 +2482,7 @@ static void _circle_kick_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         _circle_kick();
@@ -2602,7 +2602,7 @@ static void _vault_attack_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
-            msg_print("Failed!  You do not feel comfortable with your weapon.");
+            msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
         if (_vault_attack())
@@ -2758,9 +2758,9 @@ static void _wild_blade_spell(int cmd, variant *res)
  * Spell Table and Exports
  ****************************************************************/
 
-#define _MAX_OBJECTS_PER_SPECIALITY        32
-#define _MAX_SPECIALITIES                11
-#define _MAX_SPELLS_PER_SPECIALITY        10
+#define _MAX_OBJECTS_PER_SPECIALITY 32
+#define _MAX_SPECIALITIES           11
+#define _MAX_SPELLS_PER_SPECIALITY  10
 
 int weaponmaster_get_toggle(void)
 {
@@ -2798,7 +2798,7 @@ typedef struct {
 } _speciality;
 
 
-/*    p_ptr->psubclass indexes into _specialities.
+/*  p_ptr->psubclass indexes into _specialities.
     This index is persisted in savefiles and are chosen
     by the player at startup, so moving things around is 
     unwise unless you put code to fix up old savefiles 
@@ -2806,7 +2806,7 @@ typedef struct {
 */
 static _speciality _specialities[_MAX_SPECIALITIES] = {
     { "Axes",
-      "The mighty axe! Your blows will cleave with damage unsurpassed! "
+      "The mighty axe! Your blows will cleave with damage unsurpassed. "
       "Specializing in axes gives great offensive prowess, especially when "
       "your axe is wielded with two hands. However, this speciality offers "
       "little in the way of utility. Kill quickly as your life depends on it!",
@@ -2852,7 +2852,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       { TV_BOW, SV_SHORT_BOW },
     },
     { "Clubs",
-        "You will seek to club your opponents senseless!  This speciality gains passive "
+        "You will seek to club your opponents senseless! This speciality gains passive "
         "status effects against monsters, such as confusion, knock out and stunning. Also, "
         "you will gain some limited utility techniques. At high levels, your weapons will "
         "become more likely to score devastating, crushing blows against your hapless enemies.",
@@ -2903,7 +2903,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       { TV_BOW, SV_LIGHT_XBOW },
     },
     { "Daggers",
-        "A knife in the back!  This speciality favors dual wielding and rogue-like behavior. "
+        "A knife in the back! This speciality favors dual wielding and rogue-like behavior. "
         "The daggermaster can even assume the posture of The Flying Dagger which greatly "
         "enhances their low level dagger toss capability. Indeed, their prowess with the "
         "dagger toss is legendary and appears almost magical! At high levels, you will also "
@@ -2972,7 +2972,10 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { TV_POLEARM, SV_SPEAR },
     },
         { "Shields",
-          "",
+          "Specializing in shields gives excellent powers of defense and retaliation. In addition, "
+          "you can even choose to melee with your shield rather than a normal weapon, bashing your "
+          "opponents senseless. This form of combat is known as Shield Bashing and is unique to this "
+          "speciality.",
           _WEAPONMASTER_SHIELDS,
           { 
             { TV_SHIELD, SV_DRAGON_SHIELD },
@@ -2996,7 +2999,10 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
           { TV_SHIELD, SV_SMALL_LEATHER_SHIELD },
         },
         { "Slings",
-          "Watch out, Goliath!",
+          "Watch out, Goliath! As a master of slings you will shoot pebbles with uncanny speed. Your "
+          "shots may even ricochet off other monsters to score multiple hits. As with other archery "
+          "specializations, your ammo will break less often and, at high levels you will gain access "
+          "to an 'unlimited quiver' which allows you to shoot an infinite amount of (average) ammo.",
           _WEAPONMASTER_BOWS,
           { { TV_BOW, SV_SLING },
             { 0, 0 },
@@ -3013,8 +3019,10 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
           { TV_BOW, SV_SLING },
         },
         { "Staves",
-          "Monkey King!  You will battle opponents with a flurry of blows from your mighty "
-          "staff. You may eventually clone yourself at great cost.",
+          "Monkey King! You will battle opponents with a flurry of blows from your mighty "
+          "staff and will be prepared to counter the attacks of your enemies. You can vault into "
+          "battle and circle kick enemies for stunning effects, attacking them with your boots! "
+          "You may even eventually clone yourself at great cost.",
           _WEAPONMASTER_MELEE,
           { 
             { TV_HAFTED, SV_BO_STAFF },
@@ -3035,7 +3043,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
           { TV_HAFTED, SV_QUARTERSTAFF },
         },
     { "Swords",
-        "You will become a true swordmaster!  Mastery of the blade will augment "
+        "You will become a true swordmaster! Mastery of the blade will augment "
         "your weapon with elemental, vorpal or vampiric powers.",
         _WEAPONMASTER_MELEE,
         { { TV_SWORD, SV_BASTARD_SWORD } ,
@@ -3078,7 +3086,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
     },
     { "Diggers",
       "A master of digging. You prefer rocky enclosures and don't mind "
-      "lugging around a corpse or two.",
+      "lugging around a corpse or two, which you can bury in a pinch for "
+      "a temporary bonus. You can choose one of several postures which allow "
+      "you to use the digging bonus of your current weapon as an additional "
+      "bonus, such as increased strength, constitution, or even speed! So keep "
+      "your eye open for those +8 diggers!",
       _WEAPONMASTER_MELEE,
       { 
         { TV_DIGGING, SV_SHOVEL},
@@ -4223,10 +4235,10 @@ static void _character_dump(doc_ptr doc)
     }
 }
 
-class_t *weaponmaster_get_class(void)
+class_t *weaponmaster_get_class(int subclass)
 {
     static class_t me = {0};
-    static bool init = FALSE;
+    static bool    init = FALSE;
 
     /* static info never changes */
     if (!init)
@@ -4270,14 +4282,34 @@ class_t *weaponmaster_get_class(void)
         me.character_dump = _character_dump;
         init = TRUE;
     }
-    
-    if (_specialities[p_ptr->psubclass].kind == _WEAPONMASTER_BOWS)
+    if (0 <= subclass && subclass < WEAPONMASTER_MAX)
     {
-        me.base_skills.thb = 60;
-        me.extra_skills.thb = 21;
+        _speciality *ptr = &_specialities[subclass];
 
-        me.base_skills.thn = 45;
-        me.extra_skills.thn = 15;
+        me.subname = ptr->name;
+        me.subdesc = ptr->help;
+
+        if (ptr->kind == _WEAPONMASTER_BOWS)
+        {
+            me.base_skills.thb = 60;
+            me.extra_skills.thb = 21;
+
+            me.base_skills.thn = 45;
+            me.extra_skills.thn = 15;
+        }
+        else
+        {
+            me.base_skills.thb = 45;
+            me.extra_skills.thb = 15;
+
+            me.base_skills.thn = 60;
+            me.extra_skills.thn = 21;
+        }
+    }
+    else
+    {
+        me.subname = "";
+        me.subdesc = "";
     }
 
     return &me;
@@ -4302,12 +4334,6 @@ cptr weaponmaster_speciality_name(int psubclass)
 {
     /* assert(p_ptr->pclass == CLASS_WEAPONMASTER); */
     return _specialities[psubclass].name;
-}
-
-cptr weaponmaster_speciality_desc(int psubclass)
-{
-    /* assert(p_ptr->pclass == CLASS_WEAPONMASTER); */
-    return _specialities[psubclass].help;
 }
 
 void weaponmaster_do_readied_shot(monster_type *m_ptr)

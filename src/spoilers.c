@@ -882,18 +882,12 @@ static void _dragon_realms_help(FILE* fp)
     fputs("\n</style>\n", fp);
 
 }
-
-static void _class_help(FILE *fp, int idx)
+static void _class_help_table(FILE *fp, class_t *class_ptr)
 {
-    class_t     *class_ptr = get_class_aux(idx, 0);
     caster_info *caster_ptr = NULL;
 
-    if (class_ptr->caster_info && idx != CLASS_PSION)
+    if (class_ptr->caster_info && !strcmp(class_ptr->name, "Psion"))
         caster_ptr = class_ptr->caster_info();
-
-    fprintf(fp, "<topic:%s><color:o>%s</color>\n", class_ptr->name, class_ptr->name);
-    fputs(class_ptr->desc, fp);
-    fputs("\n\n", fp);
 
     fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
     fprintf(fp, "Strength     <color:%c>%+3d</color>        Disarming   %s\n",
@@ -928,6 +922,24 @@ static void _class_help(FILE *fp, int idx)
         _skill_desc(class_ptr->base_skills.thb + 5*class_ptr->extra_skills.thb, 12));
     fprintf(fp, "Experience   %3d%%\n", class_ptr->exp);
     fputs("</style></indent>\n", fp);
+}
+
+static void _class_help(FILE *fp, int idx)
+{
+    class_t *class_ptr = get_class_aux(idx, 0);
+
+    fprintf(fp, "<topic:%s><color:o>%s</color>\n", class_ptr->name, class_ptr->name);
+    fputs(class_ptr->desc, fp);
+    fputs("\n\n", fp);
+
+    switch(idx)
+    {
+    case CLASS_WEAPONMASTER:
+        fputs("See <link:Weaponmasters.txt> for more details on weaponmasters.\n\n", fp);
+        break;
+    }
+
+    _class_help_table(fp, class_ptr);
 }
 
 #define _MAX_CLASSES_PER_GROUP 20
@@ -1060,6 +1072,65 @@ static void _classes_help(FILE* fp)
             fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.thb + 5*class_ptr->extra_skills.thb, 12));
             fputc('\n', fp);
         }
+    }
+    fputs("\n</style>\n", fp);
+}
+
+static void _weaponmasters_help(FILE *fp)
+{
+    int i;
+    fputs("<style:title>Weaponmasters</style>\n\n", fp);
+    fputs(get_class_aux(CLASS_WEAPONMASTER, WEAPONMASTER_AXES)->desc, fp);
+    fputs("\n\n", fp);
+
+    for (i = 0; i < WEAPONMASTER_MAX; i++)
+    {
+        class_t *class_ptr = get_class_aux(CLASS_WEAPONMASTER, i);
+
+        fprintf(fp, "<topic:%s><color:o>%s</color>\n", class_ptr->subname, class_ptr->subname);
+        fprintf(fp, "%s\n\n", class_ptr->subdesc);
+        _class_help_table(fp, class_ptr);
+    }
+
+    fputs("<topic:Tables><style:heading>Table 1 - Weaponmaster Statistic Bonus Table</style>\n<style:table>\n", fp);
+    fprintf(fp, "<color:G>%-17.17s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n", "");
+    for (i = 0; i < WEAPONMASTER_MAX; i++)
+    {
+        class_t *class_ptr = get_class_aux(CLASS_WEAPONMASTER, i);
+        fprintf(fp, "%-17.17s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%\n",
+            class_ptr->subname,
+            class_ptr->stats[A_STR], class_ptr->stats[A_INT], class_ptr->stats[A_WIS],
+            class_ptr->stats[A_DEX], class_ptr->stats[A_CON], class_ptr->stats[A_CHR],
+            class_ptr->life, class_ptr->base_hp, class_ptr->exp
+        );
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills1><style:heading>Table 2 - Weaponmaster Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
+    for (i = 0; i < WEAPONMASTER_MAX; i++)
+    {
+        class_t *class_ptr = get_class_aux(CLASS_WEAPONMASTER, i);
+        fprintf(fp, "%-17.17s", class_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis, 8));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev, 6));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.sav + 5*class_ptr->extra_skills.sav, 7));
+        fprintf(fp, " %s", _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl)/2, 1));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills2><style:heading>Table 3 - Weaponmaster Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Bows");
+    for (i = 0; i < WEAPONMASTER_MAX; i++)
+    {
+        class_t *class_ptr = get_class_aux(CLASS_WEAPONMASTER, i);
+        fprintf(fp, "%-17.17s", class_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.srh + 5*class_ptr->extra_skills.srh, 6));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.fos + 5*class_ptr->extra_skills.fos, 6));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.thn + 5*class_ptr->extra_skills.thn, 12));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.thb + 5*class_ptr->extra_skills.thb, 12));
+        fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
 }
@@ -1446,6 +1517,7 @@ void generate_spoilers(void)
     _text_file("Draconians.txt", _draconians_help);
 
     _text_file("Classes.txt", _classes_help);
+    _text_file("Weaponmasters.txt", _weaponmasters_help);
 
     _text_file("Personalities.txt", _personalities_help);
 
@@ -1453,7 +1525,6 @@ void generate_spoilers(void)
     _text_file("Demons.txt", _demons_help);
     _text_file("Dragons.txt", _dragons_help);
     _text_file("DragonRealms.txt", _dragon_realms_help);
-
 
     _text_file("PossessorStats.csv", _possessor_stats_help);
     _text_file("MonsterDam.csv", _mon_dam_help);

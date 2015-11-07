@@ -1,0 +1,209 @@
+<style:title>Weaponmasters</style>
+
+The weaponmaster is great with a single class of weapons. The character gets combat bonuses and special powers depending on the type of specialization. Alas, the weaponmaster is truly lousy when using any weapon outside their chosen specialty so focus is key.
+
+<topic:Axes><color:o>Axes</color>
+The mighty axe! Your blows will cleave with damage unsurpassed. Specializing in axes gives great offensive prowess, especially when your axe is wielded with two hands. However, this speciality offers little in the way of utility. Kill quickly as your life depends on it!
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Bows><color:o>Bows</color>
+You will shoot to kill! The bowmaster gains techniques to enhance shooting, including more rapid firing, the ability to volley shots over the heads of intervening monsters, reduced ammo destruction, the ability to kill with a single arrow and much more. As a shooter, your missile prowess will be quite formidable, though your melee will be somewhat lacking.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Clubs><color:o>Clubs</color>
+You will seek to club your opponents senseless! This speciality gains passive status effects against monsters, such as confusion, knock out and stunning. Also, you will gain some limited utility techniques. At high levels, your weapons will become more likely to score devastating, crushing blows against your hapless enemies.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Crossbows><color:o>Crossbows</color>
+The crossbowmaster shoots deadly bolts for great damage. Their bolts may explode powerfully damaging nearby monsters. Also, they may shoot so hard as to knock their opponents backwards!
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Daggers><color:o>Daggers</color>
+A knife in the back! This speciality favors dual wielding and rogue-like behavior. The daggermaster can even assume the posture of The Flying Dagger which greatly enhances their low level dagger toss capability. Indeed, their prowess with the dagger toss is legendary and appears almost magical! At high levels, you will also gain formidable melee prowess with the Frenzy Stance. Finally, daggermasters have very strong short ranged teleport techniques that synergize well with their toss abilities.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Polearms><color:o>Polearms</color>
+You don a grim face before setting out to reap your harvest of death. You will swing your weapon wide often affecting multiple surrounding opponents.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Shields><color:o>Shields</color>
+Specializing in shields gives excellent powers of defense and retaliation. In addition, you can even choose to melee with your shield rather than a normal weapon, bashing your opponents senseless. This form of combat is known as Shield Bashing and is unique to this speciality.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Slings><color:o>Slings</color>
+Watch out, Goliath! As a master of slings you will shoot pebbles with uncanny speed. Your shots may even ricochet off other monsters to score multiple hits. As with other archery specializations, your ammo will break less often and, at high levels you will gain access to an 'unlimited quiver' which allows you to shoot an infinite amount of (average) ammo.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Staves><color:o>Staves</color>
+Monkey King! You will battle opponents with a flurry of blows from your mighty staff and will be prepared to counter the attacks of your enemies. You can vault into battle and circle kick enemies for stunning effects, attacking them with your boots! You may even eventually clone yourself at great cost.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Swords><color:o>Swords</color>
+You will become a true swordmaster! Mastery of the blade will augment your weapon with elemental, vorpal or vampiric powers.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Diggers><color:o>Diggers</color>
+A master of digging. You prefer rocky enclosures and don't mind lugging around a corpse or two, which you can bury in a pinch for a temporary bonus. You can choose one of several postures which allow you to use the digging bonus of your current weapon as an additional bonus, such as increased strength, constitution, or even speed! So keep your eye open for those +8 diggers!
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
+Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
+Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
+Life Rating  109%       Melee       <color:g>Superb       </color>
+Base HP       12        Bows        <color:g>Superb       </color>
+Experience   135%
+</style></indent>
+<topic:Tables><style:heading>Table 1 - Weaponmaster Statistic Bonus Table</style>
+<style:table>
+<color:G>                 </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
+Axes               +3   -1   -1   +1   +1   +1  109%  +12  135%
+Bows               +3   -1   -1   +1   +1   +1  109%  +12  135%
+Clubs              +3   -1   -1   +1   +1   +1  109%  +12  135%
+Crossbows          +3   -1   -1   +1   +1   +1  109%  +12  135%
+Daggers            +3   -1   -1   +1   +1   +1  109%  +12  135%
+Polearms           +3   -1   -1   +1   +1   +1  109%  +12  135%
+Shields            +3   -1   -1   +1   +1   +1  109%  +12  135%
+Slings             +3   -1   -1   +1   +1   +1  109%  +12  135%
+Staves             +3   -1   -1   +1   +1   +1  109%  +12  135%
+Swords             +3   -1   -1   +1   +1   +1  109%  +12  135%
+Diggers            +3   -1   -1   +1   +1   +1  109%  +12  135%
+
+</style>
+<topic:Skills1><style:heading>Table 2 - Weaponmaster Skill Bonus Table I</style>
+<style:table>
+                  <color:w>Disarming     Device        Save          Stealth      </color>
+Axes              <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Bows              <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Clubs             <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Crossbows         <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Daggers           <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Polearms          <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Shields           <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Slings            <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Staves            <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Swords            <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Diggers           <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
+
+</style>
+<topic:Skills2><style:heading>Table 3 - Weaponmaster Skill Bonus Table II</style>
+<style:table>
+                  <color:w>Searching     Perception    Melee         Bows         </color>
+Axes              <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Bows              <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Clubs             <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Crossbows         <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Daggers           <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Polearms          <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Shields           <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Slings            <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Staves            <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Swords            <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Diggers           <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
+
+</style>
+
+
+<color:s>Automatically generated for PosChengband 4.0.0.</color>

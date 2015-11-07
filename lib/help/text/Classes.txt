@@ -210,6 +210,8 @@ Melee
   type of specialization. Alas, the weaponmaster is truly lousy when 
   using any weapon outside their chosen specialty so focus is key.
   
+  See [d] for more details on weaponmasters.
+  
     Stats                   Skills
     Strength      +3        Disarming   Superb       
     Intelligence  -1        Device      Superb       

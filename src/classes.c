@@ -185,7 +185,7 @@ class_t *result = NULL;
         result = weaponsmith_get_class();
         break;
     case CLASS_WEAPONMASTER:
-        result = weaponmaster_get_class();
+        result = weaponmaster_get_class(psubclass);
         break;
     case CLASS_WILD_TALENT:
         result = wild_talent_get_class();
