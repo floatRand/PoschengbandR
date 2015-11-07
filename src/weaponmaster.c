@@ -2816,7 +2816,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       _WEAPONMASTER_MELEE,
     /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
       {+3, -2, -1, -2, +1,  0}, {  -5,  -7,  -3,  -1,  -2,  -2, 22,-10},
-                                {  -1,  -3,   0,   0,   0,   0, 17,  0},
+                                {  -1,  -2,   0,   0,   0,   0, 17,  0},
       { { TV_POLEARM, SV_BATTLE_AXE },
         { TV_POLEARM, SV_BEAKED_AXE },
         { TV_POLEARM, SV_BROAD_AXE },
@@ -2928,7 +2928,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       _WEAPONMASTER_MELEE,
     /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
       { 0, +1,  0, +3, -1,  0}, {   5,   4,   1,   3,   3,   3, 15, 15},
-                                {   3,   3,   0,   0,   0,   0, 10, 10},
+                                {   3,   1,   0,   0,   0,   0, 10, 10},
       { { TV_SWORD, SV_BASILLARD },
         { TV_SWORD, SV_BROKEN_DAGGER },
         { TV_SWORD, SV_DAGGER },
@@ -3030,7 +3030,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       _WEAPONMASTER_BOWS,
     /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
       {-1, +1, +1, +3, -1,  0}, {   3,   5,   1,   3,   3,   3,-10, 37},
-                                {   2,   3,   0,   0,   0,   0,  0, 17},
+                                {   2,   1,   0,   0,   0,   0,  0, 17},
       { { TV_BOW, SV_SLING },
         { 0, 0 },
       },

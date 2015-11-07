@@ -87,7 +87,7 @@ toss abilities.
 
   Stats                   Skills
   Strength      +1        Disarming   Superb       
-  Intelligence  +0        Device      Heroic       
+  Intelligence  +0        Device      Superb       
   Wisdom        -1        Save        Superb       
   Dexterity     +4        Stealth     Superb       
   Constitution  +0        Searching   Fair         
@@ -140,7 +140,7 @@ break less often and, at high levels you will gain access to an
 
   Stats                   Skills
   Strength      +0        Disarming   Superb       
-  Intelligence  +0        Device      Heroic       
+  Intelligence  +0        Device      Superb       
   Wisdom        +0        Save        Superb       
   Dexterity     +4        Stealth     Superb       
   Constitution  +0        Searching   Fair         
@@ -224,10 +224,10 @@ Axes              Excellent     Excellent     Superb        Bad
 Bows              Superb        Superb        Superb        Very Good    
 Clubs             Superb        Superb        Superb        Bad          
 Crossbows         Superb        Superb        Superb        Fair         
-Daggers           Superb        Heroic        Superb        Very Good    
+Daggers           Superb        Superb        Superb        Very Good    
 Polearms          Superb        Superb        Superb        Bad          
 Shields           Superb        Superb        Superb        Bad          
-Slings            Superb        Heroic        Superb        Very Good    
+Slings            Superb        Superb        Superb        Very Good    
 Staves            Excellent     Superb        Superb        Fair         
 Swords            Superb        Superb        Superb        Bad          
 Diggers           Superb        Superb        Superb        Fair         

@@ -63,7 +63,7 @@ A knife in the back! This speciality favors dual wielding and rogue-like behavio
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> +1</color>        Disarming   <color:g>Superb       </color>
-Intelligence <color:w> +0</color>        Device      <color:b>Heroic       </color>
+Intelligence <color:w> +0</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
 Dexterity    <color:w> +4</color>        Stealth     <color:g>Superb       </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
@@ -105,7 +105,7 @@ Watch out, Goliath! As a master of slings you will shoot pebbles with uncanny sp
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> +0</color>        Disarming   <color:g>Superb       </color>
-Intelligence <color:w> +0</color>        Device      <color:b>Heroic       </color>
+Intelligence <color:w> +0</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> +0</color>        Save        <color:g>Superb       </color>
 Dexterity    <color:w> +4</color>        Stealth     <color:g>Superb       </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
@@ -179,10 +179,10 @@ Axes              <color:G>Excellent    </color> <color:G>Excellent    </color> 
 Bows              <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Clubs             <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
 Crossbows         <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:o>Fair         </color>
-Daggers           <color:g>Superb       </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
+Daggers           <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Polearms          <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
 Shields           <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
-Slings            <color:g>Superb       </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
+Slings            <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Staves            <color:G>Excellent    </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:o>Fair         </color>
 Swords            <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:r>Bad          </color>
 Diggers           <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:o>Fair         </color>
