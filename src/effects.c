@@ -4586,19 +4586,19 @@ bool set_stun(int v, bool do_dec)
         {
             /* Stun */
             case 1:
-            msg_print("You have been stunned.");
+            msg_print("You have been <color:y>stunned</color>.");
 
             break;
 
             /* Heavy stun */
             case 2:
-            msg_print("You have been heavily stunned.");
+            msg_print("You have been <color:R>heavily stunned</color>.");
 
             break;
 
             /* Knocked out */
             case 3:
-            msg_print("You have been knocked out.");
+            msg_print("You have been <color:v>knocked out</color>.");
 
             break;
         }
@@ -4811,43 +4811,43 @@ bool set_cut(int v, bool do_dec)
         {
             /* Graze */
             case 1:
-            msg_print("You have been given a graze.");
+            msg_print("You have been given a <color:y>graze</color>.");
 
             break;
 
             /* Light cut */
             case 2:
-            msg_print("You have been given a light cut.");
+            msg_print("You have been given a <color:y>light cut</color>.");
 
             break;
 
             /* Bad cut */
             case 3:
-            msg_print("You have been given a bad cut.");
+            msg_print("You have been given a <color:o>bad cut</color>.");
 
             break;
 
             /* Nasty cut */
             case 4:
-            msg_print("You have been given a nasty cut.");
+            msg_print("You have been given a <color:o>nasty cut</color>.");
 
             break;
 
             /* Severe cut */
             case 5:
-            msg_print("You have been given a severe cut.");
+            msg_print("You have been given a <color:r>severe cut</color>.");
 
             break;
 
             /* Deep gash */
             case 6:
-            msg_print("You have been given a deep gash.");
+            msg_print("You have been given a <color:r>deep gash</color>.");
 
             break;
 
             /* Mortal wound */
             case 7:
-            msg_print("You have been given a mortal wound.");
+            msg_print("You have been given a <color:R>mortal wound</color>.");
 
             break;
         }
@@ -5520,13 +5520,10 @@ bool do_dec_stat(int stat)
     /* Sustain */
     if (sust && (!ironman_nightmare || randint0(13)))
     {
-        /* Message */
-        msg_format("You feel %s for a moment, but the feeling passes.",
+        if (disturb_minor)
+            msg_format("You feel %s for a moment, but the feeling passes.", desc_stat_neg[stat]);
 
-                desc_stat_neg[stat]);
-
-        /* Notice effect */
-        return (TRUE);
+        return TRUE;
     }
 
     /* Attempt to reduce the stat */

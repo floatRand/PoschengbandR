@@ -3219,7 +3219,7 @@ bool earthquake_aux(int cy, int cx, int r, int m_idx)
             }
             default:
             {
-                msg_print("The cave quakes!  You are pummeled with debris!");
+                msg_print("The cave quakes! You are pummeled with debris!");
                 break;
             }
         }
@@ -3230,8 +3230,7 @@ bool earthquake_aux(int cy, int cx, int r, int m_idx)
         {
             if (!mut_present(MUT_EVASION) || one_in_(2))
             {
-                /* Message and damage */
-                msg_print("You are severely crushed!");
+                msg_print("You are <color:v>severely crushed</color>!");
                 damage = 200;
             }
         }
@@ -3251,7 +3250,7 @@ bool earthquake_aux(int cy, int cx, int r, int m_idx)
                 {
                     if (!mut_present(MUT_EVASION) || one_in_(2))
                     {
-                        msg_print("You are bashed by rubble!");
+                        msg_print("You are <color:R>bashed by rubble</color>!");
                         damage = damroll(10, 4);
                         (void)set_stun(p_ptr->stun + randint1(50), FALSE);
                     }
@@ -3261,7 +3260,7 @@ bool earthquake_aux(int cy, int cx, int r, int m_idx)
                 {
                     if (!mut_present(MUT_EVASION) || one_in_(2))
                     {
-                        msg_print("You are crushed between the floor and ceiling!");
+                        msg_print("You are <color:R>crushed between the floor and ceiling</color>!");
                         damage = damroll(10, 4);
                         (void)set_stun(p_ptr->stun + randint1(50), FALSE);
                     }

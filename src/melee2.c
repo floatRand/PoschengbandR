@@ -2585,7 +2585,10 @@ static void process_monster(int m_idx)
                 filename = "monspeak.txt";
 
             if (get_rnd_line(filename, m_ptr->ap_r_idx, monmessage) == 0)
-                msg_format("%^s %s", m_name, monmessage);
+            {
+                msg_format("<color:g>%^s</color> %s", m_name, monmessage);
+                msg_boundary();
+            }
         }
     }
 
