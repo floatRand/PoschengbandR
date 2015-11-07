@@ -3463,9 +3463,15 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     }
                     else if (r_ptr->flagsr & RFR_IM_FIRE)
                     {
-                        msg_format("%^s resists alot.", m_name_subject);
-                        k /= 9;
+                        msg_format("%^s is immune.", m_name_subject);
+                        k = 0;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_FIRE);
+                    }
+                    else if (r_ptr->flagsr & RFR_RES_FIRE)
+                    {
+                        msg_format("%^s resists.", m_name_subject);
+                        k /= 3;
+                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_FIRE);
                     }
                     else if (r_ptr->flags3 & (RF3_HURT_FIRE))
                     {
@@ -3483,9 +3489,15 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     }
                     else if (r_ptr->flagsr & RFR_IM_COLD)
                     {
-                        msg_format("%^s resists alot.", m_name_subject);
-                        k /= 9;
+                        msg_format("%^s is immune.", m_name_subject);
+                        k = 0;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_COLD);
+                    }
+                    else if (r_ptr->flagsr & RFR_RES_COLD)
+                    {
+                        msg_format("%^s resists.", m_name_subject);
+                        k /= 3;
+                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_COLD);
                     }
                     else 
                     {
@@ -3513,9 +3525,15 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     }
                     else if (r_ptr->flagsr & RFR_IM_ELEC)
                     {
-                        msg_format("%^s resists alot.", m_name_subject);
-                        k /= 9;
+                        msg_format("%^s is immune.", m_name_subject);
+                        k = 0;
                         if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_ELEC);
+                    }
+                    else if (r_ptr->flagsr & RFR_RES_ELEC)
+                    {
+                        msg_format("%^s resists.", m_name_subject);
+                        k /= 3;
+                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ELEC);
                     }
                     else 
                     {
