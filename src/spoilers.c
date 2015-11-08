@@ -1115,7 +1115,7 @@ static void _weaponmasters_help(FILE *fp)
         fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis, 8));
         fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev, 6));
         fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.sav + 5*class_ptr->extra_skills.sav, 7));
-        fprintf(fp, " %s", _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl)/2, 1));
+        fprintf(fp, " %s", _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl), 1));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -1363,6 +1363,87 @@ static void _possessor_stats_help(FILE* fp)
     }
 }
 
+static void _skills_race_help(FILE* fp)
+{
+    int i,j;
+    fputs("Race,Dis,Dev,Sav,Stl,Srh,Fos,Thn,Thb\n", fp);
+    for (i = 0; i < MAX_RACES; i++)
+    {
+        int max_j = 1;
+        if (i == RACE_DEMIGOD)
+            max_j = MAX_DEMIGOD_TYPES;
+        else if (i == RACE_DRACONIAN)
+            max_j = DRACONIAN_MAX;
+
+        for (j = 0; j < max_j; j++)
+        {
+            race_t *race_ptr = get_race_aux(i, j);
+
+            if (race_ptr->flags & RACE_IS_MONSTER) continue;
+
+            if (race_ptr->subname && strlen(race_ptr->subname))
+                fprintf(fp, "\"%s:%s\",", race_ptr->name, race_ptr->subname);
+            else
+                fprintf(fp, "\"%s\",", race_ptr->name);
+            fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d\n",
+                race_ptr->skills.dis,
+                race_ptr->skills.dev,
+                race_ptr->skills.sav,
+                race_ptr->skills.stl,
+                race_ptr->skills.srh,
+                race_ptr->skills.fos,
+                race_ptr->skills.thn,
+                race_ptr->skills.thb
+            );
+        }
+    }
+}
+
+static void _skills_class_help(FILE* fp)
+{
+    int i,j;
+    fputs("Class,Dis,Dev,Sav,Stl,Srh,Fos,Thn,Thb,Dis2,Dev2,Sav2,Thn2,Thb2\n", fp);
+    for (i = 0; i < MAX_CLASS; i++)
+    {
+        int max_j = 1;
+
+        if (i == CLASS_MONSTER)
+            continue;
+        else if (i == CLASS_WEAPONMASTER)
+            max_j = WEAPONMASTER_MAX;
+        /*else if (i == CLASS_WARLOCK)
+            max_j = WARLOCK_MAX;*/
+
+        for (j = 0; j < max_j; j++)
+        {
+            class_t *class_ptr = get_class_aux(i, j);
+
+            if (class_ptr->subname && strlen(class_ptr->subname))
+                fprintf(fp, "\"%s:%s\",", class_ptr->name, class_ptr->subname);
+            else
+                fprintf(fp, "\"%s\",", class_ptr->name);
+            fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,%d+%d,%d+%d,%d+%d,%d+%d,%d+%d\n",
+                class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis,
+                class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev,
+                class_ptr->base_skills.sav + 5*class_ptr->extra_skills.sav,
+                class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl,
+                class_ptr->base_skills.srh,
+                class_ptr->base_skills.fos,
+                class_ptr->base_skills.thn + 5*class_ptr->extra_skills.thn,
+                class_ptr->base_skills.thb + 5*class_ptr->extra_skills.thb,
+                class_ptr->base_skills.dis, class_ptr->extra_skills.dis,
+                class_ptr->base_skills.dev, class_ptr->extra_skills.dev,
+                class_ptr->base_skills.sav, class_ptr->extra_skills.sav,
+                class_ptr->base_skills.thn, class_ptr->extra_skills.thn,
+                class_ptr->base_skills.thb, class_ptr->extra_skills.thb
+            );
+        }
+    }
+}
+
+/******************************************************************************
+ * Auto-generate HTML and TEXT files from the help system
+ ******************************************************************************/
 typedef struct {
     string_ptr dir;
     string_ptr base;
@@ -1528,6 +1609,9 @@ void generate_spoilers(void)
 
     _text_file("PossessorStats.csv", _possessor_stats_help);
     _text_file("MonsterDam.csv", _mon_dam_help);
+    _text_file("Skills-Racial.csv", _skills_race_help);
+    _text_file("Skills-Class.csv", _skills_class_help);
+    /*_text_file("Skills-Monster.csv", _skills_mon_help);*/
 
     _generate_html_help();
     _generate_text_help();

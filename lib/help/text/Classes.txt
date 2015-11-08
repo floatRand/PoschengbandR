@@ -214,10 +214,10 @@ Melee
   
     Stats                   Skills
     Strength      +4        Disarming   Excellent    
-    Intelligence  -3        Device      Excellent    
+    Intelligence  -3        Device      Superb       
     Wisdom        -2        Save        Superb       
-    Dexterity     -1        Stealth     Bad          
-    Constitution  +2        Searching   Fair         
+    Dexterity     -1        Stealth     Fair         
+    Constitution  +2        Searching   Poor         
     Charisma      +1        Perception  Bad          
     Life Rating  109%       Melee       Legendary[2] 
     Base HP       12        Bows        Very Good    
@@ -424,7 +424,7 @@ Magic
   
     Stats                   Skills
     Strength      -4        Disarming   Excellent    
-    Intelligence  +4        Device      Legendary[7] 
+    Intelligence  +4        Device      Legendary[5] 
     Wisdom        -1        Save        Superb       
     Dexterity     +1        Stealth     Superb       
     Constitution  -2        Searching   Fair         
@@ -1251,7 +1251,7 @@ Mauler        Superb        Superb        Superb        Bad
 Rune-Knight   Excellent     Heroic        Superb        Very Good    
 Samurai       Superb        Excellent     Superb        Very Good    
 Warrior       Superb        Excellent     Superb        Fair         
-Weaponmaster  Excellent     Excellent     Superb        Bad          
+Weaponmaster  Excellent     Superb        Superb        Fair         
 Weaponsmith   Superb        Superb        Superb        Fair         
 Archer        Superb        Superb        Superb        Superb       
 Sniper        Superb        Superb        Superb        Heroic       
@@ -1259,7 +1259,7 @@ Force-Trainer Superb        Heroic        Superb        Superb
 Monk          Heroic        Heroic        Superb        Heroic       
 Mystic        Heroic        Heroic        Superb        Heroic       
 Blood-Mage    Excellent     Legendary[5]  Superb        Superb       
-Blue-Mage     Excellent     Legendary[7]  Superb        Superb       
+Blue-Mage     Excellent     Legendary[5]  Superb        Superb       
 High-Mage     Excellent     Legendary[5]  Superb        Superb       
 Mage          Excellent     Legendary[5]  Superb        Superb       
 Necromancer   Excellent     Legendary[5]  Superb        Superb       
@@ -1300,7 +1300,7 @@ Mauler        Poor          Bad           Legendary[2]  Fair
 Rune-Knight   Fair          Poor          Superb        Very Good    
 Samurai       Poor          Bad           Heroic        Superb       
 Warrior       Poor          Bad           Legendary[2]  Heroic       
-Weaponmaster  Fair          Bad           Legendary[2]  Very Good    
+Weaponmaster  Poor          Bad           Legendary[2]  Very Good    
 Weaponsmith   Fair          Bad           Superb        Superb       
 Archer        Fair          Poor          Superb        Legendary[10]
 Sniper        Good          Fair          Excellent     Heroic       

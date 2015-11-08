@@ -2814,9 +2814,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "your axe is wielded with two hands. However, this speciality offers "
       "little in the way of utility. Kill quickly as your life depends on it!",
       _WEAPONMASTER_MELEE,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      {+3, -2, -1, -2, +1,  0}, {  -5,  -7,  -3,  -1,  -2,  -2, 22,-10},
-                                {  -1,  -2,   0,   0,   0,   0, 17,  0},
+    /*  S   I   W   D   C   C */
+      {+3, -2, -1, -2, +1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  25,  23,  31,   1,  14,   2, 70, 25},
+      {   9,   7,  10,   0,   0,   0, 30, 11},
       { { TV_POLEARM, SV_BATTLE_AXE },
         { TV_POLEARM, SV_BEAKED_AXE },
         { TV_POLEARM, SV_BROAD_AXE },
@@ -2841,9 +2843,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "single arrow and much more. As a shooter, your missile prowess will be quite "
       "formidable, though your melee will be somewhat lacking.",
       _WEAPONMASTER_BOWS,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      { 0,  0,  0, +2, -1,  0}, {   3,   5,   1,   3,   3,   3,-10, 37},
-                                {   0,   1,   0,   0,   0,   0,  0, 17},
+    /*  S   I   W   D   C   C */
+      { 0,  0,  0, +2, -1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  30,  30,  29,   4,  23,  13, 48, 72},
+      {   8,  10,  10,   0,   0,   0, 13, 28},
       { { TV_BOW, SV_SHORT_BOW },
         { TV_BOW, SV_LONG_BOW },
         { TV_BOW, SV_NAMAKE_BOW },
@@ -2866,9 +2870,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         "you will gain some limited utility techniques. At high levels, your weapons will "
         "become more likely to score devastating, crushing blows against your hapless enemies.",
         _WEAPONMASTER_MELEE,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      {+2, -1, -1, -2, +1,  0}, {  -3,  -3,  -1,   0,   0,   0, 20,  5},
-                                {   0,  -2,   0,   0,   0,   0, 15,  2},
+    /*  S   I   W   D   C   C */
+      {+2, -1, -1, -2, +1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  25,  25,  35,   1,  14,   2, 65, 60},
+      {   9,  10,  12,   0,   0,   0, 20, 18},
         { { TV_HAFTED, SV_BALL_AND_CHAIN },
           { TV_HAFTED, SV_CLUB },
           { TV_HAFTED, SV_FLAIL },
@@ -2899,9 +2905,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "powerfully damaging nearby monsters. Also, they may shoot so hard as to knock "
       "their opponents backwards!",
       _WEAPONMASTER_BOWS,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      {+1, -1, -1, +1, +1,  0}, {   0,   2,   0,   1,   2,   2,-10, 37},
-                                {   0,   1,   0,   0,   0,   0,  0, 17},
+    /*  S   I   W   D   C   C */
+      {+1, -1, -1, +1, +1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  30,  30,  29,   3,  18,  10, 48, 72},
+      {   8,   9,   9,   0,   0,   0, 13, 28},
       { { TV_BOW, SV_LIGHT_XBOW },
         { TV_BOW, SV_HEAVY_XBOW },
         { 0, 0 },
@@ -2926,9 +2934,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "very strong short ranged teleport techniques that synergize well with their toss "
       "abilities.",
       _WEAPONMASTER_MELEE,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      { 0, +1,  0, +3, -1,  0}, {   5,   4,   1,   3,   3,   3, 15, 15},
-                                {   3,   1,   0,   0,   0,   0, 10, 10},
+    /*  S   I   W   D   C   C */
+      { 0, +1,  0, +3, -1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  30,  32,  31,   5,  30,  20, 60, 66},
+      {  12,  10,  10,   0,   0,   0, 18, 20},
       { { TV_SWORD, SV_BASILLARD },
         { TV_SWORD, SV_BROKEN_DAGGER },
         { TV_SWORD, SV_DAGGER },
@@ -2957,9 +2967,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "You don a grim face before setting out to reap your harvest of death. You will swing "
       "your weapon wide often affecting multiple surrounding opponents.",
       _WEAPONMASTER_MELEE,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      {+2, -1, -1,  0, +1,  0}, {  -3,  -2,  -1,  -1,  -2,  -2, 20,-10},
-                                {  -1,  -1,   0,   0,   0,   0, 15,  0},
+    /*  S   I   W   D   C   C */
+      {+2, -1, -1,  0, +1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  25,  23,  31,   1,  14,   2, 68, 25},
+      {  10,   8,  10,   0,   0,   0, 28, 11},
       {
         { TV_POLEARM, SV_AWL_PIKE },
         { TV_POLEARM, SV_BROAD_SPEAR },
@@ -2998,9 +3010,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "opponents senseless. This form of combat is known as Shield Bashing and is unique to this "
       "speciality.",
       _WEAPONMASTER_SHIELDS,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      {+2,  0, +1,  0, +2,  0}, {  -3,  -3,  -1,  -1,  -2,  -2, 18,  0},
-                                {  -1,  -1,   0,   0,   0,   0, 13,  0},
+    /*  S   I   W   D   C   C */
+      {+2,  0, +1,  0, +2,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  25,  24,  40,   1,  12,   2, 68, 25},
+      {  10,   9,  12,   0,   0,   0, 21, 11},
       {
         { TV_SHIELD, SV_DRAGON_SHIELD },
         { TV_SHIELD, SV_KNIGHT_SHIELD },
@@ -3028,9 +3042,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "specializations, your ammo will break less often and, at high levels you will gain access "
       "to an 'unlimited quiver' which allows you to shoot an infinite amount of (average) ammo.",
       _WEAPONMASTER_BOWS,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      {-1, +1, +1, +3, -1,  0}, {   3,   5,   1,   3,   3,   3,-10, 37},
-                                {   2,   1,   0,   0,   0,   0,  0, 17},
+    /*  S   I   W   D   C   C */
+      {-1, +1, +1, +3, -1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  30,  30,  29,   4,  23,  13, 48, 72},
+      {   8,  10,  10,   0,   0,   0, 13, 28},
       { { TV_BOW, SV_SLING },
         { 0, 0 },
       },
@@ -3051,9 +3067,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "battle and circle kick enemies for stunning effects, attacking them with your boots! "
       "You may even eventually clone yourself at great cost.",
       _WEAPONMASTER_MELEE,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      { 0,  0,  0, +2, +1,  0}, {  -3,  -5,   0,  +1,   0,   0, 18,-10},
-                                {  -2,  -2,   0,   0,   0,   0, 13,  0},
+    /*  S   I   W   D   C   C */
+      { 0,  0,  0, +2, +1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  25,  25,  31,   2,  14,   4, 63, 25},
+      {  10,   9,  10,   0,   0,   0, 26, 11},
       {
         { TV_HAFTED, SV_BO_STAFF },
         { TV_HAFTED, SV_JO_STAFF },
@@ -3076,9 +3094,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "You will become a true swordmaster! Mastery of the blade will augment "
       "your weapon with elemental, vorpal or vampiric powers.",
       _WEAPONMASTER_MELEE,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      {+1, -1, -1, +1, +1,  0}, {  -3,  -3,  -1,   0,   0,   0, 20,-10},
-                                {  -1,  -1,   0,   0,   0,   0, 15,  0},
+    /*  S   I   W   D   C   C */
+      {+1, -1, -1, +1, +1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  25,  23,  31,   1,  14,   2, 70, 25},
+      {  11,   9,  10,   0,   0,   0, 29, 11},
       { { TV_SWORD, SV_BASTARD_SWORD } ,
         { TV_SWORD, SV_BROKEN_SWORD } ,
         { TV_SWORD, SV_BLADE_OF_CHAOS } ,
@@ -3125,9 +3145,11 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
       "bonus, such as increased strength, constitution, or even speed! So keep "
       "your eye open for those +8 diggers!",
       _WEAPONMASTER_MELEE,
-    /*  S   I   W   D   C   C    Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-      {+2, -1, -1,  0, +1,  0}, {  -3,  -3,  -1,  +2,  -2,  -2, 18,-10},
-                                {  -1,  -1,   0,   0,   0,   0, 13,  0},
+    /*  S   I   W   D   C   C */
+      {+2, -1, -1,  0, +1,  0},
+    /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+      {  25,  25,  33,   3,  14,   2, 60, 25},
+      {   9,   9,  11,   0,   0,   0, 26, 11},
       {
         { TV_DIGGING, SV_SHOVEL},
         { TV_DIGGING, SV_GNOMISH_SHOVEL},
@@ -4313,21 +4335,13 @@ class_t *weaponmaster_get_class(int subclass)
         me.character_dump = _character_dump;
         init = TRUE;
     }
-    /* Reset Stats and Skills each time for birth and helpfile generation */
-    {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 30,  25,  28,   1,  20,  10,  48,  35};
-    skills_t xs = { 10,   9,  10,   0,   0,   0,  13,  11};
-
+    {
         me.stats[A_STR] =  1;
         me.stats[A_INT] = -1;
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  1;
         me.stats[A_CHR] =  1;
-
-        me.base_skills = bs;
-        me.extra_skills = xs;
-
     }
     if (0 <= subclass && subclass < WEAPONMASTER_MAX)
     {
@@ -4337,8 +4351,8 @@ class_t *weaponmaster_get_class(int subclass)
         for (i = 0; i < MAX_STATS; i++)
             me.stats[i] += ptr->stats[i];
 
-        skills_add(&me.base_skills, &ptr->base_skills);
-        skills_add(&me.extra_skills, &ptr->extra_skills);
+        me.base_skills = ptr->base_skills;
+        me.extra_skills = ptr->extra_skills;
 
         me.subname = ptr->name;
         me.subdesc = ptr->help;

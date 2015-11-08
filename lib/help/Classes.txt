@@ -126,10 +126,10 @@ See <link:Weaponmasters.txt> for more details on weaponmasters.
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> +4</color>        Disarming   <color:G>Excellent    </color>
-Intelligence <color:w> -3</color>        Device      <color:G>Excellent    </color>
+Intelligence <color:w> -3</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> -2</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:r>Bad          </color>
-Constitution <color:w> +2</color>        Searching   <color:o>Fair         </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
+Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
 Life Rating  109%       Melee       <color:v>Legendary[2] </color>
 Base HP       12        Bows        <color:y>Very Good    </color>
@@ -258,7 +258,7 @@ A Blue-Mage can learn and cast monster ranged attacks, spells, or summons as the
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> -4</color>        Disarming   <color:G>Excellent    </color>
-Intelligence <color:w> +4</color>        Device      <color:v>Legendary[7] </color>
+Intelligence <color:w> +4</color>        Device      <color:v>Legendary[5] </color>
 Wisdom       <color:w> -1</color>        Save        <color:g>Superb       </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:g>Superb       </color>
 Constitution <color:w> -2</color>        Searching   <color:o>Fair         </color>
@@ -586,11 +586,11 @@ The Psion is like a Mindcrafter, and uses innate mental powers. Unlike the Mindc
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> -1</color>        Disarming   <color:G>Excellent    </color>
-Intelligence <color:v> +2</color>        Device      <color:b>Heroic       </color>
+Intelligence <color:w> +2</color>        Device      <color:b>Heroic       </color>
 Wisdom       <color:w> +2</color>        Save        <color:b>Heroic       </color>
 Dexterity    <color:w> -1</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> -1</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:v> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
 Base HP        4        Bows        <color:G>Excellent    </color>
 Experience   150%
@@ -781,7 +781,7 @@ Mauler        <color:g>Superb       </color> <color:g>Superb       </color> <col
 Rune-Knight   <color:G>Excellent    </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Samurai       <color:g>Superb       </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Warrior       <color:g>Superb       </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:o>Fair         </color>
-Weaponmaster  <color:G>Excellent    </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Weaponmaster  <color:G>Excellent    </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:o>Fair         </color>
 Weaponsmith   <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:o>Fair         </color>
 Archer        <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color>
 Sniper        <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:b>Heroic       </color>
@@ -789,7 +789,7 @@ Force-Trainer <color:g>Superb       </color> <color:b>Heroic       </color> <col
 Monk          <color:b>Heroic       </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:b>Heroic       </color>
 Mystic        <color:b>Heroic       </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:b>Heroic       </color>
 Blood-Mage    <color:G>Excellent    </color> <color:v>Legendary[5] </color> <color:g>Superb       </color> <color:g>Superb       </color>
-Blue-Mage     <color:G>Excellent    </color> <color:v>Legendary[7] </color> <color:g>Superb       </color> <color:g>Superb       </color>
+Blue-Mage     <color:G>Excellent    </color> <color:v>Legendary[5] </color> <color:g>Superb       </color> <color:g>Superb       </color>
 High-Mage     <color:G>Excellent    </color> <color:v>Legendary[5] </color> <color:g>Superb       </color> <color:g>Superb       </color>
 Mage          <color:G>Excellent    </color> <color:v>Legendary[5] </color> <color:g>Superb       </color> <color:g>Superb       </color>
 Necromancer   <color:G>Excellent    </color> <color:v>Legendary[5] </color> <color:g>Superb       </color> <color:g>Superb       </color>
@@ -830,7 +830,7 @@ Mauler        <color:R>Poor         </color> <color:r>Bad          </color> <col
 Rune-Knight   <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:y>Very Good    </color>
 Samurai       <color:R>Poor         </color> <color:r>Bad          </color> <color:b>Heroic       </color> <color:g>Superb       </color>
 Warrior       <color:R>Poor         </color> <color:r>Bad          </color> <color:v>Legendary[2] </color> <color:b>Heroic       </color>
-Weaponmaster  <color:o>Fair         </color> <color:r>Bad          </color> <color:v>Legendary[2] </color> <color:y>Very Good    </color>
+Weaponmaster  <color:R>Poor         </color> <color:r>Bad          </color> <color:v>Legendary[2] </color> <color:y>Very Good    </color>
 Weaponsmith   <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:g>Superb       </color>
 Archer        <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:v>Legendary[10]</color>
 Sniper        <color:y>Good         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:b>Heroic       </color>

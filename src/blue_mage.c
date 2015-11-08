@@ -173,7 +173,7 @@ class_t *blue_mage_get_class(void)
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
     skills_t bs = { 30,  40,  36,   3,  20,  16,  40,  25};
-    skills_t xs = {  7,  16,  11,   0,   0,   0,   6,   7};
+    skills_t xs = {  7,  15,  11,   0,   0,   0,   6,   7};
 
         me.name = "Blue-Mage";
         me.desc = "A Blue-Mage is a spell caster that must live by his wits, as he "
