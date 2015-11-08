@@ -4548,6 +4548,9 @@ bool summon_kin_player(int level, int y, int x, u32b mode)
         break;
     }    
 
+    if (warlock_is_(WARLOCK_GIANTS))
+        summon_kin_type = 'P';
+
     if (p_ptr->current_r_idx)
         summon_kin_type = r_info[p_ptr->current_r_idx].d_char;
 

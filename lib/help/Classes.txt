@@ -612,20 +612,22 @@ Base HP        0        Bows        <color:G>Excellent    </color>
 Experience   125%
 </style></indent>
 <topic:Warlock><color:o>Warlock</color>
-A Warlock, unlike typical mages, derives his powers from pacts with arcane creatures, rather than through careful study. Warlocks possess the unique offensive power of the Eldritch Blast, and they use this without paying any sort of mana or hitpoint costs (though they still have fail rates). The Warlock's primary spell stat is Charisma, and this directly influences the damage of their Eldritch Blast.
+A Warlock is a magical class but, unlike normal spellcasters, they derive their powers, stats, skills and bonuses by making a pact with a given class of monsters. This pact is irrevocable and is made at the outset of the Warlock's career. Depending on the class of monsters with whom they ally, the warlock will gain unique bonuses, abilities and magical powers. For example, alliance with the forces of the netherworld grants resistances to poison and nether, enhanced constitution and spells to control and conjure the unliving as well as spells to access the damaging forces of the netherworld directly. Each such alliance has thematic bonuses and powers, and you can read the details in the respective help sections. On final comment: allying with a given class of monsters dramatically reduces the warlock's ability to fight these foes. Instead, the warlock seeks cooperation with their brethren, or, perhaps, domination over them. But direct assaults are rarely successful.
  
-Each Warlock makes a pact with a single type of creature: Undead, Dragons, Angels, Demons or Aberrations. This pact confers both advantages and disadvantages. For one thing, Warlocks are very ineffective when fighting monsters with whom they have formed an alliance. Every form of damage is actually reduced by a substantial amount, and this makes killing pact monsters extremely difficult. Probably, the Warlock should avoid fighting these monsters altogether. Indeed, at high levels pact monsters are often friendly to the warlock, but some fights cannot be avoided it seems. That's the bad news. The good news is that each pact confers unique abilities and powers to the warlock. These benefits reflect the nature of the pact monster. For example, a pact with Undead confers resistance to Poison and Nether as well as Hold Life, among other things. A pact with Dragons confers the power to resist the elements as well as strong melee (Warlocks are generally poor fighters otherwise). In addition, each pact gives a unique high level offensive power when using their Eldritch Blast.
+In addition to pact related spells, all warlocks gain access to the unique power of the Eldritch Blast. Their primary spell stat is Charisma since they seek dominion and alliance with their chosen kin, and these monsters tend to have a strong will of their own, resisting the binding forces which the warlock imposes to gain both mastery and power.
+
+See <link:Warlocks.txt> for more details on warlock pacts.
 
   <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> -2</color>        Disarming   <color:G>Excellent    </color>
-Intelligence <color:w> +1</color>        Device      <color:g>Superb       </color>
-Wisdom       <color:w> +2</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
-Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
+Strength     <color:w> -1</color>        Disarming   <color:G>Excellent    </color>
+Intelligence <color:w> +2</color>        Device      <color:v>Legendary[5] </color>
+Wisdom       <color:w> -3</color>        Save        <color:b>Heroic       </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:g>Superb       </color>
+Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +4</color>        Perception  <color:o>Fair         </color>
-Life Rating  100%       Melee       <color:G>Excellent    </color>
-Base HP        4        Bows        <color:y>Good         </color>
-Experience   125%
+Life Rating  107%       Melee       <color:g>Superb       </color>
+Base HP       15        Bows        <color:G>Excellent    </color>
+Experience   135%
 </style></indent>
 </indent>
 <style:heading>Other</style>
@@ -762,7 +764,7 @@ Mindcrafter    -1   +0 <color:v>  +3 </color>  -1   -1   +2  100%   +4  125%
 Mirror-Master  -2 <color:v>  +3 </color>  +1   -1   -2   -2  100%   +4  130%
 Psion          -1   +2   +2   -1   -1   +2  100%   +4  150%
 Time-Lord      -1   +0 <color:v>  +3 </color>  -1   -1   +0   96%   +0  125%
-Warlock        -2   +1   +2   -1   -2 <color:v>  +4 </color> 100%   +4  125%
+Warlock        -1   +2   -3   +0   +2 <color:v>  +4 </color> 107%  +15  135%
 Archaeologist  -1   +1 <color:v>  +2 </color>  +1   -1   +0  106%   +8  120%
 Bard           -2   +1   +2   -1   -2 <color:v>  +4 </color> 100%   +4  140%
 Imitator       +0   +1   -1   +2   +0   -1  108%  +10  110%
@@ -811,7 +813,7 @@ Mindcrafter   <color:g>Superb       </color> <color:b>Heroic       </color> <col
 Mirror-Master <color:g>Superb       </color> <color:b>Heroic       </color> <color:b>Heroic       </color> <color:g>Superb       </color>
 Psion         <color:G>Excellent    </color> <color:b>Heroic       </color> <color:b>Heroic       </color> <color:y>Very Good    </color>
 Time-Lord     <color:G>Excellent    </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
-Warlock       <color:G>Excellent    </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:o>Fair         </color>
+Warlock       <color:G>Excellent    </color> <color:v>Legendary[5] </color> <color:b>Heroic       </color> <color:g>Superb       </color>
 Archaeologist <color:b>Heroic       </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:g>Superb       </color>
 Bard          <color:G>Excellent    </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:D>Very Bad     </color>
 Imitator      <color:G>Excellent    </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:y>Very Good    </color>
@@ -860,7 +862,7 @@ Mindcrafter   <color:o>Fair         </color> <color:R>Poor         </color> <col
 Mirror-Master <color:R>Poor         </color> <color:R>Poor         </color> <color:y>Good         </color> <color:y>Very Good    </color>
 Psion         <color:R>Poor         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:G>Excellent    </color>
 Time-Lord     <color:R>Poor         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:G>Excellent    </color>
-Warlock       <color:R>Poor         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:y>Good         </color>
+Warlock       <color:R>Poor         </color> <color:o>Fair         </color> <color:g>Superb       </color> <color:G>Excellent    </color>
 Archaeologist <color:G>Excellent    </color> <color:y>Good         </color> <color:g>Superb       </color> <color:G>Excellent    </color>
 Bard          <color:R>Poor         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:y>Good         </color>
 Imitator      <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:g>Superb       </color>

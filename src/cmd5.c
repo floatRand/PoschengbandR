@@ -1583,7 +1583,13 @@ int calculate_upkeep(void)
         if (is_pet(m_ptr))
         {
             total_friends++;
-            if (r_ptr->flags1 & RF1_UNIQUE)
+            if (warlock_is_pact_monster(r_ptr))
+            {
+                total_friend_levels += r_ptr->level/2;
+                if (r_ptr->flags1 & RF1_UNIQUE)
+                    total_friend_levels += r_ptr->level/2;
+            }
+            else if (r_ptr->flags1 & RF1_UNIQUE)
             {
                 if (p_ptr->pclass == CLASS_CAVALRY || p_ptr->prace == RACE_MON_RING)
                 {
@@ -2010,6 +2016,11 @@ bool do_riding(bool force)
             {
                 msg_print("This monster doesn't seem suitable for riding.");
 
+                return FALSE;
+            }
+            if (warlock_is_(WARLOCK_DRAGONS) && !(r_info[m_ptr->r_idx].flags3 & RF3_DRAGON))
+            {
+                msg_print("You are a dragon rider!");
                 return FALSE;
             }
         }

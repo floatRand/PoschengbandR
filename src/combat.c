@@ -84,12 +84,25 @@ static _blow_info_t _get_blow_info(int hand)
         result.num = 400; result.wgt = 100; result.mul = 20; break;
 
     case CLASS_WARLOCK:
-        result.num = 400; result.wgt = 70; result.mul = 25;
-        if (p_ptr->psubclass == PACT_DRAGON) 
+        result.num = 400; result.wgt = 100; result.mul = 35;
+        switch (p_ptr->psubclass)
         {
-            result.mul = 40;
-            if (p_ptr->lev >= 40) result.num = 550;
-            else result.num = 500;
+        case WARLOCK_ANGELS:
+        case WARLOCK_DEMONS:
+            result.num = 500;
+            break;
+        case WARLOCK_DRAGONS:
+            if ( p_ptr->riding
+              && (object_is_(o_ptr, TV_POLEARM, SV_LANCE) || object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE)) )
+            {
+                result.mul = 65;
+            }
+            break;
+        case WARLOCK_GIANTS:
+            result.wgt = 200;
+            result.mul = 50 + p_ptr->lev/5;
+            result.num = 500;
+            break;
         }
         break;
 

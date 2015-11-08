@@ -3924,7 +3924,7 @@ static void process_command(void)
             else if (p_ptr->tim_no_spells)
             {
                 msg_print("Your spells are blocked!");
-                energy_use = 100;
+                /*energy_use = 100;*/
             }
             else if (!fear_allow_magic())
             {

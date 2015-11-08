@@ -572,10 +572,6 @@ void browse_spells(spell_info* spells, int ct, cptr desc)
 int calculate_cost(int cost)
 {
     int result = cost;
-    caster_info *caster_ptr = get_caster_info();
-
-    if (caster_ptr && (caster_ptr->options & CASTER_NO_SPELL_COST))
-        return 0;
 
     if (p_ptr->dec_mana && cost > 0)
         result = MAX(1, result * 3 / 4);
@@ -741,8 +737,6 @@ void do_cmd_spell(void)
 
     if (caster->options & CASTER_USE_HP)
         max_cost = p_ptr->chp;
-    else if (caster->options & CASTER_NO_SPELL_COST)
-        max_cost = 10000;
     else
         max_cost = p_ptr->csp;
     choice = choose_spell(spells, ct, caster->magic_desc, max_cost);
@@ -769,7 +763,7 @@ void do_cmd_spell(void)
                 return;
             }
         }
-        else if (!(caster->options & CASTER_NO_SPELL_COST))
+        else
         {
             if (spell->cost > p_ptr->csp)
             {

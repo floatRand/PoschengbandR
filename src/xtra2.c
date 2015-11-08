@@ -1910,7 +1910,7 @@ void monster_death(int m_idx, bool drop_item)
 
         case MON_FANG:
             a_idx = ART_FANG;
-            if (prace_is_(RACE_MON_HOUND))
+            if (prace_is_(RACE_MON_HOUND) || warlock_is_(WARLOCK_HOUNDS))
                 chance = 50;
             else
                 chance = 10;
@@ -1918,7 +1918,7 @@ void monster_death(int m_idx, bool drop_item)
 
         case MON_WOLF:
             a_idx = ART_WOLF;
-            if (prace_is_(RACE_MON_HOUND))
+            if (prace_is_(RACE_MON_HOUND) || warlock_is_(WARLOCK_HOUNDS))
                 chance = 50;
             else
                 chance = 10;
@@ -1926,7 +1926,7 @@ void monster_death(int m_idx, bool drop_item)
 
         case MON_GRIP:
             a_idx = ART_GRIP;
-            if (prace_is_(RACE_MON_HOUND))
+            if (prace_is_(RACE_MON_HOUND) || warlock_is_(WARLOCK_HOUNDS))
                 chance = 50;
             else
                 chance = 10;
@@ -1942,7 +1942,10 @@ void monster_death(int m_idx, bool drop_item)
             else
             {
                 a_idx = ART_VECNA;
-                chance = 5;
+                if (warlock_is_(WARLOCK_UNDEAD))
+                    chance = 50;
+                else
+                    chance = 5;
             }
             break;
         case MON_UBBO_SATHLA:
@@ -1951,45 +1954,62 @@ void monster_death(int m_idx, bool drop_item)
             break;
         case MON_UNGOLIANT:
             a_idx = ART_UNGOLIANT;
-            chance = 5;
+            if (warlock_is_(WARLOCK_SPIDERS))
+                chance = 50;
+            else
+                chance = 5;
             break;
         case MON_GLAURUNG:
             a_idx = ART_GLAURUNG;
-            chance = 5;
+            if (warlock_is_(WARLOCK_DRAGONS))
+                chance = 50;
+            else
+                chance = 5;
             break;
         case MON_RAPHAEL:
             a_idx = ART_LOHENGRIN;
-            chance = 5;
+            if (warlock_is_(WARLOCK_ANGELS))
+                chance = 50;
+            else
+                chance = 5;
             break;
         case MON_CARCHAROTH:
             a_idx = ART_CARCHAROTH;
             chance = 5;
+            if (warlock_is_(WARLOCK_HOUNDS))
+                chance = 50;
             break;
         case MON_SURTUR:
             a_idx = ART_TWILIGHT;
-            chance = 5;
+            if (warlock_is_(WARLOCK_GIANTS))
+                chance = 50;
+            else
+                chance = 5;
             break;
         case MON_YMIR:
             a_idx = ART_YMIR;
             chance = 5;
-            if (p_ptr->pclass == CLASS_MAULER)
+            if (p_ptr->pclass == CLASS_MAULER || warlock_is_(WARLOCK_GIANTS))
                 chance = 50;
             break;
         case MON_TYPHOEUS:
             a_idx = ART_TYPHOEUS;
             chance = 5;
-            if (p_ptr->pclass == CLASS_MAULER)
+            if (p_ptr->pclass == CLASS_MAULER || warlock_is_(WARLOCK_GIANTS))
                 chance = 50;
             break;
         case MON_ATLAS:
             a_idx = ART_ATLAS;
             chance = 5;
-            if (p_ptr->pclass == CLASS_MAULER)
+            if (p_ptr->pclass == CLASS_MAULER || warlock_is_(WARLOCK_GIANTS))
                 chance = 25;
             break;
         case MON_KRONOS:
             a_idx = ART_KRONOS;
-            chance = 5;
+            if (warlock_is_(WARLOCK_GIANTS))
+                chance = 25;
+            else
+                chance = 5;
             break;
         case MON_OMARAX:
             a_idx = ART_OMARAX;

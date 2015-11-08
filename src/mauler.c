@@ -522,7 +522,7 @@ static void _splatter_spell(int cmd, variant *res)
     }
 }
 
-static void _stunning_blow_spell(int cmd, variant *res)
+void stunning_blow_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -578,7 +578,7 @@ static spell_info _spells[] =
     /*lvl cst fail spell */
     {  5,  5, 30, _smash_wall_spell},
     {  8,  5, 30, _detect_ferocity_spell},
-    { 10,  7,  0, _stunning_blow_spell},
+    { 10,  7,  0, stunning_blow_spell},
     { 12, 10,  0, _critical_blow_spell},
     { 15,  0,  0, _splatter_spell},
     { 17,  0,  0, _block_spell},

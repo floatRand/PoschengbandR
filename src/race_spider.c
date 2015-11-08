@@ -62,7 +62,7 @@ static int _web_attempts(void)
     return 8 * (p_ptr->lev - 25) / 25;
 }
 
-void _spider_web_spell(int cmd, variant *res)
+void spider_web_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -271,7 +271,7 @@ static power_info _phase_spider_powers[] = {
     { A_DEX, {  1,  1, 30, _detect_prey_spell } },
     { A_DEX, {  5,  1, 30, phase_door_spell } },
     { A_DEX, { 10,  5, 30, teleport_spell } },
-    { A_DEX, { 12, 10, 60, _spider_web_spell } },
+    { A_DEX, { 12, 10, 60, spider_web_spell } },
     { A_DEX, { 25, 10, 30, teleport_to_spell } },
     { A_DEX, { 30, 15, 50, teleport_level_spell } },
     { A_DEX, { 35, 20, 55, teleport_other_spell } },
@@ -355,7 +355,7 @@ race_t *_phase_spider_get_race_t(void)
 /* Aranea */
 static power_info _aranea_powers[] = {
     { A_DEX, {  1,  1, 30, _detect_prey_spell } },
-    { A_DEX, { 12, 10, 60, _spider_web_spell } },
+    { A_DEX, { 12, 10, 60, spider_web_spell } },
     {    -1, { -1, -1, -1, NULL } }
 };
 static int _aranea_get_powers(spell_info* spells, int max) {

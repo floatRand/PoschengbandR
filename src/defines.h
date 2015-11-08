@@ -795,6 +795,7 @@ enum _mimic_types {
 /*#define prace_is_(A) (p_ptr->mimic_form == (A) || (p_ptr->mimic_form == MIMIC_NONE && (A) < MAX_RACES && p_ptr->prace == (A)))*/
 #define psubclass_is_(A, B) (p_ptr->pclass == (A) && p_ptr->psubclass == (B))
 #define weaponmaster_is_(B) (p_ptr->pclass == CLASS_WEAPONMASTER && p_ptr->psubclass == (B))
+#define warlock_is_(B) (p_ptr->pclass == CLASS_WARLOCK && p_ptr->psubclass == (B))
 #define devicemaster_is_(B) (p_ptr->pclass == CLASS_DEVICEMASTER && p_ptr->psubclass == (B))
 #define demigod_is_(B) (prace_is_(RACE_DEMIGOD) && p_ptr->psubrace == (B))
 #define dragon_is_(B) (prace_is_(RACE_MON_DRAGON) && p_ptr->psubrace == (B))
@@ -856,12 +857,16 @@ enum _mimic_types {
 #define MAX_CLASS               45
 
 /* Warlock Pacts ... stored in p_ptr->psubclass */
-#define PACT_UNDEAD         0
-#define PACT_DRAGON         1
-#define PACT_ANGEL         2
-#define PACT_DEMON         3
-#define PACT_ABERRATION     4
-#define MAX_PACTS         5
+enum {
+    WARLOCK_UNDEAD,
+    WARLOCK_DRAGONS,
+    WARLOCK_ANGELS,
+    WARLOCK_DEMONS,
+    WARLOCK_HOUNDS,
+    WARLOCK_SPIDERS,
+    WARLOCK_GIANTS,
+    WARLOCK_MAX
+};
 
 /* Weaponmaster Specialities ... stored in p_ptr->psubclass */
 #define WEAPONMASTER_NONE      -1
@@ -1392,6 +1397,7 @@ enum _mimic_types {
 #define ART_AEGLOS              187
 #define ART_BLOOD               199
 #define ART_NUMAHOKO            202
+#define ART_DRAGONLANCE         322
 
 /* The sword of the Dawn */
 #define ART_DAWN                110
@@ -2653,8 +2659,9 @@ enum summon_specific_e {
 #define GF_CHARM_RING_BEARER  143
 #define GF_SUBJUGATION 144
 #define GF_PARALYSIS 145
+#define GF_CONTROL_PACT_MONSTER  146
 
-#define MAX_GF                145
+#define MAX_GF                147
 
 /*
  * Some things which induce learning

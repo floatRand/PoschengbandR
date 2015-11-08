@@ -811,6 +811,35 @@ void polymorph_self_spell(int cmd, variant *res)
 }
 bool cast_polymorph_self(void) { return cast_spell(polymorph_self_spell); }
 
+void polymorph_vampire_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Polymorph Vampire");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Mimic a powerful vampire for a while. Loses abilities of original race and gets abilities as a vampire.");
+        break;
+    case SPELL_INFO:
+    {
+        int base = spell_power(10 + p_ptr->lev / 2);
+        var_set_string(res, info_duration(base, base));
+        break;
+    }
+    case SPELL_CAST:
+    {
+        int base = spell_power(10 + p_ptr->lev / 2);
+        set_mimic(base + randint1(base), MIMIC_VAMPIRE, FALSE);
+        var_set_bool(res, TRUE);
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 void power_throw_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -1049,10 +1078,16 @@ void recharging_spell(int cmd, variant *res)
         var_set_string(res, "Recharging");
         break;
     case SPELL_DESC:
-        var_set_string(res, "It attempts to recharge a device using your mana for power.");
+        if (!p_ptr->msp)
+            var_set_string(res, "It attempts to recharge a device using another device for power.");
+        else
+            var_set_string(res, "It attempts to recharge a device using your mana for power.");
         break;
     case SPELL_CAST:
-        var_set_bool(res, recharge_from_player(3 * p_ptr->lev));
+        if (!p_ptr->msp)
+            var_set_bool(res, recharge_from_device(3 * p_ptr->lev));
+        else
+            var_set_bool(res, recharge_from_player(3 * p_ptr->lev));
         break;
     default:
         default_spell(cmd, res);

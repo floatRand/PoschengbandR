@@ -4,85 +4,77 @@
 
 #include "angband.h"
 
-bool warlock_is_pact_monster(monster_race *r_ptr)
-{
-    bool is_pact = FALSE;
-    /* First, we list symbols for the alliance */
-    char* pc = my_strchr(pact_info[p_ptr->psubclass].alliance, r_ptr->d_char);
-    if (pc != NULL)
-    {
-        is_pact = TRUE;
-    }
-    else
-    {
-        /* If that fails, we check flags ... I'd prefer to only check flags
-            but I'm not sure how accurate the beastiary is ... */
-        switch (p_ptr->psubclass)
-        {
-        case PACT_UNDEAD:
-            if (r_ptr->flags3 & RF3_UNDEAD)
-                is_pact = TRUE;
-            break;
-
-        case PACT_DRAGON:
-            if (r_ptr->flags3 & RF3_DRAGON)
-                is_pact = TRUE;
-            break;
-
-        case PACT_ANGEL:
-            /* Angel pact is now all good monsters!!! */
-            if (r_ptr->flags3 & RF3_GOOD)
-                is_pact = TRUE;
-            break;
-                
-        case PACT_DEMON:
-            if (r_ptr->flags3 & RF3_DEMON)
-                is_pact = TRUE;
-            break;
-                
-        case PACT_ABERRATION:
-            if (r_ptr->flags2 & RF2_HUMAN)
-                is_pact = TRUE;                
-            break;
-        }
-    }
-
-    return is_pact;
-}
+#include <assert.h>
 
 /****************************************************************
- * Private Helpers
+ * The Eldritch Blast
  ****************************************************************/
-
-static int _warlock_range(void)
+static int _blast_range(void)
 {
     int rng = 5;
 
-    if (p_ptr->lev > 47)
+    if (p_ptr->lev >= 48)
         rng = 8;
-    else if (p_ptr->lev > 31)
+    else if (p_ptr->lev >= 32)
         rng = 7;
-    else if (p_ptr->lev > 15)
+    else if (p_ptr->lev >= 16)
         rng = 6;
 
-    return rng; 
+    return rng;
 }
 
-static int _warlock_dice(void)
+static int _blast_dd(void)
 {
-    return 1 + (p_ptr->lev/5) + (p_ptr->lev * p_ptr->lev * 3/500);
+    return 1 + (p_ptr->lev/5) + (p_ptr->lev * p_ptr->lev * 10/2500);
 }
 
-static int _warlock_sides(void)
+static int _blast_ds(void)
 {
-    return warlock_damage_sides[p_ptr->stat_ind[A_CHR]];
+    static int _table[] =
+    {
+        4    /* 3 */,
+        5    /* 4 */,
+        5    /* 5 */,
+        6    /* 6 */,
+        6    /* 7 */,
+        6    /* 8 */,
+        6    /* 9 */,
+        6    /* 10 */,
+        6    /* 11 */,
+        6    /* 12 */,
+        6    /* 13 */,
+        6    /* 14 */,
+        7    /* 15 */,
+        7    /* 16 */,
+        7    /* 17 */,
+        8    /* 18/00-18/09 */,
+        8    /* 18/10-18/19 */,
+        8    /* 18/20-18/29 */,
+        8    /* 18/30-18/39 */,
+        8    /* 18/40-18/49 */,
+        9    /* 18/50-18/59 */,
+        9    /* 18/60-18/69 */,
+        10    /* 18/70-18/79 */,
+        10    /* 18/80-18/89 */,
+        11    /* 18/90-18/99 */,
+        11    /* 18/100-18/109 */,
+        12    /* 18/110-18/119 */,
+        12    /* 18/120-18/129 */,
+        13    /* 18/130-18/139 */,
+        13    /* 18/140-18/149 */,
+        14    /* 18/150-18/159 */,
+        14    /* 18/160-18/169 */,
+        15    /* 18/170-18/179 */,
+        16    /* 18/180-18/189 */,
+        17    /* 18/190-18/199 */,
+        19    /* 18/200-18/209 */,
+        19    /* 18/210-18/219 */,
+        20    /* 18/220+ */
+    };
+    return _table[p_ptr->stat_ind[A_CHR]];
 }
 
-/****************************************************************
- * Private Spells
- ****************************************************************/
-
-static void _basic_spell(int cmd, variant *res)
+static void _basic_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -93,11 +85,11 @@ static void _basic_spell(int cmd, variant *res)
         var_set_string(res, "Fires your basic Eldritch Blast.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -105,12 +97,12 @@ static void _basic_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
-        
-        fire_ball(GF_ELDRITCH, 
-                  dir, 
-                  spell_power(damroll(_warlock_dice(), _warlock_sides())), 
+
+        fire_ball(GF_ELDRITCH,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())),
                   0);
 
         var_set_bool(res, TRUE);
@@ -122,7 +114,7 @@ static void _basic_spell(int cmd, variant *res)
     }
 }
 
-static void _extended_spell(int cmd, variant *res)
+static void _extended_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -133,11 +125,11 @@ static void _extended_spell(int cmd, variant *res)
         var_set_string(res, "Fires an Eldritch Blast with increased range.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range() + 10 * p_ptr->lev/50));
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range() + 10 * p_ptr->lev/50));
         break;
     case SPELL_CAST:
     {
@@ -145,12 +137,12 @@ static void _extended_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range() + 10 * p_ptr->lev/50;
+        project_length = _blast_range() + 10 * p_ptr->lev/50;
         if (!get_aim_dir(&dir)) return;
-        
-        fire_ball(GF_ELDRITCH, 
-                  dir, 
-                  spell_power(damroll(_warlock_dice(), _warlock_sides())), 
+
+        fire_ball(GF_ELDRITCH,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())),
                   0);
 
         var_set_bool(res, TRUE);
@@ -162,7 +154,7 @@ static void _extended_spell(int cmd, variant *res)
     }
 }
 
-static void _spear_spell(int cmd, variant *res)
+static void _spear_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -173,11 +165,11 @@ static void _spear_spell(int cmd, variant *res)
         var_set_string(res, "Fires an Eldritch Beam.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -185,12 +177,12 @@ static void _spear_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
-        
-        fire_beam(GF_ELDRITCH, 
-                  dir, 
-                  spell_power(damroll(_warlock_dice(), _warlock_sides())));
+
+        fire_beam(GF_ELDRITCH,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())));
 
         var_set_bool(res, TRUE);
         break;
@@ -201,7 +193,7 @@ static void _spear_spell(int cmd, variant *res)
     }
 }
 
-static void _burst_spell(int cmd, variant *res)
+static void _burst_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -212,11 +204,11 @@ static void _burst_spell(int cmd, variant *res)
         var_set_string(res, "Fires an Eldritch Blast with increased radius.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -224,17 +216,17 @@ static void _burst_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
 
         fire_ball_aux(
-            GF_ELDRITCH, 
-            dir, 
-            spell_power(damroll(_warlock_dice(), _warlock_sides())), 
+            GF_ELDRITCH,
+            dir,
+            spell_power(damroll(_blast_dd(), _blast_ds())),
             2,
             PROJECT_FULL_DAM
         );
-        
+
         var_set_bool(res, TRUE);
         break;
     }
@@ -244,7 +236,7 @@ static void _burst_spell(int cmd, variant *res)
     }
 }
 
-static void _stunning_spell(int cmd, variant *res)
+static void _stunning_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -255,11 +247,11 @@ static void _stunning_spell(int cmd, variant *res)
         var_set_string(res, "Augments your Eldritch Blast with stunning effects.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -267,12 +259,12 @@ static void _stunning_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
-        
-        fire_ball(GF_ELDRITCH_STUN, 
-                  dir, 
-                  spell_power(damroll(_warlock_dice(), _warlock_sides())), 
+
+        fire_ball(GF_ELDRITCH_STUN,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())),
                   0);
 
         var_set_bool(res, TRUE);
@@ -284,7 +276,7 @@ static void _stunning_spell(int cmd, variant *res)
     }
 }
 
-static void _empowered_spell(int cmd, variant *res)
+static void _empowered_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -295,11 +287,11 @@ static void _empowered_spell(int cmd, variant *res)
         var_set_string(res, "Fires a very powerful Eldritch Blast, but you can't use your powers again for a bit.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d*1.75 (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d*1.75 (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -307,12 +299,12 @@ static void _empowered_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
-        
-        fire_ball(GF_ELDRITCH, 
-                  dir, 
-                  spell_power(damroll(_warlock_dice(), _warlock_sides())*7/4), 
+
+        fire_ball(GF_ELDRITCH,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())*7/4),
                   0);
         set_tim_no_spells(p_ptr->tim_no_spells + 1 + 1, FALSE);
         var_set_bool(res, TRUE);
@@ -324,7 +316,74 @@ static void _empowered_spell(int cmd, variant *res)
     }
 }
 
-static void _draining_spell(int cmd, variant *res)
+/****************************************************************
+ * The Warlock Pacts: Implemented as a Subclass
+ ****************************************************************/
+#define _MAX_SPELLS  20
+
+typedef struct {
+    cptr name;
+    cptr desc;
+    cptr alliance;
+    calc_bonuses_fn calc_bonuses;
+    calc_weapon_bonuses_fn calc_weapon_bonuses;
+    stats_fn calc_stats;
+    flags_fn get_flags;
+    int stats[MAX_STATS];
+    skills_t base_skills;
+    skills_t extra_skills;
+    int life;
+    int base_hp;
+    int exp;
+    spell_info spells[_MAX_SPELLS];        /* There is always a sentinel at the end */
+    ang_spell special_blast;
+} _pact_t, *_pact_ptr;
+
+/****************************************************************
+ * Warlock Pact: Undead
+ ****************************************************************/
+static void _undead_calc_bonuses(void)
+{
+    p_ptr->align -= 200;
+    res_add(RES_COLD);
+    if (p_ptr->lev >= 15)
+    {
+        p_ptr->see_inv = TRUE;
+        res_add(RES_POIS);
+    }
+    if (p_ptr->lev >= 30)
+    {
+        res_add(RES_NETHER);
+        p_ptr->hold_life = TRUE;
+    }
+    if (p_ptr->lev >= 35)
+        res_add(RES_DARK);
+}
+
+static void _undead_calc_stats(s16b stats[MAX_STATS])
+{
+    stats[A_WIS] -= 3 * p_ptr->lev/50;
+    stats[A_CON] += 3 * p_ptr->lev/50;
+}
+
+static void _undead_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_RES_COLD);
+    if (p_ptr->lev >= 15)
+    {
+        add_flag(flgs, TR_RES_POIS);
+        add_flag(flgs, TR_SEE_INVIS);
+    }
+    if (p_ptr->lev >= 30)
+    {
+        add_flag(flgs, TR_RES_NETHER);
+        add_flag(flgs, TR_HOLD_LIFE);
+    }
+    if (p_ptr->lev >= 35)
+        add_flag(flgs, TR_RES_DARK);
+}
+
+static void _draining_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -335,11 +394,11 @@ static void _draining_spell(int cmd, variant *res)
         var_set_string(res, "Fires an Eldritch Blast which also does Drain Life.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -347,12 +406,12 @@ static void _draining_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
-        
-        fire_ball(GF_ELDRITCH_DRAIN, 
-                  dir, 
-                  spell_power(damroll(_warlock_dice(), _warlock_sides())), 
+
+        fire_ball(GF_ELDRITCH_DRAIN,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())),
                   0);
 
         var_set_bool(res, TRUE);
@@ -364,34 +423,565 @@ static void _draining_spell(int cmd, variant *res)
     }
 }
 
-static void _prismatic_spell(int cmd, variant *res)
+static _pact_t _undead_pact = {
+  "Undead",
+  "Undead are tough creatures, each having survived death at least once. Warlocks who make a pact "
+      "with Undead will find themselves gaining additional resistances such as cold, poison, darkness and "
+      "nether. In addition, they will be able to see their kind, which tend to be invisible, and gain "
+      "resistance to life draining forces. They will also gain access to undeadly powers, which typically "
+      "involve detection and control over the forces of the netherworld. In the end, this pact will allow "
+      "its practitioners to destroy monsters with a single word, and, perhaps, to even partially leave "
+      "the world of the living altogether. Of course, allying with the undead substantially reduces the "
+      "warlock's ability to fight these creatures.",
+  "", /* RF3_UNDEAD suffices */
+  _undead_calc_bonuses,
+  NULL,
+  _undead_calc_stats,
+  _undead_get_flags,
+/*  S   I   W   D   C   C */
+  {-1,  2, -3,  0,  2,  4},
+/* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+  {  20,  40,  40,   4,  16,  20, 48, 35},
+  {   8,  15,  12,   0,   0,   0, 13, 11},
+/*Life  BaseHP     Exp */
+   107,     15,    135,
+  {
+    {  1,   1, 30, detect_life_spell},
+    {  3,   2, 30, detect_unlife_spell},
+    {  5,   3, 30, scare_spell},
+    {  7,   5, 50, nether_bolt_spell},
+    { 10,   7, 60, satisfy_hunger_spell},
+    { 15,  10, 60, animate_dead_spell},
+    { 20,  20, 60, restore_life_spell},
+    { 22,  10, 50, enslave_undead_spell},
+    { 25,  15, 40, nether_ball_spell},
+    { 32,  40, 60, summon_undead_spell},
+    { 35,  45, 70, darkness_storm_I_spell},
+    { 40,  70, 80, summon_hi_undead_spell},
+    { 42,  80, 80, genocide_spell},
+    { 50, 100, 80, wraithform_spell},
+    { -1,   0,  0, NULL },
+  },
+  _draining_blast
+};
+
+/****************************************************************
+ * Warlock Pact: Dragons
+ * The main bonus of this pact is that they are Dragonriders!
+ ****************************************************************/
+static void _dragon_calc_bonuses(void)
+{
+    res_add(RES_FEAR);
+    if (p_ptr->lev >= 30)
+        p_ptr->sustain_str = TRUE;
+}
+static void _dragon_calc_stats(s16b stats[MAX_STATS])
+{
+    stats[A_STR] += 3 * p_ptr->lev/50;
+}
+void _dragon_calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
+{
+    int to_h = 10 * p_ptr->lev / 50;
+    int to_d = 10 * p_ptr->lev / 50;
+
+    info_ptr->to_h += to_h;
+    info_ptr->dis_to_h += to_h;
+
+    info_ptr->to_d += to_d;
+    info_ptr->dis_to_d += to_d;
+}
+
+static void _dragon_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_RES_FEAR);
+    if (p_ptr->lev >= 30)
+        add_flag(flgs, TR_SUST_STR);
+}
+
+static void _dragon_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Prismatic");
+        var_set_string(res, "Dragon");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Fires multiple blasts, one each of sound, shards, chaos, and disenchantment.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res,
+            format("dam %dd%d*4 (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()/2),
+                    _blast_range()));
+        break;
+    case SPELL_CAST:
+    {
+        int dir = 0;
+        int dice = _blast_dd();
+        int sides = _blast_ds();
+
+        var_set_bool(res, FALSE);
+
+        project_length = _blast_range();
+        if (!get_aim_dir(&dir)) return;
+
+        fire_ball(GF_SOUND, dir, spell_power(damroll(dice, sides)/2), 0);
+        fire_ball(GF_SHARDS, dir, spell_power(damroll(dice, sides)/2), 0);
+        fire_ball(GF_CHAOS, dir, spell_power(damroll(dice, sides)/2), 0);
+        fire_ball(GF_DISENCHANT, dir, spell_power(damroll(dice, sides)/2), 0);
+
+        var_set_bool(res, TRUE);
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static int _dragon_breath_amount(void)
+{
+    int l = p_ptr->lev;
+    return MIN(350, p_ptr->chp * (20 + l*l*l*30/125000) / 100);
+}
+
+static int _dragon_breath_cost(void)
+{
+    int l = p_ptr->lev;
+    return MAX(l/2 + l*l*15/2500, 1);
+}
+
+static void _dragon_do_breathe(int effect, int dir, int dam)
+{
+    /* Dragon breath changes shape with maturity */
+    if (p_ptr->lev < 20)
+        fire_bolt(effect, dir, dam);
+    else if (p_ptr->lev < 30)
+        fire_beam(effect, dir, dam);
+    else
+        fire_ball(effect, dir, dam, -1 - (p_ptr->lev / 20));
+}
+
+static void _dragon_breathe_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Dragon's Breath");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Breathes a powerful breath of a random nature.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_damage(0, 0, _dragon_breath_amount()));
+        break;
+    case SPELL_COST_EXTRA:
+        var_set_int(res, _dragon_breath_cost());
+        break;
+    case SPELL_CAST:
+    {
+        int dir = 0;
+        var_set_bool(res, FALSE);
+        if (get_aim_dir(&dir))
+        {
+            int e = -1;
+            int dam = _dragon_breath_amount();
+            var_set_bool(res, FALSE);
+
+            switch (randint1(4))
+            {
+            case 1: e = GF_SOUND; break;
+            case 2: e = GF_SHARDS; break;
+            case 3: e = GF_CHAOS; break;
+            case 4: e = GF_DISENCHANT; break;
+            default: assert(0);
+            }
+            msg_format("You breathe %s.", gf_name(e));
+            _dragon_do_breathe(e, dir, dam);
+            var_set_bool(res, TRUE);
+        }
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static void _dragon_skin_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Dragon Skin");
+        break;
+    default:
+        stone_skin_spell(cmd, res);
+        break;
+    }
+}
+
+static void _charge_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Charge");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Charge a nearby monster and attack in a single action, but only if you are currently riding a dragon.");
+        break;
+    case SPELL_CAST:
+        var_set_bool(res, FALSE);
+        if (!p_ptr->riding)
+        {
+            msg_print("You need to be mounted in order to charge.");
+            return;
+        }
+        var_set_bool(res, rush_attack(7, NULL));
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static void _word_of_command_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Word of Command");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "By uttering a word of obediance, the true dragon rider can bend the will of all but the mightiest serpents.");
+        break;
+    case SPELL_CAST:                        /*v-- This is meaningless, but set high enough so that the project code actually works */
+        project_hack(GF_CONTROL_PACT_MONSTER, 100);
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static _pact_t _dragons_pact = {
+  "Dragons",
+  "By aligning themselves with dragons, the warlock gains great powers of protection and melee as "
+  "well as the ability to breathe powerful effects at a very early level. In addition, they gain "
+  "greatly enhanced skills with riding, though they may only ride dragons. As such they favor the "
+  "lance when mounted and seek continuously for the legendary 'Dragonlance'.",
+  "", /* RF3_DRAGON suffices */
+  _dragon_calc_bonuses,
+  _dragon_calc_weapon_bonuses,
+  _dragon_calc_stats,
+  _dragon_get_flags,
+/*  S   I   W   D   C   C */
+  { 2,  0,  0, -1,  1,  3},
+/* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+  {  20,  25,  30,   1,  14,  12, 68, 35},
+  {   7,  11,  10,   0,   0,   0, 21, 11},
+/*Life  BaseHP     Exp */
+   105,     10,    130,
+  {
+    {  5,   3, 40, detect_menace_spell},
+    {  7,   5, 40, detect_objects_spell},
+    { 10,   5, 50, _dragon_breathe_spell},
+    { 15,  10, 60, berserk_spell},
+    { 20,  15, 60, identify_spell},
+    { 27,  60, 70, summon_dragon_spell},
+    { 32,  40, 70, _dragon_skin_spell},
+    { 40,  90, 80, _word_of_command_spell},
+    { 45, 100, 80, summon_hi_dragon_spell},
+    { 50,  50, 70, _charge_spell},
+    { -1,   0,  0, NULL },
+  },
+  _dragon_blast
+};
+
+/****************************************************************
+ * Warlock Pact: Angels
+ ****************************************************************/
+static void _angel_calc_bonuses(void)
+{
+    p_ptr->align += 200;
+    p_ptr->levitation = TRUE;
+    if (p_ptr->lev >= 15)
+        p_ptr->see_inv = TRUE;
+    if (p_ptr->lev >= 35)
+        p_ptr->reflect = TRUE;
+}
+
+static void _angel_calc_stats(s16b stats[MAX_STATS])
+{
+    stats[A_WIS] += 3 * p_ptr->lev/50;
+}
+
+static void _angel_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_LEVITATION);
+    if (p_ptr->lev >= 15)
+        add_flag(flgs, TR_SEE_INVIS);
+    if (p_ptr->lev >= 35)
+        add_flag(flgs, TR_REFLECT);
+}
+
+static void _dispelling_blast(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Dispelling");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Fires an Eldritch Blast which also does Dispel Magic.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
+        break;
+    case SPELL_CAST:
+    {
+        int dir = 0;
+
+        var_set_bool(res, FALSE);
+
+        project_length = _blast_range();
+        if (!get_aim_dir(&dir)) return;
+
+        fire_ball(GF_ELDRITCH_DISPEL,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())),
+                  0);
+
+        var_set_bool(res, TRUE);
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static _pact_t _angels_pact = {
+  "Angels",
+  "Angels are heavenly beings who use a variety of techniques to smite those they view as evil. "
+    "Warlocks who make pacts with Angels will also find their saving throws significantly improved, "
+    "and (eventually) their body immune to bolt-like effects. Since Angels are strongly aligned with "
+    "the forces of good, making a pact with Angels will reduce damage done to all good monsters "
+    "by a substantial amount.",
+  "A", /* + RF3_GOOD ... They are even allied with Fallen Angels! */
+  _angel_calc_bonuses,
+  NULL,
+  _angel_calc_stats,
+  _angel_get_flags,
+/*  S   I   W   D   C   C */
+  { 1,  1,  2,  1,  1,  3},
+/* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+  {  20,  35,  40,   1,  16,   8, 48, 35},
+  {   7,  11,  15,   0,   0,   0, 13, 11},
+/*Life  BaseHP     Exp */
+    98,      4,    150,
+  {
+    {  2,  2, 30, bless_spell},
+    {  5,  5, 40, light_area_spell},
+    {  7,  4, 30, detect_monsters_spell},
+    { 10,  7, 40, heroism_spell},
+    { 20, 20, 60, remove_curse_I_spell},
+    { 25, 15, 60, earthquake_spell},
+    { 27, 20, 50, protection_from_evil_spell},
+    { 29, 20, 60, dispel_evil_spell},
+    { 33, 30, 70, starburst_I_spell},
+    { 37, 20, 60, healing_I_spell},
+    { 42, 70, 60, destruction_spell},
+    { 47,100, 90, summon_angel_spell},
+    { 50,120, 90, invulnerability_spell},
+    { -1,   0,  0, NULL },
+  },
+  _dispelling_blast
+};
+
+/****************************************************************
+ * Warlock Pact: Demons
+ ****************************************************************/
+static void _demon_calc_bonuses(void)
+{
+    res_add(RES_FIRE);
+    p_ptr->skills.dev += 50 * p_ptr->lev/50;
+    p_ptr->device_power += 5 * p_ptr->lev/50;
+    if (p_ptr->lev >= 15)
+        p_ptr->hold_life = TRUE;
+    if (p_ptr->lev >= 30)
+        p_ptr->no_eldritch = TRUE;
+    if (p_ptr->lev >= 40)
+        p_ptr->no_charge_drain = TRUE;
+    if (p_ptr->lev >= 45)
+        p_ptr->kill_wall = TRUE;
+    if (p_ptr->lev >= 50)
+        res_add_immune(RES_FIRE);
+}
+
+static void _demon_calc_stats(s16b stats[MAX_STATS])
+{
+    stats[A_INT] += 3 * p_ptr->lev/50;
+}
+
+static void _demon_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    add_flag(flgs, TR_RES_FIRE);
+    if (p_ptr->lev >= 10) add_flag(flgs, TR_DEVICE_POWER);
+    if (p_ptr->lev >= 15) add_flag(flgs, TR_HOLD_LIFE);
+    if (p_ptr->lev >= 50) add_flag(flgs, TR_IM_FIRE);
+}
+
+static void _vengeful_blast(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Vengeful");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Fires an extremely deadly Eldritch Blast, but you also take damage.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res,
+            format("dam %dd%d*2 (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
+        break;
+    case SPELL_CAST:
+    {
+        int dir = 0;
+        int dam = damroll(_blast_dd(), _blast_ds());
+        dam *= 2;
+        dam = spell_power(dam);
+
+        var_set_bool(res, FALSE);
+
+        project_length = _blast_range();
+        if (!get_aim_dir(&dir)) return;
+
+        fire_ball(GF_ELDRITCH, dir, dam, 0);
+        take_hit(DAMAGE_USELIFE, 100, "vengeful blast", -1);
+
+        var_set_bool(res, TRUE);
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static _pact_t _demons_pact = {
+  "Demons",
+  "Demons are crafty creatures of the netherworld, using whatever means at their disposal to bring "
+    "down their enemies. Warlocks who make pacts with Demons will find their abilities to use "
+    "all magical devices improved, and gain the ability to Recharge these devices at will. "
+    "Eventually, Demon Warlocks attain the ability to crush walls beneath their footsteps. "
+    "Making a pact with Demons will reduce damage done to all demons by a substantial amount.",
+  "", /* RF3_DEMON is sufficient */
+  _demon_calc_bonuses,
+  NULL,
+  _demon_calc_stats,
+  _demon_get_flags,
+/*  S   I   W   D   C   C */
+  { 3,  1,-10,  1,  1,  3},
+/* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+  {  20,  40,  40,   0,  12,   2, 64, 35},
+  {   7,  15,  12,   0,   0,   0, 18, 11},
+/*Life  BaseHP     Exp */
+   100,     15,    150,
+  {
+    {  3,   2, 25, evil_bless_spell},
+    {  6,   5, 30, resist_fire_spell},
+    { 11,   9, 35, summon_manes_spell},
+    { 20,  10, 50, teleport_spell},
+    { 30,  25, 60, recharging_spell},
+    { 37,  40, 80, kiss_of_succubus_spell},
+    { 43,  90, 90, summon_greater_demon_spell},
+    { 45,  80, 85, hellfire_spell},
+    { -1,   0,  0, NULL },
+  },
+  _vengeful_blast
+};
+
+/****************************************************************
+ * Warlock Pact: Hounds
+ ****************************************************************/
+static void _hound_calc_bonuses(void)
+{
+    p_ptr->pspeed += 5 * p_ptr->lev / 50;
+
+    if (p_ptr->lev >= 5)
+        res_add(RES_FIRE);
+    if (p_ptr->lev >= 10)
+        res_add(RES_COLD);
+    if (p_ptr->lev >= 15)
+        res_add(RES_ELEC);
+    if (p_ptr->lev >= 20)
+        res_add(RES_ACID);
+    if (p_ptr->lev >= 35)
+        res_add(RES_POIS);
+}
+
+static void _hound_calc_stats(s16b stats[MAX_STATS])
+{
+    stats[A_DEX] += 3 * p_ptr->lev/50;
+}
+
+static void _hound_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->lev >= 10)
+        add_flag(flgs, TR_SPEED);
+
+    if (p_ptr->lev >= 5)
+        add_flag(flgs, TR_RES_FIRE);
+    if (p_ptr->lev >= 10)
+        add_flag(flgs, TR_RES_COLD);
+    if (p_ptr->lev >= 15)
+        add_flag(flgs, TR_RES_ELEC);
+    if (p_ptr->lev >= 20)
+        add_flag(flgs, TR_RES_ACID);
+    if (p_ptr->lev >= 35)
+        add_flag(flgs, TR_RES_POIS);
+}
+
+static void _elemental_blast(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Elemental");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires multiple blasts, one each of fire, frost, acid, lightning and poison.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d*5 (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()/2), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d*5 (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()/2),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
         int dir = 0;
-        int dice = _warlock_dice();
-        int sides = _warlock_sides();
+        int dice = _blast_dd();
+        int sides = _blast_ds();
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
-        
+
         fire_ball(GF_FIRE, dir, spell_power(damroll(dice, sides)/2), 0);
         fire_ball(GF_COLD, dir, spell_power(damroll(dice, sides)/2), 0);
         fire_ball(GF_ACID, dir, spell_power(damroll(dice, sides)/2), 0);
@@ -407,22 +997,104 @@ static void _prismatic_spell(int cmd, variant *res)
     }
 }
 
-static void _dispelling_spell(int cmd, variant *res)
+static void _dog_whistle_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Dispelling");
+        var_set_string(res, "Dog Whistle");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires an Eldritch Blast which also does Dispel Magic.");
+        var_set_string(res, "By emitting a shrill whistle, unaudible to most, you attempt to control nearby canines.");
+        break;
+    case SPELL_CAST:
+        project(0, 18, py, px, 1000, GF_CONTROL_PACT_MONSTER, PROJECT_KILL, -1);
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static _pact_t _hounds_pact = {
+  "Hounds",
+  "An alliance with hounds is one of the weaker pacts the warlock may make. Hounds are fast, stealthy "
+  "and nimble, and the warlock will gain these attributes as well, in addition to basic elemental "
+  "resistances. They also gain decent melee, but other skills, especially device skills, are somewhat "
+  "lacking. Of course, they may call on their kin for assistance, but this may not be enough against "
+  "the more difficult foes of the world. Still, hounds are very common and many consider them to be "
+  "annoying as well, so perhaps an alliance is in order?",
+  "ZC",
+  _hound_calc_bonuses,
+  NULL,
+  _hound_calc_stats,
+  _hound_get_flags,
+/*  S   I   W   D   C   C */
+  { 0, -2, -2,  2,  2,  2},
+/* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+  {  20,  25,  31,   5,  12,   2, 56, 25},
+  {   7,  10,  10,   0,   0,   0, 18, 11},
+/*Life  BaseHP     Exp */
+   102,     12,    110,
+  {
+    {  1,   1, 30, hound_sniff_spell},
+    { 20,  20, 50, resistance_spell},
+    { 27,  20, 50, haste_self_spell},
+    { 30,  25, 60, summon_hounds_spell},
+    { 32,  30, 70, _dog_whistle_spell},
+    { -1,   0,  0, NULL },
+  },
+  _elemental_blast
+};
+
+/****************************************************************
+ * Warlock Pact: Spiders
+ ****************************************************************/
+static void _spider_calc_bonuses(void)
+{
+    p_ptr->pspeed += 7 * p_ptr->lev / 50;
+
+    if (p_ptr->lev >= 10)
+        res_add(RES_POIS);
+    if (p_ptr->lev >= 20)
+        res_add(RES_NEXUS);
+    if (p_ptr->lev >= 30)
+        res_add(RES_TELEPORT);
+}
+
+static void _spider_calc_stats(s16b stats[MAX_STATS])
+{
+    stats[A_DEX] += 3 * p_ptr->lev/50;
+}
+
+static void _spider_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->lev >= 8)
+        add_flag(flgs, TR_SPEED);
+
+    if (p_ptr->lev >= 10)
+        add_flag(flgs, TR_RES_POIS);
+    if (p_ptr->lev >= 20)
+        add_flag(flgs, TR_RES_NEXUS);
+}
+
+static void _phase_blast(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Phasing");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Fire an Eldritch Blast and then jump to safety in a single move.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -430,14 +1102,15 @@ static void _dispelling_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
-        
-        fire_ball(GF_ELDRITCH_DISPEL, 
-                  dir, 
-                  spell_power(damroll(_warlock_dice(), _warlock_sides())), 
+
+        fire_ball(GF_ELDRITCH,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())),
                   0);
 
+        teleport_player(25, 0);
         var_set_bool(res, TRUE);
         break;
     }
@@ -447,38 +1120,30 @@ static void _dispelling_spell(int cmd, variant *res)
     }
 }
 
-static void _vengeful_spell(int cmd, variant *res)
+static void _nexus_ball_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Vengeful");
+        var_set_string(res, "Nexus Ball");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires an extremely deadly Eldritch Blast, but you also take damage.");
+        var_set_string(res, "Generates a ball of nexus on chosen target.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d*2 (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res, info_damage(0, 0, spell_power(3*p_ptr->lev/2 + 30 + p_ptr->to_d_spell)));
         break;
     case SPELL_CAST:
     {
         int dir = 0;
-        int dam = damroll(_warlock_dice(), _warlock_sides());
-        dam *= 2;
-        dam = spell_power(dam);
-
         var_set_bool(res, FALSE);
-
-        project_length = _warlock_range();
         if (!get_aim_dir(&dir)) return;
-
-        fire_ball(GF_ELDRITCH, dir, dam, 0);
-        take_hit(DAMAGE_USELIFE, 100, "vengeful blast", -1);
-
+        fire_ball(
+            GF_NEXUS,
+            dir,
+            spell_power(3*p_ptr->lev/2 + 30 + p_ptr->to_d_spell),
+            2
+        );
         var_set_bool(res, TRUE);
         break;
     }
@@ -488,7 +1153,115 @@ static void _vengeful_spell(int cmd, variant *res)
     }
 }
 
-static void _confusing_spell(int cmd, variant *res)
+static void _greater_nexus_jump_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Greater Nexus Jump");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Generate a huge ball of nexus and then teleport away.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_damage(0, 0, py_prorata_level(200)));
+        break;
+    case SPELL_CAST:
+        fire_ball(GF_NEXUS, 0, py_prorata_level(200)*2, 2 + p_ptr->lev/10);
+        teleport_player(30, 0);
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static _pact_t _spiders_pact = {
+  "Spiders",
+  "Of all the icky, crawling things in the world, you have chosen to make an alliance "
+    "with spiders? Sure, they are stealthy, and fast, and very adept at hiding. Able "
+    "to extrude a fine sticky substance to ensnare the unwary, the spider lurks nearby, "
+    "or so you assume since you very seldom see them. Moreover, many spiders are adept at "
+    "the powers of teleportation, able to jump quickly from one location to another, which "
+    "can be quite baffling to a would be predator. They are comfortable with both poison "
+    "and nexus. But, aside from all of this, they are a bit on the squishy side. That is, "
+    "if you can manage to catch one!",
+  "S",
+  _spider_calc_bonuses,
+  NULL,
+  _spider_calc_stats,
+  _spider_get_flags,
+/*  S   I   W   D   C   C */
+  {-1,  0, -2,  2,  0,  2},
+/* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+  {  20,  37,  31,   7,  12,   2, 56, 60},
+  {   7,  11,  10,   0,   0,   0, 12, 15},
+/*Life  BaseHP     Exp */
+    97,      1,    120,
+  {
+    {  1,   2, 30, phase_door_spell},
+    {  3,   3, 30, stinking_cloud_spell},
+    {  5,   4, 30, detect_monsters_spell},
+    {  7,   5, 30, teleport_spell},
+    { 15,  10, 60, summon_spiders_spell},
+    { 20,  10, 60, spider_web_spell},
+    { 25,  12, 50, hide_in_flame_spell},
+    { 27,  13, 50, _nexus_ball_spell},
+    { 32,  15, 50, hide_in_mist_spell},
+    { 37,  20, 60, dimension_door_spell},
+    { 42,  40, 70, _greater_nexus_jump_spell},
+    { -1,   0,  0, NULL },
+  },
+  _phase_blast
+};
+
+/****************************************************************
+ * Warlock Pact: Giants
+ ****************************************************************/
+static void _giant_calc_bonuses(void)
+{
+    if (p_ptr->lev >= 30)
+        res_add(RES_SOUND);
+    if (p_ptr->lev >= 40)
+        res_add(RES_SHARDS);
+    if (p_ptr->lev >= 50)
+        res_add(RES_CHAOS);
+}
+
+void _giant_calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
+{
+    if (o_ptr->weight >= 200)
+    {
+        int to_h = 10 * p_ptr->lev / 50;
+        int to_d = 10 * p_ptr->lev / 50;
+
+        info_ptr->to_h += to_h;
+        info_ptr->dis_to_h += to_h;
+
+        info_ptr->to_d += to_d;
+        info_ptr->dis_to_d += to_d;
+    }
+}
+
+static void _giant_calc_stats(s16b stats[MAX_STATS])
+{
+    stats[A_STR] += 5 * p_ptr->lev/50;
+    stats[A_DEX] -= 3 * p_ptr->lev/50;
+    stats[A_CON] += 3 * p_ptr->lev/50;
+}
+
+static void _giant_get_flags(u32b flgs[TR_FLAG_SIZE])
+{
+    if (p_ptr->lev >= 30)
+        add_flag(flgs, TR_RES_SOUND);
+    if (p_ptr->lev >= 40)
+        add_flag(flgs, TR_RES_SHARDS);
+    if (p_ptr->lev >= 50)
+        add_flag(flgs, TR_RES_CHAOS);
+}
+
+static void _confusing_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -499,11 +1272,11 @@ static void _confusing_spell(int cmd, variant *res)
         var_set_string(res, "Fires an Eldritch Blast that also confuses your opponent.");
         break;
     case SPELL_INFO:
-        var_set_string(res, 
-            format("dam %dd%d (rng %d)", 
-                   _warlock_dice(), 
-                   spell_power(_warlock_sides()), 
-                    _warlock_range()));
+        var_set_string(res,
+            format("dam %dd%d (rng %d)",
+                   _blast_dd(),
+                   spell_power(_blast_ds()),
+                    _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -511,12 +1284,12 @@ static void _confusing_spell(int cmd, variant *res)
 
         var_set_bool(res, FALSE);
 
-        project_length = _warlock_range();
+        project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
-        
-        fire_ball(GF_ELDRITCH_CONFUSE, 
-                  dir, 
-                  spell_power(damroll(_warlock_dice(), _warlock_sides())), 
+
+        fire_ball(GF_ELDRITCH_CONFUSE,
+                  dir,
+                  spell_power(damroll(_blast_dd(), _blast_ds())),
                   0);
 
         var_set_bool(res, TRUE);
@@ -528,130 +1301,98 @@ static void _confusing_spell(int cmd, variant *res)
     }
 }
 
+static _pact_t _giants_pact = {
+  "Giants",
+  "An alliance with giants and titans grants impressive physical strength and fortitude, "
+    "but other stats will generally suffer. Later in life, you will gain giant-like resistances "
+    "including sound, shards and chaos. Your combat will be impressive, but, like giants, you "
+    "will favor heavy weapons. Oh, and you won't mind tossing a boulder or two should the need "
+    "arise. Since this alliance offers so much in the way of physical advantages, it offers very "
+    "little in the way of magical abilities or skill. Warlocks with this alliance are the best "
+    "possible fighters being nearly indistiguishable in skill from Warriors!",
+  "", /* RF3_GIANT will suffice */
+  _giant_calc_bonuses,
+  _giant_calc_weapon_bonuses,
+  _giant_calc_stats,
+  _giant_get_flags,
+/*  S   I   W   D   C   C */
+  { 2, -4, -4, -2,  2,  2},
+/* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
+  {  20,  20,  31,   0,  12,   2, 70, 40},
+  {   7,   8,  10,   0,   0,   0, 30, 20},
+/*Life  BaseHP     Exp */
+   112,     25,    140,
+  {
+    {  5,   0, 50, throw_boulder_spell},
+    { 10,   7,  0, stunning_blow_spell},
+    { 40,  30, 50, summon_kin_spell},
+    { -1,   0,  0, NULL },
+  },
+  _confusing_blast
+};
+
 /****************************************************************
- * Private Powers
+ * Private Helpers
  ****************************************************************/
-
-void _dragon_breath_spell(int cmd, variant *res)
+static _pact_ptr _get_pact(int which)
 {
-    switch (cmd)
+    switch (which)
     {
-    case SPELL_NAME:
-        var_set_string(res, "Dragon Breath");
-        break;
-    case SPELL_DESC:
-        var_set_string(res, "Breathes a powerful elemental breath.");
-        break;
-    case SPELL_INFO:
-        var_set_string(res, format("dam %d", spell_power(400)));
-        break;
-    case SPELL_CAST:
-    {
-        int  type = 0, dir = 0;
-        cptr desc = NULL;
-
-        var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
-
-        switch (randint0(5))
-        {
-        case 0: type = GF_FIRE; desc = "fire"; break;
-        case 1: type = GF_COLD; desc = "cold"; break;
-        case 2: type = GF_ELEC; desc = "lightning"; break;
-        case 3: type = GF_ACID; desc = "acid"; break;
-        case 4: type = GF_POIS; desc = "poison"; break;
-        }
-
-
-        msg_format("You breathe %s.", desc);
-        fire_ball(type, dir, spell_power(400), -(p_ptr->lev / 15) - 1);
-
-        var_set_bool(res, TRUE);
-        break;
+    case WARLOCK_UNDEAD:
+        return &_undead_pact;
+    case WARLOCK_DRAGONS:
+        return &_dragons_pact;
+    case WARLOCK_ANGELS:
+        return &_angels_pact;
+    case WARLOCK_DEMONS:
+        return &_demons_pact;
+    case WARLOCK_HOUNDS:
+        return &_hounds_pact;
+    case WARLOCK_SPIDERS:
+        return &_spiders_pact;
+    case WARLOCK_GIANTS:
+        return &_giants_pact;
     }
-    default:
-        default_spell(cmd, res);
-        break;
-    }
-}
-
-void _invulnerability_spell(int cmd, variant *res)
-{
-    switch (cmd)
-    {
-    case SPELL_NAME:
-        var_set_string(res, "Invulnerability");
-        break;
-    case SPELL_DESC:
-        var_set_string(res, "Invulnerability!! Nothing can touch you!  Nothing can hurt you!  You become *Invincible*!!!");
-        break;
-    case SPELL_CAST:
-        set_invuln(2 + randint1(2), FALSE);
-        var_set_bool(res, TRUE);
-        break;
-    default:
-        default_spell(cmd, res);
-        break;
-    }
-}
-
-void _wraithform_spell(int cmd, variant *res)
-{
-    switch (cmd)
-    {
-    case SPELL_NAME:
-        var_set_string(res, "Wraithform");
-        break;
-    case SPELL_DESC:
-        var_set_string(res, "Leave the world of the living and travel the shadows of the underwold. You gain passwall and great resistance to damage.");
-        break;
-    case SPELL_CAST:
-        set_wraith_form(2 + randint1(2), FALSE);
-        var_set_bool(res, TRUE);
-        break;
-    default:
-        default_spell(cmd, res);
-        break;
-    }
+    return NULL;
 }
 
 /****************************************************************
- * Spell Table and Exports
+ * Powers and Spells
  ****************************************************************/
+#define MAX_WARLOCK_BLASTS    7
 
-#define MAX_WARLOCK_SPELLS    7
-
-static spell_info _spells[MAX_WARLOCK_SPELLS] = 
+static spell_info _powers[MAX_WARLOCK_BLASTS] =
 {
     /*lvl cst fail spell */
-    {  1,  0,  20, _basic_spell},
-    { 10,  0,  40, _extended_spell},
-    { 18,  0,  45, _spear_spell},
-    { 26,  0,  60, _burst_spell},
-    { 33,  0,  60, _stunning_spell},
+    {  1,  0,  20, _basic_blast},
+    { 10,  0,  40, _extended_blast},
+    { 18,  0,  45, _spear_blast},
+    { 26,  0,  60, _burst_blast},
+    { 33,  0,  60, _stunning_blast},
     { 40,  0,  70, NULL},
-    { 45,  0,  75, _empowered_spell},
+    { 45,  0,  75, _empowered_blast},
 };
 
-static ang_spell _pact_spells[MAX_PACTS] = 
+static int _get_powers(spell_info* spells, int max)
 {
-    _draining_spell,
-    _prismatic_spell,
-    _dispelling_spell,
-    _vengeful_spell,
-    _confusing_spell,
-};
+    int       i;
+    int       ct = 0;
+    int       stat_idx = p_ptr->stat_ind[A_CHR];
+    _pact_ptr pact = _get_pact(p_ptr->psubclass);
 
-static int _get_spells(spell_info* spells, int max)
-{
-    int i;
-    int ct = 0;
-    int stat_idx = p_ptr->stat_ind[A_CHR];
+    assert(pact);
 
-    for (i = 0; i < MAX_WARLOCK_SPELLS; i++)
+    /* This is debatable. Empowered blast is supposed to block your powers
+       for one turn. They used to be spells, but now they are actually class
+       powers, so won't be blocked by tim_no_spells ... Unless we do the
+       following. Note, this now blocks all pact spells as well! */
+    if (p_ptr->tim_no_spells)
+        return 0;
+
+    for (i = 0; i < MAX_WARLOCK_BLASTS; i++)
     {
-        spell_info *base = &_spells[i];
-        if (ct >= max) break;
+        spell_info *base = &_powers[i];
+        if (ct >= max) break;        
         if (base->level <= p_ptr->lev)
         {
             spell_info* current = &spells[ct];
@@ -659,328 +1400,47 @@ static int _get_spells(spell_info* spells, int max)
             current->level = base->level;
             current->cost = base->cost;
             current->fail = calculate_fail_rate(base->level, base->fail, stat_idx);            
-
-            /* Hack for the pact variable slot */
             if (current->fn == NULL)
-                current->fn = _pact_spells[p_ptr->psubclass];
+                current->fn = pact->special_blast;
 
             ct++;
         }
     }
     return ct;
 }
-
-int _undead_get_powers(spell_info* spells, int max)
+static int _get_spells(spell_info* spells, int max)
 {
-    int ct = 0;
-    
-    spell_info *spell = &spells[ct++];
-    spell->level = 5;
-    spell->cost = 5;
-    spell->fail = calculate_fail_rate(5, 60, p_ptr->stat_ind[A_CHR]);
-    spell->fn = satisfy_hunger_spell;
+    int       i;
+    int       ct = 0;
+    int       stat_idx = p_ptr->stat_ind[A_CHR];
+    _pact_ptr pact = _get_pact(p_ptr->psubclass);
 
-    spell = &spells[ct++];
-    spell->level = 20;
-    spell->cost = 20;
-    spell->fail = calculate_fail_rate(20, 80, p_ptr->stat_ind[A_CHR]);
-    spell->fn = restore_life_spell;
+    assert(pact);
 
-    spell = &spells[ct++];
-    spell->level = 50;
-    spell->cost = 100;
-    spell->fail = calculate_fail_rate(50, 80, p_ptr->stat_ind[A_CHR]);
-    spell->fn = _wraithform_spell;
-
-    return ct;
-}
-
-int _dragon_get_powers(spell_info* spells, int max)
-{
-    int ct = 0;
-
-    spell_info *spell = &spells[ct++];
-    spell->level = 5;
-    spell->cost = 5;
-    spell->fail = calculate_fail_rate(5, 60, p_ptr->stat_ind[A_CHR]);
-    spell->fn = detect_objects_spell;
-
-    spell = &spells[ct++];
-    spell->level = 15;
-    spell->cost = 10;
-    spell->fail = calculate_fail_rate(15, 60, p_ptr->stat_ind[A_CHR]);
-    spell->fn = heroism_spell;
-
-    spell = &spells[ct++];
-    spell->level = 20;
-    spell->cost = 20;
-    spell->fail = calculate_fail_rate(20, 70, p_ptr->stat_ind[A_CHR]);
-    spell->fn = identify_spell;
-
-    spell = &spells[ct++];
-    spell->level = 35;
-    spell->cost = 40;
-    spell->fail = calculate_fail_rate(35, 70, p_ptr->stat_ind[A_CHR]);
-    spell->fn = stone_skin_spell;
-
-    spell = &spells[ct++];
-    spell->level = 50;
-    spell->cost = 15;
-    spell->fail = calculate_fail_rate(50, 60, p_ptr->stat_ind[A_CHR]);
-    spell->fn = massacre_spell;
-
-    return ct;
-}
-
-int _angel_get_powers(spell_info* spells, int max)
-{
-    int ct = 0;
-
-    spell_info *spell = &spells[ct++];
-    spell->level = 5;
-    spell->cost = 5;
-    spell->fail = calculate_fail_rate(5, 40, p_ptr->stat_ind[A_CHR]);
-    spell->fn = light_area_spell;
-
-    spell = &spells[ct++];
-    spell->level = 20;
-    spell->cost = 20;
-    spell->fail = calculate_fail_rate(20, 60, p_ptr->stat_ind[A_CHR]);
-    if (p_ptr->lev >= 45)
-        spell->fn = remove_curse_II_spell;
-    else
-        spell->fn = remove_curse_I_spell;
-
-    spell = &spells[ct++];
-    spell->level = 30;
-    spell->cost = 10;
-    spell->fail = calculate_fail_rate(30, 60, p_ptr->stat_ind[A_CHR]);
-    spell->fn = earthquake_spell;
-
-    spell = &spells[ct++];
-    spell->level = 35;
-    spell->cost = 40;
-    spell->fail = calculate_fail_rate(35, 60, p_ptr->stat_ind[A_CHR]);
-    spell->fn = protection_from_evil_spell;
-
-    spell = &spells[ct++];
-    spell->level = 35;
-    spell->cost = 70;
-    spell->fail = calculate_fail_rate(35, 60, p_ptr->stat_ind[A_CHR]);
-    spell->fn = destruction_spell;
-
-    spell = &spells[ct++];
-    spell->level = 50;
-    spell->cost = 100;
-    spell->fail = calculate_fail_rate(50, 90, p_ptr->stat_ind[A_CHR]);
-    spell->fn = _invulnerability_spell;
-
-    return ct;
-}
-
-int _demon_get_powers(spell_info* spells, int max)
-{
-    int ct = 0;
-
-    spell_info *spell = &spells[ct++];
-    spell->level = 5;
-    spell->cost = 5;
-    spell->fail = calculate_fail_rate(5, 40, p_ptr->stat_ind[A_CHR]);
-    spell->fn = phase_door_spell;
-
-    spell = &spells[ct++];
-    spell->level = 20;
-    spell->cost = 10;
-    spell->fail = calculate_fail_rate(20, 50, p_ptr->stat_ind[A_CHR]);
-    spell->fn = teleport_spell;
-
-/*  TODO
-    spell = &spells[ct++];
-    spell->level = 35;
-    spell->cost = 40;
-    spell->fail = calculate_fail_rate(35, 70, p_ptr->stat_ind[A_CHR]);
-    spell->fn = recharging_spell; */
-
-    return ct;
-}
-
-int _aberration_get_powers(spell_info* spells, int max)
-{
-    int ct = 0;
-
-    spell_info *spell = &spells[ct++];
-    spell->level = 5;
-    spell->cost = 5;
-    spell->fail = calculate_fail_rate(5, 40, p_ptr->stat_ind[A_CHR]);
-    spell->fn = detect_monsters_spell;
-
-    spell = &spells[ct++];
-    spell->level = 15;
-    spell->cost = 10;
-    spell->fail = calculate_fail_rate(15, 40, p_ptr->stat_ind[A_CHR]);
-    spell->fn = detect_doors_stairs_traps_spell;
-
-    spell = &spells[ct++];
-    spell->level = 20;
-    spell->cost = 20;
-    spell->fail = calculate_fail_rate(20, 50, p_ptr->stat_ind[A_CHR]);
-    spell->fn = magic_mapping_spell;
-
-    spell = &spells[ct++];
-    spell->level = 30;
-    spell->cost = 30;
-    spell->fail = calculate_fail_rate(30, 50, p_ptr->stat_ind[A_CHR]);
-    spell->fn = polymorph_self_spell;
-
-    spell = &spells[ct++];
-    spell->level = 45;
-    spell->cost = 0;
-    spell->fail = 0;
-    spell->fn = create_ammo_spell;
-
-    spell = &spells[ct++];
-    spell->level = 50;
-    spell->cost = 20;
-    spell->fail = calculate_fail_rate(50, 65, p_ptr->stat_ind[A_CHR]);
-    spell->fn = dimension_door_spell;
-
-    return ct;
-}
-
-static void _undead_calc_bonuses(void)
-{
-    res_add(RES_COLD);
-    p_ptr->skills.stl += 7 * p_ptr->lev/50;
-    if (p_ptr->lev > 14) res_add(RES_POIS);
-    if (p_ptr->lev > 29) 
+    for (i = 0; ; i++)
     {
-        res_add(RES_NETHER);
-        p_ptr->hold_life = TRUE;
-    }
-    if (p_ptr->lev > 34) 
-    {
-        res_add(RES_DARK);
-        res_add(RES_BLIND);
-    }
-    if (p_ptr->lev > 44) res_add(RES_SHARDS);
-}
-static void _undead_get_flags(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_COLD);
-    if (p_ptr->lev > 7) add_flag(flgs, TR_STEALTH);
-    if (p_ptr->lev > 14) add_flag(flgs, TR_RES_POIS);
-    if (p_ptr->lev > 29)
-    {
-        add_flag(flgs, TR_RES_NETHER);
-        add_flag(flgs, TR_HOLD_LIFE);
-    }
-    if (p_ptr->lev > 34)
-    {
-        add_flag(flgs, TR_RES_DARK);
-        add_flag(flgs, TR_RES_BLIND);
-    }
-    if (p_ptr->lev > 44) add_flag(flgs, TR_RES_SHARDS);
-}
-
-static void _dragon_calc_bonuses(void)
-{
-    res_add(RES_FEAR);
-    p_ptr->skills.thn += 100 * p_ptr->lev / 50;
-    /*if (p_ptr->lev > 14) p_ptr->levitation = TRUE; */
-    p_ptr->weapon_info[0].to_h += 10 * p_ptr->lev / 50;
-    p_ptr->weapon_info[0].dis_to_h +=  10 * p_ptr->lev / 50;
-    p_ptr->weapon_info[0].to_d += 10 * p_ptr->lev / 50;
-    p_ptr->weapon_info[0].dis_to_d += 10 * p_ptr->lev / 50;
-    p_ptr->weapon_info[1].to_h += 10 * p_ptr->lev / 50;
-    p_ptr->weapon_info[1].dis_to_h +=  10 * p_ptr->lev / 50;
-    p_ptr->weapon_info[1].to_d += 10 * p_ptr->lev / 50;
-    p_ptr->weapon_info[1].dis_to_d += 10 * p_ptr->lev / 50;
-    if (p_ptr->lev > 29) p_ptr->sustain_con = TRUE;
-    if (p_ptr->lev > 29)
-    {
-        /* only give it if they don't already have it */
-        if (!mut_present(MUT_RESIST))
+        spell_info *base = &pact->spells[i];
+        if (base->level <= 0) break;
+        if (ct >= max) break;
+        if (base->level <= p_ptr->lev)
         {
-            mut_gain(MUT_RESIST);
-            mut_lock(MUT_RESIST);
+            spell_info* current = &spells[ct++];
+            current->fn = base->fn;
+            current->level = base->level;
+            current->cost = base->cost;
+            current->fail = calculate_fail_rate(base->level, base->fail, stat_idx);
         }
     }
-    /* only remove it if they got it from us ... hey, they could have used !Poly */
-    else if (mut_present(MUT_RESIST) && mut_locked(MUT_RESIST))
-    {
-        mut_unlock(MUT_RESIST);
-        mut_lose(MUT_RESIST);
-    }
-    if (p_ptr->lev > 44)
-    {
-        /* only give it if they don't already have it */
-        if (!mut_present(MUT_BERSERK))
-        {
-            mut_gain(MUT_BERSERK);
-            mut_lock(MUT_BERSERK);
-        }
-    }
-    /* only remove it if they got it from us ... hey, they could have used !Poly */
-    else if (mut_present(MUT_BERSERK) && mut_locked(MUT_BERSERK))
-    {
-        mut_unlock(MUT_BERSERK);
-        mut_lose(MUT_BERSERK);
-    }
-}
-static void _dragon_get_flags(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_FEAR);
-    /*if (p_ptr->lev > 14) add_flag(flgs, TR_LEVITATION); */
-    if (p_ptr->lev > 29) add_flag(flgs, TR_SUST_CON);
+
+    return ct;
 }
 
-static void _angel_calc_bonuses(void)
+static void _character_dump(doc_ptr doc)
 {
-    p_ptr->levitation = TRUE;
-    p_ptr->skills.sav += 30 * p_ptr->lev/50;
-    if (p_ptr->lev > 14) p_ptr->see_inv = TRUE;
-    if (p_ptr->lev > 34) p_ptr->reflect = TRUE;
-}
-static void _angel_get_flags(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_LEVITATION);
-    if (p_ptr->lev > 14) add_flag(flgs, TR_SEE_INVIS);
-    if (p_ptr->lev > 34) add_flag(flgs, TR_REFLECT);
-}
+    spell_info spells[MAX_SPELLS];
+    int        ct = _get_spells(spells, MAX_SPELLS);
 
-static void _demon_calc_bonuses(void)
-{
-    res_add(RES_FIRE);
-    p_ptr->skills.dev += 50 * p_ptr->lev/50;
-    p_ptr->device_power += 5 * p_ptr->lev/50;
-    if (p_ptr->lev > 14) p_ptr->hold_life = TRUE;
-    if (p_ptr->lev >= 30)
-        p_ptr->no_eldritch = TRUE;
-    if (p_ptr->lev >= 40)
-        p_ptr->no_charge_drain = TRUE;
-    if (p_ptr->lev > 44)
-        p_ptr->kill_wall = TRUE;
-    if (p_ptr->lev > 49)
-        res_add_immune(RES_FIRE);
-}
-static void _demon_get_flags(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_FIRE);
-    if (p_ptr->lev > 9) add_flag(flgs, TR_DEVICE_POWER);
-    if (p_ptr->lev > 14) add_flag(flgs, TR_HOLD_LIFE);
-    if (p_ptr->lev > 49) add_flag(flgs, TR_IM_FIRE);
-}
-
-static void _aberration_calc_bonuses(void)
-{
-    res_add(RES_CHAOS);
-    p_ptr->skills.thb += 100 * p_ptr->lev/50;
-    if (p_ptr->lev > 34) p_ptr->telepathy = TRUE;    /* Easier then granting MUT3_ESP :) */
-}
-static void _aberration_get_flags(u32b flgs[TR_FLAG_SIZE])
-{
-    add_flag(flgs, TR_RES_CHAOS);
-    if (p_ptr->lev > 34) add_flag(flgs, TR_TELEPATHY);
+    py_display_spells(doc, spells, ct);
 }
 
 static caster_info * _caster_info(void)
@@ -991,103 +1451,129 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "blast";
         me.which_stat = A_CHR;
-        me.options = CASTER_NO_SPELL_COST;
         me.weight = 500;
         init = TRUE;
     }
     return &me;
 }
 
+/****************************************************************
+ * Public API
+ ****************************************************************/
+bool warlock_is_pact_monster(monster_race *r_ptr)
+{
+    if (p_ptr->pclass == CLASS_WARLOCK)
+    {
+        _pact_ptr pact = _get_pact(p_ptr->psubclass);
+        char     *pc = my_strchr(pact->alliance, r_ptr->d_char);
+
+        if (pc != NULL)
+            return TRUE;
+
+        switch (p_ptr->psubclass)
+        {
+        case WARLOCK_UNDEAD:
+            if (r_ptr->flags3 & RF3_UNDEAD)
+                return TRUE;
+            break;
+
+        case WARLOCK_DRAGONS:
+            if (r_ptr->flags3 & RF3_DRAGON)
+                return TRUE;
+            break;
+
+        case WARLOCK_ANGELS:
+            /* Angel pact is now all good monsters!!! */
+            if (r_ptr->flags3 & RF3_GOOD)
+                return TRUE;
+            break;
+
+        case WARLOCK_DEMONS:
+            if (r_ptr->flags3 & RF3_DEMON)
+                return TRUE;
+            break;
+
+        case WARLOCK_GIANTS:
+            if (r_ptr->flags3 & RF3_GIANT)
+                return TRUE;
+            break;
+        }
+    }
+
+    return FALSE;
+}
+
 class_t *warlock_get_class(int psubclass)
 {
     static class_t me = {0};
     static bool init = FALSE;
-    static int pact_init = -1;
 
     /* static info never changes */
     if (!init)
-    {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 20,  24,  34,   1,  16,  20,  34,  20};
-    skills_t xs = {  8,  10,  11,   0,   0,   0,  10,   8};
-
+    {
         me.name = "Warlock";
-        me.desc = "A Warlock, unlike typical mages, derives his powers from pacts with "
-                  "arcane creatures, rather than through careful study. Warlocks possess "
-                  "the unique offensive power of the Eldritch Blast, and they use this "
-                  "without paying any sort of mana or hitpoint costs (though they still have "
-                  "fail rates). The Warlock's primary spell stat is Charisma, and this "
-                  "directly influences the damage of their Eldritch Blast.\n \n"
-                  "Each Warlock makes a pact with a single type of creature: "
-                  "Undead, Dragons, Angels, Demons or Aberrations. This pact confers both "
-                  "advantages and disadvantages. For one thing, Warlocks are very ineffective "
-                  "when fighting monsters with whom they have formed an alliance. Every form "
-                  "of damage is actually reduced by a substantial amount, and this makes killing "
-                  "pact monsters extremely difficult. Probably, the Warlock should avoid fighting "
-                  "these monsters altogether. Indeed, at high levels pact monsters are often friendly to the "
-                  "warlock, but some fights cannot be avoided it seems. That's the bad news. "
-                  "The good news is that each pact confers unique abilities and powers to the warlock. "
-                  "These benefits reflect the nature of the pact monster. For example, a pact with "
-                  "Undead confers resistance to Poison and Nether as well as Hold Life, among other "
-                  "things. A pact with Dragons confers the power to resist the elements as well as "
-                  "strong melee (Warlocks are generally poor fighters otherwise). In addition, each "
-                  "pact gives a unique high level offensive power when using their Eldritch Blast.";
-
-        me.base_skills = bs;
-        me.extra_skills = xs;
-
-        me.life = 100;
-        me.base_hp = 4;
-        me.exp = 125;
-        me.pets = 25;
+        me.desc =
+        "A Warlock is a magical class but, unlike normal spellcasters, they derive their powers, "
+        "stats, skills and bonuses by making a pact with a given class of monsters. "
+        "This pact is irrevocable and is made "
+        "at the outset of the Warlock's career. Depending on the class of monsters with whom they "
+        "ally, the warlock will gain unique bonuses, abilities and magical powers. For example, "
+        "alliance with the forces of the netherworld grants resistances to poison and nether, enhanced "
+        "constitution and spells to control and conjure the unliving as well as spells to access "
+        "the damaging forces of the netherworld directly. Each such alliance has thematic bonuses "
+        "and powers, and you can read the details in the respective help sections. On final comment: "
+        "allying with a given class of monsters dramatically reduces the warlock's ability to fight "
+        "these foes. Instead, the warlock seeks cooperation with their brethren, or, perhaps, domination "
+        "over them. But direct assaults are rarely successful.\n \n"
+        "In addition to pact related spells, all warlocks gain access to the unique power of the "
+        "Eldritch Blast. Their primary spell stat is Charisma since they seek dominion and alliance "
+        "with their chosen kin, and these monsters tend to have a strong will of their own, resisting "
+        "the binding forces which the warlock imposes to gain both mastery and power.";
 
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
+        me.get_powers = _get_powers;
+        me.character_dump = _character_dump;
+
+        me.pets = 15;
         init = TRUE;
     }
 
-    me.stats[A_STR] = -2;
-    me.stats[A_INT] =  1;
-    me.stats[A_WIS] =  2;
-    me.stats[A_DEX] = -1;
-    me.stats[A_CON] = -2;
-    me.stats[A_CHR] =  4;
+    me.stats[A_STR] = 0;
+    me.stats[A_INT] = 0;
+    me.stats[A_WIS] = 0;
+    me.stats[A_DEX] = 0;
+    me.stats[A_CON] = 0;
+    me.stats[A_CHR] = 0;
+    me.life = 100;
+    me.base_hp = 0;
+    me.exp = 100;
 
-    if (!spoiler_hack && !birth_hack && pact_init != psubclass)
+    me.subname = "";
+    me.subdesc = "";
+
+    if (0 <= psubclass && psubclass < WARLOCK_MAX)
     {
-        switch (psubclass)
-        {
-        case PACT_UNDEAD:
-            me.stats[A_CON] += 5 * p_ptr->lev/50;
-            me.calc_bonuses = _undead_calc_bonuses;
-            me.get_flags = _undead_get_flags;
-            me.get_powers = _undead_get_powers;
-            break;
-        case PACT_DRAGON:
-            me.stats[A_STR] += 5 * p_ptr->lev/50;
-            me.calc_bonuses = _dragon_calc_bonuses;
-            me.get_flags = _dragon_get_flags;
-            me.get_powers = _dragon_get_powers;
-            break;
-        case PACT_ANGEL:
-            me.stats[A_WIS] += 5 * p_ptr->lev/50;
-            me.calc_bonuses = _angel_calc_bonuses;
-            me.get_flags = _angel_get_flags;
-            me.get_powers = _angel_get_powers;
-            break;
-        case PACT_DEMON:
-            me.stats[A_INT] += 5 * p_ptr->lev/50;
-            me.calc_bonuses = _demon_calc_bonuses;
-            me.get_flags = _demon_get_flags;
-            me.get_powers = _demon_get_powers;
-            break;
-        case PACT_ABERRATION:
-            me.stats[A_DEX] += 5 * p_ptr->lev/50;
-            me.calc_bonuses = _aberration_calc_bonuses;
-            me.get_flags = _aberration_get_flags;
-            me.get_powers = _aberration_get_powers;
-            break;
-        }
-        pact_init = psubclass;
+        int       i;
+        _pact_ptr pact = _get_pact(psubclass);
+
+        me.subname = pact->name;
+        me.subdesc = pact->desc;
+
+        for (i = 0; i < MAX_STATS; i++)
+            me.stats[i] += pact->stats[i];
+
+        me.base_skills = pact->base_skills;
+        me.extra_skills = pact->extra_skills;
+
+        me.life = pact->life;
+        me.base_hp = pact->base_hp;
+        me.exp = pact->exp;
+
+        me.calc_bonuses = pact->calc_bonuses;
+        me.calc_weapon_bonuses = pact->calc_weapon_bonuses;
+        me.calc_stats = pact->calc_stats;
+        me.get_flags = pact->get_flags;
     }
 
     return &me;

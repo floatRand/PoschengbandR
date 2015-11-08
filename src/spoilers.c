@@ -934,6 +934,9 @@ static void _class_help(FILE *fp, int idx)
 
     switch(idx)
     {
+    case CLASS_WARLOCK:
+        fputs("See <link:Warlocks.txt> for more details on warlock pacts.\n\n", fp);
+        break;
     case CLASS_WEAPONMASTER:
         fputs("See <link:Weaponmasters.txt> for more details on weaponmasters.\n\n", fp);
         break;
@@ -1125,6 +1128,65 @@ static void _weaponmasters_help(FILE *fp)
     for (i = 0; i < WEAPONMASTER_MAX; i++)
     {
         class_t *class_ptr = get_class_aux(CLASS_WEAPONMASTER, i);
+        fprintf(fp, "%-17.17s", class_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.srh + 5*class_ptr->extra_skills.srh, 6));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.fos + 5*class_ptr->extra_skills.fos, 6));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.thn + 5*class_ptr->extra_skills.thn, 12));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.thb + 5*class_ptr->extra_skills.thb, 12));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+}
+
+static void _warlocks_help(FILE *fp)
+{
+    int i;
+    fputs("<style:title>Warlocks</style>\n\n", fp);
+    fputs(get_class_aux(CLASS_WARLOCK, WARLOCK_UNDEAD)->desc, fp);
+    fputs("\n\n", fp);
+
+    for (i = 0; i < WARLOCK_MAX; i++)
+    {
+        class_t *class_ptr = get_class_aux(CLASS_WARLOCK, i);
+
+        fprintf(fp, "<topic:%s><color:o>%s</color>\n", class_ptr->subname, class_ptr->subname);
+        fprintf(fp, "%s\n\n", class_ptr->subdesc);
+        _class_help_table(fp, class_ptr);
+    }
+
+    fputs("<topic:Tables><style:heading>Table 1 - Warlock Statistic Bonus Table</style>\n<style:table>\n", fp);
+    fprintf(fp, "<color:G>%-17.17s</color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n", "");
+    for (i = 0; i < WARLOCK_MAX; i++)
+    {
+        class_t *class_ptr = get_class_aux(CLASS_WARLOCK, i);
+        fprintf(fp, "%-17.17s %+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%\n",
+            class_ptr->subname,
+            class_ptr->stats[A_STR], class_ptr->stats[A_INT], class_ptr->stats[A_WIS],
+            class_ptr->stats[A_DEX], class_ptr->stats[A_CON], class_ptr->stats[A_CHR],
+            class_ptr->life, class_ptr->base_hp, class_ptr->exp
+        );
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills1><style:heading>Table 2 - Warlock Skill Bonus Table I</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
+    for (i = 0; i < WARLOCK_MAX; i++)
+    {
+        class_t *class_ptr = get_class_aux(CLASS_WARLOCK, i);
+        fprintf(fp, "%-17.17s", class_ptr->subname);
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis, 8));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev, 6));
+        fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.sav + 5*class_ptr->extra_skills.sav, 7));
+        fprintf(fp, " %s", _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl), 1));
+        fputc('\n', fp);
+    }
+    fputs("\n</style>\n", fp);
+
+    fputs("<topic:Skills2><style:heading>Table 3 - Warlock Skill Bonus Table II</style>\n<style:table>\n", fp);
+    fprintf(fp, "%-17.17s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Searching", "Perception", "Melee", "Bows");
+    for (i = 0; i < WARLOCK_MAX; i++)
+    {
+        class_t *class_ptr = get_class_aux(CLASS_WARLOCK, i);
         fprintf(fp, "%-17.17s", class_ptr->subname);
         fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.srh + 5*class_ptr->extra_skills.srh, 6));
         fprintf(fp, " %s", _skill_desc(class_ptr->base_skills.fos + 5*class_ptr->extra_skills.fos, 6));
@@ -1411,8 +1473,8 @@ static void _skills_class_help(FILE* fp)
             continue;
         else if (i == CLASS_WEAPONMASTER)
             max_j = WEAPONMASTER_MAX;
-        /*else if (i == CLASS_WARLOCK)
-            max_j = WARLOCK_MAX;*/
+        else if (i == CLASS_WARLOCK)
+            max_j = WARLOCK_MAX;
 
         for (j = 0; j < max_j; j++)
         {
@@ -1599,6 +1661,7 @@ void generate_spoilers(void)
 
     _text_file("Classes.txt", _classes_help);
     _text_file("Weaponmasters.txt", _weaponmasters_help);
+    _text_file("Warlocks.txt", _warlocks_help);
 
     _text_file("Personalities.txt", _personalities_help);
 

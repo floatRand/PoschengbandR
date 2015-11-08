@@ -2924,6 +2924,16 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
             add_flag(o_ptr->art_flags, TR_BLOWS);
     }
 
+    if (o_ptr->name1 == ART_DRAGONLANCE)
+    {
+        if (warlock_is_(WARLOCK_DRAGONS))
+        {
+            add_flag(o_ptr->art_flags, TR_SLAY_EVIL);
+            add_flag(o_ptr->art_flags, TR_SLAY_DEMON);
+            add_flag(o_ptr->art_flags, TR_SLAY_UNDEAD);
+        }
+    }
+
     if (o_ptr->name1 == ART_BLOOD)
     {
         get_bloody_moon_flags(o_ptr);

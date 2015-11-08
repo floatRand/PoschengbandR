@@ -4218,6 +4218,45 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             break;
         }
 
+        case GF_CONTROL_PACT_MONSTER:
+            if (warlock_is_pact_monster(r_ptr))
+            {
+                if (seen) obvious = TRUE;
+
+                /* Attempt a saving throw */
+                if ( (r_ptr->flags1 & RF1_QUESTOR)
+                  || (m_ptr->mflag2 & MFLAG2_NOPET)
+                  || mon_save_p(m_ptr->r_idx, A_CHR)
+                  || ((r_ptr->flags1 & RF1_UNIQUE) && mon_save_p(m_ptr->r_idx, A_CHR)) )
+                {
+                    if (warlock_is_(WARLOCK_HOUNDS))
+                        note = " growls at you in defiance!";
+                    else
+                        note = " resists your control.";
+                    obvious = FALSE;
+                    if (one_in_(4))
+                        m_ptr->mflag2 |= MFLAG2_NOPET;
+                }
+                else if (p_ptr->cursed & TRC_AGGRAVATE)
+                {
+                    note = " finds you very aggravating!";
+                    if (one_in_(4))
+                        m_ptr->mflag2 |= MFLAG2_NOPET;
+                }
+                else
+                {
+                    if (warlock_is_(WARLOCK_HOUNDS))
+                        note = " rolls on its back in submission.";
+                    else
+                        note = " obeys your will.";
+                    set_pet(m_ptr);
+                }
+            }
+
+            /* No "real" damage */
+            dam = 0;
+            break;
+
         /* Tame animal */
         case GF_CONTROL_LIVING:
         {

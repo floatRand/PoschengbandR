@@ -60,35 +60,6 @@ static int adjust_stat(int value, int amount)
     return (value);
 }
 
-/* TODO: These don't belong here ... */
-static cptr pact_desc[MAX_PACTS] = 
-{
-    "Undead are tough creatures, each having survived death at least once. Warlocks who make a pact "
-        "with Undead will find themselves with a slew of additional resistances, along with "
-        "significantly higher hit points and constitution. Eventually, Undead Warlocks attain "
-        "the ability to become partially incorporeal for brief periods at will. Making a pact "
-        "with Undead will reduce damage done to all undead by a substantial amount.",
-    "Dragons are powerful melee combatants, having tough hides and resistances to many common "
-        "elemental types. Warlocks who make a pact with Dragons will find themselves with "
-        "significantly strong melee abilities (both offensive and defensive), extra maximum blows "
-        "in combat, and eventually powerful melee abilities like massacre and stone skin. "
-        "Making a pact with Dragons will reduce damage done to all dragons by a substantial amount.",
-    "Angels are heavenly beings who use a variety of techniques to smite those they view as evil. "
-        "Warlocks who make pacts with Angels will find their saving throws significantly improved, "
-        "and their body immune to bolt-like effects. Eventually Angel Warlocks attain the ability "
-        "to become invulnerable for brief periods at will. Since Angels are strongly aligned with "
-        "the forces of good, making a pact with Angels will reduce damage done to all good monsters "
-        "by a substantial amount.",
-    "Demons are crafty creatures of the netherworld, using whatever means at their disposal to bring "
-        "down their enemies. Warlocks who make pacts with Demons will find their abilities to use "
-        "all magical devices improved, and gain the ability to Recharge these devices at will. "
-        "Eventually, Demon Warlocks attain the ability to crush walls beneath their footsteps. "
-        "Making a pact with Demons will reduce damage done to all demons by a substantial amount.",
-    "Aberrations are the mishmash of demihumanoid races in the world of PosChengband. Warlocks who "
-        "make pacts with Aberrations will gain great skills with shooting and may even create their "
-        "own ammo. At high levels, they gain the power of Dimension Door. Making a pact with Aberrations "
-        "will reduce damage done to all humanoids (h) and people (p) by a substantial amount.",
-};
 cptr realm_jouhou[VALID_REALM] =
 {
 "Life magic is very good for healing; it relies mostly on healing, protection and detection spells. Also life magic have a few attack spells as well. It said that some high level spell of life magic can disintegrate Undead monsters into ash.",
@@ -725,10 +696,11 @@ static void _class_menu_fn(int cmd, int which, vptr cookie, variant *res)
 
 static void _warlock_menu_fn(int cmd, int which, vptr cookie, variant *res)
 {
+    class_t *class_ptr = get_class_aux(CLASS_WARLOCK, which);
     switch (cmd)
     {
     case MENU_TEXT:
-        var_set_string(res, pact_info[which].title);
+        var_set_string(res, class_ptr->subname);
         break;
     }
 }
@@ -895,14 +867,15 @@ static int _prompt_class(void)
                     {
                     menu_t menu3 = { "Pact", "Warlocks.txt", "Its time to make your pact.",
                                         _warlock_menu_fn, 
-                                        NULL, MAX_PACTS};
+                                        NULL, WARLOCK_MAX};
                         c_put_str(TERM_WHITE, "              ", 7, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubclass);
                         if (idx == _BIRTH_ESCAPE) break;
                         if (idx < 0) return idx;
                         p_ptr->psubclass = idx;
-                        c_put_str(TERM_L_BLUE, format("%-14s", pact_info[p_ptr->psubclass].title), 7, 14);
-                        if (!_confirm_choice(pact_desc[p_ptr->psubclass], menu3.count)) continue;
+                        class_ptr = get_class();
+                        c_put_str(TERM_L_BLUE, format("%-14s", class_ptr->subname), 7, 14);
+                        if (!_confirm_choice(class_ptr->subdesc, menu3.count)) continue;
                         idx = _prompt_personality();
                         if (idx == _BIRTH_ESCAPE) continue;
                         return idx;

@@ -1008,41 +1008,41 @@ Mind
     Experience   125%
     
   Warlock
-  A Warlock, unlike typical mages, derives his powers from pacts with 
-  arcane creatures, rather than through careful study. Warlocks possess 
-  the unique offensive power of the Eldritch Blast, and they use this 
-  without paying any sort of mana or hitpoint costs (though they still 
-  have fail rates). The Warlock's primary spell stat is Charisma, and 
-  this directly influences the damage of their Eldritch Blast.
+  A Warlock is a magical class but, unlike normal spellcasters, they 
+  derive their powers, stats, skills and bonuses by making a pact with 
+  a given class of monsters. This pact is irrevocable and is made at 
+  the outset of the Warlock's career. Depending on the class of 
+  monsters with whom they ally, the warlock will gain unique bonuses, 
+  abilities and magical powers. For example, alliance with the forces 
+  of the netherworld grants resistances to poison and nether, enhanced 
+  constitution and spells to control and conjure the unliving as well 
+  as spells to access the damaging forces of the netherworld directly. 
+  Each such alliance has thematic bonuses and powers, and you can read 
+  the details in the respective help sections. On final comment: 
+  allying with a given class of monsters dramatically reduces the 
+  warlock's ability to fight these foes. Instead, the warlock seeks 
+  cooperation with their brethren, or, perhaps, domination over them. 
+  But direct assaults are rarely successful.
    
-  Each Warlock makes a pact with a single type of creature: Undead, 
-  Dragons, Angels, Demons or Aberrations. This pact confers both 
-  advantages and disadvantages. For one thing, Warlocks are very 
-  ineffective when fighting monsters with whom they have formed an 
-  alliance. Every form of damage is actually reduced by a substantial 
-  amount, and this makes killing pact monsters extremely difficult. 
-  Probably, the Warlock should avoid fighting these monsters 
-  altogether. Indeed, at high levels pact monsters are often friendly 
-  to the warlock, but some fights cannot be avoided it seems. That's 
-  the bad news. The good news is that each pact confers unique 
-  abilities and powers to the warlock. These benefits reflect the 
-  nature of the pact monster. For example, a pact with Undead confers 
-  resistance to Poison and Nether as well as Hold Life, among other 
-  things. A pact with Dragons confers the power to resist the elements 
-  as well as strong melee (Warlocks are generally poor fighters 
-  otherwise). In addition, each pact gives a unique high level 
-  offensive power when using their Eldritch Blast.
+  In addition to pact related spells, all warlocks gain access to the 
+  unique power of the Eldritch Blast. Their primary spell stat is 
+  Charisma since they seek dominion and alliance with their chosen kin, 
+  and these monsters tend to have a strong will of their own, resisting 
+  the binding forces which the warlock imposes to gain both mastery and 
+  power.
+  
+  See [e] for more details on warlock pacts.
   
     Stats                   Skills
-    Strength      -2        Disarming   Excellent    
-    Intelligence  +1        Device      Superb       
-    Wisdom        +2        Save        Superb       
-    Dexterity     -1        Stealth     Fair         
-    Constitution  -2        Searching   Poor         
+    Strength      -1        Disarming   Excellent    
+    Intelligence  +2        Device      Legendary[5] 
+    Wisdom        -3        Save        Heroic       
+    Dexterity     +0        Stealth     Superb       
+    Constitution  +2        Searching   Poor         
     Charisma      +4        Perception  Fair         
-    Life Rating  100%       Melee       Excellent    
-    Base HP        4        Bows        Good         
-    Experience   125%
+    Life Rating  107%       Melee       Superb       
+    Base HP       15        Bows        Excellent    
+    Experience   135%
     
   
 Other
@@ -1232,7 +1232,7 @@ Mindcrafter    -1   +0   +3   -1   -1   +2  100%   +4  125%
 Mirror-Master  -2   +3   +1   -1   -2   -2  100%   +4  130%
 Psion          -1   +2   +2   -1   -1   +2  100%   +4  150%
 Time-Lord      -1   +0   +3   -1   -1   +0   96%   +0  125%
-Warlock        -2   +1   +2   -1   -2   +4  100%   +4  125%
+Warlock        -1   +2   -3   +0   +2   +4  107%  +15  135%
 Archaeologist  -1   +1   +2   +1   -1   +0  106%   +8  120%
 Bard           -2   +1   +2   -1   -2   +4  100%   +4  140%
 Imitator       +0   +1   -1   +2   +0   -1  108%  +10  110%
@@ -1281,7 +1281,7 @@ Mindcrafter   Superb        Heroic        Superb        Superb
 Mirror-Master Superb        Heroic        Heroic        Superb       
 Psion         Excellent     Heroic        Heroic        Very Good    
 Time-Lord     Excellent     Heroic        Superb        Very Good    
-Warlock       Excellent     Superb        Superb        Fair         
+Warlock       Excellent     Legendary[5]  Heroic        Superb       
 Archaeologist Heroic        Heroic        Superb        Superb       
 Bard          Excellent     Heroic        Superb        Very Bad     
 Imitator      Excellent     Superb        Superb        Very Good    
@@ -1330,7 +1330,7 @@ Mindcrafter   Fair          Poor          Superb        Superb
 Mirror-Master Poor          Poor          Good          Very Good    
 Psion         Poor          Bad           Superb        Excellent    
 Time-Lord     Poor          Bad           Superb        Excellent    
-Warlock       Poor          Fair          Excellent     Good         
+Warlock       Poor          Fair          Superb        Excellent    
 Archaeologist Excellent     Good          Superb        Excellent    
 Bard          Poor          Fair          Excellent     Good         
 Imitator      Fair          Poor          Superb        Superb       

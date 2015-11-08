@@ -2076,6 +2076,31 @@ void frost_bolt_spell(int cmd, variant *res)
     }
 }
 
+void genocide_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Genocide");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Eliminates an entire class of monster, exhausting you. Powerful or unique monsters may resist.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_power(spell_power(p_ptr->lev*3)));
+        break;
+    case SPELL_CAST:
+    {
+        int power = spell_power(p_ptr->lev*3);
+        var_set_bool(res, symbol_genocide(power, TRUE));
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 void glyph_of_warding_spell(int cmd, variant *res)
 {
     switch (cmd)

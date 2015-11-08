@@ -1430,7 +1430,7 @@ static cptr _do_scroll(int sval, int mode)
         if (desc) return "It eliminates an entire class of monster, exhausting you. Powerful or unique monsters may resist.";
         if (cast)
         {
-            symbol_genocide(_scroll_power(300), TRUE);
+            if (!symbol_genocide(_scroll_power(300), TRUE)) return NULL;
             device_noticed = TRUE;
         }
         break;
@@ -3243,7 +3243,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_DARK);
         if (cast)
         {
-            symbol_genocide(_BOOST(power), TRUE);
+            if (!symbol_genocide(_BOOST(power), TRUE)) return NULL;
             device_noticed = TRUE;
         }
         break;
@@ -6122,9 +6122,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
                 msg_print("You need to be mounted in order to charge.");
                 return NULL;
             }
-            p_ptr->weapon_info[0].to_d += 2;
             charged = rush_attack(7, NULL);
-            p_ptr->weapon_info[0].to_d -= 2;
             if (!charged) return NULL;
         }
         break;

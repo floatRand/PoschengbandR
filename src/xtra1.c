@@ -2934,7 +2934,6 @@ static void calc_mana(void)
         return;
     }
     if ( (caster_ptr->options & CASTER_USE_HP) 
-      || (caster_ptr->options & CASTER_NO_SPELL_COST) 
       || p_ptr->lev < caster_ptr->min_level)
     {
         p_ptr->msp = 0;
@@ -3095,7 +3094,7 @@ int py_prorata_level_aux(int amt, int w1, int w2, int w3)
    It's probably best to have all this in one place. See also the hp.ods design doc. */
 static int _calc_xtra_hp(int amt)
 {
-    int w1 = 0, w2 = 0, w3 = 0;
+    int w1 = 1, w2 = 1, w3 = 1;
     int class_idx = get_class_idx();
 
     switch (class_idx)
@@ -3130,7 +3129,6 @@ static int _calc_xtra_hp(int amt)
     case CLASS_MIRROR_MASTER:
     case CLASS_TIME_LORD:
     case CLASS_BLOOD_MAGE:
-    case CLASS_WARLOCK:
     case CLASS_NECROMANCER:
         w1 = 0; w2 = 1; w3 = 1;
         break;
@@ -3141,8 +3139,28 @@ static int _calc_xtra_hp(int amt)
         w1 = 0; w2 = 0; w3 = 1;
         break;
 
-    default:
-        w1 = 1; w2 = 1; w3 = 1;
+    case CLASS_WARLOCK:
+        switch (p_ptr->psubclass)
+        {
+        case WARLOCK_GIANTS:
+            w1 = 1; w2 = 0; w3 = 0;
+            break;
+        case WARLOCK_DEMONS:
+        case WARLOCK_UNDEAD:
+            w1 = 2; w2 = 1; w3 = 0;
+            break;
+        case WARLOCK_DRAGONS:
+        case WARLOCK_HOUNDS:
+            w1 = 1; w2 = 1; w3 = 0;
+            break;
+        case WARLOCK_ANGELS:
+            w1 = 1; w2 = 1; w3 = 1;
+            break;
+        case WARLOCK_SPIDERS:
+            w1 = 0; w2 = 1; w3 = 1;
+            break;
+        }
+        break;
     }
 
     return py_prorata_level_aux(amt, w1, w2, w3);
@@ -3182,7 +3200,6 @@ static void calc_hitpoints(void)
     if (IS_HERO()) mhp += 10;
     if (IS_SHERO() && (p_ptr->pclass != CLASS_BERSERKER)) mhp += 30;
     if (p_ptr->tsuyoshi) mhp += 50;
-    if (p_ptr->pclass == CLASS_WARLOCK && p_ptr->psubclass == PACT_UNDEAD) mhp += 100 * p_ptr->lev/50;
     if (hex_spelling(HEX_XTRA_MIGHT)) mhp += 15;
     if (hex_spelling(HEX_BUILDING)) mhp += 60;
     if (p_ptr->tim_building_up) mhp += 10 + p_ptr->lev/2;
@@ -4396,17 +4413,6 @@ void calc_bonuses(void)
         if (class_ptr != NULL && class_ptr->calc_shooter_bonuses != NULL)
             class_ptr->calc_shooter_bonuses(o_ptr, &p_ptr->shooter_info);
 
-        /* TODO: Convert old code to use class_ptr->calc_shooter_bonuses() */
-        if (!p_ptr->shooter_info.heavy_shoot)
-        {
-            if (p_ptr->pclass == CLASS_WARLOCK &&
-                p_ptr->psubclass == PACT_ABERRATION &&
-                p_ptr->shooter_info.tval_ammo <= TV_BOLT &&
-                p_ptr->shooter_info.tval_ammo >= TV_SHOT)
-            {
-                p_ptr->shooter_info.num_fire += (p_ptr->lev * 2);
-            }
-        }
         if (p_ptr->shooter_info.num_fire < 0) p_ptr->shooter_info.num_fire = 0;
     }
 

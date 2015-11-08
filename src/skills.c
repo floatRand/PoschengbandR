@@ -184,6 +184,14 @@ int skills_weapon_max(int tval, int sval)
     if (mut_present(MUT_WEAPON_SKILLS))
         return WEAPON_EXP_MASTER;
 
+    /* Dragon Warlocks are Dragon Riders! */
+    if ( warlock_is_(WARLOCK_DRAGONS)
+      && tval == TV_POLEARM
+      && (sval == SV_LANCE || sval == SV_HEAVY_LANCE) )
+    {
+        return WEAPON_EXP_MASTER;
+    }
+
     /* Hack: In case somebody calls this instead of skills_bow_max() */
     if (tval == TV_BOW && demigod_is_(DEMIGOD_ARTEMIS))
         return WEAPON_EXP_MASTER;
@@ -411,6 +419,9 @@ int skills_riding_current(void)
 
 int skills_riding_max(void)
 {
+    /* Dragon Warlocks are Dragon Riders! */
+    if (warlock_is_(WARLOCK_DRAGONS))
+        return 7000;
     return s_info[_class_idx()].s_max[SKILL_RIDING];
 }
 
