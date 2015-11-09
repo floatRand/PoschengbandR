@@ -39,7 +39,7 @@ Melee
     Dexterity     +4        Stealth     Very Bad     
     Constitution  +4        Searching   Very Bad     
     Charisma      +4        Perception  Very Bad     
-    Life Rating  200%       Melee       Legendary[32]
+    Life Rating  200%       Melee       Legendary[20]
     Base HP       22        Bows        Very Bad     
     Experience   160%
     
@@ -64,14 +64,14 @@ Melee
   walk the red path.
   
     Stats                   Skills
-    Strength      +2        Disarming   Superb       
-    Intelligence  -2        Device      Excellent    
-    Wisdom        -2        Save        Superb       
+    Strength      +2        Disarming   Good         
+    Intelligence  -2        Device      Bad          
+    Wisdom        -2        Save        Fair         
     Dexterity     +0        Stealth     Very Good    
     Constitution  +3        Searching   Poor         
     Charisma      +2        Perception  Bad          
-    Life Rating  120%       Melee       Heroic       
-    Base HP       20        Bows        Excellent    
+    Life Rating  120%       Melee       Superb       
+    Base HP       20        Bows        Poor         
     Experience   150%
     
   Duelist
@@ -99,14 +99,14 @@ Melee
   techniques the duelist relies on dexterity.
   
     Stats                   Skills
-    Strength      +2        Disarming   Superb       
-    Intelligence  +1        Device      Heroic       
-    Wisdom        -2        Save        Superb       
+    Strength      +2        Disarming   Good         
+    Intelligence  +1        Device      Very Good    
+    Wisdom        -2        Save        Bad          
     Dexterity     +2        Stealth     Superb       
     Constitution  -3        Searching   Fair         
     Charisma      +2        Perception  Poor         
-    Life Rating  100%       Melee       Superb       
-    Base HP        4        Bows        Bad          
+    Life Rating  100%       Melee       Fair         
+    Base HP        4        Bows        Very Bad     
     Experience   150%
     
   Mauler
@@ -119,14 +119,14 @@ Melee
   function properly.
   
     Stats                   Skills
-    Strength      +5        Disarming   Superb       
-    Intelligence  -2        Device      Superb       
-    Wisdom        -2        Save        Superb       
+    Strength      +5        Disarming   Good         
+    Intelligence  -2        Device      Good         
+    Wisdom        -2        Save        Very Good    
     Dexterity     -1        Stealth     Bad          
     Constitution  +3        Searching   Poor         
     Charisma      +2        Perception  Bad          
-    Life Rating  111%       Melee       Legendary[2] 
-    Base HP       18        Bows        Fair         
+    Life Rating  111%       Melee       Superb       
+    Base HP       18        Bows        Very Bad     
     Experience   120%
     
   Rune-Knight
@@ -141,14 +141,14 @@ Melee
   unique Rune spells.
   
     Stats                   Skills
-    Strength      +2        Disarming   Excellent    
-    Intelligence  +2        Device      Heroic       
-    Wisdom        +0        Save        Superb       
+    Strength      +2        Disarming   Fair         
+    Intelligence  +2        Device      Good         
+    Wisdom        +0        Save        Fair         
     Dexterity     +1        Stealth     Very Good    
     Constitution  +0        Searching   Fair         
     Charisma      +1        Perception  Poor         
-    Life Rating  107%       Melee       Superb       
-    Base HP        6        Bows        Very Good    
+    Life Rating  107%       Melee       Fair         
+    Base HP        6        Bows        Bad          
     Experience   150%
     
   Samurai
@@ -172,14 +172,14 @@ Melee
   posture in different situations.
   
     Stats                   Skills
-    Strength      +3        Disarming   Superb       
-    Intelligence  -2        Device      Excellent    
-    Wisdom        +1        Save        Superb       
+    Strength      +3        Disarming   Good         
+    Intelligence  -2        Device      Bad          
+    Wisdom        +1        Save        Fair         
     Dexterity     +2        Stealth     Very Good    
     Constitution  +1        Searching   Poor         
     Charisma      +1        Perception  Bad          
-    Life Rating  111%       Melee       Heroic       
-    Base HP       12        Bows        Superb       
+    Life Rating  111%       Melee       Superb       
+    Base HP       12        Bows        Good         
     Experience   130%
     
   Warrior
@@ -194,14 +194,14 @@ Melee
   in six random directions.
   
     Stats                   Skills
-    Strength      +4        Disarming   Superb       
-    Intelligence  -2        Device      Excellent    
-    Wisdom        -2        Save        Superb       
+    Strength      +4        Disarming   Good         
+    Intelligence  -2        Device      Bad          
+    Wisdom        -2        Save        Fair         
     Dexterity     +2        Stealth     Fair         
     Constitution  +2        Searching   Poor         
     Charisma      +1        Perception  Bad          
-    Life Rating  115%       Melee       Legendary[2] 
-    Base HP       18        Bows        Heroic       
+    Life Rating  115%       Melee       Superb       
+    Base HP       18        Bows        Superb       
     Experience   100%
     
   Weaponmaster
@@ -213,14 +213,14 @@ Melee
   See [d] for more details on weaponmasters.
   
     Stats                   Skills
-    Strength      +4        Disarming   Excellent    
-    Intelligence  -3        Device      Superb       
-    Wisdom        -2        Save        Superb       
+    Strength      +4        Disarming   Fair         
+    Intelligence  -3        Device      Bad          
+    Wisdom        -2        Save        Fair         
     Dexterity     -1        Stealth     Fair         
     Constitution  +2        Searching   Poor         
     Charisma      +1        Perception  Bad          
-    Life Rating  109%       Melee       Legendary[2] 
-    Base HP       12        Bows        Very Good    
+    Life Rating  109%       Melee       Superb       
+    Base HP       12        Bows        Bad          
     Experience   135%
     
   Weaponsmith
@@ -239,14 +239,14 @@ Melee
   which allows them to identify (later *identify*) weapons and armor.
   
     Stats                   Skills
-    Strength      +3        Disarming   Superb       
-    Intelligence  -1        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +3        Disarming   Good         
+    Intelligence  -1        Device      Fair         
+    Wisdom        -1        Save        Poor         
     Dexterity     +1        Stealth     Fair         
     Constitution  +0        Searching   Fair         
     Charisma      +0        Perception  Bad          
-    Life Rating  111%       Melee       Superb       
-    Base HP       12        Bows        Superb       
+    Life Rating  111%       Melee       Excellent    
+    Base HP       12        Bows        Good         
     Experience   130%
     
   
@@ -262,14 +262,14 @@ Archery
   shots from pile of rubble, and arrows and crossbow bolts from bones.
   
     Stats                   Skills
-    Strength      +2        Disarming   Superb       
-    Intelligence  -1        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +2        Disarming   Excellent    
+    Intelligence  -1        Device      Fair         
+    Wisdom        -1        Save        Fair         
     Dexterity     +2        Stealth     Superb       
     Constitution  +1        Searching   Fair         
     Charisma      +0        Perception  Poor         
-    Life Rating  111%       Melee       Superb       
-    Base HP       12        Bows        Legendary[10]
+    Life Rating  111%       Melee       Very Good    
+    Base HP       12        Bows        Heroic       
     Experience   110%
     
   Sniper
@@ -286,14 +286,14 @@ Archery
   They have no time for magic.
   
     Stats                   Skills
-    Strength      +2        Disarming   Superb       
-    Intelligence  -1        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +2        Disarming   Good         
+    Intelligence  -1        Device      Fair         
+    Wisdom        -1        Save        Poor         
     Dexterity     +2        Stealth     Heroic       
     Constitution  +1        Searching   Good         
     Charisma      +0        Perception  Fair         
-    Life Rating  100%       Melee       Excellent    
-    Base HP        4        Bows        Heroic       
+    Life Rating  100%       Melee       Poor         
+    Base HP        4        Bows        Superb       
     Experience   110%
     
   
@@ -318,14 +318,14 @@ Martial Arts
   'Clear Mind' - which allows them to rapidly regenerate their mana.
   
     Stats                   Skills
-    Strength      +0        Disarming   Superb       
-    Intelligence  -1        Device      Heroic       
-    Wisdom        +3        Save        Superb       
+    Strength      +0        Disarming   Good         
+    Intelligence  -1        Device      Very Good    
+    Wisdom        +3        Save        Good         
     Dexterity     +2        Stealth     Superb       
     Constitution  +1        Searching   Good         
     Charisma      +0        Perception  Fair         
-    Life Rating  100%       Melee       Superb       
-    Base HP        4        Bows        Superb       
+    Life Rating  100%       Melee       Fair         
+    Base HP        4        Bows        Fair         
     Experience   135%
     
   Monk
@@ -347,14 +347,14 @@ Martial Arts
   and use powerful combinations of attacks for the finishing blow.
   
     Stats                   Skills
-    Strength      +2        Disarming   Heroic       
-    Intelligence  -1        Device      Heroic       
-    Wisdom        +1        Save        Superb       
+    Strength      +2        Disarming   Superb       
+    Intelligence  -1        Device      Very Good    
+    Wisdom        +1        Save        Fair         
     Dexterity     +3        Stealth     Heroic       
     Constitution  +2        Searching   Good         
     Charisma      +1        Perception  Fair         
-    Life Rating  110%       Melee       Superb       
-    Base HP       12        Bows        Superb       
+    Life Rating  110%       Melee       Excellent    
+    Base HP       12        Bows        Excellent    
     Experience   130%
     
   Mystic
@@ -373,14 +373,14 @@ Martial Arts
   this knowledge with novices.
   
     Stats                   Skills
-    Strength      +2        Disarming   Heroic       
-    Intelligence  -1        Device      Heroic       
-    Wisdom        -2        Save        Superb       
+    Strength      +2        Disarming   Superb       
+    Intelligence  -1        Device      Very Good    
+    Wisdom        -2        Save        Fair         
     Dexterity     +3        Stealth     Heroic       
     Constitution  +1        Searching   Good         
     Charisma      +2        Perception  Fair         
-    Life Rating  100%       Melee       Superb       
-    Base HP        4        Bows        Superb       
+    Life Rating  100%       Melee       Excellent    
+    Base HP        4        Bows        Excellent    
     Experience   130%
     
   
@@ -396,14 +396,14 @@ Magic
   is sacred.
   
     Stats                   Skills
-    Strength      -4        Disarming   Excellent    
-    Intelligence  +3        Device      Legendary[5] 
-    Wisdom        -2        Save        Superb       
+    Strength      -4        Disarming   Fair         
+    Intelligence  +3        Device      Superb       
+    Wisdom        -2        Save        Good         
     Dexterity     +1        Stealth     Superb       
     Constitution  +2        Searching   Poor         
     Charisma      -2        Perception  Fair         
-    Life Rating  108%       Melee       Good         
-    Base HP       10        Bows        Fair         
+    Life Rating  108%       Melee       Very Bad     
+    Base HP       10        Bows        Very Bad     
     Experience   135%
     
   Blue-Mage
@@ -423,14 +423,14 @@ Magic
   itself.
   
     Stats                   Skills
-    Strength      -4        Disarming   Excellent    
-    Intelligence  +4        Device      Legendary[5] 
-    Wisdom        -1        Save        Superb       
+    Strength      -4        Disarming   Fair         
+    Intelligence  +4        Device      Superb       
+    Wisdom        -1        Save        Good         
     Dexterity     +1        Stealth     Superb       
     Constitution  -2        Searching   Fair         
     Charisma      -2        Perception  Poor         
-    Life Rating  100%       Melee       Good         
-    Base HP        4        Bows        Good         
+    Life Rating  100%       Melee       Bad          
+    Base HP        4        Bows        Bad          
     Experience   130%
     
   High-Mage
@@ -448,14 +448,14 @@ Magic
   And then, only High-Mages are able to cast Hex spells.
   
     Stats                   Skills
-    Strength      -4        Disarming   Excellent    
-    Intelligence  +4        Device      Legendary[5] 
-    Wisdom        +0        Save        Superb       
+    Strength      -4        Disarming   Fair         
+    Intelligence  +4        Device      Superb       
+    Wisdom        +0        Save        Good         
     Dexterity     +0        Stealth     Superb       
     Constitution  -2        Searching   Poor         
     Charisma      -2        Perception  Fair         
-    Life Rating   94%       Melee       Good         
-    Base HP        0        Bows        Fair         
+    Life Rating   94%       Melee       Very Bad     
+    Base HP        0        Bows        Very Bad     
     Experience   130%
     
   Mage
@@ -477,14 +477,14 @@ Magic
   power - 'Eat Magic' - which absorbs mana from wands, staves or rods.
   
     Stats                   Skills
-    Strength      -4        Disarming   Excellent    
-    Intelligence  +3        Device      Legendary[5] 
-    Wisdom        +0        Save        Superb       
+    Strength      -4        Disarming   Fair         
+    Intelligence  +3        Device      Superb       
+    Wisdom        +0        Save        Good         
     Dexterity     +1        Stealth     Superb       
     Constitution  -2        Searching   Poor         
     Charisma      -2        Perception  Fair         
-    Life Rating   95%       Melee       Good         
-    Base HP        0        Bows        Fair         
+    Life Rating   95%       Melee       Very Bad     
+    Base HP        0        Bows        Very Bad     
     Experience   130%
     
   Necromancer
@@ -500,14 +500,14 @@ Magic
   of Vecna in order to complete their power.
   
     Stats                   Skills
-    Strength      -2        Disarming   Excellent    
-    Intelligence  +3        Device      Legendary[5] 
-    Wisdom        -4        Save        Superb       
+    Strength      -2        Disarming   Fair         
+    Intelligence  +3        Device      Superb       
+    Wisdom        -4        Save        Good         
     Dexterity     +1        Stealth     Superb       
     Constitution  -1        Searching   Poor         
     Charisma      -2        Perception  Fair         
-    Life Rating   95%       Melee       Good         
-    Base HP        2        Bows        Fair         
+    Life Rating   95%       Melee       Very Bad     
+    Base HP        2        Bows        Very Bad     
     Experience   125%
     
   Sorcerer
@@ -522,14 +522,14 @@ Magic
   or rods.
   
     Stats                   Skills
-    Strength      -5        Disarming   Excellent    
-    Intelligence  +0        Device      Legendary[15]
-    Wisdom        -2        Save        Legendary[7] 
+    Strength      -5        Disarming   Fair         
+    Intelligence  +0        Device      Heroic       
+    Wisdom        -2        Save        Heroic       
     Dexterity     +2        Stealth     Very Good    
     Constitution  +0        Searching   Poor         
     Charisma      +6        Perception  Fair         
-    Life Rating   65%       Melee       Bad          
-    Base HP        0        Bows        Bad          
+    Life Rating   65%       Melee       Very Bad     
+    Base HP        0        Bows        Very Bad     
     Experience   160%
     
   
@@ -558,14 +558,14 @@ Devices
   effect, but may destroy the device in the process.
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  +2        Device      Legendary[7] 
-    Wisdom        +1        Save        Superb       
+    Strength      -1        Disarming   Poor         
+    Intelligence  +2        Device      Superb       
+    Wisdom        +1        Save        Fair         
     Dexterity     +2        Stealth     Very Good    
     Constitution  -2        Searching   Fair         
     Charisma      -2        Perception  Poor         
-    Life Rating  101%       Melee       Superb       
-    Base HP        6        Bows        Excellent    
+    Life Rating  101%       Melee       Fair         
+    Base HP        6        Bows        Poor         
     Experience   130%
     
   Magic-Eater
@@ -584,14 +584,14 @@ Devices
   their absorbed magic.
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  +2        Device      Legendary[7] 
-    Wisdom        +1        Save        Superb       
+    Strength      -1        Disarming   Poor         
+    Intelligence  +2        Device      Superb       
+    Wisdom        +1        Save        Fair         
     Dexterity     +2        Stealth     Very Good    
     Constitution  -2        Searching   Fair         
     Charisma      -2        Perception  Poor         
-    Life Rating  103%       Melee       Superb       
-    Base HP        6        Bows        Excellent    
+    Life Rating  103%       Melee       Fair         
+    Base HP        6        Bows        Poor         
     Experience   130%
     
   
@@ -620,14 +620,14 @@ Prayer
   banish all monsters in sight.
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  -3        Device      Heroic       
-    Wisdom        +3        Save        Heroic       
+    Strength      -1        Disarming   Poor         
+    Intelligence  -3        Device      Very Good    
+    Wisdom        +3        Save        Excellent    
     Dexterity     -1        Stealth     Very Good    
     Constitution  +0        Searching   Poor         
     Charisma      +2        Perception  Bad          
-    Life Rating  100%       Melee       Superb       
-    Base HP        4        Bows        Excellent    
+    Life Rating  100%       Melee       Fair         
+    Base HP        4        Bows        Poor         
     Experience   120%
     
   
@@ -648,14 +648,14 @@ Stealth
   - 'Quick Walk' - which makes their walking speed extremely fast.
   
     Stats                   Skills
-    Strength      +0        Disarming   Heroic       
-    Intelligence  -1        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +0        Disarming   Superb       
+    Intelligence  -1        Device      Fair         
+    Wisdom        -1        Save        Fair         
     Dexterity     +3        Stealth     Legendary[17]
     Constitution  +2        Searching   Excellent    
     Charisma      +2        Perception  Good         
-    Life Rating  100%       Melee       Heroic       
-    Base HP        4        Bows        Superb       
+    Life Rating  100%       Melee       Superb       
+    Base HP        4        Bows        Excellent    
     Experience   120%
     
   Rogue
@@ -678,14 +678,14 @@ Stealth
   pricing from that shop.
   
     Stats                   Skills
-    Strength      +2        Disarming   Heroic       
-    Intelligence  +1        Device      Heroic       
-    Wisdom        -1        Save        Superb       
+    Strength      +2        Disarming   Superb       
+    Intelligence  +1        Device      Excellent    
+    Wisdom        -1        Save        Fair         
     Dexterity     +3        Stealth     Heroic       
     Constitution  +1        Searching   Good         
     Charisma      +1        Perception  Fair         
-    Life Rating  110%       Melee       Superb       
-    Base HP       12        Bows        Superb       
+    Life Rating  110%       Melee       Excellent    
+    Base HP       12        Bows        Excellent    
     Experience   125%
     
   Scout
@@ -698,14 +698,14 @@ Stealth
   abilities.
   
     Stats                   Skills
-    Strength      +1        Disarming   Superb       
-    Intelligence  -1        Device      Heroic       
-    Wisdom        +2        Save        Superb       
+    Strength      +1        Disarming   Excellent    
+    Intelligence  -1        Device      Very Good    
+    Wisdom        +2        Save        Fair         
     Dexterity     +3        Stealth     Legendary[2] 
     Constitution  +0        Searching   Excellent    
     Charisma      +0        Perception  Fair         
-    Life Rating  104%       Melee       Superb       
-    Base HP        8        Bows        Superb       
+    Life Rating  104%       Melee       Very Good    
+    Base HP        8        Bows        Excellent    
     Experience   130%
     
   
@@ -727,14 +727,14 @@ Hybrid
   and scares all monsters in sight.
   
     Stats                   Skills
-    Strength      +2        Disarming   Very Good    
-    Intelligence  +1        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +2        Disarming   Bad          
+    Intelligence  +1        Device      Good         
+    Wisdom        -1        Save        Fair         
     Dexterity     +0        Stealth     Fair         
     Constitution  +2        Searching   Poor         
     Charisma      +1        Perception  Poor         
-    Life Rating  111%       Melee       Superb       
-    Base HP       12        Bows        Superb       
+    Life Rating  111%       Melee       Excellent    
+    Base HP       12        Bows        Good         
     Experience   125%
     
   Paladin
@@ -756,14 +756,14 @@ Hybrid
   class power - 'Holy Lance' or 'Hell Lance'.
   
     Stats                   Skills
-    Strength      +3        Disarming   Very Good    
-    Intelligence  -3        Device      Superb       
-    Wisdom        +1        Save        Superb       
+    Strength      +3        Disarming   Bad          
+    Intelligence  -3        Device      Fair         
+    Wisdom        +1        Save        Fair         
     Dexterity     +0        Stealth     Fair         
     Constitution  +2        Searching   Poor         
     Charisma      +2        Perception  Bad          
-    Life Rating  111%       Melee       Heroic       
-    Base HP       12        Bows        Superb       
+    Life Rating  111%       Melee       Excellent    
+    Base HP       12        Bows        Good         
     Experience   135%
     
   Ranger
@@ -783,14 +783,14 @@ Hybrid
   to know a monster's HP, speed, and experience required to evolve.
   
     Stats                   Skills
-    Strength      +2        Disarming   Excellent    
-    Intelligence  +0        Device      Heroic       
-    Wisdom        +2        Save        Superb       
+    Strength      +2        Disarming   Fair         
+    Intelligence  +0        Device      Excellent    
+    Wisdom        +2        Save        Fair         
     Dexterity     +1        Stealth     Superb       
     Constitution  +1        Searching   Fair         
     Charisma      +0        Perception  Poor         
-    Life Rating  106%       Melee       Superb       
-    Base HP        8        Bows        Heroic       
+    Life Rating  106%       Melee       Very Good    
+    Base HP        8        Bows        Superb       
     Experience   140%
     
   Red-Mage
@@ -811,14 +811,14 @@ Hybrid
   which allows them to cast two spells at once.
   
     Stats                   Skills
-    Strength      +2        Disarming   Very Good    
-    Intelligence  +2        Device      Heroic       
-    Wisdom        -1        Save        Superb       
+    Strength      +2        Disarming   Bad          
+    Intelligence  +2        Device      Very Good    
+    Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Fair         
     Constitution  +0        Searching   Poor         
     Charisma      -1        Perception  Bad          
-    Life Rating  106%       Melee       Superb       
-    Base HP        8        Bows        Very Good    
+    Life Rating  106%       Melee       Very Good    
+    Base HP        8        Bows        Bad          
     Experience   140%
     
   Warrior-Mage
@@ -838,14 +838,14 @@ Hybrid
   mana or gain mana using HP.
   
     Stats                   Skills
-    Strength      +2        Disarming   Excellent    
-    Intelligence  +2        Device      Heroic       
-    Wisdom        +0        Save        Superb       
+    Strength      +2        Disarming   Fair         
+    Intelligence  +2        Device      Good         
+    Wisdom        +0        Save        Fair         
     Dexterity     +1        Stealth     Very Good    
     Constitution  +0        Searching   Fair         
     Charisma      +1        Perception  Poor         
-    Life Rating  106%       Melee       Superb       
-    Base HP        8        Bows        Very Good    
+    Life Rating  106%       Melee       Fair         
+    Base HP        8        Bows        Bad          
     Experience   140%
     
   
@@ -865,14 +865,14 @@ Riding
   powers - 'Dominate a Living Thing' and 'Dominate Living Things'.
   
     Stats                   Skills
-    Strength      +1        Disarming   Very Good    
-    Intelligence  -1        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +1        Disarming   Bad          
+    Intelligence  -1        Device      Fair         
+    Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Very Good    
     Constitution  +0        Searching   Fair         
     Charisma      +2        Perception  Poor         
-    Life Rating  103%       Melee       Superb       
-    Base HP        6        Bows        Heroic       
+    Life Rating  103%       Melee       Fair         
+    Base HP        6        Bows        Superb       
     Experience   120%
     
   Cavalry
@@ -887,14 +887,14 @@ Riding
   allows them to forcibly saddle and tame wild monsters.
   
     Stats                   Skills
-    Strength      +2        Disarming   Excellent    
-    Intelligence  -2        Device      Excellent    
-    Wisdom        -2        Save        Superb       
+    Strength      +2        Disarming   Fair         
+    Intelligence  -2        Device      Bad          
+    Wisdom        -2        Save        Fair         
     Dexterity     +2        Stealth     Fair         
     Constitution  +2        Searching   Poor         
     Charisma      +1        Perception  Bad          
-    Life Rating  111%       Melee       Heroic       
-    Base HP       10        Bows        Heroic       
+    Life Rating  111%       Melee       Excellent    
+    Base HP       10        Bows        Superb       
     Experience   120%
     
   
@@ -914,14 +914,14 @@ Mind
   them to rapidly regenerate their mana.
   
     Stats                   Skills
-    Strength      -1        Disarming   Superb       
-    Intelligence  +0        Device      Heroic       
-    Wisdom        +3        Save        Superb       
+    Strength      -1        Disarming   Good         
+    Intelligence  +0        Device      Very Good    
+    Wisdom        +3        Save        Fair         
     Dexterity     -1        Stealth     Superb       
     Constitution  -1        Searching   Fair         
     Charisma      +2        Perception  Poor         
-    Life Rating  100%       Melee       Superb       
-    Base HP        4        Bows        Superb       
+    Life Rating  100%       Melee       Fair         
+    Base HP        4        Bows        Good         
     Experience   125%
     
   Mirror-Master
@@ -944,14 +944,14 @@ Mind
   regenerate their mana on a mirror.
   
     Stats                   Skills
-    Strength      -2        Disarming   Superb       
-    Intelligence  +3        Device      Heroic       
-    Wisdom        +1        Save        Heroic       
+    Strength      -2        Disarming   Good         
+    Intelligence  +3        Device      Very Good    
+    Wisdom        +1        Save        Excellent    
     Dexterity     -1        Stealth     Superb       
     Constitution  -2        Searching   Poor         
     Charisma      -2        Perception  Poor         
-    Life Rating  100%       Melee       Good         
-    Base HP        4        Bows        Very Good    
+    Life Rating  100%       Melee       Very Bad     
+    Base HP        4        Bows        Bad          
     Experience   130%
     
   Psion
@@ -967,14 +967,14 @@ Mind
   are truly unique!
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  +2        Device      Heroic       
-    Wisdom        +2        Save        Heroic       
+    Strength      -1        Disarming   Poor         
+    Intelligence  +2        Device      Very Good    
+    Wisdom        +2        Save        Excellent    
     Dexterity     -1        Stealth     Very Good    
     Constitution  -1        Searching   Poor         
     Charisma      +2        Perception  Bad          
-    Life Rating  100%       Melee       Superb       
-    Base HP        4        Bows        Excellent    
+    Life Rating  100%       Melee       Fair         
+    Base HP        4        Bows        Poor         
     Experience   150%
     
   Time-Lord
@@ -997,14 +997,14 @@ Mind
   resistant to time. The Time-Lord's primary magic stat is Wisdom.
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  +0        Device      Heroic       
-    Wisdom        +3        Save        Superb       
+    Strength      -1        Disarming   Poor         
+    Intelligence  +0        Device      Very Good    
+    Wisdom        +3        Save        Fair         
     Dexterity     -1        Stealth     Very Good    
     Constitution  -1        Searching   Poor         
     Charisma      +0        Perception  Bad          
-    Life Rating   96%       Melee       Superb       
-    Base HP        0        Bows        Excellent    
+    Life Rating   96%       Melee       Fair         
+    Base HP        0        Bows        Poor         
     Experience   125%
     
   Warlock
@@ -1034,14 +1034,14 @@ Mind
   See [e] for more details on warlock pacts.
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  +2        Device      Legendary[5] 
-    Wisdom        -3        Save        Heroic       
+    Strength      -1        Disarming   Poor         
+    Intelligence  +2        Device      Superb       
+    Wisdom        -3        Save        Excellent    
     Dexterity     +0        Stealth     Superb       
     Constitution  +2        Searching   Poor         
     Charisma      +4        Perception  Fair         
-    Life Rating  107%       Melee       Superb       
-    Base HP       15        Bows        Excellent    
+    Life Rating  107%       Melee       Fair         
+    Base HP       15        Bows        Poor         
     Experience   135%
     
   
@@ -1056,14 +1056,14 @@ Other
   enhanced by Wisdom.
   
     Stats                   Skills
-    Strength      -1        Disarming   Heroic       
-    Intelligence  +1        Device      Heroic       
-    Wisdom        +2        Save        Superb       
+    Strength      -1        Disarming   Superb       
+    Intelligence  +1        Device      Excellent    
+    Wisdom        +2        Save        Fair         
     Dexterity     +1        Stealth     Superb       
     Constitution  -1        Searching   Excellent    
     Charisma      +0        Perception  Good         
-    Life Rating  106%       Melee       Superb       
-    Base HP        8        Bows        Excellent    
+    Life Rating  106%       Melee       Very Good    
+    Base HP        8        Bows        Poor         
     Experience   120%
     
   Bard
@@ -1080,14 +1080,14 @@ Other
   Singing'.
   
     Stats                   Skills
-    Strength      -2        Disarming   Excellent    
-    Intelligence  +1        Device      Heroic       
-    Wisdom        +2        Save        Superb       
+    Strength      -2        Disarming   Poor         
+    Intelligence  +1        Device      Excellent    
+    Wisdom        +2        Save        Fair         
     Dexterity     -1        Stealth     Very Bad     
     Constitution  -2        Searching   Poor         
     Charisma      +4        Perception  Fair         
-    Life Rating  100%       Melee       Excellent    
-    Base HP        4        Bows        Good         
+    Life Rating  100%       Melee       Bad          
+    Base HP        4        Bows        Bad          
     Experience   140%
     
   Imitator
@@ -1109,14 +1109,14 @@ Other
   double damage or duration.
   
     Stats                   Skills
-    Strength      +0        Disarming   Excellent    
-    Intelligence  +1        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +0        Disarming   Poor         
+    Intelligence  +1        Device      Good         
+    Wisdom        -1        Save        Fair         
     Dexterity     +2        Stealth     Very Good    
     Constitution  +0        Searching   Fair         
     Charisma      -1        Perception  Poor         
-    Life Rating  108%       Melee       Superb       
-    Base HP       10        Bows        Superb       
+    Life Rating  108%       Melee       Very Good    
+    Base HP       10        Bows        Excellent    
     Experience   110%
     
   Rage-Mage
@@ -1141,14 +1141,14 @@ Other
   be quite effective in crowded situations.
   
     Stats                   Skills
-    Strength      +3        Disarming   Very Good    
-    Intelligence  -2        Device      Superb       
-    Wisdom        -2        Save        Heroic       
+    Strength      +3        Disarming   Bad          
+    Intelligence  -2        Device      Fair         
+    Wisdom        -2        Save        Superb       
     Dexterity     -2        Stealth     Very Bad     
     Constitution  +2        Searching   Poor         
     Charisma      +1        Perception  Bad          
-    Life Rating  106%       Melee       Superb       
-    Base HP        6        Bows        Excellent    
+    Life Rating  106%       Melee       Fair         
+    Base HP        6        Bows        Fair         
     Experience   150%
     
   Tourist
@@ -1164,14 +1164,14 @@ Other
   identify - is very weak indeed.
   
     Stats                   Skills
-    Strength      -1        Disarming   Good         
-    Intelligence  -1        Device      Excellent    
-    Wisdom        -1        Save        Superb       
+    Strength      -1        Disarming   Bad          
+    Intelligence  -1        Device      Bad          
+    Wisdom        -1        Save        Bad          
     Dexterity     -1        Stealth     Fair         
     Constitution  -1        Searching   Poor         
     Charisma      -3        Perception  Bad          
-    Life Rating   95%       Melee       Superb       
-    Base HP        0        Bows        Very Good    
+    Life Rating   95%       Melee       Fair         
+    Base HP        0        Bows        Bad          
     Experience    70%
     
   Wild-Talent
@@ -1181,14 +1181,14 @@ Other
   never know what those might be!
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  +2        Device      Legendary[5] 
-    Wisdom        -1        Save        Superb       
+    Strength      -1        Disarming   Fair         
+    Intelligence  +2        Device      Superb       
+    Wisdom        -1        Save        Fair         
     Dexterity     +2        Stealth     Fair         
     Constitution  -2        Searching   Fair         
     Charisma      +1        Perception  Poor         
-    Life Rating  100%       Melee       Superb       
-    Base HP        4        Bows        Superb       
+    Life Rating  100%       Melee       Excellent    
+    Base HP        4        Bows        Excellent    
     Experience   110%
     
   
@@ -1245,98 +1245,98 @@ Table 2 - Class Skill Bonus Table I
 
               Disarming     Device        Save          Stealth      
 Berserker     Very Bad      Very Bad      Very Bad      Very Bad     
-Blood-Knight  Superb        Excellent     Superb        Very Good    
-Duelist       Superb        Heroic        Superb        Superb       
-Mauler        Superb        Superb        Superb        Bad          
-Rune-Knight   Excellent     Heroic        Superb        Very Good    
-Samurai       Superb        Excellent     Superb        Very Good    
-Warrior       Superb        Excellent     Superb        Fair         
-Weaponmaster  Excellent     Superb        Superb        Fair         
-Weaponsmith   Superb        Superb        Superb        Fair         
-Archer        Superb        Superb        Superb        Superb       
-Sniper        Superb        Superb        Superb        Heroic       
-Force-Trainer Superb        Heroic        Superb        Superb       
-Monk          Heroic        Heroic        Superb        Heroic       
-Mystic        Heroic        Heroic        Superb        Heroic       
-Blood-Mage    Excellent     Legendary[5]  Superb        Superb       
-Blue-Mage     Excellent     Legendary[5]  Superb        Superb       
-High-Mage     Excellent     Legendary[5]  Superb        Superb       
-Mage          Excellent     Legendary[5]  Superb        Superb       
-Necromancer   Excellent     Legendary[5]  Superb        Superb       
-Sorcerer      Excellent     Legendary[15] Legendary[7]  Very Good    
-Devicemaster  Excellent     Legendary[7]  Superb        Very Good    
-Magic-Eater   Excellent     Legendary[7]  Superb        Very Good    
-Priest        Excellent     Heroic        Heroic        Very Good    
-Ninja         Heroic        Superb        Superb        Legendary[17]
-Rogue         Heroic        Heroic        Superb        Heroic       
-Scout         Superb        Heroic        Superb        Legendary[2] 
-Chaos-Warrior Very Good     Superb        Superb        Fair         
-Paladin       Very Good     Superb        Superb        Fair         
-Ranger        Excellent     Heroic        Superb        Superb       
-Red-Mage      Very Good     Heroic        Superb        Fair         
-Warrior-Mage  Excellent     Heroic        Superb        Very Good    
-Beastmaster   Very Good     Superb        Superb        Very Good    
-Cavalry       Excellent     Excellent     Superb        Fair         
-Mindcrafter   Superb        Heroic        Superb        Superb       
-Mirror-Master Superb        Heroic        Heroic        Superb       
-Psion         Excellent     Heroic        Heroic        Very Good    
-Time-Lord     Excellent     Heroic        Superb        Very Good    
-Warlock       Excellent     Legendary[5]  Heroic        Superb       
-Archaeologist Heroic        Heroic        Superb        Superb       
-Bard          Excellent     Heroic        Superb        Very Bad     
-Imitator      Excellent     Superb        Superb        Very Good    
-Rage-Mage     Very Good     Superb        Heroic        Very Bad     
-Tourist       Good          Excellent     Superb        Fair         
-Wild-Talent   Excellent     Legendary[5]  Superb        Fair         
+Blood-Knight  Good          Bad           Fair          Very Good    
+Duelist       Good          Very Good     Bad           Superb       
+Mauler        Good          Good          Very Good     Bad          
+Rune-Knight   Fair          Good          Fair          Very Good    
+Samurai       Good          Bad           Fair          Very Good    
+Warrior       Good          Bad           Fair          Fair         
+Weaponmaster  Fair          Bad           Fair          Fair         
+Weaponsmith   Good          Fair          Poor          Fair         
+Archer        Excellent     Fair          Fair          Superb       
+Sniper        Good          Fair          Poor          Heroic       
+Force-Trainer Good          Very Good     Good          Superb       
+Monk          Superb        Very Good     Fair          Heroic       
+Mystic        Superb        Very Good     Fair          Heroic       
+Blood-Mage    Fair          Superb        Good          Superb       
+Blue-Mage     Fair          Superb        Good          Superb       
+High-Mage     Fair          Superb        Good          Superb       
+Mage          Fair          Superb        Good          Superb       
+Necromancer   Fair          Superb        Good          Superb       
+Sorcerer      Fair          Heroic        Heroic        Very Good    
+Devicemaster  Poor          Superb        Fair          Very Good    
+Magic-Eater   Poor          Superb        Fair          Very Good    
+Priest        Poor          Very Good     Excellent     Very Good    
+Ninja         Superb        Fair          Fair          Legendary[17]
+Rogue         Superb        Excellent     Fair          Heroic       
+Scout         Excellent     Very Good     Fair          Legendary[2] 
+Chaos-Warrior Bad           Good          Fair          Fair         
+Paladin       Bad           Fair          Fair          Fair         
+Ranger        Fair          Excellent     Fair          Superb       
+Red-Mage      Bad           Very Good     Fair          Fair         
+Warrior-Mage  Fair          Good          Fair          Very Good    
+Beastmaster   Bad           Fair          Fair          Very Good    
+Cavalry       Fair          Bad           Fair          Fair         
+Mindcrafter   Good          Very Good     Fair          Superb       
+Mirror-Master Good          Very Good     Excellent     Superb       
+Psion         Poor          Very Good     Excellent     Very Good    
+Time-Lord     Poor          Very Good     Fair          Very Good    
+Warlock       Poor          Superb        Excellent     Superb       
+Archaeologist Superb        Excellent     Fair          Superb       
+Bard          Poor          Excellent     Fair          Very Bad     
+Imitator      Poor          Good          Fair          Very Good    
+Rage-Mage     Bad           Fair          Superb        Very Bad     
+Tourist       Bad           Bad           Bad           Fair         
+Wild-Talent   Fair          Superb        Fair          Fair         
 
 
 Table 3 - Class Skill Bonus Table II
 
               Searching     Perception    Melee         Bows         
-Berserker     Very Bad      Very Bad      Legendary[32] Very Bad     
-Blood-Knight  Poor          Bad           Heroic        Excellent    
-Duelist       Fair          Poor          Superb        Bad          
-Mauler        Poor          Bad           Legendary[2]  Fair         
-Rune-Knight   Fair          Poor          Superb        Very Good    
-Samurai       Poor          Bad           Heroic        Superb       
-Warrior       Poor          Bad           Legendary[2]  Heroic       
-Weaponmaster  Poor          Bad           Legendary[2]  Very Good    
-Weaponsmith   Fair          Bad           Superb        Superb       
-Archer        Fair          Poor          Superb        Legendary[10]
-Sniper        Good          Fair          Excellent     Heroic       
-Force-Trainer Good          Fair          Superb        Superb       
-Monk          Good          Fair          Superb        Superb       
-Mystic        Good          Fair          Superb        Superb       
-Blood-Mage    Poor          Fair          Good          Fair         
-Blue-Mage     Fair          Poor          Good          Good         
-High-Mage     Poor          Fair          Good          Fair         
-Mage          Poor          Fair          Good          Fair         
-Necromancer   Poor          Fair          Good          Fair         
-Sorcerer      Poor          Fair          Bad           Bad          
-Devicemaster  Fair          Poor          Superb        Excellent    
-Magic-Eater   Fair          Poor          Superb        Excellent    
-Priest        Poor          Bad           Superb        Excellent    
-Ninja         Excellent     Good          Heroic        Superb       
-Rogue         Good          Fair          Superb        Superb       
-Scout         Excellent     Fair          Superb        Superb       
-Chaos-Warrior Poor          Poor          Superb        Superb       
-Paladin       Poor          Bad           Heroic        Superb       
-Ranger        Fair          Poor          Superb        Heroic       
-Red-Mage      Poor          Bad           Superb        Very Good    
-Warrior-Mage  Fair          Poor          Superb        Very Good    
-Beastmaster   Fair          Poor          Superb        Heroic       
-Cavalry       Poor          Bad           Heroic        Heroic       
-Mindcrafter   Fair          Poor          Superb        Superb       
-Mirror-Master Poor          Poor          Good          Very Good    
-Psion         Poor          Bad           Superb        Excellent    
-Time-Lord     Poor          Bad           Superb        Excellent    
-Warlock       Poor          Fair          Superb        Excellent    
-Archaeologist Excellent     Good          Superb        Excellent    
-Bard          Poor          Fair          Excellent     Good         
-Imitator      Fair          Poor          Superb        Superb       
-Rage-Mage     Poor          Bad           Superb        Excellent    
-Tourist       Poor          Bad           Superb        Very Good    
-Wild-Talent   Fair          Poor          Superb        Superb       
+Berserker     Very Bad      Very Bad      Legendary[20] Very Bad     
+Blood-Knight  Poor          Bad           Superb        Poor         
+Duelist       Fair          Poor          Fair          Very Bad     
+Mauler        Poor          Bad           Superb        Very Bad     
+Rune-Knight   Fair          Poor          Fair          Bad          
+Samurai       Poor          Bad           Superb        Good         
+Warrior       Poor          Bad           Superb        Superb       
+Weaponmaster  Poor          Bad           Superb        Bad          
+Weaponsmith   Fair          Bad           Excellent     Good         
+Archer        Fair          Poor          Very Good     Heroic       
+Sniper        Good          Fair          Poor          Superb       
+Force-Trainer Good          Fair          Fair          Fair         
+Monk          Good          Fair          Excellent     Excellent    
+Mystic        Good          Fair          Excellent     Excellent    
+Blood-Mage    Poor          Fair          Very Bad      Very Bad     
+Blue-Mage     Fair          Poor          Bad           Bad          
+High-Mage     Poor          Fair          Very Bad      Very Bad     
+Mage          Poor          Fair          Very Bad      Very Bad     
+Necromancer   Poor          Fair          Very Bad      Very Bad     
+Sorcerer      Poor          Fair          Very Bad      Very Bad     
+Devicemaster  Fair          Poor          Fair          Poor         
+Magic-Eater   Fair          Poor          Fair          Poor         
+Priest        Poor          Bad           Fair          Poor         
+Ninja         Excellent     Good          Superb        Excellent    
+Rogue         Good          Fair          Excellent     Excellent    
+Scout         Excellent     Fair          Very Good     Excellent    
+Chaos-Warrior Poor          Poor          Excellent     Good         
+Paladin       Poor          Bad           Excellent     Good         
+Ranger        Fair          Poor          Very Good     Superb       
+Red-Mage      Poor          Bad           Very Good     Bad          
+Warrior-Mage  Fair          Poor          Fair          Bad          
+Beastmaster   Fair          Poor          Fair          Superb       
+Cavalry       Poor          Bad           Excellent     Superb       
+Mindcrafter   Fair          Poor          Fair          Good         
+Mirror-Master Poor          Poor          Very Bad      Bad          
+Psion         Poor          Bad           Fair          Poor         
+Time-Lord     Poor          Bad           Fair          Poor         
+Warlock       Poor          Fair          Fair          Poor         
+Archaeologist Excellent     Good          Very Good     Poor         
+Bard          Poor          Fair          Bad           Bad          
+Imitator      Fair          Poor          Very Good     Excellent    
+Rage-Mage     Poor          Bad           Fair          Fair         
+Tourist       Poor          Bad           Fair          Bad          
+Wild-Talent   Fair          Poor          Excellent     Excellent    
 
 
 

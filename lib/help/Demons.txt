@@ -10,56 +10,56 @@ All demon races cannot eat normal food, but must feast upon the remains of their
 Balrogs are demons of shadow and flame. Their evil knows no bounds. Their spells are the most powerful of all demonkind and at very high levels they may even call forth fires directly from hell.
 
   <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> +4</color>        Disarming   <color:g>Superb       </color>
-Intelligence <color:v> +1</color>        Device      <color:b>Heroic       </color>
-Wisdom       <color:w>-10</color>        Save        <color:b>Heroic       </color>
+Strength     <color:w> +4</color>        Disarming   <color:y>Good         </color>
+Intelligence <color:v> +1</color>        Device      <color:y>Very Good    </color>
+Wisdom       <color:w>-10</color>        Save        <color:g>Superb       </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:D>Very Bad     </color>
 Constitution <color:w> +4</color>        Searching   <color:r>Bad          </color>
 Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
-Life Rating  105%       Melee       <color:v>Legendary[7] </color>
-Base HP       45        Bows        <color:y>Good         </color>
+Life Rating  105%       Melee       <color:b>Heroic       </color>
+Base HP       45        Bows        <color:r>Bad          </color>
 Experience   300%       Infravision 50'
 </style></indent>
 <topic:Tanar'ri><color:o>Tanar'ri</color>
 Tanar'ri were originally slave demons, but rose up to overthrow their masters. They generally take on a humanoid form and are classic demons full of malice and cruelty. The ultimate form for this demon is the Marilith, a female demon with three sets of arms and a serpent body capable of attacking with six melee weapons!
 
   <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> +0</color>        Disarming   <color:g>Superb       </color>
-Intelligence <color:v> +0</color>        Device      <color:b>Heroic       </color>
-Wisdom       <color:w> -5</color>        Save        <color:g>Superb       </color>
+Strength     <color:w> +0</color>        Disarming   <color:y>Good         </color>
+Intelligence <color:v> +0</color>        Device      <color:y>Very Good    </color>
+Wisdom       <color:w> -5</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
-Life Rating   95%       Melee       <color:g>Superb       </color>
-Base HP       30        Bows        <color:G>Excellent    </color>
+Life Rating   95%       Melee       <color:G>Excellent    </color>
+Base HP       30        Bows        <color:R>Poor         </color>
 Experience   250%       Infravision 50'
 </style></indent>
 <topic:Servant of Khorne><color:o>Servant of Khorne</color>
 Khorne's servants come in many forms and are powerful forces of melee. They know nothing save melee, and strike at all that dare oppose the will of their master. As they gain experience, Khorne rewards his servants with new and more powerful forms.
 
   <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> +3</color>        Disarming   <color:g>Superb       </color>
-Intelligence <color:w> -5</color>        Device      <color:g>Superb       </color>
-Wisdom       <color:w> -5</color>        Save        <color:g>Superb       </color>
+Strength     <color:w> +3</color>        Disarming   <color:y>Good         </color>
+Intelligence <color:w> -5</color>        Device      <color:r>Bad          </color>
+Wisdom       <color:w> -5</color>        Save        <color:y>Good         </color>
 Dexterity    <color:w> +0</color>        Stealth     <color:D>Very Bad     </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
-Life Rating  100%       Melee       <color:v>Legendary[5] </color>
-Base HP       42        Bows        <color:y>Good         </color>
+Life Rating  100%       Melee       <color:g>Superb       </color>
+Base HP       42        Bows        <color:r>Bad          </color>
 Experience   250%       Infravision 50'
 </style></indent>
 <topic:Cyberdemon><color:o>Cyberdemon</color>
 Cyberdemons are giant humanoid forms, half demon and half machine. They are a bit slow and move erratically, but their immense bodies and unsurpassable firepower more than make up for this. The walls of the dungeon reverberate with their heavy steps!
 
   <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> +5</color>        Disarming   <color:g>Superb       </color>
-Intelligence <color:w>-10</color>        Device      <color:G>Excellent    </color>
-Wisdom       <color:w>-10</color>        Save        <color:g>Superb       </color>
+Strength     <color:w> +5</color>        Disarming   <color:y>Good         </color>
+Intelligence <color:w>-10</color>        Device      <color:D>Very Bad     </color>
+Wisdom       <color:w>-10</color>        Save        <color:R>Poor         </color>
 Dexterity    <color:w> -3</color>        Stealth     <color:D>Very Bad     </color>
 Constitution <color:w> +5</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
-Life Rating  120%       Melee       <color:v>Legendary[7] </color>
-Base HP       50        Bows        <color:y>Good         </color>
+Life Rating  120%       Melee       <color:b>Heroic       </color>
+Base HP       50        Bows        <color:r>Bad          </color>
 Experience   275%       Infravision 50'
 </style></indent>
 <topic:Tables><style:heading>Table 1 - Demon Statistic Bonus Table</style>
@@ -74,19 +74,19 @@ Cyberdemon         +5  -10  -10   -3   +5   +0  120%  +50  275%  140%
 <topic:Skills1><style:heading>Table 2 - Demon Skill Bonus Table I</style>
 <style:table>
                   <color:w>Disarming     Device        Save          Stealth      </color>
-Balrog            <color:g>Superb       </color> <color:b>Heroic       </color> <color:b>Heroic       </color> <color:D>Very Bad     </color>
-Tanar'ri          <color:g>Superb       </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:o>Fair         </color>
-Servant of Khorne <color:g>Superb       </color> <color:g>Superb       </color> <color:g>Superb       </color> <color:D>Very Bad     </color>
-Cyberdemon        <color:g>Superb       </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:D>Very Bad     </color>
+Balrog            <color:y>Good         </color> <color:y>Very Good    </color> <color:g>Superb       </color> <color:D>Very Bad     </color>
+Tanar'ri          <color:y>Good         </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Servant of Khorne <color:y>Good         </color> <color:r>Bad          </color> <color:y>Good         </color> <color:D>Very Bad     </color>
+Cyberdemon        <color:y>Good         </color> <color:D>Very Bad     </color> <color:R>Poor         </color> <color:D>Very Bad     </color>
 
 </style>
 <topic:Skills2><style:heading>Table 3 - Demon Skill Bonus Table II</style>
 <style:table>
                   <color:w>Searching     Perception    Melee         Bows          Infra</color>
-Balrog            <color:r>Bad          </color> <color:r>Bad          </color> <color:v>Legendary[7] </color> <color:y>Good         </color>   50'
-Tanar'ri          <color:R>Poor         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:G>Excellent    </color>   50'
-Servant of Khorne <color:R>Poor         </color> <color:r>Bad          </color> <color:v>Legendary[5] </color> <color:y>Good         </color>   50'
-Cyberdemon        <color:R>Poor         </color> <color:r>Bad          </color> <color:v>Legendary[7] </color> <color:y>Good         </color>   50'
+Balrog            <color:r>Bad          </color> <color:r>Bad          </color> <color:b>Heroic       </color> <color:r>Bad          </color>   50'
+Tanar'ri          <color:R>Poor         </color> <color:r>Bad          </color> <color:G>Excellent    </color> <color:R>Poor         </color>   50'
+Servant of Khorne <color:R>Poor         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:r>Bad          </color>   50'
+Cyberdemon        <color:R>Poor         </color> <color:r>Bad          </color> <color:b>Heroic       </color> <color:r>Bad          </color>   50'
 
 </style>
 

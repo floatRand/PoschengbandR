@@ -37,14 +37,14 @@ course, allying with the undead substantially reduces the warlock's
 ability to fight these creatures.
 
   Stats                   Skills
-  Strength      -1        Disarming   Excellent    
-  Intelligence  +2        Device      Legendary[5] 
-  Wisdom        -3        Save        Heroic       
+  Strength      -1        Disarming   Poor         
+  Intelligence  +2        Device      Superb       
+  Wisdom        -3        Save        Excellent    
   Dexterity     +0        Stealth     Superb       
   Constitution  +2        Searching   Poor         
   Charisma      +4        Perception  Fair         
-  Life Rating  107%       Melee       Superb       
-  Base HP       15        Bows        Excellent    
+  Life Rating  107%       Melee       Fair         
+  Base HP       15        Bows        Poor         
   Experience   135%
   
 Dragons
@@ -56,14 +56,14 @@ lance when mounted and seek continuously for the legendary
 'Dragonlance'.
 
   Stats                   Skills
-  Strength      +2        Disarming   Very Good    
-  Intelligence  +0        Device      Superb       
-  Wisdom        +0        Save        Superb       
+  Strength      +2        Disarming   Bad          
+  Intelligence  +0        Device      Good         
+  Wisdom        +0        Save        Fair         
   Dexterity     -1        Stealth     Fair         
   Constitution  +1        Searching   Poor         
   Charisma      +3        Perception  Poor         
-  Life Rating  105%       Melee       Heroic       
-  Base HP       10        Bows        Excellent    
+  Life Rating  105%       Melee       Excellent    
+  Base HP       10        Bows        Poor         
   Experience   130%
   
 Angels
@@ -75,14 +75,14 @@ with the forces of good, making a pact with Angels will reduce damage
 done to all good monsters by a substantial amount.
 
   Stats                   Skills
-  Strength      +1        Disarming   Very Good    
-  Intelligence  +1        Device      Heroic       
-  Wisdom        +2        Save        Heroic       
+  Strength      +1        Disarming   Bad          
+  Intelligence  +1        Device      Very Good    
+  Wisdom        +2        Save        Superb       
   Dexterity     +1        Stealth     Fair         
   Constitution  +1        Searching   Poor         
   Charisma      +3        Perception  Bad          
-  Life Rating   98%       Melee       Superb       
-  Base HP        4        Bows        Excellent    
+  Life Rating   98%       Melee       Fair         
+  Base HP        4        Bows        Poor         
   Experience   150%
   
 Demons
@@ -95,14 +95,14 @@ their footsteps. Making a pact with Demons will reduce damage done to
 all demons by a substantial amount.
 
   Stats                   Skills
-  Strength      +3        Disarming   Very Good    
-  Intelligence  +1        Device      Legendary[5] 
-  Wisdom       -10        Save        Heroic       
+  Strength      +3        Disarming   Bad          
+  Intelligence  +1        Device      Superb       
+  Wisdom       -10        Save        Excellent    
   Dexterity     +1        Stealth     Bad          
   Constitution  +1        Searching   Poor         
   Charisma      +3        Perception  Bad          
-  Life Rating  100%       Melee       Superb       
-  Base HP       15        Bows        Excellent    
+  Life Rating  100%       Melee       Excellent    
+  Base HP       15        Bows        Poor         
   Experience   150%
   
 Hounds
@@ -116,14 +116,14 @@ of the world. Still, hounds are very common and many consider them to
 be annoying as well, so perhaps an alliance is in order?
 
   Stats                   Skills
-  Strength      +0        Disarming   Very Good    
-  Intelligence  -2        Device      Superb       
-  Wisdom        -2        Save        Superb       
+  Strength      +0        Disarming   Bad          
+  Intelligence  -2        Device      Fair         
+  Wisdom        -2        Save        Fair         
   Dexterity     +2        Stealth     Heroic       
   Constitution  +2        Searching   Poor         
   Charisma      +2        Perception  Bad          
-  Life Rating  102%       Melee       Superb       
-  Base HP       12        Bows        Very Good    
+  Life Rating  102%       Melee       Very Good    
+  Base HP       12        Bows        Bad          
   Experience   110%
   
 Spiders
@@ -138,14 +138,14 @@ both poison and nexus. But, aside from all of this, they are a bit on
 the squishy side. That is, if you can manage to catch one!
 
   Stats                   Skills
-  Strength      -1        Disarming   Very Good    
-  Intelligence  +0        Device      Heroic       
-  Wisdom        -2        Save        Superb       
+  Strength      -1        Disarming   Bad          
+  Intelligence  +0        Device      Excellent    
+  Wisdom        -2        Save        Fair         
   Dexterity     +2        Stealth     Legendary[10]
   Constitution  +0        Searching   Poor         
   Charisma      +2        Perception  Bad          
-  Life Rating   97%       Melee       Superb       
-  Base HP        1        Bows        Superb       
+  Life Rating   97%       Melee       Fair         
+  Base HP        1        Bows        Very Good    
   Experience   120%
   
 Giants
@@ -160,14 +160,14 @@ skill. Warlocks with this alliance are the best possible fighters being
 nearly indistiguishable in skill from Warriors!
 
   Stats                   Skills
-  Strength      +2        Disarming   Very Good    
-  Intelligence  -4        Device      Superb       
-  Wisdom        -4        Save        Superb       
+  Strength      +2        Disarming   Bad          
+  Intelligence  -4        Device      Bad          
+  Wisdom        -4        Save        Fair         
   Dexterity     -2        Stealth     Bad          
   Constitution  +2        Searching   Poor         
   Charisma      +2        Perception  Bad          
-  Life Rating  112%       Melee       Legendary[2] 
-  Base HP       25        Bows        Superb       
+  Life Rating  112%       Melee       Superb       
+  Base HP       25        Bows        Very Good    
   Experience   140%
   
 Table 1 - Warlock Statistic Bonus Table
@@ -185,25 +185,25 @@ Giants             +2   -4   -4   -2   +2   +2  112%  +25  140%
 Table 2 - Warlock Skill Bonus Table I
 
                   Disarming     Device        Save          Stealth      
-Undead            Excellent     Legendary[5]  Heroic        Superb       
-Dragons           Very Good     Superb        Superb        Fair         
-Angels            Very Good     Heroic        Heroic        Fair         
-Demons            Very Good     Legendary[5]  Heroic        Bad          
-Hounds            Very Good     Superb        Superb        Heroic       
-Spiders           Very Good     Heroic        Superb        Legendary[10]
-Giants            Very Good     Superb        Superb        Bad          
+Undead            Poor          Superb        Excellent     Superb       
+Dragons           Bad           Good          Fair          Fair         
+Angels            Bad           Very Good     Superb        Fair         
+Demons            Bad           Superb        Excellent     Bad          
+Hounds            Bad           Fair          Fair          Heroic       
+Spiders           Bad           Excellent     Fair          Legendary[10]
+Giants            Bad           Bad           Fair          Bad          
 
 
 Table 3 - Warlock Skill Bonus Table II
 
                   Searching     Perception    Melee         Bows         
-Undead            Poor          Fair          Superb        Excellent    
-Dragons           Poor          Poor          Heroic        Excellent    
-Angels            Poor          Bad           Superb        Excellent    
-Demons            Poor          Bad           Superb        Excellent    
-Hounds            Poor          Bad           Superb        Very Good    
-Spiders           Poor          Bad           Superb        Superb       
-Giants            Poor          Bad           Legendary[2]  Superb       
+Undead            Poor          Fair          Fair          Poor         
+Dragons           Poor          Poor          Excellent     Poor         
+Angels            Poor          Bad           Fair          Poor         
+Demons            Poor          Bad           Excellent     Poor         
+Hounds            Poor          Bad           Very Good     Bad          
+Spiders           Poor          Bad           Fair          Very Good    
+Giants            Poor          Bad           Superb        Very Good    
 
 
 
