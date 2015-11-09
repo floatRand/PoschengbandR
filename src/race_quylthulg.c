@@ -14,7 +14,7 @@ static bool _summon_aux(int num, bool pet, int y, int x, int lev, int type, u32b
     int i;
     bool success = FALSE;
 
-    /*if (!lev) lev = spell_power(plev) + randint1(spell_power(plev));*/
+    /*if (!lev) lev = spell_power(plev) + randint1(spell_power(plev * 2 / 3));*/
     if (!lev) lev = MAX(plev, dun_level);
 
     if (pet)

@@ -2156,6 +2156,7 @@ enum {
 /*
  * Special caster ID for project()
  */
+#define PROJECT_WHO_PLAYER        0
 #define PROJECT_WHO_UNCTRL_POWER -1
 #define PROJECT_WHO_GLASS_SHARDS -2
 
@@ -2660,8 +2661,9 @@ enum summon_specific_e {
 #define GF_SUBJUGATION 144
 #define GF_PARALYSIS 145
 #define GF_CONTROL_PACT_MONSTER  146
+#define GF_DRAGON_SONG  147
 
-#define MAX_GF                147
+#define MAX_GF                148
 
 /*
  * Some things which induce learning

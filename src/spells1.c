@@ -1908,7 +1908,23 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
     /* Never affect projector */
     if (who && (c_ptr->m_idx == who)) return (FALSE);
-    if ((c_ptr->m_idx == p_ptr->riding) && !who && !(typ == GF_OLD_HEAL) && !(typ == GF_OLD_SPEED) && !(typ == GF_STAR_HEAL)) return (FALSE);
+
+    if (c_ptr->m_idx == p_ptr->riding && who == PROJECT_WHO_PLAYER)
+    {
+        switch (typ)
+        {
+        case GF_OLD_HEAL:
+        case GF_OLD_SPEED:
+        case GF_STAR_HEAL:
+        case GF_CRUSADE:
+        case GF_DRAGON_SONG:
+        case GF_UNHOLY_WORD:
+            break;
+        default:
+            return FALSE;
+        }
+    }
+
     if (sukekaku && ((m_ptr->r_idx == MON_SUKE) || (m_ptr->r_idx == MON_KAKU))) return FALSE;
 
     /* Don't affect already death monsters */
@@ -3790,6 +3806,46 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             break;
         }
 
+        case GF_DRAGON_SONG:
+        {
+            if ((is_pet(m_ptr) || is_friendly(m_ptr)) && (r_ptr->flags3 & RF3_DRAGON))
+            {
+                if (seen) obvious = TRUE;
+
+                set_monster_csleep(c_ptr->m_idx, 0);
+                if (MON_STUNNED(m_ptr))
+                {
+                    if (seen_msg) msg_format("%^s is no longer stunned.", m_name);
+                    set_monster_stunned(c_ptr->m_idx, 0);
+                }
+                if (MON_CONFUSED(m_ptr))
+                {
+                    if (seen_msg) msg_format("%^s is no longer confused.", m_name);
+                    set_monster_confused(c_ptr->m_idx, 0);
+                }
+                if (MON_MONFEAR(m_ptr))
+                {
+                    if (seen_msg) msg_format("%^s recovers %s courage.", m_name, m_poss);
+                    set_monster_monfear(c_ptr->m_idx, 0);
+                }
+
+                if (m_ptr->hp < m_ptr->maxhp)
+                {
+                    int heal = MIN(dam, m_ptr->maxhp - m_ptr->hp);
+                    m_ptr->hp += heal;
+                    note = " fights with renewed vigor!";
+                }
+
+                if (!MON_FAST(m_ptr))
+                {
+                    set_monster_fast(c_ptr->m_idx, MON_FAST(m_ptr) + 100);
+                    note = " fights with renewed vigor!";
+                }
+            }
+            dam = 0;
+            break;
+        }
+
         /* Sleep (Use "dam" as "power") */
         case GF_STASIS_EVIL:
         {
@@ -5515,6 +5571,8 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             if (is_pet(m_ptr)) nokori_hp = m_ptr->maxhp * 4L;
             else if ((p_ptr->pclass == CLASS_BEASTMASTER) && monster_living(r_ptr))
                 nokori_hp = m_ptr->maxhp * 3 / 10;
+            else if (warlock_is_(WARLOCK_DRAGONS) && (r_ptr->flags3 & RF3_DRAGON))
+                nokori_hp = m_ptr->maxhp * 3 / 15;
             else
                 nokori_hp = m_ptr->maxhp * 3 / 20;
 
@@ -5887,10 +5945,13 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
     /* Modify the damage */
     tmp = dam;
-    if (who)
-        dam = mon_damage_mod_mon(m_ptr, dam, (bool)(typ == GF_PSY_SPEAR));
-    else
-        dam = mon_damage_mod(m_ptr, dam, (bool)(typ == GF_PSY_SPEAR));
+    if (dam)
+    {
+        if (who > 0)
+            dam = mon_damage_mod_mon(m_ptr, dam, (bool)(typ == GF_PSY_SPEAR));
+        else
+            dam = mon_damage_mod(m_ptr, dam, (bool)(typ == GF_PSY_SPEAR));
+    }
     if (tmp > 0 && dam == 0) 
         note = " is unharmed.";
 
@@ -6134,7 +6195,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         }
 
         /* Hurt the monster, check for fear and death */
-        if (mon_take_hit(c_ptr->m_idx, dam, &fear, note_dies))
+        if (dam && mon_take_hit(c_ptr->m_idx, dam, &fear, note_dies))
         {
             /* Dead monster */
         }
@@ -6196,7 +6257,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 msg_format("%^s%s", m_name, note);
 
             /* Hack -- Pain message */
-            else if (known && (dam || !do_fear) && !(flg & PROJECT_NO_PAIN))
+            else if (known && dam && !(flg & PROJECT_NO_PAIN))
             {
                 message_pain(c_ptr->m_idx, dam);
             }

@@ -411,7 +411,7 @@ void skills_riding_gain_archery(monster_race *r_ptr)
 int skills_riding_current(void)
 {
     int current = p_ptr->skill_exp[SKILL_RIDING];
-    int max = s_info[_class_idx()].s_max[SKILL_RIDING];
+    int max = skills_riding_max();
     if (p_ptr->prace == RACE_MON_RING)
         return RIDING_EXP_MASTER;
     return MIN(current, max);
@@ -421,7 +421,7 @@ int skills_riding_max(void)
 {
     /* Dragon Warlocks are Dragon Riders! */
     if (warlock_is_(WARLOCK_DRAGONS))
-        return 7000;
+        return 7500; /* This is about -3 speed relative to RIDING_EXP_MASTER */
     return s_info[_class_idx()].s_max[SKILL_RIDING];
 }
 

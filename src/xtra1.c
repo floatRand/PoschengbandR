@@ -2851,6 +2851,15 @@ static void _calc_encumbrance(void)
         weight += equip_weight(object_is_melee_weapon);
         break;
 
+    case CLASS_WARLOCK:
+        if (p_ptr->psubclass == WARLOCK_DRAGONS)
+            weight += equip_weight(object_is_melee_weapon) / 3;
+        else if (p_ptr->psubclass == WARLOCK_GIANTS)
+            weight += equip_weight(object_is_melee_weapon) / 5;
+        else
+            weight += equip_weight(object_is_melee_weapon) * 2 / 3;
+        break;
+
     case CLASS_PRIEST:
     case CLASS_BARD:
     case CLASS_TOURIST:

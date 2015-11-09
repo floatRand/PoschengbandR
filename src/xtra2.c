@@ -2398,7 +2398,8 @@ int mon_damage_mod(monster_type *m_ptr, int dam, bool is_psy_spear)
     /* Hack: Pact monsters have special resistance to all damage from the player
        I'm not sure if this is the correct spot for this code ...*/
     if ( p_ptr->pclass == CLASS_WARLOCK
-      && warlock_is_pact_monster(r_ptr) )
+      && warlock_is_pact_monster(r_ptr)
+      && dam )
     {
         /* Let the player notice this for this monster race only the first time */
         if (!(r_ptr->r_flagsr & RFR_PACT_MONSTER))

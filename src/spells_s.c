@@ -911,7 +911,7 @@ void summon_dragon_spell(int cmd, variant *res)
     case SPELL_CAST:
     {
         int ct = 0;
-        int l = p_ptr->lev + randint1(p_ptr->lev);
+        int l = p_ptr->lev + randint1(p_ptr->lev * 2 / 3);
 
         ct += summon_specific(-1, py, px, l, SUMMON_DRAGON, PM_FORCE_PET);
         if (!ct)
@@ -934,7 +934,7 @@ void summon_greater_demon_spell(int cmd, variant *res)
         var_set_string(res, "Summon Greater Demon");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Summons greater demon. It need to sacrifice a corpse of human ('p','h' or 't').");
+        var_set_string(res, "Summons greater demon. You need to sacrifice a corpse of a human ('p','h' or 't') and the more powerful the corpse, the more powerful the demon you will conjure.");
         break;
     case SPELL_CAST:
         var_set_bool(res, cast_summon_greater_demon());
@@ -959,13 +959,13 @@ void summon_hi_dragon_spell(int cmd, variant *res)
     {
         int num = randint0(p_ptr->lev/10);
         int ct = 0, i;
-        int l = p_ptr->lev + randint1(p_ptr->lev);
 
         if (p_ptr->dragon_realm == DRAGON_REALM_DOMINATION)
             num = 2 + randint1(3);
 
         for (i = 0; i < num; i++)
         {
+            int l = p_ptr->lev + randint1(p_ptr->lev * 2 / 3);
             ct += summon_specific(-1, py, px, l, SUMMON_HI_DRAGON, PM_FORCE_PET);
         }
         if (!ct)

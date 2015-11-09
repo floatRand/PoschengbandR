@@ -479,17 +479,6 @@ static void _dragon_calc_stats(s16b stats[MAX_STATS])
 {
     stats[A_STR] += 3 * p_ptr->lev/50;
 }
-void _dragon_calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
-{
-    int to_h = 10 * p_ptr->lev / 50;
-    int to_d = 10 * p_ptr->lev / 50;
-
-    info_ptr->to_h += to_h;
-    info_ptr->dis_to_h += to_h;
-
-    info_ptr->to_d += to_d;
-    info_ptr->dis_to_d += to_d;
-}
 
 static void _dragon_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
@@ -543,7 +532,7 @@ static void _dragon_blast(int cmd, variant *res)
 static int _dragon_breath_amount(void)
 {
     int l = p_ptr->lev;
-    return MIN(350, p_ptr->chp * (20 + l*l*l*30/125000) / 100);
+    return MIN(350, p_ptr->chp * (15 + l*l*l*20/125000) / 100);
 }
 
 static int _dragon_breath_cost(void)
@@ -622,31 +611,6 @@ static void _dragon_skin_spell(int cmd, variant *res)
     }
 }
 
-static void _charge_spell(int cmd, variant *res)
-{
-    switch (cmd)
-    {
-    case SPELL_NAME:
-        var_set_string(res, "Charge");
-        break;
-    case SPELL_DESC:
-        var_set_string(res, "Charge a nearby monster and attack in a single action, but only if you are currently riding a dragon.");
-        break;
-    case SPELL_CAST:
-        var_set_bool(res, FALSE);
-        if (!p_ptr->riding)
-        {
-            msg_print("You need to be mounted in order to charge.");
-            return;
-        }
-        var_set_bool(res, rush_attack(7, NULL));
-        break;
-    default:
-        default_spell(cmd, res);
-        break;
-    }
-}
-
 static void _word_of_command_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -667,6 +631,27 @@ static void _word_of_command_spell(int cmd, variant *res)
     }
 }
 
+static void _dragon_song_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Dragon Song");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "An ancient and magical melody that soothes and encourages all of dragonkind.");
+        break;
+    case SPELL_CAST:
+        msg_print("You sing of fire and ice and treasures beyond measure.");
+        project_hack(GF_DRAGON_SONG, 5 * p_ptr->lev);
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 static _pact_t _dragons_pact = {
   "Dragons",
   "By aligning themselves with dragons, the warlock gains great powers of protection and melee as "
@@ -675,7 +660,7 @@ static _pact_t _dragons_pact = {
   "lance when mounted and seek continuously for the legendary 'Dragonlance'.",
   "", /* RF3_DRAGON suffices */
   _dragon_calc_bonuses,
-  _dragon_calc_weapon_bonuses,
+  NULL,
   _dragon_calc_stats,
   _dragon_get_flags,
 /*  S   I   W   D   C   C */
@@ -689,13 +674,13 @@ static _pact_t _dragons_pact = {
     {  5,   3, 40, detect_menace_spell},
     {  7,   5, 40, detect_objects_spell},
     { 10,   5, 50, _dragon_breathe_spell},
-    { 15,  10, 60, berserk_spell},
-    { 20,  15, 60, identify_spell},
+    { 15,  15, 60, identify_spell},
+    { 23,  15, 60, probing_spell},
     { 27,  60, 70, summon_dragon_spell},
     { 32,  40, 70, _dragon_skin_spell},
     { 40,  90, 80, _word_of_command_spell},
-    { 45, 100, 80, summon_hi_dragon_spell},
-    { 50,  50, 70, _charge_spell},
+    { 42,  50, 80, _dragon_song_spell},
+    { 50, 100, 80, summon_hi_dragon_spell},
     { -1,   0,  0, NULL },
   },
   _dragon_blast
@@ -1229,7 +1214,7 @@ static void _giant_calc_bonuses(void)
         res_add(RES_CHAOS);
 }
 
-void _giant_calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
+static void _giant_calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
     if (o_ptr->weight >= 200)
     {
