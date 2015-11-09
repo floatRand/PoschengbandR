@@ -2962,6 +2962,11 @@ static void calc_mana(void)
         msp = (adj_mag_mana[p_ptr->stat_ind[caster_ptr->which_stat]] + 10) * 2;
         if (msp) msp += (msp * _racial_mana_adjust(caster_ptr->which_stat) / 20);
     }
+    else if (p_ptr->pclass == CLASS_WILD_TALENT)
+    {
+        /* Wild-Talents don't really have a spell stat */
+        msp = 5 + py_prorata_level_aux(400, 2, 1, 1);
+    }
     else
     {
         int idx = p_ptr->stat_ind[caster_ptr->which_stat];

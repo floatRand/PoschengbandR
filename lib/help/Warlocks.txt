@@ -13,7 +13,7 @@ Intelligence <color:w> +2</color>        Device      <color:g>Superb       </col
 Wisdom       <color:w> -3</color>        Save        <color:G>Excellent    </color>
 Dexterity    <color:w> +0</color>        Stealth     <color:g>Superb       </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +4</color>        Perception  <color:o>Fair         </color>
+Charisma     <color:v> +4</color>        Perception  <color:o>Fair         </color>
 Life Rating  107%       Melee       <color:o>Fair         </color>
 Base HP       15        Bows        <color:R>Poor         </color>
 Experience   135%
@@ -27,7 +27,7 @@ Intelligence <color:w> +0</color>        Device      <color:y>Good         </col
 Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +1</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +3</color>        Perception  <color:R>Poor         </color>
+Charisma     <color:v> +3</color>        Perception  <color:R>Poor         </color>
 Life Rating  105%       Melee       <color:G>Excellent    </color>
 Base HP       10        Bows        <color:R>Poor         </color>
 Experience   130%
@@ -41,7 +41,7 @@ Intelligence <color:w> +1</color>        Device      <color:y>Very Good    </col
 Wisdom       <color:w> +2</color>        Save        <color:g>Superb       </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +1</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +3</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:v> +3</color>        Perception  <color:r>Bad          </color>
 Life Rating   98%       Melee       <color:o>Fair         </color>
 Base HP        4        Bows        <color:R>Poor         </color>
 Experience   150%
@@ -55,7 +55,7 @@ Intelligence <color:w> +1</color>        Device      <color:g>Superb       </col
 Wisdom       <color:w>-10</color>        Save        <color:G>Excellent    </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:r>Bad          </color>
 Constitution <color:w> +1</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +3</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:v> +3</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:G>Excellent    </color>
 Base HP       15        Bows        <color:R>Poor         </color>
 Experience   150%
@@ -69,7 +69,7 @@ Intelligence <color:w> -2</color>        Device      <color:o>Fair         </col
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:b>Heroic       </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:v> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  102%       Melee       <color:y>Very Good    </color>
 Base HP       12        Bows        <color:r>Bad          </color>
 Experience   110%
@@ -83,7 +83,7 @@ Intelligence <color:w> +0</color>        Device      <color:G>Excellent    </col
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +2</color>        Stealth     <color:v>Legendary[10]</color>
 Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:v> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating   97%       Melee       <color:o>Fair         </color>
 Base HP        1        Bows        <color:y>Very Good    </color>
 Experience   120%
@@ -97,7 +97,7 @@ Intelligence <color:w> -4</color>        Device      <color:r>Bad          </col
 Wisdom       <color:w> -4</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> -2</color>        Stealth     <color:r>Bad          </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
-Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
+Charisma     <color:v> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  112%       Melee       <color:g>Superb       </color>
 Base HP       25        Bows        <color:y>Very Good    </color>
 Experience   140%

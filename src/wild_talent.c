@@ -663,19 +663,25 @@ class_t *wild_talent_get_class(void)
     /* static info never changes */
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 30,  40,  31,   1,  24,  16,  68,  50 };
-    skills_t xs = {  8,  15,  10,   0,   0,   0,  18,  20 };
+    skills_t bs = { 30,  25,  31,   2,  24,  16,  56,  50 };
+    skills_t xs = {  8,  11,  10,   0,   0,   0,  18,  18 };
 
         me.name = "Wild-Talent";
         me.desc = "The Wild-Talent gains random talents and abilities as they "
                   "level up. They are good fighters, and decent with magical devices, "
                   "but their true forte is their vast array of potential random "
-                  "powers. Except you never know what those might be!";
+                  "powers. Except you never know what those might be!\n \n"
+                  "Wild-Talents do not have a spell stat. Instead, each ability that "
+                  "they gain requires its own individual stat for purposes of fail "
+                  "rate calculation. For example, Tossing a Boulder requires Strength "
+                  "while Magic Missile requires Intelligence. Each spell requires mana "
+                  "to cast, but the amount of mana available is not influenced by any "
+                  "particular stat and is simply determined by experience.";
         
         me.stats[A_STR] = -1;
-        me.stats[A_INT] =  2;
-        me.stats[A_WIS] = -1;
-        me.stats[A_DEX] =  2;
+        me.stats[A_INT] =  1;
+        me.stats[A_WIS] =  1;
+        me.stats[A_DEX] =  1;
         me.stats[A_CON] = -2;
         me.stats[A_CHR] =  1;
         

@@ -1179,16 +1179,23 @@ Other
   They are good fighters, and decent with magical devices, but their 
   true forte is their vast array of potential random powers. Except you 
   never know what those might be!
+   
+  Wild-Talents do not have a spell stat. Instead, each ability that 
+  they gain requires its own individual stat for purposes of fail rate 
+  calculation. For example, Tossing a Boulder requires Strength while 
+  Magic Missile requires Intelligence. Each spell requires mana to 
+  cast, but the amount of mana available is not influenced by any 
+  particular stat and is simply determined by experience.
   
     Stats                   Skills
     Strength      -1        Disarming   Fair         
-    Intelligence  +2        Device      Superb       
-    Wisdom        -1        Save        Fair         
-    Dexterity     +2        Stealth     Fair         
+    Intelligence  +1        Device      Good         
+    Wisdom        +1        Save        Fair         
+    Dexterity     +1        Stealth     Very Good    
     Constitution  -2        Searching   Fair         
     Charisma      +1        Perception  Poor         
-    Life Rating  100%       Melee       Excellent    
-    Base HP        4        Bows        Excellent    
+    Life Rating  100%       Melee       Very Good    
+    Base HP        4        Bows        Very Good    
     Experience   110%
     
   
@@ -1238,7 +1245,7 @@ Bard           -2   +1   +2   -1   -2   +4  100%   +4  140%
 Imitator       +0   +1   -1   +2   +0   -1  108%  +10  110%
 Rage-Mage      +3   -2   -2   -2   +2   +1  106%   +6  150%
 Tourist        -1   -1   -1   -1   -1   -3   95%   +0   70%
-Wild-Talent    -1   +2   -1   +2   -2   +1  100%   +4  110%
+Wild-Talent    -1   +1   +1   +1   -2   +1  100%   +4  110%
 
 
 Table 2 - Class Skill Bonus Table I
@@ -1287,7 +1294,7 @@ Bard          Poor          Excellent     Fair          Very Bad
 Imitator      Poor          Good          Fair          Very Good    
 Rage-Mage     Bad           Fair          Superb        Very Bad     
 Tourist       Bad           Bad           Bad           Fair         
-Wild-Talent   Fair          Superb        Fair          Fair         
+Wild-Talent   Fair          Good          Fair          Very Good    
 
 
 Table 3 - Class Skill Bonus Table II
@@ -1336,7 +1343,7 @@ Bard          Poor          Fair          Bad           Bad
 Imitator      Fair          Poor          Very Good     Excellent    
 Rage-Mage     Poor          Bad           Fair          Fair         
 Tourist       Poor          Bad           Fair          Bad          
-Wild-Talent   Fair          Poor          Excellent     Excellent    
+Wild-Talent   Fair          Poor          Very Good     Very Good    
 
 
 

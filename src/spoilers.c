@@ -928,7 +928,7 @@ static void _class_help_table(FILE *fp, class_t *class_ptr)
 {
     caster_info *caster_ptr = NULL;
 
-    if (class_ptr->caster_info && !strcmp(class_ptr->name, "Psion"))
+    if (class_ptr->caster_info && !streq(class_ptr->name, "Psion") && !streq(class_ptr->name, "Wild-Talent"))
         caster_ptr = class_ptr->caster_info();
 
     fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
@@ -1065,7 +1065,7 @@ static void _classes_help(FILE* fp)
             sprintf(line, "%-13.13s", class_ptr->name);
             for (k = 0; k < 6; k++)
             {
-                if (caster_ptr && k == caster_ptr->which_stat && class_idx != CLASS_PSION)
+                if (caster_ptr && k == caster_ptr->which_stat && class_idx != CLASS_PSION && class_idx != CLASS_WILD_TALENT)
                     sprintf(tmp, "<color:v> %+3d </color>", class_ptr->stats[k]);
                 else
                     sprintf(tmp, " %+3d ", class_ptr->stats[k]);
