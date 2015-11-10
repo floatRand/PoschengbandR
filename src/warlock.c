@@ -7,6 +7,47 @@
 #include <assert.h>
 
 /****************************************************************
+ * Toggles are techniques or songs that grant bonuses as long
+ * as they are maintained. In addition, the warlock might pay
+ * upkeep to maintain the 'toggle'.
+ ****************************************************************/
+static int _get_toggle(void)
+{
+    return p_ptr->magic_num1[0];
+}
+
+static int _set_toggle(s32b toggle)
+{
+    int result = p_ptr->magic_num1[0];
+
+    if (toggle == result) return result;
+
+    p_ptr->magic_num1[0] = toggle;
+
+    p_ptr->redraw |= PR_STATUS;
+    p_ptr->update |= PU_BONUS;
+    handle_stuff();
+
+    return result;
+}
+
+int warlock_get_toggle(void)
+{
+    int result = TOGGLE_NONE;
+    if (warlock_is_(WARLOCK_DRAGONS) && p_ptr->riding)
+        result = _get_toggle();
+    else if (p_ptr->pclass == CLASS_WARLOCK) /* In case I add toggles for other pacts ... */
+        result = _get_toggle();
+    return result;
+}
+
+void warlock_stop_singing(void)
+{   /* Dragon Songs */
+    if (warlock_is_(WARLOCK_DRAGONS))
+        _set_toggle(TOGGLE_NONE);
+}
+
+/****************************************************************
  * The Eldritch Blast
  ****************************************************************/
 static int _blast_range(void)
@@ -329,6 +370,7 @@ typedef struct {
     calc_weapon_bonuses_fn calc_weapon_bonuses;
     stats_fn calc_stats;
     flags_fn get_flags;
+    process_player_fn process_player;
     int stats[MAX_STATS];
     skills_t base_skills;
     skills_t extra_skills;
@@ -438,6 +480,7 @@ static _pact_t _undead_pact = {
   NULL,
   _undead_calc_stats,
   _undead_get_flags,
+  NULL,
 /*  S   I   W   D   C   C */
   {-1,  2, -3,  0,  2,  4},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
@@ -469,12 +512,37 @@ static _pact_t _undead_pact = {
  * Warlock Pact: Dragons
  * The main bonus of this pact is that they are Dragonriders!
  ****************************************************************/
+static monster_type *_get_mount(void)
+{
+    monster_type *result = NULL;
+    if (p_ptr->riding)
+        result = &m_list[p_ptr->riding];
+    return result;
+}
+
+static bool _is_lance(object_type *o_ptr)
+{
+    return object_is_(o_ptr, TV_POLEARM, SV_LANCE)
+        || object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE);
+}
+
 static void _dragon_calc_bonuses(void)
 {
     res_add(RES_FEAR);
     if (p_ptr->lev >= 30)
         p_ptr->sustain_str = TRUE;
 }
+
+static void _dragon_calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
+{
+    if ( _get_toggle() == WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE
+      && p_ptr->riding
+      && _is_lance(o_ptr) )
+    {
+        info_ptr->to_dd += 2;
+    }
+}
+
 static void _dragon_calc_stats(s16b stats[MAX_STATS])
 {
     stats[A_STR] += 3 * p_ptr->lev/50;
@@ -495,13 +563,13 @@ static void _dragon_blast(int cmd, variant *res)
         var_set_string(res, "Dragon");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires multiple blasts, one each of sound, shards, chaos, and disenchantment.");
+        var_set_string(res, "Breathes your eldritch blast at a chosen foe.");
         break;
     case SPELL_INFO:
         var_set_string(res,
-            format("dam %dd%d*4 (rng %d)",
+            format("dam %dd%d (rng %d)",
                    _blast_dd(),
-                   spell_power(_blast_ds()/2),
+                   spell_power(_blast_ds()),
                     _blast_range()));
         break;
     case SPELL_CAST:
@@ -515,11 +583,7 @@ static void _dragon_blast(int cmd, variant *res)
         project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
 
-        fire_ball(GF_SOUND, dir, spell_power(damroll(dice, sides)/2), 0);
-        fire_ball(GF_SHARDS, dir, spell_power(damroll(dice, sides)/2), 0);
-        fire_ball(GF_CHAOS, dir, spell_power(damroll(dice, sides)/2), 0);
-        fire_ball(GF_DISENCHANT, dir, spell_power(damroll(dice, sides)/2), 0);
-
+        fire_ball_aux(GF_ELDRITCH, dir, spell_power(damroll(dice, sides)), -1 - (p_ptr->lev / 20), PROJECT_FULL_DAM);
         var_set_bool(res, TRUE);
         break;
     }
@@ -529,84 +593,42 @@ static void _dragon_blast(int cmd, variant *res)
     }
 }
 
-static int _dragon_breath_amount(void)
-{
-    int l = p_ptr->lev;
-    return MIN(350, p_ptr->chp * (15 + l*l*l*20/125000) / 100);
-}
-
-static int _dragon_breath_cost(void)
-{
-    int l = p_ptr->lev;
-    return MAX(l/2 + l*l*15/2500, 1);
-}
-
-static void _dragon_do_breathe(int effect, int dir, int dam)
-{
-    /* Dragon breath changes shape with maturity */
-    if (p_ptr->lev < 20)
-        fire_bolt(effect, dir, dam);
-    else if (p_ptr->lev < 30)
-        fire_beam(effect, dir, dam);
-    else
-        fire_ball(effect, dir, dam, -1 - (p_ptr->lev / 20));
-}
-
-static void _dragon_breathe_spell(int cmd, variant *res)
+/* Dragon Spells */
+static void _dragon_lore_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Dragon's Breath");
+        var_set_string(res, "Dragon's Lore");
         break;
-    case SPELL_DESC:
-        var_set_string(res, "Breathes a powerful breath of a random nature.");
-        break;
-    case SPELL_INFO:
-        var_set_string(res, info_damage(0, 0, _dragon_breath_amount()));
-        break;
-    case SPELL_COST_EXTRA:
-        var_set_int(res, _dragon_breath_cost());
-        break;
-    case SPELL_CAST:
-    {
-        int dir = 0;
-        var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
-        {
-            int e = -1;
-            int dam = _dragon_breath_amount();
-            var_set_bool(res, FALSE);
-
-            switch (randint1(4))
-            {
-            case 1: e = GF_SOUND; break;
-            case 2: e = GF_SHARDS; break;
-            case 3: e = GF_CHAOS; break;
-            case 4: e = GF_DISENCHANT; break;
-            default: assert(0);
-            }
-            msg_format("You breathe %s.", gf_name(e));
-            _dragon_do_breathe(e, dir, dam);
-            var_set_bool(res, TRUE);
-        }
-        break;
-    }
     default:
-        default_spell(cmd, res);
+        identify_spell(cmd, res);
         break;
     }
 }
 
-static void _dragon_skin_spell(int cmd, variant *res)
+static void _dragon_eye_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Dragon Skin");
+        var_set_string(res, "Dragon's Eye");
         break;
     default:
-        stone_skin_spell(cmd, res);
+        telepathy_spell(cmd, res);
+        break;
+    }
+}
+
+static void _understanding_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Understanding");
+        break;
+    default:
+        probing_spell(cmd, res);
         break;
     }
 }
@@ -631,20 +653,110 @@ static void _word_of_command_spell(int cmd, variant *res)
     }
 }
 
-static void _dragon_song_spell(int cmd, variant *res)
+/* Dragon Songs */
+static void _dragon_upkeep_song(void)
+{
+    int           cost = 0;
+    monster_type *mount = _get_mount();
+
+    /* Check if the player got thrown, dismounted, or their steed was slain */
+    if (!mount)
+    {
+        _set_toggle(TOGGLE_NONE);
+        return;
+    }
+
+    switch (_get_toggle())
+    {
+    case WARLOCK_DRAGON_TOGGLE_BLESS:
+        cost = 1;
+        break;
+    case WARLOCK_DRAGON_TOGGLE_CANTER:
+        cost = 2;
+        break;
+    case WARLOCK_DRAGON_TOGGLE_GALLOP:
+        cost = 5;
+        break;
+    case WARLOCK_DRAGON_TOGGLE_HEALING:
+        cost = p_ptr->lev/2;
+        break;
+    case WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE:
+        cost = p_ptr->lev/2;
+        break;
+    }
+    if (cost > p_ptr->csp)
+    {
+        msg_print("You can no longer maintain the song.");
+        _set_toggle(TOGGLE_NONE);
+    }
+    else
+    {
+        sp_player(-cost);
+
+        /* Apply the Song. Most songs are handled in calc_bonuses(), or
+           perhaps scattered throughout the code base as 'hacks' */
+        if (_get_toggle() == WARLOCK_DRAGON_TOGGLE_HEALING)
+        {
+            int amt = p_ptr->lev * 2;
+
+            hp_player(amt);
+            if (mount->hp < mount->maxhp)
+            {
+                int heal = MIN(amt, mount->maxhp - mount->hp);
+                mount->hp += heal;
+            }
+        }
+        else if (_get_toggle() == WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE)
+        {
+            char m_name[MAX_NLEN];
+            monster_desc(m_name, mount, 0);
+            if (MON_STUNNED(mount))
+            {
+                msg_format("%^s is no longer stunned.", m_name);
+                set_monster_stunned(p_ptr->riding, 0);
+            }
+            if (MON_CONFUSED(mount))
+            {
+                msg_format("%^s is no longer confused.", m_name);
+                set_monster_confused(p_ptr->riding, 0);
+            }
+            if (MON_MONFEAR(mount))
+            {
+                msg_format("%^s is not longer afraid.", m_name);
+                set_monster_monfear(p_ptr->riding, 0);
+            }
+        }
+    }
+}
+
+static void _dragon_song(int which, cptr desc, int cmd, variant *res)
 {
     switch (cmd)
     {
-    case SPELL_NAME:
-        var_set_string(res, "Dragon Song");
-        break;
-    case SPELL_DESC:
-        var_set_string(res, "An ancient and magical melody that soothes and encourages all of dragonkind.");
-        break;
     case SPELL_CAST:
-        msg_print("You sing of fire and ice and treasures beyond measure.");
-        project_hack(GF_DRAGON_SONG, 5 * p_ptr->lev);
+        var_set_bool(res, FALSE);
+        if (!_get_mount())
+        {
+            msg_print("You may only sing when riding.");
+            return;
+        }
+        if (_get_toggle() == which)
+        {
+            msg_format("You stop singing %s.", desc);
+            _set_toggle(TOGGLE_NONE);
+        }
+        else
+        {
+            msg_format("You begin singing %s.", desc);
+            _set_toggle(which);
+        }
         var_set_bool(res, TRUE);
+        break;
+    case SPELL_ENERGY:
+        if (_get_toggle() != which)
+            var_set_int(res, 0);    /* no charge for dismissing a song */
+        else
+            var_set_int(res, 100);
         break;
     default:
         default_spell(cmd, res);
@@ -652,35 +764,271 @@ static void _dragon_song_spell(int cmd, variant *res)
     }
 }
 
+
+static void _bless_song(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Song of Blessing");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Adagio. When sung, both you and your steed will gain enhanced melee skill.");
+        break;
+    default:
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_BLESS, "of heoic deeds.", cmd, res);
+        break;
+    }
+}
+
+static void _canter_song(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Joyful Song");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Allegro. This is a pleasing melody, and your steed will prance along in time with the song.");
+        break;
+    default:
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_CANTER, "a joyful, upbeat melody.", cmd, res);
+        break;
+    }
+}
+
+static void _gallop_song(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Song of Haste");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Presto. A quick beat marks this song of urgency.");
+        break;
+    default:
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_GALLOP, "a spurring melody.", cmd, res);
+        break;
+    }
+}
+
+static void _healing_song(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Song of Life");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Largo. Slowly and majestically, both you and your mount feel the life giving effects of this powerful ballad.");
+        break;
+    default:
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_HEALING, "a rejuvenating melody.", cmd, res);
+        break;
+    }
+}
+
+static void _heroic_charge_song(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Song of War");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Molto allegro. A song of defiance, its melody captures the essence of "
+                            "the dragon's lust for treasure and conquest. Woe be to all that hear "
+                            "this ancient dragon song.");
+        break;
+    default:
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE, "of battle and riches.", cmd, res);
+        break;
+    }
+}
+
+/* Riding Techniques */
+static void _mount_jump_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Jump");
+        break;
+    case SPELL_CAST:
+        if (!p_ptr->riding)
+        {
+            msg_print("This is a riding technique. Where is your dragon?");
+            var_set_bool(res, FALSE);
+            return;
+        }
+    default:
+        jump_spell(cmd, res);
+        break;
+    }
+}
+
+static void _mount_attack_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Guided Attack");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Guide your dragon to attack a chosen foe.");
+        break;
+    case SPELL_CAST:
+    {
+        monster_type *mount = _get_mount();
+        int x = 0, y = 0;
+        int dir;
+        int m_idx = 0;
+
+        var_set_bool(res, FALSE);
+        if (!mount)
+        {
+            msg_print("This is a riding technique. Where is your dragon?");
+            return;
+        }
+
+        if (mount->energy_need > 300)
+        {
+            msg_print("You sense your dragon is too tired for another attack.");
+            return;
+        }
+
+        if (use_old_target && target_okay())
+        {
+            y = target_row;
+            x = target_col;
+            m_idx = cave[y][x].m_idx;
+            if (m_idx)
+            {
+                if (m_list[m_idx].cdis > 1)
+                    m_idx = 0;
+                else
+                    dir = 5;
+            }
+        }
+
+        if (!m_idx)
+        {
+            if (!get_rep_dir2(&dir)) return;
+            if (dir == 5) return;
+
+            y = py + ddy[dir];
+            x = px + ddx[dir];
+            m_idx = cave[y][x].m_idx;
+
+            if (!m_idx)
+            {
+                msg_print("There is no monster there.");
+                return;
+            }
+        }
+
+        if (m_idx)
+        {
+            mon_attack_mon(p_ptr->riding, m_idx);
+            mount->energy_need += ENERGY_NEED();
+            var_set_bool(res, TRUE);
+        }
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static void _mount_breathe_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Guided Breath");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Guide your dragon to breathe at a chosen foe.");
+        break;
+    case SPELL_CAST:
+    {
+        monster_type *mount = _get_mount();
+        int dir;
+
+        var_set_bool(res, FALSE);
+        if (!mount)
+        {
+            msg_print("This is a riding technique. Where is your dragon?");
+            return;
+        }
+
+        msg_format("Mount: EnergyNeed = %d", mount->energy_need);
+        if (mount->energy_need > 300)
+        {
+            msg_print("You sense your dragon is too tired for another attack.");
+            return;
+        }
+
+        if (!get_aim_dir(&dir)) return;
+
+        if (mon_spell_mon(p_ptr->riding, DRAGONRIDER_HACK))
+        {
+            mount->energy_need += ENERGY_NEED();
+            msg_format("Mount: EnergyNeed = %d", mount->energy_need);
+        }
+
+        var_set_bool(res, TRUE);
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+
 static _pact_t _dragons_pact = {
   "Dragons",
-  "By aligning themselves with dragons, the warlock gains great powers of protection and melee as "
-  "well as the ability to breathe powerful effects at a very early level. In addition, they gain "
-  "greatly enhanced skills with riding, though they may only ride dragons. As such they favor the "
-  "lance when mounted and seek continuously for the legendary 'Dragonlance'.",
+  "The bond between a Dragonrider and a Dragon is one of the strongest and most enduring ties "
+  "seen the world over. Each draws strength, power, and encouragement from the other, and together "
+  "they make a formidable foe. An alliance with Dragonkind enables this bond to form, and the Warlock "
+  "of this pact gains impressive powers for mounted combat. Indeed, they are among the elite riders "
+  "of the world, only slightly inferior to Cavalry and Beastmasters. But where they have a slight "
+  "deficiency in skill (and perhaps in melee as well), they have a strong advantage in riding techniques "
+  "and magical enhancements. Dragonriders favor the lance above all other weapons and seek continuously "
+  "for the lengendary 'Dragonlance' which they view as their long lost birthright.",
   "", /* RF3_DRAGON suffices */
   _dragon_calc_bonuses,
-  NULL,
+  _dragon_calc_weapon_bonuses,
   _dragon_calc_stats,
   _dragon_get_flags,
+  _dragon_upkeep_song,
 /*  S   I   W   D   C   C */
   { 2,  0,  0, -1,  1,  3},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-  {  20,  25,  30,   1,  14,  12, 68, 35},
-  {   7,  11,  10,   0,   0,   0, 21, 11},
+  {  20,  25,  30,   1,  14,  12, 52, 35},
+  {   7,  11,  10,   0,   0,   0, 14, 11},
 /*Life  BaseHP     Exp */
-   105,     10,    130,
+   102,     10,    130,
   {
     {  5,   3, 40, detect_menace_spell},
     {  7,   5, 40, detect_objects_spell},
-    { 10,   5, 50, _dragon_breathe_spell},
-    { 15,  15, 60, identify_spell},
-    { 23,  15, 60, probing_spell},
-    { 27,  60, 70, summon_dragon_spell},
-    { 32,  40, 70, _dragon_skin_spell},
+    { 15,  15, 60, _dragon_lore_spell},
+    { 20,  40, 70, summon_dragon_spell},
+    { 23,  10,  0, _mount_attack_spell},
+    { 25,   0,  0, _bless_song},
+    { 27,  15, 60, _understanding_spell},
+    { 29,   0,  0, _mount_jump_spell},
+    { 30,   0,  0, _canter_song},
+    { 32,  20, 50, _dragon_eye_spell},
+    { 35,  30,  0, _mount_breathe_spell},
+    { 37,   0,  0, _gallop_song},
     { 40,  90, 80, _word_of_command_spell},
-    { 42,  50, 80, _dragon_song_spell},
-    { 50, 100, 80, summon_hi_dragon_spell},
+    { 42,   0,  0, _healing_song},
+    { 45,   0,  0, _heroic_charge_song},
+/*    { 50, 100,  0, _pets_breathe_spell},*/
     { -1,   0,  0, NULL },
   },
   _dragon_blast
@@ -765,6 +1113,7 @@ static _pact_t _angels_pact = {
   NULL,
   _angel_calc_stats,
   _angel_get_flags,
+  NULL,
 /*  S   I   W   D   C   C */
   { 1,  1,  2,  1,  1,  3},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
@@ -877,6 +1226,7 @@ static _pact_t _demons_pact = {
   NULL,
   _demon_calc_stats,
   _demon_get_flags,
+  NULL,
 /*  S   I   W   D   C   C */
   { 3,  1,-10,  1,  1,  3},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
@@ -1015,6 +1365,7 @@ static _pact_t _hounds_pact = {
   NULL,
   _hound_calc_stats,
   _hound_get_flags,
+  NULL,
 /*  S   I   W   D   C   C */
   { 0, -2, -2,  2,  2,  2},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
@@ -1177,6 +1528,7 @@ static _pact_t _spiders_pact = {
   NULL,
   _spider_calc_stats,
   _spider_get_flags,
+  NULL,
 /*  S   I   W   D   C   C */
   {-1,  0, -2,  2,  0,  2},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
@@ -1300,6 +1652,7 @@ static _pact_t _giants_pact = {
   _giant_calc_weapon_bonuses,
   _giant_calc_stats,
   _giant_get_flags,
+  NULL,
 /*  S   I   W   D   C   C */
   { 2, -4, -4, -2,  2,  2},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
@@ -1559,6 +1912,7 @@ class_t *warlock_get_class(int psubclass)
         me.calc_weapon_bonuses = pact->calc_weapon_bonuses;
         me.calc_stats = pact->calc_stats;
         me.get_flags = pact->get_flags;
+        me.process_player = pact->process_player;
     }
 
     return &me;

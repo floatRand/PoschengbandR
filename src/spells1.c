@@ -1917,7 +1917,6 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         case GF_OLD_SPEED:
         case GF_STAR_HEAL:
         case GF_CRUSADE:
-        case GF_DRAGON_SONG:
         case GF_UNHOLY_WORD:
             break;
         default:
@@ -3801,46 +3800,6 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (m_ptr->hp > m_ptr->maxhp) m_ptr->hp = m_ptr->maxhp;
                 set_monster_fast(c_ptr->m_idx, MON_FAST(m_ptr) + 100);
                 note = " fights with renewed vigor!";
-            }
-            dam = 0;
-            break;
-        }
-
-        case GF_DRAGON_SONG:
-        {
-            if ((is_pet(m_ptr) || is_friendly(m_ptr)) && (r_ptr->flags3 & RF3_DRAGON))
-            {
-                if (seen) obvious = TRUE;
-
-                set_monster_csleep(c_ptr->m_idx, 0);
-                if (MON_STUNNED(m_ptr))
-                {
-                    if (seen_msg) msg_format("%^s is no longer stunned.", m_name);
-                    set_monster_stunned(c_ptr->m_idx, 0);
-                }
-                if (MON_CONFUSED(m_ptr))
-                {
-                    if (seen_msg) msg_format("%^s is no longer confused.", m_name);
-                    set_monster_confused(c_ptr->m_idx, 0);
-                }
-                if (MON_MONFEAR(m_ptr))
-                {
-                    if (seen_msg) msg_format("%^s recovers %s courage.", m_name, m_poss);
-                    set_monster_monfear(c_ptr->m_idx, 0);
-                }
-
-                if (m_ptr->hp < m_ptr->maxhp)
-                {
-                    int heal = MIN(dam, m_ptr->maxhp - m_ptr->hp);
-                    m_ptr->hp += heal;
-                    note = " fights with renewed vigor!";
-                }
-
-                if (!MON_FAST(m_ptr))
-                {
-                    set_monster_fast(c_ptr->m_idx, MON_FAST(m_ptr) + 100);
-                    note = " fights with renewed vigor!";
-                }
             }
             dam = 0;
             break;

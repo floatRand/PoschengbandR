@@ -2661,9 +2661,8 @@ enum summon_specific_e {
 #define GF_SUBJUGATION 144
 #define GF_PARALYSIS 145
 #define GF_CONTROL_PACT_MONSTER  146
-#define GF_DRAGON_SONG  147
 
-#define MAX_GF                148
+#define MAX_GF                147
 
 /*
  * Some things which induce learning
@@ -5687,6 +5686,12 @@ enum mon_save_fields_e {
 #define MYSTIC_TOGGLE_DEFENSE    43
 
 #define LEPRECHAUN_TOGGLE_BLINK  44
+
+#define WARLOCK_DRAGON_TOGGLE_BLESS 45
+#define WARLOCK_DRAGON_TOGGLE_CANTER 46
+#define WARLOCK_DRAGON_TOGGLE_GALLOP 47
+#define WARLOCK_DRAGON_TOGGLE_HEALING 48
+#define WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE 49
 
 /* Wild Counters */
 #define WILD_INFRAVISION 1

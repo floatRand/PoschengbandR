@@ -467,7 +467,7 @@ static void _centaur_birth(void)
     skills_innate_init("Hooves", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 }
 
-static void _jump_spell(int cmd, variant *res)
+void jump_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -514,7 +514,7 @@ static void _jump_spell(int cmd, variant *res)
 
 static power_info _centaur_powers[] =
 {
-    { A_DEX, {15, 10, 50, _jump_spell}},
+    { A_DEX, {15, 10, 50, jump_spell}},
     { -1, {-1, -1, -1, NULL} }
 };
 

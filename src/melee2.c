@@ -1485,7 +1485,7 @@ static int check_hit2(int power, int level, int ac, int stun)
 
 
 /* Monster attacks monster */
-static bool monst_attack_monst(int m_idx, int t_idx)
+bool mon_attack_mon(int m_idx, int t_idx)
 {
     monster_type    *m_ptr = &m_list[m_idx];
     monster_type    *t_ptr = &m_list[t_idx];
@@ -1494,7 +1494,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
     monster_race    *tr_ptr = &r_info[t_ptr->r_idx];
 
     int             ap_cnt;
-    int             ac, rlev, pt;
+    int             ac, rlev, pt, to_dd = 0;
     char            m_name[80], t_name[80];
     bool            blinked;
     bool            explode = FALSE, touched = FALSE, fear = FALSE;
@@ -1522,7 +1522,22 @@ static bool monst_attack_monst(int m_idx, int t_idx)
     ac = MON_AC(tr_ptr, t_ptr);
 
     /* Extract the effective monster level */
-    rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
+    rlev = MON_MELEE_LVL(r_ptr, m_ptr);
+
+    /* Apply Dragon Songs to the player's mount */
+    if (p_ptr->riding == m_idx && warlock_is_(WARLOCK_DRAGONS))
+    {
+        switch (warlock_get_toggle())
+        {
+        case WARLOCK_DRAGON_TOGGLE_BLESS:
+            rlev += 5;
+            break;
+        case WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE:
+            rlev += 20;
+            to_dd += 2;
+            break;
+        }
+    }
 
     /* Get the monster name (or "it") */
     monster_desc(m_name, m_ptr, 0);
@@ -1572,7 +1587,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 
         effect = r_ptr->blow[ap_cnt].effect;
         method = r_ptr->blow[ap_cnt].method;
-        d_dice = r_ptr->blow[ap_cnt].d_dice;
+        d_dice = r_ptr->blow[ap_cnt].d_dice + to_dd;
         d_side = r_ptr->blow[ap_cnt].d_side;
 
         if (!m_ptr->r_idx) break;
@@ -1974,7 +1989,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
                     if (tr_ptr->flags2 & RF2_AURA_REVENGE && !retaliation_hack)
                     {
                         retaliation_hack = TRUE;
-                        monst_attack_monst(t_idx, m_idx);
+                        mon_attack_mon(t_idx, m_idx);
                         retaliation_count++;
                         retaliation_hack = FALSE;
                     }
@@ -2733,12 +2748,12 @@ static void process_monster(int m_idx)
                  * Attempt to cast a spell at an enemy other than the player
                  * (may slow the game a smidgeon, but I haven't noticed.)
                  */
-                if (monst_spell_monst(m_idx)) return;
+                if (mon_spell_mon(m_idx, 0)) return;
             }
             else
             {
                 /* Attempt to do counter attack at first */
-                if (monst_spell_monst(m_idx)) return;
+                if (mon_spell_mon(m_idx, 0)) return;
 
                 if (aware && make_attack_spell(m_idx, FALSE)) return;
             }
@@ -3210,7 +3225,7 @@ static void process_monster(int m_idx)
                     /* attack */
                     if (y_ptr->r_idx && (y_ptr->hp >= 0))
                     {
-                        if (monst_attack_monst(m_idx, c_ptr->m_idx)) return;
+                        if (mon_attack_mon(m_idx, c_ptr->m_idx)) return;
 
                         /* In anti-melee dungeon, stupid or confused monster takes useless turn */
                         else if (d_info[dungeon_type].flags1 & DF1_NO_MELEE)

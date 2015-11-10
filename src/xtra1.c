@@ -592,6 +592,10 @@ static void prt_stat(int stat)
 #define BAR_SH_DOMINATION 166
 #define BAR_PSIONIC_DISRUPTION 167
 #define BAR_PSIONIC_DRAIN 168
+#define BAR_DRAGON_CANTER 169
+#define BAR_DRAGON_GALLOP 170
+#define BAR_DRAGON_HEALING 171
+#define BAR_DRAGON_HEROIC_CHARGE 172
 
 static struct {
     byte attr;
@@ -769,6 +773,10 @@ static struct {
     {TERM_L_BLUE, "Dom", "Dominate"},
     {TERM_RED, "[M", "Disruption"},
     {TERM_YELLOW, "Dr", "Drain"},
+    {TERM_L_BLUE, "Ctr", "Canter"},
+    {TERM_RED, "Glp", "Gallop"},
+    {TERM_YELLOW, "Hl", "Healing"},
+    {TERM_VIOLET, "Chg", "Heroic Charge"},
     {0, NULL, NULL}
 };
 
@@ -1119,6 +1127,29 @@ static void prt_status(void)
             break;
         }
     }
+
+    if (p_ptr->pclass == CLASS_WARLOCK)
+    {
+        switch (warlock_get_toggle())
+        {
+        case WARLOCK_DRAGON_TOGGLE_BLESS:
+            ADD_FLG(BAR_BLESSED);
+            break;
+        case WARLOCK_DRAGON_TOGGLE_CANTER:
+            ADD_FLG(BAR_DRAGON_CANTER);
+            break;
+        case WARLOCK_DRAGON_TOGGLE_GALLOP:
+            ADD_FLG(BAR_DRAGON_GALLOP);
+            break;
+        case WARLOCK_DRAGON_TOGGLE_HEALING:
+            ADD_FLG(BAR_DRAGON_HEALING);
+            break;
+        case WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE:
+            ADD_FLG(BAR_DRAGON_HEROIC_CHARGE);
+            break;
+        }
+    }
+
     if (p_ptr->pclass == CLASS_PSION)
     {
         if (psion_weapon_graft()) ADD_FLG(BAR_WEAPON_GRAFT);
@@ -3932,7 +3963,7 @@ void calc_bonuses(void)
         p_ptr->no_passwall_dam = TRUE;
     }
 
-    if (IS_BLESSED())
+    if (IS_BLESSED() || warlock_get_toggle() == WARLOCK_DRAGON_TOGGLE_BLESS)
     {
         for (i = 0; i < MAX_HANDS; i++)
         {
@@ -4071,7 +4102,7 @@ void calc_bonuses(void)
         race_ptr->calc_bonuses();
 
     /* Temporary "Hero" ... moved after class processing for the Swordmaster */
-    if (IS_HERO())
+    if (IS_HERO() || warlock_get_toggle() == WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE)
     {
         for (i = 0; i < MAX_HANDS; i++)
         {
@@ -4083,7 +4114,7 @@ void calc_bonuses(void)
         p_ptr->shooter_info.dis_to_h  += 12;
     }
 
-    if (IS_HERO() || IS_SHERO())
+    if (IS_HERO() || IS_SHERO() ||  warlock_get_toggle() == WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE)
         res_add(RES_FEAR);
 
     /* Calculate stats after calling class hook */
@@ -4313,6 +4344,21 @@ void calc_bonuses(void)
         }
         if (MON_FAST(riding_m_ptr)) p_ptr->pspeed += 10;
         if (MON_SLOW(riding_m_ptr)) p_ptr->pspeed -= 10;
+
+        if (warlock_is_(WARLOCK_DRAGONS))
+        {
+            switch (warlock_get_toggle())
+            {
+            case WARLOCK_DRAGON_TOGGLE_CANTER:
+                p_ptr->pspeed += 3;
+                break;
+            case WARLOCK_DRAGON_TOGGLE_GALLOP:
+            case WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE:
+                p_ptr->pspeed += 10;
+                break;
+            }
+        }
+
         riding_levitation = (riding_r_ptr->flags7 & RF7_CAN_FLY) ? TRUE : FALSE;
         if (riding_r_ptr->flags7 & (RF7_CAN_SWIM | RF7_AQUATIC)) p_ptr->can_swim = TRUE;
 

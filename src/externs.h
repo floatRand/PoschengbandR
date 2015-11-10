@@ -1074,6 +1074,7 @@ extern void delete_monster_idx(int i);
 extern void delete_monster(int y, int x);
 extern void compact_monsters(int size);
 extern void wipe_m_list(void);
+extern bool mon_attack_mon(int m_idx, int t_idx);
 
 extern bool mon_is_type(int r_idx, int type); /* Uses the various SUMMON_* constants */
 
@@ -1815,7 +1816,8 @@ extern bool make_attack_spell(int m_idx, bool ticked_off);
 
 /* mspells2.c */
 extern void get_project_point(int sy, int sx, int *ty, int *tx, int flg);
-extern bool monst_spell_monst(int m_idx);
+#define DRAGONRIDER_HACK 0x01 /* sorry about this one, but damn, mon_spell_mon needs refactoring! I don't have the patience right now ... */
+extern bool mon_spell_mon(int m_idx, int options);
 
 /* artifact.c */
 extern bool immunity_hack;
@@ -2081,7 +2083,10 @@ extern race_t *archon_get_race(void);
 extern race_t *balrog_get_race(void);
 extern race_t *barbarian_get_race(void);
 extern race_t *beastman_get_race(void);
+
 extern race_t *centaur_get_race(void);
+extern void    jump_spell(int cmd, variant *res);
+
 extern race_t *cyclops_get_race(void);
 extern race_t *dark_elf_get_race(void);
 extern race_t *demigod_get_race(int psubrace);
@@ -2388,8 +2393,12 @@ extern class_t *tourist_get_class(void);
 extern class_t *scout_get_class(void);
 extern class_t *sniper_get_class(void);
 extern class_t *sorcerer_get_class(void);
+
 extern class_t *warlock_get_class(int psubclass);
 extern bool     warlock_is_pact_monster(monster_race *r_ptr);
+extern int      warlock_get_toggle(void);
+extern void     warlock_stop_singing(void);
+
 extern class_t *warrior_get_class(void);
 extern class_t *warrior_mage_get_class(void);
 extern class_t *weaponsmith_get_class(void);
