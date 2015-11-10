@@ -98,6 +98,7 @@ static void do_cmd_eat_food_aux(int item)
 
     if (music_singing_any()) bard_stop_singing();
     if (hex_spelling_any()) stop_hex_spell_all();
+    warlock_stop_singing();
 
     /* Get the item (in the pack) */
     if (item >= 0)
@@ -609,6 +610,7 @@ static void do_cmd_quaff_potion_aux(int item)
     {
         if (!hex_spelling(HEX_INHAIL)) stop_hex_spell_all();
     }
+    warlock_stop_singing();
 
     /* Get the item (in the pack) */
     if (item >= 0)
@@ -908,6 +910,8 @@ static void do_cmd_read_scroll_aux(int item, bool known)
 
     /* Hex */
     if (hex_spelling_any() && ((p_ptr->lev < 35) || hex_spell_fully())) stop_hex_spell_all();
+
+    warlock_stop_singing();
 
     /* Assume the scroll will get used up */
     used_up = TRUE;

@@ -2535,6 +2535,8 @@ void do_cmd_rest(void)
     /* Hex */
     if (hex_spelling_any()) stop_hex_spell_all();
 
+    warlock_stop_singing();
+
     /* Prompt for time if needed */
     if (command_arg <= 0)
     {

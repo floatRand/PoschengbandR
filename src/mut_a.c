@@ -1776,6 +1776,7 @@ void nausea_mut(int cmd, variant *res)
             
             if (music_singing_any()) bard_stop_singing();
             if (hex_spelling_any()) stop_hex_spell_all();
+            warlock_stop_singing();
         }
         break;
     default:
