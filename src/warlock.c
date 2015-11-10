@@ -964,7 +964,6 @@ static void _mount_breathe_spell(int cmd, variant *res)
             return;
         }
 
-        msg_format("Mount: EnergyNeed = %d", mount->energy_need);
         if (mount->energy_need > 300)
         {
             msg_print("You sense your dragon is too tired for another attack.");
@@ -974,10 +973,7 @@ static void _mount_breathe_spell(int cmd, variant *res)
         if (!get_aim_dir(&dir)) return;
 
         if (mon_spell_mon(p_ptr->riding, DRAGONRIDER_HACK))
-        {
             mount->energy_need += ENERGY_NEED();
-            msg_format("Mount: EnergyNeed = %d", mount->energy_need);
-        }
 
         var_set_bool(res, TRUE);
         break;
@@ -988,6 +984,77 @@ static void _mount_breathe_spell(int cmd, variant *res)
     }
 }
 
+static void _pets_breathe_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Dragon's Power");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Guide all of your pet dragon's to breathe at a chosen target.");
+        break;
+    case SPELL_CAST:
+    {
+        monster_type *mount = _get_mount();
+        int dir, i;
+
+        var_set_bool(res, FALSE);
+        if (!mount)
+        {
+            msg_print("This is a riding technique. Where is your dragon?");
+            return;
+        }
+
+        if (mount->energy_need > 300)
+        {
+            msg_print("You sense your dragon is too tired for another attack.");
+            return;
+        }
+
+        if (!get_aim_dir(&dir)) return;
+
+        msg_print("<color:v>Dragons: As One!!</color>");
+        msg_boundary();
+
+        if (mon_spell_mon(p_ptr->riding, DRAGONRIDER_HACK))
+        {
+            mount->energy_need += ENERGY_NEED();
+            msg_boundary();
+        }
+
+        for (i = m_max - 1; i >= 1; i--)
+        {
+            monster_type *m_ptr = &m_list[i];
+            monster_race *r_ptr;
+
+            if (!m_ptr->r_idx) continue;
+            if (!is_pet(m_ptr)) continue;
+            if (i == p_ptr->riding) continue;
+
+            r_ptr = &r_info[m_ptr->r_idx];
+            if (!(r_ptr->flags3 & RF3_DRAGON)) continue;
+
+            if (mon_spell_mon(i, DRAGONRIDER_HACK))
+            {
+                if (is_seen(m_ptr))
+                {
+                    char m_name[MAX_NLEN];
+                    monster_desc(m_name, m_ptr, 0);
+                    msg_format("%^s disappears!", m_name);
+                }
+                delete_monster_idx(i);
+                msg_boundary();
+            }
+        }
+        var_set_bool(res, TRUE);
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
 
 static _pact_t _dragons_pact = {
   "Dragons",
@@ -1028,7 +1095,7 @@ static _pact_t _dragons_pact = {
     { 40,  90, 80, _word_of_command_spell},
     { 42,   0,  0, _healing_song},
     { 45,   0,  0, _heroic_charge_song},
-/*    { 50, 100,  0, _pets_breathe_spell},*/
+    { 50, 100,  0, _pets_breathe_spell},
     { -1,   0,  0, NULL },
   },
   _dragon_blast
