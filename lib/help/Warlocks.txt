@@ -19,7 +19,7 @@ Base HP       15        Bows        <color:R>Poor         </color>
 Experience   135%
 </style></indent>
 <topic:Dragons><color:o>Dragons</color>
-By aligning themselves with dragons, the warlock gains great powers of protection and melee as well as the ability to breathe powerful effects at a very early level. In addition, they gain greatly enhanced skills with riding, though they may only ride dragons. As such they favor the lance when mounted and seek continuously for the legendary 'Dragonlance'.
+The bond between a Dragonrider and a Dragon is one of the strongest and most enduring ties seen the world over. Each draws strength, power, and encouragement from the other, and together they make a formidable foe. An alliance with Dragonkind enables this bond to form, and the Warlock of this pact gains impressive powers for mounted combat. Indeed, they are among the elite riders of the world, only slightly inferior to Cavalry and Beastmasters. But where they have a slight deficiency in skill (and perhaps in melee as well), they have a strong advantage in riding techniques and magical enhancements. Dragonriders favor the lance above all other weapons and seek continuously for the lengendary 'Dragonlance' which they view as their long lost birthright.
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> +2</color>        Disarming   <color:r>Bad          </color>
@@ -28,7 +28,7 @@ Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </col
 Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +1</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:v> +3</color>        Perception  <color:R>Poor         </color>
-Life Rating  105%       Melee       <color:G>Excellent    </color>
+Life Rating  102%       Melee       <color:o>Fair         </color>
 Base HP       10        Bows        <color:R>Poor         </color>
 Experience   130%
 </style></indent>
@@ -106,7 +106,7 @@ Experience   140%
 <style:table>
 <color:G>                 </color> <color:G>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>
 Undead             -1   +2   -3   +0   +2   +4  107%  +15  135%
-Dragons            +2   +0   +0   -1   +1   +3  105%  +10  130%
+Dragons            +2   +0   +0   -1   +1   +3  102%  +10  130%
 Angels             +1   +1   +2   +1   +1   +3   98%   +4  150%
 Demons             +3   +1  -10   +1   +1   +3  100%  +15  150%
 Hounds             +0   -2   -2   +2   +2   +2  102%  +12  110%
@@ -130,7 +130,7 @@ Giants            <color:r>Bad          </color> <color:r>Bad          </color> 
 <style:table>
                   <color:w>Searching     Perception    Melee         Bows         </color>
 Undead            <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:R>Poor         </color>
-Dragons           <color:R>Poor         </color> <color:R>Poor         </color> <color:G>Excellent    </color> <color:R>Poor         </color>
+Dragons           <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Angels            <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Demons            <color:R>Poor         </color> <color:r>Bad          </color> <color:G>Excellent    </color> <color:R>Poor         </color>
 Hounds            <color:R>Poor         </color> <color:r>Bad          </color> <color:y>Very Good    </color> <color:r>Bad          </color>
