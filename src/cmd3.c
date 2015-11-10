@@ -1379,7 +1379,13 @@ void do_cmd_query_symbol(void)
    Idea from Vanilla 3.5, but recoded from scratch and enhanced.
    The list is scrollable and displays the current target.
    You can invoke monster recall.
-   You can change the current target. */
+   You can change the current target.
+   You can travel to a given monster.
+   You can rename your pets.
+   You can view info when probing.
+
+   Apologies: MON_LIST_PROBING is a giant, ugly hack, but the old
+   probing code was a carpal tunnel death trap in a crowded room.*/
 struct _mon_list_info_s 
 {
     int group;
@@ -1465,7 +1471,7 @@ static int _mon_list_comp(_mon_list_info_ptr left, _mon_list_info_ptr right)
     return 0;
 }
 
-static _mon_list_ptr _create_monster_list(void)
+static _mon_list_ptr _create_monster_list(int mode)
 {
     int              i;
     _mon_list_ptr    result = _mon_list_alloc();
@@ -1476,7 +1482,7 @@ static _mon_list_ptr _create_monster_list(void)
     /* Group all aware monsters by kind. */
     for (i = 0; i < max_m_idx; i++)
     {
-        const monster_type *m_ptr = &m_list[i];
+        monster_type       *m_ptr = &m_list[i];
         int                 key;
         bool                los;
         int                 r_idx = m_ptr->ap_r_idx;
@@ -1486,7 +1492,22 @@ static _mon_list_ptr _create_monster_list(void)
         if (!m_ptr->ml) continue;
 
         los = projectable(py, px, m_ptr->fy, m_ptr->fx);
-        key = los ? -r_idx : r_idx;
+        if (mode == MON_LIST_PROBING) /* No grouping and only display los monsters */
+        {
+            if (!los) continue;
+            if (!is_original_ap(m_ptr))
+            {
+                if (m_ptr->mflag2 & MFLAG2_KAGE)
+                    m_ptr->mflag2 &= ~(MFLAG2_KAGE);
+
+                m_ptr->ap_r_idx = m_ptr->r_idx;
+                lite_spot(m_ptr->fy, m_ptr->fx);
+            }
+            lore_do_probe(m_ptr->r_idx);
+            key = i;
+        }
+        else
+            key = los ? -r_idx : r_idx;
 
         info_ptr = int_map_find(map, key);
         if (!info_ptr)
@@ -1582,7 +1603,7 @@ static _mon_list_ptr _create_monster_list(void)
     return result;
 }
 
-static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
+static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect, int mode)
 {
     int     i;
     int     cx_monster;
@@ -1612,7 +1633,8 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
             if (info_ptr->group == _GROUP_LOS)
             {
                 c_put_str(TERM_WHITE,
-                      format("You see %d monster%s, %d %s awake:",
+                      format("You %s %d monster%s, %d %s awake:",
+                             mode == MON_LIST_PROBING ? "probe" : "see",
                              info_ptr->ct_los,
                              info_ptr->ct_los != 1 ? "s" : "",
                              info_ptr->ct_awake,
@@ -1686,97 +1708,158 @@ static int _draw_monster_list(_mon_list_ptr list, int top, rect_t rect)
     return i;
 }
 
-void do_cmd_list_monsters(void)
+static byte _mon_health_color(monster_type *m_ptr)
 {
-    _mon_list_ptr list = _create_monster_list();
-    rect_t        display_rect = ui_menu_rect();
+    int pct = 100 * m_ptr->hp / m_ptr->maxhp;
+    if (pct >= 100) return 'G';
+    else if (pct >= 60) return 'y';
+    else if (pct >= 25) return 'o';
+    else if (pct >= 10) return 'R';
+    return 'r';
+}
 
-    if (display_rect.cx > 50)
-        display_rect.cx = 50;
-    
-    if (list->ct_total)
+static byte _mon_exp_color(monster_type *m_ptr)
+{
+    return 'y';
+}
+
+static void _mon_display_probe(doc_ptr doc, int m_idx)
+{
+    monster_type *m_ptr = &m_list[m_idx];
+    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    int           speed;
+
+    speed = m_ptr->mspeed - 110;
+    if (MON_FAST(m_ptr)) speed += 10;
+    if (MON_SLOW(m_ptr)) speed -= 10;
+    if (m_ptr->nickname)
+        doc_printf(doc, "Name : <color:R>%13s</color>\n", quark_str(m_ptr->nickname));
+    doc_printf(doc, "Speed: <color:G>%+13d</color>\n", speed);
+    doc_printf(doc, "HP   : <color:%c>%6d</color>/<color:G>%6d</color>\n",
+        _mon_health_color(m_ptr),
+        m_ptr->hp,
+        m_ptr->maxhp
+    );
+    doc_printf(doc, "AC   : <color:G>%13d</color>\n", MON_AC(r_ptr, m_ptr));
+
+    if ((r_ptr->flags3 & (RF3_EVIL | RF3_GOOD)) == (RF3_EVIL | RF3_GOOD))
+        doc_printf(doc, "Align: <color:B>%13.13s</color>\n", "Good&Evil");
+    else if (r_ptr->flags3 & RF3_EVIL)
+        doc_printf(doc, "Align: <color:r>%13.13s</color>\n", "Evil");
+    else if (r_ptr->flags3 & RF3_GOOD)
+        doc_printf(doc, "Align: <color:g>%13.13s</color>\n", "Good");
+    else if ((m_ptr->sub_align & (SUB_ALIGN_EVIL | SUB_ALIGN_GOOD)) == (SUB_ALIGN_EVIL | SUB_ALIGN_GOOD))
+        doc_printf(doc, "Align: <color:g>%s</color>\n", "neutral(good&evil)");
+    else if (m_ptr->sub_align & SUB_ALIGN_EVIL)
+        doc_printf(doc, "Align: <color:o>%13.13s</color>\n", "Neutral Evil");
+    else if (m_ptr->sub_align & SUB_ALIGN_GOOD)
+        doc_printf(doc, "Align: <color:G>%13.13s</color>\n", "Neutral Good");
+    else
+        doc_printf(doc, "Align: <color:w>%13.13s</color>\n", "Neutral");
+
+    if (r_ptr->next_r_idx)
     {
-        int  top = 0, page_size, pos = 1;
-        int  ct_types = vec_length(list->list);
-        bool done = FALSE;
-        bool redraw = TRUE;
+        doc_printf(doc, "Exp  : <color:%c>%6d</color>/<color:G>%6d</color>\n",
+            _mon_exp_color(m_ptr),
+            m_ptr->exp,
+            r_ptr->next_exp
+        );
+    }
+    if (p_ptr->riding == m_idx)
+        doc_printf(doc, "       <color:G>%13.13s</color>\n", "Riding");
 
-        page_size = display_rect.cy;
-        if (page_size > ct_types)
-            page_size = ct_types;
+    if (is_pet(m_ptr))
+        doc_printf(doc, "       <color:G>%13.13s</color>\n", "Pet");
+    else if (is_friendly(m_ptr))
+        doc_printf(doc, "       <color:G>%13.13s</color>\n", "Friendly");
 
-        msg_line_clear();
-        screen_save();
+    if (MON_CSLEEP(m_ptr))
+        doc_printf(doc, "       <color:b>%13.13.s</color>\n", "Sleeping");
 
-        while (!done)
+    if (MON_STUNNED(m_ptr))
+        doc_printf(doc, "       <color:B>%13.13s</color>\n", "Stunned");
+
+    if (MON_MONFEAR(m_ptr))
+        doc_printf(doc, "       <color:v>%13.13s</color>\n", "Scared");
+
+    if (MON_CONFUSED(m_ptr))
+        doc_printf(doc, "       <color:U>%13.13s</color>\n", "Confused");
+
+    if (MON_INVULNER(m_ptr))
+        doc_printf(doc, "       <color:W>%13.13s</color>\n", "Invulnerable");
+
+}
+
+static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode)
+{
+    int  top = 0, page_size, pos = 1;
+    int  ct_types = vec_length(list->list);
+    bool done = FALSE;
+    bool redraw = TRUE;
+    int  cmd_queue[10]; /* A worthy hack!! */
+    int  q_pos = 0;
+    int  q_ct = 0;
+
+    page_size = display_rect.cy;
+    if (page_size > ct_types)
+        page_size = ct_types;
+
+    msg_line_clear();
+    screen_save();
+
+    while (!done)
+    {
+        int  cmd;
+
+        if (redraw)
         {
-            int cmd;
-
-            if (redraw)
+            int ct;
+            ct = _draw_monster_list(list, top, display_rect, mode);
+            Term_erase(display_rect.x, display_rect.y + ct, display_rect.cx);
+            if (mode == MON_LIST_PROBING)
             {
-                int ct;
-                ct = _draw_monster_list(list, top, display_rect);
-                Term_erase(display_rect.x, display_rect.y + ct, display_rect.cx);
+                c_put_str(TERM_L_BLUE, "['p' for Probing; ESC to Exit; ? for Help]",
+                        display_rect.y + ct, display_rect.x + 3);
+            }
+            else
+            {
                 c_put_str(TERM_L_BLUE, "[Press ESC to exit. Press ? for help]",
                         display_rect.y + ct, display_rect.x + 3);
-                redraw = FALSE;
             }
-            Term_gotoxy(display_rect.x, display_rect.y + pos);
+            redraw = FALSE;
+        }
+        Term_gotoxy(display_rect.x, display_rect.y + pos);
 
+        if (q_pos < q_ct)
+            cmd = cmd_queue[q_pos++];
+        else
             cmd = inkey_special(TRUE);
-            switch (cmd)
+
+        switch (cmd)
+        {
+        /* Monster Recall */
+        case 'r': case 'R':
+        {
+            int idx = top + pos;
+            if (0 <= idx && idx < ct_types)
             {
-            case ESCAPE:
-            case 'q':
-            case 'Q':
-            case '\n':
-            case '\r':
-                done = TRUE;
-                break;
-            case 'r':
-            case 'R':
-            {
-                int idx = top + pos;
-                if (0 <= idx && idx < ct_types)
+                _mon_list_info_ptr info_ptr = vec_get(list->list, idx);
+                assert(info_ptr);
+                if (info_ptr->r_idx)
                 {
-                    _mon_list_info_ptr info_ptr = vec_get(list->list, idx);
-                    assert(info_ptr);
-                    if (info_ptr->r_idx)
-                    {
-                        screen_roff(info_ptr->r_idx, 0);
-                        inkey();
-                        screen_load();
-                        screen_save();
-                        redraw = TRUE;
-                    }
+                    screen_roff(info_ptr->r_idx, 0);
+                    inkey();
+                    screen_load();
+                    screen_save();
+                    redraw = TRUE;
                 }
-                break;
             }
-            case '*':
-            case 't':
-            case '5':
-            {
-                int idx = top + pos;
-                if (0 <= idx && idx < ct_types)
-                {
-                    _mon_list_info_ptr info_ptr = vec_get(list->list, idx);
-                    assert(info_ptr);
-                    if ( info_ptr->r_idx
-                      && !info_ptr->target
-                      && target_able(info_ptr->m_idx) )
-                    {
-                        health_track(info_ptr->m_idx);
-                        target_who = info_ptr->m_idx;
-                        target_row = m_list[info_ptr->m_idx].fy;
-                        target_col = m_list[info_ptr->m_idx].fx;
-                        p_ptr->redraw |= PR_HEALTH_BARS;
-                        p_ptr->window |= PW_MONSTER_LIST;
-                        done = TRUE; /* Building a better target command :) */
-                    }
-                }
-                break;
-            }
-            case '`':
+            break;
+        }
+        /* Probe Monster Info */
+        case 'p': case 'P':
+        {
+            if (mode == MON_LIST_PROBING)
             {
                 int idx = top + pos;
                 if (0 <= idx && idx < ct_types)
@@ -1785,73 +1868,208 @@ void do_cmd_list_monsters(void)
                     assert(info_ptr);
                     if (info_ptr->m_idx)
                     {
-                        do_cmd_travel_xy(m_list[info_ptr->m_idx].fx, m_list[info_ptr->m_idx].fy);
-                        done = TRUE;
+                        doc_ptr   doc = doc_alloc(display_rect.cx);
+                        doc_pos_t loc = doc_pos_create(display_rect.x, display_rect.y + pos + 1);
+
+                        doc_insert(doc, "    <indent>");
+                        _mon_display_probe(doc, info_ptr->m_idx);
+                        doc_insert(doc, "</indent>\n<color:b>[</color><color:B>Up for Prev; Down for Next; Any Key to Exit</color><color:b>]</color>\n");
+
+                        if (doc_cursor(doc).y + loc.y >= Term->hgt)
+                            loc.y = Term->hgt - doc_cursor(doc).y;
+
+                        doc_sync_term(doc, doc_range_all(doc), loc);
+
+                        /* Get a key, but don't waste it! Use arrows to travel up
+                           and down and display probe info for next/prev monster */
+                        cmd = inkey_special(TRUE);
+                        if (cmd == '2' || cmd == SKEY_DOWN)
+                        {
+                            cmd_queue[0] = '2';
+                            cmd_queue[1] = 'p';
+                            q_ct = 2;
+                            q_pos = 0;
+                        }
+                        else if (cmd == '8' || cmd == SKEY_UP)
+                        {
+                            cmd_queue[0] = '8';
+                            cmd_queue[1] = 'p';
+                            q_ct = 2;
+                            q_pos = 0;
+                        }
+                        else if (cmd == 'n' || cmd == 'N')
+                        {
+                            cmd_queue[0] = 'n';
+                            cmd_queue[1] = 'p';
+                            q_ct = 2;
+                            q_pos = 0;
+                        }
+
+                        doc_free(doc);
+                        screen_load();
+                        screen_save();
+                        redraw = TRUE;
                     }
                 }
-                break;
             }
-            case SKEY_TOP:
-            case '7':
+            break;
+        }
+        /* Rename Pet */
+        case 'n': case 'N':
+        {
+            int idx = top + pos;
+            if (0 <= idx && idx < ct_types)
+            {
+                _mon_list_info_ptr info_ptr = vec_get(list->list, idx);
+                assert(info_ptr);
+                if (info_ptr->m_idx)
+                {
+                    monster_type *m_ptr = &m_list[info_ptr->m_idx];
+                    if (is_pet(m_ptr))
+                    {
+                        char out_val[20];
+
+                        if (m_ptr->nickname)
+                            strcpy(out_val, quark_str(m_ptr->nickname));
+                        else
+                            strcpy(out_val, "");
+
+                        prt("Name : ", display_rect.y + pos + 1, display_rect.x);
+                        if (askfor(out_val, 15))
+                        {
+                            if (out_val[0])
+                                m_ptr->nickname = quark_add(out_val);
+                            else
+                                m_ptr->nickname = 0;
+                        }
+                        screen_load();
+                        screen_save();
+                        redraw = TRUE;
+                    }
+                }
+            }
+            break;
+        }
+        /* Set Current Target */
+        case '*': case 't': case '5':
+        {
+            int idx = top + pos;
+            if (0 <= idx && idx < ct_types)
+            {
+                _mon_list_info_ptr info_ptr = vec_get(list->list, idx);
+                assert(info_ptr);
+                if ( info_ptr->r_idx
+                  && !info_ptr->target
+                  && target_able(info_ptr->m_idx) )
+                {
+                    health_track(info_ptr->m_idx);
+                    target_who = info_ptr->m_idx;
+                    target_row = m_list[info_ptr->m_idx].fy;
+                    target_col = m_list[info_ptr->m_idx].fx;
+                    p_ptr->redraw |= PR_HEALTH_BARS;
+                    p_ptr->window |= PW_MONSTER_LIST;
+                    done = TRUE; /* Building a better target command :) */
+                }
+            }
+            break;
+        }
+        /* Travel to Location */
+        case '`':
+        {
+            int idx = top + pos;
+            if (0 <= idx && idx < ct_types)
+            {
+                _mon_list_info_ptr info_ptr = vec_get(list->list, idx);
+                assert(info_ptr);
+                if (info_ptr->m_idx)
+                {
+                    do_cmd_travel_xy(m_list[info_ptr->m_idx].fx, m_list[info_ptr->m_idx].fy);
+                    done = TRUE;
+                }
+            }
+            break;
+        }
+        /* Navigate the List */
+        case '7': case SKEY_TOP:
+            top = 0;
+            pos = 0;
+            redraw = TRUE;
+            break;
+        case '1': case SKEY_BOTTOM:
+            top = MAX(0, ct_types - page_size);
+            pos = 0;
+            redraw = TRUE;
+            break;
+        case '9': case SKEY_PGUP:
+            top -= page_size;
+            if (top < 0)
+            {
                 top = 0;
                 pos = 0;
-                redraw = TRUE;
-                break;
-            case SKEY_BOTTOM:
-            case '1':
+            }
+            redraw = TRUE;
+            break;
+        case '3': case SKEY_PGDOWN:
+            top += page_size;
+            if (top > ct_types - page_size)
+            {
                 top = MAX(0, ct_types - page_size);
                 pos = 0;
-                redraw = TRUE;
-                break;
-            case SKEY_PGUP:
-            case '9':
-                top -= page_size;
-                if (top < 0)
-                {
-                    top = 0;
-                    pos = 0;
-                }
-                redraw = TRUE;
-                break;
-            case SKEY_PGDOWN:
-            case '3':
-                top += page_size;
-                if (top > ct_types - page_size)
-                {
-                    top = MAX(0, ct_types - page_size);
-                    pos = 0;
-                }
-                redraw = TRUE;
-                break;
-            case SKEY_DOWN:
-            case '2':
-                if (top + pos < ct_types - 1)
-                    pos++;
-
-                if (pos == page_size)
-                {
-                    pos--;
-                    top++;
-                    redraw = TRUE;
-                }
-                break;
-            case SKEY_UP:
-            case '8':
-                if (pos > 0)
-                    pos--;
-
-                if (pos == 0 && top > 0)
-                {
-                    top--;
-                    redraw = TRUE;
-                }
-                break;
-            default:
-                done = TRUE;
             }
+            redraw = TRUE;
+            break;
+        case '2': case SKEY_DOWN:
+            if (top + pos < ct_types - 1)
+                pos++;
+
+            if (pos == page_size)
+            {
+                pos--;
+                top++;
+                redraw = TRUE;
+            }
+            break;
+        case '8': case SKEY_UP:
+            if (pos > 0)
+                pos--;
+
+            if (pos == 0 && top > 0)
+            {
+                top--;
+                redraw = TRUE;
+            }
+            break;
+        /* Help */
+        case '?':
+            /* TODO */
+            break;
+        /* Exit */
+        case ESCAPE:
+        case 'q':
+        case 'Q':
+        case '\n':
+        case '\r':
+            done = TRUE;
+            break;
+        /* Exit on unknown key? */
+        default:
+            if (mode != MON_LIST_PROBING) /* Hey, it cost mana to get here! */
+                done = TRUE;
         }
-        screen_load();
     }
+    screen_load();
+}
+
+void do_cmd_list_monsters(int mode)
+{
+    _mon_list_ptr list = _create_monster_list(mode);
+    rect_t        display_rect = ui_menu_rect();
+
+    if (display_rect.cx > 50)
+        display_rect.cx = 50;
+    
+    if (list->ct_total)
+        _list_monsters_aux(list, display_rect, mode);
     else
         msg_print("You see no visible monsters.");
 
@@ -1860,14 +2078,14 @@ void do_cmd_list_monsters(void)
 
 void _fix_monster_list_aux(void)
 {
-    _mon_list_ptr list = _create_monster_list();
+    _mon_list_ptr list = _create_monster_list(MON_LIST_NORMAL);
     rect_t        display_rect = {0};
     int           ct = 0, i;
 
     Term_get_size(&display_rect.cx, &display_rect.cy);
 
     if (list->ct_total)
-        ct = _draw_monster_list(list, 0, display_rect);
+        ct = _draw_monster_list(list, 0, display_rect, MON_LIST_NORMAL);
 
     for (i = ct; i < display_rect.cy; i++)
         Term_erase(display_rect.x, display_rect.y + i, display_rect.cx);

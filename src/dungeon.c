@@ -4223,7 +4223,7 @@ static void process_command(void)
 
         case '[':
             if (!p_ptr->image)
-                do_cmd_list_monsters();
+                do_cmd_list_monsters(MON_LIST_NORMAL);
             break;
 
         case ']':

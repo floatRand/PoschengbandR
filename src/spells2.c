@@ -2634,6 +2634,9 @@ bool mass_genocide_undead(int power, bool player_cast)
  */
 bool probing(void)
 {
+    do_cmd_list_monsters(MON_LIST_PROBING);
+    return TRUE; /*?? */
+#if 0
     int     i, speed;
     int cu, cv;
     bool    probe = FALSE;
@@ -2760,6 +2763,7 @@ sprintf(buf, "%s ... align:%s HP:%d/%d AC:%d speed:%s%d exp:", m_name, align, m_
 
     /* Result */
     return (probe);
+#endif
 }
 
 

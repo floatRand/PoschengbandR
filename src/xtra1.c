@@ -1993,6 +1993,9 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
     if (m_idx == target_who)
         base_attr = TERM_L_RED;
 
+    else if (m_idx == p_ptr->riding)
+        base_attr = TERM_L_BLUE;
+
     /* Tracking an unseen monster */
     if (!m_ptr->ml)
     {
@@ -2022,7 +2025,7 @@ static void prt_mon_health_bar(int m_idx, int row, int col)
     else if (m_ptr->maxhp > 0 && m_ptr->max_maxhp > 0)
     {
         /* Extract the "percent" of health */
-        int pct = 100L * m_ptr->hp / m_ptr->maxhp;
+        int pct = 100 * m_ptr->hp / m_ptr->maxhp;
         /*int pct2 = 100L * m_ptr->hp / m_ptr->max_maxhp;*/
 
         /* Convert percent into "health" */

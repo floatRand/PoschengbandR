@@ -989,7 +989,7 @@ static void _pets_breathe_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Dragon's Power");
+        var_set_string(res, "Dragons' Fury");
         break;
     case SPELL_DESC:
         var_set_string(res, "Guide all of your pet dragon's to breathe at a chosen target.");

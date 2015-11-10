@@ -763,7 +763,11 @@ extern void do_cmd_query_symbol(void);
 extern void kamaenaoshi(int item);
 extern bool ang_sort_comp_hook(vptr u, vptr v, int a, int b);
 extern void ang_sort_swap_hook(vptr u, vptr v, int a, int b);
-extern void do_cmd_list_monsters(void);
+enum {
+    MON_LIST_NORMAL = 0,
+    MON_LIST_PROBING
+};
+extern void do_cmd_list_monsters(int mode);
 extern void do_cmd_list_objects(void);
 extern void fix_monster_list(void);
 extern void fix_object_list(void);
