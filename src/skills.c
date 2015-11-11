@@ -421,7 +421,7 @@ int skills_riding_max(void)
 {
     /* Dragon Warlocks are Dragon Riders! */
     if (warlock_is_(WARLOCK_DRAGONS))
-        return 7500; /* This is about -3 speed relative to RIDING_EXP_MASTER */
+        return RIDING_EXP_MASTER;
     return s_info[_class_idx()].s_max[SKILL_RIDING];
 }
 

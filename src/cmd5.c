@@ -1840,12 +1840,13 @@ bool rakuba(int dam, bool force)
                 p_ptr->skill_exp[SKILL_RIDING] = MIN(max, cur + inc);
             }
 
+            /* see design/riding.ods */
             if (randint0(dam / 2 + rakubalevel * 2) < cur / 30 + 10)
             {
-                if ((((p_ptr->pclass == CLASS_BEASTMASTER) || (p_ptr->pclass == CLASS_CAVALRY)) && !p_ptr->riding_ryoute) || !one_in_(p_ptr->lev*(p_ptr->riding_ryoute ? 2 : 3) + 30))
-                {
+                if (max == RIDING_EXP_MASTER && !p_ptr->riding_ryoute)
                     return FALSE;
-                }
+                if (!one_in_(p_ptr->lev*(p_ptr->riding_ryoute ? 2 : 3) + 30))
+                    return FALSE;
             }
         }
 

@@ -697,12 +697,10 @@ static void _dragon_upkeep_song(void)
            perhaps scattered throughout the code base as 'hacks' */
         if (_get_toggle() == WARLOCK_DRAGON_TOGGLE_HEALING)
         {
-            int amt = p_ptr->lev * 2;
-
-            hp_player(amt);
+            hp_player(p_ptr->lev);
             if (mount->hp < mount->maxhp)
             {
-                int heal = MIN(amt, mount->maxhp - mount->hp);
+                int heal = MIN(p_ptr->lev*3, mount->maxhp - mount->hp);
                 mount->hp += heal;
             }
         }
@@ -776,7 +774,7 @@ static void _bless_song(int cmd, variant *res)
         var_set_string(res, "Adagio. When sung, both you and your steed will gain enhanced melee skill.");
         break;
     default:
-        _dragon_song(WARLOCK_DRAGON_TOGGLE_BLESS, "of heoic deeds.", cmd, res);
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_BLESS, "of heoic deeds", cmd, res);
         break;
     }
 }
@@ -792,7 +790,7 @@ static void _canter_song(int cmd, variant *res)
         var_set_string(res, "Allegro. This is a pleasing melody, and your steed will prance along in time with the song.");
         break;
     default:
-        _dragon_song(WARLOCK_DRAGON_TOGGLE_CANTER, "a joyful, upbeat melody.", cmd, res);
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_CANTER, "a joyful, upbeat melody", cmd, res);
         break;
     }
 }
@@ -808,7 +806,7 @@ static void _gallop_song(int cmd, variant *res)
         var_set_string(res, "Presto. A quick beat marks this song of urgency.");
         break;
     default:
-        _dragon_song(WARLOCK_DRAGON_TOGGLE_GALLOP, "a spurring melody.", cmd, res);
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_GALLOP, "a spurring melody", cmd, res);
         break;
     }
 }
@@ -824,7 +822,7 @@ static void _healing_song(int cmd, variant *res)
         var_set_string(res, "Largo. Slowly and majestically, both you and your mount feel the life giving effects of this powerful ballad.");
         break;
     default:
-        _dragon_song(WARLOCK_DRAGON_TOGGLE_HEALING, "a rejuvenating melody.", cmd, res);
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_HEALING, "a rejuvenating melody", cmd, res);
         break;
     }
 }
@@ -842,7 +840,7 @@ static void _heroic_charge_song(int cmd, variant *res)
                             "this ancient dragon song.");
         break;
     default:
-        _dragon_song(WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE, "of battle and riches.", cmd, res);
+        _dragon_song(WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE, "of battle and riches", cmd, res);
         break;
     }
 }
@@ -1037,13 +1035,17 @@ static void _pets_breathe_spell(int cmd, variant *res)
 
             if (mon_spell_mon(i, DRAGONRIDER_HACK))
             {
-                if (is_seen(m_ptr))
+                m_ptr->energy_need += ENERGY_NEED();
+                if (one_in_(2))
                 {
-                    char m_name[MAX_NLEN];
-                    monster_desc(m_name, m_ptr, 0);
-                    msg_format("%^s disappears!", m_name);
+                    if (is_seen(m_ptr))
+                    {
+                        char m_name[MAX_NLEN];
+                        monster_desc(m_name, m_ptr, 0);
+                        msg_format("%^s disappears!", m_name);
+                    }
+                    delete_monster_idx(i);
                 }
-                delete_monster_idx(i);
                 msg_boundary();
             }
         }

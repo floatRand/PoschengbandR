@@ -12259,7 +12259,7 @@ D:itself seems to cry out against it.
 
 N:728:Great Storm Wyrm
 G:D:b
-I:120:30d100:30:175:80:2000
+I:123:30d100:30:175:80:2000
 W:58:2:999:22000:0:0
 B:CLAW:HURT:6d12
 B:CLAW:HURT:6d12
@@ -12546,7 +12546,7 @@ D:resembles a gargantuan octopus and its evil is almost tangible.
 
 N:741:Great Ice Wyrm
 G:D:w
-I:120:30d100:30:170:80:2000
+I:122:30d100:30:170:80:2000
 W:54:2:999:15000:0:0
 B:CLAW:HURT:4d12
 B:CLAW:HURT:4d12
@@ -12812,7 +12812,7 @@ D:An awesome vortex of pure magic, power radiates from its frame.
 
 N:753:Nidhogg the Hel-Drake
 G:D:D
-I:120:39d111:20:133:70:2000
+I:125:39d111:20:133:70:2000
 W:55:2:999:25000:0:0
 B:CLAW:LOSE_CON:8d12
 B:CLAW:LOSE_CON:8d12
@@ -12886,7 +12886,7 @@ D:eyes give away her true form.
 
 N:756:Great Hell Wyrm
 G:D:r
-I:120:54d100:40:170:40:2000
+I:122:54d100:40:170:40:2000
 W:55:2:999:18000:0:0
 B:CLAW:HURT:4d12
 B:CLAW:HURT:4d12
@@ -13128,7 +13128,7 @@ D:against him and live.
 
 N:766:Ancalagon the Black
 G:D:D
-I:120:75d100:20:125:70:2000
+I:125:75d100:20:125:70:2000
 W:58:3:999:30000:0:0
 B:CLAW:HURT:5d12
 B:CLAW:HURT:6d12
@@ -13533,7 +13533,7 @@ D:An enormous, evil sea-dragon.
 
 N:783:Great Wyrm of Chaos
 G:D:v
-I:120:45d100:40:170:20:2000
+I:125:45d100:40:170:20:2000
 W:67:2:999:25000:0:0
 B:CLAW:HURT:5d12
 B:CLAW:HURT:5d12
@@ -13559,7 +13559,7 @@ D:stay real. Its very existence distorts the universe around it.
 
 N:784:Great Wyrm of Law
 G:D:W
-I:120:45d100:40:170:255:2000
+I:125:45d100:40:170:255:2000
 W:67:2:999:25000:0:0
 B:CLAW:HURT:5d12
 B:CLAW:HURT:5d12
@@ -13584,7 +13584,7 @@ D:insects to be crushed underfoot.
 
 N:785:Great Wyrm of Balance
 G:D:s
-I:120:49d100:40:170:255:2000
+I:125:49d100:40:170:255:2000
 W:72:4:999:31000:0:0
 B:CLAW:HURT:5d12
 B:CLAW:HURT:5d12
@@ -13704,7 +13704,7 @@ P:Copy:Amberite:Rogue
 
 N:790:Great Wyrm of Many Colours
 G:D:v
-I:120:52d100:40:170:255:2000
+I:125:52d100:40:170:255:2000
 W:68:4:999:31000:0:0
 B:CLAW:HURT:6d12
 B:CLAW:HURT:6d12
@@ -16042,7 +16042,7 @@ D:It was left here to be used against intruders.
 
 N:890:Great Venom Wyrm
 G:D:g
-I:120:54d100:30:170:80:1000
+I:122:54d100:30:170:80:1000
 W:55:2:999:16000:0:0
 B:CLAW:HURT:4d12
 B:CLAW:HURT:4d12
@@ -18995,7 +18995,7 @@ D:who had become a louse just because he loves louses.
 
 N:1064:Great Wyrm of Space-Time
 G:D:v
-I:125:46d100:100:170:255:2000
+I:130:46d100:100:170:255:2000
 W:72:6:999:31000:0:0
 B:CLAW:HURT:5d12
 B:CLAW:HURT:5d12
@@ -19033,7 +19033,7 @@ S:1_IN_4 | BR_DARK
 
 N:1066:Great Bile Wyrm
 G:D:s
-I:120:40d100:30:150:80:1000
+I:122:40d100:30:150:80:1000
 W:54:2:999:17000:0:0
 B:CLAW:HURT:4d12
 B:CLAW:HURT:4d12
