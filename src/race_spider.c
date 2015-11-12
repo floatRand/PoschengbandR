@@ -103,9 +103,9 @@ void spider_web_spell(int cmd, variant *res)
         break;
     case SPELL_COST_EXTRA:
         if (p_ptr->lev >= 50)
-            var_set_int(res, 40);
+            var_set_int(res, 20);
         else
-            var_set_int(res, _web_attempts() * 5);
+            var_set_int(res, _web_attempts() * 2);
         break;
     default:
         default_spell(cmd, res);

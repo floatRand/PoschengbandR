@@ -163,11 +163,11 @@ static void _extended_blast(int cmd, variant *res)
         var_set_string(res, "Blast: Extended");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires an Eldritch Blast with increased range.");
+        var_set_string(res, "Fires a slightly weakened Eldritch Blast with increased range.");
         break;
     case SPELL_INFO:
         var_set_string(res,
-            format("dam %dd%d (rng %d)",
+            format("dam %dd%d*.75 (rng %d)",
                    _blast_dd(),
                    spell_power(_blast_ds()),
                     _blast_range() + 10 * p_ptr->lev/50));
@@ -183,7 +183,7 @@ static void _extended_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())),
+                  spell_power(damroll(_blast_dd(), _blast_ds())*3/4),
                   0);
 
         var_set_bool(res, TRUE);
@@ -1555,7 +1555,7 @@ static void _nexus_ball_spell(int cmd, variant *res)
         var_set_string(res, "Generates a ball of nexus on chosen target.");
         break;
     case SPELL_INFO:
-        var_set_string(res, info_damage(0, 0, spell_power(3*p_ptr->lev/2 + 30 + p_ptr->to_d_spell)));
+        var_set_string(res, info_damage(0, 0, spell_power(p_ptr->lev + 20 + p_ptr->to_d_spell)));
         break;
     case SPELL_CAST:
     {
@@ -1577,6 +1577,60 @@ static void _nexus_ball_spell(int cmd, variant *res)
     }
 }
 
+/* Spider Jumps*/
+static int _jump_rad(void) { return 2 + p_ptr->lev/10; }
+
+static int _poison_jump_dam(void) { return spell_power(p_ptr->lev + p_ptr->to_d_spell); }
+static void _poison_jump_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Poison Jump");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Generates a ball of poison as you jump to safety.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_damage(0, 0, _poison_jump_dam()));
+        break;
+    case SPELL_CAST:
+        fire_ball(GF_POIS, 0, _poison_jump_dam()*2, _jump_rad());
+        teleport_player(30, 0);
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static int _nexus_jump_dam(void) { return spell_power(p_ptr->lev + 5 + p_ptr->to_d_spell); }
+static void _nexus_jump_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Nexus Jump");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Generates a ball of nexus as you jump to safety.");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, info_damage(0, 0, _nexus_jump_dam()));
+        break;
+    case SPELL_CAST:
+        fire_ball(GF_NEXUS, 0, _nexus_jump_dam()*2, _jump_rad());
+        teleport_player(30, 0);
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
+static int _greater_nexus_jump_dam(void) { return spell_power(py_prorata_level_aux(200, 0, 0, 1) + p_ptr->to_d_spell); }
 static void _greater_nexus_jump_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -1585,13 +1639,13 @@ static void _greater_nexus_jump_spell(int cmd, variant *res)
         var_set_string(res, "Greater Nexus Jump");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Generate a huge ball of nexus and then teleport away.");
+        var_set_string(res, "Generates a huge ball of nexus as you jump to safety.");
         break;
     case SPELL_INFO:
-        var_set_string(res, info_damage(0, 0, py_prorata_level(200)));
+        var_set_string(res, info_damage(0, 0, _greater_nexus_jump_dam()));
         break;
     case SPELL_CAST:
-        fire_ball(GF_NEXUS, 0, py_prorata_level(200)*2, 2 + p_ptr->lev/10);
+        fire_ball(GF_NEXUS, 0, _greater_nexus_jump_dam()*2, 3 + _jump_rad());
         teleport_player(30, 0);
         var_set_bool(res, TRUE);
         break;
@@ -1625,16 +1679,16 @@ static _pact_t _spiders_pact = {
 /*Life  BaseHP     Exp */
     97,      1,    120,
   {
-    {  1,   2, 30, phase_door_spell},
+    {  1,   1, 30, phase_door_spell},
     {  3,   3, 30, stinking_cloud_spell},
     {  5,   4, 30, detect_monsters_spell},
     {  7,   5, 30, teleport_spell},
-    { 15,  10, 60, summon_spiders_spell},
-    { 20,  10, 60, spider_web_spell},
-    { 25,  12, 50, hide_in_flame_spell},
-    { 27,  13, 50, _nexus_ball_spell},
-    { 32,  15, 50, hide_in_mist_spell},
-    { 37,  20, 60, dimension_door_spell},
+    { 15,   7, 60, summon_spiders_spell},
+    { 17,   8, 50, _nexus_ball_spell},
+    { 22,   9, 50, _poison_jump_spell},
+    { 29,  12, 50, _nexus_jump_spell},
+    { 30,  10, 60, spider_web_spell},
+    { 35,  20, 60, dimension_door_spell},
     { 42,  40, 70, _greater_nexus_jump_spell},
     { -1,   0,  0, NULL },
   },
