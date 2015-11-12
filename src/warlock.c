@@ -120,7 +120,7 @@ static void _basic_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Basic");
+        var_set_string(res, "Eldritch Blast");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires your basic Eldritch Blast.");
@@ -160,7 +160,7 @@ static void _extended_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Extended");
+        var_set_string(res, "Blast: Extended");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast with increased range.");
@@ -200,7 +200,7 @@ static void _spear_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Spear");
+        var_set_string(res, "Blast: Spear");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Beam.");
@@ -239,7 +239,7 @@ static void _burst_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Burst");
+        var_set_string(res, "Blast: Burst");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast with increased radius.");
@@ -282,7 +282,7 @@ static void _stunning_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Stunning");
+        var_set_string(res, "Blast: Stunning");
         break;
     case SPELL_DESC:
         var_set_string(res, "Augments your Eldritch Blast with stunning effects.");
@@ -322,7 +322,7 @@ static void _empowered_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Empowered");
+        var_set_string(res, "Blast: Empowered");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires a very powerful Eldritch Blast, but you can't use your powers again for a bit.");
@@ -430,7 +430,7 @@ static void _draining_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Draining");
+        var_set_string(res, "Blast: Draining");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast which also does Drain Life.");
@@ -560,7 +560,7 @@ static void _dragon_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Dragon");
+        var_set_string(res, "Blast: Dragon");
         break;
     case SPELL_DESC:
         var_set_string(res, "Breathes your eldritch blast at a chosen foe.");
@@ -1135,7 +1135,7 @@ static void _dispelling_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Dispelling");
+        var_set_string(res, "Blast: Dispelling");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast which also does Dispel Magic.");
@@ -1247,7 +1247,7 @@ static void _vengeful_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Vengeful");
+        var_set_string(res, "Blast: Vengeful");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires an extremely deadly Eldritch Blast, but you also take damage.");
@@ -1358,39 +1358,58 @@ static void _hound_get_flags(u32b flgs[TR_FLAG_SIZE])
         add_flag(flgs, TR_RES_POIS);
 }
 
-static void _elemental_blast(int cmd, variant *res)
+#define _AETHER_EFFECT_CT 15
+static void _aether_blast(int cmd, variant *res)
 {
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Elemental");
+        var_set_string(res, "Blast: Aether");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Fires multiple blasts, one each of fire, frost, acid, lightning and poison.");
+        var_set_string(res, "You channel the aether to unleash a random number of random effects via your Eldritch Blast.");
         break;
     case SPELL_INFO:
         var_set_string(res,
-            format("dam %dd%d*5 (rng %d)",
+            format("dam %dd%d each (rng %d)",
                    _blast_dd(),
                    spell_power(_blast_ds()/2),
                     _blast_range()));
         break;
     case SPELL_CAST:
     {
-        int dir = 0;
+        int dir = 0, i;
+        int ct = rand_range(2, 7);
         int dice = _blast_dd();
         int sides = _blast_ds();
+        int effects[_AETHER_EFFECT_CT] =
+               {GF_ACID,  GF_ELEC,   GF_FIRE,      GF_COLD,       GF_POIS,
+                GF_LITE,  GF_DARK,   GF_CONFUSION, GF_NETHER,     GF_NEXUS,
+                GF_SOUND, GF_SHARDS, GF_CHAOS,     GF_DISENCHANT, GF_TIME};
+        int resists[_AETHER_EFFECT_CT] =
+               {RES_ACID, RES_ELEC,  RES_FIRE,     RES_COLD,      RES_POIS,
+                RES_LITE, RES_DARK,  RES_CONF,     RES_NETHER,    RES_NEXUS,
+                RES_SOUND,RES_SHARDS,RES_CHAOS,    RES_DISEN,     RES_TIME};
 
         var_set_bool(res, FALSE);
 
         project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
 
-        fire_ball(GF_FIRE, dir, spell_power(damroll(dice, sides)/2), 0);
-        fire_ball(GF_COLD, dir, spell_power(damroll(dice, sides)/2), 0);
-        fire_ball(GF_ACID, dir, spell_power(damroll(dice, sides)/2), 0);
-        fire_ball(GF_ELEC, dir, spell_power(damroll(dice, sides)/2), 0);
-        fire_ball(GF_POIS, dir, spell_power(damroll(dice, sides)/2), 0);
+        for (i = 0; i < ct; i++)
+        {
+            int idx = randint0(_AETHER_EFFECT_CT);
+            int effect = effects[idx];
+            int resist = resists[idx];
+            int dam = spell_power(damroll(dice, sides)/2);
+
+            msg_format("You channel <color:%c>%s</color>.",
+                attr_to_attr_char(res_color(resist)),
+                res_name(resist)
+            );
+            fire_ball(effect, dir, dam, 0);
+            msg_boundary();
+        }
 
         var_set_bool(res, TRUE);
         break;
@@ -1412,7 +1431,7 @@ static void _dog_whistle_spell(int cmd, variant *res)
         var_set_string(res, "By emitting a shrill whistle, unaudible to most, you attempt to control nearby canines.");
         break;
     case SPELL_CAST:
-        project(0, 18, py, px, 1000, GF_CONTROL_PACT_MONSTER, PROJECT_KILL, -1);
+        project(0, 18, py, px, 1000, GF_CONTROL_PACT_MONSTER, PROJECT_KILL | PROJECT_HIDE, -1);
         var_set_bool(res, TRUE);
         break;
     default:
@@ -1444,13 +1463,13 @@ static _pact_t _hounds_pact = {
    102,     12,    110,
   {
     {  1,   1, 30, hound_sniff_spell},
-    { 20,  20, 50, resistance_spell},
+    { 20,  20, 60, summon_hounds_spell},
     { 27,  20, 50, haste_self_spell},
-    { 30,  25, 60, summon_hounds_spell},
+    { 30,  20, 50, resistance_spell},
     { 32,  30, 70, _dog_whistle_spell},
     { -1,   0,  0, NULL },
   },
-  _elemental_blast
+  _aether_blast
 };
 
 /****************************************************************
@@ -1489,7 +1508,7 @@ static void _phase_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Phasing");
+        var_set_string(res, "Blast: Phasing");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fire an Eldritch Blast and then jump to safety in a single move.");
@@ -1672,7 +1691,7 @@ static void _confusing_blast(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Confusing");
+        var_set_string(res, "Blast: Confusing");
         break;
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast that also confuses your opponent.");
@@ -1856,7 +1875,7 @@ static caster_info * _caster_info(void)
     static bool init = FALSE;
     if (!init)
     {
-        me.magic_desc = "blast";
+        me.magic_desc = "arcane power";
         me.which_stat = A_CHR;
         me.weight = 500;
         init = TRUE;

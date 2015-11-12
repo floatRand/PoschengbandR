@@ -4234,7 +4234,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         }
 
         case GF_CONTROL_PACT_MONSTER:
-            if (warlock_is_pact_monster(r_ptr))
+            if (warlock_is_pact_monster(r_ptr) && !is_pet(m_ptr))
             {
                 if (seen) obvious = TRUE;
 

@@ -784,7 +784,7 @@ void summon_ants_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int num = randint0(p_ptr->lev/10);
+        int num = randint1(p_ptr->lev/10);
         int ct = 0, i;
         int l = p_ptr->lev + randint1(p_ptr->lev);
 
@@ -957,7 +957,7 @@ void summon_hi_dragon_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int num = randint0(p_ptr->lev/10);
+        int num = randint1(p_ptr->lev/10);
         int ct = 0, i;
 
         if (p_ptr->dragon_realm == DRAGON_REALM_DOMINATION)
@@ -991,7 +991,7 @@ void summon_hi_undead_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int num = randint0(p_ptr->lev/10);
+        int num = randint1(p_ptr->lev/10);
         int ct = 0, i;
         int l = p_ptr->lev + randint1(p_ptr->lev);
 
@@ -1022,7 +1022,7 @@ void summon_hounds_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int num = randint0(p_ptr->lev/10);
+        int num = randint1(p_ptr->lev/10);
         int ct = 0, i;
         int l = p_ptr->lev + randint1(p_ptr->lev);
 
@@ -1053,7 +1053,7 @@ void summon_hydras_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int num = randint0(p_ptr->lev/10);
+        int num = randint1(p_ptr->lev/10);
         int ct = 0, i;
         int l = p_ptr->lev + randint1(p_ptr->lev);
 
@@ -1152,7 +1152,7 @@ void summon_monsters_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int num = randint0(p_ptr->lev/10);
+        int num = randint1(p_ptr->lev/10);
         int ct = 0, i;
         int l = p_ptr->lev + randint1(p_ptr->lev);
 
@@ -1183,7 +1183,7 @@ void summon_spiders_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int num = randint0(p_ptr->lev/10);
+        int num = randint1(p_ptr->lev/10);
         int ct = 0, i;
         int l = p_ptr->lev + randint1(p_ptr->lev);
 
@@ -1288,7 +1288,7 @@ void summon_undead_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int num = randint0(p_ptr->lev/10);
+        int num = randint1(p_ptr->lev/10);
         int ct = 0, i;
         int l = p_ptr->lev + randint1(p_ptr->lev);
 
