@@ -2191,6 +2191,7 @@ extern void    mimic_dispel_player(void);
 extern void    mimic_on_kill_monster(int r_idx);
 
 extern bool    giant_is_favorite(object_type *o_ptr);
+extern void    monster_toss_spell(int cmd, variant *res);
 extern void    jelly_eat_object(object_type *o_ptr);
 
 extern void    blink_toggle_spell(int cmd, variant *res);

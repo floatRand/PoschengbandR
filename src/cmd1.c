@@ -5423,7 +5423,7 @@ void move_player(int dir, bool do_pickup, bool break_trap)
             energy_use *= 2;
         }
     }
-    else if (have_flag(f_ptr->flags, FF_WEB) && !prace_is_(RACE_MON_SPIDER))
+    else if (have_flag(f_ptr->flags, FF_WEB) && !prace_is_(RACE_MON_SPIDER) && !warlock_is_(WARLOCK_SPIDERS))
         energy_use *= 2;
 
 #ifdef ALLOW_EASY_DISARM /* TNB */

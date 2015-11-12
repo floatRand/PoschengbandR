@@ -192,6 +192,15 @@ int skills_weapon_max(int tval, int sval)
         return WEAPON_EXP_MASTER;
     }
 
+    if (warlock_is_(WARLOCK_GIANTS) && tval != TV_BOW)
+    {
+        int k_idx = lookup_kind(tval, sval);
+        if (k_info[k_idx].weight >= 200)
+            return WEAPON_EXP_MASTER;
+        if (k_info[k_idx].weight <= 100)
+            return WEAPON_EXP_BEGINNER;
+    }
+
     /* Hack: In case somebody calls this instead of skills_bow_max() */
     if (tval == TV_BOW && demigod_is_(DEMIGOD_ARTEMIS))
         return WEAPON_EXP_MASTER;

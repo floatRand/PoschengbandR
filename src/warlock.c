@@ -1203,7 +1203,7 @@ static _pact_t _angels_pact = {
     { 37, 20, 60, healing_I_spell},
     { 42, 70, 60, destruction_spell},
     { 47,100, 90, summon_angel_spell},
-    { 50,120, 90, invulnerability_spell},
+    { 50,120, 90, invulnerability_spell}, /* crusade_spell? */
     { -1,   0,  0, NULL },
   },
   _dispelling_blast
@@ -1780,6 +1780,29 @@ static void _confusing_blast(int cmd, variant *res)
     }
 }
 
+static void _giant_healing_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Giant's Healing");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "All powerful giants can heal themselves, right? Why not you?");
+        break;
+    case SPELL_INFO:
+        var_set_string(res, format("Heals %d", spell_power(p_ptr->lev * 4)));
+        break;
+    case SPELL_CAST:
+        hp_player(spell_power(p_ptr->lev * 4));
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 static _pact_t _giants_pact = {
   "Giants",
   "An alliance with giants and titans grants impressive physical strength and fortitude, "
@@ -1805,7 +1828,9 @@ static _pact_t _giants_pact = {
   {
     {  5,   0, 50, throw_boulder_spell},
     { 10,   7,  0, stunning_blow_spell},
+    { 30,   0,  0, monster_toss_spell},
     { 40,  30, 50, summon_kin_spell},
+    { 50,  50, 70, _giant_healing_spell},
     { -1,   0,  0, NULL },
   },
   _confusing_blast
