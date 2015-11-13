@@ -96,7 +96,7 @@
    because it doesn't know to check out CFLAGS in ../mk/buildsys.mk where HAVE_CONFIG_H is defined
    so that h-basic.h knows to #include "autoconf.h" so that USE_X11 gets defined. Unbelievable! :)
    If you are having compile problems, just comment this out.
-#define USE_X11 */
+#define USE_X11*/
 
 #include "angband.h"
 
@@ -2213,15 +2213,15 @@ static void paste_x11_send(XSelectionRequestEvent *rq)
 		target_list[2] = xa_compound_text;
 		target_list[3] = xa_targets;
 		XChangeProperty(DPY, rq->requestor, rq->property, rq->target,
-			(8 * sizeof(target_list[0])), PropModeReplace,
+            8, PropModeReplace,
 			(unsigned char *)target_list,
-			(sizeof(target_list) / sizeof(target_list[0])));
+            sizeof(target_list));
 	}
 	else if (rq->target == xa_timestamp)
 	{
 		XChangeProperty(DPY, rq->requestor, rq->property, rq->target,
-			(8 * sizeof(Time)), PropModeReplace,
-			(unsigned char *)s_ptr->time, 1);
+            8, PropModeReplace,
+            (unsigned char *)s_ptr->time, sizeof(Time));
 	}
 	else
 	{
@@ -2421,7 +2421,7 @@ static errr CheckEvent(bool wait)
 
 		case SelectionRequest:
 		{
-			paste_x11_send(&(xev->xselectionrequest));
+            paste_x11_send(&(xev->xselectionrequest));
 			break;
 		}
 
