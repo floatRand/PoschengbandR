@@ -1,6 +1,6 @@
 <style:title>Attacking and Weapons</style>
  
-Attacking is simple: if you move into a creature, you attack it provided you are wielding a weapon (including digging implements which are considered to be weapons). Unlike most other classes, monks and forcetrainers can attack using their bare hands to great effect and generally prefer not to use a weapon at all.
+Attacking is simple: if you move into a creature, you attack it provided you are wielding a weapon (including digging implements which are considered to be weapons). Unlike most other classes, monks and forcetrainers can attack using their bare hands to great effect and generally prefer not to use a weapon at all. Also, if you are playing in <color:r>Monster</color> mode, there is a good chance that you have innate attacks rather than weapons (e.g. Hounds, Dragons, Beholders, etc). Again, simply move into a monster to attack.
 
 Melee can do more damage per turn than any other form of attack, and the basic equipment (a weapon) is easy to find. On the other hand, melee only works against adjacent monsters and takes a great deal of training and equipment to come into its own deeper in the dungeon. Upgrading to weapons with higher base damages is vital but heavy weapons are harder to master. You will have to find a compromise, depending on class, experience level, and available equipment (use the <style:keypress>~W</style> screen to see how various weapons affect your melee skill).
 

@@ -4007,15 +4007,52 @@ void do_cmd_save_screen_doc(void)
     char       buf[1024];
     FILE      *fff;
 
-    path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "screen.txt");
+    path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "screen.doc");
     FILE_TYPE(FILE_TYPE_TEXT);
     fff = my_fopen(buf, "w");
-    if (!fff)
-        return;
-
-    string_write_file(s, fff);
-    my_fclose(fff);
+    if (fff)
+    {
+        string_write_file(s, fff);
+        my_fclose(fff);
+    }
     string_free(s);
+}
+
+static void _save_screen_aux(int format)
+{
+    string_ptr s = get_screenshot();
+    doc_ptr    doc = doc_alloc(Term->wid);
+    char       buf[1024];
+    FILE      *fff;
+
+    doc_insert(doc, "<style:screenshot>");
+    doc_insert(doc, string_buffer(s));
+    doc_insert(doc, "</style>");
+
+    if (format == DOC_FORMAT_HTML)
+        path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "screen.html");
+    else
+        path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "screen.txt");
+
+    FILE_TYPE(FILE_TYPE_TEXT);
+    fff = my_fopen(buf, "w");
+    if (fff)
+    {
+        doc_write_file(doc, fff, format);
+        my_fclose(fff);
+    }
+    string_free(s);
+    doc_free(doc);
+}
+
+void do_cmd_save_screen_txt(void)
+{
+    _save_screen_aux(DOC_FORMAT_TEXT);
+}
+
+void do_cmd_save_screen_html(void)
+{
+    _save_screen_aux(DOC_FORMAT_HTML);
 }
 
 void do_cmd_save_screen(void)

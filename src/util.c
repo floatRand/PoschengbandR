@@ -2285,6 +2285,8 @@ char inkey(void)
                to document much much more :) This little hook
                is awesome, btw! */
             do_cmd_save_screen_doc();
+            do_cmd_save_screen_txt();
+            do_cmd_save_screen_html();
 
             /* Continue */
             continue;

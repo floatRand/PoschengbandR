@@ -435,7 +435,7 @@ static void _build_res_flags(doc_ptr doc, int which, _flagzilla_ptr flagzilla)
             color =  'y';
     }
 
-    if (which == RES_FEAR)
+    if (which == RES_FEAR && res_pct(RES_FEAR) < 100)
         doc_printf(doc, " %3dx", res_ct_known(which));
     else
         doc_printf(doc, " <color:%c>%3d%%</color>", color, pct);

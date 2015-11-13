@@ -789,6 +789,8 @@ extern void do_cmd_version(void);
 extern void do_cmd_feeling(void);
 extern void do_cmd_save_screen(void);
 extern void do_cmd_save_screen_doc(void);
+extern void do_cmd_save_screen_html(void);
+extern void do_cmd_save_screen_txt(void);
 extern void do_cmd_knowledge_quests_completed(FILE *fff, int quest_num[]);
 extern void do_cmd_knowledge_quests_failed(FILE *fff, int quest_num[]);
 extern bool ang_sort_comp_quest_num(vptr u, vptr v, int a, int b);

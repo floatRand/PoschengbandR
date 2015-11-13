@@ -604,14 +604,14 @@ void stinking_cloud_spell(int cmd, variant *res)
         var_set_string(res, "Fires a ball of poison.");
         break;
     case SPELL_INFO:
-        var_set_string(res, info_damage(0, 0, spell_power(10 + p_ptr->lev / 2)));
+        var_set_string(res, info_damage(0, 0, spell_power(10 + p_ptr->lev / 2 + p_ptr->to_d_spell)));
         break;
     case SPELL_CAST:
     {
         int dir = 0;
         var_set_bool(res, FALSE);
         if (!get_aim_dir(&dir)) return;
-        fire_ball(GF_POIS, dir, spell_power(10 + p_ptr->lev / 2), spell_power(2));
+        fire_ball(GF_POIS, dir, spell_power(10 + p_ptr->lev / 2 + p_ptr->to_d_spell), spell_power(2));
         var_set_bool(res, TRUE);
         break;
     }

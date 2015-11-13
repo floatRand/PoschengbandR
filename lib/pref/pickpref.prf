@@ -173,15 +173,18 @@ Iron Spike#@v0
 
 ?:[GEQ $LEVEL 30]
 !nameless common weapons
+!nameless common shooters
 
 ?:[GEQ $LEVEL 20]
 !average common weapons
+!average common shooters
 !average common armors
 ?:1
 
 ?:[LEQ $LEVEL 34]
 #(unidentified armors
 #(unidentified weapons
+#(unidentified shooters
 ?:1
 
 ~special items

@@ -126,11 +126,10 @@ static void _basic_blast(int cmd, variant *res)
         var_set_string(res, "Fires your basic Eldritch Blast.");
         break;
     case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
+        if (p_ptr->to_d_spell)
+            var_set_string(res, format("Dice:%dd%d+%d Range:%d", _blast_dd(), _blast_ds(), p_ptr->to_d_spell, _blast_range()));
+        else
+            var_set_string(res, format("Dice:%dd%d Range:%d", _blast_dd(), _blast_ds(), _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -143,7 +142,7 @@ static void _basic_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())),
+                  spell_power(damroll(_blast_dd(), _blast_ds()) + p_ptr->to_d_spell),
                   0);
 
         var_set_bool(res, TRUE);
@@ -166,11 +165,7 @@ static void _extended_blast(int cmd, variant *res)
         var_set_string(res, "Fires a slightly weakened Eldritch Blast with increased range.");
         break;
     case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d*.75 (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range() + 10 * p_ptr->lev/50));
+        var_set_string(res, format("75%% Damage. +%d Range", 10*p_ptr->lev/50));
         break;
     case SPELL_CAST:
     {
@@ -183,7 +178,7 @@ static void _extended_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())*3/4),
+                  spell_power(damroll(_blast_dd(), _blast_ds())*3/4 + p_ptr->to_d_spell),
                   0);
 
         var_set_bool(res, TRUE);
@@ -205,13 +200,6 @@ static void _spear_blast(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Beam.");
         break;
-    case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
-        break;
     case SPELL_CAST:
     {
         int dir = 0;
@@ -223,7 +211,7 @@ static void _spear_blast(int cmd, variant *res)
 
         fire_beam(GF_ELDRITCH,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())));
+                  spell_power(damroll(_blast_dd(), _blast_ds()) + p_ptr->to_d_spell));
 
         var_set_bool(res, TRUE);
         break;
@@ -244,13 +232,6 @@ static void _burst_blast(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast with increased radius.");
         break;
-    case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
-        break;
     case SPELL_CAST:
     {
         int dir = 0;
@@ -263,7 +244,7 @@ static void _burst_blast(int cmd, variant *res)
         fire_ball_aux(
             GF_ELDRITCH,
             dir,
-            spell_power(damroll(_blast_dd(), _blast_ds())),
+            spell_power(damroll(_blast_dd(), _blast_ds()) + p_ptr->to_d_spell),
             2,
             PROJECT_FULL_DAM
         );
@@ -287,13 +268,6 @@ static void _stunning_blast(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Augments your Eldritch Blast with stunning effects.");
         break;
-    case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
-        break;
     case SPELL_CAST:
     {
         int dir = 0;
@@ -305,7 +279,7 @@ static void _stunning_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH_STUN,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())),
+                  spell_power(damroll(_blast_dd(), _blast_ds()) + p_ptr->to_d_spell),
                   0);
 
         var_set_bool(res, TRUE);
@@ -328,11 +302,7 @@ static void _empowered_blast(int cmd, variant *res)
         var_set_string(res, "Fires a very powerful Eldritch Blast, but you can't use your powers again for a bit.");
         break;
     case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d*1.75 (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
+        var_set_string(res, "175% Damage");
         break;
     case SPELL_CAST:
     {
@@ -345,7 +315,7 @@ static void _empowered_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())*7/4),
+                  spell_power(damroll(_blast_dd(), _blast_ds())*7/4 + p_ptr->to_d_spell),
                   0);
         set_tim_no_spells(p_ptr->tim_no_spells + 1 + 1, FALSE);
         var_set_bool(res, TRUE);
@@ -435,13 +405,6 @@ static void _draining_blast(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast which also does Drain Life.");
         break;
-    case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
-        break;
     case SPELL_CAST:
     {
         int dir = 0;
@@ -453,7 +416,7 @@ static void _draining_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH_DRAIN,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())),
+                  spell_power(damroll(_blast_dd(), _blast_ds()) + p_ptr->to_d_spell),
                   0);
 
         var_set_bool(res, TRUE);
@@ -565,13 +528,6 @@ static void _dragon_blast(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Breathes your eldritch blast at a chosen foe.");
         break;
-    case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
-        break;
     case SPELL_CAST:
     {
         int dir = 0;
@@ -583,7 +539,7 @@ static void _dragon_blast(int cmd, variant *res)
         project_length = _blast_range();
         if (!get_aim_dir(&dir)) return;
 
-        fire_ball_aux(GF_ELDRITCH, dir, spell_power(damroll(dice, sides)), -1 - (p_ptr->lev / 20), PROJECT_FULL_DAM);
+        fire_ball_aux(GF_ELDRITCH, dir, spell_power(damroll(dice, sides) + p_ptr->to_d_spell), -1 - (p_ptr->lev / 20), PROJECT_FULL_DAM);
         var_set_bool(res, TRUE);
         break;
     }
@@ -1140,13 +1096,6 @@ static void _dispelling_blast(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast which also does Dispel Magic.");
         break;
-    case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
-        break;
     case SPELL_CAST:
     {
         int dir = 0;
@@ -1158,7 +1107,7 @@ static void _dispelling_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH_DISPEL,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())),
+                  spell_power(damroll(_blast_dd(), _blast_ds()) + p_ptr->to_d_spell),
                   0);
 
         var_set_bool(res, TRUE);
@@ -1253,18 +1202,14 @@ static void _vengeful_blast(int cmd, variant *res)
         var_set_string(res, "Fires an extremely deadly Eldritch Blast, but you also take damage.");
         break;
     case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d*2 (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
+        var_set_string(res, "200% Damage");
         break;
     case SPELL_CAST:
     {
         int dir = 0;
         int dam = damroll(_blast_dd(), _blast_ds());
         dam *= 2;
-        dam = spell_power(dam);
+        dam = spell_power(dam + p_ptr->to_d_spell);
 
         var_set_bool(res, FALSE);
 
@@ -1370,11 +1315,7 @@ static void _aether_blast(int cmd, variant *res)
         var_set_string(res, "You channel the aether to unleash a random number of random effects via your Eldritch Blast.");
         break;
     case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d each (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()/2),
-                    _blast_range()));
+        var_set_string(res, "50% Damage");
         break;
     case SPELL_CAST:
     {
@@ -1401,7 +1342,7 @@ static void _aether_blast(int cmd, variant *res)
             int idx = randint0(_AETHER_EFFECT_CT);
             int effect = effects[idx];
             int resist = resists[idx];
-            int dam = spell_power(damroll(dice, sides)/2);
+            int dam = spell_power(damroll(dice, sides)/2 + p_ptr->to_d_spell);
 
             msg_format("You channel <color:%c>%s</color>.",
                 attr_to_attr_char(res_color(resist)),
@@ -1513,13 +1454,6 @@ static void _phase_blast(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Fire an Eldritch Blast and then jump to safety in a single move.");
         break;
-    case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
-        break;
     case SPELL_CAST:
     {
         int dir = 0;
@@ -1531,7 +1465,7 @@ static void _phase_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())),
+                  spell_power(damroll(_blast_dd(), _blast_ds()) + p_ptr->to_d_spell),
                   0);
 
         teleport_player(25, 0);
@@ -1750,13 +1684,6 @@ static void _confusing_blast(int cmd, variant *res)
     case SPELL_DESC:
         var_set_string(res, "Fires an Eldritch Blast that also confuses your opponent.");
         break;
-    case SPELL_INFO:
-        var_set_string(res,
-            format("dam %dd%d (rng %d)",
-                   _blast_dd(),
-                   spell_power(_blast_ds()),
-                    _blast_range()));
-        break;
     case SPELL_CAST:
     {
         int dir = 0;
@@ -1768,7 +1695,7 @@ static void _confusing_blast(int cmd, variant *res)
 
         fire_ball(GF_ELDRITCH_CONFUSE,
                   dir,
-                  spell_power(damroll(_blast_dd(), _blast_ds())),
+                  spell_power(damroll(_blast_dd(), _blast_ds()) + p_ptr->to_d_spell),
                   0);
 
         var_set_bool(res, TRUE);

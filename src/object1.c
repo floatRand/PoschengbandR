@@ -1028,9 +1028,9 @@ int show_inven(int target_item, int mode)
             if (l > max_o_len)
             {
                 assert(max_o_len >= 3);
-                out_desc[j][max_o_len - 3] = '.';
+                /*out_desc[j][max_o_len - 3] = '.';
                 out_desc[j][max_o_len - 2] = '.';
-                out_desc[j][max_o_len - 1] = '.';
+                out_desc[j][max_o_len - 1] = '.';*/
                 out_desc[j][max_o_len] = '\0';
             }
         }
@@ -1206,9 +1206,9 @@ int show_equip(int target_item, int mode)
             if (l > max_o_len)
             {
                 assert(max_o_len >= 3);
-                out_desc[j][max_o_len - 3] = '.';
+                /*out_desc[j][max_o_len - 3] = '.';
                 out_desc[j][max_o_len - 2] = '.';
-                out_desc[j][max_o_len - 1] = '.';
+                out_desc[j][max_o_len - 1] = '.';*/
                 out_desc[j][max_o_len] = '\0';
             }
         }

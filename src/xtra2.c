@@ -2404,7 +2404,7 @@ int mon_damage_mod(monster_type *m_ptr, int dam, bool is_psy_spear)
         /* Let the player notice this for this monster race only the first time */
         if (!(r_ptr->r_flagsr & RFR_PACT_MONSTER))
         {
-            msg_print("You are less effective against monsters you have made a pact with.");
+            msg_print("<color:v>You are less effective against monsters you have made a pact with.</color>");
             r_ptr->r_flagsr |= (RFR_PACT_MONSTER);
         }
         dam = dam/2;
