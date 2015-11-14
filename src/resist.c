@@ -320,5 +320,21 @@ bool res_can_ignore(int which)
 bool res_save_inventory(int which)
 {
     int power = res_is_low(which) ? 66 : 41;
+
+    /* Mercy for racial vulnerabilities:
+        ResCt  Old% New%
+        =====  ==== ====
+          1    24.2 35.2
+          2     1.5 16.7
+          3     0.0  7.4
+          4          3.7
+          5          1.9
+          6          0.0
+    */
+    if (prace_is_(RACE_ENT) && which == RES_FIRE)
+        power = 54;
+    if (prace_is_(RACE_ANDROID) && which == RES_ELEC)
+        power = 54;
+
     return res_save(which, power);
 }
