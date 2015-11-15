@@ -1774,7 +1774,7 @@ static void _mon_display_probe(doc_ptr doc, int m_idx)
         doc_printf(doc, "       <color:G>%13.13s</color>\n", "Friendly");
 
     if (MON_CSLEEP(m_ptr))
-        doc_printf(doc, "       <color:b>%13.13.s</color>\n", "Sleeping");
+        doc_printf(doc, "       <color:b>%13.13s</color>\n", "Sleeping");
 
     if (MON_STUNNED(m_ptr))
         doc_printf(doc, "       <color:B>%13.13s</color>\n", "Stunned");

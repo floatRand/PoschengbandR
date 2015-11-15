@@ -3870,7 +3870,6 @@ void quest_discovery(int q_idx)
     strcpy(name, (r_name + r_ptr->name));
 
     msg_print(find_quest[rand_range(0, 4)]);
-    msg_print(NULL);
 
     if (q_num == 1)
     {

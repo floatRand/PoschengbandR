@@ -2260,7 +2260,7 @@ device_effect_info_t wand_effect_table[] =
     {EFFECT_BALL_DISINTEGRATE,     70,  29,     2,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_ROCKET,                80,  30,     3,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_WALL_BUILDING,        100,  50,    16,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
-    {0, 0, 0, 0, 0, 0, 0}
+    {0}
 };
 
 device_effect_info_t rod_effect_table[] =
@@ -2302,7 +2302,7 @@ device_effect_info_t rod_effect_table[] =
     {EFFECT_BALL_CHAOS,            80,  45,     2,   0,     0, _DROP_GOOD | _DROP_GREAT},
     {EFFECT_CLAIRVOYANCE,          90, 100,     3,   0,     0, _DROP_GOOD | _DROP_GREAT},
     {EFFECT_BALL_LITE,             95,  50,     3,   0,     0, _DROP_GOOD | _DROP_GREAT},
-    {0, 0, 0, 0, 0, 0, 0}
+    {0}
 };
 
 device_effect_info_t staff_effect_table[] =
@@ -2319,7 +2319,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_DETECT_EVIL,            7,   5,     1,  30,     0, 0},
     {EFFECT_HASTE_MONSTERS,        10,   5,     1,  30,     0, 0},
     {EFFECT_SUMMON_ANGRY_MONSTERS, 10,   5,     1,  30,     0, 0},
-    {EFFECT_IDENTIFY,              10,   6,     1,  80,     0, _STOCK_TOWN},
+    {EFFECT_IDENTIFY,              10,   4,     1,  80,     0, _STOCK_TOWN},
     {EFFECT_SLEEP_MONSTERS,        10,   6,     1,  35,     0, 0},
     {EFFECT_SLOW_MONSTERS,         10,   6,     1,  35,     0, 0},
     {EFFECT_CONFUSE_MONSTERS,      15,   8,     1,  35,     0, 0},
@@ -2356,7 +2356,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_STARBURST,             85,  41,     3,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_DARKNESS_STORM,        85,  42,     3,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_RESTORE_MANA,         100, 100,    16,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
-    {0, 0, 0, 0, 0, 0, 0}
+    {0}
 };
 
 /* MAX(1, _rand_normal(1, 10)) is probablematic. Think about why! */

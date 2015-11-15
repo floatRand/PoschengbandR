@@ -33,7 +33,7 @@ potions:restore mana#!k!q
 
 ?:[NOT [EQU $CLASS Berserker]]
 scrolls:artifact creation#!*
-scrolls:destruction#!*
+scrolls:of destruction#!*
 scrolls:mass genocide#!*
 scrolls:genocide#!*
 scrolls:forest creation
