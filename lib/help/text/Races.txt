@@ -23,14 +23,14 @@ Humans
   levels much slower than the other races.
   
     Stats                   Skills
-    Strength      +1        Disarming   Excellent    
-    Intelligence  +2        Device      Superb       
-    Wisdom        +2        Save        Excellent    
+    Strength      +1        Disarming   Fair         
+    Intelligence  +2        Device      Good         
+    Wisdom        +2        Save        Fair         
     Dexterity     +2        Stealth     Very Good    
     Constitution  +3        Searching   Fair         
     Charisma      +0        Perception  Superb       
     Life Rating  100%       Melee       Superb       
-    Base HP       20        Bows        Superb       
+    Base HP       20        Bows        Excellent    
     Experience   190%       Infravision 0'
     
   Barbarian
@@ -41,14 +41,14 @@ Humans
   magic, which makes magic devices fairly hard for them to use.
   
     Stats                   Skills
-    Strength      +3        Disarming   Fair         
+    Strength      +3        Disarming   Bad          
     Intelligence  -2        Device      Very Bad     
-    Wisdom        -1        Save        Excellent    
+    Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Very Bad     
     Constitution  +2        Searching   Bad          
     Charisma      +2        Perception  Excellent    
-    Life Rating  103%       Melee       Superb       
-    Base HP       22        Bows        Superb       
+    Life Rating  103%       Melee       Excellent    
+    Base HP       22        Bows        Excellent    
     Experience   135%       Infravision 0'
     
   Demigod
@@ -60,14 +60,14 @@ Humans
   See [d] for more details on demigod parentage.
   
     Stats                   Skills
-    Strength      +1        Disarming   Very Good    
-    Intelligence  +1        Device      Excellent    
-    Wisdom        +1        Save        Very Good    
+    Strength      +1        Disarming   Fair         
+    Intelligence  +1        Device      Fair         
+    Wisdom        +1        Save        Fair         
     Dexterity     +1        Stealth     Very Bad     
     Constitution  +1        Searching   Bad          
     Charisma      +1        Perception  Excellent    
-    Life Rating  100%       Melee       Superb       
-    Base HP       20        Bows        Excellent    
+    Life Rating  100%       Melee       Excellent    
+    Base HP       20        Bows        Good         
     Experience   180%       Infravision 0'
     
   Dunadan
@@ -78,14 +78,14 @@ Humans
   reduced. 
   
     Stats                   Skills
-    Strength      +1        Disarming   Excellent    
-    Intelligence  +2        Device      Superb       
-    Wisdom        +2        Save        Excellent    
+    Strength      +1        Disarming   Fair         
+    Intelligence  +2        Device      Good         
+    Wisdom        +2        Save        Fair         
     Dexterity     +2        Stealth     Very Good    
     Constitution  +3        Searching   Fair         
     Charisma      +0        Perception  Superb       
     Life Rating  100%       Melee       Superb       
-    Base HP       20        Bows        Superb       
+    Base HP       20        Bows        Excellent    
     Experience   160%       Infravision 0'
     
   Human
@@ -97,14 +97,14 @@ Humans
   makes up for their overall mediocrity.
   
     Stats                   Skills
-    Strength      +0        Disarming   Good         
-    Intelligence  +0        Device      Good         
-    Wisdom        +0        Save        Good         
+    Strength      +0        Disarming   Poor         
+    Intelligence  +0        Device      Poor         
+    Wisdom        +0        Save        Poor         
     Dexterity     +0        Stealth     Bad          
     Constitution  +0        Searching   Bad          
     Charisma      +0        Perception  Superb       
-    Life Rating  100%       Melee       Good         
-    Base HP       20        Bows        Good         
+    Life Rating  100%       Melee       Poor         
+    Base HP       20        Bows        Poor         
     Experience   100%       Infravision 0'
     
   
@@ -117,14 +117,14 @@ Elves
   as their relatives High-Elves do, but at a higher level.
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  +3        Device      Heroic       
-    Wisdom        +2        Save        Heroic       
+    Strength      -1        Disarming   Good         
+    Intelligence  +3        Device      Excellent    
+    Wisdom        +2        Save        Excellent    
     Dexterity     +2        Stealth     Superb       
     Constitution  -2        Searching   Excellent    
     Charisma      +3        Perception  Superb       
-    Life Rating   97%       Melee       Poor         
-    Base HP       18        Bows        Superb       
+    Life Rating   97%       Melee       Bad          
+    Base HP       18        Bows        Excellent    
     Experience   155%       Infravision 50'
     
   High-Elf
@@ -136,13 +136,13 @@ Elves
   already, and experience is very hard for them to gain.
   
     Stats                   Skills
-    Strength      +1        Disarming   Excellent    
-    Intelligence  +3        Device      Legendary[2] 
-    Wisdom        -1        Save        Heroic       
+    Strength      +1        Disarming   Fair         
+    Intelligence  +3        Device      Superb       
+    Wisdom        -1        Save        Excellent    
     Dexterity     +3        Stealth     Superb       
     Constitution  +1        Searching   Fair         
     Charisma      +1        Perception  Heroic       
-    Life Rating   99%       Melee       Superb       
+    Life Rating   99%       Melee       Excellent    
     Base HP       19        Bows        Heroic       
     Experience   190%       Infravision 40'
     
@@ -152,13 +152,13 @@ Elves
   Their skills with tracking and bow are unsurpassed.
   
     Stats                   Skills
-    Strength      -1        Disarming   Excellent    
-    Intelligence  +1        Device      Superb       
-    Wisdom        +2        Save        Superb       
+    Strength      -1        Disarming   Good         
+    Intelligence  +1        Device      Good         
+    Wisdom        +2        Save        Fair         
     Dexterity     +1        Stealth     Superb       
     Constitution  -1        Searching   Excellent    
     Charisma      +1        Perception  Superb       
-    Life Rating   97%       Melee       Poor         
+    Life Rating   97%       Melee       Bad          
     Base HP       16        Bows        Superb       
     Experience   125%       Infravision 30'
     
@@ -173,14 +173,14 @@ Hobbits/Dwarves
   stealth. They can never be blinded.
   
     Stats                   Skills
-    Strength      +2        Disarming   Very Good    
-    Intelligence  -2        Device      Superb       
-    Wisdom        +2        Save        Superb       
+    Strength      +2        Disarming   Fair         
+    Intelligence  -2        Device      Very Good    
+    Wisdom        +2        Save        Good         
     Dexterity     -2        Stealth     Very Bad     
     Constitution  +2        Searching   Excellent    
     Charisma      +1        Perception  Superb       
     Life Rating  103%       Melee       Superb       
-    Base HP       22        Bows        Good         
+    Base HP       22        Bows        Poor         
     Experience   135%       Infravision 50'
     
   Gnome
@@ -194,14 +194,14 @@ Hobbits/Dwarves
   protected against paralysis.
   
     Stats                   Skills
-    Strength      -1        Disarming   Superb       
-    Intelligence  +2        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      -1        Disarming   Excellent    
+    Intelligence  +2        Device      Very Good    
+    Wisdom        -1        Save        Very Good    
     Dexterity     +2        Stealth     Superb       
     Constitution  +1        Searching   Very Good    
     Charisma      -1        Perception  Superb       
-    Life Rating   95%       Melee       Bad          
-    Base HP       16        Bows        Superb       
+    Life Rating   95%       Melee       Very Bad     
+    Base HP       16        Bows        Excellent    
     Experience   115%       Infravision 40'
     
   Hobbit
@@ -214,13 +214,13 @@ Hobbits/Dwarves
   
     Stats                   Skills
     Strength      -2        Disarming   Superb       
-    Intelligence  +1        Device      Heroic       
-    Wisdom        +1        Save        Heroic       
+    Intelligence  +1        Device      Excellent    
+    Wisdom        +1        Save        Excellent    
     Dexterity     +3        Stealth     Heroic       
     Constitution  +2        Searching   Superb       
     Charisma      +1        Perception  Heroic       
-    Life Rating   92%       Melee       Bad          
-    Base HP       14        Bows        Heroic       
+    Life Rating   92%       Melee       Very Bad     
+    Base HP       14        Bows        Superb       
     Experience   120%       Infravision 40'
     
   Nibelung
@@ -230,14 +230,14 @@ Hobbits/Dwarves
   could drain away magical energy.
   
     Stats                   Skills
-    Strength      +1        Disarming   Very Good    
-    Intelligence  -1        Device      Superb       
-    Wisdom        +2        Save        Superb       
+    Strength      +1        Disarming   Fair         
+    Intelligence  -1        Device      Good         
+    Wisdom        +2        Save        Good         
     Dexterity     +0        Stealth     Fair         
     Constitution  +2        Searching   Good         
     Charisma      -2        Perception  Superb       
-    Life Rating  103%       Melee       Superb       
-    Base HP       22        Bows        Good         
+    Life Rating  103%       Melee       Excellent    
+    Base HP       22        Bows        Poor         
     Experience   165%       Infravision 50'
     
   
@@ -253,14 +253,14 @@ Fairies
   aggravate by their personality itself, the advantage will be lost).
   
     Stats                   Skills
-    Strength      -2        Disarming   Excellent    
-    Intelligence  +2        Device      Superb       
-    Wisdom        +2        Save        Good         
+    Strength      -2        Disarming   Very Good    
+    Intelligence  +2        Device      Very Good    
+    Wisdom        +2        Save        Poor         
     Dexterity     +1        Stealth     Legendary[2] 
     Constitution  -1        Searching   Superb       
     Charisma      -3        Perception  Heroic       
-    Life Rating   91%       Melee       Bad          
-    Base HP       13        Bows        Poor         
+    Life Rating   91%       Melee       Very Bad     
+    Base HP       13        Bows        Bad          
     Experience   140%       Infravision 40'
     
   Sprite
@@ -273,14 +273,14 @@ Fairies
   higher levels they learn to fly faster.
   
     Stats                   Skills
-    Strength      -4        Disarming   Superb       
-    Intelligence  +3        Device      Superb       
-    Wisdom        +3        Save        Superb       
+    Strength      -4        Disarming   Excellent    
+    Intelligence  +3        Device      Very Good    
+    Wisdom        +3        Save        Good         
     Dexterity     +3        Stealth     Superb       
     Constitution  -2        Searching   Superb       
     Charisma      -2        Perception  Superb       
     Life Rating   92%       Melee       Very Bad     
-    Base HP       14        Bows        Good         
+    Base HP       14        Bows        Poor         
     Experience   135%       Infravision 40'
     
   
@@ -294,14 +294,14 @@ Angels/Demons
   impression on them and they gain levels slowly.
   
     Stats                   Skills
-    Strength      +2        Disarming   Good         
-    Intelligence  +0        Device      Heroic       
-    Wisdom        +4        Save        Superb       
+    Strength      +2        Disarming   Poor         
+    Intelligence  +0        Device      Excellent    
+    Wisdom        +4        Save        Very Good    
     Dexterity     +1        Stealth     Very Good    
     Constitution  +2        Searching   Poor         
     Charisma      +3        Perception  Superb       
-    Life Rating  103%       Melee       Superb       
-    Base HP       22        Bows        Superb       
+    Life Rating  103%       Melee       Excellent    
+    Base HP       22        Bows        Excellent    
     Experience   200%       Infravision 30'
     
   Balrog
@@ -314,14 +314,14 @@ Angels/Demons
   human corpses as sacrifices to regain their vitality.
   
     Stats                   Skills
-    Strength      +4        Disarming   Fair         
-    Intelligence  +2        Device      Heroic       
-    Wisdom       -10        Save        Legendary[7] 
+    Strength      +4        Disarming   Bad          
+    Intelligence  +2        Device      Excellent    
+    Wisdom       -10        Save        Superb       
     Dexterity     +2        Stealth     Very Bad     
     Constitution  +3        Searching   Bad          
     Charisma      +2        Perception  Excellent    
-    Life Rating  106%       Melee       Heroic       
-    Base HP       24        Bows        Good         
+    Life Rating  106%       Melee       Superb       
+    Base HP       24        Bows        Poor         
     Experience   180%       Infravision 50'
     
   Imp
@@ -332,14 +332,14 @@ Angels/Demons
   Invisible.
   
     Stats                   Skills
-    Strength      +0        Disarming   Fair         
-    Intelligence  -1        Device      Excellent    
-    Wisdom        -1        Save        Fair         
+    Strength      +0        Disarming   Bad          
+    Intelligence  -1        Device      Fair         
+    Wisdom        -1        Save        Poor         
     Dexterity     +1        Stealth     Fair         
     Constitution  +2        Searching   Very Bad     
     Charisma      -1        Perception  Superb       
-    Life Rating   99%       Melee       Excellent    
-    Base HP       19        Bows        Poor         
+    Life Rating   99%       Melee       Good         
+    Base HP       19        Bows        Bad          
     Experience    90%       Infravision 30'
     
   
@@ -352,14 +352,14 @@ Orcs/Trolls/Giants
   be deadly!
   
     Stats                   Skills
-    Strength      +4        Disarming   Fair         
+    Strength      +4        Disarming   Bad          
     Intelligence  -3        Device      Bad          
-    Wisdom        -2        Save        Poor         
+    Wisdom        -2        Save        Bad          
     Dexterity     -3        Stealth     Very Bad     
     Constitution  +4        Searching   Very Bad     
     Charisma      -1        Perception  Good         
-    Life Rating  108%       Melee       Heroic       
-    Base HP       24        Bows        Superb       
+    Life Rating  108%       Melee       Superb       
+    Base HP       24        Bows        Excellent    
     Experience   155%       Infravision 10'
     
   Half-Giant
@@ -370,14 +370,14 @@ Orcs/Trolls/Giants
   sustained.
   
     Stats                   Skills
-    Strength      +4        Disarming   Poor         
+    Strength      +4        Disarming   Very Bad     
     Intelligence  -2        Device      Very Bad     
-    Wisdom        -2        Save        Poor         
+    Wisdom        -2        Save        Bad          
     Dexterity     -2        Stealth     Very Bad     
     Constitution  +3        Searching   Very Bad     
     Charisma      +0        Perception  Good         
     Life Rating  108%       Melee       Heroic       
-    Base HP       26        Bows        Excellent    
+    Base HP       26        Bows        Good         
     Experience   150%       Infravision 30'
     
   Half-Ogre
@@ -389,14 +389,14 @@ Orcs/Trolls/Giants
   darkness, and like Half-Trolls, they have their strength sustained.
   
     Stats                   Skills
-    Strength      +3        Disarming   Fair         
+    Strength      +3        Disarming   Bad          
     Intelligence  -2        Device      Bad          
-    Wisdom        +0        Save        Poor         
+    Wisdom        +0        Save        Bad          
     Dexterity     -1        Stealth     Very Bad     
     Constitution  +3        Searching   Very Bad     
     Charisma      +1        Perception  Good         
-    Life Rating  106%       Melee       Heroic       
-    Base HP       23        Bows        Good         
+    Life Rating  106%       Melee       Superb       
+    Base HP       23        Bows        Poor         
     Experience   140%       Infravision 30'
     
   Half-Titan
@@ -408,14 +408,14 @@ Orcs/Trolls/Giants
   order makes them resistant to the effects of Chaos.
   
     Stats                   Skills
-    Strength      +5        Disarming   Poor         
-    Intelligence  +1        Device      Superb       
-    Wisdom        +2        Save        Very Good    
+    Strength      +5        Disarming   Bad          
+    Intelligence  +1        Device      Good         
+    Wisdom        +2        Save        Fair         
     Dexterity     -2        Stealth     Very Bad     
     Constitution  +3        Searching   Bad          
     Charisma      +3        Perception  Excellent    
     Life Rating  110%       Melee       Heroic       
-    Base HP       28        Bows        Good         
+    Base HP       28        Bows        Poor         
     Experience   200%       Infravision 0'
     
   Half-Troll
@@ -427,14 +427,14 @@ Orcs/Trolls/Giants
   levels, Half-Trolls regenerate wounds automatically.
   
     Stats                   Skills
-    Strength      +4        Disarming   Poor         
+    Strength      +4        Disarming   Bad          
     Intelligence  -4        Device      Very Bad     
     Wisdom        -1        Save        Bad          
     Dexterity     -3        Stealth     Very Bad     
     Constitution  +3        Searching   Very Bad     
     Charisma      -2        Perception  Good         
-    Life Rating  107%       Melee       Heroic       
-    Base HP       25        Bows        Bad          
+    Life Rating  107%       Melee       Superb       
+    Base HP       25        Bows        Very Bad     
     Experience   150%       Infravision 30'
     
   Kobold
@@ -444,14 +444,14 @@ Orcs/Trolls/Giants
   are not one of the more powerful races.
   
     Stats                   Skills
-    Strength      +1        Disarming   Fair         
-    Intelligence  -1        Device      Poor         
-    Wisdom        +0        Save        Fair         
+    Strength      +1        Disarming   Bad          
+    Intelligence  -1        Device      Bad          
+    Wisdom        +0        Save        Poor         
     Dexterity     +1        Stealth     Very Bad     
     Constitution  +0        Searching   Bad          
     Charisma      -2        Perception  Excellent    
-    Life Rating   98%       Melee       Superb       
-    Base HP       19        Bows        Bad          
+    Life Rating   98%       Melee       Excellent    
+    Base HP       19        Bows        Very Bad     
     Experience    90%       Infravision 30'
     
   Snotling
@@ -462,14 +462,14 @@ Orcs/Trolls/Giants
   often wield mushrooms or sticks into battle.
   
     Stats                   Skills
-    Strength      -2        Disarming   Fair         
-    Intelligence  -2        Device      Poor         
-    Wisdom        -2        Save        Fair         
+    Strength      -2        Disarming   Bad          
+    Intelligence  -2        Device      Bad          
+    Wisdom        -2        Save        Bad          
     Dexterity     -2        Stealth     Very Good    
     Constitution  -2        Searching   Bad          
     Charisma      -5        Perception  Excellent    
-    Life Rating   85%       Melee       Poor         
-    Base HP       10        Bows        Poor         
+    Life Rating   85%       Melee       Bad          
+    Base HP       10        Bows        Bad          
     Experience    45%       Infravision 20'
     
   
@@ -488,14 +488,14 @@ The Undead
   and wands as their energy source.
   
     Stats                   Skills
-    Strength      +0        Disarming   Poor         
-    Intelligence  +1        Device      Good         
-    Wisdom        -2        Save        Excellent    
+    Strength      +0        Disarming   Bad          
+    Intelligence  +1        Device      Poor         
+    Wisdom        -2        Save        Fair         
     Dexterity     +0        Stealth     Very Bad     
     Constitution  +1        Searching   Very Bad     
     Charisma      +1        Perception  Excellent    
-    Life Rating  100%       Melee       Superb       
-    Base HP       21        Bows        Good         
+    Life Rating  100%       Melee       Excellent    
+    Base HP       21        Bows        Poor         
     Experience   115%       Infravision 20'
     
   Spectre
@@ -510,14 +510,14 @@ The Undead
   but can absorb mana from staves and wands as their energy source.
   
     Stats                   Skills
-    Strength      -5        Disarming   Superb       
-    Intelligence  +4        Device      Legendary[7] 
-    Wisdom        +2        Save        Heroic       
+    Strength      -5        Disarming   Excellent    
+    Intelligence  +4        Device      Superb       
+    Wisdom        +2        Save        Excellent    
     Dexterity     +2        Stealth     Heroic       
     Constitution  -2        Searching   Good         
     Charisma      -3        Perception  Heroic       
     Life Rating   90%       Melee       Very Bad     
-    Base HP       13        Bows        Poor         
+    Base HP       13        Bows        Bad          
     Experience   250%       Infravision 50'
     
   Vampire
@@ -532,14 +532,14 @@ The Undead
   be satiated by sucking the blood from a nearby monster.
   
     Stats                   Skills
-    Strength      +3        Disarming   Excellent    
-    Intelligence  +3        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +3        Disarming   Fair         
+    Intelligence  +3        Device      Very Good    
+    Wisdom        -1        Save        Good         
     Dexterity     -1        Stealth     Superb       
     Constitution  +1        Searching   Bad          
     Charisma      +2        Perception  Excellent    
-    Life Rating  102%       Melee       Excellent    
-    Base HP       22        Bows        Good         
+    Life Rating  102%       Melee       Good         
+    Base HP       22        Bows        Poor         
     Experience   200%       Infravision 50'
     
   Zombie
@@ -553,14 +553,14 @@ The Undead
   as their energy source.
   
     Stats                   Skills
-    Strength      +2        Disarming   Poor         
+    Strength      +2        Disarming   Bad          
     Intelligence  -6        Device      Bad          
-    Wisdom        -6        Save        Superb       
+    Wisdom        -6        Save        Good         
     Dexterity     +1        Stealth     Very Bad     
     Constitution  +4        Searching   Very Bad     
     Charisma      -3        Perception  Good         
     Life Rating  108%       Melee       Superb       
-    Base HP       24        Bows        Good         
+    Base HP       24        Bows        Poor         
     Experience   180%       Infravision 20'
     
   
@@ -581,14 +581,14 @@ Other Races
   can use flasks of oil as their energy source.
   
     Stats                   Skills
-    Strength      +3        Disarming   Good         
+    Strength      +3        Disarming   Poor         
     Intelligence  -1        Device      Bad          
-    Wisdom        -5        Save        Good         
+    Wisdom        -5        Save        Poor         
     Dexterity     +1        Stealth     Very Bad     
     Constitution  +3        Searching   Fair         
     Charisma      +0        Perception  Heroic       
-    Life Rating  108%       Melee       Heroic       
-    Base HP       26        Bows        Superb       
+    Life Rating  108%       Melee       Superb       
+    Base HP       26        Bows        Excellent    
     Experience   200%       Infravision 0'
     
   Beastman
@@ -604,14 +604,14 @@ Other Races
   mutation.
   
     Stats                   Skills
-    Strength      +2        Disarming   Poor         
-    Intelligence  -2        Device      Fair         
-    Wisdom        -1        Save        Fair         
+    Strength      +2        Disarming   Bad          
+    Intelligence  -2        Device      Bad          
+    Wisdom        -1        Save        Poor         
     Dexterity     -1        Stealth     Very Bad     
     Constitution  +2        Searching   Very Bad     
     Charisma      +1        Perception  Good         
-    Life Rating  102%       Melee       Superb       
-    Base HP       22        Bows        Excellent    
+    Life Rating  102%       Melee       Excellent    
+    Base HP       22        Bows        Good         
     Experience   150%       Infravision 0'
     
   Centaur
@@ -626,14 +626,14 @@ Other Races
   foliage.
   
     Stats                   Skills
-    Strength      +3        Disarming   Good         
+    Strength      +3        Disarming   Poor         
     Intelligence  -2        Device      Bad          
-    Wisdom        +1        Save        Excellent    
+    Wisdom        +1        Save        Fair         
     Dexterity     +2        Stealth     Fair         
     Constitution  +1        Searching   Fair         
     Charisma      +0        Perception  Good         
-    Life Rating  103%       Melee       Superb       
-    Base HP       22        Bows        Superb       
+    Life Rating  103%       Melee       Excellent    
+    Base HP       22        Bows        Excellent    
     Experience   190%       Infravision 0'
     
   Draconian
@@ -647,14 +647,14 @@ Other Races
   See [e] for more details on draconians.
   
     Stats                   Skills
-    Strength      +3        Disarming   Fair         
-    Intelligence  +0        Device      Good         
-    Wisdom        +0        Save        Excellent    
+    Strength      +3        Disarming   Bad          
+    Intelligence  +0        Device      Poor         
+    Wisdom        +0        Save        Fair         
     Dexterity     +1        Stealth     Very Bad     
     Constitution  +2        Searching   Bad          
     Charisma      +2        Perception  Superb       
     Life Rating  106%       Melee       Superb       
-    Base HP       22        Bows        Excellent    
+    Base HP       22        Bows        Good         
     Experience   160%       Infravision 20'
     
   Doppelganger
@@ -683,14 +683,14 @@ Other Races
   but they can absorb water from potions as their nutrition.
   
     Stats                   Skills
-    Strength      +2        Disarming   Poor         
-    Intelligence  +0        Device      Excellent    
-    Wisdom        +2        Save        Superb       
+    Strength      +2        Disarming   Bad          
+    Intelligence  +0        Device      Fair         
+    Wisdom        +2        Save        Good         
     Dexterity     -3        Stealth     Very Bad     
     Constitution  +2        Searching   Bad          
     Charisma      +0        Perception  Superb       
     Life Rating  105%       Melee       Superb       
-    Base HP       25        Bows        Poor         
+    Base HP       25        Bows        Bad          
     Experience   135%       Infravision 0'
     
   Golem
@@ -706,14 +706,14 @@ Other Races
   with age.
   
     Stats                   Skills
-    Strength      +4        Disarming   Poor         
+    Strength      +4        Disarming   Bad          
     Intelligence  -5        Device      Bad          
-    Wisdom        -5        Save        Superb       
+    Wisdom        -5        Save        Good         
     Dexterity     -2        Stealth     Very Bad     
     Constitution  +4        Searching   Very Bad     
     Charisma      +0        Perception  Excellent    
-    Life Rating  105%       Melee       Heroic       
-    Base HP       23        Bows        Good         
+    Life Rating  105%       Melee       Superb       
+    Base HP       23        Bows        Poor         
     Experience   185%       Infravision 40'
     
   Klackon
@@ -725,14 +725,14 @@ Other Races
   spitting acid at higher levels.
   
     Stats                   Skills
-    Strength      +2        Disarming   Superb       
-    Intelligence  -1        Device      Superb       
-    Wisdom        -1        Save        Excellent    
+    Strength      +2        Disarming   Excellent    
+    Intelligence  -1        Device      Good         
+    Wisdom        -1        Save        Fair         
     Dexterity     +1        Stealth     Bad          
     Constitution  +2        Searching   Very Bad     
     Charisma      +1        Perception  Superb       
-    Life Rating  105%       Melee       Excellent    
-    Base HP       23        Bows        Excellent    
+    Life Rating  105%       Melee       Good         
+    Base HP       23        Bows        Good         
     Experience   170%       Infravision 20'
     
   Kutar
@@ -746,14 +746,14 @@ Other Races
   armour class, but renders them vulnerable to magical attacks.
   
     Stats                   Skills
-    Strength      +0        Disarming   Fair         
-    Intelligence  -1        Device      Superb       
-    Wisdom        -1        Save        Superb       
+    Strength      +0        Disarming   Bad          
+    Intelligence  -1        Device      Good         
+    Wisdom        -1        Save        Good         
     Dexterity     +1        Stealth     Heroic       
     Constitution  +2        Searching   Very Bad     
     Charisma      +0        Perception  Very Good    
-    Life Rating  102%       Melee       Good         
-    Base HP       21        Bows        Poor         
+    Life Rating  102%       Melee       Poor         
+    Base HP       21        Bows        Bad          
     Experience   175%       Infravision 0'
     
   Mindflayer
@@ -766,14 +766,14 @@ Other Races
   powers of See Invisible and Telepathy.
   
     Stats                   Skills
-    Strength      -3        Disarming   Superb       
-    Intelligence  +4        Device      Legendary[7] 
-    Wisdom        +4        Save        Heroic       
+    Strength      -3        Disarming   Excellent    
+    Intelligence  +4        Device      Superb       
+    Wisdom        +4        Save        Excellent    
     Dexterity     +0        Stealth     Very Good    
     Constitution  -2        Searching   Good         
     Charisma      -1        Perception  Superb       
-    Life Rating   97%       Melee       Bad          
-    Base HP       18        Bows        Poor         
+    Life Rating   97%       Melee       Very Bad     
+    Base HP       18        Bows        Bad          
     Experience   150%       Infravision 40'
     
   Tonberry
@@ -787,14 +787,14 @@ Other Races
   and move with reduced speed.
   
     Stats                   Skills
-    Strength      +4        Disarming   Poor         
-    Intelligence  +0        Device      Excellent    
-    Wisdom        -2        Save        Excellent    
+    Strength      +4        Disarming   Bad          
+    Intelligence  +0        Device      Fair         
+    Wisdom        -2        Save        Fair         
     Dexterity     -4        Stealth     Fair         
     Constitution  +5        Searching   Very Bad     
     Charisma      +0        Perception  Good         
-    Life Rating  108%       Melee       Heroic       
-    Base HP       26        Bows        Bad          
+    Life Rating  108%       Melee       Superb       
+    Base HP       26        Bows        Very Bad     
     Experience   175%       Infravision 20'
     
   Yeek
@@ -805,14 +805,14 @@ Other Races
   floor with an unwary Yeek.
   
     Stats                   Skills
-    Strength      -2        Disarming   Very Good    
-    Intelligence  +1        Device      Superb       
-    Wisdom        -2        Save        Superb       
+    Strength      -2        Disarming   Fair         
+    Intelligence  +1        Device      Fair         
+    Wisdom        -2        Save        Good         
     Dexterity     +1        Stealth     Superb       
     Constitution  -2        Searching   Good         
     Charisma      -4        Perception  Heroic       
-    Life Rating   92%       Melee       Poor         
-    Base HP       14        Bows        Poor         
+    Life Rating   92%       Melee       Bad          
+    Base HP       14        Bows        Bad          
     Experience    70%       Infravision 20'
     
   
@@ -864,91 +864,91 @@ Yeek          -2   +1   -2   +1   -2   -4   92%  +14   70%  105%
 Table 2 - Race Skill Bonus Table I
 
              Disarming     Device        Save          Stealth      
-Amberite     Excellent     Superb        Excellent     Very Good    
-Barbarian    Fair          Very Bad      Excellent     Very Bad     
-Demigod      Very Good     Excellent     Very Good     Very Bad     
-Dunadan      Excellent     Superb        Excellent     Very Good    
-Human        Good          Good          Good          Bad          
-Dark-Elf     Excellent     Heroic        Heroic        Superb       
-High-Elf     Excellent     Legendary[2]  Heroic        Superb       
-Wood-Elf     Excellent     Superb        Superb        Superb       
-Dwarf        Very Good     Superb        Superb        Very Bad     
-Gnome        Superb        Superb        Superb        Superb       
-Hobbit       Superb        Heroic        Heroic        Heroic       
-Nibelung     Very Good     Superb        Superb        Fair         
-Shadow-Fairy Excellent     Superb        Good          Legendary[2] 
-Sprite       Superb        Superb        Superb        Superb       
-Archon       Good          Heroic        Superb        Very Good    
-Balrog       Fair          Heroic        Legendary[7]  Very Bad     
-Imp          Fair          Excellent     Fair          Fair         
-Cyclops      Fair          Bad           Poor          Very Bad     
-Half-Giant   Poor          Very Bad      Poor          Very Bad     
-Half-Ogre    Fair          Bad           Poor          Very Bad     
-Half-Titan   Poor          Superb        Very Good     Very Bad     
-Half-Troll   Poor          Very Bad      Bad           Very Bad     
-Kobold       Fair          Poor          Fair          Very Bad     
-Snotling     Fair          Poor          Fair          Very Good    
-Skeleton     Poor          Good          Excellent     Very Bad     
-Spectre      Superb        Legendary[7]  Heroic        Heroic       
-Vampire      Excellent     Superb        Superb        Superb       
-Zombie       Poor          Bad           Superb        Very Bad     
-Android      Good          Bad           Good          Very Bad     
-Beastman     Poor          Fair          Fair          Very Bad     
-Centaur      Good          Bad           Excellent     Fair         
-Draconian    Fair          Good          Excellent     Very Bad     
+Amberite     Fair          Good          Fair          Very Good    
+Barbarian    Bad           Very Bad      Fair          Very Bad     
+Demigod      Fair          Fair          Fair          Very Bad     
+Dunadan      Fair          Good          Fair          Very Good    
+Human        Poor          Poor          Poor          Bad          
+Dark-Elf     Good          Excellent     Excellent     Superb       
+High-Elf     Fair          Superb        Excellent     Superb       
+Wood-Elf     Good          Good          Fair          Superb       
+Dwarf        Fair          Very Good     Good          Very Bad     
+Gnome        Excellent     Very Good     Very Good     Superb       
+Hobbit       Superb        Excellent     Excellent     Heroic       
+Nibelung     Fair          Good          Good          Fair         
+Shadow-Fairy Very Good     Very Good     Poor          Legendary[2] 
+Sprite       Excellent     Very Good     Good          Superb       
+Archon       Poor          Excellent     Very Good     Very Good    
+Balrog       Bad           Excellent     Superb        Very Bad     
+Imp          Bad           Fair          Poor          Fair         
+Cyclops      Bad           Bad           Bad           Very Bad     
+Half-Giant   Very Bad      Very Bad      Bad           Very Bad     
+Half-Ogre    Bad           Bad           Bad           Very Bad     
+Half-Titan   Bad           Good          Fair          Very Bad     
+Half-Troll   Bad           Very Bad      Bad           Very Bad     
+Kobold       Bad           Bad           Poor          Very Bad     
+Snotling     Bad           Bad           Bad           Very Good    
+Skeleton     Bad           Poor          Fair          Very Bad     
+Spectre      Excellent     Superb        Excellent     Heroic       
+Vampire      Fair          Very Good     Good          Superb       
+Zombie       Bad           Bad           Good          Very Bad     
+Android      Poor          Bad           Poor          Very Bad     
+Beastman     Bad           Bad           Poor          Very Bad     
+Centaur      Poor          Bad           Fair          Fair         
+Draconian    Bad           Poor          Fair          Very Bad     
 Doppelganger Very Bad      Very Bad      Very Bad      Heroic       
-Ent          Poor          Excellent     Superb        Very Bad     
-Golem        Poor          Bad           Superb        Very Bad     
-Klackon      Superb        Superb        Excellent     Bad          
-Kutar        Fair          Superb        Superb        Heroic       
-Mindflayer   Superb        Legendary[7]  Heroic        Very Good    
-Tonberry     Poor          Excellent     Excellent     Fair         
-Yeek         Very Good     Superb        Superb        Superb       
+Ent          Bad           Fair          Good          Very Bad     
+Golem        Bad           Bad           Good          Very Bad     
+Klackon      Excellent     Good          Fair          Bad          
+Kutar        Bad           Good          Good          Heroic       
+Mindflayer   Excellent     Superb        Excellent     Very Good    
+Tonberry     Bad           Fair          Fair          Fair         
+Yeek         Fair          Fair          Good          Superb       
 
 
 Table 3 - Race Skill Bonus Table II
 
              Searching     Perception    Melee         Bows          Infra
-Amberite     Fair          Superb        Superb        Superb           0'
-Barbarian    Bad           Excellent     Superb        Superb           0'
-Demigod      Bad           Excellent     Superb        Excellent        0'
-Dunadan      Fair          Superb        Superb        Superb           0'
-Human        Bad           Superb        Good          Good             0'
-Dark-Elf     Excellent     Superb        Poor          Superb          50'
-High-Elf     Fair          Heroic        Superb        Heroic          40'
-Wood-Elf     Excellent     Superb        Poor          Superb          30'
-Dwarf        Excellent     Superb        Superb        Good            50'
-Gnome        Very Good     Superb        Bad           Superb          40'
-Hobbit       Superb        Heroic        Bad           Heroic          40'
-Nibelung     Good          Superb        Superb        Good            50'
-Shadow-Fairy Superb        Heroic        Bad           Poor            40'
-Sprite       Superb        Superb        Very Bad      Good            40'
-Archon       Poor          Superb        Superb        Superb          30'
-Balrog       Bad           Excellent     Heroic        Good            50'
-Imp          Very Bad      Superb        Excellent     Poor            30'
-Cyclops      Very Bad      Good          Heroic        Superb          10'
-Half-Giant   Very Bad      Good          Heroic        Excellent       30'
-Half-Ogre    Very Bad      Good          Heroic        Good            30'
-Half-Titan   Bad           Excellent     Heroic        Good             0'
-Half-Troll   Very Bad      Good          Heroic        Bad             30'
-Kobold       Bad           Excellent     Superb        Bad             30'
-Snotling     Bad           Excellent     Poor          Poor            20'
-Skeleton     Very Bad      Excellent     Superb        Good            20'
-Spectre      Good          Heroic        Very Bad      Poor            50'
-Vampire      Bad           Excellent     Excellent     Good            50'
-Zombie       Very Bad      Good          Superb        Good            20'
-Android      Fair          Heroic        Heroic        Superb           0'
-Beastman     Very Bad      Good          Superb        Excellent        0'
-Centaur      Fair          Good          Superb        Superb           0'
-Draconian    Bad           Superb        Superb        Excellent       20'
+Amberite     Fair          Superb        Superb        Excellent        0'
+Barbarian    Bad           Excellent     Excellent     Excellent        0'
+Demigod      Bad           Excellent     Excellent     Good             0'
+Dunadan      Fair          Superb        Superb        Excellent        0'
+Human        Bad           Superb        Poor          Poor             0'
+Dark-Elf     Excellent     Superb        Bad           Excellent       50'
+High-Elf     Fair          Heroic        Excellent     Heroic          40'
+Wood-Elf     Excellent     Superb        Bad           Superb          30'
+Dwarf        Excellent     Superb        Superb        Poor            50'
+Gnome        Very Good     Superb        Very Bad      Excellent       40'
+Hobbit       Superb        Heroic        Very Bad      Superb          40'
+Nibelung     Good          Superb        Excellent     Poor            50'
+Shadow-Fairy Superb        Heroic        Very Bad      Bad             40'
+Sprite       Superb        Superb        Very Bad      Poor            40'
+Archon       Poor          Superb        Excellent     Excellent       30'
+Balrog       Bad           Excellent     Superb        Poor            50'
+Imp          Very Bad      Superb        Good          Bad             30'
+Cyclops      Very Bad      Good          Superb        Excellent       10'
+Half-Giant   Very Bad      Good          Heroic        Good            30'
+Half-Ogre    Very Bad      Good          Superb        Poor            30'
+Half-Titan   Bad           Excellent     Heroic        Poor             0'
+Half-Troll   Very Bad      Good          Superb        Very Bad        30'
+Kobold       Bad           Excellent     Excellent     Very Bad        30'
+Snotling     Bad           Excellent     Bad           Bad             20'
+Skeleton     Very Bad      Excellent     Excellent     Poor            20'
+Spectre      Good          Heroic        Very Bad      Bad             50'
+Vampire      Bad           Excellent     Good          Poor            50'
+Zombie       Very Bad      Good          Superb        Poor            20'
+Android      Fair          Heroic        Superb        Excellent        0'
+Beastman     Very Bad      Good          Excellent     Good             0'
+Centaur      Fair          Good          Excellent     Excellent        0'
+Draconian    Bad           Superb        Superb        Good            20'
 Doppelganger Very Bad      Superb        Very Bad      Very Bad         0'
-Ent          Bad           Superb        Superb        Poor             0'
-Golem        Very Bad      Excellent     Heroic        Good            40'
-Klackon      Very Bad      Superb        Excellent     Excellent       20'
-Kutar        Very Bad      Very Good     Good          Poor             0'
-Mindflayer   Good          Superb        Bad           Poor            40'
-Tonberry     Very Bad      Good          Heroic        Bad             20'
-Yeek         Good          Heroic        Poor          Poor            20'
+Ent          Bad           Superb        Superb        Bad              0'
+Golem        Very Bad      Excellent     Superb        Poor            40'
+Klackon      Very Bad      Superb        Good          Good            20'
+Kutar        Very Bad      Very Good     Poor          Bad              0'
+Mindflayer   Good          Superb        Very Bad      Bad             40'
+Tonberry     Very Bad      Good          Superb        Very Bad        20'
+Yeek         Good          Heroic        Bad           Bad             20'
 
 
 

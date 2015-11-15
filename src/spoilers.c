@@ -55,25 +55,45 @@ static cptr _dis_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xt
 static cptr _class_dis_skill_desc(class_t *class_ptr) { return _dis_skill_desc(class_ptr->base_skills.dis, class_ptr->extra_skills.dis); }
 static cptr _mon_race_dis_skill_desc(race_t *race_ptr) { return _dis_skill_desc(race_ptr->skills.dis, race_ptr->extra_skills.dis); }
 
+static cptr _dis_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
+static cptr _race_dis_skill_desc(race_t *race_ptr) { return _dis_skill_desc2(race_ptr->skills.dis); }
+static cptr _pers_dis_skill_desc(personality_ptr pers_ptr) { return _dis_skill_desc2(pers_ptr->skills.dis*2); }
+
 /* Devices */
 static cptr _dev_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra - 50, 6); }
 static cptr _class_dev_skill_desc(class_t *class_ptr) { return _dev_skill_desc(class_ptr->base_skills.dev, class_ptr->extra_skills.dev); }
 static cptr _mon_race_dev_skill_desc(race_t *race_ptr) { return _dev_skill_desc(race_ptr->skills.dev, race_ptr->extra_skills.dev); }
+
+static cptr _dev_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
+static cptr _race_dev_skill_desc(race_t *race_ptr) { return _dev_skill_desc2(race_ptr->skills.dev); }
+static cptr _pers_dev_skill_desc(personality_ptr pers_ptr) { return _dev_skill_desc2(pers_ptr->skills.dev*2); }
 
 /* Saving Throws */
 static cptr _sav_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra - 65, 5); }
 static cptr _class_sav_skill_desc(class_t *class_ptr) { return _sav_skill_desc(class_ptr->base_skills.sav, class_ptr->extra_skills.sav); }
 static cptr _mon_race_sav_skill_desc(race_t *race_ptr) { return _sav_skill_desc(race_ptr->skills.sav, race_ptr->extra_skills.sav); }
 
+static cptr _sav_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
+static cptr _race_sav_skill_desc(race_t *race_ptr) { return _sav_skill_desc2(race_ptr->skills.sav); }
+static cptr _pers_sav_skill_desc(personality_ptr pers_ptr) { return _sav_skill_desc2(pers_ptr->skills.sav*2); }
+
 /* Melee */
 static cptr _thn_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra - 70, 12); }
 static cptr _class_thn_skill_desc(class_t *class_ptr) { return _thn_skill_desc(class_ptr->base_skills.thn, class_ptr->extra_skills.thn); }
 static cptr _mon_race_thn_skill_desc(race_t *race_ptr) { return _thn_skill_desc(race_ptr->skills.thn, race_ptr->extra_skills.thn); }
 
+static cptr _thn_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
+static cptr _race_thn_skill_desc(race_t *race_ptr) { return _thn_skill_desc2(race_ptr->skills.thn); }
+static cptr _pers_thn_skill_desc(personality_ptr pers_ptr) { return _thn_skill_desc2(pers_ptr->skills.thn*2); }
+
 /* Bows */
 static cptr _thb_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra - 60, 12); }
 static cptr _class_thb_skill_desc(class_t *class_ptr) { return _thb_skill_desc(class_ptr->base_skills.thb, class_ptr->extra_skills.thb); }
 static cptr _mon_race_thb_skill_desc(race_t *race_ptr) { return _thb_skill_desc(race_ptr->skills.thb, race_ptr->extra_skills.thb); }
+
+static cptr _thb_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
+static cptr _race_thb_skill_desc(race_t *race_ptr) { return _thb_skill_desc2(race_ptr->skills.thb); }
+static cptr _pers_thb_skill_desc(personality_ptr pers_ptr) { return _thb_skill_desc2(pers_ptr->skills.thb*2); }
 
 /******************************************************************************
  * Racial Help
@@ -112,15 +132,15 @@ static void _race_help_table(FILE *fp, race_t *race_ptr)
     fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
     fprintf(fp, "Strength     %+3d        Disarming   %s\n",
         race_ptr->stats[A_STR],
-        _skill_desc(race_ptr->skills.dis + 10, 2));
+        _race_dis_skill_desc(race_ptr));
 
     fprintf(fp, "Intelligence %+3d        Device      %s\n",
         race_ptr->stats[A_INT],
-        _skill_desc(race_ptr->skills.dev + 5, 1));
+        _race_dev_skill_desc(race_ptr));
 
     fprintf(fp, "Wisdom       %+3d        Save        %s\n",
         race_ptr->stats[A_WIS],
-        _skill_desc(race_ptr->skills.sav + 5, 1));
+        _race_sav_skill_desc(race_ptr));
 
     fprintf(fp, "Dexterity    %+3d        Stealth     %s\n",
         race_ptr->stats[A_DEX],
@@ -136,11 +156,11 @@ static void _race_help_table(FILE *fp, race_t *race_ptr)
 
     fprintf(fp, "Life Rating  %3d%%       Melee       %s\n",
         race_ptr->life,
-        _skill_desc(race_ptr->skills.thn + 10, 2));
+        _race_thn_skill_desc(race_ptr));
 
     fprintf(fp, "Base HP      %3d        Bows        %s\n",
         race_ptr->base_hp,
-        _skill_desc(race_ptr->skills.thb + 10, 2));
+        _race_thb_skill_desc(race_ptr));
 
     fprintf(fp, "Experience   %3d%%       Infravision %d'\n", race_ptr->exp, race_ptr->infra*10);
     fputs("</style></indent>\n", fp);
@@ -228,9 +248,9 @@ static void _races_help(FILE* fp)
             if (race_idx == -1) break;
             race_ptr = get_race_aux(race_idx, 0);
             fprintf(fp, "%-12.12s", race_ptr->name);
-            fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
-            fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
-            fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5, 1));
+            fprintf(fp, " %s", _race_dis_skill_desc(race_ptr));
+            fprintf(fp, " %s", _race_dev_skill_desc(race_ptr));
+            fprintf(fp, " %s", _race_sav_skill_desc(race_ptr));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
             fputc('\n', fp);
         }
@@ -251,8 +271,8 @@ static void _races_help(FILE* fp)
             fprintf(fp, "%-12.12s", race_ptr->name);
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
             fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
-            fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 10, 2));
-            fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 10, 2));
+            fprintf(fp, " %s", _race_thn_skill_desc(race_ptr));
+            fprintf(fp, " %s", _race_thb_skill_desc(race_ptr));
             fprintf(fp, " %4d'", race_ptr->infra * 10);
             fputc('\n', fp);
         }
@@ -317,9 +337,9 @@ static void _demigods_help(FILE* fp)
     {
         race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
         fprintf(fp, "%-12.12s", race_ptr->subname);
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5, 1));
+        fprintf(fp, " %s", _race_dis_skill_desc(race_ptr));
+        fprintf(fp, " %s", _race_dev_skill_desc(race_ptr));
+        fprintf(fp, " %s", _race_sav_skill_desc(race_ptr));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
         fputc('\n', fp);
     }
@@ -333,8 +353,8 @@ static void _demigods_help(FILE* fp)
         fprintf(fp, "%-12.12s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 10, 2));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 10, 2));
+        fprintf(fp, " %s", _race_thn_skill_desc(race_ptr));
+        fprintf(fp, " %s", _race_thb_skill_desc(race_ptr));
         fprintf(fp, " %4d'", race_ptr->infra * 10);
         fputc('\n', fp);
     }
@@ -420,9 +440,9 @@ static void _draconians_help(FILE* fp)
     {
         race_t *race_ptr = get_race_aux(RACE_DRACONIAN, i);
         fprintf(fp, "%-12.12s", race_ptr->subname);
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dis + 10, 2));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.dev + 5, 1));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.sav + 5, 1));
+        fprintf(fp, " %s", _race_dis_skill_desc(race_ptr));
+        fprintf(fp, " %s", _race_dev_skill_desc(race_ptr));
+        fprintf(fp, " %s", _race_sav_skill_desc(race_ptr));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
         fputc('\n', fp);
     }
@@ -436,8 +456,8 @@ static void _draconians_help(FILE* fp)
         fprintf(fp, "%-12.12s", race_ptr->subname);
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.srh, 1));
         fprintf(fp, " %s", _skill_desc(race_ptr->skills.fos, 1));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thn + 10, 2));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.thb + 10, 2));
+        fprintf(fp, " %s", _race_thn_skill_desc(race_ptr));
+        fprintf(fp, " %s", _race_thb_skill_desc(race_ptr));
         fprintf(fp, " %4d'", race_ptr->infra * 10);
         fputc('\n', fp);
     }
@@ -1252,15 +1272,15 @@ static void _personality_help(FILE *fp, int idx)
     fputs("  <indent><style:table><color:G>Stats                   Skills</color>\n", fp);
     fprintf(fp, "Strength     %+3d        Disarming   %s\n",
         pers_ptr->stats[A_STR],
-        _skill_desc(pers_ptr->skills.dis + 10, 2));
+        _pers_dis_skill_desc(pers_ptr));
 
     fprintf(fp, "Intelligence %+3d        Device      %s\n",
         pers_ptr->stats[A_INT],
-        _skill_desc(pers_ptr->skills.dev + 5, 1));
+        _pers_dev_skill_desc(pers_ptr));
 
     fprintf(fp, "Wisdom       %+3d        Save        %s\n",
         pers_ptr->stats[A_WIS],
-        _skill_desc(pers_ptr->skills.sav + 5, 1));
+        _pers_sav_skill_desc(pers_ptr));
 
     fprintf(fp, "Dexterity    %+3d        Stealth     %s\n",
         pers_ptr->stats[A_DEX],
@@ -1276,11 +1296,11 @@ static void _personality_help(FILE *fp, int idx)
 
     fprintf(fp, "Life Rating  %3d%%       Melee       %s\n",
         pers_ptr->life,
-        _skill_desc(pers_ptr->skills.thn + 10, 2));
+        _pers_thn_skill_desc(pers_ptr));
 
     fprintf(fp, "Experience   %3d%%       Bows        %s\n",
         pers_ptr->exp,
-        _skill_desc(pers_ptr->skills.thb + 10, 2));
+        _pers_thb_skill_desc(pers_ptr));
     fputs("</style></indent>\n", fp);
 }
 
@@ -1330,9 +1350,9 @@ static void _personalities_help(FILE* fp)
     {
         personality_ptr pers_ptr = get_personality_aux(i);
         fprintf(fp, "%-12.12s", pers_ptr->name);
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.dis + 10, 2));
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.dev + 5, 1));
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.sav + 5, 1));
+        fprintf(fp, " %s", _pers_dis_skill_desc(pers_ptr));
+        fprintf(fp, " %s", _pers_dev_skill_desc(pers_ptr));
+        fprintf(fp, " %s", _pers_sav_skill_desc(pers_ptr));
         fprintf(fp, " %s", _skill_desc(pers_ptr->skills.stl*3 + 3, 1));
         fputc('\n', fp);
     }
@@ -1346,8 +1366,8 @@ static void _personalities_help(FILE* fp)
         fprintf(fp, "%-12.12s", pers_ptr->name);
         fprintf(fp, " %s", _skill_desc(pers_ptr->skills.srh + 3, 1));
         fprintf(fp, " %s", _skill_desc(pers_ptr->skills.fos + 3, 1));
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.thn + 10, 2));
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.thb + 10, 2));
+        fprintf(fp, " %s", _pers_thn_skill_desc(pers_ptr));
+        fprintf(fp, " %s", _pers_thb_skill_desc(pers_ptr));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);

@@ -20,14 +20,14 @@ An ordinary person is average in every respect, gaining neither skills,
 talents nor stat adjustments.
 
   Stats                   Skills
-  Strength      +0        Disarming   Good         
-  Intelligence  +0        Device      Good         
-  Wisdom        +0        Save        Good         
+  Strength      +0        Disarming   Poor         
+  Intelligence  +0        Device      Poor         
+  Wisdom        +0        Save        Poor         
   Dexterity     +0        Stealth     Fair         
   Constitution  +0        Searching   Fair         
   Charisma      +0        Perception  Fair         
-  Life Rating  100%       Melee       Good         
-  Experience   100%       Bows        Good         
+  Life Rating  100%       Melee       Poor         
+  Experience   100%       Bows        Poor         
   
 Mighty
 Mighty raises your physical stats and skills, but reduces stats and 
@@ -36,14 +36,14 @@ warrior. Also it directly influences your hit-points and spell fail
 rate.
 
   Stats                   Skills
-  Strength      +2        Disarming   Poor         
-  Intelligence  -2        Device      Bad          
-  Wisdom        -2        Save        Poor         
+  Strength      +2        Disarming   Very Bad     
+  Intelligence  -2        Device      Very Bad     
+  Wisdom        -2        Save        Very Bad     
   Dexterity     +0        Stealth     Bad          
   Constitution  +1        Searching   Bad          
   Charisma      +1        Perception  Bad          
   Life Rating  102%       Melee       Superb       
-  Experience   100%       Bows        Good         
+  Experience   100%       Bows        Poor         
   
 Shrewd
 Shrewd reduces your physical stats, and raises your intelligence and 
@@ -51,41 +51,41 @@ magical skills. It makes your stats suitable for a mage. Also it
 directly influences your hit-points and spell fail rate.
 
   Stats                   Skills
-  Strength      -2        Disarming   Very Good    
+  Strength      -2        Disarming   Good         
   Intelligence  +2        Device      Superb       
-  Wisdom        +0        Save        Excellent    
+  Wisdom        +0        Save        Fair         
   Dexterity     +1        Stealth     Fair         
   Constitution  -1        Searching   Bad          
   Charisma      -1        Perception  Excellent    
-  Life Rating   97%       Melee       Bad          
-  Experience   100%       Bows        Poor         
+  Life Rating   97%       Melee       Very Bad     
+  Experience   100%       Bows        Very Bad     
   
 Pious
 Pious deepens your faith in your God. It makes your physical ability 
 average, and your stats suitable for priest.
 
   Stats                   Skills
-  Strength      +0        Disarming   Poor         
-  Intelligence  -1        Device      Excellent    
-  Wisdom        +2        Save        Superb       
+  Strength      +0        Disarming   Very Bad     
+  Intelligence  -1        Device      Fair         
+  Wisdom        +2        Save        Very Good    
   Dexterity     -1        Stealth     Bad          
   Constitution  +0        Searching   Very Good    
   Charisma      +0        Perception  Bad          
-  Life Rating  100%       Melee       Fair         
-  Experience   100%       Bows        Poor         
+  Life Rating  100%       Melee       Very Bad     
+  Experience   100%       Bows        Very Bad     
   
 Nimble
 Nimble renders you highly skilled comparatively well, but reduces your 
 physical ability.
 
   Stats                   Skills
-  Strength      -1        Disarming   Excellent    
-  Intelligence  +1        Device      Excellent    
-  Wisdom        -1        Save        Fair         
+  Strength      -1        Disarming   Superb       
+  Intelligence  +1        Device      Good         
+  Wisdom        -1        Save        Bad          
   Dexterity     +2        Stealth     Very Good    
   Constitution  -1        Searching   Excellent    
   Charisma      +0        Perception  Excellent    
-  Life Rating   99%       Melee       Good         
+  Life Rating   99%       Melee       Poor         
   Experience   100%       Bows        Superb       
   
 Fearless
@@ -94,14 +94,14 @@ as magic defense and constitution are reduced. Also it has a direct bad
 influence on your hit-points.
 
   Stats                   Skills
-  Strength      +1        Disarming   Poor         
-  Intelligence  +0        Device      Excellent    
-  Wisdom        +0        Save        Fair         
+  Strength      +1        Disarming   Very Bad     
+  Intelligence  +0        Device      Fair         
+  Wisdom        +0        Save        Bad          
   Dexterity     -1        Stealth     Fair         
   Constitution  -1        Searching   Good         
   Charisma      +1        Perception  Bad          
   Life Rating   98%       Melee       Excellent    
-  Experience   100%       Bows        Good         
+  Experience   100%       Bows        Poor         
   
 Combat
 The Combat personality favors melee and shooting at the expense of 
@@ -112,9 +112,9 @@ Echizen".
 (See "Death Crimson" / Ecole Software Corp.)
 
   Stats                   Skills
-  Strength      +1        Disarming   Fair         
-  Intelligence  -1        Device      Poor         
-  Wisdom        -1        Save        Poor         
+  Strength      +1        Disarming   Bad          
+  Intelligence  -1        Device      Very Bad     
+  Wisdom        -1        Save        Very Bad     
   Dexterity     +1        Stealth     Fair         
   Constitution  +0        Searching   Poor         
   Charisma      +0        Perception  Good         
@@ -126,14 +126,14 @@ A Lazy person has no good stats and can do no action well. Also it has
 a direct bad influence on your spell fail rate.
 
   Stats                   Skills
-  Strength      -2        Disarming   Poor         
-  Intelligence  -2        Device      Bad          
-  Wisdom        -2        Save        Poor         
+  Strength      -2        Disarming   Very Bad     
+  Intelligence  -2        Device      Very Bad     
+  Wisdom        -2        Save        Very Bad     
   Dexterity     -2        Stealth     Bad          
   Constitution  -2        Searching   Very Bad     
   Charisma      -2        Perception  Bad          
-  Life Rating   95%       Melee       Bad          
-  Experience   100%       Bows        Bad          
+  Life Rating   95%       Melee       Very Bad     
+  Experience   100%       Bows        Very Bad     
   
 Sexy
 Sexy rises all of your stats and skills, but your haughty attitude will 
@@ -141,8 +141,8 @@ aggravate all monsters. Only females can choose this personality.
 
   Stats                   Skills
   Strength      +1        Disarming   Superb       
-  Intelligence  +1        Device      Superb       
-  Wisdom        +1        Save        Excellent    
+  Intelligence  +1        Device      Excellent    
+  Wisdom        +1        Save        Good         
   Dexterity     +1        Stealth     Fair         
   Constitution  +1        Searching   Excellent    
   Charisma      +1        Perception  Good         
@@ -157,12 +157,12 @@ personality.
   Stats                   Skills
   Strength      -2        Disarming   Superb       
   Intelligence  -2        Device      Superb       
-  Wisdom        -2        Save        Excellent    
+  Wisdom        -2        Save        Good         
   Dexterity     -2        Stealth     Superb       
   Constitution  -2        Searching   Superb       
   Charisma      -2        Perception  Superb       
-  Life Rating  100%       Melee       Superb       
-  Experience   100%       Bows        Superb       
+  Life Rating  100%       Melee       Heroic       
+  Experience   100%       Bows        Heroic       
   
 Patient
 A Patient person does things carefully. Patient people have high 
@@ -170,14 +170,14 @@ constitution, and high resilience, but poor abilities in most other
 skills. Also it directly influences your life rating.
 
   Stats                   Skills
-  Strength      -1        Disarming   Poor         
-  Intelligence  -1        Device      Poor         
-  Wisdom        +1        Save        Excellent    
+  Strength      -1        Disarming   Very Bad     
+  Intelligence  -1        Device      Very Bad     
+  Wisdom        +1        Save        Good         
   Dexterity     -2        Stealth     Very Good    
   Constitution  +2        Searching   Fair         
   Charisma      +0        Perception  Bad          
-  Life Rating  102%       Melee       Poor         
-  Experience   100%       Bows        Poor         
+  Life Rating  102%       Melee       Very Bad     
+  Experience   100%       Bows        Very Bad     
   
 Munchkin
 The Munchkin personality is for beginners. It raises all your stats and 
@@ -186,13 +186,13 @@ little honor in doing so.
 
   Stats                   Skills
   Strength      +3        Disarming   Superb       
-  Intelligence  +3        Device      Legendary[20]
-  Wisdom        +3        Save        Legendary[7] 
+  Intelligence  +3        Device      Legendary[12]
+  Wisdom        +3        Save        Heroic       
   Dexterity     +3        Stealth     Legendary[2] 
   Constitution  +3        Searching   Legendary[15]
   Charisma      +3        Perception  Legendary[15]
-  Life Rating  150%       Melee       Legendary[20]
-  Experience    50%       Bows        Legendary[20]
+  Life Rating  150%       Melee       Legendary[62]
+  Experience    50%       Bows        Legendary[62]
   
 Craven
 A Craven person is a coward, preferring to avoid a fight at any cost. 
@@ -201,12 +201,12 @@ impressive. But their stats and other skills are somewhat wanting.
 
   Stats                   Skills
   Strength      -1        Disarming   Excellent    
-  Intelligence  +1        Device      Superb       
-  Wisdom        +1        Save        Fair         
+  Intelligence  +1        Device      Excellent    
+  Wisdom        +1        Save        Bad          
   Dexterity     -1        Stealth     Superb       
   Constitution  -1        Searching   Fair         
   Charisma      -3        Perception  Fair         
-  Life Rating   99%       Melee       Bad          
+  Life Rating   99%       Melee       Very Bad     
   Experience   100%       Bows        Superb       
   
 Hasty
@@ -215,14 +215,14 @@ skill and patience, are paramount, and the Hasty adventurer moves
 quickly through the dungeon, bungling much.
 
   Stats                   Skills
-  Strength      +0        Disarming   Poor         
-  Intelligence  -1        Device      Bad          
-  Wisdom        -2        Save        Poor         
+  Strength      +0        Disarming   Very Bad     
+  Intelligence  -1        Device      Very Bad     
+  Wisdom        -2        Save        Very Bad     
   Dexterity     +2        Stealth     Bad          
   Constitution  -1        Searching   Very Bad     
   Charisma      +0        Perception  Bad          
-  Life Rating  100%       Melee       Poor         
-  Experience   100%       Bows        Poor         
+  Life Rating  100%       Melee       Very Bad     
+  Experience   100%       Bows        Very Bad     
   
 Table 1 - Personality Statistic Bonus Table
 
@@ -246,39 +246,39 @@ Hasty           +0   -1   -2   +2   -1   +0  100%  100%
 Table 2 - Personality Skill Bonus Table I
 
              Disarming     Device        Save          Stealth      
-Ordinary     Good          Good          Good          Fair         
-Mighty       Poor          Bad           Poor          Bad          
-Shrewd       Very Good     Superb        Excellent     Fair         
-Pious        Poor          Excellent     Superb        Bad          
-Nimble       Excellent     Excellent     Fair          Very Good    
-Fearless     Poor          Excellent     Fair          Fair         
-Combat       Fair          Poor          Poor          Fair         
-Lazy         Poor          Bad           Poor          Bad          
-Sexy         Superb        Superb        Excellent     Fair         
-Lucky        Superb        Superb        Excellent     Superb       
-Patient      Poor          Poor          Excellent     Very Good    
-Munchkin     Superb        Legendary[20] Legendary[7]  Legendary[2] 
-Craven       Excellent     Superb        Fair          Superb       
-Hasty        Poor          Bad           Poor          Bad          
+Ordinary     Poor          Poor          Poor          Fair         
+Mighty       Very Bad      Very Bad      Very Bad      Bad          
+Shrewd       Good          Superb        Fair          Fair         
+Pious        Very Bad      Fair          Very Good     Bad          
+Nimble       Superb        Good          Bad           Very Good    
+Fearless     Very Bad      Fair          Bad           Fair         
+Combat       Bad           Very Bad      Very Bad      Fair         
+Lazy         Very Bad      Very Bad      Very Bad      Bad          
+Sexy         Superb        Excellent     Good          Fair         
+Lucky        Superb        Superb        Good          Superb       
+Patient      Very Bad      Very Bad      Good          Very Good    
+Munchkin     Superb        Legendary[12] Heroic        Legendary[2] 
+Craven       Excellent     Excellent     Bad           Superb       
+Hasty        Very Bad      Very Bad      Very Bad      Bad          
 
 
 Table 3 - Personality Skill Bonus Table II
 
              Searching     Perception    Melee         Bows         
-Ordinary     Fair          Fair          Good          Good         
-Mighty       Bad           Bad           Superb        Good         
-Shrewd       Bad           Excellent     Bad           Poor         
-Pious        Very Good     Bad           Fair          Poor         
-Nimble       Excellent     Excellent     Good          Superb       
-Fearless     Good          Bad           Excellent     Good         
+Ordinary     Fair          Fair          Poor          Poor         
+Mighty       Bad           Bad           Superb        Poor         
+Shrewd       Bad           Excellent     Very Bad      Very Bad     
+Pious        Very Good     Bad           Very Bad      Very Bad     
+Nimble       Excellent     Excellent     Poor          Superb       
+Fearless     Good          Bad           Excellent     Poor         
 Combat       Poor          Good          Excellent     Excellent    
-Lazy         Very Bad      Bad           Bad           Bad          
+Lazy         Very Bad      Bad           Very Bad      Very Bad     
 Sexy         Excellent     Good          Superb        Superb       
-Lucky        Superb        Superb        Superb        Superb       
-Patient      Fair          Bad           Poor          Poor         
-Munchkin     Legendary[15] Legendary[15] Legendary[20] Legendary[20]
-Craven       Fair          Fair          Bad           Superb       
-Hasty        Very Bad      Bad           Poor          Poor         
+Lucky        Superb        Superb        Heroic        Heroic       
+Patient      Fair          Bad           Very Bad      Very Bad     
+Munchkin     Legendary[15] Legendary[15] Legendary[62] Legendary[62]
+Craven       Fair          Fair          Very Bad      Superb       
+Hasty        Very Bad      Bad           Very Bad      Very Bad     
 
 
 
