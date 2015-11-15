@@ -4280,7 +4280,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_HEAL_CURING:
     {
-        int amt = _extra(effect, 4*effect->power);
+        int amt = _extra(effect, 50 + 7*effect->power/2);
         if (amt < 100)
         {
             if (name) return "Cure Wounds";
@@ -5805,7 +5805,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_ROCKET:
     {
-        int dam = _extra(effect, 250 + effect->power*3/2);
+        int dam = _extra(effect, 275 + effect->power*3/2);
         if (name) return "Rocket";
         if (desc) return "It fires a rocket.";
         if (info) return info_damage(0, 0, _BOOST(dam));
