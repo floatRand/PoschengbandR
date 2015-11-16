@@ -675,7 +675,7 @@ static cptr _do_potion(int sval, int mode)
             do_res_stat(A_INT);
             do_res_stat(A_CHR);
             set_shero(0,TRUE);
-            update_stuff();
+            update_stuff(); /* hp may change if Con was drained ... */
             hp_player(_potion_power(5000));
             device_noticed = TRUE;
         }

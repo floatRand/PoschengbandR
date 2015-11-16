@@ -616,7 +616,7 @@ static void _shatter_device_spell(int cmd, variant *res)
             (void)do_res_stat(A_WIS);
             (void)do_res_stat(A_INT);
             (void)do_res_stat(A_CHR);
-            update_stuff();
+            update_stuff(); /* hp may change if Con was drained ... */
             hp_player(5000);
         }
         else if (o_ptr->activation.type == EFFECT_TELEPORT_AWAY)

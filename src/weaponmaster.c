@@ -3443,7 +3443,6 @@ static void _calc_bonuses(void)
         /* This assumes all bonus calcs are handled here and in _calc_weapon_bonuses() */
         p_ptr->magic_num1[0] = TOGGLE_NONE;
         p_ptr->redraw |= (PR_STATUS);
-        redraw_stuff();
     }
 
     if (p_ptr->psubclass == WEAPONMASTER_SLINGS)

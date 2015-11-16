@@ -833,12 +833,9 @@ void do_cmd_study(void)
     }
 #endif
 
-    /* Update Study */
-    p_ptr->update |= (PU_SPELLS);
-    update_stuff();
-
-    /* Redraw object recall */
-    p_ptr->window |= (PW_OBJECT);
+    p_ptr->update |= PU_SPELLS;
+    p_ptr->redraw |= PR_EFFECTS;
+    p_ptr->window |= PW_OBJECT;
 }
 
 

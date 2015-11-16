@@ -327,8 +327,6 @@ static void death_scythe_miss(object_type *o_ptr, int hand, int mode)
     if (k < 0) k = 0;
 
     take_hit(DAMAGE_FORCE, k, "Death scythe", -1);
-
-    redraw_stuff();
 }
 
 /*

@@ -1857,6 +1857,7 @@ static void prt_effects(void)
         else
             c_put_str(a, "Cursed", row++, col);
     }
+
     if (p_ptr->mimic_form != MIMIC_NONE)
     {
         char buf[MAX_NLEN];
