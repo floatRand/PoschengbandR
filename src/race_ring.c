@@ -902,7 +902,7 @@ static _group_t _groups[] = {
         { EFFECT_EARTHQUAKE,          25,  20, 60 },
         { EFFECT_RUNE_EXPLOSIVE,      29,  25, 65 },
         { EFFECT_ENCHANTMENT,         30,  80, 85 },
-        { EFFECT_RECHARGING,          35,  30, 65 },
+        { EFFECT_RECHARGE_FROM_DEVICE,35,  30, 65 },
         { EFFECT_RUNE_PROTECTION,     37,  50, 70 },
         { EFFECT_DESTRUCTION,         40,  35, 70 },
         { EFFECT_ALCHEMY,             43,  90, 70 },

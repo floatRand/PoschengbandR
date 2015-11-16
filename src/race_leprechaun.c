@@ -171,6 +171,7 @@ static spell_info _spells[] =
     { 20, 12, 40, telekinesis_spell}, 
     { 30, 15, 50, cause_wounds_III_spell}, 
     { 35, 15, 60, animate_dead_spell}, 
+    { 37, 20, 60, recharging_spell},  /* Using the player's gold! */
     { 40,  0,  0, blink_toggle_spell}, 
     { 45, 40, 60, _fanaticism_spell},
     { -1, -1, -1, NULL}

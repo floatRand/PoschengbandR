@@ -1232,7 +1232,7 @@ static cptr _do_scroll(int sval, int mode)
         if (desc) return "It attempts to recharge a magical device using the mana of a source device. This usually destroys the source device.";
         if (cast)
         {
-            if (!recharge_from_device(_scroll_power(75))) return NULL;
+            if (!recharge_from_device(_scroll_power(100))) return NULL;
             device_noticed = TRUE;
         }
         break;
@@ -1836,7 +1836,9 @@ static _effect_info_t _effect_info[] =
     {"GENOCIDE",        EFFECT_GENOCIDE,            70, 500, 16, BIAS_NECROMANTIC},
     {"MASS_GENOCIDE",   EFFECT_MASS_GENOCIDE,       80, 750, 16, BIAS_NECROMANTIC},
 
-    {"RECHARGING",      EFFECT_RECHARGING,          35, 500,  3, BIAS_MAGE | BIAS_DEMON},
+    {"RECHARGE_FROM_DEVICE", EFFECT_RECHARGE_FROM_DEVICE, 35, 500,  3, BIAS_MAGE | BIAS_DEMON},
+    {"RECHARGE_FROM_PLAYER", EFFECT_RECHARGE_FROM_PLAYER, 90, 500, 16, BIAS_MAGE | BIAS_DEMON},
+
     {"ENCHANTMENT",     EFFECT_ENCHANTMENT,         30, 900, 16, 0},
     {"IDENTIFY",        EFFECT_IDENTIFY,            15,  50,  1, BIAS_ROGUE | BIAS_MAGE},
     {"IDENTIFY_FULL",   EFFECT_IDENTIFY_FULL,       50, 200,  3, BIAS_ROGUE | BIAS_MAGE},
@@ -3263,9 +3265,9 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         }
         break;
     }
-    case EFFECT_RECHARGING:
+    case EFFECT_RECHARGE_FROM_DEVICE:
     {
-        int power = _extra(effect, 75);
+        int power = _extra(effect, 100);
         if (name) return "Recharging";
         if (desc) return "It attempts to recharge a magical device using the mana of a source device.";
         if (info) return format("Power %d", _BOOST(power));
@@ -3275,6 +3277,21 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             device_noticed = TRUE;
             if (!recharge_from_device(_BOOST(power))) return NULL;
+        }
+        break;
+    }
+    case EFFECT_RECHARGE_FROM_PLAYER:
+    {
+        int power = _extra(effect, 100 + effect->power);
+        if (name) return "*Recharging*";
+        if (desc) return "It attempts to recharge a magical device using your mana as the source.";
+        if (info) return format("Power %d", _BOOST(power));
+        if (value) return format("%d", power*30);
+        if (color) return format("%d", TERM_L_BLUE);
+        if (cast)
+        {
+            device_noticed = TRUE;
+            if (!recharge_from_player(_BOOST(power))) return NULL;
         }
         break;
     }

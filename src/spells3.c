@@ -2589,10 +2589,22 @@ bool recharge_from_player(int power)
     max = device_max_sp(o_ptr) - device_sp(o_ptr);
     if (amt > max)
         amt = max;
-    if (amt > p_ptr->csp)
+    if (p_ptr->prace == RACE_MON_LEPRECHAUN)
+    {
+        if (amt > p_ptr->au / 100)
+            amt = p_ptr->au / 100;
+    }
+    else if (amt > p_ptr->csp)
         amt = p_ptr->csp;
 
-    sp_player(-amt);
+    if (p_ptr->prace == RACE_MON_LEPRECHAUN)
+    {
+        p_ptr->au -= amt * 100;
+        p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+    }
+    else
+        sp_player(-amt);
+
     _recharge_aux(o_ptr, amt, power);
 
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);

@@ -563,7 +563,7 @@ W:10:90:10:45000
 P:1:0d0:0:0:18
 F:DEX | CHR | HIDE_TYPE | XTRA_POWER |
 F:FREE_ACT | RES_ACID | RES_FIRE | RES_COLD
-E:RECHARGING:20:70:130
+E:RECHARGE_FROM_DEVICE:20:70:130
 E:Your cloak glows bright yellow...
 D:A sable-hued cloak, with glowing elven-runes to restore magic showing calm 
 D:and clear as moonlight on still water.
@@ -1676,7 +1676,7 @@ F:STR | INT | WIS | DEX | CON | CHR | SPEED | STEALTH | HIDE_TYPE |
 F:HOLD_LIFE | FREE_ACT | SEE_INVIS | TELEPATHY |
 F:LEVITATION | SLOW_DIGEST | REGEN | SEARCH | LITE | WARNING |
 F:INSTA_ART | QUESTITEM | FULL_NAME
-E:RECHARGING:30:200:1000
+E:RECHARGE_FROM_DEVICE:30:200:1000
 E:Your card gleams with blinding light...
 
 N:142:'Worpal Blade'
@@ -2743,7 +2743,7 @@ P:0:3d6:15:15:15
 F:SUST_INT | SUST_WIS | DEC_MANA | BLESSED |
 F:HOLD_LIFE | TELEPATHY | PERMA_CURSE | QUESTITEM |
 F:DEC_STR | DEC_DEX | DEC_CON | SPELL_POWER | INT |
-E:RECHARGING:30:15:200
+E:RECHARGE_FROM_PLAYER:80:15:200
 E:Your spear glows red.
 D:This is the favored weapon of Athena, the great goddess of War and Wisdom.
 
@@ -2983,7 +2983,7 @@ I:39:13:2
 W:50:150:20:100000
 P:0:1d1:0:0:0
 F:FULL_NAME | INT | INSTA_ART
-E:SPEED:25:100
+E:RECHARGE_FROM_PLAYER:60:10
 E:Your stone begins to vibrate rapidly.
 
 N:285:& Stone of Chaos

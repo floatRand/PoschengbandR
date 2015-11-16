@@ -2165,22 +2165,29 @@ static bool inn_comm(int cmd)
                 }
                 else
                 {
+                    int i;
+
                     set_blind(0, TRUE);
                     set_confused(0, TRUE);
                     p_ptr->stun = 0;
                     p_ptr->chp = p_ptr->mhp;
                     if (p_ptr->pclass != CLASS_RUNE_KNIGHT)
                         p_ptr->csp = p_ptr->msp;
+
                     if (p_ptr->pclass == CLASS_MAGIC_EATER)
                         magic_eater_restore_all();
-                    if ((prev_hour >= 6) && (prev_hour <= 17))
+
+                    for (i = 0; i < INVEN_PACK; i++)
                     {
+                        if (!inventory[i].k_idx) continue;
+                        if (!object_is_device(&inventory[i])) continue;
+                        device_regen_sp_aux(&inventory[i], 1000);
+                    }
+
+                    if (prev_hour >= 6 && prev_hour <= 17)
                         msg_print("You awake refreshed for the evening.");
-                    }
                     else
-                    {
                         msg_print("You awake refreshed for the new day.");
-                    }
                 }
             }
             break;
