@@ -96,7 +96,7 @@
    because it doesn't know to check out CFLAGS in ../mk/buildsys.mk where HAVE_CONFIG_H is defined
    so that h-basic.h knows to #include "autoconf.h" so that USE_X11 gets defined. Unbelievable! :)
    If you are having compile problems, just comment this out.
-#define USE_X11*/
+#define USE_X11 */
 
 #include "angband.h"
 
@@ -610,6 +610,10 @@ static errr Infowin_set_name(cptr name)
 	strcpy(buf, name);
 	st = XStringListToTextProperty(&bp, 1, &tp);
 	if (st) XSetWMName(Metadpy->dpy, Infowin->win, &tp);
+    /* "To free the storage for the value field, use ."
+         -- Official X11 Documentation for XStringListToTextProperty
+       Thanks, guys. I'll call that mysterious function right away! */
+    free(tp.value);
 	return (0);
 }
 
@@ -3349,13 +3353,6 @@ static void hook_quit(const char *str)
         {
             XDestroyImage(td->TmpImage);
         }
-        /* TODO: This still leaks:
-            ================================================================
-            ==14300==ERROR: LeakSanitizer: detected memory leaks
-
-            Direct leak of 136 byte(s) in 1 object(s) allocated from:
-                #0 0x4be960 in calloc (/home/chris/Src/poschengband/poschengband+0x4be960)
-                #1 0x7f6769567877 in XCreateImage (/usr/lib/x86_64-linux-gnu/libX11.so.6+0x26877) */
 #endif
 
         /* Free size hints */
