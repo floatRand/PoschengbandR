@@ -5639,9 +5639,14 @@ void play_game(bool new_game)
         }
     }
 
-    /* On X11, you need to flush() before Term->hgt is accurate! */
-    Term_flush();
-    display_news();
+    /* The Windows port blocks until the user chooses a menu for a New game, or
+       to load an existing game. Thus, it will display its own start screen ... */
+    if (strcmp(ANGBAND_SYS, "win") != 0)
+    {
+        /* On X11, you need to flush() before Term->hgt is accurate! */
+        Term_flush();
+        display_news();
+    }
 
     /* Hack -- turn off the cursor */
     (void)Term_set_cursor(0);

@@ -73,6 +73,9 @@
 
 #include "angband.h"
 
+/* This is my debugging prop for QtCreator on Linux. Hopefully, I remember
+   to comment this out when I am finished debugging!
+#define WINDOWS */
 
 #ifdef WINDOWS
 
@@ -4659,8 +4662,9 @@ int FAR PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
     /* Did the user double click on a save file? */
     check_for_save_file(lpCmdLine);
 
-    prt("[Choose 'New' or 'Open' from the 'File' menu]", 23, 17);
-
+    Term_flush();
+    display_news();
+    c_prt(TERM_YELLOW, "                 [Choose 'New' or 'Open' from the 'File' menu]", Term->hgt - 1, 0);
     Term_fresh();
 
     /* Process messages forever */
