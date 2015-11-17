@@ -3105,7 +3105,7 @@ string_ptr get_screenshot(void)
 void do_cmd_note(void)
 {
     char buf[80];
-    string_ptr s = get_tiny_screenshot(50, 24);
+    string_ptr s = 0;
 
     /* Default */
     strcpy(buf, "");
@@ -3118,6 +3118,8 @@ void do_cmd_note(void)
 
     /* Add the note to the message recall */
     msg_format("<color:R>Note:</color> %s\n", buf);
+
+    s = get_tiny_screenshot(50, 24);
     msg_add(string_buffer(s));
     string_free(s);
 }
