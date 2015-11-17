@@ -28,4 +28,3 @@ You feel something roll beneath your feet.<color:U>)</color>                    
       <color:U>###</color>            <color:U>###</color>                     <color:U>###</color>         <color:U>#####</color>   <color:U>##</color>
 <color:W>Lonely Mountain: L35</color>                    <color:b>Elec</color> <color:r>Fire</color> <color:s>Cold</color> <color:G>DTrap</color>
 </style>
-              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]

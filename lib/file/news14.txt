@@ -26,4 +26,3 @@ No.'<color:U> </color><color:R>You have slain Combat-Echizen "Because it's time"
 <color:D>xxxx</color>                     ####.....<color:U><</color>..
 <color:D>xxxx</color>                        ######################
 </style>
-              [Press <color:keypress>?</color> for Credits. Press Any Other Key to Play]

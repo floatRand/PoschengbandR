@@ -28,4 +28,3 @@ Your fears finally subside.                                         CON : <color
                 <color:U>#####</color>
 <color:U>Arena: L50</color>                   StnSkn <color:g>Acid</color> <color:b>Elec</color> <color:r>Fire</color> <color:s>Cold</color> <color:g>Pois</color>
 </style>
-              [Press <color:keypress>?</color> for Credits. Press Any Other Key to Play]

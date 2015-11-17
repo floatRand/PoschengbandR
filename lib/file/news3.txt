@@ -28,4 +28,3 @@ terror!                                                             EXP <color:G
     ###############             #...
 <color:s>Stronghold: L1</color>
 </style>
-              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]

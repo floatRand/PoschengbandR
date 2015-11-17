@@ -1654,6 +1654,8 @@ static void _display_file(cptr name)
         doc_sync_term(doc, doc_range_all(doc), doc_pos_create(0, 0));
         doc_free(doc);
         my_fclose(fp);
+
+        c_prt(TERM_YELLOW, "              [Press ? for Credits. Press Any Other Key to Play]", Term->hgt - 1, 0);
         Term_fresh();
     }
 }

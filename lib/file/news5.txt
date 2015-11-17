@@ -26,4 +26,3 @@ You have The Long Sword 'Ringil' (5d5) (+22,+25) (+5) (p).
                                                                     <color:B>Study (3)</color>
 <color:W>Labyrinth: L28</color>
 </style>
-              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]

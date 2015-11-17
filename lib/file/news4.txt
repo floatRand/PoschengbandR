@@ -24,4 +24,3 @@ something roll beneath your feet.<color:U>)</color>                             
                                                                     <color:G>Fast (+1)</color>
 <color:W>Stronghold: L5</color>
 </style>
-              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]

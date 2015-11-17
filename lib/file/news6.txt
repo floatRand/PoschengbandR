@@ -25,4 +25,3 @@ slower. The Druid flees in terror!                                  EXP <color:G
 <color:U>##################################################################</color>  <color:B>Study (3)</color>
 Arena
 </style>
-              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]

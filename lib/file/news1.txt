@@ -28,4 +28,3 @@ roll beneath your feet. You feel something roll beneath your feet.  AU  <color:G
              <color:U>##</color>   <color:U>#</color>    <color:U>##</color>              <color:U>##</color>   <color:U>#+</color> ......<color:U>####</color>......<color:U>###</color>
 <color:U>Arena: L75</color>                              <color:s>Cold</color> Hero
 </style>
-              [Press <color:keypress>?</color> for Credits. Press Any Other Key to Play]

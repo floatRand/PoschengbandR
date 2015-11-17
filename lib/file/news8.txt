@@ -28,4 +28,3 @@ misses.                                                             WIS : <color
 #<color:D>#</color>####     #<color:D>#</color>###<color:D>#</color>#           ##    ##<color:D>#</color># #<color:D>#</color>#####<color:D>#</color>#            ######
 <color:s>Lonely Mountain: L35</color>
 </style>
-              [Press <style:keypress>?</style> for Credits. Press Any Other Key to Play]
