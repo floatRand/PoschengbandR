@@ -4755,9 +4755,11 @@ void calc_bonuses(void)
         {
             if (obj->tval == TV_SHIELD)
             {
-                int skill = 6000;
-                p_ptr->weapon_info[i].to_h += (skill - WEAPON_EXP_BEGINNER) / 200;
-                p_ptr->weapon_info[i].dis_to_h += (skill - WEAPON_EXP_BEGINNER) / 200;
+                int bonus = skills_shield_calc_bonus(obj->sval);
+
+                assert(weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH);
+                p_ptr->weapon_info[i].to_h += bonus;
+                p_ptr->weapon_info[i].dis_to_h += bonus;
             }
             else
             {

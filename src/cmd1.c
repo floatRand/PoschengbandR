@@ -2726,6 +2726,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         object_desc(o_name, o_ptr, OD_NAME_ONLY);
         if (weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH)
         {
+            assert(o_ptr->tval == TV_SHIELD);
             dd = 3;
             ds = k_info[o_ptr->k_idx].ac;
             to_h = o_ptr->to_a;
@@ -2821,7 +2822,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     if (o_ptr)
     {
         if (r_ptr->level + 10 > p_ptr->lev)
-            skills_weapon_gain(o_ptr->tval, o_ptr->sval);
+        {
+            if (weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH && o_ptr->tval == TV_SHIELD)
+                skills_shield_gain(o_ptr->sval);
+            else
+                skills_weapon_gain(o_ptr->tval, o_ptr->sval);
+        }
     }
     else
     {

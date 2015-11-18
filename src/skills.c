@@ -170,8 +170,16 @@ void skills_bow_gain(int sval)
 
 int skills_weapon_current(int tval, int sval)
 {
-    int max = skills_weapon_max(tval, sval);
-    int cur = p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval];
+    int max;
+    int cur;
+
+    assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
+
+    if (tval == TV_BOW)
+        return skills_bow_current(sval);
+
+    max = skills_weapon_max(tval, sval);
+    cur = p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval];
 
     if (cur > max)
         cur = max;
@@ -181,6 +189,11 @@ int skills_weapon_current(int tval, int sval)
 
 int skills_weapon_max(int tval, int sval)
 {
+    assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
+
+    if (tval == TV_BOW)
+        return skills_bow_max(sval);
+
     if (mut_present(MUT_WEAPON_SKILLS))
         return WEAPON_EXP_MASTER;
 
@@ -201,10 +214,6 @@ int skills_weapon_max(int tval, int sval)
             return WEAPON_EXP_BEGINNER;
     }
 
-    /* Hack: In case somebody calls this instead of skills_bow_max() */
-    if (tval == TV_BOW && demigod_is_(DEMIGOD_ARTEMIS))
-        return WEAPON_EXP_MASTER;
-
     return s_info[_class_idx()].w_max[tval-TV_WEAPON_BEGIN][sval];
 }
 
@@ -222,8 +231,14 @@ int skills_weapon_calc_bonus(int tval, int sval)
 
 void skills_weapon_gain(int tval, int sval)
 {
-    int max = skills_weapon_max(tval, sval);
-    int cur = p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval];
+    int max;
+    int cur;
+
+    assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
+    assert(tval != TV_BOW);
+
+    max = skills_weapon_max(tval, sval);
+    cur = p_ptr->weapon_exp[tval-TV_WEAPON_BEGIN][sval];
 
     if (cur < max)
     {
@@ -253,6 +268,8 @@ bool skills_weapon_is_icky(int tval, int sval)
 {
     bool result = FALSE;
 
+    assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
+
     /* Some classes use weapon skill tables to determine allowable weapons.
        But if the character gains the Weapon Versatility ability, all weapons
        will be masterable, even "icky" ones ... */
@@ -274,31 +291,76 @@ bool skills_weapon_is_icky(int tval, int sval)
     return result;
 }
 
-cptr skills_weapon_describe_current(int tval, int sval)
+static cptr _weapon_describe_aux(int skill, int max)
 {
-    int         current = skills_weapon_current(tval, sval);
     cptr        desc;
     static char buf[MAX_NLEN];
 
     buf[0] = '\0';
 
-    if (current < WEAPON_EXP_BEGINNER)
+    if (skill < WEAPON_EXP_BEGINNER)
         desc = "Unskilled";
-    else if (current < WEAPON_EXP_SKILLED)
+    else if (skill < WEAPON_EXP_SKILLED)
         desc = "Beginner";
-    else if (current < WEAPON_EXP_EXPERT)
+    else if (skill < WEAPON_EXP_EXPERT)
         desc = "Skilled";
-    else if (current < WEAPON_EXP_MASTER)
+    else if (skill < WEAPON_EXP_MASTER)
         desc = "Expert";
     else
         desc = "Master";
 
-    if (current == skills_weapon_max(tval, sval))
+    if (skill == max)
     {
         sprintf(buf, "!%s", desc);
         return buf;
     }
     return desc;
+}
+
+cptr skills_weapon_describe_current(int tval, int sval)
+{
+    return _weapon_describe_aux(
+        skills_weapon_current(tval, sval),
+        skills_weapon_max(tval, sval));
+}
+
+/* Shieldmasters 'Shield Bash' technique */
+static cptr skills_shield_calc_name(int sval)
+{
+    static char buf[MAX_NLEN];
+    sprintf(buf, "Shield.%d", sval);
+    return buf;
+}
+
+int skills_shield_current(int sval)
+{
+    return skills_innate_current(
+        skills_shield_calc_name(sval));
+}
+
+int skills_shield_max(int sval)
+{
+    return skills_innate_max(
+        skills_shield_calc_name(sval));
+}
+
+void skills_shield_gain(int sval)
+{
+    skills_innate_gain(
+        skills_shield_calc_name(sval));
+}
+
+int skills_shield_calc_bonus(int sval)
+{
+    return _weapon_calc_bonus_aux(
+        skills_shield_current(sval));
+}
+
+cptr skills_shield_describe_current(int sval)
+{
+    return _weapon_describe_aux(
+        skills_shield_current(sval),
+        skills_shield_max(sval));
 }
 
 void skills_martial_arts_gain(void)

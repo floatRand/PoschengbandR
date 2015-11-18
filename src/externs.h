@@ -2437,6 +2437,12 @@ extern bool skills_weapon_is_icky(int tval, int sval);
 extern int skills_weapon_calc_bonus(int tval, int sval);
 extern cptr skills_weapon_describe_current(int tval, int sval);
 
+extern int skills_shield_current(int sval);
+extern int skills_shield_max(int sval);
+extern void skills_shield_gain(int sval);
+extern int skills_shield_calc_bonus(int sval);
+extern cptr skills_shield_describe_current(int sval);
+
 extern void skills_dual_wielding_gain(monster_race *r_ptr);
 extern int skills_dual_wielding_current(void);
 extern int skills_dual_wielding_max(void);

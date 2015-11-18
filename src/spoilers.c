@@ -1538,7 +1538,7 @@ static void _skills_race_help(FILE* fp)
 static void _skills_class_help(FILE* fp)
 {
     int i,j;
-    fputs("Class,Dis,Dev,Sav,Stl,Srh,Fos,Thn,Thb,Dis2,Dev2,Sav2,Thn2,Thb2\n", fp);
+    fputs("Class,Dis,Dev,Sav,Stl,Srh,Fos,Thn,Thb,Dis2,Dev2,Sav2,Thn2,Thb2,Riding,DualWielding\n", fp);
     for (i = 0; i < MAX_CLASS; i++)
     {
         int max_j = 1;
@@ -1558,7 +1558,7 @@ static void _skills_class_help(FILE* fp)
                 fprintf(fp, "\"%s:%s\",", class_ptr->name, class_ptr->subname);
             else
                 fprintf(fp, "\"%s\",", class_ptr->name);
-            fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,%d+%d,%d+%d,%d+%d,%d+%d,%d+%d\n",
+            fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,%d+%d,%d+%d,%d+%d,%d+%d,%d+%d,%d,%d\n",
                 class_ptr->base_skills.dis + 5*class_ptr->extra_skills.dis,
                 class_ptr->base_skills.dev + 5*class_ptr->extra_skills.dev,
                 class_ptr->base_skills.sav + 5*class_ptr->extra_skills.sav,
@@ -1571,7 +1571,9 @@ static void _skills_class_help(FILE* fp)
                 class_ptr->base_skills.dev, class_ptr->extra_skills.dev,
                 class_ptr->base_skills.sav, class_ptr->extra_skills.sav,
                 class_ptr->base_skills.thn, class_ptr->extra_skills.thn,
-                class_ptr->base_skills.thb, class_ptr->extra_skills.thb
+                class_ptr->base_skills.thb, class_ptr->extra_skills.thb,
+                s_info[i].s_max[SKILL_RIDING],
+                s_info[i].s_max[SKILL_DUAL_WIELDING]
             );
         }
     }
