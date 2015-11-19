@@ -725,6 +725,7 @@ void object_known(object_type *o_ptr)
 
     /* Clear the "Empty" info */
     o_ptr->ident &= ~(IDENT_EMPTY);
+    o_ptr->ident &= ~(IDENT_TRIED);
 
     /* Now we know about the item */
     o_ptr->ident |= (IDENT_KNOWN);
@@ -1022,10 +1023,19 @@ void stats_on_identify(object_type *o_ptr)
  */
 void object_tried(object_type *o_ptr)
 {
-    /* Mark it as tried (even if "aware") */
-    k_info[o_ptr->k_idx].tried = TRUE;
+    if (object_is_device(o_ptr))
+        o_ptr->ident |= IDENT_TRIED;
+    else
+        k_info[o_ptr->k_idx].tried = TRUE;
 }
 
+bool object_is_tried(object_type *o_ptr)
+{
+    if (object_is_device(o_ptr))
+        return (o_ptr->ident & IDENT_TRIED) ? TRUE : FALSE;
+    else
+        return k_info[o_ptr->k_idx].tried;
+}
 
 /*
  * Return the "value" of an "unknown" item

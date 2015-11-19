@@ -2772,9 +2772,7 @@ enum summon_specific_e {
 #define IDENT_KNOWN     0x08    /* Item abilities are known */
 #define IDENT_STORE     0x10    /* Item is storebought !!!! */
 #define IDENT_FULL      0x20    /* Item information is known */
-#if 0
-#define IDENT_CURSED    0x40    /* Item is temporarily cursed */
-#endif
+#define IDENT_TRIED     0x40    /* Device has been tried, but still unknown */
 #define IDENT_BROKEN    0x80    /* Item is permanently worthless */
 
 
@@ -3794,13 +3792,6 @@ enum summon_specific_e {
  * Hack -- The main "screen"
  */
 #define term_screen     (angband_term[0])
-
-
-/*
- * Determine if a given inventory item is "tried"
- */
-#define object_is_tried(T) \
-    (k_info[(T)->k_idx].tried)
 
 
 /*

@@ -5665,6 +5665,7 @@ bool lose_all_info(void)
 
         /* Hack -- Clear the "empty" flag */
         o_ptr->ident &= ~(IDENT_EMPTY);
+        o_ptr->ident &= ~(IDENT_TRIED);
 
         /* Hack -- Clear the "known" flag */
         o_ptr->ident &= ~(IDENT_KNOWN);

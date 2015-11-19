@@ -2179,6 +2179,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     }
 
     /* Note "tried" if the object has been tested unsuccessfully */
+    else if (!known && object_is_device(o_ptr) && object_is_tried(o_ptr))
+    {
+        strcpy(fake_insc_buf, "tried");
+    }
     else if (!aware && object_is_tried(o_ptr))
     {
         strcpy(fake_insc_buf, "tried");
