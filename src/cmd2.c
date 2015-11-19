@@ -4765,6 +4765,17 @@ void do_cmd_travel_xy(int x, int y)
     int dx, dy, sx, sy;
     feature_type *f_ptr;
 
+    travel.run = 0;
+
+    /* Bug with wilderness scrolling yet to be located ... */
+    if (!in_bounds2(y, x))
+    {
+        forget_travel_flow();
+        travel.y = py;
+        travel.x = px;
+        return;
+    }
+
     if ((x == px) && (y == py))
     {
         msg_print("You are already there!!");

@@ -460,6 +460,9 @@ void wilderness_move_player(int old_x, int old_y)
     p_ptr->redraw |= PR_BASIC; /* In case the user left/entered a town ... */
     handle_stuff();  /* Is this necessary?? */
 
+    if (travel.run)
+        do_cmd_travel_xy(travel.x - dx*WILD_SCROLL_CX, travel.y - dy*WILD_SCROLL_CY);
+
 #if 0
     c_put_str(TERM_WHITE, format("P:%3d/%3d", px, py), 26, 0);
     c_put_str(TERM_WHITE, format("W:%3d/%3d", p_ptr->wilderness_x, p_ptr->wilderness_y), 27, 0);

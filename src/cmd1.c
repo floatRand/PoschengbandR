@@ -6466,8 +6466,24 @@ void travel_step(void)
         }
     }
 
-    /* Close door */
-    if (!easy_open && is_closed_door(cave[py+ddy[dir]][px+ddx[dir]].feat))
+    /* Travelling is bumping into jammed doors and getting stuck */
+    if (is_jammed_door(cave[py+ddy[dir]][px+ddx[dir]].feat))
+    {
+        disturb(0, 0);
+        return;
+    }
+
+    /* Closed door */
+    else if (is_closed_door(cave[py+ddy[dir]][px+ddx[dir]].feat))
+    {
+        if (!easy_open)
+        {
+            disturb(0, 0);
+            return;
+        }
+    }
+    /* Travelling is bumping into mountains and permanent walls and getting stuck */
+    else if (!player_can_enter(cave[py+ddy[dir]][px+ddx[dir]].feat, 0))
     {
         disturb(0, 0);
         return;

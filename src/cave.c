@@ -92,6 +92,15 @@ bool is_closed_door(int feat)
            !have_flag(f_ptr->flags, FF_MOVE);
 }
 
+bool is_jammed_door(int feat)
+{
+    feature_type *f_ptr = &f_info[feat];
+
+    if (have_flag(f_ptr->flags, FF_DOOR) && !have_flag(f_ptr->flags, FF_OPEN) && have_flag(f_ptr->flags, FF_BASH))
+        return TRUE;
+
+    return FALSE;
+}
 
 /*
  * Return TRUE if the given grid is a hidden closed door
