@@ -1489,6 +1489,7 @@ enum {
 #define ART_STONE_OF_CRAFT      290
 #define ART_STONE_OF_WAR        291
 #define ART_STONE_OF_ARMAGEDDON 297
+#define ART_STONE_OF_MIND       328
 
 #define ART_HOLY_GRAIL      293
 
@@ -1869,6 +1870,7 @@ enum {
 #define SV_LITE_WAR                     20
 #define SV_LITE_ARMAGEDDON              21
 #define SV_LITE_HYDRA                   22
+#define SV_LITE_MIND                    23
 
 #define SV_AMULT                         0
 #define SV_RING                          0
