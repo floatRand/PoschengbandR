@@ -495,7 +495,7 @@ void display_weapon_info(doc_ptr doc, int hand)
     if (weaponmaster_get_toggle() == TOGGLE_SHIELD_BASH && object_is_shield(o_ptr))
     {
         dd = 3 + p_ptr->weapon_info[hand].to_dd;
-        ds = k_info[o_ptr->k_idx].ac + p_ptr->weapon_info[hand].to_ds;
+        ds = o_ptr->ac + p_ptr->weapon_info[hand].to_ds;
         if (object_is_known(o_ptr))
         {
             to_h = o_ptr->to_a;

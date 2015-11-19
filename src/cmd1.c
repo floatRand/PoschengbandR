@@ -2728,7 +2728,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         {
             assert(o_ptr->tval == TV_SHIELD);
             dd = 3;
-            ds = k_info[o_ptr->k_idx].ac;
+            ds = o_ptr->ac;
             to_h = o_ptr->to_a;
             to_d = o_ptr->to_a;
 
