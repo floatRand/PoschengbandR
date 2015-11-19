@@ -59,7 +59,6 @@ Y:equippy_chars
 X:display_food_bar
 X:display_hp_bar
 X:display_sp_bar
-X:display_mutations
 X:compress_savefile
 Y:abbrev_extra
 X:abbrev_all

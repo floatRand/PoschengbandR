@@ -196,9 +196,6 @@ This option will display a status bar on the main screen that details your curre
 This option will display a status bar on the main screen that details your current state of hunger. For example:
   <color:U>,</color>[<color:R>**</color>-------]
 
-<topic:display_mutations><color:U>Display mutations in 'C'haracter Display</color> <color:D>(display_mutations)</color>
-Normally, if your character has gained mutations, they will be displayed in an extra 'h' mode window under the 'C'haracter Description command. Some players may wish to view mutations only via the knowledge command ('~' or '|') and do not want any extra screens in the Character Description: they should set this option.
-
 <topic:compress_savefile><color:U>Compress messages in savefiles</color> <color:D>(compress_savefile)</color>
 Compress the savefile, by only saving the most recent "messages" that the player has received. This can cut the size of the savefile by a drastic amount, but will result in the loss of message information.
 

@@ -246,7 +246,6 @@ bool equippy_chars;    /* Display 'equippy' chars */
 bool display_food_bar;
 bool display_hp_bar;
 bool display_sp_bar;
-bool display_mutations;    /* Display mutations in 'C'haracter Display */
 bool compress_savefile;    /* Compress messages in savefiles */
 bool abbrev_extra;    /* Describe obj's extra resistances by abbreviation */
 bool abbrev_all;    /* Describe obj's all resistances by abbreviation */
