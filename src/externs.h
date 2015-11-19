@@ -265,7 +265,6 @@ extern bool equippy_chars;    /* Display 'equippy' chars */
 extern bool display_food_bar;    /* Like the monster health bar, only tastier! */
 extern bool display_hp_bar; /* Display player HP just like the monster health bar */
 extern bool display_sp_bar; /* Display player SP just like the monster health bar */
-extern bool display_mutations;    /* Display mutations in 'C'haracter Display */
 extern bool compress_savefile;    /* Compress messages in savefiles */
 extern bool abbrev_extra;    /* Describe obj's extra resistances by abbreviation */
 extern bool abbrev_all;    /* Describe obj's all resistances by abbreviation */
@@ -1176,6 +1175,7 @@ extern void object_aware(object_type *o_ptr);
 extern void ego_aware(object_type *o_ptr);
 extern bool ego_is_aware(int which);
 extern void object_tried(object_type *o_ptr);
+extern bool object_is_tried(object_type *o_ptr);
 extern s32b object_value(object_type *o_ptr);
 extern s32b object_value_real(object_type *o_ptr);
 extern bool can_player_destroy_object(object_type *o_ptr);
