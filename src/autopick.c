@@ -646,7 +646,8 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
                 if (!object_is_rare(o_ptr)) ADD_FLG(FLG_COMMON);
             }
 
-            ADD_FLG(FLG_EGO);
+            if (!object_is_device(o_ptr))
+                ADD_FLG(FLG_EGO);
         }
 
         /* Artifact */
@@ -657,7 +658,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         else
         {
             /* Wearable nameless object */
-            if (object_is_equipment(o_ptr) || object_is_device(o_ptr))
+            if (object_is_equipment(o_ptr))
                 ADD_FLG(FLG_NAMELESS);
         }
 

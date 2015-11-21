@@ -403,6 +403,14 @@ static int _get_powers(spell_info* spells, int max)
     return get_powers_aux(spells, max, _powers);
 }
 
+static void _character_dump(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = _get_spells(spells, MAX_SPELLS);
+
+    py_display_spells(doc, spells, ct);
+}
+
 static void _calc_bonuses(void)
 {
     p_ptr->regenerate = TRUE;
@@ -577,6 +585,7 @@ class_t *blood_knight_get_class(void)
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
         me.get_powers = _get_powers;
+        me.character_dump = _character_dump;
         init = TRUE;
     }
 
