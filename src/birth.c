@@ -3132,6 +3132,7 @@ void player_outfit(void)
     case RACE_SPECTRE:
     case RACE_MON_GOLEM:
     case RACE_MON_SWORD:
+    case RACE_MON_RING:
         _birth_object(TV_STAFF, EFFECT_NOTHING, 1);
         break;
 

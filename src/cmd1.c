@@ -5397,10 +5397,22 @@ void move_player(int dir, bool do_pickup, bool break_trap)
     if (!oktomove)
     {
     }
+    else if ( !have_flag(f_ptr->flags, FF_MOVE)
+           && have_flag(f_ptr->flags, FF_CAN_FLY)
+           && p_ptr->riding
+           && !((riding_r_ptr->flags7 & RF7_CAN_FLY) || ring_lev) )
+    {
+        msg_format("Your mount needs to fly to go through the %s.", f_name + f_info[get_feat_mimic(c_ptr)].name);
 
+        if (!shadow_strike)
+            energy_use = 0;
+        running = 0;
+        oktomove = FALSE;
+    }
     else if ( !have_flag(f_ptr->flags, FF_MOVE) 
            && have_flag(f_ptr->flags, FF_CAN_FLY) 
-           && !(p_ptr->levitation || ring_lev) )
+           && !p_ptr->riding
+           && !p_ptr->levitation )
     {
         msg_format("You need to fly to go through the %s.", f_name + f_info[get_feat_mimic(c_ptr)].name);
 

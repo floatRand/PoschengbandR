@@ -1639,7 +1639,7 @@ race_t *mon_ring_get_race(void)
         me.load_player = _load;
         me.save_player = _save;
 
-        me.flags = RACE_IS_MONSTER;
+        me.flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;
         me.pseudo_class_idx = CLASS_MAGE;
         me.boss_r_idx = MON_ONE_RING;
 

@@ -399,6 +399,7 @@ static void do_cmd_eat_food_aux(int item)
              || prace_is_(RACE_GOLEM)
              || prace_is_(RACE_MON_GOLEM)
              || prace_is_(RACE_MON_SWORD)
+             || prace_is_(RACE_MON_RING)
              || p_ptr->mimic_form == MIMIC_CLAY_GOLEM
              || p_ptr->mimic_form == MIMIC_IRON_GOLEM
              || p_ptr->mimic_form == MIMIC_MITHRIL_GOLEM
@@ -517,6 +518,7 @@ static bool item_tester_hook_eatable(object_type *o_ptr)
         prace_is_(RACE_GOLEM) ||
         prace_is_(RACE_MON_GOLEM) || 
         prace_is_(RACE_MON_SWORD) || 
+        prace_is_(RACE_MON_RING) ||
         p_ptr->mimic_form == MIMIC_CLAY_GOLEM ||
         p_ptr->mimic_form == MIMIC_IRON_GOLEM ||
         p_ptr->mimic_form == MIMIC_MITHRIL_GOLEM ||
@@ -742,6 +744,7 @@ static void do_cmd_quaff_potion_aux(int item)
             case RACE_SPECTRE:
             case RACE_MON_DEMON:
             case RACE_MON_SWORD:
+            case RACE_MON_RING:
                 set_food(p_ptr->food + ((q_ptr->pval) / 20));
                 break;
             case RACE_ANDROID:
