@@ -2699,7 +2699,7 @@ static bool _reforge_artifact(void)
     char buf[255];
     object_type *src, *dest;
     int f = MIN(200, p_ptr->fame);
-    int src_max_power = f * 750 + f * f;
+    int src_max_power = f*250 + f*f*3;
     int dest_max_power = 0;
 
     if (p_ptr->prace == RACE_MON_SWORD || p_ptr->prace == RACE_MON_RING)
