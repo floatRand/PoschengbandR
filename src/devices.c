@@ -46,7 +46,7 @@ int  effect_calc_fail_rate(effect_t *effect)
     if (p_ptr->confused) chance = chance / 2;
     if (p_ptr->stun) chance = chance * 2 / 3;
 
-    fail = effect->difficulty + 5;
+    fail = effect->difficulty;
     if (chance > fail) fail -= (chance - fail)*2;
     else chance -= (fail - chance)*2;
     if (fail < USE_DEVICE) fail = USE_DEVICE;
