@@ -375,13 +375,6 @@ Text Display Options
   your current state of hunger. For example:
     ,[**-------]
   
-  Display mutations in 'C'haracter Display (display_mutations)
-  Normally, if your character has gained mutations, they will be 
-  displayed in an extra 'h' mode window under the 'C'haracter 
-  Description command. Some players may wish to view mutations only via 
-  the knowledge command ('~' or '|') and do not want any extra screens 
-  in the Character Description: they should set this option.
-  
   Compress messages in savefiles (compress_savefile)
   Compress the savefile, by only saving the most recent "messages" that 
   the player has received. This can cut the size of the savefile by a 

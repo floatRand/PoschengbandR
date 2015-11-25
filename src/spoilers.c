@@ -1502,7 +1502,7 @@ static void _possessor_stats_help(FILE* fp)
 static void _skills_race_help(FILE* fp)
 {
     int i,j;
-    fputs("Race,Dis,Dev,Sav,Stl,Srh,Fos,Thn,Thb\n", fp);
+    fputs("Race,Dis,Dev,Sav,Stl,Srh,Fos,Thn,Thb,Stats,Exp\n", fp);
     for (i = 0; i < MAX_RACES; i++)
     {
         int max_j = 1;
@@ -1514,14 +1514,18 @@ static void _skills_race_help(FILE* fp)
         for (j = 0; j < max_j; j++)
         {
             race_t *race_ptr = get_race_aux(i, j);
+            int     stats = 0, k;
 
             if (race_ptr->flags & RACE_IS_MONSTER) continue;
+
+            for (k = 0; k < MAX_STATS; k++)
+                stats += race_ptr->stats[k];
 
             if (race_ptr->subname && strlen(race_ptr->subname))
                 fprintf(fp, "\"%s:%s\",", race_ptr->name, race_ptr->subname);
             else
                 fprintf(fp, "\"%s\",", race_ptr->name);
-            fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d\n",
+            fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
                 race_ptr->skills.dis,
                 race_ptr->skills.dev,
                 race_ptr->skills.sav,
@@ -1529,7 +1533,9 @@ static void _skills_race_help(FILE* fp)
                 race_ptr->skills.srh,
                 race_ptr->skills.fos,
                 race_ptr->skills.thn,
-                race_ptr->skills.thb
+                race_ptr->skills.thb,
+                stats,
+                race_ptr->exp
             );
         }
     }
