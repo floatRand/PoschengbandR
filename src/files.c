@@ -1125,7 +1125,6 @@ cptr process_pref_file_expr(char **sp, char *fp)
 
 #define PREF_TYPE_NORMAL   0
 #define PREF_TYPE_AUTOPICK 1
-#define PREF_TYPE_HISTPREF 2
 
 /*
  * Open the "user pref file" and parse it.
@@ -1211,9 +1210,6 @@ static errr process_pref_file_aux(cptr name, int preftype)
             {
             case PREF_TYPE_AUTOPICK:
                 (void)process_autopick_file(buf + 2);
-                break;
-            case PREF_TYPE_HISTPREF:
-                (void)process_histpref_file(buf + 2);
                 break;
             default:
                 (void)process_pref_file(buf + 2);
@@ -3716,30 +3712,6 @@ errr process_autopick_file(cptr name)
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, name);
 
     err = process_pref_file_aux(buf, PREF_TYPE_AUTOPICK);
-
-    /* Result */
-    return (err);
-}
-
-
-/*
- * Process file for player's history editor.
- */
-errr process_histpref_file(cptr name)
-{
-    char buf[1024];
-    errr err = 0;
-    bool old_character_xtra = character_xtra;
-
-    /* Build the filename */
-    path_build(buf, sizeof(buf), ANGBAND_DIR_USER, name);
-
-    /* Hack -- prevent modification birth options in this file */
-    character_xtra = TRUE;
-
-    err = process_pref_file_aux(buf, PREF_TYPE_HISTPREF);
-
-    character_xtra = old_character_xtra;
 
     /* Result */
     return (err);
