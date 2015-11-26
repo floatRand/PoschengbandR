@@ -931,7 +931,7 @@ W:20:*:2
 F:HIDE_TYPE
 
 N:304:RING:(Defender)
-W:70:*:2
+W:70:*:3
 
 N:305:RING:of Wizardry
 W:30:*:2

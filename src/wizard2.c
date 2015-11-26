@@ -577,7 +577,7 @@ static void do_cmd_wiz_hack_chris5(void)
             continue;
         }
         ct_tries++;
-        if (forge.name2 == EGO_AMULET_DEFENDER)
+        if (forge.name2 == EGO_RING_SPEED)
         /*if ((forge.tval == TV_RING || forge.tval == TV_AMULET) && forge.activation.type)*/
         /*if (forge.k_idx == 133)*/
         /*if (forge.tval >= TV_LIFE_BOOK && 3 == forge.sval && forge.tval != TV_ARCANE_BOOK)*/
@@ -588,8 +588,9 @@ static void do_cmd_wiz_hack_chris5(void)
             ct_success++;
             identify_item(&forge);
             forge.ident |= (IDENT_FULL); 
-            object_desc(buf, &forge, 0);
-            msg_format("%s on Roll #%d", buf, ct_tries);
+            object_desc(buf, &forge, OD_COLOR_CODED);
+            msg_format("%d) <indent>%s</indent>", ct_tries, buf);
+            msg_boundary();
             /*drop_near(&forge, -1, py, px);*/
         }
     }

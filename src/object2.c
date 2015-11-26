@@ -2369,7 +2369,7 @@ static int _get_random_ego(int type)
                     rarity += 3*(object_level - e_ptr->max_level)/4;
                 else if (e_ptr->level && object_level < e_ptr->level)
                     rarity += 3*rarity*(e_ptr->level - object_level)/4;
-                total += MAX(255 / rarity, 1);
+                total += MAX(10000 / rarity, 1);
             }
         }
     }
@@ -2389,7 +2389,7 @@ static int _get_random_ego(int type)
                     rarity += 3*(object_level - e_ptr->max_level)/4;
                 else if (e_ptr->level && object_level < e_ptr->level)
                     rarity += 3*rarity*(e_ptr->level - object_level)/4;
-                value -= MAX(255 / rarity, 1);
+                value -= MAX(10000 / rarity, 1);
                 if (value <= 0) 
                     return i;
             }
