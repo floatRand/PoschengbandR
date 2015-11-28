@@ -2420,6 +2420,41 @@ static void process_world_aux_curse(void)
         }
     }
 
+    if (r_info[MON_SAURON].max_num && one_in_(666))
+    {
+        int slot = equip_find_ego(EGO_RING_NAZGUL);
+        if (slot)
+        {
+            object_type *o_ptr = equip_obj(slot);
+
+            o_ptr->curse_flags |= TRC_HEAVY_CURSE;
+            o_ptr->curse_flags |= TRC_CURSED;
+            o_ptr->curse_flags |= get_curse(2, o_ptr);
+            p_ptr->update |= PU_BONUS;
+
+            msg_boundary();
+            cmsg_print(TERM_VIOLET, "You behold the Eye of Sauron!");
+            if (one_in_(2))
+            {
+                msg_print("You feel your life draining away...");
+                lose_exp(p_ptr->exp / 16);
+            }
+            while (one_in_(2))
+            {
+                do_dec_stat(randint0(6));
+            }
+            if (one_in_(2))
+            {
+                msg_print("You forget yourself in utter terror!");
+                lose_all_info();
+            }
+            if (one_in_(2))
+                set_stun(p_ptr->stun + randint1(40), FALSE);
+            if (one_in_(2))
+                set_confused(p_ptr->confused + randint1(5) + 5, FALSE);
+        }
+    }
+
     if (one_in_(666))
     {
         int slot = equip_find_artifact(ART_HAND_OF_VECNA);
