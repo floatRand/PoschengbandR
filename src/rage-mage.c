@@ -528,44 +528,105 @@ static void _resist_disenchantment_spell(int cmd, variant *res)
     }
 }
 
-/*
-static bool _object_is_(object_type *o_ptr, int tv, int sv)
-{
-    if (o_ptr->tval == tv && o_ptr->sval == sv) return TRUE;
-    return FALSE;
-}*/
-
 static int _object_dam_type(object_type *o_ptr)
 {            
     switch (o_ptr->activation.type)
     {
+    case EFFECT_BEAM_ACID:
+    case EFFECT_BALL_ACID:
+    case EFFECT_BOLT_ACID:
+        return GF_ACID;
+
+    case EFFECT_BEAM_ELEC:
+    case EFFECT_BALL_ELEC:
+    case EFFECT_BOLT_ELEC:
+        return GF_ELEC;
+
+    case EFFECT_BEAM_FIRE:
+    case EFFECT_BREATHE_FIRE:
+    case EFFECT_BOLT_PLASMA:
+    case EFFECT_BALL_FIRE:
+    case EFFECT_BOLT_FIRE:
+        return GF_FIRE;
+
+    case EFFECT_BEAM_COLD:
+    case EFFECT_BREATHE_COLD:
+    case EFFECT_BOLT_ICE:
+    case EFFECT_BALL_COLD:
+    case EFFECT_BOLT_COLD:
+        return GF_COLD;
+
+    case EFFECT_BALL_POIS:
+        return GF_POIS;
+
+    case EFFECT_BREATHE_ONE_MULTIHUED:
+    {
+        switch (randint1(5))
+        {
+        case 1: return GF_ACID;
+        case 2: return GF_ELEC;
+        case 3: return GF_FIRE;
+        case 4: return GF_COLD;
+        case 5: return GF_POIS;
+        }
+    }
+
+    case EFFECT_CONFUSE_MONSTERS:
+    case EFFECT_CONFUSING_LITE:
+        return GF_CONFUSION;
+
+    case EFFECT_STARBURST:
+    case EFFECT_STARLITE:
+    case EFFECT_BALL_LITE:
+    case EFFECT_BEAM_LITE:
+    case EFFECT_LITE_AREA:
+    case EFFECT_BEAM_LITE_WEAK:
+        return GF_LITE;
+
     case EFFECT_DARKNESS:
     case EFFECT_DARKNESS_STORM:
         return GF_DARK;
-    }
-/* TODO: I just got things to compile ... Fix me!
-    if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_DARKNESS)) return GF_DARK;
-    if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_LITE)) return GF_LITE;
-    if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_STARLITE)) return GF_LITE;
-    if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_SLOWNESS)) return GF_INERT;
-    if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_HASTE_MONSTERS)) return GF_INERT;
-    if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_SLOW_MONSTERS)) return GF_INERT;
-    if (_object_is_(o_ptr, TV_STAFF, SV_STAFF_SPEED)) return GF_INERT;
 
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_ILLUMINATION)) return GF_LITE;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_LITE)) return GF_LITE;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_SPEED)) return GF_INERT;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_SLOW_MONSTER)) return GF_INERT;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_PESTICIDE)) return GF_POIS;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_ACID_BOLT)) return GF_ACID;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_ACID_BALL)) return GF_ACID;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_ELEC_BOLT)) return GF_ELEC;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_ELEC_BALL)) return GF_ELEC;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_FIRE_BOLT)) return GF_FIRE;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_FIRE_BALL)) return GF_FIRE;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_COLD_BOLT)) return GF_COLD;
-    if (_object_is_(o_ptr, TV_ROD, SV_ROD_COLD_BALL)) return GF_COLD;
-*/
+    case EFFECT_BALL_NETHER:
+        return GF_NETHER;
+
+    case EFFECT_BALL_NEXUS:
+        return GF_NEXUS;
+
+    case EFFECT_BALL_SOUND:
+    case EFFECT_BEAM_SOUND:
+        return GF_SOUND;
+
+    case EFFECT_BALL_SHARDS:
+        return GF_SHARDS;
+
+    case EFFECT_BALL_CHAOS:
+    case EFFECT_BEAM_CHAOS:
+        return GF_CHAOS;
+
+    case EFFECT_BALL_DISEN:
+        return GF_DISENCHANT;
+
+    case EFFECT_BEAM_GRAVITY:
+        return GF_GRAVITY;
+
+    case EFFECT_BEAM_DISINTEGRATE:
+    case EFFECT_BALL_DISINTEGRATE:
+        return GF_DISINTEGRATE;
+
+    case EFFECT_ROCKET:
+        return GF_ROCKET;
+
+    case EFFECT_SPEED:
+    case EFFECT_SLOWNESS:
+    case EFFECT_HASTE_MONSTERS:
+    case EFFECT_SLOW_MONSTERS:
+        return GF_INERT;
+
+    case EFFECT_HOLINESS:
+        return GF_HOLY_FIRE;
+    }
+
     return GF_MANA;
 }
 
@@ -590,8 +651,11 @@ static void _shatter_device_spell(int cmd, variant *res)
         o_ptr = &inventory[item];
         var_set_bool(res, TRUE);
         
-        /* TODO: Re-evaluate the logic here ... I simply did enough to get things compiling again! */
-        if (o_ptr->activation.type == EFFECT_DESTRUCTION)
+        if (o_ptr->activation.type == EFFECT_NONE)
+        {
+            msg_print("Nothing happens.");
+        }
+        else if (o_ptr->activation.type == EFFECT_DESTRUCTION)
         {
             if (destroy_area(py, px, 15 + p_ptr->lev + randint0(11), 4 * p_ptr->lev))
                 msg_print("The dungeon collapses...");
@@ -619,14 +683,16 @@ static void _shatter_device_spell(int cmd, variant *res)
             update_stuff(); /* hp may change if Con was drained ... */
             hp_player(5000);
         }
-        else if (o_ptr->activation.type == EFFECT_TELEPORT_AWAY)
+        else if ( o_ptr->activation.type == EFFECT_TELEPORT_AWAY
+               || o_ptr->activation.type == EFFECT_BANISH_EVIL
+               || o_ptr->activation.type == EFFECT_BANISH_ALL )
         {
             banish_monsters(p_ptr->lev * 4);
         }
         else
         {
             project(0, 5, py, px, 
-                k_info[o_ptr->k_idx].level * 16, 
+                o_ptr->activation.difficulty * 16,
                 _object_dam_type(o_ptr), 
                 PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL, -1);
         }
