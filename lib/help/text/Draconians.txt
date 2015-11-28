@@ -24,7 +24,7 @@ of Dragon Strike, their blows will burn their enemies.
   Charisma      +2        Perception  Superb       
   Life Rating  106%       Melee       Superb       
   Base HP       22        Bows        Good         
-  Experience   160%       Infravision 20'
+  Experience   190%       Infravision 20'
   
 White
 White Draconians have an affinity for frost, which they both breathe at 
@@ -43,7 +43,7 @@ Dragon Strike, their blows will freeze their enemies.
   Charisma      +2        Perception  Superb       
   Life Rating  106%       Melee       Superb       
   Base HP       22        Bows        Good         
-  Experience   160%       Infravision 20'
+  Experience   190%       Infravision 20'
   
 Blue
 Blue Draconians have an affinity for lightning, which they both breathe 
@@ -61,7 +61,7 @@ Dragon Strike, their blows will electrocute their enemies.
   Charisma      +2        Perception  Superb       
   Life Rating  105%       Melee       Excellent    
   Base HP       22        Bows        Good         
-  Experience   160%       Infravision 20'
+  Experience   190%       Infravision 20'
   
 Black
 Black Draconians have an affinity for acid, which they both breathe at 
@@ -78,7 +78,7 @@ their enemies.
   Charisma      +2        Perception  Superb       
   Life Rating  105%       Melee       Superb       
   Base HP       22        Bows        Good         
-  Experience   160%       Infravision 20'
+  Experience   190%       Infravision 20'
   
 Green
 Green Draconians have an affinity for poison, which they both breathe 
@@ -95,7 +95,7 @@ their enemies.
   Charisma      +2        Perception  Superb       
   Life Rating  103%       Melee       Good         
   Base HP       22        Bows        Good         
-  Experience   175%       Infravision 20'
+  Experience   205%       Infravision 20'
   
 Bronze
 Bronze Draconians are the most intelligent of their kind, and the best 
@@ -112,7 +112,7 @@ melee attacks of the Bronze Draconian will baffle their enemies.
   Charisma      +2        Perception  Superb       
   Life Rating  103%       Melee       Fair         
   Base HP       22        Bows        Good         
-  Experience   185%       Infravision 20'
+  Experience   215%       Infravision 20'
   
 Crystal
 Hard of skin, the Crystal Draconian is difficult to hit in melee. But 
@@ -131,7 +131,7 @@ enemies.
   Charisma      +2        Perception  Superb       
   Life Rating  105%       Melee       Excellent    
   Base HP       22        Bows        Good         
-  Experience   220%       Infravision 20'
+  Experience   250%       Infravision 20'
   
 Gold
 The wisest of their kind, Gold Draconians are resilient in the face of 
@@ -148,7 +148,7 @@ Strike, even their melee attacks will stun their enemies.
   Charisma      +2        Perception  Superb       
   Life Rating  104%       Melee       Good         
   Base HP       22        Bows        Good         
-  Experience   190%       Infravision 20'
+  Experience   220%       Infravision 20'
   
 Shadow
 Lithe, stealthy and nimble, the Shadow Draconian is seldom seen in this 
@@ -166,20 +166,20 @@ Dragon Strike, they may steal life from their enemies in melee.
   Charisma      +2        Perception  Superb       
   Life Rating  102%       Melee       Poor         
   Base HP       22        Bows        Good         
-  Experience   195%       Infravision 40'
+  Experience   225%       Infravision 40'
   
 Table 1 - Draconian Statistic Bonus Table
 
                STR  INT  WIS  DEX  CON  CHR  Life  Exp  Shop
-Red             +3   +0   +0   +1   +2   +2  106%  160%  115%
-White           +3   +0   +0   +1   +2   +2  106%  160%  115%
-Blue            +2   +1   +1   +1   +2   +2  105%  160%  110%
-Black           +2   +1   +1   +1   +2   +2  105%  160%  110%
-Green           +1   +1   +1   +1   +2   +2  103%  175%  105%
-Bronze          +1   +2   +1   +1   +2   +2  103%  185%  100%
-Crystal         +1   -1   +1   +0   +3   +2  105%  220%  105%
-Gold            +1   +1   +2   +1   +2   +2  104%  190%   95%
-Shadow          +0   +1   +1   +3   +2   +2  102%  195%  105%
+Red             +3   +0   +0   +1   +2   +2  106%  190%  115%
+White           +3   +0   +0   +1   +2   +2  106%  190%  115%
+Blue            +2   +1   +1   +1   +2   +2  105%  190%  110%
+Black           +2   +1   +1   +1   +2   +2  105%  190%  110%
+Green           +1   +1   +1   +1   +2   +2  103%  205%  105%
+Bronze          +1   +2   +1   +1   +2   +2  103%  215%  100%
+Crystal         +1   -1   +1   +0   +3   +2  105%  250%  105%
+Gold            +1   +1   +2   +1   +2   +2  104%  220%   95%
+Shadow          +0   +1   +1   +3   +2   +2  102%  225%  105%
 
 
 Table 2 - Draconian Skill Bonus Table I

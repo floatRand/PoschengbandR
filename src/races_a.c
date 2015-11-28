@@ -1179,7 +1179,7 @@ race_t *draconian_get_race(int psubrace)
 
         me.infra = 2;
 
-        me.exp = 160;
+        me.exp = 190;
         me.life = 103;
         me.shop_adjust = 105;
 
