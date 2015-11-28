@@ -20,7 +20,7 @@ their kind.
   Strength      -1        Disarming   Very Good    
   Intelligence  +3        Device      Superb       
   Wisdom        +0        Save        Excellent    
-  Dexterity     -1        Stealth     Bad          
+  Dexterity     -1        Stealth     Fair         
   Constitution  -1        Searching   Good         
   Charisma      +0        Perception  Good         
   Life Rating  100%       Melee       Bad          
@@ -41,7 +41,7 @@ diminishes the dragon's defenses and melee.
   Strength      +0        Disarming   Good         
   Intelligence  -1        Device      Good         
   Wisdom        -1        Save        Excellent    
-  Dexterity     +0        Stealth     Very Bad     
+  Dexterity     +0        Stealth     Fair         
   Constitution  +3        Searching   Bad          
   Charisma      +1        Perception  Bad          
   Life Rating  103%       Melee       Good         
@@ -64,7 +64,7 @@ focus values strength above all else.
   Strength      +3        Disarming   Poor         
   Intelligence  -2        Device      Bad          
   Wisdom        -2        Save        Poor         
-  Dexterity     +1        Stealth     Very Bad     
+  Dexterity     +1        Stealth     Fair         
   Constitution  -1        Searching   Very Bad     
   Charisma      +0        Perception  Very Bad     
   Life Rating   97%       Melee       Superb       
@@ -84,7 +84,7 @@ master.
   Strength      -1        Disarming   Very Good    
   Intelligence  -1        Device      Legendary[7] 
   Wisdom        +3        Save        Excellent    
-  Dexterity     -1        Stealth     Bad          
+  Dexterity     -1        Stealth     Fair         
   Constitution  -1        Searching   Bad          
   Charisma      -1        Perception  Bad          
   Life Rating  100%       Melee       Poor         
@@ -106,7 +106,7 @@ Unlike their kin, dragons of this order prize agility above all else.
   Strength      -1        Disarming   Fair         
   Intelligence  -1        Device      Poor         
   Wisdom        -1        Save        Superb       
-  Dexterity     +3        Stealth     Fair         
+  Dexterity     +3        Stealth     Good         
   Constitution  +1        Searching   Bad          
   Charisma      +1        Perception  Bad          
   Life Rating  102%       Melee       Bad          
@@ -131,7 +131,7 @@ else.
   Strength      -1        Disarming   Fair         
   Intelligence  -1        Device      Poor         
   Wisdom        -1        Save        Fair         
-  Dexterity     -1        Stealth     Bad          
+  Dexterity     -1        Stealth     Fair         
   Constitution  -1        Searching   Bad          
   Charisma      +3        Perception  Bad          
   Life Rating   95%       Melee       Bad          
@@ -155,7 +155,7 @@ this order may summon like minded kin for the final battles.
   Strength      +1        Disarming   Poor         
   Intelligence  -1        Device      Good         
   Wisdom        -1        Save        Fair         
-  Dexterity     +1        Stealth     Bad          
+  Dexterity     +1        Stealth     Fair         
   Constitution  -1        Searching   Very Bad     
   Charisma      +2        Perception  Very Bad     
   Life Rating   95%       Melee       Excellent    
@@ -200,13 +200,13 @@ Death           +2   -2   -2   +0   -2   +1   95%  105%    90%     90%
 Table 2 - Dragon Realm Skill Bonus Table I
 
                Disarming     Device        Save          Stealth      
-Lore           Very Good     Superb        Excellent     Bad          
-Breath         Good          Good          Excellent     Very Bad     
-Attack         Poor          Bad           Poor          Very Bad     
-Craft          Very Good     Legendary[7]  Excellent     Bad          
-Armor          Fair          Poor          Superb        Fair         
-Domination     Fair          Poor          Fair          Bad          
-Crusade        Poor          Good          Fair          Bad          
+Lore           Very Good     Superb        Excellent     Fair         
+Breath         Good          Good          Excellent     Fair         
+Attack         Poor          Bad           Poor          Fair         
+Craft          Very Good     Legendary[7]  Excellent     Fair         
+Armor          Fair          Poor          Superb        Good         
+Domination     Fair          Poor          Fair          Fair         
+Crusade        Poor          Good          Fair          Fair         
 Death          Poor          Poor          Poor          Very Good    
 
 

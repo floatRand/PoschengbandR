@@ -95,6 +95,13 @@ static cptr _thb_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
 static cptr _race_thb_skill_desc(race_t *race_ptr) { return _thb_skill_desc2(race_ptr->skills.thb); }
 static cptr _pers_thb_skill_desc(personality_ptr pers_ptr) { return _thb_skill_desc2(pers_ptr->skills.thb*2); }
 
+/* Stealth */
+static cptr _stl_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra + 2, 1); }
+static cptr _class_stl_skill_desc(class_t *class_ptr) { return _stl_skill_desc(class_ptr->base_skills.stl, class_ptr->extra_skills.stl); }
+static cptr _mon_race_stl_skill_desc(race_t *race_ptr) { return _stl_skill_desc(race_ptr->skills.stl, race_ptr->extra_skills.stl); }
+static cptr _race_stl_skill_desc(race_t *race_ptr) { return _stl_skill_desc(race_ptr->skills.stl, 0); }
+static cptr _pers_stl_skill_desc(personality_ptr pers_ptr) { return _stl_skill_desc(pers_ptr->skills.stl, 0); }
+
 /******************************************************************************
  * Racial Help
  ******************************************************************************/
@@ -144,7 +151,7 @@ static void _race_help_table(FILE *fp, race_t *race_ptr)
 
     fprintf(fp, "Dexterity    %+3d        Stealth     %s\n",
         race_ptr->stats[A_DEX],
-        _skill_desc(race_ptr->skills.stl * 3, 1));
+        _race_stl_skill_desc(race_ptr));
 
     fprintf(fp, "Constitution %+3d        Searching   %s\n",
         race_ptr->stats[A_CON],
@@ -251,7 +258,7 @@ static void _races_help(FILE* fp)
             fprintf(fp, " %s", _race_dis_skill_desc(race_ptr));
             fprintf(fp, " %s", _race_dev_skill_desc(race_ptr));
             fprintf(fp, " %s", _race_sav_skill_desc(race_ptr));
-            fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
+            fprintf(fp, " %s", _race_stl_skill_desc(race_ptr));
             fputc('\n', fp);
         }
     }
@@ -340,7 +347,7 @@ static void _demigods_help(FILE* fp)
         fprintf(fp, " %s", _race_dis_skill_desc(race_ptr));
         fprintf(fp, " %s", _race_dev_skill_desc(race_ptr));
         fprintf(fp, " %s", _race_sav_skill_desc(race_ptr));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
+        fprintf(fp, " %s", _race_stl_skill_desc(race_ptr));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -443,7 +450,7 @@ static void _draconians_help(FILE* fp)
         fprintf(fp, " %s", _race_dis_skill_desc(race_ptr));
         fprintf(fp, " %s", _race_dev_skill_desc(race_ptr));
         fprintf(fp, " %s", _race_sav_skill_desc(race_ptr));
-        fprintf(fp, " %s", _skill_desc(race_ptr->skills.stl * 3, 1));
+        fprintf(fp, " %s", _race_stl_skill_desc(race_ptr));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -558,7 +565,7 @@ static void _mon_race_help_table(FILE *fp, race_t *race_ptr)
     fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %s\n",
         (caster_ptr && caster_ptr->which_stat == A_DEX) ? 'v' : 'w',
         race_ptr->stats[A_DEX],
-        _skill_desc(3*(race_ptr->skills.stl + 5*race_ptr->extra_skills.stl)/2, 1));
+        _mon_race_stl_skill_desc(race_ptr));
     fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %s\n",
         (caster_ptr && caster_ptr->which_stat == A_CON) ? 'v' : 'w',
         race_ptr->stats[A_CON],
@@ -685,7 +692,7 @@ static void _monster_races_help(FILE* fp)
             fprintf(fp, " %s", _mon_race_dis_skill_desc(race_ptr));
             fprintf(fp, " %s", _mon_race_dev_skill_desc(race_ptr));
             fprintf(fp, " %s", _mon_race_sav_skill_desc(race_ptr));
-            fprintf(fp, " %s", _skill_desc(3*(race_ptr->skills.stl + 5*race_ptr->extra_skills.stl)/2, 1));
+            fprintf(fp, " %s", _mon_race_stl_skill_desc(race_ptr));
             fputc('\n', fp);
         }
     }
@@ -755,7 +762,7 @@ static void _demons_help(FILE* fp)
         fprintf(fp, " %s", _mon_race_dis_skill_desc(race_ptr));
         fprintf(fp, " %s", _mon_race_dev_skill_desc(race_ptr));
         fprintf(fp, " %s", _mon_race_sav_skill_desc(race_ptr));
-        fprintf(fp, " %s", _skill_desc(3*(race_ptr->skills.stl + 5*race_ptr->extra_skills.stl)/2, 1));
+        fprintf(fp, " %s", _mon_race_stl_skill_desc(race_ptr));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -816,7 +823,7 @@ static void _dragons_help(FILE* fp)
         fprintf(fp, " %s", _mon_race_dis_skill_desc(race_ptr));
         fprintf(fp, " %s", _mon_race_dev_skill_desc(race_ptr));
         fprintf(fp, " %s", _mon_race_sav_skill_desc(race_ptr));
-        fprintf(fp, " %s", _skill_desc(3*(race_ptr->skills.stl + 5*race_ptr->extra_skills.stl)/2, 1));
+        fprintf(fp, " %s", _mon_race_stl_skill_desc(race_ptr));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -869,7 +876,7 @@ static void _dragon_realms_help(FILE* fp)
         fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %s\n",
             (realm->spell_stat == A_DEX) ? 'v' : 'w',
             realm->stats[A_DEX],
-            _skill_desc(realm->skills.stl * 3, 1));
+            _skill_desc(realm->skills.stl + 4, 1));
         fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %s\n",
             (realm->spell_stat == A_CON) ? 'v' : 'w',
             realm->stats[A_CON],
@@ -921,7 +928,7 @@ static void _dragon_realms_help(FILE* fp)
         fprintf(fp, " %s", _skill_desc(realm->skills.dis + 10, 2));
         fprintf(fp, " %s", _skill_desc(realm->skills.dev + 5, 1));
         fprintf(fp, " %s", _skill_desc(realm->skills.sav + 5, 1));
-        fprintf(fp, " %s", _skill_desc(realm->skills.stl * 3, 1));
+        fprintf(fp, " %s", _skill_desc(realm->skills.stl + 4, 1));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -967,7 +974,7 @@ static void _class_help_table(FILE *fp, class_t *class_ptr)
     fprintf(fp, "Dexterity    <color:%c>%+3d</color>        Stealth     %s\n",
         (caster_ptr && caster_ptr->which_stat == A_DEX) ? 'v' : 'w',
         class_ptr->stats[A_DEX],
-        _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl), 1));
+        _class_stl_skill_desc(class_ptr));
     fprintf(fp, "Constitution <color:%c>%+3d</color>        Searching   %s\n",
         (caster_ptr && caster_ptr->which_stat == A_CON) ? 'v' : 'w',
         class_ptr->stats[A_CON],
@@ -1113,7 +1120,7 @@ static void _classes_help(FILE* fp)
             fprintf(fp, " %s", _class_dis_skill_desc(class_ptr));
             fprintf(fp, " %s", _class_dev_skill_desc(class_ptr));
             fprintf(fp, " %s", _class_sav_skill_desc(class_ptr));
-            fprintf(fp, " %s", _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl), 1));
+            fprintf(fp, " %s", _class_stl_skill_desc(class_ptr));
             fputc('\n', fp);
         }
     }
@@ -1180,7 +1187,7 @@ static void _weaponmasters_help(FILE *fp)
         fprintf(fp, " %s", _class_dis_skill_desc(class_ptr));
         fprintf(fp, " %s", _class_dev_skill_desc(class_ptr));
         fprintf(fp, " %s", _class_sav_skill_desc(class_ptr));
-        fprintf(fp, " %s", _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl), 1));
+        fprintf(fp, " %s", _class_stl_skill_desc(class_ptr));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -1239,7 +1246,7 @@ static void _warlocks_help(FILE *fp)
         fprintf(fp, " %s", _class_dis_skill_desc(class_ptr));
         fprintf(fp, " %s", _class_dev_skill_desc(class_ptr));
         fprintf(fp, " %s", _class_sav_skill_desc(class_ptr));
-        fprintf(fp, " %s", _skill_desc(3*(class_ptr->base_skills.stl + 5*class_ptr->extra_skills.stl), 1));
+        fprintf(fp, " %s", _class_stl_skill_desc(class_ptr));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);
@@ -1284,7 +1291,7 @@ static void _personality_help(FILE *fp, int idx)
 
     fprintf(fp, "Dexterity    %+3d        Stealth     %s\n",
         pers_ptr->stats[A_DEX],
-        _skill_desc(pers_ptr->skills.stl*3 + 3, 1));
+        _pers_stl_skill_desc(pers_ptr));
 
     fprintf(fp, "Constitution %+3d        Searching   %s\n",
         pers_ptr->stats[A_CON],
@@ -1353,7 +1360,7 @@ static void _personalities_help(FILE* fp)
         fprintf(fp, " %s", _pers_dis_skill_desc(pers_ptr));
         fprintf(fp, " %s", _pers_dev_skill_desc(pers_ptr));
         fprintf(fp, " %s", _pers_sav_skill_desc(pers_ptr));
-        fprintf(fp, " %s", _skill_desc(pers_ptr->skills.stl*3 + 3, 1));
+        fprintf(fp, " %s", _pers_stl_skill_desc(pers_ptr));
         fputc('\n', fp);
     }
     fputs("\n</style>\n", fp);

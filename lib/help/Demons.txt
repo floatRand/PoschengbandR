@@ -13,7 +13,7 @@ Balrogs are demons of shadow and flame. Their evil knows no bounds. Their spells
 Strength     <color:w> +4</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:v> +1</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:w>-10</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:D>Very Bad     </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:r>Bad          </color>
 Constitution <color:w> +4</color>        Searching   <color:r>Bad          </color>
 Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  105%       Melee       <color:b>Heroic       </color>
@@ -27,7 +27,7 @@ Tanar'ri were originally slave demons, but rose up to overthrow their masters. T
 Strength     <color:w> +0</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:v> +0</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:w> -5</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating   95%       Melee       <color:G>Excellent    </color>
@@ -41,7 +41,7 @@ Khorne's servants come in many forms and are powerful forces of melee. They know
 Strength     <color:w> +3</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> -5</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:w> -5</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:D>Very Bad     </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:r>Bad          </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
@@ -55,7 +55,7 @@ Cyberdemons are giant humanoid forms, half demon and half machine. They are a bi
 Strength     <color:w> +5</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w>-10</color>        Device      <color:D>Very Bad     </color>
 Wisdom       <color:w>-10</color>        Save        <color:R>Poor         </color>
-Dexterity    <color:w> -3</color>        Stealth     <color:D>Very Bad     </color>
+Dexterity    <color:w> -3</color>        Stealth     <color:r>Bad          </color>
 Constitution <color:w> +5</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  120%       Melee       <color:b>Heroic       </color>
@@ -74,10 +74,10 @@ Cyberdemon         +5  -10  -10   -3   +5   +0  120%  +50  275%  140%
 <topic:Skills1><style:heading>Table 2 - Demon Skill Bonus Table I</style>
 <style:table>
                   <color:w>Disarming     Device        Save          Stealth      </color>
-Balrog            <color:y>Good         </color> <color:y>Very Good    </color> <color:g>Superb       </color> <color:D>Very Bad     </color>
-Tanar'ri          <color:y>Good         </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Servant of Khorne <color:y>Good         </color> <color:r>Bad          </color> <color:y>Good         </color> <color:D>Very Bad     </color>
-Cyberdemon        <color:y>Good         </color> <color:D>Very Bad     </color> <color:R>Poor         </color> <color:D>Very Bad     </color>
+Balrog            <color:y>Good         </color> <color:y>Very Good    </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Tanar'ri          <color:y>Good         </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Good         </color>
+Servant of Khorne <color:y>Good         </color> <color:r>Bad          </color> <color:y>Good         </color> <color:r>Bad          </color>
+Cyberdemon        <color:y>Good         </color> <color:D>Very Bad     </color> <color:R>Poor         </color> <color:r>Bad          </color>
 
 </style>
 <topic:Skills2><style:heading>Table 3 - Demon Skill Bonus Table II</style>

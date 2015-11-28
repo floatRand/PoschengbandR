@@ -21,7 +21,7 @@ levels they may even call forth fires directly from hell.
   Strength      +4        Disarming   Good         
   Intelligence  +1        Device      Very Good    
   Wisdom       -10        Save        Superb       
-  Dexterity     +1        Stealth     Very Bad     
+  Dexterity     +1        Stealth     Bad          
   Constitution  +4        Searching   Bad          
   Charisma      +2        Perception  Bad          
   Life Rating  105%       Melee       Heroic       
@@ -39,7 +39,7 @@ capable of attacking with six melee weapons!
   Strength      +0        Disarming   Good         
   Intelligence  +0        Device      Very Good    
   Wisdom        -5        Save        Fair         
-  Dexterity     +0        Stealth     Fair         
+  Dexterity     +0        Stealth     Good         
   Constitution  +0        Searching   Poor         
   Charisma      +0        Perception  Bad          
   Life Rating   95%       Melee       Excellent    
@@ -56,7 +56,7 @@ servants with new and more powerful forms.
   Strength      +3        Disarming   Good         
   Intelligence  -5        Device      Bad          
   Wisdom        -5        Save        Good         
-  Dexterity     +0        Stealth     Very Bad     
+  Dexterity     +0        Stealth     Bad          
   Constitution  +2        Searching   Poor         
   Charisma      +0        Perception  Bad          
   Life Rating  100%       Melee       Superb       
@@ -73,7 +73,7 @@ dungeon reverberate with their heavy steps!
   Strength      +5        Disarming   Good         
   Intelligence -10        Device      Very Bad     
   Wisdom       -10        Save        Poor         
-  Dexterity     -3        Stealth     Very Bad     
+  Dexterity     -3        Stealth     Bad          
   Constitution  +5        Searching   Poor         
   Charisma      +0        Perception  Bad          
   Life Rating  120%       Melee       Heroic       
@@ -92,10 +92,10 @@ Cyberdemon         +5  -10  -10   -3   +5   +0  120%  +50  275%  140%
 Table 2 - Demon Skill Bonus Table I
 
                   Disarming     Device        Save          Stealth      
-Balrog            Good          Very Good     Superb        Very Bad     
-Tanar'ri          Good          Very Good     Fair          Fair         
-Servant of Khorne Good          Bad           Good          Very Bad     
-Cyberdemon        Good          Very Bad      Poor          Very Bad     
+Balrog            Good          Very Good     Superb        Bad          
+Tanar'ri          Good          Very Good     Fair          Good         
+Servant of Khorne Good          Bad           Good          Bad          
+Cyberdemon        Good          Very Bad      Poor          Bad          
 
 
 Table 3 - Demon Skill Bonus Table II

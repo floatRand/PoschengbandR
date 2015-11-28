@@ -26,7 +26,7 @@ Humans
     Strength      +1        Disarming   Fair         
     Intelligence  +2        Device      Good         
     Wisdom        +2        Save        Fair         
-    Dexterity     +2        Stealth     Very Good    
+    Dexterity     +2        Stealth     Fair         
     Constitution  +3        Searching   Fair         
     Charisma      +0        Perception  Superb       
     Life Rating  100%       Melee       Superb       
@@ -44,7 +44,7 @@ Humans
     Strength      +3        Disarming   Bad          
     Intelligence  -2        Device      Very Bad     
     Wisdom        -1        Save        Fair         
-    Dexterity     +1        Stealth     Very Bad     
+    Dexterity     +1        Stealth     Bad          
     Constitution  +2        Searching   Bad          
     Charisma      +2        Perception  Excellent    
     Life Rating  103%       Melee       Excellent    
@@ -63,7 +63,7 @@ Humans
     Strength      +1        Disarming   Fair         
     Intelligence  +1        Device      Fair         
     Wisdom        +1        Save        Fair         
-    Dexterity     +1        Stealth     Very Bad     
+    Dexterity     +1        Stealth     Bad          
     Constitution  +1        Searching   Bad          
     Charisma      +1        Perception  Excellent    
     Life Rating  100%       Melee       Excellent    
@@ -81,7 +81,7 @@ Humans
     Strength      +1        Disarming   Fair         
     Intelligence  +2        Device      Good         
     Wisdom        +2        Save        Fair         
-    Dexterity     +2        Stealth     Very Good    
+    Dexterity     +2        Stealth     Fair         
     Constitution  +3        Searching   Fair         
     Charisma      +0        Perception  Superb       
     Life Rating  100%       Melee       Superb       
@@ -100,7 +100,7 @@ Humans
     Strength      +0        Disarming   Poor         
     Intelligence  +0        Device      Poor         
     Wisdom        +0        Save        Poor         
-    Dexterity     +0        Stealth     Bad          
+    Dexterity     +0        Stealth     Poor         
     Constitution  +0        Searching   Bad          
     Charisma      +0        Perception  Superb       
     Life Rating  100%       Melee       Poor         
@@ -120,7 +120,7 @@ Elves
     Strength      -1        Disarming   Good         
     Intelligence  +3        Device      Excellent    
     Wisdom        +2        Save        Excellent    
-    Dexterity     +2        Stealth     Superb       
+    Dexterity     +2        Stealth     Good         
     Constitution  -2        Searching   Excellent    
     Charisma      +3        Perception  Superb       
     Life Rating   97%       Melee       Bad          
@@ -139,7 +139,7 @@ Elves
     Strength      +1        Disarming   Fair         
     Intelligence  +3        Device      Superb       
     Wisdom        -1        Save        Excellent    
-    Dexterity     +3        Stealth     Superb       
+    Dexterity     +3        Stealth     Very Good    
     Constitution  +1        Searching   Fair         
     Charisma      +1        Perception  Heroic       
     Life Rating   99%       Melee       Excellent    
@@ -155,7 +155,7 @@ Elves
     Strength      -1        Disarming   Good         
     Intelligence  +1        Device      Good         
     Wisdom        +2        Save        Fair         
-    Dexterity     +1        Stealth     Superb       
+    Dexterity     +1        Stealth     Good         
     Constitution  -1        Searching   Excellent    
     Charisma      +1        Perception  Superb       
     Life Rating   97%       Melee       Bad          
@@ -176,7 +176,7 @@ Hobbits/Dwarves
     Strength      +2        Disarming   Fair         
     Intelligence  -2        Device      Very Good    
     Wisdom        +2        Save        Good         
-    Dexterity     -2        Stealth     Very Bad     
+    Dexterity     -2        Stealth     Bad          
     Constitution  +2        Searching   Excellent    
     Charisma      +1        Perception  Superb       
     Life Rating  103%       Melee       Superb       
@@ -197,7 +197,7 @@ Hobbits/Dwarves
     Strength      -1        Disarming   Excellent    
     Intelligence  +2        Device      Very Good    
     Wisdom        -1        Save        Very Good    
-    Dexterity     +2        Stealth     Superb       
+    Dexterity     +2        Stealth     Good         
     Constitution  +1        Searching   Very Good    
     Charisma      -1        Perception  Superb       
     Life Rating   95%       Melee       Very Bad     
@@ -216,7 +216,7 @@ Hobbits/Dwarves
     Strength      -2        Disarming   Superb       
     Intelligence  +1        Device      Excellent    
     Wisdom        +1        Save        Excellent    
-    Dexterity     +3        Stealth     Heroic       
+    Dexterity     +3        Stealth     Excellent    
     Constitution  +2        Searching   Superb       
     Charisma      +1        Perception  Heroic       
     Life Rating   92%       Melee       Very Bad     
@@ -256,7 +256,7 @@ Fairies
     Strength      -2        Disarming   Very Good    
     Intelligence  +2        Device      Very Good    
     Wisdom        +2        Save        Poor         
-    Dexterity     +1        Stealth     Legendary[2] 
+    Dexterity     +1        Stealth     Excellent    
     Constitution  -1        Searching   Superb       
     Charisma      -3        Perception  Heroic       
     Life Rating   91%       Melee       Very Bad     
@@ -276,7 +276,7 @@ Fairies
     Strength      -4        Disarming   Excellent    
     Intelligence  +3        Device      Very Good    
     Wisdom        +3        Save        Good         
-    Dexterity     +3        Stealth     Superb       
+    Dexterity     +3        Stealth     Very Good    
     Constitution  -2        Searching   Superb       
     Charisma      -2        Perception  Superb       
     Life Rating   92%       Melee       Very Bad     
@@ -297,7 +297,7 @@ Angels/Demons
     Strength      +2        Disarming   Poor         
     Intelligence  +0        Device      Excellent    
     Wisdom        +4        Save        Very Good    
-    Dexterity     +1        Stealth     Very Good    
+    Dexterity     +1        Stealth     Fair         
     Constitution  +2        Searching   Poor         
     Charisma      +3        Perception  Superb       
     Life Rating  103%       Melee       Excellent    
@@ -317,7 +317,7 @@ Angels/Demons
     Strength      +4        Disarming   Bad          
     Intelligence  +2        Device      Excellent    
     Wisdom       -10        Save        Superb       
-    Dexterity     +2        Stealth     Very Bad     
+    Dexterity     +2        Stealth     Bad          
     Constitution  +3        Searching   Bad          
     Charisma      +2        Perception  Excellent    
     Life Rating  106%       Melee       Superb       
@@ -355,7 +355,7 @@ Orcs/Trolls/Giants
     Strength      +4        Disarming   Bad          
     Intelligence  -3        Device      Bad          
     Wisdom        -2        Save        Bad          
-    Dexterity     -3        Stealth     Very Bad     
+    Dexterity     -3        Stealth     Bad          
     Constitution  +4        Searching   Very Bad     
     Charisma      -1        Perception  Good         
     Life Rating  108%       Melee       Superb       
@@ -373,7 +373,7 @@ Orcs/Trolls/Giants
     Strength      +4        Disarming   Very Bad     
     Intelligence  -2        Device      Very Bad     
     Wisdom        -2        Save        Bad          
-    Dexterity     -2        Stealth     Very Bad     
+    Dexterity     -2        Stealth     Bad          
     Constitution  +3        Searching   Very Bad     
     Charisma      +0        Perception  Good         
     Life Rating  108%       Melee       Heroic       
@@ -392,7 +392,7 @@ Orcs/Trolls/Giants
     Strength      +3        Disarming   Bad          
     Intelligence  -2        Device      Bad          
     Wisdom        +0        Save        Bad          
-    Dexterity     -1        Stealth     Very Bad     
+    Dexterity     -1        Stealth     Bad          
     Constitution  +3        Searching   Very Bad     
     Charisma      +1        Perception  Good         
     Life Rating  106%       Melee       Superb       
@@ -411,7 +411,7 @@ Orcs/Trolls/Giants
     Strength      +5        Disarming   Bad          
     Intelligence  +1        Device      Good         
     Wisdom        +2        Save        Fair         
-    Dexterity     -2        Stealth     Very Bad     
+    Dexterity     -2        Stealth     Bad          
     Constitution  +3        Searching   Bad          
     Charisma      +3        Perception  Excellent    
     Life Rating  110%       Melee       Heroic       
@@ -430,7 +430,7 @@ Orcs/Trolls/Giants
     Strength      +4        Disarming   Bad          
     Intelligence  -4        Device      Very Bad     
     Wisdom        -1        Save        Bad          
-    Dexterity     -3        Stealth     Very Bad     
+    Dexterity     -3        Stealth     Bad          
     Constitution  +3        Searching   Very Bad     
     Charisma      -2        Perception  Good         
     Life Rating  107%       Melee       Superb       
@@ -447,7 +447,7 @@ Orcs/Trolls/Giants
     Strength      +1        Disarming   Bad          
     Intelligence  -1        Device      Bad          
     Wisdom        +0        Save        Poor         
-    Dexterity     +1        Stealth     Very Bad     
+    Dexterity     +1        Stealth     Bad          
     Constitution  +0        Searching   Bad          
     Charisma      -2        Perception  Excellent    
     Life Rating   98%       Melee       Excellent    
@@ -465,7 +465,7 @@ Orcs/Trolls/Giants
     Strength      -2        Disarming   Bad          
     Intelligence  -2        Device      Bad          
     Wisdom        -2        Save        Bad          
-    Dexterity     -2        Stealth     Very Good    
+    Dexterity     -2        Stealth     Fair         
     Constitution  -2        Searching   Bad          
     Charisma      -5        Perception  Excellent    
     Life Rating   85%       Melee       Bad          
@@ -491,7 +491,7 @@ The Undead
     Strength      +0        Disarming   Bad          
     Intelligence  +1        Device      Poor         
     Wisdom        -2        Save        Fair         
-    Dexterity     +0        Stealth     Very Bad     
+    Dexterity     +0        Stealth     Bad          
     Constitution  +1        Searching   Very Bad     
     Charisma      +1        Perception  Excellent    
     Life Rating  100%       Melee       Excellent    
@@ -513,7 +513,7 @@ The Undead
     Strength      -5        Disarming   Excellent    
     Intelligence  +4        Device      Superb       
     Wisdom        +2        Save        Excellent    
-    Dexterity     +2        Stealth     Heroic       
+    Dexterity     +2        Stealth     Excellent    
     Constitution  -2        Searching   Good         
     Charisma      -3        Perception  Heroic       
     Life Rating   90%       Melee       Very Bad     
@@ -535,7 +535,7 @@ The Undead
     Strength      +3        Disarming   Fair         
     Intelligence  +3        Device      Very Good    
     Wisdom        -1        Save        Good         
-    Dexterity     -1        Stealth     Superb       
+    Dexterity     -1        Stealth     Very Good    
     Constitution  +1        Searching   Bad          
     Charisma      +2        Perception  Excellent    
     Life Rating  102%       Melee       Good         
@@ -556,7 +556,7 @@ The Undead
     Strength      +2        Disarming   Bad          
     Intelligence  -6        Device      Bad          
     Wisdom        -6        Save        Good         
-    Dexterity     +1        Stealth     Very Bad     
+    Dexterity     +1        Stealth     Bad          
     Constitution  +4        Searching   Very Bad     
     Charisma      -3        Perception  Good         
     Life Rating  108%       Melee       Superb       
@@ -584,7 +584,7 @@ Other Races
     Strength      +3        Disarming   Poor         
     Intelligence  -1        Device      Bad          
     Wisdom        -5        Save        Poor         
-    Dexterity     +1        Stealth     Very Bad     
+    Dexterity     +1        Stealth     Bad          
     Constitution  +3        Searching   Fair         
     Charisma      +0        Perception  Heroic       
     Life Rating  108%       Melee       Superb       
@@ -607,7 +607,7 @@ Other Races
     Strength      +2        Disarming   Bad          
     Intelligence  -2        Device      Bad          
     Wisdom        -1        Save        Poor         
-    Dexterity     -1        Stealth     Very Bad     
+    Dexterity     -1        Stealth     Bad          
     Constitution  +2        Searching   Very Bad     
     Charisma      +1        Perception  Good         
     Life Rating  102%       Melee       Excellent    
@@ -650,7 +650,7 @@ Other Races
     Strength      +3        Disarming   Bad          
     Intelligence  +0        Device      Poor         
     Wisdom        +0        Save        Fair         
-    Dexterity     +1        Stealth     Very Bad     
+    Dexterity     +1        Stealth     Bad          
     Constitution  +2        Searching   Bad          
     Charisma      +2        Perception  Superb       
     Life Rating  106%       Melee       Superb       
@@ -667,7 +667,7 @@ Other Races
     Strength      -3        Disarming   Very Bad     
     Intelligence  -3        Device      Very Bad     
     Wisdom        -3        Save        Very Bad     
-    Dexterity     -3        Stealth     Heroic       
+    Dexterity     -3        Stealth     Excellent    
     Constitution  -3        Searching   Very Bad     
     Charisma      -3        Perception  Superb       
     Life Rating   85%       Melee       Very Bad     
@@ -686,7 +686,7 @@ Other Races
     Strength      +2        Disarming   Bad          
     Intelligence  +0        Device      Fair         
     Wisdom        +2        Save        Good         
-    Dexterity     -3        Stealth     Very Bad     
+    Dexterity     -3        Stealth     Bad          
     Constitution  +2        Searching   Bad          
     Charisma      +0        Perception  Superb       
     Life Rating  105%       Melee       Superb       
@@ -709,7 +709,7 @@ Other Races
     Strength      +4        Disarming   Bad          
     Intelligence  -5        Device      Bad          
     Wisdom        -5        Save        Good         
-    Dexterity     -2        Stealth     Very Bad     
+    Dexterity     -2        Stealth     Bad          
     Constitution  +4        Searching   Very Bad     
     Charisma      +0        Perception  Excellent    
     Life Rating  105%       Melee       Superb       
@@ -728,7 +728,7 @@ Other Races
     Strength      +2        Disarming   Excellent    
     Intelligence  -1        Device      Good         
     Wisdom        -1        Save        Fair         
-    Dexterity     +1        Stealth     Bad          
+    Dexterity     +1        Stealth     Poor         
     Constitution  +2        Searching   Very Bad     
     Charisma      +1        Perception  Superb       
     Life Rating  105%       Melee       Good         
@@ -749,7 +749,7 @@ Other Races
     Strength      +0        Disarming   Bad          
     Intelligence  -1        Device      Good         
     Wisdom        -1        Save        Good         
-    Dexterity     +1        Stealth     Heroic       
+    Dexterity     +1        Stealth     Excellent    
     Constitution  +2        Searching   Very Bad     
     Charisma      +0        Perception  Very Good    
     Life Rating  102%       Melee       Poor         
@@ -769,7 +769,7 @@ Other Races
     Strength      -3        Disarming   Excellent    
     Intelligence  +4        Device      Superb       
     Wisdom        +4        Save        Excellent    
-    Dexterity     +0        Stealth     Very Good    
+    Dexterity     +0        Stealth     Fair         
     Constitution  -2        Searching   Good         
     Charisma      -1        Perception  Superb       
     Life Rating   97%       Melee       Very Bad     
@@ -808,7 +808,7 @@ Other Races
     Strength      -2        Disarming   Fair         
     Intelligence  +1        Device      Fair         
     Wisdom        -2        Save        Good         
-    Dexterity     +1        Stealth     Superb       
+    Dexterity     +1        Stealth     Good         
     Constitution  -2        Searching   Good         
     Charisma      -4        Perception  Heroic       
     Life Rating   92%       Melee       Bad          
@@ -864,46 +864,46 @@ Yeek          -2   +1   -2   +1   -2   -4   92%  +14   70%  105%
 Table 2 - Race Skill Bonus Table I
 
              Disarming     Device        Save          Stealth      
-Amberite     Fair          Good          Fair          Very Good    
-Barbarian    Bad           Very Bad      Fair          Very Bad     
-Demigod      Fair          Fair          Fair          Very Bad     
-Dunadan      Fair          Good          Fair          Very Good    
-Human        Poor          Poor          Poor          Bad          
-Dark-Elf     Good          Excellent     Excellent     Superb       
-High-Elf     Fair          Superb        Excellent     Superb       
-Wood-Elf     Good          Good          Fair          Superb       
-Dwarf        Fair          Very Good     Good          Very Bad     
-Gnome        Excellent     Very Good     Very Good     Superb       
-Hobbit       Superb        Excellent     Excellent     Heroic       
+Amberite     Fair          Good          Fair          Fair         
+Barbarian    Bad           Very Bad      Fair          Bad          
+Demigod      Fair          Fair          Fair          Bad          
+Dunadan      Fair          Good          Fair          Fair         
+Human        Poor          Poor          Poor          Poor         
+Dark-Elf     Good          Excellent     Excellent     Good         
+High-Elf     Fair          Superb        Excellent     Very Good    
+Wood-Elf     Good          Good          Fair          Good         
+Dwarf        Fair          Very Good     Good          Bad          
+Gnome        Excellent     Very Good     Very Good     Good         
+Hobbit       Superb        Excellent     Excellent     Excellent    
 Nibelung     Fair          Good          Good          Fair         
-Shadow-Fairy Very Good     Very Good     Poor          Legendary[2] 
-Sprite       Excellent     Very Good     Good          Superb       
-Archon       Poor          Excellent     Very Good     Very Good    
-Balrog       Bad           Excellent     Superb        Very Bad     
+Shadow-Fairy Very Good     Very Good     Poor          Excellent    
+Sprite       Excellent     Very Good     Good          Very Good    
+Archon       Poor          Excellent     Very Good     Fair         
+Balrog       Bad           Excellent     Superb        Bad          
 Imp          Bad           Fair          Poor          Fair         
-Cyclops      Bad           Bad           Bad           Very Bad     
-Half-Giant   Very Bad      Very Bad      Bad           Very Bad     
-Half-Ogre    Bad           Bad           Bad           Very Bad     
-Half-Titan   Bad           Good          Fair          Very Bad     
-Half-Troll   Bad           Very Bad      Bad           Very Bad     
-Kobold       Bad           Bad           Poor          Very Bad     
-Snotling     Bad           Bad           Bad           Very Good    
-Skeleton     Bad           Poor          Fair          Very Bad     
-Spectre      Excellent     Superb        Excellent     Heroic       
-Vampire      Fair          Very Good     Good          Superb       
-Zombie       Bad           Bad           Good          Very Bad     
-Android      Poor          Bad           Poor          Very Bad     
-Beastman     Bad           Bad           Poor          Very Bad     
+Cyclops      Bad           Bad           Bad           Bad          
+Half-Giant   Very Bad      Very Bad      Bad           Bad          
+Half-Ogre    Bad           Bad           Bad           Bad          
+Half-Titan   Bad           Good          Fair          Bad          
+Half-Troll   Bad           Very Bad      Bad           Bad          
+Kobold       Bad           Bad           Poor          Bad          
+Snotling     Bad           Bad           Bad           Fair         
+Skeleton     Bad           Poor          Fair          Bad          
+Spectre      Excellent     Superb        Excellent     Excellent    
+Vampire      Fair          Very Good     Good          Very Good    
+Zombie       Bad           Bad           Good          Bad          
+Android      Poor          Bad           Poor          Bad          
+Beastman     Bad           Bad           Poor          Bad          
 Centaur      Poor          Bad           Fair          Fair         
-Draconian    Bad           Poor          Fair          Very Bad     
-Doppelganger Very Bad      Very Bad      Very Bad      Heroic       
-Ent          Bad           Fair          Good          Very Bad     
-Golem        Bad           Bad           Good          Very Bad     
-Klackon      Excellent     Good          Fair          Bad          
-Kutar        Bad           Good          Good          Heroic       
-Mindflayer   Excellent     Superb        Excellent     Very Good    
+Draconian    Bad           Poor          Fair          Bad          
+Doppelganger Very Bad      Very Bad      Very Bad      Excellent    
+Ent          Bad           Fair          Good          Bad          
+Golem        Bad           Bad           Good          Bad          
+Klackon      Excellent     Good          Fair          Poor         
+Kutar        Bad           Good          Good          Excellent    
+Mindflayer   Excellent     Superb        Excellent     Fair         
 Tonberry     Bad           Fair          Fair          Fair         
-Yeek         Fair          Fair          Good          Superb       
+Yeek         Fair          Fair          Good          Good         
 
 
 Table 3 - Race Skill Bonus Table II

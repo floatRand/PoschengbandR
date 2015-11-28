@@ -11,7 +11,7 @@ An ordinary person is average in every respect, gaining neither skills, talents 
 Strength      +0        Disarming   <color:R>Poor         </color>
 Intelligence  +0        Device      <color:R>Poor         </color>
 Wisdom        +0        Save        <color:R>Poor         </color>
-Dexterity     +0        Stealth     <color:o>Fair         </color>
+Dexterity     +0        Stealth     <color:R>Poor         </color>
 Constitution  +0        Searching   <color:o>Fair         </color>
 Charisma      +0        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:R>Poor         </color>
@@ -37,7 +37,7 @@ Shrewd reduces your physical stats, and raises your intelligence and magical ski
 Strength      -2        Disarming   <color:y>Good         </color>
 Intelligence  +2        Device      <color:g>Superb       </color>
 Wisdom        +0        Save        <color:o>Fair         </color>
-Dexterity     +1        Stealth     <color:o>Fair         </color>
+Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  -1        Searching   <color:r>Bad          </color>
 Charisma      -1        Perception  <color:G>Excellent    </color>
 Life Rating   97%       Melee       <color:D>Very Bad     </color>
@@ -63,7 +63,7 @@ Nimble renders you highly skilled comparatively well, but reduces your physical 
 Strength      -1        Disarming   <color:g>Superb       </color>
 Intelligence  +1        Device      <color:y>Good         </color>
 Wisdom        -1        Save        <color:r>Bad          </color>
-Dexterity     +2        Stealth     <color:y>Very Good    </color>
+Dexterity     +2        Stealth     <color:o>Fair         </color>
 Constitution  -1        Searching   <color:G>Excellent    </color>
 Charisma      +0        Perception  <color:G>Excellent    </color>
 Life Rating   99%       Melee       <color:R>Poor         </color>
@@ -76,7 +76,7 @@ Fearless raises your melee skills and force of personality. Stats such as magic 
 Strength      +1        Disarming   <color:D>Very Bad     </color>
 Intelligence  +0        Device      <color:o>Fair         </color>
 Wisdom        +0        Save        <color:r>Bad          </color>
-Dexterity     -1        Stealth     <color:o>Fair         </color>
+Dexterity     -1        Stealth     <color:R>Poor         </color>
 Constitution  -1        Searching   <color:y>Good         </color>
 Charisma      +1        Perception  <color:r>Bad          </color>
 Life Rating   98%       Melee       <color:G>Excellent    </color>
@@ -90,7 +90,7 @@ The Combat personality favors melee and shooting at the expense of other skills 
 Strength      +1        Disarming   <color:r>Bad          </color>
 Intelligence  -1        Device      <color:D>Very Bad     </color>
 Wisdom        -1        Save        <color:D>Very Bad     </color>
-Dexterity     +1        Stealth     <color:o>Fair         </color>
+Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +0        Searching   <color:R>Poor         </color>
 Charisma      +0        Perception  <color:y>Good         </color>
 Life Rating  100%       Melee       <color:G>Excellent    </color>
@@ -116,7 +116,7 @@ Sexy rises all of your stats and skills, but your haughty attitude will aggravat
 Strength      +1        Disarming   <color:g>Superb       </color>
 Intelligence  +1        Device      <color:G>Excellent    </color>
 Wisdom        +1        Save        <color:y>Good         </color>
-Dexterity     +1        Stealth     <color:o>Fair         </color>
+Dexterity     +1        Stealth     <color:R>Poor         </color>
 Constitution  +1        Searching   <color:G>Excellent    </color>
 Charisma      +1        Perception  <color:y>Good         </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
@@ -129,7 +129,7 @@ A Lucky man has poor stats, equivalent to a Lazy person. Mysteriously, however, 
 Strength      -2        Disarming   <color:g>Superb       </color>
 Intelligence  -2        Device      <color:g>Superb       </color>
 Wisdom        -2        Save        <color:y>Good         </color>
-Dexterity     -2        Stealth     <color:g>Superb       </color>
+Dexterity     -2        Stealth     <color:o>Fair         </color>
 Constitution  -2        Searching   <color:g>Superb       </color>
 Charisma      -2        Perception  <color:g>Superb       </color>
 Life Rating  100%       Melee       <color:b>Heroic       </color>
@@ -142,7 +142,7 @@ A Patient person does things carefully. Patient people have high constitution, a
 Strength      -1        Disarming   <color:D>Very Bad     </color>
 Intelligence  -1        Device      <color:D>Very Bad     </color>
 Wisdom        +1        Save        <color:y>Good         </color>
-Dexterity     -2        Stealth     <color:y>Very Good    </color>
+Dexterity     -2        Stealth     <color:o>Fair         </color>
 Constitution  +2        Searching   <color:o>Fair         </color>
 Charisma      +0        Perception  <color:r>Bad          </color>
 Life Rating  102%       Melee       <color:D>Very Bad     </color>
@@ -155,7 +155,7 @@ The Munchkin personality is for beginners. It raises all your stats and skills. 
 Strength      +3        Disarming   <color:g>Superb       </color>
 Intelligence  +3        Device      <color:v>Legendary[12]</color>
 Wisdom        +3        Save        <color:b>Heroic       </color>
-Dexterity     +3        Stealth     <color:v>Legendary[2] </color>
+Dexterity     +3        Stealth     <color:G>Excellent    </color>
 Constitution  +3        Searching   <color:v>Legendary[15]</color>
 Charisma      +3        Perception  <color:v>Legendary[15]</color>
 Life Rating  150%       Melee       <color:v>Legendary[62]</color>
@@ -168,7 +168,7 @@ A Craven person is a coward, preferring to avoid a fight at any cost. Craven adv
 Strength      -1        Disarming   <color:G>Excellent    </color>
 Intelligence  +1        Device      <color:G>Excellent    </color>
 Wisdom        +1        Save        <color:r>Bad          </color>
-Dexterity     -1        Stealth     <color:g>Superb       </color>
+Dexterity     -1        Stealth     <color:y>Good         </color>
 Constitution  -1        Searching   <color:o>Fair         </color>
 Charisma      -3        Perception  <color:o>Fair         </color>
 Life Rating   99%       Melee       <color:D>Very Bad     </color>
@@ -209,19 +209,19 @@ Hasty           +0   -1   -2   +2   -1   +0  100%  100%
 <topic:Skills1><style:heading>Table 2 - Personality Skill Bonus Table I</style>
 <style:table>
              <color:w>Disarming     Device        Save          Stealth      </color>
-Ordinary     <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:o>Fair         </color>
+Ordinary     <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:R>Poor         </color>
 Mighty       <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
-Shrewd       <color:y>Good         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Shrewd       <color:y>Good         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:R>Poor         </color>
 Pious        <color:D>Very Bad     </color> <color:o>Fair         </color> <color:y>Very Good    </color> <color:r>Bad          </color>
-Nimble       <color:g>Superb       </color> <color:y>Good         </color> <color:r>Bad          </color> <color:y>Very Good    </color>
-Fearless     <color:D>Very Bad     </color> <color:o>Fair         </color> <color:r>Bad          </color> <color:o>Fair         </color>
-Combat       <color:r>Bad          </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:o>Fair         </color>
+Nimble       <color:g>Superb       </color> <color:y>Good         </color> <color:r>Bad          </color> <color:o>Fair         </color>
+Fearless     <color:D>Very Bad     </color> <color:o>Fair         </color> <color:r>Bad          </color> <color:R>Poor         </color>
+Combat       <color:r>Bad          </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:R>Poor         </color>
 Lazy         <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
-Sexy         <color:g>Superb       </color> <color:G>Excellent    </color> <color:y>Good         </color> <color:o>Fair         </color>
-Lucky        <color:g>Superb       </color> <color:g>Superb       </color> <color:y>Good         </color> <color:g>Superb       </color>
-Patient      <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:y>Good         </color> <color:y>Very Good    </color>
-Munchkin     <color:g>Superb       </color> <color:v>Legendary[12]</color> <color:b>Heroic       </color> <color:v>Legendary[2] </color>
-Craven       <color:G>Excellent    </color> <color:G>Excellent    </color> <color:r>Bad          </color> <color:g>Superb       </color>
+Sexy         <color:g>Superb       </color> <color:G>Excellent    </color> <color:y>Good         </color> <color:R>Poor         </color>
+Lucky        <color:g>Superb       </color> <color:g>Superb       </color> <color:y>Good         </color> <color:o>Fair         </color>
+Patient      <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:y>Good         </color> <color:o>Fair         </color>
+Munchkin     <color:g>Superb       </color> <color:v>Legendary[12]</color> <color:b>Heroic       </color> <color:G>Excellent    </color>
+Craven       <color:G>Excellent    </color> <color:G>Excellent    </color> <color:r>Bad          </color> <color:y>Good         </color>
 Hasty        <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
 
 </style>

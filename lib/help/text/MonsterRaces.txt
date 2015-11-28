@@ -101,7 +101,7 @@ Animal
     Strength      +0        Disarming   Good         
     Intelligence  -2        Device      Fair         
     Wisdom        -2        Save        Fair         
-    Dexterity     +0        Stealth     Bad          
+    Dexterity     +0        Stealth     Fair         
     Constitution  +0        Searching   Bad          
     Charisma      +0        Perception  Bad          
     Life Rating  100%       Melee       Superb       
@@ -133,7 +133,7 @@ Animal
     Strength      -2        Disarming   Fair         
     Intelligence  -1        Device      Superb       
     Wisdom        -1        Save        Fair         
-    Dexterity     +2        Stealth     Superb       
+    Dexterity     +2        Stealth     Excellent    
     Constitution  -2        Searching   Fair         
     Charisma      -3        Perception  Poor         
     Life Rating   70%       Melee       Very Good    
@@ -164,7 +164,7 @@ Angel/Demon
     Strength      +1        Disarming   Poor         
     Intelligence  +1        Device      Excellent    
     Wisdom        +4        Save        Superb       
-    Dexterity     +1        Stealth     Fair         
+    Dexterity     +1        Stealth     Good         
     Constitution  +1        Searching   Fair         
     Charisma      +1        Perception  Poor         
     Life Rating   90%       Melee       Good         
@@ -211,7 +211,7 @@ Beholder
     Strength      -3        Disarming   Good         
     Intelligence  +4        Device      Heroic       
     Wisdom        +0        Save        Superb       
-    Dexterity     +1        Stealth     Legendary[2] 
+    Dexterity     +1        Stealth     Heroic       
     Constitution  +0        Searching   Legendary[7] 
     Charisma      +0        Perception  Legendary[7] 
     Life Rating  100%       Melee       Fair         
@@ -328,7 +328,7 @@ Golem
     Strength      +1        Disarming   Fair         
     Intelligence  -2        Device      Bad          
     Wisdom        -2        Save        Superb       
-    Dexterity     -1        Stealth     Bad          
+    Dexterity     -1        Stealth     Poor         
     Constitution  +1        Searching   Bad          
     Charisma      +0        Perception  Bad          
     Life Rating  100%       Melee       Superb       
@@ -433,7 +433,7 @@ Leprechaun
     Strength      -2        Disarming   Very Good    
     Intelligence  +1        Device      Heroic       
     Wisdom        +1        Save        Good         
-    Dexterity     +3        Stealth     Legendary[12]
+    Dexterity     +3        Stealth     Heroic       
     Constitution  -2        Searching   Fair         
     Charisma      -2        Perception  Poor         
     Life Rating   80%       Melee       Fair         
@@ -522,7 +522,7 @@ Mimic/Possessor
     Strength      -3        Disarming   Bad          
     Intelligence  +0        Device      Bad          
     Wisdom        -3        Save        Poor         
-    Dexterity     +0        Stealth     Heroic       
+    Dexterity     +0        Stealth     Superb       
     Constitution  -3        Searching   Poor         
     Charisma      -7        Perception  Poor         
     Life Rating   60%       Melee       Fair         
@@ -580,7 +580,7 @@ Orc/Troll/Giant
     Strength      +3        Disarming   Fair         
     Intelligence  -3        Device      Bad          
     Wisdom        -6        Save        Fair         
-    Dexterity     -2        Stealth     Bad          
+    Dexterity     -2        Stealth     Poor         
     Constitution  +3        Searching   Poor         
     Charisma      +0        Perception  Bad          
     Life Rating  100%       Melee       Heroic       
@@ -596,7 +596,7 @@ Orc/Troll/Giant
     Strength      +3        Disarming   Poor         
     Intelligence  -5        Device      Bad          
     Wisdom        -5        Save        Fair         
-    Dexterity     -2        Stealth     Bad          
+    Dexterity     -2        Stealth     Fair         
     Constitution  +3        Searching   Poor         
     Charisma      +0        Perception  Bad          
     Life Rating  100%       Melee       Superb       
@@ -727,22 +727,22 @@ Table 2 - Race Skill Bonus Table I
              Disarming     Device        Save          Stealth      
 Centipede    Good          Fair          Fair          Excellent    
 Hound        Fair          Bad           Fair          Superb       
-Hydra        Good          Fair          Fair          Bad          
-Spider       Fair          Superb        Fair          Superb       
-Angel        Poor          Excellent     Superb        Fair         
-Beholder     Good          Heroic        Superb        Legendary[2] 
+Hydra        Good          Fair          Fair          Fair         
+Spider       Fair          Superb        Fair          Excellent    
+Angel        Poor          Excellent     Superb        Good         
+Beholder     Good          Heroic        Superb        Heroic       
 Dragon       Fair          Good          Fair          Fair         
 Elemental    Fair          Bad           Excellent     Excellent    
-Golem        Fair          Bad           Superb        Bad          
+Golem        Fair          Bad           Superb        Poor         
 Jelly        Good          Bad           Good          Superb       
 Quylthulg    Fair          Superb        Excellent     Superb       
-Leprechaun   Very Good     Heroic        Good          Legendary[12]
+Leprechaun   Very Good     Heroic        Good          Heroic       
 Death-Sword  Good          Excellent     Excellent     Very Good    
 Mimic        Poor          Good          Fair          Fair         
-Possessor    Bad           Bad           Poor          Heroic       
+Possessor    Bad           Bad           Poor          Superb       
 Ring         Fair          Superb        Good          Excellent    
-Giant        Fair          Bad           Fair          Bad          
-Troll        Poor          Bad           Fair          Bad          
+Giant        Fair          Bad           Fair          Poor         
+Troll        Poor          Bad           Fair          Fair         
 Lich         Fair          Superb        Very Good     Superb       
 Vampire      Poor          Excellent     Fair          Superb       
 Xorn         Good          Bad           Fair          Fair         

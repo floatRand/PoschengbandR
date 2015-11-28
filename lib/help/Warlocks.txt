@@ -11,7 +11,7 @@ Undead are tough creatures, each having survived death at least once. Warlocks w
 Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> +2</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> -3</color>        Save        <color:G>Excellent    </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:v> +4</color>        Perception  <color:o>Fair         </color>
 Life Rating  107%       Melee       <color:o>Fair         </color>
@@ -53,7 +53,7 @@ Demons are crafty creatures of the netherworld, using whatever means at their di
 Strength     <color:w> +3</color>        Disarming   <color:r>Bad          </color>
 Intelligence <color:w> +1</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w>-10</color>        Save        <color:G>Excellent    </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +1</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:v> +3</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:G>Excellent    </color>
@@ -67,7 +67,7 @@ An alliance with hounds is one of the weaker pacts the warlock may make. Hounds 
 Strength     <color:w> +0</color>        Disarming   <color:r>Bad          </color>
 Intelligence <color:w> -2</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:b>Heroic       </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:v> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  102%       Melee       <color:y>Very Good    </color>
@@ -81,7 +81,7 @@ Of all the icky, crawling things in the world, you have chosen to make an allian
 Strength     <color:w> -1</color>        Disarming   <color:r>Bad          </color>
 Intelligence <color:w> +0</color>        Device      <color:G>Excellent    </color>
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:v>Legendary[10]</color>
+Dexterity    <color:w> +2</color>        Stealth     <color:g>Superb       </color>
 Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:v> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating   97%       Melee       <color:o>Fair         </color>
@@ -95,7 +95,7 @@ An alliance with giants and titans grants impressive physical strength and forti
 Strength     <color:w> +2</color>        Disarming   <color:r>Bad          </color>
 Intelligence <color:w> -4</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:w> -4</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> -2</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> -2</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:v> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  112%       Melee       <color:g>Superb       </color>
@@ -117,13 +117,13 @@ Giants             +2   -4   -4   -2   +2   +2  112%  +25  140%
 <topic:Skills1><style:heading>Table 2 - Warlock Skill Bonus Table I</style>
 <style:table>
                   <color:w>Disarming     Device        Save          Stealth      </color>
-Undead            <color:R>Poor         </color> <color:g>Superb       </color> <color:G>Excellent    </color> <color:g>Superb       </color>
+Undead            <color:R>Poor         </color> <color:g>Superb       </color> <color:G>Excellent    </color> <color:y>Very Good    </color>
 Dragons           <color:r>Bad          </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Angels            <color:r>Bad          </color> <color:y>Very Good    </color> <color:g>Superb       </color> <color:o>Fair         </color>
-Demons            <color:r>Bad          </color> <color:g>Superb       </color> <color:G>Excellent    </color> <color:r>Bad          </color>
-Hounds            <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:b>Heroic       </color>
-Spiders           <color:r>Bad          </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:v>Legendary[10]</color>
-Giants            <color:r>Bad          </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:r>Bad          </color>
+Demons            <color:r>Bad          </color> <color:g>Superb       </color> <color:G>Excellent    </color> <color:R>Poor         </color>
+Hounds            <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color>
+Spiders           <color:r>Bad          </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:g>Superb       </color>
+Giants            <color:r>Bad          </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:R>Poor         </color>
 
 </style>
 <topic:Skills2><style:heading>Table 3 - Warlock Skill Bonus Table II</style>

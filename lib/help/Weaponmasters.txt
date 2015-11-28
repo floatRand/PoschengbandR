@@ -23,7 +23,7 @@ You will shoot to kill! The bowmaster gains techniques to enhance shooting, incl
 Strength     <color:v> +1</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -1</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> -1</color>        Save        <color:R>Poor         </color>
-Dexterity    <color:w> +3</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +3</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating  109%       Melee       <color:o>Fair         </color>
@@ -51,7 +51,7 @@ The crossbowmaster shoots deadly bolts for great damage. Their bolts may explode
 Strength     <color:v> +2</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -2</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -2</color>        Save        <color:r>Bad          </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +2</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
 Life Rating  109%       Melee       <color:o>Fair         </color>
@@ -65,7 +65,7 @@ A knife in the back! This speciality favors dual wielding and rogue-like behavio
 Strength     <color:v> +1</color>        Disarming   <color:y>Very Good    </color>
 Intelligence <color:w> +0</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +4</color>        Stealth     <color:b>Heroic       </color>
+Dexterity    <color:w> +4</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +0</color>        Searching   <color:y>Good         </color>
 Charisma     <color:w> +1</color>        Perception  <color:o>Fair         </color>
 Life Rating  109%       Melee       <color:y>Very Good    </color>
@@ -107,7 +107,7 @@ Watch out, Goliath! As a master of slings you will shoot pebbles with uncanny sp
 Strength     <color:v> +0</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> +0</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> +0</color>        Save        <color:R>Poor         </color>
-Dexterity    <color:w> +4</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +4</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating  109%       Melee       <color:o>Fair         </color>
@@ -121,7 +121,7 @@ Monkey King! You will battle opponents with a flurry of blows from your mighty s
 Strength     <color:v> +1</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -1</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +3</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +3</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
 Life Rating  109%       Melee       <color:g>Superb       </color>
@@ -149,7 +149,7 @@ A master of digging. You prefer rocky enclosures and don't mind lugging around a
 Strength     <color:v> +3</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -2</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
 Life Rating  109%       Melee       <color:g>Superb       </color>
@@ -176,16 +176,16 @@ Diggers            +3   -2   -2   +1   +2   +1  109%  +12  135%
 <style:table>
                   <color:w>Disarming     Device        Save          Stealth      </color>
 Axes              <color:o>Fair         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Bows              <color:o>Fair         </color> <color:y>Good         </color> <color:R>Poor         </color> <color:g>Superb       </color>
+Bows              <color:o>Fair         </color> <color:y>Good         </color> <color:R>Poor         </color> <color:y>Very Good    </color>
 Clubs             <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Very Good    </color> <color:o>Fair         </color>
-Crossbows         <color:o>Fair         </color> <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color>
-Daggers           <color:y>Very Good    </color> <color:y>Good         </color> <color:o>Fair         </color> <color:b>Heroic       </color>
+Crossbows         <color:o>Fair         </color> <color:o>Fair         </color> <color:r>Bad          </color> <color:y>Good         </color>
+Daggers           <color:y>Very Good    </color> <color:y>Good         </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Polearms          <color:o>Fair         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Shields           <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:o>Fair         </color>
-Slings            <color:o>Fair         </color> <color:y>Good         </color> <color:R>Poor         </color> <color:g>Superb       </color>
-Staves            <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
+Slings            <color:o>Fair         </color> <color:y>Good         </color> <color:R>Poor         </color> <color:y>Very Good    </color>
+Staves            <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Swords            <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Diggers           <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:g>Superb       </color>
+Diggers           <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Good         </color>
 
 </style>
 <topic:Skills2><style:heading>Table 3 - Weaponmaster Skill Bonus Table II</style>

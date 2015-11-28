@@ -40,7 +40,7 @@ ability to fight these creatures.
   Strength      -1        Disarming   Poor         
   Intelligence  +2        Device      Superb       
   Wisdom        -3        Save        Excellent    
-  Dexterity     +0        Stealth     Superb       
+  Dexterity     +0        Stealth     Very Good    
   Constitution  +2        Searching   Poor         
   Charisma      +4        Perception  Fair         
   Life Rating  107%       Melee       Fair         
@@ -103,7 +103,7 @@ all demons by a substantial amount.
   Strength      +3        Disarming   Bad          
   Intelligence  +1        Device      Superb       
   Wisdom       -10        Save        Excellent    
-  Dexterity     +1        Stealth     Bad          
+  Dexterity     +1        Stealth     Poor         
   Constitution  +1        Searching   Poor         
   Charisma      +3        Perception  Bad          
   Life Rating  100%       Melee       Excellent    
@@ -124,7 +124,7 @@ be annoying as well, so perhaps an alliance is in order?
   Strength      +0        Disarming   Bad          
   Intelligence  -2        Device      Fair         
   Wisdom        -2        Save        Fair         
-  Dexterity     +2        Stealth     Heroic       
+  Dexterity     +2        Stealth     Excellent    
   Constitution  +2        Searching   Poor         
   Charisma      +2        Perception  Bad          
   Life Rating  102%       Melee       Very Good    
@@ -146,7 +146,7 @@ the squishy side. That is, if you can manage to catch one!
   Strength      -1        Disarming   Bad          
   Intelligence  +0        Device      Excellent    
   Wisdom        -2        Save        Fair         
-  Dexterity     +2        Stealth     Legendary[10]
+  Dexterity     +2        Stealth     Superb       
   Constitution  +0        Searching   Poor         
   Charisma      +2        Perception  Bad          
   Life Rating   97%       Melee       Fair         
@@ -168,7 +168,7 @@ nearly indistiguishable in skill from Warriors!
   Strength      +2        Disarming   Bad          
   Intelligence  -4        Device      Bad          
   Wisdom        -4        Save        Fair         
-  Dexterity     -2        Stealth     Bad          
+  Dexterity     -2        Stealth     Poor         
   Constitution  +2        Searching   Poor         
   Charisma      +2        Perception  Bad          
   Life Rating  112%       Melee       Superb       
@@ -190,13 +190,13 @@ Giants             +2   -4   -4   -2   +2   +2  112%  +25  140%
 Table 2 - Warlock Skill Bonus Table I
 
                   Disarming     Device        Save          Stealth      
-Undead            Poor          Superb        Excellent     Superb       
+Undead            Poor          Superb        Excellent     Very Good    
 Dragons           Bad           Good          Fair          Fair         
 Angels            Bad           Very Good     Superb        Fair         
-Demons            Bad           Superb        Excellent     Bad          
-Hounds            Bad           Fair          Fair          Heroic       
-Spiders           Bad           Excellent     Fair          Legendary[10]
-Giants            Bad           Bad           Fair          Bad          
+Demons            Bad           Superb        Excellent     Poor         
+Hounds            Bad           Fair          Fair          Excellent    
+Spiders           Bad           Excellent     Fair          Superb       
+Giants            Bad           Bad           Fair          Poor         
 
 
 Table 3 - Warlock Skill Bonus Table II

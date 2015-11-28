@@ -32,7 +32,7 @@ Since the Blood-Knight relies on their own blood for their power, they are restr
 Strength     <color:w> +2</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> -2</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:v> +3</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  120%       Melee       <color:g>Superb       </color>
@@ -52,7 +52,7 @@ Duelists favor light armors and cannot equip a shield. They gain no extra bonus 
 Strength     <color:v> +2</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> +1</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:w> -2</color>        Save        <color:r>Bad          </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> -3</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +2</color>        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:o>Fair         </color>
@@ -66,7 +66,7 @@ The Mauler favors extremely heavy weapons, and possesses powerful abilities whos
 Strength     <color:v> +5</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> -2</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> -2</color>        Save        <color:y>Very Good    </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +3</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  111%       Melee       <color:g>Superb       </color>
@@ -80,7 +80,7 @@ The Rune Knight is a mythical warrior-mage who is dedicated to the power of anci
 Strength     <color:w> +2</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:v> +2</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating  107%       Melee       <color:o>Fair         </color>
@@ -96,7 +96,7 @@ Samurai use the art of the blade called Kendo (or Bugei). Books of Kendo are sim
 Strength     <color:w> +3</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> -2</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:v> +1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +1</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
 Life Rating  111%       Melee       <color:g>Superb       </color>
@@ -162,7 +162,7 @@ Archers have a class power - 'Create Ammo' - which creates stones or shots from 
 Strength     <color:w> +2</color>        Disarming   <color:G>Excellent    </color>
 Intelligence <color:w> -1</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +0</color>        Perception  <color:R>Poor         </color>
 Life Rating  111%       Melee       <color:y>Very Good    </color>
@@ -180,7 +180,7 @@ Snipers know their enemies well and can shoot them from the shadows. They have n
 Strength     <color:w> +2</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> -1</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -1</color>        Save        <color:R>Poor         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:b>Heroic       </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +1</color>        Searching   <color:y>Good         </color>
 Charisma     <color:w> +0</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:R>Poor         </color>
@@ -198,7 +198,7 @@ ForceTrainers use both spellbook magic and the special spiritual power called th
 Strength     <color:w> +0</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> -1</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:v> +3</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> +1</color>        Searching   <color:y>Good         </color>
 Charisma     <color:w> +0</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:o>Fair         </color>
@@ -214,7 +214,7 @@ The different sects of monks are devoted to different areas of magic. They selec
 Strength     <color:w> +2</color>        Disarming   <color:g>Superb       </color>
 Intelligence <color:w> -1</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:v> +1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +3</color>        Stealth     <color:b>Heroic       </color>
+Dexterity    <color:w> +3</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +2</color>        Searching   <color:y>Good         </color>
 Charisma     <color:w> +1</color>        Perception  <color:o>Fair         </color>
 Life Rating  110%       Melee       <color:G>Excellent    </color>
@@ -228,7 +228,7 @@ Mystics are masters of bare handed fighting, like Monks. However, they do not le
 Strength     <color:w> +2</color>        Disarming   <color:g>Superb       </color>
 Intelligence <color:w> -1</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +3</color>        Stealth     <color:b>Heroic       </color>
+Dexterity    <color:w> +3</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +1</color>        Searching   <color:y>Good         </color>
 Charisma     <color:v> +2</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:G>Excellent    </color>
@@ -244,7 +244,7 @@ A Blood Mage is similar to a normal mage in his selection and variety of spells,
 Strength     <color:w> -4</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:v> +3</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> -2</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> -2</color>        Perception  <color:o>Fair         </color>
 Life Rating  108%       Melee       <color:D>Very Bad     </color>
@@ -260,7 +260,7 @@ A Blue-Mage can learn and cast monster ranged attacks, spells, or summons as the
 Strength     <color:w> -4</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:v> +4</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> -1</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> -2</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:r>Bad          </color>
@@ -278,7 +278,7 @@ And then, only High-Mages are able to cast Hex spells.
 Strength     <color:w> -4</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:v> +4</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> +0</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> -2</color>        Perception  <color:o>Fair         </color>
 Life Rating   94%       Melee       <color:D>Very Bad     </color>
@@ -294,7 +294,7 @@ Mages have the least restrictions in choosing and learning spells. They can free
 Strength     <color:w> -4</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:v> +3</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> +0</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> -2</color>        Perception  <color:o>Fair         </color>
 Life Rating   95%       Melee       <color:D>Very Bad     </color>
@@ -308,7 +308,7 @@ A Necromancer attempts to gain both power and knowledge through communion with t
 Strength     <color:w> -2</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:v> +3</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> -4</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> -1</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> -2</color>        Perception  <color:o>Fair         </color>
 Life Rating   95%       Melee       <color:D>Very Bad     </color>
@@ -324,7 +324,7 @@ Sorcerers can cast any spell from any spellbooks of all magic realms with 'Maste
 Strength     <color:w> -5</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> +0</color>        Device      <color:b>Heroic       </color>
 Wisdom       <color:w> -2</color>        Save        <color:b>Heroic       </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:v> +6</color>        Perception  <color:o>Fair         </color>
 Life Rating   65%       Melee       <color:D>Very Bad     </color>
@@ -344,7 +344,7 @@ Devicemasters have a few magical abilities to enhance their utility with devices
 Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:v> +2</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> +1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -2</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
 Life Rating  101%       Melee       <color:o>Fair         </color>
@@ -358,7 +358,7 @@ The Magic-Eater can absorb magical devices. Once absorbed, these devices will fu
 Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> +2</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> +1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -2</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
 Life Rating  103%       Melee       <color:o>Fair         </color>
@@ -376,7 +376,7 @@ Priests can select from Life, Death, Daemon, or Crusade as a first realm, and ch
 Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> -3</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:v> +3</color>        Save        <color:G>Excellent    </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:o>Fair         </color>
@@ -394,7 +394,7 @@ A Ninja can use Ninjutsu for lurking and surprise attacks. They gain more Ninjut
 Strength     <color:w> +0</color>        Disarming   <color:g>Superb       </color>
 Intelligence <color:w> -1</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:v> +3</color>        Stealth     <color:v>Legendary[17]</color>
+Dexterity    <color:v> +3</color>        Stealth     <color:g>Superb       </color>
 Constitution <color:w> +2</color>        Searching   <color:G>Excellent    </color>
 Charisma     <color:w> +2</color>        Perception  <color:y>Good         </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
@@ -410,7 +410,7 @@ Rogues can select one realm from Sorcery, Death, Trump, Arcane, Craft, or Burgla
 Strength     <color:w> +2</color>        Disarming   <color:g>Superb       </color>
 Intelligence <color:v> +1</color>        Device      <color:G>Excellent    </color>
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +3</color>        Stealth     <color:b>Heroic       </color>
+Dexterity    <color:w> +3</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +1</color>        Searching   <color:y>Good         </color>
 Charisma     <color:w> +1</color>        Perception  <color:o>Fair         </color>
 Life Rating  110%       Melee       <color:G>Excellent    </color>
@@ -424,7 +424,7 @@ The scout is the vanguard of any attack, and excels at stealth and observation s
 Strength     <color:w> +1</color>        Disarming   <color:G>Excellent    </color>
 Intelligence <color:w> -1</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:v> +2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +3</color>        Stealth     <color:v>Legendary[2] </color>
+Dexterity    <color:w> +3</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> +0</color>        Searching   <color:G>Excellent    </color>
 Charisma     <color:w> +0</color>        Perception  <color:o>Fair         </color>
 Life Rating  104%       Melee       <color:y>Very Good    </color>
@@ -474,7 +474,7 @@ All rangers are trained in Nature magic, and all of these spells are available t
 Strength     <color:w> +2</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> +0</color>        Device      <color:G>Excellent    </color>
 Wisdom       <color:v> +2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +0</color>        Perception  <color:R>Poor         </color>
 Life Rating  106%       Melee       <color:y>Very Good    </color>
@@ -506,7 +506,7 @@ Warrior-mages begin the game with Arcane magic, and they can freely select anoth
 Strength     <color:w> +2</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:v> +2</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating  106%       Melee       <color:o>Fair         </color>
@@ -524,7 +524,7 @@ Beastmasters use Trump magic to make good use of their monster domination and ri
 Strength     <color:w> +1</color>        Disarming   <color:r>Bad          </color>
 Intelligence <color:w> -1</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:v> +2</color>        Perception  <color:R>Poor         </color>
 Life Rating  103%       Melee       <color:o>Fair         </color>
@@ -558,7 +558,7 @@ Mindcrafters gain new mindcrafting powers and their existing ones become stronge
 Strength     <color:w> -1</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> +0</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:v> +3</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> -1</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +2</color>        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:o>Fair         </color>
@@ -574,7 +574,7 @@ Mirror-Masters gain more spells and each spell becomes more powerful as they gai
 Strength     <color:w> -2</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:v> +3</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:w> +1</color>        Save        <color:G>Excellent    </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> -2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:D>Very Bad     </color>
@@ -588,7 +588,7 @@ The Psion is like a Mindcrafter, and uses innate mental powers. Unlike the Mindc
 Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> +2</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:w> +2</color>        Save        <color:G>Excellent    </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -1</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +2</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:o>Fair         </color>
@@ -604,7 +604,7 @@ Time-Lords are mediocre fighters and not good at archery at all. They are OK wit
 Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> +0</color>        Device      <color:y>Very Good    </color>
 Wisdom       <color:v> +3</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -1</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating   96%       Melee       <color:o>Fair         </color>
@@ -622,7 +622,7 @@ See <link:Warlocks.txt> for more details on warlock pacts.
 Strength     <color:w> -1</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> +2</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> -3</color>        Save        <color:G>Excellent    </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:v> +4</color>        Perception  <color:o>Fair         </color>
 Life Rating  107%       Melee       <color:o>Fair         </color>
@@ -638,7 +638,7 @@ The Archaeologist is an erudite treasure hunter, seeking out the most valuable p
 Strength     <color:w> -1</color>        Disarming   <color:g>Superb       </color>
 Intelligence <color:w> +1</color>        Device      <color:G>Excellent    </color>
 Wisdom       <color:v> +2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:y>Very Good    </color>
 Constitution <color:w> -1</color>        Searching   <color:G>Excellent    </color>
 Charisma     <color:w> +0</color>        Perception  <color:y>Good         </color>
 Life Rating  106%       Melee       <color:y>Very Good    </color>
@@ -670,7 +670,7 @@ To use imitation, Imitators must see monster's spell at first. When a viewable m
 Strength     <color:w> +0</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> +1</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> -1</color>        Perception  <color:R>Poor         </color>
 Life Rating  108%       Melee       <color:y>Very Good    </color>
@@ -686,7 +686,7 @@ Another unique aspect of the Rage Mage concerns their Mana pool. Unlike normal s
 Strength     <color:v> +3</color>        Disarming   <color:r>Bad          </color>
 Intelligence <color:w> -2</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -2</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> -2</color>        Stealth     <color:D>Very Bad     </color>
+Dexterity    <color:w> -2</color>        Stealth     <color:r>Bad          </color>
 Constitution <color:w> +2</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +1</color>        Perception  <color:r>Bad          </color>
 Life Rating  106%       Melee       <color:o>Fair         </color>
@@ -718,7 +718,7 @@ Wild-Talents do not have a spell stat. Instead, each ability that they gain requ
 Strength     <color:w> -1</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> +1</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> +1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:y>Very Good    </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> -2</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating  100%       Melee       <color:y>Very Good    </color>
@@ -779,49 +779,49 @@ Wild-Talent    -1   +1   +1   +1   -2   +1  100%   +4  110%
 <style:table>
               <color:w>Disarming     Device        Save          Stealth      </color>
 Berserker     <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
-Blood-Knight  <color:y>Good         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:y>Very Good    </color>
-Duelist       <color:y>Good         </color> <color:y>Very Good    </color> <color:r>Bad          </color> <color:g>Superb       </color>
-Mauler        <color:y>Good         </color> <color:y>Good         </color> <color:y>Very Good    </color> <color:r>Bad          </color>
-Rune-Knight   <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
-Samurai       <color:y>Good         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:y>Very Good    </color>
+Blood-Knight  <color:y>Good         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Duelist       <color:y>Good         </color> <color:y>Very Good    </color> <color:r>Bad          </color> <color:y>Good         </color>
+Mauler        <color:y>Good         </color> <color:y>Good         </color> <color:y>Very Good    </color> <color:R>Poor         </color>
+Rune-Knight   <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Samurai       <color:y>Good         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Warrior       <color:y>Good         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Weaponmaster  <color:o>Fair         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Weaponsmith   <color:y>Good         </color> <color:o>Fair         </color> <color:R>Poor         </color> <color:o>Fair         </color>
-Archer        <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:g>Superb       </color>
-Sniper        <color:y>Good         </color> <color:o>Fair         </color> <color:R>Poor         </color> <color:b>Heroic       </color>
-Force-Trainer <color:y>Good         </color> <color:y>Very Good    </color> <color:y>Good         </color> <color:g>Superb       </color>
-Monk          <color:g>Superb       </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:b>Heroic       </color>
-Mystic        <color:g>Superb       </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:b>Heroic       </color>
-Blood-Mage    <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:g>Superb       </color>
-Blue-Mage     <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:g>Superb       </color>
-High-Mage     <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:g>Superb       </color>
-Mage          <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:g>Superb       </color>
-Necromancer   <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:g>Superb       </color>
-Sorcerer      <color:o>Fair         </color> <color:b>Heroic       </color> <color:b>Heroic       </color> <color:y>Very Good    </color>
-Devicemaster  <color:R>Poor         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:y>Very Good    </color>
-Magic-Eater   <color:R>Poor         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:y>Very Good    </color>
-Priest        <color:R>Poor         </color> <color:y>Very Good    </color> <color:G>Excellent    </color> <color:y>Very Good    </color>
-Ninja         <color:g>Superb       </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:v>Legendary[17]</color>
-Rogue         <color:g>Superb       </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:b>Heroic       </color>
-Scout         <color:G>Excellent    </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:v>Legendary[2] </color>
+Archer        <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
+Sniper        <color:y>Good         </color> <color:o>Fair         </color> <color:R>Poor         </color> <color:G>Excellent    </color>
+Force-Trainer <color:y>Good         </color> <color:y>Very Good    </color> <color:y>Good         </color> <color:y>Very Good    </color>
+Monk          <color:g>Superb       </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:G>Excellent    </color>
+Mystic        <color:g>Superb       </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:G>Excellent    </color>
+Blood-Mage    <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:y>Good         </color>
+Blue-Mage     <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:y>Good         </color>
+High-Mage     <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:y>Good         </color>
+Mage          <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:y>Good         </color>
+Necromancer   <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:y>Very Good    </color>
+Sorcerer      <color:o>Fair         </color> <color:b>Heroic       </color> <color:b>Heroic       </color> <color:o>Fair         </color>
+Devicemaster  <color:R>Poor         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Magic-Eater   <color:R>Poor         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Priest        <color:R>Poor         </color> <color:y>Very Good    </color> <color:G>Excellent    </color> <color:o>Fair         </color>
+Ninja         <color:g>Superb       </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:g>Superb       </color>
+Rogue         <color:g>Superb       </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:G>Excellent    </color>
+Scout         <color:G>Excellent    </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Chaos-Warrior <color:r>Bad          </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Paladin       <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Ranger        <color:o>Fair         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:g>Superb       </color>
+Ranger        <color:o>Fair         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:y>Good         </color>
 Red-Mage      <color:r>Bad          </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Warrior-Mage  <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
-Beastmaster   <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
+Warrior-Mage  <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Beastmaster   <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Cavalry       <color:o>Fair         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Mindcrafter   <color:y>Good         </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:g>Superb       </color>
-Mirror-Master <color:y>Good         </color> <color:y>Very Good    </color> <color:G>Excellent    </color> <color:g>Superb       </color>
-Psion         <color:R>Poor         </color> <color:y>Very Good    </color> <color:G>Excellent    </color> <color:y>Very Good    </color>
-Time-Lord     <color:R>Poor         </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Very Good    </color>
-Warlock       <color:R>Poor         </color> <color:g>Superb       </color> <color:G>Excellent    </color> <color:g>Superb       </color>
-Archaeologist <color:g>Superb       </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:g>Superb       </color>
+Mindcrafter   <color:y>Good         </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:y>Good         </color>
+Mirror-Master <color:y>Good         </color> <color:y>Very Good    </color> <color:G>Excellent    </color> <color:y>Good         </color>
+Psion         <color:R>Poor         </color> <color:y>Very Good    </color> <color:G>Excellent    </color> <color:o>Fair         </color>
+Time-Lord     <color:R>Poor         </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Warlock       <color:R>Poor         </color> <color:g>Superb       </color> <color:G>Excellent    </color> <color:y>Very Good    </color>
+Archaeologist <color:g>Superb       </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:y>Very Good    </color>
 Bard          <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:D>Very Bad     </color>
-Imitator      <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
-Rage-Mage     <color:r>Bad          </color> <color:o>Fair         </color> <color:g>Superb       </color> <color:D>Very Bad     </color>
+Imitator      <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Rage-Mage     <color:r>Bad          </color> <color:o>Fair         </color> <color:g>Superb       </color> <color:r>Bad          </color>
 Tourist       <color:r>Bad          </color> <color:r>Bad          </color> <color:r>Bad          </color> <color:o>Fair         </color>
-Wild-Talent   <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
+Wild-Talent   <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 
 </style>
 <topic:Skills2><style:heading>Table 3 - Class Skill Bonus Table II</style>

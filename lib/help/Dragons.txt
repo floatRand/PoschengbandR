@@ -157,7 +157,7 @@ Crystal Drakes are dragons of a strange crystalline form. They breathe shards an
 Strength     <color:w> +1</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -1</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -2</color>        Save        <color:G>Excellent    </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +0</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
@@ -171,7 +171,7 @@ Bronze Dragons are wyrms of confusion. While they are not quite as strong as mos
 Strength     <color:w> +0</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -1</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> -2</color>        Save        <color:y>Good         </color>
-Dexterity    <color:w> -2</color>        Stealth     <color:o>Fair         </color>
+Dexterity    <color:w> -2</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> -1</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> -1</color>        Perception  <color:o>Fair         </color>
 Life Rating  100%       Melee       <color:y>Good         </color>
@@ -199,7 +199,7 @@ Steel Dragons are magical dragons formed from rock. As they mature, their form h
 Strength     <color:w> +5</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -6</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:w> -6</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +4</color>        Searching   <color:r>Bad          </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  125%       Melee       <color:g>Superb       </color>
@@ -238,10 +238,10 @@ Law Drake         <color:o>Fair         </color> <color:G>Excellent    </color> 
 Chaos Drake       <color:o>Fair         </color> <color:G>Excellent    </color> <color:y>Very Good    </color> <color:o>Fair         </color>
 Balance Drake     <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Ethereal Drake    <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color> <color:y>Very Good    </color>
-Crystal Drake     <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:r>Bad          </color>
-Bronze Dragon     <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color> <color:o>Fair         </color>
+Crystal Drake     <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:o>Fair         </color>
+Bronze Dragon     <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color> <color:y>Good         </color>
 Gold Dragon       <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color> <color:o>Fair         </color>
-Steel Dragon      <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Steel Dragon      <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:R>Poor         </color>
 
 </style>
 <topic:Skills2><style:heading>Table 3 - Dragon Skill Bonus Table II</style>

@@ -34,7 +34,7 @@ somewhat lacking.
   Strength      +1        Disarming   Fair         
   Intelligence  -1        Device      Good         
   Wisdom        -1        Save        Poor         
-  Dexterity     +3        Stealth     Superb       
+  Dexterity     +3        Stealth     Very Good    
   Constitution  +0        Searching   Fair         
   Charisma      +1        Perception  Poor         
   Life Rating  109%       Melee       Fair         
@@ -68,7 +68,7 @@ so hard as to knock their opponents backwards!
   Strength      +2        Disarming   Fair         
   Intelligence  -2        Device      Fair         
   Wisdom        -2        Save        Bad          
-  Dexterity     +2        Stealth     Superb       
+  Dexterity     +2        Stealth     Good         
   Constitution  +2        Searching   Fair         
   Charisma      +1        Perception  Bad          
   Life Rating  109%       Melee       Fair         
@@ -89,7 +89,7 @@ toss abilities.
   Strength      +1        Disarming   Very Good    
   Intelligence  +0        Device      Good         
   Wisdom        -1        Save        Fair         
-  Dexterity     +4        Stealth     Heroic       
+  Dexterity     +4        Stealth     Excellent    
   Constitution  +0        Searching   Good         
   Charisma      +1        Perception  Fair         
   Life Rating  109%       Melee       Very Good    
@@ -142,7 +142,7 @@ break less often and, at high levels you will gain access to an
   Strength      +0        Disarming   Fair         
   Intelligence  +0        Device      Good         
   Wisdom        +0        Save        Poor         
-  Dexterity     +4        Stealth     Superb       
+  Dexterity     +4        Stealth     Very Good    
   Constitution  +0        Searching   Fair         
   Charisma      +1        Perception  Poor         
   Life Rating  109%       Melee       Fair         
@@ -160,7 +160,7 @@ yourself at great cost.
   Strength      +1        Disarming   Fair         
   Intelligence  -1        Device      Fair         
   Wisdom        -1        Save        Fair         
-  Dexterity     +3        Stealth     Very Good    
+  Dexterity     +3        Stealth     Fair         
   Constitution  +2        Searching   Poor         
   Charisma      +1        Perception  Bad          
   Life Rating  109%       Melee       Superb       
@@ -194,7 +194,7 @@ open for those +8 diggers!
   Strength      +3        Disarming   Fair         
   Intelligence  -2        Device      Fair         
   Wisdom        -2        Save        Fair         
-  Dexterity     +1        Stealth     Superb       
+  Dexterity     +1        Stealth     Good         
   Constitution  +2        Searching   Poor         
   Charisma      +1        Perception  Bad          
   Life Rating  109%       Melee       Superb       
@@ -221,16 +221,16 @@ Table 2 - Weaponmaster Skill Bonus Table I
 
                   Disarming     Device        Save          Stealth      
 Axes              Fair          Bad           Fair          Fair         
-Bows              Fair          Good          Poor          Superb       
+Bows              Fair          Good          Poor          Very Good    
 Clubs             Fair          Fair          Very Good     Fair         
-Crossbows         Fair          Fair          Bad           Superb       
-Daggers           Very Good     Good          Fair          Heroic       
+Crossbows         Fair          Fair          Bad           Good         
+Daggers           Very Good     Good          Fair          Excellent    
 Polearms          Fair          Poor          Fair          Fair         
 Shields           Fair          Fair          Excellent     Fair         
-Slings            Fair          Good          Poor          Superb       
-Staves            Fair          Fair          Fair          Very Good    
+Slings            Fair          Good          Poor          Very Good    
+Staves            Fair          Fair          Fair          Fair         
 Swords            Good          Fair          Fair          Fair         
-Diggers           Fair          Fair          Fair          Superb       
+Diggers           Fair          Fair          Fair          Good         
 
 
 Table 3 - Weaponmaster Skill Bonus Table II

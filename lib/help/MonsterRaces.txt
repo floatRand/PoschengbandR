@@ -54,7 +54,7 @@ Hydras are monsters so do not choose a normal class. Instead, they play much lik
 Strength     <color:w> +0</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:w> -2</color>        Device      <color:o>Fair         </color>
 Wisdom       <color:w> -2</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:r>Bad          </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
@@ -72,7 +72,7 @@ All spiders begin in the very weak form of the Cave Spider. Lacking any special 
 Strength     <color:w> -2</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -1</color>        Device      <color:g>Superb       </color>
 Wisdom       <color:w> -1</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> +2</color>        Stealth     <color:g>Superb       </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:G>Excellent    </color>
 Constitution <color:w> -2</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> -3</color>        Perception  <color:R>Poor         </color>
 Life Rating   70%       Melee       <color:y>Very Good    </color>
@@ -92,7 +92,7 @@ Angels use the same equipment slots as normal player races and have no innate at
 Strength     <color:w> +1</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> +1</color>        Device      <color:G>Excellent    </color>
 Wisdom       <color:v> +4</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:y>Good         </color>
 Constitution <color:w> +1</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> +1</color>        Perception  <color:R>Poor         </color>
 Life Rating   90%       Melee       <color:y>Good         </color>
@@ -119,7 +119,7 @@ Beholders are monsters so cannot choose a normal class. Instead, they gain power
 Strength     <color:w> -3</color>        Disarming   <color:y>Good         </color>
 Intelligence <color:v> +4</color>        Device      <color:b>Heroic       </color>
 Wisdom       <color:w> +0</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> +1</color>        Stealth     <color:v>Legendary[2] </color>
+Dexterity    <color:w> +1</color>        Stealth     <color:b>Heroic       </color>
 Constitution <color:w> +0</color>        Searching   <color:v>Legendary[7] </color>
 Charisma     <color:w> +0</color>        Perception  <color:v>Legendary[7] </color>
 Life Rating  100%       Melee       <color:o>Fair         </color>
@@ -188,7 +188,7 @@ There are several varieties of golem, all sharing a common evolutionary heritage
 Strength     <color:w> +1</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -2</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:w> -2</color>        Save        <color:g>Superb       </color>
-Dexterity    <color:w> -1</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> -1</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +1</color>        Searching   <color:r>Bad          </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
@@ -244,7 +244,7 @@ Leprechauns are monsters so can not choose a normal class. Instead, being small,
 Strength     <color:w> -2</color>        Disarming   <color:y>Very Good    </color>
 Intelligence <color:w> +1</color>        Device      <color:b>Heroic       </color>
 Wisdom       <color:w> +1</color>        Save        <color:y>Good         </color>
-Dexterity    <color:v> +3</color>        Stealth     <color:v>Legendary[12]</color>
+Dexterity    <color:v> +3</color>        Stealth     <color:b>Heroic       </color>
 Constitution <color:w> -2</color>        Searching   <color:o>Fair         </color>
 Charisma     <color:w> -2</color>        Perception  <color:R>Poor         </color>
 Life Rating   80%       Melee       <color:o>Fair         </color>
@@ -292,7 +292,7 @@ Possessors are monsters and do not choose a normal class. Their stats, skills, r
 Strength     <color:w> -3</color>        Disarming   <color:r>Bad          </color>
 Intelligence <color:w> +0</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:w> -3</color>        Save        <color:R>Poor         </color>
-Dexterity    <color:w> +0</color>        Stealth     <color:b>Heroic       </color>
+Dexterity    <color:w> +0</color>        Stealth     <color:g>Superb       </color>
 Constitution <color:w> -3</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> -7</color>        Perception  <color:R>Poor         </color>
 Life Rating   60%       Melee       <color:o>Fair         </color>
@@ -334,7 +334,7 @@ Giants use the same equipment slots as normal player races and have no innate at
 Strength     <color:w> +3</color>        Disarming   <color:o>Fair         </color>
 Intelligence <color:w> -3</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:w> -6</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> -2</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> -2</color>        Stealth     <color:R>Poor         </color>
 Constitution <color:w> +3</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:b>Heroic       </color>
@@ -348,7 +348,7 @@ Trolls are disgusting creatures: Big, strong and stupid. They make excellent war
 Strength     <color:w> +3</color>        Disarming   <color:R>Poor         </color>
 Intelligence <color:w> -5</color>        Device      <color:r>Bad          </color>
 Wisdom       <color:w> -5</color>        Save        <color:o>Fair         </color>
-Dexterity    <color:w> -2</color>        Stealth     <color:r>Bad          </color>
+Dexterity    <color:w> -2</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +3</color>        Searching   <color:R>Poor         </color>
 Charisma     <color:w> +0</color>        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:g>Superb       </color>
@@ -441,22 +441,22 @@ Xorn          +2   -4   -2   -3   +1   -1  100%  +30  150%  120%
              <color:w>Disarming     Device        Save          Stealth      </color>
 Centipede    <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Hound        <color:o>Fair         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:g>Superb       </color>
-Hydra        <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:r>Bad          </color>
-Spider       <color:o>Fair         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:g>Superb       </color>
-Angel        <color:R>Poor         </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:o>Fair         </color>
-Beholder     <color:y>Good         </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:v>Legendary[2] </color>
+Hydra        <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Spider       <color:o>Fair         </color> <color:g>Superb       </color> <color:o>Fair         </color> <color:G>Excellent    </color>
+Angel        <color:R>Poor         </color> <color:G>Excellent    </color> <color:g>Superb       </color> <color:y>Good         </color>
+Beholder     <color:y>Good         </color> <color:b>Heroic       </color> <color:g>Superb       </color> <color:b>Heroic       </color>
 Dragon       <color:o>Fair         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Elemental    <color:o>Fair         </color> <color:r>Bad          </color> <color:G>Excellent    </color> <color:G>Excellent    </color>
-Golem        <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:r>Bad          </color>
+Golem        <color:o>Fair         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:R>Poor         </color>
 Jelly        <color:y>Good         </color> <color:r>Bad          </color> <color:y>Good         </color> <color:g>Superb       </color>
 Quylthulg    <color:o>Fair         </color> <color:g>Superb       </color> <color:G>Excellent    </color> <color:g>Superb       </color>
-Leprechaun   <color:y>Very Good    </color> <color:b>Heroic       </color> <color:y>Good         </color> <color:v>Legendary[12]</color>
+Leprechaun   <color:y>Very Good    </color> <color:b>Heroic       </color> <color:y>Good         </color> <color:b>Heroic       </color>
 Death-Sword  <color:y>Good         </color> <color:G>Excellent    </color> <color:G>Excellent    </color> <color:y>Very Good    </color>
 Mimic        <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color>
-Possessor    <color:r>Bad          </color> <color:r>Bad          </color> <color:R>Poor         </color> <color:b>Heroic       </color>
+Possessor    <color:r>Bad          </color> <color:r>Bad          </color> <color:R>Poor         </color> <color:g>Superb       </color>
 Ring         <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Good         </color> <color:G>Excellent    </color>
-Giant        <color:o>Fair         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:r>Bad          </color>
-Troll        <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:r>Bad          </color>
+Giant        <color:o>Fair         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:R>Poor         </color>
+Troll        <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Lich         <color:o>Fair         </color> <color:g>Superb       </color> <color:y>Very Good    </color> <color:g>Superb       </color>
 Vampire      <color:R>Poor         </color> <color:G>Excellent    </color> <color:o>Fair         </color> <color:g>Superb       </color>
 Xorn         <color:y>Good         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
