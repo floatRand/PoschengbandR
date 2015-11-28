@@ -588,7 +588,7 @@ static personality_ptr _get_sexy_personality(void)
 }
 
 /****************************************************************
- * Patient
+ * Shrewd
  ****************************************************************/
 static void _shrewd_calc_bonuses(void)
 {

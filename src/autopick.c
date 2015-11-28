@@ -663,7 +663,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         }
 
         /*Devices work better if we just use the effect name */
-        if (object_is_device(o_ptr))
+        if (object_is_device(o_ptr) && o_ptr->activation.type != EFFECT_NONE)
         {
             strcpy(name_str, do_device(o_ptr, SPELL_NAME, 0));
             strcat(name_str, "$");
