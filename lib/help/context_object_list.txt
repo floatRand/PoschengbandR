@@ -49,5 +49,8 @@ There are 79 other objects:                       #<color:u>.</color># ##### #  
 
 <topic:Travel><style:heading>Travel to Object</style>
 
+You may travel to the currently selected object in the object list by pressing <style:keypress>`</style>, which, incidentally, is the same key used to invoke the travel command from the top level. Be careful when traveling, however, as you may quickly get yourself into trouble (just like with running). For example, you might travel into a horde of demons that, because they are not in direct line of sight, do not disturb you, and therefore do not terminate the travel command. So while you, with telepathy no doubt, would have wisely fled as soon as they appeared, the travel command will continue until you are actually in line of sight, which might be too late to survive. So exercise caution when using this option.
+
 <topic:Window><style:heading>Setting Up a Terminal Window</style>
 
+You may also setup the Object List as a child terminal so that it is continuously displayed. For details of setting options, refer to <link:option.txt>. For details of setting window options, see <link:option.txt#Window>.

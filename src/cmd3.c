@@ -2041,7 +2041,10 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
             break;
         /* Help */
         case '?':
-            /* TODO */
+            doc_display_help("context_monster_list.txt", NULL);
+            screen_load();
+            screen_save();
+            redraw = TRUE;
             break;
         /* Exit */
         case ESCAPE:
