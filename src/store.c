@@ -2380,7 +2380,10 @@ static void store_sell(void)
             price = ot_ptr->max_cost;
         price *= q_ptr->number;
 
-        sprintf(prompt, "Really sell %s (%c) for <color:R>%d</color> gp? <color:y>[y/n]</color>", o_name, index_to_label(item), price);
+        if (!no_selling)
+            sprintf(prompt, "Really sell %s (%c) for <color:R>%d</color> gp? <color:y>[y/n]</color>", o_name, index_to_label(item), price);
+        else
+           sprintf(prompt, "Really give %s (%c)?", o_name, index_to_label(item));
         if (msg_prompt(prompt, "ny", PROMPT_YES_NO) == 'y')
         {
             if (cur_store_num == STORE_BLACK) /* The black market is illegal! */
