@@ -233,7 +233,7 @@ void hide_in_flame_spell(int cmd, variant *res)
         var_set_string(res, "Generate a fire ball and teleport in a time. Gives resistance to fire for a while.");
         break;
     case SPELL_INFO:
-        var_set_string(res, info_damage(0, 0, dam));
+        var_set_string(res, info_damage(0, 0, dam/2));
         break;
     case SPELL_CAST:
         fire_ball(GF_FIRE, 0, dam, rad);
@@ -260,7 +260,7 @@ static void _hide_in_leaves_spell(int cmd, variant *res)
     }
 }
 
-static void _hide_in_mist_spell(int cmd, variant *res)
+void hide_in_mist_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
@@ -488,7 +488,7 @@ static spell_info _spells[] =
     {28,  32,  60, swap_pos_spell},
     {30,  30,  70, _glyph_of_explosion_spell},
     {32,  40,  40, hide_in_mud_spell},
-    {34,  35,  50, _hide_in_mist_spell},
+    {34,  35,  50, hide_in_mist_spell},
     {38,  40,  60, _rengoku_kaen_spell},
     {41,  50,  55, _bunshin_spell},
     { -1, -1,  -1, NULL}
@@ -505,12 +505,12 @@ static int _get_spells(spell_info* spells, int max)
     return get_spells_aux(spells, max, _spells);
 }
 
-static void _character_dump(FILE* file)
+static void _character_dump(doc_ptr doc)
 {
     spell_info spells[MAX_SPELLS];
     int        ct = _get_spells(spells, MAX_SPELLS);
 
-    dump_spells_aux(file, spells, ct);
+    py_display_spells(doc, spells, ct);
 }
 
 static int _get_powers(spell_info* spells, int max)
@@ -596,7 +596,7 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
-class_t *ninja_get_class_t(void)
+class_t *ninja_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;

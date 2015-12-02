@@ -121,7 +121,7 @@ static void _break_mirrors_spell(int cmd, variant *res)
         var_set_string(res, "Break Mirrors");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Destroys all mirrors on the current levels.  Monsters close to a mirror take damage.");
+        var_set_string(res, "Destroys all mirrors on the current levels. Monsters close to a mirror take damage.");
         break;
     case SPELL_CAST:
         remove_all_mirrors(TRUE);
@@ -763,6 +763,14 @@ static int _get_powers(spell_info* spells, int max)
 
 static void _calc_bonuses(void)
 {
+    if (equip_find_artifact(ART_YATA))
+    {
+        p_ptr->dec_mana = TRUE;
+        p_ptr->easy_spell = TRUE;
+    }
+    if (equip_find_artifact(ART_GIL_GALAD))
+        p_ptr->dec_mana = TRUE;
+
     if (p_ptr->lev >= 40) 
         p_ptr->reflect = TRUE;
 }
@@ -813,13 +821,12 @@ static caster_info * _caster_info(void)
         me.which_stat = A_INT;
         me.weight = 400;
         me.on_fail = _on_fail;
-        me.options = CASTER_ALLOW_DEC_MANA;
         init = TRUE;
     }
     return &me;
 }
 
-class_t *mirror_master_get_class_t(void)
+class_t *mirror_master_get_class(void)
 {
     static class_t me = {0};
     static bool init = FALSE;
