@@ -728,7 +728,7 @@ void object_known(object_type *o_ptr)
     o_ptr->ident &= ~(IDENT_TRIED);
 
     /* Now we know about the item */
-    o_ptr->ident |= (IDENT_KNOWN);
+    o_ptr->ident |= (IDENT_KNOWN | IDENT_FULL);
 
     ego_aware(o_ptr);
 }
