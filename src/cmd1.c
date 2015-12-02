@@ -4873,12 +4873,6 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
         /* Handle stuff */
         if (mpe_mode & MPE_HANDLE_STUFF) handle_stuff();
 
-        if (p_ptr->pclass == CLASS_NINJA || p_ptr->tim_superstealth)
-        {
-            if (c_ptr->info & (CAVE_GLOW)) set_superstealth(FALSE);
-            else if (p_ptr->cur_lite <= 0) set_superstealth(TRUE);
-        }
-
         if ((p_ptr->action == ACTION_QUICK_WALK) &&
             (!have_flag(f_ptr->flags, FF_PROJECT) ||
              (!p_ptr->levitation && have_flag(f_ptr->flags, FF_DEEP))))
@@ -4902,6 +4896,12 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
                 PROJECT_KILL | PROJECT_ITEM, -1);
 
             if (!player_bold(ny, nx) || p_ptr->is_dead || p_ptr->leaving) return FALSE;
+        }
+
+        if (p_ptr->pclass == CLASS_NINJA || p_ptr->tim_superstealth)
+        {
+            if (c_ptr->info & (CAVE_GLOW)) set_superstealth(FALSE);
+            else if (p_ptr->cur_lite <= 0) set_superstealth(TRUE);
         }
 
         /* Spontaneous Searching */

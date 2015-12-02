@@ -1162,7 +1162,7 @@ B:13:N:Hunter's office:Kopei:Human
 B:13:A:0:Today's wanted:0:0:a:38:0
 B:13:A:1:Wanted unique list:0:0:b:39:0
 B:13:A:2:Special target:0:0:s:37:0
-B:13:A:3:Recieve prize:0:0:c:40:0
+B:13:A:3:Receive prize:0:0:c:40:0
 
 
 ############### Town Layout ###############

@@ -1762,9 +1762,6 @@ static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
         /* Describe the object (with {terrible/special}) */
         object_desc(o_name, o_ptr, 0);
 
-        /* Message */
-        msg_format("You cannot auto-destroy %s.", o_name);
-
         /* Done */
         return;
     }
@@ -2047,7 +2044,6 @@ void autopick_pickup_items(cave_type *c_ptr)
 {
     s16b this_o_idx, next_o_idx = 0;
     bool auto_lore = p_ptr->loremaster;
-    bool auto_sense = p_ptr->lev >= 35;
     
     /* Scan the pile of objects */
     for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
@@ -2065,7 +2061,7 @@ void autopick_pickup_items(cave_type *c_ptr)
         {
             if (auto_lore)
                 identify_item(o_ptr);
-            if (auto_sense)
+            else
                 _sense_object_floor(o_ptr);
         }
 

@@ -856,7 +856,7 @@ W:20:0:0:60:100
 A:20/4
 P:0:1d2:0:0:0
 F:SHOW_MODS | TUNNEL
-D:A small spade forged of steel with gnomish craftmanship.
+D:A small spade forged of steel with gnomish craftsmanship.
 
 N:86:& Dwarven Shovel~
 G:\:B
@@ -998,7 +998,7 @@ W:50:0:0:40:2000
 A:50/1
 P:0:1d1:0:0:0
 F:IGNORE_ACID
-D:An elaboratedly decorated crown of massive gold, studded with a rainbow 
+D:An elaborately decorated crown of massive gold, studded with a rainbow
 D:of gems and jewels; worthy of an emperor.
 
 N:101:& Robe~
@@ -3244,7 +3244,7 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 E:BREATHE_ELEMENTS:50:100:300
 E:You breathe the elements!
 D:A suit with scales of every color, surrounded in a nimbus of perfectly 
-D:untramelled yet inextricably intermingled and utterly mastered powers 
+D:untrammelled yet inextricably intermingled and utterly mastered powers
 D:elemental and ethereal.
 
 N:413:& Dragon Helm~

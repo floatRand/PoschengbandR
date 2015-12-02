@@ -3295,14 +3295,9 @@ static void store_sell(void)
     if (cur_store_num == STORE_HOME)
         q = "Drop which item? ";
 
-    else if (cur_store_num == STORE_MUSEUM)
+    else if (cur_store_num == STORE_MUSEUM || no_selling)
         q = "Give which item? ";
 
-    else if (no_selling)
-    {
-        msg_print("Selling is prohibited!");
-        return;
-    }
     else
         q = "Sell which item? ";
 
@@ -3451,13 +3446,16 @@ static void store_sell(void)
             decrease_insults();
 
             /* Get some money */
-            p_ptr->au += price;
+            if (!no_selling)
+            {
+                p_ptr->au += price;
 
-            if (prace_is_(RACE_MON_LEPRECHAUN))
-                p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+                if (prace_is_(RACE_MON_LEPRECHAUN))
+                    p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
 
-            /* Update the display */
-            store_prt_gold();
+                /* Update the display */
+                store_prt_gold();
+            }
 
             /* Get the "apparent" value */
             dummy = object_value(q_ptr) * q_ptr->number;
@@ -3494,9 +3492,12 @@ static void store_sell(void)
             object_desc(o_name, q_ptr, 0);
 
             /* Describe the result (in message buffer) */
-            msg_format("You sold %s for %d gold.", o_name, price);
+            if (!no_selling)
+                msg_format("You sold %s for %d gold.", o_name, price);
+            else
+                msg_format("You gave %s.", o_name);
 
-            if (!((o_ptr->tval == TV_FIGURINE) && (value > 0)))
+            if (!((o_ptr->tval == TV_FIGURINE) && (value > 0)) && !no_selling)
             {
              /* Analyze the prices (and comment verbally) unless a figurine*/
                 purchase_analyze(price, value, dummy);
@@ -4332,6 +4333,8 @@ void do_cmd_store(void)
             prt("p) Purchase an item", 21 + xtra_stock, 30);
             if (!no_selling)
                 prt("s) Sell an item", 22 + xtra_stock, 30);
+            else
+                prt("s) Give an item", 22 + xtra_stock, 30);
             prt("x) eXamine an item", 23 + xtra_stock,30);
             if (rogue_like_commands) /* P -> b coincidentally and 'P'urchase entire stock works */
                 prt("  P) Purchase entire stock", 23 + xtra_stock, 56);

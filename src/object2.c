@@ -750,7 +750,9 @@ void object_known(object_type *o_ptr)
     o_ptr->ident &= ~(IDENT_EMPTY);
 
     /* Now we know about the item */
-    o_ptr->ident |= (IDENT_KNOWN);
+    o_ptr->ident |= (IDENT_KNOWN | IDENT_MENTAL);
+
+    ego_aware(o_ptr);
 }
 
 /*
@@ -6329,10 +6331,9 @@ bool make_gold(object_type *j_ptr)
     /* Determine how much the treasure is "worth" */
     j_ptr->pval = (base + (8 * randint1(base)) + randint1(8));
 
-    if (no_selling)
+    if (no_selling && dun_level)
     {
-        j_ptr->pval += j_ptr->pval / 2;
-        j_ptr->pval += j_ptr->pval * 2 * object_level / 100;
+        j_ptr->pval *= MIN(5, dun_level);
     }
 
     j_ptr->pval = j_ptr->pval * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;

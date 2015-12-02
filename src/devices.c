@@ -1545,7 +1545,7 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_MADNESS:
-        if (desc) return "It seems to be the hurried scriblings of a mad wizard on the verge of some great arcane discovery.  You can't make heads or tails of it. Do you read it to see what happens?";
+        if (desc) return "It seems to be the hurried scribblings of a mad wizard on the verge of some great arcane discovery.  You can't make heads or tails of it. Do you read it to see what happens?";
         if (cast)
         {
             int item;
@@ -1937,7 +1937,7 @@ static cptr _do_staff(int sval, int mode)
         }
         break;
     case SV_STAFF_HOLINESS:
-        if (desc) return "It does damage to all evil monsters in sight, gives temporary protection from lesser evil creature, cures poison, stuuned, cuts, removes fear and heals you a bit when you use it.";
+        if (desc) return "It does damage to all evil monsters in sight, gives temporary protection from lesser evil creature, cures poison, stunned, cuts, removes fear and heals you a bit when you use it.";
         if (info) return info_damage(0, 0, _staff_power(150));
         if (cast)
         {
