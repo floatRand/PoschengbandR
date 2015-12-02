@@ -182,9 +182,6 @@
 # include <curses.h>
 #endif
 
-void usleep(int);
-void putenv(const char*);
-
 typedef struct term_data term_data;
 
 struct term_data
