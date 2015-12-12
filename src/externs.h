@@ -2254,6 +2254,7 @@ extern bool duelist_issue_challenge(void);
 extern int duelist_skill_sav(int m_idx);
 extern void strafing_spell(int cmd, variant *res);
 extern bool nemesis_hack;    /* Actually, its in melee1.c */
+extern cptr duelist_equip_error(void);
 
 
 /* magic_eater.c */
