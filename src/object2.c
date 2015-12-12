@@ -6349,7 +6349,7 @@ bool make_gold(object_type *j_ptr)
 
     if (no_selling)
     {
-        j_ptr->pval *= MAX(5, dun_level / 5);
+        j_ptr->pval *= MAX(5, object_level / 5);
     }
 
     j_ptr->pval = j_ptr->pval * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;
