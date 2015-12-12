@@ -2952,6 +2952,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     case CLASS_DUELIST:
         if (c_ptr->m_idx == p_ptr->duelist_target_idx)
             duelist_attack = TRUE;
+        else if (!duelist_equip_error())
+        {
+            p_ptr->duelist_target_idx = c_ptr->m_idx;
+            msg_format("You challenge %s to a duel!", duelist_current_challenge());
+            p_ptr->redraw |= PR_STATUS;
+            duelist_attack = TRUE;
+        }
         break;
 
     case CLASS_WEAPONMASTER:
@@ -3534,11 +3541,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     k += MIN(m_ptr->hp * 2 / 5, rand_range(2, 10) * d);
                     drain_result = k;
                 }
-            }
-            else if (p_ptr->pclass == CLASS_DUELIST && p_ptr->lev >= 30)
-            {
-                /* Duelist: Careful Aim vs a non-target */
-                k = k * 3 / 2;
             }
 
             if (poison_needle || mode == HISSATSU_KYUSHO || mode == MYSTIC_KILL)
