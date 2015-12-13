@@ -1883,7 +1883,7 @@ cptr map_name(void)
  * and trigger its usage from various places in the code.
  */
 bool character_dump_hack = FALSE;
-static errr file_character(cptr name)
+static errr file_character(cptr name, bool quiet)
 {
     int        fd = -1;
     FILE        *fff = NULL;
@@ -1921,7 +1921,8 @@ static errr file_character(cptr name)
     if (!fff)
     {
         /* Message */
-        prt("Character dump failed!", 0, 0);
+        if (!quiet)
+            prt("Character dump failed!", 0, 0);
 
         (void)inkey();
 
@@ -1941,9 +1942,12 @@ static errr file_character(cptr name)
 
 
     /* Message */
-    msg_print("Character dump successful.");
+    if (!quiet)
+    {
+        msg_print("Character dump successful.");
 
-    msg_print(NULL);
+        msg_print(NULL);
+    }
 
     /* Success */
     return (0);
@@ -3347,7 +3351,7 @@ static void show_info(void)
         screen_save();
 
         /* Dump a character file */
-        (void)file_character(out_val);
+        (void)file_character(out_val, FALSE);
 
         /* Load screen */
         screen_load();
@@ -3494,7 +3498,7 @@ void close_game(void)
         // Save the screen
         screen_save();
         // Dump a character file
-        err = file_character(sheet);
+        err = file_character(sheet, TRUE);
         // Load the screen
         screen_load();
         // Check result
@@ -3504,6 +3508,7 @@ void close_game(void)
             Term_clear();
             // Warning
             msg_print("Automatic character dump failed!");
+            msg_print(NULL);
         }
 
         /* You are dead */
