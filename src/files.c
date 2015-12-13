@@ -3438,6 +3438,10 @@ void close_game(void)
 {
     char buf[1024];
     bool do_send = TRUE;
+    char curr_time[30];
+    char sheet[60];
+    time_t ct;
+    errr err;
 
     /* Handle stuff */
     handle_stuff();
@@ -3482,6 +3486,25 @@ void close_game(void)
             if (!save_player()) msg_print("death save failed!");
         }
         else do_send = FALSE;
+
+        // Automatic character dump
+        ct  = time((time_t*)0);
+        (void)strftime(curr_time, 30, "%Y-%m-%d-%H%M%S.txt", localtime(&ct));
+        sprintf(sheet, "%s-%s", player_name, curr_time);
+        // Save the screen
+        screen_save();
+        // Dump a character file
+        err = file_character(sheet);
+        // Load the screen
+        screen_load();
+        // Check result
+        if (err)
+        {
+            // Clear screen
+            Term_clear();
+            // Warning
+            msg_print("Automatic character dump failed!");
+        }
 
         /* You are dead */
         print_tomb();
