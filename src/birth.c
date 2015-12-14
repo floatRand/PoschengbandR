@@ -396,13 +396,6 @@ static void _personality_menu_fn(int cmd, int which, vptr cookie, variant *res)
     }
 }
 
-static bool _valid_personality(int which)
-{
-    if (which == PERS_SEXY && p_ptr->psex == SEX_MALE) return FALSE;
-    if (which == PERS_LUCKY && p_ptr->psex == SEX_FEMALE) return FALSE;
-    return TRUE;
-}
-
 static int _prompt_personality(void)
 {
     if (game_mode == GAME_MODE_BEGINNER)
@@ -423,8 +416,7 @@ static int _prompt_personality(void)
 
         for (i = 0; i < MAX_PERSONALITIES; i++)
         {
-            if (_valid_personality(i))
-                choices[ct++] = i;
+            choices[ct++] = i;
         }
         choices[ct] = -1;
         menu.count = ct;
