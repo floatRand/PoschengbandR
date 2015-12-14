@@ -2147,9 +2147,6 @@ struct device_effect_info_s
 typedef struct device_effect_info_s  device_effect_info_t;
 typedef struct device_effect_info_s *device_effect_info_ptr;
 
-#define PERSONALITY_IS_MALE     0x01  /* Lucky */
-#define PERSONALITY_IS_FEMALE   0x02  /* Sexy */
-
 struct personality_s
 {
     cptr            name;
