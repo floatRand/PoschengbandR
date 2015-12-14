@@ -4087,7 +4087,7 @@ enum summon_specific_e {
     time_t tmp;\
     tmp = time(NULL);\
     if (start_time)\
-        playtime += (u32b)(tmp - start_time);\
+        playtime += MIN((u32b)(tmp - start_time), 30);\
     start_time = tmp;\
 }
 

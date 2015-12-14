@@ -128,7 +128,7 @@ static void _build_general1(doc_ptr doc)
 
     update_playtime();
     doc_printf(doc, " Play Time  : <color:G>%8.8s</color>\n",
-                            format("%.2lu:%.2lu", playtime/(60*60), (playtime/60)%60));
+               format("%.2lu:%.2lu:%.2lu", playtime/(60*60), (playtime/60)%60, playtime%60));
 }
 
 static void _build_general2(doc_ptr doc)
