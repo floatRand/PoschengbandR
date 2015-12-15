@@ -898,11 +898,13 @@ static void do_cmd_wiz_hack_chris8(void)
         apply_magic(&forge, object_level, AM_GREAT);
         identify_item(&forge);
 
-        if (forge.name2 == EGO_HELMET_RAGE)
+        if (forge.name2 == EGO_GLOVES_SNIPER)
         {
             forge.ident |= (IDENT_FULL); 
-            object_desc(buf, &forge, 0);
+            object_desc(buf, &forge, OD_COLOR_CODED);
             msg_format(" %d) %s", i+1, buf);
+            msg_boundary();
+            drop_near(&forge, -1, py, px);
         }
     }
 }

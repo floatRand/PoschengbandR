@@ -1924,7 +1924,7 @@ bool enchant(object_type *o_ptr, int n, int eflag)
     for (i = 0; i < n; i++)
     {
         /* Hack -- Roll for pile resistance */
-        if (!force && randint0(prob) >= 100) continue;
+        if (!force && dun_level && randint0(prob) >= 100) continue;
 
         /* Enchant to hit */
         if (eflag & ENCH_TOHIT)
@@ -1941,6 +1941,9 @@ bool enchant(object_type *o_ptr, int n, int eflag)
 
             if ((eflag & ENCH_MINOR_HACK) && idx >= minor_limit)
                 chance = 1000;
+
+            if (chance < 1000 && dun_level == 0)
+                chance = 0;
 
             if (force || ((randint1(1000) > chance) && (!a || (randint0(100) < 50))))
             {
@@ -1969,6 +1972,9 @@ bool enchant(object_type *o_ptr, int n, int eflag)
             if ((eflag & ENCH_MINOR_HACK) && idx >= minor_limit)
                 chance = 1000;
 
+            if (chance < 1000 && dun_level == 0)
+                chance = 0;
+
             if (force || ((randint1(1000) > chance) && (!a || (randint0(100) < 50))))
             {
                 o_ptr->to_d++;
@@ -1996,6 +2002,9 @@ bool enchant(object_type *o_ptr, int n, int eflag)
 
             if ((eflag & ENCH_MINOR_HACK) && idx >= minor_limit)
                 chance = 1000;
+
+            if (chance < 1000 && dun_level == 0)
+                chance = 0;
 
             if (force || ((randint1(1000) > chance) && (!a || (randint0(100) < 50))))
             {

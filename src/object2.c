@@ -4219,6 +4219,9 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             o_ptr->to_d = 10;
             o_ptr->to_a = -10;
             break;
+        case EGO_GLOVES_SNIPER:
+            o_ptr->to_h = 5 + randint1(10);
+            break;
         }
         break;
 
