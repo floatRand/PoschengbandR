@@ -5402,34 +5402,6 @@ bool hp_player_aux(int num)
         /* Redraw */
         p_ptr->redraw |= (PR_HP);
 
-        /* Heal 0-4 */
-        if (num < 5)
-        {
-            msg_print("You feel a little better.");
-
-        }
-
-        /* Heal 5-14 */
-        else if (num < 15)
-        {
-            msg_print("You feel better.");
-
-        }
-
-        /* Heal 15-34 */
-        else if (num < 35)
-        {
-            msg_print("You feel much better.");
-
-        }
-
-        /* Heal 35+ */
-        else
-        {
-            msg_print("You feel very good.");
-
-        }
-
         fear_heal_p(old_hp, p_ptr->chp);
 
         /* Notice */
