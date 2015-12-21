@@ -2556,7 +2556,7 @@ I:37:20:1
 W:60:4:70:200000
 P:28:1d4:1:1:7
 F:STEALTH | DEC_STR | SEE_INVIS | DEX | SPEED |
-F:RES_ACID | RES_FIRE | RES_COLD | RES_POIS | RES_DARK | 
+F:RES_ACID | RES_FIRE | RES_COLD | RES_POIS | RES_DARK | XTRA_H_RES
 D:"Also there is this!" said Bilbo, bringing out a parcel which seemed
 D:to be rather heavy for its size. He unwound several folds of old cloth,
 D:and held up a small shirt of mail. It was close-woven of many rings,

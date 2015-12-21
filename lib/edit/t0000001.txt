@@ -203,6 +203,11 @@ F:!:FLOOR:3:0:132:305
 F:b:BUILDING_1:3:0:0:0:0:NONE:25
 F:!:FLOOR:3:0:132:302
 
+# Metal Shod Boots
+?:[AND [EQU $QUEST14 3] [EQU $RACE Centipede] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:25
+F:!:FLOOR:3:0:93
+
 # Elemental Ring
 ?:[AND [EQU $QUEST14 3] [EQU $RACE Ring] ]
 F:b:BUILDING_1:3:0:0:0:0:NONE:25
