@@ -386,6 +386,8 @@ static void _build_res_flags(doc_ptr doc, int which, _flagzilla_ptr flagzilla)
     {
         if (im_flg != TR_INVALID && have_flag(flagzilla->obj_flgs[i], im_flg))
             doc_insert_char(doc, TERM_VIOLET, '*');
+        else if (vuln_flg != TR_INVALID && have_flag(flagzilla->obj_flgs[i], vuln_flg) && have_flag(flagzilla->obj_flgs[i], flg))
+            doc_insert_char(doc, TERM_L_DARK, '.');
         else if (vuln_flg != TR_INVALID && have_flag(flagzilla->obj_flgs[i], vuln_flg))
             doc_insert_char(doc, TERM_L_RED, '-');
         else if (have_flag(flagzilla->obj_flgs[i], flg))
