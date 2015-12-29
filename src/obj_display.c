@@ -215,7 +215,7 @@ static void _display_other_pval(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc
         if (have_flag(flgs, TR_BLOWS))
             num +=  o_ptr->pval * 50;
         if (have_flag(flgs, TR_DEC_BLOWS))
-            num -=  o_ptr->pval * 50;
+            num -=  o_ptr->pval * 100;
 
         doc_printf(doc, "<color:%c>%+d.%2.2d</color> to Attack Speed\n",
                     (net > 0) ? 'G' : 'r', num / 100, num % 100);
