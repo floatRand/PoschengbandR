@@ -51,18 +51,18 @@ F:SHOW_MODS | AWARE
 
 N:3:GLOVES:of the Thief
 W:10:*:4
-C:5:-5:0:5
+C:5:-5:0:4
 F:DEX | STEALTH | SUST_DEX | HIDE_TYPE
 
 N:4:GLOVES:of the Giant
 W:30:*:4
-C:-5:10:0:5
+C:-5:10:0:4
 F:STR | CON | SHOW_MODS | HIDE_TYPE | SUST_STR |
 F:DEC_INT
 
 N:5:GLOVES:of the Wizard
 W:20:*:4
-C:-10:-10:-20:5
+C:-10:-10:-20:3
 F:INT | MAGIC_MASTERY | HIDE_TYPE
 
 N:6:GLOVES:of the Yeek
