@@ -175,7 +175,7 @@ static void _birth(void)
     equip_on_change_race();
 
     object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
-    if (device_init_fixed(&forge, EFFECT_BOLT_MISSILE))
+    if (device_init_fixed(&forge, EFFECT_BOLT_COLD))
         add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
