@@ -1542,7 +1542,10 @@ void possessor_calc_bonuses(void)
     if (r_ptr->flagsr & RFR_RES_ALL)
     {
         res_add_all();
-        p_ptr->magic_resistance = 95;
+        if (p_ptr->current_r_idx == MON_SPELLWARP_AUTOMATON)
+            p_ptr->magic_resistance = 35;
+        else
+            p_ptr->magic_resistance = 95;
     }
 
     if (strchr("sGLVWz", r_ptr->d_char))
@@ -1735,8 +1738,8 @@ race_t *mon_possessor_get_race(void)
                     "are capable of possessing the corpses of monsters they have slain, and gain powers and "
                     "abilities based on their current body. As such, they can become quite powerful indeed! "
                     "Unfortunately, not every type of monster will drop a corpse, and getting suitable corspes "
-                    "to inhabit can be difficult. If the possessor ever leaves their current body (and they "
-                    "must do so to inhabit a new form) then all of their equipment will be removed (except a "
+                    "to inhabit can be difficult. If the possessor ever leaves their current body then all of "
+                    "their equipment will be removed (except a "
                     "light source) and they will temporarily be in their native, vulnerable state. Finally, "
                     "leaving their current body will destroy that corpse most of the time, so the possessor "
                     "should only do so if they have a better corpse on hand (and also only if there are no "
