@@ -922,7 +922,7 @@ static int _breath_fail(int base_fail)
 static int _breath_lvl(int base_lvl)
 {
     if (strchr("Zv", r_info[p_ptr->current_r_idx].d_char))
-        base_lvl = MIN(r_info[p_ptr->current_r_idx].level, base_lvl);
+        base_lvl = MIN(r_info[p_ptr->current_r_idx].level - 5, base_lvl);
 
     return MAX(1, base_lvl);
 }
@@ -1228,9 +1228,6 @@ int possessor_get_spells(spell_info* spells, int max)
         _add_spell(&spells[ct++], 48, 120, 90, summon_amberites_spell, stat_idx);
     if (ct < max && (r_ptr->flags6 & RF6_S_UNIQUE))
         _add_spell(&spells[ct++], 50, 150, 95, summon_uniques_spell, stat_idx);
-
-    if (ct == 0)
-        msg_print("You have no spells!");
 
     return ct;
 }
