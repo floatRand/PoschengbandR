@@ -1301,7 +1301,6 @@ B:0:R:Zombie:None
 B:0:R:Vampire:None
 B:0:R:Spectre:None
 B:0:R:Ent:None
-B:0:R:Balrog:None
 B:0:R:Android:None
 
 B:1:N:Mayor:Uldrik:Human

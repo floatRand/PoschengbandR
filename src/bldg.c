@@ -2122,7 +2122,10 @@ static bool inn_comm(int cmd)
                 return FALSE;
             }
 
-            msg_print("The barkeep gives you some gruel and a beer.");
+            if (p_ptr->prace == RACE_MON_DEMON || p_ptr->prace == RACE_BALROG)
+                msg_print("You devour a passing tavern-goer.");
+            else
+                msg_print("The barkeep gives you some gruel and a beer.");
 
             (void)set_food(PY_FOOD_MAX - 1);
             break;
