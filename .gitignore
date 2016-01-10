@@ -251,3 +251,6 @@ config.log
 config.status
 configure
 mk/buildsys.mk
+
+# Ctags
+tags
