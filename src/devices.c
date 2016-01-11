@@ -1665,6 +1665,15 @@ static cptr _do_scroll(int sval, int mode)
                 take_hit(DAMAGE_NOESCAPE, 50 + randint1(50), "a Scroll of Mana", -1);
         }
         break;
+    case SV_SCROLL_BANISHMENT:
+        if (desc) return "It teleports all monsters in sight away unless resisted.";
+        if (info) return info_power(_scroll_power(150));
+        if (cast)
+        {
+            if (banish_monsters(_scroll_power(150)))
+                device_noticed = TRUE;
+        }
+        break;
     }
     return "";
 }

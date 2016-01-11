@@ -1939,6 +1939,7 @@ enum {
 #define SV_SCROLL_ICE                   59
 #define SV_SCROLL_CHAOS                 60
 #define SV_SCROLL_MANA                  61
+#define SV_SCROLL_BANISHMENT            62
 
 /* The "sval" codes for TV_POTION */
 #define SV_POTION_WATER                  0

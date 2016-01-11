@@ -4296,6 +4296,14 @@ W:50:0:0:5:25000
 P:0:1d1:0:0:0
 F:INSTA_ART
 
+N:748:Banishment:wonto maroki
+G:?:w
+I:70:62:0
+W:80:0:0:5:5000
+A:80/3
+F:IGNORE_COLD | IGNORE_FIRE | IGNORE_ACID | IGNORE_ELEC
+M:20:1d3
+
 # N: serial number : & object name~
 # G: symbol : color
 # I: tval : sval : pval
