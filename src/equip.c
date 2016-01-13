@@ -1102,7 +1102,7 @@ void equip_calc_bonuses(void)
         if (o_ptr->name1 == ART_MAUL_OF_VICE)
             p_ptr->maul_of_vice = TRUE;
 
-        if (o_ptr->name1 == ART_STONE_LORE)
+        if (o_ptr->name1 == ART_STONE_LORE || o_ptr->name3 == ART_STONE_LORE)
             p_ptr->loremaster = TRUE;
 
         if (o_ptr->name2 == EGO_BOOTS_FAIRY || o_ptr->name2 == EGO_CLOAK_FAIRY)

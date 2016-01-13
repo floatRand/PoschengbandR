@@ -3846,7 +3846,7 @@ void calc_bonuses(void)
             p_ptr->rune_elem_prot = TRUE;
         if (o_ptr->rune == RUNE_GOOD_FORTUNE) 
             p_ptr->good_luck = TRUE;
-        if (o_ptr->name1 == ART_STONE_LORE)
+        if (o_ptr->name1 == ART_STONE_LORE || o_ptr->name3 == ART_STONE_LORE)
             p_ptr->loremaster = TRUE;
     }
 
