@@ -1896,7 +1896,7 @@ static bool _prompt(void)
 }
 
 #define AUTOROLLER_STEP 50
-#define AUTOROLLER_MAX 50 * 1000
+#define AUTOROLLER_MAX 500 * 1000
 #define AUTOROLLER_DELAY
 #define MAX_TRIES 100
 static s16b stat_limit[6];
@@ -3669,7 +3669,7 @@ auto_roller_barf:
                 put_str(format("%10d", auto_round), 10, col+20);
 
 #ifdef AUTOROLLER_DELAY
-                if (flag) Term_xtra(TERM_XTRA_DELAY, 10);
+                if (flag) Term_xtra(TERM_XTRA_DELAY, 1);
 #endif
 
                 /* Make sure they see everything */
