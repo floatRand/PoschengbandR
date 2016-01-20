@@ -1626,9 +1626,12 @@ s16b get_mon_num(int level)
         r_ptr = &r_info[r_idx];
 
         /* Hack: Camelot monsters only appear in Camelot. Olympians in Mt Olympus. Southerings in the Stronghold */
-        if ((r_ptr->flags2 & RF2_CAMELOT) && dungeon_type != DUNGEON_CAMELOT) continue;
-        if ((r_ptr->flags2 & RF2_SOUTHERING) && dungeon_type != DUNGEON_STRONGHOLD) continue;
-        if ((r_ptr->flags3 & RF3_OLYMPIAN) && dungeon_type != DUNGEON_OLYMPUS) continue;
+        if (!no_wilderness)
+        {
+            if ((r_ptr->flags2 & RF2_CAMELOT) && dungeon_type != DUNGEON_CAMELOT) continue;
+            if ((r_ptr->flags2 & RF2_SOUTHERING) && dungeon_type != DUNGEON_STRONGHOLD) continue;
+            if ((r_ptr->flags3 & RF3_OLYMPIAN) && dungeon_type != DUNGEON_OLYMPUS) continue;
+        }
 
         if (!p_ptr->inside_battle && !chameleon_change_m_idx)
         {
