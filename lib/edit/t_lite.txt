@@ -1295,13 +1295,6 @@ B:0:A:2:Listen for rumors:5:5:u:19:0
 B:0:A:3:Ask about your reputation:1:1:a:55:0
 B:0:A:4:Request quest:0:0:q:6:0
 B:0:R:*:Member
-B:0:R:Golem:None
-B:0:R:Skeleton:None
-B:0:R:Zombie:None
-B:0:R:Vampire:None
-B:0:R:Spectre:None
-B:0:R:Ent:None
-B:0:R:Android:None
 
 B:1:N:Mayor:Uldrik:Human
 B:1:A:0:Request quest:0:0:q:6:0
