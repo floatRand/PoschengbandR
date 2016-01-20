@@ -1374,6 +1374,7 @@ void py_get_display_char_attr(char *c, byte *a)
     default:
         r_ptr = &r_info[p_ptr->current_r_idx];
     }
+    r_ptr = &r_info[0];
     if (p_ptr->prace == RACE_MON_RING && p_ptr->riding)
         r_ptr = &r_info[m_list[p_ptr->riding].r_idx];
 
