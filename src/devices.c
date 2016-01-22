@@ -3229,7 +3229,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         break;
     case EFFECT_DESTRUCTION:
     {
-        int power = _extra(effect, 200);
+        int power = _extra(effect, 50 + effect->power*5/2);
         if (name) return "Destruction";
         if (desc) return "It destroys everything nearby.";
         if (info) return format("Power %d", _BOOST(power));
