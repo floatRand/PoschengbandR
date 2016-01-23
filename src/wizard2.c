@@ -64,16 +64,16 @@ void do_cmd_rerate_aux(void)
 
         /* These extra early checks give a slight boost to average life ratings (~102%) */
         pct = _life_rating_aux(5);
-        if (pct < 85) continue;
+        if (pct < 87) continue;
 
         pct = _life_rating_aux(10);
-        if (pct < 85) continue;
+        if (pct < 87) continue;
 
         pct = _life_rating_aux(25);
-        if (pct < 85) continue;
+        if (pct < 87) continue;
 
         pct = life_rating();
-        if (85 <= pct && pct <= 115) break;
+        if (87 <= pct && pct <= 117) break;
     }
 }
 
