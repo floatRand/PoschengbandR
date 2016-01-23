@@ -808,7 +808,8 @@ static void _cyber_calc_bonuses(void)
 
     res_add(RES_FIRE);
     res_add(RES_POIS);
-/*    res_add_vuln(RES_CONF); */
+/*  Cyberdemons are vulnerable to confusion. See res_pct_aux() in resist.c
+    res_add_vuln(RES_CONF); */
     
     p_ptr->hold_life = TRUE;
     p_ptr->no_eldritch = TRUE;
