@@ -3178,8 +3178,14 @@ void do_cmd_debug(void)
         break;
     }
     case ';':
-        py_display();
+    {
+        object_type forge;
+        object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
+        if (device_init_fixed(&forge, EFFECT_WALL_BUILDING))
+            add_outfit(&forge);
+        /*py_display();*/
         break;
+    }
     default:
         msg_print("That is not a valid debug command.");
         break;

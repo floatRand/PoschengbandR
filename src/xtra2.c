@@ -1625,7 +1625,8 @@ void monster_death(int m_idx, bool drop_item)
         }
 
         object_prep(&forge, k_idx);
-        apply_magic(&forge, object_level, mode);
+        if (!apply_magic(&forge, object_level, mode) && object_is_device(&forge))
+            apply_magic(&forge, object_level, 0);
         mass_produce(&forge);
         drop_near(&forge, -1, y, x);
     }
@@ -2094,7 +2095,7 @@ void monster_death(int m_idx, bool drop_item)
             msg_add_tiny_screenshot(50, 24);
         }
 
-        if ((a_idx > 0) && ((randint0(100) < chance) || p_ptr->wizard))
+        if (a_idx > 0 && randint0(100) < chance)
         {
             artifact_type *a_ptr = &a_info[a_idx];
 

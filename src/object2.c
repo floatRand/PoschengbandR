@@ -5776,7 +5776,7 @@ static bool _kind_hook(int k_idx) {
 bool kind_is_device(int k_idx) { 
     switch (k_info[k_idx].tval)
     {
-    case TV_POTION: case TV_SCROLL: case TV_WAND: case TV_ROD: case TV_STAFF:
+    case TV_WAND: case TV_ROD: case TV_STAFF:
         return TRUE;
     }
     return FALSE;
@@ -5932,7 +5932,17 @@ static bool _kind_is_lance(int k_idx) {
     return FALSE;
 }
 static bool _kind_is_bow(int k_idx) {
+    if (k_info[k_idx].tval == TV_BOW)
+        return TRUE;
+    return FALSE;
+}
+static bool _kind_is_bow2(int k_idx) {
     if (k_info[k_idx].tval == TV_BOW && k_info[k_idx].sval != SV_HARP) /* Assume tailored Archer reward, and a harp is just insulting! */
+        return TRUE;
+    return FALSE;
+}
+static bool _kind_is_ammo(int k_idx) {
+    if (TV_MISSILE_BEGIN <= k_info[k_idx].tval && k_info[k_idx].tval <= TV_MISSILE_END)
         return TRUE;
     return FALSE;
 }
@@ -5965,7 +5975,8 @@ static _kind_alloc_entry _kind_alloc_table[] = {
     { kind_is_other_armor,     210,    0,    0 },
     { kind_is_wand_rod_staff,   90,  -40,  -60 },
     { _kind_is_potion_scroll,  100,  -50,  -90 },
-    { kind_is_bow_ammo,         70,    0,    0 },
+    { _kind_is_bow,             40,    0,   25 },
+    { _kind_is_ammo,            30,    0,  -25 },
     { kind_is_book,             50,    0,    0 },
     { kind_is_jewelry,          40,    0,    0 },
     { kind_is_misc,             50,  -50,  -50 },
@@ -6018,7 +6029,7 @@ static _kind_p _choose_obj_kind(u32b mode)
         case CLASS_ARCHER:
         case CLASS_SNIPER:
             if (one_in_(5))
-                _kind_hook1 = _kind_is_bow;
+                _kind_hook1 = _kind_is_bow2;
             break;
         case CLASS_DEVICEMASTER:
             if (one_in_(5))
