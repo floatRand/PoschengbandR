@@ -431,7 +431,7 @@ P:Body:Snake
 D:It is about eight feet long.
 
 N:22:Blinking dot
-G:F:s
+G:,:s
 I:110:1d2:2:1:0:5
 W:1:1:10:3:0:0
 B:SPORE:CONFUSE:1d6
@@ -678,7 +678,7 @@ P:Body:Greater Hell-Beast
 D:This unholy abomination will crush you. Flee while you can!
 
 N:40:Shrieker mushroom patch
-G:F:R
+G:,:R
 I:110:1d1:4:1:0:5
 W:2:1:50:3:0:0
 F:FORCE_SLEEP | NEVER_MOVE | NEVER_BLOW | 
@@ -783,7 +783,7 @@ P:Life:85
 D:He is leaving behind a trail of dropped spell components.
 
 N:47:Yellow mushroom patch
-G:F:y
+G:,:y
 I:110:1d1:2:1:0:10
 W:2:1:20:3:10:72
 B:SPORE:TERRIFY:2d5
@@ -1133,7 +1133,7 @@ P:Body:Naga
 D:A large black serpent's body with a female torso.
 
 N:72:Spotted mushroom patch
-G:F:o
+G:,:o
 I:110:1d1:2:1:0:10
 W:3:1:30:4:20:108
 B:SPORE:POISON:2d8
@@ -1317,7 +1317,7 @@ P:Body:Jelly3
 D:It's a large pile of pulsing blue flesh.
 
 N:85:Creeping copper coins
-G:x:u
+G:$:u
 I:100:7d8:3:24:10:70
 W:4:2:40:9:40:117
 B:HIT:HURT:1d7
@@ -1630,7 +1630,7 @@ P:Body:Death-Sword
 D:A bloodthirsty blade lurking for prey. Beware! 
 
 N:108:Purple mushroom patch
-G:F:v
+G:,:v
 I:110:1d1:2:1:0:5
 W:6:2:40:15:0:0
 B:SPORE:LOSE_CON:1d3
@@ -1761,7 +1761,7 @@ P:Life:85
 D:A nasty little fellow with a bow and arrow.
 
 N:117:Creeping silver coins
-G:x:s
+G:$:s
 I:100:12d8:4:30:10:100
 W:6:2:40:18:50:195
 B:HIT:HURT:1d7
@@ -2156,7 +2156,7 @@ P:Body:Scrawny
 D:A large black and yellow lizard. You'd better run away!
 
 N:144:Space monster
-G:X:D
+G:.:d
 I:110:21d8:30:14:20:10
 W:8:2:40:28:0:0
 B:HIT:TERRIFY:1d5
@@ -2747,7 +2747,7 @@ D:distorted resemblance to the koala bear facially, though
 D:his body had an appearance of emaciation."
 
 N:184:Clear mushroom patch
-G:F:w
+G:,:w
 I:115:1d1:4:1:0:10
 W:10:2:40:3:0:0
 B:SPORE:HURT:1d1
@@ -2758,7 +2758,7 @@ F:NO_CONF | NO_SLEEP | NO_FEAR
 D:Yum! It looks quite tasty.
 
 N:185:Quiver slot
-G:F:U
+G:,:U
 I:120:1d1:4:1:0:2
 W:10:2:40:3:0:0
 B:SHOOT:HURT:2d5
@@ -2900,7 +2900,7 @@ D:It is a fast-moving demon that blinks quickly in and out of existence; no
 D:other demon matches its teleporting mastery.
 
 N:195:Creeping gold coins
-G:x:y
+G:$:y
 I:100:18d8:5:36:10:100
 W:10:3:40:32:150:239
 B:HIT:HURT:2d5
@@ -3065,7 +3065,7 @@ D:It looks very cute, except for the razor sharp teeth. It moans
 D:ominously as it jumps at your throat!
 
 N:206:Old Man Willow
-G:X:s
+G:#:s
 I:110:23d23:20:20:20:500
 W:22:5:999:150:0:0
 B:TOUCH:PARALYZE:3d6
@@ -3564,7 +3564,7 @@ P:Copy:Half-Ogre:Warrior
 D:A hideous, smallish giant that is often found near or with orcs.
 
 N:239:Creeping mithril coins
-G:x:B
+G:$:B
 I:110:20d8:5:50:10:120
 W:13:4:50:45:500:423
 B:HIT:HURT:2d5
@@ -3718,7 +3718,7 @@ D:empty, pale eyes and a sharp beak, which it aims at your eyes
 D:as it jumps at you! 
 
 N:250:Giant white dragon fly
-G:I:w
+G:F:w
 I:110:5d8:20:20:50:15
 W:14:3:50:60:0:0
 B:BITE:COLD:1d6
@@ -3979,7 +3979,7 @@ P:Body:Octopus
 D:It doesn't move very fast, but when it does - watch out!
 
 N:267:Magic mushroom patch
-G:F:B
+G:,:B
 I:130:1d1:40:10:0:10
 W:15:2:50:10:0:0
 F:FORCE_SLEEP | NEVER_MOVE | NEVER_BLOW | FRIENDS | 
@@ -4307,7 +4307,7 @@ D:transparent jelly structure you can see treasures it has engulfed, and a
 D:few corpses as well.
 
 N:287:Giant green dragon fly
-G:I:G
+G:F:G
 I:110:3d8:12:20:50:10
 W:16:2:50:70:0:0
 B:BITE:POISON:1d6
@@ -4665,7 +4665,7 @@ D:Saint Elmo's Fire forms a ghostly halo around this hound, and sparks sting
 D:your fingers as energy builds up in the air around you.
 
 N:310:Potion mimic
-G:x:w
+G:!:w
 I:110:10d10:25:30:0:2
 W:18:3:80:60:0:0
 B:HIT:POISON:3d4
@@ -4681,7 +4681,7 @@ D:A strange creature that disguises itself as discarded objects to lure
 D:unsuspecting adventurers within reach of its venomous claws.
 
 N:311:Door mimic
-G:x:U
+G:+:U
 I:110:10d10:25:30:0:30
 W:18:6:80:70:0:0
 B:HIT:POISON:3d4
@@ -4764,7 +4764,7 @@ D:A gruesomely ugly but cunning orc, his eyes regard you with hatred. His
 D:powerful arms flex menacingly as he advances.
 
 N:316:Shambling mound
-G:F:g
+G:,:g
 I:110:20d6:20:16:40:170
 W:18:2:999:75:0:0
 B:HIT:HURT:1d8
@@ -4827,7 +4827,7 @@ D:pincers instead of hands. She wears a rather indecent skimpy
 D:leather bikini, moves quickly and casts deadly spells!
 
 N:320:Giant bronze dragon fly
-G:I:U
+G:F:U
 I:120:3d8:12:20:50:10
 W:18:1:999:70:0:0
 F:FORCE_SLEEP | NEVER_BLOW | 
@@ -4859,7 +4859,7 @@ S:THROW
 D:It is eighteen feet tall and looking at you.
 
 N:322:Giant black dragon fly
-G:I:D
+G:F:D
 I:120:3d8:12:20:50:10
 W:18:2:999:68:0:0
 F:FORCE_SLEEP | NEVER_BLOW | RAND_50 | RAND_25 | 
@@ -4903,7 +4903,7 @@ D:It is a strange red growth on the dungeon floor; it seems to burn with
 D:flame.
 
 N:325:Giant gold dragon fly
-G:I:y
+G:F:y
 I:120:3d8:12:20:50:15
 W:18:2:999:78:0:0
 B:BITE:HURT:1d3
@@ -4921,7 +4921,7 @@ D:Large beating wings support this dazzling insect. A loud buzzing noise
 D:pervades the air.
 
 N:326:Stunwall
-G:X:W
+G:#:W
 I:110:4d8:45:25:0:500
 W:18:5:50:50:0:0
 B:TOUCH:PARALYZE:10d1
@@ -4963,7 +4963,7 @@ S:TELE_TO | HEAL | SCARE | CAUSE_2 | BLIND | S_MONSTER
 D:A devil ray of the depths, with priestly magic.
 
 N:329:Huorn
-G:X:g
+G:#:g
 I:110:50d10:40:45:20:350
 W:19:1:70:75:15000:708
 B:CRUSH:HURT:3d6
@@ -5078,7 +5078,7 @@ D:An agent of supernatural beings, this creature looks like a
 D:huge eagle.
 
 N:336:Livingstone
-G:X:W
+G:#:W
 I:110:6d8:45:28:20:500
 W:20:4:70:30:700:448
 B:HIT:HURT:2d5
@@ -5340,7 +5340,7 @@ S:BR_ELEC
 D:It is a glowing blue bat with a sharp tail.
 
 N:352:Scroll mimic
-G:x:w
+G:?:w
 I:110:10d14:30:40:0:1
 W:21:3:999:60:0:0
 B:HIT:POISON:3d4
@@ -5358,7 +5358,7 @@ D:A strange creature that disguises itself as discarded objects to lure
 D:unsuspecting adventurers within reach of its venomous claws.
 
 N:353:Chest mimic
-G:x:W
+G:&:W
 I:110:10d14:30:40:0:100
 W:21:6:999:70:0:0
 B:GAZE:CONFUSE:2d3
@@ -5555,7 +5555,7 @@ D:suppleness. There was a loud hissing of formulae as they
 D:went to and fro."
 
 N:365:Vampiric mist
-G:X:D
+G:#:D
 I:110:10d8:12:55:10:10
 W:22:1:60:40:0:0
 B:ENGULF:EXP_VAMP:2d6
@@ -6051,7 +6051,7 @@ D:A hideous centipede covered in slime and with glowing tentacles around its
 D:head.
 
 N:396:Xiclotlan
-G:X:D
+G:#:D
 I:110:25d25:15:60:10:400
 W:25:2:60:60:0:0
 B:CRUSH:HURT:6d4
@@ -6158,7 +6158,7 @@ P:Copy:Half-Troll:Warrior
 D:He is a giant troll with scabrous black skin.
 
 N:402:Black
-G:X:D
+G:j:d
 I:111:14d14:12:65:30:50
 W:25:3:60:50:0:0
 B:ENGULF:EXP_VAMP:2d6
@@ -6485,7 +6485,7 @@ D:It walks on four legs, but mostly resembles a slug-shaped jelly.
 D:It even has two disgusting antennae in its head. Yecch!
 
 N:423:Creeping adamantite coins
-G:x:G
+G:$:G
 I:120:20d25:5:50:10:100
 W:27:4:999:45:0:0
 B:BITE:POISON:3d4
@@ -6513,7 +6513,7 @@ P:Copy:Half-Troll:Warrior
 D:A powerful troll form. Venom drips from its needlelike claws.
 
 N:425:Flamer of Tzeentch
-G:F:R
+G:,:R
 I:110:60d15:10:70:20:50
 W:27:2:80:500:0:0
 B:ENGULF:FIRE:3d6
@@ -6526,7 +6526,7 @@ S:BO_FIRE | BA_FIRE
 D:It looks like an inverted mushroom, with two flexible arms.
 
 N:426:Roper
-G:X:D
+G:#:D
 I:115:70d12:30:60:255:400
 W:27:5:80:235:0:0
 B:CRUSH:PARALYZE:3d5
@@ -6737,7 +6737,7 @@ D:A wraithly snake-like form with the torso of a beautiful woman, it is the
 D:most powerful of its kind.
 
 N:437:Corpser
-G:F:g
+G:,:g
 I:112:30d15:20:75:120:100
 W:28:2:70:65:0:0
 B:CRUSH:HURT:2d8
@@ -6923,7 +6923,7 @@ D:A strange ox-like form with a huge head but a thin, weak neck, it looks
 D:like the creation of some deranged alchemist.
 
 N:448:Lesser wall monster
-G:X:W
+G:#:W
 I:110:13d8:20:75:40:500
 W:28:4:999:60:2000:718
 B:HIT:HURT:2d6
@@ -7083,7 +7083,7 @@ D:A lesser angel protected by an aura of holiness. Its muscular form looks
 D:extremely powerful next to your own frail body.
 
 N:457:Ring mimic
-G:x:w
+G:=:w
 I:120:10d35:30:60:100:2
 W:29:4:999:200:0:0
 B:HIT:POISON:3d4
@@ -7588,7 +7588,7 @@ P:Speed:+10
 D:A humanoid clothed in black who moves with blinding speed.
 
 N:486:Memory moss
-G:F:b
+G:,:b
 I:110:1d2:30:1:5:20
 W:32:3:999:150:0:0
 B:HIT:CONFUSE:1d4
@@ -8757,7 +8757,7 @@ D:A massive and cruel troll of great power, drool slides caustically down
 D:his muscular frame. Despite his bulk, he strikes with stunning speed.
 
 N:552:Mist giant
-G:X:B
+G:#:B
 I:120:35d20:20:50:50:400
 W:36:2:999:450:0:0
 B:CRUSH:HURT:4d8
@@ -8852,7 +8852,7 @@ D:It has a form that legends are made of. Beautiful scales of shimmering
 D:and magical colours cover it.
 
 N:557:Raal's Tome of Destruction
-G:x:r
+G:?:r
 I:120:50d10:20:150:15:10
 W:36:4:999:1500:0:0
 F:NEVER_MOVE | NEVER_BLOW | NONLIVING |
@@ -10163,7 +10163,7 @@ S:BR_ACID
 D:A huge draconic form. Pools of acid melt the floor around it.
 
 N:625:Weird fume
-G:X:v
+G:#:v
 I:120:35d10:100:40:0:50
 W:40:2:70:800:0:0
 B:ENGULF:CONFUSE:8d4
@@ -11181,7 +11181,7 @@ D:a master of light and dark. Its form disappears from sight as it cloaks
 D:itself in unearthly shadows.
 
 N:677:Dark young of Shub-Niggurath
-G:X:D
+G:#:D
 I:120:12d100:20:75:80:400
 W:43:2:999:5000:0:0
 B:CRUSH:HURT:5d6
@@ -11847,7 +11847,7 @@ D:horror and hatefulness and unutterable evil of that forbidden spawn
 D:of black chaos, and illimitable night."
 
 N:708:Ent
-G:X:G
+G:#:G
 I:120:40d100:30:120:15:800
 W:46:3:999:12500:0:0
 B:CRUSH:HURT:10d11
@@ -11947,7 +11947,7 @@ D:brother to win a treasure hoard, and then transformed himself into
 D:a dragon, greedily watching over his hoard.
 
 N:713:Fangorn
-G:X:G
+G:#:G
 I:120:50d100:30:120:15:900
 W:47:3:999:13500:0:0
 B:CRUSH:HURT:12d13
@@ -12057,7 +12057,7 @@ D:the tortures of Hel, the Norse place of punishment for the wicked
 D:and cowardly dead.
 
 N:718:Greater wall monster
-G:X:W
+G:#:W
 I:120:15d40:20:80:20:500
 W:50:4:90:500:0:0
 B:HIT:HURT:3d6
@@ -12996,7 +12996,7 @@ D:a great wave of iridescent blackness, neither liquid nor solid,
 D:a frightful gelatinous mass."
 
 N:761:Ahtu, Avatar of Nyarlathotep
-G:X:D
+G:#:D
 I:130:50d110:30:120:15:2000
 W:56:3:999:22500:0:0
 B:CRUSH:HURT:13d13
@@ -14001,7 +14001,7 @@ D:A massive pile of rotting flesh. A disgusting stench fills the air as it
 D:throbs and writhes.
 
 N:803:Null the Living Void
-G:X:d
+G:.:d
 I:120:50d100:30:100:20:100
 W:72:2:999:32500:0:0
 B:TOUCH:LOSE_ALL:6d16
@@ -15524,7 +15524,7 @@ D:the Serpent. Unless it is stopped, the word as we know it will come to
 D:an end, all order reverting to Primal Chaos.
 
 N:863:Quantum dot
-G:F:v
+G:,:v
 I:110:4d2:20:100:0:5
 W:35:5:70:50:0:0
 B:SPORE:LOSE_ALL:2d4
@@ -15947,7 +15947,7 @@ S:BR_NETH | BR_MANA | S_HI_UNDEAD | S_HI_DRAGON | S_UNIQUE |
 S:BR_NUKE | BR_DISI | HAND_DOOM | DISPEL | ANTI_MAGIC
 
 N:884:Noxious fume
-G:X:y
+G:#:y
 I:90:3d3:20:37:30:50
 W:20:4:50:15:0:0
 B:TOUCH:POISON:3d3
@@ -15960,7 +15960,7 @@ F:NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN |
 D:It is a swirling cloud of yellowish gas.
 
 N:885:Shallow puddle
-G:x:B
+G:~:B
 I:115:9d6:10:17:0:10
 W:11:6:30:70:0:0
 B:TOUCH:ACID:2d3
@@ -16180,7 +16180,7 @@ D:A howling blast of razor-sharp mountain fragments, kept intact by perilous
 D:magics.
 
 N:898:Granite wall
-G:X:w
+G:#:w
 I:100:15d15:15:120:10:700
 W:30:2:70:350:0:0
 B:TOUCH:ACID:8d8
@@ -16235,7 +16235,7 @@ D:can cut your throat and you won't notice till you nod.
 P:Copy:Demigod:Warrior
 
 N:902:Magma intrusion
-G:X:D
+G:%:D
 I:100:15d25:15:120:10:600
 W:25:2:60:100:700:898
 B:TOUCH:FIRE:5d5
@@ -16261,7 +16261,7 @@ S:DARKNESS | BO_ACID | HOLD
 D:A kraken with a tough, scaly hide.
 
 N:904:Chaos mushroom
-G:F:g
+G:,:g
 I:120:16d6:10:4:2:20
 W:23:3:70:360:0:0
 B:SPORE:POISON:3d4
@@ -16364,7 +16364,7 @@ D:An ingenious gnomish invention -- a golem designed for underwater
 D:usage.
 
 N:911:Quartz vein
-G:X:w
+G:%:w
 I:100:15d11:15:30:10:600
 W:18:2:60:40:500:902
 B:TOUCH:ELEC:3d3
@@ -16591,7 +16591,7 @@ S:BR_COLD | BO_COLD | BA_COLD
 
 # Description in English by Nick Keulmann
 N:924:Goomba
-G:F:U
+G:,:U
 I:110:4d4:20:20:20:30
 W:2:1:20:5:100:951
 B:BITE:HURT:1d8
@@ -16979,7 +16979,7 @@ D:presence makes you deeply respect it. Few creatures can match the powers
 D:of a Solar; fewer still live to tell the tale after attacking one.
 
 N:944:Deep puddle
-G:x:b
+G:~:b
 I:125:17d6:15:40:0:30
 W:23:6:60:70:0:0
 B:TOUCH:ACID:4d3
@@ -17251,7 +17251,7 @@ P:Body:Jelly5
 D:A mysterious green jelly thing. It looks ready to explode.
 
 N:962:Slime Mold
-G:F:g
+G:,:g
 I:105:2d8:1:0:10:15
 W:12:4:30:10:0:0
 B:TOUCH:POISON:2d5
@@ -17293,7 +17293,7 @@ F:KAGE
 D:Nobody knows its true character.
 
 N:965:Statue of Chest mimic mimic
-G:x:W
+G:`:W
 I:110:10d14:30:40:0:100
 W:21:6:999:70:0:0
 B:GAZE:CONFUSE:2d3
@@ -19285,7 +19285,7 @@ D:know that they are invisible because we can't see them."
 D:(Steve Eley)
 
 N:1080:Flying Spaghetti Monster
-G:F:y
+G:,:y
 B:HIT:HURT:10d10
 I:125:91d111:40:111:40:400
 W:70:3:999:45678:0:0
@@ -19460,7 +19460,7 @@ D:This sluggish lizard-like being approaches you with a large knife brandished.
 D:It wears a crown of gold, and erratically stumbles towards you.
 
 N:1090:The Hoard
-G:x:y
+G:$:y
 I:115:40d25:20:80:10:500
 W:30:5:999:1000:0:0
 B:CRUSH:POISON:3d7
