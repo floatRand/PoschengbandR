@@ -833,7 +833,7 @@ static void _cyber_move_player(void)
     {
         int i;
     
-        msg_print("The dungeon trembles!");
+        cmsg_print(TERM_RED, "The dungeon trembles!");
         if (disturb_minor)
             disturb(0, 0);
 

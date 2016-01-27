@@ -5138,7 +5138,7 @@ bool get_rep_dir(int *dp, bool under)
             msg_print("You are confused.");
         }
         else if (p_ptr->move_random)
-            msg_print("You are moving erratically.");
+            cmsg_print(TERM_YELLOW, "You are moving erratically.");
         else
         {
             char m_name[80];
