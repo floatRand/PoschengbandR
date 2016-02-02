@@ -3494,7 +3494,7 @@ void calc_bonuses(void)
         p_ptr->weapon_info[i].heavy_wield = FALSE;
         p_ptr->weapon_info[i].icky_wield = FALSE;
         p_ptr->weapon_info[i].riding_wield = FALSE;
-        p_ptr->weapon_info[i].giant_wield = FALSE;
+        p_ptr->weapon_info[i].giant_wield = 0;
 
         p_ptr->weapon_info[i].info_attr = TERM_WHITE;
         p_ptr->weapon_info[i].info = 0;

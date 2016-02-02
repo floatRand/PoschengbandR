@@ -1259,6 +1259,7 @@ static cptr do_life_spell(int spell, int mode)
             if (cast)
             {
                 if (!ident_spell(NULL)) return NULL;
+                /*identify_pack();*/
             }
         }
         break;

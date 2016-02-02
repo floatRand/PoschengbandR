@@ -1115,9 +1115,9 @@ void equip_calc_bonuses(void)
             int rhand = arm*2;
             int lhand = arm*2 + 1;
             if (p_ptr->weapon_info[rhand].wield_how == WIELD_TWO_HANDS)
-                p_ptr->weapon_info[rhand].giant_wield = TRUE;
+                p_ptr->weapon_info[rhand].giant_wield = o_ptr->pval;
             else if (p_ptr->weapon_info[lhand].wield_how == WIELD_TWO_HANDS)
-                p_ptr->weapon_info[lhand].giant_wield = TRUE;
+                p_ptr->weapon_info[lhand].giant_wield = o_ptr->pval;
         }
 
         if (o_ptr->rune)
