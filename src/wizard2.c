@@ -3083,10 +3083,10 @@ void do_cmd_debug(void)
             switch (lev)
             {
             case 30: reps =  5; break;
-            case 40: reps = 10; break;
-            case 60: reps = 10; break;
-            case 80: reps = 10; break;
-            case 98: reps = 15; break;
+            case 40: reps =  5; break;
+            case 60: reps =  5; break;
+            case 80: reps =  5; break;
+            case 98: reps =  5; break;
             }
 
             _wiz_gather_stats(DUNGEON_ANGBAND, lev, reps);

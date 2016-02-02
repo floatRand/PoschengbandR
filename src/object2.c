@@ -5970,14 +5970,14 @@ typedef struct {
     int     great;
 } _kind_alloc_entry;
 static _kind_alloc_entry _kind_alloc_table[] = {
-    { kind_is_weapon,          200,    0,    0 },
-    { kind_is_body_armor,      190,    0,    0 },
+    { kind_is_weapon,          210,    0,    0 },
+    { kind_is_body_armor,      200,    0,    0 },
     { kind_is_other_armor,     210,    0,    0 },
     { kind_is_wand_rod_staff,   90,  -40,  -60 },
     { _kind_is_potion_scroll,  100,  -50,  -90 },
-    { _kind_is_bow,             40,    0,   25 },
+    { _kind_is_bow,             45,    0,   25 },
     { _kind_is_ammo,            30,    0,  -25 },
-    { kind_is_book,             50,    0,    0 },
+    { kind_is_book,             25,   10,   15 },
     { kind_is_jewelry,          40,    0,    0 },
     { kind_is_misc,             50,  -50,  -50 },
     { NULL, 0}
@@ -6105,7 +6105,7 @@ static _kind_p _choose_obj_kind(u32b mode)
         }
         if (!_kind_hook1)
         {
-            if (is_magic(p_ptr->realm1) && one_in_(5))
+            if (is_magic(p_ptr->realm1) && one_in_(10))
                 _kind_hook1 = kind_is_book;
             else if (_is_device_class() && one_in_(7))
                 _kind_hook1 = kind_is_wand_rod_staff;
