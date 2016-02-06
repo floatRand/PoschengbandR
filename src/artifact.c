@@ -3084,6 +3084,10 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
     {
         object_prep(&forge2, forge1.k_idx);
         create_artifact(&forge2, CREATE_ART_GOOD);
+        // Copy the activation over. This is okay because picking activation
+        // on randarts is independent of everything else.
+        forge2.activation = a_info[a_idx].activation;
+        forge2.timeout = 0;
         power = object_value_real(&forge2);
 
         if (power > best_power)
