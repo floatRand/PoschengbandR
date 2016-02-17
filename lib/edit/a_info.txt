@@ -625,7 +625,7 @@ D:shielded by his cloak from a multitude of hostile eyes.
 
 N:52:'Cambeleg'
 I:31:1:2
-W:10:6:5:36000
+W:30:6:5:36000
 P:1:0d0:8:8:15
 F:STR | CON | HIDE_TYPE | FREE_ACT | SHOW_MODS
 D:A hero's handgear that lends great prowess in battle.
