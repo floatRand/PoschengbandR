@@ -19,6 +19,7 @@ struct doc_s
     int_map_ptr    links;
     vec_ptr        style_stack;
     string_ptr     name;
+    string_ptr     html_header;
 };
 
 doc_pos_t doc_pos_create(int x, int y)
@@ -227,6 +228,7 @@ doc_ptr doc_alloc(int width)
     res->links = int_map_alloc(_doc_link_free);
     res->style_stack = vec_alloc(free);
     res->name = string_alloc();
+    res->html_header = string_alloc();
 
     /* Default Styles */
     _add_doc_style_f(res, "normal", _normal_style);
@@ -259,6 +261,7 @@ void doc_free(doc_ptr doc)
         int_map_free(doc->links);
         vec_free(doc->style_stack);
         string_free(doc->name);
+        string_free(doc->html_header);
 
         free(doc);
     }
@@ -268,6 +271,12 @@ void doc_change_name(doc_ptr doc, cptr name)
 {
     string_clear(doc->name);
     string_append_s(doc->name, name);
+}
+
+void doc_change_html_header(doc_ptr doc, cptr header)
+{
+    string_clear(doc->html_header);
+    string_append_s(doc->html_header, header);
 }
 
 doc_pos_t doc_cursor(doc_ptr doc)
@@ -1334,7 +1343,10 @@ static void _doc_write_html_file(doc_ptr doc, FILE *fp)
     if (link_idx < vec_length(links))
         next_link = vec_get(links, link_idx);
 
-    fprintf(fp, "<html>\n<body text=\"#ffffff\" bgcolor=\"#000000\"><pre>\n");
+    fprintf(fp, "<!DOCTYPE html>\n<html>\n");
+    if (string_length(doc->html_header))
+        fprintf(fp, "%s\n", string_buffer(doc->html_header));
+    fprintf(fp, "<body text=\"#ffffff\" bgcolor=\"#000000\"><pre>\n");
 
     for (pos.y = 0; pos.y <= doc->cursor.y; pos.y++)
     {

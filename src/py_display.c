@@ -2369,8 +2369,24 @@ void py_display(void)
 {
     doc_ptr    d = doc_alloc(80);
     string_ptr s = string_alloc_format("%s.txt", player_base);
+    string_ptr header = string_alloc();
 
     doc_change_name(d, string_buffer(s));
+
+    string_append_s(header, "<head>\n");
+    string_append_s(header, " <meta name='filetype' value='character dump'>\n");
+    string_printf(header,  " <meta name='variant' value='%s'>\n", VERSION_NAME);
+    string_printf(header,  " <meta name='variant_version' value='%d.%d.%d'>\n", VER_MAJOR, VER_MINOR, VER_PATCH);
+    string_printf(header,  " <meta name='character_name' value='%s'>\n", player_name);
+    string_printf(header,  " <meta name='race' value='%s'>\n", get_race()->name);
+    string_printf(header,  " <meta name='class' value='%s'>\n", get_class()->name);
+    string_printf(header,  " <meta name='level' value='%d'>\n", p_ptr->lev);
+    string_printf(header,  " <meta name='experience' value='%d'>\n", p_ptr->exp);
+    string_printf(header,  " <meta name='turncount' value='%d'>\n", game_turn);
+    string_printf(header,  " <meta name='fame' value='%d'>\n", p_ptr->fame);
+    string_append_s(header, "</head>");
+    doc_change_html_header(d, string_buffer(header));
+
     py_display_character_sheet(d);
 
     screen_save();
@@ -2379,6 +2395,7 @@ void py_display(void)
 
     doc_free(d);
     string_free(s);
+    string_free(header);
 }
 
 /* This is used by the birth process ... Note that there
