@@ -74,10 +74,10 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:3
 ?:[EQU $QUEST3 2]
 F:b:BUILDING_1:3:0:0:0:0:NONE:3
 
-# Quest 3 rewarding, reward is Rod: Chaos Bolt
+# Quest 3 rewarding, reward is Rod: Chaos Strike
 ?:[EQU $QUEST3 3]
 F:b:BUILDING_1:3:0:0:0:0:NONE:4
-F:!:FLOOR:3:0:271:313
+F:!:FLOOR:3:0:271:359
 
 
 # Quest 3 finished
