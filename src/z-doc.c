@@ -1211,6 +1211,17 @@ doc_pos_t doc_insert_cols(doc_ptr dest_doc, doc_ptr src_cols[], int col_count, i
 
                 for (j = 0; j < count; j++)
                 {
+                    /* Hack: Attempt to prevent trailing spaces. For some reason,
+                       this is causing oook to not display character dumps properly
+                       from Windows builds. Interestingly, oook displays files correctly
+                       from Linux even without this hack, which is puzzling since
+                       the files seem identical on both platforms.*/
+                    if (i == col_count - 1 && !src->c)
+                    {
+                        count = j;
+                        break;
+                    }
+
                     dest->a = src->a;
                     dest->c = src->c;
 
@@ -1222,6 +1233,9 @@ doc_pos_t doc_insert_cols(doc_ptr dest_doc, doc_ptr src_cols[], int col_count, i
                 }
             }
             dest_pos.x += count;
+
+            if (i == col_count - 1)
+                break;
 
             /* Spacing between columns */
             count = spacing;
@@ -1300,7 +1314,8 @@ static void _doc_write_text_file(doc_ptr doc, FILE *fp)
             fputc(cell->c, fp);
             cell++;
         }
-        fputc('\n', fp);
+        fprintf(fp, "\n");
+        /*fputc('\n', fp);*/
    }
 }
 
