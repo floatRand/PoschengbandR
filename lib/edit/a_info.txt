@@ -2338,12 +2338,12 @@ E:BALL_DARK:50:100:250
 E:Your collar harness is covered in pitch-darkness...
 
 N:219:Charmed Pendant
-I:40:0:2
+I:40:0:3
 W:50:50:2:100000
 P:0:0d0:0:0:5
 F:INT | CHR | INFRA | SEARCH | HIDE_TYPE | FULL_NAME |
 F:SEE_INVIS | FREE_ACT | SLOW_DIGEST | REGEN | LITE | WARNING |
-F:SH_FIRE | SH_ELEC | SH_COLD | EASY_SPELL
+F:SH_FIRE | SH_ELEC | SH_COLD | EASY_SPELL | MAGIC_MASTERY
 E:RESTORE_MANA:50:777
 E:Your pendant glows pale...
 
@@ -2351,7 +2351,7 @@ N:220:of Gogo
 I:40:0:4
 W:50:50:2:55555
 P:0:0d0:0:0:0
-F:INT | WIS | DEX | 
+F:INT | WIS | DEX |
 F:SEE_INVIS | LITE |
 
 N:221:of Robin Hood
