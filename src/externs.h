@@ -1253,6 +1253,7 @@ typedef void (*debug_hook)(cptr msg);
 extern debug_hook cost_calc_hook;
 enum { COST_REAL = 0x01 };
 extern s32b weapon_cost(object_type *o_ptr, int options);
+extern s32b ammo_cost(object_type *o_ptr, int options);
 extern s32b bow_cost(object_type *o_ptr, int options);
 extern s32b armor_cost(object_type *o_ptr, int options);
 extern s32b jewelry_cost(object_type *o_ptr, int options);

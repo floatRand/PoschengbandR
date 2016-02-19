@@ -1301,6 +1301,7 @@ s32b object_value_real(object_type *o_ptr)
        So use the new algorithms whenever possible.
     */
     if (object_is_melee_weapon(o_ptr)) return weapon_cost(o_ptr, COST_REAL);
+    if (object_is_ammo(o_ptr)) return ammo_cost(o_ptr, COST_REAL);
     if (o_ptr->tval == TV_BOW) return bow_cost(o_ptr, COST_REAL);
     if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr, COST_REAL);
     if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr, COST_REAL);
@@ -1545,6 +1546,8 @@ s32b object_value(object_type *o_ptr)
             value = weapon_cost(o_ptr, 0);
         else if (o_ptr->tval == TV_BOW)
             value = bow_cost(o_ptr, 0);
+        else if (object_is_ammo(o_ptr))
+            value = ammo_cost(o_ptr, 0);
         else if (object_is_armour(o_ptr) || object_is_shield(o_ptr))
             value = armor_cost(o_ptr, 0);
         else if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr)))
