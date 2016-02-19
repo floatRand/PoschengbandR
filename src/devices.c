@@ -705,7 +705,7 @@ static cptr _do_potion(int sval, int mode)
         }
         break;
     case SV_POTION_RESTORE_MANA:
-        if (desc) return "It restores mana to full and cures berserk when you quaff it.";
+        if (desc) return "It restores mana to full and cures berserk when you quaff it. It also partially recharges any devices in your pack.";
         if (cast)
         {
             if (restore_mana()) device_noticed = TRUE;
@@ -4364,7 +4364,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_RESTORE_MANA:
         if (name) return "Restore Mana";
-        if (desc) return "It completely restores your mana.";
+        if (desc) return "It completely restores your mana. It also partially recharges any devices in your pack.";
         if (value) return format("%d", 20000);
         if (color) return format("%d", TERM_L_BLUE);
         if (cast)
