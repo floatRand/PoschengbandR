@@ -2340,8 +2340,8 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_EARTHQUAKE,            20,  10,     1,  40,     0, 0},
     {EFFECT_HEAL,                  20,  10,     2,  60,    50, 0}, /* Cure Wounds for 50hp */
     {EFFECT_CURING,                25,  12,     1,  50,     0, 0}, /* Curing no longer heals */
-    {EFFECT_SUMMON_HOUNDS,         27,  25,     1,  40,     0, 0},
-    {EFFECT_SUMMON_HYDRAS,         27,  25,     1,  40,     0, 0},
+    {EFFECT_SUMMON_HOUNDS,         27,  25,     2,  40,     0, 0},
+    {EFFECT_SUMMON_HYDRAS,         27,  25,     3,  40,     0, 0},
     {EFFECT_SUMMON_ANTS,           27,  20,     1,  40,     0, 0},
     {EFFECT_PROBING,               30,  15,     1,  40,     0, 0},
     {EFFECT_TELEPATHY,             30,  16,     2,  60,     0, 0},
@@ -2350,7 +2350,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_SLOWNESS,              40,  19,     1,  50,     0, 0},
     {EFFECT_SPEED,                 40,  19,     1,  60,     0, 0},
     {EFFECT_IDENTIFY_FULL,         40,  20,     2,  70,     0, 0},
-    {EFFECT_REMOVE_CURSE,          40,  20,     1,  50,     0, 0},
+    {EFFECT_REMOVE_CURSE,          40,  20,     2,  50,     0, 0},
     {EFFECT_DISPEL_DEMON,          50,  21,     2,  70,     0, 0},
     {EFFECT_DISPEL_UNDEAD,         50,  21,     2,  70,     0, 0},
     {EFFECT_DISPEL_LIFE,           50,  22,     2,  70,     0, 0},

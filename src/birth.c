@@ -737,6 +737,11 @@ static bool _valid_class(int which)
         if (p_ptr->prace == RACE_CENTAUR)
             return FALSE;
     }
+    if (which == CLASS_DUELIST || which == CLASS_MAULER)
+    {
+        if (p_ptr->prace == RACE_TONBERRY)
+            return FALSE;
+    }
     return TRUE;
 }
 

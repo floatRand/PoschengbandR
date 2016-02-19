@@ -6220,7 +6220,12 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
             char           name[255];
             int            idx = ego_idx[ego_top + i];
             ego_item_type *e_ptr = &e_info[idx];
-            byte           attr = (i + ego_top == ego_cur) ? TERM_L_BLUE : TERM_WHITE;
+            byte           attr = TERM_WHITE;
+
+            if (i + ego_top == ego_cur)
+                attr = TERM_L_BLUE;
+            else if (!e_ptr->aware)
+                attr = TERM_L_DARK;
 
             strip_name_aux(name, e_name + e_ptr->name); 
             sprintf(buf, "%-35.35s %5d %6d %4d", 
