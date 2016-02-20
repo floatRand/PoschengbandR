@@ -874,8 +874,12 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     _display_curses(o_ptr, flgs, doc);
     _display_ignore(o_ptr, flgs, doc);
 
-    if (!(o_ptr->ident & IDENT_FULL))
-        doc_printf(doc, "This object may have additional powers.\n");
+    if (object_is_ego(o_ptr) && !ego_is_aware(o_ptr->name2))
+        doc_printf(doc, "You are unfamiliar with this ego type. To learn the basic attributes of this ego type, you need to *identify* or sell this object.\n");
+    else if (object_is_artifact(o_ptr) && !(o_ptr->ident & IDENT_FULL))
+        doc_printf(doc, "This object is an artifact, a unique object whose powers you must learn by *identifying* or selling this object.\n");
+    else if (!(o_ptr->ident & IDENT_FULL))
+        doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
 
     _display_autopick(o_ptr, doc);
 
@@ -1009,8 +1013,11 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     }
 
     doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
-    if (!(o_ptr->ident & IDENT_FULL))
-        doc_printf(doc, "This object may have additional powers.\n");
+
+    if (object_is_ego(o_ptr) && !(o_ptr->ident & IDENT_FULL))
+        doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
+    else if (!(o_ptr->ident & IDENT_FULL))
+        doc_printf(doc, "You may *identify* or sell this object to learn more about this device.\n");
 
     _display_ignore(o_ptr, flgs, doc);
 
