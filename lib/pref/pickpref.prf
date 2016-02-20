@@ -183,6 +183,7 @@ Iron Spike#@v0
 !average common weapons
 !average common shooters
 !average common armors
+!cursed nameless common items
 ?:1
 
 ?:[LEQ $LEVEL 34]

@@ -6224,7 +6224,7 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
 
             if (i + ego_top == ego_cur)
                 attr = TERM_L_BLUE;
-            else if (!e_ptr->aware)
+            else if (!ego_is_aware(idx))
                 attr = TERM_L_DARK;
 
             strip_name_aux(name, e_name + e_ptr->name); 

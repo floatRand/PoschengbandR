@@ -1562,9 +1562,9 @@ s32b object_value(object_type *o_ptr)
         if (!(o_ptr->ident & IDENT_FULL))
         {
             if (o_ptr->name2 && !e_info[o_ptr->name2].aware)
-                value += 500;
+                value += 500 / o_ptr->number;
             else if (object_is_artifact(o_ptr))
-                value += 1000;
+                value += 1000 / o_ptr->number;
         }
     }
     else
@@ -1575,9 +1575,9 @@ s32b object_value(object_type *o_ptr)
         if ((o_ptr->ident & IDENT_SENSE) && object_is_cursed(o_ptr))
             value /= 3;
         if ((o_ptr->ident & IDENT_SENSE) && object_is_ego(o_ptr))
-            value += 500;
+            value += 500 / o_ptr->number;
         if ((o_ptr->ident & IDENT_SENSE) && object_is_artifact(o_ptr))
-            value += 1000;
+            value += 1000 / o_ptr->number;
     }
     if (o_ptr->discount) 
         value -= (value * o_ptr->discount / 100L);
