@@ -5570,6 +5570,7 @@ enum mon_save_fields_e {
 #define CUT_BAD            25
 #define CUT_LIGHT          10
 #define CUT_GRAZE           1
+#define CUT_NONE            0
 
 /* object_type.rune */
 #define RUNE_ABSORPTION           1

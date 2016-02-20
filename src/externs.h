@@ -1696,6 +1696,8 @@ extern bool set_oppose_cold(int v, bool do_dec);
 extern bool set_oppose_pois(int v, bool do_dec);
 extern bool set_stun(int v, bool do_dec);
 extern bool set_cut(int v, bool do_dec);
+typedef struct { int level; int dam; cptr desc; byte attr; } cut_info_t;
+extern cut_info_t cut_info(int v);
 extern bool set_food(int v);
 extern bool inc_stat(int stat);
 extern bool dec_stat(int stat, int amount, int permanent);

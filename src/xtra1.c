@@ -1752,29 +1752,10 @@ static bool prt_speed(int row, int col)
  *****************************************************************************/
 static void prt_cut(int row, int col)
 {
-    int c = p_ptr->cut;
+    cut_info_t cut = cut_info(p_ptr->cut);
 
-    if (c >= CUT_MORTAL_WOUND)
-        c_put_str(TERM_L_RED, "Mortal Wound", row, col);
-
-    else if (c >= CUT_DEEP_GASH)
-        c_put_str(TERM_RED, "Deep Gash", row, col);
-
-    else if (c >= CUT_SEVERE)
-        c_put_str(TERM_RED, "Severe Cut", row, col);
-
-    else if (c >= CUT_NASTY)
-        c_put_str(TERM_ORANGE, "Nasty Cut", row, col);
-
-    else if (c >= CUT_BAD)
-        c_put_str(TERM_ORANGE, "Bad Cut", row, col);
-
-    else if (c >= CUT_LIGHT)
-        c_put_str(TERM_YELLOW, "Light Cut", row, col);
-
-    else if (c >= CUT_GRAZE)
-        c_put_str(TERM_YELLOW, "Graze", row, col);
-
+    if (cut.level != CUT_NONE)
+        c_put_str(cut.attr, cut.desc, row, col);
 }
 
 
