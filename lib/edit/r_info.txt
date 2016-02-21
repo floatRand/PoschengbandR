@@ -11080,7 +11080,7 @@ D:of innumerable sailors!
 
 N:670:Jack of Shadows
 G:p:s
-I:150:30d100:70:150:4:150
+I:130:30d100:70:150:4:150
 W:42:4:999:10000:0:0
 B:HIT:HURT:5d10
 B:HIT:HURT:5d10
@@ -11092,14 +11092,14 @@ F:RES_TELE | HUMAN | THIEF
 F:ONLY_ITEM | DROP_1D2 | DROP_GOOD | DROP_GREAT | UNIQUE |
 F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR | SMART | POWERFUL |
 F:DROP_SKELETON | DROP_CORPSE | POS_TELEPATHY
-S:1_IN_3
+S:1_IN_4
 S:BLIND | HEAL | BA_DARK | HASTE | CONF | TRAPS
 D:Deriving his strength from the shadows, this king of thieves 
 D:steals only for the challenge.
 P:Copy:High-Elf:Rogue
 P:Skills:0:0:0:7:0:0:0:0
 P:Life:90
-P:Speed:+20
+P:Speed:+15
 
 N:671:Zephyr Lord
 G:W:v
