@@ -2365,6 +2365,22 @@ void py_display_character_sheet(doc_ptr doc)
     doc_insert(doc, "</style>");
 }
 
+static int _max_depth(void)
+{
+    int result = 0;
+    int i;
+
+    for(i = 1; i < max_d_idx; i++)
+    {
+        if (!d_info[i].maxdepth) continue;
+        if (d_info[i].flags1 & DF1_RANDOM) continue;
+        if (!max_dlv[i]) continue;
+        result = MAX(result, max_dlv[i]);
+    }
+
+    return result;
+}
+
 void py_display(void)
 {
     doc_ptr    d = doc_alloc(80);
@@ -2383,6 +2399,8 @@ void py_display(void)
     string_printf(header,  " <meta name='level' value='%d'>\n", p_ptr->lev);
     string_printf(header,  " <meta name='experience' value='%d'>\n", p_ptr->exp);
     string_printf(header,  " <meta name='turncount' value='%d'>\n", game_turn);
+    string_printf(header,  " <meta name='max_depth' value='%d'>\n", _max_depth());
+    string_printf(header,  " <meta name='score' value='%d'>\n", p_ptr->exp); /* ?? Does oook need this? */
     string_printf(header,  " <meta name='fame' value='%d'>\n", p_ptr->fame);
     string_append_s(header, "</head>");
     doc_change_html_header(d, string_buffer(header));
