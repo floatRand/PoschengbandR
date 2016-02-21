@@ -2269,11 +2269,6 @@ static void store_sell(void)
     else if (cur_store_num == STORE_MUSEUM)
         q = "Give which item? ";
 
-    else if (no_selling)
-    {
-        msg_print("Selling is prohibited!");
-        return;
-    }
     else
         q = "Sell which item? ";
 
@@ -3215,8 +3210,7 @@ void do_cmd_store(void)
         else
         {
             prt("p) Purchase an item", 21 + xtra_stock, 30);
-            if (!no_selling)
-                prt("s) Sell an item", 22 + xtra_stock, 30);
+            prt("s) Sell an item", 22 + xtra_stock, 30);
             prt("x) eXamine an item", 23 + xtra_stock,30);
             if (rogue_like_commands) /* P -> b coincidentally and 'P'urchase entire stock works */
                 prt("  P) Purchase entire stock", 23 + xtra_stock, 56);

@@ -334,7 +334,6 @@ extern bool ironman_quests; /* Random quests must be completed */
 extern bool random_artifacts;
 extern bool no_artifacts;
 extern bool no_egos;
-extern bool no_selling;
 extern bool enable_virtues;
 
 /*** Easy Object Auto-Destroyer ***/
