@@ -158,19 +158,19 @@ void gain_chosen_stat(void)
         char tmp[32];
 
         cnv_stat(p_ptr->stat_max[0], tmp);
-        prt(format("        a) Str (cur %s)", tmp), 2, 14);
+        put_str(format("        a) Str (cur %6.6s)              ", tmp), 2, 14);
         cnv_stat(p_ptr->stat_max[1], tmp);
-        prt(format("        b) Int (cur %s)", tmp), 3, 14);
+        put_str(format("        b) Int (cur %6.6s)              ", tmp), 3, 14);
         cnv_stat(p_ptr->stat_max[2], tmp);
-        prt(format("        c) Wis (cur %s)", tmp), 4, 14);
+        put_str(format("        c) Wis (cur %6.6s)              ", tmp), 4, 14);
         cnv_stat(p_ptr->stat_max[3], tmp);
-        prt(format("        d) Dex (cur %s)", tmp), 5, 14);
+        put_str(format("        d) Dex (cur %6.6s)              ", tmp), 5, 14);
         cnv_stat(p_ptr->stat_max[4], tmp);
-        prt(format("        e) Con (cur %s)", tmp), 6, 14);
+        put_str(format("        e) Con (cur %6.6s)              ", tmp), 6, 14);
         cnv_stat(p_ptr->stat_max[5], tmp);
-        prt(format("        f) Chr (cur %s)", tmp), 7, 14);
-        prt("", 8, 14);
-        prt("        Which stat do you want to raise?", 1, 14);
+        put_str(format("        f) Chr (cur %6.6s)              ", tmp), 7, 14);
+        put_str("                                         ", 8, 14);
+        c_put_str(TERM_YELLOW, "        Which stat do you want to raise? ", 1, 14);
 
         while(1)
         {
@@ -180,7 +180,7 @@ void gain_chosen_stat(void)
         for(n = 0; n < 6; n++)
         {
             if (n != choice - 'a')
-                prt("",n+2,14);
+                put_str("                                         ", n+2, 14);
         }
         if (get_check("Are you sure? ")) break;
     }
