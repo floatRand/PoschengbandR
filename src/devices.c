@@ -215,7 +215,7 @@ bool device_try(object_type *o_ptr)
 
 bool device_use(object_type *o_ptr, int boost)
 {
-    device_known = object_is_aware(o_ptr);
+    device_known = object_is_known(o_ptr);
     if (do_device(o_ptr, SPELL_CAST, boost))
         return TRUE;
     return FALSE;

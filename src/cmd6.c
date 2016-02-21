@@ -1613,7 +1613,7 @@ static void do_cmd_activate_aux(int item)
         _do_capture_ball(o_ptr);
         return;
     }
-    
+
     if (effect_use(&effect, boost))
     {
         o_ptr->timeout = effect.cost;
