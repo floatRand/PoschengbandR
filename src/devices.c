@@ -5932,17 +5932,16 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     {
         int dam = _extra(effect, effect->power*2);
         if (name) return "Holiness";
-        if (desc) return "It does damage to all evil monsters in sight, gives temporary protection from lesser evil creature, cures poison, stunned, cuts, removes fear and heals you a bit when you use it.";
-        if (info) return info_damage(0, 0, _BOOST(dam));
+        if (desc) return "It does damage to all evil monsters in sight, gives temporary protection from lesser evil creature, cures poison, stunned, cuts, removes fear and heals you when you use it.";
+        if (info) return info_power(_BOOST(dam));
         if (value) return format("%d", 5000 + 30*dam);
         if (color) return format("%d", TERM_YELLOW);
         if (cast)
         {
-            int k = 3 * p_ptr->lev;
             if (dispel_evil(_BOOST(dam))) device_noticed = TRUE;
-            if (set_protevil(p_ptr->protevil + randint1(25) + k, FALSE)) device_noticed = TRUE;
+            if (set_protevil(p_ptr->protevil + _BOOST(dam/2), FALSE)) device_noticed = TRUE;
             if (set_poisoned(0, TRUE)) device_noticed = TRUE;
-            if (hp_player(_BOOST(50))) device_noticed = TRUE;
+            if (hp_player(_BOOST(dam))) device_noticed = TRUE;
             if (set_stun(0, TRUE)) device_noticed = TRUE;
             if (set_cut(0, TRUE)) device_noticed = TRUE;
         }
