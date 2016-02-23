@@ -870,6 +870,14 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
 
     if (!(o_ptr->ident & IDENT_FULL))
         doc_printf(doc, "This object may have additional powers.\n");
+    else if (p_ptr->prace == RACE_ANDROID)
+    {
+        char tmp[10];
+        int item_exp = android_item_exp(o_ptr);
+        big_num_display(item_exp, tmp);
+        if (item_exp)
+            doc_printf(doc, "Cst: %s\n", tmp);
+    }
 
     _display_autopick(o_ptr, doc);
 

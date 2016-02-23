@@ -1709,6 +1709,7 @@ extern bool restore_level(void);
 extern bool lose_all_info(void);
 extern void gain_exp_64(s32b amount, u32b amount_frac);
 extern void gain_exp(s32b amount);
+extern int  android_item_exp(object_type *o_ptr);
 extern void calc_android_exp(void);
 extern void lose_exp(s32b amount);
 extern bool drain_exp(s32b drain, s32b slip, int hold_life_prob);
