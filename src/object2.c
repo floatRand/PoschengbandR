@@ -4295,8 +4295,11 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             case EGO_BODY_ELVENKIND:
                 if (one_in_(4))
                 {
-                    add_flag(o_ptr->art_flags, TR_DEC_STR);
                     add_flag(o_ptr->art_flags, TR_DEX);
+                    if (one_in_(2))
+                        add_flag(o_ptr->art_flags, TR_DEC_STR);
+                    if (one_in_(7))
+                        add_flag(o_ptr->art_flags, TR_SPEED);
                 }
                 break;
             case EGO_BODY_DWARVEN:

@@ -5907,7 +5907,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             stun_monsters(pow);
             confuse_monsters(pow);
             turn_monsters(pow);
-            stasis_monsters(pow/3);
+            stasis_monsters(pow/4);
             device_noticed = TRUE; /* You see the dazzling lights, no? */
         }
         break;
