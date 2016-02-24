@@ -435,8 +435,8 @@ static void _display_weapon_slay(int base_mult, int slay_mult, bool force, int b
         min = max;
 
     doc_printf(doc, "<color:%c> %-7.7s</color>", attr_to_attr_char(color), name);
-    doc_printf(doc, ": %d (%d-%d) [%d.%02dx]\n",
-                    (min + max)/2, min, max,
+    doc_printf(doc, ": %d [%d.%02dx]\n",
+                    (min + max)/2,
                     mult/100, mult%100);
 }
 
