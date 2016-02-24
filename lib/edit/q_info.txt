@@ -53,7 +53,9 @@
 ?:[EQU $QUEST_NUMBER 12]
 %:q000natu.txt
 
-# Quest #13 is still unfinished
+# Warg problem (t_lite version)
+?:[EQU $QUEST_NUMBER 13]
+%:q_warg_lite.txt
 
 # Warg problem
 ?:[EQU $QUEST_NUMBER 14]

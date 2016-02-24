@@ -70,152 +70,257 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:1
 ?:[EQU $QUEST1 2]
 F:b:BUILDING_1:3:0:0:0:0:NONE:1
 
-# Quest 1 rewarding, reward is a Longsword, continue with quest 32
+# Quest 1 rewarding, reward is a Longsword, continue with quest 13
 ?:[EQU $QUEST1 3]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:42
 
 # Ring of Combat
 ?:[AND [EQU $QUEST1 3] [EQU $RACE Beholder Dragon Hound Possessor Spider] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:132:302
 
 # Steel Helm
 ?:[AND [EQU $QUEST1 3] [EQU $RACE Hydra] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:97
 
 # Steel Helm
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Monster] [EQU $RACE Golem] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:97
 
 # Two-handed Sword
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Monster] [EQU $RACE Giant] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:37
 
 # Ring of Protection
 ?:[AND [EQU $QUEST1 3] [EQU $RACE Lich Quylthulg] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:132:300
 
 # Rapier
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Duelist] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:44
 
 # Sling
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Rogue] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:77
 
 # Whip
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Archaeologist] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:49
 
 # Broad Spear
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Beastmaster Cavalry] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:543
 
 # Set of Gauntlets
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Monk Force-Trainer Mystic] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:126
 
 # War Hammer
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Priest] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:55
 
 # Short Bow
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Archer] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:73
 
 # Broad Axe
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponsmith] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:70
 
 # Ring of Protection
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:132:300
 
 # Dagger
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Ninja] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:43
 
 # Light Crossbow
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Sniper] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:75
 
 #Two-handed Flail
-?:[AND [EQU $QUEST14 3] [EQU $CLASS Mauler] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+?:[AND [EQU $QUEST1 3] [EQU $CLASS Mauler] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:51
 
 # Weaponmasters
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:70
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:73
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:55
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:75
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:43
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:87
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:63
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:128
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:77
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:54
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:42
 
-# Quest 1 finished, continue with quest 32
+# Quest 1 finished, continue with quest 13
 ?:[EQU $QUEST1 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
 
 # Quest 1 failed
 ?:[EQU $QUEST1 5]
 F:b:BUILDING_1:3:0:0:0:0:NONE:1
 
-# Quest 1 failed but done, continue with quest 32
+# Quest 1 failed but done, continue with quest 13
 ?:[EQU $QUEST1 6]
 F:b:BUILDING_1:3
+
+?:1
+
+############### Quest 13 - Warg problem ###############
+
+# Quest 13 unfinished
+?:[EQU $QUEST13 1]
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
+
+# Quest 13 completed
+?:[EQU $QUEST13 2]
+F:b:BUILDING_1:3:0:0:0:0:NONE:13
+
+# Small metal shield
+# continue with quest 32
+?:[EQU $QUEST13 3]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:130
+
+# Wand: Frost Bolt
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Magic-Eater] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:269:304
+
+# Another Long Sword
+?:[AND [EQU $QUEST13 3] [EQU $RACE Death-Sword] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:42
+
+# Ring of Wizardry
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:132:305
+
+# Ring of Combat
+?:[AND [EQU $QUEST13 3] [EQU $RACE Beholder Dragon Hound Spider] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:132:302
+
+# Elemental Ring
+?:[AND [EQU $QUEST13 3] [EQU $RACE Ring] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:132:301
+
+# Cloak
+?:[AND [EQU $QUEST13 3] [EQU $RACE Hydra Quylthulg] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:123
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:70
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:73
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:55
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:75
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:43
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:87
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:63
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:128
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:77
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:54
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:42
+
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Beastmaster Cavalry Ninja] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:126
+
+#Two-handed Flail
+?:[AND [EQU $QUEST13 3] [EQU $CLASS Mauler] ]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
+F:!:FLOOR:3:0:51
+
+# Continue with quest 32
+?:[EQU $QUEST13 4]
+F:b:BUILDING_1:3:0:0:0:0:NONE:32
 
 ?:1
 
