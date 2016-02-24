@@ -2269,6 +2269,11 @@ static void store_sell(void)
     else if (cur_store_num == STORE_MUSEUM || no_selling)
         q = "Give which item? ";
 
+    else if (no_selling)
+    {
+        msg_print("Selling is prohibited!");
+        return;
+    }
     else
         q = "Sell which item? ";
 
