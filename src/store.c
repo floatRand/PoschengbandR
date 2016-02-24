@@ -1398,6 +1398,8 @@ static bool _get_store_obj(object_type *o_ptr)
     {
         if (one_in_(3))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
+        else if (one_in_(7))
+            k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_REMOVE_CURSE);
         else if (one_in_(20))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
     }
@@ -1405,6 +1407,10 @@ static bool _get_store_obj(object_type *o_ptr)
     {
         if (one_in_(3))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
+        else if (one_in_(5))
+            k_idx = lookup_kind(TV_POTION, SV_POTION_RES_STR + randint0(6));
+        else if (one_in_(7))
+            k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_IDENTIFY);
         else if (one_in_(10))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT);
         else if (one_in_(20))
@@ -3100,7 +3106,7 @@ void do_cmd_store(void)
     /* Maintain the store max. 10 times */
     if (maintain_num > 10) maintain_num = 10;
 
-    if (maintain_num && which != STORE_GENERAL && which != STORE_BOOK)
+    if (maintain_num && (which == STORE_BLACK || which == STORE_JEWELER))
     {
         int xp = town[p_ptr->town_num].store[which].last_exp;
         xp += MIN(MAX(xp / 20, 1000), 100000);

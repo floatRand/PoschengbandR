@@ -208,9 +208,15 @@ static void _display_other_pval(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc
 
     if (!o_ptr->pval) return;
 
-    if (have_flag(flgs, TR_BLOWS))
+    if (have_flag(flgs, TR_BLOWS) || have_flag(flgs, TR_DEC_BLOWS))
     {
-        int num = o_ptr->pval * 50;
+        int num = 0;
+
+        if (have_flag(flgs, TR_BLOWS))
+            num +=  o_ptr->pval * 50;
+        if (have_flag(flgs, TR_DEC_BLOWS))
+            num -=  o_ptr->pval * 100;
+
         doc_printf(doc, "<color:%c>%+d.%2.2d</color> to Attack Speed\n",
                     (net > 0) ? 'G' : 'r', num / 100, num % 100);
     }
@@ -1011,8 +1017,11 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     }
 
     doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
-    if (!(o_ptr->ident & IDENT_FULL))
-        doc_printf(doc, "This object may have additional powers.\n");
+
+    if (object_is_ego(o_ptr) && !(o_ptr->ident & IDENT_FULL))
+        doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
+    else if (!(o_ptr->ident & IDENT_FULL))
+        doc_printf(doc, "You may *identify* or sell this object to learn more about this device.\n");
 
     _display_ignore(o_ptr, flgs, doc);
 
