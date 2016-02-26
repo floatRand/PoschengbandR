@@ -4489,7 +4489,8 @@ void calc_bonuses(void)
             /* Hack: At the moment, only the Monkey King's Cudgel ('Ruyi Jingu Bang')
              * should have this power, and it really should only enlarge that weapon (So
              * no swapping, or dual wielding, or whatever) */
-            if (o_ptr->name1 == ART_MONKEY_KING)
+            if (o_ptr->name1 == ART_MONKEY_KING
+                || o_ptr->name3 == ART_MONKEY_KING)
             {
                 info_ptr->to_dd += 2;
                 info_ptr->to_ds += 2;
