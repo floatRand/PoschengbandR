@@ -258,6 +258,19 @@ int equip_find_artifact(int which)
     return 0;
 }
 
+int equip_find_art_or_replacement(int which)
+{
+    int i;
+    for (i = EQUIP_BEGIN; i < EQUIP_BEGIN + _template->count; i++)
+    {
+        object_type *o_ptr = equip_obj(i);
+
+        if (o_ptr && (o_ptr->name1 == which || o_ptr->name3 == which))
+            return i;
+    }
+    return 0;
+}
+
 int equip_find_ego(int which)
 {
     int i;
