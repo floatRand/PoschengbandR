@@ -3053,7 +3053,7 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
         }
     }
 
-    if (o_ptr->name1 == ART_BLOOD)
+    if (o_ptr->name1 == ART_BLOOD || o_ptr->name3 == ART_BLOOD)
     {
         get_bloody_moon_flags(o_ptr);
     }

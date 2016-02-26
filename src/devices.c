@@ -6617,7 +6617,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             /* TODO: Again, we need the underlying object ... 
                For now, we safely assume the artifact is Bloody Moon. */
-            int slot = equip_find_artifact(ART_BLOOD);
+            int slot = equip_find_art_or_replacement(ART_BLOOD);
             if (slot)
             {
                 object_type *o_ptr = equip_obj(slot);
@@ -6678,7 +6678,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
                         Note: Effects might someday be triggered by spells, so passing
                         an object to this routine won't always make sense!
                      */
-                    int slot = equip_find_artifact(ART_MURAMASA);
+                    int slot = equip_find_art_or_replacement(ART_MURAMASA);
                     if (slot)
                     {
                         msg_print("The Muramasa is destroyed!");
