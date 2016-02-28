@@ -3835,6 +3835,10 @@ void calc_bonuses(void)
             p_ptr->loremaster = TRUE;
     }
 
+    // Maybe there's a better place to put this?
+    if (p_ptr->lev >= 25)
+        p_ptr->loremaster = TRUE;
+
     mut_calc_bonuses();  /* Process before equip for MUT_FLESH_ROT */
     equip_calc_bonuses();
 
