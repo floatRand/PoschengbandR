@@ -2117,17 +2117,34 @@ void monster_death(int m_idx, bool drop_item)
             }
         }
 
-        if ((r_ptr->flags7 & RF7_GUARDIAN) && (d_info[dungeon_type].final_guardian == m_ptr->r_idx))
+        int which_dungeon = 0;
+        if ((r_ptr->flags7 & RF7_GUARDIAN) && ((d_info[dungeon_type].final_guardian == m_ptr->r_idx) || no_wilderness))
         {
-            int k_idx = d_info[dungeon_type].final_object ? d_info[dungeon_type].final_object
+            if (!no_wilderness)
+                which_dungeon = dungeon_type;
+            else
+            {
+                int i;
+                for (i = 1; i < max_d_idx; i++)
+                    if (d_info[i].final_guardian == m_ptr->r_idx)
+                        which_dungeon = i;
+            }
+        }
+
+        if (which_dungeon)
+        {
+            int k_idx = d_info[which_dungeon].final_object ? d_info[which_dungeon].final_object
                 : lookup_kind(TV_SCROLL, SV_SCROLL_ACQUIREMENT);
 
-            gain_chosen_stat();
-            p_ptr->fame += randint1(3);
-
-            if (d_info[dungeon_type].final_artifact)
+            if (!no_wilderness)
             {
-                int a_idx = d_info[dungeon_type].final_artifact;
+                gain_chosen_stat();
+                p_ptr->fame += randint1(3);
+            }
+
+            if (d_info[which_dungeon].final_artifact)
+            {
+                int a_idx = d_info[which_dungeon].final_artifact;
                 artifact_type *a_ptr = &a_info[a_idx];
 
                 if (!a_ptr->cur_num)
@@ -2144,14 +2161,14 @@ void monster_death(int m_idx, bool drop_item)
                         a_ptr->cur_num = 1;
 
                     /* Prevent rewarding both artifact and "default" object */
-                    if (!d_info[dungeon_type].final_object) k_idx = 0;
+                    if (!d_info[which_dungeon].final_object) k_idx = 0;
                 }
                 else
                 {
                     object_type forge;
                     create_replacement_art(a_idx, &forge);
                     drop_here(&forge, y, x);
-                    if (!d_info[dungeon_type].final_object) k_idx = 0;
+                    if (!d_info[which_dungeon].final_object) k_idx = 0;
                 }
             }
 
@@ -2206,7 +2223,7 @@ void monster_death(int m_idx, bool drop_item)
 
             if (k_idx)
             {
-                int ego_index = d_info[dungeon_type].final_ego;
+                int ego_index = d_info[which_dungeon].final_ego;
 
                 /* Get local object */
                 q_ptr = &forge;
@@ -2268,9 +2285,12 @@ void monster_death(int m_idx, bool drop_item)
                 /* Drop it in the dungeon */
                 (void)drop_near(q_ptr, -1, y, x);
             }
-            cmsg_format(TERM_L_GREEN, "You have conquered %s!",d_name+d_info[dungeon_type].name);
-            virtue_add(VIRTUE_VALOUR, 5);
-            msg_add_tiny_screenshot(50, 24);
+            if (!no_wilderness)
+            {
+                cmsg_format(TERM_L_GREEN, "You have conquered %s!",d_name+d_info[which_dungeon].name);
+                virtue_add(VIRTUE_VALOUR, 5);
+                msg_add_tiny_screenshot(50, 24);
+            }
         }
     }
 
