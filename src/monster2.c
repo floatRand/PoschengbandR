@@ -4467,7 +4467,7 @@ bool summon_named_creature (int who, int oy, int ox, int r_idx, u32b mode)
     }
     else
     {
-        if (!(r_ptr->flags7 & RF7_GUARDIAN) && r_ptr->cur_num < r_ptr->max_num)
+        if ((!(r_ptr->flags7 & RF7_GUARDIAN) || no_wilderness) && r_ptr->cur_num < r_ptr->max_num)
             result = place_monster_aux(who, y, x, r_idx, (mode | PM_NO_KAGE));
         
         if (!result && (r_ptr->flags1 & RF1_UNIQUE) && one_in_(2))
