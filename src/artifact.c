@@ -2039,7 +2039,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         if (!one_in_(WEIRD_LUCK))
         {
             if (powers > 3) powers = powers*3/4;
-            if (powers > 5) powers = 5;
+            if (powers > 5 && o_ptr->tval != TV_RING) powers = 5;
 
             /* Artifacting high rings of damage is now possible ... */
             if (o_ptr->to_d)
@@ -2285,13 +2285,13 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             break;
 
         case TV_RING:
-            switch (randint1(7))
+            switch (randint1(8))
             {
-            case 1: case 2:
+            case 1: case 2: case 3:
                 random_plus(o_ptr);
                 has_pval = TRUE;
                 break;
-            case 3:
+            case 4:
                 if (one_in_(10))
                 {
                     add_flag(o_ptr->art_flags, TR_SPEED);
@@ -2302,12 +2302,12 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 {
                     add_flag(o_ptr->art_flags, TR_DEC_MANA);
                 }
-                else if (one_in_(100))
+                else if (one_in_(20))
                 {
                     add_flag(o_ptr->art_flags, TR_WEAPONMASTERY);
                     has_pval = TRUE;
                 }
-                else if (one_in_(66) && randint1(150) < lev - 50)
+                else if (one_in_(10) && randint1(150) < lev - 50)
                 {
                     add_flag(o_ptr->art_flags, TR_BLOWS);
                     has_pval = TRUE;
@@ -2342,10 +2342,10 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     one_high_resistance(o_ptr);
                 }
                 break;
-            case 4: case 5: case 6:
+            case 5: case 6: case 7:
                 random_resistance(o_ptr);
                 break;
-            case 7:
+            case 8:
                 random_misc(o_ptr);
                 break;
             }
@@ -2493,7 +2493,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             if (o_ptr->tval == TV_RING || o_ptr->tval == TV_GLOVES)
             {
                 o_ptr->pval = randint1(2);
-                if (one_in_(30)) o_ptr->pval++;
+                if (one_in_(6)) o_ptr->pval++;
             }
             else
             {
@@ -2532,7 +2532,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
 
     if (have_flag(o_ptr->art_flags, TR_WEAPONMASTERY) && o_ptr->pval > 2)
     {
-        if (one_in_(30))
+        if (one_in_(6))
             o_ptr->pval = 3;
         else
             o_ptr->pval = 2;
