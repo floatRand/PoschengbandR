@@ -33,7 +33,7 @@ static int _max_vampiric_drain(void)
             if ((r_ptr->level > o_ptr->to_h + o_ptr->to_d + 15))
             {
                 /*msg_print("Boost ToHit?");*/
-                if (unique || one_in_(6))
+                if (unique || (o_ptr->to_h < 10 && one_in_(2)) || one_in_(3))
                 {
                     if (o_ptr->to_h < 50 || one_in_(666))
                     {
@@ -48,7 +48,7 @@ static int _max_vampiric_drain(void)
             if ((r_ptr->level > o_ptr->to_h + o_ptr->to_d + 15))
             {
                 /*msg_print("Boost ToDam?");*/
-                if (unique || one_in_(6))
+                if (unique || (o_ptr->to_d < 10 && one_in_(2)) || one_in_(3))
                 {
                     if (o_ptr->to_d < 50 || one_in_(666))
                     {
@@ -63,7 +63,7 @@ static int _max_vampiric_drain(void)
             if ((r_ptr->level > o_ptr->dd * o_ptr->ds))
             {
                 /*msg_print("Boost dd?");*/
-                if (one_in_((o_ptr->dd + 1) * o_ptr->ds) && (unique || one_in_(6)))
+                if (one_in_((o_ptr->dd + 1) * o_ptr->ds / 2) && (unique || one_in_(6)))
                 {
                     if (o_ptr->dd < 9 || one_in_(666))
                     {
@@ -78,7 +78,7 @@ static int _max_vampiric_drain(void)
             if ((r_ptr->level > o_ptr->dd * o_ptr->ds))
             {
                 /*msg_print("Boost ds?");*/
-                if (one_in_(o_ptr->dd * (o_ptr->ds + 1)) && (unique || one_in_(6)))
+                if (one_in_(o_ptr->dd * (o_ptr->ds + 1) / 2) && (unique || one_in_(6)))
                 {
                     if (o_ptr->ds < 9 || one_in_(666))
                     {
@@ -90,9 +90,9 @@ static int _max_vampiric_drain(void)
             break;
         }
 
-        if (unique && one_in_(200 / MAX(r_ptr->level, 1)))
+        if (unique && (randint0(150) < r_ptr->level))
         {
-            switch (randint1(12))
+            switch (randint1(13))
             {
             case 1:
                 if (one_in_(6)) 
@@ -116,49 +116,49 @@ static int _max_vampiric_drain(void)
                 } 
                 break;
             case 4:
-                if (one_in_(26)) 
+                if (one_in_(24)) 
                 { 
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_BRAND_ELEC); 
                 } 
                 break;
             case 5:
-                if (one_in_(26)) 
+                if (one_in_(24)) 
                 { 
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_SLAY_UNDEAD); 
                 } 
                 break;
             case 6:
-                if (one_in_(26)) 
+                if (one_in_(24)) 
                 { 
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_SLAY_DEMON); 
                 } 
                 break;
             case 7:
-                if (one_in_(13)) 
+                if (one_in_(24)) 
                 { 
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_SLAY_DRAGON); 
                 } 
                 break;
             case 8:
-                if (one_in_(13)) 
+                if (one_in_(24)) 
                 { 
                     feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_TROLL); 
+                    add_flag(o_ptr->art_flags, TR_BRAND_ACID); 
                 } 
                 break;
             case 9:
-                if (one_in_(13)) 
+                if (one_in_(12)) 
                 { 
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_SLAY_GIANT); 
                 } 
                 break;
             case 10:
-                if (one_in_(66)) 
+                if (one_in_(24)) 
                 { 
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_SLAY_HUMAN); 
@@ -170,6 +170,11 @@ static int _max_vampiric_drain(void)
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_SLAY_EVIL); 
                 } 
+                else if (one_in_(24))
+		{
+                    feed = TRUE; 
+                    add_flag(o_ptr->art_flags, TR_CHAOTIC); 
+                }
                 break;
             case 12:
                 if (one_in_(666)) 
@@ -177,31 +182,34 @@ static int _max_vampiric_drain(void)
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_VORPAL2); 
                 }
-                else if (one_in_(6))
+                else if (one_in_(24))
                 {
                     feed = TRUE; 
                     add_flag(o_ptr->art_flags, TR_VORPAL); 
                 }
+                break;
+            case 13:
+                if (one_in_(12))
+                { 
+                    feed = TRUE; 
+                    add_flag(o_ptr->art_flags, TR_SLAY_ANIMAL); 
+                } 
                 break;
             }
         }
 
         if (feed)
         {
-            if ((o_ptr->curse_flags & TRC_TY_CURSE) == 0
-              && o_ptr->dd * o_ptr->ds > 50 )
+            if (!have_flag(o_ptr->art_flags, TR_TY_CURSE)
+              && o_ptr->dd * o_ptr->ds > 60 )
             {  
-                o_ptr->curse_flags |= TRC_TY_CURSE;
+                add_flag(o_ptr->art_flags, TR_TY_CURSE);
                 msg_print("Your Rune Sword seeks to dominate you!");
-                if (one_in_(13))
-                    add_flag(o_ptr->art_flags, TR_AGGRAVATE);
-                if (one_in_(13))
-                    add_flag(o_ptr->art_flags, TR_DRAIN_EXP);
             }
-            else if ((o_ptr->curse_flags & TRC_AGGRAVATE) == 0
+            else if (!have_flag(o_ptr->art_flags, TR_AGGRAVATE)
                    && o_ptr->dd * o_ptr->ds > 30 )
             {
-                o_ptr->curse_flags |= TRC_AGGRAVATE;
+                add_flag(o_ptr->art_flags, TR_AGGRAVATE);
                 msg_print("The thirst of your sword redoubles!");
             }
             else
