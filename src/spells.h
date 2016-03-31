@@ -20,7 +20,6 @@ extern void spell_stats_on_load(savefile_ptr file);
 extern void spell_stats_on_save(savefile_ptr file);
 extern void spell_stats_on_learn(spell_info *spell, int max_skill);
 extern void spell_stats_on_cast(spell_info *spell);
-extern void spell_stats_gain_skill(spell_info *spell);
 extern void spell_stats_on_fail(spell_info *spell);
 extern spell_stats_ptr spell_stats_aux(cptr name);
 extern spell_stats_ptr spell_stats(spell_info *spell);

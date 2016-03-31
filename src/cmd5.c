@@ -1412,6 +1412,8 @@ msg_print("An infernal sound echoed.");
                         exp_gain = 1;
                 }
                 p_ptr->spell_exp[(increment ? 32 : 0) + spell] += exp_gain;
+                if (cur_exp + exp_gain < SPELL_EXP_BEGINNER)
+                    p_ptr->spell_exp[(increment ? 32 : 0) + spell] = SPELL_EXP_BEGINNER;
             }
             last_pexp = p_ptr->exp;
             p_ptr->spell_turn[(increment ? 32 : 0)+spell] = game_turn;
