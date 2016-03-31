@@ -7960,7 +7960,7 @@ D:ethereal drake's eyes glare with white hatred from the shadows.
 N:505:Ishikawa Goemon
 G:p:W
 I:120:13d113:20:70:50:150
-W:33:7:999:2000:0:0
+W:33:5:999:2000:0:0
 B:SLASH:HURT:9d1
 B:SLASH:HURT:6d5
 B:SLASH:HURT:25d1
@@ -7975,7 +7975,7 @@ P:Copy:Half-Giant:Warrior
 N:506:Fasolt the Giant
 G:P:u
 I:112:11d111:20:70:50:500
-W:33:7:999:2500:0:0
+W:33:5:999:2500:0:0
 B:HIT:HURT:6d6
 B:BITE:HURT:3d10
 B:HIT:EAT_GOLD:2d2
@@ -13328,7 +13328,7 @@ P:Copy:High-Elf:Mage
 N:772:Gandalf the Grey
 G:p:v
 I:120:49d101:101:100:0:150
-W:60:7:999:35000:0:0
+W:60:5:999:35000:0:0
 B:HIT:UN_BONUS:6d8
 B:HIT:UN_BONUS:6d8
 B:HIT:TERRIFY:5d5
@@ -18047,7 +18047,7 @@ P:Copy:Human:Tourist
 N:1005:Ansalom, the Dark Wizard
 G:p:D
 I:120:22d150:50:100:0:170
-W:55:10:999:20000:0:0
+W:55:5:999:20000:0:0
 B:HIT:UN_BONUS:6d6
 B:HIT:UN_BONUS:6d6
 B:HIT:HURT:4d5
@@ -18655,7 +18655,7 @@ S:SPECIAL
 N:1042:Narwhal
 G:l:w
 I:130:25d100:50:100:70:1000
-W:40:20:999:6000:0:0
+W:40:2:999:6000:0:0
 B:BUTT:HURT:8d5
 B:BUTT:HURT:8d5
 B:BUTT:COLD:10d8
@@ -19127,7 +19127,7 @@ D:Tanuki can disguise as human beings by putting a magic leaf on his/her head.
 N:1068:Dionysus, the Munchkin of Chaos
 G:G:g
 I:154:10d100:100:162:40:120
-W:55:7:999:10000:0:0
+W:55:5:999:10000:0:0
 B:SHOOT:HURT:16d6
 B:SLASH:EXP_VAMP:6d8
 B:SLASH:EXP_VAMP:6d8
@@ -19459,7 +19459,7 @@ D:nearly indestructible.
 N:1086:Talos, Masterwork Spellwarp Automaton
 G:g:y
 I:115:200d100:30:250:20:2000
-W:90:15:999:40000:0:0
+W:90:5:999:40000:0:0
 B:HIT:SHATTER:15d15
 B:HIT:SHATTER:15d15
 B:HIT:SHATTER:15d15
