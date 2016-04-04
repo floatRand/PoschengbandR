@@ -2401,11 +2401,12 @@ bool no_questor_or_bounty_uniques(int r_idx)
     {
     /*
      * Decline them to be questor or bounty because they use
-     * special motion "split and combine"
+     * special motion "split and combine" or mimic other monsters
      */
     case MON_BANORLUPART:
     case MON_BANOR:
     case MON_LUPART:
+    case MON_CHAMELEON_K:
         return TRUE;
     default:
         return FALSE;
