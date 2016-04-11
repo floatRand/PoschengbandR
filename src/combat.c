@@ -842,11 +842,9 @@ void display_innate_attack_info(doc_ptr doc, int which)
     }
     else if (!(a->flags & INNATE_NO_DAM))
     {
-        doc_printf(cols[0], " %-7.7s: %d (%d-%d)\n",
+        doc_printf(cols[0], " %-7.7s: %d\n",
                 _effect_name(a->effect[0]),
-                blows * (min + max)/200,
-                blows * min/100,
-                blows * max/100
+                blows * (min + max)/200
         );
     }
 
@@ -891,11 +889,9 @@ void display_innate_attack_info(doc_ptr doc, int which)
             doc_printf(cols[0], "<tab:10><color:B>Shatters%s</color>\n", xtra);
             break;
         default:
-            doc_printf(cols[0], "<color:r> %-7.7s</color>: %d (%d-%d)\n",
+            doc_printf(cols[0], "<color:r> %-7.7s</color>: %d\n",
                     _effect_name(a->effect[i]),
-                    blows * (min2 + max2)/200,
-                    blows * min2/100,
-                    blows * max2/100
+                    blows * (min2 + max2)/200
             );
         }
     }
@@ -998,8 +994,8 @@ static void _display_missile_slay(int base_mult, int slay_mult, int shots,
     }
 
     doc_printf(doc, " <color:%c>%-8.8s</color>", attr_to_attr_char(color), name);
-    doc_printf(doc, ": %d (%d-%d) [%d.%02dx]\n",
-                    (min + max)/2, min, max,
+    doc_printf(doc, ": %d [%d.%02dx]\n",
+                    (min + max)/2,
                     mult/100, mult%100);
 }
 
