@@ -27,6 +27,14 @@ extern int kill(int, int);
 /* #undef _POSIX_SAVED_IDS */
 
 
+/*locks player name for server play
+ *this is only placed here, since including it in the other
+ *header files would interfere with the extern variable
+ *--phantom
+*/
+bool arg_lock_name;
+
+
 /*
  * Hack -- drop permissions
  */
@@ -2812,6 +2820,14 @@ void process_player_name(bool sf)
 
 /*
  * Gets a name for the character, reacting to name changes.
+ *
+ * Assumes that "display_player(0)" has just been called
+ *
+ * Perhaps we should NOT ask for a name (at "birth()") on
+ * Unix machines?  XXX XXX
+ *
+ * Added a check to see if this is for server play, if so, lock the player name
+ * -- phantom
  */
 bool py_get_name(void)
 {
@@ -2821,21 +2837,22 @@ bool py_get_name(void)
     /* Save the player name */
     strcpy(tmp, player_name);
 
-    /* Prompt for a new name */
-    if (get_string("Enter a name for your character: ", tmp, 15))
+    if(!arg_lock_name)
     {
-        /* Use the name */
-        strcpy(player_name, tmp);
-        result = TRUE;
-    }
+        if (get_string("Enter a name for your character: ", tmp, 15))
+        {
+            /* Use the name */
+            strcpy(player_name, tmp);
+            result = TRUE;
+        }
 
-    if (0 == strlen(player_name))
-    {
-        /* Use default name */
-        strcpy(player_name, "PLAYER");
-        result = TRUE;
+        if (0 == strlen(player_name))
+        {
+            /* Use default name */
+            strcpy(player_name, "PLAYER");
+            result = TRUE;
+        }
     }
-
     return result;
 }
 
