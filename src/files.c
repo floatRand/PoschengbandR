@@ -2818,17 +2818,6 @@ void process_player_name(bool sf)
 }
 
 
-/*
- * Gets a name for the character, reacting to name changes.
- *
- * Assumes that "display_player(0)" has just been called
- *
- * Perhaps we should NOT ask for a name (at "birth()") on
- * Unix machines?  XXX XXX
- *
- * Added a check to see if this is for server play, if so, lock the player name
- * -- phantom
- */
 bool py_get_name(void)
 {
     bool result = FALSE;
@@ -2837,6 +2826,7 @@ bool py_get_name(void)
     /* Save the player name */
     strcpy(tmp, player_name);
 
+    /* Check to see if this is for server play. If so, lock the player name. (--phantom) */
     if(!arg_lock_name)
     {
         if (get_string("Enter a name for your character: ", tmp, 15))
