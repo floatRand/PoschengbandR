@@ -3942,7 +3942,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         }
         break;
     case EFFECT_SUMMON_OCTOPUS:
-        if (name) return "Summon Ocotpus";
+        if (name) return "Summon Octopus";
         if (desc) return "It attempts to summon octopi for assistance.";
         if (value) return format("%d", 1200);
         if (cast)
