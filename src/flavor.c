@@ -1915,7 +1915,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
             if (prace_is_(RACE_CENTAUR) && object_is_body_armour(o_ptr))
             {
                 ac -= ac / 3;
-                to_a -= to_a / 3;
+                if (to_a > 0)
+                    to_a -= to_a / 3;
             }
 
             t = object_desc_chr(t, ' ');
