@@ -99,7 +99,13 @@ static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
     if (have_flag(flgs, TR_STEALTH)) y += 6;
     if (have_flag(flgs, TR_DEC_STEALTH)) y -= 3;
 
-    if (y != 0)
+    if (y < 0)
+    {
+        /* TODO: Rethink calculation. For an example, consider
+           Dasai which is +10 with DEC_CHR */
+        q = -(200 + y * y)*(1 + pval * pval);
+    }
+    else if (y > 0)
     {
         if (pval < 0) /* TODO: Remove negative pvals ... */
             y /= 3;
