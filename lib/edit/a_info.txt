@@ -449,7 +449,7 @@ N:36:of Thranduil
 I:32:2:2
 W:20:2:15:50000
 P:2:0d0:0:0:10
-F:INT | WIS | HIDE_TYPE | RES_BLIND | TELEPATHY | XTRA_H_RES | SPELL_CAP
+F:INT | WIS | HIDE_TYPE | RES_BLIND | TELEPATHY | XTRA_H_RES
 D:The hunting cap of King Thranduil, to whose ears come all the secrets of 
 D:his forest domain.
 
@@ -505,7 +505,7 @@ N:41:'Terror Mask'
 I:32:5:3
 W:50:3:75:200000
 P:5:1d3:18:18:10
-F:DEC_INT | DEC_WIS | HIDE_TYPE | SHOW_MODS |
+F:DEC_INT | DEC_WIS | CHR | HIDE_TYPE | SHOW_MODS |
 F:SEE_INVIS | NO_MAGIC |
 F:RES_DISEN | RES_FEAR | FREE_ACT | RES_ACID | RES_COLD | RES_POIS |
 F:TELEPORT
