@@ -2262,7 +2262,7 @@ bool identify_item(object_type *o_ptr)
     if (o_ptr->ident & IDENT_KNOWN)
         old_known = TRUE;
 
-    if (!(o_ptr->ident & (IDENT_FULL)))
+    if (!spoiler_hack && !(o_ptr->ident & (IDENT_FULL)))
     {
         if (object_is_artifact(o_ptr) || one_in_(5))
             virtue_add(VIRTUE_KNOWLEDGE, 1);
