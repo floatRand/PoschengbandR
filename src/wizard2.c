@@ -163,7 +163,7 @@ static void do_cmd_wiz_hack_chris1(void)
         char buf[MAX_NLEN];
         int value;
 
-        if (0)
+        if (1)
         {
             create_replacement_art(a_idx, &forge);
         }
@@ -179,7 +179,7 @@ static void do_cmd_wiz_hack_chris1(void)
 
         forge.ident |= (IDENT_FULL); 
     /*    forge.art_name = dummy_name; */
-        object_desc(buf, &forge, 0);
+        object_desc(buf, &forge, OD_COLOR_CODED);
         value = object_value_real(&forge);
         ct_pval += forge.pval;
 
@@ -233,11 +233,14 @@ static void do_cmd_wiz_hack_chris1(void)
             ct_spell_power++;
         /*    drop_near(&forge, -1, py, px);*/
         }
+        msg_boundary();
         msg_format(" %d) %s (%.1f%%)", i+1, buf, (double)value/(double)pow_base*100.0);
+
         /*drop_near(&forge, -1, py, px);*/
         /*value = object_value_real(&forge);*/
     }
 
+    msg_boundary();
     msg_format("Generated %d artifacts. %d had immunity. %d had speed. %d had extra attacks.", ct, ct_immunity, ct_speed, ct_blows);
     msg_format("%d had telepathy. %d had aggravation.", ct_telepathy, ct_aggravate);
 /*    msg_format("%d had darkness. %d had spell power.", ct_darkness, ct_spell_power); */
