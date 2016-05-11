@@ -3210,7 +3210,8 @@ void player_outfit(void)
     {
         _birth_object(TV_ARROW, SV_AMMO_NORMAL, rand_range(15, 20));
     }
-    else if (p_ptr->pclass == CLASS_HIGH_MAGE)
+
+    if (p_ptr->pclass == CLASS_HIGH_MAGE)
     {
         object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
         if (device_init_fixed(&forge, EFFECT_BOLT_MISSILE))
