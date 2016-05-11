@@ -328,7 +328,7 @@ int wilderness_level(int x, int y)
     int dx, dy;
 
     if (wilderness[y][x].entrance || wilderness[y][x].town)
-        return wilderness[y][x].level;
+        return MIN(wilderness[y][x].level, 60);
 
     /* Average adjacent wilderness tiles to smooth out difficulty transitions */
     for (dx = -1; dx <= 1; dx++)
@@ -346,7 +346,7 @@ int wilderness_level(int x, int y)
         }
     }
     assert(ct);
-    return total / ct;
+    return MIN(total / ct, 60);
 }
 
 static void _generate_cave(const rect_t *valid);
@@ -1379,8 +1379,10 @@ errr parse_line_wilderness(char *buf, int ymin, int xmin, int ymax, int xmax, in
     {
         if (!d_info[i].maxdepth) continue;
         if (d_info[i].flags1 & DF1_RANDOM) continue;
+
         wilderness[d_info[i].dy][d_info[i].dx].entrance = i;
-        if (!wilderness[d_info[i].dy][d_info[i].dx].town)
+
+        if (!wilderness[d_info[i].dy][d_info[i].dx].town && !(d_info[i].flags1 & DF1_WINNER))
             wilderness[d_info[i].dy][d_info[i].dx].level = d_info[i].mindepth;
     }
 
