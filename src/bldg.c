@@ -2177,11 +2177,15 @@ static bool inn_comm(int cmd)
                     if (p_ptr->pclass == CLASS_MAGIC_EATER)
                         magic_eater_restore_all();
 
-                    for (i = 0; i < INVEN_PACK; i++)
+                    for (i = 0; i < INVEN_TOTAL; i++)
                     {
-                        if (!inventory[i].k_idx) continue;
-                        if (!object_is_device(&inventory[i])) continue;
-                        device_regen_sp_aux(&inventory[i], 1000);
+                        object_type *o_ptr = &inventory[i];
+
+                        if (!o_ptr->k_idx) continue;
+                        if (object_is_device(o_ptr))
+                            device_regen_sp_aux(o_ptr, 1000);
+                        else if (o_ptr->timeout > 0)
+                            o_ptr->timeout = 0;
                     }
 
                     if (prev_hour >= 6 && prev_hour <= 17)
