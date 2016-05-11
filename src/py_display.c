@@ -2295,7 +2295,7 @@ static void _build_options(doc_ptr doc)
         doc_printf(doc, " Unusual Rooms:      On\n");
 
     if (ironman_nightmare)
-        doc_printf(doc, " Nightmare Mode:     O\n");
+        doc_printf(doc, " Nightmare Mode:     On\n");
 
     doc_printf(doc, " Arena Levels:       %s\n", ironman_empty_levels ? "*Always*" :
                                                     empty_levels ? "Sometimes" : "Never");
