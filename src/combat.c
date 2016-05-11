@@ -506,9 +506,11 @@ void display_weapon_info(doc_ptr doc, int hand)
 
     mult = 100;
     if (have_flag(flgs, TR_VORPAL2))
-        mult = mult * 5 / 3;
-    else if (have_flag(flgs, TR_VORPAL))
-        mult = mult * 11 / 9;
+        mult = mult * 5 / 3;  /* 1 + 1/3(1 + 1/2 + ...) = 1.667x */
+    else if (have_flag(flgs, TR_VORPAL) && p_ptr->vorpal)
+        mult = mult * 11 / 8; /* 1 + 1/4(1 + 1/3 + ...) = 1.375x */
+    else if (have_flag(flgs, TR_VORPAL) || p_ptr->vorpal)
+        mult = mult * 11 / 9; /* 1 + 1/6(1 + 1/4 + ...) = 1.222x */
 
     mult += mult * p_ptr->weapon_info[hand].to_mult / 100;
 
