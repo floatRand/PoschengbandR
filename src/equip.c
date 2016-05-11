@@ -1053,19 +1053,41 @@ void equip_calc_bonuses(void)
             int lhand = 2*i+1;
 
             if ( p_ptr->weapon_info[rhand].wield_how == WIELD_ONE_HAND
-              && (p_ptr->weapon_info[rhand].bare_hands || object_allow_two_hands_wielding(equip_obj(p_ptr->weapon_info[rhand].slot)))
-              && equip_is_empty_hand(lhand) )
+              && (p_ptr->weapon_info[rhand].bare_hands || object_allow_two_hands_wielding(equip_obj(p_ptr->weapon_info[rhand].slot))))
             {
-                p_ptr->weapon_info[rhand].wield_how = WIELD_TWO_HANDS;
-                p_ptr->weapon_info[lhand].wield_how = WIELD_NONE;
+                if (equip_is_empty_hand(lhand))
+                {
+                    p_ptr->weapon_info[rhand].wield_how = WIELD_TWO_HANDS;
+                    p_ptr->weapon_info[lhand].wield_how = WIELD_NONE;
+                }
+                /* Hack for Shieldmaster */
+                else if ( weaponmaster_is_(WEAPONMASTER_SHIELDS)
+                       && weaponmaster_get_toggle() != TOGGLE_SHIELD_BASH
+                       && equip_is_valid_hand(lhand)
+                       && object_is_shield(equip_obj(p_ptr->weapon_info[lhand].slot)) )
+                {
+                    p_ptr->weapon_info[rhand].wield_how = WIELD_TWO_HANDS;
+                    p_ptr->weapon_info[lhand].wield_how = WIELD_NONE;
+                }
             }
 
             if ( p_ptr->weapon_info[lhand].wield_how == WIELD_ONE_HAND
-              && (p_ptr->weapon_info[lhand].bare_hands || object_allow_two_hands_wielding(equip_obj(p_ptr->weapon_info[lhand].slot)))
-              && equip_is_empty_hand(rhand) )
+              && (p_ptr->weapon_info[lhand].bare_hands || object_allow_two_hands_wielding(equip_obj(p_ptr->weapon_info[lhand].slot))))
             {
-                p_ptr->weapon_info[lhand].wield_how = WIELD_TWO_HANDS;
-                p_ptr->weapon_info[rhand].wield_how = WIELD_NONE;
+                if (equip_is_empty_hand(rhand))
+                {
+                    p_ptr->weapon_info[lhand].wield_how = WIELD_TWO_HANDS;
+                    p_ptr->weapon_info[rhand].wield_how = WIELD_NONE;
+                }
+                /* Hack for Shieldmaster */
+                else if ( weaponmaster_is_(WEAPONMASTER_SHIELDS)
+                       && weaponmaster_get_toggle() != TOGGLE_SHIELD_BASH
+                       && equip_is_valid_hand(rhand)
+                       && object_is_shield(equip_obj(p_ptr->weapon_info[rhand].slot)) )
+                {
+                    p_ptr->weapon_info[lhand].wield_how = WIELD_TWO_HANDS;
+                    p_ptr->weapon_info[rhand].wield_how = WIELD_NONE;
+                }
             }
         }
     }
