@@ -430,6 +430,8 @@ static void _display_weapon_slay(int base_mult, int slay_mult, bool force, int b
 
     min = blows * (mult*dd/100 + to_d) / 100;
     max = blows * (mult*dd*ds/100 + to_d) / 100;
+    if (weaponmaster_get_toggle() == TOGGLE_ORDER_BLADE)
+        min = max;
 
     doc_printf(doc, "<color:%c> %-7.7s</color>", attr_to_attr_char(color), name);
     doc_printf(doc, ": %d [%d.%02dx]\n",
@@ -522,7 +524,8 @@ void display_weapon_info(doc_ptr doc, int hand)
         mult = mult * (50 + n)/30;
     }
 
-    if (!have_flag(flgs, TR_ORDER))
+    if (!have_flag(flgs, TR_ORDER)
+        && weaponmaster_get_toggle() != TOGGLE_ORDER_BLADE)
     {
         const int attempts = 10 * 1000;
         int i;
@@ -593,7 +596,8 @@ void display_weapon_info(doc_ptr doc, int hand)
 
     doc_printf(cols[0], "<color:G> %-7.7s</color>\n", "Damage");
 
-    if (!have_flag(flgs, TR_ORDER))
+    if (!have_flag(flgs, TR_ORDER)
+        && weaponmaster_get_toggle() != TOGGLE_ORDER_BLADE)
     {
         if (crit.to_d)
         {
@@ -627,7 +631,7 @@ void display_weapon_info(doc_ptr doc, int hand)
     
     if (have_flag(flgs, TR_KILL_EVIL))   
         _display_weapon_slay(mult, 350, force, num_blow, dd, ds, to_d, "Evil", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_EVIL))
+    else if (have_flag(flgs, TR_SLAY_EVIL) || weaponmaster_get_toggle() == TOGGLE_HOLY_BLADE)
         _display_weapon_slay(mult, 200, force, num_blow, dd, ds, to_d, "Evil", TERM_YELLOW, cols[0]);
 
     if (have_flag(flgs, TR_SLAY_GOOD))
