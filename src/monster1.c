@@ -2406,6 +2406,7 @@ bool no_questor_or_bounty_uniques(int r_idx)
     case MON_BANORLUPART:
     case MON_BANOR:
     case MON_LUPART:
+    case MON_CHAMELEON_K: /* No Wilderness: He's not dropping a corpse for some reason? */
         return TRUE;
     default:
         return FALSE;
