@@ -2107,9 +2107,9 @@ void object_prep(object_type *o_ptr, int k_idx)
  *
  * It is always possible (albeit unlikely) to get the "full" enchantment.
  *
- * A sample distribution of values from "m_bonus(10, N)" is shown below:
+ * A sample distribution of values from "m_bonus(10, L)" is shown below:
  *
- *   N       0     1     2     3     4     5     6     7     8     9    10
+ *   L       0     1     2     3     4     5     6     7     8     9    10
  * ---    ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----
  *   0   66.37 13.01  9.73  5.47  2.89  1.31  0.72  0.26  0.12  0.09  0.03
  *   8   46.85 24.66 12.13  8.13  4.20  2.30  1.05  0.36  0.19  0.08  0.05
@@ -2865,11 +2865,23 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
         _create_defender(o_ptr, level, power);
         break;
     case EGO_RING_SPEED:
-        o_ptr->pval = randint1(5) + m_bonus(5, level);
+    {
+        /*o_ptr->pval = randint1(5) + m_bonus(5, level);
         while (randint0(100) < 50) 
-            o_ptr->pval++;
-        if (cheat_peek) object_mention(o_ptr);
-        if (one_in_(ACTIVATION_CHANCE*2))
+            o_ptr->pval++;*/
+        int amt = 5;
+        if (level >= 30)
+            amt += (level - 30)/10;
+        o_ptr->pval = m_bonus(amt, level);
+        if (o_ptr->pval < 1)
+            o_ptr->pval = 1;
+
+        if (randint0(20) < level - 50)
+        {
+            while (one_in_(2))
+                o_ptr->pval++;
+        }
+        if (level >= 50 && one_in_(ACTIVATION_CHANCE*2))
         {
             if (one_in_(777))
                 effect_add(o_ptr, EFFECT_LIGHT_SPEED);
@@ -2878,7 +2890,10 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
             else
                 effect_add(o_ptr, EFFECT_SPEED);
         }
+
+        if (cheat_peek) object_mention(o_ptr);
         break;
+    }
     case EGO_RING_WIZARDRY:
         for (powers = _jewelry_powers(4, level, power); powers > 0; --powers)
         {

@@ -909,31 +909,83 @@ static void do_cmd_wiz_hack_chris7(void)
     msg_print(NULL);
 }
 
+#define _MAX_PVAL 30
 static void do_cmd_wiz_hack_chris8(void)
 {
-    int k_idx = get_quantity("Enter k_idx: ", 1000);
-    int ct = get_quantity("How Many?", 10000);
-    int i;
+    int k_idx = 132;/*get_quantity("Enter k_idx: ", 1000)*/;
+    int ct = 1000;/*get_quantity("How Many? ", 10000)*/;
+    int i,j;
+    int ct_objs = 0, tot_pvals = 0, max_ct = 0;
+    int pvals[_MAX_PVAL] = {0};
+    char line[_MAX_PVAL+1];
+    string_ptr histogram = string_alloc();
 
     for (i = 0; i < ct; i++)
     {
         object_type forge = {0};
-        char buf[MAX_NLEN];
+        /*char buf[MAX_NLEN];*/
 
         object_prep(&forge, k_idx);
         /*create_artifact(&forge, CREATE_ART_GOOD);*/
-        apply_magic(&forge, object_level, AM_GREAT);
+        apply_magic(&forge, object_level, 0);
         identify_item(&forge);
 
-        if (forge.name2 == EGO_GLOVES_SNIPER)
+        if (forge.name2 == EGO_RING_SPEED)
         {
-            forge.ident |= (IDENT_FULL); 
+            /*forge.ident |= (IDENT_FULL);
             object_desc(buf, &forge, OD_COLOR_CODED);
             msg_format(" %d) %s", i+1, buf);
-            msg_boundary();
-            drop_near(&forge, -1, py, px);
+            msg_boundary();*/
+
+            ct_objs++;
+            tot_pvals += forge.pval;
+            pvals[forge.pval]++;
         }
     }
+
+    for (i = 1; i < _MAX_PVAL; i++)
+    {
+        if (pvals[i] > max_ct)
+            max_ct = pvals[i];
+    }
+    for (j = max_ct; j > 0; j--)
+    {
+        if (j % 10 == 0)
+            line[0] = '0' + j/10;
+        else if (j % 5 == 0)
+            line[0] = '>';
+        else
+            line[0] = '|';
+        for (i = 1; i < _MAX_PVAL; i++)
+        {
+            if (pvals[i] >= j)
+                line[i] = '*';
+            else
+                line[i] = ' ';
+        }
+        line[_MAX_PVAL] = '\0';
+        string_printf(histogram, "%s\n", line);
+    }
+
+    line[0] = '|';
+    for (i = 1; i < _MAX_PVAL; i++)
+    {
+        if (i % 10 == 0)
+            line[i] = '0' + i/10;
+        else if (i % 5 == 0)
+            line[i] = '^';
+        else
+            line[i] = '-';
+    }
+    line[_MAX_PVAL] = '\0';
+    string_printf(histogram, "%s\n", line);
+    msg_boundary();
+    msg_print(string_buffer(histogram));
+    string_free(histogram);
+
+    msg_format("%d successes (%d.%2.2d%%). Avg pval = %d.%2.2d.",
+        ct_objs, ct_objs*100/ct, (ct_objs*10000/ct)%100,
+        tot_pvals/ct_objs, (tot_pvals*100/ct_objs)%100);
 }
 
 static bool do_cmd_wiz_hack_chris9(void)
