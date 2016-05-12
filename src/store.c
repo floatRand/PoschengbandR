@@ -1413,7 +1413,7 @@ static bool _get_store_obj(object_type *o_ptr)
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_IDENTIFY);
         else if (one_in_(10))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT);
-        else if (one_in_(20))
+        else if (!easy_id && one_in_(20))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
     }
     else if (cur_store_num == STORE_MAGIC && one_in_(20))

@@ -942,13 +942,14 @@ static bool _kind_is_utility(int k_idx)
         case SV_SCROLL_PHASE_DOOR:
         case SV_SCROLL_WORD_OF_RECALL:
         case SV_SCROLL_IDENTIFY:
-        case SV_SCROLL_STAR_IDENTIFY:
         case SV_SCROLL_REMOVE_CURSE:
         case SV_SCROLL_STAR_REMOVE_CURSE:
         case SV_SCROLL_MAPPING:
         case SV_SCROLL_PROTECTION_FROM_EVIL:
         case SV_SCROLL_DETECT_MONSTERS:
             return TRUE;
+        case SV_SCROLL_STAR_IDENTIFY:
+            return easy_id ? FALSE : TRUE;
         }
         break;
 

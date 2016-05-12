@@ -2347,7 +2347,10 @@ void autopick_pickup_items(cave_type *c_ptr)
 {
     s16b this_o_idx, next_o_idx = 0;
     bool auto_lore = p_ptr->loremaster;
-    bool auto_sense = p_ptr->lev >= 35;
+    bool auto_sense = FALSE;
+
+    if (easy_id || p_ptr->lev >= 35)
+        auto_sense = TRUE;
     
     /* Scan the pile of objects */
     for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)

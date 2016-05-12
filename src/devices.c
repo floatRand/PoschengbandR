@@ -2411,6 +2411,7 @@ static bool _device_pick_effect_aux(object_type *o_ptr, device_effect_info_ptr e
     if ((mode & AM_GOOD) && !(entry->flags & _DROP_GOOD)) return FALSE;
     if ((mode & AM_GREAT) && !(entry->flags & _DROP_GREAT)) return FALSE;
     if ((mode & AM_STOCK_TOWN) && !(entry->flags & _STOCK_TOWN)) return FALSE;
+    if (easy_id && entry->type == EFFECT_IDENTIFY_FULL) return FALSE;
     return TRUE;
 }
 

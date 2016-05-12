@@ -2282,6 +2282,9 @@ static void _build_options(doc_ptr doc)
                                                     always_small_levels ? "Always" :
                                                     small_levels ? "Sometimes" : "Never");
 
+    if (easy_id)
+        doc_printf(doc, " Easy Identify:      On\n");
+
     if (no_wilderness)
         doc_printf(doc, " Wilderness:         Off\n");
 
