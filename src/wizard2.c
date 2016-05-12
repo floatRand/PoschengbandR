@@ -912,80 +912,46 @@ static void do_cmd_wiz_hack_chris7(void)
 #define _MAX_PVAL 30
 static void do_cmd_wiz_hack_chris8(void)
 {
-    int k_idx = 132;/*get_quantity("Enter k_idx: ", 1000)*/;
-    int ct = 1000;/*get_quantity("How Many? ", 10000)*/;
-    int i,j;
-    int ct_objs = 0, tot_pvals = 0, max_ct = 0;
-    int pvals[_MAX_PVAL] = {0};
-    char line[_MAX_PVAL+1];
-    string_ptr histogram = string_alloc();
+    int i, lvl;
 
-    for (i = 0; i < ct; i++)
+    for (lvl = 10; lvl <= 100; lvl += 10)
     {
-        object_type forge = {0};
-        /*char buf[MAX_NLEN];*/
+        int pvals[_MAX_PVAL] = {0};
+        int ct_objs = 0, tot_pvals = 0, ct_attempts = 10000;
 
-        object_prep(&forge, k_idx);
-        /*create_artifact(&forge, CREATE_ART_GOOD);*/
-        apply_magic(&forge, object_level, 0);
-        identify_item(&forge);
-
-        if (forge.name2 == EGO_RING_SPEED)
+        for (i = 0; i < ct_attempts; i++)
         {
-            /*forge.ident |= (IDENT_FULL);
-            object_desc(buf, &forge, OD_COLOR_CODED);
-            msg_format(" %d) %s", i+1, buf);
-            msg_boundary();*/
+            object_type forge = {0};
 
-            ct_objs++;
-            tot_pvals += forge.pval;
-            pvals[forge.pval]++;
+            object_prep(&forge, 132);
+            apply_magic(&forge, lvl, 0);
+            /*identify_item(&forge);*/
+
+            if (forge.name2 == EGO_RING_SPEED)
+            {
+                ct_objs++;
+                tot_pvals += forge.pval;
+                pvals[forge.pval]++;
+            }
         }
-    }
 
-    for (i = 1; i < _MAX_PVAL; i++)
-    {
-        if (pvals[i] > max_ct)
-            max_ct = pvals[i];
-    }
-    for (j = max_ct; j > 0; j--)
-    {
-        if (j % 10 == 0)
-            line[0] = '0' + j/10;
-        else if (j % 5 == 0)
-            line[0] = '>';
-        else
-            line[0] = '|';
-        for (i = 1; i < _MAX_PVAL; i++)
+        msg_boundary();
+        msg_format("<color:B>Level: %3d</color>", lvl);
+        for (i = _MAX_PVAL - 1; i >= 0; i--)
         {
-            if (pvals[i] >= j)
-                line[i] = '*';
-            else
-                line[i] = ' ';
+            int ct = pvals[i];
+            if (ct)
+            {
+                msg_boundary();
+                msg_format("<color:r>+%2d</color>: %2d.%d%%", i, ct*100/ct_objs, (ct*1000/ct_objs)%10);
+            }
         }
-        line[_MAX_PVAL] = '\0';
-        string_printf(histogram, "%s\n", line);
-    }
 
-    line[0] = '|';
-    for (i = 1; i < _MAX_PVAL; i++)
-    {
-        if (i % 10 == 0)
-            line[i] = '0' + i/10;
-        else if (i % 5 == 0)
-            line[i] = '^';
-        else
-            line[i] = '-';
+        msg_boundary();
+        msg_format("%d.%2.2d%% rings of speed. Avg pval = %d.%2.2d.",
+            ct_objs*100/ct_attempts, (ct_objs*10000/ct_attempts)%100,
+            tot_pvals/ct_objs, (tot_pvals*100/ct_objs)%100);
     }
-    line[_MAX_PVAL] = '\0';
-    string_printf(histogram, "%s\n", line);
-    msg_boundary();
-    msg_print(string_buffer(histogram));
-    string_free(histogram);
-
-    msg_format("%d successes (%d.%2.2d%%). Avg pval = %d.%2.2d.",
-        ct_objs, ct_objs*100/ct, (ct_objs*10000/ct)%100,
-        tot_pvals/ct_objs, (tot_pvals*100/ct_objs)%100);
 }
 
 static bool do_cmd_wiz_hack_chris9(void)

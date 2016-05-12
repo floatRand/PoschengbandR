@@ -2366,7 +2366,7 @@ static bool make_artifact(object_type *o_ptr)
  *  Choose random ego type
  */
 int        apply_magic_ego = 0;
-static int _get_random_ego(int type)
+static int _get_random_ego(int type, int level)
 {
     int i, value;
     ego_item_type *e_ptr;
@@ -2385,10 +2385,10 @@ static int _get_random_ego(int type)
             int rarity = e_ptr->rarity;
             if (rarity)
             {
-                if (e_ptr->max_level && object_level > e_ptr->max_level)
-                    rarity += 3*(object_level - e_ptr->max_level)/4;
-                else if (e_ptr->level && object_level < e_ptr->level)
-                    rarity += 3*rarity*(e_ptr->level - object_level)/4;
+                if (e_ptr->max_level && level > e_ptr->max_level)
+                    rarity += 3*(level - e_ptr->max_level)/4;
+                else if (e_ptr->level && level < e_ptr->level)
+                    rarity += 3*rarity*(e_ptr->level - level)/4;
                 total += MAX(10000 / rarity, 1);
             }
         }
@@ -2405,10 +2405,10 @@ static int _get_random_ego(int type)
             int rarity = e_ptr->rarity;
             if (rarity)
             {
-                if (e_ptr->max_level && object_level > e_ptr->max_level)
-                    rarity += 3*(object_level - e_ptr->max_level)/4;
-                else if (e_ptr->level && object_level < e_ptr->level)
-                    rarity += 3*rarity*(e_ptr->level - object_level)/4;
+                if (e_ptr->max_level && level > e_ptr->max_level)
+                    rarity += 3*(level - e_ptr->max_level)/4;
+                else if (e_ptr->level && level < e_ptr->level)
+                    rarity += 3*rarity*(e_ptr->level - level)/4;
                 value -= MAX(10000 / rarity, 1);
                 if (value <= 0) 
                     return i;
@@ -2556,7 +2556,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
 
     while (!done)
     {
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_RING);
+        o_ptr->name2 = _get_random_ego(EGO_TYPE_RING, level);
         done = TRUE;
         if ( force_great
           && o_ptr->name2 != EGO_RING_SPEED
@@ -2871,8 +2871,8 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
             o_ptr->pval++;*/
         int amt = 5;
         if (level >= 30)
-            amt += (level - 30)/10;
-        o_ptr->pval = m_bonus(amt, level);
+            amt += (MIN(80,level) - 30)/10;
+        o_ptr->pval = 1 + m_bonus(amt, level);
         if (o_ptr->pval < 1)
             o_ptr->pval = 1;
 
@@ -2983,7 +2983,7 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
 
     while (!done)
     {
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_AMULET);
+        o_ptr->name2 = _get_random_ego(EGO_TYPE_AMULET, level);
         done = TRUE;
         if ( force_great
           && o_ptr->name2 != EGO_AMULET_DEFENDER
@@ -3437,7 +3437,7 @@ static bool _create_device(object_type *o_ptr, int level, int power, int mode)
 
         while (!done)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_DEVICE);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_DEVICE, level);
             done = TRUE;
 
             if ( o_ptr->name2 == EGO_DEVICE_RESISTANCE
@@ -3590,13 +3590,13 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
         }
         if (o_ptr->sval == SV_HARP)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_HARP);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_HARP, level);
             break;
         }
         
         while (!done)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_BOW);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_BOW, level);
             done = TRUE;
 
             switch (o_ptr->name2)
@@ -3656,7 +3656,7 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
         if (power < 0)
             break;
 
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_AMMO);
+        o_ptr->name2 = _get_random_ego(EGO_TYPE_AMMO, level);
 
         switch (o_ptr->name2)
         {
@@ -3681,7 +3681,7 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
         }
         while (!done)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_DIGGER);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_DIGGER, level);
             done = TRUE;
             switch (o_ptr->name2)
             {
@@ -3708,7 +3708,7 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
         }
         while (!done)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_WEAPON);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_WEAPON, level);
             done = TRUE;
             switch (o_ptr->name2)
             {
@@ -4204,7 +4204,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             _create_artifact(o_ptr, power);
             break;
         }
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_GLOVES);
+        o_ptr->name2 = _get_random_ego(EGO_TYPE_GLOVES, level);
         switch (o_ptr->name2)
         {
         case EGO_GLOVES_GIANT:
@@ -4264,7 +4264,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
     case TV_SOFT_ARMOR:
         if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ROBE) && one_in_(7))
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_ROBE);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_ROBE, level);
             switch (o_ptr->name2)
             {
             case EGO_ROBE_TWILIGHT:
@@ -4290,7 +4290,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
 
         while (!done)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_BODY_ARMOR);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_BODY_ARMOR, level);
             done = TRUE;
 
             switch (o_ptr->name2)
@@ -4383,7 +4383,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
 
         while (!done)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_SHIELD);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_SHIELD, level);
             done = TRUE;
 
             switch (o_ptr->name2)
@@ -4446,7 +4446,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             _create_artifact(o_ptr, power);
             break;
         }
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_CROWN);
+        o_ptr->name2 = _get_random_ego(EGO_TYPE_CROWN, level);
         switch (o_ptr->name2)
         {
         case EGO_CROWN_TELEPATHY:
@@ -4505,7 +4505,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
         }
         while (!done)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_HELMET);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_HELMET, level);
             done = TRUE;
 
             switch (o_ptr->name2)
@@ -4580,7 +4580,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             _create_artifact(o_ptr, power);
             break;
         }
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_CLOAK);
+        o_ptr->name2 = _get_random_ego(EGO_TYPE_CLOAK, level);
         switch (o_ptr->name2)
         {
         case EGO_CLOAK_IMMOLATION:
@@ -4652,7 +4652,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
         }
         while (!done)
         {
-            o_ptr->name2 = _get_random_ego(EGO_TYPE_BOOTS);
+            o_ptr->name2 = _get_random_ego(EGO_TYPE_BOOTS, level);
             done = TRUE;
 
             switch (o_ptr->name2)
@@ -4725,7 +4725,7 @@ static void _create_lite(object_type *o_ptr, int level, int power, int mode)
 
     while (!done)
     {
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_LITE);
+        o_ptr->name2 = _get_random_ego(EGO_TYPE_LITE, level);
         done = TRUE;
         switch (o_ptr->name2)
         {
