@@ -124,7 +124,37 @@ static void wiz_create_named_art(int a_idx)
     create_named_art(a_idx, py, px);
 }
 
+typedef struct {
+    string_ptr msg;
+    int        score;
+    int        lvl;
+} _wiz_msg_t, *_wiz_msg_ptr;
 
+static _wiz_msg_ptr _wiz_msg_alloc(void)
+{
+    _wiz_msg_ptr result = malloc(sizeof(_wiz_msg_t));
+    result->msg = string_alloc();
+    result->score = 0;
+    result->lvl = 0;
+    return result;
+}
+static void _wiz_msg_free(_wiz_msg_ptr msg)
+{
+    if (msg)
+    {
+        string_free(msg->msg);
+        msg->msg = 0;
+        free(msg);
+    }
+}
+static int _wiz_msg_cmp_score_desc(_wiz_msg_ptr l, _wiz_msg_ptr r)
+{
+    if (l->score < r->score)
+        return 1;
+    if (l->score > r->score)
+        return -1;
+    return 0;
+}
 /*
  * Hack -- quick debugging hook
  */
@@ -143,6 +173,7 @@ static void do_cmd_wiz_hack_chris1(void)
     int ct_pval = 0;
     int pow_base = 0;
     int i;
+    vec_ptr results = vec_alloc((vec_free_f)_wiz_msg_free);
 
     {
         object_type forge = {0};
@@ -163,22 +194,11 @@ static void do_cmd_wiz_hack_chris1(void)
         char buf[MAX_NLEN];
         int value;
 
-        if (1)
-        {
-            create_replacement_art(a_idx, &forge);
-        }
-        else
-        {
-            artifact_type  *a_ptr = &a_info[a_idx];
-            int                k_idx = lookup_kind(a_ptr->tval, a_ptr->sval);
-
-            object_prep(&forge, k_idx);
-            create_artifact(&forge, CREATE_ART_GOOD);
-        }
+        create_replacement_art(a_idx, &forge);
         identify_item(&forge);
 
         forge.ident |= (IDENT_FULL); 
-    /*    forge.art_name = dummy_name; */
+
         object_desc(buf, &forge, OD_COLOR_CODED);
         value = object_value_real(&forge);
         ct_pval += forge.pval;
@@ -195,9 +215,6 @@ static void do_cmd_wiz_hack_chris1(void)
             if (have_flag(forge.art_flags, TR_IM_COLD)) ct++;
             if (have_flag(forge.art_flags, TR_IM_FIRE)) ct++;
             if (have_flag(forge.art_flags, TR_IM_ELEC)) ct++;
-
-        /*    if (ct > 0)
-                msg_format("%s (Cost: %d)", buf, value);*/
         }
 
         if (have_flag(forge.art_flags, TR_SPEED))
@@ -223,22 +240,30 @@ static void do_cmd_wiz_hack_chris1(void)
         }
 
         if (have_flag(forge.art_flags, TR_DARKNESS))
-        {
             ct_darkness++;
-        /*    drop_near(&forge, -1, py, px); */
-        }
 
         if (have_flag(forge.art_flags, TR_SPELL_POWER))
-        {
             ct_spell_power++;
-        /*    drop_near(&forge, -1, py, px);*/
-        }
-        msg_boundary();
-        msg_format(" %d) %s (%.1f%%)", i+1, buf, (double)value/(double)pow_base*100.0);
 
-        /*drop_near(&forge, -1, py, px);*/
-        /*value = object_value_real(&forge);*/
+        {
+            _wiz_msg_ptr msg = _wiz_msg_alloc();
+            string_printf(msg->msg, "%s (%.1f%%)", buf, (double)value/(double)pow_base*100.0);
+            msg->score = value;
+            vec_add(results, msg);
+        }
+
+        /*msg_boundary();
+        msg_format(" %d) %s (%.1f%%)", i+1, buf, (double)value/(double)pow_base*100.0);*/
     }
+
+    vec_sort(results, (vec_cmp_f)_wiz_msg_cmp_score_desc);
+    for (i = 0; i < vec_length(results); i++)
+    {
+        _wiz_msg_ptr msg = vec_get(results, i);
+        msg_boundary();
+        msg_format(" %d) %s", i+1, string_buffer(msg->msg));
+    }
+    vec_free(results);
 
     msg_boundary();
     msg_format("Generated %d artifacts. %d had immunity. %d had speed. %d had extra attacks.", ct, ct_immunity, ct_speed, ct_blows);
@@ -246,7 +271,6 @@ static void do_cmd_wiz_hack_chris1(void)
 /*    msg_format("%d had darkness. %d had spell power.", ct_darkness, ct_spell_power); */
     msg_format("%d would be immunities created.", ct_would_be_immunities);
     msg_format("%.2f average pval.", (double)ct_pval/(double)ct);
-
 }
 
 static bool _is_stat_potion(object_type *o_ptr)

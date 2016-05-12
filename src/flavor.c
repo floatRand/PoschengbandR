@@ -2091,7 +2091,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         strcat(tmp_val2, buf);
     }
 
-    if (o_ptr->name3 && object_is_known(o_ptr))
+    if (o_ptr->name3 && object_is_known(o_ptr) && abbrev_all)
     {
         cptr  t = a_name + a_info[o_ptr->name3].name;
 

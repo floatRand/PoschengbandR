@@ -1531,13 +1531,6 @@ void equip_calc_bonuses(void)
         if (have_flag(flgs, TR_WEAPONMASTERY))
         {
             _weaponmastery(i, o_ptr->pval);
-
-            if ( o_ptr->name1 == ART_NARYA
-              || o_ptr->name1 == ART_NENYA
-              || o_ptr->name1 == ART_VILYA )
-            {
-                p_ptr->shooter_info.to_mult += 25 * o_ptr->pval;
-            }
         }
     }
 }

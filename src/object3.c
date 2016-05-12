@@ -488,12 +488,12 @@ s32b jewelry_cost(object_type *o_ptr, int options)
 
     if (have_flag(flgs, TR_WEAPONMASTERY))
     {
-        p += 5000 * pval;
+        p += 50000 * pval;
     }
 
     if (have_flag(flgs, TR_BLOWS))
     {
-        p += 5000 * pval;
+        p += 50000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Blows: p = %d", p);
@@ -503,7 +503,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
 
     if (have_flag(flgs, TR_XTRA_SHOTS))
     {
-        p += 5000 * pval;
+        p += 25000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Shots: p = %d", p);
@@ -512,7 +512,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
     }
     if (have_flag(flgs, TR_XTRA_MIGHT))
     {
-        p += 5000 * pval;
+        p += 25000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Extra Might: p = %d", p);

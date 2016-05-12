@@ -562,6 +562,13 @@ static void _display_extra(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr 
             (net > 0) ? "increases" : "<color:R>decreases</color>");
     }
 
+    net = _calc_net_bonus(o_ptr->pval, flgs, TR_XTRA_MIGHT, TR_INVALID);
+    if (net)
+    {
+        doc_printf(doc, "It %s the multiplier of your bow.\n",
+            (net > 0) ? "increases" : "<color:R>decreases</color>");
+    }
+
     switch (o_ptr->name1)
     {
     case ART_STONE_OF_NATURE:

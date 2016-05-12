@@ -2039,9 +2039,9 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         if (!one_in_(WEIRD_LUCK))
         {
             if (powers > 3) powers = powers*3/4;
-            if (powers > 5) powers = 5;
+            if (powers > 5 && o_ptr->tval != TV_RING) powers = 5;
 
-            /* Artifacting high rings of damage is now possible ... */
+            /* Artifacting high rings of damage used to be possible ... Perhaps it someday will again?*/
             if (o_ptr->to_d)
                 o_ptr->to_d = randint1((o_ptr->to_d + 1)/2) + randint1(o_ptr->to_d/2);
             if (o_ptr->to_a)
@@ -2302,14 +2302,26 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 {
                     add_flag(o_ptr->art_flags, TR_DEC_MANA);
                 }
-                else if (one_in_(100))
+                else if (one_in_(20))
                 {
                     add_flag(o_ptr->art_flags, TR_WEAPONMASTERY);
                     has_pval = TRUE;
                 }
-                else if (one_in_(66) && randint1(150) < lev - 50)
+                else if (one_in_(10) && randint1(150) < lev - 50)
                 {
                     add_flag(o_ptr->art_flags, TR_BLOWS);
+                    has_pval = TRUE;
+                }
+                else if (one_in_(20))
+                {
+                    add_flag(o_ptr->art_flags, TR_XTRA_MIGHT);
+                    if (!one_in_(7)) remove_flag(o_ptr->art_flags, TR_XTRA_SHOTS);
+                    has_pval = TRUE;
+                }
+                else if (one_in_(20))
+                {
+                    add_flag(o_ptr->art_flags, TR_XTRA_SHOTS);
+                    if (!one_in_(7)) remove_flag(o_ptr->art_flags, TR_XTRA_MIGHT);
                     has_pval = TRUE;
                 }
                 else if (one_in_(15))
@@ -2493,7 +2505,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             if (o_ptr->tval == TV_RING || o_ptr->tval == TV_GLOVES)
             {
                 o_ptr->pval = randint1(2);
-                if (one_in_(30)) o_ptr->pval++;
+                if (one_in_(6)) o_ptr->pval++;
             }
             else
             {
@@ -2532,7 +2544,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
 
     if (have_flag(o_ptr->art_flags, TR_WEAPONMASTERY) && o_ptr->pval > 2)
     {
-        if (one_in_(30))
+        if (one_in_(6))
             o_ptr->pval = 3;
         else
             o_ptr->pval = 2;

@@ -140,7 +140,7 @@ P:0:1d1:0:0:0
 F:STR | INT | WIS | DEX | CON | CHR | SPEED | HIDE_TYPE |
 F:FREE_ACT | SEE_INVIS |
 F:SLOW_DIGEST | REGEN | SUST_STR | SUST_DEX | IM_FIRE | BRAND_FIRE
-F:WEAPONMASTERY
+F:WEAPONMASTERY | XTRA_MIGHT
 E:BALL_FIRE:50:50:300
 E:The ring glows deep red...
 D:The Ring of Fire, set with a ruby that glows like flame. Narya is one
@@ -157,7 +157,7 @@ F:STR | INT | WIS | DEX | CON | CHR | SPEED | HIDE_TYPE |
 F:HOLD_LIFE | FREE_ACT | SEE_INVIS |
 F:LEVITATION | REGEN | 
 F:SUST_INT | SUST_WIS | IM_COLD | BRAND_COLD
-F:XTRA_POWER | WEAPONMASTERY
+F:XTRA_POWER | WEAPONMASTERY | XTRA_MIGHT
 E:BALL_COLD:50:50:400
 E:The ring glows bright white...
 D:The Ring of Adamant, with a pure white stone as centerpiece. Nenya is one
@@ -174,7 +174,7 @@ F:STR | INT | WIS | DEX | CON | CHR | SPEED | HIDE_TYPE |
 F:HOLD_LIFE | FREE_ACT | SEE_INVIS |
 F:LEVITATION | SLOW_DIGEST | REGEN |
 F:SUST_INT | SUST_WIS | SUST_STR | SUST_DEX | IM_ELEC | BRAND_ELEC
-F:XTRA_POWER | WEAPONMASTERY
+F:XTRA_POWER | WEAPONMASTERY | XTRA_MIGHT
 E:BALL_ELEC:50:50:500
 E:The ring glows deep blue...
 D:The Ring of Sapphire, with clear blue gems that shine like stars, 
