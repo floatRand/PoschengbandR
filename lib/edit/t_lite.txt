@@ -1165,10 +1165,10 @@ F:a:BUILDING_0:3:0:0:0:0:NONE:21
 ?:[EQU $QUEST21 2]
 F:a:BUILDING_0:3:0:0:0:0:NONE:21
 
-# Quest 21 rewarding (?Artifact)
+# Quest 21 rewarding (_Healing)
 ?:[EQU $QUEST21 3]
 F:a:BUILDING_0:3
-F:?:FLOOR:3:0:205
+F:?:FLOOR:3:0:270:205
 
 # Quest 21 finished, no new quest available
 ?:[EQU $QUEST21 4]
