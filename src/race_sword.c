@@ -929,8 +929,8 @@ race_t *mon_sword_get_race(void)
 
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 25,  37,  40,   4,  14,   5,  56,  20};
-    skills_t xs = { 12,  12,  12,   0,   0,   0,  20,   7};
+    skills_t bs = { 25,  24,  40,   4,  14,   5,  56,  20};
+    skills_t xs = { 12,  10,  12,   0,   0,   0,  20,   7};
 
         me.skills = bs;
         me.extra_skills = xs;
