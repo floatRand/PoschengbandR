@@ -302,9 +302,12 @@
 #define MAX_SHORT       32767
 
 /*
- * Maximum length of object's name
+ * Maximum length of object's name: Note, players can
+ * enter an arbitrarily long inscription which is appended
+ * to object descriptions, making the fixed buffer string
+ * handling approach foolish. Convert to c-string.c someday ... (237 matches)
  */
-#define MAX_NLEN        160
+#define MAX_NLEN        255
 
 /*
  * Special internal key
