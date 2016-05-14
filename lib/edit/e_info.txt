@@ -916,30 +916,30 @@ F:SLAY_EVIL | BLESSED | FULL_NAME
 #############
 
 N:300:RING:of Protection
-W:10:*:1
+W:10:*:2
 
 N:301:RING:& Elemental Ring~
-W:20:*:1
+W:20:*:2
 F:FULL_NAME
 
 N:302:RING:of Combat
-W:20:*:1
-F:HIDE_TYPE
-
-N:303:RING:of Archery
 W:20:*:2
 F:HIDE_TYPE
 
+N:303:RING:of Archery
+W:20:*:3
+F:HIDE_TYPE
+
 N:304:RING:(Defender)
-W:70:*:3
+W:70:*:6
 F:IGNORE_ACID | IGNORE_FIRE | IGNORE_COLD | IGNORE_ELEC
 
 N:305:RING:of Wizardry
-W:30:*:2
+W:30:*:4
 
 N:306:RING:of Speed
 #W:70:*:1
-W:30:*:3
+W:30:*:5
 F:SPEED | HIDE_TYPE | AWARE
 
 N:307:RING:of the Nazgul

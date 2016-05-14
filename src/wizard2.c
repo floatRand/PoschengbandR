@@ -2707,6 +2707,46 @@ extern void do_cmd_spoilers(void);
 
 #endif /* ALLOW_SPOILERS */
 
+
+static doc_ptr _wiz_doc = NULL;
+
+static void _wiz_stats_log_obj(int level, object_type *o_ptr)
+{
+    char buf[MAX_NLEN];
+    if (!_wiz_doc) return;
+    object_desc(buf, o_ptr, OD_COLOR_CODED);
+    doc_printf(_wiz_doc, "CL%2d DL%2d: <indent><style:indent>%s</style></indent>\n", p_ptr->lev, level, buf);
+}
+static void _wiz_stats_log_speed(int level, object_type *o_ptr)
+{
+    u32b flgs[TR_FLAG_SIZE];
+    object_flags(o_ptr, flgs);
+    if (have_flag(flgs, TR_SPEED))
+        _wiz_stats_log_obj(level, o_ptr);
+}
+static void _wiz_stats_log_books(int level, object_type *o_ptr, int max3, int max4)
+{
+    if ( (_third_book_p(o_ptr) && k_info[o_ptr->k_idx].counts.found < max3)
+      || (_fourth_book_p(o_ptr) && k_info[o_ptr->k_idx].counts.found < max4) )
+    {
+        _wiz_stats_log_obj(level, o_ptr);
+    }
+}
+static void _wiz_stats_log_devices(int level, object_type *o_ptr)
+{
+    if (_wand_of_rockets_p(o_ptr)) /* TODO */
+        _wiz_stats_log_obj(level, o_ptr);
+}
+static void _wiz_stats_log_arts(int level, object_type *o_ptr)
+{
+    if (o_ptr->name1)
+        _wiz_stats_log_obj(level, o_ptr);
+}
+static void _wiz_stats_log_rand_arts(int level, object_type *o_ptr)
+{
+    if (o_ptr->art_name)
+        _wiz_stats_log_obj(level, o_ptr);
+}
 static void _wiz_gather_stats(int which_dungeon, int level, int reps)
 {
     int i, j;
@@ -2726,9 +2766,16 @@ static void _wiz_gather_stats(int which_dungeon, int level, int reps)
         /* Identify all the Loot! What Fun!! */
         for (j = 0; j < max_o_idx; j++)
         {
-            if (!o_list[j].k_idx) continue;
-            if (o_list[j].tval == TV_GOLD) continue;
-            identify_item(&o_list[j]); /* statistics are updated here */
+            object_type *o_ptr = &o_list[j];
+            if (!o_ptr->k_idx) continue;
+            if (o_ptr->tval == TV_GOLD) continue;
+            identify_item(o_ptr); /* statistics are updated here */
+
+            if (1) _wiz_stats_log_speed(level, o_ptr);
+            if (0) _wiz_stats_log_books(level, o_ptr, 0, 5);
+            if (0) _wiz_stats_log_devices(level, o_ptr);
+            if (0) _wiz_stats_log_arts(level, o_ptr);
+            if (0) _wiz_stats_log_rand_arts(level, o_ptr);
         }
     }
 }
@@ -3120,8 +3167,10 @@ void do_cmd_debug(void)
            to be left in a bad state, and it has crashed once for me, so
            create a character dump right away. */
         int lev;
-        statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains, no AFC */
 
+        _wiz_doc = doc_alloc(80);
+
+        statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains, no AFC */
         for (lev = 1; lev < 100; lev++)
         {
             int reps = 1;
@@ -3137,6 +3186,11 @@ void do_cmd_debug(void)
             _wiz_gather_stats(DUNGEON_ANGBAND, lev, reps);
         }
         statistics_hack = FALSE;
+
+        doc_display(_wiz_doc, "Statistics", 0);
+        doc_free(_wiz_doc);
+        _wiz_doc = NULL;
+
         break;
     }
     case '=':
