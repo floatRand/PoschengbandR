@@ -2076,10 +2076,10 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         }
     }
 
-    if ( (abbrev_extra || abbrev_all)
-      && (o_ptr->ident & IDENT_FULL)
+    if ( (o_ptr->ident & IDENT_FULL)
       && obj_has_effect(o_ptr)
-      && !device )
+      && !device
+      && (abbrev_all || (abbrev_extra && o_ptr->activation.type)) )
     {
         char     buf[255];
         effect_t e = obj_get_effect(o_ptr);
