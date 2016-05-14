@@ -2717,6 +2717,36 @@ static void _wiz_stats_log_obj(int level, object_type *o_ptr)
     object_desc(buf, o_ptr, OD_COLOR_CODED);
     doc_printf(_wiz_doc, "CL%2d DL%2d: <indent><style:indent>%s</style></indent>\n", p_ptr->lev, level, buf);
 }
+static char _score_color(int score)
+{
+    if (score < 1000)
+        return 'D';
+    if (score < 10000)
+        return 'w';
+    if (score < 20000)
+        return 'W';
+    if (score < 40000)
+        return 'u';
+    if (score < 60000)
+        return 'y';
+    if (score < 80000)
+        return 'o';
+    if (score < 100000)
+        return 'R';
+    if (score < 150000)
+        return 'r';
+    return 'v';
+}
+static void _wiz_stats_log_obj_score(int level, object_type *o_ptr)
+{
+    char buf[MAX_NLEN];
+    int  score;
+    if (!_wiz_doc) return;
+    object_desc(buf, o_ptr, OD_COLOR_CODED);
+    score = object_value_real(o_ptr);
+    doc_printf(_wiz_doc, "CL%2d DL%2d <color:%c>%6d</color>: <indent><style:indent>%s</style></indent>\n",
+        p_ptr->lev, level, _score_color(score), score, buf);
+}
 static void _wiz_stats_log_speed(int level, object_type *o_ptr)
 {
     u32b flgs[TR_FLAG_SIZE];
@@ -2740,12 +2770,12 @@ static void _wiz_stats_log_devices(int level, object_type *o_ptr)
 static void _wiz_stats_log_arts(int level, object_type *o_ptr)
 {
     if (o_ptr->name1)
-        _wiz_stats_log_obj(level, o_ptr);
+        _wiz_stats_log_obj_score(level, o_ptr);
 }
 static void _wiz_stats_log_rand_arts(int level, object_type *o_ptr)
 {
     if (o_ptr->art_name)
-        _wiz_stats_log_obj(level, o_ptr);
+        _wiz_stats_log_obj_score(level, o_ptr);
 }
 static void _wiz_gather_stats(int which_dungeon, int level, int reps)
 {
@@ -2771,11 +2801,11 @@ static void _wiz_gather_stats(int which_dungeon, int level, int reps)
             if (o_ptr->tval == TV_GOLD) continue;
             identify_item(o_ptr); /* statistics are updated here */
 
-            if (1) _wiz_stats_log_speed(level, o_ptr);
+            if (0) _wiz_stats_log_speed(level, o_ptr);
             if (0) _wiz_stats_log_books(level, o_ptr, 0, 5);
             if (0) _wiz_stats_log_devices(level, o_ptr);
-            if (0) _wiz_stats_log_arts(level, o_ptr);
-            if (0) _wiz_stats_log_rand_arts(level, o_ptr);
+            if (1) _wiz_stats_log_arts(level, o_ptr);
+            if (1) _wiz_stats_log_rand_arts(level, o_ptr);
         }
     }
 }
