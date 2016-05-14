@@ -2873,8 +2873,6 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
         if (level >= 30)
             amt += (MIN(80,level) - 30)/10;
         o_ptr->pval = 1 + m_bonus(amt, level);
-        if (o_ptr->pval < 1)
-            o_ptr->pval = 1;
 
         if (randint0(20) < level - 50)
         {
@@ -5323,7 +5321,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         if (e_ptr->gen_flags & (TRG_XTRA_H_RES))
         {
             one_high_resistance(o_ptr);
-            if (randint1(object_level) > 60)
+            if (randint1(lev) > 60)
                 one_high_resistance(o_ptr);
         }
         if (e_ptr->gen_flags & (TRG_XTRA_E_RES)) one_ele_resistance(o_ptr);
@@ -5407,11 +5405,14 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         }
         if (o_ptr->name2 == EGO_BOOTS_SPEED)
         {
-            o_ptr->pval = 1 + m_bonus(9, object_level);
+            int amt = 3;
+            if (lev >= 30)
+                amt += (MIN(90,lev) - 30)/10;
+            o_ptr->pval = 1 + m_bonus(amt, lev);
         }
         if (o_ptr->name2 == EGO_BOOTS_FEANOR)
         {
-            o_ptr->pval = 6 + m_bonus(9, object_level);
+            o_ptr->pval = 6 + m_bonus(9, lev);
         }
         if (have_flag(o_ptr->art_flags, TR_DEVICE_POWER) && o_ptr->pval >= 3)
         {
