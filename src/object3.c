@@ -136,12 +136,12 @@ static s32b _speed_p(int pval)
 
     switch (abs(pval))
     {
-    case 1:  result = 10000; break;
-    case 2:  result = 20000; break;
-    case 3:  result = 35000; break;
-    case 4:  result = 60000; break;
-    case 5:  result = 90000; break;
-    default: result = 90000 + 40000*(pval - 5);
+    case 1:  result =  5000; break;
+    case 2:  result = 10000; break;
+    case 3:  result = 18000; break;
+    case 4:  result = 30000; break;
+    case 5:  result = 50000; break;
+    default: result = 50000 + 25000*(pval - 5);
     }
     if (pval < 0)
         result *= -1;
@@ -234,10 +234,10 @@ static s32b _resistances_q(u32b flgs[TR_FLAG_SIZE])
     cost += _check_flag_and_score(flgs, TR_RES_DISEN, 6000, &count);
     cost += _check_flag_and_score(flgs, TR_RES_TIME, 10000, &count);
 
-    cost += _check_flag_and_score(flgs, TR_IM_ACID,  80000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_ELEC, 130000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_FIRE, 120000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_COLD, 140000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_ACID,  40000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_ELEC,  60000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_FIRE,  60000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_COLD,  70000, &count);
 
     count = 0;
     cost -= _check_flag_and_score(flgs, TR_VULN_ACID, 5000, &count);
@@ -488,22 +488,31 @@ s32b jewelry_cost(object_type *o_ptr, int options)
 
     if (have_flag(flgs, TR_WEAPONMASTERY))
     {
-        p += 50000 * pval;
+        p += 25000 * pval;
     }
 
     if (have_flag(flgs, TR_BLOWS))
     {
-        p += 50000 * pval;
+        p += 25000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Blows: p = %d", p);
             cost_calc_hook(dbg_msg);
         }
     }
+    if (have_flag(flgs, TR_DEC_BLOWS))
+    {
+        p -= 25000 * pval;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * -Blows: p = %d", p);
+            cost_calc_hook(dbg_msg);
+        }
+    }
 
     if (have_flag(flgs, TR_XTRA_SHOTS))
     {
-        p += 25000 * pval;
+        p += 10000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Shots: p = %d", p);
@@ -512,7 +521,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
     }
     if (have_flag(flgs, TR_XTRA_MIGHT))
     {
-        p += 25000 * pval;
+        p += 10000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Extra Might: p = %d", p);
@@ -844,11 +853,19 @@ s32b armor_cost(object_type *o_ptr, int options)
     /* Extra Attacks */
     if (have_flag(flgs, TR_BLOWS))
     {
-        p += 50 * 1000 * pval; /* Just for show ... Shiva's Jacket and Ares */
-                               /* With Reforging, this is relevant: Biffed! */
+        p += 25000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Blows: p = %d", p);
+            cost_calc_hook(dbg_msg);
+        }
+    }
+    if (have_flag(flgs, TR_DEC_BLOWS))
+    {
+        p -= 25000 * pval;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * -Blows: p = %d", p);
             cost_calc_hook(dbg_msg);
         }
     }

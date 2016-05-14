@@ -443,6 +443,7 @@ static bool make_fake_artifact(object_type *o_ptr, int name1)
     o_ptr->ac = a_ptr->ac;
     o_ptr->dd = a_ptr->dd;
     o_ptr->ds = a_ptr->ds;
+    o_ptr->mult = a_ptr->mult;
     o_ptr->to_a = a_ptr->to_a;
     o_ptr->to_h = a_ptr->to_h;
     o_ptr->to_d = a_ptr->to_d;
@@ -452,7 +453,7 @@ static bool make_fake_artifact(object_type *o_ptr, int name1)
     return (TRUE);
 }
 
-static void spoil_artifact_doc(void)
+static void spoil_artifact_desc(void)
 {
     int i,j;
     doc_ptr doc = doc_alloc(80);
@@ -486,6 +487,60 @@ static void spoil_artifact_doc(void)
 
     doc_display(doc, "Artifact Spoilers", 0);
     doc_free(doc);
+    spoiler_hack = FALSE;
+}
+
+typedef struct {
+    char name[MAX_NLEN];
+    int score;
+} _obj_score_t, *_obj_score_ptr;
+static int _obj_score_cmp(_obj_score_ptr l, _obj_score_ptr r)
+{
+    if (l->score > r->score)
+        return -1;
+    if (l->score < r->score)
+        return 1;
+    return 0;
+}
+
+static void spoil_artifact_tables(void)
+{
+    int i;
+    doc_ptr doc = doc_alloc(80);
+    vec_ptr vec = vec_alloc(free);
+
+    spoiler_hack = TRUE;
+
+    for (i = 1; i < max_a_idx; ++i)
+    {
+        object_type    forge = {0};
+        _obj_score_ptr entry;
+
+        /*if (!make_fake_artifact(&forge, i)) continue;*/
+        if (!create_named_art_aux(i, &forge)) continue;
+
+        identify_item(&forge);
+        forge.ident |= IDENT_FULL;
+
+        entry = malloc(sizeof(_obj_score_t));
+        entry->score = object_value_real(&forge);
+        object_desc(entry->name, &forge, OD_COLOR_CODED);
+        vec_add(vec, entry);
+    }
+    vec_sort(vec, (vec_cmp_f)_obj_score_cmp);
+
+    doc_insert(doc, "     <color:G>  Score Artifact</color>\n");
+    for (i = 0; i < vec_length(vec); i++)
+    {
+        _obj_score_ptr entry = vec_get(vec, i);
+
+        doc_printf(doc, "%3d) %7d <indent><style:indent>%s</style></indent>\n", i+1, entry->score, entry->name);
+    }
+
+    doc_display(doc, "Artifact Tables", 0);
+    doc_free(doc);
+    vec_free(vec);
+
     spoiler_hack = FALSE;
 }
 
@@ -1457,7 +1512,8 @@ void do_cmd_spoilers(void)
         row = 4;
         col = 2;
         c_prt(TERM_RED, "Object Spoilers", row++, col - 2);
-        prt("(a) Artifacts", row++, col);
+        prt("(a) Artifact Descriptions", row++, col);
+        prt("(A) Artifact Tables", row++, col);
         prt("(o) Objects", row++, col);
         row++;
 
@@ -1485,7 +1541,10 @@ void do_cmd_spoilers(void)
         {
         /* Object Spoilers */
         case 'a':
-            spoil_artifact_doc();
+            spoil_artifact_desc();
+            break;
+        case 'A':
+            spoil_artifact_tables();
             break;
         case 'o':
             spoil_obj_desc("obj-desc.spo");
