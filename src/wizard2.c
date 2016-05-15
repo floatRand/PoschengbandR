@@ -14,7 +14,34 @@
 
 #include <assert.h>
 
+/* Statistics: Use the wizard commands '-' and '=' to gather statistics.
+   The Wizard command '"' and 'A' will then show all found artifacts,
+   including rand-arts. The character sheet will show statistics on object
+   distributions and key resources. The object info commands '~' for egos 'e'
+   and objects 'o' are also useful. Be sure to begin each statistics run
+   with a fresh, newly created character.*/
 bool statistics_hack = FALSE;
+static vec_ptr _rand_arts = NULL;
+
+vec_ptr rand_arts(void)
+{
+    if (!_rand_arts)
+        _rand_arts = vec_alloc(free);
+    return _rand_arts;
+}
+
+void rand_art_add(object_type *o_ptr)
+{
+    if (o_ptr->art_name)
+    {
+        object_type *copy = malloc(sizeof(object_type));
+        *copy = *o_ptr;
+        object_aware(copy);
+        object_known(copy);
+        copy->ident |= IDENT_FULL;
+        vec_add(rand_arts(), copy);
+    }
+}
 
 /*
  * Strip an "object name" into a buffer
@@ -2709,14 +2736,8 @@ extern void do_cmd_spoilers(void);
 
 
 static doc_ptr _wiz_doc = NULL;
+static bool    _wiz_show_scores = TRUE;
 
-static void _wiz_stats_log_obj(int level, object_type *o_ptr)
-{
-    char buf[MAX_NLEN];
-    if (!_wiz_doc) return;
-    object_desc(buf, o_ptr, OD_COLOR_CODED);
-    doc_printf(_wiz_doc, "CL%2d DL%2d: <indent><style:indent>%s</style></indent>\n", p_ptr->lev, level, buf);
-}
 static char _score_color(int score)
 {
     if (score < 1000)
@@ -2737,15 +2758,21 @@ static char _score_color(int score)
         return 'r';
     return 'v';
 }
-static void _wiz_stats_log_obj_score(int level, object_type *o_ptr)
+
+static void _wiz_stats_log_obj(int level, object_type *o_ptr)
 {
     char buf[MAX_NLEN];
-    int  score;
     if (!_wiz_doc) return;
     object_desc(buf, o_ptr, OD_COLOR_CODED);
-    score = object_value_real(o_ptr);
-    doc_printf(_wiz_doc, "CL%2d DL%2d <color:%c>%6d</color>: <indent><style:indent>%s</style></indent>\n",
-        p_ptr->lev, level, _score_color(score), score, buf);
+    if (_wiz_show_scores)
+    {
+        int  score;
+        score = object_value_real(o_ptr);
+        doc_printf(_wiz_doc, "CL%2d DL%2d <color:%c>%6d</color>: <indent><style:indent>%s</style></indent>\n",
+            p_ptr->lev, level, _score_color(score), score, buf);
+    }
+    else
+        doc_printf(_wiz_doc, "CL%2d DL%2d: <indent><style:indent>%s</style></indent>\n", p_ptr->lev, level, buf);
 }
 static void _wiz_stats_log_speed(int level, object_type *o_ptr)
 {
@@ -2770,12 +2797,12 @@ static void _wiz_stats_log_devices(int level, object_type *o_ptr)
 static void _wiz_stats_log_arts(int level, object_type *o_ptr)
 {
     if (o_ptr->name1)
-        _wiz_stats_log_obj_score(level, o_ptr);
+        _wiz_stats_log_obj(level, o_ptr);
 }
 static void _wiz_stats_log_rand_arts(int level, object_type *o_ptr)
 {
     if (o_ptr->art_name)
-        _wiz_stats_log_obj_score(level, o_ptr);
+        _wiz_stats_log_obj(level, o_ptr);
 }
 static void _wiz_gather_stats(int which_dungeon, int level, int reps)
 {
@@ -2801,10 +2828,13 @@ static void _wiz_gather_stats(int which_dungeon, int level, int reps)
             if (o_ptr->tval == TV_GOLD) continue;
             identify_item(o_ptr); /* statistics are updated here */
 
+            if (o_ptr->art_name)
+                rand_art_add(o_ptr);
+
             if (0) _wiz_stats_log_speed(level, o_ptr);
-            if (0) _wiz_stats_log_books(level, o_ptr, 0, 5);
+            if (0) _wiz_stats_log_books(level, o_ptr, 5, 5);
             if (0) _wiz_stats_log_devices(level, o_ptr);
-            if (1) _wiz_stats_log_arts(level, o_ptr);
+            if (0) _wiz_stats_log_arts(level, o_ptr);
             if (1) _wiz_stats_log_rand_arts(level, o_ptr);
         }
     }
@@ -3216,6 +3246,7 @@ void do_cmd_debug(void)
             _wiz_gather_stats(DUNGEON_ANGBAND, lev, reps);
         }
         statistics_hack = FALSE;
+        do_cmd_redraw();
 
         doc_display(_wiz_doc, "Statistics", 0);
         doc_free(_wiz_doc);
@@ -3228,9 +3259,17 @@ void do_cmd_debug(void)
         /* In this version, we gather statistics on the current level of the
            current dungeon. You still want to start with a fresh character. */
         int reps = get_quantity("How many reps? ", 100);
+
+        _wiz_doc = doc_alloc(80);
+
         statistics_hack = TRUE;
         _wiz_gather_stats(dungeon_type, dun_level, reps);
         statistics_hack = FALSE;
+        do_cmd_redraw();
+
+        doc_display(_wiz_doc, "Statistics", 0);
+        doc_free(_wiz_doc);
+        _wiz_doc = NULL;
         break;
     }
     case '_':

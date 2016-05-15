@@ -6153,6 +6153,7 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
         prt("You haven't found any egos just yet. Press any key to continue.", 0, 0);
         inkey();
         prt("", 0, 0);
+        C_KILL(ego_idx, max_e_idx, int);
         return;
     }
 

@@ -1996,6 +1996,10 @@ extern bool object_is_ammo(object_type *o_ptr);
 extern bool object_is_armour(object_type *o_ptr);
 extern bool object_is_shield(object_type *o_ptr);
 extern bool object_is_body_armour(object_type *o_ptr);
+extern bool object_is_ring(object_type *o_ptr);
+extern bool object_is_amulet(object_type *o_ptr);
+extern bool object_is_lite(object_type *o_ptr);
+extern bool object_is_boots(object_type *o_ptr);
 extern bool enchantment_hack;
 extern bool object_is_weapon_armour_ammo(object_type *o_ptr);
 extern bool object_is_melee_weapon(object_type *o_ptr);
@@ -2032,6 +2036,8 @@ extern bool character_dump_hack;
 extern void strip_name(char *buf, int k_idx);
 extern void strip_name_aux(char *dest, const char *src);
 extern cptr race_spoiler_page(int i);
+extern vec_ptr rand_arts(void);
+extern void rand_art_add(object_type *o_ptr);
 
 /* avatar.c */
 extern cptr virtue_name(int which);

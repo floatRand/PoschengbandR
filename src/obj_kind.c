@@ -280,7 +280,26 @@ bool object_is_helmet(object_type *o_ptr)
     if (o_ptr->tval == TV_HELM || o_ptr->tval == TV_CROWN) return TRUE;
     return FALSE;
 }
-
+bool object_is_ring(object_type *o_ptr)
+{
+    if (o_ptr->tval == TV_RING) return TRUE;
+    return FALSE;
+}
+bool object_is_amulet(object_type *o_ptr)
+{
+    if (o_ptr->tval == TV_AMULET) return TRUE;
+    return FALSE;
+}
+bool object_is_lite(object_type *o_ptr)
+{
+    if (o_ptr->tval == TV_LITE) return TRUE;
+    return FALSE;
+}
+bool object_is_boots(object_type *o_ptr)
+{
+    if (o_ptr->tval == TV_BOOTS) return TRUE;
+    return FALSE;
+}
 bool object_is_device(object_type *o_ptr)
 {
     switch (o_ptr->tval)
