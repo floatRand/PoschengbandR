@@ -2036,8 +2036,10 @@ extern bool character_dump_hack;
 extern void strip_name(char *buf, int k_idx);
 extern void strip_name_aux(char *dest, const char *src);
 extern cptr race_spoiler_page(int i);
-extern vec_ptr rand_arts(void);
-extern void rand_art_add(object_type *o_ptr);
+extern vec_ptr stats_rand_arts(void);
+extern void stats_add_rand_art(object_type *o_ptr);
+extern vec_ptr stats_egos(void);
+extern void stats_add_ego(object_type *o_ptr);
 
 /* avatar.c */
 extern cptr virtue_name(int which);

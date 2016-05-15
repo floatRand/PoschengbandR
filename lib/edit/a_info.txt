@@ -526,7 +526,7 @@ E:Your crown glows deep blue ... You feel a warm tingling inside.
 
 N:43:of Jack of Shadows
 I:35:1:7
-W:30:20:10:100000
+W:50:30:10:100000
 P:1:0d0:0:0:19
 F:STEALTH | SEARCH | FREE_ACT | SEE_INVIS | HOLD_LIFE | TELEPATHY
 
@@ -625,7 +625,7 @@ D:shielded by his cloak from a multitude of hostile eyes.
 
 N:52:'Cambeleg'
 I:31:1:2
-W:40:6:5:36000
+W:40:10:5:36000
 P:1:0d0:8:8:15
 F:STR | CON | HIDE_TYPE | FREE_ACT | SHOW_MODS
 D:A hero's handgear that lends great prowess in battle.
@@ -2530,7 +2530,7 @@ F:RES_ELEC | RES_FIRE | RES_COLD
 
 N:239:of Sam
 I:32:2:1
-W:20:1:15:15000
+W:20:3:15:15000
 P:2:0d0:1:1:7
 F:DEC_STR | DEX | HIDE_TYPE | SPEED
 D:Sam was brave and trustworthy companion of Frodo.
@@ -2539,22 +2539,22 @@ D:ahead with a steady hand and a noble heart.
 
 N:240:of Merry
 I:35:1:1
-W:20:1:10:15000
+W:20:3:10:15000
 P:1:0d0:1:1:7
 F:DEC_STR | DEX | STEALTH | SPEED | RES_CONF | SEARCH | HIDE_TYPE 
 D:Merry was the most perceptive and intelligent of hobbits.
 
 N:241:of Pippin
 I:31:1:1
-W:20:1:5:15000
+W:20:3:5:15000
 P:1:0d0:1:1:7
 F:DEC_STR | DEX | HIDE_TYPE | SHOW_MODS | SPEED
 D:'Fool of a Took' ... Ah, but Peregrin was brave if not wise.
 
 N:242:of Bilbo
-I:37:20:1
+I:37:20:2
 W:60:4:70:200000
-P:28:1d4:1:1:7
+P:28:1d4:2:2:7
 F:STEALTH | DEC_STR | SEE_INVIS | DEX | SPEED |
 F:RES_ACID | RES_FIRE | RES_COLD | RES_POIS | RES_DARK | XTRA_H_RES
 D:"Also there is this!" said Bilbo, bringing out a parcel which seemed

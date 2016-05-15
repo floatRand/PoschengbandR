@@ -22,15 +22,23 @@
    with a fresh, newly created character.*/
 bool statistics_hack = FALSE;
 static vec_ptr _rand_arts = NULL;
+static vec_ptr _egos = NULL;
 
-vec_ptr rand_arts(void)
+vec_ptr stats_rand_arts(void)
 {
     if (!_rand_arts)
         _rand_arts = vec_alloc(free);
     return _rand_arts;
 }
 
-void rand_art_add(object_type *o_ptr)
+vec_ptr stats_egos(void)
+{
+    if (!_egos)
+        _egos = vec_alloc(free);
+    return _egos;
+}
+
+void stats_add_rand_art(object_type *o_ptr)
 {
     if (o_ptr->art_name)
     {
@@ -39,7 +47,20 @@ void rand_art_add(object_type *o_ptr)
         object_aware(copy);
         object_known(copy);
         copy->ident |= IDENT_FULL;
-        vec_add(rand_arts(), copy);
+        vec_add(stats_rand_arts(), copy);
+    }
+}
+
+void stats_add_ego(object_type *o_ptr)
+{
+    if (o_ptr->name2)
+    {
+        object_type *copy = malloc(sizeof(object_type));
+        *copy = *o_ptr;
+        object_aware(copy);
+        object_known(copy);
+        copy->ident |= IDENT_FULL;
+        vec_add(stats_egos(), copy);
     }
 }
 
@@ -2829,7 +2850,10 @@ static void _wiz_gather_stats(int which_dungeon, int level, int reps)
             identify_item(o_ptr); /* statistics are updated here */
 
             if (o_ptr->art_name)
-                rand_art_add(o_ptr);
+                stats_add_rand_art(o_ptr);
+
+            if (o_ptr->name2)
+                stats_add_ego(o_ptr);
 
             if (0) _wiz_stats_log_speed(level, o_ptr);
             if (0) _wiz_stats_log_books(level, o_ptr, 5, 5);

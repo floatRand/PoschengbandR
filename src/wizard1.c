@@ -494,6 +494,8 @@ static void spoil_artifact_desc(void)
 }
 
 #define ART_RANDOM -1
+#define ART_EGO    -2
+#define ART_STD_BEGIN 1
 
 typedef struct {
     int  id;
@@ -516,72 +518,103 @@ static int _term_width(void)
     return cx;
 }
 
-typedef bool (*_art_p)(object_type *o_ptr);
+typedef bool (*_obj_p)(object_type *o_ptr);
 
-static void _spoil_artifact_table_aux(doc_ptr doc, cptr title, _art_p pred)
+#define _SPOIL_ARTS      0x01
+#define _SPOIL_RAND_ARTS 0x02
+#define _SPOIL_EGOS      0x04
+static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 {
     int i;
     vec_ptr entries = vec_alloc(free);
-    vec_ptr rand = rand_arts();
-    int     ct_std = 0, ct_rnd = 0;
-    int     score_std = 0, score_rnd = 0;
-    int     max_score_std = 0, max_score_rnd = 0;
+    int     ct_std = 0, ct_rnd = 0, ct_ego = 0;
+    int     score_std = 0, score_rnd = 0, score_ego = 0;
+    int     max_score_std = 0, max_score_rnd = 0, max_score_ego = 0;
 
-    for (i = 1; i < max_a_idx; ++i)
+    if ((options & _SPOIL_ARTS) && !random_artifacts)
     {
-        object_type    forge = {0};
-        _art_info_ptr  entry;
-
-        if (a_info[i].gen_flags & TRG_QUESTITEM) continue;
-        if (!create_named_art_aux(i, &forge)) continue;
-
-        /*No Stats Tracking, please!!!
-        identify_item(&forge);*/
-        object_aware(&forge);
-        object_known(&forge);
-        forge.ident |= IDENT_FULL;
-
-        if (pred && !pred(&forge)) continue;
-
-        entry = malloc(sizeof(_art_info_t));
-        entry->id = i;
-        entry->score = object_value_real(&forge);
-        object_desc(entry->name, &forge, OD_COLOR_CODED);
-        vec_add(entries, entry);
-
-        if (a_info[entry->id].cur_num == 1)
+        for (i = 1; i < max_a_idx; ++i)
         {
-            ct_std++;
-            score_std += entry->score;
-            if (entry->score > max_score_std)
-                max_score_std = entry->score;
+            object_type    forge = {0};
+            _art_info_ptr  entry;
+
+            if (a_info[i].gen_flags & TRG_QUESTITEM) continue;
+            if (!create_named_art_aux(i, &forge)) continue;
+
+            /*No Stats Tracking, please!!!
+            identify_item(&forge);*/
+            object_aware(&forge);
+            object_known(&forge);
+            forge.ident |= IDENT_FULL;
+
+            if ((options & _SPOIL_EGOS) && !a_info[i].cur_num) continue; /* Hack */
+            if (pred && !pred(&forge)) continue;
+
+            entry = malloc(sizeof(_art_info_t));
+            entry->id = i;
+            entry->score = object_value_real(&forge);
+            object_desc(entry->name, &forge, OD_COLOR_CODED);
+            vec_add(entries, entry);
+
+            if (a_info[entry->id].cur_num == 1)
+            {
+                ct_std++;
+                score_std += entry->score;
+                if (entry->score > max_score_std)
+                    max_score_std = entry->score;
+            }
         }
     }
-    for (i = 0; i < vec_length(rand); i++)
+    if (options & _SPOIL_RAND_ARTS)
     {
-        object_type   *o_ptr = vec_get(rand, i);
-        _art_info_ptr  entry;
+        vec_ptr v = stats_rand_arts();
+        for (i = 0; i < vec_length(v); i++)
+        {
+            object_type   *o_ptr = vec_get(v, i);
+            _art_info_ptr  entry;
 
-        if (pred && !pred(o_ptr)) continue;
+            if (pred && !pred(o_ptr)) continue;
 
-        entry = malloc(sizeof(_art_info_t));
-        entry->id = ART_RANDOM;
-        entry->score = object_value_real(o_ptr);
-        object_desc(entry->name, o_ptr, OD_COLOR_CODED);
-        vec_add(entries, entry);
+            entry = malloc(sizeof(_art_info_t));
+            entry->id = ART_RANDOM;
+            entry->score = object_value_real(o_ptr);
+            object_desc(entry->name, o_ptr, OD_COLOR_CODED);
+            vec_add(entries, entry);
 
-        ct_rnd++;
-        score_rnd += entry->score;
-        if (entry->score > max_score_rnd)
-            max_score_rnd = entry->score;
+            ct_rnd++;
+            score_rnd += entry->score;
+            if (entry->score > max_score_rnd)
+                max_score_rnd = entry->score;
+        }
     }
+    if (options & _SPOIL_EGOS)
+    {
+        vec_ptr v = stats_egos();
+        for (i = 0; i < vec_length(v); i++)
+        {
+            object_type   *o_ptr = vec_get(v, i);
+            _art_info_ptr  entry;
 
+            if (pred && !pred(o_ptr)) continue;
+
+            entry = malloc(sizeof(_art_info_t));
+            entry->id = ART_EGO;
+            entry->score = object_value_real(o_ptr);
+            object_desc(entry->name, o_ptr, OD_COLOR_CODED);
+            vec_add(entries, entry);
+
+            ct_ego++;
+            score_ego += entry->score;
+            if (entry->score > max_score_ego)
+                max_score_ego = entry->score;
+        }
+    }
     if (vec_length(entries))
     {
         vec_sort(entries, (vec_cmp_f)_art_score_cmp);
 
         doc_printf(doc, "<topic:%s><style:heading>%s</style>\n\n", title, title);
-        doc_insert(doc, "<style:wide>     <color:G>  Score Lvl Rty Cts Artifact</color>\n");
+        doc_insert(doc, "<style:wide>     <color:G>  Score Lvl Rty Cts Object Description</color>\n");
         for (i = 0; i < vec_length(entries); i++)
         {
             _art_info_ptr  entry = vec_get(entries, i);
@@ -589,6 +622,10 @@ static void _spoil_artifact_table_aux(doc_ptr doc, cptr title, _art_p pred)
             if (entry->id == ART_RANDOM)
             {
                 doc_printf(doc, "<color:v>%3d) %7d</color>             ", i+1, entry->score);
+            }
+            else if (entry->id == ART_EGO)
+            {
+                doc_printf(doc, "<color:B>%3d) %7d</color>             ", i+1, entry->score);
             }
             else
             {
@@ -609,23 +646,38 @@ static void _spoil_artifact_table_aux(doc_ptr doc, cptr title, _art_p pred)
             doc_printf(doc, "<indent><style:indent>%s</style></indent>\n", entry->name);
         }
 
-        if (ct_std || ct_rnd)
+        if (ct_std || ct_rnd || ct_ego)
         {
-            doc_printf(doc, "\n<color:G>%20.20s  Ct Average    Best</color>\n", "");
+            doc_printf(doc, "\n<color:G>%20.20s   Ct Average    Best</color>\n", "");
             if (ct_std)
             {
-                doc_printf(doc, "<color:B>%20.20s</color> %3d %7d %7d\n",
+                doc_printf(doc, "<color:B>%20.20s</color> %4d %7d %7d\n",
                     "Stand Arts", ct_std, score_std/ct_std, max_score_std);
             }
             if (ct_rnd)
             {
-                doc_printf(doc, "<color:B>%20.20s</color> %3d %7d %7d\n",
+                doc_printf(doc, "<color:B>%20.20s</color> %4d %7d %7d\n",
                     "Rand Arts", ct_rnd, score_rnd/ct_rnd, max_score_rnd);
+            }
+            if (ct_ego)
+            {
+                doc_printf(doc, "<color:B>%20.20s</color> %4d %7d %7d\n",
+                    "Egos", ct_ego, score_ego/ct_ego, max_score_ego);
             }
         }
         doc_insert(doc, "</style>\n\n");
     }
     vec_free(entries);
+}
+
+static void _spoil_artifact_table_aux(doc_ptr doc, cptr title, _obj_p pred)
+{
+    _spoil_table_aux(doc, title, pred, _SPOIL_ARTS | _SPOIL_RAND_ARTS);
+}
+
+static void _spoil_object_table_aux(doc_ptr doc, cptr title, _obj_p pred)
+{
+    _spoil_table_aux(doc, title, pred, _SPOIL_ARTS | _SPOIL_RAND_ARTS | _SPOIL_EGOS);
 }
 
 static void spoil_artifact_tables(void)
@@ -648,6 +700,29 @@ static void spoil_artifact_tables(void)
     spoiler_hack = FALSE;
 
     doc_display(doc, "Artifact Tables", 0);
+    doc_free(doc);
+}
+
+static void spoil_object_tables(void)
+{
+    doc_ptr doc = doc_alloc(MIN(100, _term_width()));
+
+    spoiler_hack = TRUE;
+    _spoil_object_table_aux(doc, "All Objects", NULL);
+    _spoil_object_table_aux(doc, "Weapons", object_is_melee_weapon);
+    _spoil_object_table_aux(doc, "Shields", object_is_shield);
+    _spoil_object_table_aux(doc, "Bows", object_is_bow);
+    _spoil_object_table_aux(doc, "Rings", object_is_ring);
+    _spoil_object_table_aux(doc, "Amulets", object_is_amulet);
+    _spoil_object_table_aux(doc, "Lights", object_is_lite);
+    _spoil_object_table_aux(doc, "Body Armor", object_is_body_armour);
+    _spoil_object_table_aux(doc, "Cloaks", object_is_cloak);
+    _spoil_object_table_aux(doc, "Helmets", object_is_helmet);
+    _spoil_object_table_aux(doc, "Gloves", object_is_gloves);
+    _spoil_object_table_aux(doc, "Boots", object_is_boots);
+    spoiler_hack = FALSE;
+
+    doc_display(doc, "Object Tables", 0);
     doc_free(doc);
 }
 
@@ -1622,6 +1697,7 @@ void do_cmd_spoilers(void)
         prt("(a) Artifact Descriptions", row++, col);
         prt("(A) Artifact Tables", row++, col);
         prt("(o) Objects", row++, col);
+        prt("(O) Object Tables", row++, col);
         row++;
 
         c_prt(TERM_RED, "Monster Spoilers", row++, col - 2);
@@ -1652,6 +1728,9 @@ void do_cmd_spoilers(void)
             break;
         case 'A':
             spoil_artifact_tables();
+            break;
+        case 'O':
+            spoil_object_tables();
             break;
         case 'o':
             spoil_obj_desc("obj-desc.spo");

@@ -21,8 +21,9 @@ debug_hook cost_calc_hook = NULL;
 static double _calc_cost(double cost, int count)
 {
     int c = count - 1;
-    /* It gets harder to add new stuff to an enchanted item */
-    return cost * (1.0 + c/10.0 + c*c/50.0);
+    /* It gets harder to add new stuff to an enchanted item
+    return cost * (1.0 + c/10.0 + c*c/50.0); */
+    return cost * (1.0 + c/5.0 + c*c/25.0);
 }
 
 static double _check_flag_and_score(u32b flgs[TR_FLAG_SIZE], u32b flg, u32b score, int *count)
@@ -234,10 +235,10 @@ static s32b _resistances_q(u32b flgs[TR_FLAG_SIZE])
     cost += _check_flag_and_score(flgs, TR_RES_DISEN, 6000, &count);
     cost += _check_flag_and_score(flgs, TR_RES_TIME, 10000, &count);
 
-    cost += _check_flag_and_score(flgs, TR_IM_ACID,  40000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_ELEC,  60000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_FIRE,  60000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_COLD,  70000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_ACID,  30000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_ELEC,  40000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_FIRE,  40000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_COLD,  50000, &count);
 
     count = 0;
     cost -= _check_flag_and_score(flgs, TR_VULN_ACID, 5000, &count);
@@ -576,7 +577,10 @@ s32b jewelry_cost(object_type *o_ptr, int options)
         int y = to_d * ABS(to_d);
 
         p += 50 * x;
-        p += 100 * y;
+        if (o_ptr->name2 == EGO_RING_WIZARDRY || o_ptr->name2 == EGO_AMULET_MAGI)
+            p += 50 * y;
+        else
+            p += 100 * y;
 
         if (cost_calc_hook)
         {
@@ -889,8 +893,12 @@ s32b armor_cost(object_type *o_ptr, int options)
         int x = to_h * ABS(to_h);
         int y = to_d * ABS(to_d);
 
-        p += 100 * x;
-        p += 200 * y;
+        p += 50 * x;
+
+        if (o_ptr->name2 == EGO_CROWN_MAGI)
+            p += 50 * y;
+        else
+            p += 100 * y;
 
         if (cost_calc_hook)
         {
@@ -981,6 +989,8 @@ s32b weapon_cost(object_type *o_ptr, int options)
 
         if (have_flag(flgs, TR_KILL_EVIL)) s += (2.5 * 0.8);
         else if (have_flag(flgs, TR_SLAY_EVIL)) s += (1.0 * 0.8);
+
+        if (o_ptr->name1 == ART_ETERNAL_BLADE) s += (1.0 * 0.8); /* BR_TIME */
 
         if (have_flag(flgs, TR_SLAY_GOOD)) s += (1.0 * 0.20);
         if (have_flag(flgs, TR_SLAY_LIVING)) s += (1.0 * 0.70);
