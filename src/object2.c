@@ -2337,7 +2337,7 @@ static bool make_artifact(object_type *o_ptr)
         if (a_ptr->level > dun_level)
         {
             /* Acquire the "out-of-depth factor" */
-            int d = (a_ptr->level - dun_level) * 2;
+            int d = (a_ptr->level - dun_level) * (a_ptr->level - dun_level);
 
             /* Roll for out-of-depth creation */
             if (!one_in_(d)) continue;
