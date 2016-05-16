@@ -942,7 +942,9 @@ s32b weapon_cost(object_type *o_ptr, int options)
         cost_calc_hook(dbg_msg);
     }
     {
-        double b = (double)o_ptr->dd * ((double)o_ptr->ds + 1.0)/2;
+        object_kind *k_ptr = &k_info[o_ptr->k_idx];
+        double b = (double)k_ptr->dd * ((double)k_ptr->ds + 1.0)/2;
+        double d = (double)o_ptr->dd * ((double)o_ptr->ds + 1.0)/2;
         double x;
         double d;
         double s = 1.0;
@@ -1003,7 +1005,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
         if (have_flag(flgs, TR_STUN))
             s *= 1.10;
 
-        d = b*s + (double)to_d;
+        d = d*s + (double)to_d;
         x = d - b;
         if (d < 1.0)
             d = 1.0;
