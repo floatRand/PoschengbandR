@@ -942,7 +942,9 @@ s32b weapon_cost(object_type *o_ptr, int options)
         cost_calc_hook(dbg_msg);
     }
     {
-        double d = (double)o_ptr->dd * ((double)o_ptr->ds + 1.0)/2;
+        double b = (double)o_ptr->dd * ((double)o_ptr->ds + 1.0)/2;
+        double x;
+        double d;
         double s = 1.0;
 
         /* Figure average damage per strike. Not really because we are stacking slays
@@ -1001,19 +1003,18 @@ s32b weapon_cost(object_type *o_ptr, int options)
         if (have_flag(flgs, TR_STUN))
             s *= 1.10;
 
-        d = d*s + (double)to_d;
+        d = b*s + (double)to_d;
+        x = d - b;
         if (d < 1.0)
             d = 1.0;
 
         if (have_flag(flgs, TR_BLOWS))
             d += (d + 40.0)*pval/10.0;  /* +20 from strength, +20 from gear ... */
 
-        w = (s32b)(d * d * d * 0.3);
+        /*w = (s32b)(d * d * d * 0.4);*/
+        w = (s32b)(x * 100.0) + (s32b)(x * x * 5.0) + (s32b)(d * d * d * 0.2);
 
         if (have_flag(flgs, TR_VAMPIRIC)) 
-            w += 5000;
-
-        if (have_flag(flgs, TR_CHAOTIC)) 
             w += 3000;
 
         if (have_flag(flgs, TR_IMPACT)) 
@@ -1024,7 +1025,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
 
         if (cost_calc_hook)
         {
-            sprintf(dbg_msg, "  * Base Cost: d = %.2f, s = %.2f, w = %d", d, s, w);
+            sprintf(dbg_msg, "  * Damage: d = %.2f, b = %.2f, s = %.2f, x = %.2f, w = %d", d, b, s, x, w);
             cost_calc_hook(dbg_msg);
         }
     }
@@ -1041,7 +1042,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
     }
 
     /* Resistances */
-    q = _resistances_q(flgs)/2;
+    q = _resistances_q(flgs);
     p = w + q;
 
     if (cost_calc_hook)
@@ -1051,7 +1052,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
     }
 
     /* Abilities */
-    q = _abilities_q(flgs)/2;
+    q = _abilities_q(flgs);
     p += q;
 
     if (cost_calc_hook)
@@ -1072,7 +1073,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
     }
 
     /* Stats */
-    q = _stats_q(flgs, pval)/2;
+    q = _stats_q(flgs, pval);
     if (q != 0)
     {
         p += q;
@@ -1138,7 +1139,12 @@ s32b weapon_cost(object_type *o_ptr, int options)
         p += 75;
 
     p += o_ptr->weight;
-    
+    if (cost_calc_hook)
+    {
+        sprintf(dbg_msg, "  * Weight/2-hands: p = %d", p);
+        cost_calc_hook(dbg_msg);
+    }
+
     if ((options & COST_REAL) || object_is_known(o_ptr))
         p = _finalize_p(p, flgs, o_ptr);
     else
@@ -1277,7 +1283,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     }
 
     /* Resistances */
-    q = _resistances_q(flgs)/2;
+    q = _resistances_q(flgs);
     p = w + q + (q/100)*w/200;
     /*p = w + q*(1+w/20000);*/
 
@@ -1361,6 +1367,13 @@ s32b bow_cost(object_type *o_ptr, int options)
             sprintf(dbg_msg, "  * AC: p = %d", p);
             cost_calc_hook(dbg_msg);
         }
+    }
+
+    p += o_ptr->weight; /* Hack for average gear ... */
+    if (cost_calc_hook)
+    {
+        sprintf(dbg_msg, "  * Weight: p = %d", p);
+        cost_calc_hook(dbg_msg);
     }
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
