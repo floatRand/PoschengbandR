@@ -24,6 +24,7 @@ static void _display_curses(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr
 static void _display_activation(object_type *o_ptr, doc_ptr doc);
 static void _display_ignore(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr doc);
 static void _display_autopick(object_type *o_ptr, doc_ptr doc);
+static void _display_cost(object_type *o_ptr, doc_ptr doc);
 static void _lite_display_doc(object_type *o_ptr, doc_ptr doc);
 
 static int _calc_net_bonus(int amt, u32b flgs[TR_FLAG_SIZE], int flg, int flg_dec);
@@ -771,6 +772,30 @@ static void _display_autopick(object_type *o_ptr, doc_ptr doc)
     }
 }
 
+/* Debugging Object Pricing */
+static doc_ptr _dbg_doc = NULL;
+static void _cost_dbg_hook(cptr msg)
+{
+    doc_printf(_dbg_doc, "%s\n", msg);
+}
+
+static void _display_cost(object_type *o_ptr, doc_ptr doc)
+{
+    if (1 && p_ptr->wizard)
+    {
+        int cost;
+
+        _dbg_doc = doc;
+        cost_calc_hook = _cost_dbg_hook;
+
+        doc_newline(doc);
+        cost = new_object_cost(o_ptr, COST_REAL);
+
+        cost_calc_hook = NULL;
+        _dbg_doc = NULL;
+    }
+}
+
 static void _lite_display_doc(object_type *o_ptr, doc_ptr doc)
 {
     if (o_ptr->tval != TV_LITE) return;
@@ -889,6 +914,7 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
         doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
 
     _display_autopick(o_ptr, doc);
+    _display_cost(o_ptr, doc);
 
     doc_insert(doc, "</style></indent>\n");
 }
@@ -1029,5 +1055,7 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     _display_ignore(o_ptr, flgs, doc);
 
     _display_autopick(o_ptr, doc);
+    _display_cost(o_ptr, doc);
+
     doc_insert(doc, "</style></indent>\n");
 }

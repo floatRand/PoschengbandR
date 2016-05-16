@@ -86,12 +86,12 @@ static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
     cost += _check_flag_and_score(flgs, TR_CHR,  500*mult, &count);
 
     count = 0;
-    cost -= _check_flag_and_score(flgs, TR_DEC_STR,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_INT,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_WIS,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_DEX,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_CON,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_CHR,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_STR,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_INT,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_WIS,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_DEX,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_CON,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_CHR,  500*mult, &count);
 
     /* Skills */
     count = 0;
@@ -104,11 +104,11 @@ static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
 
 
     count = 0;
-    cost -= _check_flag_and_score(flgs, TR_DEC_MAGIC_MASTERY,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_STEALTH,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_SPELL_CAP,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_SPELL_POWER,  250*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_LIFE, 250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_MAGIC_MASTERY,  750*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_STEALTH,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_SPELL_CAP,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_SPELL_POWER,  1000*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_LIFE, 500*mult, &count);
 
     cost -= _check_flag_and_score(flgs, TR_DEC_SPEED, 1000*mult, &count);
 
@@ -127,10 +127,16 @@ static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
     double cost = 0.0;
     int count = 0;
 
+    /* Weak, Trifling abilities */
+    count = 0;
     cost += _check_flag_and_score(flgs, TR_THROW, 100, &count);
     cost += _check_flag_and_score(flgs, TR_LITE, 300, &count);
     cost += _check_flag_and_score(flgs, TR_SLOW_DIGEST, 500, &count);
     cost += _check_flag_and_score(flgs, TR_WARNING, 700, &count);
+    cost += _check_flag_and_score(flgs, TR_EASY_SPELL, 1000, &count);
+
+    /* Low ESP */
+    count = 0;
     cost += _check_flag_and_score(flgs, TR_ESP_ORC, 700, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_TROLL, 700, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_GIANT, 700, &count);
@@ -141,35 +147,32 @@ static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
     cost += _check_flag_and_score(flgs, TR_ESP_DEMON, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_DRAGON, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_HUMAN, 1000, &count);
-    cost += _check_flag_and_score(flgs, TR_EASY_SPELL, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_NONLIVING, 1200, &count);
 
-    /* Don't let lots of weak attributes get out of hand ... */
+    /* Sustains */
     count = 0;
-
     cost += _check_flag_and_score(flgs, TR_SUST_STR, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_INT, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_WIS, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_DEX, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_CHR, 1000, &count);
     cost += _check_flag_and_score(flgs, TR_SUST_CON, 1000, &count);
+
+    /* Good Abilities */
+    count = 0;
     cost += _check_flag_and_score(flgs, TR_LEVITATION, 2500, &count);
     cost += _check_flag_and_score(flgs, TR_HOLD_LIFE, 2500, &count);
     cost += _check_flag_and_score(flgs, TR_FREE_ACT, 2500, &count);
     cost += _check_flag_and_score(flgs, TR_REGEN, 2500, &count);
 
-    /* Don't let lots of weak attributes get out of hand ... */
+    /* Great Abilities */
     count = 0;
-
     cost += _check_flag_and_score(flgs, TR_RES_FEAR, 3000, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_UNIQUE, 5000, &count);
     cost += _check_flag_and_score(flgs, TR_REFLECT, 7500, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_EVIL, 8000, &count);
     cost += _check_flag_and_score(flgs, TR_DEC_MANA, 10000, &count);
     cost += _check_flag_and_score(flgs, TR_TELEPATHY, 10000, &count);
-
-    /* Code later inflates based on item quality. This factor is pure fudge
-    cost /= 1.0; */
 
     return (u32b) cost;
 
@@ -467,12 +470,17 @@ s32b jewelry_cost(object_type *o_ptr, int options)
 
     if (have_flag(flgs, TR_WEAPONMASTERY))
     {
-        p += 25000 * pval;
+        p += 10000 * pval;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Weaponmastery: p = %d", p);
+            cost_calc_hook(dbg_msg);
+        }
     }
 
     if (have_flag(flgs, TR_BLOWS))
     {
-        p += 25000 * pval;
+        p += 15000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Blows: p = %d", p);
@@ -481,7 +489,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
     }
     if (have_flag(flgs, TR_DEC_BLOWS))
     {
-        p -= 25000 * pval;
+        p -= 15000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * -Blows: p = %d", p);
@@ -491,7 +499,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
 
     if (have_flag(flgs, TR_XTRA_SHOTS))
     {
-        p += 10000 * pval;
+        p += 7500 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Shots: p = %d", p);
@@ -500,7 +508,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
     }
     if (have_flag(flgs, TR_XTRA_MIGHT))
     {
-        p += 10000 * pval;
+        p += 7500 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Extra Might: p = %d", p);
@@ -834,7 +842,7 @@ s32b armor_cost(object_type *o_ptr, int options)
     /* Extra Attacks */
     if (have_flag(flgs, TR_BLOWS))
     {
-        p += 25000 * pval;
+        p += 15000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Blows: p = %d", p);
@@ -843,7 +851,7 @@ s32b armor_cost(object_type *o_ptr, int options)
     }
     if (have_flag(flgs, TR_DEC_BLOWS))
     {
-        p -= 25000 * pval;
+        p -= 15000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * -Blows: p = %d", p);
@@ -1183,11 +1191,11 @@ static s32b _avg_dam_bow(object_type *o_ptr, int options)
         break;
 
     case SV_HARP:
-        d = 25;
+        d = 15;
         break;
 
     default:
-        d = 50; /* Gun */
+        d = 25; /* Gun */
     }
 
     return MAX(0, d);
@@ -1230,18 +1238,21 @@ s32b bow_cost(object_type *o_ptr, int options)
     if (have_flag(flgs, TR_BRAND_FIRE)) t = t * 5 / 4;
     if (have_flag(flgs, TR_BRAND_COLD)) t = t * 5 / 4;
 
-    w = t * t * 2;
-    if (have_flag(flgs, TR_XTRA_SHOTS))
-    {
-        int i;
-        for (i = 0; i < pval; i++)
-            w = w * 11 / 10;
-    }
-
+    w = t * t * 4;
     if (cost_calc_hook)
     {
         sprintf(dbg_msg, "  * Base Cost: w = %d", w);
         cost_calc_hook(dbg_msg);
+    }
+
+    if (have_flag(flgs, TR_XTRA_SHOTS))
+    {
+        w += w * pval / 4; /* +.25 shots per pval */
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Extra Shots: w = %d", w);
+            cost_calc_hook(dbg_msg);
+        }
     }
 
     /* (+x,+y) */
@@ -1256,7 +1267,7 @@ s32b bow_cost(object_type *o_ptr, int options)
 
     if (cost_calc_hook)
     {
-        sprintf(dbg_msg, "  * (+x,+y): w = %d", w);
+        sprintf(dbg_msg, "  * Accuracy: w = %d", w);
         cost_calc_hook(dbg_msg);
     }
 

@@ -4471,6 +4471,8 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             }
             if (level > 70 && one_in_(10))
                 add_flag(o_ptr->art_flags, TR_SPEED);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_MAGE);
             break;
         case EGO_CROWN_LORDLINESS:
             if (one_in_(7))
@@ -4481,6 +4483,8 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
                 one_high_resistance(o_ptr);
             if (level > 70 && one_in_(5))
                 add_flag(o_ptr->art_flags, TR_SPEED);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_PRIESTLY);
             break;
         case EGO_CROWN_MIGHT:
             if (one_in_(7))
@@ -4490,6 +4494,8 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             }
             if (level > 70 && one_in_(10))
                 add_flag(o_ptr->art_flags, TR_SPEED);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_WARRIOR);
             break;
         case EGO_CROWN_SEEING:
             if (one_in_(3))
