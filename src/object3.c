@@ -946,7 +946,6 @@ s32b weapon_cost(object_type *o_ptr, int options)
         double b = (double)k_ptr->dd * ((double)k_ptr->ds + 1.0)/2;
         double d = (double)o_ptr->dd * ((double)o_ptr->ds + 1.0)/2;
         double x;
-        double d;
         double s = 1.0;
 
         /* Figure average damage per strike. Not really because we are stacking slays
