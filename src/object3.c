@@ -51,102 +51,75 @@ static s32b _activation_p(object_type *o_ptr)
 
 static s32b _aura_p(u32b flgs[TR_FLAG_SIZE])
 {
-    s32b p = 0, ct = 0;
-    if (have_flag(flgs, TR_SH_FIRE)) ct++;
-    if (have_flag(flgs, TR_SH_ELEC)) ct++;
-    if (have_flag(flgs, TR_SH_COLD)) ct++;
-    if (have_flag(flgs, TR_SH_SHARDS)) ct++;
-    if (have_flag(flgs, TR_SH_REVENGE)) ct++;
-    switch (ct)
-    {
-    case 0: p = 0; break;
-    case 1: p = 2000; break;
-    case 2: p = 5000; break;
-    case 3: p = 10000; break;
-    case 4: p = 20000; break;
-    default: p = 20000; break; /* Do we add more auras and forget to update? */
-    }
-    return p;
+    s32b cost = 0;
+    int count = 0;
+
+    cost += _check_flag_and_score(flgs, TR_SH_FIRE,     2500, &count);
+    cost += _check_flag_and_score(flgs, TR_SH_COLD,     2500, &count);
+    cost += _check_flag_and_score(flgs, TR_SH_ELEC,     3500, &count);
+    cost += _check_flag_and_score(flgs, TR_SH_SHARDS,   5000, &count);
+    cost += _check_flag_and_score(flgs, TR_SH_REVENGE,  7000, &count);
+
+    return cost;
 }
 
 static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
 {
-    s32b y = 0, q = 0;
+    s32b cost = 0;
+    int count = 0;
+    int mult;
 
-    pval = MIN(pval, 10); /* Iron Crown of the Serpent is +125 */
+    if (pval > 10)
+        pval = 10;
+    if (pval < -10)
+        pval = -10;
 
-    if (have_flag(flgs, TR_SPELL_POWER)) 
-        return 5000 * pval; /* Hack! */
-    else
-    {
-        if (have_flag(flgs, TR_STR)) {y += 12;}
-        if (have_flag(flgs, TR_DEX)) {y += 12;}
-        if (have_flag(flgs, TR_CON)) {y += 12;}
-    }
+    mult = pval * ABS(pval);
 
-    if (have_flag(flgs, TR_INT)) {y += 12;}
-    if (have_flag(flgs, TR_WIS)) {y += 12;}
-    if (have_flag(flgs, TR_CHR)) {y += 12;}
+    /* Stats */
+    count = 0;
+    cost += _check_flag_and_score(flgs, TR_STR,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_INT,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_WIS,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_DEX,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_CON,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_CHR,  500*mult, &count);
 
-    if (have_flag(flgs, TR_DEC_STR)) {y -= 6;}
-    if (have_flag(flgs, TR_DEC_INT)) {y -= 6;}
-    if (have_flag(flgs, TR_DEC_WIS)) {y -= 6;}
-    if (have_flag(flgs, TR_DEC_DEX)) {y -= 6;}
-    if (have_flag(flgs, TR_DEC_CON)) {y -= 6;}
-    if (have_flag(flgs, TR_DEC_CHR)) {y -= 6;}
+    count = 0;
+    cost -= _check_flag_and_score(flgs, TR_DEC_STR,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_INT,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_WIS,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_DEX,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_CON,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_CHR,  250*mult, &count);
 
-    if (have_flag(flgs, TR_MAGIC_MASTERY)) y += 9;
-    if (have_flag(flgs, TR_DEC_MAGIC_MASTERY)) y -= 4;
-    if (have_flag(flgs, TR_STEALTH)) y += 6;
-    if (have_flag(flgs, TR_DEC_STEALTH)) y -= 3;
+    /* Skills */
+    count = 0;
 
-    if (y < 0)
-    {
-        /* TODO: Rethink calculation. For an example, consider
-           Dasai which is +10 with DEC_CHR */
-        q = -(200 + y * y)*(1 + pval * pval);
-    }
-    else if (y > 0)
-    {
-        if (pval < 0) /* TODO: Remove negative pvals ... */
-            y /= 3;
+    cost += _check_flag_and_score(flgs, TR_MAGIC_MASTERY,  750*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_STEALTH,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_SPELL_CAP,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_SPELL_POWER,  1000*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_LIFE,  500*mult, &count);
 
-        q = (200 + y * ABS(y))*(1 + pval * ABS(pval));
-    }
 
-    if (have_flag(flgs, TR_SPELL_CAP))
-        q += 1000 * pval;
+    count = 0;
+    cost -= _check_flag_and_score(flgs, TR_DEC_MAGIC_MASTERY,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_STEALTH,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_SPELL_CAP,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_SPELL_POWER,  250*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_LIFE, 250*mult, &count);
 
-    if (have_flag(flgs, TR_LIFE))
-        q += 5000 * pval;
-    if (have_flag(flgs, TR_DEC_LIFE))
-        q -= 5000 * pval;
+    cost -= _check_flag_and_score(flgs, TR_DEC_SPEED, 1000*mult, &count);
 
-    if (have_flag(flgs, TR_DEC_SPEED))
-        q -= 10000 * pval;
-    if (have_flag(flgs, TR_DEC_SPELL_CAP))
-        q -= 2000 * pval;
-    if (have_flag(flgs, TR_DEC_SPELL_POWER))
-        q -= 5000 * pval;
-    return q;
+    return cost;
 }
 
 static s32b _speed_p(int pval)
 {
-    int result = 0;
+    int mult = pval * ABS(pval);
 
-    switch (abs(pval))
-    {
-    case 1:  result =  5000; break;
-    case 2:  result = 10000; break;
-    case 3:  result = 18000; break;
-    case 4:  result = 30000; break;
-    case 5:  result = 50000; break;
-    default: result = 50000 + 25000*(pval - 5);
-    }
-    if (pval < 0)
-        result *= -1;
-    return result;
+    return 1000 * mult;
 }
 
 static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
@@ -184,6 +157,10 @@ static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
     cost += _check_flag_and_score(flgs, TR_HOLD_LIFE, 2500, &count);
     cost += _check_flag_and_score(flgs, TR_FREE_ACT, 2500, &count);
     cost += _check_flag_and_score(flgs, TR_REGEN, 2500, &count);
+
+    /* Don't let lots of weak attributes get out of hand ... */
+    count = 0;
+
     cost += _check_flag_and_score(flgs, TR_RES_FEAR, 3000, &count);
     cost += _check_flag_and_score(flgs, TR_ESP_UNIQUE, 5000, &count);
     cost += _check_flag_and_score(flgs, TR_REFLECT, 7500, &count);
@@ -191,8 +168,8 @@ static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
     cost += _check_flag_and_score(flgs, TR_DEC_MANA, 10000, &count);
     cost += _check_flag_and_score(flgs, TR_TELEPATHY, 10000, &count);
 
-    /* Code later inflates based on item quality. This factor is pure fudge */
-    cost /= 1.0;
+    /* Code later inflates based on item quality. This factor is pure fudge
+    cost /= 1.0; */
 
     return (u32b) cost;
 
@@ -235,10 +212,11 @@ static s32b _resistances_q(u32b flgs[TR_FLAG_SIZE])
     cost += _check_flag_and_score(flgs, TR_RES_DISEN, 6000, &count);
     cost += _check_flag_and_score(flgs, TR_RES_TIME, 10000, &count);
 
-    cost += _check_flag_and_score(flgs, TR_IM_ACID,  30000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_ELEC,  40000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_FIRE,  40000, &count);
-    cost += _check_flag_and_score(flgs, TR_IM_COLD,  50000, &count);
+    count = 0; /* Otherwise, immunities *and* lots of resists are absurd :) */
+    cost += _check_flag_and_score(flgs, TR_IM_ACID,  25000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_ELEC,  30000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_FIRE,  30000, &count);
+    cost += _check_flag_and_score(flgs, TR_IM_COLD,  35000, &count);
 
     count = 0;
     cost -= _check_flag_and_score(flgs, TR_VULN_ACID, 5000, &count);
@@ -347,7 +325,7 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_SIZE], object_type *o_ptr)
         }
     }*/
 
-    if (!object_is_artifact(o_ptr) && o_ptr->tval != TV_LITE)
+    if (!object_is_artifact(o_ptr) && o_ptr->tval != TV_LITE && !object_is_jewelry(o_ptr))
     {
         p = p * 3 / 4;
         if (cost_calc_hook)
@@ -591,8 +569,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
         p = _finalize_p(p, flgs, o_ptr);
-    else
-        p = p * 3 / 4; /* assume not artifact */
+
     return p;
 }
 
@@ -895,11 +872,18 @@ s32b armor_cost(object_type *o_ptr, int options)
 
         p += 50 * x;
 
-        if (o_ptr->name2 == EGO_CROWN_MAGI)
-            p += 50 * y;
+        if (to_d > 20) /* Master Tonberry, Destroyer */
+        {
+            p += 40000; /* +20 damage */
+            p += (to_d - 20) * 1000;
+        }
         else
-            p += 100 * y;
-
+        {
+            if (o_ptr->name2 == EGO_CROWN_MAGI)
+                p += 50 * y;
+            else
+                p += 100 * y;
+        }
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * (+x,+y): p = %d", p);
