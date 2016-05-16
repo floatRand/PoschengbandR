@@ -3109,7 +3109,7 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
             worst_power = power;
         }
 
-        if (power > base_power * 7 / 10 && power < base_power * 2)
+        if (power > base_power * 4 / 5 && power < base_power * 2)
         {
             object_level = old_level;
             object_copy(o_ptr, &forge2);
