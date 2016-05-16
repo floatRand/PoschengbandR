@@ -2858,8 +2858,10 @@ static void _wiz_gather_stats(int which_dungeon, int level, int reps)
             if (0) _wiz_stats_log_speed(level, o_ptr);
             if (0) _wiz_stats_log_books(level, o_ptr, 5, 5);
             if (0) _wiz_stats_log_devices(level, o_ptr);
-            if (1) _wiz_stats_log_arts(level, o_ptr);
-            if (1) _wiz_stats_log_rand_arts(level, o_ptr);
+            if (0) _wiz_stats_log_arts(level, o_ptr);
+            if (0) _wiz_stats_log_rand_arts(level, o_ptr);
+            if (1 && o_ptr->name2 == EGO_RING_ARCHERY) _wiz_stats_log_obj(level, o_ptr);
+            if (1 && o_ptr->name2 == EGO_RING_COMBAT) _wiz_stats_log_obj(level, o_ptr);
         }
     }
 }

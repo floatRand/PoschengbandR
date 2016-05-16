@@ -1024,12 +1024,11 @@ s32b weapon_cost(object_type *o_ptr, int options)
         if (have_flag(flgs, TR_WILD))
             w += 10000;
 
-    }
-
-    if (cost_calc_hook)
-    {
-        sprintf(dbg_msg, "  * Base Cost: w = %d", w);
-        cost_calc_hook(dbg_msg);
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Base Cost: d = %.2f, s = %.2f, w = %d", d, s, w);
+            cost_calc_hook(dbg_msg);
+        }
     }
 
     if (to_h <= 10)
@@ -1037,6 +1036,11 @@ s32b weapon_cost(object_type *o_ptr, int options)
     else
         w += 10 * to_h * to_h;
 
+    if (cost_calc_hook)
+    {
+        sprintf(dbg_msg, "  * Accuracy: w = %d", w);
+        cost_calc_hook(dbg_msg);
+    }
 
     /* Resistances */
     q = _resistances_q(flgs)/2;

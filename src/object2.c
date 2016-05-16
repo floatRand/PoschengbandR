@@ -2685,7 +2685,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
             effect_add_random(o_ptr, BIAS_WARRIOR | BIAS_STR);
         break;
     case EGO_RING_ARCHERY:
-        for (powers = _jewelry_powers(4, level, power); powers > 0; --powers)
+        for (powers = _jewelry_powers(5, level, power); powers > 0; --powers)
         {
             switch (randint1(7))
             {
@@ -2699,9 +2699,19 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                 break;
             case 3:
                 o_ptr->to_h += randint1(5) + m_bonus(5, level);
+                while (one_in_(2) && powers > 0)
+                {
+                    o_ptr->to_h += randint1(5) + m_bonus(5, level);
+                    powers--;
+                }
                 break;
             case 4:
                 o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                while (one_in_(2) && powers > 0)
+                {
+                    o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                    powers--;
+                }
                 break;
             case 5:
                 if ( (abs(power) >= 2 || _create_level_check(200, level))
@@ -2720,7 +2730,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                     break;
                 }
             default:
-                o_ptr->to_h += randint1(5) + m_bonus(5, level);
+                o_ptr->to_d += randint1(5) + m_bonus(5, level);
             }
         }
         if (o_ptr->to_h > 25) o_ptr->to_h = 25;
