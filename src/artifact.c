@@ -2346,15 +2346,34 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 else if (one_in_(3))
                 {
                     add_flag(o_ptr->art_flags, TR_SHOW_MODS);
-                    o_ptr->to_h = 4 + (randint1(11));
-                    o_ptr->to_d = 4 + (randint1(11));
+                    o_ptr->to_h += randint1(5) + m_bonus(5, lev);
+                    o_ptr->to_d += randint1(5) + m_bonus(5, lev);
                 }
                 else
                 {
                     one_high_resistance(o_ptr);
                 }
                 break;
-            case 4: case 5: case 6:
+            case 4:
+                if (one_in_(3))
+                {
+                    add_flag(o_ptr->art_flags, TR_SHOW_MODS);
+                    o_ptr->to_h += randint1(5) + m_bonus(5, lev);
+                    o_ptr->to_d += randint1(5) + m_bonus(5, lev);
+                    break;
+                }
+                else if (one_in_(2))
+                {
+                    random_plus(o_ptr);
+                    has_pval = TRUE;
+                    break;
+                }
+                else if (one_in_(5))
+                {
+                    one_high_resistance(o_ptr);
+                    break;
+                }
+            case 5: case 6:
                 random_resistance(o_ptr);
                 break;
             case 7:
@@ -2400,15 +2419,34 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 else if (one_in_(3))
                 {
                     add_flag(o_ptr->art_flags, TR_SHOW_MODS);
-                    o_ptr->to_h = 4 + (randint1(11));
-                    o_ptr->to_d = 4 + (randint1(11));
+                    o_ptr->to_h += randint1(5) + m_bonus(5, lev);
+                    o_ptr->to_d += randint1(5) + m_bonus(5, lev);
                 }
                 else
                 {
                     one_high_resistance(o_ptr);
                 }
                 break;
-            case 4: case 5: case 6:
+            case 4:
+                if (one_in_(3))
+                {
+                    add_flag(o_ptr->art_flags, TR_SHOW_MODS);
+                    o_ptr->to_h += randint1(5) + m_bonus(5, lev);
+                    o_ptr->to_d += randint1(5) + m_bonus(5, lev);
+                    break;
+                }
+                else if (one_in_(2))
+                {
+                    random_plus(o_ptr);
+                    has_pval = TRUE;
+                    break;
+                }
+                else if (one_in_(5))
+                {
+                    one_high_resistance(o_ptr);
+                    break;
+                }
+            case 5: case 6:
                 random_resistance(o_ptr);
                 break;
             case 7:
@@ -2615,18 +2653,18 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
 
     if (object_is_armour(o_ptr) || o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET)
     {
-        int lower = 10;
+        int lower1 = 20, lower2 = 10;
 
-        if (o_ptr->tval == TV_RING)
-            lower = 15;
+        if (o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET)
+            lower1 = 25; lower2 = 20;
 
-        while ((o_ptr->to_d+o_ptr->to_h) > 20)
+        while ((o_ptr->to_d+o_ptr->to_h) > lower1)
         {
             if (one_in_(o_ptr->to_d) && one_in_(o_ptr->to_h)) break;
             o_ptr->to_d -= (s16b)randint0(3);
             o_ptr->to_h -= (s16b)randint0(3);
         }
-        while ((o_ptr->to_d+o_ptr->to_h) > lower && !immunity_hack)
+        while ((o_ptr->to_d+o_ptr->to_h) > lower2 && !immunity_hack)
         {
             if (one_in_(o_ptr->to_d) || one_in_(o_ptr->to_h)) break;
             o_ptr->to_d -= (s16b)randint0(3);

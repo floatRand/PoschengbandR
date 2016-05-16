@@ -1271,7 +1271,7 @@ void monster_death(int m_idx, bool drop_item)
     }
     case MON_BLOODLETTER:
         /* Bloodletters of Khorne may drop a blade of chaos */
-        if (drop_chosen_item && (randint1(100) < 15))
+        if (drop_chosen_item && one_in_(20))
         {
             /* Get local object */
             q_ptr = &forge;
