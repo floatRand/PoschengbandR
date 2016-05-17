@@ -78,20 +78,20 @@ static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
 
     /* Stats */
     count = 0;
-    cost += _check_flag_and_score(flgs, TR_STR,  750*mult, &count);
-    cost += _check_flag_and_score(flgs, TR_INT,  750*mult, &count);
-    cost += _check_flag_and_score(flgs, TR_WIS,  750*mult, &count);
-    cost += _check_flag_and_score(flgs, TR_DEX,  750*mult, &count);
-    cost += _check_flag_and_score(flgs, TR_CON,  750*mult, &count);
-    cost += _check_flag_and_score(flgs, TR_CHR,  750*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_STR,  600*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_INT,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_WIS,  500*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_DEX,  550*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_CON,  600*mult, &count);
+    cost += _check_flag_and_score(flgs, TR_CHR,  400*mult, &count);
 
     count = 0;
-    cost -= _check_flag_and_score(flgs, TR_DEC_STR,  750*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_INT,  750*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_WIS,  750*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_DEX,  750*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_CON,  750*mult, &count);
-    cost -= _check_flag_and_score(flgs, TR_DEC_CHR,  750*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_STR,  600*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_INT,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_WIS,  500*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_DEX,  550*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_CON,  600*mult, &count);
+    cost -= _check_flag_and_score(flgs, TR_DEC_CHR,  400*mult, &count);
 
     /* Skills */
     count = 0;
@@ -1017,15 +1017,19 @@ s32b weapon_cost(object_type *o_ptr, int options)
             s *= 1.10;
 
         d = d*s + (double)to_d;
-        x = d - b;
         if (d < 1.0)
             d = 1.0;
 
         if (have_flag(flgs, TR_BLOWS))
-            d += (d + 40.0)*pval/10.0;  /* +20 from strength, +20 from gear ... */
+            d += (d + 40.0)*pval/10.0;
+                   /* ^---Give extra attacks more respect ... Each pval is +0.50 blows. */
+        x = d - b;
 
-        /*w = (s32b)(d * d * d * 0.4);*/
+        /*         v----Extra damage over the base object type has a strong linear component, so
+                   v    that weaker to mid range weapons get better separation. */
         w = (s32b)(x * 100.0) + (s32b)(x * x * 5.0) + (s32b)(d * d * d * 0.2);
+        /* While raw damage output continues to be cubic-----^           ^
+           But, scaled to gain cross type power comparability------------^ */
 
         if (have_flag(flgs, TR_VAMPIRIC)) 
             w += 3000;

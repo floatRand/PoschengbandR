@@ -538,7 +538,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
             object_type    forge = {0};
             _art_info_ptr  entry;
 
-            if (a_info[i].gen_flags & TRG_QUESTITEM) continue;
+            if (!p_ptr->wizard && (a_info[i].gen_flags & TRG_QUESTITEM)) continue;
             if (!create_named_art_aux(i, &forge)) continue;
 
             /*No Stats Tracking, please!!!
@@ -622,10 +622,12 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
             if (entry->id == ART_RANDOM)
             {
                 doc_printf(doc, "<color:v>%3d) %7d</color>             ", i+1, entry->score);
+                doc_printf(doc, "<indent><style:indent>%s</style></indent>\n", entry->name);
             }
             else if (entry->id == ART_EGO)
             {
                 doc_printf(doc, "<color:B>%3d) %7d</color>             ", i+1, entry->score);
+                doc_printf(doc, "<indent><style:indent>%s</style></indent>\n", entry->name);
             }
             else
             {
@@ -642,8 +644,8 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
                     int k_idx = lookup_kind(a_ptr->tval, a_ptr->sval);
                     doc_printf(doc, "%3d ", k_info[k_idx].counts.found);
                 }
+                doc_printf(doc, "<indent><style:indent>%s <color:D>#%d</color></style></indent>\n", entry->name, entry->id);
             }
-            doc_printf(doc, "<indent><style:indent>%s</style></indent>\n", entry->name);
         }
 
         if (ct_std || ct_rnd || ct_ego)
