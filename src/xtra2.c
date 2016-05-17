@@ -1856,7 +1856,7 @@ void monster_death(int m_idx, bool drop_item)
 
         case MON_JACK_SHADOWS:
             a_idx = ART_JACK;
-            chance = 15;
+            chance = 33;
             break;
 
         case MON_DIO:

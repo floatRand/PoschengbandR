@@ -526,7 +526,7 @@ E:Your crown glows deep blue ... You feel a warm tingling inside.
 
 N:43:of Jack of Shadows
 I:35:1:7
-W:50:30:10:100000
+W:50:50:10:100000
 P:1:0d0:0:0:19
 F:STEALTH | SEARCH | FREE_ACT | SEE_INVIS | HOLD_LIFE | TELEPATHY
 
