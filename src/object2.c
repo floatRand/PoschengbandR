@@ -5461,6 +5461,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
                 o_ptr->pval += randint1(e_ptr->max_pval);
             }
         }
+
         if (o_ptr->name2 == EGO_BOOTS_SPEED)
         {
             int amt = 3;
@@ -5468,18 +5469,34 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
                 amt += (MIN(90,lev) - 30)/10;
             o_ptr->pval = 1 + m_bonus(amt, lev);
         }
-        if (o_ptr->name2 == EGO_BOOTS_FEANOR)
+        else if (o_ptr->name2 == EGO_BOOTS_FEANOR)
         {
             o_ptr->pval = 6 + m_bonus(9, lev);
         }
+        else if (o_ptr->name2 == EGO_BOOTS_ELVENKIND && lev > 70)
+        {
+            o_ptr->to_a += randint1(5);
+            while (one_in_(3))
+                o_ptr->pval++;
+        }
+        else if (o_ptr->name2 == EGO_CLOAK_AMAN && lev > 80)
+        {
+            while (one_in_(4))
+                o_ptr->pval++;
+        }
+
         if (have_flag(o_ptr->art_flags, TR_DEVICE_POWER) && o_ptr->pval >= 3)
         {
             o_ptr->pval = 2;
             if (one_in_(30)) o_ptr->pval++;
         }
 
-        if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_HAYABUSA) && (o_ptr->pval > 2) && (o_ptr->name2 != EGO_WEAPON_EXTRA_ATTACKS))
+        if ( object_is_(o_ptr, TV_SWORD, SV_FALCON_SWORD)
+          && o_ptr->pval > 2
+          && o_ptr->name2 != EGO_WEAPON_EXTRA_ATTACKS )
+        {
             o_ptr->pval = 2;
+        }
 
         /* Cursed Egos: Make sure to do this last to avoid nonsensical combinations of 
            good and bad flags (e.g. resist fire and vulnerable to fire) */
