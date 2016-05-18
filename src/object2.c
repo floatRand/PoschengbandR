@@ -3867,8 +3867,9 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
                 if (one_in_(4))
                 {
                     int i;
-                    int ct = 4;
-                    if (one_in_(3)) 
+                    int ct = 2;
+
+                    while (one_in_(3))
                         ct++;
 
                     for (i = 0; i < ct; i++)
@@ -3876,12 +3877,14 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
                 }
                 else
                 {
-                    add_flag(o_ptr->art_flags, TR_RES_FIRE);
-                    add_flag(o_ptr->art_flags, TR_RES_COLD);
-                    add_flag(o_ptr->art_flags, TR_RES_ACID);
-                    add_flag(o_ptr->art_flags, TR_RES_ELEC);
-                    if (one_in_(3)) 
-                        add_flag(o_ptr->art_flags, TR_RES_POIS);
+                    int i;
+                    int ct = 4;
+
+                    while (one_in_(2))
+                        ct++;
+
+                    for (i = 0; i < ct; i++)
+                        one_ele_resistance(o_ptr);
                 }
                 if (one_in_(3))
                     add_flag(o_ptr->art_flags, TR_WARNING);
@@ -5938,12 +5941,26 @@ bool kind_is_body_armor(int k_idx) {
     switch (k_info[k_idx].tval)
     {
     case TV_SOFT_ARMOR: case TV_HARD_ARMOR: case TV_DRAG_ARMOR:
-    case TV_SHIELD:
         return TRUE;
     }
     return FALSE;
 }
-bool kind_is_other_armor(int k_idx) { 
+static bool _kind_is_shield(int k_idx) {
+    if (k_info[k_idx].tval == TV_SHIELD)
+        return TRUE;
+    return FALSE;
+}
+static bool _kind_is_gloves(int k_idx) {
+    if (k_info[k_idx].tval == TV_GLOVES)
+        return TRUE;
+    return FALSE;
+}
+static bool _kind_is_cloak(int k_idx) {
+    if (k_info[k_idx].tval == TV_CLOAK)
+        return TRUE;
+    return FALSE;
+}
+bool kind_is_other_armor(int k_idx) {
     switch (k_info[k_idx].tval)
     {
     case TV_BOOTS: case TV_GLOVES: 
@@ -6001,6 +6018,11 @@ static bool _kind_is_bow(int k_idx) {
         return TRUE;
     return FALSE;
 }
+static bool _kind_is_lite(int k_idx) {
+    if (k_info[k_idx].tval == TV_LITE)
+        return TRUE;
+    return FALSE;
+}
 static bool _kind_is_bow2(int k_idx) {
     if (k_info[k_idx].tval == TV_BOW && k_info[k_idx].sval != SV_HARP) /* Assume tailored Archer reward, and a harp is just insulting! */
         return TRUE;
@@ -6023,7 +6045,7 @@ bool kind_is_misc(int k_idx) {
     {
     case TV_SKELETON: case TV_BOTTLE: case TV_JUNK: case TV_WHISTLE:
     case TV_SPIKE: case TV_CHEST: case TV_FIGURINE: case TV_STATUE:
-    case TV_CAPTURE: case TV_LITE: case TV_FOOD: case TV_FLASK:
+    case TV_CAPTURE: case TV_FOOD: case TV_FLASK:
         return TRUE;
     }
     return FALSE;
@@ -6034,6 +6056,7 @@ typedef struct {
     int     good;
     int     great;
 } _kind_alloc_entry;
+/*
 static _kind_alloc_entry _kind_alloc_table[] = {
     { kind_is_weapon,          210,    0,    0 },
     { kind_is_body_armor,      200,    0,    0 },
@@ -6045,6 +6068,28 @@ static _kind_alloc_entry _kind_alloc_table[] = {
     { kind_is_book,             25,   10,   15 },
     { kind_is_jewelry,          40,    0,    0 },
     { kind_is_misc,             50,  -50,  -50 },
+    { NULL, 0}
+};*/
+static _kind_alloc_entry _kind_alloc_table[] = {
+    /* Equipment by Slot */
+    { kind_is_weapon,          210,    0,    0 },
+    { _kind_is_shield,          30,    0,    0 },
+    { _kind_is_bow,             63,    0,    0 },
+    { kind_is_jewelry,          40,    0,    0 },
+    { _kind_is_lite,             7,    0,    0 },
+    { kind_is_body_armor,      200,    0,    0 },
+    { _kind_is_cloak,           30,    0,    0 },
+    { kind_is_helm,             30,    0,    0 },
+    { _kind_is_gloves,          30,    0,    0 },
+    { _kind_is_boots,           30,    0,    0 },
+    /*                         670              */
+
+    { kind_is_wand_rod_staff,   95,  -40,  -60 },
+    { _kind_is_potion_scroll,  105,  -50,  -90 },
+    { _kind_is_ammo,            45,    0,  -30 },
+    { kind_is_book,             35,   10,   15 },
+    { kind_is_misc,             50,  -50,  -50 },
+    /*                         330              */
     { NULL, 0}
 };
 static int _kind_alloc_weight(_kind_alloc_entry *entry, u32b mode)

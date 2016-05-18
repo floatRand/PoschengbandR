@@ -2569,9 +2569,9 @@ static void do_cmd_wiz_zap(void)
         /* Delete nearby monsters */
         if (m_ptr->cdis <= MAX_SIGHT)
         {
-            bool fear = FALSE;
-            mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
-            /*delete_monster_idx(i);*/
+            /*bool fear = FALSE;
+            mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);*/
+            delete_monster_idx(i);
         }
     }
 }
@@ -2595,12 +2595,7 @@ static void do_cmd_wiz_zap_all(void)
         /* Skip the mount */
         if (i == p_ptr->riding) continue;
 
-        /* Delete this monster */
-        {
-            bool fear = FALSE;
-            mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
-        }
-        /*delete_monster_idx(i);*/
+        delete_monster_idx(i);
     }
 }
 
@@ -2799,7 +2794,7 @@ static void _wiz_stats_log_speed(int level, object_type *o_ptr)
 {
     u32b flgs[TR_FLAG_SIZE];
     object_flags(o_ptr, flgs);
-    if (have_flag(flgs, TR_SPEED))
+    if (have_flag(flgs, TR_SPEED) && !object_is_artifact(o_ptr))
         _wiz_stats_log_obj(level, o_ptr);
 }
 static void _wiz_stats_log_books(int level, object_type *o_ptr, int max3, int max4)
@@ -2825,9 +2820,58 @@ static void _wiz_stats_log_rand_arts(int level, object_type *o_ptr)
     if (o_ptr->art_name)
         _wiz_stats_log_obj(level, o_ptr);
 }
+static void _wiz_kill_monsters(int level)
+{
+    int i;
+
+    for (i = 1; i < m_max; i++)
+    {
+        monster_type *m_ptr = &m_list[i];
+        monster_race *r_ptr;
+        bool          fear = FALSE;
+
+        if (!m_ptr->r_idx) continue;
+        if (i == p_ptr->riding) continue;
+
+        /* Skip out of depth monsters */
+        r_ptr = &r_info[m_ptr->r_idx];
+        if (r_ptr->level > level) continue;
+
+        mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
+    }
+}
+static void _wiz_inspect_objects(int level)
+{
+    int i;
+    for (i = 0; i < max_o_idx; i++)
+    {
+        object_type *o_ptr = &o_list[i];
+
+        if (!o_ptr->k_idx) continue;
+        if (o_ptr->tval == TV_GOLD) continue;
+        if (o_ptr->held_m_idx) continue;
+
+        /* Skip Vaults ... */
+        if (cave[o_ptr->iy][o_ptr->ix].info & CAVE_ICKY) continue;
+
+        identify_item(o_ptr); /* statistics are updated here */
+
+        if (o_ptr->art_name)
+            stats_add_rand_art(o_ptr);
+
+        if (o_ptr->name2)
+            stats_add_ego(o_ptr);
+
+        if (1) _wiz_stats_log_speed(level, o_ptr);
+        if (1) _wiz_stats_log_books(level, o_ptr, 5, 5);
+        if (1) _wiz_stats_log_devices(level, o_ptr);
+        if (1) _wiz_stats_log_arts(level, o_ptr);
+        if (1) _wiz_stats_log_rand_arts(level, o_ptr);
+    }
+}
 static void _wiz_gather_stats(int which_dungeon, int level, int reps)
 {
-    int i, j;
+    int i;
     dungeon_type = which_dungeon;
     for (i = 0; i < reps; i++)
     {
@@ -2837,32 +2881,8 @@ static void _wiz_gather_stats(int which_dungeon, int level, int reps)
         p_ptr->energy_need = 0;
         change_floor();
 
-        /* Zap Everyone: This has been hacked to actually kill the monsters,
-           which updates statistics, grants experience, and generates drops. */
-        do_cmd_wiz_zap_all();
-
-        /* Identify all the Loot! What Fun!! */
-        for (j = 0; j < max_o_idx; j++)
-        {
-            object_type *o_ptr = &o_list[j];
-            if (!o_ptr->k_idx) continue;
-            if (o_ptr->tval == TV_GOLD) continue;
-            identify_item(o_ptr); /* statistics are updated here */
-
-            if (o_ptr->art_name)
-                stats_add_rand_art(o_ptr);
-
-            if (o_ptr->name2)
-                stats_add_ego(o_ptr);
-
-            if (0) _wiz_stats_log_speed(level, o_ptr);
-            if (0) _wiz_stats_log_books(level, o_ptr, 5, 5);
-            if (0) _wiz_stats_log_devices(level, o_ptr);
-            if (0) _wiz_stats_log_arts(level, o_ptr);
-            if (0) _wiz_stats_log_rand_arts(level, o_ptr);
-            if (1 && o_ptr->name2 == EGO_RING_ARCHERY) _wiz_stats_log_obj(level, o_ptr);
-            if (1 && o_ptr->name2 == EGO_RING_COMBAT) _wiz_stats_log_obj(level, o_ptr);
-        }
+        _wiz_kill_monsters(level);
+        _wiz_inspect_objects(level);
     }
 }
 
@@ -3249,35 +3269,32 @@ void do_cmd_debug(void)
     {
         /* Generate Statistics on object/monster distributions. Create a new
            character, run this command, then create a character dump
-           or browse the object knowledge command (~2). The game seems
-           to be left in a bad state, and it has crashed once for me, so
-           create a character dump right away. */
+           or browse the object knowledge command (~2). Wizard commands "A and "O
+           are also useful.*/
         int lev;
+        int max_depth = get_quantity("Max Depth? ", 100);
 
         _wiz_doc = doc_alloc(80);
 
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains, no AFC */
-        for (lev = 1; lev < 100; lev++)
+        for (lev = dun_level + 2; lev <= max_depth; lev += 2)
         {
             int reps = 1;
-            switch (lev)
-            {
-            case 30: reps =  5; break;
-            case 40: reps =  5; break;
-            case 60: reps =  5; break;
-            case 80: reps =  5; break;
-            case 98: reps =  5; break;
-            }
+
+            if (lev % 10 == 0) reps += 2;
+            if (lev % 20 == 0) reps += 2;
+            if (lev % 30 == 0) reps += 7;
 
             _wiz_gather_stats(DUNGEON_ANGBAND, lev, reps);
         }
         statistics_hack = FALSE;
-        do_cmd_redraw();
 
         doc_display(_wiz_doc, "Statistics", 0);
         doc_free(_wiz_doc);
         _wiz_doc = NULL;
 
+        viewport_verify();
+        do_cmd_redraw();
         break;
     }
     case '=':
@@ -3291,11 +3308,13 @@ void do_cmd_debug(void)
         statistics_hack = TRUE;
         _wiz_gather_stats(dungeon_type, dun_level, reps);
         statistics_hack = FALSE;
-        do_cmd_redraw();
 
         doc_display(_wiz_doc, "Statistics", 0);
         doc_free(_wiz_doc);
         _wiz_doc = NULL;
+
+        viewport_verify();
+        do_cmd_redraw();
         break;
     }
     case '_':
