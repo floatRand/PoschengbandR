@@ -2588,7 +2588,7 @@ void determine_random_questor(quest_type *q_ptr)
     else
         get_mon_num_prep(mon_hook_quest, NULL);
 
-    while (1)
+    while (attempt < 10000)
     {
         int accept_lev = q_ptr->level + (q_ptr->level / 20);
         int mon_lev = q_ptr->level + 5 + randint1(q_ptr->level / 10);
@@ -2635,7 +2635,7 @@ void determine_random_questor(quest_type *q_ptr)
 
         if (r_ptr->level > q_ptr->level + 12) continue;
 
-        if (r_ptr->level > accept_lev) break;
+        if (r_ptr->level > accept_lev || attempt > 5000) break;
     }
 
     q_ptr->r_idx = r_idx;

@@ -601,11 +601,18 @@ s32b jewelry_cost(object_type *o_ptr, int options)
         int x = to_h * ABS(to_h);
         int y = to_d * ABS(to_d);
 
-        p += 50 * x;
-        if (o_ptr->name2 == EGO_RING_WIZARDRY || o_ptr->name2 == EGO_AMULET_MAGI)
-            p += 50 * y;
-        else
+        p += 100 * to_h + 10 * x;
+
+        switch (o_ptr->name2)
+        {
+        case EGO_RING_WIZARDRY:
+        case EGO_AMULET_MAGI:
+        case EGO_RING_ARCHERY:
+            p += 25 * y;
+            break;
+        default:
             p += 100 * y;
+        }
 
         if (cost_calc_hook)
         {
@@ -922,7 +929,7 @@ s32b armor_cost(object_type *o_ptr, int options)
         int x = to_h * ABS(to_h);
         int y = to_d * ABS(to_d);
 
-        p += 50 * x;
+        p += 100 * to_h + 10 * x;
 
         if (to_d > 20) /* Master Tonberry, Destroyer */
         {
@@ -932,7 +939,7 @@ s32b armor_cost(object_type *o_ptr, int options)
         else
         {
             if (o_ptr->name2 == EGO_CROWN_MAGI)
-                p += 50 * y;
+                p += 25 * y;
             else
                 p += 100 * y;
         }

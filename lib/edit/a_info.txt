@@ -2694,11 +2694,11 @@ D:his people from a fearsome demon.
 N:255:'Ruyi Jingu Bang'
 I:21:14:2
 W:70:80:160:300000
-P:0:2d11:20:25:15
+P:0:2d11:20:15:15
 F:SLAY_ANIMAL | SLAY_DEMON | SLAY_UNDEAD |
 F:FREE_ACT | RES_SOUND | HOLD_LIFE | SUST_STR | SUST_DEX |
 F:BLOWS | SPEED | STR | DEX | CON | WIS
-E:ENLARGE_WEAPON:40:555
+E:ENLARGE_WEAPON:40:100
 E:Your cudgel grows bigger ...
 D:The magic cudgel of The Monkey King, Sun Wukong, this iron rod has 
 D:the power to change its size at the will of its master.

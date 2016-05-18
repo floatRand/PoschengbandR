@@ -2366,6 +2366,26 @@ static bool make_artifact(object_type *o_ptr)
  *  Choose random ego type
  */
 int        apply_magic_ego = 0;
+static int _ego_rarity(ego_item_type *e_ptr, int level)
+{
+    int rarity = e_ptr->rarity;
+    if (rarity)
+    {
+        if (e_ptr->max_level && level > e_ptr->max_level)
+            rarity += e_ptr->rarity*(level - e_ptr->max_level);
+        else if (e_ptr->level && level < e_ptr->level)
+            rarity += e_ptr->rarity*(e_ptr->level - level);
+    }
+    return rarity;
+}
+static int _ego_weight(ego_item_type *e_ptr, int level)
+{
+    int rarity = _ego_rarity(e_ptr, level);
+    int weight = 0;
+    if (rarity)
+        weight = MAX(10000 / rarity, 1);
+    return weight;
+}
 static int _get_random_ego(int type, int level)
 {
     int i, value;
@@ -2381,17 +2401,7 @@ static int _get_random_ego(int type, int level)
         e_ptr = &e_info[i];
         
         if (e_ptr->type == type)
-        {
-            int rarity = e_ptr->rarity;
-            if (rarity)
-            {
-                if (e_ptr->max_level && level > e_ptr->max_level)
-                    rarity += 3*(level - e_ptr->max_level)/4;
-                else if (e_ptr->level && level < e_ptr->level)
-                    rarity += 3*rarity*(e_ptr->level - level)/4;
-                total += MAX(10000 / rarity, 1);
-            }
-        }
+            total += _ego_weight(e_ptr, level);
     }
 
     value = randint1(total);
@@ -2402,17 +2412,9 @@ static int _get_random_ego(int type, int level)
         
         if (e_ptr->type == type)
         {
-            int rarity = e_ptr->rarity;
-            if (rarity)
-            {
-                if (e_ptr->max_level && level > e_ptr->max_level)
-                    rarity += 3*(level - e_ptr->max_level)/4;
-                else if (e_ptr->level && level < e_ptr->level)
-                    rarity += 3*rarity*(e_ptr->level - level)/4;
-                value -= MAX(10000 / rarity, 1);
-                if (value <= 0) 
-                    return i;
-            }
+            value -= _ego_weight(e_ptr, level);
+            if (value <= 0)
+                return i;
         }
     }
 
@@ -2470,9 +2472,13 @@ static void _create_artifact(object_type *o_ptr, int level, int power)
 
 static bool _create_level_check(int power, int lvl)
 {
-    lvl = MAX(1, lvl);
+    if (lvl <= 0)
+        return FALSE;
+
+    /* L/P odds of success ... */
     if (randint0(power * 100 / lvl) < 100)
         return TRUE;
+
     return FALSE;
 }
 
@@ -2724,6 +2730,10 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
             effect_add_random(o_ptr, BIAS_WARRIOR | BIAS_STR);
         break;
     case EGO_RING_ARCHERY:
+    {
+        int div = 1;
+        if (abs(power) >= 2) div++;
+
         for (powers = _jewelry_powers(5, level, power); powers > 0; --powers)
         {
             switch (randint1(7))
@@ -2733,7 +2743,10 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                 if (!o_ptr->pval) o_ptr->pval = _jewelry_pval(5, level);
                 break;
             case 2:
-                add_flag(o_ptr->art_flags, TR_STEALTH);
+                if (_create_level_check(200/div, level - 40))
+                    add_flag(o_ptr->art_flags, TR_SPEED);
+                else
+                    add_flag(o_ptr->art_flags, TR_STEALTH);
                 if (!o_ptr->pval) o_ptr->pval = _jewelry_pval(5, level);
                 break;
             case 3:
@@ -2745,15 +2758,15 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                 }
                 break;
             case 4:
-                o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                o_ptr->to_d += randint1(7) + m_bonus(7, level);
                 while (one_in_(2) && powers > 0)
                 {
-                    o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                    o_ptr->to_d += randint1(7) + m_bonus(7, level);
                     powers--;
                 }
                 break;
             case 5:
-                if ( (abs(power) >= 2 || _create_level_check(200, level))
+                if ( _create_level_check(100/div, level)
                   && (!have_flag(o_ptr->art_flags, TR_XTRA_MIGHT) || one_in_(7) ) )
                 {
                     add_flag(o_ptr->art_flags, TR_XTRA_SHOTS);
@@ -2761,7 +2774,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                     break;
                 }
             case 6:
-                if ( (abs(power) >= 2  || _create_level_check(200, level))
+                if ( _create_level_check(200/div, level)
                   && (!have_flag(o_ptr->art_flags, TR_XTRA_SHOTS) || one_in_(7) ) )
                 {
                     add_flag(o_ptr->art_flags, TR_XTRA_MIGHT);
@@ -2769,20 +2782,24 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
                     break;
                 }
             default:
-                o_ptr->to_d += randint1(5) + m_bonus(5, level);
+                o_ptr->to_d += randint1(7) + m_bonus(7, level);
             }
         }
-        if (o_ptr->to_h > 25) o_ptr->to_h = 25;
-        if (o_ptr->to_d > 20) o_ptr->to_d = 20;
+        if (o_ptr->to_h > 30) o_ptr->to_h = 30;
+        if (o_ptr->to_d > 40) o_ptr->to_d = 40; /* most players get only one shot ... */
+        if (o_ptr->to_d > 20 && have_flag(o_ptr->art_flags, TR_XTRA_SHOTS)) o_ptr->to_d = 20;
+
         if ( o_ptr->pval > 3
           && (have_flag(o_ptr->art_flags, TR_XTRA_SHOTS) || have_flag(o_ptr->art_flags, TR_XTRA_MIGHT))
           && !one_in_(10) )
         {
             o_ptr->pval = 3;
         }
+
         if (one_in_(ACTIVATION_CHANCE))
             effect_add_random(o_ptr, BIAS_ARCHER);
         break;
+    }
     case EGO_RING_PROTECTION:
         for (powers = _jewelry_powers(5, level, power); powers > 0; --powers)
         {
@@ -3073,7 +3090,7 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
                 else if (one_in_(2))
                 {
                     add_flag(o_ptr->art_flags, TR_MAGIC_MASTERY);
-                    if (!o_ptr->pval) o_ptr->pval = _jewelry_pval(6, level);
+                    if (!o_ptr->pval) o_ptr->pval = _jewelry_pval(5, level);
                     break;
                 }
             case 6:
@@ -3430,7 +3447,11 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
         }
         if (o_ptr->to_a < -20) o_ptr->to_a = -20;
         if (o_ptr->to_h > 20) o_ptr->to_h = 20;
-        if (o_ptr->to_d > 16) o_ptr->to_d = 16;
+        if (o_ptr->to_d > 16)
+        {
+            add_flag(o_ptr->art_flags, TR_AGGRAVATE);
+            o_ptr->to_d = 16;
+        }
         if (one_in_(ACTIVATION_CHANCE))
             effect_add_random(o_ptr, BIAS_DEMON);
         break;
@@ -4504,8 +4525,22 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             else add_esp_weak(o_ptr, FALSE);
             break;
         case EGO_CROWN_MAGI:
+            if (one_in_(3))
+            {
+                one_high_resistance(o_ptr);
+            }
+            else
+            {
+                one_ele_resistance(o_ptr);
+                one_ele_resistance(o_ptr);
+                one_ele_resistance(o_ptr);
+                one_ele_resistance(o_ptr);
+            }
             if (one_in_(7))
                 add_flag(o_ptr->art_flags, TR_EASY_SPELL);
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_DEC_STR);
+
             if (one_in_(5))
                 add_flag(o_ptr->art_flags, TR_MAGIC_MASTERY);
             else if (one_in_(66))
@@ -4521,17 +4556,19 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
 
                 add_flag(o_ptr->art_flags, TR_SHOW_MODS);
             }
+
             if (level > 70 && one_in_(10))
                 add_flag(o_ptr->art_flags, TR_SPEED);
+
             if (one_in_(ACTIVATION_CHANCE))
                 effect_add_random(o_ptr, BIAS_MAGE);
             break;
         case EGO_CROWN_LORDLINESS:
-            if (one_in_(7))
+            if (one_in_(5))
                 add_flag(o_ptr->art_flags, TR_SPELL_CAP);
-            if (one_in_(7))
+            if (one_in_(5))
                 one_high_resistance(o_ptr);
-            if (one_in_(7))
+            if (one_in_(5))
                 one_high_resistance(o_ptr);
             if (level > 70 && one_in_(5))
                 add_flag(o_ptr->art_flags, TR_SPEED);
@@ -4539,7 +4576,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
                 effect_add_random(o_ptr, BIAS_PRIESTLY);
             break;
         case EGO_CROWN_MIGHT:
-            if (one_in_(7))
+            if (one_in_(5))
             {
                 o_ptr->to_h += randint1(7);
                 o_ptr->to_d += randint1(7);
@@ -5482,6 +5519,12 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         else if (o_ptr->name2 == EGO_CLOAK_AMAN && lev > 80)
         {
             while (one_in_(4))
+                o_ptr->pval++;
+        }
+        else if ( (o_ptr->name2 == EGO_CROWN_MAGI || o_ptr->name2 == EGO_CROWN_LORDLINESS || o_ptr->name2 == EGO_CROWN_MIGHT)
+               && lev > 80 )
+        {
+            if (one_in_(5))
                 o_ptr->pval++;
         }
 
