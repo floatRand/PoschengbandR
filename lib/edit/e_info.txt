@@ -630,7 +630,7 @@ F:RES_BLIND | SEE_INVIS
 N:182:LITE:of Valinor
 W:40:*:16
 C:0:0:0:2
-F:RES_LITE | SPEED | VULN_DARK
+F:RES_LITE | SPEED
 
 ###############
 ### Diggers ###

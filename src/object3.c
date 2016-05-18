@@ -264,6 +264,38 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_SIZE], object_type *o_ptr)
         }
     }
 
+    if (o_ptr->name2 == EGO_ROBE_TWILIGHT)
+    {
+        p = p / 3;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
+            cost_calc_hook(dbg_msg);
+        }
+    }
+
+    switch (o_ptr->name1)
+    {
+    case ART_STONE_OF_NATURE:
+    case ART_STONE_OF_LIFE:
+    case ART_STONE_OF_SORCERY:
+    case ART_STONE_OF_CHAOS:
+    case ART_STONE_OF_DEATH:
+    case ART_STONE_OF_TRUMP:
+    case ART_STONE_OF_DAEMON:
+    case ART_STONE_OF_CRUSADE:
+    case ART_STONE_OF_CRAFT:
+    case ART_STONE_OF_ARMAGEDDON:
+    case ART_STONE_OF_MIND:
+        p += 5000;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
+            cost_calc_hook(dbg_msg);
+        }
+        break;
+    }
+
     if (have_flag(flgs, TR_AGGRAVATE))
     {
         p = p * 8 / 10;

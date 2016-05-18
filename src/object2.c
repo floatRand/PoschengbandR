@@ -2419,14 +2419,53 @@ static int _get_random_ego(int type, int level)
     return 0;
 }
 
-static void _create_artifact(object_type *o_ptr, int power)
+typedef struct { int lvl, min, max; } _power_limit_t;
+static _power_limit_t _power_limits[] = {
+    { 10,     0,   5000 },
+    { 20,     0,   7000 },
+    { 30,     0,  10000 },
+    { 40,     0,  20000 },
+    { 50,     0,  30000 },
+    { 60, 10000, 100000 },
+    { 70, 20000,      0 },
+    { 80, 30000,      0 },
+    { 90, 40000,      0 },
+    {999, 40000,      0 }
+};
+
+static void _create_artifact(object_type *o_ptr, int level, int power)
 {
+    int  i;
     u32b mode = CREATE_ART_NORMAL;
+    int  min = 0, max = 0;
+
+    for (i = 0; ; i++)
+    {
+        if (level < _power_limits[i].lvl)
+        {
+            min = _power_limits[i].min;
+            max = _power_limits[i].max;
+            break;
+        }
+    }
     
     if (power < 0)
         mode = CREATE_ART_CURSED;
 
-    create_artifact(o_ptr, mode);
+    for (i = 0; i < 1000 ; i++)
+    {
+        object_type forge = *o_ptr;
+        int         score;
+
+        create_artifact(&forge, mode);
+        score = object_value_real(&forge);
+
+        if (min > 0 && score < min) continue;
+        if (max > 0 && score > max) continue;
+
+        *o_ptr = forge;
+        break;
+    }
 }
 
 static bool _create_level_check(int power, int lvl)
@@ -3593,7 +3632,7 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
 
         if ((!crafting && one_in_(20)) || power > 2)
         {
-            create_artifact(o_ptr, CREATE_ART_NORMAL);
+            _create_artifact(o_ptr, level, power);
             break;
         }
         if (o_ptr->sval == SV_HARP)
@@ -3684,7 +3723,7 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
     case TV_DIGGING:
         if ((!crafting && one_in_(30)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
         while (!done)
@@ -3711,7 +3750,7 @@ static void _create_weapon(object_type *o_ptr, int level, int power, int mode)
     case TV_SWORD:
         if ((!crafting && one_in_(40)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
         while (!done)
@@ -4205,14 +4244,14 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
     {
     case TV_DRAG_ARMOR:
         if ((!crafting && one_in_(50)) || power > 2)
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
         if (cheat_peek) object_mention(o_ptr);
         break;
 
     case TV_GLOVES:
         if ((!crafting && one_in_(20)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
         o_ptr->name2 = _get_random_ego(EGO_TYPE_GLOVES, level);
@@ -4295,7 +4334,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
 
         if ((!crafting && one_in_(20)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
 
@@ -4388,7 +4427,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
     case TV_SHIELD:
         if ((!crafting && one_in_(20)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
 
@@ -4454,7 +4493,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
     case TV_CROWN:
         if ((!crafting && one_in_(20)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
         o_ptr->name2 = _get_random_ego(EGO_TYPE_CROWN, level);
@@ -4527,7 +4566,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
     case TV_HELM:
         if ((!crafting && one_in_(20)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
         while (!done)
@@ -4604,7 +4643,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
     case TV_CLOAK:
         if ((!crafting && one_in_(20)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
         o_ptr->name2 = _get_random_ego(EGO_TYPE_CLOAK, level);
@@ -4674,7 +4713,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
     case TV_BOOTS:
         if ((!crafting && one_in_(20)) || power > 2)
         {
-            _create_artifact(o_ptr, power);
+            _create_artifact(o_ptr, level, power);
             break;
         }
         while (!done)
@@ -4744,9 +4783,9 @@ static void _create_lite(object_type *o_ptr, int level, int power, int mode)
     if (-1 <= power && power <= 1)
         return;
 
-    if (o_ptr->sval == SV_LITE_FEANOR && (one_in_(10) || power > 2))
+    if (o_ptr->sval == SV_LITE_FEANOR && (one_in_(7) || power > 2))
     {
-        _create_artifact(o_ptr, power);
+        _create_artifact(o_ptr, level, power);
         return;
     }
 
