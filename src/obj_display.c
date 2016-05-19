@@ -25,6 +25,7 @@ static void _display_activation(object_type *o_ptr, doc_ptr doc);
 static void _display_ignore(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr doc);
 static void _display_autopick(object_type *o_ptr, doc_ptr doc);
 static void _display_cost(object_type *o_ptr, doc_ptr doc);
+static void _display_ego_desc(object_type *o_ptr, doc_ptr doc);
 static void _lite_display_doc(object_type *o_ptr, doc_ptr doc);
 
 static int _calc_net_bonus(int amt, u32b flgs[TR_FLAG_SIZE], int flg, int flg_dec);
@@ -91,8 +92,21 @@ static void _display_desc(object_type *o_ptr, doc_ptr doc)
     else
         text = k_text + k_info[o_ptr->k_idx].text;
 
-    if (strlen(text))
+    if (strlen(text) && !have_flag(o_ptr->art_flags, TR_FAKE))
         doc_printf(doc, "%s\n\n", text);
+}
+
+static void _display_ego_desc(object_type *o_ptr, doc_ptr doc)
+{
+    if ( o_ptr->name2
+      && object_is_known(o_ptr)
+      && ego_is_aware(o_ptr->name2)
+      && have_flag(o_ptr->art_flags, TR_FAKE) )
+    {
+        cptr text = e_text + e_info[o_ptr->name2].text;
+        if (strlen(text))
+            doc_printf(doc, "\n%s\n\n", text);
+    }
 }
 
 /* For convenience, the stats section will include a few other bonuses, like stealh,
@@ -781,15 +795,13 @@ static void _cost_dbg_hook(cptr msg)
 
 static void _display_cost(object_type *o_ptr, doc_ptr doc)
 {
-    if (1 && p_ptr->wizard)
+    if (1 && p_ptr->wizard && !have_flag(o_ptr->art_flags, TR_FAKE))
     {
-        int cost;
-
         _dbg_doc = doc;
         cost_calc_hook = _cost_dbg_hook;
 
         doc_newline(doc);
-        cost = new_object_cost(o_ptr, COST_REAL);
+        new_object_cost(o_ptr, COST_REAL);
 
         cost_calc_hook = NULL;
         _dbg_doc = NULL;
@@ -905,6 +917,8 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     _display_activation(o_ptr, doc);
     _display_curses(o_ptr, flgs, doc);
     _display_ignore(o_ptr, flgs, doc);
+
+    _display_ego_desc(o_ptr, doc);
 
     if (object_is_ego(o_ptr) && !ego_is_aware(o_ptr->name2))
         doc_printf(doc, "You are unfamiliar with this ego type. To learn the basic attributes of this ego type, you need to *identify* or sell this object.\n");
@@ -1046,6 +1060,8 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     }
 
     doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
+
+    _display_ego_desc(o_ptr, doc);
 
     if (object_is_ego(o_ptr) && !(o_ptr->ident & IDENT_FULL))
         doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");

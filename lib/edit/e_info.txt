@@ -128,11 +128,13 @@ N:21:BODY_ARMOR:of Elemental Protection
 W:0:*:2
 C:0:0:10:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+D:Armors of Elemental Protection have one or more basic elemental resistances.
 
 N:22:BODY_ARMOR:of Celestial Protection
 W:50:*:4
 C:0:0:10:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+D:Armors of Celestial Protection have one or more high resistances.
 
 N:23:BODY_ARMOR:of Elvenkind
 W:30:*:8
@@ -917,25 +919,31 @@ F:SLAY_EVIL | BLESSED | FULL_NAME
 
 N:300:RING:of Protection
 W:10:*:2
+D:Rings of Protection have random defensive powers.
 
 N:301:RING:& Elemental Ring~
 W:20:*:2
 F:FULL_NAME
+D:Elemental Rings have powers to protect you from one or more of the basic elements.
 
 N:302:RING:of Combat
 W:20:*:2
 F:HIDE_TYPE
+D:Rings of Combat have powers to enhance melee.
 
 N:303:RING:of Archery
 W:20:*:3
 F:HIDE_TYPE
+D:Rings of Archery have powers to enhance shooting.
 
 N:304:RING:(Defender)
 W:70:*:6
 F:IGNORE_ACID | IGNORE_FIRE | IGNORE_COLD | IGNORE_ELEC
+D:Defender rings have powerful defensive attributes.
 
 N:305:RING:of Wizardry
 W:30:*:4
+D:Rings of Wizardry gain powers to assist spellcasters.
 
 N:306:RING:of Speed
 #W:70:*:1

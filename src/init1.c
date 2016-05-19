@@ -828,6 +828,7 @@ static cptr k_info_flags[TR_FLAG_MAX] =
     "IM_FEAR",
     "DEC_BLOWS",
     "IM_BLIND",
+    "FAKE",
 };
 
 
@@ -3224,6 +3225,15 @@ errr parse_e_info(char *buf, header *head)
                 /* Start the next entry */
             s = t;
         }
+    }
+    /* Process 'D' for "Description" */
+    else if (buf[0] == 'D')
+    {
+        /* Acquire the text */
+        s = buf+2;
+
+        /* Store the text */
+        if (!add_text(&e_ptr->text, head, s, TRUE)) return (7);
     }
 
     /* Oops */
