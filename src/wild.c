@@ -714,11 +714,14 @@ static void _generate_encounters(int x, int y, const rect_t *r, const rect_t *ex
             if (!exclude || !rect_contains_pt(exclude, x2, y2))
             {
                 int options = PM_ALLOW_GROUP;
-                if (!generate_encounter && one_in_(2)) 
-                    options |= PM_ALLOW_SLEEP;
+                /*if (!generate_encounter && one_in_(2))
+                    options |= PM_ALLOW_SLEEP;*/
                 r_idx = get_mon_num(monster_level);
                 if (r_idx) 
+                {
+                    if (r_info[r_idx].level == 0) options |= PM_ALLOW_SLEEP;
                     place_monster_aux(0, y2, x2, r_idx, options);
+                }
                 break;
             }
         }

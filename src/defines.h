@@ -439,6 +439,7 @@
 #define MAX_SIGHT       20      /* Maximum view distance */
 #define MAX_RANGE       (p_ptr->inside_battle ? 36 : 18)      /* Maximum range (spells, etc) */
 #define AAF_LIMIT       100     /* Limit of sensing radius */
+#define AAF_LIMIT_WILD  100
 #define AAF_LIMIT_RING  255
 
 
