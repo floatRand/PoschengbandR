@@ -2802,7 +2802,8 @@ static void _wiz_stats_log_books(int level, object_type *o_ptr, int max3, int ma
     if ( (_third_book_p(o_ptr) && k_info[o_ptr->k_idx].counts.found < max3)
       || (_fourth_book_p(o_ptr) && k_info[o_ptr->k_idx].counts.found < max4) )
     {
-        _wiz_stats_log_obj(level, o_ptr);
+        if (check_book_realm(o_ptr->tval, o_ptr->sval))
+            _wiz_stats_log_obj(level, o_ptr);
     }
 }
 static void _wiz_stats_log_devices(int level, object_type *o_ptr)
@@ -2835,7 +2836,7 @@ static void _wiz_kill_monsters(int level)
 
         /* Skip out of depth monsters */
         r_ptr = &r_info[m_ptr->r_idx];
-        if (r_ptr->level > level) continue;
+        if (0 && r_ptr->level > level) continue;
 
         mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
     }
@@ -2851,8 +2852,8 @@ static void _wiz_inspect_objects(int level)
         if (o_ptr->tval == TV_GOLD) continue;
         if (o_ptr->held_m_idx) continue;
 
-        /* Skip Vaults ... */
-        if (cave[o_ptr->iy][o_ptr->ix].info & CAVE_ICKY) continue;
+        /* Skip Vaults ...
+        if (cave[o_ptr->iy][o_ptr->ix].info & CAVE_ICKY) continue;*/
 
         identify_item(o_ptr); /* statistics are updated here */
 
@@ -2863,11 +2864,11 @@ static void _wiz_inspect_objects(int level)
             stats_add_ego(o_ptr);
 
         if (0) _wiz_stats_log_speed(level, o_ptr);
-        if (0) _wiz_stats_log_books(level, o_ptr, 5, 5);
+        if (1) _wiz_stats_log_books(level, o_ptr, 5, 5);
         if (0) _wiz_stats_log_devices(level, o_ptr);
         if (0) _wiz_stats_log_arts(level, o_ptr);
         if (0) _wiz_stats_log_rand_arts(level, o_ptr);
-        if (1 && o_ptr->name2 == EGO_RING_ARCHERY)
+        if (0 && o_ptr->name2 == EGO_RING_ARCHERY)
             _wiz_stats_log_obj(level, o_ptr);
     }
 }

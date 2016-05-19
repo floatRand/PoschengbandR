@@ -287,7 +287,16 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_SIZE], object_type *o_ptr)
     case ART_STONE_OF_CRAFT:
     case ART_STONE_OF_ARMAGEDDON:
     case ART_STONE_OF_MIND:
+    case ART_STONE_LORE:
         p += 5000;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
+            cost_calc_hook(dbg_msg);
+        }
+        break;
+    case ART_ASSASSINATOR:
+        p += 25000;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
@@ -369,7 +378,7 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_SIZE], object_type *o_ptr)
 
     if (!object_is_artifact(o_ptr) && o_ptr->tval != TV_LITE && !object_is_jewelry(o_ptr))
     {
-        p = p * 3 / 4;
+        p = (p + 1) * 3 / 4;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Not Artifact: p = %d", p);
@@ -953,7 +962,7 @@ s32b armor_cost(object_type *o_ptr, int options)
     if ((options & COST_REAL) || object_is_known(o_ptr))
         p = _finalize_p(p, flgs, o_ptr);
     else
-        p = p * 3 / 4; /* assume not artifact */
+        p = (p + 1) * 3 / 4; /* assume not artifact */
     return p;
 }
 
@@ -1194,7 +1203,9 @@ s32b weapon_cost(object_type *o_ptr, int options)
     if (object_allow_two_hands_wielding(o_ptr))
         p += 75;
 
-    p += o_ptr->weight;
+    if (o_ptr->weight > 20)
+        p += o_ptr->weight - 20;
+
     if (cost_calc_hook)
     {
         sprintf(dbg_msg, "  * Weight/2-hands: p = %d", p);

@@ -6388,6 +6388,7 @@ bool make_object(object_type *j_ptr, u32b mode)
         if (mode & AM_TAILORED)
         {
             _drop_tailored = TRUE;
+            base += 10;          /* To help spellcasters find their books. Really, I should just adjust their levels in k_info, though ... */
             max_attempts = 1000; /* Tailored drops can fail for certain _choose_obj_kind()s */
         }
 
