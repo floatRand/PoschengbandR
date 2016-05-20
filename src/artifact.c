@@ -1905,7 +1905,48 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
 
     if (o_ptr->pval) has_pval = TRUE;
 
-    if ((mode & (CREATE_ART_SCROLL/* | CREATE_ART_GOOD*/)) && one_in_(4))
+    if (obj_drop_theme)
+    {
+        switch (obj_drop_theme)
+        {
+        case R_DROP_WARRIOR:
+        case R_DROP_WARRIOR_SHOOT:
+        case R_DROP_SAMURAI:
+        case R_DROP_DWARF:
+            artifact_bias = BIAS_WARRIOR;
+            break;
+        case R_DROP_ARCHER:
+            artifact_bias = BIAS_ARCHER;
+            break;
+        case R_DROP_MAGE:
+            artifact_bias = BIAS_MAGE;
+            break;
+        case R_DROP_PRIEST:
+            artifact_bias = BIAS_PRIESTLY;
+            break;
+        case R_DROP_PRIEST_EVIL:
+            artifact_bias = BIAS_NECROMANTIC;
+            break;
+        case R_DROP_PALADIN:
+            artifact_bias = BIAS_LAW;
+            warrior_artifact_bias = 60;
+            break;
+        case R_DROP_PALADIN_EVIL:
+            artifact_bias = BIAS_NECROMANTIC;
+            warrior_artifact_bias = 60;
+            break;
+        case R_DROP_NINJA:
+        case R_DROP_HOBBIT:
+            artifact_bias = BIAS_ROGUE;
+            break;
+        case R_DROP_ROGUE:
+            artifact_bias = BIAS_ROGUE;
+            warrior_artifact_bias = 50;
+            break;
+        }
+    }
+
+    if (!artifact_bias && (mode & (CREATE_ART_SCROLL/* | CREATE_ART_GOOD*/)) && one_in_(4))
     {
         switch (p_ptr->pclass)
         {

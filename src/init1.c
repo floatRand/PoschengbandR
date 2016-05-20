@@ -608,6 +608,27 @@ static cptr r_info_flags9[] =
     "XXX32",
 };
 
+static cptr r_drop_themes[R_DROP_MAX] =
+{
+    "NONE",
+
+    "DROP_WARRIOR",
+    "DROP_WARRIOR_SHOOT",
+    "DROP_ARCHER",
+    "DROP_MAGE",
+    "DROP_PRIEST",
+    "DROP_PRIEST_EVIL",
+    "DROP_PALADIN",
+    "DROP_PALADIN_EVIL",
+    "DROP_SAMURAI",
+    "DROP_NINJA",
+    "DROP_ROGUE",
+
+    "DROP_HOBBIT",
+    "DROP_DWARF",
+
+    "DROP_JUNK",
+};
 
 /*
  * Monster race flags - Resistances
@@ -3818,9 +3839,29 @@ errr parse_r_info(char *buf, header *head)
             s = t;
         }
     }
+    /* O:DROP_WARRIOR */
+    else if (buf[0] == 'O')
+    {
+        /* Acquire the text */
+        s = buf+2;
+
+        if (r_ptr->drop_theme)
+            return PARSE_ERROR_GENERIC; /* Only one theme allowed */
+
+        for (i = 0; i < R_DROP_MAX; i++)
+        {
+            if (streq(s, r_drop_themes[i]))
+            {
+                r_ptr->drop_theme = i;
+                break;
+            }
+        }
+        if (!r_ptr->drop_theme)
+            return PARSE_ERROR_INVALID_FLAG; /* Not a valid theme */
+    }
 
     /* Oops */
-    else return (6);
+    else return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 
 
     /* Success */

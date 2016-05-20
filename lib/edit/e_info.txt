@@ -946,7 +946,6 @@ W:30:*:4
 D:Rings of Wizardry gain powers to assist spellcasters.
 
 N:306:RING:of Speed
-#W:70:*:1
 W:30:*:5
 F:SPEED | HIDE_TYPE | AWARE
 

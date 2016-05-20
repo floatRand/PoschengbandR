@@ -956,6 +956,7 @@ monster_hook_type get_mon_num2_hook;
  * Hack -- function hook to restrict "get_obj_num_prep()" function
  */
 bool (*get_obj_num_hook)(int k_idx);
+int obj_drop_theme;
 
 
 /* Hack, monk armour */

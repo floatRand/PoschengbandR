@@ -801,21 +801,26 @@ bool get_monster_drop(int m_idx, object_type *o_ptr)
     if (r_ptr->flags1 & RF1_DROP_GREAT) 
         mo_mode |= AM_GREAT;
 
-    if ( (r_ptr->flags1 & RF1_QUESTOR)
-      || (r_ptr->flags7 & RF7_GUARDIAN) )
+    if (r_ptr->drop_theme)
+        obj_drop_theme = r_ptr->drop_theme;
+    else /* Don't try to tailor themed drops since they could easily fail ... */
     {
-        if (one_in_(5))
-            mo_mode |= AM_TAILORED;
-    }
-    if (r_ptr->flags1 & RF1_UNIQUE)
-    {
-        if (one_in_(10))
-            mo_mode |= AM_TAILORED;
-    }
-    else if (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
-    {
-        if (one_in_(30))
-            mo_mode |= AM_TAILORED;
+        if ( (r_ptr->flags1 & RF1_QUESTOR)
+          || (r_ptr->flags7 & RF7_GUARDIAN) )
+        {
+            if (one_in_(5))
+                mo_mode |= AM_TAILORED;
+        }
+        if (r_ptr->flags1 & RF1_UNIQUE)
+        {
+            if (one_in_(10))
+                mo_mode |= AM_TAILORED;
+        }
+        else if (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
+        {
+            if (one_in_(30))
+                mo_mode |= AM_TAILORED;
+        }
     }
 
     coin_type = force_coin;
@@ -825,16 +830,23 @@ bool get_monster_drop(int m_idx, object_type *o_ptr)
     if (do_gold && (!do_item || (randint0(100) < 20)))
     {
         if (!make_gold(o_ptr))
+        {
+            obj_drop_theme = 0;
             return FALSE;
+        }
     }
     else
     {
         if (!make_object(o_ptr, mo_mode))
+        {
+            obj_drop_theme = 0;
             return FALSE;
+        }
     }
 
     object_level = base_level;
     coin_type = 0;
+    obj_drop_theme = 0;
 
     return TRUE;    
 }

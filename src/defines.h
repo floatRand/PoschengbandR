@@ -3482,6 +3482,35 @@ enum summon_specific_e {
 #define RF9_XXX31               0x40000000
 #define RF9_XXX32               0x80000000
 
+/* Themed drops ... r_info[].drop_theme
+   Note: If you reorder these, you'll need to touch r_info.txt as well.
+   See:  obj_drop_theme for implementation
+   See:  r_drop_themes in init1.c for parsing r_info.txt */
+enum r_drop_e
+{
+    R_DROP_NONE = 0,
+
+    /* Class Themes */
+    R_DROP_WARRIOR,
+    R_DROP_WARRIOR_SHOOT,
+    R_DROP_ARCHER,
+    R_DROP_MAGE,
+    R_DROP_PRIEST,
+    R_DROP_PRIEST_EVIL,
+    R_DROP_PALADIN,
+    R_DROP_PALADIN_EVIL,
+    R_DROP_SAMURAI,
+    R_DROP_NINJA,
+    R_DROP_ROGUE,
+
+    /* Racial Themes */
+    R_DROP_HOBBIT,
+    R_DROP_DWARF,
+
+    R_DROP_JUNK,
+    R_DROP_MAX
+};
+
 /*
  * Monster bit flags of racial resistances
  * Note: Resist confusion was merged to RFR_NO_CONF

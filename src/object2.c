@@ -2386,20 +2386,21 @@ static int _ego_weight(ego_item_type *e_ptr, int level)
         weight = MAX(10000 / rarity, 1);
     return weight;
 }
-static int _get_random_ego(int type, int level)
+typedef bool (*_ego_p)(int e_idx);
+
+static int _get_random_ego_aux(int type, int level, _ego_p p)
 {
     int i, value;
     ego_item_type *e_ptr;
 
     int total = 0;
-
-    if (apply_magic_ego)
-        return apply_magic_ego;
     
     for (i = 1; i < max_e_idx; i++)
     {
+        if (p && !p(i)) continue;
+
         e_ptr = &e_info[i];
-        
+
         if (e_ptr->type == type)
             total += _ego_weight(e_ptr, level);
     }
@@ -2408,8 +2409,10 @@ static int _get_random_ego(int type, int level)
 
     for (i = 1; i < max_e_idx; i++)
     {
+        if (p && !p(i)) continue;
+
         e_ptr = &e_info[i];
-        
+
         if (e_ptr->type == type)
         {
             value -= _ego_weight(e_ptr, level);
@@ -2419,6 +2422,231 @@ static int _get_random_ego(int type, int level)
     }
 
     return 0;
+}
+
+static bool _ego_p_ring(int e_idx)
+{
+    switch (obj_drop_theme)
+    {
+    case R_DROP_WARRIOR:
+    case R_DROP_WARRIOR_SHOOT:
+    case R_DROP_SAMURAI:
+        if (e_idx == EGO_RING_COMBAT) return TRUE;
+        return FALSE;
+    case R_DROP_ARCHER:
+        if (e_idx == EGO_RING_ARCHERY) return TRUE;
+        return FALSE;
+    case R_DROP_MAGE:
+        if ( e_idx == EGO_RING_PROTECTION
+          || e_idx == EGO_RING_ELEMENTAL
+          || e_idx == EGO_RING_DEFENDER
+          || e_idx == EGO_RING_WIZARDRY
+          || e_idx == EGO_RING_SPEED )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_PRIEST:
+    case R_DROP_PRIEST_EVIL:
+        if ( e_idx == EGO_RING_PROTECTION
+          || e_idx == EGO_RING_ELEMENTAL
+          || e_idx == EGO_RING_DEFENDER
+          || e_idx == EGO_RING_SPEED )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_PALADIN:
+    case R_DROP_PALADIN_EVIL:
+        if ( e_idx == EGO_RING_PROTECTION
+          || e_idx == EGO_RING_DEFENDER
+          || e_idx == EGO_RING_SPEED )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_ROGUE:
+    case R_DROP_NINJA:
+        if ( e_idx == EGO_RING_COMBAT
+          || e_idx == EGO_RING_ARCHERY
+          || e_idx == EGO_RING_SPEED )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static bool _ego_p_amulet(int e_idx)
+{
+    switch (obj_drop_theme)
+    {
+    case R_DROP_WARRIOR:
+    case R_DROP_WARRIOR_SHOOT:
+        if ( e_idx == EGO_AMULET_BARBARIAN
+          || e_idx == EGO_AMULET_HERO )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_DWARF:
+        if ( e_idx == EGO_AMULET_ELEMENTAL
+          || e_idx == EGO_AMULET_DWARVEN )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_MAGE:
+        if ( e_idx == EGO_AMULET_ELEMENTAL
+          || e_idx == EGO_AMULET_DEFENDER
+          || e_idx == EGO_AMULET_MAGI )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_PRIEST:
+    case R_DROP_PALADIN:
+        if ( e_idx == EGO_AMULET_ELEMENTAL
+          || e_idx == EGO_AMULET_DEFENDER
+          || e_idx == EGO_AMULET_SACRED
+          || e_idx == EGO_AMULET_DEVOTION )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_PALADIN_EVIL:
+    case R_DROP_PRIEST_EVIL:
+        if ( e_idx == EGO_AMULET_ELEMENTAL
+          || e_idx == EGO_AMULET_HELL )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_ROGUE:
+    case R_DROP_NINJA:
+    case R_DROP_HOBBIT:
+        if ( e_idx == EGO_AMULET_DEFENDER
+          || e_idx == EGO_AMULET_ELEMENTAL
+          || e_idx == EGO_AMULET_TRICKERY )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static bool _ego_p_body_armor(int e_idx)
+{
+    switch (obj_drop_theme)
+    {
+    case R_DROP_DWARF:
+        if (e_idx == EGO_BODY_DWARVEN) return TRUE;
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static bool _ego_p_shield(int e_idx)
+{
+    switch (obj_drop_theme)
+    {
+    case R_DROP_DWARF:
+        if (e_idx == EGO_SHIELD_DWARVEN) return TRUE;
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static bool _ego_p_helmet(int e_idx)
+{
+    switch (obj_drop_theme)
+    {
+    case R_DROP_DWARF:
+        if (e_idx == EGO_HELMET_DWARVEN) return TRUE;
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static bool _ego_p_gloves(int e_idx)
+{
+    switch (obj_drop_theme)
+    {
+    case R_DROP_WARRIOR:
+    case R_DROP_WARRIOR_SHOOT:
+    case R_DROP_SAMURAI:
+        if ( e_idx == EGO_GLOVES_SLAYING
+          || e_idx == EGO_GLOVES_BERSERKER
+          || e_idx == EGO_GLOVES_GIANT
+          || e_idx == EGO_GLOVES_GENJI
+          || e_idx == EGO_GLOVES_FREE_ACTION )
+        {
+            return TRUE;
+        }
+        return FALSE;
+    case R_DROP_ARCHER:
+        if (e_idx == EGO_GLOVES_SNIPER) return TRUE;
+        return FALSE;
+    case R_DROP_MAGE:
+        if (e_idx == EGO_GLOVES_WIZARD) return TRUE;
+        return FALSE;
+    case R_DROP_ROGUE:
+        if (e_idx == EGO_GLOVES_THIEF) return TRUE;
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static bool _ego_p_boots(int e_idx)
+{
+    switch (obj_drop_theme)
+    {
+    case R_DROP_DWARF:
+        if (e_idx == EGO_BOOTS_DWARVEN) return TRUE;
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static int _get_random_ego(int type, int level)
+{
+    _ego_p p = NULL;
+    int    e_idx = 0;
+
+    if (apply_magic_ego)
+        return apply_magic_ego;
+
+    if (obj_drop_theme)
+    {
+        switch (type)
+        {
+        case EGO_TYPE_RING: p = _ego_p_ring; break;
+        case EGO_TYPE_AMULET: p = _ego_p_amulet; break;
+        case EGO_TYPE_BODY_ARMOR: p = _ego_p_body_armor; break;
+        case EGO_TYPE_SHIELD: p = _ego_p_shield; break;
+        case EGO_TYPE_HELMET: p = _ego_p_helmet; break;
+        case EGO_TYPE_GLOVES: p = _ego_p_gloves; break;
+        case EGO_TYPE_BOOTS: p = _ego_p_boots; break;
+        }
+
+        /* Hack: Ego creation will often spin a loop, limiting
+           certain ego types to certain object types. For example,
+           Rusty Chain Mail (Dwarven) or a Pair of Soft Leather Boots (Dwarven)
+           is prevented.
+
+           In general, the kind_theme_* hooks should prevent these
+           errors, but any mistake would result in an infinite loop.
+           Turning off the drop theme here is safe. You just won't get
+           a properly themed ego item on the next pass. */
+        obj_drop_theme = 0;
+    }
+
+    e_idx = _get_random_ego_aux(type, level, p);
+    if (!e_idx && p)
+        e_idx = _get_random_ego_aux(type, level, NULL);
+    return e_idx;
 }
 
 typedef struct { int lvl, min, max; } _power_limit_t;
@@ -2590,28 +2818,8 @@ static void _create_defender(object_type *o_ptr, int level, int power)
 static void _create_ring_aux(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
-    bool done = FALSE;
-    bool force_great = FALSE;
 
-    if (!apply_magic_ego && level > 50)
-    {
-        if ((mode & (AM_GOOD | AM_GREAT)) && randint0(150) < level)
-        {
-            force_great = TRUE;
-        }
-    }
-
-    while (!done)
-    {
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_RING, level);
-        done = TRUE;
-        if ( force_great
-          && o_ptr->name2 != EGO_RING_SPEED
-          && o_ptr->name2 != EGO_RING_DEFENDER )
-        {
-            done = FALSE;
-        }
-    }
+    o_ptr->name2 = _get_random_ego(EGO_TYPE_RING, level);
 
     switch (o_ptr->name2)
     {
@@ -3036,28 +3244,8 @@ static void _create_ring_aux(object_type *o_ptr, int level, int power, int mode)
 static void _create_amulet_aux(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
-    bool force_great = FALSE;
-    bool done = FALSE;
 
-    if (!apply_magic_ego && level > 50)
-    {
-        if ((mode & (AM_GOOD | AM_GREAT)) && randint0(300) < level)
-        {
-            force_great = TRUE;
-        }
-    }
-
-    while (!done)
-    {
-        o_ptr->name2 = _get_random_ego(EGO_TYPE_AMULET, level);
-        done = TRUE;
-        if ( force_great
-          && o_ptr->name2 != EGO_AMULET_DEFENDER
-          && o_ptr->name2 != EGO_AMULET_HERO )
-        {
-            done = FALSE;
-        }
-    }
+    o_ptr->name2 = _get_random_ego(EGO_TYPE_AMULET, level);
 
     switch (o_ptr->name2)
     {
@@ -4837,6 +5025,7 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
         while (!done)
         {
             o_ptr->name2 = _get_random_ego(EGO_TYPE_BOOTS, level);
+
             done = TRUE;
 
             switch (o_ptr->name2)
@@ -5252,6 +5441,11 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         {
             power = 0;
         }
+    }
+
+    if (obj_drop_theme && !power && (o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET))
+    {
+        power = 1;
     }
 
     if (mode & AM_AVERAGE)
@@ -6252,24 +6446,24 @@ static _kind_alloc_entry _kind_alloc_table[] = {
 };*/
 static _kind_alloc_entry _kind_alloc_table[] = {
     /* Equipment by Slot */
-    { kind_is_weapon,          210,    0,    0 },
+    { kind_is_weapon,          215,    0,    0 },
     { _kind_is_shield,          30,    0,    0 },
-    { _kind_is_bow,             63,    0,    0 },
+    { _kind_is_bow,             65,    0,    0 },
     { kind_is_jewelry,          40,    0,    0 },
-    { _kind_is_lite,             7,    0,    0 },
+    { _kind_is_lite,            10,    0,    0 },
     { kind_is_body_armor,      200,    0,    0 },
     { _kind_is_cloak,           30,    0,    0 },
     { kind_is_helm,             30,    0,    0 },
     { _kind_is_gloves,          30,    0,    0 },
     { _kind_is_boots,           30,    0,    0 },
-    /*                         670              */
+    /*                         680              */
 
     { kind_is_wand_rod_staff,   95,  -40,  -60 },
     { _kind_is_potion_scroll,  105,  -50,  -90 },
     { _kind_is_ammo,            45,    0,  -30 },
-    { kind_is_book,             35,   10,   15 },
+    { kind_is_book,             25,   10,   15 }, /* R_DROP_MAGE is covering this ... */
     { kind_is_misc,             50,  -50,  -50 },
-    /*                         330              */
+    /*                         320              */
     { NULL, 0}
 };
 static int _kind_alloc_weight(_kind_alloc_entry *entry, u32b mode)
@@ -6286,6 +6480,363 @@ static int _kind_alloc_weight(_kind_alloc_entry *entry, u32b mode)
 
     return MAX(0, w);
 }
+/****************** Themed Drops ***************************************/
+static bool _kind_is_(int k_idx, int tval, int sval)
+{
+    if ( k_info[k_idx].tval == tval
+      && (sval == SV_ANY || k_info[k_idx].sval == sval) )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_theme_warrior(int k_idx) {
+    if ( _kind_is_(k_idx, TV_POTION, SV_POTION_BERSERK_STRENGTH)
+      || _kind_is_(k_idx, TV_POTION, SV_POTION_HEROISM) )
+    {
+        return TRUE;
+    }
+
+    switch (k_info[k_idx].tval)
+    {
+    case TV_SWORD:
+        if (k_info[k_idx].sval >= SV_SABRE && k_info[k_idx].sval < SV_POISON_NEEDLE)
+            return TRUE;
+        break;
+    case TV_POLEARM:
+    case TV_BOOTS:
+    case TV_GLOVES:
+    case TV_HELM:
+    case TV_SHIELD:
+    case TV_HARD_ARMOR:
+    case TV_DRAG_ARMOR:
+    case TV_RING:
+    case TV_AMULET:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_theme_warrior_shoot(int k_idx) {
+    if ( _kind_is_(k_idx, TV_BOW,  SV_LIGHT_XBOW)
+      || _kind_is_(k_idx, TV_BOW,  SV_HEAVY_XBOW)
+      || _kind_is_(k_idx, TV_BOLT, SV_ANY)  )
+    {
+        return TRUE;
+    }
+    return _kind_theme_warrior(k_idx);
+}
+static bool _kind_theme_archer(int k_idx) {
+    if ( _kind_is_(k_idx, TV_BOW,  SV_SHORT_BOW)
+      || _kind_is_(k_idx, TV_BOW,  SV_LONG_BOW)
+      || _kind_is_(k_idx, TV_ARROW,  SV_ANY) )
+    {
+        return TRUE;
+    }
+    if (k_info[k_idx].tval == TV_RING)
+        return TRUE;
+    return FALSE;
+}
+static bool _kind_theme_mage(int k_idx) {
+    if ( _kind_is_(k_idx, TV_HAFTED, SV_WIZSTAFF)
+      || _kind_is_(k_idx, TV_SOFT_ARMOR, SV_ROBE) )
+    {
+        return TRUE;
+    }
+    switch (k_info[k_idx].tval)
+    {
+    case TV_RING:
+    case TV_AMULET:
+    case TV_WAND:
+    case TV_ROD:
+    case TV_STAFF:
+    case TV_SORCERY_BOOK:
+    case TV_NATURE_BOOK:
+    case TV_CHAOS_BOOK:
+    case TV_DEATH_BOOK:
+    case TV_TRUMP_BOOK:
+    case TV_ARCANE_BOOK:
+    case TV_CRAFT_BOOK:
+    case TV_DAEMON_BOOK:
+    case TV_ARMAGEDDON_BOOK:
+        return TRUE;
+    }
+    if (k_info[k_idx].tval == TV_POTION)
+    {
+        switch (k_info[k_idx].sval)
+        {
+        case SV_POTION_RESTORE_MANA:
+        case SV_POTION_ENLIGHTENMENT:
+        case SV_POTION_STAR_ENLIGHTENMENT:
+        case SV_POTION_SELF_KNOWLEDGE:
+        case SV_POTION_INVULNERABILITY:
+        case SV_POTION_CLARITY:
+        case SV_POTION_GREAT_CLARITY:
+        case SV_POTION_INC_STR:
+        case SV_POTION_INC_INT:
+        case SV_POTION_INC_WIS:
+        case SV_POTION_INC_DEX:
+        case SV_POTION_INC_CON:
+        case SV_POTION_INC_CHR:
+            return TRUE;
+        }
+    }
+    if (k_info[k_idx].tval == TV_SCROLL)
+    {
+        switch (k_info[k_idx].sval)
+        {
+        case SV_SCROLL_PHASE_DOOR:
+        case SV_SCROLL_TELEPORT:
+        case SV_SCROLL_TELEPORT_LEVEL:
+        case SV_SCROLL_WORD_OF_RECALL:
+        case SV_SCROLL_IDENTIFY:
+        case SV_SCROLL_STAR_IDENTIFY:
+        case SV_SCROLL_RECHARGING:
+        case SV_SCROLL_STAR_DESTRUCTION:
+        case SV_SCROLL_GENOCIDE:
+        case SV_SCROLL_MASS_GENOCIDE:
+        case SV_SCROLL_ACQUIREMENT:
+        case SV_SCROLL_STAR_ACQUIREMENT:
+        case SV_SCROLL_ARTIFACT:
+        case SV_SCROLL_DETECT_MONSTERS:
+        case SV_SCROLL_FIRE:
+        case SV_SCROLL_ICE:
+        case SV_SCROLL_CHAOS:
+        case SV_SCROLL_MANA:
+        case SV_SCROLL_BANISHMENT:
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+static bool _kind_theme_priest(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_HAFTED:
+    case TV_LIFE_BOOK:
+    case TV_CRUSADE_BOOK:
+    case TV_AMULET:
+        return TRUE;
+    }
+    if (k_info[k_idx].tval == TV_POTION)
+    {
+        switch (k_info[k_idx].sval)
+        {
+        case SV_POTION_CURE_LIGHT:
+        case SV_POTION_CURE_SERIOUS:
+        case SV_POTION_CURE_CRITICAL:
+        case SV_POTION_HEALING:
+        case SV_POTION_STAR_HEALING:
+        case SV_POTION_LIFE:
+        case SV_POTION_RESTORE_EXP:
+        case SV_POTION_RES_STR:
+        case SV_POTION_RES_INT:
+        case SV_POTION_RES_WIS:
+        case SV_POTION_RES_DEX:
+        case SV_POTION_RES_CON:
+        case SV_POTION_RES_CHR:
+            return TRUE;
+        }
+    }
+    if (k_info[k_idx].tval == TV_SCROLL)
+    {
+        switch (k_info[k_idx].sval)
+        {
+        case SV_SCROLL_REMOVE_CURSE:
+        case SV_SCROLL_STAR_REMOVE_CURSE:
+        case SV_SCROLL_BLESSING:
+        case SV_SCROLL_HOLY_CHANT:
+        case SV_SCROLL_HOLY_PRAYER:
+        case SV_SCROLL_PROTECTION_FROM_EVIL:
+        case SV_SCROLL_RUNE_OF_PROTECTION:
+        case SV_SCROLL_DISPEL_UNDEAD:
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+static bool _kind_theme_priest_evil(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_HAFTED:
+    case TV_DEATH_BOOK:
+    case TV_DAEMON_BOOK:
+    case TV_AMULET:
+        return TRUE;
+    }
+    if (k_info[k_idx].tval == TV_SCROLL)
+    {
+        switch (k_info[k_idx].sval)
+        {
+        case SV_SCROLL_GENOCIDE:
+        case SV_SCROLL_MASS_GENOCIDE:
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+static bool _kind_theme_paladin(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_LIFE_BOOK:
+    case TV_CRUSADE_BOOK:
+    case TV_RING:
+    case TV_AMULET:
+        return TRUE;
+    }
+    if (k_info[k_idx].tval == TV_POTION)
+    {
+        switch (k_info[k_idx].sval)
+        {
+        case SV_POTION_CURE_LIGHT:
+        case SV_POTION_CURE_SERIOUS:
+        case SV_POTION_CURE_CRITICAL:
+        case SV_POTION_HEALING:
+        case SV_POTION_STAR_HEALING:
+        case SV_POTION_LIFE:
+            return TRUE;
+        }
+    }
+    if (k_info[k_idx].tval == TV_SCROLL)
+    {
+        switch (k_info[k_idx].sval)
+        {
+        case SV_SCROLL_BLESSING:
+        case SV_SCROLL_HOLY_CHANT:
+        case SV_SCROLL_HOLY_PRAYER:
+        case SV_SCROLL_PROTECTION_FROM_EVIL:
+        case SV_SCROLL_VENGEANCE:
+            return TRUE;
+        }
+    }
+    return _kind_theme_warrior(k_idx);
+}
+static bool _kind_theme_paladin_evil(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_DEATH_BOOK:
+    case TV_DAEMON_BOOK:
+    case TV_RING:
+    case TV_AMULET:
+        return TRUE;
+    }
+    if (k_info[k_idx].tval == TV_SCROLL)
+    {
+        switch (k_info[k_idx].sval)
+        {
+        case SV_SCROLL_GENOCIDE:
+        case SV_SCROLL_MASS_GENOCIDE:
+        case SV_SCROLL_STAR_DESTRUCTION:
+        case SV_SCROLL_VENGEANCE:
+            return TRUE;
+        }
+    }
+    return _kind_theme_warrior(k_idx);
+}
+static bool _kind_theme_samurai(int k_idx) {
+    if ( _kind_is_(k_idx, TV_SWORD, SV_KATANA)
+      || _kind_is_(k_idx, TV_SWORD, SV_WAKIZASHI)
+      || _kind_is_(k_idx, TV_HARD_ARMOR, SV_HARAMAKIDO) )
+    {
+        return TRUE;
+    }
+    switch (k_info[k_idx].tval)
+    {
+    case TV_RING:
+    case TV_HISSATSU_BOOK:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_theme_ninja(int k_idx) {
+    if ( _kind_is_(k_idx, TV_SWORD, SV_POISON_NEEDLE)
+      || _kind_is_(k_idx, TV_SWORD, SV_FALCON_SWORD)
+      || _kind_is_(k_idx, TV_SWORD, SV_DAGGER)
+      || _kind_is_(k_idx, TV_SWORD, SV_NINJATO)
+      || _kind_is_(k_idx, TV_SOFT_ARMOR, SV_KUROSHOUZOKU) )
+    {
+        return TRUE;
+    }
+    switch (k_info[k_idx].tval)
+    {
+    case TV_AMULET:
+    case TV_SPIKE:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_theme_rogue(int k_idx) {
+    if (_kind_is_(k_idx, TV_BOW, SV_SLING))
+        return TRUE;
+
+    switch (k_info[k_idx].tval)
+    {
+    case TV_AMULET:
+    case TV_SOFT_ARMOR:
+    case TV_CLOAK:
+    case TV_GLOVES:
+    case TV_SHOT:
+    case TV_BURGLARY_BOOK:
+        return TRUE;
+
+    case TV_SWORD:
+        if (k_info[k_idx].weight < 50)
+            return TRUE;
+        return FALSE;
+    }
+    return FALSE;
+}
+static bool _kind_theme_hobbit(int k_idx) {
+    if ( _kind_is_(k_idx, TV_FOOD, SV_ANY)
+      || _kind_is_(k_idx, TV_BOW, SV_SLING)
+      || _kind_is_(k_idx, TV_SHOT, SV_AMMO_LIGHT) )
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_theme_dwarf(int k_idx) {
+    if ( _kind_is_(k_idx, TV_POLEARM, SV_LOCHABER_AXE)
+      || _kind_is_(k_idx, TV_POLEARM, SV_BEAKED_AXE)
+      || _kind_is_(k_idx, TV_POLEARM, SV_BROAD_AXE)
+      || _kind_is_(k_idx, TV_POLEARM, SV_BATTLE_AXE)
+      || _kind_is_(k_idx, TV_POLEARM, SV_GREAT_AXE)
+      || _kind_is_(k_idx, TV_BOOTS, SV_PAIR_OF_METAL_SHOD_BOOTS)
+      || _kind_is_(k_idx, TV_DIGGING, SV_DWARVEN_PICK)
+      || _kind_is_(k_idx, TV_DIGGING, SV_DWARVEN_SHOVEL)
+      || _kind_is_(k_idx, TV_DIGGING, SV_MATTOCK)
+      || _kind_is_(k_idx, TV_HELM, SV_IRON_HELM)
+      || _kind_is_(k_idx, TV_HELM, SV_STEEL_HELM)
+      || _kind_is_(k_idx, TV_SHIELD, SV_SMALL_METAL_SHIELD)
+      || _kind_is_(k_idx, TV_HARD_ARMOR, SV_MITHRIL_CHAIN_MAIL)
+      || _kind_is_(k_idx, TV_HARD_ARMOR, SV_MITHRIL_PLATE_MAIL) )
+    {
+        return TRUE;
+    }
+    switch (k_info[k_idx].tval)
+    {
+    case TV_AMULET:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _kind_theme_junk(int k_idx) {
+    switch (k_info[k_idx].tval)
+    {
+    case TV_SKELETON:
+    case TV_BOTTLE:
+    case TV_JUNK:
+    case TV_SPIKE:
+    case TV_CORPSE:
+    case TV_LITE:
+    case TV_FLASK:
+    case TV_FOOD:
+        return TRUE;
+    }
+    return FALSE;
+
+}
+/****************** End of Themed Drops ***************************************/
+
 static _kind_p _choose_obj_kind(u32b mode)
 {
     int  i;
@@ -6298,14 +6849,62 @@ static _kind_p _choose_obj_kind(u32b mode)
         _kind_hook2 = kind_is_great;
     else if (mode & AM_GOOD)
         _kind_hook2 = kind_is_good;
-    else if (_drop_tailored)
-        _kind_hook2 = kind_is_tailored;
 
+    if (obj_drop_theme)
+    {
+        switch (obj_drop_theme)
+        {
+        case R_DROP_WARRIOR:
+            _kind_hook1 = _kind_theme_warrior;
+            break;
+        case R_DROP_WARRIOR_SHOOT:
+            _kind_hook1 = _kind_theme_warrior_shoot;
+            break;
+        case R_DROP_ARCHER:
+            _kind_hook1 = _kind_theme_archer;
+            break;
+        case R_DROP_MAGE:
+            _kind_hook1 = _kind_theme_mage;
+            break;
+        case R_DROP_PRIEST:
+            _kind_hook1 = _kind_theme_priest;
+            break;
+        case R_DROP_PRIEST_EVIL:
+            _kind_hook1 = _kind_theme_priest_evil;
+            break;
+        case R_DROP_PALADIN:
+            _kind_hook1 = _kind_theme_paladin;
+            break;
+        case R_DROP_PALADIN_EVIL:
+            _kind_hook1 = _kind_theme_paladin_evil;
+            break;
+        case R_DROP_SAMURAI:
+            _kind_hook1 = _kind_theme_samurai;
+            break;
+        case R_DROP_NINJA:
+            _kind_hook1 = _kind_theme_ninja;
+            break;
+        case R_DROP_ROGUE:
+            _kind_hook1 = _kind_theme_rogue;
+            break;
+        case R_DROP_HOBBIT:
+            _kind_hook1 = _kind_theme_hobbit;
+            break;
+        case R_DROP_DWARF:
+            _kind_hook1 = _kind_theme_dwarf;
+            break;
+        case R_DROP_JUNK:
+            _kind_hook1 = _kind_theme_junk;
+            break;
+        }
+    }
     /* Circumvent normal object kind frequencies for good, great and tailored drops.
      * The goal here is, for example, to allow mages to find adequate spellbooks without
-     * drowning other characters with useless junk. */
-    if (_drop_tailored)
+     * drowning other characters with useless junk.
+     * Note: Themed drops (above) circumvent tailored objects ...*/
+    else if (_drop_tailored)
     {
+        _kind_hook2 = kind_is_tailored;
         switch (p_ptr->pclass)
         {
         case CLASS_ARCHAEOLOGIST:
@@ -6499,7 +7098,10 @@ bool make_object(object_type *j_ptr, u32b mode)
 
         /* Handle failure */
         if (!k_idx) 
-            return (FALSE);
+        {
+            obj_drop_theme = 0;
+            return FALSE;
+        }
 
         /* Prepare the object */
         object_prep(j_ptr, k_idx);
@@ -6507,7 +7109,10 @@ bool make_object(object_type *j_ptr, u32b mode)
 
     /* Apply magic (allow artifacts) */
     if (!apply_magic(j_ptr, object_level, mode))
+    {
+        obj_drop_theme = 0;
         return FALSE;
+    }
 
     /* Note: It is important to do this *after* apply_magic rather than in, say, 
        object_prep() since artifacts should never spawn multiple copies. Ego ammo
@@ -6527,7 +7132,8 @@ bool make_object(object_type *j_ptr, u32b mode)
     }
 
     /* Success */
-    return (TRUE);
+    obj_drop_theme = 0;
+    return TRUE;
 }
 
 

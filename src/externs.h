@@ -491,6 +491,7 @@ extern void (*ang_sort_swap)(vptr u, vptr v, int a, int b);
 extern monster_hook_type get_mon_num_hook;
 extern monster_hook_type get_mon_num2_hook;
 extern bool (*get_obj_num_hook)(int k_idx);
+extern int  obj_drop_theme;
 extern bool monk_armour_aux;
 extern bool monk_notify_aux;
 extern wilderness_type **wilderness;
