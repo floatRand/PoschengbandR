@@ -2372,7 +2372,7 @@ static int _ego_rarity(ego_item_type *e_ptr, int level)
     if (rarity)
     {
         if (e_ptr->max_level && level > e_ptr->max_level)
-            rarity += e_ptr->rarity*(level - e_ptr->max_level);
+            rarity += 3*e_ptr->rarity*(level - e_ptr->max_level);
         else if (e_ptr->level && level < e_ptr->level)
             rarity += e_ptr->rarity*(e_ptr->level - level);
     }
@@ -2422,7 +2422,7 @@ static int _get_random_ego(int type, int level)
 }
 
 typedef struct { int lvl, min, max; } _power_limit_t;
-static _power_limit_t _power_limits[] = {
+static _power_limit_t _art_power_limits[] = {
     { 10,     0,   5000 },
     { 20,     0,   7000 },
     { 30,     0,  10000 },
@@ -2443,10 +2443,10 @@ static void _create_artifact(object_type *o_ptr, int level, int power)
 
     for (i = 0; ; i++)
     {
-        if (level < _power_limits[i].lvl)
+        if (level < _art_power_limits[i].lvl)
         {
-            min = _power_limits[i].min;
-            max = _power_limits[i].max;
+            min = _art_power_limits[i].min;
+            max = _art_power_limits[i].max;
             break;
         }
     }
@@ -2585,7 +2585,7 @@ static void _create_defender(object_type *o_ptr, int level, int power)
         effect_add_random(o_ptr, BIAS_PROTECTION);
 }
 
-static void _create_ring(object_type *o_ptr, int level, int power, int mode)
+static void _create_ring_aux(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
     bool done = FALSE;
@@ -3031,7 +3031,7 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
         power--;
 }
 
-static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
+static void _create_amulet_aux(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
     bool force_great = FALSE;
@@ -3487,6 +3487,81 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
     /* Be sure to cursify later! */
     if (power == -1)
         power--;
+}
+
+static _power_limit_t _jewelry_power_limits[] = {
+    { 10,     0,   5000 },
+    { 20,     0,   7000 },
+    { 30,     0,  10000 },
+    { 40,  2500,  20000 },
+    { 50,  5000,  30000 },
+    { 60,  7500,  60000 },
+    { 70, 10000,      0 },
+    { 80, 12500,      0 },
+    { 90, 15000,      0 },
+    {999, 15000,      0 }
+};
+
+static void _create_ring(object_type *o_ptr, int level, int power, int mode)
+{
+    int  i;
+    int  min = 0, max = 0;
+
+    for (i = 0; ; i++)
+    {
+        if (level < _jewelry_power_limits[i].lvl)
+        {
+            min = _jewelry_power_limits[i].min;
+            max = _jewelry_power_limits[i].max;
+            break;
+        }
+    }
+
+    for (i = 0; i < 1000 ; i++)
+    {
+        object_type forge = *o_ptr;
+        int         score;
+
+        _create_ring_aux(&forge, level, power, mode);
+        score = object_value_real(&forge);
+
+        if (min > 0 && score < min) continue;
+        if (max > 0 && score > max) continue;
+
+        *o_ptr = forge;
+        break;
+    }
+}
+
+static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
+{
+    int  i;
+    int  min = 0, max = 0;
+
+    for (i = 0; ; i++)
+    {
+        if (level < _jewelry_power_limits[i].lvl)
+        {
+            min = _jewelry_power_limits[i].min;
+            max = _jewelry_power_limits[i].max;
+            break;
+        }
+    }
+
+    for (i = 0; i < 1000 ; i++)
+    {
+        object_type forge = *o_ptr;
+        int         score;
+
+        _create_amulet_aux(&forge, level, power, mode);
+        score = object_value_real(&forge);
+
+        if (min > 0 && score < min) continue;
+        if (max > 0 && score > max) continue;
+
+        *o_ptr = forge;
+        break;
+    }
 }
 
 static bool _create_device(object_type *o_ptr, int level, int power, int mode)
