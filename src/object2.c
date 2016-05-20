@@ -2450,6 +2450,8 @@ static void _create_artifact(object_type *o_ptr, int level, int power)
             break;
         }
     }
+    if (one_in_(GREAT_OBJ))
+        max *= 2;
     
     if (power < 0)
         mode = CREATE_ART_CURSED;
@@ -3516,6 +3518,8 @@ static void _create_ring(object_type *o_ptr, int level, int power, int mode)
             break;
         }
     }
+    if (one_in_(GREAT_OBJ))
+        max *= 2;
 
     for (i = 0; i < 1000 ; i++)
     {
@@ -3547,6 +3551,8 @@ static void _create_amulet(object_type *o_ptr, int level, int power, int mode)
             break;
         }
     }
+    if (one_in_(GREAT_OBJ))
+        max *= 2;
 
     for (i = 0; i < 1000 ; i++)
     {

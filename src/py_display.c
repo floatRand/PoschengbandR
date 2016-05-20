@@ -455,7 +455,9 @@ static void _build_curse_flags(doc_ptr doc, cptr name)
 
         if (o_ptr)
         {
-            if (o_ptr->curse_flags & TRC_PERMA_CURSE)
+            if (object_is_cursed(o_ptr) && !(o_ptr->ident & IDENT_FULL))
+                doc_insert_char(doc, TERM_YELLOW, '?');
+            else if (o_ptr->curse_flags & TRC_PERMA_CURSE)
                 doc_insert_char(doc, TERM_VIOLET, '*');
             else if (o_ptr->curse_flags & TRC_HEAVY_CURSE)
                 doc_insert_char(doc, TERM_L_RED, '+');
