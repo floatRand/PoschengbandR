@@ -1572,7 +1572,7 @@ s32b object_value(object_type *o_ptr)
             else if (object_is_artifact(o_ptr))
                 value += 1000;
             if (object_is_cursed(o_ptr))
-                value /= 3;
+                value = (value+2)/3;
         }
     }
     else
@@ -1594,7 +1594,7 @@ s32b object_value(object_type *o_ptr)
             value += 1000;
         }
         if ((o_ptr->ident & IDENT_SENSE) && object_is_cursed(o_ptr))
-            value /= 3;
+            value = (value+2)/3;
     }
     if (o_ptr->discount) 
         value -= (value * o_ptr->discount / 100L);

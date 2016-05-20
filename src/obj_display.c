@@ -649,68 +649,67 @@ static void _display_extra(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr 
 
 static void _display_curses(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr doc)
 {
-    vec_ptr v = vec_alloc((vec_free_f)string_free);
-
-    if (object_is_cursed(o_ptr))
+    if (!(o_ptr->ident & IDENT_FULL))
+    {                               /* v--- Hide cursed status of devices until *Identified* */
+        if (object_is_cursed(o_ptr) && !object_is_device(o_ptr))
+            doc_insert(doc, "It has <color:v>unknown curses</color>.\n");
+    }
+    else
     {
-        if (o_ptr->curse_flags & TRC_PERMA_CURSE)
-            doc_insert(doc, "It is <color:v>Permanently Cursed</color>.\n");
-        else if (o_ptr->curse_flags & TRC_HEAVY_CURSE)
-            doc_insert(doc, "It is <color:r>Heavily Cursed</color>.\n");
-        else
+        vec_ptr v = vec_alloc((vec_free_f)string_free);
+        if (object_is_cursed(o_ptr))
         {
-            if (object_is_device(o_ptr) && !(o_ptr->ident & IDENT_FULL))
-            {
-                /* Hide cursed status of devices until *Identified* */
-            }
+            if (o_ptr->curse_flags & TRC_PERMA_CURSE)
+                doc_insert(doc, "It is <color:v>Permanently Cursed</color>.\n");
+            else if (o_ptr->curse_flags & TRC_HEAVY_CURSE)
+                doc_insert(doc, "It is <color:r>Heavily Cursed</color>.\n");
             else
-            {
                 doc_insert(doc, "It is <color:D>Cursed</color>.\n");
-            }
         }
-    }
 
-    if (have_flag(flgs, TR_TY_CURSE) || o_ptr->curse_flags & TRC_TY_CURSE)
-        vec_add(v, string_copy_s("<color:v>*Ancient Foul Curse*</color>"));
-    if (have_flag(flgs, TR_AGGRAVATE) || o_ptr->curse_flags & TRC_AGGRAVATE)
-        vec_add(v, string_copy_s("<color:r>Aggravates</color>"));
-    if (have_flag(flgs, TR_DRAIN_EXP) || o_ptr->curse_flags & TRC_DRAIN_EXP)
-        vec_add(v, string_copy_s("<color:y>Drains Experience</color>"));
-    if (o_ptr->curse_flags & TRC_SLOW_REGEN)
-        vec_add(v, string_copy_s("<color:o>Slow Regeneration</color>"));
-    if (o_ptr->curse_flags & TRC_ADD_L_CURSE)
-        vec_add(v, string_copy_s("<color:w>Adds Weak Curses</color>"));
-    if (o_ptr->curse_flags & TRC_ADD_H_CURSE)
-        vec_add(v, string_copy_s("<color:b>Adds Heavy Curses</color>"));
-    if (o_ptr->curse_flags & TRC_CALL_ANIMAL)
-        vec_add(v, string_copy_s("<color:g>Attracts Animals</color>"));
-    if (o_ptr->curse_flags & TRC_CALL_DEMON)
-        vec_add(v, string_copy_s("<color:R>Attracts Demons</color>"));
-    if (o_ptr->curse_flags & TRC_CALL_DRAGON)
-        vec_add(v, string_copy_s("<color:r>Attracts Dragons</color>"));
-    if (o_ptr->curse_flags & TRC_COWARDICE)
-        vec_add(v, string_copy_s("<color:y>Cowardice</color>"));
-    if (have_flag(flgs, TR_TELEPORT) || o_ptr->curse_flags & TRC_TELEPORT)
-        vec_add(v, string_copy_s("<color:B>Random Teleportation</color>"));
-    if (o_ptr->curse_flags & TRC_LOW_MELEE)
-        vec_add(v, string_copy_s("<color:G>Miss Blows</color>"));
-    if (o_ptr->curse_flags & TRC_LOW_AC)
-        vec_add(v, string_copy_s("<color:R>Low AC</color>"));
-    if (o_ptr->curse_flags & TRC_LOW_MAGIC)
-        vec_add(v, string_copy_s("<color:y>Increased Fail Rates</color>"));
-    if (o_ptr->curse_flags & TRC_FAST_DIGEST)
-        vec_add(v, string_copy_s("<color:r>Fast Digestion</color>"));
-    if (o_ptr->curse_flags & TRC_DRAIN_HP)
-        vec_add(v, string_copy_s("<color:o>Drains You</color>"));
-    if (o_ptr->curse_flags & TRC_DRAIN_MANA)
-        vec_add(v, string_copy_s("<color:B>Drains Mana</color>"));
-    if (vec_length(v))
-    {
-        _print_list(v, doc, ';', '\0');
-        doc_newline(doc);
-    }
+        if (have_flag(flgs, TR_TY_CURSE) || o_ptr->curse_flags & TRC_TY_CURSE)
+            vec_add(v, string_copy_s("<color:v>*Ancient Foul Curse*</color>"));
+        if (have_flag(flgs, TR_AGGRAVATE) || o_ptr->curse_flags & TRC_AGGRAVATE)
+            vec_add(v, string_copy_s("<color:r>Aggravates</color>"));
+        if (have_flag(flgs, TR_DRAIN_EXP) || o_ptr->curse_flags & TRC_DRAIN_EXP)
+            vec_add(v, string_copy_s("<color:y>Drains Experience</color>"));
+        if (o_ptr->curse_flags & TRC_SLOW_REGEN)
+            vec_add(v, string_copy_s("<color:o>Slow Regeneration</color>"));
+        if (o_ptr->curse_flags & TRC_ADD_L_CURSE)
+            vec_add(v, string_copy_s("<color:w>Adds Weak Curses</color>"));
+        if (o_ptr->curse_flags & TRC_ADD_H_CURSE)
+            vec_add(v, string_copy_s("<color:b>Adds Heavy Curses</color>"));
+        if (o_ptr->curse_flags & TRC_CALL_ANIMAL)
+            vec_add(v, string_copy_s("<color:g>Attracts Animals</color>"));
+        if (o_ptr->curse_flags & TRC_CALL_DEMON)
+            vec_add(v, string_copy_s("<color:R>Attracts Demons</color>"));
+        if (o_ptr->curse_flags & TRC_CALL_DRAGON)
+            vec_add(v, string_copy_s("<color:r>Attracts Dragons</color>"));
+        if (o_ptr->curse_flags & TRC_COWARDICE)
+            vec_add(v, string_copy_s("<color:y>Cowardice</color>"));
+        if (have_flag(flgs, TR_TELEPORT) || o_ptr->curse_flags & TRC_TELEPORT)
+            vec_add(v, string_copy_s("<color:B>Random Teleportation</color>"));
+        if (o_ptr->curse_flags & TRC_LOW_MELEE)
+            vec_add(v, string_copy_s("<color:G>Miss Blows</color>"));
+        if (o_ptr->curse_flags & TRC_LOW_AC)
+            vec_add(v, string_copy_s("<color:R>Low AC</color>"));
+        if (o_ptr->curse_flags & TRC_LOW_MAGIC)
+            vec_add(v, string_copy_s("<color:y>Increased Fail Rates</color>"));
+        if (o_ptr->curse_flags & TRC_FAST_DIGEST)
+            vec_add(v, string_copy_s("<color:r>Fast Digestion</color>"));
+        if (o_ptr->curse_flags & TRC_DRAIN_HP)
+            vec_add(v, string_copy_s("<color:o>Drains You</color>"));
+        if (o_ptr->curse_flags & TRC_DRAIN_MANA)
+            vec_add(v, string_copy_s("<color:B>Drains Mana</color>"));
 
-    vec_free(v);
+        if (vec_length(v))
+        {
+            _print_list(v, doc, ';', '\0');
+            doc_newline(doc);
+        }
+
+        vec_free(v);
+    }
 }
 
 static void _display_activation(object_type *o_ptr, doc_ptr doc)
@@ -920,12 +919,15 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
 
     _display_ego_desc(o_ptr, doc);
 
-    if (object_is_ego(o_ptr) && !ego_is_aware(o_ptr->name2))
-        doc_printf(doc, "You are unfamiliar with this ego type. To learn the basic attributes of this ego type, you need to *identify* or sell this object.\n");
-    else if (object_is_artifact(o_ptr) && !(o_ptr->ident & IDENT_FULL))
-        doc_printf(doc, "This object is an artifact, a unique object whose powers you must learn by *identifying* or selling this object.\n");
-    else if (!(o_ptr->ident & IDENT_FULL))
-        doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
+    if (object_is_known(o_ptr))
+    {
+        if (object_is_ego(o_ptr) && !ego_is_aware(o_ptr->name2))
+            doc_printf(doc, "You are unfamiliar with this ego type. To learn the basic attributes of this ego type, you need to *identify* or sell this object.\n");
+        else if (object_is_artifact(o_ptr) && !(o_ptr->ident & IDENT_FULL))
+            doc_printf(doc, "This object is an artifact, a unique object whose powers you must learn by *identifying* or selling this object.\n");
+        else if (!(o_ptr->ident & IDENT_FULL))
+            doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
+    }
 
     _display_autopick(o_ptr, doc);
     _display_cost(o_ptr, doc);

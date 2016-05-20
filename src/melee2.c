@@ -580,9 +580,8 @@ static bool get_moves_aux(int m_idx, int *yp, int *xp, bool no_flow)
     {
         rng = AAF_LIMIT_RING;
     }
-
-    if (!dun_level /*&& !p_ptr->town_num*/ && !p_ptr->inside_arena && !p_ptr->inside_battle && !p_ptr->inside_quest)
-        rng = AAF_LIMIT_WILD;
+    else if (!dun_level /*&& !p_ptr->town_num*/ && !p_ptr->inside_arena && !p_ptr->inside_battle && !p_ptr->inside_quest)
+        rng = AAF_LIMIT;
 
     /* Can monster cast attack spell? */
     if (r_ptr->flags4 & (RF4_ATTACK_MASK) ||
@@ -3813,10 +3812,6 @@ void process_monsters(void)
         {
             if (m_ptr->cdis >= AAF_LIMIT_RING) continue;
         }
-        else if (!dun_level /*&& !p_ptr->town_num*/ && !p_ptr->inside_arena && !p_ptr->inside_battle && !p_ptr->inside_quest)
-        {
-            if (m_ptr->cdis >= AAF_LIMIT_WILD) continue;
-        }
         else
         {
             if (m_ptr->cdis >= AAF_LIMIT) continue;
@@ -3851,18 +3846,16 @@ void process_monsters(void)
         radius = r_ptr->aaf;
         if (is_pet(m_ptr) && radius > MAX_SIGHT)
             radius = MAX_SIGHT;
-        
-        if ( p_ptr->prace == RACE_MON_RING
-          && !p_ptr->riding
-          && !is_aware(m_ptr) 
-          && mon_is_type(m_ptr->r_idx, SUMMON_RING_BEARER) )
+        else if ( p_ptr->prace == RACE_MON_RING
+               && !p_ptr->riding
+               && !is_aware(m_ptr)
+               && mon_is_type(m_ptr->r_idx, SUMMON_RING_BEARER) )
         {
             /* Lure a potential ring bearer, no matter how distant */
             radius = AAF_LIMIT_RING;
         }
-
-        if (!dun_level /*&& !p_ptr->town_num*/ && !p_ptr->inside_arena && !p_ptr->inside_battle && !p_ptr->inside_quest)
-            radius = AAF_LIMIT_WILD;
+        else if (!dun_level /*&& !p_ptr->town_num*/ && !p_ptr->inside_arena && !p_ptr->inside_battle && !p_ptr->inside_quest)
+            radius *= 3;
         
         if (m_ptr->cdis <= radius)
         {

@@ -683,7 +683,7 @@ static void _generate_encounters(int x, int y, const rect_t *r, const rect_t *ex
 
     /* Random Monsters */
     if (generate_encounter) /* Unscripted Ambush? */
-        ct = 40;    
+        ct = 20;
     else if (no_encounters_hack)
         ct = 0;
     else if (!wilderness[y][x].road)
@@ -714,8 +714,8 @@ static void _generate_encounters(int x, int y, const rect_t *r, const rect_t *ex
             if (!exclude || !rect_contains_pt(exclude, x2, y2))
             {
                 int options = PM_ALLOW_GROUP;
-                /*if (!generate_encounter && one_in_(2))
-                    options |= PM_ALLOW_SLEEP;*/
+                if (!generate_encounter && one_in_(3))
+                    options |= PM_ALLOW_SLEEP;
                 r_idx = get_mon_num(monster_level);
                 if (r_idx) 
                 {
