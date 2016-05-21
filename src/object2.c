@@ -596,6 +596,21 @@ errr get_obj_num_prep(void)
     return (0);
 }
 
+static int _spellbook_max(int tval, int sval)
+{
+    int       max = 0;
+    const int limits[4] = { 10, 10, 3, 2 };
+
+    if (!ironman_shops && tval >= TV_LIFE_BOOK)
+    {
+        if (tval == TV_ARCANE_BOOK)
+            max = 10;
+        else
+            max = limits[sval];
+    }
+
+    return max;
+}
 
 /*
  * Choose an object kind that seems "appropriate" to the given level
@@ -640,6 +655,9 @@ s16b get_obj_num(int level)
     /* Process probabilities */
     for (i = 0; i < alloc_kind_size; i++)
     {
+        int p = table[i].prob2;
+        int max = 0;
+
         /* Objects are sorted by depth */
         if (table[i].level > level) break;
         table[i].prob3 = 0;
@@ -650,12 +668,22 @@ s16b get_obj_num(int level)
         k_ptr = &k_info[k_idx];
         if (k_ptr->tval == TV_FOOD && k_ptr->sval == SV_FOOD_AMBROSIA && dungeon_type != DUNGEON_OLYMPUS) continue;
         if (easy_id && k_ptr->tval == TV_SCROLL && k_ptr->sval == SV_SCROLL_STAR_IDENTIFY) continue;
-
         /* Hack -- prevent embedded chests */
         if (opening_chest && (k_ptr->tval == TV_CHEST)) continue;
 
-        table[i].prob3 = table[i].prob2;
-        total += table[i].prob3;
+        /* TODO: Add some sort of max_num field to limit certain objects (I'm looking at you, spellbooks!)
+           Note, this also ensures an even distribution of spellbook kinds for high level books! */
+        max = _spellbook_max(k_ptr->tval, k_ptr->sval);
+        if (max && p)
+        {
+            int ct = k_ptr->counts.found - max;
+            while (ct-- > 0)
+                p /= 2;
+            p = MAX(p, 1);
+        }
+
+        table[i].prob3 = p;
+        total += p;
     }
 
     /* No legal objects */

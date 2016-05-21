@@ -1666,7 +1666,7 @@ N:221:Destruction:denmung ishbul
 G:?:w
 I:70:41:0
 W:40:0:0:5:250
-A:40/1
+A:40/2
 F:IGNORE_FIRE
 
 ##### Potions #####

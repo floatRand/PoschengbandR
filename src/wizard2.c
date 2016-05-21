@@ -814,25 +814,25 @@ typedef struct {
     int      ct2;
 } _obj_alloc_t;
 
-bool _ring_of_speed_p(object_type *o_ptr) { return o_ptr->tval == TV_RING && o_ptr->name2 == EGO_RING_SPEED; }
-bool _boots_of_speed_p(object_type *o_ptr) { return o_ptr->tval == TV_BOOTS && o_ptr->name2 == EGO_BOOTS_SPEED; }
-bool _potion_of_healing_p(object_type *o_ptr) { return object_is_(o_ptr, TV_POTION, SV_POTION_HEALING); }
-bool _potion_of_healing2_p(object_type *o_ptr) { return object_is_(o_ptr, TV_POTION, SV_POTION_STAR_HEALING); }
-bool _stat_potion_p(object_type *o_ptr) { return o_ptr->tval ==  TV_POTION && SV_POTION_INC_STR <= o_ptr->sval && o_ptr->sval <= SV_POTION_INC_CHR; }
-bool _third_book_p(object_type *o_ptr) { return o_ptr->tval >= TV_LIFE_BOOK && 2 == o_ptr->sval && o_ptr->tval != TV_ARCANE_BOOK; }
-bool _fourth_book_p(object_type *o_ptr) { return o_ptr->tval >= TV_LIFE_BOOK && 3 == o_ptr->sval && o_ptr->tval != TV_ARCANE_BOOK; }
-bool _scroll_of_destruction_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_STAR_DESTRUCTION); }
-bool _scroll_of_genocide_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_GENOCIDE); }
-bool _scroll_of_mass_genocide_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_MASS_GENOCIDE); }
-bool _wand_of_rockets_p(object_type *o_ptr) { return o_ptr->tval == TV_WAND && o_ptr->activation.type == EFFECT_ROCKET; }
-bool _ego_weapon_p(object_type *o_ptr) { return object_is_melee_weapon(o_ptr) && o_ptr->name2; }
-bool _ego_shooter_p(object_type *o_ptr) { return o_ptr->tval == TV_BOW && o_ptr->name2; }
-bool _ego_body_armor_p(object_type *o_ptr) { return object_is_body_armour(o_ptr) && o_ptr->name2; }
-bool _ego_helm_p(object_type *o_ptr) { return object_is_helmet(o_ptr) && o_ptr->name2; }
-bool _ego_cloak_p(object_type *o_ptr) { return o_ptr->tval == TV_CLOAK && o_ptr->name2; }
-bool _ego_boots_p(object_type *o_ptr) { return o_ptr->tval == TV_BOOTS && o_ptr->name2; }
-bool _ego_gloves_p(object_type *o_ptr) { return o_ptr->tval == TV_GLOVES && o_ptr->name2; }
-bool _mushroom_restoring_p(object_type *o_ptr) { return object_is_(o_ptr, TV_FOOD, SV_FOOD_RESTORING); }
+static bool _ring_of_speed_p(object_type *o_ptr) { return o_ptr->tval == TV_RING && o_ptr->name2 == EGO_RING_SPEED; }
+static bool _boots_of_speed_p(object_type *o_ptr) { return o_ptr->tval == TV_BOOTS && o_ptr->name2 == EGO_BOOTS_SPEED; }
+static bool _potion_of_healing_p(object_type *o_ptr) { return object_is_(o_ptr, TV_POTION, SV_POTION_HEALING); }
+static bool _potion_of_healing2_p(object_type *o_ptr) { return object_is_(o_ptr, TV_POTION, SV_POTION_STAR_HEALING); }
+static bool _stat_potion_p(object_type *o_ptr) { return o_ptr->tval ==  TV_POTION && SV_POTION_INC_STR <= o_ptr->sval && o_ptr->sval <= SV_POTION_INC_CHR; }
+static bool _third_book_p(object_type *o_ptr) { return o_ptr->tval >= TV_LIFE_BOOK && 2 == o_ptr->sval && o_ptr->tval != TV_ARCANE_BOOK; }
+static bool _fourth_book_p(object_type *o_ptr) { return o_ptr->tval >= TV_LIFE_BOOK && 3 == o_ptr->sval && o_ptr->tval != TV_ARCANE_BOOK; }
+static bool _scroll_of_destruction_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_STAR_DESTRUCTION); }
+static bool _scroll_of_genocide_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_GENOCIDE); }
+static bool _scroll_of_mass_genocide_p(object_type *o_ptr) { return object_is_(o_ptr, TV_SCROLL, SV_SCROLL_MASS_GENOCIDE); }
+static bool _wand_of_rockets_p(object_type *o_ptr) { return o_ptr->tval == TV_WAND && o_ptr->activation.type == EFFECT_ROCKET; }
+static bool _ego_weapon_p(object_type *o_ptr) { return object_is_melee_weapon(o_ptr) && o_ptr->name2; }
+static bool _ego_shooter_p(object_type *o_ptr) { return o_ptr->tval == TV_BOW && o_ptr->name2; }
+static bool _ego_body_armor_p(object_type *o_ptr) { return object_is_body_armour(o_ptr) && o_ptr->name2; }
+static bool _ego_helm_p(object_type *o_ptr) { return object_is_helmet(o_ptr) && o_ptr->name2; }
+static bool _ego_cloak_p(object_type *o_ptr) { return o_ptr->tval == TV_CLOAK && o_ptr->name2; }
+static bool _ego_boots_p(object_type *o_ptr) { return o_ptr->tval == TV_BOOTS && o_ptr->name2; }
+static bool _ego_gloves_p(object_type *o_ptr) { return o_ptr->tval == TV_GLOVES && o_ptr->name2; }
+static bool _mushroom_restoring_p(object_type *o_ptr) { return object_is_(o_ptr, TV_FOOD, SV_FOOD_RESTORING); }
 
 static _obj_alloc_t _hack7_data[] = {
     { "RoSpeed", _ring_of_speed_p, 0, 0 },
