@@ -324,21 +324,27 @@ void crafting_spell(int cmd, variant *res)
         {
             if (object_is_ammo(o_ptr) && randint1(30) > (o_ptr->number - 30))
             {
-                brand_weapon_aux(item);
-                o_ptr->discount = 99;
-                okay = TRUE;
+                if (brand_weapon_aux(item))
+                {
+                    o_ptr->discount = 99;
+                    okay = TRUE;
+                }
             }
             else if (object_is_weapon(o_ptr) && o_ptr->number == 1)
             {
-                brand_weapon_aux(item);
-                o_ptr->discount = 99;
-                okay = TRUE;
+                if (brand_weapon_aux(item))
+                {
+                    o_ptr->discount = 99;
+                    okay = TRUE;
+                }
             }
             else if (object_is_armour(o_ptr) && o_ptr->number == 1)
             {
-                brand_armour_aux(item);
-                o_ptr->discount = 99;
-                okay = TRUE;
+                if (brand_armour_aux(item))
+                {
+                    o_ptr->discount = 99;
+                    okay = TRUE;
+                }
             }
         }
 

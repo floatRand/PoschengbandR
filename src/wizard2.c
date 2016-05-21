@@ -453,9 +453,6 @@ static void do_cmd_wiz_hack_chris3_imp(FILE* file)
                 object_desc(buf, &forge, 0);
                 fprintf(file, "%s %d.%d lbs\n", buf, forge.weight/10, forge.weight%10);
 
-                if (p_ptr->prace == RACE_MON_RING)
-                    ring_absorb_object(&forge);
-              
                 /*msg_print(buf);*/
 
                 if (0)
@@ -2843,7 +2840,10 @@ static void _wiz_kill_monsters(int level)
 }
 static void _wiz_inspect_objects(int level)
 {
-    int i;
+    race_t  *race_ptr = get_race();
+    class_t *class_ptr = get_class();
+    int      i;
+
     for (i = 0; i < max_o_idx; i++)
     {
         object_type *o_ptr = &o_list[i];
@@ -2872,6 +2872,12 @@ static void _wiz_inspect_objects(int level)
             _wiz_stats_log_obj(level, o_ptr);
         if (0 && object_is_jewelry(o_ptr) && o_ptr->name2)
             _wiz_stats_log_obj(level, o_ptr);
+
+        if (race_ptr->destroy_object)
+            race_ptr->destroy_object(o_ptr);
+
+        if (class_ptr->destroy_object)
+            class_ptr->destroy_object(o_ptr);
     }
 }
 static void _wiz_gather_stats(int which_dungeon, int level, int reps)

@@ -1219,12 +1219,16 @@ bool brand_weapon(int brand_type)
 bool brand_weapon_aux(int item)
 {
     assert(item >= 0);
+    if (have_flag(inventory[item].art_flags, TR_NO_REMOVE))
+        return FALSE;
     apply_magic(&inventory[item], dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
 bool brand_armour_aux(int item)
 {
     assert(item >= 0);
+    if (have_flag(inventory[item].art_flags, TR_NO_REMOVE))
+        return FALSE;
     apply_magic(&inventory[item], dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
@@ -2159,7 +2163,6 @@ bool artifact_scroll(void)
     {
         o_ptr = &o_list[0 - item];
     }
-
 
     /* Description */
     object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));

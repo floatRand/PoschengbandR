@@ -1549,7 +1549,7 @@ static cptr _do_scroll(int sval, int mode)
                 msg_print("Don't be greedy. Just try it out on a single object at a time.");
                 return NULL;
             }
-            
+
             device_noticed = TRUE;
 
             /* TODO: Add more goodies ... */
@@ -1576,7 +1576,7 @@ static cptr _do_scroll(int sval, int mode)
             {
                 if (object_is_melee_weapon(o_ptr))
                 {
-                    if (!brand_weapon_aux(item)) return NULL;
+                    if (!brand_weapon_aux(item)) return "";
                 }
                 else
                     msg_print("Funny, nothing happened.");
@@ -1587,7 +1587,7 @@ static cptr _do_scroll(int sval, int mode)
                 {
                     if (object_is_melee_weapon(o_ptr))
                     {
-                        if (!brand_weapon_aux(item)) return NULL;
+                        if (!brand_weapon_aux(item)) return "";
                     }
                 }
                 else

@@ -1874,6 +1874,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     int     max_d = MAX(o_ptr->to_d, 32);
 
     if (no_artifacts) return 0;
+    if (have_flag(o_ptr->art_flags, TR_NO_REMOVE)) return 0;
     
     if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_HAYABUSA)
         is_falcon_sword = TRUE;

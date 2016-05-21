@@ -2065,6 +2065,7 @@ typedef struct {
     flags_fn                get_flags;
     load_fn                 load_player;
     save_fn                 save_player;
+    object_p                destroy_object;
 } class_t;
 
 struct equip_template_s;
@@ -2103,6 +2104,7 @@ typedef struct {
     process_world_fn        process_world;  /* Called every 10 game turns */
     load_fn                 load_player;
     save_fn                 save_player;
+    object_p                destroy_object;
     s16b                    pseudo_class_idx; /* For the "Monster" class ... */
     s16b                    shop_adjust;
 } race_t;
