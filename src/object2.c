@@ -13,7 +13,6 @@
 #include "angband.h"
 
 #include "int-map.h"
-#include "kajitips.h"
 
 #include <assert.h>
 

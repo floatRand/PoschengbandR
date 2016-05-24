@@ -6,7 +6,6 @@
  * for modifying the object_type after smithing, but had to make
  * changes since object_type.xtra3 is just a byte.
  *
- *
  **********************************************************************/
 #include "angband.h"
 
@@ -99,8 +98,8 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_LIFE, "Life", 50, 5 },
         { TR_BLOWS, "Extra Attacks", 20, 3 },
         { _ESSENCE_XTRA_DICE, "Extra Dice", 250, 4 },
-        { _ESSENCE_XTRA_MIGHT, "Extra Might", 150, 4 },
-        { TR_XTRA_SHOTS, "Extra Shots", 250, 4 },
+        { _ESSENCE_XTRA_MIGHT, "Extra Might", 250, 4 },
+        { TR_XTRA_SHOTS, "Extra Shots", 50, 4 },
         { TR_MAGIC_MASTERY, "Magic Mastery", 12, 0 },
         { TR_TUNNEL, "Digging", 10, 0 },
         { TR_INFRA, "Infravision", 10, 0 },
@@ -285,8 +284,8 @@ static void _clear_essences(void)
 static int _count_essences_aux(int type)
 {
     _essence_group_ptr group_ptr = &_essence_groups[type];
-    int                 i;
-    int                 ct = 0;
+    int                i;
+    int                ct = 0;
     for (i = 0; i < _MAX_INFO_PER_TYPE; i++)
     {
         _essence_info_ptr info_ptr = &group_ptr->entries[i];
@@ -380,7 +379,7 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
     object_flags(&old_obj, old_flgs);
 
     /* Mundanity */
-    object_prep(&new_obj, o_ptr->k_idx);    
+    object_prep(&new_obj, o_ptr->k_idx);
     new_obj.iy = old_obj.iy;
     new_obj.ix = old_obj.ix;
     new_obj.next_o_idx = old_obj.next_o_idx;
@@ -408,7 +407,7 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
         _essence_group_ptr group_ptr = &_essence_groups[i];
         assert(i == group_ptr->type);
 
-        for (j = 0; j < _MAX_INFO_PER_TYPE ; j++)
+        for (j = 0; j < _MAX_INFO_PER_TYPE; j++)
         {
             _essence_info_ptr info_ptr = &group_ptr->entries[j];
 
@@ -486,13 +485,13 @@ static void _remove(object_type *o_ptr)
         }
         o_ptr->xtra1 = 0;
     }
-    if (o_ptr->xtra3 == 1+_ESSENCE_XTRA_DICE)
+    else if (o_ptr->xtra3 == 1+_ESSENCE_XTRA_DICE)
     {
         o_ptr->dd -= o_ptr->xtra4;
         o_ptr->xtra4 = 0;
         if (o_ptr->dd < 1) o_ptr->dd = 1;
     }
-    if (o_ptr->xtra3 == 1+_ESSENCE_XTRA_MIGHT)
+    else if (o_ptr->xtra3 == 1+_ESSENCE_XTRA_MIGHT)
     {
         o_ptr->mult -= o_ptr->xtra4*25;
         o_ptr->xtra4 = 0;
@@ -1115,10 +1114,10 @@ static int _smith_add_essence(object_type *o_ptr, int type)
         {
             _essence_info_ptr info_ptr = &group_ptr->entries[i];
             if (info_ptr->id == _ESSENCE_NONE) break;
-            if (info_ptr->id == TR_IGNORE_ACID) break;
 
             if (info_ptr->id < TR_FLAG_COUNT)
             {
+                if (info_ptr->id == TR_IGNORE_ACID) continue; /* Rustproofing is handled by 'Enchant' */
                 if (!_get_essence(info_ptr->id)) continue;
                 if (have_flag(flgs, info_ptr->id)) continue;
 
@@ -1418,7 +1417,7 @@ static int _smith_add_pval(object_type *o_ptr, int type)
     if (!pval)
         pval = max_pval;
 
-    if (pval < 0) /* paranoia ... we shouldn't be called in this case! */
+    if (pval < 0) /* paranoia ... we shouldn't be called in this case! Also, there shouldn't *be* any negative pvals! */
         return _OK;
 
     if (pval > max_pval)
@@ -1852,6 +1851,14 @@ static bool _smithing(void)
     else
         o_ptr = &o_list[0 - item];
 
+    /* Smithing now automatically 'Judges' the object for free */
+    identify_item(o_ptr);
+    if (p_ptr->lev >= 30)
+    {
+        o_ptr->ident |= IDENT_FULL;
+        ego_aware(o_ptr);
+    }
+
     old_obj = *o_ptr;
 
     _smith_object(o_ptr);
@@ -1868,28 +1875,6 @@ static bool _smithing(void)
 /**********************************************************************
  * Powers
  **********************************************************************/
-void _judgment_spell(int cmd, variant *res)
-{
-    switch (cmd)
-    {
-    case SPELL_NAME:
-        var_set_string(res, "Judgment");
-        break;
-    case SPELL_DESC:
-        var_set_string(res, "Identify a given weapon, piece of armor, or missile.");
-        break;
-    case SPELL_CAST:
-        if (p_ptr->lev > 29)
-            var_set_bool(res, identify_fully(object_is_weapon_armour_ammo));
-        else
-            var_set_bool(res, ident_spell(object_is_weapon_armour_ammo));
-        break;
-    default:
-        default_spell(cmd, res);
-        break;
-    }
-}
-
 void _smithing_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -1923,7 +1908,6 @@ void _smithing_spell(int cmd, variant *res)
 static power_info _powers[] =
 {
     { A_INT, { 1,  0,  0, _smithing_spell} },
-    { A_INT, { 5, 15, 80, _judgment_spell} },
     { -1, { -1, -1, -1, NULL} }
 };
 
