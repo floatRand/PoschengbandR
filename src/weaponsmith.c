@@ -59,7 +59,7 @@ typedef struct {
     int  info; /* ammo div or pval max, etc */
 } _essence_info_t, *_essence_info_ptr;
 
-#define _MAX_INFO_PER_TYPE 23
+#define _MAX_INFO_PER_TYPE 24
 typedef struct {
     int             type;
     cptr            name;
@@ -149,6 +149,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_RES_ELEC, "Resist Elec", 15, 0 },
         { TR_RES_FIRE, "Resist Fire", 15, 0 },
         { TR_RES_COLD, "Resist Cold", 15, 0 },
+        { _ESSENCE_SPECIAL, "Resist Base", 50, _ESSENCE_RES_BASE },
         { TR_RES_POIS, "Resist Poison", 30, 0 },
         { TR_RES_LITE, "Resist Light", 30, 0 },
         { TR_RES_DARK, "Resist Dark", 30, 0 },
@@ -176,6 +177,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_SUST_DEX, "Sust Dex", 15, 0 },
         { TR_SUST_CON, "Sust Con", 15, 0 },
         { TR_SUST_CHR, "Sust Chr", 15, 0 },
+        { _ESSENCE_SPECIAL, "Sustaining", 50, _ESSENCE_SUST_ALL },
         { _ESSENCE_NONE, NULL, 0, 0 } } },
 
     { ESSENCE_TYPE_ABILITIES, "Abilities", {
@@ -414,6 +416,7 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
 
             if (info_ptr->id == _ESSENCE_XTRA_DICE) continue;
             if (info_ptr->id == _ESSENCE_XTRA_MIGHT) continue;
+            if (info_ptr->id == _ESSENCE_SPECIAL) continue;
 
             assert(info_ptr->id < TR_FLAG_COUNT);
             if (have_flag(old_flgs, info_ptr->id))
@@ -1110,10 +1113,56 @@ static int _smith_add_essence(object_type *o_ptr, int type)
             _essence_info_ptr info_ptr = &group_ptr->entries[i];
             if (info_ptr->id == _ESSENCE_NONE) break;
             if (info_ptr->id == TR_IGNORE_ACID) break;
-            if (!_get_essence(info_ptr->id)) continue;
 
-            assert(0 <= info_ptr->id && info_ptr->id < TR_FLAG_COUNT);
-            if (have_flag(flgs, info_ptr->id)) continue;
+            if (info_ptr->id < TR_FLAG_COUNT)
+            {
+                if (!_get_essence(info_ptr->id)) continue;
+                if (have_flag(flgs, info_ptr->id)) continue;
+            }
+            else
+            {
+                assert(info_ptr->id == _ESSENCE_SPECIAL);
+                if (info_ptr->info == _ESSENCE_SUST_ALL)
+                {
+                    if ( !_get_essence(TR_SUST_STR)
+                      && !_get_essence(TR_SUST_INT)
+                      && !_get_essence(TR_SUST_WIS)
+                      && !_get_essence(TR_SUST_DEX)
+                      && !_get_essence(TR_SUST_CON)
+                      && !_get_essence(TR_SUST_CHR) )
+                    {
+                        continue;
+                    }
+
+                    if ( have_flag(flgs, TR_SUST_STR)
+                      && have_flag(flgs, TR_SUST_INT)
+                      && have_flag(flgs, TR_SUST_WIS)
+                      && have_flag(flgs, TR_SUST_DEX)
+                      && have_flag(flgs, TR_SUST_CON)
+                      && have_flag(flgs, TR_SUST_CHR) )
+                    {
+                        continue;
+                    }
+                }
+                else if (info_ptr->info == _ESSENCE_RES_BASE)
+                {
+                    if ( !_get_essence(TR_RES_ACID)
+                      && !_get_essence(TR_RES_ELEC)
+                      && !_get_essence(TR_RES_FIRE)
+                      && !_get_essence(TR_RES_COLD) )
+                    {
+                        continue;
+                    }
+
+                    if ( have_flag(flgs, TR_RES_ACID)
+                      && have_flag(flgs, TR_RES_ELEC)
+                      && have_flag(flgs, TR_RES_FIRE)
+                      && have_flag(flgs, TR_RES_COLD) )
+                    {
+                        continue;
+                    }
+                }
+            }
 
             if (is_ammo && !info_ptr->info) continue;
 
@@ -1138,20 +1187,58 @@ static int _smith_add_essence(object_type *o_ptr, int type)
             for (i = 0; i < vec_length(choices); i++)
             {
                 _essence_info_ptr info_ptr = vec_get(choices, i);
-                int               avail = _get_essence(info_ptr->id);
                 int               cost = info_ptr->cost * o_ptr->number;
 
                 if (is_ammo)
                     cost /= info_ptr->info;
 
-                doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  %5d\n",
-                    (cost > avail) ? 'D' : 'y',
-                    'A' + i,
-                    info_ptr->name,
-                    (cost > avail) ? 'r' : 'G',
-                    cost,
-                    avail
-                );
+                if (info_ptr->id == _ESSENCE_SPECIAL)
+                {
+                    if (info_ptr->info == _ESSENCE_SUST_ALL)
+                    {
+                        bool ok = TRUE;
+                        if (cost > _get_essence(TR_SUST_STR)) ok = FALSE;
+                        else if (cost > _get_essence(TR_SUST_INT)) ok = FALSE;
+                        else if (cost > _get_essence(TR_SUST_WIS)) ok = FALSE;
+                        else if (cost > _get_essence(TR_SUST_DEX)) ok = FALSE;
+                        else if (cost > _get_essence(TR_SUST_CON)) ok = FALSE;
+                        else if (cost > _get_essence(TR_SUST_CHR)) ok = FALSE;
+                        doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
+                            ok ? 'y' : 'D',
+                            'A' + i,
+                            info_ptr->name,
+                            ok ? 'G' : 'r',
+                            cost
+                        );
+                    }
+                    else if (info_ptr->info == _ESSENCE_RES_BASE)
+                    {
+                        bool ok = TRUE;
+                        if (cost > _get_essence(TR_RES_ACID)) ok = FALSE;
+                        else if (cost > _get_essence(TR_RES_ELEC)) ok = FALSE;
+                        else if (cost > _get_essence(TR_RES_FIRE)) ok = FALSE;
+                        else if (cost > _get_essence(TR_RES_COLD)) ok = FALSE;
+                        doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
+                            ok ? 'y' : 'D',
+                            'A' + i,
+                            info_ptr->name,
+                            ok ? 'G' : 'r',
+                            cost
+                        );
+                    }
+                }
+                else
+                {
+                    int avail = _get_essence(info_ptr->id);
+                    doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  %5d\n",
+                        (cost > avail) ? 'D' : 'y',
+                        'A' + i,
+                        info_ptr->name,
+                        (cost > avail) ? 'r' : 'G',
+                        cost,
+                        avail
+                    );
+                }
             }
         }
         else
@@ -1176,17 +1263,60 @@ static int _smith_add_essence(object_type *o_ptr, int type)
         if (choice >= 0 && choice < vec_length(choices))
         {
             _essence_info_ptr info_ptr = vec_get(choices, choice);
-            int               avail = _get_essence(info_ptr->id);
             int               cost = info_ptr->cost * o_ptr->number;
 
             if (is_ammo)
                 cost /= info_ptr->info;
 
-            if (cost <= avail)
+            if (info_ptr->id == _ESSENCE_SPECIAL)
             {
-                o_ptr->xtra3 = info_ptr->id + 1;
-                _add_essence(info_ptr->id, -cost);
-                done = TRUE;
+                if (info_ptr->info == _ESSENCE_SUST_ALL)
+                {
+                    if ( cost <= _get_essence(TR_SUST_STR)
+                      && cost <= _get_essence(TR_SUST_INT)
+                      && cost <= _get_essence(TR_SUST_WIS)
+                      && cost <= _get_essence(TR_SUST_DEX)
+                      && cost <= _get_essence(TR_SUST_CON)
+                      && cost <= _get_essence(TR_SUST_CHR) )
+                    {
+                        o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
+                        o_ptr->xtra1 = _ESSENCE_SUST_ALL;
+                        _add_essence(TR_SUST_STR, -cost);
+                        _add_essence(TR_SUST_INT, -cost);
+                        _add_essence(TR_SUST_WIS, -cost);
+                        _add_essence(TR_SUST_DEX, -cost);
+                        _add_essence(TR_SUST_CON, -cost);
+                        _add_essence(TR_SUST_CHR, -cost);
+                        done = TRUE;
+                    }
+                }
+                else if (info_ptr->info == _ESSENCE_RES_BASE)
+                {
+                    if ( cost <= _get_essence(TR_RES_ACID)
+                      && cost <= _get_essence(TR_RES_ELEC)
+                      && cost <= _get_essence(TR_RES_FIRE)
+                      && cost <= _get_essence(TR_RES_COLD) )
+                    {
+                        o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
+                        o_ptr->xtra1 = _ESSENCE_RES_BASE;
+                        _add_essence(TR_RES_ACID, -cost);
+                        _add_essence(TR_RES_ELEC, -cost);
+                        _add_essence(TR_RES_FIRE, -cost);
+                        _add_essence(TR_RES_COLD, -cost);
+                        done = TRUE;
+                    }
+                }
+            }
+            else
+            {
+                int avail = _get_essence(info_ptr->id);
+
+                if (cost <= avail)
+                {
+                    o_ptr->xtra3 = info_ptr->id + 1;
+                    _add_essence(info_ptr->id, -cost);
+                    done = TRUE;
+                }
             }
         }
         else if (cmd == ESCAPE)
@@ -1843,6 +1973,7 @@ static void _dump_ability_table(doc_ptr doc, int type)
     {
         _essence_info_ptr info_ptr = &group_ptr->entries[i];
         if (info_ptr->id == _ESSENCE_NONE) break;
+        if (info_ptr->id == _ESSENCE_SPECIAL) continue; /* TODO */
         _dump_ability_flag(doc, info_ptr->id, info_ptr->cost, info_ptr->name);
     }
 }
