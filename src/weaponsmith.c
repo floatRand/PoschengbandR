@@ -648,6 +648,12 @@ static int _smith_remove(object_type *o_ptr)
         case _ESSENCE_SLAYING:
             name = "Slaying";
             break;
+        case _ESSENCE_RES_BASE:
+            name = "Resist Base";
+            break;
+        case _ESSENCE_SUST_ALL:
+            name = "Sustaining";
+            break;
         }
     }
 
@@ -1115,6 +1121,9 @@ static int _smith_add_essence(object_type *o_ptr, int type)
             {
                 if (!_get_essence(info_ptr->id)) continue;
                 if (have_flag(flgs, info_ptr->id)) continue;
+
+                /* TODO: Perhaps we should add filters to our tables? */
+                if (info_ptr->id == TR_DUAL_WIELDING && !object_is_armour(o_ptr)) continue; /* Boots of Genji! Yes!! :D */
             }
             else
             {

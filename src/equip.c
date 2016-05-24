@@ -1394,6 +1394,9 @@ void equip_calc_bonuses(void)
                 p_ptr->weapon_info[lhand].genji = TRUE;
                 break;
             }
+            default: /* Weaponsmith with their beloved Boots of Genji :) */
+                p_ptr->weapon_info[0].genji = TRUE;
+                p_ptr->weapon_info[1].genji = TRUE;
             }
         }
 
