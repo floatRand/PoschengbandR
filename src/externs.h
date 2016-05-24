@@ -1125,6 +1125,7 @@ extern void monster_drop_carried_objects(monster_type *m_ptr);
 extern void obj_display(object_type *o_ptr);
 extern void obj_display_rect(object_type *o_ptr, rect_t display);
 extern void obj_display_doc(object_type *o_ptr, doc_ptr doc);
+extern void obj_display_smith(object_type *o_ptr, doc_ptr doc);
 extern void device_display_doc(object_type *o_ptr, doc_ptr doc);
 
 /* py_display.c */
@@ -1234,7 +1235,6 @@ extern void reorder_pack(void);
 extern void display_koff(int k_idx);
 extern object_type *choose_warning_item(void);
 extern bool process_warning(int xx, int yy);
-extern void do_cmd_kaji(bool only_browse);
 extern void stats_on_purchase(object_type *o_ptr);
 extern void stats_on_sell(object_type *o_ptr);
 extern void stats_on_notice(object_type *o_ptr, int num);
@@ -2419,6 +2419,8 @@ extern void     warlock_stop_singing(void);
 
 extern class_t *warrior_get_class(void);
 extern class_t *warrior_mage_get_class(void);
+
+extern void     weaponsmith_object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE]);
 extern class_t *weaponsmith_get_class(void);
 
 extern cptr do_hissatsu_spell(int spell, int mode);

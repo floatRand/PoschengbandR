@@ -3034,8 +3034,10 @@ enum summon_specific_e {
 #define TR_DEC_BLOWS           167
 #define TR_IM_BLIND            168
 #define TR_FAKE                169 /* Hack for marking fake objects (e.g. inspecting known ego types) */
+#define TR_NO_ENCHANT          170
+#define TR_DUAL_WIELDING       171
 
-#define TR_FLAG_MAX            170
+#define TR_FLAG_COUNT          172
 /*#define TR_LAST_FLAG!!!!     191  (6 * 32 - 1)*/
 #define TR_FLAG_SIZE           6  
 
@@ -5243,25 +5245,6 @@ extern int PlayerUID;
 #define WEAPONMASTER_FLURRY  85
 
 #define HISSATSU_IAI    100
-
-/*
- *  Special essence id for Weapon smith
- */
-#define MIN_SPECIAL_ESSENCE 200
-
-#define ESSENCE_ATTACK        (MIN_SPECIAL_ESSENCE + 0)
-#define ESSENCE_AC            (MIN_SPECIAL_ESSENCE + 1)
-#define ESSENCE_TMP_RES_ACID  (MIN_SPECIAL_ESSENCE + 2)
-#define ESSENCE_TMP_RES_ELEC  (MIN_SPECIAL_ESSENCE + 3)
-#define ESSENCE_TMP_RES_FIRE  (MIN_SPECIAL_ESSENCE + 4)
-#define ESSENCE_TMP_RES_COLD  (MIN_SPECIAL_ESSENCE + 5)
-#define ESSENCE_SH_FIRE       (MIN_SPECIAL_ESSENCE + 6)
-#define ESSENCE_SH_ELEC       (MIN_SPECIAL_ESSENCE + 7)
-#define ESSENCE_SH_COLD       (MIN_SPECIAL_ESSENCE + 8)
-#define ESSENCE_RESISTANCE    (MIN_SPECIAL_ESSENCE + 9)
-#define ESSENCE_SUSTAIN       (MIN_SPECIAL_ESSENCE + 10)
-#define ESSENCE_SLAY_GLOVE    (MIN_SPECIAL_ESSENCE + 11)
-
 
 #define DUNGEON_MODE_NONE       0
 #define DUNGEON_MODE_AND        1

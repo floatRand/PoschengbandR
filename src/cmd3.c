@@ -383,12 +383,14 @@ void do_cmd_destroy(void)
         race_t  *race_ptr = get_race();
         class_t *class_ptr = get_class();
         bool     handled = FALSE;
+        object_type copy = *o_ptr;
 
+        copy.number = amt;
         if (!handled && race_ptr->destroy_object)
-            handled = race_ptr->destroy_object(o_ptr);
+            handled = race_ptr->destroy_object(&copy);
 
         if (!handled && class_ptr->destroy_object)
-            handled = class_ptr->destroy_object(o_ptr);
+            handled = class_ptr->destroy_object(&copy);
 
         if (!handled)
         {

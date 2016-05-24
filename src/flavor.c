@@ -1709,10 +1709,6 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     if (have_flag(flgs, TR_SHOW_MODS)) show_weapon = TRUE;
 
     /* Display the item like a weapon */
-    if (object_is_smith(o_ptr) && (o_ptr->xtra3 == 1 + ESSENCE_SLAY_GLOVE))
-        show_weapon = TRUE;
-
-    /* Display the item like a weapon */
     if (o_ptr->to_h && o_ptr->to_d) show_weapon = TRUE;
 
     /* Display the item like armour */

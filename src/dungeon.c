@@ -3885,8 +3885,6 @@ static void process_command(void)
         {
             if (p_ptr->prace == RACE_MON_RING)
                 ring_browse();
-            else if (p_ptr->pclass == CLASS_WEAPONSMITH)
-                do_cmd_kaji(TRUE);
             else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                 magic_eater_browse();
             else if (p_ptr->pclass == CLASS_SNIPER)
@@ -3940,7 +3938,6 @@ static void process_command(void)
             }
             else if (dun_level && (d_info[dungeon_type].flags1 & DF1_NO_MAGIC)
                 && p_ptr->pclass != CLASS_BERSERKER
-                && p_ptr->pclass != CLASS_WEAPONSMITH
                 && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                 && p_ptr->pclass != CLASS_WEAPONMASTER
                 && p_ptr->pclass != CLASS_MAULER )
@@ -3950,7 +3947,6 @@ static void process_command(void)
             }
             else if (p_ptr->anti_magic
                     && p_ptr->pclass != CLASS_BERSERKER
-                    && p_ptr->pclass != CLASS_WEAPONSMITH
                     && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                     && p_ptr->pclass != CLASS_WEAPONMASTER
                     && p_ptr->pclass != CLASS_MAULER )
@@ -3991,8 +3987,6 @@ static void process_command(void)
                     do_cmd_hissatsu();
                 else if (p_ptr->pclass == CLASS_BLUE_MAGE)
                     do_cmd_cast_learned();
-                else if (p_ptr->pclass == CLASS_WEAPONSMITH)
-                    do_cmd_kaji(FALSE);
                 else if (p_ptr->pclass == CLASS_SNIPER)
                     do_cmd_snipe();
                 else if (p_ptr->pclass == CLASS_ARCHAEOLOGIST ||

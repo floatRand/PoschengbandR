@@ -1896,25 +1896,17 @@ bool enchant(object_type *o_ptr, int n, int eflag)
     bool    a = object_is_artifact(o_ptr);
     bool    force = (eflag & ENCH_FORCE);
     int     minor_limit = 2 + p_ptr->lev/5; /* This matches the town service ... */
+    u32b    flgs[TR_FLAG_SIZE];
 
 
     /* Large piles resist enchantment */
     prob = o_ptr->number * 100;
 
-    if (o_ptr->tval == TV_BOW && o_ptr->sval == SV_HARP)
+    /* Some objects cannot be enchanted */
+    object_flags(o_ptr, flgs);
+    if (have_flag(flgs, TR_NO_ENCHANT))
         return FALSE;
 
-    if (o_ptr->name1 == ART_HAND_OF_VECNA)
-        return FALSE;
-
-    if (o_ptr->name1 == ART_KAMIKAZE_ROBE)
-        return FALSE;
-
-    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_RUNESWORD)
-        return FALSE;
-
-    if (o_ptr->name2 == EGO_GLOVES_BERSERKER)
-        return FALSE;
 
     /* Missiles are easy to enchant */
     if ((o_ptr->tval == TV_BOLT) ||

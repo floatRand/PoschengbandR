@@ -15,12 +15,16 @@ bool is_pval_flag(int which)
     case TR_CON: 
     case TR_CHR:
     case TR_MAGIC_MASTERY:
+    case TR_DEVICE_POWER:
+    case TR_MAGIC_RESISTANCE:
     case TR_STEALTH:
     case TR_SEARCH:
     case TR_INFRA:
     case TR_TUNNEL:
     case TR_SPEED:
     case TR_BLOWS:
+    case TR_XTRA_SHOTS:
+    case TR_XTRA_MIGHT:
     case TR_SPELL_POWER:
     case TR_SPELL_CAP:
     case TR_WEAPONMASTERY:

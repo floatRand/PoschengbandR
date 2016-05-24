@@ -1379,7 +1379,7 @@ void equip_calc_bonuses(void)
         if (have_flag(flgs, TR_SUST_CON)) p_ptr->sustain_con = TRUE;
         if (have_flag(flgs, TR_SUST_CHR)) p_ptr->sustain_chr = TRUE;
 
-        if (o_ptr->name2 == EGO_GLOVES_GENJI || o_ptr->name1 == ART_MASTER_TONBERRY || o_ptr->name1 == ART_MEPHISTOPHELES)
+        if (have_flag(flgs, TR_DUAL_WIELDING))
         {
             switch (_template->slots[i].type)
             {

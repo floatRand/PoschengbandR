@@ -7,6 +7,7 @@
 extern void obj_display(object_type *o_ptr);
 extern void obj_display_rect(object_type *o_ptr, rect_t display);
 extern void obj_display_doc(object_type *o_ptr, doc_ptr doc);
+extern void obj_display_smith(object_type *o_ptr, doc_ptr doc);
 extern void device_display_doc(object_type *o_ptr, doc_ptr doc);
 
 static void _display_name(object_type *o_ptr, doc_ptr doc);
@@ -627,7 +628,7 @@ static void _display_extra(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE], doc_ptr 
     if (object_is_(o_ptr, TV_POLEARM, SV_DEATH_SCYTHE))
         doc_insert(doc, "It causes you to strike yourself sometimes.\nIt always penetrates invulnerability barriers.\n");
 
-    if (o_ptr->name2 == EGO_GLOVES_GENJI || o_ptr->name1 == ART_MASTER_TONBERRY || o_ptr->name1 == ART_MEPHISTOPHELES)
+    if (have_flag(flgs, TR_DUAL_WIELDING))
         doc_insert(doc, "It affects your ability to hit when you are wielding two weapons.\n");
 
     if (o_ptr->tval == TV_STATUE)
@@ -931,6 +932,30 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
 
     _display_autopick(o_ptr, doc);
     _display_cost(o_ptr, doc);
+
+    doc_insert(doc, "</style></indent>\n");
+}
+
+void obj_display_smith(object_type *o_ptr, doc_ptr doc)
+{
+    u32b flgs[TR_FLAG_SIZE];
+
+    object_flags_known(o_ptr, flgs);
+
+    _display_name(o_ptr, doc);
+    doc_insert(doc, "  <indent><style:indent>");
+
+    _display_stats(o_ptr, flgs, doc);
+    _display_sustains(o_ptr, flgs, doc);
+    _display_other_pval(o_ptr, flgs, doc);
+    _display_slays(o_ptr, flgs, doc);
+    _display_brands(o_ptr, flgs, doc);
+    _display_resists(o_ptr, flgs, doc);
+    _display_abilities(o_ptr, flgs, doc);
+    _display_auras(o_ptr, flgs, doc);
+    _display_extra(o_ptr, flgs, doc);
+    _display_curses(o_ptr, flgs, doc);
+    _display_ignore(o_ptr, flgs, doc);
 
     doc_insert(doc, "</style></indent>\n");
 }

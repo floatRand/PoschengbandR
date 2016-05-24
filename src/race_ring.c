@@ -241,7 +241,7 @@ static bool _absorb(object_type *o_ptr)
     if (o_ptr->curse_flags & (TRC_TY_CURSE | TRC_HEAVY_CURSE))
         div++;
 
-    for (i = 0; i < TR_FLAG_MAX; i++)
+    for (i = 0; i < TR_FLAG_COUNT; i++)
     {
         if (_skip_flag(i)) continue;
         if (have_flag(flags, i))

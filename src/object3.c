@@ -919,10 +919,9 @@ s32b armor_cost(object_type *o_ptr, int options)
         }
     }
 
-    /* Genji? This will become TR_2WEAPON someday ... */
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
-        if (o_ptr->name2 == EGO_GLOVES_GENJI || o_ptr->name1 == ART_MASTER_TONBERRY || o_ptr->name1 == ART_MEPHISTOPHELES)
+        if (have_flag(flgs, TR_DUAL_WIELDING))
         {
             p += 20000;
             if (cost_calc_hook)

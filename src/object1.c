@@ -215,58 +215,8 @@ void object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
         flgs[i] |= o_ptr->art_flags[i];
 
     if (object_is_smith(o_ptr))
-    {
-        int add = o_ptr->xtra3 - 1;
-
-        if (add < TR_FLAG_MAX)
-        {
-            add_flag(flgs, add);
-        }
-        else if (add == ESSENCE_TMP_RES_ACID)
-        {
-            add_flag(flgs, TR_RES_ACID);
-        }
-        else if (add == ESSENCE_TMP_RES_ELEC)
-        {
-            add_flag(flgs, TR_RES_ELEC);
-        }
-        else if (add == ESSENCE_TMP_RES_FIRE)
-        {
-            add_flag(flgs, TR_RES_FIRE);
-        }
-        else if (add == ESSENCE_TMP_RES_COLD)
-        {
-            add_flag(flgs, TR_RES_COLD);
-        }
-        else if (add == ESSENCE_SH_FIRE)
-        {
-            add_flag(flgs, TR_RES_FIRE);
-            add_flag(flgs, TR_SH_FIRE);
-        }
-        else if (add == ESSENCE_SH_ELEC)
-        {
-            add_flag(flgs, TR_RES_ELEC);
-            add_flag(flgs, TR_SH_ELEC);
-        }
-        else if (add == ESSENCE_SH_COLD)
-        {
-            add_flag(flgs, TR_RES_COLD);
-            add_flag(flgs, TR_SH_COLD);
-        }
-        else if (add == ESSENCE_RESISTANCE)
-        {
-            add_flag(flgs, TR_RES_ACID);
-            add_flag(flgs, TR_RES_ELEC);
-            add_flag(flgs, TR_RES_FIRE);
-            add_flag(flgs, TR_RES_COLD);
-        }
-        else if (add == TR_IMPACT)
-        {
-        }
-    }
+        weaponsmith_object_flags(o_ptr, flgs);
 }
-
-
 
 /*
  * Obtain the "flags" for an item which are known to the player
@@ -334,52 +284,7 @@ void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
     }
 
     if (object_is_smith(o_ptr))
-    {
-        int add = o_ptr->xtra3 - 1;
-
-        if (add < TR_FLAG_MAX)
-        {
-            add_flag(flgs, add);
-        }
-        else if (add == ESSENCE_TMP_RES_ACID)
-        {
-            add_flag(flgs, TR_RES_ACID);
-        }
-        else if (add == ESSENCE_TMP_RES_ELEC)
-        {
-            add_flag(flgs, TR_RES_ELEC);
-        }
-        else if (add == ESSENCE_TMP_RES_FIRE)
-        {
-            add_flag(flgs, TR_RES_FIRE);
-        }
-        else if (add == ESSENCE_TMP_RES_COLD)
-        {
-            add_flag(flgs, TR_RES_COLD);
-        }
-        else if (add == ESSENCE_SH_FIRE)
-        {
-            add_flag(flgs, TR_RES_FIRE);
-            add_flag(flgs, TR_SH_FIRE);
-        }
-        else if (add == ESSENCE_SH_ELEC)
-        {
-            add_flag(flgs, TR_RES_ELEC);
-            add_flag(flgs, TR_SH_ELEC);
-        }
-        else if (add == ESSENCE_SH_COLD)
-        {
-            add_flag(flgs, TR_RES_COLD);
-            add_flag(flgs, TR_SH_COLD);
-        }
-        else if (add == ESSENCE_RESISTANCE)
-        {
-            add_flag(flgs, TR_RES_ACID);
-            add_flag(flgs, TR_RES_ELEC);
-            add_flag(flgs, TR_RES_FIRE);
-            add_flag(flgs, TR_RES_COLD);
-        }
-    }
+        weaponsmith_object_flags(o_ptr, flgs);
 }
 
 /*

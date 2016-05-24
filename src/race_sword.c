@@ -126,7 +126,7 @@ static bool _absorb(object_type *o_ptr)
             result = TRUE;
     }
 
-    for (i = 0; i < TR_FLAG_MAX; i++)
+    for (i = 0; i < TR_FLAG_COUNT; i++)
     {
         if (_skip_flag(i)) continue;
         if (have_flag(flags, i))

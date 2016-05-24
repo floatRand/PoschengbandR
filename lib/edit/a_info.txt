@@ -232,9 +232,9 @@ D:for rapid communication between distant lands.
 N:16:'Crimson'
 I:19:50:4
 W:80:250:100:100000
-P:0:x0.00:20:20:0
+P:0:x0.00:0:0:0
 F:SPEED | STEALTH | RES_SHARDS |
-F:INSTA_ART | XTRA_POWER | XTRA_H_RES
+F:INSTA_ART | XTRA_POWER | XTRA_H_RES | NO_ENCHANT
 E:ROCKET:60:15:300
 E:I'll fire CRIMSON! SEKKAKUDAKARA!
 
@@ -2841,7 +2841,7 @@ I:31:6:2
 W:66:222:1:666666
 P:0:1d1:0:0:0
 F:CHR
-F:FREE_ACT | PERMA_CURSE | QUESTITEM | INSTA_ART
+F:FREE_ACT | PERMA_CURSE | QUESTITEM | INSTA_ART | NO_ENCHANT
 D:It is a charred and rotting vestige of the once
 D:great Emperor Lich.
 
@@ -2879,7 +2879,7 @@ P:2:0d0:10:10:-20
 F:STR | DEX | DEC_WIS | SPEED | HIDE_TYPE 
 F:SUST_STR | SUST_DEX | HOLD_LIFE | LEVITATION
 F:RES_FIRE | RES_POIS | RES_CONF | RES_SOUND | RES_NETHER | RES_FEAR
-F:NO_MAGIC | WEAPONMASTERY
+F:NO_MAGIC | WEAPONMASTERY | NO_ENCHANT
 E:BERSERK:8:100
 E:Your robe glows crimson...
 D:This robe is stained with the the blood of many fallen heroes.
@@ -2888,8 +2888,8 @@ D:So much death. So much destruction. What could cause such a thing?
 N:273:'Railgun'
 I:19:51:2
 W:85:150:100:80000
-P:0:x0.00:25:25:0
-F:DEX | SPEED | SUST_DEX | IM_FIRE | RES_LITE
+P:0:x0.00:0:0:0
+F:DEX | SPEED | SUST_DEX | IM_FIRE | RES_LITE | NO_ENCHANT
 F:INSTA_ART
 E:BEAM_LITE:50:15:300
 E:Your gun glows with blinding light...
@@ -3220,7 +3220,7 @@ I:31:1:2
 W:90:6:5:36000
 P:1:0d0:16:6:16
 F:QUESTITEM
-F:STR | DEX | SPEED | HIDE_TYPE | FREE_ACT | SHOW_MODS
+F:STR | DEX | SPEED | HIDE_TYPE | FREE_ACT | SHOW_MODS | DUAL_WIELDING
 
 N:314:of Ulik
 I:21:1:4

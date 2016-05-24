@@ -673,7 +673,7 @@ static cptr r_info_flagsr[] =
 /*
  * Object flags
  */
-static cptr k_info_flags[TR_FLAG_MAX] =
+static cptr k_info_flags[TR_FLAG_COUNT] =
 {
     "STR",
     "INT",
@@ -850,6 +850,8 @@ static cptr k_info_flags[TR_FLAG_MAX] =
     "DEC_BLOWS",
     "IM_BLIND",
     "FAKE",
+    "NO_ENCHANT",
+    "DUAL_WIELDING",
 };
 
 
@@ -2592,7 +2594,7 @@ static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
     int i;
 
     /* Check flags */
-    for (i = 0; i < TR_FLAG_MAX; i++)
+    for (i = 0; i < TR_FLAG_COUNT; i++)
     {
         if (streq(what, k_info_flags[i]))
         {
@@ -2877,7 +2879,7 @@ static errr grab_one_artifact_flag(artifact_type *a_ptr, cptr what)
     int i;
 
     /* Check flags */
-    for (i = 0; i < TR_FLAG_MAX; i++)
+    for (i = 0; i < TR_FLAG_COUNT; i++)
     {
         if (streq(what, k_info_flags[i]))
         {
@@ -3087,7 +3089,7 @@ static bool grab_one_ego_item_flag(ego_item_type *e_ptr, cptr what)
     int i;
 
     /* Check flags */
-    for (i = 0; i < TR_FLAG_MAX; i++)
+    for (i = 0; i < TR_FLAG_COUNT; i++)
     {
         if (streq(what, k_info_flags[i]))
         {
