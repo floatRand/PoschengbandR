@@ -733,7 +733,6 @@ static int _smith_enchant_armor(object_type *o_ptr)
 
         doc_clear(_doc);
         obj_display_smith(o_ptr, _doc);
-        doc_newline(_doc);
 
         doc_printf(_doc, " <color:%c>  E</color>) Enchant to ",
             (cost_a > avail_a) ? 'D' : 'y');
@@ -880,7 +879,6 @@ static int _smith_enchant_weapon(object_type *o_ptr)
 
         doc_clear(_doc);
         obj_display_smith(o_ptr, _doc);
-        doc_newline(_doc);
 
         doc_printf(_doc, " <color:%c>  E</color>) Enchant to ",
             (cost_h > avail_h || cost_d > avail_d) ? 'D' : 'y');
@@ -1011,7 +1009,6 @@ static int _smith_add_slaying(object_type *o_ptr)
 
         doc_clear(_doc);
         obj_display_smith(o_ptr, _doc);
-        doc_newline(_doc);
 
         doc_printf(_doc, " <color:%c>  S</color>) Slaying power of ",
             (cost_h > avail_h || cost_d > avail_d) ? 'D' : 'y');
@@ -1103,8 +1100,8 @@ static int _smith_add_essence(object_type *o_ptr, int type)
        the required type, and we avoid adding a redundant ability
        (that the player is aware of) */
     {
-        u32b                flgs[TR_FLAG_SIZE];
-        int                 i;
+        u32b flgs[TR_FLAG_SIZE];
+        int  i;
 
         object_flags_known(o_ptr, flgs);
 
@@ -1177,13 +1174,31 @@ static int _smith_add_essence(object_type *o_ptr, int type)
 
         doc_clear(_doc);
         obj_display_smith(o_ptr, _doc);
-        doc_newline(_doc);
 
         if (vec_length(choices))
         {
-            int i;
-            assert(vec_length(choices) <= 26);
-            doc_printf(_doc, "<color:G>      %-15.15s  Cost  Avail</color>\n", group_ptr->name);
+            int       ct = vec_length(choices);
+            doc_ptr   cols[2] = {0};
+            int       i;
+            const int max_rows = 15;
+            int       wrap_row = 999;
+            int       doc_idx = 0;
+
+            assert(ct <= 26); /* I'm using 'a' to 'z' for choices ... */
+
+            if (ct > max_rows) /* 80x27 */
+            {
+                cols[0] = doc_alloc(35);
+                cols[1] = doc_alloc(35);
+                wrap_row = (ct + 1) / 2;
+            }
+            else
+            {
+                cols[0] = _doc;
+                cols[1] = _doc;
+            }
+
+            doc_printf(cols[doc_idx], "<color:G>      %-15.15s  Cost  Avail</color>\n", group_ptr->name);
             for (i = 0; i < vec_length(choices); i++)
             {
                 _essence_info_ptr info_ptr = vec_get(choices, i);
@@ -1191,6 +1206,12 @@ static int _smith_add_essence(object_type *o_ptr, int type)
 
                 if (is_ammo)
                     cost /= info_ptr->info;
+
+                if (i == wrap_row)
+                {
+                    doc_idx++;
+                    doc_printf(cols[doc_idx], "<color:G>      %-15.15s  Cost  Avail</color>\n", group_ptr->name);
+                }
 
                 if (info_ptr->id == _ESSENCE_SPECIAL)
                 {
@@ -1203,7 +1224,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         else if (cost > _get_essence(TR_SUST_DEX)) ok = FALSE;
                         else if (cost > _get_essence(TR_SUST_CON)) ok = FALSE;
                         else if (cost > _get_essence(TR_SUST_CHR)) ok = FALSE;
-                        doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
+                        doc_printf(cols[doc_idx], " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
                             ok ? 'y' : 'D',
                             'A' + i,
                             info_ptr->name,
@@ -1218,7 +1239,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         else if (cost > _get_essence(TR_RES_ELEC)) ok = FALSE;
                         else if (cost > _get_essence(TR_RES_FIRE)) ok = FALSE;
                         else if (cost > _get_essence(TR_RES_COLD)) ok = FALSE;
-                        doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
+                        doc_printf(cols[doc_idx], " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
                             ok ? 'y' : 'D',
                             'A' + i,
                             info_ptr->name,
@@ -1230,7 +1251,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                 else
                 {
                     int avail = _get_essence(info_ptr->id);
-                    doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  %5d\n",
+                    doc_printf(cols[doc_idx], " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  %5d\n",
                         (cost > avail) ? 'D' : 'y',
                         'A' + i,
                         info_ptr->name,
@@ -1239,6 +1260,12 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         avail
                     );
                 }
+            }
+            if (ct > max_rows)
+            {
+                doc_insert_cols(_doc, cols, 2, 0);
+                doc_free(cols[0]);
+                doc_free(cols[1]);
             }
         }
         else
@@ -1353,8 +1380,8 @@ static int _smith_add_pval(object_type *o_ptr, int type)
        the required type, and we avoid adding a redundant ability
        (that the player is aware of) */
     {
-        u32b                flgs[TR_FLAG_SIZE];
-        int                 i;
+        u32b flgs[TR_FLAG_SIZE];
+        int  i;
 
         object_flags_known(o_ptr, flgs);
 
@@ -1380,7 +1407,7 @@ static int _smith_add_pval(object_type *o_ptr, int type)
     }
 
     if (!pval)
-        pval = 1;
+        pval = max_pval;
 
     if (pval < 0) /* paranoia ... we shouldn't be called in this case! */
         return _OK;
@@ -1395,7 +1422,6 @@ static int _smith_add_pval(object_type *o_ptr, int type)
 
         doc_clear(_doc);
         obj_display_smith(o_ptr, _doc);
-        doc_newline(_doc);
 
         if (vec_length(choices))
         {
@@ -1404,7 +1430,7 @@ static int _smith_add_pval(object_type *o_ptr, int type)
 
             assert(vec_length(choices) <= 26);
 
-            doc_printf(_doc, "\n<color:G>      %-15.15s  Plus  Cost  Avail</color>\n", group_ptr->name);
+            doc_printf(_doc, "<color:G>      %-15.15s  Plus  Cost  Avail</color>\n", group_ptr->name);
             for (i = 0; i < vec_length(choices); i++)
             {
                 _essence_info_ptr info_ptr = vec_get(choices, i);
@@ -1475,9 +1501,9 @@ static int _smith_add_pval(object_type *o_ptr, int type)
             if (!o_ptr->pval || type == ESSENCE_TYPE_BONUSES)
             {
                 if (o_ptr->pval)
-                    doc_insert(_doc, "\n      <indent>Use +/- to adjust the amount of bonus to use. For most bonuses, the plus on the object will override any value you choose.</indent>\n");
+                    doc_printf(_doc, "\n      <indent>Use +/- or type '1' to '%d' to adjust the amount of bonus to use. For most bonuses, the plus on the object will override any value you choose.</indent>\n", max_pval);
                 else
-                    doc_insert(_doc, "\n      Use +/- to adjust the amount of bonus to use.\n");
+                    doc_printf(_doc, "\n      Use +/- or type '1' to '%d' to adjust the amount of bonus to use.\n", max_pval);
             }
             if (do_pval_warning)
                 doc_insert(_doc, "\n      <color:o>*</color> <indent><color:v>Choosing this option will reduce the bonus of this object affecting other attributes!</color></indent>\n");
@@ -1558,6 +1584,12 @@ static int _smith_add_pval(object_type *o_ptr, int type)
         {
             if (pval > 1) pval--;
         }
+        else if ('1' <= cmd && cmd <= '9')
+        {
+            int val = cmd - '0';
+            if (1 <= val && val <= max_pval)
+                pval = val;
+        }
     }
     vec_free(choices);
     return result;
@@ -1594,7 +1626,6 @@ static void _smith_weapon_armor(object_type *o_ptr)
 
         doc_clear(_doc);
         obj_display_smith(o_ptr, _doc);
-        doc_newline(_doc);
 
         doc_printf(_doc, "   <color:%c>E</color>) Enchant this object\n", can_enchant ? 'y' : 'D');
 
@@ -1720,7 +1751,6 @@ static void _smith_ammo(object_type *o_ptr)
 
         doc_clear(_doc);
         obj_display_smith(o_ptr, _doc);
-        doc_newline(_doc);
 
         doc_printf(_doc, "   <color:%c>E</color>) Enchant this object\n", can_enchant ? 'y' : 'D');
 
