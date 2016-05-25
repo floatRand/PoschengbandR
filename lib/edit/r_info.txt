@@ -1176,14 +1176,14 @@ W:3:1:30:5:5000:539
 B:HIT:HURT:1d7
 B:TOUCH:EAT_GOLD
 F:MALE | HAS_LITE_1 |
-F:DROP_3D2 | ONLY_ITEM | THIEF
+F:DROP_1D2 | ONLY_ITEM | THIEF
 F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR | 
 F:EVIL
 F:DROP_SKELETON | DROP_CORPSE
 P:Copy:Hobbit:Tourist
 O:DROP_HOBBIT
 D:A short little guy, in bedraggled clothes. He appears to be looking
-D:for a good tavern.
+D:for a good tavern as he mutters something about missing second breakfast.
 
 N:75:Giant white ant
 G:a:w

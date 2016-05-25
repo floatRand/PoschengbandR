@@ -6539,9 +6539,10 @@ static bool _kind_theme_warrior(int k_idx) {
     case TV_SHIELD:
     case TV_HARD_ARMOR:
     case TV_DRAG_ARMOR:
+        return TRUE;
     case TV_RING:
     case TV_AMULET:
-        return TRUE;
+        return one_in_(3);
     }
     return FALSE;
 }

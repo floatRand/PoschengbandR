@@ -801,7 +801,8 @@ bool get_monster_drop(int m_idx, object_type *o_ptr)
     if (r_ptr->flags1 & RF1_DROP_GREAT) 
         mo_mode |= AM_GREAT;
 
-    if (r_ptr->drop_theme)
+    obj_drop_theme = 0;
+    if (r_ptr->drop_theme && one_in_(2))
         obj_drop_theme = r_ptr->drop_theme;
     else /* Don't try to tailor themed drops since they could easily fail ... */
     {

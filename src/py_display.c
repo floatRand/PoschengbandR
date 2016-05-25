@@ -2122,16 +2122,19 @@ static void _build_statistics(doc_ptr doc)
     _kill_counts_imp(doc, _mon_is_evil, "Evil Monsters", total_kills);
     _kill_counts_imp(doc, _mon_is_good, "Good Monsters", total_kills);
     _kill_counts_imp(doc, _mon_is_neutral, "Neutral Monsters", total_kills);
-    doc_newline(doc);
-    _kill_counts_imp(doc, _mon_drops_good, "Good Droppers", total_kills);
-    _kill_counts_imp(doc, _mon_drops_great, "Great Droppers", total_kills);
-    doc_newline(doc);
-    _kill_counts_imp(doc, _mon_res_acid, "Resist Acid", total_kills);
-    _kill_counts_imp(doc, _mon_res_elec, "Resist Elec", total_kills);
-    _kill_counts_imp(doc, _mon_res_fire, "Resist Fire", total_kills);
-    _kill_counts_imp(doc, _mon_res_cold, "Resist Cold", total_kills);
-    _kill_counts_imp(doc, _mon_res_pois, "Resist Pois", total_kills);
-    _kill_counts_imp(doc, _mon_res_conf, "Resist Conf", total_kills);
+    if (0)
+    {
+        doc_newline(doc);
+        _kill_counts_imp(doc, _mon_drops_good, "Good Droppers", total_kills);
+        _kill_counts_imp(doc, _mon_drops_great, "Great Droppers", total_kills);
+        doc_newline(doc);
+        _kill_counts_imp(doc, _mon_res_acid, "Resist Acid", total_kills);
+        _kill_counts_imp(doc, _mon_res_elec, "Resist Elec", total_kills);
+        _kill_counts_imp(doc, _mon_res_fire, "Resist Fire", total_kills);
+        _kill_counts_imp(doc, _mon_res_cold, "Resist Cold", total_kills);
+        _kill_counts_imp(doc, _mon_res_pois, "Resist Pois", total_kills);
+        _kill_counts_imp(doc, _mon_res_conf, "Resist Conf", total_kills);
+    }
     doc_printf(doc, "\n  %-20.20s %5d\n", "Totals", total_kills);
 
     doc_newline(doc);

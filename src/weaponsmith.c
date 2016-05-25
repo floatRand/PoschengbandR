@@ -358,13 +358,6 @@ static void _absorb_one(_essence_info_ptr info, int amt)
     _absorb_one_aux(info->id, info->name, amt);
 }
 
-static void _absorb_one_quiet(_essence_info_ptr info, int amt)
-{
-    assert(info);
-    if (amt > 0)
-        _add_essence(info->id, amt);
-}
-
 typedef void (*_absorb_essence_f)(_essence_info_ptr info, int amt);
 
 static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
@@ -588,43 +581,115 @@ static int _smith_add_essence(object_type *o_ptr, int type);
 static int _smith_add_pval(object_type *o_ptr, int type);
 static int _smith_add_slaying(object_type *o_ptr);
 
-/* Absorption */
+/* Absorption
+     We do a little bit of work to show the user what essences they will gain,
+     but only using the known object flags (although we do leak curse info this way).
+     After absorption, we report the gained essences, but only if they differ
+     from the predicted results.
+ */
+static string_ptr _spy_results = NULL;
+static u32b       _spy_known_flags[TR_FLAG_SIZE];
 static void _absorb_one_spy(_essence_info_ptr info, int amt)
 {
     assert(info);
-    assert(_doc);
-    doc_printf(_doc, "      You will gain <color:B>%s</color>: %d\n", info->name, amt);
-}
+    assert(_spy_results);
 
+    /*           v~~~~~~ All of the special flags are obvious if the object has been identified */
+    if (info->id >= TR_FLAG_COUNT || have_flag(_spy_known_flags, info->id))
+    {                             /* ^~~~~~~~ But everything else requires player awareness */
+        string_printf(_spy_results, "      You will gain <color:B>%s</color>: %d\n", info->name, amt);
+    }
+}
+static void _absorb_one_smithing(_essence_info_ptr info, int amt)
+{
+    assert(info);
+    assert(_spy_results);
+    if (amt > 0)
+    {
+        _add_essence(info->id, amt); /* always report, even if capped */
+        string_printf(_spy_results, "      You gained <color:B>%s</color>: %d\n", info->name, amt);
+    }
+}
 static int _smith_absorb(object_type *o_ptr)
 {
     rect_t      r = ui_map_rect();
     object_type copy = *o_ptr;
+    bool        done = FALSE;
+    int         result = _OK;
+    string_ptr  spy_before = NULL;
+    string_ptr  spy_after = NULL;
 
-    doc_clear(_doc);
-    obj_display_smith(o_ptr, _doc);
-    doc_insert(_doc, " <color:y>  A</color>) Absorb all essences from this object\n");
-    _absorb_all(&copy, _absorb_one_spy);
-    doc_insert(_doc, "\n <color:y>ESC</color>) Return to main menu\n");
-    doc_insert(_doc, " <color:y>  Q</color>) Quit work on this object\n");
-    doc_newline(_doc);
-
-    Term_load();
-    doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
-
-    for (;;)
+    if (object_is_known(o_ptr))
     {
+        object_flags_known(o_ptr, _spy_known_flags);
+
+        spy_before = string_alloc();
+        _spy_results = spy_before;
+        _absorb_all(&copy, _absorb_one_spy);
+        _spy_results = NULL;
+    }
+
+    while (!done)
+    {
+
+        doc_clear(_doc);
+        obj_display_smith(o_ptr, _doc);
+
+        if (!spy_after)
+        {
+            doc_insert(_doc, " <color:y>  A</color>) Absorb all essences from this object\n");
+            if (spy_before)
+            {
+                doc_insert(_doc, string_buffer(spy_before));
+                if (!(o_ptr->ident & IDENT_FULL) && !object_is_nameless(o_ptr))
+                    doc_insert(_doc, "      And perhaps more?\n");
+            }
+            else
+                doc_insert(_doc, "      Who knows what you might gain?\n");
+        }
+        else
+        {
+            if (string_length(spy_after) == 0)
+                doc_insert(_doc, "      You were unable to extract any essences.\n");
+            else
+                doc_insert(_doc, string_buffer(spy_after));
+        }
+        doc_insert(_doc, "\n <color:y>ESC</color>) Return to main menu\n");
+        doc_insert(_doc, " <color:y>  Q</color>) Quit work on this object\n");
+        doc_newline(_doc);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
         switch (inkey_special(TRUE))
         {
         case ESCAPE:
-            return _OK;
+            done = TRUE;
+            break;
         case 'Q': case 'q':
-            return _UNWIND;
+            result = _UNWIND;
+            done = TRUE;
+            break;
         case 'A': case 'a':
-            _absorb_all(o_ptr, _absorb_one_quiet);
-            return _OK;
+            if (!spy_after)
+            {
+                spy_after = string_alloc();
+                _spy_results = spy_after;
+                _absorb_all(o_ptr, _absorb_one_smithing);
+                _spy_results = NULL;
+                if (spy_before && string_count_chr(spy_before, '\n') == string_count_chr(spy_after, '\n'))
+                    done = TRUE;
+            }
+            break;
         }
     }
+
+    if (spy_before)
+        string_free(spy_before);
+    if (spy_after)
+        string_free(spy_after);
+
+    return result;
 }
 
 /* Remove added essence */
@@ -1123,6 +1188,8 @@ static int _smith_add_essence(object_type *o_ptr, int type)
 
                 /* TODO: Perhaps we should add filters to our tables? */
                 if (info_ptr->id == TR_DUAL_WIELDING && !object_is_armour(o_ptr)) continue; /* Boots of Genji! Yes!! :D */
+                if ((info_ptr->id == TR_VORPAL || info_ptr->id == TR_VORPAL2) && o_ptr->tval != TV_SWORD) continue;
+                if ((info_ptr->id == TR_IMPACT || info_ptr->id == TR_STUN) && o_ptr->tval != TV_HAFTED) continue;
             }
             else
             {
@@ -1130,11 +1197,11 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                 if (info_ptr->info == _ESSENCE_SUST_ALL)
                 {
                     if ( !_get_essence(TR_SUST_STR)
-                      && !_get_essence(TR_SUST_INT)
-                      && !_get_essence(TR_SUST_WIS)
-                      && !_get_essence(TR_SUST_DEX)
-                      && !_get_essence(TR_SUST_CON)
-                      && !_get_essence(TR_SUST_CHR) )
+                      || !_get_essence(TR_SUST_INT)
+                      || !_get_essence(TR_SUST_WIS)
+                      || !_get_essence(TR_SUST_DEX)
+                      || !_get_essence(TR_SUST_CON)
+                      || !_get_essence(TR_SUST_CHR) )
                     {
                         continue;
                     }
@@ -1152,9 +1219,9 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                 else if (info_ptr->info == _ESSENCE_RES_BASE)
                 {
                     if ( !_get_essence(TR_RES_ACID)
-                      && !_get_essence(TR_RES_ELEC)
-                      && !_get_essence(TR_RES_FIRE)
-                      && !_get_essence(TR_RES_COLD) )
+                      || !_get_essence(TR_RES_ELEC)
+                      || !_get_essence(TR_RES_FIRE)
+                      || !_get_essence(TR_RES_COLD) )
                     {
                         continue;
                     }
@@ -1646,16 +1713,25 @@ static void _smith_weapon_armor(object_type *o_ptr)
         }
         else
         {
-            doc_insert(_doc, "\n   <color:y>1</color>) Add Statistic\n");
-            doc_insert(_doc, "   <color:y>2</color>) Add Bonus\n");
-            doc_insert(_doc, "   <color:y>3</color>) Add Resistance\n");
-            doc_insert(_doc, "   <color:y>4</color>) Add Sustain\n");
-            doc_insert(_doc, "   <color:y>5</color>) Add Ability\n");
-            doc_insert(_doc, "   <color:y>6</color>) Add Telepathy\n");
+            doc_newline(_doc);
+            if (_count_essences_aux(ESSENCE_TYPE_STATS))
+                doc_insert(_doc, "   <color:y>1</color>) Add Statistic\n");
+            if (_count_essences_aux(ESSENCE_TYPE_BONUSES))
+                doc_insert(_doc, "   <color:y>2</color>) Add Bonus\n");
+            if (_count_essences_aux(ESSENCE_TYPE_RESISTS))
+                doc_insert(_doc, "   <color:y>3</color>) Add Resistance\n");
+            if (_count_essences_aux(ESSENCE_TYPE_SUSTAINS))
+                doc_insert(_doc, "   <color:y>4</color>) Add Sustain\n");
+            if (_count_essences_aux(ESSENCE_TYPE_ABILITIES))
+                doc_insert(_doc, "   <color:y>5</color>) Add Ability\n");
+            if (_count_essences_aux(ESSENCE_TYPE_TELEPATHY))
+                doc_insert(_doc, "   <color:y>6</color>) Add Telepathy\n");
             if (object_is_melee_weapon(o_ptr))
             {
-                doc_insert(_doc, "   <color:y>7</color>) Add Slay\n");
-                doc_insert(_doc, "   <color:y>8</color>) Add Brand\n");
+                if (_count_essences_aux(ESSENCE_TYPE_SLAYS))
+                    doc_insert(_doc, "   <color:y>7</color>) Add Slay\n");
+                if (_count_essences_aux(ESSENCE_TYPE_BRANDS))
+                    doc_insert(_doc, "   <color:y>8</color>) Add Brand\n");
             }
             else if (object_is_armour(o_ptr))
             {
@@ -1695,31 +1771,37 @@ static void _smith_weapon_armor(object_type *o_ptr)
             break;
         case '1':
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
+            if (!_count_essences_aux(ESSENCE_TYPE_STATS)) break;
             if (_smith_add_pval(o_ptr, ESSENCE_TYPE_STATS) == _UNWIND)
                 done = TRUE;
             break;
         case '2':
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
+            if (!_count_essences_aux(ESSENCE_TYPE_BONUSES)) break;
             if (_smith_add_pval(o_ptr, ESSENCE_TYPE_BONUSES) == _UNWIND)
                 done = TRUE;
             break;
         case '3':
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
+            if (!_count_essences_aux(ESSENCE_TYPE_RESISTS)) break;
             if (_smith_add_essence(o_ptr, ESSENCE_TYPE_RESISTS) == _UNWIND)
                 done = TRUE;
             break;
         case '4':
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
+            if (!_count_essences_aux(ESSENCE_TYPE_SUSTAINS)) break;
             if (_smith_add_essence(o_ptr, ESSENCE_TYPE_SUSTAINS) == _UNWIND)
                 done = TRUE;
             break;
         case '5':
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
+            if (!_count_essences_aux(ESSENCE_TYPE_ABILITIES)) break;
             if (_smith_add_essence(o_ptr, ESSENCE_TYPE_ABILITIES) == _UNWIND)
                 done = TRUE;
             break;
         case '6':
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
+            if (!_count_essences_aux(ESSENCE_TYPE_TELEPATHY)) break;
             if (_smith_add_essence(o_ptr, ESSENCE_TYPE_TELEPATHY) == _UNWIND)
                 done = TRUE;
             break;
@@ -1727,11 +1809,13 @@ static void _smith_weapon_armor(object_type *o_ptr)
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
             if (object_is_melee_weapon(o_ptr))
             {
+                if (!_count_essences_aux(ESSENCE_TYPE_SLAYS)) break;
                 if (_smith_add_essence(o_ptr, ESSENCE_TYPE_SLAYS) == _UNWIND)
                     done = TRUE;
             }
             else if (object_is_armour(o_ptr))
             {
+                if (!_get_essence(_ESSENCE_TO_HIT_A) && !_get_essence(_ESSENCE_TO_DAM_A)) break;
                 if (_smith_add_slaying(o_ptr) == _UNWIND)
                     done = TRUE;
             }
@@ -1740,6 +1824,7 @@ static void _smith_weapon_armor(object_type *o_ptr)
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
             if (object_is_melee_weapon(o_ptr))
             {
+                if (!_count_essences_aux(ESSENCE_TYPE_BRANDS)) break;
                 if (_smith_add_essence(o_ptr, ESSENCE_TYPE_BRANDS) == _UNWIND)
                     done = TRUE;
             }
@@ -1771,8 +1856,10 @@ static void _smith_ammo(object_type *o_ptr)
         }
         else
         {
-            doc_insert(_doc, "\n   <color:y>1</color>) Add Slay\n");
-            doc_insert(_doc, "   <color:y>2</color>) Add Brand\n");
+            if (_count_essences_aux(ESSENCE_TYPE_SLAYS))
+                doc_insert(_doc, "\n   <color:y>1</color>) Add Slay\n");
+            if (_count_essences_aux(ESSENCE_TYPE_BRANDS))
+                doc_insert(_doc, "   <color:y>2</color>) Add Brand\n");
         }
 
         doc_newline(_doc);
@@ -1806,11 +1893,13 @@ static void _smith_ammo(object_type *o_ptr)
             break;
         case '1':
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
+            if (!_count_essences_aux(ESSENCE_TYPE_SLAYS)) break;
             if (_smith_add_essence(o_ptr, ESSENCE_TYPE_SLAYS) == _UNWIND)
                 done = TRUE;
             break;
         case '2':
             if (object_is_smith(o_ptr) || object_is_artifact(o_ptr)) break;
+            if (!_count_essences_aux(ESSENCE_TYPE_BRANDS)) break;
             if (_smith_add_essence(o_ptr, ESSENCE_TYPE_BRANDS) == _UNWIND)
                 done = TRUE;
             break;
@@ -2062,38 +2151,51 @@ static void _character_dump_aux(doc_ptr doc)
         doc_newline(doc);
     }
 
-    _dump_pval_table(doc, ESSENCE_TYPE_STATS);
-    doc_newline(doc);
-    _dump_pval_table(doc, ESSENCE_TYPE_BONUSES);
-    doc_newline(doc);
-
+    if (_count_essences_aux(ESSENCE_TYPE_STATS))
     {
-        doc_ptr cols[2];
-
-        cols[0] = doc_alloc(40);
-        cols[1] = doc_alloc(40);
-
-        _dump_slay_table(cols[0], ESSENCE_TYPE_SLAYS);
-        doc_newline(cols[0]);
-        _dump_slay_table(cols[0], ESSENCE_TYPE_BRANDS);
-
-        _dump_ability_table(cols[1], ESSENCE_TYPE_RESISTS);
-        doc_newline(cols[1]);
-        _dump_ability_table(cols[1], ESSENCE_TYPE_SUSTAINS);
-
-        doc_insert_cols(doc, cols, 2, 0);
-        doc_free(cols[0]);
-        doc_free(cols[1]);
+        _dump_pval_table(doc, ESSENCE_TYPE_STATS);
+        doc_newline(doc);
     }
-
+    if (_count_essences_aux(ESSENCE_TYPE_BONUSES))
+    {
+        _dump_pval_table(doc, ESSENCE_TYPE_BONUSES);
+        doc_newline(doc);
+    }
     {
         doc_ptr cols[2];
 
         cols[0] = doc_alloc(40);
         cols[1] = doc_alloc(40);
 
-        _dump_ability_table(cols[0], ESSENCE_TYPE_ABILITIES);
-        _dump_ability_table(cols[1], ESSENCE_TYPE_TELEPATHY);
+        if (_count_essences_aux(ESSENCE_TYPE_SLAYS))
+        {
+            _dump_slay_table(cols[0], ESSENCE_TYPE_SLAYS);
+            doc_newline(cols[0]);
+        }
+        if (_count_essences_aux(ESSENCE_TYPE_BRANDS))
+        {
+            _dump_slay_table(cols[0], ESSENCE_TYPE_BRANDS);
+            doc_newline(cols[0]);
+        }
+        if (_count_essences_aux(ESSENCE_TYPE_ABILITIES))
+        {
+            _dump_ability_table(cols[0], ESSENCE_TYPE_ABILITIES);
+        }
+
+        if (_count_essences_aux(ESSENCE_TYPE_RESISTS))
+        {
+            _dump_ability_table(cols[1], ESSENCE_TYPE_RESISTS);
+            doc_newline(cols[1]);
+        }
+        if (_count_essences_aux(ESSENCE_TYPE_SUSTAINS))
+        {
+            _dump_ability_table(cols[1], ESSENCE_TYPE_SUSTAINS);
+            doc_newline(cols[1]);
+        }
+        if (_count_essences_aux(ESSENCE_TYPE_TELEPATHY))
+        {
+            _dump_ability_table(cols[1], ESSENCE_TYPE_TELEPATHY);
+        }
 
         doc_insert_cols(doc, cols, 2, 0);
         doc_free(cols[0]);
