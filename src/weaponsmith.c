@@ -35,6 +35,7 @@ enum {                  /* stored in object.xtra1 when object.xtra3 - 1 = _ESSEN
     _ESSENCE_RES_BASE = 1,
     _ESSENCE_SUST_ALL,
     _ESSENCE_SLAYING,   /* object.xtra4 packs (+h,+d) in s16b */
+    _ESSENCE_BRAND_ELEMENTS,
 };
 
 /* Essences are grouped by type for display to the user */
@@ -134,6 +135,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_BRAND_ELEC, "Brand Elec", 20, 10 },
         { TR_BRAND_FIRE, "Brand Fire", 20, 10 },
         { TR_BRAND_COLD, "Brand Cold", 20, 10 },
+        { _ESSENCE_SPECIAL, "Brand Elements", 100, _ESSENCE_BRAND_ELEMENTS},
         { TR_BRAND_POIS, "Brand Poison", 20, 10 },
         { TR_CHAOTIC, "Chaotic", 20, 0 },
         { TR_VAMPIRIC, "Vampiric", 60, 0 },
@@ -718,6 +720,9 @@ static int _smith_remove(object_type *o_ptr)
         case _ESSENCE_SUST_ALL:
             name = "Sustaining";
             break;
+        case _ESSENCE_BRAND_ELEMENTS:
+            name = "Brand Elements";
+            break;
         }
     }
 
@@ -1234,6 +1239,23 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         continue;
                     }
                 }
+                else if (info_ptr->info == _ESSENCE_BRAND_ELEMENTS)
+                {
+                    if (!object_is_melee_weapon(o_ptr)) continue;
+                    if ( !_get_essence(TR_BRAND_ELEC)
+                      || !_get_essence(TR_BRAND_FIRE)
+                      || !_get_essence(TR_BRAND_COLD) )
+                    {
+                        continue;
+                    }
+
+                    if ( have_flag(flgs, TR_BRAND_ELEC)
+                      && have_flag(flgs, TR_BRAND_FIRE)
+                      && have_flag(flgs, TR_BRAND_COLD) )
+                    {
+                        continue;
+                    }
+                }
             }
 
             if (is_ammo && !info_ptr->info) continue;
@@ -1314,6 +1336,20 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         else if (cost > _get_essence(TR_RES_ELEC)) ok = FALSE;
                         else if (cost > _get_essence(TR_RES_FIRE)) ok = FALSE;
                         else if (cost > _get_essence(TR_RES_COLD)) ok = FALSE;
+                        doc_printf(cols[doc_idx], " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
+                            ok ? 'y' : 'D',
+                            'A' + i,
+                            info_ptr->name,
+                            ok ? 'G' : 'r',
+                            cost
+                        );
+                    }
+                    else if (info_ptr->info == _ESSENCE_BRAND_ELEMENTS)
+                    {
+                        bool ok = TRUE;
+                        if (cost > _get_essence(TR_BRAND_ELEC)) ok = FALSE;
+                        else if (cost > _get_essence(TR_BRAND_FIRE)) ok = FALSE;
+                        else if (cost > _get_essence(TR_BRAND_COLD)) ok = FALSE;
                         doc_printf(cols[doc_idx], " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
                             ok ? 'y' : 'D',
                             'A' + i,
@@ -1405,6 +1441,20 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         _add_essence(TR_RES_ELEC, -cost);
                         _add_essence(TR_RES_FIRE, -cost);
                         _add_essence(TR_RES_COLD, -cost);
+                        done = TRUE;
+                    }
+                }
+                else if (info_ptr->info == _ESSENCE_BRAND_ELEMENTS)
+                {
+                    if ( cost <= _get_essence(TR_BRAND_ELEC)
+                      && cost <= _get_essence(TR_BRAND_FIRE)
+                      && cost <= _get_essence(TR_BRAND_COLD) )
+                    {
+                        o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
+                        o_ptr->xtra1 = _ESSENCE_BRAND_ELEMENTS;
+                        _add_essence(TR_BRAND_ELEC, -cost);
+                        _add_essence(TR_BRAND_FIRE, -cost);
+                        _add_essence(TR_BRAND_COLD, -cost);
                         done = TRUE;
                     }
                 }
@@ -1954,6 +2004,8 @@ static bool _smithing(void)
 
     if (item >= 0)
         p_ptr->total_weight += (o_ptr->weight*o_ptr->number - old_obj.weight*old_obj.number);
+    else
+        autopick_alter_item(item, TRUE);
 
     p_ptr->notice |= PN_COMBINE | PN_REORDER;
     p_ptr->window |= PW_INVEN;
@@ -2301,6 +2353,11 @@ void weaponsmith_object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
                 break;
             case _ESSENCE_SLAYING:
                 add_flag(flgs, TR_SHOW_MODS);
+                break;
+            case _ESSENCE_BRAND_ELEMENTS:
+                add_flag(flgs, TR_BRAND_ELEC);
+                add_flag(flgs, TR_BRAND_FIRE);
+                add_flag(flgs, TR_BRAND_COLD);
                 break;
             }
         }

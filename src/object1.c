@@ -282,6 +282,9 @@ void object_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
         for (i = 0; i < TR_FLAG_SIZE; i++)
             flgs[i] |= o_ptr->art_flags[i];
     }
+    /* Comment: Weaponsmiths, Nature Casters et.al. can protect armor from corrosion
+       by directly adding TR_IGNORE_ACID to the art_flags. Seems like this should be
+       known, even if the artifact, ego, or just plain old item is not. */
 
     if (object_is_smith(o_ptr))
         weaponsmith_object_flags(o_ptr, flgs);

@@ -681,7 +681,7 @@ static char *get_ability_abbreviation(char *ptr, object_type *o_ptr, bool all)
     u32b flgs[TR_FLAG_SIZE];
 
     /* Extract the flags */
-    object_flags(o_ptr, flgs);
+    object_flags_known(o_ptr, flgs);
 
 
     /* Remove obvious flags */
@@ -2059,13 +2059,11 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     tmp_val2[0] = '\0';
 
     /* Auto abbreviation inscribe */
-    if ((abbrev_extra || abbrev_all) && (o_ptr->ident & IDENT_FULL))
+    if ((abbrev_extra || abbrev_all) && (o_ptr->ident & IDENT_KNOWN))
     {
         if (!o_ptr->inscription || !my_strchr(quark_str(o_ptr->inscription), '%'))
         {
-            bool all;
-
-            all = abbrev_all;
+            bool all = abbrev_all;
             if ((o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET) && o_ptr->art_name)
                 all = TRUE;
             get_ability_abbreviation(tmp_val2, o_ptr, all);
