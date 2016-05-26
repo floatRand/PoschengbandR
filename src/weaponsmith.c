@@ -594,8 +594,13 @@ static int _calc_enchant_cost(int bonus, int cost)
     return cost * _ench_factor[bonus] / 100;
 }
 
-/* User Interface (This is a lot of work!)
-   [1] We'll use a document to build menus for the user. This is static
+/* User Interface (This is a lot of work!)*/
+static int _inkey(void)
+{
+    return inkey_special(TRUE);
+}
+
+/* [1] We'll use a document to build menus for the user. This is static
        for convenience, but it is also needed as an absorption hook parameter
        so the user can view the essences they will gain.*/
 static doc_ptr _doc = NULL;
@@ -705,7 +710,7 @@ static int _smith_absorb(object_type *o_ptr)
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
-        switch (inkey_special(TRUE))
+        switch (_inkey())
         {
         case ESCAPE:
             done = TRUE;
@@ -785,7 +790,7 @@ static int _smith_remove(object_type *o_ptr)
 
     for (;;)
     {
-        switch (inkey_special(TRUE))
+        switch (_inkey())
         {
         case ESCAPE:
             return _OK;
@@ -888,7 +893,7 @@ static int _smith_enchant_armor(object_type *o_ptr)
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
-        cmd = inkey_special(TRUE);
+        cmd = _inkey();
         switch (cmd)
         {
         case ESCAPE:
@@ -1033,7 +1038,7 @@ static int _smith_enchant_weapon(object_type *o_ptr)
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
-        cmd = inkey_special(TRUE);
+        cmd = _inkey();
         switch (cmd)
         {
         case ESCAPE:
@@ -1105,14 +1110,14 @@ static int _smith_add_slaying(object_type *o_ptr)
     int    cost_h = 0, cost_d = 0;
 
     cost_h = _calc_enchant_to_h_a(o_ptr, to_h);
-    while (to_h > o_ptr->to_h && cost_h > avail_h)
+    while (to_h > 0 && cost_h > avail_h)
     {
         to_h--;
         cost_h = _calc_enchant_to_h_a(o_ptr, to_h);
     }
 
     cost_d = _calc_enchant_to_d_a(o_ptr, to_d);
-    while (to_d > o_ptr->to_d && cost_d > avail_d)
+    while (to_d > 0 && cost_d > avail_d)
     {
         to_d--;
         cost_d = _calc_enchant_to_d_a(o_ptr, to_d);
@@ -1163,7 +1168,7 @@ static int _smith_add_slaying(object_type *o_ptr)
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
-        cmd = inkey_special(TRUE);
+        cmd = _inkey();
         switch (cmd)
         {
         case ESCAPE:
@@ -1429,7 +1434,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
-        cmd = inkey_special(TRUE);
+        cmd = _inkey();
         if ('a' <= cmd && cmd <= 'z')
             choice = cmd - 'a';
         else if ('A' <= cmd && cmd <= 'Z')
@@ -1619,7 +1624,7 @@ static int _smith_add_pval(object_type *o_ptr, int type)
                 int               cost;
                 bool              capped = FALSE;
 
-                if (info_ptr->id >= _MIN_SPECIAL)
+                if (info_ptr->id == _ESSENCE_XTRA_DICE || info_ptr->id == _ESSENCE_XTRA_MIGHT)
                 {
                     plus = pval;
                     if (info_ptr->max && plus >= info_ptr->max)
@@ -1661,7 +1666,7 @@ static int _smith_add_pval(object_type *o_ptr, int type)
                         if (cost > _get_essence(TR_STR)) ok = FALSE;
                         else if (cost > _get_essence(TR_DEX)) ok = FALSE;
                         else if (cost > _get_essence(TR_CON)) ok = FALSE;
-                        doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  <color:%c>%4d</color>\n",
+                        doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  <color:%c>%4d</color>",
                             ok ? 'y' : 'D',
                             'A' + i,
                             info_ptr->name,
@@ -1702,9 +1707,9 @@ static int _smith_add_pval(object_type *o_ptr, int type)
             if (!o_ptr->pval || type == ESSENCE_TYPE_BONUSES)
             {
                 if (o_ptr->pval)
-                    doc_printf(_doc, "\n      <indent>Use +/- or type '1' to '%d' to adjust the amount of bonus to use. For most bonuses, the plus on the object will override any value you choose.</indent>\n", max_pval);
+                    doc_printf(_doc, "\n      <indent>Type '1' to '%d' to adjust the amount of bonus to use. For most bonuses, the plus on the object will override any value you choose.</indent>\n", max_pval);
                 else
-                    doc_printf(_doc, "\n      Use +/- or type '1' to '%d' to adjust the amount of bonus to use.\n", max_pval);
+                    doc_printf(_doc, "\n      Type '1' to '%d' to adjust the amount of bonus to use.\n", max_pval);
             }
             if (do_pval_warning)
                 doc_insert(_doc, "\n      <color:o>*</color> <indent><color:v>Choosing this option will reduce the bonus of this object affecting other attributes!</color></indent>\n");
@@ -1722,7 +1727,8 @@ static int _smith_add_pval(object_type *o_ptr, int type)
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
-        cmd = inkey_special(TRUE);
+        cmd = _inkey();
+
         if ('a' <= cmd && cmd <= 'z')
             choice = cmd - 'a';
         else if ('A' <= cmd && cmd <= 'Z')
@@ -1734,7 +1740,7 @@ static int _smith_add_pval(object_type *o_ptr, int type)
             int               plus;
             int               cost;
 
-            if (info_ptr->id >= _MIN_SPECIAL)
+            if (info_ptr->id == _ESSENCE_XTRA_DICE || info_ptr->id == _ESSENCE_XTRA_MIGHT)
                 plus = pval;
             else if (o_ptr->pval)
                 plus = o_ptr->pval;
@@ -1894,7 +1900,7 @@ static void _smith_weapon_armor(object_type *o_ptr)
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
-        cmd = inkey_special(TRUE);
+        cmd = _inkey();
         switch (cmd)
         {
         case 'L': case 'l':
@@ -2016,7 +2022,7 @@ static void _smith_ammo(object_type *o_ptr)
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
-        cmd = inkey_special(TRUE);
+        cmd = _inkey();
         switch (cmd)
         {
         case 'L': case 'l':
