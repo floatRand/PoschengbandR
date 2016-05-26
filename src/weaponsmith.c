@@ -19,7 +19,7 @@
 #define _ESSENCE_NONE -1  /* 0 is actually a valid essence: TR_STR */
 
 /* Essence IDs: These are generally an object flag (TR_*) but can be something
-   special. The id is stored as object_type.xtra3 = id + 1 */
+   special. The id is stored as object_type.xtra3 = id + 1. */
 enum {
     _ESSENCE_AC = _MIN_SPECIAL,
     _ESSENCE_TO_HIT,
@@ -32,10 +32,11 @@ enum {
 };
 
 enum {                  /* stored in object.xtra1 when object.xtra3 - 1 = _ESSENCE_SPECIAL */
-    _ESSENCE_RES_BASE = 1,
-    _ESSENCE_SUST_ALL,
-    _ESSENCE_SLAYING,   /* object.xtra4 packs (+h,+d) in s16b */
-    _ESSENCE_BRAND_ELEMENTS,
+    _SPECIAL_RES_BASE = 1,
+    _SPECIAL_SUST_ALL,
+    _SPECIAL_SLAYING,   /* object.xtra4 packs (+h,+d) in s16b */
+    _SPECIAL_BRAND_ELEMENTS,
+    _SPECIAL_MIGHT,
 };
 
 /* Essences are grouped by type for display to the user */
@@ -124,12 +125,13 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { _ESSENCE_NONE } } }, /* Note: Flags and costs are just for show here ... this group has special handling */
 
     { ESSENCE_TYPE_STATS, "Stats", {
-        { TR_STR, "Strength",     20, _ALLOW_ALL },
-        { TR_INT, "Intelligence", 20, _ALLOW_ALL },
-        { TR_WIS, "Wisdom",       20, _ALLOW_ALL },
-        { TR_DEX, "Dexterity",    20, _ALLOW_ALL },
-        { TR_CON, "Constitution", 20, _ALLOW_ALL },
-        { TR_CHR, "Charisma",     20, _ALLOW_ALL },
+        { TR_STR,           "Strength",     20, _ALLOW_ALL },
+        { TR_INT,           "Intelligence", 20, _ALLOW_ALL },
+        { TR_WIS,           "Wisdom",       20, _ALLOW_ALL },
+        { TR_DEX,           "Dexterity",    20, _ALLOW_ALL },
+        { TR_CON,           "Constitution", 20, _ALLOW_ALL },
+        { TR_CHR,           "Charisma",     20, _ALLOW_ALL },
+        { _ESSENCE_SPECIAL, "Might",       150, _ALLOW_ALL, 3, _SPECIAL_MIGHT },
         { _ESSENCE_NONE } } },
 
     { ESSENCE_TYPE_BONUSES, "Bonuses", {
@@ -174,7 +176,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_BRAND_ELEC,    "Brand Elec",      20, _ALLOW_MELEE | _ALLOW_AMMO },
         { TR_BRAND_FIRE,    "Brand Fire",      20, _ALLOW_MELEE | _ALLOW_AMMO },
         { TR_BRAND_COLD,    "Brand Cold",      20, _ALLOW_MELEE | _ALLOW_AMMO },
-        { _ESSENCE_SPECIAL, "Brand Elements", 100, _ALLOW_MELEE | _ALLOW_AMMO, 0, _ESSENCE_BRAND_ELEMENTS },
+        { _ESSENCE_SPECIAL, "Brand Elements", 100, _ALLOW_MELEE | _ALLOW_AMMO, 0, _SPECIAL_BRAND_ELEMENTS },
         { TR_BRAND_POIS,    "Brand Poison",    20, _ALLOW_MELEE | _ALLOW_AMMO },
         { TR_CHAOTIC,       "Chaotic",         20, _ALLOW_MELEE },
         { TR_VAMPIRIC,      "Vampiric",        60, _ALLOW_MELEE },
@@ -189,7 +191,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_RES_ELEC,      "Resist Elec",    15, _ALLOW_ALL },
         { TR_RES_FIRE,      "Resist Fire",    15, _ALLOW_ALL },
         { TR_RES_COLD,      "Resist Cold",    15, _ALLOW_ALL },
-        { _ESSENCE_SPECIAL, "Resist Base",    50, _ALLOW_ALL, 0, _ESSENCE_RES_BASE },
+        { _ESSENCE_SPECIAL, "Resist Base",    50, _ALLOW_ALL, 0, _SPECIAL_RES_BASE },
         { TR_RES_POIS,      "Resist Poison",  30, _ALLOW_ALL },
         { TR_RES_LITE,      "Resist Light",   30, _ALLOW_ALL },
         { TR_RES_DARK,      "Resist Dark",    30, _ALLOW_ALL },
@@ -217,7 +219,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_SUST_DEX,      "Sust Dex",   15, _ALLOW_ALL },
         { TR_SUST_CON,      "Sust Con",   15, _ALLOW_ALL },
         { TR_SUST_CHR,      "Sust Chr",   15, _ALLOW_ALL },
-        { _ESSENCE_SPECIAL, "Sustaining", 50, _ALLOW_ALL, 0, _ESSENCE_SUST_ALL },
+        { _ESSENCE_SPECIAL, "Sustaining", 50, _ALLOW_ALL, 0, _SPECIAL_SUST_ALL },
         { _ESSENCE_NONE, } } },
 
     { ESSENCE_TYPE_ABILITIES, "Abilities", {
@@ -509,7 +511,7 @@ static void _remove(object_type *o_ptr)
 
     if (o_ptr->xtra3 == 1+_ESSENCE_SPECIAL)
     {
-        if (o_ptr->xtra1 == _ESSENCE_SLAYING )
+        if (o_ptr->xtra1 == _SPECIAL_SLAYING )
         {
             o_ptr->to_h -= (o_ptr->xtra4>>8);
             o_ptr->to_d -= (o_ptr->xtra4 & 0x000f);
@@ -751,17 +753,20 @@ static int _smith_remove(object_type *o_ptr)
     {
         switch (o_ptr->xtra1)
         {
-        case _ESSENCE_SLAYING:
+        case _SPECIAL_SLAYING:
             name = "Slaying";
             break;
-        case _ESSENCE_RES_BASE:
+        case _SPECIAL_RES_BASE:
             name = "Resist Base";
             break;
-        case _ESSENCE_SUST_ALL:
+        case _SPECIAL_SUST_ALL:
             name = "Sustaining";
             break;
-        case _ESSENCE_BRAND_ELEMENTS:
+        case _SPECIAL_BRAND_ELEMENTS:
             name = "Brand Elements";
+            break;
+        case _SPECIAL_MIGHT:
+            name = "Might";
             break;
         }
     }
@@ -1191,7 +1196,7 @@ static int _smith_add_slaying(object_type *o_ptr)
             o_ptr->to_h += to_h;
             o_ptr->to_d += to_d;
             o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
-            o_ptr->xtra1 = _ESSENCE_SLAYING;
+            o_ptr->xtra1 = _SPECIAL_SLAYING;
             o_ptr->xtra4 = (to_h<<8) + to_d;
             _add_essence(_ESSENCE_TO_HIT_A, -cost_h);
             _add_essence(_ESSENCE_TO_DAM_A, -cost_d);
@@ -1235,7 +1240,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
             else
             {
                 assert(info_ptr->id == _ESSENCE_SPECIAL);
-                if (info_ptr->xtra == _ESSENCE_SUST_ALL)
+                if (info_ptr->xtra == _SPECIAL_SUST_ALL)
                 {
                     if ( !_get_essence(TR_SUST_STR)
                       || !_get_essence(TR_SUST_INT)
@@ -1257,7 +1262,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         continue;
                     }
                 }
-                else if (info_ptr->xtra == _ESSENCE_RES_BASE)
+                else if (info_ptr->xtra == _SPECIAL_RES_BASE)
                 {
                     if ( !_get_essence(TR_RES_ACID)
                       || !_get_essence(TR_RES_ELEC)
@@ -1275,7 +1280,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         continue;
                     }
                 }
-                else if (info_ptr->xtra == _ESSENCE_BRAND_ELEMENTS)
+                else if (info_ptr->xtra == _SPECIAL_BRAND_ELEMENTS)
                 {
                     if ( !_get_essence(TR_BRAND_ELEC)
                       || !_get_essence(TR_BRAND_FIRE)
@@ -1344,7 +1349,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
 
                 if (info_ptr->id == _ESSENCE_SPECIAL)
                 {
-                    if (info_ptr->xtra == _ESSENCE_SUST_ALL)
+                    if (info_ptr->xtra == _SPECIAL_SUST_ALL)
                     {
                         bool ok = TRUE;
                         if (cost > _get_essence(TR_SUST_STR)) ok = FALSE;
@@ -1361,7 +1366,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                             cost
                         );
                     }
-                    else if (info_ptr->xtra == _ESSENCE_RES_BASE)
+                    else if (info_ptr->xtra == _SPECIAL_RES_BASE)
                     {
                         bool ok = TRUE;
                         if (cost > _get_essence(TR_RES_ACID)) ok = FALSE;
@@ -1376,7 +1381,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                             cost
                         );
                     }
-                    else if (info_ptr->xtra == _ESSENCE_BRAND_ELEMENTS)
+                    else if (info_ptr->xtra == _SPECIAL_BRAND_ELEMENTS)
                     {
                         bool ok = TRUE;
                         if (cost > _get_essence(TR_BRAND_ELEC)) ok = FALSE;
@@ -1440,7 +1445,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
 
             if (info_ptr->id == _ESSENCE_SPECIAL)
             {
-                if (info_ptr->xtra == _ESSENCE_SUST_ALL)
+                if (info_ptr->xtra == _SPECIAL_SUST_ALL)
                 {
                     if ( cost <= _get_essence(TR_SUST_STR)
                       && cost <= _get_essence(TR_SUST_INT)
@@ -1450,7 +1455,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                       && cost <= _get_essence(TR_SUST_CHR) )
                     {
                         o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
-                        o_ptr->xtra1 = _ESSENCE_SUST_ALL;
+                        o_ptr->xtra1 = _SPECIAL_SUST_ALL;
                         _add_essence(TR_SUST_STR, -cost);
                         _add_essence(TR_SUST_INT, -cost);
                         _add_essence(TR_SUST_WIS, -cost);
@@ -1460,7 +1465,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         done = TRUE;
                     }
                 }
-                else if (info_ptr->xtra == _ESSENCE_RES_BASE)
+                else if (info_ptr->xtra == _SPECIAL_RES_BASE)
                 {
                     if ( cost <= _get_essence(TR_RES_ACID)
                       && cost <= _get_essence(TR_RES_ELEC)
@@ -1468,7 +1473,7 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                       && cost <= _get_essence(TR_RES_COLD) )
                     {
                         o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
-                        o_ptr->xtra1 = _ESSENCE_RES_BASE;
+                        o_ptr->xtra1 = _SPECIAL_RES_BASE;
                         _add_essence(TR_RES_ACID, -cost);
                         _add_essence(TR_RES_ELEC, -cost);
                         _add_essence(TR_RES_FIRE, -cost);
@@ -1476,14 +1481,14 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         done = TRUE;
                     }
                 }
-                else if (info_ptr->xtra == _ESSENCE_BRAND_ELEMENTS)
+                else if (info_ptr->xtra == _SPECIAL_BRAND_ELEMENTS)
                 {
                     if ( cost <= _get_essence(TR_BRAND_ELEC)
                       && cost <= _get_essence(TR_BRAND_FIRE)
                       && cost <= _get_essence(TR_BRAND_COLD) )
                     {
                         o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
-                        o_ptr->xtra1 = _ESSENCE_BRAND_ELEMENTS;
+                        o_ptr->xtra1 = _SPECIAL_BRAND_ELEMENTS;
                         _add_essence(TR_BRAND_ELEC, -cost);
                         _add_essence(TR_BRAND_FIRE, -cost);
                         _add_essence(TR_BRAND_COLD, -cost);
@@ -1554,8 +1559,22 @@ static int _smith_add_pval(object_type *o_ptr, int type)
 
             if (info_ptr->id == _ESSENCE_SPECIAL)
             {
-                /* TODO */
-                assert(FALSE);
+                if (info_ptr->xtra == _SPECIAL_MIGHT)
+                {
+                    if ( !_get_essence(TR_STR)
+                      || !_get_essence(TR_DEX)
+                      || !_get_essence(TR_CON) )
+                    {
+                        continue;
+                    }
+
+                    if ( have_flag(flgs, TR_STR)
+                      && have_flag(flgs, TR_DEX)
+                      && have_flag(flgs, TR_CON) )
+                    {
+                        continue;
+                    }
+                }
             }
             else
             {
@@ -1595,7 +1614,6 @@ static int _smith_add_pval(object_type *o_ptr, int type)
             for (i = 0; i < vec_length(choices); i++)
             {
                 _essence_info_ptr info_ptr = vec_get(choices, i);
-                int               avail = _get_essence(info_ptr->id);
                 int               plus;
                 char              plus_color = 'y';
                 int               cost;
@@ -1635,17 +1653,39 @@ static int _smith_add_pval(object_type *o_ptr, int type)
 
                 cost = _calc_pval_cost(plus, info_ptr->cost * o_ptr->number);
 
-                doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  <color:%c>%4d</color>  %5d",
-                    (cost > avail) ? 'D' : 'y',
-                    'A' + i,
-                    info_ptr->name,
-                    plus_color,
-                    plus,
-                    (cost > avail) ? 'r' : 'G',
-                    cost,
-                    avail
-                );
-
+                if (info_ptr->id == _ESSENCE_SPECIAL)
+                {
+                    if (info_ptr->xtra == _SPECIAL_MIGHT)
+                    {
+                        bool ok = TRUE;
+                        if (cost > _get_essence(TR_STR)) ok = FALSE;
+                        else if (cost > _get_essence(TR_DEX)) ok = FALSE;
+                        else if (cost > _get_essence(TR_CON)) ok = FALSE;
+                        doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  <color:%c>%4d</color>\n",
+                            ok ? 'y' : 'D',
+                            'A' + i,
+                            info_ptr->name,
+                            plus_color,
+                            plus,
+                            ok ? 'G' : 'r',
+                            cost
+                        );
+                    }
+                }
+                else
+                {
+                    int avail = _get_essence(info_ptr->id);
+                    doc_printf(_doc, " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>  <color:%c>%4d</color>  %5d",
+                        (cost > avail) ? 'D' : 'y',
+                        'A' + i,
+                        info_ptr->name,
+                        plus_color,
+                        plus,
+                        (cost > avail) ? 'r' : 'G',
+                        cost,
+                        avail
+                    );
+                }
 
                 if (capped)
                 {
@@ -1691,7 +1731,6 @@ static int _smith_add_pval(object_type *o_ptr, int type)
         if (choice >= 0 && choice < vec_length(choices))
         {
             _essence_info_ptr info_ptr = vec_get(choices, choice);
-            int               avail = _get_essence(info_ptr->id);
             int               plus;
             int               cost;
 
@@ -1707,24 +1746,46 @@ static int _smith_add_pval(object_type *o_ptr, int type)
 
             cost = _calc_pval_cost(plus, info_ptr->cost * o_ptr->number);
 
-            if (cost <= avail)
+            if (info_ptr->id == _ESSENCE_SPECIAL)
             {
-                o_ptr->xtra3 = info_ptr->id + 1;
-                _add_essence(info_ptr->id, -cost);
-                done = TRUE;
-                if (info_ptr->id < TR_FLAG_COUNT)
+                if (info_ptr->xtra == _SPECIAL_MIGHT)
                 {
-                    o_ptr->pval = plus;
+                    if ( cost <= _get_essence(TR_STR)
+                      && cost <= _get_essence(TR_DEX)
+                      && cost <= _get_essence(TR_CON) )
+                    {
+                        o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
+                        o_ptr->xtra1 = _SPECIAL_MIGHT;
+                        o_ptr->pval = plus;
+                        _add_essence(TR_STR, -cost);
+                        _add_essence(TR_DEX, -cost);
+                        _add_essence(TR_CON, -cost);
+                        done = TRUE;
+                    }
                 }
-                else if (info_ptr->id == _ESSENCE_XTRA_DICE)
+            }
+            else
+            {
+                int avail = _get_essence(info_ptr->id);
+                if (cost <= avail)
                 {
-                    o_ptr->dd += plus;
-                    o_ptr->xtra4 = plus;
-                }
-                else if (info_ptr->id == _ESSENCE_XTRA_MIGHT)
-                {
-                    o_ptr->mult += 25 * plus;
-                    o_ptr->xtra4 = plus;
+                    o_ptr->xtra3 = info_ptr->id + 1;
+                    _add_essence(info_ptr->id, -cost);
+                    done = TRUE;
+                    if (info_ptr->id < TR_FLAG_COUNT)
+                    {
+                        o_ptr->pval = plus;
+                    }
+                    else if (info_ptr->id == _ESSENCE_XTRA_DICE)
+                    {
+                        o_ptr->dd += plus;
+                        o_ptr->xtra4 = plus;
+                    }
+                    else if (info_ptr->id == _ESSENCE_XTRA_MIGHT)
+                    {
+                        o_ptr->mult += 25 * plus;
+                        o_ptr->xtra4 = plus;
+                    }
                 }
             }
         }
@@ -2372,13 +2433,13 @@ void weaponsmith_object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
         {
             switch (o_ptr->xtra1)
             {
-            case _ESSENCE_RES_BASE:
+            case _SPECIAL_RES_BASE:
                 add_flag(flgs, TR_RES_ACID);
                 add_flag(flgs, TR_RES_ELEC);
                 add_flag(flgs, TR_RES_FIRE);
                 add_flag(flgs, TR_RES_COLD);
                 break;
-            case _ESSENCE_SUST_ALL:
+            case _SPECIAL_SUST_ALL:
                 add_flag(flgs, TR_SUST_STR);
                 add_flag(flgs, TR_SUST_INT);
                 add_flag(flgs, TR_SUST_WIS);
@@ -2386,13 +2447,18 @@ void weaponsmith_object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
                 add_flag(flgs, TR_SUST_CON);
                 add_flag(flgs, TR_SUST_CHR);
                 break;
-            case _ESSENCE_SLAYING:
+            case _SPECIAL_SLAYING:
                 add_flag(flgs, TR_SHOW_MODS);
                 break;
-            case _ESSENCE_BRAND_ELEMENTS:
+            case _SPECIAL_BRAND_ELEMENTS:
                 add_flag(flgs, TR_BRAND_ELEC);
                 add_flag(flgs, TR_BRAND_FIRE);
                 add_flag(flgs, TR_BRAND_COLD);
+                break;
+            case _SPECIAL_MIGHT:
+                add_flag(flgs, TR_STR);
+                add_flag(flgs, TR_DEX);
+                add_flag(flgs, TR_CON);
                 break;
             }
         }
