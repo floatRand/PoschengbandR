@@ -3300,7 +3300,8 @@ void do_cmd_debug(void)
         }
         statistics_hack = FALSE;
 
-        doc_display(_wiz_doc, "Statistics", 0);
+        if (doc_line_count(_wiz_doc))
+            doc_display(_wiz_doc, "Statistics", 0);
         doc_free(_wiz_doc);
         _wiz_doc = NULL;
 
@@ -3320,7 +3321,8 @@ void do_cmd_debug(void)
         _wiz_gather_stats(dungeon_type, dun_level, reps);
         statistics_hack = FALSE;
 
-        doc_display(_wiz_doc, "Statistics", 0);
+        if (doc_line_count(_wiz_doc))
+            doc_display(_wiz_doc, "Statistics", 0);
         doc_free(_wiz_doc);
         _wiz_doc = NULL;
 

@@ -2088,13 +2088,21 @@ static bool _smithing(void)
         o_ptr = &o_list[0 - item];
 
     /* Smithing now automatically 'Judges' the object for free */
-    identify_item(o_ptr);
-    if (p_ptr->lev >= 30)
+    if (p_ptr->lev < 10)
     {
-        o_ptr->ident |= IDENT_FULL;
-        ego_aware(o_ptr);
+        o_ptr->ident |= IDENT_SENSE;
+        o_ptr->feeling = value_check_aux1(o_ptr);
+        o_ptr->marked |= OM_TOUCHED;
     }
-
+    else
+    {
+        identify_item(o_ptr);
+        if (p_ptr->lev >= 30)
+        {
+            o_ptr->ident |= IDENT_FULL;
+            ego_aware(o_ptr);
+        }
+    }
     old_obj = *o_ptr;
 
     _smith_object(o_ptr);

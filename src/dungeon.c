@@ -29,7 +29,7 @@ static int wild_regen = 20;
  * average -> good -> excellent -> special
  *         -> bad  -> awful     -> terrible
  */
-static byte value_check_aux1(object_type *o_ptr)
+byte value_check_aux1(object_type *o_ptr)
 {
     /* Artifacts */
     if (object_is_artifact(o_ptr))

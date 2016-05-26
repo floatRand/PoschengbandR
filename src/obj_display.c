@@ -945,6 +945,35 @@ void obj_display_smith(object_type *o_ptr, doc_ptr doc)
     _display_name(o_ptr, doc);
     doc_insert(doc, "  <indent><style:indent>");
 
+    if (!object_is_known(o_ptr) && (o_ptr->ident & IDENT_SENSE))
+    {
+        switch (o_ptr->feeling)
+        {
+        case FEEL_TERRIBLE:
+            doc_insert(doc, "This item appears to be something truly <color:v>terrible</color>.\n");
+            break;
+        case FEEL_SPECIAL:
+            doc_insert(doc, "This item appears to be something truly <color:B>special</color>.\n");
+            break;
+        case FEEL_AWFUL:
+            doc_insert(doc, "This item appears to be something <color:r>awful</color>.\n");
+            break;
+        case FEEL_EXCELLENT:
+            doc_insert(doc, "This item appears to be an <color:y>excellent</color> piece of work.\n");
+            break;
+        case FEEL_BAD:
+            doc_insert(doc, "This item appears to be a <color:R>shoddy</color> piece of work.\n");
+            break;
+        case FEEL_GOOD:
+            doc_insert(doc, "This item displays <color:G>good</color> craftmanship.\n");
+            break;
+        case FEEL_AVERAGE:
+            doc_insert(doc, "This item appears normal.\n");
+            break;
+        }
+    }
+
+
     _display_stats(o_ptr, flgs, doc);
     _display_sustains(o_ptr, flgs, doc);
     _display_other_pval(o_ptr, flgs, doc);

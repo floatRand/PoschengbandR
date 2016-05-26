@@ -922,6 +922,7 @@ extern void prevent_turn_overflow(void);
 extern void process_world_aux_movement(void);  /* yuk!  refactor the recall code instead */
 extern void fame_on_failure(void);
 extern void recharged_notice(object_type *o_ptr);
+extern byte value_check_aux1(object_type *o_ptr); /* pseudo-id */
 
 /* files.c */
 extern cptr map_name(void);
