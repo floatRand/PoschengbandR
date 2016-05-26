@@ -7255,7 +7255,7 @@ void place_object(int y, int x, u32b mode)
  *
  * The location must be a legal, clean, floor grid.
  */
-bool make_gold(object_type *j_ptr)
+bool make_gold(object_type *j_ptr, bool do_boost)
 {
     int i;
 
@@ -7287,6 +7287,9 @@ bool make_gold(object_type *j_ptr)
     j_ptr->pval = (base + (8 * randint1(base)) + randint1(8));
 
     j_ptr->pval = j_ptr->pval * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;
+
+    if (do_boost)
+        j_ptr->pval += j_ptr->pval * object_level / 7;
 
     /* Success */
     return (TRUE);
@@ -7327,7 +7330,7 @@ void place_gold(int y, int x)
     object_wipe(q_ptr);
 
     /* Make some gold */
-    if (!make_gold(q_ptr)) return;
+    if (!make_gold(q_ptr, FALSE)) return;
 
 
     /* Make an object */

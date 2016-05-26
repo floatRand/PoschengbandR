@@ -460,7 +460,7 @@ static void chest_death(bool scatter, int y, int x, s16b o_idx)
           || (small && (randint0(100) < 25)) )
         {
             /* Make some gold */
-            if (!make_gold(q_ptr)) continue;
+            if (!make_gold(q_ptr, TRUE)) continue;
         }
 
         /* Otherwise drop an item */

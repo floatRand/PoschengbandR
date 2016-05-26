@@ -830,7 +830,7 @@ bool get_monster_drop(int m_idx, object_type *o_ptr)
 
     if (do_gold && (!do_item || (randint0(100) < 20)))
     {
-        if (!make_gold(o_ptr))
+        if (!make_gold(o_ptr, TRUE))
         {
             obj_drop_theme = 0;
             return FALSE;
@@ -2305,6 +2305,22 @@ void monster_death(int m_idx, bool drop_item)
             drop_near(&forge, -1, y, x);
             j++;
         }
+    }
+
+    if (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
+    {
+        int r = (r_ptr->flags1 & RF1_DROP_GREAT) ? 7 : 3;
+        int n = randint0(r);
+        int i;
+
+        object_level = (MAX(base_level, dun_level) + r_ptr->level) / 2;
+        for (i = 0; i < n; i++)
+        {
+            object_type gold = {0};
+            if (make_gold(&gold, TRUE))
+                drop_near(&gold, -1, y, x);
+        }
+        object_level = base_level;
     }
 
     if (visible && (dump_item || dump_gold))
