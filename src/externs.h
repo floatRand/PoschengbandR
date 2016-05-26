@@ -1248,8 +1248,15 @@ extern void stats_on_equip(object_type *o_ptr);
 extern void stats_on_identify(object_type *o_ptr);
 extern void stats_on_load(savefile_ptr file);
 extern void stats_on_save(savefile_ptr file);
+extern void stats_on_gold_find(int au);
+extern void stats_on_gold_selling(int au);
+extern void stats_on_gold_buying(int au);
+extern void stats_on_gold_services(int au);
+extern void stats_on_gold_winnings(int au);
+extern void stats_on_gold_stolen(int au);
 extern void stats_reset(void);
 extern counts_t stats_rand_art_counts;
+extern gold_counts_t stats_gold_counts;
 
 /* object3.c */
 typedef void (*debug_hook)(cptr msg);

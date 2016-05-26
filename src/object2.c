@@ -795,6 +795,7 @@ bool ego_is_aware(int which)
    though.
 */
 counts_t stats_rand_art_counts = {0};
+gold_counts_t stats_gold_counts = {0};
 
 void stats_reset(void)
 {
@@ -814,6 +815,7 @@ void stats_reset(void)
     }
 
     WIPE(&stats_rand_art_counts, counts_t);
+    WIPE(&stats_gold_counts, gold_counts_t);
     device_stats_reset();
 }
 
@@ -824,6 +826,20 @@ void stats_on_load(savefile_ptr file)
     stats_rand_art_counts.bought = savefile_read_s32b(file);
     stats_rand_art_counts.used = savefile_read_s32b(file);
     stats_rand_art_counts.destroyed = savefile_read_s32b(file);
+
+    if (savefile_is_older_than(file, 4, 0, 2, 1))
+    {
+        WIPE(&stats_gold_counts, gold_counts_t);
+    }
+    else
+    {
+        stats_gold_counts.found = savefile_read_s32b(file);
+        stats_gold_counts.selling = savefile_read_s32b(file);
+        stats_gold_counts.buying = savefile_read_s32b(file);
+        stats_gold_counts.services = savefile_read_s32b(file);
+        stats_gold_counts.winnings = savefile_read_s32b(file);
+        stats_gold_counts.stolen = savefile_read_s32b(file);
+    }
 
     device_stats_on_load(file);
 }
@@ -836,7 +852,44 @@ void stats_on_save(savefile_ptr file)
     savefile_write_s32b(file, stats_rand_art_counts.used);      /* Artifact Devices */
     savefile_write_s32b(file, stats_rand_art_counts.destroyed); /* Certain Class Powers */
 
+    savefile_write_s32b(file, stats_gold_counts.found);
+    savefile_write_s32b(file, stats_gold_counts.selling);
+    savefile_write_s32b(file, stats_gold_counts.buying);
+    savefile_write_s32b(file, stats_gold_counts.services);
+    savefile_write_s32b(file, stats_gold_counts.winnings);
+    savefile_write_s32b(file, stats_gold_counts.stolen);
+
     device_stats_on_save(file);
+}
+
+void stats_on_gold_find(int au)
+{
+    stats_gold_counts.found += au;
+}
+
+void stats_on_gold_selling(int au)
+{
+    stats_gold_counts.selling += au;
+}
+
+void stats_on_gold_buying(int au)
+{
+    stats_gold_counts.buying += au;
+}
+
+void stats_on_gold_services(int au)
+{
+    stats_gold_counts.services += au;
+}
+
+void stats_on_gold_winnings(int au)
+{
+    stats_gold_counts.winnings += au;
+}
+
+void stats_on_gold_stolen(int au)
+{
+    stats_gold_counts.stolen += au;
 }
 
 void stats_on_purchase(object_type *o_ptr)

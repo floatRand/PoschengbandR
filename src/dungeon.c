@@ -3003,6 +3003,7 @@ static void process_world(void)
                 msg_print("Congratulations.");
                 msg_format("You received %d gold.", battle_odds);
                 p_ptr->au += battle_odds;
+                stats_on_gold_winnings(battle_odds);
             }
             else
             {
@@ -3016,6 +3017,7 @@ static void process_world(void)
         {
             msg_format("This battle have ended in a draw.");
             p_ptr->au += kakekin;
+            stats_on_gold_winnings(kakekin);
             msg_print(NULL);
             p_ptr->energy_need = 0;
             battle_monsters();
@@ -5961,6 +5963,8 @@ void play_game(bool new_game)
             race_ptr->birth();
 
         spell_stats_on_birth();
+
+        stats_on_gold_find(p_ptr->au); /* Found? Inherited? What's the difference? */
 
         if (game_mode == GAME_MODE_BEGINNER)
         {

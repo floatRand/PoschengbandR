@@ -1827,6 +1827,7 @@ bool alchemy(void)
         msg_format("You turn %s to %d coins worth of gold.", o_name, price);
 
         p_ptr->au += price;
+        stats_on_gold_selling(price); /* ? */
 
         /* Redraw gold */
         p_ptr->redraw |= (PR_GOLD);
@@ -2595,6 +2596,7 @@ bool recharge_from_player(int power)
     if (p_ptr->prace == RACE_MON_LEPRECHAUN)
     {
         p_ptr->au -= amt * 100;
+        stats_on_gold_services(amt * 100); /* ? */
         p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
     }
     else

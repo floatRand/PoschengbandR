@@ -112,6 +112,15 @@ struct counts_s
 };
 typedef struct counts_s counts_t;
 
+typedef struct {
+    s32b found;
+    s32b selling;
+    s32b buying;
+    s32b services;
+    s32b winnings;
+    s32b stolen;
+} gold_counts_t;
+
 /*
  * Information about object "kinds", including player knowledge.
  *

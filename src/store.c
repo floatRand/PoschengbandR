@@ -2066,6 +2066,7 @@ static void store_purchase(void)
 
                 /* Spend the money */
                 p_ptr->au -= price;
+                stats_on_gold_buying(price);
                 p_ptr->redraw |= PR_GOLD;
                 if (prace_is_(RACE_MON_LEPRECHAUN))
                     p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
@@ -2397,6 +2398,7 @@ static void store_sell(void)
 
             /* Get some money */
             p_ptr->au += price;
+            stats_on_gold_selling(price);
             p_ptr->redraw |= PR_GOLD;
             if (prace_is_(RACE_MON_LEPRECHAUN))
                 p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
@@ -3237,6 +3239,7 @@ void do_cmd_store(void)
                     _restock(st_ptr, TRUE);
                     need_redraw_store_inv = TRUE;
                     p_ptr->au -= 5000;
+                    stats_on_gold_services(5000);
                     p_ptr->redraw |= PR_GOLD;
                     store_prt_gold(); 
                 }
@@ -3263,6 +3266,7 @@ void do_cmd_store(void)
                         {
                             o_ptr->marked |= OM_RESERVED;
                             p_ptr->au -= 10000;
+                            stats_on_gold_services(10000);
                             p_ptr->redraw |= PR_GOLD;
                             store_prt_gold();
 
@@ -3718,6 +3722,7 @@ static void _buyout(void)
 
             sound(SOUND_BUY);
             p_ptr->au -= price;
+            stats_on_gold_buying(price);
             p_ptr->redraw |= PR_GOLD;
             total_price += price;
             store_prt_gold();
