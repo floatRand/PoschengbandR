@@ -3185,6 +3185,7 @@ void do_cmd_debug(void)
             }
         }
         wiz_lite(FALSE);
+        if (1) detect_treasure(255);
         {
             int i, ct = 0;
             char buf[MAX_NLEN];
