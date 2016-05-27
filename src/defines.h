@@ -18,8 +18,8 @@
 
 #define VER_MAJOR 4
 #define VER_MINOR 0
-#define VER_PATCH 2
-#define VER_EXTRA 1
+#define VER_PATCH 3
+#define VER_EXTRA 0
 
 #define GAME_MODE_BEGINNER  0
 #define GAME_MODE_NORMAL    1
