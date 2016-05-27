@@ -37,6 +37,8 @@ enum {                  /* stored in object.xtra1 when object.xtra3 - 1 = _ESSEN
     _SPECIAL_SLAYING,   /* object.xtra4 packs (+h,+d) in s16b */
     _SPECIAL_BRAND_ELEMENTS,
     _SPECIAL_MIGHT,
+    _SPECIAL_PROTECTION,
+    _SPECIAL_AURA_ELEMENTS,
 };
 
 /* Essences are grouped by type for display to the user */
@@ -224,8 +226,9 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
 
     { ESSENCE_TYPE_ABILITIES, "Abilities", {
         { TR_FREE_ACT,      "Free Action",            20, _ALLOW_ALL },
-        { TR_SEE_INVIS,     "See Invisible",          30, _ALLOW_ALL },
+        { TR_SEE_INVIS,     "See Invisible",          20, _ALLOW_ALL },
         { TR_HOLD_LIFE,     "Hold Life",              20, _ALLOW_ALL },
+        { _ESSENCE_SPECIAL, "Protection",             50, _ALLOW_ALL, 0, _SPECIAL_PROTECTION },
         { TR_SLOW_DIGEST,   "Slow Digestion",         15, _ALLOW_ALL },
         { TR_REGEN,         "Regeneration",           50, _ALLOW_ALL },
         { TR_DUAL_WIELDING, "Dual Wielding",          50, _ALLOW_ARMOR },
@@ -236,6 +239,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_SH_FIRE,       "Aura Fire",              20, _ALLOW_ARMOR },
         { TR_SH_ELEC,       "Aura Elec",              20, _ALLOW_ARMOR },
         { TR_SH_COLD,       "Aura Cold",              20, _ALLOW_ARMOR },
+        { _ESSENCE_SPECIAL, "Aura Elements",          50, _ALLOW_ALL, 0, _SPECIAL_AURA_ELEMENTS },
         { TR_SH_SHARDS,     "Aura Shards",            30, _ALLOW_ARMOR },
         { TR_SH_REVENGE,    "Revenge",                40, _ALLOW_ARMOR },
         { TR_LITE,          "Extra Light",            15, _ALLOW_ALL },
@@ -773,6 +777,12 @@ static int _smith_remove(object_type *o_ptr)
         case _SPECIAL_MIGHT:
             name = "Might";
             break;
+        case _SPECIAL_PROTECTION:
+            name = "Protection";
+            break;
+        case _SPECIAL_AURA_ELEMENTS:
+            name = "Aura Elements";
+            break;
         }
     }
 
@@ -1301,6 +1311,38 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         continue;
                     }
                 }
+                else if (info_ptr->xtra == _SPECIAL_PROTECTION)
+                {
+                    if ( !_get_essence(TR_FREE_ACT)
+                      || !_get_essence(TR_SEE_INVIS)
+                      || !_get_essence(TR_HOLD_LIFE) )
+                    {
+                        continue;
+                    }
+
+                    if ( have_flag(flgs, TR_FREE_ACT)
+                      && have_flag(flgs, TR_SEE_INVIS)
+                      && have_flag(flgs, TR_HOLD_LIFE) )
+                    {
+                        continue;
+                    }
+                }
+                else if (info_ptr->xtra == _SPECIAL_AURA_ELEMENTS)
+                {
+                    if ( !_get_essence(TR_SH_ELEC)
+                      || !_get_essence(TR_SH_FIRE)
+                      || !_get_essence(TR_SH_COLD) )
+                    {
+                        continue;
+                    }
+
+                    if ( have_flag(flgs, TR_SH_ELEC)
+                      && have_flag(flgs, TR_SH_FIRE)
+                      && have_flag(flgs, TR_SH_COLD) )
+                    {
+                        continue;
+                    }
+                }
             }
             vec_add(choices, info_ptr);
         }
@@ -1392,6 +1434,34 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         if (cost > _get_essence(TR_BRAND_ELEC)) ok = FALSE;
                         else if (cost > _get_essence(TR_BRAND_FIRE)) ok = FALSE;
                         else if (cost > _get_essence(TR_BRAND_COLD)) ok = FALSE;
+                        doc_printf(cols[doc_idx], " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
+                            ok ? 'y' : 'D',
+                            'A' + i,
+                            info_ptr->name,
+                            ok ? 'G' : 'r',
+                            cost
+                        );
+                    }
+                    else if (info_ptr->xtra == _SPECIAL_PROTECTION)
+                    {
+                        bool ok = TRUE;
+                        if (cost > _get_essence(TR_FREE_ACT)) ok = FALSE;
+                        else if (cost > _get_essence(TR_SEE_INVIS)) ok = FALSE;
+                        else if (cost > _get_essence(TR_HOLD_LIFE)) ok = FALSE;
+                        doc_printf(cols[doc_idx], " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
+                            ok ? 'y' : 'D',
+                            'A' + i,
+                            info_ptr->name,
+                            ok ? 'G' : 'r',
+                            cost
+                        );
+                    }
+                    else if (info_ptr->xtra == _SPECIAL_AURA_ELEMENTS)
+                    {
+                        bool ok = TRUE;
+                        if (cost > _get_essence(TR_SH_ELEC)) ok = FALSE;
+                        else if (cost > _get_essence(TR_SH_FIRE)) ok = FALSE;
+                        else if (cost > _get_essence(TR_SH_COLD)) ok = FALSE;
                         doc_printf(cols[doc_idx], " <color:%c>  %c</color>) %-15.15s  <color:%c>%4d</color>\n",
                             ok ? 'y' : 'D',
                             'A' + i,
@@ -1497,6 +1567,34 @@ static int _smith_add_essence(object_type *o_ptr, int type)
                         _add_essence(TR_BRAND_ELEC, -cost);
                         _add_essence(TR_BRAND_FIRE, -cost);
                         _add_essence(TR_BRAND_COLD, -cost);
+                        done = TRUE;
+                    }
+                }
+                else if (info_ptr->xtra == _SPECIAL_PROTECTION)
+                {
+                    if ( cost <= _get_essence(TR_FREE_ACT)
+                      && cost <= _get_essence(TR_SEE_INVIS)
+                      && cost <= _get_essence(TR_HOLD_LIFE) )
+                    {
+                        o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
+                        o_ptr->xtra1 = _SPECIAL_PROTECTION;
+                        _add_essence(TR_FREE_ACT, -cost);
+                        _add_essence(TR_SEE_INVIS, -cost);
+                        _add_essence(TR_HOLD_LIFE, -cost);
+                        done = TRUE;
+                    }
+                }
+                else if (info_ptr->xtra == _SPECIAL_AURA_ELEMENTS)
+                {
+                    if ( cost <= _get_essence(TR_SH_ELEC)
+                      && cost <= _get_essence(TR_SH_FIRE)
+                      && cost <= _get_essence(TR_SH_COLD) )
+                    {
+                        o_ptr->xtra3 = _ESSENCE_SPECIAL + 1;
+                        o_ptr->xtra1 = _SPECIAL_AURA_ELEMENTS;
+                        _add_essence(TR_SH_ELEC, -cost);
+                        _add_essence(TR_SH_FIRE, -cost);
+                        _add_essence(TR_SH_COLD, -cost);
                         done = TRUE;
                     }
                 }
@@ -2473,6 +2571,16 @@ void weaponsmith_object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
                 add_flag(flgs, TR_STR);
                 add_flag(flgs, TR_DEX);
                 add_flag(flgs, TR_CON);
+                break;
+            case _SPECIAL_PROTECTION:
+                add_flag(flgs, TR_FREE_ACT);
+                add_flag(flgs, TR_SEE_INVIS);
+                add_flag(flgs, TR_HOLD_LIFE);
+                break;
+            case _SPECIAL_AURA_ELEMENTS:
+                add_flag(flgs, TR_SH_ELEC);
+                add_flag(flgs, TR_SH_FIRE);
+                add_flag(flgs, TR_SH_COLD);
                 break;
             }
         }
