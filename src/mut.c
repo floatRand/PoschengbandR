@@ -708,21 +708,21 @@ bool mut_draconian_pred(int mut_idx)
         /* OK, what classes will actually work with no bow or weapon slots? */
         switch (p_ptr->pclass)
         {
-        case CLASS_MONK:
+        /*case CLASS_MONK:
+        case CLASS_FORCETRAINER: */
+        case CLASS_MYSTIC:
         case CLASS_BEASTMASTER: /* No riding, either! */
         case CLASS_ARCHER:
         case CLASS_SAMURAI:
-        case CLASS_FORCETRAINER:
         case CLASS_CAVALRY:
         case CLASS_WEAPONSMITH:
-        case CLASS_NINJA:
+        /*case CLASS_NINJA:*/
         case CLASS_SNIPER:
         case CLASS_DUELIST:
         case CLASS_WEAPONMASTER:
         case CLASS_RUNE_KNIGHT:
         case CLASS_NECROMANCER:
         case CLASS_MAULER:
-        case CLASS_MYSTIC:
             return FALSE;
             break;
         default:

@@ -2233,10 +2233,10 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     int             steal_ct = 0;
     int             hit_ct = 0;
     const int       max_drain_amt = _max_vampiric_drain();
+    bool            backstab = FALSE, fuiuchi = FALSE, stab_fleeing = FALSE;
 
     set_monster_csleep(m_idx, 0);
     monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
-
 
     if (p_ptr->afraid)
     {
@@ -2250,6 +2250,44 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
         }
     }
 
+    /* Flavor ... Allow Ninjas and Rogues to backstab after metamorphosis */
+    if (mut_present(MUT_DRACONIAN_METAMORPHOSIS))
+    {
+        switch (p_ptr->pclass)
+        {
+        case CLASS_ROGUE: /* <=== Burglary Book of Shadows currently has NINJA_S_STEALTH */
+        case CLASS_NINJA:
+            if (m_ptr->ml)
+            {
+                int tmp = p_ptr->lev * 6 + (p_ptr->skills.stl + 10) * 4;
+                if (p_ptr->monlite && (mode != HISSATSU_NYUSIN)) tmp /= 3;
+                if (p_ptr->cursed & TRC_AGGRAVATE) tmp /= 2;
+                if (r_ptr->level > (p_ptr->lev * p_ptr->lev / 20 + 10)) tmp /= 3;
+                if (MON_CSLEEP(m_ptr))
+                {
+                    backstab = TRUE;
+                }
+                else if ( (p_ptr->special_defense & NINJA_S_STEALTH)
+                       && randint0(tmp) > r_ptr->level + 20
+                       && !(r_ptr->flagsr & RFR_RES_ALL) )
+                {
+                    fuiuchi = TRUE;
+                }
+                else if (MON_MONFEAR(m_ptr))
+                {
+                    stab_fleeing = TRUE;
+                }
+            }
+            break;
+        case CLASS_SCOUT:
+            if (p_ptr->ambush)
+            {
+                if (MON_CSLEEP(m_ptr) && m_ptr->ml)
+                    backstab = TRUE;
+            }
+            break;
+        }
+    }
     for (i = 0; i < p_ptr->innate_attack_ct; i++)
     {
         innate_attack_ptr a = &p_ptr->innate_attacks[i];
@@ -2264,9 +2302,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
         {
             to_h = a->to_h + p_ptr->to_h_m;
             chance = p_ptr->skills.thn + (to_h * BTH_PLUS_ADJ);
-            if (test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml))
+            if (fuiuchi || test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml))
             {
                 int dd = a->dd + p_ptr->innate_attack_info.to_dd;
+
+                if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly attack %s!", m_name);
+                else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name);
+                else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You attack %s in the back!",  m_name);
 
                 hit_ct++;
                 sound(SOUND_HIT);
@@ -2291,6 +2333,24 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     default: msg_format("You <color:v>shred</color> %s!", m_name); break;
                     }
                 }
+
+                /* Slop for Draconian Metamorphosis ... */
+                if (backstab)
+                {
+                    if (p_ptr->pclass == CLASS_SCOUT)
+                        base_dam *= 3;
+                    else
+                        base_dam *= (3 + (p_ptr->lev / 20));
+                }
+                else if (fuiuchi)
+                {
+                    base_dam = base_dam*(5+(p_ptr->lev*2/25))/2;
+                }
+                else if (stab_fleeing)
+                {
+                    base_dam = (3 * base_dam) / 2;
+                }
+
                 base_dam += a->to_d;
                 if (!(a->flags & INNATE_NO_DAM))
                 {
@@ -2303,6 +2363,35 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                 }
 
                 dam = base_dam + p_ptr->to_d_m;
+
+                /* More slop for Draconian Metamorphosis ... */
+                if ( p_ptr->pclass == CLASS_NINJA
+                  && (p_ptr->cur_lite <= 0 || one_in_(7)) )
+                {
+                    int maxhp = maxroll(r_ptr->hdice, r_ptr->hside);
+                    if (one_in_(backstab ? 13 : (stab_fleeing || fuiuchi) ? 15 : 27))
+                    {
+                        dam *= 5;
+                        msg_format("You critically injured %s!", m_name);
+                    }
+                    else if ( (m_ptr->hp < maxhp/2 && one_in_(50))
+                           || ( (one_in_(666) || ((backstab || fuiuchi) && one_in_(11)))
+                             && !(r_ptr->flags1 & RF1_UNIQUE)
+                             && !(r_ptr->flags7 & RF7_UNIQUE2)) )
+                    {
+                        if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_UNIQUE2) || (m_ptr->hp >= maxhp/2))
+                        {
+                            dam = MAX(dam*5, m_ptr->hp/2);
+                            msg_format("You fatally injured %s!", m_name);
+                        }
+                        else
+                        {
+                            dam = m_ptr->hp + 1;
+                            msg_format("You hit %s on a fatal spot!", m_name);
+                        }
+                    }
+                }
+
                 if (a->flags & INNATE_NO_DAM)
                 {
                     base_dam = 0;
@@ -2311,7 +2400,8 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                 }
                 else
                     effect_pow = base_dam;
-                if (dam < 0) 
+
+                if (dam < 0)
                     dam = 0;
                 dam = mon_damage_mod(m_ptr, dam, FALSE);
                 if (dam > 0) 
@@ -2547,7 +2637,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                 sound(SOUND_MISS);
                 msg_format("You miss.", m_name);
             }
-
+            fuiuchi = FALSE; /* Clumsy! */
             if (mode == WEAPONMASTER_RETALIATION)
                 break;
         }

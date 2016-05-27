@@ -661,7 +661,10 @@ void draconian_metamorphosis_mut(int cmd, variant *res)
         var_set_string(res, "You have metamorphosed into a Dragon!");
         break;
     case SPELL_HELP_DESC:
-        var_set_string(res, "Your body will transform into a dragon (e.g. 6 ring slots and no weapons)");
+        if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER)
+            var_set_string(res, "Your body will transform into a dragon (e.g. 6 ring slots and no weapons). WARNING: You will lose access to martial arts!");
+        else
+            var_set_string(res, "Your body will transform into a dragon (e.g. 6 ring slots and no weapons)");
         break;
     default:
         default_spell(cmd, res);

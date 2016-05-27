@@ -5995,7 +5995,7 @@ static bool kind_is_tailored(int k_idx)
           || p_ptr->pclass == CLASS_SCOUT
           || p_ptr->pclass == CLASS_NINJA )
         {
-            return k_ptr->weight <= 200;
+            return k_ptr->weight <= 200 && equip_can_wield_kind(k_ptr->tval, k_ptr->sval);
         }
         return equip_can_wield_kind(k_ptr->tval, k_ptr->sval);
 
