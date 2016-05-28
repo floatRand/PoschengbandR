@@ -3309,6 +3309,7 @@ static bool get_stat_limits(void)
     race_t *race_ptr = get_race();
     class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
+    int score = -12;
 
     /* Clean up */
     clear_from(10);
@@ -3359,7 +3360,7 @@ static bool get_stat_limits(void)
         /* Move Cursol */
         if (cs != os)
         {
-            int  score = _birth_stats_score(cval);
+            score = _birth_stats_score(cval);
             byte score_a = TERM_L_GREEN;
 
             if (score > 30)
@@ -3487,6 +3488,9 @@ static bool get_stat_limits(void)
         }
         if(c == ESCAPE || ((c == ' ' || c == '\r' || c == '\n') && cs == 6))break;
     }
+
+    if (score > 30)
+        return get_stat_limits();
     
     for (i = 0; i < 6; i++)
     {
@@ -3654,6 +3658,8 @@ auto_roller_barf:
                 /* Check and count acceptable stats */
                 for (i = 0; i < 6; i++)
                 {
+                    p_ptr->stat_cur[i] = stat_limit[i];
+                    p_ptr->stat_max[i] = stat_limit[i];
                     /* This stat is okay */
                     if (p_ptr->stat_max[i] >= stat_limit[i])
                     {
