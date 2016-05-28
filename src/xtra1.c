@@ -3838,7 +3838,7 @@ void calc_bonuses(void)
 
     if (p_ptr->special_defense & KAMAE_MASK)
     {
-        if (p_ptr->pclass != CLASS_WILD_TALENT && !p_ptr->weapon_info[0].bare_hands)
+        if (p_ptr->pclass != CLASS_WILD_TALENT && !mut_present(MUT_DRACONIAN_METAMORPHOSIS) && !p_ptr->weapon_info[0].bare_hands)
             set_action(ACTION_NONE);
     }
     mut_calc_stats(stats); /* mut goes first for MUT_ILL_NORM, which masks charisma mods of other mutations */

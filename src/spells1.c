@@ -5933,12 +5933,12 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             /* Get stunned */
             if (MON_STUNNED(m_ptr))
             {
-                note = " is more dazed.";
+                note = " is <color:B>more dazed</color>.";
                 tmp = MON_STUNNED(m_ptr) + (do_stun / 2);
             }
             else
             {
-                note = " is dazed.";
+                note = " is <color:B>dazed</color>.";
                 tmp = do_stun;
             }
 

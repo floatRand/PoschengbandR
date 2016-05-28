@@ -140,7 +140,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_SPEED,            "Speed",          12, _ALLOW_ALL },
         { TR_STEALTH,          "Stealth",        15, _ALLOW_ALL },
         { TR_LIFE,             "Life",           50, _ALLOW_ALL,   5 },
-        { TR_BLOWS,            "Extra Attacks",  20, _ALLOW_MELEE, 3 },
+        { TR_BLOWS,            "Extra Attacks",  50, _ALLOW_MELEE, 3 },
         { _ESSENCE_XTRA_DICE,  "Extra Dice",    250, _ALLOW_MELEE, 4 },
         { _ESSENCE_XTRA_MIGHT, "Extra Might",   250, _ALLOW_BOW,   4 },
         { TR_XTRA_SHOTS,       "Extra Shots",    50, _ALLOW_BOW,   4 },

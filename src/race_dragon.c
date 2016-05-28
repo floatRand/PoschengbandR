@@ -320,6 +320,7 @@ static void _breathe_spell(int cmd, variant *res)
 
 /**********************************************************************
  * Dragon Melee
+ * cf design/dragons.ods
  **********************************************************************/
 static int _attack_level(void)
 {

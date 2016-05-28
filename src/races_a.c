@@ -977,6 +977,7 @@ static void _draconian_get_flags(u32b flgs[TR_FLAG_SIZE])
         break;
     }
 }
+/* cf design/dragons.ods */
 static int _draconian_attack_level(void)
 {
     int l = p_ptr->lev * 2;
@@ -1023,6 +1024,7 @@ static int _draconian_attack_level(void)
     case CLASS_IMITATOR:
     case CLASS_RED_MAGE:
     case CLASS_WEAPONSMITH:
+    case CLASS_ROGUE:
         l = MAX(1, l * 105 / 100);
         break;
     case CLASS_PRIEST:
@@ -1078,6 +1080,12 @@ static void _draconian_calc_innate_attacks(void)
         calc_innate_blows(&a, 400);
         a.msg = "You claw.";
         a.name = "Claw";
+
+        if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER)
+        {
+            a.effect[1] = GF_STUN;
+            a.effect_chance[1] = 15 + l/4;
+        }
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
     }

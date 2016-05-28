@@ -755,8 +755,14 @@ byte get_monster_drop_ct(monster_type *m_ptr)
         number = 0; /* Pets drop no stuff */
 
     /* No more farming quartz veins for millions in gold */
-    if ((r_ptr->flags2 & RF2_MULTIPLY) && r_ptr->r_akills > 600)
-        number = 0;
+    if (r_ptr->flags2 & RF2_MULTIPLY)
+    {
+        int cap = 600;
+        if (r_ptr->flags1 & RF1_ONLY_GOLD)
+            cap = 200; /* About 110k gp at DL21 */
+        if (r_ptr->r_akills > cap)
+            number = 0;
+    }
 
     /* No more farming summoners for drops (The Hoard, That Bat, Draconic Qs, etc) */
     if (m_ptr->parent_m_idx && !(r_ptr->flags1 & RF1_UNIQUE))
@@ -2307,7 +2313,8 @@ void monster_death(int m_idx, bool drop_item)
         }
     }
 
-    if (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
+    if ( (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
+      || (r_ptr->flags2 & RF2_THIEF) )
     {
         int r = (r_ptr->flags1 & RF1_DROP_GREAT) ? 7 : 3;
         int n = randint0(r);
