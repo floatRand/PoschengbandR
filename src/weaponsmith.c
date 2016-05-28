@@ -506,6 +506,10 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
             absorb_f(_find_essence_info(_ESSENCE_TO_DAM_A), (old_obj.to_d - new_obj.to_d)*10*mult/div);
     }
 
+    /* Extra Boosts */
+    if (old_obj.name1 == ART_MUSASI_KATANA || old_obj.name1 == ART_MUSASI_WAKIZASI)
+        absorb_f(_find_essence_info(TR_DUAL_WIELDING), 10);
+
     *o_ptr = new_obj;
 }
 
