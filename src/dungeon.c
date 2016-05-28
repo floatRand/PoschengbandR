@@ -29,7 +29,7 @@ static int wild_regen = 20;
  * average -> good -> excellent -> special
  *         -> bad  -> awful     -> terrible
  */
-static byte value_check_aux1(object_type *o_ptr)
+byte value_check_aux1(object_type *o_ptr)
 {
     /* Artifacts */
     if (object_is_artifact(o_ptr))
@@ -1315,8 +1315,6 @@ static void process_world_aux_hp_and_sp(void)
  */
 static void process_world_aux_timeout(void)
 {
-    const int dec_count = (easy_band ? 2 : 1);
-
     /*** Timeout Various Things ***/
 
     process_maul_of_vice();
@@ -1333,13 +1331,13 @@ static void process_world_aux_timeout(void)
     /* Hack -- Hallucinating */
     if (p_ptr->image)
     {
-        (void)set_image(p_ptr->image - dec_count, TRUE);
+        (void)set_image(p_ptr->image - 1, TRUE);
     }
 
     /* Blindness */
     if (p_ptr->blind)
     {
-        (void)set_blind(p_ptr->blind - dec_count, TRUE);
+        (void)set_blind(p_ptr->blind - 1, TRUE);
     }
 
     /* Times see-invisible */
@@ -1484,7 +1482,7 @@ static void process_world_aux_timeout(void)
     /* Confusion */
     if (p_ptr->confused)
     {
-        (void)set_confused(p_ptr->confused - dec_count, TRUE);
+        (void)set_confused(p_ptr->confused - 1, TRUE);
     }
 
     /* Fast */
@@ -1496,7 +1494,7 @@ static void process_world_aux_timeout(void)
     /* Slow */
     if (p_ptr->slow)
     {
-        (void)set_slow(p_ptr->slow - dec_count, TRUE);
+        (void)set_slow(p_ptr->slow - 1, TRUE);
     }
 
     /* Protection from evil */
@@ -2654,6 +2652,7 @@ static void process_world(void)
                 msg_print("Congratulations.");
                 msg_format("You received %d gold.", battle_odds);
                 p_ptr->au += battle_odds;
+                stats_on_gold_winnings(battle_odds);
             }
             else
             {
@@ -2667,6 +2666,7 @@ static void process_world(void)
         {
             msg_format("This battle have ended in a draw.");
             p_ptr->au += kakekin;
+            stats_on_gold_winnings(kakekin);
             msg_print(NULL);
             p_ptr->energy_need = 0;
             battle_monsters();
@@ -3540,8 +3540,6 @@ static void process_command(void)
         {
             if (p_ptr->prace == RACE_MON_RING)
                 ring_browse();
-            else if (p_ptr->pclass == CLASS_WEAPONSMITH)
-                do_cmd_kaji(TRUE);
             else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                 magic_eater_browse();
             else if (p_ptr->pclass == CLASS_SNIPER)
@@ -3595,7 +3593,6 @@ static void process_command(void)
             }
             else if (dun_level && (d_info[dungeon_type].flags1 & DF1_NO_MAGIC)
                 && p_ptr->pclass != CLASS_BERSERKER
-                && p_ptr->pclass != CLASS_WEAPONSMITH
                 && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                 && p_ptr->pclass != CLASS_WEAPONMASTER
                 && p_ptr->pclass != CLASS_MAULER )
@@ -3605,7 +3602,6 @@ static void process_command(void)
             }
             else if (p_ptr->anti_magic
                     && p_ptr->pclass != CLASS_BERSERKER
-                    && p_ptr->pclass != CLASS_WEAPONSMITH
                     && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                     && p_ptr->pclass != CLASS_WEAPONMASTER
                     && p_ptr->pclass != CLASS_MAULER )
@@ -3646,8 +3642,6 @@ static void process_command(void)
                     do_cmd_hissatsu();
                 else if (p_ptr->pclass == CLASS_BLUE_MAGE)
                     do_cmd_cast_learned();
-                else if (p_ptr->pclass == CLASS_WEAPONSMITH)
-                    do_cmd_kaji(FALSE);
                 else if (p_ptr->pclass == CLASS_SNIPER)
                     do_cmd_snipe();
                 else if (p_ptr->pclass == CLASS_ARCHAEOLOGIST ||
@@ -5622,6 +5616,8 @@ void play_game(bool new_game)
             race_ptr->birth();
 
         spell_stats_on_birth();
+
+        stats_on_gold_find(p_ptr->au); /* Found? Inherited? What's the difference? */
 
         if (game_mode == GAME_MODE_BEGINNER)
         {

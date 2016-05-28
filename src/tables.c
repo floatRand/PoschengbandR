@@ -3421,9 +3421,6 @@ option_type option_info[] =
 
     /*** Birth Options ***/
 
-    { &easy_band,                   FALSE, OPT_PAGE_BIRTH, 6, 31,
-    "easy_band",                    "Easy Mode (*)" },
-
     { &smart_learn,                 TRUE,  OPT_PAGE_BIRTH, 1, 14,
     "smart_learn",                  "Monsters learn from their mistakes (*)" },
 
