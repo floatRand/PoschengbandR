@@ -2201,8 +2201,7 @@ static void get_money(void)
 {
     int i, gold;
 
-    /* Social Class determines starting gold */
-    gold = randint1(600) + randint1(100) + 300;
+    gold = 650;
     if (p_ptr->pclass == CLASS_TOURIST)
       gold += 2000;
 
