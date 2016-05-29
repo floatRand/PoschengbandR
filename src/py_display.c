@@ -2304,6 +2304,9 @@ static void _build_options(doc_ptr doc)
     if (easy_id)
         doc_printf(doc, " Easy Identify:      On\n");
 
+    if (easy_lore)
+        doc_printf(doc, " Easy Lore:      On\n");
+
     if (no_wilderness)
         doc_printf(doc, " Wilderness:         Off\n");
 

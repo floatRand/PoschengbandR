@@ -106,7 +106,7 @@ static bool know_armour(int r_idx)
 
     s32b kills = r_ptr->r_tkills;
 
-    if (cheat_know) return (TRUE);
+    if (easy_lore) return (TRUE);
 
     /* Normal monsters */
     if (kills > 304 / (4 + level)) return (TRUE);
@@ -226,7 +226,7 @@ static void roff_aux(int r_idx, int mode)
     flagsr = (r_ptr->flagsr & r_ptr->r_flagsr);
 
     /* cheat_know or research_mon() */
-    if (cheat_know || (mode & 0x01))
+    if (easy_lore || (mode & 0x01))
         know_everything = TRUE;
 
     if (r_idx == MON_MONKEY_CLONE)

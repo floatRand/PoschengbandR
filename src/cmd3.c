@@ -1210,7 +1210,7 @@ void do_cmd_query_symbol(void)
         monster_race *r_ptr = &r_info[i];
 
         /* Nothing to recall */
-        if (!(cheat_know || p_ptr->wizard) && !r_ptr->r_sights) continue;
+        if (!(easy_lore || p_ptr->wizard) && !r_ptr->r_sights) continue;
 
         /* Require non-unique monsters if needed */
         if (norm && (r_ptr->flags1 & (RF1_UNIQUE))) continue;
