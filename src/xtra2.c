@@ -3977,14 +3977,18 @@ static int target_set_aux(int y, int x, int mode, cptr info)
             /* Recall */
             if (recall)
             {
+                doc_ptr doc = doc_alloc(72);
+
                 /* Save */
                 screen_save();
 
                 /* Recall on screen */
-                screen_roff(m_ptr->ap_r_idx, 0);
+                mon_display_doc(&r_info[m_ptr->ap_r_idx], doc);
+                doc_sync_term(doc, doc_range_all(doc), doc_pos_create(0, 1));
+                doc_free(doc);
 
-                /* Hack -- Complete the prompt (again) */
-                Term_addstr(-1, TERM_WHITE, format("  [r,%s%s]", x_info, info));
+                /* Hack -- Complete the prompt (again)
+                Term_addstr(-1, TERM_WHITE, format("  [r,%s%s]", x_info, info));*/
 
                 /* Command */
                 query = inkey();

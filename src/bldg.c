@@ -3332,7 +3332,7 @@ static bool research_mon(void)
                 handle_stuff();
 
                 /* know every thing mode */
-                screen_roff(r_idx, 0x01);
+                mon_display(&r_info[r_idx]);
                 notpicked = FALSE;
 
                 /* XTRA HACK REMEMBER_IDX */

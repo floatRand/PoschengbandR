@@ -67,7 +67,7 @@ static void _print_list(vec_ptr v, doc_ptr doc, char sep, char term)
     }
 }
 
-string_ptr _get_res_name(int res)
+static string_ptr _get_res_name(int res)
 {
     return string_alloc_format(
         "<color:%c>%s</color>",

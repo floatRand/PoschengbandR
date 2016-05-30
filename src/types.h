@@ -479,21 +479,19 @@ struct monster_race
     byte melee_level;
     byte save_level;
     byte rarity;              /* Rarity of creature */
+
     s16b max_level;
+    s16b id;
 
 
     byte d_attr;              /* Default monster attribute */
     byte d_char;              /* Default monster character */
-
-
     byte x_attr;              /* Desired monster attribute */
     byte x_char;              /* Desired monster character */
 
 
     byte max_num;             /* Maximum population allowed per level */
-
     byte cur_num;             /* Monster population on current level */
-
     s16b floor_id;            /* Location of unique monster */
 
 

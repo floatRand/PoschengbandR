@@ -5873,10 +5873,8 @@ static void do_cmd_knowledge_monsters(bool *need_redraw, bool visual_only, int d
                 /* Recall on screen */
                 if (!visual_list && !visual_only && (mon_idx[mon_cur] > 0))
                 {
-                    screen_roff(mon_idx[mon_cur], 0);
-
-                    (void)inkey();
-
+                    int r_idx = mon_idx[mon_cur];
+                    mon_display(&r_info[r_idx]);
                     redraw = TRUE;
                 }
                 break;

@@ -2353,6 +2353,8 @@ bool _design_monkey_clone(void)
     r_ptr->flags7 |= RF7_CAN_SWIM;
     if (p_ptr->levitation) r_ptr->flags7 |= RF7_CAN_FLY;
 
+    r_ptr->r_xtra1 |= MR1_LORE;
+
     return TRUE;
 }
 

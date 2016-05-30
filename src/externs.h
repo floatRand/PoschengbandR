@@ -1048,10 +1048,6 @@ extern void monster_gain_exp(int m_idx, int s_idx);
 /* monster1.c */
 extern bool mon_save_p(int r_idx, int stat);
 extern void roff_top(int r_idx);
-extern void screen_roff(int r_idx, int mode);
-extern void display_roff(int r_idx);
-extern void output_monster_spoiler(int r_idx, void (*roff_func)(byte attr, cptr str));
-extern void create_name(int type, char *name);
 extern bool mon_hook_dungeon(int r_idx);
 
 extern monster_hook_type get_wilderness_monster_hook(int x, int y);
@@ -1121,6 +1117,11 @@ extern void choose_new_monster(int m_idx, bool born, int r_idx);
 extern byte get_mspeed(monster_race *r_ptr);
 extern bool player_place(int y, int x);
 extern void monster_drop_carried_objects(monster_type *m_ptr);
+
+/* mon_display.c */
+extern void mon_display(monster_race *r_ptr);
+extern void mon_display_rect(monster_race *r_ptr, rect_t display);
+extern void mon_display_doc(monster_race *r_ptr, doc_ptr doc);
 
 /* obj_display.c */
 extern void obj_display(object_type *o_ptr);
@@ -1994,6 +1995,7 @@ extern bool object_is_helmet(object_type *o_ptr);
 extern bool object_is_cursed(object_type *o_ptr);
 extern bool object_is_mushroom(object_type *o_ptr);
 extern bool object_is_potion(object_type *o_ptr);
+extern bool mon_is_wanted(int r_idx);
 extern bool object_is_shoukinkubi(object_type *o_ptr);
 extern bool object_is_favorite(object_type *o_ptr);
 extern bool object_is_rare(object_type *o_ptr);

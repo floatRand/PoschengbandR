@@ -3478,6 +3478,7 @@ errr parse_r_info(char *buf, header *head)
 
         /* Point at the "info" */
         r_ptr = &r_info[i];
+        r_ptr->id = i;
 
         /* Store the name */
         if (!add_name(&r_ptr->name, head, s)) return (7);

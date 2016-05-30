@@ -419,15 +419,7 @@ static bool _choose(_choice_array_t *choices)
                 int x = Term->scr->cx; /* No way to query this? */
                 int y = Term->scr->cy;
 
-                /* This breaks things quite a bit. We cannot control where monster display happens
-                   and we only get one screen_save() op (they should stack but don't). Hence, this
-                   is it. The result means our menu cleanup code is more cumbersome ... sigh.
-                   Also, monster info trashes are current cursor position and does not restore
-                   the old location. */
-                screen_save();
-                screen_roff(r_idx, 0); /* i.e. display_monster_info(r_idx, 0) */
-                inkey();
-                screen_load();
+                mon_display(&r_info[r_idx]);
 
                 Term_gotoxy(x, y);
                 redraw = TRUE; /* screen_save buggily misses row 0 */
