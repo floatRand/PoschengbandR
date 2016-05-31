@@ -250,7 +250,7 @@ static void _display_type(monster_race *r_ptr, doc_ptr doc)
 }
 static void _display_basic(monster_race *r_ptr, doc_ptr doc)
 {
-    doc_printf(doc, "Name    : <color:B>%s</color> ", r_name + r_ptr->name);
+    doc_printf(doc, "Name    : <indent><style:indent><color:B>%s</color> ", r_name + r_ptr->name);
     assert(r_ptr->d_char);
     doc_printf(doc, "(<color:%c>%c</color>", attr_to_attr_char(r_ptr->d_attr), r_ptr->d_char);
     if (use_graphics && (r_ptr->x_char != r_ptr->d_char || r_ptr->x_attr != r_ptr->d_attr))
@@ -258,13 +258,13 @@ static void _display_basic(monster_race *r_ptr, doc_ptr doc)
         doc_insert(doc, " / ");
         doc_insert_char(doc, r_ptr->x_attr, r_ptr->x_char);
     }
-    doc_insert(doc, ")\n");
+    doc_insert(doc, ")</style></indent>\n");
 
     {
         doc_ptr cols[2];
 
         cols[0] = doc_alloc(20);
-        cols[1] = doc_alloc(50);
+        cols[1] = doc_alloc(MAX(20, MIN(50, doc_width(doc) - 20))); /* Monster Recall Terminal */
 
         /* Column 1 */
         _display_level(r_ptr, cols[0]);

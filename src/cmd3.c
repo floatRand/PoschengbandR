@@ -1843,7 +1843,19 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
             redraw = FALSE;
         }
         Term_gotoxy(display_rect.x, display_rect.y + pos);
-
+        {
+            int idx = top + pos;
+            if (0 <= idx && idx < ct_types)
+            {
+                _mon_list_info_ptr info_ptr = vec_get(list->list, idx);
+                assert(info_ptr);
+                if (info_ptr->r_idx && info_ptr->r_idx != p_ptr->monster_race_idx)
+                {
+                    monster_race_track(info_ptr->r_idx);
+                    window_stuff();
+                }
+            }
+        }
         if (q_pos < q_ct)
             cmd = cmd_queue[q_pos++];
         else

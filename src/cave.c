@@ -5086,11 +5086,8 @@ void health_track(int m_idx)
  */
 void monster_race_track(int r_idx)
 {
-    /* Save this monster ID */
     p_ptr->monster_race_idx = r_idx;
-
-    /* Window stuff */
-    p_ptr->window |= (PW_MONSTER);
+    p_ptr->window |= PW_MONSTER;
 }
 
 
