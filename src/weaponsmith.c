@@ -1963,7 +1963,7 @@ static void _smith_weapon_armor(object_type *o_ptr)
         doc_insert(_doc, "   <color:y>A</color>) Absorb all essences\n");
         if (object_is_smith(o_ptr))
             doc_insert(_doc, "   <color:y>R</color>) Remove added essence\n");
-        else if (object_is_artifact(o_ptr))
+        else if (object_is_artifact(o_ptr) || object_is_(o_ptr, TV_SWORD, SV_RUNESWORD))
         {
         }
         else

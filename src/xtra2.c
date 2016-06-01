@@ -2885,8 +2885,8 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
             }
         }
 
-        /* Recall even invisible uniques or winners */
-        if ((m_ptr->ml && !p_ptr->image) || (r_ptr->flags1 & RF1_UNIQUE))
+        /* Recall even invisible uniques or winners (or statistics gathering runs :) */
+        if ((m_ptr->ml && !p_ptr->image) || (r_ptr->flags1 & RF1_UNIQUE) || statistics_hack)
         {
             /* Count kills this life */
             if ((m_ptr->mflag2 & MFLAG2_KAGE) && (r_info[MON_KAGE].r_pkills < MAX_SHORT)) r_info[MON_KAGE].r_pkills++;

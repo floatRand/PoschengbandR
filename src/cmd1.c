@@ -20,20 +20,41 @@ static int _max_vampiric_drain(void)
     return 50;
 }
 
+/* Changes from MPA ... but I also tweaked to incrementally biff AC.
+     Author: elliptic
+     Date:   Wed Mar 30 20:42:54 2016 -0400
+
+     Rune sword changes.
+
+     It starts at (-10,-10) now and grows faster (though still with the same
+     monster level caps). The brand selection is a bit larger (and with tweaked
+     chances). Aggravation and TY_CURSE are now permanent once you gain them
+     (but you don't get TY_CURSE until 9d7/8d8/7d9 now instead of one step
+     sooner). Untested, but compiles.
+
+   Here are some test runs (Acuire Runesword on DL40 and 'play' to end game (about 7k kills)):
+   a Rune Sword (9d6) (+32,+39) [-44] {cursed, Ag|EFCoP/D}
+   a Rune Sword (7d8) (+33,+37) [-50] {cursed, Ag|EFCoPCaS}
+   a Rune Sword (9d7) (+34,+37) [-39] {cursed, AgTy|A}
+   a Rune Sword (8d9) (+43,+28) [-40] {cursed, AgTy|CoPCa/PLZ}
+   a Rune Sword (9d6) (+36,+36) [-44] {cursed, Ag|FCoPS}
+
+   See Wizard commands '-' and '=' in wizard2.c. Simply 'find' and wield a rune sword
+   at the desired time (wizard command c0w) and then complete the statistics run.
+*/
 /*static*/ void rune_sword_kill(object_type *o_ptr, monster_race *r_ptr)
 {
     if (o_ptr->curse_flags & TRC_PERMA_CURSE)
     {
         bool feed = FALSE;
         bool unique = (r_ptr->flags1 & RF1_UNIQUE);
-                        
+
         switch (randint1(4))
         {
         case 1:
             if ((r_ptr->level > o_ptr->to_h + o_ptr->to_d + 15))
             {
-                /*msg_print("Boost ToHit?");*/
-                if (unique || one_in_(6))
+                if (unique || (o_ptr->to_h < 10 && one_in_(2)) || one_in_(3))
                 {
                     if (o_ptr->to_h < 50 || one_in_(666))
                     {
@@ -47,8 +68,7 @@ static int _max_vampiric_drain(void)
         case 2:
             if ((r_ptr->level > o_ptr->to_h + o_ptr->to_d + 15))
             {
-                /*msg_print("Boost ToDam?");*/
-                if (unique || one_in_(6))
+                if (unique || (o_ptr->to_d < 10 && one_in_(2)) || one_in_(3))
                 {
                     if (o_ptr->to_d < 50 || one_in_(666))
                     {
@@ -62,13 +82,13 @@ static int _max_vampiric_drain(void)
         case 3:
             if ((r_ptr->level > o_ptr->dd * o_ptr->ds))
             {
-                /*msg_print("Boost dd?");*/
-                if (one_in_((o_ptr->dd + 1) * o_ptr->ds) && (unique || one_in_(6)))
+                if (one_in_((o_ptr->dd + 1) * o_ptr->ds / 2) && (unique || one_in_(6)))
                 {
                     if (o_ptr->dd < 9 || one_in_(666))
                     {
                         feed = TRUE;
                         o_ptr->dd++;
+                        o_ptr->to_a -= randint1(3);
                     }
                 }
             }
@@ -77,110 +97,130 @@ static int _max_vampiric_drain(void)
         case 4:
             if ((r_ptr->level > o_ptr->dd * o_ptr->ds))
             {
-                /*msg_print("Boost ds?");*/
-                if (one_in_(o_ptr->dd * (o_ptr->ds + 1)) && (unique || one_in_(6)))
+                if (one_in_(o_ptr->dd * (o_ptr->ds + 1) / 2) && (unique || one_in_(6)))
                 {
                     if (o_ptr->ds < 9 || one_in_(666))
                     {
                         feed = TRUE;
                         o_ptr->ds++;
+                        o_ptr->to_a -= randint1(3);
                     }
                 }
             }
             break;
         }
 
-        if (unique && one_in_(200 / MAX(r_ptr->level, 1)))
+        if (unique && (randint0(150) < r_ptr->level))
         {
-            switch (randint1(12))
+            switch (randint1(13))
             {
             case 1:
-                if (one_in_(6)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_BRAND_POIS); 
-                } 
+                if (one_in_(6))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_BRAND_POIS);
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 2:
-                if (one_in_(6)) 
-                { 
-                    feed = TRUE; 
+                if (one_in_(6))
+                {
+                    feed = TRUE;
                     add_flag(o_ptr->art_flags, TR_BRAND_FIRE);
-                } 
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 3:
-                if (one_in_(6)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_BRAND_COLD); 
-                } 
+                if (one_in_(6))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_BRAND_COLD);
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 4:
-                if (one_in_(26)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_BRAND_ELEC); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_BRAND_ELEC);
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 5:
-                if (one_in_(26)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_UNDEAD); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_UNDEAD);
+                }
                 break;
             case 6:
-                if (one_in_(26)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_DEMON); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_DEMON);
+                }
                 break;
             case 7:
-                if (one_in_(13)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_DRAGON); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_DRAGON);
+                }
                 break;
             case 8:
-                if (one_in_(13)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_TROLL); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_BRAND_ACID);
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 9:
-                if (one_in_(13)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_GIANT); 
-                } 
+                if (one_in_(12))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_GIANT);
+                }
                 break;
             case 10:
-                if (one_in_(66)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_HUMAN); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_HUMAN);
+                }
                 break;
             case 11:
-                if (one_in_(666)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_EVIL); 
-                } 
+                if (one_in_(666))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_EVIL);
+                    o_ptr->to_a -= randint1(5);
+                }
+                else if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_CHAOTIC);
+                }
                 break;
             case 12:
-                if (one_in_(666)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_VORPAL2); 
-                }
-                else if (one_in_(6))
+                if (one_in_(666))
                 {
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_VORPAL); 
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_VORPAL2);
+                    o_ptr->to_a -= randint1(5);
+                }
+                else if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_VORPAL);
+                    o_ptr->to_a -= randint1(5);
+                }
+                break;
+            case 13:
+                if (one_in_(12))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_ANIMAL);
                 }
                 break;
             }
@@ -188,20 +228,16 @@ static int _max_vampiric_drain(void)
 
         if (feed)
         {
-            if ((o_ptr->curse_flags & TRC_TY_CURSE) == 0
-              && o_ptr->dd * o_ptr->ds > 50 )
-            {  
-                o_ptr->curse_flags |= TRC_TY_CURSE;
+            if (!have_flag(o_ptr->art_flags, TR_TY_CURSE)
+              && o_ptr->dd * o_ptr->ds > 60 )
+            {
+                add_flag(o_ptr->art_flags, TR_TY_CURSE);
                 msg_print("Your Rune Sword seeks to dominate you!");
-                if (one_in_(13))
-                    add_flag(o_ptr->art_flags, TR_AGGRAVATE);
-                if (one_in_(13))
-                    add_flag(o_ptr->art_flags, TR_DRAIN_EXP);
             }
-            else if ((o_ptr->curse_flags & TRC_AGGRAVATE) == 0
+            else if (!have_flag(o_ptr->art_flags, TR_AGGRAVATE)
                    && o_ptr->dd * o_ptr->ds > 30 )
             {
-                o_ptr->curse_flags |= TRC_AGGRAVATE;
+                add_flag(o_ptr->art_flags, TR_AGGRAVATE);
                 msg_print("The thirst of your sword redoubles!");
             }
             else

@@ -2827,6 +2827,7 @@ static void _wiz_kill_monsters(int level)
         monster_type *m_ptr = &m_list[i];
         monster_race *r_ptr;
         bool          fear = FALSE;
+        int           slot = equip_find_object(TV_SWORD, SV_RUNESWORD);
 
         if (!m_ptr->r_idx) continue;
         if (i == p_ptr->riding) continue;
@@ -2836,6 +2837,7 @@ static void _wiz_kill_monsters(int level)
         if (0 && r_ptr->level > level) continue;
 
         mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
+        if (slot) rune_sword_kill(equip_obj(slot), r_ptr);
     }
 }
 static void _wiz_inspect_objects(int level)
@@ -2866,11 +2868,11 @@ static void _wiz_inspect_objects(int level)
         if (0) _wiz_stats_log_speed(level, o_ptr);
         if (1) _wiz_stats_log_books(level, o_ptr, 20, 20);
         if (0) _wiz_stats_log_devices(level, o_ptr);
-        if (0) _wiz_stats_log_arts(level, o_ptr);
-        if (0) _wiz_stats_log_rand_arts(level, o_ptr);
-        if (0 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_jewelry(o_ptr))
+        if (1) _wiz_stats_log_arts(level, o_ptr);
+        if (1) _wiz_stats_log_rand_arts(level, o_ptr);
+        if (1 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_jewelry(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
-        if (0 && object_is_jewelry(o_ptr) && o_ptr->name2)
+        if (1 && object_is_jewelry(o_ptr) && o_ptr->name2)
             _wiz_stats_log_obj(level, o_ptr);
 
         if (race_ptr->destroy_object)
