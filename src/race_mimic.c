@@ -402,6 +402,14 @@ static bool _choose(_choice_array_t *choices)
             _list(choices);
             redraw = FALSE;
         }
+        {
+            int r_idx = choices->choices[choices->current].r_idx;
+            if (r_idx > 0)
+            {
+                monster_race_track(r_idx);
+                window_stuff();
+            }
+        }
 
         /* No macros. The problem is that arrow keys are implemented with macros! */
         key = inkey_special(TRUE);
