@@ -120,16 +120,15 @@ static void _prt_equippy(int row, int col, int tval, int sval) /* Signatures s/b
     Term_putch(col, row, k_ptr->x_attr, k_ptr->x_char);
 }
 
-#define _DISPLAY_WIDTH 80
+static int _display_width(void)
+{
+    /*return MIN(ui_map_rect().cx, 80);*/
+    return 80; /* We are printing this wide, anyway ... */
+}
 
 static int _start_col(void)
 {
-    int w,h;
-    Term_get_size(&w, &h);
-    w -= _DISPLAY_WIDTH; 
-    if (w < 15)
-        w = 15;
-    return w;
+    return ui_map_rect().x;
 }
 
 static int _extra_col(void)
@@ -141,7 +140,7 @@ static int _extra_col(void)
 
 static void _clear_row(int row)
 {
-    Term_erase(_start_col()-1, row, _DISPLAY_WIDTH+1); /* Hack a border for cleaner display */
+    Term_erase(_start_col(), row, _display_width());
 }
 
 static cptr _choose_prompt(_choice_array_t *choices)
@@ -169,22 +168,22 @@ static void _list(_choice_array_t *choices)
     _clear_row(2); /* Header Line */
     _clear_row(3); /* Header Underline */
 
-    c_prt(TERM_YELLOW, _choose_prompt(choices), row++, start_col);
+    c_put_str(TERM_YELLOW, _choose_prompt(choices), row++, start_col);
     switch (_display_mode)
     {
     case _DISPLAY_MODE_STATS:
-                        /* [         1         2     ]   3         4         5         6         7       */
-                        /* 01234567890123456789012345678901234567890123456789012345678901234567890123456 */
-        c_prt(TERM_WHITE, "Name                       STR  INT  WIS  DEX  CON  CHR  Life  Body            ", row++, start_col);
-        c_prt(TERM_WHITE, "===============================================================================", row++, start_col);
+                            /* [         1         2     ]   3         4         5         6         7       */
+                            /* 01234567890123456789012345678901234567890123456789012345678901234567890123456 */
+        c_put_str(TERM_WHITE, "Name                       STR  INT  WIS  DEX  CON  CHR  Life  Body            ", row++, start_col);
+        c_put_str(TERM_WHITE, "===============================================================================", row++, start_col);
         break;
     case _DISPLAY_MODE_SKILLS:
-        c_prt(TERM_WHITE, "Name                       Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows  ", row++, start_col);
-        c_prt(TERM_WHITE, "===============================================================================", row++, start_col);
+        c_put_str(TERM_WHITE, "Name                       Dsrm   Dvce   Save   Stlh  Srch  Prcp  Melee  Bows  ", row++, start_col);
+        c_put_str(TERM_WHITE, "===============================================================================", row++, start_col);
         break;
     case _DISPLAY_MODE_EXTRA:
-        c_prt(TERM_WHITE, "Name                       Lvl  Max  Speed    AC  Pseudo-Class                 ", row++, start_col);
-        c_prt(TERM_WHITE, "===============================================================================", row++, start_col);
+        c_put_str(TERM_WHITE, "Name                       Lvl  Max  Speed    AC  Pseudo-Class                 ", row++, start_col);
+        c_put_str(TERM_WHITE, "===============================================================================", row++, start_col);
         break;
     }
 
@@ -203,13 +202,13 @@ static void _list(_choice_array_t *choices)
             switch (current_type)
             {
             case _TYPE_NEW:
-                c_prt(TERM_YELLOW, "New Form", row, start_col);
+                c_put_str(TERM_YELLOW, "New Form", row, start_col);
                 break;
             case _TYPE_KNOWN:
-                c_prt(TERM_RED, "Known Forms", row, start_col);
+                c_put_str(TERM_RED, "Known Forms", row, start_col);
                 break;
             case _TYPE_VISIBLE:
-                c_prt(TERM_UMBER, "Visible Forms", row, start_col);
+                c_put_str(TERM_UMBER, "Visible Forms", row, start_col);
                 break;
             }
             row++;
@@ -223,7 +222,7 @@ static void _list(_choice_array_t *choices)
         if (!choice->r_idx)
         {
             assert(choice->type == _TYPE_KNOWN);
-            c_prt((i == choices->current) ? TERM_L_BLUE : TERM_L_DARK, 
+            c_put_str((i == choices->current) ? TERM_L_BLUE : TERM_L_DARK,
                   format(" %-23.23s", "Unused"), 
                   row, start_col + 1
             );
@@ -244,7 +243,7 @@ static void _list(_choice_array_t *choices)
                 sprintf(buf, "    %-20.20s", r_name + r_ptr->name);
 
             Term_putch(start_col, row, r_ptr->x_attr, r_ptr->x_char);
-            c_prt(attr, buf, row, start_col + 1);
+            c_put_str(attr, buf, row, start_col + 1);
 
             /* Extra Info */
             if ((p_ptr->wizard || (r_ptr->r_xtra1 & MR1_POSSESSOR)) && r_ptr->body.life)
@@ -345,7 +344,7 @@ static void _list(_choice_array_t *choices)
     }
     _clear_row(row++);
     _clear_row(row);
-    c_prt(TERM_WHITE, "['?' to recall, '=' for more info, ESC to cancel, ENTER to select]", row++, start_col);
+    c_put_str(TERM_WHITE, "['?' to recall, '=' for more info, ESC to cancel, ENTER to select]", row++, start_col);
     _clear_row(row);
 
     if (current_row)
