@@ -233,6 +233,7 @@ static bool _is_monk(void)
     case MON_KENSHIROU:
     case MON_LEMS:
     case MON_RAOU:
+    case MON_ECHIZEN:
         return TRUE;
     }
     return FALSE;
@@ -996,8 +997,12 @@ int possessor_get_powers(spell_info* spells, int max)
     if (ct < max && (r_ptr->flags4 & RF4_BR_DISI))
         _add_power(&spells[ct++], _breath_lvl(35), 25, _breath_fail(95), _breathe_disintegration_spell, p_ptr->stat_ind[A_CON]);
     if (ct < max && (r_ptr->flags4 & RF4_ROCKET))
-        _add_power(&spells[ct++], 35, 30, 80, _rocket_spell, p_ptr->stat_ind[A_STR]);
-
+    {
+        if (r_ptr->id == MON_ECHIZEN)
+            _add_power(&spells[ct++], 35, 5, 50, _rocket_spell, p_ptr->stat_ind[A_STR]);
+        else
+            _add_power(&spells[ct++], 35, 30, 80, _rocket_spell, p_ptr->stat_ind[A_STR]);
+    }
     return ct;
 }
 

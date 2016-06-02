@@ -2764,7 +2764,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
     if (!m_idx) return TRUE;
 
     if (dam > 0 && (p_ptr->wizard || cheat_xtra))
-        msg_format("You do %d (out of %d) damage.", dam, m_ptr->hp);
+        msg_format("You do %d damage.", dam);
 
     if ( p_ptr->melt_armor
       && note == NULL /* Hack: Trying to just get melee and shooting */

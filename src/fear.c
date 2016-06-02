@@ -282,7 +282,7 @@ bool fear_save_p(int ml)
         }    
     }
 
-    if (p_ptr->wizard)
+    if (0 && p_ptr->wizard)
     {
         double s = _save_odds(ml, pl);
         if (p_ptr->resist[RES_FEAR])
@@ -299,7 +299,6 @@ bool fear_save_p(int ml)
         else
             msg_format("Fear: 1d%d <= 1d%d => %.2lf%% %s", ml, pl, s*100.0, result?"Y":"N");
     }
-
 
     return result;
 }
