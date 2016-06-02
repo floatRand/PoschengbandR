@@ -205,48 +205,45 @@ static void _display_alertness(monster_race *r_ptr, doc_ptr doc)
 }
 static void _display_type(monster_race *r_ptr, doc_ptr doc)
 {
-    if (_easy_lore(r_ptr) || r_ptr->r_tkills > 0)
-    {
-        vec_ptr v = vec_alloc((vec_free_f)string_free);
-        doc_insert(doc, "Type : <indent><style:indent>");
+    vec_ptr v = vec_alloc((vec_free_f)string_free);
+    doc_insert(doc, "Type : <indent><style:indent>");
 
-        if (r_ptr->flags2 & RF2_ELDRITCH_HORROR)
-            vec_add(v, string_copy_s("<color:v>Sanity Blasting</color>"));
-        if (r_ptr->flags3 & RF3_ANIMAL)
-            vec_add(v, string_copy_s("<color:G>Natural</color>"));
-        if (r_ptr->flags3 & RF3_EVIL)
-            vec_add(v, string_copy_s("<color:D>Evil</color>"));
-        if (r_ptr->flags3 & RF3_GOOD)
-            vec_add(v, string_copy_s("<color:y>Good</color>"));
-        if (r_ptr->flags3 & RF3_UNDEAD)
-            vec_add(v, string_copy_s("<color:v>Undead</color>"));
-        if (r_ptr->flags3 & RF3_AMBERITE)
-            vec_add(v, string_copy_s("<color:v>Amberite</color>"));
-        if (r_ptr->flags3 & RF3_DRAGON)
-            vec_add(v, string_copy_s("<color:o>Dragon</color>"));
-        if (r_ptr->flags3 & RF3_DEMON)
-            vec_add(v, string_copy_s("<color:v>Demon</color>"));
-        if (r_ptr->flags3 & RF3_GIANT)
-            vec_add(v, string_copy_s("<color:U>Giant</color>"));
-        if (r_ptr->flags3 & RF3_TROLL)
-            vec_add(v, string_copy_s("<color:B>Troll</color>"));
-        if (r_ptr->flags3 & RF3_ORC)
-            vec_add(v, string_copy_s("<color:u>Orc</color>"));
-        if (r_ptr->flags2 & RF2_HUMAN)
-            vec_add(v, string_copy_s("<color:W>Human</color>"));
-        if (r_ptr->flags2 & RF2_THIEF)
-            vec_add(v, string_copy_s("<color:D>Thief</color>"));
-        /*if (r_ptr->flags2 & RF2_QUANTUM)
-            vec_add(v, string_copy_s("<color:v>Quantum</color>"));*/
-        if (r_ptr->flags1 & RF1_MALE)
-            vec_add(v, string_copy_s("<color:b>Male</color>"));
-        if (r_ptr->flags1 & RF1_FEMALE)
-            vec_add(v, string_copy_s("<color:R>Female</color>")); /* Pink? */
+    if (r_ptr->flags2 & RF2_ELDRITCH_HORROR)
+        vec_add(v, string_copy_s("<color:v>Sanity Blasting</color>"));
+    if (r_ptr->flags3 & RF3_ANIMAL)
+        vec_add(v, string_copy_s("<color:G>Natural</color>"));
+    if (r_ptr->flags3 & RF3_EVIL)
+        vec_add(v, string_copy_s("<color:D>Evil</color>"));
+    if (r_ptr->flags3 & RF3_GOOD)
+        vec_add(v, string_copy_s("<color:y>Good</color>"));
+    if (r_ptr->flags3 & RF3_UNDEAD)
+        vec_add(v, string_copy_s("<color:v>Undead</color>"));
+    if (r_ptr->flags3 & RF3_AMBERITE)
+        vec_add(v, string_copy_s("<color:v>Amberite</color>"));
+    if (r_ptr->flags3 & RF3_DRAGON)
+        vec_add(v, string_copy_s("<color:o>Dragon</color>"));
+    if (r_ptr->flags3 & RF3_DEMON)
+        vec_add(v, string_copy_s("<color:v>Demon</color>"));
+    if (r_ptr->flags3 & RF3_GIANT)
+        vec_add(v, string_copy_s("<color:U>Giant</color>"));
+    if (r_ptr->flags3 & RF3_TROLL)
+        vec_add(v, string_copy_s("<color:B>Troll</color>"));
+    if (r_ptr->flags3 & RF3_ORC)
+        vec_add(v, string_copy_s("<color:u>Orc</color>"));
+    if (r_ptr->flags2 & RF2_HUMAN)
+        vec_add(v, string_copy_s("<color:W>Human</color>"));
+    if (r_ptr->flags2 & RF2_THIEF)
+        vec_add(v, string_copy_s("<color:D>Thief</color>"));
+    /*if (r_ptr->flags2 & RF2_QUANTUM)
+        vec_add(v, string_copy_s("<color:v>Quantum</color>"));*/
+    if (r_ptr->flags1 & RF1_MALE)
+        vec_add(v, string_copy_s("<color:b>Male</color>"));
+    if (r_ptr->flags1 & RF1_FEMALE)
+        vec_add(v, string_copy_s("<color:R>Female</color>")); /* Pink? */
 
-        _print_list(v, doc, ',', '\0');
-        vec_free(v);
-        doc_insert(doc, "</style></indent>\n");
-    }
+    _print_list(v, doc, ',', '\0');
+    vec_free(v);
+    doc_insert(doc, "</style></indent>\n");
 }
 static void _display_basic(monster_race *r_ptr, doc_ptr doc)
 {
