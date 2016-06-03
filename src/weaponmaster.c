@@ -2343,7 +2343,7 @@ bool _design_monkey_clone(void)
     if (p_ptr->sh_cold) r_ptr->flags3 |= RF3_AURA_COLD;
 
     if (p_ptr->reflect) r_ptr->flags2 |= RF2_REFLECTING;
-    if (p_ptr->regenerate) r_ptr->flags2 |= RF2_REGENERATE;
+    if (p_ptr->regen >= 200) r_ptr->flags2 |= RF2_REGENERATE;
     if (p_ptr->sh_fire) r_ptr->flags2 |= RF2_AURA_FIRE;
     if (p_ptr->sh_elec) r_ptr->flags2 |= RF2_AURA_ELEC;
     if (p_ptr->pass_wall) r_ptr->flags2 |= RF2_PASS_WALL;

@@ -308,7 +308,7 @@ static power_info _demeter_powers[] =
 };
 static void _demeter_calc_bonuses(void)
 {
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100;
     p_ptr->slow_digest = TRUE;
     if (p_ptr->lev >= 40)
         res_add(RES_TIME);

@@ -1461,7 +1461,7 @@ void possessor_calc_bonuses(void)
     if (r_ptr->flags2 & RF2_REFLECTING)
         p_ptr->reflect = TRUE;
     if (r_ptr->flags2 & RF2_REGENERATE)
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
     if ((r_ptr->flags2 & RF2_ELDRITCH_HORROR) || strchr("GLUVW", r_ptr->d_char))
         p_ptr->no_eldritch = TRUE;
     if (r_ptr->flags2 & RF2_AURA_FIRE)

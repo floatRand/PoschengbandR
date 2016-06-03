@@ -928,7 +928,7 @@ void samurai_posture_calc_bonuses(void)
         p_ptr->see_inv = TRUE;
         p_ptr->free_act = TRUE;
         p_ptr->slow_digest = TRUE;
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
         p_ptr->levitation = TRUE;
         p_ptr->hold_life = TRUE;
         p_ptr->sustain_str = TRUE;

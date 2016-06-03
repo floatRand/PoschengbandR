@@ -727,7 +727,7 @@ void self_knowledge(void)
         info[i++] = "You have free action.";
 
     }
-    if (p_ptr->regenerate)
+    if (p_ptr->regen > 100)
     {
         info[i++] = "You regenerate quickly.";
 

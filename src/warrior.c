@@ -4,8 +4,7 @@ static void _calc_bonuses(void)
 {
     if (p_ptr->lev >= 30)
         res_add(RES_FEAR);
-    if (p_ptr->lev >= 45)
-        p_ptr->regenerate = TRUE;
+    p_ptr->regen += 2 * p_ptr->lev;
 }
 
 static void _get_flags(u32b flgs[TR_FLAG_SIZE])

@@ -463,7 +463,7 @@ static void _calc_bonuses(void)
         res_add(RES_DARK);
         p_ptr->levitation = TRUE;
         p_ptr->pspeed += 1;
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
     }
 
     if (p_ptr->lev >= 45)
@@ -743,7 +743,7 @@ static void _bat_calc_bonuses(void)
 {
     p_ptr->levitation = TRUE;
     p_ptr->see_inv = TRUE;
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100;
     res_add(RES_DARK);
     res_add(RES_COLD);
     res_add(RES_POIS);

@@ -1324,7 +1324,7 @@ void equip_calc_bonuses(void)
             p_ptr->shooter_info.to_mult += 25 * o_ptr->pval;
 
         if (have_flag(flgs, TR_SLOW_DIGEST)) p_ptr->slow_digest = TRUE;
-        if (have_flag(flgs, TR_REGEN))       p_ptr->regenerate = TRUE;
+        if (have_flag(flgs, TR_REGEN))       p_ptr->regen += 100;
         if (have_flag(flgs, TR_TELEPATHY))   p_ptr->telepathy = TRUE;
         if (have_flag(flgs, TR_ESP_ANIMAL))  p_ptr->esp_animal = TRUE;
         if (have_flag(flgs, TR_ESP_UNDEAD))  p_ptr->esp_undead = TRUE;

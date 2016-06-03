@@ -1579,19 +1579,7 @@ static void process_world_aux_hp_and_sp(void)
     }
     else
     {
-        if (p_ptr->pclass == CLASS_BLOOD_KNIGHT)
-            regen_amount += regen_amount*p_ptr->lev/50;
-
-        if (p_ptr->super_regenerate)
-            regen_amount += regen_amount + regen_amount*p_ptr->lev/10;
-        else if (p_ptr->regenerate)
-            regen_amount = regen_amount * 2;
-
-        if (p_ptr->special_defense & (KAMAE_MASK | KATA_MASK))
-            regen_amount /= 2;
-
-        if (p_ptr->cursed & TRC_SLOW_REGEN)
-            regen_amount /= 5;
+        regen_amount = regen_amount * p_ptr->regen/100;
     }
 
     if ( p_ptr->action == ACTION_SEARCH 
@@ -3349,10 +3337,8 @@ static void process_world(void)
             int digestion = SPEED_TO_ENERGY(p_ptr->pspeed);
 
             /* Regeneration takes more food */
-            if (p_ptr->super_regenerate)
-                digestion += 30;
-            else if (p_ptr->regenerate)
-                digestion += 20;
+            if (p_ptr->regen > 100)
+                digestion += 10*(p_ptr->regen-100)/100;
             if (p_ptr->special_defense & (KAMAE_MASK | KATA_MASK))
                 digestion += 20;
             if (p_ptr->cursed & TRC_FAST_DIGEST)
@@ -3360,7 +3346,7 @@ static void process_world(void)
 
             /* Slow digestion takes less food */
             if (p_ptr->slow_digest)
-                digestion -= 5;
+                digestion /= 2;
 
             /* Temperance slows digestion */
             digestion = digestion * (375 - virtue_current(VIRTUE_TEMPERANCE)) / 375;

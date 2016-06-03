@@ -3517,8 +3517,7 @@ void calc_bonuses(void)
     p_ptr->see_inv = FALSE;
     p_ptr->free_act = FALSE;
     p_ptr->slow_digest = FALSE;
-    p_ptr->regenerate = FALSE;
-    p_ptr->super_regenerate = FALSE;
+    p_ptr->regen = 100;
     p_ptr->can_swim = FALSE;
     p_ptr->levitation = FALSE;
     p_ptr->hold_life = FALSE;
@@ -3746,7 +3745,7 @@ void calc_bonuses(void)
         p_ptr->see_inv = TRUE;
         p_ptr->free_act = TRUE;
         p_ptr->slow_digest = TRUE;
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
         p_ptr->levitation = TRUE;
 
         if (p_ptr->special_defense & KATA_MUSOU)
@@ -3885,7 +3884,7 @@ void calc_bonuses(void)
         if (hex_spelling(HEX_DEMON_AURA))
         {
             p_ptr->sh_fire = TRUE;
-            p_ptr->regenerate = TRUE;
+            p_ptr->regen += 100;
         }
         if (hex_spelling(HEX_ICE_ARMOR))
         {
@@ -4062,7 +4061,7 @@ void calc_bonuses(void)
         p_ptr->see_infra+=3;
 
     if (p_ptr->tim_regen)
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
 
     if (p_ptr->tim_levitation)
         p_ptr->levitation = TRUE;
@@ -4788,6 +4787,16 @@ void calc_bonuses(void)
     /* Display the speed (if needed) */
     if (p_ptr->pspeed != old_speed)
         p_ptr->redraw |= PR_EFFECTS;
+
+    /* Regeneration */
+    if (p_ptr->special_defense & (KAMAE_MASK | KATA_MASK))
+        p_ptr->regen /= 2;
+
+    if (p_ptr->cursed & TRC_SLOW_REGEN)
+        p_ptr->regen /= 5;
+
+    if (p_ptr->regen < 0)
+        p_ptr->regen = 0;
 
     /* Robe of the Twilight forces AC to 0 */
     if (equip_find_ego(EGO_ROBE_TWILIGHT))

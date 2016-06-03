@@ -1507,23 +1507,22 @@ struct player_type
     bool sustain_con;    /* Keep constitution */
     bool sustain_chr;    /* Keep charisma */
 
-    u32b cursed;            /* Player is cursed */
+    u32b cursed;         /* Player is cursed */
 
-    bool can_swim;        /* No damage falling */
-    bool levitation;        /* No damage falling */
-    bool lite;        /* Permanent light */
-    bool free_act;        /* Never paralyzed */
+    bool can_swim;       /* No damage falling */
+    bool levitation;     /* No damage falling */
+    bool lite;           /* Permanent light */
+    bool free_act;       /* Never paralyzed */
     bool see_inv;        /* Can see invisible */
-    bool regenerate;    /* Regenerate hit pts */
-    bool super_regenerate;
-    bool hold_life;        /* Resist life draining */
+    s16b regen;          /* Rate of regeneration: 100 = 100%, 200 = 200%, etc. */
+    bool hold_life;      /* Resist life draining */
 
     bool loremaster;
     int  auto_id_sp;
     bool cult_of_personality;
     bool fairy_stealth;
 
-    bool telepathy;        /* Telepathy */
+    bool telepathy;      /* Telepathy */
     bool esp_animal;
     bool esp_undead;
     bool esp_demon;

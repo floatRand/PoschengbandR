@@ -149,7 +149,7 @@ static void _khorne_calc_bonuses(void)
     switch (p_ptr->current_r_idx)
     {
     case MON_BLOODLETTER_KHORNE:
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
         res_add(RES_COLD);
         res_add(RES_POIS);
         res_add(RES_CHAOS);
@@ -178,7 +178,7 @@ static void _khorne_calc_bonuses(void)
         p_ptr->pspeed += 6;
         p_ptr->to_a += 50;
         p_ptr->dis_to_a += 50;
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 150;
         p_ptr->levitation = TRUE;
         p_ptr->free_act = TRUE;
         p_ptr->see_inv = TRUE;

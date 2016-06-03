@@ -610,7 +610,10 @@ static void _build_flags2(doc_ptr doc, _flagzilla_ptr flagzilla)
     _build_flags(doc, "See Invis", TR_SEE_INVIS, TR_INVALID, flagzilla);
     _build_flags(doc, "Warning", TR_WARNING, TR_INVALID, flagzilla);
     _build_flags(doc, "Slow Digest", TR_SLOW_DIGEST, TR_INVALID, flagzilla);
-    _build_flags(doc, "Regenerate", TR_REGEN, TR_INVALID, flagzilla);
+
+    _build_flags_imp(doc, "Regenerate", TR_REGEN, TR_INVALID, flagzilla);
+    doc_printf(doc, " %3d%%\n", p_ptr->regen); /* TODO: Only display known amount ... but then again, you can feel this, no? */
+
     _build_flags(doc, "Levitation", TR_LEVITATION, TR_INVALID, flagzilla);
     _build_flags(doc, "Perm Lite", TR_LITE, TR_INVALID, flagzilla);
     _build_flags(doc, "Reflection", TR_REFLECT, TR_INVALID, flagzilla);

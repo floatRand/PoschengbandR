@@ -16,7 +16,7 @@ static int _amberite_get_powers(spell_info* spells, int max)
 static void _amberite_calc_bonuses(void)
 {
     p_ptr->sustain_con = TRUE;
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100;
 }
 static void _amberite_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
@@ -1911,7 +1911,7 @@ static void _half_troll_calc_bonuses(void)
 {
     p_ptr->sustain_str = TRUE;
     if (p_ptr->lev >= 15)
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
 }
 static void _half_troll_get_flags(u32b flgs[TR_FLAG_SIZE])
 {

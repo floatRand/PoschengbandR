@@ -686,7 +686,7 @@ void draconian_regen_mut(int cmd, variant *res)
         var_set_string(res, "You will regenerate much more quickly.");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->super_regenerate = TRUE;
+        p_ptr->regen += 150;
         break;
     default:
         default_spell(cmd, res);
@@ -2142,7 +2142,7 @@ void regeneration_mut(int cmd, variant *res)
         var_set_string(res, "You are regenerating.");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
         break;
     default:
         default_spell(cmd, res);
@@ -2192,7 +2192,7 @@ void rotting_flesh_mut(int cmd, variant *res)
         var_set_string(res, "Your flesh is rotting (-2 CON, -1 CHR).");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->regenerate = FALSE; /* Equip and spells processed later ... */
+        p_ptr->regen -= 100;
         break;
     default:
         default_spell(cmd, res);

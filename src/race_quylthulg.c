@@ -797,7 +797,7 @@ static void _calc_bonuses(void)
     res_add(RES_FEAR);
     res_add(RES_BLIND);
     res_add(RES_CONF);
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100;
     p_ptr->slow_digest = TRUE;
     p_ptr->telepathy = TRUE;
     p_ptr->free_act = TRUE;

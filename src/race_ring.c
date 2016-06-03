@@ -1354,7 +1354,7 @@ static void _calc_bonuses(void)
     if (_essences[TR_SLOW_DIGEST] >= 2)
         p_ptr->slow_digest = TRUE;
     if (_essences[TR_REGEN] >= 7)
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
     if (_essences[TR_REFLECT] >= 7)
         p_ptr->reflect = TRUE;
 
