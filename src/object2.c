@@ -4722,28 +4722,43 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
                     o_ptr->to_a += m_bonus(10, level);
                 break;
             case EGO_BODY_ELEMENTAL_PROTECTION:
-                one_ele_resistance(o_ptr);
-                do { one_ele_resistance(o_ptr); } while (one_in_(2));
-                if (one_in_(4))
+            {
+                int rolls = 1 + m_bonus(6, level);
+                int i;
+                for (i = 0; i < rolls; i++)
+                    one_ele_resistance(o_ptr);
+                if (level > 20 && one_in_(4))
                     add_flag(o_ptr->art_flags, TR_RES_POIS);
                 break;
+            }
             case EGO_BODY_CELESTIAL_PROTECTION:
-                one_high_resistance(o_ptr);
-                do { one_high_resistance(o_ptr); } while (one_in_(2));
+            {
+                int rolls = 2 + randint0(m_bonus(5, level));
+                int i;
+                for (i = 0; i < rolls; i++)
+                    one_high_resistance(o_ptr);
+
+                while (one_in_(3))
+                    o_ptr->to_a += randint1(3);
+                if (one_in_(3))
+                    add_flag(o_ptr->art_flags, TR_FREE_ACT);
+                if (one_in_(3))
+                    add_flag(o_ptr->art_flags, TR_SLOW_DIGEST);
                 if (one_in_(7))
                     add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
                 if (one_in_(17))
                     add_flag(o_ptr->art_flags, TR_REFLECT);
                 break;
+            }
             case EGO_BODY_ELVENKIND:
                 if (one_in_(4))
                 {
                     add_flag(o_ptr->art_flags, TR_DEX);
-                    if (one_in_(2))
+                    if (one_in_(3))
                         add_flag(o_ptr->art_flags, TR_DEC_STR);
-                    if (one_in_(7))
-                        add_flag(o_ptr->art_flags, TR_SPEED);
                 }
+                if (level > 60 && one_in_(7))
+                    add_flag(o_ptr->art_flags, TR_SPEED);
                 break;
             case EGO_BODY_DWARVEN:
                 if (o_ptr->tval != TV_HARD_ARMOR || o_ptr->sval == SV_RUSTY_CHAIN_MAIL)
@@ -4788,6 +4803,8 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
                     done = FALSE;
                 else
                 {
+                    if (level > 66 && one_in_(6))
+                        add_flag(o_ptr->art_flags, TR_SPEED);
                     if (one_in_(ACTIVATION_CHANCE))
                         effect_add_random(o_ptr, BIAS_DEMON);
                 }
@@ -4814,17 +4831,27 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
                 /*o_ptr->to_a += 7;*/
                 break;
             case EGO_SHIELD_ELEMENTAL_PROTECTION:
-                one_ele_resistance(o_ptr);
-                do { one_ele_resistance(o_ptr); } while (one_in_(3));
-                if (one_in_(5))
+            {
+                int rolls = 1 + m_bonus(5, level);
+                int i;
+                for (i = 0; i < rolls; i++)
+                    one_ele_resistance(o_ptr);
+                if (level > 20 && one_in_(5))
                     add_flag(o_ptr->art_flags, TR_RES_POIS);
                 break;
+            }
             case EGO_SHIELD_CELESTIAL_PROTECTION:
-                one_high_resistance(o_ptr);
-                do { one_high_resistance(o_ptr); } while (one_in_(3));
-                if (one_in_(17))
+            {
+                int rolls = 1 + randint0(m_bonus(5, level));
+                int i;
+                for (i = 0; i < rolls; i++)
+                    one_high_resistance(o_ptr);
+                if (one_in_(7))
+                    add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
+                if (one_in_(5))
                     add_flag(o_ptr->art_flags, TR_REFLECT);
                 break;
+            }
             case EGO_SHIELD_ELVENKIND:
                 if (one_in_(4))
                     add_flag(o_ptr->art_flags, TR_DEC_STR);
@@ -4945,12 +4972,17 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
             }
             break;
         case EGO_CROWN_CELESTIAL_PROTECTION:
-            one_high_resistance(o_ptr);
-            do { one_high_resistance(o_ptr); } while (one_in_(3));
+        {
+            int rolls = 1 + randint0(m_bonus(5, level));
+            int i;
+            for (i = 0; i < rolls; i++)
+                one_high_resistance(o_ptr);
+            if (one_in_(7))
+                add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
             break;
         }
+        }
         break;
-
     case TV_HELM:
         if ((!crafting && one_in_(20)) || power > 2)
         {
@@ -5050,13 +5082,17 @@ static void _create_armor(object_type *o_ptr, int level, int power, int mode)
                 effect_add_random(o_ptr, BIAS_COLD);
             break;
         case EGO_CLOAK_ELEMENTAL_PROTECTION:
-            one_ele_resistance(o_ptr);
-            do { one_ele_resistance(o_ptr); } while (one_in_(4));
-            if (one_in_(7))
+        {
+            int rolls = 1 + m_bonus(5, level);
+            int i;
+            for (i = 0; i < rolls; i++)
+                one_ele_resistance(o_ptr);
+            if (level > 20 && one_in_(7))
                 add_flag(o_ptr->art_flags, TR_RES_POIS);
             if (one_in_(ACTIVATION_CHANCE))
                 effect_add_random(o_ptr, BIAS_ELEMENTAL);
             break;
+        }
         case EGO_CLOAK_BAT:
             o_ptr->to_d -= 6;
             o_ptr->to_h -= 6;

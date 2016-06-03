@@ -2875,6 +2875,7 @@ static void _wiz_inspect_objects(int level)
         if (1 && object_is_jewelry(o_ptr) && o_ptr->name2)
             _wiz_stats_log_obj(level, o_ptr);
 
+
         if (race_ptr->destroy_object)
             race_ptr->destroy_object(o_ptr);
 
@@ -3380,30 +3381,6 @@ void do_cmd_debug(void)
                 drop_near(&forge, -1, py, px);
             }
         }
-/*
-        int i, j, ct = 0;
-        object_type obj;
-        char buf[MAX_NLEN];
-
-        object_prep(&obj, 687);
-        apply_magic(&obj, 50, 0);
-        for (i = 0; i < max_r_idx; i++)
-        {
-            monster_race *r_ptr = &r_info[i];
-            if (r_ptr->level < 30) continue;
-            for (j = 0; j < r_ptr->r_akills; j++)
-            {
-                rune_sword_kill(&obj, r_ptr);
-                ct++;
-            }
-        }
-
-        identify_item(&obj);
-        obj.ident |= (IDENT_MENTAL);
-
-        object_desc(buf, &obj, 0);
-        msg_format("%d) %s", ct, buf);
-*/
         break;
     }
     case ';':
