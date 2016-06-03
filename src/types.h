@@ -574,6 +574,8 @@ struct monster_race
 #define ROOM_THEME_NIGHT       0x0008  /* Useful for wilderness graveyards where monsters only spawn at night */
 #define ROOM_THEME_DAY         0x0010
 #define ROOM_THEME_FORMATION   0x0020  /* Hack (see source for details): Allows monster formations. */
+#define ROOM_SHOP              0x2000  /* Room is a shop ... NO_TOWN means multiple shops on same level
+                                          would all stock the same stuff. This is still a wilderness problem, though */
 #define ROOM_DEBUG             0x4000  /* For debugging ... force this template to always be chosen */
 #define ROOM_NO_ROTATE         0x8000
 
