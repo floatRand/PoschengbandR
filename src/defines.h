@@ -5772,6 +5772,7 @@ enum ego_e {
     EGO_TYPE_ROBE,
     EGO_TYPE_SPECIAL,
     EGO_TYPE_DEVICE,
+    EGO_TYPE_DRAGON_ARMOR,
     EGO_TYPE_MAX
 };
 
@@ -6009,6 +6010,17 @@ enum ego_device_e {
     EGO_DEVICE_POWER,
     EGO_DEVICE_HOLDING,
     EGO_DEVICE_QUICKNESS = 356,
+};
+
+enum ego_dragon_e {
+    EGO_DRAGON_LORE = 370,
+    EGO_DRAGON_BREATH,
+    EGO_DRAGON_ATTACK,
+    EGO_DRAGON_CRAFT,
+    EGO_DRAGON_ARMOR,
+    EGO_DRAGON_DOMINATION,
+    EGO_DRAGON_CRUSADE,
+    EGO_DRAGON_DEATH,
 };
 
 enum effect_e

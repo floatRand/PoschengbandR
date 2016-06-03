@@ -1041,3 +1041,48 @@ F:HOLD_LIFE
 N:356:DEVICE:of Quickness
 W:60:*:16
 F:SPEED
+
+####################
+### Dragon Armor ###
+####################
+
+N:370:DRAGON_ARMOR:(Lore)
+W:0:*:1
+C:0:0:0:3
+F:INT
+
+N:371:DRAGON_ARMOR:(Breath)
+W:0:*:1
+C:0:0:0:3
+F:CON
+
+N:372:DRAGON_ARMOR:(Attack)
+W:0:*:1
+C:5:5:0:3
+F:STR
+
+N:373:DRAGON_ARMOR:(Craft)
+W:0:*:1
+C:0:0:0:3
+F:WIS | MAGIC_MASTERY
+
+N:374:DRAGON_ARMOR:(Armor)
+W:0:*:1
+C:0:0:10:3
+F:DEX
+
+N:375:DRAGON_ARMOR:(Domination)
+W:0:*:1
+C:0:0:0:3
+F:CHR | RES_FEAR
+
+N:376:DRAGON_ARMOR:(Crusade)
+W:0:*:2
+C:5:5:0:1
+F:STR | CHR | HOLD_LIFE
+
+N:377:DRAGON_ARMOR:(Death)
+W:0:*:3
+C:0:0:0:3
+F:STR | RES_NETHER
+

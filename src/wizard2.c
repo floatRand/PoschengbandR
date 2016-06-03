@@ -384,17 +384,19 @@ static void _test_specific_k_idx(void)
         /*create_artifact(&forge, CREATE_ART_GOOD);*/
         apply_magic(&forge, object_level, 0);
 
-        if ( forge.name2 == EGO_RING_WIZARDRY
-          || forge.name2 == EGO_AMULET_MAGI
-          || forge.name2 == EGO_CROWN_MAGI )
+        if (forge.name2)
         {
             identify_item(&forge);
             forge.ident |= (IDENT_FULL); 
         
-            object_desc(buf, &forge, 0);
-            msg_format("%s (%d)", buf, object_value_real(&forge));
-            if (forge.to_d)
+            object_desc(buf, &forge, OD_COLOR_CODED);
+            msg_format("%d) %s", i + 1, buf);
+            msg_boundary();
+            if ( have_flag(forge.art_flags, TR_VAMPIRIC)
+              || have_flag(forge.art_flags, TR_BLOWS) )
+            {
                 drop_near(&forge, -1, py, px);
+            }
         }
     }
 }
@@ -2866,13 +2868,16 @@ static void _wiz_inspect_objects(int level)
             stats_add_ego(o_ptr);
 
         if (0) _wiz_stats_log_speed(level, o_ptr);
-        if (1) _wiz_stats_log_books(level, o_ptr, 20, 20);
+        if (0) _wiz_stats_log_books(level, o_ptr, 20, 20);
         if (0) _wiz_stats_log_devices(level, o_ptr);
-        if (1) _wiz_stats_log_arts(level, o_ptr);
-        if (1) _wiz_stats_log_rand_arts(level, o_ptr);
-        if (1 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_jewelry(o_ptr))
+        if (0) _wiz_stats_log_arts(level, o_ptr);
+        if (0) _wiz_stats_log_rand_arts(level, o_ptr);
+        if (0 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_jewelry(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
-        if (1 && object_is_jewelry(o_ptr) && o_ptr->name2)
+        if (0 && object_is_jewelry(o_ptr) && o_ptr->name2)
+            _wiz_stats_log_obj(level, o_ptr);
+
+        if (1 && o_ptr->tval == TV_DRAG_ARMOR)
             _wiz_stats_log_obj(level, o_ptr);
 
 
