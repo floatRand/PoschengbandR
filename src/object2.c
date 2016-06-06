@@ -827,19 +827,12 @@ void stats_on_load(savefile_ptr file)
     stats_rand_art_counts.used = savefile_read_s32b(file);
     stats_rand_art_counts.destroyed = savefile_read_s32b(file);
 
-    if (savefile_is_older_than(file, 4, 0, 2, 1))
-    {
-        WIPE(&stats_gold_counts, gold_counts_t);
-    }
-    else
-    {
-        stats_gold_counts.found = savefile_read_s32b(file);
-        stats_gold_counts.selling = savefile_read_s32b(file);
-        stats_gold_counts.buying = savefile_read_s32b(file);
-        stats_gold_counts.services = savefile_read_s32b(file);
-        stats_gold_counts.winnings = savefile_read_s32b(file);
-        stats_gold_counts.stolen = savefile_read_s32b(file);
-    }
+    stats_gold_counts.found = savefile_read_s32b(file);
+    stats_gold_counts.selling = savefile_read_s32b(file);
+    stats_gold_counts.buying = savefile_read_s32b(file);
+    stats_gold_counts.services = savefile_read_s32b(file);
+    stats_gold_counts.winnings = savefile_read_s32b(file);
+    stats_gold_counts.stolen = savefile_read_s32b(file);
 
     device_stats_on_load(file);
 }

@@ -145,11 +145,6 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
             break;
         case SAVE_ITEM_XTRA5_OLD:
             o_ptr->xtra5 = savefile_read_s16b(file);
-            if (savefile_is_older_than(file, 4, 0, 0, 6) && object_is_device(o_ptr))
-            {
-                o_ptr->xtra5 *= 100;
-                assert(o_ptr->xtra5 > 0);
-            }
             break;
         case SAVE_ITEM_XTRA5:
             o_ptr->xtra5 = savefile_read_s32b(file);
@@ -1287,7 +1282,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
              "Loading a %d.%d.%d savefile...",
              (z_major > 9) ? z_major - 10 : z_major, z_minor, z_patch));
 
-    if (savefile_is_older_than(file, 4, 0, 0, 5))
+    if (savefile_is_older_than(file, 5, 0, 0, 0))
     {
         note("Old savefiles are not supported!");
         return 1;
@@ -1518,11 +1513,6 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
 
     rd_extra(file);
-    if (p_ptr->pclass == CLASS_WEAPONSMITH && savefile_is_older_than(file, 4, 0, 2, 0))
-    {
-        note("Weaponsmiths were re-written for version 4.0.2. Unable to upgrade since all your previous essences would be lost!");
-        return 25;
-    }
 
     if (p_ptr->energy_need < -999) world_player = TRUE;
 
