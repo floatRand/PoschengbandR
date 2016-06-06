@@ -4623,6 +4623,7 @@ static void _create_ego_dragon_armor(object_type *o_ptr, int level)
             break;
 
         case EGO_DRAGON_ARMOR:
+            o_ptr->to_a += 5;
             if (one_in_(3))
                 o_ptr->to_a += m_bonus(10, level);
             while(one_in_(2))
