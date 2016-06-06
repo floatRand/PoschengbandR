@@ -828,7 +828,7 @@ static void _club_toss_imp(_club_toss_info * info)
                         {
                             if (r_ptr->flags3 & RF3_NO_CONF)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_CONF;
+                                mon_lore_3(m_ptr, RF3_NO_CONF);
                                 msg_format("%^s is unaffected.", m_name);
                             }
                             else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -846,7 +846,7 @@ static void _club_toss_imp(_club_toss_info * info)
                         {
                             if (r_ptr->flags3 & RF3_NO_SLEEP)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_SLEEP;
+                                mon_lore_3(m_ptr, RF3_NO_SLEEP);
                                 msg_format("%^s is unaffected.", m_name);
                             }
                             else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -864,7 +864,7 @@ static void _club_toss_imp(_club_toss_info * info)
                         {
                             if (r_ptr->flags3 & RF3_NO_STUN)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
+                                mon_lore_3(m_ptr, RF3_NO_STUN);
                                 msg_format("%^s is unaffected.", m_name);
                             }
                             else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -2343,7 +2343,7 @@ bool _design_monkey_clone(void)
     if (p_ptr->sh_cold) r_ptr->flags3 |= RF3_AURA_COLD;
 
     if (p_ptr->reflect) r_ptr->flags2 |= RF2_REFLECTING;
-    if (p_ptr->regenerate) r_ptr->flags2 |= RF2_REGENERATE;
+    if (p_ptr->regen >= 200) r_ptr->flags2 |= RF2_REGENERATE;
     if (p_ptr->sh_fire) r_ptr->flags2 |= RF2_AURA_FIRE;
     if (p_ptr->sh_elec) r_ptr->flags2 |= RF2_AURA_ELEC;
     if (p_ptr->pass_wall) r_ptr->flags2 |= RF2_PASS_WALL;
@@ -2352,6 +2352,8 @@ bool _design_monkey_clone(void)
 
     r_ptr->flags7 |= RF7_CAN_SWIM;
     if (p_ptr->levitation) r_ptr->flags7 |= RF7_CAN_FLY;
+
+    r_ptr->r_xtra1 |= MR1_LORE;
 
     return TRUE;
 }

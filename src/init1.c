@@ -1758,6 +1758,8 @@ static errr _parse_room_flags(char* buf, room_template_t *room_ptr)
             room_ptr->flags |= ROOM_THEME_NIGHT;
         else if (streq(flag, "DAY"))
             room_ptr->flags |= ROOM_THEME_DAY;
+        else if (streq(flag, "SHOP"))
+            room_ptr->flags |= ROOM_SHOP;
         else if (streq(flag, "DEBUG"))
             room_ptr->flags |= ROOM_DEBUG;
         else if (streq(flag, "NO_ROTATE"))
@@ -3130,6 +3132,7 @@ static cptr e_info_types[] = /* order must match ego_e in defines.h, obviously *
     "ROBE",
     "SPECIAL",
     "DEVICE",
+    "DRAGON_ARMOR",
 };
 
 /*
@@ -3478,6 +3481,7 @@ errr parse_r_info(char *buf, header *head)
 
         /* Point at the "info" */
         r_ptr = &r_info[i];
+        r_ptr->id = i;
 
         /* Store the name */
         if (!add_name(&r_ptr->name, head, s)) return (7);

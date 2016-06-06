@@ -1003,177 +1003,51 @@ static void spoil_out(cptr str)
 
 
 
-/*
- *  Hook function used in spoil_mon_info()
- */
-static void roff_func(byte attr, cptr str)
+static int _compare_r_level(monster_race *l, monster_race *r)
 {
-    /* Unused */
-    (void)attr;
-
-    spoil_out(str);
+    if (l->level < r->level) return -1;
+    if (l->level > r->level) return 1;
+    if (l->mexp < r->mexp) return -1;
+    if (l->mexp > r->mexp) return 1;
+    if (l->id < r->id) return -1;
+    if (l->id > r->id) return 1;
+    return 0;
 }
-
-
-/*
- * Create a spoiler file for monsters (-SHAWN-)
- */
-static void spoil_mon_info(cptr fname)
+static int _compare_r_level_desc(monster_race *l, monster_race *r)
 {
-    char buf[1024];
-    int i, l, n = 0;
-    u32b flags1;
+    return -_compare_r_level(l, r);
+}
+static void spoil_mon_info()
+{
+    int     i;
+    vec_ptr v = vec_alloc(NULL);
+    doc_ptr doc = doc_alloc(80);
 
-    u16b why = 2;
-    s16b *who;
+    spoiler_hack = TRUE;
 
-    /* Build the filename */
-    path_build(buf, sizeof(buf), ANGBAND_DIR_USER, fname);
-
-    /* File type is "TEXT" */
-    FILE_TYPE(FILE_TYPE_TEXT);
-
-    /* Open the file */
-    fff = my_fopen(buf, "w");
-
-    /* Oops */
-    if (!fff)
-    {
-        msg_print("Cannot create spoiler file.");
-        return;
-    }
-
-
-    /* Dump the header */
-    sprintf(buf, "Spoiler File -- Monsters (PosChengband %d.%d.%d)\n\n\n",
-        VER_MAJOR, VER_MINOR, VER_PATCH);
-
-    spoil_out(buf);
-    spoil_out("------------------------------------------\n\n");
-
-    /* Allocate the "who" array */
-    C_MAKE(who, max_r_idx, s16b);
-
-    /* Scan the monsters */
     for (i = 1; i < max_r_idx; i++)
     {
         monster_race *r_ptr = &r_info[i];
-
-        /* Use that monster */
-        if (r_ptr->name) who[n++] = i;
+        if (!r_ptr->name) continue;
+        if (r_ptr->id == MON_MONKEY_CLONE) continue;
+        if (r_ptr->id == MON_KAGE) continue;
+        vec_add(v, r_ptr);
     }
+    vec_sort(v, (vec_cmp_f)_compare_r_level_desc);
 
-    /* Select the sort method */
-    ang_sort_comp = ang_sort_comp_hook;
-    ang_sort_swap = ang_sort_swap_hook;
-
-    /* Sort the array by dungeon depth of monsters */
-    ang_sort(who, &why, n);
-
-
-    /*
-     * List all monsters in order
-     */
-    for (l = 0; l < n; l++)
+    for (i = 0; i < vec_length(v); i++)
     {
-        monster_race *r_ptr = &r_info[who[l]];
-
-        /* Extract the flags */
-        flags1 = r_ptr->flags1;
-
-        /* Prefix */
-        /*
-        if (flags1 & (RF1_QUESTOR))
-        {
-            spoil_out("[Q] ");
-        }
-        else
-        */
-        if (flags1 & (RF1_UNIQUE))
-        {
-            spoil_out("[U] ");
-        }
-        else
-        {
-            spoil_out("The ");
-        }
-
-        /* Name */
-        sprintf(buf, "%s  (", (r_name + r_ptr->name));  /* ---)--- */
-
-        spoil_out(buf);
-
-        /* Color */
-        spoil_out(attr_to_text(r_ptr));
-
-        /* Symbol --(-- */
-        sprintf(buf, " '%c')\n", r_ptr->d_char);
-        spoil_out(buf);
-
-
-        /* Indent */
-        sprintf(buf, "=== ");
-        spoil_out(buf);
-
-        /* Number */
-        sprintf(buf, "Num:%d  ", who[l]);
-        spoil_out(buf);
-
-        /* Level */
-        sprintf(buf, "Lev:%d  ", r_ptr->level);
-        spoil_out(buf);
-
-        /* Rarity */
-        sprintf(buf, "Rar:%d  ", r_ptr->rarity);
-        spoil_out(buf);
-
-        /* Speed */
-        if (r_ptr->speed >= 110)
-        {
-            sprintf(buf, "Spd:+%d  ", (r_ptr->speed - 110));
-        }
-        else
-        {
-            sprintf(buf, "Spd:-%d  ", (110 - r_ptr->speed));
-        }
-        spoil_out(buf);
-
-        /* Hitpoints */
-        if ((flags1 & (RF1_FORCE_MAXHP)) || (r_ptr->hside == 1))
-        {
-            sprintf(buf, "Hp:%d  ", r_ptr->hdice * r_ptr->hside);
-        }
-        else
-        {
-            sprintf(buf, "Hp:%dd%d  ", r_ptr->hdice, r_ptr->hside);
-        }
-        spoil_out(buf);
-
-        /* Armor Class */
-        sprintf(buf, "Ac:%d  ", r_ptr->ac);
-        spoil_out(buf);
-
-        /* Experience */
-        sprintf(buf, "Exp:%d\n", r_ptr->mexp);
-        spoil_out(buf);
-
-        /* Reuse the code of monster recall. */
-        output_monster_spoiler(who[l], roff_func);
-
-        spoil_out(NULL);
+        monster_race *r_ptr = vec_get(v, i);
+        doc_printf(doc, "<topic:%s><color:r>=====================================================================</color>\n", r_name + r_ptr->name);
+        mon_display_doc(r_ptr, doc);
+        doc_newline(doc);
     }
+    vec_free(v);
 
-    /* Free the "who" array */
-    C_KILL(who, max_r_idx, s16b);
+    doc_display(doc, "Monster Spoilers", 0);
+    doc_free(doc);
 
-    /* Check for errors */
-    if (ferror(fff) || my_fclose(fff))
-    {
-        msg_print("Cannot close spoiler file.");
-        return;
-    }
-
-    msg_print("Successfully created a spoiler file.");
+    spoiler_hack = FALSE;
 }
 
 
@@ -1744,7 +1618,7 @@ void do_cmd_spoilers(void)
             spoil_mon_desc("mon-desc.spo");
             break;
         case 'M':
-            spoil_mon_info("mon-info.spo");
+            spoil_mon_info();
             break;
         case 'e':
             spoil_mon_evol("mon-evol.spo");

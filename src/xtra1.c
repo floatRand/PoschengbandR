@@ -2388,8 +2388,18 @@ static void fix_monster(void)
         Term_activate(angband_term[j]);
 
         /* Display monster race info */
-        if (p_ptr->monster_race_idx) display_roff(p_ptr->monster_race_idx);
+        if (p_ptr->monster_race_idx)
+        {
+            int y;
+            doc_ptr doc = doc_alloc(MIN(72, Term->wid));
+            mon_display_doc(&r_info[p_ptr->monster_race_idx], doc);
 
+            for (y = 0; y < Term->hgt; y++)
+                Term_erase(0, y, 255);
+
+            doc_sync_term(doc, doc_range_all(doc), doc_pos_create(0, 0));
+            doc_free(doc);
+        }
         /* Fresh */
         Term_fresh();
 
@@ -3507,8 +3517,7 @@ void calc_bonuses(void)
     p_ptr->see_inv = FALSE;
     p_ptr->free_act = FALSE;
     p_ptr->slow_digest = FALSE;
-    p_ptr->regenerate = FALSE;
-    p_ptr->super_regenerate = FALSE;
+    p_ptr->regen = 100;
     p_ptr->can_swim = FALSE;
     p_ptr->levitation = FALSE;
     p_ptr->hold_life = FALSE;
@@ -3736,7 +3745,7 @@ void calc_bonuses(void)
         p_ptr->see_inv = TRUE;
         p_ptr->free_act = TRUE;
         p_ptr->slow_digest = TRUE;
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
         p_ptr->levitation = TRUE;
 
         if (p_ptr->special_defense & KATA_MUSOU)
@@ -3838,7 +3847,7 @@ void calc_bonuses(void)
 
     if (p_ptr->special_defense & KAMAE_MASK)
     {
-        if (p_ptr->pclass != CLASS_WILD_TALENT && !p_ptr->weapon_info[0].bare_hands)
+        if (p_ptr->pclass != CLASS_WILD_TALENT && !mut_present(MUT_DRACONIAN_METAMORPHOSIS) && !p_ptr->weapon_info[0].bare_hands)
             set_action(ACTION_NONE);
     }
     mut_calc_stats(stats); /* mut goes first for MUT_ILL_NORM, which masks charisma mods of other mutations */
@@ -3875,7 +3884,7 @@ void calc_bonuses(void)
         if (hex_spelling(HEX_DEMON_AURA))
         {
             p_ptr->sh_fire = TRUE;
-            p_ptr->regenerate = TRUE;
+            p_ptr->regen += 100;
         }
         if (hex_spelling(HEX_ICE_ARMOR))
         {
@@ -4052,7 +4061,7 @@ void calc_bonuses(void)
         p_ptr->see_infra+=3;
 
     if (p_ptr->tim_regen)
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
 
     if (p_ptr->tim_levitation)
         p_ptr->levitation = TRUE;
@@ -4778,6 +4787,16 @@ void calc_bonuses(void)
     /* Display the speed (if needed) */
     if (p_ptr->pspeed != old_speed)
         p_ptr->redraw |= PR_EFFECTS;
+
+    /* Regeneration */
+    if (p_ptr->special_defense & (KAMAE_MASK | KATA_MASK))
+        p_ptr->regen /= 2;
+
+    if (p_ptr->cursed & TRC_SLOW_REGEN)
+        p_ptr->regen /= 5;
+
+    if (p_ptr->regen < 0)
+        p_ptr->regen = 0;
 
     /* Robe of the Twilight forces AC to 0 */
     if (equip_find_ego(EGO_ROBE_TWILIGHT))

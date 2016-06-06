@@ -489,7 +489,6 @@ static void rd_options(savefile_ptr file)
     cheat_hear = (c & 0x0200) ? TRUE : FALSE;
     cheat_room = (c & 0x0400) ? TRUE : FALSE;
     cheat_xtra = (c & 0x0800) ? TRUE : FALSE;
-    cheat_know = (c & 0x1000) ? TRUE : FALSE;
     cheat_live = (c & 0x2000) ? TRUE : FALSE;
     cheat_save = (c & 0x4000) ? TRUE : FALSE;
 

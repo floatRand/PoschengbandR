@@ -1964,11 +1964,10 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 {
                     note = " is immune.";
                     dam = 0;
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                    mon_lore_r(m_ptr, RFR_RES_ALL);
                     break;
                 }
             }
-
             break;
         }
 
@@ -1980,7 +1979,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             else if (!r_ptr->freq_spell)
@@ -2006,21 +2005,20 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_IM_ACID)
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_IM_ACID;
+                mon_lore_r(m_ptr, RFR_IM_ACID);
             }
             else if (r_ptr->flagsr & RFR_RES_ACID)
             {
                 note = " resists.";
-
                 dam /= 3;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ACID;
+                mon_lore_r(m_ptr, RFR_RES_ACID);
             }
             break;
         }
@@ -2034,21 +2032,20 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_IM_ELEC)
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_IM_ELEC;
+                mon_lore_r(m_ptr, RFR_IM_ELEC);
             }
             else if (r_ptr->flagsr & RFR_RES_ELEC)
             {
                 note = " resists.";
-
                 dam /= 3;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ELEC;
+                mon_lore_r(m_ptr, RFR_RES_ELEC);
             }
             break;
         }
@@ -2062,28 +2059,26 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_IM_FIRE)
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_IM_FIRE;
+                mon_lore_r(m_ptr, RFR_IM_FIRE);
             }
             else if (r_ptr->flagsr & RFR_RES_FIRE)
             {
                 note = " resists.";
-
                 dam /= 3;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_FIRE;
+                mon_lore_r(m_ptr, RFR_RES_FIRE);
             }
             else if (r_ptr->flags3 & RF3_HURT_FIRE)
             {
                 note = " is hit hard.";
-
                 dam *= 2;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_HURT_FIRE;
+                mon_lore_3(m_ptr, RF3_HURT_FIRE);
             }
             break;
         }
@@ -2097,28 +2092,26 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_IM_COLD)
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_IM_COLD;
+                mon_lore_r(m_ptr, RFR_IM_COLD);
             }
             else if (r_ptr->flagsr & RFR_RES_COLD)
             {
                 note = " resists.";
-
                 dam /= 3;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_COLD;
+                mon_lore_r(m_ptr, RFR_RES_COLD);
             }
             else if (r_ptr->flags3 & RF3_HURT_COLD)
             {
                 note = " is hit hard.";
-
                 dam *= 2;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_HURT_COLD;
+                mon_lore_3(m_ptr, RF3_HURT_COLD);
             }
             break;
         }
@@ -2132,21 +2125,20 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_IM_POIS)
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_IM_POIS;
+                mon_lore_r(m_ptr, RFR_IM_POIS);
             }
             else if (r_ptr->flagsr & RFR_RES_POIS)
             {
                 note = " resists.";
-
                 dam /= 3;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_POIS;
+                mon_lore_r(m_ptr, RFR_RES_POIS);
             }
             break;
         }
@@ -2160,21 +2152,20 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_IM_POIS)
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_IM_POIS;
+                mon_lore_r(m_ptr, RFR_IM_POIS);
             }
             else if (r_ptr->flagsr & RFR_RES_POIS)
             {
                 note = " resists.";
-
                 dam /= 2;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_POIS;
+                mon_lore_r(m_ptr, RFR_RES_POIS);
             }
             else if (one_in_(3)) do_poly = TRUE;
             break;
@@ -2189,15 +2180,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flags3 & RF3_GOOD)
             {
                 dam *= 2;
                 note = " is hit hard.";
-
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_GOOD);
+                mon_lore_3(m_ptr, RF3_GOOD);
             }
             break;
         }
@@ -2211,27 +2201,24 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flags3 & RF3_GOOD)
             {
                 dam = 0;
                 note = " is immune.";
-
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_GOOD;
+                mon_lore_3(m_ptr, RF3_GOOD);
             }
             else if (r_ptr->flags3 & RF3_EVIL)
             {
                 dam *= 2;
                 note = " is hit hard.";
-
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_EVIL;
+                mon_lore_3(m_ptr, RF3_EVIL);
             }
             else
             {
                 note = " resists.";
-
                 dam *= 3; dam /= randint1(6) + 6;
             }
             break;
@@ -2246,7 +2233,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             break;
@@ -2261,15 +2248,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_PLAS)
             {
                 note = " resists.";
-
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_PLAS);
+                mon_lore_r(m_ptr, RFR_RES_PLAS);
             }
             break;
         }
@@ -2283,7 +2269,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_NETH)
@@ -2291,24 +2277,21 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (r_ptr->flags3 & RF3_UNDEAD)
                 {
                     note = " is immune.";
-
                     dam = 0;
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_UNDEAD);
+                    mon_lore_3(m_ptr, RF3_UNDEAD);
                 }
                 else
                 {
                     note = " resists.";
-
                     dam *= 3; dam /= randint1(6) + 6;
                 }
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_NETH);
+                mon_lore_r(m_ptr, RFR_RES_NETH);
             }
             else if (r_ptr->flags3 & RF3_EVIL)
             {
                 dam /= 2;
                 note = " resists somewhat.";
-
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_EVIL);
+                mon_lore_3(m_ptr, RF3_EVIL);
             }
             break;
         }
@@ -2323,7 +2306,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_WATE)
@@ -2331,16 +2314,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if ((m_ptr->r_idx == MON_WATER_ELEM) || (m_ptr->r_idx == MON_UNMAKER))
                 {
                     note = " is immune.";
-
                     dam = 0;
                 }
                 else
                 {
                     note = " resists.";
-
                     dam *= 3; dam /= randint1(6) + 6;
                 }
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_WATE);
+                mon_lore_r(m_ptr, RFR_RES_WATE);
             }
             else if (who == 0 && randint1(10*r_ptr->level) > dam)
             {
@@ -2359,22 +2340,20 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_CHAO)
             {
                 note = " resists.";
-
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_CHAO);
+                mon_lore_r(m_ptr, RFR_RES_CHAO);
             }
             else if ((r_ptr->flags3 & RF3_DEMON) && one_in_(3))
             {
                 note = " resists somewhat.";
-
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_DEMON);
+                mon_lore_3(m_ptr, RF3_DEMON);
             }
             else
             {
@@ -2393,15 +2372,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_SHAR)
             {
                 note = " resists.";
-
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_SHAR);
+                mon_lore_r(m_ptr, RFR_RES_SHAR);
             }
             break;
         }
@@ -2415,15 +2393,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_SHAR)
             {
                 note = " resists somewhat.";
-
                 dam /= 2;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_SHAR);
+                mon_lore_r(m_ptr, RFR_RES_SHAR);
             }
             break;
         }
@@ -2436,16 +2413,16 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_SOUN) 
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_SOUN);
+                mon_lore_r(m_ptr, RFR_RES_SOUN);
             }
             else if (r_ptr->flags3 & RF3_NO_STUN)
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_STUN);
+                mon_lore_3(m_ptr, RF3_NO_STUN);
             }
             else if (MON_STUNNED(m_ptr))
             {
@@ -2467,7 +2444,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (!(r_ptr->flagsr & RFR_RES_SOUN))
@@ -2487,14 +2464,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_SOUN)
             {
                 note = " resists.";
                 dam *= 2; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_SOUN);
+                mon_lore_r(m_ptr, RFR_RES_SOUN);
             }
             else if (who == 0 && randint1(10*r_ptr->level) > dam)
             {
@@ -2510,7 +2487,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             dispel_monster_status(c_ptr->m_idx);
@@ -2541,7 +2518,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             dam = spell_power(MIN(m_ptr->hp*8/100 + dam, 400));
@@ -2559,7 +2536,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -2590,15 +2567,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flags3 & RF3_NO_CONF)
             {
                 note = " resists.";
-
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_CONF);
+                mon_lore_3(m_ptr, RF3_NO_CONF);
             }
             else do_conf = (10 + randint1(15) + r) / (r + 1);
             break;
@@ -2613,15 +2589,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_DISE)
             {
                 note = " resists.";
-
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_DISE);
+                mon_lore_r(m_ptr, RFR_RES_DISE);
             }
             break;
         }
@@ -2635,15 +2610,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_NEXU)
             {
                 note = " resists.";
-
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_NEXU);
+                mon_lore_r(m_ptr, RFR_RES_NEXU);
             }
             break;
         }
@@ -2657,15 +2631,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_WALL)
             {
                 note = " resists.";
-
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_WALL);
+                mon_lore_r(m_ptr, RFR_RES_WALL);
             }
             else do_stun = (randint1(15) + r) / (r + 1);
             break;
@@ -2680,7 +2653,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_INER)
@@ -2688,7 +2661,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 note = " resists.";
 
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_INER);
+                mon_lore_r(m_ptr, RFR_RES_INER);
             }
             else
             {
@@ -2721,7 +2694,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (randint1(dam) <= randint1(ml))
@@ -2742,14 +2715,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_TIME)
             {
                 note = " resists.";
                 dam *= 3; dam /= randint1(6) + 6;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_TIME);
+                mon_lore_r(m_ptr, RFR_RES_TIME);
             }
             else if (!who)
             {
@@ -2875,23 +2848,21 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_TELE)
             {
                 if (r_ptr->flags1 & (RF1_UNIQUE))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                    mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " is unaffected!";
-
                     resist_tele = TRUE;
                 }
                 else if (r_ptr->level > randint1(100))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                    mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " resists!";
-
                     resist_tele = TRUE;
                 }
             }
@@ -2906,7 +2877,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
                 dam *= 3; dam /= randint1(6) + 6;
                 do_dist = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_GRAV);
+                mon_lore_r(m_ptr, RFR_RES_GRAV);
             }
             else
             {
@@ -2957,7 +2928,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             break;
@@ -2973,15 +2944,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flags3 & RF3_HURT_ROCK)
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_ROCK);
+                mon_lore_3(m_ptr, RF3_HURT_ROCK);
                 note = " loses some skin!";
                 note_dies = " evaporates!";
-
                 dam *= 2;
             }
             break;
@@ -2992,14 +2962,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flags2 & RF2_EMPTY_MIND)
             {
                 dam = 0;
                 note = " is immune!";
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_EMPTY_MIND);
+                mon_lore_2(m_ptr, RF2_EMPTY_MIND);
                 break;
 
             }
@@ -3062,14 +3032,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flags2 & RF2_EMPTY_MIND)
             {
                 dam = 0;
                 note = " is immune!";
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_EMPTY_MIND);
+                mon_lore_2(m_ptr, RF2_EMPTY_MIND);
 
             }
             else if ((r_ptr->flags2 & (RF2_STUPID | RF2_WEIRD_MIND)) ||
@@ -3167,7 +3137,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flags2 & RF2_EMPTY_MIND)
@@ -3245,7 +3215,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (one_in_(4))
@@ -3278,7 +3248,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             break;
@@ -3293,7 +3263,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             break;
@@ -3312,7 +3282,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             if (r_ptr->flagsr & RFR_RES_ALL)
             {
                 note = " is immune.";
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -3384,7 +3354,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                     case 2:
                         if (r_ptr->flags3 & RF3_NO_CONF)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_CONF);
+                            mon_lore_3(m_ptr, RF3_NO_CONF);
                             note = " is unaffected.";
                             break;
                         }
@@ -3413,9 +3383,6 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             }
             break;
         }
-
-
-
         /* Ice -- Cold + Cuts + Stun */
         case GF_ICE:
         {
@@ -3425,7 +3392,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (who || !mon_save_p(m_ptr->r_idx, A_NONE))
@@ -3436,21 +3403,19 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_IM_COLD;
+                mon_lore_r(m_ptr, RFR_IM_COLD);
             }
             else if (r_ptr->flagsr & RFR_RES_COLD)
             {
                 note = " resists.";
-
                 dam /= 2;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_COLD;
+                mon_lore_r(m_ptr, RFR_RES_COLD);
             }
             else if (r_ptr->flags3 & (RF3_HURT_COLD))
             {
                 note = " is hit hard.";
-
                 dam *= 2;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_COLD);
+                mon_lore_3(m_ptr, RF3_HURT_COLD);
             }
             break;
         }
@@ -3465,20 +3430,15 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (!monster_living(r_ptr))
             {
-                if (is_original_ap_and_seen(m_ptr))
-                {
-                    if (r_ptr->flags3 & RF3_DEMON) r_ptr->r_flags3 |= (RF3_DEMON);
-                    if (r_ptr->flags3 & RF3_UNDEAD) r_ptr->r_flags3 |= (RF3_UNDEAD);
-                    if (r_ptr->flags3 & RF3_NONLIVING) r_ptr->r_flags3 |= (RF3_NONLIVING);
-                }
-
+                mon_lore_3(m_ptr, RF3_DEMON);
+                mon_lore_3(m_ptr, RF3_UNDEAD);
+                mon_lore_3(m_ptr, RF3_NONLIVING);
                 note = " is unaffected!";
-
                 obvious = FALSE;
                 dam = 0;
             }
@@ -3500,18 +3460,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (!monster_living(r_ptr))
             {
-                if (is_original_ap_and_seen(m_ptr))
-                {
-                    if (r_ptr->flags3 & RF3_DEMON) r_ptr->r_flags3 |= (RF3_DEMON);
-                    if (r_ptr->flags3 & RF3_UNDEAD) r_ptr->r_flags3 |= (RF3_UNDEAD);
-                    if (r_ptr->flags3 & RF3_NONLIVING) r_ptr->r_flags3 |= (RF3_NONLIVING);
-                }
-
+                mon_lore_3(m_ptr, RF3_DEMON);
+                mon_lore_3(m_ptr, RF3_UNDEAD);
+                mon_lore_3(m_ptr, RF3_NONLIVING);
                 note = " is immune.";
                 obvious = FALSE;
                 dam = 0;
@@ -3536,20 +3492,15 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (!monster_living(r_ptr))
             {
-                if (is_original_ap_and_seen(m_ptr))
-                {
-                    if (r_ptr->flags3 & RF3_DEMON) r_ptr->r_flags3 |= (RF3_DEMON);
-                    if (r_ptr->flags3 & RF3_UNDEAD) r_ptr->r_flags3 |= (RF3_UNDEAD);
-                    if (r_ptr->flags3 & RF3_NONLIVING) r_ptr->r_flags3 |= (RF3_NONLIVING);
-                }
-
+                mon_lore_3(m_ptr, RF3_DEMON);
+                mon_lore_3(m_ptr, RF3_UNDEAD);
+                mon_lore_3(m_ptr, RF3_NONLIVING);
                 note = " is immune.";
-
                 obvious = FALSE;
                 dam = 0;
             }
@@ -3557,7 +3508,6 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                    || (r_ptr->level + randint1(20) > randint1(caster_lev)))
             {
                 note = " resists!";
-
                 obvious = FALSE;
                 dam = 0;
             }
@@ -3574,7 +3524,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             /* Attempt to polymorph (see below) */
@@ -3605,7 +3555,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
             if ((p_ptr->inside_arena) || is_pet(m_ptr) || (r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) || (r_ptr->flags7 & (RF7_NAZGUL | RF7_UNIQUE2)))
             {
- note = " is unaffected!";
+                note = " is unaffected!";
             }
             else
             {
@@ -3616,13 +3566,10 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (multiply_monster(c_ptr->m_idx, TRUE, 0L))
                 {
                     note = " spawns!";
-
                 }
             }
-
             /* No "real" damage */
             dam = 0;
-
             break;
         }
 
@@ -3754,7 +3701,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if ( (r_ptr->flags1 & RF1_UNIQUE) 
@@ -3814,7 +3761,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             /* Attempt a saving throw */
@@ -3844,7 +3791,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if ((r_ptr->flags1 & RF1_UNIQUE) || r_ptr->level > randint1(dam))
@@ -3871,7 +3818,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             /* Attempt a saving throw */
@@ -3905,7 +3852,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             if (r_ptr->flagsr & RFR_RES_ALL)
             {
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -4040,7 +3987,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             else if (r_ptr->flags1 & RF1_QUESTOR)
@@ -4087,7 +4034,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -4136,7 +4083,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -4185,7 +4132,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -4202,7 +4149,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 /* Memorize a flag */
                 if (r_ptr->flags3 & (RF3_NO_CONF))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_CONF);
+                    mon_lore_3(m_ptr, RF3_NO_CONF);
                 }
 
                 /* Resist */
@@ -4288,7 +4235,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -4344,7 +4291,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -4352,7 +4299,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             if (r_ptr->flags3 & RF3_NO_SLEEP)
             {
                 note = " is immune!";
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_SLEEP;
+                mon_lore_3(m_ptr, RF3_NO_SLEEP);
                 obvious = FALSE;
             }
             else if (r_ptr->flags1 & RF1_UNIQUE) /* Historical ... I'd like to remove this. */
@@ -4391,7 +4338,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             /* Get confused later */
@@ -4402,7 +4349,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 do_conf = 0;
                 note = " is immune!";
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_CONF;
+                mon_lore_3(m_ptr, RF3_NO_CONF);
                 obvious = FALSE;
             }
             else if (r_ptr->flags1 & RF1_UNIQUE) /* Historical ... I'd like to remove this. */
@@ -4437,7 +4384,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             /* Why so much?? do_stun = damroll((caster_lev / 20) + 3 , (dam)) + 1;*/
@@ -4448,7 +4395,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 do_stun = 0;
                 note = " is unaffected!";
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
+                mon_lore_3(m_ptr, RF3_NO_STUN);
                 obvious = FALSE;
             }
             else if (randint1(ml) >= randint1(pl))
@@ -4486,7 +4433,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Memorize the effects */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_LITE);
+                mon_lore_3(m_ptr, RF3_HURT_LITE);
 
                 /* Special effect */
                 note = " cringes from the light!";
@@ -4504,9 +4451,6 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             break;
         }
 
-
-
-        /* Lite -- opposite of Dark */
         case GF_LITE:
         {
             if (seen) obvious = TRUE;
@@ -4515,7 +4459,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_LITE)
@@ -4523,11 +4467,11 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 note = " resists.";
 
                 dam *= 2; dam /= (randint1(6)+6);
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_LITE);
+                mon_lore_r(m_ptr, RFR_RES_LITE);
             }
             else if (r_ptr->flags3 & (RF3_HURT_LITE))
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_LITE);
+                mon_lore_3(m_ptr, RF3_HURT_LITE);
                 note = " cringes from the light!";
                 note_dies = " shrivels away in the light!";
 
@@ -4536,8 +4480,6 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             break;
         }
 
-
-        /* Dark -- opposite of Lite */
         case GF_DARK:
         {
             if (seen) obvious = TRUE;
@@ -4546,15 +4488,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flagsr & RFR_RES_DARK)
             {
                 note = " resists.";
-
                 dam *= 2; dam /= (randint1(6)+6);
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_DARK);
+                mon_lore_r(m_ptr, RFR_RES_DARK);
             }
             break;
         }
@@ -4575,7 +4516,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Memorize the effects */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_ROCK);
+                mon_lore_3(m_ptr, RF3_HURT_ROCK);
 
                 /* Cute little message */
                 note = " loses some skin!";
@@ -4606,14 +4547,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 {
                     if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                        mon_lore_r(m_ptr, RFR_RES_TELE);
                         note = " is unaffected!";
 
                         resists_tele = TRUE;
                     }
                     else if (r_ptr->level > randint1(100))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                        mon_lore_r(m_ptr, RFR_RES_TELE);
                         note = " resists!";
 
                         resists_tele = TRUE;
@@ -4623,7 +4564,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (!resists_tele)
                 {
                     if (seen) obvious = TRUE;
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_UNDEAD);
+                    mon_lore_3(m_ptr, RF3_UNDEAD);
                     do_dist = dam;
                 }
             }
@@ -4653,14 +4594,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 {
                     if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                        mon_lore_r(m_ptr, RFR_RES_TELE);
                         note = " is unaffected!";
 
                         resists_tele = TRUE;
                     }
                     else if (r_ptr->level > randint1(100))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                        mon_lore_r(m_ptr, RFR_RES_TELE);
                         note = " resists!";
 
                         resists_tele = TRUE;
@@ -4670,7 +4611,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (!resists_tele)
                 {
                     if (seen) obvious = TRUE;
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_EVIL);
+                    mon_lore_3(m_ptr, RF3_EVIL);
                     do_dist = dam;
                 }
             }
@@ -4699,14 +4640,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 if ((r_ptr->flagsr & RFR_RES_ALL))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                    mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " is unaffected!";
 
                     resists_tele = TRUE;
                 }
                 else if (mon_save_p(m_ptr->r_idx, A_DEX))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                    mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " resists!";
                     resists_tele = TRUE;
                 }
@@ -4735,16 +4676,14 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                    mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " is unaffected!";
-
                     resists_tele = TRUE;
                 }
                 else if (r_ptr->level > randint1(100))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                    mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " resists!";
-
                     resists_tele = TRUE;
                 }
             }
@@ -4779,7 +4718,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Learn about type */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_UNDEAD);
+                mon_lore_3(m_ptr, RF3_UNDEAD);
 
                 /* Apply some fear */
                 do_fear = damroll(3, (dam / 2)) + 1;
@@ -4824,7 +4763,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Learn about type */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_EVIL);
+                mon_lore_3(m_ptr, RF3_EVIL);
 
                 /* Apply some fear */
                 do_fear = damroll(3, (dam / 2)) + 1;
@@ -4898,7 +4837,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Learn about type */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_UNDEAD);
+                mon_lore_3(m_ptr, RF3_UNDEAD);
 
                 /* Message */
                 note = " shudders.";
@@ -4935,7 +4874,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Learn about type */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_EVIL);
+                mon_lore_3(m_ptr, RF3_EVIL);
 
                 /* Message */
                 note = " shudders.";
@@ -4971,7 +4910,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Learn about type */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_GOOD);
+                mon_lore_3(m_ptr, RF3_GOOD);
 
                 /* Message */
                 note = " shudders.";
@@ -5041,7 +4980,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Learn about type */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_DEMON);
+                mon_lore_3(m_ptr, RF3_DEMON);
 
                 /* Message */
                 note = " shudders.";
@@ -5088,7 +5027,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 dam = 0;
                 break;
             }
@@ -5121,7 +5060,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5171,7 +5110,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -5198,7 +5137,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             /* Hack: No damage now ... simply latch the whip on and let process_monster()
@@ -5218,12 +5157,12 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             else if (r_ptr->flags2 & RF2_EMPTY_MIND)
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_EMPTY_MIND);
+                mon_lore_2(m_ptr, RF2_EMPTY_MIND);
                 note = " is immune!";
                 dam = 0;
             }
@@ -5234,7 +5173,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             }
             else if (r_ptr->flags2 & RF2_WEIRD_MIND)
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_WEIRD_MIND);
+                mon_lore_2(m_ptr, RF2_WEIRD_MIND);
                 note = " resists somewhat.";
                 dam /= 2;
                 if (dam == 0) dam = 1;
@@ -5245,7 +5184,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
                 if (r_ptr->flags3 & RF3_NO_CONF)
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_CONF);
+                    mon_lore_3(m_ptr, RF3_NO_CONF);
                 }
                 else
                 {
@@ -5253,7 +5192,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 }
                 if (r_ptr->flags3 & RF3_NO_STUN)
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
+                    mon_lore_3(m_ptr, RF3_NO_STUN);
                 }
                 else
                 {
@@ -5276,7 +5215,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5288,20 +5227,20 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 /* Memorize a flag */
                 if (r_ptr->flags3 & (RF3_NO_CONF))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_CONF);
+                    mon_lore_3(m_ptr, RF3_NO_CONF);
                 }
                 note = " is unaffected!";
                 dam = 0;
             }
             else if (r_ptr->flags2 & RF2_EMPTY_MIND)
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_EMPTY_MIND);
+                mon_lore_2(m_ptr, RF2_EMPTY_MIND);
                 note = " is immune!";
                 dam = 0;
             }
             else if (r_ptr->flags2 & RF2_WEIRD_MIND)
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_WEIRD_MIND);
+                mon_lore_2(m_ptr, RF2_WEIRD_MIND);
                 note = " resists.";
                 dam /= 3;
             }
@@ -5327,7 +5266,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5339,20 +5278,20 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 /* Memorize a flag */
                 if (r_ptr->flags3 & (RF3_NO_CONF))
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_CONF);
+                    mon_lore_3(m_ptr, RF3_NO_CONF);
                 }
                 note = " is unaffected!";
                 dam = 0;
             }
             else if (r_ptr->flags2 & RF2_EMPTY_MIND)
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_EMPTY_MIND);
+                mon_lore_2(m_ptr, RF2_EMPTY_MIND);
                 note = " is immune!";
                 dam = 0;
             }
             else if (r_ptr->flags2 & RF2_WEIRD_MIND)
             {
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_WEIRD_MIND);
+                mon_lore_2(m_ptr, RF2_WEIRD_MIND);
                 note = " resists.";
                 dam /= 3;
             }
@@ -5387,7 +5326,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5410,7 +5349,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5434,7 +5373,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5458,7 +5397,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5490,7 +5429,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5588,7 +5527,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             if (r_ptr->flags2 & RF2_EMPTY_MIND)
@@ -5596,7 +5535,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 note = " is immune!";
                 dam = 0;
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_EMPTY_MIND);
+                mon_lore_2(m_ptr, RF2_EMPTY_MIND);
                 break;
             }
             if (MON_CSLEEP(m_ptr))
@@ -5661,7 +5600,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                     /* Memorize a flag */
                     if (r_ptr->flags3 & RF3_NO_SLEEP)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_SLEEP);
+                        mon_lore_3(m_ptr, RF3_NO_SLEEP);
                     }
 
                     /* No obvious effect */
@@ -5718,7 +5657,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5750,7 +5689,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Memorize the effects */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_LITE);
+                mon_lore_3(m_ptr, RF3_HURT_LITE);
 
                 /* Special effect */
                 note = " cringes from the light!";
@@ -5779,7 +5718,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 dam = 0;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
             break;
@@ -5822,7 +5761,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                     (void)set_monster_fast(c_ptr->m_idx, MON_FAST(m_ptr) + 100);
 
                     /* Learn about type */
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_GOOD);
+                    mon_lore_3(m_ptr, RF3_GOOD);
                     success = TRUE;
                 }
             }
@@ -5833,7 +5772,10 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 {
                     do_fear = randint1(90)+10;
                 }
-                else if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_NO_FEAR);
+                else
+                {
+                    mon_lore_3(m_ptr, RF3_NO_FEAR);
+                }
             }
 
             /* No "real" damage */
@@ -5849,7 +5791,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 note = " is immune.";
                 skipped = TRUE;
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
 
@@ -5933,12 +5875,12 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             /* Get stunned */
             if (MON_STUNNED(m_ptr))
             {
-                note = " is more dazed.";
+                note = " is <color:B>more dazed</color>.";
                 tmp = MON_STUNNED(m_ptr) + (do_stun / 2);
             }
             else
             {
-                note = " is dazed.";
+                note = " is <color:B>dazed</color>.";
                 tmp = do_stun;
             }
 
@@ -8782,7 +8724,7 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
                     {
                         msg_print("The attack bounces!");
                     }
-                    if (is_original_ap_and_seen(m_ptr)) ref_ptr->r_flags2 |= RF2_REFLECTING;
+                    mon_lore_2(m_ptr, RF2_REFLECTING);
 
                     /* Reflected bolts randomly target either one */
                     if (player_bold(y, x) || one_in_(2)) flg &= ~(PROJECT_PLAYER);

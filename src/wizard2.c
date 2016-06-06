@@ -384,17 +384,19 @@ static void _test_specific_k_idx(void)
         /*create_artifact(&forge, CREATE_ART_GOOD);*/
         apply_magic(&forge, object_level, 0);
 
-        if ( forge.name2 == EGO_RING_WIZARDRY
-          || forge.name2 == EGO_AMULET_MAGI
-          || forge.name2 == EGO_CROWN_MAGI )
+        if (forge.name2)
         {
             identify_item(&forge);
             forge.ident |= (IDENT_FULL); 
         
-            object_desc(buf, &forge, 0);
-            msg_format("%s (%d)", buf, object_value_real(&forge));
-            if (forge.to_d)
+            object_desc(buf, &forge, OD_COLOR_CODED);
+            msg_format("%d) %s", i + 1, buf);
+            msg_boundary();
+            if ( have_flag(forge.art_flags, TR_VAMPIRIC)
+              || have_flag(forge.art_flags, TR_BLOWS) )
+            {
                 drop_near(&forge, -1, py, px);
+            }
         }
     }
 }
@@ -2827,6 +2829,7 @@ static void _wiz_kill_monsters(int level)
         monster_type *m_ptr = &m_list[i];
         monster_race *r_ptr;
         bool          fear = FALSE;
+        int           slot = equip_find_object(TV_SWORD, SV_RUNESWORD);
 
         if (!m_ptr->r_idx) continue;
         if (i == p_ptr->riding) continue;
@@ -2836,6 +2839,7 @@ static void _wiz_kill_monsters(int level)
         if (0 && r_ptr->level > level) continue;
 
         mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
+        if (slot) rune_sword_kill(equip_obj(slot), r_ptr);
     }
 }
 static void _wiz_inspect_objects(int level)
@@ -2864,7 +2868,7 @@ static void _wiz_inspect_objects(int level)
             stats_add_ego(o_ptr);
 
         if (0) _wiz_stats_log_speed(level, o_ptr);
-        if (1) _wiz_stats_log_books(level, o_ptr, 20, 20);
+        if (0) _wiz_stats_log_books(level, o_ptr, 20, 20);
         if (0) _wiz_stats_log_devices(level, o_ptr);
         if (0) _wiz_stats_log_arts(level, o_ptr);
         if (0) _wiz_stats_log_rand_arts(level, o_ptr);
@@ -2872,6 +2876,10 @@ static void _wiz_inspect_objects(int level)
             _wiz_stats_log_obj(level, o_ptr);
         if (0 && object_is_jewelry(o_ptr) && o_ptr->name2)
             _wiz_stats_log_obj(level, o_ptr);
+
+        if (1 && o_ptr->tval == TV_DRAG_ARMOR)
+            _wiz_stats_log_obj(level, o_ptr);
+
 
         if (race_ptr->destroy_object)
             race_ptr->destroy_object(o_ptr);
@@ -3378,30 +3386,6 @@ void do_cmd_debug(void)
                 drop_near(&forge, -1, py, px);
             }
         }
-/*
-        int i, j, ct = 0;
-        object_type obj;
-        char buf[MAX_NLEN];
-
-        object_prep(&obj, 687);
-        apply_magic(&obj, 50, 0);
-        for (i = 0; i < max_r_idx; i++)
-        {
-            monster_race *r_ptr = &r_info[i];
-            if (r_ptr->level < 30) continue;
-            for (j = 0; j < r_ptr->r_akills; j++)
-            {
-                rune_sword_kill(&obj, r_ptr);
-                ct++;
-            }
-        }
-
-        identify_item(&obj);
-        obj.ident |= (IDENT_MENTAL);
-
-        object_desc(buf, &obj, 0);
-        msg_format("%d) %s", ct, buf);
-*/
         break;
     }
     case ';':

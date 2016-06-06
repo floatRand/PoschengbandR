@@ -1144,6 +1144,7 @@ void do_cmd_query_symbol(void)
     char    temp[80] = "";
 
     bool    recall = FALSE;
+    doc_ptr doc = NULL;
 
     u16b    why = 0;
     u16b    *who;
@@ -1210,7 +1211,7 @@ void do_cmd_query_symbol(void)
         monster_race *r_ptr = &r_info[i];
 
         /* Nothing to recall */
-        if (!(cheat_know || p_ptr->wizard) && !r_ptr->r_sights) continue;
+        if (!(easy_lore || p_ptr->wizard) && !r_ptr->r_sights) continue;
 
         /* Require non-unique monsters if needed */
         if (norm && (r_ptr->flags1 & (RF1_UNIQUE))) continue;
@@ -1300,6 +1301,7 @@ void do_cmd_query_symbol(void)
         ang_sort(who, &why, n);
     }
 
+    doc = doc_alloc(72);
 
     /* Start at the end */
     i = n - 1;
@@ -1325,8 +1327,11 @@ void do_cmd_query_symbol(void)
                 /* Save the screen */
                 screen_save();
 
-                /* Recall on screen */
-                screen_roff(who[i], 0);
+                /* Recall on screen
+                screen_roff(who[i], 0);*/
+                doc_clear(doc);
+                mon_display_doc(&r_info[who[i]], doc);
+                doc_sync_term(doc, doc_range_all(doc), doc_pos_create(0, 1));
             }
 
             /* Hack -- Begin the prompt */
@@ -1341,7 +1346,7 @@ void do_cmd_query_symbol(void)
             /* Unrecall */
             if (recall)
             {
-                /* Restore */
+                /* Restore*/
                 screen_load();
             }
 
@@ -1378,6 +1383,7 @@ void do_cmd_query_symbol(void)
 
     /* Free the "who" array */
     C_KILL(who, max_r_idx, u16b);
+    doc_free(doc);
 
     /* Re-display the identity */
     prt(buf, 0, 0);
@@ -1837,7 +1843,19 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
             redraw = FALSE;
         }
         Term_gotoxy(display_rect.x, display_rect.y + pos);
-
+        {
+            int idx = top + pos;
+            if (0 <= idx && idx < ct_types)
+            {
+                _mon_list_info_ptr info_ptr = vec_get(list->list, idx);
+                assert(info_ptr);
+                if (info_ptr->r_idx && info_ptr->r_idx != p_ptr->monster_race_idx)
+                {
+                    monster_race_track(info_ptr->r_idx);
+                    window_stuff();
+                }
+            }
+        }
         if (q_pos < q_ct)
             cmd = cmd_queue[q_pos++];
         else
@@ -1855,8 +1873,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                 assert(info_ptr);
                 if (info_ptr->r_idx)
                 {
-                    screen_roff(info_ptr->r_idx, 0);
-                    inkey();
+                    mon_display(&r_info[info_ptr->r_idx]);
                     screen_load();
                     screen_save();
                     redraw = TRUE;

@@ -6,7 +6,7 @@
 
 include Makefile.src
 
-BASEOBJS := $(ANGFILES) $(ZFILES)
+BASEOBJS := $(ANGFILES) $(CFILES) $(ZFILES)
 
 depgen:
 	head -n 19 Makefile.inc > Makefile.new

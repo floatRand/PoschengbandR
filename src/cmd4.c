@@ -484,10 +484,6 @@ static option_type cheat_info[CHEAT_MAX] =
     "cheat_xtra",        "Peek into something else"
     },
 
-    { &cheat_know,        FALSE,    255,    0x10, 0x00,
-    "cheat_know",        "Know complete monster info"
-    },
-
     { &cheat_live,        FALSE,    255,    0x20, 0x00,
     "cheat_live",        "Allow player to avoid death"
     },
@@ -3470,7 +3466,7 @@ static int collect_monsters(int grp_cur, s16b mon_idx[], byte mode)
         if (!r_ptr->name) continue;
 
         /* Require known monsters */
-        if (!(mode & 0x02) && !cheat_know && !r_ptr->r_sights) continue;
+        if (!(mode & 0x02) && !easy_lore && !r_ptr->r_sights) continue;
 
         if (grp_corpses)
         {
@@ -4392,7 +4388,7 @@ static void do_cmd_knowledge_uniques(void)
         if (!(r_ptr->flags1 & RF1_UNIQUE)) continue;
 
         /* Only display "known" uniques */
-        if (!cheat_know && !r_ptr->r_sights) continue;
+        if (!easy_lore && !r_ptr->r_sights) continue;
 
         /* Only print rarity <= 100 uniques */
         if (!r_ptr->rarity || ((r_ptr->rarity > 100) && !(r_ptr->flags1 & RF1_QUESTOR))) continue;
@@ -5877,10 +5873,8 @@ static void do_cmd_knowledge_monsters(bool *need_redraw, bool visual_only, int d
                 /* Recall on screen */
                 if (!visual_list && !visual_only && (mon_idx[mon_cur] > 0))
                 {
-                    screen_roff(mon_idx[mon_cur], 0);
-
-                    (void)inkey();
-
+                    int r_idx = mon_idx[mon_cur];
+                    mon_display(&r_info[r_idx]);
                     redraw = TRUE;
                 }
                 break;

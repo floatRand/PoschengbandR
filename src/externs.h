@@ -313,7 +313,8 @@ extern bool alert_trap_detect;    /* Alert when leaving trap detected area */
 
 /*** Birth Options ***/
 
-extern bool easy_id;    /* Easy Identify */
+extern bool easy_id;        /* Easy Identify */
+extern bool easy_lore;      /* Easy Monster Lore */
 extern bool smart_learn;    /* Monsters learn from their mistakes (*) */
 extern bool smart_cheat;    /* Monsters exploit players weaknesses (*) */
 extern bool no_wilderness;  /* Play without a normal wilderness */
@@ -354,7 +355,6 @@ extern bool cheat_peek;
 extern bool cheat_hear;
 extern bool cheat_room;
 extern bool cheat_xtra;
-extern bool cheat_know;
 extern bool cheat_live;
 extern bool cheat_save;
 
@@ -1048,11 +1048,29 @@ extern void monster_gain_exp(int m_idx, int s_idx);
 /* monster1.c */
 extern bool mon_save_p(int r_idx, int stat);
 extern void roff_top(int r_idx);
-extern void screen_roff(int r_idx, int mode);
-extern void display_roff(int r_idx);
-extern void output_monster_spoiler(int r_idx, void (*roff_func)(byte attr, cptr str));
-extern void create_name(int type, char *name);
 extern bool mon_hook_dungeon(int r_idx);
+
+extern void mon_lore_1(monster_type *m_ptr, u32b mask);
+extern void mon_lore_2(monster_type *m_ptr, u32b mask);
+extern void mon_lore_3(monster_type *m_ptr, u32b mask);
+extern void mon_lore_4(monster_type *m_ptr, u32b mask);
+extern void mon_lore_5(monster_type *m_ptr, u32b mask);
+extern void mon_lore_6(monster_type *m_ptr, u32b mask);
+extern void mon_lore_r(monster_type *m_ptr, u32b mask);
+
+extern void mon_lore_aux_1(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_2(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_3(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_4(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_5(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_6(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_r(monster_race *r_ptr, u32b mask);
+
+#define MON_BLOW_SILLY   0x01
+#define MON_BLOW_OBVIOUS 0x02
+#define MON_BLOW_DAMAGE  0x04
+extern void mon_lore_blows(monster_type *m_ptr, int which, int options);
+extern void mon_lore_aux_blows(monster_race *r_ptr, int which, int options);
 
 extern monster_hook_type get_wilderness_monster_hook(int x, int y);
 extern monster_hook_type get_monster_hook(void);
@@ -1121,6 +1139,11 @@ extern void choose_new_monster(int m_idx, bool born, int r_idx);
 extern byte get_mspeed(monster_race *r_ptr);
 extern bool player_place(int y, int x);
 extern void monster_drop_carried_objects(monster_type *m_ptr);
+
+/* mon_display.c */
+extern void mon_display(monster_race *r_ptr);
+extern void mon_display_rect(monster_race *r_ptr, rect_t display);
+extern void mon_display_doc(monster_race *r_ptr, doc_ptr doc);
 
 /* obj_display.c */
 extern void obj_display(object_type *o_ptr);
@@ -1994,6 +2017,7 @@ extern bool object_is_helmet(object_type *o_ptr);
 extern bool object_is_cursed(object_type *o_ptr);
 extern bool object_is_mushroom(object_type *o_ptr);
 extern bool object_is_potion(object_type *o_ptr);
+extern bool mon_is_wanted(int r_idx);
 extern bool object_is_shoukinkubi(object_type *o_ptr);
 extern bool object_is_favorite(object_type *o_ptr);
 extern bool object_is_rare(object_type *o_ptr);

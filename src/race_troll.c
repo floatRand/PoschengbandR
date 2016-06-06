@@ -270,7 +270,7 @@ static void _calc_bonuses(void)
     p_ptr->to_a += to_a;
     p_ptr->dis_to_a += to_a;
 
-    p_ptr->super_regenerate = TRUE; /* cf process_world_aux_hp_and_sp() in dungeon.c for the troll's special regeneration */
+    p_ptr->regen += 100 + 8*p_ptr->lev;
     switch (p_ptr->current_r_idx)
     {
     case MON_FOREST_TROLL:

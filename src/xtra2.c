@@ -755,8 +755,14 @@ byte get_monster_drop_ct(monster_type *m_ptr)
         number = 0; /* Pets drop no stuff */
 
     /* No more farming quartz veins for millions in gold */
-    if ((r_ptr->flags2 & RF2_MULTIPLY) && r_ptr->r_akills > 600)
-        number = 0;
+    if (r_ptr->flags2 & RF2_MULTIPLY)
+    {
+        int cap = 600;
+        if (r_ptr->flags1 & RF1_ONLY_GOLD)
+            cap = 200; /* About 110k gp at DL21 */
+        if (r_ptr->r_akills > cap)
+            number = 0;
+    }
 
     /* No more farming summoners for drops (The Hoard, That Bat, Draconic Qs, etc) */
     if (m_ptr->parent_m_idx && !(r_ptr->flags1 & RF1_UNIQUE))
@@ -2307,7 +2313,8 @@ void monster_death(int m_idx, bool drop_item)
         }
     }
 
-    if (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
+    if ( (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
+      || (r_ptr->flags2 & RF2_THIEF) )
     {
         int r = (r_ptr->flags1 & RF1_DROP_GREAT) ? 7 : 3;
         int n = randint0(r);
@@ -2757,7 +2764,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
     if (!m_idx) return TRUE;
 
     if (dam > 0 && (p_ptr->wizard || cheat_xtra))
-        msg_format("You do %d (out of %d) damage.", dam, m_ptr->hp);
+        msg_format("You do %d damage.", dam);
 
     if ( p_ptr->melt_armor
       && note == NULL /* Hack: Trying to just get melee and shooting */
@@ -2878,8 +2885,8 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
             }
         }
 
-        /* Recall even invisible uniques or winners */
-        if ((m_ptr->ml && !p_ptr->image) || (r_ptr->flags1 & RF1_UNIQUE))
+        /* Recall even invisible uniques or winners (or statistics gathering runs :) */
+        if ((m_ptr->ml && !p_ptr->image) || (r_ptr->flags1 & RF1_UNIQUE) || statistics_hack)
         {
             /* Count kills this life */
             if ((m_ptr->mflag2 & MFLAG2_KAGE) && (r_info[MON_KAGE].r_pkills < MAX_SHORT)) r_info[MON_KAGE].r_pkills++;
@@ -3970,14 +3977,18 @@ static int target_set_aux(int y, int x, int mode, cptr info)
             /* Recall */
             if (recall)
             {
+                doc_ptr doc = doc_alloc(72);
+
                 /* Save */
                 screen_save();
 
                 /* Recall on screen */
-                screen_roff(m_ptr->ap_r_idx, 0);
+                mon_display_doc(&r_info[m_ptr->ap_r_idx], doc);
+                doc_sync_term(doc, doc_range_all(doc), doc_pos_create(0, 1));
+                doc_free(doc);
 
-                /* Hack -- Complete the prompt (again) */
-                Term_addstr(-1, TERM_WHITE, format("  [r,%s%s]", x_info, info));
+                /* Hack -- Complete the prompt (again)
+                Term_addstr(-1, TERM_WHITE, format("  [r,%s%s]", x_info, info));*/
 
                 /* Command */
                 query = inkey();

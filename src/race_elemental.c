@@ -365,7 +365,7 @@ static void _earth_calc_bonuses(void)
     res_add(RES_SHARDS);
     p_ptr->pass_wall = TRUE;
     p_ptr->no_passwall_dam = TRUE;
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100;
 
     p_ptr->pspeed--;
     if (p_ptr->lev >= 25)

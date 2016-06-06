@@ -153,6 +153,7 @@
     <ClCompile Include="mindcrafter.c" />
     <ClCompile Include="mirror_master.c" />
     <ClCompile Include="monk.c" />
+    <ClCompile Include="mon_display.c" />
     <ClCompile Include="monster.c" />
     <ClCompile Include="monster1.c" />
     <ClCompile Include="monster2.c" />

@@ -824,8 +824,12 @@ static void _weapon_info_flag(int idx, u32b flgs[TR_FLAG_SIZE], int flg)
             else if (p_ptr->weapon_info[other_hand].wield_how == WIELD_TWO_HANDS)
                 add_flag(p_ptr->weapon_info[other_hand].flags, flg);
             break;
-        case EQUIP_SLOT_ANY:
-            add_flag(p_ptr->weapon_info[hand].flags, flg);
+        default:
+            for (hand = 0; hand < MAX_HANDS; hand++)
+            {
+                if (p_ptr->weapon_info[hand].wield_how != WIELD_NONE)
+                    add_flag(p_ptr->weapon_info[hand].flags, flg);
+            }
             break;
         }
     }
@@ -1273,6 +1277,7 @@ void equip_calc_bonuses(void)
             _weapon_info_flag(i, flgs, TR_IMPACT);     /* Quaker */
             _weapon_info_flag(i, flgs, TR_SLAY_GOOD);  /* Thanos, Nazgul */
             _weapon_info_flag(i, flgs, TR_SLAY_HUMAN); /* Nazgul */
+            _weapon_info_flag(i, flgs, TR_VAMPIRIC);   /* Dragon Armor (Death) */
         }
 
         if (have_flag(flgs, TR_XTRA_SHOTS))
@@ -1324,7 +1329,7 @@ void equip_calc_bonuses(void)
             p_ptr->shooter_info.to_mult += 25 * o_ptr->pval;
 
         if (have_flag(flgs, TR_SLOW_DIGEST)) p_ptr->slow_digest = TRUE;
-        if (have_flag(flgs, TR_REGEN))       p_ptr->regenerate = TRUE;
+        if (have_flag(flgs, TR_REGEN))       p_ptr->regen += 100;
         if (have_flag(flgs, TR_TELEPATHY))   p_ptr->telepathy = TRUE;
         if (have_flag(flgs, TR_ESP_ANIMAL))  p_ptr->esp_animal = TRUE;
         if (have_flag(flgs, TR_ESP_UNDEAD))  p_ptr->esp_undead = TRUE;

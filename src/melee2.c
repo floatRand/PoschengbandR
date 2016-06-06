@@ -1610,8 +1610,7 @@ bool mon_attack_mon(int m_idx, int t_idx)
         if (retaliation_hack && see_either)
         {
             cmsg_format(TERM_GREEN, "(<color:o>%^s</color> retaliates:", m_name);
-            if (is_original_ap_and_seen(m_ptr))
-                r_ptr->r_flags2 |= RF2_AURA_REVENGE;
+            mon_lore_2(m_ptr, RF2_AURA_REVENGE);
         }
 
         /* Extract the attack "power" */
@@ -2005,7 +2004,8 @@ bool mon_attack_mon(int m_idx, int t_idx)
                             {
                                 msg_format("%^s is <color:r>burned</color>!", m_name);
                             }
-                            if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags2 |= RF2_AURA_FIRE;
+                            if (m_ptr->ml)
+                                mon_lore_2(t_ptr, RF2_AURA_FIRE);
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
                                 damroll (1 + ((tr_ptr->level) / 26),
                                 1 + ((tr_ptr->level) / 17)),
@@ -2013,7 +2013,7 @@ bool mon_attack_mon(int m_idx, int t_idx)
                         }
                         else
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK);
+                            mon_lore_r(m_ptr, RFR_EFF_IM_FIRE_MASK);
                         }
                     }
 
@@ -2026,7 +2026,8 @@ bool mon_attack_mon(int m_idx, int t_idx)
                             {
                                 msg_format("%^s is <color:w>frozen</color>!", m_name);
                             }
-                            if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags3 |= RF3_AURA_COLD;
+                            if (m_ptr->ml)
+                                mon_lore_3(t_ptr, RF3_AURA_COLD);
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
                                 damroll (1 + ((tr_ptr->level) / 26),
                                 1 + ((tr_ptr->level) / 17)),
@@ -2034,7 +2035,7 @@ bool mon_attack_mon(int m_idx, int t_idx)
                         }
                         else
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK);
+                            mon_lore_r(m_ptr, RFR_EFF_IM_COLD_MASK);
                         }
                     }
 
@@ -2047,7 +2048,8 @@ bool mon_attack_mon(int m_idx, int t_idx)
                             {
                                 msg_format("%^s is <color:b>zapped</color>!", m_name);
                             }
-                            if (m_ptr->ml && is_original_ap_and_seen(t_ptr)) tr_ptr->r_flags2 |= RF2_AURA_ELEC;
+                            if (m_ptr->ml)
+                                mon_lore_2(t_ptr, RF2_AURA_ELEC);
                             project(t_idx, 0, m_ptr->fy, m_ptr->fx,
                                 damroll (1 + ((tr_ptr->level) / 26),
                                 1 + ((tr_ptr->level) / 17)),
@@ -2055,7 +2057,7 @@ bool mon_attack_mon(int m_idx, int t_idx)
                         }
                         else
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK);
+                            mon_lore_r(m_ptr, RFR_EFF_IM_ELEC_MASK);
                         }
                     }
                 }
@@ -2106,19 +2108,12 @@ bool mon_attack_mon(int m_idx, int t_idx)
             }
         }
 
-
-        /* Analyze "visible" monsters only */
-        if (is_original_ap_and_seen(m_ptr) && !do_silly_attack)
         {
-            /* Count "obvious" attacks (and ones that cause damage) */
-            if (obvious || damage || (r_ptr->r_blows[ap_cnt] > 10))
-            {
-                /* Count attacks of this type */
-                if (r_ptr->r_blows[ap_cnt] < MAX_UCHAR)
-                {
-                    r_ptr->r_blows[ap_cnt]++;
-                }
-            }
+            int options = 0;
+            if (do_silly_attack) options |= MON_BLOW_SILLY;
+            if (obvious) options |= MON_BLOW_OBVIOUS;
+            if (damage) options |= MON_BLOW_DAMAGE;
+            mon_lore_blows(m_ptr, ap_cnt, options);
         }
 
         if (retaliation_hack)
@@ -2522,9 +2517,9 @@ static void process_monster(int m_idx)
             if (allow && multiply_monster(m_idx, FALSE, (is_pet(m_ptr) ? PM_FORCE_PET : 0)))
             {
                 /* Take note if visible */
-                if (m_list[hack_m_idx_ii].ml && is_original_ap_and_seen(m_ptr))
+                if (m_list[hack_m_idx_ii].ml)
                 {
-                    r_ptr->r_flags2 |= (RF2_MULTIPLY);
+                    mon_lore_2(m_ptr, RF2_MULTIPLY);
                 }
 
                 /* Multiplying takes energy */
@@ -2555,7 +2550,8 @@ static void process_monster(int m_idx)
                         }
                     }
 
-                    if (count && is_original_ap_and_seen(m_ptr)) r_ptr->r_flags6 |= (RF6_SPECIAL);
+                    if (count)
+                        mon_lore_6(m_ptr, RF6_SPECIAL);
                 }
             }
         }
@@ -2779,7 +2775,7 @@ static void process_monster(int m_idx)
          (randint0(100) < 75))
     {
         /* Memorize flags */
-        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags1 |= (RF1_RAND_50 | RF1_RAND_25);
+        mon_lore_1(m_ptr, RF1_RAND_50 | RF1_RAND_25);
 
         /* Try four "random" directions */
         mm[0] = mm[1] = mm[2] = mm[3] = 5;
@@ -2790,7 +2786,7 @@ static void process_monster(int m_idx)
                 (randint0(100) < 50))
     {
         /* Memorize flags */
-        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags1 |= (RF1_RAND_50);
+        mon_lore_1(m_ptr, RF1_RAND_50);
 
         /* Try four "random" directions */
         mm[0] = mm[1] = mm[2] = mm[3] = 5;
@@ -2801,7 +2797,7 @@ static void process_monster(int m_idx)
                 (randint0(100) < 25))
     {
         /* Memorize flags */
-        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags1 |= RF1_RAND_25;
+        mon_lore_1(m_ptr, RF1_RAND_25);
 
         /* Try four "random" directions */
         mm[0] = mm[1] = mm[2] = mm[3] = 5;
@@ -3085,7 +3081,7 @@ static void process_monster(int m_idx)
                         /* Update some things */
                         p_ptr->update |= (PU_FLOW);
                         p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_BASH_DOOR);
+                        mon_lore_2(m_ptr, RF2_BASH_DOOR);
 
                         return;
                     }
@@ -3167,7 +3163,7 @@ static void process_monster(int m_idx)
             if (r_ptr->flags1 & RF1_NEVER_BLOW)
             {
                 /* Hack -- memorize lack of attacks */
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags1 |= (RF1_NEVER_BLOW);
+                mon_lore_1(m_ptr, RF1_NEVER_BLOW);
 
                 /* Do not move */
                 do_move = FALSE;
@@ -3181,7 +3177,7 @@ static void process_monster(int m_idx)
                     if (!(r_ptr->flags2 & RF2_STUPID)) do_move = FALSE;
                     else
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_STUPID);
+                        mon_lore_2(m_ptr, RF2_STUPID);
                     }
                 }
             }
@@ -3221,7 +3217,7 @@ static void process_monster(int m_idx)
                 {
                     if (r_ptr->flags2 & RF2_KILL_BODY)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_KILL_BODY);
+                        mon_lore_2(m_ptr, RF2_KILL_BODY);
                     }
 
                     /* attack */
@@ -3235,7 +3231,7 @@ static void process_monster(int m_idx)
                             if (MON_CONFUSED(m_ptr)) return;
                             else if (r_ptr->flags2 & RF2_STUPID)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_STUPID);
+                                mon_lore_2(m_ptr, RF2_STUPID);
                                 return;
                             }
                         }
@@ -3316,7 +3312,7 @@ static void process_monster(int m_idx)
                 /* Update some things */
                 p_ptr->update |= (PU_FLOW);
                 p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= (RF2_KILL_WALL);
+                mon_lore_2(m_ptr, RF2_KILL_WALL);
 
                 return;
             }
@@ -3355,7 +3351,7 @@ static void process_monster(int m_idx)
         if (do_move && (r_ptr->flags1 & RF1_NEVER_MOVE))
         {
             /* Hack -- memorize lack of moves */
-            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags1 |= (RF1_NEVER_MOVE);
+            mon_lore_1(m_ptr, RF1_NEVER_MOVE);
 
             /* Do not move */
             do_move = FALSE;
@@ -3641,25 +3637,25 @@ static void process_monster(int m_idx)
     if (is_original_ap_and_seen(m_ptr))
     {
         /* Monster opened a door */
-        if (did_open_door) r_ptr->r_flags2 |= (RF2_OPEN_DOOR);
+        if (did_open_door) mon_lore_aux_2(r_ptr, RF2_OPEN_DOOR);
 
         /* Monster bashed a door */
-        if (did_bash_door) r_ptr->r_flags2 |= (RF2_BASH_DOOR);
+        if (did_bash_door) mon_lore_aux_2(r_ptr, RF2_BASH_DOOR);
 
         /* Monster tried to pick something up */
-        if (did_take_item) r_ptr->r_flags2 |= (RF2_TAKE_ITEM);
+        if (did_take_item) mon_lore_aux_2(r_ptr, RF2_TAKE_ITEM);
 
         /* Monster tried to crush something */
-        if (did_kill_item) r_ptr->r_flags2 |= (RF2_KILL_ITEM);
+        if (did_kill_item) mon_lore_aux_2(r_ptr, RF2_KILL_ITEM);
 
         /* Monster pushed past another monster */
-        if (did_move_body) r_ptr->r_flags2 |= (RF2_MOVE_BODY);
+        if (did_move_body) mon_lore_aux_2(r_ptr, RF2_MOVE_BODY);
 
         /* Monster passed through a wall */
-        if (did_pass_wall) r_ptr->r_flags2 |= (RF2_PASS_WALL);
+        if (did_pass_wall) mon_lore_aux_2(r_ptr, RF2_PASS_WALL);
 
         /* Monster destroyed a wall */
-        if (did_kill_wall) r_ptr->r_flags2 |= (RF2_KILL_WALL);
+        if (did_kill_wall) mon_lore_aux_2(r_ptr, RF2_KILL_WALL);
     }
 
 
@@ -3729,56 +3725,10 @@ void process_monsters(void)
     monster_type    *m_ptr;
     monster_race    *r_ptr;
 
-    int             old_monster_race_idx;
-
-    u32b    old_r_flags1 = 0L;
-    u32b    old_r_flags2 = 0L;
-    u32b    old_r_flags3 = 0L;
-    u32b    old_r_flags4 = 0L;
-    u32b    old_r_flags5 = 0L;
-    u32b    old_r_flags6 = 0L;
-    u32b    old_r_flagsr = 0L;
-
-    byte    old_r_blows0 = 0;
-    byte    old_r_blows1 = 0;
-    byte    old_r_blows2 = 0;
-    byte    old_r_blows3 = 0;
-
-    byte    old_r_cast_spell = 0;
-
     int speed;
 
     /* Clear monster fighting indicator */
     mon_fight = FALSE;
-
-    /* Memorize old race */
-    old_monster_race_idx = p_ptr->monster_race_idx;
-
-    /* Acquire knowledge */
-    if (p_ptr->monster_race_idx)
-    {
-        /* Acquire current monster */
-        r_ptr = &r_info[p_ptr->monster_race_idx];
-
-        /* Memorize flags */
-        old_r_flags1 = r_ptr->r_flags1;
-        old_r_flags2 = r_ptr->r_flags2;
-        old_r_flags3 = r_ptr->r_flags3;
-        old_r_flags4 = r_ptr->r_flags4;
-        old_r_flags5 = r_ptr->r_flags5;
-        old_r_flags6 = r_ptr->r_flags6;
-        old_r_flagsr = r_ptr->r_flagsr;
-
-        /* Memorize blows */
-        old_r_blows0 = r_ptr->r_blows[0];
-        old_r_blows1 = r_ptr->r_blows[1];
-        old_r_blows2 = r_ptr->r_blows[2];
-        old_r_blows3 = r_ptr->r_blows[3];
-
-        /* Memorize castings */
-        old_r_cast_spell = r_ptr->r_cast_spell;
-    }
-
 
     /* Process the monsters (backwards) */
     for (i = m_max - 1; i >= 1; i--)
@@ -3951,32 +3901,6 @@ void process_monsters(void)
     /* Reset global index */
     hack_m_idx = 0;
     hack_m_spell = 0;
-
-
-    /* Tracking a monster race (the same one we were before) */
-    if (p_ptr->monster_race_idx && (p_ptr->monster_race_idx == old_monster_race_idx))
-    {
-        /* Acquire monster race */
-        r_ptr = &r_info[p_ptr->monster_race_idx];
-
-        /* Check for knowledge change */
-        if ((old_r_flags1 != r_ptr->r_flags1) ||
-            (old_r_flags2 != r_ptr->r_flags2) ||
-            (old_r_flags3 != r_ptr->r_flags3) ||
-            (old_r_flags4 != r_ptr->r_flags4) ||
-            (old_r_flags5 != r_ptr->r_flags5) ||
-            (old_r_flags6 != r_ptr->r_flags6) ||
-            (old_r_flagsr != r_ptr->r_flagsr) ||
-            (old_r_blows0 != r_ptr->r_blows[0]) ||
-            (old_r_blows1 != r_ptr->r_blows[1]) ||
-            (old_r_blows2 != r_ptr->r_blows[2]) ||
-            (old_r_blows3 != r_ptr->r_blows[3]) ||
-            (old_r_cast_spell != r_ptr->r_cast_spell))
-        {
-            /* Window stuff */
-            p_ptr->window |= (PW_MONSTER);
-        }
-    }
 }
 
 

@@ -421,7 +421,6 @@ static void wr_options(savefile_ptr file)
     if (cheat_hear) c |= 0x0200;
     if (cheat_room) c |= 0x0400;
     if (cheat_xtra) c |= 0x0800;
-    if (cheat_know) c |= 0x1000;
     if (cheat_live) c |= 0x2000;
     if (cheat_save) c |= 0x4000;
     savefile_write_u16b(file, c);

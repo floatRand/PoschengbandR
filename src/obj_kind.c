@@ -92,11 +92,18 @@ bool object_is_potion(object_type *o_ptr)
     return (k_info[o_ptr->k_idx].tval == TV_POTION);
 }
 
-
-bool object_is_shoukinkubi(object_type *o_ptr)
+bool mon_is_wanted(int r_idx)
 {
     int i;
 
+    for (i = 0; i < MAX_KUBI; i++)
+        if (r_idx == kubi_r_idx[i]) return TRUE;
+
+    return FALSE;
+}
+
+bool object_is_shoukinkubi(object_type *o_ptr)
+{
     /* Require corpse or skeleton */
     if (o_ptr->tval != TV_CORPSE) return FALSE;
 
@@ -107,9 +114,7 @@ bool object_is_shoukinkubi(object_type *o_ptr)
     if (o_ptr->pval == MON_TSUCHINOKO) return TRUE;
 
     /* Unique monster */
-    for (i = 0; i < MAX_KUBI; i++)
-        if (o_ptr->pval == kubi_r_idx[i]) break;
-    if (i < MAX_KUBI) return TRUE;
+    if (mon_is_wanted(o_ptr->pval)) return TRUE;
 
     /* Not wanted */
     return FALSE;

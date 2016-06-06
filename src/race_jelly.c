@@ -239,7 +239,7 @@ race_t *_acidic_cytoplasm_get_race_t(void)
 static void _shoggoth_calc_bonuses(void)
 {
     p_ptr->pspeed += 2;
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100;
     p_ptr->to_a += p_ptr->lev/3;
     p_ptr->dis_to_a += p_ptr->lev/3;
     p_ptr->no_eldritch = TRUE;

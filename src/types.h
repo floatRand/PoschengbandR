@@ -479,21 +479,19 @@ struct monster_race
     byte melee_level;
     byte save_level;
     byte rarity;              /* Rarity of creature */
+
     s16b max_level;
+    s16b id;
 
 
     byte d_attr;              /* Default monster attribute */
     byte d_char;              /* Default monster character */
-
-
     byte x_attr;              /* Desired monster attribute */
     byte x_char;              /* Desired monster character */
 
 
     byte max_num;             /* Maximum population allowed per level */
-
     byte cur_num;             /* Monster population on current level */
-
     s16b floor_id;            /* Location of unique monster */
 
 
@@ -576,6 +574,8 @@ struct monster_race
 #define ROOM_THEME_NIGHT       0x0008  /* Useful for wilderness graveyards where monsters only spawn at night */
 #define ROOM_THEME_DAY         0x0010
 #define ROOM_THEME_FORMATION   0x0020  /* Hack (see source for details): Allows monster formations. */
+#define ROOM_SHOP              0x2000  /* Room is a shop ... NO_TOWN means multiple shops on same level
+                                          would all stock the same stuff. This is still a wilderness problem, though */
 #define ROOM_DEBUG             0x4000  /* For debugging ... force this template to always be chosen */
 #define ROOM_NO_ROTATE         0x8000
 
@@ -1509,23 +1509,22 @@ struct player_type
     bool sustain_con;    /* Keep constitution */
     bool sustain_chr;    /* Keep charisma */
 
-    u32b cursed;            /* Player is cursed */
+    u32b cursed;         /* Player is cursed */
 
-    bool can_swim;        /* No damage falling */
-    bool levitation;        /* No damage falling */
-    bool lite;        /* Permanent light */
-    bool free_act;        /* Never paralyzed */
+    bool can_swim;       /* No damage falling */
+    bool levitation;     /* No damage falling */
+    bool lite;           /* Permanent light */
+    bool free_act;       /* Never paralyzed */
     bool see_inv;        /* Can see invisible */
-    bool regenerate;    /* Regenerate hit pts */
-    bool super_regenerate;
-    bool hold_life;        /* Resist life draining */
+    s16b regen;          /* Rate of regeneration: 100 = 100%, 200 = 200%, etc. */
+    bool hold_life;      /* Resist life draining */
 
     bool loremaster;
     int  auto_id_sp;
     bool cult_of_personality;
     bool fairy_stealth;
 
-    bool telepathy;        /* Telepathy */
+    bool telepathy;      /* Telepathy */
     bool esp_animal;
     bool esp_undead;
     bool esp_demon;

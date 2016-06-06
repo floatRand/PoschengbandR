@@ -16,6 +16,12 @@
 #include "grid.h"
 #include "rooms.h"
 
+/* Only one ROOM_SHOP room per level, please. Due to the
+   current inventory implementation (viz, using NO_TOWN),
+   multiple shops of the same kind on the same level would
+   have the same keeper and stock! */
+static bool shop_allowed = TRUE;
+
 /*
  * [from SAngband (originally from OAngband)]
  *
@@ -490,6 +496,8 @@ static bool build_room_template(int type, int subtype)
     /* Pick a room template */
     room_ptr = choose_room_template(type, subtype);
     if (!room_ptr) return FALSE;
+    if (room_ptr->flags & ROOM_SHOP)
+        shop_allowed = FALSE;
 
     /* pick type of transformation (0-7) */
     if (room_ptr->flags & ROOM_NO_ROTATE)
@@ -870,7 +878,6 @@ static char vault_aux_char;
 
 /* Breath mask for "monster pit (dragon)" */
 static u32b vault_aux_dragon_mask4;
-
 
 /*
  * Helper monster selection function
@@ -2064,12 +2071,6 @@ void build_room_template_aux(const room_template_t *room_ptr, int yval, int xval
                 place_trap(y, x);
                 break;
 
-                /* Black market in a dungeon */
-            case 'S':
-                set_cave_feat(y, x, feat_black_market);
-                store_init(NO_TOWN, STORE_BLACK);
-                break;
-
                 /* The Pattern */
             case 'p':
                 set_cave_feat(y, x, feat_pattern_start);
@@ -2262,6 +2263,7 @@ static bool _room_is_allowed(const room_template_t * room_ptr, int type, int sub
     if (room_ptr->type != type) return FALSE;
     if (subtype && room_ptr->subtype != subtype) return FALSE;
     if (!room_ptr->rarity) return FALSE;
+    if ((room_ptr->flags & ROOM_SHOP) && !shop_allowed) return FALSE;
 
     if (!dun_level)
     {
@@ -3925,9 +3927,10 @@ bool generate_rooms(void)
     /* Assume normal cave */
     room_info_type *room_info_ptr = room_info_normal;
 
+    shop_allowed = TRUE;
+
     if (dun_rooms < 5)
         dun_rooms = 5;
-
 
     /*
      * Initialize probability list.
@@ -4076,6 +4079,9 @@ bool generate_rooms(void)
         /* End loop if no room remain */
         if (!remain) break;
     }
+
+    /* Hack: Wilderness also picks room templates ... */
+    shop_allowed = TRUE;
 
     if (rooms_built < 1) return FALSE;
 

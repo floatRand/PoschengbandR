@@ -140,7 +140,7 @@ static _essence_group_t _essence_groups[ESSENCE_TYPE_MAX] = {
         { TR_SPEED,            "Speed",          12, _ALLOW_ALL },
         { TR_STEALTH,          "Stealth",        15, _ALLOW_ALL },
         { TR_LIFE,             "Life",           50, _ALLOW_ALL,   5 },
-        { TR_BLOWS,            "Extra Attacks",  20, _ALLOW_MELEE, 3 },
+        { TR_BLOWS,            "Extra Attacks",  50, _ALLOW_MELEE, 3 },
         { _ESSENCE_XTRA_DICE,  "Extra Dice",    250, _ALLOW_MELEE, 4 },
         { _ESSENCE_XTRA_MIGHT, "Extra Might",   250, _ALLOW_BOW,   4 },
         { TR_XTRA_SHOTS,       "Extra Shots",    50, _ALLOW_BOW,   4 },
@@ -505,6 +505,10 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
         if (old_obj.to_d > new_obj.to_d)
             absorb_f(_find_essence_info(_ESSENCE_TO_DAM_A), (old_obj.to_d - new_obj.to_d)*10*mult/div);
     }
+
+    /* Extra Boosts */
+    if (old_obj.name1 == ART_MUSASI_KATANA || old_obj.name1 == ART_MUSASI_WAKIZASI)
+        absorb_f(_find_essence_info(TR_DUAL_WIELDING), 10);
 
     *o_ptr = new_obj;
 }
@@ -1959,7 +1963,7 @@ static void _smith_weapon_armor(object_type *o_ptr)
         doc_insert(_doc, "   <color:y>A</color>) Absorb all essences\n");
         if (object_is_smith(o_ptr))
             doc_insert(_doc, "   <color:y>R</color>) Remove added essence\n");
-        else if (object_is_artifact(o_ptr))
+        else if (object_is_artifact(o_ptr) || object_is_(o_ptr, TV_SWORD, SV_RUNESWORD))
         {
         }
         else

@@ -413,7 +413,7 @@ static void _character_dump(doc_ptr doc)
 
 static void _calc_bonuses(void)
 {
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100 + 2*p_ptr->lev;
     if (p_ptr->lev >= 30) res_add(RES_FEAR);
 
     if (p_ptr->cut > 0)

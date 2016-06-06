@@ -1964,7 +1964,7 @@ void have_nightmare(int r_idx)
 
                   horror_desc[randint0(MAX_SAN_HORROR)], desc);
 
-    r_ptr->r_flags2 |= RF2_ELDRITCH_HORROR;
+    mon_lore_aux_2(r_ptr, RF2_ELDRITCH_HORROR);
 
     if (p_ptr->mimic_form != MIMIC_NONE)
     {
@@ -3332,7 +3332,7 @@ static bool research_mon(void)
                 handle_stuff();
 
                 /* know every thing mode */
-                screen_roff(r_idx, 0x01);
+                mon_display(&r_info[r_idx]);
                 notpicked = FALSE;
 
                 /* XTRA HACK REMEMBER_IDX */

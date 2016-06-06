@@ -471,7 +471,7 @@ static void _elder_aranea_calc_bonuses(void)
 
     p_ptr->free_act = TRUE;
     p_ptr->see_inv = TRUE;
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100;
     p_ptr->see_nocto = TRUE;
 }
 static void _elder_aranea_get_flags(u32b flgs[TR_FLAG_SIZE])

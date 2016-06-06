@@ -4113,24 +4113,15 @@ msg_format("They say 'The %d meets! We are the Ring-Ranger!'.", count);
     {
         /* Inate spell */
         if (thrown_spell < 32 * 4)
-        {
-            r_ptr->r_flags4 |= (1L << (thrown_spell - 32 * 3));
-            if (r_ptr->r_cast_spell < MAX_UCHAR) r_ptr->r_cast_spell++;
-        }
+            mon_lore_aux_4(r_ptr, 1 << (thrown_spell - 32 * 3));
 
         /* Bolt or Ball */
         else if (thrown_spell < 32 * 5)
-        {
-            r_ptr->r_flags5 |= (1L << (thrown_spell - 32 * 4));
-            if (r_ptr->r_cast_spell < MAX_UCHAR) r_ptr->r_cast_spell++;
-        }
+            mon_lore_aux_5(r_ptr, 1 << (thrown_spell - 32 * 4));
 
         /* Special spell */
         else if (thrown_spell < 32 * 6)
-        {
-            r_ptr->r_flags6 |= (1L << (thrown_spell - 32 * 5));
-            if (r_ptr->r_cast_spell < MAX_UCHAR) r_ptr->r_cast_spell++;
-        }
+            mon_lore_aux_6(r_ptr, 1 << (thrown_spell - 32 * 5));
     }
 
 

@@ -238,7 +238,7 @@ void monk_display_attack_info(doc_ptr doc, int hand)
 
 static bool _monk_check_spell(void)
 {
-    if (p_ptr->pclass == CLASS_WILD_TALENT)
+    if (p_ptr->pclass == CLASS_WILD_TALENT || mut_present(MUT_DRACONIAN_METAMORPHOSIS))
         return TRUE;
     if ((p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC) && !p_ptr->weapon_ct)
         return TRUE;

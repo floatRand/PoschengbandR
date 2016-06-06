@@ -20,20 +20,41 @@ static int _max_vampiric_drain(void)
     return 50;
 }
 
+/* Changes from MPA ... but I also tweaked to incrementally biff AC.
+     Author: elliptic
+     Date:   Wed Mar 30 20:42:54 2016 -0400
+
+     Rune sword changes.
+
+     It starts at (-10,-10) now and grows faster (though still with the same
+     monster level caps). The brand selection is a bit larger (and with tweaked
+     chances). Aggravation and TY_CURSE are now permanent once you gain them
+     (but you don't get TY_CURSE until 9d7/8d8/7d9 now instead of one step
+     sooner). Untested, but compiles.
+
+   Here are some test runs (Acuire Runesword on DL40 and 'play' to end game (about 7k kills)):
+   a Rune Sword (9d6) (+32,+39) [-44] {cursed, Ag|EFCoP/D}
+   a Rune Sword (7d8) (+33,+37) [-50] {cursed, Ag|EFCoPCaS}
+   a Rune Sword (9d7) (+34,+37) [-39] {cursed, AgTy|A}
+   a Rune Sword (8d9) (+43,+28) [-40] {cursed, AgTy|CoPCa/PLZ}
+   a Rune Sword (9d6) (+36,+36) [-44] {cursed, Ag|FCoPS}
+
+   See Wizard commands '-' and '=' in wizard2.c. Simply 'find' and wield a rune sword
+   at the desired time (wizard command c0w) and then complete the statistics run.
+*/
 /*static*/ void rune_sword_kill(object_type *o_ptr, monster_race *r_ptr)
 {
     if (o_ptr->curse_flags & TRC_PERMA_CURSE)
     {
         bool feed = FALSE;
         bool unique = (r_ptr->flags1 & RF1_UNIQUE);
-                        
+
         switch (randint1(4))
         {
         case 1:
             if ((r_ptr->level > o_ptr->to_h + o_ptr->to_d + 15))
             {
-                /*msg_print("Boost ToHit?");*/
-                if (unique || one_in_(6))
+                if (unique || (o_ptr->to_h < 10 && one_in_(2)) || one_in_(3))
                 {
                     if (o_ptr->to_h < 50 || one_in_(666))
                     {
@@ -47,8 +68,7 @@ static int _max_vampiric_drain(void)
         case 2:
             if ((r_ptr->level > o_ptr->to_h + o_ptr->to_d + 15))
             {
-                /*msg_print("Boost ToDam?");*/
-                if (unique || one_in_(6))
+                if (unique || (o_ptr->to_d < 10 && one_in_(2)) || one_in_(3))
                 {
                     if (o_ptr->to_d < 50 || one_in_(666))
                     {
@@ -62,13 +82,13 @@ static int _max_vampiric_drain(void)
         case 3:
             if ((r_ptr->level > o_ptr->dd * o_ptr->ds))
             {
-                /*msg_print("Boost dd?");*/
-                if (one_in_((o_ptr->dd + 1) * o_ptr->ds) && (unique || one_in_(6)))
+                if (one_in_((o_ptr->dd + 1) * o_ptr->ds / 2) && (unique || one_in_(6)))
                 {
                     if (o_ptr->dd < 9 || one_in_(666))
                     {
                         feed = TRUE;
                         o_ptr->dd++;
+                        o_ptr->to_a -= randint1(3);
                     }
                 }
             }
@@ -77,110 +97,130 @@ static int _max_vampiric_drain(void)
         case 4:
             if ((r_ptr->level > o_ptr->dd * o_ptr->ds))
             {
-                /*msg_print("Boost ds?");*/
-                if (one_in_(o_ptr->dd * (o_ptr->ds + 1)) && (unique || one_in_(6)))
+                if (one_in_(o_ptr->dd * (o_ptr->ds + 1) / 2) && (unique || one_in_(6)))
                 {
                     if (o_ptr->ds < 9 || one_in_(666))
                     {
                         feed = TRUE;
                         o_ptr->ds++;
+                        o_ptr->to_a -= randint1(3);
                     }
                 }
             }
             break;
         }
 
-        if (unique && one_in_(200 / MAX(r_ptr->level, 1)))
+        if (unique && (randint0(150) < r_ptr->level))
         {
-            switch (randint1(12))
+            switch (randint1(13))
             {
             case 1:
-                if (one_in_(6)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_BRAND_POIS); 
-                } 
+                if (one_in_(6))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_BRAND_POIS);
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 2:
-                if (one_in_(6)) 
-                { 
-                    feed = TRUE; 
+                if (one_in_(6))
+                {
+                    feed = TRUE;
                     add_flag(o_ptr->art_flags, TR_BRAND_FIRE);
-                } 
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 3:
-                if (one_in_(6)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_BRAND_COLD); 
-                } 
+                if (one_in_(6))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_BRAND_COLD);
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 4:
-                if (one_in_(26)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_BRAND_ELEC); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_BRAND_ELEC);
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 5:
-                if (one_in_(26)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_UNDEAD); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_UNDEAD);
+                }
                 break;
             case 6:
-                if (one_in_(26)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_DEMON); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_DEMON);
+                }
                 break;
             case 7:
-                if (one_in_(13)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_DRAGON); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_DRAGON);
+                }
                 break;
             case 8:
-                if (one_in_(13)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_TROLL); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_BRAND_ACID);
+                    o_ptr->to_a -= randint1(5);
+                }
                 break;
             case 9:
-                if (one_in_(13)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_GIANT); 
-                } 
+                if (one_in_(12))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_GIANT);
+                }
                 break;
             case 10:
-                if (one_in_(66)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_HUMAN); 
-                } 
+                if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_HUMAN);
+                }
                 break;
             case 11:
-                if (one_in_(666)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_SLAY_EVIL); 
-                } 
+                if (one_in_(666))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_EVIL);
+                    o_ptr->to_a -= randint1(5);
+                }
+                else if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_CHAOTIC);
+                }
                 break;
             case 12:
-                if (one_in_(666)) 
-                { 
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_VORPAL2); 
-                }
-                else if (one_in_(6))
+                if (one_in_(666))
                 {
-                    feed = TRUE; 
-                    add_flag(o_ptr->art_flags, TR_VORPAL); 
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_VORPAL2);
+                    o_ptr->to_a -= randint1(5);
+                }
+                else if (one_in_(24))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_VORPAL);
+                    o_ptr->to_a -= randint1(5);
+                }
+                break;
+            case 13:
+                if (one_in_(12))
+                {
+                    feed = TRUE;
+                    add_flag(o_ptr->art_flags, TR_SLAY_ANIMAL);
                 }
                 break;
             }
@@ -188,20 +228,16 @@ static int _max_vampiric_drain(void)
 
         if (feed)
         {
-            if ((o_ptr->curse_flags & TRC_TY_CURSE) == 0
-              && o_ptr->dd * o_ptr->ds > 50 )
-            {  
-                o_ptr->curse_flags |= TRC_TY_CURSE;
+            if (!have_flag(o_ptr->art_flags, TR_TY_CURSE)
+              && o_ptr->dd * o_ptr->ds > 60 )
+            {
+                add_flag(o_ptr->art_flags, TR_TY_CURSE);
                 msg_print("Your Rune Sword seeks to dominate you!");
-                if (one_in_(13))
-                    add_flag(o_ptr->art_flags, TR_AGGRAVATE);
-                if (one_in_(13))
-                    add_flag(o_ptr->art_flags, TR_DRAIN_EXP);
             }
-            else if ((o_ptr->curse_flags & TRC_AGGRAVATE) == 0
+            else if (!have_flag(o_ptr->art_flags, TR_AGGRAVATE)
                    && o_ptr->dd * o_ptr->ds > 30 )
             {
-                o_ptr->curse_flags |= TRC_AGGRAVATE;
+                add_flag(o_ptr->art_flags, TR_AGGRAVATE);
                 msg_print("The thirst of your sword redoubles!");
             }
             else
@@ -573,7 +609,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)
         {
-            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK);
+            mon_lore_r(m_ptr, RFR_EFF_IM_ACID_MASK);
         }
         else if (mode == MYSTIC_ACID)
         {
@@ -590,7 +626,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)
         {
-            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK);
+            mon_lore_r(m_ptr, RFR_EFF_IM_ELEC_MASK);
         }
         else if (mode == MYSTIC_ELEC)
         {
@@ -607,14 +643,14 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)
         {
-            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK);
+            mon_lore_r(m_ptr, RFR_EFF_IM_FIRE_MASK);
         }
         else
         {
             if (r_ptr->flags3 & RF3_HURT_FIRE)
             {
                 mult = MAX(mult, 25);
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_HURT_FIRE;
+                mon_lore_3(m_ptr, RF3_HURT_FIRE);
             }
             else if (mode == MYSTIC_FIRE)
             {
@@ -630,14 +666,14 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)
         {
-            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK);
+            mon_lore_r(m_ptr, RFR_EFF_IM_COLD_MASK);
         }
         else
         {
             if (r_ptr->flags3 & RF3_HURT_COLD)
             {
                 mult = MAX(mult, 25);
-                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_HURT_COLD;
+                mon_lore_3(m_ptr, RF3_HURT_COLD);
             }
             else if (mode == MYSTIC_COLD)
             {
@@ -653,7 +689,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)
         {
-            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK);
+            mon_lore_r(m_ptr, RFR_EFF_IM_POIS_MASK);
         }
         else if (mode == MYSTIC_POIS)
         {
@@ -758,7 +794,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_ANIMAL)
                 {
                     msg_format("%s slays animals.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_ANIMAL;
+                    mon_lore_3(m_ptr, RF3_ANIMAL);
                     if (have_flag(flgs, TR_KILL_ANIMAL))
                     {
                         if (mult < 50) mult = 50;
@@ -776,12 +812,12 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_ANIMAL))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_ANIMAL;
+                        mon_lore_3(m_ptr, RF3_ANIMAL);
                         if (mult < 40) mult = 40;
                     }
                     else if (have_flag(flgs, TR_SLAY_ANIMAL))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_ANIMAL;
+                        mon_lore_3(m_ptr, RF3_ANIMAL);
                         if (mult < 25) mult = 25;
                     }
                 }
@@ -792,7 +828,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_EVIL)
                 {
                     msg_format("%s slays evil.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_EVIL;
+                    mon_lore_3(m_ptr, RF3_EVIL);
                     if (have_flag(flgs, TR_KILL_EVIL))
                     {
                         if (mult < 45) mult = 45;
@@ -811,12 +847,12 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_EVIL))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_EVIL;
+                        mon_lore_3(m_ptr, RF3_EVIL);
                         if (mult < 35) mult = 35;
                     }
                     else if (have_flag(flgs, TR_SLAY_EVIL) || weaponmaster_get_toggle() == TOGGLE_HOLY_BLADE)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_EVIL;
+                        mon_lore_3(m_ptr, RF3_EVIL);
                         if (mult < 20) mult = 20;
                     }
                 }
@@ -827,7 +863,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_GOOD)
                 {
                     msg_format("%s slays good.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_GOOD;
+                    mon_lore_3(m_ptr, RF3_GOOD);
                     if (have_flag(flgs, TR_SLAY_GOOD))
                     {
                         if (mult < 30) mult = 30;
@@ -842,7 +878,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_SLAY_GOOD))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_GOOD;
+                        mon_lore_3(m_ptr, RF3_GOOD);
                         if (mult < 20) mult = 20;
                     }
                 }
@@ -853,7 +889,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_HUMAN)
                 {
                     msg_format("%s slays humans.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= RF2_HUMAN;
+                    mon_lore_2(m_ptr, RF2_HUMAN);
                     if (have_flag(flgs, TR_KILL_HUMAN))
                     {
                         if (mult < 50) mult = 50;
@@ -871,12 +907,12 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_HUMAN))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= RF2_HUMAN;
+                        mon_lore_2(m_ptr, RF2_HUMAN);
                         if (mult < 40) mult = 40;
                     }
                     else if (have_flag(flgs, TR_SLAY_HUMAN))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags2 |= RF2_HUMAN;
+                        mon_lore_2(m_ptr, RF2_HUMAN);
                         if (mult < 25) mult = 25;
                     }
                 }
@@ -887,7 +923,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_UNDEAD)
                 {
                     msg_format("%s slays undead.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_UNDEAD;
+                    mon_lore_3(m_ptr, RF3_UNDEAD);
                     if (have_flag(flgs, TR_KILL_UNDEAD))
                     {
                         if (mult < 60) mult = 60;
@@ -905,12 +941,12 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_UNDEAD))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_UNDEAD;
+                        mon_lore_3(m_ptr, RF3_UNDEAD);
                         if (mult < 50) mult = 50;
                     }
                     else if (have_flag(flgs, TR_SLAY_UNDEAD))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_UNDEAD;
+                        mon_lore_3(m_ptr, RF3_UNDEAD);
                         if (mult < 30) mult = 30;
                     }
                 }
@@ -921,7 +957,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_DEMON)
                 {
                     msg_format("%s slays demons.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_DEMON;
+                    mon_lore_3(m_ptr, RF3_DEMON);
                     if (have_flag(flgs, TR_KILL_DEMON))
                     {
                         if (mult < 60) mult = 60;
@@ -939,12 +975,12 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_DEMON))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_DEMON;
+                        mon_lore_3(m_ptr, RF3_DEMON);
                         if (mult < 50) mult = 50;
                     }
                     else if (have_flag(flgs, TR_SLAY_DEMON))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_DEMON;
+                        mon_lore_3(m_ptr, RF3_DEMON);
                         if (mult < 30) mult = 30;
                     }
                 }
@@ -955,7 +991,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_ORC)
                 {
                     msg_format("%s slays orcs.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_ORC;
+                    mon_lore_3(m_ptr, RF3_ORC);
                     if (have_flag(flgs, TR_KILL_ORC))
                     {
                         if (mult < 60) mult = 60;
@@ -973,12 +1009,12 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_ORC))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_ORC;
+                        mon_lore_3(m_ptr, RF3_ORC);
                         if (mult < 50) mult = 50;
                     }
                     else if (have_flag(flgs, TR_SLAY_ORC))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_ORC;
+                        mon_lore_3(m_ptr, RF3_ORC);
                         if (mult < 30) mult = 30;
                     }
                 }
@@ -990,7 +1026,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_TROLL)
                 {
                     msg_format("%s slays trolls.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_TROLL;
+                    mon_lore_3(m_ptr, RF3_TROLL);
                     if (have_flag(flgs, TR_KILL_TROLL))
                     {
                         if (mult < 60) mult = 60;
@@ -1008,12 +1044,12 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_TROLL))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_TROLL;
+                        mon_lore_3(m_ptr, RF3_TROLL);
                         if (mult < 50) mult = 50;
                     }
                     else if (have_flag(flgs, TR_SLAY_TROLL))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_TROLL;
+                        mon_lore_3(m_ptr, RF3_TROLL);
                         if (mult < 30) mult = 30;
                     }
                 }
@@ -1024,7 +1060,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_GIANT)
                 {
                     msg_format("%s slays giants.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_GIANT;
+                    mon_lore_3(m_ptr, RF3_GIANT);
                     if (have_flag(flgs, TR_KILL_GIANT))
                     {
                         if (mult < 60) mult = 60;
@@ -1042,12 +1078,12 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_GIANT))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_GIANT;
+                        mon_lore_3(m_ptr, RF3_GIANT);
                         if (mult < 50) mult = 50;
                     }
                     else if (have_flag(flgs, TR_SLAY_GIANT))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_GIANT;
+                        mon_lore_3(m_ptr, RF3_GIANT);
                         if (mult < 30) mult = 30;
                     }
                 }
@@ -1058,7 +1094,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (chaos_slay == TR_SLAY_DRAGON)
                 {
                     msg_format("%s slays dragons.", o_name);
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_DRAGON;
+                    mon_lore_3(m_ptr, RF3_DRAGON);
                     if (have_flag(flgs, TR_KILL_DRAGON))
                     {
                         if (mult < 60) mult = 60;
@@ -1078,14 +1114,14 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 {
                     if (have_flag(flgs, TR_KILL_DRAGON))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_DRAGON;
+                        mon_lore_3(m_ptr, RF3_DRAGON);
                         if (mult < 50) mult = 50;
                         if ((o_ptr->name1 == ART_NOTHUNG) && (m_ptr->r_idx == MON_FAFNER))
                             mult *= 3;
                     }
                     else if (have_flag(flgs, TR_SLAY_DRAGON))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_DRAGON;
+                        mon_lore_3(m_ptr, RF3_DRAGON);
                         if (mult < 30) mult = 30;
                     }
                 }
@@ -1096,11 +1132,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             if (hex_spelling(HEX_RUNESWORD) &&
                 (r_ptr->flags3 & RF3_GOOD))
             {
-                if (is_original_ap_and_seen(m_ptr))
-                {
-                    r_ptr->r_flags3 |= RF3_GOOD;
-                }
-
+                mon_lore_3(m_ptr, RF3_GOOD);
                 if (mult < 20) mult = 20;
             }
 
@@ -1109,7 +1141,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK);
+                    mon_lore_r(m_ptr, RFR_EFF_IM_ACID_MASK);
                 }
                 else if (chaos_slay == TR_BRAND_ACID)
                 {
@@ -1127,7 +1159,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK);
+                    mon_lore_r(m_ptr, RFR_EFF_IM_ELEC_MASK);
                 }
                 else if (chaos_slay == TR_BRAND_ELEC)
                 {
@@ -1156,7 +1188,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 int tmp = 0;
                 if (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK);
+                    mon_lore_r(m_ptr, RFR_EFF_IM_FIRE_MASK);
                 }
                 else if (chaos_slay == TR_BRAND_FIRE)
                 {
@@ -1178,7 +1210,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (tmp > 0 && (r_ptr->flags3 & RF3_HURT_FIRE))
                 {    
                     tmp *= 2;
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_HURT_FIRE;
+                    mon_lore_3(m_ptr, RF3_HURT_FIRE);
                 }
                 mult = MAX(mult, tmp);
             }
@@ -1191,7 +1223,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 int tmp = 0;
                 if (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK);
+                    mon_lore_r(m_ptr, RFR_EFF_IM_COLD_MASK);
                 }
                 else if (chaos_slay == TR_BRAND_COLD)
                 {
@@ -1214,7 +1246,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 if (tmp > 0 && (r_ptr->flags3 & RF3_HURT_COLD))
                 {    
                     tmp *= 2;
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_HURT_COLD;
+                    mon_lore_3(m_ptr, RF3_HURT_COLD);
                 }
                 mult = MAX(mult, tmp);
             }
@@ -1226,7 +1258,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK);
+                    mon_lore_r(m_ptr, RFR_EFF_IM_POIS_MASK);
                 }
                 else if (chaos_slay == TR_BRAND_POIS)
                 {
@@ -1256,10 +1288,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (r_ptr->flags3 & RF3_UNDEAD)
                 {
-                    if (is_original_ap_and_seen(m_ptr))
-                    {
-                        r_ptr->r_flags3 |= RF3_UNDEAD;
-                    }
+                    mon_lore_3(m_ptr, RF3_UNDEAD);
                     if (mult == 10) mult = 70;
                     else if (mult < 140) mult = MIN(140, mult+60);
                 }
@@ -1273,10 +1302,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             }
             if ((mode == HISSATSU_HAGAN) && (r_ptr->flags3 & RF3_HURT_ROCK))
             {
-                if (is_original_ap_and_seen(m_ptr))
-                {
-                    r_ptr->r_flags3 |= RF3_HURT_ROCK;
-                }
+                mon_lore_3(m_ptr, RF3_HURT_ROCK);
                 if (mult == 10) mult = 40;
                 else if (mult < 60) mult = 60;
             }
@@ -1284,7 +1310,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (r_ptr->flags3 & RF3_NO_STUN)
                 {
-                    if (is_original_ap_and_seen(m_ptr))    r_ptr->r_flags3 |= RF3_NO_STUN;
+                    mon_lore_3(m_ptr, RF3_NO_STUN);
                 }
                 else
                 {
@@ -2143,20 +2169,20 @@ void touch_zap_player(int m_idx)
             if (r_ptr->flags2 & RF2_AURA_FIRE)
             {
                 fire_dam = res_calc_dam(RES_FIRE, damroll(dd, ds));
-                if (fire_dam > 0 && is_original_ap_and_seen(m_ptr))
-                    r_ptr->r_flags2 |= RF2_AURA_FIRE;
+                if (fire_dam > 0)
+                    mon_lore_2(m_ptr, RF2_AURA_FIRE);
             }
             if (r_ptr->flags3 & RF3_AURA_COLD)
             {
                 cold_dam = res_calc_dam(RES_COLD, damroll(dd, ds));
-                if (cold_dam > 0 && is_original_ap_and_seen(m_ptr))
-                    r_ptr->r_flags3 |= RF3_AURA_COLD;
+                if (cold_dam > 0)
+                    mon_lore_3(m_ptr, RF3_AURA_COLD);
             }
             if (r_ptr->flags2 & RF2_AURA_ELEC)
             {
                 elec_dam = res_calc_dam(RES_ELEC, damroll(dd, ds));
-                if (elec_dam > 0 && is_original_ap_and_seen(m_ptr))
-                    r_ptr->r_flags2 |= RF2_AURA_ELEC;
+                if (elec_dam > 0)
+                    mon_lore_2(m_ptr, RF2_AURA_ELEC);
             }
 
             if (fire_dam + cold_dam + elec_dam)
@@ -2233,10 +2259,10 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     int             steal_ct = 0;
     int             hit_ct = 0;
     const int       max_drain_amt = _max_vampiric_drain();
+    bool            backstab = FALSE, fuiuchi = FALSE, stab_fleeing = FALSE;
 
     set_monster_csleep(m_idx, 0);
     monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
-
 
     if (p_ptr->afraid)
     {
@@ -2250,6 +2276,44 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
         }
     }
 
+    /* Flavor ... Allow Ninjas and Rogues to backstab after metamorphosis */
+    if (mut_present(MUT_DRACONIAN_METAMORPHOSIS))
+    {
+        switch (p_ptr->pclass)
+        {
+        case CLASS_ROGUE: /* <=== Burglary Book of Shadows currently has NINJA_S_STEALTH */
+        case CLASS_NINJA:
+            if (m_ptr->ml)
+            {
+                int tmp = p_ptr->lev * 6 + (p_ptr->skills.stl + 10) * 4;
+                if (p_ptr->monlite && (mode != HISSATSU_NYUSIN)) tmp /= 3;
+                if (p_ptr->cursed & TRC_AGGRAVATE) tmp /= 2;
+                if (r_ptr->level > (p_ptr->lev * p_ptr->lev / 20 + 10)) tmp /= 3;
+                if (MON_CSLEEP(m_ptr))
+                {
+                    backstab = TRUE;
+                }
+                else if ( (p_ptr->special_defense & NINJA_S_STEALTH)
+                       && randint0(tmp) > r_ptr->level + 20
+                       && !(r_ptr->flagsr & RFR_RES_ALL) )
+                {
+                    fuiuchi = TRUE;
+                }
+                else if (MON_MONFEAR(m_ptr))
+                {
+                    stab_fleeing = TRUE;
+                }
+            }
+            break;
+        case CLASS_SCOUT:
+            if (p_ptr->ambush)
+            {
+                if (MON_CSLEEP(m_ptr) && m_ptr->ml)
+                    backstab = TRUE;
+            }
+            break;
+        }
+    }
     for (i = 0; i < p_ptr->innate_attack_ct; i++)
     {
         innate_attack_ptr a = &p_ptr->innate_attacks[i];
@@ -2264,9 +2328,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
         {
             to_h = a->to_h + p_ptr->to_h_m;
             chance = p_ptr->skills.thn + (to_h * BTH_PLUS_ADJ);
-            if (test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml))
+            if (fuiuchi || test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml))
             {
                 int dd = a->dd + p_ptr->innate_attack_info.to_dd;
+
+                if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly attack %s!", m_name);
+                else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name);
+                else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You attack %s in the back!",  m_name);
 
                 hit_ct++;
                 sound(SOUND_HIT);
@@ -2291,6 +2359,24 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     default: msg_format("You <color:v>shred</color> %s!", m_name); break;
                     }
                 }
+
+                /* Slop for Draconian Metamorphosis ... */
+                if (backstab)
+                {
+                    if (p_ptr->pclass == CLASS_SCOUT)
+                        base_dam *= 3;
+                    else
+                        base_dam *= (3 + (p_ptr->lev / 20));
+                }
+                else if (fuiuchi)
+                {
+                    base_dam = base_dam*(5+(p_ptr->lev*2/25))/2;
+                }
+                else if (stab_fleeing)
+                {
+                    base_dam = (3 * base_dam) / 2;
+                }
+
                 base_dam += a->to_d;
                 if (!(a->flags & INNATE_NO_DAM))
                 {
@@ -2303,6 +2389,35 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                 }
 
                 dam = base_dam + p_ptr->to_d_m;
+
+                /* More slop for Draconian Metamorphosis ... */
+                if ( p_ptr->pclass == CLASS_NINJA
+                  && (p_ptr->cur_lite <= 0 || one_in_(7)) )
+                {
+                    int maxhp = maxroll(r_ptr->hdice, r_ptr->hside);
+                    if (one_in_(backstab ? 13 : (stab_fleeing || fuiuchi) ? 15 : 27))
+                    {
+                        dam *= 5;
+                        msg_format("You critically injured %s!", m_name);
+                    }
+                    else if ( (m_ptr->hp < maxhp/2 && one_in_(50))
+                           || ( (one_in_(666) || ((backstab || fuiuchi) && one_in_(11)))
+                             && !(r_ptr->flags1 & RF1_UNIQUE)
+                             && !(r_ptr->flags7 & RF7_UNIQUE2)) )
+                    {
+                        if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_UNIQUE2) || (m_ptr->hp >= maxhp/2))
+                        {
+                            dam = MAX(dam*5, m_ptr->hp/2);
+                            msg_format("You fatally injured %s!", m_name);
+                        }
+                        else
+                        {
+                            dam = m_ptr->hp + 1;
+                            msg_format("You hit %s on a fatal spot!", m_name);
+                        }
+                    }
+                }
+
                 if (a->flags & INNATE_NO_DAM)
                 {
                     base_dam = 0;
@@ -2311,7 +2426,8 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                 }
                 else
                     effect_pow = base_dam;
-                if (dam < 0) 
+
+                if (dam < 0)
                     dam = 0;
                 dam = mon_damage_mod(m_ptr, dam, FALSE);
                 if (dam > 0) 
@@ -2341,112 +2457,98 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                         case GF_ACID:
                             if (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= r_ptr->flagsr & RFR_EFF_IM_ACID_MASK;
+                                mon_lore_r(m_ptr, RFR_EFF_IM_ACID_MASK);
                                 e = 0;
                             }
                             break;
                         case GF_FIRE:
                             if (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK;
+                                mon_lore_r(m_ptr, RFR_EFF_IM_FIRE_MASK);
                                 e = 0;
                             }
                             break;
                         case GF_COLD:
                             if (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= r_ptr->flagsr & RFR_EFF_IM_COLD_MASK;
+                                mon_lore_r(m_ptr, RFR_EFF_IM_COLD_MASK);
                                 e = 0;
                             }
                             break;
                         case GF_ELEC:
                             if (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK;
+                                mon_lore_r(m_ptr, RFR_EFF_IM_ELEC_MASK);
                                 e = 0;
                             }
                             break;
                         case GF_POIS:
                             if (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= r_ptr->flagsr & RFR_EFF_IM_POIS_MASK;
+                                mon_lore_r(m_ptr, RFR_EFF_IM_POIS_MASK);
                                 e = 0;
                             }
                             break;
                         case GF_CONFUSION:
                             if (r_ptr->flags3 & RF3_NO_CONF)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flags3 |= RF3_NO_CONF;
+                                mon_lore_3(m_ptr, RF3_NO_CONF);
                                 e = 0;
                             }
                             break;
                         case GF_SOUND:
                             if (r_ptr->flagsr & RFR_RES_SOUN)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= RFR_RES_SOUN;
+                                mon_lore_r(m_ptr, RFR_RES_SOUN);
                                 e = 0;
                             }
                             break;
                         case GF_SHARDS:
                             if (r_ptr->flagsr & RFR_RES_SHAR)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= RFR_RES_SHAR;
+                                mon_lore_r(m_ptr, RFR_RES_SHAR);
                                 e = 0;
                             }
                             break;
                         case GF_NETHER:
                             if (r_ptr->flagsr & RFR_RES_NETH)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= RFR_RES_NETH;
+                                mon_lore_r(m_ptr, RFR_RES_NETH);
                                 e = 0;
                             }
                             break;
                         case GF_NEXUS:
                             if (r_ptr->flagsr & RFR_RES_NEXU)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= RFR_RES_NEXU;
+                                mon_lore_r(m_ptr, RFR_RES_NEXU);
                                 e = 0;
                             }
                             break;
                         case GF_CHAOS:
                             if (r_ptr->flagsr & RFR_RES_CHAO)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= RFR_RES_CHAO;
+                                mon_lore_r(m_ptr, RFR_RES_CHAO);
                                 e = 0;
                             }
                             break;
                         case GF_DISENCHANT:
                             if (r_ptr->flagsr & RFR_RES_DISE)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= RFR_RES_DISE;
+                                mon_lore_r(m_ptr, RFR_RES_DISE);
                                 e = 0;
                             }
                             break;
                         case GF_LITE:
                             if (r_ptr->flagsr & RFR_RES_LITE)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= RFR_RES_LITE;
+                                mon_lore_r(m_ptr, RFR_RES_LITE);
                                 e = 0;
                             }
                             break;
                         case GF_DARK:
                             if (r_ptr->flagsr & RFR_RES_DARK)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) 
-                                    r_ptr->r_flagsr |= RFR_RES_DARK;
+                                mon_lore_r(m_ptr, RFR_RES_DARK);
                                 e = 0;
                             }
                             break;
@@ -2547,7 +2649,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                 sound(SOUND_MISS);
                 msg_format("You miss.", m_name);
             }
-
+            fuiuchi = FALSE; /* Clumsy! */
             if (mode == WEAPONMASTER_RETALIATION)
                 break;
         }
@@ -3116,7 +3218,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
+                        mon_lore_r(m_ptr, RFR_RES_ALL);
                         msg_format("%^s is immune.", m_name_subject);
                     }
                     else if (mon_save_p(m_ptr->r_idx, A_DEX))
@@ -3440,12 +3542,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         if (r_ptr->flagsr & RFR_RES_ALL)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
+                            mon_lore_r(m_ptr, RFR_RES_ALL);
                             msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (r_ptr->flags3 & RF3_NO_STUN)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
+                            mon_lore_3(m_ptr, RF3_NO_STUN);
                             msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -3465,25 +3567,25 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         msg_format("%^s is immune.", m_name_subject);
                         k = 0;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                        mon_lore_r(m_ptr, RFR_RES_ALL);
                     }
                     else if (r_ptr->flagsr & RFR_IM_FIRE)
                     {
                         msg_format("%^s is immune.", m_name_subject);
                         k = 0;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_FIRE);
+                        mon_lore_r(m_ptr, RFR_IM_FIRE);
                     }
                     else if (r_ptr->flagsr & RFR_RES_FIRE)
                     {
                         msg_format("%^s resists.", m_name_subject);
                         k /= 3;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_FIRE);
+                        mon_lore_r(m_ptr, RFR_RES_FIRE);
                     }
                     else if (r_ptr->flags3 & (RF3_HURT_FIRE))
                     {
                         msg_format("%^s is hit hard.", m_name_subject);
                         k *= 2;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_FIRE);
+                        mon_lore_3(m_ptr, RF3_HURT_FIRE);
                     }
                     break;
                 case TOGGLE_ICE_BLADE:
@@ -3491,19 +3593,19 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         msg_format("%^s is immune.", m_name_subject);
                         k = 0;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                        mon_lore_r(m_ptr, RFR_RES_ALL);
                     }
                     else if (r_ptr->flagsr & RFR_IM_COLD)
                     {
                         msg_format("%^s is immune.", m_name_subject);
                         k = 0;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_COLD);
+                        mon_lore_r(m_ptr, RFR_IM_COLD);
                     }
                     else if (r_ptr->flagsr & RFR_RES_COLD)
                     {
                         msg_format("%^s resists.", m_name_subject);
                         k /= 3;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_COLD);
+                        mon_lore_r(m_ptr, RFR_RES_COLD);
                     }
                     else 
                     {
@@ -3511,7 +3613,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         {
                             msg_format("%^s is hit hard.", m_name_subject);
                             k *= 2;
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= (RF3_HURT_COLD);
+                            mon_lore_3(m_ptr, RF3_HURT_COLD);
                         }
                         if (one_in_(5)
                             && !(r_ptr->flags1 & (RF1_UNIQUE))
@@ -3527,19 +3629,19 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         msg_format("%^s is immune.", m_name_subject);
                         k = 0;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+                        mon_lore_r(m_ptr, RFR_RES_ALL);
                     }
                     else if (r_ptr->flagsr & RFR_IM_ELEC)
                     {
                         msg_format("%^s is immune.", m_name_subject);
                         k = 0;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_IM_ELEC);
+                        mon_lore_r(m_ptr, RFR_IM_ELEC);
                     }
                     else if (r_ptr->flagsr & RFR_RES_ELEC)
                     {
                         msg_format("%^s resists.", m_name_subject);
                         k /= 3;
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ELEC);
+                        mon_lore_r(m_ptr, RFR_RES_ELEC);
                     }
                     else 
                     {
@@ -3676,12 +3778,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
+                        mon_lore_r(m_ptr, RFR_RES_ALL);
                         msg_format("%^s is immune.", m_name_subject);
                     }
                     else if (r_ptr->flags3 & RF3_NO_STUN)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
+                        mon_lore_3(m_ptr, RF3_NO_STUN);
                         msg_format("%^s is immune.", m_name_subject);
                     }
                     else if ((r_ptr->flags1 & RF1_UNIQUE) && mon_save_p(m_ptr->r_idx, A_STR))
@@ -3698,7 +3800,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     if (r_ptr->flagsr & RFR_RES_ALL)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
+                        mon_lore_r(m_ptr, RFR_RES_ALL);
                         msg_format("%^s is immune.", m_name_subject);
                     }
                     else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -3800,12 +3902,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         if (r_ptr->flagsr & RFR_RES_ALL)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
+                            mon_lore_r(m_ptr, RFR_RES_ALL);
                             msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (r_ptr->flags3 & RF3_NO_CONF)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_CONF;
+                            mon_lore_3(m_ptr, RF3_NO_CONF);
                             msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -3823,12 +3925,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         if (r_ptr->flagsr & RFR_RES_ALL)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
+                            mon_lore_r(m_ptr, RFR_RES_ALL);
                             msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (r_ptr->flags3 & RF3_NO_SLEEP)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_SLEEP;
+                            mon_lore_3(m_ptr, RF3_NO_SLEEP);
                             msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -3849,12 +3951,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     {
                         if (r_ptr->flagsr & RFR_RES_ALL)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_ALL;
+                            mon_lore_r(m_ptr, RFR_RES_ALL);
                             msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (r_ptr->flags3 & RF3_NO_STUN)
                         {
-                            if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
+                            mon_lore_3(m_ptr, RF3_NO_STUN);
                             msg_format("%^s is immune.", m_name_subject);
                         }
                         else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -3963,7 +4065,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 /* Confuse the monster */
                 if (r_ptr->flags3 & RF3_NO_CONF)
                 {
-                    if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_CONF;
+                    mon_lore_3(m_ptr, RF3_NO_CONF);
                     msg_format("%^s is unaffected.", m_name_subject);
                 }
                 else if (randint0(100) < r_ptr->level)
@@ -3987,13 +4089,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     if (r_ptr->flags1 & RF1_UNIQUE)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                        mon_lore_r(m_ptr, RFR_RES_TELE);
                         msg_format("%^s is unaffected!", m_name_subject);
                         resists_tele = TRUE;
                     }
                     else if (r_ptr->level > randint1(100))
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                        mon_lore_r(m_ptr, RFR_RES_TELE);
                         msg_format("%^s resists!", m_name_subject);
                         resists_tele = TRUE;
                     }

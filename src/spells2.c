@@ -727,7 +727,7 @@ void self_knowledge(void)
         info[i++] = "You have free action.";
 
     }
-    if (p_ptr->regenerate)
+    if (p_ptr->regen > 100)
     {
         info[i++] = "You regenerate quickly.";
 
@@ -1765,17 +1765,7 @@ bool detect_monsters_evil(int range)
         if (r_ptr->flags3 & RF3_EVIL)
         {
             if (is_original_ap(m_ptr))
-            {
-                /* Take note that they are evil */
-                r_ptr->r_flags3 |= (RF3_EVIL);
-
-                /* Update monster recall window */
-                if (p_ptr->monster_race_idx == m_ptr->r_idx)
-                {
-                    /* Window stuff */
-                    p_ptr->window |= (PW_MONSTER);
-                }
-            }
+                mon_lore_aux_3(r_ptr, RF3_EVIL);
 
             /* Repair visibility later */
             repair_monsters = TRUE;
@@ -2125,17 +2115,7 @@ bool detect_monsters_xxx(int range, u32b match_flag)
         if (r_ptr->flags3 & (match_flag))
         {
             if (is_original_ap(m_ptr))
-            {
-                /* Take note that they are something */
-                r_ptr->r_flags3 |= (match_flag);
-
-                /* Update monster recall window */
-                if (p_ptr->monster_race_idx == m_ptr->r_idx)
-                {
-                    /* Window stuff */
-                    p_ptr->window |= (PW_MONSTER);
-                }
-            }
+                mon_lore_aux_3(r_ptr, match_flag);
 
             /* Repair visibility later */
             repair_monsters = TRUE;
@@ -4299,10 +4279,7 @@ bool teleport_swap(int dir)
     if (r_ptr->flagsr & RFR_RES_TELE)
     {
         msg_print("Your teleportation is blocked!");
-
-        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
-
-        /* Failure */
+        mon_lore_r(m_ptr, RFR_RES_TELE);
         return FALSE;
     }
 

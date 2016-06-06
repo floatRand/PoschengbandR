@@ -2434,7 +2434,6 @@ static void player_wipe(void)
     cheat_hear = FALSE;
     cheat_room = FALSE;
     cheat_xtra = FALSE;
-    cheat_know = FALSE;
     cheat_live = FALSE;
     cheat_save = FALSE;
 
@@ -3977,14 +3976,6 @@ void player_birth(void)
     /* Give beastman a mutation at character birth */
     if (p_ptr->prace == RACE_BEASTMAN) 
         mut_gain(p_ptr->birth_mutation);
-
-    /* Set the message window flag as default */
-    if (!window_flag[1])
-        window_flag[1] |= PW_MESSAGE;
-
-    /* Set the inv/equip window flag as default */
-    if (!window_flag[2])
-        window_flag[2] |= PW_INVEN;
 
     birth_hack = FALSE;
 

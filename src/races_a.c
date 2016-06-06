@@ -16,7 +16,7 @@ static int _amberite_get_powers(spell_info* spells, int max)
 static void _amberite_calc_bonuses(void)
 {
     p_ptr->sustain_con = TRUE;
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100;
 }
 static void _amberite_get_flags(u32b flgs[TR_FLAG_SIZE])
 {
@@ -977,6 +977,7 @@ static void _draconian_get_flags(u32b flgs[TR_FLAG_SIZE])
         break;
     }
 }
+/* cf design/dragons.ods */
 static int _draconian_attack_level(void)
 {
     int l = p_ptr->lev * 2;
@@ -1012,6 +1013,7 @@ static int _draconian_attack_level(void)
         l = MAX(1, l * 170 / 100);
         break;
     case CLASS_WARRIOR:
+    case CLASS_MONK:
     case CLASS_BLOOD_KNIGHT:
         l = MAX(1, l * 120 / 100);
         break;
@@ -1022,6 +1024,7 @@ static int _draconian_attack_level(void)
     case CLASS_IMITATOR:
     case CLASS_RED_MAGE:
     case CLASS_WEAPONSMITH:
+    case CLASS_ROGUE:
         l = MAX(1, l * 105 / 100);
         break;
     case CLASS_PRIEST:
@@ -1032,6 +1035,7 @@ static int _draconian_attack_level(void)
     case CLASS_PSION:
     case CLASS_SCOUT:
     case CLASS_DEVICEMASTER:
+    case CLASS_FORCETRAINER:
         /*l = MAX(1, l * 100 / 100);*/
         break;
     case CLASS_BARD:
@@ -1041,6 +1045,7 @@ static int _draconian_attack_level(void)
     case CLASS_RAGE_MAGE:
         l = MAX(1, l * 90 / 100);
         break;
+    case CLASS_NINJA:
     case CLASS_MAGE:
     case CLASS_HIGH_MAGE:
     case CLASS_TOURIST:
@@ -1075,6 +1080,12 @@ static void _draconian_calc_innate_attacks(void)
         calc_innate_blows(&a, 400);
         a.msg = "You claw.";
         a.name = "Claw";
+
+        if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER)
+        {
+            a.effect[1] = GF_STUN;
+            a.effect_chance[1] = 15 + l/4;
+        }
 
         p_ptr->innate_attacks[p_ptr->innate_attack_ct++] = a;
     }
@@ -1900,7 +1911,7 @@ static void _half_troll_calc_bonuses(void)
 {
     p_ptr->sustain_str = TRUE;
     if (p_ptr->lev >= 15)
-        p_ptr->regenerate = TRUE;
+        p_ptr->regen += 100;
 }
 static void _half_troll_get_flags(u32b flgs[TR_FLAG_SIZE])
 {

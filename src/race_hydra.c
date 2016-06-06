@@ -186,7 +186,7 @@ static void _calc_bonuses(void)
     p_ptr->skill_dig += 50;
     p_ptr->to_a += ac;
     p_ptr->dis_to_a += ac;
-    p_ptr->regenerate = TRUE;
+    p_ptr->regen += 100 + 4*p_ptr->lev;
 
     switch (p_ptr->current_r_idx)
     {
