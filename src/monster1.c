@@ -78,6 +78,150 @@ bool mon_save_p(int r_idx, int stat)
     return result;
 }
 
+void mon_lore_1(monster_type *m_ptr, u32b mask)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        mon_lore_aux_1(&r_info[m_ptr->r_idx], mask);
+}
+
+void mon_lore_2(monster_type *m_ptr, u32b mask)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        mon_lore_aux_2(&r_info[m_ptr->r_idx], mask);
+}
+
+void mon_lore_3(monster_type *m_ptr, u32b mask)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        mon_lore_aux_3(&r_info[m_ptr->r_idx], mask);
+}
+
+void mon_lore_4(monster_type *m_ptr, u32b mask)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        mon_lore_aux_4(&r_info[m_ptr->r_idx], mask);
+}
+
+void mon_lore_5(monster_type *m_ptr, u32b mask)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        mon_lore_aux_5(&r_info[m_ptr->r_idx], mask);
+}
+
+void mon_lore_6(monster_type *m_ptr, u32b mask)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        mon_lore_aux_6(&r_info[m_ptr->r_idx], mask);
+}
+
+void mon_lore_r(monster_type *m_ptr, u32b mask)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        mon_lore_aux_r(&r_info[m_ptr->r_idx], mask);
+}
+
+void mon_lore_blows(monster_type *m_ptr, int which, int options)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        mon_lore_aux_blows(&r_info[m_ptr->r_idx], which, options);
+}
+
+void mon_lore_aux_blows(monster_race *r_ptr, int which, int options)
+{
+    if (!(options & MON_BLOW_SILLY))
+    {
+        if ( (options & MON_BLOW_OBVIOUS)
+          || (options & MON_BLOW_DAMAGE)
+          || r_ptr->r_blows[which] > 10 )
+        {
+            if (r_ptr->r_blows[which] < MAX_UCHAR)
+            {
+                r_ptr->r_blows[which]++;
+                if (r_ptr->id == p_ptr->monster_race_idx)
+                    p_ptr->window |= PW_MONSTER;
+            }
+        }
+    }
+}
+
+void mon_lore_aux_1(monster_race *r_ptr, u32b mask)
+{
+    u32b old = r_ptr->r_flags1;
+
+    r_ptr->r_flags1 |= (r_ptr->flags1 & mask);
+    if (r_ptr->r_flags1 != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
+void mon_lore_aux_2(monster_race *r_ptr, u32b mask)
+{
+    u32b old = r_ptr->r_flags2;
+
+    r_ptr->r_flags2 |= (r_ptr->flags2 & mask);
+    if (r_ptr->r_flags2 != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
+void mon_lore_aux_3(monster_race *r_ptr, u32b mask)
+{
+    u32b old = r_ptr->r_flags3;
+
+    r_ptr->r_flags3 |= (r_ptr->flags3 & mask);
+    if (r_ptr->r_flags3 != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
+static void _mon_lore_aux_spell(monster_race *r_ptr)
+{
+    if (r_ptr->r_cast_spell < MAX_UCHAR)
+    {
+        r_ptr->r_cast_spell++;
+        if (r_ptr->id == p_ptr->monster_race_idx)
+            p_ptr->window |= PW_MONSTER;
+    }
+}
+
+void mon_lore_aux_4(monster_race *r_ptr, u32b mask)
+{
+    u32b old = r_ptr->r_flags4;
+
+    _mon_lore_aux_spell(r_ptr);
+    r_ptr->r_flags4 |= (r_ptr->flags4 & mask);
+    if (r_ptr->r_flags4 != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
+void mon_lore_aux_5(monster_race *r_ptr, u32b mask)
+{
+    u32b old = r_ptr->r_flags5;
+
+    _mon_lore_aux_spell(r_ptr);
+    r_ptr->r_flags5 |= (r_ptr->flags5 & mask);
+    if (r_ptr->r_flags5 != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
+void mon_lore_aux_6(monster_race *r_ptr, u32b mask)
+{
+    u32b old = r_ptr->r_flags6;
+
+    if (r_ptr->id != MON_OHMU) /* The one and only example of RF6_* not being a spell ... sigh */
+        _mon_lore_aux_spell(r_ptr);
+
+    r_ptr->r_flags6 |= (r_ptr->flags6 & mask);
+    if (r_ptr->r_flags6 != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
+void mon_lore_aux_r(monster_race *r_ptr, u32b mask)
+{
+    u32b old = r_ptr->r_flagsr;
+
+    r_ptr->r_flagsr |= (r_ptr->flagsr & mask);
+    if (r_ptr->r_flagsr != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
 /*
  * Hack -- Display the "name" and "attr/chars" of a monster race
  */

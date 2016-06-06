@@ -1964,7 +1964,7 @@ void have_nightmare(int r_idx)
 
                   horror_desc[randint0(MAX_SAN_HORROR)], desc);
 
-    r_ptr->r_flags2 |= RF2_ELDRITCH_HORROR;
+    mon_lore_aux_2(r_ptr, RF2_ELDRITCH_HORROR);
 
     if (p_ptr->mimic_form != MIMIC_NONE)
     {

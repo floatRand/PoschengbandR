@@ -384,7 +384,7 @@ void fear_process_p(void)
             char m_name[80];
             monster_desc(m_name, m_ptr, 0);
             msg_format("You behold the terrifying visage of %s!", m_name);
-            r_ptr->r_flags2 |= RF2_AURA_FEAR;
+            mon_lore_2(m_ptr, RF2_AURA_FEAR);
             fear_add_p(r_level/MAX(1, m_ptr->cdis-2));
         }
     }
@@ -401,7 +401,7 @@ void fear_update_m(monster_type *m_ptr)
             char m_name[80];
             monster_desc(m_name, m_ptr, 0);
             msg_format("You behold the terrifying visage of %s!", m_name);
-            r_ptr->r_flags2 |= RF2_AURA_FEAR;
+            mon_lore_2(m_ptr, RF2_AURA_FEAR);
             fear_add_p(r_level);
         }
     }
@@ -416,7 +416,7 @@ void fear_p_touch_m(monster_type *m_ptr)
         int r_level = _r_level(r_ptr);
         if (!fear_save_p(r_level))
         {
-            r_ptr->r_flags2 |= RF2_AURA_FEAR;
+            mon_lore_2(m_ptr, RF2_AURA_FEAR);
             fear_add_p(r_level);
         }
     }
@@ -434,7 +434,7 @@ bool fear_p_hurt_m(int m_idx, int dam)
         int r_level = _r_level(r_ptr);
         if (!fear_save_p(r_level))
         {
-            r_ptr->r_flags2 |= RF2_AURA_FEAR;
+            mon_lore_2(m_ptr, RF2_AURA_FEAR);
             fear_add_p(r_level/MAX(1, m_ptr->cdis - 2));
         }
     }

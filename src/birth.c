@@ -3977,14 +3977,6 @@ void player_birth(void)
     if (p_ptr->prace == RACE_BEASTMAN) 
         mut_gain(p_ptr->birth_mutation);
 
-    /* Set the message window flag as default */
-    if (!window_flag[1])
-        window_flag[1] |= PW_MESSAGE;
-
-    /* Set the inv/equip window flag as default */
-    if (!window_flag[2])
-        window_flag[2] |= PW_INVEN;
-
     birth_hack = FALSE;
 
     /* Hack: Gain CL1 */

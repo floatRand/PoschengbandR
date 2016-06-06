@@ -828,7 +828,7 @@ static void _club_toss_imp(_club_toss_info * info)
                         {
                             if (r_ptr->flags3 & RF3_NO_CONF)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_CONF;
+                                mon_lore_3(m_ptr, RF3_NO_CONF);
                                 msg_format("%^s is unaffected.", m_name);
                             }
                             else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -846,7 +846,7 @@ static void _club_toss_imp(_club_toss_info * info)
                         {
                             if (r_ptr->flags3 & RF3_NO_SLEEP)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_SLEEP;
+                                mon_lore_3(m_ptr, RF3_NO_SLEEP);
                                 msg_format("%^s is unaffected.", m_name);
                             }
                             else if (mon_save_p(m_ptr->r_idx, A_STR))
@@ -864,7 +864,7 @@ static void _club_toss_imp(_club_toss_info * info)
                         {
                             if (r_ptr->flags3 & RF3_NO_STUN)
                             {
-                                if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flags3 |= RF3_NO_STUN;
+                                mon_lore_3(m_ptr, RF3_NO_STUN);
                                 msg_format("%^s is unaffected.", m_name);
                             }
                             else if (mon_save_p(m_ptr->r_idx, A_STR))

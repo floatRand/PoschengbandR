@@ -1050,6 +1050,28 @@ extern bool mon_save_p(int r_idx, int stat);
 extern void roff_top(int r_idx);
 extern bool mon_hook_dungeon(int r_idx);
 
+extern void mon_lore_1(monster_type *m_ptr, u32b mask);
+extern void mon_lore_2(monster_type *m_ptr, u32b mask);
+extern void mon_lore_3(monster_type *m_ptr, u32b mask);
+extern void mon_lore_4(monster_type *m_ptr, u32b mask);
+extern void mon_lore_5(monster_type *m_ptr, u32b mask);
+extern void mon_lore_6(monster_type *m_ptr, u32b mask);
+extern void mon_lore_r(monster_type *m_ptr, u32b mask);
+
+extern void mon_lore_aux_1(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_2(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_3(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_4(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_5(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_6(monster_race *r_ptr, u32b mask);
+extern void mon_lore_aux_r(monster_race *r_ptr, u32b mask);
+
+#define MON_BLOW_SILLY   0x01
+#define MON_BLOW_OBVIOUS 0x02
+#define MON_BLOW_DAMAGE  0x04
+extern void mon_lore_blows(monster_type *m_ptr, int which, int options);
+extern void mon_lore_aux_blows(monster_race *r_ptr, int which, int options);
+
 extern monster_hook_type get_wilderness_monster_hook(int x, int y);
 extern monster_hook_type get_monster_hook(void);
 extern monster_hook_type get_monster_hook2(int y, int x); /* x, y is standard!!! */

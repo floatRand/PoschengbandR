@@ -4742,7 +4742,7 @@ void hit_mon_trap(int y, int x, int m_idx)
                 case 4: /* Teleport */
                     if (r_ptr->flagsr & RFR_RES_TELE)
                     {
-                        if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
+                        mon_lore_r(m_ptr, RFR_RES_TELE);
                         if (m_ptr->ml)
                             msg_format("%s resists teleportation.", m_name);
                     }
