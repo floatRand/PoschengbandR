@@ -1202,10 +1202,19 @@ extern void obj_learn_slay(object_type *o_ptr, int which, cptr msg);
 /* Equipping an object learns many things, mostly pval related. Alert the user. */
 extern void obj_learn_equipped(object_type *o_ptr);
 
+/* ego.c */
+extern void ego_create_ring(object_type *o_ptr, int level, int power, int mode);
+extern void ego_create_amulet(object_type *o_ptr, int level, int power, int mode);
+extern bool obj_create_device(object_type *o_ptr, int level, int power, int mode);
+extern void obj_create_weapon(object_type *o_ptr, int level, int power, int mode);
+extern void obj_create_armor(object_type *o_ptr, int level, int power, int mode);
+extern void obj_create_lite(object_type *o_ptr, int level, int power, int mode);
+extern int  ego_choose_type(int type, int level);
+extern void ego_weapon_adjust_weight(object_type *o_ptr);
+
 /* object2.c */
 extern bool add_esp_strong(object_type *o_ptr);
 extern void add_esp_weak(object_type *o_ptr, bool extra);
-extern void adjust_weapon_weight(object_type *o_ptr);
 extern void excise_object_idx(int o_idx);
 extern void delete_object_idx(int o_idx);
 extern void delete_object(int y, int x);

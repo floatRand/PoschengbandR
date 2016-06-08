@@ -6097,7 +6097,7 @@ static int _collect_egos(int grp_cur, int ego_idx[])
         if (!e_ptr->name) continue;
         /*if (!e_ptr->aware) continue;*/
         if (!e_ptr->aware && !e_ptr->counts.found && !e_ptr->counts.bought) continue;
-        if (e_ptr->type != type) continue;
+        if (!(e_ptr->type & type)) continue;
 
         ego_idx[cnt++] = i;
     }

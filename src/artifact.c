@@ -2764,7 +2764,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         o_ptr->art_name = quark_add("Temp");
 
     if (object_is_melee_weapon(o_ptr))
-        adjust_weapon_weight(o_ptr);
+        ego_weapon_adjust_weight(o_ptr);
 
     total_flags = new_object_cost(o_ptr, COST_REAL);
     if (cheat_peek) msg_format("Score: %d", total_flags);

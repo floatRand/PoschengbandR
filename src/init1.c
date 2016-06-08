@@ -3111,29 +3111,34 @@ static bool grab_one_ego_item_flag(ego_type *e_ptr, cptr what)
     return (1);
 }
 
-static cptr e_info_types[] = /* order must match ego_e in defines.h, obviously */
+static bool grab_one_ego_type_flag(ego_type *e_ptr, cptr what)
 {
-    "NONE", 
-    "AMMO",
-    "WEAPON",
-    "SHIELD",
-    "BOW",
-    "RING",
-    "AMULET",
-    "LITE",
-    "BODY_ARMOR",
-    "CLOAK",
-    "HELMET",
-    "GLOVES",
-    "BOOTS",
-    "DIGGER",
-    "CROWN",
-    "HARP",
-    "ROBE",
-    "SPECIAL",
-    "DEVICE",
-    "DRAGON_ARMOR",
-};
+    if (streq(what, "AMMO")) e_ptr->type |= EGO_TYPE_AMMO;
+    else if (streq(what, "WEAPON")) e_ptr->type |= EGO_TYPE_WEAPON;
+    else if (streq(what, "SHIELD")) e_ptr->type |= EGO_TYPE_SHIELD;
+    else if (streq(what, "BOW")) e_ptr->type |= EGO_TYPE_BOW;
+    else if (streq(what, "RING")) e_ptr->type |= EGO_TYPE_RING;
+    else if (streq(what, "AMULET")) e_ptr->type |= EGO_TYPE_AMULET;
+    else if (streq(what, "LITE")) e_ptr->type |= EGO_TYPE_LITE;
+    else if (streq(what, "BODY_ARMOR")) e_ptr->type |= EGO_TYPE_BODY_ARMOR;
+    else if (streq(what, "CLOAK")) e_ptr->type |= EGO_TYPE_CLOAK;
+    else if (streq(what, "HELMET")) e_ptr->type |= EGO_TYPE_HELMET;
+    else if (streq(what, "GLOVES")) e_ptr->type |= EGO_TYPE_GLOVES;
+    else if (streq(what, "BOOTS")) e_ptr->type |= EGO_TYPE_BOOTS;
+    else if (streq(what, "DIGGER")) e_ptr->type |= EGO_TYPE_DIGGER;
+    else if (streq(what, "CROWN")) e_ptr->type |= EGO_TYPE_CROWN;
+    else if (streq(what, "HARP")) e_ptr->type |= EGO_TYPE_HARP;
+    else if (streq(what, "ROBE")) e_ptr->type |= EGO_TYPE_ROBE;
+    else if (streq(what, "SPECIAL")) e_ptr->type |= EGO_TYPE_SPECIAL;
+    else if (streq(what, "DEVICE")) e_ptr->type |= EGO_TYPE_DEVICE;
+    else if (streq(what, "DRAGON_ARMOR")) e_ptr->type |= EGO_TYPE_DRAGON_ARMOR;
+    else
+    {
+        msg_format("Unknown ego type flag: '%s'.", what);
+        return ERROR_UNKOWN_FAILURE;
+    }
+    return ERROR_SUCCESS;
+}
 
 /*
  * Initialize the "e_info" array, by parsing an ascii "template" file
@@ -3155,14 +3160,13 @@ errr parse_e_info(char *buf, header *head)
     error_line = -1;
 
 
-    /* N:1:Gloves:of Free Action */
+    /* N:1:of Free Action */
     if (buf[0] == 'N')
     {
         char *zz[3];
-        int   num = tokenize(buf + 2, 3, zz, 0);
-        int   j;
+        int   num = tokenize(buf + 2, 2, zz, 0);
 
-        if (num != 3) return PARSE_ERROR_TOO_FEW_ARGUMENTS;
+        if (num != 2) return PARSE_ERROR_TOO_FEW_ARGUMENTS;
 
         /* Unique Index */
         i = atoi(zz[0]);
@@ -3171,19 +3175,6 @@ errr parse_e_info(char *buf, header *head)
 
         error_idx = i;
         e_ptr = &e_info[i];
-
-        /* Type */
-        for (j = 0; j < EGO_TYPE_MAX; j++)
-        {
-            if (streq(zz[1], e_info_types[j])) 
-            {
-                e_ptr->type = j;
-                break;
-            }
-        }
-
-        if (!e_ptr->type) return 1;
-
 
         /* Description */
         if (!add_name(&e_ptr->name, head, zz[2])) return 7;
@@ -3227,6 +3218,31 @@ errr parse_e_info(char *buf, header *head)
         e_ptr->max_to_d = td;
         e_ptr->max_to_a = ta;
         e_ptr->max_pval = pv;
+    }
+    /* T:HELMET | SHIELD | BODY_ARMOR | CLOAK
+       T:WEAPON | AMMO
+       T:RING etc. */
+    else if (buf[0] == 'T')
+    {
+        /* Parse every entry textually */
+        for (s = buf + 2; *s; )
+        {
+                /* Find the end of this entry */
+            for (t = s; *t && (*t != ' ') && (*t != '|'); ++t) /* loop */;
+
+                /* Nuke and skip any dividers */
+            if (*t)
+            {
+                *t++ = '\0';
+                while ((*t == ' ') || (*t == '|')) t++;
+            }
+
+                /* Parse this entry */
+            if (0 != grab_one_ego_type_flag(e_ptr, s)) return (5);
+
+                /* Start the next entry */
+            s = t;
+        }
     }
 
     /* Hack -- Process 'F' for flags */

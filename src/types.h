@@ -250,11 +250,14 @@ struct ego_type
     u32b name;            /* Name (offset) */
     u32b text;            /* Text (offset) */
 
-    byte type;            /* Type of Ego (Bow, Weapon, Gloves, Helmet, Crown, Harp, etc) */
+    u32b type;            /* Type Flags (Bow, Weapon, Gloves, Helmet, Crown, Harp, etc)
+                             Note: Due to object lore, it is very useful to share the same
+                             ego type across different equipment slots. For example,
+                             Elemental Protection can appear on multiple armor types. */
 
-    byte level;            /* Minimum level */
-    byte rarity;        /* Object rarity */
-    byte max_level;     /* Maximum level. 0 => No restriction */
+    byte level;           /* Minimum level */
+    byte rarity;          /* Object rarity */
+    byte max_level;       /* Maximum level. 0 => No restriction */
 
     s16b max_to_h;        /* Maximum to-hit bonus */
     s16b max_to_d;        /* Maximum to-dam bonus */

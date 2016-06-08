@@ -2777,7 +2777,7 @@ enum summon_specific_e {
 #define IDENT_FIXED     0x02    /* Item has been "haggled" */
 #define IDENT_EMPTY     0x04    /* Item charges are known */
 #define IDENT_KNOWN     0x08    /* Item abilities are known */
-#define IDENT_STORE     0x10    /* Item is storebought !!!! */
+#define IDENT_STORE     0x10    /* Item is in a store's inventory */
 #define IDENT_FULL      0x20    /* Item information is known */
 #define IDENT_TRIED     0x40    /* Device has been tried, but still unknown */
 #define IDENT_BROKEN    0x80    /* Item is permanently worthless */
@@ -5766,28 +5766,44 @@ enum slot_e {
     EQUIP_SLOT_MAX
 };
 
+/* Many ego types are now shared across mutliple kinds of equipment */
 enum ego_e {
-    EGO_TYPE_NONE, 
-    EGO_TYPE_AMMO,
-    EGO_TYPE_WEAPON,
-    EGO_TYPE_SHIELD,
-    EGO_TYPE_BOW,
-    EGO_TYPE_RING,
-    EGO_TYPE_AMULET,
-    EGO_TYPE_LITE,
-    EGO_TYPE_BODY_ARMOR,
-    EGO_TYPE_CLOAK,
-    EGO_TYPE_HELMET,
-    EGO_TYPE_GLOVES,
-    EGO_TYPE_BOOTS,
-    EGO_TYPE_DIGGER,
-    EGO_TYPE_CROWN,
-    EGO_TYPE_HARP,
-    EGO_TYPE_ROBE,
-    EGO_TYPE_SPECIAL,
-    EGO_TYPE_DEVICE,
-    EGO_TYPE_DRAGON_ARMOR,
-    EGO_TYPE_MAX
+    EGO_TYPE_NONE         = 0,
+
+    /* Melee Weapons */
+    EGO_TYPE_WEAPON       = 0x00001,
+    EGO_TYPE_DIGGER       = 0x00002,
+
+    /* Armor */
+    EGO_TYPE_SHIELD       = 0x00004,
+    EGO_TYPE_BODY_ARMOR   = 0x00008,
+    EGO_TYPE_ROBE         = 0x00010,
+    EGO_TYPE_DRAGON_ARMOR = 0x00020,
+    EGO_TYPE_CLOAK        = 0x00040,
+    EGO_TYPE_HELMET       = 0x00080,
+    EGO_TYPE_CROWN        = 0x00100,
+    EGO_TYPE_GLOVES       = 0x00200,
+    EGO_TYPE_BOOTS        = 0x00400,
+
+    /* Missile Weapons */
+    EGO_TYPE_BOW          = 0x00800,
+    EGO_TYPE_AMMO         = 0x01000,
+    EGO_TYPE_HARP         = 0x02000,
+
+    /* Jewelry, Lights, Devices */
+    EGO_TYPE_RING         = 0x04000,
+    EGO_TYPE_AMULET       = 0x08000,
+    EGO_TYPE_LITE         = 0x10000,
+    EGO_TYPE_DEVICE       = 0x20000,
+
+    /* (Blasted) */
+    EGO_TYPE_SPECIAL      = 0x40000,
+};
+
+enum ego_type_e {
+    EGO_ARMOR_PROTECTION = 1,
+    EGO_ARMOR_ELEMENTAL_PROTECTION,
+    EGO_ARMOR_CELESTIAL_PROTECTION,
 };
 
 enum ego_gloves_e {
