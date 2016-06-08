@@ -917,12 +917,19 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     _display_curses(o_ptr, flgs, doc);
     _display_ignore(o_ptr, flgs, doc);
 
-    if (object_is_known(o_ptr))
+    if (obj_is_identified(o_ptr))
     {
-        if (object_is_artifact(o_ptr) && !(o_ptr->ident & IDENT_FULL))
-            doc_printf(doc, "This object is an artifact, a unique object whose powers you must learn by *identifying* or selling this object.\n");
-        else if (!(o_ptr->ident & IDENT_FULL))
-            doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
+        if (!obj_is_identified_fully(o_ptr))
+        {
+            if (object_is_artifact(o_ptr))
+                doc_printf(doc, "This object is an artifact, a unique object whose powers you must either learn by direct experience or by *identifying* or selling this object.\n");
+            else
+                doc_printf(doc, "This object may have additional powers which you may learn either by experience or by *identifying* or selling this object.\n");
+        }
+    }
+    else if (object_is_wearable(o_ptr))
+    {
+        doc_printf(doc, "This object is unkown. You should either identify it, or, if you are truly bold (foolish?), then you might learn more by equipping it!\n");
     }
 
     _display_autopick(o_ptr, doc);
