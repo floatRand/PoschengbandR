@@ -59,14 +59,14 @@ F:INT | WIS |
 F:FORCE_WEAPON | SEE_INVIS
 
 N:4:(Blessed)
-T:WEAPON
+T:WEAPON | DIGGER
 W:0:60:2
 C:0:0:0:3
 F:WIS | ESP_GOOD |
 F:BLESSED | XTRA_POWER
 
 N:5:of Extra Attacks
-T:WEAPON
+T:WEAPON | DIGGER
 W:50:*:8
 C:0:0:0:6
 F:BLOWS
@@ -111,7 +111,7 @@ F:BLOWS | STR | DEX | DEC_WIS
 E:DESTRUCTION:50:150
 
 N:12:(Death)
-T:WEAPON
+T:WEAPON | DIGGER
 W:20:*:4
 F:VAMPIRIC | HOLD_LIFE
 
@@ -217,6 +217,33 @@ W:40:*:4
 C:7:7:0:0
 F:SLAY_EVIL | BLESSED | FULL_NAME
 
+###############
+### Diggers ###
+###############
+
+N:40:of Digging
+T:DIGGER
+W:0:40:1
+C:0:0:0:5
+F:TUNNEL | AWARE
+F:IGNORE_ACID
+
+N:41:of Dissolving
+T:DIGGER
+W:10:*:2
+C:0:3:0:5
+F:TUNNEL | BRAND_ACID |
+F:IGNORE_ACID
+
+N:42:of Disruption
+T:DIGGER
+W:50:*:4
+C:0:7:0:5
+F:TUNNEL | BRAND_ACID | STR
+F:IGNORE_ACID
+E:STONE_TO_MUD:10:5
+
+
 #############################################################
 #                           Armor                           #
 #############################################################
@@ -224,25 +251,25 @@ F:SLAY_EVIL | BLESSED | FULL_NAME
 ##############
 ### Shared ###
 ##############
-N:1:of Protection
+N:50:of Protection
 T:BODY_ARMOR | SHIELD | CLOAK | HELMET | GLOVES | BOOTS
 W:0:30:2
 C:0:0:10:0
 F:IGNORE_ACID
 
-N:2:of Elemental Protection
+N:51:of Elemental Protection
 T:BODY_ARMOR | SHIELD | CLOAK
 W:0:60:3
 C:0:0:10:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:3:of Celestial Protection
+N:52:of Celestial Protection
 T:BODY_ARMOR | SHIELD | CROWN
 W:50:*:4
 C:0:0:10:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:4:of Elvenkind
+N:53:of Elvenkind
 T:BODY_ARMOR | SHIELD
 W:40:*:8
 C:0:0:10:3
@@ -250,18 +277,18 @@ F:STEALTH |
 F:RES_ACID | RES_ELEC | RES_FIRE | RES_COLD | XTRA_H_RES
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:5:of Stealth
+N:54:of Stealth
 T:CLOAK | BOOTS
 W:0:40:2
 C:0:0:0:3
 F:STEALTH | AWARE
 
-N:6:of Free Action
+N:55:of Free Action
 T:GLOVES | BOOTS
 W:0:40:2
 F:FREE_ACT | AWARE
 
-N:7:of Seeing
+N:56:of Seeing
 T:HELMET | CROWN
 W:0:60:2
 C:0:0:0:6
@@ -271,31 +298,36 @@ F:SEARCH | RES_BLIND | SEE_INVIS
 ### Shields ###
 ###############
 
-N:83:SHIELD:(Dwarven)
+N::(Dwarven)
+T:SHIELD
 W:10:*:3
 C:5:5:12:0
 F:SUST_STR
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:84:SHIELD:(Orcish)
+N::(Orcish)
+T:SHIELD
 W:10:*:3
 C:3:6:10:3
 F:STR | RES_DARK | XTRA_E_RES
 F:DEC_INT | DEC_STEALTH | VULN_LITE |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:86:SHIELD:of Reflection
+N::of Reflection
+T:SHIELD
 W:0:*:6
 C:0:0:5:0
 F:REFLECT | AWARE
 F:IGNORE_ELEC | IGNORE_ACID | IGNORE_COLD | IGNORE_FIRE
 
-N:87:SHIELD:of Night and Day
+N::of Night and Day
+T:SHIELD
 W:0:*:6
 C:0:0:5:0
 F:RES_LITE | RES_DARK
 
-N:88:SHIELD:of Endurance
+N::of Endurance
+T:SHIELD
 W:0:70:4
 C:0:0:0:3
 F:CON
@@ -304,13 +336,15 @@ F:CON
 ### Body Armor ###
 ##################
 
-N:24:BODY_ARMOR:(Dwarven)
+N::(Dwarven)
+T:BODY_ARMOR
 W:30:*:3
 C:0:0:15:3
 F:STR |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:25:BODY_ARMOR:of the Uruk-hai
+N::of the Uruk-hai
+T:BODY_ARMOR
 W:30:*:8
 C:5:5:5:3
 F:STR |
@@ -318,7 +352,8 @@ F:DEC_INT |
 F:RES_ACID | RES_ELEC | RES_FIRE | RES_COLD | XTRA_H_RES |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | SHOW_MODS
 
-N:26:BODY_ARMOR:of the Olog-hai
+N::of the Olog-hai
+T:BODY_ARMOR
 W:30:*:8
 C:0:7:10:4
 F:STR | REGEN | RES_ACID | RES_POIS | XTRA_H_RES
@@ -326,7 +361,8 @@ F:DEC_INT |
 F:IGNORE_ACID | SHOW_MODS
 E:BERSERK:10:50
 
-N:27:BODY_ARMOR:of the Demon
+N::of the Demon
+T:BODY_ARMOR
 W:60:*:8
 C:0:7:10:4
 F:STR | INT |
@@ -334,7 +370,8 @@ F:RES_FIRE | RES_POIS | RES_NETHER | SH_FIRE | XTRA_H_RES |
 F:DEC_WIS | DEC_STEALTH |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | SHOW_MODS
 
-N:28:BODY_ARMOR:of the Demon-Lord
+N::of the Demon-Lord
+T:BODY_ARMOR
 W:90:*:64
 C:0:15:15:5
 F:STR | INT | CON | TELEPATHY
@@ -342,61 +379,154 @@ F:IM_FIRE | RES_POIS | RES_NETHER | RES_CHAOS | SH_FIRE | XTRA_H_RES |
 F:DEC_WIS | AGGRAVATE | TY_CURSE
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | SHOW_MODS
 
+#############
+### Robes ###
+#############
+
+N::of Permanence
+T:ROBE
+W:30:*:1
+C:0:0:10:0
+F:SUST_STR | SUST_DEX | SUST_CON | SUST_INT | SUST_WIS | SUST_CHR |
+F:HOLD_LIFE | RES_ACID | RES_ELEC | RES_FIRE | RES_COLD |
+F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | XTRA_H_RES
+
+N::of the Twilight
+T:ROBE
+W:50:*:10
+C:0:0:0:0
+F:SUST_STR | SUST_DEX | SUST_CON | SUST_INT | SUST_WIS | SUST_CHR |
+F:HOLD_LIFE | RES_ACID | RES_ELEC | RES_FIRE | RES_COLD | RES_POIS |
+F:RES_NETHER | RES_NEXUS | RES_CHAOS | RES_LITE | RES_DARK |
+F:RES_SHARDS | RES_SOUND | RES_DISEN | RES_CONF | RES_BLIND | RES_FEAR |
+F:FREE_ACT | SEE_INVIS | LEVITATION | REFLECT |
+F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+
+N::of the Sorcerer
+T:ROBE
+W:30:*:10
+C:-25:-25:0:5
+F:INT | SUST_INT | DEC_MANA | EASY_SPELL | SPELL_CAP | REFLECT
+F:DEC_CON
+F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+
+####################
+### Dragon Armor ###
+####################
+
+N::(Lore)
+T:DRAGON_ARMOR
+W:0:*:1
+C:0:0:0:3
+F:INT
+
+N::(Breath)
+T:DRAGON_ARMOR
+W:0:*:1
+C:0:0:0:3
+F:CON
+
+N::(Attack)
+T:DRAGON_ARMOR
+W:0:*:1
+C:5:5:0:3
+F:STR
+
+N::(Craft)
+T:DRAGON_ARMOR
+W:0:*:1
+C:0:0:0:3
+F:WIS | MAGIC_MASTERY
+
+N::(Armor)
+T:DRAGON_ARMOR
+W:0:*:1
+C:0:0:5:3
+F:DEX
+
+N::(Domination)
+T:DRAGON_ARMOR
+W:0:*:1
+C:0:0:0:3
+F:CHR | RES_FEAR
+
+N::(Crusade)
+T:DRAGON_ARMOR
+W:0:*:2
+C:5:5:0:1
+F:STR | CHR | HOLD_LIFE
+
+N::(Death)
+T:DRAGON_ARMOR
+W:0:*:3
+C:0:0:0:3
+F:STR | RES_NETHER
+
 ##############
 ### Cloaks ###
 ##############
 
-N:101:CLOAK:of Cowardice
+N::of Cowardice
+T:CLOAK
 W:0:70:4
 C:-10:-10:-10:3
 F:SPEED | VULN_FEAR | DEC_CHR
 E:TELEPORT:20:100
 
-N:104:CLOAK:of Immolation
-W:10:60:8
+N::of Immolation
+T:CLOAK
+W:10:60:4
 C:0:0:4:0
 F:IGNORE_ACID | IGNORE_FIRE | SH_FIRE | RES_FIRE
 
-N:105:CLOAK:of Electricity
-W:10:60:8
+N::of Electricity
+T:CLOAK
+W:10:60:4
 C:0:0:4:0
 F:IGNORE_ACID | IGNORE_ELEC | SH_ELEC | RES_ELEC
 
-N:106:CLOAK:of Freezing
-W:10:60:8
+N::of Freezing
+T:CLOAK
+W:10:60:4
 C:0:0:4:0
 F:IGNORE_ACID | IGNORE_COLD | SH_COLD | RES_COLD
 
-N:107:CLOAK:of Retribution
+N::of Retribution
+T:CLOAK
 W:50:*:32
 C:0:0:-20:0
 F:IGNORE_ACID | SH_REVENGE
 
-N:108:CLOAK:of Shadows
-W:30:*:16
+N::of Shadows
+T:CLOAK
+W:30:*:8
 C:0:0:10:7
 F:STEALTH | RES_DARK
 F:VULN_LITE
 
-N:109:CLOAK:of Aman
-W:50:*:32
+N::of Aman
+T:CLOAK
+W:50:*:16
 C:0:0:20:3
 F:STEALTH | SPEED | XTRA_H_RES
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:110:CLOAK:of the Bat
-W:50:*:32
+N::of the Bat
+T:CLOAK
+W:50:*:16
 C:-7:-7:-5:5
 F:SPEED | LEVITATION | RES_DARK | SEE_INVIS | INFRA | STEALTH |
 F:HIDE_TYPE | SHOW_MODS
 
-N:111:CLOAK:of the Fairy
-W:50:*:32
+N::of the Fairy
+T:CLOAK
+W:50:*:16
 C:-7:-7:-5:5
 F:DEX | SPEED | LEVITATION | RES_LITE | STEALTH |
 F:HIDE_TYPE | SHOW_MODS
 
-N:112:CLOAK:of the Nazgul
+N::of the Nazgul
+T:CLOAK
 W:50:*:0
 C:6:6:6:3
 F:STEALTH | SPEED | RES_COLD | RES_POIS | RES_NETHER | FREE_ACT | SEE_INVIS | XTRA_H_RES
@@ -561,34 +691,6 @@ F:VULN_DARK | DEC_LIFE
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 ################################################################################
-
-#############
-### Robes ###
-#############
-
-N:17:ROBE:of Permanence
-W:30:*:1
-C:0:0:10:0
-F:SUST_STR | SUST_DEX | SUST_CON | SUST_INT | SUST_WIS | SUST_CHR | 
-F:HOLD_LIFE | RES_ACID | RES_ELEC | RES_FIRE | RES_COLD | 
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | XTRA_H_RES
-
-N:18:ROBE:of the Twilight
-W:50:*:10
-C:0:0:0:0
-F:SUST_STR | SUST_DEX | SUST_CON | SUST_INT | SUST_WIS | SUST_CHR | 
-F:HOLD_LIFE | RES_ACID | RES_ELEC | RES_FIRE | RES_COLD | RES_POIS |
-F:RES_NETHER | RES_NEXUS | RES_CHAOS | RES_LITE | RES_DARK |
-F:RES_SHARDS | RES_SOUND | RES_DISEN | RES_CONF | RES_BLIND | RES_FEAR |
-F:FREE_ACT | SEE_INVIS | LEVITATION | REFLECT |
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:19:ROBE:of the Sorcerer
-W:30:*:10
-C:-25:-25:0:5
-F:INT | SUST_INT | DEC_MANA | EASY_SPELL | SPELL_CAP | REFLECT
-F:DEC_CON
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 
 ##############
@@ -787,29 +889,6 @@ W:40:*:16
 C:0:0:0:2
 F:RES_LITE | SPEED
 
-###############
-### Diggers ###
-###############
-
-N:190:DIGGER:of Digging
-W:0:40:1
-C:0:0:0:5
-F:TUNNEL | AWARE
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:191:DIGGER:of Dissolving
-W:10:*:2
-C:0:3:0:5
-F:TUNNEL | BRAND_ACID | 
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-
-N:192:DIGGER:of Disruption
-W:50:*:4
-C:0:7:0:5
-F:TUNNEL | BRAND_ACID | STR
-F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-E:STONE_TO_MUD:10:5
-
 #############
 ### Rings ###
 #############
@@ -938,48 +1017,4 @@ F:HOLD_LIFE
 N:356:DEVICE:of Quickness
 W:60:*:16
 F:SPEED
-
-####################
-### Dragon Armor ###
-####################
-
-N:370:DRAGON_ARMOR:(Lore)
-W:0:*:1
-C:0:0:0:3
-F:INT
-
-N:371:DRAGON_ARMOR:(Breath)
-W:0:*:1
-C:0:0:0:3
-F:CON
-
-N:372:DRAGON_ARMOR:(Attack)
-W:0:*:1
-C:5:5:0:3
-F:STR
-
-N:373:DRAGON_ARMOR:(Craft)
-W:0:*:1
-C:0:0:0:3
-F:WIS | MAGIC_MASTERY
-
-N:374:DRAGON_ARMOR:(Armor)
-W:0:*:1
-C:0:0:5:3
-F:DEX
-
-N:375:DRAGON_ARMOR:(Domination)
-W:0:*:1
-C:0:0:0:3
-F:CHR | RES_FEAR
-
-N:376:DRAGON_ARMOR:(Crusade)
-W:0:*:2
-C:5:5:0:1
-F:STR | CHR | HOLD_LIFE
-
-N:377:DRAGON_ARMOR:(Death)
-W:0:*:3
-C:0:0:0:3
-F:STR | RES_NETHER
 

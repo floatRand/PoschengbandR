@@ -14,7 +14,8 @@ extern void ego_weapon_adjust_weight(object_type *o_ptr);
 /*************************************************************************
  * Choose Ego Type
  *************************************************************************/
-int        apply_magic_ego = 0;
+int apply_magic_ego = 0; /* Hack to force a specific ego type (e.g. quest rewards) */
+
 static int _ego_rarity(ego_type *e_ptr, int level)
 {
     int rarity = e_ptr->rarity;
@@ -318,7 +319,7 @@ static _power_limit_t _art_power_limits[] = {
     {999, 40000,      0 }
 };
 
-static void _create_rand_art(object_type *o_ptr, int level, int power)
+static void _art_create_random(object_type *o_ptr, int level, int power)
 {
     int  i;
     u32b mode = CREATE_ART_NORMAL;
@@ -1545,7 +1546,468 @@ void ego_weapon_adjust_weight(object_type *o_ptr)
         }
     }
 }
+static void _ego_create_harp(object_type *o_ptr, int level)
+{
+    o_ptr->name2 = ego_choose_type(EGO_TYPE_HARP, level);
+}
+static void _ego_create_bow(object_type *o_ptr, int level)
+{
+    bool done = FALSE;
+    while (!done)
+    {
+        o_ptr->name2 = ego_choose_type(EGO_TYPE_BOW, level);
+        done = TRUE;
 
+        switch (o_ptr->name2)
+        {
+        case EGO_BOW_VELOCITY:
+            o_ptr->mult  += 25;
+            break;
+        case EGO_BOW_EXTRA_MIGHT:
+            o_ptr->mult  += 25 + m_bonus(15, level) * 5;
+            break;
+        case EGO_BOW_LOTHLORIEN:
+            if (o_ptr->sval != SV_LONG_BOW)
+                done = FALSE;
+            else
+            {
+                o_ptr->mult  += 25 + m_bonus(17, level) * 5;
+
+                if (one_in_(3))
+                    add_flag(o_ptr->art_flags, TR_XTRA_SHOTS);
+                else
+                    one_high_resistance(o_ptr);
+            }
+            break;
+        case EGO_BOW_BUCKLAND:
+            if (o_ptr->sval != SV_SLING)
+                done = FALSE;
+            else
+            {
+                if (one_in_(3))
+                    o_ptr->mult  += 25 + m_bonus(15, level) * 5;
+                else
+                    one_high_resistance(o_ptr);
+            }
+            break;
+        case EGO_BOW_HARADRIM:
+            if (o_ptr->sval != SV_HEAVY_XBOW)
+                done = FALSE;
+            else
+            {
+                o_ptr->mult  += 25 + m_bonus(20, level) * 5;
+                if (one_in_(3))
+                {
+                    add_flag(o_ptr->art_flags, TR_XTRA_SHOTS);
+                    add_flag(o_ptr->art_flags, TR_DEC_SPEED);
+                }
+                else
+                    one_high_resistance(o_ptr);
+            }
+            break;
+        }
+    }
+}
+static void _ego_create_digger(object_type *o_ptr, int level)
+{
+    bool done = FALSE;
+    while (!done)
+    {
+        o_ptr->name2 = ego_choose_type(EGO_TYPE_DIGGER, level);
+        done = TRUE;
+        switch (o_ptr->name2)
+        {
+        case EGO_DIGGER_DISSOLVING:
+            o_ptr->dd += 1;
+            break;
+        case EGO_DIGGER_DISRUPTION:
+            if (o_ptr->sval != SV_MATTOCK)
+                done = FALSE;
+            else
+                o_ptr->dd += 2;
+            break;
+        }
+    }
+}
+static void _ego_create_weapon(object_type *o_ptr, int level)
+{
+    bool done = FALSE;
+    while (!done)
+    {
+        o_ptr->name2 = ego_choose_type(EGO_TYPE_WEAPON, level);
+        done = TRUE;
+        switch (o_ptr->name2)
+        {
+        case EGO_WEAPON_BURNING:
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_FIRE);
+            break;
+        case EGO_WEAPON_FREEZING:
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_COLD);
+            break;
+        case EGO_WEAPON_MELTING:
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_ACID);
+            break;
+        case EGO_WEAPON_SHOCKING:
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_ELEC);
+            break;
+        case EGO_WEAPON_VENOM:
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_POIS);
+            break;
+        case EGO_WEAPON_CHAOS:
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_CHAOS);
+            break;
+        case EGO_WEAPON_ARCANE:
+            if (o_ptr->tval != TV_HAFTED || o_ptr->sval != SV_WIZSTAFF)
+                done = FALSE;
+            else
+            {
+                o_ptr->pval = randint1(2);
+                if (one_in_(30))
+                    o_ptr->pval++;
+                o_ptr->to_h = -10;
+                o_ptr->to_d = -10;
+                if (one_in_(ACTIVATION_CHANCE))
+                    effect_add_random(o_ptr, BIAS_MAGE);
+            }
+            break;
+        case EGO_WEAPON_ARMAGEDDON:
+        {
+            int odds = o_ptr->dd * o_ptr->ds / 2;
+
+            if (odds < 3) odds = 3;
+            if (one_in_(odds)) /* double damage */
+            {
+                o_ptr->dd *= 2;
+
+                /* Look alikes to keep players happy */
+                if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_LONG_SWORD && one_in_(2))
+                    o_ptr->dd = 5; /* Vorpal Blade */
+                if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_KATANA)
+                {
+                    o_ptr->dd = 8; /* Aglarang */
+                    o_ptr->ds = 4;
+                    if (one_in_(100))
+                    {
+                        o_ptr->dd = 10;
+                        o_ptr->ds = 5; /* Muramasa */
+                    }
+                }
+                if (o_ptr->tval == TV_HAFTED && o_ptr->sval == SV_WAR_HAMMER)
+                    o_ptr->dd = 9; /* Aule */
+            }
+            else
+            {
+                do
+                {
+                    o_ptr->dd++;
+                }
+                while (one_in_(o_ptr->dd));
+
+                do
+                {
+                    o_ptr->ds++;
+                }
+                while (one_in_(o_ptr->ds));
+            }
+
+            if (one_in_(5))
+            {
+                switch (randint1(5))
+                {
+                case 1: add_flag(o_ptr->art_flags, TR_BRAND_ELEC); break;
+                case 2: add_flag(o_ptr->art_flags, TR_BRAND_FIRE); break;
+                case 3: add_flag(o_ptr->art_flags, TR_BRAND_COLD); break;
+                case 4: add_flag(o_ptr->art_flags, TR_BRAND_ACID); break;
+                default: add_flag(o_ptr->art_flags, TR_BRAND_POIS); break;
+                }
+            }
+
+            if (o_ptr->tval == TV_SWORD && one_in_(3))
+                add_flag(o_ptr->art_flags, TR_VORPAL);
+
+            if (o_ptr->tval == TV_HAFTED && one_in_(7))
+                add_flag(o_ptr->art_flags, TR_IMPACT);
+            else if (o_ptr->tval == TV_HAFTED && one_in_(7))
+                add_flag(o_ptr->art_flags, TR_STUN);
+
+            if (one_in_(666))
+                add_flag(o_ptr->art_flags, TR_FORCE_WEAPON);
+
+            break;
+        }
+        case EGO_WEAPON_CRUSADE:
+            if (one_in_(4) && (level > 40))
+                add_flag(o_ptr->art_flags, TR_BLOWS);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_PRIESTLY);
+            break;
+        case EGO_WEAPON_DAEMON:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_SLAY_GOOD);
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_AGGRAVATE);
+            else
+                add_flag(o_ptr->art_flags, TR_DEC_STEALTH);
+            if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DAEMON || p_ptr->realm2 == REALM_DAEMON))
+                add_flag(o_ptr->art_flags, TR_BLESSED);
+            break;
+        case EGO_WEAPON_DEATH:
+            if (one_in_(6))
+                add_flag(o_ptr->art_flags, TR_VULN_LITE);
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_SLAY_GOOD);
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_RES_NETHER);
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_SLAY_HUMAN);
+            else if (one_in_(13))
+            {
+                add_flag(o_ptr->art_flags, TR_SLAY_LIVING);
+                o_ptr->dd++;
+                o_ptr->curse_flags |= TRC_CURSED;
+                o_ptr->curse_flags |= get_curse(2, o_ptr);
+            }
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_NECROMANTIC);
+            if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DEATH || p_ptr->realm2 == REALM_DEATH))
+                add_flag(o_ptr->art_flags, TR_BLESSED);
+            break;
+        case EGO_WEAPON_MORGUL:
+            if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DEATH || p_ptr->realm2 == REALM_DEATH))
+                add_flag(o_ptr->art_flags, TR_BLESSED);
+            break;
+        case EGO_WEAPON_DEFENDER:
+            o_ptr->to_a = 5;
+            if (one_in_(4))
+            {
+                int i;
+                int ct = 2;
+
+                while (one_in_(3))
+                    ct++;
+
+                for (i = 0; i < ct; i++)
+                    one_high_resistance(o_ptr);
+            }
+            else
+            {
+                int i;
+                int ct = 4;
+
+                while (one_in_(2))
+                    ct++;
+
+                for (i = 0; i < ct; i++)
+                    one_ele_resistance(o_ptr);
+            }
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_WARNING);
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_LEVITATION);
+            if (one_in_(7))
+                add_flag(o_ptr->art_flags, TR_REGEN);
+            break;
+        case EGO_WEAPON_EARTHQUAKES:
+            if (o_ptr->tval != TV_HAFTED)
+                done = FALSE;
+            else
+                o_ptr->pval = m_bonus(3, level);
+            break;
+        case EGO_WEAPON_KILL_DEMON:
+            if (one_in_(3))
+                one_demon_resistance(o_ptr);
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_KILL_DEMON);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_DEMON);
+            break;
+        case EGO_WEAPON_KILL_DRAGON:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_RES_POIS);
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_KILL_DRAGON);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_ELEMENTAL);
+            break;
+        case EGO_WEAPON_KILL_EVIL:
+            if (one_in_(30))
+                add_flag(o_ptr->art_flags, TR_KILL_EVIL);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_LAW);
+            break;
+        case EGO_WEAPON_KILL_GIANT:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_SUST_STR);
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_KILL_GIANT);
+            if (one_in_(ACTIVATION_CHANCE*2)) /* TODO: Need more "Giant" activations */
+                effect_add_random(o_ptr, BIAS_STR);
+            break;
+        case EGO_WEAPON_KILL_HUMAN:
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_KILL_HUMAN);
+            break;
+        case EGO_WEAPON_KILL_ORC:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_KILL_ORC);
+            break;
+        case EGO_WEAPON_KILL_TROLL:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_REGEN);
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_KILL_TROLL);
+            break;
+        case EGO_WEAPON_KILL_UNDEAD:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_KILL_UNDEAD);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_NECROMANTIC);
+            break;
+        case EGO_WEAPON_NATURE:
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_KILL_ANIMAL);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_RANGER);
+            break;
+        case EGO_WEAPON_NOLDOR:
+            if ( o_ptr->tval != TV_SWORD
+              || o_ptr->sval == SV_BLADE_OF_CHAOS
+              || o_ptr->dd * o_ptr->ds < 10 )
+            {
+                done = FALSE;
+            }
+            else
+            {
+                o_ptr->dd += 1;
+            }
+            break;
+        case EGO_WEAPON_ORDER:
+            o_ptr->dd = o_ptr->dd * o_ptr->ds;
+            o_ptr->ds = 1;
+            break;
+        case EGO_WEAPON_PATTERN:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_DEX);
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_RES_FEAR);
+            break;
+        case EGO_WEAPON_SHARPNESS:
+            if (o_ptr->tval != TV_SWORD)
+                done = FALSE;
+            else
+            {
+                o_ptr->pval = m_bonus(5, level) + 1;
+                if (one_in_(2))
+                {
+                    do
+                    {
+                        o_ptr->dd++;
+                    }
+                    while (one_in_(o_ptr->dd));
+                }
+                if (one_in_(7))
+                    add_flag(o_ptr->art_flags, TR_VORPAL2);
+                else
+                    add_flag(o_ptr->art_flags, TR_VORPAL);
+            }
+            break;
+        case EGO_WEAPON_TRUMP:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_CHR);
+            if (one_in_(5))
+                add_flag(o_ptr->art_flags, TR_SLAY_DEMON);
+            if (one_in_(7))
+                one_ability(o_ptr);
+            break;
+        case EGO_WEAPON_WESTERNESSE:
+            if (one_in_(3))
+                add_flag(o_ptr->art_flags, TR_RES_FEAR);
+            break;
+        case EGO_WEAPON_WILD:
+            o_ptr->ds = o_ptr->dd * o_ptr->ds;
+            o_ptr->dd = 1;
+            break;
+        case EGO_WEAPON_JOUSTING:
+            if ( !object_is_(o_ptr, TV_POLEARM, SV_LANCE)
+              && !object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE) )
+            {
+                done = FALSE;
+            }
+            else
+            {
+                while (one_in_(o_ptr->dd * 3)) { o_ptr->dd++; }
+                if (one_in_(3))
+                    add_flag(o_ptr->art_flags, TR_SLAY_HUMAN);
+            }
+            break;
+        case EGO_WEAPON_HELL_LANCE:
+            if ( !object_is_(o_ptr, TV_POLEARM, SV_LANCE)
+              && !object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE) )
+            {
+                done = FALSE;
+            }
+            else
+            {
+                while (one_in_(o_ptr->dd * 4)) { o_ptr->dd++; }
+                one_demon_resistance(o_ptr);
+                if (one_in_(16))
+                    add_flag(o_ptr->art_flags, TR_VAMPIRIC);
+                if (one_in_(ACTIVATION_CHANCE))
+                    effect_add_random(o_ptr, BIAS_DEMON);
+            }
+            break;
+        case EGO_WEAPON_HOLY_LANCE:
+            if ( !object_is_(o_ptr, TV_POLEARM, SV_LANCE)
+              && !object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE) )
+            {
+                done = FALSE;
+            }
+            else
+            {
+                while (one_in_(o_ptr->dd * 5)) { o_ptr->dd++; }
+                one_holy_resistance(o_ptr);
+                if (one_in_(77))
+                {
+                    o_ptr->dd = o_ptr->dd * o_ptr->ds;
+                    o_ptr->ds = 1;
+                    add_flag(o_ptr->art_flags, TR_ORDER);
+
+                }
+                if (one_in_(ACTIVATION_CHANCE))
+                    effect_add_random(o_ptr, BIAS_PRIESTLY);
+            }
+            break;
+        }
+    }
+    /* Hack -- Super-charge the damage dice, but only if they haven't already
+       been boosted/altered by the ego type (e.g., Armageddon, Hell Lance, Wild, Order, etc) */
+    if ( o_ptr->dd == k_info[o_ptr->k_idx].dd
+      && o_ptr->ds == k_info[o_ptr->k_idx].ds
+      && o_ptr->name2 != EGO_WEAPON_EXTRA_ATTACKS
+      && o_ptr->name2 != EGO_WEAPON_WILD
+      && o_ptr->name2 != EGO_WEAPON_ORDER )
+    {
+        if (o_ptr->dd * o_ptr->ds > 0 && one_in_(5 + 200/MAX(level, 1)))
+        {
+            do
+            {
+                o_ptr->dd++;
+            }
+            while (one_in_(o_ptr->dd * o_ptr->ds / 2));
+        }
+    }
+    ego_weapon_adjust_weight(o_ptr);
+}
 void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
 {
     int tohit1 = randint1(5) + m_bonus(5, level);
@@ -1554,21 +2016,20 @@ void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
     int tohit2 = m_bonus(10, level);
     int todam2 = m_bonus(10, level);
     bool crafting = (mode & AM_CRAFTING) ? TRUE : FALSE;
-    bool done = FALSE;
 
-    if ((o_ptr->tval == TV_BOLT) || (o_ptr->tval == TV_ARROW) || (o_ptr->tval == TV_SHOT))
+    if (object_is_ammo(o_ptr))
     {
         tohit2 = (tohit2+1)/2;
         todam2 = (todam2+1)/2;
     }
 
-    if (!crafting)
+    if (object_is_(o_ptr, TV_SWORD, SV_DIAMOND_EDGE))
     {
-        if (power >= 2 && o_ptr->tval == TV_SWORD && o_ptr->sval == SV_DIAMOND_EDGE && !one_in_(7)) return;
+        if (!crafting && power >= 2 && !one_in_(7)) return;
     }
-    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE) return;
+    if (object_is_(o_ptr, TV_SWORD, SV_POISON_NEEDLE)) return;
 
-    if (!crafting)
+    if (!crafting && !object_is_(o_ptr, TV_BOW, SV_HARP))
     {
         if (power == -1)
         {
@@ -1603,77 +2064,12 @@ void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
     switch (o_ptr->tval)
     {
     case TV_BOW:
-        if (o_ptr->sval == SV_HARP)
-        {
-            o_ptr->to_h = 0;
-            o_ptr->to_d = 0;
-        }
-
         if ((!crafting && one_in_(20)) || power > 2)
-        {
-            _create_rand_art(o_ptr, level, power);
-            break;
-        }
-        if (o_ptr->sval == SV_HARP)
-        {
-            o_ptr->name2 = ego_choose_type(EGO_TYPE_HARP, level);
-            break;
-        }
-
-        while (!done)
-        {
-            o_ptr->name2 = ego_choose_type(EGO_TYPE_BOW, level);
-            done = TRUE;
-
-            switch (o_ptr->name2)
-            {
-            case EGO_BOW_VELOCITY:
-                o_ptr->mult  += 25;
-                break;
-            case EGO_BOW_EXTRA_MIGHT:
-                o_ptr->mult  += 25 + m_bonus(15, level) * 5;
-                break;
-            case EGO_BOW_LOTHLORIEN:
-                if (o_ptr->sval != SV_LONG_BOW)
-                    done = FALSE;
-                else
-                {
-                    o_ptr->mult  += 25 + m_bonus(17, level) * 5;
-
-                    if (one_in_(3))
-                        add_flag(o_ptr->art_flags, TR_XTRA_SHOTS);
-                    else
-                        one_high_resistance(o_ptr);
-                }
-                break;
-            case EGO_BOW_BUCKLAND:
-                if (o_ptr->sval != SV_SLING)
-                    done = FALSE;
-                else
-                {
-                    if (one_in_(3))
-                        o_ptr->mult  += 25 + m_bonus(15, level) * 5;
-                    else
-                        one_high_resistance(o_ptr);
-                }
-                break;
-            case EGO_BOW_HARADRIM:
-                if (o_ptr->sval != SV_HEAVY_XBOW)
-                    done = FALSE;
-                else
-                {
-                    o_ptr->mult  += 25 + m_bonus(20, level) * 5;
-                    if (one_in_(3))
-                    {
-                        add_flag(o_ptr->art_flags, TR_XTRA_SHOTS);
-                        add_flag(o_ptr->art_flags, TR_DEC_SPEED);
-                    }
-                    else
-                        one_high_resistance(o_ptr);
-                }
-                break;
-            }
-        }
+            _art_create_random(o_ptr, level, power);
+        else if (o_ptr->sval == SV_HARP)
+            _ego_create_harp(o_ptr, level);
+        else
+            _ego_create_bow(o_ptr, level);
         break;
 
     case TV_BOLT:
@@ -1701,416 +2097,18 @@ void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
 
     case TV_DIGGING:
         if ((!crafting && one_in_(30)) || power > 2)
-        {
-            _create_rand_art(o_ptr, level, power);
-            break;
-        }
-        while (!done)
-        {
-            o_ptr->name2 = ego_choose_type(EGO_TYPE_DIGGER, level);
-            done = TRUE;
-            switch (o_ptr->name2)
-            {
-            case EGO_DIGGER_DISSOLVING:
-                o_ptr->dd += 1;
-                break;
-            case EGO_DIGGER_DISRUPTION:
-                if (o_ptr->sval != SV_MATTOCK)
-                    done = FALSE;
-                else
-                    o_ptr->dd += 2;
-                break;
-            }
-        }
+            _art_create_random(o_ptr, level, power);
+        else
+            _ego_create_digger(o_ptr, level);
         break;
 
     case TV_HAFTED:
     case TV_POLEARM:
     case TV_SWORD:
         if ((!crafting && one_in_(40)) || power > 2)
-        {
-            _create_rand_art(o_ptr, level, power);
-            break;
-        }
-        while (!done)
-        {
-            o_ptr->name2 = ego_choose_type(EGO_TYPE_WEAPON, level);
-            done = TRUE;
-            switch (o_ptr->name2)
-            {
-            case EGO_WEAPON_BURNING:
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_FIRE);
-                break;
-            case EGO_WEAPON_FREEZING:
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_COLD);
-                break;
-            case EGO_WEAPON_MELTING:
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_ACID);
-                break;
-            case EGO_WEAPON_SHOCKING:
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_ELEC);
-                break;
-            case EGO_WEAPON_VENOM:
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_POIS);
-                break;
-            case EGO_WEAPON_CHAOS:
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_CHAOS);
-                break;
-            case EGO_WEAPON_ARCANE:
-                if (o_ptr->tval != TV_HAFTED || o_ptr->sval != SV_WIZSTAFF)
-                    done = FALSE;
-                else
-                {
-                    o_ptr->pval = randint1(2);
-                    if (one_in_(30))
-                        o_ptr->pval++;
-                    o_ptr->to_h = -10;
-                    o_ptr->to_d = -10;
-                    if (one_in_(ACTIVATION_CHANCE))
-                        effect_add_random(o_ptr, BIAS_MAGE);
-                }
-                break;
-            case EGO_WEAPON_ARMAGEDDON:
-            {
-                int odds = o_ptr->dd * o_ptr->ds / 2;
-
-                if (odds < 3) odds = 3;
-                if (one_in_(odds)) /* double damage */
-                {
-                    o_ptr->dd *= 2;
-
-                    /* Look alikes to keep players happy */
-                    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_LONG_SWORD && one_in_(2))
-                        o_ptr->dd = 5; /* Vorpal Blade */
-                    if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_KATANA)
-                    {
-                        o_ptr->dd = 8; /* Aglarang */
-                        o_ptr->ds = 4;
-                        if (one_in_(100))
-                        {
-                            o_ptr->dd = 10;
-                            o_ptr->ds = 5; /* Muramasa */
-                        }
-                    }
-                    if (o_ptr->tval == TV_HAFTED && o_ptr->sval == SV_WAR_HAMMER)
-                        o_ptr->dd = 9; /* Aule */
-                }
-                else
-                {
-                    do
-                    {
-                        o_ptr->dd++;
-                    }
-                    while (one_in_(o_ptr->dd));
-
-                    do
-                    {
-                        o_ptr->ds++;
-                    }
-                    while (one_in_(o_ptr->ds));
-                }
-
-                if (one_in_(5))
-                {
-                    switch (randint1(5))
-                    {
-                    case 1: add_flag(o_ptr->art_flags, TR_BRAND_ELEC); break;
-                    case 2: add_flag(o_ptr->art_flags, TR_BRAND_FIRE); break;
-                    case 3: add_flag(o_ptr->art_flags, TR_BRAND_COLD); break;
-                    case 4: add_flag(o_ptr->art_flags, TR_BRAND_ACID); break;
-                    default: add_flag(o_ptr->art_flags, TR_BRAND_POIS); break;
-                    }
-                }
-
-                if (o_ptr->tval == TV_SWORD && one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_VORPAL);
-
-                if (o_ptr->tval == TV_HAFTED && one_in_(7))
-                    add_flag(o_ptr->art_flags, TR_IMPACT);
-                else if (o_ptr->tval == TV_HAFTED && one_in_(7))
-                    add_flag(o_ptr->art_flags, TR_STUN);
-
-                if (one_in_(666))
-                    add_flag(o_ptr->art_flags, TR_FORCE_WEAPON);
-
-                break;
-            }
-            case EGO_WEAPON_CRUSADE:
-                if (one_in_(4) && (level > 40))
-                    add_flag(o_ptr->art_flags, TR_BLOWS);
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_PRIESTLY);
-                break;
-            case EGO_WEAPON_DAEMON:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_SLAY_GOOD);
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_AGGRAVATE);
-                else
-                    add_flag(o_ptr->art_flags, TR_DEC_STEALTH);
-                if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DAEMON || p_ptr->realm2 == REALM_DAEMON))
-                    add_flag(o_ptr->art_flags, TR_BLESSED);
-                break;
-            case EGO_WEAPON_DEATH:
-                if (one_in_(6))
-                    add_flag(o_ptr->art_flags, TR_VULN_LITE);
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_SLAY_GOOD);
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_RES_NETHER);
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_SLAY_HUMAN);
-                else if (one_in_(13))
-                {
-                    add_flag(o_ptr->art_flags, TR_SLAY_LIVING);
-                    o_ptr->dd++;
-                    o_ptr->curse_flags |= TRC_CURSED;
-                    o_ptr->curse_flags |= get_curse(2, o_ptr);
-                }
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_NECROMANTIC);
-                if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DEATH || p_ptr->realm2 == REALM_DEATH))
-                    add_flag(o_ptr->art_flags, TR_BLESSED);
-                break;
-            case EGO_WEAPON_MORGUL:
-                if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DEATH || p_ptr->realm2 == REALM_DEATH))
-                    add_flag(o_ptr->art_flags, TR_BLESSED);
-                break;
-            case EGO_WEAPON_DEFENDER:
-                o_ptr->to_a = 5;
-                if (one_in_(4))
-                {
-                    int i;
-                    int ct = 2;
-
-                    while (one_in_(3))
-                        ct++;
-
-                    for (i = 0; i < ct; i++)
-                        one_high_resistance(o_ptr);
-                }
-                else
-                {
-                    int i;
-                    int ct = 4;
-
-                    while (one_in_(2))
-                        ct++;
-
-                    for (i = 0; i < ct; i++)
-                        one_ele_resistance(o_ptr);
-                }
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_WARNING);
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_LEVITATION);
-                if (one_in_(7))
-                    add_flag(o_ptr->art_flags, TR_REGEN);
-                break;
-            case EGO_WEAPON_EARTHQUAKES:
-                if (o_ptr->tval != TV_HAFTED)
-                    done = FALSE;
-                else
-                    o_ptr->pval = m_bonus(3, level);
-                break;
-            case EGO_WEAPON_KILL_DEMON:
-                if (one_in_(3))
-                    one_demon_resistance(o_ptr);
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_KILL_DEMON);
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_DEMON);
-                break;
-            case EGO_WEAPON_KILL_DRAGON:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_RES_POIS);
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_KILL_DRAGON);
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_ELEMENTAL);
-                break;
-            case EGO_WEAPON_KILL_EVIL:
-                if (one_in_(30))
-                    add_flag(o_ptr->art_flags, TR_KILL_EVIL);
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_LAW);
-                break;
-            case EGO_WEAPON_KILL_GIANT:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_SUST_STR);
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_KILL_GIANT);
-                if (one_in_(ACTIVATION_CHANCE*2)) /* TODO: Need more "Giant" activations */
-                    effect_add_random(o_ptr, BIAS_STR);
-                break;
-            case EGO_WEAPON_KILL_HUMAN:
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_KILL_HUMAN);
-                break;
-            case EGO_WEAPON_KILL_ORC:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_KILL_ORC);
-                break;
-            case EGO_WEAPON_KILL_TROLL:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_REGEN);
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_KILL_TROLL);
-                break;
-            case EGO_WEAPON_KILL_UNDEAD:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_KILL_UNDEAD);
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_NECROMANTIC);
-                break;
-            case EGO_WEAPON_NATURE:
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_KILL_ANIMAL);
-                if (one_in_(ACTIVATION_CHANCE))
-                    effect_add_random(o_ptr, BIAS_RANGER);
-                break;
-            case EGO_WEAPON_NOLDOR:
-                if ( o_ptr->tval != TV_SWORD
-                  || o_ptr->sval == SV_BLADE_OF_CHAOS
-                  || o_ptr->dd * o_ptr->ds < 10 )
-                {
-                    done = FALSE;
-                }
-                else
-                {
-                    o_ptr->dd += 1;
-                }
-                break;
-            case EGO_WEAPON_ORDER:
-                o_ptr->dd = o_ptr->dd * o_ptr->ds;
-                o_ptr->ds = 1;
-                break;
-            case EGO_WEAPON_PATTERN:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_HOLD_LIFE);
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_DEX);
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_RES_FEAR);
-                break;
-            case EGO_WEAPON_SHARPNESS:
-                if (o_ptr->tval != TV_SWORD)
-                    done = FALSE;
-                else
-                {
-                    o_ptr->pval = m_bonus(5, level) + 1;
-                    if (one_in_(2))
-                    {
-                        do
-                        {
-                            o_ptr->dd++;
-                        }
-                        while (one_in_(o_ptr->dd));
-                    }
-                    if (one_in_(7))
-                        add_flag(o_ptr->art_flags, TR_VORPAL2);
-                    else
-                        add_flag(o_ptr->art_flags, TR_VORPAL);
-                }
-                break;
-            case EGO_WEAPON_TRUMP:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_CHR);
-                if (one_in_(5))
-                    add_flag(o_ptr->art_flags, TR_SLAY_DEMON);
-                if (one_in_(7))
-                    one_ability(o_ptr);
-                break;
-            case EGO_WEAPON_WESTERNESSE:
-                if (one_in_(3))
-                    add_flag(o_ptr->art_flags, TR_RES_FEAR);
-                break;
-            case EGO_WEAPON_WILD:
-                o_ptr->ds = o_ptr->dd * o_ptr->ds;
-                o_ptr->dd = 1;
-                break;
-            case EGO_WEAPON_JOUSTING:
-                if ( !object_is_(o_ptr, TV_POLEARM, SV_LANCE)
-                  && !object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE) )
-                {
-                    done = FALSE;
-                }
-                else
-                {
-                    while (one_in_(o_ptr->dd * 3)) { o_ptr->dd++; }
-                    if (one_in_(3))
-                        add_flag(o_ptr->art_flags, TR_SLAY_HUMAN);
-                }
-                break;
-            case EGO_WEAPON_HELL_LANCE:
-                if ( !object_is_(o_ptr, TV_POLEARM, SV_LANCE)
-                  && !object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE) )
-                {
-                    done = FALSE;
-                }
-                else
-                {
-                    while (one_in_(o_ptr->dd * 4)) { o_ptr->dd++; }
-                    one_demon_resistance(o_ptr);
-                    if (one_in_(16))
-                        add_flag(o_ptr->art_flags, TR_VAMPIRIC);
-                    if (one_in_(ACTIVATION_CHANCE))
-                        effect_add_random(o_ptr, BIAS_DEMON);
-                }
-                break;
-            case EGO_WEAPON_HOLY_LANCE:
-                if ( !object_is_(o_ptr, TV_POLEARM, SV_LANCE)
-                  && !object_is_(o_ptr, TV_POLEARM, SV_HEAVY_LANCE) )
-                {
-                    done = FALSE;
-                }
-                else
-                {
-                    while (one_in_(o_ptr->dd * 5)) { o_ptr->dd++; }
-                    one_holy_resistance(o_ptr);
-                    if (one_in_(77))
-                    {
-                        o_ptr->dd = o_ptr->dd * o_ptr->ds;
-                        o_ptr->ds = 1;
-                        add_flag(o_ptr->art_flags, TR_ORDER);
-
-                    }
-                    if (one_in_(ACTIVATION_CHANCE))
-                        effect_add_random(o_ptr, BIAS_PRIESTLY);
-                }
-                break;
-            }
-        }
-        /* Hack -- Super-charge the damage dice, but only if they haven't already
-           been boosted/altered by the ego type (e.g., Armageddon, Hell Lance, Wild, Order, etc) */
-        if ( !o_ptr->art_name
-          && o_ptr->name2 /* These first two checks are paranoia, pure and simple! */
-          && o_ptr->dd == k_info[o_ptr->k_idx].dd
-          && o_ptr->ds == k_info[o_ptr->k_idx].ds
-          && o_ptr->name2 != EGO_WEAPON_EXTRA_ATTACKS
-          && o_ptr->name2 != EGO_WEAPON_WILD
-          && o_ptr->name2 != EGO_WEAPON_ORDER )
-        {
-            if (o_ptr->dd * o_ptr->ds > 0 && one_in_(5 + 200/MAX(level, 1)))
-            {
-                do
-                {
-                    o_ptr->dd++;
-                }
-                while (one_in_(o_ptr->dd * o_ptr->ds / 2));
-            }
-        }
-
-        if (done)
-            ego_weapon_adjust_weight(o_ptr);
+            _art_create_random(o_ptr, level, power);
+        else
+            _ego_create_weapon(o_ptr, level);
         break;
     }
 }
@@ -2754,14 +2752,14 @@ void obj_create_armor(object_type *o_ptr, int level, int power, int mode)
     {
     case TV_DRAG_ARMOR:
         if ((!crafting && one_in_(50)) || power > 2)
-            _create_rand_art(o_ptr, level, power);
+            _art_create_random(o_ptr, level, power);
         else
             _ego_create_dragon_armor(o_ptr, level);
         break;
 
     case TV_GLOVES:
         if ((!crafting && one_in_(20)) || power > 2)
-            _create_rand_art(o_ptr, level, power);
+            _art_create_random(o_ptr, level, power);
         else
             _ego_create_gloves(o_ptr, level);
         break;
@@ -2771,41 +2769,41 @@ void obj_create_armor(object_type *o_ptr, int level, int power, int mode)
         if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ROBE) && one_in_(7))
             _ego_create_robe(o_ptr, level);
         else if ((!crafting && one_in_(20)) || power > 2)
-            _create_rand_art(o_ptr, level, power);
+            _art_create_random(o_ptr, level, power);
         else
             _ego_create_body_armor(o_ptr, level);
         break;
 
     case TV_SHIELD:
         if ((!crafting && one_in_(20)) || power > 2)
-            _create_rand_art(o_ptr, level, power);
+            _art_create_random(o_ptr, level, power);
         else
             _ego_create_shield(o_ptr, level);
         break;
 
     case TV_CROWN:
         if ((!crafting && one_in_(20)) || power > 2)
-            _create_rand_art(o_ptr, level, power);
+            _art_create_random(o_ptr, level, power);
         else
             _ego_create_crown(o_ptr, level);
         break;
     case TV_HELM:
         if ((!crafting && one_in_(20)) || power > 2)
-            _create_rand_art(o_ptr, level, power);
+            _art_create_random(o_ptr, level, power);
         else
             _ego_create_helmet(o_ptr, level);
         break;
 
     case TV_CLOAK:
         if ((!crafting && one_in_(20)) || power > 2)
-            _create_rand_art(o_ptr, level, power);
+            _art_create_random(o_ptr, level, power);
         else
             _ego_create_cloak(o_ptr, level);
         break;
 
     case TV_BOOTS:
         if ((!crafting && one_in_(20)) || power > 2)
-            _create_rand_art(o_ptr, level, power);
+            _art_create_random(o_ptr, level, power);
         else
             _ego_create_boots(o_ptr, level);
         break;
@@ -2834,7 +2832,7 @@ void obj_create_lite(object_type *o_ptr, int level, int power, int mode)
 
     if (o_ptr->sval == SV_LITE_FEANOR && (one_in_(7) || power > 2))
     {
-        _create_rand_art(o_ptr, level, power);
+        _art_create_random(o_ptr, level, power);
         return;
     }
 
