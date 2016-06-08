@@ -1314,11 +1314,16 @@ int show_inven(int target_item, int mode)
         /* Display the weight if needed */
         if (mode & SHOW_FAIL_RATES)
         {
-            int fail = device_calc_fail_rate(o_ptr);
-            if (fail == 1000)
-                sprintf(tmp_val, "Fail: %3d%%", fail/10);
+            if (obj_is_identified_fully(o_ptr))
+            {
+                int fail = device_calc_fail_rate(o_ptr);
+                if (fail == 1000)
+                    sprintf(tmp_val, "Fail: %3d%%", fail/10);
+                else
+                    sprintf(tmp_val, "Fail: %2d.%d%%", fail/10, fail%10);
+            }
             else
-                sprintf(tmp_val, "Fail: %2d.%d%%", fail/10, fail%10);
+                sprintf(tmp_val, "Fail:    ?");
             put_str(tmp_val, rect.y + j, rect.x + rect.cx - 12);
         }
         else if (mode & SHOW_VALUE)
@@ -1493,13 +1498,18 @@ int show_equip(int target_item, int mode)
         if (!o_ptr) continue;
         if (mode & SHOW_FAIL_RATES)
         {
-            effect_t e = obj_get_effect(o_ptr);
-            int      fail = effect_calc_fail_rate(&e);
+            if (obj_is_identified_fully(o_ptr))
+            {
+                effect_t e = obj_get_effect(o_ptr);
+                int      fail = effect_calc_fail_rate(&e);
 
-            if (fail == 1000)
-                sprintf(tmp_val, "Fail: %3d%%", fail/10);
+                if (fail == 1000)
+                    sprintf(tmp_val, "Fail: %3d%%", fail/10);
+                else
+                    sprintf(tmp_val, "Fail: %2d.%d%%", fail/10, fail%10);
+            }
             else
-                sprintf(tmp_val, "Fail: %2d.%d%%", fail/10, fail%10);
+                sprintf(tmp_val, "Fail:    ?");
             put_str(tmp_val, rect.y + j, rect.x + rect.cx - 12);
         }
         else if (mode & SHOW_VALUE)
