@@ -89,7 +89,7 @@ static void _black_ooze_calc_bonuses(void)
     p_ptr->no_stun = TRUE;
     p_ptr->no_cut = TRUE;
 }
-static void _black_ooze_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _black_ooze_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_ACID);
     add_flag(flgs, TR_RES_POIS);
@@ -137,7 +137,7 @@ static void _gelatinous_cube_calc_bonuses(void)
     res_add(RES_ELEC);
     _black_ooze_calc_bonuses();
 }
-static void _gelatinous_cube_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _gelatinous_cube_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_ACID);
     add_flag(flgs, TR_RES_FIRE);
@@ -191,7 +191,7 @@ static void _acidic_cytoplasm_calc_bonuses(void)
 
     _gelatinous_cube_calc_bonuses();
 }
-static void _acidic_cytoplasm_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _acidic_cytoplasm_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_FREE_ACT);
@@ -248,7 +248,7 @@ static void _shoggoth_calc_bonuses(void)
 
     _acidic_cytoplasm_calc_bonuses();
 }
-static void _shoggoth_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _shoggoth_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_REGEN);

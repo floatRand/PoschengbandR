@@ -1865,8 +1865,7 @@ static bool kankin(void)
                 mass_produce(&forge);
 
                 /* Identify it fully */
-                object_aware(&forge);
-                object_known(&forge);
+                obj_identify_fully(&forge);
 
                 /*
                  * Hand it --- Assume there is an empty slot.
@@ -2588,9 +2587,8 @@ static bool _gamble_shop_aux(object_type *o_ptr)
     char buf[MAX_NLEN];
     int slot, auto_pick_idx;
 
-    identify_item(o_ptr);
-    ego_aware(o_ptr);
-    o_ptr->ident |= (IDENT_FULL);
+    obj_identify_fully(o_ptr);
+    stats_on_identify(o_ptr);
     object_desc(buf, o_ptr, OD_COLOR_CODED);
 
     clear_bldg(5, 10);
@@ -2826,9 +2824,7 @@ static bool _reforge_artifact(void)
 
     msg_print("After several hours, you are presented your new artifact...");
 
-    object_aware(dest);
-    object_known(dest);
-    dest->ident |= IDENT_FULL;
+    obj_identify_fully(dest);
 
     p_ptr->update |= PU_BONUS;
     p_ptr->window |= (PW_INVEN | PW_EQUIP);

@@ -3849,7 +3849,7 @@ cptr inven_res_label =
 static void do_cmd_knowledge_inven_aux(FILE *fff, object_type *o_ptr, int *j, byte tval, char *where)
 {
     char o_name[MAX_NLEN];
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
 
     if (!o_ptr->k_idx) return;
     if (o_ptr->tval != tval) return;
@@ -3890,7 +3890,7 @@ static void do_cmd_knowledge_inven_aux(FILE *fff, object_type *o_ptr, int *j, by
         }
         else
         {
-            object_flags_known(o_ptr, flgs);
+            obj_flags_known(o_ptr, flgs);
 
             print_im_or_res_flag(TR_IM_ACID, TR_RES_ACID);
             print_im_or_res_flag(TR_IM_ELEC, TR_RES_ELEC);
@@ -6045,83 +6045,9 @@ static void desc_obj_fake(int k_idx)
 
 static void desc_ego_fake(int e_idx)
 {
-    object_type    forge = {0};
-    ego_item_type *e_ptr = &e_info[e_idx];
-    int            k_idx = 0;
-
-    switch (e_ptr->type)
-    {
-    case EGO_TYPE_WEAPON:
-        k_idx = lookup_kind(TV_SWORD, SV_DAGGER);
-        break;
-    case EGO_TYPE_DIGGER:
-        k_idx = lookup_kind(TV_DIGGING, SV_SHOVEL);
-        break;
-    case EGO_TYPE_SHIELD:
-        k_idx = lookup_kind(TV_SHIELD, SV_SMALL_LEATHER_SHIELD);
-        break;
-    case EGO_TYPE_BOW:
-        k_idx = lookup_kind(TV_BOW, SV_SHORT_BOW);
-        break;
-    case EGO_TYPE_HARP:
-        k_idx = lookup_kind(TV_BOW, SV_HARP);
-        break;
-    case EGO_TYPE_RING:
-        k_idx = lookup_kind(TV_RING, SV_ANY);
-        break;
-    case EGO_TYPE_AMULET:
-        k_idx = lookup_kind(TV_AMULET, SV_ANY);
-        break;
-    case EGO_TYPE_LITE:
-        k_idx = lookup_kind(TV_LITE, SV_LITE_FEANOR);
-        break;
-    case EGO_TYPE_BODY_ARMOR:
-        k_idx = lookup_kind(TV_HARD_ARMOR, SV_CHAIN_MAIL);
-        break;
-    case EGO_TYPE_ROBE:
-        k_idx = lookup_kind(TV_SOFT_ARMOR, SV_ROBE);
-        break;
-    case EGO_TYPE_CLOAK:
-        k_idx = lookup_kind(TV_CLOAK, SV_CLOAK);
-        break;
-    case EGO_TYPE_HELMET:
-        k_idx = lookup_kind(TV_HELM, SV_HARD_LEATHER_CAP);
-        break;
-    case EGO_TYPE_CROWN:
-        k_idx = lookup_kind(TV_CROWN, SV_IRON_CROWN);
-        break;
-    case EGO_TYPE_GLOVES:
-        k_idx = lookup_kind(TV_GLOVES, SV_SET_OF_LEATHER_GLOVES);
-        break;
-    case EGO_TYPE_BOOTS:
-        k_idx = lookup_kind(TV_BOOTS, SV_PAIR_OF_SOFT_LEATHER_BOOTS);
-        break;
-    case EGO_TYPE_AMMO:
-        k_idx = lookup_kind(TV_ARROW, SV_AMMO_NORMAL);
-        break;
-    }
-
-    if (k_idx)
-    {
-        object_prep(&forge, k_idx);
-        forge.name2 = e_idx;
-        add_flag(forge.art_flags, TR_FAKE); /* Hack */
-
-        forge.ident |= IDENT_KNOWN;
-        if (ego_is_aware(e_idx))
-        {
-            forge.pval = e_ptr->max_pval;
-            forge.to_h = e_ptr->max_to_h;
-            forge.to_d = e_ptr->max_to_d;
-            forge.to_a = e_ptr->max_to_a;
-
-            forge.ident |= IDENT_FULL;
-        }
-
-        handle_stuff();
-        obj_display(&forge);
-        /* TODO: Improve reporting with TRG_flags */
-    }
+    /*TODO:
+    ego_type *e_ptr = &e_info[e_idx];
+    ego_display(e_ptr);*/
 }
 
 
@@ -6166,7 +6092,7 @@ static int _collect_egos(int grp_cur, int ego_idx[])
 
     for (i = 0; i < max_e_idx; i++)
     {
-        ego_item_type *e_ptr = &e_info[i];
+        ego_type *e_ptr = &e_info[i];
 
         if (!e_ptr->name) continue;
         /*if (!e_ptr->aware) continue;*/
@@ -6301,13 +6227,11 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
             char           buf[255];
             char           name[255];
             int            idx = ego_idx[ego_top + i];
-            ego_item_type *e_ptr = &e_info[idx];
+            ego_type *e_ptr = &e_info[idx];
             byte           attr = TERM_WHITE;
 
             if (i + ego_top == ego_cur)
                 attr = TERM_L_BLUE;
-            else if (!ego_is_aware(idx))
-                attr = TERM_L_DARK;
 
             strip_name_aux(name, e_name + e_ptr->name); 
             sprintf(buf, "%-35.35s %5d %6d %4d", 
@@ -6324,7 +6248,7 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
             int j;
             for (j = 0; ego_idx[j] >= 0; j++)
             {
-                ego_item_type *e_ptr = &e_info[ego_idx[j]];
+                ego_type *e_ptr = &e_info[ego_idx[j]];
                 totals.found += e_ptr->counts.found;
                 totals.bought += e_ptr->counts.bought;
                 totals.destroyed += e_ptr->counts.destroyed;

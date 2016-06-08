@@ -2383,6 +2383,7 @@ enum {
 #define OD_NAME_AND_DICE    0x00000100
 #define OD_COLOR_CODED      0x00000200  /* For msg_print only */
 
+#define OD_LORE (OD_NAME_ONLY | OD_OMIT_PREFIX | OD_COLOR_CODED)
 
 /*
  * Bit flags for the "p_ptr->special_attack" variable. -LM-
@@ -2852,6 +2853,9 @@ enum summon_specific_e {
  * Exceptions of new flag management is a set of flags to control
  * object generation and the curse flags.  These are not yet rewritten
  * in new index form; maybe these have no merit of rewriting.
+ *
+ * (FYI, the !! on have_flag makes this safe as assignment to a bool
+ *  which is just a byte. See A.7.4.7 in K&R.)
  */
 
 #define have_flag(ARRAY, INDEX) !!((ARRAY)[(INDEX)/32] & (1L << ((INDEX)%32)))
@@ -2954,7 +2958,7 @@ enum summon_specific_e {
 #define TR_TELEPORT            90
 #define TR_AGGRAVATE           91
 #define TR_BLESSED             92
-#define TR_ES_ATTACK           93
+#define TR_DEAD_93             93
 #define TR_ES_AC               94
 #define TR_SH_SHARDS           95
 
@@ -3033,13 +3037,12 @@ enum summon_specific_e {
 #define TR_IM_FEAR             166
 #define TR_DEC_BLOWS           167
 #define TR_IM_BLIND            168
-#define TR_FAKE                169 /* Hack for marking fake objects (e.g. inspecting known ego types) */
+#define TR_DEAD_169            169
 #define TR_NO_ENCHANT          170
 #define TR_DUAL_WIELDING       171
 
-#define TR_FLAG_COUNT          172
-/*#define TR_LAST_FLAG!!!!     191  (6 * 32 - 1)*/
-#define TR_FLAG_SIZE           6  
+#define TR_FLAG_COUNT          172   /* Note: This is MAX + 1, not MAX */
+#define TR_FLAG_ARRAY_SIZE       6   /* u32b flgs[TR_FLAG_ARRAY_SIZE]; */
 
 #define TRG_INSTA_ART           0x00000001     /* Item must be an artifact */
 #define TRG_QUESTITEM           0x00000002     /* quest level item -KMW- */
@@ -5378,7 +5381,18 @@ enum object_save_fields_e {
     SAVE_ITEM_ACTIVATION,
     SAVE_ITEM_MULT,
     SAVE_ITEM_MARKED,
-    SAVE_ITEM_XTRA5
+    SAVE_ITEM_XTRA5,
+    SAVE_ITEM_KNOWN_FLAGS_0,
+    SAVE_ITEM_KNOWN_FLAGS_1,
+    SAVE_ITEM_KNOWN_FLAGS_2,
+    SAVE_ITEM_KNOWN_FLAGS_3,
+    SAVE_ITEM_KNOWN_FLAGS_4,
+    SAVE_ITEM_KNOWN_FLAGS_5,
+    SAVE_ITEM_KNOWN_FLAGS_6,
+    SAVE_ITEM_KNOWN_FLAGS_7,
+    SAVE_ITEM_KNOWN_FLAGS_8,
+    SAVE_ITEM_KNOWN_FLAGS_9,
+    SAVE_ITEM_KNOWN_CURSE_FLAGS,
 };
 
 /*

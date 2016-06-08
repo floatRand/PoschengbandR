@@ -18,7 +18,7 @@ static void _klackon_calc_bonuses(void)
     res_add(RES_ACID);
     p_ptr->pspeed += (p_ptr->lev) / 10;
 }
-static void _klackon_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _klackon_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_CONF);
     add_flag(flgs, TR_RES_ACID);
@@ -86,7 +86,7 @@ static void _kobold_calc_bonuses(void)
 {
     res_add(RES_POIS);
 }
-static void _kobold_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _kobold_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_POIS);
 }
@@ -150,7 +150,7 @@ static void _kutar_calc_bonuses(void)
 {
     res_add(RES_CONF);
 }
-static void _kutar_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _kutar_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_CONF);
 }
@@ -220,7 +220,7 @@ static void _mindflayer_calc_bonuses(void)
     if (p_ptr->lev >= 15) p_ptr->see_inv = TRUE;
     if (p_ptr->lev >= 30) p_ptr->telepathy = TRUE;
 }
-static void _mindflayer_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _mindflayer_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SUST_INT);
     add_flag(flgs, TR_SUST_WIS);
@@ -294,7 +294,7 @@ static void _nibelung_calc_bonuses(void)
     res_add(RES_DISEN);
     res_add(RES_DARK);
 }
-static void _nibelung_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _nibelung_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_DISEN);
     add_flag(flgs, TR_RES_DARK);
@@ -351,7 +351,7 @@ static void _shadow_fairy_calc_bonuses(void)
     p_ptr->fairy_stealth = TRUE;
     res_add_vuln(RES_LITE);
 }
-static void _shadow_fairy_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _shadow_fairy_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_LEVITATION);
     add_flag(flgs, TR_VULN_LITE);
@@ -423,7 +423,7 @@ static void _skeleton_calc_bonuses(void)
     res_add(RES_POIS);
     if (p_ptr->lev >= 10) res_add(RES_COLD);
 }
-static void _skeleton_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _skeleton_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SEE_INVIS);
     add_flag(flgs, TR_RES_SHARDS);
@@ -522,7 +522,7 @@ static int _snotling_get_powers(spell_info* spells, int max)
 static void _snotling_calc_bonuses(void)
 {
 }
-static void _snotling_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _snotling_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
 }
 race_t *snotling_get_race(void)
@@ -593,7 +593,7 @@ static void _spectre_calc_bonuses(void)
     res_add(RES_COLD);
     p_ptr->pass_wall = TRUE;
 }
-static void _spectre_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _spectre_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_LEVITATION);
     add_flag(flgs, TR_RES_COLD);
@@ -670,7 +670,7 @@ static void _sprite_calc_bonuses(void)
     res_add(RES_LITE);
     p_ptr->pspeed += (p_ptr->lev) / 10;
 }
-static void _sprite_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _sprite_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_LITE);
     add_flag(flgs, TR_LEVITATION);
@@ -757,7 +757,7 @@ static void _tonberry_calc_bonuses(void)
     }
     /* Tonberries are also vulnerable to confusion ... cf res_pct_aux in resist.c */
 }
-static void _tonberry_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _tonberry_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SUST_STR);
     add_flag(flgs, TR_SUST_CON);
@@ -833,7 +833,7 @@ static void _vampire_calc_bonuses(void)
     p_ptr->hold_life = TRUE;
     if (p_ptr->pclass != CLASS_NINJA) p_ptr->lite = TRUE;
 }
-static void _vampire_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _vampire_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_VULN_LITE);
 
@@ -964,7 +964,7 @@ static void _yeek_calc_bonuses(void)
     if (p_ptr->lev >= 20)
         res_add_immune(RES_ACID);
 }
-static void _yeek_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _yeek_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_ACID);
     if (p_ptr->lev >= 20)
@@ -1035,7 +1035,7 @@ static void _zombie_calc_bonuses(void)
     p_ptr->slow_digest = TRUE;
     if (p_ptr->lev >= 5) res_add(RES_COLD);
 }
-static void _zombie_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _zombie_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SEE_INVIS);
     add_flag(flgs, TR_HOLD_LIFE);

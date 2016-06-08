@@ -192,7 +192,7 @@ static void _khorne_calc_bonuses(void)
     }
 }
 
-static void _khorne_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _khorne_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_RES_FIRE);
     add_flag(flgs, TR_RES_NETHER);
@@ -439,7 +439,7 @@ static void _marilith_calc_bonuses(void) {
     }
 }
 
-static void _marilith_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _marilith_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_FIRE);
     add_flag(flgs, TR_RES_NETHER);
 
@@ -650,7 +650,7 @@ static void _balrog_calc_bonuses(void) {
         p_ptr->no_charge_drain = TRUE;
     }
 }
-static void _balrog_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _balrog_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_FIRE);
     add_flag(flgs, TR_RES_NETHER);
 
@@ -816,7 +816,7 @@ static void _cyber_calc_bonuses(void)
     p_ptr->free_act = TRUE;
 }
 
-static void _cyber_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _cyber_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_RES_FIRE);
     add_flag(flgs, TR_RES_POIS);

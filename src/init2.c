@@ -775,7 +775,7 @@ static errr init_a_info(void)
 static errr init_e_info(void)
 {
     /* Init the header */
-    init_header(&e_head, max_e_idx, sizeof(ego_item_type));
+    init_header(&e_head, max_e_idx, sizeof(ego_type));
 
 #ifdef ALLOW_TEMPLATES
 

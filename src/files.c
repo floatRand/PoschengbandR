@@ -1544,7 +1544,7 @@ errr check_load_init(void)
 /*
  * Obtain the "flags" for the player as if he was an item
  */
-void player_flags(u32b flgs[TR_FLAG_SIZE])
+void player_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     int i;
     class_t *class_ptr = get_class();
@@ -1552,7 +1552,7 @@ void player_flags(u32b flgs[TR_FLAG_SIZE])
     personality_ptr pers_ptr = get_personality();
 
     /* Clear */
-    for (i = 0; i < TR_FLAG_SIZE; i++)
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
         flgs[i] = 0L;
 
     if (class_ptr->get_flags)
@@ -1570,12 +1570,12 @@ void player_flags(u32b flgs[TR_FLAG_SIZE])
     mut_get_flags(flgs);
 }
 
-void tim_player_flags(u32b flgs[TR_FLAG_SIZE])
+void tim_player_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     int i;
 
     /* Clear */
-    for (i = 0; i < TR_FLAG_SIZE; i++)
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
         flgs[i] = 0L;
 
     if (IS_HERO() || IS_SHERO())
@@ -3294,8 +3294,7 @@ static void show_info(void)
         if (!o_ptr->k_idx) continue;
 
         /* Aware and Known */
-        object_aware(o_ptr);
-        object_known(o_ptr);
+        obj_identify(o_ptr);
     }
 
     for (i = 1; i < max_towns; i++)
@@ -3311,8 +3310,7 @@ static void show_info(void)
             if (!o_ptr->k_idx) continue;
 
             /* Aware and Known */
-            object_aware(o_ptr);
-            object_known(o_ptr);
+            obj_identify(o_ptr);
         }
     }
 

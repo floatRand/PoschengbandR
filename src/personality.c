@@ -88,7 +88,7 @@ static void _fearless_calc_bonuses(void)
 {
     res_add(RES_FEAR);
 }
-static void _fearless_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _fearless_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_FEAR);
 }
@@ -139,7 +139,7 @@ static void _hasty_calc_bonuses(void)
     p_ptr->pspeed += 2;
     p_ptr->to_m_chance += 1;
 }
-static void _hasty_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _hasty_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SPEED);
 }
@@ -333,7 +333,7 @@ static void _munchkin_calc_bonuses(void)
 
     p_ptr->pspeed += p_ptr->lev/10 + 5;
 }
-static void _munchkin_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _munchkin_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_BLIND);
     add_flag(flgs, TR_RES_CONF);
@@ -542,7 +542,7 @@ static void _sexy_calc_bonuses(void)
 {
     p_ptr->cursed |= TRC_AGGRAVATE;
 }
-static void _sexy_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _sexy_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_AGGRAVATE);
 }

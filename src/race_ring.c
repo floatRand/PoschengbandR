@@ -233,8 +233,8 @@ static bool _absorb(object_type *o_ptr)
     bool result = FALSE;
     int i;
     int div = 1;
-    u32b flags[TR_FLAG_SIZE];
-    object_flags(o_ptr, flags);
+    u32b flags[TR_FLAG_ARRAY_SIZE];
+    obj_flags(o_ptr, flags);
 
     if (o_ptr->curse_flags & TRC_AGGRAVATE)
         div++;
@@ -350,7 +350,7 @@ static int _calc_stat_bonus(int flag)
     return _calc_amount(_essences[flag], 2, 1);
 }
 
-static void _add_stat_flag(int flag, u32b flgs[TR_FLAG_SIZE])
+static void _add_stat_flag(int flag, u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (_calc_stat_bonus(flag))
         add_flag(flgs, flag);
@@ -1373,7 +1373,7 @@ static void _calc_stats(s16b stats[MAX_STATS])
         stats[i] += _calc_stat_bonus(TR_STR + i);
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     int i;
 

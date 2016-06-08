@@ -1,4 +1,4 @@
-# File: k_info.txt
+# File: k_info.txt (Touch)
 # This file is used to initialize the "lib/raw/k_info.raw" file, which is
 # used to initialize the "object kind" information for the Angband game.
 

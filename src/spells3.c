@@ -330,7 +330,7 @@ bool teleport_player_aux(int dis, u32b mode)
     if (p_ptr->anti_tele && !(mode & TELEPORT_NONMAGICAL))
     {
         msg_print("A mysterious force prevents you from teleporting!");
-
+        equip_learn_flag(TR_NO_TELE);
         return FALSE;
     }
 
@@ -530,7 +530,7 @@ void teleport_player_to(int ny, int nx, u32b mode)
     if (p_ptr->anti_tele && !(mode & TELEPORT_NONMAGICAL))
     {
         msg_print("A mysterious force prevents you from teleporting!");
-
+        equip_learn_flag(TR_NO_TELE);
         return;
     }
 
@@ -577,8 +577,8 @@ static u32b _flag = 0;
 static bool _has_flag(object_type *o_ptr) {
     if (!object_is_cursed(o_ptr))
     {
-        u32b flgs[TR_FLAG_SIZE];
-        object_flags(o_ptr, flgs);
+        u32b flgs[TR_FLAG_ARRAY_SIZE];
+        obj_flags(o_ptr, flgs);
         return have_flag(flgs, _flag);
     }
     return FALSE;
@@ -672,6 +672,7 @@ void teleport_level(int m_idx)
     if ((m_idx <= 0) && p_ptr->anti_tele) /* To player */
     {
         msg_print("A mysterious force prevents you from teleporting!");
+        equip_learn_flag(TR_NO_TELE);
         return;
     }
 
@@ -990,6 +991,7 @@ bool apply_disenchant(int mode)
         object_type     *o_ptr = equip_obj(slot);
         int             t = 0;
         char            o_name[MAX_NLEN];
+        u32b            flgs[TR_FLAG_ARRAY_SIZE];
         int to_h, to_d, to_a, pval;
 
         if (o_ptr->to_h <= 0 && o_ptr->to_d <= 0 && o_ptr->to_a <= 0 && o_ptr->pval <= 1)
@@ -1000,6 +1002,14 @@ bool apply_disenchant(int mode)
         if (object_is_artifact(o_ptr) && (randint0(100) < 71))
         {
             msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(t));
+            return TRUE;
+        }
+
+        obj_flags(o_ptr, flgs);
+        if (have_flag(flgs, TR_RES_DISEN))
+        {
+            msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(t));
+            obj_learn_flag(o_ptr, TR_RES_DISEN);
             return TRUE;
         }
 
@@ -1702,14 +1712,16 @@ static int remove_curse_aux(int all)
         if (o_ptr->curse_flags & TRC_PERMA_CURSE)
         {
             o_ptr->curse_flags &= (TRC_CURSED | TRC_HEAVY_CURSE | TRC_PERMA_CURSE);
+            o_ptr->known_curse_flags &= (TRC_CURSED | TRC_HEAVY_CURSE | TRC_PERMA_CURSE);
             continue;
         }
 
-        o_ptr->curse_flags = 0L;
-        o_ptr->ident |= (IDENT_SENSE);
+        o_ptr->curse_flags = 0;
+        o_ptr->known_curse_flags = 0; /* Forget lore in preparation for next cursing */
+        o_ptr->ident  |= IDENT_SENSE;
         o_ptr->feeling = FEEL_NONE;
-        p_ptr->update |= (PU_BONUS);
-        p_ptr->window |= (PW_EQUIP);
+        p_ptr->update |= PU_BONUS;
+        p_ptr->window |= PW_EQUIP;
         p_ptr->redraw |= PR_EFFECTS;
         ct++;
     }
@@ -1897,14 +1909,14 @@ bool enchant(object_type *o_ptr, int n, int eflag)
     bool    a = object_is_artifact(o_ptr);
     bool    force = (eflag & ENCH_FORCE);
     int     minor_limit = 2 + p_ptr->lev/5; /* This matches the town service ... */
-    u32b    flgs[TR_FLAG_SIZE];
+    u32b    flgs[TR_FLAG_ARRAY_SIZE];
 
 
     /* Large piles resist enchantment */
     prob = o_ptr->number * 100;
 
     /* Some objects cannot be enchanted */
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_NO_ENCHANT))
         return FALSE;
 
@@ -2250,10 +2262,6 @@ bool artifact_scroll(void)
 bool identify_item(object_type *o_ptr)
 {
     bool old_known = FALSE;
-    char o_name[MAX_NLEN];
-
-    /* Description */
-    object_desc(o_name, o_ptr, 0);
 
     if (o_ptr->ident & IDENT_KNOWN)
         old_known = TRUE;
@@ -2264,18 +2272,8 @@ bool identify_item(object_type *o_ptr)
             virtue_add(VIRTUE_KNOWLEDGE, 1);
     }
 
-    /* Identify it fully */
-    object_aware(o_ptr);
-    object_known(o_ptr);
-
+    obj_identify(o_ptr);
     stats_on_identify(o_ptr);
-
-    /* Experimental: Jewelry is a bit tedious to *id*, and id often reveals very little. */
-    if (!easy_id && object_is_jewelry(o_ptr) && !object_is_artifact(o_ptr))
-    {
-        o_ptr->ident |= IDENT_FULL;
-        ego_aware(o_ptr);
-    }
 
     /* Player touches it */
     o_ptr->marked |= OM_TOUCHED;
@@ -2289,11 +2287,6 @@ bool identify_item(object_type *o_ptr)
     /* Window stuff */
     p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
-    strcpy(record_o_name, o_name);
-    record_turn = game_turn;
-
-    /* Description */
-    object_desc(o_name, o_ptr, OD_NAME_ONLY);
     return old_known;
 }
 
@@ -2343,6 +2336,7 @@ bool ident_spell(object_p p)
         o_ptr = &o_list[0 - item];
 
     old_known = identify_item(o_ptr);
+
     object_desc(o_name, o_ptr, 0);
 
     if (equip_is_valid_slot(item))
@@ -2436,6 +2430,11 @@ static bool item_tester_hook_identify_fully(object_type *o_ptr)
     {
         return TRUE;
     }
+    if ( (o_ptr->ident & IDENT_FULL)
+      && o_ptr->curse_flags != o_ptr->known_curse_flags )
+    {
+        return TRUE;
+    }
     return FALSE;
 }
 
@@ -2474,9 +2473,8 @@ bool identify_fully(object_p p)
     else
         o_ptr = &o_list[0 - item];
 
-    old_known = identify_item(o_ptr);
-    o_ptr->ident |= (IDENT_FULL);
-    ego_aware(o_ptr);
+    old_known = identify_item(o_ptr); /* For the stat tracking and old_known ... */
+    obj_identify_fully(o_ptr);
 
     handle_stuff();
     object_desc(o_name, o_ptr, 0);
@@ -2697,7 +2695,7 @@ bool bless_weapon(void)
 {
     int             item;
     object_type     *o_ptr;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     char            o_name[MAX_NLEN];
     cptr            q, s;
 
@@ -2730,7 +2728,7 @@ bool bless_weapon(void)
     object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
     /* Extract the flags */
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
 
     if (object_is_cursed(o_ptr))
     {
@@ -2854,7 +2852,7 @@ bool polish_shield(void)
 {
     int             item;
     object_type     *o_ptr;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     char            o_name[MAX_NLEN];
     cptr            q, s;
 
@@ -2886,7 +2884,7 @@ bool polish_shield(void)
     object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
     /* Extract the flags */
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
 
     if (o_ptr->k_idx && !object_is_artifact(o_ptr) && !object_is_ego(o_ptr) &&
         !object_is_cursed(o_ptr) && (o_ptr->sval != SV_MIRROR_SHIELD))
@@ -3699,9 +3697,9 @@ bool hates_cold(object_type *o_ptr)
  */
 int set_acid_destroy(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     if (!hates_acid(o_ptr)) return (FALSE);
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_IGNORE_ACID)) return (FALSE);
     return (TRUE);
 }
@@ -3712,9 +3710,9 @@ int set_acid_destroy(object_type *o_ptr)
  */
 int set_elec_destroy(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     if (!hates_elec(o_ptr)) return (FALSE);
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_IGNORE_ELEC)) return (FALSE);
     return (TRUE);
 }
@@ -3725,9 +3723,9 @@ int set_elec_destroy(object_type *o_ptr)
  */
 int set_fire_destroy(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     if (!hates_fire(o_ptr)) return (FALSE);
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_IGNORE_FIRE)) return (FALSE);
     return (TRUE);
 }
@@ -3738,9 +3736,9 @@ int set_fire_destroy(object_type *o_ptr)
  */
 int set_cold_destroy(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     if (!hates_cold(o_ptr)) return (FALSE);
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_IGNORE_COLD)) return (FALSE);
     return (TRUE);
 }
@@ -3843,18 +3841,19 @@ static int minus_ac(void)
     if (slot)
     {
         object_type *o_ptr = equip_obj(slot);
-        u32b         flgs[TR_FLAG_SIZE];
+        u32b         flgs[TR_FLAG_ARRAY_SIZE];
         char         o_name[MAX_NLEN];
 
         if (o_ptr->ac + o_ptr->to_a <= 0) return FALSE;
 
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
 
         if ( have_flag(flgs, TR_IGNORE_ACID)
           || demigod_is_(DEMIGOD_HEPHAESTUS) )
         {
             msg_format("Your %s is unaffected!", o_name);
+            obj_learn_flag(o_ptr, TR_IGNORE_ACID);
             return TRUE;
         }
 
@@ -4043,6 +4042,7 @@ bool rustproof(void)
     object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
     add_flag(o_ptr->art_flags, TR_IGNORE_ACID);
+    add_flag(o_ptr->known_flags, TR_IGNORE_ACID);
 
     if ((o_ptr->to_a < 0) && !object_is_cursed(o_ptr))
     {
@@ -4093,7 +4093,7 @@ void blast_object(object_type *o_ptr)
         o_ptr->to_d -= randint1(5) + randint1(5);
     }
 
-    for (i = 0; i < TR_FLAG_SIZE; i++)
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
         o_ptr->art_flags[i] = 0;
 
     o_ptr->rune = 0;

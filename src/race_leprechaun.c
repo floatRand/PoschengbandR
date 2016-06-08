@@ -245,7 +245,7 @@ static void _calc_bonuses(void)
     }
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     if (p_ptr->au >= 100 * 1000)
         add_flag(flgs, TR_SPELL_CAP);

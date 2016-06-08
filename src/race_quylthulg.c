@@ -834,7 +834,7 @@ static void _calc_bonuses(void)
     }
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_RES_FEAR);

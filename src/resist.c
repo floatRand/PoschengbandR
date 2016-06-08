@@ -80,7 +80,7 @@ static _res_info_t _resist_map[RES_MAX] = {
     { "Teleportation",  TERM_ORANGE,  TR_NO_TELE,     TR_INVALID,     TR_INVALID }
 };
 
-void res_calc_bonuses(u32b flgs[TR_FLAG_SIZE])
+void res_calc_bonuses(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     int i;
     for (i = RES_BEGIN; i < RES_END; i++)
@@ -95,7 +95,7 @@ void res_calc_bonuses(u32b flgs[TR_FLAG_SIZE])
     }
 }
 
-bool res_has_bonus(u32b flgs[TR_FLAG_SIZE])
+bool res_has_bonus(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     int i;
     for (i = RES_BEGIN; i < RES_END; i++)
@@ -149,6 +149,16 @@ int res_calc_dam(int which, int dam)
     result -= pct2 * dam / 100;
     if (result < 0)
         result = 0;
+
+    if (result < dam)
+    {
+        int flag = result ? res_get_object_flag(which) : res_get_object_immune_flag(which);
+        equip_learn_resist(flag);
+    }
+    else if (result > dam)
+    {
+        equip_learn_resist(res_get_object_vuln_flag(which));
+    }
 
     return result;
 }
@@ -275,12 +285,12 @@ int res_ct_known(int which)
     {
         int          slot = EQUIP_BEGIN + i;
         object_type *o_ptr = equip_obj(slot);
-        u32b         flgs[TR_FLAG_SIZE];
-        u32b         flgs_known[TR_FLAG_SIZE];
+        u32b         flgs[TR_FLAG_ARRAY_SIZE];
+        u32b         flgs_known[TR_FLAG_ARRAY_SIZE];
 
         if (!o_ptr) continue;
-        object_flags(o_ptr, flgs);
-        object_flags_known(o_ptr, flgs_known);
+        obj_flags(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs_known);
 
         if (have_flag(flgs, flg) && !have_flag(flgs_known, flg))
             hidden++;
@@ -300,7 +310,11 @@ bool res_save(int which, int power)
     int pct = res_pct(which);
     int roll = randint0(power);
     if (roll < pct)
+    {
+        int flag = res_get_object_flag(which);
+        equip_learn_resist(flag);
         return TRUE;
+    }
     return FALSE;
 }
 

@@ -1566,7 +1566,7 @@ void possessor_calc_bonuses(void)
     }
 }
 
-void possessor_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+void possessor_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     monster_race *r_ptr = &r_info[p_ptr->current_r_idx];
 

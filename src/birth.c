@@ -2296,7 +2296,7 @@ static void e_info_reset(void)
     /* Reset the "objects" */
     for (i = 1; i < max_e_idx; i++)
     {
-        ego_item_type *e_ptr = &e_info[i];
+        ego_type *e_ptr = &e_info[i];
 
         e_ptr->aware = FALSE;
     }
@@ -3064,10 +3064,7 @@ void add_outfit(object_type *o_ptr)
 
     if (spoiler_hack) return;
 
-    object_aware(o_ptr);
-    ego_aware(o_ptr);
-    object_known(o_ptr);
-    o_ptr->ident |= IDENT_FULL;
+    obj_identify_fully(o_ptr);
 
     slot = equip_first_empty_slot(o_ptr);
     if (slot && o_ptr->number == 1) /* Fix later for torches ... */

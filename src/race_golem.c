@@ -245,7 +245,7 @@ static void _calc_bonuses(void)
     }
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     /* Clay Golem */
     add_flag(flgs, TR_FREE_ACT);

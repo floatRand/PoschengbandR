@@ -635,7 +635,7 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
                  * are almost meaningless.
                  * Register the ego type only.
                  */
-                ego_item_type *e_ptr = &e_info[o_ptr->name2];
+                ego_type *e_ptr = &e_info[o_ptr->name2];
                 /* We ommit the basename and cannot use the ^ mark */
                 strcpy(name_str, e_name + e_ptr->name);
 

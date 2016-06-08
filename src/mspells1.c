@@ -582,14 +582,14 @@ void curse_equipment(int chance, int heavy_chance)
         bool         changed = FALSE;
         int          curse_power = 0;
         u32b         new_curse;
-        u32b         oflgs[TR_FLAG_SIZE];
+        u32b         oflgs[TR_FLAG_ARRAY_SIZE];
         object_type *o_ptr = equip_obj(slot);
         char         o_name[MAX_NLEN];
 
         if (!o_ptr) return;
         if (randint1(100) > chance) return;
 
-        object_flags(o_ptr, oflgs);
+        obj_flags(o_ptr, oflgs);
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
         if (have_flag(oflgs, TR_BLESSED) && (randint1(888) > chance))
@@ -2805,7 +2805,10 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             msg_format("%^s drains power from your muscles!", m_name);
 
             if (p_ptr->free_act)
+            {
                 msg_print("You are unaffected!");
+                equip_learn_flag(TR_FREE_ACT);
+            }
             else if (randint0(100 + rlev/2) < duelist_skill_sav(m_idx))
                 msg_print("You resist the effects!");
             else
@@ -2828,7 +2831,10 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             else msg_format("%^s stares deep into your eyes!", m_name);
 
             if (p_ptr->free_act)
+            {
                 msg_print("You are unaffected!");
+                equip_learn_flag(TR_FREE_ACT);
+            }
             else if (randint0(100 + rlev/2) < duelist_skill_sav(m_idx))
                 msg_format("You resist the effects!");
             else

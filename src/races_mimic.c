@@ -10,7 +10,7 @@ static void _clay_golem_calc_bonuses(void)
     p_ptr->to_a += 10;
     p_ptr->dis_to_a += 10;
 }
-static void _clay_golem_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _clay_golem_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_FREE_ACT);
     add_flag(flgs, TR_HOLD_LIFE);
@@ -73,7 +73,7 @@ static void _colossus_calc_bonuses(void)
     p_ptr->to_a += 40;
     p_ptr->dis_to_a += 40;
 }
-static void _colossus_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _colossus_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_FREE_ACT);
     add_flag(flgs, TR_SEE_INVIS);
@@ -151,7 +151,7 @@ static void _demon_calc_bonuses(void)
     p_ptr->dis_to_a += 10;
     p_ptr->align -= 200;
 }
-static void _demon_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _demon_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_HOLD_LIFE);
     add_flag(flgs, TR_RES_CHAOS);
@@ -237,7 +237,7 @@ static void _demon_lord_calc_bonuses(void)
     p_ptr->dis_to_a += 20;
     p_ptr->align -= 200;
 }
-static void _demon_lord_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _demon_lord_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_HOLD_LIFE);
     add_flag(flgs, TR_RES_CHAOS);
@@ -314,7 +314,7 @@ static void _iron_golem_calc_bonuses(void)
     p_ptr->to_a += 15;
     p_ptr->dis_to_a += 15;
 }
-static void _iron_golem_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _iron_golem_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_FREE_ACT);
     add_flag(flgs, TR_SEE_INVIS);
@@ -419,7 +419,7 @@ static void _mithril_golem_calc_bonuses(void)
     p_ptr->to_a += 20;
     p_ptr->dis_to_a += 20;
 }
-static void _mithril_golem_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _mithril_golem_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_FREE_ACT);
     add_flag(flgs, TR_SEE_INVIS);
@@ -476,7 +476,7 @@ static void _small_kobold_calc_bonuses(void)
 {
     res_add(RES_POIS);
 }
-static void _small_kobold_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _small_kobold_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_POIS);
 }
@@ -549,7 +549,7 @@ static void _vampire_lord_calc_bonuses(void)
     p_ptr->to_a += 10;
     p_ptr->dis_to_a += 10;
 }
-static void _vampire_lord_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _vampire_lord_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_VULN_LITE);
     add_flag(flgs, TR_IM_DARK);

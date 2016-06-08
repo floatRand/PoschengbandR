@@ -985,9 +985,7 @@ static void _reforging_spell(int cmd, variant *res)
         inven_item_increase(src_idx, -1);
         inven_item_describe(src_idx);
 
-        object_aware(dest);
-        object_known(dest);
-        dest->ident |= IDENT_FULL;
+        obj_identify_fully(dest);
 
         p_ptr->update |= PU_BONUS;
         p_ptr->window |= (PW_INVEN | PW_EQUIP);
@@ -1987,7 +1985,7 @@ static void _realm_calc_bonuses(void)
     }
 }
 
-static void _realm_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _realm_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     switch (p_ptr->dragon_realm)
     {
@@ -2055,7 +2053,7 @@ static void _dragon_calc_bonuses(void)
     _realm_calc_bonuses();
 }
 
-static void _dragon_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _dragon_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_LEVITATION);
     if (p_ptr->lev >= 20)
@@ -2269,7 +2267,7 @@ static void _elemental_calc_bonuses(void) {
     }
     _dragon_calc_bonuses();
 }
-static void _elemental_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _elemental_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     int res = _elemental_info[p_ptr->psubrace].which_res;
     add_flag(flgs, res_get_object_flag(res));
     if (p_ptr->lev >= 30)
@@ -2402,7 +2400,7 @@ static void _nether_calc_bonuses(void) {
     }
     _dragon_calc_bonuses();
 }
-static void _nether_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _nether_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_NETHER);
     if (p_ptr->lev >= 30)
     {
@@ -2516,7 +2514,7 @@ static void _law_calc_bonuses(void) {
 
     _dragon_calc_bonuses();
 }
-static void _law_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _law_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_SOUND);
     add_flag(flgs, TR_RES_SHARDS);
     if (p_ptr->lev >= 40)
@@ -2614,7 +2612,7 @@ static void _chaos_calc_bonuses(void) {
 
     _dragon_calc_bonuses();
 }
-static void _chaos_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _chaos_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_CHAOS);
     add_flag(flgs, TR_RES_DISEN);
     if (p_ptr->lev >= 40)
@@ -2709,7 +2707,7 @@ static void _balance_calc_bonuses(void) {
     }
     _dragon_calc_bonuses();
 }
-static void _balance_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _balance_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_SOUND);
     add_flag(flgs, TR_RES_SHARDS);
     add_flag(flgs, TR_RES_CHAOS);
@@ -2812,7 +2810,7 @@ static void _ethereal_calc_bonuses(void) {
     }
     _dragon_calc_bonuses();
 }
-static void _ethereal_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _ethereal_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_LITE);
     add_flag(flgs, TR_RES_DARK);
     if (p_ptr->lev >= 40)
@@ -2927,7 +2925,7 @@ static void _crystal_calc_bonuses(void) {
     }
     _dragon_calc_bonuses();
 }
-static void _crystal_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _crystal_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_COLD);
     add_flag(flgs, TR_RES_SHARDS);
     if (p_ptr->lev >= 10)
@@ -3027,7 +3025,7 @@ static void _bronze_calc_bonuses(void) {
     }
     _dragon_calc_bonuses();
 }
-static void _bronze_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _bronze_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_CONF);
     if (p_ptr->lev >= 30)
     {
@@ -3130,7 +3128,7 @@ static void _gold_calc_bonuses(void) {
     }
     _dragon_calc_bonuses();
 }
-static void _gold_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _gold_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_SOUND);
     if (p_ptr->lev >= 30)
     {
@@ -3241,7 +3239,7 @@ static void _steel_calc_bonuses(void) {
     }
     _dragon_calc_bonuses();
 }
-static void _steel_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _steel_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_RES_FIRE);
     add_flag(flgs, TR_RES_ELEC);
     add_flag(flgs, TR_RES_POIS);

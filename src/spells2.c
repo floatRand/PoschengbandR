@@ -36,7 +36,7 @@ void self_knowledge(void)
     char s_string [6] [128];
     char r_string [RES_MAX] [128];
 
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
 
     object_type *o_ptr;
 
@@ -45,9 +45,7 @@ void self_knowledge(void)
 
     cptr info[220];
 
-    int plev = p_ptr->lev;
-
-    for (j = 0; j < TR_FLAG_SIZE; j++)
+    for (j = 0; j < TR_FLAG_ARRAY_SIZE; j++)
         flgs[j] = 0L;
 
     p_ptr->knowledge |= (KNOW_STAT | KNOW_HPRATE);
@@ -65,16 +63,16 @@ void self_knowledge(void)
     /* Acquire item flags from equipment */
     for (k = EQUIP_BEGIN; k < EQUIP_BEGIN + equip_count(); k++)
     {
-        u32b tflgs[TR_FLAG_SIZE];
+        u32b tflgs[TR_FLAG_ARRAY_SIZE];
 
         o_ptr = equip_obj(k);
         if (!o_ptr) continue;
 
         /* Extract the flags */
-        object_flags(o_ptr, tflgs);
+        obj_flags(o_ptr, tflgs);
 
         /* Extract flags */
-        for (j = 0; j < TR_FLAG_SIZE; j++)
+        for (j = 0; j < TR_FLAG_ARRAY_SIZE; j++)
             flgs[j] |= tflgs[j];
     }
 
@@ -138,367 +136,8 @@ void self_knowledge(void)
             info[i++] = v_string[v_nr];
         }
         info[i++] = "";
+
     }    
-    /* Racial powers... */
-    if (p_ptr->mimic_form != MIMIC_NONE)
-    {
-        switch (p_ptr->mimic_form)
-        {
-            case MIMIC_DEMON:
-            case MIMIC_DEMON_LORD:
-                sprintf(Dummy, "You can nether breathe, dam. %d (cost %d).", 3 * plev, 10+plev/3);
-
-                info[i++] = Dummy;
-            break;
-        case MIMIC_VAMPIRE:
-            if (plev > 1)
-            {
-                sprintf(Dummy, "You can steal life from a foe, dam. %d-%d (cost %d).",
-
-                    plev + MAX(1, plev / 10), plev + plev * MAX(1, plev / 10), 1 + (plev / 3));
-                info[i++] = Dummy;
-            }
-            break;
-        }
-    }
-    else
-    {
-    switch (p_ptr->prace)
-    {
-        case RACE_NIBELUNG:
-        case RACE_DWARF:
-            if (plev > 4)
-                info[i++] = "You can find traps, doors and stairs (cost 5).";
-
-            break;
-        case RACE_HOBBIT:
-            if (plev > 14)
-            {
-                info[i++] = "You can produce food (cost 10).";
-
-            }
-            break;
-        case RACE_GNOME:
-            if (plev > 4)
-            {
-                sprintf(Dummy, "You can teleport, range %d (cost %d).",
-
-                    (1 + plev), (5 + (plev / 5)));
-                info[i++] = Dummy;
-            }
-            break;
-        case RACE_SNOTLING:
-            info[i++] = "You can devour your own flesh for sustenance.";
-            info[i++] = "Other monsters often make fun of you.";
-            info[i++] = "You are addicted to mushrooms.";
-            break;
-        case RACE_HALF_TROLL:
-            if (plev > 9)
-                info[i++] = "You enter berserk fury (cost 12).";
-
-            break;
-        case RACE_AMBERITE:
-            if (plev > 29)
-                info[i++] = "You can Shift Shadows (cost 50).";
-
-            if (plev > 39)
-                info[i++] = "You can mentally Walk the Pattern (cost 75).";
-
-            break;
-        case RACE_BARBARIAN:
-            if (plev > 7)
-                info[i++] = "You can enter berserk fury (cost 10).";
-
-            break;
-        case RACE_HALF_OGRE:
-            if (plev > 24)
-                info[i++] = "You can set an Explosive Rune (cost 35).";
-
-            break;
-        case RACE_HALF_GIANT:
-            if (plev > 19)
-                info[i++] = "You can break stone walls (cost 10).";
-
-            break;
-        case RACE_HALF_TITAN:
-            if (plev > 34)
-                info[i++] = "You can probe monsters (cost 20).";
-
-            break;
-        case RACE_CYCLOPS:
-            if (plev > 19)
-            {
-                sprintf(Dummy, "You can throw a boulder, dam. %d (cost 15).",
-
-                    3 * plev);
-                info[i++] = Dummy;
-            }
-            break;
-        case RACE_YEEK:
-            if (plev > 14)
-                info[i++] = "You can make a terrifying scream (cost 15).";
-
-            break;
-        case RACE_KLACKON:
-            if (plev > 8)
-            {
-                sprintf(Dummy, "You can spit acid, dam. %d (cost 9).", plev);
-
-                info[i++] = Dummy;
-            }
-            break;
-        case RACE_KOBOLD:
-            if (plev > 11)
-            {
-                sprintf(Dummy,
-                    "You can throw a dart of poison, dam. %d (cost 8).", plev);
-
-                info[i++] = Dummy;
-            }
-            break;
-        case RACE_DARK_ELF:
-            if (plev > 1)
-            {
-                sprintf(Dummy, "You can cast a Magic Missile, dam %d (cost 2).",
-
-                    (3 + ((plev-1) / 5)));
-                info[i++] = Dummy;
-            }
-            break;
-        case RACE_MIND_FLAYER:
-            if (plev > 14)
-                sprintf(Dummy, "You can mind blast your enemies, dam %d (cost 12).", plev);
-
-            info[i++] = Dummy;
-            break;
-        case RACE_IMP:
-            if (plev > 29)
-            {
-                sprintf(Dummy, "You can cast a Fire Ball, dam. %d (cost 15).", plev);
-
-                info[i++] = Dummy;
-            }
-            else if (plev > 8)
-            {
-                sprintf(Dummy, "You can cast a Fire Bolt, dam. %d (cost 15).", plev);
-
-                info[i++] = Dummy;
-            }
-            break;
-        case RACE_GOLEM:
-            if (plev > 19)
-                info[i++] = "You can turn your skin to stone, dur d20+30 (cost 15).";
-
-            break;
-        case RACE_ZOMBIE:
-        case RACE_SKELETON:
-            if (plev > 29)
-                info[i++] = "You can restore lost life forces (cost 30).";
-
-            break;
-        case RACE_VAMPIRE:
-            if (plev > 1)
-            {
-                sprintf(Dummy, "You can steal life from a foe, dam. %d-%d (cost %d).",
-
-                    plev + MAX(1, plev / 10), plev + plev * MAX(1, plev / 10), 1 + (plev / 3));
-                info[i++] = Dummy;
-            }
-            break;
-        case RACE_SPECTRE:
-            if (plev > 3)
-            {
-                info[i++] = "You can wail to terrify your enemies (cost 3).";
-
-            }
-            break;
-        case RACE_SPRITE:
-            if (plev > 11)
-            {
-                info[i++] = "You can throw magical dust which induces sleep (cost 12).";
-
-            }
-            break;
-        case RACE_BALROG:
-            sprintf(Dummy, "You can breathe nether, dam. %d (cost %d).", 3 * plev, 10+plev/3);
-
-            info[i++] = Dummy;
-            break;
-        case RACE_KUTAR:
-            if (plev > 19)
-                info[i++] = "You can expand horizontally, dur d20+30 (cost 15).";
-
-            break;
-        case RACE_ANDROID:
-            if (plev < 10)
-                sprintf(Dummy, "You can fire a ray gun with damage %d (cost 7).", (plev+1)/2);
-            else if (plev < 25)
-                sprintf(Dummy, "You can fire a blaster with damage %d (cost 13).", plev);
-            else if (plev < 35)
-                sprintf(Dummy, "You can fire a bazooka with damage %d (cost 26).", plev * 2);
-            else if (plev < 45)
-                sprintf(Dummy, "You can fire a beam cannon with damage %d (cost 40).", plev * 2);
-            else
-                sprintf(Dummy, "You can fire a rocket with damage %d (cost 60).", plev * 5);
-
-            info[i++] = Dummy;
-            break;
-        default:
-            break;
-    }
-    }
-
-    switch(p_ptr->pclass)
-    {
-        case CLASS_WARRIOR:
-            if (plev > 39)
-            {
-                info[i++] = "You can attack some random directions at a time (cost 75).";
-            }
-            break;
-        case CLASS_HIGH_MAGE:
-            if (p_ptr->realm1 == REALM_HEX) break;
-        case CLASS_MAGE:
-        case CLASS_BLOOD_MAGE:
-        case CLASS_SORCERER:
-            if (plev > 24)
-            {
-                info[i++] = "You can absorb charges from an item (cost 1).";
-            }
-            break;
-        case CLASS_PRIEST:
-            if (is_good_realm(p_ptr->realm1))
-            {
-                if (plev > 34)
-                {
-                    info[i++] = "You can bless a weapon (cost 70).";
-                }
-            }
-            else
-            {
-                if (plev > 41)
-                {
-                    info[i++] = "You can damages all monsters in sight (cost 40).";
-                }
-            }
-            break;
-        case CLASS_RANGER:
-            if (plev > 14)
-            {
-                info[i++] = "You can probe monsters (cost 20).";
-            }
-            break;
-        case CLASS_PALADIN:
-            if (is_good_realm(p_ptr->realm1))
-            {
-                if (plev > 29)
-                {
-                    info[i++] = "You can fires a holy spear (cost 30).";
-                }
-            }
-            else
-            {
-                if (plev > 29)
-                {
-                    info[i++] = "You can fires a spear which drains vitality (cost 30).";
-                }
-            }
-            break;
-        case CLASS_WARRIOR_MAGE:
-            if (plev > 24)
-            {
-                info[i++] = "You can convert HP to SP (cost 0).";
-                info[i++] = "You can convert SP to HP (cost 0).";
-            }
-            break;
-        case CLASS_CHAOS_WARRIOR:
-            if (plev > 39)
-            {
-                info[i++] = "You can radiate light which confuses nearby monsters (cost 50).";
-            }
-            break;
-        case CLASS_MONK:
-            if (plev > 24)
-            {
-                info[i++] = "You can assume a posture of special form (cost 0).";
-            }
-            if (plev > 29)
-            {
-                info[i++] = "You can perform double attacks in a time (cost 30).";
-            }
-            break;
-        case CLASS_MINDCRAFTER:
-        case CLASS_FORCETRAINER:
-            if (plev > 14)
-            {
-                info[i++] = "You can concentrate to regenerate your mana (cost 0).";
-            }
-            break;
-        case CLASS_TOURIST:
-                info[i++] = "You can take a photograph (cost 0).";
-            if (plev > 24)
-            {
-                info[i++] = "You can *identify* items (cost 20).";
-            }
-            break;
-        case CLASS_IMITATOR:
-            if (plev > 29)
-            {
-                info[i++] = "You can imitate monster's special attacks with double damage (cost 100).";
-            }
-            break;
-        case CLASS_BEASTMASTER:
-            info[i++] = "You can dominate a monster (cost level/4).";
-            if (plev > 29)
-            {
-                info[i++] = "You can dominate living monsters in sight (cost (level+20)/4).";
-            }
-            break;
-        case CLASS_MAGIC_EATER:
-            info[i++] = "You can absorb a staff, wand or rod itself.";
-            break;
-        case CLASS_RED_MAGE:
-            if (plev > 47)
-            {
-                info[i++] = "You can cast two spells in one time (cost 20).";
-            }
-            break;
-        case CLASS_SAMURAI:
-            {
-                info[i++] = "You can concentrate to regenerate your mana.";
-            }
-            if (plev > 24)
-            {
-                info[i++] = "You can assume a posture of special form.";
-            }
-            break;
-        case CLASS_BLUE_MAGE:
-            info[i++] = "You can study spells which your enemy casts on you.";
-            break;
-        case CLASS_CAVALRY:
-            if (plev > 9)
-            {
-                info[i++] = "You can ride on a hostile monster forcibly to turn it into pet.";
-            }
-            break;
-        case CLASS_BERSERKER:
-            if (plev > 9)
-            {
-            info[i++] = "You can travel between town and the depths.";
-            }
-            break;
-        case CLASS_MIRROR_MASTER:
-                info[i++] = "You can create a Mirror (cost 2).";
-                info[i++] = "You can break distant Mirrors (cost 0).";
-            break;
-        case CLASS_NINJA:
-            if (plev > 19)
-            {
-                info[i++] = "You can walk extremery fast.";
-            }
-            break;
-    }
-
     /* TODO: List Mutations */
 
     if (p_ptr->blind)
@@ -4249,7 +3888,7 @@ bool teleport_swap(int dir)
     if (p_ptr->anti_tele)
     {
         msg_print("A mysterious force prevents you from teleporting!");
-
+        equip_learn_flag(TR_NO_TELE);
         return FALSE;
     }
 
@@ -4683,7 +4322,10 @@ bool activate_ty_curse(bool stop_ty, int *count)
                 msg_print("You feel like a statue!");
 
                 if (p_ptr->free_act)
+                {
                     set_paralyzed(randint1(2), FALSE);
+                    equip_learn_flag(TR_FREE_ACT);
+                }
                 else
                     set_paralyzed(randint1(13), FALSE);
                 stop_ty = TRUE;

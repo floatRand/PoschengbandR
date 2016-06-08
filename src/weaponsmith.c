@@ -412,11 +412,11 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
     int          i,j;
     int          div = 1;
     int          mult = o_ptr->number;
-    u32b         old_flgs[TR_FLAG_SIZE], new_flgs[TR_FLAG_SIZE];
+    u32b         old_flgs[TR_FLAG_ARRAY_SIZE], new_flgs[TR_FLAG_ARRAY_SIZE];
     object_type  old_obj = *o_ptr;
     object_type  new_obj = {0};
 
-    object_flags(&old_obj, old_flgs);
+    obj_flags(&old_obj, old_flgs);
 
     /* Mundanity */
     object_prep(&new_obj, o_ptr->k_idx);
@@ -426,10 +426,8 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
     new_obj.marked = old_obj.marked;
     new_obj.number = old_obj.number;
     if (old_obj.tval == TV_DRAG_ARMOR) new_obj.timeout = old_obj.timeout;
-    new_obj.ident |= (IDENT_FULL);
-    object_aware(&new_obj);
-    object_known(&new_obj);
-    object_flags(&new_obj, new_flgs);
+    obj_identify_fully(&new_obj);
+    obj_flags(&new_obj, new_flgs);
 
     /* Ammo and Curses */
     if (o_ptr->curse_flags & (TRC_CURSED | TRC_HEAVY_CURSE | TRC_PERMA_CURSE)) div++;
@@ -515,7 +513,7 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
 
 static void _remove(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
 
     if (o_ptr->xtra3 == 1+_ESSENCE_SPECIAL)
     {
@@ -543,8 +541,8 @@ static void _remove(object_type *o_ptr)
         if (o_ptr->mult < 100) o_ptr->dd = 100;
     }
     o_ptr->xtra3 = 0;
-    object_flags(o_ptr, flgs);
-    if (!have_pval_flags(flgs))
+    obj_flags(o_ptr, flgs);
+    if (!have_pval_flag(flgs))
         o_ptr->pval = 0;
 }
 
@@ -645,7 +643,7 @@ static int _smith_add_slaying(object_type *o_ptr);
      from the predicted results.
  */
 static string_ptr _spy_results = NULL;
-static u32b       _spy_known_flags[TR_FLAG_SIZE];
+static u32b       _spy_known_flags[TR_FLAG_ARRAY_SIZE];
 static void _absorb_one_spy(_essence_info_ptr info, int amt)
 {
     assert(info);
@@ -678,7 +676,7 @@ static int _smith_absorb(object_type *o_ptr)
 
     if (object_is_known(o_ptr))
     {
-        object_flags_known(o_ptr, _spy_known_flags);
+        obj_flags_known(o_ptr, _spy_known_flags);
 
         spy_before = string_alloc();
         _spy_results = spy_before;
@@ -843,8 +841,8 @@ static int _smith_enchant_armor(object_type *o_ptr)
     int    cost_a = 0;
 
     {
-        u32b   flgs[TR_FLAG_SIZE];
-        object_flags(o_ptr, flgs); /* don't use object_flags_known ... it is broken for TR_IGNORE_ACID */
+        u32b   flgs[TR_FLAG_ARRAY_SIZE];
+        obj_flags(o_ptr, flgs); /* don't use object_flags_known ... it is broken for TR_IGNORE_ACID */
         if (!have_flag(flgs, TR_IGNORE_ACID))
         {
             can_rustproof = TRUE;
@@ -932,6 +930,7 @@ static int _smith_enchant_armor(object_type *o_ptr)
             if (can_rustproof && avail_rustproof >= _COST_RUSTPROOF)
             {
                 add_flag(o_ptr->art_flags, TR_IGNORE_ACID);
+                add_flag(o_ptr->known_flags, TR_IGNORE_ACID);
                 can_rustproof = FALSE;
                 _add_essence(TR_IGNORE_ACID, -_COST_RUSTPROOF);
             }
@@ -1238,10 +1237,10 @@ static int _smith_add_essence(object_type *o_ptr, int type)
        the required type, and we avoid adding a redundant ability
        (that the player is aware of) */
     {
-        u32b flgs[TR_FLAG_SIZE];
+        u32b flgs[TR_FLAG_ARRAY_SIZE];
         int  i;
 
-        object_flags_known(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs);
 
         for (i = 0; i < _MAX_INFO_PER_TYPE; i++)
         {
@@ -1652,10 +1651,10 @@ static int _smith_add_pval(object_type *o_ptr, int type)
        the required type, and we avoid adding a redundant ability
        (that the player is aware of) */
     {
-        u32b flgs[TR_FLAG_SIZE];
+        u32b flgs[TR_FLAG_ARRAY_SIZE];
         int  i;
 
-        object_flags_known(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs);
 
         for (i = 0; i < _MAX_INFO_PER_TYPE; i++)
         {
@@ -1929,8 +1928,8 @@ static int _smith_add_pval(object_type *o_ptr, int type)
 static void _character_dump_aux(doc_ptr doc);
 static bool _can_enchant(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
-    object_flags(o_ptr, flgs);
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_NO_ENCHANT)) /* Harps, Guns, Runeswords, Kamikaze Robes, etc. */
         return FALSE;
     return TRUE;
@@ -2206,10 +2205,7 @@ static bool _smithing(void)
     {
         identify_item(o_ptr);
         if (p_ptr->lev >= 30)
-        {
-            o_ptr->ident |= IDENT_FULL;
-            ego_aware(o_ptr);
-        }
+            obj_identify_fully(o_ptr);
     }
     old_obj = *o_ptr;
 
@@ -2536,7 +2532,7 @@ class_t *weaponsmith_get_class(void)
     return &me;
 }
 
-void weaponsmith_object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_SIZE])
+void weaponsmith_object_flags(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (object_is_smith(o_ptr))
     {

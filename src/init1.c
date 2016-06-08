@@ -2701,8 +2701,8 @@ errr parse_k_info(char *buf, header *head)
         if (!k_ptr->activation.type)
         {
             errr rc = effect_parse(buf + 2, &k_ptr->activation);
-            if (rc) 
-                return rc;
+            if (rc) return rc;
+            add_flag(k_ptr->flags, TR_ACTIVATE); /* for object lore */
         }
         /* Second E: line is optional and describes the activation. */
         else if (!k_ptr->activation_msg)
@@ -2966,8 +2966,8 @@ errr parse_a_info(char *buf, header *head)
         if (!a_ptr->activation.type)
         {
             errr rc = effect_parse(buf + 2, &a_ptr->activation);
-            if (rc) 
-                return rc;
+            if (rc) return rc;
+            add_flag(a_ptr->flags, TR_ACTIVATE); /* for object lore */
         }
         /* Second E: line is optional and describes the activation. */
         else if (!a_ptr->activation_msg)
@@ -3086,7 +3086,7 @@ errr parse_a_info(char *buf, header *head)
 /*
  * Grab one flag in a ego-item_type from a textual string
  */
-static bool grab_one_ego_item_flag(ego_item_type *e_ptr, cptr what)
+static bool grab_one_ego_item_flag(ego_type *e_ptr, cptr what)
 {
     int i;
 
@@ -3145,7 +3145,7 @@ errr parse_e_info(char *buf, header *head)
     char *s, *t;
 
     /* Current entry */
-    static ego_item_type *e_ptr = NULL;
+    static ego_type *e_ptr = NULL;
 
 
     /* Just before the first record */
@@ -3194,8 +3194,8 @@ errr parse_e_info(char *buf, header *head)
     else if (buf[0] == 'E')
     {
         errr rc = effect_parse(buf + 2, &e_ptr->activation);
-        if (rc) 
-            return rc;
+        if (rc) return rc;
+        add_flag(e_ptr->flags, TR_ACTIVATE); /* for object lore */
     }
     /* W:MinDepth:MaxDepth:Rarity 
        W:30:*:32                  */

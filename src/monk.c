@@ -577,7 +577,7 @@ void monk_posture_calc_stats(s16b stats[MAX_STATS])
     }
 }
 
-void monk_posture_get_flags(u32b flgs[TR_FLAG_SIZE])
+void monk_posture_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->special_defense & KAMAE_GENBU)
         add_flag(flgs, TR_REFLECT);
@@ -618,7 +618,7 @@ static void _calc_stats(s16b stats[MAX_STATS])
     monk_posture_calc_stats(stats);
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     monk_posture_get_flags(flgs);
     if (!heavy_armor())

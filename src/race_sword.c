@@ -110,8 +110,8 @@ static bool _absorb(object_type *o_ptr)
     int i;
     int div = 1;
     object_kind *k_ptr = &k_info[o_ptr->k_idx];
-    u32b flags[TR_FLAG_SIZE];
-    object_flags(o_ptr, flags);
+    u32b flags[TR_FLAG_ARRAY_SIZE];
+    obj_flags(o_ptr, flags);
 
     if (o_ptr->curse_flags & TRC_AGGRAVATE)
         div++;
@@ -228,7 +228,7 @@ static int _calc_stat_bonus(int flag)
     return _calc_amount(_essences[flag], 3, 1);
 }
 
-static void _add_stat_flag(int flag, u32b flgs[TR_FLAG_SIZE])
+static void _add_stat_flag(int flag, u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (_calc_stat_bonus(flag))
         add_flag(flgs, flag);
@@ -346,7 +346,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     int to_dd = _calc_amount(_essences[_ESSENCE_XTRA_DICE], _rank_decay(64), 1);
     int blows = _calc_amount(_essences[TR_BLOWS], _rank_decay(32), 1);
 
-    for (i = 0; i < TR_FLAG_SIZE; i++)
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
         o_ptr->art_flags[i] = 0;
 
     add_flag(o_ptr->art_flags, TR_NO_REMOVE);
@@ -500,7 +500,7 @@ static void _calc_stats(s16b stats[MAX_STATS])
         stats[i] += _calc_stat_bonus(TR_STR + i);
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     int i;
 
@@ -753,9 +753,7 @@ static void _upgrade_weapon(int tval, int sval)
     o_ptr->to_d = p_ptr->lev / 3;
 
     add_flag(o_ptr->art_flags, TR_NO_REMOVE);
-    object_aware(o_ptr);
-    object_known(o_ptr);
-    o_ptr->ident |= IDENT_FULL;
+    obj_identify_fully(o_ptr);
 
     p_ptr->update |= PU_BONUS;
     p_ptr->window |= PW_INVEN | PW_EQUIP;

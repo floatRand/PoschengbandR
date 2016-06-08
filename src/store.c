@@ -247,7 +247,7 @@ static bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
     if (object_is_artifact(o_ptr) || object_is_artifact(j_ptr)) return (0);
 
     /* Hack -- Identical art_flags! */
-    for (i = 0; i < TR_FLAG_SIZE; i++)
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
         if (o_ptr->art_flags[i] != j_ptr->art_flags[i]) return (0);
 
     /* Hack -- Never stack "powerful" items */
@@ -383,8 +383,8 @@ static int store_check_num(object_type *o_ptr)
 
 static bool is_blessed(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
-    object_flags(o_ptr, flgs);
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_BLESSED)) return (TRUE);
     else return (FALSE);
 }
@@ -1500,7 +1500,7 @@ static void store_create(void)
         if (!_get_store_obj(&forge)) continue;
 
         /* The item is "known" */
-        object_known(&forge);
+        obj_identify(&forge);
 
         /* Mark it storebought */
         forge.ident |= IDENT_STORE;
@@ -2074,10 +2074,6 @@ static void store_purchase(void)
                 /* Update the display */
                 store_prt_gold();
 
-                /* Hack -- buying an item makes you aware of it */
-                object_aware(j_ptr);
-                ego_aware(j_ptr);
-
                 /* Hack -- clear the "fixed" flag from the item */
                 j_ptr->ident &= ~(IDENT_FIXED);
 
@@ -2088,6 +2084,9 @@ static void store_purchase(void)
                 j_ptr->feeling = FEEL_NONE;
                 j_ptr->ident &= ~(IDENT_STORE);
                 j_ptr->marked &= ~(OM_RESERVED);
+
+                /* Hack -- buying an item makes you aware of it */
+                obj_identify_fully(j_ptr);
 
                 /* Give it to the player */
                 stats_on_purchase(j_ptr);
@@ -2453,7 +2452,7 @@ static void store_sell(void)
 
             /* The store gets that (known) item */
             item_pos = store_carry(q_ptr);
-            ego_aware(q_ptr);
+            obj_identify_fully(q_ptr);
 
             /* Re-display if item is now in store */
             if (item_pos >= 0)
@@ -2481,10 +2480,8 @@ static void store_sell(void)
         if (!get_check(format("Really give %s to the Museum? ", o2_name))) return;
 
         /* Identify it */
-        stats_on_sell(o_ptr); /* before identify, please! */
-        identify_item(q_ptr);
-        q_ptr->ident |= IDENT_FULL;
-        ego_aware(q_ptr);
+        stats_on_sell(o_ptr); /* before identify, please! ... Why? */
+        obj_identify_fully(o_ptr);
 
         /* Distribute charges of wands/rods */
         distribute_charges(o_ptr, q_ptr, amt);
@@ -2551,7 +2548,6 @@ static void store_examine(void)
     int         i;
     int         item;
     object_type *o_ptr;
-    char        o_name[MAX_NLEN];
     char        out_val[160];
 
 
@@ -2580,7 +2576,6 @@ static void store_examine(void)
     /* Prompt */
     sprintf(out_val, "Which item do you want to examine? ");
 
-
     /* Get the item number to be examined */
     if (!get_stock(&item, out_val, 0, i - 1)) return;
 
@@ -2590,26 +2585,9 @@ static void store_examine(void)
     /* Get the actual item */
     o_ptr = &st_ptr->stock[item];
 
-    /* Require full knowledge */
-    if (!(o_ptr->ident & IDENT_FULL))
-    {
-        /* This can only happen in the home */
-        msg_print("You have no special knowledge about that item.");
-
-        return;
-    }
-
-    /* Description */
-    object_desc(o_name, o_ptr, 0);
-
-    /* Describe
-    msg_format("Examining %s...", o_name);*/
-
-
-    /* Describe it fully */
-    ego_aware(o_ptr);
+    if (cur_store_num != STORE_HOME)
+        obj_identify_fully(o_ptr);
     obj_display(o_ptr);
-
     return;
 }
 
@@ -3727,12 +3705,12 @@ static void _buyout(void)
             total_price += price;
             store_prt_gold();
 
-            object_aware(j_ptr);
             j_ptr->ident &= ~(IDENT_FIXED);
             j_ptr->inscription = 0;
             j_ptr->feeling = FEEL_NONE;
             j_ptr->ident &= ~(IDENT_STORE);
             j_ptr->marked &= ~(OM_RESERVED);
+            obj_identify_fully(j_ptr);
 
             if (!destroy)
             {

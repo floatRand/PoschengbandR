@@ -378,7 +378,7 @@ static void _undead_calc_stats(s16b stats[MAX_STATS])
     stats[A_CON] += 3 * p_ptr->lev/50;
 }
 
-static void _undead_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _undead_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_COLD);
     if (p_ptr->lev >= 15)
@@ -511,7 +511,7 @@ static void _dragon_calc_stats(s16b stats[MAX_STATS])
     stats[A_STR] += 3 * p_ptr->lev/50;
 }
 
-static void _dragon_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _dragon_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_FEAR);
     if (p_ptr->lev >= 30)
@@ -1077,7 +1077,7 @@ static void _angel_calc_stats(s16b stats[MAX_STATS])
     stats[A_WIS] += 3 * p_ptr->lev/50;
 }
 
-static void _angel_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _angel_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_LEVITATION);
     if (p_ptr->lev >= 15)
@@ -1183,7 +1183,7 @@ static void _demon_calc_stats(s16b stats[MAX_STATS])
     stats[A_INT] += 3 * p_ptr->lev/50;
 }
 
-static void _demon_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _demon_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_FIRE);
     if (p_ptr->lev >= 10) add_flag(flgs, TR_DEVICE_POWER);
@@ -1286,7 +1286,7 @@ static void _hound_calc_stats(s16b stats[MAX_STATS])
     stats[A_DEX] += 3 * p_ptr->lev/50;
 }
 
-static void _hound_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _hound_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 10)
         add_flag(flgs, TR_SPEED);
@@ -1433,7 +1433,7 @@ static void _spider_calc_stats(s16b stats[MAX_STATS])
     stats[A_DEX] += 3 * p_ptr->lev/50;
 }
 
-static void _spider_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _spider_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 8)
         add_flag(flgs, TR_SPEED);
@@ -1664,7 +1664,7 @@ static void _giant_calc_stats(s16b stats[MAX_STATS])
     stats[A_CON] += 3 * p_ptr->lev/50;
 }
 
-static void _giant_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _giant_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 30)
         add_flag(flgs, TR_RES_SOUND);

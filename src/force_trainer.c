@@ -553,7 +553,7 @@ static void _calc_bonuses(void)
     monk_ac_bonus();
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (!heavy_armor())
     {

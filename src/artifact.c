@@ -45,8 +45,8 @@ static int artifact_bias;
  */
 static bool _add_bad_flag(object_type *o_ptr, int bad_flag, int good_flag)
 {
-    u32b flags[TR_FLAG_SIZE];
-    object_flags(o_ptr, flags); /* Careful: Might be a cursed ego! */
+    u32b flags[TR_FLAG_ARRAY_SIZE];
+    obj_flags(o_ptr, flags); /* Careful: Might be a cursed ego! */
     if (!have_flag(flags, good_flag))
     {
         add_flag(o_ptr->art_flags, bad_flag);
@@ -1901,7 +1901,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     o_ptr->name2 = 0;
     o_ptr->name3 = 0;
 
-    for (i = 0; i < TR_FLAG_SIZE; i++)
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
         o_ptr->art_flags[i] |= k_info[o_ptr->k_idx].flags[i];
 
     if (o_ptr->pval) has_pval = TRUE;
@@ -2683,7 +2683,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     add_flag(o_ptr->art_flags, TR_IGNORE_FIRE);
     add_flag(o_ptr->art_flags, TR_IGNORE_COLD);
 
-    if ( !have_flag(o_ptr->art_flags, TR_ACTIVATE)
+    if ( !obj_has_effect(o_ptr)
       && !object_is_ammo(o_ptr) )
     {
         int odds = object_is_armour(o_ptr) ? ACTIVATION_CHANCE * 2 : ACTIVATION_CHANCE;
@@ -2809,13 +2809,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         char dummy_name[80] = "";
         cptr ask_msg = "What do you want to call the artifact? ";
 
-        /* Identify it fully */
-        object_aware(o_ptr);
-        object_known(o_ptr);
-
-        /* Mark the item as fully known */
-        o_ptr->ident |= (IDENT_FULL);
-
+        obj_identify_fully(o_ptr);
         obj_display(o_ptr);
 
         if (!get_string(ask_msg, dummy_name, sizeof dummy_name)
@@ -2860,7 +2854,7 @@ void get_bloody_moon_flags(object_type *o_ptr)
 {
     int dummy, i;
 
-    for (i = 0; i < TR_FLAG_SIZE; i++)
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
         o_ptr->art_flags[i] = a_info[ART_BLOOD].flags[i];
 
     dummy = randint1(2) + randint1(2);

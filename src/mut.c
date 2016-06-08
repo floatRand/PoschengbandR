@@ -275,7 +275,7 @@ void mut_calc_bonuses(void)
     var_clear(&v);
 }
 
-void mut_get_flags(u32b flgs[TR_FLAG_SIZE])
+void mut_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     /* Unfortunately, there is no way to send a SPELL_GET_FLAGS
        event to our mutation "objects" ... So we need to delocalize

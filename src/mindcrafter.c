@@ -598,7 +598,7 @@ static void _calc_bonuses(void)
     if (p_ptr->lev >= 40) p_ptr->telepathy = TRUE;
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 10)
         add_flag(flgs, TR_RES_FEAR);

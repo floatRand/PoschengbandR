@@ -44,9 +44,7 @@ void stats_add_rand_art(object_type *o_ptr)
     {
         object_type *copy = malloc(sizeof(object_type));
         *copy = *o_ptr;
-        object_aware(copy);
-        object_known(copy);
-        copy->ident |= IDENT_FULL;
+        obj_identify_fully(copy);
         vec_add(stats_rand_arts(), copy);
     }
 }
@@ -57,9 +55,7 @@ void stats_add_ego(object_type *o_ptr)
     {
         object_type *copy = malloc(sizeof(object_type));
         *copy = *o_ptr;
-        object_aware(copy);
-        object_known(copy);
-        copy->ident |= IDENT_FULL;
+        obj_identify_fully(copy);
         vec_add(stats_egos(), copy);
     }
 }
@@ -1439,11 +1435,11 @@ static void do_cmd_wiz_change(void)
 static void wiz_display_item(object_type *o_ptr)
 {
     int i, j = 13;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     char buf[256];
 
     /* Extract the flags */
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
 
     /* Clear the screen */
     for (i = 1; i <= 23; i++) prt("", i, j - 2);
@@ -2791,8 +2787,8 @@ static void _wiz_stats_log_obj(int level, object_type *o_ptr)
 }
 static void _wiz_stats_log_speed(int level, object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
-    object_flags(o_ptr, flgs);
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_SPEED) && !object_is_artifact(o_ptr))
         _wiz_stats_log_obj(level, o_ptr);
 }
@@ -3203,8 +3199,7 @@ void do_cmd_debug(void)
                 if (o_list[i].tval == TV_GOLD) continue;
                 ct += o_list[i].number;
                 identify_item(&o_list[i]);
-                o_list[i].ident |= IDENT_FULL;
-                ego_aware(&o_list[i]);
+                obj_identify_fully(&o_list[i]);
                 if (o_list[i].name1 || o_list[i].name2)
                 {
                     object_desc(buf, &o_list[i], 0);
@@ -3368,8 +3363,7 @@ void do_cmd_debug(void)
             }*/
 
             identify_item(&forge);
-            forge.ident |= IDENT_FULL;
-            ego_aware(&forge);
+            obj_identify_fully(&forge);
 
             object_desc(buf, &forge, 0);
             fail = device_calc_fail_rate(&forge);

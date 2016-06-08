@@ -203,7 +203,7 @@ static int _aphrodite_get_powers(spell_info* spells, int max)
 {
     return get_powers_aux(spells, max, _aphrodite_powers);
 }
-static void _aphrodite_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _aphrodite_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SUST_CHR);
 }
@@ -228,7 +228,7 @@ static int _apollo_get_powers(spell_info* spells, int max)
 {
     return get_powers_aux(spells, max, _apollo_powers);
 }
-static void _apollo_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _apollo_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_BLIND);
     add_flag(flgs, TR_IM_LITE);
@@ -267,7 +267,7 @@ static int _ares_get_powers(spell_info* spells, int max)
 {
     return get_powers_aux(spells, max, _ares_powers);
 }
-static void _ares_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _ares_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SUST_STR);
 }
@@ -281,7 +281,7 @@ static void _artemis_calc_bonuses(void)
     p_ptr->shooter_info.dis_to_d += 1 + p_ptr->lev/7;
     p_ptr->sustain_dex = TRUE;
 }
-static void _artemis_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _artemis_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SUST_DEX);
 }
@@ -293,7 +293,7 @@ static void _athena_calc_bonuses(void)
 {
     p_ptr->sustain_int = TRUE;
 }
-static void _athena_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _athena_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SUST_INT);
 }
@@ -317,7 +317,7 @@ static int _demeter_get_powers(spell_info* spells, int max)
 {
     return get_powers_aux(spells, max, _demeter_powers);
 }
-static void _demeter_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _demeter_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_REGEN);
     add_flag(flgs, TR_SLOW_DIGEST);
@@ -334,7 +334,7 @@ static void _hades_calc_bonuses(void)
     p_ptr->hold_life = TRUE;
     p_ptr->sustain_con = TRUE;
 }
-static void _hades_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _hades_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_NETHER);
     add_flag(flgs, TR_HOLD_LIFE);
@@ -348,7 +348,7 @@ static void _hephaestus_calc_bonuses(void)
 {
     res_add(RES_DISEN);
 }
-static void _hephaestus_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _hephaestus_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_DISEN);
 }
@@ -371,7 +371,7 @@ static int _hera_get_powers(spell_info* spells, int max)
 {
     return get_powers_aux(spells, max, _hera_powers);
 }
-static void _hera_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _hera_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SPELL_CAP);
 }
@@ -383,7 +383,7 @@ static void _hermes_calc_bonuses(void)
 {
     p_ptr->pspeed += 5 * p_ptr->lev/50;
 }
-static void _hermes_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _hermes_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 10)
         add_flag(flgs, TR_SPEED);
@@ -402,7 +402,7 @@ static void _poseidon_calc_bonuses(void)
     if (p_ptr->lev >= 20)
         res_add(RES_ELEC);
 }
-static void _poseidon_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _poseidon_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 5)
         add_flag(flgs, TR_RES_ACID);
@@ -419,7 +419,7 @@ static void _zeus_calc_bonuses(void)
     res_add(RES_ELEC);
     p_ptr->sh_elec = TRUE;
 }
-static void _zeus_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _zeus_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_ELEC);
     add_flag(flgs, TR_SH_ELEC);

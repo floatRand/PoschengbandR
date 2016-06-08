@@ -1,4 +1,4 @@
-# File: a_info.txt
+# File: a_info.txt (Touch)
 # This file is used to initialize the "lib/raw/a_info.raw" file, which
 # is used to initialize the "artifact" information for the Angband game.
 

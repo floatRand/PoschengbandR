@@ -340,9 +340,9 @@ static void _equippy_heading(doc_ptr doc, cptr heading, int col)
 }
 
 typedef struct {
-    u32b py_flgs[TR_FLAG_SIZE];
-    u32b tim_py_flgs[TR_FLAG_SIZE];
-    u32b obj_flgs[EQUIP_MAX_SLOTS][TR_FLAG_SIZE];
+    u32b py_flgs[TR_FLAG_ARRAY_SIZE];
+    u32b tim_py_flgs[TR_FLAG_ARRAY_SIZE];
+    u32b obj_flgs[EQUIP_MAX_SLOTS][TR_FLAG_ARRAY_SIZE];
 } _flagzilla_t, *_flagzilla_ptr;
 
 static _flagzilla_ptr _flagzilla_alloc(void)
@@ -360,7 +360,7 @@ static _flagzilla_ptr _flagzilla_alloc(void)
         object_type *o_ptr = equip_obj(slot);
 
         if (o_ptr)
-            object_flags_known(o_ptr, flagzilla->obj_flgs[i]);
+            obj_flags_known(o_ptr, flagzilla->obj_flgs[i]);
     }
 
     return flagzilla;
@@ -1724,7 +1724,7 @@ static void _group_counts_tval_imp(doc_ptr doc, int tval, cptr text)
 
 static void _ego_counts_imp(doc_ptr doc, int idx, cptr text)
 {
-    ego_item_type *e_ptr = &e_info[idx];
+    ego_type *e_ptr = &e_info[idx];
 
     if (e_ptr->counts.found || e_ptr->counts.bought || e_ptr->counts.destroyed)
     {

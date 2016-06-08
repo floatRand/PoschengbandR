@@ -604,10 +604,8 @@ void do_cmd_inspect(void)
         }
 
 
-        /* Note, descriptions for potions, scrolls, wands, staves and rods all spoil
-           the object's effects. Some of the light and jewelry descriptions are also TMI.
-           Descriptions for weapons and armor should always be displayed. */
-        if (!object_is_weapon_armour_ammo(o_ptr) && !object_is_known(o_ptr))
+        /* Note, some descriptions (potions, scrolls, mushrooms) spoil the object's effects. */
+        if ( object_is_flavor(o_ptr) && !object_is_known(o_ptr))
         {
             msg_print("You have no special knowledge about that item.");
             return;

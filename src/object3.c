@@ -26,7 +26,7 @@ static double _calc_cost(double cost, int count)
     return cost * (1.0 + c/5.0 + c*c/25.0);
 }
 
-static double _check_flag_and_score(u32b flgs[TR_FLAG_SIZE], u32b flg, u32b score, int *count)
+static double _check_flag_and_score(u32b flgs[TR_FLAG_ARRAY_SIZE], u32b flg, u32b score, int *count)
 {
     double result = 0.0;
     if (have_flag(flgs, flg))
@@ -49,7 +49,7 @@ static s32b _activation_p(object_type *o_ptr)
 }
 
 
-static s32b _aura_p(u32b flgs[TR_FLAG_SIZE])
+static s32b _aura_p(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     s32b cost = 0;
     int count = 0;
@@ -63,7 +63,7 @@ static s32b _aura_p(u32b flgs[TR_FLAG_SIZE])
     return cost;
 }
 
-static s32b _stats_q(u32b flgs[TR_FLAG_SIZE], int pval)
+static s32b _stats_q(u32b flgs[TR_FLAG_ARRAY_SIZE], int pval)
 {
     s32b cost = 0;
     int count = 0;
@@ -122,7 +122,7 @@ static s32b _speed_p(int pval)
     return 1000 * mult;
 }
 
-static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
+static s32b _abilities_q(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     double cost = 0.0;
     int count = 0;
@@ -177,7 +177,7 @@ static s32b _abilities_q(u32b flgs[TR_FLAG_SIZE])
 
 }
 
-static s32b _brands_q(u32b flgs[TR_FLAG_SIZE])
+static s32b _brands_q(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     double cost = 0.0;
     int count = 0;
@@ -191,7 +191,7 @@ static s32b _brands_q(u32b flgs[TR_FLAG_SIZE])
     return (u32b) cost;
 }
 
-static s32b _resistances_q(u32b flgs[TR_FLAG_SIZE])
+static s32b _resistances_q(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     double cost = 0.0;
     int count = 0;
@@ -248,7 +248,7 @@ static s32b _resistances_q(u32b flgs[TR_FLAG_SIZE])
     return (u32b) cost;
 }
 
-s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_SIZE], object_type *o_ptr)
+s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_ARRAY_SIZE], object_type *o_ptr)
 {
     char dbg_msg[512];
     s32b y;
@@ -408,13 +408,13 @@ s32b jewelry_cost(object_type *o_ptr, int options)
 {
     s32b j, y, q, p;
     int  to_h = 0, to_d = 0, to_a = 0, pval = 0;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     char dbg_msg[512];
 
     if (options & COST_REAL)
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
     else
-        object_flags_known(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs);
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
@@ -640,13 +640,13 @@ s32b lite_cost(object_type *o_ptr, int options)
 {
     s32b j, y, q, p;
     int  pval = 0;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     char dbg_msg[512];
 
     if (options & COST_REAL)
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
     else
-        object_flags_known(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs);
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
         pval = o_ptr->pval;
@@ -776,13 +776,13 @@ s32b armor_cost(object_type *o_ptr, int options)
 {
     s32b a, y, q, p;
     int  to_h = 0, to_d = 0, to_a = 0, pval = 0;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     char dbg_msg[512];
 
     if (options & COST_REAL)
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
     else
-        object_flags_known(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs);
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
@@ -969,7 +969,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
 {
     s32b y, w, p, q;
     int  to_h = 0, to_d = 0, to_a = 0, pval = 0;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     char dbg_msg[512];
 
     /* Hacks for objects with "hidden" powers */
@@ -979,9 +979,9 @@ s32b weapon_cost(object_type *o_ptr, int options)
         return 1;
 
     if (options & COST_REAL)
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
     else
-        object_flags_known(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs);
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
@@ -1282,13 +1282,13 @@ s32b bow_cost(object_type *o_ptr, int options)
 {
     s32b y, w, p, q, t;
     int  to_h = 0, to_a = 0, pval = 0;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     char dbg_msg[512];
 
     if (options & COST_REAL)
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
     else
-        object_flags_known(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs);
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {

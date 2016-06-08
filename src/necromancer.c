@@ -540,7 +540,7 @@ static void _calc_bonuses(void)
     if (p_ptr->lev >= 35) res_add(RES_POIS);
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 5) add_flag(flgs, TR_RES_COLD);
     if (p_ptr->lev >= 15) add_flag(flgs, TR_SEE_INVIS);

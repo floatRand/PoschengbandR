@@ -344,7 +344,7 @@ static void _calc_bonuses(void)
     if (!disrupt && p_ptr->lev >= 50)
         p_ptr->peerless_stealth = TRUE;
 }
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 35)
         add_flag(flgs, TR_TELEPATHY);

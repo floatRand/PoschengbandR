@@ -477,11 +477,7 @@ static void spoil_artifact_desc(void)
 
             if (!make_fake_artifact(&forge, j)) continue;
 
-            /*No Stats Tracking, please!!!
-            identify_item(&forge);*/
-            object_aware(&forge);
-            object_known(&forge);
-            forge.ident |= IDENT_FULL;
+            obj_identify_fully(&forge);
 
             obj_display_doc(&forge, doc);
             doc_newline(doc);
@@ -542,11 +538,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
             if (!p_ptr->wizard && (a_info[i].gen_flags & TRG_QUESTITEM)) continue;
             if (!create_named_art_aux(i, &forge)) continue;
 
-            /*No Stats Tracking, please!!!
-            identify_item(&forge);*/
-            object_aware(&forge);
-            object_known(&forge);
-            forge.ident |= IDENT_FULL;
+            obj_identify_fully(&forge);
 
             if ((options & _SPOIL_EGOS) && !a_info[i].cur_num) continue; /* Hack */
             if (pred && !pred(&forge)) continue;

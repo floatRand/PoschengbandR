@@ -125,7 +125,7 @@ static void _calc_bonuses(void)
     p_ptr->redraw |= PR_STATUS;
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_IM_FEAR);
     add_flag(flgs, TR_SUST_STR);

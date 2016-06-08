@@ -5406,6 +5406,7 @@ bool do_dec_stat(int stat)
         if (disturb_minor)
             msg_format("You feel %s for a moment, but the feeling passes.", desc_stat_neg[stat]);
 
+        equip_learn_flag(TR_SUST_STR + stat);
         return TRUE;
     }
 

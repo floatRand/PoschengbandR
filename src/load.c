@@ -125,6 +125,27 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
         case SAVE_ITEM_CURSE_FLAGS:
             o_ptr->curse_flags = savefile_read_u32b(file);
             break;
+        case SAVE_ITEM_KNOWN_FLAGS_0:
+            o_ptr->known_flags[0] = savefile_read_u32b(file);
+            break;
+        case SAVE_ITEM_KNOWN_FLAGS_1:
+            o_ptr->known_flags[1] = savefile_read_u32b(file);
+            break;
+        case SAVE_ITEM_KNOWN_FLAGS_2:
+            o_ptr->known_flags[2] = savefile_read_u32b(file);
+            break;
+        case SAVE_ITEM_KNOWN_FLAGS_3:
+            o_ptr->known_flags[3] = savefile_read_u32b(file);
+            break;
+        case SAVE_ITEM_KNOWN_FLAGS_4:
+            o_ptr->known_flags[4] = savefile_read_u32b(file);
+            break;
+        case SAVE_ITEM_KNOWN_FLAGS_5:
+            o_ptr->known_flags[5] = savefile_read_u32b(file);
+            break;
+        case SAVE_ITEM_KNOWN_CURSE_FLAGS:
+            o_ptr->known_curse_flags = savefile_read_u32b(file);
+            break;
         case SAVE_ITEM_RUNE_FLAGS:
             o_ptr->rune = savefile_read_u32b(file);
             break;
@@ -1367,18 +1388,59 @@ static errr rd_savefile_new_aux(savefile_ptr file)
         }
         for (i = 0; i < tmp16u; i++)
         {
-            byte           tmp8u;
-            ego_item_type *e_ptr = &e_info[i];
+            int       ct, j;
+            ego_type *e_ptr = &e_info[i];
 
-            tmp8u = savefile_read_byte(file);
+            ct = savefile_read_byte(file);
+            if (ct > TR_FLAG_ARRAY_SIZE)
+            {
+                note(format("Too many (%d) ego known flags!", ct));
+                return (22);
+            }
+            for (j = 0; j < ct; j++)
+                e_ptr->known_flags[j] = savefile_read_u32b(file);
+            for (j = ct; j < TR_FLAG_ARRAY_SIZE; j++)
+                e_ptr->known_flags[j] = 0;
 
-            e_ptr->aware = (tmp8u & 0x01) ? TRUE: FALSE;
+            ct = savefile_read_byte(file);
+            if (ct > TR_FLAG_ARRAY_SIZE)
+            {
+                note(format("Too many (%d) ego xtra flags!", ct));
+                return (22);
+            }
+            for (j = 0; j < ct; j++)
+                e_ptr->xtra_flags[j] = savefile_read_u32b(file);
+            for (j = ct; j < TR_FLAG_ARRAY_SIZE; j++)
+                e_ptr->xtra_flags[j] = 0;
 
             e_ptr->counts.generated = savefile_read_s32b(file);
             e_ptr->counts.found = savefile_read_s32b(file);
             e_ptr->counts.bought = savefile_read_s32b(file);
             /*e_ptr->counts.used = savefile_read_s32b(file);*/
             e_ptr->counts.destroyed = savefile_read_s32b(file);
+        }
+
+        tmp16u = savefile_read_u16b(file);
+        if (tmp16u > max_a_idx)
+        {
+            note(format("Too many (%u) artifacts!", tmp16u));
+            return (22);
+        }
+        for (i = 0; i < tmp16u; i++)
+        {
+            int            ct, j;
+            artifact_type *a_ptr = &a_info[i];
+
+            ct = savefile_read_byte(file);
+            if (ct > TR_FLAG_ARRAY_SIZE)
+            {
+                note(format("Too many (%d) artifact known flags!", ct));
+                return (22);
+            }
+            for (j = 0; j < ct; j++)
+                a_ptr->known_flags[j] = savefile_read_u32b(file);
+            for (j = ct; j < TR_FLAG_ARRAY_SIZE; j++)
+                a_ptr->known_flags[j] = 0;
         }
     }
     if (arg_fiddle) note("Loaded Object Memory");

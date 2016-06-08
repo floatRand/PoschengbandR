@@ -142,7 +142,7 @@ static void _cave_spider_calc_bonuses(void)
     res_add_vuln(RES_LITE);
     p_ptr->see_nocto = TRUE;
 }
-static void _cave_spider_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _cave_spider_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_POIS);
     add_flag(flgs, TR_RES_DARK);
@@ -204,7 +204,7 @@ static void _giant_spider_calc_bonuses(void)
     res_add(RES_POIS);
     p_ptr->see_nocto = TRUE;
 }
-static void _giant_spider_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _giant_spider_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_RES_POIS);
 }
@@ -310,7 +310,7 @@ static void _phase_spider_calc_bonuses(void)
     p_ptr->free_act = TRUE;
     p_ptr->see_nocto = TRUE;
 }
-static void _phase_spider_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _phase_spider_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_RES_NEXUS);
@@ -391,7 +391,7 @@ static void _aranea_calc_bonuses(void)
     p_ptr->free_act = TRUE;
     p_ptr->see_nocto = TRUE;
 }
-static void _aranea_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _aranea_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_RES_DARK);
@@ -474,7 +474,7 @@ static void _elder_aranea_calc_bonuses(void)
     p_ptr->regen += 100;
     p_ptr->see_nocto = TRUE;
 }
-static void _elder_aranea_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _elder_aranea_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SPEED);
     add_flag(flgs, TR_RES_FIRE);

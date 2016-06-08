@@ -490,7 +490,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     }
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_VULN_LITE);
 
@@ -751,7 +751,7 @@ static void _bat_calc_bonuses(void)
     p_ptr->pspeed += 5 + p_ptr->lev * 3 / 10;
     p_ptr->hold_life = TRUE;
 }
-static void _bat_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _bat_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_LEVITATION);
     add_flag(flgs, TR_SEE_INVIS);
@@ -825,7 +825,7 @@ static void _mist_calc_bonuses(void)
 
     p_ptr->magic_resistance = 50;
 }
-static void _mist_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _mist_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_LEVITATION);
     add_flag(flgs, TR_SEE_INVIS);
@@ -904,7 +904,7 @@ static void _wolf_calc_bonuses(void)
     p_ptr->see_nocto = TRUE;
     p_ptr->pspeed += 2 + p_ptr->lev / 10;
 }
-static void _wolf_get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _wolf_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     add_flag(flgs, TR_SPEED);
 }

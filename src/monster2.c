@@ -2325,6 +2325,7 @@ void sanity_blast(monster_type *m_ptr, bool necro)
         {
             (void)set_paralyzed(randint1(4), FALSE);
         }
+        else equip_learn_flag(TR_FREE_ACT);
         while (randint0(100) > p_ptr->skills.sav)
             (void)do_dec_stat(A_INT);
         while (randint0(100) > p_ptr->skills.sav)
@@ -2595,6 +2596,7 @@ void update_mon(int m_idx, bool full)
                         /* Detectable */
                         flag = TRUE;
                         mon_lore_aux_2(r_ptr, RF2_WEIRD_MIND | RF2_SMART | RF2_STUPID);
+                        equip_learn_flag(TR_TELEPATHY);
                     }
                 }
 
@@ -2604,6 +2606,7 @@ void update_mon(int m_idx, bool full)
                     /* Detectable */
                     flag = TRUE;
                     mon_lore_aux_2(r_ptr, RF2_SMART | RF2_STUPID);
+                    equip_learn_flag(TR_TELEPATHY);
                 }
             }
 
@@ -2628,6 +2631,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_ANIMAL);
+                equip_learn_flag(TR_ESP_ANIMAL);
             }
 
             /* Magical sensing */
@@ -2635,6 +2639,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_UNDEAD);
+                equip_learn_flag(TR_ESP_UNDEAD);
             }
 
             /* Magical sensing */
@@ -2642,6 +2647,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_DEMON);
+                equip_learn_flag(TR_ESP_DEMON);
             }
 
             /* Magical sensing */
@@ -2649,6 +2655,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_ORC);
+                equip_learn_flag(TR_ESP_ORC);
             }
 
             /* Magical sensing */
@@ -2656,6 +2663,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_TROLL);
+                equip_learn_flag(TR_ESP_TROLL);
             }
 
             /* Magical sensing */
@@ -2663,6 +2671,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_GIANT);
+                equip_learn_flag(TR_ESP_GIANT);
             }
 
             /* Magical sensing */
@@ -2670,6 +2679,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_DRAGON);
+                equip_learn_flag(TR_ESP_DRAGON);
             }
 
             /* Magical sensing */
@@ -2677,6 +2687,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_2(r_ptr, RF2_HUMAN);
+                equip_learn_flag(TR_ESP_HUMAN);
             }
 
             /* Magical sensing */
@@ -2684,6 +2695,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_EVIL);
+                equip_learn_flag(TR_ESP_EVIL);
             }
 
             /* Magical sensing */
@@ -2691,6 +2703,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_GOOD);
+                equip_learn_flag(TR_ESP_GOOD);
             }
 
             /* Magical sensing */
@@ -2699,6 +2712,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_NONLIVING);
+                equip_learn_flag(TR_ESP_NONLIVING);
             }
 
             /* Magical sensing */
@@ -2706,6 +2720,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_1(r_ptr, RF1_UNIQUE);
+                equip_learn_flag(TR_ESP_UNIQUE);
             }
             
             if (p_ptr->esp_magical && monster_magical(r_ptr))
@@ -2757,6 +2772,7 @@ void update_mon(int m_idx, bool full)
                     {
                         /* Easy to see */
                         easy = flag = TRUE;
+                        equip_learn_flag(TR_SEE_INVIS);
                     }
                 }
 

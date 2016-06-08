@@ -2005,7 +2005,7 @@ static void _calc_bonuses(void)
     }
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->magic_num1[_BLENDING])
         add_flag(flgs, TR_STEALTH);

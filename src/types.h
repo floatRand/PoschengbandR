@@ -152,7 +152,7 @@ struct object_kind
 
     s32b cost;            /* Object "base cost" */
 
-    u32b flags[TR_FLAG_SIZE];    /* Flags */
+    u32b flags[TR_FLAG_ARRAY_SIZE];    /* Flags */
 
     u32b gen_flags;        /* flags for generate */
     byte stack_chance;
@@ -221,7 +221,9 @@ struct artifact_type
 
     s32b cost;            /* Artifact "cost" */
 
-    u32b     flags[TR_FLAG_SIZE];       /* Artifact Flags */
+    u32b     flags[TR_FLAG_ARRAY_SIZE];       /* Artifact Flags */
+    u32b     known_flags[TR_FLAG_ARRAY_SIZE];
+
     effect_t activation;
     u32b     activation_msg;
 
@@ -241,9 +243,9 @@ struct artifact_type
  * Information about "ego-items".
  */
 
-typedef struct ego_item_type ego_item_type;
+typedef struct ego_type ego_type;
 
-struct ego_item_type
+struct ego_type
 {
     u32b name;            /* Name (offset) */
     u32b text;            /* Text (offset) */
@@ -260,7 +262,9 @@ struct ego_item_type
 
     byte max_pval;        /* Maximum pval */
 
-    u32b flags[TR_FLAG_SIZE];    /* Ego-Item Flags */
+    u32b flags[TR_FLAG_ARRAY_SIZE];    /* Ego-Item Flags */
+    u32b known_flags[TR_FLAG_ARRAY_SIZE];
+    u32b xtra_flags[TR_FLAG_ARRAY_SIZE];
 
     u32b gen_flags;        /* flags for generate */
     effect_t activation;
@@ -348,9 +352,13 @@ struct object_type
 
     byte feeling;          /* Game generated inscription number (eg, pseudo-id) */
 
-    u32b art_flags[TR_FLAG_SIZE];        /* Extra Flags for ego and artifacts */
+    u32b art_flags[TR_FLAG_ARRAY_SIZE];        /* Extra Flags for ego and artifacts */
 
     u32b curse_flags;        /* Flags for curse */
+
+    u32b known_flags[TR_FLAG_ARRAY_SIZE];
+    u32b known_curse_flags;
+
     u32b rune;
 
     s16b next_o_idx;    /* Next object in stack (if any) */
@@ -1051,7 +1059,7 @@ struct player_pact
     bool riding_wield;
     int  giant_wield;
     int  dual_wield_pct; /* Scaled by 10 so 123 = 12.3%. Set to 1000 (ie 100%) if not dual wielding */
-    u32b flags[TR_FLAG_SIZE];
+    u32b flags[TR_FLAG_ARRAY_SIZE];
     byte info_attr;
     cptr info;
 } weapon_info_t, *weapon_info_ptr;
@@ -1068,13 +1076,13 @@ typedef struct {
     int num_fire;
     byte tval_ammo;
     bool heavy_shoot;
-    u32b flags[TR_FLAG_SIZE];
+    u32b flags[TR_FLAG_ARRAY_SIZE];
 } shooter_info_t;
 
 typedef struct {
     int to_dd;
     int xtra_blow;
-    u32b flags[TR_FLAG_SIZE]; /* TODO */
+    u32b flags[TR_FLAG_ARRAY_SIZE]; /* TODO */
 } innate_attack_info_t;
 
 typedef struct player_type player_type;
@@ -1514,7 +1522,7 @@ struct player_type
     bool can_swim;       /* No damage falling */
     bool levitation;     /* No damage falling */
     bool lite;           /* Permanent light */
-    bool free_act;       /* Never paralyzed */
+    bool free_act;       /* Never (?) paralyzed */
     bool see_inv;        /* Can see invisible */
     s16b regen;          /* Rate of regeneration: 100 = 100%, 200 = 200%, etc. */
     bool hold_life;      /* Resist life draining */
@@ -2038,7 +2046,7 @@ typedef void(*gain_level_fn)(int new_level);
 typedef void(*change_level_fn)(int old_level, int new_level);
 typedef void(*character_dump_fn)(doc_ptr doc);
 typedef void(*player_action_fn)(int energy_use);
-typedef void(*flags_fn)(u32b flgs[TR_FLAG_SIZE]);
+typedef void(*flags_fn)(u32b flgs[TR_FLAG_ARRAY_SIZE]);
 typedef void(*stats_fn)(s16b stats[MAX_STATS]);
 typedef void(*load_fn)(savefile_ptr file);
 typedef void(*save_fn)(savefile_ptr file);

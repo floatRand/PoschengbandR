@@ -136,7 +136,7 @@ static void _calc_bonuses(void) {
         p_ptr->pspeed += 1;
     }
 }
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_LEVITATION);
     add_flag(flgs, TR_RES_POIS);
 

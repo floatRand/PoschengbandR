@@ -535,7 +535,7 @@ cptr do_hissatsu_spell(int spell, int mode)
             for (hand = 0; hand < MAX_HANDS; hand++)
             {
                 int damage, basedam;
-                u32b flgs[TR_FLAG_SIZE];
+                u32b flgs[TR_FLAG_ARRAY_SIZE];
                 object_type *o_ptr = NULL;
 
                 if (p_ptr->weapon_info[hand].wield_how != WIELD_NONE)
@@ -546,7 +546,7 @@ cptr do_hissatsu_spell(int spell, int mode)
                 basedam = (o_ptr->dd * (o_ptr->ds + 1)) * 50;
                 damage = o_ptr->to_d * 100;
                 
-                object_flags(o_ptr, flgs);
+                obj_flags(o_ptr, flgs);
                 if (have_flag(flgs, TR_VORPAL2))
                 {
                     basedam *= 5;
@@ -753,7 +753,7 @@ cptr do_hissatsu_spell(int spell, int mode)
             if (p_ptr->anti_tele)
             {
                 msg_print("A mysterious force prevents you from teleporting!");
-    
+                equip_learn_flag(TR_NO_TELE);
                 break;
             }
             project(0, 0, y, x, HISSATSU_ISSEN, GF_ATTACK, PROJECT_BEAM | PROJECT_KILL, -1);
@@ -814,7 +814,7 @@ cptr do_hissatsu_spell(int spell, int mode)
             for (hand = 0; hand < MAX_HANDS; hand++)
             {
                 int damage, basedam;
-                u32b flgs[TR_FLAG_SIZE];
+                u32b flgs[TR_FLAG_ARRAY_SIZE];
                 object_type *o_ptr = NULL;
 
                 if (p_ptr->weapon_info[hand].wield_how != WIELD_NONE)
@@ -825,7 +825,7 @@ cptr do_hissatsu_spell(int spell, int mode)
                 basedam = (o_ptr->dd * (o_ptr->ds + 1)) * 50;
                 damage = o_ptr->to_d * 100;
                 
-                object_flags(o_ptr, flgs);
+                obj_flags(o_ptr, flgs);
                 if (have_flag(flgs, TR_VORPAL2))
                 {
                     basedam *= 5;
@@ -959,7 +959,7 @@ void samurai_posture_calc_stats(s16b stats[MAX_STATS])
     }
 }
 
-void samurai_posture_get_flags(u32b flgs[TR_FLAG_SIZE])
+void samurai_posture_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->special_defense & KATA_FUUJIN)
         add_flag(flgs, TR_REFLECT);
@@ -1207,7 +1207,7 @@ static void _calc_stats(s16b stats[MAX_STATS])
     samurai_posture_calc_stats(stats);
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     samurai_posture_get_flags(flgs);
     if (p_ptr->lev >= 30)

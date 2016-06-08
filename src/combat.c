@@ -189,8 +189,8 @@ static _blow_info_t _get_blow_info(int hand)
 
     case CLASS_CAVALRY:
     {
-        u32b flgs[TR_FLAG_SIZE];
-        object_flags(o_ptr, flgs);
+        u32b flgs[TR_FLAG_ARRAY_SIZE];
+        obj_flags(o_ptr, flgs);
         if (p_ptr->riding && have_flag(flgs, TR_RIDING)) {result.num = 550; result.wgt = 70; result.mul = 65;}
         else {result.num = 500; result.wgt = 100; result.mul = 35;}
         break;
@@ -445,7 +445,7 @@ void display_weapon_info(doc_ptr doc, int hand)
 {
     object_type *o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
     char o_name[MAX_NLEN];
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     int dd;
     int ds;
     int to_d = 0;
@@ -1000,7 +1000,7 @@ static void _display_missile_slay(int base_mult, int slay_mult, int shots,
 static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow, int ct)
 {
     char         o_name[MAX_NLEN];
-    u32b         flgs[TR_FLAG_SIZE];
+    u32b         flgs[TR_FLAG_ARRAY_SIZE];
     int          mult;
     int          to_h = 0;
     int          to_d = 0;

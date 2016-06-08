@@ -169,7 +169,7 @@ static void _calc_bonuses(void) {
         p_ptr->no_passwall_dam = TRUE;
     }
 }
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_SEE_INVIS);
     add_flag(flgs, TR_SLOW_DIGEST);
     add_flag(flgs, TR_HOLD_LIFE);

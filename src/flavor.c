@@ -645,7 +645,7 @@ static flag_insc_table flag_insc_sust[] =
 /*
  *  Helper function for get_inscription()
  */
-static char *inscribe_flags_aux(flag_insc_table *fi_ptr, u32b flgs[TR_FLAG_SIZE], char *ptr)
+static char *inscribe_flags_aux(flag_insc_table *fi_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE], char *ptr)
 {
     while (fi_ptr->english)
     {
@@ -662,7 +662,7 @@ static char *inscribe_flags_aux(flag_insc_table *fi_ptr, u32b flgs[TR_FLAG_SIZE]
 /*
  *  Special variation of have_flag for auto-inscription
  */
-static bool have_flag_of(flag_insc_table *fi_ptr, u32b flgs[TR_FLAG_SIZE])
+static bool have_flag_of(flag_insc_table *fi_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     while (fi_ptr->english)
     {
@@ -678,11 +678,10 @@ static bool have_flag_of(flag_insc_table *fi_ptr, u32b flgs[TR_FLAG_SIZE])
 static char *get_ability_abbreviation(char *ptr, object_type *o_ptr, bool all)
 {
     char *prev_ptr = ptr;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
 
     /* Extract the flags */
-    object_flags_known(o_ptr, flgs);
-
+    obj_flags_known(o_ptr, flgs);
 
     /* Remove obvious flags */
     if (!all)
@@ -691,22 +690,22 @@ static char *get_ability_abbreviation(char *ptr, object_type *o_ptr, bool all)
         int j;
                 
         /* Base object */
-        for (j = 0; j < TR_FLAG_SIZE; j++)
+        for (j = 0; j < TR_FLAG_ARRAY_SIZE; j++)
             flgs[j] &= ~k_ptr->flags[j];
 
         if (object_is_fixed_artifact(o_ptr))
         {
             artifact_type *a_ptr = &a_info[o_ptr->name1];
                     
-            for (j = 0; j < TR_FLAG_SIZE; j++)
+            for (j = 0; j < TR_FLAG_ARRAY_SIZE; j++)
                 flgs[j] &= ~a_ptr->flags[j];
         }
 
         if (object_is_ego(o_ptr))
         {
-            ego_item_type *e_ptr = &e_info[o_ptr->name2];
+            ego_type *e_ptr = &e_info[o_ptr->name2];
                     
-            for (j = 0; j < TR_FLAG_SIZE; j++)
+            for (j = 0; j < TR_FLAG_ARRAY_SIZE; j++)
                 flgs[j] &= ~e_ptr->flags[j];
         }
     }
@@ -809,6 +808,14 @@ static char *get_ability_abbreviation(char *ptr, object_type *o_ptr, bool all)
         ADD_INSC("(");
     }
     ptr = inscribe_flags_aux(flag_insc_sust, flgs, ptr);
+
+    /* Is there more to learn about this object? Perhaps, but don't leak quality info! */
+    if ( obj_is_identified(o_ptr)
+      && (object_is_artifact(o_ptr) || object_is_ego(o_ptr))
+      && !obj_is_identified_fully(o_ptr) )
+    {
+        ADD_INSC("?");
+    }
 
     *ptr = '\0';
 
@@ -966,16 +973,18 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     char            tmp_val2[MAX_NLEN+10];
     char            fake_insc_buf[30];
 
-    u32b flgs[TR_FLAG_SIZE];
+    u32b            flgs[TR_FLAG_ARRAY_SIZE];
+    u32b            known_flgs[TR_FLAG_ARRAY_SIZE];
 
-    int          slot;
-    object_type *bow_ptr = NULL;
+    int             slot;
+    object_type    *bow_ptr = NULL;
 
-    object_kind *k_ptr = &k_info[o_ptr->k_idx];
-    object_kind *flavor_k_ptr = &k_info[k_ptr->flavor];
+    object_kind    *k_ptr = &k_info[o_ptr->k_idx];
+    object_kind    *flavor_k_ptr = &k_info[k_ptr->flavor];
 
     /* Extract some flags */
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs); /* TR_FULL_NAME and TR_SHOW_MODS should never really be hidden ... */
+    obj_flags_known(o_ptr, known_flgs); /* ... but please don't leak  Activations, Spell Power, etc! */
 
     /* See if the object is "aware" */
     if (object_is_aware(o_ptr)) aware = TRUE;
@@ -1572,7 +1581,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         {
             if (object_is_ego(o_ptr))
             {
-                ego_item_type *e_ptr = &e_info[o_ptr->name2];
+                ego_type *e_ptr = &e_info[o_ptr->name2];
 
                 t = object_desc_chr(t, ' ');
                 t = object_desc_str(t, e_name + e_ptr->name);
@@ -1976,11 +1985,11 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
             }
         }
 
-        /* Dump "pval" flags for wearable items
+        /* Dump "pval" flags for wearable items ... We no longer leak the pval.
            have_pval_flags doesn't work correctly for devices, so assume all
            devices with a pval need display. TODO: Fix this!
         */
-        if ((have_pval_flags(flgs) || object_is_device(o_ptr)) && o_ptr->pval)
+        if ((have_pval_flag(known_flgs) || object_is_device(o_ptr)) && o_ptr->pval)
         {
             if (o_ptr->name2 == EGO_DEVICE_POWER)
             {
@@ -1993,7 +2002,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
                 t = object_desc_chr(t, p2);
             }
         }
-        if (have_flag(flgs, TR_DEVICE_POWER))
+        if (have_flag(known_flgs, TR_DEVICE_POWER))
         {
             int pct = device_power_aux(100, o_ptr->pval) - 100;
             if (pct >= 0)
@@ -2001,24 +2010,24 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
             else
                 t = object_desc_str(t, format(" {%d%%}", pct));
         }
-        else if (have_flag(flgs, TR_DEC_MAGIC_MASTERY))
+        else if (have_flag(known_flgs, TR_DEC_MAGIC_MASTERY))
         {
             int pct = device_power_aux(100, -o_ptr->pval) - 100;
             t = object_desc_str(t, format(" {%d%%}", pct));
         }
 
-        if (have_flag(flgs, TR_SPELL_POWER))
+        if (have_flag(known_flgs, TR_SPELL_POWER))
         {
             int pct = spell_power_aux(100, o_ptr->pval) - 100;
             t = object_desc_str(t, format(" <+%d%%>", pct));
         }
-        else if (have_flag(flgs, TR_DEC_SPELL_POWER))
+        else if (have_flag(known_flgs, TR_DEC_SPELL_POWER))
         {
             int pct = spell_power_aux(100, -o_ptr->pval) - 100;
             t = object_desc_str(t, format(" <%d%%>", pct));
         }
 
-        if (have_flag(flgs, TR_SPELL_CAP))
+        if (have_flag(known_flgs, TR_SPELL_CAP))
         {
             int pct = spell_cap_aux(100, o_ptr->pval) - 100;
             if (pct > 0)
@@ -2026,7 +2035,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
             else
                 t = object_desc_str(t, format(" [%d%%]", pct));
         }
-        else if (have_flag(flgs, TR_DEC_SPELL_CAP))
+        else if (have_flag(known_flgs, TR_DEC_SPELL_CAP))
         {
             int pct = spell_cap_aux(100, -o_ptr->pval) - 100;
             t = object_desc_str(t, format(" [%d%%]", pct));
@@ -2059,18 +2068,13 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     tmp_val2[0] = '\0';
 
     /* Auto abbreviation inscribe */
-    if ((abbrev_extra || abbrev_all) && (o_ptr->ident & IDENT_KNOWN))
+    if (abbrev_extra || abbrev_all)
     {
         if (!o_ptr->inscription || !my_strchr(quark_str(o_ptr->inscription), '%'))
-        {
-            bool all = abbrev_all;
-            if ((o_ptr->tval == TV_RING || o_ptr->tval == TV_AMULET) && o_ptr->art_name)
-                all = TRUE;
-            get_ability_abbreviation(tmp_val2, o_ptr, all);
-        }
+            get_ability_abbreviation(tmp_val2, o_ptr, abbrev_all);
     }
 
-    if ( (o_ptr->ident & IDENT_FULL)
+    if ( have_flag(known_flgs, TR_ACTIVATE)
       && obj_has_effect(o_ptr)
       && !device
       && (abbrev_all || (abbrev_extra && o_ptr->activation.type)) )

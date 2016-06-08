@@ -42,7 +42,7 @@ static void _calc_bonuses(void)
         p_ptr->free_act = TRUE;
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_RES_CONF);
     add_flag(flgs, TR_RES_FEAR);
@@ -374,7 +374,7 @@ static void _earth_calc_bonuses(void)
     _calc_bonuses();
 }
 
-static void _earth_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _earth_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_RES_FIRE);
     add_flag(flgs, TR_RES_COLD);
@@ -623,7 +623,7 @@ static void _air_calc_bonuses(void)
     _calc_bonuses();
 }
 
-static void _air_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _air_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_RES_ELEC);
     add_flag(flgs, TR_SPEED);
@@ -644,7 +644,7 @@ static void _air_get_flags(u32b flgs[TR_FLAG_SIZE])
 
 static bool _air_p(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     if (object_is_artifact(o_ptr)) return FALSE;
     if ( o_ptr->tval != TV_RING 
       && o_ptr->tval != TV_AMULET 
@@ -653,7 +653,7 @@ static bool _air_p(object_type *o_ptr)
     {
         return FALSE;
     }
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_IGNORE_ELEC)) return FALSE;
     return TRUE;
 }
@@ -871,7 +871,7 @@ static void _water_calc_bonuses(void)
     _calc_bonuses();
 }
 
-static void _water_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _water_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_RES_ACID);
 
@@ -893,7 +893,7 @@ static void _water_process_world(void)
     for (i = 0; i < INVEN_TOTAL; i++)
     {
         object_type *o_ptr = &inventory[i];
-        u32b         flgs[TR_FLAG_SIZE];
+        u32b         flgs[TR_FLAG_ARRAY_SIZE];
         char         o_name[MAX_NLEN];
 
         if (!o_ptr->k_idx) continue;
@@ -901,7 +901,7 @@ static void _water_process_world(void)
         if (randint0(1000) >= chance) continue;
         if (o_ptr->ac + o_ptr->to_a <= 0) continue;
 
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
         if (have_flag(flgs, TR_IM_ACID)) continue;
         if (have_flag(flgs, TR_RES_ACID)) continue;
         if (have_flag(flgs, TR_IGNORE_ACID) && !one_in_(10)) continue;
@@ -1191,7 +1191,7 @@ static void _fire_calc_bonuses(void)
     _calc_bonuses();
 }
 
-static void _fire_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+static void _fire_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
 {
     add_flag(flgs, TR_VULN_COLD);
     add_flag(flgs, TR_RES_FIRE);
@@ -1211,10 +1211,10 @@ static void _fire_get_flags(u32b flgs[TR_FLAG_SIZE])
 
 static bool _fire_p(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     if (object_is_artifact(o_ptr)) return FALSE;
     if (o_ptr->tval != TV_SCROLL && o_ptr->tval != TV_STAFF) return FALSE;
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_IGNORE_FIRE)) return FALSE;
     return TRUE;
 }

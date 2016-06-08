@@ -65,9 +65,9 @@ int device_calc_fail_rate(object_type *o_ptr)
     if (o_ptr->activation.type)
     {
         effect_t effect = o_ptr->activation;
-        u32b     flgs[TR_FLAG_SIZE];
+        u32b     flgs[TR_FLAG_ARRAY_SIZE];
 
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
         if (have_flag(flgs, TR_EASY_SPELL))
             effect.difficulty -= effect.difficulty * o_ptr->pval / 10;
 
@@ -372,6 +372,7 @@ static cptr _do_potion(int sval, int mode)
                     device_noticed = TRUE;
                 }
             }
+            else equip_learn_flag(TR_FREE_ACT);
         }
         break;
     case SV_POTION_LOSE_MEMORIES:
@@ -1687,9 +1688,9 @@ cptr do_device(object_type *o_ptr, int mode, int boost)
 
     if (o_ptr->activation.type)
     {
-        u32b flgs[TR_FLAG_SIZE];
+        u32b flgs[TR_FLAG_ARRAY_SIZE];
 
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
         if (have_flag(flgs, TR_DEVICE_POWER))
             boost += device_power_aux(100, o_ptr->pval) - 100;
 
@@ -1773,7 +1774,7 @@ bool effect_try(effect_t *effect)
 
 bool effect_use(effect_t *effect, int boost)
 {
-    device_known = TRUE;
+    device_noticed = FALSE;
     device_used_charges = 0;
     device_available_charges = 1;
     if (do_effect(effect, SPELL_CAST, boost))
@@ -2180,6 +2181,7 @@ static void _add_index(object_type *o_ptr, int index)
         o_ptr->activation.cost = _effect_info[index].cost;
         o_ptr->activation.extra = 0;
         o_ptr->timeout = 0;
+        add_flag(o_ptr->art_flags, TR_ACTIVATE); /* for object lore */
     }
 }
 
@@ -2669,7 +2671,7 @@ void device_regen_sp_aux(object_type *o_ptr, int per_mill)
 void device_regen_sp(object_type *o_ptr, int base_per_mill)
 {
     int  per_mill = base_per_mill;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
 
     if (!_is_valid_device(o_ptr))
         return;
@@ -2680,7 +2682,7 @@ void device_regen_sp(object_type *o_ptr, int base_per_mill)
     if (devicemaster_is_speciality(o_ptr))
         per_mill += base_per_mill;
 
-    object_flags(o_ptr, flgs);
+    obj_flags(o_ptr, flgs);
     if (have_flag(flgs, TR_REGEN))
         per_mill += o_ptr->pval * base_per_mill;
 
@@ -2697,7 +2699,7 @@ int device_max_sp(object_type *o_ptr)
 int device_value(object_type *o_ptr, int options)
 {
     int  result = 0;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     int  pval = 0;
 
     if (!_is_valid_device(o_ptr))
@@ -2750,9 +2752,9 @@ int device_value(object_type *o_ptr, int options)
     }
 
     if (options & COST_REAL)
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
     else
-        object_flags_known(o_ptr, flgs);
+        obj_flags_known(o_ptr, flgs);
 
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
@@ -6428,9 +6430,8 @@ cptr do_effect(effect_t *effect, int mode, int boost)
 
             object_prep(&forge, lookup_kind(TV_ARROW, m_bonus(1, p_ptr->lev)+ 1));
             forge.number = (byte)rand_range(5, 10);
-            object_aware(&forge);
-            object_known(&forge);
             apply_magic(&forge, p_ptr->lev, AM_NO_FIXED_ART);
+            obj_identify(&forge);
 
             forge.discount = 99;
 

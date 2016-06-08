@@ -648,6 +648,7 @@ void equip_wield_aux(object_type *src, int slot)
         equip_takeoff_aux(slot);
     
     object_copy(dest, src);
+    obj_learn_equipped(dest);
     stats_on_equip(dest);
     dest->marked |= OM_TOUCHED;
     dest->marked &= ~OM_WORN;
@@ -800,7 +801,7 @@ bool equip_is_empty_two_handed_slot(int slot)
    affect the hand in question, unless the other hand on that set
    of arms is wielding a weapon two handed.
  */
-static void _weapon_info_flag(int idx, u32b flgs[TR_FLAG_SIZE], int flg)
+static void _weapon_info_flag(int idx, u32b flgs[TR_FLAG_ARRAY_SIZE], int flg)
 {
     if (have_flag(flgs, flg))
     {
@@ -1113,12 +1114,12 @@ void equip_calc_bonuses(void)
     {
         int          slot = EQUIP_BEGIN + i;
         object_type *o_ptr = &inventory[slot];
-        u32b         flgs[TR_FLAG_SIZE];
+        u32b         flgs[TR_FLAG_ARRAY_SIZE];
         int          bonus_to_h, bonus_to_d;
 
         if (!o_ptr->k_idx) continue;
 
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
 
         p_ptr->cursed |= (o_ptr->curse_flags & (0xFFFFFFFFL));
         if (p_ptr->cursed)
@@ -1707,3 +1708,55 @@ void equip_on_change_race(void)
         calc_android_exp();
     }
 }
+
+void equip_learn_curse(int flag)
+{
+    int i;
+    for (i = 0; i < _template->count; i++)
+    {
+        int          slot = EQUIP_BEGIN + i;
+        object_type *o_ptr = equip_obj(slot);
+
+        if (o_ptr && obj_learn_curse(o_ptr, flag))
+        {
+            char buf[MAX_NLEN];
+            object_desc(buf, o_ptr, OD_LORE);
+            msg_format("<color:B>You feel that your %s is <color:r>cursed</color>.</color>", buf);
+        }
+    }
+}
+
+void equip_learn_resist(int obj_flag)
+{
+    int i;
+    for (i = 0; i < _template->count; i++)
+    {
+        int          slot = EQUIP_BEGIN + i;
+        object_type *o_ptr = equip_obj(slot);
+
+        if (o_ptr && obj_learn_flag(o_ptr, obj_flag))
+        {
+            char buf[MAX_NLEN];
+            object_desc(buf, o_ptr, OD_LORE);
+            msg_format("<color:B>You feel that your %s is protecting you.</color>", buf);
+        }
+    }
+}
+
+void equip_learn_flag(int obj_flag)
+{
+    int i;
+    for (i = 0; i < _template->count; i++)
+    {
+        int          slot = EQUIP_BEGIN + i;
+        object_type *o_ptr = equip_obj(slot);
+
+        if (o_ptr && obj_learn_flag(o_ptr, obj_flag))
+        {
+            char buf[MAX_NLEN];
+            object_desc(buf, o_ptr, OD_LORE);
+            msg_format("<color:B>You learn more about your %s.</color>", buf);
+        }
+    }
+}
+

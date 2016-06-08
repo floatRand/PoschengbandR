@@ -70,7 +70,7 @@ static void _calc_bonuses(void) {
         p_ptr->pspeed += 2 + (p_ptr->lev - 35)/5;
     }
 }
-static void _get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_FREE_ACT);
     add_flag(flgs, TR_SUST_STR);
     add_flag(flgs, TR_RES_POIS);

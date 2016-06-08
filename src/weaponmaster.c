@@ -3799,7 +3799,7 @@ static void _calc_stats(s16b stats[MAX_STATS])
     }
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
 {
     if (p_ptr->psubclass == WEAPONMASTER_DAGGERS)
     {

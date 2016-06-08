@@ -8084,7 +8084,7 @@ static cptr do_hex_spell(int spell, int mode)
             char *q, *s;
             char o_name[MAX_NLEN];
             object_type *o_ptr;
-            u32b f[TR_FLAG_SIZE];
+            u32b f[TR_FLAG_ARRAY_SIZE];
 
             item_tester_hook = item_tester_hook_weapon_except_bow;
             q = "Which weapon do you curse?";
@@ -8094,7 +8094,7 @@ static cptr do_hex_spell(int spell, int mode)
 
             o_ptr = &inventory[item];
             object_desc(o_name, o_ptr, OD_NAME_ONLY);
-            object_flags(o_ptr, f);
+            obj_flags(o_ptr, f);
 
             if (!get_check(format("Do you curse %s, really?", o_name))) return FALSE;
 
@@ -8376,7 +8376,7 @@ static cptr do_hex_spell(int spell, int mode)
             char *q, *s;
             char o_name[MAX_NLEN];
             object_type *o_ptr;
-            u32b f[TR_FLAG_SIZE];
+            u32b f[TR_FLAG_ARRAY_SIZE];
 
             item_tester_hook = object_is_armour;
             q = "Which piece of armour do you curse?";
@@ -8386,7 +8386,7 @@ static cptr do_hex_spell(int spell, int mode)
 
             o_ptr = &inventory[item];
             object_desc(o_name, o_ptr, OD_NAME_ONLY);
-            object_flags(o_ptr, f);
+            obj_flags(o_ptr, f);
 
             if (!get_check(format("Do you curse %s, really?", o_name))) return FALSE;
 
@@ -8585,7 +8585,7 @@ static cptr do_hex_spell(int spell, int mode)
         {
             int item;
             char *s, *q;
-            u32b f[TR_FLAG_SIZE];
+            u32b f[TR_FLAG_ARRAY_SIZE];
             object_type *o_ptr;
 
             item_tester_hook = item_tester_hook_cursed;
@@ -8595,7 +8595,7 @@ static cptr do_hex_spell(int spell, int mode)
             if (!get_item(&item, q, s, (USE_EQUIP))) return FALSE;
 
             o_ptr = &inventory[item];
-            object_flags(o_ptr, f);
+            obj_flags(o_ptr, f);
 
             p_ptr->csp += (p_ptr->lev / 5) + randint1(p_ptr->lev / 5);
             if (have_flag(f, TR_TY_CURSE) || (o_ptr->curse_flags & TRC_TY_CURSE)) p_ptr->csp += randint1(5);

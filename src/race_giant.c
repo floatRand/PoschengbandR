@@ -502,7 +502,7 @@ static void _hru_calc_bonuses(void) {
         p_ptr->dis_to_a += 15;
     }
 }
-static void _hru_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _hru_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_SUST_STR);
     if (p_ptr->lev >= 40)
         add_flag(flgs, TR_RES_SHARDS);
@@ -633,7 +633,7 @@ static void _fire_calc_bonuses(void) {
     if (p_ptr->lev >= 40)
         res_add(RES_FIRE);
 }
-static void _fire_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _fire_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_SUST_STR);
     if (p_ptr->lev >= 30)
     {
@@ -766,7 +766,7 @@ static void _frost_calc_bonuses(void) {
     if (p_ptr->lev >= 40)
         res_add(RES_COLD);
 }
-static void _frost_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _frost_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_SUST_STR);
     if (p_ptr->lev >= 30)
     {
@@ -935,7 +935,7 @@ static void _storm_calc_bonuses(void) {
         res_add(RES_ELEC);
     }
 }
-static void _storm_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _storm_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_SUST_STR);
     if (p_ptr->lev >= 30)
         add_flag(flgs, TR_RES_ELEC);
@@ -1048,7 +1048,7 @@ static void _titan_calc_bonuses(void) {
     if (p_ptr->lev >= 40)
         p_ptr->pspeed += 3;
 }
-static void _titan_get_flags(u32b flgs[TR_FLAG_SIZE]) {
+static void _titan_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
     add_flag(flgs, TR_SUST_STR);
     if (p_ptr->lev >= 30)
     {

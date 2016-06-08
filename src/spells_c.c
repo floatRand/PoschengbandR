@@ -363,10 +363,7 @@ void crafting_spell(int cmd, variant *res)
             virtue_add(VIRTUE_ENCHANTMENT, 1);
             calc_android_exp();
 
-            object_aware(o_ptr);
-            ego_aware(o_ptr);
-            object_known(o_ptr);
-            o_ptr->ident |= (IDENT_FULL);
+            obj_identify_fully(o_ptr);
             obj_display(o_ptr);
         }
         var_set_bool(res, TRUE);

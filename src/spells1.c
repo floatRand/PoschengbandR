@@ -1515,7 +1515,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
     bool obvious = FALSE;
     bool known = player_has_los_bold(y, x);
 
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
 
     char o_name[MAX_NLEN];
 
@@ -1549,7 +1549,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
         next_o_idx = o_ptr->next_o_idx;
 
         /* Extract the flags */
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
 
         /* Check for artifact */
         if (object_is_artifact(o_ptr)) is_art = TRUE;
@@ -1672,7 +1672,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
                     o_ptr->pval = (0 - o_ptr->pval);
 
                     /* Identify */
-                    object_known(o_ptr);
+                    obj_identify(o_ptr);
 
                     /* Notice */
                     if (known && (o_ptr->marked & OM_FOUND))
@@ -3095,6 +3095,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                                 default:
                                     if (!p_ptr->free_act)
                                         (void)set_paralyzed(randint1(dam), FALSE);
+                                    else equip_learn_flag(TR_FREE_ACT);
                                     break;
                             }
                         }
@@ -6685,7 +6686,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
         {
             if (fuzzy) msg_print("You are hit by nether forces!");
             dam = res_calc_dam(RES_NETHER, dam);
-            if (!res_save_default(RES_NETHER) && !CHECK_MULTISHADOW()) 
+            if (!res_save_default(RES_NETHER) && !CHECK_MULTISHADOW())
                 drain_exp(200 + (p_ptr->exp / 100), 200 + (p_ptr->exp / 1000), 75);
             get_damage = take_hit(DAMAGE_ATTACK, dam, killer, monspell);
             break;
@@ -7004,7 +7005,11 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 
         case GF_OLD_SLEEP:
         {
-            if (p_ptr->free_act)  break;
+            if (p_ptr->free_act)
+            {
+                equip_learn_flag(TR_FREE_ACT);
+                break;
+            }
             if (fuzzy) msg_print("You fall asleep!");
 
 
@@ -7226,6 +7231,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
                     {
                         (void)set_paralyzed(randint1(4), FALSE);
                     }
+                    else equip_learn_flag(TR_FREE_ACT);
                     (void)set_slow(p_ptr->slow + randint0(4) + 4, FALSE);
 
                     while (randint0(100 + rlev / 2) > (MAX(5, duelist_skill_sav(who))))

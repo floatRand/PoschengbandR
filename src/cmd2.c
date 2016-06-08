@@ -485,7 +485,7 @@ static void chest_death(bool scatter, int y, int x, s16b o_idx)
     chest_ptr->pval = 0;
 
     /* Known */
-    object_known(chest_ptr);
+    obj_identify(chest_ptr);
 }
 
 
@@ -545,6 +545,7 @@ static void chest_trap(int y, int x, s16b o_idx)
         {
             (void)set_paralyzed(randint1(4), FALSE);
         }
+        else equip_learn_flag(TR_FREE_ACT);
     }
 
     /* Summon monsters */
@@ -658,7 +659,10 @@ static void chest_trap(int y, int x, s16b o_idx)
                     if (!p_ptr->free_act) 
                         (void)set_paralyzed(randint1(4), FALSE);
                     else 
+                    {
+                        equip_learn_flag(TR_FREE_ACT);
                         (void)set_stun(p_ptr->stun + 10 + randint0(100), FALSE);
+                    }
                 }
                 else if (one_in_(3)) apply_disenchant(0);
                 else if (one_in_(2))
@@ -2697,7 +2701,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
     int mult = 10;
     monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
 
     /* Extract the flags */
     missile_flags(o_ptr, flgs);
@@ -2714,6 +2718,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_ANIMAL))
             {
                 mon_lore_3(m_ptr, RF3_ANIMAL);
+                obj_learn_slay(o_ptr, TR_SLAY_ANIMAL, "slays <color:g>Animals</color>");
                 if (mult < 17) mult = 17;
             }
 
@@ -2722,6 +2727,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_ANIMAL))
             {
                 mon_lore_3(m_ptr, RF3_ANIMAL);
+                obj_learn_slay(o_ptr, TR_KILL_ANIMAL, "slays <color:g>*Animals*</color>");
                 if (mult < 27) mult = 27;
             }
 
@@ -2730,6 +2736,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_EVIL))
             {
                 mon_lore_3(m_ptr, RF3_EVIL);
+                obj_learn_slay(o_ptr, TR_SLAY_EVIL, "slays <color:y>Evil</color>");
                 if (mult < 15) mult = 15;
             }
 
@@ -2738,6 +2745,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_EVIL))
             {
                 mon_lore_3(m_ptr, RF3_EVIL);
+                obj_learn_slay(o_ptr, TR_KILL_EVIL, "slays <color:y>*Evil*</color>");
                 if (mult < 25) mult = 25;
             }
 
@@ -2746,6 +2754,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags2 & RF2_HUMAN))
             {
                 mon_lore_2(m_ptr, RF2_HUMAN);
+                obj_learn_slay(o_ptr, TR_SLAY_HUMAN, "slays <color:s>Humans</color>");
                 if (mult < 17) mult = 17;
             }
 
@@ -2754,6 +2763,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags2 & RF2_HUMAN))
             {
                 mon_lore_2(m_ptr, RF2_HUMAN);
+                obj_learn_slay(o_ptr, TR_KILL_HUMAN, "slays <color:s>*Humans*</color>");
                 if (mult < 27) mult = 27;
             }
 
@@ -2762,6 +2772,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_UNDEAD))
             {
                 mon_lore_3(m_ptr, RF3_UNDEAD);
+                obj_learn_slay(o_ptr, TR_SLAY_UNDEAD, "slays <color:D>Undead</color>");
                 if (mult < 20) mult = 20;
             }
 
@@ -2770,6 +2781,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_UNDEAD))
             {
                 mon_lore_3(m_ptr, RF3_UNDEAD);
+                obj_learn_slay(o_ptr, TR_KILL_UNDEAD, "slays <color:D>*Undead*</color>");
                 if (mult < 30) mult = 30;
             }
 
@@ -2778,6 +2790,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_DEMON))
             {
                 mon_lore_3(m_ptr, RF3_DEMON);
+                obj_learn_slay(o_ptr, TR_SLAY_DEMON, "slays <color:R>Demons</color>");
                 if (mult < 20) mult = 20;
             }
 
@@ -2786,6 +2799,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_DEMON))
             {
                 mon_lore_3(m_ptr, RF3_DEMON);
+                obj_learn_slay(o_ptr, TR_KILL_DEMON, "slays <color:R>*Demons*</color>");
                 if (mult < 30) mult = 30;
             }
 
@@ -2794,6 +2808,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_ORC))
             {
                 mon_lore_3(m_ptr, RF3_ORC);
+                obj_learn_slay(o_ptr, TR_SLAY_ORC, "slays <color:U>Orcs</color>");
                 if (mult < 20) mult = 20;
             }
 
@@ -2802,6 +2817,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_ORC))
             {
                 mon_lore_3(m_ptr, RF3_ORC);
+                obj_learn_slay(o_ptr, TR_KILL_ORC, "slays <color:U>*Orcs*</color>");
                 if (mult < 30) mult = 30;
             }
 
@@ -2810,6 +2826,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_TROLL))
             {
                 mon_lore_3(m_ptr, RF3_TROLL);
+                obj_learn_slay(o_ptr, TR_SLAY_TROLL, "slays <color:g>Trolls</color>");
                 if (mult < 20) mult = 20;
             }
 
@@ -2818,6 +2835,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_TROLL))
             {
                 mon_lore_3(m_ptr, RF3_TROLL);
+                obj_learn_slay(o_ptr, TR_KILL_TROLL, "slays <color:g>*Trolls*</color>");
                 if (mult < 30) mult = 30;
             }
 
@@ -2826,6 +2844,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_GIANT))
             {
                 mon_lore_3(m_ptr, RF3_GIANT);
+                obj_learn_slay(o_ptr, TR_SLAY_GIANT, "slays <color:u>Giants</color>");
                 if (mult < 20) mult = 20;
             }
 
@@ -2834,6 +2853,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_GIANT))
             {
                 mon_lore_3(m_ptr, RF3_GIANT);
+                obj_learn_slay(o_ptr, TR_KILL_GIANT, "slays <color:u>*Giants*</color>");
                 if (mult < 30) mult = 30;
             }
 
@@ -2842,6 +2862,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_DRAGON))
             {
                 mon_lore_3(m_ptr, RF3_DRAGON);
+                obj_learn_slay(o_ptr, TR_SLAY_DRAGON, "slays <color:r>Dragons</color>");
                 if (mult < 20) mult = 20;
             }
 
@@ -2850,6 +2871,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 (r_ptr->flags3 & RF3_DRAGON))
             {
                 mon_lore_3(m_ptr, RF3_DRAGON);
+                obj_learn_slay(o_ptr, TR_KILL_DRAGON, "slays <color:r>*Dragons*</color>");
                 if (mult < 30) mult = 30;
 
                 if ( o_ptr->name1 == ART_BARD_ARROW 
@@ -2869,6 +2891,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 }
                 else
                 {
+                    obj_learn_slay(o_ptr, TR_BRAND_ACID, "is <color:g>Acid Branded</color>");
                     if (mult < 17) mult = 17;
                 }
             }
@@ -2882,6 +2905,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 }
                 else
                 {
+                    obj_learn_slay(o_ptr, TR_BRAND_ELEC, "is <color:b>Lightning Branded</color>");
                     if (mult < 17) mult = 17;
                 }
             }
@@ -2895,6 +2919,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 }
                 else
                 {
+                    obj_learn_slay(o_ptr, TR_BRAND_FIRE, "has <color:r>Flame Tongue</color>");
                     if (r_ptr->flags3 & RF3_HURT_FIRE)
                     {
                         mon_lore_3(m_ptr, RF3_HURT_FIRE);
@@ -2913,6 +2938,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 }
                 else
                 {
+                    obj_learn_slay(o_ptr, TR_BRAND_COLD, "is <color:W>Frost Branded</color>");
                     if (r_ptr->flags3 & RF3_HURT_COLD)
                     {
                         if (mult < 25) mult = 25;
@@ -2931,6 +2957,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 }
                 else
                 {
+                    obj_learn_slay(o_ptr, TR_BRAND_POIS, "has <color:G>Viper's Fang</color>");
                     if (mult < 17) mult = 17;
                 }
             }
@@ -2941,6 +2968,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 p_ptr->csp -= (1+(p_ptr->msp / 30));
                 p_ptr->redraw |= (PR_MANA);
                 mult = mult * 3 / 2;
+                obj_learn_slay(o_ptr, TR_FORCE_WEAPON, "is <color:B>Mana Branded</color>");
             }
 
             break;
@@ -3967,7 +3995,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
 
     int msec = delay_factor * delay_factor * delay_factor;
 
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     cptr q, s;
     bool come_back = FALSE;
     bool do_drop = TRUE;
@@ -4078,7 +4106,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
     object_copy(q_ptr, o_ptr);
 
     /* Extract the thrown object's flags. */
-    object_flags(q_ptr, flgs);
+    obj_flags(q_ptr, flgs);
 
     /* Distribute the charges of rods/wands between the stacks */
     distribute_charges(o_ptr, q_ptr, 1);

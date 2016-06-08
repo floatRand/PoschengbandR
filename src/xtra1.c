@@ -2847,10 +2847,10 @@ static void _calc_encumbrance(void)
                 slot;
                 slot = equip_find_next(object_is_gloves, slot))
         {
-            u32b         flgs[TR_FLAG_SIZE];
+            u32b         flgs[TR_FLAG_ARRAY_SIZE];
             object_type *o_ptr = equip_obj(slot);
 
-            object_flags(o_ptr, flgs);
+            obj_flags(o_ptr, flgs);
 
             if (!(have_flag(flgs, TR_FREE_ACT)) &&
                 !(have_flag(flgs, TR_MAGIC_MASTERY)) &&
@@ -3294,8 +3294,8 @@ static void _calc_torch_imp(object_type *o_ptr)
     }
     else
     {
-        u32b flgs[TR_FLAG_SIZE] = {0};
-        object_flags(o_ptr, flgs);
+        u32b flgs[TR_FLAG_ARRAY_SIZE] = {0};
+        obj_flags(o_ptr, flgs);
         if (have_flag(flgs, TR_LITE))
         {
             if (o_ptr->name2 == EGO_HELMET_VAMPIRE || o_ptr->name1 == ART_NIGHT) p_ptr->cur_lite--;
@@ -3389,7 +3389,7 @@ void calc_bonuses(void)
     s16b            old_speed = p_ptr->pspeed;
     s16b            old_life = p_ptr->life;
     object_type     *o_ptr;
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[TR_FLAG_ARRAY_SIZE];
     bool            riding_levitation = FALSE;
 
     class_t *class_ptr = get_class();
@@ -3437,7 +3437,7 @@ void calc_bonuses(void)
     p_ptr->shooter_info.to_mult = 0;
     p_ptr->shooter_info.tval_ammo = 0;
 
-    for (i = 0; i < TR_FLAG_SIZE; i++)
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
         p_ptr->shooter_info.flags[i] = 0;
 
     if (p_ptr->tim_speed_essentia)
@@ -3475,7 +3475,7 @@ void calc_bonuses(void)
         p_ptr->weapon_info[i].to_dd = 0;
         p_ptr->weapon_info[i].to_ds = 0;
         p_ptr->weapon_info[i].to_mult = 0;
-        for (j = 0; j < TR_FLAG_SIZE; j++)
+        for (j = 0; j < TR_FLAG_ARRAY_SIZE; j++)
             p_ptr->weapon_info[i].flags[j] = 0;
 
         p_ptr->weapon_info[i].base_blow = 100;
@@ -3497,7 +3497,7 @@ void calc_bonuses(void)
             memset(&p_ptr->innate_attacks[i], 0, sizeof(innate_attack_t));
         p_ptr->innate_attack_info.to_dd = 0;
         p_ptr->innate_attack_info.xtra_blow = 0;
-        for (i = 0; i < TR_FLAG_SIZE; i++)
+        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
             p_ptr->innate_attack_info.flags[i] = 0;
     }
     /* Start with "normal" speed */
@@ -4489,7 +4489,7 @@ void calc_bonuses(void)
         o_ptr = equip_obj(info_ptr->slot);
         if (!o_ptr) continue;
         
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
 
         if (p_ptr->tim_enlarge_weapon)
         {
