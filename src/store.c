@@ -884,7 +884,7 @@ static int store_carry(object_type *o_ptr)
     if (value <= 0) return (-1);
 
     /* All store items are fully *identified* */
-    o_ptr->ident |= IDENT_FULL;
+    o_ptr->ident |= IDENT_STORE;
 
     /* Erase the inscription */
     o_ptr->inscription = 0;
@@ -2406,8 +2406,8 @@ static void store_sell(void)
             store_prt_gold();
 
             /* Identify it */
-            stats_on_sell(o_ptr); /* before identify, please! */
-            identify_item(o_ptr);
+            stats_on_sell(o_ptr);
+            obj_identify_fully(o_ptr);
 
             /* Get local object */
             q_ptr = &forge;
@@ -2450,9 +2450,8 @@ static void store_sell(void)
             /* Handle stuff */
             handle_stuff();
 
-            /* The store gets that (known) item */
+            /* The store gets that item */
             item_pos = store_carry(q_ptr);
-            obj_identify_fully(q_ptr);
 
             /* Re-display if item is now in store */
             if (item_pos >= 0)

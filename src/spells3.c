@@ -2263,10 +2263,10 @@ bool identify_item(object_type *o_ptr)
 {
     bool old_known = FALSE;
 
-    if (o_ptr->ident & IDENT_KNOWN)
+    if (obj_is_identified(o_ptr))
         old_known = TRUE;
 
-    if (!spoiler_hack && !(o_ptr->ident & (IDENT_FULL)))
+    if (!spoiler_hack && !obj_is_identified_fully(o_ptr))
     {
         if (object_is_artifact(o_ptr) || one_in_(5))
             virtue_add(VIRTUE_KNOWLEDGE, 1);
@@ -2425,12 +2425,12 @@ bool mundane_spell(bool only_equip)
 
 static bool item_tester_hook_identify_fully(object_type *o_ptr)
 {
-    if ( (!object_is_known(o_ptr) || !(o_ptr->ident & IDENT_FULL))
+    if ( (!object_is_known(o_ptr) || !obj_is_identified_fully(o_ptr))
       && (!_hack_obj_p || _hack_obj_p(o_ptr)) )
     {
         return TRUE;
     }
-    if ( (o_ptr->ident & IDENT_FULL)
+    if ( obj_is_identified_fully(o_ptr)
       && o_ptr->curse_flags != o_ptr->known_curse_flags )
     {
         return TRUE;

@@ -1590,7 +1590,7 @@ s32b object_value(object_type *o_ptr)
         else
             value = object_value_real(o_ptr);
 
-        if (!(o_ptr->ident & IDENT_FULL))
+        if (!obj_is_identified_fully(o_ptr))
         {
             if (object_is_artifact(o_ptr))
                 value += 1000;

@@ -644,7 +644,7 @@ static void _display_curses(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE], d
 
     v = vec_alloc((vec_free_f)string_free);
 
-    if (o_ptr->ident & IDENT_KNOWN)
+    if (obj_is_identified(o_ptr))
     {
         /* Basic Curse Status is always obvious (light, heavy, permanent) */
         if (o_ptr->curse_flags & TRC_PERMA_CURSE)
@@ -715,7 +715,7 @@ static void _display_activation(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE
             doc_newline(doc);
             doc_printf(doc, "<color:U>Activation:</color><tab:12><color:B>%s</color>\n", res);
 
-            if (o_ptr->ident & IDENT_FULL)
+            if (obj_is_identified_fully(o_ptr))
             {
                 int fail = effect_calc_fail_rate(&e);
 
@@ -1005,7 +1005,7 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     if (o_ptr->tval == TV_SCROLL || o_ptr->tval == TV_POTION)
     {
         doc_printf(doc, "%s\n\n", do_device(o_ptr, SPELL_DESC, 0));
-        if (o_ptr->ident & IDENT_FULL)
+        if (obj_is_identified_fully(o_ptr))
         {
             cptr info = do_device(o_ptr, SPELL_INFO, 0);
             if (info && strlen(info))
@@ -1034,7 +1034,7 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     else
         boost = device_power(100) - 100;
 
-    if (o_ptr->ident & IDENT_FULL)
+    if (obj_is_identified_fully(o_ptr))
     {
         int sp = device_sp(o_ptr);
         int max_sp = device_max_sp(o_ptr);
@@ -1090,7 +1090,7 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
 
     if (o_ptr->activation.type != EFFECT_NONE)
     {
-        if (o_ptr->ident & IDENT_FULL)
+        if (obj_is_identified_fully(o_ptr))
         {
             int  fail = device_calc_fail_rate(o_ptr);
             int  charges = device_sp(o_ptr) / o_ptr->activation.cost;
@@ -1119,9 +1119,9 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
 
     doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
 
-    if (object_is_ego(o_ptr) && !(o_ptr->ident & IDENT_FULL))
+    if (object_is_ego(o_ptr) && !obj_is_identified_fully(o_ptr))
         doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
-    else if (!(o_ptr->ident & IDENT_FULL))
+    else if (!obj_is_identified_fully(o_ptr))
         doc_printf(doc, "You may *identify* or sell this object to learn more about this device.\n");
 
     _display_ignore(o_ptr, flgs, doc);

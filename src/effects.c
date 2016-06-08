@@ -5541,8 +5541,8 @@ bool lose_all_info(void)
         /* Skip non-objects */
         if (!o_ptr->k_idx) continue;
 
-        /* Allow "protection" by the MENTAL flag */
-        if (o_ptr->ident & (IDENT_FULL)) continue;
+        /* Allow "protection" by *ID* */
+        if (obj_is_identified_fully(o_ptr)) continue;
 
         /* Remove "default inscriptions" */
         o_ptr->feeling = FEEL_NONE;

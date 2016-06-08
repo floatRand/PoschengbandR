@@ -225,9 +225,7 @@ static void do_cmd_wiz_hack_chris1(void)
 
         if (!create_named_art_aux(a_idx, &forge)) return;
         pow_base = object_value_real(&forge);
-        identify_item(&forge);
-
-        forge.ident |= (IDENT_FULL); 
+        obj_identify_fully(&forge);
         object_desc(buf, &forge, 0);
 
         msg_format("Replacing %s (Cost: %d):", buf, pow_base);
@@ -239,9 +237,7 @@ static void do_cmd_wiz_hack_chris1(void)
         int value;
 
         create_replacement_art(a_idx, &forge);
-        identify_item(&forge);
-
-        forge.ident |= (IDENT_FULL); 
+        obj_identify_fully(&forge);
 
         object_desc(buf, &forge, OD_COLOR_CODED);
         value = object_value_real(&forge);
@@ -382,8 +378,7 @@ static void _test_specific_k_idx(void)
 
         if (forge.name2)
         {
-            identify_item(&forge);
-            forge.ident |= (IDENT_FULL); 
+            obj_identify_fully(&forge);
         
             object_desc(buf, &forge, OD_COLOR_CODED);
             msg_format("%d) %s", i + 1, buf);
@@ -446,8 +441,7 @@ static void do_cmd_wiz_hack_chris3_imp(FILE* file)
                 if (forge.weight > max)
                     max = forge.weight;
 
-                identify_item(&forge);
-                forge.ident |= (IDENT_FULL); 
+                obj_identify_fully(&forge);
                 object_desc(buf, &forge, 0);
                 fprintf(file, "%s %d.%d lbs\n", buf, forge.weight/10, forge.weight%10);
 
@@ -532,8 +526,7 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
 
             random_artifact_resistance(&forge, a_ptr);
 
-            identify_item(&forge);
-            forge.ident |= (IDENT_FULL); 
+            obj_identify_fully(&forge);
             object_desc(buf, &forge, 0);
 
             new_score = new_object_cost(&forge, COST_REAL);
@@ -567,8 +560,7 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
 
             /*if (forge.name2)*/
             {
-                identify_item(&forge);
-                forge.ident |= (IDENT_FULL); 
+                obj_identify_fully(&forge);
                 object_desc(buf, &forge, 0);
 
                 new_score = new_object_cost(&forge, COST_REAL);
@@ -656,8 +648,7 @@ static void do_cmd_wiz_hack_chris5(void)
         {
             char buf[MAX_NLEN];
             ct_success++;
-            identify_item(&forge);
-            forge.ident |= (IDENT_FULL); 
+            obj_identify_fully(&forge);
             object_desc(buf, &forge, OD_COLOR_CODED);
             msg_format("%d) <indent>%s</indent>", ct_tries, buf);
             msg_boundary();
@@ -706,10 +697,9 @@ static void do_cmd_wiz_hack_chris6_imp(FILE *file, bool replace)
             }
         }
         pow_base = object_value_real(&forge);
-        identify_item(&forge);
         object_level = a_info[a_idx].level;
 
-        forge.ident |= (IDENT_FULL); 
+        obj_identify_fully(&forge);
         object_desc(buf, &forge, 0);
 
         fprintf(file, "====================================================================================================\n");
@@ -739,10 +729,8 @@ static void do_cmd_wiz_hack_chris6_imp(FILE *file, bool replace)
                 speed_tot += forge.pval;
             if (have_flag(forge.art_flags, TR_BLOWS))
                 att_tot += forge.pval;
-            identify_item(&forge);
+            obj_identify_fully(&forge);
 
-            forge.ident |= (IDENT_FULL); 
-        /*    forge.art_name = dummy_name; */
             object_desc(buf, &forge, 0);
 
             fprintf(file, "%s (%.1f%%)\n", buf, (double)pow/(double)pow_base*100.0);
@@ -1026,8 +1014,7 @@ static bool do_cmd_wiz_hack_chris9(void)
 
         object_copy(&forge, dest);
         reforge_artifact(src, &forge, p_ptr->fame);
-        identify_item(&forge);
-        forge.ident |= (IDENT_FULL); 
+        obj_identify_fully(&forge);
         object_desc(buf, &forge, OD_COLOR_CODED);
         msg_format(" %d) %s\n", i+1, buf);
     }
@@ -3062,8 +3049,7 @@ void do_cmd_debug(void)
         {
             if (!o_list[i].k_idx) continue;
             ct++;
-            identify_item(&o_list[i]);
-            o_list[i].ident |= IDENT_FULL;
+            obj_identify_fully(&o_list[i]);
             if (o_list[i].name1 || o_list[i].name2)
             {
                 object_desc(buf, &o_list[i], 0);

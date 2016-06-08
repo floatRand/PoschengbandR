@@ -696,7 +696,7 @@ static int _smith_absorb(object_type *o_ptr)
             if (spy_before)
             {
                 doc_insert(_doc, string_buffer(spy_before));
-                if (!(o_ptr->ident & IDENT_FULL) && !object_is_nameless(o_ptr))
+                if (!obj_is_identified_fully(o_ptr) && !object_is_nameless(o_ptr))
                     doc_insert(_doc, "      And perhaps more?\n");
             }
             else

@@ -3101,8 +3101,7 @@ static void _birth_object(int tv, int sv, int qty)
     }
 
     forge.number = qty;
-    identify_item(&forge);
-    forge.ident |= IDENT_FULL;
+    obj_identify_fully(&forge);
     add_outfit(&forge);
 }
  

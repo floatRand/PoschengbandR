@@ -1257,7 +1257,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
 
     /*** *Identified* ***/
     if (IS_FLG(FLG_STAR_IDENTIFIED) &&
-        (!object_is_known(o_ptr) || !(o_ptr->ident & IDENT_FULL)))
+        (!object_is_known(o_ptr) || !obj_is_identified_fully(o_ptr)))
         return FALSE;
 
     /*** Dice boosted (weapon of slaying) ***/
