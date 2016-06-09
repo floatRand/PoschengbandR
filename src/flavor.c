@@ -2071,13 +2071,18 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     if (abbrev_extra || abbrev_all)
     {
         if (!o_ptr->inscription || !my_strchr(quark_str(o_ptr->inscription), '%'))
-            get_ability_abbreviation(tmp_val2, o_ptr, abbrev_all);
+        {
+            bool all = abbrev_all;
+            if (!obj_is_identified(o_ptr)) /* otherwise, this pseudo leaks the underlying name */
+                all = TRUE;
+            get_ability_abbreviation(tmp_val2, o_ptr, all);
+        }
     }
 
     if ( have_flag(known_flgs, TR_ACTIVATE)
       && obj_has_effect(o_ptr)
       && !device
-      && (abbrev_all || (abbrev_extra && o_ptr->activation.type)) )
+      && (abbrev_all || (abbrev_extra && o_ptr->activation.type) || !obj_is_identified(o_ptr)) )
     {
         char     buf[255];
         effect_t e = obj_get_effect(o_ptr);
