@@ -450,7 +450,7 @@ static void _air_birth(void)
     object_type forge;
     
     object_prep(&forge, lookup_kind(TV_RING, 0));
-    forge.name2 = EGO_RING_ELEMENTAL;
+    forge.name2 = EGO_JEWELRY_ELEMENTAL;
     forge.to_a = 15;
     add_flag(forge.art_flags, TR_RES_ELEC);
     add_flag(forge.art_flags, TR_SH_ELEC);
@@ -714,7 +714,7 @@ static void _water_birth(void)
     object_type forge;
     
     object_prep(&forge, lookup_kind(TV_RING, 0));
-    forge.name2 = EGO_RING_ELEMENTAL;
+    forge.name2 = EGO_JEWELRY_ELEMENTAL;
     forge.to_a = 15;
     add_flag(forge.art_flags, TR_RES_ACID);
     add_outfit(&forge);
@@ -978,7 +978,7 @@ static void _fire_birth(void)
     object_type forge;
     
     object_prep(&forge, lookup_kind(TV_RING, 0));
-    forge.name2 = EGO_RING_ELEMENTAL;
+    forge.name2 = EGO_JEWELRY_ELEMENTAL;
     forge.to_a = 15;
     add_flag(forge.art_flags, TR_RES_FIRE);
     add_flag(forge.art_flags, TR_SH_FIRE);

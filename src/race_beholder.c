@@ -9,7 +9,7 @@ static void _birth(void)
     skills_innate_init("Gaze", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
     
     object_prep(&forge, lookup_kind(TV_CROWN, SV_IRON_CROWN));
-    forge.name2 = EGO_CROWN_SEEING;
+    forge.name2 = EGO_ARMOR_SEEING;
     forge.pval = 4;
     forge.to_a = 10;
     add_esp_weak(&forge, FALSE);

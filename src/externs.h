@@ -1211,6 +1211,8 @@ extern void obj_create_armor(object_type *o_ptr, int level, int power, int mode)
 extern void obj_create_lite(object_type *o_ptr, int level, int power, int mode);
 extern int  ego_choose_type(int type, int level);
 extern void ego_weapon_adjust_weight(object_type *o_ptr);
+extern void ego_brand_weapon(object_type *o_ptr, int which);
+extern void ego_finalize(object_type *o_ptr, int level, int power, int mode);
 
 /* object2.c */
 extern bool add_esp_strong(object_type *o_ptr);
@@ -1473,6 +1475,7 @@ extern void phlogiston(void);
 extern bool brand_weapon(int brand_type);
 extern bool brand_weapon_aux(int item);
 extern bool brand_armour_aux(int item);
+extern bool brand_weapon_slaying(int flag);
 extern void call_the_(void);
 extern void fetch(int dir, int wgt, bool require_los);
 extern void alter_reality(void);

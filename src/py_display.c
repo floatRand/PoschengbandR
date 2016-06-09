@@ -2114,9 +2114,9 @@ static void _build_statistics(doc_ptr doc)
 
     doc_printf(doc, "\n  <color:G>Egos                 Found Bought  Dest</color>\n");
     _ego_counts_imp(doc, EGO_RING_SPEED, "Ring of Speed");
-    _ego_counts_imp(doc, EGO_RING_DEFENDER, "Ring (Defender)");
-    _ego_counts_imp(doc, EGO_AMULET_DEFENDER, "Amulet (Defender)");
+    _ego_counts_imp(doc, EGO_JEWELRY_DEFENDER, "Ring/Amulet (Defender)");
     _ego_counts_imp(doc, EGO_BOOTS_ELVENKIND, "Boots of Elvenkind");
+    _ego_counts_imp(doc, EGO_BOOTS_SPRITE, "Boots of the Sprite");
     _ego_counts_imp(doc, EGO_BOOTS_SPEED, "Boots of Speed");
     _ego_counts_imp(doc, EGO_BOOTS_FEANOR, "Boots of Feanor");
 

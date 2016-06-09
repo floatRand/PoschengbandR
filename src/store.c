@@ -1422,12 +1422,12 @@ static bool _get_store_obj(object_type *o_ptr)
         if (one_in_(5))
         {
             object_prep(o_ptr, lookup_kind(TV_AMULET, 0));
-            o_ptr->name2 = EGO_AMULET_ELEMENTAL;
+            o_ptr->name2 = EGO_JEWELRY_ELEMENTAL;
         }
         else
         {
             object_prep(o_ptr, lookup_kind(TV_RING, 0));
-            o_ptr->name2 = EGO_RING_ELEMENTAL;
+            o_ptr->name2 = EGO_JEWELRY_ELEMENTAL;
         }
         switch (randint1(5))
         {

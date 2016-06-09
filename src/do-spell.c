@@ -3667,7 +3667,7 @@ static cptr do_death_spell(int spell, int mode)
         {
             if (cast)
             {
-                brand_weapon(EGO_WEAPON_VENOM);
+                brand_weapon_slaying(TR_BRAND_POIS);
             }
         }
         break;
@@ -6101,7 +6101,7 @@ static cptr do_daemon_spell(int spell, int mode)
         {
             if (cast)
             {
-                brand_weapon(EGO_WEAPON_BURNING);
+                brand_weapon_slaying(TR_BRAND_FIRE);
             }
         }
         break;
@@ -6826,7 +6826,7 @@ static cptr do_crusade_spell(int spell, int mode)
         {
             if (cast)
             {
-                brand_weapon(EGO_WEAPON_SLAY_EVIL);
+                brand_weapon_slaying(TR_SLAY_EVIL);
             }
         }
         break;

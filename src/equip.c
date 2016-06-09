@@ -1132,9 +1132,6 @@ void equip_calc_bonuses(void)
         if (o_ptr->name1 == ART_STONE_LORE)
             p_ptr->loremaster = TRUE;
 
-        if (o_ptr->name2 == EGO_BOOTS_FAIRY || o_ptr->name2 == EGO_CLOAK_FAIRY)
-            p_ptr->fairy_stealth = TRUE;
-
         if (o_ptr->name2 == EGO_GLOVES_GIANT)
         {
             int hand = _template->slots[i].hand;
@@ -1510,7 +1507,6 @@ void equip_calc_bonuses(void)
                && o_ptr->name2 != EGO_SHIELD_DWARVEN
                && o_ptr->name2 != EGO_SHIELD_ORCISH
                && o_ptr->name2 != EGO_CROWN_MIGHT
-               && o_ptr->name2 != EGO_CLOAK_FAIRY  /* Hey, fairies can shoot just fine :) */
                && o_ptr->name2 != EGO_CLOAK_BAT
                && o_ptr->name2 != EGO_CLOAK_COWARDICE
                && o_ptr->name1 != ART_KAMIKAZE_ROBE

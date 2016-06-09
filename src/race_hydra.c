@@ -25,7 +25,7 @@ static void _birth(void)
     skills_innate_init("Bite", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 
     object_prep(&forge, lookup_kind(TV_AMULET, 0));
-    forge.name2 = EGO_AMULET_ELEMENTAL;
+    forge.name2 = EGO_JEWELRY_ELEMENTAL;
     add_flag(forge.art_flags, TR_RES_ACID);
     add_outfit(&forge);
 

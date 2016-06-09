@@ -3282,12 +3282,6 @@ void player_outfit(void)
             k_idx = lookup_kind(tv, sv);
             if (!k_idx) continue;
             object_prep(&forge, k_idx);
-            /* Assassins begin the game with a poisoned dagger */
-            if ((tv == TV_SWORD || tv == TV_HAFTED) && (p_ptr->pclass == CLASS_ROGUE &&
-                p_ptr->realm1 == REALM_DEATH)) /* Only assassins get a poisoned weapon */
-            {
-                forge.name2 = EGO_WEAPON_VENOM;
-            }
 
             /* Hack: Rune-Knights begin with an Absorption Rune on their broad sword (or whip if sexy) */
             if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_SWORD && sv == SV_BROAD_SWORD)

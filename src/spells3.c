@@ -1197,16 +1197,7 @@ bool brand_weapon(int brand_type)
     }
     else
     {
-        inventory[item].name2 = brand_type;
-        /* TODO: a_m_aux_1 in object2.c currently handles creation of weapon egos, but
-           is not re-usable since it conflates ego selection and a few other things.
-           Please refactor ... e.g.,
-           void ego_init_weapon(object_type *o_ptr, int ego_type);
-           void ego_init_armor(object_type *o_ptr, int ego_type);
-           etc.
-        */
-        if (brand_type == EGO_WEAPON_TRUMP)
-            inventory[item].pval = randint1(2);
+        ego_brand_weapon(&inventory[item], brand_type);
         result = TRUE;
     }
     if (result)
@@ -1225,7 +1216,49 @@ bool brand_weapon(int brand_type)
     calc_android_exp();
     return TRUE;
 }
+/* Hack for old branding spells attempting to make now non-existent ego types! */
+bool brand_weapon_slaying(int flag)
+{
+    bool        result = FALSE;
+    int         item;
+    cptr        q, s;
 
+    item_tester_hook = object_allow_enchant_melee_weapon;
+    item_tester_no_ryoute = TRUE;
+
+    q = "Enchant which weapon? ";
+    s = "You have nothing to enchant.";
+    if (!get_item(&item, q, s, (USE_EQUIP))) return FALSE;
+
+    if (inventory[item].name1 || inventory[item].name2)
+    {
+    }
+    else if (have_flag(inventory[item].art_flags, TR_NO_REMOVE))
+    {
+        msg_print("You are already excellent!");
+    }
+    else
+    {
+        inventory[item].name2 = EGO_WEAPON_SLAYING;
+        add_flag(inventory[item].art_flags, flag);
+        result = TRUE;
+    }
+    if (result)
+    {
+        enchant(&inventory[item], randint0(3) + 4, ENCH_TOHIT | ENCH_TODAM);
+        inventory[item].discount = 99;
+
+        virtue_add(VIRTUE_ENCHANTMENT, 2);
+    }
+    else
+    {
+        if (flush_failure) flush();
+        msg_print("The Branding failed.");
+        virtue_add(VIRTUE_ENCHANTMENT, -2);
+    }
+    calc_android_exp();
+    return TRUE;
+}
 bool brand_weapon_aux(int item)
 {
     assert(item >= 0);

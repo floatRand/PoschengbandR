@@ -2842,7 +2842,8 @@ static void _wiz_inspect_objects(int level)
         /* Skip Vaults ...
         if (cave[o_ptr->iy][o_ptr->ix].info & CAVE_ICKY) continue;*/
 
-        identify_item(o_ptr); /* statistics are updated here */
+        obj_identify_fully(o_ptr);
+        stats_on_identify(o_ptr);
 
         if (o_ptr->art_name)
             stats_add_rand_art(o_ptr);
@@ -2853,16 +2854,11 @@ static void _wiz_inspect_objects(int level)
         if (0) _wiz_stats_log_speed(level, o_ptr);
         if (0) _wiz_stats_log_books(level, o_ptr, 20, 20);
         if (0) _wiz_stats_log_devices(level, o_ptr);
-        if (0) _wiz_stats_log_arts(level, o_ptr);
-        if (0) _wiz_stats_log_rand_arts(level, o_ptr);
-        if (0 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_jewelry(o_ptr))
-            _wiz_stats_log_obj(level, o_ptr);
-        if (0 && object_is_jewelry(o_ptr) && o_ptr->name2)
-            _wiz_stats_log_obj(level, o_ptr);
+        if (1) _wiz_stats_log_arts(level, o_ptr);
+        if (1) _wiz_stats_log_rand_arts(level, o_ptr);
 
-        if (1 && o_ptr->tval == TV_DRAG_ARMOR)
+        if (1 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_ammo(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
-
 
         if (race_ptr->destroy_object)
             race_ptr->destroy_object(o_ptr);

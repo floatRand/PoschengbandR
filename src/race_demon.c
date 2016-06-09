@@ -609,7 +609,8 @@ static void _balrog_birth(void)
     add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
-    forge.name2 = EGO_WEAPON_BURNING;
+    forge.name2 = EGO_WEAPON_SLAYING;
+    add_flag(forge.art_flags, TR_BRAND_FIRE);
     forge.dd = 2;
     forge.ds = 6;
     forge.to_h = 5;
