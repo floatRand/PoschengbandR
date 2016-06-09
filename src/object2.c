@@ -1571,21 +1571,13 @@ s32b object_value(object_type *o_ptr)
     s32b value;
     if (object_is_known(o_ptr))
     {
-        if (object_is_melee_weapon(o_ptr))
-            value = weapon_cost(o_ptr, 0);
-        else if (o_ptr->tval == TV_BOW)
-            value = bow_cost(o_ptr, 0);
-        else if (object_is_ammo(o_ptr))
-            value = ammo_cost(o_ptr, 0);
-        else if (object_is_armour(o_ptr) || object_is_shield(o_ptr))
-            value = armor_cost(o_ptr, 0);
-        else if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr)))
-            value = jewelry_cost(o_ptr, 0);
-        else if (o_ptr->tval == TV_LITE)
-            value = lite_cost(o_ptr, 0);
-        else if (object_is_device(o_ptr))
-            value = device_value(o_ptr, 0);
-        else
+        /* Identify now reveals accurate object scoring. The purpose of this
+           is to assist the user in determining when to *Id* and object, or,
+           better yet, when to equip an object and invest time in learning thru
+           direct experience. Scoring is displayed in obj_display() and
+           in the home inventory of the player.*/
+        value = new_object_cost(o_ptr, COST_REAL);
+        if (!value)
             value = object_value_real(o_ptr);
 
         if (!obj_is_identified_fully(o_ptr))

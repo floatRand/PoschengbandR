@@ -1961,7 +1961,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     if (mode & OD_NAME_AND_ENCHANT) goto object_desc_done;
 
 
-    if (known) /* Known item only */
+    if (known)
     {
         if (object_is_device(o_ptr))
         {
@@ -1984,12 +1984,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
                 t = object_desc_chr(t, p2);
             }
         }
-
-        /* Dump "pval" flags for wearable items ... We no longer leak the pval.
-           have_pval_flags doesn't work correctly for devices, so assume all
-           devices with a pval need display. TODO: Fix this!
-        */
-        if ((have_pval_flag(known_flgs) || object_is_device(o_ptr)) && o_ptr->pval)
+        /* TODO: Devices need fixing, so we'll require Id for now */
+        if (object_is_device(o_ptr) && o_ptr->pval)
         {
             if (o_ptr->name2 == EGO_DEVICE_POWER)
             {
@@ -2002,45 +1998,57 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
                 t = object_desc_chr(t, p2);
             }
         }
-        if (have_flag(known_flgs, TR_DEVICE_POWER))
-        {
-            int pct = device_power_aux(100, o_ptr->pval) - 100;
-            if (pct >= 0)
-                t = object_desc_str(t, format(" {+%d%%}", pct));
-            else
-                t = object_desc_str(t, format(" {%d%%}", pct));
-        }
-        else if (have_flag(known_flgs, TR_DEC_MAGIC_MASTERY))
-        {
-            int pct = device_power_aux(100, -o_ptr->pval) - 100;
+    }
+
+    /* Learning about a pval flag on an unidentified object *should* display the pval!*/
+    if (have_pval_flag(known_flgs) && !object_is_device(o_ptr) && o_ptr->pval)
+    {
+        t = object_desc_chr(t, ' ');
+        t = object_desc_chr(t, p1);
+        t = object_desc_int(t, o_ptr->pval);
+        t = object_desc_chr(t, p2);
+    }
+    if (have_flag(known_flgs, TR_DEVICE_POWER))
+    {
+        int pct = device_power_aux(100, o_ptr->pval) - 100;
+        if (pct >= 0)
+            t = object_desc_str(t, format(" {+%d%%}", pct));
+        else
             t = object_desc_str(t, format(" {%d%%}", pct));
-        }
+    }
+    else if (have_flag(known_flgs, TR_DEC_MAGIC_MASTERY))
+    {
+        int pct = device_power_aux(100, -o_ptr->pval) - 100;
+        t = object_desc_str(t, format(" {%d%%}", pct));
+    }
 
-        if (have_flag(known_flgs, TR_SPELL_POWER))
-        {
-            int pct = spell_power_aux(100, o_ptr->pval) - 100;
-            t = object_desc_str(t, format(" <+%d%%>", pct));
-        }
-        else if (have_flag(known_flgs, TR_DEC_SPELL_POWER))
-        {
-            int pct = spell_power_aux(100, -o_ptr->pval) - 100;
-            t = object_desc_str(t, format(" <%d%%>", pct));
-        }
+    if (have_flag(known_flgs, TR_SPELL_POWER))
+    {
+        int pct = spell_power_aux(100, o_ptr->pval) - 100;
+        t = object_desc_str(t, format(" <+%d%%>", pct));
+    }
+    else if (have_flag(known_flgs, TR_DEC_SPELL_POWER))
+    {
+        int pct = spell_power_aux(100, -o_ptr->pval) - 100;
+        t = object_desc_str(t, format(" <%d%%>", pct));
+    }
 
-        if (have_flag(known_flgs, TR_SPELL_CAP))
-        {
-            int pct = spell_cap_aux(100, o_ptr->pval) - 100;
-            if (pct > 0)
-                t = object_desc_str(t, format(" [+%d%%]", pct));
-            else
-                t = object_desc_str(t, format(" [%d%%]", pct));
-        }
-        else if (have_flag(known_flgs, TR_DEC_SPELL_CAP))
-        {
-            int pct = spell_cap_aux(100, -o_ptr->pval) - 100;
+    if (have_flag(known_flgs, TR_SPELL_CAP))
+    {
+        int pct = spell_cap_aux(100, o_ptr->pval) - 100;
+        if (pct > 0)
+            t = object_desc_str(t, format(" [+%d%%]", pct));
+        else
             t = object_desc_str(t, format(" [%d%%]", pct));
-        }
+    }
+    else if (have_flag(known_flgs, TR_DEC_SPELL_CAP))
+    {
+        int pct = spell_cap_aux(100, -o_ptr->pval) - 100;
+        t = object_desc_str(t, format(" [%d%%]", pct));
+    }
 
+    if (known)
+    {
         /* Hack -- Process Lanterns/Torches */
         if ((o_ptr->tval == TV_LITE) && (!(o_ptr->name1 || o_ptr->art_name || (o_ptr->sval == SV_LITE_FEANOR))))
         {

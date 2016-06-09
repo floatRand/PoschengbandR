@@ -25,7 +25,7 @@ static void _display_curses(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE], d
 static void _display_activation(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE], doc_ptr doc);
 static void _display_ignore(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE], doc_ptr doc);
 static void _display_autopick(object_type *o_ptr, doc_ptr doc);
-static void _display_cost(object_type *o_ptr, doc_ptr doc);
+static void _display_score(object_type *o_ptr, doc_ptr doc);
 static void _lite_display_doc(object_type *o_ptr, doc_ptr doc);
 
 static int _calc_net_bonus(int amt, u32b flgs[TR_FLAG_ARRAY_SIZE], int flg, int flg_dec);
@@ -785,26 +785,53 @@ static void _display_autopick(object_type *o_ptr, doc_ptr doc)
     }
 }
 
+#if 0
 /* Debugging Object Pricing */
 static doc_ptr _dbg_doc = NULL;
 static void _cost_dbg_hook(cptr msg)
 {
     doc_printf(_dbg_doc, "%s\n", msg);
 }
+#endif
 
-static void _display_cost(object_type *o_ptr, doc_ptr doc)
+static char _score_color(int score)
 {
-    if (1 && p_ptr->wizard)
-    {
-        _dbg_doc = doc;
-        cost_calc_hook = _cost_dbg_hook;
+    if (score < 1000)
+        return 'D';
+    if (score < 10000)
+        return 'w';
+    if (score < 20000)
+        return 'W';
+    if (score < 40000)
+        return 'u';
+    if (score < 60000)
+        return 'y';
+    if (score < 80000)
+        return 'o';
+    if (score < 100000)
+        return 'R';
+    if (score < 150000)
+        return 'r';
+    return 'v';
+}
 
-        doc_newline(doc);
-        new_object_cost(o_ptr, COST_REAL);
+static void _display_score(object_type *o_ptr, doc_ptr doc)
+{
+#if 0
+    _dbg_doc = doc;
+    cost_calc_hook = _cost_dbg_hook;
 
-        cost_calc_hook = NULL;
-        _dbg_doc = NULL;
-    }
+    doc_newline(doc);
+    new_object_cost(o_ptr, 0);
+
+    cost_calc_hook = NULL;
+    _dbg_doc = NULL;
+#else
+    int score = object_value(o_ptr);
+    char buf[10];
+    big_num_display(score, buf);
+    doc_printf(doc, "<color:B>Score:</color> <color:%c>%6.6s</color>\n", _score_color(score), buf);
+#endif
 }
 
 static void _lite_display_doc(object_type *o_ptr, doc_ptr doc)
@@ -916,24 +943,27 @@ extern void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     _display_activation(o_ptr, flgs, doc);
     _display_curses(o_ptr, flgs, doc);
     _display_ignore(o_ptr, flgs, doc);
+    _display_score(o_ptr, doc);
 
-    if (obj_is_identified(o_ptr))
+    if (object_is_wearable(o_ptr))
     {
-        if (!obj_is_identified_fully(o_ptr))
+        doc_newline(doc);
+        if (obj_is_identified(o_ptr))
         {
-            if (object_is_artifact(o_ptr))
-                doc_printf(doc, "This object is an artifact, a unique object whose powers you must either learn by direct experience or by *identifying* or selling this object.\n");
-            else
-                doc_printf(doc, "This object may have additional powers which you may learn either by experience or by *identifying* or selling this object.\n");
+            if (!obj_is_identified_fully(o_ptr))
+            {
+                if (object_is_artifact(o_ptr))
+                    doc_printf(doc, "This object is an artifact, a unique object whose powers you must either learn by direct experience or by *identifying* or selling this object.\n");
+                else
+                    doc_printf(doc, "This object may have additional powers which you may learn either by experience or by *identifying* or selling this object.\n");
+            }
+        }
+        else
+        {
+            doc_printf(doc, "This object is unkown. You should either identify it, or, if you are truly bold (foolish?), then you might learn more by equipping it!\n");
         }
     }
-    else if (object_is_wearable(o_ptr))
-    {
-        doc_printf(doc, "This object is unkown. You should either identify it, or, if you are truly bold (foolish?), then you might learn more by equipping it!\n");
-    }
-
     _display_autopick(o_ptr, doc);
-    _display_cost(o_ptr, doc);
 
     doc_insert(doc, "</style></indent>\n");
 }
@@ -1118,16 +1148,15 @@ extern void device_display_doc(object_type *o_ptr, doc_ptr doc)
     }
 
     doc_insert(doc, "<style:indent>"); /* Indent a bit when word wrapping long lines */
+    _display_score(o_ptr, doc);
 
     if (object_is_ego(o_ptr) && !obj_is_identified_fully(o_ptr))
-        doc_printf(doc, "This object may have additional powers which you may learn by *identifying* or selling this object.\n");
+        doc_printf(doc, "\nThis object may have additional powers which you may learn by *identifying* or selling this object.\n");
     else if (!obj_is_identified_fully(o_ptr))
-        doc_printf(doc, "You may *identify* or sell this object to learn more about this device.\n");
+        doc_printf(doc, "\nYou may *identify* or sell this object to learn more about this device.\n");
 
     _display_ignore(o_ptr, flgs, doc);
-
     _display_autopick(o_ptr, doc);
-    _display_cost(o_ptr, doc);
 
     doc_insert(doc, "</style></indent>\n");
 }

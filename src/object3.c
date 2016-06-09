@@ -37,9 +37,10 @@ static double _check_flag_and_score(u32b flgs[TR_FLAG_ARRAY_SIZE], u32b flg, u32
     return result;
 }
 
-static s32b _activation_p(object_type *o_ptr)
+static s32b _activation_p(u32b flgs[TR_FLAG_ARRAY_SIZE], object_type *o_ptr)
 {
-    if (obj_has_effect(o_ptr))
+    /* Make sure player has learned the activation before scoring it! */
+    if (have_flag(flgs, TR_ACTIVATE) && obj_has_effect(o_ptr))
     {
         effect_t effect = obj_get_effect(o_ptr);
         assert(effect.type);
@@ -253,7 +254,7 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_ARRAY_SIZE], object_type *o_ptr)
     char dbg_msg[512];
     s32b y;
 
-    y = _activation_p(o_ptr);
+    y = _activation_p(flgs, o_ptr);
     if (y != 0)
     {
         p += y;
@@ -264,45 +265,48 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_ARRAY_SIZE], object_type *o_ptr)
         }
     }
 
-    if (o_ptr->name2 == EGO_ROBE_TWILIGHT)
+    if (obj_is_identified(o_ptr))
     {
-        p = p / 3;
-        if (cost_calc_hook)
+        if (o_ptr->name2 == EGO_ROBE_TWILIGHT)
         {
-            sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
-            cost_calc_hook(dbg_msg);
+            p = p / 3;
+            if (cost_calc_hook)
+            {
+                sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
+                cost_calc_hook(dbg_msg);
+            }
         }
-    }
 
-    switch (o_ptr->name1)
-    {
-    case ART_STONE_OF_NATURE:
-    case ART_STONE_OF_LIFE:
-    case ART_STONE_OF_SORCERY:
-    case ART_STONE_OF_CHAOS:
-    case ART_STONE_OF_DEATH:
-    case ART_STONE_OF_TRUMP:
-    case ART_STONE_OF_DAEMON:
-    case ART_STONE_OF_CRUSADE:
-    case ART_STONE_OF_CRAFT:
-    case ART_STONE_OF_ARMAGEDDON:
-    case ART_STONE_OF_MIND:
-    case ART_STONE_LORE:
-        p += 5000;
-        if (cost_calc_hook)
+        switch (o_ptr->name1)
         {
-            sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
-            cost_calc_hook(dbg_msg);
+        case ART_STONE_OF_NATURE:
+        case ART_STONE_OF_LIFE:
+        case ART_STONE_OF_SORCERY:
+        case ART_STONE_OF_CHAOS:
+        case ART_STONE_OF_DEATH:
+        case ART_STONE_OF_TRUMP:
+        case ART_STONE_OF_DAEMON:
+        case ART_STONE_OF_CRUSADE:
+        case ART_STONE_OF_CRAFT:
+        case ART_STONE_OF_ARMAGEDDON:
+        case ART_STONE_OF_MIND:
+        case ART_STONE_LORE:
+            p += 5000;
+            if (cost_calc_hook)
+            {
+                sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
+                cost_calc_hook(dbg_msg);
+            }
+            break;
+        case ART_ASSASSINATOR:
+            p += 25000;
+            if (cost_calc_hook)
+            {
+                sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
+                cost_calc_hook(dbg_msg);
+            }
+            break;
         }
-        break;
-    case ART_ASSASSINATOR:
-        p += 25000;
-        if (cost_calc_hook)
-        {
-            sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
-            cost_calc_hook(dbg_msg);
-        }
-        break;
     }
 
     if (have_flag(flgs, TR_AGGRAVATE))
@@ -355,7 +359,7 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_ARRAY_SIZE], object_type *o_ptr)
         }
     }
 
-    if (o_ptr->curse_flags & TRC_PERMA_CURSE)
+    if (obj_is_identified(o_ptr) && o_ptr->curse_flags & TRC_PERMA_CURSE)
     {
         p = p * 8 / 10;
         if (cost_calc_hook)
@@ -365,24 +369,21 @@ s32b _finalize_p(s32b p, u32b flgs[TR_FLAG_ARRAY_SIZE], object_type *o_ptr)
         }
     }
 
-    /* TODO
-    if (have_flag(flgs, TR_VULN_ACID))
+    if (o_ptr->tval != TV_LITE && !object_is_jewelry(o_ptr))
     {
-        p = p * 8 / 10;
-        if (cost_calc_hook)
+        /* Do we know this is an artifact? */
+        if ( (obj_is_identified(o_ptr) && object_is_artifact(o_ptr))
+          || (o_ptr->feeling & (FEEL_SPECIAL | FEEL_TERRIBLE)) )
         {
-            sprintf(dbg_msg, "  * Vuln Acid: p = %d", p);
-            cost_calc_hook(dbg_msg);
         }
-    }*/
-
-    if (!object_is_artifact(o_ptr) && o_ptr->tval != TV_LITE && !object_is_jewelry(o_ptr))
-    {
-        p = (p + 1) * 3 / 4;
-        if (cost_calc_hook)
+        else
         {
-            sprintf(dbg_msg, "  * Not Artifact: p = %d", p);
-            cost_calc_hook(dbg_msg);
+            p = (p + 1) * 3 / 4;
+            if (cost_calc_hook)
+            {
+                sprintf(dbg_msg, "  * Not Artifact: p = %d", p);
+                cost_calc_hook(dbg_msg);
+            }
         }
     }
 
@@ -421,14 +422,12 @@ s32b jewelry_cost(object_type *o_ptr, int options)
         to_h = o_ptr->to_h;
         to_d = o_ptr->to_d;
         to_a = o_ptr->to_a;
-        pval = o_ptr->pval;
     }
+    pval = o_ptr->pval;
 
     if (cost_calc_hook)
     {
         char buf[MAX_NLEN];
-        identify_item(o_ptr); /* Well, let's assume a developer is debugging :) */
-        o_ptr->ident |= (IDENT_FULL); 
         object_desc(buf, o_ptr, 0);
         sprintf(dbg_msg, "Scoring `%s` ...", buf);
         cost_calc_hook(dbg_msg);
@@ -630,9 +629,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
         }
     }
 
-    if ((options & COST_REAL) || object_is_known(o_ptr))
-        p = _finalize_p(p, flgs, o_ptr);
-
+    p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
@@ -648,8 +645,7 @@ s32b lite_cost(object_type *o_ptr, int options)
     else
         obj_flags_known(o_ptr, flgs);
 
-    if ((options & COST_REAL) || object_is_known(o_ptr))
-        pval = o_ptr->pval;
+    pval = o_ptr->pval;
 
     switch (o_ptr->sval)
     {
@@ -767,8 +763,7 @@ s32b lite_cost(object_type *o_ptr, int options)
         }
     }
 
-    if ((options & COST_REAL) || object_is_known(o_ptr))
-        p = _finalize_p(p, flgs, o_ptr);
+    p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
@@ -789,14 +784,12 @@ s32b armor_cost(object_type *o_ptr, int options)
         to_h = o_ptr->to_h;
         to_d = o_ptr->to_d;
         to_a = o_ptr->to_a;
-        pval = o_ptr->pval;
     }
+    pval = o_ptr->pval;
 
     if (cost_calc_hook)
     {
         char buf[MAX_NLEN];
-        identify_item(o_ptr); /* Well, let's assume a developer is debugging :) */
-        o_ptr->ident |= (IDENT_FULL); 
         object_desc(buf, o_ptr, 0);
         sprintf(dbg_msg, "Scoring `%s` ...", buf);
         cost_calc_hook(dbg_msg);
@@ -958,10 +951,7 @@ s32b armor_cost(object_type *o_ptr, int options)
         }
     }
 
-    if ((options & COST_REAL) || object_is_known(o_ptr))
-        p = _finalize_p(p, flgs, o_ptr);
-    else
-        p = (p + 1) * 3 / 4; /* assume not artifact */
+    p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
@@ -988,14 +978,12 @@ s32b weapon_cost(object_type *o_ptr, int options)
         to_h = o_ptr->to_h;
         to_d = o_ptr->to_d;
         to_a = o_ptr->to_a;
-        pval = o_ptr->pval;
     }
+    pval = o_ptr->pval;
 
     if (cost_calc_hook)
     {
         char buf[MAX_NLEN];
-        identify_item(o_ptr); /* Well, let's assume a developer is debugging :) */
-        o_ptr->ident |= (IDENT_FULL); 
         object_desc(buf, o_ptr, 0);
         sprintf(dbg_msg, "Scoring `%s` ...", buf);
         cost_calc_hook(dbg_msg);
@@ -1211,10 +1199,7 @@ s32b weapon_cost(object_type *o_ptr, int options)
         cost_calc_hook(dbg_msg);
     }
 
-    if ((options & COST_REAL) || object_is_known(o_ptr))
-        p = _finalize_p(p, flgs, o_ptr);
-    else
-        p = p * 3 / 4; /* assume not artifact */
+    p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
@@ -1294,14 +1279,12 @@ s32b bow_cost(object_type *o_ptr, int options)
     {
         to_h = o_ptr->to_h;
         to_a = o_ptr->to_a;
-        pval = o_ptr->pval;
     }
+    pval = o_ptr->pval;
 
     if (cost_calc_hook)
     {
         char buf[MAX_NLEN];
-        identify_item(o_ptr); /* Well, let's assume a developer is debugging :) */
-        o_ptr->ident |= (IDENT_FULL); 
         object_desc(buf, o_ptr, 0);
         sprintf(dbg_msg, "Scoring `%s` ...", buf);
         cost_calc_hook(dbg_msg);
@@ -1442,10 +1425,7 @@ s32b bow_cost(object_type *o_ptr, int options)
         cost_calc_hook(dbg_msg);
     }
 
-    if ((options & COST_REAL) || object_is_known(o_ptr))
-        p = _finalize_p(p, flgs, o_ptr);
-    else
-        p = p * 3 / 4; /* assume not artifact */
+    p = _finalize_p(p, flgs, o_ptr);
     return p;
 }
 
