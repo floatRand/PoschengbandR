@@ -376,7 +376,7 @@ static void _test_specific_k_idx(void)
         /*create_artifact(&forge, CREATE_ART_GOOD);*/
         apply_magic(&forge, object_level, 0);
 
-        if (forge.name2)
+        if (forge.name2 == EGO_WEAPON_SLAYING)
         {
             obj_identify_fully(&forge);
         

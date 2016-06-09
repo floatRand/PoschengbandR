@@ -1635,24 +1635,25 @@ static void _ego_create_digger(object_type *o_ptr, int level)
 typedef struct {
     int slay_flag;
     int rarity;
+    int max_lvl;
     int kill_flag;
     int esp_flag;
 } _slaying_info_t, *_slaying_info_ptr;
 static _slaying_info_t _slaying_info[] = {
-    { TR_SLAY_ORC,     2, TR_KILL_ORC,    TR_ESP_ORC},
-    { TR_SLAY_TROLL,   2, TR_KILL_TROLL,  TR_ESP_TROLL},
-    { TR_SLAY_GIANT,   2, TR_KILL_GIANT,  TR_ESP_GIANT},
-    { TR_SLAY_DRAGON,  3, TR_KILL_DRAGON, TR_ESP_DRAGON},
-    { TR_SLAY_DEMON,   3, TR_KILL_DEMON,  TR_ESP_DEMON},
-    { TR_SLAY_UNDEAD,  3, TR_KILL_UNDEAD, TR_ESP_UNDEAD},
-    { TR_SLAY_ANIMAL,  2, TR_KILL_ANIMAL, TR_ESP_ANIMAL},
-    { TR_SLAY_HUMAN,   3, TR_KILL_HUMAN,  TR_ESP_HUMAN},
-    { TR_SLAY_EVIL,    5, TR_KILL_EVIL,   TR_ESP_EVIL},
-    { TR_SLAY_GOOD,    5, TR_INVALID,     TR_ESP_GOOD},
-    { TR_SLAY_LIVING, 20, TR_INVALID,     TR_INVALID},
+    { TR_SLAY_ORC,     2, 25, TR_KILL_ORC,    TR_ESP_ORC},
+    { TR_SLAY_TROLL,   2, 35, TR_KILL_TROLL,  TR_ESP_TROLL},
+    { TR_SLAY_GIANT,   2,  0, TR_KILL_GIANT,  TR_ESP_GIANT},
+    { TR_SLAY_DRAGON,  3,  0, TR_KILL_DRAGON, TR_ESP_DRAGON},
+    { TR_SLAY_DEMON,   3,  0, TR_KILL_DEMON,  TR_ESP_DEMON},
+    { TR_SLAY_UNDEAD,  3,  0, TR_KILL_UNDEAD, TR_ESP_UNDEAD},
+    { TR_SLAY_ANIMAL,  2,  0, TR_KILL_ANIMAL, TR_ESP_ANIMAL},
+    { TR_SLAY_HUMAN,   3,  0, TR_KILL_HUMAN,  TR_ESP_HUMAN},
+    { TR_SLAY_EVIL,    5,  0, TR_KILL_EVIL,   TR_ESP_EVIL},
+    { TR_SLAY_GOOD,    5,  0, TR_INVALID,     TR_ESP_GOOD},
+    { TR_SLAY_LIVING, 20,  0, TR_INVALID,     TR_INVALID},
     { TR_INVALID },
 };
-static int _choose_slaying_info(void)
+static int _choose_slaying_info(int level)
 {
     int i, n;
     int tot = 0;
@@ -1661,6 +1662,7 @@ static int _choose_slaying_info(void)
     {
         if (_slaying_info[i].slay_flag == TR_INVALID) break;
         if (!_slaying_info[i].rarity) continue;
+        if (_slaying_info[i].max_lvl && level > _slaying_info[i].max_lvl) continue;
 
         tot += MAX(255 / _slaying_info[i].rarity, 1);
     }
@@ -1672,6 +1674,7 @@ static int _choose_slaying_info(void)
     {
         if (_slaying_info[i].slay_flag == TR_INVALID) break;
         if (!_slaying_info[i].rarity) continue;
+        if (_slaying_info[i].max_lvl && level > _slaying_info[i].max_lvl) continue;
 
         n -= MAX(255 / _slaying_info[i].rarity, 1);
         if (n <= 0) return i;
@@ -1690,7 +1693,7 @@ static void _ego_create_weapon_slaying(object_type *o_ptr, int level)
 
     for (i = 0; i < rolls; i++)
     {
-        int               j = _choose_slaying_info();
+        int               j = _choose_slaying_info(level);
         _slaying_info_ptr info;
         if (j == -1) continue;
         info = &_slaying_info[j];
