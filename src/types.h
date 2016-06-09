@@ -247,6 +247,7 @@ typedef struct ego_type ego_type;
 
 struct ego_type
 {
+    u32b id;
     u32b name;            /* Name (offset) */
     u32b text;            /* Text (offset) */
 

@@ -1,4 +1,4 @@
-# File: e_info.txt
+# File: e_info.txt (Touch)
 
 # Redone for PosChengband 3.0.0 with ideas liberally borrowed from 
 # great variants everywhere! Many thanks!!
@@ -48,6 +48,7 @@ W:0:*:2
 N:2:of Sharpness
 T:WEAPON
 W:10:70:2
+C:0:0:0:5
 F:VORPAL | TUNNEL
 
 N:3:of Force

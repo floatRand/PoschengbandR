@@ -1894,7 +1894,6 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
                 done = FALSE;
             else
             {
-                o_ptr->pval = m_bonus(5, level) + 1;
                 if (one_in_(2))
                 {
                     do

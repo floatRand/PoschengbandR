@@ -3175,6 +3175,7 @@ errr parse_e_info(char *buf, header *head)
 
         error_idx = i;
         e_ptr = &e_info[i];
+        e_ptr->id = i;
 
         /* Description */
         if (!add_name(&e_ptr->name, head, zz[1])) return 7;

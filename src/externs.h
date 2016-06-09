@@ -1149,6 +1149,9 @@ extern void obj_display_rect(object_type *o_ptr, rect_t display);
 extern void obj_display_doc(object_type *o_ptr, doc_ptr doc);
 extern void obj_display_smith(object_type *o_ptr, doc_ptr doc);
 extern void device_display_doc(object_type *o_ptr, doc_ptr doc);
+extern void ego_display(ego_type *e_ptr);
+extern void ego_display_rect(ego_type *e_ptr, rect_t display);
+extern void ego_display_doc(ego_type *e_ptr, doc_ptr doc);
 
 /* py_display.c */
 extern void py_display(void);
@@ -1201,6 +1204,10 @@ extern void obj_learn_slay(object_type *o_ptr, int which, cptr msg);
 
 /* Equipping an object learns many things, mostly pval related. Alert the user. */
 extern void obj_learn_equipped(object_type *o_ptr);
+
+extern bool ego_has_lore(ego_type *e_ptr);
+extern bool art_has_lore(artifact_type *a_ptr);
+extern bool obj_has_lore(object_type *o_ptr);
 
 /* ego.c */
 extern void ego_create_ring(object_type *o_ptr, int level, int power, int mode);

@@ -6045,35 +6045,39 @@ static void desc_obj_fake(int k_idx)
 
 static void desc_ego_fake(int e_idx)
 {
-    /*TODO:
     ego_type *e_ptr = &e_info[e_idx];
-    ego_display(e_ptr);*/
+    ego_display(e_ptr);
 }
 
 
 typedef struct {
-    int id;
+    u32b id;
     cptr name;
 } _ego_type_t;
 
 static _ego_type_t _ego_types[] = {
     { EGO_TYPE_WEAPON, "Weapons" },
     { EGO_TYPE_DIGGER, "Diggers" },
+
     { EGO_TYPE_SHIELD, "Shields" },
-    { EGO_TYPE_BOW, "Bows" },
-    { EGO_TYPE_HARP, "Harps" },
-    { EGO_TYPE_RING, "Rings" },
-    { EGO_TYPE_AMULET, "Amulets" },
-    { EGO_TYPE_LITE, "Lights" },
-    { EGO_TYPE_BODY_ARMOR, "Armors" },
+    { EGO_TYPE_BODY_ARMOR, "Body Armor" },
     { EGO_TYPE_ROBE, "Robes" },
+    { EGO_TYPE_DRAGON_ARMOR, "Dragon Armor" },
     { EGO_TYPE_CLOAK, "Cloaks" },
     { EGO_TYPE_HELMET, "Helmets" },
     { EGO_TYPE_CROWN, "Crowns" },
     { EGO_TYPE_GLOVES, "Gloves" },
     { EGO_TYPE_BOOTS, "Boots" },
+
+    { EGO_TYPE_BOW, "Bows" },
     { EGO_TYPE_AMMO, "Ammo" },
+    { EGO_TYPE_HARP, "Harps" },
+
+    { EGO_TYPE_RING, "Rings" },
+    { EGO_TYPE_AMULET, "Amulets" },
+    { EGO_TYPE_LITE, "Lights" },
     { EGO_TYPE_DEVICE, "Devices" },
+
     { EGO_TYPE_NONE, NULL },
 };
 
@@ -6096,7 +6100,7 @@ static int _collect_egos(int grp_cur, int ego_idx[])
 
         if (!e_ptr->name) continue;
         /*if (!e_ptr->aware) continue;*/
-        if (!e_ptr->aware && !e_ptr->counts.found && !e_ptr->counts.bought) continue;
+        if (!ego_has_lore(e_ptr) && !e_ptr->counts.found && !e_ptr->counts.bought) continue;
         if (!(e_ptr->type & type)) continue;
 
         ego_idx[cnt++] = i;
@@ -6113,7 +6117,7 @@ static int _collect_egos(int grp_cur, int ego_idx[])
     return cnt;
 }
 
-static void do_cmd_knowledge_egos(bool *need_redraw)
+static void do_cmd_knowledge_egos(void)
 {
     int i, len, max;
     int grp_cur, grp_top, old_grp_cur;
@@ -6177,9 +6181,9 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
             prt(format("%s - Egos", "Knowledge"), 2, 0);
             prt("Group", 4, 0);
             prt("Name", 4, max + 3);
-            prt("Found Bought Dest", 4, 46);
+            prt("Found Bought Dest", 4, max + 3 + 36);
 
-            for (i = 0; i < 63; i++)
+            for (i = 0; i < 72; i++)
             {
                 Term_putch(i, 5, TERM_WHITE, '=');
             }
@@ -6227,13 +6231,16 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
             char           buf[255];
             char           name[255];
             int            idx = ego_idx[ego_top + i];
-            ego_type *e_ptr = &e_info[idx];
+            ego_type      *e_ptr = &e_info[idx];
             byte           attr = TERM_WHITE;
 
             if (i + ego_top == ego_cur)
                 attr = TERM_L_BLUE;
 
             strip_name_aux(name, e_name + e_ptr->name); 
+            if (e_ptr->type & (~_ego_types[grp_idx[grp_cur]].id))
+                strcat(name, " [Shared]");
+
             sprintf(buf, "%-35.35s %5d %6d %4d", 
                 name, 
                 e_ptr->counts.found, e_ptr->counts.bought, e_ptr->counts.destroyed
@@ -6269,12 +6276,7 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
             Term_erase(max + 3, 6 + i, 255);
         }
 
-        /* Prompt 
-        prt(format("<dir>%s%s%s, ESC",
-            (!visual_list && !visual_only) ? ", 'r' to recall" : "",
-            visual_list ? ", ENTER to accept" : ", 'v' for visuals",
-            (attr_idx || char_idx) ? ", 'c', 'p' to paste" : ", 'c' to copy"),
-            hgt - 1, 0); */
+        prt("<dir>, 'r' to recall, ESC", hgt - 1, 0);
 
         if (!column)
         {
@@ -6295,6 +6297,8 @@ static void do_cmd_knowledge_egos(bool *need_redraw)
 
         case 'R':
         case 'r':
+        case 'I':
+        case 'i':
             if (grp_cnt > 0 && ego_idx[ego_cur] >= 0)
             {
                 desc_ego_fake(ego_idx[ego_cur]);
@@ -7863,7 +7867,7 @@ void do_cmd_knowledge(void)
             do_cmd_knowledge_objects(&need_redraw, FALSE, -1);
             break;
         case 'e':
-            do_cmd_knowledge_egos(&need_redraw);
+            do_cmd_knowledge_egos();
             break;
         case 'h':
             do_cmd_knowledge_home();

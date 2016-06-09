@@ -597,6 +597,38 @@ void obj_learn_equipped(object_type *o_ptr)
     }
 }
 
+static bool _has_lore(u32b flgs[TR_FLAG_ARRAY_SIZE])
+{
+    int i;
+    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    {
+        if (flgs[i])
+            return TRUE;
+    }
+    return FALSE;
+}
+
+bool ego_has_lore(ego_type *e_ptr)
+{
+    return _has_lore(e_ptr->known_flags);
+}
+
+bool art_has_lore(artifact_type *a_ptr)
+{
+    return _has_lore(a_ptr->known_flags);
+}
+
+bool obj_has_lore(object_type *o_ptr)
+{
+    if (_has_lore(o_ptr->known_flags))
+        return TRUE;
+    if (o_ptr->name1)
+        return art_has_lore(&a_info[o_ptr->name1]);
+    if (o_ptr->name2)
+        return ego_has_lore(&e_info[o_ptr->name2]);
+    return FALSE;
+}
+
 /*
  * Convert an inventory index into a one character label
  * Note that the label does NOT distinguish inven/equip.

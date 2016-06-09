@@ -537,11 +537,10 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             if (!p_ptr->wizard && (a_info[i].gen_flags & TRG_QUESTITEM)) continue;
             if (!create_named_art_aux(i, &forge)) continue;
-
-            obj_identify_fully(&forge);
-
             if ((options & _SPOIL_EGOS) && !a_info[i].cur_num) continue; /* Hack */
             if (pred && !pred(&forge)) continue;
+
+            obj_identify_fully(&forge);
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = i;
