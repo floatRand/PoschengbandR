@@ -2898,7 +2898,7 @@ void obj_create_armor(object_type *o_ptr, int level, int power, int mode)
 
     case TV_HARD_ARMOR:
     case TV_SOFT_ARMOR:
-        if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ROBE) && one_in_(7))
+        if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ROBE) && level >= 30 && one_in_(7))
             _ego_create_robe(o_ptr, level);
         else if ((!crafting && one_in_(20)) || power > 2)
             _art_create_random(o_ptr, level, power);
