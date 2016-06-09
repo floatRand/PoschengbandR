@@ -1206,6 +1206,8 @@ bool brand_weapon(int brand_type)
         inventory[item].discount = 99;
 
         virtue_add(VIRTUE_ENCHANTMENT, 2);
+        obj_identify_fully(&inventory[item]);
+        obj_display(&inventory[item]);
     }
     else
     {
@@ -1249,6 +1251,8 @@ bool brand_weapon_slaying(int flag)
         inventory[item].discount = 99;
 
         virtue_add(VIRTUE_ENCHANTMENT, 2);
+        obj_identify_fully(&inventory[item]);
+        obj_display(&inventory[item]);
     }
     else
     {
