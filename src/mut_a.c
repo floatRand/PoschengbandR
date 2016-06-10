@@ -620,7 +620,7 @@ void draconian_lore_mut(int cmd, variant *res)
         var_set_string(res, "Items will automatically identify as you pick them up.");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->loremaster = TRUE;
+        p_ptr->auto_id = TRUE;
         break;
     default:
         default_spell(cmd, res);
@@ -1644,7 +1644,7 @@ void loremaster_mut(int cmd, variant *res)
         var_set_string(res, "Items will automatically identify as you pick them up.");
         break;
     case SPELL_CALC_BONUS:
-        p_ptr->loremaster = TRUE;
+        p_ptr->auto_id = TRUE;
         break;
     default:
         default_spell(cmd, res);

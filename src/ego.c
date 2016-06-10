@@ -1952,13 +1952,22 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
                 add_flag(o_ptr->flags, OF_BLESSED);
             break;
         case EGO_WEAPON_DEATH:
-            if (one_in_(6))
-                add_flag(o_ptr->flags, OF_VULN_LITE);
+            if (one_in_(16))
+            {
+                add_flag(o_ptr->flags, OF_DARKNESS);
+                add_flag(o_ptr->flags, OF_RES_DARK);
+                if (one_in_(6))
+                    add_flag(o_ptr->flags, OF_VULN_LITE);
+            }
             if (one_in_(3))
                 add_flag(o_ptr->flags, OF_SLAY_GOOD);
             if (one_in_(3))
+                add_flag(o_ptr->flags, OF_BRAND_POIS);
+            if (one_in_(3))
                 add_flag(o_ptr->flags, OF_RES_NETHER);
-            if (one_in_(5))
+            if (one_in_(3))
+                add_flag(o_ptr->flags, OF_RES_POIS);
+            if (one_in_(6))
                 add_flag(o_ptr->flags, OF_SLAY_HUMAN);
             else if (one_in_(13))
             {
@@ -2239,6 +2248,8 @@ static void _ego_create_dragon_armor(object_type *o_ptr, int level)
             }
             if (one_in_(7))
                 add_flag(o_ptr->flags, OF_MAGIC_MASTERY);
+            if (one_in_(5))
+                add_flag(o_ptr->flags, OF_LORE2);
             if (one_in_(ACTIVATION_CHANCE))
             {   /* Only do strong effects since we loose the DSM's breathe activation! */
                 int choices[] = {
@@ -2711,6 +2722,8 @@ static void _ego_create_helmet(object_type *o_ptr, int level)
         case EGO_HELMET_KNOWLEDGE:
             if (one_in_(7))
                 add_flag(o_ptr->flags, OF_MAGIC_MASTERY);
+            if (one_in_(5))
+                add_flag(o_ptr->flags, OF_LORE2);
             if (one_in_(ACTIVATION_CHANCE))
             {
                 int choices[] = {

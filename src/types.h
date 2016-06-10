@@ -1531,7 +1531,8 @@ struct player_type
     s16b regen;          /* Rate of regeneration: 100 = 100%, 200 = 200%, etc. */
     bool hold_life;      /* Resist life draining */
 
-    bool loremaster;
+    bool auto_id;
+    bool auto_pseudo_id;
     int  auto_id_sp;
     bool cult_of_personality;
     bool fairy_stealth;

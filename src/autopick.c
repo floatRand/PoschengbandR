@@ -2349,11 +2349,8 @@ bool autopick_auto_id(object_type *o_ptr)
 void autopick_pickup_items(cave_type *c_ptr)
 {
     s16b this_o_idx, next_o_idx = 0;
-    bool auto_lore = p_ptr->loremaster;
-    bool auto_sense = FALSE;
-
-    if (easy_id || p_ptr->lev >= 35)
-        auto_sense = TRUE;
+    bool auto_id = p_ptr->auto_id;
+    bool auto_pseudo_id = p_ptr->auto_pseudo_id;
     
     /* Scan the pile of objects */
     for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
@@ -2369,10 +2366,16 @@ void autopick_pickup_items(cave_type *c_ptr)
         /* Identify or Pseudo-Identify before applying pickup rules */
         if (o_ptr->tval != TV_GOLD)
         {
-            if (auto_lore)
+            if (auto_id)
+            {
                 identify_item(o_ptr);
-            if (auto_sense)
+                equip_learn_flag(OF_LORE2);
+            }
+            else if (auto_pseudo_id)
+            {
                 _sense_object_floor(o_ptr);
+                equip_learn_flag(OF_LORE1);
+            }
         }
 
         idx = is_autopick(o_ptr);
