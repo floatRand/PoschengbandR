@@ -2305,7 +2305,7 @@ I:40:0:4
 W:50:75:2:50000
 P:0:0d0:0:0:5
 F:STEALTH | SEARCH | HIDE_TYPE | SEE_INVIS |
-F:RES_DARK | LITE |
+F:RES_DARK | DARKNESS |
 E:BALL_DARK:50:100:250
 E:Your amulet is covered in pitch-darkness...
 

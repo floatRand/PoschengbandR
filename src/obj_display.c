@@ -18,7 +18,7 @@ static void _display_other_pval(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], do
 static void _display_brands(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
 static void _display_slays(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
 static void _display_resists(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
-static void _display_abilities(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc, bool darkness_hack);
+static void _display_abilities(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
 static void _display_auras(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
 static void _display_extra(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
 static void _display_curses(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
@@ -495,7 +495,7 @@ static void _display_resists(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc)
     vec_free(v);
 }
 
-static void _display_abilities(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc, bool darkness_hack)
+static void _display_abilities(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc)
 {
     vec_ptr v = vec_alloc((vec_free_f)string_free);
 
@@ -527,13 +527,10 @@ static void _display_abilities(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc, bool darkn
         vec_add(v, string_copy_s("<color:B>Blessed</color>"));
     if (have_flag(flgs, OF_RIDING))
         vec_add(v, string_copy_s("<color:o>Riding</color>"));
-    if (have_flag(flgs, OF_LITE))
-    {
-        if (darkness_hack)
-            vec_add(v, string_copy_s("<color:D>Permanent Darkness (1)</color>"));
-        else
-            vec_add(v, string_copy_s("<color:y>Permanent Light (1)</color>"));
-    }
+    if (have_flag(flgs, OF_DARKNESS))
+        vec_add(v, string_copy_s("<color:D>Permanent Darkness</color>"));
+    else if (have_flag(flgs, OF_LITE))
+        vec_add(v, string_copy_s("<color:y>Permanent Light</color>"));
     if (vec_length(v))
     {
         _print_list(v, doc, ';', '\0');
@@ -878,8 +875,7 @@ static void _cost_dbg_hook(cptr msg)
 {
     doc_printf(_dbg_doc, "%s\n", msg);
 }
-#endif
-
+#else
 static char _score_color(int score)
 {
     if (score < 1000)
@@ -900,6 +896,7 @@ static char _score_color(int score)
         return 'r';
     return 'v';
 }
+#endif
 
 static void _display_score(object_type *o_ptr, doc_ptr doc)
 {
@@ -922,8 +919,10 @@ static void _display_score(object_type *o_ptr, doc_ptr doc)
 
 static void _lite_display_doc(object_type *o_ptr, doc_ptr doc)
 {
+    u32b flgs[OF_ARRAY_SIZE];
     if (o_ptr->tval != TV_LITE) return;
-    if (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->flags, OF_DARKNESS))
+    obj_flags_known(o_ptr, flgs);
+    if (have_flag(flgs, OF_DARKNESS))
     {
         doc_insert(doc, "It provides no light.\n");
 
@@ -1023,7 +1022,7 @@ void obj_display_doc(object_type *o_ptr, doc_ptr doc)
     _display_slays(flgs, doc);
     _display_brands(flgs, doc);
     _display_resists(flgs, doc);
-    _display_abilities(flgs, doc, o_ptr->name2 == EGO_HELMET_VAMPIRE || o_ptr->name1 == ART_NIGHT);
+    _display_abilities(flgs, doc);
     _display_auras(flgs, doc);
     _display_extra(o_ptr, flgs, doc);
     _display_activation(o_ptr, flgs, doc);
@@ -1098,7 +1097,7 @@ void obj_display_smith(object_type *o_ptr, doc_ptr doc)
     _display_slays(flgs, doc);
     _display_brands(flgs, doc);
     _display_resists(flgs, doc);
-    _display_abilities(flgs, doc, o_ptr->name2 == EGO_HELMET_VAMPIRE || o_ptr->name1 == ART_NIGHT);
+    _display_abilities(flgs, doc);
     _display_auras(flgs, doc);
     _display_extra(o_ptr, flgs, doc);
     _display_curses(o_ptr, flgs, doc);
@@ -1315,7 +1314,7 @@ void ego_display_doc(ego_type *e_ptr, doc_ptr doc)
         _display_slays(flgs, doc);
         _display_brands(flgs, doc);
         _display_resists(flgs, doc);
-        _display_abilities(flgs, doc, e_ptr->id == EGO_HELMET_VAMPIRE);
+        _display_abilities(flgs, doc);
         _display_auras(flgs, doc);
         _ego_display_extra(flgs, doc);
         if (have_flag(flgs, OF_ACTIVATE))
@@ -1341,7 +1340,7 @@ void ego_display_doc(ego_type *e_ptr, doc_ptr doc)
         _display_slays(flgs, doc);
         _display_brands(flgs, doc);
         _display_resists(flgs, doc);
-        _display_abilities(flgs, doc, e_ptr->id == EGO_HELMET_VAMPIRE);
+        _display_abilities(flgs, doc);
         _display_auras(flgs, doc);
         _ego_display_extra(flgs, doc);
         if (have_flag(flgs, OF_ACTIVATE))

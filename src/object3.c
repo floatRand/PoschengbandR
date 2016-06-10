@@ -133,6 +133,7 @@ static s32b _abilities_q(u32b flgs[OF_ARRAY_SIZE])
     cost += _check_flag_and_score(flgs, OF_THROWING, 100, &count);
     cost += _check_flag_and_score(flgs, OF_WARNING, 100, &count);
     cost += _check_flag_and_score(flgs, OF_LITE, 100, &count);
+    cost += _check_flag_and_score(flgs, OF_DARKNESS, 100, &count);
     cost += _check_flag_and_score(flgs, OF_SLOW_DIGEST, 100, &count);
     cost += _check_flag_and_score(flgs, OF_SEE_INVIS, 500, &count);
     cost += _check_flag_and_score(flgs, OF_FREE_ACT, 750, &count);
@@ -672,8 +673,6 @@ s32b lite_cost(object_type *o_ptr, int options)
     {
         if (o_ptr->name2 == EGO_LITE_DURATION)
             j += 100;
-        if (o_ptr->name2 == EGO_LITE_EXTRA_LIGHT)
-            j += 250;
     }
 
     /* Resistances */

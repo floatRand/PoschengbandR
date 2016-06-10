@@ -1406,8 +1406,9 @@ static void process_world_aux_hp_and_sp(void)
         if (slot)
         {
             object_type *lite = equip_obj(slot);
-            if ( lite->name2 != EGO_LITE_DARKNESS
-              && !have_flag(lite->flags, OF_DARKNESS)
+            u32b         flgs[OF_ARRAY_SIZE];
+            obj_flags(lite, flgs);
+            if ( !have_flag(flgs, OF_DARKNESS)
               && res_pct(RES_LITE) < 0)
             {
                 char o_name [MAX_NLEN];

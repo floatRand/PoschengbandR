@@ -191,22 +191,23 @@ void obj_flags(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE])
     if (object_is_ego(o_ptr))
     {
         ego_type *e_ptr = &e_info[o_ptr->name2];
+        bool      skip = FALSE;
 
-        for (i = 0; i < OF_ARRAY_SIZE; i++)
-            flgs[i] |= e_ptr->flags[i];
+        /* Ego lamps lose powers when they run out of fuel */
+        switch (o_ptr->name2)
+        {
+        case EGO_LITE_IMMOLATION:
+        case EGO_LITE_INFRAVISION:
+        case EGO_LITE_IMMORTAL_EYE:
+            if (o_ptr->sval <= SV_LITE_LANTERN && !o_ptr->xtra4)
+                skip = TRUE;
+            break;
+        }
 
-        if ((o_ptr->name2 == EGO_LITE_IMMOLATION) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN))
+        if (!skip)
         {
-            remove_flag(flgs, OF_AURA_FIRE);
-        }
-        else if ((o_ptr->name2 == EGO_LITE_INFRAVISION) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN))
-        {
-            remove_flag(flgs, OF_INFRA);
-        }
-        else if ((o_ptr->name2 == EGO_LITE_IMMORTAL_EYE) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN))
-        {
-            remove_flag(flgs, OF_RES_BLIND);
-            remove_flag(flgs, OF_SEE_INVIS);
+            for (i = 0; i < OF_ARRAY_SIZE; i++)
+                flgs[i] |= e_ptr->flags[i];
         }
     }
 
@@ -268,26 +269,26 @@ void obj_flags_known(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE])
     else if (object_is_ego(o_ptr))
     {
         ego_type *e_ptr = &e_info[o_ptr->name2];
-
-        for (i = 0; i < OF_ARRAY_SIZE; i++)
-        {
-            flgs[i] |= (e_ptr->flags[i] & e_ptr->known_flags[i]);
-            flgs[i] |= (o_ptr->flags[i] & e_ptr->known_flags[i]);
-        }
+        bool      skip = FALSE;
 
         /* Ego lamps lose powers when they run out of fuel */
-        if (o_ptr->name2 == EGO_LITE_IMMOLATION && !o_ptr->xtra4 && o_ptr->sval <= SV_LITE_LANTERN)
+        switch (o_ptr->name2)
         {
-            remove_flag(flgs, OF_AURA_FIRE);
+        case EGO_LITE_IMMOLATION:
+        case EGO_LITE_INFRAVISION:
+        case EGO_LITE_IMMORTAL_EYE:
+            if (o_ptr->sval <= SV_LITE_LANTERN && !o_ptr->xtra4)
+                skip = TRUE;
+            break;
         }
-        else if (o_ptr->name2 == EGO_LITE_INFRAVISION && !o_ptr->xtra4 && o_ptr->sval <= SV_LITE_LANTERN)
+
+        if (!skip)
         {
-            remove_flag(flgs, OF_INFRA);
-        }
-        else if (o_ptr->name2 == EGO_LITE_IMMORTAL_EYE && !o_ptr->xtra4 && o_ptr->sval <= SV_LITE_LANTERN)
-        {
-            remove_flag(flgs, OF_RES_BLIND);
-            remove_flag(flgs, OF_SEE_INVIS);
+            for (i = 0; i < OF_ARRAY_SIZE; i++)
+            {
+                flgs[i] |= (e_ptr->flags[i] & e_ptr->known_flags[i]);
+                flgs[i] |= (o_ptr->flags[i] & e_ptr->known_flags[i]);
+            }
         }
     }
 

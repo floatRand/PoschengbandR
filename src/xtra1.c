@@ -3268,9 +3268,11 @@ static void calc_hitpoints(void)
  */
 static void _calc_torch_imp(object_type *o_ptr)
 {
+    u32b flgs[OF_ARRAY_SIZE];
+    obj_flags(o_ptr, flgs);
     if (o_ptr->tval == TV_LITE)
     {
-        if (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->flags, OF_DARKNESS))
+        if (have_flag(flgs, OF_DARKNESS))
         {
             if (o_ptr->sval == SV_LITE_TORCH)
                 p_ptr->cur_lite -= 1;
@@ -3289,18 +3291,15 @@ static void _calc_torch_imp(object_type *o_ptr)
         {
             p_ptr->cur_lite += 3;
         }
-        if (o_ptr->name2 == EGO_LITE_EXTRA_LIGHT) p_ptr->cur_lite++;
+        if (have_flag(flgs, OF_LITE)) p_ptr->cur_lite++;
         if (o_ptr->sval == SV_LITE_EYE) p_ptr->cur_lite -= 10;
     }
     else
     {
-        u32b flgs[OF_ARRAY_SIZE] = {0};
-        obj_flags(o_ptr, flgs);
-        if (have_flag(flgs, OF_LITE))
-        {
-            if (o_ptr->name2 == EGO_HELMET_VAMPIRE || o_ptr->name1 == ART_NIGHT) p_ptr->cur_lite--;
-            else p_ptr->cur_lite++;
-        }
+        if (have_flag(flgs, OF_DARKNESS))
+            p_ptr->cur_lite--;
+        else if (have_flag(flgs, OF_LITE))
+            p_ptr->cur_lite++;
     }
 }
 static void calc_torch(void)
