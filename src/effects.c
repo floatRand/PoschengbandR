@@ -5406,7 +5406,7 @@ bool do_dec_stat(int stat)
         if (disturb_minor)
             msg_format("You feel %s for a moment, but the feeling passes.", desc_stat_neg[stat]);
 
-        equip_learn_flag(TR_SUST_STR + stat);
+        equip_learn_flag(OF_SUST_STR + stat);
         return TRUE;
     }
 
@@ -6177,7 +6177,7 @@ void calc_android_exp(void)
         if (object_is_fixed_artifact(o_ptr))
         {
             level = (level + MAX(a_info[o_ptr->name1].level - 8, 5)) / 2;
-            level += MIN(20, a_info[o_ptr->name1].rarity/(a_info[o_ptr->name1].gen_flags & TRG_INSTA_ART ? 10 : 3));
+            level += MIN(20, a_info[o_ptr->name1].rarity/(a_info[o_ptr->name1].gen_flags & OFG_INSTA_ART ? 10 : 3));
         }
         else if (o_ptr->art_name || o_ptr->name2)
         {

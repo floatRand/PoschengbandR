@@ -3849,7 +3849,7 @@ cptr inven_res_label =
 static void do_cmd_knowledge_inven_aux(FILE *fff, object_type *o_ptr, int *j, byte tval, char *where)
 {
     char o_name[MAX_NLEN];
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
 
     if (!o_ptr->k_idx) return;
     if (o_ptr->tval != tval) return;
@@ -3892,32 +3892,32 @@ static void do_cmd_knowledge_inven_aux(FILE *fff, object_type *o_ptr, int *j, by
         {
             obj_flags_known(o_ptr, flgs);
 
-            print_im_or_res_flag(TR_IM_ACID, TR_RES_ACID);
-            print_im_or_res_flag(TR_IM_ELEC, TR_RES_ELEC);
-            print_im_or_res_flag(TR_IM_FIRE, TR_RES_FIRE);
-            print_im_or_res_flag(TR_IM_COLD, TR_RES_COLD);
-            print_flag(TR_RES_POIS);
-            print_flag(TR_RES_LITE);
-            print_flag(TR_RES_DARK);
-            print_flag(TR_RES_SHARDS);
-            print_flag(TR_RES_SOUND);
-            print_flag(TR_RES_NETHER);
-            print_flag(TR_RES_NEXUS);
-            print_flag(TR_RES_CHAOS);
-            print_flag(TR_RES_DISEN);
+            print_im_or_res_flag(OF_IM_ACID, OF_RES_ACID);
+            print_im_or_res_flag(OF_IM_ELEC, OF_RES_ELEC);
+            print_im_or_res_flag(OF_IM_FIRE, OF_RES_FIRE);
+            print_im_or_res_flag(OF_IM_COLD, OF_RES_COLD);
+            print_flag(OF_RES_POIS);
+            print_flag(OF_RES_LITE);
+            print_flag(OF_RES_DARK);
+            print_flag(OF_RES_SHARDS);
+            print_flag(OF_RES_SOUND);
+            print_flag(OF_RES_NETHER);
+            print_flag(OF_RES_NEXUS);
+            print_flag(OF_RES_CHAOS);
+            print_flag(OF_RES_DISEN);
 
             fputs(" ", fff);
 
-            print_flag(TR_RES_BLIND);
-            print_flag(TR_RES_FEAR);
-            print_flag(TR_RES_CONF);
-            print_flag(TR_FREE_ACT);
-            print_flag(TR_SEE_INVIS);
-            print_flag(TR_HOLD_LIFE);
-            print_flag(TR_TELEPATHY);
-            print_flag(TR_SLOW_DIGEST);
-            print_flag(TR_REGEN);
-            print_flag(TR_LEVITATION);
+            print_flag(OF_RES_BLIND);
+            print_flag(OF_RES_FEAR);
+            print_flag(OF_RES_CONF);
+            print_flag(OF_FREE_ACT);
+            print_flag(OF_SEE_INVIS);
+            print_flag(OF_HOLD_LIFE);
+            print_flag(OF_TELEPATHY);
+            print_flag(OF_SLOW_DIGEST);
+            print_flag(OF_REGEN);
+            print_flag(OF_LEVITATION);
 
             fputc('\n', fff);
         }

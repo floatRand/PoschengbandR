@@ -51,7 +51,7 @@ static void _khorne_birth(void)
     forge.to_d = 0;
     forge.ds = 6;
     forge.weight = 220;
-    add_flag(forge.art_flags, TR_VORPAL);
+    add_flag(forge.flags, OF_VORPAL);
     add_outfit(&forge);
 }
 
@@ -192,51 +192,51 @@ static void _khorne_calc_bonuses(void)
     }
 }
 
-static void _khorne_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
+static void _khorne_get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, TR_RES_FIRE);
-    add_flag(flgs, TR_RES_NETHER);
+    add_flag(flgs, OF_RES_FIRE);
+    add_flag(flgs, OF_RES_NETHER);
 
-    add_flag(flgs, TR_HOLD_LIFE);
-    add_flag(flgs, TR_SLOW_DIGEST);
+    add_flag(flgs, OF_HOLD_LIFE);
+    add_flag(flgs, OF_SLOW_DIGEST);
 
     switch (p_ptr->current_r_idx)
     {
     case MON_BLOODLETTER_KHORNE:
-        add_flag(flgs, TR_REGEN);
-        add_flag(flgs, TR_RES_COLD);
-        add_flag(flgs, TR_RES_POIS);
-        add_flag(flgs, TR_RES_CHAOS);
+        add_flag(flgs, OF_REGEN);
+        add_flag(flgs, OF_RES_COLD);
+        add_flag(flgs, OF_RES_POIS);
+        add_flag(flgs, OF_RES_CHAOS);
         break;
     case MON_FLESHHOUND_KHORNE:
-        add_flag(flgs, TR_SPEED);
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_NEXUS);
-        add_flag(flgs, TR_RES_DISEN);
+        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_RES_CONF);
+        add_flag(flgs, OF_RES_NEXUS);
+        add_flag(flgs, OF_RES_DISEN);
         break;
     case MON_JUGGERNAUT_KHORNE:
-        add_flag(flgs, TR_SPEED);
-        add_flag(flgs, TR_REFLECT);
-        add_flag(flgs, TR_FREE_ACT);
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_REFLECT);
+        add_flag(flgs, OF_FREE_ACT);
+        add_flag(flgs, OF_SEE_INVIS);
 
-        add_flag(flgs, TR_RES_COLD);
-        add_flag(flgs, TR_RES_ELEC);
-        add_flag(flgs, TR_RES_POIS);
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_FEAR);
+        add_flag(flgs, OF_RES_COLD);
+        add_flag(flgs, OF_RES_ELEC);
+        add_flag(flgs, OF_RES_POIS);
+        add_flag(flgs, OF_RES_CONF);
+        add_flag(flgs, OF_RES_FEAR);
         break;
     case MON_BLOODTHIRSTER:
-        add_flag(flgs, TR_SPEED);
-        add_flag(flgs, TR_REGEN);
-        add_flag(flgs, TR_LEVITATION);
-        add_flag(flgs, TR_FREE_ACT);
-        add_flag(flgs, TR_SEE_INVIS);
-        add_flag(flgs, TR_RES_ACID);
-        add_flag(flgs, TR_RES_COLD);
-        add_flag(flgs, TR_RES_POIS);
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_NEXUS);
+        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_REGEN);
+        add_flag(flgs, OF_LEVITATION);
+        add_flag(flgs, OF_FREE_ACT);
+        add_flag(flgs, OF_SEE_INVIS);
+        add_flag(flgs, OF_RES_ACID);
+        add_flag(flgs, OF_RES_COLD);
+        add_flag(flgs, OF_RES_POIS);
+        add_flag(flgs, OF_RES_CONF);
+        add_flag(flgs, OF_RES_NEXUS);
         break;
     }
 }
@@ -439,41 +439,41 @@ static void _marilith_calc_bonuses(void) {
     }
 }
 
-static void _marilith_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
-    add_flag(flgs, TR_RES_FIRE);
-    add_flag(flgs, TR_RES_NETHER);
+static void _marilith_get_flags(u32b flgs[OF_ARRAY_SIZE]) {
+    add_flag(flgs, OF_RES_FIRE);
+    add_flag(flgs, OF_RES_NETHER);
 
-    add_flag(flgs, TR_HOLD_LIFE);
-    add_flag(flgs, TR_SLOW_DIGEST);
+    add_flag(flgs, OF_HOLD_LIFE);
+    add_flag(flgs, OF_SLOW_DIGEST);
 
     switch (p_ptr->current_r_idx)
     {
     case MON_QUASIT:
-        add_flag(flgs, TR_LEVITATION);
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_LEVITATION);
+        add_flag(flgs, OF_SEE_INVIS);
         break;
     case MON_BODAK:
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_POIS);
-        add_flag(flgs, TR_SH_FIRE);
-        add_flag(flgs, TR_FREE_ACT);
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_RES_CONF);
+        add_flag(flgs, OF_RES_POIS);
+        add_flag(flgs, OF_AURA_FIRE);
+        add_flag(flgs, OF_FREE_ACT);
+        add_flag(flgs, OF_SEE_INVIS);
         break;
     case MON_DEATH_QUASIT:
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_POIS);
-        add_flag(flgs, TR_SPEED);
-        add_flag(flgs, TR_LEVITATION);
-        add_flag(flgs, TR_FREE_ACT);
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_RES_CONF);
+        add_flag(flgs, OF_RES_POIS);
+        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_LEVITATION);
+        add_flag(flgs, OF_FREE_ACT);
+        add_flag(flgs, OF_SEE_INVIS);
         break;
     case MON_MARILITH:
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_POIS);
-        add_flag(flgs, TR_RES_CHAOS);
-        add_flag(flgs, TR_SPEED);
-        add_flag(flgs, TR_FREE_ACT);
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_RES_CONF);
+        add_flag(flgs, OF_RES_POIS);
+        add_flag(flgs, OF_RES_CHAOS);
+        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_FREE_ACT);
+        add_flag(flgs, OF_SEE_INVIS);
         break;
     }
 }
@@ -610,7 +610,7 @@ static void _balrog_birth(void)
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
     forge.name2 = EGO_WEAPON_SLAYING;
-    add_flag(forge.art_flags, TR_BRAND_FIRE);
+    add_flag(forge.flags, OF_BRAND_FIRE);
     forge.dd = 2;
     forge.ds = 6;
     forge.to_h = 5;
@@ -651,21 +651,21 @@ static void _balrog_calc_bonuses(void) {
         p_ptr->no_charge_drain = TRUE;
     }
 }
-static void _balrog_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) {
-    add_flag(flgs, TR_RES_FIRE);
-    add_flag(flgs, TR_RES_NETHER);
+static void _balrog_get_flags(u32b flgs[OF_ARRAY_SIZE]) {
+    add_flag(flgs, OF_RES_FIRE);
+    add_flag(flgs, OF_RES_NETHER);
 
-    add_flag(flgs, TR_HOLD_LIFE);
-    add_flag(flgs, TR_SH_FIRE);
+    add_flag(flgs, OF_HOLD_LIFE);
+    add_flag(flgs, OF_AURA_FIRE);
 
     if (p_ptr->lev >= 8)
-        add_flag(flgs, TR_SPEED);
+        add_flag(flgs, OF_SPEED);
     if (p_ptr->lev >= 10)
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_SEE_INVIS);
     if (p_ptr->lev >= 30)
-        add_flag(flgs, TR_RES_CHAOS);
+        add_flag(flgs, OF_RES_CHAOS);
     if (p_ptr->lev >= 40)
-        add_flag(flgs, TR_IM_FIRE);
+        add_flag(flgs, OF_IM_FIRE);
 }
 static void _balrog_gain_level(int new_level) {
     if (p_ptr->current_r_idx == MON_LESSER_BALROG && new_level >= 40)
@@ -817,14 +817,14 @@ static void _cyber_calc_bonuses(void)
     p_ptr->free_act = TRUE;
 }
 
-static void _cyber_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
+static void _cyber_get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, TR_RES_FIRE);
-    add_flag(flgs, TR_RES_POIS);
-    add_flag(flgs, TR_SPEED);
+    add_flag(flgs, OF_RES_FIRE);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_SPEED);
 
-    add_flag(flgs, TR_HOLD_LIFE);
-    add_flag(flgs, TR_FREE_ACT);
+    add_flag(flgs, OF_HOLD_LIFE);
+    add_flag(flgs, OF_FREE_ACT);
 }
 
 static void _cyber_move_player(void)

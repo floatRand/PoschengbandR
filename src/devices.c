@@ -65,13 +65,13 @@ int device_calc_fail_rate(object_type *o_ptr)
     if (o_ptr->activation.type)
     {
         effect_t effect = o_ptr->activation;
-        u32b     flgs[TR_FLAG_ARRAY_SIZE];
+        u32b     flgs[OF_ARRAY_SIZE];
 
         obj_flags(o_ptr, flgs);
-        if (have_flag(flgs, TR_EASY_SPELL))
+        if (have_flag(flgs, OF_EASY_SPELL))
             effect.difficulty -= effect.difficulty * o_ptr->pval / 10;
 
-        if (o_ptr->curse_flags & TRC_CURSED)
+        if (o_ptr->curse_flags & OFC_CURSED)
             effect.difficulty += effect.difficulty / 5;
 
         return effect_calc_fail_rate(&effect);
@@ -372,7 +372,7 @@ static cptr _do_potion(int sval, int mode)
                     device_noticed = TRUE;
                 }
             }
-            else equip_learn_flag(TR_FREE_ACT);
+            else equip_learn_flag(OF_FREE_ACT);
         }
         break;
     case SV_POTION_LOSE_MEMORIES:
@@ -1688,10 +1688,10 @@ cptr do_device(object_type *o_ptr, int mode, int boost)
 
     if (o_ptr->activation.type)
     {
-        u32b flgs[TR_FLAG_ARRAY_SIZE];
+        u32b flgs[OF_ARRAY_SIZE];
 
         obj_flags(o_ptr, flgs);
-        if (have_flag(flgs, TR_DEVICE_POWER))
+        if (have_flag(flgs, OF_DEVICE_POWER))
             boost += device_power_aux(100, o_ptr->pval) - 100;
 
         result = do_effect(&o_ptr->activation, mode, boost);
@@ -2181,7 +2181,7 @@ static void _add_index(object_type *o_ptr, int index)
         o_ptr->activation.cost = _effect_info[index].cost;
         o_ptr->activation.extra = 0;
         o_ptr->timeout = 0;
-        add_flag(o_ptr->art_flags, TR_ACTIVATE); /* for object lore */
+        add_flag(o_ptr->flags, OF_ACTIVATE); /* for object lore */
     }
 }
 
@@ -2460,10 +2460,10 @@ static void _device_pick_effect(object_type *o_ptr, device_effect_info_ptr table
 
             if (entry->flags & _NO_DESTROY)
             {
-                add_flag(o_ptr->art_flags, TR_IGNORE_ACID);
-                add_flag(o_ptr->art_flags, TR_IGNORE_ELEC);
-                add_flag(o_ptr->art_flags, TR_IGNORE_FIRE);
-                add_flag(o_ptr->art_flags, TR_IGNORE_COLD);
+                add_flag(o_ptr->flags, OF_IGNORE_ACID);
+                add_flag(o_ptr->flags, OF_IGNORE_ELEC);
+                add_flag(o_ptr->flags, OF_IGNORE_FIRE);
+                add_flag(o_ptr->flags, OF_IGNORE_COLD);
             }
 
             return;
@@ -2596,10 +2596,10 @@ bool device_init_fixed(object_type *o_ptr, int effect)
 
     if (e_ptr->flags & _NO_DESTROY)
     {
-        add_flag(o_ptr->art_flags, TR_IGNORE_ACID);
-        add_flag(o_ptr->art_flags, TR_IGNORE_ELEC);
-        add_flag(o_ptr->art_flags, TR_IGNORE_FIRE);
-        add_flag(o_ptr->art_flags, TR_IGNORE_COLD);
+        add_flag(o_ptr->flags, OF_IGNORE_ACID);
+        add_flag(o_ptr->flags, OF_IGNORE_ELEC);
+        add_flag(o_ptr->flags, OF_IGNORE_FIRE);
+        add_flag(o_ptr->flags, OF_IGNORE_COLD);
     }
 
     return TRUE;
@@ -2671,7 +2671,7 @@ void device_regen_sp_aux(object_type *o_ptr, int per_mill)
 void device_regen_sp(object_type *o_ptr, int base_per_mill)
 {
     int  per_mill = base_per_mill;
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
 
     if (!_is_valid_device(o_ptr))
         return;
@@ -2683,7 +2683,7 @@ void device_regen_sp(object_type *o_ptr, int base_per_mill)
         per_mill += base_per_mill;
 
     obj_flags(o_ptr, flgs);
-    if (have_flag(flgs, TR_REGEN))
+    if (have_flag(flgs, OF_REGEN))
         per_mill += o_ptr->pval * base_per_mill;
 
     device_regen_sp_aux(o_ptr, per_mill);
@@ -2699,7 +2699,7 @@ int device_max_sp(object_type *o_ptr)
 int device_value(object_type *o_ptr, int options)
 {
     int  result = 0;
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     int  pval = 0;
 
     if (!_is_valid_device(o_ptr))
@@ -2761,19 +2761,19 @@ int device_value(object_type *o_ptr, int options)
         if (o_ptr->name2 == EGO_DEVICE_RESISTANCE) /* I don't want artifacts to get an extra boost for TR_IGNORE_* */
             result += result * 25 / 100;
     }
-    if (have_flag(flgs, TR_REGEN))
+    if (have_flag(flgs, OF_REGEN))
         result += result * 20 * pval / 100;
 
-    if (have_flag(flgs, TR_EASY_SPELL))
+    if (have_flag(flgs, OF_EASY_SPELL))
         result += result * 10 * pval / 100;
 
-    if (have_flag(flgs, TR_DEVICE_POWER))
+    if (have_flag(flgs, OF_DEVICE_POWER))
         result += result * 25 * pval / 100;
 
-    if (have_flag(flgs, TR_HOLD_LIFE))
+    if (have_flag(flgs, OF_HOLD_LIFE))
         result += result * 30 / 100;
 
-    if (have_flag(flgs, TR_SPEED))
+    if (have_flag(flgs, OF_SPEED))
         result += result * 25 * pval / 100;
 
     return result;

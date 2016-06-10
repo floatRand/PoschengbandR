@@ -3667,7 +3667,7 @@ static cptr do_death_spell(int spell, int mode)
         {
             if (cast)
             {
-                brand_weapon_slaying(TR_BRAND_POIS);
+                brand_weapon_slaying(OF_BRAND_POIS);
             }
         }
         break;
@@ -6101,7 +6101,7 @@ static cptr do_daemon_spell(int spell, int mode)
         {
             if (cast)
             {
-                brand_weapon_slaying(TR_BRAND_FIRE);
+                brand_weapon_slaying(OF_BRAND_FIRE);
             }
         }
         break;
@@ -6826,7 +6826,7 @@ static cptr do_crusade_spell(int spell, int mode)
         {
             if (cast)
             {
-                brand_weapon_slaying(TR_SLAY_EVIL);
+                brand_weapon_slaying(OF_SLAY_EVIL);
             }
         }
         break;
@@ -8084,7 +8084,7 @@ static cptr do_hex_spell(int spell, int mode)
             char *q, *s;
             char o_name[MAX_NLEN];
             object_type *o_ptr;
-            u32b f[TR_FLAG_ARRAY_SIZE];
+            u32b f[OF_ARRAY_SIZE];
 
             item_tester_hook = item_tester_hook_weapon_except_bow;
             q = "Which weapon do you curse?";
@@ -8099,7 +8099,7 @@ static cptr do_hex_spell(int spell, int mode)
             if (!get_check(format("Do you curse %s, really?", o_name))) return FALSE;
 
             if (!one_in_(3) &&
-                (object_is_artifact(o_ptr) || have_flag(f, TR_BLESSED)))
+                (object_is_artifact(o_ptr) || have_flag(f, OF_BLESSED)))
             {
                 msg_format("%s resists the effect.", o_name);
                 if (one_in_(3))
@@ -8126,20 +8126,20 @@ static cptr do_hex_spell(int spell, int mode)
             {
                 int power = 0;
                 msg_format("A terrible black aura blasts your %s!", o_name);
-                o_ptr->curse_flags |= (TRC_CURSED);
+                o_ptr->curse_flags |= (OFC_CURSED);
 
                 if (object_is_artifact(o_ptr) || object_is_ego(o_ptr))
                 {
 
-                    if (one_in_(3)) o_ptr->curse_flags |= (TRC_HEAVY_CURSE);
+                    if (one_in_(3)) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
                     if (one_in_(666))
                     {
-                        o_ptr->curse_flags |= (TRC_TY_CURSE);
-                        if (one_in_(666)) o_ptr->curse_flags |= (TRC_PERMA_CURSE);
+                        o_ptr->curse_flags |= (OFC_TY_CURSE);
+                        if (one_in_(666)) o_ptr->curse_flags |= (OFC_PERMA_CURSE);
 
-                        add_flag(o_ptr->art_flags, TR_AGGRAVATE);
-                        add_flag(o_ptr->art_flags, TR_VORPAL);
-                        add_flag(o_ptr->art_flags, TR_VAMPIRIC);
+                        add_flag(o_ptr->flags, OF_AGGRAVATE);
+                        add_flag(o_ptr->flags, OF_VORPAL);
+                        add_flag(o_ptr->flags, OF_BRAND_VAMP);
                         msg_print("Blood, Blood, Blood!");
                         power = 2;
                     }
@@ -8376,7 +8376,7 @@ static cptr do_hex_spell(int spell, int mode)
             char *q, *s;
             char o_name[MAX_NLEN];
             object_type *o_ptr;
-            u32b f[TR_FLAG_ARRAY_SIZE];
+            u32b f[OF_ARRAY_SIZE];
 
             item_tester_hook = object_is_armour;
             q = "Which piece of armour do you curse?";
@@ -8391,7 +8391,7 @@ static cptr do_hex_spell(int spell, int mode)
             if (!get_check(format("Do you curse %s, really?", o_name))) return FALSE;
 
             if (!one_in_(3) &&
-                (object_is_artifact(o_ptr) || have_flag(f, TR_BLESSED)))
+                (object_is_artifact(o_ptr) || have_flag(f, OF_BLESSED)))
             {
                 msg_format("%s resists the effect.", o_name);
                 if (one_in_(3))
@@ -8418,21 +8418,21 @@ static cptr do_hex_spell(int spell, int mode)
             {
                 int power = 0;
                 msg_format("A terrible black aura blasts your %s!", o_name);
-                o_ptr->curse_flags |= (TRC_CURSED);
+                o_ptr->curse_flags |= (OFC_CURSED);
 
                 if (object_is_artifact(o_ptr) || object_is_ego(o_ptr))
                 {
 
-                    if (one_in_(3)) o_ptr->curse_flags |= (TRC_HEAVY_CURSE);
+                    if (one_in_(3)) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
                     if (one_in_(666))
                     {
-                        o_ptr->curse_flags |= (TRC_TY_CURSE);
-                        if (one_in_(666)) o_ptr->curse_flags |= (TRC_PERMA_CURSE);
+                        o_ptr->curse_flags |= (OFC_TY_CURSE);
+                        if (one_in_(666)) o_ptr->curse_flags |= (OFC_PERMA_CURSE);
 
-                        add_flag(o_ptr->art_flags, TR_AGGRAVATE);
-                        add_flag(o_ptr->art_flags, TR_RES_POIS);
-                        add_flag(o_ptr->art_flags, TR_RES_DARK);
-                        add_flag(o_ptr->art_flags, TR_RES_NETHER);
+                        add_flag(o_ptr->flags, OF_AGGRAVATE);
+                        add_flag(o_ptr->flags, OF_RES_POIS);
+                        add_flag(o_ptr->flags, OF_RES_DARK);
+                        add_flag(o_ptr->flags, OF_RES_NETHER);
                         msg_print("Blood, Blood, Blood!");
                         power = 2;
                     }
@@ -8585,7 +8585,7 @@ static cptr do_hex_spell(int spell, int mode)
         {
             int item;
             char *s, *q;
-            u32b f[TR_FLAG_ARRAY_SIZE];
+            u32b f[OF_ARRAY_SIZE];
             object_type *o_ptr;
 
             item_tester_hook = item_tester_hook_cursed;
@@ -8598,14 +8598,14 @@ static cptr do_hex_spell(int spell, int mode)
             obj_flags(o_ptr, f);
 
             p_ptr->csp += (p_ptr->lev / 5) + randint1(p_ptr->lev / 5);
-            if (have_flag(f, TR_TY_CURSE) || (o_ptr->curse_flags & TRC_TY_CURSE)) p_ptr->csp += randint1(5);
+            if (have_flag(f, OF_TY_CURSE) || (o_ptr->curse_flags & OFC_TY_CURSE)) p_ptr->csp += randint1(5);
             if (p_ptr->csp > p_ptr->msp) p_ptr->csp = p_ptr->msp;
 
-            if (o_ptr->curse_flags & TRC_PERMA_CURSE)
+            if (o_ptr->curse_flags & OFC_PERMA_CURSE)
             {
                 /* Nothing */
             }
-            else if (o_ptr->curse_flags & TRC_HEAVY_CURSE)
+            else if (o_ptr->curse_flags & OFC_HEAVY_CURSE)
             {
                 if (one_in_(7))
                 {
@@ -8613,7 +8613,7 @@ static cptr do_hex_spell(int spell, int mode)
                     o_ptr->curse_flags = 0L;
                 }
             }
-            else if ((o_ptr->curse_flags & (TRC_CURSED)) && one_in_(3))
+            else if ((o_ptr->curse_flags & (OFC_CURSED)) && one_in_(3))
             {
                 msg_print("Curse vanished away.");
                 o_ptr->curse_flags = 0L;

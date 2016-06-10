@@ -566,8 +566,8 @@ u32b get_curse(int power, object_type *o_ptr)
         {
             if (new_curse & TRC_HEAVY_MASK) continue;
         }
-        if (new_curse == TRC_LOW_MELEE && !object_is_weapon(o_ptr)) continue;
-        if (new_curse == TRC_LOW_AC && !object_is_armour(o_ptr)) continue;
+        if (new_curse == OFC_LOW_MELEE && !object_is_weapon(o_ptr)) continue;
+        if (new_curse == OFC_LOW_AC && !object_is_armour(o_ptr)) continue;
         break;
     }
     return new_curse;
@@ -582,7 +582,7 @@ void curse_equipment(int chance, int heavy_chance)
         bool         changed = FALSE;
         int          curse_power = 0;
         u32b         new_curse;
-        u32b         oflgs[TR_FLAG_ARRAY_SIZE];
+        u32b         oflgs[OF_ARRAY_SIZE];
         object_type *o_ptr = equip_obj(slot);
         char         o_name[MAX_NLEN];
 
@@ -592,7 +592,7 @@ void curse_equipment(int chance, int heavy_chance)
         obj_flags(o_ptr, oflgs);
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
-        if (have_flag(oflgs, TR_BLESSED) && (randint1(888) > chance))
+        if (have_flag(oflgs, OF_BLESSED) && (randint1(888) > chance))
         {
             msg_format("Your %s resists cursing!", o_name);
             return;
@@ -601,17 +601,17 @@ void curse_equipment(int chance, int heavy_chance)
         if ((randint1(100) <= heavy_chance) &&
             (object_is_artifact(o_ptr) || object_is_ego(o_ptr)))
         {
-            if (!(o_ptr->curse_flags & TRC_HEAVY_CURSE))
+            if (!(o_ptr->curse_flags & OFC_HEAVY_CURSE))
                 changed = TRUE;
-            o_ptr->curse_flags |= TRC_HEAVY_CURSE;
-            o_ptr->curse_flags |= TRC_CURSED;
+            o_ptr->curse_flags |= OFC_HEAVY_CURSE;
+            o_ptr->curse_flags |= OFC_CURSED;
             curse_power++;
         }
         else
         {
             if (!object_is_cursed(o_ptr))
                 changed = TRUE;
-            o_ptr->curse_flags |= TRC_CURSED;
+            o_ptr->curse_flags |= OFC_CURSED;
         }
         if (heavy_chance >= 50) curse_power++;
 
@@ -2807,7 +2807,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             if (p_ptr->free_act)
             {
                 msg_print("You are unaffected!");
-                equip_learn_flag(TR_FREE_ACT);
+                equip_learn_flag(OF_FREE_ACT);
             }
             else if (randint0(100 + rlev/2) < duelist_skill_sav(m_idx))
                 msg_print("You resist the effects!");
@@ -2833,7 +2833,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             if (p_ptr->free_act)
             {
                 msg_print("You are unaffected!");
-                equip_learn_flag(TR_FREE_ACT);
+                equip_learn_flag(OF_FREE_ACT);
             }
             else if (randint0(100 + rlev/2) < duelist_skill_sav(m_idx))
                 msg_format("You resist the effects!");

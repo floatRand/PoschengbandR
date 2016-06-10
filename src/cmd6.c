@@ -206,7 +206,7 @@ static void do_cmd_eat_food_aux(int item)
                         ident = TRUE;
                     }
                 }
-                else equip_learn_flag(TR_FREE_ACT);
+                else equip_learn_flag(OF_FREE_ACT);
                 break;
             }
 
@@ -1117,7 +1117,7 @@ static void do_cmd_device_aux(int item)
     int          charges = 1;
     int          boost;
     bool         is_devicemaster = FALSE;
-    u32b         flgs[TR_FLAG_ARRAY_SIZE];
+    u32b         flgs[OF_ARRAY_SIZE];
 
     if (item >= 0)
         o_ptr = &inventory[item];
@@ -1149,7 +1149,7 @@ static void do_cmd_device_aux(int item)
             energy_use -= delta;
     }
 
-    if (have_flag(flgs, TR_SPEED))
+    if (have_flag(flgs, OF_SPEED))
         energy_use -= energy_use * o_ptr->pval / 10;
 
     if (p_ptr->tim_no_device)
@@ -1181,7 +1181,7 @@ static void do_cmd_device_aux(int item)
         return;
     }
 
-    if ((o_ptr->curse_flags & TRC_CURSED) && one_in_(6))
+    if ((o_ptr->curse_flags & OFC_CURSED) && one_in_(6))
     {
         msg_print("Oops! The device explodes!");
         project(
@@ -1565,7 +1565,7 @@ static void do_cmd_activate_aux(int item)
     cptr         msg;
     effect_t     effect;
     int          boost = device_power(100) - 100;
-    u32b         flgs[TR_FLAG_ARRAY_SIZE];
+    u32b         flgs[OF_ARRAY_SIZE];
 
     /* Get the item (in the pack) */
     if (item >= 0)
@@ -1618,7 +1618,7 @@ static void do_cmd_activate_aux(int item)
         _do_capture_ball(o_ptr);
         return;
     }
-    device_known = have_flag(flgs, TR_ACTIVATE);
+    device_known = have_flag(flgs, OF_ACTIVATE);
     if (effect_use(&effect, boost))
     {
         if (device_noticed)

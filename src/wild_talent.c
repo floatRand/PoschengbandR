@@ -584,7 +584,7 @@ static void _calc_stats(s16b stats[MAX_STATS])
     samurai_posture_calc_stats(stats);
     monk_posture_calc_stats(stats);
 }
-static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
     samurai_posture_get_flags(flgs);
     monk_posture_get_flags(flgs);

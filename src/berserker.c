@@ -125,16 +125,16 @@ static void _calc_bonuses(void)
     p_ptr->redraw |= PR_STATUS;
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_IM_FEAR);
-    add_flag(flgs, TR_SUST_STR);
-    add_flag(flgs, TR_SUST_DEX);
-    add_flag(flgs, TR_SUST_CON);
-    add_flag(flgs, TR_REGEN);
-    add_flag(flgs, TR_FREE_ACT);
-    add_flag(flgs, TR_SPEED);
-    if (p_ptr->lev >= 40) add_flag(flgs, TR_REFLECT);
+    add_flag(flgs, OF_IM_FEAR);
+    add_flag(flgs, OF_SUST_STR);
+    add_flag(flgs, OF_SUST_DEX);
+    add_flag(flgs, OF_SUST_CON);
+    add_flag(flgs, OF_REGEN);
+    add_flag(flgs, OF_FREE_ACT);
+    add_flag(flgs, OF_SPEED);
+    if (p_ptr->lev >= 40) add_flag(flgs, OF_REFLECT);
 }
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)

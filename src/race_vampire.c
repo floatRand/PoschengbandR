@@ -490,23 +490,23 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     }
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
+static void _get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, TR_VULN_LITE);
+    add_flag(flgs, OF_VULN_LITE);
 
-    add_flag(flgs, TR_RES_NETHER);
-    add_flag(flgs, TR_RES_COLD);
-    add_flag(flgs, TR_RES_POIS);
-    add_flag(flgs, TR_RES_DARK);
-    add_flag(flgs, TR_HOLD_LIFE);
+    add_flag(flgs, OF_RES_NETHER);
+    add_flag(flgs, OF_RES_COLD);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_RES_DARK);
+    add_flag(flgs, OF_HOLD_LIFE);
     if (p_ptr->lev >= 35)
     {
-        add_flag(flgs, TR_LEVITATION);
-        add_flag(flgs, TR_SPEED);
-        add_flag(flgs, TR_REGEN);
+        add_flag(flgs, OF_LEVITATION);
+        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_REGEN);
     }
     if (p_ptr->lev >= 45)
-        add_flag(flgs, TR_IM_DARK);
+        add_flag(flgs, OF_IM_DARK);
 }
 
 static void _move_player(void)
@@ -751,16 +751,16 @@ static void _bat_calc_bonuses(void)
     p_ptr->pspeed += 5 + p_ptr->lev * 3 / 10;
     p_ptr->hold_life = TRUE;
 }
-static void _bat_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _bat_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_LEVITATION);
-    add_flag(flgs, TR_SEE_INVIS);
-    add_flag(flgs, TR_REGEN);
-    add_flag(flgs, TR_SPEED);
-    add_flag(flgs, TR_RES_DARK);
-    add_flag(flgs, TR_RES_COLD);
-    add_flag(flgs, TR_RES_POIS);
-    add_flag(flgs, TR_HOLD_LIFE);
+    add_flag(flgs, OF_LEVITATION);
+    add_flag(flgs, OF_SEE_INVIS);
+    add_flag(flgs, OF_REGEN);
+    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_RES_DARK);
+    add_flag(flgs, OF_RES_COLD);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_HOLD_LIFE);
 }
 race_t *bat_get_race(void)
 {
@@ -825,18 +825,18 @@ static void _mist_calc_bonuses(void)
 
     p_ptr->magic_resistance = 50;
 }
-static void _mist_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _mist_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_LEVITATION);
-    add_flag(flgs, TR_SEE_INVIS);
-    add_flag(flgs, TR_HOLD_LIFE);
+    add_flag(flgs, OF_LEVITATION);
+    add_flag(flgs, OF_SEE_INVIS);
+    add_flag(flgs, OF_HOLD_LIFE);
 
-    add_flag(flgs, TR_RES_COLD);
-    add_flag(flgs, TR_RES_POIS);
-    add_flag(flgs, TR_RES_ACID);
-    add_flag(flgs, TR_RES_NETHER);
+    add_flag(flgs, OF_RES_COLD);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_RES_ACID);
+    add_flag(flgs, OF_RES_NETHER);
 
-    add_flag(flgs, TR_MAGIC_RESISTANCE);
+    add_flag(flgs, OF_MAGIC_RESISTANCE);
 }
 race_t *mist_get_race(void)
 {
@@ -904,9 +904,9 @@ static void _wolf_calc_bonuses(void)
     p_ptr->see_nocto = TRUE;
     p_ptr->pspeed += 2 + p_ptr->lev / 10;
 }
-static void _wolf_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _wolf_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_SPEED);
+    add_flag(flgs, OF_SPEED);
 }
 race_t *wolf_get_race(void)
 {

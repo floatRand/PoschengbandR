@@ -257,14 +257,14 @@ object_type *_choose(cptr verb, int tval, int options)
 void _use_object(object_type *o_ptr)
 {
     int  boost = device_power(100) - 100;
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     bool used = FALSE;
     int  charges = 1;
 
     energy_use = 100;
 
     obj_flags(o_ptr, flgs);
-    if (have_flag(flgs, TR_SPEED))
+    if (have_flag(flgs, OF_SPEED))
         energy_use -= energy_use * o_ptr->pval / 10;
 
     if (!fear_allow_device())

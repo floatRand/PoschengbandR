@@ -45,9 +45,9 @@ static void _calc_bonuses(void)
     p_ptr->regen += 100;
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_REGEN);
+    add_flag(flgs, OF_REGEN);
 }
 
 static void _on_cast(const spell_info *spell)

@@ -42,18 +42,18 @@ static void _calc_bonuses(void)
         p_ptr->free_act = TRUE;
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
+static void _get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, TR_RES_CONF);
-    add_flag(flgs, TR_RES_FEAR);
-    add_flag(flgs, TR_LEVITATION);
-    add_flag(flgs, TR_SLOW_DIGEST);
+    add_flag(flgs, OF_RES_CONF);
+    add_flag(flgs, OF_RES_FEAR);
+    add_flag(flgs, OF_LEVITATION);
+    add_flag(flgs, OF_SLOW_DIGEST);
     if (p_ptr->lev >= 5)
-        add_flag(flgs, TR_RES_POIS);
+        add_flag(flgs, OF_RES_POIS);
     if (p_ptr->lev >= 10)
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_SEE_INVIS);
     if (p_ptr->lev >= 15)
-        add_flag(flgs, TR_FREE_ACT);
+        add_flag(flgs, OF_FREE_ACT);
 }
 
 static bool _elemental_travel(int flag)
@@ -183,7 +183,7 @@ static void _earth_birth(void)
     forge.name2 = EGO_RING_COMBAT;
     forge.to_d = 6;
     forge.pval = 3;
-    add_flag(forge.art_flags, TR_STR);
+    add_flag(forge.flags, OF_STR);
     add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_CLUB));
@@ -374,14 +374,14 @@ static void _earth_calc_bonuses(void)
     _calc_bonuses();
 }
 
-static void _earth_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
+static void _earth_get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, TR_RES_FIRE);
-    add_flag(flgs, TR_RES_COLD);
-    add_flag(flgs, TR_RES_ELEC);
-    add_flag(flgs, TR_RES_SHARDS);
-    add_flag(flgs, TR_SPEED);
-    add_flag(flgs, TR_REGEN);
+    add_flag(flgs, OF_RES_FIRE);
+    add_flag(flgs, OF_RES_COLD);
+    add_flag(flgs, OF_RES_ELEC);
+    add_flag(flgs, OF_RES_SHARDS);
+    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_REGEN);
 
     _get_flags(flgs);
 }
@@ -452,9 +452,9 @@ static void _air_birth(void)
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_JEWELRY_ELEMENTAL;
     forge.to_a = 15;
-    add_flag(forge.art_flags, TR_RES_ELEC);
-    add_flag(forge.art_flags, TR_SH_ELEC);
-    add_flag(forge.art_flags, TR_IGNORE_ELEC);
+    add_flag(forge.flags, OF_RES_ELEC);
+    add_flag(forge.flags, OF_AURA_ELEC);
+    add_flag(forge.flags, OF_IGNORE_ELEC);
     add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_SWORD, SV_LONG_SWORD));
@@ -623,28 +623,28 @@ static void _air_calc_bonuses(void)
     _calc_bonuses();
 }
 
-static void _air_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
+static void _air_get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, TR_RES_ELEC);
-    add_flag(flgs, TR_SPEED);
+    add_flag(flgs, OF_RES_ELEC);
+    add_flag(flgs, OF_SPEED);
 
     if (p_ptr->lev >= 25)
     {
-        add_flag(flgs, TR_RES_ACID);
-        add_flag(flgs, TR_RES_FIRE);
-        add_flag(flgs, TR_RES_COLD);
-        add_flag(flgs, TR_SH_ELEC);
+        add_flag(flgs, OF_RES_ACID);
+        add_flag(flgs, OF_RES_FIRE);
+        add_flag(flgs, OF_RES_COLD);
+        add_flag(flgs, OF_AURA_ELEC);
     }
 
     if (p_ptr->lev >= 50)
-        add_flag(flgs, TR_IM_ELEC);
+        add_flag(flgs, OF_IM_ELEC);
 
     _get_flags(flgs);
 }
 
 static bool _air_p(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     if (object_is_artifact(o_ptr)) return FALSE;
     if ( o_ptr->tval != TV_RING 
       && o_ptr->tval != TV_AMULET 
@@ -654,7 +654,7 @@ static bool _air_p(object_type *o_ptr)
         return FALSE;
     }
     obj_flags(o_ptr, flgs);
-    if (have_flag(flgs, TR_IGNORE_ELEC)) return FALSE;
+    if (have_flag(flgs, OF_IGNORE_ELEC)) return FALSE;
     return TRUE;
 }
 
@@ -716,7 +716,7 @@ static void _water_birth(void)
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_JEWELRY_ELEMENTAL;
     forge.to_a = 15;
-    add_flag(forge.art_flags, TR_RES_ACID);
+    add_flag(forge.flags, OF_RES_ACID);
     add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
@@ -871,15 +871,15 @@ static void _water_calc_bonuses(void)
     _calc_bonuses();
 }
 
-static void _water_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
+static void _water_get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, TR_RES_ACID);
+    add_flag(flgs, OF_RES_ACID);
 
     if (p_ptr->lev >= 25)
-        add_flag(flgs, TR_SPEED);
+        add_flag(flgs, OF_SPEED);
 
     if (p_ptr->lev >= 50)
-        add_flag(flgs, TR_IM_ACID);
+        add_flag(flgs, OF_IM_ACID);
 
     _get_flags(flgs);
 }
@@ -893,7 +893,7 @@ static void _water_process_world(void)
     for (i = 0; i < INVEN_TOTAL; i++)
     {
         object_type *o_ptr = &inventory[i];
-        u32b         flgs[TR_FLAG_ARRAY_SIZE];
+        u32b         flgs[OF_ARRAY_SIZE];
         char         o_name[MAX_NLEN];
 
         if (!o_ptr->k_idx) continue;
@@ -902,9 +902,9 @@ static void _water_process_world(void)
         if (o_ptr->ac + o_ptr->to_a <= 0) continue;
 
         obj_flags(o_ptr, flgs);
-        if (have_flag(flgs, TR_IM_ACID)) continue;
-        if (have_flag(flgs, TR_RES_ACID)) continue;
-        if (have_flag(flgs, TR_IGNORE_ACID) && !one_in_(10)) continue;
+        if (have_flag(flgs, OF_IM_ACID)) continue;
+        if (have_flag(flgs, OF_RES_ACID)) continue;
+        if (have_flag(flgs, OF_IGNORE_ACID) && !one_in_(10)) continue;
         if (object_is_artifact(o_ptr) && !one_in_(2)) continue;
 
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
@@ -980,8 +980,8 @@ static void _fire_birth(void)
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_JEWELRY_ELEMENTAL;
     forge.to_a = 15;
-    add_flag(forge.art_flags, TR_RES_FIRE);
-    add_flag(forge.art_flags, TR_SH_FIRE);
+    add_flag(forge.flags, OF_RES_FIRE);
+    add_flag(forge.flags, OF_AURA_FIRE);
     add_outfit(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
@@ -1191,31 +1191,31 @@ static void _fire_calc_bonuses(void)
     _calc_bonuses();
 }
 
-static void _fire_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE]) 
+static void _fire_get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, TR_VULN_COLD);
-    add_flag(flgs, TR_RES_FIRE);
-    add_flag(flgs, TR_SH_FIRE);
+    add_flag(flgs, OF_VULN_COLD);
+    add_flag(flgs, OF_RES_FIRE);
+    add_flag(flgs, OF_AURA_FIRE);
 
     if (p_ptr->lev >= 25)
-        add_flag(flgs, TR_SPEED);
+        add_flag(flgs, OF_SPEED);
 
     if (p_ptr->lev >= 40)
-        add_flag(flgs, TR_RES_ELEC);
+        add_flag(flgs, OF_RES_ELEC);
 
     if (p_ptr->lev >= 50)
-        add_flag(flgs, TR_IM_FIRE);
+        add_flag(flgs, OF_IM_FIRE);
 
     _get_flags(flgs);
 }
 
 static bool _fire_p(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     if (object_is_artifact(o_ptr)) return FALSE;
     if (o_ptr->tval != TV_SCROLL && o_ptr->tval != TV_STAFF) return FALSE;
     obj_flags(o_ptr, flgs);
-    if (have_flag(flgs, TR_IGNORE_FIRE)) return FALSE;
+    if (have_flag(flgs, OF_IGNORE_FIRE)) return FALSE;
     return TRUE;
 }
 

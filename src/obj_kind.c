@@ -5,15 +5,15 @@
 #include <assert.h>
 
 const int pval_flags[] = {
-    TR_STR, TR_INT, TR_WIS, TR_DEX, TR_CON, TR_CHR,
-    TR_MAGIC_MASTERY, TR_DEVICE_POWER, TR_MAGIC_RESISTANCE,
-    TR_STEALTH, TR_SEARCH, TR_INFRA, TR_TUNNEL, TR_SPEED,
-    TR_BLOWS, TR_XTRA_SHOTS, TR_XTRA_MIGHT,
-    TR_SPELL_POWER, TR_SPELL_CAP, TR_WEAPONMASTERY, TR_LIFE,
-    TR_DEC_STR, TR_DEC_INT, TR_DEC_WIS, TR_DEC_DEX, TR_DEC_CON, TR_DEC_CHR,
-    TR_DEC_STEALTH, TR_DEC_SPEED, TR_DEC_LIFE,
-    TR_DEC_MAGIC_MASTERY, TR_DEC_SPELL_CAP, TR_DEC_SPELL_POWER, TR_DEC_BLOWS,
-    TR_INVALID
+    OF_STR, OF_INT, OF_WIS, OF_DEX, OF_CON, OF_CHR,
+    OF_MAGIC_MASTERY, OF_DEVICE_POWER, OF_MAGIC_RESISTANCE,
+    OF_STEALTH, OF_SEARCH, OF_INFRA, OF_TUNNEL, OF_SPEED,
+    OF_BLOWS, OF_XTRA_SHOTS, OF_XTRA_MIGHT,
+    OF_SPELL_POWER, OF_SPELL_CAP, OF_WEAPONMASTERY, OF_LIFE,
+    OF_DEC_STR, OF_DEC_INT, OF_DEC_WIS, OF_DEC_DEX, OF_DEC_CON, OF_DEC_CHR,
+    OF_DEC_STEALTH, OF_DEC_SPEED, OF_DEC_LIFE,
+    OF_DEC_MAGIC_MASTERY, OF_DEC_SPELL_CAP, OF_DEC_SPELL_POWER, OF_DEC_BLOWS,
+    OF_INVALID
 };
 
 bool is_pval_flag(int which)
@@ -22,18 +22,18 @@ bool is_pval_flag(int which)
     for (i = 0; ; i++)
     {
         int flg = pval_flags[i];
-        if (flg == TR_INVALID) break;
+        if (flg == OF_INVALID) break;
         if (flg == which) return TRUE;
     }
     return FALSE;
 }
-bool have_pval_flag(u32b flgs[TR_FLAG_ARRAY_SIZE])
+bool have_pval_flag(u32b flgs[OF_ARRAY_SIZE])
 {
     int i;
     for (i = 0; ; i++)
     {
         int flg = pval_flags[i];
-        if (flg == TR_INVALID) break;
+        if (flg == OF_INVALID) break;
         if (have_flag(flgs, flg)) return TRUE;
     }
     return FALSE;
@@ -107,10 +107,10 @@ bool object_is_favorite(object_type *o_ptr)
     {
     case CLASS_PRIEST:
     {
-        u32b flgs[TR_FLAG_ARRAY_SIZE];
+        u32b flgs[OF_ARRAY_SIZE];
         obj_flags_known(o_ptr, flgs);
 
-        if (!have_flag(flgs, TR_BLESSED) && 
+        if (!have_flag(flgs, OF_BLESSED) && 
             !(o_ptr->tval == TV_HAFTED))
             return FALSE;
         break;
@@ -130,11 +130,11 @@ bool object_is_favorite(object_type *o_ptr)
     case CLASS_BEASTMASTER:
     case CLASS_CAVALRY:
     {
-        u32b flgs[TR_FLAG_ARRAY_SIZE];
+        u32b flgs[OF_ARRAY_SIZE];
         obj_flags_known(o_ptr, flgs);
 
         /* Is it known to be suitable to using while riding? */
-        if (!(have_flag(flgs, TR_RIDING)))
+        if (!(have_flag(flgs, OF_RIDING)))
             return FALSE;
 
         break;

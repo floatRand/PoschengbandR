@@ -2787,7 +2787,7 @@ static bool _reforge_artifact(void)
         return FALSE;
     }
 
-    if (have_flag(dest->art_flags, TR_NO_REMOVE))
+    if (have_flag(dest->flags, OF_NO_REMOVE))
     {
         msg_print("You cannot be reforged!");
         return FALSE;
@@ -2914,11 +2914,11 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
 
         object_copy(&copy, o_ptr);
         copy.curse_flags = 0;
-        remove_flag(copy.art_flags, TR_AGGRAVATE);
-        remove_flag(copy.art_flags, TR_NO_TELE);
-        remove_flag(copy.art_flags, TR_NO_MAGIC);
-        remove_flag(copy.art_flags, TR_DRAIN_EXP);
-        remove_flag(copy.art_flags, TR_TY_CURSE);
+        remove_flag(copy.flags, OF_AGGRAVATE);
+        remove_flag(copy.flags, OF_NO_TELE);
+        remove_flag(copy.flags, OF_NO_MAGIC);
+        remove_flag(copy.flags, OF_DRAIN_EXP);
+        remove_flag(copy.flags, OF_TY_CURSE);
         old_cost = new_object_cost(&copy, COST_REAL);
                 
         for (i = 0; i < 25; i++) /* TODO: Option for max. But +25 a pop is enough perhaps? */

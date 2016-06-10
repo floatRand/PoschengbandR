@@ -105,22 +105,22 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
             o_ptr->marked = savefile_read_u32b(file);
             break;
         case SAVE_ITEM_ART_FLAGS_0:
-            o_ptr->art_flags[0] = savefile_read_u32b(file);
+            o_ptr->flags[0] = savefile_read_u32b(file);
             break;
         case SAVE_ITEM_ART_FLAGS_1:
-            o_ptr->art_flags[1] = savefile_read_u32b(file);
+            o_ptr->flags[1] = savefile_read_u32b(file);
             break;
         case SAVE_ITEM_ART_FLAGS_2:
-            o_ptr->art_flags[2] = savefile_read_u32b(file);
+            o_ptr->flags[2] = savefile_read_u32b(file);
             break;
         case SAVE_ITEM_ART_FLAGS_3:
-            o_ptr->art_flags[3] = savefile_read_u32b(file);
+            o_ptr->flags[3] = savefile_read_u32b(file);
             break;
         case SAVE_ITEM_ART_FLAGS_4:
-            o_ptr->art_flags[4] = savefile_read_u32b(file);
+            o_ptr->flags[4] = savefile_read_u32b(file);
             break;
         case SAVE_ITEM_ART_FLAGS_5:
-            o_ptr->art_flags[5] = savefile_read_u32b(file);
+            o_ptr->flags[5] = savefile_read_u32b(file);
             break;
         case SAVE_ITEM_CURSE_FLAGS:
             o_ptr->curse_flags = savefile_read_u32b(file);
@@ -1392,25 +1392,25 @@ static errr rd_savefile_new_aux(savefile_ptr file)
             ego_type *e_ptr = &e_info[i];
 
             ct = savefile_read_byte(file);
-            if (ct > TR_FLAG_ARRAY_SIZE)
+            if (ct > OF_ARRAY_SIZE)
             {
                 note(format("Too many (%d) ego known flags!", ct));
                 return (22);
             }
             for (j = 0; j < ct; j++)
                 e_ptr->known_flags[j] = savefile_read_u32b(file);
-            for (j = ct; j < TR_FLAG_ARRAY_SIZE; j++)
+            for (j = ct; j < OF_ARRAY_SIZE; j++)
                 e_ptr->known_flags[j] = 0;
 
             ct = savefile_read_byte(file);
-            if (ct > TR_FLAG_ARRAY_SIZE)
+            if (ct > OF_ARRAY_SIZE)
             {
                 note(format("Too many (%d) ego xtra flags!", ct));
                 return (22);
             }
             for (j = 0; j < ct; j++)
                 e_ptr->xtra_flags[j] = savefile_read_u32b(file);
-            for (j = ct; j < TR_FLAG_ARRAY_SIZE; j++)
+            for (j = ct; j < OF_ARRAY_SIZE; j++)
                 e_ptr->xtra_flags[j] = 0;
 
             e_ptr->counts.generated = savefile_read_s32b(file);
@@ -1432,14 +1432,14 @@ static errr rd_savefile_new_aux(savefile_ptr file)
             artifact_type *a_ptr = &a_info[i];
 
             ct = savefile_read_byte(file);
-            if (ct > TR_FLAG_ARRAY_SIZE)
+            if (ct > OF_ARRAY_SIZE)
             {
                 note(format("Too many (%d) artifact known flags!", ct));
                 return (22);
             }
             for (j = 0; j < ct; j++)
                 a_ptr->known_flags[j] = savefile_read_u32b(file);
-            for (j = ct; j < TR_FLAG_ARRAY_SIZE; j++)
+            for (j = ct; j < OF_ARRAY_SIZE; j++)
                 a_ptr->known_flags[j] = 0;
         }
     }
@@ -1515,7 +1515,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
                     quest[i].k_idx = savefile_read_s16b(file);
                     if (quest[i].k_idx)
-                        a_info[quest[i].k_idx].gen_flags |= TRG_QUESTITEM;
+                        a_info[quest[i].k_idx].gen_flags |= OFG_QUESTITEM;
 
                     quest[i].flags = savefile_read_byte(file);
                     quest[i].dungeon = savefile_read_byte(file);

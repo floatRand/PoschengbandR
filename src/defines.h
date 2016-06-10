@@ -2830,30 +2830,16 @@ enum summon_specific_e {
 
 
 /*
- * Object flags
+ * Object Flags (OF_*)
  *
  * Old variables for object flags such as flags1, flags2, and flags3
- * are obsoleted.  Now single array flgs[TR_FLAG_SIZE] contains all
+ * are obsoleted.  Now single array flgs[OF_ARRAY_SIZE] contains all
  * object flags.  And each flag is refered by single index number
  * instead of a bit mask.
  *
- * Therefore it's very easy to add a lot of new flags; no one need to
- * worry about in which variable a new flag should be put, nor to
- * modify a huge number of files all over the source directory at once
- * to add new flag variables such as flags4, flags5, etc...
- *
  * All management of flags is now treated using a set of macros
  * instead of bit operations.
- * Note: These macros are using division, modulo, and bit shift
- * operations, and it seems that these operations are rather slower
- * than original bit operation.  But since index numbers are almost
- * always given as constant, such slow operations are performed in the
- * compile time.  So there is no problem on the speed.
- *
- * Exceptions of new flag management is a set of flags to control
- * object generation and the curse flags.  These are not yet rewritten
- * in new index form; maybe these have no merit of rewriting.
- *
+
  * (FYI, the !! on have_flag makes this safe as assignment to a bool
  *  which is just a byte. See A.7.4.7 in K&R.)
  */
@@ -2862,248 +2848,289 @@ enum summon_specific_e {
 #define add_flag(ARRAY, INDEX) ((ARRAY)[(INDEX)/32] |= (1L << ((INDEX)%32)))
 #define remove_flag(ARRAY, INDEX) ((ARRAY)[(INDEX)/32] &= ~(1L << ((INDEX)%32)))
 
-#define TR_INVALID            -1
-#define TR_STR                 0
-#define TR_INT                 1
-#define TR_WIS                 2
-#define TR_DEX                 3
-#define TR_CON                 4
-#define TR_CHR                 5
-#define TR_MAGIC_MASTERY       6
-#define TR_FORCE_WEAPON        7
-#define TR_STEALTH             8
-#define TR_SEARCH              9
-#define TR_INFRA               10
-#define TR_TUNNEL              11
-#define TR_SPEED               12
-#define TR_BLOWS               13
-#define TR_CHAOTIC             14
-#define TR_VAMPIRIC            15
-#define TR_SLAY_ANIMAL         16
-#define TR_SLAY_EVIL           17
-#define TR_SLAY_UNDEAD         18
-#define TR_SLAY_DEMON          19
-#define TR_SLAY_ORC            20
-#define TR_SLAY_TROLL          21
-#define TR_SLAY_GIANT          22
-#define TR_SLAY_DRAGON         23
-#define TR_KILL_DRAGON         24
-#define TR_VORPAL              25
-#define TR_IMPACT              26
-#define TR_BRAND_POIS          27
-#define TR_BRAND_ACID          28
-#define TR_BRAND_ELEC          29
-#define TR_BRAND_FIRE          30
-#define TR_BRAND_COLD          31
+/*
+ * Object Flags (OF_*)
+ *
+ * Do not delete or reorder, and only add new flags to the end unless
+ * you are ready to break savefiles.
+ *
+ * We no longer support negative pvals, but instead now have various OF_DEC_*
+ * flags. I find that mixing good attributes with bad ones provides for more
+ * interesting cursed objects, as well as a few noncursed egos and artifacts.
+ *
+ */
+enum obj_flags_e {
+    OF_INVALID = -1,   /* 0 is being used, and I'd hate to waste a bit :) */
 
-#define TR_SUST_STR            32
-#define TR_SUST_INT            33
-#define TR_SUST_WIS            34
-#define TR_SUST_DEX            35
-#define TR_SUST_CON            36
-#define TR_SUST_CHR            37
-#define TR_RIDING              38
-#define TR_EASY_SPELL          39
-#define TR_IM_ACID             40
-#define TR_IM_ELEC             41
-#define TR_IM_FIRE             42
-#define TR_IM_COLD             43
-#define TR_THROW               44
-#define TR_REFLECT             45
-#define TR_FREE_ACT            46
-#define TR_HOLD_LIFE           47
-#define TR_RES_ACID            48
-#define TR_RES_ELEC            49
-#define TR_RES_FIRE            50
-#define TR_RES_COLD            51
-#define TR_RES_POIS            52
-#define TR_RES_FEAR            53
-#define TR_RES_LITE            54
-#define TR_RES_DARK            55
-#define TR_RES_BLIND           56
-#define TR_RES_CONF            57
-#define TR_RES_SOUND           58
-#define TR_RES_SHARDS          59
-#define TR_RES_NETHER          60
-#define TR_RES_NEXUS           61
-#define TR_RES_CHAOS           62
-#define TR_RES_DISEN           63
+    /* Flavor/Description */
+    OF_HIDE_TYPE = 0,  /* By design, the 0 flag is useless. cf The Weaponsmith and object_type.xtra2 */
+    OF_SHOW_MODS,
+    OF_FULL_NAME,
+    OF_FIXED_FLAVOR,
 
-#define TR_SH_FIRE             64
-#define TR_SH_ELEC             65
-#define TR_SLAY_HUMAN          66
-#define TR_SH_COLD             67
-#define TR_NO_TELE             68
-#define TR_NO_MAGIC            69
-#define TR_DEC_MANA            70
-#define TR_TY_CURSE            71
-#define TR_WARNING             72
-#define TR_HIDE_TYPE           73
-#define TR_SHOW_MODS           74
-#define TR_WEAPONMASTERY       75
-#define TR_LEVITATION          76
-#define TR_LITE                77
-#define TR_SEE_INVIS           78
-#define TR_TELEPATHY           79
-#define TR_SLOW_DIGEST         80
-#define TR_REGEN               81
-#define TR_XTRA_MIGHT          82
-#define TR_XTRA_SHOTS          83
-#define TR_IGNORE_ACID         84
-#define TR_IGNORE_ELEC         85
-#define TR_IGNORE_FIRE         86
-#define TR_IGNORE_COLD         87
-#define TR_ACTIVATE            88
-#define TR_DRAIN_EXP           89
-#define TR_TELEPORT            90
-#define TR_AGGRAVATE           91
-#define TR_BLESSED             92
-#define TR_DEAD_93             93
-#define TR_ES_AC               94
-#define TR_SH_SHARDS           95
+    /* Stats (Code often assumes order here: e.g. OF_STR + loop_variable) */
+    OF_STR,
+    OF_INT,
+    OF_WIS,
+    OF_DEX,
+    OF_CON,
+    OF_CHR,
+    OF_DEC_STR,
+    OF_DEC_INT,
+    OF_DEC_WIS,
+    OF_DEC_DEX,
+    OF_DEC_CON,
+    OF_DEC_CHR,
+    OF_SUST_STR,
+    OF_SUST_INT,
+    OF_SUST_WIS,
+    OF_SUST_DEX,
+    OF_SUST_CON,
+    OF_SUST_CHR,
 
-#define TR_KILL_ANIMAL         96
-#define TR_KILL_EVIL           97
-#define TR_KILL_UNDEAD         98
-#define TR_KILL_DEMON          99
-#define TR_KILL_ORC            100
-#define TR_KILL_TROLL          101
-#define TR_KILL_GIANT          102
-#define TR_KILL_HUMAN          103
-#define TR_ESP_ANIMAL          104
-#define TR_ESP_UNDEAD          105
-#define TR_ESP_DEMON           106
-#define TR_ESP_ORC             107
-#define TR_ESP_TROLL           108
-#define TR_ESP_GIANT           109
-#define TR_ESP_DRAGON          110
-#define TR_ESP_HUMAN           111
-#define TR_ESP_EVIL            112
-#define TR_ESP_GOOD            113
-#define TR_ESP_NONLIVING       114
-#define TR_ESP_UNIQUE          115
-#define TR_FULL_NAME           116
-#define TR_FIXED_FLAVOR        117
-#define TR_SPELL_POWER         118
-#define TR_RES_TIME            119
-#define TR_SPELL_CAP           120
-#define TR_LIFE                121
-#define TR_WILD                122
-#define TR_ORDER               123
-#define TR_DARKNESS            124
-#define TR_NO_SUMMON           125
-#define TR_NO_REMOVE           126
-#define TR_MAGIC_RESISTANCE    127
+    /* Skills/Bonuses */
+    OF_SPEED,
+    OF_STEALTH,
+    OF_SEARCH,
+    OF_INFRA,
+    OF_TUNNEL,
+    OF_MAGIC_MASTERY,
+    OF_MAGIC_RESISTANCE,
+    OF_SPELL_POWER,
+    OF_SPELL_CAP,
+    OF_DEVICE_POWER,
+    OF_LIFE,
 
-#define TR_SLAY_GOOD           128
-#define TR_DEC_STR             129
-#define TR_DEC_INT             130
-#define TR_DEC_WIS             131
-#define TR_DEC_DEX             132
-#define TR_DEC_CON             133
-#define TR_DEC_CHR             134
-#define TR_VULN_ACID           135
-#define TR_VULN_ELEC           136
-#define TR_VULN_FIRE           137
-#define TR_VULN_COLD           138
-#define TR_VULN_POIS           139
-#define TR_VULN_FEAR           140
-#define TR_VULN_LITE           141
-#define TR_VULN_DARK           142
-#define TR_VULN_BLIND          143
-#define TR_VULN_CONF           144
-#define TR_VULN_SOUND          145
-#define TR_VULN_SHARDS         146
-#define TR_VULN_NETHER         147
-#define TR_VULN_NEXUS          148
-#define TR_VULN_CHAOS          149
-#define TR_VULN_DISEN          150
-#define TR_DEC_STEALTH         151
-#define TR_DEC_SPEED           152
-#define TR_DEC_LIFE            153
-#define TR_SH_REVENGE          154
-#define TR_VORPAL2             155
-#define TR_DEC_MAGIC_MASTERY   156
-#define TR_DEC_SPELL_CAP       157
-#define TR_DEC_SPELL_POWER     158
-#define TR_SLAY_LIVING         159
+    OF_DEC_SPEED,
+    OF_DEC_STEALTH,
+    OF_DEC_MAGIC_MASTERY,
+    OF_DEC_SPELL_POWER,
+    OF_DEC_SPELL_CAP,
+    OF_DEC_LIFE,
 
-#define TR_STUN                160
-#define TR_DEVICE_POWER        161
-#define TR_IM_POIS             162
-#define TR_IM_LITE             163
-#define TR_IM_DARK             164
-#define TR_IM_NETHER           165
-#define TR_IM_FEAR             166
-#define TR_DEC_BLOWS           167
-#define TR_IM_BLIND            168
-#define TR_DEAD_169            169
-#define TR_NO_ENCHANT          170
-#define TR_DUAL_WIELDING       171
+    /* Resists */
+    OF_RES_ACID,
+    OF_RES_ELEC,
+    OF_RES_FIRE,
+    OF_RES_COLD,
+    OF_RES_POIS,
+    OF_RES_LITE,
+    OF_RES_DARK,
+    OF_RES_CONF,
+    OF_RES_NETHER,
+    OF_RES_NEXUS,
+    OF_RES_SOUND,
+    OF_RES_SHARDS,
+    OF_RES_CHAOS,
+    OF_RES_DISEN,
+    OF_RES_TIME,
+    OF_RES_BLIND,
+    OF_RES_FEAR,
 
-#define TR_FLAG_COUNT          172   /* Note: This is MAX + 1, not MAX */
-#define TR_FLAG_ARRAY_SIZE       6   /* u32b flgs[TR_FLAG_ARRAY_SIZE]; */
+    OF_IM_ACID,
+    OF_IM_ELEC,
+    OF_IM_FIRE,
+    OF_IM_COLD,
+    OF_IM_POIS,
+    OF_IM_LITE,
+    OF_IM_DARK,
+    OF_IM_NETHER,
+    OF_IM_BLIND,
+    OF_IM_FEAR,
 
-#define TRG_INSTA_ART           0x00000001     /* Item must be an artifact */
-#define TRG_QUESTITEM           0x00000002     /* quest level item -KMW- */
-#define TRG_XTRA_POWER          0x00000004     /* Extra power */
-#define TRG_ONE_SUSTAIN         0x00000008     /* One sustain */
-#define TRG_XTRA_RES_OR_POWER   0x00000010     /* Extra resistance or power */
-#define TRG_XTRA_H_RES          0x00000020     /* Extra high resistance */
-#define TRG_XTRA_E_RES          0x00000040     /* Extra element resistance */
-#define TRG_XTRA_L_RES          0x00000080     /* Extra lordly resistance */
-#define TRG_XTRA_D_RES          0x00000100     /* Extra dragon resistance */
-#define TRG_XTRA_RES            0x00000200     /* Extra resistance */
-#define TRG_CURSED              0x00000400     /* Item is Cursed */
-#define TRG_HEAVY_CURSE         0x00000800     /* Item is Heavily Cursed */
-#define TRG_PERMA_CURSE         0x00001000     /* Item is Perma Cursed */
-#define TRG_RANDOM_CURSE0       0x00002000     /* Item is Random Cursed */
-#define TRG_RANDOM_CURSE1       0x00004000     /* Item is Random Cursed */
-#define TRG_RANDOM_CURSE2       0x00008000     /* Item is Random Cursed */
-#define TRG_AWARE               0x00010000
-#define TRG_TOWN                0x00020000     /* Item is allowed to be stocked in town */
+    OF_VULN_ACID,
+    OF_VULN_ELEC,
+    OF_VULN_FIRE,
+    OF_VULN_COLD,
+    OF_VULN_POIS,
+    OF_VULN_LITE,
+    OF_VULN_DARK,
+    OF_VULN_CONF,
+    OF_VULN_NETHER,
+    OF_VULN_NEXUS,
+    OF_VULN_SOUND,
+    OF_VULN_SHARDS,
+    OF_VULN_CHAOS,
+    OF_VULN_DISEN,
+    OF_VULN_BLIND,
+    OF_VULN_FEAR,
+
+    /* Abilities */
+    OF_FREE_ACT,
+    OF_SEE_INVIS,
+    OF_REGEN,
+    OF_HOLD_LIFE,
+    OF_REFLECT,
+    OF_LEVITATION,
+    OF_SLOW_DIGEST,
+    OF_WARNING,
+    OF_NO_MAGIC,
+    OF_NO_SUMMON,
+    OF_NO_TELE,
+    OF_NO_ENCHANT,
+    OF_NO_REMOVE,
+    OF_EASY_SPELL,
+    OF_DEC_MANA,
+    OF_LITE,
+    OF_DARKNESS,
+    OF_LORE1,
+    OF_LORE2,
+
+    OF_ACTIVATE, /* Present, but not required to Activate (obj_has_effect() suffices).
+                    This is a very useful crutch for object lore, though. */
+
+    OF_IGNORE_ACID,
+    OF_IGNORE_ELEC,
+    OF_IGNORE_FIRE,
+    OF_IGNORE_COLD,
+
+    /* Auras */
+    OF_AURA_ELEC,
+    OF_AURA_FIRE,
+    OF_AURA_COLD,
+    OF_AURA_SHARDS,
+    OF_AURA_REVENGE,
+    OF_AURA_FEAR,
+
+    /* Telepathy */
+    OF_TELEPATHY,
+    OF_ESP_EVIL,
+    OF_ESP_GOOD,
+    OF_ESP_NONLIVING,
+    OF_ESP_UNIQUE,
+    OF_ESP_DRAGON,
+    OF_ESP_DEMON,
+    OF_ESP_UNDEAD,
+    OF_ESP_ANIMAL,
+    OF_ESP_HUMAN,
+    OF_ESP_ORC,
+    OF_ESP_TROLL,
+    OF_ESP_GIANT,
+
+    /* Weapons */
+    OF_SLAY_EVIL,
+    OF_SLAY_GOOD,
+    OF_SLAY_LIVING,
+    OF_SLAY_DRAGON,
+    OF_SLAY_DEMON,
+    OF_SLAY_UNDEAD,
+    OF_SLAY_ANIMAL,
+    OF_SLAY_HUMAN,
+    OF_SLAY_ORC,
+    OF_SLAY_TROLL,
+    OF_SLAY_GIANT,
+
+    OF_KILL_EVIL,
+    OF_KILL_DRAGON,
+    OF_KILL_DEMON,
+    OF_KILL_UNDEAD,
+    OF_KILL_ANIMAL,
+    OF_KILL_HUMAN,
+    OF_KILL_ORC,
+    OF_KILL_TROLL,
+    OF_KILL_GIANT,
+
+    OF_BRAND_ACID,
+    OF_BRAND_ELEC,
+    OF_BRAND_FIRE,
+    OF_BRAND_COLD,
+    OF_BRAND_POIS,
+    OF_BRAND_CHAOS,
+    OF_BRAND_VAMP,
+    OF_BRAND_WILD,
+    OF_BRAND_ORDER,
+    OF_BRAND_MANA,
+    OF_VORPAL,
+    OF_VORPAL2,
+    OF_IMPACT,
+    OF_STUN,
+
+    OF_BLESSED,
+    OF_RIDING,
+    OF_THROWING,
+
+    OF_BLOWS,
+    OF_DEC_BLOWS,
+    OF_WEAPONMASTERY,
+    OF_DUAL_WIELDING,
+
+    /* Bows */
+    OF_XTRA_MIGHT,
+    OF_XTRA_SHOTS,
+
+    /* Curses */
+    OF_DRAIN_EXP,
+    OF_TELEPORT,
+    OF_AGGRAVATE,
+    OF_TY_CURSE,
+
+    /* A few places loop from 0 <= i < OF_COUNT ... (init1, race_sword and race_ring) */
+    OF_COUNT,
+};
+#define OF_ARRAY_SIZE          6
+/* u32b flgs[OF_ARRAY_SIZE];
+   assert((OF_COUNT + 31)/32 == OF_ARRAY_SIZE); is checked during initialization */
+
+/* Object Flags for Generation (OFG_*) */
+#define OFG_INSTA_ART           0x00000001     /* Item must be an artifact */
+#define OFG_QUESTITEM           0x00000002     /* quest level item -KMW- */
+#define OFG_XTRA_POWER          0x00000004     /* Extra power */
+#define OFG_ONE_SUSTAIN         0x00000008     /* One sustain */
+#define OFG_XTRA_RES_OR_POWER   0x00000010     /* Extra resistance or power */
+#define OFG_XTRA_H_RES          0x00000020     /* Extra high resistance */
+#define OFG_XTRA_E_RES          0x00000040     /* Extra element resistance */
+#define OFG_XTRA_L_RES          0x00000080     /* Extra lordly resistance */
+#define OFG_XTRA_D_RES          0x00000100     /* Extra dragon resistance */
+#define OFG_XTRA_RES            0x00000200     /* Extra resistance */
+#define OFG_CURSED              0x00000400     /* Item is Cursed */
+#define OFG_HEAVY_CURSE         0x00000800     /* Item is Heavily Cursed */
+#define OFG_PERMA_CURSE         0x00001000     /* Item is Perma Cursed */
+#define OFG_RANDOM_CURSE0       0x00002000     /* Item is Random Cursed */
+#define OFG_RANDOM_CURSE1       0x00004000     /* Item is Random Cursed */
+#define OFG_RANDOM_CURSE2       0x00008000     /* Item is Random Cursed */
+#define OFG_AWARE               0x00010000
+#define OFG_TOWN                0x00020000     /* Item is allowed to be stocked in town */
 
 
+/* Object Flags for Curses (OFC_*) */
 #define MAX_CURSE 17
 
-#define TRC_CURSED              0x00000001
-#define TRC_HEAVY_CURSE         0x00000002
-#define TRC_PERMA_CURSE         0x00000004
-#define TRC_XXX1                0x00000008
-#define TRC_TY_CURSE            0x00000010
-#define TRC_AGGRAVATE           0x00000020
-#define TRC_DRAIN_EXP           0x00000040
-#define TRC_SLOW_REGEN          0x00000080
-#define TRC_ADD_L_CURSE         0x00000100
-#define TRC_ADD_H_CURSE         0x00000200
-#define TRC_CALL_ANIMAL         0x00000400
-#define TRC_CALL_DEMON          0x00000800
-#define TRC_CALL_DRAGON         0x00001000
-#define TRC_COWARDICE           0x00002000
-#define TRC_TELEPORT            0x00004000
-#define TRC_LOW_MELEE           0x00008000
-#define TRC_LOW_AC              0x00010000
-#define TRC_LOW_MAGIC           0x00020000
-#define TRC_FAST_DIGEST         0x00040000
-#define TRC_DRAIN_HP            0x00080000
-#define TRC_DRAIN_MANA          0x00100000
-#define TRC_TELEPORT_SELF       0x00200000
-#define TRC_CHAINSWORD          0x00400000
+#define OFC_CURSED              0x00000001
+#define OFC_HEAVY_CURSE         0x00000002
+#define OFC_PERMA_CURSE         0x00000004
+#define OFC_XXX1                0x00000008
+#define OFC_TY_CURSE            0x00000010
+#define OFC_AGGRAVATE           0x00000020
+#define OFC_DRAIN_EXP           0x00000040
+#define OFC_SLOW_REGEN          0x00000080
+#define OFC_ADD_L_CURSE         0x00000100
+#define OFC_ADD_H_CURSE         0x00000200
+#define OFC_CALL_ANIMAL         0x00000400
+#define OFC_CALL_DEMON          0x00000800
+#define OFC_CALL_DRAGON         0x00001000
+#define OFC_COWARDICE           0x00002000
+#define OFC_TELEPORT            0x00004000
+#define OFC_LOW_MELEE           0x00008000
+#define OFC_LOW_AC              0x00010000
+#define OFC_LOW_MAGIC           0x00020000
+#define OFC_FAST_DIGEST         0x00040000
+#define OFC_DRAIN_HP            0x00080000
+#define OFC_DRAIN_MANA          0x00100000
+#define OFC_TELEPORT_SELF       0x00200000
+#define OFC_CHAINSWORD          0x00400000
 
 #define TRC_SPECIAL_MASK \
-    (TRC_TY_CURSE | TRC_AGGRAVATE)
+    (OFC_TY_CURSE | OFC_AGGRAVATE)
 
 #define TRC_HEAVY_MASK   \
-    (TRC_TY_CURSE | TRC_AGGRAVATE | TRC_DRAIN_EXP | TRC_ADD_H_CURSE | \
-     TRC_CALL_DEMON | TRC_CALL_DRAGON | TRC_TELEPORT)
+    (OFC_TY_CURSE | OFC_AGGRAVATE | OFC_DRAIN_EXP | OFC_ADD_H_CURSE | \
+     OFC_CALL_DEMON | OFC_CALL_DRAGON | OFC_TELEPORT)
 
 #define TRC_P_FLAG_MASK  \
-    (TRC_TELEPORT_SELF | TRC_CHAINSWORD | \
-     TRC_TY_CURSE | TRC_DRAIN_EXP | TRC_ADD_L_CURSE | TRC_ADD_H_CURSE | \
-     TRC_CALL_ANIMAL | TRC_CALL_DEMON | TRC_CALL_DRAGON | TRC_COWARDICE | \
-     TRC_TELEPORT | TRC_DRAIN_HP | TRC_DRAIN_MANA)
-
-
+    (OFC_TELEPORT_SELF | OFC_CHAINSWORD | \
+     OFC_TY_CURSE | OFC_DRAIN_EXP | OFC_ADD_L_CURSE | OFC_ADD_H_CURSE | \
+     OFC_CALL_ANIMAL | OFC_CALL_DEMON | OFC_CALL_DRAGON | OFC_COWARDICE | \
+     OFC_TELEPORT | OFC_DRAIN_HP | OFC_DRAIN_MANA)
 
 /*
  * Bit flags for apply_magic() (etc)

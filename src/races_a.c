@@ -18,10 +18,10 @@ static void _amberite_calc_bonuses(void)
     p_ptr->sustain_con = TRUE;
     p_ptr->regen += 100;
 }
-static void _amberite_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _amberite_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_SUST_CON);
-    add_flag(flgs, TR_REGEN);
+    add_flag(flgs, OF_SUST_CON);
+    add_flag(flgs, OF_REGEN);
 }
 race_t *amberite_get_race(void)
 {
@@ -128,12 +128,12 @@ static void _android_calc_bonuses(void)
     /*res_add_vuln(RES_ELEC); cf resists.c res_pct_aux() for an alternative*/
     p_ptr->hold_life = TRUE;
 }
-static void _android_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _android_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_FREE_ACT);
-    add_flag(flgs, TR_RES_POIS);
-    add_flag(flgs, TR_SLOW_DIGEST);
-    add_flag(flgs, TR_HOLD_LIFE);
+    add_flag(flgs, OF_FREE_ACT);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_SLOW_DIGEST);
+    add_flag(flgs, OF_HOLD_LIFE);
     /*add_flag(flgs, TR_VULN_ELEC);*/
 }
 race_t *android_get_race(void)
@@ -199,10 +199,10 @@ static void _archon_calc_bonuses(void)
     p_ptr->see_inv = TRUE;
     p_ptr->align += 200;
 }
-static void _archon_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _archon_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_LEVITATION);
-    add_flag(flgs, TR_SEE_INVIS);
+    add_flag(flgs, OF_LEVITATION);
+    add_flag(flgs, OF_SEE_INVIS);
 }
 race_t *archon_get_race(void)
 {
@@ -269,13 +269,13 @@ static void _balrog_calc_bonuses(void)
     if (p_ptr->lev >= 45) res_add(RES_FIRE);
     p_ptr->align -= 200;
 }
-static void _balrog_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _balrog_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_FIRE);
-    add_flag(flgs, TR_RES_NETHER);
-    add_flag(flgs, TR_HOLD_LIFE);
+    add_flag(flgs, OF_RES_FIRE);
+    add_flag(flgs, OF_RES_NETHER);
+    add_flag(flgs, OF_HOLD_LIFE);
     if (p_ptr->lev >= 10)
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_SEE_INVIS);
 }
 race_t *balrog_get_race(void)
 {
@@ -340,9 +340,9 @@ static void _barbarian_calc_bonuses(void)
 {
     res_add(RES_FEAR);
 }
-static void _barbarian_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _barbarian_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_FEAR);
+    add_flag(flgs, OF_RES_FEAR);
 }
 race_t *barbarian_get_race(void)
 {
@@ -404,10 +404,10 @@ static void _beastman_calc_bonuses(void)
     res_add(RES_CONF);
     res_add(RES_SOUND);
 }
-static void _beastman_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _beastman_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_SOUND);
-    add_flag(flgs, TR_RES_CONF);
+    add_flag(flgs, OF_RES_SOUND);
+    add_flag(flgs, OF_RES_CONF);
 }
 race_t *beastman_get_race(void)
 {
@@ -542,10 +542,10 @@ static void _centaur_calc_bonuses(void)
     }
 }
 
-static void _centaur_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _centaur_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
     if (p_ptr->lev >= 10)
-        add_flag(flgs, TR_SPEED);
+        add_flag(flgs, OF_SPEED);
 }
 
 static void _centaur_calc_innate_attacks(void)
@@ -637,9 +637,9 @@ static void _cyclops_calc_bonuses(void)
 {
     res_add(RES_SOUND);
 }
-static void _cyclops_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _cyclops_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_SOUND);
+    add_flag(flgs, OF_RES_SOUND);
 }
 race_t *cyclops_get_race(void)
 {
@@ -703,12 +703,12 @@ static void _dark_elf_calc_bonuses(void)
     p_ptr->spell_cap += 3;
     if (p_ptr->lev >= 20) p_ptr->see_inv = TRUE;
 }
-static void _dark_elf_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _dark_elf_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_DARK);
-    add_flag(flgs, TR_SPELL_CAP);
+    add_flag(flgs, OF_RES_DARK);
+    add_flag(flgs, OF_SPELL_CAP);
     if (p_ptr->lev >= 20)
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_SEE_INVIS);
 }
 race_t *dark_elf_get_race(void)
 {
@@ -941,39 +941,39 @@ static void _draconian_calc_bonuses(void)
         p_ptr->dis_to_a += to_a;
     }
 }
-static void _draconian_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _draconian_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_LEVITATION);
+    add_flag(flgs, OF_LEVITATION);
     switch (p_ptr->psubrace)
     {
     case DRACONIAN_RED:
-        add_flag(flgs, TR_RES_FIRE);
+        add_flag(flgs, OF_RES_FIRE);
         break;
     case DRACONIAN_WHITE:
-        add_flag(flgs, TR_RES_COLD);
+        add_flag(flgs, OF_RES_COLD);
         break;
     case DRACONIAN_BLUE:
-        add_flag(flgs, TR_RES_ELEC);
+        add_flag(flgs, OF_RES_ELEC);
         break;
     case DRACONIAN_BLACK:
-        add_flag(flgs, TR_RES_ACID);
+        add_flag(flgs, OF_RES_ACID);
         break;
     case DRACONIAN_GREEN:
-        add_flag(flgs, TR_RES_POIS);
+        add_flag(flgs, OF_RES_POIS);
         break;
     case DRACONIAN_BRONZE:
-        add_flag(flgs, TR_RES_CONF);
+        add_flag(flgs, OF_RES_CONF);
         break;
     case DRACONIAN_CRYSTAL:
-        add_flag(flgs, TR_RES_SHARDS);
+        add_flag(flgs, OF_RES_SHARDS);
         if (p_ptr->lev >= 40)
-            add_flag(flgs, TR_REFLECT);
+            add_flag(flgs, OF_REFLECT);
         break;
     case DRACONIAN_GOLD:
-        add_flag(flgs, TR_RES_SOUND);
+        add_flag(flgs, OF_RES_SOUND);
         break;
     case DRACONIAN_SHADOW:
-        add_flag(flgs, TR_RES_NETHER);
+        add_flag(flgs, OF_RES_NETHER);
         break;
     }
 }
@@ -1344,9 +1344,9 @@ static void _dunadan_calc_bonuses(void)
 {
     p_ptr->sustain_con = TRUE;
 }
-static void _dunadan_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _dunadan_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_SUST_CON);
+    add_flag(flgs, OF_SUST_CON);
 }
 race_t *dunadan_get_race(void)
 {
@@ -1409,9 +1409,9 @@ static void _dwarf_calc_bonuses(void)
 {
     res_add(RES_BLIND);
 }
-static void _dwarf_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _dwarf_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_BLIND);
+    add_flag(flgs, OF_RES_BLIND);
 }
 race_t *dwarf_get_race(void)
 {
@@ -1476,7 +1476,7 @@ static void _ent_calc_bonuses(void)
     if (!equip_find_first(object_is_melee_weapon)) 
         p_ptr->skill_dig += p_ptr->lev * 10;
 }
-static void _ent_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _ent_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
     /*add_flag(flgs, TR_VULN_FIRE);*/
 }
@@ -1556,9 +1556,9 @@ static void _gnome_calc_bonuses(void)
 {
     p_ptr->free_act = TRUE;
 }
-static void _gnome_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _gnome_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_FREE_ACT);
+    add_flag(flgs, OF_FREE_ACT);
 }
 race_t *gnome_get_race(void)
 {
@@ -1633,16 +1633,16 @@ static void _golem_calc_bonuses(void)
 
     p_ptr->pspeed -= p_ptr->lev/16;
 }
-static void _golem_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _golem_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_SEE_INVIS);
-    add_flag(flgs, TR_FREE_ACT);
-    add_flag(flgs, TR_RES_POIS);
-    add_flag(flgs, TR_SLOW_DIGEST);
+    add_flag(flgs, OF_SEE_INVIS);
+    add_flag(flgs, OF_FREE_ACT);
+    add_flag(flgs, OF_RES_POIS);
+    add_flag(flgs, OF_SLOW_DIGEST);
     if (p_ptr->lev >= 35)
-        add_flag(flgs, TR_HOLD_LIFE);
+        add_flag(flgs, OF_HOLD_LIFE);
     if (p_ptr->lev >= 16)
-        add_flag(flgs, TR_SPEED);
+        add_flag(flgs, OF_SPEED);
 }
 race_t *golem_get_race(void)
 {
@@ -1713,10 +1713,10 @@ static void _half_giant_calc_bonuses(void)
     p_ptr->sustain_str = TRUE;
     res_add(RES_SHARDS);
 }
-static void _half_giant_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _half_giant_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_SHARDS);
-    add_flag(flgs, TR_SUST_STR);
+    add_flag(flgs, OF_RES_SHARDS);
+    add_flag(flgs, OF_SUST_STR);
 }
 race_t *half_giant_get_race(void)
 {
@@ -1779,10 +1779,10 @@ static void _half_ogre_calc_bonuses(void)
     res_add(RES_DARK);
     p_ptr->sustain_str = TRUE;
 }
-static void _half_ogre_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _half_ogre_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_SUST_STR);
-    add_flag(flgs, TR_RES_DARK);
+    add_flag(flgs, OF_SUST_STR);
+    add_flag(flgs, OF_RES_DARK);
 }
 race_t *half_ogre_get_race(void)
 {
@@ -1846,9 +1846,9 @@ static void _half_titan_calc_bonuses(void)
 {
     res_add(RES_CHAOS);
 }
-static void _half_titan_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _half_titan_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_CHAOS);
+    add_flag(flgs, OF_RES_CHAOS);
 }
 race_t *half_titan_get_race(void)
 {
@@ -1913,11 +1913,11 @@ static void _half_troll_calc_bonuses(void)
     if (p_ptr->lev >= 15)
         p_ptr->regen += 100;
 }
-static void _half_troll_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _half_troll_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_SUST_STR);
+    add_flag(flgs, OF_SUST_STR);
     if (p_ptr->lev >= 15)
-        add_flag(flgs, TR_REGEN);
+        add_flag(flgs, OF_REGEN);
 }
 race_t *half_troll_get_race(void)
 {
@@ -1972,10 +1972,10 @@ static void _high_elf_calc_bonuses(void)
     res_add(RES_LITE);
     p_ptr->see_inv = TRUE;
 }
-static void _high_elf_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _high_elf_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_LITE);
-    add_flag(flgs, TR_SEE_INVIS);
+    add_flag(flgs, OF_RES_LITE);
+    add_flag(flgs, OF_SEE_INVIS);
 }
 race_t *high_elf_get_race(void)
 {
@@ -2159,11 +2159,11 @@ static void _imp_calc_bonuses(void)
     res_add(RES_FIRE);
     if (p_ptr->lev >= 10) p_ptr->see_inv = TRUE;
 }
-static void _imp_get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _imp_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    add_flag(flgs, TR_RES_FIRE);
+    add_flag(flgs, OF_RES_FIRE);
     if (p_ptr->lev >= 10)
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_SEE_INVIS);
 }
 race_t *imp_get_race(void)
 {

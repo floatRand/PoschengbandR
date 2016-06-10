@@ -86,35 +86,35 @@ void wr_item(savefile_ptr file, object_type *o_ptr)
         savefile_write_byte(file, SAVE_ITEM_MARKED);
         savefile_write_u32b(file, o_ptr->marked);
     }
-    if (o_ptr->art_flags[0])
+    if (o_ptr->flags[0])
     {
         savefile_write_byte(file, SAVE_ITEM_ART_FLAGS_0);
-        savefile_write_u32b(file, o_ptr->art_flags[0]);
+        savefile_write_u32b(file, o_ptr->flags[0]);
     }
-    if (o_ptr->art_flags[1])
+    if (o_ptr->flags[1])
     {
         savefile_write_byte(file, SAVE_ITEM_ART_FLAGS_1);
-        savefile_write_u32b(file, o_ptr->art_flags[1]);
+        savefile_write_u32b(file, o_ptr->flags[1]);
     }
-    if (o_ptr->art_flags[2])
+    if (o_ptr->flags[2])
     {
         savefile_write_byte(file, SAVE_ITEM_ART_FLAGS_2);
-        savefile_write_u32b(file, o_ptr->art_flags[2]);
+        savefile_write_u32b(file, o_ptr->flags[2]);
     }
-    if (o_ptr->art_flags[3])
+    if (o_ptr->flags[3])
     {
         savefile_write_byte(file, SAVE_ITEM_ART_FLAGS_3);
-        savefile_write_u32b(file, o_ptr->art_flags[3]);
+        savefile_write_u32b(file, o_ptr->flags[3]);
     }
-    if (o_ptr->art_flags[4])
+    if (o_ptr->flags[4])
     {
         savefile_write_byte(file, SAVE_ITEM_ART_FLAGS_4);
-        savefile_write_u32b(file, o_ptr->art_flags[4]);
+        savefile_write_u32b(file, o_ptr->flags[4]);
     }
-    if (o_ptr->art_flags[5])
+    if (o_ptr->flags[5])
     {
         savefile_write_byte(file, SAVE_ITEM_ART_FLAGS_5);
-        savefile_write_u32b(file, o_ptr->art_flags[5]);
+        savefile_write_u32b(file, o_ptr->flags[5]);
     }
     if (o_ptr->curse_flags)
     {
@@ -401,12 +401,12 @@ static void wr_xtra_ego(savefile_ptr file, int e_idx)
     int       i;
     ego_type *e_ptr = &e_info[e_idx];
 
-    savefile_write_byte(file, TR_FLAG_ARRAY_SIZE);
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    savefile_write_byte(file, OF_ARRAY_SIZE);
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
         savefile_write_u32b(file, e_ptr->known_flags[i]);
 
-    savefile_write_byte(file, TR_FLAG_ARRAY_SIZE);
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    savefile_write_byte(file, OF_ARRAY_SIZE);
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
         savefile_write_u32b(file, e_ptr->xtra_flags[i]);
 
     savefile_write_s32b(file, e_ptr->counts.generated);
@@ -421,8 +421,8 @@ static void wr_xtra_art(savefile_ptr file, int a_idx)
     int            i;
     artifact_type *a_ptr = &a_info[a_idx];
 
-    savefile_write_byte(file, TR_FLAG_ARRAY_SIZE);
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    savefile_write_byte(file, OF_ARRAY_SIZE);
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
         savefile_write_u32b(file, a_ptr->known_flags[i]);
 }
 

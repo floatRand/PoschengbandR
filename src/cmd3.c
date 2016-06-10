@@ -208,7 +208,7 @@ void do_cmd_drop(void)
             msg_print("Hmmm, it seems to be cursed.");
             return;
         }
-        if (have_flag(o_ptr->art_flags, TR_NO_REMOVE))
+        if (have_flag(o_ptr->flags, OF_NO_REMOVE))
         {
             msg_print("You can't drop yourself, silly!");
             return;
@@ -420,7 +420,7 @@ void do_cmd_destroy(void)
         if (is_equipped)
         {
             blast_object(o_ptr);
-            o_ptr->curse_flags = TRC_HEAVY_CURSE;
+            o_ptr->curse_flags = OFC_HEAVY_CURSE;
         }
     }
     else if (is_equipped)
@@ -753,7 +753,7 @@ static bool item_tester_refill_lantern(object_type *o_ptr)
 
 static bool _lite_is_darkness(object_type *lite)
 {
-    if (lite->name2 == EGO_LITE_DARKNESS || have_flag(lite->art_flags, TR_DARKNESS))
+    if (lite->name2 == EGO_LITE_DARKNESS || have_flag(lite->flags, OF_DARKNESS))
         return TRUE;
     return FALSE;
 }

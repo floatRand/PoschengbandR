@@ -540,12 +540,12 @@ static void _calc_bonuses(void)
     if (p_ptr->lev >= 35) res_add(RES_POIS);
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-    if (p_ptr->lev >= 5) add_flag(flgs, TR_RES_COLD);
-    if (p_ptr->lev >= 15) add_flag(flgs, TR_SEE_INVIS);
-    if (p_ptr->lev >= 25) add_flag(flgs, TR_HOLD_LIFE);
-    if (p_ptr->lev >= 35) add_flag(flgs, TR_RES_POIS);
+    if (p_ptr->lev >= 5) add_flag(flgs, OF_RES_COLD);
+    if (p_ptr->lev >= 15) add_flag(flgs, OF_SEE_INVIS);
+    if (p_ptr->lev >= 25) add_flag(flgs, OF_HOLD_LIFE);
+    if (p_ptr->lev >= 35) add_flag(flgs, OF_RES_POIS);
 }
 
 static int _get_powers(spell_info* spells, int max)

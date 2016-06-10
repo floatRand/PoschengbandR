@@ -247,8 +247,8 @@ static bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
     if (object_is_artifact(o_ptr) || object_is_artifact(j_ptr)) return (0);
 
     /* Hack -- Identical art_flags! */
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
-        if (o_ptr->art_flags[i] != j_ptr->art_flags[i]) return (0);
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
+        if (o_ptr->flags[i] != j_ptr->flags[i]) return (0);
 
     /* Hack -- Never stack "powerful" items */
     if (o_ptr->xtra1 || j_ptr->xtra1) return (0);
@@ -383,9 +383,9 @@ static int store_check_num(object_type *o_ptr)
 
 static bool is_blessed(object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     obj_flags(o_ptr, flgs);
-    if (have_flag(flgs, TR_BLESSED)) return (TRUE);
+    if (have_flag(flgs, OF_BLESSED)) return (TRUE);
     else return (FALSE);
 }
 
@@ -1087,12 +1087,12 @@ static void store_delete(void)
  */
 static bool _town_accept_aux(int k_idx)
 {
-    if (k_info[k_idx].gen_flags & TRG_INSTA_ART)
+    if (k_info[k_idx].gen_flags & OFG_INSTA_ART)
         return FALSE;
 
     if (p_ptr->town_num != SECRET_TOWN)
     {
-        if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+        if (!(k_info[k_idx].gen_flags & OFG_TOWN))
             return FALSE;
     }
     return TRUE;
@@ -1152,7 +1152,7 @@ static bool _weapon_accept(int k_idx)
     case TV_RAGE_BOOK:
         if (p_ptr->town_num == SECRET_TOWN && !one_in_(20))
         {
-            if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+            if (!(k_info[k_idx].gen_flags & OFG_TOWN))
                 return FALSE;
         }
         return TRUE;
@@ -1194,7 +1194,7 @@ static bool _temple_accept(int k_idx)
     case TV_CRUSADE_BOOK:
         if (p_ptr->town_num == SECRET_TOWN && !one_in_(20))
         {
-            if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+            if (!(k_info[k_idx].gen_flags & OFG_TOWN))
                 return FALSE;
         }
         return TRUE;
@@ -1241,7 +1241,7 @@ static bool _alchemist_accept(int k_idx)
 
     if (p_ptr->town_num == SECRET_TOWN && !one_in_(20))
     {
-        if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+        if (!(k_info[k_idx].gen_flags & OFG_TOWN))
             return FALSE;
     }
 
@@ -1268,7 +1268,7 @@ static bool _magic_accept(int k_idx)
     case TV_STAFF:
         if (p_ptr->town_num == SECRET_TOWN && !one_in_(10))
         {
-            if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+            if (!(k_info[k_idx].gen_flags & OFG_TOWN))
                 return FALSE;
         }
         return TRUE;
@@ -1280,7 +1280,7 @@ static bool _magic_accept(int k_idx)
     case TV_SORCERY_BOOK: 
         if (p_ptr->town_num == SECRET_TOWN && !one_in_(20))
         {
-            if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+            if (!(k_info[k_idx].gen_flags & OFG_TOWN))
                 return FALSE;
         }
         return TRUE;
@@ -1295,7 +1295,7 @@ static bool _book_accept(int k_idx)
 
     if (p_ptr->town_num == SECRET_TOWN && !one_in_(10))
     {
-        if (!(k_info[k_idx].gen_flags & TRG_TOWN))
+        if (!(k_info[k_idx].gen_flags & OFG_TOWN))
             return FALSE;
     }
 
@@ -1320,7 +1320,7 @@ static bool _book_accept(int k_idx)
 
 static bool _jeweler_accept(int k_idx)
 {
-    if (k_info[k_idx].gen_flags & TRG_INSTA_ART)
+    if (k_info[k_idx].gen_flags & OFG_INSTA_ART)
         return FALSE;
 
     switch (k_info[k_idx].tval)
@@ -1432,13 +1432,13 @@ static bool _get_store_obj(object_type *o_ptr)
         switch (randint1(5))
         {
         case 1: case 2:
-            add_flag(o_ptr->art_flags, TR_RES_COLD);
+            add_flag(o_ptr->flags, OF_RES_COLD);
             break;
         case 3: case 4:
-            add_flag(o_ptr->art_flags, TR_RES_FIRE);
+            add_flag(o_ptr->flags, OF_RES_FIRE);
             break;
         case 5:
-            add_flag(o_ptr->art_flags, TR_RES_ACID);
+            add_flag(o_ptr->flags, OF_RES_ACID);
             break;
         }
         return TRUE;
@@ -2314,7 +2314,7 @@ static void store_sell(void)
             msg_print("Hmmm, it seems to be cursed.");
             return;
         }
-        if (have_flag(o_ptr->art_flags, TR_NO_REMOVE))
+        if (have_flag(o_ptr->flags, OF_NO_REMOVE))
         {
             msg_print("You can't sell yourself, silly!");
             return;

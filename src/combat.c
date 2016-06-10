@@ -189,9 +189,9 @@ static _blow_info_t _get_blow_info(int hand)
 
     case CLASS_CAVALRY:
     {
-        u32b flgs[TR_FLAG_ARRAY_SIZE];
+        u32b flgs[OF_ARRAY_SIZE];
         obj_flags(o_ptr, flgs);
-        if (p_ptr->riding && have_flag(flgs, TR_RIDING)) {result.num = 550; result.wgt = 70; result.mul = 65;}
+        if (p_ptr->riding && have_flag(flgs, OF_RIDING)) {result.num = 550; result.wgt = 70; result.mul = 65;}
         else {result.num = 500; result.wgt = 100; result.mul = 35;}
         break;
     }
@@ -445,7 +445,7 @@ void display_weapon_info(doc_ptr doc, int hand)
 {
     object_type *o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
     char o_name[MAX_NLEN];
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     int dd;
     int ds;
     int to_d = 0;
@@ -487,7 +487,7 @@ void display_weapon_info(doc_ptr doc, int hand)
     }
 
     weapon_flags_known(hand, flgs);
-    if ( (have_flag(flgs, TR_FORCE_WEAPON) || p_ptr->tim_force) 
+    if ( (have_flag(flgs, OF_BRAND_MANA) || p_ptr->tim_force) 
       && (p_ptr->csp > o_ptr->dd*o_ptr->ds/5) )
     {
         force = TRUE;
@@ -507,11 +507,11 @@ void display_weapon_info(doc_ptr doc, int hand)
     }
 
     mult = 100;
-    if (have_flag(flgs, TR_VORPAL2))
+    if (have_flag(flgs, OF_VORPAL2))
         mult = mult * 5 / 3;  /* 1 + 1/3(1 + 1/2 + ...) = 1.667x */
-    else if (have_flag(flgs, TR_VORPAL) && p_ptr->vorpal)
+    else if (have_flag(flgs, OF_VORPAL) && p_ptr->vorpal)
         mult = mult * 11 / 8; /* 1 + 1/4(1 + 1/3 + ...) = 1.375x */
-    else if (have_flag(flgs, TR_VORPAL) || p_ptr->vorpal)
+    else if (have_flag(flgs, OF_VORPAL) || p_ptr->vorpal)
         mult = mult * 11 / 9; /* 1 + 1/6(1 + 1/4 + ...) = 1.222x */
 
     mult += mult * p_ptr->weapon_info[hand].to_mult / 100;
@@ -524,7 +524,7 @@ void display_weapon_info(doc_ptr doc, int hand)
         mult = mult * (50 + n)/30;
     }
 
-    if (!have_flag(flgs, TR_ORDER)
+    if (!have_flag(flgs, OF_BRAND_ORDER)
         && weaponmaster_get_toggle() != TOGGLE_ORDER_BLADE)
     {
         const int attempts = 10 * 1000;
@@ -596,7 +596,7 @@ void display_weapon_info(doc_ptr doc, int hand)
 
     doc_printf(cols[0], "<color:G> %-7.7s</color>\n", "Damage");
 
-    if (!have_flag(flgs, TR_ORDER)
+    if (!have_flag(flgs, OF_BRAND_ORDER)
         && weaponmaster_get_toggle() != TOGGLE_ORDER_BLADE)
     {
         if (crit.to_d)
@@ -624,70 +624,70 @@ void display_weapon_info(doc_ptr doc, int hand)
     if (p_ptr->tim_slay_sentient)
         _display_weapon_slay(mult, 200, force, num_blow, dd, ds, to_d, "Sent.", TERM_YELLOW, cols[0]);
     
-    if (have_flag(flgs, TR_KILL_ANIMAL)) 
+    if (have_flag(flgs, OF_KILL_ANIMAL)) 
         _display_weapon_slay(mult, 400, force, num_blow, dd, ds, to_d, "Animals", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_ANIMAL))
+    else if (have_flag(flgs, OF_SLAY_ANIMAL))
         _display_weapon_slay(mult, 250, force, num_blow, dd, ds, to_d, "Animals", TERM_YELLOW, cols[0]);
     
-    if (have_flag(flgs, TR_KILL_EVIL))   
+    if (have_flag(flgs, OF_KILL_EVIL))   
         _display_weapon_slay(mult, 350, force, num_blow, dd, ds, to_d, "Evil", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_EVIL) || weaponmaster_get_toggle() == TOGGLE_HOLY_BLADE)
+    else if (have_flag(flgs, OF_SLAY_EVIL) || weaponmaster_get_toggle() == TOGGLE_HOLY_BLADE)
         _display_weapon_slay(mult, 200, force, num_blow, dd, ds, to_d, "Evil", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_SLAY_GOOD))
+    if (have_flag(flgs, OF_SLAY_GOOD))
         _display_weapon_slay(mult, 200, force, num_blow, dd, ds, to_d, "Good", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_SLAY_LIVING))
+    if (have_flag(flgs, OF_SLAY_LIVING))
         _display_weapon_slay(mult, 200, force, num_blow, dd, ds, to_d, "Living", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_HUMAN))
+    if (have_flag(flgs, OF_KILL_HUMAN))
         _display_weapon_slay(mult, 400, force, num_blow, dd, ds, to_d, "Human", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_HUMAN))
+    else if (have_flag(flgs, OF_SLAY_HUMAN))
         _display_weapon_slay(mult, 250, force, num_blow, dd, ds, to_d, "Human", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_UNDEAD))
+    if (have_flag(flgs, OF_KILL_UNDEAD))
         _display_weapon_slay(mult, 500, force, num_blow, dd, ds, to_d, "Undead", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_UNDEAD))
+    else if (have_flag(flgs, OF_SLAY_UNDEAD))
         _display_weapon_slay(mult, 300, force, num_blow, dd, ds, to_d, "Undead", TERM_YELLOW, cols[0]);
     
-    if (have_flag(flgs, TR_KILL_DEMON))  
+    if (have_flag(flgs, OF_KILL_DEMON))  
         _display_weapon_slay(mult, 500, force, num_blow, dd, ds, to_d, "Demons", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_DEMON))
+    else if (have_flag(flgs, OF_SLAY_DEMON))
         _display_weapon_slay(mult, 300, force, num_blow, dd, ds, to_d, "Demons", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_ORC))  
+    if (have_flag(flgs, OF_KILL_ORC))  
         _display_weapon_slay(mult, 500, force, num_blow, dd, ds, to_d, "Orcs", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_ORC))
+    else if (have_flag(flgs, OF_SLAY_ORC))
         _display_weapon_slay(mult, 300, force, num_blow, dd, ds, to_d, "Orcs", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_TROLL))  
+    if (have_flag(flgs, OF_KILL_TROLL))  
         _display_weapon_slay(mult, 500, force, num_blow, dd, ds, to_d, "Trolls", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_TROLL))
+    else if (have_flag(flgs, OF_SLAY_TROLL))
         _display_weapon_slay(mult, 300, force, num_blow, dd, ds, to_d, "Trolls", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_GIANT))  
+    if (have_flag(flgs, OF_KILL_GIANT))  
         _display_weapon_slay(mult, 500, force, num_blow, dd, ds, to_d, "Giants", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_GIANT))
+    else if (have_flag(flgs, OF_SLAY_GIANT))
         _display_weapon_slay(mult, 300, force, num_blow, dd, ds, to_d, "Giants", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_DRAGON))  
+    if (have_flag(flgs, OF_KILL_DRAGON))  
         _display_weapon_slay(mult, 500, force, num_blow, dd, ds, to_d, "Dragons", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_DRAGON))
+    else if (have_flag(flgs, OF_SLAY_DRAGON))
         _display_weapon_slay(mult, 300, force, num_blow, dd, ds, to_d, "Dragons", TERM_YELLOW, cols[0]);
     
-    if (have_flag(flgs, TR_BRAND_ACID))
+    if (have_flag(flgs, OF_BRAND_ACID))
         _display_weapon_slay(mult, 250, force, num_blow, dd, ds, to_d, "Acid", TERM_RED, cols[0]);
 
-    if (have_flag(flgs, TR_BRAND_ELEC))
+    if (have_flag(flgs, OF_BRAND_ELEC))
         _display_weapon_slay(mult, 250, force, num_blow, dd, ds, to_d, "Elec", TERM_RED, cols[0]);
 
-    if (have_flag(flgs, TR_BRAND_FIRE))
+    if (have_flag(flgs, OF_BRAND_FIRE))
         _display_weapon_slay(mult, 250, force, num_blow, dd, ds, to_d, "Fire", TERM_RED, cols[0]);
 
-    if (have_flag(flgs, TR_BRAND_COLD))
+    if (have_flag(flgs, OF_BRAND_COLD))
         _display_weapon_slay(mult, 250, force, num_blow, dd, ds, to_d, "Cold", TERM_RED, cols[0]);
 
-    if (have_flag(flgs, TR_BRAND_POIS))
+    if (have_flag(flgs, OF_BRAND_POIS))
         _display_weapon_slay(mult, 250, force, num_blow, dd, ds, to_d, "Poison", TERM_RED, cols[0]);
 
     if (p_ptr->weapon_info[hand].wield_how == WIELD_TWO_HANDS)
@@ -1000,7 +1000,7 @@ static void _display_missile_slay(int base_mult, int slay_mult, int shots,
 static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow, int ct)
 {
     char         o_name[MAX_NLEN];
-    u32b         flgs[TR_FLAG_ARRAY_SIZE];
+    u32b         flgs[OF_ARRAY_SIZE];
     int          mult;
     int          to_h = 0;
     int          to_d = 0;
@@ -1093,64 +1093,64 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
         _display_missile_slay(mult, 100, num_fire, dd, ds, to_d, to_d_xtra, "Force", TERM_L_BLUE, cols[0]);
     }
 
-    if (have_flag(flgs, TR_KILL_ANIMAL)) 
+    if (have_flag(flgs, OF_KILL_ANIMAL)) 
         _display_missile_slay(mult, 270, num_fire, dd, ds, to_d, to_d_xtra, "Animals", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_ANIMAL))
+    else if (have_flag(flgs, OF_SLAY_ANIMAL))
         _display_missile_slay(mult, 170, num_fire, dd, ds, to_d, to_d_xtra, "Animals", TERM_YELLOW, cols[0]);
     
-    if (have_flag(flgs, TR_KILL_EVIL))   
+    if (have_flag(flgs, OF_KILL_EVIL))   
         _display_missile_slay(mult, 250, num_fire, dd, ds, to_d, to_d_xtra, "Evil", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_EVIL))
+    else if (have_flag(flgs, OF_SLAY_EVIL))
         _display_missile_slay(mult, 150, num_fire, dd, ds, to_d, to_d_xtra, "Evil", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_HUMAN))
+    if (have_flag(flgs, OF_KILL_HUMAN))
         _display_missile_slay(mult, 270, num_fire, dd, ds, to_d, to_d_xtra, "Human", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_HUMAN))
+    else if (have_flag(flgs, OF_SLAY_HUMAN))
         _display_missile_slay(mult, 170, num_fire, dd, ds, to_d, to_d_xtra, "Human", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_UNDEAD))
+    if (have_flag(flgs, OF_KILL_UNDEAD))
         _display_missile_slay(mult, 300, num_fire, dd, ds, to_d, to_d_xtra, "Undead", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_UNDEAD))
+    else if (have_flag(flgs, OF_SLAY_UNDEAD))
         _display_missile_slay(mult, 200, num_fire, dd, ds, to_d, to_d_xtra, "Undead", TERM_YELLOW, cols[0]);
     
-    if (have_flag(flgs, TR_KILL_DEMON))  
+    if (have_flag(flgs, OF_KILL_DEMON))  
         _display_missile_slay(mult, 300, num_fire, dd, ds, to_d, to_d_xtra, "Demons", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_DEMON))
+    else if (have_flag(flgs, OF_SLAY_DEMON))
         _display_missile_slay(mult, 200, num_fire, dd, ds, to_d, to_d_xtra, "Demons", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_ORC))  
+    if (have_flag(flgs, OF_KILL_ORC))  
         _display_missile_slay(mult, 300, num_fire, dd, ds, to_d, to_d_xtra, "Orcs", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_ORC))
+    else if (have_flag(flgs, OF_SLAY_ORC))
         _display_missile_slay(mult, 200, num_fire, dd, ds, to_d, to_d_xtra, "Orcs", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_TROLL))  
+    if (have_flag(flgs, OF_KILL_TROLL))  
         _display_missile_slay(mult, 300, num_fire, dd, ds, to_d, to_d_xtra, "Trolls", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_TROLL))
+    else if (have_flag(flgs, OF_SLAY_TROLL))
         _display_missile_slay(mult, 200, num_fire, dd, ds, to_d, to_d_xtra, "Trolls", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_GIANT))  
+    if (have_flag(flgs, OF_KILL_GIANT))  
         _display_missile_slay(mult, 300, num_fire, dd, ds, to_d, to_d_xtra, "Giants", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_GIANT))
+    else if (have_flag(flgs, OF_SLAY_GIANT))
         _display_missile_slay(mult, 200, num_fire, dd, ds, to_d, to_d_xtra, "Giants", TERM_YELLOW, cols[0]);
 
-    if (have_flag(flgs, TR_KILL_DRAGON))  
+    if (have_flag(flgs, OF_KILL_DRAGON))  
         _display_missile_slay(mult, 300, num_fire, dd, ds, to_d, to_d_xtra, "Dragons", TERM_YELLOW, cols[0]);
-    else if (have_flag(flgs, TR_SLAY_DRAGON))
+    else if (have_flag(flgs, OF_SLAY_DRAGON))
         _display_missile_slay(mult, 200, num_fire, dd, ds, to_d, to_d_xtra, "Dragons", TERM_YELLOW, cols[0]);
     
-    if (have_flag(flgs, TR_BRAND_ACID))
+    if (have_flag(flgs, OF_BRAND_ACID))
         _display_missile_slay(mult, 170, num_fire, dd, ds, to_d, to_d_xtra, "Acid", TERM_RED, cols[0]);
 
-    if (have_flag(flgs, TR_BRAND_ELEC))
+    if (have_flag(flgs, OF_BRAND_ELEC))
         _display_missile_slay(mult, 170, num_fire, dd, ds, to_d, to_d_xtra, "Elec", TERM_RED, cols[0]);
 
-    if (have_flag(flgs, TR_BRAND_FIRE))
+    if (have_flag(flgs, OF_BRAND_FIRE))
         _display_missile_slay(mult, 170, num_fire, dd, ds, to_d, to_d_xtra, "Fire", TERM_RED, cols[0]);
 
-    if (have_flag(flgs, TR_BRAND_COLD))
+    if (have_flag(flgs, OF_BRAND_COLD))
         _display_missile_slay(mult, 170, num_fire, dd, ds, to_d, to_d_xtra, "Cold", TERM_RED, cols[0]);
 
-    if (have_flag(flgs, TR_BRAND_POIS))
+    if (have_flag(flgs, OF_BRAND_POIS))
         _display_missile_slay(mult, 170, num_fire, dd, ds, to_d, to_d_xtra, "Poison", TERM_RED, cols[0]);
 
     /* Second Column */

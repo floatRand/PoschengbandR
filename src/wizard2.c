@@ -243,30 +243,30 @@ static void do_cmd_wiz_hack_chris1(void)
         value = object_value_real(&forge);
         ct_pval += forge.pval;
 
-        if (have_flag(forge.art_flags, TR_IM_ACID)
-         || have_flag(forge.art_flags, TR_IM_COLD)
-         || have_flag(forge.art_flags, TR_IM_FIRE)
-         || have_flag(forge.art_flags, TR_IM_ELEC))
+        if (have_flag(forge.flags, OF_IM_ACID)
+         || have_flag(forge.flags, OF_IM_COLD)
+         || have_flag(forge.flags, OF_IM_FIRE)
+         || have_flag(forge.flags, OF_IM_ELEC))
         {
             int ct = 0;
             ct_immunity++;
             
-            if (have_flag(forge.art_flags, TR_IM_ACID)) ct++;
-            if (have_flag(forge.art_flags, TR_IM_COLD)) ct++;
-            if (have_flag(forge.art_flags, TR_IM_FIRE)) ct++;
-            if (have_flag(forge.art_flags, TR_IM_ELEC)) ct++;
+            if (have_flag(forge.flags, OF_IM_ACID)) ct++;
+            if (have_flag(forge.flags, OF_IM_COLD)) ct++;
+            if (have_flag(forge.flags, OF_IM_FIRE)) ct++;
+            if (have_flag(forge.flags, OF_IM_ELEC)) ct++;
         }
 
-        if (have_flag(forge.art_flags, TR_SPEED))
+        if (have_flag(forge.flags, OF_SPEED))
             ct_speed++;
 
-        if (have_flag(forge.art_flags, TR_BLOWS))
+        if (have_flag(forge.flags, OF_BLOWS))
             ct_blows++;
 
-        if (have_flag(forge.art_flags, TR_TELEPATHY))
+        if (have_flag(forge.flags, OF_TELEPATHY))
             ct_telepathy++;
 
-        if (have_flag(forge.art_flags, TR_AGGRAVATE))
+        if (have_flag(forge.flags, OF_AGGRAVATE))
             ct_aggravate++;
 
         if (immunity_hack)
@@ -274,15 +274,15 @@ static void do_cmd_wiz_hack_chris1(void)
             ct_would_be_immunities++;
         }
 
-        if ( have_flag(forge.art_flags, TR_WILD)
-          || have_flag(forge.art_flags, TR_ORDER) )
+        if ( have_flag(forge.flags, OF_BRAND_WILD)
+          || have_flag(forge.flags, OF_BRAND_ORDER) )
         {
         }
 
-        if (have_flag(forge.art_flags, TR_DARKNESS))
+        if (have_flag(forge.flags, OF_DARKNESS))
             ct_darkness++;
 
-        if (have_flag(forge.art_flags, TR_SPELL_POWER))
+        if (have_flag(forge.flags, OF_SPELL_POWER))
             ct_spell_power++;
 
         {
@@ -383,8 +383,8 @@ static void _test_specific_k_idx(void)
             object_desc(buf, &forge, OD_COLOR_CODED);
             msg_format("%d) %s", i + 1, buf);
             msg_boundary();
-            if ( have_flag(forge.art_flags, TR_VAMPIRIC)
-              || have_flag(forge.art_flags, TR_BLOWS) )
+            if ( have_flag(forge.flags, OF_BRAND_VAMP)
+              || have_flag(forge.flags, OF_BLOWS) )
             {
                 drop_near(&forge, -1, py, px);
             }
@@ -520,9 +520,9 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
             forge.to_d = a_ptr->to_d;
             forge.weight = a_ptr->weight;
 
-            if (a_ptr->gen_flags & TRG_CURSED) forge.curse_flags |= (TRC_CURSED);
-            if (a_ptr->gen_flags & TRG_HEAVY_CURSE) forge.curse_flags |= (TRC_HEAVY_CURSE);
-            if (a_ptr->gen_flags & TRG_PERMA_CURSE) forge.curse_flags |= (TRC_PERMA_CURSE);
+            if (a_ptr->gen_flags & OFG_CURSED) forge.curse_flags |= (OFC_CURSED);
+            if (a_ptr->gen_flags & OFG_HEAVY_CURSE) forge.curse_flags |= (OFC_HEAVY_CURSE);
+            if (a_ptr->gen_flags & OFG_PERMA_CURSE) forge.curse_flags |= (OFC_PERMA_CURSE);
 
             random_artifact_resistance(&forge, a_ptr);
 
@@ -547,7 +547,7 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
         int k = randint1(max_k_idx);
         object_type forge;
 
-        if (k_info[k].gen_flags & TRG_INSTA_ART) continue;
+        if (k_info[k].gen_flags & OFG_INSTA_ART) continue;
 
         object_prep(&forge, k);
 
@@ -725,9 +725,9 @@ static void do_cmd_wiz_hack_chris6_imp(FILE *file, bool replace)
             pow = object_value_real(&forge);
             pow_tot += pow;
             pval_tot += forge.pval;
-            if (have_flag(forge.art_flags, TR_SPEED))
+            if (have_flag(forge.flags, OF_SPEED))
                 speed_tot += forge.pval;
-            if (have_flag(forge.art_flags, TR_BLOWS))
+            if (have_flag(forge.flags, OF_BLOWS))
                 att_tot += forge.pval;
             obj_identify_fully(&forge);
 
@@ -1422,7 +1422,7 @@ static void do_cmd_wiz_change(void)
 static void wiz_display_item(object_type *o_ptr)
 {
     int i, j = 13;
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     char buf[256];
 
     /* Extract the flags */
@@ -2251,7 +2251,7 @@ static void wiz_create_item(void)
     /* Return if failed */
     if (!k_idx) return;
 
-    if (k_info[k_idx].gen_flags & TRG_INSTA_ART)
+    if (k_info[k_idx].gen_flags & OFG_INSTA_ART)
     {
         int i;
 
@@ -2774,9 +2774,9 @@ static void _wiz_stats_log_obj(int level, object_type *o_ptr)
 }
 static void _wiz_stats_log_speed(int level, object_type *o_ptr)
 {
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     obj_flags(o_ptr, flgs);
-    if (have_flag(flgs, TR_SPEED) && !object_is_artifact(o_ptr))
+    if (have_flag(flgs, OF_SPEED) && !object_is_artifact(o_ptr))
         _wiz_stats_log_obj(level, o_ptr);
 }
 static void _wiz_stats_log_books(int level, object_type *o_ptr, int max3, int max4)

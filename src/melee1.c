@@ -582,7 +582,7 @@ bool make_attack_normal(int m_idx)
 
                 case RBE_UN_POWER:
                 {
-                    u32b flgs[TR_FLAG_ARRAY_SIZE];
+                    u32b flgs[OF_ARRAY_SIZE];
                     char buf[MAX_NLEN];
                     bool drained = FALSE;
                     bool drain_amt = rlev; /* TODO: Consider using damage instead. Indeed, I nerfed this effect
@@ -610,7 +610,7 @@ bool make_attack_normal(int m_idx)
                         if (o_ptr->tval != TV_WAND && o_ptr->tval != TV_STAFF && o_ptr->tval != TV_ROD) continue;
 
                         obj_flags(o_ptr, flgs);
-                        if (have_flag(flgs, TR_HOLD_LIFE))
+                        if (have_flag(flgs, OF_HOLD_LIFE))
                         {
                             drained = TRUE; /* No food drain! */
                             break;
@@ -1111,7 +1111,7 @@ bool make_attack_normal(int m_idx)
                     else if (p_ptr->free_act)
                     {
                         msg_print("You are unaffected!");
-                        equip_learn_flag(TR_FREE_ACT);
+                        equip_learn_flag(OF_FREE_ACT);
 
                         obvious = TRUE;
                     }
@@ -1611,7 +1611,7 @@ bool make_attack_normal(int m_idx)
                         cmsg_print(TERM_L_UMBER, "(You retaliate:");
 
                     py_attack(m_ptr->fy, m_ptr->fx, WEAPONMASTER_RETALIATION);
-                    equip_learn_flag(TR_SH_REVENGE);
+                    equip_learn_flag(OF_AURA_REVENGE);
                     cmsg_print(TERM_L_UMBER, ")");
                     if (mystic_get_toggle() == MYSTIC_TOGGLE_RETALIATE)
                         sp_player(-7);

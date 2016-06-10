@@ -104,19 +104,19 @@ void reset_visuals(void)
 /*
  * Obtain the "flags" for an item
  */
-void weapon_flags(int hand, u32b flgs[TR_FLAG_ARRAY_SIZE])
+void weapon_flags(int hand, u32b flgs[OF_ARRAY_SIZE])
 {
     object_type *o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
     if (o_ptr)
     {
         int i;
         obj_flags(o_ptr, flgs);
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] |= p_ptr->weapon_info[hand].flags[i];
     }
 }
 
-void weapon_flags_known(int hand, u32b flgs[TR_FLAG_ARRAY_SIZE])
+void weapon_flags_known(int hand, u32b flgs[OF_ARRAY_SIZE])
 {
     object_type *o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
     if (o_ptr)
@@ -124,58 +124,58 @@ void weapon_flags_known(int hand, u32b flgs[TR_FLAG_ARRAY_SIZE])
         int i;
         obj_flags_known(o_ptr, flgs);
         /* TODO: Some of the following flags might not be known ... */
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] |= p_ptr->weapon_info[hand].flags[i];
     }
 }
 
-void missile_flags(object_type *arrow, u32b flgs[TR_FLAG_ARRAY_SIZE])
+void missile_flags(object_type *arrow, u32b flgs[OF_ARRAY_SIZE])
 {
     int i;
     int slot = equip_find_first(object_is_bow);
 
     obj_flags(arrow, flgs);
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
         flgs[i] |= p_ptr->shooter_info.flags[i];
 
     if (slot)
     {
         object_type *bow = equip_obj(slot);
-        u32b         bow_flgs[TR_FLAG_ARRAY_SIZE];
+        u32b         bow_flgs[OF_ARRAY_SIZE];
 
         obj_flags(bow, bow_flgs);
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] |= bow_flgs[i]; /* Mask? */
     }
 }
 
-void missile_flags_known(object_type *arrow, u32b flgs[TR_FLAG_ARRAY_SIZE])
+void missile_flags_known(object_type *arrow, u32b flgs[OF_ARRAY_SIZE])
 {
     int i;
     int slot = equip_find_first(object_is_bow);
 
     obj_flags_known(arrow, flgs);
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
         flgs[i] |= p_ptr->shooter_info.flags[i];
 
     if (slot)
     {
         object_type *bow = equip_obj(slot);
-        u32b         bow_flgs[TR_FLAG_ARRAY_SIZE];
+        u32b         bow_flgs[OF_ARRAY_SIZE];
 
         obj_flags_known(bow, bow_flgs);
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] |= bow_flgs[i]; /* Mask? */
     }
 }
 
-void obj_flags(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
+void obj_flags(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE])
 {
     object_kind *k_ptr = &k_info[o_ptr->k_idx];
     int i;
 
     /* Base object */
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
         flgs[i] = k_ptr->flags[i];
 
     /* Artifact */
@@ -183,7 +183,7 @@ void obj_flags(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
     {
         artifact_type *a_ptr = &a_info[o_ptr->name1];
 
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] = a_ptr->flags[i];
     }
 
@@ -192,27 +192,27 @@ void obj_flags(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
     {
         ego_type *e_ptr = &e_info[o_ptr->name2];
 
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] |= e_ptr->flags[i];
 
         if ((o_ptr->name2 == EGO_LITE_IMMOLATION) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN))
         {
-            remove_flag(flgs, TR_SH_FIRE);
+            remove_flag(flgs, OF_AURA_FIRE);
         }
         else if ((o_ptr->name2 == EGO_LITE_INFRAVISION) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN))
         {
-            remove_flag(flgs, TR_INFRA);
+            remove_flag(flgs, OF_INFRA);
         }
         else if ((o_ptr->name2 == EGO_LITE_IMMORTAL_EYE) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN))
         {
-            remove_flag(flgs, TR_RES_BLIND);
-            remove_flag(flgs, TR_SEE_INVIS);
+            remove_flag(flgs, OF_RES_BLIND);
+            remove_flag(flgs, OF_SEE_INVIS);
         }
     }
 
     /* Random artifact ! */
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
-        flgs[i] |= o_ptr->art_flags[i];
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
+        flgs[i] |= o_ptr->flags[i];
 
     if (object_is_smith(o_ptr))
         weaponsmith_object_flags(o_ptr, flgs);
@@ -222,7 +222,7 @@ void obj_flags(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
  *   Object Lore
  *************************************************************/
 
-void obj_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
+void obj_flags_known(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE])
 {
     object_kind *k_ptr = &k_info[o_ptr->k_idx];
     int i;
@@ -233,14 +233,14 @@ void obj_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
         return;
     }
 
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
         flgs[i] = 0;
 
     /* Base object: Note you still know an unidentified blade of chaos
        grants resist chaos, provided your aware of the object kind.*/
     if (k_ptr->aware)
     {
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] = k_ptr->flags[i];
     }
 
@@ -250,9 +250,9 @@ void obj_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
        would reveal the underlying ego! cf obj_identify and obj_learn_flag.*/
     if (!obj_is_identified(o_ptr))
     {
-        u32b actual[TR_FLAG_ARRAY_SIZE];
+        u32b actual[OF_ARRAY_SIZE];
         obj_flags(o_ptr, actual);
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] = actual[i] & o_ptr->known_flags[i];
         return;
     }
@@ -262,48 +262,48 @@ void obj_flags_known(object_type *o_ptr, u32b flgs[TR_FLAG_ARRAY_SIZE])
     {
         artifact_type *a_ptr = &a_info[o_ptr->name1];
 
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] |= (a_ptr->flags[i] & a_ptr->known_flags[i]);
     }
     else if (object_is_ego(o_ptr))
     {
         ego_type *e_ptr = &e_info[o_ptr->name2];
 
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
         {
             flgs[i] |= (e_ptr->flags[i] & e_ptr->known_flags[i]);
-            flgs[i] |= (o_ptr->art_flags[i] & e_ptr->known_flags[i]);
+            flgs[i] |= (o_ptr->flags[i] & e_ptr->known_flags[i]);
         }
 
         /* Ego lamps lose powers when they run out of fuel */
         if (o_ptr->name2 == EGO_LITE_IMMOLATION && !o_ptr->xtra4 && o_ptr->sval <= SV_LITE_LANTERN)
         {
-            remove_flag(flgs, TR_SH_FIRE);
+            remove_flag(flgs, OF_AURA_FIRE);
         }
         else if (o_ptr->name2 == EGO_LITE_INFRAVISION && !o_ptr->xtra4 && o_ptr->sval <= SV_LITE_LANTERN)
         {
-            remove_flag(flgs, TR_INFRA);
+            remove_flag(flgs, OF_INFRA);
         }
         else if (o_ptr->name2 == EGO_LITE_IMMORTAL_EYE && !o_ptr->xtra4 && o_ptr->sval <= SV_LITE_LANTERN)
         {
-            remove_flag(flgs, TR_RES_BLIND);
-            remove_flag(flgs, TR_SEE_INVIS);
+            remove_flag(flgs, OF_RES_BLIND);
+            remove_flag(flgs, OF_SEE_INVIS);
         }
     }
 
     /* Random artifacts, extra resists, biffs on cursed egos, etc. */
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
-        flgs[i] |= (o_ptr->art_flags[i] & o_ptr->known_flags[i]);
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
+        flgs[i] |= (o_ptr->flags[i] & o_ptr->known_flags[i]);
 
     /* Patch Up Activation overrides. For example, ego dragon scale
        mail might have an unlearned activation override. So, the player
        would know about the default Breathe activation, but might not
        yet have discovered that the activation is actually for Mass Genocide! */
-    if ( have_flag(o_ptr->art_flags, TR_ACTIVATE)
-      && !have_flag(o_ptr->known_flags, TR_ACTIVATE)
-      && have_flag(flgs, TR_ACTIVATE) )
+    if ( have_flag(o_ptr->flags, OF_ACTIVATE)
+      && !have_flag(o_ptr->known_flags, OF_ACTIVATE)
+      && have_flag(flgs, OF_ACTIVATE) )
     {
-        remove_flag(flgs, TR_ACTIVATE);
+        remove_flag(flgs, OF_ACTIVATE);
     }
 
     if (object_is_smith(o_ptr))
@@ -326,7 +326,7 @@ static void _obj_identify_aux(object_type *o_ptr)
     if (o_ptr->name1)
     {
         artifact_type *a_ptr = &a_info[o_ptr->name1];
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
         {
             a_ptr->known_flags[i] |= (o_ptr->known_flags[i] & a_ptr->flags[i]);
             o_ptr->known_flags[i] &= ~a_ptr->flags[i];
@@ -335,9 +335,9 @@ static void _obj_identify_aux(object_type *o_ptr)
     else if (o_ptr->name2)
     {
         ego_type *e_ptr = &e_info[o_ptr->name2];
-        bool      activate = have_flag(o_ptr->known_flags, TR_ACTIVATE);
+        bool      activate = have_flag(o_ptr->known_flags, OF_ACTIVATE);
 
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
         {
             e_ptr->known_flags[i] |= (o_ptr->known_flags[i] & e_ptr->flags[i]);
             e_ptr->known_flags[i] |= (o_ptr->known_flags[i] & e_ptr->xtra_flags[i]);
@@ -346,7 +346,7 @@ static void _obj_identify_aux(object_type *o_ptr)
 
         /* Patch up activation overrides */
         if (o_ptr->activation.type && activate)
-            add_flag(o_ptr->known_flags, TR_ACTIVATE);
+            add_flag(o_ptr->known_flags, OF_ACTIVATE);
     }
 }
 
@@ -366,38 +366,38 @@ static void _obj_identify_fully_aux(object_type *o_ptr)
     if (o_ptr->name1)
     {
         artifact_type *a_ptr = &a_info[o_ptr->name1];
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
         {
             a_ptr->known_flags[i] |= a_ptr->flags[i];
-            o_ptr->known_flags[i] |= o_ptr->art_flags[i] & (~a_ptr->flags[i]);
+            o_ptr->known_flags[i] |= o_ptr->flags[i] & (~a_ptr->flags[i]);
         }
     }
     else if (o_ptr->name2)
     {
         ego_type *e_ptr = &e_info[o_ptr->name2];
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
         {
             e_ptr->known_flags[i] |= e_ptr->flags[i];
-            o_ptr->known_flags[i] |= o_ptr->art_flags[i] & (~e_ptr->flags[i]);
+            o_ptr->known_flags[i] |= o_ptr->flags[i] & (~e_ptr->flags[i]);
 
             /* Mark variable ego attributes as possibilities for future.
                Note: The next time an ego of this type spawns with a known
                possible flag, it will be learned on Identify. See above. */
             if (object_is_cursed(o_ptr))
-                e_ptr->known_flags[i] |= (o_ptr->art_flags[i] & e_ptr->xtra_flags[i]);
+                e_ptr->known_flags[i] |= (o_ptr->flags[i] & e_ptr->xtra_flags[i]);
             else
-                e_ptr->known_flags[i] |= o_ptr->art_flags[i];
+                e_ptr->known_flags[i] |= o_ptr->flags[i];
         }
     }
     else /* perhaps a rand-art? */
     {
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
-            o_ptr->known_flags[i] |= o_ptr->art_flags[i];
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
+            o_ptr->known_flags[i] |= o_ptr->flags[i];
     }
 
     /* Learn random activations */
     if (o_ptr->activation.type)
-        add_flag(o_ptr->known_flags, TR_ACTIVATE);
+        add_flag(o_ptr->known_flags, OF_ACTIVATE);
 
     _obj_learn_curses(o_ptr);
 }
@@ -440,7 +440,7 @@ bool obj_learn_flag(object_type *o_ptr, int which)
     /* Lore on unidentified objects is tricky, but flavorful */
     if (!obj_is_identified(o_ptr))
     {
-        u32b flgs[TR_FLAG_ARRAY_SIZE];
+        u32b flgs[OF_ARRAY_SIZE];
         obj_flags(o_ptr, flgs);
         if (have_flag(flgs, which) && !have_flag(o_ptr->known_flags, which))
         {
@@ -458,7 +458,7 @@ bool obj_learn_flag(object_type *o_ptr, int which)
             add_flag(a_ptr->known_flags, which);
             return TRUE;
         }
-        else if (have_flag(o_ptr->art_flags, which))
+        else if (have_flag(o_ptr->flags, which))
         {
             if (have_flag(o_ptr->known_flags, which)) return FALSE;
             add_flag(o_ptr->known_flags, which);
@@ -474,7 +474,7 @@ bool obj_learn_flag(object_type *o_ptr, int which)
             add_flag(e_ptr->known_flags, which);
             return TRUE;
         }
-        else if (have_flag(o_ptr->art_flags, which))
+        else if (have_flag(o_ptr->flags, which))
         {
             if (have_flag(e_ptr->xtra_flags, which))
             {
@@ -490,7 +490,7 @@ bool obj_learn_flag(object_type *o_ptr, int which)
         }
     }
     /* Random Artifact */
-    else if (have_flag(o_ptr->art_flags, which))
+    else if (have_flag(o_ptr->flags, which))
     {
         if (!have_flag(o_ptr->known_flags, which))
         {
@@ -508,28 +508,28 @@ void obj_learn_activation(object_type *o_ptr)
     /* Lore on unidentified objects is tricky, but flavorful */
     if (!obj_is_identified(o_ptr))
     {
-        if (obj_has_effect(o_ptr) && !have_flag(o_ptr->known_flags, TR_ACTIVATE))
-            add_flag(o_ptr->known_flags, TR_ACTIVATE);
+        if (obj_has_effect(o_ptr) && !have_flag(o_ptr->known_flags, OF_ACTIVATE))
+            add_flag(o_ptr->known_flags, OF_ACTIVATE);
         return;
     }
 
     if (o_ptr->activation.type)
-        add_flag(o_ptr->known_flags, TR_ACTIVATE);
+        add_flag(o_ptr->known_flags, OF_ACTIVATE);
     else if (o_ptr->name1)
     {
         artifact_type *a_ptr = &a_info[o_ptr->name1];
         if (a_ptr->activation.type)
-            add_flag(a_ptr->known_flags, TR_ACTIVATE);
+            add_flag(a_ptr->known_flags, OF_ACTIVATE);
         else
-            add_flag(o_ptr->known_flags, TR_ACTIVATE); /* Paranoia: Activation on k_ptr, but that should be known by default! */
+            add_flag(o_ptr->known_flags, OF_ACTIVATE); /* Paranoia: Activation on k_ptr, but that should be known by default! */
     }
     else if (o_ptr->name2)
     {
         ego_type *e_ptr = &e_info[o_ptr->name2];
         if (e_ptr->activation.type)
-            add_flag(e_ptr->known_flags, TR_ACTIVATE);
+            add_flag(e_ptr->known_flags, OF_ACTIVATE);
         else
-            add_flag(o_ptr->known_flags, TR_ACTIVATE); /* Paranoia: Activation on k_ptr, but that should be known by default! */
+            add_flag(o_ptr->known_flags, OF_ACTIVATE); /* Paranoia: Activation on k_ptr, but that should be known by default! */
     }
 }
 
@@ -559,10 +559,10 @@ void obj_learn_slay(object_type *o_ptr, int which, cptr msg)
 }
 
 const int _xtra_lore_flags[] = {
-    TR_LEVITATION, TR_REGEN, TR_EASY_SPELL, TR_DEC_MANA,
-    TR_SH_FIRE, TR_SH_ELEC, TR_SH_COLD, TR_SH_SHARDS,
-    TR_LITE, TR_DARKNESS, TR_SLOW_DIGEST,
-    TR_INVALID
+    OF_LEVITATION, OF_REGEN, OF_EASY_SPELL, OF_DEC_MANA,
+    OF_AURA_FIRE, OF_AURA_ELEC, OF_AURA_COLD, OF_AURA_SHARDS,
+    OF_LITE, OF_DARKNESS, OF_SLOW_DIGEST,
+    OF_INVALID
 };
 
 void obj_learn_equipped(object_type *o_ptr)
@@ -573,20 +573,20 @@ void obj_learn_equipped(object_type *o_ptr)
     for (i = 0; ; i++)
     {
         int flg = pval_flags[i];
-        if (flg == TR_INVALID) break;
+        if (flg == OF_INVALID) break;
         if (obj_learn_flag(o_ptr, flg)) learned = TRUE;
     }
 
     for (i = 0; ; i++)
     {
         int flg = _xtra_lore_flags[i];
-        if (flg == TR_INVALID) break;
+        if (flg == OF_INVALID) break;
         if (obj_learn_flag(o_ptr, flg)) learned = TRUE;
     }
 
     if (p_ptr->pclass == CLASS_PRIEST)
     {
-        if (obj_learn_flag(o_ptr, TR_BLESSED)) learned = TRUE;
+        if (obj_learn_flag(o_ptr, OF_BLESSED)) learned = TRUE;
     }
 
     if (learned) /* TODO: Give messages for each learned flag? */
@@ -597,10 +597,10 @@ void obj_learn_equipped(object_type *o_ptr)
     }
 }
 
-static bool _has_lore(u32b flgs[TR_FLAG_ARRAY_SIZE])
+static bool _has_lore(u32b flgs[OF_ARRAY_SIZE])
 {
     int i;
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
     {
         if (flgs[i])
             return TRUE;

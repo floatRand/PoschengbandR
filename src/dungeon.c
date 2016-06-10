@@ -1407,7 +1407,7 @@ static void process_world_aux_hp_and_sp(void)
         {
             object_type *lite = equip_obj(slot);
             if ( lite->name2 != EGO_LITE_DARKNESS
-              && !have_flag(lite->art_flags, TR_DARKNESS)
+              && !have_flag(lite->flags, OF_DARKNESS)
               && res_pct(RES_LITE) < 0)
             {
                 char o_name [MAX_NLEN];
@@ -2168,7 +2168,7 @@ static void process_world_aux_curse(void)
          * Hack: Uncursed teleporting items (e.g. Trump Weapons)
          * can actually be useful!
          */
-        if ((p_ptr->cursed & TRC_TELEPORT_SELF) && one_in_(200))
+        if ((p_ptr->cursed & OFC_TELEPORT_SELF) && one_in_(200))
         {
             char o_name[MAX_NLEN];
             object_type *o_ptr;
@@ -2177,12 +2177,12 @@ static void process_world_aux_curse(void)
             /* Scan the equipment with random teleport ability */
             for (i = EQUIP_BEGIN; i < EQUIP_BEGIN + equip_count(); i++)
             {
-                u32b flgs[TR_FLAG_ARRAY_SIZE];
+                u32b flgs[OF_ARRAY_SIZE];
                 o_ptr = equip_obj(i);
 
                 if (!o_ptr) continue;
                 obj_flags(o_ptr, flgs);
-                if (have_flag(flgs, TR_TELEPORT))
+                if (have_flag(flgs, OF_TELEPORT))
                 {
                     /* {.} will stop random teleportation. */
                     if (!o_ptr->inscription || !my_strchr(quark_str(o_ptr->inscription), '.'))
@@ -2211,7 +2211,7 @@ static void process_world_aux_curse(void)
             }
         }
         /* Make a chainsword noise */
-        if ((p_ptr->cursed & TRC_CHAINSWORD) && one_in_(CHAINSWORD_NOISE))
+        if ((p_ptr->cursed & OFC_CHAINSWORD) && one_in_(CHAINSWORD_NOISE))
         {
             char noise[1024];
             if (!get_rnd_line("chainswd.txt", 0, noise))
@@ -2219,31 +2219,31 @@ static void process_world_aux_curse(void)
             disturb(FALSE, FALSE);
         }
         /* TY Curse */
-        if ((p_ptr->cursed & TRC_TY_CURSE) && one_in_(TY_CURSE_CHANCE))
+        if ((p_ptr->cursed & OFC_TY_CURSE) && one_in_(TY_CURSE_CHANCE))
         {
             int count = 0;
             (void)activate_ty_curse(FALSE, &count);
-            equip_learn_curse(TRC_TY_CURSE);
+            equip_learn_curse(OFC_TY_CURSE);
         }
         /* Handle experience draining */
         if (p_ptr->prace != RACE_ANDROID && 
-            ((p_ptr->cursed & TRC_DRAIN_EXP) && one_in_(4)))
+            ((p_ptr->cursed & OFC_DRAIN_EXP) && one_in_(4)))
         {
             p_ptr->exp -= (p_ptr->lev+1)/2;
             if (p_ptr->exp < 0) p_ptr->exp = 0;
             p_ptr->max_exp -= (p_ptr->lev+1)/2;
             if (p_ptr->max_exp < 0) p_ptr->max_exp = 0;
             check_experience();
-            equip_learn_curse(TRC_DRAIN_EXP);
-            equip_learn_flag(TR_DRAIN_EXP);
+            equip_learn_curse(OFC_DRAIN_EXP);
+            equip_learn_flag(OF_DRAIN_EXP);
         }
         /* Add light curse (Later) */
-        if ((p_ptr->cursed & TRC_ADD_L_CURSE) && one_in_(2000))
+        if ((p_ptr->cursed & OFC_ADD_L_CURSE) && one_in_(2000))
         {
             u32b new_curse;
             object_type *o_ptr;
 
-            o_ptr = choose_cursed_obj_name(TRC_ADD_L_CURSE);
+            o_ptr = choose_cursed_obj_name(OFC_ADD_L_CURSE);
 
             new_curse = get_curse(0, o_ptr);
             if (!(o_ptr->curse_flags & new_curse))
@@ -2258,16 +2258,16 @@ static void process_world_aux_curse(void)
                 o_ptr->feeling = FEEL_NONE;
 
                 p_ptr->update |= (PU_BONUS);
-                obj_learn_curse(o_ptr, TRC_ADD_L_CURSE);
+                obj_learn_curse(o_ptr, OFC_ADD_L_CURSE);
             }
         }
         /* Add heavy curse (Later) */
-        if ((p_ptr->cursed & TRC_ADD_H_CURSE) && one_in_(2000))
+        if ((p_ptr->cursed & OFC_ADD_H_CURSE) && one_in_(2000))
         {
             u32b new_curse;
             object_type *o_ptr;
 
-            o_ptr = choose_cursed_obj_name(TRC_ADD_H_CURSE);
+            o_ptr = choose_cursed_obj_name(OFC_ADD_H_CURSE);
 
             new_curse = get_curse(1, o_ptr);
             if (!(o_ptr->curse_flags & new_curse))
@@ -2282,57 +2282,57 @@ static void process_world_aux_curse(void)
                 o_ptr->feeling = FEEL_NONE;
 
                 p_ptr->update |= (PU_BONUS);
-                obj_learn_curse(o_ptr, TRC_ADD_H_CURSE);
+                obj_learn_curse(o_ptr, OFC_ADD_H_CURSE);
             }
         }
         /* Call animal */
-        if ((p_ptr->cursed & TRC_CALL_ANIMAL) && one_in_(2500))
+        if ((p_ptr->cursed & OFC_CALL_ANIMAL) && one_in_(2500))
         {
             if (summon_specific(0, py, px, dun_level, SUMMON_ANIMAL,
                 (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET)))
             {
                 char o_name[MAX_NLEN];
-                object_type *o_ptr = choose_cursed_obj_name(TRC_CALL_ANIMAL);
+                object_type *o_ptr = choose_cursed_obj_name(OFC_CALL_ANIMAL);
 
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
                 msg_format("Your %s have attracted an animal!", o_name);
 
                 disturb(0, 0);
-                obj_learn_curse(o_ptr, TRC_CALL_ANIMAL);
+                obj_learn_curse(o_ptr, OFC_CALL_ANIMAL);
             }
         }
         /* Call demon */
-        if ((p_ptr->cursed & TRC_CALL_DEMON) && one_in_(1111))
+        if ((p_ptr->cursed & OFC_CALL_DEMON) && one_in_(1111))
         {
             if (summon_specific(0, py, px, dun_level, SUMMON_DEMON, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET)))
             {
                 char o_name[MAX_NLEN];
-                object_type *o_ptr = choose_cursed_obj_name(TRC_CALL_DEMON);
+                object_type *o_ptr = choose_cursed_obj_name(OFC_CALL_DEMON);
 
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
                 msg_format("Your %s have attracted a demon!", o_name);
 
                 disturb(0, 0);
-                obj_learn_curse(o_ptr, TRC_CALL_DEMON);
+                obj_learn_curse(o_ptr, OFC_CALL_DEMON);
             }
         }
         /* Call dragon */
-        if ((p_ptr->cursed & TRC_CALL_DRAGON) && one_in_(800))
+        if ((p_ptr->cursed & OFC_CALL_DRAGON) && one_in_(800))
         {
             if (summon_specific(0, py, px, dun_level, SUMMON_DRAGON,
                 (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET)))
             {
                 char o_name[MAX_NLEN];
-                object_type *o_ptr = choose_cursed_obj_name(TRC_CALL_DRAGON);
+                object_type *o_ptr = choose_cursed_obj_name(OFC_CALL_DRAGON);
 
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
                 msg_format("Your %s have attracted an animal!", o_name);
 
                 disturb(0, 0);
-                obj_learn_curse(o_ptr, TRC_CALL_DRAGON);
+                obj_learn_curse(o_ptr, OFC_CALL_DRAGON);
             }
         }
-        if ((p_ptr->cursed & TRC_COWARDICE) && one_in_(1500))
+        if ((p_ptr->cursed & OFC_COWARDICE) && one_in_(1500))
         {
             if (!fear_save_p(fear_threat_level()))
             {
@@ -2340,35 +2340,35 @@ static void process_world_aux_curse(void)
                 msg_print("It's so dark... so scary!");
 
                 fear_add_p(FEAR_SCARED);
-                equip_learn_curse(TRC_COWARDICE);
+                equip_learn_curse(OFC_COWARDICE);
             }
         }
         /* Teleport player */
-        if ((p_ptr->cursed & TRC_TELEPORT) && one_in_(200) && !p_ptr->anti_tele)
+        if ((p_ptr->cursed & OFC_TELEPORT) && one_in_(200) && !p_ptr->anti_tele)
         {
             disturb(0, 0);
 
             /* Teleport player */
             teleport_player(40, TELEPORT_PASSIVE);
-            equip_learn_curse(TRC_TELEPORT);
-            equip_learn_flag(TR_TELEPORT);
+            equip_learn_curse(OFC_TELEPORT);
+            equip_learn_flag(OF_TELEPORT);
         }
         /* Handle HP draining */
-        if ((p_ptr->cursed & TRC_DRAIN_HP) && one_in_(666))
+        if ((p_ptr->cursed & OFC_DRAIN_HP) && one_in_(666))
         {
             char o_name[MAX_NLEN];
-            object_type *o_ptr = choose_cursed_obj_name(TRC_DRAIN_HP);
+            object_type *o_ptr = choose_cursed_obj_name(OFC_DRAIN_HP);
 
             object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
             msg_format("Your %s drains HP from you!", o_name);
             take_hit(DAMAGE_LOSELIFE, MIN(p_ptr->lev*2, 100), o_name, -1);
-            obj_learn_curse(o_ptr, TRC_DRAIN_HP);
+            obj_learn_curse(o_ptr, OFC_DRAIN_HP);
         }
         /* Handle mana draining */
-        if ((p_ptr->cursed & TRC_DRAIN_MANA) && p_ptr->csp && one_in_(666))
+        if ((p_ptr->cursed & OFC_DRAIN_MANA) && p_ptr->csp && one_in_(666))
         {
             char o_name[MAX_NLEN];
-            object_type *o_ptr = choose_cursed_obj_name(TRC_DRAIN_MANA);
+            object_type *o_ptr = choose_cursed_obj_name(OFC_DRAIN_MANA);
 
             object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
             msg_format("Your %s drains mana from you!", o_name);
@@ -2379,7 +2379,7 @@ static void process_world_aux_curse(void)
                 p_ptr->csp_frac = 0;
             }
             p_ptr->redraw |= PR_MANA;
-            obj_learn_curse(o_ptr, TRC_DRAIN_MANA);
+            obj_learn_curse(o_ptr, OFC_DRAIN_MANA);
         }
     }
 
@@ -2405,8 +2405,8 @@ static void process_world_aux_curse(void)
         {
             object_type *o_ptr = equip_obj(slot);
 
-            o_ptr->curse_flags |= TRC_HEAVY_CURSE;
-            o_ptr->curse_flags |= TRC_CURSED;
+            o_ptr->curse_flags |= OFC_HEAVY_CURSE;
+            o_ptr->curse_flags |= OFC_CURSED;
             o_ptr->curse_flags |= get_curse(2, o_ptr);
             p_ptr->update |= PU_BONUS;
 
@@ -3359,7 +3359,7 @@ static void process_world(void)
                 digestion += 10*(p_ptr->regen-100)/100;
             if (p_ptr->special_defense & (KAMAE_MASK | KATA_MASK))
                 digestion += 20;
-            if (p_ptr->cursed & TRC_FAST_DIGEST)
+            if (p_ptr->cursed & OFC_FAST_DIGEST)
                 digestion += 30;
 
             /* Slow digestion takes less food */
@@ -3974,7 +3974,7 @@ static void process_command(void)
                     which_power = "rage";
 
                 msg_format("An anti-magic shell disrupts your %s!", which_power);
-                equip_learn_flag(TR_NO_MAGIC);
+                equip_learn_flag(OF_NO_MAGIC);
                 energy_use = 0;
             }
             else if (IS_SHERO() && p_ptr->pclass != CLASS_BERSERKER && p_ptr->pclass != CLASS_BLOOD_KNIGHT && p_ptr->pclass != CLASS_RAGE_MAGE)

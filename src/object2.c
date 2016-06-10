@@ -1128,7 +1128,7 @@ static s32b object_value_base(object_type *o_ptr)
 s32b flag_cost(object_type *o_ptr, int plusses, bool hack)
 {
     s32b total = 0;
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     s32b tmp_cost;
     int count;
     int i;
@@ -1140,7 +1140,7 @@ s32b flag_cost(object_type *o_ptr, int plusses, bool hack)
      * Exclude fixed flags of the base item.
      * pval bonuses of base item will be treated later.
      */
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
         flgs[i] &= ~(k_ptr->flags[i]);
 
     /* Exclude fixed flags of the fixed artifact. */
@@ -1148,7 +1148,7 @@ s32b flag_cost(object_type *o_ptr, int plusses, bool hack)
     {
         artifact_type *a_ptr = &a_info[o_ptr->name1];
 
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] &= ~(a_ptr->flags[i]);
     }
 
@@ -1157,7 +1157,7 @@ s32b flag_cost(object_type *o_ptr, int plusses, bool hack)
     {
         ego_type *e_ptr = &e_info[o_ptr->name2];
 
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
+        for (i = 0; i < OF_ARRAY_SIZE; i++)
             flgs[i] &= ~(e_ptr->flags[i]);
     }
 
@@ -1165,142 +1165,142 @@ s32b flag_cost(object_type *o_ptr, int plusses, bool hack)
     /*
      * Calucurate values of remaining flags
      */
-    if (have_flag(flgs, TR_STR)) total += (1500 * plusses);
-    if (have_flag(flgs, TR_INT)) total += (1500 * plusses);
-    if (have_flag(flgs, TR_WIS)) total += (1500 * plusses);
-    if (have_flag(flgs, TR_DEX)) total += (1500 * plusses);
-    if (have_flag(flgs, TR_CON)) total += (1500 * plusses);
-    if (have_flag(flgs, TR_CHR)) total += (750 * plusses);
-    if (have_flag(flgs, TR_MAGIC_MASTERY)) total += (600 * plusses);
-    if (have_flag(flgs, TR_STEALTH)) total += (250 * plusses);
-    if (have_flag(flgs, TR_SEARCH)) total += (100 * plusses);
-    if (have_flag(flgs, TR_INFRA)) total += (150 * plusses);
-    if (have_flag(flgs, TR_TUNNEL)) total += (175 * plusses);
-    if ((have_flag(flgs, TR_SPEED)) && (plusses > 0))
+    if (have_flag(flgs, OF_STR)) total += (1500 * plusses);
+    if (have_flag(flgs, OF_INT)) total += (1500 * plusses);
+    if (have_flag(flgs, OF_WIS)) total += (1500 * plusses);
+    if (have_flag(flgs, OF_DEX)) total += (1500 * plusses);
+    if (have_flag(flgs, OF_CON)) total += (1500 * plusses);
+    if (have_flag(flgs, OF_CHR)) total += (750 * plusses);
+    if (have_flag(flgs, OF_MAGIC_MASTERY)) total += (600 * plusses);
+    if (have_flag(flgs, OF_STEALTH)) total += (250 * plusses);
+    if (have_flag(flgs, OF_SEARCH)) total += (100 * plusses);
+    if (have_flag(flgs, OF_INFRA)) total += (150 * plusses);
+    if (have_flag(flgs, OF_TUNNEL)) total += (175 * plusses);
+    if ((have_flag(flgs, OF_SPEED)) && (plusses > 0))
         total += (10000 * plusses);
-    if ((have_flag(flgs, TR_BLOWS)) && (plusses > 0))
+    if ((have_flag(flgs, OF_BLOWS)) && (plusses > 0))
         total += (10000 * plusses);
 
     tmp_cost = 0;
     count = 0;
-    if (have_flag(flgs, TR_CHAOTIC)) {total += 9000;count++;}
-    if (have_flag(flgs, TR_ORDER)) {total += 12000;count++;}
-    if (have_flag(flgs, TR_WILD)) {total += 20000;count++;}
-    if (have_flag(flgs, TR_VAMPIRIC)) {total += 6500;count++;}
-    if (have_flag(flgs, TR_FORCE_WEAPON)) {tmp_cost += 2500;count++;}
-    if (have_flag(flgs, TR_KILL_ANIMAL)) {tmp_cost += 2800;count++;}
-    else if (have_flag(flgs, TR_SLAY_ANIMAL)) {tmp_cost += 500;}
-    if (have_flag(flgs, TR_KILL_EVIL)) {tmp_cost += 5800;count++;}
-    else if (have_flag(flgs, TR_SLAY_EVIL)) {tmp_cost += 3800;count++;}
-    if (have_flag(flgs, TR_KILL_HUMAN)) {tmp_cost += 2800;count++;}
-    else if (have_flag(flgs, TR_SLAY_HUMAN)) {tmp_cost += 800;}
-    if (have_flag(flgs, TR_KILL_UNDEAD)) {tmp_cost += 2800;count++;}
-    else if (have_flag(flgs, TR_SLAY_UNDEAD)) {tmp_cost += 1000;}
-    if (have_flag(flgs, TR_KILL_DEMON)) {tmp_cost += 2800;count++;}
-    else if (have_flag(flgs, TR_SLAY_DEMON)) {tmp_cost += 800;}
-    if (have_flag(flgs, TR_KILL_ORC)) {tmp_cost += 500;}
-    else if (have_flag(flgs, TR_SLAY_ORC)) {tmp_cost += 150;}
-    if (have_flag(flgs, TR_KILL_TROLL)) {tmp_cost += 280;}
-    else if (have_flag(flgs, TR_SLAY_TROLL)) {tmp_cost += 180;}
-    if (have_flag(flgs, TR_KILL_GIANT)) {tmp_cost += 1000;count++;}
-    else if (have_flag(flgs, TR_SLAY_GIANT)) {tmp_cost += 180;}
-    if (have_flag(flgs, TR_KILL_DRAGON)) {tmp_cost += 2800;count++;}
-    else if (have_flag(flgs, TR_SLAY_DRAGON)) {tmp_cost += 1800;count++;}
+    if (have_flag(flgs, OF_BRAND_CHAOS)) {total += 9000;count++;}
+    if (have_flag(flgs, OF_BRAND_ORDER)) {total += 12000;count++;}
+    if (have_flag(flgs, OF_BRAND_WILD)) {total += 20000;count++;}
+    if (have_flag(flgs, OF_BRAND_VAMP)) {total += 6500;count++;}
+    if (have_flag(flgs, OF_BRAND_MANA)) {tmp_cost += 2500;count++;}
+    if (have_flag(flgs, OF_KILL_ANIMAL)) {tmp_cost += 2800;count++;}
+    else if (have_flag(flgs, OF_SLAY_ANIMAL)) {tmp_cost += 500;}
+    if (have_flag(flgs, OF_KILL_EVIL)) {tmp_cost += 5800;count++;}
+    else if (have_flag(flgs, OF_SLAY_EVIL)) {tmp_cost += 3800;count++;}
+    if (have_flag(flgs, OF_KILL_HUMAN)) {tmp_cost += 2800;count++;}
+    else if (have_flag(flgs, OF_SLAY_HUMAN)) {tmp_cost += 800;}
+    if (have_flag(flgs, OF_KILL_UNDEAD)) {tmp_cost += 2800;count++;}
+    else if (have_flag(flgs, OF_SLAY_UNDEAD)) {tmp_cost += 1000;}
+    if (have_flag(flgs, OF_KILL_DEMON)) {tmp_cost += 2800;count++;}
+    else if (have_flag(flgs, OF_SLAY_DEMON)) {tmp_cost += 800;}
+    if (have_flag(flgs, OF_KILL_ORC)) {tmp_cost += 500;}
+    else if (have_flag(flgs, OF_SLAY_ORC)) {tmp_cost += 150;}
+    if (have_flag(flgs, OF_KILL_TROLL)) {tmp_cost += 280;}
+    else if (have_flag(flgs, OF_SLAY_TROLL)) {tmp_cost += 180;}
+    if (have_flag(flgs, OF_KILL_GIANT)) {tmp_cost += 1000;count++;}
+    else if (have_flag(flgs, OF_SLAY_GIANT)) {tmp_cost += 180;}
+    if (have_flag(flgs, OF_KILL_DRAGON)) {tmp_cost += 2800;count++;}
+    else if (have_flag(flgs, OF_SLAY_DRAGON)) {tmp_cost += 1800;count++;}
 
-    if (have_flag(flgs, TR_VORPAL)) {tmp_cost += 1500;count++;}
-    if (have_flag(flgs, TR_VORPAL2)) {tmp_cost += 5000;count++;}
-    if (have_flag(flgs, TR_IMPACT)) {tmp_cost += 500;}
-    if (have_flag(flgs, TR_BRAND_POIS)) {tmp_cost += 1000;count++;}
-    if (have_flag(flgs, TR_BRAND_ACID)) {tmp_cost += 1200;count++;}
-    if (have_flag(flgs, TR_BRAND_ELEC)) {tmp_cost += 1000;count++;}
-    if (have_flag(flgs, TR_BRAND_FIRE)) {tmp_cost += 1000;count++;}
-    if (have_flag(flgs, TR_BRAND_COLD)) {tmp_cost += 1000;count++;}
+    if (have_flag(flgs, OF_VORPAL)) {tmp_cost += 1500;count++;}
+    if (have_flag(flgs, OF_VORPAL2)) {tmp_cost += 5000;count++;}
+    if (have_flag(flgs, OF_IMPACT)) {tmp_cost += 500;}
+    if (have_flag(flgs, OF_BRAND_POIS)) {tmp_cost += 1000;count++;}
+    if (have_flag(flgs, OF_BRAND_ACID)) {tmp_cost += 1200;count++;}
+    if (have_flag(flgs, OF_BRAND_ELEC)) {tmp_cost += 1000;count++;}
+    if (have_flag(flgs, OF_BRAND_FIRE)) {tmp_cost += 1000;count++;}
+    if (have_flag(flgs, OF_BRAND_COLD)) {tmp_cost += 1000;count++;}
     total += (tmp_cost * count);
 
-    if (have_flag(flgs, TR_SUST_STR)) total += 250;
-    if (have_flag(flgs, TR_SUST_INT)) total += 250;
-    if (have_flag(flgs, TR_SUST_WIS)) total += 250;
-    if (have_flag(flgs, TR_SUST_DEX)) total += 250;
-    if (have_flag(flgs, TR_SUST_CON)) total += 250;
-    if (have_flag(flgs, TR_SUST_CHR)) total += 50;
-    if (have_flag(flgs, TR_RIDING)) total += 0;
-    if (have_flag(flgs, TR_EASY_SPELL)) total += 1500;
-    if (have_flag(flgs, TR_THROW)) total += 50;
-    if (have_flag(flgs, TR_FREE_ACT)) total += 2500;
-    if (have_flag(flgs, TR_HOLD_LIFE)) total += 1500;
+    if (have_flag(flgs, OF_SUST_STR)) total += 250;
+    if (have_flag(flgs, OF_SUST_INT)) total += 250;
+    if (have_flag(flgs, OF_SUST_WIS)) total += 250;
+    if (have_flag(flgs, OF_SUST_DEX)) total += 250;
+    if (have_flag(flgs, OF_SUST_CON)) total += 250;
+    if (have_flag(flgs, OF_SUST_CHR)) total += 50;
+    if (have_flag(flgs, OF_RIDING)) total += 0;
+    if (have_flag(flgs, OF_EASY_SPELL)) total += 1500;
+    if (have_flag(flgs, OF_THROWING)) total += 50;
+    if (have_flag(flgs, OF_FREE_ACT)) total += 2500;
+    if (have_flag(flgs, OF_HOLD_LIFE)) total += 1500;
 
     tmp_cost = 0;
     count = 0;
-    if (have_flag(flgs, TR_IM_ACID)) {tmp_cost += 15000;count += 2;}
-    if (have_flag(flgs, TR_IM_ELEC)) {tmp_cost += 15000;count += 2;}
-    if (have_flag(flgs, TR_IM_FIRE)) {tmp_cost += 15000;count += 2;}
-    if (have_flag(flgs, TR_IM_COLD)) {tmp_cost += 15000;count += 2;}
-    if (have_flag(flgs, TR_REFLECT)) {tmp_cost += 5000;count += 2;}
-    if (have_flag(flgs, TR_RES_ACID)) {tmp_cost += 500;count++;}
-    if (have_flag(flgs, TR_RES_ELEC)) {tmp_cost += 500;count++;}
-    if (have_flag(flgs, TR_RES_FIRE)) {tmp_cost += 500;count++;}
-    if (have_flag(flgs, TR_RES_COLD)) {tmp_cost += 500;count++;}
-    if (have_flag(flgs, TR_RES_POIS)) {tmp_cost += 1000;count += 1;}
-    if (have_flag(flgs, TR_RES_FEAR)) {tmp_cost += 1000;count += 1;}
-    if (have_flag(flgs, TR_RES_LITE)) {tmp_cost += 800;count += 1;}
-    if (have_flag(flgs, TR_RES_DARK)) {tmp_cost += 800;count += 1;}
-    if (have_flag(flgs, TR_RES_BLIND)) {tmp_cost += 900;count += 1;}
-    if (have_flag(flgs, TR_RES_CONF)) {tmp_cost += 900;count += 1;}
-    if (have_flag(flgs, TR_RES_SOUND)) {tmp_cost += 900;count += 1;}
-    if (have_flag(flgs, TR_RES_SHARDS)) {tmp_cost += 900;count += 1;}
-    if (have_flag(flgs, TR_RES_NETHER)) {tmp_cost += 900;count += 1;}
-    if (have_flag(flgs, TR_RES_NEXUS)) {tmp_cost += 900;count += 1;}
-    if (have_flag(flgs, TR_RES_CHAOS)) {tmp_cost += 1000;count += 1;}
-    if (have_flag(flgs, TR_RES_DISEN)) {tmp_cost += 2000;count += 1;}
+    if (have_flag(flgs, OF_IM_ACID)) {tmp_cost += 15000;count += 2;}
+    if (have_flag(flgs, OF_IM_ELEC)) {tmp_cost += 15000;count += 2;}
+    if (have_flag(flgs, OF_IM_FIRE)) {tmp_cost += 15000;count += 2;}
+    if (have_flag(flgs, OF_IM_COLD)) {tmp_cost += 15000;count += 2;}
+    if (have_flag(flgs, OF_REFLECT)) {tmp_cost += 5000;count += 2;}
+    if (have_flag(flgs, OF_RES_ACID)) {tmp_cost += 500;count++;}
+    if (have_flag(flgs, OF_RES_ELEC)) {tmp_cost += 500;count++;}
+    if (have_flag(flgs, OF_RES_FIRE)) {tmp_cost += 500;count++;}
+    if (have_flag(flgs, OF_RES_COLD)) {tmp_cost += 500;count++;}
+    if (have_flag(flgs, OF_RES_POIS)) {tmp_cost += 1000;count += 1;}
+    if (have_flag(flgs, OF_RES_FEAR)) {tmp_cost += 1000;count += 1;}
+    if (have_flag(flgs, OF_RES_LITE)) {tmp_cost += 800;count += 1;}
+    if (have_flag(flgs, OF_RES_DARK)) {tmp_cost += 800;count += 1;}
+    if (have_flag(flgs, OF_RES_BLIND)) {tmp_cost += 900;count += 1;}
+    if (have_flag(flgs, OF_RES_CONF)) {tmp_cost += 900;count += 1;}
+    if (have_flag(flgs, OF_RES_SOUND)) {tmp_cost += 900;count += 1;}
+    if (have_flag(flgs, OF_RES_SHARDS)) {tmp_cost += 900;count += 1;}
+    if (have_flag(flgs, OF_RES_NETHER)) {tmp_cost += 900;count += 1;}
+    if (have_flag(flgs, OF_RES_NEXUS)) {tmp_cost += 900;count += 1;}
+    if (have_flag(flgs, OF_RES_CHAOS)) {tmp_cost += 1000;count += 1;}
+    if (have_flag(flgs, OF_RES_DISEN)) {tmp_cost += 2000;count += 1;}
     total += (tmp_cost * count);
 
-    if (have_flag(flgs, TR_SH_FIRE)) total += 100;
-    if (have_flag(flgs, TR_SH_ELEC)) total += 100;
-    if (have_flag(flgs, TR_SH_COLD)) total += 100;
-    if (have_flag(flgs, TR_NO_TELE)) total -= 50000;
-    if (have_flag(flgs, TR_NO_MAGIC)) total -= 2500;
-    if (have_flag(flgs, TR_TY_CURSE)) total -= 15000;
-    if (have_flag(flgs, TR_HIDE_TYPE)) total += 0;
-    if (have_flag(flgs, TR_SHOW_MODS)) total += 0;
-    if (have_flag(flgs, TR_LEVITATION)) total += 350;
-    if (have_flag(flgs, TR_LITE)) total += 350;
-    if (have_flag(flgs, TR_SEE_INVIS)) total += 500;
-    if (have_flag(flgs, TR_TELEPATHY)) total += 20000;
-    if (have_flag(flgs, TR_ESP_ANIMAL)) total += 1000;
-    if (have_flag(flgs, TR_ESP_UNDEAD)) total += 1000;
-    if (have_flag(flgs, TR_ESP_DEMON)) total += 1000;
-    if (have_flag(flgs, TR_ESP_ORC)) total += 1000;
-    if (have_flag(flgs, TR_ESP_TROLL)) total += 1000;
-    if (have_flag(flgs, TR_ESP_GIANT)) total += 1000;
-    if (have_flag(flgs, TR_ESP_DRAGON)) total += 1000;
-    if (have_flag(flgs, TR_ESP_HUMAN)) total += 1000;
-    if (have_flag(flgs, TR_ESP_EVIL)) total += 15000;
-    if (have_flag(flgs, TR_ESP_GOOD)) total += 2000;
-    if (have_flag(flgs, TR_ESP_NONLIVING)) total += 2000;
-    if (have_flag(flgs, TR_ESP_UNIQUE)) total += 10000;
-    if (have_flag(flgs, TR_SLOW_DIGEST)) total += 750;
-    if (have_flag(flgs, TR_REGEN)) total += 2500;
-    if (have_flag(flgs, TR_WARNING)) total += 2000;
-    if (have_flag(flgs, TR_DEC_MANA)) total += 10000;
-    if (have_flag(flgs, TR_XTRA_MIGHT)) total += 2250;
-    if (have_flag(flgs, TR_XTRA_SHOTS)) total += 10000 * o_ptr->pval;
-    if (have_flag(flgs, TR_IGNORE_ACID)) total += 100;
-    if (have_flag(flgs, TR_IGNORE_ELEC)) total += 100;
-    if (have_flag(flgs, TR_IGNORE_FIRE)) total += 100;
-    if (have_flag(flgs, TR_IGNORE_COLD)) total += 100;
-    if (have_flag(flgs, TR_DRAIN_EXP)) total -= 12500;
-    if (have_flag(flgs, TR_TELEPORT))
+    if (have_flag(flgs, OF_AURA_FIRE)) total += 100;
+    if (have_flag(flgs, OF_AURA_ELEC)) total += 100;
+    if (have_flag(flgs, OF_AURA_COLD)) total += 100;
+    if (have_flag(flgs, OF_NO_TELE)) total -= 50000;
+    if (have_flag(flgs, OF_NO_MAGIC)) total -= 2500;
+    if (have_flag(flgs, OF_TY_CURSE)) total -= 15000;
+    if (have_flag(flgs, OF_HIDE_TYPE)) total += 0;
+    if (have_flag(flgs, OF_SHOW_MODS)) total += 0;
+    if (have_flag(flgs, OF_LEVITATION)) total += 350;
+    if (have_flag(flgs, OF_LITE)) total += 350;
+    if (have_flag(flgs, OF_SEE_INVIS)) total += 500;
+    if (have_flag(flgs, OF_TELEPATHY)) total += 20000;
+    if (have_flag(flgs, OF_ESP_ANIMAL)) total += 1000;
+    if (have_flag(flgs, OF_ESP_UNDEAD)) total += 1000;
+    if (have_flag(flgs, OF_ESP_DEMON)) total += 1000;
+    if (have_flag(flgs, OF_ESP_ORC)) total += 1000;
+    if (have_flag(flgs, OF_ESP_TROLL)) total += 1000;
+    if (have_flag(flgs, OF_ESP_GIANT)) total += 1000;
+    if (have_flag(flgs, OF_ESP_DRAGON)) total += 1000;
+    if (have_flag(flgs, OF_ESP_HUMAN)) total += 1000;
+    if (have_flag(flgs, OF_ESP_EVIL)) total += 15000;
+    if (have_flag(flgs, OF_ESP_GOOD)) total += 2000;
+    if (have_flag(flgs, OF_ESP_NONLIVING)) total += 2000;
+    if (have_flag(flgs, OF_ESP_UNIQUE)) total += 10000;
+    if (have_flag(flgs, OF_SLOW_DIGEST)) total += 750;
+    if (have_flag(flgs, OF_REGEN)) total += 2500;
+    if (have_flag(flgs, OF_WARNING)) total += 2000;
+    if (have_flag(flgs, OF_DEC_MANA)) total += 10000;
+    if (have_flag(flgs, OF_XTRA_MIGHT)) total += 2250;
+    if (have_flag(flgs, OF_XTRA_SHOTS)) total += 10000 * o_ptr->pval;
+    if (have_flag(flgs, OF_IGNORE_ACID)) total += 100;
+    if (have_flag(flgs, OF_IGNORE_ELEC)) total += 100;
+    if (have_flag(flgs, OF_IGNORE_FIRE)) total += 100;
+    if (have_flag(flgs, OF_IGNORE_COLD)) total += 100;
+    if (have_flag(flgs, OF_DRAIN_EXP)) total -= 12500;
+    if (have_flag(flgs, OF_TELEPORT))
     {
         if (object_is_cursed(o_ptr))
             total -= 7500;
         else
             total += 250;
     }
-    if (have_flag(flgs, TR_AGGRAVATE)) total -= 10000;
-    if (have_flag(flgs, TR_BLESSED)) total += 750;
-    if (o_ptr->curse_flags & TRC_CURSED) total -= 5000;
-    if (o_ptr->curse_flags & TRC_HEAVY_CURSE) total -= 12500;
-    if (o_ptr->curse_flags & TRC_PERMA_CURSE) total -= 15000;
+    if (have_flag(flgs, OF_AGGRAVATE)) total -= 10000;
+    if (have_flag(flgs, OF_BLESSED)) total += 750;
+    if (o_ptr->curse_flags & OFC_CURSED) total -= 5000;
+    if (o_ptr->curse_flags & OFC_HEAVY_CURSE) total -= 12500;
+    if (o_ptr->curse_flags & OFC_PERMA_CURSE) total -= 15000;
 
     /* Also, give some extra for activatable powers... */
     if (obj_has_effect(o_ptr))
@@ -1322,7 +1322,7 @@ s32b object_value_real(object_type *o_ptr)
 {
     s32b value;
 
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
 
     object_kind *k_ptr = &k_info[o_ptr->k_idx];
 
@@ -1381,8 +1381,8 @@ s32b object_value_real(object_type *o_ptr)
         int i;
         bool flag = FALSE;
 
-        for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++) 
-            if (o_ptr->art_flags[i]) flag = TRUE;
+        for (i = 0; i < OF_ARRAY_SIZE; i++) 
+            if (o_ptr->flags[i]) flag = TRUE;
 
         if (flag) value += flag_cost(o_ptr, o_ptr->pval, FALSE);
     }
@@ -1417,27 +1417,27 @@ s32b object_value_real(object_type *o_ptr)
         if (o_ptr->pval < 0) return (0L);
 
         /* Give credit for stat bonuses */
-        if (have_flag(flgs, TR_STR)) value += (o_ptr->pval * 200L);
-        if (have_flag(flgs, TR_INT)) value += (o_ptr->pval * 200L);
-        if (have_flag(flgs, TR_WIS)) value += (o_ptr->pval * 200L);
-        if (have_flag(flgs, TR_DEX)) value += (o_ptr->pval * 200L);
-        if (have_flag(flgs, TR_CON)) value += (o_ptr->pval * 200L);
-        if (have_flag(flgs, TR_CHR)) value += (o_ptr->pval * 200L);
+        if (have_flag(flgs, OF_STR)) value += (o_ptr->pval * 200L);
+        if (have_flag(flgs, OF_INT)) value += (o_ptr->pval * 200L);
+        if (have_flag(flgs, OF_WIS)) value += (o_ptr->pval * 200L);
+        if (have_flag(flgs, OF_DEX)) value += (o_ptr->pval * 200L);
+        if (have_flag(flgs, OF_CON)) value += (o_ptr->pval * 200L);
+        if (have_flag(flgs, OF_CHR)) value += (o_ptr->pval * 200L);
 
         /* Give credit for stealth and searching */
-        if (have_flag(flgs, TR_MAGIC_MASTERY)) value += (o_ptr->pval * 100);
-        if (have_flag(flgs, TR_STEALTH)) value += (o_ptr->pval * 100L);
-        if (have_flag(flgs, TR_SEARCH)) value += (o_ptr->pval * 100L);
+        if (have_flag(flgs, OF_MAGIC_MASTERY)) value += (o_ptr->pval * 100);
+        if (have_flag(flgs, OF_STEALTH)) value += (o_ptr->pval * 100L);
+        if (have_flag(flgs, OF_SEARCH)) value += (o_ptr->pval * 100L);
 
         /* Give credit for infra-vision and tunneling */
-        if (have_flag(flgs, TR_INFRA)) value += (o_ptr->pval * 50L);
-        if (have_flag(flgs, TR_TUNNEL)) value += (o_ptr->pval * 50L);
+        if (have_flag(flgs, OF_INFRA)) value += (o_ptr->pval * 50L);
+        if (have_flag(flgs, OF_TUNNEL)) value += (o_ptr->pval * 50L);
 
         /* Give credit for extra attacks */
-        if (have_flag(flgs, TR_BLOWS)) value += (o_ptr->pval * 5000L);
+        if (have_flag(flgs, OF_BLOWS)) value += (o_ptr->pval * 5000L);
 
         /* Give credit for speed bonus */
-        if (have_flag(flgs, TR_SPEED)) value += (o_ptr->pval * 10000L);
+        if (have_flag(flgs, OF_SPEED)) value += (o_ptr->pval * 10000L);
 
         break;
     }
@@ -1876,8 +1876,8 @@ int object_similar_part(object_type *o_ptr, object_type *j_ptr)
 
 
     /* Hack -- Identical art_flags! */
-    for (i = 0; i < TR_FLAG_ARRAY_SIZE; i++)
-        if (o_ptr->art_flags[i] != j_ptr->art_flags[i]) return 0;
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
+        if (o_ptr->flags[i] != j_ptr->flags[i]) return 0;
 
     /* Hack -- Require identical "cursed" status */
     if (o_ptr->curse_flags != j_ptr->curse_flags) return 0;
@@ -2094,12 +2094,12 @@ void object_prep(object_type *o_ptr, int k_idx)
     if (k_info[o_ptr->k_idx].cost <= 0) o_ptr->ident |= (IDENT_BROKEN);
 
     /* Hack -- cursed items are always "cursed" */
-    if (k_ptr->gen_flags & (TRG_CURSED)) o_ptr->curse_flags |= (TRC_CURSED);
-    if (k_ptr->gen_flags & (TRG_HEAVY_CURSE)) o_ptr->curse_flags |= (TRC_HEAVY_CURSE);
-    if (k_ptr->gen_flags & (TRG_PERMA_CURSE)) o_ptr->curse_flags |= (TRC_PERMA_CURSE);
-    if (k_ptr->gen_flags & (TRG_RANDOM_CURSE0)) o_ptr->curse_flags |= get_curse(0, o_ptr);
-    if (k_ptr->gen_flags & (TRG_RANDOM_CURSE1)) o_ptr->curse_flags |= get_curse(1, o_ptr);
-    if (k_ptr->gen_flags & (TRG_RANDOM_CURSE2)) o_ptr->curse_flags |= get_curse(2, o_ptr);
+    if (k_ptr->gen_flags & (OFG_CURSED)) o_ptr->curse_flags |= (OFC_CURSED);
+    if (k_ptr->gen_flags & (OFG_HEAVY_CURSE)) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
+    if (k_ptr->gen_flags & (OFG_PERMA_CURSE)) o_ptr->curse_flags |= (OFC_PERMA_CURSE);
+    if (k_ptr->gen_flags & (OFG_RANDOM_CURSE0)) o_ptr->curse_flags |= get_curse(0, o_ptr);
+    if (k_ptr->gen_flags & (OFG_RANDOM_CURSE1)) o_ptr->curse_flags |= get_curse(1, o_ptr);
+    if (k_ptr->gen_flags & (OFG_RANDOM_CURSE2)) o_ptr->curse_flags |= get_curse(2, o_ptr);
 }
 
 
@@ -2269,8 +2269,8 @@ static bool make_artifact_special(object_type *o_ptr)
 
         if (!a_ptr->name) continue;
         if (a_ptr->cur_num) continue;
-        if (a_ptr->gen_flags & TRG_QUESTITEM) continue;
-        if (!(a_ptr->gen_flags & TRG_INSTA_ART)) continue;
+        if (a_ptr->gen_flags & OFG_QUESTITEM) continue;
+        if (!(a_ptr->gen_flags & OFG_INSTA_ART)) continue;
 
         /* XXX XXX Enforce minimum "depth" (loosely) */
         if (a_ptr->level > dun_level)
@@ -2341,8 +2341,8 @@ static bool make_artifact(object_type *o_ptr)
 
         if (!a_ptr->name) continue;
         if (a_ptr->cur_num) continue;
-        if (a_ptr->gen_flags & TRG_QUESTITEM) continue;
-        if (a_ptr->gen_flags & TRG_INSTA_ART) continue;
+        if (a_ptr->gen_flags & OFG_QUESTITEM) continue;
+        if (a_ptr->gen_flags & OFG_INSTA_ART) continue;
         if (a_ptr->tval != o_ptr->tval) continue;
         if (a_ptr->sval != o_ptr->sval) continue;
 
@@ -2380,9 +2380,9 @@ bool add_esp_strong(object_type *o_ptr)
 
     switch (randint1(3))
     {
-    case 1: add_flag(o_ptr->art_flags, TR_ESP_EVIL); break;
-    case 2: add_flag(o_ptr->art_flags, TR_TELEPATHY); break;
-    case 3:    add_flag(o_ptr->art_flags, TR_ESP_NONLIVING); nonliv = TRUE; break;
+    case 1: add_flag(o_ptr->flags, OF_ESP_EVIL); break;
+    case 2: add_flag(o_ptr->flags, OF_TELEPATHY); break;
+    case 3:    add_flag(o_ptr->flags, OF_ESP_NONLIVING); nonliv = TRUE; break;
     }
 
     return nonliv;
@@ -2416,15 +2416,15 @@ void add_esp_weak(object_type *o_ptr, bool extra)
 
     while (n--) switch (idx[n])
     {
-    case 1: add_flag(o_ptr->art_flags, TR_ESP_ANIMAL); break;
-    case 2: add_flag(o_ptr->art_flags, TR_ESP_UNDEAD); break;
-    case 3: add_flag(o_ptr->art_flags, TR_ESP_DEMON); break;
-    case 4: add_flag(o_ptr->art_flags, TR_ESP_ORC); break;
-    case 5: add_flag(o_ptr->art_flags, TR_ESP_TROLL); break;
-    case 6: add_flag(o_ptr->art_flags, TR_ESP_GIANT); break;
-    case 7: add_flag(o_ptr->art_flags, TR_ESP_DRAGON); break;
-    case 8: add_flag(o_ptr->art_flags, TR_ESP_HUMAN); break;
-    case 9: add_flag(o_ptr->art_flags, TR_ESP_GOOD); break;
+    case 1: add_flag(o_ptr->flags, OF_ESP_ANIMAL); break;
+    case 2: add_flag(o_ptr->flags, OF_ESP_UNDEAD); break;
+    case 3: add_flag(o_ptr->flags, OF_ESP_DEMON); break;
+    case 4: add_flag(o_ptr->flags, OF_ESP_ORC); break;
+    case 5: add_flag(o_ptr->flags, OF_ESP_TROLL); break;
+    case 6: add_flag(o_ptr->flags, OF_ESP_GIANT); break;
+    case 7: add_flag(o_ptr->flags, OF_ESP_DRAGON); break;
+    case 8: add_flag(o_ptr->flags, OF_ESP_HUMAN); break;
+    case 9: add_flag(o_ptr->flags, OF_ESP_GOOD); break;
     }
 }
 
@@ -2519,7 +2519,7 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
             o_ptr->pval = i;
 
             /* Some figurines are cursed */
-            if (one_in_(6)) o_ptr->curse_flags |= TRC_CURSED;
+            if (one_in_(6)) o_ptr->curse_flags |= OFC_CURSED;
 
             if (cheat_peek)
             {
@@ -2868,12 +2868,12 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         if (!a_ptr->cost) o_ptr->ident |= (IDENT_BROKEN);
 
         /* Hack -- extract the "cursed" flag */
-        if (a_ptr->gen_flags & TRG_CURSED) o_ptr->curse_flags |= (TRC_CURSED);
-        if (a_ptr->gen_flags & TRG_HEAVY_CURSE) o_ptr->curse_flags |= (TRC_HEAVY_CURSE);
-        if (a_ptr->gen_flags & TRG_PERMA_CURSE) o_ptr->curse_flags |= (TRC_PERMA_CURSE);
-        if (a_ptr->gen_flags & (TRG_RANDOM_CURSE0)) o_ptr->curse_flags |= get_curse(0, o_ptr);
-        if (a_ptr->gen_flags & (TRG_RANDOM_CURSE1)) o_ptr->curse_flags |= get_curse(1, o_ptr);
-        if (a_ptr->gen_flags & (TRG_RANDOM_CURSE2)) o_ptr->curse_flags |= get_curse(2, o_ptr);
+        if (a_ptr->gen_flags & OFG_CURSED) o_ptr->curse_flags |= (OFC_CURSED);
+        if (a_ptr->gen_flags & OFG_HEAVY_CURSE) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
+        if (a_ptr->gen_flags & OFG_PERMA_CURSE) o_ptr->curse_flags |= (OFC_PERMA_CURSE);
+        if (a_ptr->gen_flags & (OFG_RANDOM_CURSE0)) o_ptr->curse_flags |= get_curse(0, o_ptr);
+        if (a_ptr->gen_flags & (OFG_RANDOM_CURSE1)) o_ptr->curse_flags |= get_curse(1, o_ptr);
+        if (a_ptr->gen_flags & (OFG_RANDOM_CURSE2)) o_ptr->curse_flags |= get_curse(2, o_ptr);
 
 
         /* Cheat -- peek at the item */
@@ -2926,7 +2926,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 
             if (o_ptr->sval == SV_RUNESWORD) 
             {
-                o_ptr->curse_flags |= (TRC_PERMA_CURSE);
+                o_ptr->curse_flags |= (OFC_PERMA_CURSE);
             }
             else 
             {
@@ -2986,12 +2986,12 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         (p_ptr->personality == PERS_SEXY || demigod_is_(DEMIGOD_APHRODITE)))
     {
         o_ptr->pval = 3;
-        add_flag(o_ptr->art_flags, TR_STR);
-        add_flag(o_ptr->art_flags, TR_INT);
-        add_flag(o_ptr->art_flags, TR_WIS);
-        add_flag(o_ptr->art_flags, TR_DEX);
-        add_flag(o_ptr->art_flags, TR_CON);
-        add_flag(o_ptr->art_flags, TR_CHR);
+        add_flag(o_ptr->flags, OF_STR);
+        add_flag(o_ptr->flags, OF_INT);
+        add_flag(o_ptr->flags, OF_WIS);
+        add_flag(o_ptr->flags, OF_DEX);
+        add_flag(o_ptr->flags, OF_CON);
+        add_flag(o_ptr->flags, OF_CHR);
     }
 
     if (o_ptr->art_name)
@@ -3009,12 +3009,12 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         if (!k_info[o_ptr->k_idx].cost) o_ptr->ident |= (IDENT_BROKEN);
 
         /* Hack -- acquire "cursed" flag */
-        if (k_ptr->gen_flags & (TRG_CURSED)) o_ptr->curse_flags |= (TRC_CURSED);
-        if (k_ptr->gen_flags & (TRG_HEAVY_CURSE)) o_ptr->curse_flags |= TRC_HEAVY_CURSE;
-        if (k_ptr->gen_flags & (TRG_PERMA_CURSE)) o_ptr->curse_flags |= TRC_PERMA_CURSE;
-        if (k_ptr->gen_flags & (TRG_RANDOM_CURSE0)) o_ptr->curse_flags |= get_curse(0, o_ptr);
-        if (k_ptr->gen_flags & (TRG_RANDOM_CURSE1)) o_ptr->curse_flags |= get_curse(1, o_ptr);
-        if (k_ptr->gen_flags & (TRG_RANDOM_CURSE2)) o_ptr->curse_flags |= get_curse(2, o_ptr);
+        if (k_ptr->gen_flags & (OFG_CURSED)) o_ptr->curse_flags |= (OFC_CURSED);
+        if (k_ptr->gen_flags & (OFG_HEAVY_CURSE)) o_ptr->curse_flags |= OFC_HEAVY_CURSE;
+        if (k_ptr->gen_flags & (OFG_PERMA_CURSE)) o_ptr->curse_flags |= OFC_PERMA_CURSE;
+        if (k_ptr->gen_flags & (OFG_RANDOM_CURSE0)) o_ptr->curse_flags |= get_curse(0, o_ptr);
+        if (k_ptr->gen_flags & (OFG_RANDOM_CURSE1)) o_ptr->curse_flags |= get_curse(1, o_ptr);
+        if (k_ptr->gen_flags & (OFG_RANDOM_CURSE2)) o_ptr->curse_flags |= get_curse(2, o_ptr);
     }
     return TRUE;
 }
@@ -5880,9 +5880,9 @@ void display_koff(int k_idx)
 
 /* Choose one of items that have warning flag */
 static bool _object_has_warning(object_type *o_ptr) {
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
     obj_flags(o_ptr, flgs);
-    return have_flag(flgs, TR_WARNING);
+    return have_flag(flgs, OF_WARNING);
 }
 object_type *choose_warning_item(void)
 {
@@ -6245,7 +6245,7 @@ bool process_warning(int xx, int yy)
             if (o_ptr) object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
             else strcpy(o_name, "body"); /* Warning ability without item */
             msg_format("Your %s pulsates sharply!", o_name);
-            if (o_ptr) obj_learn_flag(o_ptr, TR_WARNING);
+            if (o_ptr) obj_learn_flag(o_ptr, OF_WARNING);
             disturb(0, 0);
             return get_check("Really want to go ahead? ");
         }
@@ -6261,7 +6261,7 @@ bool process_warning(int xx, int yy)
         if (o_ptr) object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
         else strcpy(o_name, "body"); /* Warning ability without item */
         msg_format("Your %s pulsates!", o_name);
-        if (o_ptr) obj_learn_flag(o_ptr, TR_WARNING);
+        if (o_ptr) obj_learn_flag(o_ptr, OF_WARNING);
         disturb(0, 0);
         return get_check("Really want to go ahead? ");
     }

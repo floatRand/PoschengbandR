@@ -1,4 +1,4 @@
-# File: k_info.txt (Touch)
+# File: k_info.txt
 # This file is used to initialize the "lib/raw/k_info.raw" file, which is
 # used to initialize the "object kind" information for the Angband game.
 
@@ -3490,7 +3490,7 @@ W:70:0:0:350:10000
 A:70/6
 P:0:10d10:-50:30:0
 F:SHOW_MODS | VORPAL | CURSED | HEAVY_CURSE |
-F:SLAY_DRAGON | SLAY_ANIMAL | SLAY_EVIL | SLAY_HUMAN | VAMPIRIC |
+F:SLAY_DRAGON | SLAY_ANIMAL | SLAY_EVIL | SLAY_HUMAN | BRAND_VAMP |
 F:SLAY_UNDEAD | SLAY_DEMON | SLAY_TROLL | SLAY_GIANT | SLAY_ORC |
 F:BRAND_FIRE | BRAND_ELEC | BRAND_COLD | BRAND_ACID | BRAND_POIS |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | RIDING
@@ -3994,7 +3994,7 @@ W:70:0:0:150:50000
 A:30/8
 P:0:0d0:-10:-10:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-F:VAMPIRIC | NO_ENCHANT
+F:BRAND_VAMP | NO_ENCHANT
 D:A black blade, covered with gleaming runes. It is rumored
 D:to be an evil weapon of great power that will ultimately control
 D:its bearer.

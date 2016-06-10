@@ -362,7 +362,7 @@ static void spoil_obj_desc(cptr fname)
             if (k_ptr->tval != group_item[i].tval) continue;
 
             /* Hack -- Skip instant-artifacts */
-            if (k_ptr->gen_flags & (TRG_INSTA_ART)) continue;
+            if (k_ptr->gen_flags & (OFG_INSTA_ART)) continue;
 
             /* Save the index */
             who[n++] = k;
@@ -535,7 +535,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
             object_type    forge = {0};
             _art_info_ptr  entry;
 
-            if (!p_ptr->wizard && (a_info[i].gen_flags & TRG_QUESTITEM)) continue;
+            if (!p_ptr->wizard && (a_info[i].gen_flags & OFG_QUESTITEM)) continue;
             if (!create_named_art_aux(i, &forge)) continue;
             if ((options & _SPOIL_EGOS) && !a_info[i].cur_num) continue; /* Hack */
             if (pred && !pred(&forge)) continue;
@@ -632,7 +632,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
                     (a_ptr->cur_num == 1) ? 'y' : 'w',
                     i+1, entry->score, a_ptr->level, a_ptr->rarity);
 
-                if (a_ptr->gen_flags & TRG_INSTA_ART)
+                if (a_ptr->gen_flags & OFG_INSTA_ART)
                     doc_insert(doc, "    ");
                 else
                     doc_printf(doc, "%3d ", k_info[entry->k_idx].counts.found);

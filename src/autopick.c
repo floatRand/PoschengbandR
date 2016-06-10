@@ -1413,7 +1413,7 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         else if (p_ptr->pclass == CLASS_NINJA)
         {
             if ( o_ptr->tval == TV_LITE 
-              && (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->art_flags, TR_DARKNESS))
+              && (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->flags, OF_DARKNESS))
               && object_is_known(o_ptr))
             {
                 is_special = TRUE;
@@ -1944,7 +1944,7 @@ static bool is_opt_confirm_destroy(object_type *o_ptr)
         else if (p_ptr->pclass == CLASS_NINJA)
         {
             if ( o_ptr->tval == TV_LITE 
-              && (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->art_flags, TR_DARKNESS))
+              && (o_ptr->name2 == EGO_LITE_DARKNESS || have_flag(o_ptr->flags, OF_DARKNESS))
               && object_is_known(o_ptr))
             {
                 return FALSE;

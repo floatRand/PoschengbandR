@@ -36,7 +36,7 @@ void self_knowledge(void)
     char s_string [6] [128];
     char r_string [RES_MAX] [128];
 
-    u32b flgs[TR_FLAG_ARRAY_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
 
     object_type *o_ptr;
 
@@ -45,7 +45,7 @@ void self_knowledge(void)
 
     cptr info[220];
 
-    for (j = 0; j < TR_FLAG_ARRAY_SIZE; j++)
+    for (j = 0; j < OF_ARRAY_SIZE; j++)
         flgs[j] = 0L;
 
     p_ptr->knowledge |= (KNOW_STAT | KNOW_HPRATE);
@@ -63,7 +63,7 @@ void self_knowledge(void)
     /* Acquire item flags from equipment */
     for (k = EQUIP_BEGIN; k < EQUIP_BEGIN + equip_count(); k++)
     {
-        u32b tflgs[TR_FLAG_ARRAY_SIZE];
+        u32b tflgs[OF_ARRAY_SIZE];
 
         o_ptr = equip_obj(k);
         if (!o_ptr) continue;
@@ -72,7 +72,7 @@ void self_knowledge(void)
         obj_flags(o_ptr, tflgs);
 
         /* Extract flags */
-        for (j = 0; j < TR_FLAG_ARRAY_SIZE; j++)
+        for (j = 0; j < OF_ARRAY_SIZE; j++)
             flgs[j] |= tflgs[j];
     }
 
@@ -175,87 +175,87 @@ void self_knowledge(void)
         info[i++] = "You are hallucinating.";
 
     }
-    if (p_ptr->cursed & TRC_TY_CURSE)
+    if (p_ptr->cursed & OFC_TY_CURSE)
     {
         info[i++] = "You carry an ancient foul curse.";
 
     }
-    if (p_ptr->cursed & TRC_AGGRAVATE)
+    if (p_ptr->cursed & OFC_AGGRAVATE)
     {
         info[i++] = "You aggravate monsters.";
 
     }
-    if (p_ptr->cursed & TRC_DRAIN_EXP)
+    if (p_ptr->cursed & OFC_DRAIN_EXP)
     {
         info[i++] = "You are drained.";
 
     }
-    if (p_ptr->cursed & TRC_SLOW_REGEN)
+    if (p_ptr->cursed & OFC_SLOW_REGEN)
     {
         info[i++] = "You regenerate slowly.";
 
     }
-    if (p_ptr->cursed & TRC_ADD_L_CURSE)
+    if (p_ptr->cursed & OFC_ADD_L_CURSE)
     {
         info[i++] = "Your weak curses multiply.";
 
     }
-    if (p_ptr->cursed & TRC_ADD_H_CURSE)
+    if (p_ptr->cursed & OFC_ADD_H_CURSE)
     {
         info[i++] = "Your heavy curses multiply.";
 
     }
-    if (p_ptr->cursed & TRC_CALL_ANIMAL)
+    if (p_ptr->cursed & OFC_CALL_ANIMAL)
     {
         info[i++] = "You attract animals.";
 
     }
-    if (p_ptr->cursed & TRC_CALL_DEMON)
+    if (p_ptr->cursed & OFC_CALL_DEMON)
     {
         info[i++] = "You attract demons.";
 
     }
-    if (p_ptr->cursed & TRC_CALL_DRAGON)
+    if (p_ptr->cursed & OFC_CALL_DRAGON)
     {
         info[i++] = "You attract dragons.";
 
     }
-    if (p_ptr->cursed & TRC_COWARDICE)
+    if (p_ptr->cursed & OFC_COWARDICE)
     {
         info[i++] = "You are subject to cowardice.";
 
     }
-    if (p_ptr->cursed & TRC_TELEPORT)
+    if (p_ptr->cursed & OFC_TELEPORT)
     {
         info[i++] = "Your position is very uncertain.";
 
     }
-    if (p_ptr->cursed & TRC_LOW_MELEE)
+    if (p_ptr->cursed & OFC_LOW_MELEE)
     {
         info[i++] = "Your weapon causes you to miss blows.";
 
     }
-    if (p_ptr->cursed & TRC_LOW_AC)
+    if (p_ptr->cursed & OFC_LOW_AC)
     {
         info[i++] = "You are subject to be hit.";
 
     }
-    if (p_ptr->cursed & TRC_LOW_MAGIC)
+    if (p_ptr->cursed & OFC_LOW_MAGIC)
     {
         info[i++] = "You are subject to fail spellcasting.";
 
     }
-    if (p_ptr->cursed & TRC_FAST_DIGEST)
+    if (p_ptr->cursed & OFC_FAST_DIGEST)
     {
         info[i++] = "You have a good appetite.";
 
     }
-    if (p_ptr->cursed & TRC_DRAIN_HP)
+    if (p_ptr->cursed & OFC_DRAIN_HP)
     {
         info[i++] = "You are drained.";
 
     }
-    if (p_ptr->cursed & TRC_DRAIN_MANA)
+    if (p_ptr->cursed & OFC_DRAIN_MANA)
     {
         info[i++] = "You brain is drained.";
 
@@ -561,63 +561,63 @@ void self_knowledge(void)
 
     }
 
-    if (have_flag(flgs, TR_STR))
+    if (have_flag(flgs, OF_STR))
     {
         info[i++] = "Your strength is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_INT))
+    if (have_flag(flgs, OF_INT))
     {
         info[i++] = "Your intelligence is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_WIS))
+    if (have_flag(flgs, OF_WIS))
     {
         info[i++] = "Your wisdom is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_DEX))
+    if (have_flag(flgs, OF_DEX))
     {
         info[i++] = "Your dexterity is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_CON))
+    if (have_flag(flgs, OF_CON))
     {
         info[i++] = "Your constitution is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_CHR))
+    if (have_flag(flgs, OF_CHR))
     {
         info[i++] = "Your charisma is affected by your equipment.";
 
     }
 
-    if (have_flag(flgs, TR_STEALTH))
+    if (have_flag(flgs, OF_STEALTH))
     {
         info[i++] = "Your stealth is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_SEARCH))
+    if (have_flag(flgs, OF_SEARCH))
     {
         info[i++] = "Your searching ability is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_INFRA))
+    if (have_flag(flgs, OF_INFRA))
     {
         info[i++] = "Your infravision is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_TUNNEL))
+    if (have_flag(flgs, OF_TUNNEL))
     {
         info[i++] = "Your digging ability is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_SPEED))
+    if (have_flag(flgs, OF_SPEED))
     {
         info[i++] = "Your speed is affected by your equipment.";
 
     }
-    if (have_flag(flgs, TR_BLOWS))
+    if (have_flag(flgs, OF_BLOWS))
     {
         info[i++] = "Your attack speed is affected by your equipment.";
 
@@ -3888,7 +3888,7 @@ bool teleport_swap(int dir)
     if (p_ptr->anti_tele)
     {
         msg_print("A mysterious force prevents you from teleporting!");
-        equip_learn_flag(TR_NO_TELE);
+        equip_learn_flag(OF_NO_TELE);
         return FALSE;
     }
 
@@ -4324,7 +4324,7 @@ bool activate_ty_curse(bool stop_ty, int *count)
                 if (p_ptr->free_act)
                 {
                     set_paralyzed(randint1(2), FALSE);
-                    equip_learn_flag(TR_FREE_ACT);
+                    equip_learn_flag(OF_FREE_ACT);
                 }
                 else
                     set_paralyzed(randint1(13), FALSE);
