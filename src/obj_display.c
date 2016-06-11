@@ -35,6 +35,7 @@ extern void ego_display(ego_type *e_ptr);
 extern void ego_display_rect(ego_type *e_ptr, rect_t display);
 extern void ego_display_doc(ego_type *e_ptr, doc_ptr doc);
 
+static void _ego_display_name(ego_type *e_ptr, doc_ptr doc);
 static void _ego_display_stats(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
 static void _ego_display_other_pval(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
 static void _ego_display_extra(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc);
@@ -1291,16 +1292,69 @@ static bool _have_flag(u32b flgs[OF_ARRAY_SIZE])
     }
     return FALSE;
 }
-void ego_display_doc(ego_type *e_ptr, doc_ptr doc)
+
+static void _ego_display_name(ego_type *e_ptr, doc_ptr doc)
 {
-    int  i;
     char name[255];
-    u32b flgs[OF_ARRAY_SIZE];
+
+    /* Major hackage. Many egos can span multiple types, and
+       I'd rather not always list them all. For example, 'Armor of Protection'
+       is enough, rather than 'Body Armor/Shield/Cloak/Helmet/Gloves/Boots of Protection' */
+    if (e_ptr->type & EGO_TYPE_WEAPON)
+        doc_insert(doc, "Weapon ");
+    else if (e_ptr->type & EGO_TYPE_DIGGER)
+        doc_insert(doc, "Digger ");
+    else if (e_ptr->type & EGO_TYPE_BODY_ARMOR)
+        doc_insert(doc, "Armor ");
+    else if (e_ptr->type & EGO_TYPE_DRAGON_ARMOR)
+        doc_insert(doc, "Dragon Armor ");
+    else if (e_ptr->type == (EGO_TYPE_CLOAK | EGO_TYPE_BOOTS))
+        doc_insert(doc, "Cloak/Boots ");
+    else if (e_ptr->type == (EGO_TYPE_GLOVES | EGO_TYPE_BOOTS))
+        doc_insert(doc, "Golves/Boots ");
+    else if (e_ptr->type == (EGO_TYPE_HELMET | EGO_TYPE_CROWN))
+        doc_insert(doc, "Helmet/Crown ");
+    else if (e_ptr->type & EGO_TYPE_SHIELD)
+        doc_insert(doc, "Shield ");
+    else if (e_ptr->type & EGO_TYPE_ROBE)
+        doc_insert(doc, "Robe ");
+    else if (e_ptr->type & EGO_TYPE_CLOAK)
+        doc_insert(doc, "Cloak ");
+    else if (e_ptr->type & EGO_TYPE_HELMET)
+        doc_insert(doc, "Helmet ");
+    else if (e_ptr->type & EGO_TYPE_CROWN)
+        doc_insert(doc, "Crown ");
+    else if (e_ptr->type & EGO_TYPE_GLOVES)
+        doc_insert(doc, "Gloves ");
+    else if (e_ptr->type & EGO_TYPE_BOOTS)
+        doc_insert(doc, "Boots ");
+    else if (e_ptr->type & EGO_TYPE_BOW)
+        doc_insert(doc, "Bow ");
+    else if (e_ptr->type & EGO_TYPE_AMMO)
+        doc_insert(doc, "Ammo ");
+    else if (e_ptr->type & EGO_TYPE_HARP)
+        doc_insert(doc, "Harp ");
+    else if (e_ptr->type == (EGO_TYPE_RING | EGO_TYPE_AMULET))
+        doc_insert(doc, "Ring/Amulet ");
+    else if (e_ptr->type & EGO_TYPE_RING)
+        doc_insert(doc, "Ring ");
+    else if (e_ptr->type & EGO_TYPE_AMULET)
+        doc_insert(doc, "Amulet ");
+    else if (e_ptr->type & EGO_TYPE_LITE)
+        doc_insert(doc, "Light ");
+    else if (e_ptr->type & EGO_TYPE_DEVICE)
+        doc_insert(doc, "Device ");
 
     strip_name_aux(name, e_name + e_ptr->name);
     doc_printf(doc, "%s\n\n", name);
+}
 
-    /* TODO: Types, (+X, +Y), +AC, pval etc */
+void ego_display_doc(ego_type *e_ptr, doc_ptr doc)
+{
+    int  i;
+    u32b flgs[OF_ARRAY_SIZE];
+
+    _ego_display_name(e_ptr, doc);
 
     /* First, the fixed flags always present */
     for (i = 0; i < OF_ARRAY_SIZE; i++)
