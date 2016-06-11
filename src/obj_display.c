@@ -1377,7 +1377,7 @@ void ego_display_doc(ego_type *e_ptr, doc_ptr doc)
         _display_auras(flgs, doc);
         _ego_display_extra(flgs, doc);
         if (have_flag(flgs, OF_ACTIVATE))
-            _display_activation_aux(&e_ptr->activation, TRUE, doc);
+            _display_activation_aux(&e_ptr->activation, FALSE, doc);
         _display_ignore(flgs, doc);
         doc_insert(doc, "</style></indent>\n");
     }
@@ -1391,7 +1391,7 @@ void ego_display_doc(ego_type *e_ptr, doc_ptr doc)
 
     if (_have_flag(flgs))
     {
-        doc_insert(doc, "\n<color:B>Optional Bonuses</color>\n");
+        doc_insert(doc, "<color:B>Optional Bonuses</color>\n");
         doc_insert(doc, "  <indent><style:indent>");
         _ego_display_stats(flgs, doc);
         _display_sustains(flgs, doc);

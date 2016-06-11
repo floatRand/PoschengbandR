@@ -1521,28 +1521,13 @@ static void _object_counts_imp(doc_ptr doc, int tval, int sval)
     {
         doc_printf(
             doc,
-            "  %-20.20s %5d %6d %5d %5d",
+            "  %-20.20s %5d %6d %5d %5d\n",
             k_name + k_ptr->name,
             k_ptr->counts.found,
             k_ptr->counts.bought,
             k_ptr->counts.used,
             k_ptr->counts.destroyed
         );
-
-        switch (tval)
-        {
-        case TV_WAND: case TV_ROD: case TV_STAFF: case TV_SCROLL:
-        {
-            int         fail;
-            object_type forge;
-            object_prep(&forge, lookup_kind(tval, sval));
-            fail = device_calc_fail_rate(&forge);
-            doc_printf(doc, " %3d.%1d%%", fail / 10, fail % 10);
-            break;
-        }
-        }
-
-        doc_newline(doc);
     }
 }
 
@@ -1556,7 +1541,6 @@ static void _device_counts_imp(doc_ptr doc, int tval, int effect)
     if (entry->counts.found || entry->counts.bought || entry->counts.used || entry->counts.destroyed)
     {
         effect_t effect;
-        int      fail;
 
         effect.power = entry->level;
         effect.difficulty = entry->level;
@@ -1564,17 +1548,13 @@ static void _device_counts_imp(doc_ptr doc, int tval, int effect)
 
         doc_printf(
             doc,
-            "  %-20.20s %5d %6d %5d %5d",
+            "  %-20.20s %5d %6d %5d %5d\n",
             do_effect(&effect, SPELL_NAME, 0),
             entry->counts.found,
             entry->counts.bought,
             entry->counts.used,
             entry->counts.destroyed
         );
-
-        fail = effect_calc_fail_rate(&effect);
-        doc_printf(doc, " %3d.%1d%%", fail / 10, fail % 10);
-        doc_newline(doc);
     }
 }
 
@@ -1995,7 +1975,7 @@ static void _build_statistics(doc_ptr doc)
     _object_counts_imp(doc, TV_POTION, SV_POTION_EXPERIENCE);
     _group_counts_tval_imp(doc, TV_POTION, "Totals");
 
-    doc_printf(doc, "\n  <color:G>Scrolls              Found Bought  Used  Dest  Fail</color>\n");
+    doc_printf(doc, "\n  <color:G>Scrolls              Found Bought  Used  Dest</color>\n");
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_IDENTIFY);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
@@ -2013,7 +1993,7 @@ static void _build_statistics(doc_ptr doc)
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_ARTIFACT);
     _group_counts_tval_imp(doc, TV_SCROLL, "Totals");
 
-    doc_printf(doc, "\n  <color:G>Wands                Found Bought  Used  Dest  Fail</color>\n");
+    doc_printf(doc, "\n  <color:G>Wands                Found Bought  Used  Dest</color>\n");
     if (p_ptr->wizard)
     {
         for (i = 0; ; i++)
@@ -2039,7 +2019,7 @@ static void _build_statistics(doc_ptr doc)
     }
     _group_counts_tval_imp(doc, TV_WAND, "Totals");
 
-    doc_printf(doc, "\n  <color:G>Staves               Found Bought  Used  Dest  Fail</color>\n");
+    doc_printf(doc, "\n  <color:G>Staves               Found Bought  Used  Dest</color>\n");
     if (p_ptr->wizard)
     {
         for (i = 0; ; i++)
@@ -2067,7 +2047,7 @@ static void _build_statistics(doc_ptr doc)
     }
     _group_counts_tval_imp(doc, TV_STAFF, "Totals");
 
-    doc_printf(doc, "\n  <color:G>Rods                 Found Bought  Used  Dest  Fail</color>\n");
+    doc_printf(doc, "\n  <color:G>Rods                 Found Bought  Used  Dest</color>\n");
     if (p_ptr->wizard)
     {
         for (i = 0; ; i++)

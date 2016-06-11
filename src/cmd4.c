@@ -18,6 +18,7 @@
 #include <assert.h>
 
 static void do_cmd_knowledge_shooter(void);
+static void browser_cursor(char ch, int *column, int *grp_cur, int grp_cnt, int *list_cur, int list_cnt);
 
 /*
  * A set of functions to maintain automatic dumps of various kinds.
@@ -4075,269 +4076,309 @@ void do_cmd_save_screen(void)
     doc_free(doc);
 }
 
-/*
- * Sorting hook -- Comp function -- see below
- *
- * We use "u" to point to array of monster indexes,
- * and "v" to select the type of sorting to perform on "u".
- */
-static bool ang_sort_art_comp(vptr u, vptr v, int a, int b)
+/************************************************************************
+ * Artifact Lore (Standard Arts Only)
+ * Note: Check out the Wizard Spoiler Commands for an alternative approach.
+ *       ^a"a and ^a"O
+ ************************************************************************/
+typedef struct {
+    object_p filter;
+    cptr     name;
+} _art_type_t;
+
+static _art_type_t _art_types[] = {
+    { object_is_melee_weapon, "Weapons" },
+    { object_is_shield, "Shield" },
+    { object_is_bow, "Bows" },
+    { object_is_ring, "Rings" },
+    { object_is_amulet, "Amulets" },
+    { object_is_lite, "Lights" },
+    { object_is_body_armour, "Body Armor" },
+    { object_is_cloak, "Cloaks" },
+    { object_is_helmet, "Helmets" },
+    { object_is_gloves, "Gloves" },
+    { object_is_boots, "Boots" },
+    { object_is_ammo, "Ammo" },
+    { NULL, NULL },
+};
+
+static bool _compare_a_level(vptr u, vptr v, int a, int b)
 {
-    u16b *who = (u16b*)(u);
+    int *indices = (int*)u;
+    int left = indices[a];
+    int right = indices[b];
+    return a_info[left].level <= a_info[right].level;
+}
 
-    u16b *why = (u16b*)(v);
+static bool _art_floor_unfound(int a_idx)
+{
+    int x, y;
 
-    int w1 = who[a];
-    int w2 = who[b];
-
-    int z1, z2;
-
-    /* Sort by total kills */
-    if (*why >= 3)
+    /* Check the dungeon to see if lying on floor still, and not identified */
+    for (y = 0; y < cur_hgt; y++)
     {
-        /* Extract total kills */
-        z1 = a_info[w1].tval;
-        z2 = a_info[w2].tval;
+        for (x = 0; x < cur_wid; x++)
+        {
+            cave_type *c_ptr = &cave[y][x];
+            s16b this_o_idx, next_o_idx = 0;
 
-        /* Compare total kills */
-        if (z1 < z2) return (TRUE);
-        if (z1 > z2) return (FALSE);
+            for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
+            {
+                object_type *o_ptr = &o_list[this_o_idx];
+
+                next_o_idx = o_ptr->next_o_idx;
+                if (o_ptr->name1 != a_idx) continue;
+                if (obj_is_identified(o_ptr)) return FALSE;
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}
+
+static bool _art_pack_unfound(int a_idx)
+{
+    int i;
+    /* Check player's pack to see if unidentified still */
+    for (i = 0; i < INVEN_TOTAL; i++)
+    {
+        object_type *o_ptr = &inventory[i];
+
+        if (!o_ptr->k_idx) continue;
+        if (o_ptr->name1 != a_idx) continue;
+        if (obj_is_identified(o_ptr)) return FALSE;
+
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _art_is_found(int a_idx)
+{
+    if (!a_info[a_idx].cur_num)
+        return FALSE;
+
+    if (_art_floor_unfound(a_idx) || _art_pack_unfound(a_idx))
+        return FALSE;
+
+    /* Gee, we should probably check the players home as well ... sigh */
+
+    return TRUE;
+}
+
+static int _collect_arts(int grp_cur, int art_idx[])
+{
+    int i, cnt = 0;
+
+    for (i = 0; i < max_a_idx; i++)
+    {
+        artifact_type *a_ptr = &a_info[i];
+        object_type    forge;
+
+        if (!a_ptr->name) continue;
+        if (!art_has_lore(a_ptr) && !_art_is_found(i)) continue;
+        if (!create_named_art_aux_aux(i, &forge)) continue;
+        if (!_art_types[grp_cur].filter(&forge)) continue;
+
+        art_idx[cnt++] = i;
     }
 
+    /* Sort Results */
+    ang_sort_comp = _compare_a_level;
+    ang_sort_swap = _swap_int;
+    ang_sort(art_idx, NULL, cnt);
 
-    /* Sort by monster level */
-    if (*why >= 2)
-    {
-        /* Extract levels */
-        z1 = a_info[w1].sval;
-        z2 = a_info[w2].sval;
+    /* Terminate the list */
+    art_idx[cnt] = -1;
 
-        /* Compare levels */
-        if (z1 < z2) return (TRUE);
-        if (z1 > z2) return (FALSE);
-    }
-
-
-    /* Sort by monster experience */
-    if (*why >= 1)
-    {
-        /* Extract experience */
-        z1 = a_info[w1].level;
-        z2 = a_info[w2].level;
-
-        /* Compare experience */
-        if (z1 < z2) return (TRUE);
-        if (z1 > z2) return (FALSE);
-    }
-
-
-    /* Compare indexes */
-    return (w1 <= w2);
+    return cnt;
 }
 
 
-/*
- * Sorting hook -- Swap function -- see below
- *
- * We use "u" to point to array of monster indexes,
- * and "v" to select the type of sorting to perform.
- */
-static void ang_sort_art_swap(vptr u, vptr v, int a, int b)
-{
-    u16b *who = (u16b*)(u);
-
-    u16b holder;
-
-    /* Unused */
-    (void)v;
-
-    /* Swap */
-    holder = who[a];
-    who[a] = who[b];
-    who[b] = holder;
-}
-
-
-/*
- * Check the status of "artifacts"
- */
 static void do_cmd_knowledge_artifacts(void)
 {
-    int i, k, z, x, y, n = 0;
-    u16b why = 3;
-    s16b *who;
+    int i, len, max;
+    int grp_cur, grp_top, old_grp_cur;
+    int art_cur, art_top;
+    int grp_cnt, grp_idx[100];
+    int art_cnt;
+    int *art_idx;
 
-    FILE *fff;
+    int column = 0;
+    bool flag;
+    bool redraw;
 
-    char file_name[1024];
-
-    char base_name[MAX_NLEN];
-
-    bool *okay;
-
-    /* Open a new file */
-    fff = my_fopen_temp(file_name, 1024);
-
-    if (!fff) {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return; 
-    }
+    int browser_rows;
+    int wid, hgt;
 
     if (random_artifacts)
     {
-        fprintf(fff, "You won't find any fixed artifacts this game.");
+        cmsg_print(TERM_L_RED, "You won't find any fixed artifacts this game.");
+        return;
     }
     else if (no_artifacts)
     {
-        fprintf(fff, "You won't find any artifacts this game.");
+        cmsg_print(TERM_L_RED, "You won't find any artifacts this game.");
+        return;
     }
-    else
+
+    /* Get size */
+    Term_get_size(&wid, &hgt);
+
+    browser_rows = hgt - 8;
+
+    C_MAKE(art_idx, max_a_idx, int);
+
+    max = 0;
+    grp_cnt = 0;
+    for (i = 0; _art_types[i].filter; i++)
     {
-        /* Allocate the "who" array */
-        C_MAKE(who, max_a_idx, s16b);
+        len = strlen(_art_types[i].name);
+        if (len > max)
+            max = len;
 
-        /* Allocate the "okay" array */
-        C_MAKE(okay, max_a_idx, bool);
-
-        /* Scan the artifacts */
-        for (k = 0; k < max_a_idx; k++)
-        {
-            artifact_type *a_ptr = &a_info[k];
-
-            /* Default */
-            okay[k] = FALSE;
-
-            /* Skip "empty" artifacts */
-            if (!a_ptr->name) continue;
-
-            /* Skip "uncreated" artifacts */
-            if (!a_ptr->cur_num) continue;
-
-            /* Assume okay */
-            okay[k] = TRUE;
-        }
-
-        /* Check the dungeon */
-        for (y = 0; y < cur_hgt; y++)
-        {
-            for (x = 0; x < cur_wid; x++)
-            {
-                cave_type *c_ptr = &cave[y][x];
-
-                s16b this_o_idx, next_o_idx = 0;
-
-                /* Scan all objects in the grid */
-                for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
-                {
-                    object_type *o_ptr;
-
-                    /* Acquire object */
-                    o_ptr = &o_list[this_o_idx];
-
-                    /* Acquire next object */
-                    next_o_idx = o_ptr->next_o_idx;
-
-                    /* Ignore non-artifacts */
-                    if (!object_is_fixed_artifact(o_ptr)) continue;
-
-                    /* Ignore known items */
-                    if (object_is_known(o_ptr)) continue;
-
-                    /* Note the artifact */
-                    okay[o_ptr->name1] = FALSE;
-                }
-            }
-        }
-
-        /* Check the inventory and equipment */
-        for (i = 0; i < INVEN_TOTAL; i++)
-        {
-            object_type *o_ptr = &inventory[i];
-
-            /* Ignore non-objects */
-            if (!o_ptr->k_idx) continue;
-
-            /* Ignore non-artifacts */
-            if (!object_is_fixed_artifact(o_ptr)) continue;
-
-            /* Ignore known items */
-            if (object_is_known(o_ptr)) continue;
-
-            /* Note the artifact */
-            okay[o_ptr->name1] = FALSE;
-        }
-
-        for (k = 0; k < max_a_idx; k++)
-        {
-            if (okay[k]) who[n++] = k;
-        }
-
-        /* Select the sort method */
-        ang_sort_comp = ang_sort_art_comp;
-        ang_sort_swap = ang_sort_art_swap;
-
-        /* Sort the array by dungeon depth of monsters */
-        ang_sort(who, &why, n);
-
-        /* Scan the artifacts */
-        for (k = 0; k < n; k++)
-        {
-            artifact_type *a_ptr = &a_info[who[k]];
-
-            /* Paranoia */
-            strcpy(base_name, "Unknown Artifact");
-
-
-            /* Obtain the base object type */
-            z = lookup_kind(a_ptr->tval, a_ptr->sval);
-
-            /* Real object */
-            if (z)
-            {
-                object_type forge;
-                object_type *q_ptr;
-
-                /* Get local object */
-                q_ptr = &forge;
-
-                /* Create fake object */
-                object_prep(q_ptr, z);
-
-                /* Make it an artifact */
-                q_ptr->name1 = who[k];
-
-                /* Display as if known */
-                q_ptr->ident |= IDENT_STORE;
-
-                /* Describe the artifact */
-                object_desc(base_name, q_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-            }
-            else
-            {
-                strcpy(base_name, "Unknown Artifact");
-            }
-
-            /* Hack -- Build the artifact name */
-            fprintf(fff, "     The %s\n", base_name);
-
-        }
-
-        /* Free the "who" array */
-        C_KILL(who, max_a_idx, s16b);
-
-        /* Free the "okay" array */
-        C_KILL(okay, max_a_idx, bool);
+        if (_collect_arts(i, art_idx))
+            grp_idx[grp_cnt++] = i;
     }
-    /* Close the file */
-    my_fclose(fff);
+    grp_idx[grp_cnt] = -1;
 
-    /* Display the file contents */
-    show_file(TRUE, file_name, "Artifacts Seen", 0, 0);
+    if (!grp_cnt)
+    {
+        prt("You haven't found any artifacts just yet. Press any key to continue.", 0, 0);
+        inkey();
+        prt("", 0, 0);
+        C_KILL(art_idx, max_a_idx, int);
+        return;
+    }
 
+    art_cnt = 0;
 
-    /* Remove the file */
-    fd_kill(file_name);
+    old_grp_cur = -1;
+    grp_cur = grp_top = 0;
+    art_cur = art_top = 0;
+
+    flag = FALSE;
+    redraw = TRUE;
+
+    while (!flag)
+    {
+        char ch;
+        if (redraw)
+        {
+            clear_from(0);
+
+            prt(format("%s - Artifacts", "Knowledge"), 2, 0);
+            prt("Group", 4, 0);
+            prt("Name", 4, max + 3);
+
+            for (i = 0; i < 72; i++)
+            {
+                Term_putch(i, 5, TERM_WHITE, '=');
+            }
+
+            for (i = 0; i < browser_rows; i++)
+            {
+                Term_putch(max + 1, 6 + i, TERM_WHITE, '|');
+            }
+
+            redraw = FALSE;
+        }
+
+        /* Scroll group list */
+        if (grp_cur < grp_top) grp_top = grp_cur;
+        if (grp_cur >= grp_top + browser_rows) grp_top = grp_cur - browser_rows + 1;
+
+        /* Display a list of object groups */
+        for (i = 0; i < browser_rows && grp_idx[i] >= 0; i++)
+        {
+            int  grp = grp_idx[grp_top + i];
+            byte attr = (grp_top + i == grp_cur) ? TERM_L_BLUE : TERM_WHITE;
+
+            Term_erase(0, 6 + i, max);
+            c_put_str(attr, _art_types[grp].name, 6 + i, 0);
+        }
+
+        if (old_grp_cur != grp_cur)
+        {
+            old_grp_cur = grp_cur;
+
+            /* Get a list of objects in the current group */
+            art_cnt = _collect_arts(grp_idx[grp_cur], art_idx) + 1;
+        }
+
+        /* Scroll object list */
+        while (art_cur < art_top)
+            art_top = MAX(0, art_top - browser_rows/2);
+        while (art_cur >= art_top + browser_rows)
+            art_top = MIN(art_cnt - browser_rows, art_top + browser_rows/2);
+
+        /* Display a list of objects in the current group */
+        /* Display lines until done */
+        for (i = 0; i < browser_rows && art_top + i < art_cnt && art_idx[art_top + i] >= 0; i++)
+        {
+            char        name[MAX_NLEN];
+            int         idx = art_idx[art_top + i];
+            object_type forge;
+            byte        attr = TERM_WHITE;
+
+            create_named_art_aux_aux(idx, &forge);
+            forge.ident = IDENT_KNOWN;
+            object_desc(name, &forge, OD_OMIT_INSCRIPTION);
+
+            if (i + art_top == art_cur)
+                attr = TERM_L_BLUE;
+            else
+                attr = tval_to_attr[forge.tval % 128];
+
+            c_prt(attr, name, 6 + i, max + 3);
+        }
+
+        /* Clear remaining lines */
+        for (; i < browser_rows; i++)
+        {
+            Term_erase(max + 3, 6 + i, 255);
+        }
+
+        prt("<dir>, 'r' to recall, ESC", hgt - 1, 0);
+
+        if (!column)
+        {
+            Term_gotoxy(0, 6 + (grp_cur - grp_top));
+        }
+        else
+        {
+            Term_gotoxy(max + 3, 6 + (art_cur - art_top));
+        }
+
+        ch = inkey();
+
+        switch (ch)
+        {
+        case ESCAPE:
+            flag = TRUE;
+            break;
+
+        case 'R':
+        case 'r':
+        case 'I':
+        case 'i':
+            if (grp_cnt > 0 && art_idx[art_cur] >= 0)
+            {
+                int idx = art_idx[art_cur];
+                object_type forge;
+                create_named_art_aux_aux(idx, &forge);
+                forge.ident = IDENT_KNOWN;
+                obj_display(&forge);
+                redraw = TRUE;
+            }
+            break;
+
+        default:
+            browser_cursor(ch, &column, &grp_cur, grp_cnt, &art_cur, art_cnt);
+        }
+    }
+
+    C_KILL(art_idx, max_a_idx, int);
 }
 
 

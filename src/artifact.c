@@ -3209,7 +3209,7 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
 /*
  * Create the artifact of the specified number
  */
-bool create_named_art_aux(int a_idx, object_type *o_ptr)
+bool create_named_art_aux_aux(int a_idx, object_type *o_ptr)
 {
     int k_idx;
     artifact_type *a_ptr = &a_info[a_idx];
@@ -3230,6 +3230,15 @@ bool create_named_art_aux(int a_idx, object_type *o_ptr)
     o_ptr->to_h = a_ptr->to_h;
     o_ptr->to_d = a_ptr->to_d;
     o_ptr->weight = a_ptr->weight;
+
+    return TRUE;
+}
+bool create_named_art_aux(int a_idx, object_type *o_ptr)
+{
+    artifact_type *a_ptr = &a_info[a_idx];
+
+    if (!create_named_art_aux_aux(a_idx, o_ptr))
+        return FALSE;
 
     if (a_ptr->gen_flags & OFG_CURSED) o_ptr->curse_flags |= (OFC_CURSED);
     if (a_ptr->gen_flags & OFG_HEAVY_CURSE) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
