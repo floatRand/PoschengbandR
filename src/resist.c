@@ -274,6 +274,7 @@ int res_ct_known(int which)
     int ct = p_ptr->resist[which];
     int hidden = 0;
     int flg = res_get_object_flag(which);
+    int vuln_flg = res_get_object_vuln_flag(which);
     int i;
 
     /* Life is a bit hard at the moment since "player flags"
@@ -294,6 +295,8 @@ int res_ct_known(int which)
 
         if (have_flag(flgs, flg) && !have_flag(flgs_known, flg))
             hidden++;
+        if (have_flag(flgs, vuln_flg) && !have_flag(flgs_known, vuln_flg))
+            hidden--;
     }
 
     ct -= hidden;

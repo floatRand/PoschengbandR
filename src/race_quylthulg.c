@@ -836,7 +836,7 @@ static void _calc_bonuses(void)
 
 static void _get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
-    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_DEC_SPEED);
     add_flag(flgs, OF_RES_FEAR);
     add_flag(flgs, OF_RES_BLIND);
     add_flag(flgs, OF_RES_CONF);

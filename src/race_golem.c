@@ -271,7 +271,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     /* Mithril Golem */
     if (p_ptr->lev >= 30)
     {
-        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_DEC_SPEED);
         add_flag(flgs, OF_RES_CONF);
         add_flag(flgs, OF_RES_SHARDS);
         add_flag(flgs, OF_REFLECT);

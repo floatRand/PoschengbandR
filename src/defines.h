@@ -2863,7 +2863,7 @@ enum obj_flags_e {
     OF_INVALID = -1,   /* 0 is being used, and I'd hate to waste a bit :) */
 
     /* Flavor/Description */
-    OF_HIDE_TYPE = 0,  /* By design, the 0 flag is useless. cf The Weaponsmith and object_type.xtra2 */
+    OF_HIDE_TYPE = 0,  /* By design, the 0 flag is useless. cf The Weaponsmith and object_type.xtra3 */
     OF_SHOW_MODS,
     OF_FULL_NAME,
     OF_FIXED_FLAVOR,

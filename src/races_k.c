@@ -762,7 +762,7 @@ static void _tonberry_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_SUST_STR);
     add_flag(flgs, OF_SUST_CON);
     add_flag(flgs, OF_RES_FEAR);
-    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_DEC_SPEED);
 }
 race_t *tonberry_get_race(void)
 {

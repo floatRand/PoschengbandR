@@ -380,7 +380,7 @@ static void _earth_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_COLD);
     add_flag(flgs, OF_RES_ELEC);
     add_flag(flgs, OF_RES_SHARDS);
-    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_DEC_SPEED);
     add_flag(flgs, OF_REGEN);
 
     _get_flags(flgs);

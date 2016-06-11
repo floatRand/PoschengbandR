@@ -284,11 +284,13 @@ void mut_get_flags(u32b flgs[OF_ARRAY_SIZE])
     if (mut_present(MUT_FLESH_ROT))
         remove_flag(flgs, OF_REGEN);
 
+    if (mut_present(MUT_XTRA_LEGS))
+        add_flag(flgs, OF_SPEED);
+
     if (mut_present(MUT_XTRA_FAT) ||
-        mut_present(MUT_XTRA_LEGS) ||
         mut_present(MUT_SHORT_LEG))
     {
-        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_DEC_SPEED);
     }
 
     if (mut_present(MUT_ELEC_AURA))

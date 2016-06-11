@@ -918,7 +918,7 @@ static void _display_score(object_type *o_ptr, doc_ptr doc)
     int score = object_value(o_ptr);
     char buf[10];
     big_num_display(score, buf);
-    doc_printf(doc, "<color:B>Score:</color> <color:%c>%6.6s</color>\n", _score_color(score), buf);
+    doc_printf(doc, "<color:B>Score:</color> <color:%c>%s</color>\n", _score_color(score), buf);
 #endif
 }
 

@@ -1642,7 +1642,7 @@ static void _golem_get_flags(u32b flgs[OF_ARRAY_SIZE])
     if (p_ptr->lev >= 35)
         add_flag(flgs, OF_HOLD_LIFE);
     if (p_ptr->lev >= 16)
-        add_flag(flgs, OF_SPEED);
+        add_flag(flgs, OF_DEC_SPEED);
 }
 race_t *golem_get_race(void)
 {

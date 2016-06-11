@@ -1792,7 +1792,6 @@ static void _ego_create_weapon_craft(object_type *o_ptr, int level)
 
     assert(o_ptr->name2 == EGO_WEAPON_CRAFT);
 
-
     if (one_in_(GREAT_OBJ))
         rolls *= 2;
 
@@ -1944,10 +1943,16 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
         case EGO_WEAPON_DAEMON:
             if (one_in_(3))
                 add_flag(o_ptr->flags, OF_SLAY_GOOD);
+            if (one_in_(3))
+                add_flag(o_ptr->flags, OF_BRAND_FIRE);
+            if (one_in_(6))
+                add_flag(o_ptr->flags, OF_SLAY_HUMAN);
             if (one_in_(5))
                 add_flag(o_ptr->flags, OF_AGGRAVATE);
             else
                 add_flag(o_ptr->flags, OF_DEC_STEALTH);
+            if (one_in_(ACTIVATION_CHANCE))
+                effect_add_random(o_ptr, BIAS_DEMON);
             if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DAEMON || p_ptr->realm2 == REALM_DAEMON))
                 add_flag(o_ptr->flags, OF_BLESSED);
             break;

@@ -79,7 +79,7 @@ static void _colossus_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_SEE_INVIS);
     add_flag(flgs, OF_HOLD_LIFE);
     add_flag(flgs, OF_RES_POIS);
-    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_DEC_SPEED);
     add_flag(flgs, OF_RES_SHARDS);
     add_flag(flgs, OF_REFLECT);
     add_flag(flgs, OF_RES_SOUND);
@@ -320,7 +320,7 @@ static void _iron_golem_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_SEE_INVIS);
     add_flag(flgs, OF_HOLD_LIFE);
     add_flag(flgs, OF_RES_POIS);
-    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_DEC_SPEED);
 }
 race_t *iron_golem_get_race(void)
 {
@@ -425,7 +425,7 @@ static void _mithril_golem_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_SEE_INVIS);
     add_flag(flgs, OF_HOLD_LIFE);
     add_flag(flgs, OF_RES_POIS);
-    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_DEC_SPEED);
     add_flag(flgs, OF_RES_SHARDS);
     add_flag(flgs, OF_REFLECT);
 }

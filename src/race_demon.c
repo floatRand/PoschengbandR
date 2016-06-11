@@ -821,7 +821,7 @@ static void _cyber_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
     add_flag(flgs, OF_RES_FIRE);
     add_flag(flgs, OF_RES_POIS);
-    add_flag(flgs, OF_SPEED);
+    add_flag(flgs, OF_DEC_SPEED);
 
     add_flag(flgs, OF_HOLD_LIFE);
     add_flag(flgs, OF_FREE_ACT);
