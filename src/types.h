@@ -273,7 +273,6 @@ struct ego_type
     u32b gen_flags;        /* flags for generate */
     effect_t activation;
 
-    bool aware;
     counts_t counts;
 };
 

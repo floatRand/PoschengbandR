@@ -1418,7 +1418,11 @@ static bool _get_store_obj(object_type *o_ptr)
     }
     else if (cur_store_num == STORE_MAGIC && one_in_(20))
     {
-        /* Hack: Early resists are hard to find, and Archviles are so damn nasty! */
+        /* Hack: Early resists are hard to find, and Archviles are so damn nasty!
+           BTW, since we are cheating and not using normal ego generation code, we'll
+           need to manually add to ego_type.xtra_flags. This will improve the
+           player's lore experience should they purchase or examine this item
+           of stock. */
         if (one_in_(5))
         {
             object_prep(o_ptr, lookup_kind(TV_AMULET, 0));
@@ -1433,12 +1437,15 @@ static bool _get_store_obj(object_type *o_ptr)
         {
         case 1: case 2:
             add_flag(o_ptr->flags, OF_RES_COLD);
+            add_flag(e_info[EGO_JEWELRY_ELEMENTAL].xtra_flags, OF_RES_COLD);
             break;
         case 3: case 4:
             add_flag(o_ptr->flags, OF_RES_FIRE);
+            add_flag(e_info[EGO_JEWELRY_ELEMENTAL].xtra_flags, OF_RES_FIRE);
             break;
         case 5:
             add_flag(o_ptr->flags, OF_RES_ACID);
+            add_flag(e_info[EGO_JEWELRY_ELEMENTAL].xtra_flags, OF_RES_ACID);
             break;
         }
         return TRUE;

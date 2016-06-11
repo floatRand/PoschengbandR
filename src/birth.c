@@ -2291,15 +2291,6 @@ static void birth_put_stats(void)
 
 static void e_info_reset(void)
 {
-    int i;
-
-    /* Reset the "objects" */
-    for (i = 1; i < max_e_idx; i++)
-    {
-        ego_type *e_ptr = &e_info[i];
-
-        e_ptr->aware = FALSE;
-    }
 }
 
 static void k_info_reset(void)

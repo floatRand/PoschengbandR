@@ -1277,7 +1277,7 @@ void equip_calc_bonuses(void)
             _weapon_info_flag(i, flgs, OF_IMPACT);     /* Quaker */
             _weapon_info_flag(i, flgs, OF_SLAY_GOOD);  /* Thanos, Nazgul */
             _weapon_info_flag(i, flgs, OF_SLAY_HUMAN); /* Nazgul */
-            _weapon_info_flag(i, flgs, OF_BRAND_VAMP);   /* Dragon Armor (Death) */
+            _weapon_info_flag(i, flgs, OF_BRAND_VAMP); /* Dragon Armor (Death), Helm of the Vampire */
         }
 
         if (have_flag(flgs, OF_XTRA_SHOTS))

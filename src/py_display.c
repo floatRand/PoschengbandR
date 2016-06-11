@@ -2007,6 +2007,7 @@ static void _build_statistics(doc_ptr doc)
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_GENOCIDE);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_MASS_GENOCIDE);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_FOREST_CREATION);
+    _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_BANISHMENT);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_ACQUIREMENT);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_STAR_ACQUIREMENT);
     _object_counts_imp(doc, TV_SCROLL, SV_SCROLL_ARTIFACT);

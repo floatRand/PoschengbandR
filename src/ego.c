@@ -2740,6 +2740,8 @@ static void _ego_create_helmet(object_type *o_ptr, int level)
             }
             break;
         case EGO_HELMET_PIETY:
+            if (one_in_(7))
+                add_flag(o_ptr->flags, OF_SPELL_CAP);
             if (one_in_(ACTIVATION_CHANCE))
             {
                 int choices[] = {
@@ -2751,6 +2753,10 @@ static void _ego_create_helmet(object_type *o_ptr, int level)
             }
             break;
         case EGO_HELMET_RAGE:
+            if (one_in_(6))
+                add_flag(o_ptr->flags, OF_DEC_STEALTH);
+            if (one_in_(3))
+                add_flag(o_ptr->flags, OF_VULN_CONF);
             o_ptr->to_d += 3;
             o_ptr->to_d += m_bonus(7, level);
             break;
@@ -2786,9 +2792,15 @@ static void _ego_create_cloak(object_type *o_ptr, int level)
         if (one_in_(ACTIVATION_CHANCE))
             effect_add_random(o_ptr, BIAS_COLD);
         break;
+    case EGO_CLOAK_SHADOWS:
+        if (one_in_(3))
+            add_flag(o_ptr->flags, OF_VULN_LITE);
+        break;
     case EGO_CLOAK_BAT:
         o_ptr->to_d -= 6;
         o_ptr->to_h -= 6;
+        if (one_in_(6))
+            add_flag(o_ptr->flags, OF_DARKNESS);
         if (one_in_(3))
         {
             add_flag(o_ptr->flags, OF_VULN_LITE);
