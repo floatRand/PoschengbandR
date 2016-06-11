@@ -4166,7 +4166,7 @@ static bool _art_is_found(int a_idx)
     return TRUE;
 }
 
-static int _collect_arts(int grp_cur, int art_idx[])
+static int _collect_arts(int grp_cur, int art_idx[], bool show_all)
 {
     int i, cnt = 0;
 
@@ -4176,7 +4176,11 @@ static int _collect_arts(int grp_cur, int art_idx[])
         object_type    forge;
 
         if (!a_ptr->name) continue;
-        if (!art_has_lore(a_ptr) && !_art_is_found(i)) continue;
+        if (!_art_is_found(i))
+        {
+            if (!show_all) continue;
+            if (!art_has_lore(a_ptr)) continue;
+        }
         if (!create_named_art_aux_aux(i, &forge)) continue;
         if (!_art_types[grp_cur].filter(&forge)) continue;
 
@@ -4197,6 +4201,8 @@ static int _collect_arts(int grp_cur, int art_idx[])
 
 static void do_cmd_knowledge_artifacts(void)
 {
+    static bool show_all = TRUE;
+
     int i, len, max;
     int grp_cur, grp_top, old_grp_cur;
     int art_cur, art_top;
@@ -4207,6 +4213,7 @@ static void do_cmd_knowledge_artifacts(void)
     int column = 0;
     bool flag;
     bool redraw;
+    bool rebuild;
 
     int browser_rows;
     int wid, hgt;
@@ -4237,7 +4244,7 @@ static void do_cmd_knowledge_artifacts(void)
         if (len > max)
             max = len;
 
-        if (_collect_arts(i, art_idx))
+        if (_collect_arts(i, art_idx, TRUE))
             grp_idx[grp_cnt++] = i;
     }
     grp_idx[grp_cnt] = -1;
@@ -4259,6 +4266,7 @@ static void do_cmd_knowledge_artifacts(void)
 
     flag = FALSE;
     redraw = TRUE;
+    rebuild = TRUE;
 
     while (!flag)
     {
@@ -4298,12 +4306,13 @@ static void do_cmd_knowledge_artifacts(void)
             c_put_str(attr, _art_types[grp].name, 6 + i, 0);
         }
 
-        if (old_grp_cur != grp_cur)
+        if (rebuild || old_grp_cur != grp_cur)
         {
             old_grp_cur = grp_cur;
 
             /* Get a list of objects in the current group */
-            art_cnt = _collect_arts(grp_idx[grp_cur], art_idx) + 1;
+            art_cnt = _collect_arts(grp_idx[grp_cur], art_idx, show_all);
+            rebuild = FALSE;
         }
 
         /* Scroll object list */
@@ -4327,6 +4336,8 @@ static void do_cmd_knowledge_artifacts(void)
 
             if (i + art_top == art_cur)
                 attr = TERM_L_BLUE;
+            else if (!_art_is_found(idx))
+                attr = TERM_L_DARK;
             else
                 attr = tval_to_attr[forge.tval % 128];
 
@@ -4339,7 +4350,10 @@ static void do_cmd_knowledge_artifacts(void)
             Term_erase(max + 3, 6 + i, 255);
         }
 
-        prt("<dir>, 'r' to recall, ESC", hgt - 1, 0);
+        if (show_all)
+            prt("<dir>, 'r' to recall, 't' to Hide Unfound, ESC", hgt - 1, 0);
+        else
+            prt("<dir>, 'r' to recall, 't' to Show All, ESC", hgt - 1, 0);
 
         if (!column)
         {
@@ -4358,10 +4372,14 @@ static void do_cmd_knowledge_artifacts(void)
             flag = TRUE;
             break;
 
-        case 'R':
-        case 'r':
-        case 'I':
-        case 'i':
+        case 'T': case 't':
+            show_all = !show_all;
+            art_cur = 0;
+            rebuild = TRUE;
+            break;
+
+        case 'R': case 'r':
+        case 'I': case 'i':
             if (grp_cnt > 0 && art_idx[art_cur] >= 0)
             {
                 int idx = art_idx[art_cur];
