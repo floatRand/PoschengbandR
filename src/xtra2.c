@@ -2313,8 +2313,9 @@ void monster_death(int m_idx, bool drop_item)
         }
     }
 
-    if ( (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
-      || (r_ptr->flags2 & RF2_THIEF) )
+    if ( r_ptr->level
+      && ( (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
+        || (r_ptr->flags2 & RF2_THIEF) ) )
     {
         int r = (r_ptr->flags1 & RF1_DROP_GREAT) ? 7 : 3;
         int n = randint0(r);

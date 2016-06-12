@@ -723,11 +723,12 @@ static void _display_curses(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_pt
     vec_ptr v;
 
     if (object_is_device(o_ptr)) return;
-    if (!object_is_cursed(o_ptr)) return;
     if (!(o_ptr->ident & (IDENT_KNOWN | IDENT_SENSE | IDENT_FULL))) return;
 
     v = vec_alloc((vec_free_f)string_free);
 
+    /* Note: Object may not actually be cursed, but still might have
+       Aggravate or TY Curse. */
     if (obj_is_identified(o_ptr))
     {
         /* Basic Curse Status is always obvious (light, heavy, permanent) */
@@ -735,10 +736,10 @@ static void _display_curses(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_pt
             doc_insert(doc, "It is <color:v>Permanently Cursed</color>.\n");
         else if (o_ptr->curse_flags & OFC_HEAVY_CURSE)
             doc_insert(doc, "It is <color:r>Heavily Cursed</color>.\n");
-        else
+        else if (o_ptr->curse_flags & OFC_CURSED)
             doc_insert(doc, "It is <color:D>Cursed</color>.\n");
     }
-    else
+    else if (o_ptr->curse_flags & OFC_CURSED)
         doc_insert(doc, "It has <color:v>unknown curses</color>.\n");
 
     /* The precise nature of the curse, however, must be learned either by

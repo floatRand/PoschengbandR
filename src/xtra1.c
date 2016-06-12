@@ -3814,6 +3814,9 @@ void calc_bonuses(void)
             p_ptr->sh_elec = TRUE;
     }
 
+    if (IS_INVULN())
+        res_add_immune(RES_FEAR);
+
     /* Personalities */
     if (pers_ptr->calc_bonuses)
         pers_ptr->calc_bonuses();
@@ -3991,6 +3994,8 @@ void calc_bonuses(void)
     {
         int ct = 0;
         int to_d = 3 + p_ptr->lev/5;
+
+        res_add_immune(RES_FEAR);
 
         for (i = 0; i < MAX_HANDS; i++)
         {

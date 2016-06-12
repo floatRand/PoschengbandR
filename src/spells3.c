@@ -2452,6 +2452,7 @@ bool mundane_spell(bool only_equip)
         o_ptr->inscription = inscription;
         if (item >= 0) p_ptr->total_weight += (o_ptr->weight - weight);
     }
+    p_ptr->update |= PU_BONUS;
     calc_android_exp();
 
     /* Something happened */

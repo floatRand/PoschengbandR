@@ -1585,7 +1585,7 @@ s32b object_value(object_type *o_ptr)
             if (object_is_artifact(o_ptr))
                 value += 1000;
             if (object_is_cursed(o_ptr))
-                value = (value+2)/3;
+                value -= value/10;
         }
     }
     else

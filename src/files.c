@@ -1578,8 +1578,12 @@ void tim_player_flags(u32b flgs[OF_ARRAY_SIZE])
     for (i = 0; i < OF_ARRAY_SIZE; i++)
         flgs[i] = 0L;
 
-    if (IS_HERO() || IS_SHERO())
+    if (IS_HERO())
         add_flag(flgs, OF_RES_FEAR);
+    if (IS_SHERO())
+        add_flag(flgs, OF_IM_FEAR);
+    if (IS_INVULN())
+        add_flag(flgs, OF_IM_FEAR);
     if (p_ptr->tim_invis)
         add_flag(flgs, OF_SEE_INVIS);
     if (p_ptr->tim_regen)

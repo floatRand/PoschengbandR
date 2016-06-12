@@ -105,7 +105,7 @@ static int _get_spells(spell_info* spells, int max)
 
 static void _calc_bonuses(void)
 {
-    /* Berserkers are immune to fear (cf fear.c) */
+    res_add_immune(RES_FEAR);
     p_ptr->shero = 1;
     p_ptr->sustain_str = TRUE;
     p_ptr->sustain_dex = TRUE;

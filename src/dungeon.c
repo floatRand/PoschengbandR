@@ -2209,6 +2209,7 @@ static void process_world_aux_curse(void)
                     msg_format("You can inscribe {.} on your %s to disable random teleportation. ", o_name);
                     disturb(1, 0);
                 }
+                obj_learn_flag(o_ptr, OF_TELEPORT);
             }
         }
         /* Make a chainsword noise */
