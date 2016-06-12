@@ -1009,7 +1009,6 @@ extern errr init_buildings(void);
 extern s16b f_tag_to_index_in_init(cptr str);
 extern void init_angband(void);
 extern void display_news(void);
-extern cptr get_check_sum(void);
 
 /* load.c */
 extern errr rd_savefile_new(void);
