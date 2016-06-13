@@ -311,6 +311,42 @@ void obj_flags_known(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE])
         weaponsmith_object_flags(o_ptr, flgs);
 }
 
+static void _obj_flags_purify(u32b flgs[OF_ARRAY_SIZE])
+{
+    remove_flag(flgs, OF_HIDE_TYPE);
+    remove_flag(flgs, OF_SHOW_MODS);
+    remove_flag(flgs, OF_FULL_NAME);
+    remove_flag(flgs, OF_FIXED_FLAVOR);
+}
+
+static bool _obj_flags_any(u32b flgs[OF_ARRAY_SIZE])
+{
+    int i;
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
+    {
+        if (flgs[i])
+            return TRUE;
+    }
+    return FALSE;
+}
+
+void obj_flags_unknown(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE])
+{
+    u32b actual[OF_ARRAY_SIZE];
+    u32b known[OF_ARRAY_SIZE];
+    int  i;
+
+    assert(o_ptr);
+
+    obj_flags(o_ptr, actual);
+    _obj_flags_purify(actual);
+
+    obj_flags_known(o_ptr, known);
+
+    for (i = 0; i < OF_ARRAY_SIZE; i++)
+        flgs[i] = actual[i] & (~known[i]);
+}
+
 static void _obj_identify_aux(object_type *o_ptr)
 {
     int i;
@@ -363,7 +399,6 @@ static void _obj_identify_fully_aux(object_type *o_ptr)
 {
     int i;
 
-    o_ptr->ident |= IDENT_FULL;
     if (o_ptr->name1)
     {
         artifact_type *a_ptr = &a_info[o_ptr->name1];
@@ -411,8 +446,9 @@ bool obj_is_identified(object_type *o_ptr)
 
 bool obj_is_identified_fully(object_type *o_ptr)
 {
-    assert(o_ptr);
-    return (o_ptr->ident & IDENT_FULL) ? TRUE : FALSE;
+    u32b flgs[OF_ARRAY_SIZE];
+    obj_flags_unknown(o_ptr, flgs);
+    return !_obj_flags_any(flgs);
 }
 
 void obj_identify(object_type *o_ptr)
@@ -598,30 +634,19 @@ void obj_learn_equipped(object_type *o_ptr)
     }
 }
 
-static bool _has_lore(u32b flgs[OF_ARRAY_SIZE])
-{
-    int i;
-    for (i = 0; i < OF_ARRAY_SIZE; i++)
-    {
-        if (flgs[i])
-            return TRUE;
-    }
-    return FALSE;
-}
-
 bool ego_has_lore(ego_type *e_ptr)
 {
-    return _has_lore(e_ptr->known_flags);
+    return _obj_flags_any(e_ptr->known_flags);
 }
 
 bool art_has_lore(artifact_type *a_ptr)
 {
-    return _has_lore(a_ptr->known_flags);
+    return _obj_flags_any(a_ptr->known_flags);
 }
 
 bool obj_has_lore(object_type *o_ptr)
 {
-    if (_has_lore(o_ptr->known_flags))
+    if (_obj_flags_any(o_ptr->known_flags))
         return TRUE;
     if (o_ptr->name1)
         return art_has_lore(&a_info[o_ptr->name1]);

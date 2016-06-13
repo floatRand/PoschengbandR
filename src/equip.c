@@ -1267,7 +1267,8 @@ void equip_calc_bonuses(void)
         }
 
         /* New: Rings and Gloves can grant weapon slays */
-        if (!object_is_melee_weapon(o_ptr)) /* Hack for Jellies ... */
+        if ( !object_is_melee_weapon(o_ptr) /* Hack for Jellies ... */
+          && !object_is_bow(o_ptr) )
         {
             _weapon_info_flag(i, flgs, OF_BRAND_FIRE);
             _weapon_info_flag(i, flgs, OF_BRAND_COLD);

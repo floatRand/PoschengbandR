@@ -6560,7 +6560,10 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             int slot = equip_find_artifact(ART_BLOOD);
             if (slot)
             {
-                get_bloody_moon_flags(equip_obj(slot));
+                object_type *o_ptr = equip_obj(slot);
+                get_bloody_moon_flags(o_ptr);
+                obj_identify_fully(o_ptr);
+                obj_display(o_ptr);
                 if (p_ptr->prace == RACE_ANDROID) calc_android_exp();
                 p_ptr->update |= (PU_BONUS | PU_HP);
                 device_noticed = TRUE;

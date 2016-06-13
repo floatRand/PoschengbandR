@@ -682,6 +682,9 @@ static char *get_ability_abbreviation(char *ptr, object_type *o_ptr, bool all)
     char *prev_ptr = ptr;
     u32b flgs[OF_ARRAY_SIZE];
 
+    if (object_is_device(o_ptr))
+        return ptr;
+
     /* Extract the flags */
     obj_flags_known(o_ptr, flgs);
 

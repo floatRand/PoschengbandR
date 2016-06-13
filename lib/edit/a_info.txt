@@ -2151,8 +2151,7 @@ N:199:'Bloody Moon'
 I:22:30:2
 W:70:12:250:180000
 P:0:8d4:8:8:8
-F:SHOW_MODS
-E:BLOODY_MOON:30:3333
+E:BLOODY_MOON:30:500
 E:Your scythe glows brightly!
 
 N:200:'Dasai'

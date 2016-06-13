@@ -391,8 +391,8 @@ static void init_header(header *head, int num, int len)
  * good at knowing when to recreate (it used timestamps) and often
  * resulted in corruption. Now, while I can certainly figure this out
  * and manually delete my *.raw files, I'd rather not have player's games
- * crash when they upgrade to a new version. Parsing templates takes less
- * than 500ms on my ancient machine, so why bother?
+ * crash when they upgrade to a new version. Parsing templates takes 150ms
+ * on my ancient machine, so why bother?
  *
  * TODO: Refactor Initialization code. No need for headers, etc.
  * Tags, Text and Name should just be malloc'd strings. Room templates
@@ -1622,7 +1622,6 @@ void init_angband(void)
     note("[Initializing arrays... (monsters)]");
     if (init_r_info()) quit("Cannot initialize monsters");
 
-
     /* Initialize dungeon info */
     note("[Initializing arrays... (dungeon)]");
     if (init_d_info()) quit("Cannot initialize dungeon");
@@ -1668,7 +1667,6 @@ void init_angband(void)
     /* Initialize vault info */
     if (init_v_info()) quit("Cannot initialize vaults");
 
-
     /* Initialize some other arrays */
     note("[Initializing arrays... (other)]");
     if (init_other()) quit("Cannot initialize other stuff");
@@ -1677,8 +1675,6 @@ void init_angband(void)
     /* Initialize some other arrays */
     note("[Initializing arrays... (alloc)]");
     if (init_alloc()) quit("Cannot initialize alloc stuff");
-
-
 
     /*** Load default user pref files ***/
 

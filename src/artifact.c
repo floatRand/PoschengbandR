@@ -2855,26 +2855,56 @@ void get_bloody_moon_flags(object_type *o_ptr)
     int dummy, i;
 
     for (i = 0; i < OF_ARRAY_SIZE; i++)
-        o_ptr->flags[i] = a_info[ART_BLOOD].flags[i];
+    {
+        o_ptr->flags[i] = 0;
+        o_ptr->known_flags[i] = 0;
+    }
 
     dummy = randint1(2) + randint1(2);
     for (i = 0; i < dummy; i++)
     {
-        int flag = randint0(26);
-        if (flag >= 20) add_flag(o_ptr->flags, OF_KILL_UNDEAD + flag - 20);
-        else if (flag == 19) add_flag(o_ptr->flags, OF_KILL_ANIMAL);
-        else if (flag == 18) add_flag(o_ptr->flags, OF_SLAY_HUMAN);
-        else add_flag(o_ptr->flags, OF_BRAND_CHAOS + flag);
+        switch (randint1(26))
+        {
+        case  1: add_flag(o_ptr->flags, OF_SLAY_EVIL); break;
+        case  2: add_flag(o_ptr->flags, OF_SLAY_GOOD); break;
+        case  3: add_flag(o_ptr->flags, OF_SLAY_LIVING); break;
+        case  4: add_flag(o_ptr->flags, OF_SLAY_DRAGON); break;
+        case  5: add_flag(o_ptr->flags, OF_SLAY_DEMON); break;
+        case  6: add_flag(o_ptr->flags, OF_SLAY_UNDEAD); break;
+        case  7: add_flag(o_ptr->flags, OF_SLAY_ANIMAL); break;
+        case  8: add_flag(o_ptr->flags, OF_SLAY_HUMAN); break;
+        case  9: add_flag(o_ptr->flags, OF_SLAY_TROLL); break;
+        case 10: add_flag(o_ptr->flags, OF_SLAY_GIANT); break;
+
+        case 11: add_flag(o_ptr->flags, OF_KILL_DRAGON); break;
+        case 12: add_flag(o_ptr->flags, OF_KILL_DEMON); break;
+        case 13: add_flag(o_ptr->flags, OF_KILL_UNDEAD); break;
+        case 14: add_flag(o_ptr->flags, OF_KILL_ANIMAL); break;
+        case 15: add_flag(o_ptr->flags, OF_KILL_HUMAN); break;
+        case 16: add_flag(o_ptr->flags, OF_KILL_TROLL); break;
+        case 17: add_flag(o_ptr->flags, OF_KILL_GIANT); break;
+
+        case 18: add_flag(o_ptr->flags, OF_BRAND_ACID); break;
+        case 19: add_flag(o_ptr->flags, OF_BRAND_ELEC); break;
+        case 20: add_flag(o_ptr->flags, OF_BRAND_FIRE); break;
+        case 21: add_flag(o_ptr->flags, OF_BRAND_COLD); break;
+        case 22: add_flag(o_ptr->flags, OF_BRAND_POIS); break;
+        case 23: add_flag(o_ptr->flags, OF_BRAND_CHAOS); break;
+        case 24: add_flag(o_ptr->flags, OF_BRAND_VAMP); break;
+        case 25: add_flag(o_ptr->flags, OF_BRAND_MANA); break;
+        case 26: add_flag(o_ptr->flags, OF_VORPAL); break;
+        }
     }
 
     dummy = randint1(2);
-    for (i = 0; i < dummy; i++) one_resistance(o_ptr);
+    for (i = 0; i < dummy; i++)
+        one_resistance(o_ptr);
 
     for (i = 0; i < 2; i++)
     {
         int tmp = randint0(11);
         if (tmp < 6) add_flag(o_ptr->flags, OF_STR + tmp);
-        else add_flag(o_ptr->flags, OF_STEALTH + tmp - 6);
+        else one_ability(o_ptr);
     }
 }
 

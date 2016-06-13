@@ -1959,9 +1959,6 @@ void object_absorb(object_type *o_ptr, object_type *j_ptr)
         if (o_ptr->ident & IDENT_STORE) o_ptr->ident &= 0xEF;
     }
 
-    /* Hack -- blend "mental" status */
-    if (j_ptr->ident & (IDENT_FULL)) o_ptr->ident |= (IDENT_FULL);
-
     /* Hack -- blend "inscriptions" */
     if (j_ptr->inscription) o_ptr->inscription = j_ptr->inscription;
 

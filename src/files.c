@@ -1791,7 +1791,7 @@ int ct_kills_all(void)
         }
         else
         {
-            result += r_ptr->r_akills;
+            result += r_ptr->r_pkills;
         }
     }
 

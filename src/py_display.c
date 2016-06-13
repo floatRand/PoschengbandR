@@ -1871,7 +1871,7 @@ static void _kill_counts_imp(doc_ptr doc, _mon_p p, cptr text, int total)
                     kills++;   /* Perhaps The Cloning Pits is messing up r_akills? */
             }
             else
-                kills += r_info[i].r_akills;
+                kills += r_info[i].r_pkills;
         }
     }
 

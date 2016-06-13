@@ -2778,7 +2778,7 @@ enum summon_specific_e {
 #define IDENT_EMPTY     0x04    /* Item charges are known */
 #define IDENT_KNOWN     0x08    /* Item abilities are known */
 #define IDENT_STORE     0x10    /* Item is in a store's inventory */
-#define IDENT_FULL      0x20    /* Item information is known */
+#define IDENT_XXX6      0x20
 #define IDENT_TRIED     0x40    /* Device has been tried, but still unknown */
 #define IDENT_BROKEN    0x80    /* Item is permanently worthless */
 
