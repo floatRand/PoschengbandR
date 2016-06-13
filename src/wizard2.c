@@ -2757,6 +2757,27 @@ static char _score_color(int score)
     return 'v';
 }
 
+static void _wiz_stats_log_android(int level, object_type *o_ptr)
+{
+    int  score = obj_value_real(o_ptr);
+    int  exp   = android_obj_exp(o_ptr);
+    char name[MAX_NLEN];
+    char buf[10];
+
+    if (!_wiz_doc) return;
+    if (!exp) return;
+
+    object_desc(name, o_ptr, OD_COLOR_CODED);
+
+    big_num_display(score, buf);
+    doc_printf(_wiz_doc, "<color:%c>%s</color> ", _score_color(score), buf);
+
+    big_num_display(exp, buf);
+    doc_printf(_wiz_doc, "<color:%c>%s</color>:", _score_color(exp/10), buf);
+
+    doc_printf(_wiz_doc, " <indent><style:indent>%s</style></indent>\n", name);
+}
+
 static void _wiz_stats_log_obj(int level, object_type *o_ptr)
 {
     char buf[MAX_NLEN];
@@ -2854,11 +2875,14 @@ static void _wiz_inspect_objects(int level)
         if (0) _wiz_stats_log_speed(level, o_ptr);
         if (0) _wiz_stats_log_books(level, o_ptr, 20, 20);
         if (0) _wiz_stats_log_devices(level, o_ptr);
-        if (1) _wiz_stats_log_arts(level, o_ptr);
-        if (1) _wiz_stats_log_rand_arts(level, o_ptr);
+        if (0) _wiz_stats_log_arts(level, o_ptr);
+        if (0) _wiz_stats_log_rand_arts(level, o_ptr);
 
-        if (1 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_ammo(o_ptr))
+        if (0 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_ammo(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
+
+        if (p_ptr->prace == RACE_ANDROID && object_is_wearable(o_ptr) && !object_is_nameless(o_ptr))
+            _wiz_stats_log_android(level, o_ptr);
 
         if (race_ptr->destroy_object)
             race_ptr->destroy_object(o_ptr);

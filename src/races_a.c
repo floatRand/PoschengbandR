@@ -73,7 +73,13 @@ race_t *amberite_get_race(void)
 /****************************************************************
  * Android
  ****************************************************************/
-
+static int _obj_value(object_type *o_ptr)
+{
+    object_type  copy = *o_ptr;
+    copy.discount = 0;
+    copy.curse_flags = 0;
+    return obj_value_real(&copy);
+}
 int android_obj_exp(object_type *o_ptr)
 {
     int value, exp, level;
@@ -82,6 +88,12 @@ int android_obj_exp(object_type *o_ptr)
     if (!object_is_wearable(o_ptr)) return 0;
     if (object_is_jewelry(o_ptr)) return 0;
     if (o_ptr->tval == TV_LITE) return 0;
+
+    value = _obj_value(o_ptr);
+    if (value <= 0) return 0;
+    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI) && p_ptr->personality != PERS_SEXY)
+        value /= 32;
+    if (value > 5000000) value = 5000000;
 
     level = MAX(k_info[o_ptr->k_idx].level - 8, 1);
 
@@ -96,38 +108,15 @@ int android_obj_exp(object_type *o_ptr)
     }
     else if (o_ptr->art_name || o_ptr->name2)
     {
-        s32b total_flags = flag_cost(o_ptr, o_ptr->pval, FALSE);
-        int fake_level;
+        int fake_level = 10 + value / 1500;
 
-        if (!object_is_weapon_ammo(o_ptr))
-        {
-            /* For armors */
-            if (total_flags < 15000) fake_level = 10;
-            else if (total_flags < 35000) fake_level = 25;
-            else fake_level = 40;
-        }
-        else
-        {
-            /* For weapons */
-            if (total_flags < 20000) fake_level = 10;
-            else if (total_flags < 45000) fake_level = 25;
-            else fake_level = 40;
-        }
+        if (fake_level > 90)
+            fake_level = 90;
+
         fake_level = MAX(fake_level - 8, 5);
         level = MAX(level, (level + fake_level) / 2 + 3);
     }
 
-    {
-        object_type  copy = *o_ptr;
-        copy.discount = 0;
-        copy.curse_flags = 0;
-        value = obj_value_real(&copy);
-    }
-
-    if (value <= 0) return 0;
-    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI) && p_ptr->personality != PERS_SEXY)
-        value /= 32;
-    if (value > 5000000) value = 5000000;
     if (o_ptr->tval == TV_DRAG_ARMOR || o_ptr->tval == TV_CARD) level /= 2;
 
     if ( object_is_artifact(o_ptr)

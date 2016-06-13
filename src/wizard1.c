@@ -577,7 +577,14 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = ART_RANDOM;
-            entry->score = obj_value_real(o_ptr);
+            if (p_ptr->prace == RACE_ANDROID)
+            {
+                entry->score = android_obj_exp(o_ptr);
+                if (!entry->score)
+                    entry->score = obj_value_real(o_ptr);
+            }
+            else
+                entry->score = obj_value_real(o_ptr);
             object_desc(entry->name, o_ptr, OD_COLOR_CODED);
             entry->k_idx = o_ptr->k_idx;
             vec_add(entries, entry);
@@ -600,7 +607,14 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = ART_EGO;
-            entry->score = obj_value_real(o_ptr);
+            if (p_ptr->prace == RACE_ANDROID)
+            {
+                entry->score = android_obj_exp(o_ptr);
+                if (!entry->score)
+                    entry->score = obj_value_real(o_ptr);
+            }
+            else
+                entry->score = obj_value_real(o_ptr);
             object_desc(entry->name, o_ptr, OD_COLOR_CODED);
             entry->k_idx = o_ptr->k_idx;
             vec_add(entries, entry);
