@@ -361,7 +361,7 @@ void crafting_spell(int cmd, variant *res)
         else
         {
             virtue_add(VIRTUE_ENCHANTMENT, 1);
-            calc_android_exp();
+            android_calc_exp();
 
             obj_identify_fully(o_ptr);
             obj_display(o_ptr);
@@ -1582,7 +1582,7 @@ void minor_enchantment_spell(int cmd, variant *res)
             o_ptr->discount = 99;
             virtue_add(VIRTUE_ENCHANTMENT, 1);
         }
-        calc_android_exp();
+        android_calc_exp();
         var_set_bool(res, TRUE);
         break;
     }
@@ -1648,7 +1648,7 @@ void enchantment_spell(int cmd, variant *res)
         else
             virtue_add(VIRTUE_ENCHANTMENT, 1);
 
-        calc_android_exp();
+        android_calc_exp();
         var_set_bool(res, TRUE);
         break;
     }

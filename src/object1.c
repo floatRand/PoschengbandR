@@ -1386,7 +1386,7 @@ int show_inven(int target_item, int mode)
         }
         else if (mode & SHOW_VALUE)
         {
-            int value = object_value_real(o_ptr);
+            int value = obj_value_real(o_ptr);
             sprintf(tmp_val, "Pow: %7d", value);
             put_str(tmp_val, rect.y + j, rect.x + rect.cx - 13);
         }
@@ -1572,7 +1572,7 @@ int show_equip(int target_item, int mode)
         }
         else if (mode & SHOW_VALUE)
         {
-            int value = object_value_real(o_ptr);
+            int value = obj_value_real(o_ptr);
             sprintf(tmp_val, "Pow: %7d", value);
             put_str(tmp_val, rect.y + j, rect.cx - 13);
         }

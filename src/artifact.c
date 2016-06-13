@@ -1806,7 +1806,7 @@ void get_random_name(char *return_name, object_type *o_ptr, int power)
 void curse_object(object_type *o_ptr)
 {
     int ct = randint1(2);
-    int v = object_value_real(o_ptr) / 10000;
+    int v = obj_value_real(o_ptr) / 10000;
     int i;
     
     o_ptr->curse_flags |= OFC_CURSED;
@@ -3093,7 +3093,7 @@ bool reforge_artifact(object_type *src, object_type *dest, int fame)
     int         old_level, i;
 
     /* Score the Original */
-    base_power = object_value_real(src);
+    base_power = obj_value_real(src);
 
     /* Pay a Power Tax! */
     base_power = base_power/2 + randint1(base_power*fame/500);
@@ -3118,7 +3118,7 @@ bool reforge_artifact(object_type *src, object_type *dest, int fame)
     {
         object_copy(&forge, dest);
         create_artifact(&forge, CREATE_ART_GOOD);
-        power = object_value_real(&forge);
+        power = obj_value_real(&forge);
 
         if (power > best_power)
         {
@@ -3187,7 +3187,7 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
     {
         forge1.to_a = MAX(10, forge1.to_a);
     }
-    base_power = MAX(7500, object_value_real(&forge1));
+    base_power = MAX(7500, obj_value_real(&forge1));
     
     best_power = -10000000;
     power = 0;
@@ -3200,7 +3200,7 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
     {
         object_prep(&forge2, forge1.k_idx);
         create_artifact(&forge2, CREATE_ART_GOOD);
-        power = object_value_real(&forge2);
+        power = obj_value_real(&forge2);
 
         if (power > best_power)
         {

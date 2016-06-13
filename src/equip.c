@@ -695,7 +695,7 @@ void equip_wield_aux(object_type *src, int slot)
     p_ptr->update |= PU_MANA;
     p_ptr->redraw |= PR_EQUIPPY;
     p_ptr->window |= PW_INVEN | PW_EQUIP;
-    calc_android_exp();
+    android_calc_exp();
 }
 
 void equip_takeoff(void)
@@ -746,7 +746,7 @@ void equip_takeoff(void)
     if (weaponmaster_is_(WEAPONMASTER_SHIELDS))
         handle_stuff();
     
-    calc_android_exp();
+    android_calc_exp();
 }
 
 void equip_takeoff_aux(int slot)
@@ -1706,7 +1706,7 @@ void equip_on_change_race(void)
         p_ptr->update |= PU_MANA;
         p_ptr->redraw |= PR_EQUIPPY;
         p_ptr->window |= PW_INVEN | PW_EQUIP;
-        calc_android_exp();
+        android_calc_exp();
     }
 }
 

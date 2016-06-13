@@ -2737,13 +2737,13 @@ static bool _reforge_artifact(void)
         msg_print("You must choose an artifact for reforging.");
         return FALSE;
     }
-    if (object_value_real(src) > src_max_power)
+    if (obj_value_real(src) > src_max_power)
     {
         msg_print("You are not famous enough to reforge that item.");
         return FALSE;
     }
 
-    cost = object_value_real(src);
+    cost = obj_value_real(src);
     
     dest_max_power = cost / 2;
     if (dest_max_power < 1000) /* Reforging won't try to power match weak stuff ... */
@@ -2805,7 +2805,7 @@ static bool _reforge_artifact(void)
         return FALSE;
     }
 
-    if (object_value_real(dest) > dest_max_power)
+    if (obj_value_real(dest) > dest_max_power)
     {
         msg_print("This item is too powerful for the source artifact you have chosen.");
         return FALSE;
@@ -3043,7 +3043,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
 
         p_ptr->au -= cost;
         stats_on_gold_services(cost);
-        if (equip_is_valid_slot(item)) calc_android_exp();
+        if (equip_is_valid_slot(item)) android_calc_exp();
         return (TRUE);
     }
 }

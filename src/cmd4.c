@@ -395,7 +395,7 @@ void do_cmd_redraw(void)
     /* Hack -- update */
     handle_stuff();
 
-    if (p_ptr->prace == RACE_ANDROID) calc_android_exp();
+    if (p_ptr->prace == RACE_ANDROID) android_calc_exp();
 
 
     /* Redraw every window */

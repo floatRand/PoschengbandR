@@ -355,7 +355,7 @@ static void _art_create_random(object_type *o_ptr, int level, int power)
         int         score;
 
         create_artifact(&forge, mode);
-        score = object_value_real(&forge);
+        score = obj_value_real(&forge);
 
         if (min > 0 && score < min) continue;
         if (max > 0 && score > max) continue;
@@ -401,7 +401,7 @@ void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
         int         score;
 
         _create_ring_aux(&forge, level, power, mode);
-        score = object_value_real(&forge);
+        score = obj_value_real(&forge);
 
         if (min > 0 && score < min) continue;
         if (max > 0 && score > max) continue;
@@ -434,7 +434,7 @@ void ego_create_amulet(object_type *o_ptr, int level, int power, int mode)
         int         score;
 
         _create_amulet_aux(&forge, level, power, mode);
-        score = object_value_real(&forge);
+        score = obj_value_real(&forge);
 
         if (min > 0 && score < min) continue;
         if (max > 0 && score > max) continue;

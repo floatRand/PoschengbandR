@@ -185,7 +185,7 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
     (*lev) = k_info[q_ptr->k_idx].level;
 
     /* Value */
-    (*val) = object_value(q_ptr);
+    (*val) = obj_value(q_ptr);
 
 
     /* Hack */
@@ -544,7 +544,14 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = i;
-            entry->score = object_value_real(&forge);
+            if (p_ptr->prace == RACE_ANDROID)
+            {
+                entry->score = android_obj_exp(&forge);
+                if (!entry->score)
+                    entry->score = obj_value_real(&forge);
+            }
+            else
+                entry->score = obj_value_real(&forge);
             object_desc(entry->name, &forge, OD_COLOR_CODED);
             entry->k_idx = forge.k_idx;
             vec_add(entries, entry);
@@ -570,7 +577,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = ART_RANDOM;
-            entry->score = object_value_real(o_ptr);
+            entry->score = obj_value_real(o_ptr);
             object_desc(entry->name, o_ptr, OD_COLOR_CODED);
             entry->k_idx = o_ptr->k_idx;
             vec_add(entries, entry);
@@ -593,7 +600,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = ART_EGO;
-            entry->score = object_value_real(o_ptr);
+            entry->score = obj_value_real(o_ptr);
             object_desc(entry->name, o_ptr, OD_COLOR_CODED);
             entry->k_idx = o_ptr->k_idx;
             vec_add(entries, entry);

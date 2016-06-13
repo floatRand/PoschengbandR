@@ -1044,7 +1044,7 @@ bool apply_disenchant(int mode)
 
             p_ptr->update |= (PU_BONUS);
             p_ptr->window |= (PW_EQUIP);
-            calc_android_exp();
+            android_calc_exp();
         }
         return TRUE;
     }
@@ -1215,7 +1215,7 @@ bool brand_weapon(int brand_type)
         msg_print("The Branding failed.");
         virtue_add(VIRTUE_ENCHANTMENT, -2);
     }
-    calc_android_exp();
+    android_calc_exp();
     return TRUE;
 }
 /* Hack for old branding spells attempting to make now non-existent ego types! */
@@ -1260,7 +1260,7 @@ bool brand_weapon_slaying(int flag)
         msg_print("The Branding failed.");
         virtue_add(VIRTUE_ENCHANTMENT, -2);
     }
-    calc_android_exp();
+    android_calc_exp();
     return TRUE;
 }
 bool brand_weapon_aux(int item)
@@ -1841,7 +1841,7 @@ bool alchemy(void)
     /* Verify unless quantity given */
     if (!force)
     {
-        if (confirm_destroy || (object_value(o_ptr) > 0))
+        if (confirm_destroy || (obj_value(o_ptr) > 0))
         {
             /* Make a verification */
             sprintf(out_val, "Really turn %s to gold? ", o_name);
@@ -1860,7 +1860,7 @@ bool alchemy(void)
         return FALSE;
     }
 
-    price = object_value_real(o_ptr);
+    price = obj_value_real(o_ptr);
 
     if (price <= 0)
     {
@@ -2067,7 +2067,7 @@ bool enchant(object_type *o_ptr, int n, int eflag)
     /* Window stuff */
     p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
-    calc_android_exp();
+    android_calc_exp();
 
     /* Success */
     return (TRUE);
@@ -2144,7 +2144,7 @@ bool enchant_spell(int num_hit, int num_dam, int num_ac)
     else
         virtue_add(VIRTUE_ENCHANTMENT, 1);
 
-    calc_android_exp();
+    android_calc_exp();
 
     /* Something happened */
     return (TRUE);
@@ -2286,7 +2286,7 @@ bool artifact_scroll(void)
     else
         virtue_add(VIRTUE_ENCHANTMENT, 1);
 
-    calc_android_exp();
+    android_calc_exp();
 
     /* Something happened */
     return (TRUE);
@@ -2453,7 +2453,7 @@ bool mundane_spell(bool only_equip)
         if (item >= 0) p_ptr->total_weight += (o_ptr->weight - weight);
     }
     p_ptr->update |= PU_BONUS;
-    calc_android_exp();
+    android_calc_exp();
 
     /* Something happened */
     return TRUE;
@@ -2877,7 +2877,7 @@ bool bless_weapon(void)
     /* Window stuff */
     p_ptr->window |= PW_EQUIP;
 
-    calc_android_exp();
+    android_calc_exp();
 
     return TRUE;
 }
@@ -2946,7 +2946,7 @@ bool polish_shield(void)
 
         virtue_add(VIRTUE_ENCHANTMENT, -2);
     }
-    calc_android_exp();
+    android_calc_exp();
 
     return FALSE;
 }
@@ -3899,7 +3899,7 @@ static int minus_ac(void)
         o_ptr->to_a--;
         p_ptr->update |= PU_BONUS;
         p_ptr->window |= PW_EQUIP;
-        calc_android_exp();
+        android_calc_exp();
         return TRUE;
     }
     return FALSE;
@@ -4094,7 +4094,7 @@ bool rustproof(void)
         ((item >= 0) ? "Your" : "The"), o_name,
         ((o_ptr->number > 1) ? "are" : "is"));
 
-    calc_android_exp();
+    android_calc_exp();
     return TRUE;
 }
 

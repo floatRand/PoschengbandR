@@ -1318,7 +1318,7 @@ s32b flag_cost(object_type *o_ptr, int plusses, bool hack)
  * Return the "real" price of a "known" item, not including discounts
  *
  */
-s32b object_value_real(object_type *o_ptr)
+s32b obj_value_real(object_type *o_ptr)
 {
     s32b value;
 
@@ -1566,7 +1566,7 @@ s32b object_value_real(object_type *o_ptr)
  * Note that discounted items stay discounted forever, even if
  * the discount is "forgotten" by the player via memory loss.
  */
-s32b object_value(object_type *o_ptr)
+s32b obj_value(object_type *o_ptr)
 {
     s32b value;
     if (object_is_known(o_ptr))
@@ -1578,7 +1578,7 @@ s32b object_value(object_type *o_ptr)
            in the home inventory of the player.*/
         value = new_object_cost(o_ptr, COST_REAL);
         if (!value)
-            value = object_value_real(o_ptr);
+            value = obj_value_real(o_ptr);
 
         if (!obj_is_identified_fully(o_ptr))
         {
@@ -5334,7 +5334,7 @@ bool object_sort_comp(object_type *o_ptr, s32b o_value, object_type *j_ptr)
     }
 
     /* Objects sort by decreasing value */
-    return o_value > object_value(j_ptr);
+    return o_value > obj_value(j_ptr);
 }
 
 
@@ -5416,7 +5416,7 @@ s16b inven_carry(object_type *o_ptr)
     if (i < INVEN_PACK)
     {
         /* Get the "value" of the item */
-        s32b o_value = object_value(o_ptr);
+        s32b o_value = obj_value(o_ptr);
 
         /* Scan every occupied slot */
         for (j = 0; j < INVEN_PACK; j++)
@@ -5752,7 +5752,7 @@ void reorder_pack(void)
         if (!o_ptr->k_idx) continue;
 
         /* Get the "value" of the item */
-        o_value = object_value(o_ptr);
+        o_value = obj_value(o_ptr);
 
         /* Scan every occupied slot */
         for (j = 0; j < INVEN_PACK; j++)

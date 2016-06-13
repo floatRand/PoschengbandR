@@ -923,13 +923,13 @@ static void _reforging_spell(int cmd, variant *res)
             msg_print("You must choose an artifact for reforging.");
             return;
         }
-        if (object_value_real(src) > src_max_power)
+        if (obj_value_real(src) > src_max_power)
         {
             msg_print("You are not powerful enough to reforge that item.");
             return;
         }
 
-        cost = object_value_real(src);
+        cost = obj_value_real(src);
     
         dest_max_power = cost / 2;
         if (dest_max_power < 1000) /* Reforging won't try to power match weak stuff ... */
@@ -970,7 +970,7 @@ static void _reforging_spell(int cmd, variant *res)
             return;
         }
 
-        if (object_value_real(dest) > dest_max_power)
+        if (obj_value_real(dest) > dest_max_power)
         {
             msg_print("This item is too powerful for the source artifact you have chosen.");
             return;

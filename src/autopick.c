@@ -1337,13 +1337,13 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
 
     if (IS_FLG(FLG_MORE_VALUE))
     {
-        int value = object_value(o_ptr);
+        int value = obj_value(o_ptr);
         if (value <= entry->value)
             return FALSE;
     }
 
     /*** Worthless items ***/
-    if (IS_FLG(FLG_WORTHLESS) && object_value(o_ptr) > 0)
+    if (IS_FLG(FLG_WORTHLESS) && obj_value(o_ptr) > 0)
         return FALSE;
 
     /*** Artifact object ***/
@@ -1900,7 +1900,7 @@ static bool is_opt_confirm_destroy(object_type *o_ptr)
 			   non-zero values). However, a subsequent option may keep them
 			   around (e.g. leave_special or leave_equip) */
 		}
-		else if (object_value(o_ptr) > 0) 
+		else if (obj_value(o_ptr) > 0) 
 			return FALSE;
 	}
 

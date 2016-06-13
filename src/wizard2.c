@@ -224,7 +224,7 @@ static void do_cmd_wiz_hack_chris1(void)
         char buf[MAX_NLEN];
 
         if (!create_named_art_aux(a_idx, &forge)) return;
-        pow_base = object_value_real(&forge);
+        pow_base = obj_value_real(&forge);
         obj_identify_fully(&forge);
         object_desc(buf, &forge, 0);
 
@@ -240,7 +240,7 @@ static void do_cmd_wiz_hack_chris1(void)
         obj_identify_fully(&forge);
 
         object_desc(buf, &forge, OD_COLOR_CODED);
-        value = object_value_real(&forge);
+        value = obj_value_real(&forge);
         ct_pval += forge.pval;
 
         if (have_flag(forge.flags, OF_IM_ACID)
@@ -530,7 +530,7 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
             object_desc(buf, &forge, 0);
 
             new_score = new_object_cost(&forge, COST_REAL);
-            old_score = object_value_real(&forge);
+            old_score = obj_value_real(&forge);
 
 
             fprintf(file, "%d\t%d\t%d\t%s\n", 
@@ -564,7 +564,7 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
                 object_desc(buf, &forge, 0);
 
                 new_score = new_object_cost(&forge, COST_REAL);
-                old_score = object_value_real(&forge);
+                old_score = obj_value_real(&forge);
 
                 fprintf(file, "%d\t%d\t%d\t%s\n", 
                     old_score,
@@ -696,7 +696,7 @@ static void do_cmd_wiz_hack_chris6_imp(FILE *file, bool replace)
                 forge.to_a = MAX(10, forge.to_a);
             }
         }
-        pow_base = object_value_real(&forge);
+        pow_base = obj_value_real(&forge);
         object_level = a_info[a_idx].level;
 
         obj_identify_fully(&forge);
@@ -722,7 +722,7 @@ static void do_cmd_wiz_hack_chris6_imp(FILE *file, bool replace)
                 object_prep(&forge, k_idx);
                 create_artifact(&forge, CREATE_ART_GOOD);
             }
-            pow = object_value_real(&forge);
+            pow = obj_value_real(&forge);
             pow_tot += pow;
             pval_tot += forge.pval;
             if (have_flag(forge.flags, OF_SPEED))
@@ -996,7 +996,7 @@ static bool do_cmd_wiz_hack_chris9(void)
 
     src = &inventory[src_idx];
 
-    cost = object_value_real(src);
+    cost = obj_value_real(src);
     cost *= 10;
 
     msg_format("Reforging will cost you %d gold.", cost);
@@ -1450,7 +1450,7 @@ static void wiz_display_item(object_type *o_ptr)
            o_ptr->pval, o_ptr->to_a, o_ptr->to_h, o_ptr->to_d), 6, j);
 
     prt(format("name1 = %-4d  name2 = %-4d  cost = %d",
-           o_ptr->name1, o_ptr->name2, object_value_real(o_ptr)), 7, j);
+           o_ptr->name1, o_ptr->name2, obj_value_real(o_ptr)), 7, j);
 
     prt(format("ident = %04x  xtra1 = %-4d  xtra2 = %-4d  timeout = %-d",
            o_ptr->ident, o_ptr->xtra1, o_ptr->xtra2, o_ptr->timeout), 8, j);
@@ -2765,7 +2765,7 @@ static void _wiz_stats_log_obj(int level, object_type *o_ptr)
     if (_wiz_show_scores)
     {
         int  score;
-        score = object_value_real(o_ptr);
+        score = obj_value_real(o_ptr);
         doc_printf(_wiz_doc, "CL%2d DL%2d <color:%c>%6d</color>: <indent><style:indent>%s</style></indent>\n",
             p_ptr->lev, level, _score_color(score), score, buf);
     }

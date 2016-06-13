@@ -2859,7 +2859,7 @@ static byte get_dungeon_feeling(void)
           || o_ptr->tval == TV_DRAG_ARMOR
           || object_is_dragon_armor(o_ptr) )
         {
-            s32b cost = object_value_real(o_ptr);
+            s32b cost = obj_value_real(o_ptr);
 
             delta += 10 * base;
             if (cost > 10000L) delta += 10 * base;
@@ -5987,7 +5987,7 @@ void play_game(bool new_game)
     /* Hack -- Enforce "delayed death" */
     if (p_ptr->chp < 0) p_ptr->is_dead = TRUE;
 
-    if (p_ptr->prace == RACE_ANDROID) calc_android_exp();
+    if (p_ptr->prace == RACE_ANDROID) android_calc_exp();
 
     if (new_game && ((p_ptr->pclass == CLASS_CAVALRY) || (p_ptr->pclass == CLASS_BEASTMASTER)))
     {

@@ -99,7 +99,7 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
     s32b    price;
 
     /* Get the value of one of the items */
-    price = object_value(o_ptr);
+    price = obj_value(o_ptr);
 
     /* Worthless items */
     if (price <= 0) return 0;
@@ -149,7 +149,7 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
 void discount(object_type *o_ptr)
 {
     int discount = 0;
-    s32b cost = object_value(o_ptr);
+    s32b cost = obj_value(o_ptr);
 
     if (cost < 5)
     {
@@ -607,7 +607,7 @@ static bool store_will_buy(object_type *o_ptr)
     }
 
     /* XXX XXX XXX Ignore "worthless" items */
-    if (object_value(o_ptr) <= 0) return (FALSE);
+    if (obj_value(o_ptr) <= 0) return (FALSE);
 
     /* Assume okay */
     return (TRUE);
@@ -718,7 +718,7 @@ bool combine_and_reorder_home(int store_num)
         if (!o_ptr->k_idx) continue;
 
         /* Get the "value" of the item */
-        o_value = object_value(o_ptr);
+        o_value = obj_value(o_ptr);
 
         /* Scan every occupied slot */
         for (j = 0; j < st_ptr->stock_num; j++)
@@ -828,7 +828,7 @@ static int home_carry(object_type *o_ptr)
 
 
     /* Determine the "value" of the item */
-    value = object_value(o_ptr);
+    value = obj_value(o_ptr);
 
     /* Check existing slots to see if we must "slide" */
     for (slot = 0; slot < st_ptr->stock_num; slot++)
@@ -878,7 +878,7 @@ static int store_carry(object_type *o_ptr)
 
 
     /* Evaluate the object */
-    value = object_value(o_ptr);
+    value = obj_value(o_ptr);
 
     /* Cursed/Worthless items "disappear" when sold */
     if (value <= 0) return (-1);
@@ -935,7 +935,7 @@ static int store_carry(object_type *o_ptr)
         }
 
         /* Evaluate that slot */
-        j_value = object_value(j_ptr);
+        j_value = obj_value(j_ptr);
 
         /* Objects sort by decreasing value */
         if (value > j_value) break;
@@ -1522,7 +1522,7 @@ static void store_create(void)
             if (black_market_crap(&forge)) continue;
 
             /* Hack -- No "cheap" items */
-            if (object_value(&forge) < 10) continue;
+            if (obj_value(&forge) < 10) continue;
 
             /* No "worthless" items */
             /* if (object_value(q_ptr) <= 0) continue; */
@@ -1533,7 +1533,7 @@ static void store_create(void)
         else
         {
             /* No "worthless" items */
-            if (object_value(&forge) <= 0) continue;
+            if (obj_value(&forge) <= 0) continue;
             if (object_is_cursed(&forge)) continue;
         }
 
@@ -1615,7 +1615,7 @@ static void display_entry(int pos)
         }
         if (cur_store_num == STORE_HOME)
         {
-            int score = object_value(o_ptr);
+            int score = obj_value(o_ptr);
             if (score)
             {
                 (void)sprintf(out_val, "%9d ", score);
@@ -2542,7 +2542,7 @@ static void store_sell(void)
     }
 
     if (equip_is_valid_slot(item))
-        calc_android_exp();
+        android_calc_exp();
 }
 
 

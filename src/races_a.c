@@ -73,6 +73,109 @@ race_t *amberite_get_race(void)
 /****************************************************************
  * Android
  ****************************************************************/
+
+int android_obj_exp(object_type *o_ptr)
+{
+    int value, exp, level;
+
+    if (!o_ptr) return 0;
+    if (!object_is_wearable(o_ptr)) return 0;
+    if (object_is_jewelry(o_ptr)) return 0;
+    if (o_ptr->tval == TV_LITE) return 0;
+
+    level = MAX(k_info[o_ptr->k_idx].level - 8, 1);
+
+    if (object_is_fixed_artifact(o_ptr))
+    {
+        artifact_type *a_ptr = &a_info[o_ptr->name1];
+        int            a_lvl = MAX(a_ptr->level - 8, 5);
+        int            r_div = a_ptr->gen_flags & OFG_INSTA_ART ? 10 : 3;
+
+        level = (level + a_lvl) / 2;
+        level += MIN(20, a_ptr->rarity/r_div);
+    }
+    else if (o_ptr->art_name || o_ptr->name2)
+    {
+        s32b total_flags = flag_cost(o_ptr, o_ptr->pval, FALSE);
+        int fake_level;
+
+        if (!object_is_weapon_ammo(o_ptr))
+        {
+            /* For armors */
+            if (total_flags < 15000) fake_level = 10;
+            else if (total_flags < 35000) fake_level = 25;
+            else fake_level = 40;
+        }
+        else
+        {
+            /* For weapons */
+            if (total_flags < 20000) fake_level = 10;
+            else if (total_flags < 45000) fake_level = 25;
+            else fake_level = 40;
+        }
+        fake_level = MAX(fake_level - 8, 5);
+        level = MAX(level, (level + fake_level) / 2 + 3);
+    }
+
+    {
+        object_type  copy = *o_ptr;
+        copy.discount = 0;
+        copy.curse_flags = 0;
+        value = obj_value_real(&copy);
+    }
+
+    if (value <= 0) return 0;
+    if (object_is_(o_ptr, TV_SOFT_ARMOR, SV_ABUNAI_MIZUGI) && p_ptr->personality != PERS_SEXY)
+        value /= 32;
+    if (value > 5000000) value = 5000000;
+    if (o_ptr->tval == TV_DRAG_ARMOR || o_ptr->tval == TV_CARD) level /= 2;
+
+    if ( object_is_artifact(o_ptr)
+      || object_is_ego(o_ptr)
+      || o_ptr->tval == TV_DRAG_ARMOR
+      || object_is_dragon_armor(o_ptr)
+      || object_is_(o_ptr, TV_SWORD, SV_DIAMOND_EDGE) )
+    {
+        if (level > 65) level = 35 + (level - 65) / 5;
+        else if (level > 35) level = 25 + (level - 35) / 3;
+        else if (level > 15) level = 15 + (level - 15) / 2;
+        exp = MIN(100000L, value) * level * level / 2;
+        if (value > 100000L)
+            exp += (value - 100000L) * level * level / 8;
+    }
+    else
+    {
+        exp = MIN(100000L, value) * level;
+        if (value > 100000L)
+            exp += (value - 100000L) * level / 4;
+    }
+    if (object_is_melee_weapon(o_ptr) || o_ptr->tval == TV_BOW)
+        return exp / 48;
+    else if (object_is_body_armour(o_ptr))
+        return 3 * exp / 32;
+    else
+        return exp / 16;
+}
+
+void android_calc_exp(void)
+{
+    int slot;
+    s32b total_exp = 0;
+
+    if (p_ptr->is_dead) return;
+
+    if (p_ptr->prace != RACE_ANDROID) return;
+
+    for (slot = EQUIP_BEGIN; slot < EQUIP_BEGIN + equip_count(); slot++)
+    {
+        object_type *o_ptr = equip_obj(slot);
+        total_exp += android_obj_exp(o_ptr);
+    }
+    p_ptr->exp = p_ptr->max_exp = total_exp;
+    check_experience();
+}
+
+
 static int _android_get_powers(spell_info* spells, int max)
 {
     int         ct = 0;

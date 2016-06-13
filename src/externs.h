@@ -1236,8 +1236,9 @@ extern bool object_is_aware(object_type *o_ptr);
 extern void object_aware(object_type *o_ptr);
 extern void object_tried(object_type *o_ptr);
 extern bool object_is_tried(object_type *o_ptr);
-extern s32b object_value(object_type *o_ptr);
-extern s32b object_value_real(object_type *o_ptr);
+extern s32b obj_value(object_type *o_ptr);
+extern s32b obj_value_real(object_type *o_ptr);
+extern s32b obj_android_exp(object_type *o_ptr);
 extern bool can_player_destroy_object(object_type *o_ptr);
 extern void distribute_charges(object_type *o_ptr, object_type *q_ptr, int amt);
 extern void reduce_charges(object_type *o_ptr, int amt);
@@ -1779,7 +1780,6 @@ extern bool restore_level(void);
 extern bool lose_all_info(void);
 extern void gain_exp_64(s32b amount, u32b amount_frac);
 extern void gain_exp(s32b amount);
-extern void calc_android_exp(void);
 extern void lose_exp(s32b amount);
 extern bool drain_exp(s32b drain, s32b slip, int hold_life_prob);
 extern void do_poly_self(void);
@@ -2166,7 +2166,11 @@ extern bool mimic_no_regen(void);
 extern cptr gf_name(int which);
 
 extern race_t *amberite_get_race(void);
+
 extern race_t *android_get_race(void);
+extern void    android_calc_exp(void);
+extern int     android_obj_exp(object_type *o_ptr);
+
 extern race_t *archon_get_race(void);
 extern race_t *balrog_get_race(void);
 extern race_t *barbarian_get_race(void);

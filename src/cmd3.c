@@ -239,7 +239,7 @@ void do_cmd_drop(void)
     inven_drop(item, amt);
 
     if (equip_is_valid_slot(item))
-        calc_android_exp();
+        android_calc_exp();
 
     p_ptr->redraw |= PR_EQUIPPY;
 }
@@ -330,7 +330,7 @@ void do_cmd_destroy(void)
     }
 
     /* Verify unless quantity given beforehand */
-    if (!force && (confirm_destroy || (object_value(o_ptr) > 0)))
+    if (!force && (confirm_destroy || (obj_value(o_ptr) > 0)))
     {
         char ch;
         int options = OD_COLOR_CODED;
@@ -528,17 +528,17 @@ void do_cmd_destroy(void)
     if (q_ptr->to_a || q_ptr->to_h || q_ptr->to_d)
         virtue_add(VIRTUE_ENCHANTMENT, -1);
     
-    if (object_value_real(q_ptr) > 30000)
+    if (obj_value_real(q_ptr) > 30000)
         virtue_add(VIRTUE_SACRIFICE, 2);
     
-    else if (object_value_real(q_ptr) > 10000)
+    else if (obj_value_real(q_ptr) > 10000)
         virtue_add(VIRTUE_SACRIFICE, 1);
 
     if (q_ptr->to_a != 0 || q_ptr->to_d != 0 || q_ptr->to_h != 0)
         virtue_add(VIRTUE_HARMONY, 1);
 
     if (equip_is_valid_slot(item)) 
-        calc_android_exp();
+        android_calc_exp();
 }
 
 
@@ -2240,7 +2240,7 @@ static _obj_list_ptr _create_obj_list(void)
         info->y = o_ptr->iy;
         info->dy = info->y - py;
         info->dx = info->x - px;
-        info->score = object_value(o_ptr);
+        info->score = obj_value(o_ptr);
         info->count = o_ptr->number;
 
         auto_pick_idx = is_autopick(o_ptr);
@@ -2348,7 +2348,7 @@ static int _draw_obj_list(_obj_list_ptr list, int top, rect_t rect)
             Term_queue_bigchar(rect.x + 1, rect.y + i, a, c, 0, 0);
             c_put_str(attr, format(obj_fmt, o_name), rect.y + i, rect.x + 3);
             if (p_ptr->wizard)
-                c_put_str(TERM_WHITE, format("%6d %6d ", info_ptr->score, object_value_real(o_ptr)), rect.y + i, rect.x + 3 + cx_obj + 1);
+                c_put_str(TERM_WHITE, format("%6d %6d ", info_ptr->score, obj_value_real(o_ptr)), rect.y + i, rect.x + 3 + cx_obj + 1);
             else
                 c_put_str(TERM_WHITE, format("%-9.9s ", loc), rect.y + i, rect.x + 3 + cx_obj + 1);
         }

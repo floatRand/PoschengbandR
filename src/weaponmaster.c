@@ -686,7 +686,7 @@ static bool _club_toss(int hand)
         p_ptr->redraw |= PR_EQUIPPY;
         p_ptr->update |= PU_BONUS;
 
-        calc_android_exp();
+        android_calc_exp();
         handle_stuff();
     }
 
@@ -1210,7 +1210,7 @@ static bool _dagger_toss(int hand)
         
         p_ptr->redraw |= PR_EQUIPPY;
         p_ptr->update |= PU_BONUS;
-        calc_android_exp();
+        android_calc_exp();
         handle_stuff();
     }
     return TRUE;

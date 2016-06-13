@@ -878,7 +878,7 @@ void _psionic_crafting_spell(int power, int cmd, variant *res)
         else
         {
             virtue_add(VIRTUE_ENCHANTMENT, 1);
-            calc_android_exp();
+            android_calc_exp();
         }
         _enchant_power = 0;
         var_set_bool(res, TRUE);

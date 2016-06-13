@@ -4522,7 +4522,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
     }
     else if (equiped_item)
     {
-        calc_android_exp();
+        android_calc_exp();
     }
 
     /* Drop (or break) near that location */

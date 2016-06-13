@@ -384,7 +384,7 @@ static void home_carry(store_type *st_ptr, object_type *o_ptr)
     }
 
     /* Determine the "value" of the item */
-    value = object_value(o_ptr);
+    value = obj_value(o_ptr);
 
     /* Check existing slots to see if we must "slide" */
     for (slot = 0; slot < st_ptr->stock_num; slot++)

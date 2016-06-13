@@ -917,10 +917,19 @@ static void _display_score(object_type *o_ptr, doc_ptr doc)
     cost_calc_hook = NULL;
     _dbg_doc = NULL;
 #else
-    int score = object_value(o_ptr);
+    int score = obj_value(o_ptr);
     char buf[10];
     big_num_display(score, buf);
     doc_printf(doc, "<color:B>Score:</color> <color:%c>%s</color>\n", _score_color(score), buf);
+
+    if (p_ptr->prace == RACE_ANDROID && obj_is_identified(o_ptr))
+    {
+        score = android_obj_exp(o_ptr);
+        big_num_display(score, buf);
+        if (score)
+            doc_printf(doc, "<color:B>Const:</color> <color:%c>%s</color>\n", _score_color(score), buf);
+    }
+
 #endif
 }
 

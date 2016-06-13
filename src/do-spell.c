@@ -5343,7 +5343,7 @@ static cptr do_craft_spell(int spell, int mode)
                 virtue_add(VIRTUE_ENCHANTMENT, 1);
             }
 
-            calc_android_exp();
+            android_calc_exp();
         }
         break;
 
