@@ -75,8 +75,13 @@ static bool _elemental_travel(int flag)
         teleport_player((p_ptr->lev + 2) * 2, TELEPORT_PASSIVE);
     }
     else
-        teleport_player_to(y, x, 0);
-
+    {
+        /* Note: teleport_player_to requires FF_TELEPORTABLE, which won't work for walls */
+        if (flag == FF_WALL && !cave_have_flag_bold(y, x, FF_PERMANENT))
+            move_player_effect(y, x, MPE_FORGET_FLOW | MPE_HANDLE_STUFF | MPE_DONT_PICKUP);
+        else
+            teleport_player_to(y, x, 0);
+    }
     return TRUE;
 }
 
