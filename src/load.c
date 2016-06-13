@@ -192,7 +192,10 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
             TODO: Report an error back to the load routine!!*/
         }
     }
+    if (object_is_device(o_ptr))
+        add_flag(o_ptr->flags, OF_ACTIVATE);
 }
+
 
 static void rd_monster(savefile_ptr file, monster_type *m_ptr)
 {

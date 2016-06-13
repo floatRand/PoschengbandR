@@ -2531,7 +2531,9 @@ bool device_init(object_type *o_ptr, int level, int mode)
     o_ptr->xtra5 = _bounds_check(_rand_normal(o_ptr->xtra4/2, 25), o_ptr->activation.cost, o_ptr->xtra4);
     o_ptr->xtra5 *= 100; /* scale current sp by 100 for smoother regeneration */
 
-    /* cf _create_device in object2.c for egos */
+    add_flag(o_ptr->flags, OF_ACTIVATE);
+
+    /* cf obj_create_device in ego.c for egos */
     return TRUE;
 }
 
@@ -2601,6 +2603,8 @@ bool device_init_fixed(object_type *o_ptr, int effect)
         add_flag(o_ptr->flags, OF_IGNORE_FIRE);
         add_flag(o_ptr->flags, OF_IGNORE_COLD);
     }
+
+    add_flag(o_ptr->flags, OF_ACTIVATE);
 
     return TRUE;
 }
