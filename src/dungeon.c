@@ -170,7 +170,6 @@ static int _adj_pseudo_id(int num)
 {
     int result = num * adj_pseudo_id[p_ptr->stat_ind[A_WIS]] / 100;
     int lev = p_ptr->lev;
-    int slot;
 
     result = result * (625 - virtue_current(VIRTUE_KNOWLEDGE)) / 625;
 
@@ -181,18 +180,6 @@ static int _adj_pseudo_id(int num)
         lev -= 5;
         if (lev < 0) break;
         result /= 2;
-    }
-
-    /* TODO: p_ptr->enhanced_psuedo_id ... */
-    for (slot = equip_find_first(object_is_helmet);
-            slot;
-            slot = equip_find_next(object_is_helmet, slot))
-    {
-        if (equip_obj(slot)->rune == RUNE_UNDERSTANDING)
-        {
-            result /= 10;
-            break;
-        }
     }
     return result;
 }
@@ -210,8 +197,8 @@ static int _class_idx(void)
 
 static void sense_inventory1(void)
 {
-    int         i;
-    int         plev = p_ptr->lev;
+    int         i;             /* v~~~ Early Game speed is ridiculous otherwise */
+    int         plev = p_ptr->lev + 10;
     bool        heavy = FALSE;
     object_type *o_ptr;
 
@@ -467,7 +454,7 @@ static void sense_inventory1(void)
 static void sense_inventory2(void)
 {
     int         i;
-    int         plev = p_ptr->lev;
+    int         plev = p_ptr->lev + 10;
     object_type *o_ptr;
 
     if (p_ptr->confused) return;
