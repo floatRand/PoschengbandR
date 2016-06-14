@@ -1450,7 +1450,6 @@ extern bool control_one_demon(int dir, int plev);
 extern bool charm_animal(int dir, int plev);
 extern bool charm_living(int dir, int plev);
 extern bool mindblast_monsters(int dam);
-extern s32b flag_cost(object_type *o_ptr, int plusses, bool hack);
 extern void report_magics(void);
 extern bool teleport_swap(int dir);
 extern bool project_hook(int typ, int dir, int dam, int flg);
