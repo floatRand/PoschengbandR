@@ -2433,9 +2433,9 @@ static void _ego_create_armor_celestial_protection(object_type *o_ptr, int level
     int rolls, i;
     assert(o_ptr->name2 == EGO_ARMOR_CELESTIAL_PROTECTION);
     if (object_is_body_armour(o_ptr))
-        rolls = 2 + m_bonus(5, level);
+        rolls = 2 + m_bonus(3, level);
     else
-        rolls = 1 + m_bonus(5, level);
+        rolls = 1 + m_bonus(3, level);
 
     for (i = 0; i < rolls; i++)
         one_high_resistance(o_ptr);
@@ -3019,8 +3019,27 @@ void obj_create_lite(object_type *o_ptr, int level, int power, int mode)
         case EGO_LITE_VALINOR:
             if (o_ptr->sval != SV_LITE_FEANOR)
                 done = FALSE;
-            else if (one_in_(7))
-                add_flag(o_ptr->flags, OF_STEALTH);
+            else
+            {
+                if (one_in_(7))
+                    add_flag(o_ptr->flags, OF_STEALTH);
+                if (one_in_(ACTIVATION_CHANCE))
+                {
+                    int choices[] = {
+                        EFFECT_LITE_AREA, EFFECT_LITE_MAP_AREA, EFFECT_ENLIGHTENMENT, EFFECT_CLAIRVOYANCE, -1
+                    };
+                    _effect_add_list(o_ptr, choices);
+                }
+            }
+            break;
+        case EGO_LITE_SCRYING:
+            if (o_ptr->sval != SV_LITE_FEANOR)
+                done = FALSE;
+            else
+            {
+                if (one_in_(2)) add_esp_strong(o_ptr);
+                else add_esp_weak(o_ptr, FALSE);
+            }
             break;
         case EGO_LITE_DARKNESS:
             o_ptr->xtra4 = 0;

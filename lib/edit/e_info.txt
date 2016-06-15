@@ -1043,6 +1043,10 @@ W:40:*:16
 C:0:0:0:2
 F:RES_LITE | SPEED | XTRA_H_RES
 
+N:243:of Scrying
+T:LITE
+W:40:*:8
+
 ###############
 ### Devices ###
 ###############

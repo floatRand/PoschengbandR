@@ -5995,6 +5995,7 @@ enum ego_type_e {
     EGO_LITE_DARKNESS = 240,
     EGO_LITE_IMMORTAL_EYE,
     EGO_LITE_VALINOR,
+    EGO_LITE_SCRYING,
 
     /* Devices */
     EGO_DEVICE_RESISTANCE = 250,
