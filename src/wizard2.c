@@ -885,7 +885,7 @@ static void do_cmd_wiz_hack_chris7_imp(FILE* fff)
             }
 
             if (forge.name1)
-                a_info[forge.name1].cur_num = 0;
+                a_info[forge.name1].generated = FALSE;
 
             /*
             object_wipe(&forge);
@@ -1751,7 +1751,7 @@ static void wiz_reroll_item(object_type *o_ptr)
             /* Preserve wizard-generated artifacts */
             if (object_is_fixed_artifact(q_ptr))
             {
-                a_info[q_ptr->name1].cur_num = 0;
+                a_info[q_ptr->name1].generated = FALSE;
                 q_ptr->name1 = 0;
             }
 
@@ -1769,7 +1769,7 @@ static void wiz_reroll_item(object_type *o_ptr)
         /* Preserve wizard-generated artifacts */
         if (object_is_fixed_artifact(q_ptr))
         {
-            a_info[q_ptr->name1].cur_num = 0;
+            a_info[q_ptr->name1].generated = FALSE;
             q_ptr->name1 = 0;
         }
 
@@ -1878,7 +1878,7 @@ static void wiz_statistics(object_type *o_ptr)
 
     /* XXX XXX XXX Mega-Hack -- allow multiple artifacts */
     if (object_is_fixed_artifact(o_ptr)) 
-        a_info[o_ptr->name1].cur_num = 0;
+        a_info[o_ptr->name1].generated = FALSE;
 
 
     /* Interact */
@@ -1961,7 +1961,7 @@ static void wiz_statistics(object_type *o_ptr)
 
             /* XXX XXX XXX Mega-Hack -- allow multiple artifacts */
             if (object_is_fixed_artifact(q_ptr)) 
-                a_info[q_ptr->name1].cur_num = 0;
+                a_info[q_ptr->name1].generated = FALSE;
 
 
             /* Test for the same tval and sval. */
@@ -2013,7 +2013,7 @@ static void wiz_statistics(object_type *o_ptr)
 
 
     /* Hack -- Normally only make a single artifact */
-    if (object_is_fixed_artifact(o_ptr)) a_info[o_ptr->name1].cur_num = 1;
+    if (object_is_fixed_artifact(o_ptr)) a_info[o_ptr->name1].generated = TRUE;
 }
 
 

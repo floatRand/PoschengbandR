@@ -1277,7 +1277,8 @@ static bool wr_savefile_new(savefile_ptr file)
     for (i = 0; i < tmp16u; i++)
     {
         artifact_type *a_ptr = &a_info[i];
-        savefile_write_byte(file, a_ptr->cur_num);
+        savefile_write_byte(file, a_ptr->generated);
+        savefile_write_byte(file, a_ptr->found);
         savefile_write_s16b(file, a_ptr->floor_id);
     }
 

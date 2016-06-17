@@ -232,8 +232,8 @@ struct artifact_type
     byte level;            /* Artifact level */
     byte rarity;        /* Artifact rarity */
 
-    byte cur_num;        /* Number created (0 or 1) */
-    byte max_num;        /* Unused (should be "1") */
+    bool generated; /* Artifact has been created, but possibly yet to be discovered */
+    bool found;     /* Player has found and identified this artifact */
 
     s16b floor_id;          /* Leaved on this location last time */
 };

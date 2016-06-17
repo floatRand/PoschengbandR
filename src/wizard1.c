@@ -537,7 +537,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             if (!p_ptr->wizard && (a_info[i].gen_flags & OFG_QUESTITEM)) continue;
             if (!create_named_art_aux(i, &forge)) continue;
-            if ((options & _SPOIL_EGOS) && !a_info[i].cur_num) continue; /* Hack */
+            if ((options & _SPOIL_EGOS) && !a_info[i].found) continue; /* Hack */
             if (pred && !pred(&forge)) continue;
 
             obj_identify_fully(&forge);
@@ -556,7 +556,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
             entry->k_idx = forge.k_idx;
             vec_add(entries, entry);
 
-            if (a_info[entry->id].cur_num == 1)
+            if (a_info[entry->id].found)
             {
                 ct_std++;
                 score_std += entry->score;
@@ -650,7 +650,7 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
             artifact_type *a_ptr = &a_info[entry->id];
 
                 doc_printf(doc, "<color:%c>%3d) %7d</color> %3d %3d ",
-                    (a_ptr->cur_num == 1) ? 'y' : 'w',
+                    (a_ptr->found) ? 'y' : 'w',
                     i+1, entry->score, a_ptr->level, a_ptr->rarity);
 
                 if (a_ptr->gen_flags & OFG_INSTA_ART)

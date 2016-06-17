@@ -4943,7 +4943,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                     object_prep(q_ptr, k_idx);
                     drop_here(q_ptr, y2, x2);                
                 }
-                else if (a_info[artifact_index].cur_num)
+                else if (a_info[artifact_index].generated)
                 {
                     object_type forge;
                     create_replacement_art(artifact_index, &forge);
@@ -4953,7 +4953,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                 {
                     /* Create the artifact */
                     if (create_named_art(artifact_index, y2, x2))
-                        a_info[artifact_index].cur_num = 1;
+                        a_info[artifact_index].generated = TRUE;
                 }
             }
             if (level > 0)

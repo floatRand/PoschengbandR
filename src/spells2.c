@@ -2542,7 +2542,7 @@ bool destroy_area(int y1, int x1, int r, int power)
                     if (object_is_fixed_artifact(o_ptr) && (!object_is_known(o_ptr) || in_generate))
                     {
                         /* Mega-Hack -- Preserve the artifact */
-                        a_info[o_ptr->name1].cur_num = 0;
+                        a_info[o_ptr->name1].generated = FALSE;
 
                         if (in_generate && cheat_peek)
                         {
@@ -2551,10 +2551,10 @@ bool destroy_area(int y1, int x1, int r, int power)
                             msg_format("Artifact (%s) was *destroyed* during generation.", o_name);
                         }
                     }
-                    else if (o_ptr->name3 && (!object_is_known(o_ptr) || in_generate))
+                    else if (random_artifacts && o_ptr->name3 && (!object_is_known(o_ptr) || in_generate))
                     {
                         /* Mega-Hack -- Preserve the artifact */
-                        a_info[o_ptr->name3].cur_num = 0;
+                        a_info[o_ptr->name3].generated = FALSE;
 
                         if (in_generate && cheat_peek)
                         {

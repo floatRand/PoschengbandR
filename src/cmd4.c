@@ -4104,62 +4104,6 @@ static bool _compare_a_level(vptr u, vptr v, int a, int b)
     return a_info[left].level <= a_info[right].level;
 }
 
-static bool _art_floor_unfound(int a_idx)
-{
-    int x, y;
-
-    /* Check the dungeon to see if lying on floor still, and not identified */
-    for (y = 0; y < cur_hgt; y++)
-    {
-        for (x = 0; x < cur_wid; x++)
-        {
-            cave_type *c_ptr = &cave[y][x];
-            s16b this_o_idx, next_o_idx = 0;
-
-            for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
-            {
-                object_type *o_ptr = &o_list[this_o_idx];
-
-                next_o_idx = o_ptr->next_o_idx;
-                if (o_ptr->name1 != a_idx) continue;
-                if (obj_is_identified(o_ptr)) return FALSE;
-                return TRUE;
-            }
-        }
-    }
-    return FALSE;
-}
-
-static bool _art_pack_unfound(int a_idx)
-{
-    int i;
-    /* Check player's pack to see if unidentified still */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-
-        if (!o_ptr->k_idx) continue;
-        if (o_ptr->name1 != a_idx) continue;
-        if (obj_is_identified(o_ptr)) return FALSE;
-
-        return TRUE;
-    }
-    return FALSE;
-}
-
-static bool _art_is_found(int a_idx)
-{
-    if (!a_info[a_idx].cur_num)
-        return FALSE;
-
-    if (_art_floor_unfound(a_idx) || _art_pack_unfound(a_idx))
-        return FALSE;
-
-    /* Gee, we should probably check the players home as well ... sigh */
-
-    return TRUE;
-}
-
 static int _collect_arts(int grp_cur, int art_idx[], bool show_all)
 {
     int i, cnt = 0;
@@ -4170,7 +4114,7 @@ static int _collect_arts(int grp_cur, int art_idx[], bool show_all)
         object_type    forge;
 
         if (!a_ptr->name) continue;
-        if (!_art_is_found(i))
+        if (!a_ptr->found)
         {
             if (!show_all) continue;
             if (!art_has_lore(a_ptr)) continue;
@@ -4330,7 +4274,7 @@ static void do_cmd_knowledge_artifacts(void)
 
             if (i + art_top == art_cur)
                 attr = TERM_L_BLUE;
-            else if (!_art_is_found(idx))
+            else if (!a_info[idx].found)
                 attr = TERM_L_DARK;
             else
                 attr = tval_to_attr[forge.tval % 128];

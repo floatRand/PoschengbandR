@@ -1397,18 +1397,18 @@ void monster_death(int m_idx, bool drop_item)
 
                 a_ptr = &a_info[a_idx];
             }
-            while (a_ptr->cur_num);
+            while (a_ptr->generated);
 
             /* Create the artifact */
             if (create_named_art(a_idx, y, x))
             {
-                a_ptr->cur_num = 1;
+                a_ptr->generated = TRUE;
 
                 /* Hack -- Memorize location of artifact in saved floors */
                 if (character_dungeon) a_ptr->floor_id = p_ptr->floor_id;
             }
             else if (!preserve_mode) 
-                a_ptr->cur_num = 1;
+                a_ptr->generated = TRUE;
         }
         break;
 
@@ -2119,18 +2119,18 @@ void monster_death(int m_idx, bool drop_item)
         {
             artifact_type *a_ptr = &a_info[a_idx];
 
-            if (!a_ptr->cur_num)
+            if (!a_ptr->generated)
             {
                 /* Create the artifact */
                 if (create_named_art(a_idx, y, x))
                 {
-                    a_ptr->cur_num = 1;
+                    a_ptr->generated = TRUE;
 
                     /* Hack -- Memorize location of artifact in saved floors */
                     if (character_dungeon) a_ptr->floor_id = p_ptr->floor_id;
                 }
                 else if (!preserve_mode) 
-                    a_ptr->cur_num = 1;
+                    a_ptr->generated = TRUE;
             }
         }
 
@@ -2147,18 +2147,18 @@ void monster_death(int m_idx, bool drop_item)
                 int a_idx = d_info[dungeon_type].final_artifact;
                 artifact_type *a_ptr = &a_info[a_idx];
 
-                if (!a_ptr->cur_num)
+                if (!a_ptr->generated)
                 {
                     /* Create the artifact */
                     if (create_named_art(a_idx, y, x))
                     {
-                        a_ptr->cur_num = 1;
+                        a_ptr->generated = TRUE;
 
                         /* Hack -- Memorize location of artifact in saved floors */
                         if (character_dungeon) a_ptr->floor_id = p_ptr->floor_id;
                     }
                     else if (!preserve_mode) 
-                        a_ptr->cur_num = 1;
+                        a_ptr->generated = TRUE;
 
                     /* Prevent rewarding both artifact and "default" object */
                     if (!d_info[dungeon_type].final_object) k_idx = 0;

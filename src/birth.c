@@ -2352,7 +2352,8 @@ static void player_wipe(void)
     for (i = 0; i < max_a_idx; i++)
     {
         artifact_type *a_ptr = &a_info[i];
-        a_ptr->cur_num = 0;
+        a_ptr->generated = FALSE;
+        a_ptr->found = FALSE;
     }
 
     /* Reset the objects */

@@ -456,12 +456,12 @@ void wipe_o_list(void)
             if (object_is_fixed_artifact(o_ptr) && !object_is_known(o_ptr))
             {
                 /* Mega-Hack -- Preserve the artifact */
-                a_info[o_ptr->name1].cur_num = 0;
+                a_info[o_ptr->name1].generated = FALSE;
             }
-            if (o_ptr->name3 && !object_is_known(o_ptr))
+            if (random_artifacts && o_ptr->name3 && !object_is_known(o_ptr))
             {
                 /* Mega-Hack -- Preserve the artifact */
-                a_info[o_ptr->name3].cur_num = 0;
+                a_info[o_ptr->name3].generated = FALSE;
             }
         }
 
@@ -871,6 +871,13 @@ void stats_on_sell(object_type *o_ptr)
         device_stats_on_find(o_ptr);
         o_ptr->marked |= OM_EFFECT_COUNTED;
     }
+
+    if (o_ptr->name1)
+    {
+        assert(a_info[o_ptr->name1].generated);
+        a_info[o_ptr->name1].found = TRUE;
+    }
+
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
     {
         e_info[o_ptr->name2].counts.found += o_ptr->number;
@@ -1032,6 +1039,12 @@ void stats_on_identify(object_type *o_ptr)
     {
         device_stats_on_find(o_ptr);
         o_ptr->marked |= OM_EFFECT_COUNTED;
+    }
+
+    if (o_ptr->name1)
+    {
+        assert(a_info[o_ptr->name1].generated);
+        a_info[o_ptr->name1].found = TRUE;
     }
 
     if (o_ptr->name2 && !(o_ptr->marked & OM_EGO_COUNTED))
@@ -1895,7 +1908,7 @@ static bool make_artifact_special(object_type *o_ptr)
         artifact_type *a_ptr = &a_info[i];
 
         if (!a_ptr->name) continue;
-        if (a_ptr->cur_num) continue;
+        if (a_ptr->generated) continue;
         if (a_ptr->gen_flags & OFG_QUESTITEM) continue;
         if (!(a_ptr->gen_flags & OFG_INSTA_ART)) continue;
 
@@ -1967,7 +1980,7 @@ static bool make_artifact(object_type *o_ptr)
         artifact_type *a_ptr = &a_info[i];
 
         if (!a_ptr->name) continue;
-        if (a_ptr->cur_num) continue;
+        if (a_ptr->generated) continue;
         if (a_ptr->gen_flags & OFG_QUESTITEM) continue;
         if (a_ptr->gen_flags & OFG_INSTA_ART) continue;
         if (a_ptr->tval != o_ptr->tval) continue;
@@ -2460,7 +2473,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         artifact_type *a_ptr = &a_info[o_ptr->name3];
 
         /* Hack -- Mark the artifact as "created" */
-        a_ptr->cur_num = 1;
+        a_ptr->generated = TRUE;
 
         /* Hack -- Memorize location of artifact in saved floors */
         if (character_dungeon)
@@ -2475,7 +2488,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         artifact_type *a_ptr = &a_info[o_ptr->name1];
 
         /* Hack -- Mark the artifact as "created" */
-        a_ptr->cur_num = 1;
+        a_ptr->generated = TRUE;
 
         /* Hack -- Memorize location of artifact in saved floors */
         if (character_dungeon)
@@ -4005,10 +4018,10 @@ void place_object(int y, int x, u32b mode)
         /* Hack -- Preserve artifacts */
         if (object_is_fixed_artifact(q_ptr))
         {
-            a_info[q_ptr->name1].cur_num = 0;
+            a_info[q_ptr->name1].generated = FALSE;
         }
-        if (q_ptr->name3)
-            a_info[q_ptr->name3].cur_num = 0;
+        if (random_artifacts && q_ptr->name3)
+            a_info[q_ptr->name3].generated = FALSE;
     }
 }
 
@@ -4350,13 +4363,13 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
                 if (object_is_fixed_artifact(j_ptr) && !object_is_known(j_ptr))
                 {
                     /* Mega-Hack -- Preserve the artifact */
-                    a_info[j_ptr->name1].cur_num = 0;
+                    a_info[j_ptr->name1].generated = FALSE;
                 }
 
-                if (j_ptr->name3 && !object_is_known(j_ptr))
+                if (random_artifacts && j_ptr->name3 && !object_is_known(j_ptr))
                 {
                     /* Mega-Hack -- Preserve the artifact */
-                    a_info[j_ptr->name3].cur_num = 0;
+                    a_info[j_ptr->name3].generated = FALSE;
                 }
             }
 
@@ -4434,12 +4447,12 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
         /* Hack -- Preserve artifacts */
         if (object_is_fixed_artifact(j_ptr))
         {
-            a_info[j_ptr->name1].cur_num = 0;
+            a_info[j_ptr->name1].generated = FALSE;
         }
 
-        if (j_ptr->name3)
+        if (random_artifacts && j_ptr->name3)
         {
-            a_info[j_ptr->name3].cur_num = 0;
+            a_info[j_ptr->name3].generated = FALSE;
         }
 
         /* Failure */

@@ -1817,54 +1817,17 @@ int ct_uniques(void)
 
 int ct_artifacts(void)
 {
-    int i, y, x;
+    int i;
     int result = 0;
-    s16b *skip;
-
-    C_MAKE(skip, max_a_idx, s16b);
-
-    /* This is hard ... don't leak information to the player
-       when an artifact is on the current level but not yet found! */
-    for (y = 0; y < cur_hgt; y++)
-    {
-        for (x = 0; x < cur_wid; x++)
-        {
-            cave_type *c_ptr = &cave[y][x];
-            s16b this_o_idx, next_o_idx = 0;
-
-            for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
-            {
-                object_type *o_ptr = &o_list[this_o_idx];
-                next_o_idx = o_ptr->next_o_idx;
-
-                if (!object_is_fixed_artifact(o_ptr)) continue;
-                if (object_is_known(o_ptr)) continue;
-                skip[o_ptr->name1] = TRUE;
-            }
-        }
-    }
-
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-
-        if (!o_ptr->k_idx) continue;
-        if (!object_is_fixed_artifact(o_ptr)) continue;
-        if (object_is_known(o_ptr)) continue;
-
-        skip[o_ptr->name1] = TRUE;
-    }
 
     for (i = 0; i < max_a_idx; i++)
     {
         artifact_type *a_ptr = &a_info[i];
         if (!a_ptr->name) continue;
-        if (!a_ptr->cur_num) continue;
-        if (skip[i]) continue;
+        if (!a_ptr->found) continue;
         result++;
     }
 
-    C_KILL(skip, max_a_idx, s16b);
     return result;
 }
 

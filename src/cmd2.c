@@ -3852,9 +3852,9 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
             {
                 msg_format("The %s have gone to somewhere.", o_name);
                 if (object_is_fixed_artifact(q_ptr))
-                    a_info[bow->name1].cur_num = 0;
-                if (q_ptr->name3)
-                    a_info[bow->name3].cur_num = 0;
+                    a_info[q_ptr->name1].generated = FALSE;
+                if (random_artifacts && q_ptr->name3)
+                    a_info[q_ptr->name3].generated = FALSE;
                 return;
             }
 
