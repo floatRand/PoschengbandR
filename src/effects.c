@@ -3352,12 +3352,14 @@ bool set_superstealth(bool set)
         {
             if (cave[py][px].info & CAVE_MNLT)
             {
-                msg_print("You are mantled in weak shadow from ordinary eyes.");
+                if (disturb_minor)
+                    msg_print("<color:D>You are mantled in weak shadow from ordinary eyes.</color>");
                 p_ptr->monlite = p_ptr->old_monlite = TRUE;
             }
             else
             {
-                msg_print("You are mantled in shadow from ordinary eyes!");
+                if (disturb_minor)
+                    msg_print("<color:D>You are mantled in shadow from ordinary eyes!</color>");
                 p_ptr->monlite = p_ptr->old_monlite = FALSE;
             }
 
@@ -3373,7 +3375,8 @@ bool set_superstealth(bool set)
     {
         if (p_ptr->special_defense & NINJA_S_STEALTH)
         {
-            msg_print("You are exposed to common sight once more.");
+            if (disturb_minor)
+                msg_print("<color:y>You are exposed to common sight once more.</color>");
 
             notice = TRUE;
 

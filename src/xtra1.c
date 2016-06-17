@@ -653,7 +653,7 @@ static struct {
     {TERM_L_BLUE, "Rg", "Regen"},
     {TERM_L_RED, "If", "Infr"},
     {TERM_UMBER, "Sl", "Stealth"},
-    {TERM_YELLOW, "Stlt", "Stealth"},
+    {TERM_L_DARK, "Hd", "Hiding"},
     {TERM_L_BLUE, "Rc", "Recall"},
     {TERM_WHITE, "Al", "Alter"},
     /* Hex */

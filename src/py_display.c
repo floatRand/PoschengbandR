@@ -1950,6 +1950,8 @@ static void _build_statistics(doc_ptr doc)
     _group_counts_tval_imp(doc, TV_SHOT, "Shots");
     _group_counts_tval_imp(doc, TV_ARROW, "Arrows");
     _group_counts_tval_imp(doc, TV_BOLT, "Bolts");
+    if (p_ptr->pclass == CLASS_NINJA)
+        _group_counts_tval_imp(doc, TV_SPIKE, "Syuriken");
     _group_counts_imp(doc, _kind_is_spellbook, "Spellbooks");
     _group_counts_tval_imp(doc, TV_FOOD, "Food");
     _group_counts_imp(doc, _kind_is_corpse, "Corpses");
