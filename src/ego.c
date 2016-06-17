@@ -3058,7 +3058,10 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
         if (!store_hack)
             e_ptr->counts.generated++;
 
-        /* Hack -- acquire "cursed" flag */
+        if (have_flag(o_ptr->flags, OF_BRAND_FIRE))
+            add_flag(o_ptr->flags, OF_LITE);
+
+        /* Curses */
         if (e_ptr->gen_flags & OFG_CURSED) o_ptr->curse_flags |= (OFC_CURSED);
         if (e_ptr->gen_flags & OFG_HEAVY_CURSE) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
         if (e_ptr->gen_flags & OFG_PERMA_CURSE) o_ptr->curse_flags |= (OFC_PERMA_CURSE);
@@ -3066,6 +3069,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
         if (e_ptr->gen_flags & (OFG_RANDOM_CURSE1)) o_ptr->curse_flags |= get_curse(1, o_ptr);
         if (e_ptr->gen_flags & (OFG_RANDOM_CURSE2)) o_ptr->curse_flags |= get_curse(2, o_ptr);
 
+        /* Bonuses */
         if (e_ptr->gen_flags & (OFG_ONE_SUSTAIN)) one_sustain(o_ptr);
         if (e_ptr->gen_flags & (OFG_XTRA_POWER)) one_ability(o_ptr);
         if (e_ptr->gen_flags & (OFG_XTRA_H_RES))
@@ -3079,7 +3083,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
         if (e_ptr->gen_flags & (OFG_XTRA_L_RES)) one_lordly_high_resistance(o_ptr);
         if (e_ptr->gen_flags & (OFG_XTRA_RES)) one_resistance(o_ptr);
 
-        /* Hack -- obtain bonuses */
+        /* Plusses */
         if (e_ptr->max_to_h)
         {
             if (e_ptr->max_to_h < 0)
@@ -3102,7 +3106,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
                 o_ptr->to_a += randint1(e_ptr->max_to_a);
         }
 
-        /* Hack -- obtain pval */
+        /* Pval */
         if (e_ptr->max_pval)
         {
             if ((o_ptr->name2 == EGO_WEAPON_CRUSADE) && (have_flag(o_ptr->flags, OF_BLOWS)))
@@ -3110,9 +3114,6 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
                 if (o_ptr->dd*o_ptr->ds > 30)
                 {
                     remove_flag(o_ptr->flags, OF_BLOWS);
-                    /* As far as I can tell, pval is first assigned for Holy Avengers
-                        as the terminal else clause of this (outer) if, which is missed
-                        by having picked up extra blows ... */
                     o_ptr->pval = randint1(e_ptr->max_pval);
                 }
                 else

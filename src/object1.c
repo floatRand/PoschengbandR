@@ -381,8 +381,13 @@ static void _obj_identify_aux(object_type *o_ptr)
             o_ptr->known_flags[i] &= ~(e_ptr->flags[i] | e_ptr->xtra_flags[i]);
         }
 
-        /* Patch up activation overrides */
+        /* Patch up activation overrides. OF_ACTIVATE will exist in e_ptr->xtra_flags,
+           and the user may have learned the activation prior to Identify */
         if (o_ptr->activation.type && activate)
+            add_flag(o_ptr->known_flags, OF_ACTIVATE);
+
+        /* Automatically know previously learned random activations */
+        if (o_ptr->activation.type && effect_is_known(o_ptr->activation.type))
             add_flag(o_ptr->known_flags, OF_ACTIVATE);
     }
 }
@@ -433,7 +438,10 @@ static void _obj_identify_fully_aux(object_type *o_ptr)
 
     /* Learn random activations */
     if (o_ptr->activation.type)
+    {
         add_flag(o_ptr->known_flags, OF_ACTIVATE);
+        effect_learn(o_ptr->activation.type);
+    }
 
     _obj_learn_curses(o_ptr);
 }
@@ -464,8 +472,8 @@ void obj_identify_fully(object_type *o_ptr)
 {
     assert(o_ptr);
     if (!obj_is_identified(o_ptr))
-        _obj_identify_aux(o_ptr);
-    if (!obj_is_identified_fully(o_ptr))
+        _obj_identify_aux(o_ptr);    /* v~~~~Store items have no 'unknown' flags */
+    if (!obj_is_identified_fully(o_ptr) || (o_ptr->ident & IDENT_STORE))
         _obj_identify_fully_aux(o_ptr);
     else
         _obj_learn_curses(o_ptr);
@@ -551,7 +559,10 @@ void obj_learn_activation(object_type *o_ptr)
     }
 
     if (o_ptr->activation.type)
+    {
         add_flag(o_ptr->known_flags, OF_ACTIVATE);
+        effect_learn(o_ptr->activation.type);
+    }
     else if (o_ptr->name1)
     {
         artifact_type *a_ptr = &a_info[o_ptr->name1];

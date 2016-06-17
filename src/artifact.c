@@ -2683,6 +2683,9 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     add_flag(o_ptr->flags, OF_IGNORE_FIRE);
     add_flag(o_ptr->flags, OF_IGNORE_COLD);
 
+    if (have_flag(o_ptr->flags, OF_BRAND_FIRE))
+        add_flag(o_ptr->flags, OF_LITE);
+
     if ( !obj_has_effect(o_ptr)
       && !object_is_ammo(o_ptr) )
     {

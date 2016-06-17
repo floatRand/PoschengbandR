@@ -1808,7 +1808,8 @@ typedef struct
     int  cost;
     int  rarity;
     int  bias;
-} _effect_info_t;
+    bool known;
+} _effect_info_t, *_effect_info_ptr;
 
 /*  Allocation Table for Random Artifact Activations
     This also assists parsing a_info.txt, k_info.txt and e_info.txt.
@@ -2077,8 +2078,39 @@ static _effect_info_t _effect_info[] =
     {"GONG",            EFFECT_GONG,                 0,   0,  0, 0},
     {"MURAMASA",        EFFECT_MURAMASA,             0,   0,  0, 0},
 
-    { 0, 0, 0, 0, 0, 0 }
+    {0}
 };
+
+_effect_info_ptr _get_effect_info(int type)
+{
+    int i;
+    for (i = 0; ; i++)
+    {
+        _effect_info_ptr e = &_effect_info[i];
+        if (!e->type) break;
+        if (e->type == type) return e;
+    }
+    return NULL;
+}
+
+bool effect_is_known(int type)
+{
+    _effect_info_ptr e = _get_effect_info(type);
+    if (e)
+        return e->known;
+    return FALSE;
+}
+
+bool effect_learn(int type)
+{
+    _effect_info_ptr e = _get_effect_info(type);
+    if (e && !e->known)
+    {
+        e->known = TRUE;
+        return TRUE;
+    }
+    return FALSE;
+}
 
 errr effect_parse(char *line, effect_t *effect) /* LITE_AREA:<Lvl>:<Timeout>:<Extra> */
 {
@@ -2875,9 +2907,23 @@ static void _device_stats_load_imp(savefile_ptr file, device_effect_info_ptr tab
 
 void device_stats_on_save(savefile_ptr file)
 {
+    int i, ct = 0;
     _device_stats_save_imp(file, wand_effect_table);
     _device_stats_save_imp(file, rod_effect_table);
     _device_stats_save_imp(file, staff_effect_table);
+
+    for (i = 0; ; i++)
+    {
+        if (!_effect_info[i].type) break;
+        if (_effect_info[i].known) ct++;
+    }
+    savefile_write_s32b(file, ct);
+    for (i = 0; ; i++)
+    {
+        if (!_effect_info[i].type) break;
+        if (_effect_info[i].known)
+            savefile_write_s32b(file, _effect_info[i].type);
+    }
 }
 
 void device_stats_on_load(savefile_ptr file)
@@ -2885,6 +2931,19 @@ void device_stats_on_load(savefile_ptr file)
     _device_stats_load_imp(file, wand_effect_table);
     _device_stats_load_imp(file, rod_effect_table);
     _device_stats_load_imp(file, staff_effect_table);
+
+    if (!savefile_is_older_than(file, 5, 0, 0, 2))
+    {
+        int i, ct;
+        ct = savefile_read_s32b(file);
+        for (i = 0; i < ct; i++)
+        {
+            int type = savefile_read_s32b(file);
+            _effect_info_ptr e = _get_effect_info(type);
+            if (e)
+                e->known = TRUE;
+        }
+    }
 }
 
 void device_stats_on_find(object_type *o_ptr)
