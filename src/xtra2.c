@@ -1414,8 +1414,10 @@ void monster_death(int m_idx, bool drop_item)
 
     case MON_SERPENT:
         if (!drop_chosen_item) break;
-        create_named_art(ART_GROND, py, px);
-        create_named_art(ART_CHAOS, py, px);
+        if (create_named_art(ART_GROND, y, x))
+            a_info[ART_GROND].generated = TRUE;
+        if (create_named_art(ART_CHAOS, y, x))
+            a_info[ART_CHAOS].generated = TRUE;
         break;
 
     case MON_B_DEATH_SWORD:

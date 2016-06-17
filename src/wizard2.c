@@ -165,7 +165,8 @@ static bool wiz_dimension_door(void)
  */
 static void wiz_create_named_art(int a_idx)
 {
-    create_named_art(a_idx, py, px);
+    if (create_named_art(a_idx, py, px))
+        a_info[a_idx].generated = TRUE;
 }
 
 typedef struct {
@@ -2265,7 +2266,8 @@ static void wiz_create_item(void)
             if (a_info[i].sval != k_info[k_idx].sval) continue;
 
             /* Create this artifact */
-            (void)create_named_art(i, py, px);
+            if (create_named_art(i, py, px))
+                a_info[i].generated = TRUE;
 
             /* All done */
             msg_print("Allocated(INSTA_ART).");
