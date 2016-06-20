@@ -808,7 +808,7 @@ typedef struct {
     s16b leader_idx;
     s16b count;
     s16b ai;            /* How is the pack behaving? */
-    s16b guard_m_idx;    /* Pack is guarding another monster, perhaps the leader */
+    s16b guard_idx;     /* Pack is guarding another monster, perhaps the leader. Or, this is a dungeon entrance being guarded. */
     s16b guard_x;       /* Pack is defending a specific location */
     s16b guard_y;
     s16b distance;
@@ -1883,6 +1883,7 @@ struct dungeon_info_type {
     int final_ego;       /* Ego type for final_object, or effect type for devices */
     int final_artifact;    /* The artifact you'll find at the bottom */
     int final_guardian;    /* The artifact's guardian. If an artifact is specified, then it's NEEDED */
+    int initial_guardian;  /* Guarding the entrance */
 
     byte special_div;    /* % of monsters affected by the flags/races allowed, to add some variety */
     int tunnel_percent;

@@ -369,8 +369,8 @@ static void compact_monsters_aux(int i1, int i2)
         pack_info_t *pack_ptr = pack_info_ptr(i1);
         if (pack_ptr)
         {
-            if (pack_ptr->guard_m_idx == i1) /* Assumes pack is guarding one of its members! */
-                pack_ptr->guard_m_idx = i2;
+            if (pack_ptr->ai == AI_GUARD_MON && pack_ptr->guard_idx == i1) /* Assumes pack is guarding one of its members! */
+                pack_ptr->guard_idx = i2;
 
             if (pack_ptr->leader_idx == i1)
                 pack_ptr->leader_idx = i2;
@@ -720,7 +720,7 @@ void pack_choose_ai(int m_idx)
                 if (pack_ptr->leader_idx)
                 {
                     pack_ptr->ai = AI_GUARD_MON;
-                    pack_ptr->guard_m_idx = pack_ptr->leader_idx;
+                    pack_ptr->guard_idx = pack_ptr->leader_idx;
                 }
                 else if (r_ptr->freq_spell)
                 {
@@ -766,6 +766,10 @@ void pack_on_slay_monster(int m_idx)
     {
         pack_info_t *pack_ptr = &pack_info_list[m_ptr->pack_idx];
         pack_ptr->count--;
+
+        if (m_ptr->smart & SM_GUARDIAN)
+            dungeon_flags[pack_ptr->guard_idx] |= DUNGEON_NO_GUARDIAN;
+
         if (pack_ptr->count <= 0)
             pack_info_push(m_ptr->pack_idx);
         else if (pack_ptr->ai != AI_FEAR)
@@ -3198,7 +3202,7 @@ byte get_mspeed(monster_race *r_ptr)
  * This is the only function which may place a monster in the dungeon,
  * except for the savefile loading code.
  */
-static int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
+int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
 {
     /* Access the location */
     cave_type        *c_ptr = &cave[y][x];

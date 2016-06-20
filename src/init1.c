@@ -4189,6 +4189,13 @@ errr parse_d_info(char *buf, header *head)
                 /* Continue */
                 continue;
             }
+            if (1 == sscanf(s, "INITIAL_GUARDIAN_%d", &monst))
+            {
+                d_ptr->initial_guardian = monst;
+                s = t;
+                continue;
+            }
+
 
             /* XXX XXX XXX Hack -- Read Special Percentage */
             if (1 == sscanf(s, "MONSTER_DIV_%d", &monst))

@@ -1152,7 +1152,7 @@ static errr rd_saved_floor(savefile_ptr file, saved_floor_type *sf_ptr)
             ptr->leader_idx = savefile_read_s16b(file);
             ptr->count = savefile_read_s16b(file);
             ptr->ai = savefile_read_s16b(file);
-            ptr->guard_m_idx = savefile_read_s16b(file);
+            ptr->guard_idx = savefile_read_s16b(file);
             ptr->guard_x = savefile_read_s16b(file);
             ptr->guard_y = savefile_read_s16b(file);
             ptr->distance = savefile_read_s16b(file);

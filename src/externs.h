@@ -602,7 +602,8 @@ extern s16b *max_dlv;
     [1] Address Stair Scumming by occasionally removing the wilderness entrance. (Done)
     [2] Lock dungeons until a certain event takes place (Proposed)
 */
-#define DUNGEON_NO_ENTRANCE 0x0001
+#define DUNGEON_NO_ENTRANCE 0x0001  /* Wilderness Entrance has collapsed (stair scummer?) */
+#define DUNGEON_NO_GUARDIAN 0x0002  /* Wilderness Entrance Guardian has been slain */
 extern u32b *dungeon_flags;
 
 extern s16b feat_wall_outer;
@@ -1126,6 +1127,7 @@ extern void sanity_blast(monster_type *m_ptr, bool necro);
 extern void update_mon(int m_idx, bool full);
 extern void update_monsters(bool full);
 extern bool place_monster_aux(int who, int y, int x, int r_idx, u32b mode);
+extern int  place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode);
 extern bool place_monster(int y, int x, u32b mode);
 extern bool alloc_horde(int y, int x);
 extern bool alloc_guardian(bool def_val);

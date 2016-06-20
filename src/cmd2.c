@@ -319,6 +319,7 @@ void do_cmd_go_down(void)
                   && down_num >= 20 
                   && !ironman_rooms 
                   && !(d_info[dungeon_type].flags1 & DF1_RANDOM) 
+                  && !(d_info[dungeon_type].initial_guardian && !(dungeon_flags[dungeon_type] & DUNGEON_NO_GUARDIAN))
                   && one_in_(14) )
                 {
                     /* Hack:  No stair scum */

@@ -4688,6 +4688,11 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                     resists_tele = TRUE;
                 }
             }
+            else if (m_ptr->smart & SM_GUARDIAN)
+            {
+                note = " is unaffected!";
+                resists_tele = TRUE;
+            }
 
             if (!resists_tele)
             {
