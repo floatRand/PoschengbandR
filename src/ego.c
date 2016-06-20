@@ -3186,6 +3186,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
             o_ptr->pval = 2;
         }
 
+        if (!object_is_device(o_ptr))
         {
             int i;
             for (i = 0; i < OF_ARRAY_SIZE; i++)
