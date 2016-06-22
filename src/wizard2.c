@@ -2759,6 +2759,7 @@ static char _score_color(int score)
     return 'v';
 }
 
+#if 0
 static void _wiz_stats_log_android(int level, object_type *o_ptr)
 {
     int  score = obj_value_real(o_ptr);
@@ -2779,6 +2780,7 @@ static void _wiz_stats_log_android(int level, object_type *o_ptr)
 
     doc_printf(_wiz_doc, " <indent><style:indent>%s</style></indent>\n", name);
 }
+#endif
 
 static void _wiz_stats_log_obj(int level, object_type *o_ptr)
 {
@@ -2875,16 +2877,13 @@ static void _wiz_inspect_objects(int level)
             stats_add_ego(o_ptr);
 
         if (0) _wiz_stats_log_speed(level, o_ptr);
-        if (0) _wiz_stats_log_books(level, o_ptr, 20, 20);
+        if (1) _wiz_stats_log_books(level, o_ptr, 20, 20);
         if (0) _wiz_stats_log_devices(level, o_ptr);
         if (0) _wiz_stats_log_arts(level, o_ptr);
         if (0) _wiz_stats_log_rand_arts(level, o_ptr);
 
         if (0 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_ammo(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
-
-        if (p_ptr->prace == RACE_ANDROID && object_is_wearable(o_ptr) && !object_is_nameless(o_ptr))
-            _wiz_stats_log_android(level, o_ptr);
 
         if (race_ptr->destroy_object)
             race_ptr->destroy_object(o_ptr);
