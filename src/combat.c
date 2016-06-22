@@ -479,10 +479,6 @@ void display_weapon_info(doc_ptr doc, int hand)
     case MAULER_KNOCKBACK:
         num_blow = 100;
         break;
-    case MAULER_KNOCKOUT_BLOW:
-        num_blow = 100;
-        to_h -= 50;
-        break;
     case PY_POWER_ATTACK:
         to_h += 10;
         to_d += p_ptr->lev / 2;

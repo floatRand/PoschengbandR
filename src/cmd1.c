@@ -3035,7 +3035,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     bonus = p_ptr->weapon_info[hand].to_h + to_h;
     if (mode == WEAPONMASTER_KNOCK_BACK) bonus -= 20;
     if (mode == WEAPONMASTER_REAPING) bonus -= 40;
-    if (mode == MAULER_KNOCKOUT_BLOW) bonus -= 50;
     if (mode == WEAPONMASTER_CUNNING_STRIKE) bonus += 20;
     if (mode == WEAPONMASTER_SMITE_EVIL && hand == 0 && (r_ptr->flags3 & RF3_EVIL)) bonus += 200;
     if (duelist_attack) bonus += p_ptr->lev;
@@ -3876,25 +3875,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 3 + randint1(3)));
                     }
                 }
-                if (mode == MAULER_KNOCKOUT_BLOW)
-                {
-                    if (r_ptr->flagsr & RFR_RES_ALL)
-                    {
-                        mon_lore_r(m_ptr, RFR_RES_ALL);
-                        msg_format("%^s is immune.", m_name_subject);
-                    }
-                    else if (mon_save_p(m_ptr->r_idx, A_STR))
-                    {
-                        msg_format("%^s resists.", m_name_subject);
-                    }
-                    else
-                    {
-                        msg_format("%^s is knocked out.", m_name_subject);
-                        set_monster_paralyzed(c_ptr->m_idx, randint1(3));
-                        /* No more retaliation this round! */                    
-                        retaliation_count = 100; /* Any number >= 4 will do ... */
-                    }
-                }
                 if (mode == MELEE_AWESOME_BLOW)
                 {
                     int dir = calculate_dir(px, py, x, y);
@@ -4308,7 +4288,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         if (mauler_get_toggle() == MAULER_TOGGLE_MAUL) break;
         if (mode == MAULER_STUNNING_BLOW) break;
         if (mode == MAULER_KNOCKBACK) break;
-        if (mode == MAULER_KNOCKOUT_BLOW) break;
         if (mode == MAULER_CRUSHING_BLOW) break;
         if (mode == MAULER_SCATTER) break;
         if (mode == HISSATSU_KYUSHO) break;
@@ -4760,7 +4739,6 @@ bool py_attack(int y, int x, int mode)
         case ROGUE_ASSASSINATE:
         case MAULER_STUNNING_BLOW:
         case MAULER_KNOCKBACK:
-        case MAULER_KNOCKOUT_BLOW:
         case MAULER_CRUSHING_BLOW:
         case MAULER_CRITICAL_BLOW:
         case MAULER_SCATTER:
