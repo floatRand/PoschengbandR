@@ -437,7 +437,7 @@ static void _obj_identify_fully_aux(object_type *o_ptr)
     }
 
     /* Learn random activations */
-    if (o_ptr->activation.type)
+    if (o_ptr->activation.type && !object_is_device(o_ptr))
     {
         add_flag(o_ptr->known_flags, OF_ACTIVATE);
         effect_learn(o_ptr->activation.type);
