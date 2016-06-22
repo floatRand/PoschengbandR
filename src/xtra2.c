@@ -2802,7 +2802,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
         monster_desc(m_name, m_ptr, MD_TRUE_NAME);
 
         if (p_ptr->tim_killing_spree)
-            set_fast(p_ptr->fast + 5, FALSE);
+            set_fast(p_ptr->fast + 10, FALSE);
 
         if (r_info[m_ptr->r_idx].flags7 & RF7_TANUKI)
         {
