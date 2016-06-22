@@ -429,6 +429,8 @@ static void _obj_identify_fully_aux(object_type *o_ptr)
             else
                 e_ptr->known_flags[i] |= o_ptr->flags[i];
         }
+        if (object_is_device(o_ptr))
+            remove_flag(e_ptr->known_flags, OF_ACTIVATE);
     }
     else /* perhaps a rand-art? */
     {
