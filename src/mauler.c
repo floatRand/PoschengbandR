@@ -616,15 +616,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
             int w = o_ptr->weight;
             int h = (w - 150)/20;
             int d = (w - 150)/10;
-            int m = (w - 150)/2;
 
-            if (m > 200)
-                m = 200;
-            if (m < 0)
-                m = 0;
-
-            info_ptr->to_mult += m * p_ptr->lev/50;
-    
             if (_get_toggle() != MAULER_TOGGLE_BLOCK)
             {
                 info_ptr->to_h += h;

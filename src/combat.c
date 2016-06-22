@@ -68,7 +68,7 @@ static _blow_info_t _get_blow_info(int hand)
         break;
 
     case CLASS_MAULER:
-        result.num = 175; result.wgt = 280; result.mul = 75; break;
+        result.num = 300; result.wgt = 280; result.mul = 125; break;
 
     case CLASS_BERSERKER:
         result.num = 600; result.wgt = 70; result.mul = 75; break;
@@ -373,7 +373,7 @@ int calculate_base_blows(int hand, int str_idx, int dex_idx)
     result = rng.min + (rng.max - rng.min) * blow_str_idx / 110;
 
     if (p_ptr->pclass == CLASS_MAULER)
-        result = 100 + (result - 100)/8;
+        result = 100 + (result - 100)*2/5;
         
     if (result > blow_info.num) 
         result = blow_info.num;
@@ -470,8 +470,11 @@ void display_weapon_info(doc_ptr doc, int hand)
 
     switch (display_weapon_mode)
     {
-    case MAULER_STUNNING_BLOW:
     case MAULER_CRITICAL_BLOW:
+        if (num_blow > 100)
+            num_blow = 100 + (num_blow - 100) / 2;
+        break;
+    case MAULER_STUNNING_BLOW:
     case MAULER_CRUSHING_BLOW:
     case MAULER_KNOCKBACK:
         num_blow = 100;
@@ -514,15 +517,8 @@ void display_weapon_info(doc_ptr doc, int hand)
     else if (have_flag(flgs, OF_VORPAL) || p_ptr->vorpal)
         mult = mult * 11 / 9; /* 1 + 1/6(1 + 1/4 + ...) = 1.222x */
 
-    mult += mult * p_ptr->weapon_info[hand].to_mult / 100;
-
     if (display_weapon_mode == MAULER_CRUSHING_BLOW)
-    {
-        int d = p_ptr->lev/5;
-        int n = 10*(1 + d)/2; /* scale by 10 */
-
-        mult = mult * (50 + n)/30;
-    }
+        mult = mult * NUM_BLOWS(hand) / 50;
 
     if (!have_flag(flgs, OF_BRAND_ORDER)
         && weaponmaster_get_toggle() != TOGGLE_ORDER_BLADE)
@@ -610,12 +606,6 @@ void display_weapon_info(doc_ptr doc, int hand)
                             crit.mul/100, crit.mul%100, crit_pct / 10, crit_pct % 10);
         }
     }
-    if (p_ptr->weapon_info[hand].to_mult)
-    {
-        int m = 100 + p_ptr->weapon_info[hand].to_mult;
-        doc_printf(cols[0], " %-7.7s: %d.%02dx\n", "Mauler", m / 100, m % 100);
-    }
-
 
     _display_weapon_slay(mult, 100, FALSE, num_blow, dd, ds, to_d, "Normal", TERM_WHITE, cols[0]);
     if (force)

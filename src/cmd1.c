@@ -2284,10 +2284,18 @@ void touch_zap_player(int m_idx)
 }
 
 /* Fractional Blows: 2.75 is stored as 275 and should give 3 blows 75% of the time. */
-static int _get_num_blow(int hand)
+static int _get_num_blow(int hand, int mode)
 {
+    int result;
     int num_blow = NUM_BLOWS(hand);
-    int result = num_blow / 100;
+
+    if (mode == MAULER_CRITICAL_BLOW)
+    {
+        if (num_blow > 100)
+            num_blow = 100 + (num_blow - 100) / 2;
+    }
+
+    result = num_blow / 100;
 
     if (randint0(100) < (num_blow % 100))
         result++;
@@ -3042,7 +3050,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
     chance += virtue_current(VIRTUE_VALOUR) / 10;
 
-    num_blow = _get_num_blow(hand);
+    num_blow = _get_num_blow(hand, mode);
 
     if (mode == HISSATSU_COLD) num_blow += 2;
     if (mode == WEAPONMASTER_FLURRY) num_blow *= 2;
@@ -3328,9 +3336,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 }
 
                 if (mode == MAULER_CRUSHING_BLOW)
-                {   /* 2x to 5x */
-                    k = k * (5 + randint1(p_ptr->lev/5)) / 3;
-                }
+                    k = k * NUM_BLOWS(hand) / 50;
 
                 if ( (have_flag(flgs, OF_IMPACT) && (k > 50 || one_in_(7))) 
                   || chaos_effect == 2 
@@ -3381,8 +3387,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                         msg_print(crit.desc);
                     }
                 }
-
-                k += k * p_ptr->weapon_info[hand].to_mult / 100;
 
                 drain_result = k;
                 k2 = k;
@@ -4302,7 +4306,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         if (mode == MELEE_AWESOME_BLOW) break;
         if (mode == ROGUE_ASSASSINATE) break;
         if (mauler_get_toggle() == MAULER_TOGGLE_MAUL) break;
-        if (mode == MAULER_CRITICAL_BLOW) break;
         if (mode == MAULER_STUNNING_BLOW) break;
         if (mode == MAULER_KNOCKBACK) break;
         if (mode == MAULER_KNOCKOUT_BLOW) break;
@@ -4545,7 +4548,7 @@ bool py_attack(int y, int x, int mode)
             if (p_ptr->weapon_info[i].wield_how != WIELD_NONE && !mdeath && !fear_stop)
             {
                 object_type *o_ptr = equip_obj(p_ptr->weapon_info[i].slot);
-                int num_blow = _get_num_blow(i);
+                int num_blow = _get_num_blow(i, 0);
 
                 for (j = 0; j < num_blow; j++)
                 {
@@ -4593,7 +4596,7 @@ bool py_attack(int y, int x, int mode)
             if (p_ptr->weapon_info[i].wield_how != WIELD_NONE && !mdeath && !fear_stop)
             {
                 object_type *o_ptr = equip_obj(p_ptr->weapon_info[i].slot);
-                int num_blow = _get_num_blow(i);
+                int num_blow = _get_num_blow(i, 0);
                 for (j = 0; j < num_blow; j++)
                 {
                     for (k = 0; k < ct; k++)
@@ -4644,7 +4647,7 @@ bool py_attack(int y, int x, int mode)
                 drain_left = _max_vampiric_drain();
                 if (p_ptr->weapon_info[i].wield_how != WIELD_NONE && !mdeath && !fear_stop)
                 {
-                    int num_blow = _get_num_blow(i);
+                    int num_blow = _get_num_blow(i, 0);
                     for (j = 0; j < num_blow; j++)
                     {
                         int y, x;
@@ -4676,8 +4679,6 @@ bool py_attack(int y, int x, int mode)
                         /* Monster cannot move back? */
                         if (!monster_can_enter(ny, nx, &r_info[m_ptr->r_idx], 0))
                         {
-                            /* -more- */
-                            if (j < 2) msg_print(NULL);
                             continue;
                         }
     
@@ -4700,9 +4701,6 @@ bool py_attack(int y, int x, int mode)
                         {
                             break;
                         }
-
-                        /* -more- */
-                        if (j < 2) msg_print(NULL);
                     }
                 }
             }

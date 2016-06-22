@@ -1053,7 +1053,6 @@ struct player_pact
     int  dis_to_d;
     int  to_dd;
     int  to_ds;
-    int  to_mult;
     int  base_blow;
     int  xtra_blow;
     bool genji;

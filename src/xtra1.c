@@ -3473,7 +3473,6 @@ void calc_bonuses(void)
 
         p_ptr->weapon_info[i].to_dd = 0;
         p_ptr->weapon_info[i].to_ds = 0;
-        p_ptr->weapon_info[i].to_mult = 0;
         for (j = 0; j < OF_ARRAY_SIZE; j++)
             p_ptr->weapon_info[i].flags[j] = 0;
 
