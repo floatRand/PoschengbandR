@@ -1187,10 +1187,10 @@ static bool get_moves(int m_idx, int *mm)
 
         if (pack_ptr->ai == AI_GUARD_MON)
         {
-            monster_type *m_ptr2 = &m_list[pack_ptr->guard_m_idx];
+            monster_type *m_ptr2 = &m_list[pack_ptr->guard_idx];
             if (!m_ptr2->r_idx)
                 pack_ptr->ai = AI_SEEK;    /* detect a dead guardian */
-            else if ( m_idx != pack_ptr->guard_m_idx
+            else if ( m_idx != pack_ptr->guard_idx
                    && m_ptr->cdis > 3 )
             {
                 x = m_ptr->fx - m_ptr2->fx;
@@ -2274,7 +2274,7 @@ static void process_monster(int m_idx)
     {
         int tmp = p_ptr->lev*6+(p_ptr->skills.stl+10)*4;
         if (p_ptr->monlite) tmp /= 3;
-        if (p_ptr->cursed & TRC_AGGRAVATE) tmp /= 2;
+        if (p_ptr->cursed & OFC_AGGRAVATE) tmp /= 2;
         if (r_ptr->level > (p_ptr->lev*p_ptr->lev/20+10)) tmp /= 3;
         /* Low-level monsters will find it difficult to locate the player. */
         if (randint0(tmp) > (r_ptr->level+20)) aware = FALSE;
@@ -2414,7 +2414,7 @@ static void process_monster(int m_idx)
     if (MON_CSLEEP(m_ptr))
     {
         /* Handle non-aggravation - Still sleeping */
-        if (!(p_ptr->cursed & TRC_AGGRAVATE)) return;
+        if (!(p_ptr->cursed & OFC_AGGRAVATE)) return;
 
         /* Handle aggravation */
 
@@ -2450,7 +2450,7 @@ static void process_monster(int m_idx)
     }
 
     /* No one wants to be your friend if you're aggravating */
-    if (is_friendly(m_ptr) && (p_ptr->cursed & TRC_AGGRAVATE))
+    if (is_friendly(m_ptr) && (p_ptr->cursed & OFC_AGGRAVATE))
         gets_angry = TRUE;
 
     /* Paranoia... no pet uniques outside wizard mode -- TY */
@@ -3463,7 +3463,7 @@ static void process_monster(int m_idx)
                 /* Scan all objects in the grid */
                 for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
                 {
-                    u32b flgs[TR_FLAG_SIZE], flg2 = 0L, flg3 = 0L, flgr = 0L;
+                    u32b flgs[OF_ARRAY_SIZE], flg2 = 0L, flg3 = 0L, flgr = 0L;
                     char m_name[80], o_name[MAX_NLEN];
 
                     /* Acquire object */
@@ -3487,7 +3487,7 @@ static void process_monster(int m_idx)
                     }
 
                     /* Extract some flags */
-                    object_flags(o_ptr, flgs);
+                    obj_flags(o_ptr, flgs);
 
                     /* Acquire the object name */
                     object_desc(o_name, o_ptr, 0);
@@ -3496,30 +3496,30 @@ static void process_monster(int m_idx)
                     monster_desc(m_name, m_ptr, MD_INDEF_HIDDEN);
 
                     /* React to objects that hurt the monster */
-                    if (have_flag(flgs, TR_SLAY_DRAGON)) flg3 |= (RF3_DRAGON);
-                    if (have_flag(flgs, TR_KILL_DRAGON)) flg3 |= (RF3_DRAGON);
-                    if (have_flag(flgs, TR_SLAY_TROLL))  flg3 |= (RF3_TROLL);
-                    if (have_flag(flgs, TR_KILL_TROLL))  flg3 |= (RF3_TROLL);
-                    if (have_flag(flgs, TR_SLAY_GIANT))  flg3 |= (RF3_GIANT);
-                    if (have_flag(flgs, TR_KILL_GIANT))  flg3 |= (RF3_GIANT);
-                    if (have_flag(flgs, TR_SLAY_ORC))    flg3 |= (RF3_ORC);
-                    if (have_flag(flgs, TR_KILL_ORC))    flg3 |= (RF3_ORC);
-                    if (have_flag(flgs, TR_SLAY_DEMON))  flg3 |= (RF3_DEMON);
-                    if (have_flag(flgs, TR_KILL_DEMON))  flg3 |= (RF3_DEMON);
-                    if (have_flag(flgs, TR_SLAY_UNDEAD)) flg3 |= (RF3_UNDEAD);
-                    if (have_flag(flgs, TR_KILL_UNDEAD)) flg3 |= (RF3_UNDEAD);
-                    if (have_flag(flgs, TR_SLAY_ANIMAL)) flg3 |= (RF3_ANIMAL);
-                    if (have_flag(flgs, TR_KILL_ANIMAL)) flg3 |= (RF3_ANIMAL);
-                    if (have_flag(flgs, TR_SLAY_EVIL))   flg3 |= (RF3_EVIL);
-                    if (have_flag(flgs, TR_KILL_EVIL))   flg3 |= (RF3_EVIL);
-                    if (have_flag(flgs, TR_SLAY_GOOD))   flg3 |= (RF3_GOOD);
-                    if (have_flag(flgs, TR_SLAY_HUMAN))  flg2 |= (RF2_HUMAN);
-                    if (have_flag(flgs, TR_KILL_HUMAN))  flg2 |= (RF2_HUMAN);
-                    if (have_flag(flgs, TR_BRAND_ACID))  flgr |= (RFR_IM_ACID);
-                    if (have_flag(flgs, TR_BRAND_ELEC))  flgr |= (RFR_IM_ELEC);
-                    if (have_flag(flgs, TR_BRAND_FIRE))  flgr |= (RFR_IM_FIRE);
-                    if (have_flag(flgs, TR_BRAND_COLD))  flgr |= (RFR_IM_COLD);
-                    if (have_flag(flgs, TR_BRAND_POIS))  flgr |= (RFR_IM_POIS);
+                    if (have_flag(flgs, OF_SLAY_DRAGON)) flg3 |= (RF3_DRAGON);
+                    if (have_flag(flgs, OF_KILL_DRAGON)) flg3 |= (RF3_DRAGON);
+                    if (have_flag(flgs, OF_SLAY_TROLL))  flg3 |= (RF3_TROLL);
+                    if (have_flag(flgs, OF_KILL_TROLL))  flg3 |= (RF3_TROLL);
+                    if (have_flag(flgs, OF_SLAY_GIANT))  flg3 |= (RF3_GIANT);
+                    if (have_flag(flgs, OF_KILL_GIANT))  flg3 |= (RF3_GIANT);
+                    if (have_flag(flgs, OF_SLAY_ORC))    flg3 |= (RF3_ORC);
+                    if (have_flag(flgs, OF_KILL_ORC))    flg3 |= (RF3_ORC);
+                    if (have_flag(flgs, OF_SLAY_DEMON))  flg3 |= (RF3_DEMON);
+                    if (have_flag(flgs, OF_KILL_DEMON))  flg3 |= (RF3_DEMON);
+                    if (have_flag(flgs, OF_SLAY_UNDEAD)) flg3 |= (RF3_UNDEAD);
+                    if (have_flag(flgs, OF_KILL_UNDEAD)) flg3 |= (RF3_UNDEAD);
+                    if (have_flag(flgs, OF_SLAY_ANIMAL)) flg3 |= (RF3_ANIMAL);
+                    if (have_flag(flgs, OF_KILL_ANIMAL)) flg3 |= (RF3_ANIMAL);
+                    if (have_flag(flgs, OF_SLAY_EVIL))   flg3 |= (RF3_EVIL);
+                    if (have_flag(flgs, OF_KILL_EVIL))   flg3 |= (RF3_EVIL);
+                    if (have_flag(flgs, OF_SLAY_GOOD))   flg3 |= (RF3_GOOD);
+                    if (have_flag(flgs, OF_SLAY_HUMAN))  flg2 |= (RF2_HUMAN);
+                    if (have_flag(flgs, OF_KILL_HUMAN))  flg2 |= (RF2_HUMAN);
+                    if (have_flag(flgs, OF_BRAND_ACID))  flgr |= (RFR_IM_ACID);
+                    if (have_flag(flgs, OF_BRAND_ELEC))  flgr |= (RFR_IM_ELEC);
+                    if (have_flag(flgs, OF_BRAND_FIRE))  flgr |= (RFR_IM_FIRE);
+                    if (have_flag(flgs, OF_BRAND_COLD))  flgr |= (RFR_IM_COLD);
+                    if (have_flag(flgs, OF_BRAND_POIS))  flgr |= (RFR_IM_POIS);
 
                     /* The object cannot be picked up by the monster */
                     if (object_is_artifact(o_ptr) || (r_ptr->flags3 & flg3) || (r_ptr->flags2 & flg2) ||
@@ -3815,7 +3815,7 @@ void process_monsters(void)
 
         /* Handle "sight" and "aggravation" */
         else if ((m_ptr->cdis <= MAX_SIGHT) &&
-            (player_has_los_bold(fy, fx) || (p_ptr->cursed & TRC_AGGRAVATE)))
+            (player_has_los_bold(fy, fx) || (p_ptr->cursed & OFC_AGGRAVATE)))
         {
             /* We can "see" or "feel" the player */
             test = TRUE;

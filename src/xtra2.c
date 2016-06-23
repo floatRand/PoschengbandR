@@ -1397,25 +1397,27 @@ void monster_death(int m_idx, bool drop_item)
 
                 a_ptr = &a_info[a_idx];
             }
-            while (a_ptr->cur_num);
+            while (a_ptr->generated);
 
             /* Create the artifact */
             if (create_named_art(a_idx, y, x))
             {
-                a_ptr->cur_num = 1;
+                a_ptr->generated = TRUE;
 
                 /* Hack -- Memorize location of artifact in saved floors */
                 if (character_dungeon) a_ptr->floor_id = p_ptr->floor_id;
             }
             else if (!preserve_mode) 
-                a_ptr->cur_num = 1;
+                a_ptr->generated = TRUE;
         }
         break;
 
     case MON_SERPENT:
         if (!drop_chosen_item) break;
-        create_named_art(ART_GROND, py, px);
-        create_named_art(ART_CHAOS, py, px);
+        if (create_named_art(ART_GROND, y, x))
+            a_info[ART_GROND].generated = TRUE;
+        if (create_named_art(ART_CHAOS, y, x))
+            a_info[ART_CHAOS].generated = TRUE;
         break;
 
     case MON_B_DEATH_SWORD:
@@ -2119,18 +2121,18 @@ void monster_death(int m_idx, bool drop_item)
         {
             artifact_type *a_ptr = &a_info[a_idx];
 
-            if (!a_ptr->cur_num)
+            if (!a_ptr->generated)
             {
                 /* Create the artifact */
                 if (create_named_art(a_idx, y, x))
                 {
-                    a_ptr->cur_num = 1;
+                    a_ptr->generated = TRUE;
 
                     /* Hack -- Memorize location of artifact in saved floors */
                     if (character_dungeon) a_ptr->floor_id = p_ptr->floor_id;
                 }
                 else if (!preserve_mode) 
-                    a_ptr->cur_num = 1;
+                    a_ptr->generated = TRUE;
             }
         }
 
@@ -2147,18 +2149,18 @@ void monster_death(int m_idx, bool drop_item)
                 int a_idx = d_info[dungeon_type].final_artifact;
                 artifact_type *a_ptr = &a_info[a_idx];
 
-                if (!a_ptr->cur_num)
+                if (!a_ptr->generated)
                 {
                     /* Create the artifact */
                     if (create_named_art(a_idx, y, x))
                     {
-                        a_ptr->cur_num = 1;
+                        a_ptr->generated = TRUE;
 
                         /* Hack -- Memorize location of artifact in saved floors */
                         if (character_dungeon) a_ptr->floor_id = p_ptr->floor_id;
                     }
                     else if (!preserve_mode) 
-                        a_ptr->cur_num = 1;
+                        a_ptr->generated = TRUE;
 
                     /* Prevent rewarding both artifact and "default" object */
                     if (!d_info[dungeon_type].final_object) k_idx = 0;
@@ -2313,8 +2315,9 @@ void monster_death(int m_idx, bool drop_item)
         }
     }
 
-    if ( (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
-      || (r_ptr->flags2 & RF2_THIEF) )
+    if ( r_ptr->level
+      && ( (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
+        || (r_ptr->flags2 & RF2_THIEF) ) )
     {
         int r = (r_ptr->flags1 & RF1_DROP_GREAT) ? 7 : 3;
         int n = randint0(r);
@@ -2799,7 +2802,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
         monster_desc(m_name, m_ptr, MD_TRUE_NAME);
 
         if (p_ptr->tim_killing_spree)
-            set_fast(p_ptr->fast + 5, FALSE);
+            set_fast(p_ptr->fast + 10, FALSE);
 
         if (r_info[m_ptr->r_idx].flags7 & RF7_TANUKI)
         {

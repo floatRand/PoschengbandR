@@ -1566,117 +1566,117 @@ void possessor_calc_bonuses(void)
     }
 }
 
-void possessor_get_flags(u32b flgs[TR_FLAG_SIZE]) 
+void possessor_get_flags(u32b flgs[OF_ARRAY_SIZE]) 
 {
     monster_race *r_ptr = &r_info[p_ptr->current_r_idx];
 
     if (r_ptr->speed != 110)
-        add_flag(flgs, TR_SPEED);
+        add_flag(flgs, OF_SPEED);
 
     if (r_ptr->flags9 & RF9_POS_HOLD_LIFE)
-        add_flag(flgs, TR_HOLD_LIFE);
+        add_flag(flgs, OF_HOLD_LIFE);
     if (r_ptr->flags9 & RF9_POS_TELEPATHY)
-        add_flag(flgs, TR_TELEPATHY);
+        add_flag(flgs, OF_TELEPATHY);
     if (r_ptr->flags9 & RF9_POS_SEE_INVIS)
-        add_flag(flgs, TR_SEE_INVIS);
+        add_flag(flgs, OF_SEE_INVIS);
     if (r_ptr->flags9 & RF9_POS_SUST_STR)
-        add_flag(flgs, TR_SUST_STR);
+        add_flag(flgs, OF_SUST_STR);
     if (r_ptr->flags9 & RF9_POS_SUST_INT)
-        add_flag(flgs, TR_SUST_INT);
+        add_flag(flgs, OF_SUST_INT);
     if (r_ptr->flags9 & RF9_POS_SUST_WIS)
-        add_flag(flgs, TR_SUST_WIS);
+        add_flag(flgs, OF_SUST_WIS);
     if (r_ptr->flags9 & RF9_POS_SUST_DEX)
-        add_flag(flgs, TR_SUST_DEX);
+        add_flag(flgs, OF_SUST_DEX);
     if (r_ptr->flags9 & RF9_POS_SUST_CON)
-        add_flag(flgs, TR_SUST_CON);
+        add_flag(flgs, OF_SUST_CON);
     if (r_ptr->flags9 & RF9_POS_SUST_CHR)
-        add_flag(flgs, TR_SUST_CHR);
+        add_flag(flgs, OF_SUST_CHR);
 
     if (r_ptr->flags2 & RF2_REFLECTING)
-        add_flag(flgs, TR_REFLECT);
+        add_flag(flgs, OF_REFLECT);
     if (r_ptr->flags2 & RF2_REGENERATE)
-        add_flag(flgs, TR_REGEN);
+        add_flag(flgs, OF_REGEN);
     if (r_ptr->flags2 & RF2_AURA_FIRE)
-        add_flag(flgs, TR_SH_FIRE);
+        add_flag(flgs, OF_AURA_FIRE);
     if (r_ptr->flags2 & RF2_AURA_ELEC)
-        add_flag(flgs, TR_SH_ELEC);
+        add_flag(flgs, OF_AURA_ELEC);
 
     if (r_ptr->flags3 & RF3_AURA_COLD)
-        add_flag(flgs, TR_SH_COLD);
+        add_flag(flgs, OF_AURA_COLD);
     if (r_ptr->flags3 & RF3_NO_FEAR)
-        add_flag(flgs, TR_RES_FEAR);
+        add_flag(flgs, OF_RES_FEAR);
     if (r_ptr->flags3 & RF3_NO_CONF)
-        add_flag(flgs, TR_RES_CONF);
+        add_flag(flgs, OF_RES_CONF);
     if (r_ptr->flags3 & RF3_NO_SLEEP)
-        add_flag(flgs, TR_FREE_ACT);
+        add_flag(flgs, OF_FREE_ACT);
 
     if (r_ptr->flags7 & RF7_CAN_FLY)
-        add_flag(flgs, TR_LEVITATION);
+        add_flag(flgs, OF_LEVITATION);
 
     if (r_ptr->flagsr & RFR_RES_ACID)
-        add_flag(flgs, TR_RES_ACID);
+        add_flag(flgs, OF_RES_ACID);
     if (r_ptr->flagsr & RFR_RES_ELEC)
-        add_flag(flgs, TR_RES_ELEC);
+        add_flag(flgs, OF_RES_ELEC);
     if (r_ptr->flagsr & RFR_RES_FIRE)
-        add_flag(flgs, TR_RES_FIRE);
+        add_flag(flgs, OF_RES_FIRE);
     if (r_ptr->flagsr & RFR_RES_COLD)
-        add_flag(flgs, TR_RES_COLD);
+        add_flag(flgs, OF_RES_COLD);
     if (r_ptr->flagsr & RFR_RES_POIS)
-        add_flag(flgs, TR_RES_POIS);
+        add_flag(flgs, OF_RES_POIS);
     if (r_ptr->flagsr & RFR_RES_LITE)
-        add_flag(flgs, TR_RES_LITE);
+        add_flag(flgs, OF_RES_LITE);
     if (r_ptr->flagsr & RFR_RES_DARK)
-        add_flag(flgs, TR_RES_DARK);
+        add_flag(flgs, OF_RES_DARK);
     if (r_ptr->flagsr & RFR_RES_NETH)
-        add_flag(flgs, TR_RES_NETHER);
+        add_flag(flgs, OF_RES_NETHER);
     if (r_ptr->flagsr & RFR_RES_SHAR)
-        add_flag(flgs, TR_RES_SHARDS);
+        add_flag(flgs, OF_RES_SHARDS);
     if (r_ptr->flagsr & RFR_RES_SOUN)
-        add_flag(flgs, TR_RES_SOUND);
+        add_flag(flgs, OF_RES_SOUND);
     if (r_ptr->flagsr & RFR_RES_CHAO)
-        add_flag(flgs, TR_RES_CHAOS);
+        add_flag(flgs, OF_RES_CHAOS);
     if (r_ptr->flagsr & RFR_RES_NEXU)
-        add_flag(flgs, TR_RES_NEXUS);
+        add_flag(flgs, OF_RES_NEXUS);
     if (r_ptr->flagsr & RFR_RES_DISE)
-        add_flag(flgs, TR_RES_DISEN);
+        add_flag(flgs, OF_RES_DISEN);
     if (r_ptr->flagsr & RFR_RES_TIME)
-        add_flag(flgs, TR_RES_TIME);
+        add_flag(flgs, OF_RES_TIME);
     if (r_ptr->flagsr & RFR_RES_ALL)
     {
-        add_flag(flgs, TR_RES_FIRE);
-        add_flag(flgs, TR_RES_COLD);
-        add_flag(flgs, TR_RES_ACID);
-        add_flag(flgs, TR_RES_ELEC);
-        add_flag(flgs, TR_RES_POIS);
-        add_flag(flgs, TR_RES_LITE);
-        add_flag(flgs, TR_RES_DARK);
-        add_flag(flgs, TR_RES_CONF);
-        add_flag(flgs, TR_RES_NETHER);
-        add_flag(flgs, TR_RES_NEXUS);
-        add_flag(flgs, TR_RES_SOUND);
-        add_flag(flgs, TR_RES_SHARDS);
-        add_flag(flgs, TR_RES_CHAOS);
-        add_flag(flgs, TR_RES_DISEN);
-        add_flag(flgs, TR_RES_TIME);
+        add_flag(flgs, OF_RES_FIRE);
+        add_flag(flgs, OF_RES_COLD);
+        add_flag(flgs, OF_RES_ACID);
+        add_flag(flgs, OF_RES_ELEC);
+        add_flag(flgs, OF_RES_POIS);
+        add_flag(flgs, OF_RES_LITE);
+        add_flag(flgs, OF_RES_DARK);
+        add_flag(flgs, OF_RES_CONF);
+        add_flag(flgs, OF_RES_NETHER);
+        add_flag(flgs, OF_RES_NEXUS);
+        add_flag(flgs, OF_RES_SOUND);
+        add_flag(flgs, OF_RES_SHARDS);
+        add_flag(flgs, OF_RES_CHAOS);
+        add_flag(flgs, OF_RES_DISEN);
+        add_flag(flgs, OF_RES_TIME);
     }
 
     if (r_ptr->flagsr & RFR_IM_ACID)
-        add_flag(flgs, TR_IM_ACID);
+        add_flag(flgs, OF_IM_ACID);
     if (r_ptr->flagsr & RFR_IM_ELEC)
-        add_flag(flgs, TR_IM_ELEC);
+        add_flag(flgs, OF_IM_ELEC);
     if (r_ptr->flagsr & RFR_IM_FIRE)
-        add_flag(flgs, TR_IM_FIRE);
+        add_flag(flgs, OF_IM_FIRE);
     if (r_ptr->flagsr & RFR_IM_COLD)
-        add_flag(flgs, TR_IM_COLD);
+        add_flag(flgs, OF_IM_COLD);
     if (r_ptr->flagsr & RFR_IM_POIS)
-        add_flag(flgs, TR_IM_POIS);
+        add_flag(flgs, OF_IM_POIS);
 
     if (r_ptr->flags3 & RF3_HURT_LITE)
-        add_flag(flgs, TR_VULN_LITE);
+        add_flag(flgs, OF_VULN_LITE);
     if (r_ptr->flags3 & RF3_HURT_FIRE)
-        add_flag(flgs, TR_VULN_FIRE);
+        add_flag(flgs, OF_VULN_FIRE);
     if (r_ptr->flags3 & RF3_HURT_COLD)
-        add_flag(flgs, TR_VULN_COLD);
+        add_flag(flgs, OF_VULN_COLD);
 }
 
 /**********************************************************************

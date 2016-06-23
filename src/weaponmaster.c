@@ -686,7 +686,7 @@ static bool _club_toss(int hand)
         p_ptr->redraw |= PR_EQUIPPY;
         p_ptr->update |= PU_BONUS;
 
-        calc_android_exp();
+        android_calc_exp();
         handle_stuff();
     }
 
@@ -1210,7 +1210,7 @@ static bool _dagger_toss(int hand)
         
         p_ptr->redraw |= PR_EQUIPPY;
         p_ptr->update |= PU_BONUS;
-        calc_android_exp();
+        android_calc_exp();
         handle_stuff();
     }
     return TRUE;
@@ -3799,20 +3799,20 @@ static void _calc_stats(s16b stats[MAX_STATS])
     }
 }
 
-static void _get_flags(u32b flgs[TR_FLAG_SIZE])
+static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
     if (p_ptr->psubclass == WEAPONMASTER_DAGGERS)
     {
         if (p_ptr->speciality_equip)
         {
-            if (p_ptr->lev >= 10) add_flag(flgs, TR_STEALTH);
+            if (p_ptr->lev >= 10) add_flag(flgs, OF_STEALTH);
         }
     }
     else if (p_ptr->psubclass == WEAPONMASTER_SWORDS)
     {
         if (p_ptr->speciality_equip)
         {
-            if (p_ptr->lev >= 45) add_flag(flgs, TR_VORPAL);
+            if (p_ptr->lev >= 45) add_flag(flgs, OF_VORPAL);
         }
     }
     else if (p_ptr->psubclass == WEAPONMASTER_SHIELDS)
@@ -3821,11 +3821,11 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
         {
             if (p_ptr->lev >= 45)
             {
-                add_flag(flgs, TR_RES_ACID);
-                add_flag(flgs, TR_RES_COLD);
-                add_flag(flgs, TR_RES_FIRE);
-                add_flag(flgs, TR_RES_ELEC);
-                add_flag(flgs, TR_REFLECT);
+                add_flag(flgs, OF_RES_ACID);
+                add_flag(flgs, OF_RES_COLD);
+                add_flag(flgs, OF_RES_FIRE);
+                add_flag(flgs, OF_RES_ELEC);
+                add_flag(flgs, OF_REFLECT);
             }
         }
     }
@@ -3833,8 +3833,8 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
     {
         if (p_ptr->speciality_equip)
         {
-            if (p_ptr->lev >= 10) add_flag(flgs, TR_SH_REVENGE);
-            if (p_ptr->lev >= 20) add_flag(flgs, TR_SPEED);
+            if (p_ptr->lev >= 10) add_flag(flgs, OF_AURA_REVENGE);
+            if (p_ptr->lev >= 20) add_flag(flgs, OF_SPEED);
         }
     }
     else if (p_ptr->psubclass == WEAPONMASTER_DIGGERS)
@@ -3844,10 +3844,10 @@ static void _get_flags(u32b flgs[TR_FLAG_SIZE])
             switch (_get_toggle())
             {
             case TOGGLE_STOICISM:
-                add_flag(flgs, TR_STEALTH);
+                add_flag(flgs, OF_STEALTH);
                 break;
             case TOGGLE_INDUSTRIOUS_MORTICIAN:
-                add_flag(flgs, TR_SPEED);
+                add_flag(flgs, OF_SPEED);
                 break;
             }
         }

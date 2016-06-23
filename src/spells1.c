@@ -1515,7 +1515,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
     bool obvious = FALSE;
     bool known = player_has_los_bold(y, x);
 
-    u32b flgs[TR_FLAG_SIZE];
+    u32b flgs[OF_ARRAY_SIZE];
 
     char o_name[MAX_NLEN];
 
@@ -1549,7 +1549,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
         next_o_idx = o_ptr->next_o_idx;
 
         /* Extract the flags */
-        object_flags(o_ptr, flgs);
+        obj_flags(o_ptr, flgs);
 
         /* Check for artifact */
         if (object_is_artifact(o_ptr)) is_art = TRUE;
@@ -1562,7 +1562,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
             {
                 do_kill = TRUE;
                 note_kill = (plural ? " melt!" : " melts!");
-                if (have_flag(flgs, TR_IGNORE_ACID)) ignore = TRUE;
+                if (have_flag(flgs, OF_IGNORE_ACID)) ignore = TRUE;
             }
             break;
         case GF_ELEC:
@@ -1570,7 +1570,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
             {
                 do_kill = TRUE;
                 note_kill = (plural ? " are destroyed!" : " is destroyed!");
-                if (have_flag(flgs, TR_IGNORE_ELEC)) ignore = TRUE;
+                if (have_flag(flgs, OF_IGNORE_ELEC)) ignore = TRUE;
             }
             break;
         case GF_FIRE:
@@ -1578,7 +1578,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
             {
                 do_kill = TRUE;
                 note_kill = (plural ? " burn up!" : " burns up!");
-                if (have_flag(flgs, TR_IGNORE_FIRE)) ignore = TRUE;
+                if (have_flag(flgs, OF_IGNORE_FIRE)) ignore = TRUE;
             }
             break;
         case GF_COLD:
@@ -1586,7 +1586,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
             {
                 note_kill = (plural ? " shatter!" : " shatters!");
                 do_kill = TRUE;
-                if (have_flag(flgs, TR_IGNORE_COLD)) ignore = TRUE;
+                if (have_flag(flgs, OF_IGNORE_COLD)) ignore = TRUE;
             }
             break;
         case GF_PLASMA:
@@ -1594,14 +1594,14 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
             {
                 do_kill = TRUE;
                 note_kill = (plural ? " burn up!" : " burns up!");
-                if (have_flag(flgs, TR_IGNORE_FIRE)) ignore = TRUE;
+                if (have_flag(flgs, OF_IGNORE_FIRE)) ignore = TRUE;
             }
             if (hates_elec(o_ptr))
             {
                 ignore = FALSE;
                 do_kill = TRUE;
                 note_kill = (plural ? " are destroyed!" : " is destroyed!");
-                if (have_flag(flgs, TR_IGNORE_ELEC)) ignore = TRUE;
+                if (have_flag(flgs, OF_IGNORE_ELEC)) ignore = TRUE;
             }
             break;
         case GF_METEOR:
@@ -1609,14 +1609,14 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
             {
                 do_kill = TRUE;
                 note_kill = (plural ? " burn up!" : " burns up!");
-                if (have_flag(flgs, TR_IGNORE_FIRE)) ignore = TRUE;
+                if (have_flag(flgs, OF_IGNORE_FIRE)) ignore = TRUE;
             }
             if (hates_cold(o_ptr))
             {
                 ignore = FALSE;
                 do_kill = TRUE;
                 note_kill = (plural ? " shatter!" : " shatters!");
-                if (have_flag(flgs, TR_IGNORE_COLD)) ignore = TRUE;
+                if (have_flag(flgs, OF_IGNORE_COLD)) ignore = TRUE;
             }
             break;
         case GF_ICE:
@@ -1643,7 +1643,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
         case GF_CHAOS:
             do_kill = TRUE;
             note_kill = (plural ? " are destroyed!" : " is destroyed!");
-            if (have_flag(flgs, TR_RES_CHAOS)) ignore = TRUE;
+            if (have_flag(flgs, OF_RES_CHAOS)) ignore = TRUE;
             break;
         case GF_HOLY_FIRE:
         case GF_HELL_FIRE:
@@ -1672,7 +1672,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
                     o_ptr->pval = (0 - o_ptr->pval);
 
                     /* Identify */
-                    object_known(o_ptr);
+                    obj_identify(o_ptr);
 
                     /* Notice */
                     if (known && (o_ptr->marked & OM_FOUND))
@@ -3095,6 +3095,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                                 default:
                                     if (!p_ptr->free_act)
                                         (void)set_paralyzed(randint1(dam), FALSE);
+                                    else equip_learn_flag(OF_FREE_ACT);
                                     break;
                             }
                         }
@@ -4001,7 +4002,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 obvious = FALSE;
                 if (one_in_(4)) m_ptr->mflag2 |= MFLAG2_NOPET;
             }
-            else if (p_ptr->cursed & TRC_AGGRAVATE)
+            else if (p_ptr->cursed & OFC_AGGRAVATE)
             {
                 note = " hates you too much!";
                 if (one_in_(4)) m_ptr->mflag2 |= MFLAG2_NOPET;
@@ -4053,7 +4054,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 obvious = FALSE;
                 if (one_in_(4)) m_ptr->mflag2 |= MFLAG2_NOPET;
             }
-            else if (p_ptr->cursed & TRC_AGGRAVATE)
+            else if (p_ptr->cursed & OFC_AGGRAVATE)
             {
                 note = " hates you too much!";
 
@@ -4102,7 +4103,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 obvious = FALSE;
                 if (one_in_(4)) m_ptr->mflag2 |= MFLAG2_NOPET;
             }
-            else if (p_ptr->cursed & TRC_AGGRAVATE)
+            else if (p_ptr->cursed & OFC_AGGRAVATE)
             {
                 note = " hates you too much!";
 
@@ -4159,7 +4160,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 obvious = FALSE;
                 if (one_in_(4)) m_ptr->mflag2 |= MFLAG2_NOPET;
             }
-            else if (p_ptr->cursed & TRC_AGGRAVATE)
+            else if (p_ptr->cursed & OFC_AGGRAVATE)
             {
                 note = " hates you too much!";
 
@@ -4199,7 +4200,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                     if (one_in_(4))
                         m_ptr->mflag2 |= MFLAG2_NOPET;
                 }
-                else if (p_ptr->cursed & TRC_AGGRAVATE)
+                else if (p_ptr->cursed & OFC_AGGRAVATE)
                 {
                     note = " finds you very aggravating!";
                     if (one_in_(4))
@@ -4255,7 +4256,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 obvious = FALSE;
                 if (one_in_(4)) m_ptr->mflag2 |= MFLAG2_NOPET;
             }
-            else if (p_ptr->cursed & TRC_AGGRAVATE)
+            else if (p_ptr->cursed & OFC_AGGRAVATE)
             {
                 note = " hates you too much!";
 
@@ -4686,6 +4687,11 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                     note = " resists!";
                     resists_tele = TRUE;
                 }
+            }
+            else if (m_ptr->smart & SM_GUARDIAN)
+            {
+                note = " is unaffected!";
+                resists_tele = TRUE;
             }
 
             if (!resists_tele)
@@ -5747,7 +5753,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 else if ((r_ptr->flags1 & (RF1_QUESTOR)) ||
                     (r_ptr->flags1 & (RF1_UNIQUE)) ||
                     (m_ptr->mflag2 & MFLAG2_NOPET) ||
-                    (p_ptr->cursed & TRC_AGGRAVATE) ||
+                    (p_ptr->cursed & OFC_AGGRAVATE) ||
                      ((r_ptr->level+10) > randint1(dam)))
                 {
                     /* Resist */
@@ -6338,7 +6344,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         q_ptr->pval = photo;
 
         /* Mark the item as fully known */
-        q_ptr->ident |= (IDENT_FULL);
+        q_ptr->ident |= (IDENT_KNOWN);
 
         /* Drop it in the dungeon */
         (void)drop_near(q_ptr, -1, py, px);
@@ -6685,7 +6691,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
         {
             if (fuzzy) msg_print("You are hit by nether forces!");
             dam = res_calc_dam(RES_NETHER, dam);
-            if (!res_save_default(RES_NETHER) && !CHECK_MULTISHADOW()) 
+            if (!res_save_default(RES_NETHER) && !CHECK_MULTISHADOW())
                 drain_exp(200 + (p_ptr->exp / 100), 200 + (p_ptr->exp / 1000), 75);
             get_damage = take_hit(DAMAGE_ATTACK, dam, killer, monspell);
             break;
@@ -7004,7 +7010,11 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 
         case GF_OLD_SLEEP:
         {
-            if (p_ptr->free_act)  break;
+            if (p_ptr->free_act)
+            {
+                equip_learn_flag(OF_FREE_ACT);
+                break;
+            }
             if (fuzzy) msg_print("You fall asleep!");
 
 
@@ -7226,6 +7236,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
                     {
                         (void)set_paralyzed(randint1(4), FALSE);
                     }
+                    else equip_learn_flag(OF_FREE_ACT);
                     (void)set_slow(p_ptr->slow + randint0(4) + 4, FALSE);
 
                     while (randint0(100 + rlev / 2) > (MAX(5, duelist_skill_sav(who))))

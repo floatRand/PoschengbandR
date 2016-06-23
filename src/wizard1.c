@@ -185,7 +185,7 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
     (*lev) = k_info[q_ptr->k_idx].level;
 
     /* Value */
-    (*val) = object_value(q_ptr);
+    (*val) = obj_value(q_ptr);
 
 
     /* Hack */
@@ -362,7 +362,7 @@ static void spoil_obj_desc(cptr fname)
             if (k_ptr->tval != group_item[i].tval) continue;
 
             /* Hack -- Skip instant-artifacts */
-            if (k_ptr->gen_flags & (TRG_INSTA_ART)) continue;
+            if (k_ptr->gen_flags & (OFG_INSTA_ART)) continue;
 
             /* Save the index */
             who[n++] = k;
@@ -477,11 +477,7 @@ static void spoil_artifact_desc(void)
 
             if (!make_fake_artifact(&forge, j)) continue;
 
-            /*No Stats Tracking, please!!!
-            identify_item(&forge);*/
-            object_aware(&forge);
-            object_known(&forge);
-            forge.ident |= IDENT_FULL;
+            obj_identify_fully(&forge);
 
             obj_display_doc(&forge, doc);
             doc_newline(doc);
@@ -539,26 +535,28 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
             object_type    forge = {0};
             _art_info_ptr  entry;
 
-            if (!p_ptr->wizard && (a_info[i].gen_flags & TRG_QUESTITEM)) continue;
+            if (!p_ptr->wizard && (a_info[i].gen_flags & OFG_QUESTITEM)) continue;
             if (!create_named_art_aux(i, &forge)) continue;
-
-            /*No Stats Tracking, please!!!
-            identify_item(&forge);*/
-            object_aware(&forge);
-            object_known(&forge);
-            forge.ident |= IDENT_FULL;
-
-            if ((options & _SPOIL_EGOS) && !a_info[i].cur_num) continue; /* Hack */
+            if ((options & _SPOIL_EGOS) && !a_info[i].found) continue; /* Hack */
             if (pred && !pred(&forge)) continue;
+
+            obj_identify_fully(&forge);
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = i;
-            entry->score = object_value_real(&forge);
+            if (p_ptr->prace == RACE_ANDROID)
+            {
+                entry->score = android_obj_exp(&forge);
+                if (!entry->score)
+                    entry->score = obj_value_real(&forge);
+            }
+            else
+                entry->score = obj_value_real(&forge);
             object_desc(entry->name, &forge, OD_COLOR_CODED);
             entry->k_idx = forge.k_idx;
             vec_add(entries, entry);
 
-            if (a_info[entry->id].cur_num == 1)
+            if (a_info[entry->id].found)
             {
                 ct_std++;
                 score_std += entry->score;
@@ -579,7 +577,14 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = ART_RANDOM;
-            entry->score = object_value_real(o_ptr);
+            if (p_ptr->prace == RACE_ANDROID)
+            {
+                entry->score = android_obj_exp(o_ptr);
+                if (!entry->score)
+                    entry->score = obj_value_real(o_ptr);
+            }
+            else
+                entry->score = obj_value_real(o_ptr);
             object_desc(entry->name, o_ptr, OD_COLOR_CODED);
             entry->k_idx = o_ptr->k_idx;
             vec_add(entries, entry);
@@ -602,7 +607,14 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
 
             entry = malloc(sizeof(_art_info_t));
             entry->id = ART_EGO;
-            entry->score = object_value_real(o_ptr);
+            if (p_ptr->prace == RACE_ANDROID)
+            {
+                entry->score = android_obj_exp(o_ptr);
+                if (!entry->score)
+                    entry->score = obj_value_real(o_ptr);
+            }
+            else
+                entry->score = obj_value_real(o_ptr);
             object_desc(entry->name, o_ptr, OD_COLOR_CODED);
             entry->k_idx = o_ptr->k_idx;
             vec_add(entries, entry);
@@ -638,10 +650,10 @@ static void _spoil_table_aux(doc_ptr doc, cptr title, _obj_p pred, int options)
             artifact_type *a_ptr = &a_info[entry->id];
 
                 doc_printf(doc, "<color:%c>%3d) %7d</color> %3d %3d ",
-                    (a_ptr->cur_num == 1) ? 'y' : 'w',
+                    (a_ptr->found) ? 'y' : 'w',
                     i+1, entry->score, a_ptr->level, a_ptr->rarity);
 
-                if (a_ptr->gen_flags & TRG_INSTA_ART)
+                if (a_ptr->gen_flags & OFG_INSTA_ART)
                     doc_insert(doc, "    ");
                 else
                     doc_printf(doc, "%3d ", k_info[entry->k_idx].counts.found);

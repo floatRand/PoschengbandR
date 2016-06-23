@@ -369,8 +369,8 @@ static void compact_monsters_aux(int i1, int i2)
         pack_info_t *pack_ptr = pack_info_ptr(i1);
         if (pack_ptr)
         {
-            if (pack_ptr->guard_m_idx == i1) /* Assumes pack is guarding one of its members! */
-                pack_ptr->guard_m_idx = i2;
+            if (pack_ptr->ai == AI_GUARD_MON && pack_ptr->guard_idx == i1) /* Assumes pack is guarding one of its members! */
+                pack_ptr->guard_idx = i2;
 
             if (pack_ptr->leader_idx == i1)
                 pack_ptr->leader_idx = i2;
@@ -720,7 +720,7 @@ void pack_choose_ai(int m_idx)
                 if (pack_ptr->leader_idx)
                 {
                     pack_ptr->ai = AI_GUARD_MON;
-                    pack_ptr->guard_m_idx = pack_ptr->leader_idx;
+                    pack_ptr->guard_idx = pack_ptr->leader_idx;
                 }
                 else if (r_ptr->freq_spell)
                 {
@@ -766,6 +766,10 @@ void pack_on_slay_monster(int m_idx)
     {
         pack_info_t *pack_ptr = &pack_info_list[m_ptr->pack_idx];
         pack_ptr->count--;
+
+        if (m_ptr->smart & SM_GUARDIAN)
+            dungeon_flags[pack_ptr->guard_idx] |= DUNGEON_NO_GUARDIAN;
+
         if (pack_ptr->count <= 0)
             pack_info_push(m_ptr->pack_idx);
         else if (pack_ptr->ai != AI_FEAR)
@@ -2325,6 +2329,7 @@ void sanity_blast(monster_type *m_ptr, bool necro)
         {
             (void)set_paralyzed(randint1(4), FALSE);
         }
+        else equip_learn_flag(OF_FREE_ACT);
         while (randint0(100) > p_ptr->skills.sav)
             (void)do_dec_stat(A_INT);
         while (randint0(100) > p_ptr->skills.sav)
@@ -2595,6 +2600,7 @@ void update_mon(int m_idx, bool full)
                         /* Detectable */
                         flag = TRUE;
                         mon_lore_aux_2(r_ptr, RF2_WEIRD_MIND | RF2_SMART | RF2_STUPID);
+                        equip_learn_flag(OF_TELEPATHY);
                     }
                 }
 
@@ -2604,6 +2610,7 @@ void update_mon(int m_idx, bool full)
                     /* Detectable */
                     flag = TRUE;
                     mon_lore_aux_2(r_ptr, RF2_SMART | RF2_STUPID);
+                    equip_learn_flag(OF_TELEPATHY);
                 }
             }
 
@@ -2628,6 +2635,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_ANIMAL);
+                equip_learn_flag(OF_ESP_ANIMAL);
             }
 
             /* Magical sensing */
@@ -2635,6 +2643,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_UNDEAD);
+                equip_learn_flag(OF_ESP_UNDEAD);
             }
 
             /* Magical sensing */
@@ -2642,6 +2651,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_DEMON);
+                equip_learn_flag(OF_ESP_DEMON);
             }
 
             /* Magical sensing */
@@ -2649,6 +2659,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_ORC);
+                equip_learn_flag(OF_ESP_ORC);
             }
 
             /* Magical sensing */
@@ -2656,6 +2667,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_TROLL);
+                equip_learn_flag(OF_ESP_TROLL);
             }
 
             /* Magical sensing */
@@ -2663,6 +2675,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_GIANT);
+                equip_learn_flag(OF_ESP_GIANT);
             }
 
             /* Magical sensing */
@@ -2670,6 +2683,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_DRAGON);
+                equip_learn_flag(OF_ESP_DRAGON);
             }
 
             /* Magical sensing */
@@ -2677,6 +2691,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_2(r_ptr, RF2_HUMAN);
+                equip_learn_flag(OF_ESP_HUMAN);
             }
 
             /* Magical sensing */
@@ -2684,6 +2699,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_EVIL);
+                equip_learn_flag(OF_ESP_EVIL);
             }
 
             /* Magical sensing */
@@ -2691,6 +2707,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_GOOD);
+                equip_learn_flag(OF_ESP_GOOD);
             }
 
             /* Magical sensing */
@@ -2699,6 +2716,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_3(r_ptr, RF3_NONLIVING);
+                equip_learn_flag(OF_ESP_NONLIVING);
             }
 
             /* Magical sensing */
@@ -2706,6 +2724,7 @@ void update_mon(int m_idx, bool full)
             {
                 flag = TRUE;
                 if (is_original_ap(m_ptr) && !p_ptr->image) mon_lore_aux_1(r_ptr, RF1_UNIQUE);
+                equip_learn_flag(OF_ESP_UNIQUE);
             }
             
             if (p_ptr->esp_magical && monster_magical(r_ptr))
@@ -2757,6 +2776,7 @@ void update_mon(int m_idx, bool full)
                     {
                         /* Easy to see */
                         easy = flag = TRUE;
+                        equip_learn_flag(OF_SEE_INVIS);
                     }
                 }
 
@@ -3182,7 +3202,7 @@ byte get_mspeed(monster_race *r_ptr)
  * This is the only function which may place a monster in the dungeon,
  * except for the savefile loading code.
  */
-static int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
+int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
 {
     /* Access the location */
     cave_type        *c_ptr = &cave[y][x];

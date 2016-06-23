@@ -788,7 +788,7 @@ char *a_text;
 /*
  * The ego-item arrays
  */
-ego_item_type *e_info;
+ego_type *e_info;
 char *e_name;
 char *e_text;
 
@@ -989,23 +989,6 @@ bool leave_corpse;
 bool leave_junk;
 bool leave_chest;
 bool leave_special;
-
-/* Nikki */
-bool record_fix_art;
-bool record_rand_art;
-bool record_destroy_uniq;
-bool record_fix_quest;
-bool record_rand_quest;
-bool record_maxdepth;
-bool record_stair;
-bool record_buy;
-bool record_sell;
-bool record_danger;
-bool record_arena;
-bool record_ident;
-bool record_named_pet;
-char record_o_name[MAX_NLEN];
-s32b record_turn;
 
 /*
  * Wilderness

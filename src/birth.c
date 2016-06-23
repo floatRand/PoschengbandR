@@ -2291,15 +2291,6 @@ static void birth_put_stats(void)
 
 static void e_info_reset(void)
 {
-    int i;
-
-    /* Reset the "objects" */
-    for (i = 1; i < max_e_idx; i++)
-    {
-        ego_item_type *e_ptr = &e_info[i];
-
-        e_ptr->aware = FALSE;
-    }
 }
 
 static void k_info_reset(void)
@@ -2361,7 +2352,8 @@ static void player_wipe(void)
     for (i = 0; i < max_a_idx; i++)
     {
         artifact_type *a_ptr = &a_info[i];
-        a_ptr->cur_num = 0;
+        a_ptr->generated = FALSE;
+        a_ptr->found = FALSE;
     }
 
     /* Reset the objects */
@@ -3064,10 +3056,7 @@ void add_outfit(object_type *o_ptr)
 
     if (spoiler_hack) return;
 
-    object_aware(o_ptr);
-    ego_aware(o_ptr);
-    object_known(o_ptr);
-    o_ptr->ident |= IDENT_FULL;
+    obj_identify_fully(o_ptr);
 
     slot = equip_first_empty_slot(o_ptr);
     if (slot && o_ptr->number == 1) /* Fix later for torches ... */
@@ -3104,8 +3093,7 @@ static void _birth_object(int tv, int sv, int qty)
     }
 
     forge.number = qty;
-    identify_item(&forge);
-    forge.ident |= IDENT_FULL;
+    obj_identify_fully(&forge);
     add_outfit(&forge);
 }
  
@@ -3286,12 +3274,6 @@ void player_outfit(void)
             k_idx = lookup_kind(tv, sv);
             if (!k_idx) continue;
             object_prep(&forge, k_idx);
-            /* Assassins begin the game with a poisoned dagger */
-            if ((tv == TV_SWORD || tv == TV_HAFTED) && (p_ptr->pclass == CLASS_ROGUE &&
-                p_ptr->realm1 == REALM_DEATH)) /* Only assassins get a poisoned weapon */
-            {
-                forge.name2 = EGO_WEAPON_VENOM;
-            }
 
             /* Hack: Rune-Knights begin with an Absorption Rune on their broad sword (or whip if sexy) */
             if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_SWORD && sv == SV_BROAD_SWORD)

@@ -122,6 +122,7 @@
     <ClCompile Include="doppelganger.c" />
     <ClCompile Include="duelist.c" />
     <ClCompile Include="dungeon.c" />
+    <ClCompile Include="ego.c" />
     <ClCompile Include="effects.c" />
     <ClCompile Include="equip.c" />
     <ClCompile Include="fear.c" />

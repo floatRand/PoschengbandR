@@ -201,6 +201,9 @@
     <ClCompile Include="effects.c">
       <Filter>Effects</Filter>
     </ClCompile>
+    <ClCompile Include="ego.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
     <ClCompile Include="obj_kind.c">
       <Filter>Objects</Filter>
     </ClCompile>

@@ -1603,14 +1603,14 @@ static void _apply_room_grid1(int x, int y, const room_grid_t *grid_ptr, u16b ro
             object_prep(&forge, k_idx);
             drop_here(&forge, y, x);                
         }
-        else if (a_info[a_idx].cur_num)
+        else if (a_info[a_idx].generated)
         {
             object_type forge;
             create_replacement_art(a_idx, &forge);
             drop_here(&forge, y, x);
         }
         else if (create_named_art(a_idx, y, x))
-            a_info[a_idx].cur_num = 1;
+            a_info[a_idx].generated = TRUE;
     }
     else if (grid_ptr->flags & ROOM_GRID_OBJ_RANDOM)
     {
