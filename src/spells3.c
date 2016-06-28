@@ -1862,7 +1862,7 @@ bool alchemy(void)
 
     price = obj_value_real(o_ptr);
 
-    if (price <= 0)
+    if (price <= 0 || no_selling)
     {
         msg_format("You turn %s to fool's gold.", o_name);
     }
