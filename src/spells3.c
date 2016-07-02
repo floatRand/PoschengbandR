@@ -1219,7 +1219,7 @@ bool brand_weapon(int brand_type)
     return TRUE;
 }
 /* Hack for old branding spells attempting to make now non-existent ego types! */
-bool brand_weapon_slaying(int flag)
+bool brand_weapon_slaying(int brand_flag, int res_flag)
 {
     bool        result = FALSE;
     int         item;
@@ -1242,7 +1242,9 @@ bool brand_weapon_slaying(int flag)
     else
     {
         inventory[item].name2 = EGO_WEAPON_SLAYING;
-        add_flag(inventory[item].flags, flag);
+        add_flag(inventory[item].flags, brand_flag);
+        if (res_flag != OF_INVALID)
+            add_flag(inventory[item].flags, res_flag);
         result = TRUE;
     }
     if (result)

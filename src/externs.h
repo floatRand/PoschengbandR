@@ -1486,7 +1486,7 @@ extern void phlogiston(void);
 extern bool brand_weapon(int brand_type);
 extern bool brand_weapon_aux(int item);
 extern bool brand_armour_aux(int item);
-extern bool brand_weapon_slaying(int flag);
+extern bool brand_weapon_slaying(int brand_flag, int res_flag);
 extern void call_the_(void);
 extern void fetch(int dir, int wgt, bool require_los);
 extern void alter_reality(void);
