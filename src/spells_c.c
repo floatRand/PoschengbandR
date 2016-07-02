@@ -283,7 +283,7 @@ void confusing_lights_spell(int cmd, variant *res)
         stun_monsters(p_ptr->lev * 4);
         confuse_monsters(p_ptr->lev * 4);
         turn_monsters(p_ptr->lev * 4);
-        stasis_monsters(p_ptr->lev * 4);
+        stasis_monsters(p_ptr->lev * 2);
         var_set_bool(res, TRUE);
         break;
     default:
