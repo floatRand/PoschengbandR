@@ -1848,6 +1848,8 @@ static void prt_effects(void)
     }
     if (monk_armour_aux)
         c_put_str(TERM_RED, "Heavy Armor", row++, col);
+    if (p_ptr->cumber_glove)
+        c_put_str(TERM_RED, "Encumbrance", row++, col);
     for (i = 0; i < MAX_HANDS; i++)
     {
         if (p_ptr->weapon_info[i].heavy_wield)
@@ -2937,6 +2939,7 @@ static void _report_encumbrance(void)
         else
             msg_print("Your hands feel more suitable for spellcasting.");
         p_ptr->old_cumber_glove = p_ptr->cumber_glove;
+        p_ptr->redraw |= PR_EFFECTS;
     }
 
     if (p_ptr->old_cumber_armor != p_ptr->cumber_armor)
