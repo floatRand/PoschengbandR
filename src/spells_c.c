@@ -168,7 +168,8 @@ void clear_mind_spell(int cmd, variant *res)
             return;
         }
 
-        msg_print("You feel your head clear a little.");
+        if (disturb_minor)
+            msg_print("You feel your head clear a little.");
 
         if (p_ptr->pclass == CLASS_PSION) /* Testing ... */
             amt = 3 + p_ptr->lev/10;
