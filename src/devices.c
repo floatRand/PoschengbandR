@@ -686,7 +686,12 @@ static cptr _do_potion(int sval, int mode)
         if (info) return format("5d%d + %d", _potion_power(6), _potion_power(5));
         if (cast)
         {
-            if (sp_player(_potion_power(damroll(5, 6) + 5)))
+            int amt = _potion_power(damroll(5, 6) + 5);
+
+            if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
+                amt = (amt + 2)/3;
+
+            if (sp_player(amt))
             {
                 msg_print("You feel your mind clear.");
                 device_noticed = TRUE;
@@ -698,7 +703,12 @@ static cptr _do_potion(int sval, int mode)
         if (info) return format("10d%d + %d", _potion_power(10), _potion_power(15));
         if (cast)
         {
-            if (sp_player(_potion_power(damroll(10, 10) + 15)))
+            int amt = _potion_power(damroll(10, 10) + 15);
+
+            if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
+                amt = (amt + 2)/3;
+
+            if (sp_player(amt))
             {
                 msg_print("You feel your mind clear.");
                 device_noticed = TRUE;
@@ -4514,6 +4524,9 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_BLUE);
         if (cast)
         {
+            if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
+                amt = (amt + 2)/3;
+
             if (sp_player(_BOOST(amt)))
             {
                 msg_print("You feel your mind clear.");
@@ -4532,6 +4545,9 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_BLUE);
         if (cast)
         {
+            if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
+                amt = (amt + 2)/3;
+
             if (sp_player(_BOOST(amt)))
             {
                 msg_print("You feel your mind clear.");
