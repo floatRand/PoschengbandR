@@ -83,7 +83,7 @@ cptr rune_desc(int which)
     case RUNE_UNDERSTANDING:
         return "<<Understanding>>";
     case RUNE_ELEMENTAL_PROTECTION:
-        return "<<Elemental Protection>>";
+        return "<<Preservation>>";
     case RUNE_HASTE:
         return "<<Haste>>";
     case RUNE_SEEING:
@@ -717,7 +717,7 @@ static void _rune_of_elemental_protection_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Rune of Protection");
+        var_set_string(res, "Rune of Preservation");
         break;
     case SPELL_DESC:
         var_set_string(res, "Creates a standalone rune. As long as you have this rune in your inventory, your inventory items are less likely to be destroyed by elemental attacks.");
