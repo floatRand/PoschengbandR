@@ -5957,11 +5957,11 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_CONFUSING_LITE:
     {
-        int pow = _extra(effect, effect->power*4);
+        int pow = _extra(effect, effect->power*2);
         if (name) return "Confusing Lights";
         if (desc) return "It emits dazzling lights which slow, stun, confuse, scare and even freeze nearby monsters.";
         if (info) return format("Power %d", pow);
-        if (value) return format("%d", 10*pow);
+        if (value) return format("%d", 60*pow);
         if (color) return format("%d", res_color(RES_CONF));
         if (cast)
         {
@@ -5971,7 +5971,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             stun_monsters(pow);
             confuse_monsters(pow);
             turn_monsters(pow);
-            stasis_monsters(pow/4);
+            stasis_monsters(pow/3);
             device_noticed = TRUE; /* You see the dazzling lights, no? */
         }
         break;

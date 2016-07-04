@@ -6289,7 +6289,7 @@ static cptr do_daemon_spell(int spell, int mode)
 
     case 23:
         if (name) return "Doom Hand";
-        if (desc) return "Attempts to make a monster's HP almost half.";
+        if (desc) return "Attempt to mortally wound a target monster, draining a large proportion of their remaining health.";
     
         {
             if (cast)
@@ -6297,7 +6297,7 @@ static cptr do_daemon_spell(int spell, int mode)
                 if (!get_aim_dir(&dir)) return NULL;
                 else msg_print("You invoke the Hand of Doom!");
 
-                fire_ball_hide(GF_HAND_DOOM, dir, spell_power(plev * 5 / 2), 0);
+                fire_ball_hide(GF_HAND_DOOM, dir, spell_power(plev * 3), 0);
             }
         }
         break;
