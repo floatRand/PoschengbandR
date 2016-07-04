@@ -361,7 +361,7 @@ static void _rune_of_absorption_spell(int cmd, variant *res)
         var_set_string(res, "Rune of Absorption");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Places a Rune of Absorption on chosen item granting a special magical defense that absorbs damage from all monster spells restoring your mana in the process.");
+        var_set_string(res, "Places a Rune of Absorption on chosen melee weapon, body armor or shield. This rune grants a special magical defense that absorbs damage from all monster spells restoring your mana in the process.");
         break;
     case SPELL_CAST:
     {
