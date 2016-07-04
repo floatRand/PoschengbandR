@@ -125,6 +125,12 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
         return FALSE;
     }
 
+    if (o_ptr->number > 1)
+    {
+        msg_print("Failed! You may only add a rune to a single object at a time.");
+        return FALSE;
+    }
+
     if (prompt)
     {
         if (!get_check(
@@ -133,6 +139,8 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
     }
 
     o_ptr->rune = which;
+    if (object_is_nameless(o_ptr))
+        o_ptr->discount = 99;
 
     /* Note: Any effect that requires a pval will need to be handled
        silently in calc_bonuses(). This is because we keep the pval
