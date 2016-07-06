@@ -1047,6 +1047,7 @@ extern void monster_gain_exp(int m_idx, int s_idx);
 
 /* monster1.c */
 extern bool mon_save_p(int r_idx, int stat);
+extern bool mon_save_aux(int r_idx, int power);
 extern void roff_top(int r_idx);
 extern bool mon_hook_dungeon(int r_idx);
 
@@ -2467,7 +2468,10 @@ extern void     rage_mage_blood_lust(int dam);
 extern void     rage_mage_rage_fueled(int dam);
 extern class_t *ranger_get_class(void);
 extern class_t *red_mage_get_class(void);
+
 extern class_t *rogue_get_class(void);
+extern cptr     do_burglary_spell(int spell, int mode);
+
 extern bool     rune_add(object_type *o_ptr, int which, bool prompt);
 extern cptr     rune_desc(int which);
 extern void     rune_calc_bonuses(object_type *o_ptr);
