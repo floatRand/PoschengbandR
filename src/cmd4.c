@@ -462,7 +462,7 @@ void do_cmd_messages(int old_now_turn)
 /*
  * Number of cheating options
  */
-#define CHEAT_MAX 7
+#define CHEAT_MAX 6
 
 /*
  * Cheating options
