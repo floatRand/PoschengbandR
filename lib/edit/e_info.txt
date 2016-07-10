@@ -1,6 +1,6 @@
 # File: e_info.txt
 
-# Redone for PosChengband 3.0.0 with ideas liberally borrowed from 
+# Redone for PosChengband 3.0.0 with ideas liberally borrowed from
 # great variants everywhere! Many thanks!!
 
 # This file is used to initialize the "lib/raw/e_info.raw" file, which is
@@ -172,7 +172,7 @@ F:IGNORE_ACID | IGNORE_FIRE
 
 N:21:of Morgul
 T:WEAPON
-W:0:*:3
+W:0:*:6
 C:20:20:10:0
 F:SEE_INVIS | AGGRAVATE | HEAVY_CURSE | CURSED |
 F:SLAY_UNDEAD | BRAND_POIS | ESP_UNDEAD | SLAY_GOOD

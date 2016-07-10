@@ -52,33 +52,33 @@ static void _build_general1(doc_ptr doc)
     if (race_ptr->subname)
     {
         if (p_ptr->prace == RACE_MON_RING)
-            doc_printf(doc, " Controlling: <color:B>%-27.27s</color>\n", race_ptr->subname);
+            doc_printf(doc, " Controlling: <color:B>%-26.26s</color>\n", race_ptr->subname);
         else if (p_ptr->prace == RACE_MON_MIMIC)
         {
             if (p_ptr->current_r_idx == MON_MIMIC)
-                doc_printf(doc, " Mimicking  : <color:B>%-27.27s</color>\n", "Nothing");
+                doc_printf(doc, " Mimicking  : <color:B>%-26.26s</color>\n", "Nothing");
             else
-                doc_printf(doc, " Mimicking  : <color:B>%-27.27s</color>\n", race_ptr->subname);
+                doc_printf(doc, " Mimicking  : <color:B>%-26.26s</color>\n", race_ptr->subname);
         }
         else
-            doc_printf(doc, " Subrace    : <color:B>%-27.27s</color>\n", race_ptr->subname);
+            doc_printf(doc, " Subrace    : <color:B>%-26.26s</color>\n", race_ptr->subname);
     }
     else
-        doc_printf(doc, " Subrace    : <color:B>%-27.27s</color>\n", "None");
+        doc_printf(doc, " Subrace    : <color:B>%-26.26s</color>\n", "None");
 
     doc_printf(doc, " Class      : <color:B>%s</color>\n", class_ptr->name);
 
     /* Assume Subclass and Magic are mutually exclusive ... */
     if (class_ptr->subname)
-        doc_printf(doc, " Subclass   : <color:B>%-27.27s</color>\n", class_ptr->subname);
+        doc_printf(doc, " Subclass   : <color:B>%-26.26s</color>\n", class_ptr->subname);
     else if (p_ptr->pclass == CLASS_WARLOCK)
-        doc_printf(doc, " Subclass   : <color:B>%-27.27s</color>\n", pact_info[p_ptr->psubclass].title);
+        doc_printf(doc, " Subclass   : <color:B>%-26.26s</color>\n", pact_info[p_ptr->psubclass].title);
     else if (p_ptr->pclass == CLASS_WEAPONMASTER)
-        doc_printf(doc, " Subclass   : <color:B>%-27.27s</color>\n", weaponmaster_speciality_name(p_ptr->psubclass));
+        doc_printf(doc, " Subclass   : <color:B>%-26.26s</color>\n", weaponmaster_speciality_name(p_ptr->psubclass));
     else if (p_ptr->prace == RACE_MON_DRAGON)
     {
         dragon_realm_ptr realm = dragon_get_realm(p_ptr->dragon_realm);
-        doc_printf(doc, " Realm      : <color:B>%-27.27s</color>\n", realm->name);
+        doc_printf(doc, " Realm      : <color:B>%-26.26s</color>\n", realm->name);
     }
     else if (p_ptr->realm1)
     {
