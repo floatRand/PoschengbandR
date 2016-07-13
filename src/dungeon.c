@@ -857,12 +857,36 @@ static void regenhp(int percent)
 /*
  * Regenerate mana points
  */
+static void _decay_mana(void)
+{
+    /* PY_REGEN_NORMAL is the Regen factor in unit (1/2^16) */
+    s32b decay = 0;
+    u32b decay_frac = (p_ptr->msp * 32 * PY_REGEN_NORMAL + PY_REGEN_MNBASE);
+
+    /* Convert the unit (1/2^16) to (1/2^32) */
+    s64b_LSHIFT(decay, decay_frac, 16);
+
+    /* Decay */
+    s64b_sub(&(p_ptr->csp), &(p_ptr->csp_frac), decay, decay_frac);
+
+    /* Stop decaying */
+    if (p_ptr->csp < p_ptr->msp)
+    {
+        p_ptr->csp = p_ptr->msp;
+        p_ptr->csp_frac = 0;
+    }
+}
 static void regenmana(int percent)
 {
     s32b old_csp = p_ptr->csp;
 
     if (p_ptr->pclass == CLASS_RUNE_KNIGHT || p_ptr->pclass == CLASS_RAGE_MAGE) return;
-    if (mimic_no_regen()) return;
+    if (mimic_no_regen())
+    {
+        if (p_ptr->csp > p_ptr->msp) /* Doppelganger Samurai/Mystics should still decay supercharged mana! */
+            _decay_mana();
+        return;
+    }
 
     /*
      * Excess mana will decay 32 times faster than normal
@@ -870,24 +894,8 @@ static void regenmana(int percent)
      */
     if (p_ptr->csp > p_ptr->msp)
     {
-        /* PY_REGEN_NORMAL is the Regen factor in unit (1/2^16) */
-        s32b decay = 0;
-        u32b decay_frac = (p_ptr->msp * 32 * PY_REGEN_NORMAL + PY_REGEN_MNBASE);
-
-        /* Convert the unit (1/2^16) to (1/2^32) */
-        s64b_LSHIFT(decay, decay_frac, 16);
-
-        /* Decay */
-        s64b_sub(&(p_ptr->csp), &(p_ptr->csp_frac), decay, decay_frac);
-
-        /* Stop decaying */
-        if (p_ptr->csp < p_ptr->msp)
-        {
-            p_ptr->csp = p_ptr->msp;
-            p_ptr->csp_frac = 0;
-        }
+        _decay_mana();
     }
-
     /* Regenerating mana (unless the player has excess mana) */
     else if (percent > 0)
     {
