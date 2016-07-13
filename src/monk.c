@@ -135,10 +135,10 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     _attack_t counts[MAX_MA];
     int i;
     const int tot = 1000;
-    int tot_dam = 0;
+    int tot_dam = 0;              /* Scaled by 10 */
     int tot_mul = 0;
-    int tot_to_d = 0;
-    int blows = NUM_BLOWS(hand);
+    int tot_to_d = 0;             /* Scaled by 10 */
+    int blows = NUM_BLOWS(hand);  /* Scaled by 100: 100 = 1.00 blows, 275 = 2.75 blows, etc */
     int to_d = p_ptr->weapon_info[hand].to_d * 10;
     critical_t crit;
     doc_ptr cols[2] = {0};
@@ -199,13 +199,15 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     doc_newline(cols[1]);
     doc_insert(cols[1], "<color:y>Average Damage:</color>\n");
     doc_printf(cols[1], " One Strike: %d.%1d\n", (tot_dam + to_d)/10, (tot_dam + to_d)%10);
+
+    /* Note: blows are scaled by 100. tot_dam and to_d by 10. So we divide by 1000 to recover the integer part ... */
     doc_printf(cols[1], " One Attack: %d.%1d\n", blows*(tot_dam + to_d)/1000, ((blows*(tot_dam + to_d))/100)%10);
 
     if (display_weapon_mode == MYSTIC_ACID)
     {
         doc_printf(cols[1], " <color:r>      Acid</color>: %d.%1d\n",
-            blows*(tot_dam*20/10 + to_d + 5)/1000,
-            ((blows*(tot_dam*20/10 + to_d + 5))/100)%10);
+            blows*(tot_dam*20/10 + to_d + 50)/1000,
+            ((blows*(tot_dam*20/10 + to_d + 50))/100)%10);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ACID))
     {
@@ -217,8 +219,8 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     if (display_weapon_mode == MYSTIC_FIRE)
     {
         doc_printf(cols[1], " <color:r>      Fire</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d + 3)/1000,
-            ((blows*(tot_dam*17/10 + to_d + 3))/100)%10);
+            blows*(tot_dam*17/10 + to_d + 30)/1000,
+            ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_FIRE))
     {
@@ -230,8 +232,8 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     if (display_weapon_mode == MYSTIC_COLD)
     {
         doc_printf(cols[1], " <color:r>      Cold</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d + 3)/1000,
-            ((blows*(tot_dam*17/10 + to_d + 3))/100)%10);
+            blows*(tot_dam*17/10 + to_d + 30)/1000,
+            ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_COLD))
     {
@@ -243,8 +245,8 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     if (display_weapon_mode == MYSTIC_ELEC)
     {
         doc_printf(cols[1], " <color:r>      Elec</color>: %d.%1d\n",
-            blows*(tot_dam*25/10 + to_d + 7)/1000,
-            ((blows*(tot_dam*25/10 + to_d + 7))/100)%10);
+            blows*(tot_dam*25/10 + to_d + 70)/1000,
+            ((blows*(tot_dam*25/10 + to_d + 70))/100)%10);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ELEC))
     {
@@ -256,8 +258,8 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     if (display_weapon_mode == MYSTIC_POIS)
     {
         doc_printf(cols[1], " <color:r>      Pois</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d + 3)/1000,
-            ((blows*(tot_dam*17/10 + to_d + 3))/100)%10);
+            blows*(tot_dam*17/10 + to_d + 30)/1000,
+            ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_POIS))
     {
