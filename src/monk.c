@@ -42,7 +42,7 @@ static int _get_attack_idx(int lvl, u32b defense)
             attack_idx = randint0(MAX_MA);
             ma_ptr = &ma_blows[attack_idx];
 
-            if (p_ptr->pclass == CLASS_FORCETRAINER && ma_ptr->min_level > 1) 
+            if (p_ptr->pclass == CLASS_FORCETRAINER && ma_ptr->min_level > 1)
                 min_level = ma_ptr->min_level + 3;
             else min_level = ma_ptr->min_level;
         }
@@ -82,11 +82,11 @@ void _get_attack_counts(int tot, _attack_t *counts, int hand)
 
         _attack_ptr = &counts[attack_idx];
         _attack_ptr->count++;
-        
+
         /* Crits depend on the attack chosen. The following won't be stable
            for attacks that occur infrequently, but hopefully things will just
            average out */
-        crit = monk_get_critical(ma_ptr, hand, 0);
+        crit = monk_get_critical(ma_ptr, hand, display_weapon_mode);
 
         if (crit.desc)
         {
@@ -119,7 +119,7 @@ critical_t monk_get_critical(martial_arts *ma_ptr, int hand, int mode)
 
     if (mode == MYSTIC_CRITICAL)
         weight += weight/2 + 300;
-    
+
     if (p_ptr->pclass == CLASS_FORCETRAINER) min_level = MAX(1, min_level - 3);
 
     return critical_norm(weight, min_level, p_ptr->weapon_info[hand].to_h, 0, 0);
@@ -179,7 +179,8 @@ void monk_display_attack_info(doc_ptr doc, int hand)
 
     /* Account for criticals in all that follows ... */
     tot_dam = tot_dam * crit.mul/100;
-    to_d = to_d + crit.to_d;
+    to_d += crit.to_d;
+
     doc_printf(cols[0], "<tab:8>%20s %3d.%1d +%3d\n", "One Strike:", tot_dam/10, tot_dam%10, to_d/10);
 
     /* Second Column */
@@ -188,10 +189,10 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     doc_printf(cols[1], "Number of Blows: %d.%2.2d\n", blows/100, blows%100);
     doc_printf(cols[1], "To Hit:  0  50 100 150 200 (AC)\n");
     doc_printf(cols[1], "        %2d  %2d  %2d  %2d  %2d (%%)\n",
-        hit_chance(0, 0, 0), 
-        hit_chance(0, 0, 50), 
-        hit_chance(0, 0, 100), 
-        hit_chance(0, 0, 150), 
+        hit_chance(0, 0, 0),
+        hit_chance(0, 0, 50),
+        hit_chance(0, 0, 100),
+        hit_chance(0, 0, 150),
         hit_chance(0, 0, 200)
     );
 
@@ -200,31 +201,65 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     doc_printf(cols[1], " One Strike: %d.%1d\n", (tot_dam + to_d)/10, (tot_dam + to_d)%10);
     doc_printf(cols[1], " One Attack: %d.%1d\n", blows*(tot_dam + to_d)/1000, ((blows*(tot_dam + to_d))/100)%10);
 
-    if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ACID))
+    if (display_weapon_mode == MYSTIC_ACID)
+    {
+        doc_printf(cols[1], " <color:r>      Acid</color>: %d.%1d\n",
+            blows*(tot_dam*20/10 + to_d + 5)/1000,
+            ((blows*(tot_dam*20/10 + to_d + 5))/100)%10);
+    }
+    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ACID))
     {
         doc_printf(cols[1], " <color:r>      Acid</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
             ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
-    if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ELEC))
+
+    if (display_weapon_mode == MYSTIC_FIRE)
     {
-        doc_printf(cols[1], " <color:r>      Elec</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d)/1000,
-            ((blows*(tot_dam*17/10 + to_d))/100)%10);
+        doc_printf(cols[1], " <color:r>      Fire</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d + 3)/1000,
+            ((blows*(tot_dam*17/10 + to_d + 3))/100)%10);
     }
-    if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_FIRE))
+    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_FIRE))
     {
         doc_printf(cols[1], " <color:r>      Fire</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
             ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
-    if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_COLD))
+
+    if (display_weapon_mode == MYSTIC_COLD)
+    {
+        doc_printf(cols[1], " <color:r>      Cold</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d + 3)/1000,
+            ((blows*(tot_dam*17/10 + to_d + 3))/100)%10);
+    }
+    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_COLD))
     {
         doc_printf(cols[1], " <color:r>      Cold</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
             ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
-    if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_POIS))
+
+    if (display_weapon_mode == MYSTIC_ELEC)
+    {
+        doc_printf(cols[1], " <color:r>      Elec</color>: %d.%1d\n",
+            blows*(tot_dam*25/10 + to_d + 7)/1000,
+            ((blows*(tot_dam*25/10 + to_d + 7))/100)%10);
+    }
+    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ELEC))
+    {
+        doc_printf(cols[1], " <color:r>      Elec</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d)/1000,
+            ((blows*(tot_dam*17/10 + to_d))/100)%10);
+    }
+
+    if (display_weapon_mode == MYSTIC_POIS)
+    {
+        doc_printf(cols[1], " <color:r>      Pois</color>: %d.%1d\n",
+            blows*(tot_dam*17/10 + to_d + 3)/1000,
+            ((blows*(tot_dam*17/10 + to_d + 3))/100)%10);
+    }
+    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_POIS))
     {
         doc_printf(cols[1], " <color:r>      Pois</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
@@ -422,7 +457,7 @@ void monk_posture_spell(int cmd, variant *res)
 static int _get_powers(spell_info* spells, int max)
 {
     int ct = 0;
-    
+
     spell_info* spell = &spells[ct++];
     spell->level = 25;
     spell->cost = 0;
@@ -525,7 +560,7 @@ void monk_posture_calc_bonuses(void)
             for (i = 0; i < MAX_HANDS; i++)
             {
                 p_ptr->weapon_info[i].xtra_blow -= 200;
-                if (p_ptr->lev > 42) 
+                if (p_ptr->lev > 42)
                     p_ptr->weapon_info[i].xtra_blow -= 100;
             }
         }
@@ -686,7 +721,7 @@ class_t *monk_get_class(void)
         me.base_hp = 12;
         me.exp = 130;
         me.pets = 35;
-        
+
         me.calc_bonuses = _calc_bonuses;
         me.calc_stats = _calc_stats;
         me.get_flags = _get_flags;
