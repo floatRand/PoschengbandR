@@ -3837,6 +3837,7 @@ void calc_bonuses(void)
     for (i = 0; i < INVEN_PACK; i++)
     {
         o_ptr = &inventory[i];
+        obj_flags(o_ptr, flgs);
         if (!o_ptr->k_idx) continue;
         if (o_ptr->name1 == ART_MAUL_OF_VICE)
             p_ptr->maul_of_vice = TRUE;
@@ -3844,6 +3845,10 @@ void calc_bonuses(void)
             p_ptr->rune_elem_prot = TRUE;
         if (o_ptr->rune == RUNE_GOOD_FORTUNE) 
             p_ptr->good_luck = TRUE;
+        if (have_flag(flgs, OF_LORE2))
+            p_ptr->auto_id = TRUE;
+        else if (have_flag(flgs, OF_LORE1))
+            p_ptr->auto_pseudo_id = TRUE;
     }
 
     mut_calc_bonuses();  /* Process before equip for MUT_FLESH_ROT */
