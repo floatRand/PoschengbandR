@@ -3341,7 +3341,7 @@ static bool get_stat_limits(void)
         if (cs != os)
         {
             byte score_a = TERM_L_GREEN;
-			score = _birth_stats_score(cval);
+            score = _birth_stats_score(cval);
             
             if (score > 30)
                 score_a = TERM_RED;

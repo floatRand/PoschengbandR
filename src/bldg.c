@@ -2958,8 +2958,8 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
             {
                 int new_cost = new_object_cost(&copy, COST_REAL);
                 int unit_cost_add = new_cost - old_cost;
-				int min_cost = (i+1)*cost;
-				int unit_cost;
+                int min_cost = (i+1)*cost;
+                int unit_cost;
                 old_cost = new_cost;
                 
                 unit_cost_add *= m;

@@ -1659,7 +1659,7 @@ void monster_death(int m_idx, bool drop_item)
         int a_idx = 0;
         int chance = 0;
         int which_dungeon = 0;
-		race_t *race_ptr = get_race();
+        race_t *race_ptr = get_race();
 
         switch (m_ptr->r_idx)
         {
