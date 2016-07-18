@@ -3415,6 +3415,10 @@ static void process_world(void)
     /* Process recharging */
     process_world_aux_recharge();
 
+    /* Have auto_id affect inventory*/
+    if (p_ptr->auto_id)
+        identify_pack();
+
     /* Feel the inventory */
     sense_inventory1();
     sense_inventory2();
