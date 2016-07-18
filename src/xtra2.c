@@ -1658,7 +1658,8 @@ void monster_death(int m_idx, bool drop_item)
     {
         int a_idx = 0;
         int chance = 0;
-        race_t *race_ptr = get_race();
+        int which_dungeon = 0;
+		race_t *race_ptr = get_race();
 
         switch (m_ptr->r_idx)
         {
@@ -2136,7 +2137,7 @@ void monster_death(int m_idx, bool drop_item)
             }
         }
 
-        int which_dungeon = 0;
+        which_dungeon = 0;
         if ((r_ptr->flags7 & RF7_GUARDIAN) && ((d_info[dungeon_type].final_guardian == m_ptr->r_idx) || no_wilderness))
         {
             if (!no_wilderness)

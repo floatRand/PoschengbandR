@@ -3340,9 +3340,9 @@ static bool get_stat_limits(void)
         /* Move Cursol */
         if (cs != os)
         {
-            score = _birth_stats_score(cval);
             byte score_a = TERM_L_GREEN;
-
+			score = _birth_stats_score(cval);
+            
             if (score > 30)
                 score_a = TERM_RED;
             else if (score < 20)
