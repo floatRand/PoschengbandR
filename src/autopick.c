@@ -2026,9 +2026,6 @@ static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
         /* Describe the object (with {terrible/special}) */
         object_desc(o_name, o_ptr, 0);
 
-        /* Message */
-        msg_format("You cannot auto-destroy %s.", o_name);
-
         /* Done */
         return;
     }
