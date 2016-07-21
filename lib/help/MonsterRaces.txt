@@ -238,7 +238,7 @@ Leprechauns are small, mischevous creatures, always scheming for gold. They are 
  
 Leprechauns value riches above all else and even begin the game with their legendary pot of gold. Leprechauns also have the luck of the Irish, and good drops are more common for them. For magic, the leprechaun has a few talents and even a bit of cursing offense (Malicious and Death Leprechauns are vile, evil creatures, after all). They are masters of teleportation and detection. And while one never fears their combat (though one despises their thievery, of course), they are great masters of bow and device alike. At high levels, they move with incredible speed and seem to be in multiple places at once. Dexterity determines the leprechaun's skill with their magic.
  
-Leprechauns are monsters so can not choose a normal class. Instead, being small, they should spend their initial pot of gold wisely and then enter the dungeons in search of new treasure. Since gold is so important to the leprechaun, much of their strength depends on possessing a large hoard of wealth, and various leprechaun attributes are directly affected by the amount of gold on hand.
+The leprechaun uses gold for spell casting the way other players use mana. Gold is also used to pay for recharging devices or to power mana branded weapons. In addition, increasing the amount of gold on hand increases the power of the leprechaun, granting extra blows per round, extra shots per round, increased AC, life rating and even increasing their power with magical devices. To succeed in life, greed is obviously the primary virtue of the leprechaun!
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> -2</color>        Disarming   <color:y>Very Good    </color>
@@ -490,4 +490,4 @@ Xorn         <color:R>Poor         </color> <color:r>Bad          </color> <colo
 </style>
 
 
-<color:s>Automatically generated for PosChengband 5.0.0.</color>
+<color:s>Automatically generated for PosChengband 5.0.1.</color>

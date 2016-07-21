@@ -422,12 +422,13 @@ Leprechaun
   places at once. Dexterity determines the leprechaun's skill with 
   their magic.
    
-  Leprechauns are monsters so can not choose a normal class. Instead, 
-  being small, they should spend their initial pot of gold wisely and 
-  then enter the dungeons in search of new treasure. Since gold is so 
-  important to the leprechaun, much of their strength depends on 
-  possessing a large hoard of wealth, and various leprechaun attributes 
-  are directly affected by the amount of gold on hand.
+  The leprechaun uses gold for spell casting the way other players use 
+  mana. Gold is also used to pay for recharging devices or to power 
+  mana branded weapons. In addition, increasing the amount of gold on 
+  hand increases the power of the leprechaun, granting extra blows per 
+  round, extra shots per round, increased AC, life rating and even 
+  increasing their power with magical devices. To succeed in life, 
+  greed is obviously the primary virtue of the leprechaun!
   
     Stats                   Skills
     Strength      -2        Disarming   Very Good    
@@ -776,5 +777,5 @@ Xorn         Poor          Bad           Excellent     Bad             50'
 
 
 
-Automatically generated for PosChengband 5.0.0.
+Automatically generated for PosChengband 5.0.1.
 
