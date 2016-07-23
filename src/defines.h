@@ -719,7 +719,7 @@
 #define DRAGON_RED      0
 #define DRAGON_WHITE    1
 #define DRAGON_BLUE     2
-#define DRAGON_BLACK    3 
+#define DRAGON_BLACK    3
 #define DRAGON_GREEN    4
 #define DRAGON_NETHER   5
 #define DRAGON_LAW      6
@@ -2388,7 +2388,7 @@ enum {
 /*
  * Bit flags for the "p_ptr->special_attack" variable. -LM-
  *
- * Note:  The elemental and poison attacks should be managed using the 
+ * Note:  The elemental and poison attacks should be managed using the
  * function "set_ele_attack", in spell2.c.  This provides for timeouts and
  * prevents the player from getting more than one at a time.
  */
@@ -2783,7 +2783,7 @@ enum summon_specific_e {
 #define IDENT_BROKEN    0x80    /* Item is permanently worthless */
 
 
-/* 
+/*
  * How object is marked (flags in object_type.mark)
  * OM_FOUND --- original boolean flag
  * OM_NOMSG --- temporary flag to suppress messages which were
@@ -3285,7 +3285,7 @@ enum obj_flags_e {
 #define RF2_KILL_BODY       0x00200000  /* Monster can kill monsters */
 #define RF2_TAKE_ITEM       0x00400000  /* Monster can pick up items */
 #define RF2_KILL_ITEM       0x00800000  /* Monster can crush items */
-#define RF2_AURA_REVENGE    0x01000000  
+#define RF2_AURA_REVENGE    0x01000000
 #define RF2_THIEF           0x02000000
 #define RF2_AURA_FEAR       0x04000000
 #define RF2_CAMELOT         0x08000000
@@ -5109,8 +5109,8 @@ extern int PlayerUID;
 #define MON_MULTIHUED_CENTIPEDE 1132
 
 /* The Metal Babble guards the Arena dungeon, but this requires the guardian to be a unique
-   monster or the dungeon never gets flagged as completed. Note, this messes up the needle 
-   code in py_attack_aux() since the needle doesn't work on uniques, but I think I have 
+   monster or the dungeon never gets flagged as completed. Note, this messes up the needle
+   code in py_attack_aux() since the needle doesn't work on uniques, but I think I have
    that fixed now ... sigh
 */
 #define MON_HAGURE2        1110
@@ -5426,7 +5426,7 @@ enum object_save_fields_e {
  */
 enum mon_save_fields_e {
     SAVE_MON_DONE = 0,
-    SAVE_MON_AP_R_IDX, 
+    SAVE_MON_AP_R_IDX,
     SAVE_MON_SUB_ALIGN,
     SAVE_MON_TIMER,
     SAVE_MON_TARGET_Y,
@@ -5657,7 +5657,7 @@ enum mon_save_fields_e {
 #define SHOOT_NONE            0
 #define SHOOT_BOUNCE          1
 #define SHOOT_PIERCE        2
-#define SHOOT_RUN            3 
+#define SHOOT_RUN            3
 #define SHOOT_MANY          4
 #define SHOOT_ALL           5
 #define SHOOT_VOLLEY        7
@@ -5736,13 +5736,15 @@ enum mon_save_fields_e {
 #define MYSTIC_TOGGLE_OFFENSE    42
 #define MYSTIC_TOGGLE_DEFENSE    43
 
-#define LEPRECHAUN_TOGGLE_BLINK  44
+#define LEPRECHAUN_TOGGLE_BLINK    44
 
 #define WARLOCK_DRAGON_TOGGLE_BLESS 45
 #define WARLOCK_DRAGON_TOGGLE_CANTER 46
 #define WARLOCK_DRAGON_TOGGLE_GALLOP 47
 #define WARLOCK_DRAGON_TOGGLE_HEALING 48
 #define WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE 49
+
+#define LEPRECHAUN_TOGGLE_HOARDING 50
 
 /* Wild Counters */
 #define WILD_INFRAVISION 1
@@ -5778,15 +5780,15 @@ enum slot_e {
     EQUIP_SLOT_NONE,
     EQUIP_SLOT_GLOVES,
     EQUIP_SLOT_WEAPON_SHIELD,
-    EQUIP_SLOT_RING,         
-    EQUIP_SLOT_BOW,          
-    EQUIP_SLOT_AMULET,       
-    EQUIP_SLOT_LITE,         
-    EQUIP_SLOT_BODY_ARMOR,   
-    EQUIP_SLOT_CLOAK,        
-    EQUIP_SLOT_BOOTS,        
-    EQUIP_SLOT_HELMET,       
-    EQUIP_SLOT_ANY,             
+    EQUIP_SLOT_RING,
+    EQUIP_SLOT_BOW,
+    EQUIP_SLOT_AMULET,
+    EQUIP_SLOT_LITE,
+    EQUIP_SLOT_BODY_ARMOR,
+    EQUIP_SLOT_CLOAK,
+    EQUIP_SLOT_BOOTS,
+    EQUIP_SLOT_HELMET,
+    EQUIP_SLOT_ANY,
     EQUIP_SLOT_WEAPON,
     EQUIP_SLOT_CAPTURE_BALL,
     EQUIP_SLOT_MAX

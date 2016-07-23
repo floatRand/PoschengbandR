@@ -127,6 +127,22 @@ void blink_toggle_spell(int cmd, variant *res)
     }
 }
 
+void _hoarding_toggle_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Hoarding");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "When using this technique, any items you 'destroy' will be automatically converted into gold.");
+        break;
+    default:
+        _toggle_spell(LEPRECHAUN_TOGGLE_HOARDING, cmd, res);
+        break;
+    }
+}
+
 /**********************************************************************
  * Leprechaun Spells and Abilities
  **********************************************************************/
@@ -174,6 +190,7 @@ static spell_info _spells[] =
     { 35,  500,   60, animate_dead_spell},
     { 37, 1000,   60, recharging_spell},
     { 40,    0,    0, blink_toggle_spell},
+    { 42,    0,    0, _hoarding_toggle_spell},
     { 45, 1500,   60, _fanaticism_spell},
     { -1,   -1,   -1, NULL}
 };
@@ -271,7 +288,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
-    info_ptr->xtra_blow += MIN(p_ptr->au / 100000, 150);
+    info_ptr->xtra_blow += MIN(p_ptr->au / 100000, 100);
 }
 
 static void _player_action(int energy_use)
@@ -379,6 +396,31 @@ bool leprechaun_steal(int m_idx)
     return result;
 }
 
+bool _destroy_object(object_type *o_ptr)
+{
+    if (_get_toggle() == LEPRECHAUN_TOGGLE_HOARDING)
+    {
+        int amt = obj_value_real(o_ptr) * o_ptr->number / 3;
+
+        if (amt > 0)
+        {
+            char o_name[MAX_NLEN];
+
+            object_desc(o_name, o_ptr, OD_COLOR_CODED);
+            msg_format("You turn %s to %d coins worth of gold.", o_name, amt);
+
+            p_ptr->au += amt;
+            stats_on_gold_selling(amt); /* ? */
+
+            p_ptr->redraw |= (PR_GOLD);
+            p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 race_t *mon_leprechaun_get_race(void)
 {
     static race_t me = {0};
@@ -415,6 +457,7 @@ race_t *mon_leprechaun_get_race(void)
         me.gain_level = _gain_level;
         me.birth = _birth;
         me.player_action = _player_action;
+        me.destroy_object = _destroy_object;
         me.pseudo_class_idx = CLASS_ROGUE;
 
         me.flags = RACE_IS_MONSTER;

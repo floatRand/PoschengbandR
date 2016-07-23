@@ -596,6 +596,7 @@ static void prt_stat(int stat)
 #define BAR_DRAGON_GALLOP 170
 #define BAR_DRAGON_HEALING 171
 #define BAR_DRAGON_HEROIC_CHARGE 172
+#define BAR_HOARDING 173
 
 static struct {
     byte attr;
@@ -777,6 +778,7 @@ static struct {
     {TERM_RED, "Glp", "Gallop"},
     {TERM_YELLOW, "Hl", "Healing"},
     {TERM_VIOLET, "Chg", "Heroic Charge"},
+    {TERM_YELLOW, "$$", "Hoarding"},
     {0, NULL, NULL}
 };
 
@@ -1091,6 +1093,9 @@ static void prt_status(void)
         {
         case LEPRECHAUN_TOGGLE_BLINK:
             ADD_FLG(BAR_BLINK);
+            break;
+        case LEPRECHAUN_TOGGLE_HOARDING:
+            ADD_FLG(BAR_HOARDING);
             break;
         }
     }
