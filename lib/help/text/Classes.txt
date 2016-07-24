@@ -133,16 +133,11 @@ Melee
   The Rune Knight is a mythical warrior-mage who is dedicated to the 
   power of ancient Runes that hold immense power. By affixing these 
   Runes to his equipment, the Rune Knight can become an avatar of 
-  destruction, or an invulnerable bastion. Unlike the Warrior-Mage and 
-  all other casters, the Rune Knight's mana does not regenerate on its 
-  own; rather, the Rune Knight must siphon mana from magical attacks 
-  directed at him. The Rune Knight has a fixed (though very large) 
-  selection of spells that he can use his mana on, in addition to his 
-  unique Rune spells.
+  destruction, or an invulnerable bastion.
   
     Stats                   Skills
     Strength      +2        Disarming   Fair         
-    Intelligence  +2        Device      Good         
+    Intelligence  +0        Device      Good         
     Wisdom        +0        Save        Fair         
     Dexterity     +1        Stealth     Fair         
     Constitution  +0        Searching   Fair         
@@ -1206,7 +1201,7 @@ Berserker      +8  -20  -20   +4   +4   +4  200%  +22  160%
 Blood-Knight   +2   -2   -2   +0   +3   +2  120%  +20  150%
 Duelist        +2   +1   -2   +2   -3   +2  100%   +4  150%
 Mauler         +5   -2   -2   -1   +3   +2  111%  +18  120%
-Rune-Knight    +2   +2   +0   +1   +0   +1  107%   +6  150%
+Rune-Knight    +2   +0   +0   +1   +0   +1  107%   +6  150%
 Samurai        +3   -2   +1   +2   +1   +1  111%  +12  130%
 Warrior        +4   -2   -2   +2   +2   +1  115%  +18  100%
 Weaponmaster   +4   -3   -2   -1   +2   +1  109%  +12  135%

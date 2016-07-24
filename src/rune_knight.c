@@ -9,8 +9,6 @@
  ****************************************************************/
 void rune_calc_bonuses(object_type *o_ptr)
 {
-    if (o_ptr->rune == RUNE_ABSORPTION)
-        p_ptr->magic_resistance += 15;
     if (o_ptr->rune == RUNE_UNDERSTANDING && object_is_helmet(o_ptr))
         p_ptr->auto_pseudo_id = TRUE;
     if (o_ptr->rune == RUNE_SHADOW)
@@ -62,8 +60,6 @@ cptr rune_desc(int which)
 {
     switch (which)
     {
-    case RUNE_ABSORPTION:
-        return "<<Absorption>>";
     case RUNE_PROTECTION:
         return "<<Protection>>";
     case RUNE_REGENERATION:
@@ -142,7 +138,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
     {
     case RUNE_PROTECTION:
         add_flag(o_ptr->flags, OF_IGNORE_ACID);
-        o_ptr->to_a += 2 + randint1(8);
+        o_ptr->to_a += 5;
         break;
 
     case RUNE_REGENERATION:
@@ -323,53 +319,8 @@ static void _rune_default_spell(int cmd, variant *res)
 {
     switch (cmd)
     {
-    case SPELL_COST_EXTRA:
-        var_set_int(res, MAX(25, p_ptr->msp));
-        break;
-    /*case SPELL_COLOR:
-        var_set_int(res, TERM_L_BLUE);
-        break; */
     default:
         default_spell(cmd, res);
-        break;
-    }
-}
-
-static bool _rune_of_absorption_pred(object_type *o_ptr)
-{
-    if ( object_is_body_armour(o_ptr)
-      || object_is_melee_weapon(o_ptr)
-      || object_is_shield(o_ptr) )
-    {
-        return TRUE;
-    }
-    return FALSE;
-}
-static void _rune_of_absorption_spell(int cmd, variant *res)
-{
-    switch (cmd)
-    {
-    case SPELL_NAME:
-        var_set_string(res, "Rune of Absorption");
-        break;
-    case SPELL_DESC:
-        var_set_string(res, "Places a Rune of Absorption on chosen item granting a special magical defense that absorbs damage from all monster spells restoring your mana in the process.");
-        break;
-    case SPELL_CAST:
-    {
-        object_type *o_ptr = _rune_object_prompt(_rune_of_absorption_pred);
-        var_set_bool(res, FALSE);
-
-        if (o_ptr)
-            var_set_bool(res, rune_add(o_ptr, RUNE_ABSORPTION, TRUE));
-
-        break;
-    }
-    case SPELL_COST_EXTRA:
-        var_set_int(res, MAX(1, p_ptr->msp * 3 / 10));
-        break;
-    default:
-        _rune_default_spell(cmd, res);
         break;
     }
 }
@@ -400,9 +351,6 @@ static void _rune_of_protection_spell(int cmd, variant *res)
         
         break;
     }
-    case SPELL_COST_EXTRA:
-        var_set_int(res, MAX(5, p_ptr->msp * 5 / 10));
-        break;
     default:
         _rune_default_spell(cmd, res);
         break;
@@ -438,9 +386,6 @@ static void _rune_of_regeneration_spell(int cmd, variant *res)
         
         break;
     }
-    case SPELL_COST_EXTRA:
-        var_set_int(res, MAX(10, p_ptr->msp * 5 / 10));
-        break;
     default:
         _rune_default_spell(cmd, res);
         break;
@@ -709,7 +654,7 @@ static void _rune_of_elemental_protection_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Rune of Protection");
+        var_set_string(res, "Rune of Elements");
         break;
     case SPELL_DESC:
         var_set_string(res, "Creates a standalone rune. As long as you have this rune in your inventory, your inventory items are less likely to be destroyed by elemental attacks.");
@@ -1135,28 +1080,12 @@ static void _rune_of_immortality_spell(int cmd, variant *res)
 /****************************************************************
  * Spell Table and Exports
  ****************************************************************/
- #define _MAX_SPELLS_PER_GROUP    25
- #define _MAX_SPELL_GROUPS       4
-
-typedef struct {
-    cptr name;
-    cptr help;
-    int color;
-    spell_info spells[_MAX_SPELLS_PER_GROUP];    /* There is always a sentinel at the end */
-} _spell_group;
-
-static _spell_group _spell_groups[_MAX_SPELL_GROUPS] = {
-    { "Runes of Creation",
-      "Augment your equipment by attaching runes of various powers. Also, you may create "
-      "certain stand alone runes that grant powers by virtue of being present in your "
-      "inventory. Be sure to always keep Absorption handy, for it is your only means "
-      "of regaining spell points!",
-      TERM_L_BLUE,
-      { {  1,   0, 0, _rune_of_absorption_spell },
-        {  5,   0, 0, _rune_of_protection_spell },
-        {  7,   0, 0, _rune_of_regeneration_spell },
-        {  9,   0, 0, _rune_of_fire_spell },
-        { 11,   0, 0, _rune_of_air_spell },
+static spell_info _spells[] =
+{
+        {  1,   0, 0, _rune_of_protection_spell },
+        {  4,   0, 0, _rune_of_regeneration_spell },
+        {  7,   0, 0, _rune_of_fire_spell },
+        { 10,   0, 0, _rune_of_air_spell },
         { 13,   0, 0, _rune_of_water_spell },
         { 15,   0, 0, _rune_of_light_spell },
         { 17,   0, 0, _rune_of_shadow_spell },
@@ -1175,124 +1104,16 @@ static _spell_group _spell_groups[_MAX_SPELL_GROUPS] = {
         { 41,   0, 0, _rune_of_destruction_spell },
         { 43,   0, 0, _rune_of_good_fortune_spell },
         { 45,   0, 0, _rune_of_immortality_spell },
-        { -1,   0,  0, NULL },
-      }
-    },
-    { "Runes of the Novice",
-      "Minor spells and powers, available to the weakest of Rune-Knights. "
-      "While hardly awe-inspiring, these powers grant detection and weak "
-      "utility that are designed to assist the novice in their quest for deeper "
-      "understanding.",
-      TERM_L_GREEN,
-      { {  1,   1, 20, detect_monsters_spell },
-        {  1,   2, 25, phase_door_spell },
-        {  3,   3, 25, detect_doors_stairs_traps_spell },
-        {  5,   5, 35, light_area_spell },
-        {  7,  10, 75, resist_poison_spell },
-        {  9,   7, 75, magic_mapping_spell },
-        { 11,   9, 35, summon_manes_spell },
-        { 12,  12, 40, orb_of_entropy_spell },
-        { 15,   9, 35, teleport_spell },
-        { -1,   0,  0, NULL },
-      }
-    },
-    { "Runes of the Initiate",
-      "Stronger rune powers, available to the experienced Rune-Knight. "
-      "These powers offer great utility to assist you on your journey "
-      "of knowledge.",
-      TERM_UMBER,
-      { { 16,  16, 45, remove_curse_I_spell },
-        { 18,  12, 60, teleport_other_spell },
-        { 20,  20, 85, satisfy_hunger_spell },
-        { 21,  20, 80, explosive_rune_spell },
-        { 22,  16, 60, stone_to_mud_spell },
-        { 25,  25, 85, disintegrate_spell },
-        { 28,  20, 70, resistance_spell },
-        { 29,  23, 60, protection_from_evil_spell },
-        { 30,  25, 75, battle_frenzy_spell },
-        { -1,   0,  0, NULL },
-      }
-    },
-    { "Runes of the Master",
-      "Mighty powers indeed. Use them wisely, for the forces of evil have "
-      "grown strong and don't take well to rivals in their quest for domination.",
-      TERM_RED,
-      { { 33,  30, 75, identify_fully_spell },
-        { 35,  33, 45, dimension_door_spell },
-        { 36,  70, 75, glyph_of_warding_spell },
-        { 38,  65, 85, mana_branding_spell },
-        { 40,  40, 80, eye_for_an_eye_spell },
-        { 42, 100, 80, clairvoyance_spell },
-        { 43, 100, 45, living_trump_spell },
-        { 45,  58, 85, mana_storm_II_spell },
-        { 47, 100, 90, wraithform_spell },
-        { 49,  80, 85, polymorph_demonlord_spell },
-        { -1,   0,  0, NULL },
-      }
-    },
+        { -1,  -1,-1, NULL },
 };
-
-static int _get_spells_imp(spell_info* spells, int max, _spell_group *spell_group)
-{
-    int i;
-    int ct = 0;
-    int stat_idx = p_ptr->stat_ind[A_INT];
-    
-    for (i = 0; ; i++)
-    {
-        spell_info *base = &spell_group->spells[i];
-        if (base->level < 0) break;
-        if (ct >= max) break;
-        if (base->level <= p_ptr->lev)
-        {
-            spell_info* current = &spells[ct];
-            current->fn = base->fn;
-            current->level = base->level;
-            current->cost = base->cost;
-
-            current->fail = calculate_fail_rate(base->level, base->fail, stat_idx);            
-            ct++;
-        }
-    }
-    return ct;
-}
-
-static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
-{
-    switch (cmd)
-    {
-    case MENU_TEXT:
-        var_set_string(res, _spell_groups[which].name);
-        break;
-    case MENU_HELP:
-        var_set_string(res, _spell_groups[which].help);
-        break;
-    case MENU_COLOR:
-        var_set_int(res, _spell_groups[which].color);
-        break;
-    default:
-        default_menu(cmd, which, cookie, res);
-    }
-}
 
 static int _get_spells(spell_info* spells, int max)
 {
-    int idx = -1;
-    int ct = 0;
-    menu_t menu = { "Use which group of spells?", "Browse which group of spells?", NULL,
-                    _spell_menu_fn, _spell_groups, _MAX_SPELL_GROUPS};
-
-    idx = menu_choose(&menu);
-    if (idx < 0) return 0;
-    ct = _get_spells_imp(spells, max, &_spell_groups[idx]);
-    if (ct == 0)
-        msg_print("You don't know any of those spells yet!");
-    return ct;
+    return get_spells_aux(spells, max, _spells);
 }
 
 static void _calc_bonuses(void)
 {
-    p_ptr->spell_cap += 7;
 }
 
 static caster_info * _caster_info(void)
@@ -1301,9 +1122,10 @@ static caster_info * _caster_info(void)
     static bool init = FALSE;
     if (!init)
     {
-        me.magic_desc = "spell";
-        me.which_stat = A_INT;
-        me.weight = 450;
+        me.magic_desc = "rune";
+        me.options = CASTER_USE_HP;
+        me.which_stat = A_STR;
+        me.weight = 1000;
         init = TRUE;
     }
     return &me;
@@ -1323,14 +1145,10 @@ class_t *rune_knight_get_class(void)
         me.desc = "The Rune Knight is a mythical warrior-mage who is dedicated to the power "
                   "of ancient Runes that hold immense power. By affixing these Runes to his "
                   "equipment, the Rune Knight can become an avatar of destruction, or an "
-                  "invulnerable bastion. Unlike the Warrior-Mage and all other casters, the "
-                  "Rune Knight's mana does not regenerate on its own; rather, the Rune Knight "
-                  "must siphon mana from magical attacks directed at him. The Rune Knight has "
-                  "a fixed (though very large) selection of spells that he can use his mana on, "
-                  "in addition to his unique Rune spells.";
+                  "invulnerable bastion.";
 
         me.stats[A_STR] = 2;
-        me.stats[A_INT] = 2;
+        me.stats[A_INT] = 0;
         me.stats[A_WIS] = 0;
         me.stats[A_DEX] = 1;
         me.stats[A_CON] = 0;

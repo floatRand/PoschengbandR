@@ -4412,12 +4412,6 @@ bool eat_magic(int power)
     int item, amt;
     int fail_odds = 0, lev;
 
-    if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
-    {
-        msg_print("You are not allowed to Eat Magic!");
-        return FALSE;
-    }
-
     /* Get an item */
     item_tester_hook = _obj_recharge_src;
     if (!get_item(&item, "Drain which item? ", "You have nothing to drain.", USE_INVEN | USE_FLOOR))

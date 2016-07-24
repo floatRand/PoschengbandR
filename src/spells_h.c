@@ -338,7 +338,7 @@ void hp_to_sp_spell(int cmd, variant *res)
         {
             int wounds = p_ptr->msp - p_ptr->csp;
 
-            if (wounds > 0 && p_ptr->pclass != CLASS_RUNE_KNIGHT)
+            if (wounds > 0)
             {
                 int healing = p_ptr->chp;
 
@@ -356,7 +356,7 @@ void hp_to_sp_spell(int cmd, variant *res)
     case SPELL_CAST:
     {
         int gain_sp = take_hit(DAMAGE_USELIFE, p_ptr->lev, "thoughtless convertion from HP to SP", -1) / 5;
-        if (gain_sp && p_ptr->pclass != CLASS_RUNE_KNIGHT)
+        if (gain_sp)
         {
             p_ptr->csp += gain_sp;
             if (p_ptr->csp > p_ptr->msp)

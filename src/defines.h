@@ -5629,7 +5629,6 @@ enum mon_save_fields_e {
 #define CUT_NONE            0
 
 /* object_type.rune */
-#define RUNE_ABSORPTION           1
 #define RUNE_PROTECTION           2
 #define RUNE_REGENERATION         3
 #define RUNE_FIRE                 4
