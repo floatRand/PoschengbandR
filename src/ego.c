@@ -269,13 +269,7 @@ int ego_choose_type(int type, int level)
     int    e_idx = 0;
 
     if (apply_magic_ego)
-    {
-        /* Avoid infinite loops if our client tries to force
-           an ego type that is invalid for the object in question */
-        int result = apply_magic_ego;
-        apply_magic_ego = 0;
-        return result;
-    }
+        return apply_magic_ego;
 
     if (obj_drop_theme)
     {
