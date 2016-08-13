@@ -283,22 +283,13 @@ int ego_choose_type(int type, int level)
         case EGO_TYPE_GLOVES: p = _ego_p_gloves; break;
         case EGO_TYPE_BOOTS: p = _ego_p_boots; break;
         }
-
-        /* Hack: Ego creation will often spin a loop, limiting
-           certain ego types to certain object types. For example,
-           Rusty Chain Mail (Dwarven) or a Pair of Soft Leather Boots (Dwarven)
-           is prevented.
-
-           In general, the kind_theme_* hooks should prevent these
-           errors, but any mistake would result in an infinite loop.
-           Turning off the drop theme here is safe. You just won't get
-           a properly themed ego item on the next pass. */
-        obj_drop_theme = 0;
     }
 
     e_idx = _choose_type(type, level, p);
+
     if (!e_idx && p)
         e_idx = _choose_type(type, level, NULL);
+
     return e_idx;
 }
 
