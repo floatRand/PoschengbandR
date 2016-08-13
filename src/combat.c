@@ -939,31 +939,21 @@ int bow_range(object_type *o_ptr)
 {
     int range, mult;
 
+    mult = bow_mult(o_ptr);
+    range = 13 + mult/80;
+
     switch (o_ptr->sval)
     {
     case SV_LIGHT_XBOW:
-        range = 9; /* somebody is adding 1 later ... */
-        range += (p_ptr->concent + 1) / 2;    /* Snipers? */
+        if (p_ptr->concent) /* Sniper */
+            range += (p_ptr->concent + 1) / 2;
         break;
-
-    case SV_SHORT_BOW:
-        range = 9; /* somebody is adding 1 later ... */
-        break;
-
-    default:
-        mult = bow_mult(o_ptr);
-        range = 13 + mult/80;
-        if (o_ptr->sval == SV_HEAVY_XBOW)
-        {
-            if (p_ptr->concent)
-                range -= (5 - (p_ptr->concent + 1) / 2);
-            else
-                range -= 5;
-        }
+    case SV_HEAVY_XBOW:
+        range -= 5;
+        if (p_ptr->concent) /* Sniper */
+            range += (p_ptr->concent + 1) / 2;
         break;
     }
-    if (prace_is_(RACE_DEMIGOD) && p_ptr->psubrace == DEMIGOD_ARTEMIS)
-        range += 1 + p_ptr->lev/12;
 
     return range;
 }

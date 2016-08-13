@@ -730,7 +730,7 @@ N:73:& Short Bow~
 G:}:U
 I:19:12:0
 W:10:0:0:30:400
-P:0:x3.00:0:0:0
+P:0:x2.50:0:0:0
 A:10/1
 F:SHOW_MODS | TOWN
 D:The traditional hunter's weapon, this light bow is easily drawn.
@@ -749,7 +749,7 @@ N:75:& Light Crossbow~
 G:}:s
 I:19:23:0
 W:15:0:0:110:500
-P:0:x4.00:0:0:0
+P:0:x3.50:0:0:0
 A:15/1
 F:SHOW_MODS | TOWN
 D:A mechanical bow made of wood, it is cocked to augment the strength of

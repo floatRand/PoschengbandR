@@ -19,7 +19,7 @@
 #define VER_MAJOR 5
 #define VER_MINOR 0
 #define VER_PATCH 1
-#define VER_EXTRA 0
+#define VER_EXTRA 1
 
 #define GAME_MODE_BEGINNER  0
 #define GAME_MODE_NORMAL    1
@@ -1633,16 +1633,17 @@ enum {
 #define SV_AMMO_NORMAL                   1    /* shots, arrows, bolts */
 #define SV_AMMO_HEAVY                    2    /* seeker arrows and bolts, mithril shots */
 
-/* The "sval" codes for TV_BOW */
-#define SV_SLING                         2    /* (x2) */
-#define SV_SHORT_BOW                    12    /* (x3) */
-#define SV_LONG_BOW                     13    /* (x3) */
-#define SV_LIGHT_XBOW                   23    /* (x4) */
-#define SV_HEAVY_XBOW                   24    /* (x4) */
-#define SV_CRIMSON                      50    /* (x0) */
-#define SV_RAILGUN                      51    /* (x0) */
-#define SV_NAMAKE_BOW                   63    /* (x3) */
-#define SV_HARP                            70  /* (x0) */
+/* The "sval" codes for TV_BOW. The weird sequencing is historic (Previously,
+   sval%10 gave the bow multiplier, but this is now specified in k_info, etc). */
+#define SV_SLING                         2
+#define SV_SHORT_BOW                    12
+#define SV_LONG_BOW                     13
+#define SV_LIGHT_XBOW                   23
+#define SV_HEAVY_XBOW                   24
+#define SV_CRIMSON                      50
+#define SV_RAILGUN                      51
+#define SV_NAMAKE_BOW                   63
+#define SV_HARP                         70
 
 /* The "sval" codes for TV_DIGGING */
 #define SV_SHOVEL                        1
