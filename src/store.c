@@ -1380,13 +1380,29 @@ static bool _get_store_obj(object_type *o_ptr)
         break;
     case STORE_BLACK:
         choose_obj_kind(0);
-        level1 = 25 + randint0(25);
-        level2 = 25 + randint0(25);
+        if (dun_level)
+        {
+            level1 = dun_level;
+            level2 = dun_level;
+        }
+        else
+        {
+            level1 = 25 + randint0(25);
+            level2 = 25 + randint0(25);
+        }
         break;
     case STORE_JEWELER:
         get_obj_num_hook = _jeweler_accept;
-        level1 = 25 + randint0(25);
-        level2 = 25 + randint0(25);
+        if (dun_level)
+        {
+            level1 = dun_level;
+            level2 = dun_level;
+        }
+        else
+        {
+            level1 = 25 + randint0(25);
+            level2 = 25 + randint0(25);
+        }
         break;
     }
 
