@@ -124,7 +124,12 @@ static void _display_level(monster_race *r_ptr, doc_ptr doc)
     if (r_ptr->level == 0)
         doc_insert(doc, "<color:G>Town</color>");
     else if (_easy_lore(r_ptr) || r_ptr->r_tkills > 0)
-        doc_printf(doc, "<color:G>%d</color>", (int)r_ptr->level);
+    {
+        if (r_ptr->max_level != 999)
+            doc_printf(doc, "<color:G>%d to %d</color>", (int)r_ptr->level, (int)r_ptr->max_level);
+        else
+            doc_printf(doc, "<color:G>%d</color>", (int)r_ptr->level);
+    }
     else
         doc_insert(doc, "<color:y>?</color>");
     doc_newline(doc);
