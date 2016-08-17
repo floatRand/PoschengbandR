@@ -1011,7 +1011,7 @@ void py_display_spells(doc_ptr doc, spell_info *table, int ct)
     var_init(&vfm);
 
     doc_printf(doc, "<topic:Spells>=================================== <color:keypress>S</color>pells ====================================\n\n");
-    doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s Cast Fail</color>\n", "", "Desc");
+    doc_printf(doc, "<color:G>%-20.20s Lvl Cost Fail %-15.15s  Cast Fail</color>\n", "", "Desc");
 
     for (i = 0; i < ct; i++)
     {
@@ -1023,7 +1023,7 @@ void py_display_spells(doc_ptr doc, spell_info *table, int ct)
         spell->fn(SPELL_COST_EXTRA, &vc);
         spell->fn(SPELL_FAIL_MIN, &vfm);
 
-        doc_printf(doc, "%-20.20s %3d %4d %3d%% %-15.15s %4d %4d %3d%%\n",
+        doc_printf(doc, "%-20.20s %3d %4d %3d%% %-15.15s %5d %4d %3d%%\n",
             var_get_string(&vn),
             spell->level, calculate_cost(spell->cost + var_get_int(&vc)), MAX(spell->fail, var_get_int(&vfm)),
             var_get_string(&vd),

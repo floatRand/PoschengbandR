@@ -4708,7 +4708,7 @@ void calc_bonuses(void)
             }
             else if (p_ptr->pclass == CLASS_MYSTIC)
             {
-                p_ptr->weapon_info[i].base_blow += MIN(500, 500 * blow_base / 60);
+                p_ptr->weapon_info[i].base_blow += MIN(450, 450 * blow_base / 60);
             }
             else
             {

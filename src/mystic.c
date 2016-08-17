@@ -116,6 +116,7 @@ static void _cold_strike_spell(int cmd, variant *res)
     }
 }
 
+/* For the Logrus Master
 static void _confusing_strike_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -133,7 +134,7 @@ static void _confusing_strike_spell(int cmd, variant *res)
         default_spell(cmd, res);
         break;
     }
-}
+} */
 
 static void _crushing_blow_spell(int cmd, variant *res)
 {
@@ -457,7 +458,7 @@ static spell_info _spells[] =
     { 17,  0,  0, _fast_toggle_spell},
     { 19,  0,  0, _defense_toggle_spell},
     { 21, 15, 50, _mystic_insights_spell},
-    { 23, 15,  0, _confusing_strike_spell},
+    /* For the Logrus Master: { 23, 15,  0, _confusing_strike_spell}, */
     { 25, 17,  0, _acid_strike_spell},
     { 27, 20,  0, _stunning_blow_spell},
     { 29,  0,  0, _retaliate_toggle_spell},
@@ -469,7 +470,7 @@ static spell_info _spells[] =
     { 37,  0,  0, _offense_toggle_spell},
     { 39, 40,  0, _knockout_blow_spell},
     { 42, 50,  0, _killing_strike_spell},
-    { 45, 50,  0, _crushing_blow_spell},
+    { 45, 70,  0, _crushing_blow_spell},
     { -1, -1, -1, NULL}
 };
 

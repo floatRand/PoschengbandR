@@ -32,7 +32,7 @@ static int _get_attack_idx(int lvl, u32b defense)
     int min_level;
 
     if (p_ptr->stun || p_ptr->confused)
-        return 0; /* Punch for 1d4 */
+        tries = 1;
 
     for (i = 0; i < tries; i++)
     {
@@ -117,12 +117,9 @@ critical_t monk_get_critical(martial_arts *ma_ptr, int hand, int mode)
     int min_level = ma_ptr->min_level;
     int weight = _get_weight();
 
-    if (mode == MYSTIC_CRITICAL)
-        weight += weight/2 + 300;
-
     if (p_ptr->pclass == CLASS_FORCETRAINER) min_level = MAX(1, min_level - 3);
 
-    return critical_norm(weight, min_level, p_ptr->weapon_info[hand].to_h, 0, 0);
+    return critical_norm(weight, min_level, p_ptr->weapon_info[hand].to_h, mode, 0);
 }
 
 int monk_get_attack_idx(void)

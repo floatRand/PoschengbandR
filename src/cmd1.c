@@ -554,6 +554,7 @@ critical_t critical_norm(int weight, int plus, s16b meichuu, int mode, int hand)
       || mode == HISSATSU_3DAN
       || mode == MAULER_CRITICAL_BLOW
       || mode == GOLEM_BIG_PUNCH
+      || mode == MYSTIC_CRITICAL
       || randint1(roll) <= i )
     {
         int k = weight + randint1(quality);
