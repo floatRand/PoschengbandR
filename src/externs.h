@@ -33,7 +33,7 @@ extern cptr macro_trigger_keycode[2][MAX_MACRO_TRIG];
 
 extern int level_up;
 
-/* 
+/*
  *  List for auto-picker/destroyer entries
  */
 extern int max_autopick;
@@ -1947,13 +1947,6 @@ extern void race_legends(void);
 extern void race_score(int race_num);
 extern void show_highclass(void);
 
-/* mind.c */
-extern mind_power mind_powers[MIND_MAX_CLASSES];
-extern void mindcraft_info(char *p, int use_mind, int power);
-extern void do_cmd_mind(void);
-extern void do_cmd_mind_browse(void);
-
-
 /* mspells3.c */
 extern bool do_cmd_cast_learned(void);
 extern void learn_spell(int monspell);
@@ -2265,7 +2258,7 @@ extern void    possessor_on_birth(void);
 extern void    possessor_calc_innate_attacks(void);
 extern int     possessor_get_powers(spell_info* spells, int max);
 extern int     possessor_get_spells(spell_info* spells, int max);
-extern 
+extern
 caster_info   *possessor_caster_info(void);
 extern void    possessor_calc_bonuses(void);
 extern int     possessor_r_speed(int r_idx);
@@ -2512,7 +2505,7 @@ extern void     on_p_hit_m(int m_idx);
 /* skills.c */
 extern skill_table *s_info; /* deprecated ... in process of removing naked table reads*/
 extern void skills_add(skills_t *dest, skills_t *src);
-extern void skills_scale(skills_t *dest, int num, int denom); 
+extern void skills_scale(skills_t *dest, int num, int denom);
 extern void skills_init(skills_t *dest);
 typedef struct { cptr desc; byte color; } skill_desc_t;
 extern skill_desc_t skills_describe(int amt, int div);
