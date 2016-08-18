@@ -204,7 +204,7 @@ object_type *_choose(cptr verb, int tval, int options)
         }
 
         if ('a' <= cmd && cmd < 'a' + _MAX_SLOTS)
-        {            
+        {
             slot = A2I(cmd);
             if (exchange)
             {
@@ -363,7 +363,7 @@ static bool gain_magic(void)
     char o_name[MAX_NLEN];
 
     item_tester_hook = object_is_device;
-    if (!get_item(&item, "Gain power of which item? ", "You have nothing to gain power from.", (USE_INVEN | USE_FLOOR))) 
+    if (!get_item(&item, "Gain power of which item? ", "You have nothing to gain power from.", (USE_INVEN | USE_FLOOR)))
         return FALSE;
 
     if (item >= 0)
@@ -429,8 +429,8 @@ static void _absorb_magic_spell(int cmd, variant *res)
     }
 }
 
-void magic_eater_gain(void) 
-{ 
+void magic_eater_gain(void)
+{
     if (cast_spell(_absorb_magic_spell))
         energy_use = 100;
 }
@@ -443,7 +443,10 @@ bool magic_eater_regen(int pct)
 
     if (p_ptr->pclass != CLASS_MAGIC_EATER) return FALSE;
 
-    base = 3*p_ptr->regen/100;
+    base = 3;
+    if (p_ptr->regen > 100)
+        base += (p_ptr->regen - 100) / 100;
+
     for (i = 0; i < _MAX_SLOTS; i++)
     {
         object_type *o_ptr = _which_obj(TV_WAND, i);
@@ -451,7 +454,7 @@ bool magic_eater_regen(int pct)
         o_ptr = _which_obj(TV_STAFF, i);
         if (o_ptr->k_idx) device_regen_sp(o_ptr, base);
         o_ptr = _which_obj(TV_ROD, i);
-        if (o_ptr->k_idx) device_regen_sp(o_ptr, 10*base);
+        if (o_ptr->k_idx) device_regen_sp(o_ptr, 2*base);
     }
     return TRUE;
 }
@@ -486,7 +489,7 @@ void magic_eater_restore_all(void)
     }
 }
 
-/* Old annoyance of Magic Eaters: No automatic resting to regenerate charges! 
+/* Old annoyance of Magic Eaters: No automatic resting to regenerate charges!
    See dungeon.c:process_player() */
 bool magic_eater_can_regen(void)
 {
