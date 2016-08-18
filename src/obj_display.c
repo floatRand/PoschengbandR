@@ -1241,8 +1241,15 @@ void device_display_doc(object_type *o_ptr, doc_ptr doc)
             {
                 int       per_mill = magic_eater_regen_amt(o_ptr->tval);
                 const int scale = 100;
-                int       sp = device_max_sp(o_ptr) * per_mill * scale / 1000;
-                int       turns = o_ptr->activation.cost * scale * scale / sp;
+                int       cost = o_ptr->activation.cost * scale;
+                int       sp, turns;
+
+                if (have_flag(flgs, OF_REGEN)) /* cf device_regen_sp */
+                    per_mill += o_ptr->pval * per_mill;
+
+                sp = device_max_sp(o_ptr) * per_mill * scale / 1000;
+                turns = cost * scale / sp;
+
                 doc_printf(doc, "Regen  : <color:G>%d.%02d</color> rounds per charge\n", turns / scale, turns % scale);
             }
             doc_printf(doc, "Fail   : <color:G>%d.%d%%</color>\n", fail/10, fail%10);
