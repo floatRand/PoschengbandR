@@ -1244,8 +1244,8 @@ void device_display_doc(object_type *o_ptr, doc_ptr doc)
                 int       cost = o_ptr->activation.cost * scale;
                 int       sp, turns;
 
-                if (have_flag(flgs, OF_REGEN)) /* cf device_regen_sp */
-                    per_mill += o_ptr->pval * per_mill;
+                if (have_flag(flgs, OF_REGEN))
+                    per_mill += o_ptr->pval * per_mill / 5;
 
                 sp = device_max_sp(o_ptr) * per_mill * scale / 1000;
                 turns = cost * scale / sp;

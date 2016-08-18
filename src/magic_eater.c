@@ -452,12 +452,22 @@ int magic_eater_regen_amt(int tval)
 static void _do_regen(int tval)
 {
     int i;
-    int amt = magic_eater_regen_amt(tval);
+    int base = magic_eater_regen_amt(tval);
 
     for (i = 0; i < _MAX_SLOTS; i++)
     {
         object_type *o_ptr = _which_obj(tval, i);
-        if (o_ptr->k_idx) device_regen_sp(o_ptr, amt);
+        if (o_ptr->k_idx)
+        {
+            int  amt = base;
+            u32b flgs[OF_ARRAY_SIZE];
+
+            obj_flags(o_ptr, flgs);
+            if (have_flag(flgs, OF_REGEN))
+                amt += o_ptr->pval * base / 5;
+
+            device_regen_sp_aux(o_ptr, amt);
+        }
     }
 }
 
