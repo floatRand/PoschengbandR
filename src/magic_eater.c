@@ -436,26 +436,39 @@ void magic_eater_gain(void)
 }
 
 /* Regeneration */
-bool magic_eater_regen(int pct)
+int magic_eater_regen_amt(int tval)
+{
+   int amt = 3; /* per mill */
+
+    if (p_ptr->regen > 100)
+        amt += (p_ptr->regen - 100) / 100;
+
+    if (tval == TV_ROD)
+        amt *= 5;
+
+    return amt;
+}
+
+static void _do_regen(int tval)
 {
     int i;
-    int base;
-
-    if (p_ptr->pclass != CLASS_MAGIC_EATER) return FALSE;
-
-    base = 3;
-    if (p_ptr->regen > 100)
-        base += (p_ptr->regen - 100) / 100;
+    int amt = magic_eater_regen_amt(tval);
 
     for (i = 0; i < _MAX_SLOTS; i++)
     {
-        object_type *o_ptr = _which_obj(TV_WAND, i);
-        if (o_ptr->k_idx) device_regen_sp(o_ptr, base);
-        o_ptr = _which_obj(TV_STAFF, i);
-        if (o_ptr->k_idx) device_regen_sp(o_ptr, base);
-        o_ptr = _which_obj(TV_ROD, i);
-        if (o_ptr->k_idx) device_regen_sp(o_ptr, 2*base);
+        object_type *o_ptr = _which_obj(tval, i);
+        if (o_ptr->k_idx) device_regen_sp(o_ptr, amt);
     }
+}
+
+bool magic_eater_regen(int pct)
+{
+    if (p_ptr->pclass != CLASS_MAGIC_EATER) return FALSE;
+
+    _do_regen(TV_WAND);
+    _do_regen(TV_STAFF);
+    _do_regen(TV_ROD);
+
     return TRUE;
 }
 

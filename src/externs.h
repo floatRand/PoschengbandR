@@ -2343,6 +2343,7 @@ extern bool magic_eater_regen(int percent);
 extern void magic_eater_restore(void);
 extern void magic_eater_restore_all(void);
 extern bool magic_eater_can_regen(void);
+extern int  magic_eater_regen_amt(int tval);
 
 extern void magic_eater_browse(void);
 extern void magic_eater_cast(int tval);
