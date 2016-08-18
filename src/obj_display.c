@@ -1174,15 +1174,6 @@ void device_display_doc(object_type *o_ptr, doc_ptr doc)
         doc_printf(doc, "Power  : <color:G>%d</color>\n", device_level(o_ptr));
         doc_printf(doc, "Mana   : <color:%c>%d</color>/<color:G>%d</color>\n",
                     (sp < max_sp) ? 'y' : 'G', sp, max_sp);
-
-        if (p_ptr->pclass == CLASS_MAGIC_EATER)
-        {
-            int       per_mill = magic_eater_regen_amt(o_ptr->tval);
-            const int scale = 100;
-            int       sp = device_max_sp(o_ptr) * per_mill * scale / 1000;
-            int       turns = o_ptr->activation.cost * scale * scale / sp;
-            doc_printf(doc, "Regen  : <color:G>%d.%02d</color> rounds per charge\n", turns / scale, turns % scale);
-        }
     }
     else
     {
@@ -1246,6 +1237,14 @@ void device_display_doc(object_type *o_ptr, doc_ptr doc)
             doc_printf(doc, "Cost   : <color:G>%d</color>\n", o_ptr->activation.cost);
             doc_printf(doc, "Charges: <color:%c>%d</color>/<color:G>%d</color>\n",
                         (charges < max_charges) ? 'y' : 'G', charges, max_charges);
+            if (p_ptr->pclass == CLASS_MAGIC_EATER)
+            {
+                int       per_mill = magic_eater_regen_amt(o_ptr->tval);
+                const int scale = 100;
+                int       sp = device_max_sp(o_ptr) * per_mill * scale / 1000;
+                int       turns = o_ptr->activation.cost * scale * scale / sp;
+                doc_printf(doc, "Regen  : <color:G>%d.%02d</color> rounds per charge\n", turns / scale, turns % scale);
+            }
             doc_printf(doc, "Fail   : <color:G>%d.%d%%</color>\n", fail/10, fail%10);
             doc_printf(doc, "Desc   : <indent>%s</indent>\n\n", do_device(o_ptr, SPELL_DESC, boost));
         }
