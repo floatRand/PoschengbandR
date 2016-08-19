@@ -4986,6 +4986,7 @@ static bool _auto_detect_traps(void)
 {
     int i;
     if (p_ptr->pclass == CLASS_BERSERKER) return FALSE;
+    if (p_ptr->pclass == CLASS_MAGIC_EATER && magic_eater_auto_detect_traps()) return TRUE;
 
     i = pack_find(TV_SCROLL, SV_SCROLL_DETECT_TRAP);
     if (i >= 0 && !p_ptr->blind && !(get_race()->flags & RACE_IS_ILLITERATE))
