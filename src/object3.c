@@ -270,6 +270,7 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
 
     if (obj_is_identified(o_ptr))
     {
+        int xtra = 0;
         if (o_ptr->name2 == EGO_ROBE_TWILIGHT)
         {
             p = p / 3;
@@ -293,21 +294,23 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
         case ART_STONE_OF_CRAFT:
         case ART_STONE_OF_ARMAGEDDON:
         case ART_STONE_OF_MIND:
-            p += 5000;
-            if (cost_calc_hook)
-            {
-                sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
-                cost_calc_hook(dbg_msg);
-            }
+            xtra = 5000;
             break;
         case ART_ASSASSINATOR:
-            p += 25000;
+            xtra = 25000;
+            break;
+        case ART_SPECTRAL_DSM: /* Passwall */
+            xtra = 50000;
+            break;
+        }
+        if (xtra)
+        {
+            p += xtra;
             if (cost_calc_hook)
             {
                 sprintf(dbg_msg, "  * Hidden Power: p = %d", p);
                 cost_calc_hook(dbg_msg);
             }
-            break;
         }
     }
 

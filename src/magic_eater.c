@@ -489,11 +489,16 @@ void magic_eater_restore(void)
     for (i = 0; i < _MAX_SLOTS; i++)
     {
         object_type *o_ptr = _which_obj(TV_WAND, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 350);
+        if (o_ptr->k_idx)
+            device_regen_sp_aux(o_ptr, 350);
+
         o_ptr = _which_obj(TV_STAFF, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 350);
+        if (o_ptr->k_idx && o_ptr->activation.type != EFFECT_RESTORE_MANA)
+            device_regen_sp_aux(o_ptr, 350);
+
         o_ptr = _which_obj(TV_ROD, i);
-        if (o_ptr->k_idx) device_regen_sp_aux(o_ptr, 700);
+        if (o_ptr->k_idx)
+            device_regen_sp_aux(o_ptr, 700);
     }
 }
 

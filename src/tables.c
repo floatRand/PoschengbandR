@@ -1353,7 +1353,7 @@ arena_type arena_info[MAX_ARENA_MONS + 2] =
     { MON_NIGHTWALKER,   TV_ROD,    EFFECT_BEAM_DISINTEGRATE      },
     { MON_SHAMBLER,      TV_STAFF,  EFFECT_HOLINESS               },
     { MON_BLACK_REAVER,  TV_SCROLL, SV_SCROLL_STAR_ACQUIREMENT    },
-    { MON_FENGHUANG,     TV_STAFF,  EFFECT_RESTORE_MANA           },
+    { MON_FENGHUANG,     TV_STAFF,  EFFECT_STARBURST              },
     { MON_WYRM_POWER,    TV_ROD,    EFFECT_HEAL_CURING_HERO       },
     { 0,                 0,         0                             }, /* Victory prizing */
     { MON_HAGURE,        TV_SCROLL, SV_SCROLL_ARTIFACT            },
@@ -2193,7 +2193,7 @@ s32b realm_choices2[MAX_CLASS] =
      CH_CRUSADE | CH_ARMAGEDDON), /* Blood-Mage */
     CH_NONE,                /* Necromancer */
     CH_NONE,                /* Psion */
-    CH_NONE,                /* Rage-Mage */    
+    CH_NONE,                /* Rage-Mage */
     CH_NONE,                /* Scout */
     CH_NONE,                /* Mauler */
     CH_NONE,                /* Monster */
@@ -3592,7 +3592,7 @@ cptr game_inscriptions[] =
     "good",          /* FEEL_GOOD */
     "excellent",     /* FEEL_EXCELLENT */
     "special",       /* FEEL_SPECIAL */
-	"bad",           /* FEEL_BAD */
+    "bad",           /* FEEL_BAD */
 };
 
 kamae kamae_shurui[MAX_KAMAE] =
