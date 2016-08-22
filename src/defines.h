@@ -5655,10 +5655,10 @@ enum mon_save_fields_e {
 #define RUNE_IMMORTALITY          23
 
 /* Weaponmaster shooting powers */
-#define SHOOT_NONE            0
-#define SHOOT_BOUNCE          1
+#define SHOOT_NONE          0
+#define SHOOT_BOUNCE        1
 #define SHOOT_PIERCE        2
-#define SHOOT_RUN            3
+#define SHOOT_RUN           3
 #define SHOOT_MANY          4
 #define SHOOT_ALL           5
 #define SHOOT_VOLLEY        7
@@ -5669,6 +5669,7 @@ enum mon_save_fields_e {
 #define SHOOT_SHATTER      12
 #define SHOOT_KNOCKBACK    13
 #define SHOOT_ELEMENTAL    14
+#define SHOOT_SNIPING      15  /* Scout */
 
 /* Weaponmaster et. al. toggle modes */
 #define TOGGLE_NONE                0

@@ -2323,7 +2323,7 @@ static void process_world_aux_curse(void)
                 object_type *o_ptr = choose_cursed_obj_name(OFC_CALL_DRAGON);
 
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-                msg_format("Your %s have attracted an animal!", o_name);
+                msg_format("Your %s have attracted a dragon!", o_name);
 
                 disturb(0, 0);
                 obj_learn_curse(o_ptr, OFC_CALL_DRAGON);
