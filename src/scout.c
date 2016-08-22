@@ -526,9 +526,6 @@ static void _character_dump(doc_ptr doc)
     if (!disrupt && p_ptr->lev >= 20)
         doc_printf(doc, "  * You ambush sleeping monsters for extra damage.\n");
 
-    if (!disrupt && p_ptr->lev >= 35)
-        p_ptr->telepathy = TRUE;
-
     if (!disrupt && p_ptr->lev >= 50)
         doc_printf(doc, "  * You have Peerless Stealth and will never aggravate monsters.\n");
 
