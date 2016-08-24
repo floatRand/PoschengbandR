@@ -958,31 +958,32 @@ int bow_range(object_type *o_ptr)
     return range;
 }
 
-
-
 static void _display_missile_slay(int base_mult, int slay_mult, int shots,
                                   int dd, int ds, int to_d, int to_d_xtra,
                                   cptr name, int color, doc_ptr doc)
 {
-    int mult, min, max;
+    int mult, min, max, avg1, avg2;
 
     mult = slay_mult;
     mult = mult * base_mult / 100;
 
     if (p_ptr->concent)
     {
-        min = shots * (boost_concentration_damage(mult*(dd + to_d)/100) + to_d_xtra) / 100;
-        max = shots * (boost_concentration_damage(mult*(dd*ds + to_d)/100) + to_d_xtra) / 100;
+        min = boost_concentration_damage(mult*(dd + to_d)/100) + to_d_xtra;
+        max = boost_concentration_damage(mult*(dd*ds + to_d)/100) + to_d_xtra;
     }
     else
     {
-        min = shots * (mult*(dd + to_d)/100 + to_d_xtra) / 100;
-        max = shots * (mult*(dd*ds + to_d)/100 + to_d_xtra) / 100;
+        min = mult*(dd + to_d)/100 + to_d_xtra;
+        max = mult*(dd*ds + to_d)/100 + to_d_xtra;
     }
 
+    avg1 = (min+max)/2;
+    avg2 = shots*avg1/100;
+
     doc_printf(doc, " <color:%c>%-8.8s</color>", attr_to_attr_char(color), name);
-    doc_printf(doc, ": %d [%d.%02dx]\n",
-                    (min + max)/2,
+    doc_printf(doc, ": %d/%d [%d.%02dx]\n",
+                    avg1, avg2,
                     mult/100, mult%100);
 }
 

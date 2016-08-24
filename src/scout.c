@@ -529,6 +529,7 @@ static void _character_dump(doc_ptr doc)
     if (!disrupt && p_ptr->lev >= 50)
         doc_printf(doc, "  * You have Peerless Stealth and will never aggravate monsters.\n");
 
+    doc_newline(doc);
 }
 
 static caster_info * _caster_info(void)

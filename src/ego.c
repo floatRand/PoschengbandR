@@ -1555,7 +1555,7 @@ static void _ego_create_bow(object_type *o_ptr, int level)
         switch (o_ptr->name2)
         {
         case EGO_BOW_VELOCITY:
-            o_ptr->mult  += 25;
+            o_ptr->mult  += 5 + m_bonus(4, level) * 5;
             break;
         case EGO_BOW_EXTRA_MIGHT:
             o_ptr->mult  += 25 + m_bonus(15, level) * 5;
