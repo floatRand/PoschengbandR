@@ -1857,6 +1857,10 @@ static bool _mon_res_conf(int r_idx)
         return TRUE;
     return FALSE;
 }
+static bool _mon_is_pact(int r_idx)
+{
+    return warlock_is_pact_monster(&r_info[r_idx]);
+}
 static void _kill_counts_imp(doc_ptr doc, _mon_p p, cptr text, int total)
 {
     int i;
@@ -2121,6 +2125,8 @@ static void _build_statistics(doc_ptr doc)
     _kill_counts_imp(doc, _mon_is_troll, "Trolls", total_kills);
     _kill_counts_imp(doc, _mon_is_undead, "Undead", total_kills);
     _kill_counts_imp(doc, _mon_is_unique, "Uniques", total_kills);
+    if (p_ptr->pclass == CLASS_WARLOCK)
+        _kill_counts_imp(doc, _mon_is_pact, "Pact", total_kills);
     doc_newline(doc);
     _kill_counts_imp(doc, _mon_is_evil, "Evil Monsters", total_kills);
     _kill_counts_imp(doc, _mon_is_good, "Good Monsters", total_kills);

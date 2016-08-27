@@ -127,9 +127,9 @@ static void _basic_blast(int cmd, variant *res)
         break;
     case SPELL_INFO:
         if (p_ptr->to_d_spell)
-            var_set_string(res, format("Dice:%dd%d+%d Range:%d", _blast_dd(), _blast_ds(), p_ptr->to_d_spell, _blast_range()));
+            var_set_string(res, format("%dd%d+%d (Rng %d)", _blast_dd(), _blast_ds(), p_ptr->to_d_spell, _blast_range()));
         else
-            var_set_string(res, format("Dice:%dd%d Range:%d", _blast_dd(), _blast_ds(), _blast_range()));
+            var_set_string(res, format("%dd%d (Rng %d)", _blast_dd(), _blast_ds(), _blast_range()));
         break;
     case SPELL_CAST:
     {
@@ -1824,14 +1824,14 @@ static int _get_powers(spell_info* spells, int max)
     for (i = 0; i < MAX_WARLOCK_BLASTS; i++)
     {
         spell_info *base = &_powers[i];
-        if (ct >= max) break;        
+        if (ct >= max) break;
         if (base->level <= p_ptr->lev)
         {
             spell_info* current = &spells[ct];
             current->fn = base->fn;
             current->level = base->level;
             current->cost = base->cost;
-            current->fail = calculate_fail_rate(base->level, base->fail, stat_idx);            
+            current->fail = calculate_fail_rate(base->level, base->fail, stat_idx);
             if (current->fn == NULL)
                 current->fn = pact->special_blast;
 

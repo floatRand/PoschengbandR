@@ -245,6 +245,8 @@ static void _display_type(monster_race *r_ptr, doc_ptr doc)
         vec_add(v, string_copy_s("<color:b>Male</color>"));
     if (r_ptr->flags1 & RF1_FEMALE)
         vec_add(v, string_copy_s("<color:R>Female</color>")); /* Pink? */
+    if (p_ptr->pclass == CLASS_WARLOCK && warlock_is_pact_monster(r_ptr))
+        vec_add(v, string_copy_s("<color:v>Pact</color>"));
 
     _print_list(v, doc, ',', '\0');
     vec_free(v);
