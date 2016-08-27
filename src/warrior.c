@@ -37,7 +37,7 @@ static int _get_powers(spell_info* spells, int max)
     int ct = 0;
 
     spell_info* spell = &spells[ct++];
-    spell->level = 40;
+    spell->level = 30;
     spell->cost = 25;
     spell->fail = calculate_fail_rate(spell->level, 80, p_ptr->stat_ind[A_DEX]);
     spell->fn = sword_dance_spell;
