@@ -766,7 +766,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
     if (have_flag(flgs, OF_BRAND_CHAOS))
     {
         chaos_slay = _chaos_slays[randint0(_MAX_CHAOS_SLAYS)];
-        object_desc(o_name, o_ptr, OD_NAME_ONLY);
+        object_desc(o_name, o_ptr, OD_NAME_ONLY | OD_OMIT_PREFIX | OD_COLOR_CODED);
     }
 
     /* Some "weapons" and "ammo" do extra damage */
@@ -795,7 +795,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_ANIMAL)
                 {
-                    msg_format("%s slays animals.", o_name);
+                    msg_format("Your %s slays animals.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_ANIMAL);
                     if (have_flag(flgs, OF_KILL_ANIMAL))
@@ -834,7 +834,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_EVIL)
                 {
-                    msg_format("%s slays evil.", o_name);
+                    msg_format("Your %s slays evil.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_EVIL);
                     if (have_flag(flgs, OF_KILL_EVIL))
@@ -874,7 +874,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_GOOD)
                 {
-                    msg_format("%s slays good.", o_name);
+                    msg_format("Your %s slays good.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_GOOD);
                     if (have_flag(flgs, OF_SLAY_GOOD))
@@ -903,7 +903,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_HUMAN)
                 {
-                    msg_format("%s slays humans.", o_name);
+                    msg_format("Your %s slays humans.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_2(m_ptr, RF2_HUMAN);
                     if (have_flag(flgs, OF_KILL_HUMAN))
@@ -942,7 +942,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_UNDEAD)
                 {
-                    msg_format("%s slays undead.", o_name);
+                    msg_format("Your %s slays undead.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_UNDEAD);
                     if (have_flag(flgs, OF_KILL_UNDEAD))
@@ -981,7 +981,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_DEMON)
                 {
-                    msg_format("%s slays demons.", o_name);
+                    msg_format("Your %s slays demons.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_DEMON);
                     if (have_flag(flgs, OF_KILL_DEMON))
@@ -1020,7 +1020,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_ORC)
                 {
-                    msg_format("%s slays orcs.", o_name);
+                    msg_format("Your %s slays orcs.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_ORC);
                     if (have_flag(flgs, OF_KILL_ORC))
@@ -1060,7 +1060,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_TROLL)
                 {
-                    msg_format("%s slays trolls.", o_name);
+                    msg_format("Your %s slays trolls.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_TROLL);
                     if (have_flag(flgs, OF_KILL_TROLL))
@@ -1099,7 +1099,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_GIANT)
                 {
-                    msg_format("%s slays giants.", o_name);
+                    msg_format("Your %s slays giants.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_GIANT);
                     if (have_flag(flgs, OF_KILL_GIANT))
@@ -1138,7 +1138,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
             {
                 if (chaos_slay == OF_SLAY_DRAGON)
                 {
-                    msg_format("%s slays dragons.", o_name);
+                    msg_format("Your %s slays dragons.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     mon_lore_3(m_ptr, RF3_DRAGON);
                     if (have_flag(flgs, OF_KILL_DRAGON))
@@ -1195,7 +1195,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 }
                 else if (chaos_slay == OF_BRAND_ACID)
                 {
-                    cmsg_format(TERM_L_DARK, "%s is covered in acid.", o_name);
+                    msg_format("Your %s is covered in acid.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     if (have_flag(flgs, OF_BRAND_ACID))
                     {
@@ -1222,7 +1222,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 }
                 else if (chaos_slay == OF_BRAND_ELEC)
                 {
-                    cmsg_format(TERM_BLUE, "%s is covered in electricity.", o_name);
+                    msg_format("Your %s is covered in electricity.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     if (have_flag(flgs, OF_BRAND_ELEC))
                     {
@@ -1254,7 +1254,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 }
                 else if (chaos_slay == OF_BRAND_FIRE)
                 {
-                    cmsg_format(TERM_RED, "%s is covered in fire.", o_name);
+                    msg_format("Your %s is covered in fire.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     if (have_flag(flgs, OF_BRAND_FIRE))
                     {
@@ -1292,7 +1292,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 }
                 else if (chaos_slay == OF_BRAND_COLD)
                 {
-                    cmsg_format(TERM_L_BLUE, "%s is covered in frost.", o_name);
+                    msg_format("Your %s is covered in frost.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     if (have_flag(flgs, OF_BRAND_COLD))
                     {
@@ -1330,7 +1330,7 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 }
                 else if (chaos_slay == OF_BRAND_POIS)
                 {
-                    cmsg_format(TERM_GREEN, "%s is covered in poison.", o_name);
+                    msg_format("Your %s is covered in poison.", o_name);
                     obj_learn_slay(o_ptr, OF_BRAND_CHAOS, "has the <color:v>Mark of Chaos</color>");
                     if (have_flag(flgs, OF_BRAND_POIS))
                     {
