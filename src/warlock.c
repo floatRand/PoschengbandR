@@ -1152,7 +1152,7 @@ static _pact_t _angels_pact = {
     { 37, 20, 60, healing_I_spell},
     { 42, 70, 60, destruction_spell},
     { 47,100, 90, summon_angel_spell},
-    { 50,120, 90, invulnerability_spell}, /* crusade_spell? */
+    { 50,120, 90, crusade_spell},
     { -1,   0,  0, NULL },
   },
   _dispelling_blast

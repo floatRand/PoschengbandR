@@ -1393,7 +1393,6 @@ extern bool dispel_undead(int dam);
 extern bool dispel_monsters(int dam);
 extern bool dispel_living(int dam);
 extern bool dispel_demons(int dam);
-extern bool crusade(void);
 extern bool turn_undead(void);
 extern bool destroy_area(int y1, int x1, int r, int power);
 extern bool earthquake_aux(int cy, int cx, int r, int m_idx);
