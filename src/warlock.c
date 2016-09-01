@@ -1678,7 +1678,6 @@ static void _giant_calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_p
 static void _giant_calc_stats(s16b stats[MAX_STATS])
 {
     stats[A_STR] += 5 * p_ptr->lev/50;
-    stats[A_DEX] -= 3 * p_ptr->lev/50;
     stats[A_CON] += 3 * p_ptr->lev/50;
 }
 
@@ -1764,7 +1763,7 @@ static _pact_t _giants_pact = {
   _giant_get_flags,
   NULL,
 /*  S   I   W   D   C   C */
-  { 2, -4, -4, -2,  2,  2},
+  { 2, -4, -4, -3,  2,  2},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
   {  20,  20,  31,   0,  12,   2, 70, 40},
   {   7,   8,  10,   0,   0,   0, 30, 20},
