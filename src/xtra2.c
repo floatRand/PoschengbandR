@@ -4019,6 +4019,8 @@ static int target_set_aux(int y, int x, int mode, cptr info)
                 strcat(out_val, "(Friendly) ");
             else if (m_ptr->smart & SM_CLONED)
                 strcat(out_val, "(Clone) ");
+            if (display_distance)
+                sprintf(out_val + strlen(out_val), "(Rng %d) ", m_ptr->cdis);
             sprintf(out_val + strlen(out_val), "[r,%s%s]", x_info, info);
 
             prt(out_val, 0, 0);

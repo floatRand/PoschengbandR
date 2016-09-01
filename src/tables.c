@@ -3335,6 +3335,9 @@ option_type option_info[] =
     { &ignore_unview,               FALSE, OPT_PAGE_TEXT, 2, 13,
     "ignore_unview",                "Ignore actions of out of sight monsters" },
 
+    { &display_distance,            FALSE,  OPT_PAGE_TEXT, 1, 4,
+    "display_distance",             "Display distance in monster list" },
+
     /*** Game-Play ***/
 
     { &stack_force_notes,           TRUE,  OPT_PAGE_GAMEPLAY, 0, 8,
