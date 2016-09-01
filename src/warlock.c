@@ -1285,6 +1285,7 @@ static _pact_t _demons_pact = {
  ****************************************************************/
 static void _hound_calc_bonuses(void)
 {
+    p_ptr->skill_dig += 60;
     p_ptr->pspeed += 5 * p_ptr->lev / 50;
 
     if (p_ptr->lev >= 5)
@@ -1338,7 +1339,7 @@ static void _aether_blast(int cmd, variant *res)
     case SPELL_CAST:
     {
         int dir = 0, i;
-        int ct = rand_range(2, 7);
+        int ct = rand_range(3, 7);
         int dice = _blast_dd();
         int sides = _blast_ds();
         int effects[_AETHER_EFFECT_CT] =
@@ -1399,6 +1400,26 @@ static void _dog_whistle_spell(int cmd, variant *res)
     }
 }
 
+static void _aether_shield_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Aether Shield");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Much like the dreaded Aether hound, you will gain protective elemental auras for a bit.");
+        break;
+    case SPELL_CAST:
+        set_tim_sh_elements(randint1(30) + 20, FALSE);
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 static _pact_t _hounds_pact = {
   "Hounds",
   "An alliance with hounds is one of the weaker pacts the warlock may make. Hounds are fast, stealthy "
@@ -1416,8 +1437,8 @@ static _pact_t _hounds_pact = {
 /*  S   I   W   D   C   C */
   { 0, -2, -2,  2,  2,  2},
 /* Dsrm Dvce Save Stlh Srch Prcp Thn Thb*/
-  {  20,  25,  31,   5,  12,   2, 56, 25},
-  {   7,  10,  10,   0,   0,   0, 18, 11},
+  {  20,  25,  31,   5,  20,  15, 56, 25},
+  {   7,  10,  10,   0,   0,   0, 20, 11},
 /*Life  BaseHP     Exp */
    102,     12,    110,
   {
@@ -1426,6 +1447,7 @@ static _pact_t _hounds_pact = {
     { 27,  20, 50, haste_self_spell},
     { 30,  20, 50, resistance_spell},
     { 32,  30, 70, _dog_whistle_spell},
+    { 40,  20, 60, _aether_shield_spell},
     { -1,   0,  0, NULL },
   },
   _aether_blast
