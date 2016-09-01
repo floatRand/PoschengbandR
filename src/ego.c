@@ -2653,6 +2653,10 @@ static void _ego_create_crown(object_type *o_ptr, int level)
             o_ptr->to_h += randint1(7);
             o_ptr->to_d += randint1(7);
         }
+        if (one_in_(3))
+            add_flag(o_ptr->flags, OF_RES_FEAR);
+        else
+            one_high_resistance(o_ptr);
         if (level > 70 && one_in_(10))
             add_flag(o_ptr->flags, OF_SPEED);
         if (one_in_(ACTIVATION_CHANCE))
