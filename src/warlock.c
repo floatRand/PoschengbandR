@@ -370,6 +370,12 @@ static void _undead_calc_bonuses(void)
     }
     if (p_ptr->lev >= 35)
         res_add(RES_DARK);
+
+    if (equip_find_artifact(ART_STONE_OF_DEATH))
+    {
+        p_ptr->dec_mana = TRUE;
+        p_ptr->easy_spell = TRUE;
+    }
 }
 
 static void _undead_calc_stats(s16b stats[MAX_STATS])
@@ -462,9 +468,9 @@ static _pact_t _undead_pact = {
     { 22,  10, 50, enslave_undead_spell},
     { 25,  15, 40, nether_ball_spell},
     { 32,  40, 60, summon_undead_spell},
-    { 35,  45, 70, darkness_storm_I_spell},
+    { 35,  30, 70, darkness_storm_I_spell},
     { 40,  70, 80, summon_hi_undead_spell},
-    { 42,  80, 80, genocide_spell},
+    { 42,  50, 80, genocide_spell},
     { 50, 100, 80, wraithform_spell},
     { -1,   0,  0, NULL },
   },
@@ -1070,6 +1076,12 @@ static void _angel_calc_bonuses(void)
         p_ptr->see_inv = TRUE;
     if (p_ptr->lev >= 35)
         p_ptr->reflect = TRUE;
+
+    if (equip_find_artifact(ART_STONE_OF_CRUSADE) || equip_find_artifact(ART_STONE_OF_LIFE))
+    {
+        p_ptr->dec_mana = TRUE;
+        p_ptr->easy_spell = TRUE;
+    }
 }
 
 static void _angel_calc_stats(s16b stats[MAX_STATS])
@@ -1176,6 +1188,12 @@ static void _demon_calc_bonuses(void)
         p_ptr->kill_wall = TRUE;
     if (p_ptr->lev >= 50)
         res_add_immune(RES_FIRE);
+
+    if (equip_find_artifact(ART_STONE_OF_DAEMON))
+    {
+        p_ptr->dec_mana = TRUE;
+        p_ptr->easy_spell = TRUE;
+    }
 }
 
 static void _demon_calc_stats(s16b stats[MAX_STATS])
