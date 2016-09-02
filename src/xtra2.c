@@ -4365,6 +4365,15 @@ static int target_set_aux(int y, int x, int mode, cptr info)
             else sprintf(f_idx_str, "%d", c_ptr->feat);
             sprintf(out_val, "%s%s%s%s [%s] %x %s %d %d %d (%d,%d)", s1, s2, s3, name, info, c_ptr->info, f_idx_str, c_ptr->dist, c_ptr->cost, c_ptr->when, y, x);
         }
+        else if (display_distance)
+        {
+            /* Note: c_ptr->dist != m_ptr->cdis. The cave distance is not the range as diagonals count as 1, not 1.5
+               Use distance calculation from update_mon, which sets m_ptr->cdis.*/
+            int dy = (py > y) ? (py - y) : (y - py);
+            int dx = (px > x) ? (px - x) : (x - px);
+            int d  = (dy > dx) ? (dy + (dx>>1)) : (dx + (dy>>1));
+            sprintf(out_val, "%s%s%s%s [%s] (Rng %d)", s1, s2, s3, name, info, d);
+        }
         else
             sprintf(out_val, "%s%s%s%s [%s]", s1, s2, s3, name, info);
 
