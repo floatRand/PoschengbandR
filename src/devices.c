@@ -2696,18 +2696,21 @@ bool device_is_fully_charged(object_type *o_ptr)
 /* Note: Rods fire every 10 game turns; wands and staves fire every 100 game turns.*/
 void device_regen_sp_aux(object_type *o_ptr, int per_mill)
 {
-    int  div = 1000;
-    int  amt = o_ptr->xtra4 * 100 * per_mill;
+    if (!device_is_fully_charged(o_ptr))
+    {
+        int  div = 1000;
+        int  amt = o_ptr->xtra4 * 100 * per_mill;
 
-    o_ptr->xtra5 += amt / div;
-    if (randint0(div) < (amt % div))
-        o_ptr->xtra5++;
+        o_ptr->xtra5 += amt / div;
+        if (randint0(div) < (amt % div))
+            o_ptr->xtra5++;
 
-    if (o_ptr->xtra5 > o_ptr->xtra4 * 100)
-        o_ptr->xtra5 = o_ptr->xtra4 * 100;
+        if (o_ptr->xtra5 > o_ptr->xtra4 * 100)
+            o_ptr->xtra5 = o_ptr->xtra4 * 100;
 
-    if (device_is_fully_charged(o_ptr))
-        recharged_notice(o_ptr);
+        if (device_is_fully_charged(o_ptr))
+            recharged_notice(o_ptr);
+    }
 }
 
 void device_regen_sp(object_type *o_ptr, int base_per_mill)
