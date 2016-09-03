@@ -907,15 +907,15 @@ F:@:FLOOR:3:0:0:0:83
 
 ##########################################################################
 # Warlock
-# Indra
+# Daeron
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Warlock] [EQU [MOD $RANDOM27 5] 0] ]
 F:a:BUILDING_0:3
-F:@:FLOOR:3:0:0:0:33
+F:@:FLOOR:3:0:0:0:246
 
-# Arvedui
+# Palantir
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Warlock] [GEQ [MOD $RANDOM27 5] 1] ]
 F:a:BUILDING_0:3
-F:@:FLOOR:3:0:0:0:24
+F:@:FLOOR:3:0:0:0:15
 
 ##########################################################################
 # Rogue

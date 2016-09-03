@@ -108,7 +108,7 @@ static int _blast_ds(void)
         15    /* 18/170-18/179 */,
         16    /* 18/180-18/189 */,
         17    /* 18/190-18/199 */,
-        19    /* 18/200-18/209 */,
+        18    /* 18/200-18/209 */,
         19    /* 18/210-18/219 */,
         20    /* 18/220+ */
     };
@@ -1842,8 +1842,8 @@ static spell_info _powers[MAX_WARLOCK_BLASTS] =
     { 18,  0,  45, _spear_blast},
     { 26,  0,  60, _burst_blast},
     { 33,  0,  60, _stunning_blast},
-    { 40,  0,  70, NULL},
-    { 45,  0,  75, _empowered_blast},
+    { 37,  0,  70, NULL},
+    { 42,  0,  75, _empowered_blast},
 };
 
 static int _get_powers(spell_info* spells, int max)
