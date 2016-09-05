@@ -353,7 +353,7 @@ static void _art_create_random(object_type *o_ptr, int level, int power)
 static _power_limit_t _jewelry_power_limits[] = {
     { 10,     0,   5000 },
     { 20,     0,   7000 },
-    { 30,     0,  10000 },
+    { 30,  1000,  15000 },
     { 40,  2500,  20000 },
     { 50,  5000,  30000 },
     { 60,  7500,  60000 },
@@ -377,6 +377,13 @@ void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
             break;
         }
     }
+
+    if (mode & (AM_FORCE_EGO | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
+    {
+        if (min < 7500) min = 7500;
+        if (max < 15000) max = 15000;
+    }
+
     if (one_in_(GREAT_OBJ))
         max *= 2;
 
@@ -410,6 +417,13 @@ void ego_create_amulet(object_type *o_ptr, int level, int power, int mode)
             break;
         }
     }
+
+    if (mode & (AM_FORCE_EGO | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
+    {
+        if (min < 7500) min = 7500;
+        if (max < 15000) max = 15000;
+    }
+
     if (one_in_(GREAT_OBJ))
         max *= 2;
 

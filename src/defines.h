@@ -3147,6 +3147,7 @@ enum obj_flags_e {
 #define AM_FORCE_EGO    0x00000100
 #define AM_STOCK_TOWN   0x00000200
 #define AM_STOCK_BM     0x00000400
+#define AM_GUARDIAN     0x00000800
 
 
 /*** Monster blow constants ***/
