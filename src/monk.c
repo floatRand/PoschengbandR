@@ -536,6 +536,13 @@ void monk_posture_calc_bonuses(void)
                 for (i = 0; i < MAX_HANDS; i++)
                     p_ptr->weapon_info[i].xtra_blow += 100;
             }
+
+            /* Didn't this used to give vulnerabilites?? */
+            res_add_vuln(RES_ACID);
+            res_add_vuln(RES_FIRE);
+            res_add_vuln(RES_ELEC);
+            res_add_vuln(RES_COLD);
+            res_add_vuln(RES_POIS);
         }
         else if (p_ptr->special_defense & KAMAE_SEIRYU)
         {
@@ -619,6 +626,14 @@ void monk_posture_get_flags(u32b flgs[OF_ARRAY_SIZE])
     {
         add_flag(flgs, OF_LEVITATION);
         add_flag(flgs, OF_SPEED);
+    }
+    if (p_ptr->special_defense & KAMAE_BYAKKO)
+    {
+        add_flag(flgs, OF_VULN_FIRE);
+        add_flag(flgs, OF_VULN_COLD);
+        add_flag(flgs, OF_VULN_ACID);
+        add_flag(flgs, OF_VULN_ELEC);
+        add_flag(flgs, OF_VULN_POIS);
     }
     if (p_ptr->special_defense & KAMAE_SEIRYU)
     {
