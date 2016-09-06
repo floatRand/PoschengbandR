@@ -2262,7 +2262,7 @@ void monster_death(int m_idx, bool drop_item)
                 }
                 else
                 {
-#if 0
+#if 1
                     if (p_ptr->wizard)
                     {
                         int iii;
@@ -2270,15 +2270,15 @@ void monster_death(int m_idx, bool drop_item)
                         for (iii = 0; iii < 100; )
                         {
                             object_type forge = {0};
-                            object_prep(&forge, k_idx);
-                            if (!apply_magic(&forge, object_level, AM_NO_FIXED_ART | AM_GOOD)) continue;
-                            iii++;
-                            identify_item(&forge);
-                            forge.ident |= IDENT_FULL;
-                            ego_aware(&forge);
+                            int         score;
 
+                            object_prep(&forge, k_idx);
+                            if (!apply_magic(&forge, object_level, AM_NO_FIXED_ART | AM_GOOD | AM_GUARDIAN)) continue;
+                            iii++;
+                            score = obj_value_real(&forge);
+                            obj_identify_fully(&forge);
                             object_desc(buf, &forge, OD_COLOR_CODED);
-                            msg_format("%d) %s\n", iii, buf);
+                            msg_format("%d) %s (%d)\n", iii, buf, score);
                         }
                     }
 #endif

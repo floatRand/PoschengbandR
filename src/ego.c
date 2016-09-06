@@ -380,8 +380,8 @@ void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
 
     if (mode & (AM_FORCE_EGO | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
     {
-        if (min < 7500) min = 7500;
-        if (max < 15000) max = 15000;
+        if (min < 5000) min = 5000;
+        if (max < 10000) max = 10000;
     }
 
     if (one_in_(GREAT_OBJ))
@@ -420,8 +420,8 @@ void ego_create_amulet(object_type *o_ptr, int level, int power, int mode)
 
     if (mode & (AM_FORCE_EGO | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
     {
-        if (min < 7500) min = 7500;
-        if (max < 15000) max = 15000;
+        if (min < 5000) min = 5000;
+        if (max < 10000) max = 10000;
     }
 
     if (one_in_(GREAT_OBJ))
@@ -1261,7 +1261,7 @@ static void _create_amulet_aux(object_type *o_ptr, int level, int power, int mod
             case 3:
                 if (one_in_(3))
                     add_flag(o_ptr->flags, OF_FREE_ACT);
-                else
+                else if (level > 30)
                 {
                     add_flag(o_ptr->flags, OF_NO_MAGIC);
                     if (abs(power) >= 2 && one_in_(10) && level >= 70)
@@ -1274,7 +1274,7 @@ static void _create_amulet_aux(object_type *o_ptr, int level, int power, int mod
             case 4:
                 if (abs(power) >= 2 && one_in_(10) && level >= 70)
                     add_flag(o_ptr->flags, OF_NO_SUMMON);
-                else if (one_in_(6))
+                else if (one_in_(6) && level > 30)
                     add_flag(o_ptr->flags, OF_NO_TELE);
                 else
                     add_flag(o_ptr->flags, OF_RES_FEAR);
