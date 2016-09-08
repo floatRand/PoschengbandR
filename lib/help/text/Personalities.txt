@@ -137,7 +137,7 @@ a direct bad influence on your spell fail rate.
   
 Sexy
 Sexy rises all of your stats and skills, but your haughty attitude will 
-aggravate all monsters.
+aggravate all monsters. Only females can choose this personality.
 
   Stats                   Skills
   Strength      +1        Disarming   Superb       
@@ -150,8 +150,9 @@ aggravate all monsters.
   Experience   100%       Bows        Superb       
   
 Lucky
-A Lucky person has poor stats, equivalent to a Lazy person. 
-Mysteriously, however, they can do all things well.
+A Lucky man has poor stats, equivalent to a Lazy person. Mysteriously, 
+however, he can do all things well. Only males can choose this 
+personality.
 
   Stats                   Skills
   Strength      -2        Disarming   Superb       

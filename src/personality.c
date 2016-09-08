@@ -530,7 +530,7 @@ static void _sexy_birth(void)
     object_type forge = {0};
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
     if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
-        rune_add(&forge, RUNE_FIRE, FALSE);
+        rune_add(&forge, RUNE_ABSORPTION, FALSE);
     add_outfit(&forge);
 
     /* skills_on_birth() is doing this already ...

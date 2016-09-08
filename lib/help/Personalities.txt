@@ -110,7 +110,7 @@ Life Rating   95%       Melee       <color:D>Very Bad     </color>
 Experience   100%       Bows        <color:D>Very Bad     </color>
 </style></indent>
 <topic:Sexy><color:o>Sexy</color>
-Sexy rises all of your stats and skills, but your haughty attitude will aggravate all monsters.
+Sexy rises all of your stats and skills, but your haughty attitude will aggravate all monsters. Only females can choose this personality.
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength      +1        Disarming   <color:g>Superb       </color>
@@ -123,7 +123,7 @@ Life Rating  100%       Melee       <color:g>Superb       </color>
 Experience   100%       Bows        <color:g>Superb       </color>
 </style></indent>
 <topic:Lucky><color:o>Lucky</color>
-A Lucky person has poor stats, equivalent to a Lazy person. Mysteriously, however, they can do all things well.
+A Lucky man has poor stats, equivalent to a Lazy person. Mysteriously, however, he can do all things well. Only males can choose this personality.
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength      -2        Disarming   <color:g>Superb       </color>

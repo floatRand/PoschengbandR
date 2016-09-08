@@ -79,7 +79,10 @@ bool restore_mana(void)
     }
     else if (p_ptr->csp < p_ptr->msp)
     {
-        p_ptr->csp = p_ptr->msp;
+        if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
+            p_ptr->csp += (p_ptr->msp - p_ptr->csp) / 3;
+        else
+            p_ptr->csp = p_ptr->msp;
 
         p_ptr->csp_frac = 0;
         p_ptr->redraw |= (PR_MANA);

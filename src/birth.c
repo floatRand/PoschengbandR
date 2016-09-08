@@ -3266,9 +3266,9 @@ void player_outfit(void)
             if (!k_idx) continue;
             object_prep(&forge, k_idx);
 
-            /* Hack: Rune-Knights begin with a Fire Rune on their broad sword (or whip if sexy) */
+            /* Hack: Rune-Knights begin with an Absorption Rune on their broad sword (or whip if sexy) */
             if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_SWORD && sv == SV_BROAD_SWORD)
-                rune_add(&forge, RUNE_FIRE, FALSE);
+                rune_add(&forge, RUNE_ABSORPTION, FALSE);
 
             add_outfit(&forge);
         }
