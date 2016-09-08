@@ -74,11 +74,11 @@ Base HP       18        Bows        <color:D>Very Bad     </color>
 Experience   120%
 </style></indent>
 <topic:Rune-Knight><color:o>Rune-Knight</color>
-The Rune Knight is a mythical warrior-mage who is dedicated to the power of ancient Runes that hold immense power. By affixing these Runes to his equipment, the Rune Knight can become an avatar of destruction, or an invulnerable bastion. Unlike the Warrior-Mage and all other casters, the Rune Knight's mana does not regenerate on its own; rather, the Rune Knight must siphon mana from magical attacks directed at him. The Rune Knight has a fixed (though very large) selection of spells that he can use his mana on, in addition to his unique Rune spells.
+The Rune Knight is a mythical warrior-mage who is dedicated to the power of ancient Runes that hold immense power. By affixing these Runes to his equipment, the Rune Knight can become an avatar of destruction, or an invulnerable bastion.
 
   <indent><style:table><color:G>Stats                   Skills</color>
-Strength     <color:w> +2</color>        Disarming   <color:o>Fair         </color>
-Intelligence <color:v> +2</color>        Device      <color:y>Good         </color>
+Strength     <color:v> +2</color>        Disarming   <color:o>Fair         </color>
+Intelligence <color:w> +0</color>        Device      <color:y>Good         </color>
 Wisdom       <color:w> +0</color>        Save        <color:o>Fair         </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:o>Fair         </color>
 Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
@@ -733,7 +733,7 @@ Berserker    <color:v>  +8 </color> -20  -20   +4   +4   +4  200%  +22  160%
 Blood-Knight   +2   -2   -2   +0 <color:v>  +3 </color>  +2  120%  +20  150%
 Duelist      <color:v>  +2 </color>  +1   -2   +2   -3   +2  100%   +4  150%
 Mauler       <color:v>  +5 </color>  -2   -2   -1   +3   +2  111%  +18  120%
-Rune-Knight    +2 <color:v>  +2 </color>  +0   +1   +0   +1  107%   +6  150%
+Rune-Knight  <color:v>  +2 </color>  +0   +0   +1   +0   +1  107%   +6  150%
 Samurai        +3   -2 <color:v>  +1 </color>  +2   +1   +1  111%  +12  130%
 Warrior        +4   -2   -2   +2   +2   +1  115%  +18  100%
 Weaponmaster <color:v>  +4 </color>  -3   -2   -1   +2   +1  109%  +12  135%

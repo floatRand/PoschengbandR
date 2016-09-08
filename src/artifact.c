@@ -3207,6 +3207,8 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
         // on randarts is independent of everything else.
         forge2.activation = a_info[a_idx].activation;
         forge2.timeout = 0;
+        if (forge2.activation.type)
+            add_flag(forge2.flags, OF_ACTIVATE);
         power = obj_value_real(&forge2);
 
         if (power > best_power)

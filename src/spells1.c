@@ -6523,8 +6523,6 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
         {
             int x = dam * p_ptr->magic_resistance / 100;
             dam -= x;
-            if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
-                sp_player(MAX(x, 3 + p_ptr->lev/5));
         }
     }
 
