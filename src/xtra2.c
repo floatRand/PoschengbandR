@@ -630,6 +630,8 @@ void check_quest_completion(monster_type *m_ptr)
                     {
                         reward = TRUE;
                         quest[i].status = QUEST_STATUS_FINISHED;
+                        if (no_wilderness)
+                            gain_chosen_stat();
                         msg_add_tiny_screenshot(50, 24);
                     }
                 }
