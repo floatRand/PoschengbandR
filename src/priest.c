@@ -100,7 +100,7 @@ class_t *priest_get_class(void)
                     "Should a priest choose Death or Daemon as their first realm, however, then "
                     "they will serve an evil god. As such, they actually enjoy shedding blood, and "
                     "suffer no such weapon restriction. Of course, evil priests abhor good things, "
-                    "and are unable to choose Life of Crusade for their second realm.\n \n"
+                    "and are unable to choose Life or Crusade for their second realm.\n \n"
                     "Good priests have a strong affinity for Life prayers, and learn them very well, even better "
                     "than a High Mage. Conversely, evil priests favor prayers of Death, and receive "
                     "strong bonuses when choosing this foul realm. Otherwise, priests learn spells less "
