@@ -695,7 +695,7 @@ static void _remember_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Remember");
+        var_set_string(res, "Remembrance");
         break;
     case SPELL_DESC:
         var_set_string(res, "Restores life and stats.");

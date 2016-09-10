@@ -548,6 +548,7 @@
 #define realm2tval(A) ((A) + TV_LIFE_BOOK - 1)
 #define technic2magic(A)      (is_magic(A) ? (A) : (A) - MIN_TECHNIC + 1 + MAX_MAGIC)
 #define is_good_realm(REALM)   ((REALM) == REALM_LIFE || (REALM) == REALM_CRUSADE)
+#define is_evil_realm(REALM)   ((REALM) == REALM_DEATH || (REALM) == REALM_DAEMON)
 
 /*
  * Magic-books for the realms

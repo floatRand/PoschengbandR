@@ -3512,7 +3512,6 @@ void calc_bonuses(void)
 
     /* Clear all the flags */
     p_ptr->cursed = 0L;
-    p_ptr->bless_blade = FALSE;
     p_ptr->pass_wall = FALSE;
     p_ptr->kill_wall = FALSE;
     p_ptr->dec_mana = FALSE;
@@ -4590,21 +4589,6 @@ void calc_bonuses(void)
             p_ptr->weapon_info[i].dis_to_d += MAX(bonus_to_d,1);
         }
 
-        /* Priest weapon penalty for non-blessed edged weapons */
-        if ((p_ptr->pclass == CLASS_PRIEST) && (!(have_flag(flgs, OF_BLESSED))) &&
-            ((o_ptr->tval == TV_SWORD) || (o_ptr->tval == TV_POLEARM)))
-        {
-            /* Reduce the real bonuses */
-            p_ptr->weapon_info[i].to_h -= 2;
-            p_ptr->weapon_info[i].to_d -= 2;
-
-            /* Reduce the mental bonuses */
-            p_ptr->weapon_info[i].dis_to_h -= 2;
-            p_ptr->weapon_info[i].dis_to_d -= 2;
-
-            /* Icky weapon */
-            p_ptr->weapon_info[i].icky_wield = TRUE;
-        }
         /* Hex bonuses */
         if (p_ptr->realm1 == REALM_HEX)
         {

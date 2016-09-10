@@ -2826,6 +2826,7 @@ bool bless_weapon(void)
             ((o_ptr->number > 1) ? "" : "s"));
 
         add_flag(o_ptr->flags, OF_BLESSED);
+        add_flag(o_ptr->known_flags, OF_BLESSED);
         o_ptr->discount = 99;
     }
     else

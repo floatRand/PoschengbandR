@@ -2425,6 +2425,8 @@ extern class_t *ninja_get_class(void);
 extern class_t *paladin_get_class(void);
 extern bool     player_is_monster_king(void);
 extern class_t *priest_get_class(void);
+extern bool     priest_is_good(void);
+extern bool     priest_is_evil(void);
 extern class_t *psion_get_class(void);
 extern int      psion_backlash_dam(int dam);
 extern void     psion_decrement_counters(void);

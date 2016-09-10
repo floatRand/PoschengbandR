@@ -378,7 +378,7 @@ void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
         }
     }
 
-    if (mode & (AM_FORCE_EGO | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
+    if (mode & (AM_FORCE_EGO | AM_GREAT | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
     {
         if (min < 5000) min = 5000;
         if (max < 10000) max = 10000;
@@ -418,7 +418,7 @@ void ego_create_amulet(object_type *o_ptr, int level, int power, int mode)
         }
     }
 
-    if (mode & (AM_FORCE_EGO | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
+    if (mode & (AM_FORCE_EGO | AM_GREAT | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
     {
         if (min < 5000) min = 5000;
         if (max < 10000) max = 10000;
@@ -1958,8 +1958,6 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
                 add_flag(o_ptr->flags, OF_DEC_STEALTH);
             if (one_in_(ACTIVATION_CHANCE))
                 effect_add_random(o_ptr, BIAS_DEMON);
-            if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DAEMON || p_ptr->realm2 == REALM_DAEMON))
-                add_flag(o_ptr->flags, OF_BLESSED);
             break;
         case EGO_WEAPON_DEATH:
             if (one_in_(16))
@@ -1988,8 +1986,6 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
             }
             if (one_in_(ACTIVATION_CHANCE))
                 effect_add_random(o_ptr, BIAS_NECROMANTIC);
-            if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DEATH || p_ptr->realm2 == REALM_DEATH))
-                add_flag(o_ptr->flags, OF_BLESSED);
             break;
         case EGO_WEAPON_NATURE:
             if (one_in_(5))
@@ -2035,10 +2031,6 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
         case EGO_WEAPON_WESTERNESSE:
             if (one_in_(3))
                 add_flag(o_ptr->flags, OF_RES_FEAR);
-            break;
-        case EGO_WEAPON_MORGUL:
-            if (p_ptr->pclass == CLASS_PRIEST && (p_ptr->realm1 == REALM_DEATH || p_ptr->realm2 == REALM_DEATH))
-                add_flag(o_ptr->flags, OF_BLESSED);
             break;
         case EGO_WEAPON_PATTERN:
             if (one_in_(3))

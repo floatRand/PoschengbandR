@@ -1551,7 +1551,6 @@ struct player_type
     bool esp_magical;
 
     bool slow_digest;    /* Slower digestion */
-    bool bless_blade;    /* Blessed blade */
     bool pass_wall;     /* Permanent wraithform */
     bool kill_wall;
     bool dec_mana;

@@ -1324,7 +1324,6 @@ void equip_calc_bonuses(void)
         if (have_flag(flgs, OF_SPELL_CAP))   p_ptr->spell_cap += o_ptr->pval;
         if (have_flag(flgs, OF_DEC_SPELL_CAP))   p_ptr->spell_cap -= o_ptr->pval;
         if (have_flag(flgs, OF_MAGIC_RESISTANCE))   p_ptr->magic_resistance += 5*o_ptr->pval;
-        if (have_flag(flgs, OF_BLESSED))     p_ptr->bless_blade = TRUE;
 
         if (have_flag(flgs, OF_XTRA_MIGHT) && o_ptr->tval != TV_BOW)
             p_ptr->shooter_info.to_mult += 25 * o_ptr->pval;
