@@ -3618,6 +3618,7 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
             {
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
                 msg_format("%s glows %s.", o_name, color);
+                obj_learn_flag(o_ptr, OF_WARNING);
             }
             else
             {
