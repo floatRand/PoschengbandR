@@ -6132,6 +6132,19 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                         m_ptr->anger_ct++;
                     if (splashed)
                         m_ptr->anger_ct++;
+                    /* Attempt to deal with Dungeon Guardians splash exploit.
+                       Dungeon guardians use AI_GUARD_POS, so cannot be lured
+                       away from the dungeon entrance. Attempting this exploit
+                       makes them really mad, and if they are mad enough, then
+                       they will actually pursue the player (cf get_moves in melee2.c) */
+                    if (splashed && m_ptr->cdis > MAX_RANGE)
+                    {
+                        pack_info_t *pack_ptr = pack_info_ptr(c_ptr->m_idx);
+                        if (pack_ptr && pack_ptr->ai == AI_GUARD_POS)
+                            m_ptr->anger_ct += 10;
+                        else
+                            m_ptr->anger_ct++;
+                    }
                 }
                 /* Splashing Uniques out of LOS makes them rethink their approach */
                 if (splashed && (r_ptr->flags1 & RF1_UNIQUE))

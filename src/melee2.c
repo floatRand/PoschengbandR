@@ -1177,8 +1177,9 @@ static bool get_moves(int m_idx, int *mm)
             y = 0;
             done = TRUE;
         }
-
-        if (pack_ptr->ai == AI_GUARD_POS && m_ptr->cdis > 3)
+        if ( pack_ptr->ai == AI_GUARD_POS
+          && m_ptr->cdis > 3    /* abandon guarding if the player gets close ... */
+          && !m_ptr->anger_ct ) /* ... or if we get ticked off. */
         {
             x = m_ptr->fx - pack_ptr->guard_x;
             y = m_ptr->fy - pack_ptr->guard_y;
