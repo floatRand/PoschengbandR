@@ -363,29 +363,42 @@ static _power_limit_t _jewelry_power_limits[] = {
     {999, 15000,      0 }
 };
 
-void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
+static _power_limit_t _get_jewelry_power_limit(int level, int mode)
 {
-    int  i;
-    int  min = 0, max = 0;
+    _power_limit_t rng = {0};
+    int            i;
 
     for (i = 0; ; i++)
     {
         if (level < _jewelry_power_limits[i].lvl)
         {
-            min = _jewelry_power_limits[i].min;
-            max = _jewelry_power_limits[i].max;
+            rng.min = _jewelry_power_limits[i].min;
+            rng.max = _jewelry_power_limits[i].max;
             break;
         }
     }
 
-    if (mode & (AM_FORCE_EGO | AM_GREAT | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
+    if (mode & (AM_FORCE_EGO | AM_GREAT | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... and Smeagol, Robin Hood, Wormy, etc. */
     {
-        if (min < 5000) min = 5000;
-        if (max < 10000) max = 10000;
+        if (rng.min < 5000) rng.min = 5000;
+        if (rng.max < 10000) rng.max = 10000;
+    }
+    else if (mode & AM_GOOD) /* Early game uniques all DROP_GOOD */
+    {
+        if (rng.min < 2500) rng.min = 2500;
+        if (rng.max < 7500) rng.max = 7500;
     }
 
     if (one_in_(GREAT_OBJ))
-        max *= 2;
+        rng.max *= 2;
+
+    return rng;
+}
+
+void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
+{
+    int  i;
+    _power_limit_t rng = _get_jewelry_power_limit(level, mode);
 
     for (i = 0; i < 1000 ; i++)
     {
@@ -395,8 +408,8 @@ void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
         _create_ring_aux(&forge, level, power, mode);
         score = obj_value_real(&forge);
 
-        if (min > 0 && score < min) continue;
-        if (max > 0 && score > max) continue;
+        if (rng.min > 0 && score < rng.min) continue;
+        if (rng.max > 0 && score > rng.max) continue;
 
         *o_ptr = forge;
         break;
@@ -406,26 +419,7 @@ void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
 void ego_create_amulet(object_type *o_ptr, int level, int power, int mode)
 {
     int  i;
-    int  min = 0, max = 0;
-
-    for (i = 0; ; i++)
-    {
-        if (level < _jewelry_power_limits[i].lvl)
-        {
-            min = _jewelry_power_limits[i].min;
-            max = _jewelry_power_limits[i].max;
-            break;
-        }
-    }
-
-    if (mode & (AM_FORCE_EGO | AM_GREAT | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... */
-    {
-        if (min < 5000) min = 5000;
-        if (max < 10000) max = 10000;
-    }
-
-    if (one_in_(GREAT_OBJ))
-        max *= 2;
+    _power_limit_t rng = _get_jewelry_power_limit(level, mode);
 
     for (i = 0; i < 1000 ; i++)
     {
@@ -435,8 +429,8 @@ void ego_create_amulet(object_type *o_ptr, int level, int power, int mode)
         _create_amulet_aux(&forge, level, power, mode);
         score = obj_value_real(&forge);
 
-        if (min > 0 && score < min) continue;
-        if (max > 0 && score > max) continue;
+        if (rng.min > 0 && score < rng.min) continue;
+        if (rng.max > 0 && score > rng.max) continue;
 
         *o_ptr = forge;
         break;
