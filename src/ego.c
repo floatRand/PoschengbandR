@@ -381,12 +381,12 @@ static _power_limit_t _get_jewelry_power_limit(int level, int mode)
     if (mode & (AM_FORCE_EGO | AM_GREAT | AM_GUARDIAN)) /* Quest rewards and early dungeon guardians ... and Smeagol, Robin Hood, Wormy, etc. */
     {
         if (rng.min < 5000) rng.min = 5000;
-        if (rng.max < 10000) rng.max = 10000;
+        if (rng.max && rng.max < 10000) rng.max = 10000;
     }
     else if (mode & AM_GOOD) /* Early game uniques all DROP_GOOD */
     {
         if (rng.min < 2500) rng.min = 2500;
-        if (rng.max < 7500) rng.max = 7500;
+        if (rng.max && rng.max < 7500) rng.max = 7500;
     }
 
     if (one_in_(GREAT_OBJ))
