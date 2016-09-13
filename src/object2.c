@@ -3918,6 +3918,7 @@ bool make_object(object_type *j_ptr, u32b mode)
         obj_drop_theme = 0;
         return FALSE;
     }
+    j_ptr->level = object_level; /* Wizard statistics ... */
 
     /* Note: It is important to do this *after* apply_magic rather than in, say,
        object_prep() since artifacts should never spawn multiple copies. Ego ammo

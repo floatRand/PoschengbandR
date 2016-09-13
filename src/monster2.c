@@ -1664,6 +1664,23 @@ s16b get_mon_num(int level)
         }
 
         table[i].prob3 = table[i].prob2;
+
+#if 1
+        /* Hack: Undersized monsters become more rare ... */
+        if (table[i].prob3 && level > r_ptr->level + 9 && !(r_ptr->flags1 & RF1_UNIQUE))
+        {
+            int delta = level - r_ptr->level;
+            while (delta > 0)
+            {
+                table[i].prob3 = (table[i].prob3 + 1)/2;
+                delta -= 10;
+            }
+            if (!table[i].prob3)
+                table[i].prob3 = 1;
+            /*msg_format("%s: %d -> %d", r_name + r_ptr->name, table[i].prob2, table[i].prob3);*/
+        }
+#endif
+
         total += table[i].prob3;
     }
 

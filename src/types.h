@@ -368,6 +368,8 @@ struct object_type
 
     s16b held_m_idx;    /* Monster holding us (if any) */
     effect_t activation;
+
+    s16b level;         /* object_level on generation for my statistical pleasures */
 };
 #define object_is_(O, T, S) ((O)->tval == (T) && (O)->sval == (S))
 

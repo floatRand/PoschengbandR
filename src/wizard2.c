@@ -60,6 +60,52 @@ void stats_add_ego(object_type *o_ptr)
     }
 }
 
+typedef struct {
+    int total;
+    int count;
+} _tally_t;
+static _tally_t _monster_levels[MAX_DEPTH];
+static _tally_t _object_levels[MAX_DEPTH];
+
+static void _stats_reset_monster_levels(void)
+{
+    int i;
+    for (i = 0; i < MAX_DEPTH; i++)
+    {
+        _monster_levels[i].total = 0;
+        _monster_levels[i].count = 0;
+    }
+}
+
+static void _stats_note_monster_level(int dlvl, int mlvl)
+{
+    if (0 <= dlvl && dlvl < MAX_DEPTH)
+    {
+        _monster_levels[dlvl].total += mlvl;
+        _monster_levels[dlvl].count++;
+    }
+}
+
+static void _stats_reset_object_levels(void)
+{
+    int i;
+    for (i = 0; i < MAX_DEPTH; i++)
+    {
+        _object_levels[i].total = 0;
+        _object_levels[i].count = 0;
+    }
+}
+
+static void _stats_note_object_level(int dlvl, int olvl)
+{
+    if (0 <= dlvl && dlvl < MAX_DEPTH)
+    {
+        _object_levels[dlvl].total += olvl;
+        _object_levels[dlvl].count++;
+    }
+}
+
+
 /*
  * Strip an "object name" into a buffer
  */
@@ -2846,6 +2892,7 @@ static void _wiz_kill_monsters(int level)
         r_ptr = &r_info[m_ptr->r_idx];
         if (0 && r_ptr->level > level) continue;
 
+        _stats_note_monster_level(level, r_ptr->level);
         mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
         if (slot) rune_sword_kill(equip_obj(slot), r_ptr);
     }
@@ -2869,6 +2916,8 @@ static void _wiz_inspect_objects(int level)
 
         obj_identify_fully(o_ptr);
         stats_on_identify(o_ptr);
+        if (o_ptr->level)
+            _stats_note_object_level(level, o_ptr->level);
 
         if (o_ptr->art_name)
             stats_add_rand_art(o_ptr);
@@ -3300,7 +3349,8 @@ void do_cmd_debug(void)
         int max_depth = get_quantity("Max Depth? ", 100);
 
         _wiz_doc = doc_alloc(80);
-
+        _stats_reset_monster_levels();
+        _stats_reset_object_levels();
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains, no AFC */
         for (lev = dun_level + 2; lev <= max_depth; lev += 2)
         {
@@ -3313,6 +3363,48 @@ void do_cmd_debug(void)
             _wiz_gather_stats(DUNGEON_ANGBAND, lev, reps);
         }
         statistics_hack = FALSE;
+
+        {
+            _tally_t mon_total_tally = {0};
+            _tally_t obj_total_tally = {0};
+            doc_newline(_wiz_doc);
+            doc_insert(_wiz_doc, "<color:G>Depth   Monster Level    Object Level</color>\n");
+            for (lev = 0; lev < MAX_DEPTH; lev++)
+            {
+                _tally_t mon_tally = _monster_levels[lev];
+                _tally_t obj_tally = _object_levels[lev];
+
+                if (!mon_tally.count || !obj_tally.count) continue;
+
+                mon_total_tally.total += mon_tally.total;
+                mon_total_tally.count += mon_tally.count;
+
+                obj_total_tally.total += obj_tally.total;
+                obj_total_tally.count += obj_tally.count;
+
+                doc_printf(_wiz_doc, "%5d   %3d.%02d (%4d)    %3d.%02d (%4d)\n", lev,
+                    mon_tally.total / mon_tally.count,
+                    (mon_tally.total*100 / mon_tally.count) % 100,
+                    mon_tally.count,
+                    obj_tally.total / obj_tally.count,
+                    (obj_tally.total*100 / obj_tally.count) % 100,
+                    obj_tally.count
+                );
+            }
+
+            if (mon_total_tally.count && obj_total_tally.count)
+            {
+                doc_printf(_wiz_doc, "<color:R>        %3d.%02d (%5d)   %3d.%02d (%5d)</color>\n",
+                    mon_total_tally.total / mon_total_tally.count,
+                    (mon_total_tally.total*100 / mon_total_tally.count) % 100,
+                    mon_total_tally.count,
+                    obj_total_tally.total / obj_total_tally.count,
+                    (obj_total_tally.total*100 / obj_total_tally.count) % 100,
+                    obj_total_tally.count
+                );
+            }
+            doc_newline(_wiz_doc);
+        }
 
         if (doc_line_count(_wiz_doc))
             doc_display(_wiz_doc, "Statistics", 0);
