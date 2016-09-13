@@ -5054,6 +5054,7 @@ extern int PlayerUID;
 #define MON_A_SILVER            1011
 #define MON_ROLENTO             1013
 #define MON_RAOU                1018
+#define MON_NAMI                1021
 #define MON_SHURYUUDAN          1023
 #define MON_WAHHA               1031
 #define MON_DEBBY               1032

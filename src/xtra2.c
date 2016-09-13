@@ -822,7 +822,7 @@ bool get_monster_drop(int m_idx, object_type *o_ptr)
         }
         if (r_ptr->flags1 & RF1_UNIQUE)
         {
-            if (one_in_(10))
+            if (one_in_(10) || m_ptr->r_idx == MON_NAMI)
                 mo_mode |= AM_TAILORED;
         }
         else if (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
