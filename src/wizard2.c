@@ -2940,7 +2940,7 @@ static void _wiz_inspect_objects(int level)
         if (0 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_ammo(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
 
-        if (1 && o_ptr->name2 == EGO_RING_COMBAT && object_is_jewelry(o_ptr))
+        if (1 && o_ptr->name2 == EGO_AMULET_MAGI && object_is_jewelry(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
 
         if (race_ptr->destroy_object)

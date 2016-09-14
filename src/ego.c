@@ -975,13 +975,20 @@ static void _create_ring_aux(object_type *o_ptr, int level, int power, int mode)
                 if (abs(power) >= 2)
                 {
                     add_flag(o_ptr->flags, OF_DEC_MANA);
-                    break;
+                }
+                else if (one_in_(3))
+                {
+                    add_flag(o_ptr->flags, OF_RES_CONF);
+                }
+                else if (one_in_(3))
+                {
+                    add_flag(o_ptr->flags, OF_RES_BLIND);
                 }
                 else
                 {
                     add_flag(o_ptr->flags, OF_LEVITATION);
-                    break;
                 }
+                break;
             case 6:
                 if (abs(power) >= 2 && one_in_(30))
                 {
@@ -1064,6 +1071,16 @@ static void _create_amulet_aux(object_type *o_ptr, int level, int power, int mod
                 {
                     add_flag(o_ptr->flags, OF_MAGIC_MASTERY);
                     if (!o_ptr->pval) o_ptr->pval = _jewelry_pval(5, level);
+                    break;
+                }
+                else if (one_in_(3))
+                {
+                    add_flag(o_ptr->flags, OF_RES_CONF);
+                    break;
+                }
+                else if (one_in_(3))
+                {
+                    add_flag(o_ptr->flags, OF_RES_BLIND);
                     break;
                 }
             case 6:
