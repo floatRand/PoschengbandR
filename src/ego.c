@@ -786,6 +786,8 @@ static void _create_ring_aux(object_type *o_ptr, int level, int power, int mode)
                     break;
                 }
             default:
+                if (one_in_(4))
+                    o_ptr->to_h += randint1(3) + m_bonus(3, level);
                 o_ptr->to_d += randint1(5) + m_bonus(5, level);
             }
         }

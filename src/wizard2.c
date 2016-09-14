@@ -2843,11 +2843,11 @@ static void _wiz_stats_log_obj(int level, object_type *o_ptr)
     {
         int  score;
         score = obj_value_real(o_ptr);
-        doc_printf(_wiz_doc, "CL%2d DL%2d <color:%c>%6d</color>: <indent><style:indent>%s</style></indent>\n",
-            p_ptr->lev, level, _score_color(score), score, buf);
+        doc_printf(_wiz_doc, "C%2d D%2d O%2d <color:%c>%6d</color>: <indent><style:indent>%s</style></indent>\n",
+            p_ptr->lev, level, o_ptr->level, _score_color(score), score, buf);
     }
     else
-        doc_printf(_wiz_doc, "CL%2d DL%2d: <indent><style:indent>%s</style></indent>\n", p_ptr->lev, level, buf);
+        doc_printf(_wiz_doc, "C%2d D%2d O%2d: <indent><style:indent>%s</style></indent>\n", p_ptr->lev, level, o_ptr->level, buf);
 }
 static void _wiz_stats_log_speed(int level, object_type *o_ptr)
 {
@@ -2940,7 +2940,7 @@ static void _wiz_inspect_objects(int level)
         if (0 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_ammo(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
 
-        if (1 && o_ptr->name2 && object_is_jewelry(o_ptr))
+        if (1 && o_ptr->name2 == EGO_RING_COMBAT && object_is_jewelry(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
 
         if (race_ptr->destroy_object)
@@ -3355,6 +3355,8 @@ void do_cmd_debug(void)
         int max_depth = get_quantity("Max Depth? ", 100);
 
         _wiz_doc = doc_alloc(80);
+        doc_insert(_wiz_doc, "<style:wide>");
+
         _stats_reset_monster_levels();
         _stats_reset_object_levels();
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains, no AFC */
@@ -3437,6 +3439,7 @@ void do_cmd_debug(void)
             doc_newline(_wiz_doc);
         }
 
+        doc_insert(_wiz_doc, "</style>");
         if (doc_line_count(_wiz_doc))
             doc_display(_wiz_doc, "Statistics", 0);
         doc_free(_wiz_doc);
