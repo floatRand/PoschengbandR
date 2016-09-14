@@ -105,9 +105,10 @@ static void _stats_note_object_level(int dlvl, int olvl)
     {
         _object_levels[dlvl].total += olvl;
         _object_levels[dlvl].count++;
-
-        _object_histogram[olvl]++;
     }
+
+    if (0 <= olvl && olvl < MAX_DEPTH)
+        _object_histogram[olvl]++;
 }
 
 
@@ -3357,6 +3358,7 @@ void do_cmd_debug(void)
         _stats_reset_monster_levels();
         _stats_reset_object_levels();
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains, no AFC */
+#if 1
         for (lev = dun_level + 2; lev <= max_depth; lev += 2)
         {
             int reps = 1;
@@ -3367,13 +3369,21 @@ void do_cmd_debug(void)
 
             _wiz_gather_stats(DUNGEON_ANGBAND, lev, reps);
         }
+#else
+        for (lev = 5; lev <= 100; lev += 5)
+            _wiz_gather_stats(DUNGEON_ANGBAND, lev, 5);
+#endif
         statistics_hack = FALSE;
 
         {
             _tally_t mon_total_tally = {0};
             _tally_t obj_total_tally = {0};
             int      obj_total = 0;
+            int      obj_running = 0;
             int      last_lev = 0;
+
+            for (lev = 0; lev < MAX_DEPTH; lev++)
+                obj_total += _object_histogram[lev];
 
             doc_newline(_wiz_doc);
             doc_insert(_wiz_doc, "<color:G>Depth   Monster Level    Object Level   Object Counts</color>\n");
@@ -3396,29 +3406,32 @@ void do_cmd_debug(void)
                     obj_ct += _object_histogram[j];
                 }
                 last_lev = lev;
-                obj_total += obj_ct;
+                obj_running += obj_ct;
 
-                doc_printf(_wiz_doc, "%5d   %3d.%02d (%4d)    %3d.%02d (%4d)           %4d\n", lev,
+                doc_printf(_wiz_doc, "%5d   %3d.%02d (%4d)    %3d.%02d (%4d)        %3d.%02d%%  %3d.%02d%%\n",
+                    lev,
                     mon_tally.total / mon_tally.count,
                     (mon_tally.total*100 / mon_tally.count) % 100,
                     mon_tally.count,
                     obj_tally.total / obj_tally.count,
                     (obj_tally.total*100 / obj_tally.count) % 100,
                     obj_tally.count,
-                    obj_ct
+                    obj_ct*100 / obj_total,
+                    (obj_ct*10000 / obj_total) % 100,
+                    obj_running*100 / obj_total,
+                    (obj_running*10000 / obj_total) % 100
                 );
             }
 
             if (mon_total_tally.count && obj_total_tally.count)
             {
-                doc_printf(_wiz_doc, "<color:R>        %3d.%02d (%5d)   %3d.%02d (%5d)         %5d</color>\n",
+                doc_printf(_wiz_doc, "<color:R>        %3d.%02d (%5d)   %3d.%02d (%5d)</color>\n",
                     mon_total_tally.total / mon_total_tally.count,
                     (mon_total_tally.total*100 / mon_total_tally.count) % 100,
                     mon_total_tally.count,
                     obj_total_tally.total / obj_total_tally.count,
                     (obj_total_tally.total*100 / obj_total_tally.count) % 100,
-                    obj_total_tally.count,
-                    obj_total
+                    obj_total_tally.count
                 );
             }
             doc_newline(_wiz_doc);
