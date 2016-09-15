@@ -1665,21 +1665,19 @@ s16b get_mon_num(int level)
 
         table[i].prob3 = table[i].prob2;
 
-#if 1
-        /* Hack: Undersized monsters become more rare ... */
-        if (table[i].prob3 && level > r_ptr->level + 9 && !(r_ptr->flags1 & RF1_UNIQUE))
+        /* Hack: Undersized monsters become more rare ... but only for max_depth restricted monsters.
+           The goal is that these monsters gradually become less and less common, rather than suddenly
+           disappearing. About 50% of monsters currently have depth restrictions. */
+        if ( table[i].prob3
+          && r_ptr->max_level != 999 /* <=== Remove this, and the end game becomes too difficult */
+          && level > r_ptr->level + 9
+          && !(r_ptr->flags1 & RF1_UNIQUE) ) /* Redundant. Uniques never have depth restrictions. */
         {
             int delta = level - r_ptr->level;
-            while (delta > 0)
-            {
-                table[i].prob3 = (table[i].prob3 + 1)/2;
-                delta -= 10;
-            }
+            table[i].prob3 = table[i].prob3 >> (delta/10);
             if (!table[i].prob3)
                 table[i].prob3 = 1;
-            /*msg_format("%s: %d -> %d", r_name + r_ptr->name, table[i].prob2, table[i].prob3);*/
         }
-#endif
 
         total += table[i].prob3;
     }
