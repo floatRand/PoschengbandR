@@ -2760,6 +2760,10 @@ static void process_monster(int m_idx)
         }
     }
 
+    /* Really, a non-spell turn. The monster may never move, or may be blocked, and we still
+       want to track those turns for accurate reporting of spell frequency. */
+    mon_lore_move(m_ptr);
+
     /* Hack -- Assume no movement */
     mm[0] = mm[1] = mm[2] = mm[3] = 0;
     mm[4] = mm[5] = mm[6] = mm[7] = 0;
@@ -3157,9 +3161,6 @@ static void process_monster(int m_idx)
                 do_move = FALSE;
             }
         }
-
-        if (do_move)
-            mon_lore_move(m_ptr);
 
         /* The player is in the way */
         if (do_move && player_bold(ny, nx))
