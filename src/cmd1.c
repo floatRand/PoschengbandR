@@ -2672,19 +2672,19 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     case GF_OLD_CONF:
                     case GF_OLD_SLOW:
                     case GF_STUN:
-                        project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE, -1);
+                        project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_SHORT_MON_NAME, -1);
                         *mdeath = (m_ptr->r_idx == 0);
                         break;
                     case GF_DRAIN_MANA:
                     {
                         int amt = MIN(effect_pow, max_drain_amt - drain_amt);
-                        if (amt && project(0, 0, m_ptr->fy, m_ptr->fx, amt, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN, -1))
+                        if (amt && project(0, 0, m_ptr->fy, m_ptr->fx, amt, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1))
                             drain_amt += amt;
                         *mdeath = (m_ptr->r_idx == 0);
                         break;
                     }
                     case GF_OLD_DRAIN:
-                        if (monster_living(r_ptr) && project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN, -1))
+                        if (monster_living(r_ptr) && project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1))
                         {
                             int amt = MIN(effect_pow, max_drain_amt - drain_amt);
                             if (prace_is_(MIMIC_BAT))
@@ -2708,11 +2708,11 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                         if (base_dam > 50 || one_in_(7))
                         {
                             delay_quake = TRUE;
-                            project(0, 0, m_ptr->fy, m_ptr->fx, base_dam, GF_STUN, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN, -1);
+                            project(0, 0, m_ptr->fy, m_ptr->fx, base_dam, GF_STUN, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1);
                         }
                         break;
                     default:
-                        project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN, -1);
+                        project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1);
                         *mdeath = (m_ptr->r_idx == 0);
                     }
                 }
@@ -2756,11 +2756,11 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     if (delay_quake)
         earthquake(py, px, 10);
     if (delay_sleep && !*mdeath)
-        project(0, 0, m_ptr->fy, m_ptr->fx, delay_sleep, GF_OLD_SLEEP, PROJECT_KILL|PROJECT_HIDE, -1);
+        project(0, 0, m_ptr->fy, m_ptr->fx, delay_sleep, GF_OLD_SLEEP, PROJECT_KILL|PROJECT_HIDE|PROJECT_SHORT_MON_NAME, -1);
     if (delay_stasis && !*mdeath)
-        project(0, 0, m_ptr->fy, m_ptr->fx, delay_stasis, GF_STASIS, PROJECT_KILL|PROJECT_HIDE, -1);
+        project(0, 0, m_ptr->fy, m_ptr->fx, delay_stasis, GF_STASIS, PROJECT_KILL|PROJECT_HIDE|PROJECT_SHORT_MON_NAME, -1);
     if (delay_paralysis && !*mdeath)
-        project(0, 0, m_ptr->fy, m_ptr->fx, delay_paralysis, GF_PARALYSIS, PROJECT_KILL|PROJECT_HIDE, -1);
+        project(0, 0, m_ptr->fy, m_ptr->fx, delay_paralysis, GF_PARALYSIS, PROJECT_KILL|PROJECT_HIDE|PROJECT_SHORT_MON_NAME, -1);
     if (steal_ct && !*mdeath)
     {
         if (mon_save_p(m_ptr->r_idx, A_DEX))

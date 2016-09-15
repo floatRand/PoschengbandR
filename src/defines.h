@@ -2159,6 +2159,7 @@ enum {
 #define PROJECT_LOS         0x8000
 #define PROJECT_FULL_DAM    0x10000
 #define PROJECT_NO_PAIN     0x20000  /* Omit the pain messages. Note: Mon vs Mon melee is implemented with project()! */
+#define PROJECT_SHORT_MON_NAME 0x40000 /* "It falls asleep" rather than "The Icky Blue Mean Monster falls asleep." */
 
 
 /*

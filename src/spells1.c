@@ -1937,7 +1937,10 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
     }
 
     /* Get the monster name (BEFORE polymorphing) */
-    monster_desc(m_name, m_ptr, 0);
+    if (flg & PROJECT_SHORT_MON_NAME)
+        monster_desc(m_name, m_ptr, MD_PRON_VISIBLE);
+    else
+        monster_desc(m_name, m_ptr, 0);
 
     /* Get the monster possessive ("his"/"her"/"its") */
     monster_desc(m_poss, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
@@ -5052,7 +5055,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             else
             {
                 if (see_s_msg)
-                    msg_format("%s is unaffected.", m_name);
+                    msg_format("%^s is unaffected.", m_name);
                 dam = 0;
             }
             break;
@@ -5103,7 +5106,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             }
             else
             {
-                if (see_s_msg) msg_format("%s is unaffected.", m_name);
+                if (see_s_msg) msg_format("%^s is unaffected.", m_name);
             }
             dam = 0;
             break;
