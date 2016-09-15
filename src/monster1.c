@@ -50,7 +50,7 @@ static int _r_level(int r_idx)
 
     if (r_ptr->flags1 & RF1_UNIQUE)
         ml += ml/5;
-    
+
     if (r_ptr->flags2 & RF2_POWERFUL)
         ml += 7;
 
@@ -77,8 +77,8 @@ bool mon_save_aux(int r_idx, int power)
 bool mon_save_p(int r_idx, int stat)
 {
     int pl = p_ptr->lev;
-    
-    if (stat >= 0 && stat < 6) 
+
+    if (stat >= 0 && stat < 6)
         pl += adj_stat_save[p_ptr->stat_ind[stat]];
 
     return mon_save_aux(r_idx, pl);
@@ -179,12 +179,36 @@ void mon_lore_aux_3(monster_race *r_ptr, u32b mask)
 
 static void _mon_lore_aux_spell(monster_race *r_ptr)
 {
+    u32b old = r_ptr->r_spell_turns;
+    r_ptr->r_spell_turns++;
+    if (r_ptr->r_spell_turns < old) /* wrap? */
+        r_ptr->r_spell_turns = old;
+
+    if (r_ptr->r_spell_turns != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+
     if (r_ptr->r_cast_spell < MAX_UCHAR)
     {
         r_ptr->r_cast_spell++;
         if (r_ptr->id == p_ptr->monster_race_idx)
             p_ptr->window |= PW_MONSTER;
     }
+}
+
+static void _mon_lore_aux_move(monster_race *r_ptr)
+{
+    u32b old = r_ptr->r_move_turns;
+    r_ptr->r_move_turns++;
+    if (r_ptr->r_move_turns < old) /* wrap? */
+        r_ptr->r_move_turns = old;
+    if (r_ptr->r_move_turns != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
+void mon_lore_move(monster_type *m_ptr)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        _mon_lore_aux_move(&r_info[m_ptr->r_idx]);
 }
 
 void mon_lore_aux_4(monster_race *r_ptr, u32b mask)

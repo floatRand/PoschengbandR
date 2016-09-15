@@ -3158,6 +3158,9 @@ static void process_monster(int m_idx)
             }
         }
 
+        if (do_move)
+            mon_lore_move(m_ptr);
+
         /* The player is in the way */
         if (do_move && player_bold(ny, nx))
         {

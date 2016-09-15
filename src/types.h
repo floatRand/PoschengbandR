@@ -526,7 +526,11 @@ struct monster_race
     byte r_drop_gold;         /* Max number of gold dropped at once */
     byte r_drop_item;         /* Max number of item dropped at once */
 
-    byte r_cast_spell;        /* Max number of other spells seen */
+    byte r_cast_spell;        /* (DEPRECATED) Max number of other spells seen */
+
+    u32b r_spell_turns;       /* Same as r_cast_spell, but keep on counting 'em (savefile compat) */
+    u32b r_move_turns;        /* Includes attacking the player */
+                              /* Now we can report accurate observed spell frequencies! */
 
     byte r_blows[4];          /* Number of times each blow type was seen */
 
