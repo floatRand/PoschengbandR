@@ -1882,7 +1882,8 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
     bool heal_leper = FALSE;
 
     /* Hold the monster name */
-    char m_name[80];
+    char m_name[MAX_NLEN];
+    char m_name_object[MAX_NLEN];
 
     char m_poss[80];
 
@@ -1938,10 +1939,15 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
     /* Get the monster name (BEFORE polymorphing) */
     if (flg & PROJECT_SHORT_MON_NAME)
+    {
         monster_desc(m_name, m_ptr, MD_PRON_VISIBLE);
+        monster_desc(m_name_object, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+    }
     else
+    {
         monster_desc(m_name, m_ptr, 0);
-
+        monster_desc(m_name_object, m_ptr, 0);
+    }
     /* Get the monster possessive ("his"/"her"/"its") */
     monster_desc(m_poss, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
 
@@ -4234,7 +4240,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
             if (r_ptr->flags3 & (RF3_NO_CONF)) dam -= 30;
             if (dam < 1) dam = 1;
-            msg_format("You stare into %s.", m_name);
+            msg_format("You stare into %s.", m_name_object);
             if ((r_ptr->flagsr & RFR_RES_ALL) || p_ptr->inside_arena)
             {
                 note = " is immune.";
@@ -5099,7 +5105,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 else
                 {
                     /* Message */
-                    msg_format("You draw psychic energy from %s.", m_name);
+                    msg_format("You draw psychic energy from %s.", m_name_object);
 
                     (void)hp_player(dam);
                 }
@@ -5218,7 +5224,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         {
             if (seen) obvious = TRUE;
             /* Message */
-            if (!who) msg_format("You gaze intently at %s.", m_name);
+            if (!who) msg_format("You gaze intently at %s.", m_name_object);
 
             if (r_ptr->flagsr & RFR_RES_ALL)
             {
@@ -5269,7 +5275,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         {
             if (seen) obvious = TRUE;
             /* Message */
-            if (!who) msg_format("You gaze intently at %s.", m_name);
+            if (!who) msg_format("You gaze intently at %s.", m_name_object);
 
             if (r_ptr->flagsr & RFR_RES_ALL)
             {
@@ -5520,6 +5526,13 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         /* Attack (Use "dam" as attack type) */
         case GF_ATTACK:
         {
+            if (dam == BEHOLDER_GAZE && !los(m_ptr->fy, m_ptr->fx, py, px))
+            {
+                if (seen_msg) msg_format("%^s can't see you, and isn't affected!", m_name);
+                skipped = TRUE;
+                break;
+            }
+
             /* Return this monster's death */
             return py_attack(y, x, dam);
         }

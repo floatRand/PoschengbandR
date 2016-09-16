@@ -5278,6 +5278,8 @@ extern int PlayerUID;
 
 #define WEAPONMASTER_FLURRY  85
 
+#define BEHOLDER_GAZE        86
+
 #define HISSATSU_IAI    100
 
 #define DUNGEON_MODE_NONE       0

@@ -4034,7 +4034,8 @@ void calc_bonuses(void)
         p_ptr->weapon_info[1].to_h += 12;
         p_ptr->shooter_info.to_h  -= 12;
         p_ptr->to_h_m  += 12;
-        p_ptr->to_d_m  += 3+(p_ptr->lev/5);
+        if (p_ptr->prace != RACE_MON_BEHOLDER)
+            p_ptr->to_d_m  += 3+(p_ptr->lev/5);
         p_ptr->shooter_info.dis_to_h  -= 12;
         p_ptr->to_a -= 10;
         p_ptr->dis_to_a -= 10;
@@ -4402,9 +4403,12 @@ void calc_bonuses(void)
     p_ptr->to_a += calc_adj_dex_ta();
     p_ptr->dis_to_a += calc_adj_dex_ta();
 
-    p_ptr->to_d_m  += ((int)(adj_str_td[p_ptr->stat_ind[A_STR]]) - 128);
-    p_ptr->to_h_m  += ((int)(adj_dex_th[p_ptr->stat_ind[A_DEX]]) - 128);
-    p_ptr->to_h_m  += ((int)(adj_str_th[p_ptr->stat_ind[A_STR]]) - 128);
+    if (p_ptr->prace != RACE_MON_BEHOLDER)
+    {
+        p_ptr->to_d_m  += ((int)(adj_str_td[p_ptr->stat_ind[A_STR]]) - 128);
+        p_ptr->to_h_m  += ((int)(adj_str_th[p_ptr->stat_ind[A_STR]]) - 128);
+        p_ptr->to_h_m  += ((int)(adj_dex_th[p_ptr->stat_ind[A_DEX]]) - 128);
+    }
 
     p_ptr->shooter_info.to_h  += ((int)(adj_dex_th[p_ptr->stat_ind[A_DEX]]) - 128);
     p_ptr->shooter_info.dis_to_h  += ((int)(adj_dex_th[p_ptr->stat_ind[A_DEX]]) - 128);

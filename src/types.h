@@ -1101,7 +1101,7 @@ typedef struct {
 } counter_t;
 
 #define MAX_WILD_COUNTERS  5
-#define MAX_INNATE_EFFECTS 7
+#define MAX_INNATE_EFFECTS 8
 
 #define INNATE_SKIP        0x0001
 #define INNATE_VORPAL      0x0002

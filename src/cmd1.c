@@ -2341,7 +2341,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     int             dam, base_dam, effect_pow, to_h, chance;
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
-    char            m_name[80];
+    char            m_name_subject[MAX_NLEN], m_name_object[MAX_NLEN];
     int             i, j, k;
     int             delay_sleep = 0;
     int             delay_stasis = 0;
@@ -2354,14 +2354,16 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     bool            backstab = FALSE, fuiuchi = FALSE, stab_fleeing = FALSE;
 
     set_monster_csleep(m_idx, 0);
-    monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+
+    monster_desc(m_name_subject, m_ptr, MD_PRON_VISIBLE);
+    monster_desc(m_name_object, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
 
     if (p_ptr->afraid)
     {
         if (!fear_allow_melee(m_idx))
         {
             if (m_ptr->ml)
-                cmsg_format(TERM_VIOLET, "You are too afraid to attack %s!", m_name);
+                cmsg_format(TERM_VIOLET, "You are too afraid to attack %s!", m_name_object);
             else
                 cmsg_format(TERM_VIOLET, "There is something scary in your way!");
             return;
@@ -2424,13 +2426,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
             {
                 int dd = a->dd + p_ptr->innate_attack_info.to_dd;
 
-                if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly attack %s!", m_name);
-                else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name);
-                else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You attack %s in the back!",  m_name);
+                if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly attack %s!", m_name_object);
+                else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name_object);
+                else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You attack %s in the back!",  m_name_object);
 
                 hit_ct++;
                 sound(SOUND_HIT);
-                msg_format(a->msg, m_name);
+                msg_format(a->msg, m_name_object);
 
                 base_dam = damroll(dd, a->ds);
                 if ((a->flags & INNATE_VORPAL) && one_in_(6))
@@ -2442,13 +2444,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     base_dam *= m;
                     switch (m)
                     {
-                    case 2: msg_format("You <color:U>gouge</color> %s!", m_name); break;
-                    case 3: msg_format("You <color:y>maim</color> %s!", m_name); break;
-                    case 4: msg_format("You <color:R>carve</color> %s!", m_name); break;
-                    case 5: msg_format("You <color:r>cleave</color> %s!", m_name); break;
-                    case 6: msg_format("You <color:v>smite</color> %s!", m_name); break;
-                    case 7: msg_format("You <color:v>eviscerate</color> %s!", m_name); break;
-                    default: msg_format("You <color:v>shred</color> %s!", m_name); break;
+                    case 2: msg_format("You <color:U>gouge</color> %s!", m_name_object); break;
+                    case 3: msg_format("You <color:y>maim</color> %s!", m_name_object); break;
+                    case 4: msg_format("You <color:R>carve</color> %s!", m_name_object); break;
+                    case 5: msg_format("You <color:r>cleave</color> %s!", m_name_object); break;
+                    case 6: msg_format("You <color:v>smite</color> %s!", m_name_object); break;
+                    case 7: msg_format("You <color:v>eviscerate</color> %s!", m_name_object); break;
+                    default: msg_format("You <color:v>shred</color> %s!", m_name_object); break;
                     }
                 }
 
@@ -2490,7 +2492,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     if (one_in_(backstab ? 13 : (stab_fleeing || fuiuchi) ? 15 : 27))
                     {
                         dam *= 5;
-                        msg_format("You critically injured %s!", m_name);
+                        msg_format("You critically injured %s!", m_name_object);
                     }
                     else if ( (m_ptr->hp < maxhp/2 && one_in_(50))
                            || ( (one_in_(666) || ((backstab || fuiuchi) && one_in_(11)))
@@ -2500,12 +2502,12 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                         if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_UNIQUE2) || (m_ptr->hp >= maxhp/2))
                         {
                             dam = MAX(dam*5, m_ptr->hp/2);
-                            msg_format("You fatally injured %s!", m_name);
+                            msg_format("You fatally injured %s!", m_name_object);
                         }
                         else
                         {
                             dam = m_ptr->hp + 1;
-                            msg_format("You hit %s on a fatal spot!", m_name);
+                            msg_format("You hit %s on a fatal spot!", m_name_object);
                         }
                     }
                 }
@@ -2693,7 +2695,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                             }
                             else
                             {
-                                msg_format("You <color:D>drain life</color> from %s!", m_name);
+                                msg_format("You <color:D>drain life</color> from %s!", m_name_object);
                                 hp_player(amt);
                             }
                             drain_amt += amt;
@@ -2731,7 +2733,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 
                 if (mode == DRAGON_SNATCH)
                 {
-                    msg_format("You grab %s in your jaws.", m_name);
+                    msg_format("You grab %s in your jaws.", m_name_object);
                     monster_toss(m_idx);
                     return;
                 }
@@ -2739,14 +2741,17 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
             else
             {
                 sound(SOUND_MISS);
-                msg_format("You miss.", m_name);
+                if (p_ptr->prace == RACE_MON_BEHOLDER)
+                    msg_format("%^s avoids your gaze.", m_name_subject);
+                else
+                    msg_print("You miss.");
             }
             fuiuchi = FALSE; /* Clumsy! */
-            if (mode == WEAPONMASTER_RETALIATION)
-                break;
+
+            if (mode == WEAPONMASTER_RETALIATION) break;
+            if (mode == BEHOLDER_GAZE) break;
         }
-        if (mode == WEAPONMASTER_RETALIATION)
-            break;
+        if (mode == WEAPONMASTER_RETALIATION) break;
     }
     if (mode == DRAGON_TAIL_SWEEP && !*mdeath && hit_ct)
     {
