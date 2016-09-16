@@ -1,27 +1,10 @@
 #include "angband.h"
 
-static void _birth(void) 
-{ 
-    object_type    forge;
-
+static void _birth(void)
+{
     p_ptr->current_r_idx = MON_GAZER;
     equip_on_change_race();
     skills_innate_init("Gaze", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
-    
-    object_prep(&forge, lookup_kind(TV_CROWN, SV_IRON_CROWN));
-    forge.name2 = EGO_ARMOR_SEEING;
-    forge.pval = 4;
-    forge.to_a = 10;
-    add_esp_weak(&forge, FALSE);
-    add_outfit(&forge);
-
-    object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
-    if (device_init_fixed(&forge, EFFECT_BOLT_FIRE))
-        add_outfit(&forge);
-
-    object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
-    if (device_init_fixed(&forge, EFFECT_BOLT_COLD))
-        add_outfit(&forge);
 }
 
 /**********************************************************************
@@ -31,13 +14,17 @@ static void _calc_innate_attacks(void)
 {
     if (!p_ptr->blind)
     {
-        innate_attack_t    a = {0};
+        innate_attack_t a = {0};
         int l = p_ptr->lev;
 
-        a.dd = 1 + (l + 5)/12;
-        a.ds = 6 + l/15;
         a.weight = 250;
-        a.to_h = p_ptr->lev/5;
+        a.flags = INNATE_NO_CRIT; /* You are gazing at enemies, not bashing them with your eyeballs! */
+                                  /* And the 25lb weight is meant to limit blows, not increase damage. */
+
+        a.dd = 1 + (l + 5)/12;    /* Max: 5d9 (+16, +10) */
+        a.ds = 6 + l/15;
+        a.to_h = p_ptr->lev/3;
+        a.to_d = p_ptr->lev/5;
 
         a.effect[0] = GF_MISSILE;
 
@@ -72,16 +59,38 @@ static void _calc_innate_attacks(void)
     }
 }
 
+static void _vision_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Vision");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Maps your nearby location.");
+        break;
+    case SPELL_CAST:
+        map_area(DETECT_RAD_MAP);
+        var_set_bool(res, TRUE);
+        break;
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 /***********************************************************************************
  *                 10           25          35                 45
  * Beholder: Gazer -> Spectator -> Beholder -> Undead Beholder -> Ultimate Beholder
  ***********************************************************************************/
 static spell_info _beholder_spells[] = {
+    {  1,  1, 30, detect_monsters_spell},
     {  1,  1, 30, paralyze_spell},
     {  1,  2, 30, confuse_spell},
     { 10,  4, 30, cause_wounds_II_spell},
     { 10,  5, 30, slow_spell},
     { 10,  7, 30, amnesia_spell},
+    { 15,  7, 30, _vision_spell},
     { 25,  7, 30, drain_mana_spell},
     { 25,  4, 30, frost_bolt_spell},
     { 25,  6, 30, fire_bolt_spell},
@@ -91,10 +100,12 @@ static spell_info _beholder_spells[] = {
     { -1, -1, -1, NULL}
 };
 static spell_info _undead_beholder_spells[] = {
+    {  1,  1, 30, detect_monsters_spell},
     {  1,  1, 30, paralyze_spell},
     {  1,  2, 30, confuse_spell},
     { 10,  5, 30, slow_spell},
     { 10,  7, 30, amnesia_spell},
+    { 15,  7, 30, _vision_spell},
     { 25,  7, 30, drain_mana_spell},
     { 25,  7, 30, scare_spell},
     { 25, 10, 50, mind_blast_spell},
@@ -106,10 +117,12 @@ static spell_info _undead_beholder_spells[] = {
     { -1, -1, -1, NULL}
 };
 static spell_info _ultimate_beholder_spells[] = {
+    {  1,  1, 30, detect_monsters_spell},
     {  1,  1, 30, paralyze_spell},
     {  1,  2, 30, confuse_spell},
     { 10,  5, 30, slow_spell},
     { 10,  7, 30, amnesia_spell},
+    { 15,  7, 30, _vision_spell},
     { 25,  7, 30, drain_mana_spell},
     { 25, 10, 30, frost_ball_spell},
     { 25, 12, 30, fire_ball_spell},
@@ -152,7 +165,7 @@ static int _get_powers(spell_info* spells, int max)
 }
 static void _calc_bonuses(void) {
     int l = p_ptr->lev;
-    int ac = l/2 + l*l/100;
+    int ac = l * 3 / 2;
 
     p_ptr->to_a += ac;
     p_ptr->dis_to_a += ac;
@@ -297,7 +310,7 @@ race_t *mon_beholder_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;
-    static cptr   titles[5] =  {"Gazer", "Spectator", "Beholder", "Undead Beholder", "Ultimate Beholder"};    
+    static cptr   titles[5] =  {"Gazer", "Spectator", "Beholder", "Undead Beholder", "Ultimate Beholder"};
     int           rank = 0;
 
     if (p_ptr->lev >= 10) rank++;
@@ -328,7 +341,7 @@ race_t *mon_beholder_get_race(void)
         me.extra_skills = xs;
 
         me.infra = 8;
-        me.exp = 250;
+        me.exp = 200;
         me.base_hp = 20;
         me.life = 100;
         me.shop_adjust = 140;

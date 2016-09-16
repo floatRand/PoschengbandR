@@ -803,7 +803,7 @@ void display_innate_attack_info(doc_ptr doc, int which)
         }
     }
 
-    if (!(a->flags & INNATE_NO_DAM))
+    if (!(a->flags & (INNATE_NO_DAM | INNATE_NO_CRIT)))
     {
         critical_t crit = {0};
         const int ct = 10 * 1000;

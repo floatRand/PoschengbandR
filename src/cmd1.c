@@ -2470,7 +2470,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                 }
 
                 base_dam += a->to_d;
-                if (!(a->flags & INNATE_NO_DAM))
+                if (!(a->flags & (INNATE_NO_DAM | INNATE_NO_CRIT)))
                 {
                     critical_t crit = critical_norm(a->weight, to_h, 0, mode, HAND_NONE);
                     if (crit.desc)

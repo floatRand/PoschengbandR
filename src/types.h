@@ -1107,6 +1107,7 @@ typedef struct {
 #define INNATE_VORPAL      0x0002
 #define INNATE_EXPLODE     0x0004
 #define INNATE_NO_DAM      0x0008
+#define INNATE_NO_CRIT     0x0010
 
 typedef struct {
     int dd;
