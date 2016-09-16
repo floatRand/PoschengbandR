@@ -388,17 +388,17 @@ static void _display_frequency(monster_race *r_ptr, doc_ptr doc)
 {
     int pct = 0;
     if (_easy_lore(r_ptr))
-        pct = r_ptr->freq_spell;
+        pct = r_ptr->freq_spell * 100;
     else if (r_ptr->r_spell_turns)
     {
         int total = r_ptr->r_spell_turns + r_ptr->r_move_turns;
-        pct = r_ptr->r_spell_turns * 100 / total;
+        pct = r_ptr->r_spell_turns * 10000 / total;
     }
     if (pct)
     {
         vec_ptr v = vec_alloc((vec_free_f)string_free);
 
-        doc_printf(doc, "Spells  : <color:G>%d%%</color> ", pct);
+        doc_printf(doc, "Spells  : <color:G>%d.%02d%%</color> ", pct/100, pct%100);
         doc_printf(doc, "(%d of %d moves) ", r_ptr->r_spell_turns, r_ptr->r_spell_turns + r_ptr->r_move_turns);
 
         if (r_ptr->flags2 & RF2_SMART)
