@@ -139,7 +139,7 @@ static void _vision_spell(int cmd, variant *res)
  ***********************************************************************************/
 static spell_info _beholder_spells[] = {
     {  1,  1, 30, detect_monsters_spell},
-    {  1,  3, 50, _gaze_spell},
+    {  1,  3,  0, _gaze_spell},
     { 15,  7, 30, _vision_spell},
     { 25,  7, 30, drain_mana_spell},
     { 25,  4, 30, frost_bolt_spell},
@@ -149,7 +149,7 @@ static spell_info _beholder_spells[] = {
 };
 static spell_info _undead_beholder_spells[] = {
     {  1,  1, 30, detect_monsters_spell},
-    {  1,  3, 50, _gaze_spell},
+    {  1,  3,  0, _gaze_spell},
     { 15,  7, 30, _vision_spell},
     { 25,  7, 30, drain_mana_spell},
     { 35, 10, 30, animate_dead_spell},
@@ -160,7 +160,7 @@ static spell_info _undead_beholder_spells[] = {
 };
 static spell_info _ultimate_beholder_spells[] = {
     {  1,  1, 30, detect_monsters_spell},
-    {  1,  3, 50, _gaze_spell},
+    {  1,  3,  0, _gaze_spell},
     { 15,  7, 30, _vision_spell},
     { 25,  7, 30, drain_mana_spell},
     { 25, 10, 30, frost_ball_spell},
@@ -378,7 +378,13 @@ race_t *mon_beholder_get_race(void)
                     "spell stat and beholders are quite intelligent indeed. Their searching and "
                     "perception are legendary and they are quite capable with magical devices. "
                     "However, they are not very strong and won't be able to stand long against "
-                    "multiple foes.";
+                    "multiple foes.\n \n"
+                    "The attack of the beholder is unique. Since their gaze is not a normal physical "
+                    "attack, they receive no benefit to melee from their Strength and Dexterity. Also, "
+                    "the number of attacks is determined by level rather than the normal way: in this "
+                    "respect, they resemble monks. Finally, the beholder need not be next to their foes "
+                    "in order to attack with melee. They may gaze at distant monsters, though doing so "
+                    "only gives a single gaze attack and the range of their gaze is somewhat restricted.";
 
         me.skills = bs;
         me.extra_skills = xs;
