@@ -2663,7 +2663,6 @@ static void process_monster(int m_idx)
             {
             case AI_SHOOT:
             case AI_MAINTAIN_DISTANCE:
-            case AI_GUARD_POS:
                 freq_n -= 2;
                 if (freq_n < 2)
                     freq_n = 2;
@@ -2671,6 +2670,7 @@ static void process_monster(int m_idx)
                 break;
             case AI_LURE:
             case AI_FEAR:
+            case AI_GUARD_POS:
                 freq_n -= 1;
                 if (freq_n < 2)
                     freq_n = 2;
