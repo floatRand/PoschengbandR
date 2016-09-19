@@ -2761,8 +2761,10 @@ static void process_monster(int m_idx)
     }
 
     /* Really, a non-spell turn. The monster may never move, or may be blocked, and we still
-       want to track those turns for accurate reporting of spell frequency. */
-    mon_lore_move(m_ptr);
+       want to track those turns for accurate reporting of spell frequency. Also, don't count
+       unless the monster could spell.*/
+    if (projectable(py, px, m_ptr->fy, m_ptr->fx))
+        mon_lore_move(m_ptr);
 
     /* Hack -- Assume no movement */
     mm[0] = mm[1] = mm[2] = mm[3] = 0;

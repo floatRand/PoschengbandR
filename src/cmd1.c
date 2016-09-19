@@ -2749,7 +2749,6 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
             fuiuchi = FALSE; /* Clumsy! */
 
             if (mode == WEAPONMASTER_RETALIATION) break;
-            if (mode == BEHOLDER_GAZE) break;
         }
         if (mode == WEAPONMASTER_RETALIATION) break;
     }
