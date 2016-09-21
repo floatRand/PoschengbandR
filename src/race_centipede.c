@@ -167,6 +167,10 @@ static void _calc_innate_attacks(void)
  **********************************************************************/
 static void _calc_bonuses(void)
 {
+    int r = _rank();
+    p_ptr->to_a += 2*r;
+    p_ptr->dis_to_a += 2*r;
+
     p_ptr->skill_dig += 50;
     p_ptr->pspeed += _rank();
 }
