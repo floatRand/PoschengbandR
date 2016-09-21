@@ -4968,7 +4968,14 @@ bool player_can_enter(s16b feature, u16b mode)
 {
     feature_type *f_ptr = &f_info[feature];
 
-    if (p_ptr->riding) return monster_can_cross_terrain(feature, &r_info[m_list[p_ptr->riding].r_idx], mode | CEM_RIDING);
+    if (p_ptr->riding)
+        return monster_can_cross_terrain(feature, &r_info[m_list[p_ptr->riding].r_idx], mode | CEM_RIDING);
+
+    if (p_ptr->prace == RACE_MON_POSSESSOR && p_ptr->current_r_idx != MON_POSSESSOR_SOUL)
+        return monster_can_cross_terrain(feature, &r_info[p_ptr->current_r_idx], mode | CEM_MIMIC);
+
+    if (p_ptr->prace == RACE_MON_MIMIC && p_ptr->current_r_idx != MON_MIMIC)
+        return monster_can_cross_terrain(feature, &r_info[p_ptr->current_r_idx], mode | CEM_MIMIC);
 
     /* Pattern */
     if (have_flag(f_ptr->flags, FF_PATTERN))
@@ -4978,6 +4985,7 @@ bool player_can_enter(s16b feature, u16b mode)
 
     /* "CAN" flags */
     if (have_flag(f_ptr->flags, FF_CAN_FLY) && p_ptr->levitation) return TRUE;
+    /*if (have_flag(f_ptr->flags, FF_CAN_CLIMB) && p_ptr->climbing) return TRUE;*/
     if (have_flag(f_ptr->flags, FF_CAN_SWIM) && p_ptr->can_swim) return TRUE;
     if (have_flag(f_ptr->flags, FF_CAN_PASS) && p_ptr->pass_wall) return TRUE;
 
@@ -5445,7 +5453,10 @@ void move_player(int dir, bool do_pickup, bool break_trap)
         }
     }
 
-    if (oktomove && (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC))
+    if (!oktomove)
+    {
+    }
+    else if (p_ptr->prace == RACE_MON_POSSESSOR || p_ptr->prace == RACE_MON_MIMIC)
     {
         monster_race *r_ptr = &r_info[p_ptr->current_r_idx];
         if (r_ptr->flags1 & RF1_NEVER_MOVE)
@@ -5457,6 +5468,10 @@ void move_player(int dir, bool do_pickup, bool break_trap)
             disturb(0, 0);*/
         }
         else if (have_flag(f_ptr->flags, FF_CAN_FLY) && ((r_ptr->flags7 & RF7_CAN_FLY) || p_ptr->levitation))
+        {
+            /* Allow moving */
+        }
+        else if (have_flag(f_ptr->flags, FF_CAN_CLIMB) && (r_ptr->flags7 & RF7_CAN_CLIMB))
         {
             /* Allow moving */
         }
@@ -5481,16 +5496,14 @@ void move_player(int dir, bool do_pickup, bool break_trap)
             disturb(0, 0);
         }
     }
-
-    if (oktomove && p_ptr->prace == RACE_MON_RING && !p_ptr->riding)
+    else if (p_ptr->prace == RACE_MON_RING && !p_ptr->riding)
     {
         msg_print("You can't move! Try using your Glitter power to lure a ringbearer instead.");
         energy_use = 0;
         oktomove = FALSE;
         disturb(0, 0);
     }
-
-    if (oktomove && p_ptr->riding)
+    else if (p_ptr->riding)
     {
         if (riding_r_ptr->flags1 & RF1_NEVER_MOVE)
         {
@@ -5536,6 +5549,10 @@ void move_player(int dir, bool do_pickup, bool break_trap)
         {
             /* Allow moving */
         }
+        else if (have_flag(f_ptr->flags, FF_CAN_CLIMB) && (riding_r_ptr->flags7 & RF7_CAN_CLIMB))
+        {
+            /* Allow moving */
+        }
         else if (have_flag(f_ptr->flags, FF_CAN_SWIM) && ((riding_r_ptr->flags7 & RF7_CAN_SWIM) || ring_lev))
         {
             /* Allow moving */
@@ -5573,35 +5590,23 @@ void move_player(int dir, bool do_pickup, bool break_trap)
             disturb(0, 0);
         }
     }
-
-    if (!oktomove)
-    {
-    }
     else if ( !have_flag(f_ptr->flags, FF_MOVE)
-           && have_flag(f_ptr->flags, FF_CAN_FLY)
-           && p_ptr->riding
-           && !((riding_r_ptr->flags7 & RF7_CAN_FLY) || ring_lev) )
-    {
-        msg_format("Your mount needs to fly to go through the %s.", f_name + f_info[get_feat_mimic(c_ptr)].name);
-
-        if (!shadow_strike)
-            energy_use = 0;
-        running = 0;
-        oktomove = FALSE;
-    }
-    else if ( !have_flag(f_ptr->flags, FF_MOVE)
-           && have_flag(f_ptr->flags, FF_CAN_FLY)
-           && !p_ptr->riding
+           && (have_flag(f_ptr->flags, FF_CAN_FLY) || have_flag(f_ptr->flags, FF_CAN_CLIMB))
            && !p_ptr->levitation )
     {
         msg_format("You need to fly to go through the %s.", f_name + f_info[get_feat_mimic(c_ptr)].name);
-
+        oktomove = FALSE;
         if (!shadow_strike)
             energy_use = 0;
         running = 0;
-        oktomove = FALSE;
     }
 
+
+    if (!oktomove)
+    {
+        /* FYI: Either the player was blocked from movement -OR- the player attacked
+           because a monster was in the way.*/
+    }
     /*
      * Player can move through trees and
      * has effective -10 speed

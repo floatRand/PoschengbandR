@@ -997,7 +997,7 @@ enum {
 /* #define FF_ACID          49 */
 /* #define FF_OIL           50 */
 /* #define FF_XXX04      51 */
-/* #define FF_CAN_CLIMB     52 */
+#define FF_CAN_CLIMB     52
 #define FF_CAN_FLY       53
 #define FF_CAN_SWIM      54
 #define FF_CAN_PASS      55
@@ -1173,6 +1173,7 @@ enum {
  */
 #define CEM_RIDING              0x0001
 #define CEM_P_CAN_ENTER_PATTERN 0x0002
+#define CEM_MIMIC               0x0004
 
 
 /* Lighting levels of features' attr and char */
@@ -3465,6 +3466,7 @@ enum obj_flags_e {
 #define RF7_SELF_DARK_1         0x00020000  /* Monster darkens itself */
 #define RF7_HAS_DARK_2          0x00040000  /* Monster carries darkness */
 #define RF7_SELF_DARK_2         0x00080000  /* Monster darkens itself */
+#define RF7_CAN_CLIMB           0x00100000
 
 /*
  * Monster race flags
