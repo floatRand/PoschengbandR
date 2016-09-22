@@ -306,8 +306,8 @@ static _power_limit_t _art_power_limits[] = {
     { 30,     0,  10000 },
     { 40,     0,  20000 },
     { 50,     0,  30000 },
-    { 60, 10000, 100000 },
-    { 70, 20000,      0 },
+    { 60, 10000,  50000 },
+    { 70, 20000,  80000 },
     { 80, 30000,      0 },
     { 90, 40000,      0 },
     {999, 40000,      0 }
@@ -329,7 +329,10 @@ static void _art_create_random(object_type *o_ptr, int level, int power)
         }
     }
     if (one_in_(GREAT_OBJ))
+    {
+        if (min < 5000) min = 5000;
         max *= 2;
+    }
 
     if (power < 0)
         mode = CREATE_ART_CURSED;
@@ -346,8 +349,9 @@ static void _art_create_random(object_type *o_ptr, int level, int power)
         if (max > 0 && score > max) continue;
 
         *o_ptr = forge;
-        break;
+        return;
     }
+    create_artifact(o_ptr, mode); /* Missed the threshold for some reason ... */
 }
 
 static _power_limit_t _jewelry_power_limits[] = {
@@ -390,7 +394,10 @@ static _power_limit_t _get_jewelry_power_limit(int level, int mode)
     }
 
     if (one_in_(GREAT_OBJ))
+    {
+        if (rng.min < 5000) rng.min = 5000;
         rng.max *= 2;
+    }
 
     return rng;
 }
@@ -412,8 +419,9 @@ void ego_create_ring(object_type *o_ptr, int level, int power, int mode)
         if (rng.max > 0 && score > rng.max) continue;
 
         *o_ptr = forge;
-        break;
+        return;
     }
+    _create_ring_aux(o_ptr, level, power, mode); /* ooops */
 }
 
 void ego_create_amulet(object_type *o_ptr, int level, int power, int mode)
@@ -433,8 +441,9 @@ void ego_create_amulet(object_type *o_ptr, int level, int power, int mode)
         if (rng.max > 0 && score > rng.max) continue;
 
         *o_ptr = forge;
-        break;
+        return;
     }
+    _create_amulet_aux(o_ptr, level, power, mode); /* ooops */
 }
 
 /*************************************************************************
