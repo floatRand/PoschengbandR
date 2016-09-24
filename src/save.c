@@ -215,6 +215,11 @@ void wr_item(savefile_ptr file, object_type *o_ptr)
         savefile_write_s16b(file, o_ptr->activation.cost);
         savefile_write_s16b(file, o_ptr->activation.extra);
     }
+    if (o_ptr->level)
+    {
+        savefile_write_byte(file, SAVE_ITEM_LEVEL);
+        savefile_write_s16b(file, o_ptr->level);
+    }
 
     savefile_write_byte(file, SAVE_ITEM_DONE);
 }

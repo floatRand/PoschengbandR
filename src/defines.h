@@ -5428,6 +5428,7 @@ enum object_save_fields_e {
     SAVE_ITEM_KNOWN_FLAGS_8,
     SAVE_ITEM_KNOWN_FLAGS_9,
     SAVE_ITEM_KNOWN_CURSE_FLAGS,
+    SAVE_ITEM_LEVEL,
 };
 
 /*

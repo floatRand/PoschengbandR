@@ -188,6 +188,9 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
             o_ptr->activation.cost = savefile_read_s16b(file);
             o_ptr->activation.extra = savefile_read_s16b(file);
             break;
+        case SAVE_ITEM_LEVEL:
+            o_ptr->level = savefile_read_s16b(file);
+            break;
         /* default:
             TODO: Report an error back to the load routine!!*/
         }
