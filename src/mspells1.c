@@ -1864,9 +1864,8 @@ bool make_attack_spell(int m_idx, bool ticked_off)
         && (in_no_magic_dungeon || (MON_STUNNED(m_ptr) && one_in_(2)) || (randint0(100) < failrate)))
     {
         disturb(1, 0);
-        /* Message */
+        mon_lore_aux_spell(r_ptr);
         msg_format("%^s tries to cast a spell, but fails.", m_name);
-
         return (TRUE);
     }
 

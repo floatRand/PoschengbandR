@@ -177,7 +177,7 @@ void mon_lore_aux_3(monster_race *r_ptr, u32b mask)
         p_ptr->window |= PW_MONSTER;
 }
 
-static void _mon_lore_aux_spell(monster_race *r_ptr)
+void mon_lore_aux_spell(monster_race *r_ptr)
 {
     u32b old = r_ptr->r_spell_turns;
     r_ptr->r_spell_turns++;
@@ -215,7 +215,7 @@ void mon_lore_aux_4(monster_race *r_ptr, u32b mask)
 {
     u32b old = r_ptr->r_flags4;
 
-    _mon_lore_aux_spell(r_ptr);
+    mon_lore_aux_spell(r_ptr);
     r_ptr->r_flags4 |= (r_ptr->flags4 & mask);
     if (r_ptr->r_flags4 != old && r_ptr->id == p_ptr->monster_race_idx)
         p_ptr->window |= PW_MONSTER;
@@ -225,7 +225,7 @@ void mon_lore_aux_5(monster_race *r_ptr, u32b mask)
 {
     u32b old = r_ptr->r_flags5;
 
-    _mon_lore_aux_spell(r_ptr);
+    mon_lore_aux_spell(r_ptr);
     r_ptr->r_flags5 |= (r_ptr->flags5 & mask);
     if (r_ptr->r_flags5 != old && r_ptr->id == p_ptr->monster_race_idx)
         p_ptr->window |= PW_MONSTER;
@@ -236,7 +236,7 @@ void mon_lore_aux_6(monster_race *r_ptr, u32b mask)
     u32b old = r_ptr->r_flags6;
 
     if (r_ptr->id != MON_OHMU) /* The one and only example of RF6_* not being a spell ... sigh */
-        _mon_lore_aux_spell(r_ptr);
+        mon_lore_aux_spell(r_ptr);
 
     r_ptr->r_flags6 |= (r_ptr->flags6 & mask);
     if (r_ptr->r_flags6 != old && r_ptr->id == p_ptr->monster_race_idx)
