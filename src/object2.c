@@ -2324,6 +2324,8 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
     /* Maximum "level" for various things */
     if (lev > MAX_DEPTH - 1) lev = MAX_DEPTH - 1;
 
+    o_ptr->level = lev; /* Wizard statistics ... */
+
     /* Base chance of being "good" */
     f1 = lev + 10;
 
@@ -2466,6 +2468,11 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         }
     }
 
+    /* Hack -- Creating an artifact will re-prep the object, zeroing out level field.
+       Not everybody calls into artifact.c with a prep'd object, so I guess we need to
+       handle this here. */
+    if (!o_ptr->level)
+        o_ptr->level = lev;
 
     /* Hack -- analyze replacement artifacts */
     if (o_ptr->name3)
@@ -3918,7 +3925,6 @@ bool make_object(object_type *j_ptr, u32b mode)
         obj_drop_theme = 0;
         return FALSE;
     }
-    j_ptr->level = object_level; /* Wizard statistics ... */
 
     /* Note: It is important to do this *after* apply_magic rather than in, say,
        object_prep() since artifacts should never spawn multiple copies. Ego ammo
