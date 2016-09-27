@@ -175,7 +175,7 @@ race_t *kutar_get_race(void)
         me.stats[A_WIS] = -1;
         me.stats[A_DEX] =  1;
         me.stats[A_CON] =  2;
-        me.stats[A_CHR] =  0;
+        me.stats[A_CHR] =  2;
 
         me.skills.dis = -2;
         me.skills.dev = 5;
