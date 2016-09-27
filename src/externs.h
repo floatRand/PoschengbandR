@@ -2544,6 +2544,7 @@ extern int skills_martial_arts_max(void);
 
 extern void skills_riding_gain_melee(monster_race *r_ptr);
 extern void skills_riding_gain_archery(monster_race *r_ptr);
+extern void skills_riding_gain_rakuba(int dam);
 extern int skills_riding_current(void);
 extern int skills_riding_max(void);
 

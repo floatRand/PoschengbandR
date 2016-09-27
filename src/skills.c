@@ -440,10 +440,38 @@ int skills_dual_wielding_max(void)
     return s_info[_class_idx()].s_max[SKILL_DUAL_WIELDING];
 }
 
+static void _skills_riding_gain(int inc)
+{
+    int current = p_ptr->skill_exp[SKILL_RIDING];
+    int max = skills_riding_max();
+    int update = MIN(max, current + inc);
+
+    if (update > current)
+    {
+        p_ptr->skill_exp[SKILL_RIDING] = update;
+        p_ptr->update |= PU_BONUS;
+
+        /* Give some feedback every 100 points */
+        if (update/100 > current/100)
+        {
+            if (update <= 500)
+                cmsg_print(TERM_L_BLUE, "You are starting to get the hang of riding. Keep at it!");
+            else if (update <= 1000)
+                cmsg_print(TERM_L_BLUE, "You feel more comfortable while riding.");
+            else if (update <= 2000)
+                cmsg_print(TERM_L_BLUE, "You feel your riding improve.");
+            else if (update <= 5000)
+                cmsg_print(TERM_L_BLUE, "You are getting quite good at riding.");
+            else
+                cmsg_print(TERM_L_BLUE, "Soon you will be a riding master!");
+        }
+    }
+}
+
 void skills_riding_gain_melee(monster_race *r_ptr)
 {
     int current = p_ptr->skill_exp[SKILL_RIDING];
-    int max = s_info[_class_idx()].s_max[SKILL_RIDING];
+    int max = skills_riding_max();
 
     assert(p_ptr->riding);
 
@@ -464,9 +492,30 @@ void skills_riding_gain_melee(monster_race *r_ptr)
         }
 
         if (inc)
+            _skills_riding_gain(inc);
+    }
+}
+
+void skills_riding_gain_rakuba(int dam)
+{
+    int current = p_ptr->skill_exp[SKILL_RIDING];
+    int max = skills_riding_max();
+
+    assert(p_ptr->riding);
+
+    if (current < max && max > 1000)
+    {
+        int ridinglevel = r_info[m_list[p_ptr->riding].r_idx].level;
+        int inc = 0;
+
+        if (dam/2 + ridinglevel > current/30 + 10)
         {
-            p_ptr->skill_exp[SKILL_RIDING] = MIN(max, current + inc);
-            p_ptr->update |= PU_BONUS;
+            if (ridinglevel > current/100 + 15)
+                inc += 1 + ridinglevel - current/100 - 15;
+            else
+                inc += 1;
+
+            _skills_riding_gain(inc);
         }
     }
 }
@@ -474,7 +523,7 @@ void skills_riding_gain_melee(monster_race *r_ptr)
 void skills_riding_gain_archery(monster_race *r_ptr)
 {
     int current = p_ptr->skill_exp[SKILL_RIDING];
-    int max = s_info[_class_idx()].s_max[SKILL_RIDING];
+    int max = skills_riding_max();
 
     assert(p_ptr->riding);
 
@@ -484,8 +533,7 @@ void skills_riding_gain_archery(monster_race *r_ptr)
 
         if ((current - RIDING_EXP_BEGINNER*2) / 200 < ridinglevel && one_in_(2))
         {
-            p_ptr->skill_exp[SKILL_RIDING] += 1;
-            p_ptr->update |= PU_BONUS;
+            _skills_riding_gain(1);
         }
     }
 }
@@ -739,6 +787,9 @@ void skills_on_birth(void)
         p_ptr->weapon_exp[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP] = MAX(WEAPON_EXP_BEGINNER, p_ptr->weapon_exp[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP]);
     for (i = 0; i < 10; i++)
         p_ptr->skill_exp[i] = s_info[class_idx].s_start[i];
+
+    if (warlock_is_(WARLOCK_DRAGONS))
+        p_ptr->skill_exp[SKILL_RIDING] = RIDING_EXP_BEGINNER;
 
     str_map_clear(_innate_map());
 }
