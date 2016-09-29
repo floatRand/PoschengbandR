@@ -635,15 +635,15 @@ F:@:FLOOR:3:0:0:0:215
 
 ##########################################################################
 # Archaeologist
-# Nain, a fine digger!
+# Nain
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Archaeologist] [EQU [MOD $RANDOM27 5] 0] ]
 F:a:BUILDING_0:3
 F:@:FLOOR:3:0:0:0:211
 
-# Whip of Dr. Jones ... note this class gets a "buffed" version!
+# Palantir
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Archaeologist] [GEQ [MOD $RANDOM27 5] 1] ]
 F:a:BUILDING_0:3
-F:@:FLOOR:3:0:0:0:162
+F:@:FLOOR:3:0:0:0:15
 
 ##########################################################################
 # Duelist
