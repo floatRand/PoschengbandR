@@ -352,7 +352,7 @@ static void _excavation_spell(int cmd, variant *res)
                 {
                     msg_print("You dig your way to treasure!");
                     cave_alter_feat(y, x, FF_TUNNEL);
-                    teleport_player_to(y, x, TELEPORT_NONMAGICAL); /*??*/
+                    move_player_effect(y, x, 0);
                     b = TRUE;
                 }
                 else
