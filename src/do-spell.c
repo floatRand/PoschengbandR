@@ -5670,7 +5670,9 @@ static cptr do_craft_spell(int spell, int mode)
         if (name) return "Polish Shield";
         if (desc) return "Makes your shield reflect missiles and bolt spells.";
         if (cast)
-            polish_shield();
+        {
+            if (!polish_shield()) return NULL;
+        }
         break;
 
     case 22:

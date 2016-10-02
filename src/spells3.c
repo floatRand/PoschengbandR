@@ -2938,8 +2938,6 @@ bool polish_shield(void)
 
         o_ptr->discount = 99;
         virtue_add(VIRTUE_ENCHANTMENT, 2);
-
-        return TRUE;
     }
     else
     {
@@ -2951,7 +2949,7 @@ bool polish_shield(void)
     }
     android_calc_exp();
 
-    return FALSE;
+    return TRUE;
 }
 
 

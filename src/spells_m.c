@@ -689,8 +689,7 @@ void polish_shield_spell(int cmd, variant *res)
         var_set_string(res, "Makes your shield reflect missiles and bolt spells.");
         break;
     case SPELL_CAST:
-        polish_shield();
-        var_set_bool(res, TRUE);
+        var_set_bool(res, polish_shield());
         break;
     default:
         default_spell(cmd, res);
