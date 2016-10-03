@@ -177,18 +177,10 @@ static void _ancient_protection_spell(int cmd, variant *res)
         var_set_string(res, "Ancient Protection");
         break;
     case SPELL_DESC:
-        if (p_ptr->lev < 50)
-            var_set_string(res, "Sets a glyph on the floor beneath you. Monsters cannot attack you if you are on a glyph, but can try to break glyph.");
-        else
-            var_set_string(res, "Sets glyphs on nearby floors. Monsters cannot attack you if you are on a glyph, but can try to break glyph.");
-        break;
-    case SPELL_SPOIL_DESC:
-        var_set_string(res, "Sets a glyph on the floor beneath you. Monsters cannot attack you if you are on a glyph, but can try to break glyph. At L50, this spell also surrounds the player with 8 additional glyphs.");
+        var_set_string(res, "Sets a glyph on the floor beneath you. Monsters cannot attack you if you are on a glyph, but can try to break glyph.");
         break;
     case SPELL_CAST:
         warding_glyph();
-        if (p_ptr->lev >= 50)
-            glyph_creation();
         var_set_bool(res, TRUE);
         break;
     default:
