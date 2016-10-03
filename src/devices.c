@@ -2544,21 +2544,21 @@ bool device_init(object_type *o_ptr, int level, int mode)
     switch (o_ptr->tval)
     {
     case TV_WAND:
-        _device_pick_effect(o_ptr, wand_effect_table, level, mode);
+        _device_pick_effect(o_ptr, wand_effect_table, o_ptr->xtra3, mode);
         if (!o_ptr->activation.type)
             return FALSE;
         /* device_max_sp */
         o_ptr->xtra4 = _bounds_check(_rand_normal(3*o_ptr->xtra3, 15), o_ptr->activation.cost*4, 1000);
         break;
     case TV_ROD:
-        _device_pick_effect(o_ptr, rod_effect_table, level, mode);
+        _device_pick_effect(o_ptr, rod_effect_table, o_ptr->xtra3, mode);
         if (!o_ptr->activation.type)
             return FALSE;
         /* device_max_sp: rods have fewer sp but regen more quickly. */
         o_ptr->xtra4 = _bounds_check(_rand_normal(3*o_ptr->xtra3/2, 15), o_ptr->activation.cost*2, 1000);
         break;
     case TV_STAFF:
-        _device_pick_effect(o_ptr, staff_effect_table, level, mode);
+        _device_pick_effect(o_ptr, staff_effect_table, o_ptr->xtra3, mode);
         if (!o_ptr->activation.type)
             return FALSE;
         /* device_max_sp */
