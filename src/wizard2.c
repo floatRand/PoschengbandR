@@ -60,6 +60,58 @@ void stats_add_ego(object_type *o_ptr)
     }
 }
 
+typedef struct {
+    int total;
+    int count;
+} _tally_t;
+static _tally_t _monster_levels[MAX_DEPTH];
+static _tally_t _object_levels[MAX_DEPTH];
+static int      _object_histogram[MAX_DEPTH];
+
+static void _stats_reset_monster_levels(void)
+{
+    int i;
+    for (i = 0; i < MAX_DEPTH; i++)
+    {
+        _monster_levels[i].total = 0;
+        _monster_levels[i].count = 0;
+    }
+}
+
+static void _stats_note_monster_level(int dlvl, int mlvl)
+{
+    if (0 <= dlvl && dlvl < MAX_DEPTH)
+    {
+        _monster_levels[dlvl].total += mlvl;
+        _monster_levels[dlvl].count++;
+    }
+}
+
+static void _stats_reset_object_levels(void)
+{
+    int i;
+    for (i = 0; i < MAX_DEPTH; i++)
+    {
+        _object_levels[i].total = 0;
+        _object_levels[i].count = 0;
+
+        _object_histogram[i] = 0;
+    }
+}
+
+static void _stats_note_object_level(int dlvl, int olvl)
+{
+    if (0 <= dlvl && dlvl < MAX_DEPTH)
+    {
+        _object_levels[dlvl].total += olvl;
+        _object_levels[dlvl].count++;
+    }
+
+    if (0 <= olvl && olvl < MAX_DEPTH)
+        _object_histogram[olvl]++;
+}
+
+
 /*
  * Strip an "object name" into a buffer
  */
@@ -68,13 +120,13 @@ void strip_name_aux(char *dest, const char *src)
     char *t;
 
     /* Skip past leading characters */
-    while (*src == ' ' || *src == '&' || *src == '[') 
+    while (*src == ' ' || *src == '&' || *src == '[')
         src++;
 
     /* Copy useful chars */
     for (t = dest; *src; src++)
     {
-        if (*src != '~' && *src != ']') 
+        if (*src != '~' && *src != ']')
             *t++ = *src;
     }
 
@@ -251,7 +303,7 @@ static void do_cmd_wiz_hack_chris1(void)
         {
             int ct = 0;
             ct_immunity++;
-            
+
             if (have_flag(forge.flags, OF_IM_ACID)) ct++;
             if (have_flag(forge.flags, OF_IM_COLD)) ct++;
             if (have_flag(forge.flags, OF_IM_FIRE)) ct++;
@@ -372,7 +424,7 @@ static void _test_specific_k_idx(void)
     {
         char buf[MAX_NLEN];
         object_type forge;
-        
+
         object_prep(&forge, k_idx);
         /*create_artifact(&forge, CREATE_ART_GOOD);*/
         apply_magic(&forge, object_level, 0);
@@ -380,7 +432,7 @@ static void _test_specific_k_idx(void)
         if (forge.name2 == EGO_WEAPON_SLAYING)
         {
             obj_identify_fully(&forge);
-        
+
             object_desc(buf, &forge, OD_COLOR_CODED);
             msg_format("%d) %s", i + 1, buf);
             msg_boundary();
@@ -534,14 +586,14 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
             old_score = obj_value_real(&forge);
 
 
-            fprintf(file, "%d\t%d\t%d\t%s\n", 
+            fprintf(file, "%d\t%d\t%d\t%s\n",
                 old_score,
                 new_score,
                 new_score - old_score,
                 buf
             );
         }
-    }    
+    }
 
     for (i = 0; i < 5000; )
     {
@@ -567,7 +619,7 @@ static void do_cmd_wiz_hack_chris4_imp(FILE* file)
                 new_score = new_object_cost(&forge, COST_REAL);
                 old_score = obj_value_real(&forge);
 
-                fprintf(file, "%d\t%d\t%d\t%s\n", 
+                fprintf(file, "%d\t%d\t%d\t%s\n",
                     old_score,
                     new_score,
                     new_score - old_score,
@@ -607,7 +659,7 @@ static void do_cmd_wiz_hack_chris4(void)
     cost_calc_hook = _wiz_dbg_hook;
 
     do_cmd_wiz_hack_chris4_imp(fff);
-    
+
     cost_calc_hook = NULL;
     my_fclose(_wiz_dbg_file);
 
@@ -1194,7 +1246,7 @@ static void prt_alloc(byte tval, byte sval, int row, int col)
 
         prt(format("%d", (i * K_MAX_DEPTH / 220) % 10), row + i + 1, col);
 
-        if (display[i] <= 0) 
+        if (display[i] <= 0)
             continue;
 
         /* Note the level */
@@ -1878,7 +1930,7 @@ static void wiz_statistics(object_type *o_ptr)
 
 
     /* XXX XXX XXX Mega-Hack -- allow multiple artifacts */
-    if (object_is_fixed_artifact(o_ptr)) 
+    if (object_is_fixed_artifact(o_ptr))
         a_info[o_ptr->name1].generated = FALSE;
 
 
@@ -1961,7 +2013,7 @@ static void wiz_statistics(object_type *o_ptr)
 
 
             /* XXX XXX XXX Mega-Hack -- allow multiple artifacts */
-            if (object_is_fixed_artifact(q_ptr)) 
+            if (object_is_fixed_artifact(q_ptr))
                 a_info[q_ptr->name1].generated = FALSE;
 
 
@@ -2063,7 +2115,7 @@ static void do_cmd_wiz_blue_mage(void)
 
     int                i = 0;
     int                j = 0;
-    s32b            f4 = 0, f5 = 0, f6 = 0;    
+    s32b            f4 = 0, f5 = 0, f6 = 0;
 
     for (j=1; j<6; j++)
     {
@@ -2125,7 +2177,7 @@ static void do_cmd_wiz_play(void)
     {
         o_ptr = &o_list[0 - item];
     }
-    
+
     /* The item was not changed */
     changed = FALSE;
 
@@ -2303,7 +2355,7 @@ static void wiz_create_item(void)
         q_ptr->pval = n;
     else
         q_ptr->number = n;
- 
+
     /* Drop the object from heaven */
     (void)drop_near(q_ptr, -1, py, px);
 
@@ -2359,7 +2411,7 @@ static void do_cmd_wiz_cure_all(void)
     (void)set_cut(0, TRUE);
     (void)set_slow(0, TRUE);
 
-    /* No longer hungry 
+    /* No longer hungry
     (void)set_food(PY_FOOD_MAX - 1);*/
 }
 
@@ -2791,11 +2843,11 @@ static void _wiz_stats_log_obj(int level, object_type *o_ptr)
     {
         int  score;
         score = obj_value_real(o_ptr);
-        doc_printf(_wiz_doc, "CL%2d DL%2d <color:%c>%6d</color>: <indent><style:indent>%s</style></indent>\n",
-            p_ptr->lev, level, _score_color(score), score, buf);
+        doc_printf(_wiz_doc, "C%2d D%2d O%2d <color:%c>%6d</color>: <indent><style:indent>%s</style></indent>\n",
+            p_ptr->lev, level, o_ptr->level, _score_color(score), score, buf);
     }
     else
-        doc_printf(_wiz_doc, "CL%2d DL%2d: <indent><style:indent>%s</style></indent>\n", p_ptr->lev, level, buf);
+        doc_printf(_wiz_doc, "C%2d D%2d O%2d: <indent><style:indent>%s</style></indent>\n", p_ptr->lev, level, o_ptr->level, buf);
 }
 static void _wiz_stats_log_speed(int level, object_type *o_ptr)
 {
@@ -2846,6 +2898,7 @@ static void _wiz_kill_monsters(int level)
         r_ptr = &r_info[m_ptr->r_idx];
         if (0 && r_ptr->level > level) continue;
 
+        _stats_note_monster_level(level, r_ptr->level);
         mon_take_hit(i, m_ptr->hp + 1, &fear, NULL);
         if (slot) rune_sword_kill(equip_obj(slot), r_ptr);
     }
@@ -2869,6 +2922,8 @@ static void _wiz_inspect_objects(int level)
 
         obj_identify_fully(o_ptr);
         stats_on_identify(o_ptr);
+        if (o_ptr->level)
+            _stats_note_object_level(level, o_ptr->level);
 
         if (o_ptr->art_name)
             stats_add_rand_art(o_ptr);
@@ -2877,12 +2932,15 @@ static void _wiz_inspect_objects(int level)
             stats_add_ego(o_ptr);
 
         if (0) _wiz_stats_log_speed(level, o_ptr);
-        if (1) _wiz_stats_log_books(level, o_ptr, 20, 20);
+        if (0) _wiz_stats_log_books(level, o_ptr, 20, 20);
         if (0) _wiz_stats_log_devices(level, o_ptr);
-        if (0) _wiz_stats_log_arts(level, o_ptr);
-        if (0) _wiz_stats_log_rand_arts(level, o_ptr);
+        if (1) _wiz_stats_log_arts(level, o_ptr);
+        if (1) _wiz_stats_log_rand_arts(level, o_ptr);
 
         if (0 && o_ptr->name2 && !object_is_device(o_ptr) && !object_is_ammo(o_ptr))
+            _wiz_stats_log_obj(level, o_ptr);
+
+        if (1 && o_ptr->name2 && object_is_jewelry(o_ptr))
             _wiz_stats_log_obj(level, o_ptr);
 
         if (race_ptr->destroy_object)
@@ -3013,22 +3071,22 @@ void do_cmd_debug(void)
     /* Good Objects */
     case 'g':
 #if 1
-	{
-		object_type forge;
-		int num = 10;
+    {
+        object_type forge;
+        int num = 10;
 
-		while (num--)
-		{
-			object_wipe(&forge);
-			if (!make_object(&forge, AM_GOOD)) continue;
-			drop_near(&forge, -1, py, px);
-		}
-	}
+        while (num--)
+        {
+            object_wipe(&forge);
+            if (!make_object(&forge, AM_GOOD)) continue;
+            drop_near(&forge, -1, py, px);
+        }
+    }
 #else
         if (command_arg <= 0) command_arg = 10;
-        acquirement(py, px, command_arg, FALSE, TRUE); 
+        acquirement(py, px, command_arg, FALSE, TRUE);
 #endif
-		break;
+        break;
 
     /* Hitpoint rerating */
     case 'h':
@@ -3297,8 +3355,12 @@ void do_cmd_debug(void)
         int max_depth = get_quantity("Max Depth? ", 100);
 
         _wiz_doc = doc_alloc(80);
+        doc_insert(_wiz_doc, "<style:wide>");
 
+        _stats_reset_monster_levels();
+        _stats_reset_object_levels();
         statistics_hack = TRUE; /* No messages, no damage, no prompts for stat gains, no AFC */
+#if 1
         for (lev = dun_level + 2; lev <= max_depth; lev += 2)
         {
             int reps = 1;
@@ -3309,8 +3371,75 @@ void do_cmd_debug(void)
 
             _wiz_gather_stats(DUNGEON_ANGBAND, lev, reps);
         }
+#else
+        for (lev = 5; lev <= 100; lev += 5)
+            _wiz_gather_stats(DUNGEON_ANGBAND, lev, 5);
+#endif
         statistics_hack = FALSE;
 
+        {
+            _tally_t mon_total_tally = {0};
+            _tally_t obj_total_tally = {0};
+            int      obj_total = 0;
+            int      obj_running = 0;
+            int      last_lev = 0;
+
+            for (lev = 0; lev < MAX_DEPTH; lev++)
+                obj_total += _object_histogram[lev];
+
+            doc_newline(_wiz_doc);
+            doc_insert(_wiz_doc, "<color:G>Depth   Monster Level    Object Level   Object Counts</color>\n");
+            for (lev = 0; lev < MAX_DEPTH; lev++)
+            {
+                _tally_t mon_tally = _monster_levels[lev];
+                _tally_t obj_tally = _object_levels[lev];
+                int      j, obj_ct = 0;
+
+                if (!mon_tally.count || !obj_tally.count) continue;
+
+                mon_total_tally.total += mon_tally.total;
+                mon_total_tally.count += mon_tally.count;
+
+                obj_total_tally.total += obj_tally.total;
+                obj_total_tally.count += obj_tally.count;
+
+                for (j = last_lev + 1; j <= lev; j++)
+                {
+                    obj_ct += _object_histogram[j];
+                }
+                last_lev = lev;
+                obj_running += obj_ct;
+
+                doc_printf(_wiz_doc, "%5d   %3d.%02d (%4d)    %3d.%02d (%4d)        %3d.%02d%%  %3d.%02d%%\n",
+                    lev,
+                    mon_tally.total / mon_tally.count,
+                    (mon_tally.total*100 / mon_tally.count) % 100,
+                    mon_tally.count,
+                    obj_tally.total / obj_tally.count,
+                    (obj_tally.total*100 / obj_tally.count) % 100,
+                    obj_tally.count,
+                    obj_ct*100 / obj_total,
+                    (obj_ct*10000 / obj_total) % 100,
+                    obj_running*100 / obj_total,
+                    (obj_running*10000 / obj_total) % 100
+                );
+            }
+
+            if (mon_total_tally.count && obj_total_tally.count)
+            {
+                doc_printf(_wiz_doc, "<color:R>        %3d.%02d (%5d)   %3d.%02d (%5d)</color>\n",
+                    mon_total_tally.total / mon_total_tally.count,
+                    (mon_total_tally.total*100 / mon_total_tally.count) % 100,
+                    mon_total_tally.count,
+                    obj_total_tally.total / obj_total_tally.count,
+                    (obj_total_tally.total*100 / obj_total_tally.count) % 100,
+                    obj_total_tally.count
+                );
+            }
+            doc_newline(_wiz_doc);
+        }
+
+        doc_insert(_wiz_doc, "</style>");
         if (doc_line_count(_wiz_doc))
             doc_display(_wiz_doc, "Statistics", 0);
         doc_free(_wiz_doc);

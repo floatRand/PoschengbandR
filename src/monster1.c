@@ -50,7 +50,7 @@ static int _r_level(int r_idx)
 
     if (r_ptr->flags1 & RF1_UNIQUE)
         ml += ml/5;
-    
+
     if (r_ptr->flags2 & RF2_POWERFUL)
         ml += 7;
 
@@ -60,22 +60,28 @@ static int _r_level(int r_idx)
     return ml;
 }
 
-bool mon_save_p(int r_idx, int stat)
+bool mon_save_aux(int r_idx, int power)
 {
-    int  pl = p_ptr->lev;
     int  ml = _r_level(r_idx);
     bool result = FALSE;
-    
-    if (stat >= 0 && stat < 6) 
+
+    if (power < 1)
+        power = 1;
+
+    if (randint1(power) <= randint1(ml))
+        result = TRUE;
+
+    return result;
+}
+
+bool mon_save_p(int r_idx, int stat)
+{
+    int pl = p_ptr->lev;
+
+    if (stat >= 0 && stat < 6)
         pl += adj_stat_save[p_ptr->stat_ind[stat]];
 
-    if (pl < 1)
-        pl = 1;
-
-    if (randint1(pl) <= randint1(ml)) 
-        result = TRUE;
-    
-    return result;
+    return mon_save_aux(r_idx, pl);
 }
 
 void mon_lore_1(monster_type *m_ptr, u32b mask)
@@ -171,8 +177,16 @@ void mon_lore_aux_3(monster_race *r_ptr, u32b mask)
         p_ptr->window |= PW_MONSTER;
 }
 
-static void _mon_lore_aux_spell(monster_race *r_ptr)
+void mon_lore_aux_spell(monster_race *r_ptr)
 {
+    u32b old = r_ptr->r_spell_turns;
+    r_ptr->r_spell_turns++;
+    if (r_ptr->r_spell_turns < old) /* wrap? */
+        r_ptr->r_spell_turns = old;
+
+    if (r_ptr->r_spell_turns != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+
     if (r_ptr->r_cast_spell < MAX_UCHAR)
     {
         r_ptr->r_cast_spell++;
@@ -181,11 +195,27 @@ static void _mon_lore_aux_spell(monster_race *r_ptr)
     }
 }
 
+static void _mon_lore_aux_move(monster_race *r_ptr)
+{
+    u32b old = r_ptr->r_move_turns;
+    r_ptr->r_move_turns++;
+    if (r_ptr->r_move_turns < old) /* wrap? */
+        r_ptr->r_move_turns = old;
+    if (r_ptr->r_move_turns != old && r_ptr->id == p_ptr->monster_race_idx)
+        p_ptr->window |= PW_MONSTER;
+}
+
+void mon_lore_move(monster_type *m_ptr)
+{
+    if (is_original_ap_and_seen(m_ptr))
+        _mon_lore_aux_move(&r_info[m_ptr->r_idx]);
+}
+
 void mon_lore_aux_4(monster_race *r_ptr, u32b mask)
 {
     u32b old = r_ptr->r_flags4;
 
-    _mon_lore_aux_spell(r_ptr);
+    mon_lore_aux_spell(r_ptr);
     r_ptr->r_flags4 |= (r_ptr->flags4 & mask);
     if (r_ptr->r_flags4 != old && r_ptr->id == p_ptr->monster_race_idx)
         p_ptr->window |= PW_MONSTER;
@@ -195,7 +225,7 @@ void mon_lore_aux_5(monster_race *r_ptr, u32b mask)
 {
     u32b old = r_ptr->r_flags5;
 
-    _mon_lore_aux_spell(r_ptr);
+    mon_lore_aux_spell(r_ptr);
     r_ptr->r_flags5 |= (r_ptr->flags5 & mask);
     if (r_ptr->r_flags5 != old && r_ptr->id == p_ptr->monster_race_idx)
         p_ptr->window |= PW_MONSTER;
@@ -206,7 +236,7 @@ void mon_lore_aux_6(monster_race *r_ptr, u32b mask)
     u32b old = r_ptr->r_flags6;
 
     if (r_ptr->id != MON_OHMU) /* The one and only example of RF6_* not being a spell ... sigh */
-        _mon_lore_aux_spell(r_ptr);
+        mon_lore_aux_spell(r_ptr);
 
     r_ptr->r_flags6 |= (r_ptr->flags6 & mask);
     if (r_ptr->r_flags6 != old && r_ptr->id == p_ptr->monster_race_idx)
@@ -580,10 +610,12 @@ void anger_monster(monster_type *m_ptr)
 bool monster_can_cross_terrain(s16b feat, monster_race *r_ptr, u16b mode)
 {
     feature_type *f_ptr = &f_info[feat];
-    bool          ring_lev = FALSE;
+    bool          lev = FALSE;
 
     if ((mode & CEM_RIDING) && p_ptr->prace == RACE_MON_RING && p_ptr->levitation)
-        ring_lev = TRUE;
+        lev = TRUE;
+    if ((mode & CEM_MIMIC) && p_ptr->levitation)
+        lev = TRUE;
 
     /* Pattern */
     if (have_flag(f_ptr->flags, FF_PATTERN))
@@ -599,8 +631,9 @@ bool monster_can_cross_terrain(s16b feat, monster_race *r_ptr, u16b mode)
     }
 
     /* "CAN" flags */
-    if (have_flag(f_ptr->flags, FF_CAN_FLY) && ((r_ptr->flags7 & RF7_CAN_FLY) || ring_lev)) return TRUE;
-    if (have_flag(f_ptr->flags, FF_CAN_SWIM) && ((r_ptr->flags7 & RF7_CAN_SWIM) || ring_lev)) return TRUE;
+    if (have_flag(f_ptr->flags, FF_CAN_FLY) && ((r_ptr->flags7 & RF7_CAN_FLY) || lev)) return TRUE;
+    if (have_flag(f_ptr->flags, FF_CAN_CLIMB) && (r_ptr->flags7 & RF7_CAN_CLIMB)) return TRUE;
+    if (have_flag(f_ptr->flags, FF_CAN_SWIM) && ((r_ptr->flags7 & RF7_CAN_SWIM) || lev)) return TRUE;
     if (have_flag(f_ptr->flags, FF_CAN_PASS))
     {
         if ((r_ptr->flags2 & RF2_PASS_WALL) && (!(mode & CEM_RIDING) || p_ptr->pass_wall)) return TRUE;

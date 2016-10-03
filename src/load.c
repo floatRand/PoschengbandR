@@ -188,12 +188,24 @@ void rd_item(savefile_ptr file, object_type *o_ptr)
             o_ptr->activation.cost = savefile_read_s16b(file);
             o_ptr->activation.extra = savefile_read_s16b(file);
             break;
+        case SAVE_ITEM_LEVEL:
+            o_ptr->level = savefile_read_s16b(file);
+            break;
         /* default:
             TODO: Report an error back to the load routine!!*/
         }
     }
     if (object_is_device(o_ptr))
         add_flag(o_ptr->flags, OF_ACTIVATE);
+
+    if (savefile_is_older_than(file, 5, 0, 1, 1))
+    {
+        if ( object_is_(o_ptr, TV_BOW, SV_SHORT_BOW)
+          || object_is_(o_ptr, TV_BOW, SV_LIGHT_XBOW) )
+        {
+            o_ptr->mult -= 50;
+        }
+    }
 }
 
 
@@ -313,6 +325,16 @@ static void rd_lore(savefile_ptr file, int r_idx)
     r_ptr->r_drop_gold = savefile_read_byte(file);
     r_ptr->r_drop_item = savefile_read_byte(file);
     r_ptr->r_cast_spell = savefile_read_byte(file);
+    if (savefile_is_older_than(file, 5, 0, 2, 1))
+    {
+        r_ptr->r_spell_turns = 0;
+        r_ptr->r_move_turns = 0;
+    }
+    else
+    {
+        r_ptr->r_spell_turns = savefile_read_u32b(file);
+        r_ptr->r_move_turns = savefile_read_u32b(file);
+    }
     r_ptr->r_blows[0] = savefile_read_byte(file);
     r_ptr->r_blows[1] = savefile_read_byte(file);
     r_ptr->r_blows[2] = savefile_read_byte(file);
@@ -846,7 +868,7 @@ static void rd_extra(savefile_ptr file)
 
     for (i = 0; i < MUT_FLAG_SIZE; ++i)
         p_ptr->muta_lock[i] = savefile_read_u32b(file);
-         
+
     for (i = 0; i < MAX_DEMIGOD_POWERS; ++i)
         p_ptr->demigod_power[i] = savefile_read_s16b(file);
 
@@ -1056,7 +1078,7 @@ static errr rd_saved_floor(savefile_ptr file, saved_floor_type *sf_ptr)
         count = savefile_read_byte(file);
 
         id = 0;
-        do 
+        do
         {
             tmp8u = savefile_read_byte(file);
             id += tmp8u;
@@ -1191,7 +1213,7 @@ static errr rd_dungeon(savefile_ptr file)
 
     max_floor_id = savefile_read_s16b(file);
     dungeon_type = savefile_read_byte(file);
-    
+
     num = savefile_read_byte(file);
 
     /*** No saved floor (On the surface etc.) ***/
@@ -1338,7 +1360,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
         /* Hack -- Non-unique Nazguls are semi-unique */
         else if (r_ptr->flags7 & RF7_NAZGUL) r_ptr->max_num = MAX_NAZGUL_NUM;
-        else if (i == MON_CAMELOT_KNIGHT) 
+        else if (i == MON_CAMELOT_KNIGHT)
             r_ptr->max_num = MAX_CAMELOT_KNIGHT_NUM;
     }
 
@@ -1500,10 +1522,10 @@ static errr rd_savefile_new_aux(savefile_ptr file)
                         {
                             quest_type      *q_ptr = &quest[i];
                             monster_race    *quest_r_ptr;
-                            
+
                             determine_random_questor(q_ptr);
                             quest_r_ptr = &r_info[q_ptr->r_idx];
-                            
+
                             if (quest_r_ptr->flags1 & RF1_UNIQUE)
                             {
                                 quest_r_ptr->flags1 |= RF1_QUESTOR;
@@ -1765,7 +1787,7 @@ bool load_floor(saved_floor_type *sf_ptr, u32b mode)
         fd_kill(floor_savefile);
         safe_setuid_drop();
     }
-    
+
     if (!ok)
     {
         msg_print("Software bug in load_floor: All is *not* OK!");

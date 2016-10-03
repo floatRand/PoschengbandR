@@ -5,10 +5,10 @@
 ############### Additional default terrain settings ###############
 
 # Default for reward 1
-F:!:FLOOR:3 
+F:!:FLOOR:3
 
 # Default for reward 2
-F:?:FLOOR:3 
+F:?:FLOOR:3
 
 # Default sorcery tower reward
 F:(:FLOOR:3
@@ -798,7 +798,7 @@ F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:125
 
 # Yoichi
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] [GEQ [MOD $RANDOM27 5] 1] ] 
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:148
 
@@ -808,7 +808,7 @@ F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:251
 
 # Aegis Fang
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] [GEQ [MOD $RANDOM27 5] 1] ] 
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:208
 
@@ -818,7 +818,7 @@ F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:126
 
 # Wilhelm Tell
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] [GEQ [MOD $RANDOM27 5] 1] ] 
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:223
 
@@ -828,7 +828,7 @@ F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:140
 
 # Fiona
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] [GEQ [MOD $RANDOM27 5] 1] ] 
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:70
 
@@ -848,7 +848,7 @@ F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:94
 
 # Avavir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] [GEQ [MOD $RANDOM27 5] 1] ] 
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:109
 
@@ -858,7 +858,7 @@ F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:30
 
 # Gil-Galad
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] [GEQ [MOD $RANDOM27 5] 1] ] 
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:138
 
@@ -883,21 +883,21 @@ F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:84
 
 # Anduril
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] [GEQ [MOD $RANDOM27 5] 1] ] 
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:83
 
 ##########################################################################
 # Warlock
-# Indra
+# Daeron
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Warlock] [EQU [MOD $RANDOM27 5] 0] ]
 F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:33
+F:!:FLOOR:3:0:0:0:246
 
-# Arvedui
+# Palantir
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Warlock] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:24
+F:!:FLOOR:3:0:0:0:15
 
 ##########################################################################
 # Rogue
@@ -913,10 +913,10 @@ F:!:FLOOR:3:0:0:0:134
 
 ##########################################################################
 # Monk, Force-Trainer
-# The Leather Jacket of Shiva's Avatar
+# The Robe of Eternity
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Monk Force-Trainer Mystic] [EQU [MOD $RANDOM27 5] 0] ]
 F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:26
+F:!:FLOOR:3:0:0:0:244
 
 # Palantir
 ?:[AND [EQU $QUEST27 3] [EQU $CLASS Monk Force-Trainer Mystic] [GEQ [MOD $RANDOM27 5] 1] ]
@@ -1271,7 +1271,7 @@ F:a:BUILDING_0:3
 F:D:QUEST_ENTER:3:0:0:0:0:NONE:21
 F:a:BUILDING_0:3:0:0:0:0:NONE:21
 
-# Quest 21 completed 
+# Quest 21 completed
 ?:[EQU $QUEST21 2]
 F:a:BUILDING_0:3:0:0:0:0:NONE:21
 
