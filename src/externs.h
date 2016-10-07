@@ -206,6 +206,8 @@ extern bool hack_mind;
 
 extern bool rogue_like_commands;    /* Rogue-like commands */
 extern bool always_pickup;    /* Pick things up by default */
+extern bool toggle_run_status;
+extern bool toggle_running;
 extern bool carry_query_flag;    /* Prompt before picking things up */
 extern bool quick_messages;    /* Activate quick messages */
 extern bool command_menu;    /* Enable command selection menu */

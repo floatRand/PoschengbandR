@@ -597,6 +597,8 @@ static void prt_stat(int stat)
 #define BAR_DRAGON_HEALING 171
 #define BAR_DRAGON_HEROIC_CHARGE 172
 #define BAR_HOARDING 173
+#define BAR_RUNNING  174
+#define BAR_WALKING  175
 
 static struct {
     byte attr;
@@ -779,6 +781,8 @@ static struct {
     {TERM_YELLOW, "Hl", "Healing"},
     {TERM_VIOLET, "Chg", "Heroic Charge"},
     {TERM_YELLOW, "$$", "Hoarding"},
+    {TERM_L_RED, "Run", "Running"},
+    {TERM_L_BLUE, "Walk", "Walking"},
     {0, NULL, NULL}
 };
 
@@ -817,6 +821,14 @@ static void prt_status(void)
 
     /* Tsuyoshi  */
     if (p_ptr->tsuyoshi) ADD_FLG(BAR_TSUYOSHI);
+
+    if (toggle_run_status)
+    {
+        if (toggle_running)
+            ADD_FLG(BAR_RUNNING);
+        else
+            ADD_FLG(BAR_WALKING);
+    }
 
     /* prt_effects()
     if (p_ptr->image) ADD_FLG(BAR_HALLUCINATION);

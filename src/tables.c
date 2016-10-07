@@ -3187,6 +3187,9 @@ option_type option_info[] =
     { &always_pickup,               FALSE, OPT_PAGE_INPUT, 0, 5,
     "always_pickup",                "Pick things up by default" },
 
+    { &toggle_run_status,           FALSE, OPT_PAGE_INPUT, 0, 13,
+    "toggle_run_status",            "Toggle run status with '.' key" },
+
     { &carry_query_flag,            FALSE, OPT_PAGE_INPUT, 0, 3,
     "carry_query_flag",             "Prompt before picking things up" },
 

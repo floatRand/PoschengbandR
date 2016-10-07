@@ -3695,16 +3695,20 @@ static void process_command(void)
         /* Move (usually pick up things) */
         case ';':
         {
+            if (toggle_run_status && toggle_running)
+                do_cmd_run();
+            else
+            {
 #ifdef ALLOW_EASY_DISARM /* TNB */
 
-            do_cmd_walk(FALSE);
+                do_cmd_walk(FALSE);
 
 #else /* ALLOW_EASY_DISARM -- TNB */
 
-            do_cmd_walk(always_pickup);
+                do_cmd_walk(always_pickup);
 
 #endif /* ALLOW_EASY_DISARM -- TNB */
-
+            }
             break;
         }
 
@@ -3730,7 +3734,13 @@ static void process_command(void)
         /* Begin Running -- Arg is Max Distance */
         case '.':
         {
-            if (!p_ptr->wild_mode) do_cmd_run();
+            if (toggle_run_status)
+            {
+                toggle_running = !toggle_running;
+                p_ptr->redraw |= PR_STATUS;
+            }
+            else if (!p_ptr->wild_mode)
+                do_cmd_run();
             break;
         }
 

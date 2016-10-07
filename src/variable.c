@@ -187,6 +187,8 @@ int current_flow_depth = 0;
 
 bool rogue_like_commands;    /* Rogue-like commands */
 bool always_pickup;    /* Pick things up by default */
+bool toggle_run_status;
+bool toggle_running;
 bool carry_query_flag;    /* Prompt before picking things up */
 bool quick_messages;    /* Activate quick messages */
 bool command_menu;    /* Enable command selection menu */

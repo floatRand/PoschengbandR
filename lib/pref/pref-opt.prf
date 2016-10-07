@@ -13,6 +13,7 @@
 
 X:rogue_like_commands
 X:always_pickup
+X:toggle_run_status
 X:carry_query_flag
 X:quick_messages
 Y:command_menu
