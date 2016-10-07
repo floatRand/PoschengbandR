@@ -4643,6 +4643,7 @@ static void process_player(void)
     {
         /* Check for "player abort" (semi-efficiently for resting) */
         if ( running
+          || travel.run
           || command_rep
           || p_ptr->action == ACTION_REST
           || p_ptr->action == ACTION_GLITTER
