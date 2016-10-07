@@ -12,6 +12,8 @@
 
 #include "angband.h"
 
+#include <assert.h>
+
 /*
  * Go up one level
  */
@@ -4639,7 +4641,7 @@ static void travel_flow(int ty, int tx)
 
     if (!have_flag(f_ptr->flags, FF_MOVE)) wall = TRUE;
 
-    /* Add the player's grid to the queue */
+    /* Add the target destination grid to the queue */
     wall = travel_flow_aux(ty, tx, 0, wall);
 
     /* Now process the queue */
@@ -4672,18 +4674,15 @@ void do_cmd_travel_xy(int x, int y)
 
     travel.run = 0;
 
-    /* Bug with wilderness scrolling yet to be located ... */
-    if (!in_bounds2(y, x))
-    {
-        forget_travel_flow();
-        travel.y = py;
-        travel.x = px;
-        return;
-    }
+    assert(in_bounds2(y, x)); /* Old bug with traveling in a scrollable wilderness */
 
-    if ((x == px) && (y == py))
+    if (x == px && y == py)
     {
-        msg_print("You are already there!!");
+        /* Shut up already ... perhaps we are being called from wilderness_move_player, rather
+        than from the top level. It turns out that the Museum in Outpost is located on a scroll
+        boundary, and the scroll fires on the last move of the travel flow, but is processed
+        before travel_step checks that we are finished.
+        msg_print("You are already there!!"); */
         return;
     }
 

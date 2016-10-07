@@ -2251,7 +2251,7 @@ static _obj_list_ptr _create_obj_list(void)
 
     /* The object list now includes features, at least on the surface. This permits
        easy town traveling to the various shops */
-    if (!dun_level)
+    if (!dun_level && !p_ptr->wild_mode)
     {
         for (y = 0; y < cur_hgt - 1; y++)
         {
