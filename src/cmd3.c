@@ -1834,6 +1834,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
     while (!done)
     {
         int  cmd;
+        bool handled = FALSE;
 
         if (redraw)
         {
@@ -1874,7 +1875,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
         switch (cmd)
         {
         /* Monster Recall */
-        case 'r': case 'R':
+        case '/': case 'R':
         {
             int idx = top + pos;
             if (0 <= idx && idx < ct_types)
@@ -1887,12 +1888,13 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                     screen_load();
                     screen_save();
                     redraw = TRUE;
+                    handled = TRUE;
                 }
             }
             break;
         }
         /* Probe Monster Info */
-        case 'p': case 'P':
+        case 'P':
         {
             if (mode == MON_LIST_PROBING)
             {
@@ -1946,11 +1948,12 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                         redraw = TRUE;
                     }
                 }
+                handled = TRUE;
             }
             break;
         }
         /* Rename Pet */
-        case 'n': case 'N':
+        case 'N':
         {
             int idx = top + pos;
             if (0 <= idx && idx < ct_types)
@@ -1980,13 +1983,14 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                         screen_load();
                         screen_save();
                         redraw = TRUE;
+                        handled = TRUE;
                     }
                 }
             }
             break;
         }
         /* Set Current Target */
-        case '*': case 't': case '5':
+        case '*': case '5': case 'T':
         {
             int idx = top + pos;
             if (0 <= idx && idx < ct_types)
@@ -2004,6 +2008,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                     p_ptr->redraw |= PR_HEALTH_BARS;
                     p_ptr->window |= PW_MONSTER_LIST;
                     done = TRUE; /* Building a better target command :) */
+                    handled = TRUE;
                 }
             }
             break;
@@ -2020,6 +2025,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                 {
                     do_cmd_travel_xy(m_list[info_ptr->m_idx].fx, m_list[info_ptr->m_idx].fy);
                     done = TRUE;
+                    handled = TRUE;
                 }
             }
             break;
@@ -2029,11 +2035,13 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
             top = 0;
             pos = 0;
             redraw = TRUE;
+            handled = TRUE;
             break;
         case '1': case SKEY_BOTTOM:
             top = MAX(0, ct_types - page_size);
             pos = 0;
             redraw = TRUE;
+            handled = TRUE;
             break;
         case '9': case SKEY_PGUP:
             top -= page_size;
@@ -2043,6 +2051,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                 pos = 0;
             }
             redraw = TRUE;
+            handled = TRUE;
             break;
         case '3': case SKEY_PGDOWN:
             top += page_size;
@@ -2052,6 +2061,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                 pos = 0;
             }
             redraw = TRUE;
+            handled = TRUE;
             break;
         case '2': case SKEY_DOWN:
             if (top + pos < ct_types - 1)
@@ -2063,6 +2073,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                 top++;
                 redraw = TRUE;
             }
+            handled = TRUE;
             break;
         case '8': case SKEY_UP:
             if (pos > 0)
@@ -2073,6 +2084,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                 top--;
                 redraw = TRUE;
             }
+            handled = TRUE;
             break;
         /* Help */
         case '?':
@@ -2080,20 +2092,68 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
             screen_load();
             screen_save();
             redraw = TRUE;
+            handled = TRUE;
             break;
         /* Exit */
         case ESCAPE:
-        case 'q':
         case 'Q':
         case '\n':
         case '\r':
+        case '[':
             done = TRUE;
+            handled = TRUE;
             break;
-        /* Exit on unknown key? */
-        default:
-            if (mode != MON_LIST_PROBING) /* Hey, it cost mana to get here! */
-                done = TRUE;
         }
+
+        /* Goto next text match */
+        if (!handled && islower(cmd))
+        {
+            int  search = cmd;
+            int  i;
+
+            for (i = pos + 1; i != pos; )
+            {
+                int idx = top + i;
+                _mon_list_info_ptr info_ptr = NULL;
+
+                if (idx >= ct_types)
+                {
+                    i = 0;
+                    continue;
+                }
+
+                info_ptr = vec_get(list->list, idx);
+                assert(info_ptr);
+                if (info_ptr->m_idx)
+                {
+                    monster_type *m_ptr = &m_list[info_ptr->m_idx];
+                    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+                    cptr          name = r_name + r_ptr->name;
+                    int           c;
+
+                    if (strstr(name, "The ") == name)
+                        name += 4;
+
+                    c = name[0];
+                    if (isalpha(c))
+                        c = tolower(c);
+
+                    if (c == search)
+                    {
+                        pos = i;
+                        handled = TRUE;
+                        break;
+                    }
+                }
+                i++;
+                if (i >= page_size)
+                    i = 0;
+            }
+        }
+
+        /* Exit on unkown key? */
+        if (!handled && quick_messages && mode != MON_LIST_PROBING) /* Hey, it cost mana to get here! */
+            done = TRUE;
     }
     screen_load();
 }
@@ -2488,13 +2548,13 @@ void do_cmd_list_objects(void)
                 redraw = TRUE;
                 break;
             case ESCAPE:
-            case 'q':
             case 'Q':
             case '\n':
             case '\r':
+            case ']':
                 done = TRUE;
                 break;
-            case 'x':
+            case '/':
             case 'I':
             {
                 int idx = top + pos;
@@ -2587,9 +2647,72 @@ void do_cmd_list_objects(void)
                 }
                 break;
 
-            default:
-                done = TRUE;
-            }
+            default: /* Attempt to locate next element in list beginning with pressed key */
+            {
+                bool found = FALSE;
+                if (islower(cmd))
+                {
+                    int search = cmd;
+                    int i = pos + 1;
+                    for (i = pos + 1; i != pos; )
+                    {
+                        int idx = top + i;
+                        _obj_list_info_ptr info_ptr = NULL;
+
+                        if (idx >= ct_types)
+                        {
+                            i = 0;
+                            continue;
+                        }
+
+                        info_ptr = vec_get(list->list, idx);
+                        assert(info_ptr);
+                        if (info_ptr->idx)
+                        {
+                            if (info_ptr->group == _GROUP_FEATURE)
+                            {
+                                feature_type *f_ptr = &f_info[info_ptr->idx];
+                                cptr          name = f_name + f_ptr->name;
+                                int           c = name[0];
+
+                                if (isalpha(c))
+                                    c = tolower(c);
+
+                                if (c == search)
+                                {
+                                    pos = i;
+                                    found = TRUE;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                object_type *o_ptr = &o_list[info_ptr->idx];
+                                char         name[MAX_NLEN];
+                                char         c;
+
+                                object_desc(name, o_ptr, OD_NAME_ONLY | OD_OMIT_PREFIX | OD_OMIT_INSCRIPTION | OD_NO_FLAVOR | OD_NO_PLURAL);
+                                c = name[0];
+                                if (isalpha(c))
+                                    c = tolower(c);
+
+                                if (c == search)
+                                {
+                                    pos = i;
+                                    found = TRUE;
+                                    break;
+                                }
+                            }
+                        }
+                        i++;
+                        if (i >= page_size)
+                            i = 0;
+                    }
+                }
+
+                if (!found && quick_messages)
+                    done = TRUE;
+            }}
         }
         screen_load();
     }
