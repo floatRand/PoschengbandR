@@ -2189,7 +2189,7 @@ static bool _smithing(void)
     item_tester_hook = object_is_weapon_armour_ammo;
     item_tester_no_ryoute = TRUE;
 
-    if (!get_item(&item, "Smith which object? ", "You have nothing to work with.", (USE_INVEN | USE_FLOOR)))
+    if (!get_item(&item, "Smith which object? ", "You have nothing to work with.", (USE_EQUIP | USE_INVEN | USE_FLOOR)))
         return FALSE;
     if (item >= 0)
         o_ptr = &inventory[item];
@@ -2220,6 +2220,8 @@ static bool _smithing(void)
 
     p_ptr->notice |= PN_COMBINE | PN_REORDER;
     p_ptr->window |= PW_INVEN;
+	p_ptr->update |= PU_BONUS; //To deal with changing stats on equipped items
+    handle_stuff();
 
     return TRUE;
 }
