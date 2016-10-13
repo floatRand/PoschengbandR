@@ -2192,7 +2192,15 @@ static bool _smithing(void)
     if (!get_item(&item, "Smith which object? ", "You have nothing to work with.", (USE_EQUIP | USE_INVEN | USE_FLOOR)))
         return FALSE;
     if (item >= 0)
+    {
         o_ptr = &inventory[item];
+        /* Don't allow working on equipped cursed items, or the player could uncurse them for free by absorbing them */
+        if (equip_is_valid_slot(item) && object_is_cursed(o_ptr))
+        {
+            msg_print("The item's curse obstructs your work!");
+            return FALSE;
+        }
+    }    
     else
         o_ptr = &o_list[0 - item];
 
@@ -2220,7 +2228,7 @@ static bool _smithing(void)
 
     p_ptr->notice |= PN_COMBINE | PN_REORDER;
     p_ptr->window |= PW_INVEN;
-	p_ptr->update |= PU_BONUS; //To deal with changing stats on equipped items
+    p_ptr->update |= PU_BONUS; //To deal with changing stats on equipped items
     handle_stuff();
 
     return TRUE;
