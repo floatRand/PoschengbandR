@@ -1088,3 +1088,8 @@ S:BOOTS:Boots
 S:BOOTS:Boots
 S:BOOTS:Boots
 
+N:105:Vortex4
+S:ANY:Any
+S:ANY:Any
+S:ANY:Any
+S:ANY:Any

@@ -685,10 +685,8 @@
 #define RACE_MON_MIMIC          59
 #define RACE_WOOD_ELF           60
 #define RACE_MON_CENTIPEDE      61
-/* TODO: New races are in progress! ... */
-    #define RACE_MON_GHOST          62
-    #define RACE_MON_ZOMBIE         63
-    #define MAX_RACES               62 /* TODO: Bump me!! */
+#define RACE_MON_VORTEX         62
+#define MAX_RACES               63
 
 #define DEMIGOD_MINOR           0
 #define DEMIGOD_ZEUS            1
@@ -4730,11 +4728,11 @@ extern int PlayerUID;
 #define MON_QUYLTHULG           342
 #define MON_D_ELF_LORD          348
 #define MON_CLOUD_GIANT         349
-#define MON_FIRE_VOR            354
-#define MON_WATER_VOR           355
+#define MON_FIRE_VORTEX         354
+#define MON_WATER_VORTEX        355
 #define MON_ARCH_VILE           357
-#define MON_COLD_VOR            358
-#define MON_ENERGY_VOR          359
+#define MON_COLD_VORTEX         358
+#define MON_ENERGY_VORTEX       359
 #define MON_VAMPIRIC_MIST       365
 #define MON_IRON_GOLEM          367
 #define MON_JADE_MONK           370
@@ -4825,19 +4823,19 @@ extern int PlayerUID;
 #define MON_CHAOS_SPAWN   574
 #define MON_CRYPT_THING   577
 #define MON_MAGMA_ELEMENTAL 584
-#define MON_NEXUS_VOR     587
-#define MON_PLASMA_VOR    588
-#define MON_TIME_VOR      589
-#define MON_MATURE_GOLD_DRAGON    590
-#define MON_CRYSTAL_DRAKE         591
-#define MON_M_MH_DRAGON   593
-#define MON_DEATH_KNIGHT 597
-#define MON_MANDOR        598
-#define MON_SHIM_VOR      600
-#define MON_ANCIENT_BRONZE_DRAGON 602
-#define MON_BEHOLDER 603
-#define MON_SERAPH        605
-#define MON_LOGE            606
+#define MON_NEXUS_VORTEX           587
+#define MON_PLASMA_VORTEX          588
+#define MON_MATURE_GOLD_DRAGON     590
+#define MON_CRYSTAL_DRAKE          591
+#define MON_M_MH_DRAGON            593
+#define MON_DEATH_KNIGHT           597
+#define MON_MANDOR                 598
+#define MON_TIME_VORTEX            599
+#define MON_SHIMMERING_VORTEX      600
+#define MON_ANCIENT_BRONZE_DRAGON  602
+#define MON_BEHOLDER               603
+#define MON_SERAPH                 605
+#define MON_LOGE                   606
 #define MON_MONASTIC_LICH 611
 #define MON_SEVEN_HEADED_HYDRA 614
 #define MON_MOIRE           615
@@ -4912,8 +4910,8 @@ extern int PlayerUID;
 #define MON_HAND_DRUJ           748
 #define MON_EYE_DRUJ            749
 #define MON_SKULL_DRUJ          750
-#define MON_CHAOS_VOR           751
-#define MON_AETHER_VOR          752
+#define MON_CHAOS_VORTEX        751
+#define MON_AETHER_VORTEX       752
 #define MON_LERNEAN_HYDRA       754
 #define MON_BLOODTHIRSTER       758
 #define MON_DRACONIC_QUYLTHULG  759
@@ -5006,7 +5004,7 @@ extern int PlayerUID;
 #define MON_TROLL_KING          894
 #define MON_SKY_GOLEM           895
 #define MON_BAZOOKER            896
-#define MON_SHARD_VOR           897
+#define MON_SHARD_VORTEX        897
 #define MON_FIRE_TROLL          899
 #define MON_SMALL_KRAKEN        903
 #define MON_POLEAXE_OF_ANIMATED_ATTACK 908
@@ -5065,6 +5063,7 @@ extern int PlayerUID;
 #define MON_PALADIN             1038
 #define MON_CHAMELEON           1040
 #define MON_CHAMELEON_K         1041
+#define MON_DISINTEGRATE_VORTEX 1045
 #define MON_TOPAZ_MONK          1047
 #define MON_STONE_DRAGON        1048
 #define MON_STEEL_DRAGON        1049

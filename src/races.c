@@ -216,6 +216,9 @@ race_t *get_race_aux(int prace, int psubrace)
     case RACE_MON_VAMPIRE:
         result = mon_vampire_get_race();
         break;
+    case RACE_MON_VORTEX:
+        result = mon_vortex_get_race();
+        break;
     case RACE_MON_XORN:
         result = mon_xorn_get_race();
         break;

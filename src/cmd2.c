@@ -14,6 +14,8 @@
 
 #include <assert.h>
 
+static bool do_cmd_bash_aux(int y, int x, int dir);
+
 /*
  * Go up one level
  */
@@ -1119,7 +1121,10 @@ void do_cmd_open(void)
         else
         {
             /* Open the door */
-            more = do_cmd_open_aux(y, x);
+            if (p_ptr->prace == RACE_MON_VORTEX)
+                more = do_cmd_bash_aux(y, x, dir);
+            else
+                more = do_cmd_open_aux(y, x);
         }
     }
 
@@ -1539,7 +1544,7 @@ void do_cmd_tunnel(void)
  *    The code here should be nearly identical to that in
  *    do_cmd_open_test() and do_cmd_open_aux().
  */
-bool easy_open_door(int y, int x)
+bool easy_open_door(int y, int x, int dir)
 {
     int i, j;
 
@@ -1553,12 +1558,16 @@ bool easy_open_door(int y, int x)
         return (FALSE);
     }
 
+    if (p_ptr->prace == RACE_MON_VORTEX)
+    {
+        do_cmd_bash_aux(y, x, dir);
+        return TRUE;
+    }
+
     /* Jammed door */
     if (!have_flag(f_ptr->flags, FF_OPEN))
     {
-        /* Stuck */
         msg_format("The %s appears to be stuck.", f_name + f_info[get_feat_mimic(c_ptr)].name);
-
     }
 
     /* Locked door */
@@ -1975,6 +1984,7 @@ static bool do_cmd_bash_aux(int y, int x, int dir)
     temp = (bash - (temp * 10));
 
     if (p_ptr->pclass == CLASS_BERSERKER) temp *= 2;
+    if (p_ptr->prace == RACE_MON_VORTEX) temp = 100;
 
     /* Hack -- always have a chance */
     if (temp < 1) temp = 1;

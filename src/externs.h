@@ -2016,7 +2016,7 @@ extern void repeat_check(void);
 extern bool easy_open;
 
 /* cmd2.c */
-extern bool easy_open_door(int y, int x);
+extern bool easy_open_door(int y, int x, int dir);
 
 #endif /* ALLOW_EASY_OPEN -- TNB */
 
@@ -2240,6 +2240,7 @@ extern void    spider_web_spell(int cmd, variant *res);
 extern race_t *mon_sword_get_race(void);
 extern race_t *mon_troll_get_race(void);
 extern race_t *mon_vampire_get_race(void);
+extern race_t *mon_vortex_get_race(void);
 extern race_t *mon_xorn_get_race(void);
 
 extern bool dragon_vamp_hack;
@@ -2253,6 +2254,8 @@ extern void    hound_sniff_spell(int cmd, variant *res);
 extern void    hound_stalk_spell(int cmd, variant *res);
 extern void    hound_run_spell(int cmd, variant *res);
 extern void    hound_leap_spell(int cmd, variant *res);
+
+extern int     vortex_get_effect(void);
 
 extern bool    possessor_can_gain_exp(void);
 extern int     possessor_get_toggle(void);

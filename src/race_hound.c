@@ -17,7 +17,7 @@ static _tier_t _tiers[_MAX_TIERS] = {
     { 15, { MON_FIRE_HOUND, MON_COLD_HOUND, MON_ENERGY_HOUND, MON_AIR_HOUND, MON_WATER_HOUND, -1 } },
     { 23, { MON_EARTH_HOUND, MON_VIBRATION_HOUND, MON_NEXUS_HOUND, MON_MULTI_HUED_HOUND, -1 } },
     { 31, { MON_INERTIA_HOUND, MON_IMPACT_HOUND, MON_NETHER_HOUND, -1 } },
-    { 39, { MON_GRAVITY_HOUND, MON_TIME_HOUND, MON_PLASMA_HOUND, MON_CHAOS_HOUND, -1 } }, 
+    { 39, { MON_GRAVITY_HOUND, MON_TIME_HOUND, MON_PLASMA_HOUND, MON_CHAOS_HOUND, -1 } },
     { 47, { MON_HOUND_OF_TINDALOS, MON_MANA_HOUND, MON_AETHER_HOUND, -1 } },
 };
 
@@ -90,8 +90,8 @@ static cptr _mon_name(int r_idx)
 /**********************************************************************
  * Hound Equipment
  **********************************************************************/
-static void _birth(void) 
-{ 
+static void _birth(void)
+{
     object_type    forge;
 
     p_ptr->current_r_idx = MON_CLEAR_HOUND;
@@ -203,7 +203,7 @@ static int _breath_effect(void)
     case MON_MANA_HOUND: return GF_MANA;
     case MON_AETHER_HOUND:
     {
-        int choices[] = {GF_FIRE, 1, 
+        int choices[] = {GF_FIRE, 1,
                          GF_COLD, 1,
                          GF_ELEC, 2,
                          GF_ACID, 2,
