@@ -378,24 +378,24 @@ since you are unlikely to roll 8's for all the remaining unconstrained
 stats. An example of a reasonable choice is the following:
 
  Name       : </font><font color="#00c8ff">Test
- </font><font color="#ffffff">Sex        : </font><font color="#00c8ff">Female        
- </font><font color="#ffffff">Personality: </font><font color="#00c8ff">Mighty        
- </font><font color="#ffffff">Race       : </font><font color="#00c8ff">High-Elf      
+ </font><font color="#ffffff">Sex        : </font><font color="#00c8ff">Male          
+ </font><font color="#ffffff">Personality: </font><font color="#00c8ff">Combat        
+ </font><font color="#ffffff">Race       : </font><font color="#00c8ff">Nibelung      
  </font><font color="#ffffff">Subrace    :
- Class      : </font><font color="#00c8ff">Warrior       
- </font><font color="#ffffff">Realm      :                     
+ Class      : </font><font color="#00c8ff">Priest        
+ </font><font color="#ffffff">Realm      : </font><font color="#00c8ff">Crusade, Life       
 
-          Make your character. ('S' Restart, 'Q' Quit, '?' Help)
+          </font><font color="#ffffff">Make your character. ('S' Restart, 'Q' Quit, '?' Help)
           Set minimum stats.
           2/8 for Select, 4/6 for Change value, Enter for Goto next
 
                      Base   Rac  Cla  Per      Total  Maximum  Points
-          STR :        16    +1   +4   +2  =   18/50   18/60      12
-          INT :         8    +3   -2   -2  =       7      16      -2
-          WIS :         8    -1   -2   -2  =       3      12      -2
-          DEX :        16    +3   +2   +0  =   18/30   18/40      12
-          </font><font color="#fffd00">CON :        14    +1   +2   +1  =      18   18/30       5
-          </font><font color="#ffffff">CHR :         8    +1   +1   +1  =      11   18/20      -2
+          STR :        16    +1   -1   +1  =      17      18      10
+          INT :         8    -1   -3   -1  =       3      12      -3
+          WIS :        15    +2   +3   -1  =   18/10   18/30       6
+          DEX :        16    +0   -1   +1  =      16      17      10
+          </font><font color="#fffd00">CON :        14    +2   +0   +0  =      16   18/10       3
+          </font><font color="#ffffff">CHR :         8    -2   +2   +0  =       8      17      -3
 
                                    Accept                         </font><font color="#00ff00">23
 
@@ -423,37 +423,42 @@ levels for the remaining statistics rather than looking for high rolls.
 Also note that the game significantly "nerfs" the power of the 
 Auto-roller relative to other variants. After 50,000 rolls the 
 Auto-roller simply stops and forces you to accept the best match (if 
-any) or to repick minimums. A good idea is to pick constraints on 2 
-stats at most, and even then, you are unlikely to roll 17s in both 
-stats. A 17 and a 16 is rare as well, so perhaps try a 17 and a 15, or 
-two 16s. For example, my above restrictions (16, 16, 14) yielded a 
-handful of matches, the best being the following:
+any) or to repick minimums. A good idea is to pick constraints on as 
+few stats as possible. The more constraints, the less quality you can 
+get. For example, you can ask for 2 17s, but then you probably won't 
+get anything better than an 11 on a third stat. You could instead ask 
+for 3 16s with fair success. For 4 stats, you could do 16, 15, 15, 15, 
+or perhaps 16, 16, 15, 14 ... You can work out the possibilities, and 
+the UI coloring will let you know what is likely and what is not (</font><font color="#00ff00">Green 
+</font><font color="#ffffff">scores almost always work while </font><font color="#ff9200">Orange </font><font color="#ffffff">is very unlikely and </font><font color="#c00000">Red </font><font color="#ffffff">is 
+impossible). For example, my above restrictions (16, 16, 15, 14) 
+yielded a handful of matches, the best being the following:
+
 
  Name       : </font><font color="#00c8ff">Test                         </font><font color="#ffffff">========== Stats ==========
- Sex        : </font><font color="#00c8ff">Female                             </font><font color="#ffffff">STR  :     </font><font color="#00ff00">18/50
- </font><font color="#ffffff">Personality: </font><font color="#00c8ff">Mighty                             </font><font color="#ffffff">INT  :         </font><font color="#00ff00">8
- </font><font color="#ffffff">Race       : </font><font color="#00c8ff">High-Elf                           </font><font color="#ffffff">WIS  :         </font><font color="#00ff00">6
- </font><font color="#ffffff">Subrace    : </font><font color="#00c8ff">None                               </font><font color="#ffffff">DEX  :     </font><font color="#00ff00">18/30
- </font><font color="#ffffff">Class      : </font><font color="#00c8ff">Warrior                            </font><font color="#ffffff">CON  :        </font><font color="#00ff00">18
-                                                 </font><font color="#ffffff">CHR  :        </font><font color="#00ff00">12
+ Sex        : </font><font color="#00c8ff">Male                               </font><font color="#ffffff">STR  :        </font><font color="#00ff00">17
+ </font><font color="#ffffff">Personality: </font><font color="#00c8ff">Combat                             </font><font color="#ffffff">INT  :         </font><font color="#00ff00">5
+ </font><font color="#ffffff">Race       : </font><font color="#00c8ff">Nibelung                           </font><font color="#ffffff">WIS  :     </font><font color="#00ff00">18/20
+ </font><font color="#ffffff">Subrace    : </font><font color="#00c8ff">None                               </font><font color="#ffffff">DEX  :        </font><font color="#00ff00">16
+ </font><font color="#ffffff">Class      : </font><font color="#00c8ff">Priest                             </font><font color="#ffffff">CON  :        </font><font color="#00ff00">16
+ </font><font color="#ffffff">Realm      : </font><font color="#00c8ff">Crusade, Life                      </font><font color="#ffffff">CHR  :         </font><font color="#00ff00">9
                                         
- </font><font color="#ffffff">Level      :        </font><font color="#00ff00">1                           </font><font color="#ffffff">HP   :     </font><font color="#00ff00">54/54
- </font><font color="#ffffff">Cur Exp    :        </font><font color="#00ff00">0                           </font><font color="#ffffff">SP   :       </font><font color="#00ff00">0/0
- </font><font color="#ffffff">Max Exp    :        </font><font color="#00ff00">0                           </font><font color="#ffffff">AC   :         </font><font color="#00ff00">2
+ </font><font color="#ffffff">Level      :        </font><font color="#00ff00">1                           </font><font color="#ffffff">HP   :     </font><font color="#00ff00">38/38
+ </font><font color="#ffffff">Cur Exp    :        </font><font color="#00ff00">0                           </font><font color="#ffffff">SP   :     </font><font color="#00ff00">13/13
+ </font><font color="#ffffff">Max Exp    :        </font><font color="#00ff00">0                           </font><font color="#ffffff">AC   :         </font><font color="#00ff00">1
  </font><font color="#ffffff">Adv Exp    :       </font><font color="#00ff00">19                           </font><font color="#ffffff">Speed:        </font><font color="#ffcc80">+0
                                         
                                            </font><font color="#ffffff">========== Skills =========
- Gold       :      </font><font color="#00ff00">435                     </font><font color="#ffffff">Melee      : </font><font color="#00ff00">Excellent
- </font><font color="#ffffff">Kills      :        </font><font color="#00ff00">0                     </font><font color="#ffffff">Ranged     : </font><font color="#fffd00">Very Good
- </font><font color="#ffffff">Uniques    :        </font><font color="#00ff00">0                     </font><font color="#ffffff">SavingThrow: </font><font color="#fffd00">Good
- </font><font color="#ffffff">Artifacts  :      </font><font color="#00ff00">0+0                     </font><font color="#ffffff">Stealth    : </font><font color="#fffd00">Good
-                                           </font><font color="#ffffff">Perception : </font><font color="#ff4040">Poor
- </font><font color="#ffffff">Game Day   :        </font><font color="#00ff00">1                     </font><font color="#ffffff">Searching  : </font><font color="#ff4040">Poor
+ Gold       :      </font><font color="#00ff00">161                     </font><font color="#ffffff">Melee      : </font><font color="#fffd00">Good
+ </font><font color="#ffffff">Kills      :        </font><font color="#00ff00">0                     </font><font color="#ffffff">Ranged     : </font><font color="#ff9200">Fair
+ </font><font color="#ffffff">Uniques    :        </font><font color="#00ff00">0                     </font><font color="#ffffff">SavingThrow: </font><font color="#fffd00">Very Good
+ </font><font color="#ffffff">Artifacts  :      </font><font color="#00ff00">0+0                     </font><font color="#ffffff">Stealth    : </font><font color="#ff9200">Fair
+                                           </font><font color="#ffffff">Perception : </font><font color="#ff9200">Fair
+ </font><font color="#ffffff">Game Day   :        </font><font color="#00ff00">1                     </font><font color="#ffffff">Searching  : </font><font color="#ff9200">Fair
  </font><font color="#ffffff">Game Time  :     </font><font color="#00ff00">6:00                     </font><font color="#ffffff">Disarming  : </font><font color="#ff9200">Fair
- </font><font color="#ffffff">Play Time  :    </font><font color="#00ff00">00:08                     </font><font color="#ffffff">Device     : </font><font color="#ff9200">Fair
-  </font><font color="#ffffff">[You must accept, or Enter to accept] 
+ </font><font color="#ffffff">Play Time  :    </font><font color="#00ff00">00:00                     </font><font color="#ffffff">Device     : </font><font color="#fffd00">Very Good
 
-If you select not to use the auto-roller, the computer will roll one 
+</font><font color="#ffffff">If you select not to use the auto-roller, the computer will roll one 
 random character at a time and then display it for you to either accept 
 or reject. The 'r', 'p' and Enter keys will work as outlined above. 
 Since this is a difficult game, we recommend using the auto-roller. 

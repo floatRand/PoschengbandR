@@ -70,11 +70,11 @@ void spell_stats_on_save(savefile_ptr file)
 {
     str_map_ptr      map = _spell_stats_map();
     str_map_iter_ptr iter;
-    
+
     savefile_write_s32b(file, str_map_count(map));
 
-    for (iter = str_map_iter_alloc(map); 
-            str_map_iter_is_valid(iter); 
+    for (iter = str_map_iter_alloc(map);
+            str_map_iter_is_valid(iter);
             str_map_iter_next(iter))
     {
         spell_stats_ptr stats = str_map_iter_current(iter);
@@ -143,7 +143,7 @@ void spell_stats_on_fail_old(int realm, int spell)
  * for some more code flexibility (e.g. scrolls that hold *any* spell and
  * Spells copied from scrolls into "books" for spellcasters, etc.)
  ***********************************************************************/
- 
+
 void default_spell(int cmd, variant *res) /* Base class */
 {
     switch (cmd)
@@ -156,7 +156,7 @@ void default_spell(int cmd, variant *res) /* Base class */
     case SPELL_INFO:
     case SPELL_MUT_DESC:
         var_set_string(res, "");
-        break;    
+        break;
 
     case SPELL_GAIN_MUT:
     case SPELL_LOSE_MUT:
@@ -281,7 +281,7 @@ cptr get_spell_spoiler_name(ang_spell spell)
     variant v;
     var_init(&v);
     spell(SPELL_SPOIL_NAME, &v);
-    
+
     if (var_is_null(&v))
         spell(SPELL_NAME, &v);
 
@@ -358,7 +358,7 @@ static void _list_spells(spell_info* spells, int ct, int max_cost)
 
         sprintf(temp, "  %c) ", letter);
 
-        strcat(temp, format("%-23.23s %3d %4d %3d%%", 
+        strcat(temp, format("%-23.23s %3d %4d %3d%%",
                             var_get_string(&name),
                             spell->level,
                             spell->cost,
@@ -481,7 +481,7 @@ static int _choose_spell(spell_info* spells, int ct, cptr desc, int max_cost)
         /* Good to go! */
         break;
     }
-    
+
     var_clear(&name);
     return choice;
 }
@@ -513,7 +513,7 @@ void browse_spells(spell_info* spells, int ct, cptr desc)
     for(;;)
     {
         int choice = -1;
-        
+
         choice = _choose_spell(spells, ct, desc, 10000);
         if (choice < 0 || choice >= ct) break;
 
@@ -594,7 +594,7 @@ int calculate_fail_rate(int level, int base_fail, int stat_idx)
     if (fail > 100) fail = 100;
     return fail;
 }
- 
+
 /****************************************************************
  * Entrypoints for the world
  ****************************************************************/
@@ -661,16 +661,16 @@ void do_cmd_spell(void)
 {
     spell_info spells[MAX_SPELLS];
     caster_info *caster = get_caster_info();
-    int ct = 0; 
+    int ct = 0;
     int choice = 0;
     int max_cost = 0;
 
-    if (!caster) 
+    if (!caster)
     {
         msg_print("You cannot cast spells.");
         return;
     }
-    
+
     if (p_ptr->confused)
     {
         msg_print("You are too confused!");
@@ -681,7 +681,7 @@ void do_cmd_spell(void)
     {
         set_action(ACTION_NONE);
     }
-    
+
     ct = _get_spell_table(spells, MAX_SPELLS);
     if (ct == 0)
     {
@@ -691,6 +691,8 @@ void do_cmd_spell(void)
 
     if (caster->options & CASTER_USE_HP)
         max_cost = p_ptr->chp;
+    else if (caster->options & CASTER_USE_AU)
+        max_cost = p_ptr->au;
     else
         max_cost = p_ptr->csp;
     choice = choose_spell(spells, ct, caster->magic_desc, max_cost);
@@ -705,8 +707,8 @@ void do_cmd_spell(void)
             return;
         }
 
-        /* Verify Cost ... Note, I'm removing options for over exertion 
-           Also note we now pay casting costs up front for mana casters. 
+        /* Verify Cost ... Note, I'm removing options for over exertion
+           Also note we now pay casting costs up front for mana casters.
            If the user cancels, then we return the cost below.
         */
         if (caster->options & CASTER_USE_HP)
@@ -714,6 +716,14 @@ void do_cmd_spell(void)
             if (spell->cost > p_ptr->chp)
             {
                 msg_print("You do not have enough hp to use this power.");
+                return;
+            }
+        }
+        else if (caster->options & CASTER_USE_AU)
+        {
+            if (spell->cost > p_ptr->au)
+            {
+                msg_print("You do not have enough gold to use this power.");
                 return;
             }
         }
@@ -735,7 +745,7 @@ void do_cmd_spell(void)
             fail_spell(spell->fn);
             if (flush_failure) flush();
             msg_print("You failed to concentrate hard enough!");
-            if (!(caster->options & CASTER_USE_HP) && demigod_is_(DEMIGOD_ATHENA) )
+            if (!(caster->options & (CASTER_USE_HP | CASTER_USE_AU)) && demigod_is_(DEMIGOD_ATHENA) )
                 p_ptr->csp += spell->cost/2;
             if (caster->on_fail != NULL)
                 (caster->on_fail)(spell);
@@ -745,7 +755,7 @@ void do_cmd_spell(void)
             if (!cast_spell(spell->fn))
             {
                 /* Give back the spell cost, since the user canceled the spell */
-                if (!(caster->options & CASTER_USE_HP)) p_ptr->csp += spell->cost;
+                if (!(caster->options & (CASTER_USE_HP | CASTER_USE_AU))) p_ptr->csp += spell->cost;
                 return;
             }
             spell_stats_on_cast(spell);
@@ -756,6 +766,13 @@ void do_cmd_spell(void)
 
         if ((caster->options & CASTER_USE_HP) && spell->cost > 0)
             take_hit(DAMAGE_USELIFE, spell->cost, "concentrating too hard", -1);
+        if ((caster->options & CASTER_USE_AU) && spell->cost > 0)
+        {
+            p_ptr->au -= spell->cost;
+            stats_on_gold_services(spell->cost); /* ? */
+            p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+            p_ptr->redraw |= (PR_GOLD);
+        }
 
         if (caster->on_cast != NULL)
             (caster->on_cast)(spell);
@@ -769,11 +786,11 @@ void do_cmd_spell(void)
 void do_cmd_power(void)
 {
     spell_info spells[MAX_SPELLS];
-    int ct = 0; 
+    int ct = 0;
     int choice = 0;
     race_t *race_ptr = get_race();
     class_t *class_ptr = get_class();
-    
+
     if (p_ptr->confused)
     {
         msg_print("You are too confused!");
@@ -781,14 +798,14 @@ void do_cmd_power(void)
     }
 
     /* Hack ... Rethink this a bit, but the alternative of hacking into
-       the 'm' command is a million times worse! 
+       the 'm' command is a million times worse!
        Doppelgangers need to be able to cancel their current mimicry.
        Also, add Mimic power back first so it always stays in the 'a' slot. */
     if (race_ptr->mimic && p_ptr->prace == RACE_DOPPELGANGER)
     {
         ct += (get_true_race()->get_powers)(spells + ct, MAX_SPELLS - ct);
     }
-    
+
     if (race_ptr->get_powers != NULL)
     {
         ct += (race_ptr->get_powers)(spells + ct, MAX_SPELLS - ct);
@@ -819,7 +836,7 @@ void do_cmd_power(void)
     if (choice >= 0 && choice < ct)
     {
         spell_info *spell = &spells[choice];
-        
+
         if (spell->level > p_ptr->lev)
         {
             msg_print("You can't use that power yet!");
@@ -858,7 +875,7 @@ void do_cmd_power(void)
             p_ptr->csp = 0;
             take_hit(DAMAGE_USELIFE, cost, "concentrating too hard", -1);
         }
-        else 
+        else
             p_ptr->csp -= spell->cost;
 
         p_ptr->redraw |= (PR_MANA);
@@ -874,11 +891,11 @@ int get_powers_aux(spell_info* spells, int max, power_info* table)
 {
     int i;
     int ct = 0;
-    
+
     for (i = 0; ; i++)
     {
         power_info *base = &table[i];
-        
+
         if (ct >= max) break;
         if (!base->spell.fn) break;
 
@@ -890,10 +907,10 @@ int get_powers_aux(spell_info* spells, int max, power_info* table)
             current->cost = base->spell.cost;
 
             current->fail = calculate_fail_rate(
-                base->spell.level, 
-                base->spell.fail, 
+                base->spell.level,
+                base->spell.fail,
                 p_ptr->stat_ind[base->stat]
-            );            
+            );
             ct++;
         }
     }
@@ -942,7 +959,7 @@ int spell_stats_fail(spell_stats_ptr stats)
 }
 
 void dump_spells_aux(FILE *fff, spell_info *table, int ct)
-{        
+{
     int i;
     variant vn, vd, vc, vfm;
 
@@ -964,7 +981,7 @@ void dump_spells_aux(FILE *fff, spell_info *table, int ct)
     }
     for (i = 0; i < ct; i++)
     {
-        spell_info     *spell = &table[i];      
+        spell_info     *spell = &table[i];
         spell_stats_ptr stats = spell_stats(spell);
 
         spell->fn(SPELL_NAME, &vn);
@@ -972,9 +989,9 @@ void dump_spells_aux(FILE *fff, spell_info *table, int ct)
         spell->fn(SPELL_COST_EXTRA, &vc);
         spell->fn(SPELL_FAIL_MIN, &vfm);
 
-        fprintf(fff, "%-20.20s %3d %4d %3d%% %-15.15s %4d %4d %3d%%\n", 
-            var_get_string(&vn), 
-            spell->level, calculate_cost(spell->cost + var_get_int(&vc)), MAX(spell->fail, var_get_int(&vfm)), 
+        fprintf(fff, "%-20.20s %3d %4d %3d%% %-15.15s %4d %4d %3d%%\n",
+            var_get_string(&vn),
+            spell->level, calculate_cost(spell->cost + var_get_int(&vc)), MAX(spell->fail, var_get_int(&vfm)),
             var_get_string(&vd),
             stats->ct_cast, stats->ct_fail,
             spell_stats_fail(stats)
@@ -1034,7 +1051,7 @@ static void _dump_book(doc_ptr doc, int realm, int book)
         {
             s16b exp = experience_of_spell(s_idx, realm);
             int  exp_level = spell_exp_level(exp);
-            
+
             cost = mod_need_mana(s_ptr->smana, s_idx, realm);
 
             max = FALSE;
@@ -1049,7 +1066,7 @@ static void _dump_book(doc_ptr doc, int realm, int book)
 
         strcpy(info, do_spell(realm, s_idx, SPELL_INFO));
         comment = info;
-        
+
         if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE)
         {
             if (s_ptr->slevel > p_ptr->max_plv)
@@ -1092,13 +1109,13 @@ static void _dump_book(doc_ptr doc, int realm, int book)
         {
             spell_stats_ptr stats = spell_stats_old(realm, s_idx);
             strcat(
-                line, 
+                line,
                 format(
                     "<color:%c>%-25s %3d %3d %-15.15s %5d</color>",
                     color,
                     do_spell(realm, s_idx, SPELL_NAME),
-                    s_ptr->slevel, 
-                    cost, 
+                    s_ptr->slevel,
+                    cost,
                     comment,
                     stats->ct_cast
                 )
@@ -1108,18 +1125,18 @@ static void _dump_book(doc_ptr doc, int realm, int book)
         {
             spell_stats_ptr stats = spell_stats_old(realm, s_idx);
             strcat(
-                line, 
+                line,
                 format(
                     "<color:%c>%-25s%c%-4s %3d %3d %3d%% %-15.15s %5d %4d %3d%%</color>",
                     color,
                     do_spell(realm, s_idx, SPELL_NAME),
-                    (max ? '!' : ' '), 
+                    (max ? '!' : ' '),
                     proficiency,
-                    s_ptr->slevel, 
-                    cost, 
-                    spell_chance(s_idx, realm), 
+                    s_ptr->slevel,
+                    cost,
+                    spell_chance(s_idx, realm),
                     comment,
-                    stats->ct_cast, 
+                    stats->ct_cast,
                     stats->ct_fail,
                     spell_stats_fail(stats)
                 )
@@ -1207,7 +1224,7 @@ static void _dump_realm(doc_ptr doc, int realm)
             if (first)
             {
                 doc_printf(doc, "<color:r>Realm:</color> <color:B>%s</color>\n\n", realm_names[realm]);
-                first = FALSE;    
+                first = FALSE;
             }
             _dump_book(doc, realm, i);
         }
@@ -1241,6 +1258,6 @@ void spellbook_character_dump(doc_ptr doc)
             doc_printf(doc, " You were able to use %s magic before.\n", realm_names[i+1]);
         }
         doc_newline(doc);
-    }    
+    }
 }
 
