@@ -4255,99 +4255,12 @@ static s16b poly_r_idx(int r_idx)
 
 bool polymorph_monster(int y, int x)
 {
-    cave_type *c_ptr = &cave[y][x];
+    cave_type    *c_ptr = &cave[y][x];
     monster_type *m_ptr = &m_list[c_ptr->m_idx];
-    bool polymorphed = FALSE;
-    int new_r_idx;
-    int old_r_idx = m_ptr->r_idx;
-    bool targeted = (target_who == c_ptr->m_idx) ? TRUE : FALSE;
-    bool health_tracked = (p_ptr->health_who == c_ptr->m_idx) ? TRUE : FALSE;
-    monster_type back_m;
+    int           r_idx = poly_r_idx(m_ptr->r_idx);
 
-    if (p_ptr->inside_arena || p_ptr->inside_battle) return (FALSE);
-
-    if ((p_ptr->riding == c_ptr->m_idx) || (m_ptr->mflag2 & MFLAG2_KAGE)) return (FALSE);
-
-    /* Memorize the monster before polymorphing */
-    back_m = *m_ptr;
-
-    /* Pick a "new" monster race */
-    new_r_idx = poly_r_idx(old_r_idx);
-
-    /* Handle polymorph */
-    if (new_r_idx != old_r_idx)
-    {
-        u32b mode = 0L;
-        bool preserve_hold_objects = back_m.hold_o_idx ? TRUE : FALSE;
-        s16b this_o_idx, next_o_idx = 0;
-
-        /* Get the monsters attitude */
-        if (is_friendly(m_ptr)) mode |= PM_FORCE_FRIENDLY;
-        if (is_pet(m_ptr)) mode |= PM_FORCE_PET;
-        if (m_ptr->mflag2 & MFLAG2_NOPET) mode |= PM_NO_PET;
-
-        /* Mega-hack -- ignore held objects */
-        m_ptr->hold_o_idx = 0;
-
-        /* "Kill" the "old" monster */
-        delete_monster_idx(c_ptr->m_idx);
-
-        /* Create a new monster (no groups) */
-        if (place_monster_aux(0, y, x, new_r_idx, mode))
-        {
-            m_list[hack_m_idx_ii].nickname = back_m.nickname;
-            mon_set_parent(&m_list[hack_m_idx_ii], back_m.parent_m_idx);
-            m_list[hack_m_idx_ii].hold_o_idx = back_m.hold_o_idx;
-
-            /* Success */
-            polymorphed = TRUE;
-        }
-        else
-        {
-            /* Placing the new monster failed */
-            if (place_monster_aux(0, y, x, old_r_idx, (mode | PM_NO_KAGE | PM_IGNORE_TERRAIN)))
-            {
-                m_list[hack_m_idx_ii] = back_m;
-
-                /* Re-initialize monster process */
-                mproc_init();
-            }
-            else preserve_hold_objects = FALSE;
-        }
-
-        /* Mega-hack -- preserve held objects */
-        if (preserve_hold_objects)
-        {
-            for (this_o_idx = back_m.hold_o_idx; this_o_idx; this_o_idx = next_o_idx)
-            {
-                /* Acquire object */
-                object_type *o_ptr = &o_list[this_o_idx];
-
-                /* Acquire next object */
-                next_o_idx = o_ptr->next_o_idx;
-
-                /* Held by new monster */
-                o_ptr->held_m_idx = hack_m_idx_ii;
-            }
-        }
-        else if (back_m.hold_o_idx) /* Failed (paranoia) */
-        {
-            /* Delete objects */
-            for (this_o_idx = back_m.hold_o_idx; this_o_idx; this_o_idx = next_o_idx)
-            {
-                /* Acquire next object */
-                next_o_idx = o_list[this_o_idx].next_o_idx;
-
-                /* Delete the object */
-                delete_object_idx(this_o_idx);
-            }
-        }
-
-        if (targeted) target_who = hack_m_idx_ii;
-        if (health_tracked) health_track(hack_m_idx_ii);
-    }
-
-    return polymorphed;
+    mon_change_race(c_ptr->m_idx, r_idx, "polymorphed");
+    return TRUE;
 }
 
 

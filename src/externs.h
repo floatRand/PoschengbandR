@@ -2572,6 +2572,7 @@ extern bool check_foresight(void);
 extern bool devolve_monster(int m_idx, bool msg);
 extern bool evolve_monster(int m_idx, bool msg);
 extern bool mon_amnesia(int m_idx);
+extern void mon_change_race(int m_idx, int new_r_idx, cptr verb);
 
 /* weaponmaster.c */
 extern class_t *weaponmaster_get_class(int subclass);

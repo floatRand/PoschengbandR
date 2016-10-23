@@ -36,14 +36,14 @@ static int _find_devolution_idx(int r_idx)
     return 0;
 }
 
-/*    Evolve or Devolve a Monster. I spiked this from monster_gain_exp() in melee2.c without
+/*  Evolve or Devolve a Monster. I spiked this from monster_gain_exp() in melee2.c without
     any great understanding on my part.
+    UPDATE: Use this for polymorph monster as well (spells3.c).
 */
-static void _change_monster_race(int m_idx, int new_r_idx)
+void mon_change_race(int m_idx, int new_r_idx, cptr verb)
 {
     char m_name[80], new_name[80];
     int old_hp, old_maxhp, old_r_idx;
-    int old_lvl, new_lvl;
     byte old_sub_align;
     monster_type *m_ptr;
     monster_race *r_ptr;
@@ -55,7 +55,6 @@ static void _change_monster_race(int m_idx, int new_r_idx)
     old_maxhp = m_ptr->max_maxhp;
     old_r_idx = m_ptr->r_idx;
     old_sub_align = m_ptr->sub_align;
-    old_lvl = r_info[m_ptr->r_idx].level;
 
     real_r_ptr(m_ptr)->cur_num--;
 
@@ -66,7 +65,6 @@ static void _change_monster_race(int m_idx, int new_r_idx)
 
     m_ptr->ap_r_idx = m_ptr->r_idx;
     r_ptr = &r_info[m_ptr->r_idx];
-    new_lvl = r_ptr->level;
 
     if (r_ptr->flags1 & RF1_FORCE_MAXHP)
     {
@@ -114,14 +112,14 @@ static void _change_monster_race(int m_idx, int new_r_idx)
             }
             else
             {
-                cptr txt = (new_lvl > old_lvl) ? "evolved" : "devolved";
                 monster_desc(new_name, m_ptr, 0);
-                msg_format("%^s %s into %s.", m_name, txt, new_name);
+                cmsg_format(TERM_L_BLUE, "%^s %s into %s.", m_name, verb, new_name);
             }
         }
         if (!p_ptr->image) r_info[old_r_idx].r_xtra1 |= MR1_SINKA;
         mon_set_parent(m_ptr, 0);
     }
+
     update_mon(m_idx, FALSE);
     lite_spot(m_ptr->fy, m_ptr->fx);
 }
@@ -164,7 +162,7 @@ bool devolve_monster(int m_idx, bool msg)
     }
 
     set_monster_csleep(m_idx, 0);
-    _change_monster_race(m_idx, r_idx);
+    mon_change_race(m_idx, r_idx, "devolved");
     return TRUE;
 }
 
@@ -193,7 +191,7 @@ bool evolve_monster(int m_idx, bool msg)
             msg_format("%^s resists.", m_name);
         return FALSE;
     }
-    _change_monster_race(m_idx, r_idx);
+    mon_change_race(m_idx, r_idx, "evolved");
     return TRUE;
 }
 

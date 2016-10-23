@@ -2355,6 +2355,7 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
     byte            old_fy = m_ptr->fy, old_fx = m_ptr->fx;
     int             old_hp = m_ptr->hp;
+    int             old_r_idx = m_ptr->r_idx;
     char            m_name_subject[MAX_NLEN], m_name_object[MAX_NLEN];
     int             i, j, k;
     int             delay_sleep = 0;
@@ -2738,6 +2739,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     default:                             /* v--- Check for pure elemental attack (e.g. Fire vortex) */
                         project(0, 0, m_ptr->fy, m_ptr->fx, k ? effect_pow : dam, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1);
                         *mdeath = (m_ptr->r_idx == 0);
+                        /* Polymorph effect? */
+                        if (m_ptr->r_idx && m_ptr->r_idx != old_r_idx)
+                        {
+                            old_r_idx = m_ptr->r_idx;
+                            monster_desc(m_name_subject, m_ptr, MD_PRON_VISIBLE);
+                            monster_desc(m_name_object, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+                        }
                     }
                 }
                 /* TODO: Should rings of power brand innate attacks? */
