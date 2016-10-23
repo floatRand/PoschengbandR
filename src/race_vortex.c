@@ -676,8 +676,7 @@ race_t *mon_vortex_get_race(void)
         me.gain_level = _gain_level;
         me.birth = _birth;
 
-        me.flags = RACE_IS_MONSTER; /* | RACE_IS_ILLITERATE? */
-        /*me.boss_r_idx = MON_???;*/
+        me.flags = RACE_IS_MONSTER | RACE_IS_NONLIVING;
 
         me.pseudo_class_idx = CLASS_WARRIOR;
 

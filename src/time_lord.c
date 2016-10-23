@@ -60,6 +60,7 @@ void mon_change_race(int m_idx, int new_r_idx, cptr verb)
 
     monster_desc(m_name, m_ptr, 0);
     m_ptr->r_idx = new_r_idx;
+    m_ptr->drop_ct = get_monster_drop_ct(m_ptr);
 
     real_r_ptr(m_ptr)->cur_num++;
 
