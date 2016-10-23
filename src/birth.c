@@ -3168,6 +3168,7 @@ void player_outfit(void)
         _birth_object(TV_SCROLL, SV_SCROLL_DARKNESS, rand_range(2, 5));
     }
     else if ( p_ptr->prace == RACE_MON_JELLY
+           || p_ptr->prace == RACE_MON_VORTEX
            || p_ptr->prace == RACE_MON_SPIDER
            || p_ptr->prace == RACE_MON_VAMPIRE
            || p_ptr->prace == RACE_MON_SWORD

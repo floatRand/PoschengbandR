@@ -739,7 +739,11 @@ static cptr _effect_name(int which)
     case GF_COLD: return "Cold";
     case GF_POIS: return "Poison";
     case GF_NETHER: return "Nether";
+    case GF_NEXUS: return "Nexus";
+    case GF_LITE: return "Light";
+    case GF_CHAOS: return "Chaos";
     case GF_SHARDS: return "Shards";
+    case GF_DISINTEGRATE: return "Disint";
     case GF_DISENCHANT: return "Disench";
     case GF_TIME: return "Time";
     case GF_OLD_DRAIN: return "Drain";

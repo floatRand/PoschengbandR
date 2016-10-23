@@ -9571,7 +9571,7 @@ F:NO_CONF | NO_SLEEP | NO_FEAR | NO_STUN | NONLIVING
 F:POS_GAIN_AC | POS_HOLD_LIFE
 P:Copy:Zombie:Rage-Mage
 P:Stats:-4:0:0:0:0:0
-P:Body:Vortex5
+P:Body:Vortex6
 S:1_IN_6 |
 S:BR_NEXU
 D:A maelstrom of potent magical energy.
@@ -9589,7 +9589,7 @@ F:NO_CONF | NO_SLEEP | NO_FEAR | NO_STUN | NONLIVING
 F:POS_GAIN_AC | POS_HOLD_LIFE
 P:Copy:Zombie:Rage-Mage
 P:Stats:-4:0:0:0:0:0
-P:Body:Vortex5
+P:Body:Vortex6
 S:1_IN_6 |
 S:BR_PLAS
 D:A whirlpool of intense flame, charring the stones at your feet.
@@ -9821,7 +9821,7 @@ F:RES_LITE | NO_CONF | NO_SLEEP | NO_FEAR | NO_STUN | NONLIVING
 F:POS_GAIN_AC | POS_HOLD_LIFE
 P:Copy:Zombie:Rage-Mage
 P:Stats:-4:0:0:0:0:0
-P:Body:Vortex5
+P:Body:Vortex6
 S:1_IN_4 |
 S:BR_LITE | SHRIEK
 D:A strange pillar of shining light that hurts your eyes. Its shape changes

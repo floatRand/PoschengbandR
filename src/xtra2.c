@@ -5173,7 +5173,7 @@ bool get_rep_dir(int *dp, bool under)
             dir = ddd[randint0(8)];
         }
     }
-    else if (p_ptr->move_random)
+    else if (p_ptr->move_random && !p_ptr->wild_mode)
     {
         if (one_in_(66))
         {

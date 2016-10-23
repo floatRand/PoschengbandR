@@ -78,6 +78,13 @@ static int _find_tier(int r_idx)
     return -1;
 }
 
+static int _rank(void)
+{
+    if (p_ptr->current_r_idx)
+        return _find_tier(p_ptr->current_r_idx);
+    return 0; /* Unborn ... */
+}
+
 static cptr _mon_name(int r_idx)
 {
     if (r_idx == MON_CHAOS_VORTEX) /* This became a Death vortex, but we are being nostalgic ... */
@@ -177,15 +184,16 @@ int vortex_get_effect(void)
 static void _calc_innate_attacks(void)
 {
     int l = p_ptr->lev;
-    int to_d = l/5;
+    int r = _rank();
+    int to_d = r + l/5;
     int to_h = l/2;
 
     /* Engulf */
     {
         innate_attack_t a = {0};
 
-        a.dd = 3 + l / 12;
-        a.ds = 3 + l / 12;
+        a.dd = 3 + r;
+        a.ds = 3 + r;
         a.to_d += to_d;
         a.to_h += to_h;
 
@@ -260,7 +268,7 @@ static void _breathe_spell(int cmd, variant *res)
         if (get_aim_dir(&dir))
         {
             int e = _breath_effect();
-            msg_format("You breathe %s", gf_name(e));
+            msg_format("You breathe %s.", gf_name(e));
             fire_ball(e, dir, _breath_amount(), -1 - (p_ptr->lev / 20));
             var_set_bool(res, TRUE);
         }
@@ -426,8 +434,10 @@ static int _get_powers(spell_info* spells, int max) {
  **********************************************************************/
 static void _calc_bonuses(void)
 {
-    p_ptr->to_a += 5 + p_ptr->lev/2;
-    p_ptr->dis_to_a += 5 + p_ptr->lev/2;
+    int r = _rank();
+
+    p_ptr->to_a += 5 + 5*r;
+    p_ptr->dis_to_a += 5 + 5*r;
 
     p_ptr->free_act = TRUE;
     res_add(RES_CONF);
@@ -491,11 +501,12 @@ static void _calc_bonuses(void)
         break;
     case MON_SHARD_VORTEX:
         p_ptr->pspeed += 5;
+        p_ptr->skill_dig += 100;
         res_add(RES_SHARDS);
         p_ptr->sh_shards = TRUE;
         break;
     case MON_CHAOS_VORTEX:
-        p_ptr->pspeed += 5;
+        p_ptr->pspeed += 7;
         res_add(RES_CHAOS);
         break;
     case MON_DISINTEGRATE_VORTEX:
@@ -623,6 +634,7 @@ race_t *mon_vortex_get_race(void)
 {
     static race_t me = {0};
     static bool   init = FALSE;
+    int           r = _rank();
 
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
@@ -673,11 +685,11 @@ race_t *mon_vortex_get_race(void)
     }
 
     me.subname = _mon_name(p_ptr->current_r_idx);
-    me.stats[A_STR] =  0 + p_ptr->lev/12;
+    me.stats[A_STR] =  0 + r;
     me.stats[A_INT] = -5;
     me.stats[A_WIS] = -5;
-    me.stats[A_DEX] =  2 + p_ptr->lev/15;
-    me.stats[A_CON] =  1 + p_ptr->lev/17;
+    me.stats[A_DEX] =  2 + r;
+    me.stats[A_CON] =  1 + r/2;
     me.stats[A_CHR] =  0;
     me.equip_template = mon_get_equip_template();
 
