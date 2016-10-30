@@ -7269,12 +7269,15 @@ static cptr do_music_spell(int spell, int mode)
             {
                 int count = p_ptr->magic_num1[2];
 
-                if (count >= 19) wiz_lite(FALSE);
-                if (count >= 11)
+                if (count >= 19 && plev > 39)
                 {
+                    if (count == 19) msg_print("You sense the entire level!");
+                    wiz_lite(FALSE);
+                }
+                if (count >= 11 && plev > 24)
+                {
+                    if (count == 11) msg_print("You sense the terrain around you!");
                     map_area(rad);
-                    if (plev > 39 && count < 19)
-                        p_ptr->magic_num1[2] = count + 1;
                 }
                 if (count >= 6)
                 {
@@ -7282,24 +7285,17 @@ static cptr do_music_spell(int spell, int mode)
                     /* detect_treasure(rad); */
                     detect_objects_gold(rad);
                     detect_objects_normal(rad);
-
-                    if (plev > 24 && count < 11)
-                        p_ptr->magic_num1[2] = count + 1;
                 }
-                if (count >= 3)
+                if (count >= 3 && plev > 19)
                 {
                     detect_monsters_invis(rad);
                     detect_monsters_normal(rad);
-
-                    if (plev > 19 && count < 6)
-                        p_ptr->magic_num1[2] = count + 1;
                 }
                 detect_traps(rad, TRUE);
                 detect_doors(rad);
                 detect_stairs(rad);
 
-                if (plev > 14 && count < 3)
-                    p_ptr->magic_num1[2] = count + 1;
+                p_ptr->magic_num1[2] = count + 1;
             }
         }
 
