@@ -6377,7 +6377,14 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 5);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            bool old_target_pet = target_pet;
+            target_pet = TRUE;
+            if (!get_aim_dir(&dir))
+            {
+                target_pet = old_target_pet;
+                return NULL;
+            }
+            target_pet = old_target_pet;
             if (heal_monster(dir, _BOOST(damroll(10, 10))))
                 device_noticed = TRUE;
         }
@@ -6388,7 +6395,14 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 15);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            bool old_target_pet = target_pet;
+            target_pet = TRUE;
+            if (!get_aim_dir(&dir))
+            {
+                target_pet = old_target_pet;
+                return NULL;
+            }
+            target_pet = old_target_pet;
             if (speed_monster(dir))
                 device_noticed = TRUE;
         }
