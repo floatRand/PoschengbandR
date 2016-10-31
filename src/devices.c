@@ -2283,6 +2283,7 @@ device_effect_info_t wand_effect_table[] =
     {EFFECT_SCARE_MONSTER,          7,   5,     1,  20,     0, 0},
     {EFFECT_STONE_TO_MUD,          10,   5,     1,  60,     0, 0},
     {EFFECT_POLYMORPH,             12,   6,     1,  25,     0, 0},
+    {EFFECT_CLONE_MONSTER,         12,   6,     1,  25,     0, 0},
     {EFFECT_BOLT_COLD,             12,   7,     1,  25,     0, 0},
     {EFFECT_BOLT_ELEC,             15,   7,     1,  25,     0, 0},
     {EFFECT_BOLT_ACID,             17,   8,     1,  25,     0, 0},
