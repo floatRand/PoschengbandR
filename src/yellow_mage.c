@@ -30,7 +30,7 @@ static caster_info * _caster_info(void)
 
 static void _calc_bonuses(void)
 {
-    p_ptr->spells_per_round += py_prorata_level(180);
+    p_ptr->spells_per_round += py_prorata_level(150);
 }
 
 
