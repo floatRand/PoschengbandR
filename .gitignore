@@ -76,7 +76,7 @@ build/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
-*.exe
+#*.exe
 *_i.c
 *_p.c
 *.ilk
