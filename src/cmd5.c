@@ -2041,7 +2041,14 @@ bool do_riding(bool force)
         if ( p_ptr->prace != RACE_MON_RING 
           && r_info[m_ptr->r_idx].level > randint1((skills_riding_current() / 50 + p_ptr->lev / 2 + 20)))
         {
-            msg_print("You failed to ride.");
+            if (r_info[m_ptr->r_idx].level > (skills_riding_current() / 50 + p_ptr->lev / 2 + 20))
+            {
+                msg_print("This monster is too powerful for you to ride!");
+            }
+            else
+            {
+                msg_print("You failed to ride.");
+            }
 
             energy_use = 100;
 
