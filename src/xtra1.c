@@ -2521,7 +2521,11 @@ static void calc_spells(void)
         num_allowed = (num_allowed+1)/2;
         if (num_allowed>(32+bonus)) num_allowed = 32+bonus;
     }
-    else if ((p_ptr->pclass == CLASS_MAGE) || (p_ptr->pclass == CLASS_BLOOD_MAGE) || (p_ptr->pclass == CLASS_PRIEST))
+    else if ( p_ptr->pclass == CLASS_MAGE
+           || p_ptr->pclass == CLASS_BLOOD_MAGE
+           || p_ptr->pclass == CLASS_PRIEST
+           || p_ptr->pclass == CLASS_YELLOW_MAGE
+           || p_ptr->pclass == CLASS_GRAY_MAGE )
     {
         if (num_allowed>(96+bonus)) num_allowed = 96+bonus;
     }
@@ -2893,6 +2897,8 @@ static void _calc_encumbrance(void)
     case CLASS_MONK:
     case CLASS_FORCETRAINER:
     case CLASS_SORCERER:
+    case CLASS_YELLOW_MAGE:
+    case CLASS_GRAY_MAGE:
         weight += equip_weight(object_is_melee_weapon);
         break;
 
@@ -3052,6 +3058,8 @@ static void calc_mana(void)
         case CLASS_BLOOD_MAGE:
         case CLASS_HIGH_MAGE:
         case CLASS_BLUE_MAGE:
+        case CLASS_YELLOW_MAGE:
+        case CLASS_GRAY_MAGE:
             msp -= msp * p_ptr->cumber_armor_amt / 600;
             break;
 
@@ -3197,6 +3205,8 @@ static int _calc_xtra_hp(int amt)
     case CLASS_MAGE:
     case CLASS_HIGH_MAGE:
     case CLASS_SORCERER:
+    case CLASS_YELLOW_MAGE:
+    case CLASS_GRAY_MAGE:
         w1 = 0; w2 = 0; w3 = 1;
         break;
 
@@ -3519,6 +3529,8 @@ void calc_bonuses(void)
         for (i = 0; i < OF_ARRAY_SIZE; i++)
             p_ptr->innate_attack_info.flags[i] = 0;
     }
+    p_ptr->spells_per_round = 100;
+
     /* Start with "normal" speed */
     p_ptr->pspeed = 110;
 

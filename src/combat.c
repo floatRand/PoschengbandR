@@ -81,6 +81,8 @@ static _blow_info_t _get_blow_info(int hand)
     case CLASS_BLOOD_MAGE:
     case CLASS_HIGH_MAGE:
     case CLASS_BLUE_MAGE:
+    case CLASS_YELLOW_MAGE:
+    case CLASS_GRAY_MAGE:
         result.num = 400; result.wgt = 100; result.mul = 20; break;
 
     case CLASS_WARLOCK:

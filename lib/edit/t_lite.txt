@@ -141,7 +141,7 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:32
 F:!:FLOOR:3:0:70
 
 # Ring of Protection
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage] ]
+?:[AND [EQU $QUEST1 3] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
 F:b:BUILDING_1:3:0:0:0:0:NONE:32
 F:!:FLOOR:3:0:132:205
 
@@ -828,17 +828,17 @@ F:!:FLOOR:3:0:0:0:215
 # Mage, High-Mage, Sorcerer, Blue-Mage, Blood-Mage
 
 # Gandalf
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage] [EQU [MOD $RANDOM27 10] 0] ]
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [EQU [MOD $RANDOM27 10] 0] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:120
 
 # Saruman
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage] [EQU [MOD $RANDOM27 10] 1] ]
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [EQU [MOD $RANDOM27 10] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:249
 
 # Thranduil
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage] [GEQ [MOD $RANDOM27 10] 2] ]
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [GEQ [MOD $RANDOM27 10] 2] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:36
 

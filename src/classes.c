@@ -190,6 +190,9 @@ class_t *result = NULL;
     case CLASS_WILD_TALENT:
         result = wild_talent_get_class();
         break;
+    case CLASS_YELLOW_MAGE:
+        result = yellow_mage_get_class();
+        break;
     }
 
     return result;

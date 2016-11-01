@@ -839,24 +839,30 @@ enum _mimic_types {
 #define CLASS_NINJA             26
 #define CLASS_SNIPER            27
 #define CLASS_TIME_LORD         28
-#define CLASS_BLOOD_KNIGHT        29
-#define CLASS_WARLOCK            30
-#define CLASS_ARCHAEOLOGIST        31
-#define CLASS_DUELIST            32
-#define CLASS_WILD_TALENT        33
-#define CLASS_RUNE_KNIGHT        34
-#define CLASS_WEAPONMASTER        35
+#define CLASS_BLOOD_KNIGHT      29
+#define CLASS_WARLOCK           30
+#define CLASS_ARCHAEOLOGIST     31
+#define CLASS_DUELIST           32
+#define CLASS_WILD_TALENT       33
+#define CLASS_RUNE_KNIGHT       34
+#define CLASS_WEAPONMASTER      35
 #define CLASS_BLOOD_MAGE        36
-#define CLASS_NECROMANCER        37
-#define CLASS_PSION                38
-#define CLASS_RAGE_MAGE            39
+#define CLASS_NECROMANCER       37
+#define CLASS_PSION             38
+#define CLASS_RAGE_MAGE         39
 #define CLASS_SCOUT             40
 #define CLASS_MAULER            41
 #define CLASS_MONSTER           42
 #define CLASS_MYSTIC            43
 #define CLASS_DEVICEMASTER      44
-
-#define MAX_CLASS               45
+#define CLASS_YELLOW_MAGE       45
+#define CLASS_GRAY_MAGE         46
+    #define MAX_CLASS               46
+/*
+#define CLASS_LOGRUS_MASTER     47
+#define CLASS_TERRAMANCER       48
+#define CLASS_CANNIBAL          49
+#define MAX_CLASS               50 */
 
 /* Warlock Pacts ... stored in p_ptr->psubclass */
 enum {

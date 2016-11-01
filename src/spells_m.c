@@ -385,7 +385,7 @@ void orb_of_entropy_spell(int cmd, variant *res)
 {
     int base;
 
-    if (p_ptr->pclass == CLASS_MAGE || p_ptr->pclass == CLASS_BLOOD_MAGE || p_ptr->pclass == CLASS_HIGH_MAGE || p_ptr->pclass == CLASS_SORCERER)
+    if (p_ptr->pclass == CLASS_MAGE || p_ptr->pclass == CLASS_BLOOD_MAGE || p_ptr->pclass == CLASS_HIGH_MAGE || p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_YELLOW_MAGE || p_ptr->pclass == CLASS_GRAY_MAGE)
         base = p_ptr->lev + p_ptr->lev / 2;
     else
         base = p_ptr->lev + p_ptr->lev / 4;

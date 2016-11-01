@@ -1149,9 +1149,16 @@ void do_cmd_cast(void)
 
     /* Take a turn ... Note some spells might have variable
         energy costs, so we allow them to override the default
-        value of 100 when handling SPELL_CAST.
+        value when handling SPELL_CAST.
     */
     energy_use = 100;
+    if (p_ptr->pclass == CLASS_YELLOW_MAGE)
+    {
+        int delta = p_ptr->lev - s_ptr->slevel;
+        if (delta > 0) /* paranoia */
+            energy_use -= delta;
+    }
+    energy_use = energy_use * 100 / p_ptr->spells_per_round;
 
     /* Failed spell */
     if (randint0(100) < chance)
@@ -1210,7 +1217,6 @@ void do_cmd_cast(void)
         if ((o_ptr->tval == TV_CHAOS_BOOK) && (randint1(100) < spell))
         {
             msg_print("You produce a chaotic effect!");
-
             wild_magic(spell);
         }
         else if ((o_ptr->tval == TV_DEATH_BOOK) && (randint1(100) < spell))
@@ -1231,8 +1237,7 @@ void do_cmd_cast(void)
         }
         else if ((o_ptr->tval == TV_MUSIC_BOOK) && (randint1(200) < spell))
         {
-msg_print("An infernal sound echoed.");
-
+            msg_print("An infernal sound echoed.");
             aggravate_monsters(0);
         }
         if (randint1(100) >= chance)

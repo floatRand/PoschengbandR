@@ -649,7 +649,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Archery", {CLASS_ARCHER, CLASS_SNIPER, -1} },
     { "Martial Arts", {CLASS_FORCETRAINER, CLASS_MONK, CLASS_MYSTIC, -1} },
     { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
-                    CLASS_NECROMANCER, CLASS_SORCERER, -1} },
+                    CLASS_NECROMANCER, CLASS_SORCERER, CLASS_YELLOW_MAGE, -1} },
     { "Devices", {CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
     { "Prayer", {CLASS_PRIEST, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
@@ -3029,6 +3029,13 @@ static int player_init[MAX_CLASS][3][2] =
         { TV_WAND, EFFECT_BOLT_MISSILE },
         { TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR},
         { TV_SWORD, SV_SHORT_SWORD },
+    },
+
+    {
+        /* Yellow-Mage */
+        { TV_SORCERY_BOOK, 0 }, /* Hack: for realm1 book */
+        { TV_DEATH_BOOK, 0 }, /* Hack: for realm2 book */
+        { TV_SWORD, SV_DAGGER }
     },
 };
 

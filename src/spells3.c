@@ -3277,7 +3277,14 @@ s16b spell_chance(int spell, int use_realm)
         chance += 5 * (need_mana - p_ptr->csp);
     }
 
-    if ((use_realm != p_ptr->realm1) && ((p_ptr->pclass == CLASS_MAGE) || (p_ptr->pclass == CLASS_BLOOD_MAGE) || (p_ptr->pclass == CLASS_PRIEST))) chance += 5;
+    if ( use_realm != p_ptr->realm1
+      && ( p_ptr->pclass == CLASS_MAGE
+        || p_ptr->pclass == CLASS_BLOOD_MAGE
+        || p_ptr->pclass == CLASS_PRIEST
+        || p_ptr->pclass == CLASS_YELLOW_MAGE ) )
+    {
+        chance += 5;
+    }
 
     /* Extract the minimum failure rate */
     minfail = adj_mag_fail[p_ptr->stat_ind[mp_ptr->spell_stat]];

@@ -1386,6 +1386,7 @@ struct player_type
     s32b spell_turn[64];      /* Turn last cast successfully, or 0 */
     s16b weapon_exp[5][64];   /* Proficiency of weapons */
     s16b skill_exp[10];       /* Proficiency of misc. skill */
+    s16b spells_per_round;    /* 175 = 1.75 spells per round, etc. Calculated in calc_bonuses(). Only works for book casters (do_cmd_cast) at the moment. */
 
     s32b magic_num1[MAX_MAGIC_NUM];     /* Array for non-spellbook type magic */
     byte magic_num2[MAX_MAGIC_NUM];     /* Flags for non-spellbook type magics */

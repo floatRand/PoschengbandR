@@ -91,7 +91,6 @@ extern s32b realm_choices2[];
 extern cptr realm_names[];
 extern cptr spell_names[VALID_REALM][32];
 extern int chest_traps[64];
-extern cptr player_title[MAX_CLASS][PY_MAX_LEVEL/5];
 extern cptr color_names[16];
 extern cptr stat_names[6];
 extern cptr stat_names_reduced[6];
@@ -2489,6 +2488,7 @@ extern void     samurai_posture_spell(int cmd, variant *res);
 extern void     samurai_posture_get_flags(u32b flgs[OF_ARRAY_SIZE]);
 extern void     samurai_posture_calc_stats(s16b stats[MAX_STATS]);
 extern void     samurai_posture_calc_bonuses(void);
+extern cptr     do_hissatsu_spell(int spell, int mode);
 
 extern class_t *tourist_get_class(void);
 extern class_t *scout_get_class(void);
@@ -2506,7 +2506,7 @@ extern class_t *warrior_mage_get_class(void);
 extern void     weaponsmith_object_flags(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE]);
 extern class_t *weaponsmith_get_class(void);
 
-extern cptr do_hissatsu_spell(int spell, int mode);
+extern class_t *yellow_mage_get_class(void);
 
 /* necromancer.c */
 extern bool     repose_of_the_dead;

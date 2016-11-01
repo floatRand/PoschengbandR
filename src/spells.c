@@ -1305,5 +1305,10 @@ void spellbook_character_dump(doc_ptr doc)
         }
         doc_newline(doc);
     }
+
+    if (p_ptr->spells_per_round > 100)
+    {
+        doc_printf(doc, " You may cast %d.%2d spells per round.\n\n", p_ptr->spells_per_round/100, p_ptr->spells_per_round%100);
+    }
 }
 

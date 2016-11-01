@@ -172,7 +172,7 @@ cptr info_weight(int weight)
  */
 int beam_chance(void)
 {
-    if (p_ptr->pclass == CLASS_MAGE || p_ptr->pclass == CLASS_BLOOD_MAGE || p_ptr->pclass == CLASS_NECROMANCER)
+    if (p_ptr->pclass == CLASS_MAGE || p_ptr->pclass == CLASS_BLOOD_MAGE || p_ptr->pclass == CLASS_NECROMANCER || p_ptr->pclass == CLASS_YELLOW_MAGE || p_ptr->pclass == CLASS_GRAY_MAGE)
         return p_ptr->lev;
     if (p_ptr->pclass == CLASS_HIGH_MAGE || p_ptr->pclass == CLASS_SORCERER)
         return p_ptr->lev + 10;
@@ -1568,7 +1568,7 @@ static cptr do_sorcery_spell(int spell, int mode)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -1640,7 +1640,7 @@ static cptr do_sorcery_spell(int spell, int mode)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -2855,7 +2855,9 @@ static cptr do_chaos_spell(int spell, int mode)
             if (p_ptr->pclass == CLASS_MAGE ||
                 p_ptr->pclass == CLASS_BLOOD_MAGE ||
                 p_ptr->pclass == CLASS_HIGH_MAGE ||
-                p_ptr->pclass == CLASS_SORCERER)
+                p_ptr->pclass == CLASS_SORCERER ||
+                p_ptr->pclass == CLASS_YELLOW_MAGE ||
+                p_ptr->pclass == CLASS_GRAY_MAGE)
                 base = plev + plev / 2;
             else
                 base = plev + plev / 4;
@@ -3194,7 +3196,7 @@ static cptr do_chaos_spell(int spell, int mode)
         if (desc) return "Fires a magic rocket.";
 
         {
-            int dam = spell_power(120 + plev * 2 + p_ptr->to_d_spell);
+            int dam = spell_power(50 + plev * 4 + p_ptr->to_d_spell);
             int rad = 2;
 
             if (info) return info_damage(0, 0, dam);
@@ -3202,9 +3204,7 @@ static cptr do_chaos_spell(int spell, int mode)
             if (cast)
             {
                 if (!get_aim_dir(&dir)) return NULL;
-
                 msg_print("You launch a rocket!");
-
                 fire_rocket(GF_ROCKET, dir, dam, rad);
             }
         }
@@ -3579,7 +3579,9 @@ static cptr do_death_spell(int spell, int mode)
             if (p_ptr->pclass == CLASS_MAGE ||
                 p_ptr->pclass == CLASS_BLOOD_MAGE ||
                 p_ptr->pclass == CLASS_HIGH_MAGE ||
-                p_ptr->pclass == CLASS_SORCERER)
+                p_ptr->pclass == CLASS_SORCERER ||
+                p_ptr->pclass == CLASS_YELLOW_MAGE ||
+                p_ptr->pclass == CLASS_GRAY_MAGE)
                 base = plev + plev / 2;
             else
                 base = plev + plev / 4;
@@ -4094,7 +4096,7 @@ static cptr do_trump_spell(int spell, int mode)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -4161,7 +4163,7 @@ static cptr do_trump_spell(int spell, int mode)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -4820,7 +4822,7 @@ static cptr do_arcane_spell(int spell, int mode)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -5061,7 +5063,7 @@ static cptr do_arcane_spell(int spell, int mode)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -5981,7 +5983,9 @@ static cptr do_daemon_spell(int spell, int mode)
             if (p_ptr->pclass == CLASS_MAGE ||
                 p_ptr->pclass == CLASS_BLOOD_MAGE ||
                 p_ptr->pclass == CLASS_HIGH_MAGE ||
-                p_ptr->pclass == CLASS_SORCERER)
+                p_ptr->pclass == CLASS_SORCERER ||
+                p_ptr->pclass == CLASS_YELLOW_MAGE ||
+                p_ptr->pclass == CLASS_GRAY_MAGE)
                 base = plev + plev / 2;
             else
                 base = plev + plev / 4;
@@ -6545,7 +6549,7 @@ static cptr do_crusade_spell(int spell, int mode)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -8658,7 +8662,7 @@ static cptr do_hex_spell(int spell, int mode)
             {
                 msg_print("Oops!");
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(30, 0L);
             }
 
