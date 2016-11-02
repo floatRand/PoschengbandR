@@ -3890,6 +3890,8 @@ static void process_command(void)
                 rage_mage_gain_spell();
             else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                 magic_eater_gain();
+            else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+                gray_mage_gain_spell();
             else if (p_ptr->pclass == CLASS_PSION)
             {
                 msg_print("You can only gain spells at certain levels.");
@@ -3910,6 +3912,8 @@ static void process_command(void)
                 do_cmd_snipe_browse();
             else if (p_ptr->pclass == CLASS_RAGE_MAGE)
                 rage_mage_browse_spell();
+            else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+                gray_mage_browse_spell();
             else if (p_ptr->pclass == CLASS_ARCHAEOLOGIST ||
                      p_ptr->pclass == CLASS_BERSERKER ||
                      p_ptr->pclass == CLASS_DUELIST ||
@@ -4009,6 +4013,8 @@ static void process_command(void)
                     do_cmd_cast_learned();
                 else if (p_ptr->pclass == CLASS_SNIPER)
                     do_cmd_snipe();
+                else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+                    gray_mage_cast_spell();
                 else if (p_ptr->pclass == CLASS_ARCHAEOLOGIST ||
                             p_ptr->pclass == CLASS_BERSERKER ||
                             p_ptr->pclass == CLASS_DUELIST ||

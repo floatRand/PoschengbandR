@@ -2516,11 +2516,6 @@ static void calc_spells(void)
     {
         num_allowed = 32;
     }
-    else if (p_ptr->realm2 == REALM_NONE)
-    {
-        num_allowed = (num_allowed+1)/2;
-        if (num_allowed>(32+bonus)) num_allowed = 32+bonus;
-    }
     else if ( p_ptr->pclass == CLASS_MAGE
            || p_ptr->pclass == CLASS_BLOOD_MAGE
            || p_ptr->pclass == CLASS_PRIEST
@@ -2528,6 +2523,11 @@ static void calc_spells(void)
            || p_ptr->pclass == CLASS_GRAY_MAGE )
     {
         if (num_allowed>(96+bonus)) num_allowed = 96+bonus;
+    }
+    else if (p_ptr->realm2 == REALM_NONE)
+    {
+        num_allowed = (num_allowed+1)/2;
+        if (num_allowed>(32+bonus)) num_allowed = 32+bonus;
     }
     else
     {

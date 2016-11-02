@@ -648,7 +648,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
                     CLASS_WEAPONSMITH, -1} },
     { "Archery", {CLASS_ARCHER, CLASS_SNIPER, -1} },
     { "Martial Arts", {CLASS_FORCETRAINER, CLASS_MONK, CLASS_MYSTIC, -1} },
-    { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
+    { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_GRAY_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
                     CLASS_NECROMANCER, CLASS_SORCERER, CLASS_YELLOW_MAGE, -1} },
     { "Devices", {CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
     { "Prayer", {CLASS_PRIEST, -1} },
@@ -724,6 +724,16 @@ static void _devicemaster_menu_fn(int cmd, int which, vptr cookie, variant *res)
     {
     case MENU_TEXT:
         var_set_string(res, devicemaster_speciality_name(which));
+        break;
+    }
+}
+
+static void _gray_mage_menu_fn(int cmd, int which, vptr cookie, variant *res)
+{
+    switch (cmd)
+    {
+    case MENU_TEXT:
+        var_set_string(res, gray_mage_speciality_name(which));
         break;
     }
 }
@@ -923,6 +933,25 @@ static int _prompt_class(void)
                         p_ptr->psubclass = idx;
                         c_put_str(TERM_L_BLUE, format("%-14s", devicemaster_speciality_name(p_ptr->psubclass)), 7, 14);
                         if (!_confirm_choice(devicemaster_speciality_desc(p_ptr->psubclass), menu3.count)) continue;
+                        idx = _prompt_personality();
+                        if (idx == _BIRTH_ESCAPE) continue;
+                        return idx;
+                    }
+                }
+                else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+                {
+                    for (;;)
+                    {
+                    menu_t menu3 = { "Speciality", "classes.txt#Gray-Mage", "Choose a magical bias.",
+                                        _gray_mage_menu_fn,
+                                        NULL, GRAY_MAGE_MAX};
+                        c_put_str(TERM_WHITE, "              ", 7, 14);
+                        idx = _menu_choose(&menu3, p_ptr->psubclass);
+                        if (idx == _BIRTH_ESCAPE) break;
+                        if (idx < 0) return idx;
+                        p_ptr->psubclass = idx;
+                        c_put_str(TERM_L_BLUE, format("%-14s", gray_mage_speciality_name(p_ptr->psubclass)), 7, 14);
+                        if (!_confirm_choice(gray_mage_speciality_desc(p_ptr->psubclass), menu3.count)) continue;
                         idx = _prompt_personality();
                         if (idx == _BIRTH_ESCAPE) continue;
                         return idx;
@@ -3037,6 +3066,14 @@ static int player_init[MAX_CLASS][3][2] =
         { TV_DEATH_BOOK, 0 }, /* Hack: for realm2 book */
         { TV_SWORD, SV_DAGGER }
     },
+
+    {
+        /* Gray-Mage TODO */
+        { 0, 0 },
+        { 0, 0 },
+        { 0, 0 }
+    },
+
 };
 
 
@@ -3100,7 +3137,6 @@ static void _birth_object(int tv, int sv, int qty)
     }
 
     forge.number = qty;
-    obj_identify_fully(&forge);
     add_outfit(&forge);
 }
 

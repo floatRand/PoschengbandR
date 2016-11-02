@@ -10,7 +10,7 @@ void rage_mage_rage_fueled(int dam)
 
     if (sp < 1)
         sp = 1;
-    
+
     p_ptr->csp += sp;
     if (p_ptr->csp > p_ptr->msp)
     {
@@ -29,18 +29,18 @@ void rage_mage_blood_lust(int dam)
         sp = dam/8;
     else
         sp = dam/12;
-        
+
     if (sp < 1)
         sp = 1;
-        
+
     p_ptr->csp += sp;
     if (p_ptr->csp > p_ptr->msp)
     {
         p_ptr->csp = p_ptr->msp;
         p_ptr->csp_frac = 0;
     }
-    p_ptr->redraw |= PR_MANA;            
-    
+    p_ptr->redraw |= PR_MANA;
+
     _unclear_mind = FALSE;
 }
 
@@ -115,7 +115,7 @@ static void _barbaric_resistance_spell(int cmd, variant *res)
     case SPELL_CAST:
     {
         int base = 10;
-        
+
         if (p_ptr->shero)
             base = 20;
 
@@ -124,7 +124,7 @@ static void _barbaric_resistance_spell(int cmd, variant *res)
         set_oppose_fire(randint1(base) + base, FALSE);
         set_oppose_cold(randint1(base) + base, FALSE);
         set_oppose_pois(randint1(base) + base, FALSE);
-    
+
         var_set_bool(res, TRUE);
         break;
     }
@@ -288,7 +288,7 @@ static void _focus_rage_spell(int cmd, variant *res)
 
         _unclear_mind = FALSE; /* Hack to avoid automatic mana drain for this action */
         var_set_bool(res, TRUE);
-        break;    
+        break;
     }
     default:
         default_spell(cmd, res);
@@ -350,7 +350,7 @@ static void _greater_focus_rage_spell(int cmd, variant *res)
         int hp = 10 + p_ptr->lev;
 
         var_set_bool(res, FALSE);
-        
+
         if (p_ptr->shero)
             hp = 2 * p_ptr->lev;
 
@@ -364,7 +364,7 @@ static void _greater_focus_rage_spell(int cmd, variant *res)
 
         _unclear_mind = FALSE; /* Hack to avoid automatic mana drain for this action */
         var_set_bool(res, TRUE);
-        break;    
+        break;
     }
     default:
         default_spell(cmd, res);
@@ -529,7 +529,7 @@ static void _resist_disenchantment_spell(int cmd, variant *res)
 }
 
 static int _object_dam_type(object_type *o_ptr)
-{            
+{
     switch (o_ptr->activation.type)
     {
     case EFFECT_BEAM_ACID:
@@ -644,13 +644,13 @@ static void _shatter_device_spell(int cmd, variant *res)
     {
         int item;
         object_type *o_ptr;
-        
+
         var_set_bool(res, FALSE);
         item_tester_hook = object_is_device;
         if (!get_item(&item, "Shatter which device?", "You have nothing to shatter.", USE_INVEN)) return;
         o_ptr = &inventory[item];
         var_set_bool(res, TRUE);
-        
+
         if (o_ptr->activation.type == EFFECT_NONE)
         {
             msg_print("Nothing happens.");
@@ -691,9 +691,9 @@ static void _shatter_device_spell(int cmd, variant *res)
         }
         else
         {
-            project(0, 5, py, px, 
+            project(0, 5, py, px,
                 o_ptr->activation.difficulty * 16,
-                _object_dam_type(o_ptr), 
+                _object_dam_type(o_ptr),
                 PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL, -1);
         }
         inven_item_increase(item, -1);
@@ -748,14 +748,14 @@ static void _smash_spell(int cmd, variant *res)
     case SPELL_CAST:
     {
         int y, x, dir;
-        
+
         var_set_bool(res, FALSE);
         if (!get_rep_dir2(&dir)) return;
         if (dir == 5) return;
 
         y = py + ddy[dir];
         x = px + ddx[dir];
-        
+
         if (!in_bounds(y, x)) return;
 
         if (cave_have_flag_bold(y, x, FF_HURT_ROCK))
@@ -841,11 +841,11 @@ static void _summon_commando_team_spell(int cmd, variant *res)
         if (!target_set(TARGET_KILL)) return;
         x = target_col;
         y = target_row;
-            
+
         for (i = 0; i < num; i++)
         {
             summon_named_creature(-1, y, x, MON_G_MASTER_MYS, mode);
-        }                
+        }
         var_set_bool(res, TRUE);
         break;
     }
@@ -873,11 +873,11 @@ static void _summon_horde_spell(int cmd, variant *res)
 
         if (p_ptr->shero)
             mode |= PM_HASTE;
-            
+
         for (i = 0; i < num; i++)
         {
             summon_named_creature(-1, py, px, MON_DAWN, mode);
-        }                
+        }
         var_set_bool(res, TRUE);
         break;
     }
@@ -914,7 +914,7 @@ static void _whirlwind_attack_spell(int cmd, variant *res)
 }
 
 /* The Rage Mage uses spellbooks to learn spells
-   like other magic classes. However, learning a 
+   like other magic classes. However, learning a
    spell destroys the book, and casting a spell
    does not require the book (cf The Samurai).
    Rage is a class specific realm.
@@ -927,7 +927,7 @@ typedef struct {
 } book_t;
 
 static book_t _books[4] = {
-    { "Anger Management", 
+    { "Anger Management",
         {{ 1,  2, 30, _shout_spell},
          { 2,  2, 25, _detect_magical_foes_spell},
          { 3,  3, 30, _smash_spell},
@@ -968,7 +968,7 @@ static book_t _books[4] = {
          {47,  0, 80, _rage_strike_spell}}
     },
 };
-                                 
+
 static int _spell_index(int book, int spell)
 {
     return book * _SPELLS_PER_BOOK + spell;
@@ -985,7 +985,7 @@ static void _learn_spell(int book, int spell)
 {
     int idx = _spell_index(book, spell);
     int i;
-    
+
     p_ptr->spell_learned1 |= (1L << idx);
 
     /* Find the next open entry in "p_ptr->spell_order[]" */
@@ -997,7 +997,8 @@ static void _learn_spell(int book, int spell)
 
     /* Add the spell to the known list */
     p_ptr->spell_order[i++] = spell;
-    
+    p_ptr->learned_spells++;
+
     msg_format("You have learned the technique of %s.", get_spell_name(_books[book].spells[spell].fn));
 }
 
@@ -1010,45 +1011,45 @@ static bool _gain_spell(int book)
 
     /* Build a list of learnable spells. Spells can only be
        learned once (no spell skills) and we only display spells
-       if the user is of high enough level. This is rather 
+       if the user is of high enough level. This is rather
        different than how the system normally behaves, but why spoil
        the nature of future higher level spells to the player?
-    */    
+    */
     for (i = 0; i < _SPELLS_PER_BOOK; i++)
     {
         spell_info *src = &_books[book].spells[i];
-        
+
         if (!_is_spell_known(book, i) && src->level <= p_ptr->lev)
         {
             spell_info *dest = &spells[ct];
-            
+
             dest->level = src->level;
             dest->cost = src->cost;
             dest->fail = calculate_fail_rate(
-                src->level, 
-                src->fail, 
+                src->level,
+                src->fail,
                 p_ptr->stat_ind[A_STR]
             );
             dest->fn = src->fn;
             indices[ct] = i;
-            
+
             ct++;
         }
     }
-    
+
     if (ct == 0)
     {
         msg_print("You may not learn any spells in that book.");
         return FALSE;
     }
-    
+
     which = choose_spell(spells, ct, "rage", 1000);
     if (which >= 0 && which < ct)
     {
         _learn_spell(book, indices[which]);
         return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -1067,7 +1068,7 @@ void rage_mage_gain_spell(void)
         msg_print("You are too confused!");
         return;
     }
-    
+
     if (!p_ptr->new_spells)
     {
         msg_print("You cannot learn any new techniques!");
@@ -1089,12 +1090,12 @@ void rage_mage_gain_spell(void)
             inventory[item].number = 1;
             object_desc(o_name, &inventory[item], 0);
             inventory[item].number = old_amt;
-            
+
             msg_format("%^s is destroyed.", o_name);
             inven_item_increase(item, -1);
             inven_item_describe(item);
             inven_item_optimize(item);
-            
+
             energy_use = 100;
         }
     }
@@ -1102,7 +1103,7 @@ void rage_mage_gain_spell(void)
 
 void rage_mage_browse_spell(void)
 {
-    /* TODO: Perhaps browse should display contents of rage 
+    /* TODO: Perhaps browse should display contents of rage
        spellbooks in inventory rather than already known spells? */
     do_cmd_spell_browse();
 }
@@ -1128,7 +1129,7 @@ static void _player_action(int energy_use)
         int loss;
         loss = p_ptr->csp/8 + p_ptr->lev/10 + 1;
         loss = loss * energy_use / 100; /* Prorata normal action energy */
-    
+
         p_ptr->csp -= loss;
         if (p_ptr->csp < 0)
         {
@@ -1148,7 +1149,7 @@ static void _calc_bonuses(void)
     /* Squishy */
     p_ptr->to_a -= p_ptr->lev + 10;
     p_ptr->dis_to_a -= p_ptr->lev + 10;
-    
+
     if (p_ptr->tim_resist_curses)
     {
         p_ptr->skills.sav += 20;
@@ -1163,18 +1164,18 @@ static int _get_spells_imp(spell_info* spells, int max, int book)
     for (i = 0; i < _SPELLS_PER_BOOK; i++)
     {
         spell_info *src, *dest;
-        
+
         if (ct >= max) break;
         src = &_books[book].spells[i];
-        
+
         if (_is_spell_known(book, i))
-        {            
+        {
             dest = &spells[ct++];
             dest->level = src->level;
             dest->cost = src->cost;
             dest->fail = calculate_fail_rate(
-                src->level, 
-                src->fail, 
+                src->level,
+                src->fail,
                 p_ptr->stat_ind[A_STR]
             );
             dest->fn = src->fn;
@@ -1201,7 +1202,7 @@ static int _get_spells(spell_info* spells, int max)
     int ct = 0;
     menu_t menu = { "Use which group?", NULL, NULL,
                     _book_menu_fn, _books, 4 };
-    
+
     idx = menu_choose(&menu);
     if (idx < 0) return 0;
 

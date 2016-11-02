@@ -113,7 +113,7 @@ static void _display(object_type *list, rect_t display)
 #define _ALLOW_EMPTY    0x01 /* Absorb */
 #define _ALLOW_SWITCH   0x02 /* Browse/Use */
 #define _ALLOW_EXCHANGE 0x04
-object_type *_choose(cptr verb, int tval, int options)
+static object_type *_choose(cptr verb, int tval, int options)
 {
     object_type *result = NULL;
     int          slot = 0;
@@ -254,7 +254,7 @@ object_type *_choose(cptr verb, int tval, int options)
     return result;
 }
 
-void _use_object(object_type *o_ptr)
+static void _use_object(object_type *o_ptr)
 {
     int  boost = device_power(100) - 100;
     u32b flgs[OF_ARRAY_SIZE];

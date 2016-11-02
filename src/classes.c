@@ -94,6 +94,9 @@ class_t *result = NULL;
     case CLASS_FORCETRAINER:
         result = force_trainer_get_class();
         break;
+    case CLASS_GRAY_MAGE:
+        result = gray_mage_get_class();
+        break;
     case CLASS_HIGH_MAGE:
         result = high_mage_get_class();
         break;

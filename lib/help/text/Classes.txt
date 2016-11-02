@@ -433,6 +433,35 @@ Magic
     Base HP        4        Bows        Bad          
     Experience   130%
     
+  Gray-Mage
+  The Gray-Mage casts spells from memory, rather than from a book.  
+  Indeed, the spell book is only required for the initial learning 
+  process. However, only a small number of spells may be learned at any 
+  given time, and while the Gray-Mage may replace old spells with new 
+  ones, they can only learn a fixed number of total spells (based upon 
+  Intelligence and Experience).
+   
+  The Gray-Mage does not choose spell realms the way an ordinary spell 
+  caster would. Instead, they choose a general bias towards one of 
+  Good, Neutral or Evil magic. So while all Gray-Mages may learn spells 
+  from the Arcane, Armageddon, Chaos, Craft, Sorcery and Trump realms, 
+  only a Good Bias allows access to Life and Crusade magic; only a 
+  Neutral Bias allows access to Nature magic; and only an Evil Bias 
+  allows access to Death and Daemon magic. Still, it is obvious that 
+  the Gray Mage will have an extremely large pool of spells from which 
+  to choose. Like the Mage, Intelligence is the key stat.
+  
+    Stats                   Skills
+    Strength      -4        Disarming   Fair         
+    Intelligence  +3        Device      Superb       
+    Wisdom        +0        Save        Good         
+    Dexterity     +1        Stealth     Good         
+    Constitution  -2        Searching   Poor         
+    Charisma      -2        Perception  Fair         
+    Life Rating   95%       Melee       Very Bad     
+    Base HP        0        Bows        Very Bad     
+    Experience   130%
+    
   High-Mage
   High-mages are mages who specialize in one particular field of magic 
   and learn it very well - much better than the ordinary mage. A high 
@@ -1248,6 +1277,7 @@ Monk           +2   -1   +1   +3   +2   +1  110%  +12  130%
 Mystic         +2   -1   -2   +3   +1   +2  100%   +4  130%
 Blood-Mage     -4   +3   -2   +1   +2   -2  108%  +10  135%
 Blue-Mage      -4   +4   -1   +1   -2   -2  100%   +4  130%
+Gray-Mage      -4   +3   +0   +1   -2   -2   95%   +0  130%
 High-Mage      -4   +4   +0   +0   -2   -2   94%   +0  130%
 Mage           -4   +3   +0   +1   -2   -2   95%   +0  130%
 Necromancer    -2   +3   -4   +1   -1   -2   95%   +2  125%
@@ -1298,6 +1328,7 @@ Monk          Superb        Very Good     Fair          Excellent
 Mystic        Superb        Very Good     Fair          Excellent    
 Blood-Mage    Fair          Superb        Good          Good         
 Blue-Mage     Fair          Superb        Good          Good         
+Gray-Mage     Fair          Superb        Good          Good         
 High-Mage     Fair          Superb        Good          Good         
 Mage          Fair          Superb        Good          Good         
 Necromancer   Fair          Superb        Good          Very Good    
@@ -1348,6 +1379,7 @@ Monk          Good          Fair          Excellent     Excellent
 Mystic        Good          Fair          Excellent     Excellent    
 Blood-Mage    Poor          Fair          Very Bad      Very Bad     
 Blue-Mage     Fair          Poor          Bad           Bad          
+Gray-Mage     Poor          Fair          Very Bad      Very Bad     
 High-Mage     Poor          Fair          Very Bad      Very Bad     
 Mage          Poor          Fair          Very Bad      Very Bad     
 Necromancer   Poor          Fair          Very Bad      Very Bad     

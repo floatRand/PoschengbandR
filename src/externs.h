@@ -89,7 +89,6 @@ extern u32b fake_spell_flags[4];
 extern s32b realm_choices1[];
 extern s32b realm_choices2[];
 extern cptr realm_names[];
-extern cptr spell_names[VALID_REALM][32];
 extern int chest_traps[64];
 extern cptr color_names[16];
 extern cptr stat_names[6];
@@ -2412,10 +2411,17 @@ extern cptr     devicemaster_speciality_name(int psubclass);
 extern cptr     devicemaster_speciality_desc(int psubclass);
 extern bool     devicemaster_is_speciality(object_type *o_ptr);
 extern class_t *force_trainer_get_class(void);
+
+extern void     gray_mage_browse_spell(void);
+extern void     gray_mage_cast_spell(void);
+extern void     gray_mage_gain_spell(void);
+extern class_t *gray_mage_get_class(void);
+extern cptr     gray_mage_speciality_name(int psubclass);
+extern cptr     gray_mage_speciality_desc(int psubclass);
+
 extern class_t *high_mage_get_class(void);
 extern bool     imitator_cast(bool revenge);
 extern class_t *imitator_get_class(void);
-extern void     spellbook_character_dump(doc_ptr doc);
 extern class_t *mage_get_class(void);
 extern equip_template_ptr mon_get_equip_template(void);
 extern cptr     mon_name(int r_idx);

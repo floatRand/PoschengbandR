@@ -526,7 +526,7 @@
 #define REALM_DEATH        5
 #define REALM_TRUMP        6
 #define REALM_ARCANE       7
-#define REALM_CRAFT           8
+#define REALM_CRAFT        8
 #define REALM_DAEMON       9
 #define REALM_CRUSADE      10
 #define REALM_NECROMANCY   11
@@ -857,14 +857,14 @@ enum _mimic_types {
 #define CLASS_DEVICEMASTER      44
 #define CLASS_YELLOW_MAGE       45
 #define CLASS_GRAY_MAGE         46
-    #define MAX_CLASS               46
+#define MAX_CLASS               47
+
 /*
 #define CLASS_LOGRUS_MASTER     47
 #define CLASS_TERRAMANCER       48
-#define CLASS_CANNIBAL          49
-#define MAX_CLASS               50 */
+#define CLASS_CANNIBAL          49 */
 
-/* Warlock Pacts ... stored in p_ptr->psubclass */
+/* Subclasses */
 enum {
     WARLOCK_UNDEAD,
     WARLOCK_DRAGONS,
@@ -876,7 +876,13 @@ enum {
     WARLOCK_MAX
 };
 
-/* Weaponmaster Specialities ... stored in p_ptr->psubclass */
+enum {
+    GRAY_MAGE_GOOD,
+    GRAY_MAGE_NEUTRAL,
+    GRAY_MAGE_EVIL,
+    GRAY_MAGE_MAX,
+};
+
 #define WEAPONMASTER_NONE      -1
 #define WEAPONMASTER_AXES       0
 #define WEAPONMASTER_BOWS       1

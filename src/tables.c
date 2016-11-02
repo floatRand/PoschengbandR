@@ -2140,6 +2140,7 @@ s32b realm_choices1[MAX_CLASS] =
      CH_CHAOS | CH_DEATH | CH_TRUMP |
      CH_ARCANE | CH_ENCHANT | CH_DAEMON |
      CH_CRUSADE | CH_ARMAGEDDON),  /* Yellow-Mage */
+    CH_NONE,                /* Gray-Mage */
 };
 
 
@@ -2207,6 +2208,7 @@ s32b realm_choices2[MAX_CLASS] =
      CH_CHAOS | CH_DEATH | CH_TRUMP |
      CH_ARCANE | CH_ENCHANT | CH_DAEMON |
      CH_CRUSADE | CH_ARMAGEDDON),  /* Yellow-Mage */
+    CH_NONE,                /* Gray-Mage */
 };
 
 
