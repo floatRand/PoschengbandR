@@ -1279,6 +1279,9 @@ static void _dump_realm(doc_ptr doc, int realm)
 
 void spellbook_character_dump(doc_ptr doc)
 {
+    if (p_ptr->pclass == CLASS_RAGE_MAGE)
+        return; /* TODO */
+
     doc_printf(doc, "<topic:Spells>==================================== <color:keypress>S</color>pells ===================================\n\n");
 
     if (p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_SORCERER)

@@ -1903,7 +1903,7 @@ static void prt_effects(void)
         prt_food(row++, col);
     if (p_ptr->wizard)
         c_put_str(TERM_L_BLUE, "Wizard", row++, col);
-    if (p_ptr->new_spells)
+    if (p_ptr->new_spells && p_ptr->pclass != CLASS_RAGE_MAGE)
     {
         char tmp[20];
         sprintf(tmp, "Study (%d)", p_ptr->new_spells);

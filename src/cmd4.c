@@ -7842,7 +7842,8 @@ void do_cmd_knowledge(void)
 
         c_prt(TERM_RED, "Skills", row++, col - 2);
         prt("(P) Proficiency", row++, col);
-        prt("(s) Spell Proficiency", row++, col);
+        if (p_ptr->pclass != CLASS_RAGE_MAGE) /* TODO */
+            prt("(s) Spell Proficiency", row++, col);
         row++;
 
         /* Prompt */
@@ -7947,7 +7948,8 @@ void do_cmd_knowledge(void)
             do_cmd_knowledge_weapon_exp();
             break;
         case 's':
-            do_cmd_knowledge_spell_exp();
+            if (p_ptr->pclass != CLASS_RAGE_MAGE)  /* TODO */
+                do_cmd_knowledge_spell_exp();
             break;
 
         default:

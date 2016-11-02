@@ -145,7 +145,7 @@ static void _crude_mapping_spell(int cmd, variant *res)
         var_set_string(res, "Maps the dungeon in your vicinity.");
         break;
     case SPELL_CAST:
-        map_area(14);
+        map_area(DETECT_RAD_DEFAULT); /* Was 14, but that was just plain annoying! */
         var_set_bool(res, TRUE);
         break;
     default:
@@ -998,16 +998,18 @@ static void _learn_spell(int book, int spell)
     /* Add the spell to the known list */
     p_ptr->spell_order[i++] = spell;
     p_ptr->learned_spells++;
+    p_ptr->update |= PU_SPELLS;
+    p_ptr->redraw |= PR_EFFECTS;
 
     msg_format("You have learned the technique of %s.", get_spell_name(_books[book].spells[spell].fn));
 }
 
 static bool _gain_spell(int book)
 {
-    spell_info     spells[_SPELLS_PER_BOOK];
-    int            indices[_SPELLS_PER_BOOK];
-    int            which;
-    int         ct = 0, i;
+    spell_info spells[_SPELLS_PER_BOOK];
+    int        indices[_SPELLS_PER_BOOK];
+    int        which;
+    int        ct = 0, i;
 
     /* Build a list of learnable spells. Spells can only be
        learned once (no spell skills) and we only display spells
@@ -1075,8 +1077,8 @@ void rage_mage_gain_spell(void)
         return;
     }
 
-    msg_format("You can learn %d new technique%s.", p_ptr->new_spells, (p_ptr->new_spells == 1 ? "" : "s"));
-    msg_print(NULL);
+    /*msg_format("You can learn %d new technique%s.", p_ptr->new_spells, (p_ptr->new_spells == 1 ? "" : "s"));
+    msg_print(NULL);*/
 
     item_tester_tval = TV_RAGE_BOOK;
     if (get_item(&item, "Study which book?", "You have no books that you can read.", USE_INVEN))
@@ -1212,6 +1214,18 @@ static int _get_spells(spell_info* spells, int max)
     return ct;
 }
 
+static void _character_dump(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = 0, i;
+
+    for (i = 0; i < 4; i++)
+        ct += _get_spells_imp(spells + ct, MAX_SPELLS - ct, i);
+
+    py_display_spells(doc, spells, ct);
+}
+
+
 class_t *rage_mage_get_class(void)
 {
     static class_t me = {0};
@@ -1256,6 +1270,7 @@ class_t *rage_mage_get_class(void)
         me.get_spells = _get_spells;
         me.caster_info = _caster_info;
         me.player_action = _player_action;
+        me.character_dump = _character_dump;
         init = TRUE;
     }
 
