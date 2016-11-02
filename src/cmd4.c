@@ -3127,7 +3127,7 @@ void do_cmd_note(void)
  */
 void do_cmd_version(void)
 {
-    msg_format("You are playing PosChengband %d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
+    msg_format("You are playing PosChengband R %d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
 }
 
 

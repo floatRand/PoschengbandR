@@ -2340,7 +2340,7 @@ static void _build_options(doc_ptr doc)
 /****************************** Character Sheet ************************************/
 void py_display_character_sheet(doc_ptr doc)
 {
-    doc_insert(doc, "<style:wide>  [PosChengband <$:version> Character Dump]\n");
+    doc_insert(doc, "<style:wide>  [PosChengband R (Rapid) <$:version> Character Dump]\n");
     if (p_ptr->total_winner)
         doc_insert(doc, "              <color:B>***WINNER***</color>\n");
     else if (p_ptr->is_dead)

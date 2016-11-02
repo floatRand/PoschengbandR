@@ -857,8 +857,9 @@ enum _mimic_types {
 #define CLASS_MONSTER           42
 #define CLASS_MYSTIC            43
 #define CLASS_DEVICEMASTER      44
+#define CLASS_ALCHEMIST			45
 
-#define MAX_CLASS               45
+#define MAX_CLASS               46
 
 /* Warlock Pacts ... stored in p_ptr->psubclass */
 enum {
@@ -909,7 +910,8 @@ enum {
 #define PERS_MUNCHKIN     11
 #define PERS_CRAVEN       12
 #define PERS_HASTY        13
-#define MAX_PERSONALITIES 14
+#define PERS_ECLECTIC     14
+#define MAX_PERSONALITIES 15
 
 /*
  * Number of feats we change to (Excluding default). Used in f_info.txt.
@@ -5114,6 +5116,7 @@ extern int PlayerUID;
 #define MON_MARILITH            1130
 #define MON_MIMIC               1131
 #define MON_MULTIHUED_CENTIPEDE 1132
+#define MON_HIBACHI             1133
 
 /* The Metal Babble guards the Arena dungeon, but this requires the guardian to be a unique
    monster or the dungeon never gets flagged as completed. Note, this messes up the needle

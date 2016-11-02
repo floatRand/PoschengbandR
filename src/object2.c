@@ -2328,6 +2328,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 
     /* Base chance of being "good" */
     f1 = lev + 10;
+	if (f1 < 15) f1 = 15; // minimal chance, curves up early game a slightly.
 
     /* Maximal chance of being "good" */
     if (f1 > d_info[dungeon_type].obj_good) f1 = d_info[dungeon_type].obj_good;
@@ -2467,6 +2468,11 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
             if (make_artifact(o_ptr)) break;
         }
     }
+
+	/* Hack. Minor chance for outofdepth items */
+	if (power >= 2){
+		if (one_in_(77) && lev<=80) lev += 20;
+	}
 
     /* Hack -- Creating an artifact will re-prep the object, zeroing out level field.
        Not everybody calls into artifact.c with a prep'd object, so I guess we need to

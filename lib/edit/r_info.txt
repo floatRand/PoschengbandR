@@ -20546,6 +20546,26 @@ P:Copy:Human:Mauler
 P:Body:Centipede6
 D:Oh my god, it's changing colors! Run!!
 
+N:1133:Hibachi
+G:I:R
+I:150:35d100:50:100:20:400
+W:85:3:999:20000:0:0
+B:SHOOT:HURT:7d12
+B:SHOOT:HURT:7d12
+B:SHOOT:HURT:7d12
+B:STING:HURT:6d10
+F:UNIQUE
+F:ONLY_ITEM | DROP_2D2 | SELF_LITE_2 | DROP_GREAT | FORCE_MAXHP 
+F:OPEN_DOOR | BASH_DOOR | SMART | CAN_FLY | NONLIVING 
+F:EVIL | FEMALE | AURA_FIRE | CAN_SPEAK | POWERFUL 
+F:RES_COLD | RES_ACID | RES_POIS | RES_PLAS | RES_SHAR 
+F:RES_LITE | RES_SOUN | RES_DISE 
+F:IM_FIRE | NO_CONF | NO_SLEEP | NO_STUN
+S:1_IN_3 |
+S:ROCKET | SHOOT | BO_FIRE | BO_PLAS | BO_MANA | BLINK | INVULNER
+D:A giant mechanical bee, engulfed in raging fire.
+D:You feel immense fury emanating from inside.
+
 # N: serial number : monster name
 # G: symbol : color
 # I: speed : hit points : vision : armor class : alertness : weight (lbs)

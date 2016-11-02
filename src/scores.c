@@ -177,7 +177,7 @@ void display_scores_aux(int from, int to, int note, high_score *score)
         Term_clear();
 
         /* Title */
-        put_str("                PosChengband Hall of Fame", 0, 0);
+        put_str("                PosChengband R Hall of Fame", 0, 0);
 
 
         /* Indicate non-top scores */

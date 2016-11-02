@@ -81,6 +81,54 @@ static personality_ptr _get_craven_personality(void)
     return &me;
 }
 
+
+/****************************************************************
+* Eclectic
+****************************************************************/
+static void _eclectic_calc_bonuses(void)
+{
+	p_ptr->to_m_chance -= 1;
+}
+
+static personality_ptr _get_eclectic_personality(void)
+{
+	static personality_t me = { 0 };
+	static bool init = FALSE;
+
+	if (!init)
+	{
+		me.name = "Eclectic";
+		me.desc = "Rather than focusing in one thing, an eclectic "
+			"person is good at everything, but has tendency "
+			"to learn new things rather slowly.";
+
+		me.stats[A_STR] = 1;
+		me.stats[A_INT] = 1;
+		me.stats[A_WIS] = 1;
+		me.stats[A_DEX] = 1;
+		me.stats[A_CON] = 1;
+		me.stats[A_CHR] = 1;
+
+		me.skills.dis = 2;
+		me.skills.dev = 2;
+		me.skills.sav = 2;
+		me.skills.stl = 2;
+		me.skills.srh = 2;
+		me.skills.fos = 2;
+		me.skills.thn = 4;
+		me.skills.thb = 4;
+
+		me.life = 100;
+		me.exp = 125;
+
+		me.calc_bonuses = _eclectic_calc_bonuses;
+
+		init = TRUE;
+	}
+	return &me;
+}
+
+
 /****************************************************************
  * Fearless
  ****************************************************************/
@@ -643,6 +691,8 @@ personality_ptr get_personality_aux(int index)
         return _get_combat_personality();
     case PERS_CRAVEN:
         return _get_craven_personality();
+	case PERS_ECLECTIC:
+		return _get_eclectic_personality();
     case PERS_FEARLESS:
         return _get_fearless_personality();
     case PERS_HASTY:

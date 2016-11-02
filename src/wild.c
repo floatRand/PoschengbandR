@@ -355,6 +355,7 @@ int wilderness_level(int x, int y)
             }
         }
     }
+
     assert(ct);
     return MIN(total / ct, 60);
 }
@@ -682,7 +683,7 @@ static void _generate_encounters(int x, int y, const rect_t *r, const rect_t *ex
     if ( !wilderness[y][x].town
       && generate_encounter
       && !no_wilderness
-      && one_in_(5))
+      && one_in_(5)) 
     {
         room_template_t *room_ptr = choose_room_template(ROOM_AMBUSH, _encounter_terrain_type(x, y));
         if (room_ptr && _generate_special_encounter(room_ptr, x, y, r, exclude))

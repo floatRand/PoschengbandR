@@ -187,6 +187,19 @@ Charisma      +0        Perception  <color:r>Bad          </color>
 Life Rating  100%       Melee       <color:D>Very Bad     </color>
 Experience   100%       Bows        <color:D>Very Bad     </color>
 </style></indent>
+<topic:Eclectic><color:o>Eclectic</color>
+Rather than focusing in one thing, an eclectic person is good at everything, but has tendency to learn new things rather slowly.
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength      +1        Disarming   <color:o>Fair         </color>
+Intelligence  +1        Device      <color:o>Fair         </color>
+Wisdom        +1        Save        <color:o>Fair         </color>
+Dexterity     +1        Stealth     <color:o>Fair         </color>
+Constitution  +1        Searching   <color:y>Good         </color>
+Charisma      +1        Perception  <color:y>Good         </color>
+Life Rating  100%       Melee       <color:y>Very Good    </color>
+Experience   125%       Bows        <color:y>Very Good    </color>
+</style></indent>
 <topic:Tables><style:heading>Table 1 - Personality Statistic Bonus Table</style>
 
 <style:table><color:G>               STR  INT  WIS  DEX  CON  CHR  Life  Exp</color>
@@ -204,6 +217,7 @@ Patient         -1   -1   +1   -2   +2   +0  102%  100%
 Munchkin        +3   +3   +3   +3   +3   +3  150%   50%
 Craven          -1   +1   +1   -1   -1   -3   99%  100%
 Hasty           +0   -1   -2   +2   -1   +0  100%  100%
+Eclectic        +1   +1   +1   +1   +1   +1  100%  125%
 
 </style>
 <topic:Skills1><style:heading>Table 2 - Personality Skill Bonus Table I</style>
@@ -223,6 +237,7 @@ Patient      <color:D>Very Bad     </color> <color:D>Very Bad     </color> <colo
 Munchkin     <color:g>Superb       </color> <color:v>Legendary[12]</color> <color:b>Heroic       </color> <color:G>Excellent    </color>
 Craven       <color:G>Excellent    </color> <color:G>Excellent    </color> <color:r>Bad          </color> <color:y>Good         </color>
 Hasty        <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:r>Bad          </color>
+Eclectic     <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 
 </style>
 <topic:Skills2><style:heading>Table 3 - Personality Skill Bonus Table II</style>
@@ -242,6 +257,7 @@ Patient      <color:o>Fair         </color> <color:r>Bad          </color> <colo
 Munchkin     <color:v>Legendary[15]</color> <color:v>Legendary[15]</color> <color:v>Legendary[62]</color> <color:v>Legendary[62]</color>
 Craven       <color:o>Fair         </color> <color:o>Fair         </color> <color:D>Very Bad     </color> <color:g>Superb       </color>
 Hasty        <color:D>Very Bad     </color> <color:r>Bad          </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
+Eclectic     <color:y>Good         </color> <color:y>Good         </color> <color:y>Very Good    </color> <color:y>Very Good    </color>
 
 </style>
 

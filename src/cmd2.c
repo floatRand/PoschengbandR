@@ -2403,7 +2403,7 @@ void do_cmd_walk(bool pickup)
     if (p_ptr->wild_mode && !cave_have_flag_bold(py, px, FF_TOWN))
     {
         int lvl = wilderness_level(px, py);
-        int tmp = MAX(1, 120 + p_ptr->lev*10 - lvl + 5);
+        int tmp = MAX(1, 180 + p_ptr->lev*10 - lvl + 5); /* ver R, less ambushes */
 
         if (wilderness[py][px].road)
             tmp *= 3;
