@@ -6280,7 +6280,7 @@ static cptr do_daemon_spell(int spell, int mode)
         if (desc) return "Fires a ball of nexus.";
 
         {
-            int dam = spell_power(100 + plev * 2 + p_ptr->to_d_spell);
+            int dam = spell_power(75 + plev * 3 + p_ptr->to_d_spell);
             int rad = 4;
 
             if (info) return info_damage(0, 0, dam);
