@@ -379,15 +379,22 @@ static bool _is_allowed_realm(int realm)
     return FALSE;
 }
 
-static bool _is_allowed_book(int tval)
+static bool _is_spellbook(int tval)
 {
+    if (tval < TV_LIFE_BOOK || tval > TV_BURGLARY_BOOK) return FALSE;
+    return TRUE;
+}
+
+bool gray_mage_is_allowed_book(int tval, int sval) /* For autopick.c */
+{
+    if (!_is_spellbook(tval)) return FALSE;
     return _is_allowed_realm(tval2realm(tval));
 }
 
 static bool _spell_book_p(object_type *o_ptr)
 {
-    if (!kind_is_book(o_ptr->k_idx)) return FALSE;
-    return _is_allowed_book(o_ptr->tval);
+    if (!_is_spellbook(o_ptr->tval)) return FALSE;
+    return gray_mage_is_allowed_book(o_ptr->tval, o_ptr->sval);
 }
 
 /* cmd5.c get_spell() was blowing up when I attempted code reuse ...

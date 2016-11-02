@@ -742,6 +742,10 @@ bool check_book_realm(const byte book_tval, const byte book_sval)
         if (is_magic(tval2realm(book_tval)))
             return ((book_tval == TV_ARCANE_BOOK) || (book_sval < 2));
     }
+    else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+    {
+        return gray_mage_is_allowed_book(book_tval, book_sval);
+    }
     return (REALM1_BOOK == book_tval || REALM2_BOOK == book_tval);
 }
 
@@ -1885,14 +1889,14 @@ bool get_item(int *cp, cptr pmt, cptr str, int mode)
             item_tester_tval = 0;
             item_tester_hook = NULL;
             command_cmd = 0; /* Hack -- command_cmd is no longer effective */
-            return (TRUE);            
+            return (TRUE);
         }
         else if ((mode & OPTION_ALL) && *cp == INVEN_ALL)
         {
             item_tester_tval = 0;
             item_tester_hook = NULL;
             command_cmd = 0; /* Hack -- command_cmd is no longer effective */
-            return (TRUE);            
+            return (TRUE);
         }
 
         /* Floor item? */
@@ -1919,7 +1923,7 @@ bool get_item(int *cp, cptr pmt, cptr str, int mode)
             }
         }
 
-        else if ( (inven && (*cp >= 0) && (*cp < INVEN_PACK)) 
+        else if ( (inven && (*cp >= 0) && (*cp < INVEN_PACK))
                || (equip && equip_is_valid_slot(*cp)) )
         {
             if (prev_tag && command_cmd)
@@ -2952,7 +2956,7 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
             }
         }
 
-        else if ( (inven && (*cp >= 0) && (*cp < INVEN_PACK)) 
+        else if ( (inven && (*cp >= 0) && (*cp < INVEN_PACK))
                || (equip && equip_is_valid_slot(*cp)) )
         {
             if (prev_tag && command_cmd)
@@ -3602,7 +3606,7 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
                 /* Add after the last object. */
                 o_list[i].next_o_idx = o_idx;
 
-                /* Re-scan floor list */ 
+                /* Re-scan floor list */
                 floor_num = scan_floor(floor_list, py, px, 0x03);
 
                 /* Hack -- Fix screen */

@@ -2416,6 +2416,7 @@ extern void     gray_mage_browse_spell(void);
 extern void     gray_mage_cast_spell(void);
 extern void     gray_mage_gain_spell(void);
 extern class_t *gray_mage_get_class(void);
+extern bool     gray_mage_is_allowed_book(int tval, int sval);
 extern cptr     gray_mage_speciality_name(int psubclass);
 extern cptr     gray_mage_speciality_desc(int psubclass);
 
