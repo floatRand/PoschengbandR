@@ -2386,6 +2386,9 @@ extern int mystic_get_toggle(void);
 /* ninja.c */
 extern void quick_walk_spell(int cmd, variant *res);
 
+/* alchemist.c */
+extern void alchemist_cast(int tval);
+
 extern class_t *archaeologist_get_class(void);
 extern bool     archaeologist_is_favored_weapon(object_type *o_ptr);
 extern int      archaeologist_spell_stat_idx(void);

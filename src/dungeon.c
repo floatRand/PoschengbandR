@@ -220,6 +220,7 @@ static void sense_inventory1(void)
             case CLASS_WEAPONMASTER:
             case CLASS_RAGE_MAGE:
             case CLASS_MAULER:
+			case CLASS_ALCHEMIST:
             case CLASS_MONSTER:
             {
                 /* Good sensing */
@@ -3911,7 +3912,8 @@ static void process_command(void)
                      p_ptr->pclass == CLASS_SCOUT ||
                      p_ptr->pclass == CLASS_MAULER ||
                      p_ptr->pclass == CLASS_MYSTIC ||
-                     p_ptr->pclass == CLASS_TIME_LORD )
+                     p_ptr->pclass == CLASS_TIME_LORD ||
+					 p_ptr->pclass == CLASS_ALCHEMIST)
             {
                 /* This is the preferred entry point ... I'm still working on
                    coverting everything else */
@@ -3943,7 +3945,8 @@ static void process_command(void)
                 && p_ptr->pclass != CLASS_BERSERKER
                 && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                 && p_ptr->pclass != CLASS_WEAPONMASTER
-                && p_ptr->pclass != CLASS_MAULER )
+                && p_ptr->pclass != CLASS_MAULER 
+				&& p_ptr->pclass != CLASS_ALCHEMIST)
             {
                 msg_print("The dungeon absorbs all attempted magic!");
                 msg_print(NULL);
@@ -3952,7 +3955,8 @@ static void process_command(void)
                     && p_ptr->pclass != CLASS_BERSERKER
                     && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                     && p_ptr->pclass != CLASS_WEAPONMASTER
-                    && p_ptr->pclass != CLASS_MAULER )
+                    && p_ptr->pclass != CLASS_MAULER 
+					&& p_ptr->pclass != CLASS_ALCHEMIST)
             {
                 cptr which_power = "magic";
                 if (p_ptr->pclass == CLASS_MINDCRAFTER || p_ptr->pclass == CLASS_PSION)
@@ -3991,6 +3995,8 @@ static void process_command(void)
                     do_cmd_hissatsu();
                 else if (p_ptr->pclass == CLASS_BLUE_MAGE)
                     do_cmd_cast_learned();
+				else if (p_ptr->pclass == CLASS_ALCHEMIST)
+					alchemist_cast(0);
                 else if (p_ptr->pclass == CLASS_SNIPER)
                     do_cmd_snipe();
                 else if (p_ptr->pclass == CLASS_ARCHAEOLOGIST ||
@@ -4012,7 +4018,7 @@ static void process_command(void)
                             p_ptr->pclass == CLASS_MAULER ||
                             p_ptr->pclass == CLASS_MYSTIC ||
                             p_ptr->pclass == CLASS_PSION ||
-                            p_ptr->pclass == CLASS_TIME_LORD )
+                            p_ptr->pclass == CLASS_TIME_LORD)
                 {
                     /* This is the preferred entrypoint for spells ...
                         I'm still working on coverting everything else */
@@ -4133,7 +4139,7 @@ static void process_command(void)
         {
             if (!p_ptr->wild_mode)
             {
-                if (p_ptr->inside_arena && !devicemaster_is_(DEVICEMASTER_POTIONS))
+                if (p_ptr->inside_arena && (!devicemaster_is_(DEVICEMASTER_POTIONS) && !p_ptr->pclass == CLASS_ALCHEMIST  ))
                 {
                     msg_print("The arena absorbs all attempted magic!");
                     msg_print(NULL);

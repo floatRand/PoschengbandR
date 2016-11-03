@@ -1963,6 +1963,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_WEAPONMASTER:
             case CLASS_RUNE_KNIGHT:
             case CLASS_MAULER:
+			case CLASS_ALCHEMIST:
                 artifact_bias = BIAS_WARRIOR;
                 break;
             case CLASS_MAGE:

@@ -212,6 +212,9 @@ static _blow_info_t _get_blow_info(int hand)
     case CLASS_NINJA:
         result.num = 425; result.wgt = 20; result.mul = 10; break;
 
+	case CLASS_ALCHEMIST:
+		result.num = 525; result.wgt = 150; result.mul = 55; break;
+
     case CLASS_MONSTER:
         result.num = 500; result.wgt = 70; result.mul = 50;
         if (prace_is_(RACE_MON_LICH))

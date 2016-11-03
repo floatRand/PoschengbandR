@@ -4,61 +4,42 @@
 
 /** Based on Magic Eater code, if it wasn't obvious.**/
 
-#define _MAX_SLOTS 8
+#define _MAX_INF_SLOTS 8
 #define _INVALID_SLOT -1
+#define _INFUSION_CAP 30
 
-static object_type _infusions[_MAX_SLOTS];
-static int _infusion_ct[_MAX_SLOTS];
+static object_type _infusions[_MAX_INF_SLOTS];
 
 static void _birth(void)
 {
 	int i;
-	for (i = 0; i < _MAX_SLOTS; i++)
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
 	{
 		memset(&_infusions[i], 0, sizeof(object_type));
 	}
 }
 
-static object_type *_which_list(int tval)
-{
-	switch (tval)
-	{
-	case TV_POTION: return _infusions;
-	}
-	assert(0);
-	return NULL;
-}
-
 static object_type *_which_obj(int tval, int slot)
 {
-	assert(0 <= slot && slot < _MAX_SLOTS);
-	return _which_list(tval) + slot;
+	assert(0 <= slot && slot < _MAX_INF_SLOTS);
+	return _infusions + slot;
 }
 
-static cptr _which_name(int tval)
-{
-	switch (tval)
-	{
-	case TV_POTION: return "Potion";
-	}
-	assert(0);
-	return NULL;
-}
-
-static void _display(object_type *list, rect_t display)
+static void _displayInfusions(rect_t display)
 {
 	char    buf[MAX_NLEN];
 	int     i;
 	point_t pos = rect_topleft(&display);
 	int     padding, max_o_len = 20;
 	doc_ptr doc = NULL;
+	object_type *list = _infusions;
 
 
 	padding = 5;   /* leading " a) " + trailing " " */
 	padding += 12; /* " Count " */
 
 	/* Measure */
-	for (i = 0; i < _MAX_SLOTS; i++)
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
 	{
 		object_type *o_ptr = list + i;
 		if (o_ptr->k_idx)
@@ -77,7 +58,7 @@ static void _display(object_type *list, rect_t display)
 	/* Display */
 	doc = doc_alloc(display.cx);
 	doc_insert(doc, "<style:table>");
-	for (i = 0; i < _MAX_SLOTS; i++)
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
 	{
 		object_type *o_ptr = list + i;
 
@@ -85,18 +66,14 @@ static void _display(object_type *list, rect_t display)
 
 		if (o_ptr->k_idx)
 		{
-			int inf_ct = _infusion_ct[i];
 
 			object_desc(buf, o_ptr, OD_COLOR_CODED);
 			doc_insert(doc, buf);
-
-			
-				doc_printf(doc, "<tab:%d>Count: %3d%%\n", display.cx - 12, inf_ct);
-
+			doc_printf(doc, "\n", display.cx - 12,"");
 			/*doc_printf(doc, "<tab:%d>SP: %3d.%2.2d\n", display.cx - 12, o_ptr->xtra5 / 100, o_ptr->xtra5 % 100);*/
 		}
 		else
-			doc_insert_text(doc, TERM_L_DARK, "(Empty)\n");
+			doc_insert_text(doc, TERM_L_DARK, "(None)\n");
 	}
 	doc_insert(doc, "</style>");
 	doc_sync_term(doc, doc_range_all(doc), doc_pos_create(pos.x, pos.y));
@@ -107,7 +84,7 @@ static void _display(object_type *list, rect_t display)
 #define _ALLOW_SWITCH   0x02 /* Browse/Use */
 #define _ALLOW_EXCHANGE 0x04
 
-object_type *_choose(cptr verb, int tval, int options)
+object_type *_chooseInfusion(cptr verb, int tval, int options)
 {
 	object_type *result = NULL;
 	int          slot = 0;
@@ -119,28 +96,13 @@ object_type *_choose(cptr verb, int tval, int options)
 	bool         exchange = FALSE;
 	int          slot1 = _INVALID_SLOT, slot2 = _INVALID_SLOT;
 
-	if ((options & _ALLOW_SWITCH) && REPEAT_PULL(&cmd))
-	{
-		switch (cmd)
-		{
-		case 'w': which_tval = TV_WAND; break;
-		case 's': which_tval = TV_STAFF; break;
-		case 'r': which_tval = TV_ROD; break;
-		}
-
-		if (REPEAT_PULL(&cmd))
-		{
-			slot = A2I(cmd);
-			if (0 <= slot && slot < _MAX_SLOTS)
-				return _which_obj(which_tval, slot);
-		}
-	}
-
 	if (display.cx > 80)
 		display.cx = 80;
 
+	which_tval = TV_POTION;
 	prompt = string_alloc();
 	screen_save();
+
 	while (!done)
 	{
 		string_clear(prompt);
@@ -148,21 +110,15 @@ object_type *_choose(cptr verb, int tval, int options)
 		if (exchange)
 		{
 			if (slot1 == _INVALID_SLOT)
-				string_printf(prompt, "Select the first %s:", _which_name(which_tval));
+				string_printf(prompt, "Select the first %s:", "infusion");
 			else
-				string_printf(prompt, "Select the second %s:", _which_name(which_tval));
+				string_printf(prompt, "Select the second %s:", "infusion");
 		}
 		else
 		{
-			string_printf(prompt, "%s which %s", verb, _which_name(which_tval));
+			string_printf(prompt, "%s which %s", "Inject", "infusion");
 			if (options & _ALLOW_SWITCH)
 			{
-				switch (which_tval)
-				{
-				case TV_WAND: string_append_s(prompt, " [Press 'S' for Staves, 'R' for Rods"); break;
-				case TV_STAFF: string_append_s(prompt, " [Press 'W' for Wands, 'R' for Rods"); break;
-				case TV_ROD: string_append_s(prompt, " [Press 'W' for Wands, 'S' for Staves"); break;
-				}
 				if (options & _ALLOW_EXCHANGE)
 					string_append_s(prompt, ", 'X' to Exchange");
 				string_append_s(prompt, "]:");
@@ -171,22 +127,12 @@ object_type *_choose(cptr verb, int tval, int options)
 				string_append_c(prompt, ':');
 		}
 		prt(string_buffer(prompt), 0, 0);
-		_display(_which_list(which_tval), display);
+		_displayInfusions(display);
 
 		cmd = inkey_special(FALSE);
 
 		if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q')
 			done = TRUE;
-
-		if (options & _ALLOW_SWITCH)
-		{
-			if (cmd == 'w' || cmd == 'W')
-				which_tval = TV_WAND;
-			else if (cmd == 's' || cmd == 'S')
-				which_tval = TV_STAFF;
-			else if (cmd == 'r' || cmd == 'R')
-				which_tval = TV_ROD;
-		}
 
 		if (options & _ALLOW_EXCHANGE)
 		{
@@ -197,7 +143,7 @@ object_type *_choose(cptr verb, int tval, int options)
 			}
 		}
 
-		if ('a' <= cmd && cmd < 'a' + _MAX_SLOTS)
+		if ('a' <= cmd && cmd < 'a' + _MAX_INF_SLOTS)
 		{
 			slot = A2I(cmd);
 			if (exchange)
@@ -232,25 +178,14 @@ object_type *_choose(cptr verb, int tval, int options)
 		}
 	}
 
-	if (result && (options & _ALLOW_SWITCH))
-	{
-		switch (which_tval)
-		{
-		case TV_WAND: REPEAT_PUSH('w'); break;
-		case TV_STAFF: REPEAT_PUSH('s'); break;
-		case TV_ROD: REPEAT_PUSH('r'); break;
-		}
-		REPEAT_PUSH(I2A(slot));
-	}
-
 	screen_load();
 	string_free(prompt);
 	return result;
 }
 
-void _remove_infusion(){
+int _alchemist_infusion_energyreduction(){
 
-
+	return 0;
 }
 
 void _use_infusion(object_type* o_ptr, int n, int overdose)
@@ -259,20 +194,18 @@ void _use_infusion(object_type* o_ptr, int n, int overdose)
 	u32b flgs[OF_ARRAY_SIZE];
 	bool used = FALSE;
 	int  uses = 1;
-	if (overdose>1) uses = overdose;
 
-	energy_use = 100;
+	energy_use = 100 - _alchemist_infusion_energyreduction();
 
 	obj_flags(o_ptr, flgs);
-	if (have_flag(flgs, OF_SPEED))
-		energy_use -= energy_use * o_ptr->pval / 10;
-
-	if (_infusion_ct[n] < uses)
+	
+	if (o_ptr->number < uses || o_ptr->number == 0)
 	{
 		if (flush_failure) flush();
-		msg_print("There are no infusions left.");
+		msg_print("There are no enough infusions.");
 		return;
 	}
+	
 	/*
 	if (o_ptr->activation.type == EFFECT_IDENTIFY)
 		device_available_charges = device_sp(o_ptr) / o_ptr->activation.cost;
@@ -280,14 +213,11 @@ void _use_infusion(object_type* o_ptr, int n, int overdose)
 	sound(SOUND_QUAFF);
 	
 	used = device_use(o_ptr, boost);
-	for (int i = 0; i < overdose-1; i++){
-		device_use(o_ptr, boost);
-	}
-
 	if (used)
 	{
+		msg_print("There are no enough infusions.");
+		o_ptr->number += uses;
 		stats_on_use(o_ptr, uses);
-		_infusion_ct[n]-=uses;
 	}
 	else
 		energy_use = 0;
@@ -295,7 +225,7 @@ void _use_infusion(object_type* o_ptr, int n, int overdose)
 
 void alchemist_browse(void)
 {
-	object_type *o_ptr = _choose("Browse", TV_POTION, _ALLOW_SWITCH | _ALLOW_EXCHANGE);
+	object_type *o_ptr = _chooseInfusion("Browse", TV_POTION, _ALLOW_SWITCH | _ALLOW_EXCHANGE);
 	if (o_ptr)
 		obj_display(o_ptr);
 }
@@ -307,9 +237,12 @@ void alchemist_cast(int tval)
 	if (!tval)
 		tval = TV_POTION;
 
-	o_ptr = _choose("Use", tval, _ALLOW_SWITCH);
+	o_ptr = _chooseInfusion("Use", tval, _ALLOW_SWITCH);
 	if (o_ptr)
+	{
 		_use_object(o_ptr);
+	}
+
 }
 
 /* Absorb Magic */
@@ -319,9 +252,8 @@ static bool create_infusion(void)
 	object_type *src_ptr;
 	object_type *dest_ptr;
 	char o_name[MAX_NLEN];
-	int numCreated = 0; 
 
-	item_tester_hook = object_is_device;
+	item_tester_hook = object_is_potion;
 	if (!get_item(&item, "Create infusion from which potions? ", "You have nothing to create infusions from.", (USE_INVEN | USE_FLOOR)))
 		return FALSE;
 
@@ -330,11 +262,12 @@ static bool create_infusion(void)
 	else
 		src_ptr = &o_list[0 - item];
 
-	dest_ptr = _choose("Replace", src_ptr->tval, _ALLOW_EMPTY);
+	dest_ptr = _chooseInfusion("Replace", src_ptr->tval, _ALLOW_EMPTY);
 	if (!dest_ptr)
 		return FALSE;
 
-	if (dest_ptr->k_idx)
+	
+	if (dest_ptr->k_idx && dest_ptr->sval != src_ptr->sval)
 	{
 		char prompt[255];
 		object_desc(o_name, dest_ptr, OD_COLOR_CODED);
@@ -343,28 +276,40 @@ static bool create_infusion(void)
 			return FALSE;
 	}
 
-	int infct = get_quantity(NULL, src_ptr->number);
+	int infct = get_quantity(NULL, MIN(src_ptr->number,_INFUSION_CAP));
 
-	object_desc(o_name, src_ptr, OD_COLOR_CODED);
-	msg_format("You create infusions out of %s.", o_name);
+	if (dest_ptr->sval == src_ptr->sval){ // we already got one, so just increment them!
+			
+		if (dest_ptr->number + infct > _INFUSION_CAP) infct = 30 - dest_ptr->number;
+		if (infct < 0) infct = 0;
 
-	*dest_ptr = *src_ptr;
+		dest_ptr->number += infct;
+		object_desc(o_name, src_ptr, OD_COLOR_CODED);
+		msg_format("You create additional infusions out of %s.", o_name);
+	}
+	// limit the infusions
+	else {
+		object_desc(o_name, src_ptr, OD_COLOR_CODED);
+		msg_format("You create infusions out of %s.", o_name);
 
-	dest_ptr->inscription = 0;
-	obj_identify_fully(dest_ptr);
-	stats_on_identify(dest_ptr);
-	
+		*dest_ptr = *src_ptr;
+		dest_ptr->discount = 0;
+		dest_ptr->number = infct;
+		dest_ptr->inscription = 0;
+		obj_identify_fully(dest_ptr);
+		stats_on_identify(dest_ptr);
+	}
 	/* Eliminate the item (from the pack) */
 	if (item >= 0)
 	{
-		inven_item_increase(item, -numCreated);
+		inven_item_increase(item, -infct);
 		inven_item_describe(item);
 		inven_item_optimize(item);
 	}
 	/* Eliminate the item (from the floor) */
 	else
 	{
-		floor_item_increase(0 - item, -numCreated);
+		floor_item_increase(0 - item, -infct);
 		floor_item_describe(0 - item);
 		floor_item_optimize(0 - item);
 	}
@@ -379,10 +324,10 @@ static void _create_infusion_spell(int cmd, variant *res)
 		var_set_string(res, "Create Infusion");
 		break;
 	case SPELL_DESC:
-		var_set_string(res, "");
+		var_set_string(res, "Alchemically process potion to create an infusion - faster to use, and resistant to damage.");
 		break;
 	case SPELL_CAST:
-		var_set_bool(res, gain_magic());
+		var_set_bool(res, create_infusion());
 		break;
 	default:
 		default_spell(cmd, res);
@@ -404,7 +349,7 @@ int alchemist_regen_amt(int tval)
 
 bool alchemist_regen(int pct)
 {
-	if (p_ptr->pclass != CLASS_MAGIC_EATER) return FALSE;
+	if (p_ptr->pclass != CLASS_ALCHEMIST) return FALSE;
 }
 /* Auto-ID */
 bool alchemist_auto_id(object_type *o_ptr)
@@ -412,7 +357,7 @@ bool alchemist_auto_id(object_type *o_ptr)
 	/*
 	int i;
 	if (p_ptr->pclass != CLASS_MAGIC_EATER) return FALSE;
-	for (i = 0; i < _MAX_SLOTS; i++)
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
 	{
 		object_type *device_ptr = _which_obj(TV_POTION, i);
 		if (device_ptr->activation.type == EFFECT_IDENTIFY && device_sp(device_ptr) > device_ptr->activation.cost)
@@ -427,13 +372,13 @@ bool alchemist_auto_id(object_type *o_ptr)
 }
 
 /* Character Dump */
-static void _dump_list(doc_ptr doc, object_type *which_list)
+static void _dump_list(doc_ptr doc)
 {
 	int i;
 	char o_name[MAX_NLEN];
-	for (i = 0; i < _MAX_SLOTS; i++)
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
 	{
-		object_type *o_ptr = which_list + i;
+		object_type *o_ptr = _infusions + i;
 		if (o_ptr->k_idx)
 		{
 			object_desc(o_name, o_ptr, OD_COLOR_CODED);
@@ -447,19 +392,19 @@ static void _dump_list(doc_ptr doc, object_type *which_list)
 
 static void _character_dump(doc_ptr doc)
 {
-	doc_printf(doc, "<topic:Alchemist>================================ Created <color:keypress>I</color>nfusions ===============================\n\n");
+	doc_printf(doc, "<topic:Alchemist>============================= Created <color:keypress>I</color>nfusions ============================\n\n");
 
-	_dump_list(doc, _which_list(TV_POTION));
+	_dump_list(doc);
 
 	doc_newline(doc);
 }
 
-static void _load_list(savefile_ptr file, object_type *which_list)
+static void _load_list(savefile_ptr file)
 {
 	int i;
-	for (i = 0; i < _MAX_SLOTS; i++)
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
 	{
-		object_type *o_ptr = which_list + i;
+		object_type *o_ptr = _infusions + i;
 		memset(o_ptr, 0, sizeof(object_type));
 	}
 
@@ -468,8 +413,8 @@ static void _load_list(savefile_ptr file, object_type *which_list)
 		object_type *o_ptr;
 		i = savefile_read_u16b(file);
 		if (i == 0xFFFF) break;
-		assert(0 <= i && i < _MAX_SLOTS);
-		o_ptr = which_list + i;
+		assert(0 <= i && i < _MAX_INF_SLOTS);
+		o_ptr = _infusions + i;
 		rd_item(file, o_ptr);
 		assert(o_ptr->k_idx);
 	}
@@ -477,15 +422,15 @@ static void _load_list(savefile_ptr file, object_type *which_list)
 
 static void _load_player(savefile_ptr file)
 {
-	_load_list(file, _which_list(TV_POTION));
+	_load_list(file);
 }
 
-static void _save_list(savefile_ptr file, object_type *which_list)
+static void _save_list(savefile_ptr file)
 {
 	int i;
-	for (i = 0; i < _MAX_SLOTS; i++)
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
 	{
-		object_type *o_ptr = which_list + i;
+		object_type *o_ptr = _infusions + i;
 		if (o_ptr->k_idx)
 		{
 			savefile_write_u16b(file, (u16b)i);
@@ -497,7 +442,7 @@ static void _save_list(savefile_ptr file, object_type *which_list)
 
 static void _save_player(savefile_ptr file)
 {
-	_save_list(file, _which_list(TV_POTION));
+	_save_list(file);
 }
 
 /* Class Info */
@@ -522,8 +467,8 @@ class_t *alchemist_get_class(void)
 	/* static info never changes */
 	if (!init)
 	{           /* dis, dev, sav, stl, srh, fos, thn, thb */
-		skills_t bs = { 25, 42, 36, 2, 20, 16, 48, 35 };
-		skills_t xs = { 7, 16, 10, 0, 0, 0, 13, 11 };
+		skills_t bs = { 20, 20, 24, 20, 16, 10, 70, 66 };
+		skills_t xs = { 7, 7, 10, 10, 10, 0, 25, 18 };
 
 		me.name = "Alchemist";
 		me.desc = "Alchemist is master of tinctures, conconctions and "
@@ -546,7 +491,7 @@ class_t *alchemist_get_class(void)
 		me.base_skills = bs;
 		me.extra_skills = xs;
 		me.life = 102;
-		me.base_hp = 6;
+		me.base_hp = 12;
 		me.exp = 150;
 		me.pets = 30;
 

@@ -2699,6 +2699,7 @@ static bool _is_device_class(void)
     case CLASS_HIGH_MAGE:
     case CLASS_MAGE:
     case CLASS_MAGIC_EATER:
+	case CLASS_ALCHEMIST:
     case CLASS_MIRROR_MASTER:
     case CLASS_NECROMANCER:
     case CLASS_ROGUE:
@@ -3762,6 +3763,10 @@ static _kind_p _choose_obj_kind(u32b mode)
                 }
             }
             break;
+		case CLASS_ALCHEMIST:
+			if (one_in_(5))
+				_kind_hook1 = _kind_is_potion;
+			break;
         case CLASS_MAGIC_EATER:
             if (one_in_(5))
                 _kind_hook1 = kind_is_device;
