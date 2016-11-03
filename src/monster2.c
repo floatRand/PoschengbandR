@@ -1661,6 +1661,10 @@ s16b get_mon_num(int level)
                 if (r_info[MON_BANOR].cur_num > 0) continue;
                 if (r_info[MON_LUPART].cur_num > 0) continue;
             }
+
+			if (r_idx == MON_HIBACHI){
+				if (r_info[MON_TAISABACHI].max_num == 0) continue; // Only if Taisabachi has been destroyed.
+			}
         }
 
         table[i].prob3 = table[i].prob2;

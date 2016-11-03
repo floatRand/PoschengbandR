@@ -3338,6 +3338,9 @@ option_type option_info[] =
     { &display_distance,            FALSE,  OPT_PAGE_TEXT, 1, 4,
     "display_distance",             "Display distance in monster list" },
 
+	{ &simple_stat_display,		    TRUE, OPT_PAGE_TEXT, 2, 28,
+	"simple stat display", "Display high stats in more simple format" },
+
     /*** Game-Play ***/
 
     { &stack_force_notes,           TRUE,  OPT_PAGE_GAMEPLAY, 0, 8,

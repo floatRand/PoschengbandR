@@ -1115,7 +1115,7 @@ void apply_nexus(monster_type *m_ptr)
 
         case 7:
         {
-            if (randint0(100) < p_ptr->skills.sav)
+			if (randint0(100) < p_ptr->skills.sav || (p_ptr->resist[RES_NEXUS])) // automatically resist if you have nexus-resistance.
             {
                 msg_print("You resist the effects!");
                 break;

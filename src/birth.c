@@ -3289,7 +3289,7 @@ void player_outfit(void)
 
 static bool get_stat_limits(void)
 {
-    int i, j, m, cs, os;
+    int i, j, m, cs, os, lf;
     s16b cval[6];
     char c;
     char buf[80], cur[80];
@@ -3308,30 +3308,35 @@ static bool get_stat_limits(void)
     put_str("           Base   Rac  Cla  Per      Total  Maximum  Points", 13, 10);
 
     /* Output the maximum stats */
-    for (i = 0; i < 6; i++)
-    {
-        /* Reset the "success" counter */
-        stat_match[i] = 0;
-        cval[i] = 8; /* Stats are rolled as 5 + 1d3 + 1d4 + 1d5 */
+	for (i = 0; i < 6; i++)
+	{
+		/* Reset the "success" counter */
+		stat_match[i] = 0;
+		cval[i] = 8; /* Stats are rolled as 5 + 1d3 + 1d4 + 1d5 */
 
-        /* Race/Class bonus */
-        j = race_ptr->stats[i] + class_ptr->stats[i] + pers_ptr->stats[i];
+		/* Race/Class bonus */
+		j = race_ptr->stats[i] + class_ptr->stats[i] + pers_ptr->stats[i];
 
-        /* Obtain the "maximal" stat */
-        m = adjust_stat(17, j);
+		/* Obtain the "maximal" stat */
+		m = adjust_stat(17, j);
 
-        if (m > 18)
-            sprintf(max[i], "18/%02d", (m - 18));
+		lf = (15 + m / 10) + 3;
+		if (m > 18){
+			if(simple_stat_display) sprintf(max[i], "%02d", lf);
+			else sprintf(max[i], "18/%02d", (m - 18));
+		}
         else
             sprintf(max[i], "%2d", m);
 
         /* Obtain the current stat */
         m = adjust_stat(cval[i], j);
-
-        if (m > 18)
-            sprintf(inp, "18/%02d", (m - 18));
-        else
-            sprintf(inp, "%2d", m);
+		lf = (15 + m / 10) + 3;
+		if (m > 18){
+			if (simple_stat_display) sprintf(inp, "%02d", lf);
+			else sprintf(inp, "18/%02d", (m - 18));
+		}
+		else
+			sprintf(inp, "%2d", m);
 
         sprintf(buf, "%6s       %2d   %+3d  %+3d  %+3d  =  %6s  %6s  %6d",
             stat_names[i], cval[i], race_ptr->stats[i], class_ptr->stats[i],
@@ -3377,9 +3382,12 @@ static bool get_stat_limits(void)
 
                 /* Obtain the current stat */
                 m = adjust_stat(cval[cs], j);
+				lf = (15 + m / 10) + 3;
 
-                if (m > 18)
-                    sprintf(inp, "18/%02d", (m - 18));
+				if (m > 18){
+					if (simple_stat_display) sprintf(inp, "%02d", lf);
+					else sprintf(inp, "18/%02d", (m - 18));
+				}
                 else
                     sprintf(inp, "%2d", m);
 

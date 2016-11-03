@@ -1276,6 +1276,27 @@ void monster_death(int m_idx, bool drop_item)
         }
         break;
 
+	 case MON_TAISABACHI:
+		/* TLB is revealed! */
+		if (!(p_ptr->inside_arena || p_ptr->inside_battle))
+		{
+			bool notice = FALSE;
+
+				int wy = y, wx = x;
+				bool pet = is_pet(m_ptr);
+				u32b mode = 0L;
+
+				if (summon_named_creature(m_idx, wy, wx, MON_HIBACHI, mode))
+				{
+					if (player_can_see_bold(wy, wx))
+						notice = TRUE;
+				}
+			
+			if (notice)
+				msg_print("Hibachi emerges from the explosion!");
+		}
+		break;
+
     case MON_VARIANT_MAINTAINER:
     {
         bool notice = FALSE;

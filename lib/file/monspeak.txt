@@ -764,13 +764,10 @@ says, "Don't you monkey with the monkey!"
 munches on a banana.
 says, "Hear no evil, see no evil, speak no evil."
 
-N:1133:Hibachi
-screams, "Shinugayoi!"
-chitters, "You are a round too early to face me!"
-chitters, "How dare you penetrate my territory?"
-chitters, "Die, maggot."
-chitters, "Die a miserable death by my awesome weapon."
-chitters, "Face full extend of the jam!"
+N:1133:Taisabachi
+chitters.
+
+N:1134:Hibachi
 chitters furiously.
 
 

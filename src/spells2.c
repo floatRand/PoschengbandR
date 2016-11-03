@@ -81,8 +81,12 @@ void self_knowledge(void)
     for (v_nr = 0; v_nr < 6; v_nr++)
     {
         char stat_desc[80];
+		if (simple_stat_display){
+			int lf = (15 + p_ptr->stat_cur[v_nr] / 10) + 3;
 
-        sprintf(stat_desc, "%s 18/%d", stat_names[v_nr], p_ptr->stat_max_max[v_nr]-18);
+			sprintf(stat_desc, "%s %d", stat_names[v_nr], lf);
+		}
+		else sprintf(stat_desc, "%s 18/%d", stat_names[v_nr], p_ptr->stat_max_max[v_nr]-18);
 
         strcpy(s_string[v_nr], stat_desc);
 

@@ -173,8 +173,8 @@ static int _adj_pseudo_id(int num)
 
     result = result * (625 - virtue_current(VIRTUE_KNOWLEDGE)) / 625;
 
-    /* Hack: Pseudo-id becomes instantaneous at CL35 ( 25, R-ver ) */
-    if (lev >= 25) return 0;
+    /* Hack: Pseudo-id becomes instantaneous at CL35 ( 20, R-ver ) */
+    if (lev >= 20) return 0;
     for (;;)
     {
         lev -= 5;

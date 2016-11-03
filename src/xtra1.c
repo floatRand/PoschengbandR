@@ -205,30 +205,49 @@ static int calc_adj_dex_ta(void)
  */
 void cnv_stat(int val, char *out_val)
 {
-    /* Above 18 */
-    if (val > 18)
-    {
-        int bonus = (val - 18);
+	
 
-        if (bonus >= 220)
-        {
-            sprintf(out_val, "18/%3s", "***");
-        }
-        else if (bonus >= 100)
-        {
-            sprintf(out_val, "18/%03d", bonus);
-        }
-        else
-        {
-            sprintf(out_val, " 18/%02d", bonus);
-        }
-    }
+	if (simple_stat_display){
+		if (val > 18)
+		{
+			int bonus = (val - 18);
+			int lf = (15 + bonus / 10) + 3;
+			if (lf == 40) { sprintf(out_val, "  40%2d", "**"); }
+			else sprintf(out_val, "    %2d", lf);
+		}
+		/* From 3 to 18 */
+		else
+		{
+			sprintf(out_val, "    %2d", val);
+		}
+	}
+	else{
+		if (val > 18)
+		{
+			int bonus = (val - 18);
 
-    /* From 3 to 18 */
-    else
-    {
-        sprintf(out_val, "    %2d", val);
-    }
+
+			if (bonus >= 220)
+			{
+				sprintf(out_val, "40%3s", "***");
+			}
+			else if (bonus >= 100)
+			{
+				sprintf(out_val, "18/%03d", bonus);
+			}
+			else
+			{
+				sprintf(out_val, " 18/%02d", bonus);
+			}
+		}
+
+		/* From 3 to 18 */
+		else
+		{
+			sprintf(out_val, "    %2d", val);
+		}
+	}
+
 }
 
 
@@ -3528,7 +3547,7 @@ void calc_bonuses(void)
     p_ptr->levitation = FALSE;
     p_ptr->hold_life = FALSE;
     p_ptr->auto_id = FALSE;
-    p_ptr->auto_pseudo_id = FALSE;
+    p_ptr->auto_pseudo_id = TRUE; // automatic in this version. 
     p_ptr->auto_id_sp = 0;
     p_ptr->cult_of_personality = FALSE;
     p_ptr->telepathy = FALSE;
@@ -3613,8 +3632,8 @@ void calc_bonuses(void)
     p_ptr->align = friend_align;
     p_ptr->maul_of_vice = FALSE;
 
-    if (easy_id || p_ptr->lev >= 25)
-        p_ptr->auto_pseudo_id = TRUE;
+    if (easy_id) // EVEN EASIER ID!
+       p_ptr->auto_id = TRUE;
 
     if (p_ptr->tim_sustain_str) p_ptr->sustain_str = TRUE;
     if (p_ptr->tim_sustain_int) p_ptr->sustain_int = TRUE;
