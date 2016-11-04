@@ -3189,6 +3189,7 @@ static int _calc_xtra_hp(int amt)
     case CLASS_IMITATOR:
     case CLASS_NINJA:
     case CLASS_RUNE_KNIGHT:
+	case CLASS_ALCHEMIST:
         w1 = 1; w2 = 1; w3 = 0;
         break;
 

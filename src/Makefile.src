@@ -33,7 +33,7 @@ SDLMAINFILES = main-sdl.o
 X11MAINFILES = main-x11.o
 
 ANGFILES = \
-	archaeologist.o archer.o artifact.o autopick.o virtue.o bard.o \
+	alchemist.o archaeologist.o archer.o artifact.o autopick.o virtue.o bard.o \
 	beastmaster.o berserker.o birth.o bldg.o blood_knight.o blood_mage.o blue_mage.o \
     cavalry.o cave.o chaos_warrior.o classes.o cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o \
 	cmd6.o combat.o demigod.o devicemaster.o devices.o do-spell.o doppelganger.o duelist.o dungeon.o \

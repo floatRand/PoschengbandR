@@ -2023,6 +2023,8 @@ enum {
 #define SV_POTION_CLARITY               70
 #define SV_POTION_GREAT_CLARITY         71
 
+#define POTION_MAX 72
+
 /* The "sval" codes for TV_FLASK */
 #define SV_FLASK_OIL                   0
 

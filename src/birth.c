@@ -3030,6 +3030,12 @@ static int player_init[MAX_CLASS][3][2] =
         { TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR},
         { TV_SWORD, SV_SHORT_SWORD },
     },
+	{
+		/* Alchemist */
+		{ TV_POTION, SV_POTION_SPEED },
+		{ TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR },
+		{ TV_SWORD, SV_SHORT_SWORD },
+	},
 };
 
 
