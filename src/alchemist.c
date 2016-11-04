@@ -311,11 +311,6 @@ object_type *_chooseInfusion(cptr verb, int tval, int options)
 	return result;
 }
 
-int _alchemist_infusion_energyreduction(){
-
-	return 0;
-}
-
 void _use_infusion(object_type* o_ptr, int overdose)
 {
 	int  boost = device_power(100) - 100;
@@ -323,7 +318,7 @@ void _use_infusion(object_type* o_ptr, int overdose)
 	cptr used = NULL;
 	int  uses = 1;
 
-	energy_use = 100 - _alchemist_infusion_energyreduction();
+	energy_use = 100 - _AlchemistSkill(); // at best 30!
 
 	obj_flags(o_ptr, flgs);
 	
@@ -397,7 +392,7 @@ static bool create_infusion(void)
 		return FALSE;
 
 	if (dest_ptr->number >= _INFUSION_CAP) {
-		object_desc(o_name, dest_ptr, OD_COLOR_CODED);
+		object_desc(o_name, dest_ptr, OD_OMIT_PREFIX);
 		msg_format("This slot is already full of %s", o_name);
 		return FALSE;
 	}
@@ -477,7 +472,175 @@ static void _create_infusion_spell(int cmd, variant *res)
 	}
 }
 
-static bool evaporate(){}
+bool _evaporate_aux(object_type *o_ptr){
+
+	int blastType = 0;
+	int power = 0;
+	int dam = -1;
+	int minPow = -1; int maxPow = -1;
+	int fixRad = -1;
+	int rad = 2;
+	int dir = 0;
+	int plev = p_ptr->lev;
+	cptr desc = "";
+
+	char o_name[MAX_NLEN];
+
+	switch (o_ptr->sval){
+	case SV_POTION_APPLE_JUICE:
+	case SV_POTION_SALT_WATER:
+	case SV_POTION_WATER:			blastType = GF_WATER2;	 dam = damroll(3, 3); desc = "It produces a blast of water!";	break;
+	case SV_POTION_BLINDNESS:		blastType = GF_DARK_WEAK;	 dam = damroll(3, 3);					break;
+	case SV_POTION_DETONATIONS:		blastType = GF_ROCKET; dam = p_ptr->lev * 5;						break; // special thing
+	case SV_POTION_DEATH:			blastType = GF_DEATH_RAY; dam = p_ptr->lev * 200;					break;
+	case SV_POTION_RUINATION:		blastType = GF_TIME; dam = plev * 2;  minPow = 30;						break; //Strong time
+	case SV_POTION_LIFE:			blastType = GF_DISP_UNDEAD;	dam = plev * 20; maxPow = 600;	break;
+	case SV_POTION_HEALING:			blastType = GF_DISP_UNDEAD;	dam = plev * 5; maxPow = 200;		break;
+	case SV_POTION_STAR_HEALING:	blastType = GF_DISP_UNDEAD;	dam = plev * 10; maxPow = 400;	break;
+	case SV_POTION_SLEEP:			blastType = GF_OLD_SLEEP; dam = 25 + 5 * (plev - 40); break;
+	case SV_POTION_DEC_CHR:
+	case SV_POTION_DEC_STR:
+	case SV_POTION_DEC_DEX:
+	case SV_POTION_DEC_INT:
+	case SV_POTION_DEC_WIS:
+	case SV_POTION_DEC_CON:
+									blastType = GF_TIME; dam = plev; 								break; // it's time, but really weak.
+	case SV_POTION_CONFUSION:		blastType = GF_CONFUSION;							break;
+	case SV_POTION_SLOWNESS:		blastType = GF_OLD_SLOW;							break;
+	case SV_POTION_LOSE_MEMORIES:	blastType = GF_AMNESIA;								break;
+	case SV_POTION_BLOOD:			blastType = GF_BLOOD; dam = damroll(3, 3);			break;
+	case SV_POTION_POISON:			blastType = GF_POIS; (30 + plev) * 2; rad = 3;      break;
+	case SV_POTION_BERSERK_STRENGTH:blastType = GF_BRAIN_SMASH;	dam = damroll(12, 12);	break;
+	case SV_POTION_STONE_SKIN:		blastType = GF_PARALYSIS; dam = 25 + 5 * (plev - 40); break; // turns to 'stone'
+	case SV_POTION_SLIME_MOLD:		blastType = GF_STUN; 3 + (plev - 1) / 5;			break;
+	case SV_POTION_RESTORE_MANA:    blastType = GF_MANA; dam = damroll(10, 10); rad = 1;break;
+	default: blastType = -1; // no allowing others.
+	}
+	// get description, as well...
+	switch (o_ptr->sval){
+			case SV_POTION_APPLE_JUICE:     desc = "It produces a blast of... apple juice?";	break;
+			case SV_POTION_SALT_WATER:      desc = "It produces a blast of salt water!";	break;
+			case SV_POTION_WATER:			desc = "It produces a blast of water!";	break;
+			case SV_POTION_BLINDNESS:		desc = "It produces a cloud of darkness";	break;
+			case SV_POTION_DETONATIONS:		desc = "It produces an explosion!";	break;
+			case SV_POTION_DEATH:			desc = "It produces a cloud of death!";	break;
+			case SV_POTION_RUINATION:		desc = "It produces a eerie white mist!";	break;
+			case SV_POTION_LIFE:			desc = "It produces a massive pillar of raw life energy!";	break;
+			case SV_POTION_HEALING:			desc = "It produces a cloud of raw life energy!";	break;
+			case SV_POTION_STAR_HEALING:	desc = "It produces a blast of raw life energy!";	break;
+			case SV_POTION_SLEEP:			desc = "It produces a cloud of sleeping gas!";	break;
+			case SV_POTION_DEC_CHR:
+			case SV_POTION_DEC_STR:
+			case SV_POTION_DEC_DEX:
+			case SV_POTION_DEC_INT:
+			case SV_POTION_DEC_WIS:
+			case SV_POTION_DEC_CON:
+				desc = "It a cloud of brown mist!";	break;
+			case SV_POTION_CONFUSION:		desc = "It produces a blast of water!";	break;
+			case SV_POTION_SLOWNESS:		desc = "It produces a blast of water!";	break;
+			case SV_POTION_LOSE_MEMORIES:	desc = "It produces a blast of water!";	break;
+			case SV_POTION_BLOOD:			desc = "It produces a blast of water!";	break;
+			case SV_POTION_POISON:			desc = "It produces a blast of water!";	break;
+			case SV_POTION_BERSERK_STRENGTH:desc = "It produces a cloud of fury!";	break;
+			case SV_POTION_STONE_SKIN:		desc = "It produces a cloud of petrification!";	break;
+			case SV_POTION_SLIME_MOLD:		desc = "It produces a blast of slime!";	break;
+			case SV_POTION_RESTORE_MANA:    desc = "It produces a blast of raw mana!";	break;
+	default: blastType = -1; // no allowing others.
+	}
+
+	if (blastType < 0) { msg_format("You cannot evaporate this potion."); return FALSE; }
+	if (!get_aim_dir(&dir)){ return FALSE; }
+
+	// some special stuff.
+	if (p_ptr->lev > 40 && blastType == GF_AMNESIA)  plev += (p_ptr->lev - 40) * 2;
+
+
+	int default_power = plev;
+
+	if (dam < 0){ 
+		if (minPow >= 0 && minPow > default_power) default_power = minPow;
+		if (maxPow >= 0 && maxPow < default_power) default_power = maxPow;
+		power = spell_power(default_power); 
+	}
+
+	else power = dam;
+
+	object_desc(o_name, o_ptr, OD_OMIT_PREFIX | OD_NO_PLURAL);
+	msg_format("You evaporate %s. %s",o_name, desc);
+
+	fire_ball_aux(
+		blastType,
+		dir,
+		power,
+		rad,
+		PROJECT_FULL_DAM
+		);
+
+
+	return TRUE;
+}
+
+static bool evaporate(){
+
+	int item;
+	object_type *o_ptr;
+	char o_name[MAX_NLEN];
+	bool EvapInf = TRUE;
+	bool success = FALSE;
+
+	char prompt[255];
+	sprintf(prompt, "Evaporate [Q] Potion or [m] Infusion? ");
+	if (msg_prompt(prompt, "qm", PROMPT_DEFAULT) == 'q')
+		EvapInf = FALSE;
+
+	if (EvapInf == FALSE){
+		item_tester_hook = object_is_potion;
+		if (!get_item(&item, "Evaporate which potion? ", "You have nothing to evaporate.", (USE_INVEN | USE_FLOOR)))
+			return FALSE;
+
+		if (item >= 0)
+			o_ptr = &inventory[item];
+		else
+			o_ptr = &o_list[0 - item];
+
+		if (o_ptr){
+			success = _evaporate_aux(o_ptr);
+		}
+
+		if (success == TRUE){
+			if (item >= 0)
+			{
+				inven_item_increase(item, -1);
+				inven_item_describe(item);
+				inven_item_optimize(item);
+			}
+			/* Eliminate the item (from the floor) */
+			else
+			{
+				floor_item_increase(0 - item, -1);
+				floor_item_describe(0 - item);
+				floor_item_optimize(0 - item);
+			}
+		}
+	}
+	else{
+		o_ptr = _chooseInfusion("Evaporate", TV_POTION, 0);
+		if (!o_ptr){ return FALSE; }
+
+		if (o_ptr->number < 1){
+			msg_format("There's nothing to evaporate.");
+			return FALSE;
+		}
+
+		success = _evaporate_aux(o_ptr);
+		if (success == TRUE){
+			o_ptr->number--;
+		}
+
+	}
+	energy_use = 100;
+	return TRUE;
+}
 
 static void _evaporate_spell(int cmd, variant *res)
 {
@@ -513,11 +676,11 @@ static bool break_down_potion(void){
 	int ct = get_quantity(NULL, o_ptr->number);
 
 	if (ct > 0){
-			int cost = (ct * _FindFormula(o_ptr->sval).cost)/2;
+			int cost = (ct * _FindFormula(o_ptr->sval).cost)/3;
 
 			if (_CHEM + cost > _MAX_CHEM){ 
 				char prompt[255];
-				object_desc(o_name, o_ptr, OD_COLOR_CODED);
+				object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
 				sprintf(prompt, "Really break down %s? You will exceed the chemical, and some will be lost. <color:y>[y/N]</color>", o_name);
 				if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n')
 					return FALSE;
@@ -768,6 +931,8 @@ static void _save_player(savefile_ptr file)
 }
 
 
+	
+
 /* Class Info */
 static int _get_powers(spell_info* spells, int max)
 {
@@ -794,13 +959,13 @@ static int _get_powers(spell_info* spells, int max)
 				spell = &spells[ct++];
 	spell->level = 8;
 	spell->cost = 4;
-	spell->fail = 20;
+	spell->fail = 0; //TODO:FAIL CHANCES!
 	spell->fn = _evaporate_spell;
 
 				spell = &spells[ct++];
 	spell->level = 25;
 	spell->cost = 5;
-	spell->fail = 40;
+	spell->fail = 0;
 	spell->fn = alchemy_spell;
 
 	return ct;

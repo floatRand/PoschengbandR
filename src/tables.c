@@ -2136,6 +2136,7 @@ s32b realm_choices1[MAX_CLASS] =
     CH_NONE,                /* Monster */
     CH_NONE,                /* Mystic */
     CH_NONE,                /* Devicemaster */
+	CH_NONE,				/* Alchemist */
 };
 
 
@@ -2199,6 +2200,7 @@ s32b realm_choices2[MAX_CLASS] =
     CH_NONE,                /* Monster */
     CH_NONE,                /* Mystic */
     CH_NONE,                /* Devicemaster */
+	CH_NONE,				/* Alchemist */
 };
 
 
@@ -2930,6 +2932,20 @@ cptr player_title[MAX_CLASS][PY_MAX_LEVEL / 5] =
         "Rocketeer",
         "Rocketeer",
     },
+
+	/* Alchemist */
+	{
+		"Apprentice",
+		"Beginner",
+		"Beginner",
+		"Journeyman",
+		"Journeyman",
+		"Professional",
+		"Professional",
+		"Master",
+		"Master",
+		"Grand",
+	},
 };
 
 monster_power monster_powers[MAX_MONSPELLS] =
