@@ -1115,17 +1115,21 @@ void apply_nexus(monster_type *m_ptr)
 
         case 7:
         {
+			msg_print("You shudder for a moment!");
+			/*
 			if (randint0(100) < p_ptr->skills.sav || (p_ptr->resist[RES_NEXUS])) // automatically resist if you have nexus-resistance.
             {
                 msg_print("You resist the effects!");
                 break;
             }
+
             msg_print("Your body starts to scramble...");
             if (p_ptr->pclass == CLASS_WILD_TALENT)
                 wild_talent_scramble();
             else
                 mutate_player();
-            break;
+            break;**/
+			break;
         }
     }
 }
