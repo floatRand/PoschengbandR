@@ -667,8 +667,27 @@ static bool _club_toss(int hand)
     {
         object_type copy;
 
+        if (!info.come_back)
+        {
+            char o_name[MAX_NLEN];
+            object_desc(o_name, info.o_ptr, OD_NAME_ONLY);
+            msg_format("Your %s fails to return!", o_name);
+        }
+
         if (info.fail_catch)
             msg_print("But you can't catch!");
+
+        if (TRUE) /* This is a showstopper, so force the player to notice! */
+        {
+            msg_print("Press <color:y>Space</color> to continue.");
+            flush();
+            for (;;)
+            {
+                char ch = inkey();
+                if (ch == ' ') break;
+            }
+            msg_line_clear();
+        }
 
         object_copy(&copy, info.o_ptr);
         copy.number = 1;
@@ -685,7 +704,6 @@ static bool _club_toss(int hand)
 
         p_ptr->redraw |= PR_EQUIPPY;
         p_ptr->update |= PU_BONUS;
-
         android_calc_exp();
         handle_stuff();
     }
