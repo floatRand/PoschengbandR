@@ -131,6 +131,7 @@
     <ClCompile Include="floors.c" />
     <ClCompile Include="force_trainer.c" />
     <ClCompile Include="generate.c" />
+    <ClCompile Include="gray_mage.c" />
     <ClCompile Include="grid.c" />
     <ClCompile Include="hex.c" />
     <ClCompile Include="high_mage.c" />
@@ -202,6 +203,7 @@
     <ClCompile Include="race_sword.c" />
     <ClCompile Include="race_troll.c" />
     <ClCompile Include="race_vampire.c" />
+    <ClCompile Include="race_vortex.c" />
     <ClCompile Include="race_xorn.c" />
     <ClCompile Include="race_zombie.c" />
     <ClCompile Include="racial.c" />
@@ -263,6 +265,7 @@
     <ClCompile Include="wizard2.c" />
     <ClCompile Include="xtra1.c" />
     <ClCompile Include="xtra2.c" />
+    <ClCompile Include="yellow_mage.c" />
     <ClCompile Include="z-doc.c" />
     <ClCompile Include="z-form.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
