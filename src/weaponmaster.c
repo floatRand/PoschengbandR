@@ -624,7 +624,7 @@ static bool _club_toss(int hand)
     if((back_chance > 30) && (!one_in_(100) || super_boomerang))
     {
         info.come_back = TRUE;
-        if (back_chance <= 37 && !p_ptr->blind)
+        if (back_chance <= 37 || p_ptr->blind)
             info.fail_catch = TRUE;
     }
 
