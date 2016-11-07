@@ -1606,7 +1606,7 @@ bool make_attack_normal(int m_idx)
                   && !p_ptr->is_dead )
                 {
                     if (weaponmaster_get_toggle() == TOGGLE_TRADE_BLOWS)
-                        msg_format("You trade blows with %^s.", m_name);
+                        msg_format("(You trade blows with %^s.", m_name);
                     else
                         cmsg_print(TERM_L_UMBER, "(You retaliate:");
 
