@@ -1278,7 +1278,7 @@ extern void place_object(int y, int x, u32b mode);
 extern bool make_gold(object_type *j_ptr, bool do_boost);
 extern void place_gold(int y, int x);
 extern s16b drop_near(object_type *o_ptr, int chance, int y, int x);
-extern void acquirement(int y1, int x1, int num, bool great, bool known);
+extern void acquirement(int y1, int x1, int num, int greatness, bool known);
 extern void init_normal_traps(void);
 extern s16b choose_random_trap(void);
 extern void disclose_grid(int y, int x);
@@ -2082,6 +2082,7 @@ extern bool object_is_smith(object_type *o_ptr);
 extern bool object_is_artifact(object_type *o_ptr);
 extern bool object_is_dragon_armor(object_type *o_ptr);
 extern bool object_is_nameless(object_type *o_ptr);
+extern bool object_is_scroll(object_type *o_ptr);
 extern bool object_allow_two_hands_wielding(object_type *o_ptr);
 
 /* wild.c */
@@ -2388,6 +2389,15 @@ extern void quick_walk_spell(int cmd, variant *res);
 
 /* alchemist.c */
 extern void alchemist_cast(int tval);
+
+/* freelancer.c -rtl-
+extern int freelancer_stab_level(void);
+extern void freelancer_skill_boost(void);
+extern int freelancer_hp_boost(void);
+extern int freelancer_sp_boost(void);
+**/
+
+extern bool maledict_ty_protection(void);
 
 extern class_t *archaeologist_get_class(void);
 extern bool     archaeologist_is_favored_weapon(object_type *o_ptr);

@@ -222,6 +222,7 @@ void virtue_init(void)
     case CLASS_MAGE:
     case CLASS_BLOOD_MAGE:
     case CLASS_NECROMANCER:
+	case CLASS_ALCHEMIST:
         p_ptr->vir_types[i++] = VIRTUE_KNOWLEDGE;
         p_ptr->vir_types[i++] = VIRTUE_ENCHANTMENT;
         break;
@@ -297,6 +298,7 @@ void virtue_init(void)
         p_ptr->vir_types[i++] = VIRTUE_VITALITY;
         break;
     case CLASS_MAGIC_EATER:
+	case CLASS_MALEDICT:
         p_ptr->vir_types[i++] = VIRTUE_ENCHANTMENT;
         p_ptr->vir_types[i++] = VIRTUE_KNOWLEDGE;
         break;

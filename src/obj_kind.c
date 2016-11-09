@@ -324,6 +324,12 @@ bool object_is_armour(object_type *o_ptr)
     return FALSE;
 }
 
+bool object_is_scroll(object_type *o_ptr)
+{
+	return o_ptr->tval == TV_SCROLL;
+
+}
+
 bool object_is_shield(object_type *o_ptr)
 {
     if (o_ptr->tval == TV_SHIELD || o_ptr->tval == TV_CARD) return TRUE;

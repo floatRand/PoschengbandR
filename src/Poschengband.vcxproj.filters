@@ -600,6 +600,12 @@
     <ClCompile Include="alchemist.c">
       <Filter>Player\Classes\PoschengbandR</Filter>
     </ClCompile>
+    <ClCompile Include="freelancer.c">
+      <Filter>Player\Classes\PoschengbandR</Filter>
+    </ClCompile>
+    <ClCompile Include="maledictator.c">
+      <Filter>Player\Classes\PoschengbandR</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="angband.h">

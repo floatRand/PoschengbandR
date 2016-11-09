@@ -2487,11 +2487,11 @@ typedef struct _gamble_shop_s {
 
 const _gamble_shop_t _gamble_shop_potions[] = {
     { TV_POTION, SV_POTION_SPEED, 50},
-    { TV_POTION, SV_POTION_CURING, 38},
+    { TV_POTION, SV_POTION_CURING, 50},
     { TV_POTION, SV_POTION_RESISTANCE, 30},
-    { TV_POTION, SV_POTION_HEALING, 30},
-    { TV_POTION, SV_POTION_STAR_HEALING, 10},
-    { TV_POTION, SV_POTION_RESTORE_MANA, 10},
+    { TV_POTION, SV_POTION_HEALING, 50},
+    { TV_POTION, SV_POTION_STAR_HEALING, 20},
+    { TV_POTION, SV_POTION_RESTORE_MANA, 20},
     { TV_POTION, SV_POTION_INC_STR, 3},
     { TV_POTION, SV_POTION_INC_INT, 3},
     { TV_POTION, SV_POTION_INC_WIS, 3},
@@ -2676,7 +2676,7 @@ static bool _gamble_shop_device(int tval)
 
     while (one_in_(lvl/10))
         lvl += 20;
-
+	
     for (;;)
     {
         k_idx = lookup_kind(tval, SV_ANY);
@@ -2864,6 +2864,100 @@ static void _enchant_menu_fn(int cmd, int which, vptr cookie, variant *res)
     default:
         default_menu(cmd, which, cookie, res);
     }
+}
+
+static bool _library_can_read(int sval){
+	/* For berserkers, so they can make some use out of acquirements and whatnot. */
+	switch (sval){
+	case SV_SCROLL_ACQUIREMENT:
+	case SV_SCROLL_STAR_ACQUIREMENT:
+	case SV_SCROLL_CRAFTING:
+	case SV_SCROLL_CURSE_ARMOR:
+	case SV_SCROLL_CURSE_WEAPON:
+	case SV_SCROLL_ENCHANT_ARMOR:
+	case SV_SCROLL_ENCHANT_WEAPON_TO_DAM:
+	case SV_SCROLL_ENCHANT_WEAPON_TO_HIT:
+	case SV_SCROLL_MUNDANITY:
+	case SV_SCROLL_IDENTIFY:
+	case SV_SCROLL_STAR_IDENTIFY:
+	case SV_SCROLL_STAR_REMOVE_CURSE:
+	case SV_SCROLL_REMOVE_CURSE:
+	case SV_SCROLL_RECHARGING:
+	case SV_SCROLL_ARTIFACT:
+	case SV_SCROLL_RESET_RECALL:
+	case SV_SCROLL_WORD_OF_RECALL:
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static bool _read_scroll_for_player(){
+
+	int         i, item, cost = 0;
+	bool        okay = FALSE;
+	object_type *o_ptr;
+	cptr        q, s;
+	char        tmp_str[MAX_NLEN];
+	int         store_factor = store_calc_price_factor(100);
+
+
+	clear_bldg(4, 18);
+
+	q = "Which scroll shall I read for you? ";
+	s = "You have no scrolls. ";
+	if (!get_item(&item, q, s, USE_INVEN )) return (FALSE);
+	o_ptr = &inventory[item];
+
+	if (cost == 0) cost = store_calc_sell_price(obj_value_real(o_ptr) / 2, store_factor);
+
+	/* Streamline. Nothing is more fun then enchanting Twilight (-40,-60)->(+10, +10), I
+	admit. But other players might not share my love of carpal tunnel syndrome! */
+	{
+		if (!_library_can_read(o_ptr->sval))
+		{
+			object_desc(tmp_str, o_ptr, OD_COLOR_CODED | OD_NO_PLURAL | OD_OMIT_PREFIX);
+			msg_format("I will not read %^s for you. ", tmp_str);
+			return FALSE;
+		}
+	}
+
+	char prompt[255];
+	object_desc(tmp_str, o_ptr, OD_COLOR_CODED | OD_NO_PLURAL | OD_OMIT_PREFIX);
+	sprintf(prompt, "Reading %s will cost %d gold. y/n? ", tmp_str, cost);
+	if (msg_prompt(prompt, "ny", PROMPT_YES_NO) == 'n') return FALSE;
+
+	/* Check if the player has enough money */
+	if (p_ptr->au < cost)
+	{
+		msg_format("You don't have enough gold.");
+		return FALSE;
+	}
+
+	okay = device_use(o_ptr, 0);
+
+	if (!okay)
+	{
+		if (flush_failure) flush();
+		msg_print("Scroll wasn't read.");
+		return (FALSE);
+	}
+	else
+	{
+		
+		if (item >= 0)
+		{
+			inven_item_increase(item, -1);
+			inven_item_describe(item);
+			inven_item_optimize(item);
+		}
+		
+		p_ptr->au -= cost;
+		stats_on_gold_services(cost);
+	
+		return (TRUE);
+	}
+	
+	return FALSE;
 }
 
 static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_guild)
@@ -3383,7 +3477,6 @@ static bool research_mon(void)
     return (!notpicked);
 }
 
-
 /*
  * Execute a building command
  */
@@ -3503,6 +3596,7 @@ static void bldg_process_command(building_type *bldg, int i)
         set_confused(0, TRUE);
         set_cut(0, TRUE);
         set_stun(0, TRUE);
+		restore_level(); // restore levels too.
 
         if (p_ptr->riding)
         {
@@ -3637,6 +3731,11 @@ static void bldg_process_command(building_type *bldg, int i)
             paid = TRUE;
         }
         break;
+	case BACT_READ_SCROLL:
+			item_tester_hook = object_is_scroll;
+			_read_scroll_for_player();
+			break;
+		
     case BACT_REPUTATION:
         if (p_ptr->fame <= 0)
             cmsg_print(TERM_WHITE, "Who the hell are you?");

@@ -1963,7 +1963,6 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_WEAPONMASTER:
             case CLASS_RUNE_KNIGHT:
             case CLASS_MAULER:
-			case CLASS_ALCHEMIST:
                 artifact_bias = BIAS_WARRIOR;
                 break;
             case CLASS_MAGE:
@@ -1975,6 +1974,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_BLOOD_MAGE:
             case CLASS_NECROMANCER:
             case CLASS_DEVICEMASTER:
+			case CLASS_MALEDICT:
                 artifact_bias = BIAS_MAGE;
                 warrior_artifact_bias = 20;
                 break;
@@ -1985,6 +1985,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             case CLASS_ROGUE:
             case CLASS_NINJA:
             case CLASS_SCOUT:
+			case CLASS_ALCHEMIST:
                 artifact_bias = BIAS_ROGUE;
                 warrior_artifact_bias = 30;
                 break;
@@ -1999,6 +2000,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 break;
             case CLASS_WARRIOR_MAGE:
             case CLASS_RED_MAGE:
+			//case CLASS_FREELANCER: -rtl-
             case CLASS_PSION:
                 artifact_bias = BIAS_MAGE;
                 warrior_artifact_bias = 20;

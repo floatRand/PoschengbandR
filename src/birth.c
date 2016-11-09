@@ -654,7 +654,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Prayer", {CLASS_PRIEST, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
     { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_PALADIN, CLASS_RANGER, CLASS_RED_MAGE,
-                    CLASS_WARRIOR_MAGE, -1} },
+			CLASS_WARRIOR_MAGE, CLASS_MALEDICT, -1 } },
     { "Riding", {CLASS_BEASTMASTER, CLASS_CAVALRY, -1} },
     { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
@@ -3036,8 +3036,13 @@ static int player_init[MAX_CLASS][3][2] =
 		{ TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR },
 		{ TV_SWORD, SV_SHORT_SWORD },
 	},
+	{
+		/* Maledict */
+		{ TV_SORCERY_BOOK, 0 },
+		{ TV_SOFT_ARMOR, SV_HARD_LEATHER_ARMOR },
+		{ TV_SWORD, SV_SHORT_SWORD },
+	},
 };
-
 
 /*
  * Hook function for human corpses
@@ -3182,10 +3187,11 @@ void player_outfit(void)
     }
     else if (p_ptr->pclass != CLASS_NINJA)
     {
-        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_TORCH));
-        forge.number = (byte)rand_range(3, 7);
-        forge.xtra4 = rand_range(3, 7) * 500;
-        add_outfit(&forge);
+		// Player starts with lantern.
+		object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_LANTERN));
+		forge.number = 1;
+		forge.xtra4 = 5000;
+		add_outfit(&forge);
     }
 
     if (p_ptr->prace == RACE_SNOTLING)

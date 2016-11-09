@@ -2317,9 +2317,9 @@ static void a_m_aux_4(object_type *o_ptr, int level, int power, int mode)
  */
 bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 {
-    int i, rolls, f1, f2, power;
+	int i, rolls, f1, f2, power;
 
-    if (p_ptr->personality == PERS_MUNCHKIN) lev += randint0(p_ptr->lev/2+10);
+	if (p_ptr->personality == PERS_MUNCHKIN || (mode & AM_STARACQUIRE) ) lev += randint0(p_ptr->lev / 2 + 10);
 
     /* Maximum "level" for various things */
     if (lev > MAX_DEPTH - 1) lev = MAX_DEPTH - 1;
@@ -2468,11 +2468,6 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
             if (make_artifact(o_ptr)) break;
         }
     }
-
-	/* Hack. Minor chance for outofdepth items */
-	if (power >= 2){
-		if (one_in_(77) && lev<=80) lev += 20;
-	}
 
     /* Hack -- Creating an artifact will re-prep the object, zeroing out level field.
        Not everybody calls into artifact.c with a prep'd object, so I guess we need to
@@ -4530,37 +4525,55 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
 /*
  * Scatter some "great" objects near the player
  */
-void acquirement(int y1, int x1, int num, bool great, bool known)
+void acquirement(int y1, int x1, int num, int greatness, bool known)
 {
-    object_type *i_ptr;
-    object_type object_type_body;
-    u32b mode = AM_GOOD | (great ? (AM_GREAT | AM_TAILORED) : 0L);
-    int  attempt = 0;
+	object_type *i_ptr;
+    object_type object_type_body, object_type_body_b;
 
+	u32b mode = AM_GOOD | ( (greatness >= 2) ? (AM_GREAT | AM_TAILORED) : 0L);
+	if (greatness > 2) mode |= ( AM_SPECIAL | AM_NO_FIXED_ART ); // artifact, but no fixed ones! 
+	if (greatness == 4) mode |= AM_STARACQUIRE;
+
+	int rerolls = greatness == 4 ? 4 : 0;
+    int attempt = 0;
+
+	int oldscore = 0;
+	int newscore = 0;
     /* Acquirement */
-    while (num && attempt < 1000)
-    {
-        /* Get local object */
-        i_ptr = &object_type_body;
+	
+		while (num && attempt < 1000)
+		{
+			/* Get local object */
+			i_ptr = &object_type_body;
 
-        /* Wipe the object */
-        object_wipe(i_ptr);
-        attempt++;
+			/* Wipe the object */
+			object_wipe(i_ptr);
+			attempt++;
 
-        /* Make a good (or great) object (if possible) */
-        if (!make_object(i_ptr, mode)) continue;
 
-        num--;
-        if (known)
-        {
-            obj_identify(i_ptr);
-        }
+			/* Make a good (or great) object (if possible) */
+			if (!make_object(i_ptr, mode)) continue;
 
-        /* Drop the object */
-        (void)drop_near(i_ptr, -1, y1, x1);
-    }
+				newscore = obj_value_real(i_ptr);
+				if (newscore > oldscore) object_type_body_b = object_type_body; // copy the if it is better
+				if (rerolls > 0){ rerolls--; continue; }
+			
+				object_wipe(i_ptr);
+				i_ptr = &object_type_body_b;
+
+				num--;
+
+			if (known)
+			{
+				obj_identify(i_ptr);
+			}
+
+			/* Drop the object */
+			(void)drop_near(i_ptr, -1, y1, x1);
+		}
+	
+
 }
-
 
 #define MAX_NORMAL_TRAPS 18
 

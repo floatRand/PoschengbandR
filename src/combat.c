@@ -136,6 +136,7 @@ static _blow_info_t _get_blow_info(int hand)
 
     case CLASS_PALADIN:
     case CLASS_SAMURAI:
+	case CLASS_MALEDICT:
         result.num = 550; result.wgt = 70; result.mul = 45; break;
 
     case CLASS_MYSTIC:
@@ -200,6 +201,7 @@ static _blow_info_t _get_blow_info(int hand)
 
     case CLASS_ARCHER:
     case CLASS_BARD:
+	//case CLASS_FREELANCER:
         result.num = 450; result.wgt = 70; result.mul = 20; break;
 
     case CLASS_FORCETRAINER:

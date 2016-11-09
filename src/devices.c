@@ -1458,15 +1458,15 @@ static cptr _do_scroll(int sval, int mode)
         if (desc) return "It creates one great item when you read it.";
         if (cast)
         {
-            acquirement(py, px, 1, TRUE, FALSE);
+            acquirement(py, px, 1, 3, FALSE);
             device_noticed = TRUE;
         }
         break;
     case SV_SCROLL_STAR_ACQUIREMENT:
-        if (desc) return "It creates some great items when you read it.";
+        if (desc) return "It creates a truly great item when you read it.";
         if (cast)
         {
-            acquirement(py, px, _scroll_power(randint1(2) + 1), TRUE, FALSE);
+            acquirement(py, px, 1, 4, FALSE);
             device_noticed = TRUE;
         }
         break;

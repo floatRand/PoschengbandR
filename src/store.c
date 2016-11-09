@@ -1215,6 +1215,9 @@ static bool _temple_accept(int k_idx)
         case SV_POTION_CURE_LIGHT:
         case SV_POTION_BOLDNESS:
         case SV_POTION_HEROISM:
+		case SV_POTION_SPEED:
+		case SV_POTION_HEALING:
+		case SV_POTION_STAR_HEALING:
             return TRUE;
         }
         return FALSE;
@@ -1375,8 +1378,9 @@ static bool _get_store_obj(object_type *o_ptr)
         }
         else
         {
-            level1 = 25 + randint0(25);
-            level2 = 25 + randint0(25);
+			/* Make black market items more worth in long run. */
+			level1 = 25 + randint0(25 + p_ptr->lev / 2) + p_ptr->lev / 2;
+			level2 = 25 + randint0(25 + p_ptr->lev / 2) + p_ptr->lev / 2;
         }
         break;
     case STORE_JEWELER:
@@ -1404,8 +1408,14 @@ static bool _get_store_obj(object_type *o_ptr)
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
         else if (one_in_(7))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_REMOVE_CURSE);
-        else if (one_in_(20))
-            k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
+		else if (one_in_(20))
+			k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
+		else if (one_in_(30) && p_ptr->lev >= 10)
+			k_idx = lookup_kind(TV_POTION, SV_POTION_CURING);
+		else if (one_in_(50) && p_ptr->lev >= 20) // rare
+			k_idx = lookup_kind(TV_POTION, SV_POTION_HEALING);
+		else if (one_in_(100) && p_ptr->lev >= 30)
+			k_idx = lookup_kind(TV_POTION,SV_POTION_STAR_HEALING);
     }
     else if (cur_store_num == STORE_ALCHEMIST)
     {
@@ -1415,10 +1425,13 @@ static bool _get_store_obj(object_type *o_ptr)
             k_idx = lookup_kind(TV_POTION, SV_POTION_RES_STR + randint0(6));
         else if (one_in_(7))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_IDENTIFY);
-        else if (one_in_(10))
-            k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT);
+		else if (one_in_(10))
+			k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT);
+		else if (one_in_(15) && p_ptr->lev>=15) 
+			k_idx = lookup_kind(TV_POTION, SV_POTION_SPEED);
         else if (!easy_id && one_in_(20))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
+
     }
     else if (cur_store_num == STORE_MAGIC && one_in_(20))
     {

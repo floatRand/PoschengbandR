@@ -30,9 +30,7 @@ typedef struct {
 // empties for sake of being consistent with the ids, so I can just do quick lookup with _formulas[SV_POTION_WATER] etc. 
 // svals might be bit excessive then, but eh... Easier on eye, perhaps. Could be checked for safety, ex (if(i!=sval) search_through ). 
 
-static _formula_info_t _null_formula = { -1, -1, FALSE };
-
-static _formula_info_t _formulas[POTION_MAX] = {
+static _formula_info_t _formulas[POTION_MAX+1] = {
 { SV_POTION_WATER,					10, 1},
 { SV_POTION_APPLE_JUICE,			10, 1},
 { SV_POTION_SLIME_MOLD,				10, 1}, 
@@ -81,18 +79,18 @@ static _formula_info_t _formulas[POTION_MAX] = {
 { SV_POTION_RES_DEX,				60, 15},
 { SV_POTION_RES_CON,				60, 15},
 { SV_POTION_RES_CHR,				60, 15},
-{ SV_POTION_INC_STR,				900, 999},
-{ SV_POTION_INC_INT,				900, 999},
-{ SV_POTION_INC_WIS,				900, 999},
-{ SV_POTION_INC_DEX,				900, 999},
-{ SV_POTION_INC_CON,				900, 999},
-{ SV_POTION_INC_CHR,				900, 999},
+{ SV_POTION_INC_STR,				1500, 30},
+{ SV_POTION_INC_INT,				1500, 30},
+{ SV_POTION_INC_WIS,				1500, 30},
+{ SV_POTION_INC_DEX,				1500, 30},
+{ SV_POTION_INC_CON,				1500, 30},
+{ SV_POTION_INC_CHR,				1500, 30},
 { -1, -1, 999 }, // ==========================================//
-{ SV_POTION_AUGMENTATION,			2400, 999},
+{ SV_POTION_AUGMENTATION,			3000, 60},
 { SV_POTION_ENLIGHTENMENT,			120, 30},
 { SV_POTION_STAR_ENLIGHTENMENT,		180, 40},
 { SV_POTION_SELF_KNOWLEDGE,			120, 30},
-{ SV_POTION_EXPERIENCE,				3000, 999},
+{ SV_POTION_EXPERIENCE,				3000, 30},
 { SV_POTION_RESISTANCE,				120, 15},
 { SV_POTION_CURING,					90, 20},
 { SV_POTION_INVULNERABILITY,		300, 60},
@@ -106,6 +104,7 @@ static _formula_info_t _formulas[POTION_MAX] = {
 { SV_POTION_CLARITY,				90, 20},
 { SV_POTION_GREAT_CLARITY,			120, 30},
 
+{ -1, -1, 999 }, // null entry
 };
 
 
@@ -125,14 +124,15 @@ static object_type *_which_obj(int tval, int slot)
 	return _infusions + slot;
 }
 
-static _formula_info_t _FindFormula(int sval){
+static _formula_info_t *_FindFormula(int sval){
+	if (sval<0 || sval > POTION_MAX) return _formulas + POTION_MAX;
 
-	if (sval == _formulas[sval].sval) return _formulas[sval];
+	if (sval == _formulas[sval].sval) return _formulas + sval;
 
 	for (int i = 0; i < POTION_MAX; i++){
-		if (sval == _formulas[i].sval) return _formulas[i];
+		if (sval == _formulas[i].sval) return _formulas + sval;
 	}
-	return _null_formula;
+	return _formulas + POTION_MAX;
 }
 
 static void _displayInfusions(rect_t display)
@@ -177,7 +177,7 @@ static void _displayInfusions(rect_t display)
 
 		if (o_ptr->k_idx)
 		{
-			DC = _FindFormula(o_ptr->sval).minLv;
+			DC = _FindFormula(o_ptr->sval)->minLv;
 			
 
 			
@@ -185,14 +185,14 @@ static void _displayInfusions(rect_t display)
 			doc_insert(doc, buf);
 			if (DC <= alcskil){ // can do
 				doc_printf(doc, "<tab:%d>Cost: %4d%, DC:<color:G>%3d%</color>\n",
-					display.cx - 22, _FindFormula(o_ptr->sval).cost, DC);
+					display.cx - 22, _FindFormula(o_ptr->sval)->cost, DC);
 			} 
 			else if (DC == 999){ // can't do ever
 				doc_printf(doc, "<tab:%d><color:r>Unreproduceable</color>\n",display.cx - 22);
 			}
 			else {
 				doc_printf(doc, "<tab:%d>Cost: %4d%, DC:<color:R>%3d%</color>\n",
-					display.cx - 22, _FindFormula(o_ptr->sval).cost, DC);
+					display.cx - 22, _FindFormula(o_ptr->sval)->cost, DC);
 			}
 
 			/*doc_printf(doc, "<tab:%d>SP: %3d.%2.2d\n", display.cx - 12, o_ptr->xtra5 / 100, o_ptr->xtra5 % 100);*/
@@ -670,12 +670,13 @@ static bool break_down_potion(void){
 
 			if (o_ptr->sval == SV_POTION_WATER){
 				if(randint0(100)<10) msg_print("It's just H2O, funny guy.");
-				else msg_print("It's just plain water, funny guy.");
-				e
+				else msg_print("It's just plain water.");
+				
 				return FALSE;
 			} // 
 
-			int cost = (ct * _FindFormula(o_ptr->sval).cost)/3;
+			int formulaCost = _FindFormula(o_ptr->sval)->cost;
+			int cost = (ct * formulaCost)/3;
 
 			if (_CHEM + cost > _MAX_CHEM){ 
 				char prompt[255];
@@ -756,9 +757,9 @@ void _reproduceInf(object_type* o_ptr){
 
 	int infct = get_quantity(NULL, MIN(_INFUSION_CAP, limit));
 
-	int cost = infct * _FindFormula(o_ptr->sval).cost;
+	int cost = infct * _FindFormula(o_ptr->sval)->cost;
 
-	if (_FindFormula(o_ptr->sval).minLv > _AlchemistSkill()){
+	if (_FindFormula(o_ptr->sval)->minLv > _AlchemistSkill()){
 		msg_format("This infusion is beyond your skills to reproduce.");
 		return;
 	}
@@ -821,19 +822,6 @@ void alchemist_gain(void)
 		energy_use = 100;
 }
 
-/* Regeneration */
-int alchemist_regen_amt(int tval)
-{
-	return 1;
-}
-
-bool alchemist_regen(int pct)
-{
-	if (p_ptr->pclass != CLASS_ALCHEMIST) return FALSE;
-	return TRUE;
-}
-
-
 /* Character Dump */
 static void _dump_list(doc_ptr doc)
 {
@@ -883,6 +871,16 @@ static void _load_list(savefile_ptr file)
 	}
 
 	_CHEM = savefile_read_s32b(file);
+}
+
+static void _calc_bonuses(void){
+	p_ptr->regen += 100 + p_ptr->lev;
+
+}
+
+static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+	if(p_ptr->lev > 25) add_flag(flgs, OF_BRAND_POIS);
 }
 
 static void _load_player(savefile_ptr file)
@@ -989,7 +987,7 @@ class_t *alchemist_get_class(void)
 			"of potions and turning items to gold. They require intelligence "
 			"for some of their abilities.";
 
-		me.stats[A_STR] = -1;
+		me.stats[A_STR] = 0;
 		me.stats[A_INT] = 2;
 		me.stats[A_WIS] = -1;
 		me.stats[A_DEX] = 2;
@@ -997,14 +995,16 @@ class_t *alchemist_get_class(void)
 		me.stats[A_CHR] = -2;
 		me.base_skills = bs;
 		me.extra_skills = xs;
-		me.life = 102;
+		me.life = 105;
 		me.base_hp = 12;
 		me.exp = 150;
 		me.pets = 30;
 
 		me.birth = _birth;
 		me.get_powers = _get_powers;
+		me.calc_bonuses = _calc_bonuses;
 		me.character_dump = _character_dump;
+		me.get_flags = _get_flags;
 		me.caster_info = _caster_info;
 		me.load_player = _load_player;
 		me.save_player = _save_player;

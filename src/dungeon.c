@@ -198,7 +198,7 @@ static int _class_idx(void)
 static void sense_inventory1(void)
 {
     int         i;             /* v~~~ Early Game speed is ridiculous otherwise */
-    int         plev = p_ptr->lev + 10;
+    int         plev = p_ptr->lev + 30;
     bool        heavy = FALSE;
     object_type *o_ptr;
 
@@ -279,6 +279,7 @@ static void sense_inventory1(void)
             case CLASS_ROGUE:
             case CLASS_NINJA:
             case CLASS_SCOUT:
+			//case CLASS_FREELANCER -rtl-:
             {
                 /* Okay sensing */
                 if (0 != randint0(_adj_pseudo_id(20000) / (plev * plev + 40))) return;
@@ -2220,8 +2221,13 @@ static void process_world_aux_curse(void)
         if ((p_ptr->cursed & OFC_TY_CURSE) && one_in_(TY_CURSE_CHANCE))
         {
             int count = 0;
-            (void)activate_ty_curse(FALSE, &count);
-            equip_learn_curse(OFC_TY_CURSE);
+			if ( !(maledict_ty_protection)  ){
+				(void)activate_ty_curse(FALSE, &count);
+				equip_learn_curse(OFC_TY_CURSE);
+			}
+			else{
+				msg_format("You supress the ancient curse lashing at you...");
+			}
         }
         /* Handle experience draining */
         if (p_ptr->prace != RACE_ANDROID &&

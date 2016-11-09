@@ -858,8 +858,9 @@ enum _mimic_types {
 #define CLASS_MYSTIC            43
 #define CLASS_DEVICEMASTER      44
 #define CLASS_ALCHEMIST			45
+#define CLASS_MALEDICT			46
 
-#define MAX_CLASS               46
+#define MAX_CLASS               47
 
 /* Warlock Pacts ... stored in p_ptr->psubclass */
 enum {
@@ -3155,7 +3156,7 @@ enum obj_flags_e {
 #define AM_STOCK_TOWN   0x00000200
 #define AM_STOCK_BM     0x00000400
 #define AM_GUARDIAN     0x00000800
-
+#define AM_STARACQUIRE  0x00001000 /* Use player-level for generating things, instead. */
 
 /*** Monster blow constants ***/
 
@@ -4392,6 +4393,7 @@ extern int PlayerUID;
 #define BACT_REPUTATION             55
 #define BACT_REFORGE_ARTIFACT       56
 #define BACT_CHANGE_NAME            57
+#define BACT_READ_SCROLL			58
 
 /*
  * Quest status

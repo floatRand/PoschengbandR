@@ -1789,7 +1789,6 @@ bool remove_all_curse(void)
     return (remove_curse_aux(TRUE));
 }
 
-
 /*
  * Turns an object into gold, gain some of its value in a shop
  */

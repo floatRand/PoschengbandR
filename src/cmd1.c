@@ -2380,6 +2380,12 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
             if (m_ptr->ml)
             {
                 int tmp = p_ptr->lev * 6 + (p_ptr->skills.stl + 10) * 4;
+
+				//if (p_ptr->pclass == CLASS_FREELANCER){
+				//	if (freelancer_stab_level() == 1)  tmp = (tmp*2) / 3; // 66% effect
+				//	if (freelancer_stab_level() == 2)  tmp = (tmp*4) / 5; // 80% effect
+				//}
+
                 if (p_ptr->monlite && (mode != HISSATSU_NYUSIN)) tmp /= 3;
                 if (p_ptr->cursed & OFC_AGGRAVATE) tmp /= 2;
                 if (r_ptr->level > (p_ptr->lev * p_ptr->lev / 20 + 10)) tmp /= 3;
@@ -2980,9 +2986,16 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         /* vvvvv FALL THRU vvvvvv */
     case CLASS_ROGUE:
     case CLASS_NINJA:
+	//case CLASS_FREELANCER:
         if (o_ptr && !p_ptr->weapon_info[hand].icky_wield)
         {
             int tmp = p_ptr->lev * 6 + (p_ptr->skills.stl + 10) * 4;
+
+			//if (p_ptr->pclass == CLASS_FREELANCER){ // freelancers have bit weaker version. 1st is 66% effective, 2nd is 80%. 100%? 3rd level.
+			//	if (freelancer_stab_level() == 1)  tmp = (tmp * 2) / 3; // 66% effect
+			//	if (freelancer_stab_level() == 2)  tmp = (tmp * 4) / 5; // 80% effect
+			//}
+
             if (p_ptr->monlite && (mode != HISSATSU_NYUSIN)) tmp /= 3;
             if (p_ptr->cursed & OFC_AGGRAVATE) tmp /= 2;
             if (r_ptr->level > (p_ptr->lev * p_ptr->lev / 20 + 10)) tmp /= 3;

@@ -189,9 +189,14 @@ class_t *result = NULL;
         break;
     case CLASS_WILD_TALENT:
         result = wild_talent_get_class();
+		break;
 	case CLASS_ALCHEMIST:
 		result = alchemist_get_class();
         break;
+	case CLASS_MALEDICT:
+		result = maledict_get_class();
+	//case CLASS_FREELANCER:
+		//result = freelancer_get_class();
     }
 
     return result;

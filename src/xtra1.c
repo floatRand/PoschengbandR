@@ -2938,6 +2938,7 @@ static void _calc_encumbrance(void)
     case CLASS_PALADIN:
     case CLASS_CHAOS_WARRIOR:
     case CLASS_RAGE_MAGE:
+	case CLASS_MALEDICT:
         weight += equip_weight(object_is_melee_weapon) / 5;
         break;
 
@@ -3082,6 +3083,7 @@ static void calc_mana(void)
         case CLASS_RANGER:
         case CLASS_MONK:
         case CLASS_RED_MAGE:
+		case CLASS_MALEDICT:
             msp -= msp * p_ptr->cumber_armor_amt / 1000;
             break;
 
@@ -3181,6 +3183,7 @@ static int _calc_xtra_hp(int amt)
     case CLASS_ARCHER:
     case CLASS_WEAPONSMITH:
     case CLASS_WEAPONMASTER:
+	case CLASS_MALEDICT:
         w1 = 2; w2 = 1; w3 = 0;
         break;
 
@@ -3190,6 +3193,7 @@ static int _calc_xtra_hp(int amt)
     case CLASS_NINJA:
     case CLASS_RUNE_KNIGHT:
 	case CLASS_ALCHEMIST:
+	//case CLASS_FREELANCER:
         w1 = 1; w2 = 1; w3 = 0;
         break;
 
@@ -3273,6 +3277,7 @@ static void calc_hitpoints(void)
     if (hex_spelling(HEX_BUILDING)) mhp += 60;
     if (p_ptr->tim_building_up) mhp += 10 + p_ptr->lev/2;
     if (mut_present(MUT_UNYIELDING)) mhp += p_ptr->lev;
+	//if (p_ptr->pclass == CLASS_FREELANCER){ mhp += freelancer_hp_boost(); } -rtl-
 
     if (p_ptr->mhp != mhp)
     {
@@ -3548,7 +3553,7 @@ void calc_bonuses(void)
     p_ptr->levitation = FALSE;
     p_ptr->hold_life = FALSE;
     p_ptr->auto_id = FALSE;
-    p_ptr->auto_pseudo_id = TRUE; // automatic in this version. 
+    p_ptr->auto_pseudo_id = FALSE; 
     p_ptr->auto_id_sp = 0;
     p_ptr->cult_of_personality = FALSE;
     p_ptr->telepathy = FALSE;
@@ -3719,6 +3724,10 @@ void calc_bonuses(void)
             skills_add(&p_ptr->skills, &realm->skills);
             skills_add(&p_ptr->skills, &extra);
         }
+
+		//if (p_ptr->pclass == CLASS_ALCHEMIST){
+		//	freelancer_skill_boost(); // add freelancer skill boosts!
+		//}
     }
 
     p_ptr->skill_tht = p_ptr->skills.thb;
