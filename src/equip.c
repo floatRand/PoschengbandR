@@ -726,11 +726,12 @@ void equip_takeoff(void)
         if (((o_ptr->curse_flags & OFC_HEAVY_CURSE) && one_in_(7)) || one_in_(4))
         {
             msg_print("You teared a cursed equipment off by sheer strength!");
-            o_ptr->ident |= (IDENT_SENSE);
+            o_ptr->ident |= IDENT_SENSE;
             o_ptr->curse_flags = 0L;
             o_ptr->feeling = FEEL_NONE;
-            p_ptr->update |= (PU_BONUS);
-            p_ptr->window |= (PW_EQUIP);
+            p_ptr->update |= PU_BONUS;
+            p_ptr->window |= PW_EQUIP;
+            p_ptr->redraw |= PR_EFFECTS;
 
             msg_print("You break the curse.");
         }
