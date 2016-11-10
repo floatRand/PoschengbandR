@@ -3554,7 +3554,7 @@ void calc_bonuses(void)
     p_ptr->levitation = FALSE;
     p_ptr->hold_life = FALSE;
     p_ptr->auto_id = FALSE;
-    p_ptr->auto_pseudo_id = FALSE; 
+    p_ptr->auto_pseudo_id = ( p_ptr->lev >= 25 ); 
     p_ptr->auto_id_sp = 0;
     p_ptr->cult_of_personality = FALSE;
     p_ptr->telepathy = FALSE;
@@ -4858,9 +4858,18 @@ void calc_bonuses(void)
     if (IS_TIM_STEALTH()) p_ptr->skills.stl += 99;
     if (p_ptr->action == ACTION_STALK) p_ptr->skills.stl += (p_ptr->lev+2)/3;
 
-    if (p_ptr->tim_dark_stalker)
-        p_ptr->skills.stl += 3 + p_ptr->lev/5;
+	if (p_ptr->tim_dark_stalker){
+		p_ptr->skills.stl += 3 + p_ptr->lev / 5;
 
+		if (p_ptr->pclass == CLASS_MALEDICT // for maledicts, dark stalker grants temporary protection from aggravation. 
+			&& p_ptr->cursed & OFC_AGGRAVATE
+			&& p_ptr->personality != PERS_SEXY)
+		{
+			p_ptr->cursed &= ~(OFC_AGGRAVATE);
+			p_ptr->skills.stl = MIN(p_ptr->skills.stl - 3, (p_ptr->skills.stl + 2) / 2);
+		}
+	
+	}
     /* Affect Skill -- disarming (DEX and INT) */
     p_ptr->skills.dis += adj_dex_dis[p_ptr->stat_ind[A_DEX]];
     p_ptr->skills.dis += adj_int_dis[p_ptr->stat_ind[A_INT]];

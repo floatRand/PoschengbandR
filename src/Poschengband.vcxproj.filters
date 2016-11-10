@@ -603,7 +603,7 @@
     <ClCompile Include="freelancer.c">
       <Filter>Player\Classes\PoschengbandR</Filter>
     </ClCompile>
-    <ClCompile Include="maledictator.c">
+    <ClCompile Include="maledict.c">
       <Filter>Player\Classes\PoschengbandR</Filter>
     </ClCompile>
   </ItemGroup>

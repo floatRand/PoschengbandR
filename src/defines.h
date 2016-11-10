@@ -13,7 +13,7 @@
 /*
  * Name of the version/variant
  */
-#define VERSION_NAME "PosChengband"
+#define VERSION_NAME "PosChengband R"
 
 
 #define VER_MAJOR 5

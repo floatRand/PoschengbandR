@@ -2137,7 +2137,7 @@ s32b realm_choices1[MAX_CLASS] =
     CH_NONE,                /* Mystic */
     CH_NONE,                /* Devicemaster */
 	CH_NONE,				/* Alchemist */
-	(CH_DEATH),				/* --------- */
+	CH_NONE,				/* Maledict */
 };
 
 
@@ -2202,7 +2202,7 @@ s32b realm_choices2[MAX_CLASS] =
     CH_NONE,                /* Mystic */
     CH_NONE,                /* Devicemaster */
 	CH_NONE,				/* Alchemist */
-	CH_NONE,	/* ----------*/
+	CH_NONE,				/* Maledict */
 };
 
 

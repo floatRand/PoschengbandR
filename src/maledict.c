@@ -28,14 +28,18 @@ int _calculate_curse_power(void){
 	int slot;
 	int boost = 0;
 	u32b checklist = 0;
+	int basePow = 0;
 
 	for (slot = equip_find_first(object_is_cursed); slot; slot = equip_find_next(object_is_cursed, slot))
 	{
 		object_type *o_ptr = equip_obj(slot);
 		checklist |= (o_ptr->curse_flags);
+		if (o_ptr->curse_flags & OFC_PERMA_CURSE) basePow += 3;
+		else if (o_ptr->curse_flags & OFC_HEAVY_CURSE) basePow += 2;
+		else if (o_ptr->curse_flags & OFC_CURSED) basePow++;
 	}
-
-	boost = _count_flags_set(checklist);
+	basePow /= 2;
+	boost = _count_flags_set(checklist) + basePow;
 	//SPECIAL ONES
 	if (checklist & OFC_PERMA_CURSE) boost += 5;
 	if (checklist & OFC_TY_CURSE) boost += 4;
@@ -45,25 +49,13 @@ int _calculate_curse_power(void){
 	return boost;
 }
 
-
-bool _purge_curse(void){
-
-	int item;
+bool _purge_curse_which(object_type *o_ptr, int itemnum){
 	char tmp_str[MAX_NLEN];
-	object_type *o_ptr;
 
-	item_tester_hook = object_is_cursed;
-	if (!get_item(&item, "Remove curse from which item? ", "There's nothing to uncurse.", (USE_INVEN | USE_EQUIP)))
+	if (o_ptr->curse_flags & OFC_PERMA_CURSE){
+		object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
+		msg_format("The curse permeating %s is permanent.", tmp_str);
 		return FALSE;
-	o_ptr = &inventory[item];
-	if (item >= 0) o_ptr = &inventory[item];
-
-	if (!o_ptr) return FALSE;
-
-	if (o_ptr->curse_flags & OFC_PERMA_CURSE){ 
-			object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
-			msg_format("The curse permeating %s is permanent.", tmp_str);
-		return FALSE; 
 	} // do nothing. It's permanent.
 	if (p_ptr->lev > 35 && o_ptr->curse_flags & OFC_PERMA_CURSE){
 		o_ptr->curse_flags = 0; o_ptr->curse_flags |= OFC_PERMA_CURSE;
@@ -102,8 +94,26 @@ bool _purge_curse(void){
 		return TRUE;
 	}
 	else{
-		return FALSE; 
+		return FALSE;
 	}
+
+}
+
+bool _purge_curse(void){
+
+	int item;
+	object_type *o_ptr;
+
+	item_tester_hook = object_is_cursed;
+	if (!get_item(&item, "Remove curse from which item? ", "There's nothing to uncurse.", (USE_INVEN | USE_EQUIP)))
+		return FALSE;
+	o_ptr = &inventory[item];
+	if (item >= 0) o_ptr = &inventory[item];
+
+	if (!o_ptr) return FALSE;
+	_purge_curse_which(o_ptr, item);
+	
+	return TRUE;
 }
 
 bool _curse_item_aux(void){
@@ -120,19 +130,21 @@ bool _curse_item_aux(void){
 	if (item >= 0) o_ptr = &inventory[item];
 	if (!o_ptr) return FALSE;
 
-	if (p_ptr->lev > 35) power = 2;
-	else power = 1;
+	if (p_ptr->lev > 35) power = 1;
+	else power = 0;
 
 	object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
-	if(power==1) msg_format("A terrible black aura blasts your %s!", tmp_str);
+	if(power==2) msg_format("A terrible black aura blasts your %s!", tmp_str);
 	else msg_format("A black aura surrounds your %s!", tmp_str);
 
 	o_ptr->curse_flags |= (OFC_CURSED);
-	if(power == 2) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
+	if(power == 1) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
 
-	for (int i = 0; i < randint0(power+1) + 1; i++){
+	for (int i = 0; i < randint0(power+2) + 1; i++){
 		o_ptr->curse_flags |= get_curse(power, o_ptr);
 	}
+
+	o_ptr->known_curse_flags = o_ptr->curse_flags; // make the curses known.
 
 	return TRUE;
 }
@@ -158,18 +170,73 @@ static void _curse_item_spell(int cmd, variant *res)
 static int _get_curse_rolls(int pow){
 
 	if (pow == 2) return 4 + (p_ptr->lev / 10) + (_curse_boost_capped / 3); // max 4 + 5 + 5 = 14 
-	else if (pow == 1) return 2 + (p_ptr->lev / 10) + (_curse_boost_capped / 5); // max 2 + 5 + 3 = 10
-	return 2 + (p_ptr->lev + 10) / 20 + ((_curse_boost_capped * 2) / 15); // max 2 + 3 + 2 = 5
+	else if (pow == 1) return 2 + (p_ptr->lev / 10) + (_curse_boost_capped / 3); // max 1 + 5 + 5 = 11
+	return 2 + (p_ptr->lev + 10) / 20 + (_curse_boost_capped / 5); // max 1 + 3 + 3 = 7
 
 }
 
+static bool _inflict_curse_aux(int pow, monster_type *m_ptr, int m_idx, bool DoDamage){
+	int ct = 0; int p = 0;
+	int highest_power = 0;
+	int dType = -1;
+	int refunds = 0;
+	int dmg = 0;
+	int rolls = 1;
+	int plev = p_ptr->lev;
+
+	char m_name[MAX_NLEN];
+	monster_desc(m_name, m_ptr, 0);
+
+	rolls = _get_curse_rolls(pow);
+	if (one_in_(3)) rolls++;
+
+	while (ct <= rolls){
+		ct++;
+		dmg = plev + _curse_boost_capped;
+		dType = -1;
+		if (one_in_(666) && plev > 40){ dType = GF_DEATH_RAY; p = 7; dmg = spell_power(plev * 200); }
+		else if (one_in_(66) && plev > 40){ dType = GF_BLOOD_CURSE; p = 6; }
+		else if (one_in_(22) && plev > 35){ dType = GF_HAND_DOOM; p = 5; }
+		else if (one_in_(18) && plev > 30){ dType = GF_ANTIMAGIC; p = 4; }
+		else if (one_in_(15) && plev > 10){ dType = GF_AMNESIA; p = 3; }
+		else if (one_in_(12) && plev > 10){ dType = GF_PARALYSIS; p = 3; }
+		else if (one_in_(10)){ dType = GF_OLD_CONF; p = 2; }
+		else if (one_in_(8)){ dType = GF_STUN; p = 2; }
+		else if (one_in_(6)){ dType = GF_TURN_ALL; p = 1; }
+		else if (one_in_(4)){ dType = GF_OLD_SLOW; p = 1; }
+		if (p > highest_power) highest_power = p;
+
+		if (r_info[m_idx].flags1 & RF1_UNIQUE){ // if it is an unique, give some refund for high-powered ones...
+			if (p == 6 || p == 3 || p == 7){ refunds++; continue; }
+		}
+		if (dType > 0){
+			project(0, 0, m_ptr->fy, m_ptr->fx, dmg, dType, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME | PROJECT_JUMP, -1);
+		}
+	}
+	// In addition to these things, we also have some damage. Depends a lot on highest power.
+	if (DoDamage){
+		dmg += (plev / 2) * refunds + plev * pow;
+		project(0, 0, m_ptr->fy, m_ptr->fx, dmg, GF_NETHER, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME | PROJECT_JUMP, -1);
+	}
+
+	switch (highest_power){
+	case 1: msg_format("%^s is subjected to a curse. ", m_name); break;
+	case 2: msg_format("The curse reaches out for %s. ", m_name); break;
+	case 3: msg_format("%^s is cursed. ", m_name); break;
+	case 4: msg_format("%^s takes heavy toll from curse. ", m_name); break;
+	case 5: msg_format("%^s is blasted by a mighty curse! ", m_name); break;
+	case 6: msg_format("Black Omen! Terrible fate awaits %s! ", m_name); break;
+	case 7: msg_format("Hand of death reaches for %s! ", m_name); break;
+	default: msg_format("But nothing happens. ", m_name); break;
+	}
+
+	return TRUE;
+}
+
 static bool _inflict_curse(int pow){ 
-	bool result = FALSE;
 	int m_idx = 0;
 	monster_type *m_ptr;
 	char m_name[MAX_NLEN];
-	int plev = p_ptr->lev;
-
 	if (!target_set(TARGET_KILL)) return FALSE;
 
 	m_idx = cave[target_row][target_col].m_idx;
@@ -183,60 +250,50 @@ static bool _inflict_curse(int pow){
 	else if (pow == 1) msg_format("You invoke curse on %s. ", m_name);
 	else msg_format("You invoke a great curse on %s. ", m_name);
 
-	if (m_ptr)
-	{
-	
-			int ct = 0; int p = 0;
-			int highest_power = 0;
-			int dType = -1;
-			int refunds = 0;
-			int dmg = 0;
-			int rolls = 1;
-
-			rolls = _get_curse_rolls(pow);
-			if (one_in_(3)) rolls++;
-
-			while (ct <= rolls){
-				ct++;
-				dmg = plev + _curse_boost_capped;
-
-				if (one_in_(666) && plev > 40){ dType = GF_DEATH_RAY; p = 7; dmg = spell_power(plev * 200); }
-				else if (one_in_(66) && plev > 40){ dType = GF_BLOOD_CURSE; p = 6; }
-				else if (one_in_(22) && plev > 35){ dType = GF_HAND_DOOM; p = 5; }
-				else if (one_in_(18) && plev > 30){ dType = GF_ANTIMAGIC; p = 4; }
-				else if (one_in_(15) && plev > 10){ dType = GF_AMNESIA; p = 3; }
-				else if (one_in_(12) && plev > 10){ dType = GF_PARALYSIS; p = 3; }
-				else if (one_in_(10)){ dType = GF_OLD_CONF; p = 2; }
-				else if (one_in_(8)){ dType = GF_STUN; p = 2; }
-				else if (one_in_(6)){ dType = GF_TURN_ALL; p = 1; }
-				else if (one_in_(4)){ dType = GF_OLD_SLOW; p = 1; }
-				if (p > highest_power) highest_power = p;
-
-				if (r_info[m_idx].flags1 & RF1_UNIQUE){ // if it is an unique, give some refund for high-powered ones...
-					if (p == 6 || p == 3 || p == 7){refunds++; continue;}
-				}
-
-				project(0, 0, m_ptr->fy, m_ptr->fx, dmg, dType, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1);
-			}
-			// In addition to these things, we also have some damage. Depends a lot on highest power.
-			dmg += ( plev/2 ) * refunds + plev * pow;
-			project(0, 0, m_ptr->fy, m_ptr->fx, dmg, GF_NETHER, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1);
-
-			switch (highest_power){
-					case 1: msg_format("%^s is subjected to a curse. ", m_name); break;
-					case 2: msg_format("The curse reaches out for %s. ", m_name); break;
-					case 3: msg_format("%^s is cursed. ", m_name); break;
-					case 4: msg_format("%^s takes heavy toll from curse. ", m_name); break;
-					case 5: msg_format("%^s is blasted by a mighty curse! ", m_name); break;
-					case 6: msg_format("Black Omen! Terrible fate awaits %s! ", m_name); break;
-					case 7: msg_format("Hand of death reaches for %s! ", m_name); break;
-					default: msg_format("But nothing happens. ", m_name); break;
-			}
+		if (m_ptr)
+		{
+			_inflict_curse_aux(pow, m_ptr, m_idx, TRUE);
 			energy_use = 100;
 			return TRUE;
 		}
 
 		return FALSE;
+}
+
+static bool _blasphemy(void){
+
+	int afflicted = 0;
+	monster_type *m_ptr;
+	msg_print("You utter an ancient and terrible word.");
+
+	for (int i = 1; i < m_max; i++)
+	{
+		m_ptr = &m_list[i];
+		if (player_has_los_bold(m_ptr->fy, m_ptr->fx)){ // Not seen
+			_inflict_curse_aux(1, m_ptr, i, FALSE);
+			afflicted++;
+		}
+
+	}
+	if (afflicted == 0){ msg_print("... But there's no one to listen."); return FALSE; }
+	energy_use = 100;
+	return TRUE;
+}
+
+/* BLASHPEMY */
+static void _blasphemy_spell(int cmd, variant *res){
+	switch (cmd){
+	case SPELL_NAME: var_set_string(res, "Blasphemy"); break;
+	case SPELL_INFO: var_set_string(res, info_power(_get_curse_rolls(1) * 10)); break;
+	case SPELL_DESC: var_set_string(res, "Utter an accursed word, inflicting curse on all monsters."); break;
+	case SPELL_CAST: 
+		if (_blasphemy()){
+			project(0, 4, py, px, damroll(p_ptr->lev, 8), GF_NETHER, (PROJECT_FULL_DAM | PROJECT_KILL | PROJECT_SHORT_MON_NAME), -1);
+			var_set_bool(res, TRUE);
+		} else var_set_bool(res, FALSE);
+		break;
+	default:default_spell(cmd, res); break;
+	}
 }
 
 /* MINOR CURSE */
@@ -276,12 +333,13 @@ static void _sense_misfortune(int cmd, variant *res)
 {
 	switch (cmd){
 	case SPELL_NAME: var_set_string(res, "Sense Misfortune"); break;
-	case SPELL_DESC: var_set_string(res, "Senses monsters and traps in range."); break;
-	case SPELL_INFO: var_set_string(res, info_radius(20 + _curse_boost_capped)); break;
+	case SPELL_DESC: var_set_string(res, "Senses monsters and traps in range. At high level, also maps the area."); break;
+	case SPELL_INFO: var_set_string(res, info_radius(26 + _curse_boost_capped)); break;
 	case SPELL_CAST: 
 		msg_print("You attempt to sense misfortune... \n");
-		detect_monsters_evil( 20 + _curse_boost_capped );
-		detect_traps(20 + _curse_boost_capped, FALSE);
+		detect_monsters_evil( 26 + _curse_boost_capped );
+		detect_traps(26 + _curse_boost_capped, FALSE);
+		if (p_ptr->lev > 40){ map_area(26 + _curse_boost_capped); }
 		var_set_bool(res, TRUE);
 		break;
 	default:default_spell(cmd, res); break;
@@ -316,7 +374,118 @@ static void _dimensional_anchor(int cmd, variant *res)
 	}
 }
 
+static void _karmic_balance(int cmd, variant *res)
+{
+	switch (cmd){
+	case SPELL_NAME: var_set_string(res, "Karmic Balance"); break;
+	case SPELL_DESC: var_set_string(res, "Purge all curses from equipment to heal self."); break;
+	case SPELL_INFO: var_set_string(res, info_heal(0, 0, _curse_boost_capped * 70)); break;
+	case SPELL_CAST:{
+		int old_cursepow = _curse_boost_capped;
+		if (old_cursepow == 0){ msg_print("You are not carrying any dispellable curses. "); var_set_bool(res, FALSE); break; }
+		msg_print("You are enveloped in good karma. ");
+		hp_player(spell_power(old_cursepow * 70));
+		remove_all_curse();
+		if (old_cursepow >= 3){
+			set_stun(0, TRUE);
+			set_cut(0, TRUE);
+			set_blind(0, TRUE);
+			energy_use = 10; // super-quick too.
+		}
+		var_set_bool(res, TRUE);
+		break;
+	}
+	default:default_spell(cmd, res); break;
+	}
+}
 
+static void _drain_curse_pow(int cmd, variant *res){
+	switch (cmd){
+	case SPELL_NAME: var_set_string(res, "Drain Curse Power"); break;
+	case SPELL_DESC: var_set_string(res, "Drains curse equipment to replenish mana."); break;
+	case SPELL_INFO: var_set_string(res, info_power(p_ptr->lev / 2 + 15)); break;
+	case SPELL_CAST:
+	{
+		int item;
+		char *s, *q;
+		u32b f[OF_ARRAY_SIZE];
+		object_type *o_ptr;
+		item_tester_hook = object_is_cursed;
+		q = "Which cursed equipment do you drain mana from?";
+		s = "You have no cursed equipment.";
+
+		if (!get_item(&item, q, s, (USE_EQUIP))){
+			var_set_bool(res, FALSE); break;
+		}
+
+		o_ptr = &inventory[item];
+		obj_flags(o_ptr, f);
+
+			if (_purge_curse_which(o_ptr,item)){
+				p_ptr->csp += (p_ptr->lev / 2) + randint1(p_ptr->lev / 2);
+				if (p_ptr->csp > p_ptr->msp) p_ptr->csp = p_ptr->msp;
+				var_set_bool(res, TRUE);
+			}
+			else{ 
+				msg_print("Failed to drain curse.");  
+				var_set_bool(res, FALSE);
+			}
+		 break;
+	}
+	default: default_spell(cmd, res); break;
+	}
+}
+
+static void _umbra_spell(int cmd, variant *res){
+	switch (cmd){
+	case SPELL_NAME: var_set_string(res, "Umbra"); break;
+	case SPELL_DESC: var_set_string(res, "Shroud yourself in shadows, making you more difficult to detect."); break;
+	case SPELL_INFO: var_set_string(res, info_duration(p_ptr->lev / 3 + _curse_boost_capped * 3, p_ptr->lev / 3 + _curse_boost_capped * 3)); break;
+	case SPELL_CAST:
+		set_tim_dark_stalker(spell_power(p_ptr->lev / 3 + _curse_boost_capped * 3 + randint0(p_ptr->lev / 3 + _curse_boost_capped * 3)), FALSE);
+		var_set_bool(res, TRUE);
+		break;
+	default:default_spell(cmd, res); break;
+	}
+}
+
+static bool _unleash(void){
+	
+	msg_print("All malice is released!");
+
+	if(_curse_boost_capped >= 6) cast_destruction();
+	if(_curse_boost_capped >= 5) project_hack(GF_BLOOD_CURSE, _curse_boost_capped * 25);
+	project(0, 10, py, px, damroll(_curse_boost_capped, 25), GF_MANA, (PROJECT_FULL_DAM | PROJECT_KILL | PROJECT_SHORT_MON_NAME), -1);
+	hp_player(spell_power(_curse_boost_capped * 20));
+	set_stun(0, TRUE);
+	set_cut(0, TRUE);
+	set_blind(0, TRUE);
+
+	remove_all_curse();
+	energy_use = 100;
+	return TRUE;
+
+}
+
+static void _unleash_spell(int cmd, variant *res){
+	switch (cmd){
+	case SPELL_NAME: var_set_string(res, "Unleash Malice"); break;
+	case SPELL_DESC: var_set_string(res, "Unleash all the misery and malice in your equipment."); break;
+	case SPELL_INFO: {
+		if (_curse_boost_capped > 2){
+			var_set_string(res, info_power(p_ptr->lev * 2 + _curse_boost_capped * 20));
+		}
+		else var_set_string(res, info_power(0));
+		break;
+	}
+	case SPELL_CAST:{ 
+		if (_curse_boost_capped > 2) var_set_bool(res, _unleash()); 
+		else msg_print("There isn't enough malice in you... "); var_set_bool(res, FALSE); 
+		break;
+	}
+	default:default_spell(cmd, res); break;
+	}
+}
 static int _get_powers(spell_info* spells, int max)
 {
 	int ct = 0;
@@ -348,15 +517,16 @@ static spell_info _spells[] =
 {
 	/*lvl cst fail spell */
 	{ 1, 10, 30, _minor_curse }, // debuff
-	{ 5, 12, 40, _sense_misfortune }, // detect traps / monsters
+	{ 5, 5, 40, _sense_misfortune }, // detect traps / monsters
 	{ 10, 15, 40, _curse_of_impotence}, // no breeding
-	//{ 15, 8, 50,  _Drain_Curse_Power }, // attempts to remove curse from one equipment, restores mana based on curses.
-	//{ 20, 9, 50,  _Umbra}, // Stealth buff, cancels out aggravation
-	{ 25, 40, 50, _curse_spell}, // stronger debuff + damage
+	{ 15, 8, 50,  _drain_curse_pow }, // attempts to remove curse from one equipment, restores mana based on curses.
+	{ 20, 20, 50,  _umbra_spell}, // Stealth buff, cancels out aggravation
+	{ 25, 30, 50, _curse_spell}, // stronger debuff + damage
 	{ 30, 30, 50, _dimensional_anchor }, // -TELE on self and everyone on sight
-	//{ 40, 15, 60, _Suppress_Curses }, // Buff, negates effects of curses for some duration ( including AC! )
-	{ 45, 80, 60, _major_curse }, // crippling debuff
-	//{ 50, 100, 80, _Unleash }, // *remove curse, heal, LOS effects depending on the curse_power. Requires curses to be present.
+	{ 35, 30, 50, _karmic_balance  }, // Remove curse & heal
+	{ 40, 110, 50, _blasphemy_spell },
+	{ 45, 60, 60, _major_curse }, // crippling debuff
+	{ 50, 100, 80, _unleash_spell }, // *remove curse, heal, LOS effects depending on the curse_power. Requires curses to be present.
 	{ -1, -1, -1, NULL }
 };
 
@@ -369,6 +539,8 @@ static void _calc_bonuses(void)
 {
 	int boost = 0;
 	_curse_ty_count = 0;
+
+	boost = _calculate_curse_power();
 
 	_curse_boost = boost; // save up the uncapped boost.
 	// 22 is true max number of curse flags that you can have, totaling to score of 38. 
@@ -399,8 +571,7 @@ static caster_info * _caster_info(void)
 	{
 		me.magic_desc = "malison";
 		me.which_stat = A_CHR;
-		me.weight = 500;
-		me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
+		me.weight = 460;
 		me.min_fail = 5;
 		init = TRUE;
 	}
@@ -429,8 +600,8 @@ class_t *maledict_get_class(void)
 		me.stats[A_CHR] = 3;
 		me.base_skills = bs;
 		me.extra_skills = xs;
-		me.life = 110;
-		me.base_hp = 14;
+		me.life = 105;
+		me.base_hp = 12;
 		me.exp = 135;
 		me.pets = 30;
 

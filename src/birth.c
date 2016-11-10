@@ -3038,9 +3038,9 @@ static int player_init[MAX_CLASS][3][2] =
 	},
 	{
 		/* Maledict */
-		{ TV_SORCERY_BOOK, 0 },
-		{ TV_SOFT_ARMOR, SV_HARD_LEATHER_ARMOR },
-		{ TV_SWORD, SV_SHORT_SWORD },
+		{ TV_SWORD, SV_SMALL_SWORD },
+		{ TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR },
+		{ TV_POTION, SV_POTION_RESTORE_MANA }
 	},
 };
 
