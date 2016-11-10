@@ -2772,7 +2772,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
       && !mon_save_p(m_ptr->r_idx, A_NONE) )
     {
         char m_name[MAX_NLEN];
-        monster_desc(m_name, m_ptr, MD_POSSESSIVE);
+        monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_POSSESSIVE);
         msg_format("%^s armor melts.", m_name);
         m_ptr->ac_adj -= randint1(2);
         if (p_ptr->wizard || cheat_xtra)
