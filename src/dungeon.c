@@ -2068,6 +2068,9 @@ static void process_world_aux_timeout(void)
     if (p_ptr->tim_slay_sentient)
         set_tim_slay_sentient(p_ptr->tim_slay_sentient - 1, TRUE);
 
+	if (p_ptr->tim_no_tele)
+		set_tim_no_tele(p_ptr->tim_no_tele - 1, TRUE);
+
     wild_decrement_counters();
 
     if (p_ptr->pclass == CLASS_PSION)
@@ -2221,7 +2224,7 @@ static void process_world_aux_curse(void)
         if ((p_ptr->cursed & OFC_TY_CURSE) && one_in_(TY_CURSE_CHANCE))
         {
             int count = 0;
-			if ( !(maledict_ty_protection)  ){
+			if ( !(maledict_ty_protection())  ){
 				(void)activate_ty_curse(FALSE, &count);
 				equip_learn_curse(OFC_TY_CURSE);
 			}
@@ -4024,7 +4027,8 @@ static void process_command(void)
                             p_ptr->pclass == CLASS_MAULER ||
                             p_ptr->pclass == CLASS_MYSTIC ||
                             p_ptr->pclass == CLASS_PSION ||
-                            p_ptr->pclass == CLASS_TIME_LORD)
+                            p_ptr->pclass == CLASS_TIME_LORD ||
+							p_ptr->pclass == CLASS_MALEDICT)
                 {
                     /* This is the preferred entrypoint for spells ...
                         I'm still working on coverting everything else */

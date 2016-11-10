@@ -1729,6 +1729,10 @@ void tim_player_flags(u32b flgs[OF_ARRAY_SIZE])
         if (hex_spelling(HEX_ICE_ARMOR)) add_flag(flgs, OF_AURA_COLD);
         if (hex_spelling(HEX_SHOCK_CLOAK)) add_flag(flgs, OF_AURA_ELEC);
     }
+
+	if (p_ptr->tim_no_tele){
+		add_flag(flgs, OF_NO_TELE);
+	}
 }
 
 void tim_player_stats(s16b stats[MAX_STATS])

@@ -2034,9 +2034,10 @@ bool make_attack_normal(int m_idx)
     /* Blink away */
     if (blinked && alive && !p_ptr->is_dead)
     {
-        if (teleport_barrier(m_idx))
+		char tmp_str[80];
+        if (teleport_barrier(m_idx, tmp_str))
         {
-            msg_print("The thief flees laughing...? But magic barrier obstructs it.");
+            msg_format("The thief flees laughing...? But %s obstructs it.",tmp_str);
         }
         else
         {

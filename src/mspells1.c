@@ -2970,9 +2970,10 @@ bool make_attack_spell(int m_idx, bool ticked_off)
         case 160+4:
         {
             if (!wall_scummer) disturb(1, 0);
-            if (teleport_barrier(m_idx))
+			char tmp_str[80];
+            if (teleport_barrier(m_idx, tmp_str))
             {
-                msg_format("Magic barrier obstructs teleporting of %^s.", m_name);
+                msg_format("%^s obstructs teleporting of %^s.", tmp_str,m_name);
             }
             else
             {
@@ -2988,9 +2989,10 @@ bool make_attack_spell(int m_idx, bool ticked_off)
         case 160+5:
         {
             if (!wall_scummer) disturb(1, 0);
-            if (teleport_barrier(m_idx))
+			char tmp_str[80];
+            if (teleport_barrier(m_idx, tmp_str))
             {
-                msg_format("Magic barrier obstructs teleporting of %^s.", m_name);
+                msg_format("%^s obstructs teleporting of %^s.", tmp_str, m_name);
             }
             else
             {

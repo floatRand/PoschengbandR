@@ -1340,6 +1340,8 @@ struct player_type
     s16b free_turns;
     s16b tim_foresight;
 
+	s16b tim_no_tele;
+
     /* Rune Knight: Some Rune effects might become general game mechanics, like Magic Resistance
        and Magic Absorption.  Also, let's consolidate the White Aura mutation with the Rune of
        Good Fortune into a cached Good Luck value */
@@ -1885,7 +1887,7 @@ struct dungeon_info_type {
 
     char r_char[5];     /* Monster race allowed */
     int final_object;    /* The object you'll find at the bottom */
-    int final_ego;       /* Ego type for final_object, or effect type for devices */
+   int final_ego;       /* Ego type for final_object, or effect type for devices */
     int final_artifact;    /* The artifact you'll find at the bottom */
     int final_guardian;    /* The artifact's guardian. If an artifact is specified, then it's NEEDED */
     int initial_guardian;  /* Guarding the entrance */

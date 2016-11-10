@@ -2891,9 +2891,9 @@ static bool _library_can_read(int sval){
 	return FALSE;
 }
 
-static bool _read_scroll_for_player(){
+static bool _read_scroll_for_player(void){
 
-	int         i, item, cost = 0;
+	int         item, cost = 0;
 	bool        okay = FALSE;
 	object_type *o_ptr;
 	cptr        q, s;
@@ -2957,7 +2957,6 @@ static bool _read_scroll_for_player(){
 		return (TRUE);
 	}
 	
-	return FALSE;
 }
 
 static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_guild)

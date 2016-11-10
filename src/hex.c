@@ -250,16 +250,28 @@ void revenge_store(int dam)
     p_ptr->magic_num1[2] += dam;
 }
 
-
-bool teleport_barrier(int m_idx)
+bool teleport_barrier(int m_idx, char *effectname) 
 {
+	/* Made more generalized */
     monster_type *m_ptr = &m_list[m_idx];
     monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
-    if (!hex_spelling(HEX_ANTI_TELE)) return FALSE;
-    if ((p_ptr->lev * 3 / 2) < randint1(r_ptr->level)) return FALSE;
+	
+	if (p_ptr->pclass == CLASS_MALEDICT){ //Maledict's dimensional lock
+		if (p_ptr->tim_no_tele > 0 && (p_ptr->lev * 3 / 2) >= randint1(r_ptr->level)){
+			sprintf(effectname, "%s", "dimensional lock");
+		return TRUE;
+		}
+	}
 
-    return TRUE;
+	if (hex_spelling(HEX_ANTI_TELE)){ // anti-teleport barrier
+		if ((p_ptr->lev * 3 / 2) >= randint1(r_ptr->level)){
+			sprintf(effectname, "%s", "magic barrier");
+			return TRUE;
+		}
+	}
+
+    return FALSE;
 }
 
 

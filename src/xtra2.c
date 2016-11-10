@@ -1283,7 +1283,6 @@ void monster_death(int m_idx, bool drop_item)
 			bool notice = FALSE;
 
 				int wy = y, wx = x;
-				bool pet = is_pet(m_ptr);
 				u32b mode = 0L;
 
 				if (summon_named_creature(m_idx, wy, wx, MON_HIBACHI, mode))

@@ -2136,11 +2136,12 @@ bool mon_attack_mon(int m_idx, int t_idx)
     /* Blink away */
     if (blinked && m_ptr->r_idx)
     {
-        if (teleport_barrier(m_idx))
+		char tmp_str[80];
+        if (teleport_barrier(m_idx, tmp_str))
         {
             if (see_m)
             {
-                msg_print("The thief flees laughing...? But magic barrier obstructs it.");
+                msg_format("The thief flees laughing...? But %s obstructs it.",tmp_str);
             }
             else if (known)
             {

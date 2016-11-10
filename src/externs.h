@@ -1730,6 +1730,7 @@ extern bool set_tim_no_spells(int v, bool do_dec);
 extern bool set_tim_no_device(int v, bool do_dec);
 extern bool set_resist_magic(int v, bool do_dec);
 extern bool set_tim_reflect(int v, bool do_dec);
+extern bool set_tim_no_tele(int v, bool do_dec);
 
 extern bool set_tim_spell_reaction(int v, bool do_dec);
 extern bool set_tim_resist_curses(int v, bool do_dec);
@@ -2143,7 +2144,7 @@ extern bool hex_spell_fully(void);
 extern void hex_stop_spelling_spell(int cmd, variant *res);
 extern void revenge_spell(void);
 extern void revenge_store(int dam);
-extern bool teleport_barrier(int m_idx);
+extern bool teleport_barrier(int m_idx, char *effectname);
 extern bool magic_barrier(int m_idx);
 extern bool multiply_barrier(int m_idx);
 
@@ -2388,6 +2389,7 @@ extern int mystic_get_toggle(void);
 extern void quick_walk_spell(int cmd, variant *res);
 
 /* alchemist.c */
+extern class_t *alchemist_get_class(void);
 extern void alchemist_cast(int tval);
 
 /* freelancer.c -rtl-
@@ -2396,7 +2398,7 @@ extern void freelancer_skill_boost(void);
 extern int freelancer_hp_boost(void);
 extern int freelancer_sp_boost(void);
 **/
-
+extern class_t *maledict_get_class(void);
 extern bool maledict_ty_protection(void);
 
 extern class_t *archaeologist_get_class(void);

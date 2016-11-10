@@ -721,6 +721,7 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->tim_killing_spree);
     savefile_write_s16b(file, p_ptr->tim_slay_sentient);
     savefile_write_s16b(file, p_ptr->tim_shrike);
+	savefile_write_s16b(file, p_ptr->tim_no_tele);
 
     {
         int i;

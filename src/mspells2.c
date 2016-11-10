@@ -2705,43 +2705,46 @@ bool mon_spell_mon(int m_idx, int options)
         break;
 
     /* RF6_BLINK */
-    case 160+4:
-        if (teleport_barrier(m_idx))
-        {
-            if (see_m)
-            {
-                msg_format("Magic barrier obstructs teleporting of %^s.", m_name);
-            }
-        }
-        else
-        {
-            if (see_m)
-            {
-                msg_format("%^s blinks away.", m_name);
-            }
-            teleport_away(m_idx, 10, 0L);
-        }
-        break;
-
+	case 160 + 4:
+	{
+		char tb_name[80];
+		if (teleport_barrier(m_idx, tb_name))
+		{
+			if (see_m)
+			{
+				msg_format("%^s obstructs teleporting of %^s.", tb_name, m_name);
+			}
+		}
+		else
+		{
+			if (see_m)
+			{
+				msg_format("%^s blinks away.", m_name);
+			}
+			teleport_away(m_idx, 10, 0L);
+		}
+		break;
+	}
     /* RF6_TPORT */
-    case 160+5:
-        if (teleport_barrier(m_idx))
-        {
-            if (see_m)
-            {
-                msg_format("Magic barrier obstructs teleporting of %^s.", m_name);
-            }
-        }
-        else
-        {
-            if (see_m)
-            {
-                msg_format("%^s teleports away.", m_name);
-            }
-            teleport_away_followable(m_idx);
-        }
-        break;
-
+	case 160 + 5:{
+		char tb_name[80];
+		if (teleport_barrier(m_idx, tb_name))
+		{
+			if (see_m)
+			{
+				msg_format("%^s obstructs teleporting of %^s.", tb_name, m_name);
+			}
+		}
+		else
+		{
+			if (see_m)
+			{
+				msg_format("%^s teleports away.", m_name);
+			}
+			teleport_away_followable(m_idx);
+		}
+		break;
+	}
     /* RF6_WORLD */
     case 160+6:
 #if 0

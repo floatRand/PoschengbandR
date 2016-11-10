@@ -166,6 +166,7 @@ void reset_tim_flags(void)
     p_ptr->tim_device_power = 0;
     p_ptr->tim_sh_time = 0;
     p_ptr->tim_foresight = 0;
+	p_ptr->tim_no_tele = 0;
 
     p_ptr->oppose_acid = 0;     /* Timed -- oppose acid */
     p_ptr->oppose_elec = 0;     /* Timed -- oppose lightning */
@@ -603,6 +604,8 @@ void dispel_player(void)
     set_tim_spurt(0, TRUE);
     set_tim_speed_essentia(0, TRUE);
     set_tim_shrike(0, TRUE);
+
+	set_tim_no_tele(0, TRUE);
     /* Coming soon ... 
     set_tim_slow_digest(0, TRUE);
     set_tim_crystal_skin(0, TRUE);
@@ -7411,7 +7414,7 @@ bool set_tim_foresight(int v, bool do_dec)
             msg_print("You can see the future!");
             notice = TRUE;
         }
-    }
+    } 
     /* Shut */
     else
     {
@@ -7429,4 +7432,45 @@ bool set_tim_foresight(int v, bool do_dec)
     p_ptr->update |= PU_BONUS;
     handle_stuff();
     return TRUE;
+}
+
+bool set_tim_no_tele(int v, bool do_dec)
+{
+	bool notice = FALSE;
+
+	/* Hack -- Force good values */
+	v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+
+	if (p_ptr->is_dead) return FALSE;
+
+	/* Open */
+	if (v)
+	{
+		if (p_ptr->tim_no_tele)
+		{
+			if (p_ptr->tim_no_tele > v && !do_dec) return FALSE;
+		}
+		else
+		{
+			msg_print("You feel locked in space.");
+			notice = TRUE;
+		}
+	}
+	/* Shut */
+	else
+	{
+		if (p_ptr->tim_foresight)
+		{
+			msg_print("You feel less bound in space.");
+			notice = TRUE;
+		}
+	}
+
+	p_ptr->tim_no_tele = v;
+	if (!notice) return FALSE;
+	if (disturb_state) disturb(0, 0);
+	p_ptr->redraw |= PR_STATUS;
+	p_ptr->update |= PU_BONUS;
+	handle_stuff();
+	return TRUE;
 }

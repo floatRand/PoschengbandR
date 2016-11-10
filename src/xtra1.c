@@ -988,6 +988,7 @@ static void prt_status(void)
     if (p_ptr->tim_blood_revenge) ADD_FLG(BAR_BLOOD_REVENGE);
     if (p_ptr->tim_genji) ADD_FLG(BAR_GENJI);
     if (p_ptr->tim_force) ADD_FLG(BAR_FORCE);
+	if (p_ptr->tim_no_tele) ADD_FLG(BAR_ANTITELE);
     if (p_ptr->pclass == CLASS_WEAPONMASTER)
     {
         switch (weaponmaster_get_toggle())
@@ -3650,6 +3651,7 @@ void calc_bonuses(void)
     if (p_ptr->tim_hold_life) p_ptr->hold_life = TRUE;
     if (p_ptr->tim_inven_prot) p_ptr->inven_prot = TRUE;
     if (p_ptr->tim_quick_walk) p_ptr->quick_walk = TRUE;
+	if (p_ptr->tim_no_tele) p_ptr->anti_tele = TRUE; 
 
     if (p_ptr->special_attack & ATTACK_ACID)
     {
