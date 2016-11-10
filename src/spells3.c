@@ -1054,21 +1054,32 @@ bool apply_disenchant(int mode)
 
 void mutate_player(void)
 {
-    int max1, cur1, max2, cur2, ii, jj, i;
+    int ii, jj, i;
+    ii = randint0(6); /* Pick initial */ 
+	for (jj = ii; jj == ii; jj = randint0(6)); /* Loop to get pair */
 
-    /* Pick a pair of stats */
-    ii = randint0(6);
-    for (jj = ii; jj == ii; jj = randint0(6)) /* loop */;
+	int alter_amt = 1+randint0(5); int ct = 0;
+	bool stop = FALSE;
+	
+	/* One is capped? Try swapping them! */
+	if (p_ptr->stat_max[ii] == p_ptr->stat_max_max[ii] || p_ptr->stat_max[ii] == p_ptr->stat_max_max[ii]){
+		int tmp = ii;
+		ii = jj;
+		jj = tmp;
+	}
 
-    max1 = p_ptr->stat_max[ii];
-    cur1 = p_ptr->stat_cur[ii];
-    max2 = p_ptr->stat_max[jj];
-    cur2 = p_ptr->stat_cur[jj];
+	// And siphon stats. If we hit cap, exit.
+	while (ct<alter_amt && !stop){
 
-    p_ptr->stat_max[ii] = max2;
-    p_ptr->stat_cur[ii] = cur2;
-    p_ptr->stat_max[jj] = max1;
-    p_ptr->stat_cur[jj] = cur1;
+		if (p_ptr->stat_max[ii] >= p_ptr->stat_max_max[ii] || p_ptr->stat_max[ii] <= 3) stop = TRUE;
+		else{
+			p_ptr->stat_max[ii]++;
+			p_ptr->stat_cur[ii]++;
+			p_ptr->stat_max[jj]--;
+			p_ptr->stat_cur[jj]--;
+			ct++;
+		}
+	}
 
     for (i=0;i<6;i++)
     {
@@ -1114,10 +1125,8 @@ void apply_nexus(monster_type *m_ptr)
         }
 
         case 7:
-        {
-			msg_print("You shudder for a moment!");
-			/*
-			if (randint0(100) < p_ptr->skills.sav || (p_ptr->resist[RES_NEXUS])) // automatically resist if you have nexus-resistance.
+        {		
+			if (randint0(100) < p_ptr->skills.sav) 
             {
                 msg_print("You resist the effects!");
                 break;
@@ -1128,8 +1137,7 @@ void apply_nexus(monster_type *m_ptr)
                 wild_talent_scramble();
             else
                 mutate_player();
-            break;**/
-			break;
+            break;
         }
     }
 }
