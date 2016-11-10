@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 Oraoraoraoraoraoraoraoraoraoraoraoraoraoraoraoraora!!!! <color:U>You attack The </color>
 <color:U>Serpent of Chaos:</color> You <color:y>double-kick</color>. It was a <color:R>great</color> hit! You miss. You    ..  % LEVEL <color:G>    50</color>

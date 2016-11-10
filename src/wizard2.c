@@ -2742,7 +2742,7 @@ static void do_cmd_dump_options(void)
         if (ot_ptr->o_var) exist[ot_ptr->o_set][ot_ptr->o_bit] = i + 1;
     }
 
-    fprintf(fff, "[Option bits usage on PosChengband %d.%d.%d]\n\n",
+    fprintf(fff, "[Option bits usage on PosChengband R %d.%d.%d]\n\n",
             VER_MAJOR, VER_MINOR, VER_PATCH);
 
     fputs("Set - Bit (Page) Option Name\n", fff);

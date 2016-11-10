@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 <color:U>You attack the Druid:</color> You kick. You <color:y>double-kick</color>. He is stunned.
 You <color:y>double-kick</color>. You kick him in the ankle. He starts limping       LEVEL <color:G>    23</color>

@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 You have The Long Sword 'Ringil' (5d5) (+22,+25) (+5) (p).
                                                                     LEVEL <color:G>    23</color>

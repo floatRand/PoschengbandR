@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 <color:U>You attack the Topaz monk:</color> You miss. You miss. You kick him in the
 ankle. You <color:U>butt</color>. You land a <color:y>Cat's Claw</color>. <color:R>You have slain the Topaz </color>   LEVEL <color:G>    29</color>

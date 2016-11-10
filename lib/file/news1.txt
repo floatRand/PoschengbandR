@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 <color:U>You attack The Norsa:</color> You claw. You are frozen and <color:b>shocked</color>.
 <color:v>*Ouch!*</color> You miss. You miss. You claw. The Norsa shouts,             LEVEL <color:G>    50</color>

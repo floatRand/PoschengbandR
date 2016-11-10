@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 You breathe sound. Stop, you brute! That was rather dishonorable.
 The Large white snake jerks limply. The Large white snake flees in  LEVEL <color:G>     1</color>

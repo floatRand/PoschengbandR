@@ -1,5 +1,7 @@
 ----- How to install -----
 
+	IMPORTANT NOTE: This is not updated for Poschengband R. 
+
 --- LINUX
   Download and unpack the source archive, or clone the git repository:
     $ git clone https://github.com/poschengband/poschengband.git

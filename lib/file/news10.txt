@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 Ahhhtatatatatatatatatatatatatatataatatatatattaaaaa!!!! <color:U>You attack </color>
 <color:U>Bleys, Master of Manipulation:</color> You <color:y>double-kick</color>. It was a <color:R>great</color> hit! You ...<color:G>#</color>. LEVEL <color:G>    45</color>

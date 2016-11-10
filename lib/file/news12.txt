@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 
 <color:U>The Set of Dragon Gloves 'Claw of Bahamut' [4,+17]</color>                  LEVEL <color:G>    43</color>

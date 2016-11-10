@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 <color:U>You attack the Warg:</color> You butt the Warg. How heroic! <color:R>You have slain </color>
 <color:R>the Warg.</color> How heroic! <color:B>You just completed your quest!</color> A magical      LEVEL <color:G>    10</color>

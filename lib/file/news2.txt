@@ -1,4 +1,4 @@
-<color:y>PosChengband <$:version></color>
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>
 <color:U>You attack the Frost giant:</color> You miss. You hit. You are frozen. You
 hit. You are frozen. You hit. You are frozen. You hit. You are      LEVEL <color:G>    22</color>

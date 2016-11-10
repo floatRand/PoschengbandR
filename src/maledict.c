@@ -519,14 +519,14 @@ static spell_info _spells[] =
 	{ 1, 10, 30, _minor_curse }, // debuff
 	{ 5, 5, 40, _sense_misfortune }, // detect traps / monsters
 	{ 10, 15, 40, _curse_of_impotence}, // no breeding
-	{ 15, 8, 50,  _drain_curse_pow }, // attempts to remove curse from one equipment, restores mana based on curses.
-	{ 20, 20, 50,  _umbra_spell}, // Stealth buff, cancels out aggravation
-	{ 25, 30, 50, _curse_spell}, // stronger debuff + damage
-	{ 30, 30, 50, _dimensional_anchor }, // -TELE on self and everyone on sight
-	{ 35, 30, 50, _karmic_balance  }, // Remove curse & heal
-	{ 40, 110, 50, _blasphemy_spell },
-	{ 45, 60, 60, _major_curse }, // crippling debuff
-	{ 50, 100, 80, _unleash_spell }, // *remove curse, heal, LOS effects depending on the curse_power. Requires curses to be present.
+	{ 15, 8, 45,  _drain_curse_pow }, // attempts to remove curse from one equipment, restores mana based on curses.
+	{ 20, 20, 45,  _umbra_spell}, // Stealth buff, cancels out aggravation
+	{ 25, 30, 45, _curse_spell}, // stronger debuff + damage
+	{ 30, 30, 45, _dimensional_anchor }, // -TELE on self and everyone on sight
+	{ 35, 30, 45, _karmic_balance  }, // Remove curse & heal
+	{ 40, 110, 45, _blasphemy_spell },
+	{ 45, 60, 45, _major_curse }, // crippling debuff
+	{ 50, 100, 50, _unleash_spell }, // *remove curse, heal, LOS effects depending on the curse_power. Requires curses to be present.
 	{ -1, -1, -1, NULL }
 };
 
@@ -585,18 +585,22 @@ class_t *maledict_get_class(void)
 
 	if (!init)
 	{           /* dis, dev, sav, stl, srh, fos, thn, thb */
-		skills_t bs = { 20, 24, 34, 1, 12, 2, 68, 40 };
+		skills_t bs = { 20, 24, 32, 1, 12, 2, 68, 40 };
 		skills_t xs = { 7, 10, 11, 0, 0, 0, 21, 18 };
 
 		me.name = "Maledict";
 		me.desc = "A maledict draws their powers from the misfortunes, bad omens and ill luck. "
-			"Wielding variety depilating and damaging spells, blah blah blah description ";
+			"They become more powerful the more cursed their equipment, and can direct debilating "
+			"malisons at their foes. Notably, they have very easy time uncursing equipment, and can "
+			"curse it again if they feel like it. They even gain some protection against ancient foul "
+			"curses. At high levels, they receive abilities to uncurse all their equipment for a great "
+			"benefit.";
 
 		me.stats[A_STR] = 2;
 		me.stats[A_INT] = -1;
 		me.stats[A_WIS] = -2;
-		me.stats[A_DEX] = 0;
-		me.stats[A_CON] = 2;
+		me.stats[A_DEX] = 1;
+		me.stats[A_CON] = 1;
 		me.stats[A_CHR] = 3;
 		me.base_skills = bs;
 		me.extra_skills = xs;

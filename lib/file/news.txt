@@ -1,5 +1,4 @@
-<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*>
-
+<color:y>PosChengband <color:R>R</color> <color:y><$:version><color:*></color>
 <style:screenshot>LEVEL <color:G>    47<color:*> ..<color:U>#########<color:*>.....<color:U>#########<color:*>.......<color:U>##<color:*><color:b>~~<color:*><color:u>.<color:*>.<color:g>....<color:*><color:G>######<color:*><color:o>########<color:*><color:G>##########<color:*>
 EXP <color:G>    128k<color:*> ..<color:U>#########<color:*>.....<color:U>####1####<color:*>......<color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>.....<color:*><color:G>######<color:*><color:o>##<color:*><color:v>><color:*><color:o>###<color:*><color:G>###########<color:*>
 AU  <color:G>    629k<color:*> ..<color:U>####<color:*><color:s>2<color:*><color:U>####<color:*>....................<color:U>####<color:*><color:b>~<color:*><color:u>.<color:*>.<color:g>......<color:*><color:G>######<color:*><color:u>.<color:*>.<color:u>.<color:*><color:G>#####<color:*>........<color:*>
