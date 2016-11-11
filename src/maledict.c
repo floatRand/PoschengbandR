@@ -155,7 +155,8 @@ static void _purge_curse_spell(int cmd, variant *res)
 	case SPELL_NAME: var_set_string(res, "Purge Curse");break;
 	case SPELL_DESC: var_set_string(res, "Removes a curse from a single item. At high levels you can dispel even more powerful curses."); break;
 	case SPELL_CAST: var_set_bool(res, _purge_curse()); break;
-	default: default_spell(cmd, res);break;}
+	default: default_spell(cmd, res);break;
+	}
 }
 
 static void _curse_item_spell(int cmd, variant *res)
@@ -492,13 +493,13 @@ static int _get_powers(spell_info* spells, int max)
 
 	spell_info* spell = &spells[ct++];
 	spell->level = 3;
-	spell->cost = 20;
+	spell->cost = 0;
 	spell->fail = calculate_fail_rate(spell->level, 20, p_ptr->stat_ind[A_CHR]);
 	spell->fn = _purge_curse_spell;
 
 	spell = &spells[ct++];
 	spell->level = 7;
-	spell->cost = 20;
+	spell->cost = 0;
 	spell->fail = calculate_fail_rate(spell->level, 35, p_ptr->stat_ind[A_CHR]);
 	spell->fn = _curse_item_spell;
 
@@ -585,8 +586,8 @@ class_t *maledict_get_class(void)
 
 	if (!init)
 	{           /* dis, dev, sav, stl, srh, fos, thn, thb */
-		skills_t bs = { 20, 24, 32, 1, 12, 2, 68, 40 };
-		skills_t xs = { 7, 10, 11, 0, 0, 0, 21, 18 };
+		skills_t bs = { 20, 24, 28, 1, 12, 2, 68, 51 };
+		skills_t xs = { 7, 10, 10, 0, 0, 0, 21, 21 };
 
 		me.name = "Maledict";
 		me.desc = "A maledict draws their powers from the misfortunes, bad omens and ill luck. "
