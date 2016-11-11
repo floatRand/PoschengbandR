@@ -54,9 +54,16 @@ snipe_power snipe_powers[MAX_SNIPE_POWERS] =
 
 static bool snipe_concentrate(void)
 {
-    if ((int)p_ptr->concent < (2 + (p_ptr->lev + 5) / 10)) p_ptr->concent++;
+    int concent_max = (2 + (p_ptr->lev + 5) / 10);
 
-    msg_format("You concentrate deeply. (lvl %d)", p_ptr->concent);
+    if ((int)p_ptr->concent < concent_max)
+        p_ptr->concent++;
+    
+    if ((int)p_ptr->concent < concent_max) 
+        msg_format("You concentrate deeply. (lvl %d)", p_ptr->concent);
+    else
+        msg_format("You are fully concentrated. (lvl %d)", p_ptr->concent);
+
     reset_concent = FALSE;
 
     p_ptr->update |= PU_BONUS;
