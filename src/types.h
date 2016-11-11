@@ -130,6 +130,7 @@ typedef struct object_kind object_kind;
 
 struct object_kind
 {
+    u32b idx;
     u32b name;            /* Name (offset) */
     u32b text;            /* Text (offset) */
     u32b flavor_name;        /* Flavor name (offset) */
