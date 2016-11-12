@@ -1293,7 +1293,7 @@ void spellbook_character_dump(doc_ptr doc)
 			_dump_realm(doc, p_ptr->realm1);
 		}
 		else {
-			doc_printf(doc,"( None. )\n");
+			doc_printf(doc,"( None )\n\n");
 		}
         if (p_ptr->realm2)
             _dump_realm(doc, p_ptr->realm2);
