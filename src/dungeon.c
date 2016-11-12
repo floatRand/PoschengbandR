@@ -4028,7 +4028,8 @@ static void process_command(void)
                             p_ptr->pclass == CLASS_MYSTIC ||
                             p_ptr->pclass == CLASS_PSION ||
                             p_ptr->pclass == CLASS_TIME_LORD ||
-							p_ptr->pclass == CLASS_MALEDICT)
+							p_ptr->pclass == CLASS_MALEDICT
+							)
                 {
                     /* This is the preferred entrypoint for spells ...
                         I'm still working on coverting everything else */

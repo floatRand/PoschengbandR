@@ -104,6 +104,7 @@ static int _get_weight(void)
     if (p_ptr->special_defense & KAMAE_SUZAKU) weight = 4;
     if (mystic_get_toggle() == MYSTIC_TOGGLE_DEFENSE) weight = 6;
     if (mystic_get_toggle() == MYSTIC_TOGGLE_OFFENSE) weight = 10;
+	if (p_ptr->pclass == CLASS_MONK && !p_ptr->realm1) weight = 10;
     if ((p_ptr->pclass == CLASS_FORCETRAINER) && (p_ptr->magic_num1[0]))
     {
         weight += (p_ptr->magic_num1[0]/30);
@@ -453,11 +454,247 @@ void monk_posture_spell(int cmd, variant *res)
     }
 }
 
+
+void monk_stunning_fist(int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Stunning Fist");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Attempt to stun a monster with a single touch.");
+		break;
+	case SPELL_CAST:
+	{
+		int x = 0, y = 0;
+		int dir;
+		int m_idx = 0;
+		if (use_old_target && target_okay())
+		{
+			y = target_row;
+			x = target_col;
+			m_idx = cave[y][x].m_idx;
+			if (m_idx)
+			{
+				if (m_list[m_idx].cdis > 1)
+					m_idx = 0;
+				else
+					dir = 5;
+			}
+		}
+		if (!m_idx){
+			if (!get_rep_dir2(&dir)) return FALSE;
+			if (dir == 5) return FALSE;
+
+			y = py + ddy[dir];
+			x = px + ddx[dir];
+			m_idx = cave[y][x].m_idx;
+
+			if (!m_idx)
+			{
+				msg_print("There is no monster there.");
+				var_set_bool(res, FALSE); break;
+			}
+		}
+
+		if (m_idx)
+		{
+			project(0, 0, y, x, p_ptr->lev, GF_STUN, (PROJECT_HIDE | PROJECT_KILL), 0);
+			var_set_bool(res, TRUE); break;
+		}
+		var_set_bool(res, FALSE);
+		break;
+	}
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+void monk_jump(int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Jump");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Jump to a random position.");
+		break;
+	case SPELL_CAST:
+		teleport_player(8, TELEPORT_LINE_OF_SIGHT | TELEPORT_NONMAGICAL);
+		var_set_bool(res, TRUE);
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+void monk_charge(int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Charge");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Charge at enemy and strike.");
+		break;
+	case SPELL_CAST:
+		var_set_bool(res, rush_attack(5, NULL));
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+#define _HFANG_RANGE 6
+
+static bool _cave_is_open(int y, int x)
+{
+	if (cave_have_flag_bold(y, x, FF_HURT_ROCK)) return FALSE;
+	if (cave[y][x].feat == feat_permanent) return FALSE;
+	if (cave[y][x].feat == feat_permanent_glass_wall) return FALSE;
+	if (cave[y][x].feat == feat_mountain) return FALSE;
+	return TRUE;
+}
+
+bool horizontal_fang_aux(){
+
+	int y, x, tx, ty, dir = 5, i, lastMonPos = -1;
+	int range = _HFANG_RANGE;
+	bool okay = FALSE;
+	if (!get_aim_dir(&dir)){ return FALSE; }
+	y = py; x = px;
+
+	for (i = 1; i < _HFANG_RANGE; i++) // look if we can traverse through line and land on OK grid queare.
+	{
+		y = py + ddy[dir] * i;
+		x = px + ddx[dir] * i;
+		if (in_bounds(y, x)){
+			if (!_cave_is_open(y, x)) { range = i; break; } // force stop at hard barriers 
+			else if (cave[y][x].m_idx){ lastMonPos = i; } // monstar. Not legit position ot tele to, but no bad.
+		}
+	}
+	if (lastMonPos < 0) return FALSE; // no monster.
+	u32b mode = (TELEPORT_NONMAGICAL);
+	/* Find a position just behind the last monster hit.*/
+	for (i = lastMonPos; i < lastMonPos + 16; i++){
+		y = py + ddy[dir] * i;
+		x = px + ddx[dir] * i;
+		if (in_bounds(y, x)) {
+			if (cave_player_teleportable_bold(y, x, mode)){
+				okay = TRUE;
+				tx = x; ty = y;
+				break; 
+			}
+		} // found just a nice spot for us!
+	}
+	if (!okay){ // couldn't tele behind, try to tele in front off ( doesn't hit the monster )
+		for (i = lastMonPos; i > 1; i--){
+			y = py + ddy[dir] * i;
+			x = px + ddx[dir] * i;
+			if (in_bounds(y, x)) {
+				if (cave_player_teleportable_bold(y, x, mode)) // found just a nice spot for us!
+				{ 
+					okay = TRUE; range = i; 
+					tx = x; ty = y;
+					break;
+				}
+			} 
+		}
+	}	
+	if (!okay){ msg_print("You wouldn't be able to land. "); return FALSE; } // give up.
+
+	msg_print("You strike through your enemies!!");
+
+	for (i = 0; i <= range; i++)
+	{
+		y = py + ddy[dir] * i;
+		x = px + ddx[dir] * i;
+		if (cave[y][x].m_idx)
+		{
+			py_attack(y, x, 0);
+		}
+	}
+	(void)move_player_effect(ty, tx, MPE_FORGET_FLOW | MPE_HANDLE_STUFF | MPE_DONT_PICKUP);
+
+	
+	return TRUE;
+}
+
+void monk_horizontal_fang(int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Horizontal Fang");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Charge through a straight line, attacking anyone on the way.");
+		break;
+	case SPELL_CAST:
+		var_set_bool(res, horizontal_fang_aux());
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+void monk_quaking_strike(int cmd, variant *res){
+
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Earthquaking Fist");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Shakes dungeon structure, and results in random swapping of floors and walls.");
+		break;
+	case SPELL_CAST:
+	{
+		msg_print("You strike the ground! ");
+		if (earthquake(py, px, 10))  msg_print("And the dungeon shakes!! ");
+		var_set_bool(res, TRUE);
+		break;
+	}
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
 static int _get_powers(spell_info* spells, int max)
 {
     int ct = 0;
+	spell_info *spell;
 
-    spell_info* spell = &spells[ct++];
+	if (p_ptr->realm1 == 0){
+		
+		spell = &spells[ct++];
+		spell->level = 1;
+		spell->cost = 10;
+		spell->fail = calculate_fail_rate(spell->level, 50, p_ptr->stat_ind[A_WIS]);
+		spell->fn = monk_stunning_fist;
+
+		spell = &spells[ct++];
+		spell->level = 10;
+		spell->cost = 6;
+		spell->fail = calculate_fail_rate(spell->level, 50, p_ptr->stat_ind[A_WIS]);
+		spell->fn = monk_jump;
+
+		spell = &spells[ct++];
+		spell->level = 20;
+		spell->cost = 10;
+		spell->fail = calculate_fail_rate(spell->level, 50, p_ptr->stat_ind[A_WIS]);
+		spell->fn = monk_charge;
+	}
+
+    spell = &spells[ct++];
     spell->level = 25;
     spell->cost = 0;
     spell->fail = 0;
@@ -468,6 +705,20 @@ static int _get_powers(spell_info* spells, int max)
     spell->cost = 30;
     spell->fail = calculate_fail_rate(spell->level, 80, p_ptr->stat_ind[A_STR]);
     spell->fn = monk_double_attack_spell;
+
+	if (p_ptr->realm1 == 0){
+		spell = &spells[ct++];
+		spell->level = 35;
+		spell->cost = 30;
+		spell->fail = calculate_fail_rate(spell->level, 50, p_ptr->stat_ind[A_WIS]);
+		spell->fn = monk_quaking_strike;
+
+		spell = &spells[ct++];
+		spell->level = 40;
+		spell->cost = 50;
+		spell->fail = calculate_fail_rate(spell->level, 50, p_ptr->stat_ind[A_WIS]);
+		spell->fn = monk_horizontal_fang;
+	}
 
     return ct;
 }
@@ -716,7 +967,8 @@ class_t *monk_get_class(void)
                     "likewise, but if armour is being worn, this effect decreases. "
                     "Wisdom determines a Monk's spell casting ability.\n \n"
                     "The different sects of monks are devoted to different areas of "
-                    "magic. They select a realm from Life, Nature, Craft, Trump and Death. "
+                    "magic. They select a realm from Life, Nature, Craft, Trump, Death "
+					"or forego any of these for some unique martial techniques."
                     "They will eventually learn all prayers in the discipline of their "
                     "choice. They have two class powers - 'Assume a Posture' and "
                     "'Double Attack'. They can choose different forms of postures in "

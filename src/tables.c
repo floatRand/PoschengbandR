@@ -2092,7 +2092,7 @@ s32b realm_choices1[MAX_CLASS] =
     (CH_ARCANE),                            /* Warrior-Mage */
     (CH_CHAOS | CH_DAEMON),                 /* Chaos-Warrior */
     (CH_LIFE | CH_NATURE | CH_DEATH |
-     CH_ENCHANT | CH_TRUMP),                /* Monk */
+     CH_ENCHANT | CH_TRUMP | CH_NONE),                /* Monk */
     (CH_NONE),                              /* Mindcrafter */
     (CH_LIFE | CH_SORCERY | CH_NATURE |
      CH_CHAOS | CH_DEATH | CH_TRUMP |

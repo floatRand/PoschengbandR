@@ -454,12 +454,16 @@ static void _realm_menu_fn(int cmd, int which, vptr cookie, variant *res)
     case MENU_TEXT:
         var_set_string(res, realm_names[idx]);
         break;
-    case MENU_ON_BROWSE:
-        c_put_str(TERM_L_BLUE, realm_names[idx], 3, 40);
-        put_str(": Characteristic", 3, 40+strlen(realm_names[idx]));
-        put_str(realm_subinfo[technic2magic(idx)-1], 4, 40);
-        var_set_bool(res, TRUE);
-        break;
+	case MENU_ON_BROWSE:
+		{
+			if (idx > 0){
+				c_put_str(TERM_L_BLUE, realm_names[idx], 3, 40);
+				put_str(": Characteristic", 3, 40 + strlen(realm_names[idx]));
+				put_str(realm_subinfo[technic2magic(idx) - 1], 4, 40);
+			}
+			var_set_bool(res, TRUE);
+		break;
+		}
     }
 }
 
@@ -599,29 +603,44 @@ static int _prompt_realm1(void)
         p_ptr->realm1 = p_ptr->realm2 = 0;
         return _prompt_personality();
     }
-    for (;;)
-    {
-        u32b   bits = realm_choices1[p_ptr->pclass];
-        int    choices[MAX_REALM];
-        int    ct = 0;
-        int    idx, i;
-        menu_t menu = { "Realm", "magic.txt#MagicRealms", "Note: The realm of magic will determine which spells you can learn.",
-                            _realm_menu_fn,
-                            choices, 0};
-        for (i = 0; i < 32; i++)
-        {
-            if (bits & (1L << i))
-                choices[ct++] = i+1;
-        }
+	for (;;)
+	{
+		u32b   bits = realm_choices1[p_ptr->pclass];
+		int    choices[MAX_REALM + 1];
+		int    ct = 0;
+		int    idx, i;
+		int    no_realm = -1;
+		menu_t menu = { "Realm", "magic.txt#MagicRealms", "Note: The realm of magic will determine which spells you can learn.",
+			_realm_menu_fn,
+			choices, 0 };
+		for (i = 0; i < 32; i++)
+		{
+			if (bits & (1L << i))
+				choices[ct++] = i + 1;
+		}
+
+		if (p_ptr->pclass == CLASS_MONK){ // classes that have choice of not picking a realm
+			no_realm = ct;
+			choices[ct++] = CH_NONE;
+		}
+	
         menu.count = ct;
         choices[ct] = -1;
         c_put_str(TERM_L_BLUE, format("%-20s", ""), 7, 14);
         idx = _menu_choose(&menu, _find_id(choices, p_ptr->realm1));
+
         if (idx < 0) return idx;
+
+		if (idx == no_realm){
+			p_ptr->realm1 = p_ptr->realm2 = 0;
+			return _prompt_personality();
+		}
+
         p_ptr->realm1 = choices[idx];
         c_put_str(TERM_L_BLUE, realm_names[p_ptr->realm1], 7, 14);
         if (!_confirm_choice(realm_jouhou[technic2magic(p_ptr->realm1)-1], menu.count)) continue;
         idx = _prompt_realm2();
+
         if (idx == _BIRTH_ESCAPE)
         {
             if (menu.count == 1)

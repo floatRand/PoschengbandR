@@ -614,7 +614,6 @@ class_t *maledict_get_class(void)
 		me.caster_info = _caster_info;
 		me.get_spells = _get_spells;
 		me.get_powers = _get_powers;
-		me.character_dump = spellbook_character_dump;
 		init = TRUE;
 	}
 

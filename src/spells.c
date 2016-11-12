@@ -1289,8 +1289,12 @@ void spellbook_character_dump(doc_ptr doc)
     }
     else
     {
-        if (p_ptr->realm1)
-            _dump_realm(doc, p_ptr->realm1);
+		if (p_ptr->realm1){
+			_dump_realm(doc, p_ptr->realm1);
+		}
+		else {
+			doc_printf(doc,"( None. )\n");
+		}
         if (p_ptr->realm2)
             _dump_realm(doc, p_ptr->realm2);
     }

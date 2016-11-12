@@ -417,7 +417,7 @@ void do_cmd_browse(void)
     cptr q, s;
 
     /* Warriors are illiterate */
-    if (!(p_ptr->realm1 || p_ptr->realm2) && (p_ptr->pclass != CLASS_SORCERER) && (p_ptr->pclass != CLASS_RED_MAGE))
+    if (!(p_ptr->realm1 || p_ptr->realm2) && (p_ptr->pclass != CLASS_SORCERER) && (p_ptr->pclass != CLASS_RED_MAGE) && !( p_ptr->pclass == CLASS_MONK && !p_ptr->realm1 ))
     {
         msg_print("You cannot read books!");
 
