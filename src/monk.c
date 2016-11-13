@@ -454,6 +454,43 @@ void monk_posture_spell(int cmd, variant *res)
     }
 }
 
+// do blow acted funkily, so here's this.
+bool _monk_touch_attack(int dmgtype, int dmg, u32b mode){
+	int x = 0, y = 0;
+	int dir;
+	int m_idx = 0;
+	if (use_old_target && target_okay())
+	{
+		y = target_row;
+		x = target_col;
+		m_idx = cave[y][x].m_idx;
+		if (m_idx)
+		{
+			if (m_list[m_idx].cdis > 1)
+				m_idx = 0;
+			else
+				dir = 5;
+		}
+	}
+	if (!m_idx){
+		if (!get_rep_dir2(&dir)) return FALSE;
+		if (dir == 5) return FALSE;
+		y = py + ddy[dir];
+		x = px + ddx[dir];
+		m_idx = cave[y][x].m_idx;
+		if (!m_idx)
+		{
+			msg_print("There is no monster there.");
+			return FALSE;
+		}
+	}
+	if (m_idx)
+	{
+		project(0, 0, y, x, dmg, dmgtype, mode, 0);
+		return TRUE;
+	}
+	return FALSE;
+}
 
 void monk_stunning_fist(int cmd, variant *res)
 {
@@ -466,46 +503,8 @@ void monk_stunning_fist(int cmd, variant *res)
 		var_set_string(res, "Attempt to stun a monster with a single touch.");
 		break;
 	case SPELL_CAST:
-	{
-		int x = 0, y = 0;
-		int dir;
-		int m_idx = 0;
-		if (use_old_target && target_okay())
-		{
-			y = target_row;
-			x = target_col;
-			m_idx = cave[y][x].m_idx;
-			if (m_idx)
-			{
-				if (m_list[m_idx].cdis > 1)
-					m_idx = 0;
-				else
-					dir = 5;
-			}
-		}
-		if (!m_idx){
-			if (!get_rep_dir2(&dir)) return FALSE;
-			if (dir == 5) return FALSE;
-
-			y = py + ddy[dir];
-			x = px + ddx[dir];
-			m_idx = cave[y][x].m_idx;
-
-			if (!m_idx)
-			{
-				msg_print("There is no monster there.");
-				var_set_bool(res, FALSE); break;
-			}
-		}
-
-		if (m_idx)
-		{
-			project(0, 0, y, x, p_ptr->lev, GF_STUN, (PROJECT_HIDE | PROJECT_KILL), 0);
-			var_set_bool(res, TRUE); break;
-		}
-		var_set_bool(res, FALSE);
+		var_set_bool(res, _monk_touch_attack(GF_STUN,p_ptr->lev, PROJECT_HIDE | PROJECT_KILL ));
 		break;
-	}
 	default:
 		default_spell(cmd, res);
 		break;
@@ -564,65 +563,58 @@ static bool _cave_is_open(int y, int x)
 
 bool horizontal_fang_aux(){
 
-	int y, x, tx, ty, dir = 5, i, lastMonPos = -1;
+	int tx, ty, i;
 	int range = _HFANG_RANGE;
-	bool okay = FALSE;
-	if (!get_aim_dir(&dir)){ return FALSE; }
-	y = py; x = px;
+	bool sq_okay = FALSE, strikeMsg = TRUE;
+	u16b path_g[32];
+	int path_n;
+	int flg = PROJECT_THRU | PROJECT_KILL;
 
-	for (i = 1; i < _HFANG_RANGE; i++) // look if we can traverse through line and land on OK grid queare.
-	{
-		y = py + ddy[dir] * i;
-		x = px + ddx[dir] * i;
-		if (in_bounds(y, x)){
-			if (!_cave_is_open(y, x)) { range = i; break; } // force stop at hard barriers 
-			else if (cave[y][x].m_idx){ lastMonPos = i; } // monstar. Not legit position ot tele to, but no bad.
-		}
-	}
-	if (lastMonPos < 0) return FALSE; // no monster.
-	u32b mode = (TELEPORT_NONMAGICAL);
-	/* Find a position just behind the last monster hit.*/
-	for (i = lastMonPos; i < lastMonPos + 16; i++){
-		y = py + ddy[dir] * i;
-		x = px + ddx[dir] * i;
-		if (in_bounds(y, x)) {
-			if (cave_player_teleportable_bold(y, x, mode)){
-				okay = TRUE;
-				tx = x; ty = y;
-				break; 
-			}
-		} // found just a nice spot for us!
-	}
-	if (!okay){ // couldn't tele behind, try to tele in front off ( doesn't hit the monster )
-		for (i = lastMonPos; i > 1; i--){
-			y = py + ddy[dir] * i;
-			x = px + ddx[dir] * i;
-			if (in_bounds(y, x)) {
-				if (cave_player_teleportable_bold(y, x, mode)) // found just a nice spot for us!
-				{ 
-					okay = TRUE; range = i; 
-					tx = x; ty = y;
-					break;
-				}
-			} 
-		}
-	}	
-	if (!okay){ msg_print("You wouldn't be able to land. "); return FALSE; } // give up.
+	if (!tgt_pt(&tx, &ty, _HFANG_RANGE)) return FALSE;
 
-	msg_print("You strike through your enemies!!");
+	project_length = range;
+	path_n = project_path(path_g, project_length, py, px, ty, tx, flg);
+	project_length = 0;
 
-	for (i = 0; i <= range; i++)
-	{
-		y = py + ddy[dir] * i;
-		x = px + ddx[dir] * i;
-		if (cave[y][x].m_idx)
-		{
-			py_attack(y, x, 0);
-		}
+	if (!path_n) return FALSE;
+	if (!los(ty, tx, py, px)){ 
+		msg_print("You have to see where you are going! ");
+		return FALSE;
 	}
+	else if (!cave_player_teleportable_bold(ty, tx, TELEPORT_LINE_OF_SIGHT | TELEPORT_NONMAGICAL) || !in_bounds(ty, tx)){
+		msg_print("Invalid destination! ");
+		return FALSE;
+	}
+	
+
+	/* No scrolling for you */
+	if (!dun_level && !p_ptr->wild_mode && !p_ptr->inside_arena && !p_ptr->inside_battle)
+		wilderness_scroll_lock = TRUE;
+
 	(void)move_player_effect(ty, tx, MPE_FORGET_FLOW | MPE_HANDLE_STUFF | MPE_DONT_PICKUP);
 
-	
+	for (i = 0; i < path_n; i++)
+	{
+		cave_type *c_ptr;
+
+		int ny = GRID_Y(path_g[i]);
+		int nx = GRID_X(path_g[i]);
+		c_ptr = &cave[ny][nx];
+		sq_okay = !c_ptr->m_idx && player_can_enter(c_ptr->feat, 0);
+
+		if (cave[ny][nx].m_idx)
+		{
+			if (strikeMsg){ msg_print("You strike through your enemies!!"); strikeMsg = FALSE; }
+			py_attack(ny, nx, 0);
+		}
+	}
+
+	if (!dun_level && !p_ptr->wild_mode && !p_ptr->inside_arena && !p_ptr->inside_battle)
+	{
+		wilderness_scroll_lock = FALSE;
+		wilderness_move_player(px, py);
+	}
+
 	return TRUE;
 }
 
