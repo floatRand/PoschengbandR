@@ -2110,6 +2110,10 @@ extern void stats_add_rand_art(object_type *o_ptr);
 extern vec_ptr stats_egos(void);
 extern void stats_add_ego(object_type *o_ptr);
 
+/* wiz_obj.c */
+extern void wiz_obj_create(void);
+extern void wiz_obj_smith(void);
+
 /* avatar.c */
 extern cptr virtue_name(int which);
 extern int virtue_find(int which);

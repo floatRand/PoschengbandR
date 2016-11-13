@@ -3200,7 +3200,7 @@ void do_cmd_debug(void)
 
     /* Object playing routines */
     case 'o':
-        do_cmd_wiz_play();
+        wiz_obj_smith();
         break;
 
     /* Phase Door */
