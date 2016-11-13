@@ -393,7 +393,7 @@ cptr devicemaster_speciality_desc(int psubclass)
 }
 
 bool devicemaster_is_speciality(object_type *o_ptr)
-{
+{   
     if (p_ptr->pclass == CLASS_DEVICEMASTER)
     {
         if (_speciality_tval(p_ptr->psubclass) == o_ptr->tval)

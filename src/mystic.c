@@ -3,6 +3,26 @@
 /****************************************************************
  * Helpers
  ****************************************************************/
+cptr mystic_spec_name(int psubclass)
+{
+	switch (psubclass)
+	{
+	case MYSTIC_SPEC_FIST: return "Way of the Fist";
+	case MYSTIC_SPEC_MIND: return "Way of the Mind";
+	}
+	return "";
+}
+
+cptr mystic_spec_desc(int psubclass)
+{
+	switch (psubclass)
+	{
+	case MYSTIC_SPEC_FIST: return "You specialize in physical techniques.";
+	case MYSTIC_SPEC_MIND: return "You specialize in mystic abilities.";
+	}
+	return "";
+}
+
 static int _get_toggle(void)
 {
     return p_ptr->magic_num1[0];
@@ -440,11 +460,247 @@ static void _summon_spiders_spell(int cmd, variant *res)
     }
 }
 
+/** PHYSICAL ALTERNATIVE **/
+int prompt_adjancent_monster(int *res_y, int *res_x){
+	int x, y;
+	int dir;
+	int m_idx;
+	if (use_old_target && target_okay())
+	{
+		y = target_row;
+		x = target_col;
+		m_idx = cave[y][x].m_idx;
+		if (m_idx)
+		{
+			if (m_list[m_idx].cdis > 1)
+				m_idx = 0;
+			else
+				dir = 5;
+			*res_x = x; *res_y = y;
+			return m_idx;
+		}
+		else return -1;
+	}
+	else{
+		if (!get_rep_dir2(&dir)) return -1;
+		if (dir == 5) return -1;
+		y = py + ddy[dir];
+		x = px + ddx[dir];
+		m_idx = cave[y][x].m_idx;
+		if (!m_idx)
+		{
+			msg_print("There is no monster there.");
+			return -1;
+		}
+		*res_x = x; *res_y = y;
+		return m_idx;
+	}
+}
+void _mystic_jump(int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Jump");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Jump to a random position.");
+		break;
+	case SPELL_CAST:
+		teleport_player(8, TELEPORT_LINE_OF_SIGHT | TELEPORT_NONMAGICAL);
+		var_set_bool(res, TRUE);
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+#define _HFANG_RANGE 10
+
+static bool _cave_is_open(int y, int x)
+{
+	if (cave_have_flag_bold(y, x, FF_HURT_ROCK)) return FALSE;
+	if (cave[y][x].feat == feat_permanent) return FALSE;
+	if (cave[y][x].feat == feat_permanent_glass_wall) return FALSE;
+	if (cave[y][x].feat == feat_mountain) return FALSE;
+	return TRUE;
+}
+
+bool horizontal_fang_aux(){
+
+	int tx, ty, i;
+	int range = _HFANG_RANGE;
+	bool sq_okay = FALSE, strikeMsg = TRUE;
+	u16b path_g[32];
+	int path_n;
+	int flg = PROJECT_THRU | PROJECT_KILL;
+
+	if (!tgt_pt(&tx, &ty, _HFANG_RANGE)) return FALSE;
+
+	project_length = range;
+	path_n = project_path(path_g, project_length, py, px, ty, tx, flg);
+	project_length = 0;
+
+	if (!path_n) return FALSE;
+	if (!los(ty, tx, py, px)){
+		msg_print("You have to see where you are going! ");
+		return FALSE;
+	}
+	else if (!cave_player_teleportable_bold(ty, tx, TELEPORT_LINE_OF_SIGHT | TELEPORT_NONMAGICAL) || !in_bounds(ty, tx)){
+		msg_print("Invalid destination! ");
+		return FALSE;
+	}
+
+
+	/* No scrolling for you */
+	if (!dun_level && !p_ptr->wild_mode && !p_ptr->inside_arena && !p_ptr->inside_battle)
+		wilderness_scroll_lock = TRUE;
+
+	(void)move_player_effect(ty, tx, MPE_FORGET_FLOW | MPE_HANDLE_STUFF | MPE_DONT_PICKUP);
+
+	for (i = 0; i < path_n; i++)
+	{
+		cave_type *c_ptr;
+
+		int ny = GRID_Y(path_g[i]);
+		int nx = GRID_X(path_g[i]);
+		c_ptr = &cave[ny][nx];
+		sq_okay = !c_ptr->m_idx && player_can_enter(c_ptr->feat, 0);
+
+		if (cave[ny][nx].m_idx)
+		{
+			if (strikeMsg){ msg_print("You strike through your enemies!!"); strikeMsg = FALSE; }
+			py_attack(ny, nx, 0);
+		}
+	}
+
+	if (!dun_level && !p_ptr->wild_mode && !p_ptr->inside_arena && !p_ptr->inside_battle)
+	{
+		wilderness_scroll_lock = FALSE;
+		wilderness_move_player(px, py);
+	}
+
+	return TRUE;
+}
+
+void _horizontal_fang(int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Horizontal Fang");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Charge through a straight line, attacking anyone on the way.");
+		break;
+	case SPELL_CAST:
+		var_set_bool(res, horizontal_fang_aux());
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+void _quaking_strike(int cmd, variant *res){
+
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Earthquaking Fist");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Shakes dungeon structure, and results in random swapping of floors and walls.");
+		break;
+	case SPELL_CAST:
+	{
+		msg_print("You strike the ground! ");
+		if (earthquake(py, px, 10))  msg_print("And the dungeon shakes!! ");
+		var_set_bool(res, TRUE);
+		break;
+	}
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+void _overdrive(int cmd, variant *res){
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Overdrive");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Makes two unavoidable attacks that pierces through invulnerability barriers.");
+		break;
+	case SPELL_CAST:
+	{
+		int x, y;
+		bool result = FALSE;
+		int m_idx = prompt_adjancent_monster(&y, &x);
+		if (m_idx){
+			if (one_in_(2)) msg_print("AHHHHHTATATATATATATATATATATATATATATATAAAAAAA!!!!");
+			else if (one_in_(2)) msg_print("ORAORAORAORAORAORAORAORAORAORAORAORAORA!!!!");
+			else msg_print("MUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDA!!!!");
+
+			py_attack(y, x, MONK_OVERDRIVE);
+			if (cave[y][x].m_idx)
+			{
+				handle_stuff();
+				py_attack(y, x, MONK_OVERDRIVE);
+			}
+			result = TRUE;
+		}
+		var_set_bool(res, result);
+		break;
+	}
+	case SPELL_ENERGY:
+		var_set_int(res, 100 + ENERGY_NEED());
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+static void _circle_kick_spell(int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Circle Kick");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Kicks all adjacent opponents, stunning them.");
+		break;
+	case SPELL_INFO:
+	{
+		int ds = p_ptr->lev;
+		int dd = 0;
+		dd = MIN(10, p_ptr->lev / 4);
+
+		var_set_string(res, info_damage(dd, ds, p_ptr->to_d_m));
+		break;
+	}
+	case SPELL_CAST:
+	{
+		circle_kick();
+		var_set_bool(res, TRUE);
+		break;
+	}
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
 
 /****************************************************************
  * Spell Table and Exports
  ****************************************************************/
-static spell_info _spells[] =
+static spell_info _spells_mind[] =
 {
     /*lvl cst fail spell */
     {  1,  0,  0, samurai_concentration_spell},
@@ -474,9 +730,42 @@ static spell_info _spells[] =
     { -1, -1, -1, NULL}
 };
 
+static spell_info _spells_fist[] =
+{
+	/*lvl cst fail spell */
+	{ 3, 0, 0, samurai_concentration_spell },
+	{ 5, 10, 20, _mystic_jump },
+	{ 9, 10, 30, detect_menace_spell },
+	{ 13, 15, 40, sense_surroundings_spell },
+	{ 15, 0, 0, _stealth_toggle_spell },
+	{ 17, 0, 0, _fast_toggle_spell },
+	{ 19, 0, 0, _defense_toggle_spell },
+	{ 21, 10, 20, awesome_blow_spell },
+	{ 22, 25, 30, swap_pos_spell },
+	{ 24, 20, 0, _stunning_blow_spell },
+	{ 25, 25, 30, rush_attack_spell },
+	{ 27, 20, 40, _circle_kick_spell },
+	{ 29, 0, 0, _retaliate_toggle_spell },
+	{ 30, 30, 60, haste_self_spell },
+	{ 32, 30, 60, resistance_spell },
+	{ 33, 30, 0, _quaking_strike },
+	{ 35, 20, 60, _offense_toggle_spell },
+	{ 37, 0, 0, _knockout_blow_spell },
+	{ 39, 40, 0, _horizontal_fang },
+	{ 42, 50, 0, _killing_strike_spell },
+	{ 45, 70, 0, _crushing_blow_spell },
+	{ 50, 100, 50, _overdrive},
+	{ -1, -1, -1, NULL }
+};
+
+
 static int _get_spells(spell_info* spells, int max)
 {
-    return get_spells_aux(spells, max, _spells);
+	switch (p_ptr->psubclass){
+		case MYSTIC_SPEC_MIND:     return get_spells_aux(spells, max, _spells_mind);
+		case MYSTIC_SPEC_FIST:     return get_spells_aux(spells, max, _spells_fist);
+		default: return get_spells_aux(spells, max, _spells_mind);
+	}
 }
 static void _calc_bonuses(void)
 {
@@ -522,7 +811,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
             add_flag(flgs, OF_FREE_ACT);
     }
 }
-static caster_info * _caster_info(void)
+static caster_info * _caster_info_mind(void)
 {
     static caster_info me = {0};
     static bool init = FALSE;
@@ -535,6 +824,7 @@ static caster_info * _caster_info(void)
     }
     return &me;
 }
+
 static void _character_dump(doc_ptr doc)
 {
     spell_info spells[MAX_SPELLS];
@@ -542,7 +832,7 @@ static void _character_dump(doc_ptr doc)
 
     py_display_spells(doc, spells, ct);
 }
-class_t *mystic_get_class(void)
+class_t *mystic_get_class(int subclass)
 {
     static class_t me = {0};
     static bool init = FALSE;
@@ -580,11 +870,13 @@ class_t *mystic_get_class(void)
 
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
-        me.caster_info = _caster_info;
+        me.caster_info = _caster_info_mind;
         me.get_spells = _get_spells;
         me.character_dump = _character_dump;
         init = TRUE;
     }
+	me.subname = mystic_spec_name(subclass);
+	me.subdesc = mystic_spec_desc(subclass);
 
     return &me;
 }

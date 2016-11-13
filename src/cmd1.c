@@ -3144,6 +3144,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             success_hit = TRUE;
         }
         else if (weaponmaster_get_toggle() == TOGGLE_BURNING_BLADE) success_hit = TRUE;
+		else if (mode == MONK_OVERDRIVE) success_hit = TRUE;
         else success_hit = test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml);
 
         if (mode == HISSATSU_MAJIN)
@@ -3527,7 +3528,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 k,
                 (o_ptr && o_ptr->tval == TV_POLEARM && o_ptr->sval == SV_DEATH_SCYTHE)
              || (p_ptr->pclass == CLASS_BERSERKER && one_in_(2))
-             || mode == WEAPONMASTER_CRUSADERS_STRIKE
+             || mode == WEAPONMASTER_CRUSADERS_STRIKE || mode == MONK_OVERDRIVE
             );
 
             if (duelist_attack)

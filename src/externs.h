@@ -2382,7 +2382,7 @@ extern void monk_display_attack_info(doc_ptr, int hand);
 
 
 /* mystic.c */
-extern class_t *mystic_get_class(void);
+extern class_t *mystic_get_class(int psubclass);
 extern int mystic_get_toggle(void);
 
 /* ninja.c */
@@ -2422,6 +2422,11 @@ extern bool     devicemaster_desperation;
 extern cptr     devicemaster_speciality_name(int psubclass);
 extern cptr     devicemaster_speciality_desc(int psubclass);
 extern bool     devicemaster_is_speciality(object_type *o_ptr);
+
+extern cptr		mystic_spec_name(int psubclass);
+extern cptr     mystic_spec_desc(int psubclass);
+extern bool     mystic_is_speciality(object_type *o_ptr);
+
 extern class_t *force_trainer_get_class(void);
 extern class_t *high_mage_get_class(void);
 extern bool     imitator_cast(bool revenge);
@@ -2596,6 +2601,8 @@ extern int shoot_hack;
 extern int shoot_count;
 extern int shoot_item;
 extern cptr weaponmaster_speciality_name(int psubclass);
+
+extern void circle_kick(void);
 
 /* spoilers.c */
 extern void generate_spoilers(void);

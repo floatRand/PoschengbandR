@@ -896,6 +896,9 @@ enum {
 #define DEVICEMASTER_SCROLLS 4
 #define DEVICEMASTER_MAX     5
 
+#define MYSTIC_SPEC_MIND 0
+#define MYSTIC_SPEC_FIST 1
+#define MYSTIC_SPEC_MAX 2
 
 #define PERS_ORDINARY      0
 #define PERS_MIGHTY        1
@@ -5289,6 +5292,8 @@ extern int PlayerUID;
 #define WEAPONMASTER_FLURRY  85
 
 #define BEHOLDER_GAZE        86
+
+#define MONK_OVERDRIVE		 87		
 
 #define HISSATSU_IAI    100
 

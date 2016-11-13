@@ -5517,6 +5517,8 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
                     sprintf(tmp, "%s", weaponmaster_speciality_name(p_ptr->psubclass));
                 else if (p_ptr->pclass == CLASS_DEVICEMASTER)
                     sprintf(tmp, "%s", devicemaster_speciality_name(p_ptr->psubclass));
+				else if (p_ptr->pclass == CLASS_MYSTIC)
+					sprintf(tmp, "%s", mystic_spec_name(p_ptr->psubclass));
                 else
                     sprintf(tmp, "None");
                 v = tmp;

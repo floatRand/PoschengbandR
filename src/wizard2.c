@@ -3291,7 +3291,10 @@ void do_cmd_debug(void)
     case 'x':
         gain_exp(command_arg ? command_arg : (p_ptr->exp + 1));
         break;
-
+	/* Gain stupid amount of experience*/
+	case 'X':
+		gain_exp(10 * 1000 * 1000); // should be enough.
+		break;
     /* Zap Monsters (Genocide) */
     case 'z':
         do_cmd_wiz_zap();

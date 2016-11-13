@@ -619,10 +619,12 @@ static int _prompt_realm1(void)
 				choices[ct++] = i + 1;
 		}
 
+		/*
 		if (p_ptr->pclass == CLASS_MONK){ // classes that have choice of not picking a realm
 			no_realm = ct;
 			choices[ct++] = CH_NONE;
 		}
+		*/
 	
         menu.count = ct;
         choices[ct] = -1;
@@ -630,7 +632,6 @@ static int _prompt_realm1(void)
         idx = _menu_choose(&menu, _find_id(choices, p_ptr->realm1));
 
         if (idx < 0) return idx;
-
 		if (idx == no_realm){
 			p_ptr->realm1 = p_ptr->realm2 = 0;
 			return _prompt_personality();
@@ -745,6 +746,16 @@ static void _devicemaster_menu_fn(int cmd, int which, vptr cookie, variant *res)
         var_set_string(res, devicemaster_speciality_name(which));
         break;
     }
+}
+
+static void _mystic_spec_menu_fn(int cmd, int which, vptr cookie, variant *res)
+{
+	switch (cmd)
+	{
+	case MENU_TEXT:
+		var_set_string(res, mystic_spec_name(which));
+		break;
+	}
 }
 
 static bool _valid_class(int which)
@@ -947,6 +958,25 @@ static int _prompt_class(void)
                         return idx;
                     }
                 }
+				else if (p_ptr->pclass == CLASS_MYSTIC)
+				{
+					for (;;)
+					{
+						menu_t menu3 = { "Speciality", "Devicemasters.txt", "It is time to specialize.",
+							_mystic_spec_menu_fn,
+							NULL, MYSTIC_SPEC_MAX };
+						c_put_str(TERM_WHITE, "              ", 7, 14);
+						idx = _menu_choose(&menu3, p_ptr->psubclass);
+						if (idx == _BIRTH_ESCAPE) break;
+						if (idx < 0) return idx;
+						p_ptr->psubclass = idx;
+						c_put_str(TERM_L_BLUE, format("%-14s", mystic_spec_name(p_ptr->psubclass)), 7, 14);
+						if (!_confirm_choice(mystic_spec_desc(p_ptr->psubclass), menu3.count)) continue;
+						idx = _prompt_personality();
+						if (idx == _BIRTH_ESCAPE) continue;
+						return idx;
+					}
+				}
                 else
                 {
                     p_ptr->psubclass = 0;

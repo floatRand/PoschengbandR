@@ -122,7 +122,7 @@ class_t *result = NULL;
         result = monster_get_class();
         break;
     case CLASS_MYSTIC:
-        result = mystic_get_class();
+        result = mystic_get_class(psubclass);
         break;
     case CLASS_NECROMANCER:
         result = necromancer_get_class();

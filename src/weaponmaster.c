@@ -2389,7 +2389,7 @@ static void _monkey_king_spell(int cmd, variant *res)
     }
 }
 
-void _circle_kick(void)
+void circle_kick(void)
 {
     int i;
     int dd = 1;
@@ -2400,6 +2400,10 @@ void _circle_kick(void)
 
     if (slot)
         dd = equip_obj(slot)->ac;
+
+	if (p_ptr->pclass == CLASS_MYSTIC){
+		dd = MIN(10,p_ptr->lev / 4); // for mystics it deals damage based on level instead.
+	}
 
     for (i = 0; i < 8; i++)
     {
@@ -2487,7 +2491,7 @@ static void _circle_kick_spell(int cmd, variant *res)
             msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
-        _circle_kick();
+        circle_kick();
         var_set_bool(res, TRUE);
         break;
     }
