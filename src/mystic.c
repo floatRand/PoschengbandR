@@ -696,6 +696,58 @@ static void _circle_kick_spell(int cmd, variant *res)
 	}
 }
 
+static void _break_rock_spell(int cmd, variant *res)
+{
+	/*Copied over from archeologist.*/
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Break Rock");
+		break;
+	case SPELL_DESC:
+		var_set_string(res, "Break through walls or other obstacles with your fists.");
+		break;
+	case SPELL_ENERGY:
+		var_set_int(res, 200);
+		break;
+	case SPELL_CAST:
+	{
+		int dir = 5;
+		bool b = FALSE;
+		if (get_rep_dir2(&dir)
+			&& dir != 5)
+		{
+			int x, y;
+			y = py + ddy[dir];
+			x = px + ddx[dir];
+			if (!in_bounds(y, x))
+			{
+				msg_print("This wall can not be broken.");
+			}
+			else if (cave_have_flag_bold(y, x, FF_WALL)
+				|| cave_have_flag_bold(y, x, FF_TREE)
+				|| cave_have_flag_bold(y, x, FF_CAN_DIG))
+			{
+				msg_print("You break through wall!");
+				cave_alter_feat(y, x, FF_TUNNEL);
+				sound(SOUND_DIG);
+				teleport_player_to(y, x, TELEPORT_NONMAGICAL); 
+				b = TRUE;
+			}
+			else
+			{
+				msg_print("There is nothing to excavate.");
+			}
+		}
+		var_set_bool(res, b);
+	}
+	break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
 
 /****************************************************************
  * Spell Table and Exports
@@ -733,7 +785,7 @@ static spell_info _spells_mind[] =
 static spell_info _spells_fist[] =
 {
 	/*lvl cst fail spell */
-	{ 3, 0, 0, samurai_concentration_spell },
+	{ 1, 0, 0, samurai_concentration_spell },
 	{ 5, 10, 20, _mystic_jump },
 	{ 9, 10, 30, detect_menace_spell },
 	{ 13, 15, 40, sense_surroundings_spell },
@@ -745,6 +797,7 @@ static spell_info _spells_fist[] =
 	{ 24, 20, 0, _stunning_blow_spell },
 	{ 25, 25, 30, rush_attack_spell },
 	{ 27, 20, 40, _circle_kick_spell },
+	{ 28, 2, 0, _break_rock_spell },
 	{ 29, 0, 0, _retaliate_toggle_spell },
 	{ 30, 30, 60, haste_self_spell },
 	{ 32, 30, 60, resistance_spell },
