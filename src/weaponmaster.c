@@ -4212,8 +4212,8 @@ static void _character_dump(doc_ptr doc)
     {
         doc_printf(doc, "  * You pay reduced energy costs when equipping a dagger.\n");
         doc_printf(doc, "  * You dual wield very effectively with daggers.\n");
-        if (p_ptr->lev >= 20)
-            doc_printf(doc, "  * You gain a bonus to AC when wielding a dagger.\n");
+        if (p_ptr->lev >= 25)
+            doc_printf(doc, "  * You gain a bonus to AC when wielding dual wielding daggers.\n");
         if (p_ptr->lev >= 12)
             doc_printf(doc, "  * You gain a bonus to stealth when wielding a dagger.\n");
         if (p_ptr->lev >= 30)
