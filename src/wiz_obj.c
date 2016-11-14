@@ -188,6 +188,102 @@ static int _smith_reroll(object_type *o_ptr)
     }
 }
 
+static int _smith_resistances(object_type *o_ptr)
+{
+    object_type copy = *o_ptr;
+    rect_t r = ui_map_rect();
+
+    for (;;)
+    {
+        int  cmd, which;
+
+        doc_clear(_doc);
+        obj_display_smith(&copy, _doc);
+
+        for (which = RES_BEGIN; which < RES_END; which++)
+        {
+            doc_printf(_doc, "   <color:y>%c</color>) %s%c\n",
+                I2A(which - RES_BEGIN), res_name(which),
+                res_get_object_immune_flag(which) != OF_INVALID ? '*' : ' ');
+        }
+
+        doc_newline(_doc);
+        doc_insert(_doc, "   SHIFT+choice toggle vulnerability\n");
+        doc_insert(_doc, "(*)CTRL+choice toggle immunity\n");
+
+        doc_newline(_doc);
+        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_newline(_doc);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
+        cmd = _inkey();
+
+        /* Note: iscntrl('\r') is true ... so we need to check this first*/
+        if (cmd == '\r')
+        {
+            *o_ptr = copy;
+            return _OK;
+        }
+        else if (cmd == ESCAPE)
+            return _CANCEL;
+
+        /* Toggle resistance? */
+        which = A2I(cmd) + RES_BEGIN;
+        if (RES_BEGIN <= which && which < RES_END)
+        {
+            int  flg = res_get_object_flag(which);
+            if (have_flag(copy.flags, flg))
+                remove_flag(copy.flags, flg);
+            else
+                add_flag(copy.flags, flg);
+            obj_identify_fully(&copy);
+            continue;
+        }
+
+        /* Toggle vulnerability? */
+        if (isupper(cmd))
+        {
+            which = A2I(tolower(cmd)) + RES_BEGIN;
+            if (RES_BEGIN <= which && which < RES_END)
+            {
+                int  flg = res_get_object_vuln_flag(which);
+                if (flg != OF_INVALID)
+                {
+                    if (have_flag(copy.flags, flg))
+                        remove_flag(copy.flags, flg);
+                    else
+                        add_flag(copy.flags, flg);
+                    obj_identify_fully(&copy);
+                    continue;
+                }
+            }
+        }
+
+        /* Toggle immunity? */
+        if (iscntrl(cmd))
+        {
+            char c = 'a' + cmd - KTRL('A');
+            which = A2I(c) + RES_BEGIN;
+            if (RES_BEGIN <= which && which < RES_END)
+            {
+                int  flg = res_get_object_immune_flag(which);
+                if (flg != OF_INVALID)
+                {
+                    if (have_flag(copy.flags, flg))
+                        remove_flag(copy.flags, flg);
+                    else
+                        add_flag(copy.flags, flg);
+                    obj_identify_fully(&copy);
+                }
+                continue;
+            }
+        }
+    }
+}
+
 static int _smith_weapon_armor(object_type *o_ptr)
 {
     rect_t r = ui_map_rect();
@@ -226,6 +322,7 @@ static int _smith_weapon_armor(object_type *o_ptr)
         case ESCAPE: return _CANCEL;
         case '\r': return _OK;
         case 'p': _smith_plusses(o_ptr); break;
+        case 'r': _smith_resistances(o_ptr); break;
         case 'R': _smith_reroll(o_ptr); break;
         }
     }
