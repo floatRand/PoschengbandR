@@ -2974,12 +2974,16 @@ static void _wiz_gather_stats(int which_dungeon, int level, int reps)
 extern void do_cmd_debug(void);
 void do_cmd_debug(void)
 {
-    int     x, y, n;
+    int     x, y, n, repeat;
     char    cmd;
 
-
-    /* Get a "debug command" */
-    get_com("Debug Command: ", &cmd, FALSE);
+    if (REPEAT_PULL(&repeat))
+        cmd = repeat;
+    else
+    {
+        get_com("Debug Command: ", &cmd, FALSE);
+        REPEAT_PUSH(cmd);
+    }
 
     /* Analyze the command */
     switch (cmd)
