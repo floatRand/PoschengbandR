@@ -2498,14 +2498,6 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         /* Hack -- Mark the artifact as "created" */
         a_ptr->generated = TRUE;
 
-		/* Hack. Lucky Coin / Unlucky Coin. It's either or. */
-		if (a_ptr->tval == TV_LITE){
-			if (a_ptr->sval == SV_LITE_COIN){
-				a_info[ART_ULCOIN].generated = TRUE;
-				a_info[ART_LCOIN].generated = TRUE;
-			}
-		} 
-
         /* Hack -- Memorize location of artifact in saved floors */
         if (character_dungeon)
             a_ptr->floor_id = p_ptr->floor_id;
