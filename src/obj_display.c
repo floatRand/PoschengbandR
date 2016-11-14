@@ -950,6 +950,8 @@ static void _lite_display_doc(object_type *o_ptr, doc_ptr doc)
             doc_insert(doc, "It decreases radius of light source by 2.\n");
         else if (o_ptr->sval == SV_LITE_TORCH)
             doc_insert(doc, "It decreases radius of light source by 1.\n");
+		else if (o_ptr->sval == SV_LITE_COIN)
+			doc_insert(doc, "It decreases radius of light source by 1.\n");
         else
             doc_insert(doc, "It decreases radius of light source by 3.\n");
     }
@@ -957,6 +959,8 @@ static void _lite_display_doc(object_type *o_ptr, doc_ptr doc)
     {
         if (o_ptr->name1 == ART_EYE_OF_VECNA)
             doc_insert(doc, "It allows you to see in the dark.\n");
+		else if (o_ptr->sval == SV_LITE_COIN)
+			doc_insert(doc, "It provides light (radius 1) forever.\n");
         else
             doc_insert(doc, "It provides light (radius 3) forever.\n");
     }

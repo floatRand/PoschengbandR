@@ -1696,9 +1696,10 @@ void carry(bool pickup)
             sound(SOUND_SELL);
 
             /* Collect the gold */
-            p_ptr->au += value;
-            stats_on_gold_find(value);
-
+			if (value >= 0){
+				p_ptr->au += value; // let's not pick the negative gold, otherwise we risk a nuclear annihilation.
+				stats_on_gold_find(value);
+			}
             /* Redraw gold */
             p_ptr->redraw |= (PR_GOLD);
 

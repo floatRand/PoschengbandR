@@ -1202,6 +1202,8 @@ enum {
 #define ART_PALANTIR             15
 #define ART_STONE_LORE           17
 #define ART_FLY_STONE            147
+#define ART_LCOIN				 329
+#define ART_ULCOIN				 330
 
 /* Amulets */
 #define ART_CARLAMMAS            4
@@ -1883,6 +1885,7 @@ enum {
 #define SV_LITE_ARMAGEDDON              21
 #define SV_LITE_HYDRA                   22
 #define SV_LITE_MIND                    23
+#define SV_LITE_COIN					24
 
 #define SV_AMULT                         0
 #define SV_RING                          0

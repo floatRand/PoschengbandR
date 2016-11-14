@@ -4104,9 +4104,10 @@ void py_pickup_floor(bool pickup)
                 (int)o_ptr->pval, o_name);
 
             /* Collect the gold */
-            p_ptr->au += o_ptr->pval;
-            stats_on_gold_find(o_ptr->pval);
-
+			if (o_ptr->pval >= 0){
+				p_ptr->au += o_ptr->pval; // prevent collecting negatives for now.
+				stats_on_gold_find(o_ptr->pval);
+			}
             /* Redraw gold */
             p_ptr->redraw |= (PR_GOLD);
 

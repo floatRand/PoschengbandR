@@ -2438,6 +2438,27 @@ bool mundane_spell(bool only_equip)
         msg_print("There is no effect.");
         return TRUE;
     }
+	else if (o_ptr->name1 == ART_LCOIN || o_ptr->name1 == ART_ULCOIN){
+		msg_print("It turns back into a regular coin.");
+		
+		if (item >= 0)
+		{
+			inven_item_increase(item, -1);
+			inven_item_describe(item);
+			inven_item_optimize(item);
+		}
+		else
+		{
+			floor_item_increase(0 - item, -1);
+			floor_item_describe(0 - item);
+			floor_item_optimize(0 - item);
+		}
+
+		p_ptr->au++;
+		p_ptr->update |= PU_BONUS;
+		
+		return TRUE;
+	}
 
     if (have_flag(o_ptr->flags, OF_NO_REMOVE))
     {

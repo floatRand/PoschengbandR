@@ -1345,8 +1345,8 @@ struct player_type
     /* Rune Knight: Some Rune effects might become general game mechanics, like Magic Resistance
        and Magic Absorption.  Also, let's consolidate the White Aura mutation with the Rune of
        Good Fortune into a cached Good Luck value */
-    s16b magic_resistance;
-    bool good_luck;
+	s16b magic_resistance; 
+    bool good_luck, bad_luck;
 
     bool rune_elem_prot;
 

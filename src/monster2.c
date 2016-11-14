@@ -1656,14 +1656,14 @@ s16b get_mon_num(int level)
                 continue;
             }
 
+			/* Unique handling */
             if (r_idx == MON_BANORLUPART)
             {
                 if (r_info[MON_BANOR].cur_num > 0) continue;
                 if (r_info[MON_LUPART].cur_num > 0) continue;
             }
-
-			if (r_idx == MON_HIBACHI){
-				if (r_info[MON_TAISABACHI].max_num == 0) continue; // Only if Taisabachi has been destroyed.
+			else if (r_idx == MON_HIBACHI){
+				if (r_info[MON_TAISABACHI].max_num != 0) continue; // Only if Taisabachi has been destroyed.
 			}
         }
 

@@ -3320,6 +3320,8 @@ static void _calc_torch_imp(object_type *o_ptr)
             p_ptr->cur_lite += 2;
         else if (o_ptr->sval == SV_LITE_FEANOR)
             p_ptr->cur_lite += 2;
+		else if (o_ptr->sval == SV_LITE_COIN)
+			p_ptr->cur_lite += 1;
         else if (o_ptr->name1 || o_ptr->art_name || o_ptr->name3)
         {
             p_ptr->cur_lite += 3;
@@ -3601,6 +3603,7 @@ void calc_bonuses(void)
 
     p_ptr->magic_resistance = 0;
     p_ptr->good_luck = FALSE;
+	p_ptr->bad_luck = FALSE;
     p_ptr->rune_elem_prot = FALSE;
     p_ptr->no_eldritch = FALSE;
     p_ptr->no_charge_drain = FALSE;
@@ -3775,6 +3778,16 @@ void calc_bonuses(void)
         case ART_STONE_OF_ARMAGEDDON:
             p_ptr->easy_realm1 = REALM_ARMAGEDDON;
             break;
+		case ART_LCOIN:{
+			if (!mut_present(MUT_BAD_LUCK)) p_ptr->good_luck = TRUE; // bad luck mutation cancels out bonuses...
+				else p_ptr->bad_luck = FALSE;	
+			break;
+			}
+		case ART_ULCOIN:{
+			if (!mut_present(MUT_GOOD_LUCK)) p_ptr->bad_luck = TRUE; // bad luck mutation cancels out bonuses...
+				else p_ptr->good_luck = FALSE;
+			break;
+			}
         }
     }
 
@@ -3857,8 +3870,10 @@ void calc_bonuses(void)
     if (pers_ptr->calc_bonuses)
         pers_ptr->calc_bonuses();
 
-    if (mut_present(MUT_GOOD_LUCK))
+    if (mut_present(MUT_GOOD_LUCK) && !p_ptr->bad_luck)
         p_ptr->good_luck = TRUE;
+	if (mut_present(MUT_BAD_LUCK) && !p_ptr->good_luck)
+		p_ptr->bad_luck = TRUE;
 
     if (music_singing(MUSIC_WALL))
         p_ptr->kill_wall = TRUE;
@@ -3881,7 +3896,7 @@ void calc_bonuses(void)
             p_ptr->rune_elem_prot = TRUE;
         if (o_ptr->rune == RUNE_GOOD_FORTUNE)
             p_ptr->good_luck = TRUE;
-    }
+	}
 
     mut_calc_bonuses();  /* Process before equip for MUT_FLESH_ROT */
     equip_calc_bonuses();

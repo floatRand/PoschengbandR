@@ -4304,6 +4304,14 @@ A:50/4
 F:IGNORE_COLD | IGNORE_FIRE | IGNORE_ACID | IGNORE_ELEC
 M:20:1d3
 
+N:749:& Coin
+G:$:o
+I:39:24:0
+W:40:0:0:5:25000
+P:0:1d1:0:0:0
+F:INSTA_ART
+
+
 # N: serial number : & object name~
 # G: symbol : color
 # I: tval : sval : pval

@@ -423,7 +423,6 @@ static int _prompt_personality(void)
 
         for (i = 0; i < MAX_PERSONALITIES; i++)
         {
-            if (_valid_personality(i))
                 choices[ct++] = i;
         }
         choices[ct] = -1;

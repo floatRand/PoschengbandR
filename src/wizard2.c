@@ -3087,7 +3087,13 @@ void do_cmd_debug(void)
         acquirement(py, px, command_arg, FALSE, TRUE);
 #endif
         break;
-
+	/* GOLD */
+	case 'G':
+	{
+		p_ptr->au += 1000000L;
+		p_ptr->redraw |= (PR_GOLD);
+		break;
+	}
     /* Hitpoint rerating */
     case 'h':
     {

@@ -3348,6 +3348,24 @@ F:FULL_NAME | WIS | INSTA_ART
 E:RESTORE_MANA:50:777
 E:You focus your thoughts as your stone thrums with power.
 
+N:329:Lucky Coin
+I:39:24:2
+W:40:150:1:100000
+P:0:1d1:0:0:0
+F:FULL_NAME | INSTA_ART 
+F:FREE_ACT | HOLD_LIFE
+D:Dull coin emanating warmth.
+
+N:330:Unlucky Coin
+I:39:24:2
+W:40:150:1:100000
+P:0:1d1:0:0:0
+F:FULL_NAME | INSTA_ART 
+F:CURSED | HEAVY_CURSE | PERMA_CURSE
+F:FREE_ACT | DARKNESS
+F:WEAPONMASTERY 
+D:Worn coin, cold to touch. It seems to have passed through many unfortunate hands. 
+
 # N: serial number : item name
 # I: tval : sval : pval
 # W: depth : rarity : weight : cost

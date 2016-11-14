@@ -641,7 +641,10 @@ void self_knowledge(void)
         info[i++] = "Objects are automatically pseudo-identified as you pass over them.";
     if (p_ptr->cult_of_personality)
         info[i++] = "Summoned monsters sometimes switch their allegiance.";
-
+	if (p_ptr->good_luck)
+		info[i++] = "You are lucky.";
+	if (p_ptr->bad_luck)
+		info[i++] = "You are unlucky.";
     /* TODO: We used to spoil your first weapon, and ignore any alternate weapons. Rethink ... */
 
     /* Save the screen */

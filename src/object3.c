@@ -294,6 +294,7 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
         case ART_STONE_OF_CRAFT:
         case ART_STONE_OF_ARMAGEDDON:
         case ART_STONE_OF_MIND:
+		case ART_LCOIN:
             xtra = 5000;
             break;
         case ART_ASSASSINATOR:

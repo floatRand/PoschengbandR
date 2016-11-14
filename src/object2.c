@@ -2353,7 +2353,7 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         f1 += 5;
         f2 += 2;
     }
-    else if(mut_present(MUT_BAD_LUCK))
+    else if(p_ptr->bad_luck)
     {
         f1 -= 5;
         f2 -= 2;
@@ -2497,6 +2497,14 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 
         /* Hack -- Mark the artifact as "created" */
         a_ptr->generated = TRUE;
+
+		/* Hack. Lucky Coin / Unlucky Coin. It's either or. */
+		if (a_ptr->tval == TV_LITE){
+			if (a_ptr->sval == SV_LITE_COIN){
+				a_info[ART_ULCOIN].generated = TRUE;
+				a_info[ART_LCOIN].generated = TRUE;
+			}
+		} 
 
         /* Hack -- Memorize location of artifact in saved floors */
         if (character_dungeon)
@@ -4045,7 +4053,8 @@ void place_object(int y, int x, u32b mode)
  */
 bool make_gold(object_type *j_ptr, bool do_boost)
 {
-    int i;
+	int i;
+	int au;
 
     s32b base;
 
@@ -4071,13 +4080,17 @@ bool make_gold(object_type *j_ptr, bool do_boost)
     /* Hack -- Base coin cost */
     base = k_info[OBJ_GOLD_LIST+i].cost;
 
+	/* Bugfix, in Hell gold rolled over to negative. */
+	au = (base + (8 * randint1(base)) + randint1(8));
+	au = au * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;
+
     /* Determine how much the treasure is "worth" */
-    j_ptr->pval = (base + (8 * randint1(base)) + randint1(8));
-
-    j_ptr->pval = j_ptr->pval * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;
-
     if (do_boost)
-        j_ptr->pval += j_ptr->pval * object_level / 7;
+      au += au * object_level / 7;
+
+	if (au > 30000) au = 30000; // hard cap, for now.
+
+	j_ptr->pval = au;
 
     /* Success */
     return (TRUE);
