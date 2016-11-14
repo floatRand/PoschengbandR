@@ -1410,11 +1410,11 @@ static bool _get_store_obj(object_type *o_ptr)
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_REMOVE_CURSE);
 		else if (one_in_(20))
 			k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
-		else if (one_in_(30) && p_ptr->lev >= 10)
+		else if (one_in_(30) && p_ptr->lev >= 20)
 			k_idx = lookup_kind(TV_POTION, SV_POTION_CURING);
-		else if (one_in_(50) && p_ptr->lev >= 20) // rare
+		else if (one_in_(50) && p_ptr->lev >= 30) // rare
 			k_idx = lookup_kind(TV_POTION, SV_POTION_HEALING);
-		else if (one_in_(100) && p_ptr->lev >= 30)
+		else if (one_in_(100) && p_ptr->lev >= 40)
 			k_idx = lookup_kind(TV_POTION,SV_POTION_STAR_HEALING);
     }
     else if (cur_store_num == STORE_ALCHEMIST)
@@ -1427,7 +1427,7 @@ static bool _get_store_obj(object_type *o_ptr)
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_IDENTIFY);
 		else if (one_in_(10))
 			k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT);
-		else if (one_in_(15) && p_ptr->lev>=15) 
+		else if (one_in_(15) && p_ptr->lev>=25) 
 			k_idx = lookup_kind(TV_POTION, SV_POTION_SPEED);
         else if (!easy_id && one_in_(20))
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
