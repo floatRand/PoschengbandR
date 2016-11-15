@@ -22,20 +22,13 @@ void wiz_obj_create(void)
 /***********************************************************************
  * Object Modification (Smithing)
  **********************************************************************/
-typedef int (*_smith_fn)(object_type *o_ptr);
 
+/* Low level helpers for bit twiddling */
 typedef struct {
     int flag;
     cptr name;
     object_p pred;
 } _flag_info_t, *_flag_info_ptr;
-
-typedef struct {
-    char choice;
-    cptr name;
-    _smith_fn smithee;
-    object_p pred;
-} _command_t, *_command_ptr;
 
 static void _toggle(object_type *o_ptr, int flag)
 {
@@ -46,6 +39,7 @@ static void _toggle(object_type *o_ptr, int flag)
     obj_identify_fully(o_ptr);
 }
 
+/* Level 2 Smithing functions */
 static int _smith_plusses(object_type *o_ptr)
 {
     rect_t      r = ui_map_rect();
@@ -642,29 +636,69 @@ static int _smith_resistances(object_type *o_ptr)
     }
 }
 
-static int _smith_weapon_armor(object_type *o_ptr)
-{
-    rect_t r = ui_map_rect();
+/* Top Level Smithing UI */
+typedef int (*_smith_fn)(object_type *o_ptr);
 
-    for (;;)
+typedef struct {
+    char choice;
+    cptr name;
+    _smith_fn smithee;
+    object_p pred;
+} _command_t, *_command_ptr;
+
+static bool _slays_p(object_type *o_ptr)
+{
+    return object_is_melee_weapon(o_ptr)
+        || object_is_ammo(o_ptr);
+}
+
+static bool _brands_p(object_type *o_ptr)
+{
+    return object_is_melee_weapon(o_ptr)
+        || object_is_ammo(o_ptr)
+        || object_is_bow(o_ptr);
+}
+
+static _command_t _commands[] = {
+    { 'p', "Plusses", _smith_plusses, object_is_weapon_armour_ammo },
+    { 's', "Stats", _smith_stats, object_is_wearable },
+    { 'b', "Bonuses", _smith_bonuses, object_is_wearable },
+    { 'r', "Resistances", _smith_resistances, object_is_wearable },
+    { 'a', "Abilities", _smith_abilities, object_is_wearable },
+    { 't', "Telepathies", _smith_telepathies, object_is_wearable },
+    { 'S', "Slays", _smith_slays, _slays_p },
+    { 'B', "Brands", _smith_brands, _brands_p },
+    { 'R', "Re-roll", _smith_reroll, object_is_wearable },
+    { 0 }
+};
+
+static int _smith_object_aux(object_type *o_ptr)
+{
+    rect_t  r = ui_map_rect();
+    vec_ptr v = vec_alloc(NULL);
+    int     result = _NONE, i; 
+
+    for (i = 0; ; i++)
+    {
+        _command_ptr c_ptr = &_commands[i];
+        if (!c_ptr->smithee) break;
+        if (c_ptr->pred && !c_ptr->pred(o_ptr)) continue;
+        vec_add(v, c_ptr);
+    }
+
+    while (result == _NONE && vec_length(v))
     {
         int  cmd;
 
         doc_clear(_doc);
         obj_display_smith(o_ptr, _doc);
 
-        doc_insert(_doc, "   <color:y>p</color>) Plusses\n");
-        doc_insert(_doc, "   <color:y>s</color>) Stats\n");
-        doc_insert(_doc, "   <color:y>b</color>) Bonuses\n");
-        doc_insert(_doc, "   <color:y>r</color>) Resistances\n");
-        doc_insert(_doc, "   <color:y>a</color>) Abilities\n");
-        doc_insert(_doc, "   <color:y>t</color>) Telepathies\n");
-        if (object_is_melee_weapon(o_ptr))
+        for (i = 0; i < vec_length(v); i++)
         {
-            doc_insert(_doc, "   <color:y>S</color>) Slays\n");
-            doc_insert(_doc, "   <color:y>B</color>) Brands\n");
+            _command_ptr c_ptr = vec_get(v, i);
+            doc_printf(_doc, "   <color:y>%c</color>) %s\n",
+                c_ptr->choice, c_ptr->name);
         }
-        doc_insert(_doc, "   <color:y>R</color>) Re-roll\n");
 
         doc_newline(_doc);
         doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
@@ -674,21 +708,26 @@ static int _smith_weapon_armor(object_type *o_ptr)
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
 
         cmd = _inkey();
-        switch (cmd)
+        if (cmd == '\r')
+            result = _OK;
+        else if (cmd == ESCAPE)
+            result = _CANCEL;
+        else
         {
-        case ESCAPE: return _CANCEL;
-        case '\r': return _OK;
-        case 'p': _smith_plusses(o_ptr); break;
-        case 's': _smith_stats(o_ptr); break;
-        case 'b': _smith_bonuses(o_ptr); break;
-        case 'r': _smith_resistances(o_ptr); break;
-        case 'a': _smith_abilities(o_ptr); break;
-        case 't': _smith_telepathies(o_ptr); break;
-        case 'S': _smith_slays(o_ptr); break;
-        case 'B': _smith_brands(o_ptr); break;
-        case 'R': _smith_reroll(o_ptr); break;
+            for (i = 0; i < vec_length(v); i++)
+            {
+                _command_ptr c_ptr = vec_get(v, i);
+                if (c_ptr->choice == cmd)
+                {
+                    assert(c_ptr->smithee);
+                    c_ptr->smithee(o_ptr);
+                    break;
+                }
+            }
         }
     }
+    vec_free(v);
+    return result;
 }
 
 static int _smith_object(object_type *o_ptr)
@@ -699,8 +738,7 @@ static int _smith_object(object_type *o_ptr)
     msg_line_clear();
     Term_save();
 
-    if (object_is_weapon(o_ptr) || object_is_armour(o_ptr))
-        result = _smith_weapon_armor(o_ptr);
+    result = _smith_object_aux(o_ptr);
 
     Term_load();
     doc_free(_doc);
@@ -710,8 +748,9 @@ static int _smith_object(object_type *o_ptr)
 
 static bool _smith_p(object_type *o_ptr)
 {
-    if (object_is_weapon(o_ptr)) return TRUE;
-    if (object_is_armour(o_ptr)) return TRUE;
+    if (object_is_wearable(o_ptr)) return TRUE;
+    if (object_is_ammo(o_ptr)) return TRUE;
+    if (object_is_device(o_ptr)) return TRUE;
     return FALSE;
 }
 
