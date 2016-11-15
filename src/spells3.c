@@ -2628,6 +2628,11 @@ bool recharge_from_player(int power)
         if (amt > p_ptr->au / 100)
             amt = p_ptr->au / 100;
     }
+    else if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+    {
+        if (amt > p_ptr->chp)
+            amt = p_ptr->chp;
+    }
     else if (amt > p_ptr->csp)
         amt = p_ptr->csp;
 
@@ -2637,6 +2642,8 @@ bool recharge_from_player(int power)
         stats_on_gold_services(amt * 100); /* ? */
         p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
     }
+    else if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+        take_hit(DAMAGE_NOESCAPE, amt, "recharging", -1);
     else
         sp_player(-amt);
 

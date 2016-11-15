@@ -1666,7 +1666,13 @@ static cptr do_sorcery_spell(int spell, int mode)
 
     case 7:
         if (name) return "Recharging";
-        if (desc) return "It attempts to recharge a device using your mana for power.";
+        if (desc)
+        {
+            if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+                return "It attempts to recharge a device using your blood for power.";
+            else
+                return "It attempts to recharge a device using your mana for power.";
+        }
 
         {
             int power = spell_power(plev * 3);
