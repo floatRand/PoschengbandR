@@ -488,6 +488,26 @@ static int _smith_slays(object_type *o_ptr)
     return _smith_flags(o_ptr, _slay_flags);
 }
 
+static _flag_info_t _brand_flags[] = {
+    { OF_BRAND_ACID,    "Brand Acid" },
+    { OF_BRAND_ELEC,    "Brand Elec" },
+    { OF_BRAND_FIRE,    "Brand Fire" },
+    { OF_BRAND_COLD,    "Brand Cold" },
+    { OF_BRAND_POIS,    "Brand Poison" },
+    { OF_BRAND_CHAOS,   "Chaotic", object_is_melee_weapon },
+    { OF_BRAND_VAMP,    "Vampiric", object_is_melee_weapon },
+    { OF_IMPACT,        "Impact", object_is_melee_weapon },
+    { OF_STUN,          "Stun", object_is_melee_weapon },
+    { OF_VORPAL,        "Vorpal", object_is_melee_weapon },
+    { OF_VORPAL2,       "*Vorpal*", object_is_melee_weapon },
+    { OF_INVALID }
+};
+
+static int _smith_brands(object_type *o_ptr)
+{
+    return _smith_flags(o_ptr, _brand_flags);
+}
+
 static void _reroll_aux(object_type *o_ptr, int flags)
 {
     object_prep(o_ptr, o_ptr->k_idx);
@@ -665,6 +685,7 @@ static int _smith_weapon_armor(object_type *o_ptr)
         case 'a': _smith_abilities(o_ptr); break;
         case 't': _smith_telepathies(o_ptr); break;
         case 'S': _smith_slays(o_ptr); break;
+        case 'B': _smith_brands(o_ptr); break;
         case 'R': _smith_reroll(o_ptr); break;
         }
     }
