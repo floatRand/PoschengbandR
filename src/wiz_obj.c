@@ -1,6 +1,7 @@
 #include "angband.h"
 #include <assert.h>
 
+#define _NONE  -1
 #define _OK     0
 #define _CANCEL 1
 
@@ -21,37 +22,28 @@ void wiz_obj_create(void)
 /***********************************************************************
  * Object Modification (Smithing)
  **********************************************************************/
-static int _smith_stub(object_type *o_ptr)
+typedef int (*_smith_fn)(object_type *o_ptr);
+
+typedef struct {
+    int flag;
+    cptr name;
+    object_p pred;
+} _flag_info_t, *_flag_info_ptr;
+
+typedef struct {
+    char choice;
+    cptr name;
+    _smith_fn smithee;
+    object_p pred;
+} _command_t, *_command_ptr;
+
+static void _toggle(object_type *o_ptr, int flag)
 {
-    object_type copy = *o_ptr;
-    rect_t r = ui_map_rect();
-
-    for (;;)
-    {
-        int  cmd;
-
-        doc_clear(_doc);
-        obj_display_smith(&copy, _doc);
-
-        doc_insert(_doc, "   <color:y>X</color>) #######\n");
-
-        doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
-        doc_newline(_doc);
-
-        Term_load();
-        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
-
-        cmd = _inkey();
-        switch (cmd)
-        {
-        case '\r':
-            *o_ptr = copy;
-            return _OK;
-        case ESCAPE: return _CANCEL;
-        }
-    }
+    if (have_flag(o_ptr->flags, flag)) remove_flag(o_ptr->flags, flag);
+    else add_flag(o_ptr->flags, flag);
+    if (is_pval_flag(flag) && have_flag(o_ptr->flags, flag) && o_ptr->pval == 0)
+        o_ptr->pval = 1;
+    obj_identify_fully(o_ptr);
 }
 
 static int _smith_plusses(object_type *o_ptr)
@@ -221,14 +213,7 @@ static int _smith_stats(object_type *o_ptr)
         i = A2I(cmd);
         if (0 <= i && i < MAX_STATS)
         {
-            int flag = OF_STR + i;
-            if (have_flag(copy.flags, flag)) remove_flag(copy.flags, flag);
-            else
-            {
-                add_flag(copy.flags, flag);
-                if (!copy.pval) copy.pval = 1;
-            }
-            obj_identify_fully(&copy);
+            _toggle(&copy, OF_STR + i);
             continue;
         }
 
@@ -238,14 +223,7 @@ static int _smith_stats(object_type *o_ptr)
             i = A2I(tolower(cmd));
             if (0 <= i && i < MAX_STATS)
             {
-                int flag = OF_DEC_STR + i;
-                if (have_flag(copy.flags, flag)) remove_flag(copy.flags, flag);
-                else
-                {
-                    add_flag(copy.flags, flag);
-                    if (!copy.pval) copy.pval = 1;
-                }
-                obj_identify_fully(&copy);
+                _toggle(&copy, OF_DEC_STR + i);
                 continue;
             }
         }
@@ -257,14 +235,121 @@ static int _smith_stats(object_type *o_ptr)
             i = A2I(c);
             if (0 <= i && i < MAX_STATS)
             {
-                int flag = OF_SUST_STR + i;
-                if (have_flag(copy.flags, flag)) remove_flag(copy.flags, flag);
-                else add_flag(copy.flags, flag);
-                obj_identify_fully(&copy);
+                _toggle(&copy, OF_SUST_STR + i);
                 continue;
             }
         }
     }
+}
+
+static bool _blows_p(object_type *o_ptr)
+{
+    return object_is_wearable(o_ptr)
+        && o_ptr->tval != TV_BOW;
+}
+
+static bool _shots_p(object_type *o_ptr)
+{
+    return object_is_wearable(o_ptr)
+        && !object_is_melee_weapon(o_ptr);
+}
+
+static bool _weaponmastery_p(object_type *o_ptr)
+{
+    return object_is_wearable(o_ptr)
+        && !object_is_melee_weapon(o_ptr)
+        && o_ptr->tval != TV_BOW;
+}
+
+static _flag_info_t _bonus_flags[] = {
+    { OF_BLOWS, "Attack Speed", _blows_p },
+    { OF_MAGIC_MASTERY, "Device Skill" },
+    { OF_DEVICE_POWER, "Device Power" },
+    { OF_TUNNEL, "Digging" },
+    { OF_XTRA_MIGHT, "Extra Might", _shots_p },
+    { OF_XTRA_SHOTS, "Extra Shots", _shots_p },
+    { OF_INFRA, "Infravision" },
+    { OF_LIFE, "Life Rating" },
+    { OF_MAGIC_RESISTANCE, "Magic Resistance" },
+    { OF_SEARCH, "Searching" },
+    { OF_SPEED, "Speed" },
+    { OF_SPELL_POWER, "Spell Power" },
+    { OF_SPELL_CAP, "Spell Capacity" },
+    { OF_STEALTH, "Stealth" },
+    { OF_WEAPONMASTERY, "Weaponmastery", _weaponmastery_p },
+    { OF_INVALID }
+};
+
+static int _smith_bonuses(object_type *o_ptr)
+{
+    object_type copy = *o_ptr;
+    rect_t      r = ui_map_rect();
+    vec_ptr     v = vec_alloc(NULL);
+    int         result = _NONE, i;
+
+    /* Build list of applicable flags */
+    for (i = 0; ; i++)
+    {
+        _flag_info_ptr fi = &_bonus_flags[i];
+        if (fi->flag == OF_INVALID) break;
+        if (fi->pred && !fi->pred(o_ptr)) continue;
+        vec_add(v, fi);
+    }
+
+    while (result == _NONE)
+    {
+        int  cmd;
+
+        doc_clear(_doc);
+        obj_display_smith(&copy, _doc);
+
+        for (i = 0; i < vec_length(v); i++)
+        {
+            _flag_info_ptr fi = vec_get(v, i);
+            doc_printf(_doc, "   <color:y>%c</color>) %s\n", I2A(i), fi->name);
+        }
+
+        doc_insert(_doc, "      Use p/P to adust the pval.\n");
+        doc_newline(_doc);
+        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_newline(_doc);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
+        cmd = _inkey();
+        if (cmd == '\r')
+        {
+            *o_ptr = copy;
+            result =  _OK;
+        }
+        else if (cmd == ESCAPE)
+        {
+            result = _CANCEL;
+        }
+        else if (cmd == 'p')
+        {
+            if (copy.pval > 0) copy.pval--;
+            else copy.pval = 15;
+        }
+        else if (cmd == 'P')
+        {
+            if (copy.pval < 15) copy.pval++;
+            else copy.pval = 0;
+        }
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < vec_length(v))
+            {
+                _flag_info_ptr fi = vec_get(v, i);
+                _toggle(&copy, fi->flag);
+            }
+        }
+    }
+    vec_free(v);
+    return result;
 }
 
 static void _reroll_aux(object_type *o_ptr, int flags)
@@ -364,12 +449,7 @@ static int _smith_resistances(object_type *o_ptr)
         which = A2I(cmd) + RES_BEGIN;
         if (RES_BEGIN <= which && which < RES_END)
         {
-            int  flg = res_get_object_flag(which);
-            if (have_flag(copy.flags, flg))
-                remove_flag(copy.flags, flg);
-            else
-                add_flag(copy.flags, flg);
-            obj_identify_fully(&copy);
+            _toggle(&copy, res_get_object_flag(which));
             continue;
         }
 
@@ -379,14 +459,10 @@ static int _smith_resistances(object_type *o_ptr)
             which = A2I(tolower(cmd)) + RES_BEGIN;
             if (RES_BEGIN <= which && which < RES_END)
             {
-                int  flg = res_get_object_vuln_flag(which);
-                if (flg != OF_INVALID)
+                int  flag = res_get_object_vuln_flag(which);
+                if (flag != OF_INVALID)
                 {
-                    if (have_flag(copy.flags, flg))
-                        remove_flag(copy.flags, flg);
-                    else
-                        add_flag(copy.flags, flg);
-                    obj_identify_fully(&copy);
+                    _toggle(&copy, flag);
                     continue;
                 }
             }
@@ -399,16 +475,12 @@ static int _smith_resistances(object_type *o_ptr)
             which = A2I(c) + RES_BEGIN;
             if (RES_BEGIN <= which && which < RES_END)
             {
-                int  flg = res_get_object_immune_flag(which);
-                if (flg != OF_INVALID)
+                int  flag = res_get_object_immune_flag(which);
+                if (flag != OF_INVALID)
                 {
-                    if (have_flag(copy.flags, flg))
-                        remove_flag(copy.flags, flg);
-                    else
-                        add_flag(copy.flags, flg);
-                    obj_identify_fully(&copy);
+                    _toggle(&copy, flag);
+                    continue;
                 }
-                continue;
             }
         }
     }
@@ -429,7 +501,6 @@ static int _smith_weapon_armor(object_type *o_ptr)
         doc_insert(_doc, "   <color:y>s</color>) Stats\n");
         doc_insert(_doc, "   <color:y>b</color>) Bonuses\n");
         doc_insert(_doc, "   <color:y>r</color>) Resistances\n");
-        doc_insert(_doc, "   <color:y>S</color>) Sustains\n");
         doc_insert(_doc, "   <color:y>a</color>) Abilities\n");
         doc_insert(_doc, "   <color:y>t</color>) Telepathies\n");
         if (object_is_melee_weapon(o_ptr))
@@ -452,9 +523,10 @@ static int _smith_weapon_armor(object_type *o_ptr)
         case ESCAPE: return _CANCEL;
         case '\r': return _OK;
         case 'p': _smith_plusses(o_ptr); break;
+        case 's': _smith_stats(o_ptr); break;
+        case 'b': _smith_bonuses(o_ptr); break;
         case 'r': _smith_resistances(o_ptr); break;
         case 'R': _smith_reroll(o_ptr); break;
-        case 's': _smith_stats(o_ptr); break;
         }
     }
 }
