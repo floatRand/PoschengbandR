@@ -433,6 +433,84 @@ static int _smith_abilities(object_type *o_ptr)
     return result;
 }
 
+static _flag_info_t _telepathy_flags[] = {
+    { OF_TELEPATHY,     "Telepathy" },
+    { OF_ESP_ANIMAL,    "Sense Animals" },
+    { OF_ESP_UNDEAD,    "Sense Undead" },
+    { OF_ESP_DEMON,     "Sense Demon" },
+    { OF_ESP_ORC,       "Sense Orc" },
+    { OF_ESP_TROLL,     "Sense Troll" },
+    { OF_ESP_GIANT,     "Sense Giant" },
+    { OF_ESP_DRAGON,    "Sense Dragon" },
+    { OF_ESP_HUMAN,     "Sense Human" },
+    { OF_ESP_EVIL,      "Sense Evil" },
+    { OF_ESP_GOOD,      "Sense Good" },
+    { OF_ESP_NONLIVING, "Sense Nonliving" },
+    { OF_ESP_UNIQUE,    "Sense Unique" },
+    { OF_INVALID }
+};
+
+static int _smith_telepathies(object_type *o_ptr)
+{
+    object_type copy = *o_ptr;
+    rect_t      r = ui_map_rect();
+    vec_ptr     v = vec_alloc(NULL);
+    int         result = _NONE, i;
+
+    /* Build list of applicable flags */
+    for (i = 0; ; i++)
+    {
+        _flag_info_ptr fi = &_telepathy_flags[i];
+        if (fi->flag == OF_INVALID) break;
+        if (fi->pred && !fi->pred(o_ptr)) continue;
+        vec_add(v, fi);
+    }
+
+    while (result == _NONE)
+    {
+        int  cmd;
+
+        doc_clear(_doc);
+        obj_display_smith(&copy, _doc);
+
+        for (i = 0; i < vec_length(v); i++)
+        {
+            _flag_info_ptr fi = vec_get(v, i);
+            doc_printf(_doc, "   <color:y>%c</color>) %s\n", I2A(i), fi->name);
+        }
+
+        doc_newline(_doc);
+        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_newline(_doc);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
+        cmd = _inkey();
+        if (cmd == '\r')
+        {
+            *o_ptr = copy;
+            result =  _OK;
+        }
+        else if (cmd == ESCAPE)
+        {
+            result = _CANCEL;
+        }
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < vec_length(v))
+            {
+                _flag_info_ptr fi = vec_get(v, i);
+                _toggle(&copy, fi->flag);
+            }
+        }
+    }
+    vec_free(v);
+    return result;
+}
+
 static void _reroll_aux(object_type *o_ptr, int flags)
 {
     object_prep(o_ptr, o_ptr->k_idx);
@@ -608,6 +686,7 @@ static int _smith_weapon_armor(object_type *o_ptr)
         case 'b': _smith_bonuses(o_ptr); break;
         case 'r': _smith_resistances(o_ptr); break;
         case 'a': _smith_abilities(o_ptr); break;
+        case 't': _smith_telepathies(o_ptr); break;
         case 'R': _smith_reroll(o_ptr); break;
         }
     }
