@@ -21,6 +21,39 @@ void wiz_obj_create(void)
 /***********************************************************************
  * Object Modification (Smithing)
  **********************************************************************/
+static int _smith_stub(object_type *o_ptr)
+{
+    object_type copy = *o_ptr;
+    rect_t r = ui_map_rect();
+
+    for (;;)
+    {
+        int  cmd;
+
+        doc_clear(_doc);
+        obj_display_smith(&copy, _doc);
+
+        doc_insert(_doc, "   <color:y>X</color>) #######\n");
+
+        doc_newline(_doc);
+        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_newline(_doc);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
+        cmd = _inkey();
+        switch (cmd)
+        {
+        case '\r':
+            *o_ptr = copy;
+            return _OK;
+        case ESCAPE: return _CANCEL;
+        }
+    }
+}
+
 static int _smith_plusses(object_type *o_ptr)
 {
     rect_t      r = ui_map_rect();
@@ -65,7 +98,7 @@ static int _smith_plusses(object_type *o_ptr)
             if (object_is_melee_weapon(&copy))
             {
                 if (copy.dd > 0) copy.dd--;
-                else copy.dd = 15;
+                else copy.dd = 99;
             }
             else if (copy.tval == TV_BOW)
             {
@@ -81,7 +114,7 @@ static int _smith_plusses(object_type *o_ptr)
         case 'X':
             if (object_is_melee_weapon(&copy))
             {
-                if (copy.dd < 15) copy.dd++;
+                if (copy.dd < 99) copy.dd++;
                 else copy.dd = 0;
             }
             else if (copy.tval == TV_BOW)
@@ -99,13 +132,13 @@ static int _smith_plusses(object_type *o_ptr)
             if (object_is_melee_weapon(&copy))
             {
                 if (copy.ds > 0) copy.ds--;
-                else copy.ds = 15;
+                else copy.ds = 99;
             }
             break;
         case 'Y':
             if (object_is_melee_weapon(&copy))
             {
-                if (copy.ds < 15) copy.ds++;
+                if (copy.ds < 99) copy.ds++;
                 else copy.ds = 0;
             }
             break;
@@ -133,6 +166,103 @@ static int _smith_plusses(object_type *o_ptr)
             if (copy.to_a < 50) copy.to_a++;
             else copy.to_a = -50;
             break;
+        }
+    }
+}
+
+static int _smith_stats(object_type *o_ptr)
+{
+    object_type copy = *o_ptr;
+    rect_t r = ui_map_rect();
+
+    for (;;)
+    {
+        int cmd, i;
+
+        doc_clear(_doc);
+        obj_display_smith(&copy, _doc);
+
+        for (i = 0; i < MAX_STATS; i++)
+        {
+            doc_printf(_doc, "   <color:y>%c</color>) %s\n", I2A(i), stat_name_true[i]);
+        }
+        doc_insert(_doc, "      Use SHIFT+choice to toggle decrement flag.\n");
+        doc_insert(_doc, "      Use CTRL+choice to toggle sustain flag.\n");
+        doc_insert(_doc, "      Use p/P to adust the pval.\n");
+
+        doc_newline(_doc);
+        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_newline(_doc);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
+        cmd = _inkey();
+        
+        /* Note: iscntrl('\r') is true ... so we need to check this first*/
+        switch (cmd)
+        {
+        case '\r':
+            *o_ptr = copy;
+            return _OK;
+        case ESCAPE: return _CANCEL;
+        case 'p':
+            if (copy.pval > 0) copy.pval--;
+            else copy.pval = 15;
+            break;
+        case 'P':
+            if (copy.pval < 15) copy.pval++;
+            else copy.pval = 0;
+            break;
+        }
+       
+        /* Toggle inc stat? */
+        i = A2I(cmd);
+        if (0 <= i && i < MAX_STATS)
+        {
+            int flag = OF_STR + i;
+            if (have_flag(copy.flags, flag)) remove_flag(copy.flags, flag);
+            else
+            {
+                add_flag(copy.flags, flag);
+                if (!copy.pval) copy.pval = 1;
+            }
+            obj_identify_fully(&copy);
+            continue;
+        }
+
+        /* Toggle dec stat? */
+        if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < MAX_STATS)
+            {
+                int flag = OF_DEC_STR + i;
+                if (have_flag(copy.flags, flag)) remove_flag(copy.flags, flag);
+                else
+                {
+                    add_flag(copy.flags, flag);
+                    if (!copy.pval) copy.pval = 1;
+                }
+                obj_identify_fully(&copy);
+                continue;
+            }
+        }
+
+        /* Toggle sustain stat? */
+        if (iscntrl(cmd))
+        {
+            char c = 'a' + cmd - KTRL('A');
+            i = A2I(c);
+            if (0 <= i && i < MAX_STATS)
+            {
+                int flag = OF_SUST_STR + i;
+                if (have_flag(copy.flags, flag)) remove_flag(copy.flags, flag);
+                else add_flag(copy.flags, flag);
+                obj_identify_fully(&copy);
+                continue;
+            }
         }
     }
 }
@@ -324,6 +454,7 @@ static int _smith_weapon_armor(object_type *o_ptr)
         case 'p': _smith_plusses(o_ptr); break;
         case 'r': _smith_resistances(o_ptr); break;
         case 'R': _smith_reroll(o_ptr); break;
+        case 's': _smith_stats(o_ptr); break;
         }
     }
 }

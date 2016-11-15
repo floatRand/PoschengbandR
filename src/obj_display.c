@@ -1122,6 +1122,7 @@ void obj_display_smith(object_type *o_ptr, doc_ptr doc)
     _display_extra(o_ptr, flgs, doc);
     _display_curses(o_ptr, flgs, doc);
     _display_ignore(flgs, doc);
+    _display_score(o_ptr, doc);
 
     doc_insert(doc, "</style></indent>\n");
 }
