@@ -5205,7 +5205,13 @@ static cptr do_arcane_spell(int spell, int mode)
 
     case 28:
         if (name) return "Recharging";
-        if (desc) return "It attempts to recharge a device using your mana for power.";
+        if (desc)
+        {
+            if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+                return "It attempts to recharge a device using your blood for power.";
+            else
+                return "It attempts to recharge a device using your mana for power.";
+        }
 
         {
             int power = spell_power(plev * 3 / 2);
@@ -8325,7 +8331,14 @@ static cptr do_hex_spell(int spell, int mode)
 
     case 18:
         if (name) return "Recharging";
-        if (desc) return "It attempts to recharge a device using your mana for power.";
+        if (desc)
+        {
+            if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+                return "It attempts to recharge a device using your blood for power.";
+            else
+                return "It attempts to recharge a device using your mana for power.";
+        }
+
         power = plev * 2;
         if (info) return info_power(power);
         if (cast)
