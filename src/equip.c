@@ -1727,7 +1727,7 @@ void equip_learn_curse(int flag)
     }
 }
 
-void equip_learn_resist(int obj_flag)
+void _learn_resist_aux(int obj_flag, cptr desc)
 {
     int i;
     for (i = 0; i < _template->count; i++)
@@ -1739,9 +1739,19 @@ void equip_learn_resist(int obj_flag)
         {
             char buf[MAX_NLEN];
             object_desc(buf, o_ptr, OD_LORE);
-            msg_format("<color:B>You feel that your %s is protecting you.</color>", buf);
+            msg_format("<color:B>You feel that your %s is %s you.</color>", buf, desc);
         }
     }
+}
+
+void equip_learn_resist(int obj_flag)
+{
+    _learn_resist_aux(obj_flag, "protecting");
+}
+
+void equip_learn_vuln(int obj_flag)
+{
+    _learn_resist_aux(obj_flag, "exposing");
 }
 
 void equip_learn_flag(int obj_flag)
