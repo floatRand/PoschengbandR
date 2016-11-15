@@ -52,7 +52,7 @@ static int _smith_plusses(object_type *o_ptr)
         doc_clear(_doc);
         obj_display_smith(&copy, _doc);
 
-        if (object_is_melee_weapon(o_ptr))
+        if (object_is_melee_weapon(o_ptr) || object_is_ammo(o_ptr))
         {
             doc_insert(_doc, "      Use x/X to adust the damage dice.\n");
             doc_insert(_doc, "      Use y/Y to adust the damage sides.\n");
@@ -61,7 +61,8 @@ static int _smith_plusses(object_type *o_ptr)
             doc_insert(_doc, "      Use x/X to adust the multiplier.\n");
         else
             doc_insert(_doc, "      Use x/X to adust the base AC.\n");
-        doc_insert(_doc, "      Use a/A to adust the armor class bonus.\n");
+        if (!object_is_ammo(o_ptr))
+            doc_insert(_doc, "      Use a/A to adust the armor class bonus.\n");
         doc_insert(_doc, "      Use h/H to adust the melee accuracy.\n");
         doc_insert(_doc, "      Use d/D to adust the melee damage.\n");
 
@@ -81,7 +82,7 @@ static int _smith_plusses(object_type *o_ptr)
             return _OK;
         case ESCAPE: return _CANCEL;
         case 'x':
-            if (object_is_melee_weapon(&copy))
+            if (object_is_melee_weapon(&copy) || object_is_ammo(o_ptr))
             {
                 if (copy.dd > 0) copy.dd--;
                 else copy.dd = 99;
@@ -98,7 +99,7 @@ static int _smith_plusses(object_type *o_ptr)
             }
             break;
         case 'X':
-            if (object_is_melee_weapon(&copy))
+            if (object_is_melee_weapon(&copy) || object_is_ammo(o_ptr))
             {
                 if (copy.dd < 99) copy.dd++;
                 else copy.dd = 0;
@@ -115,14 +116,14 @@ static int _smith_plusses(object_type *o_ptr)
             }
             break;
         case 'y':
-            if (object_is_melee_weapon(&copy))
+            if (object_is_melee_weapon(&copy) || object_is_ammo(o_ptr))
             {
                 if (copy.ds > 0) copy.ds--;
                 else copy.ds = 99;
             }
             break;
         case 'Y':
-            if (object_is_melee_weapon(&copy))
+            if (object_is_melee_weapon(&copy) || object_is_ammo(o_ptr))
             {
                 if (copy.ds < 99) copy.ds++;
                 else copy.ds = 0;
@@ -145,12 +146,18 @@ static int _smith_plusses(object_type *o_ptr)
             else copy.to_d = -50;
             break;
         case 'a':
-            if (copy.to_a > -50) copy.to_a--;
-            else copy.to_a = 50;
+            if (!object_is_ammo(o_ptr))
+            {
+                if (copy.to_a > -50) copy.to_a--;
+                else copy.to_a = 50;
+            }
             break;
         case 'A':
-            if (copy.to_a < 50) copy.to_a++;
-            else copy.to_a = -50;
+            if (!object_is_ammo(o_ptr))
+            {
+                if (copy.to_a < 50) copy.to_a++;
+                else copy.to_a = -50;
+            }
             break;
         }
     }
@@ -281,7 +288,6 @@ static int _smith_bonuses(object_type *o_ptr)
     vec_ptr     v = vec_alloc(NULL);
     int         result = _NONE, i;
 
-    /* Build list of applicable flags */
     for (i = 0; ; i++)
     {
         _flag_info_ptr fi = &_bonus_flags[i];
@@ -353,15 +359,15 @@ static int _smith_flags(object_type* o_ptr, _flag_info_ptr flags)
     vec_ptr     v = vec_alloc(NULL);
     int         result = _NONE, i;
 
-    /* Build list of applicable flags */
-    for (;;)
+    for (i = 0; ; i++)
     {
-        if (flags->flag == OF_INVALID) break;
-        if (flags->pred && !flags->pred(o_ptr)) continue;
-        vec_add(v, flags++);
+        _flag_info_ptr fi = &flags[i];
+        if (fi->flag == OF_INVALID) break;
+        if (fi->pred && !fi->pred(o_ptr)) continue;
+        vec_add(v, fi);
     }
 
-    while (result == _NONE)
+    while (result == _NONE && vec_length(v) > 0)
     {
         int  cmd;
 
@@ -669,6 +675,7 @@ static _command_t _commands[] = {
     { 'S', "Slays", _smith_slays, _slays_p },
     { 'B', "Brands", _smith_brands, _brands_p },
     { 'R', "Re-roll", _smith_reroll, object_is_wearable },
+    /* TODO: Activations, devices */
     { 0 }
 };
 
