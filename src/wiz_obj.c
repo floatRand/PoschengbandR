@@ -352,27 +352,7 @@ static int _smith_bonuses(object_type *o_ptr)
     return result;
 }
 
-static _flag_info_t _ability_flags[] = {
-    { OF_FREE_ACT, "Free Action" },
-    { OF_SEE_INVIS, "See Invisible" },
-    { OF_HOLD_LIFE, "Hold Life" },
-    { OF_SLOW_DIGEST, "Slow Digestion" },
-    { OF_REGEN, "Regeneration" },
-    { OF_DUAL_WIELDING, "Dual Wielding", object_is_gloves },
-    { OF_NO_MAGIC, "Antimagic" },
-    { OF_WARNING, "Warning" },
-    { OF_LEVITATION, "Levitation" },
-    { OF_REFLECT, "Reflection" },
-    { OF_AURA_FIRE, "Aura Fire" },
-    { OF_AURA_ELEC, "Aura Elec" },
-    { OF_AURA_COLD, "Aura Cold" },
-    { OF_AURA_SHARDS, "Aura Shards" },
-    { OF_AURA_REVENGE, "Aura Revenge" },
-    { OF_LITE, "Extra Light" },
-    { OF_INVALID }
-};
-
-static int _smith_abilities(object_type *o_ptr)
+static int _smith_flags(object_type* o_ptr, _flag_info_ptr flags)
 {
     object_type copy = *o_ptr;
     rect_t      r = ui_map_rect();
@@ -380,12 +360,11 @@ static int _smith_abilities(object_type *o_ptr)
     int         result = _NONE, i;
 
     /* Build list of applicable flags */
-    for (i = 0; ; i++)
+    for (;;)
     {
-        _flag_info_ptr fi = &_ability_flags[i];
-        if (fi->flag == OF_INVALID) break;
-        if (fi->pred && !fi->pred(o_ptr)) continue;
-        vec_add(v, fi);
+        if (flags->flag == OF_INVALID) break;
+        if (flags->pred && !flags->pred(o_ptr)) continue;
+        vec_add(v, flags++);
     }
 
     while (result == _NONE)
@@ -433,6 +412,31 @@ static int _smith_abilities(object_type *o_ptr)
     return result;
 }
 
+static _flag_info_t _ability_flags[] = {
+    { OF_FREE_ACT, "Free Action" },
+    { OF_SEE_INVIS, "See Invisible" },
+    { OF_HOLD_LIFE, "Hold Life" },
+    { OF_SLOW_DIGEST, "Slow Digestion" },
+    { OF_REGEN, "Regeneration" },
+    { OF_DUAL_WIELDING, "Dual Wielding", object_is_gloves },
+    { OF_NO_MAGIC, "Antimagic" },
+    { OF_WARNING, "Warning" },
+    { OF_LEVITATION, "Levitation" },
+    { OF_REFLECT, "Reflection" },
+    { OF_AURA_FIRE, "Aura Fire" },
+    { OF_AURA_ELEC, "Aura Elec" },
+    { OF_AURA_COLD, "Aura Cold" },
+    { OF_AURA_SHARDS, "Aura Shards" },
+    { OF_AURA_REVENGE, "Aura Revenge" },
+    { OF_LITE, "Extra Light" },
+    { OF_INVALID }
+};
+
+static int _smith_abilities(object_type *o_ptr)
+{
+    return _smith_flags(o_ptr, _ability_flags);
+}
+
 static _flag_info_t _telepathy_flags[] = {
     { OF_TELEPATHY,     "Telepathy" },
     { OF_ESP_ANIMAL,    "Sense Animals" },
@@ -452,63 +456,36 @@ static _flag_info_t _telepathy_flags[] = {
 
 static int _smith_telepathies(object_type *o_ptr)
 {
-    object_type copy = *o_ptr;
-    rect_t      r = ui_map_rect();
-    vec_ptr     v = vec_alloc(NULL);
-    int         result = _NONE, i;
+    return _smith_flags(o_ptr, _telepathy_flags);
+}
 
-    /* Build list of applicable flags */
-    for (i = 0; ; i++)
-    {
-        _flag_info_ptr fi = &_telepathy_flags[i];
-        if (fi->flag == OF_INVALID) break;
-        if (fi->pred && !fi->pred(o_ptr)) continue;
-        vec_add(v, fi);
-    }
+static _flag_info_t _slay_flags[] = {
+    { OF_SLAY_EVIL,   "Slay Evil" },
+    { OF_SLAY_GOOD,   "Slay Good", object_is_melee_weapon },
+    { OF_SLAY_LIVING, "Slay Living", object_is_melee_weapon },
+    { OF_SLAY_UNDEAD, "Slay Undead" },
+    { OF_SLAY_DEMON,  "Slay Demon" },
+    { OF_SLAY_DRAGON, "Slay Dragon" },
+    { OF_SLAY_HUMAN,  "Slay Human" },
+    { OF_SLAY_ANIMAL, "Slay Animal" },
+    { OF_SLAY_ORC,    "Slay Orc" },
+    { OF_SLAY_TROLL,  "Slay Troll" },
+    { OF_SLAY_GIANT,  "Slay Giant" },
+    { OF_KILL_EVIL,   "Kill Evil" },
+    { OF_KILL_UNDEAD, "Kill Undead" },
+    { OF_KILL_DEMON,  "Kill Demon" },
+    { OF_KILL_DRAGON, "Kill Dragon" },
+    { OF_KILL_HUMAN,  "Kill Human" },
+    { OF_KILL_ANIMAL, "Kill Animal" },
+    { OF_KILL_ORC,    "Kill Orc" },
+    { OF_KILL_TROLL,  "Kill Troll" },
+    { OF_KILL_GIANT,  "Kill Giant" },
+    { OF_INVALID }
+};
 
-    while (result == _NONE)
-    {
-        int  cmd;
-
-        doc_clear(_doc);
-        obj_display_smith(&copy, _doc);
-
-        for (i = 0; i < vec_length(v); i++)
-        {
-            _flag_info_ptr fi = vec_get(v, i);
-            doc_printf(_doc, "   <color:y>%c</color>) %s\n", I2A(i), fi->name);
-        }
-
-        doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
-        doc_newline(_doc);
-
-        Term_load();
-        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
-
-        cmd = _inkey();
-        if (cmd == '\r')
-        {
-            *o_ptr = copy;
-            result =  _OK;
-        }
-        else if (cmd == ESCAPE)
-        {
-            result = _CANCEL;
-        }
-        else
-        {
-            i = A2I(cmd);
-            if (0 <= i && i < vec_length(v))
-            {
-                _flag_info_ptr fi = vec_get(v, i);
-                _toggle(&copy, fi->flag);
-            }
-        }
-    }
-    vec_free(v);
-    return result;
+static int _smith_slays(object_type *o_ptr)
+{
+    return _smith_flags(o_ptr, _slay_flags);
 }
 
 static void _reroll_aux(object_type *o_ptr, int flags)
@@ -664,7 +641,7 @@ static int _smith_weapon_armor(object_type *o_ptr)
         doc_insert(_doc, "   <color:y>t</color>) Telepathies\n");
         if (object_is_melee_weapon(o_ptr))
         {
-            doc_insert(_doc, "   <color:y>k</color>) Slays (Kills)\n");
+            doc_insert(_doc, "   <color:y>S</color>) Slays\n");
             doc_insert(_doc, "   <color:y>B</color>) Brands\n");
         }
         doc_insert(_doc, "   <color:y>R</color>) Re-roll\n");
@@ -687,6 +664,7 @@ static int _smith_weapon_armor(object_type *o_ptr)
         case 'r': _smith_resistances(o_ptr); break;
         case 'a': _smith_abilities(o_ptr); break;
         case 't': _smith_telepathies(o_ptr); break;
+        case 'S': _smith_slays(o_ptr); break;
         case 'R': _smith_reroll(o_ptr); break;
         }
     }
