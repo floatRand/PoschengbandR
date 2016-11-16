@@ -999,6 +999,10 @@ bool apply_disenchant(int mode)
 
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
+        if (demigod_is_(DEMIGOD_HEPHAESTUS))
+        {
+            return TRUE;
+        }
         if (object_is_artifact(o_ptr) && (randint0(100) < 71))
         {
             msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(t));
@@ -3893,8 +3897,12 @@ static int minus_ac(void)
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
         obj_flags(o_ptr, flgs);
 
-        if ( have_flag(flgs, OF_IGNORE_ACID)
-          || demigod_is_(DEMIGOD_HEPHAESTUS) )
+        if (demigod_is_(DEMIGOD_HEPHAESTUS))
+        {
+            obj_learn_flag(o_ptr, OF_IGNORE_ACID);
+            return TRUE;
+        }
+        if (have_flag(flgs, OF_IGNORE_ACID))
         {
             msg_format("Your %s is unaffected!", o_name);
             obj_learn_flag(o_ptr, OF_IGNORE_ACID);
