@@ -2647,6 +2647,7 @@ bool device_init_fixed(object_type *o_ptr, int effect)
     return TRUE;
 }
 
+/* TODO: See wiz_obj.c for reliance on xtra fields */
 int device_level(object_type *o_ptr)
 {
     if (_is_valid_device(o_ptr))

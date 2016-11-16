@@ -54,21 +54,21 @@ static int _smith_plusses(object_type *o_ptr)
 
         if (object_is_melee_weapon(o_ptr) || object_is_ammo(o_ptr))
         {
-            doc_insert(_doc, "      Use x/X to adust the damage dice.\n");
-            doc_insert(_doc, "      Use y/Y to adust the damage sides.\n");
+            doc_insert(_doc, " <color:y>x</color>/<color:y>X</color>) Adjust damage dice\n");
+            doc_insert(_doc, " <color:y>y</color>/<color:y>Y</color>) Adjust damage sides\n");
         }
         else if (o_ptr->tval == TV_BOW)
-            doc_insert(_doc, "      Use x/X to adust the multiplier.\n");
+            doc_insert(_doc, " <color:y>x</color>/<color:y>X</color>) Adjust multiplier\n");
         else
-            doc_insert(_doc, "      Use x/X to adust the base AC.\n");
+            doc_insert(_doc, " <color:y>x</color>/<color:y>X</color>) Adjust base AC\n");
         if (!object_is_ammo(o_ptr))
-            doc_insert(_doc, "      Use a/A to adust the armor class bonus.\n");
-        doc_insert(_doc, "      Use h/H to adust the melee accuracy.\n");
-        doc_insert(_doc, "      Use d/D to adust the melee damage.\n");
+            doc_insert(_doc, " <color:y>a</color>/<color:y>A</color>) Adjust AC bonus\n");
+        doc_insert(_doc, " <color:y>h</color>/<color:y>H</color>) Adjust melee accuracy\n");
+        doc_insert(_doc, " <color:y>d</color>/<color:y>D</color>) Adjust melee damage\n");
 
         doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
         doc_newline(_doc);
 
         Term_load();
@@ -179,13 +179,14 @@ static int _smith_stats(object_type *o_ptr)
         {
             doc_printf(_doc, "   <color:y>%c</color>) %s\n", I2A(i), stat_name_true[i]);
         }
-        doc_insert(_doc, "      Use SHIFT+choice to toggle decrement flag.\n");
-        doc_insert(_doc, "      Use CTRL+choice to toggle sustain flag.\n");
-        doc_insert(_doc, "      Use p/P to adust the pval.\n");
+        doc_insert(_doc, " <color:y>p</color>/<color:y>P</color>) Adjust pval\n");
+        doc_newline(_doc);
+        doc_insert(_doc, "      Use SHIFT+choice to toggle decrement flag\n");
+        doc_insert(_doc, "      Use CTRL+choice to toggle sustain flag\n");
 
         doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
         doc_newline(_doc);
 
         Term_load();
@@ -298,7 +299,14 @@ static int _smith_bonuses(object_type *o_ptr)
 
     while (result == _NONE)
     {
-        int  cmd;
+        int     cmd, split = vec_length(v); /* default to no split ... cols[1] remains empty */
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(23);
+        cols[1] = doc_alloc(30);
+
+        if (split > 10)
+            split = (split + 1) / 2;
 
         doc_clear(_doc);
         obj_display_smith(&copy, _doc);
@@ -306,13 +314,18 @@ static int _smith_bonuses(object_type *o_ptr)
         for (i = 0; i < vec_length(v); i++)
         {
             _flag_info_ptr fi = vec_get(v, i);
-            doc_printf(_doc, "   <color:y>%c</color>) %s\n", I2A(i), fi->name);
+            doc_printf(cols[i < split ? 0 : 1], "   <color:y>%c</color>) %s\n", I2A(i), fi->name);
         }
 
-        doc_insert(_doc, "      Use p/P to adust the pval.\n");
+        doc_insert_cols(_doc, cols, 2, 0);
+        doc_free(cols[0]);
+        doc_free(cols[1]);
+
+        doc_insert(_doc, " <color:y>p</color>/<color:y>P</color>) Adjust pval\n");
+
         doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
         doc_newline(_doc);
 
         Term_load();
@@ -369,7 +382,14 @@ static int _smith_flags(object_type* o_ptr, _flag_info_ptr flags)
 
     while (result == _NONE && vec_length(v) > 0)
     {
-        int  cmd;
+        int     cmd, split = vec_length(v); /* default to no split ... cols[1] remains empty */
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(23);
+        cols[1] = doc_alloc(30);
+
+        if (split > 10)
+            split = (split + 1) / 2;
 
         doc_clear(_doc);
         obj_display_smith(&copy, _doc);
@@ -377,12 +397,15 @@ static int _smith_flags(object_type* o_ptr, _flag_info_ptr flags)
         for (i = 0; i < vec_length(v); i++)
         {
             _flag_info_ptr fi = vec_get(v, i);
-            doc_printf(_doc, "   <color:y>%c</color>) %s\n", I2A(i), fi->name);
+            doc_printf(cols[i < split ? 0 : 1], "   <color:y>%c</color>) %s\n", I2A(i), fi->name);
         }
 
-        doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_insert_cols(_doc, cols, 2, 0);
+        doc_free(cols[0]);
+        doc_free(cols[1]);
+
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
         doc_newline(_doc);
 
         Term_load();
@@ -494,6 +517,7 @@ static _flag_info_t _brand_flags[] = {
     { OF_BRAND_FIRE,    "Brand Fire" },
     { OF_BRAND_COLD,    "Brand Cold" },
     { OF_BRAND_POIS,    "Brand Poison" },
+    { OF_BRAND_MANA,    "Brand Mana" },
     { OF_BRAND_CHAOS,   "Chaotic", object_is_melee_weapon },
     { OF_BRAND_VAMP,    "Vampiric", object_is_melee_weapon },
     { OF_IMPACT,        "Impact", object_is_melee_weapon },
@@ -535,8 +559,8 @@ static int _smith_reroll(object_type *o_ptr)
         doc_insert(_doc, "   <color:y>r</color>) Random Artifact\n");
 
         doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
         doc_newline(_doc);
 
         Term_load();
@@ -567,24 +591,31 @@ static int _smith_resistances(object_type *o_ptr)
     for (;;)
     {
         int  cmd, which;
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(20);
+        cols[1] = doc_alloc(30);
 
         doc_clear(_doc);
         obj_display_smith(&copy, _doc);
 
         for (which = RES_BEGIN; which < RES_END; which++)
         {
-            doc_printf(_doc, "   <color:y>%c</color>) %s%c\n",
+            doc_printf(cols[which < RES_NEXUS ? 0 : 1], "   <color:y>%c</color>) %s%c\n",
                 I2A(which - RES_BEGIN), res_name(which),
                 res_get_object_immune_flag(which) != OF_INVALID ? '*' : ' ');
         }
 
-        doc_newline(_doc);
-        doc_insert(_doc, "   SHIFT+choice toggle vulnerability\n");
-        doc_insert(_doc, "(*)CTRL+choice toggle immunity\n");
+        doc_insert_cols(_doc, cols, 2, 0);
+        doc_free(cols[0]);
+        doc_free(cols[1]);
+
+        doc_insert(_doc, "      SHIFT+choice toggle vulnerability\n");
+        doc_insert(_doc, "   (*)CTRL+choice toggle immunity\n");
 
         doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
         doc_newline(_doc);
 
         Term_load();
@@ -642,6 +673,267 @@ static int _smith_resistances(object_type *o_ptr)
     }
 }
 
+/* Devices */
+static device_effect_info_ptr _device_find_effect(device_effect_info_ptr tbl, int effect)
+{
+    int i;
+
+    for (i = 0; ; i++)
+    {
+        device_effect_info_ptr entry = &tbl[i];
+
+        if (!entry->type) break;
+        if (entry->type == effect) return entry;
+    }
+
+    return NULL;
+}
+
+static device_effect_info_ptr _device_effect_tbl(object_type *o_ptr)
+{
+    assert(object_is_device(o_ptr));
+    switch (o_ptr->tval)
+    {
+    case TV_WAND: return wand_effect_table;
+    case TV_STAFF: return staff_effect_table;
+    case TV_ROD: return rod_effect_table;
+    }
+    assert(FALSE);
+    return NULL;
+}
+
+static device_effect_info_ptr _choose_effect(object_type *o_ptr)
+{
+    rect_t                 r = ui_map_rect();
+    device_effect_info_ptr tbl = _device_effect_tbl(o_ptr);
+    device_effect_info_ptr effect = _device_find_effect(tbl, o_ptr->activation.type);
+
+    for (;;)
+    {
+        int cmd, i, ct = 0, split;
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(30);
+        cols[1] = doc_alloc(30);
+
+        doc_clear(_doc);
+        /*obj_display_smith(o_ptr, _doc);*/
+        doc_insert(_doc, "   <color:G>Choose an Effect:</color>\n");
+
+        for (i = 0; ; i++)
+        {
+            if (!tbl[i].type) break;
+            ct++;
+        }
+        split = ct;
+        if (split > 10)
+            split = (ct + 1) / 2;
+
+        for (i = 0; ; i++)
+        {
+            device_effect_info_ptr e = &tbl[i];
+            effect_t               dummy = {0};
+            char                   choice = '?';
+            char                   color = 'w';
+
+            if (!e->type) break;
+            dummy.type = e->type;
+            if (i < 26) choice = 'a' + i;
+            else if (i < 52) choice = 'A' + (i - 26);
+            if (e->type == o_ptr->activation.type) color = 'B';
+            doc_printf(cols[i < split ? 0 : 1], "   <color:y>%c</color>) <color:%c>%s</color>\n",
+                choice, color, do_effect(&dummy, SPELL_NAME, 0));
+        }
+        doc_insert_cols(_doc, cols, 2, 1);
+        doc_free(cols[0]);
+        doc_free(cols[1]);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
+        cmd = _inkey();
+        if (cmd == ESCAPE)
+            break;
+        else
+        {
+            if (isupper(cmd)) i = cmd - 'A' + 26;
+            else i = cmd - 'a';
+            if (0 <= i && i < ct)
+            {
+                effect = &tbl[i];
+                break;
+            }
+        }
+    }
+    return effect;
+}
+
+static int _smith_device_effect(object_type *o_ptr)
+{
+    rect_t                 r = ui_map_rect();
+    object_type            copy = *o_ptr;
+    device_effect_info_ptr tbl = _device_effect_tbl(o_ptr);
+    device_effect_info_ptr effect = _device_find_effect(tbl, copy.activation.type);
+
+    for (;;)
+    {
+        int  cmd;
+
+        doc_clear(_doc);
+        obj_display_smith(&copy, _doc);
+
+        doc_insert(_doc, "   <color:y>e</color>) Change effect\n");
+
+        doc_insert(_doc, " <color:y>p</color>/<color:y>P</color>) Adjust power\n");
+        doc_insert(_doc, " <color:y>m</color>/<color:y>M</color>) Adjust mana\n");
+        doc_insert(_doc, " <color:y>l</color>/<color:y>L</color>) Adjust effect level\n");
+        doc_insert(_doc, " <color:y>c</color>/<color:y>C</color>) Adjust effect cost\n");
+
+        doc_newline(_doc);
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
+        doc_newline(_doc);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
+        cmd = _inkey();
+        switch (cmd)
+        {
+        case '\r':
+            *o_ptr = copy;
+            return _OK;
+        case ESCAPE: return _CANCEL;
+        case 'l':
+            if (copy.activation.difficulty > 1) copy.activation.difficulty--;
+            else copy.activation.difficulty = 100;
+            break;
+        case 'L':
+            if (copy.activation.difficulty < 100) copy.activation.difficulty++;
+            else copy.activation.difficulty = 1;
+            break;
+        case 'c':
+            if (copy.activation.cost > 1) copy.activation.cost--;
+            else copy.activation.cost = 150;
+            break;
+        case 'C':
+            if (copy.activation.cost < 150) copy.activation.cost++;
+            else copy.activation.cost = 1;
+            break;
+        /* Note: We break encapsulation here ... */
+        case 'p':
+            if (copy.xtra3 > effect->level) copy.xtra3--;
+            else copy.xtra3 = 100;
+            copy.activation.power = copy.xtra3;
+            break;
+        case 'P':
+            if (copy.xtra3 < 100) copy.xtra3++;
+            else copy.xtra3 = effect->level;
+            copy.activation.power = copy.xtra3;
+            break;
+        case 'm':
+            if (copy.xtra4 > copy.activation.cost + 4) copy.xtra4 -= 5;
+            else copy.xtra4 = 500;
+            if (copy.xtra5/100 > copy.xtra4)
+                copy.xtra5 = copy.xtra4*100;
+            break;
+        case 'M':
+            if (copy.xtra4 < 496) copy.xtra4 += 5;
+            else copy.xtra4 = copy.activation.cost;
+            if (copy.xtra5/100 > copy.xtra4)
+                copy.xtra5 = copy.xtra4*100;
+            break;
+        case 'e':
+        {
+            device_effect_info_ptr new_effect = _choose_effect(&copy);
+            if (new_effect->type != effect->type)
+            {
+                effect = new_effect;
+                copy.activation.type = effect->type;
+                if (effect->level > copy.xtra3)
+                {
+                    copy.xtra3 = effect->level;
+                    copy.activation.power = effect->level;
+                }
+                copy.activation.difficulty = effect->level;
+                copy.activation.cost = effect->cost;
+                if (effect->cost > copy.xtra4)
+                {
+                    copy.xtra4 = effect->cost;
+                    copy.xtra5 = effect->cost * 100;
+                }
+            }
+            break;
+        }
+        }
+    }
+}
+
+static int _smith_device_bonus(object_type *o_ptr)
+{
+    rect_t      r = ui_map_rect();
+    object_type copy = *o_ptr;
+
+    for (;;)
+    {
+        int cmd;
+
+        doc_clear(_doc);
+        obj_display_smith(&copy, _doc);
+
+        doc_insert(_doc, "   <color:y>q</color>) Quickness\n");
+        doc_insert(_doc, "   <color:y>p</color>) Power\n");
+        doc_insert(_doc, "   <color:y>e</color>) Easy Use\n");
+        doc_insert(_doc, "   <color:y>r</color>) Regeneration\n");
+        doc_insert(_doc, "   <color:y>h</color>) Hold Charges\n");
+        doc_insert(_doc, " <color:y>x</color>/<color:y>X</color>) Adjust amount of bonus\n");
+
+        doc_newline(_doc);
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
+        doc_newline(_doc);
+
+        Term_load();
+        doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
+
+        cmd = _inkey();
+        switch (cmd)
+        {
+        case '\r':
+            *o_ptr = copy;
+            return _OK;
+        case ESCAPE: return _CANCEL;
+        case 'q':
+            _toggle(&copy, OF_SPEED);
+            break;
+        case 'p':
+            _toggle(&copy, OF_DEVICE_POWER);
+            break;
+        case 'e':
+            _toggle(&copy, OF_EASY_SPELL);
+            if (!copy.pval) /* not normally a pval flag */
+                copy.pval = 1;
+            break;
+        case 'r':
+            _toggle(&copy, OF_REGEN);
+            if (!copy.pval) /* not normally a pval flag */
+                copy.pval = 1;
+            break;
+        case 'h':
+            _toggle(&copy, OF_HOLD_LIFE);
+            break;
+        case 'x':
+            if (copy.pval > 0) copy.pval--;
+            else copy.pval = 15;
+            break;
+        case 'X':
+            if (copy.pval < 15) copy.pval++;
+            else copy.pval = 0;
+            break;
+        }
+    }
+}
+
 /* Top Level Smithing UI */
 typedef int (*_smith_fn)(object_type *o_ptr);
 
@@ -674,8 +966,11 @@ static _command_t _commands[] = {
     { 't', "Telepathies", _smith_telepathies, object_is_wearable },
     { 'S', "Slays", _smith_slays, _slays_p },
     { 'B', "Brands", _smith_brands, _brands_p },
-    { 'R', "Re-roll", _smith_reroll, object_is_wearable },
-    /* TODO: Activations, devices */
+/*  { 'A', "Activation", _smith_activation, object_is_wearable },*/
+    { 'e', "Effects", _smith_device_effect, object_is_device },
+    { 'b', "Bonuses", _smith_device_bonus, object_is_device },
+    { 'R', "Re-roll", _smith_reroll },
+/*  { 'i', "Ignore", _smith_ignore },*/
     { 0 }
 };
 
@@ -708,8 +1003,8 @@ static int _smith_object_aux(object_type *o_ptr)
         }
 
         doc_newline(_doc);
-        doc_insert(_doc, " <color:y>ENTER</color>) Accept changes\n");
-        doc_insert(_doc, " <color:y>  ESC</color>) Cancel changes\n");
+        doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
+        doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
         doc_newline(_doc);
         Term_load();
         doc_sync_term(_doc, doc_range_all(_doc), doc_pos_create(r.x, r.y));
