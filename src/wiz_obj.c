@@ -263,22 +263,29 @@ static bool _weaponmastery_p(object_type *o_ptr)
         && o_ptr->tval != TV_BOW;
 }
 
-static _flag_info_t _bonus_flags[] = {
-    { OF_BLOWS, "Attack Speed", _blows_p },
-    { OF_MAGIC_MASTERY, "Device Skill" },
-    { OF_DEVICE_POWER, "Device Power" },
-    { OF_TUNNEL, "Digging" },
-    { OF_XTRA_MIGHT, "Extra Might", _shots_p },
-    { OF_XTRA_SHOTS, "Extra Shots", _shots_p },
-    { OF_INFRA, "Infravision" },
-    { OF_LIFE, "Life Rating" },
-    { OF_MAGIC_RESISTANCE, "Magic Resistance" },
-    { OF_SEARCH, "Searching" },
-    { OF_SPEED, "Speed" },
-    { OF_SPELL_POWER, "Spell Power" },
-    { OF_SPELL_CAP, "Spell Capacity" },
-    { OF_STEALTH, "Stealth" },
-    { OF_WEAPONMASTERY, "Weaponmastery", _weaponmastery_p },
+typedef struct { /* Bonuses need to support DEC_* flags */
+    int flag;
+    int dec_flag;
+    cptr name;
+    object_p pred;
+} _flagx_info_t, *_flagx_info_ptr;
+
+static _flagx_info_t _bonus_flags[] = {
+    { OF_BLOWS, OF_DEC_BLOWS, "Attack Speed", _blows_p },
+    { OF_MAGIC_MASTERY, OF_DEC_MAGIC_MASTERY, "Device Skill" },
+    { OF_DEVICE_POWER, OF_INVALID, "Device Power" },
+    { OF_TUNNEL, OF_INVALID, "Digging" },
+    { OF_XTRA_MIGHT, OF_INVALID, "Extra Might", _shots_p },
+    { OF_XTRA_SHOTS, OF_INVALID, "Extra Shots", _shots_p },
+    { OF_INFRA, OF_INVALID, "Infravision" },
+    { OF_LIFE, OF_DEC_LIFE, "Life Rating" },
+    { OF_MAGIC_RESISTANCE, OF_INVALID, "Magic Resistance" },
+    { OF_SEARCH, OF_INVALID, "Searching" },
+    { OF_SPEED, OF_DEC_SPEED, "Speed" },
+    { OF_SPELL_POWER, OF_DEC_SPELL_POWER, "Spell Power" },
+    { OF_SPELL_CAP, OF_DEC_SPELL_CAP, "Spell Capacity" },
+    { OF_STEALTH, OF_DEC_STEALTH, "Stealth" },
+    { OF_WEAPONMASTERY, OF_INVALID, "Weaponmastery", _weaponmastery_p },
     { OF_INVALID }
 };
 
@@ -291,7 +298,7 @@ static int _smith_bonuses(object_type *o_ptr)
 
     for (i = 0; ; i++)
     {
-        _flag_info_ptr fi = &_bonus_flags[i];
+        _flagx_info_ptr fi = &_bonus_flags[i];
         if (fi->flag == OF_INVALID) break;
         if (fi->pred && !fi->pred(o_ptr)) continue;
         vec_add(v, fi);
@@ -313,8 +320,14 @@ static int _smith_bonuses(object_type *o_ptr)
 
         for (i = 0; i < vec_length(v); i++)
         {
-            _flag_info_ptr fi = vec_get(v, i);
-            doc_printf(cols[i < split ? 0 : 1], "   <color:y>%c</color>) %s\n", I2A(i), fi->name);
+            _flagx_info_ptr fi = vec_get(v, i);
+            doc_printf(
+                cols[i < split ? 0 : 1],
+                "   <color:y>%c</color>) %s%c\n",
+                I2A(i),
+                fi->name,
+                fi->dec_flag != OF_INVALID ? '*' : ' '
+            );
         }
 
         doc_insert_cols(_doc, cols, 2, 0);
@@ -322,6 +335,7 @@ static int _smith_bonuses(object_type *o_ptr)
         doc_free(cols[1]);
 
         doc_insert(_doc, " <color:y>p</color>/<color:y>P</color>) Adjust pval\n");
+        doc_insert(_doc, "   (*)Use SHIFT+choice to toggle decrement flag\n");
 
         doc_newline(_doc);
         doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
@@ -351,12 +365,22 @@ static int _smith_bonuses(object_type *o_ptr)
             if (copy.pval < 15) copy.pval++;
             else copy.pval = 0;
         }
+        else if (isupper(cmd))
+        {
+            i = cmd - 'A';
+            if (0 <= i && i < vec_length(v))
+            {
+                _flagx_info_ptr fi = vec_get(v, i);
+                if (fi->dec_flag != OF_INVALID)
+                    _toggle(&copy, fi->dec_flag);
+            }
+        }
         else
         {
             i = A2I(cmd);
             if (0 <= i && i < vec_length(v))
             {
-                _flag_info_ptr fi = vec_get(v, i);
+                _flagx_info_ptr fi = vec_get(v, i);
                 _toggle(&copy, fi->flag);
             }
         }
