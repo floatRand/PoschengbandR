@@ -1733,10 +1733,16 @@ cptr do_device(object_type *o_ptr, int mode, int boost)
     }
     else
     {
+		
         switch (o_ptr->tval)
         {
         case TV_SCROLL: result = _do_scroll(o_ptr->sval, mode); break;
-        case TV_POTION: result = _do_potion(o_ptr->sval, mode); break;
+		case TV_POTION:
+			{ 
+				result = _do_potion(o_ptr->sval, mode); 
+				if (p_ptr->pclass == CLASS_ALCHEMIST) alchemist_super_potion_effect(o_ptr->sval);
+				break;
+			}
         }
     }
     device_known = FALSE;

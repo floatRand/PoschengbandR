@@ -2391,6 +2391,7 @@ extern void quick_walk_spell(int cmd, variant *res);
 /* alchemist.c */
 extern class_t *alchemist_get_class(void);
 extern void alchemist_cast(int tval);
+extern void alchemist_super_potion_effect(int sval);
 
 /* freelancer.c -rtl-
 extern int freelancer_stab_level(void);

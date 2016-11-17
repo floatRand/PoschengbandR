@@ -921,15 +921,42 @@ static void _load_list(savefile_ptr file)
 	}
 }
 
+void alchemist_super_potion_effect(int sval){
+
+	switch (sval)
+	{
+		case SV_POTION_ENLIGHTENMENT: set_tim_esp(100 + randint0(p_ptr->lev * 2), FALSE); break;
+		case SV_POTION_STAR_ENLIGHTENMENT: set_tim_esp(300 + randint0(p_ptr->lev * 6), FALSE); break;
+		case SV_POTION_CLARITY: set_confused(0, FALSE); break;
+		case SV_POTION_GREAT_CLARITY: set_confused(0, FALSE); set_stun(0, FALSE); set_image(0, FALSE); break;
+	}
+
+}
+
 static void _calc_bonuses(void){
 	if(p_ptr->lev >= 10) p_ptr->regen += 100;
 	if (p_ptr->lev >= 20) p_ptr->special_attack |= ATTACK_POIS;
 	if (p_ptr->lev >= 40) p_ptr->special_attack |= ATTACK_ACID;
+	int boost = 0;
 
-	int boost = 1 + p_ptr->lev / 10;
-	p_ptr->to_h_m += boost;
-	p_ptr->to_d_m += boost;
-	p_ptr->shooter_info.num_fire += p_ptr->lev * 150 / 100;
+	if (IS_SHERO()){ // extra benefits from things.
+		boost = 2 + p_ptr->lev / 5;
+
+		p_ptr->weapon_info[0].xtra_blow += py_prorata_level_aux(100, 0, 1, 1);
+		p_ptr->weapon_info[1].xtra_blow += py_prorata_level_aux(100, 0, 1, 1);
+
+		p_ptr->to_h_m += boost;
+		p_ptr->to_d_m += boost;
+
+		p_ptr->pspeed += 4;
+		p_ptr->shooter_info.num_fire += p_ptr->lev * 150 / 50;
+	}
+	else if (IS_HERO()){
+		boost = p_ptr->lev / 5;
+		p_ptr->pspeed += 2;
+		p_ptr->shooter_info.num_fire += p_ptr->lev * 150 / 80;
+	}
+
 }
 
 
