@@ -1828,7 +1828,7 @@ s16b m_bonus(int max, int level)
 /*
  * Cheat -- describe a created object for the user
  */
-static void object_mention(object_type *o_ptr)
+void object_mention(object_type *o_ptr)
 {
     char o_name[MAX_NLEN];
 
