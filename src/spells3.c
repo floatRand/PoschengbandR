@@ -4181,7 +4181,7 @@ bool curse_armor(int slot)
         msg_format("A terrible black aura blasts your %s!", o_name);
         virtue_add(VIRTUE_ENCHANTMENT, -5);
         blast_object(o_ptr);
-        o_ptr->curse_flags = OFC_CURSED;
+        o_ptr->curse_flags |= OFC_CURSED;
     }
 
     return TRUE;
@@ -4212,7 +4212,7 @@ bool curse_weapon(bool force, int slot)
         if (!force) msg_format("A terrible black aura blasts your %s!", o_name);
         virtue_add(VIRTUE_ENCHANTMENT, -5);
         blast_object(o_ptr);
-        o_ptr->curse_flags = OFC_CURSED;
+        o_ptr->curse_flags |= OFC_CURSED;
     }
     return TRUE;
 }
