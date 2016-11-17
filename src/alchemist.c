@@ -342,6 +342,22 @@ void _use_infusion(object_type* o_ptr, int overdose)
 		msg_print("There are no enough infusions.");
 		return;
 	}
+
+	if (o_ptr->sval == SV_POTION_DEATH
+		|| o_ptr->sval == SV_POTION_RUINATION
+		|| o_ptr->sval == SV_POTION_DETONATIONS){
+
+		char prompt[255];
+		char o_name[255];
+		object_desc(o_name, o_ptr, OD_COLOR_CODED | OD_NO_PLURAL | OD_OMIT_PREFIX);
+		sprintf(prompt, "Really use %s? <color:y>[y/N]</color>", o_name);
+		if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n')
+			return;
+		else{
+			sprintf(prompt, "Really, REALLY use %s? <color:y>[y/N]</color>", o_name);
+			if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n') return;
+		}
+	}
 	
 	/*
 	if (o_ptr->activation.type == EFFECT_IDENTIFY)
@@ -906,7 +922,7 @@ static void _load_list(savefile_ptr file)
 }
 
 static void _calc_bonuses(void){
-	p_ptr->regen += p_ptr->lev * 2;
+	if(p_ptr->lev >= 10) p_ptr->regen += 100;
 	if (p_ptr->lev >= 20) p_ptr->special_attack |= ATTACK_POIS;
 	if (p_ptr->lev >= 40) p_ptr->special_attack |= ATTACK_ACID;
 
@@ -919,8 +935,7 @@ static void _calc_bonuses(void){
 
 static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-	if(p_ptr->lev >= 20) add_flag(flgs, OF_BRAND_POIS);
-	if(p_ptr->lev >= 40) add_flag(flgs, OF_BRAND_ACID);
+
 }
 
 static void _load_player(savefile_ptr file)
