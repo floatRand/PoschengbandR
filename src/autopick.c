@@ -2314,6 +2314,9 @@ bool autopick_auto_id(object_type *o_ptr)
         if (p_ptr->pclass == CLASS_MAGIC_EATER && magic_eater_auto_id(o_ptr))
             return TRUE;
 
+		if (p_ptr->pclass == CLASS_ALCHEMIST && o_ptr->tval == TV_POTION)
+			return TRUE;
+
         i = pack_find(TV_SCROLL, SV_SCROLL_IDENTIFY);
 
         if (i >= 0 && !p_ptr->blind && !(race->flags & RACE_IS_ILLITERATE))
@@ -2381,6 +2384,11 @@ void autopick_pickup_items(cave_type *c_ptr)
                 _sense_object_floor(o_ptr);
                 equip_learn_flag(OF_LORE1);
             }
+
+			if (p_ptr->pclass == CLASS_ALCHEMIST && o_ptr->tval == TV_POTION){
+				_sense_object_floor(o_ptr);
+				equip_learn_flag(OF_LORE1);
+			}
         }
 
         idx = is_autopick(o_ptr);

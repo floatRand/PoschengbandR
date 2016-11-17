@@ -59,11 +59,11 @@ static _formula_info_t _formulas[POTION_MAX+1] = {
 { SV_POTION_DETECT_INVIS,			60, 5},
 { SV_POTION_SLOW_POISON,			20, 1},
 { SV_POTION_CURE_POISON,			40, 1},
-{ SV_POTION_BOLDNESS,				60, 5},
+{ SV_POTION_BOLDNESS,				120, 5},
 { SV_POTION_SPEED,					120, 10},
-{ SV_POTION_RESIST_HEAT,			60, 5},
-{ SV_POTION_RESIST_COLD,			60, 5},
-{ SV_POTION_HEROISM,				90, 5},
+{ SV_POTION_RESIST_HEAT,			120, 5},
+{ SV_POTION_RESIST_COLD,			120, 5},
+{ SV_POTION_HEROISM,				60, 5},
 { SV_POTION_BERSERK_STRENGTH,		120, 25},
 { SV_POTION_CURE_LIGHT,				10, 1},
 { SV_POTION_CURE_SERIOUS,			30, 5},
@@ -484,69 +484,80 @@ bool _evaporate_aux(object_type *o_ptr){
 	cptr desc = "";
 
 	char o_name[MAX_NLEN];
+	if (o_ptr->tval == TV_POTION){
+		switch (o_ptr->sval){
+		case SV_POTION_APPLE_JUICE:
+		case SV_POTION_SALT_WATER:		// Not GF_WATER because it is a goddamn beast.
+		case SV_POTION_WATER:			blastType = GF_ACID;  dam = 10 + damroll(plev / 5, 10);		    break;
+		case SV_POTION_BLINDNESS:		blastType = GF_DARK_WEAK; dam = (5 + plev) * 2;					break;
+		case SV_POTION_DETONATIONS:		blastType = GF_ROCKET; dam = plev * 12; rad = 3;				break; // give it bit boost for being that rare.
+		case SV_POTION_DEATH:			blastType = GF_DEATH_RAY; dam = plev * 200; rad = 1;			break; // powerful as shit
+		case SV_POTION_RUINATION:		blastType = GF_TIME; dam = plev * 5;  minPow = 100;				break;
+		case SV_POTION_LIFE:			blastType = GF_DISP_UNDEAD;	dam = plev * 40; maxPow = 2000;	    break; // should be super-powerful. Niche use.
+		case SV_POTION_HEALING:			blastType = GF_DISP_UNDEAD;	dam = plev * 10; maxPow = 450;		break;
+		case SV_POTION_STAR_HEALING:	blastType = GF_DISP_UNDEAD;	dam = plev * 15; maxPow = 850;	    break;
+		case SV_POTION_SLEEP:			blastType = GF_OLD_SLEEP; dam = 25 + 7 * (plev / 10);		    break;
 
-	switch (o_ptr->sval){
-	case SV_POTION_APPLE_JUICE:
-	case SV_POTION_SALT_WATER:		// Not GF_WATER because it is a goddamn beast.
-	case SV_POTION_WATER:			blastType = GF_ACID;  dam = 10 + damroll( plev / 5, 10 );	maxPow = 80; break; 
-	case SV_POTION_BLINDNESS:		blastType = GF_DARK_WEAK; dam = (5 + plev) * 2; maxPow = 120;	break;
-	case SV_POTION_DETONATIONS:		blastType = GF_ROCKET; dam = plev * 12; rad = 3;				break; // give it bit boost for being that rare.
-	case SV_POTION_DEATH:			blastType = GF_DEATH_RAY; dam = plev * 200; rad = 1;			break; // powerful as shit
-	case SV_POTION_RUINATION:		blastType = GF_TIME; dam = plev * 5;  minPow = 30;				break;
-	case SV_POTION_LIFE:			blastType = GF_DISP_UNDEAD;	dam = plev * 40; maxPow = 2000;	    break; // should be super-powerful. Niche use.
-	case SV_POTION_HEALING:			blastType = GF_DISP_UNDEAD;	dam = plev * 10; maxPow = 450;		break;
-	case SV_POTION_STAR_HEALING:	blastType = GF_DISP_UNDEAD;	dam = plev * 15; maxPow = 850;	    break;
-	case SV_POTION_SLEEP:			blastType = GF_OLD_SLEEP; dam = 25 + 7 * (plev /10);		    break;
+		case SV_POTION_DEC_CHR:
+		case SV_POTION_DEC_STR:
+		case SV_POTION_DEC_DEX:
+		case SV_POTION_DEC_INT:
+		case SV_POTION_DEC_WIS:
+		case SV_POTION_DEC_CON:
+			blastType = GF_TIME; (5 + plev) * 2; 							break;
+		case SV_POTION_CONFUSION:		blastType = GF_CONFUSION; dam = plev;							break;
+		case SV_POTION_SLOWNESS:		blastType = GF_OLD_SLOW; dam = plev;							break;
+		case SV_POTION_LOSE_MEMORIES:	blastType = GF_AMNESIA;	dam = plev;								break;
+		case SV_POTION_BLOOD:			blastType = GF_BLOOD; dam = (30 + plev) * 2;					break;
+		case SV_POTION_POISON:			blastType = GF_POIS; dam = (30 + plev) * 2; rad = 3;			break;
+		case SV_POTION_BERSERK_STRENGTH:blastType = GF_BRAIN_SMASH;	dam = damroll(12, 12);				break;
+		case SV_POTION_STONE_SKIN:		blastType = GF_PARALYSIS; dam = 25 + plev;						break; // turns to 'stone'
+		case SV_POTION_SLIME_MOLD:		blastType = GF_STUN; dam = (5 + plev) * 2;						break;
+		case SV_POTION_RESTORE_MANA:    blastType = GF_MANA; dam = (30 + plev) * 2 + 50;			    break;
+		default: blastType = -1; // Other potions cannot be evaporated.
+		}
 
-	case SV_POTION_DEC_CHR:
-	case SV_POTION_DEC_STR:
-	case SV_POTION_DEC_DEX:
-	case SV_POTION_DEC_INT:
-	case SV_POTION_DEC_WIS:
-	case SV_POTION_DEC_CON:
-									blastType = GF_TIME; (5 + plev) * 2; 							break; 
-	case SV_POTION_CONFUSION:		blastType = GF_CONFUSION; dam = plev;							break;
-	case SV_POTION_SLOWNESS:		blastType = GF_OLD_SLOW; dam = plev;							break;
-	case SV_POTION_LOSE_MEMORIES:	blastType = GF_AMNESIA;	dam = plev;								break;
-	case SV_POTION_BLOOD:			blastType = GF_BLOOD; dam = (30 + plev) * 2;					break;
-	case SV_POTION_POISON:			blastType = GF_POIS; dam = (30 + plev) * 2; rad = 3;			break;
-	case SV_POTION_BERSERK_STRENGTH:blastType = GF_BRAIN_SMASH;	dam = damroll(12, 12);				break;
-	case SV_POTION_STONE_SKIN:		blastType = GF_PARALYSIS; dam = 25 + plev;						break; // turns to 'stone'
-	case SV_POTION_SLIME_MOLD:		blastType = GF_STUN; dam = (5 + plev) * 2;						break;
-	case SV_POTION_RESTORE_MANA:    blastType = GF_MANA; dam = (30 + plev) * 2 + 50; maxPow = 200;  break;
-	default: blastType = -1; // Other potions cannot be evaporated.
+		switch (o_ptr->sval){
+		case SV_POTION_APPLE_JUICE:     desc = "It produces a blast of... apple juice?";	break;
+		case SV_POTION_SALT_WATER:      desc = "It produces a blast of mist, and some salt.";	break;
+		case SV_POTION_WATER:			desc = "It produces a blast of mist!";	break;
+		case SV_POTION_BLINDNESS:		desc = "It produces a cloud of darkness";	break;
+		case SV_POTION_DETONATIONS:		desc = "It produces an explosion!";	break;
+		case SV_POTION_DEATH:			desc = "It produces a cloud of death!";	break;
+		case SV_POTION_RUINATION:		desc = "It produces an eerie white mist!";	break;
+		case SV_POTION_LIFE:			desc = "It produces a massive pillar of raw life energy!";	break;
+		case SV_POTION_HEALING:			desc = "It produces a cloud of raw life energy!";	break;
+		case SV_POTION_STAR_HEALING:	desc = "It produces a blast of raw life energy!";	break;
+		case SV_POTION_SLEEP:			desc = "It produces a cloud of sleeping gas!";	break;
+		case SV_POTION_DEC_CHR:
+		case SV_POTION_DEC_STR:
+		case SV_POTION_DEC_DEX:
+		case SV_POTION_DEC_INT:
+		case SV_POTION_DEC_WIS:
+		case SV_POTION_DEC_CON:
+			desc = "It a cloud of brown mist!";	break;
+		case SV_POTION_CONFUSION:		desc = "It produces a scintillating cloud!";	break;
+		case SV_POTION_SLOWNESS:		desc = "It produces a slow cloud!";	break;
+		case SV_POTION_LOSE_MEMORIES:	desc = "It produces an ominous mist!";	break;
+		case SV_POTION_BLOOD:			desc = "It produces a blast of blood!";	break;
+		case SV_POTION_POISON:			desc = "It produces a cloud of poison!";	break;
+		case SV_POTION_BERSERK_STRENGTH:desc = "It produces a cloud of fury!";	break;
+		case SV_POTION_STONE_SKIN:		desc = "It produces a cloud of petrification!";	break;
+		case SV_POTION_SLIME_MOLD:		desc = "It produces a blast of slime!";	break;
+		case SV_POTION_RESTORE_MANA:    desc = "It produces a blast of raw mana!";	break;
+		default: blastType = -1; // no allowing others.
+		}
 	}
+	else if (o_ptr->tval == TV_FLASK){
+		if (o_ptr->sval == SV_FLASK_OIL){
+			desc = "The flask explodes into a cloud of fire!";
+			dam = 12 + damroll(plev / 5, 12);	
+			blastType = GF_FIRE; rad = 3;
+		}
+	}
+
 	// Descriptions for sake of formatting.
-	switch (o_ptr->sval){
-			case SV_POTION_APPLE_JUICE:     desc = "It produces a blast of... apple juice?";	break;
-			case SV_POTION_SALT_WATER:      desc = "It produces a blast of mist, and some salt.";	break;
-			case SV_POTION_WATER:			desc = "It produces a blast of mist!";	break;
-			case SV_POTION_BLINDNESS:		desc = "It produces a cloud of darkness";	break;
-			case SV_POTION_DETONATIONS:		desc = "It produces an explosion!";	break;
-			case SV_POTION_DEATH:			desc = "It produces a cloud of death!";	break;
-			case SV_POTION_RUINATION:		desc = "It produces an eerie white mist!";	break;
-			case SV_POTION_LIFE:			desc = "It produces a massive pillar of raw life energy!";	break;
-			case SV_POTION_HEALING:			desc = "It produces a cloud of raw life energy!";	break;
-			case SV_POTION_STAR_HEALING:	desc = "It produces a blast of raw life energy!";	break;
-			case SV_POTION_SLEEP:			desc = "It produces a cloud of sleeping gas!";	break;
-			case SV_POTION_DEC_CHR:
-			case SV_POTION_DEC_STR:
-			case SV_POTION_DEC_DEX:
-			case SV_POTION_DEC_INT:
-			case SV_POTION_DEC_WIS:
-			case SV_POTION_DEC_CON:
-				desc = "It a cloud of brown mist!";	break;
-			case SV_POTION_CONFUSION:		desc = "It produces a scintillating cloud!";	break;
-			case SV_POTION_SLOWNESS:		desc = "It produces a slow cloud!";	break;
-			case SV_POTION_LOSE_MEMORIES:	desc = "It produces an ominous mist!";	break;
-			case SV_POTION_BLOOD:			desc = "It produces a blast of blood!";	break;
-			case SV_POTION_POISON:			desc = "It produces a cloud of poison!";	break;
-			case SV_POTION_BERSERK_STRENGTH:desc = "It produces a cloud of fury!";	break;
-			case SV_POTION_STONE_SKIN:		desc = "It produces a cloud of petrification!";	break;
-			case SV_POTION_SLIME_MOLD:		desc = "It produces a blast of slime!";	break;
-			case SV_POTION_RESTORE_MANA:    desc = "It produces a blast of raw mana!";	break;
-	default: blastType = -1; // no allowing others.
-	}
+
 
 	if (blastType < 0) { msg_format("You cannot evaporate this potion."); return FALSE; }
 	if (!get_aim_dir(&dir)){ return FALSE; }
@@ -572,6 +583,11 @@ bool _evaporate_aux(object_type *o_ptr){
 	return TRUE;
 }
 
+bool _object_is_evaporable(object_type *o_ptr)
+{
+	return (k_info[o_ptr->k_idx].tval == TV_POTION) || (k_info[o_ptr->k_idx].tval == TV_FLASK);
+}
+
 static bool evaporate(void){
 
 	int item;
@@ -585,7 +601,7 @@ static bool evaporate(void){
 		EvapInf = FALSE;
 
 	if (EvapInf == FALSE){
-		item_tester_hook = object_is_potion;
+		item_tester_hook = _object_is_evaporable;
 		if (!get_item(&item, "Evaporate which potion? ", "You have nothing to evaporate.", (USE_INVEN | USE_FLOOR)))
 			return FALSE;
 
@@ -783,6 +799,7 @@ void _reproduceInf(object_type* o_ptr){
 	{
 		msg_format("You recreate %d infusions.", infct);
 		o_ptr->number += infct;
+		_CHEM -= cost;
 	}
 	else
 		energy_use = 0;
@@ -814,7 +831,6 @@ static void _reproduce_infusion_spell(int cmd, variant *res)
 		break;
 	}
 }
-
 
 void alchemist_gain(void)
 {
@@ -874,13 +890,21 @@ static void _load_list(savefile_ptr file)
 }
 
 static void _calc_bonuses(void){
-	p_ptr->regen += 100 + p_ptr->lev;
+	p_ptr->regen += p_ptr->lev * 2;
+	if (p_ptr->lev >= 20) p_ptr->special_attack |= ATTACK_POIS;
+	if (p_ptr->lev >= 40) p_ptr->special_attack |= ATTACK_ACID;
 
+	int boost = 1 + p_ptr->lev / 10;
+	p_ptr->to_h_m += boost;
+	p_ptr->to_d_m += boost;
+	p_ptr->shooter_info.num_fire += p_ptr->lev * 150 / 100;
 }
+
 
 static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-	if(p_ptr->lev > 25) add_flag(flgs, OF_BRAND_POIS);
+	if(p_ptr->lev >= 20) add_flag(flgs, OF_BRAND_POIS);
+	if(p_ptr->lev >= 40) add_flag(flgs, OF_BRAND_ACID);
 }
 
 static void _load_player(savefile_ptr file)
@@ -948,13 +972,13 @@ static int _get_powers(spell_info* spells, int max)
 	spell->fail = 0;
 	spell->fn = _break_down_potion_spell;
 
-				spell = &spells[ct++];
+	spell = &spells[ct++];
 	spell->level = 5;
-	spell->cost = 16;
+	spell->cost = 8;
 	spell->fail = calculate_fail_rate(spell->level, 25, p_ptr->stat_ind[A_INT]); 
 	spell->fn = _evaporate_spell;
 
-				spell = &spells[ct++];
+	spell = &spells[ct++];
 	spell->level = 20;
 	spell->cost = 5;
 	spell->fail = calculate_fail_rate(spell->level, 30, p_ptr->stat_ind[A_INT]);
@@ -991,13 +1015,13 @@ class_t *alchemist_get_class(void)
 		me.stats[A_INT] = 2;
 		me.stats[A_WIS] = -1;
 		me.stats[A_DEX] = 2;
-		me.stats[A_CON] = -2;
+		me.stats[A_CON] = 0;
 		me.stats[A_CHR] = -2;
 		me.base_skills = bs;
 		me.extra_skills = xs;
 		me.life = 105;
 		me.base_hp = 12;
-		me.exp = 150;
+		me.exp = 125;
 		me.pets = 30;
 
 		me.birth = _birth;
