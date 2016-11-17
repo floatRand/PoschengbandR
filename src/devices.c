@@ -1687,12 +1687,39 @@ static cptr _do_scroll(int sval, int mode)
     return "";
 }
 
+static bool _confirmUseHarmful(object_type *o_ptr){
+
+	if (o_ptr->tval == TV_POTION && // just for potions now
+		(o_ptr->sval == SV_POTION_DEATH
+		|| o_ptr->sval == SV_POTION_RUINATION
+		|| o_ptr->sval == SV_POTION_DETONATIONS)){
+
+		if (o_ptr->ident & IDENT_KNOWN){ // only ask we -know- it is harmful.
+			char prompt[255];
+			char o_name[255];
+
+			object_desc(o_name, o_ptr, OD_COLOR_CODED | OD_NO_PLURAL | OD_OMIT_PREFIX);
+			sprintf(prompt, "Really use %s? <color:y>[y/N]</color>", o_name);
+			if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n')
+				return FALSE;
+			else{
+				sprintf(prompt, "Really, REALLY use %s? <color:y>[y/N]</color>", o_name);
+				if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n') return FALSE;
+			}
+		}
+	}
+	
+	return TRUE;
+}
+
 cptr do_device(object_type *o_ptr, int mode, int boost)
 {
     cptr result = NULL;
 
     device_noticed = FALSE;
     device_used_charges = 0;
+
+	//if (!_confirmUseHarmful(o_ptr)) return "";
 
     if (o_ptr->activation.type)
     {
