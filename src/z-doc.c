@@ -1607,6 +1607,7 @@ int doc_display_aux(doc_ptr doc, cptr caption, int top, rect_t display)
 
         cmd = inkey_special(TRUE);
 
+        /* links */
         if ('a' <= cmd && cmd <= 'z')
         {
             doc_link_ptr link = int_map_find(doc->links, cmd);
@@ -1615,6 +1616,37 @@ int doc_display_aux(doc_ptr doc, cptr caption, int top, rect_t display)
                 rc = doc_display_help_aux(string_buffer(link->file), string_buffer(link->topic), display);
                 if (rc == _UNWIND)
                     done = TRUE;
+                continue;
+            }
+        }
+
+        /* vi like movement for roguelike keyset */
+        if (rogue_like_commands)
+        {
+            if (cmd == 'j')
+            {
+                top++;
+                if (top > doc->cursor.y - page_size)
+                    top = MAX(0, doc->cursor.y - page_size);
+                continue;
+            }
+            else if (cmd == 'k')
+            {
+                top--;
+                if (top < 0) top = 0;
+                continue;
+            }
+            else if (cmd == KTRL('F'))
+            {
+                top += page_size;
+                if (top > doc->cursor.y - page_size)
+                    top = MAX(0, doc->cursor.y - page_size);
+                continue;
+            }
+            else if (cmd == KTRL('B'))
+            {
+                top -= page_size;
+                if (top < 0) top = 0;
                 continue;
             }
         }
