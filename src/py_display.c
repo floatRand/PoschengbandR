@@ -2421,6 +2421,8 @@ void py_display(void)
     string_printf(header,  " <meta name='max_depth' value='%d'>\n", _max_depth());
     string_printf(header,  " <meta name='score' value='%d'>\n", p_ptr->exp); /* ?? Does oook need this? */
     string_printf(header,  " <meta name='fame' value='%d'>\n", p_ptr->fame);
+    string_printf(header,  " <meta name='winner' value='%d'>\n", p_ptr->total_winner ? 1 : 0);
+    string_printf(header,  " <meta name='dead' value='%d'>\n", p_ptr->is_dead ? 1 : 0);
     string_append_s(header, "</head>");
     doc_change_html_header(d, string_buffer(header));
 
