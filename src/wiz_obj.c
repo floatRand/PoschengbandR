@@ -556,17 +556,41 @@ static int _smith_brands(object_type *o_ptr)
     return _smith_flags(o_ptr, _brand_flags);
 }
 
-static void _reroll_aux(object_type *o_ptr, int flags)
+static void _reroll_aux(object_type *o_ptr, int flags, int min)
 {
-    object_prep(o_ptr, o_ptr->k_idx);
-    apply_magic(o_ptr, dun_level, AM_NO_FIXED_ART | flags);
-    obj_identify_fully(o_ptr);
+    int attempts = 1000; /* param? */
+    int i, score, best_score = -1; /* scores are never negative */
+    object_type forge, best = {0};
+
+    for (i = 0; i < attempts; i++)
+    {
+        object_prep(&forge, o_ptr->k_idx);
+        apply_magic(&forge, dun_level, AM_NO_FIXED_ART | flags);
+        obj_identify_fully(&forge);
+
+        score = obj_value_real(&forge);
+        if (score > min)
+        {
+            forge.number = o_ptr->number; /* ammo */
+            *o_ptr = forge;
+            return;
+        }
+        else if (score > best_score)
+        {
+            best_score = score;
+            best = forge;
+        }
+    }
+    assert(best.k_idx == o_ptr->k_idx);
+    best.number = o_ptr->number; /* ammo */
+    *o_ptr = best;
 }
 
 static int _smith_reroll(object_type *o_ptr)
 {
     object_type copy = *o_ptr;
-    rect_t r = ui_map_rect();
+    rect_t      r = ui_map_rect();
+    static int  min = 0;
 
     for (;;)
     {
@@ -583,6 +607,9 @@ static int _smith_reroll(object_type *o_ptr)
         doc_insert(_doc, "   <color:y>r</color>) Random Artifact\n");
 
         doc_newline(_doc);
+        doc_printf(_doc, "   <color:y>m</color>) Min Score = %d\n", min);
+
+        doc_newline(_doc);
         doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
         doc_insert(_doc, " <color:y>ESC</color>) Cancel changes\n");
         doc_newline(_doc);
@@ -597,12 +624,24 @@ static int _smith_reroll(object_type *o_ptr)
             *o_ptr = copy;
             return _OK;
         case ESCAPE: return _CANCEL;
-        case 'w': _reroll_aux(&copy, AM_GOOD | AM_GREAT | AM_CURSED); break;
-        case 'b': _reroll_aux(&copy, AM_GOOD | AM_CURSED); break;
-        case 'a': _reroll_aux(&copy, AM_AVERAGE); break;
-        case 'g': _reroll_aux(&copy, AM_GOOD); break;
-        case 'e': _reroll_aux(&copy, AM_GOOD | AM_GREAT); break;
-        case 'r': _reroll_aux(&copy, AM_GOOD | AM_GREAT | AM_SPECIAL); break;
+        case 'm':
+        {
+            char buf[50];
+            sprintf(buf, "%d", min);
+            if (get_string("Min Score: ", buf, 50))
+            {
+                min = atoi(buf);
+                if (min < 0) min = 0;
+                else if (min > 200000) min = 200000;
+            }
+            break;
+        }
+        case 'w': _reroll_aux(&copy, AM_GOOD | AM_GREAT | AM_CURSED, min); break;
+        case 'b': _reroll_aux(&copy, AM_GOOD | AM_CURSED, min); break;
+        case 'a': _reroll_aux(&copy, AM_AVERAGE, min); break;
+        case 'g': _reroll_aux(&copy, AM_GOOD, min); break;
+        case 'e': _reroll_aux(&copy, AM_GOOD | AM_GREAT, min); break;
+        case 'r': _reroll_aux(&copy, AM_GOOD | AM_GREAT | AM_SPECIAL, min); break;
         }
     }
 }
@@ -1099,6 +1138,7 @@ void wiz_obj_smith(void)
     copy = *o_ptr;
     obj_identify_fully(&copy);
 
+    msg_line_clear();
     if (_smith_object(&copy) == _OK)
     {
         if (item >= 0) p_ptr->total_weight -= o_ptr->weight*o_ptr->number;
