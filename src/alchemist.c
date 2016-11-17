@@ -9,9 +9,14 @@
 #define _INFUSION_CAP 50
 #define _MAX_CHEM 35000
 
+#define _CTIER0 0
+#define _CTIER1 1
+#define _CTIER2 2
+#define _CTIER_MAX 2
+
 static object_type _infusions[_MAX_INF_SLOTS];
 
-static int _CHEM = 0;
+static int _CHEM[] = {0,0,0};
 
 
 int _AlchemistSkill(void){
@@ -23,6 +28,7 @@ typedef struct {
 	int  sval;
 	int  cost;
 	int minLv;
+	int ctier;
 } _formula_info_t, *_formula_info_ptr;
 
 
@@ -31,80 +37,80 @@ typedef struct {
 // svals might be bit excessive then, but eh... Easier on eye, perhaps. Could be checked for safety, ex (if(i!=sval) search_through ). 
 
 static _formula_info_t _formulas[POTION_MAX+1] = {
-{ SV_POTION_WATER,					10, 1},
-{ SV_POTION_APPLE_JUICE,			10, 1},
-{ SV_POTION_SLIME_MOLD,				10, 1}, 
-{ -1, -1, 999 }, // ==========================================//
-{ SV_POTION_SLOWNESS,				20, 1},
-{ SV_POTION_SALT_WATER,				20, 1},
-{ SV_POTION_POISON,					30, 1},
-{ SV_POTION_BLINDNESS,				30, 1},
-{ -1, -1, 999 }, // ==========================================//
-{ SV_POTION_CONFUSION,				30, 1},
-{ -1, -1, 999 }, // ==========================================//
-{ SV_POTION_SLEEP,					60, 1},
-{ -1, -1, 999 }, // ==========================================//
-{ SV_POTION_LOSE_MEMORIES,			10, 1},
-{ -1, -1, 999 }, // ==========================================//
-{ SV_POTION_RUINATION,				200, 40},
-{ SV_POTION_DEC_STR,				40, 1},
-{ SV_POTION_DEC_INT,				40, 1},
-{ SV_POTION_DEC_WIS,				40, 1},
-{ SV_POTION_DEC_DEX,				40, 1},
-{ SV_POTION_DEC_CON,				40, 1},
-{ SV_POTION_DEC_CHR,				40, 1},
-{ SV_POTION_DETONATIONS,			300, 40},
-{ SV_POTION_DEATH,					500, 40},
-{ SV_POTION_INFRAVISION,			60, 5},
-{ SV_POTION_DETECT_INVIS,			60, 5},
-{ SV_POTION_SLOW_POISON,			20, 1},
-{ SV_POTION_CURE_POISON,			40, 1},
-{ SV_POTION_BOLDNESS,				120, 5},
-{ SV_POTION_SPEED,					120, 10},
-{ SV_POTION_RESIST_HEAT,			120, 5},
-{ SV_POTION_RESIST_COLD,			120, 5},
-{ SV_POTION_HEROISM,				60, 5},
-{ SV_POTION_BERSERK_STRENGTH,		120, 25},
-{ SV_POTION_CURE_LIGHT,				10, 1},
-{ SV_POTION_CURE_SERIOUS,			30, 5},
-{ SV_POTION_CURE_CRITICAL,			60, 15},
-{ SV_POTION_HEALING,				200, 30},
-{ SV_POTION_STAR_HEALING,			400, 40},
-{ SV_POTION_LIFE,					600, 60},
-{ SV_POTION_RESTORE_MANA,			180, 30},
-{ SV_POTION_RESTORE_EXP,			60, 15},
-{ SV_POTION_RES_STR,				60, 15},
-{ SV_POTION_RES_INT,				60, 15},
-{ SV_POTION_RES_WIS,				60, 15},
-{ SV_POTION_RES_DEX,				60, 15},
-{ SV_POTION_RES_CON,				60, 15},
-{ SV_POTION_RES_CHR,				60, 15},
-{ SV_POTION_INC_STR,				1500, 30},
-{ SV_POTION_INC_INT,				1500, 30},
-{ SV_POTION_INC_WIS,				1500, 30},
-{ SV_POTION_INC_DEX,				1500, 30},
-{ SV_POTION_INC_CON,				1500, 30},
-{ SV_POTION_INC_CHR,				1500, 30},
-{ -1, -1, 999 }, // ==========================================//
-{ SV_POTION_AUGMENTATION,			3000, 60},
-{ SV_POTION_ENLIGHTENMENT,			120, 30},
-{ SV_POTION_STAR_ENLIGHTENMENT,		180, 40},
-{ SV_POTION_SELF_KNOWLEDGE,			120, 30},
-{ SV_POTION_EXPERIENCE,				3000, 30},
-{ SV_POTION_RESISTANCE,				120, 15},
-{ SV_POTION_CURING,					90, 20},
-{ SV_POTION_INVULNERABILITY,		300, 60},
-{ SV_POTION_NEW_LIFE,				240, 1},
-{ SV_POTION_NEO_TSUYOSHI,			60, 1},
-{ SV_POTION_TSUYOSHI,				30, 1},
-{ SV_POTION_POLYMORPH,				120, 1},
-{ SV_POTION_BLOOD,					120, 1},
-{ SV_POTION_GIANT_STRENGTH,			120, 30},
-{ SV_POTION_STONE_SKIN,				120, 30},
-{ SV_POTION_CLARITY,				90, 20},
-{ SV_POTION_GREAT_CLARITY,			120, 30},
+{ SV_POTION_WATER,					10, 1, _CTIER0 },
+{ SV_POTION_APPLE_JUICE,			10, 1, _CTIER0 },
+{ SV_POTION_SLIME_MOLD,				10, 1, _CTIER0 }, 
+{ -1, -1, 999 , _CTIER0 }, // ==========================================//
+{ SV_POTION_SLOWNESS,				20, 1, _CTIER0 },
+{ SV_POTION_SALT_WATER,				20, 1, _CTIER0 },
+{ SV_POTION_POISON,					30, 1, _CTIER0 },
+{ SV_POTION_BLINDNESS,				30, 1, _CTIER0 },
+{ -1, -1, 999 , _CTIER0 }, // ==========================================//
+{ SV_POTION_CONFUSION,				30, 1, _CTIER0 },
+{ -1, -1, 999 , _CTIER0 }, // ==========================================//
+{ SV_POTION_SLEEP,					60, 1, _CTIER0 },
+{ -1, -1, 999 , _CTIER0 }, // ==========================================//
+{ SV_POTION_LOSE_MEMORIES,			10, 1, _CTIER0 },
+{ -1, -1, 999 , _CTIER0 }, // ==========================================//
+{ SV_POTION_RUINATION,				100, 40, _CTIER1 },
+{ SV_POTION_DEC_STR,				40, 1, _CTIER0 },
+{ SV_POTION_DEC_INT,				40, 1, _CTIER0 },
+{ SV_POTION_DEC_WIS,				40, 1, _CTIER0 },
+{ SV_POTION_DEC_DEX,				40, 1, _CTIER0 },
+{ SV_POTION_DEC_CON,				40, 1, _CTIER0 },
+{ SV_POTION_DEC_CHR,				40, 1, _CTIER0 },
+{ SV_POTION_DETONATIONS,			100, 40, _CTIER1 },
+{ SV_POTION_DEATH,					160, 40, _CTIER1 },
+{ SV_POTION_INFRAVISION,			60, 5, _CTIER0 },
+{ SV_POTION_DETECT_INVIS,			60, 5, _CTIER0 },
+{ SV_POTION_SLOW_POISON,			20, 1, _CTIER0 },
+{ SV_POTION_CURE_POISON,			40, 1, _CTIER0 },
+{ SV_POTION_BOLDNESS,				120, 5, _CTIER1 },
+{ SV_POTION_SPEED,					120, 10, _CTIER1 },
+{ SV_POTION_RESIST_HEAT,			120, 5, _CTIER1 },
+{ SV_POTION_RESIST_COLD,			120, 5, _CTIER1 },
+{ SV_POTION_HEROISM,				60, 5, _CTIER0 },
+{ SV_POTION_BERSERK_STRENGTH,		120, 25, _CTIER1 },
+{ SV_POTION_CURE_LIGHT,				10, 1, _CTIER0 },
+{ SV_POTION_CURE_SERIOUS,			30, 5, _CTIER0 },
+{ SV_POTION_CURE_CRITICAL,			60, 15, _CTIER0 },
+{ SV_POTION_HEALING,				200, 30, _CTIER1 },
+{ SV_POTION_STAR_HEALING,			200, 40, _CTIER2 },
+{ SV_POTION_LIFE,					400, 60, _CTIER2 },
+{ SV_POTION_RESTORE_MANA,			180, 30, _CTIER1 },
+{ SV_POTION_RESTORE_EXP,			60, 15, _CTIER0 },
+{ SV_POTION_RES_STR,				60, 15, _CTIER0 },
+{ SV_POTION_RES_INT,				60, 15, _CTIER0 },
+{ SV_POTION_RES_WIS,				60, 15, _CTIER0 },
+{ SV_POTION_RES_DEX,				60, 15, _CTIER0 },
+{ SV_POTION_RES_CON,				60, 15, _CTIER0 },
+{ SV_POTION_RES_CHR,				60, 15, _CTIER0 },
+{ SV_POTION_INC_STR,				500, 30, _CTIER2 },
+{ SV_POTION_INC_INT,				500, 30, _CTIER2 },
+{ SV_POTION_INC_WIS,				500, 30, _CTIER2 },
+{ SV_POTION_INC_DEX,				500, 30, _CTIER2 },
+{ SV_POTION_INC_CON,				500, 30, _CTIER2 },
+{ SV_POTION_INC_CHR,				500, 30, _CTIER2 },
+{ -1, -1, 999 , _CTIER0 }, // ==========================================//
+{ SV_POTION_AUGMENTATION,			1000, 999, _CTIER2 },
+{ SV_POTION_ENLIGHTENMENT,			120, 30, _CTIER1 },
+{ SV_POTION_STAR_ENLIGHTENMENT,		180, 40, _CTIER1 },
+{ SV_POTION_SELF_KNOWLEDGE,			120, 30, _CTIER1 },
+{ SV_POTION_EXPERIENCE,				1000, 999, _CTIER2 },
+{ SV_POTION_RESISTANCE,				120, 15, _CTIER1 },
+{ SV_POTION_CURING,					90, 20, _CTIER1 },
+{ SV_POTION_INVULNERABILITY,		450, 60, _CTIER2 },
+{ SV_POTION_NEW_LIFE,				240, 1, _CTIER2 },
+{ SV_POTION_NEO_TSUYOSHI,			60, 1, _CTIER0 },
+{ SV_POTION_TSUYOSHI,				30, 1, _CTIER0 },
+{ SV_POTION_POLYMORPH,				120, 1, _CTIER1 },
+{ SV_POTION_BLOOD,					120, 1, _CTIER0 },
+{ SV_POTION_GIANT_STRENGTH,			120, 30, _CTIER1 },
+{ SV_POTION_STONE_SKIN,				120, 30, _CTIER1 },
+{ SV_POTION_CLARITY,				90, 20, _CTIER0 },
+{ SV_POTION_GREAT_CLARITY,			120, 30, _CTIER1 },
 
-{ -1, -1, 999 }, // null entry
+{ -1, -1, 999 , _CTIER0 }, // null entry
 };
 
 
@@ -115,7 +121,12 @@ static void _birth(void)
 	{
 		memset(&_infusions[i], 0, sizeof(object_type));
 	}
-	_CHEM = 200; // to offset sorta rocky start.
+	for (i = 0; i <= _CTIER_MAX; i++)
+	{
+		_CHEM[i] = 0;
+	}
+	_CHEM[_CTIER0] = 240; 
+	_CHEM[_CTIER1] = 120;
 }
 
 static object_type *_which_obj(int tval, int slot)
@@ -144,7 +155,7 @@ static void _displayInfusions(rect_t display)
 	doc_ptr doc = NULL;
 	object_type *list = _infusions;
 	int alcskil = _AlchemistSkill();
-	int DC = 1;
+	int DC = 1, tier = 0;
 
 	padding = 5;   /* leading " a) " + trailing " " */
 	padding += 12; /* " Count " */
@@ -178,21 +189,18 @@ static void _displayInfusions(rect_t display)
 		if (o_ptr->k_idx)
 		{
 			DC = _FindFormula(o_ptr->sval)->minLv;
-			
-
-			
+			tier = _FindFormula(o_ptr->sval)->ctier;
 			object_desc(buf, o_ptr, OD_COLOR_CODED);
 			doc_insert(doc, buf);
+
 			if (DC <= alcskil){ // can do
-				doc_printf(doc, "<tab:%d>Cost: %4d%, DC:<color:G>%3d%</color>\n",
-					display.cx - 22, _FindFormula(o_ptr->sval)->cost, DC);
+				 doc_printf(doc, "<tab:%d>Cost: %4d%, Tier: %d, DC:<color:G>%3d%</color>\n", display.cx - 28, _FindFormula(o_ptr->sval)->cost, tier, DC);
 			} 
 			else if (DC == 999){ // can't do ever
 				doc_printf(doc, "<tab:%d><color:r>Unreproduceable</color>\n",display.cx - 22);
 			}
 			else {
-				doc_printf(doc, "<tab:%d>Cost: %4d%, DC:<color:R>%3d%</color>\n",
-					display.cx - 22, _FindFormula(o_ptr->sval)->cost, DC);
+				doc_printf(doc, "<tab:%d>Cost: %4d%, Tier: %d, DC:<color:R>%3d%</color>\n", display.cx - 28, _FindFormula(o_ptr->sval)->cost, tier, DC);
 			}
 
 			/*doc_printf(doc, "<tab:%d>SP: %3d.%2.2d\n", display.cx - 12, o_ptr->xtra5 / 100, o_ptr->xtra5 % 100);*/
@@ -200,8 +208,14 @@ static void _displayInfusions(rect_t display)
 		else
 			doc_insert_text(doc, TERM_L_DARK, "(None)\n");
 	}
-	doc_printf(doc, "Chemical stock: %d \n", _CHEM);
 
+
+	doc_printf(doc, "\nAlchemist skill: <color:y>%4d%</color> \n", _AlchemistSkill());
+	doc_printf(doc, "Chemical stock: \n");
+		doc_printf(doc, "<tab:3><color:U>Tier 0: %4d%</color> \n", _CHEM[_CTIER0]);
+		doc_printf(doc, "<tab:3><color:o>Tier 1: %4d%</color> \n", _CHEM[_CTIER1]);
+		doc_printf(doc, "<tab:3><color:v>Tier 2: %4d%</color> \n", _CHEM[_CTIER2]);
+	doc_printf(doc, "\n");
 	doc_insert(doc, "</style>");
 	doc_sync_term(doc, doc_range_all(doc), doc_pos_create(pos.x, pos.y));
 	doc_free(doc);
@@ -692,9 +706,9 @@ static bool break_down_potion(void){
 			} // 
 
 			int formulaCost = _FindFormula(o_ptr->sval)->cost;
-			int cost = (ct * formulaCost)/3;
-
-			if (_CHEM + cost > _MAX_CHEM){ 
+			int cost = (ct * formulaCost)/2;
+			int tier = _FindFormula(o_ptr->sval)->ctier;
+			if (_CHEM[tier] + cost > _MAX_CHEM){ 
 				char prompt[255];
 				object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
 				sprintf(prompt, "Really break down %s? You will exceed the chemical, and some will be lost. <color:y>[y/N]</color>", o_name);
@@ -702,10 +716,10 @@ static bool break_down_potion(void){
 					return FALSE;
 			}
 
-			_CHEM += cost;
-			if (_CHEM > _MAX_CHEM) _CHEM = _MAX_CHEM;
+			_CHEM[tier] += cost;
+			if (_CHEM[tier] > _MAX_CHEM) _CHEM[tier] = _MAX_CHEM;
 
-			msg_format("You break down potion(s) and gain %d chemical, totaling at %d.", cost, _CHEM);
+			msg_format("You break down potion(s) and gain %d chemical, totaling at %d.", cost, _CHEM[tier]);
 	}
 	
 	/* Eliminate the item (from the pack) */
@@ -774,13 +788,13 @@ void _reproduceInf(object_type* o_ptr){
 	int infct = get_quantity(NULL, MIN(_INFUSION_CAP, limit));
 
 	int cost = infct * _FindFormula(o_ptr->sval)->cost;
-
+	int tier = _FindFormula(o_ptr->sval)->ctier;
 	if (_FindFormula(o_ptr->sval)->minLv > _AlchemistSkill()){
 		msg_format("This infusion is beyond your skills to reproduce.");
 		return;
 	}
 	
-	if (infct < 1){ // do notting
+	if (infct < 1 || tier<0 || tier>2){ // do notting
 		return;
 	}
 
@@ -790,7 +804,7 @@ void _reproduceInf(object_type* o_ptr){
 	if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n')
 		return;
 
-	if (cost > _CHEM){ 
+	if (cost > _CHEM[tier]){ 
 		msg_format("You do not have enough chemicals.");
 		return;
 	}
@@ -799,7 +813,7 @@ void _reproduceInf(object_type* o_ptr){
 	{
 		msg_format("You recreate %d infusions.", infct);
 		o_ptr->number += infct;
-		_CHEM -= cost;
+		_CHEM[tier] -= cost;
 	}
 	else
 		energy_use = 0;
@@ -886,7 +900,9 @@ static void _load_list(savefile_ptr file)
 		assert(o_ptr->k_idx);
 	}
 
-	_CHEM = savefile_read_s32b(file);
+	for (i = 0; i <= _CTIER_MAX; i++){
+		_CHEM[i] = savefile_read_s32b(file);
+	}
 }
 
 static void _calc_bonuses(void){
@@ -925,8 +941,10 @@ static void _save_list(savefile_ptr file)
 		}
 	}
 	savefile_write_u16b(file, 0xFFFF); /* sentinel */
-
-	savefile_write_s32b(file, (s32b)_CHEM); // save chemical count.
+	for (i = 0; i <= _CTIER_MAX; i++){
+		savefile_write_s32b(file, (s32b)_CHEM[i]); // save chemical count.
+	}
+	
 }
 
 static void _save_player(savefile_ptr file)
