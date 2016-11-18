@@ -186,12 +186,10 @@ int beam_chance(void)
  */
 bool trump_summoning(int num, bool pet, int y, int x, int lev, int type, u32b mode)
 {
-    int plev = p_ptr->lev;
-
     int who;
     int i;
     bool success = FALSE;
-
+	int plev = p_ptr->lev;
     /* Default level */
     if (!lev) lev = spell_power(plev) + randint1(spell_power(plev * 2 / 3));
 
@@ -962,15 +960,13 @@ bool cast_summon_greater_demon(void)
 
 
 
-static cptr do_life_spell(int spell, int mode)
+static cptr do_life_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
     bool spoil = (mode == SPELL_SPOIL_DESC) ? TRUE : FALSE;
-
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -1528,7 +1524,7 @@ static cptr do_life_spell(int spell, int mode)
 }
 
 
-static cptr do_sorcery_spell(int spell, int mode)
+static cptr do_sorcery_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -1536,7 +1532,6 @@ static cptr do_sorcery_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -2057,7 +2052,7 @@ static cptr do_sorcery_spell(int spell, int mode)
 }
 
 
-static cptr do_nature_spell(int spell, int mode)
+static cptr do_nature_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -2065,7 +2060,6 @@ static cptr do_nature_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -2751,7 +2745,7 @@ static cptr do_nature_spell(int spell, int mode)
 }
 
 
-static cptr do_chaos_spell(int spell, int mode)
+static cptr do_chaos_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -2762,7 +2756,6 @@ static cptr do_chaos_spell(int spell, int mode)
     static const char s_random[] = "random";
 
     int dir;
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -3392,7 +3385,7 @@ static cptr do_chaos_spell(int spell, int mode)
 }
 
 
-static cptr do_death_spell(int spell, int mode)
+static cptr do_death_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -3403,7 +3396,7 @@ static cptr do_death_spell(int spell, int mode)
     static const char s_random[] = "random";
 
     int dir;
-    int plev = p_ptr->lev;
+
 
     switch (spell)
     {
@@ -4059,7 +4052,7 @@ static cptr do_death_spell(int spell, int mode)
     return "";
 }
 
-static cptr do_trump_spell(int spell, int mode)
+static cptr do_trump_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -4070,7 +4063,6 @@ static cptr do_trump_spell(int spell, int mode)
     static const char s_random[] = "random";
 
     int dir;
-    int plev = p_ptr->lev;
     int x = px;
     int y = py;
 
@@ -4726,7 +4718,7 @@ static cptr do_trump_spell(int spell, int mode)
 }
 
 
-static cptr do_arcane_spell(int spell, int mode)
+static cptr do_arcane_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -4734,7 +4726,6 @@ static cptr do_arcane_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -5274,14 +5265,12 @@ static cptr do_arcane_spell(int spell, int mode)
 }
 
 
-static cptr do_craft_spell(int spell, int mode)
+static cptr do_craft_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
-
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -5822,7 +5811,7 @@ static cptr do_craft_spell(int spell, int mode)
 }
 
 
-static cptr do_daemon_spell(int spell, int mode)
+static cptr do_daemon_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -5832,7 +5821,6 @@ static cptr do_daemon_spell(int spell, int mode)
     static const char s_dam[] = "dam ";
 
     int dir;
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -6437,7 +6425,7 @@ static cptr do_daemon_spell(int spell, int mode)
 }
 
 
-static cptr do_crusade_spell(int spell, int mode)
+static cptr do_crusade_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -6445,7 +6433,6 @@ static cptr do_crusade_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -7019,7 +7006,7 @@ static cptr do_crusade_spell(int spell, int mode)
 }
 
 
-static cptr do_music_spell(int spell, int mode)
+static cptr do_music_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -7030,7 +7017,6 @@ static cptr do_music_spell(int spell, int mode)
     bool stop = (mode == SPELL_STOP) ? TRUE : FALSE;
 
     int dir;
-    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -7960,7 +7946,7 @@ static bool item_tester_hook_cursed(object_type *o_ptr)
     return (bool)(object_is_cursed(o_ptr));
 }
 
-static cptr do_hex_spell(int spell, int mode)
+static cptr do_hex_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -7971,7 +7957,6 @@ static cptr do_hex_spell(int spell, int mode)
 
     bool add = TRUE;
 
-    int plev = p_ptr->lev;
     int power;
 
     switch (spell)
@@ -8752,14 +8737,13 @@ static cptr do_hex_spell(int spell, int mode)
     return "";
 }
 
-static cptr do_armageddon_spell(int spell, int mode)
+static cptr do_armageddon_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
-    int plev = p_ptr->lev;
     int dir;
 
     switch (spell)
@@ -9369,24 +9353,30 @@ cptr do_spell(int realm, int spell, int mode)
 
     _current_realm_hack = realm;
 
+	int plev = p_ptr->lev;
+
+	if (p_ptr->pclass == CLASS_FREELANCER){
+		plev = freelancer_spell_power(realm);
+	}
+
     switch (realm)
     {
-    case REALM_LIFE:     result = do_life_spell(spell, mode); break;
-    case REALM_SORCERY:  result = do_sorcery_spell(spell, mode); break;
-    case REALM_NATURE:   result = do_nature_spell(spell, mode); break;
-    case REALM_CHAOS:    result = do_chaos_spell(spell, mode); break;
-    case REALM_DEATH:    result = do_death_spell(spell, mode); break;
-    case REALM_TRUMP:    result = do_trump_spell(spell, mode); break;
-    case REALM_ARCANE:   result = do_arcane_spell(spell, mode); break;
-    case REALM_CRAFT:    result = do_craft_spell(spell, mode); break;
-    case REALM_DAEMON:   result = do_daemon_spell(spell, mode); break;
-    case REALM_CRUSADE:  result = do_crusade_spell(spell, mode); break;
-    case REALM_MUSIC:    result = do_music_spell(spell, mode); break;
-    case REALM_HISSATSU: result = do_hissatsu_spell(spell, mode); break;
-    case REALM_HEX:      result = do_hex_spell(spell, mode); break;
-    case REALM_NECROMANCY: result = do_necromancy_spell(spell, mode); break;
-    case REALM_ARMAGEDDON: result = do_armageddon_spell(spell, mode); break;
-    case REALM_BURGLARY: result = do_burglary_spell(spell, mode); break;
+    case REALM_LIFE:     result = do_life_spell(spell, mode, plev); break;
+    case REALM_SORCERY:  result = do_sorcery_spell(spell, mode, plev); break;
+	case REALM_NATURE:   result = do_nature_spell(spell, mode, plev); break;
+	case REALM_CHAOS:    result = do_chaos_spell(spell, mode, plev); break;
+	case REALM_DEATH:    result = do_death_spell(spell, mode, plev); break;
+	case REALM_TRUMP:    result = do_trump_spell(spell, mode, plev); break;
+	case REALM_ARCANE:   result = do_arcane_spell(spell, mode, plev); break;
+	case REALM_CRAFT:    result = do_craft_spell(spell, mode, plev); break;
+	case REALM_DAEMON:   result = do_daemon_spell(spell, mode, plev); break;
+	case REALM_CRUSADE:  result = do_crusade_spell(spell, mode, plev); break;
+	case REALM_MUSIC:    result = do_music_spell(spell, mode, plev); break;
+    case REALM_HISSATSU: result = do_hissatsu_spell(spell, mode, plev); break;
+	case REALM_HEX:      result = do_hex_spell(spell, mode, plev); break;
+    case REALM_NECROMANCY: result = do_necromancy_spell(spell, mode, plev); break;
+	case REALM_ARMAGEDDON: result = do_armageddon_spell(spell, mode, plev); break;
+    case REALM_BURGLARY: result = do_burglary_spell(spell, mode, plev); break;
     }
 
     _current_realm_hack = 0;

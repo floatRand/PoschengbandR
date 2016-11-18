@@ -99,8 +99,10 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
 
     /* No "okay" spells */
     if (!okay) return (FALSE);
-    if (((use_realm) != p_ptr->realm1) && ((use_realm) != p_ptr->realm2) && (p_ptr->pclass != CLASS_SORCERER) && (p_ptr->pclass != CLASS_RED_MAGE)) return FALSE;
-    if (((p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE)) && !is_magic(use_realm)) return FALSE;
+    if (((use_realm) != p_ptr->realm1) && ((use_realm) != p_ptr->realm2) 
+		&& !class_doesnt_study(p_ptr->pclass)) return FALSE;
+	if (p_ptr->pclass == CLASS_FREELANCER && !freelancer_can_use_realm(use_realm)) return FALSE;
+	if (class_doesnt_study(p_ptr->pclass) && !is_magic(use_realm)) return FALSE;
     if ((p_ptr->pclass == CLASS_RED_MAGE) && ((use_realm) != REALM_ARCANE) && (sval > 1)) return FALSE;
 
     /* Assume cancelled */
@@ -417,7 +419,7 @@ void do_cmd_browse(void)
     cptr q, s;
 
     /* Warriors are illiterate */
-    if (!(p_ptr->realm1 || p_ptr->realm2) && (p_ptr->pclass != CLASS_SORCERER) && (p_ptr->pclass != CLASS_RED_MAGE))
+	if (!(p_ptr->realm1 || p_ptr->realm2) && !class_doesnt_study(p_ptr->pclass))
     {
         msg_print("You cannot read books!");
 
@@ -963,7 +965,7 @@ void do_cmd_cast(void)
     caster_info    *caster_ptr = get_caster_info();
 
     /* Require spell ability */
-    if (!p_ptr->realm1 && (p_ptr->pclass != CLASS_SORCERER) && (p_ptr->pclass != CLASS_RED_MAGE))
+	if (!p_ptr->realm1 && !class_doesnt_study(p_ptr->pclass))
     {
         msg_print("You cannot cast spells!");
 
@@ -1051,7 +1053,7 @@ void do_cmd_cast(void)
     /* Access the item's sval */
     sval = o_ptr->sval;
 
-    if ((p_ptr->pclass != CLASS_SORCERER) && (p_ptr->pclass != CLASS_RED_MAGE) && (o_ptr->tval == REALM2_BOOK)) increment = 32;
+	if (!class_doesnt_study(p_ptr->pclass) && (o_ptr->tval == REALM2_BOOK)) increment = 32;
 
 
     /* Track the object kind */
@@ -1060,7 +1062,7 @@ void do_cmd_cast(void)
     /* Hack -- Handle stuff */
     handle_stuff();
 
-    if ((p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE))
+	if (class_doesnt_study(p_ptr->pclass))
         realm = o_ptr->tval - TV_LIFE_BOOK + 1;
     else if (increment) realm = p_ptr->realm2;
     else realm = p_ptr->realm1;
@@ -1273,8 +1275,7 @@ msg_print("An infernal sound echoed.");
         if (!(increment ?
             (p_ptr->spell_worked2 & (1L << spell)) :
             (p_ptr->spell_worked1 & (1L << spell)))
-            && (p_ptr->pclass != CLASS_SORCERER)
-            && (p_ptr->pclass != CLASS_RED_MAGE))
+			&& !class_doesnt_study(p_ptr->pclass))
         {
             int e = s_ptr->sexp;
 

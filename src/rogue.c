@@ -243,7 +243,7 @@ static cptr _rogue_negotiate(void)
 }
 
 
-cptr do_burglary_spell(int spell, int mode)
+cptr do_burglary_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
@@ -251,7 +251,6 @@ cptr do_burglary_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
     bool fail = (mode == SPELL_FAIL) ? TRUE : FALSE;
 
-    int plev = p_ptr->lev;
     int rad = DETECT_RAD_DEFAULT;
     int dir;
 

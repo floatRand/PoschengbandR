@@ -3366,7 +3366,7 @@ s16b spell_chance(int spell, int use_realm)
     if (chance > 95) chance = 95;
 
     if ((use_realm == p_ptr->realm1) || (use_realm == p_ptr->realm2)
-        || (p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE))
+		|| (class_doesnt_study(p_ptr->pclass)))
     {
         s16b exp = experience_of_spell(spell, use_realm);
         if (exp >= SPELL_EXP_EXPERT) chance--;
@@ -3410,8 +3410,8 @@ bool spell_okay(int spell, bool learned, bool study_pray, int use_realm)
         return (FALSE);
     }
 
-    if (p_ptr->pclass == CLASS_SORCERER) return (TRUE);
-    if (p_ptr->pclass == CLASS_RED_MAGE) return (TRUE);
+	if (class_doesnt_study(p_ptr->pclass)) return TRUE;
+
 
     /* Spell is learned */
     if ((use_realm == p_ptr->realm2) ?
@@ -3464,7 +3464,7 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
     put_str("Name", display.y, display.x + 5);
     put_str(buf, display.y, display.x + 29);
 
-    if ((p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE)) increment = 0;
+	if (class_doesnt_study(p_ptr->pclass)) increment = 0;
     else if (use_realm == p_ptr->realm1) increment = 0;
     else if (use_realm == p_ptr->realm2) increment = 32;
 
@@ -3537,7 +3537,7 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
         line_attr = TERM_WHITE;
 
         /* Analyze the spell */
-        if ((p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE))
+        if (class_doesnt_study(p_ptr->pclass))
         {
             if (s_ptr->slevel > p_ptr->max_plv)
             {

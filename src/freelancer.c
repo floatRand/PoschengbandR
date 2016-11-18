@@ -18,6 +18,7 @@ And hey, only purchases need to be saved!
 */
 
 static skills_t _skill_boost = { 0, 0, 0, 0, 0, 0, 0, 0 };
+static skills_t _base_skills = { 0, 0, 0, 0, 0, 0, 0, 0 }; // for sake of displaying base levels.
 
 // the skills are represented in different order. Basically just points into right directions....
 #define _SKILL_MAX 8 
@@ -71,23 +72,23 @@ typedef struct {
 #define _FL_MAX_PROF				 16 // maximum.
 
 static fl_proficiency _proficiencies[_FL_MAX_PROF] = {
-//IDX,cost, leveling cost, lv, mxlv, minimum plv
-{ _FL_LEARN_REALM,				1, 1, 1, 1, "Learn a magic realm"},
-{ _FL_LEARN_WEAPON,				1, 1, 1, 1, "Learn a weapon group skill" },
-{ _FL_LEARN_DUAL_WIELDING,		1, 1, 1, 1, "Learn dual wielding skill" },
-{ _FL_LEARN_RIDING,				1, 1, 1, 1, "Learn riding skill" },
-{ _FL_LEARN_MARTIAL_ARTS,		1, 1, 1, 1, "Learn martial arts" },
+//IDX,cost, leveling cost, mxlv, minimum plv
+{ _FL_LEARN_REALM,				1, 1, 2, 1, "Learn a magic realm"},
+{ _FL_LEARN_WEAPON,				1, 1, 2, 1, "Learn a weapon group skill" },
+{ _FL_LEARN_DUAL_WIELDING,		1, 1, 3, 1, "Learn dual wielding skill" },
+{ _FL_LEARN_RIDING,				1, 1, 3, 1, "Learn riding skill" },
+{ _FL_LEARN_MARTIAL_ARTS,		1, 1, 3, 1, "Learn martial arts" },
 
-{ _FL_BOOST_HP,					1, 1, 1, 1, "Boost HP" },
-{ _FL_BOOST_SP,					1, 1, 1, 1, "Boost SP" },
-{ _FL_BOOST_MELEE,				1, 1, 1, 1, "Boost melee attacks" },
-{ _FL_BOOST_BLOWS,				1, 1, 1, 1, "Boost number of attacks" },
-{ _FL_BOOST_RANGED,				1, 1, 1, 1, "Boost ranged attacks" },
-{ _FL_BOOST_MAGIC,				1, 1, 1, 1, "Boost casting" },
-{ _FL_BOOST_SKILL,				1, 1, 1, 1, "Boost invidual skill" },
+{ _FL_BOOST_HP,					1, 1, 5, 1, "Boost HP" },
+{ _FL_BOOST_SP,					1, 1, 5, 1, "Boost SP" },
+{ _FL_BOOST_MELEE,				1, 1, 5, 1, "Boost melee attacks" },
+{ _FL_BOOST_BLOWS,				1, 1, 5, 1, "Boost number of attacks" },
+{ _FL_BOOST_RANGED,				1, 1, 5, 1, "Boost ranged attacks" },
+{ _FL_BOOST_MAGIC,				1, 1, 5, 1, "Boost casting" },
+{ _FL_BOOST_SKILL,				1, 1, 5, 1, "Boost invidual skill" },
 
-{ _FL_F_SNEAK_ATTACKS,			1, 1, 1, 1, "Gain sneak attacking" },
-{ _FL_F_HEAVY_ARMOR_CASTING,	1, 1, 1, 1, "Improve casting in heavy armour" },
+{ _FL_F_SNEAK_ATTACKS,			1, 1, 3, 1, "Gain sneak attacking" },
+{ _FL_F_HEAVY_ARMOR_CASTING,	1, 1, 3, 1, "Improve casting in heavy armour" },
 { _FL_F_AUTO_IDENTIFY,			1, 1, 1, 1, "Identify items automatically" },
 
 { _FL_NULL, 0,0,0,0, "" } // for bad returns.
@@ -99,24 +100,24 @@ typedef struct {
 	int cast_stat;
 } _fl_realm_info, *_fl_realm_info_ptr;
 
-// specialty realms require the actual casting stat in order. Cost -1 is NO_BUY
 static _fl_realm_info _realmInfo[MAX_REALM] = {
-	{ REALM_NATURE,		1, -1 },
-	{ REALM_CRAFT,		1, -1 },
-	{ REALM_DAEMON,		1, -1 },
+	{ REALM_NONE,		1, -1 },
 	{ REALM_LIFE,		1, -1 },
-	{ REALM_DEATH,		1, -1 },
+	{ REALM_SORCERY,	1, -1 },
+	{ REALM_NATURE,		1, -1 },
 	{ REALM_CHAOS,		1, -1 },
 	{ REALM_TRUMP,		1, -1 },
-	{ REALM_CRUSADE, 	1, -1 },
-	{ REALM_HISSATSU,	1, A_WIS },
-	{ REALM_MUSIC,		-1, A_CHR },
-	{ REALM_HEX,		-1, A_INT }, 
-	{ REALM_NECROMANCY, 1, -1 },
-	{ REALM_RAGE,		1, -1 },
 	{ REALM_ARCANE,		1, -1 },
+	{ REALM_CRAFT, 		1, -1 },
+	{ REALM_DAEMON,		1, -1 },
+	{ REALM_CRUSADE,	1, -1 },
+	{ REALM_NECROMANCY,	1, -1 }, 
+	{ REALM_ARMAGEDDON, 1, -1 },
+	{ REALM_MUSIC,		1, A_CHR },
+	{ REALM_HISSATSU,	1, A_WIS },
+	{ REALM_HEX,		-1, A_INT },
+	{ REALM_RAGE,		1, A_STR }, 
 	{ REALM_BURGLARY,	1, A_DEX },
-	{ REALM_ARMAGEDDON, 1, -1 }, 
 };
  // +1 gives max lv 3, +2 give max lv 4
 typedef struct {
@@ -176,33 +177,30 @@ fl_proficiency *_fetch_proficiency(int prof){
 	
 }
 
+void _update_skills(void){
+	skills_init(&_skill_boost);
+	_skill_boost.dev = _get_skill_boost_amt(_SKILL_DEV);
+	_skill_boost.dis = _get_skill_boost_amt(_SKILL_DIS);
+	_skill_boost.fos = _get_skill_boost_amt(_SKILL_FOS);
+	_skill_boost.sav = _get_skill_boost_amt(_SKILL_SAV);
+	_skill_boost.srh = _get_skill_boost_amt(_SKILL_SRH);
+	_skill_boost.stl = _get_skill_boost_amt(_SKILL_STL);
+	_skill_boost.thb = _get_skill_boost_amt(_SKILL_THB);
+	_skill_boost.thn = _get_skill_boost_amt(_SKILL_THN);
+
+}
+
+void freelancer_skill_boost(void){
+	_update_skills();
+	_base_skills = p_ptr->skills; // hopefully the mutability doesn't fuck me over.
+
+	skills_add(&p_ptr->skills, &_skill_boost);
+}
+
 int _get_skill_boost_amt(int skillID){
 	if (skillID < 0 || skillID>7) return 0;
 	else return _skillLevels[skillID] * _skillSteps[skillID];
 	return 0;
-}
-
-static void _birth(void){
-	/* Init all. */
-	int i = 0; 
-	_prof_points = 1; // beanie points;
-
-	// initialize, reset, all that jazz.
-	for (i = 0; i < _FL_MAX_BUYS; i++){
-		_fl_purchases[i].lv = -1;
-		_fl_purchases[i].profID = _FL_NULL;
-		_fl_purchases[i].subID = -1;
-	}
-	// 0 out levels
-	for (i = 0; i < _FL_MAX_PROF; i++) { _profLevels[i] = 0; }
-	for (i = 0; i < MAX_REALM; i++) { _realmLevels[i] = 0; }
-	for (i = 0; i < _FL_TVAL_WPNMAX; i++) { _wpnLevels[i] = 0; }
-
-	// and skill boosts as well.
-	skills_init(&_skill_boost);
-	for (i = 0; i < _SKILL_MAX; i++) { _skillLevels[i] = 0; }
-
-	_p_ct = 0;
 }
 
 static int _calc_Upgrade_Cost(int i){
@@ -332,7 +330,8 @@ static int _displaySkills(rect_t display, u16b mode)
 	int     padding, max_o_len = 20;
 	doc_ptr doc = NULL;
 	skill_desc_t    desc = { 0 }, descB = { 0 };
-	skills_t        skills = p_ptr->skills;
+	skills_t        skills = _base_skills;
+	skills_t		skills_b;
 
 	padding = 5;   /* leading " a) " + trailing " " */
 	padding += 12; /* " Count " */
@@ -340,41 +339,43 @@ static int _displaySkills(rect_t display, u16b mode)
 	if (max_o_len + padding > display.cx)
 		max_o_len = display.cx - padding;
 
+	_update_skills();
+	skills_b = _skill_boost;
 	/* Display */
 	doc = doc_alloc(display.cx);
 	doc_insert(doc, "<style:table>\n");
 	
 	doc_printf(doc, "<tab:2> %c) ", I2A(0));
-	desc = skills_describe(skills.thn, 12); descB = skills_describe(_get_skill_boost_amt(_SKILL_THN), 12);
-	doc_printf(doc, "   Melee      : <color:%c>%s</color> (boost: <color:%c>%s</color>)\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc);
+	desc = skills_describe(skills.thn, 12); descB = skills_describe(skills_b.thn, 12);
+	doc_printf(doc, " Melee      : <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_THN]);
 
 	doc_printf(doc, "<tab:2> %c) ", I2A(1));
-	desc = skills_describe(skills.thb, 12); descB = skills_describe(_get_skill_boost_amt(_SKILL_THB), 12);
-	doc_printf(doc, "   Ranged     : <color:%c>%s</color> (boost: <color:%c>%s</color>)\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc);
+	desc = skills_describe(skills.thb, 12); descB = skills_describe(skills_b.thb, 12);
+	doc_printf(doc, " Ranged     : <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_THB]);
 
 	doc_printf(doc, "<tab:2> %c) ", I2A(2));
-	desc = skills_describe(skills.sav, 7); descB = skills_describe(_get_skill_boost_amt(_SKILL_SAV), 7);
-	doc_printf(doc, "   SavingThrow: <color:%c>%s</color> (boost: <color:%c>%s</color>)\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc);
+	desc = skills_describe(skills.sav, 7); descB = skills_describe(skills_b.sav, 7);
+	doc_printf(doc, " SavingThrow: <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_SAV]);
 
 	doc_printf(doc, "<tab:2> %c) ", I2A(3));
-	desc = skills_describe(skills.stl, 1); descB = skills_describe(_get_skill_boost_amt(_SKILL_STL), 1);
-	doc_printf(doc, "   Stealth    : <color:%c>%s</color> (boost: <color:%c>%s</color>)\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc);
+	desc = skills_describe(skills.stl, 1); descB = skills_describe(skills_b.stl, 1);
+	doc_printf(doc, " Stealth    : <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_STL]);
 
 	doc_printf(doc, "<tab:2> %c) ", I2A(4));
-	desc = skills_describe(skills.fos, 6); descB = skills_describe(_get_skill_boost_amt(_SKILL_FOS), 6);
-	doc_printf(doc, "   Perception : <color:%c>%s</color> (boost: <color:%c>%s</color>)\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc);
+	desc = skills_describe(skills.fos, 6); descB = skills_describe(skills_b.fos, 6);
+	doc_printf(doc, " Perception : <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_FOS]);
 
 	doc_printf(doc, "<tab:2> %c) ", I2A(5));
-	desc = skills_describe(skills.srh, 6); descB = skills_describe(_get_skill_boost_amt(_SKILL_SRH), 6);
-	doc_printf(doc, "   Searching  : <color:%c>%s</color> (boost: <color:%c>%s</color>)\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc);
+	desc = skills_describe(skills.srh, 6); descB = skills_describe(skills_b.srh, 6);
+	doc_printf(doc, " Searching  : <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_SRH]);
 
 	doc_printf(doc, "<tab:2> %c) ", I2A(6));
-	desc = skills_describe(skills.dis, 8); descB = skills_describe(_get_skill_boost_amt(_SKILL_DIS), 8);
-	doc_printf(doc, "   Disarming  : <color:%c>%s</color> (boost: <color:%c>%s</color>)\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc);
+	desc = skills_describe(skills.dis, 8); descB = skills_describe(skills_b.dis, 8);
+	doc_printf(doc, " Disarming  : <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_DIS]);
 
 	doc_printf(doc, "<tab:2> %c) ", I2A(7));
-	desc = skills_describe(skills.dev, 6); descB = skills_describe(_get_skill_boost_amt(_SKILL_DEV), 6);
-	doc_printf(doc, "   Device     : <color:%c>%s</color> (boost: <color:%c>%s</color>)\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc);
+	desc = skills_describe(skills.dev, 6); descB = skills_describe(skills_b.dev, 6);
+	doc_printf(doc, " Device     : <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_DEV]);
 
 	doc_printf(doc, "\nProficiency points: %d\n", _prof_points);
 	doc_insert(doc, "</style>");
@@ -395,6 +396,7 @@ static void _displayProficiencies(rect_t display, u16b mode)
 	doc_ptr doc = NULL;
 	fl_proficiency *list = _proficiencies;
 	int DC = 1;
+	bool displayLvs = TRUE;
 
 	padding = 5;   /* leading " a) " + trailing " " */
 	padding += 12; /* " Count " */
@@ -433,26 +435,31 @@ static void _displayProficiencies(rect_t display, u16b mode)
 
 		if (prof_ptr->prof != _FL_NULL)
 		{
-			int prlv = fl_GetProfLevel(_FL_LEARN_REALM, 0);
+			int prlv = fl_GetProfLevel(prof_ptr->prof, 0);
+			int prmaxlv = prof_ptr->maxLevel;
+			displayLvs = !(prof_ptr->prof == _FL_LEARN_REALM || prof_ptr->prof == _FL_LEARN_WEAPON || prof_ptr->prof == _FL_BOOST_SKILL);
+
 			int cost = prof_ptr->cost;
 			if (prlv > 1) cost = _calc_Upgrade_Cost(i);
 
 				if (prof_ptr->minPLev <= p_ptr->lev){
 					if (prlv == 0){ // display unpurchased ones with white 
 						doc_insert_text(doc, TERM_L_WHITE, prof_ptr->name);
-						if (i > _FL_LEARN_WEAPON && i!= _FL_BOOST_SKILL) doc_printf(doc, "<tab:%d>Unpurchased, Cost:%2d%\n",
+						if (displayLvs) doc_printf(doc, "<tab:%d>Unpurchased, Cost:%2d%\n",
 							display.cx - 28, cost);
 						else doc_insert_text(doc, TERM_L_DARK, "\n");
 					}
 					else if (prlv > 0 && prlv < prof_ptr->maxLevel){ // dgreen
-						doc_insert_text(doc, TERM_GREEN, prof_ptr->name);
-						doc_printf(doc, "<tab:%d><color:g>Level: %2d%, Cost:%2d%</color>\n",
+						doc_insert_text(doc, TERM_L_GREEN, prof_ptr->name);
+						if (displayLvs) doc_printf(doc, "<tab:%d><color:G>Level: %2d%, Cost:%2d%</color>\n",
 							display.cx - 28, cost);
+						else doc_insert_text(doc, TERM_L_DARK, "\n");
 					}
 					else { // capped
 						doc_insert_text(doc, TERM_YELLOW, prof_ptr->name);
-						doc_printf(doc, "<tab:%d><color:y>Max level</color>\n",
+						if (displayLvs) doc_printf(doc, "<tab:%d><color:y>Max level</color>\n",
 							display.cx - 28);
+						else doc_insert_text(doc, TERM_L_DARK, "\n");
 					}
 				}
 				else{
@@ -474,41 +481,87 @@ static void _displayProficiencies(rect_t display, u16b mode)
 	doc_free(doc);
 }
 
+void freelancer_count_buys(void){
+	int i = 0;
+
+	// 0 out.
+	for (i = 0; i < _FL_MAX_PROF; i++) { _profLevels[i] = 0; }
+	for (i = 0; i < MAX_REALM; i++) { _realmLevels[i] = 0; }
+	for (i = 0; i < _FL_TVAL_WPNMAX; i++) { _wpnLevels[i] = 0; }
+	for (i = 0; i < _SKILL_MAX; i++) { _skillLevels[i] = 0; }
+
+		for (i = 0; i < _FL_MAX_BUYS; i++){
+			if (_fl_purchases[i].lv >= p_ptr->lev) {
+				switch( _fl_purchases[i].profID ){
+					case _FL_LEARN_REALM: _realmLevels[_fl_purchases[i].subID]++; break;
+					case _FL_LEARN_WEAPON: _wpnLevels[_fl_purchases[i].subID]++; break;
+					case _FL_BOOST_SKILL:_skillLevels[_fl_purchases[i].subID]++; break;
+					default: _profLevels[_fl_purchases[i].profID]++; break;
+				}	
+			} else if (_fl_purchases[i].profID == _FL_NULL) break; // the way they are done, there shouldn't be nulls inbetween...
+		}
+
+}
+
+int freelancer_spell_power(int use_realm){
+
+	if (use_realm < 0 || use_realm >= MAX_REALM) return 0;
+	if (_realmLevels[use_realm] == 0) return 0;
+
+			return (p_ptr->lev * 10) / (15 - _realmLevels[use_realm]*2);
+}
 
 cptr _grantProficiency(int prof, int sub_choice, int *res){
 	int getCost = -1;
-	int curLv = 0;
+	int curLv = 0, minPlev = 0;
+	bool maxedOut = FALSE;
+	bool ok = FALSE;
 	cptr profName;
+
+	res = -1;
 	// Basically check if you are either:
 	// 1. Have enough points for buying
 	// 2. Are high level enough.
+	// 3. Are already maxed out.
 	// Also, a method of tracking purchases is needed so develeveling works properly. 
 	bool upgrading = FALSE; // this is if we are not buying
 
 	if (prof == _FL_LEARN_REALM && (sub_choice >= 0 && sub_choice < MAX_REALM)){
 		getCost = _realmInfo[sub_choice].cost;
 		profName = realm_names[_realmInfo[sub_choice].realmID];
-		_realmLevels[sub_choice]++;
+			if (_realmLevels[sub_choice] >= _proficiencies[prof].maxLevel) maxedOut = TRUE;
+			ok = TRUE;
 	}
 	else if (prof == _FL_LEARN_WEAPON && (sub_choice >= 0 && sub_choice < _FL_TVAL_WPNMAX)){
 		getCost = _wpn_profs[sub_choice].cost;
 		profName = _wpn_profs[sub_choice].name;
-		_wpnLevels[sub_choice]++;
+			if (_wpnLevels[sub_choice] >= _proficiencies[prof].maxLevel) maxedOut = TRUE;
+			ok = TRUE;
 	}
 	else if (prof == _FL_BOOST_SKILL && (sub_choice >= 0 && sub_choice < _SKILL_MAX)){
 		getCost = _skillCosts[sub_choice];
 		profName = _skillNames[sub_choice];
-
-		_skillLevels[sub_choice]++;
+			if (_skillLevels[sub_choice] >= _proficiencies[prof].maxLevel) maxedOut = TRUE;
+			ok = TRUE;
 	}
 	else {
 			getCost = _proficiencies[prof].cost;
-			profName = "wooo";
-	
+			profName = _proficiencies[prof].name;
+			if (_profLevels[prof] >= _proficiencies[prof].maxLevel) maxedOut = TRUE;
+			ok = TRUE;
 	}
+	// check if it is legit choice.
+	if (getCost > _prof_points) return "You don't have enough proficiency points.";
+	else if (maxedOut) return "The proficiency is already at max level.";
+	else if (_p_ct >= _FL_MAX_BUYS - 2) return "You cannot buy more proficiencies. Perhaps buy a potion of new life?";
 
-	res = -1;
-
+	if(ok){
+		_fl_purchases[_p_ct].lv = p_ptr->lev; // mark down level gained
+		_fl_purchases[_p_ct].profID = prof;  // mark profession
+		_fl_purchases[_p_ct].subID = sub_choice; // mark possible sub-choice
+		_p_ct++;
+		res = 1;
+	}
 	return profName;
 }
 
@@ -533,6 +586,8 @@ int _chooseProf(int options)
 	// oh christ this thing makes my heads spin...
 	while (!all_done){ // main loop begin
 
+		freelancer_count_buys(); // update things. 
+		chosen_prof = _FL_NULL; sub_choice = -1;
 		// first block, getting the proficiency
 		while (1)
 		{
@@ -586,7 +641,6 @@ int _chooseProf(int options)
 		}
 		else if (chosen_prof == _FL_BOOST_SKILL){
 			while (1){
-
 				string_clear(prompt);
 				string_printf(prompt, "Boost which skill? :");
 				prt(string_buffer(prompt), 0, 0);
@@ -626,8 +680,8 @@ int _chooseProf(int options)
 	screen_load();
 	string_free(prompt);
 
-
-
+	p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
+	update_stuff();
 	return chosen_prof;
 }
 
@@ -651,6 +705,28 @@ static void _choose_prof_spell(int cmd, variant *res)
 	}
 }
 
+static void _birth(void){
+	/* Init all. */
+	int i = 0;
+	_prof_points = 1; // beanie points;
+
+	// initialize, reset, all that jazz.
+	for (i = 0; i < _FL_MAX_BUYS; i++){
+		_fl_purchases[i].lv = -1;
+		_fl_purchases[i].profID = _FL_NULL;
+		_fl_purchases[i].subID = -1;
+	}
+	_p_ct = 0; // SUPER-IMPORTANT
+
+	// 0 out levels
+	for (i = 0; i < _FL_MAX_PROF; i++) { _profLevels[i] = 0; }
+	for (i = 0; i < MAX_REALM; i++) { _realmLevels[i] = 0; }
+	for (i = 0; i < _FL_TVAL_WPNMAX; i++) { _wpnLevels[i] = 0; }
+
+	// and skill boosts as well.
+	skills_init(&_skill_boost);
+	for (i = 0; i < _SKILL_MAX; i++) { _skillLevels[i] = 0; }
+}
 
 static int _get_powers(spell_info* spells, int max)
 {
@@ -677,7 +753,7 @@ int _castingStat(void){
 
 
 int _minFail(void){
-	//return MAX(1, _minFailRate);
+	return 5;
 }
 
 int _castWeightLimit(void){
@@ -692,10 +768,6 @@ u32b _casterFlags(void){
 	return castFlags;
 }
 
-void freelancer_skill_boost(void){
-	skills_add(&p_ptr->skills, &_skill_boost);
-}
-
 int freelancer_sp_boost(void){
 	if (fl_GetProfLevel(_FL_BOOST_SP, 0) > 0){
 		return fl_GetProfLevel(_FL_BOOST_SP, 0)*p_ptr->lev; // 1 per level.
@@ -705,7 +777,7 @@ int freelancer_sp_boost(void){
 
 int freelancer_hp_boost(void){
 	if (fl_GetProfLevel(_FL_BOOST_HP, 0) > 0){
-		return fl_GetProfLevel(_FL_BOOST_HP, 0)*p_ptr->lev*22; // 1 per level.
+		return fl_GetProfLevel(_FL_BOOST_HP, 0)*p_ptr->lev*2; // 1 per level.
 	}
 	return 0;
 }
@@ -714,10 +786,20 @@ int freelancer_stab_level(){
 	int stabbylv = fl_GetProfLevel(_FL_F_SNEAK_ATTACKS, 0);
 	return stabbylv;
 }
+
+bool freelancer_can_use_realm(int realm){
+
+	if (_realmLevels[realm] > 0) return TRUE;
+	return FALSE;
+}
  
 static void _calc_bonuses(void)
 {
+	freelancer_count_buys(); // COUNT THEM!
+	freelancer_skill_boost();
+
 	if (fl_GetProfLevel(_FL_F_AUTO_IDENTIFY, 0) > 0) p_ptr->auto_id = TRUE;
+
 }
 
 static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
@@ -730,11 +812,11 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 	int meleeBoost = fl_GetProfLevel(_FL_BOOST_MELEE, 0);
 	int blowBoost = fl_GetProfLevel(_FL_BOOST_BLOWS, 0);
 	if (meleeBoost > 0){
-		info_ptr->to_d += p_ptr->lev / (9 - meleeBoost);
-		info_ptr->dis_to_d += p_ptr->lev / (9 - meleeBoost);
+		info_ptr->to_d += p_ptr->lev / (10 - meleeBoost);
+		info_ptr->dis_to_d += p_ptr->lev / (10 - meleeBoost);
 	}
 
-	if(blowBoost>0) info_ptr->xtra_blow += py_prorata_level_aux(blowBoost * 50, 0, 1, 1);
+	if(blowBoost>0) info_ptr->xtra_blow += py_prorata_level_aux(( p_ptr->lev * blowBoost)/4, 0, 1, 1);
 
 }
 
@@ -743,7 +825,8 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 	int rangedBoost = fl_GetProfLevel(_FL_BOOST_RANGED, 0);
 	// we don't really care what we shoot with, unlike rangers. We do worse, though.
 	if (rangedBoost > 0){
-		info_ptr->num_fire += (p_ptr->lev * 50 + rangedBoost * 25) / 50;
+		// not sure how to handle this yet, actually.
+		//info_ptr->num_fire += (p_ptr->lev * 50 + rangedBoost * 10) / 50;
 	}
 }
 

@@ -1815,6 +1815,7 @@ extern bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note);
 extern void mon_check_kill_unique(int m_idx);
 extern void resize_map(void);
 extern void redraw_window(void);
+extern bool class_doesnt_study(int class_idx);
 
 /* Display
    Various regions of the terminal are reserved for different things.
@@ -2395,9 +2396,10 @@ extern void alchemist_super_potion_effect(int sval);
 
 /* freelancer.c */
 extern int freelancer_stab_level(void);
-extern void freelancer_skill_boost(void);
 extern int freelancer_hp_boost(void);
 extern int freelancer_sp_boost(void);
+extern bool freelancer_can_use_realm(int realm);
+extern int freelancer_spell_power(int use_realm);
 
 extern class_t *maledict_get_class(void);
 extern bool maledict_ty_protection(void);
@@ -2491,7 +2493,7 @@ extern class_t *ranger_get_class(void);
 extern class_t *red_mage_get_class(void);
 
 extern class_t *rogue_get_class(void);
-extern cptr     do_burglary_spell(int spell, int mode);
+extern cptr     do_burglary_spell(int spell, int mode, int plev);
 
 extern bool     rune_add(object_type *o_ptr, int which, bool prompt);
 extern cptr     rune_desc(int which);
@@ -2522,11 +2524,11 @@ extern class_t *warrior_mage_get_class(void);
 extern void     weaponsmith_object_flags(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE]);
 extern class_t *weaponsmith_get_class(void);
 
-extern cptr do_hissatsu_spell(int spell, int mode);
+extern cptr do_hissatsu_spell(int spell, int mode, int plev);
 
 /* necromancer.c */
 extern bool     repose_of_the_dead;
-extern cptr     do_necromancy_spell(int spell, int mode);
+extern cptr     do_necromancy_spell(int spell, int mode, int plev);
 extern class_t *necromancer_get_class(void);
 extern void     on_p_hit_m(int m_idx);
 

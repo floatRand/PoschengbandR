@@ -5526,7 +5526,7 @@ void display_koff(int k_idx)
     }
     else
     {
-        if ((p_ptr->pclass != CLASS_SORCERER) && (p_ptr->pclass != CLASS_RED_MAGE)) return;
+		if (!class_doesnt_study(p_ptr->pclass)) return;
         if (!is_magic(use_realm)) return;
         if ((p_ptr->pclass == CLASS_RED_MAGE) && (use_realm != REALM_ARCANE) && (sval > 1)) return;
     }

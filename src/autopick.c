@@ -705,17 +705,13 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         if (o_ptr->tval != TV_ARCANE_BOOK) name = FALSE;
     }
 
-    if (REALM1_BOOK == o_ptr->tval &&
-        p_ptr->pclass != CLASS_SORCERER &&
-        p_ptr->pclass != CLASS_RED_MAGE)
+	if (REALM1_BOOK == o_ptr->tval && !class_doesnt_study(p_ptr->pclass))
     {
         ADD_FLG(FLG_REALM1);
         name = FALSE;
     }
 
-    if (REALM2_BOOK == o_ptr->tval &&
-        p_ptr->pclass != CLASS_SORCERER &&
-        p_ptr->pclass != CLASS_RED_MAGE)
+	if (REALM2_BOOK == o_ptr->tval && !class_doesnt_study(p_ptr->pclass))
     {
         ADD_FLG(FLG_REALM2);
         name = FALSE;

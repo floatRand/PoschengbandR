@@ -1056,7 +1056,7 @@ static void _dump_book(doc_ptr doc, int realm, int book)
     int          i, increment = 64;
     caster_info *caster_ptr = get_caster_info();
 
-    if ((p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE)) increment = 0;
+	if (class_doesnt_study(p_ptr->pclass)) increment = 0;
     else if (realm == p_ptr->realm1) increment = 0;
     else if (realm == p_ptr->realm2) increment = 32;
 
@@ -1113,7 +1113,7 @@ static void _dump_book(doc_ptr doc, int realm, int book)
         strcpy(info, do_spell(realm, s_idx, SPELL_INFO));
         comment = info;
 
-        if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE)
+		if (class_doesnt_study(p_ptr->pclass))
         {
             if (s_ptr->slevel > p_ptr->max_plv)
             {
@@ -1209,7 +1209,7 @@ static bool _has_spells(int realm, int book)
 
         if (s_ptr->slevel >= 99) continue;
 
-        if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE)
+		if (class_doesnt_study(p_ptr->pclass))
         {
             if (s_ptr->slevel > p_ptr->max_plv) continue;
             else if (s_ptr->slevel > p_ptr->lev) return TRUE;
@@ -1260,7 +1260,7 @@ static void _dump_realm(doc_ptr doc, int realm)
 
         /* Red Mages and Sorcerers don't learn spells, so make sure the user actually
            has the book in their pack (otherwise we spoil ... ) */
-        if (p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_SORCERER)
+		if (class_doesnt_study(p_ptr->pclass))
             dump = _has_book(realm, i);
         else
             dump = _has_spells(realm, i) || _has_book(realm, i);

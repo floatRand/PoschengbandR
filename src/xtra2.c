@@ -5841,3 +5841,9 @@ int spell_exp_level(int spell_exp)
     else if (spell_exp < SPELL_EXP_MASTER) return EXP_LEVEL_EXPERT;
     else return EXP_LEVEL_MASTER;
 }
+
+bool class_doesnt_study(int class_idx){
+
+	return (class_idx == CLASS_RED_MAGE || class_idx == CLASS_SORCERER || class_idx == CLASS_FREELANCER);
+	
+}

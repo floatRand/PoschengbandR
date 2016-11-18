@@ -3,14 +3,13 @@
 /***********************************************************************
  * Samurai Spells (Hissatsu)
  ***********************************************************************/
-cptr do_hissatsu_spell(int spell, int mode)
+cptr do_hissatsu_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = p_ptr->lev;
 
     switch (spell)
     {

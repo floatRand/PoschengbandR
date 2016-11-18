@@ -179,15 +179,13 @@ static void _necro_do_summon(int what, int num, bool fail)
 /**********************************************************************
  * Spells: Note, we are still using the old "Book Spell System"
  **********************************************************************/
-cptr do_necromancy_spell(int spell, int mode)
+cptr do_necromancy_spell(int spell, int mode, int plev)
 {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
     bool fail = (mode == SPELL_FAIL) ? TRUE : FALSE;
-
-    int plev = p_ptr->lev;
 
     switch (spell)
     {

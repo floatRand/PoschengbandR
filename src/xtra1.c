@@ -3457,7 +3457,6 @@ void calc_bonuses(void)
     /* Clear the stat modifiers */
     for (i = 0; i < 6; i++) p_ptr->stat_add[i] = 0;
 
-
     /* Clear the Displayed/Real armor class */
     p_ptr->dis_ac = p_ptr->ac = 0;
 
@@ -3493,6 +3492,7 @@ void calc_bonuses(void)
     p_ptr->to_m_chance = 0;
 
     p_ptr->weapon_ct = 0;
+
     for (i = 0; i < MAX_HANDS; i++)
     {
         p_ptr->weapon_info[i].wield_how = WIELD_NONE;
@@ -3727,12 +3727,7 @@ void calc_bonuses(void)
             skills_add(&p_ptr->skills, &realm->skills);
             skills_add(&p_ptr->skills, &extra);
         }
-
-		if (p_ptr->pclass == CLASS_FREELANCER){
-			freelancer_skill_boost(); // add freelancer skill boosts!
-		}
     }
-
     p_ptr->skill_tht = p_ptr->skills.thb;
     p_ptr->skill_dig = 0;
 
