@@ -201,7 +201,7 @@ static _blow_info_t _get_blow_info(int hand)
 
     case CLASS_ARCHER:
     case CLASS_BARD:
-	//case CLASS_FREELANCER:
+	case CLASS_FREELANCER:
         result.num = 450; result.wgt = 70; result.mul = 20; break;
 
     case CLASS_FORCETRAINER:

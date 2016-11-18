@@ -678,7 +678,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
     { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_IMITATOR, CLASS_RAGE_MAGE,
-                    CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
+                    CLASS_TOURIST, CLASS_WILD_TALENT, CLASS_FREELANCER, -1} },
 };
 
 static void _class_group_menu_fn(int cmd, int which, vptr cookie, variant *res)
@@ -3089,6 +3089,12 @@ static int player_init[MAX_CLASS][3][2] =
 		{ TV_SWORD, SV_SMALL_SWORD },
 		{ TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR },
 		{ TV_POTION, SV_POTION_RESTORE_MANA }
+	},
+	{
+		/* Freelancer */
+		{ TV_SWORD, SV_SMALL_SWORD },
+		{ TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR },
+		{ 0, 0}
 	},
 };
 

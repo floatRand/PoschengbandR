@@ -195,8 +195,8 @@ class_t *result = NULL;
         break;
 	case CLASS_MALEDICT:
 		result = maledict_get_class();
-	//case CLASS_FREELANCER:
-		//result = freelancer_get_class();
+	case CLASS_FREELANCER:
+		result = freelancer_get_class();
     }
 
     return result;

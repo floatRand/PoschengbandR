@@ -279,7 +279,7 @@ static void sense_inventory1(void)
             case CLASS_ROGUE:
             case CLASS_NINJA:
             case CLASS_SCOUT:
-			//case CLASS_FREELANCER -rtl-:
+			case CLASS_FREELANCER:
             {
                 /* Okay sensing */
                 if (0 != randint0(_adj_pseudo_id(20000) / (plev * plev + 40))) return;

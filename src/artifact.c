@@ -2000,7 +2000,6 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 break;
             case CLASS_WARRIOR_MAGE:
             case CLASS_RED_MAGE:
-			//case CLASS_FREELANCER: -rtl-
             case CLASS_PSION:
                 artifact_bias = BIAS_MAGE;
                 warrior_artifact_bias = 20;
@@ -2046,7 +2045,11 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 }
                 warrior_artifact_bias = 20;
                 break;
-
+			case  CLASS_FREELANCER: 
+				artifact_bias = BIAS_CHR;
+				warrior_artifact_bias = 30;
+				
+				break;
             default:
                 artifact_bias = BIAS_WARRIOR;
                 break;

@@ -2376,16 +2376,17 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     {
         switch (p_ptr->pclass)
         {
+		case CLASS_FREELANCER:
         case CLASS_ROGUE: /* <=== Burglary Book of Shadows currently has NINJA_S_STEALTH */
         case CLASS_NINJA:
             if (m_ptr->ml)
             {
                 int tmp = p_ptr->lev * 6 + (p_ptr->skills.stl + 10) * 4;
 
-				//if (p_ptr->pclass == CLASS_FREELANCER){
-				//	if (freelancer_stab_level() == 1)  tmp = (tmp*2) / 3; // 66% effect
-				//	if (freelancer_stab_level() == 2)  tmp = (tmp*4) / 5; // 80% effect
-				//}
+				if (p_ptr->pclass == CLASS_FREELANCER){
+					if (freelancer_stab_level() == 1)  tmp = (tmp*2) / 3; // 66% effect
+					if (freelancer_stab_level() == 2)  tmp = (tmp*4) / 5; // 80% effect
+				}
 
                 if (p_ptr->monlite && (mode != HISSATSU_NYUSIN)) tmp /= 3;
                 if (p_ptr->cursed & OFC_AGGRAVATE) tmp /= 2;

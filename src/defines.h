@@ -859,8 +859,9 @@ enum _mimic_types {
 #define CLASS_DEVICEMASTER      44
 #define CLASS_ALCHEMIST			45
 #define CLASS_MALEDICT			46
+#define CLASS_FREELANCER		47
 
-#define MAX_CLASS               47
+#define MAX_CLASS               48
 
 /* Warlock Pacts ... stored in p_ptr->psubclass */
 enum {

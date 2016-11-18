@@ -358,7 +358,6 @@ void _use_infusion(object_type* o_ptr, int overdose)
 			if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n') return;
 		}
 	}
-	
 	/*
 	if (o_ptr->activation.type == EFFECT_IDENTIFY)
 		device_available_charges = device_sp(o_ptr) / o_ptr->activation.cost;
