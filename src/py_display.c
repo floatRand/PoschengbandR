@@ -71,10 +71,6 @@ static void _build_general1(doc_ptr doc)
     /* Assume Subclass and Magic are mutually exclusive ... */
     if (class_ptr->subname)
         doc_printf(doc, " Subclass   : <color:B>%-26.26s</color>\n", class_ptr->subname);
-    else if (p_ptr->pclass == CLASS_WARLOCK)
-        doc_printf(doc, " Subclass   : <color:B>%-26.26s</color>\n", pact_info[p_ptr->psubclass].title);
-    else if (p_ptr->pclass == CLASS_WEAPONMASTER)
-        doc_printf(doc, " Subclass   : <color:B>%-26.26s</color>\n", weaponmaster_speciality_name(p_ptr->psubclass));
     else if (p_ptr->prace == RACE_MON_DRAGON)
     {
         dragon_realm_ptr realm = dragon_get_realm(p_ptr->dragon_realm);

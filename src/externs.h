@@ -641,6 +641,9 @@ extern void determine_random_questor(quest_type *q_ptr);
 extern void player_outfit(void);
 extern int calc_exp_factor(void);
 
+/* py_birth.c */
+extern int py_birth(void);
+
 /* cave.c */
 extern int distance(int y1, int x1, int y2, int x2);
 extern bool is_trap(int feat);
@@ -1825,6 +1828,7 @@ extern rect_t ui_map_rect(void);
 extern rect_t ui_menu_rect(void);
 extern rect_t ui_status_bar_rect(void);
 extern rect_t ui_char_info_rect(void);
+extern rect_t ui_screen_rect(void);
 /* cf msg_line_rect() in message.h and note that the message "line" is
    really a drop down box of sorts. It may drop on top of whatever is beneath
    it (currently the map region). */

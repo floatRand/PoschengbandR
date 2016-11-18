@@ -3262,6 +3262,11 @@ rect_t ui_map_rect(void)
     );
 }
 
+rect_t ui_screen_rect(void)
+{
+    return rect_create(0, 0, Term->wid, Term->hgt);
+}
+
 rect_t ui_menu_rect(void)
 {
     return ui_map_rect();

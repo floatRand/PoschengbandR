@@ -2058,6 +2058,7 @@ typedef void(*flags_fn)(u32b flgs[OF_ARRAY_SIZE]);
 typedef void(*stats_fn)(s16b stats[MAX_STATS]);
 typedef void(*load_fn)(savefile_ptr file);
 typedef void(*save_fn)(savefile_ptr file);
+typedef int(*birth_ui_fn)(doc_ptr doc);
 
 typedef struct {
     cptr                    name;
@@ -2072,7 +2073,8 @@ typedef struct {
     s16b                    exp;
     byte                    pets;
 
-    birth_fn                birth;
+    birth_fn                birth;          /* After py_birth() ... grant starting gear, etc */
+    birth_ui_fn             birth_ui;       /* Used during py_birth() ... choose a subclass */ 
     process_player_fn       process_player; /* Called from process_player ... but player take 0 or more actions per call */
     player_action_fn        player_action;  /* Called once per player action, so long as the action consumes energy */
     move_player_fn          move_player;    /* Called every time the player actually moves */
@@ -2177,6 +2179,7 @@ typedef struct device_effect_info_s *device_effect_info_ptr;
 
 struct personality_s
 {
+    int             id;
     cptr            name;
     cptr            desc;
     s16b            stats[MAX_STATS];

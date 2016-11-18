@@ -6341,3 +6341,15 @@ enum dragon_realm_e
     DRAGON_REALM_DEATH,
     DRAGON_REALM_MAX
 };
+
+enum ui_result_e
+{
+    UI_NONE = 0,
+    UI_OK,
+    UI_CANCEL,
+    UI_QUIT,
+    UI_RESTART,
+    UI_UNWIND,
+    UI_ERROR
+};
+

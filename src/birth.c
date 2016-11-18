@@ -3979,6 +3979,7 @@ void player_birth(void)
     /* Create a new character */
 
     /* Quick start? */
+#if 0
     if (!ask_quick_start())
     {
         /* No, normal start */
@@ -3993,7 +3994,10 @@ void player_birth(void)
         if (p_ptr->prace == RACE_BEASTMAN && !p_ptr->birth_mutation)
             p_ptr->birth_mutation = mut_gain_random_aux(mut_good_pred);
     }
-
+#else
+    if (py_birth() != UI_OK)
+        quit(NULL);
+#endif
     /* Init the shops */
     for (i = 1; i < max_towns; i++)
     {

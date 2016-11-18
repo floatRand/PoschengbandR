@@ -1,5 +1,7 @@
 #include "angband.h"
 
+#include <assert.h>
+
 /****************************************************************
  * Combat
  ****************************************************************/
@@ -637,38 +639,55 @@ static personality_ptr _get_shrewd_personality(void)
  ****************************************************************/
 personality_ptr get_personality_aux(int index)
 {
+    personality_ptr result = NULL;
     switch (index)
     {
     case PERS_COMBAT:
-        return _get_combat_personality();
+        result = _get_combat_personality();
+        break;
     case PERS_CRAVEN:
-        return _get_craven_personality();
+        result = _get_craven_personality();
+        break;
     case PERS_FEARLESS:
-        return _get_fearless_personality();
+        result = _get_fearless_personality();
+        break;
     case PERS_HASTY:
-        return _get_hasty_personality();
+        result = _get_hasty_personality();
+        break;
     case PERS_LAZY:
-        return _get_lazy_personality();
+        result = _get_lazy_personality();
+        break;
     case PERS_LUCKY:
-        return _get_lucky_personality();
+        result = _get_lucky_personality();
+        break;
     case PERS_MIGHTY:
-        return _get_mighty_personality();
+        result = _get_mighty_personality();
+        break;
     case PERS_MUNCHKIN:
-        return _get_munchkin_personality();
+        result = _get_munchkin_personality();
+        break;
     case PERS_NIMBLE:
-        return _get_nimble_personality();
+        result = _get_nimble_personality();
+        break;
     case PERS_ORDINARY:
-        return _get_odinary_personality();
+        result = _get_odinary_personality();
+        break;
     case PERS_PATIENT:
-        return _get_patient_personality();
+        result = _get_patient_personality();
+        break;
     case PERS_PIOUS:
-        return _get_pious_personality();
+        result = _get_pious_personality();
+        break;
     case PERS_SEXY:
-        return _get_sexy_personality();
+        result = _get_sexy_personality();
+        break;
     case PERS_SHREWD:
-        return _get_shrewd_personality();
+        result = _get_shrewd_personality();
+        break;
     }
-    return _get_odinary_personality();
+    assert(result);
+    result->id = index;
+    return result;
 }
 
 personality_ptr get_personality(void)
