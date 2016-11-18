@@ -68,6 +68,8 @@ static void _csv_file(cptr name, _file_fn fn)
  * purposes. For example, Warriors have "Bad" device skills while a Mage is "Superb".
  * Of course, a CL50 Warrior's Character Sheet might list their device skill as
  * "Superb", but it really is "Bad" ... Trust me!
+ *
+ * TODO: I copied this to skills.c ... please rewrite here (cf wiz_doc.c)
  ******************************************************************************/
 static cptr _skill_desc(int amt, int div)
 {

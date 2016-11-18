@@ -4,6 +4,8 @@
 
 #include "angband.h"
 
+#include <assert.h>
+
 int lookup_class_idx(cptr name)
 {
     int i;
@@ -198,6 +200,9 @@ class_t *result = NULL;
         break;
     }
 
+    assert(result);
+    result->id = pclass;
+    result->subid = psubclass;
     return result;
 }
 

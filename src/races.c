@@ -1,5 +1,6 @@
 #include "angband.h"
 
+#include <assert.h>
 
 /****************************************************************
  * Public Entrypoints
@@ -294,6 +295,9 @@ race_t *get_race_aux(int prace, int psubrace)
         break;
     }
 
+    assert(result);
+    result->id = prace;
+    result->subid = psubrace;
     return result;
 }
 

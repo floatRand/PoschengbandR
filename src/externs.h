@@ -2537,6 +2537,11 @@ extern void skills_scale(skills_t *dest, int num, int denom);
 extern void skills_init(skills_t *dest);
 typedef struct { cptr desc; byte color; } skill_desc_t;
 extern skill_desc_t skills_describe(int amt, int div);
+extern void skills_desc_class(class_t *class_ptr, skills_desc_t *skills);
+extern void skills_desc_mon_race(race_t *race_ptr, skills_desc_t *skills);
+extern void skills_desc_race(race_t *race_ptr, skills_desc_t *skills);
+extern void skills_desc_pers(personality_t *pers_ptr, skills_desc_t *skills);
+extern void skills_desc_aux(skills_t *base, skills_t *xtra, skills_desc_t *skills);
 
 extern int skills_bow_current(int sval);
 extern int skills_bow_max(int sval);

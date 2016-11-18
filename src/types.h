@@ -434,6 +434,18 @@ typedef struct {
     s16b thb;            /* combat (shooting) */
 } skills_t;
 
+#define SKILL_DESC_LEN 50
+typedef struct {
+    char dis[SKILL_DESC_LEN];
+    char dev[SKILL_DESC_LEN];
+    char sav[SKILL_DESC_LEN];
+    char stl[SKILL_DESC_LEN];
+    char srh[SKILL_DESC_LEN];
+    char fos[SKILL_DESC_LEN];
+    char thn[SKILL_DESC_LEN];
+    char thb[SKILL_DESC_LEN];
+} skills_desc_t, *skills_desc_ptr;
+
 struct monster_body_s
 {
     s16b     stats[MAX_STATS];
@@ -2061,6 +2073,8 @@ typedef void(*save_fn)(savefile_ptr file);
 typedef int(*birth_ui_fn)(doc_ptr doc);
 
 typedef struct {
+    int                     id;
+    int                     subid;
     cptr                    name;
     cptr                    subname;
     cptr                    desc;
@@ -2097,6 +2111,8 @@ typedef struct {
 struct equip_template_s;
 
 typedef struct {
+    int                     id;
+    int                     subid;
     cptr                    name;
     cptr                    subname;
     cptr                    desc;
