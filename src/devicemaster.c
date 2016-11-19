@@ -479,7 +479,7 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
-class_t *devicemaster_get_class(void)
+class_t *devicemaster_get_class(int psubclass)
 {
     static class_t me = {0};
     static bool init = FALSE;
@@ -529,6 +529,7 @@ class_t *devicemaster_get_class(void)
         init = TRUE;
     }
 
-    me.subname = devicemaster_speciality_name(p_ptr->psubclass);
+    me.subname = devicemaster_speciality_name(psubclass);
+    me.subdesc = devicemaster_speciality_desc(psubclass);
     return &me;
 }

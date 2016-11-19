@@ -1493,7 +1493,7 @@ static int _prompt_race(void)
                     {
                     menu_t menu3 = { "Parentage", "Demigods.txt", "Unlike in real life, you get to choose your parent.",
                                         _demigod_menu_fn,
-                                        NULL, MAX_DEMIGOD_TYPES};
+                                        NULL, DEMIGOD_MAX};
 
                         c_put_str(TERM_WHITE, "                        ", 5, 14);
                         idx = _menu_choose(&menu3, p_ptr->psubrace);
@@ -1863,7 +1863,7 @@ static bool _prompt_game_mode(void)
 
             if (p_ptr->prace == RACE_DEMIGOD)
             {
-                p_ptr->psubrace = randint0(MAX_DEMIGOD_TYPES);
+                p_ptr->psubrace = randint0(DEMIGOD_MAX);
                 race_ptr = get_race();
                 c_put_str(TERM_L_BLUE, format("%-19s", race_ptr->subname), 5, 14);
             }

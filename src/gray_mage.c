@@ -621,7 +621,7 @@ extern cptr gray_mage_speciality_desc(int psubclass)
     return "";
 }
 
-class_t *gray_mage_get_class(void)
+class_t *gray_mage_get_class(int psubclass)
 {
     static class_t me = {0};
     static bool init = FALSE;
@@ -671,6 +671,7 @@ class_t *gray_mage_get_class(void)
 
         init = TRUE;
     }
-    me.subname = gray_mage_speciality_name(p_ptr->psubclass);
+    me.subname = gray_mage_speciality_name(psubclass);
+    me.subdesc = gray_mage_speciality_desc(psubclass);
     return &me;
 }

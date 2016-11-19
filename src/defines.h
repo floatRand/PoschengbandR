@@ -701,8 +701,8 @@
 #define DEMIGOD_HERA            10
 #define DEMIGOD_DEMETER         11
 #define DEMIGOD_APHRODITE       12
+#define DEMIGOD_MAX             13
 
-#define MAX_DEMIGOD_TYPES        13
 #define MAX_DEMIGOD_POWERS        5
 
 #define SPIDER_PHASE  0

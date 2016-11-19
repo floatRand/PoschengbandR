@@ -341,7 +341,7 @@ static void _demigods_help(FILE* fp)
     fputs(get_race_aux(RACE_DEMIGOD, 0)->desc, fp);
     fputs("\n\n", fp);
 
-    for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
+    for (i = 0; i < DEMIGOD_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
 
@@ -354,7 +354,7 @@ static void _demigods_help(FILE* fp)
     fputs("<topic:Tables><style:heading>Table 1 - Demigod Statistic Bonus Table</style>\n\n", fp);
     fputs("<style:table><color:G>               STR  INT  WIS  DEX  CON  CHR  Life  Exp  Shop</color>\n", fp);
 
-    for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
+    for (i = 0; i < DEMIGOD_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
 
@@ -369,7 +369,7 @@ static void _demigods_help(FILE* fp)
 
     fputs("<topic:Skills1><style:heading>Table 2 - Demigod Skill Bonus Table I</style>\n<style:table>\n", fp);
     fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s</color>\n", "", "Disarming", "Device", "Save", "Stealth");
-    for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
+    for (i = 0; i < DEMIGOD_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
         fprintf(fp, "%-12.12s", race_ptr->subname);
@@ -383,7 +383,7 @@ static void _demigods_help(FILE* fp)
 
     fputs("<topic:Skills2><style:heading>Table 3 - Demigod Skill Bonus Table II</style>\n<style:table>\n", fp);
     fprintf(fp, "%-12.12s <color:w>%-13.13s %-13.13s %-13.13s %-13.13s %s</color>\n", "", "Searching", "Perception", "Melee", "Bows", "Infra");
-    for (i = 0; i < MAX_DEMIGOD_TYPES; i++)
+    for (i = 0; i < DEMIGOD_MAX; i++)
     {
         race_t *race_ptr = get_race_aux(RACE_DEMIGOD, i);
         fprintf(fp, "%-12.12s", race_ptr->subname);
@@ -1543,7 +1543,7 @@ static void _skills_race_table(FILE* fp)
     {
         int max_j = 1;
         if (i == RACE_DEMIGOD)
-            max_j = MAX_DEMIGOD_TYPES;
+            max_j = DEMIGOD_MAX;
         else if (i == RACE_DRACONIAN)
             max_j = DRACONIAN_MAX;
 

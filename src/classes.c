@@ -88,7 +88,7 @@ class_t *result = NULL;
         result = chaos_warrior_get_class();
         break;
     case CLASS_DEVICEMASTER:
-        result = devicemaster_get_class();
+        result = devicemaster_get_class(psubclass);
         break;
     case CLASS_DUELIST:
         result = duelist_get_class();
@@ -97,7 +97,7 @@ class_t *result = NULL;
         result = force_trainer_get_class();
         break;
     case CLASS_GRAY_MAGE:
-        result = gray_mage_get_class();
+        result = gray_mage_get_class(psubclass);
         break;
     case CLASS_HIGH_MAGE:
         result = high_mage_get_class();

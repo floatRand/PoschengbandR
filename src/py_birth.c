@@ -34,7 +34,14 @@ static int _stats_ui(void)
 
 /************************************************************************
  * 2) Race/Class/Personality
+ *
+ * Note: It assumed througout that the player starts with a valid
+ * race, class and personality, and that throughout the birth process
+ * these fields remain legal. Currently, player_wipe gives an Ordinary
+ * Human Warrior to start.
  ***********************************************************************/ 
+
+/* state of the info panel */
 enum {
     _RCP_STATS,
     _RCP_SKILLS1,
@@ -43,41 +50,68 @@ enum {
 };
 static int _rcp_state = _RCP_STATS;
 
+static void _inc_rcp_state(void)
+{
+    ++_rcp_state;
+    if (_rcp_state == _RCP_COUNT)
+        _rcp_state = _RCP_STATS;
+}
+
+/* top frame displays <user fields> | <info panel> */
 static void _sex_line(doc_ptr doc)
 {
-    doc_printf(doc, "Sex   : <color:B>%s</color>\n", sex_info[p_ptr->psex].title);
+    doc_printf(doc, "Sex  : <color:B>%s</color>\n", sex_info[p_ptr->psex].title);
 }
 
 static void _race_line(doc_ptr doc)
 {
     race_t *race_ptr = get_race();
-    doc_printf(doc, "Race  : <color:B>%s", race_ptr->name);
+    doc_insert(doc, "Race : <indent><color:B>");
     if (race_ptr->subname)
-        doc_printf(doc, " (%s)", race_ptr->subname);
-    doc_insert(doc, "</color>\n");
+        doc_printf(doc, "%s ", race_ptr->subname);
+    doc_printf(doc, "%s</indent></color>\n", race_ptr->name);
 }
 
 static void _class_line(doc_ptr doc)
 {
     class_t *class_ptr = get_class();
-    doc_printf(doc, "Class : <color:B>%s", class_ptr->name);
+    doc_printf(doc, "Class: <color:B>%s</color>\n", class_ptr->name);
     if (class_ptr->subname)
-        doc_printf(doc, " (%s)", class_ptr->subname);
-    doc_insert(doc, "</color>\n");
+    {
+        if (p_ptr->pclass == CLASS_WARLOCK)
+            doc_printf(doc, "Pact : <color:B>%s</color>\n", class_ptr->subname);
+        else if (p_ptr->pclass == CLASS_WEAPONMASTER || p_ptr->pclass == CLASS_DEVICEMASTER)
+            doc_printf(doc, "Spec : <color:B>%s</color>\n", class_ptr->subname);
+        else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+            doc_printf(doc, "Bias : <color:B>%s</color>\n", class_ptr->subname);
+        else
+            doc_printf(doc, "       <color:B>%s</color>\n", class_ptr->subname);
+    }
 }
 
 static void _pers_line(doc_ptr doc)
 {
     personality_ptr pers_ptr = get_personality();
-    doc_printf(doc, "Pers  : <color:B>%s</color>\n", pers_ptr->name);
+    doc_printf(doc, "Pers : <color:B>%s</color>\n", pers_ptr->name);
+}
+
+static void _magic_line(doc_ptr doc)
+{
+    if (!p_ptr->realm1) return;
+    doc_printf(doc, "Magic: <color:B>%s", realm_names[p_ptr->realm1]);
+    if (p_ptr->realm2)
+        doc_printf(doc, ", %s</color>\n", realm_names[p_ptr->realm2]);
+    else
+        doc_insert(doc, "</color>\n");
 }
 
 static void _race_class_header(doc_ptr doc)
 {
     _sex_line(doc);
+    _pers_line(doc);
     _race_line(doc);
     _class_line(doc);
-    _pers_line(doc);
+    _magic_line(doc);
 }
 
 static void _race_class_info(doc_ptr doc)
@@ -89,6 +123,10 @@ static void _race_class_info(doc_ptr doc)
     if (_rcp_state == _RCP_STATS)
     {
         doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n");
+        doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%       %3d%%\n",
+            pers_ptr->stats[A_STR], pers_ptr->stats[A_INT], pers_ptr->stats[A_WIS],
+            pers_ptr->stats[A_DEX], pers_ptr->stats[A_CON], pers_ptr->stats[A_CHR],
+            pers_ptr->life, pers_ptr->exp);
         doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%\n",
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
             race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
@@ -97,10 +135,6 @@ static void _race_class_info(doc_ptr doc)
             class_ptr->stats[A_STR], class_ptr->stats[A_INT], class_ptr->stats[A_WIS],
             class_ptr->stats[A_DEX], class_ptr->stats[A_CON], class_ptr->stats[A_CHR],
             class_ptr->life, class_ptr->base_hp, class_ptr->exp);
-        doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%       %3d%%\n",
-            pers_ptr->stats[A_STR], pers_ptr->stats[A_INT], pers_ptr->stats[A_WIS],
-            pers_ptr->stats[A_DEX], pers_ptr->stats[A_CON], pers_ptr->stats[A_CHR],
-            pers_ptr->life, pers_ptr->exp);
         doc_printf(doc, "<color:R>%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%</color>\n",
             race_ptr->stats[A_STR] + class_ptr->stats[A_STR] + pers_ptr->stats[A_STR],
             race_ptr->stats[A_INT] + class_ptr->stats[A_INT] + pers_ptr->stats[A_INT],
@@ -136,12 +170,12 @@ static void _race_class_info(doc_ptr doc)
         {
             doc_printf(doc, "<color:w>%-10.10s %-10.10s %-10.10s %-10.10s</color>\n",
                 "Disarming", "Device", "Save", "Stealth");
+            doc_printf(doc, "%s %s %s %s\n",
+                p_desc.dis, p_desc.dev, p_desc.sav, p_desc.stl);
             doc_printf(doc, "%s %s %s %s\n", /* Note: descriptions contain formatting tags, so %-10.10s won't work ... cf skills.c */
                 r_desc.dis, r_desc.dev, r_desc.sav, r_desc.stl);
             doc_printf(doc, "%s %s %s %s\n",
                 c_desc.dis, c_desc.dev, c_desc.sav, c_desc.stl);
-            doc_printf(doc, "%s %s %s %s\n",
-                p_desc.dis, p_desc.dev, p_desc.sav, p_desc.stl);
             doc_printf(doc, "%s %s %s %s\n",
                 tot_desc.dis, tot_desc.dev, tot_desc.sav, tot_desc.stl);
         }
@@ -150,11 +184,11 @@ static void _race_class_info(doc_ptr doc)
             doc_printf(doc, "<color:w>%-10.10s %-10.10s %-10.10s %-10.10s</color>\n",
                 "Searching", "Perception", "Melee", "Bows");
             doc_printf(doc, "%s %s %s %s\n",
+                p_desc.srh, p_desc.fos, p_desc.thn, p_desc.thb);
+            doc_printf(doc, "%s %s %s %s\n",
                 r_desc.srh, r_desc.fos, r_desc.thn, r_desc.thb);
             doc_printf(doc, "%s %s %s %s\n",
                 c_desc.srh, c_desc.fos, c_desc.thn, c_desc.thb);
-            doc_printf(doc, "%s %s %s %s\n",
-                p_desc.srh, p_desc.fos, p_desc.thn, p_desc.thb);
             doc_printf(doc, "%s %s %s %s\n",
                 tot_desc.srh, tot_desc.fos, tot_desc.thn, tot_desc.thb);
         }
@@ -165,8 +199,8 @@ static void _race_class_top(doc_ptr doc)
 {
     doc_ptr cols[2];
 
-    cols[0] = doc_alloc(29);
-    cols[1] = doc_alloc(50);
+    cols[0] = doc_alloc(25);
+    cols[1] = doc_alloc(55);
 
     _race_class_header(cols[0]);
     _race_class_info(cols[1]);
@@ -174,6 +208,111 @@ static void _race_class_top(doc_ptr doc)
 
     doc_free(cols[0]);
     doc_free(cols[1]);
+}
+
+/************************************************************************
+ * 2.1.1) Subrace
+ ***********************************************************************/ 
+static int _demigod_ui(void)
+{
+    assert(p_ptr->prace == RACE_DEMIGOD);
+    for (;;)
+    {
+        int cmd, i;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose Demigod Parentage</color>\n");
+        for (i = 0; i < DEMIGOD_MAX; i++)
+        {
+            race_t *race_ptr = get_race_aux(p_ptr->prace, i);
+            doc_printf(_doc, "  <color:y>%c</color>) %s\n", I2A(i), race_ptr->subname);
+        }
+        doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Demigods.txt", NULL);
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < DEMIGOD_MAX)
+            {
+                race_t *race_ptr = get_race_aux(p_ptr->prace, i);
+                doc_display_help("Demigods.txt", race_ptr->subname);
+            }
+        }
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < DEMIGOD_MAX)
+            {
+                p_ptr->psubrace = i;
+                return UI_OK;
+            }
+        }
+    }
+    return UI_OK;
+}
+
+static int _draconian_ui(void)
+{
+    assert(p_ptr->prace == RACE_DRACONIAN);
+    for (;;)
+    {
+        int cmd, i;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose Draconian Subrace</color>\n");
+        for (i = 0; i < DRACONIAN_MAX; i++)
+        {
+            race_t *race_ptr = get_race_aux(p_ptr->prace, i);
+            doc_printf(_doc, "  <color:y>%c</color>) %s\n", I2A(i), race_ptr->subname);
+        }
+        doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Draconians.txt", NULL);
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < DRACONIAN_MAX)
+            {
+                race_t *race_ptr = get_race_aux(p_ptr->prace, i);
+                doc_display_help("Draconians.txt", race_ptr->subname);
+            }
+        }
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < DRACONIAN_MAX)
+            {
+                p_ptr->psubrace = i;
+                return UI_OK;
+            }
+        }
+    }
+}
+
+static int _subrace_ui(void)
+{
+    if (p_ptr->prace == RACE_DEMIGOD)
+        return _demigod_ui();
+    else if (p_ptr->prace == RACE_DRACONIAN)
+        return _draconian_ui();
+    else
+    {
+        p_ptr->psubrace = 0;
+        return UI_OK;
+    }
 }
 
 /************************************************************************
@@ -284,16 +423,9 @@ static int _race_ui(_race_group_ptr group)
 
         cmd = _inkey();
 
-        if (cmd == ESCAPE)
-            result = UI_CANCEL;
-        else if (cmd == '\t')
-        {
-            _rcp_state++;
-            if (_rcp_state == _RCP_COUNT)
-                _rcp_state = _RCP_STATS;
-        }
-        else if (cmd == '?')
-            doc_display_help("Races.txt", NULL);
+        if (cmd == ESCAPE) result = UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Races.txt", NULL);
         else if (isupper(cmd))
         {
             i = A2I(tolower(cmd));
@@ -308,10 +440,20 @@ static int _race_ui(_race_group_ptr group)
             i = A2I(cmd);
             if (0 <= i && i < vec_length(v))
             {
+                int     old_id = p_ptr->prace;
                 race_t *race_ptr = vec_get(v, i);
-                p_ptr->prace = race_ptr->id;
-                /* TODO: Subraces */
-                result = UI_OK;
+
+                if (p_ptr->prace != race_ptr->id)
+                {
+                    p_ptr->prace = race_ptr->id;
+                    p_ptr->psubrace = 0;
+                }
+                result = _subrace_ui();
+                if (result == UI_CANCEL)
+                {
+                    p_ptr->prace = old_id;
+                    result = UI_NONE;
+                }
             }
         }
     }
@@ -352,28 +494,380 @@ static void _race_group_ui(void)
 
         cmd = _inkey();
 
-        if (cmd == ESCAPE)
-            break;
-        else if (cmd == '\t')
-        {
-            _rcp_state++;
-            if (_rcp_state == _RCP_COUNT)
-                _rcp_state = _RCP_STATS;
-        }
-        else if (cmd == '?')
-            doc_display_help("Races.txt", NULL);
+        if (cmd == ESCAPE) break;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Races.txt", NULL);
         else
         {
             i = A2I(cmd);
             if (0 <= i && i < vec_length(groups))
             {
                 _race_group_ptr g_ptr = vec_get(groups, i);
-                if (_race_ui(g_ptr) == UI_OK)
-                    break;
+                if (_race_ui(g_ptr) == UI_OK) break;
             }
         }
     }
     vec_free(groups);
+}
+
+/************************************************************************
+ * 2.2.2) Magic
+ ***********************************************************************/ 
+static int _realm2_ui(void)
+{
+    u32b bits = realm_choices2[p_ptr->pclass];
+    int  choices[MAX_REALM];
+    int  ct = 0, i;
+
+    if (!bits)
+    {
+        p_ptr->realm2 = 0;
+        return UI_OK;
+    }
+
+    if (p_ptr->pclass == CLASS_PRIEST)
+    {
+        if (is_good_realm(p_ptr->realm1))
+            bits &= ~(CH_DEATH | CH_DAEMON);
+        else
+            bits &= ~(CH_LIFE | CH_CRUSADE);
+    }
+
+    for (i = 0; i < 32; i++)
+    {
+        int id = i + 1;
+        if (bits & (1L << i) && p_ptr->realm1 != id)
+            choices[ct++] = id;
+    }
+    choices[ct] = -1;
+
+    for (;;)
+    {
+        int cmd;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose Your Secondary Magic Realm</color>\n");
+        for (i = 0; i < ct; i++)
+        {
+            int id = choices[i];
+            doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+                I2A(i),
+                id == p_ptr->realm2 ? 'B' : 'w',
+                realm_names[id]
+            );
+        }
+        doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE)
+            return UI_CANCEL;
+        else if (cmd == '?')
+            doc_display_help("magic.txt", NULL);
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < ct)
+            {
+                int id = choices[i];
+                doc_display_help("magic.txt", realm_names[id]);
+            }
+        }
+        else
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < ct)
+            {
+                int id = choices[i];
+                p_ptr->realm2 = id;
+                return UI_OK;
+            }
+        }
+    }
+}
+
+static int _realm1_ui(void)
+{
+    u32b bits = realm_choices1[p_ptr->pclass];
+    int  choices[MAX_REALM];
+    int  ct = 0, i;
+
+    if (!bits)
+    {
+        p_ptr->realm1 = 0;
+        p_ptr->realm2 = 0;
+        return UI_OK;
+    }
+
+    for (i = 0; i < 32; i++)
+    {
+        if (bits & (1L << i))
+            choices[ct++] = i+1;
+    }
+    choices[ct] = -1;
+
+    for (;;)
+    {
+        int cmd;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose Your Primary Magic Realm</color>\n");
+        for (i = 0; i < ct; i++)
+        {
+            int id = choices[i];
+            doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+                I2A(i),
+                id == p_ptr->realm1 ? 'B' : 'w',
+                realm_names[id]
+            );
+        }
+        doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE)
+            return UI_CANCEL;
+        else if (cmd == '?')
+            doc_display_help("magic.txt", NULL);
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < ct)
+            {
+                int id = choices[i];
+                doc_display_help("magic.txt", realm_names[id]);
+            }
+        }
+        else
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < ct)
+            {
+                int id = choices[i];
+                int old_id = p_ptr->realm1;
+                int rc;
+
+                p_ptr->realm1 = id;
+                rc = _realm2_ui();
+                if (rc == UI_CANCEL)
+                    p_ptr->realm1 = old_id;
+                else
+                    return UI_OK;
+            }
+        }
+    }
+}
+
+/************************************************************************
+ * 2.2.1) Subclass
+ ***********************************************************************/ 
+static int _warlock_ui(void)
+{
+    assert(p_ptr->pclass == CLASS_WARLOCK);
+    for (;;)
+    {
+        int cmd, i;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose Warlock Pact</color>\n");
+        for (i = 0; i < WARLOCK_MAX; i++)
+        {
+            class_t *class_ptr = get_class_aux(p_ptr->pclass, i);
+            doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+                I2A(i),
+                p_ptr->psubclass == i ? 'B' : 'w',
+                class_ptr->subname
+            );
+        }
+        doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Warlocks.txt", NULL);
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < WARLOCK_MAX)
+            {
+                class_t *class_ptr = get_class_aux(p_ptr->pclass, i);
+                doc_display_help("Warlocks.txt", class_ptr->subname);
+            }
+        }
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < WARLOCK_MAX)
+            {
+                p_ptr->psubclass = i;
+                return UI_OK;
+            }
+        }
+    }
+}
+
+static int _weaponmaster_ui(void)
+{
+    assert(p_ptr->pclass == CLASS_WEAPONMASTER);
+    for (;;)
+    {
+        int cmd, i;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose Speciality</color>\n");
+        for (i = 0; i < WEAPONMASTER_MAX; i++)
+        {
+            class_t *class_ptr = get_class_aux(p_ptr->pclass, i);
+            doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+                I2A(i),
+                p_ptr->psubclass == i ? 'B' : 'w',
+                class_ptr->subname
+            );
+        }
+        doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Weaponmasters.txt", NULL);
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < WEAPONMASTER_MAX)
+            {
+                class_t *class_ptr = get_class_aux(p_ptr->pclass, i);
+                doc_display_help("Weaponmasters.txt", class_ptr->subname);
+            }
+        }
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < WEAPONMASTER_MAX)
+            {
+                p_ptr->psubclass = i;
+                return UI_OK;
+            }
+        }
+    }
+}
+
+static int _devicemaster_ui(void)
+{
+    assert(p_ptr->pclass == CLASS_DEVICEMASTER);
+    for (;;)
+    {
+        int cmd, i;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose Speciality</color>\n");
+        for (i = 0; i < DEVICEMASTER_MAX; i++)
+        {
+            class_t *class_ptr = get_class_aux(p_ptr->pclass, i);
+            doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+                I2A(i),
+                p_ptr->psubclass == i ? 'B' : 'w',
+                class_ptr->subname
+            );
+        }
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Classes.txt", "Devicemaster");
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < DEVICEMASTER_MAX)
+            {
+                p_ptr->psubclass = i;
+                return UI_OK;
+            }
+        }
+    }
+}
+
+static int _gray_mage_ui(void)
+{
+    assert(p_ptr->pclass == CLASS_GRAY_MAGE);
+    for (;;)
+    {
+        int cmd, i;
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        doc_insert(_doc, "<color:G>Choose Bias</color>\n");
+        for (i = 0; i < GRAY_MAGE_MAX; i++)
+        {
+            class_t *class_ptr = get_class_aux(p_ptr->pclass, i);
+            doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+                I2A(i),
+                p_ptr->psubclass == i ? 'B' : 'w',
+                class_ptr->subname
+            );
+        }
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Classes.txt", "Gray-Mage");
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < GRAY_MAGE_MAX)
+            {
+                p_ptr->psubclass = i;
+                return UI_OK;
+            }
+        }
+    }
+}
+
+static int _subclass_ui(void)
+{
+    for (;;)
+    {
+        int rc;
+        bool has_subclass = TRUE;
+
+        /* Prompt for a subclass */
+        if (p_ptr->pclass == CLASS_WARLOCK)
+            rc = _warlock_ui();
+        else if (p_ptr->pclass == CLASS_WEAPONMASTER)
+            rc = _weaponmaster_ui();
+        else if (p_ptr->pclass == CLASS_DEVICEMASTER)
+            rc = _devicemaster_ui();
+        else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+            rc = _gray_mage_ui();
+        else
+        {
+            p_ptr->psubclass = 0;
+            rc = UI_OK;
+            has_subclass = FALSE;
+        }
+        /* Cancel subclass returns to _class_ui */
+        if (rc == UI_CANCEL) return UI_CANCEL;
+
+        /* Prompt for magic */
+        rc =_realm1_ui();
+
+        /* Cancel magic stays here if there is a sublass ui */
+        if (rc == UI_OK || !has_subclass) return rc;
+    }
 }
 
 /************************************************************************
@@ -463,16 +957,9 @@ static int _class_ui(_class_group_ptr group)
 
         cmd = _inkey();
 
-        if (cmd == ESCAPE)
-            result = UI_CANCEL;
-        else if (cmd == '\t')
-        {
-            _rcp_state++;
-            if (_rcp_state == _RCP_COUNT)
-                _rcp_state = _RCP_STATS;
-        }
-        else if (cmd == '?')
-            doc_display_help("Classes.txt", NULL);
+        if (cmd == ESCAPE) result = UI_CANCEL;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Classes.txt", NULL);
         else if (isupper(cmd))
         {
             i = A2I(tolower(cmd));
@@ -488,10 +975,15 @@ static int _class_ui(_class_group_ptr group)
             if (0 <= i && i < vec_length(v))
             {
                 class_t *class_ptr = vec_get(v, i);
+                int      old_id = p_ptr->pclass;
+
                 p_ptr->pclass = class_ptr->id;
-                /* TODO: Subclass */
-                /* TODO: Magic */
-                result = UI_OK;
+                result = _subclass_ui();
+                if (result == UI_CANCEL)
+                {
+                    p_ptr->pclass = old_id;
+                    result = UI_NONE;
+                }
             }
         }
     }
@@ -532,16 +1024,9 @@ static void _class_group_ui(void)
 
         cmd = _inkey();
 
-        if (cmd == ESCAPE)
-            break;
-        else if (cmd == '\t')
-        {
-            _rcp_state++;
-            if (_rcp_state == _RCP_COUNT)
-                _rcp_state = _RCP_STATS;
-        }
-        else if (cmd == '?')
-            doc_display_help("Classes.txt", NULL);
+        if (cmd == ESCAPE) break;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Classes.txt", NULL);
         else
         {
             i = A2I(cmd);
@@ -619,16 +1104,9 @@ static void _pers_ui(void)
 
         cmd = _inkey();
 
-        if (cmd == ESCAPE)
-            break;
-        else if (cmd == '\t')
-        {
-            _rcp_state++;
-            if (_rcp_state == _RCP_COUNT)
-                _rcp_state = _RCP_STATS;
-        }
-        else if (cmd == '?')
-            doc_display_help("Personalities.txt", NULL);
+        if (cmd == ESCAPE) break;
+        else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '?') doc_display_help("Personalities.txt", NULL);
         else if (isupper(cmd))
         {
             i = A2I(tolower(cmd));
@@ -667,11 +1145,14 @@ static int _race_class_ui(void)
         cols[1] = doc_alloc(46);
 
         doc_insert(cols[0], "  <color:y>s</color>) Change Sex\n");
+        doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
         doc_insert(cols[0], "  <color:y>c</color>) Change Class\n");
-        doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
+        if (p_ptr->realm1)
+            doc_insert(cols[0], "  <color:y>m</color>) Change Magic\n");
 
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
+        doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
         doc_insert(cols[1], "<color:y>RET</color>) Next Screen\n");
         doc_insert(cols[1], "<color:y>ESC</color>) Prev Screen\n");
 
@@ -679,6 +1160,10 @@ static int _race_class_ui(void)
         doc_free(cols[0]);
         doc_free(cols[1]);
 
+        doc_insert(_doc, "<color:G>Tip:</color> <indent>You can often get specific "
+                         "help by entering the uppercase letter for a command. For "
+                         "example, type <color:keypress>R</color> on this screen "
+                         "to receive help on your currently selected race.</indent>");
         _sync_term(_doc);
 
         cmd = _inkey();
@@ -689,18 +1174,53 @@ static int _race_class_ui(void)
         case ESCAPE:
             return UI_CANCEL;
         case '\t':
-            _rcp_state++;
-            if (_rcp_state == _RCP_COUNT)
-                _rcp_state = _RCP_STATS;
+            _inc_rcp_state();
+            break;
+        case '?':
+            doc_display_help("birth.txt", NULL);
             break;
         case 'r':
             _race_group_ui();
             break;
+        case 'R':
+        {
+            race_t *race_ptr = get_race();
+            if (p_ptr->prace == RACE_DEMIGOD)
+                doc_display_help("Demigods.txt", race_ptr->subname);
+            else if (p_ptr->prace == RACE_DRACONIAN)
+                doc_display_help("Draconians.txt", race_ptr->subname);
+            else
+                doc_display_help("Races.txt", race_ptr->name);
+            break;
+        }
         case 'c':
             _class_group_ui();
             break;
+        case 'C':
+        {
+            class_t *class_ptr = get_class();
+            if (p_ptr->pclass == CLASS_WARLOCK)
+                doc_display_help("Warlocks.txt", class_ptr->subname);
+            else
+                doc_display_help("Classes.txt", class_ptr->name);
+            break;
+        }
         case 'p':
             _pers_ui();
+            break;
+        case 'P':
+        {
+            personality_ptr pers_ptr = get_personality();
+            doc_display_help("Personalities.txt", pers_ptr->name);
+            break;
+        }
+        case 'm':
+            if (p_ptr->realm1)
+                _realm1_ui();
+            break;
+        case 'M':
+            if (p_ptr->realm1)
+                doc_display_help("magic.txt", realm_names[p_ptr->realm1]);
             break;
         case 's':
             if (p_ptr->psex == SEX_MALE)
