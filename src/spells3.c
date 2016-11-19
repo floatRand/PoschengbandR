@@ -3153,6 +3153,7 @@ s16b experience_of_spell(int spell, int use_realm)
 {
     if (p_ptr->pclass == CLASS_SORCERER) return SPELL_EXP_MASTER;
     else if (p_ptr->pclass == CLASS_RED_MAGE) return SPELL_EXP_SKILLED;
+	else if (p_ptr->pclass == CLASS_FREELANCER) return SPELL_EXP_SKILLED;
     else if (use_realm == p_ptr->realm1) return p_ptr->spell_exp[spell];
     else if (use_realm == p_ptr->realm2) return p_ptr->spell_exp[spell + 32];
     else return 0;
@@ -3502,7 +3503,7 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
             if (!increment && (exp_level == EXP_LEVEL_MASTER)) max = TRUE;
             else if ((increment == 32) && (exp_level >= EXP_LEVEL_EXPERT)) max = TRUE;
             else if (s_ptr->slevel >= 99) max = TRUE;
-            else if ((p_ptr->pclass == CLASS_RED_MAGE) && (exp_level >= EXP_LEVEL_SKILLED)) max = TRUE;
+            else if ((p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_FREELANCER) && (exp_level >= EXP_LEVEL_SKILLED)) max = TRUE;
 
             strncpy(ryakuji, exp_level_str[exp_level], 4);
             ryakuji[3] = ']';

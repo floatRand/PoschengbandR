@@ -228,12 +228,12 @@ static int _displayRealms(rect_t display, u16b mode)
 	/* Display */
 	doc = doc_alloc(display.cx);
 	doc_insert(doc, "<style:table>\n");
-	for (i = 0; i < MAX_REALM; i++)
+	for (i = 1; i < MIN_TECHNIC; i++)
 	{
 		_fl_realm_info *info_ptr = list + i;
 		if (info_ptr->cost > 0)
 		{
-			doc_printf(doc, "<tab:3> %c) ", I2A(i));
+			doc_printf(doc, "<tab:3> %c) ", I2A(i-1));
 			int prlv = fl_GetProfLevel(_FL_LEARN_REALM, i);
 			int cost = info_ptr->cost;
 			//if (prlv > 1) cost = _calc_Upgrade_Cost(i);
@@ -504,11 +504,14 @@ void freelancer_count_buys(void){
 }
 
 int freelancer_spell_power(int use_realm){
-
+	int ret = 0;
 	if (use_realm < 0 || use_realm >= MAX_REALM) return 0;
 	if (_realmLevels[use_realm] == 0) return 0;
+		
+	ret = (p_ptr->lev * 10) / (15 - _realmLevels[use_realm]*2);
+	if (ret < 1) ret = 1;
 
-			return (p_ptr->lev * 10) / (15 - _realmLevels[use_realm]*2);
+	return ret;
 }
 
 cptr _grantProficiency(int prof, int sub_choice, int *res){
@@ -614,7 +617,7 @@ int _chooseProf(int options)
 				string_printf(prompt, "Learn which realm? :");
 				prt(string_buffer(prompt), 0, 0);
 				max_choises = _displayRealms(display, 0);
-				cmd = inkey_special(FALSE);
+				cmd = inkey_special(FALSE)+1;
 				if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q'){ chosen_prof = _FL_NULL; break; }
 				if ('a' <= cmd && cmd < 'a' + max_choises)
 				{
@@ -836,12 +839,10 @@ static caster_info* _caster_info(void)
 	static bool init = FALSE;
 	if (!init)
 	{
-		me.magic_desc = "knapsack";
-		me.which_stat = _castingStat;
-		me.weight = _castWeightLimit;
-		me.min_fail = _minFail;
-		me.options = _casterFlags;
-		init = TRUE;
+		me.magic_desc = "spell";
+		me.which_stat = A_INT;
+		me.weight = 430;
+		me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
 	}
 	return &me;
 }

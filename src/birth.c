@@ -2227,11 +2227,11 @@ static void get_extra(bool roll_hitdie)
     p_ptr->old_race1 = 0L;
     p_ptr->old_race2 = 0L;
     p_ptr->old_realm = 0;
-
     for (i = 0; i < 64; i++)
     {
         if (p_ptr->pclass == CLASS_SORCERER) p_ptr->spell_exp[i] = SPELL_EXP_MASTER;
         else if (p_ptr->pclass == CLASS_RED_MAGE) p_ptr->spell_exp[i] = SPELL_EXP_SKILLED;
+		else if (p_ptr->pclass == CLASS_FREELANCER) p_ptr->spell_exp[i] = SPELL_EXP_SKILLED;
         else p_ptr->spell_exp[i] = SPELL_EXP_UNSKILLED;
     }
 
@@ -2450,7 +2450,7 @@ static void player_wipe(void)
 
 
     /* Wipe the spells */
-    if (p_ptr->pclass == CLASS_SORCERER)
+    if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_FREELANCER)
     {
         p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0xffffffffL;
         p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0xffffffffL;

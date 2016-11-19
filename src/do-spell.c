@@ -172,7 +172,7 @@ cptr info_weight(int weight)
  */
 int beam_chance(void)
 {
-    if (p_ptr->pclass == CLASS_MAGE || p_ptr->pclass == CLASS_BLOOD_MAGE || p_ptr->pclass == CLASS_NECROMANCER || p_ptr->pclass == CLASS_MALEDICT)
+    if (p_ptr->pclass == CLASS_MAGE || p_ptr->pclass == CLASS_BLOOD_MAGE || p_ptr->pclass == CLASS_NECROMANCER)
         return p_ptr->lev;
     if (p_ptr->pclass == CLASS_HIGH_MAGE || p_ptr->pclass == CLASS_SORCERER)
         return p_ptr->lev + 10;
@@ -9357,6 +9357,7 @@ cptr do_spell(int realm, int spell, int mode)
 
 	if (p_ptr->pclass == CLASS_FREELANCER){
 		plev = freelancer_spell_power(realm);
+		//msg_format("POWER: %d", plev);
 	}
 
     switch (realm)

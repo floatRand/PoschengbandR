@@ -2138,6 +2138,7 @@ s32b realm_choices1[MAX_CLASS] =
     CH_NONE,                /* Devicemaster */
 	CH_NONE,				/* Alchemist */
 	CH_NONE,				/* Maledict */
+	CH_NONE,
 };
 
 
@@ -2203,6 +2204,7 @@ s32b realm_choices2[MAX_CLASS] =
     CH_NONE,                /* Devicemaster */
 	CH_NONE,				/* Alchemist */
 	CH_NONE,				/* Maledict */
+	CH_NONE,
 };
 
 
@@ -2962,7 +2964,19 @@ cptr player_title[MAX_CLASS][PY_MAX_LEVEL / 5] =
 		"Dark Omen",
 		"Black Omen",
 	},
-
+	/* FREELANCER */
+	{ 
+		"Illspeaker",
+		"Maledictor",
+		"Maledictor",
+		"Accursed",
+		"Accursed",
+		"Hexer",
+		"Hexer",
+		"Dark Omen",
+		"Dark Omen",
+		"Black Omen",
+	},
 };
 
 monster_power monster_powers[MAX_MONSPELLS] =

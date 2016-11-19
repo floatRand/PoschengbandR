@@ -2496,8 +2496,7 @@ static void calc_spells(void)
     /* Hack -- handle "xtra" mode */
     if (character_xtra) return;
 
-    if ( p_ptr->pclass == CLASS_SORCERER
-      || p_ptr->pclass == CLASS_RED_MAGE )
+    if ( class_doesnt_study(p_ptr->pclass) )
     {
         p_ptr->new_spells = 0;
         return;
@@ -3044,6 +3043,7 @@ static void calc_mana(void)
 
         if (msp && (p_ptr->personality == PERS_MUNCHKIN)) msp += msp/2;
         if (msp && (get_class_idx() == CLASS_SORCERER)) msp += msp*(25+p_ptr->lev)/100;
+		if (msp && (get_class_idx() == CLASS_FREELANCER)) msp += freelancer_sp_boost();
     }
 
     _calc_encumbrance();
