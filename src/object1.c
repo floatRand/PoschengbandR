@@ -744,7 +744,7 @@ bool check_book_realm(const byte book_tval, const byte book_sval)
     }
 	else if (p_ptr->pclass == CLASS_FREELANCER)
 	{
-		return freelancer_can_use_realm(tval2realm(book_tval));
+		return freelancer_get_realm_lev(tval2realm(book_tval)) > 0;
 	}
     return (REALM1_BOOK == book_tval || REALM2_BOOK == book_tval);
 }

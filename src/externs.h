@@ -2395,11 +2395,14 @@ extern void alchemist_cast(int tval);
 extern void alchemist_super_potion_effect(int sval);
 
 /* freelancer.c */
+extern class_t *freelancer_get_class(void);
 extern int freelancer_stab_level(void);
 extern int freelancer_hp_boost(void);
 extern int freelancer_sp_boost(void);
-extern bool freelancer_can_use_realm(int realm);
+extern int freelancer_mana_regen(int amt);
 extern int freelancer_spell_power(int use_realm);
+extern int freelancer_get_realm_lev(int realm);
+extern bool freelancer_can_cast(int use_realm, magic_type *s_ptr);
 
 extern class_t *maledict_get_class(void);
 extern bool maledict_ty_protection(void);

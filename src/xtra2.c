@@ -5843,7 +5843,6 @@ int spell_exp_level(int spell_exp)
 }
 
 bool class_doesnt_study(int class_idx){
-
-	return (class_idx == CLASS_RED_MAGE || class_idx == CLASS_SORCERER || class_idx == CLASS_FREELANCER);
-	
+	return (class_idx == CLASS_RED_MAGE || class_idx == CLASS_SORCERER || class_idx == CLASS_FREELANCER);	
 }
+

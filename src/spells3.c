@@ -3372,6 +3372,11 @@ s16b spell_chance(int spell, int use_realm)
         s16b exp = experience_of_spell(spell, use_realm);
         if (exp >= SPELL_EXP_EXPERT) chance--;
         if (exp >= SPELL_EXP_MASTER) chance--;
+
+		if (p_ptr->pclass == CLASS_FREELANCER){ 
+			if (!freelancer_can_cast(use_realm,s_ptr)) chance = 100;
+			else chance-=freelancer_get_realm_lev(use_realm); 
+		}
     }
 
     /* Return the chance */
@@ -3410,6 +3415,11 @@ bool spell_okay(int spell, bool learned, bool study_pray, int use_realm)
         /* Never okay */
         return (FALSE);
     }
+
+	// Freelancers cannot reach 41-50 spells without 2nd tier.
+	if (p_ptr->pclass == CLASS_FREELANCER){
+		return freelancer_can_cast(use_realm, s_ptr);
+	}
 
 	if (class_doesnt_study(p_ptr->pclass)) return TRUE;
 
@@ -3552,6 +3562,13 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
 
                 line_attr = TERM_YELLOW;
             }
+			else if (p_ptr->pclass == CLASS_FREELANCER)
+			{
+				if (!freelancer_can_cast(use_realm, s_ptr)){
+					comment = "too difficult";
+					line_attr = TERM_L_DARK;
+				}
+			}
         }
         else if ((use_realm != p_ptr->realm1) && (use_realm != p_ptr->realm2))
         {

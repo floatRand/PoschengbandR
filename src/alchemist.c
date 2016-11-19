@@ -533,7 +533,7 @@ bool _evaporate_aux(object_type *o_ptr){
 		case SV_POTION_DEC_INT:
 		case SV_POTION_DEC_WIS:
 		case SV_POTION_DEC_CON:
-			blastType = GF_TIME; (5 + plev) * 2; 							break;
+			blastType = GF_TIME; dam = (5 + plev) * 2; 							break;
 		case SV_POTION_CONFUSION:		blastType = GF_CONFUSION; dam = plev;							break;
 		case SV_POTION_SLOWNESS:		blastType = GF_OLD_SLOW; dam = plev;							break;
 		case SV_POTION_LOSE_MEMORIES:	blastType = GF_AMNESIA;	dam = plev;								break;

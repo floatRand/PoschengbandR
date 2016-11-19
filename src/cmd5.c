@@ -101,7 +101,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
     if (!okay) return (FALSE);
     if (((use_realm) != p_ptr->realm1) && ((use_realm) != p_ptr->realm2) 
 		&& !class_doesnt_study(p_ptr->pclass)) return FALSE;
-	if (p_ptr->pclass == CLASS_FREELANCER && !freelancer_can_use_realm(use_realm)) return FALSE;
+	if (p_ptr->pclass == CLASS_FREELANCER && freelancer_get_realm_lev(use_realm)<1) return FALSE;
 	if (class_doesnt_study(p_ptr->pclass) && !is_magic(use_realm)) return FALSE;
     if ((p_ptr->pclass == CLASS_RED_MAGE) && ((use_realm) != REALM_ARCANE) && (sval > 1)) return FALSE;
 

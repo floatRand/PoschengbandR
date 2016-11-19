@@ -1605,6 +1605,10 @@ static void process_world_aux_hp_and_sp(void)
     if (_fast_mana_regen())
         upkeep_regen = upkeep_regen * 2;
 
+	if (p_ptr->pclass == CLASS_FREELANCER){
+		upkeep_regen += freelancer_mana_regen(upkeep_regen);
+	}
+
     regenmana(upkeep_regen);
 
     if (magic_eater_regen(regen_amount))
