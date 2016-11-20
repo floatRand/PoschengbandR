@@ -1758,8 +1758,7 @@ static int _prompt_sex(void)
         if (idx < 0) return idx;
 
         p_ptr->psex = idx;
-        sp_ptr = &sex_info[p_ptr->psex]; /* TODO: Remove this ... */
-        c_put_str(TERM_L_BLUE, format("%-14s", sp_ptr->title), 2, 14);
+        c_put_str(TERM_L_BLUE, format("%-14s", sex_info[p_ptr->psex].title), 2, 14);
 
         if (game_mode == GAME_MODE_MONSTER)
             idx = _prompt_mon_race();
@@ -1849,8 +1848,7 @@ static bool _prompt_game_mode(void)
 
             c_put_str(TERM_WHITE, "              ", 2, 14);
             p_ptr->psex = one_in_(2) ? SEX_MALE : SEX_FEMALE;
-            sp_ptr = &sex_info[p_ptr->psex]; /* TODO: Remove this ... */
-            c_put_str(TERM_L_BLUE, format("%-14s", sp_ptr->title), 2, 14);
+            c_put_str(TERM_L_BLUE, format("%-14s", sex_info[p_ptr->psex].title), 2, 14);
 
             c_put_str(TERM_WHITE, "              ", 4, 14);
             c_put_str(TERM_WHITE, "                   ", 5, 14);
@@ -3934,7 +3932,6 @@ static bool ask_quick_start(void)
     init_dungeon_quests();
     init_turn();
 
-    sp_ptr = &sex_info[p_ptr->psex];
     mp_ptr = &m_info[p_ptr->pclass];
 
     /* Calc hitdie, but don't roll */
@@ -3997,6 +3994,23 @@ void player_birth(void)
 #else
     if (py_birth() != UI_OK)
         quit(NULL);
+
+    /* Here's a bunch of crap that py_birth() shouldn't need to know */
+    equip_on_init();
+    virtue_init();
+    get_max_stats();
+    do_cmd_rerate_aux();
+    init_dungeon_quests();
+    init_turn();
+
+    mp_ptr = &m_info[p_ptr->pclass];
+
+    get_extra(TRUE);
+    p_ptr->update |= (PU_BONUS | PU_HP);
+    update_stuff();
+    p_ptr->chp = p_ptr->mhp;
+    p_ptr->csp = p_ptr->msp;
+    process_player_name(FALSE);
 #endif
     /* Init the shops */
     for (i = 1; i < max_towns; i++)

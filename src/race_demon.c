@@ -501,7 +501,6 @@ static void _marilith_gain_level(int new_level) {
     {
         p_ptr->current_r_idx = MON_MARILITH;
         p_ptr->psex = SEX_FEMALE;
-        sp_ptr = &sex_info[p_ptr->psex];
         msg_print("You have evolved into a Marilith.");
         equip_on_change_race();
         p_ptr->redraw |= PR_MAP;

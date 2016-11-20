@@ -744,7 +744,6 @@ player_type *p_ptr = &p_body;
  * Pointer to the player tables
  * (sex, race, class, magic)
  */
-player_sex *sp_ptr;
 player_magic *mp_ptr;
 
 

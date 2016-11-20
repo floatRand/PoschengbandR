@@ -437,7 +437,6 @@ extern byte tval_to_attr[128];
 extern char tval_to_char[128];
 extern cptr keymap_act[KEYMAP_MODES][256];
 extern player_type *p_ptr;
-extern player_sex *sp_ptr;
 extern player_magic *mp_ptr;
 extern birther previous_char;
 extern room_template_t *room_info;

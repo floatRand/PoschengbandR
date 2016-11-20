@@ -1618,7 +1618,6 @@ static errr rd_savefile_new_aux(savefile_ptr file)
         p_ptr->player_hp[i] = savefile_read_s16b(file);
 
     /* Important -- Initialize stuff */
-    sp_ptr = &sex_info[p_ptr->psex];
     mp_ptr = &m_info[p_ptr->pclass];
 
     /* Read spell info */

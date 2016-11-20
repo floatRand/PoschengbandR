@@ -1407,13 +1407,11 @@ void possessor_calc_bonuses(void)
     if ((r_ptr->flags1 & RF1_FEMALE) && p_ptr->psex != SEX_FEMALE)
     {
         p_ptr->psex = SEX_FEMALE;
-        sp_ptr = &sex_info[p_ptr->psex];
     }
 
     if ((r_ptr->flags1 & RF1_MALE) && p_ptr->psex != SEX_MALE)
     {
         p_ptr->psex = SEX_MALE;
-        sp_ptr = &sex_info[p_ptr->psex];
     }
 
     if (!equip_can_wield_kind(TV_LITE, SV_LITE_FEANOR))

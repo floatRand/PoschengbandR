@@ -41,7 +41,7 @@ static void _build_general1(doc_ptr doc)
     personality_ptr  pers_ptr = get_personality();
 
     doc_printf(doc, " Name       : <color:B>%s</color>\n", player_name);
-    doc_printf(doc, " Sex        : <color:B>%s</color>\n", sp_ptr->title);
+    doc_printf(doc, " Sex        : <color:B>%s</color>\n", sex_info[p_ptr->psex].title);
     doc_printf(doc, " Personality: <color:B>%s</color>\n", pers_ptr->name);
 
     if (race_ptr->mimic)

@@ -4,6 +4,8 @@
 
 /************************************************************************
  * Give birth to a new player.
+ * TODO: quickstart/welcome/final(change name)/monster mode/birth options
+ *
  * *_ui() functions run menu loops according to the following flow graph:
  ***********************************************************************/
 extern int py_birth(void);
@@ -60,7 +62,9 @@ int py_birth(void)
  ***********************************************************************/ 
 static int _welcome_ui(void)
 {
-    return _race_class_ui();
+    if (_race_class_ui() == UI_OK)
+        return UI_OK;
+    return UI_CANCEL;
 }
 
 /************************************************************************
@@ -84,7 +88,6 @@ static int _race_class_ui(void)
         doc_clear(_doc);
         _race_class_top(_doc);
 
-        /* Choices */
         cols[0] = doc_alloc(30);
         cols[1] = doc_alloc(46);
 
@@ -114,7 +117,9 @@ static int _race_class_ui(void)
         switch (cmd)
         {
         case '\r':
-            return _stats_ui();
+            if (_stats_ui() == UI_OK)
+                return UI_OK;
+            break;
         case ESCAPE:
             return UI_CANCEL;
         case '\t':
@@ -234,7 +239,6 @@ static void _race_group_ui(void)
         doc_clear(_doc);
         _race_class_top(_doc);
 
-        /* Choices */
         doc_insert(_doc, "<color:G>Choose a Type of Race to Play</color>\n");
         for (i = 0; i < vec_length(groups); i++)
         {
@@ -274,7 +278,6 @@ static int _race_ui(int ids[])
         doc_clear(_doc);
         _race_class_top(_doc);
 
-        /* Choices */
         cols[0] = doc_alloc(30);
         cols[1] = doc_alloc(30);
 
@@ -549,7 +552,6 @@ static void _class_group_ui(void)
         doc_clear(_doc);
         _race_class_top(_doc);
 
-        /* Choices */
         doc_insert(_doc, "<color:G>Choose a Type of Class to Play</color>\n");
         for (i = 0; i < vec_length(groups); i++)
         {
@@ -590,7 +592,6 @@ static int _class_ui(int ids[])
         doc_clear(_doc);
         _race_class_top(_doc);
 
-        /* Choices */
         cols[0] = doc_alloc(30);
         cols[1] = doc_alloc(30);
 
@@ -1029,7 +1030,6 @@ static void _pers_ui(void)
         doc_clear(_doc);
         _race_class_top(_doc);
 
-        /* Choices */
         cols[0] = doc_alloc(20);
         cols[1] = doc_alloc(20);
 
@@ -1107,9 +1107,290 @@ static vec_ptr _pers_choices(void)
 /************************************************************************
  * 3) Stats
  ***********************************************************************/ 
+
+static int _stat_points[18] =
+{ 0, 0, 0,
+ -8,-7,-6,   /*  3  4  5 */
+ -5,-4,-3,   /*  6  7  8 */
+ -2,-1, 0,   /*  9 10 11 */
+  1, 2, 3,   /* 12 13 14 */
+  6,10,16 }; /* 15 16 17 */
+
+#define _MAX_SCORE 30
+
+static int _stats_score(void);
+static void _stats_init(void);
+static void _stat_dec(int which);
+static void _stat_inc(int which);
+static cptr _stat_desc(int stat);
+static bool _stats_changed = FALSE;
+
+static cptr _stat_names[MAX_STATS] = { "STR", "INT", "WIS", "DEX", "CON", "CHR" };
+static char _stat_to_char(int which);
+static int _char_to_stat(char which);
+
 static int _stats_ui(void)
 {
-    return _final_ui();
+    race_t         *race_ptr = get_race();
+    class_t        *class_ptr = get_class();
+    personality_ptr pers_ptr = get_personality();
+
+    /* Initialize stats with reasonable defaults.
+       If the user backs up and changes their class,
+       pick new defaults (unless they manually made
+       changes. */
+    if (!_stats_changed)
+        _stats_init();
+
+    for (;;)
+    {
+        int cmd, score, i;
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(32);
+        cols[1] = doc_alloc(30);
+
+        doc_clear(_doc);
+        _race_class_top(_doc);
+
+        score = _stats_score();
+        doc_insert(cols[0], "<color:G>Enter Your Starting Stats</color>\n");
+        doc_insert(cols[0], "<tab:9>Base  Pts  Mod  Total\n");
+        for (i = 0; i < MAX_STATS; i++)
+        {
+            int stat = p_ptr->stat_cur[i];
+            int bonus = pers_ptr->stats[i] + race_ptr->stats[i] + class_ptr->stats[i];
+            doc_printf(cols[0], "<color:y>%c</color>/<color:y>%c</color>) %-3.3s ",
+                _stat_to_char(i),
+                toupper(_stat_to_char(i)),
+                _stat_names[i]
+            );
+            doc_printf(cols[0], "%4d  <color:w>%3d</color>  <color:R>%+3d</color> %6.6s\n",
+                stat,
+                _stat_points[stat],
+                bonus,
+                _stat_desc(stat + bonus)
+            );
+        }
+        doc_printf(cols[0], "<tab:15><color:%c>%3d</color>\n",
+            score <= _MAX_SCORE ? 'G' : 'r', score);
+
+        doc_newline(cols[1]);
+        doc_newline(cols[1]);
+        doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
+        doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
+        doc_printf(cols[1], "<color:%c>RET</color>) Next Screen\n", score <= _MAX_SCORE ? 'y' : 'D');
+        doc_insert(cols[1], "<color:y>ESC</color>) Prev Screen\n");
+
+        doc_insert_cols(_doc, cols, 2, 1);
+        doc_free(cols[0]);
+        doc_free(cols[1]);
+
+        doc_insert(_doc,
+            "<color:G>Note: </color><indent>"
+            "You may adjust each starting stat using the indicated "
+            "keys. The lower case key decrements while the upper case increments "
+            "the starting value. Values may range from 8 to 17 and each value that "
+            "you enter is charged the indicated number of points. You only have 30 "
+            "points to spend so be sure to adjust those stats that matter most."
+            "</indent>");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == '\r')
+        {
+            if (score <= _MAX_SCORE && _final_ui() == UI_OK)
+                return UI_OK;
+        }
+        else if (cmd == ESCAPE)
+            return UI_CANCEL;
+        else if (cmd == '\t')
+            _inc_rcp_state();
+        else if (isupper(cmd))
+        {
+            i = _char_to_stat(tolower(cmd));
+            if (i != A_NONE)
+                _stat_inc(i);
+        }
+        else
+        {
+            i = _char_to_stat(cmd);
+            if (i != A_NONE)
+                _stat_dec(i);
+        }
+    }
+}
+
+static char _stat_cmd_map[MAX_STATS] = { 's', 'i', 'w', 'd', 'c', 'r' };
+static char _stat_to_char(int which)
+{
+    return _stat_cmd_map[which];
+}
+
+static int _char_to_stat(char which)
+{
+    int i;
+    for (i = 0; i < MAX_STATS; i++)
+    {
+        char c = _stat_cmd_map[i];
+        if (c == which) return i;
+    }
+    return A_NONE;
+}
+
+static cptr _stat_desc(int stat)
+{
+    static char buf[10];
+    if (stat < 3) stat = 3;
+    if (stat > 40) stat = 40;
+    if (stat < 19)
+        sprintf(buf, "%2d", stat);
+    else
+        sprintf(buf, "18/%d", 10*(stat - 18));
+    return buf;
+}
+
+static void _stats_init_aux(int stats[MAX_STATS])
+{
+    int i;
+    for (i = 0; i < MAX_STATS; i++)
+    {
+        p_ptr->stat_cur[i] = stats[i];
+        p_ptr->stat_max[i] = stats[i];
+    }
+}
+
+static void _stats_init(void)
+{
+    switch (p_ptr->pclass)
+    {
+    case CLASS_WARRIOR:
+    case CLASS_CAVALRY:
+    case CLASS_BERSERKER:
+    case CLASS_MAULER:
+    case CLASS_ARCHER:
+    case CLASS_SAMURAI:
+    case CLASS_WEAPONSMITH:
+    case CLASS_WEAPONMASTER:
+    case CLASS_NINJA:
+    case CLASS_SNIPER:
+    case CLASS_DUELIST:
+    case CLASS_RAGE_MAGE:
+    {
+        int stats[6] = { 17, 8, 8, 17, 15, 9 };
+        _stats_init_aux(stats);
+        break;
+    }
+    case CLASS_BLOOD_KNIGHT:
+    {
+        int stats[6] = { 17, 8, 8, 15, 17, 9 };
+        _stats_init_aux(stats);
+        break;
+    }
+    case CLASS_MAGE:
+    case CLASS_HIGH_MAGE:
+    case CLASS_SORCERER:
+    case CLASS_BLUE_MAGE:
+    case CLASS_GRAY_MAGE:
+    case CLASS_YELLOW_MAGE:
+    case CLASS_MIRROR_MASTER:
+    case CLASS_BLOOD_MAGE:
+    case CLASS_NECROMANCER:
+    {
+        int stats[6] = { 16, 17, 9, 9, 16, 9 };
+        _stats_init_aux(stats);
+        break;
+    }
+    case CLASS_PRIEST:
+    case CLASS_RANGER:
+    case CLASS_PALADIN:
+    case CLASS_MINDCRAFTER:
+    case CLASS_FORCETRAINER:
+    case CLASS_TIME_LORD:
+    case CLASS_ARCHAEOLOGIST:
+    {
+        int stats[6] = { 16, 8, 17, 16, 11, 8 };
+        _stats_init_aux(stats);
+        break;
+    }
+    case CLASS_ROGUE:
+    case CLASS_WARRIOR_MAGE:
+    case CLASS_CHAOS_WARRIOR:
+    case CLASS_TOURIST:
+    case CLASS_MAGIC_EATER:
+    case CLASS_RED_MAGE:
+    case CLASS_RUNE_KNIGHT:
+    case CLASS_SCOUT:
+    case CLASS_DEVICEMASTER:
+    {
+        int stats[6] = { 16, 16, 9, 16, 14, 10 };
+        _stats_init_aux(stats);
+        break;
+    }
+    case CLASS_MONK:
+    {
+        int stats[6] = { 16, 8, 16, 17, 11, 8 };
+        _stats_init_aux(stats);
+        break;
+    }
+    case CLASS_MYSTIC:
+    {
+        int stats[6] = { 16, 8, 8, 17, 11, 16 };
+        _stats_init_aux(stats);
+        break;
+    }
+    case CLASS_BEASTMASTER:
+    case CLASS_BARD:
+    {
+        int stats[6] = { 16, 8, 8, 16, 11, 17 };
+        _stats_init_aux(stats);
+        break;
+    }
+    /* TODO */
+    case CLASS_WARLOCK:
+    case CLASS_WILD_TALENT:
+    case CLASS_PSION:
+    case CLASS_MONSTER:
+    default:
+    {
+        int stats[6] = { 15, 15, 15, 15, 15, 11 };
+        _stats_init_aux(stats);
+    }
+    }
+}
+
+static void _stat_dec(int which)
+{
+    int val = p_ptr->stat_cur[which];
+    if (val > 8)
+        val--;
+    else
+        val = 17;
+    p_ptr->stat_cur[which] = val;
+    p_ptr->stat_max[which] = val;
+    _stats_changed = TRUE;
+}
+
+static void _stat_inc(int which)
+{
+    int val = p_ptr->stat_cur[which];
+    if (val < 17)
+        val++;
+    else
+        val = 8;
+    p_ptr->stat_cur[which] = val;
+    p_ptr->stat_max[which] = val;
+    _stats_changed = TRUE;
+}
+
+static int _stats_score()
+{
+    int i, score = 0;
+
+    for (i = 0; i < MAX_STATS; i++)
+        score += _stat_points[p_ptr->stat_cur[i]];
+
+    return score;
 }
 
 /************************************************************************
@@ -1117,7 +1398,7 @@ static int _stats_ui(void)
  ***********************************************************************/ 
 static int _final_ui(void)
 {
-    return UI_CANCEL;
+    return UI_OK;
 }
 
 /************************************************************************
