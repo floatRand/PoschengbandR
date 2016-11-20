@@ -15937,5 +15937,5 @@ W:4:62:0:2  #
 W:4:63:0:2  # 
 # Skill
 S:0:0:4000  # Martial Arts
-S:1:0:6000  # Dual Wielding
+S:1:0:4000  # Dual Wielding
 S:2:0:2000  # Riding

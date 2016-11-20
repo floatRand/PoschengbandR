@@ -867,59 +867,6 @@ void alchemist_gain(void)
 		energy_use = 100;
 }
 
-/* Character Dump */
-static void _dump_list(doc_ptr doc)
-{
-	int i;
-	char o_name[MAX_NLEN];
-	for (i = 0; i < _MAX_INF_SLOTS; i++)
-	{
-		object_type *o_ptr = _infusions + i;
-		if (o_ptr->k_idx)
-		{
-			object_desc(o_name, o_ptr, OD_COLOR_CODED);
-			doc_printf(doc, "%c) %s\n", I2A(i), o_name);
-		}
-		else
-			doc_printf(doc, "%c) (Empty)\n", I2A(i));
-	}
-	doc_newline(doc);
-}
-
-static void _character_dump(doc_ptr doc)
-{
-	doc_printf(doc, "<topic:Alchemist>============================= Created <color:keypress>I</color>nfusions ============================\n\n");
-
-	_dump_list(doc);
-
-	doc_newline(doc);
-}
-
-static void _load_list(savefile_ptr file)
-{
-	int i;
-	for (i = 0; i < _MAX_INF_SLOTS; i++)
-	{
-		object_type *o_ptr = _infusions + i;
-		memset(o_ptr, 0, sizeof(object_type));
-	}
-
-	while (1)
-	{
-		object_type *o_ptr;
-		i = savefile_read_u16b(file);
-		if (i == 0xFFFF) break;
-		assert(0 <= i && i < _MAX_INF_SLOTS);
-		o_ptr = _infusions + i;
-		rd_item(file, o_ptr);
-		assert(o_ptr->k_idx);
-	}
-
-	for (i = 0; i <= _CTIER_MAX; i++){
-		_CHEM[i] = savefile_read_s32b(file);
-	}
-}
-
 void alchemist_super_potion_effect(int sval){
 
 	switch (sval)
@@ -964,6 +911,31 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 
 }
 
+static void _load_list(savefile_ptr file)
+{
+	int i;
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
+	{
+		object_type *o_ptr = _infusions + i;
+		memset(o_ptr, 0, sizeof(object_type));
+	}
+
+	while (1)
+	{
+		object_type *o_ptr;
+		i = savefile_read_u16b(file);
+		if (i == 0xFFFF) break;
+		assert(0 <= i && i < _MAX_INF_SLOTS);
+		o_ptr = _infusions + i;
+		rd_item(file, o_ptr);
+		assert(o_ptr->k_idx);
+	}
+
+	for (i = 0; i <= _CTIER_MAX; i++){
+		_CHEM[i] = savefile_read_s32b(file);
+	}
+}
+
 static void _load_player(savefile_ptr file)
 {
 	_load_list(file);
@@ -993,6 +965,33 @@ static void _save_player(savefile_ptr file)
 	_save_list(file);
 }
 
+/* Character Dump */
+static void _dump_list(doc_ptr doc)
+{
+	int i;
+	char o_name[MAX_NLEN];
+	for (i = 0; i < _MAX_INF_SLOTS; i++)
+	{
+		object_type *o_ptr = _infusions + i;
+		if (o_ptr->k_idx)
+		{
+			object_desc(o_name, o_ptr, OD_COLOR_CODED);
+			doc_printf(doc, "%c) %s\n", I2A(i), o_name);
+		}
+		else
+			doc_printf(doc, "%c) (Empty)\n", I2A(i));
+	}
+	doc_newline(doc);
+}
+
+static void _character_dump(doc_ptr doc)
+{
+	doc_printf(doc, "<topic:Alchemist>============================= Created <color:keypress>I</color>nfusions ============================\n\n");
+
+	_dump_list(doc);
+
+	doc_newline(doc);
+}
 
 static caster_info * _caster_info(void)
 {

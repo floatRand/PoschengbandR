@@ -122,9 +122,9 @@ critical_t monk_get_critical(martial_arts *ma_ptr, int hand, int mode)
     return critical_norm(weight, min_level, p_ptr->weapon_info[hand].to_h, mode, 0);
 }
 
-int monk_get_attack_idx(void)
+int monk_get_attack_idx(int plev)
 {
-    return _get_attack_idx(p_ptr->lev, p_ptr->special_defense);
+    return _get_attack_idx(plev, p_ptr->special_defense);
 }
 
 void monk_display_attack_info(doc_ptr doc, int hand)

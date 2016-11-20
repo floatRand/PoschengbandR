@@ -1003,7 +1003,7 @@ void equip_calc_bonuses(void)
                         p_ptr->weapon_info[hand].xtra_blow += 100;
                 }
             }
-            else if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC)
+            else if (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC || freelancer_ma_lev()>0)
             {
                 p_ptr->weapon_info[hand].wield_how = WIELD_ONE_HAND;
                 p_ptr->weapon_info[hand].bare_hands = TRUE;

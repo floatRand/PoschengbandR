@@ -1,9 +1,11 @@
 #include "angband.h"
-
+#include "assert.h"
 
 static const int _prof_progression = 2; // 2 point every levels, 5 at first level
 static int _prof_points = 5;
 static int _p_ct = 0; // number of purchases. Used for iterating.
+static bool refresh_weaponskills = TRUE;
+
 #define _FL_MAX_BUYS 256 // maximum number of purchases. Shouln't be really reached...
 
 /* On structuring:
@@ -72,9 +74,9 @@ typedef struct {
 
 static fl_proficiency _proficiencies[_FL_MAX_PROF] = {
 //IDX,cost, mxlv, minimum plv
-{ _FL_LEARN_REALM,				8, 2, 1, "Learn a magic realm"}, // FULLY IMPLEMENTED :)
-{ _FL_LEARN_WEAPON,				3, 2, 1, "Learn a weapon group skill" }, // UNIMPLEMENTED
-{ _FL_LEARN_DUAL_WIELDING,		8, 3, 1, "Learn dual wielding skill" }, // UNIMPLEMENTED
+{ _FL_LEARN_REALM,				5, 2, 1, "Learn a magic realm"}, // FULLY IMPLEMENTED :)
+{ _FL_LEARN_WEAPON,				3, 2, 1, "Learn a weapon group skill" }, // IMPLEMENTED
+{ _FL_LEARN_DUAL_WIELDING,		8, 2, 1, "Learn dual wielding skill" }, // IMPLEMENTED
 { _FL_LEARN_RIDING,				8, 3, 1, "Learn riding skill" }, // UNIMPLEMENTED
 { _FL_LEARN_MARTIAL_ARTS,		8, 3, 1, "Learn martial arts" }, // UNIMPLEMENTED
 
@@ -83,11 +85,11 @@ static fl_proficiency _proficiencies[_FL_MAX_PROF] = {
 { _FL_BOOST_MELEE,				2, 5, 1, "Boost melee attacks" }, // IMPLEMENTED :)
 { _FL_BOOST_BLOWS,				2, 5, 1, "Boost number of attacks" }, // IMPLEMENTED :)
 { _FL_BOOST_RANGED,				2, 5, 1, "Boost ranged attacks" }, // UNIMPLEMENTED
-{ _FL_BOOST_MANA_REGEN,			4, 3, 1, "Boost mana regen" }, // IMPLEMENTED
+{ _FL_BOOST_MANA_REGEN,			4, 3, 1, "Boost mana regen" }, // IMPLEMENTED :)
 { _FL_BOOST_SKILL,				1, 5, 1, "Boost invidual skill" }, // IMPLEMENTED :)
 
 { _FL_F_SNEAK_ATTACKS,			8, 3, 5, "Gain sneak attacking" }, // IMPLEMENTED, NOT TESTED?
-{ _FL_F_HEAVY_ARMOR_CASTING,	8, 2, 10, "Improve casting in heavy armour" }, // UNIMPLEMENTED
+{ _FL_F_HEAVY_ARMOR_CASTING,	8, 2, 10, "Improve casting in heavy armour" }, // IMPLEMENTED
 { _FL_F_AUTO_IDENTIFY,			10, 1, 15, "Identify items automatically" }, // IMPLEMENTED
 
 { _FL_NULL, 0,0,0, "" } // for bad returns.
@@ -160,6 +162,7 @@ static int fl_GetProfLevel(int profId, int subId){
 	if (profId < 0 || profId >= _FL_MAX_PROF) return -1;
 
 	if (profId == _FL_LEARN_REALM && subId>=0 && subId<MAX_REALM) return _realmLevels[subId];
+	else if (profId == _FL_BOOST_SKILL && subId >= 0 && subId < _SKILL_MAX) return _skillLevels[subId];
 	else if (profId == _FL_LEARN_WEAPON && subId >= 0 && subId<_FL_TVAL_WPNMAX) return _wpnLevels[subId];
 	return _profLevels[profId];
 
@@ -225,9 +228,20 @@ static int _prof_get_cost(int prof, int sub){
 	else if (prof == _FL_LEARN_WEAPON){ lvToBuy = _wpnLevels[sub]; baseCost = _proficiencies[prof].cost; }
 	else if (prof == _FL_BOOST_SKILL){ lvToBuy = _skillLevels[sub]; baseCost = _proficiencies[prof].cost; }
 	else {lvToBuy = _profLevels[prof];  baseCost = _proficiencies[prof].cost;}
-
 		return (lvToBuy+1) * baseCost;
 }
+
+static int _prof_get_base_cost(int prof){
+	int baseCost = 1;
+
+	if (prof == _FL_LEARN_REALM){ baseCost = _proficiencies[prof].cost; }
+	else if (prof == _FL_LEARN_WEAPON){ baseCost = _proficiencies[prof].cost; }
+	else if (prof == _FL_BOOST_SKILL){ baseCost = _proficiencies[prof].cost; }
+	else {  baseCost = _proficiencies[prof].cost; }
+	return baseCost;
+}
+
+
 
 
 static int _displayRealms(rect_t display, u16b mode)
@@ -263,9 +277,9 @@ static int _displayRealms(rect_t display, u16b mode)
 					doc_printf(doc, "<tab:%d>Unpurchased, Cost:%2d%\n",display.cx - 28, cost);
 				}
 				else if (prlv > 0 && prlv < 2){ // dgreen
-					doc_insert_text(doc, TERM_GREEN, realm_names[info_ptr->realmID]);
-					doc_printf(doc, "<tab:%d><color:g>Level: %2d%, Cost:%2d%</color>\n",
-						display.cx - 28, cost);
+					doc_insert_text(doc, TERM_L_GREEN, realm_names[info_ptr->realmID]);
+					doc_printf(doc, "<tab:%d><color:G>Level: %2d%, Cost:%2d%</color>\n",
+						display.cx - 28, prlv, cost);
 				}
 				else { // capped
 					doc_insert_text(doc, TERM_YELLOW, realm_names[info_ptr->realmID]);
@@ -318,9 +332,9 @@ static int _displayWpnGroups(rect_t display, u16b mode)
 				doc_printf(doc, "<tab:%d>Unpurchased, Cost:%2d%\n", display.cx - 28, cost);
 			}
 			else if (prlv > 0 && prlv < 2){ // dgreen
-				doc_insert_text(doc, TERM_GREEN, info_ptr->name);
-				doc_printf(doc, "<tab:%d><color:g>Level: %2d%, Cost:%2d%</color>\n",
-					display.cx - 28, cost);
+				doc_insert_text(doc, TERM_L_GREEN, info_ptr->name);
+				doc_printf(doc, "<tab:%d><color:G>Level: %2d%, Cost:%2d%</color>\n",
+					display.cx - 28, prlv, cost);
 			}
 			else { // capped
 				doc_insert_text(doc, TERM_YELLOW, info_ptr->name);
@@ -477,7 +491,7 @@ static void _displayProficiencies(rect_t display, u16b mode)
 					else if (prlv > 0 && prlv < prof_ptr->maxLevel){ // dgreen
 						doc_insert_text(doc, TERM_L_GREEN, prof_ptr->name);
 						if (displayLvs) doc_printf(doc, "<tab:%d><color:G>Level: %2d%, Cost:%2d%</color>\n",
-							display.cx - 28, cost);
+							display.cx - 28, prlv, cost);
 						else doc_insert_text(doc, TERM_L_DARK, "\n");
 					}
 					else { // capped
@@ -525,14 +539,15 @@ void freelancer_count_buys(void){
 
 			if (_fl_purchases[i].lv >= p_ptr->lev) {
 				switch( pId ){
-					case _FL_LEARN_REALM: { _realmLevels[spId]++; prof_pts -= _prof_get_cost(pId,spId); break; }
-					case _FL_LEARN_WEAPON:{ _wpnLevels[spId]++; prof_pts -= _prof_get_cost(pId, spId); break; }
-					case _FL_BOOST_SKILL:{_skillLevels[spId]++; prof_pts -= _prof_get_cost(pId, spId); break; }
-					default:{_profLevels[pId]++; prof_pts -= _prof_get_cost(pId, spId); break; }
+					case _FL_LEARN_REALM:{ _realmLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
+					case _FL_LEARN_WEAPON:{ _wpnLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); refresh_weaponskills = TRUE; break; }
+					case _FL_BOOST_SKILL:{_skillLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
+					default:{_profLevels[pId]++; prof_pts -= _prof_get_base_cost(pId, spId); break; }
 				}	
 			} else if (_fl_purchases[i].profID == _FL_NULL) break; // the way they are done, there shouldn't be nulls inbetween...
 		}
 		_prof_points = prof_pts;
+		freelancer_adjust_wpn_skills();
 }
 
 int freelancer_spell_power(int use_realm){
@@ -741,10 +756,9 @@ static void _choose_prof_spell(int cmd, variant *res)
 	}
 }
 
-static void _birth(void){
+void freelancer_reset(void){
 	/* Init all. */
 	int i = 0;
-	_prof_points = 5; // beanie points;
 
 	// initialize, reset, all that jazz.
 	for (i = 0; i < _FL_MAX_BUYS; i++){
@@ -762,6 +776,13 @@ static void _birth(void){
 	// and skill boosts as well.
 	skills_init(&_skill_boost);
 	for (i = 0; i < _SKILL_MAX; i++) { _skillLevels[i] = 0; }
+
+	freelancer_count_buys();
+	freelancer_adjust_wpn_skills();
+}
+
+static void _birth(void){
+	freelancer_reset();
 }
 
 static int _get_powers(spell_info* spells, int max)
@@ -782,14 +803,6 @@ int freelancer_key_stat(void){
 	if (p_ptr->stat_use[res] < p_ptr->stat_use[A_CHR]) res = A_CHR;
 	if (p_ptr->stat_use[res] < p_ptr->stat_use[A_WIS]) res = A_WIS;
 	return res;
-}
-
-
-	
-
-
-int _minFail(void){
-	return 5;
 }
 
 int _castWeightLimit(void){
@@ -828,7 +841,7 @@ bool freelancer_can_use_realm(int realm){
 	if (_realmLevels[realm] > 0) return TRUE;
 	return FALSE;
 }
- 
+
 int freelancer_mana_regen(amt){
 	// amount is base regen. Sorcerers/mages have 200% default. Se each should perhaps be 50%, maxing at 3 ranks?
 	int regenTier = fl_GetProfLevel(_FL_BOOST_MANA_REGEN, 0);
@@ -836,6 +849,127 @@ int freelancer_mana_regen(amt){
 		return amt + (amt / 2)*regenTier;
 	}
 	return 0;
+}
+
+int _calc_min_wskill(int tval){
+	if (tval<0 || tval>_FL_TVAL_WPNMAX) return 0;
+	int a = fl_GetProfLevel(_FL_LEARN_WEAPON, tval);
+	switch (a){
+		case 0: return WEAPON_EXP_UNSKILLED;
+		case 1: return WEAPON_EXP_BEGINNER;
+		case 2: return WEAPON_EXP_SKILLED;
+	}
+	return 0;
+}
+
+int _calc_max_wskill(int tval){
+	if (tval<0 || tval>_FL_TVAL_WPNMAX) return 0;
+	int a = fl_GetProfLevel(_FL_LEARN_WEAPON, tval);
+	switch (a){
+	case 0: return WEAPON_EXP_SKILLED;
+	case 1: return WEAPON_EXP_EXPERT;
+	case 2: return WEAPON_EXP_MASTER;
+	}
+	return 0;
+}
+
+int _calc_min_riding_skill(int lv){
+
+	if (lv > 0) return RIDING_EXP_BEGINNER;
+	return RIDING_EXP_UNSKILLED;
+}
+
+int _calc_max_riding_skill(int lv){
+	if (lv == 1) return RIDING_EXP_SKILLED;
+	else if (lv == 2) return RIDING_EXP_EXPERT;
+	else return RIDING_EXP_UNSKILLED;
+}
+
+int _calc_min_dw_skill(int lv){
+	if (lv == 1) return WEAPON_EXP_BEGINNER;
+	else if (lv == 2) return WEAPON_EXP_SKILLED;
+	return WEAPON_EXP_UNSKILLED;
+}
+
+int _calc_max_dw_skill(int lv){
+	if (lv == 1) return WEAPON_EXP_EXPERT;
+	else if (lv == 2) return WEAPON_EXP_MASTER;
+	return WEAPON_EXP_UNSKILLED;
+}
+
+int _calc_min_ma_skill(int lv){
+	if (lv == 1) return WEAPON_EXP_BEGINNER;
+	else if (lv == 2) return WEAPON_EXP_SKILLED;
+	return WEAPON_EXP_UNSKILLED;
+}
+
+int _calc_max_ma_skill(int lv){
+	if (lv == 1) return WEAPON_EXP_EXPERT;
+	else if (lv == 2) return WEAPON_EXP_MASTER;
+	return WEAPON_EXP_UNSKILLED;
+}
+
+int freelancer_ma_lev(void){ 
+	if (p_ptr->pclass != CLASS_FREELANCER) return -1;
+	return fl_GetProfLevel(_FL_LEARN_MARTIAL_ARTS, 0); }
+
+void freelancer_adjust_wpn_skills(void){
+
+	int i, j;
+	int dw_skill = fl_GetProfLevel(_FL_LEARN_DUAL_WIELDING, 0);
+	int rd_skill = fl_GetProfLevel(_FL_LEARN_MARTIAL_ARTS, 0);
+	int ma_skill = fl_GetProfLevel(_FL_LEARN_MARTIAL_ARTS, 0);
+
+		s_info[p_ptr->pclass].s_start[SKILL_DUAL_WIELDING] = _calc_min_dw_skill(dw_skill); 
+		s_info[p_ptr->pclass].s_max[SKILL_DUAL_WIELDING] = _calc_max_dw_skill(dw_skill);
+
+		s_info[p_ptr->pclass].s_start[SKILL_MARTIAL_ARTS] = _calc_min_ma_skill(ma_skill);
+		s_info[p_ptr->pclass].s_max[SKILL_MARTIAL_ARTS] = _calc_max_ma_skill(ma_skill);
+
+		s_info[p_ptr->pclass].s_start[SKILL_RIDING] = _calc_min_riding_skill(rd_skill);
+		s_info[p_ptr->pclass].s_max[SKILL_RIDING] = _calc_min_riding_skill(rd_skill);
+
+
+	for (i = 0; i < 64; i++)
+	{
+		// mins
+		s_info[p_ptr->pclass].w_start[TV_HAFTED - TV_WEAPON_BEGIN][i] = _calc_min_wskill(_FL_TVAL_HAFTED);
+		s_info[p_ptr->pclass].w_start[TV_POLEARM - TV_WEAPON_BEGIN][i] = _calc_min_wskill(_FL_TVAL_POLEARM);
+		s_info[p_ptr->pclass].w_start[TV_SWORD - TV_WEAPON_BEGIN][i] = _calc_min_wskill(_FL_TVAL_SWORD);
+		s_info[p_ptr->pclass].w_start[TV_BOW - TV_WEAPON_BEGIN][i] = _calc_min_wskill(_FL_TVAL_BOW);
+		// maxes
+		s_info[p_ptr->pclass].w_max[TV_HAFTED - TV_WEAPON_BEGIN][i] = _calc_max_wskill(_FL_TVAL_HAFTED);
+		s_info[p_ptr->pclass].w_max[TV_POLEARM - TV_WEAPON_BEGIN][i] = _calc_max_wskill(_FL_TVAL_POLEARM);
+		s_info[p_ptr->pclass].w_max[TV_SWORD - TV_WEAPON_BEGIN][i] = _calc_max_wskill(_FL_TVAL_SWORD);
+		s_info[p_ptr->pclass].w_max[TV_BOW - TV_WEAPON_BEGIN][i] = _calc_max_wskill(_FL_TVAL_BOW);
+	}
+	/* Patch up current skills since we keep changing the allowed maximums */
+	if (p_ptr->skill_exp[SKILL_DUAL_WIELDING] > s_info[p_ptr->pclass].s_max[SKILL_DUAL_WIELDING])
+		p_ptr->skill_exp[SKILL_DUAL_WIELDING] = s_info[p_ptr->pclass].s_max[SKILL_DUAL_WIELDING];
+	if (p_ptr->skill_exp[SKILL_DUAL_WIELDING] < s_info[p_ptr->pclass].s_start[SKILL_DUAL_WIELDING])
+		p_ptr->skill_exp[SKILL_DUAL_WIELDING] = s_info[p_ptr->pclass].s_start[SKILL_DUAL_WIELDING];
+
+	if (p_ptr->skill_exp[SKILL_MARTIAL_ARTS] > s_info[p_ptr->pclass].s_max[SKILL_MARTIAL_ARTS])
+		p_ptr->skill_exp[SKILL_MARTIAL_ARTS] = s_info[p_ptr->pclass].s_max[SKILL_MARTIAL_ARTS];
+	if (p_ptr->skill_exp[SKILL_MARTIAL_ARTS] < s_info[p_ptr->pclass].s_start[SKILL_MARTIAL_ARTS])
+		p_ptr->skill_exp[SKILL_MARTIAL_ARTS] = s_info[p_ptr->pclass].s_start[SKILL_MARTIAL_ARTS];
+
+	if (p_ptr->skill_exp[SKILL_RIDING] > s_info[p_ptr->pclass].s_max[SKILL_RIDING])
+		p_ptr->skill_exp[SKILL_RIDING] = s_info[p_ptr->pclass].s_max[SKILL_RIDING];
+	if (p_ptr->skill_exp[SKILL_RIDING] < s_info[p_ptr->pclass].s_start[SKILL_RIDING])
+		p_ptr->skill_exp[SKILL_RIDING] = s_info[p_ptr->pclass].s_start[SKILL_RIDING];
+
+	for (i = 0; i < 5; i++)
+	{
+		for (j = 0; j < 64; j++)
+		{
+			if (p_ptr->weapon_exp[i][j] > s_info[p_ptr->pclass].w_max[i][j])
+				p_ptr->weapon_exp[i][j] = s_info[p_ptr->pclass].w_max[i][j];
+			if (p_ptr->weapon_exp[i][j] < s_info[p_ptr->pclass].w_start[i][j])
+				p_ptr->weapon_exp[i][j] = s_info[p_ptr->pclass].w_start[i][j];
+		}
+	}
+
 }
 
 static void _calc_bonuses(void)
@@ -861,8 +995,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 		info_ptr->dis_to_d += p_ptr->lev / (10 - meleeBoost);
 	}
 
-	if(blowBoost>0) info_ptr->xtra_blow += py_prorata_level_aux(( p_ptr->lev * blowBoost)/4, 0, 1, 1);
-
+	if(blowBoost>0) info_ptr->xtra_blow += py_prorata_level_aux(( p_ptr->lev * blowBoost), 0, 1, 1);
 }
 
 static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
@@ -875,6 +1008,61 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 	}
 }
 
+
+static void _load_list(savefile_ptr file)
+{
+
+	// Let's save all them to keep filesizes regular. I think it might be the best option, here... 255x3x32 bits = rougle 3 kilobytes. Nothing to frothe over... 
+	int i;
+	for (i = 0; i < _FL_MAX_BUYS; i++) // reset
+	{
+		_fl_purchase *buy_ptr = _fl_purchases + i;
+		memset(buy_ptr, -1, sizeof(_fl_purchase));
+	}
+	int lv, pr, sp;
+	i = 0;
+	while (1)
+	{
+		_fl_purchase *buy_ptr;
+		lv = savefile_read_s32b(file);
+		if (lv == 255) break; // this is sentinel. Just get out ASAP.
+		pr = savefile_read_s32b(file); // prof id
+		sp = savefile_read_s32b(file); // sub id
+		assert(0 <= i && i < _FL_MAX_BUYS && lv > 0 && lv <= 50 );
+		_fl_purchases[i].lv = lv;
+		if (pr == -1) pr = _FL_NULL;
+		_fl_purchases[i].profID = pr;
+		_fl_purchases[i].subID = sp;
+		i++;
+	}
+	_p_ct = savefile_read_s32b(file); // and last one is the number we are going at. Probably could get it dynamically.
+}
+
+static void _load_player(savefile_ptr file)
+{
+	_load_list(file);
+}
+
+static void _save_list(savefile_ptr file)
+{
+	int i;
+	for (i = 0; i < _FL_MAX_BUYS; i++)
+	{
+		_fl_purchase *buy_ptr = _fl_purchases + i;
+			savefile_write_s32b(file, buy_ptr->lv);
+			savefile_write_s32b(file, buy_ptr->profID);
+			savefile_write_s32b(file, buy_ptr->subID);
+	} // write down all the purchases
+	savefile_write_s32b(file, 255); /* sentinel. Just a zero. All levels should be set to -1, anyway... */
+	savefile_write_s32b(file, _p_ct); // and write how many things have been purchaed.
+
+}
+
+static void _save_player(savefile_ptr file)
+{
+	_save_list(file);
+}
+
 static caster_info* _caster_info(void)
 {
 	static caster_info me = { 0 };
@@ -882,10 +1070,10 @@ static caster_info* _caster_info(void)
 	if (!init)
 	{
 		me.magic_desc = "spell";
-		me.weight = 430;
 		me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
 		init = TRUE;
 	}
+	me.weight = 430 + fl_GetProfLevel(_FL_F_HEAVY_ARMOR_CASTING,0) * 200;
 	me.which_stat = freelancer_key_stat();
 	return &me;
 }
@@ -932,6 +1120,8 @@ class_t *freelancer_get_class(void)
 		me.get_spells = _get_spells;*/
 		me.get_powers = _get_powers;
 		me.character_dump = spellbook_character_dump;
+		me.save_player = _save_player;
+		me.load_player = _load_player;
 		init = TRUE;
 	}
 

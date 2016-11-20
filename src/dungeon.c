@@ -5855,6 +5855,10 @@ void play_game(bool new_game)
     if (p_ptr->pclass == CLASS_WEAPONMASTER && !new_game)
         weaponmaster_adjust_skills();
 
+	if (p_ptr->pclass == CLASS_FREELANCER && !new_game){
+		freelancer_adjust_wpn_skills();
+	}
+
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(dungeon_type);
 

@@ -2377,7 +2377,7 @@ extern void remove_mirror(int y, int x);
 /* monk.c */
 extern void monk_double_attack_spell(int cmd, variant *res);
 extern void monk_posture_spell(int cmd, variant *res);
-extern int  monk_get_attack_idx(void);
+extern int  monk_get_attack_idx(int plev);
 extern critical_t monk_get_critical(martial_arts *ma_ptr, int hand, int mode);
 extern void monk_display_attack_info(doc_ptr, int hand);
 
@@ -2402,7 +2402,10 @@ extern int freelancer_sp_boost(void);
 extern int freelancer_mana_regen(int amt);
 extern int freelancer_spell_power(int use_realm);
 extern int freelancer_get_realm_lev(int realm);
+extern int freelancer_ma_lev(void);
 extern bool freelancer_can_cast(int use_realm, magic_type *s_ptr);
+extern void freelancer_adjust_wpn_skills(void);
+extern void freelancer_reset(void);
 
 extern class_t *maledict_get_class(void);
 extern bool maledict_ty_protection(void);

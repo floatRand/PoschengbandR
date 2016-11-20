@@ -2962,7 +2962,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         ds = 1;
         to_h = 0;
         to_d = 0;
-        if ( (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC)
+        if ( (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC || freelancer_ma_lev()>0)
           && !p_ptr->riding )
         {
             monk_attack = TRUE;
@@ -3227,7 +3227,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             if (monk_attack && mode != MYSTIC_KILL)
             {
                 int special_effect = 0, stun_effect = 0;
-                martial_arts *ma_ptr = &ma_blows[monk_get_attack_idx()];
+				int plev = p_ptr->lev;
+				
+				if (p_ptr->pclass == CLASS_FREELANCER){
+					plev = (p_ptr->lev * (7 + (freelancer_ma_lev()))) / (10);
+				}
+                martial_arts *ma_ptr = &ma_blows[monk_get_attack_idx(p_ptr->lev)];
                 int resist_stun = 0;
 
                 if (r_ptr->flags1 & RF1_UNIQUE) resist_stun += (10*r_ptr->level);

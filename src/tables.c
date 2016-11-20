@@ -2966,16 +2966,16 @@ cptr player_title[MAX_CLASS][PY_MAX_LEVEL / 5] =
 	},
 	/* FREELANCER */
 	{ 
-		"Illspeaker",
-		"Maledictor",
-		"Maledictor",
-		"Accursed",
-		"Accursed",
-		"Hexer",
-		"Hexer",
-		"Dark Omen",
-		"Dark Omen",
-		"Black Omen",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
 	},
 };
 
