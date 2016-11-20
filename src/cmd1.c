@@ -2385,7 +2385,8 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 
 				if (p_ptr->pclass == CLASS_FREELANCER){
 					if (freelancer_stab_level() == 1)  tmp = (tmp*2) / 3; // 66% effect
-					if (freelancer_stab_level() == 2)  tmp = (tmp*4) / 5; // 80% effect
+					else if (freelancer_stab_level() == 2)  tmp = (tmp*4) / 5; // 80% effect
+					else break;
 				}
 
                 if (p_ptr->monlite && (mode != HISSATSU_NYUSIN)) tmp /= 3;
@@ -2993,9 +2994,10 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         {
             int tmp = p_ptr->lev * 6 + (p_ptr->skills.stl + 10) * 4;
 
-			if (p_ptr->pclass == CLASS_FREELANCER){ // freelancers have bit weaker version. 1st is 66% effective, 2nd is 80%. 100%? 3rd level.
+			if (p_ptr->pclass == CLASS_FREELANCER){
 				if (freelancer_stab_level() == 1)  tmp = (tmp * 2) / 3; // 66% effect
-				if (freelancer_stab_level() == 2)  tmp = (tmp * 4) / 5; // 80% effect
+				else if (freelancer_stab_level() == 2)  tmp = (tmp * 4) / 5; // 80% effect
+				else break;
 			}
 
             if (p_ptr->monlite && (mode != HISSATSU_NYUSIN)) tmp /= 3;

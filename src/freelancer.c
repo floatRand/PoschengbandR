@@ -6,7 +6,7 @@ static int _prof_points = 5;
 static int _p_ct = 0; // number of purchases. Used for iterating.
 static bool refresh_weaponskills = TRUE;
 
-#define _FL_MAX_BUYS 256 // maximum number of purchases. Shouln't be really reached...
+#define _FL_MAX_BUYS 105 // maximum number of purchases. Shouln't be really reached...
 
 /* On structuring:
 This is a hot mess.
@@ -544,7 +544,7 @@ void freelancer_count_buys(void){
 					case _FL_BOOST_SKILL:{_skillLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
 					default: {_profLevels[pId]++; prof_pts -= _prof_get_base_cost(pId); break; }
 				}	
-			} else if (_fl_purchases[i].profID == _FL_NULL) break; // the way they are done, there shouldn't be nulls inbetween...
+			} 
 		}
 		_prof_points = prof_pts;
 		freelancer_adjust_wpn_skills();
@@ -600,10 +600,13 @@ cptr _grantProficiency(int prof, int sub_choice, int *res){
 			if (_profLevels[prof] >= _proficiencies[prof].maxLevel) maxedOut = TRUE;
 			ok = TRUE;
 	}
+	minPlev = _proficiencies[prof].minPLev;
+
 	// check if it is legit choice.
 	if (getCost > _prof_points) return "You don't have enough proficiency points.";
 	else if (maxedOut) return "The proficiency is already at max level.";
 	else if (_p_ct >= _FL_MAX_BUYS - 2) return "You cannot buy more proficiencies. Perhaps buy a potion of new life?";
+	else if (p_ptr->lev < minPlev) return "You cannot learn that proficiency yet.";
 
 	if(ok){
 		_fl_purchases[_p_ct].lv = p_ptr->lev; // mark down level gained
@@ -779,6 +782,7 @@ void freelancer_reset(void){
 
 	freelancer_count_buys();
 	freelancer_adjust_wpn_skills();
+
 }
 
 static void _birth(void){
@@ -1011,16 +1015,9 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 
 static void _load_list(savefile_ptr file)
 {
-
 	// Let's save all them to keep filesizes regular. I think it might be the best option, here... 255x3x32 bits = rougle 3 kilobytes. Nothing to frothe over... 
-	int i;
-	for (i = 0; i < _FL_MAX_BUYS; i++) // reset
-	{
-		_fl_purchase *buy_ptr = _fl_purchases + i;
-		memset(buy_ptr, -1, sizeof(_fl_purchase));
-	}
+	int i = 0;
 	int lv, pr, sp;
-	i = 0;
 	while (1)
 	{
 		lv = savefile_read_s32b(file);
@@ -1047,10 +1044,9 @@ static void _save_list(savefile_ptr file)
 	int i;
 	for (i = 0; i < _FL_MAX_BUYS; i++)
 	{
-		_fl_purchase *buy_ptr = _fl_purchases + i;
-			savefile_write_s32b(file, buy_ptr->lv);
-			savefile_write_s32b(file, buy_ptr->profID);
-			savefile_write_s32b(file, buy_ptr->subID);
+		savefile_write_s32b(file, _fl_purchases[i].lv);
+		savefile_write_s32b(file, _fl_purchases[i].profID);
+		savefile_write_s32b(file, _fl_purchases[i].subID);
 	} // write down all the purchases
 	savefile_write_s32b(file, 255); /* sentinel. Just a zero. All levels should be set to -1, anyway... */
 	savefile_write_s32b(file, _p_ct); // and write how many things have been purchaed.
