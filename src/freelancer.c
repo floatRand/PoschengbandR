@@ -1016,7 +1016,8 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 
 static void _load_list(savefile_ptr file)
 {
-	// Let's save all them to keep filesizes regular. I think it might be the best option, here... 255x3x32 bits = rougle 3 kilobytes. Nothing to frothe over... 
+	// Let's save all them to keep filesizes regular. I think it might be the best option, here... 105x3x32 bits = little over 1kb. Nothing to froth over...
+	// Although level could be dropped.
 	int i = 0;
 	int lv, pr, sp;
 	while (1)
