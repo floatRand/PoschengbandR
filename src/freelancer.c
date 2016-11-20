@@ -1095,7 +1095,8 @@ class_t *freelancer_get_class(void)
 			"they can use to purchase new abilities: skills, realms, etc. "
 			"However, due to not being as focused as others, these abilities "
 			"are somewhat weaker.\n"
-			"Their highest mental ability determines their casting ability.";
+			"Their highest mental ability determines their casting ability. \n"
+			"{ EXPERIMENTAL CLASS }";
 
 		me.stats[A_STR] = 0;
 		me.stats[A_INT] = 0;

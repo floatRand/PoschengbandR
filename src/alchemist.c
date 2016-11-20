@@ -1067,7 +1067,8 @@ class_t *alchemist_get_class(void)
 			"Even bad potions are useful in their hands, as weapons or "
 			"ingredients. Their other abilities include creating copies "
 			"of potions and turning items to gold. They require intelligence "
-			"for some of their abilities.";
+			"for some of their abilities.\n"
+			"{ EXPERIMENTAL CLASS }";
 
 		me.stats[A_STR] = 0;
 		me.stats[A_INT] = 2;

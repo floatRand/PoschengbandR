@@ -595,7 +595,9 @@ class_t *maledict_get_class(void)
 			"malisons at their foes. Notably, they have very easy time uncursing equipment, and can "
 			"curse it again if they feel like it. They even gain some protection against ancient foul "
 			"curses. At high levels, they receive abilities to uncurse all their equipment for a great "
-			"benefit.";
+			"benefit.\n"
+			"{ EXPERIMENTAL CLASS }";
+			
 
 		me.stats[A_STR] = 2;
 		me.stats[A_INT] = -1;
