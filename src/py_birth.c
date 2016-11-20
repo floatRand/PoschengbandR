@@ -4,7 +4,7 @@
 
 /************************************************************************
  * Give birth to a new player.
- * TODO: quickstart/welcome/final(change name)/monster mode/birth options
+ * TODO: quickstart/welcome/beginner & monster mode/birth options
  *
  * *_ui() functions run menu loops according to the following flow graph:
  ***********************************************************************/
@@ -27,7 +27,6 @@ extern int py_birth(void);
         static int _realm1_ui(void);
             static int _realm2_ui(void);
     static int _stats_ui(void);
-    static int _final_ui(void);
 
 /* I prefer to render menus to a document rather than directly to the terminal */
 static doc_ptr _doc = NULL;
@@ -77,6 +76,7 @@ static int _welcome_ui(void)
  ***********************************************************************/ 
 static void _race_class_top(doc_ptr doc);
 static void _inc_rcp_state(void);
+static void _change_name(void);
 
 static int _race_class_ui(void)
 {
@@ -91,6 +91,7 @@ static int _race_class_ui(void)
         cols[0] = doc_alloc(30);
         cols[1] = doc_alloc(46);
 
+        doc_insert(cols[0], "  <color:y>n</color>) Change Name\n");
         doc_insert(cols[0], "  <color:y>s</color>) Change Sex\n");
         doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
@@ -127,6 +128,9 @@ static int _race_class_ui(void)
             break;
         case '?':
             doc_display_help("birth.txt", NULL);
+            break;
+        case 'n':
+            _change_name();
             break;
         case 'r':
             _race_group_ui();
@@ -1177,9 +1181,12 @@ static int _stats_ui(void)
 
         doc_newline(cols[1]);
         doc_newline(cols[1]);
+        doc_insert(cols[1], "<color:y>  n</color>) Change Name\n");
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
         doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
-        doc_printf(cols[1], "<color:%c>RET</color>) Next Screen\n", score <= _MAX_SCORE ? 'y' : 'D');
+        doc_printf(cols[1], "<color:%c>RET</color>) <color:%c>Begin Play</color>\n",
+            score <= _MAX_SCORE ? 'y' : 'D',
+            score <= _MAX_SCORE ? 'v' : 'D');
         doc_insert(cols[1], "<color:y>ESC</color>) Prev Screen\n");
 
         doc_insert_cols(_doc, cols, 2, 1);
@@ -1197,15 +1204,14 @@ static int _stats_ui(void)
 
         _sync_term(_doc);
         cmd = _inkey();
-        if (cmd == '\r')
-        {
-            if (score <= _MAX_SCORE && _final_ui() == UI_OK)
-                return UI_OK;
-        }
+        if (cmd == '\r' && score <= _MAX_SCORE)
+            return UI_OK;
         else if (cmd == ESCAPE)
             return UI_CANCEL;
         else if (cmd == '\t')
             _inc_rcp_state();
+        else if (cmd == 'n')
+            _change_name();
         else if (isupper(cmd))
         {
             i = _char_to_stat(tolower(cmd));
@@ -1394,14 +1400,6 @@ static int _stats_score()
 }
 
 /************************************************************************
- * 4) Final Confirmation
- ***********************************************************************/ 
-static int _final_ui(void)
-{
-    return UI_OK;
-}
-
-/************************************************************************
  * Low level utilities
  ***********************************************************************/ 
 /* The UI is organized as follows:
@@ -1431,6 +1429,7 @@ static void _race_class_top(doc_ptr doc)
 }
 
 /* Player Fields */
+static void _name_line(doc_ptr doc);
 static void _sex_line(doc_ptr doc);
 static void _pers_line(doc_ptr doc);
 static void _race_line(doc_ptr doc);
@@ -1439,11 +1438,17 @@ static void _magic_line(doc_ptr doc);
 
 static void _race_class_header(doc_ptr doc)
 {
+    _name_line(doc);
     _sex_line(doc);
     _pers_line(doc);
     _race_line(doc);
     _class_line(doc);
     _magic_line(doc);
+}
+
+static void _name_line(doc_ptr doc)
+{
+    doc_printf(doc, "Name : <color:B>%s</color>\n", player_name);
 }
 
 static void _sex_line(doc_ptr doc)
@@ -1589,6 +1594,20 @@ static void _race_class_info(doc_ptr doc)
             doc_printf(doc, "%s %s %s %s\n",
                 tot_desc.srh, tot_desc.fos, tot_desc.thn, tot_desc.thb);
         }
+    }
+}
+
+static void _change_name(void)
+{
+    if (!arg_lock_name)
+    {
+        char tmp[64];
+        strcpy(tmp, player_name);
+        Term_gotoxy(7, 0); /* Hack */
+        if (askfor(tmp, 15))
+            strcpy(player_name, tmp);
+        if (0 == strlen(player_name))
+            strcpy(player_name, "PLAYER");
     }
 }
 

@@ -4006,6 +4006,7 @@ void player_birth(void)
     mp_ptr = &m_info[p_ptr->pclass];
 
     get_extra(TRUE);
+    get_money();
     p_ptr->update |= (PU_BONUS | PU_HP);
     update_stuff();
     p_ptr->chp = p_ptr->mhp;
