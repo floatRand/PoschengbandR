@@ -290,7 +290,7 @@ static int _displayRealms(rect_t display, u16b mode)
 		}
 
 	}
-	doc_printf(doc, "\nProficiency points: %d\n", _prof_points);
+	doc_printf(doc, "\nProficiency points: %d \n", _prof_points);
 	doc_insert(doc, "</style>");
 	doc_sync_term(doc, doc_range_all(doc), doc_pos_create(pos.x, pos.y));
 	doc_free(doc);
@@ -347,7 +347,7 @@ static int _displayWpnGroups(rect_t display, u16b mode)
 
 	}
 
-	doc_printf(doc, "\nProficiency points: %d\n", _prof_points);
+	doc_printf(doc, "\nProficiency points: %d \n", _prof_points);
 	doc_insert(doc, "</style>");
 	doc_sync_term(doc, doc_range_all(doc), doc_pos_create(pos.x, pos.y));
 	doc_free(doc);
@@ -417,7 +417,7 @@ static int _displaySkills(rect_t display, u16b mode)
 	desc = skills_describe(skills.dev, 6); descB = skills_describe(skills_b.dev, 6);
 	doc_printf(doc, " Device     : <color:%c>%s</color> (+<color:%c>%s</color>),  lv: %d, cost: %d\n", attr_to_attr_char(desc.color), desc.desc, attr_to_attr_char(descB.color), descB.desc, _skillLevels[_SKILL_DEV], cost);
 
-	doc_printf(doc, "\nProficiency points: %d\n", _prof_points);
+	doc_printf(doc, "\nProficiency points: %d \n", _prof_points);
 	doc_insert(doc, "</style>");
 	doc_sync_term(doc, doc_range_all(doc), doc_pos_create(pos.x, pos.y));
 	doc_free(doc);
@@ -513,7 +513,7 @@ static void _displayProficiencies(rect_t display, u16b mode)
 	
 	}
 
-	doc_printf(doc, "\nProficiency points: %d\n", _prof_points);
+	doc_printf(doc, "\nProficiency points: %d \n", _prof_points);
 
 	doc_insert(doc, "</style>");
 	doc_sync_term(doc, doc_range_all(doc), doc_pos_create(pos.x, pos.y));
