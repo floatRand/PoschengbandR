@@ -88,7 +88,7 @@ static fl_proficiency _proficiencies[_FL_MAX_PROF] = {
 { _FL_BOOST_MANA_REGEN,			4, 3, 1, "Boost mana regen" }, // IMPLEMENTED :)
 { _FL_BOOST_SKILL,				1, 5, 1, "Boost invidual skill" }, // IMPLEMENTED :)
 
-{ _FL_F_SNEAK_ATTACKS,			8, 3, 5, "Gain sneak attacking" }, // IMPLEMENTED, NOT TESTED?
+{ _FL_F_SNEAK_ATTACKS,			12, 2, 5, "Gain sneak attacking" }, // IMPLEMENTED, NOT TESTED?
 { _FL_F_HEAVY_ARMOR_CASTING,	8, 2, 10, "Improve casting in heavy armour" }, // IMPLEMENTED
 { _FL_F_AUTO_IDENTIFY,			10, 1, 15, "Identify items automatically" }, // IMPLEMENTED
 
