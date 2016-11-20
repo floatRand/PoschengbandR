@@ -481,7 +481,7 @@ static void _displayProficiencies(rect_t display, u16b mode)
 
 			int cost = _prof_get_cost(i, 0);
 
-				if (prof_ptr->minPLev <= p_ptr->lev){
+			if (prof_ptr->minPLev <= p_ptr->max_plv){
 					if (prlv == 0){ // display unpurchased ones with white 
 						doc_insert_text(doc, TERM_L_WHITE, prof_ptr->name);
 						if (displayLvs) doc_printf(doc, "<tab:%d>Unpurchased, Cost:%2d%\n",
@@ -523,7 +523,7 @@ static void _displayProficiencies(rect_t display, u16b mode)
 void freelancer_count_buys(void){
 	int i = 0;
 
-	int prof_pts = 5 + p_ptr->lev * _prof_progression;
+	int prof_pts = 5 + p_ptr->max_plv * _prof_progression;
 	int pId = 0;
 	int spId = 0;
 
@@ -537,14 +537,14 @@ void freelancer_count_buys(void){
 			pId = _fl_purchases[i].profID;
 			spId = _fl_purchases[i].subID;
 
-			if (_fl_purchases[i].lv >= p_ptr->lev) {
+				// Here was a level check, it is gone now. It bugged a lot for some reason. If problems arise, it needs to be reimplemented.
 				switch( pId ){
 					case _FL_LEARN_REALM:{ _realmLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
 					case _FL_LEARN_WEAPON:{ _wpnLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); refresh_weaponskills = TRUE; break; }
 					case _FL_BOOST_SKILL:{_skillLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
 					default: {_profLevels[pId]++; prof_pts -= _prof_get_base_cost(pId); break; }
 				}	
-			} 
+			
 		}
 		_prof_points = prof_pts;
 		freelancer_adjust_wpn_skills();
@@ -606,10 +606,10 @@ cptr _grantProficiency(int prof, int sub_choice, int *res){
 	if (getCost > _prof_points) return "You don't have enough proficiency points.";
 	else if (maxedOut) return "The proficiency is already at max level.";
 	else if (_p_ct >= _FL_MAX_BUYS - 2) return "You cannot buy more proficiencies. Perhaps buy a potion of new life?";
-	else if (p_ptr->lev < minPlev) return "You cannot learn that proficiency yet.";
+	else if (p_ptr->max_plv < minPlev) return "You cannot learn that proficiency yet.";
 
 	if(ok){
-		_fl_purchases[_p_ct].lv = p_ptr->lev; // mark down level gained
+		_fl_purchases[_p_ct].lv = p_ptr->max_plv; // mark down level gained
 		_fl_purchases[_p_ct].profID = prof;  // mark profession
 		_fl_purchases[_p_ct].subID = sub_choice; // mark possible sub-choice
 		_p_ct++;
@@ -749,6 +749,7 @@ static void _choose_prof_spell(int cmd, variant *res)
 	case SPELL_DESC:
 		var_set_string(res, "Learn new skill yo.");
 		break;
+	case SPELL_INFO: var_set_string(res, info_power(_p_ct)); break;
 	case SPELL_CAST:
 		_chooseProf(0);
 		var_set_bool(res, TRUE);
@@ -1008,7 +1009,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 	// we don't really care what we shoot with, unlike rangers. We do worse, though.
 	if (rangedBoost > 0){
 		// not sure how to handle this yet, actually.
-		//info_ptr->num_fire += (p_ptr->lev * 50 + rangedBoost * 10) / 50;
+		info_ptr->num_fire += (p_ptr->lev * (rangedBoost * 20)) / 50;
 	}
 }
 
