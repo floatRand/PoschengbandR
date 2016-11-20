@@ -193,6 +193,12 @@ fl_proficiency *_fetch_proficiency(int prof){
 	
 }
 
+static int _get_skill_boost_amt(int skillID){
+	if (skillID < 0 || skillID>7) return 0;
+	else return _skillLevels[skillID] * _skillSteps[skillID];
+	return 0;
+}
+
 void _update_skills(void){
 	skills_init(&_skill_boost);
 	_skill_boost.dev = _get_skill_boost_amt(_SKILL_DEV);
@@ -211,12 +217,6 @@ void freelancer_skill_boost(void){
 	_base_skills = p_ptr->skills; // hopefully the mutability doesn't fuck me over.
 
 	skills_add(&p_ptr->skills, &_skill_boost);
-}
-
-static int _get_skill_boost_amt(int skillID){
-	if (skillID < 0 || skillID>7) return 0;
-	else return _skillLevels[skillID] * _skillSteps[skillID];
-	return 0;
 }
 
 static int _prof_get_cost(int prof, int sub){
@@ -542,7 +542,7 @@ void freelancer_count_buys(void){
 					case _FL_LEARN_REALM:{ _realmLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
 					case _FL_LEARN_WEAPON:{ _wpnLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); refresh_weaponskills = TRUE; break; }
 					case _FL_BOOST_SKILL:{_skillLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
-					default:{_profLevels[pId]++; prof_pts -= _prof_get_base_cost(pId, spId); break; }
+					default: {_profLevels[pId]++; prof_pts -= _prof_get_base_cost(pId); break; }
 				}	
 			} else if (_fl_purchases[i].profID == _FL_NULL) break; // the way they are done, there shouldn't be nulls inbetween...
 		}
@@ -1023,7 +1023,6 @@ static void _load_list(savefile_ptr file)
 	i = 0;
 	while (1)
 	{
-		_fl_purchase *buy_ptr;
 		lv = savefile_read_s32b(file);
 		if (lv == 255) break; // this is sentinel. Just get out ASAP.
 		pr = savefile_read_s32b(file); // prof id
