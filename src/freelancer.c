@@ -263,7 +263,7 @@ static int _displayRealms(rect_t display, u16b mode)
 	doc = doc_alloc(display.cx);
 	doc_insert(doc, "<style:table>\n");
 	choices++;
-	for (i = 1; i < MAX_MAGIC; i++)
+	for (i = 1; i < MAX_MAGIC-1; i++)
 	{
 		_fl_realm_info *info_ptr = list + i;
 		if (info_ptr->cost > 0)
@@ -859,6 +859,7 @@ int freelancer_mana_regen(amt){
 int _calc_min_wskill(int tval){
 	if (tval<0 || tval>_FL_TVAL_WPNMAX) return 0;
 	int a = fl_GetProfLevel(_FL_LEARN_WEAPON, tval);
+	if (tval > 2) tval = 2;
 	switch (a){
 		case 0: return WEAPON_EXP_UNSKILLED;
 		case 1: return WEAPON_EXP_BEGINNER;
@@ -870,6 +871,7 @@ int _calc_min_wskill(int tval){
 int _calc_max_wskill(int tval){
 	if (tval<0 || tval>_FL_TVAL_WPNMAX) return 0;
 	int a = fl_GetProfLevel(_FL_LEARN_WEAPON, tval);
+	if (tval > 2) tval = 2;
 	switch (a){
 	case 0: return WEAPON_EXP_SKILLED;
 	case 1: return WEAPON_EXP_EXPERT;
@@ -886,13 +888,13 @@ int _calc_min_riding_skill(int lv){
 
 int _calc_max_riding_skill(int lv){
 	if (lv == 1) return RIDING_EXP_SKILLED;
-	else if (lv == 2) return RIDING_EXP_EXPERT;
+	else if (lv >= 2) return RIDING_EXP_EXPERT;
 	else return RIDING_EXP_UNSKILLED;
 }
 
 int _calc_min_dw_skill(int lv){
 	if (lv == 1) return WEAPON_EXP_BEGINNER;
-	else if (lv == 2) return WEAPON_EXP_SKILLED;
+	else if (lv >= 2) return WEAPON_EXP_SKILLED;
 	return WEAPON_EXP_UNSKILLED;
 }
 
