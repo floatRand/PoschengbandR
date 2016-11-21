@@ -4,7 +4,7 @@
 
 /** Based on Magic Eater code, if it wasn't obvious.**/
 
-#define _MAX_INF_SLOTS 10
+#define _MAX_INF_SLOTS 12
 #define _INVALID_SLOT -1
 #define _INFUSION_CAP 99
 #define _MAX_CHEM 35000
@@ -45,7 +45,7 @@ typedef struct {
 static _formula_info_t _formulas[POTION_MAX+1] = {
 { SV_POTION_WATER,					10, 1, _CTIER0 },
 { SV_POTION_APPLE_JUICE,			10, 1, _CTIER0 },
-{ SV_POTION_SLIME_MOLD,				10, 1, _CTIER0 }, 
+{ SV_POTION_SLIME_MOLD,				60, 1, _CTIER0 }, 
 { -1, -1, 999 , _CTIER0 }, // ==========================================//
 { SV_POTION_SLOWNESS,				20, 1, _CTIER0 },
 { SV_POTION_SALT_WATER,				20, 1, _CTIER0 },
@@ -56,7 +56,7 @@ static _formula_info_t _formulas[POTION_MAX+1] = {
 { -1, -1, 999 , _CTIER0 }, // ==========================================//
 { SV_POTION_SLEEP,					60, 1, _CTIER0 },
 { -1, -1, 999 , _CTIER0 }, // ==========================================//
-{ SV_POTION_LOSE_MEMORIES,			10, 1, _CTIER0 },
+{ SV_POTION_LOSE_MEMORIES,			80, 1, _CTIER0 },
 { -1, -1, 999 , _CTIER0 }, // ==========================================//
 { SV_POTION_RUINATION,				100, 40, _CTIER1 },
 { SV_POTION_DEC_STR,				40, 1, _CTIER0 },
@@ -72,25 +72,25 @@ static _formula_info_t _formulas[POTION_MAX+1] = {
 { SV_POTION_SLOW_POISON,			20, 1, _CTIER0 },
 { SV_POTION_CURE_POISON,			40, 1, _CTIER0 },
 { SV_POTION_BOLDNESS,				60, 5, _CTIER1 },
-{ SV_POTION_SPEED,					120, 10, _CTIER1 },
+{ SV_POTION_SPEED,					150, 10, _CTIER0 },
 { SV_POTION_RESIST_HEAT,			50, 5, _CTIER1 },
 { SV_POTION_RESIST_COLD,			50, 5, _CTIER1 },
 { SV_POTION_HEROISM,				60, 5, _CTIER0 },
 { SV_POTION_BERSERK_STRENGTH,		120, 25, _CTIER1 },
-{ SV_POTION_CURE_LIGHT,				10, 1, _CTIER0 },
-{ SV_POTION_CURE_SERIOUS,			30, 5, _CTIER0 },
-{ SV_POTION_CURE_CRITICAL,			60, 15, _CTIER0 },
+{ SV_POTION_CURE_LIGHT,				20, 1, _CTIER0 },
+{ SV_POTION_CURE_SERIOUS,			60, 5, _CTIER0 },
+{ SV_POTION_CURE_CRITICAL,			90, 15, _CTIER0 },
 { SV_POTION_HEALING,				200, 30, _CTIER1 },
 { SV_POTION_STAR_HEALING,			200, 40, _CTIER2 },
 { SV_POTION_LIFE,					400, 60, _CTIER2 },
-{ SV_POTION_RESTORE_MANA,			180, 30, _CTIER1 },
-{ SV_POTION_RESTORE_EXP,			60, 15, _CTIER0 },
-{ SV_POTION_RES_STR,				60, 15, _CTIER0 },
-{ SV_POTION_RES_INT,				60, 15, _CTIER0 },
-{ SV_POTION_RES_WIS,				60, 15, _CTIER0 },
-{ SV_POTION_RES_DEX,				60, 15, _CTIER0 },
-{ SV_POTION_RES_CON,				60, 15, _CTIER0 },
-{ SV_POTION_RES_CHR,				60, 15, _CTIER0 },
+{ SV_POTION_RESTORE_MANA,			160, 30, _CTIER1 },
+{ SV_POTION_RESTORE_EXP,			60, 15, _CTIER1 },
+{ SV_POTION_RES_STR,				30, 15, _CTIER1 },
+{ SV_POTION_RES_INT,				30, 15, _CTIER1 },
+{ SV_POTION_RES_WIS,				30, 15, _CTIER1 },
+{ SV_POTION_RES_DEX,				30, 15, _CTIER1 },
+{ SV_POTION_RES_CON,				30, 15, _CTIER1 },
+{ SV_POTION_RES_CHR,				30, 15, _CTIER1 },
 { SV_POTION_INC_STR,				500, 30, _CTIER2 },
 { SV_POTION_INC_INT,				500, 30, _CTIER2 },
 { SV_POTION_INC_WIS,				500, 30, _CTIER2 },
@@ -106,10 +106,10 @@ static _formula_info_t _formulas[POTION_MAX+1] = {
 { SV_POTION_RESISTANCE,				120, 15, _CTIER1 },
 { SV_POTION_CURING,					90, 20, _CTIER1 },
 { SV_POTION_INVULNERABILITY,		450, 60, _CTIER2 },
-{ SV_POTION_NEW_LIFE,				240, 1, _CTIER2 },
+{ SV_POTION_NEW_LIFE,				140, 1, _CTIER2 },
 { SV_POTION_NEO_TSUYOSHI,			60, 1, _CTIER0 },
 { SV_POTION_TSUYOSHI,				30, 1, _CTIER0 },
-{ SV_POTION_POLYMORPH,				120, 1, _CTIER1 },
+{ SV_POTION_POLYMORPH,				80, 1, _CTIER1 },
 { SV_POTION_BLOOD,					120, 1, _CTIER0 },
 { SV_POTION_GIANT_STRENGTH,			120, 30, _CTIER1 },
 { SV_POTION_STONE_SKIN,				120, 30, _CTIER1 },
@@ -449,7 +449,9 @@ static bool create_infusion(void)
 			return FALSE;
 	}
 
-	int infct = get_quantity(NULL, MIN(src_ptr->number,_INFUSION_CAP));
+	int infct = 1;
+	if (src_ptr->number > 1) infct = get_quantity(NULL, MIN(src_ptr->number,_INFUSION_CAP));
+
 	if (infct <= 0) { msg_format("You do nothing.");  return FALSE; }
 	
 
@@ -898,7 +900,6 @@ void alchemist_super_potion_effect(int sval){
 }
 
 static void _calc_bonuses(void){
-	if (p_ptr->lev >= 10) p_ptr->regen += 100;
 	if (p_ptr->lev >= 20) 
 	{
 		add_flag(p_ptr->weapon_info[0].flags, OF_BRAND_POIS);
