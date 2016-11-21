@@ -1047,7 +1047,7 @@ static caster_info * _caster_info(void)
 	if (!init)
 	{
 		me.magic_desc = "alchemy";
-		me.weight = 400;
+		me.weight = 1000;
 		init = TRUE;
 	}
 	me.which_stat = A_INT;
