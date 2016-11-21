@@ -163,12 +163,14 @@ bool _purge_curse(void){
 }
 
 void _curse_item_t(object_type *o_ptr, int pow){
-	o_ptr->curse_flags |= (OFC_CURSED);
-	if (pow == 1) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
 
-	for (int i = 0; i < randint0(pow + 2) + 1; i++){
-		o_ptr->curse_flags |= get_curse(pow, o_ptr);
-	}
+	if (pow >= 1) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
+	o_ptr->curse_flags |= (OFC_CURSED);
+
+	// curses are actually not guaranteed... You can try to reroll them.
+		if(one_in_(3)) o_ptr->curse_flags |= get_curse(pow, o_ptr);
+		if(one_in_(9)) o_ptr->curse_flags |= get_curse(pow, o_ptr);
+		if(one_in_(27)) o_ptr->curse_flags |= get_curse(pow, o_ptr);
 
 	o_ptr->known_curse_flags = o_ptr->curse_flags; // make the curses known.
 }
@@ -192,7 +194,7 @@ bool _curse_item_aux(bool all){
 		else power = 0;
 
 		object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
-		if (power == 2) msg_format("A terrible black aura blasts your %s!", tmp_str);
+		if (power == 1) msg_format("A terrible black aura blasts your %s!", tmp_str);
 		else msg_format("A black aura surrounds your %s!", tmp_str);
 
 		_curse_item_t(o_ptr, power);
@@ -203,10 +205,9 @@ bool _curse_item_aux(bool all){
 		else { msg_format("Black aura washes over your equipment!", tmp_str); power = 0; }
 
 		int slot = 0;
-		for (slot = equip_find_first(object_is_cursed); slot; slot = equip_find_next(object_is_cursed, slot))
+		for (slot = equip_find_first(object_is_wearable); slot; slot = equip_find_next(object_is_wearable, slot))
 		{
-			object_type *o_ptr = equip_obj(slot);
-			_curse_item_t(o_ptr, power);
+			_curse_item_t(equip_obj(slot), power);
 		}
 
 	}
