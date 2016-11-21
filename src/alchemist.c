@@ -80,8 +80,8 @@ static _formula_info_t _formulas[POTION_MAX+1] = {
 { SV_POTION_CURE_LIGHT,				20, 1, _CTIER0 },
 { SV_POTION_CURE_SERIOUS,			60, 5, _CTIER0 },
 { SV_POTION_CURE_CRITICAL,			90, 15, _CTIER0 },
-{ SV_POTION_HEALING,				200, 30, _CTIER1 },
-{ SV_POTION_STAR_HEALING,			200, 40, _CTIER2 },
+{ SV_POTION_HEALING,				240, 30, _CTIER1 },
+{ SV_POTION_STAR_HEALING,			240, 40, _CTIER2 },
 { SV_POTION_LIFE,					400, 60, _CTIER2 },
 { SV_POTION_RESTORE_MANA,			160, 30, _CTIER1 },
 { SV_POTION_RESTORE_EXP,			60, 15, _CTIER1 },
@@ -733,7 +733,7 @@ bool alchemist_break_down_aux(object_type *o_ptr, int ct){
 	if (_CHEM[tier] > _MAX_CHEM) _CHEM[tier] = _MAX_CHEM;
 
 	msg_format("You break down potion(s) and gain %d %s chemical, totaling at %d.", cost, _tiername[tier], _CHEM[tier]);
-
+	return TRUE;
 }
 
 static bool break_down_potion(void){
