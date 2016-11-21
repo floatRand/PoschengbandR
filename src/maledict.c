@@ -669,7 +669,7 @@ static caster_info * _caster_info(void)
 	{
 		me.magic_desc = "malison";
 		me.which_stat = A_CHR;
-		me.weight = 460;
+		me.weight = 4000;
 		me.min_fail = 5;
 		init = TRUE;
 	}
