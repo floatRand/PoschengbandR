@@ -200,7 +200,7 @@ static void _displayInfusions(rect_t display)
 			doc_insert(doc, buf);
 
 			if (DC <= alcskil){ // can do
-				 doc_printf(doc, "<tab:%d>Cost: %4d%, %s: %d, DC:<color:G>%3d%</color>\n", display.cx - 32, _FindFormula(o_ptr->sval)->cost, _tiername[tier], DC);
+				 doc_printf(doc, "<tab:%d>Cost: %4d%, %s, DC:<color:G>%3d%</color>\n", display.cx - 32, _FindFormula(o_ptr->sval)->cost, _tiername[tier], DC);
 			} 
 			else if (DC == 999){ // can't do ever
 				doc_printf(doc, "<tab:%d><color:r>Unreproduceable</color>\n",display.cx - 22);
