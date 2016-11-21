@@ -103,7 +103,7 @@ bool _purge_curse_which(object_type *o_ptr, int itemnum){
 		msg_format("The curse permeating %s is permanent.", tmp_str);
 		return FALSE;
 	} // do nothing. It's permanent.
-	if (p_ptr->lev > 35 && o_ptr->curse_flags & OFC_PERMA_CURSE){
+	if (p_ptr->lev >= 35 && o_ptr->curse_flags & OFC_PERMA_CURSE){
 		o_ptr->curse_flags = 0; o_ptr->curse_flags |= OFC_PERMA_CURSE;
 		o_ptr->known_curse_flags = 0; o_ptr->known_curse_flags |= OFC_PERMA_CURSE; /* Forget lore in preparation for next cursing */
 		o_ptr->ident |= IDENT_SENSE;
@@ -115,7 +115,7 @@ bool _purge_curse_which(object_type *o_ptr, int itemnum){
 		msg_format("The curse of %s is permanent. Lesser curses are stripped away.", tmp_str);
 		return TRUE;
 	}
-	else if (p_ptr->lev > 25 && o_ptr->curse_flags & OFC_HEAVY_CURSE){
+	else if (p_ptr->lev >= 25 && o_ptr->curse_flags & OFC_HEAVY_CURSE){
 		o_ptr->curse_flags = 0;
 		o_ptr->known_curse_flags = 0; /* Forget lore in preparation for next cursing */
 		o_ptr->ident |= IDENT_SENSE;
@@ -188,7 +188,7 @@ bool _curse_item_aux(bool all){
 		if (item >= 0) o_ptr = &inventory[item];
 		if (!o_ptr) return FALSE;
 
-		if (p_ptr->lev > 35) power = 1;
+		if (p_ptr->lev >= 35) power = 1;
 		else power = 0;
 
 		object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
@@ -198,9 +198,9 @@ bool _curse_item_aux(bool all){
 		_curse_item_t(o_ptr, power);
 	}
 	else {
-		msg_format("Black aura washes over your equipment!", tmp_str);
-		if (p_ptr->lev > 35) power = 1;
-		else power = 0;
+
+		if (p_ptr->lev >= 40){ msg_format("A terrible black aura blasts through your equipment!", tmp_str); power = 1; }
+		else { msg_format("Black aura washes over your equipment!", tmp_str); power = 0; }
 
 		int slot = 0;
 		for (slot = equip_find_first(object_is_cursed); slot; slot = equip_find_next(object_is_cursed, slot))
@@ -211,7 +211,8 @@ bool _curse_item_aux(bool all){
 
 	}
 
-
+	p_ptr->update |= (PU_BONUS);
+	update_stuff();
 	return TRUE;
 }
 
