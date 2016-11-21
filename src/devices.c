@@ -1744,7 +1744,7 @@ cptr do_device(object_type *o_ptr, int mode, int boost)
 		case TV_POTION:
 			{ 
 				result = _do_potion(o_ptr->sval, mode); 
-				if (p_ptr->pclass == CLASS_ALCHEMIST) alchemist_super_potion_effect(o_ptr->sval);
+				if (p_ptr->pclass == CLASS_ALCHEMIST && mode & SPELL_CAST) alchemist_super_potion_effect(o_ptr->sval);
 				break;
 			}
         }
