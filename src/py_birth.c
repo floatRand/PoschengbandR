@@ -59,11 +59,121 @@ int py_birth(void)
 /************************************************************************
  * Welcome to Poschengband!
  ***********************************************************************/ 
+static void _set_mode(int mode);
+
 static int _welcome_ui(void)
 {
-    if (_race_class_ui() == UI_OK)
-        return UI_OK;
-    return UI_CANCEL;
+    for (;;)
+    {
+        int cmd;
+
+        doc_clear(_doc);
+
+        doc_insert(_doc,
+            "Welcome to <color:keyword>Poschengband</color>, a dungeon exploration "
+            "role playing game. Your goal is to defeat the dreaded <color:keyword>"
+            "Serpent of Chaos</color>, but before you can face it, you must battle "
+            "many foes. Your first step is to create a character for this quest. "
+            "The following screens will guide you through this process so that you "
+            "may quickly begin playing. You can get general help at any time by "
+            "pressing <color:keypress>?</color>.\n\n"
+        );
+
+        doc_insert(_doc,
+            "First, you must decide what type of game to play. If you are new, "
+            "it is recommended you play in <color:keyword>Beginner Mode</color>.\n\n"
+        );
+
+        doc_insert(_doc, "<color:G>Choose the Type of Game to Play</color>\n");
+        doc_insert(_doc, "  <color:y>b</color>) Beginner\n");
+        doc_insert(_doc, "  <color:y>n</color>) Normal\n");
+        doc_insert(_doc, "  <color:y>m</color>) Monster\n");
+        doc_newline(_doc);
+        doc_insert(_doc, "  <color:y>?</color>) Help\n");
+        doc_insert(_doc, "<color:y>ESC</color>) <color:v>Quit</color>\n");
+
+
+        doc_newline(_doc);
+        doc_insert(_doc, "<color:G>Tip:</color> <indent>You can often get specific "
+                         "help by entering the uppercase letter for a command. For "
+                         "example, type <color:keypress>B</color> on this screen "
+                         "to receive help on Beginner Mode.</indent>");
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == '?')
+            doc_display_help("birth.txt", "Welcome");
+        else if (cmd == ESCAPE)
+            return UI_CANCEL;
+        else if (cmd == 'n')
+        {
+            _set_mode(GAME_MODE_NORMAL);
+            if (_race_class_ui() == UI_OK)
+                return UI_OK;
+        }
+        else if (cmd == 'N')
+            doc_display_help("birth.txt", "NormalMode");
+        else if (cmd == 'b')
+        {
+            _set_mode(GAME_MODE_BEGINNER);
+            if (_race_class_ui() == UI_OK)
+                return UI_OK;
+        }
+        else if (cmd == 'B')
+            doc_display_help("birth.txt", "BeginnerMode");
+    }
+}
+
+static void _stats_init(void);
+
+static void _set_mode(int mode)
+{
+    static bool first = TRUE;
+    if (mode == GAME_MODE_BEGINNER)
+    {
+        if (first || game_mode != mode)
+        {
+            p_ptr->prace = RACE_HOBBIT;
+            p_ptr->psubrace = 0;
+            p_ptr->pclass = CLASS_ROGUE;
+            p_ptr->psubclass = 0;
+            p_ptr->realm1 = REALM_BURGLARY;
+            p_ptr->realm2 = REALM_NONE;
+            p_ptr->dragon_realm = DRAGON_REALM_NONE;
+            p_ptr->personality = PERS_ORDINARY;
+            _stats_init();
+        }
+    }
+    else if (mode == GAME_MODE_NORMAL)
+    {
+        if (first || game_mode == GAME_MODE_MONSTER)
+        {
+            p_ptr->prace = RACE_HOBBIT;
+            p_ptr->psubrace = 0;
+            p_ptr->pclass = CLASS_ROGUE;
+            p_ptr->psubclass = 0;
+            p_ptr->realm1 = REALM_BURGLARY;
+            p_ptr->realm2 = REALM_NONE;
+            p_ptr->dragon_realm = DRAGON_REALM_NONE;
+            p_ptr->personality = PERS_ORDINARY;
+            _stats_init();
+        }
+    }
+    else if (mode == GAME_MODE_MONSTER)
+    {
+        if (first || game_mode != mode)
+        {
+            p_ptr->prace = RACE_MON_TROLL;
+            p_ptr->psubrace = TROLL_ETTIN;
+            p_ptr->pclass = CLASS_MONSTER;
+            p_ptr->psubclass = 0;
+            p_ptr->realm1 = REALM_NONE;
+            p_ptr->realm2 = REALM_NONE;
+            p_ptr->dragon_realm = DRAGON_REALM_NONE;
+            _stats_init();
+        }
+    }
+    game_mode = mode;
+    first = FALSE;
 }
 
 /************************************************************************
@@ -77,6 +187,28 @@ static int _welcome_ui(void)
 static void _race_class_top(doc_ptr doc);
 static void _inc_rcp_state(void);
 static void _change_name(void);
+
+static int _beginner_races[] = {
+  RACE_HUMAN,
+  RACE_DWARF,
+  RACE_HOBBIT,
+  RACE_GNOME,
+  RACE_DUNADAN,
+  RACE_HIGH_ELF,
+  RACE_HALF_TROLL,
+  -1
+};
+
+static int _beginner_classes[] = {
+  CLASS_WARRIOR,
+  CLASS_MAGE,
+  CLASS_PRIEST,
+  CLASS_ROGUE,
+  CLASS_RANGER,
+  CLASS_PALADIN,
+  CLASS_NINJA,
+  -1
+};
 
 static int _race_class_ui(void)
 {
@@ -93,7 +225,8 @@ static int _race_class_ui(void)
 
         doc_insert(cols[0], "  <color:y>n</color>) Change Name\n");
         doc_insert(cols[0], "  <color:y>s</color>) Change Sex\n");
-        doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
+        if (game_mode != GAME_MODE_BEGINNER)
+            doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
         doc_insert(cols[0], "  <color:y>c</color>) Change Class\n");
         if (p_ptr->realm1)
@@ -133,7 +266,10 @@ static int _race_class_ui(void)
             _change_name();
             break;
         case 'r':
-            _race_group_ui();
+            if (game_mode == GAME_MODE_BEGINNER)
+                _race_ui(_beginner_races);
+            else
+                _race_group_ui();
             break;
         case 'R':
         {
@@ -147,7 +283,10 @@ static int _race_class_ui(void)
             break;
         }
         case 'c':
-            _class_group_ui();
+            if (game_mode == GAME_MODE_BEGINNER)
+                _class_ui(_beginner_classes);
+            else
+                _class_group_ui();
             break;
         case 'C':
         {
@@ -159,12 +298,16 @@ static int _race_class_ui(void)
             break;
         }
         case 'p':
-            _pers_ui();
+            if (game_mode != GAME_MODE_BEGINNER)
+                _pers_ui();
             break;
         case 'P':
         {
-            personality_ptr pers_ptr = get_personality();
-            doc_display_help("Personalities.txt", pers_ptr->name);
+            if (game_mode != GAME_MODE_BEGINNER)
+            {
+                personality_ptr pers_ptr = get_personality();
+                doc_display_help("Personalities.txt", pers_ptr->name);
+            }
             break;
         }
         case 'm':
@@ -1123,7 +1266,6 @@ static int _stat_points[18] =
 #define _MAX_SCORE 30
 
 static int _stats_score(void);
-static void _stats_init(void);
 static void _stat_dec(int which);
 static void _stat_inc(int which);
 static cptr _stat_desc(int stat);
@@ -1363,6 +1505,7 @@ static void _stats_init(void)
         _stats_init_aux(stats);
     }
     }
+    _stats_changed = FALSE;
 }
 
 static void _stat_dec(int which)
@@ -1440,7 +1583,8 @@ static void _race_class_header(doc_ptr doc)
 {
     _name_line(doc);
     _sex_line(doc);
-    _pers_line(doc);
+    if (game_mode != GAME_MODE_BEGINNER)
+        _pers_line(doc);
     _race_line(doc);
     _class_line(doc);
     _magic_line(doc);
@@ -1525,10 +1669,13 @@ static void _race_class_info(doc_ptr doc)
     if (_rcp_state == _RCP_STATS)
     {
         doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n");
-        doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%       %3d%%\n",
-            pers_ptr->stats[A_STR], pers_ptr->stats[A_INT], pers_ptr->stats[A_WIS],
-            pers_ptr->stats[A_DEX], pers_ptr->stats[A_CON], pers_ptr->stats[A_CHR],
-            pers_ptr->life, pers_ptr->exp);
+        if (game_mode != GAME_MODE_BEGINNER)
+        {
+            doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%       %3d%%\n",
+                pers_ptr->stats[A_STR], pers_ptr->stats[A_INT], pers_ptr->stats[A_WIS],
+                pers_ptr->stats[A_DEX], pers_ptr->stats[A_CON], pers_ptr->stats[A_CHR],
+                pers_ptr->life, pers_ptr->exp);
+        }
         doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%\n",
             race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
             race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
@@ -1572,8 +1719,11 @@ static void _race_class_info(doc_ptr doc)
         {
             doc_printf(doc, "<color:w>%-10.10s %-10.10s %-10.10s %-10.10s</color>\n",
                 "Disarming", "Device", "Save", "Stealth");
-            doc_printf(doc, "%s %s %s %s\n",
-                p_desc.dis, p_desc.dev, p_desc.sav, p_desc.stl);
+            if (game_mode != GAME_MODE_BEGINNER)
+            {
+                doc_printf(doc, "%s %s %s %s\n",
+                    p_desc.dis, p_desc.dev, p_desc.sav, p_desc.stl);
+            }
             doc_printf(doc, "%s %s %s %s\n", /* Note: descriptions contain formatting tags, so %-10.10s won't work ... cf skills.c */
                 r_desc.dis, r_desc.dev, r_desc.sav, r_desc.stl);
             doc_printf(doc, "%s %s %s %s\n",
@@ -1585,8 +1735,11 @@ static void _race_class_info(doc_ptr doc)
         {
             doc_printf(doc, "<color:w>%-10.10s %-10.10s %-10.10s %-10.10s</color>\n",
                 "Searching", "Perception", "Melee", "Bows");
-            doc_printf(doc, "%s %s %s %s\n",
-                p_desc.srh, p_desc.fos, p_desc.thn, p_desc.thb);
+            if (game_mode != GAME_MODE_BEGINNER)
+            {
+                doc_printf(doc, "%s %s %s %s\n",
+                    p_desc.srh, p_desc.fos, p_desc.thn, p_desc.thb);
+            }
             doc_printf(doc, "%s %s %s %s\n",
                 r_desc.srh, r_desc.fos, r_desc.thn, r_desc.thb);
             doc_printf(doc, "%s %s %s %s\n",
