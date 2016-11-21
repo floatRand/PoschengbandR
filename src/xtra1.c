@@ -1173,6 +1173,10 @@ static void prt_status(void)
         }
     }
 
+	if (p_ptr->pclass == CLASS_MALEDICT){
+		if (maledict_get_toggle() == MALEDICT_TOGGLE_ANTITELE) ADD_FLG(BAR_ANTITELE);
+	}
+
     if (p_ptr->pclass == CLASS_PSION)
     {
         if (psion_weapon_graft()) ADD_FLG(BAR_WEAPON_GRAFT);

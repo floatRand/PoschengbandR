@@ -857,6 +857,7 @@ static bool anti_magic_check(void)
     case CLASS_WEAPONSMITH:
     case CLASS_ARCHER:
     case CLASS_CAVALRY:
+	case CLASS_ALCHEMIST:
         return FALSE;
 
     case CLASS_TOURIST:
@@ -876,7 +877,6 @@ static bool anti_magic_check(void)
     case CLASS_BEASTMASTER:
     case CLASS_BLOOD_KNIGHT:
     case CLASS_MAULER:
-	case CLASS_ALCHEMIST:
         return one_in_(5);
 
     case CLASS_MINDCRAFTER:

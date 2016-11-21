@@ -5774,6 +5774,8 @@ enum mon_save_fields_e {
 
 #define LEPRECHAUN_TOGGLE_HOARDING 50
 
+#define MALEDICT_TOGGLE_ANTITELE 51
+
 /* Wild Counters */
 #define WILD_INFRAVISION 1
 #define WILD_BLESS 2

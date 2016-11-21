@@ -281,6 +281,7 @@ void virtue_init(void)
         p_ptr->vir_types[i++] = VIRTUE_KNOWLEDGE;
         break;
     case CLASS_TOURIST:
+	case CLASS_FREELANCER:
         p_ptr->vir_types[i++] = VIRTUE_ENLIGHTENMENT;
         p_ptr->vir_types[i++] = VIRTUE_CHANCE;
         break;

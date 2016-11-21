@@ -3991,7 +3991,7 @@ static void process_command(void)
                 equip_learn_flag(OF_NO_MAGIC);
                 energy_use = 0;
             }
-            else if (IS_SHERO() && p_ptr->pclass != CLASS_BERSERKER && p_ptr->pclass != CLASS_BLOOD_KNIGHT && p_ptr->pclass != CLASS_RAGE_MAGE)
+            else if (IS_SHERO() && p_ptr->pclass != CLASS_BERSERKER && p_ptr->pclass != CLASS_BLOOD_KNIGHT && p_ptr->pclass != CLASS_RAGE_MAGE && p_ptr->pclass != CLASS_ALCHEMIST)
             {
                 msg_format("You cannot think clearly!");
                 energy_use = 0;

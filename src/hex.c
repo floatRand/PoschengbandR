@@ -255,10 +255,9 @@ bool teleport_barrier(int m_idx, char *effectname)
 	/* Made more generalized */
     monster_type *m_ptr = &m_list[m_idx];
     monster_race *r_ptr = &r_info[m_ptr->r_idx];
-
 	
 	if (p_ptr->pclass == CLASS_MALEDICT){ //Maledict's dimensional lock
-		if (p_ptr->tim_no_tele > 0 && (p_ptr->lev * 3 / 2) >= randint1(r_ptr->level)){
+		if (maledict_get_toggle() == MALEDICT_TOGGLE_ANTITELE && (p_ptr->lev * 3 / 2) >= randint1(r_ptr->level)){
 			sprintf(effectname, "%s", "dimensional lock");
 		return TRUE;
 		}

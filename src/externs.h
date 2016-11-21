@@ -2409,6 +2409,7 @@ extern void freelancer_reset(void);
 
 extern class_t *maledict_get_class(void);
 extern bool maledict_ty_protection(void);
+extern int maledict_get_toggle(void);
 
 extern class_t *archaeologist_get_class(void);
 extern bool     archaeologist_is_favored_weapon(object_type *o_ptr);

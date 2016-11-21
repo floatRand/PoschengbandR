@@ -24,6 +24,52 @@ int _count_flags_set(u32b flg)
 	return (((flg + (flg >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
 }
 
+static bool _antitele_toggle = FALSE;
+
+static int _get_toggle(void)
+{
+	return p_ptr->magic_num1[0];
+}
+
+static int _set_toggle(s32b toggle)
+{
+	int result = p_ptr->magic_num1[0];
+
+	if (toggle == result) return result;
+
+	p_ptr->magic_num1[0] = toggle;
+
+	p_ptr->redraw |= PR_STATUS;
+	p_ptr->update |= PU_BONUS;
+	handle_stuff();
+	return result;
+}
+
+
+static void _toggle_spell(int which, int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_CAST:
+		var_set_bool(res, FALSE);
+		if (_get_toggle() == which)
+			_set_toggle(TOGGLE_NONE);
+		else
+			_set_toggle(which);
+		var_set_bool(res, TRUE);
+		break;
+	case SPELL_ENERGY:
+		if (_get_toggle() != which)
+			var_set_int(res, 0);   
+		else
+			var_set_int(res, 100);
+		break;
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
 int _calculate_curse_power(void){
 	int slot;
 	int boost = 0;
@@ -116,35 +162,55 @@ bool _purge_curse(void){
 	return TRUE;
 }
 
-bool _curse_item_aux(void){
+void _curse_item_t(object_type *o_ptr, int pow){
+	o_ptr->curse_flags |= (OFC_CURSED);
+	if (pow == 1) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
+
+	for (int i = 0; i < randint0(pow + 2) + 1; i++){
+		o_ptr->curse_flags |= get_curse(pow, o_ptr);
+	}
+
+	o_ptr->known_curse_flags = o_ptr->curse_flags; // make the curses known.
+}
+
+bool _curse_item_aux(bool all){
 
 	int item, power = 0;
 	char tmp_str[MAX_NLEN];
 	object_type *o_ptr;
 	item_tester_hook = object_is_equipment;
 
-	if (!get_item(&item, "Curse which item? ", "There's nothing to uncurse.", (USE_INVEN | USE_EQUIP)))
-		return FALSE;
+	if (!all){
+		if (!get_item(&item, "Curse which item? ", "There's nothing to uncurse.", (USE_INVEN | USE_EQUIP)))
+			return FALSE;
 
-	o_ptr = &inventory[item];
-	if (item >= 0) o_ptr = &inventory[item];
-	if (!o_ptr) return FALSE;
+		o_ptr = &inventory[item];
+		if (item >= 0) o_ptr = &inventory[item];
+		if (!o_ptr) return FALSE;
 
-	if (p_ptr->lev > 35) power = 1;
-	else power = 0;
+		if (p_ptr->lev > 35) power = 1;
+		else power = 0;
 
-	object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
-	if(power==2) msg_format("A terrible black aura blasts your %s!", tmp_str);
-	else msg_format("A black aura surrounds your %s!", tmp_str);
+		object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
+		if (power == 2) msg_format("A terrible black aura blasts your %s!", tmp_str);
+		else msg_format("A black aura surrounds your %s!", tmp_str);
 
-	o_ptr->curse_flags |= (OFC_CURSED);
-	if(power == 1) o_ptr->curse_flags |= (OFC_HEAVY_CURSE);
+		_curse_item_t(o_ptr, power);
+	}
+	else {
+		msg_format("Black aura washes over your equipment!", tmp_str);
+		if (p_ptr->lev > 35) power = 1;
+		else power = 0;
 
-	for (int i = 0; i < randint0(power+2) + 1; i++){
-		o_ptr->curse_flags |= get_curse(power, o_ptr);
+		int slot = 0;
+		for (slot = equip_find_first(object_is_cursed); slot; slot = equip_find_next(object_is_cursed, slot))
+		{
+			object_type *o_ptr = equip_obj(slot);
+			_curse_item_t(o_ptr, power);
+		}
+
 	}
 
-	o_ptr->known_curse_flags = o_ptr->curse_flags; // make the curses known.
 
 	return TRUE;
 }
@@ -164,8 +230,19 @@ static void _curse_item_spell(int cmd, variant *res)
 	switch (cmd){
 	case SPELL_NAME: var_set_string(res, "Curse Item"); break;
 	case SPELL_DESC: var_set_string(res, "Curses a single item."); break;
-	case SPELL_CAST: var_set_bool(res,_curse_item_aux()); break;
+	case SPELL_CAST: var_set_bool(res,_curse_item_aux(FALSE)); break;
 	default: default_spell(cmd, res);break;}
+}
+
+static void _curse_item_all_spell(int cmd, variant *res)
+{
+	switch (cmd){
+	case SPELL_NAME: var_set_string(res, "Curse Equipment"); break;
+	case SPELL_DESC: var_set_string(res, "Curses all equipment. This takes bit longer, but not as long as cursing items invidually."); break;
+	case SPELL_CAST: var_set_bool(res, _curse_item_aux(TRUE)); break;
+	case SPELL_ENERGY: var_set_int(res, 300);
+	default: default_spell(cmd, res); break;
+	}
 }
 
 static int _get_curse_rolls(int pow){
@@ -365,12 +442,13 @@ static void _dimensional_anchor(int cmd, variant *res)
 	switch (cmd){
 	case SPELL_NAME: var_set_string(res, "Dimensional Lock"); break;
 	case SPELL_DESC: var_set_string(res, "Locks everything in place, slowing them disallowing teleportation of monsters - and you."); break;
-	case SPELL_CAST:
-		set_tim_no_tele(25 + randint0(25), FALSE);
-		msg_print("Everything is chained into space...");
-		project_hack(GF_OLD_SLOW, p_ptr->lev * 2 + _curse_boost);
+	case SPELL_CAST:{
+		_toggle_spell(MALEDICT_TOGGLE_ANTITELE, cmd, res);
+		if (_get_toggle() == MALEDICT_TOGGLE_ANTITELE) msg_print("Everything is locked down in space.");
+		else msg_print("Dimensional anchoring vanishes.");
 		var_set_bool(res, TRUE);
 		break;
+	}
 	default:default_spell(cmd, res); break;
 	}
 }
@@ -503,6 +581,13 @@ static int _get_powers(spell_info* spells, int max)
 	spell->fail = calculate_fail_rate(spell->level, 35, p_ptr->stat_ind[A_CHR]);
 	spell->fn = _curse_item_spell;
 
+	spell = &spells[ct++];
+	spell->level = 30;
+	spell->cost = 30;
+	spell->fail = calculate_fail_rate(spell->level, 70, p_ptr->stat_ind[A_CHR]);
+	spell->fn = _curse_item_all_spell;
+
+
 	return ct;
 }
 
@@ -514,6 +599,14 @@ bool maledict_ty_protection(void){
 	return FALSE;
 }
 
+int maledict_get_toggle(void)
+{
+	int result = TOGGLE_NONE;
+	if (p_ptr->pclass == CLASS_MALEDICT)
+		result = _get_toggle();
+	return result;
+}
+
 static spell_info _spells[] =
 {
 	/*lvl cst fail spell */
@@ -523,7 +616,7 @@ static spell_info _spells[] =
 	{ 15, 8, 45,  _drain_curse_pow }, // attempts to remove curse from one equipment, restores mana based on curses.
 	{ 20, 20, 45,  _umbra_spell}, // Stealth buff, cancels out aggravation
 	{ 25, 30, 45, _curse_spell}, // stronger debuff + damage
-	{ 30, 30, 45, _dimensional_anchor }, // -TELE on self and everyone on sight
+	{ 30, 0, 0, _dimensional_anchor }, // -TELE on self and everyone on sight
 	{ 35, 30, 45, _karmic_balance  }, // Remove curse & heal
 	{ 40, 110, 45, _blasphemy_spell },
 	{ 45, 60, 45, _major_curse }, // crippling debuff
@@ -548,11 +641,13 @@ static void _calc_bonuses(void)
 	// To gain full power, The boost itself scales up to 15.
 	boost = (boost*2) / 3;
 	int boost_cap = 5 + p_ptr->lev / 5;
-
 	if (boost > boost_cap) boost = boost_cap;
-	_curse_boost_capped = boost;
 
-	p_ptr->to_d_spell += p_ptr->lev / 10 + boost / 2;
+	_curse_boost_capped = boost;
+	p_ptr->pspeed += boost / 3;
+
+	p_ptr->weapon_info[0].xtra_blow += py_prorata_level_aux(boost*10, 0, 1, 1);
+	p_ptr->weapon_info[1].xtra_blow += py_prorata_level_aux(boost*10, 0, 1, 1);
 
 	p_ptr->weapon_info[0].to_h += boost; p_ptr->weapon_info[1].to_h += boost;
 	p_ptr->to_h_m += boost;
@@ -562,6 +657,7 @@ static void _calc_bonuses(void)
 	p_ptr->to_d_m += boost;
 	p_ptr->weapon_info[0].dis_to_d += boost; p_ptr->weapon_info[1].dis_to_d += boost;
 
+	if (maledict_get_toggle() == MALEDICT_TOGGLE_ANTITELE) p_ptr->anti_tele = TRUE;
 }
 
 static caster_info * _caster_info(void)

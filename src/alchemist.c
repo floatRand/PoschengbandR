@@ -6,13 +6,19 @@
 
 #define _MAX_INF_SLOTS 10
 #define _INVALID_SLOT -1
-#define _INFUSION_CAP 50
+#define _INFUSION_CAP 99
 #define _MAX_CHEM 35000
 
 #define _CTIER0 0
 #define _CTIER1 1
 #define _CTIER2 2
-#define _CTIER_MAX 2
+#define _CTIER_MAX 3
+
+static cptr _tiername[_CTIER_MAX] = {
+	"tier 0",
+	"tier 1",
+	"tier 2"
+};
 
 static object_type _infusions[_MAX_INF_SLOTS];
 
@@ -94,7 +100,7 @@ static _formula_info_t _formulas[POTION_MAX+1] = {
 { -1, -1, 999 , _CTIER0 }, // ==========================================//
 { SV_POTION_AUGMENTATION,			1000, 999, _CTIER2 },
 { SV_POTION_ENLIGHTENMENT,			120, 30, _CTIER1 },
-{ SV_POTION_STAR_ENLIGHTENMENT,		180, 40, _CTIER1 },
+{ SV_POTION_STAR_ENLIGHTENMENT,		800, 40, _CTIER2 },
 { SV_POTION_SELF_KNOWLEDGE,			120, 30, _CTIER1 },
 { SV_POTION_EXPERIENCE,				1000, 999, _CTIER2 },
 { SV_POTION_RESISTANCE,				120, 15, _CTIER1 },
@@ -194,13 +200,13 @@ static void _displayInfusions(rect_t display)
 			doc_insert(doc, buf);
 
 			if (DC <= alcskil){ // can do
-				 doc_printf(doc, "<tab:%d>Cost: %4d%, Tier: %d, DC:<color:G>%3d%</color>\n", display.cx - 28, _FindFormula(o_ptr->sval)->cost, tier, DC);
+				 doc_printf(doc, "<tab:%d>Cost: %4d%, %s: %d, DC:<color:G>%3d%</color>\n", display.cx - 32, _FindFormula(o_ptr->sval)->cost, _tiername[tier], DC);
 			} 
 			else if (DC == 999){ // can't do ever
 				doc_printf(doc, "<tab:%d><color:r>Unreproduceable</color>\n",display.cx - 22);
 			}
 			else {
-				doc_printf(doc, "<tab:%d>Cost: %4d%, Tier: %d, DC:<color:R>%3d%</color>\n", display.cx - 28, _FindFormula(o_ptr->sval)->cost, tier, DC);
+				doc_printf(doc, "<tab:%d>Cost: %4d%, %s, DC:<color:R>%3d%</color>\n", display.cx - 32, _FindFormula(o_ptr->sval)->cost, _tiername[tier], DC);
 			}
 
 			/*doc_printf(doc, "<tab:%d>SP: %3d.%2.2d\n", display.cx - 12, o_ptr->xtra5 / 100, o_ptr->xtra5 % 100);*/
@@ -212,9 +218,9 @@ static void _displayInfusions(rect_t display)
 
 	doc_printf(doc, "\nAlchemist skill: <color:y>%4d%</color> \n", _AlchemistSkill());
 	doc_printf(doc, "Chemical stock: \n");
-		doc_printf(doc, "<tab:3><color:U>Tier 0: %4d%</color> \n", _CHEM[_CTIER0]);
-		doc_printf(doc, "<tab:3><color:o>Tier 1: %4d%</color> \n", _CHEM[_CTIER1]);
-		doc_printf(doc, "<tab:3><color:v>Tier 2: %4d%</color> \n", _CHEM[_CTIER2]);
+		doc_printf(doc, "<tab:3><color:U>%s: %4d%</color> \n", _tiername[_CTIER0], _CHEM[_CTIER0]);
+		doc_printf(doc, "<tab:3><color:o>%s: %4d%</color> \n", _tiername[_CTIER1], _CHEM[_CTIER1]);
+		doc_printf(doc, "<tab:3><color:v>%s: %4d%</color> \n", _tiername[_CTIER2], _CHEM[_CTIER2]);
 	doc_printf(doc, "\n");
 	doc_insert(doc, "</style>");
 	doc_sync_term(doc, doc_range_all(doc), doc_pos_create(pos.x, pos.y));
@@ -308,7 +314,7 @@ object_type *_chooseInfusion(cptr verb, int tval, int options)
 					slot1 = slot2 = _INVALID_SLOT;
 				}
 			}
-			else
+			else 
 			{
 				object_type *o_ptr = _which_obj(which_tval, slot);
 				if (o_ptr->k_idx || (options & _ALLOW_EMPTY))
@@ -391,7 +397,7 @@ void alchemist_cast(int tval)
 	if (!tval)
 		tval = TV_POTION;
 
-	o_ptr = _chooseInfusion("Use", tval, _ALLOW_SWITCH);
+	o_ptr = _chooseInfusion("Use", tval, _ALLOW_SWITCH | _ALLOW_EXCHANGE);
 	if (o_ptr)
 	{
 		_use_infusion(o_ptr, 1);
@@ -415,8 +421,16 @@ static bool create_infusion(void)
 		src_ptr = &inventory[item];
 	else
 		src_ptr = &o_list[0 - item];
+	bool already_slotted = FALSE;
+	
+	for (int i = 0; i < _MAX_INF_SLOTS; i++){ // auto-assign if there is already one.
+		if (_infusions[i].sval == src_ptr->sval && (src_ptr->tval == TV_POTION && _infusions[i].tval == TV_POTION) && _infusions[i].number < _INFUSION_CAP){ 
+			dest_ptr = &_infusions[i]; already_slotted = TRUE; break; }
+	}
 
-	dest_ptr = _chooseInfusion("Replace", src_ptr->tval, _ALLOW_EMPTY);
+	if (!already_slotted){
+		dest_ptr = _chooseInfusion("Replace", src_ptr->tval, _ALLOW_EMPTY);
+	}
 	if (!dest_ptr)
 		return FALSE;
 
@@ -436,6 +450,8 @@ static bool create_infusion(void)
 	}
 
 	int infct = get_quantity(NULL, MIN(src_ptr->number,_INFUSION_CAP));
+	if (infct <= 0) { msg_format("You do nothing.");  return FALSE; }
+	
 
 	if (dest_ptr->sval == src_ptr->sval && dest_ptr->number>0){ 
 		// we already got one, so just increment them! And check that there is -something-, because water has sval of 0
@@ -658,7 +674,8 @@ static bool evaporate(void){
 				floor_item_optimize(0 - item);
 			}
 		}
-	}
+		else return FALSE;
+	} 
 	else{
 		o_ptr = _chooseInfusion("Evaporate", TV_POTION, 0);
 		if (!o_ptr){ return FALSE; }
@@ -697,10 +714,29 @@ static void _evaporate_spell(int cmd, variant *res)
 	}
 }
 
+bool alchemist_break_down_aux(object_type *o_ptr, int ct){
+	char o_name[MAX_NLEN];
+	int formulaCost = _FindFormula(o_ptr->sval)->cost;
+	int cost = (ct * formulaCost) / 2;
+	int tier = _FindFormula(o_ptr->sval)->ctier;
+	if (_CHEM[tier] + cost > _MAX_CHEM){
+		char prompt[255];
+		object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
+		sprintf(prompt, "Really break down %s? You will exceed the chemical, and some will be lost. <color:y>[y/N]</color>", o_name);
+		if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n')
+			return FALSE;
+	}
+
+	_CHEM[tier] += cost;
+	if (_CHEM[tier] > _MAX_CHEM) _CHEM[tier] = _MAX_CHEM;
+
+	msg_format("You break down potion(s) and gain %d %s chemical, totaling at %d.", cost, _tiername[tier], _CHEM[tier]);
+
+}
+
 static bool break_down_potion(void){
 	int item;
 	object_type *o_ptr;
-	char o_name[MAX_NLEN];
 
 	item_tester_hook = object_is_potion;
 	if (!get_item(&item, "Break down which potions? ", "You have nothing to break down.", (USE_INVEN | USE_FLOOR)))
@@ -710,7 +746,7 @@ static bool break_down_potion(void){
 	else o_ptr = &o_list[0 - item];
 
 	int ct = get_quantity(NULL, o_ptr->number);
-
+	bool success = FALSE;
 	if (ct > 0){
 
 			if (o_ptr->sval == SV_POTION_WATER){
@@ -720,36 +756,24 @@ static bool break_down_potion(void){
 				return FALSE;
 			} // 
 
-			int formulaCost = _FindFormula(o_ptr->sval)->cost;
-			int cost = (ct * formulaCost)/2;
-			int tier = _FindFormula(o_ptr->sval)->ctier;
-			if (_CHEM[tier] + cost > _MAX_CHEM){ 
-				char prompt[255];
-				object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
-				sprintf(prompt, "Really break down %s? You will exceed the chemical, and some will be lost. <color:y>[y/N]</color>", o_name);
-				if (msg_prompt(prompt, "ny", PROMPT_DEFAULT) == 'n')
-					return FALSE;
-			}
-
-			_CHEM[tier] += cost;
-			if (_CHEM[tier] > _MAX_CHEM) _CHEM[tier] = _MAX_CHEM;
-
-			msg_format("You break down potion(s) and gain %d chemical, totaling at %d.", cost, _CHEM[tier]);
+			success = alchemist_break_down_aux(o_ptr, ct);
 	}
 	
-	/* Eliminate the item (from the pack) */
-	if (item >= 0)
-	{
-		inven_item_increase(item, -ct);
-		inven_item_describe(item);
-		inven_item_optimize(item);
-	}
-	/* Eliminate the item (from the floor) */
-	else
-	{
-		floor_item_increase(0 - item, -ct);
-		floor_item_describe(0 - item);
-		floor_item_optimize(0 - item);
+	if (success){
+		/* Eliminate the item (from the pack) */
+		if (item >= 0)
+		{
+			inven_item_increase(item, -ct);
+			inven_item_describe(item);
+			inven_item_optimize(item);
+		}
+		/* Eliminate the item (from the floor) */
+		else
+		{
+			floor_item_increase(0 - item, -ct);
+			floor_item_describe(0 - item);
+			floor_item_optimize(0 - item);
+		}
 	}
 	return TRUE;
 }
@@ -820,7 +844,7 @@ void _reproduceInf(object_type* o_ptr){
 		return;
 
 	if (cost > _CHEM[tier]){ 
-		msg_format("You do not have enough chemicals.");
+		msg_format("You do not have enough %s chemicals.", _tiername[tier]);
 		return;
 	}
 
@@ -861,12 +885,6 @@ static void _reproduce_infusion_spell(int cmd, variant *res)
 	}
 }
 
-void alchemist_gain(void)
-{
-	if (cast_spell(_create_infusion_spell))
-		energy_use = 100;
-}
-
 void alchemist_super_potion_effect(int sval){
 
 	switch (sval)
@@ -880,9 +898,19 @@ void alchemist_super_potion_effect(int sval){
 }
 
 static void _calc_bonuses(void){
-	if(p_ptr->lev >= 10) p_ptr->regen += 100;
-	if (p_ptr->lev >= 20) p_ptr->special_attack |= ATTACK_POIS;
-	if (p_ptr->lev >= 40) p_ptr->special_attack |= ATTACK_ACID;
+	if (p_ptr->lev >= 10) p_ptr->regen += 100;
+	if (p_ptr->lev >= 20) 
+	{
+		add_flag(p_ptr->weapon_info[0].flags, OF_BRAND_POIS);
+		add_flag(p_ptr->weapon_info[1].flags, OF_BRAND_POIS);
+		add_flag(p_ptr->shooter_info.flags, OF_BRAND_POIS);
+	}
+	if (p_ptr->lev >= 40)
+	{
+		add_flag(p_ptr->weapon_info[0].flags, OF_BRAND_ACID);
+		add_flag(p_ptr->weapon_info[1].flags, OF_BRAND_ACID);
+		add_flag(p_ptr->shooter_info.flags, OF_BRAND_ACID);
+	}
 	int boost = 0;
 
 	if (IS_SHERO()){ // extra benefits from things.
@@ -898,17 +926,36 @@ static void _calc_bonuses(void){
 		p_ptr->shooter_info.num_fire += p_ptr->lev * 150 / 50;
 	}
 	else if (IS_HERO()){
-		boost = p_ptr->lev / 5;
+		boost = 1+p_ptr->lev / 10;
 		p_ptr->pspeed += 2;
+		p_ptr->to_h_m += boost;
+		p_ptr->to_d_m += boost;
 		p_ptr->shooter_info.num_fire += p_ptr->lev * 150 / 80;
 	}
 
 }
 
+static bool _on_destroy_object(object_type *o_ptr)
+{
+	if (object_is_potion(o_ptr))
+	{
+		char o_name[MAX_NLEN];
+		object_desc(o_name, o_ptr, OD_COLOR_CODED);
+		msg_format("You attempt to break down %s. ", o_name);
+		alchemist_break_down_aux(o_ptr, o_ptr->number);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+
 
 static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
-
+	if (p_ptr->lev >= 20)
+		add_flag(flgs, OF_BRAND_POIS);
+	if (p_ptr->lev >= 40)
+		add_flag(flgs, OF_BRAND_ACID);
 }
 
 static void _load_list(savefile_ptr file)
@@ -1091,6 +1138,8 @@ class_t *alchemist_get_class(void)
 		me.caster_info = _caster_info;
 		me.load_player = _load_player;
 		me.save_player = _save_player;
+		me.destroy_object = _on_destroy_object;
+
 		init = TRUE;
 	}
 
