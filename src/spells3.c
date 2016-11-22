@@ -687,7 +687,7 @@ void teleport_level(int m_idx)
     }
 
     /* Down only */
-    if ((ironman_downward && (m_idx <= 0)) || (dun_level <= d_info[dungeon_type].mindepth))
+    if (((ironman_downward || coffeebreak_mode) && (m_idx <= 0)) || (dun_level <= d_info[dungeon_type].mindepth))
     {
         if (see_m) msg_format("%^s sink%s through the floor.", m_name, (m_idx <= 0) ? "" : "s");
         if (m_idx <= 0) /* To player */
@@ -935,7 +935,7 @@ bool reset_recall(void)
     select_dungeon = choose_dungeon("reset", 1, 1);
 
     /* Ironman option */
-    if (ironman_downward)
+    if (ironman_downward || coffeebreak_mode)
     {
         msg_print("Nothing happens.");
 
@@ -1618,7 +1618,7 @@ void fetch(int dir, int wgt, bool require_los)
 void alter_reality(void)
 {
     /* Ironman option */
-    if (p_ptr->inside_arena || ironman_downward)
+    if (p_ptr->inside_arena || ironman_downward || coffeebreak_mode)
     {
         msg_print("Nothing happens.");
         return;

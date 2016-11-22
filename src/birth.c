@@ -3620,10 +3620,7 @@ static bool player_birth_aux(void)
         screen_save();
         do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
 
-		if (coffeebreak_mode){
-			ironman_downward = TRUE;
-			no_wilderness = TRUE;
-		}
+		if (coffeebreak_mode) no_wilderness = TRUE;
 
         screen_load();
     }

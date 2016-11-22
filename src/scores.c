@@ -779,7 +779,7 @@ void kingly(void)
 		put_str("Veni, Vidi, Vici!", cy + 3, cx - 9);
 		put_str("I came, I saw, I conquered!", cy + 4, cx - 14);
 		if (!coffeebreak_mode) put_str(format("All Hail the Mighty %s!", sp_ptr->winner), cy + 5, cx - 13);
-		else put_str(format("Now get back to work, %s!", sp_ptr->winner), cy + 5, cx - 13);
+		else put_str(format("Now get back to work, %s!", player_name), cy + 5, cx - 13);
 	
 
     /* Flush input */

@@ -616,7 +616,7 @@ static void pattern_teleport(void)
         char    tmp_val[160];
 
         /* Only downward in ironman mode */
-        if (ironman_downward)
+        if (ironman_downward || coffeebreak_mode)
             min_level = dun_level;
 
         /* Maximum level */
@@ -2625,6 +2625,8 @@ void process_world_aux_movement(void)
                 dungeon_type = p_ptr->recall_dungeon;
                 dun_level = max_dlv[dungeon_type];
                 if (dun_level < 1) dun_level = 1;
+
+				if (coffeebreak_mode && dun_level <= 98) dun_level++; // :^)
 
                 /* Nightmare mode makes recall more dangerous */
                 if (ironman_nightmare && !randint0(666) && (dungeon_type == DUNGEON_ANGBAND))

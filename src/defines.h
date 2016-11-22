@@ -5515,7 +5515,7 @@ enum mon_save_fields_e {
     (p_ptr->inside_arena || p_ptr->inside_battle || \
      (p_ptr->inside_quest && !random_quest_number(dun_level)) || \
      (((TARGET) <= 0) && (quest_number(dun_level) || (dun_level >= d_info[dungeon_type].maxdepth)) && \
-      (dun_level >= 1) && ironman_downward))
+      (dun_level >= 1) && (ironman_downward || coffeebreak_mode)))
 
 
 /*

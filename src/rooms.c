@@ -2265,10 +2265,11 @@ static bool _room_is_allowed(const room_template_t * room_ptr, int type, int sub
     if (!room_ptr->rarity) return FALSE;
     if ((room_ptr->flags & ROOM_SHOP) && !shop_allowed) return FALSE;
 
+	/*
 	if (coffeebreak_mode && shop_allowed){ // force a shop on every 20 levels on coffeebreaks. It should get vanilla town most of the time since it picks biggest first, but...
 		if (base_level % 20 == 0 && base_level != 100 && 
 			!(room_ptr->flags & ROOM_SHOP)) return FALSE;
-	}
+	}**/
 
     if (!dun_level)
     {

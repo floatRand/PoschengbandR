@@ -996,9 +996,14 @@ void leave_floor(void)
         if (change_floor_mode & CFM_DOWN)
         {
             if (!dun_level)
-            {
+            { 
                 if (d_info[dungeon_type].flags1 & DF1_RANDOM)
                     move_num = rand_range(d_info[dungeon_type].mindepth, d_info[dungeon_type].maxdepth);
+				else if (coffeebreak_mode && dungeon_type == DUNGEON_ANGBAND){
+					// on coffeebreak we always return to recall level. It can't be reset, either...
+					if (max_dlv[dungeon_type] < 99) move_num = max_dlv[dungeon_type] + 1; 
+					else move_num = max_dlv[dungeon_type];
+				}
                 else
                     move_num = d_info[dungeon_type].mindepth;
             }
@@ -1363,7 +1368,7 @@ void change_floor(void)
                 }
 
                 /* No stairs up when ironman_downward */
-                else if ((change_floor_mode & CFM_DOWN) && !ironman_downward)
+                else if ((change_floor_mode & CFM_DOWN) && !(ironman_downward || coffeebreak_mode))
                 {
                     c_ptr->feat = (change_floor_mode & CFM_SHAFT) ? feat_state(feat_up_stair, FF_SHAFT) : feat_up_stair;
                 }
@@ -1451,7 +1456,7 @@ void stair_creation(bool down_only)
 
 
     /* Forbid up staircases on Ironman mode */
-    if (ironman_downward || down_only) up = FALSE;
+    if (ironman_downward || down_only || coffeebreak_mode) up = FALSE;
 
     /* Forbid down staircases on quest level */
     if (quest_number(dun_level) || (dun_level >= d_info[dungeon_type].maxdepth)) down = FALSE;

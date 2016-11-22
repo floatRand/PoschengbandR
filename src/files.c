@@ -3005,7 +3005,8 @@ long total_points(void)
         if(max_dlv[i] > max_dl)
             max_dl = max_dlv[i];
 
-    point_l = (p_ptr->max_max_exp + (100 * max_dl));
+    if(!coffeebreak_mode) point_l = (p_ptr->max_max_exp + (100 * max_dl));
+	else point_l = (p_ptr->max_max_exp / 10 + (100 * max_dl));
     point_h = point_l / 0x10000L;
     point_l = point_l % 0x10000L;
     point_h *= mult;
@@ -3022,7 +3023,6 @@ long total_points(void)
         point += (arena_win * arena_win * (arena_win > 29 ? 1000 : 100));
 
     if (ironman_downward) point *= 2;
-	if (coffeebreak_mode) point /= 4;
 
     if (p_ptr->pclass == CLASS_BERSERKER)
     {
