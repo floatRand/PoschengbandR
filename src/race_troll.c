@@ -417,10 +417,23 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     }
 }
 
+static name_desc_t _info[TROLL_MAX] = {
+    { "Ettin", "Ettins are large, two-headed trolls. They lack much in the way of "
+                "powers and abilities, but make up for this with the ability to "
+                "wield an extra helmet." },
+    { "Storm Troll", "Storm Trolls are fast trolls with elemental powers. They may call "
+                        "forth elemental balls and bolts. Their weapons are wreathed in "
+                        "electricity as their fury rains down on all they meet." },
+    { "Spirit Troll", "Spirit trolls may pass through walls on their quest to demolish "
+                        "all that oppose them." },
+    { "Troll King", "Troll Kings are lords of their kind, fast and extremely deadly in "
+                        "melee. They may blink themselves out of harms way." },
+};
+
 /******************************************************************************
  * Troll Public API
  ******************************************************************************/
-race_t *mon_troll_get_race(void)
+race_t *mon_troll_get_race(int psubrace)
 {
     static race_t me = {0};
     static bool   init = FALSE;
@@ -466,6 +479,12 @@ race_t *mon_troll_get_race(void)
     me.stats[A_CON] =  3 + p_ptr->lev/13;
     me.stats[A_CHR] =  0;
     me.life = 100 + (p_ptr->lev/10)*4;
+
+    if (birth_hack || spoiler_hack)
+    {
+        me.subname = _info[psubrace].name;
+        me.subdesc = _info[psubrace].desc;
+    }
 
     me.equip_template = mon_get_equip_template();
     return &me;

@@ -1120,6 +1120,26 @@ static race_t *_titan_get_race_t(void)
     return &me;
 }
 
+static name_desc_t _info[GIANT_MAX] = {
+    { "Fire Giant", "Fire Giants are massive giants of flame. At high levels they become "
+                        "wreathed in flames and even their weapons will burn their foes. Like "
+                        "all giants, they may toss loose rubble at their foes. In addition, "
+                        "they have a few fire based distance attacks up their sleeves." },
+    { "Frost Giant", "Frost Giants are massive giants of ice. At high levels they become "
+                        "wreathed in cold and even their weapons will freeze their foes. Like "
+                        "all giants, they may toss loose rubble at their foes. In addition, "
+                        "they have a few cold based distance attacks up their sleeves." },
+    { "Storm Giant", "Storm Giants are massive giants of lightning. At high levels they become "
+                        "wreathed in electricity and even their weapons will shock their foes. Like "
+                        "all giants, they may toss loose rubble at their foes. In addition, "
+                        "they have a few lightning based distance attacks up their sleeves." },
+    { "Titan", "Titans are huge immortal beings of incredible strength and awesome power. "
+                "Descended from Gaia and Uranus, they ruled during the legendary Golden Age, "
+                "but were overthrown by the Olympians during the War of the Titans." },
+    { "Hru", "Hrus are rock giants, made of stone. Their hides are tough and they are able "
+                "to break through walls effortlessly. Hrus are incredibly strong, but lack "
+                "much in the way of magical powers." },
+};
 /**********************************************************************
  * Public
  **********************************************************************/
@@ -1161,6 +1181,12 @@ race_t *mon_giant_get_race(int psubrace)
     result->base_hp = 46;
     result->pseudo_class_idx = CLASS_WARRIOR;
     result->shop_adjust = 130;
+
+    if (birth_hack || spoiler_hack)
+    {
+        result->subname = _info[psubrace].name;
+        result->subdesc = _info[psubrace].desc;
+    }
 
     return result;
 }

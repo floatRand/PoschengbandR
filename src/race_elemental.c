@@ -1272,6 +1272,30 @@ static race_t *_fire_get_race_t(void)
     return &me;
 }
 
+static name_desc_t _info[ELEMENTAL_MAX] = {
+    { "Earth Elemental",
+        "Earth Elementals are creatures of rock: Strong, tough and slow. "
+        "They may move freely through the earth and are capable of conjuring "
+        "sharp clods of earth to hurl at their foes. Their skin is very tough, "
+        "and they can even turn their bodies to stone. However, being made of "
+        "earth, their potions frequently turn to mud." },
+    { "Air Elemental",
+        "Air Elementals are creatures of electricity. They are incredibly fast, "
+        "blinking in and out of sight as they shower their enemies with confusing "
+        "and shocking blows. Electricity crackles menacingly about their nimble frames, "
+        "tending to destroy rings, amulets, wands and rods." },
+    { "Water Elemental",
+        "Water Elementals are creatures of water, able to modify this ubiquitous "
+        "liquid into a deadly and often corrosive weapon of destruction. Fear their "
+        "rage! They cannot be stunned. Their corrosive nature erodes any armor that "
+        "gets too close." },
+    { "Fire Elemental",
+        "Fire Elementals are creatures of flame. They have a vast arsenal of "
+        "flaming attacks with which to singe the fiercest of foes. However, they "
+        "must beware of cold based attacks! Being wreathed in flames, scrolls and "
+        "staves are quickly burned to ash." },
+};
+
 /**********************************************************************
  * Public
  **********************************************************************/
@@ -1303,6 +1327,12 @@ race_t *mon_elemental_get_race(int psubrace)
     result->base_hp = 30;
     result->pseudo_class_idx = CLASS_WARRIOR;
     result->shop_adjust = 120;
+
+    if (birth_hack || spoiler_hack)
+    {
+        result->subname = _info[psubrace].name;
+        result->subdesc = _info[psubrace].desc;
+    }
 
     return result;
 }

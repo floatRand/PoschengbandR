@@ -44,6 +44,11 @@
  * and increase the complexity of the code.
  */
 
+typedef struct {
+    cptr name;
+    cptr desc;
+} name_desc_t, *name_desc_ptr;
+
 /*
  * Feature state structure
  *
@@ -2164,6 +2169,7 @@ typedef struct equip_template_s {
 } equip_template_t, *equip_template_ptr;
 
 typedef struct {
+    int                     id;
     cptr                    name;
     cptr                    desc;
     s16b                    stats[MAX_STATS];

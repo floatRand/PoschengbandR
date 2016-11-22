@@ -555,6 +555,17 @@ static int _get_powers(spell_info* spells, int max)
     return ct;
 }
 
+static name_desc_t _info[GOLEM_MAX] = {
+    { "Colossus", "The Colossus is the biggest of all golems, truly immense. "
+                  "Unfortunately, they are also the slowest of all golems on "
+                  "account of their great size." },
+    { "Sky Golem", "The Sky Golem is the product of powerful enchantments, resistant "
+                   "to the ravages of time. They may even breathe time!" },
+    { "Spellwarp Automaton", "The Spellwarp Automaton is nearly indestructible, being "
+                             "almost completely immune to magic. However, their great "
+                             "power takes a seeming eternity to mature." },
+};
+
 /**********************************************************************
  * Public
  **********************************************************************/
@@ -604,23 +615,17 @@ race_t *mon_golem_get_race(int psubrace)
     switch (psubrace)
     {
     case GOLEM_SKY:
-        if (!p_ptr->current_r_idx)
-            me.subname = "Sky Golem";
         me.life = 100 + 2*rank;
         me.exp = 250;
         break;
 
     case GOLEM_SPELLWARP:
-        if (!p_ptr->current_r_idx)
-            me.subname = "Spellwarp Automaton";
         me.life = 100 + 3*rank;
         me.exp = 350;
         break;
 
     case GOLEM_COLOSSUS:
     default:
-        if (!p_ptr->current_r_idx)
-            me.subname = "Colossus";
         if (p_ptr->current_r_idx == MON_COLOSSUS)
         {
             me.stats[A_STR] += 3;
@@ -630,6 +635,12 @@ race_t *mon_golem_get_race(int psubrace)
         me.life = 100 + 5*rank;
         me.exp = 200;
         break;
+    }
+
+    if (birth_hack || spoiler_hack)
+    {
+        me.subname = _info[psubrace].name;
+        me.subdesc = _info[psubrace].desc;
     }
 
     return &me;

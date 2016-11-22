@@ -203,7 +203,7 @@ race_t *get_race_aux(int prace, int psubrace)
         result = mon_quylthulg_get_race();
         break;
     case RACE_MON_SPIDER:
-        result = mon_spider_get_race();
+        result = mon_spider_get_race(psubrace);
         break;
     case RACE_MON_SWORD:
         result = mon_sword_get_race();
@@ -212,7 +212,7 @@ race_t *get_race_aux(int prace, int psubrace)
         result = mon_ring_get_race();
         break;
     case RACE_MON_TROLL:
-        result = mon_troll_get_race();
+        result = mon_troll_get_race(psubrace);
         break;
     case RACE_MON_VAMPIRE:
         result = mon_vampire_get_race();

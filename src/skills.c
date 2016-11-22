@@ -813,6 +813,7 @@ static cptr _mon_race_dis_skill_desc(race_t *race_ptr) { return _dis_skill_desc(
 static cptr _dis_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
 static cptr _race_dis_skill_desc(race_t *race_ptr) { return _dis_skill_desc2(race_ptr->skills.dis); }
 static cptr _pers_dis_skill_desc(personality_ptr pers_ptr) { return _dis_skill_desc2(pers_ptr->skills.dis*2); }
+static cptr _realm_dis_skill_desc(dragon_realm_ptr realm_ptr) { return _skill_desc(realm_ptr->skills.dis + 10, 2); }
 
 /* Devices */
 static cptr _dev_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra - 50, 6); }
@@ -822,6 +823,7 @@ static cptr _mon_race_dev_skill_desc(race_t *race_ptr) { return _dev_skill_desc(
 static cptr _dev_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
 static cptr _race_dev_skill_desc(race_t *race_ptr) { return _dev_skill_desc2(race_ptr->skills.dev); }
 static cptr _pers_dev_skill_desc(personality_ptr pers_ptr) { return _dev_skill_desc2(pers_ptr->skills.dev*2); }
+static cptr _realm_dev_skill_desc(dragon_realm_ptr realm_ptr) { return _skill_desc(realm_ptr->skills.dev + 5, 1); }
 
 /* Saving Throws */
 static cptr _sav_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra - 65, 5); }
@@ -831,6 +833,7 @@ static cptr _mon_race_sav_skill_desc(race_t *race_ptr) { return _sav_skill_desc(
 static cptr _sav_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
 static cptr _race_sav_skill_desc(race_t *race_ptr) { return _sav_skill_desc2(race_ptr->skills.sav); }
 static cptr _pers_sav_skill_desc(personality_ptr pers_ptr) { return _sav_skill_desc2(pers_ptr->skills.sav*2); }
+static cptr _realm_sav_skill_desc(dragon_realm_ptr realm_ptr) { return _skill_desc(realm_ptr->skills.sav + 5, 1); }
 
 /* Melee */
 static cptr _thn_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra - 70, 12); }
@@ -840,6 +843,7 @@ static cptr _mon_race_thn_skill_desc(race_t *race_ptr) { return _thn_skill_desc(
 static cptr _thn_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
 static cptr _race_thn_skill_desc(race_t *race_ptr) { return _thn_skill_desc2(race_ptr->skills.thn); }
 static cptr _pers_thn_skill_desc(personality_ptr pers_ptr) { return _thn_skill_desc2(pers_ptr->skills.thn*2); }
+static cptr _realm_thn_skill_desc(dragon_realm_ptr realm_ptr) { return _skill_desc(realm_ptr->skills.thn + 10, 2); }
 
 /* Bows */
 static cptr _thb_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra - 60, 12); }
@@ -849,6 +853,7 @@ static cptr _mon_race_thb_skill_desc(race_t *race_ptr) { return _thb_skill_desc(
 static cptr _thb_skill_desc2(int base) { return _skill_desc(base + 5, 2); }
 static cptr _race_thb_skill_desc(race_t *race_ptr) { return _thb_skill_desc2(race_ptr->skills.thb); }
 static cptr _pers_thb_skill_desc(personality_ptr pers_ptr) { return _thb_skill_desc2(pers_ptr->skills.thb*2); }
+static cptr _realm_thb_skill_desc(dragon_realm_ptr realm_ptr) { return _skill_desc(realm_ptr->skills.thb + 10, 2); }
 
 /* Stealth */
 static cptr _stl_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra + 2, 1); }
@@ -856,6 +861,7 @@ static cptr _class_stl_skill_desc(class_t *class_ptr) { return _stl_skill_desc(c
 static cptr _mon_race_stl_skill_desc(race_t *race_ptr) { return _stl_skill_desc(race_ptr->skills.stl, race_ptr->extra_skills.stl); }
 static cptr _race_stl_skill_desc(race_t *race_ptr) { return _stl_skill_desc(race_ptr->skills.stl, 0); }
 static cptr _pers_stl_skill_desc(personality_ptr pers_ptr) { return _stl_skill_desc(pers_ptr->skills.stl, 0); }
+static cptr _realm_stl_skill_desc(dragon_realm_ptr realm_ptr) { return _skill_desc(realm_ptr->skills.stl + 4, 1); }
 
 /* Searching */
 static cptr _srh_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra, 6); }
@@ -865,6 +871,7 @@ static cptr _mon_race_srh_skill_desc(race_t *race_ptr) { return _srh_skill_desc(
 static cptr _srh_skill_desc2(int base) { return _skill_desc(base, 1); }
 static cptr _race_srh_skill_desc(race_t *race_ptr) { return _srh_skill_desc2(race_ptr->skills.srh); }
 static cptr _pers_srh_skill_desc(personality_ptr pers_ptr) { return _srh_skill_desc2(pers_ptr->skills.srh + 3); }
+static cptr _realm_srh_skill_desc(dragon_realm_ptr realm_ptr) { return _skill_desc(realm_ptr->skills.srh, 1); }
 
 /* Perception */
 static cptr _fos_skill_desc(int base, int xtra) { return _skill_desc(base + 5*xtra, 6); }
@@ -874,6 +881,7 @@ static cptr _mon_race_fos_skill_desc(race_t *race_ptr) { return _fos_skill_desc(
 static cptr _fos_skill_desc2(int base) { return _skill_desc(base, 1); }
 static cptr _race_fos_skill_desc(race_t *race_ptr) { return _fos_skill_desc2(race_ptr->skills.fos); }
 static cptr _pers_fos_skill_desc(personality_ptr pers_ptr) { return _fos_skill_desc2(pers_ptr->skills.fos + 3); }
+static cptr _realm_fos_skill_desc(dragon_realm_ptr realm_ptr) { return _skill_desc(realm_ptr->skills.fos, 1); }
 
 
 void skills_desc_class(class_t *class_ptr, skills_desc_t *skills)
@@ -922,6 +930,18 @@ void skills_desc_pers(personality_t *pers_ptr, skills_desc_t *skills)
     strcpy(skills->fos, _pers_fos_skill_desc(pers_ptr));
     strcpy(skills->thn, _pers_thn_skill_desc(pers_ptr));
     strcpy(skills->thb, _pers_thb_skill_desc(pers_ptr));
+}
+
+void skills_desc_realm(dragon_realm_ptr realm_ptr, skills_desc_t *skills)
+{
+    strcpy(skills->dis, _realm_dis_skill_desc(realm_ptr));
+    strcpy(skills->dev, _realm_dev_skill_desc(realm_ptr));
+    strcpy(skills->sav, _realm_sav_skill_desc(realm_ptr));
+    strcpy(skills->stl, _realm_stl_skill_desc(realm_ptr));
+    strcpy(skills->srh, _realm_srh_skill_desc(realm_ptr));
+    strcpy(skills->fos, _realm_fos_skill_desc(realm_ptr));
+    strcpy(skills->thn, _realm_thn_skill_desc(realm_ptr));
+    strcpy(skills->thb, _realm_thb_skill_desc(realm_ptr));
 }
 
 void skills_desc_aux(skills_t *base, skills_t *xtra, skills_desc_t *skills)
