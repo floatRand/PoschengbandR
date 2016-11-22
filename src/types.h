@@ -1628,11 +1628,14 @@ struct player_type
 
 /*
  * A structure to hold "rolled" information
+ *
+ * TODO: Dead fields are mis-aligned ... remove for 6.0
  */
 typedef struct birther birther;
 
 struct birther
 {
+    byte game_mode;
     byte psex;         /* Sex index */
     byte prace;        /* Race index */
     byte psubrace;
@@ -1643,21 +1646,21 @@ struct birther
     byte realm2;       /* Second magic realm */
     byte dragon_realm;
 
-    s16b age;
-    s16b ht;
-    s16b wt;
-    s16b sc;
+s16b age;
+s16b ht;
+s16b wt;
+s16b sc;
 
     s32b au;
 
     s16b stat_max[6];        /* Current "maximal" stat values */
-    s16b stat_max_max[6];    /* Maximal "maximal" stat values */
-    s16b player_hp[PY_MAX_LEVEL]; /* Map (L-1)->Cumulative Percentage of Base HD */
-                                  /* See calc_hitpoints() in xtra1.c for details */
-    s16b chaos_patron;
-    int  mutation;
+s16b stat_max_max[6];    /* Maximal "maximal" stat values */
+s16b player_hp[PY_MAX_LEVEL]; /* Map (L-1)->Cumulative Percentage of Base HD */
+                              /* See calc_hitpoints() in xtra1.c for details */
+s16b chaos_patron;
+int  mutation;
 
-    s16b vir_types[8];
+s16b vir_types[8];
 
     bool quick_ok;
 };

@@ -53,6 +53,7 @@ extern int py_birth(void);
 static doc_ptr _doc = NULL;
 
 static void _birth_options(void);
+static void _birth_finalize(void);
 static int _inkey(void);
 static void _sync_term(doc_ptr doc);
 static int _count(int ids[]);
@@ -112,6 +113,8 @@ static int _welcome_ui(void)
         doc_insert(_doc, "  <color:y>n</color>) Normal\n");
         doc_insert(_doc, "  <color:y>m</color>) Monster\n");
         doc_newline(_doc);
+        if (previous_char.quick_ok)
+            doc_insert(_doc, "  <color:y>q</color>) Quick Start\n");
         doc_insert(_doc, "  <color:y>=</color>) Options\n");
         doc_insert(_doc, "  <color:y>?</color>) Help\n");
         doc_insert(_doc, "<color:y>ESC</color>) <color:v>Quit</color>\n");
@@ -130,6 +133,30 @@ static int _welcome_ui(void)
             return UI_CANCEL;
         else if (cmd == '=')
             _birth_options();
+        else if (cmd == 'q' && previous_char.quick_ok)
+        {
+            int i;
+            game_mode = previous_char.game_mode;
+            p_ptr->psex = previous_char.psex;
+            p_ptr->prace = previous_char.prace;
+            p_ptr->psubrace = previous_char.psubrace;
+            p_ptr->pclass = previous_char.pclass;
+            p_ptr->psubclass = previous_char.psubclass;
+            p_ptr->personality = previous_char.personality;
+            p_ptr->realm1 = previous_char.realm1;
+            p_ptr->realm2 = previous_char.realm2;
+            p_ptr->dragon_realm = previous_char.dragon_realm;
+            p_ptr->au = previous_char.au;
+            for (i = 0; i < MAX_STATS; i++)
+            {
+                p_ptr->stat_cur[i] = previous_char.stat_max[i];
+                p_ptr->stat_max[i] = previous_char.stat_max[i];
+            }
+            if (_race_class_ui() == UI_OK)
+                return UI_OK;
+        }
+        else if (cmd == 'Q' && previous_char.quick_ok)
+            doc_display_help("birth.txt", "QuickStart");
         else if (cmd == 'b')
         {
             _set_mode(GAME_MODE_BEGINNER);
@@ -1698,7 +1725,10 @@ static int _stats_ui(void)
         _sync_term(_doc);
         cmd = _inkey();
         if (cmd == '\r' && score <= _MAX_SCORE)
+        {
+            _birth_finalize();
             return UI_OK;
+        }
         else if (cmd == ESCAPE)
             return UI_CANCEL;
         else if (cmd == '\t')
@@ -2338,5 +2368,26 @@ static void _birth_options(void)
 {
     Term_load();
     do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
+}
+
+static void _birth_finalize(void)
+{
+    int i;
+
+    previous_char.quick_ok = TRUE;
+    previous_char.game_mode = game_mode;
+    previous_char.psex = p_ptr->psex;
+    previous_char.prace = p_ptr->prace;
+    previous_char.psubrace = p_ptr->psubrace;
+    previous_char.pclass = p_ptr->pclass;
+    previous_char.psubclass = p_ptr->psubclass;
+    previous_char.personality = p_ptr->personality;
+    previous_char.realm1 = p_ptr->realm1;
+    previous_char.realm2 = p_ptr->realm2;
+    previous_char.dragon_realm = p_ptr->dragon_realm;
+    previous_char.au = p_ptr->au;
+
+    for (i = 0; i < MAX_STATS; i++)
+        previous_char.stat_max[i] = p_ptr->stat_max[i];
 }
 
