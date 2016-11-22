@@ -331,7 +331,9 @@ race_t *mon_hydra_get_race(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    me.subname = NULL;
+    if (!birth_hack && !spoiler_hack)
+        me.subname = titles[rank];
     me.stats[A_STR] = rank;
     me.stats[A_INT] = -2;
     me.stats[A_WIS] = -2;

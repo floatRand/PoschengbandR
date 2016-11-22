@@ -5,6 +5,14 @@
 /************************************************************************
  * Give birth to a new player.
  * TODO: quickstart/birth options
+ * For reference, there are 3 possible game modes:
+ * [1] Beginner: Limited Races and Classes
+ *               No Wilderness
+ *               No Personality
+ *               No Birth Options
+ * [2] Normal:   Standard Game with All Races/Classes/etc.
+ * [3] Monster:  Monster Races
+ *               No Class (CLASS_MONSTER is a bunch of zeros!)
  *
  * *_ui() functions run menu loops according to the following flow graph:
  ***********************************************************************/
@@ -1421,6 +1429,9 @@ static int _mon_race_ui(int ids[])
 
 static int _mon_subrace_ui(void)
 {
+    if (p_ptr->prace != RACE_MON_DRAGON)
+        p_ptr->dragon_realm = 0;
+
     if (p_ptr->prace == RACE_MON_DEMON)
         return _mon_demon_ui();
     else if (p_ptr->prace == RACE_MON_DRAGON)
@@ -1724,100 +1735,203 @@ static void _stats_init_aux(int stats[MAX_STATS])
 
 static void _stats_init(void)
 {
-    switch (p_ptr->pclass)
+    if (p_ptr->pclass == CLASS_MONSTER)
     {
-    case CLASS_WARRIOR:
-    case CLASS_CAVALRY:
-    case CLASS_BERSERKER:
-    case CLASS_MAULER:
-    case CLASS_ARCHER:
-    case CLASS_SAMURAI:
-    case CLASS_WEAPONSMITH:
-    case CLASS_WEAPONMASTER:
-    case CLASS_NINJA:
-    case CLASS_SNIPER:
-    case CLASS_DUELIST:
-    case CLASS_RAGE_MAGE:
-    {
-        int stats[6] = { 17, 8, 8, 17, 15, 9 };
-        _stats_init_aux(stats);
-        break;
+        switch (p_ptr->prace)
+        {
+        case RACE_MON_JELLY:
+        case RACE_MON_XORN:
+        case RACE_MON_HOUND:
+        case RACE_MON_GIANT:
+        case RACE_MON_VORTEX:
+        case RACE_MON_CENTIPEDE:
+        case RACE_MON_TROLL:
+        case RACE_MON_HYDRA:
+        case RACE_MON_SPIDER:
+        case RACE_MON_LEPRECHAUN:
+        case RACE_MON_ELEMENTAL:
+        case RACE_MON_SWORD:
+        case RACE_MON_GOLEM:
+        {
+            int stats[6] = { 17, 8, 8, 17, 15, 9 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case RACE_MON_ANGEL:
+        {
+            int stats[6] = { 16, 8, 17, 16, 11, 8 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case RACE_MON_LICH:
+        case RACE_MON_BEHOLDER:
+        case RACE_MON_RING:
+        {
+            int stats[6] = { 16, 17, 9, 9, 16, 9 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case RACE_MON_VAMPIRE:
+        {
+            int stats[6] = { 16, 8, 8, 17, 11, 16 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case RACE_MON_MIMIC:
+        case RACE_MON_POSSESSOR:
+        {
+            int stats[6] = { 15, 15, 11, 15, 15, 15 };
+            _stats_init_aux(stats);
+        }
+        case RACE_MON_QUYLTHULG:
+        {
+            int stats[6] = { 16, 8, 8, 11, 16, 17 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case RACE_MON_DRAGON:
+            if (p_ptr->dragon_realm == DRAGON_REALM_LORE)
+            {
+                int stats[6] = { 16, 16, 9, 16, 14, 10 };
+                _stats_init_aux(stats);
+            }
+            else if (p_ptr->dragon_realm == DRAGON_REALM_BREATH)
+            {
+                int stats[6] = { 16, 8, 8, 16, 17, 11 };
+                _stats_init_aux(stats);
+            }
+            else if (p_ptr->dragon_realm == DRAGON_REALM_CRAFT)
+            {
+                int stats[6] = { 16, 9, 16, 16, 14, 10 };
+                _stats_init_aux(stats);
+            }
+            else if ( p_ptr->dragon_realm == DRAGON_REALM_DOMINATION
+                   || p_ptr->dragon_realm == DRAGON_REALM_CRUSADE )
+            {
+                int stats[6] = { 16, 8, 8, 16, 15, 16 };
+                _stats_init_aux(stats);
+            }
+            else
+            {
+                int stats[6] = { 17, 8, 8, 17, 15, 9 };
+                _stats_init_aux(stats);
+            }
+            break;
+        case RACE_MON_DEMON:
+            if (p_ptr->psubrace == DEMON_BALROG || p_ptr->psubrace == DEMON_MARILITH)
+            {
+                int stats[6] = { 16, 16, 9, 16, 14, 10 };
+                _stats_init_aux(stats);
+            }
+            else if (p_ptr->psubrace == DEMON_CYBERDEMON)
+            {
+                int stats[6] = { 17, 8, 8, 15, 17, 9 };
+                _stats_init_aux(stats);
+            }
+            else
+            {
+                int stats[6] = { 17, 8, 8, 17, 15, 9 };
+                _stats_init_aux(stats);
+            }
+            break;
+        }
     }
-    case CLASS_BLOOD_KNIGHT:
+    else
     {
-        int stats[6] = { 17, 8, 8, 15, 17, 9 };
-        _stats_init_aux(stats);
-        break;
-    }
-    case CLASS_MAGE:
-    case CLASS_HIGH_MAGE:
-    case CLASS_SORCERER:
-    case CLASS_BLUE_MAGE:
-    case CLASS_GRAY_MAGE:
-    case CLASS_YELLOW_MAGE:
-    case CLASS_MIRROR_MASTER:
-    case CLASS_BLOOD_MAGE:
-    case CLASS_NECROMANCER:
-    {
-        int stats[6] = { 16, 17, 9, 9, 16, 9 };
-        _stats_init_aux(stats);
-        break;
-    }
-    case CLASS_PRIEST:
-    case CLASS_RANGER:
-    case CLASS_PALADIN:
-    case CLASS_MINDCRAFTER:
-    case CLASS_FORCETRAINER:
-    case CLASS_TIME_LORD:
-    case CLASS_ARCHAEOLOGIST:
-    {
-        int stats[6] = { 16, 8, 17, 16, 11, 8 };
-        _stats_init_aux(stats);
-        break;
-    }
-    case CLASS_ROGUE:
-    case CLASS_WARRIOR_MAGE:
-    case CLASS_CHAOS_WARRIOR:
-    case CLASS_TOURIST:
-    case CLASS_MAGIC_EATER:
-    case CLASS_RED_MAGE:
-    case CLASS_RUNE_KNIGHT:
-    case CLASS_SCOUT:
-    case CLASS_DEVICEMASTER:
-    {
-        int stats[6] = { 16, 16, 9, 16, 14, 10 };
-        _stats_init_aux(stats);
-        break;
-    }
-    case CLASS_MONK:
-    {
-        int stats[6] = { 16, 8, 16, 17, 11, 8 };
-        _stats_init_aux(stats);
-        break;
-    }
-    case CLASS_MYSTIC:
-    {
-        int stats[6] = { 16, 8, 8, 17, 11, 16 };
-        _stats_init_aux(stats);
-        break;
-    }
-    case CLASS_BEASTMASTER:
-    case CLASS_BARD:
-    {
-        int stats[6] = { 16, 8, 8, 16, 11, 17 };
-        _stats_init_aux(stats);
-        break;
-    }
-    /* TODO */
-    case CLASS_WARLOCK:
-    case CLASS_WILD_TALENT:
-    case CLASS_PSION:
-    case CLASS_MONSTER:
-    default:
-    {
-        int stats[6] = { 15, 15, 15, 15, 15, 11 };
-        _stats_init_aux(stats);
-    }
+        switch (p_ptr->pclass)
+        {
+        case CLASS_WARRIOR:
+        case CLASS_CAVALRY:
+        case CLASS_BERSERKER:
+        case CLASS_MAULER:
+        case CLASS_ARCHER:
+        case CLASS_SAMURAI:
+        case CLASS_WEAPONSMITH:
+        case CLASS_WEAPONMASTER:
+        case CLASS_NINJA:
+        case CLASS_SNIPER:
+        case CLASS_DUELIST:
+        case CLASS_RAGE_MAGE:
+        {
+            int stats[6] = { 17, 8, 8, 17, 15, 9 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case CLASS_BLOOD_KNIGHT:
+        {
+            int stats[6] = { 17, 8, 8, 15, 17, 9 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case CLASS_MAGE:
+        case CLASS_HIGH_MAGE:
+        case CLASS_SORCERER:
+        case CLASS_BLUE_MAGE:
+        case CLASS_GRAY_MAGE:
+        case CLASS_YELLOW_MAGE:
+        case CLASS_MIRROR_MASTER:
+        case CLASS_BLOOD_MAGE:
+        case CLASS_NECROMANCER:
+        {
+            int stats[6] = { 16, 17, 9, 9, 16, 9 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case CLASS_PRIEST:
+        case CLASS_RANGER:
+        case CLASS_PALADIN:
+        case CLASS_MINDCRAFTER:
+        case CLASS_FORCETRAINER:
+        case CLASS_TIME_LORD:
+        case CLASS_ARCHAEOLOGIST:
+        {
+            int stats[6] = { 16, 8, 17, 16, 11, 8 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case CLASS_ROGUE:
+        case CLASS_WARRIOR_MAGE:
+        case CLASS_CHAOS_WARRIOR:
+        case CLASS_TOURIST:
+        case CLASS_MAGIC_EATER:
+        case CLASS_RED_MAGE:
+        case CLASS_RUNE_KNIGHT:
+        case CLASS_SCOUT:
+        case CLASS_DEVICEMASTER:
+        {
+            int stats[6] = { 16, 16, 9, 16, 14, 10 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case CLASS_MONK:
+        {
+            int stats[6] = { 16, 8, 16, 17, 11, 8 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case CLASS_MYSTIC:
+        {
+            int stats[6] = { 16, 8, 8, 17, 11, 16 };
+            _stats_init_aux(stats);
+            break;
+        }
+        case CLASS_BEASTMASTER:
+        case CLASS_BARD:
+        case CLASS_WARLOCK:
+        {
+            int stats[6] = { 16, 8, 8, 16, 11, 17 };
+            _stats_init_aux(stats);
+            break;
+        }
+        /* TODO */
+        case CLASS_WILD_TALENT:
+        case CLASS_PSION:
+        default:
+        {
+            int stats[6] = { 15, 15, 15, 15, 15, 11 };
+            _stats_init_aux(stats);
+        }
+        }
     }
     _stats_changed = FALSE;
 }
@@ -1874,8 +1988,8 @@ static void _race_class_top(doc_ptr doc)
 {
     doc_ptr cols[2];
 
-    cols[0] = doc_alloc(26);
-    cols[1] = doc_alloc(54);
+    cols[0] = doc_alloc(27);
+    cols[1] = doc_alloc(53);
 
     _race_class_header(cols[0]);
     _race_class_info(cols[1]);

@@ -1725,6 +1725,11 @@ int           r_idx = p_ptr->current_r_idx, i;
 
         race_ptr->subname = mon_name(r_idx);
     }
+    if (birth_hack || spoiler_hack)
+    {
+        race_ptr->subname = NULL;
+        race_ptr->subdesc = NULL;
+    }
 }
 race_t *mon_possessor_get_race(void)
 {

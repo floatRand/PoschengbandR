@@ -989,6 +989,12 @@ race_t *mon_sword_get_race(void)
     me.boss_r_idx = MON_STORMBRINGER;
 
     me.equip_template = mon_get_equip_template();
+
+    if (birth_hack || spoiler_hack)
+    {
+        me.subname = NULL;
+        me.subdesc = NULL;
+    }
     return &me;
 }
 

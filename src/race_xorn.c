@@ -159,5 +159,10 @@ race_t *mon_xorn_get_race(void)
 
     me.equip_template = mon_get_equip_template();
 
+    if (birth_hack || spoiler_hack)
+    {
+        me.subname = NULL;
+        me.subdesc = NULL;
+    }
     return &me;
 }

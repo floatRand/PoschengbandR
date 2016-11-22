@@ -288,5 +288,12 @@ race_t *mon_angel_get_race(void)
     result->shop_adjust = 90;
 
     result->boss_r_idx = MON_RAPHAEL;
+
+    if (birth_hack || spoiler_hack)
+    {
+        result->subname = NULL;
+        result->subdesc = NULL;
+    }
+
     return result;
 }

@@ -414,7 +414,8 @@ race_t *mon_beholder_get_race(void)
         init = TRUE;
     }
 
-    me.subname = titles[rank];
+    if (!birth_hack && !spoiler_hack)
+        me.subname = titles[rank];
     me.stats[A_STR] = -3;
     me.stats[A_INT] =  4 + rank;
     me.stats[A_WIS] =  0;

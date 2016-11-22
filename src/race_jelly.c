@@ -371,6 +371,13 @@ race_t *mon_jelly_get_race(void)
     result->destroy_object = jelly_eat_object;
 
     result->boss_r_idx = MON_UBBO_SATHLA;
+
+    if (birth_hack || spoiler_hack)
+    {
+        result->subname = NULL;
+        result->subdesc = NULL;
+    }
+
     return result;
 }
 

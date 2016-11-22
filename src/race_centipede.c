@@ -221,7 +221,8 @@ race_t *mon_centipede_get_race(void)
         init = TRUE;
     }
 
-    me.subname = titles[r];
+    if (!birth_hack && !spoiler_hack)
+        me.subname = titles[r];
     me.stats[A_STR] = (r + 1)/3;
     me.stats[A_INT] = -3;
     me.stats[A_WIS] = -3;

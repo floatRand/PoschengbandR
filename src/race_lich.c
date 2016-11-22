@@ -300,5 +300,11 @@ race_t *mon_lich_get_race(void)
     result->shop_adjust = 135;
 
     result->boss_r_idx = MON_VECNA;
+
+    if (birth_hack || spoiler_hack)
+    {
+        result->subname = NULL;
+        result->subdesc = NULL;
+    }
     return result;
 }
