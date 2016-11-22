@@ -694,6 +694,7 @@ extern void object_kind_track(int k_idx);
 extern void disturb(int stop_search, int flush_output);
 extern void glow_deep_lava_and_bldg(void);
 extern void py_get_display_char_attr(char *c, byte *a);
+extern void map_rot(void);
 
 /* cmd1.c */
 extern void rune_sword_kill(object_type *o_ptr, monster_race *r_ptr);

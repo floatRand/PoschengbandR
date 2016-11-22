@@ -4446,7 +4446,92 @@ void wiz_dark(void)
     p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
 }
 
+int _forget_percentage(int y, int x){
+	int dx = (x - px);
+	int dy = (y - py);
 
+	dx = dx * dx; 
+	dy = dy * dy;
+
+	int d = dx + dy;
+	
+	if (d <= 16) return 0; //remember 4 tiles always
+	else if (d <= 16+25) return 10; //   5 tiles away
+	else if (d <= 16+100) return 20; //  10 tiles away
+	else if (d <= 16+156) return 40; // 16...
+	else if (d <= 16+484) return 60; // 22...
+	else if (d <= 16+784) return 80; // 28...
+	else if (d <= 16+1296) return 90; // 36 is max
+	else return 100;
+}
+
+/*
+* Map rot. Less severe than outright forgetting map.
+*/
+void map_rot(void)
+{  
+	int i, chance, y, x;
+	cave_type *c_ptr;
+
+	for (y = 1; y < cur_hgt - 1; y++) { // random rot.
+		for (x = 1; x < cur_wid - 1; x++){
+			c_ptr = &cave[y][x];
+			chance = _forget_percentage(y, x);
+
+			if (chance != 0 && (randint0(100) < chance)){
+				c_ptr->info &= ~(CAVE_MARK | CAVE_IN_DETECT);
+				c_ptr->info |= (CAVE_UNSAFE);
+			}
+
+		}
+	}
+	
+	/* Forget every grid on horizontal edge */
+	for (x = 0; x < cur_wid; x++)
+	{
+		cave[0][x].info &= ~(CAVE_MARK);
+		cave[cur_hgt - 1][x].info &= ~(CAVE_MARK);
+	}
+
+	/* Forget every grid on vertical edge */
+	for (y = 1; y < (cur_hgt - 1); y++)
+	{
+		cave[y][0].info &= ~(CAVE_MARK);
+		cave[y][cur_wid - 1].info &= ~(CAVE_MARK);
+	}
+
+	/* Forget all objects */
+	for (i = 1; i < o_max; i++)
+	{
+		object_type *o_ptr = &o_list[i];
+		c_ptr = &cave[o_ptr->iy][o_ptr->ix];
+		if (c_ptr->info & CAVE_MARK) continue; // skip lighted objects
+
+		/* Skip dead objects */
+		if (!o_ptr->k_idx) continue;
+
+		/* Skip held objects */
+		if (o_ptr->held_m_idx) continue;
+
+		/* Forget the object */
+		o_ptr->marked &= (OM_TOUCHED | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);
+	}
+
+	/* Mega-Hack -- Forget the view and lite */
+	p_ptr->update |= (PU_UN_VIEW | PU_UN_LITE);
+
+	/* Update the view and lite */
+	p_ptr->update |= (PU_VIEW | PU_LITE | PU_MON_LITE);
+
+	/* Update the monsters */
+	p_ptr->update |= (PU_MONSTERS);
+
+	/* Redraw map */
+	p_ptr->redraw |= (PR_MAP);
+
+	/* Window stuff */
+	p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
+}
 
 
 

@@ -3094,7 +3094,6 @@ void do_cmd_debug(void)
 		p_ptr->redraw |= (PR_GOLD);
 		break;
 	}
-    /* Hitpoint rerating */
     case 'h':
     {
         int i, r;
@@ -3154,7 +3153,9 @@ void do_cmd_debug(void)
     case 'k':
         self_knowledge();
         break;
-
+	case 'K':
+		if(lose_all_info()) msg_print("You forget all!");
+		break;
     /* Learn about objects */
     case 'l':
         do_cmd_wiz_learn();

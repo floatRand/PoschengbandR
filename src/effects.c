@@ -5541,6 +5541,8 @@ bool lose_all_info(void)
     /* Forget info about objects */
     for (i = 0; i < INVEN_TOTAL; i++)
     {
+		if(saving_throw(10 + p_ptr->lev)) continue;
+
         object_type *o_ptr = &inventory[i];
 
         /* Skip non-objects */
@@ -5573,7 +5575,7 @@ bool lose_all_info(void)
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_OBJECT_LIST);
 
     /* Mega-Hack -- Forget the map */
-    wiz_dark();
+	map_rot();
 
     /* It worked */
     return (TRUE);
