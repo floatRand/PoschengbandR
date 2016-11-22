@@ -36,6 +36,8 @@ static void _birth(void)
     msg_print("You feel the luck of the Irish!");
     mut_gain(MUT_GOOD_LUCK);
     mut_lock(MUT_GOOD_LUCK);
+
+    p_ptr->au = 50000;
 }
 
 static int _get_toggle(void)

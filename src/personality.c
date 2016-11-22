@@ -188,6 +188,10 @@ static personality_ptr _get_hasty_personality(void)
 /****************************************************************
  * Lazy
  ****************************************************************/
+static void _lazy_birth(void)
+{
+    p_ptr->au /= 2;
+}
 static void _lazy_calc_bonuses(void)
 {
     p_ptr->to_m_chance += 10;
@@ -222,6 +226,7 @@ static personality_ptr _get_lazy_personality(void)
         me.life = 95;
         me.exp = 100;
 
+        me.birth = _lazy_birth;
         me.calc_bonuses = _lazy_calc_bonuses;
 
         init = TRUE;
@@ -325,6 +330,11 @@ static personality_ptr _get_mighty_personality(void)
 /****************************************************************
  * Munchkin
  ****************************************************************/
+static void _munchkin_birth(void)
+{
+    p_ptr->au = 10 * 1000 * 1000;
+}
+
 static void _munchkin_calc_bonuses(void)
 {
     res_add(RES_BLIND);
@@ -375,6 +385,7 @@ static personality_ptr _get_munchkin_personality(void)
         me.life = 150;
         me.exp = 50;
 
+        me.birth = _munchkin_birth;
         me.calc_bonuses = _munchkin_calc_bonuses;
         me.get_flags = _munchkin_get_flags;
 

@@ -54,6 +54,13 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
+static void _birth(void)
+{
+    int i;
+    for (i = 0; i < 64; i++)
+        p_ptr->spell_exp[i] = SPELL_EXP_MASTER;
+}
+
 class_t *sorcerer_get_class(void)
 {
     static class_t me = {0};
@@ -87,6 +94,7 @@ class_t *sorcerer_get_class(void)
         me.exp = 160;
         me.pets = 25;
         
+        me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.caster_info = _caster_info;

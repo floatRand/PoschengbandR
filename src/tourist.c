@@ -62,6 +62,11 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
+static void _birth(void)
+{
+    p_ptr->au += 2000;
+}
+
 class_t *tourist_get_class(void)
 {
     static class_t me = {0};
@@ -96,6 +101,7 @@ class_t *tourist_get_class(void)
         me.exp = 70;
         me.pets = 40;
         
+        me.birth = _birth;
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL
         me.get_spells = _get_spells;*/

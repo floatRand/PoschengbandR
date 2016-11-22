@@ -4,7 +4,7 @@
 
 /************************************************************************
  * Give birth to a new player.
- * TODO: quickstart/birth options
+ *
  * For reference, there are 3 possible game modes:
  * [1] Beginner: Limited Races and Classes
  *               No Wilderness
@@ -115,7 +115,8 @@ static int _welcome_ui(void)
         doc_newline(_doc);
         if (previous_char.quick_ok)
             doc_insert(_doc, "  <color:y>q</color>) Quick Start\n");
-        doc_insert(_doc, "  <color:y>=</color>) Options\n");
+        if (game_mode != GAME_MODE_BEGINNER)
+            doc_insert(_doc, "  <color:y>=</color>) Options\n");
         doc_insert(_doc, "  <color:y>?</color>) Help\n");
         doc_insert(_doc, "<color:y>ESC</color>) <color:v>Quit</color>\n");
 
@@ -302,7 +303,8 @@ static int _race_class_ui(void)
         }
 
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
-        doc_insert(cols[1], "<color:y>  =</color>) Options\n");
+        if (game_mode != GAME_MODE_BEGINNER)
+            doc_insert(cols[1], "<color:y>  =</color>) Options\n");
         doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
         doc_insert(cols[1], "<color:y>RET</color>) Next Screen\n");
         doc_insert(cols[1], "<color:y>ESC</color>) Prev Screen\n");
@@ -1702,7 +1704,8 @@ static int _stats_ui(void)
         doc_newline(cols[1]);
         doc_insert(cols[1], "<color:y>  n</color>) Change Name\n");
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
-        doc_insert(cols[1], "<color:y>  =</color>) Options\n");
+        if (game_mode != GAME_MODE_BEGINNER)
+            doc_insert(cols[1], "<color:y>  =</color>) Options\n");
         doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
         doc_printf(cols[1], "<color:%c>RET</color>) <color:%c>Begin Play</color>\n",
             score <= _MAX_SCORE ? 'y' : 'D',
@@ -2366,14 +2369,18 @@ static int _count(int ids[])
 
 static void _birth_options(void)
 {
-    Term_load();
-    do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
+    if (game_mode != GAME_MODE_BEGINNER)
+    {
+        Term_load();
+        do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
+    }
 }
 
 static void _birth_finalize(void)
 {
     int i;
 
+    /* Quick Start */
     previous_char.quick_ok = TRUE;
     previous_char.game_mode = game_mode;
     previous_char.psex = p_ptr->psex;
@@ -2389,5 +2396,29 @@ static void _birth_finalize(void)
 
     for (i = 0; i < MAX_STATS; i++)
         previous_char.stat_max[i] = p_ptr->stat_max[i];
+
+    /* Other Initialization */
+    if (game_mode == GAME_MODE_BEGINNER)
+        no_wilderness = TRUE;
+
+    equip_on_init();
+    virtue_init();
+
+    p_ptr->au = randint1(600) + randint1(100) + 300;
+
+    get_max_stats();
+    do_cmd_rerate_aux();
+
+    p_ptr->start_race = p_ptr->prace;
+    p_ptr->expfact = calc_exp_factor();
+
+    mp_ptr = &m_info[p_ptr->pclass];
+
+    /* Rest Up to Max HP and SP */
+    p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;
+    update_stuff();
+    p_ptr->chp = p_ptr->mhp;
+    p_ptr->csp = p_ptr->msp;
+    process_player_name(FALSE);
 }
 

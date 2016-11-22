@@ -228,6 +228,10 @@ static void _android_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_HOLD_LIFE);
     /*add_flag(flgs, TR_VULN_ELEC);*/
 }
+static void _android_birth(void)
+{
+    p_ptr->au /= 5;
+}
 race_t *android_get_race(void)
 {
     static race_t me = {0};
@@ -271,6 +275,7 @@ race_t *android_get_race(void)
         me.shop_adjust = 120;
 
 
+        me.birth = _android_birth;
         me.calc_bonuses = _android_calc_bonuses;
         me.get_powers = _android_get_powers;
         me.get_flags = _android_get_flags;
@@ -501,6 +506,10 @@ static void _beastman_get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_SOUND);
     add_flag(flgs, OF_RES_CONF);
 }
+static void _beastman_birth(void)
+{
+    mut_gain_random(mut_good_pred);
+}
 race_t *beastman_get_race(void)
 {
     static race_t me = {0};
@@ -540,6 +549,7 @@ race_t *beastman_get_race(void)
         me.infra = 0;
         me.shop_adjust = 130;
 
+        me.birth = _beastman_birth;
         me.calc_bonuses = _beastman_calc_bonuses;
         me.gain_level = _beastman_gain_level;
         me.get_flags = _beastman_get_flags;
