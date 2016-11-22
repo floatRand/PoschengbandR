@@ -2265,6 +2265,11 @@ static bool _room_is_allowed(const room_template_t * room_ptr, int type, int sub
     if (!room_ptr->rarity) return FALSE;
     if ((room_ptr->flags & ROOM_SHOP) && !shop_allowed) return FALSE;
 
+	if (coffeebreak_mode && shop_allowed){ // force a shop on every 20 levels on coffeebreaks. It should get vanilla town most of the time since it picks biggest first, but...
+		if (base_level % 20 == 0 && base_level != 100 && 
+			!(room_ptr->flags & ROOM_SHOP)) return FALSE;
+	}
+
     if (!dun_level)
     {
         if ((room_ptr->flags & ROOM_THEME_DAY) && !is_daytime()) return FALSE;
@@ -3969,7 +3974,6 @@ bool generate_rooms(void)
         prob_list[ROOM_T_GREATER_VAULT] = 0;
         prob_list[ROOM_T_RANDOM_VAULT] = 0;
     }
-
 
     /* NO_CAVE dungeon (Castle)*/
     if (d_info[dungeon_type].flags1 & DF1_NO_CAVE)
