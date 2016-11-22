@@ -52,6 +52,7 @@ extern int py_birth(void);
 /* I prefer to render menus to a document rather than directly to the terminal */
 static doc_ptr _doc = NULL;
 
+static void _birth_options(void);
 static int _inkey(void);
 static void _sync_term(doc_ptr doc);
 static int _count(int ids[]);
@@ -111,6 +112,7 @@ static int _welcome_ui(void)
         doc_insert(_doc, "  <color:y>n</color>) Normal\n");
         doc_insert(_doc, "  <color:y>m</color>) Monster\n");
         doc_newline(_doc);
+        doc_insert(_doc, "  <color:y>=</color>) Options\n");
         doc_insert(_doc, "  <color:y>?</color>) Help\n");
         doc_insert(_doc, "<color:y>ESC</color>) <color:v>Quit</color>\n");
 
@@ -126,6 +128,8 @@ static int _welcome_ui(void)
             doc_display_help("birth.txt", "Welcome");
         else if (cmd == ESCAPE)
             return UI_CANCEL;
+        else if (cmd == '=')
+            _birth_options();
         else if (cmd == 'b')
         {
             _set_mode(GAME_MODE_BEGINNER);
@@ -271,6 +275,7 @@ static int _race_class_ui(void)
         }
 
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
+        doc_insert(cols[1], "<color:y>  =</color>) Options\n");
         doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
         doc_insert(cols[1], "<color:y>RET</color>) Next Screen\n");
         doc_insert(cols[1], "<color:y>ESC</color>) Prev Screen\n");
@@ -294,6 +299,9 @@ static int _race_class_ui(void)
             break;
         case ESCAPE:
             return UI_CANCEL;
+        case '=':
+            _birth_options();
+            break;
         case '\t':
             _inc_rcp_state();
             break;
@@ -400,7 +408,7 @@ static void _pers_ui(void)
         cols[0] = doc_alloc(20);
         cols[1] = doc_alloc(20);
 
-        if (split > 10)
+        if (split > 7)
             split = (split + 1)/2;
         for (i = 0; i < vec_length(v); i++)
         {
@@ -427,6 +435,7 @@ static void _pers_ui(void)
 
         if (cmd == ESCAPE) break;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Personalities.txt", NULL);
         else if (isupper(cmd))
         {
@@ -538,6 +547,7 @@ static void _race_group_ui(void)
 
         if (cmd == ESCAPE) break;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Races.txt", NULL);
         else
         {
@@ -568,7 +578,7 @@ static int _race_ui(int ids[])
         cols[0] = doc_alloc(30);
         cols[1] = doc_alloc(30);
 
-        if (split > 10)
+        if (split > 7)
             split = (split + 1)/2;
         for (i = 0; i < vec_length(v); i++)
         {
@@ -595,6 +605,7 @@ static int _race_ui(int ids[])
 
         if (cmd == ESCAPE) result = UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Races.txt", NULL);
         else if (isupper(cmd))
         {
@@ -707,6 +718,7 @@ static int _subrace_ui_aux(int ct, cptr desc, cptr help, cptr topic)
         cmd = _inkey();
         if (cmd == ESCAPE) return UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help(help, topic);
         else if (isupper(cmd) && !topic)
         {
@@ -820,6 +832,7 @@ static void _class_group_ui(void)
 
         if (cmd == ESCAPE) break;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Classes.txt", NULL);
         else
         {
@@ -851,7 +864,7 @@ static int _class_ui(int ids[])
         cols[0] = doc_alloc(30);
         cols[1] = doc_alloc(30);
 
-        if (split > 10)
+        if (split > 7)
             split = (split + 1)/2;
         for (i = 0; i < vec_length(v); i++)
         {
@@ -878,6 +891,7 @@ static int _class_ui(int ids[])
 
         if (cmd == ESCAPE) result = UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Classes.txt", NULL);
         else if (isupper(cmd))
         {
@@ -972,6 +986,7 @@ static int _warlock_ui(void)
         cmd = _inkey();
         if (cmd == ESCAPE) return UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Warlocks.txt", NULL);
         else if (isupper(cmd))
         {
@@ -1020,6 +1035,7 @@ static int _weaponmaster_ui(void)
         cmd = _inkey();
         if (cmd == ESCAPE) return UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Weaponmasters.txt", NULL);
         else if (isupper(cmd))
         {
@@ -1067,6 +1083,7 @@ static int _devicemaster_ui(void)
         cmd = _inkey();
         if (cmd == ESCAPE) return UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Classes.txt", "Devicemaster");
         else
         {
@@ -1105,6 +1122,7 @@ static int _gray_mage_ui(void)
         cmd = _inkey();
         if (cmd == ESCAPE) return UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("Classes.txt", "Gray-Mage");
         else
         {
@@ -1164,6 +1182,8 @@ static int _realm1_ui(void)
         cmd = _inkey();
         if (cmd == ESCAPE)
             return UI_CANCEL;
+        else if (cmd == '=')
+            _birth_options();
         else if (cmd == '?')
             doc_display_help("magic.txt", NULL);
         else if (isupper(cmd))
@@ -1246,6 +1266,8 @@ static int _realm2_ui(void)
         cmd = _inkey();
         if (cmd == ESCAPE)
             return UI_CANCEL;
+        else if (cmd == '=')
+            _birth_options();
         else if (cmd == '?')
             doc_display_help("magic.txt", NULL);
         else if (isupper(cmd))
@@ -1324,6 +1346,7 @@ static void _mon_race_group_ui(void)
 
         if (cmd == ESCAPE) break;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("MonsterRaces.txt", NULL);
         else if (isupper(cmd))
         {
@@ -1394,6 +1417,7 @@ static int _mon_race_ui(int ids[])
 
         if (cmd == ESCAPE) return UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("MonsterRaces.txt", NULL);
         else if (isupper(cmd))
         {
@@ -1519,6 +1543,7 @@ static int _dragon_realm_ui(void)
 
         if (cmd == ESCAPE) rc = UI_CANCEL;
         else if (cmd == '\t') _inc_rcp_state();
+        else if (cmd == '=') _birth_options();
         else if (cmd == '?') doc_display_help("DragonRealms.txt", NULL);
         else if (isupper(cmd))
         {
@@ -1650,6 +1675,7 @@ static int _stats_ui(void)
         doc_newline(cols[1]);
         doc_insert(cols[1], "<color:y>  n</color>) Change Name\n");
         doc_insert(cols[1], "<color:y>  ?</color>) Help\n");
+        doc_insert(cols[1], "<color:y>  =</color>) Options\n");
         doc_insert(cols[1], "<color:y>TAB</color>) More Info\n");
         doc_printf(cols[1], "<color:%c>RET</color>) <color:%c>Begin Play</color>\n",
             score <= _MAX_SCORE ? 'y' : 'D',
@@ -1677,6 +1703,8 @@ static int _stats_ui(void)
             return UI_CANCEL;
         else if (cmd == '\t')
             _inc_rcp_state();
+        else if (cmd == '=')
+            _birth_options();
         else if (cmd == 'n')
             _change_name();
         else if (isupper(cmd))
@@ -2304,5 +2332,11 @@ static int _count(int ids[])
         ct++;
     }
     return ct;
+}
+
+static void _birth_options(void)
+{
+    Term_load();
+    do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
 }
 
