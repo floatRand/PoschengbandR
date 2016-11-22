@@ -224,3 +224,14 @@ caster_info *get_caster_info(void)
     return result;
 }
 
+int get_spell_stat(void)
+{
+    int          result = A_NONE;
+    caster_info *caster_ptr = get_caster_info();
+
+    if (caster_ptr)
+        result = caster_ptr->which_stat;
+
+    return result;
+}
+

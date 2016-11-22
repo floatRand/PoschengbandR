@@ -2334,6 +2334,7 @@ extern class_t *get_class_aux(int pclass, int psubclass);
 extern int lookup_class_idx(cptr name);
 extern int get_class_idx(void);
 extern caster_info *get_caster_info(void);
+extern int get_spell_stat(void);
 extern int get_powers_aux(spell_info* spells, int max, power_info* table);
 extern int get_spells_aux(spell_info* spells, int max, spell_info* table);
 extern void dump_spells_aux(FILE *fff, spell_info *table, int ct);

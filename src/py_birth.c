@@ -2110,50 +2110,64 @@ static void _inc_rcp_state(void)
         _rcp_state = _RCP_STATS;
 }
 
+static void _stats_line(doc_ptr doc, s16b stats[MAX_STATS], int spell_stat, char color)
+{
+    int i;
+    for (i = 0; i < MAX_STATS; i++)
+    {
+        doc_printf(doc, "<color:%c>%+3d</color>  ",
+            i == spell_stat ? 'v' : color,
+            stats[i]);
+    }
+}
+
+static void _stats_add(s16b stats[MAX_STATS], s16b to_add[MAX_STATS])
+{
+    int i;
+    for (i = 0; i < MAX_STATS; i++)
+        stats[i] += to_add[i];
+}
+
 static void _race_class_info(doc_ptr doc)
 {
     race_t *race_ptr = get_race();
     class_t *class_ptr = get_class();
     personality_ptr pers_ptr = get_personality();
     dragon_realm_ptr realm_ptr = dragon_get_realm(p_ptr->dragon_realm); /* 0 is OK */
+    int spell_stat = get_spell_stat();
     
     doc_newline(doc);
     if (_rcp_state == _RCP_STATS)
     {
+        s16b stats[MAX_STATS] = {0};
+
+        _stats_add(stats, race_ptr->stats);
+        _stats_add(stats, class_ptr->stats);
+        _stats_add(stats, pers_ptr->stats);
+        if (p_ptr->dragon_realm)
+            _stats_add(stats, realm_ptr->stats);
+
         doc_insert(doc, "<style:heading><color:w>STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp</color>\n");
         if (game_mode != GAME_MODE_BEGINNER)
         {
-            doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%       %3d%%\n",
-                pers_ptr->stats[A_STR], pers_ptr->stats[A_INT], pers_ptr->stats[A_WIS],
-                pers_ptr->stats[A_DEX], pers_ptr->stats[A_CON], pers_ptr->stats[A_CHR],
-                pers_ptr->life, pers_ptr->exp);
+            _stats_line(doc, pers_ptr->stats, spell_stat, 'G');
+            doc_printf(doc, "%3d%%       %3d%%\n", pers_ptr->life, pers_ptr->exp);
         }
-        doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%\n",
-            race_ptr->stats[A_STR], race_ptr->stats[A_INT], race_ptr->stats[A_WIS],
-            race_ptr->stats[A_DEX], race_ptr->stats[A_CON], race_ptr->stats[A_CHR],
-            race_ptr->life, race_ptr->base_hp, race_ptr->exp);
+        _stats_line(doc, race_ptr->stats, spell_stat, 'G');
+        doc_printf(doc, "%3d%%  %+3d  %3d%%\n", race_ptr->life, race_ptr->base_hp, race_ptr->exp);
         if (game_mode != GAME_MODE_MONSTER)
         {
-            doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%\n",
-                class_ptr->stats[A_STR], class_ptr->stats[A_INT], class_ptr->stats[A_WIS],
-                class_ptr->stats[A_DEX], class_ptr->stats[A_CON], class_ptr->stats[A_CHR],
-                class_ptr->life, class_ptr->base_hp, class_ptr->exp);
+            _stats_line(doc, class_ptr->stats, spell_stat, 'G');
+            doc_printf(doc, "%3d%%  %+3d  %3d%%\n", class_ptr->life, class_ptr->base_hp, class_ptr->exp);
         }
         if (p_ptr->dragon_realm)
         {
-            doc_printf(doc, "%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%       %3d%%\n",
-                realm_ptr->stats[A_STR], realm_ptr->stats[A_INT], realm_ptr->stats[A_WIS],
-                realm_ptr->stats[A_DEX], realm_ptr->stats[A_CON], realm_ptr->stats[A_CHR],
-                realm_ptr->life, realm_ptr->exp);
+            _stats_line(doc, realm_ptr->stats, spell_stat, 'G');
+            doc_printf(doc, "%3d%%       %3d%%\n", realm_ptr->life, realm_ptr->exp);
         }
 
-        doc_printf(doc, "<color:R>%+3d  %+3d  %+3d  %+3d  %+3d  %+3d  %3d%%  %+3d  %3d%%</color>\n",
-            race_ptr->stats[A_STR] + class_ptr->stats[A_STR] + pers_ptr->stats[A_STR] + realm_ptr->stats[A_STR],
-            race_ptr->stats[A_INT] + class_ptr->stats[A_INT] + pers_ptr->stats[A_INT] + realm_ptr->stats[A_INT],
-            race_ptr->stats[A_WIS] + class_ptr->stats[A_WIS] + pers_ptr->stats[A_WIS] + realm_ptr->stats[A_WIS],
-            race_ptr->stats[A_DEX] + class_ptr->stats[A_DEX] + pers_ptr->stats[A_DEX] + realm_ptr->stats[A_DEX],
-            race_ptr->stats[A_CON] + class_ptr->stats[A_CON] + pers_ptr->stats[A_CON] + realm_ptr->stats[A_CON],
-            race_ptr->stats[A_CHR] + class_ptr->stats[A_CHR] + pers_ptr->stats[A_CHR] + realm_ptr->stats[A_CHR],
+        _stats_line(doc, stats, spell_stat, 'R');
+        doc_printf(doc, "<color:R>%3d%%  %+3d  %3d%%</color>\n",
             race_ptr->life * class_ptr->life * pers_ptr->life * realm_ptr->life / 1000000,
             race_ptr->base_hp + class_ptr->base_hp,
             race_ptr->exp * class_ptr->exp * pers_ptr->exp * realm_ptr->exp / 1000000
