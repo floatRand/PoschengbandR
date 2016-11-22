@@ -1913,6 +1913,8 @@ static void prt_effects(void)
         prt_food(row++, col);
     if (p_ptr->wizard)
         c_put_str(TERM_L_BLUE, "Wizard", row++, col);
+	if (coffeebreak_mode)
+		c_put_str(TERM_L_UMBER, "Coffeebreak", row++, col);
     if (p_ptr->new_spells)
     {
         char tmp[20];

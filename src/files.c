@@ -3022,6 +3022,8 @@ long total_points(void)
         point += (arena_win * arena_win * (arena_win > 29 ? 1000 : 100));
 
     if (ironman_downward) point *= 2;
+	if (coffeebreak_mode) point /= 5;
+
     if (p_ptr->pclass == CLASS_BERSERKER)
     {
         if ( p_ptr->prace == RACE_SPECTRE )

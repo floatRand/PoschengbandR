@@ -244,6 +244,8 @@ void skills_weapon_gain(int tval, int sval)
 {
     int max;
     int cur;
+	int mult = 3;
+	if (coffeebreak_mode) mult = 16;
 
     assert(TV_WEAPON_BEGIN <= tval && tval <= TV_WEAPON_END);
     assert(tval != TV_BOW);
@@ -260,6 +262,8 @@ void skills_weapon_gain(int tval, int sval)
         else if (cur < WEAPON_EXP_EXPERT && p_ptr->lev > 19) add = 1;
         else if (p_ptr->lev > 34 && one_in_(2)) add = 1;
 
+		add *= mult;
+	
         if (add > 0)
         {
             int old_bonus = _weapon_calc_bonus_aux(cur);
@@ -379,6 +383,9 @@ void skills_martial_arts_gain(void)
     int current = p_ptr->skill_exp[SKILL_MARTIAL_ARTS];
     int max = s_info[_class_idx()].s_max[SKILL_MARTIAL_ARTS];
 
+	int mult = 3;
+	if (coffeebreak_mode) mult = 16;
+
     if (current < max)
     {
         if (current < WEAPON_EXP_BEGINNER)
@@ -389,6 +396,8 @@ void skills_martial_arts_gain(void)
             current += 1;
         else if (p_ptr->lev > 34 && one_in_(3))
             current += 1;
+
+		current *= mult;
 
         p_ptr->skill_exp[SKILL_MARTIAL_ARTS] = MIN(current, max);
         p_ptr->update |= PU_BONUS;
@@ -412,6 +421,9 @@ void skills_dual_wielding_gain(monster_race *r_ptr)
     int current = p_ptr->skill_exp[SKILL_DUAL_WIELDING];
     int max = s_info[_class_idx()].s_max[SKILL_DUAL_WIELDING];
 
+	int mult = 3;
+	if (coffeebreak_mode) mult = 16;
+
     if (current < max && (current - 1000) / 200 < r_ptr->level)
     {
         if (current < WEAPON_EXP_BEGINNER)
@@ -423,6 +435,7 @@ void skills_dual_wielding_gain(monster_race *r_ptr)
         else if (current < WEAPON_EXP_MASTER && one_in_(3))
             current += 1;
 
+		current *= mult;
         p_ptr->skill_exp[SKILL_DUAL_WIELDING] = MIN(current, max);
         p_ptr->update |= PU_BONUS;
     }
@@ -445,7 +458,10 @@ void skills_riding_gain_melee(monster_race *r_ptr)
     int current = p_ptr->skill_exp[SKILL_RIDING];
     int max = s_info[_class_idx()].s_max[SKILL_RIDING];
 
-    assert(p_ptr->riding);
+	int mult = 3;
+	if (coffeebreak_mode) mult = 16;
+    
+		assert(p_ptr->riding);
 
     if (current < max)
     {
@@ -465,7 +481,7 @@ void skills_riding_gain_melee(monster_race *r_ptr)
 
         if (inc)
         {
-            p_ptr->skill_exp[SKILL_RIDING] = MIN(max, current + inc);
+            p_ptr->skill_exp[SKILL_RIDING] = MIN(max, current + inc * mult);
             p_ptr->update |= PU_BONUS;
         }
     }
@@ -476,6 +492,9 @@ void skills_riding_gain_archery(monster_race *r_ptr)
     int current = p_ptr->skill_exp[SKILL_RIDING];
     int max = s_info[_class_idx()].s_max[SKILL_RIDING];
 
+	int mult = 3;
+	if (coffeebreak_mode) mult = 16;
+
     assert(p_ptr->riding);
 
     if (current < max)
@@ -484,7 +503,7 @@ void skills_riding_gain_archery(monster_race *r_ptr)
 
         if ((current - RIDING_EXP_BEGINNER*2) / 200 < ridinglevel && one_in_(2))
         {
-            p_ptr->skill_exp[SKILL_RIDING] += 1;
+            p_ptr->skill_exp[SKILL_RIDING] += 1 * mult;
             p_ptr->update |= PU_BONUS;
         }
     }

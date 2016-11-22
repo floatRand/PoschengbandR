@@ -913,7 +913,7 @@ static void _build_equipment(doc_ptr doc)
 static void _build_melee(doc_ptr doc)
 {
     if (p_ptr->prace != RACE_MON_RING)
-    {
+    { 
         int i;
         doc_insert(doc, "<topic:Melee>==================================== <color:keypress>M</color>elee ====================================\n\n");
         for (i = 0; i < MAX_HANDS; i++)
@@ -2332,6 +2332,10 @@ static void _build_options(doc_ptr doc)
 
     if (no_egos)
         doc_printf(doc, " No Egos:            Enabled\n");
+
+	if (coffeebreak_mode)
+		doc_printf(doc, " Coffeebreak Mode:            Enabled\n");
+
 
     if (p_ptr->noscore)
         doc_printf(doc, "\n <color:v>You have done something illegal.</color>\n");

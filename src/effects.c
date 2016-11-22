@@ -17,7 +17,6 @@
 void set_action(int typ)
 {
     int prev_typ = p_ptr->action;
-
     if (typ == prev_typ)
         return;
     else

@@ -3542,6 +3542,10 @@ option_type option_info[] =
 
     { &no_egos,                            FALSE, OPT_PAGE_BIRTH, 6, 25,
     "no_egos",                            "Never create ego items" },
+	
+	{ &coffeebreak_mode,				FALSE, OPT_PAGE_BIRTH, 6, 26,
+	"coffee_break",						"When in hurry. (*)" },
+
 
     /*** Easy Object Auto-Destroyer ***/
 

@@ -1818,7 +1818,7 @@ bool rakuba(int dam, bool force)
     if (dam >= 0 || force)
     {
         if (!force)
-        {
+        { 
             int cur = skills_riding_current();
             int max = skills_riding_max();
             int ridinglevel = r_ptr->level;

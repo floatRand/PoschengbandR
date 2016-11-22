@@ -2327,21 +2327,25 @@ void monster_death(int m_idx, bool drop_item)
     if (is_pet(m_ptr)) number = 0;
 
     /* Drop some objects */
-    for (attempt = 0, j = 0; j < number && attempt < 1000; attempt++)
-    {
-        if (get_monster_drop(m_idx, &forge))
-        {
-            assert(forge.k_idx);
-            if (forge.tval == TV_GOLD)
-                dump_gold++;
-            else
-                dump_item++;
+	int mult_drops = 1;
+	if (coffeebreak_mode) mult_drops = 4;
 
-            drop_near(&forge, -1, y, x);
-            j++;
-        }
-    }
+	for (int k = 0; k < mult_drops; k++){
+		for (attempt = 0, j = 0; j < number && attempt < 1000; attempt++)
+		{
+			if (get_monster_drop(m_idx, &forge))
+			{
+				assert(forge.k_idx);
+				if (forge.tval == TV_GOLD)
+					dump_gold++;
+				else
+					dump_item++;
 
+				drop_near(&forge, -1, y, x);
+				j++;
+			}
+		}
+	
     if ( r_ptr->level
       && ( (r_ptr->flags1 & (RF1_DROP_GOOD | RF1_DROP_GREAT))
         || (r_ptr->flags2 & RF2_THIEF) ) )
@@ -2362,6 +2366,7 @@ void monster_death(int m_idx, bool drop_item)
 
     if (visible && (dump_item || dump_gold))
         lore_treasure(m_idx, dump_item, dump_gold);
+	}
 
     if (do_vampire_servant)
     {
@@ -2641,6 +2646,8 @@ static void get_exp_from_mon(int dam, monster_type *m_ptr)
         s64b_mul(&new_exp, &new_exp_frac, 0, 6);
         s64b_div(&new_exp, &new_exp_frac, 0, 5);
     }
+
+	if (coffeebreak_mode) s64b_mul(&new_exp, &new_exp_frac, 0, 10); // super-experience
 
     /* Intelligence affects learning! */
     s64b_mul(&new_exp, &new_exp_frac, 0, adj_exp_gain[p_ptr->stat_ind[A_INT]]);

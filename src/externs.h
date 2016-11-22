@@ -337,6 +337,7 @@ extern bool random_artifacts;
 extern bool no_artifacts;
 extern bool no_egos;
 extern bool enable_virtues;
+extern bool coffeebreak_mode;
 
 /*** Easy Object Auto-Destroyer ***/
 

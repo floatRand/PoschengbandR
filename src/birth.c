@@ -374,7 +374,7 @@ static bool _confirm_choice(cptr desc, int ct)
 static void _personality_menu_fn(int cmd, int which, vptr cookie, variant *res)
 {
     int  idx = ((int*)cookie)[which];
-    char buf[100];
+    char buf[128];
     personality_ptr pers_ptr = get_personality_aux(idx);
 
     switch (cmd)
@@ -413,9 +413,9 @@ static int _prompt_personality(void)
 
     for (;;)
     {
-        char   tmp[80];
+        char   tmp[128];
         int    idx, ct = 0, i;
-        int    choices[MAX_PERSONALITIES];
+        int    choices[MAX_PERSONALITIES+1];
         personality_ptr pers_ptr = NULL;
         menu_t menu = { "Personality", "Personalities.txt", "Note: Your personality determines various intrinsic abilities and bonuses.",
                             _personality_menu_fn,
@@ -425,6 +425,7 @@ static int _prompt_personality(void)
         {
                 choices[ct++] = i;
         }
+
         choices[ct] = -1;
         menu.count = ct;
 
@@ -442,7 +443,7 @@ static int _prompt_personality(void)
         if (!_confirm_choice(pers_ptr->desc, menu.count)) continue;
         return p_ptr->personality;
     }
-    /*return _BIRTH_ESCAPE;  unreachable */
+    //return _BIRTH_ESCAPE; 
 }
 
 static void _realm_menu_fn(int cmd, int which, vptr cookie, variant *res)
@@ -3618,6 +3619,12 @@ static bool player_birth_aux(void)
         /*no_wilderness = FALSE;*/
         screen_save();
         do_cmd_options_aux(OPT_PAGE_BIRTH, "Birth Option((*)s effect score)");
+
+		if (coffeebreak_mode){
+			ironman_downward = TRUE;
+			no_wilderness = TRUE;
+		}
+
         screen_load();
     }
 
