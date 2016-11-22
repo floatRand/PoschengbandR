@@ -350,7 +350,7 @@ static cptr _do_potion(int sval, int mode)
                     msg_print("You can't remember a thing, or how you got here!");
                 }
             }
-        }
+        } 
         break;
     case SV_POTION_SLEEP:
         if (desc) return "It paralyzes you when you quaff it.";
