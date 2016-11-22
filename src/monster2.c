@@ -2360,19 +2360,19 @@ void sanity_blast(monster_type *m_ptr, bool necro)
         return;
     }
 
-    if (!saving_throw(p_ptr->skills.sav - power)) /* Amnesia */
-    {
-
-        if (lose_all_info())
-            msg_print("You forget everything in your utmost terror!");
-
-        return;
-    }
-
-    if (saving_throw(p_ptr->skills.sav - power))
+    if (saving_throw(p_ptr->skills.sav - power)) 
     {
         return;
     }
+
+	if (!saving_throw(p_ptr->skills.sav - power)) /* Amnesia */
+	{
+
+		if (lose_all_info())
+			msg_print("You forget everything in your utmost terror!");
+
+		return;
+	}
 
     /* Else gain permanent insanity */
     if (mut_present(MUT_MORONIC) && /*(p_ptr->muta2 & MUT2_BERS_RAGE) &&*/
