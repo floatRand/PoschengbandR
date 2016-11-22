@@ -5541,7 +5541,6 @@ bool lose_all_info(void)
     /* Forget info about objects */
     for (i = 0; i < INVEN_TOTAL; i++)
     {
-		if(saving_throw(p_ptr->lev - 20)) continue;
 
         object_type *o_ptr = &inventory[i];
 
