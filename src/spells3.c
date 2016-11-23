@@ -703,8 +703,15 @@ void teleport_level(int m_idx)
 
             if (!dun_level)
             {
-                dun_level = d_info[dungeon_type].mindepth;
-                prepare_change_floor_mode(CFM_RAND_PLACE);
+				if (!coffeebreak_mode){
+					dun_level = d_info[dungeon_type].mindepth;
+					prepare_change_floor_mode(CFM_RAND_PLACE);
+				}
+				else if (dungeon_type == DUNGEON_ANGBAND){
+					if (max_dlv[dungeon_type] <= 98) dun_level = max_dlv[dungeon_type]+1;
+					else dun_level = max_dlv[dungeon_type];
+					prepare_change_floor_mode(CFM_RAND_PLACE);
+				}
             }
             else
             {

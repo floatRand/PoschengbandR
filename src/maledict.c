@@ -200,7 +200,6 @@ bool _curse_item_aux(bool all){
 		_curse_item_t(o_ptr, power);
 	}
 	else {
-
 		if (p_ptr->lev >= 40){ msg_format("A terrible black aura blasts through your equipment!", tmp_str); power = 1; }
 		else { msg_format("Black aura washes over your equipment!", tmp_str); power = 0; }
 

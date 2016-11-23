@@ -3560,7 +3560,7 @@ void calc_bonuses(void)
     p_ptr->levitation = FALSE;
     p_ptr->hold_life = FALSE;
     p_ptr->auto_id = FALSE;
-    p_ptr->auto_pseudo_id = ( p_ptr->lev >= 25 ); 
+    p_ptr->auto_pseudo_id = ( p_ptr->lev >= 25 || coffeebreak_mode ); // just to make loot rates bearable on coffeebreak.
     p_ptr->auto_id_sp = 0;
     p_ptr->cult_of_personality = FALSE;
     p_ptr->telepathy = FALSE;
