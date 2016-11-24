@@ -3213,7 +3213,7 @@ static void process_world(void)
         if (!(game_turn % (TURNS_PER_TICK * STORE_TICKS)))
         {
             /* Sometimes, shuffle the shop-keepers */
-            if (one_in_(STORE_SHUFFLE))
+            if (one_in_(STORE_SHUFFLE) || ( coffeebreak_mode && one_in_(STORE_SHUFFLE/7) )) // on coffeebreak mode, switch more frequently since gamespeed is higher.
             {
                 int n, i;
 
