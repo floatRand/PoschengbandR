@@ -1061,33 +1061,35 @@ bool apply_disenchant(int mode)
 
 void mutate_player(void)
 {
+	/* This is my personal attempt at making a more fair, yet still a permanent and noticeable efffect. 
+	   Rather than swapping two stats, it picks two and siphons x amount of points from to another. 
+	   At superb saving throw, it still gets from 1 to 5 or so. If the effect goes through in first place. */
+
     int ii, jj, i;
     ii = randint0(6); /* Pick initial */ 
 	for (jj = ii; jj == ii; jj = randint0(6)); /* Loop to get pair */
 
-	int alter_amt = 1+randint0(5); int ct = 0;
-	bool stop = FALSE;
+	int alter_amt = 5+randint0(5); /* The maximum amount shuffled */
 	
-	/* One is capped? Try swapping them! */
-	if (p_ptr->stat_max[ii] == p_ptr->stat_max_max[ii] || p_ptr->stat_max[ii] == p_ptr->stat_max_max[ii]){
+	/* One is capped/minimum? Try swapping them! */
+	if (p_ptr->stat_max[ii] == p_ptr->stat_max_max[ii] || p_ptr->stat_max[jj] <= 3){
 		int tmp = ii;
 		ii = jj;
 		jj = tmp;
 	}
-
-	// And siphon stats. If we hit cap, exit.
-	while (ct<alter_amt && !stop){
-
-		if (p_ptr->stat_max[ii] >= p_ptr->stat_max_max[ii] || p_ptr->stat_max[ii] <= 3) stop = TRUE;
+	/* And then loop. One point siphon is guaranteed */
+	for (int i = 0; i < alter_amt; i++){
+		if (p_ptr->stat_max[ii] >= p_ptr->stat_max_max[ii] || p_ptr->stat_max[jj] <= 3) break;
 		else{
 			p_ptr->stat_max[ii]++;
 			p_ptr->stat_cur[ii]++;
 			p_ptr->stat_max[jj]--;
 			p_ptr->stat_cur[jj]--;
-			ct++;
 		}
+		if (randint0(100) < p_ptr->skills.sav / 3) break; /* allow a save after each shuffle. */
 	}
 
+	/* Make sure we don't exceed the max -- we shouldn't, though. Paranoia. */
     for (i=0;i<6;i++)
     {
         if(p_ptr->stat_max[i] > p_ptr->stat_max_max[i]) p_ptr->stat_max[i] = p_ptr->stat_max_max[i];
@@ -1133,7 +1135,7 @@ void apply_nexus(monster_type *m_ptr)
 
         case 7:
         {		
-			if (randint0(100) < p_ptr->skills.sav) 
+			if (randint0(100) < p_ptr->skills.sav/2) 
             {
                 msg_print("You resist the effects!");
                 break;

@@ -3153,9 +3153,12 @@ void do_cmd_debug(void)
     case 'k':
         self_knowledge();
         break;
+
+	/* Nexus Scrample */
 	case 'K':
-		if(lose_all_info()) msg_print("You forget all!");
+		mutate_player();
 		break;
+
     /* Learn about objects */
     case 'l':
         do_cmd_wiz_learn();
