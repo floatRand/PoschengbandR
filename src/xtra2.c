@@ -2328,7 +2328,7 @@ void monster_death(int m_idx, bool drop_item)
 
     /* Drop some objects */
 	int mult_drops = 1;
-	if (coffeebreak_mode) mult_drops = 4;
+	if (coffeebreak_mode) mult_drops = 2;
 
 	for (int k = 0; k < mult_drops; k++){
 		for (attempt = 0, j = 0; j < number && attempt < 1000; attempt++)
@@ -2647,7 +2647,7 @@ static void get_exp_from_mon(int dam, monster_type *m_ptr)
         s64b_div(&new_exp, &new_exp_frac, 0, 5);
     }
 
-	if (coffeebreak_mode) s64b_mul(&new_exp, &new_exp_frac, 0, 10); // super-experience
+	if (coffeebreak_mode) s64b_mul(&new_exp, &new_exp_frac, 0, 8); // super-experience
 
     /* Intelligence affects learning! */
     s64b_mul(&new_exp, &new_exp_frac, 0, adj_exp_gain[p_ptr->stat_ind[A_INT]]);
