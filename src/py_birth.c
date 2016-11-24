@@ -286,7 +286,8 @@ static int _race_class_ui(void)
         cols[1] = doc_alloc(46);
 
         doc_insert(cols[0], "  <color:y>n</color>) Change Name\n");
-        doc_insert(cols[0], "  <color:y>s</color>) Change Sex\n");
+        doc_printf(cols[0], "  <color:%c>s</color>) Change Sex\n",
+            p_ptr->personality == PERS_SEXY || p_ptr->personality == PERS_LUCKY ? 'D' : 'y');
         if (game_mode != GAME_MODE_BEGINNER)
             doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
@@ -335,10 +336,13 @@ static int _race_class_ui(void)
             _inc_rcp_state();
             break;
         case '?':
-            doc_display_help("birth.txt", NULL);
+            doc_display_help("birth.txt", "RaceClass");
             break;
         case 'n':
             _change_name();
+            break;
+        case 'N':
+            doc_display_help("birth.txt", "CharacterName");
             break;
         case 'r':
             if (game_mode == GAME_MODE_BEGINNER)
@@ -1734,12 +1738,16 @@ static int _stats_ui(void)
         }
         else if (cmd == ESCAPE)
             return UI_CANCEL;
+        else if (cmd == '?')
+            doc_display_help("birth.txt", "Stats");
         else if (cmd == '\t')
             _inc_rcp_state();
         else if (cmd == '=')
             _birth_options();
         else if (cmd == 'n')
             _change_name();
+        else if (cmd == 'N')
+            doc_display_help("birth.txt", "CharacterName");
         else if (isupper(cmd))
         {
             i = _char_to_stat(tolower(cmd));
