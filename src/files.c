@@ -2985,7 +2985,6 @@ long total_points(void)
     int arena_win = MIN(p_ptr->arena_number, MAX_ARENA_MONS);
 
     if (!preserve_mode) mult += 10;
-    if (!autoroller) mult += 10;
     if (!smart_learn) mult -= 20;
     if (smart_cheat) mult += 30;
     if (ironman_shops) mult += 50;

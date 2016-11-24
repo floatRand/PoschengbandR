@@ -113,7 +113,6 @@ X:ironman_rooms
 X:ironman_nightmare
 Y:enable_virtues
 Y:preserve_mode
-Y:autoroller
 Y:powerup_home
 
 ##### Easy Object Auto-Destroyer #####

@@ -309,7 +309,6 @@ bool ironman_empty_levels;    /* Always create empty 'arena' levels (*) */
 bool ironman_rooms;    /* Always generate very unusual rooms (*) */
 bool ironman_nightmare;    /* Nightmare mode(it isn't even remotely fair!)(*) */
 bool preserve_mode;    /* Preserve artifacts (*) */
-bool autoroller;    /* Allow use of autoroller for stats (*) */
 bool powerup_home;    /* Increase capacity of your home (*) */
 bool allow_friendly_monster; /* Allow monsters friendly to player */
 bool allow_hostile_monster; /* Allow monsters hostile to each other */

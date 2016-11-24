@@ -326,7 +326,6 @@ extern bool ironman_empty_levels;    /* Always create empty 'arena' levels (*) *
 extern bool ironman_rooms;    /* Always generate very unusual rooms (*) */
 extern bool ironman_nightmare;    /* Nightmare mode(it isn't even remotely fair!)(*) */
 extern bool preserve_mode;    /* Preserve artifacts (*) */
-extern bool autoroller;    /* Allow use of autoroller for stats (*) */
 extern bool powerup_home;    /* Increase capacity of your home (*) */
 extern bool allow_friendly_monster; /* Allow monsters friendly to player */
 extern bool allow_hostile_monster; /* Allow monsters hostile to each other */

@@ -2852,9 +2852,6 @@ option_type option_info[] =
     { &preserve_mode,               TRUE,  OPT_PAGE_BIRTH, 6, 14,
     "preserve_mode",                "Preserve artifacts (*)" },
 
-    { &autoroller,                  TRUE,  OPT_PAGE_BIRTH, 6, 15,
-    "autoroller",                   "Allow use of autoroller for stats (*)" },
-
     { &powerup_home,                TRUE,  OPT_PAGE_BIRTH, 4, 3,
     "powerup_home",                 "Increase capacity of your home (*)" },
 
