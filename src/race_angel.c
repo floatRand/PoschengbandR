@@ -20,13 +20,16 @@ static void _birth(void)
     p_ptr->current_r_idx = MON_ANGEL;
 
     object_prep(&forge, lookup_kind(TV_POTION, SV_POTION_HEALING));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_MACE));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_food();
+    py_birth_light();
 }
 
 /******************************************************************************

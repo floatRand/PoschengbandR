@@ -5853,11 +5853,16 @@ void play_game(bool new_game)
     now_turn = game_turn;
     start_time = time(NULL);
 
+    /* TODO: py_skills_init() or some such ... w_max needs to be reset each time you play, 
+     * not just on player birth */
     if (p_ptr->prace == RACE_TONBERRY)
         s_info[p_ptr->pclass].w_max[TV_HAFTED-TV_WEAPON_BEGIN][SV_SABRE] = WEAPON_EXP_MASTER;
 
     if (p_ptr->pclass == CLASS_WEAPONMASTER && !new_game)
         weaponmaster_adjust_skills();
+
+    if (p_ptr->personality == PERS_SEXY)
+        s_info[p_ptr->pclass].w_max[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP] = WEAPON_EXP_MASTER;
 
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(dungeon_type);
@@ -5978,23 +5983,31 @@ void play_game(bool new_game)
         if (pers_ptr->birth) /* Hack: Personality goes first for the Sexy Whip! */
             pers_ptr->birth();
 
-        player_outfit();
+        /* birth functions should handle this
+        player_outfit();*/
 
+        /* Note: The class birth function should give starting
+         * equipment and spellbooks while the race birth function
+         * should give starting food and light (in general) */
         if (class_ptr->birth)
             class_ptr->birth();
 
         if (race_ptr->birth)
             race_ptr->birth();
+        else
+        {
+            /* most races won't need a special birth function, so
+             * give standard food and light by default */
+            py_birth_food();
+            py_birth_light();
+        }
 
         spell_stats_on_birth();
 
         stats_on_gold_find(p_ptr->au); /* Found? Inherited? What's the difference? */
 
-        if (game_mode == GAME_MODE_BEGINNER)
-        {
-            /*TODO: Write up a quick start guide. We are Light Town, so no wilderness references please! */
-            /*show_file(TRUE, "beginner.txt", NULL, 0, 0);*/
-        }
+        if (class_ptr->gain_level) /* Gain CL1 (e.g. Chaos Warriors) */
+            (class_ptr->gain_level)(p_ptr->lev);
     }
 
 

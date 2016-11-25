@@ -5,6 +5,9 @@ static void _birth(void)
     p_ptr->current_r_idx = MON_GAZER;
     equip_on_change_race();
     skills_innate_init("Gaze", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
+
+    py_birth_food();
+    py_birth_light();
 }
 
 static int _rank(void)

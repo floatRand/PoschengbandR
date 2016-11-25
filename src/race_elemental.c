@@ -189,15 +189,17 @@ static void _earth_birth(void)
     forge.to_d = 6;
     forge.pval = 3;
     add_flag(forge.flags, OF_STR);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_CLUB));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HARD_ARMOR, SV_CHAIN_MAIL));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     p_ptr->current_r_idx = MON_EARTH_SPIRIT; 
+
+    py_birth_light();
 }
 
 static void _earth_gain_level(int new_level) 
@@ -460,17 +462,18 @@ static void _air_birth(void)
     add_flag(forge.flags, OF_RES_ELEC);
     add_flag(forge.flags, OF_AURA_ELEC);
     add_flag(forge.flags, OF_IGNORE_ELEC);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SWORD, SV_LONG_SWORD));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HARD_ARMOR, SV_CHAIN_MAIL));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_STAFF, SV_ANY));
     if (device_init_fixed(&forge, EFFECT_NOTHING))
-        add_outfit(&forge);
+        py_birth_obj(&forge);
+    py_birth_light();
 
     p_ptr->current_r_idx = MON_AIR_SPIRIT; 
 }
@@ -722,15 +725,18 @@ static void _water_birth(void)
     forge.name2 = EGO_JEWELRY_ELEMENTAL;
     forge.to_a = 15;
     add_flag(forge.flags, OF_RES_ACID);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     forge.name2 = EGO_RING_COMBAT;
     forge.to_d = 5;
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_POLEARM, SV_TRIDENT));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_obj_aux(TV_POTION, SV_POTION_WATER, rand_range(15, 23));
+    py_birth_light();
 
     p_ptr->current_r_idx = MON_WATER_SPIRIT; 
 }
@@ -987,18 +993,20 @@ static void _fire_birth(void)
     forge.to_a = 15;
     add_flag(forge.flags, OF_RES_FIRE);
     add_flag(forge.flags, OF_AURA_FIRE);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_HARD_ARMOR, SV_CHAIN_MAIL));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_FLASK, SV_ANY));
     apply_magic(&forge, 1, AM_NO_FIXED_ART);
     forge.number = (byte)rand_range(7, 12);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_light();
 
     p_ptr->current_r_idx = MON_FIRE_SPIRIT; 
 }

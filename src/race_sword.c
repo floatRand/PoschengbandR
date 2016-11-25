@@ -736,7 +736,10 @@ static void _birth(void)
     add_flag(forge.flags, OF_NO_REMOVE);
     forge.to_h =  1;
     forge.to_d =  3;
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_obj_aux(TV_STAFF, EFFECT_NOTHING, 1);
+    py_birth_light();
 }
 
 static object_type *_weapon(void)

@@ -22,14 +22,16 @@ static void _birth(void)
     skills_innate_init("Finger", WEAPON_EXP_BEGINNER, WEAPON_EXP_MASTER);
 
     object_prep(&forge, lookup_kind(TV_CROWN, SV_IRON_CROWN));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_STAFF, SV_ANY));
     if (device_init_fixed(&forge, EFFECT_ANIMATE_DEAD))
-        add_outfit(&forge);
+        py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_ROBE));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_light();
 }
 
 /**********************************************************************

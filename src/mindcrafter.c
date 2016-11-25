@@ -669,6 +669,13 @@ static void _character_dump(doc_ptr doc)
     py_display_spells(doc, spells, ct);
 }
 
+static void _birth(void)
+{
+    py_birth_obj_aux(TV_SWORD, SV_SMALL_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(2, 5));
+}
+
 class_t *mindcrafter_get_class(void)
 {
     static class_t me = {0};
@@ -706,6 +713,7 @@ class_t *mindcrafter_get_class(void)
         me.exp = 125;
         me.pets = 35;
 
+        me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;

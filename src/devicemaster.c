@@ -412,29 +412,31 @@ static void _birth(void)
     case DEVICEMASTER_RODS:
         object_prep(&forge, lookup_kind(TV_ROD, SV_ANY));
         if (device_init_fixed(&forge, EFFECT_DETECT_MONSTERS))
-            add_outfit(&forge);
+            py_birth_obj(&forge);
         break;
     case DEVICEMASTER_STAVES:
         object_prep(&forge, lookup_kind(TV_STAFF, SV_ANY));
         if (device_init_fixed(&forge, EFFECT_SLEEP_MONSTERS))
-            add_outfit(&forge);
+            py_birth_obj(&forge);
         break;
     case DEVICEMASTER_WANDS:
         object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
         if (device_init_fixed(&forge, EFFECT_SLEEP_MONSTER))
-            add_outfit(&forge);
+            py_birth_obj(&forge);
         break;
     case DEVICEMASTER_POTIONS:
         object_prep(&forge, lookup_kind(TV_POTION, SV_POTION_SPEED));
         forge.number = 6;
-        add_outfit(&forge);
+        py_birth_obj(&forge);
         break;
     case DEVICEMASTER_SCROLLS:
         object_prep(&forge, lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT));
         forge.number = 6;
-        add_outfit(&forge);
+        py_birth_obj(&forge);
         break;
     }
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
 }
 
 static void _character_dump(doc_ptr doc)

@@ -60,6 +60,10 @@ static void _birth(void)
     int i;
     for (i = 0; i < 64; i++)
         p_ptr->spell_exp[i] = SPELL_EXP_EXPERT;
+
+    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_HARD_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_ARCANE_BOOK, 0, 1);
 }
 
 class_t *red_mage_get_class(void)

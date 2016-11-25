@@ -1226,6 +1226,13 @@ static void _character_dump(doc_ptr doc)
 }
 
 
+static void _birth(void)
+{
+    py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_spellbooks();
+}
+
 class_t *rage_mage_get_class(void)
 {
     static class_t me = {0};
@@ -1266,6 +1273,7 @@ class_t *rage_mage_get_class(void)
         me.exp = 150;
         me.pets = 40;
 
+        me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;
         me.get_spells = _get_spells;
         me.caster_info = _caster_info;

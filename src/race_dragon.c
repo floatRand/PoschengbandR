@@ -41,7 +41,10 @@ static void _dragon_birth(void)
     forge.pval = 1;
     add_flag(forge.flags, OF_STR);
     add_flag(forge.flags, OF_DEX);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_food();
+    py_birth_light();
 }
 
 /**********************************************************************

@@ -38,6 +38,9 @@ static void _birth(void)
     mut_lock(MUT_GOOD_LUCK);
 
     p_ptr->au = 50000;
+
+    py_birth_food();
+    py_birth_light();
 }
 
 static int _get_toggle(void)

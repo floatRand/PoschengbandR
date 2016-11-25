@@ -27,13 +27,16 @@ static void _birth(void)
     object_prep(&forge, lookup_kind(TV_AMULET, 0));
     forge.name2 = EGO_JEWELRY_ELEMENTAL;
     add_flag(forge.flags, OF_RES_ACID);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_CROWN, SV_IRON_CROWN));
     forge.name2 = EGO_CROWN_MIGHT;
     forge.pval = 1;
     forge.to_a = 5;
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_food();
+    py_birth_light();
 }
 
 /**********************************************************************

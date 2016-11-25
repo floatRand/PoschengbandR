@@ -246,32 +246,32 @@ static void _birth(void)
     int i;
 
     object_prep(&forge, lookup_kind(TV_SWORD, SV_DAGGER));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     if (p_ptr->psubclass == GRAY_MAGE_GOOD)
     {
         object_prep(&forge, lookup_kind(TV_LIFE_BOOK, 0));
-        add_outfit(&forge);
+        py_birth_obj(&forge);
 
         object_prep(&forge, lookup_kind(TV_CRUSADE_BOOK, 0));
-        add_outfit(&forge);
+        py_birth_obj(&forge);
     }
     else if (p_ptr->psubclass == GRAY_MAGE_NEUTRAL)
     {
         object_prep(&forge, lookup_kind(TV_NATURE_BOOK, 0));
-        add_outfit(&forge);
+        py_birth_obj(&forge);
     }
     else if (p_ptr->psubclass == GRAY_MAGE_EVIL)
     {
         object_prep(&forge, lookup_kind(TV_DEATH_BOOK, 0));
-        add_outfit(&forge);
+        py_birth_obj(&forge);
 
         object_prep(&forge, lookup_kind(TV_DAEMON_BOOK, 0));
-        add_outfit(&forge);
+        py_birth_obj(&forge);
     }
 
     object_prep(&forge, lookup_kind(TV_ARCANE_BOOK, 0));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     /* Restart? player_wipe doesn't know about this stuff, of course ... */
     for (i = 0; i < _MAX_SLOTS; i++)

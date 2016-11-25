@@ -630,17 +630,21 @@ extern int pack_find(int tval, int sval);
 extern cptr realm_jouhou[VALID_REALM];
 extern bool birth_hack;
 extern void add_history_from_pref_line(cptr t);
-extern void add_outfit(object_type *o_ptr);
 extern cptr birth_get_class_desc(int i);
 extern cptr birth_get_realm_desc(int i);
 extern void player_birth(void);
 extern void get_max_stats(void);
 extern void determine_random_questor(quest_type *q_ptr);
-extern void player_outfit(void);
 extern int calc_exp_factor(void);
+extern bool monster_hook_human(int r_idx);
 
 /* py_birth.c */
-extern int py_birth(void);
+extern int  py_birth(void);
+extern void py_birth_obj(object_type *o_ptr);
+extern void py_birth_obj_aux(int tval, int sval, int qty);
+extern void py_birth_food(void);
+extern void py_birth_light(void);
+extern void py_birth_spellbooks(void);
 
 /* cave.c */
 extern int distance(int y1, int x1, int y2, int x2);

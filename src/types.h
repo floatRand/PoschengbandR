@@ -2132,7 +2132,8 @@ typedef struct {
     s16b                    base_hp;
     s16b                    exp;
     s16b                    infra;
-    birth_fn                birth;
+    birth_fn                birth; /* Note: If specified, give starting food and light as well
+                                      See: py_birth_food() and py_birth_light() for defaults */
     calc_bonuses_fn         calc_bonuses;    /* Do flag related bonuses here ... */
     stats_fn                calc_stats;      /* ... and stat related stuff here */
     calc_weapon_bonuses_fn  calc_weapon_bonuses;

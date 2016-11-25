@@ -572,10 +572,13 @@ static void _birth(void)
     forge.to_d = 2;
     forge.pval = 1;
     add_flag(forge.flags, OF_DEX);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_food();
+    py_birth_light();
 }
 
 static name_desc_t _info[SPIDER_MAX] = {

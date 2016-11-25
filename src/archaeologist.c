@@ -794,6 +794,13 @@ static void _character_dump(doc_ptr doc)
     py_display_spells(doc, spells, ct);
 }
 
+static void _birth(void)
+{
+    py_birth_obj_aux(TV_HAFTED, SV_WHIP, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_SCROLL, SV_SCROLL_MAPPING, rand_range(5, 10));
+}
+
 class_t *archaeologist_get_class(void)
 {
     static class_t me = {0};
@@ -825,6 +832,7 @@ class_t *archaeologist_get_class(void)
         me.exp = 120;
         me.pets = 40;
 
+        me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
         me.process_player = _process_player;

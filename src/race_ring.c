@@ -427,14 +427,14 @@ static void _birth(void)
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     add_flag(forge.flags, OF_NO_REMOVE);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_RING, 0));
     get_random_name(buf, &forge, 1);
     forge.art_name = quark_add(buf);
     forge.to_a = 10;
     effect_add(&forge, EFFECT_BOLT_MISSILE);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_AMULET, 0));
     get_random_name(buf, &forge, 1);
@@ -443,11 +443,14 @@ static void _birth(void)
     add_flag(forge.flags, OF_INT);
     add_flag(forge.flags, OF_CHR);
     effect_add(&forge, EFFECT_PHASE_DOOR);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT));
     forge.number = 10;
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_obj_aux(TV_STAFF, EFFECT_NOTHING, 1);
+    py_birth_light();
 
     doc_display_help("rings.txt", NULL);
 }

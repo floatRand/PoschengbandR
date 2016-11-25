@@ -886,11 +886,14 @@ static void _birth(void)
     equip_on_change_race();
     
     object_prep(&forge, lookup_kind(TV_CAPTURE, 0));
-    add_outfit(&forge);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_WHISTLE, 1));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_food();
+    py_birth_light();
 }
 
 static void _gain_level(int new_level) 

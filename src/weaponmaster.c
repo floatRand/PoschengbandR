@@ -3324,7 +3324,7 @@ void _on_birth(void)
     /* Give the player a starting weapon from this group */
     kind = _specialities[p_ptr->psubclass].birth_obj;
     object_prep(&forge, lookup_kind(kind.tval, kind.sval));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     if (kind.tval == TV_BOW)
     {
@@ -3333,19 +3333,19 @@ void _on_birth(void)
         case SV_SLING:
             object_prep(&forge, lookup_kind(TV_SHOT, SV_AMMO_NORMAL));
             forge.number = (byte)rand_range(15, 20);
-            add_outfit(&forge);
+            py_birth_obj(&forge);
             break;
         case SV_SHORT_BOW:
         case SV_LONG_BOW:
             object_prep(&forge, lookup_kind(TV_ARROW, SV_AMMO_NORMAL));
             forge.number = (byte)rand_range(15, 20);
-            add_outfit(&forge);
+            py_birth_obj(&forge);
             break;
         case SV_LIGHT_XBOW:
         case SV_HEAVY_XBOW:
             object_prep(&forge, lookup_kind(TV_BOLT, SV_AMMO_NORMAL));
             forge.number = (byte)rand_range(15, 20);
-            add_outfit(&forge);
+            py_birth_obj(&forge);
             break;
         }
     }
@@ -3360,6 +3360,8 @@ void _on_birth(void)
     }
 
     weaponmaster_adjust_skills();
+
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_LEATHER_JACK, 1);
 }
 
 static void _set_max_skill(int tval, int skill)

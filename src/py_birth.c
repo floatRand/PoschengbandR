@@ -49,6 +49,12 @@ extern int py_birth(void);
                     static int _mon_troll_ui(void);
     static int _stats_ui(void);
 
+extern void py_birth_obj(object_type *o_ptr);
+extern void py_birth_obj_aux(int tval, int sval, int qty);
+extern void py_birth_food(void);
+extern void py_birth_light(void);
+extern void py_birth_spellbooks(void);
+
 /* I prefer to render menus to a document rather than directly to the terminal */
 static doc_ptr _doc = NULL;
 
@@ -59,7 +65,7 @@ static void _sync_term(doc_ptr doc);
 static int _count(int ids[]);
 
 /************************************************************************
- * Public Entrypoint
+ * Public Entrypoints
  ***********************************************************************/ 
 int py_birth(void)
 {
@@ -78,6 +84,80 @@ int py_birth(void)
     _doc = NULL;
 
     return result;
+}
+
+extern void py_birth_obj_aux(int tval, int sval, int qty)
+{
+    object_type forge;
+
+    switch (tval)
+    {
+    case TV_WAND: case TV_ROD: case TV_STAFF:
+    {
+        int k_idx = lookup_kind(tval, SV_ANY);
+        object_prep(&forge, k_idx);
+        if (!device_init_fixed(&forge, sval))
+            return;
+        qty = 1;
+        break;
+    }
+    default:
+        object_prep(&forge, lookup_kind(tval, sval));
+    }
+
+    forge.number = qty;
+    py_birth_obj(&forge);
+}
+
+extern void py_birth_obj(object_type *o_ptr)
+{
+    int slot;
+
+    if (spoiler_hack) return;
+
+    /* Big hack for sexy players ... only get one melee weapon */
+    if ( p_ptr->personality == PERS_SEXY
+      && object_is_melee_weapon(o_ptr)
+      && !object_is_(o_ptr, TV_HAFTED, SV_WHIP) )
+    {
+        return;
+    }
+
+    obj_identify_fully(o_ptr);
+
+    slot = equip_first_empty_slot(o_ptr);
+    if (slot && o_ptr->number == 1)
+        equip_wield_aux(o_ptr, slot);
+    else
+        slot = inven_carry(o_ptr);
+
+    autopick_alter_item(slot, FALSE);
+}
+
+/* Standard Food and Light */
+extern void py_birth_food(void)
+{
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_RATION, 2 + rand_range(3, 7));
+}
+
+extern void py_birth_light(void)
+{
+    if (p_ptr->pclass != CLASS_NINJA)
+    {
+        object_type forge = {0};
+        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_TORCH));
+        forge.number = rand_range(3, 7);
+        forge.xtra4 = rand_range(3, 7) * 500;
+        py_birth_obj(&forge);
+    }
+}
+
+void py_birth_spellbooks(void)
+{
+    if (p_ptr->realm1)
+        py_birth_obj_aux(TV_LIFE_BOOK + p_ptr->realm1 - 1, 0, 1);
+    if (p_ptr->realm2)
+        py_birth_obj_aux(TV_LIFE_BOOK + p_ptr->realm2 - 1, 0, 1);
 }
 
 /************************************************************************
@@ -731,21 +811,34 @@ static int _subrace_ui_aux(int ct, cptr desc, cptr help, cptr topic)
 {
     for (;;)
     {
-        int cmd, i;
+        int cmd, i, split = ct;
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(30);
+        cols[1] = doc_alloc(30);
 
         doc_clear(_doc);
         _race_class_top(_doc);
 
-        doc_printf(_doc, "<color:G>Choose %s</color>\n", desc);
+        if (split > 7)
+            split = (ct + 1)/2;
+
         for (i = 0; i < ct; i++)
         {
             race_t *race_ptr = get_race_aux(p_ptr->prace, i);
-            doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+            doc_printf(
+                i < split ? cols[0] : cols[1],
+                "  <color:y>%c</color>) <color:%c>%s</color>\n",
                 I2A(i),
                 i == p_ptr->psubrace ? 'B' : 'w',
                 race_ptr->subname);
         }
+        doc_printf(_doc, "<color:G>Choose %s</color>\n", desc);
+        doc_insert_cols(_doc, cols, 2, 1);
         doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+
+        doc_free(cols[0]);
+        doc_free(cols[1]);
 
         _sync_term(_doc);
         cmd = _inkey();
@@ -848,17 +941,31 @@ static void _class_group_ui(void)
 
     for (;;)
     {
-        int cmd;
+        int cmd, split = vec_length(groups);
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(30);
+        cols[1] = doc_alloc(30);
 
         doc_clear(_doc);
         _race_class_top(_doc);
 
-        doc_insert(_doc, "<color:G>Choose a Type of Class to Play</color>\n");
+        if (split > 7)
+            split = (split + 1)/2;
+
         for (i = 0; i < vec_length(groups); i++)
         {
             _class_group_ptr g_ptr = vec_get(groups, i);
-            doc_printf( _doc, "  <color:y>%c</color>) %s\n", I2A(i), g_ptr->name);
+            doc_printf(
+                i < split ? cols[0] : cols[1],
+                "  <color:y>%c</color>) %s\n", I2A(i), g_ptr->name);
         }
+        doc_insert(_doc, "<color:G>Choose a Type of Class to Play</color>\n");
+        doc_insert_cols(_doc, cols, 2, 1);
+
+        doc_free(cols[0]);
+        doc_free(cols[1]);
+
         _sync_term(_doc);
 
         cmd = _inkey();
@@ -1209,7 +1316,7 @@ static int _realm1_ui(void)
                 realm_names[id]
             );
         }
-        doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+        doc_insert(_doc, "\n     Use SHIFT+choice to display help topic\n");
 
         _sync_term(_doc);
         cmd = _inkey();
@@ -1293,7 +1400,7 @@ static int _realm2_ui(void)
                 realm_names[id]
             );
         }
-        doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
+        doc_insert(_doc, "\n     Use SHIFT+choice to display help topic\n");
 
         _sync_term(_doc);
         cmd = _inkey();
@@ -2109,8 +2216,13 @@ static void _race_line(doc_ptr doc)
     race_t *race_ptr = get_race();
     if (game_mode == GAME_MODE_MONSTER)
     {
-        if (p_ptr->prace == RACE_MON_DRAGON) /* single line for realm stats/skills */
+        if ( p_ptr->prace == RACE_MON_DRAGON
+          || p_ptr->prace == RACE_MON_GIANT
+          || p_ptr->prace == RACE_MON_ELEMENTAL
+          || p_ptr->prace == RACE_MON_TROLL )
+        {
             doc_printf(doc, "Race : <color:B>%s</color>\n", race_ptr->subname);
+        }
         else
         {
             doc_printf(doc, "Race : <color:B>%s</color>\n", race_ptr->name);

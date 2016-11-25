@@ -596,6 +596,14 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
+static void _birth(void)
+{
+    py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
+    py_birth_obj_aux(TV_SPIKE, 0, rand_range(15, 20));
+}
+
 class_t *ninja_get_class(void)
 {
     static class_t me = {0};
@@ -636,6 +644,7 @@ class_t *ninja_get_class(void)
         me.exp = 120;
         me.pets = 40;
 
+        me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;

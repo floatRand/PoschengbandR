@@ -546,10 +546,7 @@ static void _sexy_birth(void)
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
     if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
         rune_add(&forge, RUNE_ABSORPTION, FALSE);
-    add_outfit(&forge);
-
-    /* skills_on_birth() is doing this already ...
-    s_info[p_ptr->pclass].w_max[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP] = WEAPON_EXP_MASTER; */
+    py_birth_obj(&forge);
 }
 static void _sexy_calc_bonuses(void)
 {

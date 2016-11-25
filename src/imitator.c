@@ -948,6 +948,13 @@ static int _get_powers(spell_info* spells, int max)
     return ct;
 }
 
+static void _birth(void)
+{
+    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(2, 5));
+}
+
 class_t *imitator_get_class(void)
 {
     static class_t me = {0};
@@ -988,6 +995,7 @@ class_t *imitator_get_class(void)
         me.exp = 110;
         me.pets = 20;
         
+        me.birth = _birth;
         me.get_powers = _get_powers;
         init = TRUE;
     }

@@ -601,6 +601,13 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
+static void _birth(void)
+{
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(5, 10));
+    py_birth_spellbooks();
+}
+
 class_t *force_trainer_get_class(void)
 {
     static class_t me = {0};
@@ -644,6 +651,7 @@ class_t *force_trainer_get_class(void)
         me.exp = 135;
         me.pets = 40;
 
+        me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;
         me.caster_info = _caster_info;

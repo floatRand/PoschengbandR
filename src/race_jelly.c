@@ -328,10 +328,12 @@ static void _birth(void)
     forge.pval = 1;
     forge.to_d = 3;
     add_flag(forge.flags, OF_STR);
-    add_outfit(&forge);
+    py_birth_obj(&forge);
 
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
-    add_outfit(&forge);
+    py_birth_obj(&forge);
+
+    py_birth_light();
 }
 
 race_t *mon_jelly_get_race(void)

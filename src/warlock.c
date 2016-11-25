@@ -1930,6 +1930,13 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
+static void _birth(void)
+{
+    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
+}
+
 /****************************************************************
  * Public API
  ****************************************************************/
@@ -2003,6 +2010,7 @@ class_t *warlock_get_class(int psubclass)
         "with their chosen kin, and these monsters tend to have a strong will of their own, resisting "
         "the binding forces which the warlock imposes to gain both mastery and power.";
 
+        me.birth = _birth;
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
         me.get_powers = _get_powers;
