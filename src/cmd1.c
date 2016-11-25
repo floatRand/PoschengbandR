@@ -2928,6 +2928,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     r_ptr = &r_info[m_ptr->r_idx];
     is_human = (r_ptr->d_char == 'p');
     is_lowlevel = (r_ptr->level < (p_ptr->lev - 15));
+	int w_ct = p_ptr->weapon_ct;
+	if (w_ct == 0) w_ct = 1;
 
     weapon_flags(hand, flgs);
     if (o_ptr)
@@ -3873,8 +3875,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     energy_use = 0;
                     if (hand)
-                        energy_use += (hand - 1) * 100 / p_ptr->weapon_ct;
-                    energy_use += num * (100 / p_ptr->weapon_ct) / num_blow;
+                        energy_use += (hand - 1) * 100 / w_ct;
+                    energy_use += num * (100 / w_ct) / num_blow;
                 }
                 if (o_ptr && o_ptr->name1 == ART_ZANTETSU && is_lowlevel)
                     msg_print("Sigh... Another trifling thing I've cut....");
