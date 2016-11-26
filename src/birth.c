@@ -3341,8 +3341,6 @@ void player_outfit(void)
 			if (runesword_start && (tv == TV_SWORD || tv == TV_HAFTED || tv == TV_POLEARM)){  
 				/* force runesword as weapon */
 				k_idx = lookup_kind(TV_SWORD, SV_RUNESWORD);
-				object_prep(&forge, k_idx);
-				forge.curse_flags |= (OFC_PERMA_CURSE | OFC_CURSED);
 			}
 			else  k_idx = lookup_kind(tv, sv);
 
@@ -3350,6 +3348,7 @@ void player_outfit(void)
             if (!k_idx) continue;
             object_prep(&forge, k_idx);
 
+			if (runesword_start) forge.curse_flags |= (OFC_PERMA_CURSE | OFC_CURSED);
             /* Hack: Rune-Knights begin with an Absorption Rune on their broad sword (or whip if sexy) */
             if (p_ptr->pclass == CLASS_RUNE_KNIGHT && tv == TV_SWORD && sv == SV_BROAD_SWORD)
                 rune_add(&forge, RUNE_ABSORPTION, FALSE);
