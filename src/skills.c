@@ -613,7 +613,8 @@ int skills_innate_calc_bonus(cptr name)
 void skills_innate_gain(cptr name)
 {
     _skill_info_ptr info = _innate_info(name);
-
+	int mult = 3;
+	if (coffeebreak_mode) mult = 16;
     /* Double Check initialization */
     if (!info)
     {
@@ -636,7 +637,7 @@ void skills_innate_gain(cptr name)
         {
             int old_bonus = _innate_calc_bonus_aux(info->current);
             int new_bonus;
-            info->current += add;
+            info->current += add * mult;
             if (info->current > info->max)
                 info->current = info->max;
             new_bonus = _innate_calc_bonus_aux(info->current);
