@@ -131,7 +131,6 @@ static void _birth(void)
     py_birth_obj(&forge);
 
     py_birth_obj_aux(TV_STAFF, EFFECT_NOTHING, 1);
-    py_birth_light();
 }
 
 /**********************************************************************

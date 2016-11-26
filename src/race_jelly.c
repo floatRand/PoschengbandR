@@ -332,8 +332,6 @@ static void _birth(void)
 
     object_prep(&forge, lookup_kind(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL));
     py_birth_obj(&forge);
-
-    py_birth_light();
 }
 
 race_t *mon_jelly_get_race(void)

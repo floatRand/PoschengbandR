@@ -287,8 +287,7 @@ static void _artemis_get_flags(u32b flgs[OF_ARRAY_SIZE])
 }
 static void _artemis_birth(void)
 {
-    if (!equip_find_object(TV_BOW, SV_SHORT_BOW))
-        py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
+    py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_ARROW, SV_AMMO_NORMAL, rand_range(15, 20));
     py_birth_food();
     py_birth_light();

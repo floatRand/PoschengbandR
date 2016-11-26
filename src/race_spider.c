@@ -578,7 +578,6 @@ static void _birth(void)
     py_birth_obj(&forge);
 
     py_birth_food();
-    py_birth_light();
 }
 
 static name_desc_t _info[SPIDER_MAX] = {

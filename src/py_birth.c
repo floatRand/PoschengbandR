@@ -113,7 +113,12 @@ extern void py_birth_obj(object_type *o_ptr)
 {
     int slot;
 
-    if (spoiler_hack) return;
+    if (spoiler_hack)
+        return;
+
+    /* Androids can hit CL9 or more with starting Chain Mail! */
+    if (p_ptr->prace == RACE_ANDROID && object_is_body_armour(o_ptr))
+        return;
 
     /* Big hack for sexy players ... only get one melee weapon */
     if ( p_ptr->personality == PERS_SEXY
@@ -122,6 +127,10 @@ extern void py_birth_obj(object_type *o_ptr)
     {
         return;
     }
+
+    /* Weed out duplicate gear (e.g. Artemis Archer) */
+    if (object_is_wearable(o_ptr) && o_ptr->number == 1 && equip_find_object(o_ptr->tval, o_ptr->sval))
+        return;
 
     obj_identify_fully(o_ptr);
 
@@ -209,7 +218,7 @@ static int _welcome_ui(void)
         _sync_term(_doc);
         cmd = _inkey();
         if (cmd == '?')
-            doc_display_help("birth.txt", "Welcome");
+            doc_display_help("birth.txt", NULL /*"Welcome"*/);
         else if (cmd == ESCAPE)
             return UI_CANCEL;
         else if (cmd == '=')
@@ -2524,7 +2533,7 @@ static void _birth_finalize(void)
     equip_on_init();
     virtue_init();
 
-    p_ptr->au = randint1(600) + randint1(100) + 300;
+    p_ptr->au = randint1(600) + randint1(100) + 100;
 
     get_max_stats();
     do_cmd_rerate_aux();
