@@ -2998,6 +2998,7 @@ long total_points(void)
     if (!powerup_home) mult += 50;
     if (ironman_rooms) mult += 100;
     if (ironman_nightmare) mult += 100;
+	if (runesword_start) mult += 10;
 
     if (mult < 5) mult = 5;
 
