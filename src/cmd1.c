@@ -3362,10 +3362,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     k = damroll(dd + p_ptr->weapon_info[hand].to_dd, ds + p_ptr->weapon_info[hand].to_ds);
                 k = tot_dam_aux(o_ptr, k, m_ptr, hand, mode, FALSE);
 
-				if (k <= 0){ // no completely damageless attacks.
-					if (one_in_(2)) k = 1; else k = 0;
-				}
-
                 if (backstab)
                 {
                     if (p_ptr->pclass == CLASS_SCOUT)
@@ -3493,7 +3489,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             if (mode == HISSATSU_SEKIRYUKA && !monster_living(r_ptr)) k = 0;
             if (mode == HISSATSU_SEKIRYUKA && !p_ptr->cut) k /= 2;
 
-            if (k < 0) k = 0;
+			if (k <= 0){ /* A small hack, mostly for runesword starts. You can have one point of damage occasionally. */ 
+				if (one_in_(2)) k = 1; else k = 0;
+			}
 
             if (mode == HISSATSU_ZANMA && !(!monster_living(r_ptr) && (r_ptr->flags3 & RF3_EVIL)))
                 k = 0;
