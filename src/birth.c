@@ -3341,6 +3341,8 @@ void player_outfit(void)
 			if (runesword_start && (tv == TV_SWORD || tv == TV_HAFTED || tv == TV_POLEARM)){  
 				/* force runesword as weapon */
 				k_idx = lookup_kind(TV_SWORD, SV_RUNESWORD);
+				object_prep(&forge, k_idx);
+				forge.curse_flags |= (OFC_PERMA_CURSE | OFC_CURSED);
 			}
 			else  k_idx = lookup_kind(tv, sv);
 
