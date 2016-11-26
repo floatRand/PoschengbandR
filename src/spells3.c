@@ -2442,7 +2442,7 @@ bool mundane_spell(bool only_equip)
         o_ptr = &o_list[0 - item];
     }
 
-    if (o_ptr->name1 == ART_HAND_OF_VECNA || o_ptr->name1 == ART_EYE_OF_VECNA)
+    if (o_ptr->name1 == ART_HAND_OF_VECNA || o_ptr->name1 == ART_EYE_OF_VECNA || (o_ptr->sval == SV_RUNESWORD && runesword_start))
     {
         msg_print("There is no effect.");
         return TRUE;

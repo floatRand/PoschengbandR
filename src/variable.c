@@ -318,6 +318,7 @@ bool random_artifacts;
 bool no_artifacts;
 bool no_egos;
 bool enable_virtues;
+bool runesword_start;
 bool coffeebreak_mode;
 
 /*** Easy Object Auto-Destroyer ***/

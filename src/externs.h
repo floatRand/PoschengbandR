@@ -338,6 +338,7 @@ extern bool no_artifacts;
 extern bool no_egos;
 extern bool enable_virtues;
 extern bool coffeebreak_mode;
+extern bool runesword_start;
 
 /*** Easy Object Auto-Destroyer ***/
 

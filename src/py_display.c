@@ -2325,6 +2325,9 @@ static void _build_options(doc_ptr doc)
     if (ironman_quests)
         doc_printf(doc, " Ironman Quests:     Enabled\n");
 
+	if (runesword_start)
+		doc_printf(doc, " Forced Runesword:     Enabled\n");
+
     if (no_artifacts)
         doc_printf(doc, " No Artifacts:       Enabled\n");
     else if (random_artifacts)

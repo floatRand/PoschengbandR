@@ -3338,7 +3338,13 @@ void player_outfit(void)
                 add_outfit(&forge);
             break;
         default:
-            k_idx = lookup_kind(tv, sv);
+			if (runesword_start && (tv == TV_SWORD || tv == TV_HAFTED || tv == TV_POLEARM)){  
+				/* force runesword as weapon */
+				k_idx = lookup_kind(TV_SWORD, SV_RUNESWORD);
+			}
+			else  k_idx = lookup_kind(tv, sv);
+
+           
             if (!k_idx) continue;
             object_prep(&forge, k_idx);
 
@@ -3348,7 +3354,7 @@ void player_outfit(void)
 
             add_outfit(&forge);
         }
-    }
+    } 
 
     /* Hack -- make aware of the water */
     k_info[lookup_kind(TV_POTION, SV_POTION_WATER)].aware = TRUE;

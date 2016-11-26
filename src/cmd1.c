@@ -2929,7 +2929,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     is_human = (r_ptr->d_char == 'p');
     is_lowlevel = (r_ptr->level < (p_ptr->lev - 15));
 	int w_ct = p_ptr->weapon_ct;
-	if (w_ct == 0) w_ct = 1;
 
     weapon_flags(hand, flgs);
     if (o_ptr)
@@ -3362,6 +3361,10 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 else
                     k = damroll(dd + p_ptr->weapon_info[hand].to_dd, ds + p_ptr->weapon_info[hand].to_ds);
                 k = tot_dam_aux(o_ptr, k, m_ptr, hand, mode, FALSE);
+
+				if (k <= 0){ // no completely damageless attacks.
+					if (one_in_(2)) k = 1; else k = 0;
+				}
 
                 if (backstab)
                 {
@@ -3874,6 +3877,9 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 if ((p_ptr->pclass == CLASS_BERSERKER || mut_present(MUT_FANTASTIC_FRENZY) || p_ptr->tim_shrike) && energy_use)
                 {
                     energy_use = 0;
+
+					if (w_ct == 0) w_ct = 1;
+
                     if (hand)
                         energy_use += (hand - 1) * 100 / w_ct;
                     energy_use += num * (100 / w_ct) / num_blow;
