@@ -2370,7 +2370,7 @@ enum {
 #define PM_ALLOW_CLONED   0x00000800
 #define PM_WALL_SCUMMER   0x00001000
 #define PM_RING_BEARER    0x00002000
-
+#define PM_SUMMON_FATIGUE 0x00004000
 
 /* Bit flags for monster_desc() */
 #define MD_OBJECTIVE      0x00000001 /* Objective (or Reflexive) */

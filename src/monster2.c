@@ -3547,7 +3547,8 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
     /* Give a random starting energy */
     if (!ironman_nightmare)
     {
-        m_ptr->energy_need = ENERGY_NEED() - (s16b)randint0(100);
+		if (mode & PM_SUMMON_FATIGUE) m_ptr->energy_need = ENERGY_NEED() + (s16b)randint0(100)*2 - MIN(dun_level / 2,100);
+		else m_ptr->energy_need = ENERGY_NEED() - (s16b)randint0(100);
     }
     else
     {

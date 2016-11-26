@@ -1947,7 +1947,7 @@ static void hit_trap(bool break_trap)
             num = 2 + randint1(3);
             for (i = 0; i < num; i++)
             {
-                (void)summon_specific(0, y, x, dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
+				(void)summon_specific(0, y, x, dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET | PM_SUMMON_FATIGUE));
             }
 
             if (dun_level > randint1(100)) /* No nasty effect for low levels */
@@ -2156,7 +2156,7 @@ static void hit_trap(bool break_trap)
             int evil_idx = 0, good_idx = 0;
 
             int lev;
-            msg_print("Suddenly, you are surrounded by immotal beings!");
+            msg_print("Suddenly, you are surrounded by immortal beings!");
 
             /* Summon Demons and Angels */
             for (lev = dun_level; lev >= 20; lev -= 1 + lev/16)
@@ -2173,10 +2173,10 @@ static void hit_trap(bool break_trap)
                     /* Require line of projection */
                     if (!projectable(py, px, y1, x1)) continue;
 
-                    if (summon_specific(0, y1, x1, lev, SUMMON_ARMAGE_EVIL, (PM_NO_PET)))
+                    if (summon_specific(0, y1, x1, lev, SUMMON_ARMAGE_EVIL, (PM_NO_PET | PM_SUMMON_FATIGUE)))
                         evil_idx = hack_m_idx_ii;
 
-                    if (summon_specific(0, y1, x1, lev, SUMMON_ARMAGE_GOOD, (PM_NO_PET)))
+                    if (summon_specific(0, y1, x1, lev, SUMMON_ARMAGE_GOOD, (PM_NO_PET | PM_SUMMON_FATIGUE)))
                     {
                         good_idx = hack_m_idx_ii;
                     }
