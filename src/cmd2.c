@@ -2520,6 +2520,9 @@ void do_cmd_stay(bool pickup)
  */
 void do_cmd_rest(void)
 {
+    int tmp;
+    if (REPEAT_PULL(&tmp))
+        command_arg = tmp;
 
     set_action(ACTION_NONE);
     if (weaponmaster_get_toggle() == TOGGLE_SHADOW_STANCE)
@@ -2536,7 +2539,7 @@ void do_cmd_rest(void)
     warlock_stop_singing();
 
     /* Prompt for time if needed */
-    if (command_arg <= 0)
+    if (command_arg == 0)
     {
         cptr p = "<color:y>Rest</color> (0-9999, '*' for HP/SP, '&' as needed): ";
 
@@ -2568,6 +2571,7 @@ void do_cmd_rest(void)
             command_arg = atoi(out_val);
             if (command_arg <= 0) return;
         }
+        REPEAT_PUSH(command_arg);
     }
 
 

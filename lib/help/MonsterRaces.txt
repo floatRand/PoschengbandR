@@ -122,8 +122,8 @@ Strength     <color:w> -3</color>        Disarming   <color:y>Good         </col
 Intelligence <color:v> +4</color>        Device      <color:b>Heroic       </color>
 Wisdom       <color:w> +0</color>        Save        <color:g>Superb       </color>
 Dexterity    <color:w> +1</color>        Stealth     <color:b>Heroic       </color>
-Constitution <color:w> +0</color>        Searching   <color:v>Legendary[7] </color>
-Charisma     <color:w> +0</color>        Perception  <color:v>Legendary[7] </color>
+Constitution <color:w> +0</color>        Searching   <color:v>Amber[7]     </color>
+Charisma     <color:w> +0</color>        Perception  <color:v>Amber[7]     </color>
 Life Rating  100%       Melee       <color:o>Fair         </color>
 Base HP       20        Bows        <color:D>Very Bad     </color>
 Experience   200%       Infravision 80'
@@ -492,7 +492,7 @@ Hound        <color:o>Fair         </color> <color:R>Poor         </color> <colo
 Hydra        <color:r>Bad          </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:r>Bad          </color>   50'
 Spider       <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:r>Bad          </color>   50'
 Angel        <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Good         </color> <color:o>Fair         </color>   30'
-Beholder     <color:v>Legendary[7] </color> <color:v>Legendary[7] </color> <color:o>Fair         </color> <color:D>Very Bad     </color>   80'
+Beholder     <color:v>Amber[7]     </color> <color:v>Amber[7]     </color> <color:o>Fair         </color> <color:D>Very Bad     </color>   80'
 Dragon       <color:o>Fair         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:r>Bad          </color>   50'
 Elemental    <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color> <color:r>Bad          </color>   50'
 Vortex       <color:r>Bad          </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:D>Very Bad     </color>    0'

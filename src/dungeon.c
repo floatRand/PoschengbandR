@@ -3540,7 +3540,7 @@ static void process_command(void)
 #ifdef ALLOW_REPEAT /* TNB */
 
     /* Handle repeating the last command */
-    repeat_check();
+    repeat_check(FALSE);
 
 #endif /* ALLOW_REPEAT -- TNB */
 
@@ -4294,15 +4294,8 @@ static void process_command(void)
 
         /*** System Commands ***/
 
-        /* Hack -- User interface */
-        case '!':
-        {
-            (void)Term_user(0);
-            break;
-        }
-
         /* Single line from a pref file */
-        case '"':
+        case '!':
         {
             do_cmd_pref();
             break;

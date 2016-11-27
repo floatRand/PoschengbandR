@@ -2008,7 +2008,7 @@ extern void fsetfileinfo(cptr path, u32b fcreator, u32b ftype);
 extern int count_bits(u32b x);
 extern void repeat_push(int what);
 extern bool repeat_pull(int *what);
-extern void repeat_check(void);
+extern void repeat_check(int shopping);
 
 #else
 #define REPEAT_PULL(pn) FALSE

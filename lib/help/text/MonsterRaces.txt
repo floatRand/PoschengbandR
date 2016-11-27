@@ -220,8 +220,8 @@ Beholder
     Intelligence  +4        Device      Heroic       
     Wisdom        +0        Save        Superb       
     Dexterity     +1        Stealth     Heroic       
-    Constitution  +0        Searching   Legendary[7] 
-    Charisma      +0        Perception  Legendary[7] 
+    Constitution  +0        Searching   Amber[7]     
+    Charisma      +0        Perception  Amber[7]     
     Life Rating  100%       Melee       Fair         
     Base HP       20        Bows        Very Bad     
     Experience   200%       Infravision 80'
@@ -801,7 +801,7 @@ Hound        Fair          Poor          Excellent     Bad             50'
 Hydra        Bad           Bad           Superb        Bad             50'
 Spider       Fair          Poor          Very Good     Bad             50'
 Angel        Fair          Poor          Good          Fair            30'
-Beholder     Legendary[7]  Legendary[7]  Fair          Very Bad        80'
+Beholder     Amber[7]      Amber[7]      Fair          Very Bad        80'
 Dragon       Fair          Fair          Excellent     Bad             50'
 Elemental    Fair          Poor          Superb        Bad             50'
 Vortex       Bad           Bad           Superb        Very Bad         0'

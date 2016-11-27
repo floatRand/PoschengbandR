@@ -17,7 +17,7 @@ Wisdom       <color:w>-20</color>        Save        <color:D>Very Bad     </col
 Dexterity    <color:w> +4</color>        Stealth     <color:D>Very Bad     </color>
 Constitution <color:w> +4</color>        Searching   <color:D>Very Bad     </color>
 Charisma     <color:w> +4</color>        Perception  <color:D>Very Bad     </color>
-Life Rating  200%       Melee       <color:v>Legendary[20]</color>
+Life Rating  200%       Melee       <color:v>Amber[20]    </color>
 Base HP       22        Bows        <color:D>Very Bad     </color>
 Experience   160%
 </style></indent>
@@ -865,7 +865,7 @@ Wild-Talent   <color:o>Fair         </color> <color:y>Good         </color> <col
 <topic:Skills2><style:heading>Table 3 - Class Skill Bonus Table II</style>
 <style:table>
               <color:w>Searching     Perception    Melee         Bows         </color>
-Berserker     <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:v>Legendary[20]</color> <color:D>Very Bad     </color>
+Berserker     <color:D>Very Bad     </color> <color:D>Very Bad     </color> <color:v>Amber[20]    </color> <color:D>Very Bad     </color>
 Blood-Knight  <color:R>Poor         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:R>Poor         </color>
 Duelist       <color:o>Fair         </color> <color:R>Poor         </color> <color:o>Fair         </color> <color:D>Very Bad     </color>
 Mauler        <color:R>Poor         </color> <color:r>Bad          </color> <color:g>Superb       </color> <color:D>Very Bad     </color>

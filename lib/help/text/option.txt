@@ -106,20 +106,6 @@ off after the creation is finished!
   before it is completely explored as any fixed artifact can be 
   regenerated in subsequent levels.
   
-  Allow use of autoroller for stats (autoroller)
-  If you choose to use the auto-roller, you can specify minimum limit 
-  of each stat. Once you have specified your desired statistics, the 
-  computer will then randomly roll successive start-up characters and 
-  compare them to your specified criteria. Each stat is rolled as a 
-  number from 8 to 17, with a normal distribution, and is then 
-  immediately modified based upon the race and class which you have 
-  chosen. Once a character that matches or exceeds your expectations 
-  has been rolled, the computer will display the character for you to 
-  look at, and asks you whether you accept or not. You may press Enter 
-  to accept. If you do not accept, you may press 'r' to resume rolling 
-  and searching for the next match or, if this is not your first match, 
-  'p' to return to the previous character which met your criteria.
-  
   Increase capacity of your home (powerup_home)
   If this option is enabled, the capacity of your home will be expanded 
   to 20 pages. If not, capacity is only 2 pages.

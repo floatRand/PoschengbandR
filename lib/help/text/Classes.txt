@@ -39,7 +39,7 @@ Melee
     Dexterity     +4        Stealth     Very Bad     
     Constitution  +4        Searching   Very Bad     
     Charisma      +4        Perception  Very Bad     
-    Life Rating  200%       Melee       Legendary[20]
+    Life Rating  200%       Melee       Amber[20]    
     Base HP       22        Bows        Very Bad     
     Experience   160%
     
@@ -1363,7 +1363,7 @@ Wild-Talent   Fair          Good          Fair          Fair
 Table 3 - Class Skill Bonus Table II
 
               Searching     Perception    Melee         Bows         
-Berserker     Very Bad      Very Bad      Legendary[20] Very Bad     
+Berserker     Very Bad      Very Bad      Amber[20]     Very Bad     
 Blood-Knight  Poor          Bad           Superb        Poor         
 Duelist       Fair          Poor          Fair          Very Bad     
 Mauler        Poor          Bad           Superb        Very Bad     
