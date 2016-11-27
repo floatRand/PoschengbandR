@@ -3539,6 +3539,8 @@ void calc_bonuses(void)
         for (i = 0; i < OF_ARRAY_SIZE; i++)
             p_ptr->innate_attack_info.flags[i] = 0;
     }
+	p_ptr->innate_brands = 0;
+
     /* Start with "normal" speed */
     p_ptr->pspeed = 110;
 

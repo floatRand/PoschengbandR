@@ -1291,6 +1291,17 @@ void equip_calc_bonuses(void)
             _weapon_info_flag(i, flgs, OF_SLAY_GOOD);  /* Thanos, Nazgul */
             _weapon_info_flag(i, flgs, OF_SLAY_HUMAN); /* Nazgul */
             _weapon_info_flag(i, flgs, OF_BRAND_VAMP); /* Dragon Armor (Death), Helm of the Vampire */
+
+			if(have_flag(flgs, OF_BRAND_FIRE)) p_ptr->innate_brands |= INNA_BRAND_FIRE;
+			if(have_flag(flgs, OF_BRAND_COLD)) p_ptr->innate_brands |= INNA_BRAND_COLD;
+			if(have_flag(flgs, OF_BRAND_ELEC)) p_ptr->innate_brands |= INNA_BRAND_ELEC;
+			if(have_flag(flgs, OF_BRAND_ACID)) p_ptr->innate_brands |= INNA_BRAND_ACID;
+			if(have_flag(flgs, OF_BRAND_POIS)) p_ptr->innate_brands |= INNA_BRAND_POIS;
+			if(have_flag(flgs, OF_IMPACT))	   p_ptr->innate_brands |= INNA_BRAND_IMPACT;
+			if(have_flag(flgs, OF_SLAY_GOOD))  p_ptr->innate_brands |= INNA_BRAND_GOOD;
+			if(have_flag(flgs, OF_SLAY_HUMAN)) p_ptr->innate_brands |= INNA_BRAND_HUMAN;
+			if(have_flag(flgs, OF_BRAND_VAMP)) p_ptr->innate_brands |= INNA_BRAND_VAMP;
+
         }
 
         if (have_flag(flgs, OF_XTRA_SHOTS))

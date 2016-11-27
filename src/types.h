@@ -1109,6 +1109,16 @@ typedef struct {
 #define INNATE_NO_DAM      0x0008
 #define INNATE_NO_CRIT     0x0010
 
+#define INNA_BRAND_ACID    0x0001
+#define INNA_BRAND_POIS	   0x0002
+#define INNA_BRAND_FIRE	   0x0004
+#define INNA_BRAND_COLD    0x0008
+#define INNA_BRAND_ELEC    0x0010
+#define INNA_BRAND_GOOD    0x0020
+#define INNA_BRAND_IMPACT  0x0040
+#define INNA_BRAND_VAMP    0x0080
+#define INNA_BRAND_HUMAN   0x0100
+
 typedef struct {
     int dd;
     int ds;
@@ -1214,7 +1224,6 @@ struct player_type
     s16b oppose_cold;    /* Timed -- oppose cold */
     s16b oppose_pois;    /* Timed -- oppose poison */
 
-
     s16b tim_esp;       /* Timed ESP */
     s16b tim_esp_magical;
     s16b wraith_form;   /* Timed wraithform */
@@ -1285,6 +1294,8 @@ struct player_type
     bool            innate_attack_lock;
     innate_attack_t innate_attacks[MAX_INNATE_ATTACKS];
     int             innate_attack_ct;
+
+	s16b innate_brands;
 
     bool sense_artifact;
     s16b duelist_target_idx;

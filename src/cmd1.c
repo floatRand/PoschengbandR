@@ -729,7 +729,6 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
 			mult = MAX(mult, 20);
 			if (mult < monk_elem_slay) mult = monk_elem_slay;
 	}
-
     return tdam * mult / 10 + bonus;
 }
 
@@ -2385,6 +2384,13 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
     monster_desc(m_name_subject, m_ptr, MD_PRON_VISIBLE);
     monster_desc(m_name_object, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
 
+	bool acid_brand = (p_ptr->innate_brands & INNA_BRAND_ACID || p_ptr->special_attack & ATTACK_ACID || mode == MYSTIC_ACID);
+	bool elec_brand = (p_ptr->innate_brands & INNA_BRAND_ELEC || p_ptr->special_attack & ATTACK_ELEC || mode == MYSTIC_ELEC);
+	bool cold_brand = (p_ptr->innate_brands & INNA_BRAND_COLD || p_ptr->special_attack & ATTACK_COLD || mode == MYSTIC_COLD);
+	bool fire_brand = (p_ptr->innate_brands & INNA_BRAND_FIRE || p_ptr->special_attack & ATTACK_FIRE || mode == MYSTIC_FIRE);
+	bool pois_brand = (p_ptr->innate_brands & INNA_BRAND_POIS || p_ptr->special_attack & ATTACK_POIS || mode == MYSTIC_POIS);
+	bool mana_brand = ((p_ptr->tim_force));
+
     if (p_ptr->afraid)
     {
         if (!fear_allow_melee(m_idx))
@@ -2457,110 +2463,111 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
         {
             to_h = a->to_h + p_ptr->to_h_m;
             chance = p_ptr->skills.thn + (to_h * BTH_PLUS_ADJ);
-            if (fuiuchi || test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml))
-            {
-                int dd = a->dd + p_ptr->innate_attack_info.to_dd;
+			if (fuiuchi || test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml))
+			{
+				int dd = a->dd + p_ptr->innate_attack_info.to_dd;
 
-                if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly attack %s!", m_name_object);
-                else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name_object);
-                else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You attack %s in the back!",  m_name_object);
+				if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly attack %s!", m_name_object);
+				else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name_object);
+				else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You attack %s in the back!", m_name_object);
 
-                hit_ct++;
-                sound(SOUND_HIT);
-                msg_format(a->msg, m_name_object);
+				hit_ct++;
+				sound(SOUND_HIT);
+				msg_format(a->msg, m_name_object);
 
-                base_dam = damroll(dd, a->ds);
-                if ((a->flags & INNATE_VORPAL) && one_in_(6))
-                {
-                    int m = 2;
-                    while (one_in_(4))
-                        m++;
+				base_dam = damroll(dd, a->ds);
+				if ((a->flags & INNATE_VORPAL) && one_in_(6))
+				{
+					int m = 2;
+					while (one_in_(4))
+						m++;
 
-                    base_dam *= m;
-                    switch (m)
-                    {
-                    case 2: msg_format("You <color:U>gouge</color> %s!", m_name_object); break;
-                    case 3: msg_format("You <color:y>maim</color> %s!", m_name_object); break;
-                    case 4: msg_format("You <color:R>carve</color> %s!", m_name_object); break;
-                    case 5: msg_format("You <color:r>cleave</color> %s!", m_name_object); break;
-                    case 6: msg_format("You <color:v>smite</color> %s!", m_name_object); break;
-                    case 7: msg_format("You <color:v>eviscerate</color> %s!", m_name_object); break;
-                    default: msg_format("You <color:v>shred</color> %s!", m_name_object); break;
-                    }
-                }
+					base_dam *= m;
+					switch (m)
+					{
+					case 2: msg_format("You <color:U>gouge</color> %s!", m_name_object); break;
+					case 3: msg_format("You <color:y>maim</color> %s!", m_name_object); break;
+					case 4: msg_format("You <color:R>carve</color> %s!", m_name_object); break;
+					case 5: msg_format("You <color:r>cleave</color> %s!", m_name_object); break;
+					case 6: msg_format("You <color:v>smite</color> %s!", m_name_object); break;
+					case 7: msg_format("You <color:v>eviscerate</color> %s!", m_name_object); break;
+					default: msg_format("You <color:v>shred</color> %s!", m_name_object); break;
+					}
+				}
 
-                /* Slop for Draconian Metamorphosis ... */
-                if (backstab)
-                {
-                    if (p_ptr->pclass == CLASS_SCOUT)
-                        base_dam *= 3;
-                    else
-                        base_dam *= (3 + (p_ptr->lev / 20));
-                }
-                else if (fuiuchi)
-                {
-                    base_dam = base_dam*(5+(p_ptr->lev*2/25))/2;
-                }
-                else if (stab_fleeing)
-                {
-                    base_dam = (3 * base_dam) / 2;
-                }
+				/* Slop for Draconian Metamorphosis ... */
+				if (backstab)
+				{
+					if (p_ptr->pclass == CLASS_SCOUT)
+						base_dam *= 3;
+					else
+						base_dam *= (3 + (p_ptr->lev / 20));
+				}
+				else if (fuiuchi)
+				{
+					base_dam = base_dam*(5 + (p_ptr->lev * 2 / 25)) / 2;
+				}
+				else if (stab_fleeing)
+				{
+					base_dam = (3 * base_dam) / 2;
+				}
 
-                base_dam += a->to_d;
-                if (!(a->flags & (INNATE_NO_DAM | INNATE_NO_CRIT)))
-                {
-                    critical_t crit = critical_norm(a->weight, to_h, 0, mode, HAND_NONE);
-                    if (crit.desc)
-                    {
-                        base_dam = base_dam * crit.mul/100 + crit.to_d;
-                        msg_print(crit.desc);
-                    }
-                }
+				base_dam += a->to_d;
+				if (!(a->flags & (INNATE_NO_DAM | INNATE_NO_CRIT)))
+				{
+					critical_t crit = critical_norm(a->weight, to_h, 0, mode, HAND_NONE);
+					if (crit.desc)
+					{
+						base_dam = base_dam * crit.mul / 100 + crit.to_d;
+						msg_print(crit.desc);
+					}
+				}
 
-                dam = base_dam + p_ptr->to_d_m;
+				dam = base_dam + p_ptr->to_d_m;
 
-                /* More slop for Draconian Metamorphosis ... */
-                if ( p_ptr->pclass == CLASS_NINJA
-                  && (p_ptr->cur_lite <= 0 || one_in_(7)) )
-                {
-                    int maxhp = maxroll(r_ptr->hdice, r_ptr->hside);
-                    if (one_in_(backstab ? 13 : (stab_fleeing || fuiuchi) ? 15 : 27))
-                    {
-                        dam *= 5;
-                        msg_format("You critically injured %s!", m_name_object);
-                    }
-                    else if ( (m_ptr->hp < maxhp/2 && one_in_(50))
-                           || ( (one_in_(666) || ((backstab || fuiuchi) && one_in_(11)))
-                             && !(r_ptr->flags1 & RF1_UNIQUE)
-                             && !(r_ptr->flags7 & RF7_UNIQUE2)) )
-                    {
-                        if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_UNIQUE2) || (m_ptr->hp >= maxhp/2))
-                        {
-                            dam = MAX(dam*5, m_ptr->hp/2);
-                            msg_format("You fatally injured %s!", m_name_object);
-                        }
-                        else
-                        {
-                            dam = m_ptr->hp + 1;
-                            msg_format("You hit %s on a fatal spot!", m_name_object);
-                        }
-                    }
-                }
+				/* More slop for Draconian Metamorphosis ... */
+				if (p_ptr->pclass == CLASS_NINJA
+					&& (p_ptr->cur_lite <= 0 || one_in_(7)))
+				{
+					int maxhp = maxroll(r_ptr->hdice, r_ptr->hside);
+					if (one_in_(backstab ? 13 : (stab_fleeing || fuiuchi) ? 15 : 27))
+					{
+						dam *= 5;
+						msg_format("You critically injured %s!", m_name_object);
+					}
+					else if ((m_ptr->hp < maxhp / 2 && one_in_(50))
+						|| ((one_in_(666) || ((backstab || fuiuchi) && one_in_(11)))
+						&& !(r_ptr->flags1 & RF1_UNIQUE)
+						&& !(r_ptr->flags7 & RF7_UNIQUE2)))
+					{
+						if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_UNIQUE2) || (m_ptr->hp >= maxhp / 2))
+						{
+							dam = MAX(dam * 5, m_ptr->hp / 2);
+							msg_format("You fatally injured %s!", m_name_object);
+						}
+						else
+						{
+							dam = m_ptr->hp + 1;
+							msg_format("You hit %s on a fatal spot!", m_name_object);
+						}
+					}
+				}
 
-                if (a->flags & INNATE_NO_DAM)
-                {
-                    base_dam = 0;
-                    effect_pow = p_ptr->lev * 2;
-                    dam = 0;
-                }
-                else
-                    effect_pow = base_dam;
+				if (a->flags & INNATE_NO_DAM)
+				{
+					base_dam = 0;
+					effect_pow = p_ptr->lev * 2;
+					dam = 0;
+				}
+				else
+					effect_pow = base_dam;
 
-                if (dam < 0)
-                    dam = 0;
-                dam = mon_damage_mod(m_ptr, dam, FALSE);
-                if (dam > 0)
-                    anger_monster(m_ptr);
+				if (dam < 0)
+					dam = 0;
+				dam = mon_damage_mod(m_ptr, dam, FALSE);
+				if (dam > 0)
+					anger_monster(m_ptr);
+
 
                 for (k = 0; k < MAX_INNATE_EFFECTS && !*mdeath; k++)
                 {
@@ -2568,11 +2575,26 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                     int p = a->effect_chance[k];
 
                     if (p == 0) p = 100;
-                    if (!e && k == 0)
-                    {
-                        if (a->flags & INNATE_NO_DAM)
-                            continue;
-                        e = GF_MISSILE;
+					if (!e && k == 0)
+					{
+						if (a->flags & INNATE_NO_DAM)
+							continue;
+
+						// If there is no effect, it gets replaced with the brand, unless monster is immune.
+						// No idea how to handle vampiric effect yet. Sorry.
+						int b_mult = 14;
+						if ((p_ptr->innate_brands & INNA_BRAND_HUMAN) && r_ptr->flags2 & RF2_HUMAN){ e = GF_MISSILE; b_mult = 17; }
+						else if (p_ptr->innate_brands & INNA_BRAND_GOOD && r_ptr->flags2 & RF3_GOOD){ e = GF_MISSILE; b_mult = 14; }
+						else if (mana_brand && p_ptr->csp >= p_ptr->msp / 30){ e = GF_MANA; p_ptr->csp -= p_ptr->msp / 30; }
+						else if (acid_brand && !(r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)) e = GF_ACID;
+						else if (elec_brand && !(r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)) e = GF_ELEC;
+						else if (cold_brand && !(r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)) e = GF_COLD;
+						else if (fire_brand && !(r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)) e = GF_FIRE;
+						else if (pois_brand && !(r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)) e = GF_POIS;
+						else{ e = GF_MISSILE; b_mult = 10; }
+
+						dam *= b_mult; 
+						dam /= 10;
                     }
 
                     /* Hack: When I decreased monster base resistance (89% -> 50%)
@@ -2748,9 +2770,11 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
                             project(0, 0, m_ptr->fy, m_ptr->fx, base_dam, GF_STUN, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1);
                         }
                         break;
-                    default:
-                        project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1);
-                        *mdeath = (m_ptr->r_idx == 0);
+					default:{
+						if(dam<=0) project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1);
+						else project(0, 0, m_ptr->fy, m_ptr->fx, dam, e, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1);
+						*mdeath = (m_ptr->r_idx == 0);
+						}
                     }
                 }
                 /* TODO: Should rings of power brand innate attacks? */
