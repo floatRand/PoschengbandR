@@ -2562,7 +2562,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                         o_ptr->to_h = 4 + (randint1(11));
                         o_ptr->to_d = 4 + (randint1(11));
                     }
-                    else if (o_ptr->tval == TV_GLOVES && one_in_(2))
+                    else if (o_ptr->tval == TV_GLOVES && one_in_(3))
                     {
                         add_flag(o_ptr->flags, OF_DEX);
                         has_pval = TRUE;
