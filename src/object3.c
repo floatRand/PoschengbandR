@@ -304,6 +304,7 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
             break;
 		case ART_AMULET_NIGHTMARE:
 			p = p / 2;
+			break;
         }
         if (xtra)
         {
