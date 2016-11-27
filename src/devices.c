@@ -360,7 +360,7 @@ static cptr _do_potion(int sval, int mode)
             {
                 msg_print("You fall asleep.");
 
-                if (ironman_nightmare)
+                if (p_ptr->nightmare_mode)
                 {
                     msg_print("A horrible vision enters your mind.");
                     get_mon_num_prep(get_nightmare, NULL);

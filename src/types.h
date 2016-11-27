@@ -1445,6 +1445,7 @@ struct player_type
     byte feeling;        /* Most recent dungeon feeling */
     s32b feeling_turn;    /* The turn of the last dungeon feeling */
 
+	bool nightmare_mode;
 
     /*** Temporary fields ***/
 

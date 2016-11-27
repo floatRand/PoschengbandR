@@ -2165,7 +2165,7 @@ static bool inn_comm(int cmd)
 
                 p_ptr->chp = p_ptr->mhp;
 
-                if (ironman_nightmare)
+                if (p_ptr->nightmare_mode)
                 {
                     msg_print("Horrible visions flit through your mind as you sleep.");
                     get_mon_num_prep(get_nightmare, NULL);

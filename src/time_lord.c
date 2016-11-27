@@ -76,7 +76,7 @@ static void _change_monster_race(int m_idx, int new_r_idx)
     {
         m_ptr->max_maxhp = damroll(r_ptr->hdice, r_ptr->hside);
     }
-    if (ironman_nightmare)
+    if (p_ptr->nightmare_mode)
     {
         u32b hp = m_ptr->max_maxhp * 2L;
 

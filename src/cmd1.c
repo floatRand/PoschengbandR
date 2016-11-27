@@ -2126,7 +2126,7 @@ static void hit_trap(bool break_trap)
                 msg_print("You fall asleep.");
 
 
-                if (ironman_nightmare)
+                if (p_ptr->nightmare_mode)
                 {
                     msg_print("A horrible vision enters your mind.");
 

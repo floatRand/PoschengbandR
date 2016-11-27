@@ -1219,6 +1219,7 @@ enum {
 #define ART_HELL                 218
 #define ART_CHARMED              219
 #define ART_GOGO                 220
+#define ART_AMULET_NIGHTMARE	 331
 
 /* Rings */
 #define ART_FRAKIR               8

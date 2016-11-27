@@ -598,6 +598,18 @@ void equip_wield(void)
         if (!get_check(dummy)) return;
     }
 
+	/* Bit too obvious...
+	if (o_ptr->name1 == ART_AMULET_NIGHTMARE)
+	{
+		char dummy[MAX_NLEN + 80];
+		object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+		msg_format("As you touch %s, you nearly black out from a torrent of horrific visions flooding into your mind.", o_name);
+		sprintf(dummy, "Really, really put it on?");
+		if (!get_check(dummy)) return;
+	}
+	*/
+
+
     /* Quest Completed? */
     for (i = 0; i < max_quests; i++)
     {
@@ -700,6 +712,31 @@ void equip_wield_aux(object_type *src, int slot)
 			else if (mut_present(MUT_GOOD_LUCK)) msg_print("The world is a cruel place. ");
 			msg_print("You feel unlucky.");
 		}
+	}
+	if (dest->name1 == ART_AMULET_NIGHTMARE)
+	{
+		/* Apply nightmare effects on everyone! */
+		int i;
+		for (i = 1; i < m_max; i++)
+		{
+			monster_type *m_ptr = &m_list[i];
+
+			/* Paranoia -- Skip dead monsters */
+			if (!m_ptr->r_idx) continue;
+
+			/* Skip the mount */
+			if (i == p_ptr->riding) continue;
+
+			int newHp = m_ptr->max_maxhp * 2L;
+			m_ptr->max_maxhp = MIN(30000, newHp);
+				newHp = m_ptr->maxhp * 2L;
+			m_ptr->maxhp = MIN(30000, newHp);
+				newHp = m_ptr->hp * 2L;
+			m_ptr->hp = MIN(30000, newHp);
+			m_ptr->energy_need -= randint0(100);
+			(void)set_monster_csleep(i, 0); // NO SLEEPING
+		}
+		aggravate_monsters(0);
 	}
 
     p_ptr->update |= PU_BONUS;
@@ -1145,6 +1182,8 @@ void equip_calc_bonuses(void)
             p_ptr->auto_id = TRUE;
         else if (have_flag(flgs, OF_LORE1))
             p_ptr->auto_pseudo_id = TRUE;
+
+		if (o_ptr->name1 == ART_AMULET_NIGHTMARE) p_ptr->nightmare_mode = TRUE;
 
         if (o_ptr->name2 == EGO_GLOVES_GIANT)
         {

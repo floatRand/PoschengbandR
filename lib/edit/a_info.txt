@@ -3359,12 +3359,23 @@ D:Dull coin emanating warmth.
 N:330:Unlucky Coin
 I:39:24:2
 W:30:50:1:100000
-P:0:1d1:0:0:0
+P:0:1d1:3:3:3
 F:FULL_NAME | INSTA_ART 
 F:CURSED | HEAVY_CURSE | PERMA_CURSE
-F:FREE_ACT | DARKNESS
+F:FREE_ACT | DARKNESS | SPEED | RES_DARK
 F:WEAPONMASTERY 
 D:Worn coin, cold to touch. It seems to have passed through many unfortunate hands. 
+
+N:331:Pendant of Nightmares
+I:40:0:5
+W:30:70:2:555555
+P:0:0d0:5:5:5
+F:FULL_NAME | INSTA_ART 
+F:STR | INT | WIS | DEX | CON | CHR | SPEED
+F:TELEPATHY | SPELL_CAP | WEAPONMASTERY | REFLECT 
+F:RES_NETHER | RES_NEXUS | RES_DISEN | RES_TIME
+F:CURSED | HEAVY_CURSE | PERMA_CURSE
+D:'No no no no no no no no no no' - etched on the pendant.
 
 # N: serial number : item name
 # I: tval : sval : pval

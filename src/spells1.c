@@ -7048,7 +7048,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
             if (fuzzy) msg_print("You fall asleep!");
 
 
-            if (ironman_nightmare)
+            if (p_ptr->nightmare_mode)
             {
                 msg_print("A horrible vision enters your mind.");
 

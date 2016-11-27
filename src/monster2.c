@@ -1572,7 +1572,7 @@ s16b get_mon_num(int level)
     if ((level > 0) && !p_ptr->inside_battle && !(d_info[dungeon_type].flags1 & DF1_BEGINNER))
     {
         /* Nightmare mode allows more out-of depth monsters */
-        if (ironman_nightmare && !randint0(pls_kakuritu))
+        if (p_ptr->nightmare_mode && !randint0(pls_kakuritu))
         {
             /* What a bizarre calculation */
             level = 1 + (level * MAX_DEPTH / randint1(MAX_DEPTH));
@@ -3124,7 +3124,7 @@ void choose_new_monster(int m_idx, bool born, int r_idx)
     }
 
     /* Monsters have double hitpoints in Nightmare mode */
-    if (ironman_nightmare)
+    if (p_ptr->nightmare_mode)
     {
         u32b hp = m_ptr->max_maxhp * 2L;
         m_ptr->max_maxhp = (s16b)MIN(30000, hp);
@@ -3283,7 +3283,7 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
 
         /* Depth monsters may NOT be created out of depth, unless in Nightmare mode */
         if ((r_ptr->flags1 & (RF1_FORCE_DEPTH)) && (dun_level < r_ptr->level) &&
-            (!ironman_nightmare || (r_ptr->flags1 & (RF1_QUESTOR))))
+            (!p_ptr->nightmare_mode || (r_ptr->flags1 & (RF1_QUESTOR))))
         {
             /* Cannot create */
             return 0;
@@ -3505,7 +3505,7 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
     m_ptr->mtimed[MTIMED_CSLEEP] = 0;
 
     /* Enforce sleeping if needed */
-    if ((mode & PM_ALLOW_SLEEP) && r_ptr->sleep && !ironman_nightmare)
+    if ((mode & PM_ALLOW_SLEEP) && r_ptr->sleep && !p_ptr->nightmare_mode)
     {
         int val = r_ptr->sleep;
         (void)set_monster_csleep(c_ptr->m_idx, (val * 2) + randint1(val * 10));
@@ -3522,7 +3522,7 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
     }
 
     /* Monsters have double hitpoints in Nightmare mode */
-    if (ironman_nightmare)
+    if (p_ptr->nightmare_mode)
     {
         u32b hp = m_ptr->max_maxhp * 2L;
 
@@ -3545,7 +3545,7 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
     if (mode & PM_HASTE) (void)set_monster_fast(c_ptr->m_idx, 100);
 
     /* Give a random starting energy */
-    if (!ironman_nightmare)
+    if (!p_ptr->nightmare_mode)
     {
 		if (mode & PM_SUMMON_FATIGUE) m_ptr->energy_need = ENERGY_NEED() + (s16b)randint0(100)*2 - MIN(dun_level / 2,100);
 		else m_ptr->energy_need = ENERGY_NEED() - (s16b)randint0(100);
@@ -3557,7 +3557,7 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
     }
 
     /* Force monster to wait for player, unless in Nightmare mode */
-    if ((r_ptr->flags1 & RF1_FORCE_SLEEP) && !ironman_nightmare)
+    if ((r_ptr->flags1 & RF1_FORCE_SLEEP) && !p_ptr->nightmare_mode)
     {
         /* Monster is still being nice */
         m_ptr->mflag |= (MFLAG_NICE);

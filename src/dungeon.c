@@ -2629,7 +2629,7 @@ void process_world_aux_movement(void)
 				if (coffeebreak_mode && dun_level <= 98) dun_level++; // :^)
 
                 /* Nightmare mode makes recall more dangerous */
-                if (ironman_nightmare && !randint0(666) && (dungeon_type == DUNGEON_ANGBAND))
+                if (p_ptr->nightmare_mode && !randint0(666) && (dungeon_type == DUNGEON_ANGBAND))
                 {
                     if (dun_level < 50)
                     {
@@ -3309,7 +3309,7 @@ static void process_world(void)
      *
      * Require exact minute -- Don't activate multiple times in a minute
      */
-    if (ironman_nightmare && (min != prev_min))
+    if (p_ptr->nightmare_mode && (min != prev_min))
     {
         /* Every 15 minutes after 11:00 pm */
         if ((hour == 23) && !(min % 15))

@@ -586,7 +586,7 @@ static void place_pet(void)
             m_ptr->hold_o_idx = 0;
             m_ptr->target_y = 0;
 
-            if ((r_ptr->flags1 & RF1_FORCE_SLEEP) && !ironman_nightmare)
+            if ((r_ptr->flags1 & RF1_FORCE_SLEEP) && !p_ptr->nightmare_mode)
             {
                 /* Monster is still being nice */
                 m_ptr->mflag |= (MFLAG_NICE);

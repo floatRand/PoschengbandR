@@ -3540,7 +3540,7 @@ void calc_bonuses(void)
             p_ptr->innate_attack_info.flags[i] = 0;
     }
 	p_ptr->innate_brands = 0;
-
+	
     /* Start with "normal" speed */
     p_ptr->pspeed = 110;
 
@@ -3586,6 +3586,9 @@ void calc_bonuses(void)
     p_ptr->sustain_con = FALSE;
     p_ptr->sustain_dex = FALSE;
     p_ptr->sustain_chr = FALSE;
+
+	if(ironman_nightmare) p_ptr->nightmare_mode = TRUE;
+		else p_ptr->nightmare_mode = FALSE;
 
     res_clear();
 

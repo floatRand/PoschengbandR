@@ -3844,7 +3844,7 @@ void process_monsters(void)
             speed = m_ptr->mspeed;
 
             /* Monsters move quickly in Nightmare mode */
-            if (ironman_nightmare) speed += 5;
+            if (p_ptr->nightmare_mode) speed += 5;
 
             if (MON_FAST(m_ptr)) speed += 10;
             if (MON_SLOW(m_ptr)) speed -= 10;
@@ -4345,7 +4345,7 @@ static void process_monsters_mtimed_aux(int m_idx, int mtimed_idx)
             u32b noise = csleep_noise;
 
             /* Nightmare monsters are more alert */
-            if (ironman_nightmare) notice /= 2;
+            if (p_ptr->nightmare_mode) notice /= 2;
 
             /* Hack -- See if monster "notices" player */
             if ((notice * notice * notice) <= noise)
@@ -4691,7 +4691,7 @@ void monster_gain_exp(int m_idx, int s_idx)
         {
             m_ptr->max_maxhp = damroll(r_ptr->hdice, r_ptr->hside);
         }
-        if (ironman_nightmare)
+        if (p_ptr->nightmare_mode)
         {
             u32b hp = m_ptr->max_maxhp * 2L;
 

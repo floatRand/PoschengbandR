@@ -5407,7 +5407,7 @@ bool do_dec_stat(int stat)
     }
 
     /* Sustain */
-    if (sust && (!ironman_nightmare || randint0(13)))
+    if (sust && (!p_ptr->nightmare_mode || randint0(13)))
     {
         if (disturb_minor)
             msg_format("You feel %s for a moment, but the feeling passes.", desc_stat_neg[stat]);
@@ -5417,7 +5417,7 @@ bool do_dec_stat(int stat)
     }
 
     /* Attempt to reduce the stat */
-    if (dec_stat(stat, 10, (ironman_nightmare && !randint0(13))))
+    if (dec_stat(stat, 10, (p_ptr->nightmare_mode && !randint0(13))))
     {
         /* Message */
         msg_format("You feel very %s.", desc_stat_neg[stat]);
