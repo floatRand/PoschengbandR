@@ -587,13 +587,6 @@ void do_cmd_eat_food(void)
 
     /* Eat the object */
     do_cmd_eat_food_aux(item);
-
-    if (p_ptr->fasting)
-    {
-        msg_print("You break your fast.");
-        p_ptr->redraw |= PR_STATUS;
-        p_ptr->fasting = FALSE;
-    }
 }
 
 
@@ -849,13 +842,6 @@ void do_cmd_quaff_potion(void)
 
     /* Quaff the potion */
     do_cmd_quaff_potion_aux(item);
-
-    if (p_ptr->fasting)
-    {
-        msg_print("You break your fast.");
-        p_ptr->redraw |= PR_STATUS;
-        p_ptr->fasting = FALSE;
-    }
 }
 
 

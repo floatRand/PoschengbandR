@@ -4975,6 +4975,13 @@ bool set_food(int v)
         notice = TRUE;
     }
 
+    if ((v > p_ptr->food) && p_ptr->fasting)
+    {
+        msg_print("You break your fast.");
+        p_ptr->redraw |= PR_STATUS;
+        p_ptr->fasting = FALSE;
+    }
+
     /* Food decrease */
     else if (new_aux < old_aux)
     {

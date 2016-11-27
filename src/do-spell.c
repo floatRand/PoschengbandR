@@ -1098,12 +1098,6 @@ static cptr do_life_spell(int spell, int mode)
             if (cast)
             {
                 set_food(PY_FOOD_MAX - 1);
-                if (p_ptr->fasting)
-                {
-                    msg_print("You break your fast.");
-                    p_ptr->redraw |= PR_STATUS;
-                    p_ptr->fasting = FALSE;
-                }
             }
         }
         break;
