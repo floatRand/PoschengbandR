@@ -206,7 +206,7 @@ void monk_display_attack_info(doc_ptr doc, int hand)
             blows*(tot_dam*20/10 + to_d + 50)/1000,
             ((blows*(tot_dam*20/10 + to_d + 50))/100)%10);
     }
-    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ACID))
+    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ACID) || p_ptr->special_attack & ATTACK_ACID)
     {
         doc_printf(cols[1], " <color:r>      Acid</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
@@ -219,7 +219,7 @@ void monk_display_attack_info(doc_ptr doc, int hand)
             blows*(tot_dam*17/10 + to_d + 30)/1000,
             ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
     }
-    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_FIRE))
+	else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_FIRE) || p_ptr->special_attack & ATTACK_FIRE)
     {
         doc_printf(cols[1], " <color:r>      Fire</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
@@ -232,7 +232,7 @@ void monk_display_attack_info(doc_ptr doc, int hand)
             blows*(tot_dam*17/10 + to_d + 30)/1000,
             ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
     }
-    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_COLD))
+	else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_COLD) || p_ptr->special_attack & ATTACK_COLD)
     {
         doc_printf(cols[1], " <color:r>      Cold</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
@@ -245,7 +245,7 @@ void monk_display_attack_info(doc_ptr doc, int hand)
             blows*(tot_dam*25/10 + to_d + 70)/1000,
             ((blows*(tot_dam*25/10 + to_d + 70))/100)%10);
     }
-    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ELEC))
+	else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ELEC) || p_ptr->special_attack & ATTACK_ELEC)
     {
         doc_printf(cols[1], " <color:r>      Elec</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
@@ -258,12 +258,19 @@ void monk_display_attack_info(doc_ptr doc, int hand)
             blows*(tot_dam*17/10 + to_d + 30)/1000,
             ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
     }
-    else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_POIS))
+	else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_POIS) || p_ptr->special_attack & ATTACK_POIS)
     {
         doc_printf(cols[1], " <color:r>      Pois</color>: %d.%1d\n",
             blows*(tot_dam*17/10 + to_d)/1000,
             ((blows*(tot_dam*17/10 + to_d))/100)%10);
     }
+
+	if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_MANA) || p_ptr->tim_force)
+	{
+		doc_printf(cols[1], " <color:B>      Mana</color>: %d.%1d\n",
+			blows*(tot_dam * 20 / 10 + to_d) / 1000,
+			((blows*(tot_dam * 20 / 10 + to_d)) / 100) % 10);
+	}
 
     doc_insert_cols(doc, cols, 2, 0);
     doc_free(cols[0]);

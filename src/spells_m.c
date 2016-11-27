@@ -66,7 +66,7 @@ void mana_branding_spell(int cmd, variant *res)
         var_set_string(res, "Mana Branding");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Makes current weapon some elemental branded. You must wield weapons.");
+        var_set_string(res, "Makes current weapon some elemental branded. ");
         break;
     case SPELL_CAST:
         var_set_bool(res, choose_ele_attack());

@@ -1745,7 +1745,8 @@ bool set_tim_force(int v, bool do_dec)
         }
         else
         {
-            msg_print("Your weapon seems very powerful.");
+			if (!p_ptr->weapon_info[0].bare_hands) msg_print("Your weapon seems very powerful.");
+			else msg_print("Your fists glow with power!");
             notice = TRUE;
         }
     }
@@ -1754,7 +1755,8 @@ bool set_tim_force(int v, bool do_dec)
     {
         if (p_ptr->tim_force)
         {
-            msg_print("Your weapon seems normal once again.");
+			if (!p_ptr->weapon_info[0].bare_hands) msg_print("Your weapon seems very powerful.");
+			else msg_print("Your fists stop glowing.");
             notice = TRUE;
         }
     }

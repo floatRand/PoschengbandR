@@ -606,7 +606,26 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
     monster_race *r_ptr = &r_info[m_ptr->r_idx];
     const int monk_elem_slay = 17;
 
-    if (have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_ACID) || mode == MYSTIC_ACID || mode == DRACONIAN_STRIKE_ACID)
+	bool acid_brand =
+		(have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_ACID) || mode == MYSTIC_ACID || 
+		 mode == DRACONIAN_STRIKE_ACID || (p_ptr->special_attack & (ATTACK_ACID)));
+	bool elec_brand =
+		(have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_ELEC) || mode == MYSTIC_ELEC || 
+		 mode == DRACONIAN_STRIKE_ELEC || (p_ptr->special_attack & (ATTACK_ELEC)));
+	bool fire_brand =
+		(have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_FIRE) || mode == MYSTIC_FIRE || 
+		 mode == DRACONIAN_STRIKE_FIRE || (p_ptr->special_attack & (ATTACK_FIRE)));
+	bool cold_brand =
+		(have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_COLD) || mode == MYSTIC_COLD || 
+		 mode == DRACONIAN_STRIKE_COLD || (p_ptr->special_attack & (ATTACK_COLD)));
+	bool pois_brand = 
+		(have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_POIS) || mode == MYSTIC_POIS || 
+		 mode == DRACONIAN_STRIKE_POIS || (p_ptr->special_attack & (ATTACK_POIS)));
+	
+	bool mana_brand = (have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_MANA) || (p_ptr->tim_force));
+
+		
+    if (acid_brand)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)
         {
@@ -623,7 +642,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
-    if (have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_ELEC) || mode == MYSTIC_ELEC || mode == DRACONIAN_STRIKE_ELEC)
+    if (elec_brand)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)
         {
@@ -640,7 +659,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
-    if (have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_FIRE) || mode == MYSTIC_FIRE || mode == DRACONIAN_STRIKE_FIRE)
+    if (fire_brand)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)
         {
@@ -663,7 +682,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
-    if (have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_COLD) || mode == MYSTIC_COLD || mode == DRACONIAN_STRIKE_COLD)
+    if (cold_brand)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)
         {
@@ -686,7 +705,7 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
-    if (have_flag(p_ptr->weapon_info[0].flags, OF_BRAND_POIS) || mode == MYSTIC_POIS || mode == DRACONIAN_STRIKE_POIS)
+    if (pois_brand)
     {
         if (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)
         {
@@ -702,6 +721,14 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
             if (mult < monk_elem_slay) mult = monk_elem_slay;
         }
     }
+
+	if (mana_brand && (p_ptr->csp >(p_ptr->msp / 30)))
+	{
+			p_ptr->csp -= (1 + (p_ptr->msp / 30));
+			p_ptr->redraw |= (PR_MANA);
+			mult = MAX(mult, 20);
+			if (mult < monk_elem_slay) mult = monk_elem_slay;
+	}
 
     return tdam * mult / 10 + bonus;
 }
@@ -735,7 +762,6 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
 
     u32b flgs[OF_ARRAY_SIZE] = {0};
     char o_name[MAX_NLEN];
-
     /* Extract the flags */
     if (thrown)
         obj_flags(o_ptr, flgs);
@@ -3533,7 +3559,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     msg_format("%s is not effected.", m_name_subject);
                 }
             }
-
+			
             /* Modify the damage */
             k = mon_damage_mod(
                 m_ptr,
