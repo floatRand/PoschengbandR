@@ -2586,11 +2586,11 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 						if ((p_ptr->innate_brands & INNA_BRAND_HUMAN) && r_ptr->flags2 & RF2_HUMAN){ e = GF_MISSILE; b_mult = 15; }
 						else if (mana_brand && p_ptr->csp >= p_ptr->msp / 30){ e = GF_MANA; p_ptr->csp -= p_ptr->msp / 30; b_mult = 13; }
 						else if (p_ptr->innate_brands & INNA_BRAND_GOOD && r_ptr->flags2 & RF3_GOOD){ e = GF_MISSILE; b_mult = 12; }
-						else if (acid_brand && !(r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)) e = GF_ACID;
-						else if (elec_brand && !(r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)) e = GF_ELEC;
-						else if (cold_brand && !(r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)) e = GF_COLD;
-						else if (fire_brand && !(r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)) e = GF_FIRE;
-						else if (pois_brand && !(r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)) e = GF_POIS;
+						else if (acid_brand && !(r_ptr->flagsr & RFR_EFF_IM_ACID_MASK && r_ptr->r_flagsr & RFR_RES_ACID)) e = GF_ACID;
+						else if (elec_brand && !(r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK && r_ptr->r_flagsr & RFR_RES_ELEC)) e = GF_ELEC;
+						else if (cold_brand && !(r_ptr->flagsr & RFR_EFF_IM_COLD_MASK && r_ptr->r_flagsr & RFR_RES_COLD)) e = GF_COLD;
+						else if (fire_brand && !(r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK && r_ptr->r_flagsr & RFR_RES_FIRE)) e = GF_FIRE;
+						else if (pois_brand && !(r_ptr->flagsr & RFR_EFF_IM_POIS_MASK && r_ptr->r_flagsr & RFR_RES_POIS)) e = GF_POIS;
 						else{ e = GF_MISSILE; b_mult = 10; }
 
 						dam *= b_mult; 
