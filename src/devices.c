@@ -2122,7 +2122,7 @@ static _effect_info_t _effect_info[] =
     {"SACRED_KNIGHTS",  EFFECT_SACRED_KNIGHTS,       0,   0,  0, 0},
     {"GONG",            EFFECT_GONG,                 0,   0,  0, 0},
     {"MURAMASA",        EFFECT_MURAMASA,             0,   0,  0, 0},
-
+	{"SKYCLOAK",		EFFECT_SKYCLOAK,			 0,	  0,  0, 0},
     {0}
 };
 
@@ -6733,6 +6733,49 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             }
         }
         break;
+	case EFFECT_SKYCLOAK:
+	{
+		if (name) return "Flip cloak";
+		if (desc) return "Flips the cloak inside-out.";
+		if (value) return format("%d", 5000);
+		if (cast)
+		{
+			int slot = equip_find_artifact(ART_DAYCLOAK);
+			if (slot)
+			{ /* this is abuse */
+				object_type *o_ptr = equip_obj(slot);
+				
+				object_prep(o_ptr, o_ptr->k_idx);
+				create_named_art_aux(ART_NIGHTCLOAK,o_ptr);
+
+				obj_identify_fully(o_ptr);
+				if (p_ptr->prace == RACE_ANDROID) android_calc_exp();
+				p_ptr->update |= (PU_BONUS | PU_HP | PU_TORCH);
+				update_stuff();
+				device_noticed = TRUE;
+				break;
+			}
+			slot = equip_find_artifact(ART_NIGHTCLOAK);
+			if (slot)
+			{
+				object_type *o_ptr = equip_obj(slot);
+
+				object_prep(o_ptr, o_ptr->k_idx);
+				create_named_art_aux(ART_DAYCLOAK, o_ptr);
+
+				obj_identify_fully(o_ptr);
+				if (p_ptr->prace == RACE_ANDROID) android_calc_exp();
+				p_ptr->update |= (PU_BONUS | PU_HP | PU_TORCH);
+				update_stuff();
+				device_noticed = TRUE;
+				break;
+			}
+
+
+			device_noticed = TRUE;
+			break;
+		}
+	}
     default:
         if (name) return format("Invalid Effect: %d", effect->type);
     }

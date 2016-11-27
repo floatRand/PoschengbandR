@@ -82,7 +82,7 @@ void self_knowledge(void)
     {
         char stat_desc[80];
 		if (simple_stat_display){
-			int lf = (15 + p_ptr->stat_cur[v_nr] / 10) + 3;
+			int lf = MIN((15 + p_ptr->stat_cur[v_nr] / 10) + 3,40);
 
 			sprintf(stat_desc, "%s %d", stat_names[v_nr], lf);
 		}

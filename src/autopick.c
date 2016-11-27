@@ -2384,9 +2384,8 @@ void autopick_pickup_items(cave_type *c_ptr)
                 equip_learn_flag(OF_LORE1);
             }
 
-			if (p_ptr->pclass == CLASS_ALCHEMIST && o_ptr->tval == TV_POTION){
-				_sense_object_floor(o_ptr);
-				equip_learn_flag(OF_LORE1);
+			if (p_ptr->pclass == CLASS_ALCHEMIST && o_ptr->tval == TV_POTION){ 
+				identify_item(o_ptr);
 			}
         }
 

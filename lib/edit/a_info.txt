@@ -3380,11 +3380,33 @@ D:'No no no no no no no no no no' - etched on the pendant.
 N:332:Pickaxe of Despair
 I:20:4:4
 W:50:40:500:300000
-P:0:9d3:-16:16:0
+P:0:20d4:-16:64:0
 F:FULL_NAME
 F:TUNNEL | RES_DARK | STR
-F:KILL_EVIL | DEC_SPEED
+F:DEC_SPEED
 D:'Despair' is engraved on the shaft.
+
+N:333:Daywoven Shroud
+I:35:5:3
+W:30:50:0:40000
+P:1:0d0:0:0:12
+F:FULL_NAME
+F:CON | SEARCH | SPEED | HIDE_TYPE | LITE 
+F:FREE_ACT | HOLD_LIFE | RES_DARK | RES_COLD | RES_NETHER 
+E:SKYCLOAK:0:1
+E:You flip your cloak, revealing a dark night!
+D:A strange cloak patterned with sky.
+
+N:334:Nightwoven Shroud
+I:35:5:3
+W:30:50:0:40000
+P:1:0d0:0:0:12
+F:FULL_NAME
+F:DEX | STEALTH | SPEED | HIDE_TYPE | DARKNESS 
+F:FREE_ACT | HOLD_LIFE | RES_LITE | RES_FIRE | RES_SOUND
+E:SKYCLOAK:0:1
+E:You flip your cloak, revealing a bright day!
+D:A strange cloak patterned with night sky.
 
 # N: serial number : item name
 # I: tval : sval : pval

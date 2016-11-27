@@ -2483,6 +2483,11 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
         /* Hack -- Mark the artifact as "created" */
         a_ptr->generated = TRUE;
 
+		if (o_ptr->name3 == ART_NIGHTCLOAK || o_ptr->name3 == ART_DAYCLOAK)
+		{
+			a_info[ART_NIGHTCLOAK].generated = TRUE;  a_info[ART_DAYCLOAK].generated = TRUE;
+		}
+
         /* Hack -- Memorize location of artifact in saved floors */
         if (character_dungeon)
             a_ptr->floor_id = p_ptr->floor_id;
@@ -2497,6 +2502,11 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
 
         /* Hack -- Mark the artifact as "created" */
         a_ptr->generated = TRUE;
+
+		if (o_ptr->name1 == ART_NIGHTCLOAK || o_ptr->name1 == ART_DAYCLOAK)
+		{ 
+			a_info[ART_NIGHTCLOAK].generated = TRUE;  a_info[ART_DAYCLOAK].generated = TRUE; 
+		}
 
         /* Hack -- Memorize location of artifact in saved floors */
         if (character_dungeon)

@@ -1293,6 +1293,8 @@ enum {
 #define ART_TUOR                50
 #define ART_MOOK                205
 #define ART_HEAVENLY_MAIDEN     233
+#define ART_DAYCLOAK			333
+#define ART_NIGHTCLOAK			334
 
 /* Gloves */
 #define ART_CAMBELEG            52
@@ -6308,6 +6310,7 @@ enum effect_e
     EFFECT_SACRED_KNIGHTS,
     EFFECT_GONG,
     EFFECT_MURAMASA,
+	EFFECT_SKYCLOAK,
 
     EFFECT_MAX
 };

@@ -271,7 +271,7 @@ void monk_display_attack_info(doc_ptr doc, int hand)
 			blows*(tot_dam * 20 / 10 + to_d) / 1000,
 			((blows*(tot_dam * 20 / 10 + to_d)) / 100) % 10);
 	}
-
+	
     doc_insert_cols(doc, cols, 2, 0);
     doc_free(cols[0]);
     doc_free(cols[1]);

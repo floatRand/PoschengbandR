@@ -212,7 +212,7 @@ void cnv_stat(int val, char *out_val)
 		{
 			int bonus = (val - 18);
 			int lf = (15 + bonus / 10) + 3;
-			if (lf == 40) { sprintf(out_val, "  40%2d", "**"); }
+			if (lf >= 40) { sprintf(out_val, "   40*"); }
 			else sprintf(out_val, "    %2d", lf);
 		}
 		/* From 3 to 18 */
