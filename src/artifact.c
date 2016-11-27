@@ -2098,6 +2098,10 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
         }
     }
 
+	if (o_ptr->tval == TV_GLOVES){
+		powers += MAX(0,randint1(MIN(object_level/30, 2)));
+	} // gloves are really weak for artifact-creation
+
     /* Playtesting shows that FA, SI and HL are too rare ... let's boost these a bit */
     switch (o_ptr->tval)
     {

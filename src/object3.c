@@ -1062,9 +1062,14 @@ s32b weapon_cost(object_type *o_ptr, int options)
         if (d < 1.0)
             d = 1.0;
 
-        if (have_flag(flgs, OF_BLOWS))
-            d += (d + 40.0)*pval/10.0;
+		if (have_flag(flgs, OF_BLOWS))
+			d += (d + 40.0)*pval / 10.0;
+		else if (have_flag(flgs, OF_DEC_BLOWS))
+			d -= (d + 40.0)*pval / 10.0;
                    /* ^---Give extra attacks more respect ... Each pval is +0.50 blows. */
+		if (d < 1.0)
+			d = 1.0;
+
         x = d - b;
 
         /*         v----Extra damage over the base object type has a strong linear component, so

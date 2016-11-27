@@ -1241,7 +1241,7 @@ s32b obj_value(object_type *o_ptr)
           && (o_ptr->feeling == FEEL_EXCELLENT || o_ptr->feeling == FEEL_AWFUL)
           && object_is_ego(o_ptr))
         {
-            value += 500 / o_ptr->number;
+          value += 500 / o_ptr->number;
         }
         if ( (o_ptr->ident & IDENT_SENSE)
           && (o_ptr->feeling == FEEL_SPECIAL || o_ptr->feeling == FEEL_TERRIBLE)

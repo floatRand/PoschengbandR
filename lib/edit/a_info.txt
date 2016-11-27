@@ -3368,7 +3368,7 @@ D:Worn coin, cold to touch. It seems to have passed through many unfortunate han
 
 N:331:Pendant of Nightmares
 I:40:0:5
-W:30:70:2:555555
+W:30:70:2:300000
 P:0:0d0:5:5:5
 F:FULL_NAME | INSTA_ART 
 F:STR | INT | WIS | DEX | CON | CHR | SPEED
@@ -3376,6 +3376,15 @@ F:TELEPATHY | SPELL_CAP | WEAPONMASTERY | REFLECT
 F:RES_NETHER | RES_NEXUS | RES_DISEN | RES_TIME
 F:CURSED | HEAVY_CURSE | PERMA_CURSE
 D:'No no no no no no no no no no' - etched on the pendant.
+
+N:332:Pickaxe of Despair
+I:20:4:4
+W:50:40:500:300000
+P:0:9d3:-16:16:0
+F:FULL_NAME
+F:TUNNEL | RES_DARK | STR
+F:KILL_EVIL | DEC_SPEED
+D:'Despair' is engraved on the shaft.
 
 # N: serial number : item name
 # I: tval : sval : pval
