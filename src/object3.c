@@ -280,7 +280,6 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
                 cost_calc_hook(dbg_msg);
             }
         }
-
         switch (o_ptr->name1)
         {
         case ART_STONE_OF_NATURE:
@@ -303,6 +302,8 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
         case ART_SPECTRAL_DSM: /* Passwall */
             xtra = 50000;
             break;
+		case ART_AMULET_NIGHTMARE:
+			p = p / 2;
         }
         if (xtra)
         {
