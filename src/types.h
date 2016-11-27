@@ -1118,6 +1118,7 @@ typedef struct {
 #define INNA_BRAND_IMPACT  0x0040
 #define INNA_BRAND_VAMP    0x0080
 #define INNA_BRAND_HUMAN   0x0100
+#define INNA_BRAND_MANA	   0x0200
 
 typedef struct {
     int dd;

@@ -857,14 +857,14 @@ void display_innate_attack_info(doc_ptr doc, int which)
         doc_printf(cols[0], " %-7.7s: %d\n",_effect_name(a->effect[0]), blows * (min + max)/200);
     }
 
-	if (acid_brand)     doc_printf(cols[0], " <color:g> %-11.11s</color>: %d\n", "Acid brand", blows * (((min2 + max2) * 14) / 10) / 200);
-	if (elec_brand)     doc_printf(cols[0], " <color:b> %-11.11s</color>: %d\n", "Elec brand", blows * (((min2 + max2) * 14) / 10) / 200);
-	if (fire_brand)     doc_printf(cols[0], " <color:r> %-11.11s</color>: %d\n", "Fire brand", blows * (((min2 + max2) * 14) / 10) / 200);
-	if (cold_brand)     doc_printf(cols[0], " <color:W> %-11.11s</color>: %d\n", "Cold brand", blows * (((min2 + max2) * 14) / 10) / 200);
-	if (pois_brand)     doc_printf(cols[0], " <color:G> %-11.11s</color>: %d\n", "Pois brand", blows * (((min2 + max2) * 14) / 10) / 200);
-	if (mana_brand)     doc_printf(cols[0], " <color:B> %-11.11s</color>: %d\n", "Mana brand", blows * (((min2 + max2) * 14) / 10) / 200);
-	if (p_ptr->innate_brands & INNA_BRAND_GOOD) doc_printf(cols[0], " <color:w> %-11.11s</color>: %d\n", "Slay good", blows * (((min2 + max2) * 14) / 10) / 200);
-	if (p_ptr->innate_brands & INNA_BRAND_HUMAN) doc_printf(cols[0], " <color:y> %-11.11s</color>: %d\n", "Slay human", blows * (((min2 + max2) * 17) / 10) / 200);
+	if (acid_brand)     doc_printf(cols[0], " <color:g> %-11.11s</color>: %d\n", "Acid brand", blows * (((min2 + max2) * 12) / 10) / 200);
+	if (elec_brand)     doc_printf(cols[0], " <color:b> %-11.11s</color>: %d\n", "Elec brand", blows * (((min2 + max2) * 12) / 10) / 200);
+	if (fire_brand)     doc_printf(cols[0], " <color:r> %-11.11s</color>: %d\n", "Fire brand", blows * (((min2 + max2) * 12) / 10) / 200);
+	if (cold_brand)     doc_printf(cols[0], " <color:W> %-11.11s</color>: %d\n", "Cold brand", blows * (((min2 + max2) * 12) / 10) / 200);
+	if (pois_brand)     doc_printf(cols[0], " <color:G> %-11.11s</color>: %d\n", "Pois brand", blows * (((min2 + max2) * 12) / 10) / 200);
+	if (mana_brand)     doc_printf(cols[0], " <color:B> %-11.11s</color>: %d\n", "Mana brand", blows * (((min2 + max2) * 12) / 10) / 200);
+	if (p_ptr->innate_brands & INNA_BRAND_GOOD) doc_printf(cols[0], " <color:w> %-11.11s</color>: %d\n", "Slay good", blows * (((min2 + max2) * 12) / 10) / 200);
+	if (p_ptr->innate_brands & INNA_BRAND_HUMAN) doc_printf(cols[0], " <color:y> %-11.11s</color>: %d\n", "Slay human", blows * (((min2 + max2) * 15) / 10) / 200);
 
     for (i = 1; i < MAX_INNATE_EFFECTS; i++)
     {

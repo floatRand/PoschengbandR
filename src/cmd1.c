@@ -2582,9 +2582,9 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 
 						// If there is no effect, it gets replaced with the brand, unless monster is immune.
 						// No idea how to handle vampiric effect yet. Sorry.
-						int b_mult = 14;
-						if ((p_ptr->innate_brands & INNA_BRAND_HUMAN) && r_ptr->flags2 & RF2_HUMAN){ e = GF_MISSILE; b_mult = 17; }
-						else if (p_ptr->innate_brands & INNA_BRAND_GOOD && r_ptr->flags2 & RF3_GOOD){ e = GF_MISSILE; b_mult = 14; }
+						int b_mult = 12;
+						if ((p_ptr->innate_brands & INNA_BRAND_HUMAN) && r_ptr->flags2 & RF2_HUMAN){ e = GF_MISSILE; b_mult = 15; }
+						else if (p_ptr->innate_brands & INNA_BRAND_GOOD && r_ptr->flags2 & RF3_GOOD){ e = GF_MISSILE; b_mult = 12; }
 						else if (mana_brand && p_ptr->csp >= p_ptr->msp / 30){ e = GF_MANA; p_ptr->csp -= p_ptr->msp / 30; }
 						else if (acid_brand && !(r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)) e = GF_ACID;
 						else if (elec_brand && !(r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)) e = GF_ELEC;
