@@ -5765,6 +5765,7 @@ int bow_energy(int sval)
         case SV_LONG_BOW:
         case SV_CRIMSON:
         case SV_RAILGUN:
+		case SV_CANNON:
         case SV_HARP:
         {
             energy = 10000;

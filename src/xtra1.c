@@ -4533,6 +4533,7 @@ void calc_bonuses(void)
             case SV_CRIMSON:
             case SV_RAILGUN:
             case SV_HARP:
+			case SV_CANNON:
             {
                 p_ptr->shooter_info.tval_ammo = TV_NO_AMMO;
                 break;

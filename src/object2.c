@@ -5643,6 +5643,7 @@ static void spell_damcalc(monster_type *m_ptr, int typ, int dam, int limit, int 
         dam = res_calc_dam(RES_DARK, dam);
         break;
 
+	case GF_IMPACT:
     case GF_SHARDS:
         dam = res_calc_dam(RES_SHARDS, dam);
         break;

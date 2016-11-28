@@ -805,6 +805,9 @@ static void _display_activation_aux(effect_t *effect, bool full_info, doc_ptr do
         doc_printf(doc, "<color:U>Fail:</color><tab:12>%d.%d%%\n", fail/10, fail%10);
         if (effect->cost)
             doc_printf(doc, "<color:U>Timeout:</color><tab:12>%d\n", effect->cost);
+		doc_printf(doc, "%s\n", do_effect(effect, SPELL_DESC, 0));
+		
+
     }
 
 }

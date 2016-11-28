@@ -408,6 +408,7 @@ static named_num gf_desc[] =
     {"GF_ELDRITCH_DISPEL",    GF_ELDRITCH_DISPEL        },
     {"GF_ELDRITCH_CONFUSE",    GF_ELDRITCH_CONFUSE        },
     {"GF_PHARAOHS_CURSE",    GF_PHARAOHS_CURSE        },
+	{"GF_IMPACT", GF_IMPACT },
     {NULL,                     0                        }
 };
 

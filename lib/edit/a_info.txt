@@ -3380,7 +3380,7 @@ D:'No no no no no no no no no no' - etched on the pendant.
 N:332:Pickaxe of Despair
 I:20:4:4
 W:50:40:500:300000
-P:0:20d4:-16:64:0
+P:0:20d4:-16:32:0
 F:FULL_NAME
 F:TUNNEL | RES_DARK | STR
 F:DEC_SPEED
@@ -3407,6 +3407,27 @@ F:FREE_ACT | HOLD_LIFE | RES_LITE | RES_FIRE | RES_SOUND
 E:SKYCLOAK:0:1
 E:You flip your cloak, revealing a bright day!
 D:A strange cloak patterned with night sky.
+
+N:335:Bladedance Buckler
+I:34:3:2
+W:40:50:30:80000
+P:1:1d2:12:12:4
+F:FULL_NAME
+F:DEX | SPEED | SUST_DEX
+F:RES_CONF | RES_SHARDS | RES_DISEN | RES_FEAR
+F:AURA_REVENGE
+D:A buckler of a famous swashbuckler - just holding it makes 
+D:you imagine the graceful parries and ripostes performed with this shield.
+
+N:336:Hand-Cannon Dora
+I:19:52:4
+W:75:100:1000:100000
+P:0:x0.00:0:0:0
+F:INSTA_ART | FULL_NAME | HIDE_TYPE
+F:STR | RES_FIRE | RES_SHARDS | RES_FEAR
+E:CANNONFIRE:40:350
+E:Fire in the hole!
+D:A minituarized cannon - certainly packs a punch.
 
 # N: serial number : item name
 # I: tval : sval : pval

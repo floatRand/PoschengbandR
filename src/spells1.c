@@ -140,6 +140,7 @@ static byte spell_color(int type)
             case GF_SOUND:          return (0x09);
             case GF_SHARDS:         return (0x08);
             case GF_ROCK:         return (0x08);
+			case GF_IMPACT:		    return (0x08);
             case GF_FORCE:          return (0x09);
             case GF_INERT:        return (0x09);
             case GF_GRAVITY:        return (0x09);
@@ -889,6 +890,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
         case GF_ROCK:
         case GF_ROCKET:
         case GF_FORCE:
+		case GF_IMPACT:
             message = "is blasted.";
             break;
         case GF_ACID:
@@ -956,6 +958,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
         case GF_DISENCHANT:
         case GF_FORCE:
         case GF_GRAVITY:
+		case GF_IMPACT:
             message = "was crushed.";break;
         default:
             message = NULL;break;
@@ -1409,6 +1412,7 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
         case GF_SHARDS:
         case GF_ROCK:
         case GF_ROCKET:
+		case GF_IMPACT:
         {
             if (is_mirror_grid(c_ptr))
             {
@@ -1488,8 +1492,6 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
     return (obvious);
 }
 
-
-
 /*
  * We are called from "project()" to "damage" objects
  *
@@ -1509,7 +1511,6 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
 static bool project_o(int who, int r, int y, int x, int dam, int typ)
 {
     cave_type *c_ptr = &cave[y][x];
-
     s16b this_o_idx, next_o_idx = 0;
 
     bool obvious = FALSE;
@@ -1624,6 +1625,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
         case GF_ROCK:
         case GF_FORCE:
         case GF_SOUND:
+		case GF_IMPACT:
             if (hates_cold(o_ptr))
             {
                 note_kill = (plural ? " shatter!" : " shatters!");
@@ -2447,6 +2449,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             break;
         }
 
+		case GF_IMPACT:
         case GF_ROCK:
             if (seen) obvious = TRUE;
             if (r_ptr->flagsr & RFR_RES_ALL)
@@ -6773,6 +6776,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
             break;
         }
         case GF_ROCK:
+		case GF_IMPACT:
         {
             if (fuzzy) msg_print("You are hit by something solid!");
             if (one_in_(2))
@@ -8988,6 +8992,8 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
             }
         }
     }
+
+	if((typ == GF_IMPACT && !one_in_(3)) || (typ == GF_QUAKE)) earthquake(by, bx, 6);
 
     if (who > 0 && p_ptr->spell_turned)
         project(-1, old_rad, y1, x1, dam, typ, flg, 0);

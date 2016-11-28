@@ -1267,6 +1267,7 @@ enum {
 #define ART_YATA                151
 #define ART_EARENDIL            186
 #define ART_PERSEUS             197
+#define ART_RIPOSTE_BUCKLER     335
 
 /* Helms and Crowns */
 #define ART_INDRA               33
@@ -1656,6 +1657,7 @@ enum {
 #define SV_HEAVY_XBOW                   24
 #define SV_CRIMSON                      50
 #define SV_RAILGUN                      51
+#define SV_CANNON						52
 #define SV_NAMAKE_BOW                   63
 #define SV_HARP                         70
 
@@ -2687,8 +2689,9 @@ enum summon_specific_e {
 #define GF_SUBJUGATION 144
 #define GF_PARALYSIS 145
 #define GF_CONTROL_PACT_MONSTER  146
+#define GF_IMPACT				147
 
-#define MAX_GF                147
+#define MAX_GF                148
 
 /*
  * Some things which induce learning
@@ -6311,6 +6314,7 @@ enum effect_e
     EFFECT_GONG,
     EFFECT_MURAMASA,
 	EFFECT_SKYCLOAK,
+	EFFECT_CANNONFIRE,
 
     EFFECT_MAX
 };

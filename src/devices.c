@@ -2123,6 +2123,7 @@ static _effect_info_t _effect_info[] =
     {"GONG",            EFFECT_GONG,                 0,   0,  0, 0},
     {"MURAMASA",        EFFECT_MURAMASA,             0,   0,  0, 0},
 	{"SKYCLOAK",		EFFECT_SKYCLOAK,			 0,	  0,  0, 0},
+	{"CANNONFIRE",      EFFECT_CANNONFIRE,			 0,   0,  0, 0},
     {0}
 };
 
@@ -6773,8 +6774,31 @@ cptr do_effect(effect_t *effect, int mode, int boost)
 
 
 			device_noticed = TRUE;
-			break;
 		}
+		break;
+	}
+	case EFFECT_CANNONFIRE:
+	{
+		int dd = 20;
+		int ds = 10;
+		if (name) return "Cannon fire";
+		if (desc) return "Fires the cannon. The impact may cause a cave-in.";
+		if (info) return info_damage(_BOOST(dd), ds, 500);
+		if (value) return format("%d", 500 + _avg_damroll(_BOOST(dd), ds));
+		if (color) return format("%d", TERM_UMBER);
+		if (cast)
+		{
+			if (!get_aim_dir(&dir)) return NULL;
+			fire_ball_aux(
+				GF_IMPACT,
+				dir,
+				500 + damroll(_BOOST(dd), ds),
+				3,
+				PROJECT_FULL_DAM | PROJECT_KILL | PROJECT_AIMED | PROJECT_PATH
+				);
+			device_noticed = TRUE;
+		}
+		break;
 	}
     default:
         if (name) return format("Invalid Effect: %d", effect->type);
