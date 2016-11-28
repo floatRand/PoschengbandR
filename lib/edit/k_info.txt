@@ -1521,7 +1521,7 @@ N:200:Mass Genocide:trolsee mex
 G:?:w
 I:70:45:0
 W:50:0:0:5:1000
-A:50/4:100/4
+A:50/4:90/4
 
 N:201:Detect Invisible:stafoo lechi
 G:?:w
@@ -1570,7 +1570,7 @@ N:207:Genocide:ashval paylech
 G:?:w
 I:70:44:0
 W:40:0:0:5:750
-A:40/4:80/4
+A:40/3:70/3
 
 N:208:Darkness:fapay doea
 G:?:w
@@ -1665,8 +1665,8 @@ M:100:1d5
 N:221:Destruction:denmung ishbul
 G:?:w
 I:70:41:0
-W:40:0:0:5:250
-A:40/2
+W:35:0:0:5:250
+A:35/2:65/2
 F:IGNORE_FIRE
 
 ##### Potions #####
@@ -1843,7 +1843,7 @@ N:242:Healing:Gray Speckled
 G:!:s
 I:75:37:200
 W:31:0:0:4:300
-A:31/1:60/1:80/1
+A:31/1:50/1:70/1
 P:0:1d1:0:0:0
 M:20:1d3
 
@@ -2665,14 +2665,14 @@ N:419:*Healing*:Oily Yellow
 G:!:y
 I:75:38:0
 W:80:0:0:4:1500
-A:40/8:60/4:80/2
+A:40/7:60/3:80/2
 P:0:1d1:0:0:0
 
 N:420:Life:Gloopy Green
 G:!:g
 I:75:39:0
 W:100:0:0:4:5000
-A:60/8:100/4
+A:50/8:90/4
 P:0:1d1:0:0:0
 
 N:421:Self Knowledge:Shimmering
