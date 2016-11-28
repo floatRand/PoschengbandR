@@ -357,7 +357,6 @@ static int _displayWpnGroups(rect_t display, u16b mode)
 
 static int _displaySkills(rect_t display, u16b mode)
 {
-	int choices = 0;
 	point_t pos = rect_topleft(&display);
 	int     padding, max_o_len = 20;
 	doc_ptr doc = NULL;
@@ -435,7 +434,6 @@ static void _displayProficiencies(rect_t display, u16b mode)
 	int     padding, max_o_len = 20;
 	doc_ptr doc = NULL;
 	fl_proficiency *list = _proficiencies;
-	int DC = 1;
 	bool displayLvs = TRUE;
 
 	padding = 5;   /* leading " a) " + trailing " " */
@@ -476,7 +474,6 @@ static void _displayProficiencies(rect_t display, u16b mode)
 		if (prof_ptr->prof != _FL_NULL)
 		{
 			int prlv = fl_GetProfLevel(prof_ptr->prof, 0);
-			int prmaxlv = prof_ptr->maxLevel;
 			displayLvs = !(prof_ptr->prof == _FL_LEARN_REALM || prof_ptr->prof == _FL_LEARN_WEAPON || prof_ptr->prof == _FL_BOOST_SKILL);
 
 			int cost = _prof_get_cost(i, 0);
@@ -563,7 +560,7 @@ int freelancer_spell_power(int use_realm){
 
 cptr _grantProficiency(int prof, int sub_choice, int *res){
 	int getCost = -1;
-	int curLv = 0, minPlev = 0;
+	int minPlev = 0;
 	bool maxedOut = FALSE;
 	bool ok = FALSE;
 	cptr profName;
@@ -574,7 +571,6 @@ cptr _grantProficiency(int prof, int sub_choice, int *res){
 	// 2. Are high level enough.
 	// 3. Are already maxed out.
 	// Also, a method of tracking purchases is needed so develeveling works properly. 
-	bool upgrading = FALSE; // this is if we are not buying
 
 	if (prof == _FL_LEARN_REALM && (sub_choice >= 0 && sub_choice < MAX_REALM)){
 		getCost = _prof_get_cost(prof, sub_choice);
@@ -631,7 +627,6 @@ int _chooseProf(int options)
 	string_ptr   prompt = NULL;
 	cptr		 failMsg;
 	bool         quit = FALSE, all_done = FALSE;
-	bool         exchange = FALSE;
 
 	if (display.cx > 80)
 		display.cx = 80;
@@ -836,7 +831,7 @@ int freelancer_hp_boost(void){
 	return 0;
 }
 
-int freelancer_stab_level(){
+int freelancer_stab_level(void){
 	int stabbylv = fl_GetProfLevel(_FL_F_SNEAK_ATTACKS, 0);
 	return stabbylv;
 }
@@ -847,7 +842,7 @@ bool freelancer_can_use_realm(int realm){
 	return FALSE;
 }
 
-int freelancer_mana_regen(amt){
+int freelancer_mana_regen(int amt){
 	// amount is base regen. Sorcerers/mages have 200% default. Se each should perhaps be 50%, maxing at 3 ranks?
 	int regenTier = fl_GetProfLevel(_FL_BOOST_MANA_REGEN, 0);
 	if (regenTier > 0){

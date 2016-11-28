@@ -127,7 +127,7 @@ static void _birth(void)
 	{
 		memset(&_infusions[i], 0, sizeof(object_type));
 	}
-	for (i = 0; i <= _CTIER_MAX; i++)
+	for (i = 0; i < _CTIER_MAX; i++)
 	{
 		_CHEM[i] = 0;
 	}
@@ -405,7 +405,6 @@ void alchemist_cast(int tval)
 
 }
 
-/* Absorb Magic */
 static bool create_infusion(void)
 {
 	int item;
@@ -431,6 +430,7 @@ static bool create_infusion(void)
 	if (!already_slotted){
 		dest_ptr = _chooseInfusion("Replace", src_ptr->tval, _ALLOW_EMPTY);
 	}
+
 	if (!dest_ptr)
 		return FALSE;
 
@@ -979,7 +979,7 @@ static void _load_list(savefile_ptr file)
 		assert(o_ptr->k_idx);
 	}
 
-	for (i = 0; i <= _CTIER_MAX; i++){
+	for (i = 0; i < _CTIER_MAX; i++){
 		_CHEM[i] = savefile_read_s32b(file);
 	}
 }
@@ -1002,7 +1002,7 @@ static void _save_list(savefile_ptr file)
 		}
 	}
 	savefile_write_u16b(file, 0xFFFF); /* sentinel */
-	for (i = 0; i <= _CTIER_MAX; i++){
+	for (i = 0; i < _CTIER_MAX; i++){
 		savefile_write_s32b(file, (s32b)_CHEM[i]); // save chemical count.
 	}
 	

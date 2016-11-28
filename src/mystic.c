@@ -527,7 +527,7 @@ static bool _cave_is_open(int y, int x)
 	return TRUE;
 }
 
-bool horizontal_fang_aux(){
+static bool horizontal_fang_aux(){
 
 	int tx, ty, i;
 	int range = _HFANG_RANGE;
