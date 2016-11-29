@@ -283,6 +283,14 @@ static bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
     return (TRUE);
 }
 
+static int _get_purse_limit(owner_type *ot_ptr){
+
+	if (ot_ptr){
+		if(mut_present(MUT_MERCHANTS_FRIEND)) return MIN((int)ot_ptr->max_cost+10000,40000);
+		else return ot_ptr->max_cost;
+	} return 5000;
+
+}
 
 /*
  * Allow a store item to absorb another item
@@ -1837,7 +1845,7 @@ static void display_store(void)
         put_str(buf, 3, 10);
 
         /* Show the max price in the store (above prices) */
-        sprintf(buf, "%s (%d)", store_name, (int)ot_ptr->max_cost);
+        sprintf(buf, "%s (%d)", store_name, _get_purse_limit(ot_ptr));
         prt(buf, 3, 50);
 
         /* Label the item descriptions */
@@ -2154,7 +2162,7 @@ static void store_purchase(void)
                             ot_ptr->owner_name, get_race_aux(ot_ptr->owner_race, 0)->name);
                         put_str(buf, 3, 10);
                         sprintf(buf, "%s (%d)",
-                            (f_name + f_info[cur_store_feat].name), (int)ot_ptr->max_cost);
+							(f_name + f_info[cur_store_feat].name), _get_purse_limit(ot_ptr));
                         prt(buf, 3, 50);
                     }
 
@@ -2406,8 +2414,8 @@ static void store_sell(void)
         char prompt[255];
 
         price = price_item(q_ptr, ot_ptr->min_inflate, TRUE);
-        if (price > ot_ptr->max_cost)
-            price = ot_ptr->max_cost;
+		if (price > _get_purse_limit(ot_ptr))
+			price = _get_purse_limit(ot_ptr);
         price *= q_ptr->number;
 
         sprintf(prompt, "Really sell %s (%c) for <color:R>%d</color> gp? <color:y>[y/n]</color>", o_name, index_to_label(item), price);
@@ -3068,8 +3076,8 @@ void do_cmd_store(void)
     if (dun_level || !p_ptr->town_num) p_ptr->town_num = NO_TOWN;
     inner_town_num = p_ptr->town_num;
 
-    if ( (mut_present(MUT_MERCHANTS_FRIEND) || p_ptr->wizard)
-      && which != STORE_HOME
+    if (
+      which != STORE_HOME
       && which != STORE_MUSEUM )
     {
         friend_hack = TRUE;
@@ -3187,11 +3195,16 @@ void do_cmd_store(void)
             prt(" SPACE) Next page", 23 + xtra_stock, 0);
         }
 
-        if (friend_hack)
+        if (friend_hack && mut_present(MUT_MERCHANTS_FRIEND))
         {
             prt(" 1) Shuffle Stock (5000gp)", 24 + xtra_stock, 0);
             prt("   2) Hold Item (10000gp)", 24 + xtra_stock, 27);
         }
+		else 
+		{
+			prt(" 1) Shuffle Stock (10000gp)", 24 + xtra_stock, 0);
+			prt("   2) Hold Item (20000gp)", 24 + xtra_stock, 27);
+		}
 
         /* Home commands */
         if (cur_store_num == STORE_HOME)
@@ -3230,23 +3243,24 @@ void do_cmd_store(void)
 
         if (friend_hack)
         {
+			int costmult = (mut_present(MUT_MERCHANTS_FRIEND)) ? 1 : 2;
             switch (command_cmd)
             {
             case '1':
-                if (5000 > p_ptr->au)
+                if (5000 * costmult > p_ptr->au)
                     msg_print("You do not have the gold!");
                 else
                 {
                     _restock(st_ptr, TRUE);
                     need_redraw_store_inv = TRUE;
-                    p_ptr->au -= 5000;
-                    stats_on_gold_services(5000);
+					p_ptr->au -= 5000 * costmult;
+					stats_on_gold_services(5000 * costmult);
                     p_ptr->redraw |= PR_GOLD;
                     store_prt_gold();
                 }
                 break;
             case '2':
-                if (10000 > p_ptr->au)
+				if (10000 * costmult > p_ptr->au)
                     msg_print("You do not have the gold!");
                 else
                 {
@@ -3266,8 +3280,8 @@ void do_cmd_store(void)
                         else
                         {
                             o_ptr->marked |= OM_RESERVED;
-                            p_ptr->au -= 10000;
-                            stats_on_gold_services(10000);
+							p_ptr->au -= 10000 * costmult;
+							stats_on_gold_services(10000 * costmult);
                             p_ptr->redraw |= PR_GOLD;
                             store_prt_gold();
 
@@ -3758,7 +3772,7 @@ static void _buyout(void)
                         ot_ptr->owner_name, get_race_aux(ot_ptr->owner_race, 0)->name);
                     put_str(buf, 3, 10);
                     sprintf(buf, "%s (%d)",
-                        (f_name + f_info[cur_store_feat].name), (int)(ot_ptr->max_cost));
+						(f_name + f_info[cur_store_feat].name), _get_purse_limit(ot_ptr));
                     prt(buf, 3, 50);
                 }
                 else
