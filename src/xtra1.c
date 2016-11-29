@@ -2095,6 +2095,18 @@ static void prt_health_bars(void)
             prt_mon_health_bar(p_ptr->health_who, row++, col);
         if (target_who > 0 && target_who != p_ptr->riding && target_who != p_ptr->health_who)
             prt_mon_health_bar(target_who, row++, col);
+        if (target_who < 0)
+        {
+            int dx = target_col - px;
+            int dy = target_row - py;
+            cptr s;
+            s = format("%c%3d %c%3d",
+                    (dy > 0) ? 'S' : 'N', abs(dy),
+                    (dx > 0) ? 'E' : 'W', abs(dx));
+            Term_putstr(col, row, -1, TERM_RED, "T: ");
+            Term_addstr(-1, TERM_WHITE, s);
+            row++;
+        }
     }
 }
 

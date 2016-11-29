@@ -5175,6 +5175,11 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
         /* Update stuff */
         p_ptr->update |= (PU_VIEW | PU_LITE | PU_FLOW | PU_MON_LITE | PU_DISTANCE);
         p_ptr->window |= PW_MONSTER_LIST | PW_OBJECT_LIST;
+        if (target_who < 0)
+        {
+            target_okay(); /* dismiss if no longer valid */
+            p_ptr->redraw |= PR_HEALTH_BARS;
+        }
 
         if (!view_unsafe_grids)
             p_ptr->redraw |= PR_STATUS;
