@@ -2405,7 +2405,7 @@ static bool _is_retired(void)
 void py_display(void)
 {
     doc_ptr    d = doc_alloc(80);
-    string_ptr s = string_alloc_format("%s.txt", player_base);
+    string_ptr s = string_alloc_format("%s.html", player_base);
     string_ptr header = string_alloc();
 
     doc_change_name(d, string_buffer(s));
