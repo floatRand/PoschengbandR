@@ -41,7 +41,7 @@ static void _bind_monster_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         stasis_monster(dir);
         var_set_bool(res, TRUE);
         break;
@@ -417,7 +417,7 @@ static void _smoke_ball_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_OLD_CONF, dir, p_ptr->lev*3, 3);
         var_set_bool(res, TRUE);
         break;

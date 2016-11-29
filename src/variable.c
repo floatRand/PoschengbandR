@@ -194,6 +194,7 @@ bool quick_messages;    /* Activate quick messages */
 bool command_menu;    /* Enable command selection menu */
 bool other_query_flag;    /* Prompt for floor item selection */
 bool use_old_target;    /* Use old target by default */
+bool auto_target;    /* Automatically target nearest monster */
 bool always_repeat;    /* Repeat obvious commands */
 bool confirm_destroy;    /* Prompt for destruction of known worthless items */
 bool confirm_wear;    /* Confirm to wear/wield known cursed items */

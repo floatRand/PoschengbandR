@@ -68,7 +68,7 @@ static void _aklash_breathe_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             msg_print("You breathe gas.");
             fire_ball(GF_POIS, dir, p_ptr->chp / 4, -2);

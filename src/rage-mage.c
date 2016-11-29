@@ -58,7 +58,7 @@ static void _anti_magic_ray_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_ANTIMAGIC, dir, 1, 0);
         var_set_bool(res, TRUE);
         break;
@@ -389,7 +389,7 @@ static void _greater_shout_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_SOUND, dir, damroll(p_ptr->lev - 10, 8), -3);
         var_set_bool(res, TRUE);
         break;
@@ -414,7 +414,7 @@ static void _mana_clash_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_MANA_CLASH, dir, 24 * p_ptr->lev, 2); /* damage later divided by Y + 1 in spells1!project_m where Y is spell freq */
         var_set_bool(res, TRUE);
         break;
@@ -458,7 +458,7 @@ static void _rage_strike_spell(int cmd, variant *res)
             if (!get_check("Really? This will kill you!")) return;
         }
 
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball(GF_MISSILE, dir, _rage_strike_dam(), 0);
         take_hit(DAMAGE_NOESCAPE, 100, "Rage", -1);
@@ -724,7 +724,7 @@ static void _shout_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_SOUND, dir, damroll(3 + (p_ptr->lev-1)/5, 4), -2);
         var_set_bool(res, TRUE);
         break;

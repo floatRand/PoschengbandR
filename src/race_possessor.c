@@ -772,7 +772,7 @@ static void _breathe_spell(int what, int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             if (p_ptr->current_r_idx == MON_BOTEI) 
                 msg_print("'Botei-Build cutter!!!'");
@@ -871,7 +871,7 @@ static void _rocket_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         msg_print("You launch a rocket.");
         fire_rocket(GF_ROCKET, dir, p_ptr->chp / 3, 2);

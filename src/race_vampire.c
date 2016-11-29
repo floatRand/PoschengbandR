@@ -176,7 +176,7 @@ void _gaze_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_DOMINATION, dir, _gaze_power(), 0);
         var_set_bool(res, TRUE);
         break;

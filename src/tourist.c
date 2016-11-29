@@ -14,7 +14,7 @@ static void _take_photo_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, TRUE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         project_length = 1;
         fire_beam(GF_PHOTO, dir, 1);
         var_set_bool(res, TRUE);

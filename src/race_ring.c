@@ -702,7 +702,7 @@ static void _charm_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             project_hook(GF_CHARM_RING_BEARER, dir, _charm_power(), PROJECT_STOP | PROJECT_KILL);
             var_set_bool(res, TRUE);

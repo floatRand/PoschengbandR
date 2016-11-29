@@ -773,7 +773,7 @@ void _cyber_rocket_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         msg_print("You launch a rocket.");
         fire_rocket(GF_ROCKET, dir, _rocket_amount(), 2);

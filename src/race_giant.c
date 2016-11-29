@@ -600,7 +600,7 @@ static void _breathe_plasma_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             msg_print("You breathe plasma...");
             fire_ball(GF_PLASMA, dir, p_ptr->chp*3/10, -3);
@@ -737,7 +737,7 @@ static void _ice_storm_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_ICE, dir, 6*p_ptr->lev, 5);
         var_set_bool(res, TRUE);
         break;
@@ -873,7 +873,7 @@ static void _breathe_storm_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             msg_print("You breathe storm...");
             fire_ball(GF_STORM, dir, p_ptr->chp*3/10, -3);
@@ -903,7 +903,7 @@ static void _lightning_storm_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_ELEC, dir, 7*p_ptr->lev, 5);
         var_set_bool(res, TRUE);
         break;

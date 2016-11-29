@@ -232,7 +232,7 @@ static void _shard_bolt_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_bolt(GF_SHARDS, dir, damroll(dd, ds));
         var_set_bool(res, TRUE);
         break;
@@ -306,7 +306,7 @@ static void _shard_ball_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_SHARDS, dir, dam, 2);
         var_set_bool(res, TRUE);
         break;
@@ -545,7 +545,7 @@ static void _lightning_storm_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_ELEC, dir, dam, 4);
         var_set_bool(res, TRUE);
         break;
@@ -789,7 +789,7 @@ static void _water_ball_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_WATER2, dir, dam, 4);
         var_set_bool(res, TRUE);
         break;
@@ -1049,7 +1049,7 @@ static void _fire_whip_spell(int cmd, variant *res)
         int dir = 0;
         var_set_bool(res, FALSE);
         project_length = range;
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_beam(GF_FIRE, dir, damroll(dd, ds));
         var_set_bool(res, TRUE);
         break;
@@ -1079,7 +1079,7 @@ static void _fire_storm_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_ball(GF_FIRE, dir, dam, 4);
         var_set_bool(res, TRUE);
         break;

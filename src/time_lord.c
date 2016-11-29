@@ -310,7 +310,7 @@ static void _bolt_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_bolt_or_beam(
             beam_chance() - 10,
@@ -466,7 +466,7 @@ static void _blast_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball(GF_TIME, dir, dam, 2);
         var_set_bool(res, TRUE);
@@ -677,7 +677,7 @@ static void _breath_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball(GF_TIME, dir, _breath_dam(), -3);
         var_set_bool(res, TRUE);

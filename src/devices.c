@@ -3214,7 +3214,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 1500);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (teleport_monster(dir)) device_noticed = TRUE;
         }
         break;
@@ -3626,7 +3626,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_DARK);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball_hide(GF_GENOCIDE, dir, _BOOST(power), 0);
             device_noticed = TRUE;
         }
@@ -4197,7 +4197,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 10*_extra(effect, 50));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return FALSE;
+            if (!get_fire_dir(&dir)) return FALSE;
             if (charm_animal(dir, _BOOST(lvl)))
                 device_noticed = TRUE;
         }
@@ -4212,7 +4212,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 15*_extra(effect, 50));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return FALSE;
+            if (!get_fire_dir(&dir)) return FALSE;
             if (control_one_demon(dir, _BOOST(lvl)))
                 device_noticed = TRUE;
         }
@@ -4227,7 +4227,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 15*_extra(effect, 50));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return FALSE;
+            if (!get_fire_dir(&dir)) return FALSE;
             if (control_one_undead(dir, _BOOST(lvl)))
                 device_noticed = TRUE;
         }
@@ -4242,7 +4242,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 15*_extra(effect, 50));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return FALSE;
+            if (!get_fire_dir(&dir)) return FALSE;
             if (charm_monster(dir, _BOOST(lvl)))
                 device_noticed = TRUE;
         }
@@ -4571,7 +4571,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 20*_avg_damroll(dd, ds));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_MISSILE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4588,7 +4588,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_ACID));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_ACID, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4605,7 +4605,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_ELEC));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_ELEC, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4622,7 +4622,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_FIRE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_FIRE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4639,7 +4639,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_COLD));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_COLD, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4656,7 +4656,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_POIS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_POIS, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4673,7 +4673,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_LITE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_LITE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4690,7 +4690,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_DARK));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_DARK, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4707,7 +4707,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_CONF));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_CONFUSION, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4724,7 +4724,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_NETHER));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_NETHER, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4741,7 +4741,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_NEXUS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_NEXUS, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4758,7 +4758,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_SOUND));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_SOUND, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4775,7 +4775,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_SHARDS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_SHARDS, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4792,7 +4792,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_CHAOS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_CHAOS, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4809,7 +4809,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_DISEN));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_DISENCHANT, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4826,7 +4826,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_TIME));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_TIME, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4843,7 +4843,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_BLUE);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_WATER, dir, _BOOST(damroll(dd, 8)));
             device_noticed = TRUE;
         }
@@ -4859,7 +4859,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_BLUE);
         if (cast)
         {
-            if (device_known && !get_aim_dir(&dir)) return NULL;
+            if (device_known && !get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_MANA, dir, _BOOST(dam));
             device_noticed = TRUE;
         }
@@ -4876,7 +4876,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_COLD));
         if (cast)
         {
-            if (device_known && !get_aim_dir(&dir)) return NULL;
+            if (device_known && !get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_ICE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4893,7 +4893,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_FIRE));
         if (cast)
         {
-            if (device_known && !get_aim_dir(&dir)) return NULL;
+            if (device_known && !get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_PLASMA, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4913,7 +4913,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_LITE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_print("A line of blue shimmering light appears.");
             project_hook(GF_LITE_WEAK, dir, _BOOST(damroll(dd, ds)), PROJECT_BEAM | PROJECT_GRID | PROJECT_KILL);
             device_noticed = TRUE;
@@ -4930,7 +4930,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_LITE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_print("A line of pure white light appears.");
             fire_beam(GF_LITE, dir, _BOOST(dam));
             device_noticed = TRUE;
@@ -4948,7 +4948,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_UMBER);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_beam(GF_GRAVITY, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4965,7 +4965,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_SLATE);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_beam(GF_DISINTEGRATE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4982,7 +4982,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_ACID));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_beam(GF_ACID, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -4999,7 +4999,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_ELEC));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_beam(GF_ELEC, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -5016,7 +5016,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_FIRE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_beam(GF_FIRE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -5033,7 +5033,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_COLD));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_beam(GF_COLD, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -5050,7 +5050,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_SOUND));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_beam(GF_SOUND, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -5067,7 +5067,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_CHAOS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_beam(GF_CHAOS, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -5085,7 +5085,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_ACID));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_ACID, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5101,7 +5101,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_ELEC));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_ELEC, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5117,7 +5117,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_FIRE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_FIRE, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5133,7 +5133,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_COLD));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_COLD, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5149,7 +5149,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_POIS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_POIS, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5165,7 +5165,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_LITE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_LITE, dir, _BOOST(dam), 4);
             device_noticed = TRUE;
         }
@@ -5181,7 +5181,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_DARK));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_DARK, dir, _BOOST(dam), 4);
             device_noticed = TRUE;
         }
@@ -5197,7 +5197,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_CONF));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_NETHER, dir, _BOOST(dam), 3);
             device_noticed = TRUE;
         }
@@ -5213,7 +5213,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_NETHER));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_NETHER, dir, _BOOST(dam), 3);
             device_noticed = TRUE;
         }
@@ -5229,7 +5229,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_NEXUS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_NEXUS, dir, _BOOST(dam), 3);
             device_noticed = TRUE;
         }
@@ -5245,7 +5245,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_SOUND));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_SOUND, dir, _BOOST(dam), 3);
             device_noticed = TRUE;
         }
@@ -5261,7 +5261,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_SHARDS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_SHARDS, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5277,7 +5277,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_CHAOS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_CHAOS, dir, _BOOST(dam), 5);
             device_noticed = TRUE;
         }
@@ -5293,7 +5293,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_DISEN));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_DISENCHANT, dir, _BOOST(dam), 3);
             device_noticed = TRUE;
         }
@@ -5309,7 +5309,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_TIME));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_TIME, dir, _BOOST(dam), 3);
             device_noticed = TRUE;
         }
@@ -5325,7 +5325,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_BLUE);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_WATER, dir, _BOOST(dam), 4);
             device_noticed = TRUE;
         }
@@ -5341,7 +5341,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_BLUE);
         if (cast)
         {
-            if (device_known && !get_aim_dir(&dir)) return NULL;
+            if (device_known && !get_fire_dir(&dir)) return NULL;
             fire_ball(GF_MANA, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5357,7 +5357,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_SLATE);
         if (cast)
         {
-            if (device_known && !get_aim_dir(&dir)) return NULL;
+            if (device_known && !get_fire_dir(&dir)) return NULL;
             fire_ball(GF_DISINTEGRATE, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5375,7 +5375,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_ACID));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_ACID, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5391,7 +5391,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_ELEC));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_ELEC, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5407,7 +5407,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_FIRE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_FIRE, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5423,7 +5423,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_COLD));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_COLD, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5439,7 +5439,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_POIS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_POIS, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5455,7 +5455,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_LITE));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_LITE, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5471,7 +5471,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_DARK));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_DARK, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5487,7 +5487,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_CONF));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_CONFUSION, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5503,7 +5503,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_NETHER));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_NETHER, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5519,7 +5519,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_NEXUS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_NEXUS, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5535,7 +5535,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_SOUND));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_SOUND, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5551,7 +5551,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_SHARDS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_SHARDS, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5567,7 +5567,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_CHAOS));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_CHAOS, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5583,7 +5583,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_DISEN));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_DISENCHANT, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5599,7 +5599,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_TIME));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_TIME, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5624,7 +5624,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             };
             int which = randint0(5);
 
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
@@ -5647,7 +5647,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             };
             int which = randint0(2);
 
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
@@ -5670,7 +5670,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             };
             int which = randint0(2);
 
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
@@ -5695,7 +5695,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             };
             int which = randint0(4);
 
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
@@ -5718,7 +5718,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             };
             int which = randint0(2);
 
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_format("It breathes %s.", _choices[which].desc);
             fire_ball(_choices[which].type, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
@@ -5735,7 +5735,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_VIOLET);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball(GF_MISSILE, dir, _BOOST(dam), -2);
             device_noticed = TRUE;
         }
@@ -5860,7 +5860,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_L_DARK);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             dam = _BOOST(dam);
             if (drain_life(dir, dam))
             {
@@ -5922,7 +5922,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_UMBER);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_rocket(GF_ROCKET, dir, _BOOST(dam), 2);
             device_noticed = TRUE;
         }
@@ -5939,7 +5939,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_UMBER);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_METEOR, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }
@@ -5994,7 +5994,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_SLATE);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_bolt(GF_ARROW, dir, _BOOST(dam));
             device_noticed = TRUE;
         }
@@ -6261,7 +6261,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_BLUE);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (sleep_monster(dir, _BOOST(power)))
                 device_noticed = TRUE;
         }
@@ -6274,7 +6274,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_UMBER);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (slow_monster(dir))
                 device_noticed = TRUE;
         }
@@ -6289,7 +6289,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_CONF));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (confuse_monster(dir, _BOOST(power)))
                 device_noticed = TRUE;
         }
@@ -6305,7 +6305,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", res_color(RES_FEAR));
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (fear_monster(dir, _BOOST(power)))
                 device_noticed = TRUE;
         }
@@ -6318,7 +6318,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_ORANGE);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (poly_monster(dir))
                 device_noticed = TRUE;
         }
@@ -6378,7 +6378,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 5);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (heal_monster(dir, _BOOST(damroll(10, 10))))
                 device_noticed = TRUE;
         }
@@ -6389,7 +6389,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 15);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (speed_monster(dir))
                 device_noticed = TRUE;
         }
@@ -6409,7 +6409,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 10);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             if (clone_monster(dir))
                 device_noticed = TRUE;
         }
@@ -6540,7 +6540,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 1000);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             ring_of_power(dir);
             device_noticed = TRUE;
         }
@@ -6551,7 +6551,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 10000);
         if (cast)
         {
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_print("You breathe the elements.");
 
             fire_ball(GF_MISSILE, dir, _BOOST(300), 4);

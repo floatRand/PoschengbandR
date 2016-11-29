@@ -25,7 +25,7 @@ static void _small_force_ball_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int dice = 3 + ((p_ptr->lev - 1) / 5) + _force_boost()/ 12;
             int sides = 4;
@@ -89,7 +89,7 @@ static void _kamehameha_spell(int cmd, variant *res)
         int dir = 0;
         project_length = p_ptr->lev / 8 + 3;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int dice = 5 + ((p_ptr->lev - 1) / 5) + _force_boost() / 10;
             int sides = 5;
@@ -217,7 +217,7 @@ static void _shock_power_spell(int cmd, variant *res)
     {
         int y, x, dam, dir;
         project_length = 1;
-        if (!get_aim_dir(&dir))
+        if (!get_fire_dir(&dir))
         { 
             var_set_bool(res, FALSE);
             return;
@@ -305,7 +305,7 @@ static void _large_force_ball_spell(int cmd, variant *res)
     {
         int dir;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int dice = 10;
             int sides = 6;
@@ -408,7 +408,7 @@ static void _super_kamehameha_spell(int cmd, variant *res)
         int sides = 15;
         
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_beam(
             GF_MANA,

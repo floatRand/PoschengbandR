@@ -102,7 +102,7 @@ void _heal_monster_spell(int cmd, variant *res)
         var_set_bool(res, FALSE);
 
         target_pet = TRUE;
-        result = get_aim_dir(&dir);
+        result = get_fire_dir(&dir);
         target_pet = old_target_pet;
 
         if (!result) return;

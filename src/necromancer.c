@@ -361,7 +361,7 @@ cptr do_necromancy_spell(int spell, int mode)
         if (cast)
         {
             int dir; 
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball_hide(GF_ENTOMB, dir, p_ptr->lev, 0);
             p_ptr->update |= (PU_FLOW);
             p_ptr->redraw |= (PR_MAP);

@@ -20,7 +20,7 @@ cptr do_hissatsu_spell(int spell, int mode)
         if (cast)
         {
             project_length = 2;
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
 
             project_hook(GF_ATTACK, dir, HISSATSU_2, PROJECT_STOP | PROJECT_KILL);
         }
@@ -529,7 +529,7 @@ cptr do_hissatsu_spell(int spell, int mode)
         if (cast)
         {
             int total_damage = 0, hand;
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             msg_print("You swing your weapon downward.");
 
             for (hand = 0; hand < MAX_HANDS; hand++)

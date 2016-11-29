@@ -3060,7 +3060,7 @@ bool do_cmd_fire_aux1(int item, object_type *bow)
     }
     else
     {
-        if (!get_aim_dir(&dir))
+        if (!get_fire_dir(&dir))
         {
             energy_use = 0;
             if (snipe_type == SP_AWAY) snipe_type = SP_NONE;
@@ -4163,7 +4163,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
         project_length = tdis + 1;
 
         /* Get a direction (or cancel) */
-        if (!get_aim_dir(&dir)) return FALSE;
+        if (!get_fire_dir(&dir)) return FALSE;
 
         /* Predict the "target" location */
         tx = px + 99 * ddx[dir];

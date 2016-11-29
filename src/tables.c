@@ -2588,6 +2588,9 @@ option_type option_info[] =
     { &use_old_target,              FALSE, OPT_PAGE_INPUT, 0, 4,
     "use_old_target",               "Use old target by default" },
 
+    { &auto_target,                 FALSE, OPT_PAGE_INPUT, 0, 15,
+    "auto_target",                  "Automatically target nearest monster" },
+
     { &always_repeat,               TRUE,  OPT_PAGE_INPUT, 0, 6,
     "always_repeat",                "Repeat obvious commands" },
 

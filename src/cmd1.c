@@ -3872,7 +3872,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                     if (p_ptr->lev >= 35)    /* Endless Duel */
                     {
-                        /* Hacks so that get_aim_dir() actually allows user to select a new target */
+                        /* Hacks so that get_fire_dir() actually allows user to select a new target */
                         target_who = 0;
                         command_dir = 0;
                         msg_print("Your chosen target is vanquished!  Select another.");

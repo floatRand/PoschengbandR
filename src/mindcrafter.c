@@ -113,7 +113,7 @@ void _neural_blast_spell(int cmd, variant *res)
         int sides = (3 + p_ptr->lev / 15);
         var_set_bool(res, FALSE);
 
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         if (randint1(100) < p_ptr->lev * 2)
             fire_beam(GF_PSI, dir, spell_power(damroll(dice, sides) + p_ptr->to_d_spell));
@@ -220,7 +220,7 @@ void _domination_spell(int cmd, variant *res)
         if (p_ptr->lev < 30)
         {
             int dir = 0;
-            if (!get_aim_dir(&dir)) return;
+            if (!get_fire_dir(&dir)) return;
 
             fire_ball(GF_DOMINATION, dir, spell_power(p_ptr->lev), 0);
         }
@@ -261,7 +261,7 @@ void _pulverise_spell(int cmd, variant *res)
         int rad = p_ptr->lev > 20 ? spell_power((p_ptr->lev - 20) / 8 + 1) : 0;
 
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball(
             GF_TELEKINESIS,
@@ -470,7 +470,7 @@ void _psychic_drain_spell(int cmd, variant *res)
         int dir = 0;
         int dam = spell_power(damroll(p_ptr->lev / 2, 6) + p_ptr->to_d_spell);
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         /* Only charge extra energy if the drain succeeded */
         if (fire_ball(GF_PSI_DRAIN, dir, dam, 0))
@@ -502,7 +502,7 @@ void psycho_spear_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_beam(GF_PSY_SPEAR, dir, spell_power(randint1(p_ptr->lev*3)+p_ptr->lev*3 + p_ptr->to_d_spell));
         var_set_bool(res, TRUE);
         break;
@@ -530,7 +530,7 @@ void _psycho_storm_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball(GF_PSI_STORM, dir, spell_power(p_ptr->lev * 5 + damroll(10, 10) + p_ptr->to_d_spell), 4);
 

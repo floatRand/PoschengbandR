@@ -4411,7 +4411,7 @@ static int target_set_aux(int y, int x, int mode, cptr info)
 /*
  * Handle "target" and "look".
  *
- * Note that this code can be called from "get_aim_dir()".
+ * Note that this code can be called from "get_fire_dir()".
  *
  * All locations must be on the current panel. Consider the use of
  * "panel_bounds()" to allow "off-panel" targets, perhaps by using
@@ -4957,7 +4957,44 @@ bool target_set(int mode)
  * if there is a usable target already set.
  *
  * Note that confusion over-rides any (explicit?) user choice.
+ *
  */
+bool get_fire_dir(int *dp)
+{
+    bool valid_target = FALSE;
+    if (use_old_target && target_okay())
+        valid_target = TRUE;
+    /* auto_target the closest monster if no valid target is selected up front */
+    if (!valid_target && auto_target && !p_ptr->confused && !p_ptr->image)
+    {
+        int i, best_m_idx = 0, best_dis = 9999;
+
+        for (i = 0; i < max_m_idx; i++)
+        {
+            monster_type *m_ptr = &m_list[i];
+            if (!m_ptr->r_idx) continue;
+            if (!m_ptr->ml) continue;
+            if (!projectable(py, px, m_ptr->fy, m_ptr->fx)) continue;
+            if (m_ptr->cdis < best_dis)
+            {
+                best_dis = m_ptr->cdis;
+                best_m_idx = i;
+            }
+        }
+        if (best_m_idx)
+        {
+            target_who = best_m_idx;
+            target_row = m_list[best_m_idx].fy;
+            target_col = m_list[best_m_idx].fx;
+            *dp = 5;
+            p_ptr->redraw |= PR_HEALTH_BARS;
+            return TRUE;
+        }
+    }
+    /* fall back on normal target selection */
+    return get_aim_dir(dp);
+}
+
 bool get_aim_dir(int *dp)
 {
     int        dir;

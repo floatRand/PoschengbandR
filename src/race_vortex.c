@@ -267,7 +267,7 @@ static void _breathe_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _breath_effect();
             msg_format("You breathe %s.", gf_name(e));

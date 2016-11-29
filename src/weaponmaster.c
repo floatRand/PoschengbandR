@@ -643,7 +643,7 @@ static bool _club_toss(int hand)
         if (info.tdis > mul) info.tdis = mul;
 
         project_length = info.tdis + 1;
-        if (!get_aim_dir(&dir)) return FALSE;
+        if (!get_fire_dir(&dir)) return FALSE;
 
         info.tx = px + 99 * ddx[dir];
         info.ty = py + 99 * ddy[dir];
@@ -1149,7 +1149,7 @@ static bool _dagger_toss(int hand)
         if (info.tdis > mul) info.tdis = mul;
 
         project_length = info.tdis + 1;
-        if (!get_aim_dir(&dir)) return FALSE;
+        if (!get_fire_dir(&dir)) return FALSE;
 
         info.tx = px + 99 * ddx[dir];
         info.ty = py + 99 * ddy[dir];
@@ -1861,7 +1861,7 @@ static void _reach_spell(int cmd, variant *res)
             bool b = FALSE;
 
             project_length = 2 + p_ptr->lev/40;
-            if (get_aim_dir(&dir))
+            if (get_fire_dir(&dir))
             {
                 project_hook(GF_ATTACK, dir, HISSATSU_2, PROJECT_STOP | PROJECT_KILL);
                 b = TRUE;
@@ -2509,7 +2509,7 @@ static void _circle_kick_spell(int cmd, variant *res)
 
     project_length = 3;
 
-    if (!get_aim_dir(&dir)) return FALSE;
+    if (!get_fire_dir(&dir)) return FALSE;
 
     tx = px + project_length * ddx[dir];
     ty = py + project_length * ddy[dir];

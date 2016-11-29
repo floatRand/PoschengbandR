@@ -335,7 +335,7 @@ static void _brain_smash_spell(int power, int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball(
             GF_PSI_BRAIN_SMASH, 
@@ -416,7 +416,7 @@ static void _ego_whip_spell(int power, int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball(
             GF_PSI_EGO_WHIP, 
@@ -504,7 +504,7 @@ static void _energy_blast_spell(int power, int cmd, variant *res)
         var_set_bool(res, FALSE);
         
         if (type < 0) return;
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball_aux(
             type, 
@@ -585,7 +585,7 @@ static void _mana_thrust_spell(int power, int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         fire_bolt(GF_MANA, dir, spell_power(damroll(4*power, 4*power)));
         var_set_bool(res, TRUE);
         break;
@@ -1276,7 +1276,7 @@ static void _psionic_storm_spell(int power, int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         fire_ball_aux(
             GF_PSI_STORM, 

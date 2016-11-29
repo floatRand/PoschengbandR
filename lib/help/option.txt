@@ -89,7 +89,10 @@ The command selection menu is a helpful tool for beginning players. By pressing 
 Forces the game to ask you before select an item on floor.
 
 <topic:use_old_target><color:U>Use old target by default</color> <color:D>(use_old_target)</color>
-Forces all commands which normally ask for a <color:keyword>direction</color> to use the current <color:keyword>target</color> if there is one. Use of this option can be dangerous if you target locations on the ground, unless you clear them when done.
+This option forces all commands which normally ask for a <color:keyword>direction</color> to use the current <color:keyword>target</color> if there is one. Use of this option can be dangerous if you target locations on the ground, unless you clear them when done. Actually, position targets now automatically clear when they are no longer valid (e.g. after a teleport). Pay attention to the character info section of your screen as it always shows your current target, whether monster or location.
+
+<topic:auto_target><color:U>Automatically target nearest monster</color> <color:D>(auto_target)</color>
+With this option enabled, every offensive spell you cast or device you use will automatically target the closest monster if there is not already a valid target selected. If you use this option, then it is highly recommended that you also enable the <color:keyword>use_old_target</color> option. That way, if you are in a situation where the automatic targeting is not what you want, you can just select a target up front before casting your spell.
 
 <topic:always_repeat><color:U>Repeat obvious commands</color> <color:D>(always_repeat)</color>
 Tells the game that when you attempt to <color:keyword>open</color> a door or chest, <color:keyword>bash</color> a door, <color:keyword>tunnel</color> through walls, or <color:keyword>disarm</color> traps or chests, that you wish to repeat the command 99 times (see <link:command.txt#CommandCounts>).

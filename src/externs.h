@@ -211,6 +211,7 @@ extern bool quick_messages;    /* Activate quick messages */
 extern bool command_menu;    /* Enable command selection menu */
 extern bool other_query_flag;    /* Prompt for floor item selection */
 extern bool use_old_target;    /* Use old target by default */
+extern bool auto_target;       /* Automatically target nearest monster */
 extern bool always_repeat;    /* Repeat obvious commands */
 extern bool confirm_destroy;    /* Prompt for destruction of known worthless items */
 extern bool confirm_wear;    /* Confirm to wear/wield known cursed items */
@@ -1880,7 +1881,14 @@ extern void ang_sort(vptr u, vptr v, int n);
 extern bool target_able(int m_idx);
 extern bool target_okay(void);
 extern bool target_set(int mode);
+
+/* get_fire_dir will attempt to auto_target (if set) and should be used
+ * by any offensive player spell.
+ * get_aim_dir will not auto_target. Use it for things like telekinesis
+ * and stone to mud. */
+extern bool get_fire_dir(int *dp);
 extern bool get_aim_dir(int *dp);
+
 extern bool get_hack_dir(int *dp);
 extern bool get_rep_dir(int *dp, bool under);
 extern bool get_rep_dir2(int *dp);

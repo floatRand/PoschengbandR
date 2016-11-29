@@ -109,7 +109,7 @@ static void _gaze_spell(int cmd, variant *res)
         int dir = 0;
         var_set_bool(res, FALSE);
         project_length = 6 + _rank();
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             project_hook(GF_ATTACK, dir, BEHOLDER_GAZE, PROJECT_STOP | PROJECT_KILL);
             var_set_bool(res, TRUE);

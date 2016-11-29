@@ -347,7 +347,7 @@ void _breathe_cold_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         msg_print("You breathe cold.");
         fire_ball(GF_COLD, dir, p_ptr->chp / 2, -3);
@@ -377,7 +377,7 @@ void _breathe_disintegration_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         msg_print("You breathe disintegration.");
         fire_ball(GF_DISINTEGRATE, dir, p_ptr->chp / 4, -3);
@@ -407,7 +407,7 @@ void _breathe_light_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         msg_print("You breathe light.");
         fire_ball(GF_LITE, dir, p_ptr->chp / 3, -3);
@@ -437,7 +437,7 @@ void _breathe_time_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
 
         msg_print("You breathe time.");
         fire_ball(GF_TIME, dir, p_ptr->chp / 5, -3);
@@ -467,7 +467,7 @@ void _shoot_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         msg_print("You shoot a missile.");
         fire_bolt(GF_MISSILE, dir, damroll(15, 15));
         var_set_bool(res, TRUE);

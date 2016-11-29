@@ -378,7 +378,7 @@ static void _extended_whip_spell(int cmd, variant *res)
             bool b = FALSE;
 
             project_length = 2;
-            if (get_aim_dir(&dir))
+            if (get_fire_dir(&dir))
             {
                 project_hook(GF_ATTACK, dir, HISSATSU_2, PROJECT_STOP | PROJECT_KILL);
                 b = TRUE;

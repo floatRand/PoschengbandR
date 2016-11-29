@@ -992,7 +992,7 @@ static void _draconian_breathe_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _draconian_breath_effect();
             int dam = _draconian_breath_amount();

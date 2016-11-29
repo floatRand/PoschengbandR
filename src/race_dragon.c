@@ -303,7 +303,7 @@ static void _breathe_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _breath_effect();
             int dam = _breath_amount();
@@ -581,7 +581,7 @@ static void _bolt_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _breath_effect();
             int dam = MAX(1, _breath_amount()/2);
@@ -622,7 +622,7 @@ static void _beam_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _breath_effect();
             int dam = _breath_amount();
@@ -663,7 +663,7 @@ static void _cone_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _breath_effect();
             int dam = _breath_amount();
@@ -704,7 +704,7 @@ static void _split_beam_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _breath_effect();
             int dam = MAX(1, _breath_amount()/2);
@@ -715,7 +715,7 @@ static void _split_beam_spell(int cmd, variant *res)
             
             command_dir = 0; /* Code is buggy asking for a direction 2x in a single player action! */
             target_who = 0;  /* TODO: Repeat command is busted ... */
-            if (get_aim_dir(&dir))
+            if (get_fire_dir(&dir))
                 fire_beam(e, dir, dam);
 
             var_set_bool(res, TRUE);
@@ -748,7 +748,7 @@ static void _retreating_breath_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _breath_effect();
             int dam = _breath_amount();
@@ -799,7 +799,7 @@ static void _deadly_breath_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int e = _breath_effect();
             int dam = _breath_amount() * 125 / 100;
@@ -1403,7 +1403,7 @@ static void _breathe_spell_aux(int effect, int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int dam = _breath_amount();
 
@@ -1663,7 +1663,7 @@ static void _breathe_unholiness_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int dam = _breath_amount() * 3 / 2;
 
@@ -1769,7 +1769,7 @@ static void _enslave_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (!get_aim_dir(&dir)) return;
+        if (!get_fire_dir(&dir)) return;
         charm_monster(dir, p_ptr->lev * 2);
         var_set_bool(res, TRUE);
         break;
@@ -1813,7 +1813,7 @@ static void _breathe_subjugation_spell(int cmd, variant *res)
     {
         int dir = 0;
         var_set_bool(res, FALSE);
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
         {
             int dam = subjugation_power();
 
@@ -2095,7 +2095,7 @@ static void _reach_spell(int cmd, variant *res)
             int dir = 5;
             var_set_bool(res, FALSE);
             project_length = 2 + p_ptr->lev/40;
-            if (!get_aim_dir(&dir)) return;
+            if (!get_fire_dir(&dir)) return;
             p_ptr->innate_attacks[0].flags |= INNATE_SKIP;
             project_hook(GF_ATTACK, dir, 0, PROJECT_STOP | PROJECT_KILL);
             p_ptr->innate_attacks[0].flags &= ~INNATE_SKIP;
