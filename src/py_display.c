@@ -230,6 +230,7 @@ static void _build_general2(doc_ptr doc)
         }
 
         doc_printf(doc, "<tab:9>Speed: <color:%c>%9.9s</color>\n", attr_to_attr_char(attr), string_buffer(s));
+        doc_printf(doc, "<tab:9>Mult : <color:%c>     x%01d.%01d</color>\n", attr_to_attr_char(attr), SPEED_TO_ENERGY(speed + 110) / 10, SPEED_TO_ENERGY(speed + 110) % 10);
     }
 
     doc_newline(doc);
