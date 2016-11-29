@@ -7273,14 +7273,14 @@ static cptr do_music_spell(int spell, int mode)
                     if (count == 11) msg_print("You sense the terrain around you!");
                     map_area(rad);
                 }
-                if (count >= 6)
+                if (count >= 6 && plev > 19)
                 {
                     /* There are too many hidden treasure. So... */
                     /* detect_treasure(rad); */
                     detect_objects_gold(rad);
                     detect_objects_normal(rad);
                 }
-                if (count >= 3 && plev > 19)
+                if (count >= 3 && plev > 14)
                 {
                     detect_monsters_invis(rad);
                     detect_monsters_normal(rad);
