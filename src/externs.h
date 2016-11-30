@@ -1821,6 +1821,7 @@ extern void mon_check_kill_unique(int m_idx);
 extern void resize_map(void);
 extern void redraw_window(void);
 extern bool class_doesnt_study(int class_idx);
+extern int monster_tele_save(monster_race *r_ptr, int power);
 
 /* Display
    Various regions of the terminal are reserved for different things.

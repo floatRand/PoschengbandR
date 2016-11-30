@@ -4243,25 +4243,14 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
             else if (chaos_effect == 4)
             {
-                bool resists_tele = FALSE;
+				int resists_tele = monster_tele_save(r_ptr, p_ptr->lev*2);
 
-                if (r_ptr->flagsr & RFR_RES_TELE)
+                if (resists_tele>0)
                 {
-                    if (r_ptr->flags1 & RF1_UNIQUE)
-                    {
-                        mon_lore_r(m_ptr, RFR_RES_TELE);
-                        msg_format("%^s is unaffected!", m_name_subject);
-                        resists_tele = TRUE;
-                    }
-                    else if (r_ptr->level > randint1(100))
-                    {
-                        mon_lore_r(m_ptr, RFR_RES_TELE);
-                        msg_format("%^s resists!", m_name_subject);
-                        resists_tele = TRUE;
-                    }
+                       if(resists_tele<3) mon_lore_r(m_ptr, RFR_RES_TELE);
+                        msg_format("%^s resists!", m_name_subject);           
                 }
-
-                if (!resists_tele)
+				else 
                 {
                     msg_format("%^s disappears!", m_name_subject);
                     teleport_away(c_ptr->m_idx, 50, TELEPORT_PASSIVE);

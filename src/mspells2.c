@@ -328,7 +328,7 @@ bool mon_spell_mon(int m_idx, int options)
 
     bool can_remember;
 
-    bool resists_tele = FALSE;
+    int resists_tele = 0;
 
     /* Prepare flags for summoning */
     if (!pet) u_mode |= PM_ALLOW_UNIQUE;
@@ -2889,31 +2889,28 @@ bool mon_spell_mon(int m_idx, int options)
                 }
             }
 
-            if (tr_ptr->flagsr & RFR_RES_TELE)
+			resists_tele = monster_tele_save(tr_ptr, r_ptr->level);
+            if (resists_tele>0)
             {
-                if ((tr_ptr->flags1 & RF1_UNIQUE) || (tr_ptr->flagsr & RFR_RES_ALL))
+                if (resists_tele >= 2)
                 {
-                    mon_lore_r(t_ptr, RFR_RES_TELE);
+                    if(resists_tele<3) mon_lore_r(t_ptr, RFR_RES_TELE);
                     if (see_t)
                     {
                         msg_format("%^s is unaffected!", t_name);
                     }
-
-                    resists_tele = TRUE;
                 }
-                else if (tr_ptr->level > randint1(100))
+				else if (resists_tele==1)
                 {
                     mon_lore_r(t_ptr, RFR_RES_TELE);
                     if (see_t)
                     {
                         msg_format("%^s resists!", t_name);
                     }
-
-                    resists_tele = TRUE;
                 }
             }
 
-            if (!resists_tele)
+            if (resists_tele == 0)
             {
                 if (t_idx == p_ptr->riding) teleport_player_to(m_ptr->fy, m_ptr->fx, TELEPORT_PASSIVE);
                 else teleport_monster_to(t_idx, m_ptr->fy, m_ptr->fx, 100, TELEPORT_PASSIVE);
@@ -2940,31 +2937,28 @@ bool mon_spell_mon(int m_idx, int options)
                 }
             }
 
-            if (tr_ptr->flagsr & RFR_RES_TELE)
-            {
-                if ((tr_ptr->flags1 & RF1_UNIQUE) || (tr_ptr->flagsr & RFR_RES_ALL))
-                {
-                    mon_lore_r(t_ptr, RFR_RES_TELE);
-                    if (see_t)
-                    {
-                        msg_format("%^s is unaffected!", t_name);
-                    }
+			resists_tele = monster_tele_save(tr_ptr, r_ptr->level);
+			if (resists_tele>0)
+			{
+				if (resists_tele >= 2)
+				{
+					if (resists_tele<3) mon_lore_r(t_ptr, RFR_RES_TELE);
+					if (see_t)
+					{
+						msg_format("%^s is unaffected!", t_name);
+					}
+				}
+				else if (resists_tele == 1)
+				{
+					mon_lore_r(t_ptr, RFR_RES_TELE);
+					if (see_t)
+					{
+						msg_format("%^s resists!", t_name);
+					}
+				}
+			}
 
-                    resists_tele = TRUE;
-                }
-                else if (tr_ptr->level > randint1(100))
-                {
-                    mon_lore_r(t_ptr, RFR_RES_TELE);
-                    if (see_t)
-                    {
-                        msg_format("%^s resists!", t_name);
-                    }
-
-                    resists_tele = TRUE;
-                }
-            }
-
-            if (!resists_tele)
+            if (resists_tele == 0)
             {
                 if (t_idx == p_ptr->riding) teleport_player_away(m_idx, MAX_SIGHT * 2 + 5);
                 else teleport_away(t_idx, MAX_SIGHT * 2 + 5, TELEPORT_PASSIVE);

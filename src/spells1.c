@@ -2863,15 +2863,16 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
-            if (r_ptr->flagsr & RFR_RES_TELE)
+			int resists_tele = monster_tele_save(r_ptr,p_ptr->lev*2);
+            if (resists_tele>0)
             {
-                if (r_ptr->flags1 & (RF1_UNIQUE))
+                if (resists_tele>=2)
                 {
-                    mon_lore_r(m_ptr, RFR_RES_TELE);
+                    if(resists_tele==2) mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " is unaffected!";
                     resist_tele = TRUE;
                 }
-                else if (r_ptr->level > randint1(100))
+                else if (resists_tele==1)
                 {
                     mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " resists!";
@@ -2879,7 +2880,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 }
             }
 
-            if (!resist_tele) do_dist = 10;
+            if (resist_tele == 0) do_dist = 10;
             else do_dist = 0;
             if (p_ptr->riding && (c_ptr->m_idx == p_ptr->riding)) do_dist = 0;
 
@@ -4551,30 +4552,26 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         /* Teleport undead (Use "dam" as "power") */
         case GF_AWAY_UNDEAD:
         {
+	
             /* Only affect undead */
             if (r_ptr->flags3 & (RF3_UNDEAD))
             {
-                bool resists_tele = FALSE;
-
-                if (r_ptr->flagsr & RFR_RES_TELE)
+				int resists_tele = monster_tele_save(r_ptr, dam);
+                if (resists_tele>0)
                 {
-                    if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL))
+                    if (resists_tele >= 2)
                     {
-                        mon_lore_r(m_ptr, RFR_RES_TELE);
+                        if(resists_tele == 2)mon_lore_r(m_ptr, RFR_RES_TELE);
                         note = " is unaffected!";
-
-                        resists_tele = TRUE;
                     }
-                    else if (r_ptr->level > randint1(100))
+                    else if (resists_tele == 1)
                     {
                         mon_lore_r(m_ptr, RFR_RES_TELE);
                         note = " resists!";
-
-                        resists_tele = TRUE;
                     }
                 }
 
-                if (!resists_tele)
+                if (resists_tele == 0)
                 {
                     if (seen) obvious = TRUE;
                     mon_lore_3(m_ptr, RF3_UNDEAD);
@@ -4601,27 +4598,23 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             /* Only affect evil */
             if (r_ptr->flags3 & (RF3_EVIL))
             {
-                bool resists_tele = FALSE;
+				int resists_tele = monster_tele_save(r_ptr, dam);
 
-                if (r_ptr->flagsr & RFR_RES_TELE)
+                if (resists_tele>0)
                 {
-                    if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL))
+                    if (resists_tele>=2)
                     {
-                        mon_lore_r(m_ptr, RFR_RES_TELE);
+                        if(resists_tele == 2) mon_lore_r(m_ptr, RFR_RES_TELE);
                         note = " is unaffected!";
-
-                        resists_tele = TRUE;
                     }
-                    else if (r_ptr->level > randint1(100))
+                    else if (resists_tele==1)
                     {
                         mon_lore_r(m_ptr, RFR_RES_TELE);
                         note = " resists!";
-
-                        resists_tele = TRUE;
                     }
                 }
 
-                if (!resists_tele)
+                if (resists_tele == 0)
                 {
                     if (seen) obvious = TRUE;
                     mon_lore_3(m_ptr, RF3_EVIL);
@@ -4643,30 +4636,28 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
         case GF_ISOLATION:
         {
-            bool resists_tele = FALSE;
+            int resists_tele = monster_tele_save(r_ptr,p_ptr->lev*2);
             if (c_ptr->m_idx == p_ptr->duelist_target_idx)
             {
                 dam = 0;
                 return TRUE;
             }
-            if (r_ptr->flagsr & RFR_RES_TELE)
+            if (resists_tele>0)
             {
-                if ((r_ptr->flagsr & RFR_RES_ALL))
+                if (resists_tele>=2)
                 {
-                    mon_lore_r(m_ptr, RFR_RES_TELE);
+                    if(resists_tele==2) mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " is unaffected!";
-
-                    resists_tele = TRUE;
                 }
                 else if (mon_save_p(m_ptr->r_idx, A_DEX))
                 {
                     mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " resists!";
-                    resists_tele = TRUE;
                 }
+				else resists_tele = 0;
             }
 
-            if (!resists_tele)
+            if (resists_tele)
             {
                 /* Obvious */
                 if (seen) obvious = TRUE;
@@ -4684,29 +4675,27 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         /* Teleport monster (Use "dam" as "power") */
         case GF_AWAY_ALL:
         {
-            bool resists_tele = FALSE;
-            if (r_ptr->flagsr & RFR_RES_TELE)
+            int resists_tele = monster_tele_save(r_ptr, dam);
+            if (resists_tele>0)
             {
-                if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL))
+                if (resists_tele>=2)
                 {
-                    mon_lore_r(m_ptr, RFR_RES_TELE);
+                    if(resists_tele == 2 )mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " is unaffected!";
-                    resists_tele = TRUE;
                 }
-                else if (r_ptr->level > randint1(100))
+                else if (resists_tele==1)
                 {
                     mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " resists!";
-                    resists_tele = TRUE;
                 }
             }
             else if (m_ptr->smart & SM_GUARDIAN)
             {
                 note = " is unaffected!";
-                resists_tele = TRUE;
+                resists_tele = 2;
             }
 
-            if (!resists_tele)
+            if (resists_tele == 0)
             {
                 /* Obvious */
                 if (seen) obvious = TRUE;

@@ -5854,3 +5854,14 @@ bool class_doesnt_study(int class_idx){
 	return (class_idx == CLASS_RED_MAGE || class_idx == CLASS_SORCERER || class_idx == CLASS_FREELANCER);	
 }
 
+/* Returns whetever resist teleportation. 0 doesn't resist, 1 is resist, 2 is immune, 3 is temp  */
+int monster_tele_save(monster_race *r_ptr, int power){
+
+	if (r_ptr->flagsr & RFR_RES_ALL) return 2; // immune
+	else if (maledict_get_toggle() == MALEDICT_TOGGLE_ANTITELE) return 3; // temp
+	else if ( (int)r_ptr->level - ((power)/5) > randint1(100) && !(r_ptr->flags1 & RF1_UNIQUE && one_in_(2))) // resists
+	{
+		return 1;
+	}
+	return 0;
+}

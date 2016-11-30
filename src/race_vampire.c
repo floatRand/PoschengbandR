@@ -217,15 +217,17 @@ void _grasp_spell(int cmd, variant *res)
         m_ptr = &m_list[m_idx];
         r_ptr = &r_info[m_ptr->r_idx];
         monster_desc(m_name, m_ptr, 0);
-        if (r_ptr->flagsr & RFR_RES_TELE)
+
+		int resists_tele = monster_tele_save(r_ptr, p_ptr->lev*2);
+        if (resists_tele>0)
         {
-            if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flagsr & RFR_RES_ALL))
+            if (resists_tele >= 2)
             {
-                mon_lore_r(m_ptr, RFR_RES_TELE);
+                if(resists_tele == 2) mon_lore_r(m_ptr, RFR_RES_TELE);
                 msg_format("%s is unaffected!", m_name);
                 break;
             }
-            else if (r_ptr->level > randint1(100))
+            else if (resists_tele == 1)
             {
                 mon_lore_r(m_ptr, RFR_RES_TELE);
                 msg_format("%s resists!", m_name);

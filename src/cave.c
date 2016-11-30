@@ -4824,20 +4824,23 @@ void hit_mon_trap(int y, int x, int m_idx)
                         msg_format("%s is hit by a small dart.", m_name);
                     project(0, 1, m_ptr->fy, m_ptr->fx, p_ptr->lev, GF_OLD_SLOW, (PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_NO_HANGEKI), -1);
                     break;
-                case 4: /* Teleport */
-                    if (r_ptr->flagsr & RFR_RES_TELE)
-                    {
-                        mon_lore_r(m_ptr, RFR_RES_TELE);
-                        if (m_ptr->ml)
-                            msg_format("%s resists teleportation.", m_name);
-                    }
-                    else
-                    {
-                        if (m_ptr->ml)
-                            msg_format("%s disappears.", m_name);
-                        teleport_away(m_idx, 100, TELEPORT_PASSIVE);
-                    }
-                    break;
+				case 4: /* Teleport */
+				{
+					int resists_tele = monster_tele_save(r_ptr, dun_level);
+					if (resists_tele > 0)
+					{
+						if (resists_tele<=2) mon_lore_r(m_ptr, RFR_RES_TELE);
+						if (m_ptr->ml)
+							msg_format("%s resists teleportation.", m_name);
+					}
+					else
+					{
+						if (m_ptr->ml)
+							msg_format("%s disappears.", m_name);
+						teleport_away(m_idx, 100, TELEPORT_PASSIVE);
+					}
+					break;
+				}
                 case 5: /* Trap Door */
                     if (r_ptr->flags7 & RF7_CAN_FLY)
                     {
