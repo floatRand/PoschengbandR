@@ -1360,23 +1360,29 @@ void py_get_display_char_attr(char *c, byte *a)
 {
     monster_race *r_ptr;
 
-    switch (p_ptr->mimic_form)
+    if (display_race)
     {
-    case MIMIC_BAT:
-        r_ptr = &r_info[MON_VAMPIRE_BAT];
-        break;
-    case MIMIC_MIST:
-        r_ptr = &r_info[MON_VAMPIRIC_MIST];
-        break;
-    case MIMIC_WOLF:
-        r_ptr = &r_info[196];
-        break;
-    default:
-        r_ptr = &r_info[p_ptr->current_r_idx];
+        switch (p_ptr->mimic_form)
+        {
+        case MIMIC_BAT:
+            r_ptr = &r_info[MON_VAMPIRE_BAT];
+            break;
+        case MIMIC_MIST:
+            r_ptr = &r_info[MON_VAMPIRIC_MIST];
+            break;
+        case MIMIC_WOLF:
+            r_ptr = &r_info[196];
+            break;
+        default:
+            r_ptr = &r_info[p_ptr->current_r_idx];
+        }
+        if (p_ptr->prace == RACE_MON_RING && p_ptr->riding)
+            r_ptr = &r_info[m_list[p_ptr->riding].r_idx];
     }
-    r_ptr = &r_info[0];
-    if (p_ptr->prace == RACE_MON_RING && p_ptr->riding)
-        r_ptr = &r_info[m_list[p_ptr->riding].r_idx];
+    else
+    {
+        r_ptr = &r_info[0];
+    }
 
     assert(r_ptr);
     *c = r_ptr->x_char;

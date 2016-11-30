@@ -272,6 +272,7 @@ extern bool exp_need;    /* Show the experience needed for next level */
 extern bool ignore_unview;    /* Ignore whenever any monster does */
 extern bool display_distance;    /* Display distance of LoS monsters in monster list */
 extern bool simple_stat_display;
+extern bool display_race; /* Display monster races with their racial char */
 
 
 /*** Game-Play Options ***/

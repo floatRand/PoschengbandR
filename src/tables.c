@@ -3339,7 +3339,10 @@ option_type option_info[] =
     "display_distance",             "Display distance in monster list" },
 
     { &simple_stat_display,		    FALSE, OPT_PAGE_TEXT, 2, 28,
-    "simple stat display",          "Display high stats in a more simple format" },
+    "simple_stat_display",          "Display high stats in a more simple format" },
+   
+    { &display_race,		        TRUE, OPT_PAGE_TEXT, 2, 29,
+    "display_race",                  "Player character depends on race" },
 
     /*** Game-Play ***/
 
