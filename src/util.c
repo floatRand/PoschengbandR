@@ -4068,12 +4068,12 @@ void repeat_check(int shopping)
     {
         _repeat_state = _PLAYING;
         prt("Playback: ", 0, 0);
-        _repeat_reg = inkey();
+        _repeat_reg = inkey_special(FALSE);
         if (_repeat_reg == '\'')
         {
             Term_save();
             _repeat_list();
-            _repeat_reg = inkey();
+            _repeat_reg = inkey_special(FALSE);
             Term_load();
         }
         prt("", 0, 0);
@@ -4115,7 +4115,7 @@ void repeat_check(int shopping)
         if (command_cmd == '"')
         {
             prt("Record: ", 0, 0);
-            _repeat_reg = inkey();
+            _repeat_reg = inkey_special(FALSE);
             prt("", 0, 0);
             if (_repeat_reg == ESCAPE)
             {
