@@ -2875,7 +2875,7 @@ bool set_invuln(int v, bool do_dec)
     {
         if (p_ptr->invuln && !music_singing(MUSIC_INVULN))
         {
-            msg_print("The invulnerability wears off.");
+            msg_print("The invulnerability wears off, and you lose some time.");
 
             notice = TRUE;
 
