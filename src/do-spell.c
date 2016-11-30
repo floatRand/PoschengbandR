@@ -7908,7 +7908,8 @@ static cptr do_music_spell(int spell, int mode)
         {
             if (!p_ptr->invuln)
             {
-                msg_print("The invulnerability wears off.");
+                msg_print("The invulnerability wears off, and you lose some time.");
+                p_ptr->energy_need += ENERGY_NEED();
                 /* Redraw map */
                 p_ptr->redraw |= (PR_MAP);
 
