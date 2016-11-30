@@ -408,7 +408,7 @@ static int _prompt_personality(void)
     {
         char   tmp[80];
         int    idx, ct = 0, i;
-        int    choices[MAX_PERSONALITIES];
+        int    choices[MAX_PERSONALITIES+1];
         personality_ptr pers_ptr = NULL;
         menu_t menu = { "Personality", "Personalities.txt", "Note: Your personality determines various intrinsic abilities and bonuses.",
                             _personality_menu_fn,
