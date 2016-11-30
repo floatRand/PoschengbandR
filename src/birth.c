@@ -3280,7 +3280,7 @@ void player_outfit(void)
 
 static bool get_stat_limits(void)
 {
-    int i, j, m, cs, os;
+    int i, j, m, cs, os, lf;
     s16b cval[6];
     char c;
     char buf[80], cur[80];
@@ -3313,7 +3313,12 @@ static bool get_stat_limits(void)
         m = adjust_stat(17, j);
 
         if (m > 18)
-            sprintf(max[i], "18/%02d", (m - 18));
+            if (simple_stat_display)
+            {
+                lf = (18 + (m - 18) / 10);
+                sprintf(max[i], "%02d", lf);
+            }
+            else sprintf(max[i], "18/%02d", (m - 18));
         else
             sprintf(max[i], "%2d", m);
 
@@ -3321,7 +3326,12 @@ static bool get_stat_limits(void)
         m = adjust_stat(cval[i], j);
 
         if (m > 18)
-            sprintf(inp, "18/%02d", (m - 18));
+            if (simple_stat_display)
+            {
+                lf = (18 + (m - 18) / 10);
+                sprintf(inp, "%02d", lf);
+            }
+            else sprintf(inp, "18/%02d", (m - 18));
         else
             sprintf(inp, "%2d", m);
 
@@ -3365,9 +3375,15 @@ static bool get_stat_limits(void)
 
                 /* Obtain the current stat */
                 m = adjust_stat(cval[cs], j);
-
-                if (m > 18)
-                    sprintf(inp, "18/%02d", (m - 18));
+                               
+                if (m > 18) {
+                    if (simple_stat_display)
+                    {
+                        lf = 18 + (m - 18) / 10;
+                        sprintf(inp, "%02d", lf);
+                    }
+                    else sprintf(inp, "18/%02d", (m - 18));
+                }
                 else
                     sprintf(inp, "%2d", m);
 

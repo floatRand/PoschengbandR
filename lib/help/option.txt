@@ -221,7 +221,13 @@ Setting this option to yes alters the display of experience on the left of the m
 
 <topic:ignore_unview><color:U>Ignore actions of out of sight monsters</color> <color:D>(ignore_unview)</color>
 With this option, you won't receive messages when out of sight monsters fight one another. This is useful if you are playing with lots of pets and don't wish to read a blow by blow account of the battle raging around you.
+
+<topic:simple_stat_display><color:U>Simplify stat-display</color> <color:D>(simple_stat_display)</color>
+This option causes the game to display stats as numbers up to 40, instead of the percentile system where the max is 18/220. The game still works the same way under the hood, though. This only changes the way things are displayed to the player.
+
 </indent>
+
+
 <topic:GamePlay><style:heading>Game Play Options</style>
   <indent>
 <topic:stack_force_notes><color:U>Merge inscriptions when stacking</color> <color:D>(stack_force_notes)</color>

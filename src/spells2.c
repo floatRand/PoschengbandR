@@ -82,7 +82,15 @@ void self_knowledge(void)
     {
         char stat_desc[80];
 
-        sprintf(stat_desc, "%s 18/%d", stat_names[v_nr], p_ptr->stat_max_max[v_nr]-18);
+        if (simple_stat_display)
+        {
+            int lf = (18 + (p_ptr->stat_max_max[v_nr] - 18) / 10);
+            sprintf(stat_desc, "%s %d", stat_names[v_nr], lf);
+        }
+        else
+        {
+            sprintf(stat_desc, "%s 18/%d", stat_names[v_nr], p_ptr->stat_max_max[v_nr] - 18);
+        }
 
         strcpy(s_string[v_nr], stat_desc);
 

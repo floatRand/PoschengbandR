@@ -205,29 +205,48 @@ static int calc_adj_dex_ta(void)
  */
 void cnv_stat(int val, char *out_val)
 {
-    /* Above 18 */
-    if (val > 18)
-    {
-        int bonus = (val - 18);
-
-        if (bonus >= 220)
+    
+    if (simple_stat_display) {
+        if (val >= 18 + 220)
         {
-            sprintf(out_val, "18/%3s", "***");
+            sprintf(out_val, "**40**");
         }
-        else if (bonus >= 100)
+        else if (val > 18)
         {
-            sprintf(out_val, "18/%03d", bonus);
+            int lf = (18 + (val - 18) / 10);
+            sprintf(out_val, "    %2d", lf);
         }
+        /* From 3 to 18 */
         else
         {
-            sprintf(out_val, " 18/%02d", bonus);
+            sprintf(out_val, "    %2d", val);
         }
     }
+    else {
+        /* Above 18 */
+        if (val > 18)
+        {
+            int bonus = (val - 18);
 
-    /* From 3 to 18 */
-    else
-    {
-        sprintf(out_val, "    %2d", val);
+            if (bonus >= 220)
+            {
+                sprintf(out_val, "18/%3s", "***");
+            }
+            else if (bonus >= 100)
+            {
+                sprintf(out_val, "18/%03d", bonus);
+            }
+            else
+            {
+                sprintf(out_val, " 18/%02d", bonus);
+            }
+        }
+
+        /* From 3 to 18 */
+        else
+        {
+            sprintf(out_val, "    %2d", val);
+        }
     }
 }
 

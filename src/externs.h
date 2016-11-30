@@ -271,6 +271,7 @@ extern bool abbrev_all;    /* Describe obj's all resistances by abbreviation */
 extern bool exp_need;    /* Show the experience needed for next level */
 extern bool ignore_unview;    /* Ignore whenever any monster does */
 extern bool display_distance;    /* Display distance of LoS monsters in monster list */
+extern bool simple_stat_display;
 
 
 /*** Game-Play Options ***/
