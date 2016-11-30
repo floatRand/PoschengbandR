@@ -3,6 +3,7 @@ N:*:Default
 of Beauty
 'Hobbit Strength'
 of Encircling
+of Snotling Power
 'Wooden Ring'
 of Copper
 of Modesty

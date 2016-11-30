@@ -2,6 +2,8 @@ N:*:Default
 of Power
 of Elvish Power
 of Dwarvish Power
+of Human Power
+of Gnome Power
 of Giant Strength
 'Golden Avatar'
 of Immortality
@@ -19,3 +21,4 @@ of Ascension
 of Dragonkind
 of the Dark Lord
 'Celestial Protection'
+of Ouroboros
