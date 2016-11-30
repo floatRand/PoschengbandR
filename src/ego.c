@@ -8,6 +8,9 @@ extern bool obj_create_device(object_type *o_ptr, int level, int power, int mode
 extern void obj_create_weapon(object_type *o_ptr, int level, int power, int mode);
 extern void obj_create_armor(object_type *o_ptr, int level, int power, int mode);
 extern void obj_create_lite(object_type *o_ptr, int level, int power, int mode);
+extern void obj_create_amulet(object_type *o_ptr, int level, int power, int mode);
+extern void obj_create_ring(object_type *o_ptr, int level, int power, int mode);
+
 extern int  ego_choose_type(int type, int level);
 extern void ego_weapon_adjust_weight(object_type *o_ptr);
 
@@ -2145,6 +2148,7 @@ static void _ego_create_weapon(object_type *o_ptr, int level)
     }
     ego_weapon_adjust_weight(o_ptr);
 }
+
 void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
 {
     int tohit1 = randint1(5) + m_bonus(5, level);
@@ -2902,6 +2906,38 @@ static void _ego_create_boots(object_type *o_ptr, int level)
             break;
         }
     }
+}
+
+void obj_create_ring(object_type *o_ptr, int level, int power, int mode)
+{
+	bool crafting = (mode & AM_CRAFTING) ? TRUE : FALSE;
+
+	if (mode & AM_FORCE_EGO)
+		crafting = TRUE; /* Hack to prevent artifacts */
+
+	if (-1 <= power && power <= 1)
+		return;
+	
+	if (!crafting && (one_in_(40) || power > 2)){ _art_create_random(o_ptr, level, power); }
+					else ego_create_ring(o_ptr, level, power, mode);
+
+	ego_finalize(o_ptr, level, power, mode);
+}
+
+void obj_create_amulet(object_type *o_ptr, int level, int power, int mode)
+{
+	bool crafting = (mode & AM_CRAFTING) ? TRUE : FALSE;
+
+	if (mode & AM_FORCE_EGO)
+		crafting = TRUE; /* Hack to prevent artifacts */
+
+	if (-1 <= power && power <= 1)
+		return;
+
+	if (!crafting && (one_in_(40) || power > 2)){ _art_create_random(o_ptr, level, power); }
+				else ego_create_amulet(o_ptr, level, power, mode);
+
+	ego_finalize(o_ptr, level, power, mode);
 }
 
 void obj_create_armor(object_type *o_ptr, int level, int power, int mode)

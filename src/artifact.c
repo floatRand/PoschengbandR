@@ -2426,6 +2426,18 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     one_high_resistance(o_ptr);
                     break;
                 }
+				else if (one_in_(4))
+				{
+					if (!one_in_(6) || lev < 30)
+					{
+						if (!one_in_(3)) add_flag(o_ptr->flags, OF_AURA_FIRE);
+						else if (!one_in_(2)) add_flag(o_ptr->flags, OF_AURA_COLD);
+						else add_flag(o_ptr->flags, OF_AURA_ELEC);
+					}
+					else if (!one_in_(3) || lev < 50) add_flag(o_ptr->flags, OF_AURA_SHARDS);
+					else add_flag(o_ptr->flags, OF_AURA_REVENGE);
+
+				}
             case 5: case 6:
                 random_resistance(o_ptr);
                 break;
@@ -2499,6 +2511,18 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     one_high_resistance(o_ptr);
                     break;
                 }
+				else if (one_in_(4))
+				{
+					if (!one_in_(6) || lev < 30)
+					{
+						if (!one_in_(3)) add_flag(o_ptr->flags, OF_AURA_FIRE);
+						else if (!one_in_(2)) add_flag(o_ptr->flags, OF_AURA_COLD);
+						else add_flag(o_ptr->flags, OF_AURA_ELEC);
+					}
+					else if (!one_in_(3) || lev < 50) add_flag(o_ptr->flags, OF_AURA_SHARDS);
+					else add_flag(o_ptr->flags, OF_AURA_REVENGE);
+
+				}
             case 5: case 6:
                 random_resistance(o_ptr);
                 break;

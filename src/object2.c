@@ -2620,10 +2620,10 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
             if (power) obj_create_armor(o_ptr, lev, power, mode);
             break;
         case TV_RING:
-            if (power) ego_create_ring(o_ptr, lev, power, mode);
+            if (power) obj_create_ring(o_ptr, lev, power, mode);
             break;
         case TV_AMULET:
-            if (power) ego_create_amulet(o_ptr, lev, power, mode);
+            if (power) obj_create_amulet(o_ptr, lev, power, mode);
             break;
         case TV_LITE:
             obj_create_lite(o_ptr, lev, power, mode);
