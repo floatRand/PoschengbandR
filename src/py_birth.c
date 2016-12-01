@@ -375,8 +375,7 @@ static int _race_class_ui(void)
         cols[1] = doc_alloc(46);
 
         doc_insert(cols[0], "  <color:y>n</color>) Change Name\n");
-        doc_printf(cols[0], "  <color:%c>s</color>) Change Sex\n",
-            p_ptr->personality == PERS_SEXY || p_ptr->personality == PERS_LUCKY ? 'D' : 'y');
+        doc_printf(cols[0], "  <color:y>s</color>) Change Sex\n");
         if (game_mode != GAME_MODE_BEGINNER)
             doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
@@ -500,11 +499,8 @@ static int _race_class_ui(void)
             break;
         case 's':
             if (p_ptr->psex == SEX_MALE)
-            {
-                if (p_ptr->personality != PERS_LUCKY)
-                    p_ptr->psex = SEX_FEMALE;
-            }
-            else if (p_ptr->personality != PERS_SEXY)
+                p_ptr->psex = SEX_FEMALE;
+            else
                 p_ptr->psex = SEX_MALE;
             break;
         }
@@ -594,8 +590,6 @@ static vec_ptr _pers_choices(void)
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         personality_ptr pers_ptr = get_personality_aux(i);
-        if (p_ptr->psex == SEX_MALE && i == PERS_SEXY) continue;
-        if (p_ptr->psex == SEX_FEMALE && i == PERS_LUCKY) continue;
         vec_add(v, pers_ptr);
     }
     vec_sort(v, (vec_cmp_f)_pers_cmp);
