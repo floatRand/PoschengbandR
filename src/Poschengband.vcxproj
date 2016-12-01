@@ -176,6 +176,7 @@
     <ClCompile Include="personality.c" />
     <ClCompile Include="priest.c" />
     <ClCompile Include="psion.c" />
+    <ClCompile Include="py_birth.c" />
     <ClCompile Include="py_display.c" />
     <ClCompile Include="races.c" />
     <ClCompile Include="races_a.c" />
@@ -263,6 +264,7 @@
     <ClCompile Include="wild_talent.c" />
     <ClCompile Include="wizard1.c" />
     <ClCompile Include="wizard2.c" />
+    <ClCompile Include="wiz_obj.c" />
     <ClCompile Include="xtra1.c" />
     <ClCompile Include="xtra2.c" />
     <ClCompile Include="yellow_mage.c" />

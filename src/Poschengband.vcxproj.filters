@@ -126,6 +126,9 @@
     <ClCompile Include="variable.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wiz_obj.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wizard1.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -598,6 +601,9 @@
       <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="personality.c">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="py_birth.c">
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="py_display.c">
