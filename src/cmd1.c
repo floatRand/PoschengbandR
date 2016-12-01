@@ -3884,10 +3884,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                 if ((p_ptr->pclass == CLASS_BERSERKER || mut_present(MUT_FANTASTIC_FRENZY) || p_ptr->tim_shrike) && energy_use)
                 {
+                    int ct = MAX(1, p_ptr->weapon_ct); /* paranoia ... if we are called with 0, that is a bug (I cannot reproduce) */
+                    int frac = 100/ct;                 /* Perhaps the 'zerker leveled up to 35 in the middle of a round of attacks? */
+
                     energy_use = 0;
-                    if (hand)
-                        energy_use += (hand - 1) * 100 / p_ptr->weapon_ct;
-                    energy_use += num * (100 / p_ptr->weapon_ct) / num_blow;
+                    if (hand) /* hand is 0, 1, ... so hand is the number of successful rounds of attacks so far */
+                        energy_use += hand * frac;
+                    energy_use += num * frac / num_blow;
                 }
                 if (o_ptr && o_ptr->name1 == ART_ZANTETSU && is_lowlevel)
                     msg_print("Sigh... Another trifling thing I've cut....");
@@ -4353,6 +4356,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         if (mode == MYSTIC_KILL) break;
         if (mode == MYSTIC_KNOCKOUT) break;
         if (mode == MYSTIC_CONFUSE) break;
+        if (!p_ptr->weapon_ct) break; /* Draconian Metamorphosis in the middle of attacking ... mon_take_hit -> gain_exp ->
+                                         gain level 35 -> change body type -> drop all weapons -> handle_stuff -> continue attacks!
+                                         BTW: Gaining experience and calling handle_stuff in the middle of a round of attacks
+                                         causes numerous other problems and should be removed at some point. The problem is that
+                                         handle_stuff is like a virus ... someone will keep calling it to resurface these sorts
+                                         of issues! */
     }
 
     if (mode == WEAPONMASTER_ELUSIVE_STRIKE && hit_ct)
