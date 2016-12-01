@@ -1617,18 +1617,28 @@ static _mon_list_ptr _create_monster_list(int mode)
 
     vec_sort(result->list, (vec_cmp_f)_mon_list_comp);
 
-    /* Hack: Auto track the first monster on the list */
+    /* Hack: Auto track the first monster on the list
+     * if the old track is either missing, or stale. */
     if ( !p_ptr->monster_race_idx
-      || target_who <= 0
-      || !int_map_find(map, -m_list[target_who].r_idx) )
+      || !int_map_find(map, -p_ptr->monster_race_idx) )
     {
-        for (i = 0; i < vec_length(result->list); i++)
+        /* If there is a valid target, it should already be tracking,
+         * but let's double check */
+        if ( target_who > 0
+          && int_map_find(map, -m_list[target_who].r_idx) )
         {
-            _mon_list_info_ptr info_ptr = vec_get(result->list, i);
-            if (info_ptr->subgroup == _SUBGROUP_DATA)
+            monster_race_track(m_list[target_who].r_idx);
+        }
+        else
+        {
+            for (i = 0; i < vec_length(result->list); i++)
             {
-                monster_race_track(info_ptr->r_idx);
-                break;
+                _mon_list_info_ptr info_ptr = vec_get(result->list, i);
+                if (info_ptr->subgroup == _SUBGROUP_DATA)
+                {
+                    monster_race_track(info_ptr->r_idx);
+                    break;
+                }
             }
         }
     }
