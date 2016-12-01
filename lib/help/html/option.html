@@ -177,10 +177,22 @@ off after the creation is finished!
   </font><font color="#ffffff">Forces the game to ask you before select an item on floor.
   
 <a name="use_old_target"></a>  </font><font color="#c08040">Use old target by default </font><font color="#404040">(use_old_target)
-  </font><font color="#ffffff">Forces all commands which normally ask for a </font><font color="#ff0000">direction </font><font color="#ffffff">to use the 
-  current </font><font color="#ff0000">target </font><font color="#ffffff">if there is one. Use of this option can be dangerous 
-  if you target locations on the ground, unless you clear them when 
-  done.
+  </font><font color="#ffffff">This option forces all commands which normally ask for a </font><font color="#ff0000">direction </font><font color="#ffffff">to 
+  use the current </font><font color="#ff0000">target </font><font color="#ffffff">if there is one. Use of this option can be 
+  dangerous if you target locations on the ground, unless you clear 
+  them when done. Actually, position targets now automatically clear 
+  when they are no longer valid (e.g. after a teleport). Pay attention 
+  to the character info section of your screen as it always shows your 
+  current target, whether monster or location.
+  
+<a name="auto_target"></a>  </font><font color="#c08040">Automatically target nearest monster </font><font color="#404040">(auto_target)
+  </font><font color="#ffffff">With this option enabled, every offensive spell you cast or device 
+  you use will automatically target the closest monster if there is not 
+  already a valid target selected. If you use this option, then it is 
+  highly recommended that you also enable the </font><font color="#ff0000">use_old_target </font><font color="#ffffff">option. 
+  That way, if you are in a situation where the automatic targeting is 
+  not what you want, you can just select a target up front before 
+  casting your spell.
   
 <a name="always_repeat"></a>  </font><font color="#c08040">Repeat obvious commands </font><font color="#404040">(always_repeat)
   </font><font color="#ffffff">Tells the game that when you attempt to </font><font color="#ff0000">open </font><font color="#ffffff">a door or chest, </font><font color="#ff0000">bash </font><font color="#ffffff">a 

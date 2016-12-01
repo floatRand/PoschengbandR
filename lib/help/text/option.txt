@@ -174,10 +174,22 @@ Input Options
   Forces the game to ask you before select an item on floor.
   
   Use old target by default (use_old_target)
-  Forces all commands which normally ask for a direction to use the 
-  current target if there is one. Use of this option can be dangerous 
-  if you target locations on the ground, unless you clear them when 
-  done.
+  This option forces all commands which normally ask for a direction to 
+  use the current target if there is one. Use of this option can be 
+  dangerous if you target locations on the ground, unless you clear 
+  them when done. Actually, position targets now automatically clear 
+  when they are no longer valid (e.g. after a teleport). Pay attention 
+  to the character info section of your screen as it always shows your 
+  current target, whether monster or location.
+  
+  Automatically target nearest monster (auto_target)
+  With this option enabled, every offensive spell you cast or device 
+  you use will automatically target the closest monster if there is not 
+  already a valid target selected. If you use this option, then it is 
+  highly recommended that you also enable the use_old_target option. 
+  That way, if you are in a situation where the automatic targeting is 
+  not what you want, you can just select a target up front before 
+  casting your spell.
   
   Repeat obvious commands (always_repeat)
   Tells the game that when you attempt to open a door or chest, bash a 
