@@ -3070,7 +3070,10 @@ bool get_check_strict(cptr prompt, int mode)
 bool get_com(cptr prompt, char *command, bool z_escape)
 {
     /* Paranoia XXX XXX XXX */
+
+    /* Wednesday 2016-07-27 20:14:30 lumiera: removing this to avoid annoying -more- prompt in capture ball activation
     msg_print(NULL);
+    */
 
     /* Display a prompt */
     prt(prompt, 0, 0);
