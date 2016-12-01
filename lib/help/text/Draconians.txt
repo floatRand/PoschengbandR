@@ -233,10 +233,6 @@ to decide which power you will choose for your character.
   Magic Resistance
   You will gain an improved saving throw versus magical attacks.
 
-  Metamorphosis
-  Your body will transform into a dragon (e.g. 6 ring slots and no 
-  weapons)
-
   Regeneration
   You will regenerate much more quickly.
 
@@ -251,5 +247,5 @@ to decide which power you will choose for your character.
 
 
 
-Automatically generated for PosChengband 5.0.2.
+Automatically generated for PosChengband 5.0.3.
 

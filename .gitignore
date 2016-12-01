@@ -243,6 +243,7 @@ pip-log.txt
 *.o
 /src/poschengband
 /poschengband
+/src/tags
 
 # Temporary (cache) files built during run-time
 *.raw

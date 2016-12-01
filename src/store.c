@@ -2696,7 +2696,7 @@ static void store_process_command(void)
 #ifdef ALLOW_REPEAT /* TNB */
 
     /* Handle repeating the last command */
-    repeat_check();
+    repeat_check(TRUE);
 
 #endif /* ALLOW_REPEAT -- TNB */
 

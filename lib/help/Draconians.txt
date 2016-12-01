@@ -189,9 +189,6 @@ You will be able to attack an adjacent opponent with a special blow (Fire, Cold,
   <indent><color:G>Magic Resistance</color>
 You will gain an improved saving throw versus magical attacks.</indent>
 
-  <indent><color:G>Metamorphosis</color>
-Your body will transform into a dragon (e.g. 6 ring slots and no weapons)</indent>
-
   <indent><color:G>Regeneration</color>
 You will regenerate much more quickly.</indent>
 
@@ -205,4 +202,4 @@ You will be able to summon aid from dragons.</indent>
 
 
 
-<color:s>Automatically generated for PosChengband 5.0.2.</color>
+<color:s>Automatically generated for PosChengband 5.0.3.</color>
