@@ -2914,9 +2914,6 @@ void obj_create_ring(object_type *o_ptr, int level, int power, int mode)
 
 	if (mode & AM_FORCE_EGO)
 		crafting = TRUE; /* Hack to prevent artifacts */
-
-	if (-1 <= power && power <= 1)
-		return;
 	
 	if (!crafting && (one_in_(40) || power > 2)){ _art_create_random(o_ptr, level, power); }
 					else ego_create_ring(o_ptr, level, power, mode);
@@ -2930,9 +2927,6 @@ void obj_create_amulet(object_type *o_ptr, int level, int power, int mode)
 
 	if (mode & AM_FORCE_EGO)
 		crafting = TRUE; /* Hack to prevent artifacts */
-
-	if (-1 <= power && power <= 1)
-		return;
 
 	if (!crafting && (one_in_(40) || power > 2)){ _art_create_random(o_ptr, level, power); }
 				else ego_create_amulet(o_ptr, level, power, mode);
