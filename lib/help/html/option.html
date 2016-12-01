@@ -109,20 +109,6 @@ off after the creation is finished!
   before it is completely explored as any fixed artifact can be 
   regenerated in subsequent levels.
   
-<a name="autoroller"></a>  </font><font color="#c08040">Allow use of autoroller for stats </font><font color="#707070">(autoroller)
-  </font><font color="#ffffff">If you choose to use the auto-roller, you can specify minimum limit 
-  of each stat. Once you have specified your desired statistics, the 
-  computer will then randomly roll successive start-up characters and 
-  compare them to your specified criteria. Each stat is rolled as a 
-  number from 8 to 17, with a normal distribution, and is then 
-  immediately modified based upon the race and class which you have 
-  chosen. Once a character that matches or exceeds your expectations 
-  has been rolled, the computer will display the character for you to 
-  look at, and asks you whether you accept or not. You may press Enter 
-  to accept. If you do not accept, you may press 'r' to resume rolling 
-  and searching for the next match or, if this is not your first match, 
-  'p' to return to the previous character which met your criteria.
-  
 <a name="powerup_home"></a>  </font><font color="#c08040">Increase capacity of your home </font><font color="#707070">(powerup_home)
   </font><font color="#ffffff">If this option is enabled, the capacity of your home will be expanded 
   to 20 pages. If not, capacity is only 2 pages.
@@ -138,6 +124,28 @@ off after the creation is finished!
   up. Otherwise, you must use the </font><font color="#ff8000">g </font><font color="#ffffff">command, or the </font><font color="#ff8000">- </font><font color="#ffffff">command while 
   walking. Combined with </font><font color="#ff0000">carry_query_flag</font><font color="#ffffff">, allows you to selectively 
   pick up all items which you step on.
+  
+<a name="toggle_run_status"></a>  </font><font color="#c08040">Toggle Run Status </font><font color="#707070">(toggle_run_status)
+  </font><font color="#ffffff">Internally, the player walks in a direction by pressing </font><font color="#ff8000">; </font><font color="#ffffff">followed by 
+  the direction argument </font><font color="#ff8000">(0-9) </font><font color="#ffffff">and runs by pressing </font><font color="#ff8000">. </font><font color="#ffffff">followed by the 
+  direction argument </font><font color="#ff8000">(0-9) </font><font color="#ffffff">(Roguelike: Pressing </font><font color="#ff8000">, </font><font color="#ffffff">followed by the 
+  direction argument). Of course, this is ridiculous tedium, so the 
+  game uses keymaps to map the number keys, arrow keys, and numpad keys 
+  to the appropriate </font><font color="#ff8000">;&lt;dir&gt; </font><font color="#ffffff">sequence. For all ports but Curses, the 
+  player can press </font><font color="#ff8000">&lt;shift&gt;&lt;dir&gt; </font><font color="#ffffff">to run since the default preferences 
+  map this single keypress into a </font><font color="#ff8000">.&lt;dir&gt; </font><font color="#ffffff">sequence. In Curses with the 
+  default keyset, the </font><font color="#ff8000">&lt;shift&gt;&lt;arrow or numpad&gt; </font><font color="#ffffff">keymaps are not 
+  available ("Curses doesn't do that"), so the player is forced to 
+  manually enter the </font><font color="#ff8000">.&lt;dir&gt; </font><font color="#ffffff">sequence by hand in order to run, or to 
+  play with the Roguelike keyset (see <a href="command.html#RogueKeyset"></font><font color="#00ff00">[e]</a></font><font color="#ffffff">).
+  
+  With the </font><font color="#ff0000">toggle_run_status </font><font color="#ffffff">option enabled, the internal key commands 
+  are altered from the default. The direction keys now either walk or 
+  run in the indicated direction, depending on the current status. This 
+  status is toggled by pressing </font><font color="#ff8000">. </font><font color="#ffffff">(Roguelike: </font><font color="#ff8000">,</font><font color="#ffffff">) and displayed to the 
+  user on the bottom of the screen. Thus, with this option, the player 
+  can run during dungeon exploration with a single keystroke rather 
+  than two, toggling between running and walking as needed.
   
 <a name="carry_query_flag"></a>  </font><font color="#c08040">Prompt before picking things up </font><font color="#707070">(carry_query_flag)
   </font><font color="#ffffff">Forces the game to ask you if you want to pick something up when you 
@@ -169,15 +177,27 @@ off after the creation is finished!
   </font><font color="#ffffff">Forces the game to ask you before select an item on floor.
   
 <a name="use_old_target"></a>  </font><font color="#c08040">Use old target by default </font><font color="#707070">(use_old_target)
-  </font><font color="#ffffff">Forces all commands which normally ask for a </font><font color="#ff0000">direction </font><font color="#ffffff">to use the 
-  current </font><font color="#ff0000">target </font><font color="#ffffff">if there is one. Use of this option can be dangerous 
-  if you target locations on the ground, unless you clear them when 
-  done.
+  </font><font color="#ffffff">This option forces all commands which normally ask for a </font><font color="#ff0000">direction </font><font color="#ffffff">to 
+  use the current </font><font color="#ff0000">target </font><font color="#ffffff">if there is one. Use of this option can be 
+  dangerous if you target locations on the ground, unless you clear 
+  them when done. Actually, position targets now automatically clear 
+  when they are no longer valid (e.g. after a teleport). Pay attention 
+  to the character info section of your screen as it always shows your 
+  current target, whether monster or location.
+  
+<a name="auto_target"></a>  </font><font color="#c08040">Automatically target nearest monster </font><font color="#707070">(auto_target)
+  </font><font color="#ffffff">With this option enabled, every offensive spell you cast or device 
+  you use will automatically target the closest monster if there is not 
+  already a valid target selected. If you use this option, then it is 
+  highly recommended that you also enable the </font><font color="#ff0000">use_old_target </font><font color="#ffffff">option. 
+  That way, if you are in a situation where the automatic targeting is 
+  not what you want, you can just select a target up front before 
+  casting your spell.
   
 <a name="always_repeat"></a>  </font><font color="#c08040">Repeat obvious commands </font><font color="#707070">(always_repeat)
   </font><font color="#ffffff">Tells the game that when you attempt to </font><font color="#ff0000">open </font><font color="#ffffff">a door or chest, </font><font color="#ff0000">bash </font><font color="#ffffff">a 
   door, </font><font color="#ff0000">tunnel </font><font color="#ffffff">through walls, or </font><font color="#ff0000">disarm </font><font color="#ffffff">traps or chests, that you wish 
-  to repeat the command 99 times (see <a href="command.html#CommandCounts"></font><font color="#00ff00">[e]</a></font><font color="#ffffff">).
+  to repeat the command 99 times (see <a href="command.html#CommandCounts"></font><font color="#00ff00">[f]</a></font><font color="#ffffff">).
   
 <a name="confirm_destroy"></a>  </font><font color="#c08040">Prompt for destruction of known worthless items </font><font color="#707070">(confirm_destroy)
   </font><font color="#ffffff">Normally, no confirmation will be asked if you attempt to destroy an 
@@ -321,14 +341,14 @@ off after the creation is finished!
   somewhat. Note that this option is only useful when using macros, 
   resting, running, or repeating commands, since the output is always 
   flushed when the game is waiting for a keypress from the user.
-      
+  
 <a name="fresh_after"></a>  </font><font color="#c08040">Flush output after monster's move </font><font color="#707070">(fresh_after)
   </font><font color="#ffffff">This option forces the game to flush all output after not only every 
   player command, but also after every round of processing monsters and 
   objects, which will give you maximal information, but may slow down 
   the game a lot, especially on slower machines, and on faster machines 
   you normally do not have a chance to see the results anyway.
-      
+  
 <a name="fresh_message"></a>  </font><font color="#c08040">Flush output after every message </font><font color="#707070">(fresh_message)
   </font><font color="#ffffff">This option forces the game to flush all output after every message 
   displayed by the game. This will give you maximal information, but 
@@ -339,7 +359,7 @@ off after the creation is finished!
   machines, but horrible on most graphics machines. Note that only some 
   machines are able to *not* show the cursor, but on those machines, 
   hiding the cursor often speeds up the game and looks better.
-      
+  
 <a name="display_path"></a>  </font><font color="#c08040">Display actual path before shooting </font><font color="#707070">(display_path)
   </font><font color="#ffffff">When this option is set, the targeting mode will show path from you 
   to current target point continuously.
@@ -419,7 +439,7 @@ off after the creation is finished!
   Fire is not an EXTRA resistance.
   
   The list of abbreviations for each resistances and abilities are 
-  described in <a href="objects.html#InscriptionAbbrev"></font><font color="#00ff00">[f]</a></font><font color="#ffffff">.
+  described in <a href="objects.html#InscriptionAbbrev"></font><font color="#00ff00">[g]</a></font><font color="#ffffff">.
   
 <a name="abbrev_all"></a>  </font><font color="#c08040">Describe obj's all resistances by abbreviation </font><font color="#707070">(abbrev_all)
   </font><font color="#ffffff">When an *identified* equipment is displayed, an abbreviation string 
@@ -427,7 +447,7 @@ off after the creation is finished!
   inscriptions of the object.
   
   The list of abbreviations for each resistances and abilities are 
-  described in <a href="objects.html#InscriptionAbbrev"></font><font color="#00ff00">[g]</a></font><font color="#ffffff">.
+  described in <a href="objects.html#InscriptionAbbrev"></font><font color="#00ff00">[h]</a></font><font color="#ffffff">.
   
 <a name="exp_need"></a>  </font><font color="#c08040">Show the experience needed for the next level </font><font color="#707070">(exp_need)
   </font><font color="#ffffff">Setting this option to yes alters the display of experience on the 
@@ -440,6 +460,20 @@ off after the creation is finished!
   lots of pets and don't wish to read a blow by blow account of the 
   battle raging around you.
   
+<a name="simple_stat_display"></a>  </font><font color="#c08040">Display high stats in a more simple format </font><font color="#707070">(simple_stat_display)
+  </font><font color="#ffffff">This option causes the game to display stats as numbers up to 40, 
+  instead of the percentile system where the max is 18/220. The game 
+  still works the same way under the hood, though. This only changes 
+  the way things are displayed to the player.
+  
+<a name="display_race"></a>  </font><font color="#c08040">Player character depends on their race </font><font color="#707070">(simple_stat_display)
+  </font><font color="#ffffff">With this option a player who plays as a Quylthulg, for example, will 
+  be represented by a Q. If the option is turned off the player will 
+  always be @. 
+  
+  
+
+
 <a name="GamePlay"></a></font><font color="#c00000">Game Play Options
   
 <a name="stack_force_notes"></a>  </font><font color="#c08040">Merge inscriptions when stacking </font><font color="#707070">(stack_force_notes)
@@ -501,24 +535,23 @@ off after the creation is finished!
   
 <a name="find_ignore_stairs"></a>  </font><font color="#c08040">Run past stairs </font><font color="#707070">(find_ignore_stairs)
   </font><font color="#ffffff">Ignore stairs when running.
-      
+  
 <a name="find_ignore_doors"></a>  </font><font color="#c08040">Run through open doors </font><font color="#707070">(find_ignore_doors)
   </font><font color="#ffffff">Ignore open doors when running.
-      
+  
 <a name="find_cut"></a>  </font><font color="#c08040">Run past known corners </font><font color="#707070">(find_cut)
   </font><font color="#ffffff">Cut sharply around known corners when running. This will result in 
   faster running, but may cause you to run into a lurking monster.
   
 <a name="check_abort"></a>  </font><font color="#c08040">Check for user abort while continuous command </font><font color="#707070">(check_abort)
-  </font><font color="#ffffff">Avoid checking to see if the user has pressed a key during resting or 
-  running or repeated commands. This not only makes the game much more 
-  efficient (on many systems), but also allows the use of certain 
-  obscure macro sequences, such as turning this option on, resting 
-  until done, turning this option off, and casting a spell. Note that 
-  the use of this option may be dangerous on certain "graphic" 
-  machines. Resting for long periods of time with this option set is 
-  dangerous since the resting may not stop until the user takes damage 
-  from starvation.
+  </font><font color="#ffffff">Turning this option off will avoid checking to see if the user has 
+  pressed a key during resting or running or repeated commands. This 
+  not only makes the game much more efficient (on many systems), but 
+  also allows the use of certain obscure macro sequences, such as 
+  turning this option off, resting until done, turning this option on, 
+  and casting a spell. Resting for long periods of time with this 
+  option turned off is dangerous since the resting may not stop until 
+  the user takes damage from starvation.
   
 <a name="flush_failure"></a>  </font><font color="#c08040">Flush input on various failures </font><font color="#707070">(flush_failure)
   </font><font color="#ffffff">This option forces the game to flush all pending input whenever 
@@ -532,7 +565,7 @@ off after the creation is finished!
   character is "disturbed". This is useful if you use macros which take 
   time, since it will prevent you from continuing your macro while 
   being attacked by a monster.
-      
+  
 <a name="disturb_move"></a>  </font><font color="#c08040">Disturb whenever any monster moves </font><font color="#707070">(disturb_move)
   </font><font color="#ffffff">Disturb the player when any monster moves, appears, or disappears. 
   This includes monsters which are only visible due to telepathy, so 
@@ -562,7 +595,7 @@ off after the creation is finished!
 <a name="disturb_panel"></a>  </font><font color="#c08040">Disturb whenever map panel changes </font><font color="#707070">(disturb_panel)
   </font><font color="#ffffff">This option causes you to be disturbed by the map scrolling, as it 
   does automatically when you get close to the edge of the screen.
-      
+  
 <a name="disturb_state"></a>  </font><font color="#c08040">Disturb whenever player state changes </font><font color="#707070">(disturb_state)
   </font><font color="#ffffff">This option causes you to be disturbed whenever the player state 
   changes, including changes in hunger, resistance, confusion, etc.
@@ -574,7 +607,7 @@ off after the creation is finished!
   
 <a name="ring_bell"></a>  </font><font color="#c08040">Audible bell (on errors, etc) </font><font color="#707070">(ring_bell)
   </font><font color="#ffffff">Attempt to make a bell noise when various errors occur.
-      
+  
 <a name="disturb_trap_detect"></a>  </font><font color="#c08040">Disturb when leaving trap detected area </font><font color="#707070">(disturb_trap_detect)
   </font><font color="#ffffff">This option causes you to be disturbed when the player is running out 
   of trap-detected area.
@@ -592,7 +625,7 @@ off after the creation is finished!
   
     </font><font color="#00ff00">Note: The </font><font color="#ff0000">Easy Auto-Destroyer </font><font color="#00ff00">is a simpler to use 
     version of the full featured </font><font color="#ff0000">Mogaminator </font><font color="#00ff00">discussed in <a href="editor.html">
-    [h]</a>. It is designed for those who feel the full version 
+    [i]</a>. It is designed for those who feel the full version 
     is too complicated to use. However, you really should 
     only use one or the other. So if you are using the full 
     version, then you should not also enable the easy 
