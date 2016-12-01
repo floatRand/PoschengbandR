@@ -3238,6 +3238,9 @@ void do_cmd_store(void)
         prt("w/t) Wear/Take off equipment", 22 + xtra_stock, 56);
         prt("You may: ", 20 + xtra_stock, 0);
 
+		char dummy[MAX_NLEN + 80];
+		char o_name[MAX_NLEN];
+
         /* Get a command */
         request_command(TRUE);
 
@@ -3251,12 +3254,15 @@ void do_cmd_store(void)
                     msg_print("You do not have the gold!");
                 else
                 {
-                    _restock(st_ptr, TRUE);
-                    need_redraw_store_inv = TRUE;
-					p_ptr->au -= 5000 * costmult;
-					stats_on_gold_services(5000 * costmult);
-                    p_ptr->redraw |= PR_GOLD;
-                    store_prt_gold();
+					sprintf(dummy, "Shuffle stock? ");
+					if (get_check(dummy)){
+						_restock(st_ptr, TRUE);
+						need_redraw_store_inv = TRUE;
+						p_ptr->au -= 5000 * costmult;
+						stats_on_gold_services(5000 * costmult);
+						p_ptr->redraw |= PR_GOLD;
+						store_prt_gold();
+					}
                 }
                 break;
             case '2':
@@ -3279,14 +3285,21 @@ void do_cmd_store(void)
                         }
                         else
                         {
-                            o_ptr->marked |= OM_RESERVED;
-							p_ptr->au -= 10000 * costmult;
-							stats_on_gold_services(10000 * costmult);
-                            p_ptr->redraw |= PR_GOLD;
-                            store_prt_gold();
+							object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+							msg_format("So you want me to hold %s?", o_name);
+							sprintf(dummy, " ");
+							if (get_check(dummy)){
 
-                            need_redraw_store_inv = TRUE;
-                            msg_print("Done! Come back later when you have more gold, OK?");
+								o_ptr->marked |= OM_RESERVED;
+								p_ptr->au -= 10000 * costmult;
+								stats_on_gold_services(10000 * costmult);
+								p_ptr->redraw |= PR_GOLD;
+								store_prt_gold();
+
+								need_redraw_store_inv = TRUE;
+								msg_print("Done! Come back later when you have more gold, OK?");
+							}
+							else msg_print("Very well, then.");
                         }
                     }
                 }
