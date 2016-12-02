@@ -383,10 +383,36 @@ static void _display_resists(monster_race *r_ptr, doc_ptr doc)
 
 static string_ptr _format_breath(char* name, u32b element, int maxhp, char col, bool showdmg)
 {
-	if (showdmg)
-		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, max_breath_damage(element, maxhp));
+	u32b r = _DeBruijnBitPosition32(element);
+	int dmg = (_easy_lore(r_ptr)) ? max_mspell_damage(4,element,r_ptr) : r_ptr->innate_dmg[r];
+
+	if (showdmg && dmg > 0)
+		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
 	else
 		return string_alloc_format("<color:%c>%s</color>", col, name);	
+}
+
+static string_ptr _format_spell5(monster_race *r_ptr, char* name, u32b element, char col, bool showdmg)
+{
+	u32b r = _DeBruijnBitPosition32(element);
+	int dmg = (_easy_lore(r_ptr)) ? max_mspell_damage(5, element, r_ptr) : r_ptr->spell_dmg[r];
+
+	if (showdmg && dmg > 0)
+		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
+	else
+		return string_alloc_format("<color:%c>%s</color>", col, name);
+}
+
+static string_ptr _format_spell6(monster_race *r_ptr, char* name, u32b element,char col, bool showdmg)
+{
+
+	u32b r = _DeBruijnBitPosition32(element);
+	int dmg = (_easy_lore(r_ptr)) ? max_mspell_damage(6, element, r_ptr) : r_ptr->special_dmg[r];
+
+	if (showdmg && dmg > 0)
+		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
+	else
+		return string_alloc_format("<color:%c>%s</color>", col, name);
 }
 
 /**************************************************************************

@@ -370,6 +370,11 @@ static void wr_lore(savefile_ptr file, int r_idx)
     savefile_write_byte(file, r_ptr->r_cast_spell);
     savefile_write_u32b(file, r_ptr->r_spell_turns);
     savefile_write_u32b(file, r_ptr->r_move_turns);
+
+	for (i = 0; i < 32; i++){ savefile_write_s16b(file, r_ptr->innate_dmg[i]); }
+	for (i = 0; i < 32; i++){ savefile_write_s16b(file, r_ptr->spell_dmg[i]); }
+	for (i = 0; i < 32; i++){ savefile_write_s16b(file, r_ptr->special_dmg[i]); }
+
     savefile_write_byte(file, r_ptr->r_blows[0]);
     savefile_write_byte(file, r_ptr->r_blows[1]);
     savefile_write_byte(file, r_ptr->r_blows[2]);

@@ -4117,18 +4117,24 @@ msg_format("They say 'The %d meets! We are the Ring-Ranger!'.", count);
     if (can_remember)
     {
         /* Inate spell */
-        if (thrown_spell < 32 * 4)
-            mon_lore_aux_4(r_ptr, 1 << (thrown_spell - 32 * 3));
-
+		if (thrown_spell < 32 * 4)
+		{
+			mon_lore_aux_4(r_ptr, 1 << (thrown_spell - 32 * 3));
+			if (dam >= 0 && dam > r_ptr->innate_dmg[thrown_spell - 32 * 3]) r_ptr->innate_dmg[thrown_spell - 32 * 3] = dam; 
+		}
         /* Bolt or Ball */
-        else if (thrown_spell < 32 * 5)
-            mon_lore_aux_5(r_ptr, 1 << (thrown_spell - 32 * 4));
-
+		else if (thrown_spell < 32 * 5)
+		{
+			mon_lore_aux_5(r_ptr, 1 << (thrown_spell - 32 * 4));
+			if (dam >= 0 && dam > r_ptr->spell_dmg[thrown_spell - 32 * 4]) r_ptr->spell_dmg[thrown_spell - 32 * 4] = dam;
+		}
         /* Special spell */
-        else if (thrown_spell < 32 * 6)
-            mon_lore_aux_6(r_ptr, 1 << (thrown_spell - 32 * 5));
-    }
-
+		else if (thrown_spell < 32 * 6)
+		{
+			mon_lore_aux_6(r_ptr, 1 << (thrown_spell - 32 * 5));
+			if (dam >= 0 && dam > r_ptr->special_dmg[thrown_spell - 32 * 5]) r_ptr->special_dmg[thrown_spell - 32 * 5] = dam;
+		}
+	}
 
     /* Always take note of monsters that kill you */
     if (p_ptr->is_dead && (r_ptr->r_deaths < MAX_SHORT) && !p_ptr->inside_arena)
