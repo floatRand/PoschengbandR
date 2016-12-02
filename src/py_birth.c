@@ -154,9 +154,9 @@ extern void py_birth_light(void)
     if (p_ptr->pclass != CLASS_NINJA)
     {
         object_type forge = {0};
-        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_TORCH));
-        forge.number = rand_range(3, 7);
-        forge.xtra4 = rand_range(3, 7) * 500;
+        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_LANTERN));
+        forge.number = 1;
+        forge.xtra4 = 5000;
         py_birth_obj(&forge);
     }
 }
@@ -375,8 +375,7 @@ static int _race_class_ui(void)
         cols[1] = doc_alloc(46);
 
         doc_insert(cols[0], "  <color:y>n</color>) Change Name\n");
-        doc_printf(cols[0], "  <color:%c>s</color>) Change Sex\n",
-            p_ptr->personality == PERS_SEXY || p_ptr->personality == PERS_LUCKY ? 'D' : 'y');
+        doc_insert(cols[0], "  <color:y>s</color>) Change Sex\n");
         if (game_mode != GAME_MODE_BEGINNER)
             doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
@@ -500,11 +499,8 @@ static int _race_class_ui(void)
             break;
         case 's':
             if (p_ptr->psex == SEX_MALE)
-            {
-                if (p_ptr->personality != PERS_LUCKY)
-                    p_ptr->psex = SEX_FEMALE;
-            }
-            else if (p_ptr->personality != PERS_SEXY)
+                p_ptr->psex = SEX_FEMALE;
+            else
                 p_ptr->psex = SEX_MALE;
             break;
         }
@@ -594,8 +590,6 @@ static vec_ptr _pers_choices(void)
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         personality_ptr pers_ptr = get_personality_aux(i);
-        if (p_ptr->psex == SEX_MALE && i == PERS_SEXY) continue;
-        if (p_ptr->psex == SEX_FEMALE && i == PERS_LUCKY) continue;
         vec_add(v, pers_ptr);
     }
     vec_sort(v, (vec_cmp_f)_pers_cmp);
@@ -2533,7 +2527,7 @@ static void _birth_finalize(void)
     equip_on_init();
     virtue_init();
 
-    p_ptr->au = randint1(600) + randint1(100) + 100;
+    p_ptr->au = 450;
 
     get_max_stats();
     do_cmd_rerate_aux();
