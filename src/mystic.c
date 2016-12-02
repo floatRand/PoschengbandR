@@ -641,14 +641,16 @@ void _overdrive(int cmd, variant *res){
 		bool result = FALSE;
 		int m_idx = prompt_adjancent_monster(&y, &x);
 		if (m_idx){
-		    msg_print("Messatsu!");
-
+			msg_print("Messatsu!");
+			if(one_in_(3)) virtue_add(VIRTUE_COMPASSION, -1);
 			py_attack(y, x, MONK_OVERDRIVE);
 			if (cave[y][x].m_idx)
 			{
 				handle_stuff();
 				py_attack(y, x, MONK_OVERDRIVE);
 			}
+			
+			if (m_list[m_idx].hp <= 0){ msg_print("Ten!"); }
 			result = TRUE;
 		}
 		var_set_bool(res, result);
