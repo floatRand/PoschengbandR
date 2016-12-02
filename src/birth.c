@@ -215,11 +215,16 @@ static void player_wipe(void)
         r_ptr->r_skills = 0;
         r_ptr->stolen_ct = 0;
 
+        for (int f = 0; f < 32; f++){
+            r_ptr->spell_dmg[f].damage = -1;
+            r_ptr->spell_dmg[f].max_damage = -1;
+        }
+
         /* Wipe out pact alliances from previous character
-           Currently, flagsr is only set to make the memory field
-           work, but perhaps it would be better to set this once
-           and for all when a pact is made?  This would break
-           my savefiles though ...*/
+        Currently, flagsr is only set to make the memory field
+        work, but perhaps it would be better to set this once
+        and for all when a pact is made?  This would break
+        my savefiles though ...*/
         r_ptr->flagsr &= ~(RFR_PACT_MONSTER);
         r_ptr->r_flagsr &= ~(RFR_PACT_MONSTER);
     }
@@ -328,7 +333,7 @@ static void player_wipe(void)
     p_ptr->duelist_target_idx = 0;
 
     /* Reset virtues*/
-    for (i = 0; i < 8; i++) p_ptr->virtues[i]=0;
+    for (i = 0; i < 8; i++) p_ptr->virtues[i] = 0;
 
     /* Set the recall dungeon accordingly */
     if (no_wilderness)
