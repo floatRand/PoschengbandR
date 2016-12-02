@@ -3551,11 +3551,11 @@ bool target_okay(void)
             return TRUE;
         }
         /* Position Targets are confusing. They should be dismissed when no longer valid. */
-        target_who = 0;
+        /*target_who = 0;
         target_row = 0;
         target_col = 0;
         p_ptr->redraw |= PR_HEALTH_BARS;
-        return FALSE;
+        return FALSE;*/
     }
 
     /* Check moving targets */
@@ -3576,7 +3576,7 @@ bool target_okay(void)
     }
 
     /* Assume no target */
-    return (FALSE);
+    return (TRUE);
 }
 
 
