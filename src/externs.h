@@ -1829,6 +1829,7 @@ extern void resize_map(void);
 extern void redraw_window(void);
 extern bool class_doesnt_study(int class_idx);
 extern int monster_tele_save(monster_race *r_ptr, int power);
+extern int max_breath_damage(u32b breath, int hp);
 
 /* Display
    Various regions of the terminal are reserved for different things.

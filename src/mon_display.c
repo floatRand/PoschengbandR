@@ -379,6 +379,14 @@ static void _display_resists(monster_race *r_ptr, doc_ptr doc)
     vec_free(v);
 }
 
+static string_ptr _format_breath(char* name, u32b element, int maxhp, char col, bool showdmg)
+{
+	if (showdmg)
+		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, max_breath_damage(element, maxhp));
+	else
+		return string_alloc_format("<color:%c>%s</color>", col, name);	
+}
+
 /**************************************************************************
  * Spells
  **************************************************************************/
@@ -427,28 +435,43 @@ static void _display_spells(monster_race *r_ptr, doc_ptr doc)
         RF4_BR_LITE, RF4_BR_DARK, RF4_BR_CONF, RF4_BR_NETH, RF4_BR_NEXU, RF4_BR_SOUN,
         RF4_BR_SHAR, RF4_BR_CHAO, RF4_BR_DISE, RF4_BR_TIME, -1, -1, -1};
 
+	bool showDmg = TRUE;
+	int maxhp = r_ptr->hdice*r_ptr->hside;
+
     for (i = 0; i < RES_MAX; i++)
     {
         int which = flags[i];
-        if (which >= 0 && (r_ptr->flags4 & which))
-            vec_add(v, _get_res_name(i));
+		int b_dmg = max_breath_damage(which, maxhp);
+		if (which >= 0 && (r_ptr->flags4 & which)){
+			vec_add(v, _format_breath(res_name(i), which, maxhp, attr_to_attr_char(res_color(i)), showDmg));
+		}
     }
-    if (r_ptr->flags4 & RF4_BR_INER)
-        vec_add(v, string_copy_s("<color:s>Inertia</color>"));
-    if (r_ptr->flags4 & RF4_BR_GRAV)
-        vec_add(v, string_copy_s("<color:s>Gravity</color>"));
-    if (r_ptr->flags4 & RF4_BR_PLAS)
-        vec_add(v, string_copy_s("<color:R>Plasma</color>"));
-    if (r_ptr->flags4 & RF4_BR_WALL)
-        vec_add(v, string_copy_s("<color:u>Force</color>"));
-    if (r_ptr->flags4 & RF4_BR_MANA)
-        vec_add(v, string_copy_s("<color:B>Mana</color>"));
-    if (r_ptr->flags4 & RF4_BR_NUKE)
-        vec_add(v, string_copy_s("<color:G>Toxic Waste</color>"));
-    if (r_ptr->flags4 & RF4_BR_DISI)
-        vec_add(v, string_copy_s("<color:s>Disintegration</color>"));
-    if (r_ptr->flags4 & RF4_BR_STORM)
-        vec_add(v, string_copy_s("<color:b>Storm</color>"));
+
+	if (r_ptr->flags4 & RF4_BR_INER)
+	{
+		vec_add(v, _format_breath("Inertia", RF4_BR_INER, maxhp, 's', showDmg));
+	}
+    if (r_ptr->flags4 & RF4_BR_GRAV){
+		vec_add(v, _format_breath("Gravity", RF4_BR_GRAV, maxhp, 's', showDmg));
+	}
+    if (r_ptr->flags4 & RF4_BR_PLAS){
+		vec_add(v, _format_breath("Plasma", RF4_BR_PLAS, maxhp, 'R', showDmg));
+	}
+    if (r_ptr->flags4 & RF4_BR_WALL){
+		vec_add(v, _format_breath("Force", RF4_BR_WALL, maxhp, 'u', showDmg));
+	}
+    if (r_ptr->flags4 & RF4_BR_MANA){
+		vec_add(v, _format_breath("Mana", RF4_BR_MANA, maxhp,'B', showDmg));
+	}
+    if (r_ptr->flags4 & RF4_BR_NUKE){
+		vec_add(v, _format_breath("Toxic Waste", RF4_BR_NUKE, maxhp, 'G', showDmg));
+	}
+    if (r_ptr->flags4 & RF4_BR_DISI){
+		vec_add(v, _format_breath("Disintegration", RF4_BR_DISI, maxhp, 's', showDmg));
+	}
+    if (r_ptr->flags4 & RF4_BR_STORM){
+		vec_add(v, _format_breath("Storm Winds", RF4_BR_STORM, maxhp, 'b', showDmg));
+	}
 
     if (vec_length(v))
     {

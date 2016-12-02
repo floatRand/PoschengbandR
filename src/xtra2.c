@@ -5920,3 +5920,41 @@ int monster_tele_save(monster_race *r_ptr, int power){
 	}
 	return 0;
 }
+
+int max_breath_damage(u32b breath, int hp){
+	
+	switch (breath){
+		case RF4_ROCKET: return MIN(hp / 4, 600);
+		///////
+		case RF4_BR_FIRE:
+		case RF4_BR_ELEC:
+		case RF4_BR_COLD:
+		case RF4_BR_ACID: return MIN(hp / 4, 900);
+		///////
+		case RF4_BR_LITE:
+		case RF4_BR_DARK:
+		///////
+		case RF4_BR_DISE: 
+		case RF4_BR_CHAO:
+		case RF4_BR_SHAR: return MIN(hp / 6, 500);
+		/////
+		case RF4_BR_STORM: return MIN(hp / 5, 300);
+		case RF4_BR_POIS: return MIN(hp / 5, 600);
+		case RF4_BR_CONF: return MIN(hp / 6, 400);
+		case RF4_BR_NETH: return MIN(hp / 7, 550);
+		case RF4_BR_NEXU: return MIN(hp / 3, 250);
+		case RF4_BR_SOUN: return MIN(hp / 6, 450);
+		case RF4_BR_NUKE: return MIN(hp / 5, 600);
+		case RF4_BR_TIME: return MIN(hp / 3, 150);
+		case RF4_BR_MANA: return MIN(hp / 3, 250);
+		case RF4_BR_WALL:
+		case RF4_BR_GRAV: return MIN(hp / 3, 200);
+		case RF4_BR_DISI: return MIN(hp / 6, 150);
+		case RF4_BR_INER:
+		case RF4_BR_PLAS: return MIN(hp / 6, 200);
+		////
+
+		default: return 0;
+	}
+
+}
