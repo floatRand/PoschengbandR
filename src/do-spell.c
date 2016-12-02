@@ -172,7 +172,7 @@ cptr info_weight(int weight)
  */
 int beam_chance(void)
 {
-    if (p_ptr->pclass == CLASS_MAGE || p_ptr->pclass == CLASS_BLOOD_MAGE || p_ptr->pclass == CLASS_NECROMANCER)
+    if (p_ptr->pclass == CLASS_MAGE || p_ptr->pclass == CLASS_BLOOD_MAGE || p_ptr->pclass == CLASS_NECROMANCER || p_ptr->pclass == CLASS_YELLOW_MAGE || p_ptr->pclass == CLASS_GRAY_MAGE)
         return p_ptr->lev;
     if (p_ptr->pclass == CLASS_HIGH_MAGE || p_ptr->pclass == CLASS_SORCERER)
         return p_ptr->lev + 10;
@@ -712,7 +712,7 @@ static void cast_shuffle(void)
     {
         msg_print("It's the Lovers.");
 
-        if (get_aim_dir(&dir))
+        if (get_fire_dir(&dir))
             charm_monster(dir, MIN(p_ptr->lev, 20));
     }
     else if (die < 101)
@@ -804,7 +804,7 @@ bool cast_wrath_of_the_god(int dam, int rad)
     int dir, i;
     int b = 10 + randint1(10);
 
-    if (!get_aim_dir(&dir)) return FALSE;
+    if (!get_fire_dir(&dir)) return FALSE;
 
     /* Use the given direction */
     tx = px + 99 * ddx[dir];
@@ -1563,7 +1563,7 @@ static cptr do_sorcery_spell(int spell, int mode, int plev)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -1616,7 +1616,7 @@ static cptr do_sorcery_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 confuse_monster(dir, power);
             }
@@ -1635,7 +1635,7 @@ static cptr do_sorcery_spell(int spell, int mode, int plev)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -1652,7 +1652,7 @@ static cptr do_sorcery_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 sleep_monster(dir, power);
             }
@@ -1661,7 +1661,13 @@ static cptr do_sorcery_spell(int spell, int mode, int plev)
 
     case 7:
         if (name) return "Recharging";
-        if (desc) return "It attempts to recharge a device using your mana for power.";
+        if (desc)
+        {
+            if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+                return "It attempts to recharge a device using your blood for power.";
+            else
+                return "It attempts to recharge a device using your mana for power.";
+        }
 
         {
             int power = spell_power(plev * 3);
@@ -1714,7 +1720,7 @@ static cptr do_sorcery_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 slow_monster(dir);
             }
@@ -1759,7 +1765,7 @@ static cptr do_sorcery_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_beam(GF_AWAY_ALL, dir, power);
             }
@@ -2094,7 +2100,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
             {
                 project_length = range;
 
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_beam(GF_ELEC, dir, spell_power(damroll(dice, sides) + p_ptr->to_d_spell));
             }
@@ -2248,7 +2254,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance() - 10,
                     GF_COLD,
@@ -2292,7 +2298,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance() - 10,
                     GF_FIRE,
@@ -2315,7 +2321,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 msg_print("A line of sunlight appears.");
 
                 project_hook(
@@ -2549,7 +2555,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_FIRE, dir, dam, rad);
             }
         }
@@ -2567,7 +2573,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_COLD, dir, dam, rad);
             }
@@ -2586,7 +2592,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_ELEC, dir, dam, rad);
                 break;
             }
@@ -2605,7 +2611,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_WATER, dir, dam, rad);
             }
         }
@@ -2623,7 +2629,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt(
                     GF_ICE,
                     dir,
@@ -2645,7 +2651,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_GRAVITY, dir, dam, rad);
             }
         }
@@ -2678,7 +2684,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             case 2: /* Deadly bolt of lightning */
                 msg_print("Your hands crackle with electricity!");
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt(
                     GF_ELEC,
                     dir,
@@ -2732,7 +2738,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
             case 6: /* Rock Storm */
                 msg_print("You fire a storm of boulders!");
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 for (i = 0; i < 3; i++)
                     fire_ball(GF_SHARDS, dir, spell_power(70 + plev + p_ptr->to_d_spell), 1);
                 break;
@@ -2771,7 +2777,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance() - 10,
@@ -2848,7 +2854,9 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
             if (p_ptr->pclass == CLASS_MAGE ||
                 p_ptr->pclass == CLASS_BLOOD_MAGE ||
                 p_ptr->pclass == CLASS_HIGH_MAGE ||
-                p_ptr->pclass == CLASS_SORCERER)
+                p_ptr->pclass == CLASS_SORCERER ||
+                p_ptr->pclass == CLASS_YELLOW_MAGE ||
+                p_ptr->pclass == CLASS_GRAY_MAGE)
                 base = plev + plev / 2;
             else
                 base = plev + plev / 4;
@@ -2858,7 +2866,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(
                     GF_MISSILE, /* GF_MANA? */
@@ -2882,7 +2890,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance(),
@@ -2944,7 +2952,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
             if (cast)
             {
 
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 cast_wonder(dir);
             }
@@ -2963,7 +2971,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance(),
@@ -3006,7 +3014,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_beam(
                     GF_MANA,
@@ -3029,7 +3037,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_FIRE, dir, dam, rad);
             }
@@ -3047,7 +3055,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_beam(GF_AWAY_ALL, dir, power);
             }
@@ -3081,7 +3089,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_CHAOS, dir, dam, rad);
             }
@@ -3099,7 +3107,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 poly_monster(dir);
             }
@@ -3158,7 +3166,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_DISINTEGRATE, dir, dam, rad);
             }
@@ -3187,17 +3195,15 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
         if (desc) return "Fires a magic rocket.";
 
         {
-            int dam = spell_power(120 + plev * 2 + p_ptr->to_d_spell);
+            int dam = spell_power(50 + plev * 4 + p_ptr->to_d_spell);
             int rad = 2;
 
             if (info) return info_damage(0, 0, dam);
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
-
+                if (!get_fire_dir(&dir)) return NULL;
                 msg_print("You launch a rocket!");
-
                 fire_rocket(GF_ROCKET, dir, dam, rad);
             }
         }
@@ -3258,7 +3264,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_beam(
                     GF_GRAVITY,
@@ -3340,7 +3346,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_MANA, dir, dam, rad);
             }
@@ -3359,7 +3365,7 @@ static cptr do_chaos_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_CHAOS, dir, dam, rad);
             }
@@ -3430,7 +3436,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
             if (cast)
             {
                 int dam;
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 dam = spell_power(damroll(dice, sides) + p_ptr->to_d_spell);
                 fire_ball(GF_HELL_FIRE, dir, dam, rad);
 
@@ -3480,7 +3486,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_POIS, dir, dam, rad);
             }
@@ -3498,7 +3504,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 sleep_monster(dir, power);
             }
@@ -3533,7 +3539,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fear_monster(dir, power);
                 stun_monster(dir, power);
@@ -3552,7 +3558,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 control_one_undead(dir, power);
             }
@@ -3572,7 +3578,9 @@ static cptr do_death_spell(int spell, int mode, int plev)
             if (p_ptr->pclass == CLASS_MAGE ||
                 p_ptr->pclass == CLASS_BLOOD_MAGE ||
                 p_ptr->pclass == CLASS_HIGH_MAGE ||
-                p_ptr->pclass == CLASS_SORCERER)
+                p_ptr->pclass == CLASS_SORCERER ||
+                p_ptr->pclass == CLASS_YELLOW_MAGE ||
+                p_ptr->pclass == CLASS_GRAY_MAGE)
                 base = plev + plev / 2;
             else
                 base = plev + plev / 4;
@@ -3582,7 +3590,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(
                     GF_OLD_DRAIN,
@@ -3606,7 +3614,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance(),
@@ -3646,7 +3654,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball_hide(GF_GENOCIDE, dir, power, 0);
             }
@@ -3680,7 +3688,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
             {
                 int dam = base + damroll(dice, sides);
 
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 if (drain_life(dir, dam))
                 {
@@ -3770,7 +3778,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 cast_invoke_spirits(dir);
             }
@@ -3789,7 +3797,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance(),
@@ -3846,7 +3854,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
             {
                 int i;
 
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 virtue_add(VIRTUE_SACRIFICE, -1);
                 virtue_add(VIRTUE_VITALITY, -1);
@@ -3890,7 +3898,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_DARK, dir, dam, rad);
             }
@@ -3904,7 +3912,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
         {
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 project_hook(GF_DEATH_RAY, dir, plev * 200, /*  v--- This is mean as it auto kills the player! */
                                 PROJECT_STOP | PROJECT_KILL /*| PROJECT_REFLECTABLE*/);
             }
@@ -4025,7 +4033,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_NETHER, dir, dam, rad);
             }
@@ -4086,7 +4094,7 @@ static cptr do_trump_spell(int spell, int mode, int plev)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -4153,7 +4161,7 @@ static cptr do_trump_spell(int spell, int mode, int plev)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -4187,7 +4195,7 @@ static cptr do_trump_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_beam(GF_AWAY_ALL, dir, power);
             }
@@ -4306,7 +4314,7 @@ static cptr do_trump_spell(int spell, int mode, int plev)
                 bool old_target_pet = target_pet;
                 target_pet = TRUE;
 
-                result = get_aim_dir(&dir);
+                result = get_fire_dir(&dir);
 
                 /* Restore target_pet option */
                 target_pet = old_target_pet;
@@ -4394,7 +4402,7 @@ static cptr do_trump_spell(int spell, int mode, int plev)
                 /* HACK -- No range limit */
                 project_length = -1;
 
-                result = get_aim_dir(&dir);
+                result = get_fire_dir(&dir);
 
                 /* Restore range to default */
                 project_length = 0;
@@ -4596,7 +4604,7 @@ static cptr do_trump_spell(int spell, int mode, int plev)
                 bool old_target_pet = target_pet;
                 target_pet = TRUE;
 
-                result = get_aim_dir(&dir);
+                result = get_fire_dir(&dir);
 
                 /* Restore target_pet option */
                 target_pet = old_target_pet;
@@ -4741,7 +4749,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance() - 10,
@@ -4811,7 +4819,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -5052,7 +5060,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -5102,7 +5110,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 msg_print("A line of light appears.");
 
@@ -5179,7 +5187,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_beam(GF_AWAY_ALL, dir, power);
             }
@@ -5188,7 +5196,13 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
     case 28:
         if (name) return "Recharging";
-        if (desc) return "It attempts to recharge a device using your mana for power.";
+        if (desc)
+        {
+            if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+                return "It attempts to recharge a device using your blood for power.";
+            else
+                return "It attempts to recharge a device using your mana for power.";
+        }
 
         {
             int power = spell_power(plev * 3 / 2);
@@ -5659,7 +5673,9 @@ static cptr do_craft_spell(int spell, int mode, int plev)
         if (name) return "Polish Shield";
         if (desc) return "Makes your shield reflect missiles and bolt spells.";
         if (cast)
-            polish_shield();
+        {
+            if (!polish_shield()) return NULL;
+        }
         break;
 
     case 22:
@@ -5836,7 +5852,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance() - 10,
@@ -5907,7 +5923,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fear_monster(dir, power);
                 stun_monster(dir, power);
@@ -5927,7 +5943,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance(),
@@ -5967,7 +5983,9 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
             if (p_ptr->pclass == CLASS_MAGE ||
                 p_ptr->pclass == CLASS_BLOOD_MAGE ||
                 p_ptr->pclass == CLASS_HIGH_MAGE ||
-                p_ptr->pclass == CLASS_SORCERER)
+                p_ptr->pclass == CLASS_SORCERER ||
+                p_ptr->pclass == CLASS_YELLOW_MAGE ||
+                p_ptr->pclass == CLASS_GRAY_MAGE)
                 base = plev + plev / 2;
             else
                 base = plev + plev / 4;
@@ -5977,7 +5995,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(
                     GF_HELL_FIRE,
@@ -6000,7 +6018,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 control_one_demon(dir, power);
             }
@@ -6051,7 +6069,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance(),
@@ -6075,7 +6093,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_FIRE, dir, dam, rad);
             }
@@ -6106,7 +6124,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_NETHER, dir, dam, rad);
             }
@@ -6219,7 +6237,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_PLASMA, dir, dam, rad);
             }
@@ -6262,14 +6280,14 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
         if (desc) return "Fires a ball of nexus.";
 
         {
-            int dam = spell_power(100 + plev * 2 + p_ptr->to_d_spell);
+            int dam = spell_power(75 + plev * 3 + p_ptr->to_d_spell);
             int rad = 4;
 
             if (info) return info_damage(0, 0, dam);
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_NEXUS, dir, dam, rad);
             }
         }
@@ -6282,7 +6300,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
         {
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 else msg_print("You invoke the Hand of Doom!");
 
                 fire_ball_hide(GF_HAND_DOOM, dir, spell_power(plev * 3), 0);
@@ -6378,7 +6396,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_HELL_FIRE, dir, dam, rad);
                 take_hit(DAMAGE_USELIFE, 20 + randint1(30), "the strain of casting Hellfire", -1);
@@ -6397,7 +6415,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball_hide(GF_GENOCIDE, dir, power, 0);
             }
@@ -6448,7 +6466,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt_or_beam(
                     beam_chance() - 10,
@@ -6495,7 +6513,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fear_monster(dir, power);
             }
@@ -6530,7 +6548,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
             if (cast)
             {
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(range, 0L);
             }
         }
@@ -6548,7 +6566,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_blast(GF_LITE, dir, dice, sides, 10, 3);
             }
         }
@@ -6579,7 +6597,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_AWAY_EVIL, dir, power, 0);
             }
         }
@@ -6606,7 +6624,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(
                     GF_HOLY_FIRE,
                     dir,
@@ -6695,7 +6713,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt(GF_ELEC, dir, dam);
             }
         }
@@ -6748,7 +6766,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 stasis_evil(dir);
             }
         }
@@ -6832,7 +6850,7 @@ static cptr do_crusade_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(GF_LITE, dir, dam, rad);
             }
@@ -7083,7 +7101,7 @@ static cptr do_music_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_bolt(
                     GF_SOUND,
@@ -7649,7 +7667,7 @@ static cptr do_music_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_beam(
                     GF_SOUND,
@@ -7865,7 +7883,7 @@ static cptr do_music_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
 
                 fire_ball(
                     GF_SOUND,
@@ -8298,7 +8316,14 @@ static cptr do_hex_spell(int spell, int mode, int plev)
 
     case 18:
         if (name) return "Recharging";
-        if (desc) return "It attempts to recharge a device using your mana for power.";
+        if (desc)
+        {
+            if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+                return "It attempts to recharge a device using your blood for power.";
+            else
+                return "It attempts to recharge a device using your mana for power.";
+        }
+
         power = plev * 2;
         if (info) return info_power(power);
         if (cast)
@@ -8641,7 +8666,7 @@ static cptr do_hex_spell(int spell, int mode, int plev)
             {
                 msg_print("Oops!");
                 if (mut_present(MUT_ASTRAL_GUIDE))
-                    energy_use = 30;
+                    energy_use /= 3;
                 teleport_player(30, 0L);
             }
 
@@ -8698,7 +8723,7 @@ static cptr do_hex_spell(int spell, int mode, int plev)
                     {
                         msg_print("Time to revenge!");
                     }
-                    while (!get_aim_dir(&dir));
+                    while (!get_fire_dir(&dir));
 
                     fire_ball(GF_HELL_FIRE, dir, power, 1);
 
@@ -8761,7 +8786,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance(),
                     GF_ELEC,
@@ -8783,7 +8808,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance(),
                     GF_COLD,
@@ -8805,7 +8830,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance(),
                     GF_FIRE,
@@ -8827,7 +8852,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance(),
                     GF_ACID,
@@ -8849,7 +8874,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_ELEC, dir, dam, rad);
             }
         }
@@ -8866,7 +8891,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_COLD, dir, dam, rad);
             }
         }
@@ -8883,7 +8908,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_FIRE, dir, dam, rad);
             }
         }
@@ -8900,7 +8925,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_ACID, dir, dam, rad);
             }
         }
@@ -8919,7 +8944,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance(),
                     GF_SHARDS,
@@ -8941,7 +8966,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance(),
                     GF_GRAVITY,
@@ -8963,7 +8988,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt_or_beam(
                     beam_chance(),
                     GF_PLASMA,
@@ -8985,7 +9010,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_METEOR, dir, dam, rad);
             }
         }
@@ -9020,7 +9045,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_TELEKINESIS, dir, dam, rad);
             }
         }
@@ -9051,7 +9076,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 msg_print("You launch a rocket!");
                 fire_rocket(GF_ROCKET, dir, dam, rad);
             }
@@ -9071,7 +9096,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt(
                     GF_ICE,
                     dir,
@@ -9092,7 +9117,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_WATER, dir, dam, rad);
             }
         }
@@ -9109,7 +9134,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_ELEC, dir, dam, rad);
             }
         }
@@ -9126,7 +9151,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_COLD, dir, dam, rad);
             }
         }
@@ -9143,7 +9168,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_FIRE, dir, dam, rad);
             }
         }
@@ -9160,7 +9185,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_ACID, dir, dam, rad);
             }
         }
@@ -9177,7 +9202,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_PLASMA, dir, dam, rad);
             }
         }
@@ -9194,7 +9219,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_GRAVITY, dir, dam, rad);
             }
         }
@@ -9213,7 +9238,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_bolt(
                     GF_MANA,
                     dir,
@@ -9234,7 +9259,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_PLASMA, dir, dam, rad);
             }
         }
@@ -9251,7 +9276,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_MANA, dir, dam, rad);
             }
         }
@@ -9268,7 +9293,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_SOUND, dir, dam, rad);
             }
         }
@@ -9285,7 +9310,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_INERT, dir, dam, rad);
             }
         }
@@ -9302,7 +9327,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_DISINTEGRATE, dir, dam, rad);
             }
         }
@@ -9319,7 +9344,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_MANA, dir, dam, rad);
             }
         }
@@ -9336,7 +9361,7 @@ static cptr do_armageddon_spell(int spell, int mode, int plev)
 
             if (cast)
             {
-                if (!get_aim_dir(&dir)) return NULL;
+                if (!get_fire_dir(&dir)) return NULL;
                 fire_ball(GF_SHARDS, dir, dam, rad);
             }
         }

@@ -71,12 +71,12 @@ Animal
   even a cloak and a suit of body armor.
   
     Stats                   Skills
-    Strength      +1        Disarming   Fair         
+    Strength      +5        Disarming   Fair         
     Intelligence  -3        Device      Bad          
     Wisdom        -5        Save        Fair         
-    Dexterity     +2        Stealth     Superb       
-    Constitution  +1        Searching   Fair         
-    Charisma      +0        Perception  Poor         
+    Dexterity     +5        Stealth     Superb       
+    Constitution  +4        Searching   Fair         
+    Charisma      +2        Perception  Poor         
     Life Rating  100%       Melee       Excellent    
     Base HP       22        Bows        Bad          
     Experience   150%       Infravision 50'
@@ -98,13 +98,13 @@ Animal
   among other flame based attacks. They resist fire as well.
   
     Stats                   Skills
-    Strength      +0        Disarming   Good         
+    Strength      +5        Disarming   Good         
     Intelligence  -2        Device      Fair         
     Wisdom        -2        Save        Fair         
-    Dexterity     +0        Stealth     Fair         
-    Constitution  +0        Searching   Bad          
+    Dexterity     +3        Stealth     Fair         
+    Constitution  +5        Searching   Bad          
     Charisma      +0        Perception  Bad          
-    Life Rating  100%       Melee       Superb       
+    Life Rating  115%       Melee       Superb       
     Base HP       45        Bows        Bad          
     Experience   130%       Infravision 50'
     
@@ -161,13 +161,13 @@ Angel/Demon
   no innate attacks.
   
     Stats                   Skills
-    Strength      +1        Disarming   Poor         
-    Intelligence  +1        Device      Excellent    
-    Wisdom        +4        Save        Superb       
-    Dexterity     +1        Stealth     Good         
-    Constitution  +1        Searching   Fair         
-    Charisma      +1        Perception  Poor         
-    Life Rating   90%       Melee       Good         
+    Strength      +4        Disarming   Poor         
+    Intelligence  +4        Device      Excellent    
+    Wisdom        +7        Save        Superb       
+    Dexterity     +4        Stealth     Good         
+    Constitution  +4        Searching   Fair         
+    Charisma      +7        Perception  Poor         
+    Life Rating  108%       Melee       Good         
     Base HP       26        Bows        Fair         
     Experience   325%       Infravision 30'
     
@@ -217,11 +217,11 @@ Beholder
   
     Stats                   Skills
     Strength      -3        Disarming   Good         
-    Intelligence  +4        Device      Heroic       
+    Intelligence  +8        Device      Heroic       
     Wisdom        +0        Save        Superb       
-    Dexterity     +1        Stealth     Heroic       
-    Constitution  +0        Searching   Legendary[7] 
-    Charisma      +0        Perception  Legendary[7] 
+    Dexterity     +3        Stealth     Heroic       
+    Constitution  +0        Searching   Amber[7]     
+    Charisma      +2        Perception  Amber[7]     
     Life Rating  100%       Melee       Fair         
     Base HP       20        Bows        Very Bad     
     Experience   200%       Infravision 80'
@@ -256,18 +256,18 @@ Dragon
   See [f] for more details on dragon realms.
   
     Stats                   Skills
-    Strength      +1        Disarming   Fair         
-    Intelligence  -1        Device      Good         
-    Wisdom        -2        Save        Fair         
-    Dexterity     -2        Stealth     Fair         
-    Constitution  +0        Searching   Fair         
-    Charisma      -1        Perception  Fair         
-    Life Rating  100%       Melee       Excellent    
+    Strength      +5        Disarming   Fair         
+    Intelligence  +3        Device      Good         
+    Wisdom        +2        Save        Fair         
+    Dexterity     +2        Stealth     Fair         
+    Constitution  +4        Searching   Fair         
+    Charisma      +3        Perception  Fair         
+    Life Rating  120%       Melee       Excellent    
     Base HP       40        Bows        Bad          
     Experience   250%       Infravision 50'
     
   
-Elemental
+Elemental/Vortex
   Elemental
   Elementals are mindless creatures animated from a single elemental 
   form. As a species, elementals can never be confused or cut, and they 
@@ -298,15 +298,49 @@ Elemental
   quite corrosive, but, alas, sometimes their armor corrodes as well!
   
     Stats                   Skills
-    Strength      +2        Disarming   Fair         
+    Strength      +5        Disarming   Fair         
     Intelligence  -5        Device      Bad          
     Wisdom        -5        Save        Excellent    
-    Dexterity     -2        Stealth     Excellent    
-    Constitution  +2        Searching   Fair         
+    Dexterity     -4        Stealth     Excellent    
+    Constitution  +6        Searching   Fair         
     Charisma      +0        Perception  Poor         
-    Life Rating  105%       Melee       Superb       
+    Life Rating  120%       Melee       Superb       
     Base HP       30        Bows        Bad          
     Experience   170%       Infravision 50'
+    
+  Vortex
+  Vortices are mindless whirlwinds of elemental forces randomly moving 
+  about the dungeon in search of prey. They are seldom confused and 
+  never blinded since they lack vision in the normal sense. Indeed, 
+  they seem to be aware of their surroundings even without eyes and 
+  need not wear a light source. They can be neither stunned, nor cut, 
+  and their mindless nature renders them immune to fear. But, alas, 
+  they are hopeless with magical devices, are rather weak in melee, 
+  and, while they may breathe almost effortlessly, their breath attacks 
+  are rather weak.
+   
+  Vortices do not have normal bodies. Rather they are simply a rapidly 
+  spinning elemental mass, and as such, they may incorporate objects 
+  into their rotating essence, gaining bonuses and protection in the 
+  process. The number of objects they may use increases with level, and 
+  there are no restrictions on the types of equipment they may 'wield' 
+  in each slot. While they may 'wield' weapons this way, they cannot 
+  attack with them. Instead, the vortex may engulf nearby monsters with 
+  their elemental essence.
+   
+  Vortices evolve randomly, though all seem to end up with the 
+  evolutionary perfection of the Aether vortex.
+  
+    Stats                   Skills
+    Strength      +0        Disarming   Fair         
+    Intelligence  -5        Device      Bad          
+    Wisdom        -5        Save        Superb       
+    Dexterity     +2        Stealth     Very Good    
+    Constitution  +1        Searching   Bad          
+    Charisma      +0        Perception  Bad          
+    Life Rating  102%       Melee       Superb       
+    Base HP       25        Bows        Very Bad     
+    Experience   125%       Infravision 0'
     
   
 Golem
@@ -333,13 +367,13 @@ Golem
   nearly forever to build, unfortunately.
   
     Stats                   Skills
-    Strength      +1        Disarming   Fair         
-    Intelligence  -2        Device      Bad          
-    Wisdom        -2        Save        Superb       
-    Dexterity     -1        Stealth     Poor         
-    Constitution  +1        Searching   Bad          
-    Charisma      +0        Perception  Bad          
-    Life Rating  100%       Melee       Superb       
+    Strength      +6        Disarming   Fair         
+    Intelligence  -5        Device      Bad          
+    Wisdom        -5        Save        Superb       
+    Dexterity     -4        Stealth     Poor         
+    Constitution  +6        Searching   Bad          
+    Charisma      +3        Perception  Bad          
+    Life Rating  125%       Melee       Superb       
     Base HP       50        Bows        Bad          
     Experience   200%       Infravision 50'
     
@@ -397,12 +431,12 @@ Jelly
   Quylthulgs have no physical attacks.
   
     Stats                   Skills
-    Strength      -5        Disarming   Fair         
-    Intelligence  -5        Device      Superb       
-    Wisdom        -5        Save        Excellent    
-    Dexterity     -5        Stealth     Superb       
-    Constitution  -5        Searching   Fair         
-    Charisma      +6        Perception  Good         
+    Strength      -1        Disarming   Fair         
+    Intelligence  -1        Device      Superb       
+    Wisdom        -1        Save        Excellent    
+    Dexterity     -1        Stealth     Superb       
+    Constitution  -1        Searching   Fair         
+    Charisma     +10        Perception  Good         
     Life Rating   95%       Melee       Very Bad     
     Base HP        0        Bows        Very Bad     
     Experience   150%       Infravision 50'
@@ -439,10 +473,10 @@ Leprechaun
   greed is obviously the primary virtue of the leprechaun!
   
     Stats                   Skills
-    Strength      -2        Disarming   Very Good    
+    Strength      -6        Disarming   Very Good    
     Intelligence  +1        Device      Heroic       
     Wisdom        +1        Save        Good         
-    Dexterity     +3        Stealth     Heroic       
+    Dexterity     +7        Stealth     Heroic       
     Constitution  -2        Searching   Fair         
     Charisma      -2        Perception  Poor         
     Life Rating   80%       Melee       Fair         
@@ -459,13 +493,13 @@ Mimic/Possessor
   they find, gaining power in the process.
   
     Stats                   Skills
-    Strength      +1        Disarming   Good         
+    Strength      +5        Disarming   Good         
     Intelligence  -5        Device      Fair         
     Wisdom        -5        Save        Excellent    
-    Dexterity     +0        Stealth     Very Good    
-    Constitution  +1        Searching   Poor         
+    Dexterity     +2        Stealth     Very Good    
+    Constitution  +5        Searching   Poor         
     Charisma      +0        Perception  Bad          
-    Life Rating   85%       Melee       Excellent    
+    Life Rating  105%       Melee       Excellent    
     Base HP       30        Bows        Very Bad     
     Experience   150%       Infravision 30'
     
@@ -535,7 +569,7 @@ Mimic/Possessor
     Constitution  -3        Searching   Poor         
     Charisma      -7        Perception  Poor         
     Life Rating   60%       Melee       Fair         
-    Base HP       15        Bows        Bad          
+    Base HP       15        Bows        Good         
     Experience   250%       Infravision 70'
     
   Ring
@@ -586,13 +620,13 @@ Orc/Troll/Giant
   no innate attacks.
   
     Stats                   Skills
-    Strength      +6        Disarming   Fair         
+    Strength      +9        Disarming   Fair         
     Intelligence  -3        Device      Bad          
     Wisdom        -3        Save        Fair         
     Dexterity     -2        Stealth     Poor         
-    Constitution  +3        Searching   Poor         
-    Charisma      +0        Perception  Bad          
-    Life Rating  107%       Melee       Heroic       
+    Constitution  +6        Searching   Poor         
+    Charisma      +1        Perception  Bad          
+    Life Rating  122%       Melee       Heroic       
     Base HP       46        Bows        Superb       
     Experience   200%       Infravision 50'
     
@@ -602,13 +636,13 @@ Orc/Troll/Giant
   incredible powers of regeneration.
   
     Stats                   Skills
-    Strength      +3        Disarming   Poor         
+    Strength      +7        Disarming   Poor         
     Intelligence  -5        Device      Bad          
     Wisdom        -5        Save        Fair         
-    Dexterity     -2        Stealth     Fair         
-    Constitution  +3        Searching   Poor         
+    Dexterity     +0        Stealth     Fair         
+    Constitution  +6        Searching   Poor         
     Charisma      +0        Perception  Bad          
-    Life Rating  100%       Melee       Superb       
+    Life Rating  120%       Melee       Superb       
     Base HP       50        Bows        Bad          
     Experience   150%       Infravision 50'
     
@@ -633,13 +667,13 @@ Undead
   enough.
   
     Stats                   Skills
-    Strength      +0        Disarming   Fair         
-    Intelligence  +3        Device      Superb       
-    Wisdom        -3        Save        Very Good    
-    Dexterity     +1        Stealth     Superb       
-    Constitution  +0        Searching   Fair         
-    Charisma      +0        Perception  Good         
-    Life Rating  100%       Melee       Very Bad     
+    Strength      -5        Disarming   Fair         
+    Intelligence  +6        Device      Superb       
+    Wisdom        -6        Save        Very Good    
+    Dexterity     +4        Stealth     Superb       
+    Constitution  -2        Searching   Fair         
+    Charisma      +3        Perception  Good         
+    Life Rating   94%       Melee       Very Bad     
     Base HP       20        Bows        Very Bad     
     Experience   275%       Infravision 50'
     
@@ -665,13 +699,13 @@ Undead
   hypnotic gaze.
   
     Stats                   Skills
-    Strength      +2        Disarming   Poor         
+    Strength      +5        Disarming   Poor         
     Intelligence  +1        Device      Excellent    
-    Wisdom        -1        Save        Fair         
-    Dexterity     +0        Stealth     Superb       
+    Wisdom        -4        Save        Fair         
+    Dexterity     +3        Stealth     Superb       
     Constitution  -2        Searching   Good         
-    Charisma      +1        Perception  Fair         
-    Life Rating   90%       Melee       Excellent    
+    Charisma      +5        Perception  Fair         
+    Life Rating   99%       Melee       Excellent    
     Base HP       20        Bows        Poor         
     Experience   250%       Infravision 50'
     
@@ -694,13 +728,13 @@ Xorn
   play like warriors and are strong as such.
   
     Stats                   Skills
-    Strength      +2        Disarming   Good         
+    Strength      +4        Disarming   Good         
     Intelligence  -4        Device      Bad          
     Wisdom        -2        Save        Fair         
-    Dexterity     -3        Stealth     Fair         
-    Constitution  +1        Searching   Poor         
+    Dexterity     -1        Stealth     Fair         
+    Constitution  +3        Searching   Poor         
     Charisma      -1        Perception  Bad          
-    Life Rating  100%       Melee       Excellent    
+    Life Rating  108%       Melee       Excellent    
     Base HP       30        Bows        Bad          
     Experience   150%       Infravision 50'
     
@@ -709,26 +743,27 @@ Table 1 - Race Statistic Bonus Table
 
              STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
 Centipede     +0   -3   -3   +0   +0   -3   90%  +15  100%  120%
-Hound         +1   -3   -5   +2   +1   +0  100%  +22  150%  110%
-Hydra         +0   -2   -2   +0   +0   +0  100%  +45  130%  130%
+Hound         +5   -3   -5   +5   +4   +2  100%  +22  150%  110%
+Hydra         +5   -2   -2   +3   +5   +0  115%  +45  130%  130%
 Spider        -2   -1   -1   +2   -2   -3   70%  +25  200%  115%
-Angel         +1   +1   +4   +1   +1   +1   90%  +26  325%   90%
-Beholder      -3   +4   +0   +1   +0   +0  100%  +20  200%  140%
-Dragon        +1   -1   -2   -2   +0   -1  100%  +40  250%  130%
-Elemental     +2   -5   -5   -2   +2   +0  105%  +30  170%  120%
-Golem         +1   -2   -2   -1   +1   +0  100%  +50  200%  130%
+Angel         +4   +4   +7   +4   +4   +7  108%  +26  325%   90%
+Beholder      -3   +8   +0   +3   +0   +2  100%  +20  200%  140%
+Dragon        +5   +3   +2   +2   +4   +3  120%  +40  250%  130%
+Elemental     +5   -5   -5   -4   +6   +0  120%  +30  170%  120%
+Vortex        +0   -5   -5   +2   +1   +0  102%  +25  125%  120%
+Golem         +6   -5   -5   -4   +6   +3  125%  +50  200%  130%
 Jelly         +1   -5   -5   +1   +1   -2   90%  +40  150%  125%
-Quylthulg     -5   -5   -5   -5   -5   +6   95%   +0  150%  120%
-Leprechaun    -2   +1   +1   +3   -2   -2   80%  +15  150%   85%
-Death-Sword   +1   -5   -5   +0   +1   +0   85%  +30  150%  110%
+Quylthulg     -1   -1   -1   -1   -1  +10   95%   +0  150%  120%
+Leprechaun    -6   +1   +1   +7   -2   -2   80%  +15  150%   85%
+Death-Sword   +5   -5   -5   +2   +5   +0  105%  +30  150%  110%
 Mimic         +0   +1   -1   +2   +0   -1  108%  +15  250%  110%
 Possessor     -3   +0   -3   +0   -3   -7   60%  +15  250%  110%
 Ring          -3   +4   +1   +0   -1   +3   85%  +10  150%  110%
-Giant         +6   -3   -3   -2   +3   +0  107%  +46  200%  130%
-Troll         +3   -5   -5   -2   +3   +0  100%  +50  150%  135%
-Lich          +0   +3   -3   +1   +0   +0  100%  +20  275%  135%
-Vampire       +2   +1   -1   +0   -2   +1   90%  +20  250%  130%
-Xorn          +2   -4   -2   -3   +1   -1  100%  +30  150%  120%
+Giant         +9   -3   -3   -2   +6   +1  122%  +46  200%  130%
+Troll         +7   -5   -5   +0   +6   +0  120%  +50  150%  135%
+Lich          -5   +6   -6   +4   -2   +3   94%  +20  275%  135%
+Vampire       +5   +1   -4   +3   -2   +5   99%  +20  250%  130%
+Xorn          +4   -4   -2   -1   +3   -1  108%  +30  150%  120%
 
 
 Table 2 - Race Skill Bonus Table I
@@ -742,6 +777,7 @@ Angel        Poor          Excellent     Superb        Good
 Beholder     Good          Heroic        Superb        Heroic       
 Dragon       Fair          Good          Fair          Fair         
 Elemental    Fair          Bad           Excellent     Excellent    
+Vortex       Fair          Bad           Superb        Very Good    
 Golem        Fair          Bad           Superb        Poor         
 Jelly        Good          Bad           Good          Superb       
 Quylthulg    Fair          Superb        Excellent     Superb       
@@ -765,16 +801,17 @@ Hound        Fair          Poor          Excellent     Bad             50'
 Hydra        Bad           Bad           Superb        Bad             50'
 Spider       Fair          Poor          Very Good     Bad             50'
 Angel        Fair          Poor          Good          Fair            30'
-Beholder     Legendary[7]  Legendary[7]  Fair          Very Bad        80'
+Beholder     Amber[7]      Amber[7]      Fair          Very Bad        80'
 Dragon       Fair          Fair          Excellent     Bad             50'
 Elemental    Fair          Poor          Superb        Bad             50'
+Vortex       Bad           Bad           Superb        Very Bad         0'
 Golem        Bad           Bad           Superb        Bad             50'
 Jelly        Poor          Bad           Superb        Bad              0'
 Quylthulg    Fair          Good          Very Bad      Very Bad        50'
 Leprechaun   Fair          Poor          Fair          Superb          50'
 Death-Sword  Poor          Bad           Excellent     Very Bad        30'
 Mimic        Fair          Fair          Very Good     Excellent        0'
-Possessor    Poor          Poor          Fair          Bad             70'
+Possessor    Poor          Poor          Fair          Good            70'
 Ring         Poor          Fair          Very Bad      Very Bad        50'
 Giant        Poor          Bad           Heroic        Superb          50'
 Troll        Poor          Bad           Superb        Bad             50'
@@ -785,5 +822,5 @@ Xorn         Poor          Bad           Excellent     Bad             50'
 
 
 
-Automatically generated for PosChengband 5.0.2.
+Automatically generated for PosChengband R 5.0.3.
 

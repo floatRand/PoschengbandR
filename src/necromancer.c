@@ -359,7 +359,7 @@ cptr do_necromancy_spell(int spell, int mode, int plev)
         if (cast)
         {
             int dir; 
-            if (!get_aim_dir(&dir)) return NULL;
+            if (!get_fire_dir(&dir)) return NULL;
             fire_ball_hide(GF_ENTOMB, dir, p_ptr->lev, 0);
             p_ptr->update |= (PU_FLOW);
             p_ptr->redraw |= (PR_MAP);
@@ -580,6 +580,12 @@ static caster_info * _caster_info(void)
     return &me;
 }
 
+static void _birth(void)
+{
+    py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
+    py_birth_spellbooks();
+}
+
 class_t *necromancer_get_class(void)
 {
     static class_t me = {0};
@@ -615,6 +621,7 @@ class_t *necromancer_get_class(void)
         me.exp = 125;
         me.pets = 10;
 
+        me.birth = _birth;
         me.caster_info = _caster_info;
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;

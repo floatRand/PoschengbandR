@@ -775,12 +775,10 @@ void kingly(void)
     put_str("*#########*#########*", cy - 1, cx - 11);
     put_str("*#########*#########*", cy, cx - 11);
 
-    /* Display a message */
 		put_str("Veni, Vidi, Vici!", cy + 3, cx - 9);
 		put_str("I came, I saw, I conquered!", cy + 4, cx - 14);
-		if (!coffeebreak_mode) put_str(format("All Hail the Mighty %s!", sp_ptr->winner), cy + 5, cx - 13);
+		if (!coffeebreak_mode) put_str(format("All Hail the Mighty %s!", sex_info[p_ptr->psex].winner), cy + 5, cx - 13);
 		else put_str(format("Now get back to work, %s!", player_name), cy + 5, cx - 13);
-	
 
     /* Flush input */
     flush();

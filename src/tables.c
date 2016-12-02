@@ -2138,7 +2138,12 @@ s32b realm_choices1[MAX_CLASS] =
     CH_NONE,                /* Devicemaster */
 	CH_NONE,				/* Alchemist */
 	CH_NONE,				/* Maledict */
-	CH_NONE,
+	CH_NONE,			    /* Freelancer */
+    (CH_LIFE | CH_SORCERY | CH_NATURE |
+     CH_CHAOS | CH_DEATH | CH_TRUMP |
+     CH_ARCANE | CH_ENCHANT | CH_DAEMON |
+     CH_CRUSADE | CH_ARMAGEDDON),  /* Yellow-Mage */
+    CH_NONE,                /* Gray-Mage */
 };
 
 
@@ -2204,7 +2209,12 @@ s32b realm_choices2[MAX_CLASS] =
     CH_NONE,                /* Devicemaster */
 	CH_NONE,				/* Alchemist */
 	CH_NONE,				/* Maledict */
-	CH_NONE,
+	CH_NONE,				/* Freelancer */
+    (CH_LIFE | CH_SORCERY | CH_NATURE |
+     CH_CHAOS | CH_DEATH | CH_TRUMP |
+     CH_ARCANE | CH_ENCHANT | CH_DAEMON |
+     CH_CRUSADE | CH_ARMAGEDDON),  /* Yellow-Mage */
+    CH_NONE,                /* Gray-Mage */
 };
 
 
@@ -2310,7 +2320,6 @@ int chest_traps[64] =
     (CHEST_EXPLODE | CHEST_SUMMON),
     (CHEST_EXPLODE | CHEST_SUMMON),
 };
-
 
 /*
  * Class titles for the player.
@@ -2977,6 +2986,34 @@ cptr player_title[MAX_CLASS][PY_MAX_LEVEL / 5] =
 		"Stranger",
 		"Stranger",
 	},
+
+	/* Yellow */
+	{
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+	},
+
+	/* Gray */
+	{
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+		"Stranger",
+	}, // missing for some reason?
 };
 
 monster_power monster_powers[MAX_MONSPELLS] =
@@ -3234,6 +3271,9 @@ option_type option_info[] =
     { &always_pickup,               FALSE, OPT_PAGE_INPUT, 0, 5,
     "always_pickup",                "Pick things up by default" },
 
+    { &toggle_run_status,           FALSE, OPT_PAGE_INPUT, 0, 13,
+    "toggle_run_status",            "Toggle run status with '.' key" },
+
     { &carry_query_flag,            FALSE, OPT_PAGE_INPUT, 0, 3,
     "carry_query_flag",             "Prompt before picking things up" },
 
@@ -3248,6 +3288,9 @@ option_type option_info[] =
 
     { &use_old_target,              FALSE, OPT_PAGE_INPUT, 0, 4,
     "use_old_target",               "Use old target by default" },
+
+    { &auto_target,                 FALSE, OPT_PAGE_INPUT, 0, 15,
+    "auto_target",                  "Automatically target nearest monster" },
 
     { &always_repeat,               TRUE,  OPT_PAGE_INPUT, 0, 6,
     "always_repeat",                "Repeat obvious commands" },
@@ -3518,9 +3561,6 @@ option_type option_info[] =
 
     { &preserve_mode,               TRUE,  OPT_PAGE_BIRTH, 6, 14,
     "preserve_mode",                "Preserve artifacts (*)" },
-
-    { &autoroller,                  TRUE,  OPT_PAGE_BIRTH, 6, 15,
-    "autoroller",                   "Allow use of autoroller for stats (*)" },
 
     { &powerup_home,                TRUE,  OPT_PAGE_BIRTH, 4, 3,
     "powerup_home",                 "Increase capacity of your home (*)" },

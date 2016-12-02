@@ -1,3 +1,9 @@
+=== History of PosChengband R ==
+
+R is for whatever you believe it is.
+It is just slightly faster paced, with some personal additions / 
+alterations. 
+
 === History of PosChengband ===
 
 PosChengband 1.0.0 Released

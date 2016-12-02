@@ -39,7 +39,7 @@ Melee
     Dexterity     +4        Stealth     Very Bad     
     Constitution  +4        Searching   Very Bad     
     Charisma      +4        Perception  Very Bad     
-    Life Rating  200%       Melee       Legendary[20]
+    Life Rating  200%       Melee       Amber[20]    
     Base HP       22        Bows        Very Bad     
     Experience   160%
     
@@ -249,6 +249,27 @@ Melee
     Base HP       12        Bows        Good         
     Experience   130%
     
+  Maledict
+  A maledict draws their powers from the misfortunes, bad omens and ill 
+  luck. They become more powerful the more cursed their equipment, and 
+  can direct debilating malisons at their foes. Notably, they have very 
+  easy time uncursing equipment, and can curse it again if they feel 
+  like it. They even gain some protection against ancient foul curses. 
+  At high levels, they receive abilities to uncurse all their equipment 
+  for a great benefit.
+  { EXPERIMENTAL CLASS }
+  
+    Stats                   Skills
+    Strength      +2        Disarming   Bad          
+    Intelligence  -1        Device      Fair         
+    Wisdom        -2        Save        Poor         
+    Dexterity     +1        Stealth     Fair         
+    Constitution  +1        Searching   Poor         
+    Charisma      +3        Perception  Bad          
+    Life Rating  105%       Melee       Excellent    
+    Base HP       12        Bows        Excellent    
+    Experience   135%
+    
   
 Archery
   Archer
@@ -340,11 +361,12 @@ Martial Arts
   Monk's spell casting ability.
    
   The different sects of monks are devoted to different areas of magic. 
-  They select a realm from Life, Nature, Craft, Trump and Death. They 
-  will eventually learn all prayers in the discipline of their choice. 
-  They have two class powers - 'Assume a Posture' and 'Double Attack'. 
-  They can choose different forms of postures in different situations, 
-  and use powerful combinations of attacks for the finishing blow.
+  They select a realm from Life, Nature, Craft, Trump, Death or forego 
+  any of these for some unique martial techniques.They will eventually 
+  learn all prayers in the discipline of their choice. They have two 
+  class powers - 'Assume a Posture' and 'Double Attack'. They can 
+  choose different forms of postures in different situations, and use 
+  powerful combinations of attacks for the finishing blow.
   
     Stats                   Skills
     Strength      +2        Disarming   Superb       
@@ -382,6 +404,91 @@ Martial Arts
     Life Rating  100%       Melee       Excellent    
     Base HP        4        Bows        Excellent    
     Experience   130%
+    
+  
+Devices
+  Devicemaster
+  Devicemasters are excellent with magical devices, but poor in most 
+  other skills. They may shoot or use melee in a pinch, but this will 
+  never be their forte. Instead, they must rely on their arsenal of 
+  magical devices in order to survive.
+   
+  The Devicemaster chooses to specialize in a particular class of 
+  devices and they gain extra bonuses when using devices from their 
+  speciality. These bonuses include increased damage, increased speed 
+  of activation, extra resistance to charge draining, and even the 
+  ability to occasionally power these devices without consuming 
+  charges. Each of these abilities becomes greater with experience.
+   
+  Devicemasters have a few magical abilities to enhance their utility 
+  with devices. As expected, they gain a powerful talent of Recharging 
+  very early on. Also, they may detect magical devices from a distance. 
+  At higher levels, they gain the powerful ability to move effects from 
+  one device to another (wand/rod/staff) or to move essence from one 
+  potion/scroll to a lower level potion/scroll. As a final ability, the 
+  Devicemaster may use multiple charges at once from a given device in 
+  an act of desperation. This greatly increases the power of the 
+  effect, but may destroy the device in the process.
+  
+    Stats                   Skills
+    Strength      -1        Disarming   Poor         
+    Intelligence  +2        Device      Superb       
+    Wisdom        +1        Save        Fair         
+    Dexterity     +2        Stealth     Fair         
+    Constitution  -2        Searching   Fair         
+    Charisma      -2        Perception  Poor         
+    Life Rating  101%       Melee       Fair         
+    Base HP        6        Bows        Poor         
+    Experience   130%
+    
+  Magic-Eater
+  The Magic-Eater can absorb magical devices. Once absorbed, these 
+  devices will function like normal objects and can be used whenever 
+  charges are available. In effect, it is as if the Magic-Eater had 
+  extra inventory slots for devices. However, absorbed magic can not be 
+  drained the way normal devices can, nor can these objects be 
+  destroyed. There are fixed number of slots for each kind of device, 
+  and the Magic-Eater will need to choose which object to replace once 
+  the slots are all used. Absorbed magic can not be recharged the way 
+  normal devices can. Instead, the Magic-Eater must rest to regain 
+  charges the way a normal spellcaster must rest to regain mana. 
+  Similarly, the Magic-Eater may quaff a potion to restore mana to 
+  speed this process, though this will not necessarily restore all of 
+  their absorbed magic.
+  
+    Stats                   Skills
+    Strength      -1        Disarming   Poor         
+    Intelligence  +2        Device      Superb       
+    Wisdom        +1        Save        Fair         
+    Dexterity     +2        Stealth     Fair         
+    Constitution  -2        Searching   Fair         
+    Charisma      -2        Perception  Poor         
+    Life Rating  103%       Melee       Fair         
+    Base HP        6        Bows        Poor         
+    Experience   130%
+    
+  Alchemist
+  Alchemist is master of tinctures, conconctions and infusions. They 
+  can prepare themselves set infusions from  that replicate the effect 
+  - without consuming space in inventory or having chance of 
+  shattering. They are rather decent in melee, especially with the 
+  right potion - they cannot rival those specialized in such, though. 
+  Even bad potions are useful in their hands, as weapons or 
+  ingredients. Their other abilities include creating copies of potions 
+  and turning items to gold. They require intelligence for some of 
+  their abilities.
+  { EXPERIMENTAL CLASS }
+  
+    Stats                   Skills
+    Strength      +0        Disarming   Excellent    
+    Intelligence  +2        Device      Fair         
+    Wisdom        -1        Save        Fair         
+    Dexterity     +2        Stealth     Excellent    
+    Constitution  +0        Searching   Excellent    
+    Charisma      -2        Perception  Fair         
+    Life Rating  105%       Melee       Superb       
+    Base HP       12        Bows        Superb       
+    Experience   125%
     
   
 Magic
@@ -431,6 +538,35 @@ Magic
     Charisma      -2        Perception  Poor         
     Life Rating  100%       Melee       Bad          
     Base HP        4        Bows        Bad          
+    Experience   130%
+    
+  Gray-Mage
+  The Gray-Mage casts spells from memory, rather than from a book.  
+  Indeed, the spell book is only required for the initial learning 
+  process. However, only a small number of spells may be learned at any 
+  given time, and while the Gray-Mage may replace old spells with new 
+  ones, they can only learn a fixed number of total spells (based upon 
+  Intelligence and Experience).
+   
+  The Gray-Mage does not choose spell realms the way an ordinary spell 
+  caster would. Instead, they choose a general bias towards one of 
+  Good, Neutral or Evil magic. So while all Gray-Mages may learn spells 
+  from the Arcane, Armageddon, Chaos, Craft, Sorcery and Trump realms, 
+  only a Good Bias allows access to Life and Crusade magic; only a 
+  Neutral Bias allows access to Nature magic; and only an Evil Bias 
+  allows access to Death and Daemon magic. Still, it is obvious that 
+  the Gray Mage will have an extremely large pool of spells from which 
+  to choose. Like the Mage, Intelligence is the key stat.
+  
+    Stats                   Skills
+    Strength      -4        Disarming   Fair         
+    Intelligence  +3        Device      Superb       
+    Wisdom        +0        Save        Good         
+    Dexterity     +1        Stealth     Good         
+    Constitution  -2        Searching   Poor         
+    Charisma      -2        Perception  Fair         
+    Life Rating   95%       Melee       Very Bad     
+    Base HP        0        Bows        Very Bad     
     Experience   130%
     
   High-Mage
@@ -532,66 +668,31 @@ Magic
     Base HP        0        Bows        Very Bad     
     Experience   160%
     
-  
-Devices
-  Devicemaster
-  Devicemasters are excellent with magical devices, but poor in most 
-  other skills. They may shoot or use melee in a pinch, but this will 
-  never be their forte. Instead, they must rely on their arsenal of 
-  magical devices in order to survive.
+  Yellow-Mage
+  A Yellow Mage is a type of Mage who focuses on rapid spell casting. 
+  Much as the Warrior gets multiple attacks per round, the Yellow Mage 
+  may cast multiple spells per round. Their spell speed increases with 
+  level. In addition, they may also cast low level spells more quickly 
+  as they gain in experience (For example, a CL50 Yellow Mage casting a 
+  L35 spell only requires 85% of the normal time, and this bonus 
+  applies before their spells per round bonus).
    
-  The Devicemaster chooses to specialize in a particular class of 
-  devices and they gain extra bonuses when using devices from their 
-  speciality. These bonuses include increased damage, increased speed 
-  of activation, extra resistance to charge draining, and even the 
-  ability to occasionally power these devices without consuming 
-  charges. Each of these abilities becomes greater with experience.
-   
-  Devicemasters have a few magical abilities to enhance their utility 
-  with devices. As expected, they gain a powerful talent of Recharging 
-  very early on. Also, they may detect magical devices from a distance. 
-  At higher levels, they gain the powerful ability to move effects from 
-  one device to another (wand/rod/staff) or to move essence from one 
-  potion/scroll to a lower level potion/scroll. As a final ability, the 
-  Devicemaster may use multiple charges at once from a given device in 
-  an act of desperation. This greatly increases the power of the 
-  effect, but may destroy the device in the process.
+  In all other respects, the Yellow Mage is similar to the Mage. They 
+  may learn spells from two spell realms and use Intelligence as their 
+  primary spell statistic. However, due to their focus upon hasty 
+  casting, they are unable to learn the mightiest of spells in most 
+  realms, especially as regards powerful offensive spells like Mana 
+  Storm.
   
     Stats                   Skills
-    Strength      -1        Disarming   Poor         
-    Intelligence  +2        Device      Superb       
-    Wisdom        +1        Save        Fair         
-    Dexterity     +2        Stealth     Fair         
-    Constitution  -2        Searching   Fair         
-    Charisma      -2        Perception  Poor         
-    Life Rating  101%       Melee       Fair         
-    Base HP        6        Bows        Poor         
-    Experience   130%
-    
-  Magic-Eater
-  The Magic-Eater can absorb magical devices. Once absorbed, these 
-  devices will function like normal objects and can be used whenever 
-  charges are available. In effect, it is as if the Magic-Eater had 
-  extra inventory slots for devices. However, absorbed magic can not be 
-  drained the way normal devices can, nor can these objects be 
-  destroyed. There are fixed number of slots for each kind of device, 
-  and the Magic-Eater will need to choose which object to replace once 
-  the slots are all used. Absorbed magic can not be recharged the way 
-  normal devices can. Instead, the Magic-Eater must rest to regain 
-  charges the way a normal spellcaster must rest to regain mana. 
-  Similarly, the Magic-Eater may quaff a potion to restore mana to 
-  speed this process, though this will not necessarily restore all of 
-  their absorbed magic.
-  
-    Stats                   Skills
-    Strength      -1        Disarming   Poor         
-    Intelligence  +2        Device      Superb       
-    Wisdom        +1        Save        Fair         
-    Dexterity     +2        Stealth     Fair         
-    Constitution  -2        Searching   Fair         
-    Charisma      -2        Perception  Poor         
-    Life Rating  103%       Melee       Fair         
-    Base HP        6        Bows        Poor         
+    Strength      -4        Disarming   Fair         
+    Intelligence  +3        Device      Superb       
+    Wisdom        +0        Save        Good         
+    Dexterity     +1        Stealth     Good         
+    Constitution  -2        Searching   Poor         
+    Charisma      -2        Perception  Fair         
+    Life Rating   95%       Melee       Very Bad     
+    Base HP        0        Bows        Very Bad     
     Experience   130%
     
   
@@ -1174,7 +1275,7 @@ Other
     Constitution  -1        Searching   Poor         
     Charisma      -3        Perception  Bad          
     Life Rating   95%       Melee       Fair         
-    Base HP        0        Bows        Bad          
+    Base HP        0        Bows        Good         
     Experience    70%
     
   Wild-Talent
@@ -1214,19 +1315,23 @@ Samurai        +3   -2   +1   +2   +1   +1  111%  +12  130%
 Warrior        +4   -2   -2   +2   +2   +1  115%  +18  100%
 Weaponmaster   +4   -3   -2   -1   +2   +1  109%  +12  135%
 Weaponsmith    +3   -1   -1   +1   +0   +0  111%  +12  130%
+Maledict       +2   -1   -2   +1   +1   +3  105%  +12  135%
 Archer         +2   -1   -1   +2   +1   +0  111%  +12  110%
 Sniper         +2   -1   -1   +2   +1   +0  100%   +4  110%
 Force-Trainer  +0   -1   +3   +2   +1   +0  100%   +4  135%
 Monk           +2   -1   +1   +3   +2   +1  110%  +12  130%
 Mystic         +2   -1   -2   +3   +1   +2  100%   +4  130%
+Devicemaster   -1   +2   +1   +2   -2   -2  101%   +6  130%
+Magic-Eater    -1   +2   +1   +2   -2   -2  103%   +6  130%
+Alchemist      +0   +2   -1   +2   +0   -2  105%  +12  125%
 Blood-Mage     -4   +3   -2   +1   +2   -2  108%  +10  135%
 Blue-Mage      -4   +4   -1   +1   -2   -2  100%   +4  130%
+Gray-Mage      -4   +3   +0   +1   -2   -2   95%   +0  130%
 High-Mage      -4   +4   +0   +0   -2   -2   94%   +0  130%
 Mage           -4   +3   +0   +1   -2   -2   95%   +0  130%
 Necromancer    -2   +3   -4   +1   -1   -2   95%   +2  125%
 Sorcerer       -5   +0   -2   +2   +0   +6   65%   +0  160%
-Devicemaster   -1   +2   +1   +2   -2   -2  101%   +6  130%
-Magic-Eater    -1   +2   +1   +2   -2   -2  103%   +6  130%
+Yellow-Mage    -4   +3   +0   +1   -2   -2   95%   +0  130%
 Priest         -1   -3   +3   -1   +0   +2  100%   +4  120%
 Ninja          +0   -1   -1   +3   +2   +2  100%   +4  120%
 Rogue          +2   +1   -1   +3   +1   +1  110%  +12  125%
@@ -1263,19 +1368,23 @@ Samurai       Good          Bad           Fair          Fair
 Warrior       Good          Bad           Fair          Fair         
 Weaponmaster  Fair          Bad           Fair          Fair         
 Weaponsmith   Good          Fair          Poor          Fair         
+Maledict      Bad           Fair          Poor          Fair         
 Archer        Excellent     Fair          Fair          Very Good    
 Sniper        Good          Fair          Poor          Excellent    
 Force-Trainer Good          Very Good     Good          Very Good    
 Monk          Superb        Very Good     Fair          Excellent    
 Mystic        Superb        Very Good     Fair          Excellent    
+Devicemaster  Poor          Superb        Fair          Fair         
+Magic-Eater   Poor          Superb        Fair          Fair         
+Alchemist     Excellent     Fair          Fair          Excellent    
 Blood-Mage    Fair          Superb        Good          Good         
 Blue-Mage     Fair          Superb        Good          Good         
+Gray-Mage     Fair          Superb        Good          Good         
 High-Mage     Fair          Superb        Good          Good         
 Mage          Fair          Superb        Good          Good         
 Necromancer   Fair          Superb        Good          Very Good    
 Sorcerer      Fair          Heroic        Heroic        Fair         
-Devicemaster  Poor          Superb        Fair          Fair         
-Magic-Eater   Poor          Superb        Fair          Fair         
+Yellow-Mage   Fair          Superb        Good          Good         
 Priest        Poor          Very Good     Excellent     Fair         
 Ninja         Superb        Fair          Fair          Superb       
 Rogue         Superb        Excellent     Fair          Excellent    
@@ -1303,7 +1412,7 @@ Wild-Talent   Fair          Good          Fair          Fair
 Table 3 - Class Skill Bonus Table II
 
               Searching     Perception    Melee         Bows         
-Berserker     Very Bad      Very Bad      Legendary[20] Very Bad     
+Berserker     Very Bad      Very Bad      Amber[20]     Very Bad     
 Blood-Knight  Poor          Bad           Superb        Poor         
 Duelist       Fair          Poor          Fair          Very Bad     
 Mauler        Poor          Bad           Superb        Very Bad     
@@ -1312,19 +1421,23 @@ Samurai       Poor          Bad           Superb        Good
 Warrior       Poor          Bad           Superb        Superb       
 Weaponmaster  Poor          Bad           Superb        Bad          
 Weaponsmith   Fair          Bad           Excellent     Good         
+Maledict      Poor          Bad           Excellent     Excellent    
 Archer        Fair          Poor          Very Good     Heroic       
 Sniper        Good          Fair          Poor          Superb       
 Force-Trainer Good          Fair          Fair          Fair         
 Monk          Good          Fair          Excellent     Excellent    
 Mystic        Good          Fair          Excellent     Excellent    
+Devicemaster  Fair          Poor          Fair          Poor         
+Magic-Eater   Fair          Poor          Fair          Poor         
+Alchemist     Excellent     Fair          Superb        Superb       
 Blood-Mage    Poor          Fair          Very Bad      Very Bad     
 Blue-Mage     Fair          Poor          Bad           Bad          
+Gray-Mage     Poor          Fair          Very Bad      Very Bad     
 High-Mage     Poor          Fair          Very Bad      Very Bad     
 Mage          Poor          Fair          Very Bad      Very Bad     
 Necromancer   Poor          Fair          Very Bad      Very Bad     
 Sorcerer      Poor          Fair          Very Bad      Very Bad     
-Devicemaster  Fair          Poor          Fair          Poor         
-Magic-Eater   Fair          Poor          Fair          Poor         
+Yellow-Mage   Poor          Fair          Very Bad      Very Bad     
 Priest        Poor          Bad           Fair          Poor         
 Ninja         Excellent     Good          Superb        Excellent    
 Rogue         Good          Fair          Excellent     Excellent    
@@ -1345,11 +1458,11 @@ Archaeologist Excellent     Good          Very Good     Poor
 Bard          Poor          Fair          Bad           Bad          
 Imitator      Fair          Poor          Very Good     Excellent    
 Rage-Mage     Poor          Bad           Fair          Fair         
-Tourist       Poor          Bad           Fair          Bad          
+Tourist       Poor          Bad           Fair          Good         
 Wild-Talent   Fair          Poor          Very Good     Very Good    
 
 
 
 
-Automatically generated for PosChengband 5.0.2.
+Automatically generated for PosChengband R 5.0.3.
 

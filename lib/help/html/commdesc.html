@@ -761,9 +761,34 @@ maximal legal value.
 <a name="Extra"></a>  </font><font color="#c00000">Extra Commands
   
     </font><font color="#c08040">Repeat Last Command (</font><font color="#ff8000">n</font><font color="#c08040">) or (</font><font color="#ff8000">X</font><font color="#c08040">)
-    </font><font color="#ffffff">This command repeat previously executed command with all its 
+    </font><font color="#ffffff">This command repeats the previously executed command with all its 
     arguments. Very useful to repeat casting, for example, magic 
     missile to same opponent.
+  
+    </font><font color="#c08040">Record Command (</font><font color="#ff8000">"</font><font color="#c08040">)
+    </font><font color="#ffffff">Commands that you enter may be recorded to any normal ascii 
+    character register. In fact, every command that you manually enter 
+    is automatically recorded to the </font><font color="#ff8000">. </font><font color="#ffffff">register. When you repeat the 
+    last command, you are really playing back the contents of this 
+    special </font><font color="#ff8000">. </font><font color="#ffffff">register. But you can also record the next command to a 
+    register of your choosing and then play it back manually later. For 
+    example, the command sequence </font><font color="#ff8000">"Fmae*t </font><font color="#ffffff">records the command </font><font color="#ff8000">mae*t </font><font color="#ffffff">to 
+    the </font><font color="#ff8000">F </font><font color="#ffffff">register in addition to the </font><font color="#ff8000">. </font><font color="#ffffff">register. You can later play 
+    back this command with </font><font color="#ff8000">'F </font><font color="#ffffff">whereas playing back with </font><font color="#ff8000">'. </font><font color="#ffffff">or </font><font color="#ff8000">n </font><font color="#ffffff">is only 
+    valid on the very next turn.
+  
+    </font><font color="#c08040">Playback Command (</font><font color="#ff8000">'</font><font color="#c08040">)
+    </font><font color="#ffffff">As mentioned above, you may record commands with the </font><font color="#ff8000">" </font><font color="#ffffff">command and 
+    play them back later with the </font><font color="#ff8000">' </font><font color="#ffffff">command. Commands are stored in 
+    registers, each of which is addressed with a single ASCII 
+    character. For example, if you record a command with </font><font color="#ff8000">"t&lt;cmd&gt;</font><font color="#ffffff">, then 
+    you may later play it back by pressing </font><font color="#ff8000">'t</font><font color="#ffffff">. These command registers 
+    are temporary and will be erased every time you restart the game. 
+    To view your recorded commands, choose the </font><font color="#ff8000">' </font><font color="#ffffff">register (i.e., press 
+    </font><font color="#ff8000">'' </font><font color="#ffffff">from the top level). You can then enter the register you wish to 
+    use (e.g. </font><font color="#ff8000">''t </font><font color="#ffffff">works the same as </font><font color="#ff8000">'t </font><font color="#ffffff">except that the register 
+    contents of all recorded commands are displayed to you after you 
+    press the second </font><font color="#ff8000">'</font><font color="#ffffff">).
   
     </font><font color="#c08040">Toggle Choice Window (</font><font color="#ff8000">^I</font><font color="#c08040">)
     </font><font color="#ffffff">Toggles the display in the choice window (if available) between 

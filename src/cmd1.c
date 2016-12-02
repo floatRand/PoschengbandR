@@ -2362,11 +2362,26 @@ static int _get_num_blow_innate(int which)
 
 static void do_monster_knockback(int x, int y, int dist);
 
+void wizard_report_damage(int amt)
+{
+#if 0
+    static int count = 0;
+    static int total = 0;
+
+    count++;
+    total += amt;
+    cmsg_format(TERM_L_RED, "You did %d damage (%d Avg).", amt, total / count);
+#endif
+}
+
 static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 {
     int             dam, base_dam, effect_pow, to_h, chance;
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
+    byte            old_fy = m_ptr->fy, old_fx = m_ptr->fx;
+    int             old_hp = m_ptr->hp;
+    int             old_r_idx = m_ptr->r_idx;
     char            m_name_subject[MAX_NLEN], m_name_object[MAX_NLEN];
     int             i, j, k;
     int             delay_sleep = 0;
@@ -2455,12 +2470,15 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
         int               blows = _get_num_blow_innate(i);
 
         if (a->flags & INNATE_SKIP) continue;
+        if (m_ptr->fy != old_fy || m_ptr->fx != old_fx) break; /* Teleport Effect? */
 
         if (r_ptr->level + 10 > p_ptr->lev)
             skills_innate_gain(skills_innate_calc_name(a));
 
         for (j = 0; j < blows; j++)
         {
+            if (m_ptr->fy != old_fy || m_ptr->fx != old_fx) break; /* Teleport Effect? */
+
             to_h = a->to_h + p_ptr->to_h_m;
             chance = p_ptr->skills.thn + (to_h * BTH_PLUS_ADJ);
 			if (fuiuchi || test_hit_norm(chance, MON_AC(r_ptr, m_ptr), m_ptr->ml))
@@ -2569,12 +2587,14 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 					anger_monster(m_ptr);
 
 
-                for (k = 0; k < MAX_INNATE_EFFECTS && !*mdeath; k++)
-                {
-                    int e = a->effect[k];
-                    int p = a->effect_chance[k];
+				for (k = 0; k < MAX_INNATE_EFFECTS && !*mdeath; k++)
+				{
+					int e = a->effect[k];
+					int p = a->effect_chance[k];
 
-                    if (p == 0) p = 100;
+					if (m_ptr->fy != old_fy || m_ptr->fx != old_fx) break; /* Teleport Effect? */
+
+					if (p == 0) p = 100;
 					if (!e && k == 0)
 					{
 						if (a->flags & INNATE_NO_DAM)
@@ -2593,218 +2613,232 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 						else if (pois_brand && !(r_ptr->flagsr & RFR_EFF_IM_POIS_MASK || r_ptr->r_flagsr & RFR_RES_POIS)) e = GF_POIS;
 						else{ e = GF_MISSILE; b_mult = 10; }
 
-						dam *= b_mult; 
+						dam *= b_mult;
 						dam /= 10;
-                    }
+					}
 
-                    /* Hack: When I decreased monster base resistance (89% -> 50%)
-                       I inadvertantly made dragon bite attacks too strong. Let's
-                       emulate the way branded weapons work, but only when the elemental
-                       effect is added on top of some base effect (generally GF_MISSILE). */
-                    if (k && mode == DRAGON_DEADLY_BITE)
-                    {
-                        switch (e)
-                        {
-                        case GF_ACID:
-                            if (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)
-                            {
-                                mon_lore_r(m_ptr, RFR_EFF_IM_ACID_MASK);
-                                e = 0;
-                            }
-                            break;
-                        case GF_FIRE:
-                            if (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)
-                            {
-                                mon_lore_r(m_ptr, RFR_EFF_IM_FIRE_MASK);
-                                e = 0;
-                            }
-                            break;
-                        case GF_COLD:
-                            if (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)
-                            {
-                                mon_lore_r(m_ptr, RFR_EFF_IM_COLD_MASK);
-                                e = 0;
-                            }
-                            break;
-                        case GF_ELEC:
-                            if (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)
-                            {
-                                mon_lore_r(m_ptr, RFR_EFF_IM_ELEC_MASK);
-                                e = 0;
-                            }
-                            break;
-                        case GF_POIS:
-                            if (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)
-                            {
-                                mon_lore_r(m_ptr, RFR_EFF_IM_POIS_MASK);
-                                e = 0;
-                            }
-                            break;
-                        case GF_CONFUSION:
-                            if (r_ptr->flags3 & RF3_NO_CONF)
-                            {
-                                mon_lore_3(m_ptr, RF3_NO_CONF);
-                                e = 0;
-                            }
-                            break;
-                        case GF_SOUND:
-                            if (r_ptr->flagsr & RFR_RES_SOUN)
-                            {
-                                mon_lore_r(m_ptr, RFR_RES_SOUN);
-                                e = 0;
-                            }
-                            break;
-                        case GF_SHARDS:
-                            if (r_ptr->flagsr & RFR_RES_SHAR)
-                            {
-                                mon_lore_r(m_ptr, RFR_RES_SHAR);
-                                e = 0;
-                            }
-                            break;
-                        case GF_NETHER:
-                            if (r_ptr->flagsr & RFR_RES_NETH)
-                            {
-                                mon_lore_r(m_ptr, RFR_RES_NETH);
-                                e = 0;
-                            }
-                            break;
-                        case GF_NEXUS:
-                            if (r_ptr->flagsr & RFR_RES_NEXU)
-                            {
-                                mon_lore_r(m_ptr, RFR_RES_NEXU);
-                                e = 0;
-                            }
-                            break;
-                        case GF_CHAOS:
-                            if (r_ptr->flagsr & RFR_RES_CHAO)
-                            {
-                                mon_lore_r(m_ptr, RFR_RES_CHAO);
-                                e = 0;
-                            }
-                            break;
-                        case GF_DISENCHANT:
-                            if (r_ptr->flagsr & RFR_RES_DISE)
-                            {
-                                mon_lore_r(m_ptr, RFR_RES_DISE);
-                                e = 0;
-                            }
-                            break;
-                        case GF_LITE:
-                            if (r_ptr->flagsr & RFR_RES_LITE)
-                            {
-                                mon_lore_r(m_ptr, RFR_RES_LITE);
-                                e = 0;
-                            }
-                            break;
-                        case GF_DARK:
-                            if (r_ptr->flagsr & RFR_RES_DARK)
-                            {
-                                mon_lore_r(m_ptr, RFR_RES_DARK);
-                                e = 0;
-                            }
-                            break;
-                        }
-                    }
-
-                    if (!e) continue;
-                    if (randint1(100) > p) continue;
-
-                    switch (e)
-                    {
-                    case GF_MISSILE:
-                        *mdeath = mon_take_hit(m_idx, dam, fear, NULL);
-                        break;
-                    case GF_DISENCHANT:
-                        *mdeath = mon_take_hit(m_idx, dam, fear, NULL);
-                        if (!(*mdeath) && one_in_(7))
-                            dispel_monster_status(m_idx);
-                        break;
-                    case GF_OLD_SLEEP:
-                        delay_sleep += effect_pow/2;
-                        break;
-                    case GF_STASIS:
-                        delay_stasis += effect_pow;
-                        break;
-                    case GF_PARALYSIS:
-                        delay_paralysis += effect_pow;
-                        break;
-                    case GF_OLD_CONF:
-                    case GF_OLD_SLOW:
-                    case GF_STUN:
-                        project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_SHORT_MON_NAME, -1);
-                        *mdeath = (m_ptr->r_idx == 0);
-                        break;
-                    case GF_DRAIN_MANA:
-                    {
-                        int amt = MIN(effect_pow, max_drain_amt - drain_amt);
-                        if (amt && project(0, 0, m_ptr->fy, m_ptr->fx, amt, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1))
-                            drain_amt += amt;
-                        *mdeath = (m_ptr->r_idx == 0);
-                        break;
-                    }
-                    case GF_OLD_DRAIN:
-                        if (monster_living(r_ptr) && project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1))
-                        {
-                            int amt = MIN(effect_pow, max_drain_amt - drain_amt);
-                            if (prace_is_(MIMIC_BAT))
-                            {
-                                vampire_feed(amt);
-                            }
-                            else
-                            {
-                                msg_format("You <color:D>drain life</color> from %s!", m_name_object);
-                                hp_player(amt);
-                            }
-                            drain_amt += amt;
-                        }
-                        *mdeath = (m_ptr->r_idx == 0);
-                        break;
-                    case GF_STEAL:
-                        if (leprechaun_steal(m_idx))
-                            steal_ct++;
-                        break;
-                    case GF_QUAKE:
-                        if (base_dam > 50 || one_in_(7))
-                        {
-                            delay_quake = TRUE;
-                            project(0, 0, m_ptr->fy, m_ptr->fx, base_dam, GF_STUN, PROJECT_KILL|PROJECT_HIDE|PROJECT_NO_PAIN|PROJECT_SHORT_MON_NAME, -1);
-                        }
-                        break;
-					default:{
-						if(dam<=0) project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1);
-						else project(0, 0, m_ptr->fy, m_ptr->fx, dam, e, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1);
-						*mdeath = (m_ptr->r_idx == 0);
+					/* Hack: When I decreased monster base resistance (89% -> 50%)
+					   I inadvertantly made dragon bite attacks too strong. Let's
+					   emulate the way branded weapons work, but only when the elemental
+					   effect is added on top of some base effect (generally GF_MISSILE). */
+					if (k && mode == DRAGON_DEADLY_BITE)
+					{
+						switch (e)
+						{
+						case GF_ACID:
+							if (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK)
+							{
+								mon_lore_r(m_ptr, RFR_EFF_IM_ACID_MASK);
+								e = 0;
+							}
+							break;
+						case GF_FIRE:
+							if (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)
+							{
+								mon_lore_r(m_ptr, RFR_EFF_IM_FIRE_MASK);
+								e = 0;
+							}
+							break;
+						case GF_COLD:
+							if (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK)
+							{
+								mon_lore_r(m_ptr, RFR_EFF_IM_COLD_MASK);
+								e = 0;
+							}
+							break;
+						case GF_ELEC:
+							if (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK)
+							{
+								mon_lore_r(m_ptr, RFR_EFF_IM_ELEC_MASK);
+								e = 0;
+							}
+							break;
+						case GF_POIS:
+							if (r_ptr->flagsr & RFR_EFF_IM_POIS_MASK)
+							{
+								mon_lore_r(m_ptr, RFR_EFF_IM_POIS_MASK);
+								e = 0;
+							}
+							break;
+						case GF_CONFUSION:
+							if (r_ptr->flags3 & RF3_NO_CONF)
+							{
+								mon_lore_3(m_ptr, RF3_NO_CONF);
+								e = 0;
+							}
+							break;
+						case GF_SOUND:
+							if (r_ptr->flagsr & RFR_RES_SOUN)
+							{
+								mon_lore_r(m_ptr, RFR_RES_SOUN);
+								e = 0;
+							}
+							break;
+						case GF_SHARDS:
+							if (r_ptr->flagsr & RFR_RES_SHAR)
+							{
+								mon_lore_r(m_ptr, RFR_RES_SHAR);
+								e = 0;
+							}
+							break;
+						case GF_NETHER:
+							if (r_ptr->flagsr & RFR_RES_NETH)
+							{
+								mon_lore_r(m_ptr, RFR_RES_NETH);
+								e = 0;
+							}
+							break;
+						case GF_NEXUS:
+							if (r_ptr->flagsr & RFR_RES_NEXU)
+							{
+								mon_lore_r(m_ptr, RFR_RES_NEXU);
+								e = 0;
+							}
+							break;
+						case GF_CHAOS:
+							if (r_ptr->flagsr & RFR_RES_CHAO)
+							{
+								mon_lore_r(m_ptr, RFR_RES_CHAO);
+								e = 0;
+							}
+							break;
+						case GF_DISENCHANT:
+							if (r_ptr->flagsr & RFR_RES_DISE)
+							{
+								mon_lore_r(m_ptr, RFR_RES_DISE);
+								e = 0;
+							}
+							break;
+						case GF_LITE:
+							if (r_ptr->flagsr & RFR_RES_LITE)
+							{
+								mon_lore_r(m_ptr, RFR_RES_LITE);
+								e = 0;
+							}
+							break;
+						case GF_DARK:
+							if (r_ptr->flagsr & RFR_RES_DARK)
+							{
+								mon_lore_r(m_ptr, RFR_RES_DARK);
+								e = 0;
+							}
+							break;
 						}
-                    }
-                }
-                /* TODO: Should rings of power brand innate attacks? */
-                touch_zap_player(m_idx);
+					}
 
-                if (a->flags & INNATE_EXPLODE)
-                {
-                    possessor_explode(dam);
-                    return;
-                }
+					if (!e) continue;
+					if (randint1(100) > p) continue;
 
-                if (*mdeath) return;
+					if (p_ptr->current_r_idx == MON_AETHER_VORTEX)
+						e = vortex_get_effect();
 
-                on_p_hit_m(m_idx);
+					switch (e)
+					{
+					case GF_MISSILE:
+						*mdeath = mon_take_hit(m_idx, dam, fear, NULL);
+						break;
+					case GF_DISENCHANT:
+						*mdeath = mon_take_hit(m_idx, dam, fear, NULL);
+						if (!(*mdeath) && one_in_(7))
+							dispel_monster_status(m_idx);
+						break;
+					case GF_OLD_SLEEP:
+						delay_sleep += effect_pow / 2;
+						break;
+					case GF_STASIS:
+						delay_stasis += effect_pow;
+						break;
+					case GF_PARALYSIS:
+						delay_paralysis += effect_pow;
+						break;
+					case GF_OLD_CONF:
+					case GF_OLD_SLOW:
+					case GF_STUN:
+						project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL | PROJECT_HIDE | PROJECT_SHORT_MON_NAME, -1);
+						*mdeath = (m_ptr->r_idx == 0);
+						break;
+					case GF_DRAIN_MANA:
+					{
+						int amt = MIN(effect_pow, max_drain_amt - drain_amt);
+						if (amt && project(0, 0, m_ptr->fy, m_ptr->fx, amt, e, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1))
+							drain_amt += amt;
+						*mdeath = (m_ptr->r_idx == 0);
+						break;
+					}
+					case GF_OLD_DRAIN:
+						if (monster_living(r_ptr) && project(0, 0, m_ptr->fy, m_ptr->fx, effect_pow, e, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1))
+						{
+							int amt = MIN(effect_pow, max_drain_amt - drain_amt);
+							if (prace_is_(MIMIC_BAT))
+							{
+								vampire_feed(amt);
+							}
+							else
+							{
+								msg_format("You <color:D>drain life</color> from %s!", m_name_object);
+								hp_player(amt);
+							}
+							drain_amt += amt;
+						}
+						*mdeath = (m_ptr->r_idx == 0);
+						break;
+					case GF_STEAL:
+						if (leprechaun_steal(m_idx))
+							steal_ct++;
+						break;
+					case GF_QUAKE:
+						if (base_dam > 50 || one_in_(7))
+						{
+							delay_quake = TRUE;
+							project(0, 0, m_ptr->fy, m_ptr->fx, base_dam, GF_STUN, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1);
+						}
+						break;
 
-                if (mode == DRAGON_SNATCH)
-                {
-                    msg_format("You grab %s in your jaws.", m_name_object);
-                    monster_toss(m_idx);
-                    return;
-                }
-            }
-            else
-            {
-                sound(SOUND_MISS);
-                if (p_ptr->prace == RACE_MON_BEHOLDER)
-                    msg_format("%^s avoids your gaze.", m_name_subject);
-                else
-                    msg_print("You miss.");
-            }
+					default:{
+						project(0, 0, m_ptr->fy, m_ptr->fx, k ? effect_pow : dam, e, PROJECT_KILL | PROJECT_HIDE | PROJECT_NO_PAIN | PROJECT_SHORT_MON_NAME, -1);
+						*mdeath = (m_ptr->r_idx == 0);
+						/* Polymorph effect? */
+						if (m_ptr->r_idx && m_ptr->r_idx != old_r_idx)
+						{
+							old_r_idx = m_ptr->r_idx;
+							monster_desc(m_name_subject, m_ptr, MD_PRON_VISIBLE);
+							monster_desc(m_name_object, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+						}
+					}
+					}
+					/* TODO: Should rings of power brand innate attacks? */
+					touch_zap_player(m_idx);
+
+					if (a->flags & INNATE_EXPLODE)
+					{
+						possessor_explode(dam);
+						return;
+					}
+
+					if (*mdeath)
+					{
+						wizard_report_damage(old_hp);
+						return;
+					}
+
+					on_p_hit_m(m_idx);
+
+					if (mode == DRAGON_SNATCH)
+					{
+						msg_format("You grab %s in your jaws.", m_name_object);
+						monster_toss(m_idx);
+						return;
+					}
+				}
+			}
+			else
+				{
+							sound(SOUND_MISS);
+							if (p_ptr->prace == RACE_MON_BEHOLDER)
+								msg_format("%^s avoids your gaze.", m_name_subject);
+							else
+								msg_print("You miss.");
+						}
             fuiuchi = FALSE; /* Clumsy! */
 
             if (mode == WEAPONMASTER_RETALIATION) break;
@@ -2831,6 +2865,8 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
         else
             teleport_player(25 + p_ptr->lev/2, 0L);
     }
+
+    wizard_report_damage(old_hp - m_ptr->hp);
 }
 
 /*
@@ -3912,7 +3948,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                     if (p_ptr->lev >= 35)    /* Endless Duel */
                     {
-                        /* Hacks so that get_aim_dir() actually allows user to select a new target */
+                        /* Hacks so that get_fire_dir() actually allows user to select a new target */
                         target_who = 0;
                         command_dir = 0;
                         msg_print("Your chosen target is vanquished!  Select another.");
@@ -5207,6 +5243,11 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
         /* Update stuff */
         p_ptr->update |= (PU_VIEW | PU_LITE | PU_FLOW | PU_MON_LITE | PU_DISTANCE);
         p_ptr->window |= PW_MONSTER_LIST | PW_OBJECT_LIST;
+        if (target_who < 0)
+        {
+            target_okay(); /* dismiss if no longer valid */
+            p_ptr->redraw |= PR_HEALTH_BARS;
+        }
 
         if (!view_unsafe_grids)
             p_ptr->redraw |= PR_STATUS;
@@ -5762,7 +5803,7 @@ void move_player(int dir, bool do_pickup, bool break_trap)
             {
 #ifdef ALLOW_EASY_OPEN
                 /* Closed doors */
-                if (easy_open && is_closed_door(feat) && easy_open_door(y, x))
+                if (easy_open && is_closed_door(feat) && easy_open_door(y, x, dir))
                 {
                     /* Hack. Try to deduce what happened since easy_open_door hides this.
                        Try to repeat attempting to unlock the door, but do a quick check

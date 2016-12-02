@@ -1296,7 +1296,7 @@ static bool _check_realm(int class_idx, int realm_idx)
         return TRUE;
     if (realm_choices2[class_idx] & bit)
         return TRUE;
-    if (class_doesnt_study(class_idx))
+	if (class_doesnt_study(class_idx) || class_idx == CLASS_GRAY_MAGE)
     {
         if (is_magic(realm_idx) && realm_idx != REALM_NECROMANCY)
             return TRUE;

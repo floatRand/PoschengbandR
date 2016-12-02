@@ -1,0 +1,372 @@
+  [PosChengband R 5.0.3 Character Dump]
+              ***WINNER***
+
+ Name       : PLAYER                       ========== Stats ==========
+ Sex        : Female                             STR  :        30
+ Personality: Ordinary                           INT  :         9
+ Race       : Human                              WIS  :         9
+ Subrace    : None                               DEX  :        14
+ Class      : Warrior                            CON  :        19
+                                                 CHR  :        12
+                                        
+ Level      :       50                           HP   :   664/718
+ Cur Exp    :  4765738                           SP   :       0/0
+ Max Exp    :  4765738                           AC   :        14
+ Adv Exp    :    *****                           Speed:        +0
+                                        
+                                           ========== Skills =========
+ Gold       : 10020152                     Melee      : Legendary[5]
+ Kills      :       21                     Ranged     : Legendary[2]
+ Uniques    :        5                     SavingThrow: Superb
+ Artifacts  :      0+0                     Stealth    : Poor
+                                           Perception : Poor
+ Game Day   :        1                     Searching  : Poor
+ Game Time  :     6:36                     Disarming  : Superb
+ Play Time  :    00:03                     Device     : Superb
+                                        
+============================= Character Equipment =============================
+
+ a) a Broad Sword (2d5) (+0,+0)
+ c) a Light Crossbow (x3.50) (+0,+0)
+ g) a Brass Lantern (with 4747 turns of light)
+ h) Chain Mail (-2) [14,+0]
+
+              | }   ~[                                | }   ~[    
+ Resistances  abcdefghijkl@              Abilities    abcdefghijkl@
+ Acid       : .............   0%         Speed      : .............
+ Electricity: .............   0%         Free Act   : .............
+ Fire       : .............   0%         See Invis  : .............
+ Cold       : .............   0%         Warning    : .............
+ Poison     : .............   0%         Slow Digest: .............
+ Light      : .............   0%         Regenerate : ............+ 200%
+ Dark       : .............   0%         Levitation : .............
+ Confusion  : .............   0%         Perm Lite  : .............
+ Nether     : .............   0%         Reflection : .............
+ Nexus      : .............   0%         Hold Life  : .............
+ Sound      : .............   0%         Dec Mana   : .............
+ Shards     : .............   0%         Easy Spell : .............
+ Chaos      : .............   0%         Anti Magic : .............
+ Disenchantm: .............   0%         Magic Skill: .............
+ Time       : .............   0%         Spell Power: .............
+ Blindness  : .............   0%         Spell Cap  : .............
+ Fear       : ............+   1x         Magic Res  : .............
+                                         Infravision: .............
+              | }   ~[                   Stealth    : .............
+ Auras        abcdefghijkl@              Searching  : .............
+ Aura Elec  : .............             
+ Aura Fire  : .............                           | }   ~[    
+ Aura Cold  : .............              Sustains     abcdefghijkl@
+ Aura Shards: .............              Sust Str   : .............
+ Revenge    : .............              Sust Int   : .............
+                                         Sust Wis   : .............
+              | }   ~[                   Sust Dex   : .............
+ Slays        abcdefghijkl@              Sust Con   : .............
+ Slay Evil  : .............              Sust Chr   : .............
+ Slay Undead: .............             
+ Slay Demon : .............                           | }   ~[    
+ Slay Dragon: .............              Detection    abcdefghijkl@
+ Slay Human : .............              Telepathy  : .............
+ Slay Animal: .............              ESP Evil   : .............
+ Slay Orc   : .............              ESP Nonliv : .............
+ Slay Troll : .............              ESP Good   : .............
+ Slay Giant : .............              ESP Undead : .............
+ Slay Good  : .............              ESP Demon  : .............
+ Slay Living: .............              ESP Dragon : .............
+ Acid Brand : .............              ESP Human  : .............
+ Elec Brand : .............              ESP Animal : .............
+ Fire Brand : .............              ESP Orc    : .............
+ Cold Brand : .............              ESP Troll  : .............
+ Pois Brand : .............              ESP Giant  : .............
+ Mana Brand : .............             
+ Sharpness  : .............                           | }   ~[    
+ Quake      : .............              Curses       abcdefghijkl@
+ Vampiric   : .............              Cursed     : .............
+ Chaotic    : .............              Rnd Tele   : .............
+ Add Blows  : .............              No Tele    : .............
+ Blessed    : .............              Drain Exp  : .............
+ Riding     : +............              Aggravate  : .............
+ Tunnel     : .............              TY Curse   : .............
+ Throwing   : .............             
+                                        
+              | }   ~[    
+              abcdefghijkl@   Base  R  C  P  E  Total
+       STR  : .............     26  0  4  0  0     30
+       INT  : .............     11  0 -2  0  0      9
+       WIS  : .............     11  0 -2  0  0      9
+       DEX  : .............     12  0  2  0  0     14
+       CON  : .............     17  0  2  0  0     19
+       CHR  : .............     11  0  1  0  0     12
+
+==================================== Melee ====================================
+
+ Hand #1: a Broad Sword (2d5) (+0,+0)                        Accuracy
+ Weight : 15.0 lbs                                            AC Hit
+ Profic : Beginner (+6 To Hit)                                25 89%
+ To Hit : 0 + 18 = 18                                         50 82%
+ To Dam : 0 + 24 = 24                                         75 76%
+ Blows  : 3.38                                               100 69%
+ Damage                                                      125 63%
+ Crits  : 1.12x (8.6%)                                       150 56%
+ Normal : 102 [1.12x]                                        175 50%
+                                                             200 43%
+
+=================================== Shooting ==================================
+
+ Shooting: a Light Crossbow (x3.50) (+0,+0)
+ Range   : 180'
+ Shots   : 1.66
+ Mult    : 3.78x
+ To Hit  : 0 + 5 = 5
+ To Dam  : 0 (Multiplier Applies)
+ Xtra Dam: 0 (Multiplier Does Not Apply)
+
+=================================== Powers ====================================
+
+                     Lvl Cost Fail Desc            Cast Fail
+Sword Dancing         30   25  20%                    0    0   0%
+
+=================================== Dungeons ==================================
+
+ Angband         : level 100
+
+You retired from the adventure after winning.
+
+ Last Message: HH
+
+==================================== Quests ===================================
+
+  Completed Quests
+  Oberon                                   (Danger  level:  99) - level 50
+  Serpent of Chaos                         (Danger  level: 100) - level 50
+
+
+  Arena:  0 Victory
+
+================================ Monster Kills ================================
+
+You have defeated 21 enemies including 5 unique monsters in total.
+
+  Uniques                                  Lvl
+  The Serpent of Chaos                     100
+  Oberon, King of Amber                     99
+  The Destroyer                             94
+  Angamaite of Umbar                        24
+  King Mulu, the Chief of Southerings       16
+
+  Non-uniques               Lvl Count     Non-uniques               Lvl Count
+  Hell hound of Julian       83     2     Cave spider                 2     8
+  Nether hound               51     1     Olog                       35     3
+  Ancient bronze dragon      38     1     Hell hound of Julian       83     2
+  Olog                       35     3     Nether hound               51     1
+  Nexus quylthulg            32     1     Ancient bronze dragon      38     1
+  Cave spider                 2     8     Nexus quylthulg            32     1
+                                        
+                                        
+=================================== Virtues ===================================
+
+Your alignment: Neutral
+
+You are somewhat virtuous in Valour.
+You have strayed from the path of Honour.
+You have strayed from the path of Individualism.
+You are neutral to Justice.
+You are neutral to Temperance.
+You are neutral to Patience.
+You are neutral to Diligence.
+You are neutral to Sacrifice.
+
+================================== Mutations ==================================
+
+You are a fast learner.
+
+============================= Character Inventory =============================
+
+a) 6 Rations of Food
+b) 16 Scrolls of Word of Recall
+
+================================== Statistics =================================
+
+                 Gold
+  Found    :    20152
+  Selling  :        0
+  Winnings : 10000000 10020152
+  Purchases:        0
+  Services :        0
+  Stolen   :        0        0
+                      10020152
+
+  Objects Found    :     30
+  Objects Bought   :      0
+  Objects Destroyed:      9
+
+  Equipment            Found Bought  Used  Dest
+  Weapons                  1      0     0     0
+  Shields                  0      0     0     1
+  Bows                     1      0     0     2
+  Lights                   1      0     0     0
+  Body Armor               1      0     0     2
+  Totals                   4      0     0     5
+
+  Devices              Found Bought  Used  Dest
+  Scrolls                 20      0     4     0
+  Totals                  20      0     4     0
+
+  Other                Found Bought  Used  Dest
+  Food                     6      0     0     0
+  Corpses                  0      0     0     1
+  Totals                   6      0     0     1
+
+  Potions              Found Bought  Used  Dest
+
+  Scrolls              Found Bought  Used  Dest
+  Word of Recall          20      0     4     0
+  Totals                  20      0     4     0
+
+  Wands                Found Bought  Used  Dest
+
+  Staves               Found Bought  Used  Dest
+
+  Rods                 Found Bought  Used  Dest
+
+  Spellbooks           Found Bought  Used  Dest
+
+  Egos Found    :      0
+  Egos Bought   :      0
+  Egos Destroyed:      2
+
+  Egos                 Found Bought  Dest
+
+  Monsters             Kills   Pct
+  Animals                 11  52.3%
+  Dragons                  1   4.7%
+  Hounds                   1   4.7%
+  Humans                   3  14.2%
+  Trolls                   3  14.2%
+  Uniques                  5  23.8%
+
+  Evil Monsters            9  42.8%
+  Neutral Monsters        12  57.1%
+
+  Totals                  21
+
+================================ Last Messages ================================
+
+You are confused.
+You feel less confused now.
+You are no longer scared, but you still feel nervous.
+
+You are no longer nervous, but you still feel uneasy.
+Your fears finally subside.
+You sense the presence of invisible creatures! You sense the presence 
+of monsters!
+Select a point and press space.
+You do 10990 damage. Oberon, King of Amber shouts, 'AAAARRRGGGHHH!!!' 
+How heroic! You are straying from the path of individualism. You have 
+slain Oberon, King of Amber. How heroic! You just completed your quest! 
+A magical staircase appears...
+
+There is a granite wall blocking your way.
+You behold the loathsome visage of Nyarlathotep, the Crawling Chaos 
+[Lure]! You behold the terrifying visage of Nyarlathotep, the Crawling 
+Chaos [Lure]! You feel terrified. You dastardly villain!
+
+You are no longer terrified, but you still feel nervous.
+Your fears finally subside.
+You see a Heavy Crossbow (x5) {special}. You collect 8389 gold pieces 
+worth of adamantite. You see a Broad Spear (1d9) {excellent}. You 
+collect 984 gold pieces worth of garnets. You see a Set of Leather 
+Gloves [1] {special}. You see Leather Scale Mail [11] {special}.
+
+You see Book of Kendo [Hokusin Ittouryuu Kaiden]. You see Bar Chain 
+Mail [23] {excellent}. You see a Mace (2d4) {excellent}. You collect 
+2301 gold pieces worth of adamantite. You see a Broken Dagger (1d1) 
+{excellent}. You see Do-maru [25] {excellent}. You see a Robe [2] 
+{excellent}.
+
+You collect 2120 gold pieces worth of gold. You see a Ring 
+{unidentified}. You see a Two-Handed Flail (3d6) {excellent}. You see a 
+Pair of Hard Leather Boots [3] {excellent}. You see Double Chain Mail 
+[16] {special}. You see a Guisarme (10d1) {excellent}. You see a Golden 
+Crown [0] {excellent}. You see a Scroll titled "nihum khomar".
+
+You collect 3558 gold pieces worth of adamantite. You see a Small Metal 
+Shield [9] {excellent}. You see O-yoroi [24] {excellent}. You see a 
+Dwarven Shovel (2d3) {excellent}. You see a Robe [2] {excellent}. You 
+see Ribbed Plate Armour [33] {excellent}. You see a Sorcery Spellbook 
+[Grimoire of Power]. You see a Trident (1d8) {excellent}.
+
+You see a Flail (2d6) {excellent}. You collect 2619 gold pieces worth 
+of sapphires. You see a Sling (x3) {special}. You see a Ring 
+{unidentified}. You see 29 Seeker Bolts (6d5) {excellent}. You see a 
+Large Metal Shield [8] {special}. You see a Song Book [Lays of 
+Beleriand].
+
+Autosaving the game... You enter a maze of down staircases.
+You do 64 damage. You have slain the Nexus quylthulg. You do 481 
+damage. How heroic! You have slain the Hell hound of Julian [Lure]. You 
+do 481 damage. How heroic! You have slain the Hell hound of Julian 
+[Seek].
+You sense the presence of invisible creatures! You sense the presence 
+of monsters!
+Select a point and press space.
+You do 30001 damage. The Serpent of Chaos shouts, 'AAAARRRGGGHHH!!!' 
+How heroic! You have destroyed The Serpent of Chaos. How heroic! You 
+just completed your quest! A magical staircase appears... You feel 
+something roll beneath your feet. You feel something roll beneath your 
+feet. You feel something roll beneath your feet. You feel something 
+roll beneath your feet. You feel something roll beneath your feet. You 
+feel something roll beneath your feet. You feel something roll beneath 
+your feet. You feel something roll beneath your feet. You feel 
+something roll beneath your feet. You feel something roll beneath your 
+feet. You feel something roll beneath your feet. You feel something 
+roll beneath your feet. *** CONGRATULATIONS *** You have won the game! 
+You may retire (commit suicide) when you are ready.
+                       #########                  
+                       #       #       ###########
+                       #       #       #          
+                       #       #       #          
+                       #       ###    ## #########
+                       #       ' ##  ##' #  ###  #
+                       #       #  #### # ####4####
+                       #       ## ##   '          
+                       ## # #####    ###          
+          ###        ###  # #   ###  # #          
+         ## #        #  ..# ############          
+         #  #      ### ##.#                       
+       ###  ##     #   ##@##############          
+       #     ##   ## ####$#            #          
+       #      #####  #  #$#            #     ###9#
+      ##      ##    #####J#            #     # ###
+     ##       ## ##     |$#            #     #####
+     #         # ## #######            #          
+     #         #+## #                  #          
+     #              #                  ###########
+     #         ######                             
+     #         #                                  
+     #         #       #########                  
+     #         #       #       #                  
+
+
+There is a grinding sound.
+There is a granite wall blocking your way. <x6>
+There is a grinding sound. <x2>
+You hear a door burst open!
+That command does not work in stores. That command does not work in 
+stores. That command does not work in stores. That command does not 
+work in stores. That command does not work in stores.
+
+You do 731 damage. You have slain the Ancient bronze dragon.
+You see an Awl-Pike (1d8) {good}.
+HH Goodbye, PLAYER!
+
+=================================== Options ===================================
+
+ Preserve Mode:      On
+ Small Levels:       Sometimes
+ Wilderness:         Off
+ Arena Levels:       Sometimes
+ Coffeebreak Mode:            Enabled
+
+ You have done something illegal.
+
+
