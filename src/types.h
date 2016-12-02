@@ -451,6 +451,11 @@ typedef struct {
     char thb[SKILL_DESC_LEN];
 } skills_desc_t, *skills_desc_ptr;
 
+
+typedef struct {
+	int damage, max_damage;
+} m_spell_dmg, *m_spell_dmg_ptr;
+
 struct monster_body_s
 {
     s16b     stats[MAX_STATS];
@@ -465,14 +470,15 @@ struct monster_body_s
 };
 typedef struct monster_body_s monster_body_t;
 
-
 typedef struct monster_race monster_race;
+
 
 #define MON_AC(r_ptr, m_ptr) MAX((r_ptr)->ac + (m_ptr)->ac_adj, 0)
 #define MON_MELEE_LVL(r_ptr, m_ptr) MAX(((r_ptr)->melee_level ? (r_ptr)->melee_level : (r_ptr)->level) + (m_ptr)->melee_adj, 1)
 
 struct monster_race
 {
+
     u32b name;                /* Name (offset) */
     u32b text;                /* Text (offset) */
 
@@ -500,6 +506,10 @@ struct monster_race
     u32b flags8;              /* Flags 8 (wilderness info) */
     u32b flags9;              /* Flags 9 (drops info; possessor info) */
     u32b flagsr;              /* Flags R (resistances info) */
+
+	m_spell_dmg innate_dmg[32]; /* Innate/breath */
+	m_spell_dmg spell_dmg[32]; /* Normal spell */
+	m_spell_dmg special_dmg[32]; /* Special spell */
 
     monster_blow blow[4];
 
