@@ -1893,12 +1893,24 @@ static int _char_to_stat(char which)
 static cptr _stat_desc(int stat)
 {
     static char buf[10];
-    if (stat < 3) stat = 3;
-    if (stat > 40) stat = 40;
-    if (stat < 19)
+
+    if (simple_stat_display)
+    {
+        if (stat < 3) stat = 3;
+        if (stat > 40) stat = 40;
         sprintf(buf, "%2d", stat);
+    }
     else
-        sprintf(buf, "18/%d", 10*(stat - 18));
+    {
+        if (stat < 3) stat = 3;
+        if (stat > 40) stat = 40;
+        if (stat < 19)
+            sprintf(buf, "%2d", stat);
+        else if (stat == 40)
+            sprintf(buf, "18/***");
+        else
+            sprintf(buf, "18/%d", 10*(stat - 18));
+    }
     return buf;
 }
 
