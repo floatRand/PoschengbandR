@@ -641,7 +641,7 @@ void _overdrive(int cmd, variant *res){
 		bool result = FALSE;
 		int m_idx = prompt_adjancent_monster(&y, &x);
 		if (m_idx){
-			msg_print("Messatsu!");
+			msg_print("Shun Goku Satsu!");
 			if(one_in_(3)) virtue_add(VIRTUE_COMPASSION, -1);
 			py_attack(y, x, MONK_OVERDRIVE);
 			if (cave[y][x].m_idx)
