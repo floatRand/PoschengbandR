@@ -309,7 +309,7 @@ static void rd_monster(savefile_ptr file, monster_type *m_ptr)
 static void rd_lore(savefile_ptr file, int r_idx)
 {
     bool pact = FALSE;
-
+	int i;
     monster_race *r_ptr = &r_info[r_idx];
 
     r_ptr->r_sights = savefile_read_s16b(file);
@@ -335,6 +335,11 @@ static void rd_lore(savefile_ptr file, int r_idx)
         r_ptr->r_spell_turns = savefile_read_u32b(file);
         r_ptr->r_move_turns = savefile_read_u32b(file);
     }
+
+	for (i = 0; i < 32; i++){ r_ptr->innate_dmg[i].damage = savefile_read_s16b(file); }
+	for (i = 0; i < 32; i++){ r_ptr->spell_dmg[i].damage = savefile_read_s16b(file); }
+	for (i = 0; i < 32; i++){ r_ptr->special_dmg[i].damage = savefile_read_s16b(file); }
+
     r_ptr->r_blows[0] = savefile_read_byte(file);
     r_ptr->r_blows[1] = savefile_read_byte(file);
     r_ptr->r_blows[2] = savefile_read_byte(file);

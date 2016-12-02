@@ -630,10 +630,10 @@ void _overdrive(int cmd, variant *res){
 	switch (cmd)
 	{
 	case SPELL_NAME:
-		var_set_string(res, "Overdrive");
+		var_set_string(res, "Raging Demon");
 		break;
 	case SPELL_DESC:
-		var_set_string(res, "Makes two unavoidable attacks that pierces through invulnerability barriers.");
+		var_set_string(res, "Makes two unavoidable attacks that pierce through invulnerability barriers.");
 		break;
 	case SPELL_CAST:
 	{
@@ -641,9 +641,7 @@ void _overdrive(int cmd, variant *res){
 		bool result = FALSE;
 		int m_idx = prompt_adjancent_monster(&y, &x);
 		if (m_idx){
-			if (one_in_(2)) msg_print("AHHHHHTATATATATATATATATATATATATATATATAAAAAAA!!!!");
-			else if (one_in_(2)) msg_print("ORAORAORAORAORAORAORAORAORAORAORAORAORA!!!!");
-			else msg_print("MUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDA!!!!");
+		    msg_print("Messatsu!");
 
 			py_attack(y, x, MONK_OVERDRIVE);
 			if (cave[y][x].m_idx)
@@ -657,7 +655,7 @@ void _overdrive(int cmd, variant *res){
 		break;
 	}
 	case SPELL_ENERGY:
-		var_set_int(res, 100 + ENERGY_NEED());
+		var_set_int(res, 70 + ENERGY_NEED());
 		break;
 	default:
 		default_spell(cmd, res);

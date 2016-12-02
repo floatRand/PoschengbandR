@@ -354,7 +354,7 @@ static void wr_monster(savefile_ptr file, monster_type *m_ptr)
 static void wr_lore(savefile_ptr file, int r_idx)
 {
     monster_race *r_ptr = &r_info[r_idx];
-
+	int i;
     savefile_write_s16b(file, r_ptr->r_sights);
     savefile_write_s16b(file, r_ptr->r_deaths);
     savefile_write_s16b(file, r_ptr->r_pkills);
@@ -370,6 +370,11 @@ static void wr_lore(savefile_ptr file, int r_idx)
     savefile_write_byte(file, r_ptr->r_cast_spell);
     savefile_write_u32b(file, r_ptr->r_spell_turns);
     savefile_write_u32b(file, r_ptr->r_move_turns);
+
+	for (i = 0; i < 32; i++){ savefile_write_s16b(file, r_ptr->innate_dmg[i].damage); }
+	for (i = 0; i < 32; i++){ savefile_write_s16b(file, r_ptr->spell_dmg[i].damage); }
+	for (i = 0; i < 32; i++){ savefile_write_s16b(file, r_ptr->special_dmg[i].damage); }
+
     savefile_write_byte(file, r_ptr->r_blows[0]);
     savefile_write_byte(file, r_ptr->r_blows[1]);
     savefile_write_byte(file, r_ptr->r_blows[2]);

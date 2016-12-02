@@ -33,6 +33,7 @@ extern int py_birth(void);
                     static int _weaponmaster_ui(void);
                     static int _devicemaster_ui(void);
                     static int _gray_mage_ui(void);
+					static int _mystic_ui(void);
         static int _realm1_ui(void);
             static int _realm2_ui(void);
         /* Monster Mode */
@@ -375,8 +376,7 @@ static int _race_class_ui(void)
         cols[1] = doc_alloc(46);
 
         doc_insert(cols[0], "  <color:y>n</color>) Change Name\n");
-        doc_printf(cols[0], "  <color:%c>s</color>) Change Sex\n",
-            p_ptr->personality == PERS_SEXY || p_ptr->personality == PERS_LUCKY ? 'D' : 'y');
+        doc_insert(cols[0], "  <color:y>s</color>) Change Sex\n");
         if (game_mode != GAME_MODE_BEGINNER)
             doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
@@ -501,11 +501,9 @@ static int _race_class_ui(void)
         case 's':
             if (p_ptr->psex == SEX_MALE)
             {
-                if (p_ptr->personality != PERS_LUCKY)
                     p_ptr->psex = SEX_FEMALE;
             }
-            else if (p_ptr->personality != PERS_SEXY)
-                p_ptr->psex = SEX_MALE;
+			else p_ptr->psex = SEX_MALE;
             break;
         }
     }
@@ -594,8 +592,6 @@ static vec_ptr _pers_choices(void)
     for (i = 0; i < MAX_PERSONALITIES; i++)
     {
         personality_ptr pers_ptr = get_personality_aux(i);
-        if (p_ptr->psex == SEX_MALE && i == PERS_SEXY) continue;
-        if (p_ptr->psex == SEX_FEMALE && i == PERS_LUCKY) continue;
         vec_add(v, pers_ptr);
     }
     vec_sort(v, (vec_cmp_f)_pers_cmp);
@@ -916,12 +912,12 @@ typedef struct _class_group_s {
 static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Melee", {CLASS_BERSERKER, CLASS_BLOOD_KNIGHT, CLASS_DUELIST, CLASS_MAULER,
                     CLASS_RUNE_KNIGHT, CLASS_SAMURAI, CLASS_WARRIOR, CLASS_WEAPONMASTER,
-                    CLASS_WEAPONSMITH, -1} },
+                    CLASS_WEAPONSMITH, CLASS_MALEDICT, -1} },
     { "Archery", {CLASS_ARCHER, CLASS_SNIPER, -1} },
     { "Martial Arts", {CLASS_FORCETRAINER, CLASS_MONK, CLASS_MYSTIC, -1} },
     { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_GRAY_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
                     CLASS_NECROMANCER, CLASS_SORCERER, CLASS_YELLOW_MAGE, -1} },
-    { "Devices", {CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, -1} },
+    { "Devices", {CLASS_DEVICEMASTER, CLASS_MAGIC_EATER, CLASS_ALCHEMIST, -1} },
     { "Prayer", {CLASS_PRIEST, -1} },
     { "Stealth", {CLASS_NINJA, CLASS_ROGUE, CLASS_SCOUT, -1} },
     { "Hybrid", {CLASS_CHAOS_WARRIOR, CLASS_PALADIN, CLASS_RANGER, CLASS_RED_MAGE,
@@ -930,7 +926,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
     { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_IMITATOR, CLASS_RAGE_MAGE,
-                    CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
+                    CLASS_TOURIST, CLASS_WILD_TALENT, CLASS_FREELANCER, -1} },
 };
 
 static void _class_group_ui(void)
@@ -1090,8 +1086,10 @@ static int _subclass_ui(void)
             rc = _weaponmaster_ui();
         else if (p_ptr->pclass == CLASS_DEVICEMASTER)
             rc = _devicemaster_ui();
-        else if (p_ptr->pclass == CLASS_GRAY_MAGE)
-            rc = _gray_mage_ui();
+		else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+			rc = _gray_mage_ui();
+		else if (p_ptr->pclass == CLASS_MYSTIC)
+			rc = _mystic_ui();
         else
         {
             p_ptr->psubclass = 0;
@@ -1283,6 +1281,45 @@ static int _gray_mage_ui(void)
             }
         }
     }
+}
+
+static int _mystic_ui(void)
+{
+	assert(p_ptr->pclass == CLASS_MYSTIC);
+	for (;;)
+	{
+		int cmd, i;
+
+		doc_clear(_doc);
+		_race_class_top(_doc);
+
+		doc_insert(_doc, "<color:G>Choose Path</color>\n");
+		for (i = 0; i < MYSTIC_SPEC_MAX; i++)
+		{
+			class_t *class_ptr = get_class_aux(p_ptr->pclass, i);
+			doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
+				I2A(i),
+				p_ptr->psubclass == i ? 'B' : 'w',
+				class_ptr->subname
+				);
+		}
+
+		_sync_term(_doc);
+		cmd = _inkey();
+		if (cmd == ESCAPE) return UI_CANCEL;
+		else if (cmd == '\t') _inc_rcp_state();
+		else if (cmd == '=') _birth_options();
+		else if (cmd == '?') doc_display_help("Classes.txt", "Mystic");
+		else
+		{
+			i = A2I(cmd);
+			if (0 <= i && i < MYSTIC_SPEC_MAX)
+			{
+				p_ptr->psubclass = i;
+				return UI_OK;
+			}
+		}
+	}
 }
 
 /************************************************************************

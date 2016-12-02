@@ -379,12 +379,50 @@ static void _display_resists(monster_race *r_ptr, doc_ptr doc)
     vec_free(v);
 }
 
-static string_ptr _format_breath(char* name, u32b element, int maxhp, char col, bool showdmg)
+
+static const int _MultiplyDeBruijnBitPosition[32] =
 {
-	if (showdmg)
-		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, max_breath_damage(element, maxhp));
+	0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
+	31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
+};
+static u32b _DeBruijnBitPosition32(u32b flag){
+	return _MultiplyDeBruijnBitPosition[((u32b)((flag & -flag) * 0x077CB531U)) >> 27];
+}
+
+
+static string_ptr _format_spell4(monster_race *r_ptr, char* name, u32b element, char col, bool showdmg)
+{
+	
+	u32b r = _DeBruijnBitPosition32(element);
+	int dmg = r_ptr->innate_dmg[r].damage;
+
+	if (showdmg && dmg > 0)
+		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
 	else
 		return string_alloc_format("<color:%c>%s</color>", col, name);	
+}
+
+static string_ptr _format_spell5(monster_race *r_ptr, char* name, u32b element, char col, bool showdmg)
+{
+	u32b r = _DeBruijnBitPosition32(element);
+	int dmg = r_ptr->spell_dmg[r].damage;
+
+	if (showdmg && dmg > 0)
+		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
+	else
+		return string_alloc_format("<color:%c>%s</color>", col, name);
+}
+
+static string_ptr _format_spell6(monster_race *r_ptr, char* name, u32b element,char col, bool showdmg)
+{
+
+	u32b r = _DeBruijnBitPosition32(element);
+	int dmg = r_ptr->special_dmg[r].damage;
+
+	if (showdmg && dmg > 0)
+		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
+	else
+		return string_alloc_format("<color:%c>%s</color>", col, name);
 }
 
 /**************************************************************************
@@ -430,10 +468,10 @@ static void _display_spells(monster_race *r_ptr, doc_ptr doc)
     vec_ptr    v = vec_alloc((vec_free_f)string_free);
 
     /* Breaths */
-    const int  flags[RES_MAX] = {
+    const u32b flags[RES_MAX] = {
         RF4_BR_ACID, RF4_BR_ELEC, RF4_BR_FIRE, RF4_BR_COLD, RF4_BR_POIS,
         RF4_BR_LITE, RF4_BR_DARK, RF4_BR_CONF, RF4_BR_NETH, RF4_BR_NEXU, RF4_BR_SOUN,
-        RF4_BR_SHAR, RF4_BR_CHAO, RF4_BR_DISE, RF4_BR_TIME, -1, -1, -1};
+        RF4_BR_SHAR, RF4_BR_CHAO, RF4_BR_DISE, RF4_BR_TIME, 0, 0, 0};
 
 	bool showDmg = TRUE;
 	int maxhp = r_ptr->hdice*r_ptr->hside;
@@ -441,36 +479,35 @@ static void _display_spells(monster_race *r_ptr, doc_ptr doc)
     for (i = 0; i < RES_MAX; i++)
     {
         int which = flags[i];
-		int b_dmg = max_breath_damage(which, maxhp);
-		if (which >= 0 && (r_ptr->flags4 & which)){
-			vec_add(v, _format_breath(res_name(i), which, maxhp, attr_to_attr_char(res_color(i)), showDmg));
+		if (which > 0 && (r_ptr->flags4 & which)){
+			vec_add(v, _format_spell4(r_ptr,res_name(i), which, attr_to_attr_char(res_color(i)), showDmg));
 		}
     }
 
 	if (r_ptr->flags4 & RF4_BR_INER)
 	{
-		vec_add(v, _format_breath("Inertia", RF4_BR_INER, maxhp, 's', showDmg));
+		vec_add(v, _format_spell4(r_ptr,"Inertia", RF4_BR_INER, 's', showDmg));
 	}
     if (r_ptr->flags4 & RF4_BR_GRAV){
-		vec_add(v, _format_breath("Gravity", RF4_BR_GRAV, maxhp, 's', showDmg));
+		vec_add(v, _format_spell4(r_ptr, "Gravity", RF4_BR_GRAV, 's', showDmg));
 	}
     if (r_ptr->flags4 & RF4_BR_PLAS){
-		vec_add(v, _format_breath("Plasma", RF4_BR_PLAS, maxhp, 'R', showDmg));
+		vec_add(v, _format_spell4(r_ptr, "Plasma", RF4_BR_PLAS, 'R', showDmg));
 	}
     if (r_ptr->flags4 & RF4_BR_WALL){
-		vec_add(v, _format_breath("Force", RF4_BR_WALL, maxhp, 'u', showDmg));
+		vec_add(v, _format_spell4(r_ptr, "Force", RF4_BR_WALL, 'u', showDmg));
 	}
     if (r_ptr->flags4 & RF4_BR_MANA){
-		vec_add(v, _format_breath("Mana", RF4_BR_MANA, maxhp,'B', showDmg));
+		vec_add(v, _format_spell4(r_ptr, "Mana", RF4_BR_MANA, 'B', showDmg));
 	}
     if (r_ptr->flags4 & RF4_BR_NUKE){
-		vec_add(v, _format_breath("Toxic Waste", RF4_BR_NUKE, maxhp, 'G', showDmg));
+		vec_add(v, _format_spell4(r_ptr, "Toxic Waste", RF4_BR_NUKE, 'G', showDmg));
 	}
     if (r_ptr->flags4 & RF4_BR_DISI){
-		vec_add(v, _format_breath("Disintegration", RF4_BR_DISI, maxhp, 's', showDmg));
+		vec_add(v, _format_spell4(r_ptr, "Disintegration", RF4_BR_DISI, 's', showDmg));
 	}
     if (r_ptr->flags4 & RF4_BR_STORM){
-		vec_add(v, _format_breath("Storm Winds", RF4_BR_STORM, maxhp, 'b', showDmg));
+		vec_add(v, _format_spell4(r_ptr, "Storm Winds", RF4_BR_STORM, 'b', showDmg));
 	}
 
     if (vec_length(v))
@@ -489,85 +526,85 @@ static void _display_spells(monster_race *r_ptr, doc_ptr doc)
     /* Offense */
     vec_clear(v);
 
-    if (r_ptr->flags4 & RF4_ROCKET)
-        vec_add(v, string_copy_s("<color:u>Rocket</color>"));
-    if (r_ptr->flags4 & RF4_SHOOT)
-        vec_add(v, string_copy_s("<color:u>Fire Arrow</color>"));
+	if (r_ptr->flags4 & RF4_ROCKET)
+		vec_add(v, _format_spell4(r_ptr, "Rocket", RF4_ROCKET, 'u', showDmg));
+	if (r_ptr->flags4 & RF4_SHOOT)
+		vec_add(v, _format_spell4(r_ptr, "Fire Arrow", RF4_SHOOT, 'u', showDmg));
+	if (r_ptr->flags5 & RF5_BA_ACID)
+	    vec_add(v, _format_spell5(r_ptr, "Acid Ball", RF5_BA_ACID, 'g', showDmg));
+	if (r_ptr->flags5 & RF5_BA_ELEC)
+		vec_add(v, _format_spell5(r_ptr, "Lightning Ball", RF5_BA_ELEC, 'b', showDmg)); 
+	if (r_ptr->flags5 & RF5_BA_FIRE)
+		vec_add(v, _format_spell5(r_ptr, "Fire Ball", RF5_BA_FIRE, 'r', showDmg)); 
+	if (r_ptr->flags5 & RF5_BA_COLD)
+		vec_add(v, _format_spell5(r_ptr, "Frost Ball", RF5_BA_COLD, 'W', showDmg));
+	if (r_ptr->flags5 & RF5_BA_POIS)
+		vec_add(v, _format_spell5(r_ptr, "Poison Ball", RF5_BA_POIS, 'W', showDmg));
+	if (r_ptr->flags5 & RF5_BA_NETH)
+		vec_add(v, _format_spell5(r_ptr, "Nether Ball", RF5_BA_NETH, 'D', showDmg));
+	if (r_ptr->flags5 & RF5_BA_WATE)
+		vec_add(v, _format_spell5(r_ptr, "Water Ball", RF5_BA_WATE, 'b', showDmg));
+	if (r_ptr->flags4 & RF4_BA_NUKE)
+		vec_add(v, _format_spell4(r_ptr, "Ball of Radiation", RF4_BA_NUKE, 'G', showDmg));
+	if (r_ptr->flags4 & RF4_THROW)
+		vec_add(v, _format_spell4(r_ptr, "Throw Boulder", RF4_THROW, 's', showDmg));
+	if (r_ptr->flags5 & RF5_BA_MANA)
+		vec_add(v, _format_spell5(r_ptr, "Mana Storm", RF5_BA_MANA, 'B', showDmg));
+	if (r_ptr->flags5 & RF5_BA_DARK)
+		vec_add(v, _format_spell5(r_ptr, "Darkness Storm", RF5_BA_DARK, 'D', showDmg));
+	if (r_ptr->flags5 & RF5_BA_LITE)
+		vec_add(v, _format_spell5(r_ptr, "Starburst", RF5_BA_LITE, 'y', showDmg));
+	if (r_ptr->flags4 & RF4_BA_CHAO)
+		vec_add(v, _format_spell4(r_ptr, "Invoke Logrus", RF4_BA_CHAO, 'v', showDmg));
+	if (r_ptr->flags6 & RF6_HAND_DOOM)
+		vec_add(v, _format_spell6(r_ptr, "Hand of Doom", RF6_HAND_DOOM, 'v', showDmg));
+	if (r_ptr->flags6 & RF6_PSY_SPEAR)
+		vec_add(v, _format_spell6(r_ptr, "Psycho-Spear", RF6_PSY_SPEAR, 'y', showDmg));
+	if (r_ptr->flags5 & RF5_DRAIN_MANA)
+		vec_add(v, _format_spell5(r_ptr, "Drain Mana", RF5_DRAIN_MANA, 's', showDmg));
+	if (r_ptr->flags5 & RF5_MIND_BLAST)
+		vec_add(v, _format_spell5(r_ptr, "Mind Blast", RF5_MIND_BLAST, 'R', showDmg));
+	if (r_ptr->flags5 & RF5_BRAIN_SMASH)
+		vec_add(v, _format_spell5(r_ptr, "Brain Smash", RF5_BRAIN_SMASH, 'r', showDmg));
+	if (r_ptr->flags5 & RF5_CAUSE_1)
+		vec_add(v, _format_spell5(r_ptr, "Cause Light Wounds", RF5_CAUSE_1, 'W', showDmg));
+	if (r_ptr->flags5 & RF5_CAUSE_2)
+		vec_add(v, _format_spell5(r_ptr, "Cause Serious Wounds", RF5_CAUSE_2, 'W', showDmg));
+	if (r_ptr->flags5 & RF5_CAUSE_3)
+		vec_add(v, _format_spell5(r_ptr, "Cause Critical Wounds", RF5_CAUSE_3, 'W', showDmg));
+	if (r_ptr->flags5 & RF5_CAUSE_4)
+		vec_add(v, _format_spell5(r_ptr, "Cause Critical Wounds", RF5_CAUSE_4, 'W', showDmg));
+	if (r_ptr->flags5 & RF5_BO_ACID)
+		vec_add(v, _format_spell5(r_ptr, "Acid Bolt", RF5_BO_ACID, 'g', showDmg));
+	if (r_ptr->flags5 & RF5_BO_ELEC)
+		vec_add(v, _format_spell5(r_ptr, "Lightning Bolt", RF5_BO_ELEC, 'b', showDmg));
+	if (r_ptr->flags5 & RF5_BO_FIRE)
+		vec_add(v, _format_spell5(r_ptr, "Fire Bolt", RF5_BO_FIRE, 'r', showDmg));
+	if (r_ptr->flags5 & RF5_BO_COLD)
+		vec_add(v, _format_spell5(r_ptr, "Frost Bolt", RF5_BO_COLD, 'W', showDmg));
+	if (r_ptr->flags5 & RF5_BO_NETH)
+		vec_add(v, _format_spell5(r_ptr, "Nether Bolt", RF5_BO_NETH, 'D', showDmg));
+	if (r_ptr->flags5 & RF5_BO_WATE)
+		vec_add(v, _format_spell5(r_ptr, "Water Bolt", RF5_BO_WATE, 'b', showDmg));
+	if (r_ptr->flags5 & RF5_BO_MANA)
+		vec_add(v, _format_spell5(r_ptr, "Mana Bolt", RF5_BO_MANA, 'B', showDmg));
+	if (r_ptr->flags5 & RF5_BO_PLAS)
+		vec_add(v, _format_spell5(r_ptr, "Plasma Bolt", RF5_BO_PLAS, 'R', showDmg));
+	if (r_ptr->flags5 & RF5_BO_ICEE)
+		vec_add(v, _format_spell5(r_ptr, "Ice Bolt", RF5_BO_ICEE, 'w', showDmg));
+	if (r_ptr->flags5 & RF5_MISSILE)
+		vec_add(v, _format_spell5(r_ptr, "Magic Missile", RF5_MISSILE, 's', showDmg));
+	if (r_ptr->flags5 & RF5_SCARE)
+		vec_add(v, string_copy_s("<color:s>Terrify</color>"));
+	if (r_ptr->flags5 & RF5_BLIND)
+		vec_add(v, string_copy_s("<color:D>Blind</color>"));
+	if (r_ptr->flags5 & RF5_CONF)
+		vec_add(v, string_copy_s("<color:U>Confuse</color>"));
+	if (r_ptr->flags5 & RF5_SLOW)
+		vec_add(v, string_copy_s("<color:u>Slow</color>"));
+	if (r_ptr->flags5 & RF5_HOLD)
+		vec_add(v, string_copy_s("<color:r>Paralyze</color>"));
 
-    if (r_ptr->flags5 & RF5_BA_ACID)
-        vec_add(v, string_copy_s("<color:g>Acid Ball</color>"));
-    if (r_ptr->flags5 & RF5_BA_ELEC)
-        vec_add(v, string_copy_s("<color:b>Lightning Ball</color>"));
-    if (r_ptr->flags5 & RF5_BA_FIRE)
-        vec_add(v, string_copy_s("<color:r>Fire Ball</color>"));
-    if (r_ptr->flags5 & RF5_BA_COLD)
-        vec_add(v, string_copy_s("<color:W>Frost Ball</color>"));
-    if (r_ptr->flags5 & RF5_BA_POIS)
-        vec_add(v, string_copy_s("<color:G>Poison Ball</color>"));
-    if (r_ptr->flags5 & RF5_BA_NETH)
-        vec_add(v, string_copy_s("<color:D>Nether Ball</color>"));
-    if (r_ptr->flags5 & RF5_BA_WATE)
-        vec_add(v, string_copy_s("<color:b>Water Ball</color>"));
-    if (r_ptr->flags4 & RF4_BA_NUKE)
-        vec_add(v, string_copy_s("<color:G>Ball of Radiation</color>"));
-    if (r_ptr->flags4 & RF4_THROW)
-        vec_add(v, string_copy_s("<color:s>Throw Boulder</color>"));
-    if (r_ptr->flags5 & RF5_BA_MANA)
-        vec_add(v, string_copy_s("<color:B>Mana Storm</color>"));
-    if (r_ptr->flags5 & RF5_BA_DARK)
-        vec_add(v, string_copy_s("<color:D>Darkness Storm</color>"));
-    if (r_ptr->flags5 & RF5_BA_LITE)
-        vec_add(v, string_copy_s("<color:y>Starburst</color>"));
-    if (r_ptr->flags4 & RF4_BA_CHAO)
-        vec_add(v, string_copy_s("<color:v>Invoke Logrus</color>"));
-    if (r_ptr->flags6 & RF6_HAND_DOOM)
-        vec_add(v, string_copy_s("<color:v>Hand of Doom</color>"));
-    if (r_ptr->flags6 & RF6_PSY_SPEAR)
-        vec_add(v, string_copy_s("<color:y>Psycho-spear</color>"));
-    if (r_ptr->flags5 & RF5_DRAIN_MANA)
-        vec_add(v, string_copy_s("<color:s>Drain Mana</color>"));
-    if (r_ptr->flags5 & RF5_MIND_BLAST)
-        vec_add(v, string_copy_s("<color:R>Mind Blast</color>"));
-    if (r_ptr->flags5 & RF5_BRAIN_SMASH)
-        vec_add(v, string_copy_s("<color:r>Brain Smash</color>"));
-    if (r_ptr->flags5 & RF5_CAUSE_1)
-        vec_add(v, string_copy_s("<color:W>Cause Light Wounds</color>"));
-    if (r_ptr->flags5 & RF5_CAUSE_2)
-        vec_add(v, string_copy_s("<color:W>Cause Serious Wounds</color>"));
-    if (r_ptr->flags5 & RF5_CAUSE_3)
-        vec_add(v, string_copy_s("<color:W>Cause Critical Wounds</color>"));
-    if (r_ptr->flags5 & RF5_CAUSE_4)
-        vec_add(v, string_copy_s("<color:W>Cause Mortal Wounds</color>"));
-    if (r_ptr->flags5 & RF5_BO_ACID)
-        vec_add(v, string_copy_s("<color:g>Acid Bolt</color>"));
-    if (r_ptr->flags5 & RF5_BO_ELEC)
-        vec_add(v, string_copy_s("<color:b>Lightning Bolt</color>"));
-    if (r_ptr->flags5 & RF5_BO_FIRE)
-        vec_add(v, string_copy_s("<color:r>Fire Bolt</color>"));
-    if (r_ptr->flags5 & RF5_BO_COLD)
-        vec_add(v, string_copy_s("<color:W>Frost Bolt</color>"));
-    if (r_ptr->flags5 & RF5_BO_NETH)
-        vec_add(v, string_copy_s("<color:D>Nether Bolt</color>"));
-    if (r_ptr->flags5 & RF5_BO_WATE)
-        vec_add(v, string_copy_s("<color:b>Water Bolt</color>"));
-    if (r_ptr->flags5 & RF5_BO_MANA)
-        vec_add(v, string_copy_s("<color:B>Mana Bolt</color>"));
-    if (r_ptr->flags5 & RF5_BO_PLAS)
-        vec_add(v, string_copy_s("<color:R>Plasma Bolt</color>"));
-    if (r_ptr->flags5 & RF5_BO_ICEE)
-        vec_add(v, string_copy_s("<color:w>Ice Bolt</color>"));
-    if (r_ptr->flags5 & RF5_MISSILE)
-        vec_add(v, string_copy_s("<color:s>Magic Missile</color>"));
-    if (r_ptr->flags5 & RF5_SCARE)
-        vec_add(v, string_copy_s("<color:s>Terrify</color>"));
-    if (r_ptr->flags5 & RF5_BLIND)
-        vec_add(v, string_copy_s("<color:D>Blind</color>"));
-    if (r_ptr->flags5 & RF5_CONF)
-        vec_add(v, string_copy_s("<color:U>Confuse</color>"));
-    if (r_ptr->flags5 & RF5_SLOW)
-        vec_add(v, string_copy_s("<color:u>Slow</color>"));
-    if (r_ptr->flags5 & RF5_HOLD)
-        vec_add(v, string_copy_s("<color:r>Paralyze</color>"));
 
     if (vec_length(v))
     {

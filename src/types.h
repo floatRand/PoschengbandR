@@ -453,7 +453,7 @@ typedef struct {
 
 
 typedef struct {
-	int damage, max_damage;
+	s16b damage, max_damage;
 } m_spell_dmg, *m_spell_dmg_ptr;
 
 struct monster_body_s

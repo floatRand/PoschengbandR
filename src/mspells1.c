@@ -4120,17 +4120,27 @@ msg_format("They say 'The %d meets! We are the Ring-Ranger!'.", count);
     if (can_remember)
     {
         /* Inate spell */
-        if (thrown_spell < 32 * 4)
-            mon_lore_aux_4(r_ptr, 1 << (thrown_spell - 32 * 3));
-
+		if (thrown_spell < 32 * 4)
+		{
+			mon_lore_aux_4(r_ptr, 1 << (thrown_spell - 32 * 3));
+			msg_format("Previous damage record: %d", r_ptr->innate_dmg[thrown_spell - 32 * 3].damage);
+			if (dam >= 0 && dam > r_ptr->innate_dmg[thrown_spell - 32 * 3].damage){
+				msg_format("Attempting to record damage: %d dmg to slot %d", dam, thrown_spell - 32 * 3);
+				r_ptr->innate_dmg[thrown_spell - 32 * 3].damage = dam; }
+		}
         /* Bolt or Ball */
-        else if (thrown_spell < 32 * 5)
-            mon_lore_aux_5(r_ptr, 1 << (thrown_spell - 32 * 4));
-
+		else if (thrown_spell < 32 * 5)
+		{
+			mon_lore_aux_5(r_ptr, 1 << (thrown_spell - 32 * 4));
+			if (dam >= 0 && dam > r_ptr->spell_dmg[thrown_spell - 32 * 4].damage) r_ptr->spell_dmg[thrown_spell - 32 * 4].damage = dam;
+		}
         /* Special spell */
-        else if (thrown_spell < 32 * 6)
-            mon_lore_aux_6(r_ptr, 1 << (thrown_spell - 32 * 5));
-    }
+		else if (thrown_spell < 32 * 6)
+		{
+			mon_lore_aux_6(r_ptr, 1 << (thrown_spell - 32 * 5));
+			if (dam >= 0 && dam > r_ptr->special_dmg[thrown_spell - 32 * 5].damage) r_ptr->special_dmg[thrown_spell - 32 * 5].damage = dam;
+		}
+	}
 
 
     /* Always take note of monsters that kill you */
