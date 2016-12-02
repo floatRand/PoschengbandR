@@ -218,14 +218,9 @@ static void player_wipe(void)
 		/* Clear memory of spell damages */ 
 		/* Make fetching max damage a thing later for other things */
 		for (int f = 0; f < 32; f++){
-			r_ptr->spell_dmg[f].damage = -1;
-			r_ptr->spell_dmg[f].max_damage = -1;
-
-			r_ptr->innate_dmg[f].damage = -1;
-			r_ptr->innate_dmg[f].max_damage = -1;
-
-			r_ptr->special_dmg[f].damage = -1;
-			r_ptr->special_dmg[f].max_damage = -1;
+			r_ptr->spell_dmg[f] = -1;
+			r_ptr->innate_dmg[f] = -1;
+			r_ptr->special_dmg[f] = -1;
 		}
 
 		/* Wipe out pact alliances from previous character

@@ -451,11 +451,6 @@ typedef struct {
     char thb[SKILL_DESC_LEN];
 } skills_desc_t, *skills_desc_ptr;
 
-
-typedef struct {
-	s16b damage, max_damage;
-} m_spell_dmg, *m_spell_dmg_ptr;
-
 struct monster_body_s
 {
     s16b     stats[MAX_STATS];
@@ -507,9 +502,9 @@ struct monster_race
     u32b flags9;              /* Flags 9 (drops info; possessor info) */
     u32b flagsr;              /* Flags R (resistances info) */
 
-	m_spell_dmg innate_dmg[32]; /* Innate/breath */
-	m_spell_dmg spell_dmg[32]; /* Normal spell */
-	m_spell_dmg special_dmg[32]; /* Special spell */
+	s16b innate_dmg[32]; /* Innate/breath */
+	s16b spell_dmg[32]; /* Normal spell */
+	s16b special_dmg[32]; /* Special spell */
 
     monster_blow blow[4];
 

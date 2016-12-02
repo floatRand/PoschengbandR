@@ -5921,23 +5921,26 @@ int monster_tele_save(monster_race *r_ptr, int power){
 	return 0;
 }
 
-int max_breath_damage(u32b breath, int hp){
+/* Later on perhaps all spell damages could be rounded up here...*/
+int max_mspell_damage(int fGroup, u32b atk, monster_race *r_ptr){
 	
-	switch (breath){
+	int hp = (r_ptr->hside * r_ptr->hdice); // max hp
+	int rlev = (r_ptr->level);
+	bool powerful = r_ptr->flags2 & RF2_POWERFUL;
+
+	if (fGroup == 4){
+		switch (atk){
+			/* HP-BASED BREATHS */
 		case RF4_ROCKET: return MIN(hp / 4, 600);
-		///////
 		case RF4_BR_FIRE:
 		case RF4_BR_ELEC:
 		case RF4_BR_COLD:
 		case RF4_BR_ACID: return MIN(hp / 4, 900);
-		///////
 		case RF4_BR_LITE:
 		case RF4_BR_DARK:
-		///////
-		case RF4_BR_DISE: 
+		case RF4_BR_DISE:
 		case RF4_BR_CHAO:
 		case RF4_BR_SHAR: return MIN(hp / 6, 500);
-		/////
 		case RF4_BR_STORM: return MIN(hp / 5, 300);
 		case RF4_BR_POIS: return MIN(hp / 5, 600);
 		case RF4_BR_CONF: return MIN(hp / 6, 400);
@@ -5952,9 +5955,54 @@ int max_breath_damage(u32b breath, int hp){
 		case RF4_BR_DISI: return MIN(hp / 6, 150);
 		case RF4_BR_INER:
 		case RF4_BR_PLAS: return MIN(hp / 6, 200);
-		////
-
+			/* OTHER */
+		case RF4_BA_NUKE: return (rlev + 10 * 6) * ((powerful) ? 2 : 1);  /* TY: Nuke Ball */
+		case RF4_BA_CHAO: return ((powerful) ? (rlev * 3) : (rlev * 2)) + 10*10;  /* TY: Logrus Ball */
+		case RF4_THROW: return rlev * 3;
+		case RF4_SHOOT: return r_ptr->blow[0].d_dice *  r_ptr->blow[0].d_side; // since it's based on blows-info...
 		default: return 0;
+		}
 	}
+	else if (fGroup == 5){
+		switch (atk){
+		case RF5_BA_ACID: return (rlev * 3 + 15) * ((powerful) ? 2 : 1);
+		case RF5_BA_ELEC: return ((rlev * 3 / 2) + 8) * ((powerful) ? 2 : 1);
+		case RF5_BA_FIRE: return ((rlev * 7 / 2) + 10) * ((powerful) ? 2 : 1);
+		case RF5_BA_COLD: return ((rlev * 3 / 2) + 10) * ((powerful) ? 2 : 1);
+		case RF5_BA_POIS: return 12 * 2 * ((powerful) ? 2 : 1); 
+		case RF5_BA_NETH: return 50 + 10*10 + (rlev * ((powerful) ? 2 : 1));
+		case RF5_BA_WATE: return ((powerful) ? (rlev * 3) : (rlev * 2)) + 50;
+		case RF5_BA_MANA: 
+		case RF5_BA_DARK: return (rlev * 4) + 50 + 10 * 10;
+		case RF5_DRAIN_MANA: return (rlev / 2) + 1;
+		case RF5_MIND_BLAST: return 7 * 7;
+		case RF5_BRAIN_SMASH: return 12 * 12;
+		case RF5_CAUSE_1: return 3 * 8;
+		case RF5_CAUSE_2: return 8 * 8;
+		case RF5_CAUSE_3: return 10 * 15;
+		case RF5_CAUSE_4: return 15 * 15;
+		case RF5_BO_ACID: return (7*8 + (rlev / 3)) * ((powerful) ? 2 : 1);
+		case RF5_BO_ELEC: return (4*8 + (rlev / 3)) * ((powerful) ? 2 : 1);
+		case RF5_BO_FIRE: return (9*8 + (rlev / 3)) * ((powerful) ? 2 : 1);
+		case RF5_BO_COLD: return (6*8 + (rlev / 3)) * ((powerful) ? 2 : 1);
+		case RF5_BA_LITE: return (rlev * 4) + 50 + 10 * 10;
+		case RF5_BO_NETH: return 30 + 5*5 + (rlev * 4) / ((powerful) ? 2 : 3);
+		case RF5_BO_WATE: return 10 * 10 + (rlev * 3 / ((powerful) ? 2 : 3));
+		case RF5_BO_MANA: return (rlev * 7 / 2) + 50;
+		case RF5_BO_PLAS: return 10 + 8 * 7 + (rlev * 3 / ((powerful) ? 2 : 3));
+		case RF5_BO_ICEE: return 6*6 + (rlev * 3 / ((powerful) ? 2 : 3));  
+		case RF5_MISSILE: return 2*6 + (rlev / 3);
+		default: return 0;
+		}
+	}
+	else if (fGroup == 6){
+		switch (atk){
+			case RF6_SPECIAL: if (r_ptr->d_char == 'B'){ return 4 * 8 + 6 * 8; } else return 0; // birds' drop attack is weirdly specific to 'B' creatures.
+			case RF6_PSY_SPEAR: return (powerful) ? ((rlev * 2) + 150) : ((rlev * 3 / 2) + 100);
+			default: return 0;
+		}
+	}
+
+	return 0;
 
 }
