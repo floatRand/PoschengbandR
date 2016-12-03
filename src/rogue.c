@@ -765,11 +765,14 @@ static caster_info * _caster_info(void)
         me.magic_desc = "spell";
         me.which_stat = A_INT;
         me.weight = 400;
-        me.min_level = 5;
         me.min_fail = 5;
         me.options = CASTER_GLOVE_ENCUMBRANCE;
         init = TRUE;
     }
+    if (p_ptr->realm1 == REALM_BURGLARY)
+        me.min_level = 1;
+    else
+        me.min_level = 5;
     return &me;
 }
 
