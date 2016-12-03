@@ -5268,12 +5268,12 @@ bool get_rep_dir(int *dp, bool under)
             monster_desc(m_name, m_ptr, 0);
             if (MON_CONFUSED(m_ptr))
             {
- msg_format("%^s is confusing.", m_name);
+                msg_format("%^s is confusing.", m_name);
 
             }
             else
             {
-msg_format("You cannot control %s.", m_name);
+                msg_format("You cannot control %s.", m_name);
             }
         }
     }
