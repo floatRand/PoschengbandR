@@ -2089,20 +2089,25 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     {
         if (!one_in_(WEIRD_LUCK))
         {
-            if (powers > 3) powers = powers*3/4;
-            if (powers > 5 && o_ptr->tval != TV_RING) powers = 5;
+            if (powers > 3 && o_ptr->tval == TV_LITE) powers = powers*3/4; 
+            if (powers > 5 && o_ptr->tval != TV_RING && o_ptr->tval != TV_AMULET) powers = 5;
 
             /* Artifacting high rings of damage used to be possible ... Perhaps it someday will again?*/
             if (o_ptr->to_d)
                 o_ptr->to_d = randint1((o_ptr->to_d + 1)/2) + randint1(o_ptr->to_d/2);
             if (o_ptr->to_a)
                 o_ptr->to_a = randint1((o_ptr->to_a + 1)/2) + randint1(o_ptr->to_a/2);
-        }
+
+		}
     }
+
+	if ((o_ptr->tval == TV_AMULET || o_ptr->tval == TV_RING) && powers <= 3) powers++; // earlier rings were really weak. 
 
 	if (o_ptr->tval == TV_GLOVES){
 		powers += MAX(0,randint1(MIN(object_level/30, 2)));
 	} // gloves are really weak for artifact-creation
+
+	if (p_ptr->wizard) msg_format("Artifact power: %d", powers);
 
     /* Playtesting shows that FA, SI and HL are too rare ... let's boost these a bit */
     switch (o_ptr->tval)
