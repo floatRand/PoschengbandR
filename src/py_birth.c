@@ -155,9 +155,9 @@ extern void py_birth_light(void)
     if (p_ptr->pclass != CLASS_NINJA)
     {
         object_type forge = {0};
-        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_TORCH));
-        forge.number = rand_range(3, 7);
-        forge.xtra4 = rand_range(3, 7) * 500;
+        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_LANTERN));
+        forge.number = 1;
+        forge.xtra4 = 4500;
         py_birth_obj(&forge);
     }
 }

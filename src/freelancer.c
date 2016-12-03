@@ -783,6 +783,10 @@ void freelancer_reset(void){
 
 static void _birth(void){
 	freelancer_reset();
+
+		py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
+		py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
+		py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
 }
 
 static int _get_powers(spell_info* spells, int max)

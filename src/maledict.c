@@ -676,6 +676,13 @@ static caster_info * _caster_info(void)
 	return &me;
 }
 
+static void _birth(void)
+{
+	py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
+	py_birth_obj_aux(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL, 1);
+	py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
+}
+
 class_t *maledict_get_class(void)
 {
 	static class_t me = { 0 };
@@ -713,6 +720,7 @@ class_t *maledict_get_class(void)
 		me.caster_info = _caster_info;
 		me.get_spells = _get_spells;
 		me.get_powers = _get_powers;
+		me.birth = _birth;
 		init = TRUE;
 	}
 
