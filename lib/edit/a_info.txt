@@ -242,7 +242,7 @@ N:17:of Lore
 I:39:7:0
 W:30:12:15:20000
 P:0:1d1:0:0:0
-F:INSTA_ART | LORE2
+F:INSTA_ART | LORE
 D:A great emerald that fills your mind with images of knowledge and
 D:understanding as you stare into its depths.
 
@@ -2959,10 +2959,10 @@ F:STR | DEX | BLOWS | BRAND_ACID | IM_ACID
 F:XTRA_H_RES | XTRA_RES_OR_POWER
 
 N:282:& Stone of Nature
-I:39:11:0
+I:39:11:4
 W:50:150:20:100000
 P:0:1d1:0:0:5
-F:FULL_NAME | INSTA_ART
+F:FULL_NAME | INSTA_ART | AUTOMAP
 E:STONE_SKIN:25:100
 E:Your stone hums softly.
 D:At first glance, it appears to be just an ordinary rock.

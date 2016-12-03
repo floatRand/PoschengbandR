@@ -2403,6 +2403,11 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     add_flag(o_ptr->flags, OF_DEC_CON);
                     has_pval = TRUE;
                 }
+				else if (one_in_(50))
+				{
+					add_flag(o_ptr->flags, OF_AUTOMAP);
+					has_pval = TRUE;
+				}
                 else if (one_in_(3))
                 {
                     add_flag(o_ptr->flags, OF_SHOW_MODS);
@@ -2494,6 +2499,11 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     o_ptr->to_h += randint1(5) + m_bonus(5, lev);
                     o_ptr->to_d += randint1(5) + m_bonus(5, lev);
                 }
+				else if (one_in_(50))
+				{
+					add_flag(o_ptr->flags, OF_AUTOMAP);
+					has_pval = TRUE;
+				}
                 else
                 {
                     one_high_resistance(o_ptr);
@@ -2528,7 +2538,6 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
 					}
 					else if (!one_in_(3) || lev < 50) add_flag(o_ptr->flags, OF_AURA_SHARDS);
 					else add_flag(o_ptr->flags, OF_AURA_REVENGE);
-
 				}
             case 5: case 6:
                 random_resistance(o_ptr);

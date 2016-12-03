@@ -2376,12 +2376,11 @@ void autopick_pickup_items(cave_type *c_ptr)
             if (auto_id)
             {
                 identify_item(o_ptr);
-                equip_learn_flag(OF_LORE2);
+                equip_learn_flag(OF_LORE);
             }
             else if (auto_pseudo_id)
             {
                 _sense_object_floor(o_ptr);
-                equip_learn_flag(OF_LORE1);
             }
 
 			if (p_ptr->pclass == CLASS_ALCHEMIST && o_ptr->tval == TV_POTION){ 

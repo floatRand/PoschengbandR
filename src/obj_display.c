@@ -501,10 +501,10 @@ static void _display_abilities(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc)
 {
     vec_ptr v = vec_alloc((vec_free_f)string_free);
 
-    if (have_flag(flgs, OF_LORE2))
+    if (have_flag(flgs, OF_LORE))
         vec_add(v, string_copy_s("<color:B>Auto Identify</color>"));
-    else if (have_flag(flgs, OF_LORE1))
-        vec_add(v, string_copy_s("<color:B>Auto Pseudo-Identify</color>"));
+	if (have_flag(flgs, OF_AUTOMAP))
+		vec_add(v, string_copy_s("<color:B>Guidance</color>"));
 
     if (have_flag(flgs, OF_FREE_ACT))
         vec_add(v, string_copy_s("<color:R>Free Action</color>"));

@@ -1160,84 +1160,88 @@ void equip_calc_bonuses(void)
     }
 
     /* Scan equipment for bonuses. */
-    for (i = 0; i < _template->count; i++)
-    {
-        int          slot = EQUIP_BEGIN + i;
-        object_type *o_ptr = &inventory[slot];
-        u32b         flgs[OF_ARRAY_SIZE];
-        int          bonus_to_h, bonus_to_d;
+	for (i = 0; i < _template->count; i++)
+	{
+		int          slot = EQUIP_BEGIN + i;
+		object_type *o_ptr = &inventory[slot];
+		u32b         flgs[OF_ARRAY_SIZE];
+		int          bonus_to_h, bonus_to_d;
 
-        if (!o_ptr->k_idx) continue;
+		if (!o_ptr->k_idx) continue;
 
-        obj_flags(o_ptr, flgs);
+		obj_flags(o_ptr, flgs);
 
-        p_ptr->cursed |= (o_ptr->curse_flags & (0xFFFFFFFFL));
-        if (p_ptr->cursed)
-            p_ptr->redraw |= PR_EFFECTS;
-        if (o_ptr->name1 == ART_CHAINSWORD) p_ptr->cursed |= OFC_CHAINSWORD;
+		p_ptr->cursed |= (o_ptr->curse_flags & (0xFFFFFFFFL));
+		if (p_ptr->cursed)
+			p_ptr->redraw |= PR_EFFECTS;
+		if (o_ptr->name1 == ART_CHAINSWORD) p_ptr->cursed |= OFC_CHAINSWORD;
 
-        if (o_ptr->name1 == ART_MAUL_OF_VICE)
-            p_ptr->maul_of_vice = TRUE;
+		if (o_ptr->name1 == ART_MAUL_OF_VICE)
+			p_ptr->maul_of_vice = TRUE;
 
-        if (have_flag(flgs, OF_LORE2))
-            p_ptr->auto_id = TRUE;
-        else if (have_flag(flgs, OF_LORE1))
-            p_ptr->auto_pseudo_id = TRUE;
+		if (have_flag(flgs, OF_LORE))
+			p_ptr->auto_id = TRUE;
 
 		if (o_ptr->name1 == ART_AMULET_NIGHTMARE) p_ptr->nightmare_mode = TRUE;
 
-        if (o_ptr->name2 == EGO_GLOVES_GIANT)
-        {
-            int hand = _template->slots[i].hand;
-            int arm = hand / 2;
-            int rhand = arm*2;
-            int lhand = arm*2 + 1;
-            if (p_ptr->weapon_info[rhand].wield_how == WIELD_TWO_HANDS)
-                p_ptr->weapon_info[rhand].giant_wield = o_ptr->pval;
-            else if (p_ptr->weapon_info[lhand].wield_how == WIELD_TWO_HANDS)
-                p_ptr->weapon_info[lhand].giant_wield = o_ptr->pval;
-        }
+		if (o_ptr->name2 == EGO_GLOVES_GIANT)
+		{
+			int hand = _template->slots[i].hand;
+			int arm = hand / 2;
+			int rhand = arm * 2;
+			int lhand = arm * 2 + 1;
+			if (p_ptr->weapon_info[rhand].wield_how == WIELD_TWO_HANDS)
+				p_ptr->weapon_info[rhand].giant_wield = o_ptr->pval;
+			else if (p_ptr->weapon_info[lhand].wield_how == WIELD_TWO_HANDS)
+				p_ptr->weapon_info[lhand].giant_wield = o_ptr->pval;
+		}
 
-        if (o_ptr->rune)
-        {
-            rune_calc_bonuses(o_ptr);
-            rune_calc_stats(o_ptr, p_ptr->stat_add);
-        }
+		if (o_ptr->rune)
+		{
+			rune_calc_bonuses(o_ptr);
+			rune_calc_stats(o_ptr, p_ptr->stat_add);
+		}
 
-        if (have_flag(flgs, OF_STR)) p_ptr->stat_add[A_STR] += o_ptr->pval;
-        if (have_flag(flgs, OF_INT)) p_ptr->stat_add[A_INT] += o_ptr->pval;
-        if (have_flag(flgs, OF_WIS)) p_ptr->stat_add[A_WIS] += o_ptr->pval;
-        if (have_flag(flgs, OF_DEX)) p_ptr->stat_add[A_DEX] += o_ptr->pval;
-        if (have_flag(flgs, OF_CON)) p_ptr->stat_add[A_CON] += o_ptr->pval;
-        if (have_flag(flgs, OF_CHR)) p_ptr->stat_add[A_CHR] += o_ptr->pval;
+		if (have_flag(flgs, OF_STR)) p_ptr->stat_add[A_STR] += o_ptr->pval;
+		if (have_flag(flgs, OF_INT)) p_ptr->stat_add[A_INT] += o_ptr->pval;
+		if (have_flag(flgs, OF_WIS)) p_ptr->stat_add[A_WIS] += o_ptr->pval;
+		if (have_flag(flgs, OF_DEX)) p_ptr->stat_add[A_DEX] += o_ptr->pval;
+		if (have_flag(flgs, OF_CON)) p_ptr->stat_add[A_CON] += o_ptr->pval;
+		if (have_flag(flgs, OF_CHR)) p_ptr->stat_add[A_CHR] += o_ptr->pval;
 
-        if (have_flag(flgs, OF_DEC_STR)) p_ptr->stat_add[A_STR] -= o_ptr->pval;
-        if (have_flag(flgs, OF_DEC_INT)) p_ptr->stat_add[A_INT] -= o_ptr->pval;
-        if (have_flag(flgs, OF_DEC_WIS)) p_ptr->stat_add[A_WIS] -= o_ptr->pval;
-        if (have_flag(flgs, OF_DEC_DEX)) p_ptr->stat_add[A_DEX] -= o_ptr->pval;
-        if (have_flag(flgs, OF_DEC_CON)) p_ptr->stat_add[A_CON] -= o_ptr->pval;
-        if (have_flag(flgs, OF_DEC_CHR)) p_ptr->stat_add[A_CHR] -= o_ptr->pval;
+		if (have_flag(flgs, OF_DEC_STR)) p_ptr->stat_add[A_STR] -= o_ptr->pval;
+		if (have_flag(flgs, OF_DEC_INT)) p_ptr->stat_add[A_INT] -= o_ptr->pval;
+		if (have_flag(flgs, OF_DEC_WIS)) p_ptr->stat_add[A_WIS] -= o_ptr->pval;
+		if (have_flag(flgs, OF_DEC_DEX)) p_ptr->stat_add[A_DEX] -= o_ptr->pval;
+		if (have_flag(flgs, OF_DEC_CON)) p_ptr->stat_add[A_CON] -= o_ptr->pval;
+		if (have_flag(flgs, OF_DEC_CHR)) p_ptr->stat_add[A_CHR] -= o_ptr->pval;
 
-        if (have_flag(flgs, OF_MAGIC_MASTERY))
-            p_ptr->skills.dev += 8*o_ptr->pval;
+		if (have_flag(flgs, OF_MAGIC_MASTERY))
+			p_ptr->skills.dev += 8 * o_ptr->pval;
 
-        if (have_flag(flgs, OF_DEVICE_POWER))
-            p_ptr->device_power += o_ptr->pval;
+		if (have_flag(flgs, OF_DEVICE_POWER))
+			p_ptr->device_power += o_ptr->pval;
 
-        if (have_flag(flgs, OF_DEC_MAGIC_MASTERY))
-        {
-            p_ptr->skills.dev -= 8*o_ptr->pval;
-            p_ptr->device_power -= o_ptr->pval;
-        }
+		if (have_flag(flgs, OF_DEC_MAGIC_MASTERY))
+		{
+			p_ptr->skills.dev -= 8 * o_ptr->pval;
+			p_ptr->device_power -= o_ptr->pval;
+		}
 
-        if (have_flag(flgs, OF_STEALTH)) p_ptr->skills.stl += o_ptr->pval;
-        if (have_flag(flgs, OF_DEC_STEALTH)) p_ptr->skills.stl -= o_ptr->pval;
-        if (have_flag(flgs, OF_SEARCH)) p_ptr->skills.srh += (o_ptr->pval * 5);
-        if (have_flag(flgs, OF_SEARCH)) p_ptr->skills.fos += (o_ptr->pval * 5);
-        if (have_flag(flgs, OF_INFRA)) p_ptr->see_infra += o_ptr->pval;
-        if (have_flag(flgs, OF_TUNNEL)) p_ptr->skill_dig += (o_ptr->pval * 20);
-        if (have_flag(flgs, OF_SPEED)) p_ptr->pspeed += o_ptr->pval;
-        if (have_flag(flgs, OF_DEC_SPEED)) p_ptr->pspeed -= o_ptr->pval;
+		if (have_flag(flgs, OF_STEALTH)) p_ptr->skills.stl += o_ptr->pval;
+		if (have_flag(flgs, OF_DEC_STEALTH)) p_ptr->skills.stl -= o_ptr->pval;
+		if (have_flag(flgs, OF_SEARCH)) p_ptr->skills.srh += (o_ptr->pval * 5);
+		if (have_flag(flgs, OF_SEARCH)) p_ptr->skills.fos += (o_ptr->pval * 5);
+		if (have_flag(flgs, OF_INFRA)) p_ptr->see_infra += o_ptr->pval;
+		if (have_flag(flgs, OF_TUNNEL)) p_ptr->skill_dig += (o_ptr->pval * 20);
+		if (have_flag(flgs, OF_SPEED)) p_ptr->pspeed += o_ptr->pval;
+		if (have_flag(flgs, OF_DEC_SPEED)) p_ptr->pspeed -= o_ptr->pval;
+
+
+		if (have_flag(flgs, OF_AUTOMAP)) 
+		{
+			p_ptr->automapping += o_ptr->pval;
+		}
 
         if (have_flag(flgs, OF_BLOWS) || have_flag(flgs, OF_DEC_BLOWS))
         {

@@ -542,8 +542,8 @@ static flag_insc_table flag_insc_misc[] =
     { "Ty", OF_TY_CURSE, -1 },
     { "Ds", OF_DARKNESS, -1 },
     { "Wm", OF_WEAPONMASTERY, -1 },
-    { "Ps", OF_LORE1, -1 },
-    { "Id", OF_LORE2, -1 },
+    { "Am", OF_AUTOMAP, -1 },
+    { "Id", OF_LORE, -1 },
     { NULL, 0, -1 }
 };
 

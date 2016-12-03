@@ -1338,6 +1338,8 @@ struct player_type
     bool lightning_reflexes;
     bool clear_mind;
 
+	s16b automapping;
+
     bool ambush;
     bool peerless_stealth;
     s16b open_terrain_ct;

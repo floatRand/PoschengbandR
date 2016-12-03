@@ -3006,8 +3006,8 @@ enum obj_flags_e {
     OF_DEC_MANA,
     OF_LITE,
     OF_DARKNESS,
-    OF_LORE1,
-    OF_LORE2,
+    OF_AUTOMAP,
+    OF_LORE,
 
     OF_ACTIVATE, /* Present, but not required to Activate (obj_has_effect() suffices).
                     This is a very useful crutch for object lore, though. */

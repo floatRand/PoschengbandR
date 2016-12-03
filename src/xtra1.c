@@ -3624,6 +3624,8 @@ void calc_bonuses(void)
     p_ptr->sustain_dex = FALSE;
     p_ptr->sustain_chr = FALSE;
 
+	p_ptr->automapping = 0;
+
 	if(ironman_nightmare) p_ptr->nightmare_mode = TRUE;
 		else p_ptr->nightmare_mode = FALSE;
 
