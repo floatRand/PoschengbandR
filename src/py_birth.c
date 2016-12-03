@@ -2564,7 +2564,7 @@ static void _birth_finalize(void)
         previous_char.stat_max[i] = p_ptr->stat_max[i];
 
     /* Other Initialization */
-    if (game_mode == GAME_MODE_BEGINNER)
+    if (game_mode == GAME_MODE_BEGINNER || coffeebreak_mode)
         no_wilderness = TRUE;
 
     equip_on_init();
