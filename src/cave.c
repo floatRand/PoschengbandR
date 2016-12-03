@@ -4480,8 +4480,8 @@ void map_rot(void)
 
 			if (chance != 0 && (randint0(100) < chance)){
 				c_ptr->info &= ~(CAVE_MARK | CAVE_IN_DETECT);
-				c_ptr->info |= (CAVE_UNSAFE);
 			}
+			c_ptr->info |= (CAVE_UNSAFE); // Really annoying otherwise...
 
 		}
 	}
