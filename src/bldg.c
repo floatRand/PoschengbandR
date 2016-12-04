@@ -1503,7 +1503,7 @@ static bool kakutoujou(void)
             char buf[80];
             monster_race *r_ptr = &r_info[battle_mon[i]];
 
-            sprintf(buf,"%d) %-58s  %4ud.%02ud", i+1, format("%s%s", r_name + r_ptr->name, (r_ptr->flags1 & RF1_UNIQUE) ? " (clone)" : ""), mon_odds[i]/100, mon_odds[i]%100);
+            sprintf(buf,"%d) %-58s  %4u.%02u", i+1, format("%s%s", r_name + r_ptr->name, (r_ptr->flags1 & RF1_UNIQUE) ? " (clone)" : ""), mon_odds[i]/100, mon_odds[i]%100);
             prt(buf, 5+i, 1);
         }
 
