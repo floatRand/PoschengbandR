@@ -1101,3 +1101,14 @@ S:ANY:Any
 S:ANY:Any
 S:ANY:Any
 S:ANY:Any
+
+N:107:Visitor
+S:WEAPON_SHIELD:Tentacle:0
+S:WEAPON_SHIELD:Tentacle:1
+S:BOW:Shooting
+S:RING:Ring
+S:RING:Ring
+S:AMULET:Neck
+S:CLOAK:Cloak
+S:ANY:Any
+S:ANY:Any

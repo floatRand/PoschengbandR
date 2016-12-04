@@ -917,6 +917,153 @@ race_t *vampire_get_race(void)
 
     return &me;
 }
+/****************************************************************
+* Visitor
+****************************************************************/
+static void _ethereal_jaunt(int cmd, variant *res)
+{
+	switch (cmd)
+	{
+	case SPELL_NAME:
+		var_set_string(res, "Ethereal Jaunt");
+		break;
+	case SPELL_DESC:
+		if(p_ptr->lev <= 35) var_set_string(res, "Phases out of reality and randomly returns a random place nearby.");
+		else var_set_string(res, "Phases out of reality and returns to selected place nearby.");
+		break;
+	case SPELL_CAST:{
+		var_set_bool(res, FALSE);
+		bool ddoor = (p_ptr->lev >= 35) ? TRUE : FALSE;
+			
+		if(!ddoor) teleport_player(8, TELEPORT_NONMAGICAL);
+		else {
+			int y, x;
+			msg_print("You phase out of reality ...");
+			if (!tgt_pt(&x, &y, p_ptr->automapping)) break;
+			if (!dimension_door_aux(x, y, p_ptr->automapping, TELEPORT_NONMAGICAL))
+				msg_print("You fail to pass ethereal plane correctly!");
+		}
+		var_set_bool(res, TRUE);
+		break;
+	}
+	default:
+		default_spell(cmd, res);
+		break;
+	}
+}
+
+static int _visitor_get_detection_range(){ return 3 + p_ptr->lev / 7; }
+
+static power_info _visitor_powers[] =
+{
+	{ A_WIS, { 5, 30, 33, _ethereal_jaunt } },
+	{ -1, { -1, -1, -1, NULL } }
+};
+
+static int _visitor_get_powers(spell_info* spells, int max)
+{
+	return get_powers_aux(spells, max, _visitor_powers);
+}
+
+static void _visitor_process_world(void)
+{
+	int i, y, x;
+	/* Scan monsters */
+	for (i = 1; i < m_max; i++)
+	{
+		monster_type *m_ptr = &m_list[i];
+		monster_race *r_ptr = &r_info[m_ptr->r_idx];
+
+		/* Skip dead monsters */
+		if (!m_ptr->r_idx) continue;
+
+		/* Location */
+		y = m_ptr->fy;
+		x = m_ptr->fx;
+
+		/* Only detect nearby monsters */
+		if (distance(py, px, y, x) > _visitor_get_detection_range()+4) continue;
+
+		/* Repair visibility later */
+		repair_monsters = TRUE;
+
+		/* Hack -- Detect monster */
+		m_ptr->mflag2 |= (MFLAG2_MARK | MFLAG2_SHOW);
+
+		/* Update the monster */
+		update_mon(i, FALSE);
+	}
+
+}
+
+static void _visitor_calc_bonuses(void)
+{
+	res_add_immune(RES_BLIND);
+	p_ptr->see_nocto = TRUE;
+	p_ptr->no_eldritch = TRUE;
+	p_ptr->anti_tele = TRUE;
+	p_ptr->automapping = MAX(_visitor_get_detection_range(), p_ptr->automapping);
+	p_ptr->see_inv = TRUE;
+	p_ptr->ac -= (5 + p_ptr->lev);
+	if (p_ptr->lev >= 20) p_ptr->sh_fear = TRUE;
+}
+static void _visitor_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+	if (p_ptr->lev >= 20) add_flag(flgs, OF_AURA_FEAR);
+	p_ptr->see_inv = TRUE;
+	add_flag(flgs, OF_IM_BLIND);
+	add_flag(flgs, OF_NO_TELE);
+	add_flag(flgs, OF_AUTOMAP);
+}
+race_t *visitor_get_race(void)
+{
+	static race_t me = { 0 };
+	static bool init = FALSE;
+
+	if (!init)
+	{
+		me.name = "Visitor";
+		me.desc = "A peculiar being from beyond the veil, stranded or staying for whatever "
+			"reason. Their physical presence is rather flimsy, but being "
+			"from higher dimension, they can see through walls and detect monsters. They do "
+			"not require sight to see. \n" 
+			"Due to being unnative, regular methods of teleportation do not work on them. "
+			"However, they can use their ethereal jaunt to replicate teleporting. "
+			"In addition, their presence terrifies other creatures, and those that try "
+			"to meddle with your mind will be blasted by eldritch truths. \n"
+			"{ EXPERIMENTAL RACE, wip }";
+
+		me.stats[A_STR] = 0;
+		me.stats[A_INT] = 0;
+		me.stats[A_WIS] = 2;
+		me.stats[A_DEX] = 0;
+		me.stats[A_CON] = 0;
+		me.stats[A_CHR] = -5;
+
+		me.skills.dis = 5;
+		me.skills.dev = 6;
+		me.skills.sav = 4;
+		me.skills.stl = 4;
+		me.skills.srh = 8;
+		me.skills.fos = 12;
+		me.skills.thn = 5;
+		me.skills.thb = 5;
+
+		me.life = 98;
+		me.base_hp = 20;
+		me.exp = 180;
+		me.shop_adjust = 110;
+
+		me.calc_bonuses = _visitor_calc_bonuses;
+		me.get_flags = _visitor_get_flags;
+		me.get_powers = _visitor_get_powers;
+		me.process_world = _visitor_process_world;
+		me.equip_template = &b_info[107];
+		init = TRUE;
+	}
+
+	return &me;
+}
 
 /****************************************************************
  * Wood-Elf

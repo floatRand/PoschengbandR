@@ -1994,7 +1994,7 @@ bool make_attack_spell(int m_idx, bool ticked_off)
         {
             if (blind) msg_format("%^s mumbles powerfully.", m_name);
             else msg_format("%^s invokes polymorph other.", m_name);
-            if (prace_is_(RACE_ANDROID) || p_ptr->pclass == CLASS_MONSTER || p_ptr->prace == RACE_DOPPELGANGER)
+            if (prace_is_(RACE_ANDROID) || p_ptr->pclass == CLASS_MONSTER || p_ptr->prace == RACE_DOPPELGANGER || p_ptr->prace == RACE_VISITOR)
                 msg_print("You are unaffected!");
             else if (mut_present(MUT_DRACONIAN_METAMORPHOSIS))
                 msg_print("You are unaffected!");
@@ -3449,7 +3449,11 @@ bool make_attack_spell(int m_idx, bool ticked_off)
             disturb(1, 0);
             msg_format("%^s tries to blank your mind.", m_name);
 
-            if (randint0(100 + rlev/2) < duelist_skill_sav(m_idx))
+			if (p_ptr->prace == RACE_VISITOR && randint0(100)>=80-(p_ptr->lev/5)*3){
+				msg_format("You attempt to erase mind of %^s in retaliation.", m_name);
+				project(0, 0, m_ptr->fy, m_ptr->fx, p_ptr->lev * 2, GF_AMNESIA, (PROJECT_KILL | PROJECT_HIDE), 0);
+			}
+            else if (randint0(100 + rlev/2) < duelist_skill_sav(m_idx))
             {
                 msg_print("You resist the effects!");
             }

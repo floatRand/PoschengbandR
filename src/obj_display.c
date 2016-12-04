@@ -503,8 +503,6 @@ static void _display_abilities(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc)
 
     if (have_flag(flgs, OF_LORE))
         vec_add(v, string_copy_s("<color:B>Auto Identify</color>"));
-	if (have_flag(flgs, OF_AUTOMAP))
-		vec_add(v, string_copy_s("<color:B>Guidance</color>"));
 
     if (have_flag(flgs, OF_FREE_ACT))
         vec_add(v, string_copy_s("<color:R>Free Action</color>"));
@@ -609,6 +607,10 @@ static void _display_auras(u32b flgs[OF_ARRAY_SIZE], doc_ptr doc)
 static void _display_extra(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_ptr doc)
 {
     int net = 0;
+
+	if (have_flag(flgs, OF_AUTOMAP)){
+		doc_printf(doc, "<color:y>It automatically maps nearby area with radius of %d.\n</color>", 3 + o_ptr->pval);
+	}
 
     if (have_flag(flgs, OF_EASY_SPELL))
         doc_insert(doc, "It affects your ability to cast spells.\n");

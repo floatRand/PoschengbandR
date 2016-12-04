@@ -2403,7 +2403,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     add_flag(o_ptr->flags, OF_DEC_CON);
                     has_pval = TRUE;
                 }
-				else if (one_in_(50))
+				else if (one_in_(30))
 				{
 					add_flag(o_ptr->flags, OF_AUTOMAP);
 					has_pval = TRUE;
@@ -2499,7 +2499,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     o_ptr->to_h += randint1(5) + m_bonus(5, lev);
                     o_ptr->to_d += randint1(5) + m_bonus(5, lev);
                 }
-				else if (one_in_(50))
+				else if (one_in_(30))
 				{
 					add_flag(o_ptr->flags, OF_AUTOMAP);
 					has_pval = TRUE;
@@ -2587,6 +2587,9 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                             add_esp_weak(o_ptr, FALSE);
                         ++esp_count;
                     }
+					else if ((o_ptr->tval == TV_CROWN || o_ptr->tval == TV_HELM) && one_in_(30)){
+						add_flag(o_ptr->flags, OF_AUTOMAP); has_pval = TRUE;
+					}
                     else if (!boosted_ac && randint1(225) < lev)
                     {
                         o_ptr->to_a = 20 + randint1(20);

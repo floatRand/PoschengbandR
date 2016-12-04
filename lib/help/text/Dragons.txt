@@ -33,13 +33,13 @@ Dragon matures, it becomes more and more resistant to fire, eventually
 gaining total immunity.
 
   Stats                   Skills
-  Strength      +4        Disarming   Fair         
-  Intelligence  +2        Device      Good         
-  Wisdom        +1        Save        Fair         
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +3        Searching   Fair         
-  Charisma      +2        Perception  Fair         
-  Life Rating  115%       Melee       Excellent    
+  Strength      +5        Disarming   Fair         
+  Intelligence  +3        Device      Good         
+  Wisdom        +2        Save        Fair         
+  Dexterity     +2        Stealth     Fair         
+  Constitution  +4        Searching   Fair         
+  Charisma      +3        Perception  Fair         
+  Life Rating  120%       Melee       Excellent    
   Base HP       40        Bows        Bad          
   Experience   250%       Infravision 50'
   
@@ -51,13 +51,13 @@ possible among dragonkind and they too become more and more resistant
 to cold as they mature.
 
   Stats                   Skills
-  Strength      +4        Disarming   Fair         
-  Intelligence  +2        Device      Good         
-  Wisdom        +1        Save        Fair         
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +3        Searching   Fair         
-  Charisma      +2        Perception  Fair         
-  Life Rating  115%       Melee       Excellent    
+  Strength      +5        Disarming   Fair         
+  Intelligence  +3        Device      Good         
+  Wisdom        +2        Save        Fair         
+  Dexterity     +2        Stealth     Fair         
+  Constitution  +4        Searching   Fair         
+  Charisma      +3        Perception  Fair         
+  Life Rating  120%       Melee       Excellent    
   Base HP       40        Bows        Bad          
   Experience   250%       Infravision 50'
   
@@ -69,13 +69,13 @@ eventually shock their foes. Blue Dragons become more and more
 resistant to lightning as they mature.
 
   Stats                   Skills
-  Strength      +4        Disarming   Fair         
-  Intelligence  +2        Device      Good         
-  Wisdom        +1        Save        Fair         
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +3        Searching   Fair         
-  Charisma      +2        Perception  Fair         
-  Life Rating  115%       Melee       Excellent    
+  Strength      +5        Disarming   Fair         
+  Intelligence  +3        Device      Good         
+  Wisdom        +2        Save        Fair         
+  Dexterity     +2        Stealth     Fair         
+  Constitution  +4        Searching   Fair         
+  Charisma      +3        Perception  Fair         
+  Life Rating  120%       Melee       Excellent    
   Base HP       40        Bows        Bad          
   Experience   250%       Infravision 50'
   
@@ -86,13 +86,13 @@ brethren. As they mature, their bites corrode their enemies and the
 Black Dragon also becomes more and more resistant to acid.
 
   Stats                   Skills
-  Strength      +4        Disarming   Fair         
-  Intelligence  +2        Device      Good         
-  Wisdom        +1        Save        Fair         
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +3        Searching   Fair         
-  Charisma      +2        Perception  Fair         
-  Life Rating  115%       Melee       Excellent    
+  Strength      +5        Disarming   Fair         
+  Intelligence  +3        Device      Good         
+  Wisdom        +2        Save        Fair         
+  Dexterity     +2        Stealth     Fair         
+  Constitution  +4        Searching   Fair         
+  Charisma      +3        Perception  Fair         
+  Life Rating  120%       Melee       Excellent    
   Base HP       40        Bows        Bad          
   Experience   250%       Infravision 50'
   
@@ -103,13 +103,13 @@ mature, their bites poison their enemies. Also, Green Dragons become
 more and more resistant to poison.
 
   Stats                   Skills
-  Strength      +4        Disarming   Fair         
-  Intelligence  +2        Device      Good         
-  Wisdom        +1        Save        Fair         
-  Dexterity     +1        Stealth     Fair         
-  Constitution  +3        Searching   Fair         
-  Charisma      +2        Perception  Fair         
-  Life Rating  115%       Melee       Excellent    
+  Strength      +5        Disarming   Fair         
+  Intelligence  +3        Device      Good         
+  Wisdom        +2        Save        Fair         
+  Dexterity     +2        Stealth     Fair         
+  Constitution  +4        Searching   Fair         
+  Charisma      +3        Perception  Fair         
+  Life Rating  120%       Melee       Excellent    
   Base HP       40        Bows        Bad          
   Experience   250%       Infravision 50'
   
@@ -122,13 +122,13 @@ dragons eventually gain the ability to pass through walls and also
 become more and more resistant to nether.
 
   Stats                   Skills
-  Strength      +2        Disarming   Fair         
-  Intelligence  +1        Device      Good         
-  Wisdom        -1        Save        Good         
-  Dexterity     -1        Stealth     Very Good    
-  Constitution  +0        Searching   Fair         
-  Charisma      +2        Perception  Fair         
-  Life Rating   95%       Melee       Fair         
+  Strength      +4        Disarming   Fair         
+  Intelligence  +3        Device      Good         
+  Wisdom        +0        Save        Good         
+  Dexterity     +0        Stealth     Very Good    
+  Constitution  +1        Searching   Fair         
+  Charisma      +5        Perception  Fair         
+  Life Rating  100%       Melee       Fair         
   Base HP       40        Bows        Bad          
   Experience   300%       Infravision 50'
   
@@ -141,13 +141,13 @@ Their melee is among the weakest of all dragonkind but they still fight
 rather well ... What dragon doesn't?
 
   Stats                   Skills
-  Strength      +0        Disarming   Fair         
-  Intelligence  -1        Device      Excellent    
-  Wisdom        -2        Save        Very Good    
-  Dexterity     -2        Stealth     Fair         
-  Constitution  -1        Searching   Fair         
-  Charisma      -1        Perception  Fair         
-  Life Rating  100%       Melee       Good         
+  Strength      +5        Disarming   Fair         
+  Intelligence  +4        Device      Excellent    
+  Wisdom        +0        Save        Very Good    
+  Dexterity     +1        Stealth     Fair         
+  Constitution  +3        Searching   Fair         
+  Charisma      +4        Perception  Fair         
+  Life Rating  110%       Melee       Good         
   Base HP       40        Bows        Bad          
   Experience   280%       Infravision 50'
   
@@ -160,13 +160,13 @@ disenchantment. Their melee is among the weakest of all dragonkind but
 they still fight rather well ... What dragon doesn't?
 
   Stats                   Skills
-  Strength      +0        Disarming   Fair         
-  Intelligence  -1        Device      Excellent    
-  Wisdom        -2        Save        Very Good    
-  Dexterity     -2        Stealth     Fair         
-  Constitution  -1        Searching   Fair         
-  Charisma      -1        Perception  Fair         
-  Life Rating  100%       Melee       Good         
+  Strength      +5        Disarming   Fair         
+  Intelligence  +4        Device      Excellent    
+  Wisdom        +0        Save        Very Good    
+  Dexterity     +1        Stealth     Fair         
+  Constitution  +3        Searching   Fair         
+  Charisma      +4        Perception  Fair         
+  Life Rating  110%       Melee       Good         
   Base HP       40        Bows        Bad          
   Experience   280%       Infravision 50'
   
@@ -178,13 +178,13 @@ breaths are much weaker than those of the elemental dragons and they
 are weaker than either of Chaos or Law Drakes, though not by much.
 
   Stats                   Skills
-  Strength      +0        Disarming   Fair         
-  Intelligence  -1        Device      Good         
-  Wisdom        -2        Save        Fair         
-  Dexterity     -2        Stealth     Fair         
-  Constitution  -1        Searching   Fair         
-  Charisma      -1        Perception  Fair         
-  Life Rating   95%       Melee       Fair         
+  Strength      +4        Disarming   Fair         
+  Intelligence  +3        Device      Good         
+  Wisdom        +0        Save        Fair         
+  Dexterity     +1        Stealth     Fair         
+  Constitution  +2        Searching   Fair         
+  Charisma      +4        Perception  Fair         
+  Life Rating  105%       Melee       Fair         
   Base HP       40        Bows        Bad          
   Experience   300%       Infravision 50'
   
@@ -198,13 +198,13 @@ in all of dragonkind (except for Steel Dragons which cannot breathe at
 all).
 
   Stats                   Skills
-  Strength      +2        Disarming   Fair         
-  Intelligence  +1        Device      Good         
-  Wisdom        -1        Save        Good         
-  Dexterity     +0        Stealth     Very Good    
-  Constitution  +1        Searching   Fair         
-  Charisma      +1        Perception  Fair         
-  Life Rating  102%       Melee       Fair         
+  Strength      +4        Disarming   Fair         
+  Intelligence  +3        Device      Good         
+  Wisdom        +0        Save        Good         
+  Dexterity     +2        Stealth     Very Good    
+  Constitution  +3        Searching   Fair         
+  Charisma      +3        Perception  Fair         
+  Life Rating  109%       Melee       Fair         
   Base HP       40        Bows        Bad          
   Experience   250%       Infravision 50'
   
@@ -214,13 +214,13 @@ shards and melee powerfully with razor sharp claws and teeth. At high
 levels, they gain the power of reflection.
 
   Stats                   Skills
-  Strength      +1        Disarming   Fair         
-  Intelligence  -1        Device      Fair         
-  Wisdom        -2        Save        Excellent    
-  Dexterity     +0        Stealth     Fair         
-  Constitution  +0        Searching   Fair         
-  Charisma      +0        Perception  Fair         
-  Life Rating  100%       Melee       Superb       
+  Strength      +6        Disarming   Fair         
+  Intelligence  +4        Device      Fair         
+  Wisdom        +0        Save        Excellent    
+  Dexterity     +3        Stealth     Fair         
+  Constitution  +4        Searching   Fair         
+  Charisma      +3        Perception  Fair         
+  Life Rating  115%       Melee       Superb       
   Base HP       40        Bows        Bad          
   Experience   275%       Infravision 50'
   
@@ -270,33 +270,33 @@ putting all the other dragons to complete and utter shame. They also
 have the most hitpoints of all dragons.
 
   Stats                   Skills
-  Strength      +8        Disarming   Fair         
+  Strength     +10        Disarming   Fair         
   Intelligence  -6        Device      Bad          
   Wisdom        -6        Save        Superb       
-  Dexterity     -3        Stealth     Poor         
-  Constitution  +7        Searching   Bad          
-  Charisma      +3        Perception  Bad          
-  Life Rating  140%       Melee       Superb       
+  Dexterity     -5        Stealth     Poor         
+  Constitution  +9        Searching   Bad          
+  Charisma      +5        Perception  Bad          
+  Life Rating  150%       Melee       Superb       
   Base HP       40        Bows        Bad          
   Experience   250%       Infravision 50'
   
 Table 1 - Dragon Statistic Bonus Table
 
                   STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
-Red Dragon         +4   +2   +1   +1   +3   +2  115%  +40  250%  130%
-White Dragon       +4   +2   +1   +1   +3   +2  115%  +40  250%  130%
-Blue Dragon        +4   +2   +1   +1   +3   +2  115%  +40  250%  130%
-Black Dragon       +4   +2   +1   +1   +3   +2  115%  +40  250%  130%
-Green Dragon       +4   +2   +1   +1   +3   +2  115%  +40  250%  130%
-Shadow Drake       +2   +1   -1   -1   +0   +2   95%  +40  300%  130%
-Law Drake          +0   -1   -2   -2   -1   -1  100%  +40  280%  130%
-Chaos Drake        +0   -1   -2   -2   -1   -1  100%  +40  280%  130%
-Balance Drake      +0   -1   -2   -2   -1   -1   95%  +40  300%  130%
-Ethereal Drake     +2   +1   -1   +0   +1   +1  102%  +40  250%  130%
-Crystal Drake      +1   -1   -2   +0   +0   +0  100%  +40  275%  130%
+Red Dragon         +5   +3   +2   +2   +4   +3  120%  +40  250%  130%
+White Dragon       +5   +3   +2   +2   +4   +3  120%  +40  250%  130%
+Blue Dragon        +5   +3   +2   +2   +4   +3  120%  +40  250%  130%
+Black Dragon       +5   +3   +2   +2   +4   +3  120%  +40  250%  130%
+Green Dragon       +5   +3   +2   +2   +4   +3  120%  +40  250%  130%
+Shadow Drake       +4   +3   +0   +0   +1   +5  100%  +40  300%  130%
+Law Drake          +5   +4   +0   +1   +3   +4  110%  +40  280%  130%
+Chaos Drake        +5   +4   +0   +1   +3   +4  110%  +40  280%  130%
+Balance Drake      +4   +3   +0   +1   +2   +4  105%  +40  300%  130%
+Ethereal Drake     +4   +3   +0   +2   +3   +3  109%  +40  250%  130%
+Crystal Drake      +6   +4   +0   +3   +4   +3  115%  +40  275%  130%
 Bronze Dragon      +4   +3   +0   +2   +3   +3  110%  +40  250%  130%
 Gold Dragon        +4   +3   +0   +2   +3   +3  110%  +40  250%  130%
-Steel Dragon       +8   -6   -6   -3   +7   +3  140%  +40  250%  130%
+Steel Dragon      +10   -6   -6   -5   +9   +5  150%  +40  250%  130%
 
 
 Table 2 - Dragon Skill Bonus Table I

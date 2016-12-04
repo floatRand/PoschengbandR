@@ -912,16 +912,19 @@ static void _display_other(monster_race *r_ptr, doc_ptr doc)
     /* Auras */
     vec_clear(v);
 
+	int aura_dd = 1 + r_ptr->level / 26;
+	int aura_ds = 1 + r_ptr->level / 17;
+
     if (r_ptr->flags2 & RF2_AURA_REVENGE)
         vec_add(v, string_copy_s("<color:v>Retaliation</color>"));
     if (r_ptr->flags2 & RF2_AURA_FEAR)
         vec_add(v, string_copy_s("<color:v>Fear</color>"));
     if (r_ptr->flags2 & RF2_AURA_FIRE)
-        vec_add(v, _get_res_name(RES_FIRE));
+		vec_add(v, string_alloc_format("<color:%c>%s (%dd%d)</color>", attr_to_attr_char(res_color(RES_FIRE)), res_name(RES_FIRE), aura_dd, aura_ds));
     if (r_ptr->flags3 & RF3_AURA_COLD)
-        vec_add(v, _get_res_name(RES_COLD));
+		vec_add(v, string_alloc_format("<color:%c>%s (%dd%d)</color>", attr_to_attr_char(res_color(RES_COLD)), res_name(RES_COLD), aura_dd, aura_ds));
     if (r_ptr->flags2 & RF2_AURA_ELEC)
-        vec_add(v, _get_res_name(RES_ELEC));
+		vec_add(v, string_alloc_format("<color:%c>%s (%dd%d)</color>", attr_to_attr_char(res_color(RES_ELEC)), res_name(RES_ELEC), aura_dd, aura_ds));
 
     if (vec_length(v))
     {

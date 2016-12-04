@@ -568,6 +568,22 @@ Life Rating  108%       Melee       <color:g>Superb       </color>
 Base HP       26        Bows        <color:D>Very Bad     </color>
 Experience   175%       Infravision 20'
 </style></indent>
+<topic:Visitor><color:o>Visitor</color>
+A peculiar being from beyond the veil, stranded or staying for whatever reason. Their physical presence is rather flimsy, but being from higher dimension, they can see through walls and detect monsters. They do not require sight to see. 
+Due to being unnative, regular methods of teleportation do not work on them. However, they can use their ethereal jaunt to replicate teleporting. In addition, their presence terrifies other creatures, and those that try to meddle with your mind will be blasted by eldritch truths. 
+{ EXPERIMENTAL RACE, wip }
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength      +0        Disarming   <color:y>Good         </color>
+Intelligence  +0        Device      <color:y>Good         </color>
+Wisdom        +2        Save        <color:o>Fair         </color>
+Dexterity     +0        Stealth     <color:y>Very Good    </color>
+Constitution  +0        Searching   <color:G>Excellent    </color>
+Charisma      -5        Perception  <color:g>Superb       </color>
+Life Rating   98%       Melee       <color:y>Good         </color>
+Base HP       20        Bows        <color:y>Good         </color>
+Experience   180%       Infravision 0'
+</style></indent>
 <topic:Yeek><color:o>Yeek</color>
 Yeeks are among the most pathetic creatures. Fortunately, their horrible screams can scare away less confident foes, and their skin becomes more and more resistant to acid, as they gain experience. But having said that, even a mediocre monster can wipe the proverbial floor with an unwary Yeek.
 
@@ -625,6 +641,7 @@ Klackon       +2   -1   -1   +1   +2   +1  105%  +23  170%  115%
 Kutar         +0   -1   -1   +1   +2   +2  102%  +21  175%   95%
 Mindflayer    -3   +4   +4   +0   -2   -1   97%  +18  150%  115%
 Tonberry      +4   +0   -2   -4   +5   +0  108%  +26  175%  115%
+Visitor       +0   +0   +2   +0   +0   -5   98%  +20  180%  110%
 Yeek          -2   +1   -2   +1   -2   -4   92%  +14   70%  105%
 
 </style>
@@ -670,6 +687,7 @@ Klackon      <color:G>Excellent    </color> <color:y>Good         </color> <colo
 Kutar        <color:r>Bad          </color> <color:y>Good         </color> <color:y>Good         </color> <color:G>Excellent    </color>
 Mindflayer   <color:G>Excellent    </color> <color:g>Superb       </color> <color:G>Excellent    </color> <color:o>Fair         </color>
 Tonberry     <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
+Visitor      <color:y>Good         </color> <color:y>Good         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
 Yeek         <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Good         </color> <color:y>Good         </color>
 
 </style>
@@ -715,6 +733,7 @@ Klackon      <color:D>Very Bad     </color> <color:g>Superb       </color> <colo
 Kutar        <color:D>Very Bad     </color> <color:y>Very Good    </color> <color:R>Poor         </color> <color:r>Bad          </color>    0'
 Mindflayer   <color:y>Good         </color> <color:g>Superb       </color> <color:D>Very Bad     </color> <color:r>Bad          </color>   40'
 Tonberry     <color:D>Very Bad     </color> <color:y>Good         </color> <color:g>Superb       </color> <color:D>Very Bad     </color>   20'
+Visitor      <color:G>Excellent    </color> <color:g>Superb       </color> <color:y>Good         </color> <color:y>Good         </color>    0'
 Yeek         <color:y>Good         </color> <color:b>Heroic       </color> <color:r>Bad          </color> <color:r>Bad          </color>   20'
 
 </style>

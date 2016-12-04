@@ -503,7 +503,7 @@ static void _mirror_tunnel_spell(int cmd, variant *res)
 
         msg_print("You go through the mirror world ...");
         if (!tgt_pt(&x, &y, p_ptr->lev / 2 + 10)) return;
-        if (!dimension_door_aux(x, y, p_ptr->lev / 2 + 10))
+        if (!dimension_door_aux(x, y, p_ptr->lev / 2 + 10, 0L))
             msg_print("You fail to pass into the mirror plane correctly!");
 
         var_set_bool(res, TRUE);

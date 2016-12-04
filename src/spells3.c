@@ -4340,7 +4340,7 @@ bool polymorph_monster(int y, int x)
 /*
  * Dimension Door
  */
-bool dimension_door_aux(int x, int y, int rng)
+bool dimension_door_aux(int x, int y, int rng, u32b mode)
 {
     int    plev = p_ptr->lev;
 
@@ -4349,7 +4349,7 @@ bool dimension_door_aux(int x, int y, int rng)
 
     if (p_ptr->wizard)
     {
-        teleport_player_to(y, x, 0L);
+        teleport_player_to(y, x, mode);
         return TRUE;
     }
     else if ( !cave_player_teleportable_bold(y, x, 0L)
@@ -4363,7 +4363,7 @@ bool dimension_door_aux(int x, int y, int rng)
     }
     else
     {
-        teleport_player_to(y, x, 0L);
+        teleport_player_to(y, x, mode);
         return TRUE;
     }
 }
@@ -4379,7 +4379,7 @@ bool dimension_door(int rng)
     /* Rerutn FALSE if cancelled */
     if (!tgt_pt(&x, &y, rng)) return FALSE;
 
-    if (dimension_door_aux(x, y, rng)) return TRUE;
+    if (dimension_door_aux(x, y, rng, 0L)) return TRUE;
 
     if (p_ptr->pclass == CLASS_TIME_LORD)
         msg_print("You fail to exit the temporal plane correctly!");
@@ -4556,6 +4556,7 @@ bool summon_kin_player(int level, int y, int x, u32b mode)
                 summon_kin_type = 'A';
                 break;
             case RACE_BALROG:
+			case RACE_VISITOR:
                 summon_kin_type = 'U';
                 break;
             default:

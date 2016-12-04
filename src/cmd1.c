@@ -5269,8 +5269,6 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
         /* Remove "unsafe" flag */
         if ((!p_ptr->blind && !no_lite()) || !is_trap(c_ptr->feat)) c_ptr->info &= ~(CAVE_UNSAFE);
 
-		if (p_ptr->automapping > 0){ map_area(3 + p_ptr->automapping); equip_learn_flag(OF_AUTOMAP); }
-
         /* For get everything when requested hehe I'm *NASTY* */
         if (dun_level && (d_info[dungeon_type].flags1 & DF1_FORGET)) map_rot();
 

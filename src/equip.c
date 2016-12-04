@@ -1240,7 +1240,7 @@ void equip_calc_bonuses(void)
 
 		if (have_flag(flgs, OF_AUTOMAP)) 
 		{
-			p_ptr->automapping += o_ptr->pval;
+			if (o_ptr->pval > p_ptr->automapping) p_ptr->automapping = o_ptr->pval; // only take highest automap.
 		}
 
         if (have_flag(flgs, OF_BLOWS) || have_flag(flgs, OF_DEC_BLOWS))

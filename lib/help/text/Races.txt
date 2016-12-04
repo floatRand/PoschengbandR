@@ -797,6 +797,29 @@ Other Races
     Base HP       26        Bows        Very Bad     
     Experience   175%       Infravision 20'
     
+  Visitor
+  A peculiar being from beyond the veil, stranded or staying for 
+  whatever reason. Their physical presence is rather flimsy, but being 
+  from higher dimension, they can see through walls and detect 
+  monsters. They do not require sight to see. 
+  Due to being unnative, regular methods of teleportation do not work 
+  on them. However, they can use their ethereal jaunt to replicate 
+  teleporting. In addition, their presence terrifies other creatures, 
+  and those that try to meddle with your mind will be blasted by 
+  eldritch truths. 
+  { EXPERIMENTAL RACE, wip }
+  
+    Stats                   Skills
+    Strength      +0        Disarming   Good         
+    Intelligence  +0        Device      Good         
+    Wisdom        +2        Save        Fair         
+    Dexterity     +0        Stealth     Very Good    
+    Constitution  +0        Searching   Excellent    
+    Charisma      -5        Perception  Superb       
+    Life Rating   98%       Melee       Good         
+    Base HP       20        Bows        Good         
+    Experience   180%       Infravision 0'
+    
   Yeek
   Yeeks are among the most pathetic creatures. Fortunately, their 
   horrible screams can scare away less confident foes, and their skin 
@@ -858,6 +881,7 @@ Klackon       +2   -1   -1   +1   +2   +1  105%  +23  170%  115%
 Kutar         +0   -1   -1   +1   +2   +2  102%  +21  175%   95%
 Mindflayer    -3   +4   +4   +0   -2   -1   97%  +18  150%  115%
 Tonberry      +4   +0   -2   -4   +5   +0  108%  +26  175%  115%
+Visitor       +0   +0   +2   +0   +0   -5   98%  +20  180%  110%
 Yeek          -2   +1   -2   +1   -2   -4   92%  +14   70%  105%
 
 
@@ -903,6 +927,7 @@ Klackon      Excellent     Good          Fair          Poor
 Kutar        Bad           Good          Good          Excellent    
 Mindflayer   Excellent     Superb        Excellent     Fair         
 Tonberry     Bad           Fair          Fair          Fair         
+Visitor      Good          Good          Fair          Very Good    
 Yeek         Fair          Fair          Good          Good         
 
 
@@ -948,6 +973,7 @@ Klackon      Very Bad      Superb        Good          Good            20'
 Kutar        Very Bad      Very Good     Poor          Bad              0'
 Mindflayer   Good          Superb        Very Bad      Bad             40'
 Tonberry     Very Bad      Good          Superb        Very Bad        20'
+Visitor      Excellent     Superb        Good          Good             0'
 Yeek         Good          Heroic        Bad           Bad             20'
 
 

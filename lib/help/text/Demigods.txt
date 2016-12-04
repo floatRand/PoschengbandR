@@ -303,9 +303,6 @@ you will choose for your character.
   Arcane Mastery
   Your spells will fail less often.
 
-  Astral Guide
-  Teleportation costs less energy.
-
   Black Marketeer
   You will gain favorable pricing in the black market.
 
@@ -318,9 +315,6 @@ you will choose for your character.
   Evasion
   You will dodge enemy breath attacks and have better odds for avoiding 
   earthquakes.
-
-  Fantastic Frenzy
-  You kill weak monsters more efficiently.
 
   Fast Learner
   You will gain a bonus to experience for each monster slain.

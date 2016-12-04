@@ -250,6 +250,9 @@ race_t *get_race_aux(int prace, int psubrace)
     case RACE_VAMPIRE:
         result = vampire_get_race();
         break;
+	case RACE_VISITOR:
+		result = visitor_get_race();
+		break;
     case RACE_YEEK:
         result = yeek_get_race();
         break;

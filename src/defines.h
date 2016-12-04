@@ -686,7 +686,8 @@
 #define RACE_WOOD_ELF           60
 #define RACE_MON_CENTIPEDE      61
 #define RACE_MON_VORTEX         62
-#define MAX_RACES               63
+#define RACE_VISITOR			63
+#define MAX_RACES               64
 
 #define DEMIGOD_MINOR           0
 #define DEMIGOD_ZEUS            1

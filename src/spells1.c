@@ -7187,10 +7187,15 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
         }
         case GF_MIND_BLAST:
         {
-            if ((randint0(100 + rlev / 2) < MAX(5, duelist_skill_sav(who))) && !CHECK_MULTISHADOW())
+			if (p_ptr->prace == RACE_VISITOR && randint0(100)>=80 - (p_ptr->lev/5)*3 && !(r_ptr->flags2 & RF2_ELDRITCH_HORROR)) {
+				msg_format("You attempt to blast mind of %^s in retaliation.", m_name);
+				project(0, 0, m_ptr->fy, m_ptr->fx, p_ptr->lev * 2, GF_MIND_BLAST, (PROJECT_KILL | PROJECT_HIDE), 0);
+				learn_spell(monspell);
+			}
+            else if ((randint0(100 + rlev / 2) < MAX(5, duelist_skill_sav(who))) && !CHECK_MULTISHADOW())
             {
-                msg_print("You resist the effects!");
-                learn_spell(monspell);
+					msg_print("You resist the effects!");
+					learn_spell(monspell);
             }
             else
             {
@@ -7220,10 +7225,15 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
         /* Brain smash */
         case GF_BRAIN_SMASH:
         {
-            if ((randint0(100 + rlev / 2) < MAX(5, duelist_skill_sav(who))) && !CHECK_MULTISHADOW())
+			if (p_ptr->prace == RACE_VISITOR && randint0(100) >= 80 - (p_ptr->lev / 5) * 3 && !(r_ptr->flags2 & RF2_ELDRITCH_HORROR)) {
+				msg_format("You attempt to smash brain of %^s in retaliation.", m_name);
+				project(0, 0, m_ptr->fy, m_ptr->fx, p_ptr->lev * 2, GF_BRAIN_SMASH, (PROJECT_KILL | PROJECT_HIDE), 0);
+				learn_spell(monspell);
+			}
+            else if ((randint0(100 + rlev / 2) < MAX(5, duelist_skill_sav(who))) && !CHECK_MULTISHADOW())
             {
-                msg_print("You resist the effects!");
-                learn_spell(monspell);
+					msg_print("You resist the effects!");
+					learn_spell(monspell);
             }
             else
             {

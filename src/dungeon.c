@@ -3452,6 +3452,8 @@ static void process_world(void)
     /* Involuntary Movement */
     process_world_aux_movement();
 
+	if (p_ptr->automapping > 0){ map_area(3 + p_ptr->automapping); equip_learn_flag(OF_AUTOMAP); }
+
     {
         race_t *race_ptr = get_race();
         if (race_ptr->process_world)

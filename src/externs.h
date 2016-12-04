@@ -1480,7 +1480,7 @@ extern bool rush_attack(int rng, bool *mdeath);
 
 
 /* spells3.c */
-extern bool dimension_door_aux(int x, int y, int rng);
+extern bool dimension_door_aux(int x, int y, int rng, u32b mode);
 extern bool teleport_away(int m_idx, int dis, u32b mode);
 extern void teleport_monster_to(int m_idx, int ty, int tx, int power, u32b mode);
 extern bool cave_player_teleportable_bold(int y, int x, u32b mode);
@@ -2238,6 +2238,7 @@ extern race_t *spectre_get_race(void);
 extern race_t *sprite_get_race(void);
 extern race_t *tonberry_get_race(void);
 extern race_t *vampire_get_race(void);
+extern race_t *visitor_get_race(void);
 extern race_t *wood_elf_get_race(void);
 extern race_t *yeek_get_race(void);
 extern race_t *zombie_get_race(void);
