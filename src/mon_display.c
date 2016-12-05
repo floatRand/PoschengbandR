@@ -381,51 +381,6 @@ static void _display_resists(monster_race *r_ptr, doc_ptr doc)
     vec_free(v);
 }
 
-
-static const int _MultiplyDeBruijnBitPosition[32] =
-{
-	0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
-	31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
-};
-static u32b _DeBruijnBitPosition32(u32b flag){
-	return _MultiplyDeBruijnBitPosition[((u32b)((flag & -flag) * 0x077CB531U)) >> 27];
-}
-
-
-static string_ptr _format_spell4(monster_race *r_ptr, char* name, u32b element, char col, bool showdmg)
-{
-	u32b r = _DeBruijnBitPosition32(element);
-	int dmg = (_easy_lore(r_ptr)) ? max_mspell_damage(4,element,r_ptr) : r_ptr->innate_dmg[r];
-
-	if (showdmg && dmg > 0)
-		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
-	else
-		return string_alloc_format("<color:%c>%s</color>", col, name);	
-}
-
-static string_ptr _format_spell5(monster_race *r_ptr, char* name, u32b element, char col, bool showdmg)
-{
-	u32b r = _DeBruijnBitPosition32(element);
-	int dmg = (_easy_lore(r_ptr)) ? max_mspell_damage(5, element, r_ptr) : r_ptr->spell_dmg[r];
-
-	if (showdmg && dmg > 0)
-		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
-	else
-		return string_alloc_format("<color:%c>%s</color>", col, name);
-}
-
-static string_ptr _format_spell6(monster_race *r_ptr, char* name, u32b element,char col, bool showdmg)
-{
-
-	u32b r = _DeBruijnBitPosition32(element);
-	int dmg = (_easy_lore(r_ptr)) ? max_mspell_damage(6, element, r_ptr) : r_ptr->special_dmg[r];
-
-	if (showdmg && dmg > 0)
-		return string_alloc_format("<color:%c>%s (%d)</color>", col, name, dmg);
-	else
-		return string_alloc_format("<color:%c>%s</color>", col, name);
-}
-
 /**************************************************************************
  * Spells
  **************************************************************************/
@@ -473,42 +428,28 @@ static void _display_spells(monster_race *r_ptr, doc_ptr doc)
         RF4_BR_LITE, RF4_BR_DARK, RF4_BR_CONF, RF4_BR_NETH, RF4_BR_NEXU, RF4_BR_SOUN,
         RF4_BR_SHAR, RF4_BR_CHAO, RF4_BR_DISE, RF4_BR_TIME, 0, 0, 0};
 
-	bool showDmg = TRUE;
-	int maxhp = r_ptr->hdice*r_ptr->hside;
-
     for (i = 0; i < RES_MAX; i++)
     {
         int which = flags[i];
-		if (which > 0 && (r_ptr->flags4 & which)){
-			vec_add(v, _format_spell4(r_ptr,res_name(i), which, attr_to_attr_char(res_color(i)), showDmg));
-		}
+        if (which >= 0 && (r_ptr->flags4 & which))
+            vec_add(v, _get_res_name(i));
     }
-
-	if (r_ptr->flags4 & RF4_BR_INER)
-	{
-		vec_add(v, _format_spell4(r_ptr,"Inertia", RF4_BR_INER, 's', showDmg));
-	}
-    if (r_ptr->flags4 & RF4_BR_GRAV){
-		vec_add(v, _format_spell4(r_ptr, "Gravity", RF4_BR_GRAV, 's', showDmg));
-	}
-    if (r_ptr->flags4 & RF4_BR_PLAS){
-		vec_add(v, _format_spell4(r_ptr, "Plasma", RF4_BR_PLAS, 'R', showDmg));
-	}
-    if (r_ptr->flags4 & RF4_BR_WALL){
-		vec_add(v, _format_spell4(r_ptr, "Force", RF4_BR_WALL, 'u', showDmg));
-	}
-    if (r_ptr->flags4 & RF4_BR_MANA){
-		vec_add(v, _format_spell4(r_ptr, "Mana", RF4_BR_MANA, 'B', showDmg));
-	}
-    if (r_ptr->flags4 & RF4_BR_NUKE){
-		vec_add(v, _format_spell4(r_ptr, "Toxic Waste", RF4_BR_NUKE, 'G', showDmg));
-	}
-    if (r_ptr->flags4 & RF4_BR_DISI){
-		vec_add(v, _format_spell4(r_ptr, "Disintegration", RF4_BR_DISI, 's', showDmg));
-	}
-    if (r_ptr->flags4 & RF4_BR_STORM){
-		vec_add(v, _format_spell4(r_ptr, "Storm Winds", RF4_BR_STORM, 'b', showDmg));
-	}
+    if (r_ptr->flags4 & RF4_BR_INER)
+        vec_add(v, string_copy_s("<color:s>Inertia</color>"));
+    if (r_ptr->flags4 & RF4_BR_GRAV)
+        vec_add(v, string_copy_s("<color:s>Gravity</color>"));
+    if (r_ptr->flags4 & RF4_BR_PLAS)
+        vec_add(v, string_copy_s("<color:R>Plasma</color>"));
+    if (r_ptr->flags4 & RF4_BR_WALL)
+        vec_add(v, string_copy_s("<color:u>Force</color>"));
+    if (r_ptr->flags4 & RF4_BR_MANA)
+        vec_add(v, string_copy_s("<color:B>Mana</color>"));
+    if (r_ptr->flags4 & RF4_BR_NUKE)
+        vec_add(v, string_copy_s("<color:G>Toxic Waste</color>"));
+    if (r_ptr->flags4 & RF4_BR_DISI)
+        vec_add(v, string_copy_s("<color:s>Disintegration</color>"));
+    if (r_ptr->flags4 & RF4_BR_STORM)
+        vec_add(v, string_copy_s("<color:b>Storm</color>"));
 
     if (vec_length(v))
     {
