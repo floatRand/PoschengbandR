@@ -128,13 +128,14 @@ extern void py_birth_obj(object_type *o_ptr)
         return;
     }
 
-    /* Weed out duplicate gear (e.g. Artemis Archer) */
-    if (object_is_wearable(o_ptr) && o_ptr->number == 1 && equip_find_object(o_ptr->tval, o_ptr->sval))
+    slot = equip_first_empty_slot(o_ptr);
+
+    /* Weed out duplicate gear (e.g. Artemis Archer), but allow things like Centipedes' multiple boots or Rings' unequippable starting jewelry. */
+    if (object_is_wearable(o_ptr) && o_ptr->number == 1 && !(slot || p_ptr->prace == RACE_MON_RING))
         return;
 
     obj_identify_fully(o_ptr);
 
-    slot = equip_first_empty_slot(o_ptr);
     if (slot && o_ptr->number == 1)
         equip_wield_aux(o_ptr, slot);
     else
