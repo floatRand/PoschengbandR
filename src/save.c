@@ -354,7 +354,7 @@ static void wr_monster(savefile_ptr file, monster_type *m_ptr)
 static void wr_lore(savefile_ptr file, int r_idx)
 {
     monster_race *r_ptr = &r_info[r_idx];
-
+	int i;
     savefile_write_s16b(file, r_ptr->r_sights);
     savefile_write_s16b(file, r_ptr->r_deaths);
     savefile_write_s16b(file, r_ptr->r_pkills);
