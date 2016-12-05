@@ -155,9 +155,9 @@ extern void py_birth_light(void)
     if (!p_ptr->see_nocto)  /* Ninjas and certain monster races can see in the dark. */
     {
         object_type forge = {0};
-        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_TORCH));
-        forge.number = rand_range(3, 7);
-        forge.xtra4 = rand_range(3, 7) * 500;
+        object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_LANTERN));
+        forge.number = 1;
+        forge.xtra4 = 5000;
         py_birth_obj(&forge);
     }
 }
@@ -376,7 +376,7 @@ static int _race_class_ui(void)
         cols[1] = doc_alloc(46);
 
         doc_insert(cols[0], "  <color:y>n</color>) Change Name\n");
-        doc_printf(cols[0], "  <color:y>s</color>) Change Sex\n");
+        doc_insert(cols[0], "  <color:y>s</color>) Change Sex\n");
         if (game_mode != GAME_MODE_BEGINNER)
             doc_insert(cols[0], "  <color:y>p</color>) Change Personality\n");
         doc_insert(cols[0], "  <color:y>r</color>) Change Race\n");
@@ -2540,7 +2540,7 @@ static void _birth_finalize(void)
     equip_on_init();
     virtue_init();
 
-    p_ptr->au = randint1(600) + randint1(100) + 100;
+    p_ptr->au = 450;
 
     get_max_stats();
     do_cmd_rerate_aux();
