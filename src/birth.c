@@ -193,6 +193,7 @@ static void player_wipe(void)
     for (i = 1; i < max_r_idx; i++)
     {
         monster_race *r_ptr = &r_info[i];
+        int f;
 
         /* Hack -- Reset the counter */
         r_ptr->cur_num = 0;
@@ -217,7 +218,7 @@ static void player_wipe(void)
 
         /* Clear memory of spell damages */ 
         /* Make fetching max damage a thing later for other things */
-        for (int f = 0; f < 32; f++){
+        for (f = 0; f < 32; f++){
             r_ptr->spell_dmg[f] = -1;
             r_ptr->innate_dmg[f] = -1;
             r_ptr->special_dmg[f] = -1;
