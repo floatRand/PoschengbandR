@@ -216,14 +216,6 @@ static void player_wipe(void)
         r_ptr->r_skills = 0;
         r_ptr->stolen_ct = 0;
 
-        /* Clear memory of spell damages */ 
-        /* Make fetching max damage a thing later for other things */
-        for (f = 0; f < 32; f++){
-            r_ptr->spell_dmg[f] = -1;
-            r_ptr->innate_dmg[f] = -1;
-            r_ptr->special_dmg[f] = -1;
-        }
-
         /* Wipe out pact alliances from previous character
         Currently, flagsr is only set to make the memory field
         work, but perhaps it would be better to set this once
