@@ -193,7 +193,6 @@ static void player_wipe(void)
     for (i = 1; i < max_r_idx; i++)
     {
         monster_race *r_ptr = &r_info[i];
-        int f;
 
         /* Hack -- Reset the counter */
         r_ptr->cur_num = 0;
