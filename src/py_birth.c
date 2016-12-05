@@ -152,7 +152,7 @@ extern void py_birth_food(void)
 
 extern void py_birth_light(void)
 {
-    if (p_ptr->pclass != CLASS_NINJA)
+    if (!p_ptr->see_nocto)  /* Ninjas and certain monster races can see in the dark. */
     {
         object_type forge = {0};
         object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_TORCH));
