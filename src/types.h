@@ -502,10 +502,6 @@ struct monster_race
     u32b flags9;              /* Flags 9 (drops info; possessor info) */
     u32b flagsr;              /* Flags R (resistances info) */
 
-	s16b innate_dmg[32]; /* Innate/breath */
-	s16b spell_dmg[32]; /* Normal spell */
-	s16b special_dmg[32]; /* Special spell */
-
     monster_blow blow[4];
 
     s16b next_r_idx;
