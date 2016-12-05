@@ -183,7 +183,7 @@ bool _curse_item_aux(bool all){
 	item_tester_hook = object_is_equipment;
 
 	if (!all){
-		if (!get_item(&item, "Curse which item? ", "There's nothing to uncurse.", (USE_INVEN | USE_EQUIP)))
+		if (!get_item(&item, "Curse which item? ", "There's nothing to curse.", (USE_INVEN | USE_EQUIP)))
 			return FALSE;
 
 		o_ptr = &inventory[item];

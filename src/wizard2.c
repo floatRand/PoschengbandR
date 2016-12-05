@@ -2359,6 +2359,10 @@ void do_cmd_debug(void)
         do_cmd_wiz_learn();
         break;
 
+	case 'L':
+		lose_all_info();
+		break;
+
     /* Magic Mapping */
     case 'm':
         map_area(DETECT_RAD_ALL * 3);
