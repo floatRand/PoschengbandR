@@ -309,7 +309,7 @@ static void rd_monster(savefile_ptr file, monster_type *m_ptr)
 static void rd_lore(savefile_ptr file, int r_idx)
 {
     bool pact = FALSE;
-	int i;
+
     monster_race *r_ptr = &r_info[r_idx];
 
     r_ptr->r_sights = savefile_read_s16b(file);
