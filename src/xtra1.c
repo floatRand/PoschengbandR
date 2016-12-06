@@ -4422,7 +4422,6 @@ void calc_bonuses(void)
     {
         /* Extract the "weight limit" (in tenth pounds) */
         i = (int)weight_limit();
-		if (i < 10) i = 10;
     }
     else
     {
@@ -4480,6 +4479,7 @@ void calc_bonuses(void)
         i = 1500 + riding_r_ptr->level * 25;
     }
     /* XXX XXX XXX Apply "encumbrance" from weight */
+	if (i < 500) i = 500; // enforce minimum weight
     if (j > i) p_ptr->pspeed -= ((j - i) / (i / 5));
 
     /* Searching slows the player down

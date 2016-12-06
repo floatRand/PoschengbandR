@@ -2349,9 +2349,17 @@ void do_cmd_debug(void)
         self_knowledge();
         break;
 
-	/* Nexus Scrample */
+	/* Some quest info */
 	case 'K':
-		mutate_player();
+	{
+		msg_format("Currently in dungeon: %^s.\n", d_name + d_info[dungeon_type].name);
+		for (int i = 0; i < max_r_idx; i++){
+			monster_race *r_ptr = &r_info[i]; 
+			if (r_ptr->flags1 & RF1_QUESTOR) msg_format("Questor: %^s.\n", r_name+r_ptr->name);
+		}
+		msg_print("Dump end.\n");
+
+	}
 		break;
 
     /* Learn about objects */

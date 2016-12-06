@@ -1635,7 +1635,18 @@ s16b get_mon_num(int level)
             if ((r_ptr->flags2 & RF2_CAMELOT) && dungeon_type != DUNGEON_CAMELOT) continue;
             if ((r_ptr->flags2 & RF2_SOUTHERING) && dungeon_type != DUNGEON_STRONGHOLD) continue;
             if ((r_ptr->flags3 & RF3_OLYMPIAN) && dungeon_type != DUNGEON_OLYMPUS) continue;
-        }
+		}
+		else
+		{ /* Camelot and Olympian uniques are really tough, and since no-wilderness can force them to spawn in quest like Vault.
+		     Mordred or Arthur is not fun times there.
+		     Bit too unmanageable. Slight requirement for level too. When you go to Camelot, etc. you kinda know what you are dealing with, and
+			 are hopefully sort of equipped. 
+			 Doesn't apply on nightmare mode, though :^)! */
+			if (!p_ptr->nightmare_mode){
+				if ((r_ptr->flags2 & RF2_CAMELOT) && (table[i].level + 2 >= level || dungeon_type != DUNGEON_ANGBAND)) continue;
+				if ((r_ptr->flags3 & RF3_OLYMPIAN) && (table[i].level + 2 >= level || dungeon_type != DUNGEON_ANGBAND)) continue;
+			}
+		}
 
         if (!p_ptr->inside_battle && !chameleon_change_m_idx)
         {
