@@ -1079,7 +1079,10 @@ void mutate_player(void)
 	}
 	/* And then loop. One point siphon is guaranteed */
 	for (int i = 0; i < alter_amt; i++){
+
 		if (p_ptr->stat_max[ii] >= p_ptr->stat_max_max[ii] || p_ptr->stat_max[jj] <= 3) break;
+		if (p_ptr->stat_cur[ii] >= p_ptr->stat_max_max[ii] || p_ptr->stat_cur[jj] <= 3) break;
+
 		else{
 			p_ptr->stat_max[ii]++;
 			p_ptr->stat_cur[ii]++;
@@ -1094,6 +1097,9 @@ void mutate_player(void)
     {
         if(p_ptr->stat_max[i] > p_ptr->stat_max_max[i]) p_ptr->stat_max[i] = p_ptr->stat_max_max[i];
         if(p_ptr->stat_cur[i] > p_ptr->stat_max_max[i]) p_ptr->stat_cur[i] = p_ptr->stat_max_max[i];
+		/*Paranoia...*/
+		if (p_ptr->stat_max[i] < 3) p_ptr->stat_max[i] = 3;
+		if (p_ptr->stat_cur[i] < 3) p_ptr->stat_cur[i] = 3;
     }
 
     p_ptr->update |= (PU_BONUS);
