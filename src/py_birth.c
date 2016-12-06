@@ -34,7 +34,6 @@ extern int py_birth(void);
                     static int _devicemaster_ui(void);
                     static int _gray_mage_ui(void);
 					static int _mystic_ui(void);
-					static int _chaos_warrior_ui(void);
         static int _realm1_ui(void);
             static int _realm2_ui(void);
         /* Monster Mode */
@@ -1091,8 +1090,6 @@ static int _subclass_ui(void)
 			rc = _gray_mage_ui();
 		else if (p_ptr->pclass == CLASS_MYSTIC)
 			rc = _mystic_ui();
-		else if (p_ptr->pclass == CLASS_CHAOS_WARRIOR)
-			rc = _chaos_warrior_ui();
         else
         {
             p_ptr->psubclass = 0;
@@ -1324,54 +1321,6 @@ static int _mystic_ui(void)
 		}
 	}
 }
-
-static int _chaos_warrior_ui(void)
-{
-	assert(p_ptr->pclass == CLASS_CHAOS_WARRIOR);
-	for (;;)
-	{
-		int cmd, i;
-
-		doc_clear(_doc);
-		_race_class_top(_doc);
-
-		doc_insert(_doc, "<color:G>Choose your patron</color>\n");
-		for (i = 0; i < MAX_PATRON; i++)
-		{ 
-			cptr patron = chaos_patrons[i];
-			doc_printf(_doc, "  <color:y>%c</color>) <color:%c>%s</color>\n",
-				I2A(i),
-				p_ptr->psubclass == i ? 'B' : 'w',
-				patron
-				);
-		}
-		doc_insert(_doc, "     Use SHIFT+choice to display help topic\n");
-
-		_sync_term(_doc);
-		cmd = _inkey();
-		if (cmd == ESCAPE) return UI_CANCEL;
-		else if (cmd == '\t') _inc_rcp_state();
-		else if (cmd == '=') _birth_options();
-		else if (isupper(cmd))
-		{
-			i = A2I(tolower(cmd));
-			if (0 <= i && i < MAX_PATRON)
-			{
-				p_ptr->chaos_patron = i;
-			}
-		}
-		else
-		{
-			i = A2I(cmd);
-			if (0 <= i && i < MAX_PATRON)
-			{
-				p_ptr->chaos_patron = i;
-				return UI_OK;
-			}
-		}
-	}
-}
-
 
 /************************************************************************
  * 2.3.2) Magic
@@ -2610,6 +2559,8 @@ static void _birth_finalize(void)
     previous_char.realm2 = p_ptr->realm2;
     previous_char.dragon_realm = p_ptr->dragon_realm;
     previous_char.au = p_ptr->au;
+
+	if (p_ptr->pclass == CLASS_CHAOS_WARRIOR) p_ptr->chaos_patron = randint0(MAX_PATRON); // get random chaos patron for chaos warriors...
 
     for (i = 0; i < MAX_STATS; i++)
         previous_char.stat_max[i] = p_ptr->stat_max[i];
