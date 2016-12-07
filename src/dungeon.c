@@ -173,8 +173,8 @@ static int _adj_pseudo_id(int num)
 
     result = result * (625 - virtue_current(VIRTUE_KNOWLEDGE)) / 625;
 
-    /* Hack: Pseudo-id becomes instantaneous at CL35 */
-    if (lev >= 35) return 0;
+    /* Player gets auto_pseudo_id at CL35 (CL1 with easy_id) or possibly from ego items */
+    if (p_ptr->auto_pseudo_id) return 0;
     for (;;)
     {
         lev -= 5;
@@ -204,7 +204,7 @@ static void sense_inventory1(void)
 
     if (p_ptr->confused) return;
 
-    if (easy_id)
+    if (p_ptr->auto_pseudo_id)
         heavy = TRUE;
     else
     {
@@ -440,7 +440,7 @@ static void sense_inventory1(void)
         if (!okay) continue;
 
         /* Occasional failure on inventory items */
-        if ((i < INVEN_PACK) && (0 != randint0(5))) continue;
+        if (!p_ptr->auto_pseudo_id && (i < INVEN_PACK) && (0 != randint0(5))) continue;
 
         /* Good luck */
         if (p_ptr->good_luck && !randint0(13))
@@ -461,32 +461,28 @@ static void sense_inventory2(void)
 
     if (p_ptr->confused) return;
 
-    switch (_class_idx())
-    {
-        case CLASS_WARRIOR:
-        case CLASS_ARCHER:
-        case CLASS_SAMURAI:
-        case CLASS_CAVALRY:
-        case CLASS_BERSERKER:
-        case CLASS_SNIPER:
-        case CLASS_BLOOD_KNIGHT:
-        case CLASS_DUELIST:
-        case CLASS_WEAPONMASTER:
-        case CLASS_RAGE_MAGE:
-        case CLASS_MAULER:
-        case CLASS_MONSTER:
-        {
-            return;
-        }
-    }
-
-    if (easy_id)
+    
+    if (p_ptr->auto_pseudo_id)
     {
     }
     else
     {
         switch (_class_idx())
         {
+            case CLASS_WARRIOR:
+            case CLASS_ARCHER:
+            case CLASS_SAMURAI:
+            case CLASS_CAVALRY:
+            case CLASS_BERSERKER:
+            case CLASS_SNIPER:
+            case CLASS_BLOOD_KNIGHT:
+            case CLASS_DUELIST:
+            case CLASS_WEAPONMASTER:
+            case CLASS_RAGE_MAGE:
+            case CLASS_MAULER:
+            case CLASS_MONSTER:
+                return;
+
             case CLASS_WEAPONSMITH:
             case CLASS_PALADIN:
             case CLASS_CHAOS_WARRIOR:
@@ -594,7 +590,7 @@ static void sense_inventory2(void)
         if (!okay) continue;
 
         /* Occasional failure on inventory items */
-        if ((i < INVEN_PACK) && (0 != randint0(5))) continue;
+        if (!p_ptr->auto_pseudo_id && (i < INVEN_PACK) && (0 != randint0(5))) continue;
 
         sense_inventory_aux(i, TRUE);
     }
