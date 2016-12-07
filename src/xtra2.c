@@ -251,7 +251,7 @@ void check_experience(void)
             sound(SOUND_LEVEL);
             cmsg_format(TERM_L_GREEN, "Welcome to level %d.", p_ptr->lev);
 
-            if (easy_lore && p_ptr->lev == 25)
+            if (easy_id && p_ptr->lev == 25)
                 msg_print("You have evolved into a Stone of Lore.");
 
             if (class_ptr->gain_level != NULL)

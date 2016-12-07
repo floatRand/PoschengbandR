@@ -1143,7 +1143,7 @@ void equip_calc_bonuses(void)
         if (o_ptr->name1 == ART_MAUL_OF_VICE)
             p_ptr->maul_of_vice = TRUE;
 
-        if (easy_lore && p_ptr->lev >= 25 || have_flag(flgs, OF_LORE2))
+        if (easy_id && p_ptr->lev >= 25 || have_flag(flgs, OF_LORE2))
             p_ptr->auto_id = TRUE;
         else if (have_flag(flgs, OF_LORE1))
             p_ptr->auto_pseudo_id = TRUE;
