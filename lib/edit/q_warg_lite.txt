@@ -1,0 +1,24 @@
+# q_warg_lite.txt
+
+# Name
+Q:13:N:Warg problem
+
+# type:num_mon:cur_num:max_num:level:r_idx:k_idx
+Q:13:Q:1:0:0:16:5:257:0:1
+
+# Description for quest
+?:[LEQ $QUEST13 2]
+Q:13:T:Our scouts report a large number of Wargs in the dungeon.
+Q:13:T:We don't know who set them on guard at 250 feet, but we
+Q:13:T:think their task is to hinder resupply of our outposts
+Q:13:T:in the dungeon. We offer you a small reward if you clear
+Q:13:T:the path for the supplies.
+?:1
+
+# Description for quest reward
+?:[EQU $QUEST13 3]
+Q:13:T:Since most of the supplies have been send to our troops
+Q:13:T:in the dungeon, we can only give you a small reward.
+Q:13:T:It awaits you outside.
+?:1
+

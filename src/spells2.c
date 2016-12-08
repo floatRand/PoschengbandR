@@ -84,6 +84,7 @@ void self_knowledge(void)
 		if (simple_stat_display){
 			int lf = MIN((15 + p_ptr->stat_cur[v_nr] / 10) + 3,40);
 
+
 			sprintf(stat_desc, "%s %d", stat_names[v_nr], lf);
 		}
 		else sprintf(stat_desc, "%s 18/%d", stat_names[v_nr], p_ptr->stat_max_max[v_nr]-18);

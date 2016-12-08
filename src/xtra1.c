@@ -205,46 +205,50 @@ static int calc_adj_dex_ta(void)
  */
 void cnv_stat(int val, char *out_val)
 {
-	
 
-	if (simple_stat_display){
-		if (val > 18)
-		{
-			int bonus = (val - 18);
-			int lf = (15 + bonus / 10) + 3;
-			if (lf >= 40) { sprintf(out_val, "   40*"); }
-			else sprintf(out_val, "    %2d", lf);
-		}
-		/* From 3 to 18 */
-		else
-		{
-			sprintf(out_val, "    %2d", val);
-		}
-	}
-	else{
-		if (val > 18)
-		{
-			int bonus = (val - 18);
-			if (bonus >= 220)
-			{
-				sprintf(out_val, "18/%3s", "***");
-			}
-			else if (bonus >= 100)
-			{
-				sprintf(out_val, "18/%03d", bonus);
-			}
-			else
-			{
-				sprintf(out_val, " 18/%02d", bonus);
-			}
-		}
+    
+    if (simple_stat_display) {
+        if (val >= 18 + 220)
+        {
+            sprintf(out_val, "**40**");
+        }
+        else if (val > 18)
+        {
+            int lf = (18 + (val - 18) / 10);
+            sprintf(out_val, "    %2d", lf);
+        }
+        /* From 3 to 18 */
+        else
+        {
+            sprintf(out_val, "    %2d", val);
+        }
+    }
+    else {
+        /* Above 18 */
+        if (val > 18)
+        {
+            int bonus = (val - 18);
 
-		/* From 3 to 18 */
-		else
-		{
-			sprintf(out_val, "    %2d", val);
-		}
-	}
+            if (bonus >= 220)
+            {
+                sprintf(out_val, "18/%3s", "***");
+            }
+            else if (bonus >= 100)
+            {
+                sprintf(out_val, "18/%03d", bonus);
+            }
+            else
+            {
+                sprintf(out_val, " 18/%02d", bonus);
+            }
+        }
+
+        /* From 3 to 18 */
+        else
+        {
+            sprintf(out_val, "    %2d", val);
+        }
+    }
 
 }
 
@@ -3690,8 +3694,14 @@ void calc_bonuses(void)
     p_ptr->align = friend_align;
     p_ptr->maul_of_vice = FALSE;
 
-    if (easy_id) // EVEN EASIER ID!
-       p_ptr->auto_id = TRUE;
+    if (easy_id && p_ptr->lev >= 25)
+    {
+        p_ptr->auto_id = TRUE;
+    }
+    else if (easy_id || p_ptr->lev >= 25)
+    {
+        p_ptr->auto_pseudo_id = TRUE;
+    }
 
     if (p_ptr->tim_sustain_str) p_ptr->sustain_str = TRUE;
     if (p_ptr->tim_sustain_int) p_ptr->sustain_int = TRUE;
@@ -3934,6 +3944,7 @@ void calc_bonuses(void)
     for (i = 0; i < INVEN_PACK; i++)
     {
         o_ptr = &inventory[i];
+        obj_flags(o_ptr, flgs);
         if (!o_ptr->k_idx) continue;
         if (o_ptr->name1 == ART_MAUL_OF_VICE)
             p_ptr->maul_of_vice = TRUE;
@@ -3942,6 +3953,9 @@ void calc_bonuses(void)
         if (o_ptr->rune == RUNE_GOOD_FORTUNE)
             p_ptr->good_luck = TRUE;
 	}
+
+      if (have_flag(flgs, OF_LORE))
+            p_ptr->auto_id = TRUE;
 
     mut_calc_bonuses();  /* Process before equip for MUT_FLESH_ROT */
     equip_calc_bonuses();
@@ -4609,7 +4623,8 @@ void calc_bonuses(void)
             /* Hack: At the moment, only the Monkey King's Cudgel ('Ruyi Jingu Bang')
              * should have this power, and it really should only enlarge that weapon (So
              * no swapping, or dual wielding, or whatever) */
-            if (o_ptr->name1 == ART_MONKEY_KING)
+            if (o_ptr->name1 == ART_MONKEY_KING
+                || o_ptr->name3 == ART_MONKEY_KING)
             {
                 info_ptr->to_dd += 2;
                 info_ptr->to_ds += 2;

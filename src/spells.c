@@ -105,52 +105,6 @@ void spell_stats_on_cast(spell_info *spell)
     stats->ct_cast++;
 }
 
-void spell_stats_gain_skill(spell_info *spell)
-{
-    static int      last_pexp = 0;
-    spell_stats_ptr stats = spell_stats(spell);
-
-    /* Hack: Try to eliminate spell spamming for experience.
-       The experience check is for blasting monsters with consecutive Mana Bursts
-       which should be granting spell experience, provided one is damaging monsters.
-
-       The turn check is for utility spells (Teleport & Detect tactics) since one
-       might be doing a bunch of legitimate casting without fighting monsters.
-
-       Note: Androids will probably always fail to pass the xp check! Hmm ...
-       Note: One still might be able to macro up a cast followed by a rest command.
-    */
-    if ( last_pexp != p_ptr->exp
-      || (!p_ptr->inside_quest && game_turn > stats->last_turn + 50 + randint1(50)) )
-    {
-        int skill = 0;
-        int dlvl = MAX(base_level, dun_level);
-
-        if (stats->skill < SPELL_EXP_BEGINNER)
-            skill += 60;
-        else if (stats->skill < SPELL_EXP_SKILLED)
-        {
-            if (dlvl > 4 && dlvl + 10 > p_ptr->lev)
-                skill = 8;
-        }
-        else if (stats->skill < SPELL_EXP_EXPERT)
-        {
-            if (dlvl + 5 > p_ptr->lev && dlvl + 5 > spell->level)
-                skill = 2;
-        }
-        else if (stats->skill < SPELL_EXP_MASTER)
-        {
-            if (dlvl + 5 > p_ptr->lev && dlvl > spell->level)
-                skill = 1;
-        }
-        stats->skill += skill;
-        if (stats->skill > stats->max_skill)
-            stats->skill = stats->max_skill;
-    }
-    last_pexp = p_ptr->exp;
-    stats->last_turn = game_turn;
-}
-
 void spell_stats_on_fail(spell_info *spell)
 {
     spell_stats_ptr stats = spell_stats(spell);

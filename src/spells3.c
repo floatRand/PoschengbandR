@@ -996,7 +996,6 @@ bool apply_disenchant(int mode)
     if (slot)
     {
         object_type     *o_ptr = equip_obj(slot);
-        int             t = 0;
         char            o_name[MAX_NLEN];
         u32b            flgs[OF_ARRAY_SIZE];
         int to_h, to_d, to_a, pval;
@@ -1006,16 +1005,21 @@ bool apply_disenchant(int mode)
 
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
+        if (demigod_is_(DEMIGOD_HEPHAESTUS))
+        {
+            msg_format("Your divine blood protects your %s (%c) from disenchantment!", o_name, index_to_label(slot));
+            return TRUE;
+        }
         if (object_is_artifact(o_ptr) && (randint0(100) < 71))
         {
-            msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(t));
+            msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(slot));
             return TRUE;
         }
 
         obj_flags(o_ptr, flgs);
         if (have_flag(flgs, OF_RES_DISEN))
         {
-            msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(t));
+            msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(slot));
             obj_learn_flag(o_ptr, OF_RES_DISEN);
             return TRUE;
         }
@@ -1045,7 +1049,7 @@ bool apply_disenchant(int mode)
         if ((to_h != o_ptr->to_h) || (to_d != o_ptr->to_d) ||
             (to_a != o_ptr->to_a) || (pval != o_ptr->pval))
         {
-            msg_format("Your %s (%c) was disenchanted!", o_name, index_to_label(t));
+            msg_format("Your %s (%c) was disenchanted!", o_name, index_to_label(slot));
             virtue_add(VIRTUE_HARMONY, 1);
             virtue_add(VIRTUE_ENCHANTMENT, -2);
 
@@ -1910,7 +1914,7 @@ bool alchemy(void)
 
     price = obj_value_real(o_ptr);
 
-    if (price <= 0)
+    if (price <= 0 || no_selling)
     {
         msg_format("You turn %s to fool's gold.", o_name);
     }
@@ -2351,7 +2355,7 @@ bool identify_item(object_type *o_ptr)
     if (obj_is_identified(o_ptr))
         old_known = TRUE;
 
-    if (!spoiler_hack && !obj_is_identified_fully(o_ptr))
+    if (!spoiler_hack && !old_known)
     {
         if (object_is_artifact(o_ptr) || one_in_(5))
             virtue_add(VIRTUE_KNOWLEDGE, 1);
@@ -3437,7 +3441,7 @@ s16b spell_chance(int spell, int use_realm)
  * The spell must be legible, not forgotten, and also, to cast,
  * it must be known, and to study, it must not be known.
  */
-bool spell_okay(int spell, bool learned, bool study_pray, int use_realm)
+bool spell_okay(int spell, bool learned, bool study_pray, int use_realm, bool browse)
 {
     magic_type *s_ptr;
 
@@ -3450,6 +3454,9 @@ bool spell_okay(int spell, bool learned, bool study_pray, int use_realm)
     {
         s_ptr = &mp_ptr->info[use_realm - 1][spell];
     }
+
+    // Can always browse spell information.
+    if (browse) return (TRUE);
 
     /* Spell is illegal */
     if (s_ptr->slevel > p_ptr->lev) return (FALSE);
@@ -3987,15 +3994,20 @@ static int minus_ac(void)
         object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
         obj_flags(o_ptr, flgs);
 
-        if ( have_flag(flgs, OF_IGNORE_ACID)
-          || demigod_is_(DEMIGOD_HEPHAESTUS) )
+        if (demigod_is_(DEMIGOD_HEPHAESTUS))
         {
-            msg_format("Your %s is unaffected!", o_name);
+            msg_format("Your divine blood protects your %s (%c) from corrosion!", o_name, index_to_label(slot));
+            obj_learn_flag(o_ptr, OF_IGNORE_ACID);
+            return TRUE;
+        }
+        if (have_flag(flgs, OF_IGNORE_ACID))
+        {
+            msg_format("Your %s (%c) is unaffected!", o_name, index_to_label(slot));
             obj_learn_flag(o_ptr, OF_IGNORE_ACID);
             return TRUE;
         }
 
-        msg_format("Your %s is damaged!", o_name);
+        msg_format("Your %s (%c) is damaged!", o_name, index_to_label(slot));
         o_ptr->to_a--;
         p_ptr->update |= PU_BONUS;
         p_ptr->window |= PW_EQUIP;

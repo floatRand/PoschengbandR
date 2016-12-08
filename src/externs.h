@@ -273,6 +273,8 @@ extern bool exp_need;    /* Show the experience needed for next level */
 extern bool ignore_unview;    /* Ignore whenever any monster does */
 extern bool display_distance;    /* Display distance of LoS monsters in monster list */
 extern bool simple_stat_display;
+extern bool display_race; /* Display monster races with their racial char */
+
 
 /*** Game-Play Options ***/
 
@@ -336,6 +338,7 @@ extern bool ironman_quests; /* Random quests must be completed */
 extern bool random_artifacts;
 extern bool no_artifacts;
 extern bool no_egos;
+extern bool no_selling;
 extern bool enable_virtues;
 extern bool coffeebreak_mode;
 extern bool runesword_start;
@@ -1530,7 +1533,7 @@ extern int mod_need_mana(int need_mana, int spell, int realm);
 extern int mod_spell_chance_1(int chance, int realm);
 extern int mod_spell_chance_2(int chance, int realm);
 extern s16b spell_chance(int spell,int realm);
-extern bool spell_okay(int spell, bool learned, bool study_pray, int realm);
+extern bool spell_okay(int spell, bool learned, bool study_pray, int realm, bool browse);
 extern void print_spells(int target_spell, byte *spells, int num, rect_t display, int use_realm);
 extern bool hates_acid(object_type *o_ptr);
 extern bool hates_elec(object_type *o_ptr);
@@ -2371,6 +2374,7 @@ extern bool duelist_issue_challenge(void);
 extern int duelist_skill_sav(int m_idx);
 extern void strafing_spell(int cmd, variant *res);
 extern bool nemesis_hack;    /* Actually, its in melee1.c */
+extern cptr duelist_equip_error(void);
 
 
 /* magic_eater.c */

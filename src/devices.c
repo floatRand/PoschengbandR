@@ -2322,6 +2322,7 @@ device_effect_info_t wand_effect_table[] =
     {EFFECT_SCARE_MONSTER,          7,   5,     1,  20,     0, 0},
     {EFFECT_STONE_TO_MUD,          10,   5,     1,  60,     0, 0},
     {EFFECT_POLYMORPH,             12,   6,     1,  25,     0, 0},
+    {EFFECT_CLONE_MONSTER,         12,   6,     1,  25,     0, 0},
     {EFFECT_BOLT_COLD,             12,   7,     1,  25,     0, 0},
     {EFFECT_BOLT_ELEC,             15,   7,     1,  25,     0, 0},
     {EFFECT_BOLT_ACID,             17,   8,     1,  25,     0, 0},
@@ -6417,7 +6418,14 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 5);
         if (cast)
         {
-            if (!get_fire_dir(&dir)) return NULL;
+            bool old_target_pet = target_pet;
+            target_pet = TRUE;
+            if (!get_fire_dir(&dir))
+            {
+                target_pet = old_target_pet;
+                return NULL;
+            }
+            target_pet = old_target_pet;
             if (heal_monster(dir, _BOOST(damroll(10, 10))))
                 device_noticed = TRUE;
         }
@@ -6428,7 +6436,14 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (value) return format("%d", 15);
         if (cast)
         {
-            if (!get_fire_dir(&dir)) return NULL;
+            bool old_target_pet = target_pet;
+            target_pet = TRUE;
+            if (!get_fire_dir(&dir))
+            {
+                target_pet = old_target_pet;
+                return NULL;
+            }
+            target_pet = old_target_pet;
             if (speed_monster(dir))
                 device_noticed = TRUE;
         }
@@ -6664,7 +6679,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             /* TODO: Again, we need the underlying object ...
                For now, we safely assume the artifact is Bloody Moon. */
-            int slot = equip_find_artifact(ART_BLOOD);
+            int slot = equip_find_art_or_replacement(ART_BLOOD);
             if (slot)
             {
                 object_type *o_ptr = equip_obj(slot);
@@ -6725,7 +6740,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
                         Note: Effects might someday be triggered by spells, so passing
                         an object to this routine won't always make sense!
                      */
-                    int slot = equip_find_artifact(ART_MURAMASA);
+                    int slot = equip_find_art_or_replacement(ART_MURAMASA);
                     if (slot)
                     {
                         msg_print("The Muramasa is destroyed!");

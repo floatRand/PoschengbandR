@@ -76,7 +76,7 @@ build/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
-*.exe
+#*.exe
 *_i.c
 *_p.c
 *.ilk
@@ -108,6 +108,8 @@ ipch/
 *.opensdf
 *.sdf
 *.cachefile
+*.vc.db
+*.vc.opendb
 
 # Visual Studio profiler
 *.psess

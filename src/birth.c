@@ -140,82 +140,77 @@ static void k_info_reset(void)
 */
 static void player_wipe(void)
 {
-	int i;
+    int i;
 
-	/* Hack -- free the "last message" string */
-	if (p_ptr->last_message) z_string_free(p_ptr->last_message);
+    /* Hack -- free the "last message" string */
+    if (p_ptr->last_message) z_string_free(p_ptr->last_message);
 
-	/* Hack -- zero the struct */
-	(void)WIPE(p_ptr, player_type);
-	p_ptr->mimic_form = MIMIC_NONE;
+    /* Hack -- zero the struct */
+    (void)WIPE(p_ptr, player_type);
+    p_ptr->mimic_form = MIMIC_NONE;
 
-	/* Wipe the quests */
-	for (i = 0; i < max_quests; i++)
-	{
-		quest[i].status = QUEST_STATUS_UNTAKEN;
+    /* Wipe the quests */
+    for (i = 0; i < max_quests; i++)
+    {
+        quest[i].status = QUEST_STATUS_UNTAKEN;
 
-		quest[i].cur_num = 0;
-		quest[i].max_num = 0;
-		quest[i].type = 0;
-		quest[i].level = 0;
-		quest[i].r_idx = 0;
-		quest[i].complev = 0;
-		quest[i].seed = 0;
-	}
+        quest[i].cur_num = 0;
+        quest[i].max_num = 0;
+        quest[i].type = 0;
+        quest[i].level = 0;
+        quest[i].r_idx = 0;
+        quest[i].complev = 0;
+        quest[i].seed = 0;
+    }
 
-	/* No weight */
-	p_ptr->total_weight = 0;
+    /* No weight */
+    p_ptr->total_weight = 0;
 
-	/* No items */
-	inven_cnt = 0;
+    /* No items */
+    inven_cnt = 0;
 
-	/* Clear the inventory */
-	for (i = 0; i < INVEN_TOTAL; i++)
-	{
-		object_wipe(&inventory[i]);
-	}
+    /* Clear the inventory */
+    for (i = 0; i < INVEN_TOTAL; i++)
+    {
+        object_wipe(&inventory[i]);
+    }
 
 
-	/* Start with no artifacts made yet */
-	for (i = 0; i < max_a_idx; i++)
-	{
-		artifact_type *a_ptr = &a_info[i];
-		a_ptr->generated = FALSE;
-		a_ptr->found = FALSE;
-	}
+    /* Start with no artifacts made yet */
+    for (i = 0; i < max_a_idx; i++)
+    {
+        artifact_type *a_ptr = &a_info[i];
+        a_ptr->generated = FALSE;
+        a_ptr->found = FALSE;
+    }
 
-	/* Reset the objects */
-	k_info_reset();
-	e_info_reset();
-	stats_reset();
+    /* Reset the objects */
+    k_info_reset();
+    e_info_reset();
+    stats_reset();
 
-	/* Reset the "monsters" */
-	for (i = 1; i < max_r_idx; i++)
-	{
-		monster_race *r_ptr = &r_info[i];
+    /* Reset the "monsters" */
+    for (i = 1; i < max_r_idx; i++)
+    {
+        monster_race *r_ptr = &r_info[i];
 
-		/* Hack -- Reset the counter */
-		r_ptr->cur_num = 0;
+        /* Hack -- Reset the counter */
+        r_ptr->cur_num = 0;
 
-		/* Hack -- Reset the max counter */
-		r_ptr->max_num = 100;
+        /* Hack -- Reset the max counter */
+        r_ptr->max_num = 100;
 
-		/* Hack -- Reset the max counter */
-		if (r_ptr->flags1 & RF1_UNIQUE) r_ptr->max_num = 1;
+        /* Hack -- Reset the max counter */
+        if (r_ptr->flags1 & RF1_UNIQUE) r_ptr->max_num = 1;
 
-		/* Hack -- Non-unique Nazguls are semi-unique */
-		else if (r_ptr->flags7 & RF7_NAZGUL) r_ptr->max_num = MAX_NAZGUL_NUM;
-		else if (i == MON_CAMELOT_KNIGHT) r_ptr->max_num = MAX_CAMELOT_KNIGHT_NUM;
+        /* Hack -- Non-unique Nazguls are semi-unique */
+        else if (r_ptr->flags7 & RF7_NAZGUL) r_ptr->max_num = MAX_NAZGUL_NUM;
+        else if (i == MON_CAMELOT_KNIGHT) r_ptr->max_num = MAX_CAMELOT_KNIGHT_NUM;
 
-		/* Clear visible kills in this life */
-		r_ptr->r_pkills = 0;
+        /* Clear visible kills in this life */
+        r_ptr->r_pkills = 0;
 
-		/* Clear all kills in this life */
-		r_ptr->r_akills = 0;
-		r_ptr->r_skills = 0;
-		r_ptr->stolen_ct = 0;
-
-		/* Clear memory of spell damages */ 
+		/* Clear memory of spell damages */
 		/* Make fetching max damage a thing later for other things */
 		for (int f = 0; f < 32; f++){
 			r_ptr->spell_dmg[f] = -1;
@@ -223,132 +218,138 @@ static void player_wipe(void)
 			r_ptr->special_dmg[f] = -1;
 		}
 
-		/* Wipe out pact alliances from previous character
-		Currently, flagsr is only set to make the memory field
-		work, but perhaps it would be better to set this once
-		and for all when a pact is made?  This would break
-		my savefiles though ...*/
-		r_ptr->flagsr &= ~(RFR_PACT_MONSTER);
-		r_ptr->r_flagsr &= ~(RFR_PACT_MONSTER);
-	}
+        /* Clear all kills in this life */
+        r_ptr->r_akills = 0;
+        r_ptr->r_skills = 0;
+        r_ptr->stolen_ct = 0;
+
+        /* Wipe out pact alliances from previous character
+        Currently, flagsr is only set to make the memory field
+        work, but perhaps it would be better to set this once
+        and for all when a pact is made?  This would break
+        my savefiles though ...*/
+        r_ptr->flagsr &= ~(RFR_PACT_MONSTER);
+        r_ptr->r_flagsr &= ~(RFR_PACT_MONSTER);
+    }
 
 
-	/* Hack -- Well fed player */
-	p_ptr->food = PY_FOOD_FULL - 1;
+    /* Hack -- Well fed player */
+    p_ptr->food = PY_FOOD_FULL - 1;
 
 
-	/* Wipe the spells */
-	if (p_ptr->pclass == CLASS_SORCERER)
-	{
-		p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0xffffffffL;
-		p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0xffffffffL;
-	}
-	else
-	{
-		p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0L;
-		p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0L;
-	}
-	p_ptr->spell_forgotten1 = p_ptr->spell_forgotten2 = 0L;
-	for (i = 0; i < 64; i++) p_ptr->spell_order[i] = 99;
-	p_ptr->learned_spells = 0;
-	p_ptr->add_spells = 0;
-	p_ptr->knowledge = 0;
+    /* Wipe the spells */
+    if (p_ptr->pclass == CLASS_SORCERER)
+    {
+        p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0xffffffffL;
+        p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0xffffffffL;
+    }
+    else
+    {
+        p_ptr->spell_learned1 = p_ptr->spell_learned2 = 0L;
+        p_ptr->spell_worked1 = p_ptr->spell_worked2 = 0L;
+    }
+    p_ptr->spell_forgotten1 = p_ptr->spell_forgotten2 = 0L;
+    for (i = 0; i < 64; i++) p_ptr->spell_order[i] = 99;
+    p_ptr->learned_spells = 0;
+    p_ptr->add_spells = 0;
+    p_ptr->knowledge = 0;
 
-	/* Clean the mutation count */
-	mutant_regenerate_mod = 100;
+    /* Clean the mutation count */
+    mutant_regenerate_mod = 100;
 
-	/* Clear "cheat" options */
-	cheat_peek = FALSE;
-	cheat_hear = FALSE;
-	cheat_room = FALSE;
-	cheat_xtra = FALSE;
-	cheat_live = FALSE;
-	cheat_save = FALSE;
+    /* Clear "cheat" options */
+    cheat_peek = FALSE;
+    cheat_hear = FALSE;
+    cheat_room = FALSE;
+    cheat_xtra = FALSE;
+    cheat_live = FALSE;
+    cheat_save = FALSE;
 
-	/* Assume no winning game */
-	p_ptr->total_winner = FALSE;
+    /* Assume no winning game */
+    p_ptr->total_winner = FALSE;
 
-	world_player = FALSE;
+    world_player = FALSE;
 
-	/* Assume no panic save */
-	p_ptr->panic_save = 0;
+    /* Assume no panic save */
+    p_ptr->panic_save = 0;
 
-	/* Assume no cheating */
-	p_ptr->noscore = 0;
-	p_ptr->wizard = FALSE;
+    /* Assume no cheating */
+    p_ptr->noscore = 0;
+    p_ptr->wizard = FALSE;
 
-	/* Not waiting to report score */
-	p_ptr->wait_report_score = FALSE;
+    /* Not waiting to report score */
+    p_ptr->wait_report_score = FALSE;
 
-	/* Default pet command settings */
-	p_ptr->pet_follow_distance = PET_FOLLOW_DIST;
-	p_ptr->pet_extra_flags = (PF_TELEPORT | PF_ATTACK_SPELL | PF_SUMMON_SPELL);
+    /* Default pet command settings */
+    p_ptr->pet_follow_distance = PET_FOLLOW_DIST;
+    p_ptr->pet_extra_flags = (PF_TELEPORT | PF_ATTACK_SPELL | PF_SUMMON_SPELL);
 
-	/* Wipe the recall depths */
-	for (i = 0; i < max_d_idx; i++)
-	{
-		max_dlv[i] = 0;
-		dungeon_flags[i] = 0;
-	}
+    /* Wipe the recall depths */
+    for (i = 0; i < max_d_idx; i++)
+    {
+        max_dlv[i] = 0;
+        dungeon_flags[i] = 0;
+    }
 
-	p_ptr->visit = 1;
-	p_ptr->wild_mode = FALSE;
+    p_ptr->visit = 1;
+    p_ptr->wild_mode = FALSE;
 
-	for (i = 0; i < MAX_MAGIC_NUM; i++)
-	{
-		p_ptr->magic_num1[i] = 0;
-		p_ptr->magic_num2[i] = 0;
-	}
+    for (i = 0; i < MAX_MAGIC_NUM; i++)
+    {
+        p_ptr->magic_num1[i] = 0;
+        p_ptr->magic_num2[i] = 0;
+    }
 
-	/* Level one */
-	p_ptr->max_plv = p_ptr->lev = 1;
+    /* Level one */
+    p_ptr->max_plv = p_ptr->lev = 1;
 
-	/* Initialize arena and rewards information -KMW- */
-	p_ptr->arena_number = 0;
-	p_ptr->inside_arena = FALSE;
-	p_ptr->inside_quest = 0;
-	for (i = 0; i < MAX_MANE; i++)
-	{
-		p_ptr->mane_spell[i] = -1;
-		p_ptr->mane_dam[i] = 0;
-	}
-	p_ptr->mane_num = 0;
-	p_ptr->exit_bldg = TRUE; /* only used for arena now -KMW- */
+    /* Initialize arena and rewards information -KMW- */
+    p_ptr->arena_number = 0;
+    p_ptr->inside_arena = FALSE;
+    p_ptr->inside_quest = 0;
+    for (i = 0; i < MAX_MANE; i++)
+    {
+        p_ptr->mane_spell[i] = -1;
+        p_ptr->mane_dam[i] = 0;
+    }
+    p_ptr->mane_num = 0;
+    p_ptr->exit_bldg = TRUE; /* only used for arena now -KMW- */
 
-	/* Bounty */
-	p_ptr->today_mon = 0;
+    /* Bounty */
+    p_ptr->today_mon = 0;
 
-	/* Reset monster arena */
-	battle_monsters();
+    /* Reset monster arena */
+    battle_monsters();
 
-	/* Reset mutations */
-	for (i = 0; i < MUT_FLAG_SIZE; ++i)
-	{
-		p_ptr->muta[i] = 0;
-		p_ptr->muta_lock[i] = 0;
-	}
+    /* Reset mutations */
+    for (i = 0; i < MUT_FLAG_SIZE; ++i)
+    {
+        p_ptr->muta[i] = 0;
+        p_ptr->muta_lock[i] = 0;
+    }
 
-	for (i = 0; i < MAX_DEMIGOD_POWERS; ++i)
-		p_ptr->demigod_power[i] = -1;
+    for (i = 0; i < MAX_DEMIGOD_POWERS; ++i)
+        p_ptr->demigod_power[i] = -1;
 
-	p_ptr->draconian_power = -1;
+    p_ptr->draconian_power = -1;
 
-	p_ptr->duelist_target_idx = 0;
+    p_ptr->duelist_target_idx = 0;
 
-	/* Reset virtues*/
-	for (i = 0; i < 8; i++) p_ptr->virtues[i] = 0;
+    /* Reset virtues*/
+    for (i = 0; i < 8; i++) p_ptr->virtues[i] = 0;
 
-	/* Set the recall dungeon accordingly */
-	if (no_wilderness)
-	{
-		dungeon_type = 0;
-		p_ptr->recall_dungeon = DUNGEON_ANGBAND;
-	}
-	else
-	{
-		dungeon_type = 0;
-		p_ptr->recall_dungeon = DUNGEON_STRONGHOLD;
-	}
+    /* Set the recall dungeon accordingly */
+    if (no_wilderness)
+    {
+        dungeon_type = 0;
+        p_ptr->recall_dungeon = DUNGEON_ANGBAND;
+    }
+    else
+    {
+        dungeon_type = 0;
+        p_ptr->recall_dungeon = DUNGEON_STRONGHOLD;
+    }
+
 }
 
 

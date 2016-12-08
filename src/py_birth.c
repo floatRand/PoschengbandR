@@ -129,13 +129,14 @@ extern void py_birth_obj(object_type *o_ptr)
         return;
     }
 
-    /* Weed out duplicate gear (e.g. Artemis Archer) */
-    if (object_is_wearable(o_ptr) && o_ptr->number == 1 && equip_find_object(o_ptr->tval, o_ptr->sval))
+    slot = equip_first_empty_slot(o_ptr);
+
+    /* Weed out duplicate gear (e.g. Artemis Archer), but allow things like Centipedes' multiple boots or Rings' unequippable starting jewelry. */
+    if (object_is_wearable(o_ptr) && o_ptr->number == 1 && !(slot || p_ptr->prace == RACE_MON_RING))
         return;
 
     obj_identify_fully(o_ptr);
 
-    slot = equip_first_empty_slot(o_ptr);
     if (slot && o_ptr->number == 1)
         equip_wield_aux(o_ptr, slot);
     else
@@ -152,12 +153,13 @@ extern void py_birth_food(void)
 
 extern void py_birth_light(void)
 {
-    if (p_ptr->pclass != CLASS_NINJA)
+    if (!p_ptr->see_nocto)  /* Ninjas and certain monster races can see in the dark. */
     {
         object_type forge = {0};
         object_prep(&forge, lookup_kind(TV_LITE, SV_LITE_LANTERN));
         forge.number = 1;
-        forge.xtra4 = 4500;
+        forge.xtra4 = 5000;
+
         py_birth_obj(&forge);
     }
 }
@@ -323,6 +325,18 @@ static void _set_mode(int mode)
             p_ptr->dragon_realm = DRAGON_REALM_NONE;
             _stats_init();
         }
+    }
+    if ((first || game_mode != mode) && mode == previous_char.game_mode && previous_char.quick_ok)
+    {
+        p_ptr->prace = previous_char.prace;
+        p_ptr->psubrace = previous_char.psubrace;
+        p_ptr->pclass = previous_char.pclass;
+        p_ptr->psubclass = previous_char.psubclass;
+        p_ptr->personality = previous_char.personality;
+        p_ptr->realm1 = previous_char.realm1;
+        p_ptr->realm2 = previous_char.realm2;
+        p_ptr->dragon_realm = previous_char.dragon_realm;
+        _stats_init();
     }
     game_mode = mode;
     first = FALSE;
@@ -504,6 +518,7 @@ static int _race_class_ui(void)
                     p_ptr->psex = SEX_FEMALE;
             }
 			else p_ptr->psex = SEX_MALE;
+
             break;
         }
     }
@@ -1936,12 +1951,24 @@ static int _char_to_stat(char which)
 static cptr _stat_desc(int stat)
 {
     static char buf[10];
-    if (stat < 3) stat = 3;
-    if (stat > 40) stat = 40;
-    if (stat < 19)
+
+    if (simple_stat_display)
+    {
+        if (stat < 3) stat = 3;
+        if (stat > 40) stat = 40;
         sprintf(buf, "%2d", stat);
+    }
     else
-        sprintf(buf, "18/%d", 10*(stat - 18));
+    {
+        if (stat < 3) stat = 3;
+        if (stat > 40) stat = 40;
+        if (stat < 19)
+            sprintf(buf, "%2d", stat);
+        else if (stat == 40)
+            sprintf(buf, "18/***");
+        else
+            sprintf(buf, "18/%d", 10*(stat - 18));
+    }
     return buf;
 }
 
@@ -2572,7 +2599,7 @@ static void _birth_finalize(void)
     equip_on_init();
     virtue_init();
 
-    p_ptr->au = randint1(600) + randint1(100) + 100;
+    p_ptr->au = 450;
 
     get_max_stats();
     do_cmd_rerate_aux();

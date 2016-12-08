@@ -432,7 +432,7 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
     obj_flags(&new_obj, new_flgs);
 
     /* Ammo and Curses */
-    if (o_ptr->curse_flags & (OFC_CURSED | OFC_HEAVY_CURSE | OFC_PERMA_CURSE)) div++;
+    if (o_ptr->curse_flags & OFC_PERMA_CURSE) div++;
     if (have_flag(old_flgs, OF_AGGRAVATE)) div++;
     if (have_flag(old_flgs, OF_NO_TELE)) div++;
     if (have_flag(old_flgs, OF_DRAIN_EXP)) div++;
@@ -2189,10 +2189,18 @@ static bool _smithing(void)
     item_tester_hook = object_is_weapon_armour_ammo;
     item_tester_no_ryoute = TRUE;
 
-    if (!get_item(&item, "Smith which object? ", "You have nothing to work with.", (USE_INVEN | USE_FLOOR)))
+    if (!get_item(&item, "Smith which object? ", "You have nothing to work with.", (USE_EQUIP | USE_INVEN | USE_FLOOR)))
         return FALSE;
     if (item >= 0)
+    {
         o_ptr = &inventory[item];
+        /* Don't allow working on equipped cursed items, or the player could uncurse them for free by absorbing them */
+        if (equip_is_valid_slot(item) && object_is_cursed(o_ptr))
+        {
+            msg_print("The item's curse obstructs your work!");
+            return FALSE;
+        }
+    }    
     else
         o_ptr = &o_list[0 - item];
 
@@ -2220,6 +2228,8 @@ static bool _smithing(void)
 
     p_ptr->notice |= PN_COMBINE | PN_REORDER;
     p_ptr->window |= PW_INVEN;
+    p_ptr->update |= PU_BONUS; //To deal with changing stats on equipped items
+    handle_stuff();
 
     return TRUE;
 }

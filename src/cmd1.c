@@ -3068,6 +3068,13 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     case CLASS_DUELIST:
         if (c_ptr->m_idx == p_ptr->duelist_target_idx)
             duelist_attack = TRUE;
+        else if (!duelist_equip_error())
+        {
+            p_ptr->duelist_target_idx = c_ptr->m_idx;
+            msg_format("You challenge %s to a duel!", duelist_current_challenge());
+            p_ptr->redraw |= PR_STATUS;
+            duelist_attack = TRUE;
+        }
         break;
 
     case CLASS_WEAPONMASTER:
@@ -3666,11 +3673,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     k += MIN(m_ptr->hp * 2 / 5, rand_range(2, 10) * d);
                     drain_result = k;
                 }
-            }
-            else if (p_ptr->pclass == CLASS_DUELIST && p_ptr->lev >= 30)
-            {
-                /* Duelist: Careful Aim vs a non-target */
-                k = k * 3 / 2;
             }
 
             if (poison_needle || mode == HISSATSU_KYUSHO || mode == MYSTIC_KILL)
@@ -5275,12 +5277,6 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
         /* Handle stuff */
         if (mpe_mode & MPE_HANDLE_STUFF) handle_stuff();
 
-        if (p_ptr->pclass == CLASS_NINJA || p_ptr->tim_superstealth)
-        {
-            if (c_ptr->info & (CAVE_GLOW)) set_superstealth(FALSE);
-            else if (p_ptr->cur_lite <= 0) set_superstealth(TRUE);
-        }
-
         if ((p_ptr->action == ACTION_QUICK_WALK) &&
             (!have_flag(f_ptr->flags, FF_PROJECT) ||
              (!p_ptr->levitation && have_flag(f_ptr->flags, FF_DEEP))))
@@ -5304,6 +5300,12 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
                 PROJECT_KILL | PROJECT_ITEM, -1);
 
             if (!player_bold(ny, nx) || p_ptr->is_dead || p_ptr->leaving) return FALSE;
+        }
+
+        if (p_ptr->pclass == CLASS_NINJA || p_ptr->tim_superstealth)
+        {
+            if (c_ptr->info & (CAVE_GLOW)) set_superstealth(FALSE);
+            else if (p_ptr->cur_lite <= 0) set_superstealth(TRUE);
         }
 
         /* Spontaneous Searching */

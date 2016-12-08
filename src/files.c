@@ -1863,7 +1863,7 @@ cptr map_name(void)
  * and trigger its usage from various places in the code.
  */
 bool character_dump_hack = FALSE;
-static errr file_character(cptr name)
+static errr file_character(cptr name, bool quiet)
 {
     int        fd = -1;
     FILE        *fff = NULL;
@@ -1901,7 +1901,8 @@ static errr file_character(cptr name)
     if (!fff)
     {
         /* Message */
-        prt("Character dump failed!", 0, 0);
+        if (!quiet)
+            prt("Character dump failed!", 0, 0);
 
         (void)inkey();
 
@@ -1921,9 +1922,12 @@ static errr file_character(cptr name)
 
 
     /* Message */
-    msg_print("Character dump successful.");
+    if (!quiet)
+    {
+        msg_print("Character dump successful.");
 
-    msg_print(NULL);
+        msg_print(NULL);
+    }
 
     /* Success */
     return (0);
@@ -2899,12 +2903,7 @@ void do_cmd_suicide(void)
  */
 void do_cmd_save_game(int is_autosave)
 {
-    /* Autosaves do not disturb */
-    if (is_autosave)
-    {
-        msg_print("Autosaving the game...");
-    }
-    else
+    if (!is_autosave)
     {
         /* Disturb the player */
         disturb(1, 0);
@@ -2917,7 +2916,8 @@ void do_cmd_save_game(int is_autosave)
     handle_stuff();
 
     /* Message */
-    prt("Saving game...", 0, 0);
+    if (!is_autosave)
+        prt("Saving game...", 0, 0);
 
 
     /* Refresh */
@@ -2933,7 +2933,8 @@ void do_cmd_save_game(int is_autosave)
     /* Save the player */
     if (save_player())
     {
-        prt("Saving game... done.", 0, 0);
+        if (!is_autosave)
+            prt("Saving game... done.", 0, 0);
 
     }
 
@@ -3328,7 +3329,7 @@ static void show_info(void)
         screen_save();
 
         /* Dump a character file */
-        (void)file_character(out_val);
+        (void)file_character(out_val, FALSE);
 
         /* Load screen */
         screen_load();
@@ -3419,6 +3420,10 @@ void close_game(void)
 {
     char buf[1024];
     bool do_send = TRUE;
+    char curr_time[30];
+    char sheet[60];
+    time_t ct;
+    errr err;
 
     /* Handle stuff */
     handle_stuff();
@@ -3463,6 +3468,26 @@ void close_game(void)
             if (!save_player()) msg_print("death save failed!");
         }
         else do_send = FALSE;
+
+        // Automatic character dump
+        ct  = time((time_t*)0);
+        (void)strftime(curr_time, 30, "%Y-%m-%d-%H%M%S.txt", localtime(&ct));
+        sprintf(sheet, "%s-%s", player_name, curr_time);
+        // Save the screen
+        screen_save();
+        // Dump a character file
+        err = file_character(sheet, TRUE);
+        // Load the screen
+        screen_load();
+        // Check result
+        if (err)
+        {
+            // Clear screen
+            Term_clear();
+            // Warning
+            msg_print("Automatic character dump failed!");
+            msg_print(NULL);
+        }
 
         /* You are dead */
         print_tomb();

@@ -477,27 +477,15 @@ bool disenchant_player(void)
             }
             break;
         case 33:
-            if (music_singing_any() || hex_spelling_any())
+            if music_singing_any()
             {
-                cptr str = (music_singing_any()) ? "singing" : "spelling";
-                p_ptr->magic_num1[1] = p_ptr->magic_num1[0];
-                p_ptr->magic_num1[0] = 0;
-                msg_format("Your %s is interrupted.", str);
-                p_ptr->action = ACTION_NONE;
-
-                /* Recalculate bonuses */
-                p_ptr->update |= (PU_BONUS | PU_HP);
-
-                /* Redraw map */
-                p_ptr->redraw |= (PR_MAP | PR_STATUS | PR_STATE);
-
-                /* Update monsters */
-                p_ptr->update |= (PU_MONSTERS);
-
-                /* Window stuff */
-                p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
-
-                p_ptr->energy_need += ENERGY_NEED();
+                msg_print("Your singing is interrupted.");
+                bard_stop_singing();
+            }
+            if hex_spelling_any()
+            {
+                msg_print("Your spelling is interrupted.");
+                stop_hex_spell_all();
             }
             break;
         }
@@ -626,25 +614,16 @@ void dispel_player(void)
 
     if (music_singing_any() || hex_spelling_any())
     {
-        cptr str = (music_singing_any()) ? "singing" : "spelling";
-        p_ptr->magic_num1[1] = p_ptr->magic_num1[0];
-        p_ptr->magic_num1[0] = 0;
-        msg_format("Your %s is interrupted.", str);
-        p_ptr->action = ACTION_NONE;
-
-        /* Recalculate bonuses */
-        p_ptr->update |= (PU_BONUS | PU_HP);
-
-        /* Redraw map */
-        p_ptr->redraw |= (PR_MAP | PR_STATUS | PR_STATE);
-
-        /* Update monsters */
-        p_ptr->update |= (PU_MONSTERS);
-
-        /* Window stuff */
-        p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
-
-        p_ptr->energy_need += ENERGY_NEED();
+        if music_singing_any()
+        {
+            msg_print("Your singing is interrupted.");
+            bard_stop_singing();
+        }
+        if hex_spelling_any()
+        {
+            msg_print("Your spelling is interrupted.");
+            stop_hex_spell_all();
+        }
     }
 }
 
@@ -2900,7 +2879,7 @@ bool set_invuln(int v, bool do_dec)
     {
         if (p_ptr->invuln && !music_singing(MUSIC_INVULN))
         {
-            msg_print("The invulnerability wears off.");
+            msg_print("The invulnerability wears off, and you lose some time.");
 
             notice = TRUE;
 
@@ -4977,6 +4956,13 @@ bool set_food(int v)
 
         /* Change */
         notice = TRUE;
+    }
+
+    if ((v > p_ptr->food) && p_ptr->fasting)
+    {
+        msg_print("You break your fast.");
+        p_ptr->redraw |= PR_STATUS;
+        p_ptr->fasting = FALSE;
     }
 
     /* Food decrease */

@@ -1094,12 +1094,6 @@ static cptr do_life_spell(int spell, int mode, int plev)
             if (cast)
             {
                 set_food(PY_FOOD_MAX - 1);
-                if (p_ptr->fasting)
-                {
-                    msg_print("You break your fast.");
-                    p_ptr->redraw |= PR_STATUS;
-                    p_ptr->fasting = FALSE;
-                }
             }
         }
         break;
@@ -1159,7 +1153,7 @@ static cptr do_life_spell(int spell, int mode, int plev)
 
     case 11:
         if (name) return "Resist Heat and Cold";
-        if (desc) return "Gives resistance to fire and cold. These resistances can be added to which from equipment for more powerful resistances.";
+        if (desc) return "Gives resistance to fire and cold.";
 
         {
             int base = spell_power(20);
@@ -2186,7 +2180,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
     case 6:
         if (name) return "Resist Environment";
-        if (desc) return "Gives resistance to fire, cold and electricity for a while. These resistances can be added to which from equipment for more powerful resistances.";
+        if (desc) return "Gives resistance to fire, cold and electricity for a while.";
 
         {
             int base = spell_power(20);
@@ -2434,7 +2428,7 @@ static cptr do_nature_spell(int spell, int mode, int plev)
 
     case 18:
         if (name) return "Resistance True";
-        if (desc) return "Gives resistance to fire, cold, electricity, acid and poison for a while. These resistances can be added to which from equipment for more powerful resistances.";
+        if (desc) return "Gives resistance to fire, cold, electricity, acid and poison for a while.";
 
         {
             int base = spell_power(20);
@@ -3513,7 +3507,7 @@ static cptr do_death_spell(int spell, int mode, int plev)
 
     case 5:
         if (name) return "Undead Resistance";
-        if (desc) return "Gives resistance to poison and cold. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to poison and cold.";
 
         {
             int base = spell_power(20);
@@ -4968,7 +4962,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
     case 14:
         if (name) return "Resist Cold";
-        if (desc) return "Gives resistance to cold. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to cold.";
 
         {
             int base = spell_power(20);
@@ -4984,7 +4978,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
     case 15:
         if (name) return "Resist Fire";
-        if (desc) return "Gives resistance to fire. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to fire.";
 
         {
             int base = spell_power(20);
@@ -5000,7 +4994,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
     case 16:
         if (name) return "Resist Lightning";
-        if (desc) return "Gives resistance to electricity. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to electricity.";
 
         {
             int base = spell_power(20);
@@ -5016,7 +5010,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
     case 17:
         if (name) return "Resist Acid";
-        if (desc) return "Gives resistance to acid. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to acid.";
 
         {
             int base = spell_power(20);
@@ -5149,7 +5143,7 @@ static cptr do_arcane_spell(int spell, int mode, int plev)
 
     case 25:
         if (name) return "Resist Poison";
-        if (desc) return "Gives resistance to poison. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to poison.";
 
         {
             int base = spell_power(20);
@@ -5380,7 +5374,7 @@ static cptr do_craft_spell(int spell, int mode, int plev)
 
     case 3:
         if (name) return "Resist Cold";
-        if (desc) return "Gives resistance to cold. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to cold.";
 
         {
             int base = spell_power(20);
@@ -5396,7 +5390,7 @@ static cptr do_craft_spell(int spell, int mode, int plev)
 
     case 4:
         if (name) return "Resist Fire";
-        if (desc) return "Gives resistance to fire. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to fire.";
 
         {
             int base = spell_power(20);
@@ -5428,7 +5422,7 @@ static cptr do_craft_spell(int spell, int mode, int plev)
 
     case 6:
         if (name) return "Resist Lightning";
-        if (desc) return "Gives resistance to electricity. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to electricity.";
 
         {
             int base = spell_power(20);
@@ -5444,7 +5438,7 @@ static cptr do_craft_spell(int spell, int mode, int plev)
 
     case 7:
         if (name) return "Resist Acid";
-        if (desc) return "Gives resistance to acid. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to acid.";
 
         {
             int base = spell_power(20);
@@ -5487,7 +5481,7 @@ static cptr do_craft_spell(int spell, int mode, int plev)
 
     case 10:
         if (name) return "Resist Poison";
-        if (desc) return "Gives resistance to poison. This resistance can be added to which from equipment for more powerful resistance.";
+        if (desc) return "Gives resistance to poison.";
 
         {
             int base = spell_power(20);
@@ -5609,7 +5603,7 @@ static cptr do_craft_spell(int spell, int mode, int plev)
 
     case 18:
         if (name) return "Resistance";
-        if (desc) return "Gives resistance to fire, cold, electricity, acid and poison for a while. These resistances can be added to which from equipment for more powerful resistances.";
+        if (desc) return "Gives resistance to fire, cold, electricity, acid and poison for a while.";
 
         {
             int base = spell_power(20);
@@ -5898,7 +5892,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
     case 3:
         if (name) return "Resist Fire";
-        if (desc) return "Gives resistance to fire for a while. This resistance can be added to which from equipment for more powerful resistances.";
+        if (desc) return "Gives resistance to fire for a while.";
 
         {
             int base = spell_power(20);
@@ -6187,7 +6181,7 @@ static cptr do_daemon_spell(int spell, int mode, int plev)
 
     case 17:
         if (name) return "Devilish Cloak";
-        if (desc) return "Gives resistance to fire, acid and poison as well as an aura of fire. These resistances can be added to which from equipment for more powerful resistances.";
+        if (desc) return "Gives resistance to fire, acid and poison as well as an aura of fire.";
 
         {
             int base = spell_power(20);
@@ -7273,37 +7267,33 @@ static cptr do_music_spell(int spell, int mode, int plev)
             {
                 int count = p_ptr->magic_num1[2];
 
-                if (count >= 19) wiz_lite(FALSE);
-                if (count >= 11)
+                if (count >= 19 && plev > 39)
                 {
-                    map_area(rad);
-                    if (plev > 39 && count < 19)
-                        p_ptr->magic_num1[2] = count + 1;
+                    if (count == 19) msg_print("You sense the entire level!");
+                    wiz_lite(FALSE);
                 }
-                if (count >= 6)
+                if (count >= 11 && plev > 24)
+                {
+                    if (count == 11) msg_print("You sense the terrain around you!");
+                    map_area(rad);
+                }
+                if (count >= 6 && plev > 19)
                 {
                     /* There are too many hidden treasure. So... */
                     /* detect_treasure(rad); */
                     detect_objects_gold(rad);
                     detect_objects_normal(rad);
-
-                    if (plev > 24 && count < 11)
-                        p_ptr->magic_num1[2] = count + 1;
                 }
-                if (count >= 3)
+                if (count >= 3 && plev > 14)
                 {
                     detect_monsters_invis(rad);
                     detect_monsters_normal(rad);
-
-                    if (plev > 19 && count < 6)
-                        p_ptr->magic_num1[2] = count + 1;
                 }
                 detect_traps(rad, TRUE);
                 detect_doors(rad);
                 detect_stairs(rad);
 
-                if (plev > 14 && count < 3)
-                    p_ptr->magic_num1[2] = count + 1;
+                p_ptr->magic_num1[2] = count + 1;
             }
         }
 
@@ -7512,7 +7502,7 @@ static cptr do_music_spell(int spell, int mode, int plev)
 
     case 17:
         if (name) return "Finrod's Resistance";
-        if (desc) return "Gives resistance to fire, cold, electricity, acid and poison. These resistances can be added to which from equipment for more powerful resistances.";
+        if (desc) return "Gives resistance to fire, cold, electricity, acid and poison.";
 
         /* Stop singing before start another */
         if (cast || fail) bard_stop_singing();
@@ -7922,7 +7912,8 @@ static cptr do_music_spell(int spell, int mode, int plev)
         {
             if (!p_ptr->invuln)
             {
-                msg_print("The invulnerability wears off.");
+                msg_print("The invulnerability wears off, and you lose some time.");
+                p_ptr->energy_need += ENERGY_NEED();
                 /* Redraw map */
                 p_ptr->redraw |= (PR_MAP);
 

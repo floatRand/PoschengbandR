@@ -256,6 +256,7 @@ bool exp_need;    /* Show the experience needed for next level */
 bool ignore_unview;    /* Ignore whenever any monster does */
 bool display_distance;
 bool simple_stat_display;
+bool display_race; /* Display monster races with their racial char */
 
 /*** Game-Play Options ***/
 
@@ -319,6 +320,7 @@ bool ironman_quests; /* Random quests must be completed */
 bool random_artifacts;
 bool no_artifacts;
 bool no_egos;
+bool no_selling;
 bool enable_virtues;
 bool runesword_start;
 bool coffeebreak_mode;

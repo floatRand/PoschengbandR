@@ -40,7 +40,7 @@ cptr spell_category_name(int tval)
 
 bool select_the_force = FALSE;
 
-static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm)
+static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm, bool browse)
 {
     int         i;
     int         spell = -1;
@@ -62,7 +62,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
     if (repeat_pull(sn))
     {
         /* Verify the spell */
-        if (spell_okay(*sn, learned, FALSE, use_realm))
+        if (spell_okay(*sn, learned, FALSE, use_realm, FALSE))
         {
             /* Success */
             return (TRUE);
@@ -94,7 +94,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
     for (i = 0; i < num; i++)
     {
         /* Look for "okay" spells */
-        if (spell_okay(spells[i], learned, FALSE, use_realm)) okay = TRUE;
+        if (spell_okay(spells[i], learned, FALSE, use_realm, browse)) okay = TRUE;
     }
 
     /* No "okay" spells */
@@ -229,7 +229,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
         spell = spells[i];
 
         /* Require "okay" spells */
-        if (!spell_okay(spell, learned, FALSE, use_realm))
+        if (!spell_okay(spell, learned, FALSE, use_realm, browse))
         {
             bell();
             msg_format("You may not %s that %s.", prompt, p);
@@ -509,7 +509,7 @@ void do_cmd_browse(void)
     while(TRUE)
     {
         /* Ask for a spell, allow cancel */
-        if (!get_spell(&spell, "browse", o_ptr->sval, TRUE, use_realm))
+        if (!get_spell(&spell, "browse", o_ptr->sval, TRUE, use_realm, TRUE))
         {
             /* If cancelled, leave immediately. */
             if (spell == -1) break;
@@ -684,7 +684,7 @@ void do_cmd_study(void)
     if (mp_ptr->spell_book != TV_LIFE_BOOK)
     {
         /* Ask for a spell, allow cancel */
-        if (!get_spell(&spell, "study", sval, FALSE, o_ptr->tval - TV_LIFE_BOOK + 1)
+        if (!get_spell(&spell, "study", sval, FALSE, o_ptr->tval - TV_LIFE_BOOK + 1, FALSE)
             && (spell == -1)) return;
 
     }
@@ -704,7 +704,7 @@ void do_cmd_study(void)
             {
                 /* Skip non "okay" prayers */
                 if (!spell_okay(spell, FALSE, TRUE,
-                    (increment ? p_ptr->realm2 : p_ptr->realm1))) continue;
+                    (increment ? p_ptr->realm2 : p_ptr->realm1), FALSE)) continue;
 
                 /* Hack -- Prepare the randomizer */
                 k++;
@@ -947,7 +947,7 @@ static void wild_magic(int spell)
  */
 void do_cmd_cast(void)
 {
-    int    item, sval, spell, realm;
+    int    item, sval, spell;
     int    chance;
     int    increment = 0;
     int    use_realm;
@@ -1062,22 +1062,16 @@ void do_cmd_cast(void)
     /* Hack -- Handle stuff */
     handle_stuff();
 
-	if (class_doesnt_study(p_ptr->pclass))
-        realm = o_ptr->tval - TV_LIFE_BOOK + 1;
-    else if (increment) realm = p_ptr->realm2;
-    else realm = p_ptr->realm1;
+    use_realm = tval2realm(o_ptr->tval);
 
     /* Ask for a spell */
     if (!get_spell(&spell, ((mp_ptr->spell_book == TV_LIFE_BOOK) ? "recite" : "cast"),
-        sval, TRUE, realm))
+        sval, TRUE, use_realm, FALSE))
     {
         if (spell == -2)
             msg_format("You don't know any %ss in that book.", prayer);
         return;
     }
-
-
-    use_realm = tval2realm(o_ptr->tval);
 
     /* Hex */
     if (use_realm == REALM_HEX)
@@ -1095,11 +1089,11 @@ void do_cmd_cast(void)
     }
     else
     {
-        s_ptr = &mp_ptr->info[realm - 1][spell];
+        s_ptr = &mp_ptr->info[use_realm - 1][spell];
     }
 
     /* Extract mana consumption rate */
-    need_mana = mod_need_mana(s_ptr->smana, spell, realm);
+    need_mana = mod_need_mana(s_ptr->smana, spell, use_realm);
 
     /* Verify "dangerous" spells */
     if (caster_ptr && (caster_ptr->options & CASTER_USE_HP))
@@ -1167,12 +1161,12 @@ void do_cmd_cast(void)
     {
         if (flush_failure) flush();
 
-        msg_format("You failed to cast %s!", do_spell(increment ? p_ptr->realm2 : p_ptr->realm1, spell % 32, SPELL_NAME));
+        msg_format("You failed to cast %s!", do_spell(use_realm, spell % 32, SPELL_NAME));
 
         if (take_mana && prace_is_(RACE_DEMIGOD) && p_ptr->psubrace == DEMIGOD_ATHENA)
             p_ptr->csp += take_mana/2;
 
-        spell_stats_on_fail_old(realm, spell);
+        spell_stats_on_fail_old(use_realm, spell);
         sound(SOUND_FAIL);
 
         if (caster_ptr && caster_ptr->on_fail != NULL)
@@ -1186,7 +1180,7 @@ void do_cmd_cast(void)
         if (caster_ptr && (caster_ptr->options & CASTER_USE_HP))
             take_hit(DAMAGE_USELIFE, need_mana, "concentrating too hard", -1);
 
-        switch (realm)
+        switch (use_realm)
         {
         case REALM_LIFE:
             if (randint1(100) < chance) virtue_add(VIRTUE_VITALITY, -1);
@@ -1213,7 +1207,7 @@ void do_cmd_cast(void)
         }
 
         /* Failure casting may activate some side effect */
-        do_spell(realm, spell, SPELL_FAIL);
+        do_spell(use_realm, spell, SPELL_FAIL);
 
 
         if ((o_ptr->tval == TV_CHAOS_BOOK) && (randint1(100) < spell))
@@ -1250,7 +1244,7 @@ void do_cmd_cast(void)
     else
     {
         /* Canceled spells cost neither a turn nor mana */
-        if (!do_spell(realm, spell, SPELL_CAST))
+        if (!do_spell(use_realm, spell, SPELL_CAST))
         {
             /* If we eagerly took mana for this spell, then put it back! */
             if (take_mana > 0)
@@ -1259,7 +1253,7 @@ void do_cmd_cast(void)
             return;
         }
 
-        spell_stats_on_cast_old(realm, spell);
+        spell_stats_on_cast_old(use_realm, spell);
 
         if (caster_ptr && (caster_ptr->options & CASTER_USE_HP))
             take_hit(DAMAGE_USELIFE, need_mana, "concentrating too hard", -1);
@@ -1285,7 +1279,7 @@ void do_cmd_cast(void)
             int e = s_ptr->sexp;
 
             /* The spell worked */
-            if (realm == p_ptr->realm1)
+            if (use_realm == p_ptr->realm1)
             {
                 p_ptr->spell_worked1 |= (1L << spell);
             }
@@ -1300,7 +1294,7 @@ void do_cmd_cast(void)
             /* Redraw object recall */
             p_ptr->window |= (PW_OBJECT);
 
-            switch (realm)
+            switch (use_realm)
             {
             case REALM_LIFE:
                 virtue_add(VIRTUE_TEMPERANCE, 1);
@@ -1342,7 +1336,7 @@ void do_cmd_cast(void)
                 break;
             }
         }
-        switch (realm)
+        switch (use_realm)
         {
         case REALM_LIFE:
             if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_TEMPERANCE, 1);
@@ -1418,6 +1412,8 @@ void do_cmd_cast(void)
                         exp_gain = 1;
                 }
                 p_ptr->spell_exp[(increment ? 32 : 0) + spell] += exp_gain;
+                if (cur_exp + exp_gain < SPELL_EXP_BEGINNER)
+                    p_ptr->spell_exp[(increment ? 32 : 0) + spell] = SPELL_EXP_BEGINNER;
             }
             last_pexp = p_ptr->exp;
             p_ptr->spell_turn[(increment ? 32 : 0)+spell] = game_turn;
@@ -1458,7 +1454,7 @@ void do_cmd_cast(void)
             /* Hack -- Bypass free action */
             (void)set_paralyzed(randint1(5 * oops + 1), FALSE);
 
-            switch (realm)
+            switch (use_realm)
             {
             case REALM_LIFE:
                 virtue_add(VIRTUE_VITALITY, -10);
@@ -2033,11 +2029,19 @@ bool do_riding(bool force)
         if ( p_ptr->prace != RACE_MON_RING
           && r_info[m_ptr->r_idx].level > randint1((skills_riding_current() / 50 + p_ptr->lev / 2 + 20)))
         {
-            if (p_ptr->wizard)
-                msg_format("Failed: %d > 1d%d", r_info[m_ptr->r_idx].level, skills_riding_current()/50 + p_ptr->lev/2 + 20);
-            else
-                msg_print("You failed to ride.");
 
+            if (p_ptr->wizard)
+            {
+                msg_format("Failed: %d > 1d%d", r_info[m_ptr->r_idx].level, skills_riding_current() / 50 + p_ptr->lev / 2 + 20);
+            }
+            else if (r_info[m_ptr->r_idx].level > (skills_riding_current() / 50 + p_ptr->lev / 2 + 20))
+            {
+                msg_print("This monster is too powerful for you to ride!");
+            }
+            else
+            {
+                msg_print("You failed to ride.");
+            }
 
             energy_use = 100;
 

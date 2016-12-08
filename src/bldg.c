@@ -1503,7 +1503,7 @@ static bool kakutoujou(void)
             char buf[80];
             monster_race *r_ptr = &r_info[battle_mon[i]];
 
-            sprintf(buf,"%d) %-58s  %4ud.%02ud", i+1, format("%s%s", r_name + r_ptr->name, (r_ptr->flags1 & RF1_UNIQUE) ? " (clone)" : ""), mon_odds[i]/100, mon_odds[i]%100);
+            sprintf(buf,"%d) %-58s  %4u.%02u", i+1, format("%s%s", r_name + r_ptr->name, (r_ptr->flags1 & RF1_UNIQUE) ? " (clone)" : ""), mon_odds[i]/100, mon_odds[i]%100);
             prt(buf, 5+i, 1);
         }
 
@@ -3000,6 +3000,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     {
         int idx = -1;
         int old_cost;
+        int unit_cost_sum = 0;
         _enchant_choice_t choices[25];
         object_type copy = {0};
         menu_t menu = { "Enchant How Much?", NULL, 
@@ -3050,10 +3051,14 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
             else
             {
                 int new_cost = new_object_cost(&copy, COST_REAL);
-                int unit_cost = new_cost - old_cost;
+                int unit_cost_add = new_cost - old_cost;
                 int min_cost = (i+1)*cost;
-
-                unit_cost *= m;
+                int unit_cost;
+                old_cost = new_cost;
+                
+                unit_cost_add *= m;
+                unit_cost_sum += unit_cost_add;
+                unit_cost = unit_cost_sum;
 
                 unit_cost = store_calc_sell_price(unit_cost, store_factor);
 

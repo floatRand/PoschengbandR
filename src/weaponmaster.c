@@ -606,21 +606,25 @@ static bool _club_toss(int hand)
     int dir;
     _club_toss_info info;
     int back_chance;
+    bool super_boomerang;    
 
     /* Setup info for the toss */
     info.item = p_ptr->weapon_info[hand].slot;
     info.o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
 
+    super_boomerang = ((info.o_ptr->name1 == ART_MJOLLNIR) || (info.o_ptr->name1 == ART_AEGISFANG));
+
     /* Toss mechanics stolen from Samurai Boomerang ... see do_cmd_throw_aux() */
     back_chance = randint1(30)+20+((int)(adj_dex_th[p_ptr->stat_ind[A_DEX]]) - 128);
     back_chance += 4+randint1(5);
+    if (super_boomerang) back_chance += 100;    
 
     info.come_back = FALSE;
     info.fail_catch = FALSE;
-    if (back_chance > 30 && !one_in_(100))
+    if((back_chance > 30) && (!one_in_(100) || super_boomerang))
     {
         info.come_back = TRUE;
-        if (back_chance <= 37 && !p_ptr->blind)
+        if (back_chance <= 37 || p_ptr->blind)
             info.fail_catch = TRUE;
     }
 
@@ -667,8 +671,27 @@ static bool _club_toss(int hand)
     {
         object_type copy;
 
+        if (!info.come_back)
+        {
+            char o_name[MAX_NLEN];
+            object_desc(o_name, info.o_ptr, OD_NAME_ONLY);
+            msg_format("Your %s fails to return!", o_name);
+        }
+
         if (info.fail_catch)
             msg_print("But you can't catch!");
+
+        if (TRUE) /* This is a showstopper, so force the player to notice! */
+        {
+            msg_print("Press <color:y>Space</color> to continue.");
+            flush();
+            for (;;)
+            {
+                char ch = inkey();
+                if (ch == ' ') break;
+            }
+            msg_line_clear();
+        }
 
         object_copy(&copy, info.o_ptr);
         copy.number = 1;
@@ -685,7 +708,6 @@ static bool _club_toss(int hand)
 
         p_ptr->redraw |= PR_EQUIPPY;
         p_ptr->update |= PU_BONUS;
-
         android_calc_exp();
         handle_stuff();
     }

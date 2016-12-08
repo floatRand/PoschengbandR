@@ -57,6 +57,7 @@ extern int                equip_next_slot(object_type *o_ptr, int last);
 extern int                equip_find_first(object_p p);
 extern int                equip_find_next(object_p p, int last);
 extern int                equip_find_artifact(int which);
+extern int                equip_find_art_or_replacement(int which);
 extern int                equip_find_ego(int which);
 extern int                equip_find_empty_hand(void);
 extern int                equip_find_object(int tval, int sval);

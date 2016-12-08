@@ -256,6 +256,9 @@ void check_experience(void)
             sound(SOUND_LEVEL);
             cmsg_format(TERM_L_GREEN, "Welcome to level %d.", p_ptr->lev);
 
+            if (easy_id && p_ptr->lev == 25)
+                msg_print("You have evolved into a Stone of Lore.");
+
             if (class_ptr->gain_level != NULL)
                 (class_ptr->gain_level)(p_ptr->lev);
 
@@ -1685,6 +1688,7 @@ void monster_death(int m_idx, bool drop_item)
     {
         int a_idx = 0;
         int chance = 0;
+        int which_dungeon = 0;
         race_t *race_ptr = get_race();
 
         switch (m_ptr->r_idx)
@@ -2163,17 +2167,34 @@ void monster_death(int m_idx, bool drop_item)
             }
         }
 
-        if ((r_ptr->flags7 & RF7_GUARDIAN) && (d_info[dungeon_type].final_guardian == m_ptr->r_idx))
+        which_dungeon = 0;
+        if ((r_ptr->flags7 & RF7_GUARDIAN) && ((d_info[dungeon_type].final_guardian == m_ptr->r_idx) || no_wilderness))
         {
-            int k_idx = d_info[dungeon_type].final_object ? d_info[dungeon_type].final_object
+            if (!no_wilderness)
+                which_dungeon = dungeon_type;
+            else
+            {
+                int i;
+                for (i = 1; i < max_d_idx; i++)
+                    if (d_info[i].final_guardian == m_ptr->r_idx)
+                        which_dungeon = i;
+            }
+        }
+
+        if (which_dungeon)
+        {
+            int k_idx = d_info[which_dungeon].final_object ? d_info[which_dungeon].final_object
                 : lookup_kind(TV_SCROLL, SV_SCROLL_ACQUIREMENT);
 
-            gain_chosen_stat();
-            p_ptr->fame += randint1(3);
-
-            if (d_info[dungeon_type].final_artifact)
+            if (!no_wilderness)
             {
-                int a_idx = d_info[dungeon_type].final_artifact;
+                gain_chosen_stat();
+                p_ptr->fame += randint1(3);
+            }
+
+            if (d_info[which_dungeon].final_artifact)
+            {
+                int a_idx = d_info[which_dungeon].final_artifact;
                 artifact_type *a_ptr = &a_info[a_idx];
 
                 if (!a_ptr->generated)
@@ -2190,14 +2211,14 @@ void monster_death(int m_idx, bool drop_item)
                         a_ptr->generated = TRUE;
 
                     /* Prevent rewarding both artifact and "default" object */
-                    if (!d_info[dungeon_type].final_object) k_idx = 0;
+                    if (!d_info[which_dungeon].final_object) k_idx = 0;
                 }
                 else
                 {
                     object_type forge;
                     create_replacement_art(a_idx, &forge);
                     drop_here(&forge, y, x);
-                    if (!d_info[dungeon_type].final_object) k_idx = 0;
+                    if (!d_info[which_dungeon].final_object) k_idx = 0;
                 }
             }
 
@@ -2252,7 +2273,7 @@ void monster_death(int m_idx, bool drop_item)
 
             if (k_idx)
             {
-                int ego_index = d_info[dungeon_type].final_ego;
+                int ego_index = d_info[which_dungeon].final_ego;
 
                 /* Get local object */
                 q_ptr = &forge;
@@ -2314,9 +2335,12 @@ void monster_death(int m_idx, bool drop_item)
                 /* Drop it in the dungeon */
                 (void)drop_near(q_ptr, -1, y, x);
             }
-            cmsg_format(TERM_L_GREEN, "You have conquered %s!",d_name+d_info[dungeon_type].name);
-            virtue_add(VIRTUE_VALOUR, 5);
-            msg_add_tiny_screenshot(50, 24);
+            if (!no_wilderness)
+            {
+                cmsg_format(TERM_L_GREEN, "You have conquered %s!",d_name+d_info[which_dungeon].name);
+                virtue_add(VIRTUE_VALOUR, 5);
+                msg_add_tiny_screenshot(50, 24);
+            }
         }
     }
 
@@ -3552,21 +3576,8 @@ bool target_able(int m_idx)
  */
 bool target_okay(void)
 {
-    /* Accept (projectable) stationary targets */
-    if (target_who < 0)
-    {
-        if ( in_bounds(target_row, target_col)
-          && projectable(py, px, target_row, target_col) )
-        {
-            return TRUE;
-        }
-        /* Position Targets are confusing. They should be dismissed when no longer valid. */
-        target_who = 0;
-        target_row = 0;
-        target_col = 0;
-        p_ptr->redraw |= PR_HEALTH_BARS;
-        return FALSE;
-    }
+    /* Accept stationary targets */
+    if (target_who < 0) return TRUE;
 
     /* Check moving targets */
     if (target_who > 0)
@@ -5277,7 +5288,10 @@ bool get_rep_dir(int *dp, bool under)
             msg_print("You are confused.");
         }
         else if (p_ptr->move_random)
+        {
             cmsg_print(TERM_YELLOW, "You are moving erratically.");
+            disturb(0, 0);
+        }
         else
         {
             char m_name[80];
@@ -5286,12 +5300,12 @@ bool get_rep_dir(int *dp, bool under)
             monster_desc(m_name, m_ptr, 0);
             if (MON_CONFUSED(m_ptr))
             {
- msg_format("%^s is confusing.", m_name);
+                msg_format("%^s is confusing.", m_name);
 
             }
             else
             {
-msg_format("You cannot control %s.", m_name);
+                msg_format("You cannot control %s.", m_name);
             }
         }
     }

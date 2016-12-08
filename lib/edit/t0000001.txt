@@ -1160,17 +1160,6 @@ B:0:A:3:request Quest:0:0:q:6:0
 B:0:A:4:Teleport to other town:500:500:m:42:0
 B:0:A:5:Ask about your reputation:1:1:a:55:0
 B:0:R:*:Member
-B:0:R:Golem:None
-B:0:R:Skeleton:None
-B:0:R:Zombie:None
-B:0:R:Vampire:None
-B:0:R:Spectre:None
-B:0:R:Ent:None
-B:0:R:Balrog:None
-B:0:R:Android:None
-B:0:R:Demon:None
-B:0:R:Lich:None
-B:0:R:Jelly:None
 
 B:1:N:Mayor:Uldrik:Human
 B:1:A:0:Request quest:0:0:q:6:0

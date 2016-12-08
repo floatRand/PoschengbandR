@@ -4026,6 +4026,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
     cptr q, s;
     bool come_back = FALSE;
     bool do_drop = TRUE;
+    bool boomerang_fail = FALSE;
 
 
     if (p_ptr->special_defense & KATA_MUSOU)
@@ -4508,6 +4509,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
                 if (item >= 0)
                 {
                     msg_format("%s comes back to you, but you can't catch!", o2_name);
+                    boomerang_fail = TRUE;
                 }
                 else
                 {
@@ -4520,6 +4522,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
         else
         {
             msg_format("%s doesn't back!", o2_name);
+            boomerang_fail = TRUE;
         }
     }
 
@@ -4547,9 +4550,23 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
         }
         do_drop = FALSE;
     }
-    else if (equiped_item)
+    else 
     {
-        android_calc_exp();
+        if (boomerang_fail) /* This is a showstopper, so force the player to notice! */
+        {
+            msg_print("Press <color:y>Space</color> to continue.");
+            flush();
+            for (;;)
+            {
+                char ch = inkey();
+                if (ch == ' ') break;
+            }
+            msg_line_clear();
+        }
+        if (equiped_item)
+        {
+            android_calc_exp();
+        }
     }
 
     /* Drop (or break) near that location */

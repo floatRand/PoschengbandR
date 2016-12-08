@@ -3428,8 +3428,11 @@ option_type option_info[] =
     { &display_distance,            FALSE,  OPT_PAGE_TEXT, 1, 4,
     "display_distance",             "Display distance in monster list" },
 
-	{ &simple_stat_display,		    TRUE, OPT_PAGE_TEXT, 2, 28,
-	"simple stat display", "Display high stats in more simple format" },
+    { &simple_stat_display,		    FALSE, OPT_PAGE_TEXT, 2, 28,
+    "simple_stat_display",          "Display high stats in a more simple format" },
+   
+    { &display_race,		        TRUE, OPT_PAGE_TEXT, 2, 29,
+    "display_race",                  "Player character depends on race" },
 
     /*** Game-Play ***/
 
@@ -3589,6 +3592,8 @@ option_type option_info[] =
 	{ &coffeebreak_mode,				FALSE, OPT_PAGE_BIRTH, 6, 26,
 	"coffee_break",						"When in hurry. (*)" },
 
+    { &no_selling,                        FALSE, OPT_PAGE_BIRTH, 6, 27,
+    "no_selling",                       "Prohibit selling to shops" },
 
     /*** Easy Object Auto-Destroyer ***/
 

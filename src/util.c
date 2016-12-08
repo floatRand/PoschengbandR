@@ -2345,6 +2345,9 @@ char inkey(void)
     /* Cancel the various "global parameters" */
     inkey_base = inkey_xtra = inkey_flag = inkey_scan = FALSE;
 
+    /* Update playtime */
+    update_playtime();
+
     /* Return the keypress */
     return (ch);
 }
