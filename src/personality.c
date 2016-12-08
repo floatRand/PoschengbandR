@@ -588,6 +588,7 @@ static personality_ptr _get_pious_personality(void)
  ****************************************************************/
 static void _sexy_birth(void)
 {
+	if (runesword_start) return;
     object_type forge = {0};
     object_prep(&forge, lookup_kind(TV_HAFTED, SV_WHIP));
     if (p_ptr->pclass == CLASS_RUNE_KNIGHT)

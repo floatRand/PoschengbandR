@@ -55,6 +55,7 @@ extern void py_birth_obj_aux(int tval, int sval, int qty);
 extern void py_birth_food(void);
 extern void py_birth_light(void);
 extern void py_birth_spellbooks(void);
+extern void py_birth_runesword(void);
 
 /* I prefer to render menus to a document rather than directly to the terminal */
 static doc_ptr _doc = NULL;
@@ -124,10 +125,14 @@ extern void py_birth_obj(object_type *o_ptr)
     /* Big hack for sexy players ... only get one melee weapon */
     if ( p_ptr->personality == PERS_SEXY
       && object_is_melee_weapon(o_ptr)
-      && !object_is_(o_ptr, TV_HAFTED, SV_WHIP) )
+      && !object_is_(o_ptr, TV_HAFTED, SV_WHIP) && !runesword_start)
     {
         return;
     }
+
+	if (runesword_start && object_is_melee_weapon(o_ptr) && !object_is_(o_ptr, TV_SWORD, SV_RUNESWORD)){
+		return;
+	}
 
     slot = equip_first_empty_slot(o_ptr);
 
@@ -162,6 +167,19 @@ extern void py_birth_light(void)
 
         py_birth_obj(&forge);
     }
+}
+
+extern void py_birth_runesword(void)
+{
+	if (!runesword_start) return;
+	object_type forge = { 0 };
+	object_prep(&forge, lookup_kind(TV_SWORD, SV_RUNESWORD));
+	forge.number = 1;
+	forge.curse_flags |= (OFC_CURSED | OFC_PERMA_CURSE);
+
+	if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
+		rune_add(&forge, RUNE_ABSORPTION, FALSE);
+	py_birth_obj(&forge);
 }
 
 void py_birth_spellbooks(void)

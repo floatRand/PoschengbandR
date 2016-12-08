@@ -3556,7 +3556,7 @@ option_type option_info[] =
     { &ironman_nightmare,           FALSE, OPT_PAGE_BIRTH, 6, 18,
     "ironman_nightmare",            "Nightmare mode(it isn't even remotely fair!)(*)" },
 
-	{ &runesword_start, FALSE, OPT_PAGE_BIRTH, 6, 27,
+	{ &runesword_start, FALSE, OPT_PAGE_BIRTH, 6, 28,
 	"runesword_start", "Begin game with runesword wielded. (*)" },
 
     { &enable_virtues,                  FALSE, OPT_PAGE_BIRTH, 6, 13,

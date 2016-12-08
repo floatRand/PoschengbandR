@@ -407,7 +407,7 @@ bool test_hit_norm(int chance, int ac, int vis)
     int k;
 
     /* Wimpy attack never hits */
-    if (chance <= 0) return (FALSE);
+    if (chance <= 5) chance = 5;
 
     /* Penalize invisible targets */
     if (!vis) chance = (chance + 1) / 2;

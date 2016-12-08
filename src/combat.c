@@ -6,7 +6,7 @@ int hit_chance_innate(int to_h, int ac)
     int chance = p_ptr->skills.thn + to_h * BTH_PLUS_ADJ;
     int odds;
 
-    if (chance <= 0) return 0;
+    if (chance <= 5) return 5;
 
     odds = 95*(chance - ac*3/4)*1000/(chance*100);
     if (p_ptr->personality == PERS_LAZY) odds = (19*odds+10)/20;
@@ -21,7 +21,7 @@ int hit_chance(int hand, int to_h, int ac)
 
     chance = chance * p_ptr->weapon_info[hand].dual_wield_pct / 1000;
     chance += virtue_current(VIRTUE_VALOUR) / 10;
-    if (chance <= 0) return 0;
+    if (chance <= 5) return 5;
 
     odds = 95*(chance - ac*3/4)*1000/(chance*100);
     if (p_ptr->personality == PERS_LAZY) odds = (19*odds+10)/20;

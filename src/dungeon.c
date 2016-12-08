@@ -6029,6 +6029,8 @@ void play_game(bool new_game)
             py_birth_light();
         }
 
+		if (runesword_start) py_birth_runesword();
+
         spell_stats_on_birth();
 
         stats_on_gold_find(p_ptr->au); /* Found? Inherited? What's the difference? */
