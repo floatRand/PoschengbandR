@@ -2267,6 +2267,8 @@ extern dragon_realm_ptr dragon_get_realm(int which);
 extern int subjugation_power(void);
 extern bool monster_toss(int m_idx);
 
+extern void    rechoose_subrace(void);
+
 extern void    hound_calc_innate_attacks(void);
 extern void    hound_sniff_spell(int cmd, variant *res);
 extern void    hound_stalk_spell(int cmd, variant *res);
