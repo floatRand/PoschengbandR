@@ -703,6 +703,9 @@ void rechoose_subrace(void)
     case RACE_MON_QUYLTHULG:
         p_ptr->current_r_idx = MON_QUYLTHULG;
         break;
+    case RACE_MON_TROLL:
+        p_ptr->current_r_idx = MON_FOREST_TROLL;
+        break;
     default:
         return;
     }
