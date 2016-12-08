@@ -457,12 +457,6 @@ Text Display Options
   lots of pets and don't wish to read a blow by blow account of the 
   battle raging around you.
   
-<<<<<<< HEAD
-  Simplify stat-display (simple_stat_display)
-  TODO:write this thing
-  
-  
-=======
   Display high stats in a more simple format (simple_stat_display)
   This option causes the game to display stats as numbers up to 40, 
   instead of the percentile system where the max is 18/220. The game 
@@ -475,9 +469,9 @@ Text Display Options
   always be @. 
   
   
+  
 
 
->>>>>>> cba570cf22cc16a04d217b0c44021e72da5d3faa
 Game Play Options
   
   Merge inscriptions when stacking (stack_force_notes)
