@@ -3421,7 +3421,7 @@ D:you imagine the graceful parries and ripostes performed with this shield.
 
 N:336:Hand-Cannon Dora
 I:19:52:4
-W:75:100:1000:100000
+W:75:50:1000:100000
 P:0:x0.00:0:0:0
 F:INSTA_ART | FULL_NAME | HIDE_TYPE
 F:STR | RES_FIRE | RES_SHARDS | RES_FEAR

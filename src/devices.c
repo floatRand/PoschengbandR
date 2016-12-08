@@ -6780,7 +6780,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
 	}
 	case EFFECT_CANNONFIRE:
 	{
-		int dd = 20;
+		int dd = 10;
 		int ds = 10;
 		if (name) return "Cannon fire";
 		if (desc) return "Fires the cannon. The impact may cause a cave-in.";

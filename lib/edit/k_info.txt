@@ -3468,7 +3468,7 @@ F:INSTA_ART
 N:591:& Cannon~
 G:}:R
 I:19:52:0
-W:15:0:0:750:1000
+W:75:0:0:750:1000
 F:INSTA_ART
 
 N:592:& Poison Needle~
