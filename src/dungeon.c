@@ -5891,6 +5891,10 @@ void play_game(bool new_game)
     if (p_ptr->personality == PERS_SEXY)
         s_info[p_ptr->pclass].w_max[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP] = WEAPON_EXP_MASTER;
 
+	if (runesword_start){
+		s_info[p_ptr->pclass].w_start[TV_SWORD - TV_WEAPON_BEGIN][SV_RUNESWORD] = WEAPON_EXP_BEGINNER;
+		s_info[p_ptr->pclass].w_max[TV_SWORD - TV_WEAPON_BEGIN][SV_RUNESWORD] = WEAPON_EXP_MASTER;
+	}
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(dungeon_type);
 
