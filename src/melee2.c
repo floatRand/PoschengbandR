@@ -2606,13 +2606,11 @@ static void process_monster(int m_idx)
             }
 		}
 		else if (m_ptr->ap_r_idx == MON_RUMOURMONGER){
-
 			if( aware && is_aware(m_ptr) &&
 				m_idx != p_ptr->riding &&
 				one_in_(4) &&
 				player_has_los_bold(oy, ox) &&
 				projectable(oy, ox, py, px) ){
-
 				char m_name[80];
 				char monmessage[1024];
 				/* Acquire the monster name/poss */
