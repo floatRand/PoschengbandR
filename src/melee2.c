@@ -2604,7 +2604,30 @@ static void process_monster(int m_idx)
                 msg_format("<color:g>%^s</color> %s", m_name, monmessage);
                 msg_boundary();
             }
-        }
+		}
+		else if (m_ptr->ap_r_idx == MON_RUMOURMONGER){
+
+			if( aware && is_aware(m_ptr) &&
+				m_idx != p_ptr->riding &&
+				one_in_(4) &&
+				player_has_los_bold(oy, ox) &&
+				projectable(oy, ox, py, px) ){
+
+				char m_name[80];
+				char monmessage[1024];
+				/* Acquire the monster name/poss */
+				if (m_ptr->ml)
+					monster_desc(m_name, m_ptr, 0);
+				else
+					strcpy(m_name, "It");
+
+				errr err = get_rnd_line("rumors.txt", 0, monmessage);
+
+				if (err) strcpy(monmessage, "Some rumors are wrong.");
+				msg_format("<color:g>%^s</color> says: '%s'", m_name, monmessage);
+				msg_boundary();
+			}
+		}
     }
 
     /* Pack AI ... Attempt to wake up your buddies!

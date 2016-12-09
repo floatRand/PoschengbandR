@@ -770,6 +770,7 @@ chitters.
 N:1134:Hibachi
 chitters furiously.
 
+N:1135:Rumourmonger
 
 N:*:Default lines
 cackles evilly.

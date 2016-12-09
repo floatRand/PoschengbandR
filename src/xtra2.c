@@ -1510,6 +1510,14 @@ void monster_death(int m_idx, bool drop_item)
         }
         break;
     }
+	case MON_RUMOURMONGER:
+	{
+			int         k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_RUMOR);
+			object_type forge;
+			object_prep(&forge, k_idx);
+			forge.number = 1 + randint0(9);
+			drop_near(&forge, -1, y, x);
+	} break;
     case MON_NAZGUL:
     case MON_ANGMAR:
     case MON_KHAMUL:
@@ -2991,6 +2999,11 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
             }
 #endif
         }
+		else if (m_ptr->r_idx == MON_RUMOURMONGER){
+			char line_got[1024];
+			if (!get_rnd_line("death.txt", 0, line_got))
+				msg_format("%^s draws his last breath: '%s'", m_name, line_got);
+		}
 
         if (!(d_info[dungeon_type].flags1 & DF1_BEGINNER))
         {

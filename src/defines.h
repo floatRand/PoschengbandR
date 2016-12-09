@@ -5148,6 +5148,7 @@ extern int PlayerUID;
 #define MON_MULTIHUED_CENTIPEDE 1132
 #define MON_TAISABACHI          1133
 #define MON_HIBACHI             1134
+#define MON_RUMOURMONGER		1135
 
 /* The Metal Babble guards the Arena dungeon, but this requires the guardian to be a unique
    monster or the dungeon never gets flagged as completed. Note, this messes up the needle
