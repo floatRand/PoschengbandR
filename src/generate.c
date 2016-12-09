@@ -564,16 +564,19 @@ bool place_quest_monsters(void)
         u32b mode;
         int j;
 
-        if (quest[i].status != QUEST_STATUS_TAKEN ||
-            (quest[i].type != QUEST_TYPE_KILL_LEVEL &&
-             quest[i].type != QUEST_TYPE_RANDOM) ||
-            quest[i].level != dun_level ||
-            dungeon_type != quest[i].dungeon ||
-            (quest[i].flags & QUEST_FLAG_PRESET))
+        if (quest[i].status != QUEST_STATUS_TAKEN || (quest[i].type != QUEST_TYPE_KILL_LEVEL && quest[i].type != QUEST_TYPE_RANDOM) ||
+            dungeon_type != quest[i].dungeon || (quest[i].flags & QUEST_FLAG_PRESET))
         {
             /* Ignore it */
             continue;
         }
+		if (!no_wilderness && quest[i].level != dun_level) continue;
+		else{ /* Hack for Warg-quest so it can be completed on Ironmans. Causes wargs to generate beyond the depth 5. Unless we are on random quest level. */
+			if (no_wilderness && (ironman_downward || coffeebreak_mode) && quest[i].max_num > 1){
+				if (quest_number(dun_level) == 0 || quest_number(dun_level) >= MIN_RANDOM_QUEST || quest[i].level > dun_level) continue;
+			}
+			else if (quest[i].level != dun_level) continue;
+		}
 
         r_ptr = &r_info[quest[i].r_idx];
 

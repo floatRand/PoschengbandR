@@ -511,9 +511,13 @@ void check_quest_completion(monster_type *m_ptr)
                 continue;
 
             /* Quest is not on this level */
-            if ((quest[i].level != dun_level) &&
+			if ((quest[i].level != dun_level) && ( !no_wilderness ) &&
                 (quest[i].type != QUEST_TYPE_KILL_ANY_LEVEL))
                 continue;
+
+			if ((quest[i].level > dun_level) && ( quest[i].max_num > 1 && quest[i].cur_num <= quest[i].max_num) && ( no_wilderness && ( coffeebreak_mode || ironman_downward )) &&
+				(quest[i].type == QUEST_TYPE_KILL_LEVEL)) // allow warg-hack...
+				continue;
 
             /* Not a "kill monster" quest */
             if ((quest[i].type == QUEST_TYPE_FIND_ARTIFACT) ||
