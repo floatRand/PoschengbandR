@@ -1829,6 +1829,8 @@ static void hit_trap(bool break_trap)
 
     cptr name = "a trap";
 
+	if (equip_find_artifact(ART_SOFT_TREAD) && !one_in_(20)){ msg_print("You softly step on the trap."); return; }
+
     /* Disturb the player */
     disturb(0, 0);
 
@@ -5411,6 +5413,8 @@ bool trap_can_be_ignored(int feat)
     feature_type *f_ptr = &f_info[feat];
 
     if (!have_flag(f_ptr->flags, FF_TRAP)) return TRUE;
+
+	if (equip_find_artifact(ART_SOFT_TREAD)) return TRUE;
 
     switch (f_ptr->subtype)
     {

@@ -1327,6 +1327,7 @@ enum {
 #define ART_SHIVA_BOOTS         63
 #define ART_GLASS               165
 #define ART_GETA                210
+#define ART_SOFT_TREAD          337
 
 /* Digging */
 #define ART_NAIN                211

@@ -297,6 +297,7 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
             xtra = 5000;
             break;
         case ART_ASSASSINATOR:
+		case ART_SOFT_TREAD:
             xtra = 25000;
             break;
         case ART_SPECTRAL_DSM: /* Passwall */
