@@ -3386,7 +3386,7 @@ F:TUNNEL | RES_DARK | STR
 F:DEC_SPEED
 D:'Despair' is engraved on the shaft.
 
-N:333:Daywoven Shroud
+N:333:Diurnal Shroud
 I:35:5:3
 W:30:50:0:40000
 P:1:0d0:0:0:12
@@ -3397,7 +3397,7 @@ E:SKYCLOAK:0:1
 E:You flip your cloak, revealing a dark night!
 D:A strange cloak patterned with sky.
 
-N:334:Nightwoven Shroud
+N:334:Nocturnal Shroud
 I:35:5:3
 W:30:50:0:40000
 P:1:0d0:0:0:12
