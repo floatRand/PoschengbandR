@@ -1356,7 +1356,7 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
     }
 }
 
-byte _py_get_display_char_hp_col(){
+byte _py_get_display_char_hp_col(void){
 	int ch = p_ptr->chp;
 	int mh = p_ptr->mhp;
 	/* D - Black    w - White     s - Gray     o - Orange
@@ -1364,7 +1364,8 @@ byte _py_get_display_char_hp_col(){
 	# d - Dark Gray  W - Light Gray   v - Violet    y - Yellow
 	# R - Light Red  G - Light Green  B - Light Blue  U - Light Brown */
 
-	if (ch <= (mh) / 6) return TERM_RED;
+	if (ch < 0) return TERM_L_DARK; /*ded*/
+	else if (ch <= (mh) / 6) return TERM_RED;
 	else if (ch <= (mh * 2) / 6) return TERM_L_RED;
 	else if (ch <= (mh * 3) / 6) return TERM_ORANGE;
 	else if (ch <= (mh * 4) / 6) return TERM_L_UMBER;
