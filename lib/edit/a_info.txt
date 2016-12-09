@@ -3435,7 +3435,7 @@ W:40:30:40:50000
 P:3:1d1:0:0:6
 F:STEALTH | DEX | FULL_NAME
 D:A pair of boots, reducing even the most cumbersome tread into a dainty, feather-light step.
-D:No blade or grass or trap is bothered by such soft touch.
+D:No blade of grass nor trap is bothered by such soft touch.
 
 # N: serial number : item name
 # I: tval : sval : pval
