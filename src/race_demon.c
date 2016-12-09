@@ -850,8 +850,10 @@ static void _cyber_get_flags(u32b flgs[OF_ARRAY_SIZE])
 
 static void _cyber_move_player(void)
 {
+	bool soft_tread = equip_find_artifact(ART_SOFT_TREAD);
     /* Cyberdemons move erratically (cf get_rep_dir()) and make a lot of noise */
-    if (one_in_(66))
+	/* R: Boots of Soft Tread negates this. Have fun with mental image of cybie ballerinas. */
+    if (one_in_(66) && !soft_tread) 
     {
         int i;
 
