@@ -1356,6 +1356,23 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
     }
 }
 
+byte _py_get_display_char_hp_col(){
+	int ch = p_ptr->chp;
+	int mh = p_ptr->mhp;
+	/* D - Black    w - White     s - Gray     o - Orange
+	# r - Red     g - Green     b - Blue     u - Brown
+	# d - Dark Gray  W - Light Gray   v - Violet    y - Yellow
+	# R - Light Red  G - Light Green  B - Light Blue  U - Light Brown */
+
+	if (ch <= (mh) / 6) return TERM_RED;
+	else if (ch <= (mh * 2) / 6) return TERM_L_RED;
+	else if (ch <= (mh * 3) / 6) return TERM_ORANGE;
+	else if (ch <= (mh * 4) / 6) return TERM_L_UMBER;
+	else if (ch <= (mh * 5) / 6) return TERM_YELLOW;
+	return TERM_WHITE;
+
+}
+
 void py_get_display_char_attr(char *c, byte *a)
 {
     monster_race *r_ptr;
@@ -1400,8 +1417,10 @@ void py_get_display_char_attr(char *c, byte *a)
     }
 
     assert(r_ptr);
+
     *c = r_ptr->x_char;
-    *a = r_ptr->x_attr;
+	if (color_char_hp) *a = _py_get_display_char_hp_col();
+	else  *a = r_ptr->x_attr;
 }
 
 /*

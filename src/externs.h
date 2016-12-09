@@ -274,7 +274,7 @@ extern bool ignore_unview;    /* Ignore whenever any monster does */
 extern bool display_distance;    /* Display distance of LoS monsters in monster list */
 extern bool simple_stat_display;
 extern bool display_race; /* Display monster races with their racial char */
-
+extern bool color_char_hp;
 
 /*** Game-Play Options ***/
 

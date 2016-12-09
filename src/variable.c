@@ -257,6 +257,7 @@ bool ignore_unview;    /* Ignore whenever any monster does */
 bool display_distance;
 bool simple_stat_display;
 bool display_race; /* Display monster races with their racial char */
+bool color_char_hp; /* Colour character depending on hp */
 
 /*** Game-Play Options ***/
 

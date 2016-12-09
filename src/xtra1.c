@@ -3322,16 +3322,19 @@ static void calc_hitpoints(void)
     if (mut_present(MUT_UNYIELDING)) mhp += p_ptr->lev;
 	if (p_ptr->pclass == CLASS_FREELANCER){ mhp += freelancer_hp_boost(); } 
 
-    if (p_ptr->mhp != mhp)
-    {
-        if (p_ptr->mhp)
-            p_ptr->chp = mhp * p_ptr->chp / p_ptr->mhp;
-        else /* birthing */
-            p_ptr->chp = mhp;
+	if (p_ptr->mhp != mhp)
+	{
+		if (p_ptr->mhp)
+			p_ptr->chp = mhp * p_ptr->chp / p_ptr->mhp;
+		else /* birthing */
+			p_ptr->chp = mhp;
 
-        p_ptr->chp_frac = 0;
-        p_ptr->mhp = mhp;
-        p_ptr->redraw |= (PR_HP);
+		p_ptr->chp_frac = 0;
+		p_ptr->mhp = mhp;
+		p_ptr->redraw |= (PR_HP);
+		if (color_char_hp){ 
+			lite_spot(py, px);
+		}
     }
 }
 

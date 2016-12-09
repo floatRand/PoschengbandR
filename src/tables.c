@@ -3434,6 +3434,9 @@ option_type option_info[] =
     { &display_race,		        TRUE, OPT_PAGE_TEXT, 2, 29,
     "display_race",                  "Player character depends on race" },
 
+	{ &color_char_hp,				FALSE, OPT_PAGE_TEXT, 2, 30,
+	"color_char_hp",				"Player character color depends on hp." },
+
     /*** Game-Play ***/
 
     { &stack_force_notes,           TRUE,  OPT_PAGE_GAMEPLAY, 0, 8,
