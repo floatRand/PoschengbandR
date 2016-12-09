@@ -2357,6 +2357,7 @@ void do_cmd_debug(void)
 			monster_race *r_ptr = &r_info[i]; 
 			if (r_ptr->flags1 & RF1_QUESTOR) msg_format("Questor: %^s.\n", r_name+r_ptr->name);
 		}
+		msg_format("Questnum: %d.\n",quest_number(dun_level));
 		msg_print("Dump end.\n");
 
 	}

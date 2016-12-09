@@ -4049,9 +4049,25 @@ int quest_number(int level)
             (quest[i].dungeon == dungeon_type))
             return (i);
     }
-
+	int randnum = random_quest_number(level);
+	if (randnum > 0) return randnum;
     /* Check for random quest */
-    return (random_quest_number(level));
+
+
+	for (i = 0; i < max_quests; i++)
+	{
+		if (quest[i].max_num > 1 && QUEST_TYPE_KILL_LEVEL){
+			if ((quest[i].dungeon == dungeon_type)){
+				if ((quest[i].level <= level))
+						return i;
+			}
+		}
+	}
+	/*Shitty warghack*/
+
+	
+
+	return 0;
 }
 
 
@@ -4075,7 +4091,6 @@ int random_quest_number(int level)
             return i;
         }
     }
-
     /* Nope */
     return 0;
 }

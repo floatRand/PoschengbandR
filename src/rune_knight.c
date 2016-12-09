@@ -119,7 +119,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
     if (!which) return FALSE;
     object_desc(o_name, o_ptr, 0);
 
-    if (o_ptr->rune)
+    if (o_ptr->rune && !(o_ptr->curse_flags & OFC_PERMA_CURSE)) /* Permanently cursed weapons have luxury of having swappable runes. */
     {
         msg_format("%^s already has an attached rune.", o_name);
         return FALSE;
