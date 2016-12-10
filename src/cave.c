@@ -5259,6 +5259,7 @@ void disturb(int stop_search, int unused_flag)
 
         /* Redraw the state (later) */
         p_ptr->redraw |= (PR_STATE);
+
     }
 
     /* Cancel Resting */
@@ -5269,6 +5270,10 @@ void disturb(int stop_search, int unused_flag)
     {
         /* Cancel */
         set_action(ACTION_NONE);
+
+		if (color_char_hp){
+			lite_spot(py, px);
+		}
     }
 
     /* Cancel running */

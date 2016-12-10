@@ -856,6 +856,10 @@ static void regenhp(int percent)
         if (weaponmaster_is_(WEAPONMASTER_STAVES))
             p_ptr->update |= (PU_BONUS);
 
+		if (color_char_hp){
+			lite_spot(py, px);
+		}
+
         wild_regen = 20;
     }
 }

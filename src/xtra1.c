@@ -3332,6 +3332,7 @@ static void calc_hitpoints(void)
 		p_ptr->chp_frac = 0;
 		p_ptr->mhp = mhp;
 		p_ptr->redraw |= (PR_HP);
+
 		if (color_char_hp){ 
 			lite_spot(py, px);
 		}

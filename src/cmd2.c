@@ -2520,128 +2520,126 @@ void do_cmd_stay(bool pickup)
  */
 void do_cmd_rest(void)
 {
-    int tmp;
-    if (REPEAT_PULL(&tmp))
-        command_arg = tmp;
+	int tmp;
+	if (REPEAT_PULL(&tmp))
+		command_arg = tmp;
 
-    set_action(ACTION_NONE);
-    if (weaponmaster_get_toggle() == TOGGLE_SHADOW_STANCE)
-        weaponmaster_set_toggle(TOGGLE_NONE);
+	set_action(ACTION_NONE);
+	if (weaponmaster_get_toggle() == TOGGLE_SHADOW_STANCE)
+		weaponmaster_set_toggle(TOGGLE_NONE);
 
-    if ((p_ptr->pclass == CLASS_BARD) && (p_ptr->magic_num1[0] || p_ptr->magic_num1[1]))
-    {
-        bard_stop_singing();
-    }
+	if ((p_ptr->pclass == CLASS_BARD) && (p_ptr->magic_num1[0] || p_ptr->magic_num1[1]))
+	{
+		bard_stop_singing();
+	}
 
-    /* Hex */
-    if (hex_spelling_any()) stop_hex_spell_all();
+	/* Hex */
+	if (hex_spelling_any()) stop_hex_spell_all();
 
-    warlock_stop_singing();
+	warlock_stop_singing();
 
-    /* Prompt for time if needed */
-    if (command_arg == 0)
-    {
-        cptr p = "<color:y>Rest</color> (0-9999, '*' for HP/SP, '&' as needed): ";
-
-
-        char out_val[80];
-
-        /* Default */
-        strcpy(out_val, "&");
-
-        /* Ask for duration
-        if (!get_string(p, out_val, 4)) return;*/
-        if (!msg_input(p, out_val, 4)) return;
-
-        /* Rest until done */
-        if (out_val[0] == '&')
-        {
-            command_arg = (-2);
-        }
-
-        /* Rest a lot */
-        else if (out_val[0] == '*')
-        {
-            command_arg = (-1);
-        }
-
-        /* Rest some */
-        else
-        {
-            command_arg = atoi(out_val);
-            if (command_arg <= 0) return;
-        }
-        REPEAT_PUSH(command_arg);
-    }
+	/* Prompt for time if needed */
+	if (command_arg == 0)
+	{
+		cptr p = "<color:y>Rest</color> (0-9999, '*' for HP/SP, '&' as needed): ";
 
 
-    /* Paranoia */
-    if (command_arg > 9999) command_arg = 9999;
+		char out_val[80];
 
-    /* Mimickry blocks all regeneration (hp and sp)!
-       We can either block this command since resting will stop
-       immediately (cf process_player() in dungeon.c) or, more
-       conveniently, we can stop mimicry, though this will tend
-       to expose the player!
-     */
-    if (mimic_no_regen() && command_arg < 0)
-    {
-        bool clear = TRUE;
-        if (command_arg == -2)
-        {
-            if (p_ptr->blind ||
-                p_ptr->confused ||
-                p_ptr->poisoned ||
-                p_ptr->afraid ||
-                p_ptr->stun ||
-                p_ptr->cut ||
-                p_ptr->slow ||
-                p_ptr->paralyzed ||
-                p_ptr->image ||
-                p_ptr->word_recall ||
-                p_ptr->alter_reality)
-            {
-                clear = FALSE;
-            }
-        }
+		/* Default */
+		strcpy(out_val, "&");
 
-        if (clear)
-            mimic_race(MIMIC_NONE, "You cannot rest while maintaining your current form.");
-    }
+		/* Ask for duration
+		if (!get_string(p, out_val, 4)) return;*/
+		if (!msg_input(p, out_val, 4)) return;
 
-    if (p_ptr->special_defense & NINJA_S_STEALTH) set_superstealth(FALSE);
+		/* Rest until done */
+		if (out_val[0] == '&')
+		{
+			command_arg = (-2);
+		}
 
-    /* Take a turn XXX XXX XXX (?) */
-    energy_use = 100;
+		/* Rest a lot */
+		else if (out_val[0] == '*')
+		{
+			command_arg = (-1);
+		}
 
-    /* The sin of sloth */
-    if (command_arg > 100)
-        virtue_add(VIRTUE_DILIGENCE, -1);
+		/* Rest some */
+		else
+		{
+			command_arg = atoi(out_val);
+			if (command_arg <= 0) return;
+		}
+		REPEAT_PUSH(command_arg);
+	}
 
-    /* Why are you sleeping when there's no need?  WAKE UP!*/
-    if ((p_ptr->chp == p_ptr->mhp) &&
-        (p_ptr->csp == p_ptr->msp) &&
-        !p_ptr->blind && !p_ptr->confused &&
-        !p_ptr->poisoned && !p_ptr->afraid &&
-        !p_ptr->stun && !p_ptr->cut &&
-        !p_ptr->slow && !p_ptr->paralyzed &&
-        !p_ptr->image && !p_ptr->word_recall &&
-        !p_ptr->alter_reality &&
-        !magic_eater_can_regen())
-    {
-        virtue_add(VIRTUE_DILIGENCE, -1);
-    }
-    /* Save the rest code */
-    resting = command_arg;
-    p_ptr->action = ACTION_REST;
 
-    /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS);
+	/* Paranoia */
+	if (command_arg > 9999) command_arg = 9999;
 
-    /* Redraw the state */
-    p_ptr->redraw |= (PR_STATE);
+	/* Mimickry blocks all regeneration (hp and sp)!
+	   We can either block this command since resting will stop
+	   immediately (cf process_player() in dungeon.c) or, more
+	   conveniently, we can stop mimicry, though this will tend
+	   to expose the player!
+	   */
+	if (mimic_no_regen() && command_arg < 0)
+	{
+		bool clear = TRUE;
+		if (command_arg == -2)
+		{
+			if (p_ptr->blind ||
+				p_ptr->confused ||
+				p_ptr->poisoned ||
+				p_ptr->afraid ||
+				p_ptr->stun ||
+				p_ptr->cut ||
+				p_ptr->slow ||
+				p_ptr->paralyzed ||
+				p_ptr->image ||
+				p_ptr->word_recall ||
+				p_ptr->alter_reality)
+			{
+				clear = FALSE;
+			}
+		}
 
-	if (color_char_hp) lite_spot(py, px);
+		if (clear)
+			mimic_race(MIMIC_NONE, "You cannot rest while maintaining your current form.");
+	}
+
+	if (p_ptr->special_defense & NINJA_S_STEALTH) set_superstealth(FALSE);
+
+	/* Take a turn XXX XXX XXX (?) */
+	energy_use = 100;
+
+	/* The sin of sloth */
+	if (command_arg > 100)
+		virtue_add(VIRTUE_DILIGENCE, -1);
+
+	/* Why are you sleeping when there's no need?  WAKE UP!*/
+	if ((p_ptr->chp == p_ptr->mhp) &&
+		(p_ptr->csp == p_ptr->msp) &&
+		!p_ptr->blind && !p_ptr->confused &&
+		!p_ptr->poisoned && !p_ptr->afraid &&
+		!p_ptr->stun && !p_ptr->cut &&
+		!p_ptr->slow && !p_ptr->paralyzed &&
+		!p_ptr->image && !p_ptr->word_recall &&
+		!p_ptr->alter_reality &&
+		!magic_eater_can_regen())
+	{
+		virtue_add(VIRTUE_DILIGENCE, -1);
+	}
+	/* Save the rest code */
+	resting = command_arg;
+	p_ptr->action = ACTION_REST;
+
+	/* Recalculate bonuses */
+	p_ptr->update |= (PU_BONUS);
+
+	/* Redraw the state */
+	p_ptr->redraw |= (PR_STATE);
 
     /* Handle stuff */
     handle_stuff();
