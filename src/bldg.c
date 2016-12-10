@@ -4056,6 +4056,8 @@ int quest_number(int level)
 
 	for (i = 0; i < max_quests; i++)
 	{
+		if (quest[i].status != QUEST_STATUS_TAKEN) continue;
+
 		if (quest[i].max_num > 1 && QUEST_TYPE_KILL_LEVEL){
 			if ((quest[i].dungeon == dungeon_type)){
 				if ((quest[i].level <= level))
