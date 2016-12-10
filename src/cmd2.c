@@ -2641,6 +2641,8 @@ void do_cmd_rest(void)
     /* Redraw the state */
     p_ptr->redraw |= (PR_STATE);
 
+	if (color_char_hp) p_ptr->update |= (PU_HP);
+
     /* Handle stuff */
     handle_stuff();
 
