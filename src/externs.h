@@ -985,8 +985,11 @@ extern bool arg_lock_name; /*locks player name for server play --phantom*/
 /* flavor.c */
 extern void get_table_name_aux(char *out_string);
 extern void get_table_name(char *out_string);
+extern void get_table_name_uppercase(char *out_string);
 extern void get_table_sindarin_aux(char *out_string);
 extern void get_table_sindarin(char *out_string);
+extern void get_table_sindarin_uppercase(char *out_string);
+extern void get_name_of_X(char *return_string, int pow);
 extern void flavor_init(void);
 extern char tval_to_attr_char(int tval);
 extern char attr_to_attr_char(byte a);

@@ -136,6 +136,13 @@ void get_table_name(char *out_string)
     sprintf(out_string, "'%s'", buff);
 }
 
+void get_table_name_uppercase(char *out_string)
+{
+	char buff[80];
+	get_table_sindarin_aux(buff);
+	buff[0] = toupper(buff[0]);
+	sprintf(out_string, "'%s'", buff);
+}
 
 /*
  * Make random Sindarin name
@@ -151,18 +158,77 @@ void get_table_sindarin_aux(char *out_string)
     strcat(out_string, Syllable);
 }
 
-
-/*
- * Make random Sindarin name with quotes
- */
 void get_table_sindarin(char *out_string)
 {
-    char buff[80];
-    get_table_sindarin_aux(buff);
+	char buff[80];
+	get_table_sindarin_aux(buff);
 
-    sprintf(out_string, "'%s'", buff);
+	sprintf(out_string, "'%s'", buff);
 }
 
+void get_table_sindarin_uppercase(char *out_string)
+{
+	char buff[80];
+	get_table_sindarin_aux(buff);
+	buff[0] = toupper(buff[0]);
+	sprintf(out_string, "'%s'", buff);
+}
+
+void get_of_X_name_aux(char *out_string, int pow)
+{
+#define _BAD_WORD_MAX 21
+#define _POW1_WORD_MAX 36
+#define _POW2_WORD_MAX 22
+
+	static cptr _words_bad[_BAD_WORD_MAX] = {
+		"Trash", "Distaste", "Fear", "Dishonesty",
+		"Traps", "Rand", "Loss", "Doom", "Yeeks",
+		"Snotlings", "Sadness", "Bad taste", "Tourist",
+		"Stubbed Toes", "Spilled Drinks", "Forgotten keys",
+		"Early Mornings", "Hiding Insects", "Stress",
+		"Bad Arguements", "Weakness"
+	};
+
+	static cptr _words_pow1[_POW1_WORD_MAX] = {
+		"Fire", "Water", "Thunder", "Wind", "Earth",
+		"Abyss", "Moon", "Sun", "Stars", "Logrus",
+		"Dirty Deeds", "Crimson", "Skies",
+		"Wolves", "Birds", "Rats", "Men", "Women", "Night",
+		"Day", "Aqua Regia", "Electrons", "Protons",
+		"Castles", "Corpses", "Neutrality", "Polarities",
+		"Poles", "Betrayer", "Jacks", "Butcherer", "Sorcerer",
+		"Philosopher", "Mummy", "Order", "Secrets"
+	};
+
+	static cptr _words_pow2[_POW2_WORD_MAX] = {
+		"Power", "Annihilation", "Demise", "Quietus",
+		"Royalty", "Kings", "Dragons", "Gods", "Victory",
+		"Death", "Invulnerability", "Invincibility", "Glory", 
+		"Fame", "Heroes", "Hero", "Slayer", "Conqueror",
+		"Mastermind", "Metempsychosis", "Royal Flush", "Four Aces"
+	};
+
+	strcpy(out_string, "");
+
+	switch (pow){
+			
+	case 1: strcat(out_string, _words_pow1[randint0(_POW1_WORD_MAX)]); break;
+	case 2: strcat(out_string, _words_pow2[randint0(_POW2_WORD_MAX)]); break;
+	default: strcat(out_string, _words_bad[randint0(_BAD_WORD_MAX)]); break;
+	}
+
+	out_string[16] = '\0'; // null terminator...
+	
+}
+
+void get_name_of_X(char *return_string, int pow){
+
+	char buff[80];
+	get_of_X_name_aux(buff,pow);
+
+	sprintf(return_string, "of %s", buff);
+
+}
 
 /*
  * Shuffle flavor indices of a group of objects with given tval

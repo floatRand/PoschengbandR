@@ -9,7 +9,7 @@
  */
 
 #include "angband.h"
-#include <assert.h>
+#include <assert.h>na
 
 static void random_resistance(object_type * o_ptr);
 static void random_slay(object_type *o_ptr);
@@ -1798,7 +1798,20 @@ void get_random_name(char *return_name, object_type *o_ptr, int power)
     return_name[0] = '\0';
     for (attempt = 0;; ++attempt)
     {
-        get_random_name_aux(return_name, o_ptr, power);
+
+		if (power <= 1){
+			int b = randint0(2);
+			if(b==0) get_random_name_aux(return_name, o_ptr, power);
+			else get_name_of_X(return_name, power);
+		}
+		else{
+			int b = randint0(4);
+			if (b == 0) get_random_name_aux(return_name, o_ptr, power);
+			else if (b == 1) get_table_sindarin_uppercase(return_name);
+			else if (b == 2) get_table_name_uppercase(return_name);
+			else get_name_of_X(return_name, power);
+		}
+
         if (return_name[0] != '\0') break;
         if (attempt > 100) break;
     }
