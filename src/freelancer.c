@@ -80,13 +80,13 @@ static fl_proficiency _proficiencies[_FL_MAX_PROF] = {
 { _FL_LEARN_RIDING,				8, 3, 1, "Learn riding skill" }, // UNIMPLEMENTED
 { _FL_LEARN_MARTIAL_ARTS,		8, 3, 1, "Learn martial arts" }, // UNIMPLEMENTED
 
-{ _FL_BOOST_HP,					2, 5, 1, "Boost HP" }, // IMPLEMENTED :)
-{ _FL_BOOST_SP,					2, 5, 1, "Boost SP" }, // IMPLEMENTED :)
-{ _FL_BOOST_MELEE,				2, 5, 1, "Boost melee attacks" }, // IMPLEMENTED :)
-{ _FL_BOOST_BLOWS,				2, 5, 1, "Boost number of attacks" }, // IMPLEMENTED :)
-{ _FL_BOOST_RANGED,				2, 5, 1, "Boost ranged attacks" }, // UNIMPLEMENTED
-{ _FL_BOOST_MANA_REGEN,			4, 3, 1, "Boost mana regen" }, // IMPLEMENTED :)
-{ _FL_BOOST_SKILL,				1, 5, 1, "Boost invidual skill" }, // IMPLEMENTED :)
+{ _FL_BOOST_HP,					3, 5, 1, "Boost HP" }, // IMPLEMENTED :)
+{ _FL_BOOST_SP,					3, 5, 1, "Boost SP" }, // IMPLEMENTED :)
+{ _FL_BOOST_MELEE,				3, 5, 1, "Boost melee attacks" }, // IMPLEMENTED :)
+{ _FL_BOOST_BLOWS,				3, 5, 1, "Boost number of attacks" }, // IMPLEMENTED :)
+{ _FL_BOOST_RANGED,				3, 5, 1, "Boost ranged attacks" }, // UNIMPLEMENTED
+{ _FL_BOOST_MANA_REGEN,			5, 3, 1, "Boost mana regen" }, // IMPLEMENTED :)
+{ _FL_BOOST_SKILL,				2, 5, 1, "Boost invidual skill" }, // IMPLEMENTED :)
 
 { _FL_F_SNEAK_ATTACKS,			12, 2, 5, "Gain sneak attacking" }, // IMPLEMENTED, NOT TESTED?
 { _FL_F_HEAVY_ARMOR_CASTING,	8, 2, 10, "Improve casting in heavy armour" }, // IMPLEMENTED
@@ -219,16 +219,30 @@ void freelancer_skill_boost(void){
 	skills_add(&p_ptr->skills, &_skill_boost);
 }
 
+int fl_total_realms_bought(){
+	int i; int total = 0;
+	for (i = 0; i < MAX_REALM; i++){
+		if (_realmLevels[i] > 0) total++;
+	}
+
+	return total;
+
+}
+
 static int _prof_get_cost(int prof, int sub){
 
 	int lvToBuy = 1;
 	int baseCost = 1;
+	int boost = 0;
 
-	if (prof == _FL_LEARN_REALM){ lvToBuy = _realmLevels[sub]; baseCost = _proficiencies[prof].cost; }
+	if (prof == _FL_LEARN_REALM){ 
+		lvToBuy = _realmLevels[sub]; baseCost = (_proficiencies[prof].cost);
+		boost = fl_total_realms_bought() * 2;
+	}
 	else if (prof == _FL_LEARN_WEAPON){ lvToBuy = _wpnLevels[sub]; baseCost = _proficiencies[prof].cost; }
 	else if (prof == _FL_BOOST_SKILL){ lvToBuy = _skillLevels[sub]; baseCost = _proficiencies[prof].cost; }
 	else {lvToBuy = _profLevels[prof];  baseCost = _proficiencies[prof].cost;}
-		return (lvToBuy+1) * baseCost;
+		return (lvToBuy+1) * baseCost + boost;
 }
 
 static int _prof_get_base_cost(int prof){
@@ -536,10 +550,10 @@ void freelancer_count_buys(void){
 
 				// Here was a level check, it is gone now. It bugged a lot for some reason. If problems arise, it needs to be reimplemented.
 				switch( pId ){
-					case _FL_LEARN_REALM:{ _realmLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
-					case _FL_LEARN_WEAPON:{ _wpnLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); refresh_weaponskills = TRUE; break; }
-					case _FL_BOOST_SKILL:{_skillLevels[spId]++; prof_pts -= _prof_get_base_cost(pId); break; }
-					default: {_profLevels[pId]++; prof_pts -= _prof_get_base_cost(pId); break; }
+					case _FL_LEARN_REALM:{prof_pts -= _prof_get_cost(pId, spId); _realmLevels[spId]++; break; }
+					case _FL_LEARN_WEAPON:{ prof_pts -= _prof_get_cost(pId, spId); _wpnLevels[spId]++;  refresh_weaponskills = TRUE; break; }
+					case _FL_BOOST_SKILL:{ prof_pts -= _prof_get_cost(pId, spId); _skillLevels[spId]++; break; }
+					default: {prof_pts -= _prof_get_cost(pId, spId);  _profLevels[pId]++;  break; }
 				}	
 			
 		}
@@ -1027,7 +1041,7 @@ static void _load_list(savefile_ptr file)
 		if (lv == 255) break; // this is sentinel. Just get out ASAP.
 		pr = savefile_read_s32b(file); // prof id
 		sp = savefile_read_s32b(file); // sub id
-		assert(0 <= i && i < _FL_MAX_BUYS && lv > 0 && lv <= 50 );
+		assert(0 <= i && i < _FL_MAX_BUYS );
 		_fl_purchases[i].lv = lv;
 		if (pr == -1) pr = _FL_NULL;
 		_fl_purchases[i].profID = pr;
@@ -1068,11 +1082,13 @@ static caster_info* _caster_info(void)
 	if (!init)
 	{
 		me.magic_desc = "spell";
-		me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
 		init = TRUE;
 	}
 	me.weight = 430 + fl_GetProfLevel(_FL_F_HEAVY_ARMOR_CASTING,0) * 200;
 	me.which_stat = freelancer_key_stat();
+	me.options = CASTER_ALLOW_DEC_MANA;
+	if (fl_GetProfLevel(_FL_F_HEAVY_ARMOR_CASTING, 0)>=1) me.options |= CASTER_GLOVE_ENCUMBRANCE; // allow gloves with armour
+
 	return &me;
 }
 
