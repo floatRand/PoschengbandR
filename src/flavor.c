@@ -197,7 +197,8 @@ bool _mon_has_unique(int r_idx){
 			case MON_UBBO_SATHLA:
 			case MON_MASTER_TONBERRY:
 		/*Are just awkward for naming*/
-			case 818: // mouth of sauron - would translate to "The Mouth".
+			case 818: /* mouth of sauron - would translate to "The Mouth" */
+			case 451: /* ultimate dungeon cleaner. Bit too long */
 			return TRUE;
 			default: return FALSE;
 	}

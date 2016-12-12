@@ -1799,7 +1799,7 @@ void get_random_name(char *return_name, object_type *o_ptr, int power)
     for (attempt = 0;; ++attempt)
     {
 		
-		if (power <= 1){
+		if (power == 0){
 			int b = randint0(100);
 			if(b<=25) get_random_name_aux(return_name, o_ptr, power);
 			else{ 
