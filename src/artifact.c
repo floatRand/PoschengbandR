@@ -1800,8 +1800,8 @@ void get_random_name(char *return_name, object_type *o_ptr, int power)
     {
 		
 		if (power <= 1){
-			int b = randint0(2);
-			if(b==0) get_random_name_aux(return_name, o_ptr, power);
+			int b = randint0(100);
+			if(b<=25) get_random_name_aux(return_name, o_ptr, power);
 			else{ 
 				if(one_in_(2))get_name_of_X(return_name, power); 
 				else get_mon_random_name(return_name, o_ptr->level, power);
@@ -1809,10 +1809,10 @@ void get_random_name(char *return_name, object_type *o_ptr, int power)
 
 		}
 		else{
-			int b = randint0(4);
-			if (b == 0) get_random_name_aux(return_name, o_ptr, power);
-			else if (b == 1) get_table_sindarin_uppercase(return_name);
-			else if (b == 2) get_table_name_uppercase(return_name);
+			int b = randint0(100);
+			if (b<=10) get_random_name_aux(return_name, o_ptr, power);
+			else if (b<=40) get_table_sindarin_uppercase(return_name);
+			else if (b<=70) get_table_name_uppercase(return_name);
 			else{
 				if (one_in_(2) == 0)get_name_of_X(return_name, power);
 				else get_mon_random_name(return_name, o_ptr->level, power);

@@ -230,7 +230,7 @@ void get_mon_random_name_aux(char *out_string, int maxlv, int power){
 
 	while (attempts<10000){
 		attempts++;
-		bool force_unique = (power >= 1 && attempts < 5000);
+		bool force_unique = (power >= 1 && attempts < 5000 && !one_in_(100));
 
 		pick = 1+randint0(range-1);
 		r_ptr = &r_info[pick];
