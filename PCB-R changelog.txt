@@ -1,0 +1,34 @@
+PCB-R changelog as of 10.12.2016:
+ 
+CORE CHANGES:
+* Much faster leveling, especially at the higher levels.
+  Skills also level up much faster, three times as fast.
+* Nexus doesn't scramble stats, siphons instead ( max 1d6+4 points ), giving saving throw after each point siphoned.
+* Brands work on monk/innate attacks.
+* Much, much faster identification. At 25 you get pseudo-id by default.
+* Pseudo-id property on items has been replaced with automapping-property. Stones of Nature automatically gain this.
+* Random artifact jewelry now generates in dungeons.
+* ?Artifact and ?*Artifact create single tailored {special} items, instead of potentially granting random trash.
+* Amnesia doesn't wipe map completely. Instead it rots it.
+* Teleport Other works on teleport-resistant uniques, although they get similar resist-chance to others, plus additional 50% chance of outright ignoring it.
+* Some uniques slightly nerfed ( ex. Gachapin )
+* On no-wilderness mode, Olympians and Camelot uniques have more restrictive spawning-conditions.
+* Itemization changes. Lot of useful consumeables drop earlier and more often, and perhaps are even found in shops.
+* Shop changes. You can request shuffle stock for 10k, or hold item for 20k. Black market level scales with player.
+* Cursed devices are uncursed alongside with equipment. You also sometimes get feeling of cursed device when using such.
+* Summon Traps have energy-penalty on summoned monsters.
+* More naming schemes for artifacts.
+* Expanded the size of home from 240 items to 960.
+ 
+ADDITIONS ( OPTIONS )
+* Option for simple stat-display ( 3-40 ), although this was adopted to pseudo from R already.
+* Two new birth options, forced runesword start and coffee-break mode ( very accelereted exp-gain and loot, no-wilderness and vanilla ironman_stairs )
+* Option for showing HP in player-character in dungeon-view.
+ 
+ADDITIONS ( CONTENT )
+* Monster spell damage lore
+* Three new classes, alchemist ( stores, reproduces and evaporates potions ), maledict ( wear cursed shit for bonuses, throw curses at things ) and freelancer ( start out as blank slate, purchase realms / skills / boosts by leveling ). Although I must warn that the classes are still unbalanced due to little playtesting.
+* New race that gains automapping and autodetecting creatures, but can't use teleportation abilities outside of their own
+* Bunch of new named artifacts.
+* Two ( three ) new unique monsters
+* Subclass for mystics. Trades out summoning and branded hits for various physical techniques.
