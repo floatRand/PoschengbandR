@@ -237,7 +237,7 @@ static int _prof_get_cost(int prof, int sub){
 
 	if (prof == _FL_LEARN_REALM){ 
 		lvToBuy = _realmLevels[sub]; baseCost = (_proficiencies[prof].cost);
-		boost = fl_total_realms_bought() * 2;
+		boost = (_realmLevels[sub]==0) ? fl_total_realms_bought() * 4 : 0; // initial purchase is more costly.
 	}
 	else if (prof == _FL_LEARN_WEAPON){ lvToBuy = _wpnLevels[sub]; baseCost = _proficiencies[prof].cost; }
 	else if (prof == _FL_BOOST_SKILL){ lvToBuy = _skillLevels[sub]; baseCost = _proficiencies[prof].cost; }
