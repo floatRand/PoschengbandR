@@ -199,6 +199,7 @@ bool _mon_has_unique(int r_idx){
 		/*Are just awkward for naming*/
 			case 818: // mouth of sauron - would translate to "The Mouth".
 			return TRUE;
+			default: return FALSE;
 	}
 
 
@@ -218,6 +219,10 @@ void get_mon_random_name_aux(char *out_string, int maxlv, int power){
 
 	if (power == 2) maxlv += 20;
 	else if (power == 0) maxlv -= 20;
+
+	if (maxlv > 100) maxlv = 100; 
+	if (maxlv < 0) maxlv = 0;
+
 	min_lev = maxlv - (maxlv / 5);
 	max_lev = maxlv + (maxlv / 5);
 
@@ -225,11 +230,9 @@ void get_mon_random_name_aux(char *out_string, int maxlv, int power){
 
 	while (attempts<10000){
 		attempts++;
-
-
 		bool force_unique = (power >= 1 && attempts < 5000);
-		pick = 1+randint0(range-1);
 
+		pick = 1+randint0(range-1);
 		r_ptr = &r_info[pick];
 
 		if (force_unique && !(r_ptr->flags1 & RF1_UNIQUE)) continue;
@@ -266,8 +269,6 @@ void get_mon_random_name_aux(char *out_string, int maxlv, int power){
 		break;
 	}
 	if (!name_ok) strcat(out_string, "Nobody"); // silly fallback
-
-	
 
 }
 
