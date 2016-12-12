@@ -474,7 +474,7 @@ static errr rd_store(savefile_ptr file, int town_number, int store_number)
         rd_item(file, q_ptr);
 
         /* Acquire valid items */
-        if (st_ptr->stock_num < (store_number == STORE_HOME ? (STORE_INVEN_MAX) * 10 : (store_number == STORE_MUSEUM ? (STORE_INVEN_MAX) * 50 : STORE_INVEN_MAX)))
+        if (st_ptr->stock_num < (store_number == STORE_HOME ? (STORE_INVEN_MAX) * 40 : (store_number == STORE_MUSEUM ? (STORE_INVEN_MAX) * 50 : STORE_INVEN_MAX)))
         {
             int k;
             if (sort)
