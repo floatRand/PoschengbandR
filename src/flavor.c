@@ -174,6 +174,110 @@ void get_table_sindarin_uppercase(char *out_string)
 	sprintf(out_string, "'%s'", buff);
 }
 
+bool _mon_has_unique(int r_idx){
+
+
+	switch (r_idx){
+		/*Have already unique item attached to them*/
+			case MON_MEPHISTOPHELES: 
+			case MON_QUAKER:
+			case MON_MULTIHUED_CENTIPEDE:
+			case MON_ATLAS:
+			case MON_DESTROYER:
+			case MON_EMPEROR_QUYLTHULG:
+			case MON_LOGE:
+			case MON_JACK_SHADOWS:
+			case MON_MOIRE:
+			case MON_ARIEL:
+			case MON_ULIK:
+			case MON_TYPHOEUS:
+			case MON_VECNA:
+			case MON_KRONOS:
+			case MON_YMIR:
+			case MON_UBBO_SATHLA:
+			case MON_MASTER_TONBERRY:
+		/*Are just awkward for naming*/
+			case 818: // mouth of sauron - would translate to "The Mouth".
+			return TRUE;
+	}
+
+
+		return FALSE;
+}
+
+void get_mon_random_name_aux(char *out_string, int maxlv, int power){
+	int range = max_r_idx;
+	int pick;
+	int attempts = 0;
+	int i = 0;
+	monster_race *r_ptr;
+	bool name_ok = FALSE;
+	bool fail = FALSE;
+
+	int min_lev, max_lev;
+
+	if (power == 2) maxlv += 20;
+	else if (power == 0) maxlv -= 20;
+	min_lev = maxlv - (maxlv / 5);
+	max_lev = maxlv + (maxlv / 5);
+
+	strcpy(out_string, "");
+
+	while (attempts<10000){
+		attempts++;
+
+
+		bool force_unique = (power >= 1 && attempts < 5000);
+		pick = 1+randint0(range-1);
+
+		r_ptr = &r_info[pick];
+
+		if (force_unique && !(r_ptr->flags1 & RF1_UNIQUE)) continue;
+		if (r_ptr->flags3 & RF3_OLYMPIAN) continue; // they have already uniques of their own...
+		if (_mon_has_unique(pick)) continue; // Let's not give duplicates or wonky names...
+
+		if (r_ptr->level < min_lev) continue;
+		if (r_ptr->level > max_lev) continue;
+		if (r_ptr->level >= 98) continue; // let's not give rings of Morgoth or such... 
+
+		if (fail) continue;
+
+		/* Cut up a string a little...*/
+		char m_name[128];
+		char m_buff[33];
+		strcpy(m_name, (r_name + r_ptr->name));
+		strcpy(m_buff, "");
+		int l = 0;
+
+		for (i = 0; i < 32; i++)
+		{
+			if (m_name[i] == ',' || m_name[i] == '\0') break;
+			if (i < 14 && m_name[i] == ' ' &&  m_name[i + 1] == 't' && m_name[i + 2] == 'h' && m_name[i + 3] == 'e') break; // omit 'the'
+			if (i < 15 && m_name[i] == ' ' &&  m_name[i + 1] == 'o' && m_name[i + 2] == 'f') break; // and 'of'
+
+			m_buff[i] = m_name[i];
+			l++;
+		}
+		m_buff[l] = '\0'; // null terminator...
+
+		strcat(out_string, &m_buff); // 
+		name_ok = TRUE;
+
+		break;
+	}
+	if (!name_ok) strcat(out_string, "Nobody"); // silly fallback
+
+	
+
+}
+
+void get_mon_random_name(char *out_string, int maxlv, int power){
+	char buff[80];
+	get_mon_random_name_aux(buff, maxlv, power);
+	buff[0] = toupper(buff[0]);
+	sprintf(out_string, "of %s", buff);
+}
+
 void get_of_X_name_aux(char *out_string, int pow)
 {
 #define _BAD_WORD_MAX 21

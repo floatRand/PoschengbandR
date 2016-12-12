@@ -2331,16 +2331,9 @@ void do_cmd_debug(void)
         do_cmd_wiz_jump();
         break;
 
-	case 'J':
+	case 'J': // get random stuff
 	{
-		char buf[MAX_NLEN];
-		object_type forge;
-		int k_idx = (one_in_(2)) ? 132 : 163;
-		object_prep(&forge, k_idx);
-		if (apply_magic(&forge, dun_level, AM_GOOD | AM_GREAT | AM_SPECIAL)){
-			object_desc(buf, &forge, 0);
-			drop_near(&forge, -1, py, px);
-		}
+		acquirement(py, px, 6, 1+randint0(4), TRUE);
 	}
 		break;
 

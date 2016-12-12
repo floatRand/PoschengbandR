@@ -990,6 +990,7 @@ extern void get_table_sindarin_aux(char *out_string);
 extern void get_table_sindarin(char *out_string);
 extern void get_table_sindarin_uppercase(char *out_string);
 extern void get_name_of_X(char *return_string, int pow);
+extern void get_mon_random_name(char *out_string, int maxlv, int power);
 extern void flavor_init(void);
 extern char tval_to_attr_char(int tval);
 extern char attr_to_attr_char(byte a);
