@@ -732,7 +732,7 @@ static errr init_towns(void)
             /* Assume full stock */
             if (j == STORE_HOME)
             {
-                st_ptr->stock_size = (STORE_INVEN_MAX * 10);
+                st_ptr->stock_size = (STORE_INVEN_MAX * 40); // in vanilla PCB, * 10. In this we have rather larger inventory.
             }
             else if (j == STORE_MUSEUM)
             {
