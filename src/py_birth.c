@@ -173,6 +173,7 @@ void py_birth_spellbooks(void)
  * Welcome to Poschengband!
  ***********************************************************************/ 
 static void _set_mode(int mode);
+static bool _stats_changed = FALSE;
 
 static int _welcome_ui(void)
 {
@@ -242,6 +243,7 @@ static int _welcome_ui(void)
                 p_ptr->stat_cur[i] = previous_char.stat_max[i];
                 p_ptr->stat_max[i] = previous_char.stat_max[i];
             }
+            _stats_changed = TRUE; /* block default stat allocation via _stats_init */
             if (_race_class_ui() == UI_OK)
                 return UI_OK;
         }
@@ -1768,7 +1770,6 @@ static int _stats_score(void);
 static void _stat_dec(int which);
 static void _stat_inc(int which);
 static cptr _stat_desc(int stat);
-static bool _stats_changed = FALSE;
 
 static cptr _stat_names[MAX_STATS] = { "STR", "INT", "WIS", "DEX", "CON", "CHR" };
 static char _stat_to_char(int which);
