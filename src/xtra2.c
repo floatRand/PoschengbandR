@@ -155,22 +155,53 @@ void gain_chosen_stat(void)
     while(1)
     {
         int n;
-        char tmp[32];
 
-        cnv_stat(p_ptr->stat_max[0], tmp);
-        put_str(format("        a) Str (cur %6.6s)              ", tmp), 2, 14);
-        cnv_stat(p_ptr->stat_max[1], tmp);
-        put_str(format("        b) Int (cur %6.6s)              ", tmp), 3, 14);
-        cnv_stat(p_ptr->stat_max[2], tmp);
-        put_str(format("        c) Wis (cur %6.6s)              ", tmp), 4, 14);
-        cnv_stat(p_ptr->stat_max[3], tmp);
-        put_str(format("        d) Dex (cur %6.6s)              ", tmp), 5, 14);
-        cnv_stat(p_ptr->stat_max[4], tmp);
-        put_str(format("        e) Con (cur %6.6s)              ", tmp), 6, 14);
-        cnv_stat(p_ptr->stat_max[5], tmp);
-        put_str(format("        f) Chr (cur %6.6s)              ", tmp), 7, 14);
-        put_str("                                         ", 8, 14);
-        c_put_str(TERM_YELLOW, "        Which stat do you want to raise? ", 1, 14);
+
+        if (p_ptr->knowledge & KNOW_STAT)
+        {
+            char cur[32];
+            char max[32];
+
+            cnv_stat_exact(p_ptr->stat_max[A_STR], cur);
+            cnv_stat(p_ptr->stat_max_max[A_STR], max);
+            put_str(format("        a) Str (cur %6.6s, max %6.6s)   ", cur, max), 2, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_INT], cur);
+            cnv_stat(p_ptr->stat_max_max[A_INT], max);
+            put_str(format("        b) Int (cur %6.6s, max %6.6s)   ", cur, max), 3, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_WIS], cur);
+            cnv_stat(p_ptr->stat_max_max[A_WIS], max);
+            put_str(format("        c) Wis (cur %6.6s, max %6.6s)   ", cur, max), 4, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_DEX], cur);
+            cnv_stat(p_ptr->stat_max_max[A_DEX], max);
+            put_str(format("        d) Dex (cur %6.6s, max %6.6s)   ", cur, max), 5, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_CON], cur);
+            cnv_stat(p_ptr->stat_max_max[A_CON], max);
+            put_str(format("        e) Con (cur %6.6s, max %6.6s)   ", cur, max), 6, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_CHR], cur);
+            cnv_stat(p_ptr->stat_max_max[A_CHR], max);
+            put_str(format("        f) Chr (cur %6.6s, max %6.6s)   ", cur, max), 7, 14);
+            put_str("                                         ", 8, 14);
+            c_put_str(TERM_YELLOW, "        Which stat do you want to raise? ", 1, 14);
+            
+        }
+        else
+        {
+            char tmp[32];
+            cnv_stat_exact(p_ptr->stat_max[A_STR], tmp);
+            put_str(format("        a) Str (cur %6.6s)              ", tmp), 2, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_INT], tmp);
+            put_str(format("        b) Int (cur %6.6s)              ", tmp), 3, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_WIS], tmp);
+            put_str(format("        c) Wis (cur %6.6s)              ", tmp), 4, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_DEX], tmp);
+            put_str(format("        d) Dex (cur %6.6s)              ", tmp), 5, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_CON], tmp);
+            put_str(format("        e) Con (cur %6.6s)              ", tmp), 6, 14);
+            cnv_stat_exact(p_ptr->stat_max[A_CHR], tmp);
+            put_str(format("        f) Chr (cur %6.6s)              ", tmp), 7, 14);
+            put_str("                                         ", 8, 14);
+            c_put_str(TERM_YELLOW, "        Which stat do you want to raise? ", 1, 14);
+        }
 
         while(1)
         {

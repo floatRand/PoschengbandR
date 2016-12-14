@@ -250,6 +250,30 @@ void cnv_stat(int val, char *out_val)
     }
 }
 
+/*
+* If simple_stat_display is on, this includes the decimal portion of the stat. Otherwise it is the same as cnv_stat. 
+*/
+void cnv_stat_exact(int val, char *out_val)
+{
+    if (simple_stat_display)
+    {
+        if (val >= 18 + 220)
+        {
+            sprintf(out_val, "  40.0");
+        }
+        else if (val > 18)
+        {
+            sprintf(out_val, "  %2d.%d", (18 + (val - 18) / 10), (val - 18) % 10);
+        }
+        /* From 3 to 18 */
+        else
+        {
+            sprintf(out_val, "    %2d", val);
+        }
+    }
+    else cnv_stat(val, out_val);
+}
+
 
 
 /*
