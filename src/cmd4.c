@@ -7027,7 +7027,14 @@ static void do_cmd_knowledge_stat(void)
     for (i = 0; i < MAX_STATS; i++)
     {
         if ((p_ptr->knowledge & KNOW_STAT) || p_ptr->stat_max[i] == p_ptr->stat_max_max[i])
-            doc_printf(doc, "%s <color:G>18/%d</color>\n", stat_names[i], p_ptr->stat_max_max[i]-18);
+            if (simple_stat_display)
+            {
+                doc_printf(doc, "%s <color:G>%d</color>\n", stat_names[i], 18 + (p_ptr->stat_max_max[i] - 18)/10);
+            }
+            else
+            {
+                doc_printf(doc, "%s <color:G>18/%d</color>\n", stat_names[i], p_ptr->stat_max_max[i] - 18);
+            }
         else
             doc_printf(doc, "%s <color:y>\?\?\?</color>\n", stat_names[i]);
     }
