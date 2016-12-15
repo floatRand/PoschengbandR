@@ -449,7 +449,6 @@ static void _calc_bonuses(void)
     p_ptr->no_stun = TRUE;
     p_ptr->no_cut = TRUE;
     p_ptr->no_eldritch = TRUE;
-    p_ptr->move_random = TRUE;
     p_ptr->hold_life = TRUE;
     p_ptr->levitation = TRUE;
 

@@ -5250,13 +5250,6 @@ bool get_rep_dir(int *dp, bool under)
             dir = ddd[randint0(8)];
         }
     }
-    else if (p_ptr->move_random && !p_ptr->wild_mode)
-    {
-        if (one_in_(66))
-        {
-            dir = ddd[randint0(8)];
-        }
-    }
 
     /* Notice confusion */
     if (command_dir != dir)
@@ -5266,8 +5259,6 @@ bool get_rep_dir(int *dp, bool under)
             /* Warn the user */
             msg_print("You are confused.");
         }
-        else if (p_ptr->move_random)
-            cmsg_print(TERM_YELLOW, "You are moving erratically.");
         else
         {
             char m_name[80];

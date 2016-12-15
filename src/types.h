@@ -1586,8 +1586,6 @@ struct player_type
 
     byte easy_realm1;   /* Magic Stones give realm specific boosts */
 
-    bool move_random;   /* Cyberdemons and Possessors ... */
-
     int           weapon_ct;
     weapon_info_t weapon_info[MAX_HANDS];
     innate_attack_info_t innate_attack_info;
