@@ -4626,6 +4626,18 @@ static bool travel_flow_aux(int y, int x, int n, bool wall)
 
     /* Ignore out of bounds */
     if (!in_bounds(y, x)) return wall;
+    
+    /* In wilderness, don't scroll the target location off the map */
+    if (!dun_level && !p_ptr->inside_quest && !p_ptr->inside_battle && !p_ptr->inside_arena)
+    {
+        int     tqx = travel.x / WILD_SCROLL_CX;
+        int     tqy = travel.y / WILD_SCROLL_CY;
+        int     qx = x / WILD_SCROLL_CX;
+        int     qy = y / WILD_SCROLL_CY;
+        
+        if (tqx == 2 && qx == 0 || tqx == 0 && qx == 2 || tqy == 2 && qy == 0 || tqy == 0 && qy == 2)
+            return wall;
+    }
 
     /* Ignore "pre-stamped" entries */
     if (travel.cost[y][x] != TRAVEL_UNABLE) return wall;
