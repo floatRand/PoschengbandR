@@ -4053,22 +4053,26 @@ int quest_number(int level)
 	if (randnum > 0) return randnum;
     /* Check for random quest */
 
-
-	for (i = 0; i < max_quests; i++)
-	{
-		if (quest[i].status != QUEST_STATUS_TAKEN) continue;
-
-		if (quest[i].max_num > 1 && QUEST_TYPE_KILL_LEVEL){
-			if ((quest[i].dungeon == dungeon_type)){
-				if ((quest[i].level <= level))
+	if (ironman_downward || coffeebreak_mode){ 
+		/*So-called 'warg-hack'. On ironman/coffeebreak, if you take warg-quest too late, it become uncompleteable.
+		  This hack alters quest so that the wargs spawn on the level player is on, UNLESS there is another quest AND dlevel is deeper than regular quest.
+		  Might be cause for a strange Heisen-bug... I have no idea about it, sorry.
+		*/
+		for (i = 0; i < max_quests; i++)
+		{
+			if (quest[i].status != QUEST_STATUS_TAKEN) continue;
+			if (quest[i].status == QUEST_STATUS_FINISHED) continue;
+			if (quest[i].status == QUEST_STATUS_REWARDED) continue;
+			if (quest[i].status == QUEST_STATUS_COMPLETED) continue; /* huge paranoia... */
+			if (quest[i].max_num > 1 && QUEST_TYPE_KILL_LEVEL){
+				if ((quest[i].dungeon == dungeon_type)){
+					if ((quest[i].level <= level))
 						return i;
+				}
 			}
 		}
 	}
 	/*Shitty warghack*/
-
-	
-
 	return 0;
 }
 
