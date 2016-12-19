@@ -1839,6 +1839,8 @@ extern bool class_doesnt_study(int class_idx);
 extern int monster_tele_save(monster_race *r_ptr, int power);
 extern int max_mspell_damage(int fGroup, u32b atk, monster_race *r_ptr);
 
+extern int Rfear_get_fail_chance(int ml);
+
 /* Display
    Various regions of the terminal are reserved for different things.
    For example, msgs are drawn near the top, the map is (now) leftmost, a

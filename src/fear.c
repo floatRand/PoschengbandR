@@ -566,3 +566,39 @@ void fear_hurt_p(int old_hp, int new_hp)
     }
 }
 
+int Rfear_get_fail_chance(int ml){
+
+	int pl;
+	int rolls;
+	int i;
+
+	if (!hack_mind) return TRUE;
+	if (ml <= 1) return TRUE;
+
+	/* Immunity to Fear?*/
+	if (res_pct(RES_FEAR) >= 100) return 100;
+	pl = _plev() + adj_stat_save_fear[p_ptr->stat_ind[A_CHR]];
+
+	if (pl < 1) pl = 1;
+	rolls = 1 + p_ptr->resist[RES_FEAR];
+	/* Vulnerability to Fear? At least give the player a chance! */
+	/* For attempt to succeed, at least one of the rolls needs to succeed. */
+	/* Don't talk to me about random equalities ever again. */
+	if (rolls < 1) { rolls = 1; pl = (pl + 1) / 2; }
+
+	int chance;
+	/* Failure: ML > PL  */
+	int denom = pl + ml;
+	int numer = ml;
+	if (denom < 1) denom = 1;
+
+	/* Fail chance gets smaller and smaller... */
+	for (i = 1; i < rolls; i++){  
+		denom *= denom; numer *= numer;
+	}
+	/*Hack to get percentage...*/
+	return (numer * 200 + denom) / (denom * 2);
+
+
+}
+

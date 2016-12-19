@@ -377,74 +377,83 @@ static void _flagzilla_free(_flagzilla_ptr flagzilla)
 
 static void _build_res_flags(doc_ptr doc, int which, _flagzilla_ptr flagzilla)
 {
-    int i;
-    int flg = res_get_object_flag(which);
-    int im_flg = res_get_object_immune_flag(which);
-    int vuln_flg = res_get_object_vuln_flag(which);
-    int pct = res_pct_known(which);
-    char color = 'w';
+	int i;
+	int flg = res_get_object_flag(which);
+	int im_flg = res_get_object_immune_flag(which);
+	int vuln_flg = res_get_object_vuln_flag(which);
+	int pct = res_pct_known(which);
+	char color = 'w';
 
-    doc_printf(doc, " %-11.11s: ", res_name(which));
+	doc_printf(doc, " %-11.11s: ", res_name(which));
 
-    for (i = 0; i < equip_count(); i++)
-    {
-        if (im_flg != OF_INVALID && have_flag(flagzilla->obj_flgs[i], im_flg))
-            doc_insert_char(doc, TERM_VIOLET, '*');
-        else if (vuln_flg != OF_INVALID && have_flag(flagzilla->obj_flgs[i], vuln_flg) && have_flag(flagzilla->obj_flgs[i], flg))
-            doc_insert_char(doc, TERM_L_DARK, '.');
-        else if (vuln_flg != OF_INVALID && have_flag(flagzilla->obj_flgs[i], vuln_flg))
-            doc_insert_char(doc, TERM_L_RED, '-');
-        else if (have_flag(flagzilla->obj_flgs[i], flg))
-            doc_insert_char(doc, TERM_WHITE, '+');
-        else
-            doc_insert_char(doc, TERM_L_DARK, '.');
-    }
+	for (i = 0; i < equip_count(); i++)
+	{
+		if (im_flg != OF_INVALID && have_flag(flagzilla->obj_flgs[i], im_flg))
+			doc_insert_char(doc, TERM_VIOLET, '*');
+		else if (vuln_flg != OF_INVALID && have_flag(flagzilla->obj_flgs[i], vuln_flg) && have_flag(flagzilla->obj_flgs[i], flg))
+			doc_insert_char(doc, TERM_L_DARK, '.');
+		else if (vuln_flg != OF_INVALID && have_flag(flagzilla->obj_flgs[i], vuln_flg))
+			doc_insert_char(doc, TERM_L_RED, '-');
+		else if (have_flag(flagzilla->obj_flgs[i], flg))
+			doc_insert_char(doc, TERM_WHITE, '+');
+		else
+			doc_insert_char(doc, TERM_L_DARK, '.');
+	}
 
-    if (im_flg != OF_INVALID && have_flag(flagzilla->py_flgs, im_flg))
-        doc_insert_char(doc, TERM_VIOLET, '*');
-    else if (im_flg != OF_INVALID && have_flag(flagzilla->tim_py_flgs, im_flg))
-        doc_insert_char(doc, TERM_YELLOW, '*');
-    else if (have_flag(flagzilla->tim_py_flgs, flg))
-    {
-        if (vuln_flg != OF_INVALID && have_flag(flagzilla->py_flgs, vuln_flg))
-            doc_insert_char(doc, TERM_ORANGE, '#');
-        else
-            doc_insert_char(doc, TERM_YELLOW, '#');
-    }
-    else if (vuln_flg != OF_INVALID && have_flag(flagzilla->py_flgs, vuln_flg))
-        doc_insert_char(doc, TERM_RED, 'v');
-    else if (have_flag(flagzilla->py_flgs, flg))
-        doc_insert_char(doc, TERM_WHITE, '+');
-    else
-        doc_insert_char(doc, TERM_L_DARK, '.');
+	if (im_flg != OF_INVALID && have_flag(flagzilla->py_flgs, im_flg))
+		doc_insert_char(doc, TERM_VIOLET, '*');
+	else if (im_flg != OF_INVALID && have_flag(flagzilla->tim_py_flgs, im_flg))
+		doc_insert_char(doc, TERM_YELLOW, '*');
+	else if (have_flag(flagzilla->tim_py_flgs, flg))
+	{
+		if (vuln_flg != OF_INVALID && have_flag(flagzilla->py_flgs, vuln_flg))
+			doc_insert_char(doc, TERM_ORANGE, '#');
+		else
+			doc_insert_char(doc, TERM_YELLOW, '#');
+	}
+	else if (vuln_flg != OF_INVALID && have_flag(flagzilla->py_flgs, vuln_flg))
+		doc_insert_char(doc, TERM_RED, 'v');
+	else if (have_flag(flagzilla->py_flgs, flg))
+		doc_insert_char(doc, TERM_WHITE, '+');
+	else
+		doc_insert_char(doc, TERM_L_DARK, '.');
 
-    if (pct == 100)
-        color = 'v';
-    else if (pct < 0)
-        color = 'D';
-    else if (res_is_low(which))
-    {
-        if (pct >= 72)
-            color =  'r';
-        else if (pct >= 65)
-            color =  'R';
-        else if (pct >= 50)
-            color =  'y';
-    }
-    else
-    {
-        if (pct >= 45)
-            color =  'r';
-        else if (pct >= 40)
-            color =  'R';
-        else if (pct >= 30)
-            color =  'y';
-    }
+	if (pct == 100)
+		color = 'v';
+	else if (pct < 0)
+		color = 'D';
+	else if (res_is_low(which))
+	{
+		if (pct >= 72)
+			color = 'r';
+		else if (pct >= 65)
+			color = 'R';
+		else if (pct >= 50)
+			color = 'y';
+	}
+	else
+	{
+		if (pct >= 45)
+			color = 'r';
+		else if (pct >= 40)
+			color = 'R';
+		else if (pct >= 30)
+			color = 'y';
+	}
 
-    if (which == RES_FEAR && res_pct(RES_FEAR) < 100)
-        doc_printf(doc, " %3dx", res_ct_known(which));
-    else
-        doc_printf(doc, " <color:%c>%3d%%</color>", color, pct);
+
+	if (which == RES_FEAR && res_pct(RES_FEAR) < 100){
+		doc_printf(doc, " %3dx", res_ct_known(which));
+		if (p_ptr->wizard){
+			doc_printf(doc, "\n<tab:7>Fear Fail Chance (dev%/atk%):\n");
+			doc_printf(doc, "<tab:10><color:U>UNEASY: %3d    %3d\n</color>", Rfear_get_fail_chance(FEAR_UNEASY), Rfear_get_fail_chance(FEAR_UNEASY * 3));
+			doc_printf(doc, "<tab:10><color:y>SCARED: %3d    %3d\n</color>", Rfear_get_fail_chance(FEAR_SCARED), Rfear_get_fail_chance(FEAR_SCARED * 3));
+			doc_printf(doc, "<tab:10><color:R>TERRIF: %3d    %3d\n</color>", Rfear_get_fail_chance(FEAR_TERRIFIED), Rfear_get_fail_chance(FEAR_TERRIFIED * 3));
+		}
+	} 
+    else doc_printf(doc, " <color:%c>%3d%%</color>", color, pct);
+	
+
     doc_newline(doc);
 }
 
