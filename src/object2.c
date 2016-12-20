@@ -3744,6 +3744,7 @@ static _kind_p _choose_obj_kind(u32b mode)
             break;
         case CLASS_ARCHER:
         case CLASS_SNIPER:
+		case CLASS_HUNTER:
             if (one_in_(5))
                 _kind_hook1 = _kind_is_bow2;
             break;

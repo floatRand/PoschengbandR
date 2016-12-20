@@ -1429,7 +1429,8 @@ static cptr _do_scroll(int sval, int mode)
                 p_ptr->pclass == CLASS_MYSTIC ||
                 p_ptr->pclass == CLASS_MAULER ||
 				p_ptr->pclass == CLASS_ALCHEMIST ||
-				p_ptr->pclass == CLASS_FREELANCER
+				p_ptr->pclass == CLASS_FREELANCER ||
+				p_ptr->pclass == CLASS_HUNTER
 				)
             {
                 msg_print("There is no effect.");

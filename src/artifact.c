@@ -2013,6 +2013,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 break;
             case CLASS_RANGER:
             case CLASS_SNIPER:
+			case CLASS_HUNTER:
                 artifact_bias = BIAS_RANGER;
                 warrior_artifact_bias = 30;
                 break;

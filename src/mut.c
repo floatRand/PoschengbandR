@@ -715,6 +715,7 @@ bool mut_draconian_pred(int mut_idx)
         case CLASS_MYSTIC:
         case CLASS_BEASTMASTER: /* No riding, either! */
         case CLASS_ARCHER:
+		case CLASS_HUNTER:
         case CLASS_SAMURAI:
         case CLASS_CAVALRY:
         case CLASS_WEAPONSMITH:
