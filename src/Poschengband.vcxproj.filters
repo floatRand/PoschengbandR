@@ -621,6 +621,9 @@
     <ClCompile Include="maledict.c">
       <Filter>Player\Classes\PoschengbandR</Filter>
     </ClCompile>
+    <ClCompile Include="hunter.c">
+      <Filter>Player\Classes\PoschengbandR</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="angband.h">

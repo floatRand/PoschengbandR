@@ -946,7 +946,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Melee", {CLASS_BERSERKER, CLASS_BLOOD_KNIGHT, CLASS_DUELIST, CLASS_MAULER,
                     CLASS_RUNE_KNIGHT, CLASS_SAMURAI, CLASS_WARRIOR, CLASS_WEAPONMASTER,
                     CLASS_WEAPONSMITH, CLASS_MALEDICT, -1} },
-    { "Archery", {CLASS_ARCHER, CLASS_SNIPER, -1} },
+    { "Archery", {CLASS_ARCHER, CLASS_SNIPER, CLASS_HUNTER, -1} },
     { "Martial Arts", {CLASS_FORCETRAINER, CLASS_MONK, CLASS_MYSTIC, -1} },
     { "Magic", {CLASS_BLOOD_MAGE, CLASS_BLUE_MAGE, CLASS_GRAY_MAGE, CLASS_HIGH_MAGE, CLASS_MAGE,
                     CLASS_NECROMANCER, CLASS_SORCERER, CLASS_YELLOW_MAGE, -1} },
@@ -2171,6 +2171,7 @@ static void _stats_init(void)
             break;
         }
         case CLASS_MONK:
+		case CLASS_HUNTER:
         {
             int stats[6] = { 16, 8, 16, 17, 11, 8 };
             _stats_init_aux(stats);

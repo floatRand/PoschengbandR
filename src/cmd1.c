@@ -2992,6 +2992,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
     bool            monk_attack = FALSE;
     bool            duelist_attack = FALSE;
     bool            perfect_strike = FALSE;
+	int 			hunter_attack = 0;
     bool            do_quake = FALSE;
     bool            weak = FALSE;
     bool            drain_msg = TRUE;
@@ -3078,7 +3079,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             duelist_attack = TRUE;
         }
         break;
-
     case CLASS_WEAPONMASTER:
         if (!p_ptr->sneak_attack)
             break;
@@ -3122,7 +3122,15 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 backstab = TRUE;
         }
         break;
+	case CLASS_HUNTER:
+		// hunter attack represents +5% adjustment to attack
+		if (c_ptr->m_idx == get_hunter_quarry()) hunter_attack = 6; // bonus
+		else if (get_hunter_quarry()) hunter_attack = -6; // quarry is set, but not target of attack
 
+		if (mon_is_wanted(m_ptr->r_idx) || r_ptr->flags1 & RF1_QUESTOR) hunter_attack += 2 + p_ptr->lev / 25;
+		else if (r_ptr->flags1 & RF1_UNIQUE || r_ptr->flags7 & RF7_UNIQUE2) hunter_attack += 1 + p_ptr->lev / 40;
+		
+		break;
     case CLASS_MONSTER:
         if (p_ptr->ambush && o_ptr)
         {
@@ -3472,6 +3480,10 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 {
                     k = (3 * k) / 2;
                 }
+
+				if (hunter_attack != 0){
+					k = (k*(20 + hunter_attack)) / 20;
+				}
 
                 if (mode == MAULER_CRUSHING_BLOW)
                     k = k * NUM_BLOWS(hand) / 50;
@@ -3961,6 +3973,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     else
                         msg_print("Your chosen target is vanquished!");
                 }
+
+				if (hunter_attack){
+					p_ptr->redraw |= PR_STATUS;
+					set_hunter_quarry(0);
+					msg_print("Your quarry is slain!");
+				}
 
                 if ((p_ptr->pclass == CLASS_BERSERKER || mut_present(MUT_FANTASTIC_FRENZY) || p_ptr->tim_shrike) && energy_use)
                 {

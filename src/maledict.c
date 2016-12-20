@@ -464,7 +464,7 @@ static void _karmic_balance(int cmd, variant *res)
 		int old_cursepow = _curse_boost_capped;
 		if (old_cursepow == 0){ msg_print("You are not carrying any dispellable curses. "); var_set_bool(res, FALSE); break; }
 		msg_print("You are enveloped in good karma. ");
-		hp_player(spell_power(old_cursepow * 70));
+		hp_player(spell_power(old_cursepow *100));
 		remove_all_curse();
 		if (old_cursepow >= 3){
 			set_stun(0, TRUE);
@@ -536,13 +536,13 @@ static bool _unleash(void){
 	if(_curse_boost_capped >= 6) cast_destruction();
 	if(_curse_boost_capped >= 5) project_hack(GF_BLOOD_CURSE, _curse_boost_capped * 25);
 	project(0, 10, py, px, damroll(_curse_boost_capped, 25), GF_MANA, (PROJECT_FULL_DAM | PROJECT_KILL | PROJECT_SHORT_MON_NAME), -1);
-	hp_player(spell_power(_curse_boost_capped * 20));
+	hp_player(spell_power(_curse_boost_capped * 50));
 	set_stun(0, TRUE);
 	set_cut(0, TRUE);
 	set_blind(0, TRUE);
 
 	remove_all_curse();
-	energy_use = 100;
+	energy_use = 10;
 	return TRUE;
 
 }

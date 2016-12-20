@@ -2662,6 +2662,8 @@ static int breakage_chance(object_type *o_ptr)
     if (weaponmaster_is_(WEAPONMASTER_BOWS) && p_ptr->lev >= 20)
         archer_bonus = 7;
 
+	if (p_ptr->pclass == CLASS_HUNTER) archer_bonus = (p_ptr->lev) / 10 + 4;
+
     /* Examine the snipe type */
     if (snipe_type)
     {
@@ -2674,7 +2676,7 @@ static int breakage_chance(object_type *o_ptr)
         if (snipe_type == SP_HOLYNESS) return (40);
     }
 
-    if (shoot_hack == SHOOT_SHATTER) return 100;
+    if (shoot_hack == SHOOT_SHATTER || shoot_hack == SHOOT_EXPLODE) return 100;
     if (weaponmaster_get_toggle() == TOGGLE_EXPLODING_BOLT) return 100;
     if (shoot_hack == SHOOT_ELEMENTAL) return 100;
     if (weaponmaster_get_toggle() == TOGGLE_OVERDRAW) return 100;
@@ -3181,6 +3183,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
         no_energy = TRUE;
         break;
     case SHOOT_RETALIATE:
+	case SHOOT_FAN:
         no_energy = TRUE;
         break;
     case SHOOT_VOLLEY:
@@ -3190,6 +3193,9 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
     case SHOOT_SHATTER:
     case SHOOT_KNOCKBACK:
     case SHOOT_ELEMENTAL:
+	case SHOOT_POISON:
+	case SHOOT_EXPLODE:
+	case SHOOT_MANA:
         no_energy = TRUE;
         energy_use = 100;
         break;
@@ -3432,47 +3438,47 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
             if (shoot_hack == SHOOT_VOLLEY && (x != tx || y != ty)) continue;
 
             /* Monster here, Try to hit it */
-            if (cave[y][x].m_idx)
-            {
-                int armour;
-                bool hit = FALSE;
-                cave_type *c_ptr = &cave[y][x];
+			if (cave[y][x].m_idx)
+			{
+				int armour;
+				bool hit = FALSE;
+				cave_type *c_ptr = &cave[y][x];
 
-                monster_type *m_ptr = &m_list[c_ptr->m_idx];
-                monster_race *r_ptr = &r_info[m_ptr->r_idx];
+				monster_type *m_ptr = &m_list[c_ptr->m_idx];
+				monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
-                /* Check the visibility */
-                visible = m_ptr->ml;
+				/* Check the visibility */
+				visible = m_ptr->ml;
 
-                /* Note the collision */
-                hit_body = TRUE;
+				/* Note the collision */
+				hit_body = TRUE;
 
-                if (MON_CSLEEP(m_ptr))
-                {
-                    if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) virtue_add(VIRTUE_COMPASSION, -1);
-                    if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) virtue_add(VIRTUE_HONOUR, -1);
-                }
+				if (MON_CSLEEP(m_ptr))
+				{
+					if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) virtue_add(VIRTUE_COMPASSION, -1);
+					if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) virtue_add(VIRTUE_HONOUR, -1);
+				}
 
-                if ((r_ptr->level + 10) > p_ptr->lev)
-                    skills_bow_gain(bow->sval);
+				if ((r_ptr->level + 10) > p_ptr->lev)
+					skills_bow_gain(bow->sval);
 
-                if (p_ptr->riding)
-                    skills_riding_gain_archery(r_ptr);
+				if (p_ptr->riding)
+					skills_riding_gain_archery(r_ptr);
 
-                armour = MON_AC(r_ptr, m_ptr);
-                if (p_ptr->concent)
-                {
-                    armour *= (10 - p_ptr->concent);
-                    armour /= 10;
-                }
+				armour = MON_AC(r_ptr, m_ptr);
+				if (p_ptr->concent)
+				{
+					armour *= (10 - p_ptr->concent);
+					armour /= 10;
+				}
 
-                if ( p_ptr->painted_target
-                  && p_ptr->painted_target_idx == c_ptr->m_idx
-                  && p_ptr->painted_target_ct >= 3)
-                {
-                    if (randint1(100) <= 95)
-                        hit = TRUE;
-                }
+				if (p_ptr->painted_target
+					&& p_ptr->painted_target_idx == c_ptr->m_idx
+					&& p_ptr->painted_target_ct >= 3)
+				{
+					if (randint1(100) <= 95)
+						hit = TRUE;
+				}
                 else if (weaponmaster_is_(WEAPONMASTER_BOWS) && cur_dis == 1)
                 {
                     hit = TRUE;
@@ -3486,6 +3492,8 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
 
                     hit = test_hit_fire(chance2 - cur_dis, armour, m_ptr->ml);
                 }
+
+				if (shoot_hack == SHOOT_MANA){ hit = TRUE; }
 
                 if (p_ptr->painted_target)
                 {
@@ -3517,6 +3525,18 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
 
                     /* Get extra damage from concentration */
                     if (p_ptr->concent) tdam = boost_concentration_damage(tdam);
+
+					if (p_ptr->pclass == CLASS_HUNTER){
+						int hunter_attack = 0;
+						// hunter attack represents +5% adjustment to attack
+						if (c_ptr->m_idx == get_hunter_quarry()) hunter_attack = 6; // bonus
+						else if (get_hunter_quarry()) hunter_attack = -6; // quarry is set, but not target of attack
+
+						if (mon_is_wanted(m_ptr->r_idx) || r_ptr->flags1 & RF1_QUESTOR) hunter_attack += 2 + p_ptr->lev / 25;
+						else if (r_ptr->flags1 & RF1_UNIQUE || r_ptr->flags7 & RF7_UNIQUE2) hunter_attack += 1 + p_ptr->lev / 40;
+
+						if (hunter_attack != 0) tdam = (tdam * (20 + hunter_attack)) / 20;
+					}
 
                     /* Handle unseen monster */
                     if (!visible)
@@ -3565,11 +3585,14 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                     else
                     {
                         critical_t crit = {0};
-                        if (shoot_hack != SHOOT_SHATTER && shoot_hack != SHOOT_ELEMENTAL)
+                        if (shoot_hack != SHOOT_SHATTER && shoot_hack != SHOOT_ELEMENTAL && shoot_hack != SHOOT_EXPLODE)
                             tdam = tot_dam_aux_shot(q_ptr, tdam, m_ptr);
 
                         if (shoot_hack == SHOOT_SNIPING && MON_CSLEEP(m_ptr))
                             tdam *= 2;
+
+						else if (shoot_hack == SHOOT_POISON && !(r_ptr->r_flagsr & RES_POIS)) tdam *= 2;
+						else if (shoot_hack == SHOOT_MANA) tdam *= 4;
 
                         crit = critical_shot(q_ptr->weight, q_ptr->to_h);
                         if (crit.desc)
@@ -3601,6 +3624,16 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                         project(0, ((p_ptr->concent + 1) / 2 + 1), ny, nx, tdam, GF_MISSILE, flg, -1);
                         break;
                     }
+
+					if (shoot_hack == SHOOT_EXPLODE)
+					{
+						u16b flg = (PROJECT_STOP | PROJECT_JUMP | PROJECT_KILL | PROJECT_GRID);
+						sound(SOUND_EXPLODE); /* No explode sound - use breath fire instead */
+						tdam = tdam * (100 + p_ptr->lev * 4) / 100;
+						project(0, randint1(2 + p_ptr->lev / 40), ny, nx, tdam, GF_SHARDS, flg, -1);
+						break;
+					}
+
                     if (shoot_hack == SHOOT_ELEMENTAL)
                     {
                         int rad = 0;

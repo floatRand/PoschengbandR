@@ -223,6 +223,7 @@ static void sense_inventory1(void)
             case CLASS_DUELIST:
             case CLASS_RUNE_KNIGHT:
             case CLASS_WEAPONMASTER:
+			case CLASS_HUNTER:
             case CLASS_RAGE_MAGE:
             case CLASS_MAULER:
 			case CLASS_ALCHEMIST:
@@ -487,6 +488,7 @@ static void sense_inventory2(void)
             case CLASS_WEAPONMASTER:
             case CLASS_RAGE_MAGE:
             case CLASS_MAULER:
+			case CLASS_HUNTER:
             case CLASS_MONSTER:
                 return;
 
@@ -3959,7 +3961,8 @@ static void process_command(void)
                      p_ptr->pclass == CLASS_MAULER ||
                      p_ptr->pclass == CLASS_MYSTIC ||
                      p_ptr->pclass == CLASS_TIME_LORD ||
-					 p_ptr->pclass == CLASS_ALCHEMIST)
+					 p_ptr->pclass == CLASS_ALCHEMIST ||
+					 p_ptr->pclass == CLASS_HUNTER ) /* this whole thing is dumb and should be done away with... */
             {
                 /* This is the preferred entry point ... I'm still working on
                    coverting everything else */
@@ -3992,7 +3995,9 @@ static void process_command(void)
                 && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                 && p_ptr->pclass != CLASS_WEAPONMASTER
                 && p_ptr->pclass != CLASS_MAULER 
-				&& p_ptr->pclass != CLASS_ALCHEMIST)
+				&& p_ptr->pclass != CLASS_ALCHEMIST
+				&& p_ptr->pclass != CLASS_HUNTER
+				)
             {
                 msg_print("The dungeon absorbs all attempted magic!");
                 msg_print(NULL);
@@ -4002,7 +4007,8 @@ static void process_command(void)
                     && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                     && p_ptr->pclass != CLASS_WEAPONMASTER
                     && p_ptr->pclass != CLASS_MAULER 
-					&& p_ptr->pclass != CLASS_ALCHEMIST)
+					&& p_ptr->pclass != CLASS_ALCHEMIST
+					&& p_ptr->pclass != CLASS_HUNTER)
             {
                 cptr which_power = "magic";
                 if (p_ptr->pclass == CLASS_MINDCRAFTER || p_ptr->pclass == CLASS_PSION)
@@ -4067,7 +4073,8 @@ static void process_command(void)
                             p_ptr->pclass == CLASS_MYSTIC ||
                             p_ptr->pclass == CLASS_PSION ||
                             p_ptr->pclass == CLASS_TIME_LORD ||
-							p_ptr->pclass == CLASS_MALEDICT
+							p_ptr->pclass == CLASS_MALEDICT ||
+							p_ptr->pclass == CLASS_HUNTER
 							)
                 {
                     /* This is the preferred entrypoint for spells ...

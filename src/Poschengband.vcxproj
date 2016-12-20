@@ -139,6 +139,7 @@
     <ClCompile Include="hex.c" />
     <ClCompile Include="high_mage.c" />
     <ClCompile Include="hissatsu.c" />
+    <ClCompile Include="hunter.c" />
     <ClCompile Include="imitator.c" />
     <ClCompile Include="init1.c" />
     <ClCompile Include="init2.c" />

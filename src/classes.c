@@ -207,6 +207,9 @@ class_t *result = NULL;
     case CLASS_YELLOW_MAGE:
         result = yellow_mage_get_class();
         break;
+	case CLASS_HUNTER:
+		result = hunter_get_class();
+		break;
     }
 
     assert(result);

@@ -862,7 +862,8 @@ enum _mimic_types {
 #define CLASS_FREELANCER		47
 #define CLASS_YELLOW_MAGE       48
 #define CLASS_GRAY_MAGE         49
-#define MAX_CLASS               50
+#define CLASS_HUNTER			50
+#define MAX_CLASS               51
 
 /*
 #define CLASS_LOGRUS_MASTER     50
@@ -5718,6 +5719,10 @@ enum mon_save_fields_e {
 #define SHOOT_KNOCKBACK    13
 #define SHOOT_ELEMENTAL    14
 #define SHOOT_SNIPING      15  /* Scout */
+#define SHOOT_POISON	   16  /* Hunter */
+#define SHOOT_MANA		   17
+#define SHOOT_EXPLODE	   18
+#define SHOOT_FAN		   19
 
 /* Weaponmaster et. al. toggle modes */
 #define TOGGLE_NONE                0

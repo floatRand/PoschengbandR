@@ -1246,6 +1246,22 @@ static void prt_status(void)
         bar[BAR_DUELIST].lstr = duelist_buffer;
     }
 
+
+	if (p_ptr->pclass == CLASS_HUNTER)
+	{
+		if (get_hunter_quarry()){
+			static char duelist_buffer[100];
+			ADD_FLG(BAR_DUELIST);
+			if (get_hunter_quarry())
+				bar[BAR_DUELIST].attr = TERM_YELLOW;
+			else
+				bar[BAR_DUELIST].attr = TERM_L_DARK;
+
+			strnfmt(duelist_buffer, 100, "%^s", get_current_quarry_name());
+			bar[BAR_DUELIST].lstr = duelist_buffer;
+		}
+	}
+
     if (p_ptr->tim_building_up) ADD_FLG(BAR_BUILD);
     if (p_ptr->tim_vicious_strike) ADD_FLG(BAR_VICIOUS_STRIKE);
     if (p_ptr->tim_enlarge_weapon) ADD_FLG(BAR_ENLARGE_WEAPON);
@@ -3259,6 +3275,7 @@ static int _calc_xtra_hp(int amt)
     case CLASS_RUNE_KNIGHT:
 	case CLASS_ALCHEMIST:
 	case CLASS_FREELANCER:
+	case CLASS_HUNTER:
         w1 = 1; w2 = 1; w3 = 0;
         break;
 

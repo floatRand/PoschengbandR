@@ -451,7 +451,7 @@ void do_cmd_snipe(void)
     }
     if (p_ptr->stun)
     {
-        msg_print("You are too stuned!");
+        msg_print("You are too stunned!");
         return;
     }
 

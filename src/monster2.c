@@ -267,6 +267,14 @@ void delete_monster_idx(int i)
         p_ptr->duelist_target_idx = 0;
         p_ptr->redraw |= PR_STATUS;
     }
+
+	if (p_ptr->pclass == CLASS_HUNTER
+		&& get_hunter_quarry() == i)
+	{
+		set_hunter_quarry(0);
+		p_ptr->redraw |= PR_STATUS;
+	}
+
     p_ptr->window |= PW_MONSTER_LIST;
 }
 
@@ -338,6 +346,7 @@ static void compact_monsters_aux(int i1, int i2)
     /* Hack -- Update the target */
     if (target_who == i1) target_who = i2;
     if (p_ptr->duelist_target_idx == i1) p_ptr->duelist_target_idx = i2;
+	if (get_hunter_quarry() == i1) set_hunter_quarry(i2);
 
     /* Hack -- Update the target */
     if (pet_t_m_idx == i1) pet_t_m_idx = i2;
@@ -488,7 +497,7 @@ void wipe_m_list(void)
 {
     int i;
 
-    if (p_ptr->duelist_target_idx)
+    if (p_ptr->duelist_target_idx || get_hunter_quarry()>0)
     {
         /* This is unfortunate, but the monster list gets wiped every time the
            game is saved, sometimes multiple times. I think to create a save file,
@@ -496,6 +505,7 @@ void wipe_m_list(void)
            the current duel will unfortunately be canceled until I can think of a
            way to cope with this. */
         p_ptr->duelist_target_idx = 0;
+		set_hunter_quarry(0);
         p_ptr->redraw |= PR_STATUS;
     }
 
@@ -2046,6 +2056,13 @@ void monster_desc(char *desc, monster_type *m_ptr, int mode)
     {
         strcat(desc, " (Painted)");
     }
+
+	if (p_ptr->pclass == CLASS_HUNTER
+		&& get_hunter_quarry()>0
+		&& m_ptr == &m_list[get_hunter_quarry()])
+	{
+		strcat(desc, " (Quarry)");
+	}
 
     if (p_ptr->wizard && m_ptr->pack_idx)
     {
@@ -3659,7 +3676,10 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
                 msg_format("An %s image forms in your mind.");
             }
         }
-    }
+    } 
+	if (p_ptr->pclass == CLASS_HUNTER){
+		if (mon_is_wanted(r_idx))  msg_format("<color:y>%^s is nearby... Time to collect bounty!</color>", name);
+	}
 
     if (is_mon_trap_grid(c_ptr))
         hit_mon_trap(y, x, c_ptr->m_idx);

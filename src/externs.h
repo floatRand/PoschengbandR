@@ -2453,6 +2453,12 @@ extern class_t *maledict_get_class(void);
 extern bool maledict_ty_protection(void);
 extern int maledict_get_toggle(void);
 
+/* hunter.c */
+extern class_t *hunter_get_class(void);
+extern int get_hunter_quarry(void);
+extern void set_hunter_quarry(int x);
+extern cptr get_current_quarry_name(void);
+
 extern class_t *archaeologist_get_class(void);
 extern bool     archaeologist_is_favored_weapon(object_type *o_ptr);
 extern int      archaeologist_spell_stat_idx(void);
