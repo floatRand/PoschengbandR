@@ -2611,6 +2611,34 @@ bool recharge_from_player(int power)
     int          item;
     int          amt, max;
     object_type *o_ptr;
+    char resource[32];
+
+    amt = power;
+    if (p_ptr->prace == RACE_MON_LEPRECHAUN)
+    {
+        if (amt > p_ptr->au / 100)
+            amt = p_ptr->au / 100;
+        sprintf(resource, "money");
+    }
+    else if (p_ptr->pclass == CLASS_BLOOD_MAGE)
+    {
+        if (amt > p_ptr->chp)
+            amt = p_ptr->chp;
+        sprintf(resource, "health");
+    }
+    else
+    {
+        if (amt > p_ptr->csp)
+            amt = p_ptr->csp;
+        sprintf(resource, "SP");
+    }
+
+    if (amt == 0) 
+    {
+
+        msg_format("Failed! You don't have enough %s!", resource);
+        return NULL;
+    }
 
     /* Get destination device */
     _obj_recharge_src_ptr = NULL;
@@ -2622,23 +2650,10 @@ bool recharge_from_player(int power)
         o_ptr = &inventory[item];
     else
         o_ptr = &o_list[0 - item];
-
-    amt = power;
+    
     max = device_max_sp(o_ptr) - device_sp(o_ptr);
     if (amt > max)
         amt = max;
-    if (p_ptr->prace == RACE_MON_LEPRECHAUN)
-    {
-        if (amt > p_ptr->au / 100)
-            amt = p_ptr->au / 100;
-    }
-    else if (p_ptr->pclass == CLASS_BLOOD_MAGE)
-    {
-        if (amt > p_ptr->chp)
-            amt = p_ptr->chp;
-    }
-    else if (amt > p_ptr->csp)
-        amt = p_ptr->csp;
 
     if (p_ptr->prace == RACE_MON_LEPRECHAUN)
     {
