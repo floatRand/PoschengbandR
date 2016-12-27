@@ -2990,11 +2990,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         ds = 1;
         to_h = 0;
         to_d = 0;
-        if ( (p_ptr->pclass == CLASS_MONK || p_ptr->pclass == CLASS_FORCETRAINER || p_ptr->pclass == CLASS_MYSTIC)
-          && !p_ptr->riding )
-        {
+        if (p_ptr->monk_lvl && !p_ptr->riding)
             monk_attack = TRUE;
-        }
     }
 
     if (p_ptr->painted_target)

@@ -480,6 +480,7 @@ static int _get_spells(spell_info* spells, int max)
 }
 static void _calc_bonuses(void)
 {
+    p_ptr->monk_lvl = p_ptr->lev;
     if (!heavy_armor())
     {
         p_ptr->pspeed += p_ptr->lev/10;

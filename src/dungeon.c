@@ -3882,8 +3882,10 @@ static void process_command(void)
         /* Gain new spells/prayers */
         case 'G':
         {
-            if ((p_ptr->pclass == CLASS_SORCERER) || (p_ptr->pclass == CLASS_RED_MAGE))
+            if (p_ptr->pclass == CLASS_SORCERER || p_ptr->pclass == CLASS_RED_MAGE)
                 msg_print("You don't have to learn spells!");
+            else if (p_ptr->pclass == CLASS_SKILLMASTER)
+                skillmaster_gain_skill();
             else if (p_ptr->pclass == CLASS_SAMURAI)
                 do_cmd_gain_hissatsu();
             else if (p_ptr->pclass == CLASS_RAGE_MAGE)

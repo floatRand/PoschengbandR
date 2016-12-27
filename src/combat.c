@@ -151,6 +151,10 @@ static _blow_info_t _get_blow_info(int hand)
         result.num = weaponmaster_get_max_blows(o_ptr, hand);
         result.wgt = 70; result.mul = 50; break;
 
+    case CLASS_SKILLMASTER:
+        result.num = skillmaster_get_max_blows(o_ptr);
+        result.wgt = 70; result.mul = 50; break;
+
     case CLASS_WARRIOR_MAGE:
     case CLASS_RED_MAGE:
         result.num = 525; result.wgt = 70; result.mul = 30; break;

@@ -1903,7 +1903,17 @@ static void prt_effects(void)
         prt_food(row++, col);
     if (p_ptr->wizard)
         c_put_str(TERM_L_BLUE, "Wizard", row++, col);
-    if (p_ptr->new_spells && p_ptr->pclass != CLASS_RAGE_MAGE)
+    if (p_ptr->pclass == CLASS_SKILLMASTER)
+    {
+        int amt = skillmaster_new_skills();
+        if (amt > 0)
+        {
+            char tmp[20];
+            sprintf(tmp, "Study (%d)", amt);
+            c_put_str(TERM_L_BLUE, tmp, row++, col);
+        }
+    }
+    else if (p_ptr->new_spells && p_ptr->pclass != CLASS_RAGE_MAGE)
     {
         char tmp[20];
         sprintf(tmp, "Study (%d)", p_ptr->new_spells);
@@ -3404,6 +3414,16 @@ u32b weight_limit(void)
     return i;
 }
 
+static bool _is_martial_arts(void)
+{
+    int i;
+    for (i = 0; i < MAX_HANDS; i++)
+    {
+        if (p_ptr->weapon_info[i].bare_hands)
+            return TRUE;
+    }
+    return FALSE;
+}
 
 /*
  * Calculate the players current "state", taking into account
@@ -3645,6 +3665,7 @@ void calc_bonuses(void)
     p_ptr->open_terrain_ct = 0;
 
     p_ptr->quick_walk = FALSE;
+    p_ptr->monk_lvl = 0;
 
     p_ptr->align = friend_align;
     p_ptr->maul_of_vice = FALSE;
@@ -4723,7 +4744,7 @@ void calc_bonuses(void)
         int arm = i / 2;
         if (p_ptr->weapon_info[i].wield_how != WIELD_NONE && p_ptr->weapon_info[i].bare_hands)
         {
-            int blow_base = p_ptr->lev + adj_dex_blow[p_ptr->stat_ind[A_DEX]];
+            int blow_base = p_ptr->monk_lvl + adj_dex_blow[p_ptr->stat_ind[A_DEX]];
             p_ptr->weapon_info[i].base_blow = 100;
 
             if (p_ptr->pclass == CLASS_FORCETRAINER)
@@ -4739,6 +4760,10 @@ void calc_bonuses(void)
             {
                 p_ptr->weapon_info[i].base_blow += MIN(450, 450 * blow_base / 60);
             }
+            else if (p_ptr->pclass == CLASS_SKILLMASTER)
+            {
+                p_ptr->weapon_info[i].base_blow += MIN(500, 500 * blow_base / 60);
+            }
             else
             {
                 p_ptr->weapon_info[i].base_blow += MIN(600, 600 * blow_base / 60);
@@ -4748,11 +4773,11 @@ void calc_bonuses(void)
                 p_ptr->weapon_info[i].base_blow  /= 2;
             else
             {
-                p_ptr->weapon_info[i].to_h += (p_ptr->lev / 3);
-                p_ptr->weapon_info[i].dis_to_h += (p_ptr->lev / 3);
+                p_ptr->weapon_info[i].to_h += (p_ptr->monk_lvl / 3);
+                p_ptr->weapon_info[i].dis_to_h += (p_ptr->monk_lvl / 3);
 
-                p_ptr->weapon_info[i].to_d += (p_ptr->lev / 6);
-                p_ptr->weapon_info[i].dis_to_d += (p_ptr->lev / 6);
+                p_ptr->weapon_info[i].to_d += (p_ptr->monk_lvl / 6);
+                p_ptr->weapon_info[i].dis_to_d += (p_ptr->monk_lvl / 6);
             }
 
             p_ptr->weapon_info[i].base_blow -= arm*100;
@@ -5023,6 +5048,7 @@ void calc_bonuses(void)
     if ((p_ptr->pclass == CLASS_MONK
       || p_ptr->pclass == CLASS_MYSTIC
       || p_ptr->pclass == CLASS_FORCETRAINER
+      || p_ptr->pclass == CLASS_SKILLMASTER
       || p_ptr->pclass == CLASS_NINJA
       || p_ptr->pclass == CLASS_SCOUT) && (monk_armour_aux != monk_notify_aux))
     {
@@ -5464,7 +5490,6 @@ void handle_stuff(void)
     if (p_ptr->window) window_stuff();
 }
 
-
 bool heavy_armor(void)
 {
     u16b monk_arm_wgt = 0;
@@ -5473,7 +5498,8 @@ bool heavy_armor(void)
      && p_ptr->pclass != CLASS_MYSTIC
      && p_ptr->pclass != CLASS_FORCETRAINER
      && p_ptr->pclass != CLASS_NINJA
-     && p_ptr->pclass != CLASS_SCOUT)
+     && p_ptr->pclass != CLASS_SCOUT
+     && (p_ptr->pclass != CLASS_SKILLMASTER || !_is_martial_arts()) )
     {
         return FALSE;
     }

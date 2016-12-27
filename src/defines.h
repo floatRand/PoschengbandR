@@ -857,7 +857,8 @@ enum _mimic_types {
 #define CLASS_DEVICEMASTER      44
 #define CLASS_YELLOW_MAGE       45
 #define CLASS_GRAY_MAGE         46
-#define MAX_CLASS               47
+#define CLASS_SKILLMASTER       47
+#define MAX_CLASS               48
 
 /*
 #define CLASS_LOGRUS_MASTER     47

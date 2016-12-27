@@ -539,6 +539,7 @@ static int _get_powers(spell_info* spells, int max)
 
 static void _calc_bonuses(void)
 {
+    p_ptr->monk_lvl = (p_ptr->lev * 94 + 50) / 100;
     if (p_ptr->lev >= 15) 
         p_ptr->clear_mind = TRUE;
 

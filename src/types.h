@@ -1588,6 +1588,8 @@ struct player_type
 
     bool move_random;   /* Cyberdemons and Possessors ... */
 
+    s16b monk_lvl;
+
     int           weapon_ct;
     weapon_info_t weapon_info[MAX_HANDS];
     innate_attack_info_t innate_attack_info;
