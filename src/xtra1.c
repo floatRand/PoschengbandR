@@ -3878,16 +3878,12 @@ void calc_bonuses(void)
         case ART_STONE_OF_ARMAGEDDON:
             p_ptr->easy_realm1 = REALM_ARMAGEDDON;
             break;
-		case ART_LCOIN:{
-			if (!mut_present(MUT_BAD_LUCK)) p_ptr->good_luck = TRUE; // bad luck mutation cancels out bonuses...
-				else p_ptr->bad_luck = FALSE;	
+		case ART_LCOIN:
+			p_ptr->good_luck = TRUE; 
 			break;
-			}
-		case ART_ULCOIN:{
-			if (!mut_present(MUT_GOOD_LUCK)) p_ptr->bad_luck = TRUE; // bad luck mutation cancels out bonuses...
-				else p_ptr->good_luck = FALSE;
+		case ART_ULCOIN:
+			p_ptr->bad_luck = TRUE; 
 			break;
-			}
         }
     }
 
@@ -3970,11 +3966,6 @@ void calc_bonuses(void)
     if (pers_ptr->calc_bonuses)
         pers_ptr->calc_bonuses();
 
-    if (mut_present(MUT_GOOD_LUCK) && !p_ptr->bad_luck)
-        p_ptr->good_luck = TRUE;
-	if (mut_present(MUT_BAD_LUCK) && !p_ptr->good_luck)
-		p_ptr->bad_luck = TRUE;
-
     if (music_singing(MUSIC_WALL))
         p_ptr->kill_wall = TRUE;
 
@@ -4040,6 +4031,11 @@ void calc_bonuses(void)
 
     if (p_ptr->tim_building_up)
         p_ptr->skills.thn += 60*p_ptr->lev/50;
+
+	if (mut_present(MUT_GOOD_LUCK)) p_ptr->good_luck = TRUE;
+	if (mut_present(MUT_BAD_LUCK)) p_ptr->bad_luck = TRUE;
+	/*Two cancel eachother out...*/
+	if (p_ptr->good_luck && p_ptr->bad_luck){ p_ptr->good_luck = FALSE; p_ptr->bad_luck = FALSE; }
 
     /* Hex bonuses */
     if (p_ptr->realm1 == REALM_HEX)

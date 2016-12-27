@@ -718,12 +718,12 @@ void equip_wield_aux(object_type *src, int slot)
 		if (dest->name1 == ART_LCOIN){
 			if (mut_present(MUT_BAD_LUCK)) msg_print("You feel as if the coin shields you from your misfortune. ");
 			else if (mut_present(MUT_GOOD_LUCK)) msg_print("You don't feel that much luckier... ");
-			msg_print("You feel lucky.");
+			else msg_print("You feel lucky.");
 		}
 		else if (dest->name1 == ART_ULCOIN){
 			if (mut_present(MUT_GOOD_LUCK)) msg_print("Your good luck seems to be suppressing the misfortune in the coin... ");
 			else if (mut_present(MUT_GOOD_LUCK)) msg_print("The world is a cruel place. ");
-			msg_print("You feel unlucky.");
+			else msg_print("You feel unlucky.");
 		}
 	}
 	if (dest->name1 == ART_AMULET_NIGHTMARE)

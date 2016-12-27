@@ -3591,8 +3591,14 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                         if (shoot_hack == SHOOT_SNIPING && MON_CSLEEP(m_ptr))
                             tdam *= 2;
 
-						else if (shoot_hack == SHOOT_POISON && !(r_ptr->r_flagsr & RES_POIS)) tdam *= 2;
-						else if (shoot_hack == SHOOT_MANA) tdam *= 4;
+						else if (shoot_hack == SHOOT_POISON && !(r_ptr->r_flagsr & RES_POIS)){
+							tdam *= 15;
+							tdam /= 10;
+							mon_lore_r(m_ptr, RES_POIS);
+						}
+						else if (shoot_hack == SHOOT_MANA){
+							tdam *= 3;
+						}
 
                         crit = critical_shot(q_ptr->weight, q_ptr->to_h);
                         if (crit.desc)

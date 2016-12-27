@@ -528,7 +528,7 @@ static int _get_powers(spell_info* spells, int max)
 	spell_info* spell = &spells[ct++];
 	spell->level = 15;
 	spell->cost = 20;
-	spell->fail = calculate_fail_rate(spell->level, 60, p_ptr->stat_ind[A_WIS]);
+	spell->fail = calculate_fail_rate(spell->level, 60, p_ptr->stat_ind[A_CHR]);
 	spell->fn = probing_spell;
 
 	spell = &spells[ct++];
@@ -562,7 +562,7 @@ static caster_info * _caster_info(void)
 	if (!init)
 	{
 		me.magic_desc = "hunter trick";
-		me.which_stat = A_WIS;
+		me.which_stat = A_CHR;
 		me.weight = 800;
 		me.min_fail = 0;
 		init = TRUE;
@@ -622,10 +622,10 @@ class_t *hunter_get_class(void)
 
 		me.stats[A_STR] = 0;
 		me.stats[A_INT] = -1;
-		me.stats[A_WIS] = 2;
+		me.stats[A_WIS] = 0;
 		me.stats[A_DEX] = 2;
 		me.stats[A_CON] = 0;
-		me.stats[A_CHR] = 0;
+		me.stats[A_CHR] = 2;
 		me.base_skills = bs;
 		me.extra_skills = xs;
 		me.life = 100;

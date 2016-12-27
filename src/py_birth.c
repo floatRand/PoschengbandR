@@ -2171,7 +2171,6 @@ static void _stats_init(void)
             break;
         }
         case CLASS_MONK:
-		case CLASS_HUNTER:
         {
             int stats[6] = { 16, 8, 16, 17, 11, 8 };
             _stats_init_aux(stats);
@@ -2186,6 +2185,7 @@ static void _stats_init(void)
         case CLASS_BEASTMASTER:
         case CLASS_BARD:
         case CLASS_WARLOCK:
+		case CLASS_HUNTER:
         {
             int stats[6] = { 16, 8, 8, 16, 11, 17 };
             _stats_init_aux(stats);
