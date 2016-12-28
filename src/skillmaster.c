@@ -468,6 +468,8 @@ static void _melee_calc_bonuses(void)
     int pts = _get_skill_pts(_TYPE_MELEE, _MARTIAL_ARTS);
     assert(0 <= pts && pts <= 5);
     p_ptr->monk_lvl = (p_ptr->lev * _melee_info[pts].ma_wgt + 50) / 100;
+    if (!equip_find_first(object_is_melee_weapon) && p_ptr->monk_lvl)
+        monk_ac_bonus();
 }
 
 /************************************************************************
@@ -488,6 +490,9 @@ static void _shoot_init_class(class_t *class_ptr)
     _shoot_skill_t row = _tbl[pts];
     class_ptr->base_skills.thb = row.base_thb;
     class_ptr->extra_skills.thb = row.xtra_thb;
+
+    pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
+    class_ptr->stats[A_DEX] += (pts + 1) / 2;
 }
 
 typedef struct { int to_h; int to_d; int prof; int shots; } _shoot_info_t;
@@ -526,6 +531,410 @@ int skillmaster_bow_prof(void)
     return _shoot_info[pts].prof;
 }
 
+typedef struct { int skill; int back; int mult; int energy; } _throw_info_t;
+static _throw_info_t _throw_info[6] = {
+    {   0, 15, 100, 100 },
+    {  12, 18, 100, 100 },
+    {  28, 21, 150, 100 }, /* 18/220 Dex for 0% fail */
+    {  48, 24, 200,  90 }, /* 18/180 Dex for 0% fail */
+    {  72, 27, 300,  80 }, /* 18/150 Dex for 0% fail */
+    { 100, 30, 400,  60 }, /* 18/110 Dex for 0% fail */
+};
+
+static void _shoot_calc_bonuses(void)
+{
+    int pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
+    assert(0 <= pts && pts <= 5);
+    /* Bow skills are a bit low for effective throwing, presumably since
+     * the code expects to_h bonuses from both shooter and ammo? Note that
+     * skill_tht is already initialized to skills.thb in calc_bonuses() */
+    p_ptr->skill_tht += _throw_info[pts].skill;
+}
+
+/* THROW WEAPON ... TODO: Try to consolidate this with the 2 other versions in weaponmaster.c */
+typedef struct {
+    int item;
+    object_type *o_ptr;
+    int mult; /* scaled by 100 to better handle fractional blows */
+    int tdis;
+    int tx;
+    int ty;
+    bool come_back;
+    bool fail_catch;
+} _throw_weapon_info;
+
+static void _throw_weapon_imp(_throw_weapon_info * info_ptr);
+
+static int _throw_back_chance(void)
+{
+    int result;
+    int pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
+    assert(0 <= pts && pts <= 5);
+
+    result = randint1(30);
+    result += _throw_info[pts].back;
+    result += adj_dex_th[p_ptr->stat_ind[A_DEX]];
+    result -= 128;
+
+    return result;
+}
+
+static int _throw_mult(int hand)
+{
+    int result;
+    int pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
+    assert(0 <= pts && pts <= 5);
+
+    result = _throw_info[pts].mult;
+    if (p_ptr->mighty_throw)
+        result += 100;
+
+    return result;
+}
+
+static int _throw_range(int hand)
+{
+    int          mul, div, rng;
+    object_type *o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
+
+    mul = 10 + 2 * (_throw_mult(hand) - 100) / 100;
+    div = o_ptr->weight > 10 ? o_ptr->weight : 10;
+    div /= 2;
+
+    rng = (adj_str_blow[p_ptr->stat_ind[A_STR]] + 20) * mul / div;
+    if (rng > mul) rng = mul;
+    if (rng < 5) rng = 5;
+
+    return rng;
+}
+
+static bool _throw_weapon(int hand)
+{
+    int dir;
+    _throw_weapon_info info;
+    int back_chance;
+    int oops = 100;
+
+    /* Setup info for the toss */
+    info.item = p_ptr->weapon_info[hand].slot;
+    info.o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
+    info.come_back = FALSE;
+
+    if (!info.o_ptr) return FALSE; /* paranoia */
+    if (object_is_cursed(info.o_ptr))
+    {
+        msg_print("Hmmm, it seems to be cursed.");
+        return FALSE;
+    }
+
+    back_chance = _throw_back_chance();
+
+    info.come_back = FALSE;
+    info.fail_catch = FALSE;
+    if (back_chance > 30 && !one_in_(oops))
+    {
+        info.come_back = TRUE;
+        if (p_ptr->blind || p_ptr->image || p_ptr->confused || one_in_(oops))
+            info.fail_catch = TRUE;
+        else
+        {
+            oops = 37;
+            if (p_ptr->stun)
+                oops += 10;
+            if (back_chance <= oops)
+                info.fail_catch = TRUE;
+        }
+    }
+
+    /* Pick a target */
+    info.mult = _throw_mult(hand);
+    info.tdis = _throw_range(hand);
+
+    project_length = info.tdis;
+    if (!get_fire_dir(&dir)) return FALSE;
+
+    info.tx = px + 99 * ddx[dir];
+    info.ty = py + 99 * ddy[dir];
+
+    if (dir == 5 && target_okay())
+    {
+        info.tx = target_col;
+        info.ty = target_row;
+    }
+    project_length = 0;
+
+    if (info.tx == px && info.ty == py) return FALSE;
+
+    /* Throw */
+    _throw_weapon_imp(&info);
+
+    /* Handle Inventory */
+    if (!info.come_back || info.fail_catch)
+    {
+        object_type copy;
+
+        if (!info.come_back)
+        {
+            char o_name[MAX_NLEN];
+            object_desc(o_name, info.o_ptr, OD_NAME_ONLY);
+            msg_format("Your %s fails to return!", o_name);
+        }
+
+        if (info.fail_catch)
+            cmsg_print(TERM_VIOLET, "But you can't catch!");
+
+        if (TRUE) /* This is a showstopper, so force the player to notice! */
+        {
+            msg_print("Press <color:y>Space</color> to continue.");
+            flush();
+            for (;;)
+            {
+                char ch = inkey();
+                if (ch == ' ') break;
+            }
+            msg_line_clear();
+        }
+
+        object_copy(&copy, info.o_ptr);
+        copy.number = 1;
+
+        inven_item_increase(info.item, -1);
+        inven_item_describe(info.item);
+        inven_item_optimize(info.item);
+
+
+        if (!info.come_back)
+            drop_near(&copy, 0, info.ty, info.tx);
+        else
+            drop_near(&copy, 0, py, px);
+
+        p_ptr->redraw |= PR_EQUIPPY;
+        p_ptr->update |= PU_BONUS;
+        android_calc_exp();
+        handle_stuff();
+    }
+    return TRUE;
+}
+
+static void _throw_weapon_imp(_throw_weapon_info * info)
+{
+    char o_name[MAX_NLEN];
+    u16b path[512];
+    int msec = delay_factor * delay_factor * delay_factor;
+    int y, x, ny, nx, tdam;
+    int cur_dis, ct;
+    int chance;
+
+    chance = p_ptr->skill_tht + (p_ptr->shooter_info.to_h + info->o_ptr->to_h) * BTH_PLUS_ADJ;
+
+    object_desc(o_name, info->o_ptr, OD_NAME_ONLY);
+    ct = project_path(path, info->tdis, py, px, info->ty, info->tx, PROJECT_PATH);
+
+    y = py;
+    x = px;
+
+    for (cur_dis = 0; cur_dis < ct; )
+    {
+        /* Peek ahead at the next square in the path */
+        ny = GRID_Y(path[cur_dis]);
+        nx = GRID_X(path[cur_dis]);
+
+        /* Stopped by walls/doors/forest ... but allow hitting your target, please! */
+        if (!cave_have_flag_bold(ny, nx, FF_PROJECT)
+         && !cave[ny][nx].m_idx)
+        {
+            break;
+        }
+
+        /* The player can see the (on screen) missile */
+        if (panel_contains(ny, nx) && player_can_see_bold(ny, nx))
+        {
+            char c = object_char(info->o_ptr);
+            byte a = object_attr(info->o_ptr);
+
+            /* Draw, Hilite, Fresh, Pause, Erase */
+            print_rel(c, a, ny, nx);
+            move_cursor_relative(ny, nx);
+            Term_fresh();
+            Term_xtra(TERM_XTRA_DELAY, msec);
+            lite_spot(ny, nx);
+            Term_fresh();
+        }
+
+        /* The player cannot see the missile */
+        else
+        {
+            /* Pause anyway, for consistancy */
+            Term_xtra(TERM_XTRA_DELAY, msec);
+        }
+
+        /* Save the new location */
+        x = nx;
+        y = ny;
+
+        /* Advance the distance */
+        cur_dis++;
+
+        /* Monster here, Try to hit it */
+        if (cave[y][x].m_idx)
+        {
+            cave_type *c_ptr = &cave[y][x];
+            monster_type *m_ptr = &m_list[c_ptr->m_idx];
+            monster_race *r_ptr = &r_info[m_ptr->r_idx];
+            bool visible = m_ptr->ml;
+
+            if (test_hit_fire(chance - cur_dis, MON_AC(r_ptr, m_ptr), m_ptr->ml))
+            {
+                bool fear = FALSE;
+
+                if (!visible)
+                    msg_format("The %s finds a mark.", o_name);
+                else
+                {
+                    char m_name[80];
+                    monster_desc(m_name, m_ptr, 0);
+                    msg_format("The %s hits %s.", o_name, m_name);
+                    if (m_ptr->ml)
+                    {
+                        if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
+                        health_track(c_ptr->m_idx);
+                    }
+                }
+
+                /***** The Damage Calculation!!! *****/
+                tdam = damroll(info->o_ptr->dd, info->o_ptr->ds);
+                tdam = tot_dam_aux(info->o_ptr, tdam, m_ptr, 0, 0, TRUE);
+                tdam = critical_throw(info->o_ptr->weight, info->o_ptr->to_h, tdam);
+                tdam += info->o_ptr->to_d;
+                tdam += adj_str_td[p_ptr->stat_ind[A_STR]] - 128;
+                tdam = tdam * info->mult / 100;
+                /*tdam += p_ptr->shooter_info.to_d; <== It feels wrong for Rings of Archery to work here!*/
+                if (tdam < 0) tdam = 0;
+                tdam = mon_damage_mod(m_ptr, tdam, FALSE);
+
+                if (mon_take_hit(c_ptr->m_idx, tdam, &fear, extract_note_dies(real_r_ptr(m_ptr))))
+                {
+                    /* Dead monster */
+                }
+                else
+                {
+                    message_pain(c_ptr->m_idx, tdam);
+                    if (tdam > 0)
+                        anger_monster(m_ptr);
+
+                    if (tdam > 0 && m_ptr->cdis > 1 && allow_ticked_off(r_ptr))
+                    {
+                        if (mut_present(MUT_PEERLESS_SNIPER))
+                        {
+                        }
+                        else
+                        {
+                            m_ptr->anger_ct++;
+                        }
+                    }
+
+                    if (fear && m_ptr->ml)
+                    {
+                        char m_name[80];
+                        sound(SOUND_FLEE);
+                        monster_desc(m_name, m_ptr, 0);
+                        msg_format("%^s flees in terror!", m_name);
+                    }
+                }
+            }
+
+            /* Stop looking */
+            break;
+        }
+    }
+
+    if (info->come_back)
+    {
+        int i;
+        for (i = cur_dis; i >= 0; i--)
+        {
+            y = GRID_Y(path[i]);
+            x = GRID_X(path[i]);
+            if (panel_contains(y, x) && player_can_see_bold(y, x))
+            {
+                char c = object_char(info->o_ptr);
+                byte a = object_attr(info->o_ptr);
+
+                /* Draw, Hilite, Fresh, Pause, Erase */
+                print_rel(c, a, y, x);
+                move_cursor_relative(y, x);
+                Term_fresh();
+                Term_xtra(TERM_XTRA_DELAY, msec);
+                lite_spot(y, x);
+                Term_fresh();
+            }
+            else
+            {
+                /* Pause anyway, for consistancy */
+                Term_xtra(TERM_XTRA_DELAY, msec);
+            }
+        }
+        msg_format("Your %s comes back to you.", o_name);
+    }
+    else
+    {
+        /* Record the actual location of the toss so we can drop the object here if required */
+        info->tx = x;
+        info->ty = y;
+    }
+}
+
+static int _throwing_hand(void)
+{
+    int hand;
+    for (hand = 0; hand < MAX_HANDS; hand++)
+    {
+        if (p_ptr->weapon_info[hand].wield_how != WIELD_NONE && !p_ptr->weapon_info[hand].bare_hands)
+            return hand;
+    }
+    return HAND_NONE;
+}
+
+static void _throw_weapon_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Throw Weapon");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "Throws your leading weapon, which might return to you.");
+        break;
+    case SPELL_INFO:
+    {
+        int hand = _throwing_hand();
+        if (hand != HAND_NONE)
+            var_set_string(res, info_range(_throw_range(hand)));
+        break;
+    }
+    case SPELL_CAST:
+    {
+        int hand = _throwing_hand();
+        var_set_bool(res, FALSE);
+        if (hand != HAND_NONE)
+            var_set_bool(res, _throw_weapon(hand));
+        else
+            msg_print("You need to wield a weapon before throwing it.");
+        break;
+    }
+    case SPELL_ENERGY:
+    {
+        int pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
+        assert(0 <= pts && pts <= 5);
+        var_set_int(res, _throw_info[pts].energy);
+        break;
+    }
+    default:
+        default_spell(cmd, res);
+        break;
+    }
+}
+
 /************************************************************************
  * Techniques
  ***********************************************************************/
@@ -557,6 +966,25 @@ static void _gain_level(int new_lvl)
 static void _calc_bonuses(void)
 {
     _melee_calc_bonuses();
+    _shoot_calc_bonuses();
+}
+
+static void _add_power(spell_info* spell, int lvl, int cost, int fail, ang_spell fn, int stat_idx)
+{
+    spell->level = lvl;
+    spell->cost = cost;
+    spell->fail = calculate_fail_rate(lvl, fail, stat_idx);
+    spell->fn = fn;
+}
+
+static int _get_powers(spell_info* spells, int max)
+{
+    int ct = 0;
+
+    if (ct < max && _get_skill_pts(_TYPE_SHOOT, _THROWING) > 0)
+        _add_power(&spells[ct++], 1, 0, 0, _throw_weapon_spell, A_DEX); /* No cost or fail ... this is a skill, not magic! */
+
+    return ct;
 }
 
 class_t *skillmaster_get_class(void)
@@ -593,8 +1021,8 @@ class_t *skillmaster_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;
-        /*me.get_powers = _get_powers;
-        me.get_flags = _get_flags;*/
+        me.get_powers = _get_powers;
+        /*me.get_flags = _get_flags;*/
         me.load_player = _load_player;
         me.save_player = _save_player;
         init = TRUE;
