@@ -4684,7 +4684,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             bool resists_tele = FALSE;
             if (r_ptr->flagsr & RFR_RES_TELE)
             {
-                if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL))
+                if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL) || (m_ptr->smart & SM_GUARDIAN))
                 {
                     mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " is unaffected!";
