@@ -5,10 +5,12 @@
 /************************************************************************
  * The Skill System
  ***********************************************************************/
-#define _MAX_SKILLS    15
-#define _MARTIAL_ARTS 300
-#define _ARCHERY      301
-#define _THROWING     302
+#define _MAX_SKILLS     15
+#define _MARTIAL_ARTS  300
+#define _ARCHERY       301
+#define _THROWING      302
+#define _DUAL_WIELDING 303
+#define _RIDING        304
 
 enum _type_e {
     _TYPE_NONE = 0,
@@ -53,12 +55,48 @@ static _group_t _groups[] = {
          { _TYPE_MELEE, _MARTIAL_ARTS, "Martial Arts", 5, 0 },
          { 0 }}},
     { _TYPE_SHOOT, "Ranged", 10,
-        "Ranged skills increase your ability to fight monsters using distance weapons such as bows and slings, as "
-        "well as the ability to throw melee weapons effectively. The total number of points spent in this group will "
-        "determine your base shooting skill, as well as how fast this skill increases with experience. Archery grants "
-        "proficiency with the various classes of shooters as well as increasing your number of shots per round.",
+        "Ranged skills increase your ability to fight monsters using distance weapons "
+        "such as bows and slings, as well as the ability to throw melee weapons "
+        "effectively. The total number of points spent in this group will determine "
+        "your base shooting skill, as well as how fast this skill increases with "
+        "experience. Archery grants proficiency with the various classes of shooters "
+        "as well as increasing your number of shots per round.",
         {{ _TYPE_SHOOT, _ARCHERY, "Archery", 5, 0 },
          { _TYPE_SHOOT, _THROWING, "Throwing", 5, 0 },
+         { 0 }}},
+    { _TYPE_MAGIC, "Magic", 0,
+        "Magic skills grant access to various spellcasting realms using INT rather "
+        "than WIS as the spellcasting stat. Each point in a given realm increases "
+        "your maximum spellcasting level as well as the decreasing the cost and fail "
+        "rates of individual spells. You need not learn individual spells the way a "
+        "mage might. Rather, you may cast any spell in a known realm provided your "
+        "spellcasting level is high enough. The total number of points spent in this "
+        "group provides a modest boost to device skills as well as increasing your "
+        "INT. Unfortunately. this total also has a negative impact on your life rating.",
+        {{ _TYPE_MAGIC, REALM_ARCANE, "Arcane", 5, 0 },
+         { _TYPE_MAGIC, REALM_ARMAGEDDON, "Armageddon", 5, 0 },
+         { _TYPE_MAGIC, REALM_CHAOS, "Chaos", 5, 0 },
+         { _TYPE_MAGIC, REALM_CRAFT, "Craft", 5, 0 },
+         { _TYPE_MAGIC, REALM_CRUSADE, "Crusade", 5, 0 },
+         { _TYPE_MAGIC, REALM_DAEMON, "Daemon", 5, 0 },
+         { _TYPE_MAGIC, REALM_DEATH, "Death", 5, 0 },
+         { _TYPE_MAGIC, REALM_NATURE, "Nature", 5, 0 },
+         { _TYPE_MAGIC, REALM_SORCERY, "Sorcery", 5, 0 },
+         { _TYPE_MAGIC, REALM_TRUMP, "Trump", 5, 0 },
+         { 0 }}},
+    { _TYPE_PRAYER, "Prayer", 0,
+        "",
+        {{ _TYPE_PRAYER, REALM_CRUSADE, "Crusade", 5, 0 },
+         { _TYPE_PRAYER, REALM_DAEMON, "Daemon", 5, 0 },
+         { _TYPE_PRAYER, REALM_DEATH, "Death", 5, 0 },
+         { _TYPE_PRAYER, REALM_LIFE, "Life", 5, 0 },
+         { 0 }}},
+    { _TYPE_TECHNIQUE, "Technique", 0,
+        "",
+        {{ _TYPE_TECHNIQUE, REALM_BURGLARY, "Burglary", 5, 0 },
+         { _TYPE_TECHNIQUE, REALM_HISSATSU, "Kendo", 5, 0 }, 
+         { _TYPE_TECHNIQUE, _DUAL_WIELDING, "Dual Wielding", 5, 0 },
+         { _TYPE_TECHNIQUE, _RIDING, "Riding", 5, 0 },
          { 0 }}},
     { 0 }
 };
@@ -142,6 +180,25 @@ static int _get_skill_pts(int type, int subtype)
     return s->current;
 }
 
+static int _get_skill_ct_aux(_group_ptr g)
+{
+    int i, ct = 0;
+    for (i = 0; ; i++)
+    {
+        _skill_ptr s = &g->skills[i];
+        if (!s->type) break;
+        ct++;
+    }
+    return ct;
+}
+
+static int _get_skill_ct(int type)
+{
+    _group_ptr g = _get_group(type);
+    assert(g);
+    return _get_skill_ct_aux(g);
+}
+
 static void _reset_group(_group_ptr g)
 {
     int i;
@@ -207,7 +264,7 @@ static void _save_player(savefile_ptr file)
 }
 
 /************************************************************************
- * User Interface
+ * Gain a Skill (UI)
  ***********************************************************************/
 static doc_ptr _doc = NULL;
 
@@ -248,9 +305,14 @@ static int _gain_skill_ui(_group_ptr g)
 {
     for (;;)
     {
-        int cmd, i, ct = 0;
-        int free_pts = _get_free_pts();
-        int group_pts = _get_group_pts_aux(g);
+        int     cmd, i, ct = _get_skill_ct_aux(g);
+        int     split = (ct > 7) ? (ct + 1)/2 : ct;
+        int     free_pts = _get_free_pts();
+        int     group_pts = _get_group_pts_aux(g);
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(26);
+        cols[1] = doc_alloc(36);
 
         doc_clear(_doc);
         doc_printf(_doc, "<color:B>%-10.10s</color>: <indent>%s</indent>\n\n", g->name, g->desc);
@@ -261,17 +323,23 @@ static int _gain_skill_ui(_group_ptr g)
         for (i = 0; ; i++, ct++)
         {
             _skill_ptr s = &g->skills[i];
+            doc_ptr    col = cols[i < split ? 0 : 1];
+
             if (!s->type) break;
-            doc_printf(_doc, "  <color:%c>%c</color>) %s",
+
+            doc_printf(col, "  <color:%c>%c</color>) %s",
                 free_pts > 0 && s->current < s->max ? 'y' : 'D',
                 I2A(i),
                 s->name
             );
             if (s->current && s->max)
-                doc_printf(_doc, " (%d%%)", 100*s->current/s->max);
-            doc_newline(_doc);
+                doc_printf(col, " (%d%%)", 100*s->current/s->max);
+            doc_newline(col);
         }
-        doc_newline(_doc);
+        doc_insert_cols(_doc, cols, 2, 1);
+        doc_free(cols[0]);
+        doc_free(cols[1]);
+
         doc_insert(_doc, "  <color:y>?</color>) Help\n");
         doc_insert(_doc, "<color:y>ESC</color>) Cancel\n");
 
@@ -332,6 +400,8 @@ static int _gain_type_ui(void)
             doc_printf(_doc, "  <color:y>%c</color>) %s", I2A(i), g->name);
             if (pts && g->max)
                 doc_printf(_doc, " (%d%%)", 100*pts/g->max);
+            else if (pts)
+                doc_printf(_doc, " (%d)", pts);
             doc_newline(_doc);
         }
         doc_newline(_doc);
@@ -413,6 +483,9 @@ static void _melee_init_class(class_t *class_ptr)
     class_ptr->extra_skills.thn = row.xtra_thn;
     class_ptr->stats[A_STR] += row.str;
     class_ptr->stats[A_DEX] += row.dex;
+
+    pts = _get_skill_pts(_TYPE_MELEE, _MARTIAL_ARTS);
+    class_ptr->stats[A_DEX] += (pts + 1) / 3;
 }
 
 typedef struct { int to_h; int to_d; int prof; int blows; int ma_wgt; } _melee_info_t;
@@ -493,6 +566,9 @@ static void _shoot_init_class(class_t *class_ptr)
 
     pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
     class_ptr->stats[A_DEX] += (pts + 1) / 2;
+
+    pts = _get_skill_pts(_TYPE_SHOOT, _ARCHERY);
+    class_ptr->base_skills.stl += (pts + 1) / 2;
 }
 
 typedef struct { int to_h; int to_d; int prof; int shots; } _shoot_info_t;
@@ -936,6 +1012,427 @@ static void _throw_weapon_spell(int cmd, variant *res)
 }
 
 /************************************************************************
+ * Magic Skills
+ ***********************************************************************/
+static void _magic_init_class(class_t *class_ptr)
+{
+    typedef struct { int base_dev; int xtra_dev; int stat; } _magic_skill_t;
+    static _magic_skill_t _tbl[11] = {
+        { 18,  7, 0 },
+
+        { 25,  9, 1 },
+        { 27,  9, 1 },
+        { 29,  9, 1 },
+        { 30,  9, 2 },
+        { 31,  9, 2 },
+
+        { 32, 10, 2 },
+        { 33, 10, 3 },
+        { 34, 10, 3 },
+        { 35, 10, 3 },
+        { 35, 11, 4 }
+    };
+    int pts = _get_group_pts(_TYPE_MAGIC);
+    _magic_skill_t row = _tbl[MIN(10, pts)];
+    class_ptr->base_skills.dev = row.base_dev;
+    class_ptr->extra_skills.dev = row.xtra_dev;
+    class_ptr->stats[A_INT] += row.stat;
+    class_ptr->life -= (pts + 1) / 2;
+}
+
+typedef struct { int max_lvl; int cost_mult; int fail_adj; int fail_min; } _realm_skill_t;
+static _realm_skill_t _realm_skills[6] = {
+    {  1,   0,  0, 50 },
+    { 30, 150, 10,  5 },
+    { 35, 125,  5,  5 },
+    { 40, 110,  2,  4 },
+    { 45, 100,  1,  3 },
+    { 50,  90,  0,  0 }
+};
+
+caster_info *_caster_info(void)
+{
+    static caster_info info = {0};
+    int magic_pts = _get_group_pts(_TYPE_MAGIC);
+    int prayer_pts = _get_group_pts(_TYPE_PRAYER);
+
+    info.options = 0;
+    info.weight = 450;
+    /* Experimental: Learning Kendo let's you focus
+     * to supercharge mana, no matter what other realms you
+     * know. This is powerful, so we preclude access
+     * to CASTER_ALLOW_DEC_MANA altogether. Also, unlike
+     * Samurai, you still need to carry books! */
+    if (_get_skill_pts(_TYPE_TECHNIQUE, REALM_HISSATSU))
+    {
+        info.which_stat = A_WIS;
+        info.magic_desc = "technique";
+        info.options = CASTER_SUPERCHARGE_MANA;
+        return &info;
+    }
+    /* Now, use INT or WIS for mana, depending on which
+     * has the most total points */
+    else if (magic_pts && magic_pts > prayer_pts)
+    {
+        info.which_stat = A_INT;
+        info.magic_desc = "spell";
+        info.options |= CASTER_GLOVE_ENCUMBRANCE;
+        if (magic_pts >= 5)
+            info.options |= CASTER_ALLOW_DEC_MANA;
+        return &info;
+    }
+    else if (prayer_pts)
+    {
+        info.which_stat = A_WIS;
+        info.magic_desc = "prayer";
+        if (prayer_pts >= 5)
+            info.options |= CASTER_ALLOW_DEC_MANA;
+        return &info;
+    }
+    else if (_get_skill_pts(_TYPE_TECHNIQUE, REALM_BURGLARY))
+    {
+        info.which_stat = A_DEX;
+        info.magic_desc = "thieving talent";
+        return &info;
+    }
+    return NULL;
+}
+
+/************************************************************************
+ * Spellcasting UI
+ ***********************************************************************/
+typedef struct {
+    int level;
+    int cost;
+    int fail;
+    int realm;
+    int idx;
+} _spell_info_t, *_spell_info_ptr;
+
+static bool _can_cast(void)
+{
+    if ( !_get_group_pts(_TYPE_MAGIC)
+      && !_get_group_pts(_TYPE_PRAYER)
+      && !_get_skill_pts(_TYPE_TECHNIQUE, REALM_BURGLARY)
+      && !_get_skill_pts(_TYPE_TECHNIQUE, REALM_HISSATSU) )
+    {
+        msg_print("You don't know any spell realms. Use the 'G' command to gain the appropriate skills.");
+        flush();
+        return FALSE;
+    }
+    if (p_ptr->blind || no_lite())
+    {
+        msg_print("You cannot see!");
+        flush();
+        return FALSE;
+    }
+    if (p_ptr->confused)
+    {
+        msg_print("You are too confused!");
+        flush();
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static int _get_realm_pts(int realm)
+{
+    _skill_ptr s;
+    if (realm == REALM_BURGLARY || realm == REALM_HISSATSU)
+    {
+        s = _get_skill(_TYPE_TECHNIQUE, realm);
+        assert(s);
+        return s->current;
+    }
+    /* Assert: A realm, if known, is only known in either Magic or Prayer
+     * but never in both */
+    s = _get_skill(_TYPE_MAGIC, realm);
+    if (s && s->current)
+        return s->current;
+    s = _get_skill(_TYPE_PRAYER, realm);
+    if (s && s->current)
+        return s->current;
+    return 0;
+}
+
+static int _get_realm_stat(int realm)
+{
+    _skill_ptr s;
+    if (realm == REALM_BURGLARY)
+        return A_DEX;
+    else if (realm == REALM_HISSATSU)
+        return A_WIS;
+    s = _get_skill(_TYPE_MAGIC, realm);
+    if (s && s->current)
+        return A_INT;
+    s = _get_skill(_TYPE_PRAYER, realm);
+    if (s && s->current)
+        return A_WIS;
+    return A_NONE;
+}
+
+static int _get_realm_lvl(int realm)
+{
+    int pts = _get_realm_pts(realm);
+    int max = 0;
+
+    assert(0 <= pts && pts <= 5);
+    max = _realm_skills[pts].max_lvl;
+    if (p_ptr->lev > max)
+        return max;
+    return p_ptr->lev;
+}
+
+int py_casting_lvl(int realm)
+{
+    if (p_ptr->pclass != CLASS_SKILLMASTER)
+        return p_ptr->lev;
+    return _get_realm_lvl(realm);
+}
+
+static bool _spellbook_hook(object_type *o_ptr)
+{
+    if (TV_BOOK_BEGIN <= o_ptr->tval && o_ptr->tval <= TV_BOOK_END)
+    {
+        int realm = tval2realm(o_ptr->tval);
+        int pts = _get_realm_pts(realm);
+        if (pts > 0)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+/* Note: At the moment, we only support spellbook base realms. Should that
+ * change, I will probably need to replace get_item() with something more
+ * intelligent that also handles non-book based realms in a single menu. */
+static object_type *_prompt_spellbook(void)
+{
+    int item;
+    item_tester_hook = _spellbook_hook;
+    if (!get_item(&item, "Use which book? ", "You have no spellbooks!", USE_INVEN | USE_FLOOR))
+        return NULL;
+    if (item >= 0)
+        return &inventory[item];
+    else
+        return &o_list[-item];
+}
+
+static vec_ptr _get_spell_list(object_type *spellbook)
+{
+    vec_ptr        v = vec_alloc(free);
+    int            realm = tval2realm(spellbook->tval);
+    int            pts = _get_realm_pts(realm);
+    _realm_skill_t skill;
+    int            start = 8*spellbook->sval;
+    int            stop = start + 8;
+    int            lvl = _get_realm_lvl(realm);
+    int            stat = p_ptr->stat_ind[_get_realm_stat(realm)];
+    int            i;
+
+    assert(0 < pts && pts <= 5);
+    skill = _realm_skills[pts];
+    for (i = start; i < stop; i++)
+    {
+        magic_type      info;
+        _spell_info_ptr spell = malloc(sizeof(_spell_info_t));
+
+        if (is_magic(realm))
+            info = mp_ptr->info[realm - 1][i];
+        else
+            info = technic_info[realm - MIN_TECHNIC][i];
+        spell->level = info.slevel;
+        spell->cost = info.smana * skill.cost_mult / 100;
+        if (is_magic(realm) && pts >= 4) /* dec mana? */
+            spell->cost = calculate_cost(spell->cost);
+        if (realm == REALM_HISSATSU)
+            spell->fail = 0;
+        else
+        {
+            spell->fail = calculate_fail_rate_aux(lvl, info.slevel, MIN(100, MAX(0, info.sfail + skill.fail_adj)), stat);
+            if (spell->fail < skill.fail_min)
+                spell->fail = skill.fail_min;
+        }
+        spell->realm = realm;
+        spell->idx = i;
+        vec_add(v, spell);
+    }
+    return v;
+}
+
+#define _BROWSE_MODE 0x01
+static bool _prompt_spell(object_type *spellbook, _spell_info_ptr chosen_spell, int options)
+{
+    bool         result = FALSE;
+    vec_ptr      spells = _get_spell_list(spellbook);
+    object_kind *k_ptr = &k_info[spellbook->k_idx];
+    int          browse_idx = -1, cmd, i;
+    int          realm = tval2realm(spellbook->tval);
+    int          lvl = _get_realm_lvl(realm);
+
+    if (REPEAT_PULL(&cmd))
+    {
+        i = A2I(cmd);
+        if (0 <= i && i < vec_length(spells))
+        {
+            _spell_info_ptr spell = vec_get(spells, i);
+            if (spell->level <= lvl && spell->cost <= p_ptr->csp)
+            {
+                *chosen_spell = *spell;
+                vec_free(spells);
+                return TRUE;
+            }
+        }
+    }
+
+    assert(!_doc);
+    _doc = doc_alloc(72);
+
+    msg_line_clear();
+    Term_save();
+    for (;;)
+    {
+        doc_clear(_doc);
+        doc_printf(_doc, "<color:%c>%-27.27s</color> <color:G>Lvl  SP Fail Desc</color>\n",
+            attr_to_attr_char(k_ptr->d_attr), k_name + k_ptr->name);
+        for (i = 0; i < vec_length(spells); i++)
+        {
+            _spell_info_ptr spell = vec_get(spells, i);
+            if (spell->level >= 99)
+            {
+                doc_printf(_doc, " <color:D>%c) Illegible</color>\n", I2A(i));
+            }
+            else
+            {
+                doc_printf(_doc, " <color:%c>%c</color>) ",
+                    (spell->level <= lvl && spell->cost <= p_ptr->csp) ? 'y' : 'D', I2A(i));
+                doc_printf(_doc, "<color:%c>%-23.23s</color> ",
+                    i == browse_idx ? 'B' : 'w',
+                    do_spell(spell->realm, spell->idx, SPELL_NAME));
+                doc_printf(_doc, "%3d <color:%c>%3d</color> %3d%% ",
+                    spell->level,
+                    spell->cost <= p_ptr->csp ? 'w' : 'r',
+                    spell->cost, spell->fail);
+                if (spell->level <= lvl)
+                    doc_printf(_doc, "%s", do_spell(spell->realm, spell->idx, SPELL_INFO));
+                doc_newline(_doc);
+            }
+        }
+        if (0 <= browse_idx && browse_idx < vec_length(spells))
+        {
+            _spell_info_ptr spell = vec_get(spells, browse_idx);
+            doc_newline(_doc);
+            doc_insert(_doc, do_spell(spell->realm, spell->idx, SPELL_DESC));
+            doc_newline(_doc);
+        }
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) break;
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < vec_length(spells))
+                browse_idx = i;
+        }
+        else if (islower(cmd))
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < vec_length(spells))
+            {
+                if (options & _BROWSE_MODE)
+                    browse_idx = i;
+                else
+                {
+                    _spell_info_ptr spell = vec_get(spells, i);
+                    if (spell->level <= lvl && spell->cost <= p_ptr->csp)
+                    {
+                        *chosen_spell = *spell;
+                        result = TRUE;
+                        REPEAT_PUSH(cmd);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    Term_load();
+
+    vec_free(spells);
+    doc_free(_doc);
+    _doc = NULL;
+
+    return result;
+}
+
+static void _cast_spell(_spell_info_ptr spell)
+{
+    int lvl = _get_realm_lvl(spell->realm);
+
+    assert(spell->level <= lvl);
+    assert(spell->cost <= p_ptr->csp);
+
+    p_ptr->csp -= spell->cost;
+    energy_use = 100;
+
+    if (randint0(100) < spell->fail)
+    {
+        if (flush_failure) flush();
+
+        cmsg_format(TERM_VIOLET, "You failed to cast <color:B>%s</color>!", do_spell(spell->realm, spell->idx, SPELL_NAME));
+        if (demigod_is_(DEMIGOD_ATHENA))
+            p_ptr->csp += spell->cost/2;
+        spell_stats_on_fail_old(spell->realm, spell->idx);
+        sound(SOUND_FAIL);
+        do_spell(spell->realm, spell->idx, SPELL_FAIL);
+    }
+    else
+    {
+        if (!do_spell(spell->realm, spell->idx, SPELL_CAST))
+        {  /* Canceled */
+            p_ptr->csp += spell->cost;
+            energy_use = 0;
+            return;
+        }
+        sound(SOUND_ZAP);
+        spell_stats_on_cast_old(spell->realm, spell->idx);
+    }
+    p_ptr->redraw |= PR_MANA;
+    p_ptr->window |= PW_SPELL;
+}
+
+void skillmaster_cast(void)
+{
+    if (_can_cast())
+    {
+        object_type  *spellbook = _prompt_spellbook();
+        _spell_info_t spell = {0};
+        
+        if (!spellbook)
+            return;
+        if (spellbook->tval == TV_HISSATSU_BOOK && !equip_find_first(object_is_melee_weapon))
+        {
+            if (flush_failure) flush();
+            msg_print("You need to wield a weapon!");
+            return;
+        }
+        if (_prompt_spell(spellbook, &spell, 0))
+            _cast_spell(&spell);
+    }
+}
+
+void skillmaster_browse(void)
+{
+    if (_can_cast())
+    {
+        object_type  *spellbook = _prompt_spellbook();
+        _spell_info_t spell = {0};
+        
+        if (!spellbook)
+            return;
+        _prompt_spell(spellbook, &spell, _BROWSE_MODE);
+    }
+}
+
+/************************************************************************
  * Techniques
  ***********************************************************************/
 int skillmaster_riding_prof(void)
@@ -983,7 +1480,8 @@ static int _get_powers(spell_info* spells, int max)
 
     if (ct < max && _get_skill_pts(_TYPE_SHOOT, _THROWING) > 0)
         _add_power(&spells[ct++], 1, 0, 0, _throw_weapon_spell, A_DEX); /* No cost or fail ... this is a skill, not magic! */
-
+    if (ct < max && _get_skill_pts(_TYPE_TECHNIQUE, REALM_HISSATSU) > 0)
+        _add_power(&spells[ct++], 1, 0, 0, samurai_concentration_spell, A_WIS); 
     return ct;
 }
 
@@ -1017,6 +1515,7 @@ class_t *skillmaster_get_class(void)
         me.exp = 130;
 
         me.birth = _birth;
+        me.caster_info = _caster_info;
         me.gain_level = _gain_level;
         me.calc_bonuses = _calc_bonuses;
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
@@ -1045,6 +1544,7 @@ class_t *skillmaster_get_class(void)
     {
         _melee_init_class(&me);
         _shoot_init_class(&me);
+        _magic_init_class(&me);
     }
 
     return &me;

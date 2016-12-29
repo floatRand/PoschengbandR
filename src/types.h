@@ -2049,6 +2049,7 @@ typedef spell_stats_t        *spell_stats_ptr;
 #define CASTER_USE_HP               0x0010
 #define CASTER_GAIN_SKILL           0x0020
 #define CASTER_USE_AU               0x0040 /* Leprechauns */
+#define CASTER_SUPERCHARGE_MANA     0x0080
 
 typedef struct {
     cptr magic_desc;    /* spell, mindcraft, brutal power, ninjitsu, etc */

@@ -1,5 +1,7 @@
 #include "angband.h"
 
+#include <assert.h>
+
 /* TODO: Move special py_attack code here
          Move blows calculations here
          Move posture code here */
@@ -31,6 +33,7 @@ static int _get_attack_idx(int lvl, u32b defense)
     int best_attack_idx = 0;
     int min_level;
 
+    assert(lvl > 0);
     if (p_ptr->stun || p_ptr->confused)
         tries = 1;
 

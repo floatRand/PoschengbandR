@@ -2526,6 +2526,13 @@ extern int      skillmaster_weapon_prof(int tval);
 extern int      skillmaster_martial_arts_prof(void);
 extern int      skillmaster_riding_prof(void);
 extern int      skillmaster_dual_wielding_prof(void);
+extern void     skillmaster_cast(void);
+extern void     skillmaster_browse(void);
+/* In order to support the Skillmaster, with their varying degrees
+ * of proficiency in various spell realms, spellcasting code can no
+ * longer assume that p_ptr->lev is the effective casting level for
+ * a given spell realm.  Call py_casting_lvl instead. */
+extern int      py_casting_lvl(int realm);
 
 extern class_t *tourist_get_class(void);
 extern class_t *scout_get_class(void);

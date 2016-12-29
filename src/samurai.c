@@ -10,7 +10,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = p_ptr->lev;
+    int plev = py_casting_lvl(REALM_HISSATSU);
 
     switch (spell)
     {
@@ -1108,7 +1108,7 @@ static bool _choose_kata(void)
 
 static int _max_sp(void)
 {
-    return MAX(p_ptr->msp*4, p_ptr->lev*5+5);
+    return MAX(p_ptr->msp*4, py_casting_lvl(REALM_HISSATSU)*5+5);
 }
 
 static void _concentrate(bool noisy)
@@ -1242,6 +1242,7 @@ static caster_info * _caster_info(void)
         me.magic_desc = "technique";
         me.which_stat = A_WIS;
         me.weight = 3000;
+        me.options = CASTER_SUPERCHARGE_MANA;
         init = TRUE;
     }
     return &me;

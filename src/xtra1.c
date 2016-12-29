@@ -3041,7 +3041,7 @@ static void calc_mana(void)
         lvl = p_ptr->lev;
 
 
-    if (p_ptr->pclass == CLASS_SAMURAI || p_ptr->pclass == CLASS_MYSTIC)
+    if (caster_ptr->options & CASTER_SUPERCHARGE_MANA)
     {
         msp = (adj_mag_mana[p_ptr->stat_ind[caster_ptr->which_stat]] + 10) * 2;
         if (msp) msp += (msp * _racial_mana_adjust(caster_ptr->which_stat) / 20);
@@ -3142,7 +3142,7 @@ static void calc_mana(void)
         else if (p_ptr->csp > 0 && csp >= 0)
             p_ptr->csp = csp;
 
-        if (p_ptr->csp >= msp && p_ptr->pclass != CLASS_SAMURAI && p_ptr->pclass != CLASS_MYSTIC)
+        if (p_ptr->csp >= msp && !(caster_ptr->options & CASTER_SUPERCHARGE_MANA))
         {
             p_ptr->csp = msp;
             p_ptr->csp_frac = 0;

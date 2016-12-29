@@ -3914,6 +3914,8 @@ static void process_command(void)
                 do_cmd_snipe_browse();
             else if (p_ptr->pclass == CLASS_RAGE_MAGE)
                 rage_mage_browse_spell();
+            else if (p_ptr->pclass == CLASS_SKILLMASTER)
+                skillmaster_browse();
             else if (p_ptr->pclass == CLASS_GRAY_MAGE)
                 gray_mage_browse_spell();
             else if (p_ptr->pclass == CLASS_ARCHAEOLOGIST ||
@@ -4009,6 +4011,8 @@ static void process_command(void)
                     imitator_cast(FALSE);
                 else if (p_ptr->pclass == CLASS_MAGIC_EATER)
                     magic_eater_cast(0);
+                else if (p_ptr->pclass == CLASS_SKILLMASTER)
+                    skillmaster_cast();
                 else if (p_ptr->pclass == CLASS_SAMURAI)
                     do_cmd_hissatsu();
                 else if (p_ptr->pclass == CLASS_BLUE_MAGE)

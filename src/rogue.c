@@ -11,7 +11,7 @@ static cptr _rogue_pick_pocket(int power)
     char          m_name[MAX_NLEN];
     char          o_name[MAX_NLEN];
 
-    power += p_ptr->lev;
+    power += py_casting_lvl(REALM_BURGLARY);
     power += adj_stat_save[p_ptr->stat_ind[A_DEX]];
 
     if (!get_rep_dir2(&dir)) return NULL;
@@ -251,7 +251,7 @@ cptr do_burglary_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
     bool fail = (mode == SPELL_FAIL) ? TRUE : FALSE;
 
-    int plev = p_ptr->lev;
+    int plev = py_casting_lvl(REALM_BURGLARY);
     int rad = DETECT_RAD_DEFAULT;
     int dir;
 
@@ -655,7 +655,7 @@ cptr do_burglary_spell(int spell, int mode)
         if (name) return "Hide in Shadows";
         if (desc) return "You become shrouded in darkness, your torch light magically dimmed.";
         {
-            int d = p_ptr->lev;
+            int d = plev;
             if (info) return info_duration(spell_power(d), spell_power(d));
             if (cast)
             {
@@ -763,16 +763,22 @@ static caster_info * _caster_info(void)
     if (!init)
     {
         me.magic_desc = "spell";
-        me.which_stat = A_INT;
         me.weight = 400;
-        me.min_fail = 5;
         me.options = CASTER_GLOVE_ENCUMBRANCE;
         init = TRUE;
     }
     if (p_ptr->realm1 == REALM_BURGLARY)
+    {
+        me.which_stat = A_DEX;
         me.min_level = 1;
+        me.min_fail = 0;
+    }
     else
+    {
+        me.which_stat = A_INT;
         me.min_level = 5;
+        me.min_fail = 5;
+    }
     return &me;
 }
 

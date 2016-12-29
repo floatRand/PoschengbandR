@@ -1615,6 +1615,8 @@ enum {
 #define TV_WEAPON_END     TV_SWORD
 #define TV_ARMOR_BEGIN    TV_BOOTS
 #define TV_ARMOR_END      TV_DRAG_ARMOR
+#define TV_BOOK_BEGIN     TV_LIFE_BOOK
+#define TV_BOOK_END       TV_BURGLARY_BOOK
 
 /* Any subvalue */
 #define SV_ANY                     255
