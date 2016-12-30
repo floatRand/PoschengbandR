@@ -6,11 +6,6 @@
  * The Skill System
  ***********************************************************************/
 #define _MAX_SKILLS     15
-#define _MARTIAL_ARTS  300
-#define _ARCHERY       301
-#define _THROWING      302
-#define _DUAL_WIELDING 303
-#define _RIDING        304
 
 enum _type_e {
     _TYPE_NONE = 0,
@@ -21,6 +16,42 @@ enum _type_e {
     _TYPE_SKILLS = 5,
     _TYPE_TECHNIQUE = 6,
     _TYPE_ABILITY = 7,
+};
+
+/* It is convenient to use TV_* and REALM_* for various skills,
+ * so other values must be chosen so as not to cause collisions */
+enum {
+    _SKILL_START = 300,
+    _MARTIAL_ARTS = 300,
+    _ARCHERY,
+    _THROWING,
+    _DUAL_WIELDING,
+    _RIDING,
+    _DEVICES,
+    _STEALTH,
+    _SPEED,
+    _AWARENESS,
+    _HEALTH,
+    _AGILITY,
+    _MAGIC_RESISTANCE,
+    _SKILL_STOP
+};
+
+/* Abilities are one time purchases granting a power or some other
+ * attribute, like regeneration */
+enum {
+    _ABILITY_START = 400,
+    _CLEAR_MIND = 400,
+    _EAT_MAGIC,
+    _LOREMASTER,
+    _LUCK,
+    _MASSACRE,
+    _NATURE_AWARENESS,
+    _PANIC_HIT,
+    _REGENERATION,
+    _RESISTANCE,
+    _STONE_SKIN,
+    _ABILITY_STOP
 };
 
 typedef struct _skill_s {
@@ -34,14 +65,13 @@ typedef struct _skill_s {
 typedef struct _group_s {
     int  type;
     cptr name;
-    int  max;
     cptr desc;
     _skill_t skills[_MAX_SKILLS];
 } _group_t, *_group_ptr;
 
 static _group_t _groups[] = {
-    { _TYPE_MELEE, "Melee", 10,
-        "Melee skills increase your ability to fight monsters in hand to hand combat. "
+    { _TYPE_MELEE, "Melee",
+        "<color:B>Melee</color> skills increase your ability to fight monsters in hand to hand combat. "
         "The total number of points spent in this group will determine your base fighting "
         "skill, as well as how much melee skill you gain with experience. In addition, this "
         "total gives bonuses to STR and DEX. The individual skills determine your base "
@@ -54,18 +84,19 @@ static _group_t _groups[] = {
          { _TYPE_MELEE, TV_DIGGING, "Diggers", 5, 0 },
          { _TYPE_MELEE, _MARTIAL_ARTS, "Martial Arts", 5, 0 },
          { 0 }}},
-    { _TYPE_SHOOT, "Ranged", 10,
-        "Ranged skills increase your ability to fight monsters using distance weapons "
+    { _TYPE_SHOOT, "Ranged",
+        "<color:B>Ranged</color> skills increase your ability to fight monsters using distance weapons "
         "such as bows and slings, as well as the ability to throw melee weapons "
         "effectively. The total number of points spent in this group will determine "
         "your base shooting skill, as well as how fast this skill increases with "
         "experience. Archery grants proficiency with the various classes of shooters "
-        "as well as increasing your number of shots per round.",
+        "as well as increasing your number of shots per round. Throwing grants the power "
+        "to throw your leading melee weapon and perhaps have it return to you as well.",
         {{ _TYPE_SHOOT, _ARCHERY, "Archery", 5, 0 },
          { _TYPE_SHOOT, _THROWING, "Throwing", 5, 0 },
          { 0 }}},
-    { _TYPE_MAGIC, "Magic", 0,
-        "Magic skills grant access to various spellcasting realms using INT rather "
+    { _TYPE_MAGIC, "Magic",
+        "<color:B>Magic</color> skills grant access to various spellcasting realms using INT rather "
         "than WIS as the spellcasting stat. Each point in a given realm increases "
         "your maximum spellcasting level as well as the decreasing the cost and fail "
         "rates of individual spells. You need not learn individual spells the way a "
@@ -84,15 +115,44 @@ static _group_t _groups[] = {
          { _TYPE_MAGIC, REALM_SORCERY, "Sorcery", 5, 0 },
          { _TYPE_MAGIC, REALM_TRUMP, "Trump", 5, 0 },
          { 0 }}},
-    { _TYPE_PRAYER, "Prayer", 0,
-        "",
+    { _TYPE_PRAYER, "Prayer",
+        "<color:B>Prayer</color> skills work like Magic skills, granting access to various realms of "
+        "magic. However, prayer realms use WIS for the spellcasting stat rather than "
+        "INT. Moreover, the total points in the Prayer group grants enhanced saving "
+        "throws as well as increased WIS, but does not affect device skills or life "
+        "rating. As in Magic, the number of points invested in a particular realm "
+        "determines your maximum casting level and also influences casting costs and "
+        "fail rates. Life magic is only available as a Prayer talent. The other prayer "
+        "realms are duplicated as Magic talents, but you can only learn them in one "
+        "way: as either INT based or WIS based.",
         {{ _TYPE_PRAYER, REALM_CRUSADE, "Crusade", 5, 0 },
          { _TYPE_PRAYER, REALM_DAEMON, "Daemon", 5, 0 },
          { _TYPE_PRAYER, REALM_DEATH, "Death", 5, 0 },
          { _TYPE_PRAYER, REALM_LIFE, "Life", 5, 0 },
          { 0 }}},
-    { _TYPE_TECHNIQUE, "Technique", 0,
-        "",
+    { _TYPE_SKILLS, "Skills",
+        "There are various <color:B>Skills</color> important for every player, including "
+        "stealth, perception, health and magic devices. While these skills may be influenced by "
+        "talents in other groups (e.g. Magic increases your device skills), it is often "
+        "desirable to directly increase these skills even more. In addition, you can directly "
+        "improve your starting stats by investing in some of the skills in this group "
+        "(e.g. Agility improves DEX while Health improve CON).",
+        {{ _TYPE_SKILLS, _AGILITY, "Agility", 3, 0 },
+         { _TYPE_SKILLS, _AWARENESS, "Awareness", 3, 0 },
+         { _TYPE_SKILLS, _DEVICES, "Devices", 5, 0 },
+         { _TYPE_SKILLS, _HEALTH, "Health", 3, 0 },
+         { _TYPE_SKILLS, _MAGIC_RESISTANCE, "Magic Resistance", 3, 0 },
+         { _TYPE_SKILLS, _SPEED, "Speed", 5, 0 },
+         { _TYPE_SKILLS, _STEALTH, "Stealth", 5, 0 },
+         { 0 }}},
+    { _TYPE_TECHNIQUE, "Techniques",
+        "There are various specialty <color:B>Techniques</color> which you may want to "
+        "learn, including the Riding and Dual Wielding talents, as well as access to the "
+        "Burglary and Kendo techniques. These latter two function like spell realms, using "
+        "DEX and WIS respectively as their primary spell stat. Kendo also makes your mana "
+        "function like that of the Samurai, and this behavior is used no matter what other "
+        "Magic or Prayer realms you have learned. Note that Kendo still requires you to "
+        "carry the appropriate spellbooks since you really are not samurai.",
         {{ _TYPE_TECHNIQUE, REALM_BURGLARY, "Burglary", 5, 0 },
          { _TYPE_TECHNIQUE, REALM_HISSATSU, "Kendo", 5, 0 }, 
          { _TYPE_TECHNIQUE, _DUAL_WIELDING, "Dual Wielding", 5, 0 },
@@ -301,47 +361,59 @@ static int _confirm_skill_ui(_skill_ptr s)
     }
 }
 
+static bool _can_gain_skill(_skill_ptr s)
+{
+    if (!_get_free_pts()) return FALSE;
+    if (s->current == s->max) return FALSE;
+    if (s->type == _TYPE_MAGIC)
+    {
+        _skill_ptr s2 = _get_skill(_TYPE_PRAYER, s->subtype);
+        if (s2 && s2->current) return FALSE;
+    }
+    else if (s->type == _TYPE_PRAYER)
+    {
+        _skill_ptr s2 = _get_skill(_TYPE_MAGIC, s->subtype);
+        if (s2 && s2->current) return FALSE;
+    }
+    return TRUE;
+}
+
 static int _gain_skill_ui(_group_ptr g)
 {
     for (;;)
     {
         int     cmd, i, ct = _get_skill_ct_aux(g);
-        int     split = (ct > 7) ? (ct + 1)/2 : ct;
         int     free_pts = _get_free_pts();
         int     group_pts = _get_group_pts_aux(g);
         doc_ptr cols[2];
 
-        cols[0] = doc_alloc(26);
-        cols[1] = doc_alloc(36);
+        cols[0] = doc_alloc(40);
+        cols[1] = doc_alloc(30);
 
         doc_clear(_doc);
-        doc_printf(_doc, "<color:B>%-10.10s</color>: <indent>%s</indent>\n\n", g->name, g->desc);
-        doc_printf(_doc, "%-10.10s: <color:%c>%d</color>\n", "Learned", group_pts ? 'G' : 'r', group_pts);
-        doc_printf(_doc, "%-10.10s: <color:%c>%d</color>\n", "Available", free_pts ? 'G' : 'r', free_pts);
-        doc_newline(_doc);
-        doc_insert(_doc, "<color:G>Choose the Skill</color>\n");
+        doc_printf(_doc, "%s\n\n", g->desc);
+        doc_insert(cols[0], "<color:G>Choose the Skill</color>\n");
         for (i = 0; ; i++, ct++)
         {
             _skill_ptr s = &g->skills[i];
-            doc_ptr    col = cols[i < split ? 0 : 1];
-
             if (!s->type) break;
-
-            doc_printf(col, "  <color:%c>%c</color>) %s",
-                free_pts > 0 && s->current < s->max ? 'y' : 'D',
+            doc_printf(cols[0], "  <color:%c>%c</color>) %s",
+                _can_gain_skill(s) ? 'y' : 'D',
                 I2A(i),
                 s->name
             );
             if (s->current && s->max)
-                doc_printf(col, " (%d%%)", 100*s->current/s->max);
-            doc_newline(col);
+                doc_printf(cols[0], " (%d%%)", 100*s->current/s->max);
+            doc_newline(cols[0]);
         }
+        doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Learned", group_pts ? 'G' : 'r', group_pts);
+        doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Available", free_pts ? 'G' : 'r', free_pts);
+        doc_insert(cols[1], "\n\n");
+        doc_insert(cols[1], "  <color:y>?</color>) Help\n");
+        doc_insert(cols[1], "<color:y>ESC</color>) Cancel\n");
         doc_insert_cols(_doc, cols, 2, 1);
         doc_free(cols[0]);
         doc_free(cols[1]);
-
-        doc_insert(_doc, "  <color:y>?</color>) Help\n");
-        doc_insert(_doc, "<color:y>ESC</color>) Cancel\n");
 
         _sync_term(_doc);
         cmd = _inkey();
@@ -362,7 +434,7 @@ static int _gain_skill_ui(_group_ptr g)
             if (0 <= i && i < ct)
             {
                 _skill_ptr s = &g->skills[i];
-                if (free_pts > 0 && s->current < s->max && _confirm_skill_ui(s) == UI_OK)
+                if (_can_gain_skill(s) && _confirm_skill_ui(s) == UI_OK)
                 {
                     s->current++;
                     return UI_OK;
@@ -379,41 +451,39 @@ static int _gain_type_ui(void)
         int cmd, i, pts, ct = 0;
         int free_pts = _get_free_pts();
         int learned_pts = _get_pts();
+        doc_ptr cols[2];
+
+        cols[0] = doc_alloc(40);
+        cols[1] = doc_alloc(30);
 
         doc_clear(_doc);
-        doc_printf(_doc, "<color:B>%-10.10s</color>: <indent>%s</indent>\n\n", "Skills",
-            "As a Skillmaster, you must choose which skills to learn. The various skills are organized "
-            "into groups. Often, the total number of points in a given group determines broad level "
+        doc_insert(_doc,
+            "You must choose which <color:B>skills</color> to learn. The various skills are grouped "
+            "into categories. Often, the total number of points in a given group determines broad level "
             "skills and perhaps grants boosts to your starting stats, while the specific skill points "
             "grant targetted benefits (such as proficiency with a class of weapons, or access to "
             "a specific spell realm). Details are given in the submenu for each group. Feel free to "
-            "explore the various groups since you may always <color:keypress>ESC</color> to return here.");
-        doc_printf(_doc, "%-10.10s: <color:%c>%d</color>\n", "Learned", learned_pts ? 'G' : 'r', learned_pts);
-        doc_printf(_doc, "%-10.10s: <color:%c>%d</color>\n", "Available", free_pts ? 'G' : 'r', free_pts);
-        doc_newline(_doc);
-        doc_insert(_doc, "<color:G>Choose the Skill Type</color>\n");
+            "explore the various groups since you may always <color:keypress>ESC</color> to return here.\n\n");
+        doc_insert(cols[0], "<color:G>Choose the Skill Type</color>\n");
         for (i = 0; ; i++, ct++)
         {
             _group_ptr g = &_groups[i];
             if (!g->type) break;
             pts = _get_group_pts_aux(g);
-            doc_printf(_doc, "  <color:y>%c</color>) %s", I2A(i), g->name);
-            if (pts && g->max)
-                doc_printf(_doc, " (%d%%)", 100*pts/g->max);
-            else if (pts)
-                doc_printf(_doc, " (%d)", pts);
-            doc_newline(_doc);
+            doc_printf(cols[0], "  <color:y>%c</color>) %s", I2A(i), g->name);
+            if (pts) doc_printf(cols[0], " (%d)", pts);
+            doc_newline(cols[0]);
         }
-        doc_newline(_doc);
-        doc_insert(_doc, "  <color:y>?</color>) Help\n");
-        doc_insert(_doc, "<color:y>ESC</color>) <color:v>Quit</color>\n");
 
+        doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Learned", learned_pts ? 'G' : 'r', learned_pts);
+        doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Available", free_pts ? 'G' : 'r', free_pts);
+        doc_insert(cols[1], "\n\n");
+        doc_insert(cols[1], "  <color:y>?</color>) Help\n");
+        doc_insert(cols[1], "<color:y>ESC</color>) <color:v>Quit</color>\n");
+        doc_insert_cols(_doc, cols, 2, 1);
+        doc_free(cols[0]);
+        doc_free(cols[1]);
 
-        /*doc_newline(_doc);
-        doc_insert(_doc, "<color:G>Tip:</color> <indent>You can often get specific "
-                         "help by entering the uppercase letter for a command. For "
-                         "example, type <color:keypress>A</color> on this screen "
-                         "to receive help on Melee Skills.</indent>");*/
         _sync_term(_doc);
         cmd = _inkey();
         if (cmd == ESCAPE) return UI_CANCEL;
@@ -465,22 +535,22 @@ static void _melee_init_class(class_t *class_ptr)
     typedef struct { int base_thn; int xtra_thn; int str; int dex; } _melee_skill_t;
     static _melee_skill_t _tbl[11] = {
         { 34,  6, 0, 0 },
-        { 34, 10, 1, 0 },
-        { 35, 12, 1, 0 },
-        { 48, 13, 1, 1 },
-        { 50, 14, 2, 1 },
-        { 52, 15, 2, 1 },
+        { 50, 10, 1, 0 },
+        { 55, 12, 1, 0 },
+        { 60, 15, 1, 1 },
+        { 65, 18, 2, 1 },
+        { 70, 21, 2, 1 },
 
-        { 56, 18, 2, 2 },
-        { 64, 18, 3, 2 },
-        { 70, 23, 3, 2 },
+        { 70, 23, 2, 2 },
         { 70, 25, 3, 2 },
+        { 70, 27, 3, 2 },
+        { 70, 29, 3, 2 },
         { 70, 30, 4, 2 }
     };
     int pts = MIN(10, _get_group_pts(_TYPE_MELEE));
     _melee_skill_t row = _tbl[pts];
-    class_ptr->base_skills.thn = row.base_thn;
-    class_ptr->extra_skills.thn = row.xtra_thn;
+    class_ptr->base_skills.thn += row.base_thn;
+    class_ptr->extra_skills.thn += row.xtra_thn;
     class_ptr->stats[A_STR] += row.str;
     class_ptr->stats[A_DEX] += row.dex;
 
@@ -561,8 +631,8 @@ static void _shoot_init_class(class_t *class_ptr)
     };
     int pts = MIN(5, _get_group_pts(_TYPE_SHOOT));
     _shoot_skill_t row = _tbl[pts];
-    class_ptr->base_skills.thb = row.base_thb;
-    class_ptr->extra_skills.thb = row.xtra_thb;
+    class_ptr->base_skills.thb += row.base_thb;
+    class_ptr->extra_skills.thb += row.xtra_thb;
 
     pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
     class_ptr->stats[A_DEX] += (pts + 1) / 2;
@@ -1012,7 +1082,7 @@ static void _throw_weapon_spell(int cmd, variant *res)
 }
 
 /************************************************************************
- * Magic Skills
+ * Magic/Prayer Skills
  ***********************************************************************/
 static void _magic_init_class(class_t *class_ptr)
 {
@@ -1034,10 +1104,35 @@ static void _magic_init_class(class_t *class_ptr)
     };
     int pts = _get_group_pts(_TYPE_MAGIC);
     _magic_skill_t row = _tbl[MIN(10, pts)];
-    class_ptr->base_skills.dev = row.base_dev;
-    class_ptr->extra_skills.dev = row.xtra_dev;
+    class_ptr->base_skills.dev += row.base_dev;
+    class_ptr->extra_skills.dev += row.xtra_dev;
     class_ptr->stats[A_INT] += row.stat;
     class_ptr->life -= (pts + 1) / 2;
+}
+
+static void _prayer_init_class(class_t *class_ptr)
+{
+    typedef struct { int base_sav; int xtra_sav; int stat; } _prayer_skill_t;
+    static _prayer_skill_t _tbl[11] = {
+        { 31, 10, 0 },
+
+        { 32, 11, 1 },
+        { 33, 11, 1 },
+        { 34, 11, 2 },
+        { 35, 11, 2 },
+        { 36, 11, 3 },
+
+        { 38, 11, 3 },
+        { 39, 12, 4 },
+        { 40, 12, 4 },
+        { 40, 13, 4 },
+        { 40, 14, 4 }
+    };
+    int pts = _get_group_pts(_TYPE_PRAYER);
+    _prayer_skill_t row = _tbl[MIN(10, pts)];
+    class_ptr->base_skills.sav += row.base_sav;
+    class_ptr->extra_skills.sav += row.xtra_sav;
+    class_ptr->stats[A_WIS] += row.stat;
 }
 
 typedef struct { int max_lvl; int cost_mult; int fail_adj; int fail_min; } _realm_skill_t;
@@ -1433,16 +1528,103 @@ void skillmaster_browse(void)
 }
 
 /************************************************************************
+ * Skills
+ ***********************************************************************/
+static void _skills_init_class(class_t *class_ptr)
+{
+    int pts;
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _AGILITY);
+    class_ptr->stats[A_DEX] += pts;
+    class_ptr->base_skills.dis += 25 + 7*pts;
+    class_ptr->extra_skills.dis += 7 + 2*pts;
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _AWARENESS);
+    class_ptr->base_skills.srh += 12 + 13*pts;
+    class_ptr->base_skills.fos += 6 + 9*pts;
+    /* TODO: Pseudo-id speed. Level feeling speed. */
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _DEVICES);
+    class_ptr->base_skills.dev += 8*pts;
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _HEALTH);
+    class_ptr->stats[A_CON] += pts;
+    class_ptr->life += 5*pts;
+    class_ptr->base_hp += 10*pts;
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _MAGIC_RESISTANCE);
+    class_ptr->base_skills.sav += 15*pts;
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _STEALTH);
+    class_ptr->base_skills.stl += 2*pts;
+}
+
+static void _skills_calc_bonuses(void)
+{
+    int pts;
+    pts = _get_skill_pts(_TYPE_SKILLS, _AWARENESS);
+    if (pts >= 2)
+        p_ptr->see_inv = TRUE;
+    if (pts >= 3)
+        p_ptr->auto_pseudo_id = TRUE;
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _SPEED);
+    p_ptr->pspeed += 2*pts;
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _STEALTH);
+    if (pts >= 5)
+        p_ptr->ambush = TRUE;
+}
+
+void _skills_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+    int pts;
+    pts = _get_skill_pts(_TYPE_SKILLS, _AWARENESS);
+    if (pts >= 2)
+        add_flag(flgs, OF_SEE_INVIS);
+
+    pts = _get_skill_pts(_TYPE_SKILLS, _SPEED);
+    if (pts > 0)
+        add_flag(flgs, OF_SPEED);
+}
+
+/************************************************************************
  * Techniques
  ***********************************************************************/
+void _tech_init_class(class_t *class_ptr)
+{
+    int pts;
+
+    pts = _get_skill_pts(_TYPE_TECHNIQUE, REALM_BURGLARY);
+    class_ptr->stats[A_DEX] += (pts + 2) / 3;
+    class_ptr->base_skills.stl += (pts + 2) / 3;
+    class_ptr->base_skills.dis += 5*pts;
+}
+
+void _tech_calc_bonuses(void)
+{
+    int pts;
+
+    pts = _get_skill_pts(_TYPE_TECHNIQUE, _DUAL_WIELDING);
+    if (pts >= 5)
+    {
+        p_ptr->weapon_info[0].genji = TRUE;
+        p_ptr->weapon_info[1].genji = TRUE;
+    }
+}
+
 int skillmaster_riding_prof(void)
 {
-    return 0;
+    int pts = _get_skill_pts(_TYPE_TECHNIQUE, _RIDING);
+    int prof[6] = { 0, RIDING_EXP_BEGINNER, RIDING_EXP_SKILLED, RIDING_EXP_EXPERT, 6500, RIDING_EXP_MASTER };
+    return prof[MIN(5, pts)];
 }
 
 int skillmaster_dual_wielding_prof(void)
 {
-    return 0;
+    int pts = _get_skill_pts(_TYPE_TECHNIQUE, _DUAL_WIELDING);
+    int prof[6] = { 0, WEAPON_EXP_BEGINNER, WEAPON_EXP_SKILLED, WEAPON_EXP_EXPERT, WEAPON_EXP_MASTER, WEAPON_EXP_MASTER };
+    return prof[MIN(5, pts)];
 }
 
 /************************************************************************
@@ -1464,6 +1646,13 @@ static void _calc_bonuses(void)
 {
     _melee_calc_bonuses();
     _shoot_calc_bonuses();
+    _skills_calc_bonuses();
+    _tech_calc_bonuses();
+}
+
+void _get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+    _skills_get_flags(flgs);
 }
 
 static void _add_power(spell_info* spell, int lvl, int cost, int fail, ang_spell fn, int stat_idx)
@@ -1521,7 +1710,7 @@ class_t *skillmaster_get_class(void)
         me.calc_weapon_bonuses = _calc_weapon_bonuses;
         me.calc_shooter_bonuses = _calc_shooter_bonuses;
         me.get_powers = _get_powers;
-        /*me.get_flags = _get_flags;*/
+        me.get_flags = _get_flags;
         me.load_player = _load_player;
         me.save_player = _save_player;
         init = TRUE;
@@ -1545,6 +1734,9 @@ class_t *skillmaster_get_class(void)
         _melee_init_class(&me);
         _shoot_init_class(&me);
         _magic_init_class(&me);
+        _prayer_init_class(&me);
+        _skills_init_class(&me);
+        _tech_init_class(&me);
     }
 
     return &me;

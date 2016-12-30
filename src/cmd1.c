@@ -3050,6 +3050,10 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 backstab = TRUE;
         }
         break;
+    case CLASS_SKILLMASTER:
+        if (p_ptr->ambush && MON_CSLEEP(m_ptr) && m_ptr->ml)
+            backstab = TRUE;
+        break;
     }
 
     if (o_ptr)
@@ -3196,7 +3200,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 }
             }
 
-            if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly stab %s!", m_name_object);
+            if (backstab) cmsg_format(TERM_L_GREEN, "You cruelly attack %s!", m_name_object);
             else if (fuiuchi) cmsg_format(TERM_L_GREEN, "You make a surprise attack, and hit %s with a powerful blow!", m_name_object);
             else if (stab_fleeing) cmsg_format(TERM_L_GREEN, "You backstab %s!",  m_name_object);
             else if (perfect_strike) cmsg_format(TERM_L_GREEN, "You land a perfect strike against %s.", m_name_object);
@@ -3295,6 +3299,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     k = k * crit.mul/100 + crit.to_d;
                     msg_print(crit.desc);
                 }
+                if (backstab) /* stealthy skillmaster martial artist */
+                    k *= 3;
 
                 if ((special_effect == MA_KNEE) && ((k + p_ptr->weapon_info[hand].to_d) < m_ptr->hp))
                 {
