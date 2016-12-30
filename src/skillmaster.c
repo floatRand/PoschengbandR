@@ -158,6 +158,21 @@ static _group_t _groups[] = {
          { _TYPE_TECHNIQUE, _DUAL_WIELDING, "Dual Wielding", 5, 0 },
          { _TYPE_TECHNIQUE, _RIDING, "Riding", 5, 0 },
          { 0 }}},
+    { _TYPE_ABILITY, "Abilities",
+        "Many <color:B>Abilities</color> can be purchased for a single skill point. Often "
+        "these grant an extra power which you may activate at will without cost, and usually "
+        "without fail. Alternatively, abilities may grant a bonus such as regeneration or "
+        "good fortune.",
+        {{ _TYPE_ABILITY, _CLEAR_MIND, "Clear Mind", 1, 0 },
+         { _TYPE_ABILITY, _EAT_MAGIC, "Eat Magic", 1, 0 },
+         { _TYPE_ABILITY, _LOREMASTER, "Loremastery", 1, 0 },
+         { _TYPE_ABILITY, _LUCK, "Luck", 1, 0 },
+         { _TYPE_ABILITY, _MASSACRE, "Massacre", 1, 0 },
+         { _TYPE_ABILITY, _PANIC_HIT, "Panic Hit", 1, 0 },
+         { _TYPE_ABILITY, _REGENERATION, "Regeneration", 1, 0 },
+         { _TYPE_ABILITY, _RESISTANCE, "Resistance", 1, 0 },
+         { _TYPE_ABILITY, _STONE_SKIN, "Stone Skin", 1 , 0 },
+         { 0 }}},
     { 0 }
 };
 
@@ -1088,7 +1103,7 @@ static void _magic_init_class(class_t *class_ptr)
 {
     typedef struct { int base_dev; int xtra_dev; int stat; } _magic_skill_t;
     static _magic_skill_t _tbl[11] = {
-        { 18,  7, 0 },
+        { 23,  9, 0 },
 
         { 25,  9, 1 },
         { 27,  9, 1 },
@@ -1599,6 +1614,10 @@ void _tech_init_class(class_t *class_ptr)
     class_ptr->stats[A_DEX] += (pts + 2) / 3;
     class_ptr->base_skills.stl += (pts + 2) / 3;
     class_ptr->base_skills.dis += 5*pts;
+
+    pts = _get_skill_pts(_TYPE_TECHNIQUE, REALM_HISSATSU);
+    if (pts)
+        class_ptr->stats[A_WIS] += 1;
 }
 
 void _tech_calc_bonuses(void)
@@ -1648,6 +1667,13 @@ static void _calc_bonuses(void)
     _shoot_calc_bonuses();
     _skills_calc_bonuses();
     _tech_calc_bonuses();
+
+    if (_get_skill_pts(_TYPE_ABILITY, _LOREMASTER))
+        p_ptr->auto_id = TRUE;
+    if (_get_skill_pts(_TYPE_ABILITY, _LUCK))
+        p_ptr->good_luck = TRUE;
+    if (_get_skill_pts(_TYPE_ABILITY, _REGENERATION))
+        p_ptr->regen += 150;
 }
 
 void _get_flags(u32b flgs[OF_ARRAY_SIZE])
@@ -1655,11 +1681,13 @@ void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     _skills_get_flags(flgs);
 }
 
-static void _add_power(spell_info* spell, int lvl, int cost, int fail, ang_spell fn, int stat_idx)
+static void _add_power(spell_info* spell, ang_spell fn)
 {
-    spell->level = lvl;
-    spell->cost = cost;
-    spell->fail = calculate_fail_rate(lvl, fail, stat_idx);
+    /* Powers are generally granted without cost, or fail. They are available
+     * immediately upon purchase, and there is no relevant stat to consider */
+    spell->level = 1;
+    spell->cost = 0;
+    spell->fail = 0;
     spell->fn = fn;
 }
 
@@ -1668,9 +1696,22 @@ static int _get_powers(spell_info* spells, int max)
     int ct = 0;
 
     if (ct < max && _get_skill_pts(_TYPE_SHOOT, _THROWING) > 0)
-        _add_power(&spells[ct++], 1, 0, 0, _throw_weapon_spell, A_DEX); /* No cost or fail ... this is a skill, not magic! */
+        _add_power(&spells[ct++], _throw_weapon_spell);
     if (ct < max && _get_skill_pts(_TYPE_TECHNIQUE, REALM_HISSATSU) > 0)
-        _add_power(&spells[ct++], 1, 0, 0, samurai_concentration_spell, A_WIS); 
+        _add_power(&spells[ct++], samurai_concentration_spell);
+    if (ct < max && _get_skill_pts(_TYPE_ABILITY, _CLEAR_MIND) > 0)
+        _add_power(&spells[ct++], clear_mind_spell);
+    if (ct < max && _get_skill_pts(_TYPE_ABILITY, _EAT_MAGIC) > 0)
+        _add_power(&spells[ct++], eat_magic_spell);
+    if (ct < max && _get_skill_pts(_TYPE_ABILITY, _MASSACRE) > 0)
+        _add_power(&spells[ct++], massacre_spell);
+    if (ct < max && _get_skill_pts(_TYPE_ABILITY, _PANIC_HIT) > 0)
+        _add_power(&spells[ct++], panic_hit_spell);
+    if (ct < max && _get_skill_pts(_TYPE_ABILITY, _RESISTANCE) > 0)
+        _add_power(&spells[ct++], resistance_spell);
+    if (ct < max && _get_skill_pts(_TYPE_ABILITY, _STONE_SKIN) > 0)
+        _add_power(&spells[ct++], stone_skin_spell);
+
     return ct;
 }
 
