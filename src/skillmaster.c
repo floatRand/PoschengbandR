@@ -1252,12 +1252,21 @@ typedef struct {
     int idx;
 } _spell_info_t, *_spell_info_ptr;
 
-static bool _can_cast(void)
+static bool _has_magic(void)
 {
     if ( !_get_group_pts(_TYPE_MAGIC)
       && !_get_group_pts(_TYPE_PRAYER)
       && !_get_skill_pts(_TYPE_TECHNIQUE, REALM_BURGLARY)
       && !_get_skill_pts(_TYPE_TECHNIQUE, REALM_HISSATSU) )
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static bool _can_cast(void)
+{
+    if (!_has_magic())
     {
         msg_print("You don't know any spell realms. Use the 'G' command to gain the appropriate skills.");
         flush();
@@ -1408,15 +1417,50 @@ static vec_ptr _get_spell_list(object_type *spellbook)
     return v;
 }
 
+/* This is shared with the character dump ... */
+static void _list_spells(doc_ptr doc, object_type *spellbook, vec_ptr spells, int browse_idx)
+{
+    int          i;
+    object_kind *k_ptr = &k_info[spellbook->k_idx];
+    int          realm = tval2realm(spellbook->tval);
+    int          lvl = _get_realm_lvl(realm);
+
+    doc_printf(doc, "<color:%c>%-27.27s</color> <color:G>Lvl  SP Fail Desc</color>\n",
+        attr_to_attr_char(k_ptr->d_attr), k_name + k_ptr->name);
+    
+    for (i = 0; i < vec_length(spells); i++)
+    {
+        _spell_info_ptr spell = vec_get(spells, i);
+        if (spell->level >= 99)
+        {
+            doc_printf(doc, " <color:D>%c) Illegible</color>\n", I2A(i));
+        }
+        else
+        {
+            doc_printf(doc, " <color:%c>%c</color>) ",
+                (spell->level <= lvl && spell->cost <= p_ptr->csp) ? 'y' : 'D', I2A(i));
+            doc_printf(doc, "<color:%c>%-23.23s</color> ",
+                i == browse_idx ? 'B' : 'w',
+                do_spell(spell->realm, spell->idx, SPELL_NAME));
+            doc_printf(doc, "%3d <color:%c>%3d</color> %3d%% ",
+                spell->level,
+                spell->cost <= p_ptr->csp ? 'w' : 'r',
+                spell->cost, spell->fail);
+            if (spell->level <= lvl)
+                doc_printf(doc, "%s", do_spell(spell->realm, spell->idx, SPELL_INFO));
+            doc_newline(doc);
+        }
+    }
+}
+
 #define _BROWSE_MODE 0x01
 static bool _prompt_spell(object_type *spellbook, _spell_info_ptr chosen_spell, int options)
 {
-    bool         result = FALSE;
-    vec_ptr      spells = _get_spell_list(spellbook);
-    object_kind *k_ptr = &k_info[spellbook->k_idx];
-    int          browse_idx = -1, cmd, i;
-    int          realm = tval2realm(spellbook->tval);
-    int          lvl = _get_realm_lvl(realm);
+    bool    result = FALSE;
+    vec_ptr spells = _get_spell_list(spellbook);
+    int     browse_idx = -1, cmd, i;
+    int     realm = tval2realm(spellbook->tval);
+    int     lvl = _get_realm_lvl(realm);
 
     if (REPEAT_PULL(&cmd))
     {
@@ -1441,31 +1485,7 @@ static bool _prompt_spell(object_type *spellbook, _spell_info_ptr chosen_spell, 
     for (;;)
     {
         doc_clear(_doc);
-        doc_printf(_doc, "<color:%c>%-27.27s</color> <color:G>Lvl  SP Fail Desc</color>\n",
-            attr_to_attr_char(k_ptr->d_attr), k_name + k_ptr->name);
-        for (i = 0; i < vec_length(spells); i++)
-        {
-            _spell_info_ptr spell = vec_get(spells, i);
-            if (spell->level >= 99)
-            {
-                doc_printf(_doc, " <color:D>%c) Illegible</color>\n", I2A(i));
-            }
-            else
-            {
-                doc_printf(_doc, " <color:%c>%c</color>) ",
-                    (spell->level <= lvl && spell->cost <= p_ptr->csp) ? 'y' : 'D', I2A(i));
-                doc_printf(_doc, "<color:%c>%-23.23s</color> ",
-                    i == browse_idx ? 'B' : 'w',
-                    do_spell(spell->realm, spell->idx, SPELL_NAME));
-                doc_printf(_doc, "%3d <color:%c>%3d</color> %3d%% ",
-                    spell->level,
-                    spell->cost <= p_ptr->csp ? 'w' : 'r',
-                    spell->cost, spell->fail);
-                if (spell->level <= lvl)
-                    doc_printf(_doc, "%s", do_spell(spell->realm, spell->idx, SPELL_INFO));
-                doc_newline(_doc);
-            }
-        }
+        _list_spells(_doc, spellbook, spells, browse_idx);
         if (0 <= browse_idx && browse_idx < vec_length(spells))
         {
             _spell_info_ptr spell = vec_get(spells, browse_idx);
@@ -1762,6 +1782,88 @@ static int _get_powers(spell_info* spells, int max)
     return ct;
 }
 
+static void _dump_book(doc_ptr doc, object_type *spellbook)
+{
+    vec_ptr spells = _get_spell_list(spellbook);
+    _list_spells(doc, spellbook, spells, -1);
+    doc_newline(doc);
+    vec_free(spells);
+}
+
+static object_type *_find_book(int realm, int book)
+{
+    int tval = realm2tval(realm);
+    int sval = book;
+    int i;
+
+    for (i = 0; i < INVEN_PACK; i++)
+    {
+        if (inventory[i].tval == tval && inventory[i].sval == sval)
+            return &inventory[i];
+    }
+    return NULL;
+}
+
+static void _dump_realm(doc_ptr doc, int realm)
+{
+    int i;
+    bool first = TRUE;
+    for (i = 0; i < 4; i++)
+    {
+        object_type *spellbook = _find_book(realm, i);
+        if (spellbook)
+        {
+            if (first)
+            {
+                doc_printf(doc, "<color:r>Realm:</color> <color:B>%s</color>\n\n", realm_names[realm]);
+                first = FALSE;
+            }
+            _dump_book(doc, spellbook);
+        }
+    }
+}
+
+static void _dump_group(doc_ptr doc, _group_ptr g)
+{
+    int pts = _get_group_pts_aux(g);
+    if (pts > 0)
+    {
+        int i;
+        doc_printf(doc, "<color:B>%s</color> (%d)\n", g->name, pts);
+        for (i = 0; ; i++)
+        {
+            _skill_ptr s = &g->skills[i];
+            if (!s->type) break;
+            if (!s->current) continue;
+            doc_printf(doc, "  %s", s->name);
+            if (s->max)
+                doc_printf(doc, " (%d%%)\n", s->current * 100 / s->max);
+            else
+                doc_printf(doc, " (%d)\n", s->current);
+        }
+        doc_newline(doc);
+    }
+}
+
+static void _character_dump(doc_ptr doc)
+{
+    int i;
+    doc_printf(doc, "<topic:Skills>==================================== <color:keypress>S</color>kills ===================================\n\n");
+    for (i = 0; ; i++)
+    {
+        _group_ptr g = &_groups[i];
+        if (!g->type) break;
+        _dump_group(doc, g);
+    }
+
+    if (_has_magic())
+    {
+        doc_printf(doc, "<topic:Spells>==================================== <color:keypress>S</color>pells ===================================\n\n");
+        for (i = REALM_LIFE; i <= MAX_REALM; i++)
+            _dump_realm(doc, i);
+    }
+}
+
 class_t *skillmaster_get_class(void)
 {
     static class_t me = {0};
@@ -1792,6 +1894,7 @@ class_t *skillmaster_get_class(void)
         me.exp = 130;
 
         me.birth = _birth;
+        me.character_dump = _character_dump;
         me.caster_info = _caster_info;
         me.gain_level = _gain_level;
         me.calc_bonuses = _calc_bonuses;
