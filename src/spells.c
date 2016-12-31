@@ -586,7 +586,6 @@ int calculate_fail_rate_aux(int caster_lvl, int spell_lvl, int base_fail, int st
     int min = 0;
     caster_info *caster_ptr = get_caster_info();
 
-    assert(caster_ptr);
     if (caster_lvl < spell_lvl)
         return 100;
 

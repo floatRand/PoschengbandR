@@ -4011,6 +4011,22 @@ void repeat_push(int what)
     }
 }
 
+static void _repeat_pop(_repeat_buffer_ptr buf)
+{
+    if (buf->ct > 0)
+        buf->ct--;
+}
+
+void repeat_pop(void)
+{
+    if (_repeat_state == _RECORDING)
+    {
+        _repeat_pop(&_repeat_buffers['.']);
+        if (_repeat_reg && _repeat_reg != '.')
+            _repeat_pop(&_repeat_buffers[(int)_repeat_reg]);
+    }
+}
+
 static bool _repeat_pull(_repeat_buffer_ptr buf, int *what)
 {
     if (buf->pos >= buf->ct) return FALSE;

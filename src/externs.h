@@ -2012,15 +2012,17 @@ extern void fsetfileinfo(cptr path, u32b fcreator, u32b ftype);
 #ifdef ALLOW_REPEAT /* TNB ... 'n' repeats the last command */
 #define REPEAT_PULL(pn) repeat_pull(pn)
 #define REPEAT_PUSH(pn) repeat_push(pn)
-
+#define REPEAT_POP()    repeat_pop()
 extern int count_bits(u32b x);
 extern void repeat_push(int what);
 extern bool repeat_pull(int *what);
+extern void repeat_pop(void);
 extern void repeat_check(int shopping);
 
 #else
 #define REPEAT_PULL(pn) FALSE
 #define REPEAT_PUSH(pn) ((void)0)
+#define REPEAT_POP() ((void)0)
 #endif /* ALLOW_REPEAT -- TNB */
 
 #ifdef ALLOW_EASY_OPEN /* TNB */
