@@ -1616,7 +1616,13 @@ static void _skills_init_class(class_t *class_ptr)
     pts = _get_skill_pts(_TYPE_SKILLS, _AWARENESS);
     class_ptr->base_skills.srh += 12 + 15*pts;
     class_ptr->base_skills.fos += 6 + 15*pts;
-    /* TODO: Pseudo-id speed. Level feeling speed. */
+    if (!pts)
+        class_ptr->flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK;
+    else
+    {
+        class_ptr->flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG |
+                           CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
+    }
 
     pts = _get_skill_pts(_TYPE_SKILLS, _DEVICES);
     class_ptr->base_skills.dev += 10*pts;
@@ -1918,6 +1924,7 @@ class_t *skillmaster_get_class(void)
     me.life = 100;
     me.base_hp = 10;
     me.pets = 40;
+    me.flags = 0;
 
     /* Rebuild the class_t, using the current skill allocation */
     if (!spoiler_hack && !birth_hack)

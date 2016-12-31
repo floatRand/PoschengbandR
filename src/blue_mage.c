@@ -209,6 +209,8 @@ class_t *blue_mage_get_class(void)
         me.base_hp = 4;
         me.exp = 130;
         me.pets = 35;
+        me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
+                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
         
         me.birth = _birth;
         me.caster_info = _caster_info;

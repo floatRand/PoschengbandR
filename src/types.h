@@ -2097,6 +2097,7 @@ typedef struct {
     s16b                    base_hp;
     s16b                    exp;
     byte                    pets;
+    u32b                    flags;
 
     birth_fn                birth;          /* After py_birth() ... grant starting gear, etc */
     birth_ui_fn             birth_ui;       /* Used during py_birth() ... choose a subclass */ 

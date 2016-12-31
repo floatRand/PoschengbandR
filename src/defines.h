@@ -773,6 +773,19 @@
 #define RACE_IS_MONSTER      0x0008
 #define RACE_IS_ILLITERATE   0x0010
 
+/* Pseudo-ID: Sense1 is the traditional equipable item sensing.
+ * Sense2 is jewelry, lights and magical devices (mage like sensing). */
+#define CLASS_SENSE1_STRONG  0x0001
+#define CLASS_SENSE1_WEAK    0x0002
+#define CLASS_SENSE1_SLOW    0x0004
+#define CLASS_SENSE1_MED     0x0008
+#define CLASS_SENSE1_FAST    0x0010
+#define CLASS_SENSE2_STRONG  0x0020
+#define CLASS_SENSE2_WEAK    0x0040
+#define CLASS_SENSE2_SLOW    0x0080
+#define CLASS_SENSE2_MED     0x0100
+#define CLASS_SENSE2_FAST    0x0200
+
 /* Mimicry uses races too ... Its just that players
    cannot choose these races during birth. */
 #define MIMIC_NONE            -1                  /* RACE_HUMAN is 0 and Dopplegangers can mimic humans! */

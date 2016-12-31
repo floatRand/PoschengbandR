@@ -1297,6 +1297,7 @@ class_t *samurai_get_class(void)
         me.base_hp = 12;
         me.exp = 130;
         me.pets = 40;
+        me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG;
 
         me.birth = _birth;
         me.caster_info = _caster_info;        

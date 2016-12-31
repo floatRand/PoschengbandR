@@ -80,6 +80,8 @@ class_t *beastmaster_get_class(void)
         me.base_hp = 6;
         me.exp = 120;
         me.pets = 10;
+        me.flags = CLASS_SENSE1_SLOW | CLASS_SENSE1_WEAK |
+                   CLASS_SENSE2_WEAK;
         
         me.birth = _birth;
         me.caster_info = _caster_info;
