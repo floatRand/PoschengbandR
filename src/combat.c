@@ -35,9 +35,9 @@ int bow_hit_chance(int sval, int to_h, int ac)
     int odds;
 
     if (sval == SV_LIGHT_XBOW || sval == SV_HEAVY_XBOW)
-        chance = (p_ptr->skills.thb + (p_ptr->weapon_exp[0][sval] / 400 + to_h) * BTH_PLUS_ADJ);
+        chance = (p_ptr->skills.thb + (skills_bow_current(sval) / 400 + to_h) * BTH_PLUS_ADJ);
     else
-        chance = (p_ptr->skills.thb + ((p_ptr->weapon_exp[0][sval] - (WEAPON_EXP_MASTER / 2)) / 200 + to_h) * BTH_PLUS_ADJ);
+        chance = (p_ptr->skills.thb + ((skills_bow_current(sval) - (WEAPON_EXP_MASTER / 2)) / 200 + to_h) * BTH_PLUS_ADJ);
 
     if (chance <= 0) return 0;
 

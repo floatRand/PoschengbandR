@@ -3224,9 +3224,9 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
     }
 
     if (bow->sval == SV_LIGHT_XBOW || bow->sval == SV_HEAVY_XBOW)
-        chance = (p_ptr->skills.thb + (p_ptr->weapon_exp[0][bow->sval] / 400 + bonus) * BTH_PLUS_ADJ);
+        chance = p_ptr->skills.thb + (skills_bow_current(bow->sval) / 400 + bonus) * BTH_PLUS_ADJ;
     else
-        chance = (p_ptr->skills.thb + ((p_ptr->weapon_exp[0][bow->sval] - (WEAPON_EXP_MASTER / 2)) / 200 + bonus) * BTH_PLUS_ADJ);
+        chance = p_ptr->skills.thb + ((skills_bow_current(bow->sval) - WEAPON_EXP_MASTER/2) / 200 + bonus) * BTH_PLUS_ADJ;
 
     if (!no_energy)
         energy_use = bow_energy(bow->sval);
@@ -3554,7 +3554,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                         if ((randint1(randint1(r_ptr->level / (3 + p_ptr->concent)) + (8 - p_ptr->concent)) == 1)
                             && !(r_ptr->flags1 & RF1_UNIQUE) && !(r_ptr->flags7 & RF7_UNIQUE2))
                         {
-                            char m_name[80];
+                            char m_name[MAX_NLEN];
                             monster_desc(m_name, m_ptr, 0);
                             tdam = m_ptr->hp + 1;
                             msg_format("Your shot hit a fatal spot of %s!", m_name);
@@ -3568,8 +3568,16 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                         if (shoot_hack != SHOOT_SHATTER && shoot_hack != SHOOT_ELEMENTAL)
                             tdam = tot_dam_aux_shot(q_ptr, tdam, m_ptr);
 
-                        if (shoot_hack == SHOOT_SNIPING && MON_CSLEEP(m_ptr))
-                            tdam *= 2;
+                        if (MON_CSLEEP(m_ptr))
+                        {
+                            if (shoot_hack == SHOOT_SNIPING || (p_ptr->pclass == CLASS_SKILLMASTER && p_ptr->ambush))
+                            {
+                                char m_name[MAX_NLEN];
+                                monster_desc(m_name, m_ptr, 0);
+                                cmsg_format(TERM_VIOLET, "You cruelly shoot the sleeping %s!", m_name);
+                                tdam *= 2;
+                            }
+                        }
 
                         crit = critical_shot(q_ptr->weight, q_ptr->to_h);
                         if (crit.desc)

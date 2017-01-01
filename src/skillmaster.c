@@ -688,11 +688,11 @@ static void _shoot_init_class(class_t *class_ptr)
     typedef struct { int base_thb; int xtra_thb; } _shoot_skill_t;
     static _shoot_skill_t _tbl[6] = {
         { 20, 11 },
-        { 30, 15 },
+        { 40, 15 },
         { 50, 20 },
         { 55, 25 },
-        { 55, 30 },
-        { 72, 28 }
+        { 60, 27 },
+        { 70, 30 }
     };
     int pts = MIN(5, _get_group_pts(_TYPE_SHOOT));
     _shoot_skill_t row = _tbl[pts];
@@ -713,8 +713,8 @@ static _shoot_info_t _shoot_info[6] = {
     {  0,  0, 4000,   0 },
     {  1,  0, 6000,  25 },
     {  3,  0, 7000,  50 },
-    {  5,  2, 8000,  75 },
-    { 10,  5, 8000, 100 }
+    {  5,  2, 8000, 100 },
+    { 10,  5, 8000, 150 }
 };
 
 static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
@@ -766,7 +766,7 @@ static void _shoot_calc_bonuses(void)
 typedef struct {
     int item;
     object_type *o_ptr;
-    int mult; /* scaled by 100 to better handle fractional blows */
+    int mult; /* scaled by 100 */
     int tdis;
     int tx;
     int ty;

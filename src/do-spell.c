@@ -5287,6 +5287,75 @@ static cptr do_arcane_spell(int spell, int mode)
     return "";
 }
 
+static bool _craft_enchant(int max, int inc)
+{
+    int         item;
+    object_type *o_ptr;
+    char        o_name[MAX_NLEN];
+    bool        improved = FALSE;
+
+    item_tester_hook = object_is_weapon_armour_ammo;
+    item_tester_no_ryoute = TRUE;
+
+    if (!get_item(&item, "Enchant which item? ", "You have nothing to enchant.", (USE_EQUIP | USE_INVEN | USE_FLOOR)))
+        return FALSE;
+
+    if (item >= 0)
+        o_ptr = &inventory[item];
+    else
+        o_ptr = &o_list[0 - item];
+
+    object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+
+    /* Enchanting is now automatic ... It was always possible to max
+     * out enchanting quickly with skilled macro usage, but other players
+     * are inviting carpal tunnel issues to no purpose. */
+    if (object_is_weapon_ammo(o_ptr))
+    {
+        if (o_ptr->to_h < max)
+        {
+            o_ptr->to_h = MIN(max, o_ptr->to_h + inc);
+            improved = TRUE;
+        }
+        if (o_ptr->to_d < max)
+        {
+            o_ptr->to_d = MIN(max, o_ptr->to_d + inc);
+            improved = TRUE;
+        }
+    }
+    else
+    {
+        if (o_ptr->to_a < max)
+        {
+            o_ptr->to_a = MIN(max, o_ptr->to_a + inc);
+            improved = TRUE;
+        }
+    }
+
+
+    msg_format("%s %s glow%s brightly!",
+            ((item >= 0) ? "Your" : "The"), o_name,
+            ((o_ptr->number > 1) ? "" : "s"));
+
+    if (!improved)
+    {
+        msg_print("The enchantment failed.");
+        if (one_in_(3) && virtue_current(VIRTUE_ENCHANTMENT) < 100)
+            virtue_add(VIRTUE_ENCHANTMENT, -1);
+    }
+    else
+    {
+        virtue_add(VIRTUE_ENCHANTMENT, 1);
+        /* Minor Enchantment should not allow gold farming ... */
+        if (inc == 1 && object_is_nameless(o_ptr))
+            o_ptr->discount = 99;
+        p_ptr->update |= PU_BONUS;
+        p_ptr->notice |= PN_COMBINE | PN_REORDER;
+        p_ptr->window |= PW_INVEN | PW_EQUIP;
+        android_calc_exp();
+    }
+    return TRUE;
+}
 
 static cptr do_craft_spell(int spell, int mode)
 {
@@ -5305,59 +5374,8 @@ static cptr do_craft_spell(int spell, int mode)
 
         if (cast)
         {
-            int         item;
-            bool        okay = FALSE;
-            object_type *o_ptr;
-            char        o_name[MAX_NLEN];
-
-            item_tester_hook = object_is_weapon_armour_ammo;
-            item_tester_no_ryoute = TRUE;
-
-            if (!get_item(&item, "Enchant which item? ", "You have nothing to enchant.", (USE_EQUIP | USE_INVEN | USE_FLOOR))) return NULL;
-
-            if (item >= 0)
-                o_ptr = &inventory[item];
-            else
-                o_ptr = &o_list[0 - item];
-
-            object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-
-            if (object_is_weapon_ammo(o_ptr))
-            {
-                if (one_in_(2))
-                {
-                    if (enchant(o_ptr, 1, ENCH_TOHIT | ENCH_MINOR_HACK)) okay = TRUE;
-                }
-                else
-                {
-                    if (enchant(o_ptr, 1, ENCH_TODAM | ENCH_MINOR_HACK)) okay = TRUE;
-                }
-            }
-            else
-            {
-                if (enchant(o_ptr, 1, ENCH_TOAC | ENCH_MINOR_HACK)) okay = TRUE;
-            }
-
-
-            msg_format("%s %s glow%s brightly!",
-                    ((item >= 0) ? "Your" : "The"), o_name,
-                    ((o_ptr->number > 1) ? "" : "s"));
-
-            if (!okay)
-            {
-                if (flush_failure) flush();
-                msg_print("The enchantment failed.");
-                if (one_in_(3) && virtue_current(VIRTUE_ENCHANTMENT) < 100)
-                    virtue_add(VIRTUE_ENCHANTMENT, -1);
-            }
-            else
-            {
-                if (object_is_nameless(o_ptr))
-                    o_ptr->discount = 99;
-                virtue_add(VIRTUE_ENCHANTMENT, 1);
-            }
-
-            android_calc_exp();
+            if (!_craft_enchant(2 + plev/5, 1))
+                return NULL;
         }
         break;
 
@@ -5765,11 +5783,10 @@ static cptr do_craft_spell(int spell, int mode)
         if (name) return "Enchantment";
         if (desc) return "Attempts to increase +to-hit, +to-dam of a weapon, or to increase +AC of armor.";
 
+        if (cast)
         {
-            if (cast)
-            {
-                if (!cast_enchantment()) return NULL;
-            }
+            if (!_craft_enchant(15, 3))
+                return NULL;
         }
         break;
 
