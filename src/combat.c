@@ -60,7 +60,7 @@ static _blow_info_t _get_blow_info(int hand)
 
     if (!o_ptr) return result;
 
-    /* TODO: Use race_ptr and class_ptr instead of this giant switch ... */
+    /* TODO: p_ptr->weapon_info[] can add blow stuff ... set in calc_bonuses() */
     switch (p_ptr->pclass)
     {
     case CLASS_WARRIOR:
@@ -152,8 +152,10 @@ static _blow_info_t _get_blow_info(int hand)
         result.wgt = 70; result.mul = 50; break;
 
     case CLASS_SKILLMASTER:
-        result.num = skillmaster_get_max_blows(o_ptr);
-        result.wgt = 70; result.mul = 50; break;
+        result.num = skillmaster_get_blows_max(o_ptr);
+        result.wgt = 70;
+        result.mul = skillmaster_get_blows_mult(o_ptr);
+        break;
 
     case CLASS_WARRIOR_MAGE:
     case CLASS_RED_MAGE:

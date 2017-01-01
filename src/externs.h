@@ -2520,7 +2520,8 @@ extern void     samurai_posture_calc_bonuses(void);
 extern cptr     do_hissatsu_spell(int spell, int mode);
 
 extern class_t *skillmaster_get_class(void);
-extern int      skillmaster_get_max_blows(object_type *o_ptr);
+extern int      skillmaster_get_blows_max(object_type *o_ptr);
+extern int      skillmaster_get_blows_mult(object_type *o_ptr);
 extern void     skillmaster_gain_skill(void);
 extern int      skillmaster_new_skills(void);
 extern int      skillmaster_bow_prof(void);

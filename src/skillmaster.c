@@ -564,8 +564,8 @@ void skillmaster_gain_skill(void)
     Term_save();
     if (_gain_type_ui() == UI_OK)
     {
-        p_ptr->update |= PU_BONUS;
-        p_ptr->redraw |= PR_EFFECTS;
+        p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;
+        p_ptr->redraw |= PR_EFFECTS | PR_HP | PR_MANA;
     }
     Term_load();
 
@@ -604,14 +604,14 @@ static void _melee_init_class(class_t *class_ptr)
     class_ptr->stats[A_DEX] += (pts + 1)/3;
 }
 
-typedef struct { int to_h; int to_d; int prof; int blows; int ma_wgt; } _melee_info_t;
+typedef struct { int to_h; int to_d; int prof; int blows_max; int blows_mult; int ma_wgt; } _melee_info_t;
 static _melee_info_t _melee_info[6] = {
-    {  0,  0, 2000, 400,   0 },
-    {  0,  0, 4000, 500,  60 },
-    {  0,  0, 6000, 525,  70 },
-    {  5,  0, 7000, 550,  80 },
-    { 10,  3, 8000, 575,  90 },
-    { 20, 10, 8000, 600, 100 }
+    {  0,  0, 2000, 400, 20,   0 },
+    {  0,  0, 4000, 500, 30,  60 },
+    {  0,  0, 6000, 525, 40,  70 },
+    {  5,  0, 7000, 550, 50,  80 },
+    { 10,  3, 8000, 575, 55,  90 },
+    { 20, 10, 8000, 600, 60, 100 }
 };
 
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
@@ -629,11 +629,30 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     info_ptr->dis_to_d += info.to_d;
 }
 
-int skillmaster_get_max_blows(object_type *o_ptr)
+int skillmaster_get_blows_max(object_type *o_ptr)
 {
     int pts = _get_skill_pts(_TYPE_MELEE, o_ptr->tval);
     assert(0 <= pts && pts <= 5);
-    return _melee_info[pts].blows;
+    return _melee_info[pts].blows_max;
+}
+
+int skillmaster_get_blows_mult(object_type *o_ptr)
+{
+    int pts = _get_skill_pts(_TYPE_MELEE, o_ptr->tval);
+    int mult;
+    assert(0 <= pts && pts <= 5);
+    mult = _melee_info[pts].blows_mult;
+    if (p_ptr->riding)
+    {
+        u32b flgs[OF_ARRAY_SIZE];
+        obj_flags(o_ptr, flgs);
+        if (have_flag(flgs, OF_RIDING))
+        {
+            pts = _get_skill_pts(_TYPE_TECHNIQUE, _RIDING);
+            mult += 5 * pts;
+        }
+    }
+    return mult;
 }
 
 int skillmaster_weapon_prof(int tval)
@@ -1866,7 +1885,11 @@ static void _character_dump(doc_ptr doc)
     {
         doc_printf(doc, "<topic:Spells>==================================== <color:keypress>S</color>pells ===================================\n\n");
         for (i = REALM_LIFE; i <= MAX_REALM; i++)
-            _dump_realm(doc, i);
+        {
+            int pts = _get_realm_pts(i);
+            if (pts > 0)
+                _dump_realm(doc, i);
+        }
     }
 }
 
