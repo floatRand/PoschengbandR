@@ -1361,6 +1361,16 @@ int py_casting_lvl(int realm)
     return _get_realm_lvl(realm);
 }
 
+int py_max_casting_lvl(void)
+{
+    int i, lvl = 0;
+    if (p_ptr->pclass != CLASS_SKILLMASTER)
+        return p_ptr->lev;
+    for (i = 0; i <= MAX_REALM; i++)
+        lvl = MAX(lvl, _get_realm_lvl(i));
+    return lvl;
+}
+
 static bool _spellbook_hook(object_type *o_ptr)
 {
     if (TV_BOOK_BEGIN <= o_ptr->tval && o_ptr->tval <= TV_BOOK_END)

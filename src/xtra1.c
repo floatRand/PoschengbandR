@@ -3016,9 +3016,11 @@ static void calc_mana(void)
         }
         return;
     }
+
+    lvl = py_max_casting_lvl();
     if ( (caster_ptr->options & CASTER_USE_HP)
       || (caster_ptr->options & CASTER_USE_AU)
-      || p_ptr->lev < caster_ptr->min_level)
+      || lvl < caster_ptr->min_level)
     {
         p_ptr->msp = 0;
         p_ptr->csp = 0;
@@ -3036,10 +3038,7 @@ static void calc_mana(void)
     }
 
     if (caster_ptr->min_level) /* Hack: 0 => 1 */
-        lvl = p_ptr->lev - caster_ptr->min_level + 1;
-    else
-        lvl = p_ptr->lev;
-
+        lvl = lvl - caster_ptr->min_level + 1;
 
     if (caster_ptr->options & CASTER_SUPERCHARGE_MANA)
     {
