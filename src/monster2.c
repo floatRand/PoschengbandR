@@ -4315,6 +4315,30 @@ static bool summon_specific_okay(int r_idx)
     return (summon_specific_aux(r_idx));
 }
 
+/* Copied over from spells.c. Should probably make it extern*/
+static bool cave_monster_teleportable_bold(int m_idx, int y, int x, u32b mode)
+{
+	monster_type *m_ptr = &m_list[m_idx];
+	cave_type    *c_ptr = &cave[y][x];
+	feature_type *f_ptr = &f_info[c_ptr->feat];
+
+	/* Require "teleportable" space */
+	if (!have_flag(f_ptr->flags, FF_TELEPORTABLE)) return FALSE;
+
+	if (c_ptr->m_idx && (c_ptr->m_idx != m_idx)) return FALSE;
+	if (player_bold(y, x)) return FALSE;
+
+	/* Hack -- no teleport onto glyph of warding */
+	if (is_glyph_grid(c_ptr)) return FALSE;
+	if (is_mon_trap_grid(c_ptr)) return FALSE;
+
+	if (!(mode & TELEPORT_PASSIVE))
+	{
+		if (!monster_can_cross_terrain(c_ptr->feat, &r_info[m_ptr->r_idx], 0)) return FALSE;
+	}
+
+	return TRUE;
+}
 
 /*
  * Place a monster (of the specified "type") near the given
@@ -4342,7 +4366,7 @@ static bool summon_specific_okay(int r_idx)
  */
 bool summon_specific(int who, int y1, int x1, int lev, int type, u32b mode)
 {
-    int x, y, r_idx;
+    int x, y, r_idx, i;
 
     if (type != SUMMON_RING_BEARER)
     {
@@ -4352,15 +4376,71 @@ bool summon_specific(int who, int y1, int x1, int lev, int type, u32b mode)
     /* Note: summon_specific does not imply summoning at all, despite the name ...
        Let's try to guess whether or not this is really a summon spell ...
     */
-    if ( (who > 0 && hack_m_spell) /* monster cast a spell ... probably a summon spell */
-      || who == -1 )               /* player did something ... probably a summon spell/activation */
-    {
-        if (p_ptr->anti_summon && !one_in_(7))
-        {
-            msg_format("The summoning is blocked!");
-            return FALSE;
-        }
-    }
+	if ((who > 0 && hack_m_spell) /* monster cast a spell ... probably a summon spell */
+		|| who == -1)               /* player did something ... probably a summon spell/activation */
+	{
+		if (p_ptr->anti_summon && !one_in_(7))
+		{
+			msg_format("The summoning is blocked!");
+			return FALSE;
+		}
+		else if (p_ptr->pclass == CLASS_SCOUT && p_ptr->lev > 30 && who > 0){
+			/*
+			Scouts have chance of rerouting or prevent summons. Basically, first
+			it tries to prevent it, and afterwards it tries to place them somewhere away.
+			If that fails, summons function normally.
+			*/
+
+			int fail_chance = scout_get_open_terrain() * 5;
+			if (p_ptr->lev > 45) fail_chance += 10;
+
+			if (randint1(100) <= fail_chance){
+				if(!p_ptr->wizard) msg_print("You prevent reinforcements!"); 
+				else msg_format("You prevent reinforcements (fail: %d)!", fail_chance);
+				return FALSE;
+			}
+			else if (randint1(100) <= fail_chance){
+				if (!p_ptr->wizard) msg_print("You reroute reinforcements somewhere else!");
+				else msg_format("You reroute reinforcements somewhere else (fail: %d)!", fail_chance);
+				int tries = 0;
+				int dis = p_ptr->lev * 4;
+				int min = 25 + p_ptr->lev / 2;
+				bool success = FALSE;
+				int nx, ny;
+				int d = 0;
+				while (!success)
+				{
+					tries++;
+					/* Try several locations */
+					for (i = 0; i < 500; i++)
+					{
+						/* Pick a (possibly illegal) location */
+						while (1)
+						{
+							ny = rand_spread(y1, dis);
+							nx = rand_spread(x1, dis);
+							d = distance(y1, x1, ny, nx);
+							if ((d >= min) && (d <= dis)) break;
+						}
+
+						/* Ignore illegal locations */
+						if (!in_bounds(ny, nx)) continue;
+						if (!cave_monster_teleportable_bold(who, ny, nx, mode)) continue;
+						if (!(p_ptr->inside_quest || p_ptr->inside_arena))
+							if (cave[ny][nx].info & CAVE_ICKY) continue;
+
+						/* This grid looks good */
+						success = TRUE;
+
+						/* Stop looking */
+						break;
+					}
+					if (tries > 100) break;
+				}
+				if (success){ x1 = nx; y1 = ny; }
+			}
+		}
+	}
     if (!mon_scatter(0, &y, &x, y1, x1, 2)) return FALSE;
 
     /* Save the summoner */
@@ -4510,6 +4590,58 @@ bool summon_named_creature (int who, int oy, int ox, int r_idx, u32b mode)
         msg_format("The summoning is blocked!");
         return FALSE;
     }
+	else if (p_ptr->pclass == CLASS_SCOUT && p_ptr->lev > 30 && who > 0){
+		int fail_chance = scout_get_open_terrain() * 5;
+		if (p_ptr->lev > 45) fail_chance += 10;
+
+		if (randint1(100) <= fail_chance){
+			if (!p_ptr->wizard) msg_print("You prevent reinforcements!");
+			else msg_format("You prevent reinforcements (fail: %d)!", fail_chance);
+			return FALSE;
+		}
+		else if (randint1(100) <= fail_chance){
+			if (!p_ptr->wizard) msg_print("You reroute reinforcements somewhere else!");
+				else msg_format("You reroute reinforcements somewhere else (fail: %d)!", fail_chance);
+
+			int tries = 0;
+			int dis = p_ptr->lev * 4;
+			int min = 25 + p_ptr->lev / 2;
+			bool success = FALSE;
+			int nx, ny;
+			int d = 0;
+			while (!success)
+			{
+				tries++;
+				/* Try several locations */
+				for (i = 0; i < 500; i++)
+				{
+					/* Pick a (possibly illegal) location */
+					while (1)
+					{
+						ny = rand_spread(oy, dis);
+						nx = rand_spread(ox, dis);
+						d = distance(oy, ox, ny, nx);
+						if ((d >= min) && (d <= dis)) break;
+					}
+
+					/* Ignore illegal locations */
+					if (!in_bounds(ny, nx)) continue;
+					if (!cave_monster_teleportable_bold(who, ny, nx, mode)) continue;
+					if (!(p_ptr->inside_quest || p_ptr->inside_arena))
+						if (cave[ny][nx].info & CAVE_ICKY) continue;
+
+					/* This grid looks good */
+					success = TRUE;
+
+					/* Stop looking */
+					break;
+				}
+				if (tries > 100) break;
+			}
+			if (success){ ox = nx; oy = ny; }
+		}
+	}
+
     if (!mon_scatter(r_idx, &y, &x, oy, ox, 2)) return FALSE;
 
     r_ptr = &r_info[r_idx];

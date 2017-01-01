@@ -2574,6 +2574,8 @@ extern cptr		do_hissatsu_spell(int spell, int mode, int plev);
 
 extern class_t *tourist_get_class(void);
 extern class_t *scout_get_class(void);
+extern int scout_get_open_terrain(void);
+
 extern class_t *sniper_get_class(void);
 extern class_t *sorcerer_get_class(void);
 

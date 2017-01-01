@@ -404,6 +404,10 @@ static int _count_open_terrain(void)
     return count;
 }
 
+int scout_get_open_terrain(){
+	return _count_open_terrain();
+}
+
 static int _prorate_effect(int amt)
 {
     int base = (amt + 3) / 4;
