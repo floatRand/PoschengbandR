@@ -1632,7 +1632,7 @@ static void _skill_display_help(_skill_ptr s)
             doc_display_help("magic.txt", realm_names[realm]);
     }
     else
-        doc_display_help("Skillmaster.txt", s->name);
+        doc_display_help("Skillmasters.txt", s->name);
 }
 
 static int _gain_skill_ui(_group_ptr g)
@@ -1680,7 +1680,7 @@ static int _gain_skill_ui(_group_ptr g)
             cmd = _inkey();
         }
         if (cmd == ESCAPE) return UI_CANCEL;
-        else if (cmd == '?') doc_display_help("Skillmaster.txt", NULL);
+        else if (cmd == '?') doc_display_help("Skillmasters.txt", NULL);
         else if (isupper(cmd))
         {
             i = A2I(tolower(cmd));
@@ -1757,14 +1757,14 @@ static int _gain_type_ui(void)
             cmd = _inkey();
         }
         if (cmd == ESCAPE) return UI_CANCEL;
-        else if (cmd == '?') doc_display_help("Skillmaster.txt", NULL);
+        else if (cmd == '?') doc_display_help("Skillmasters.txt", NULL);
         else if (isupper(cmd))
         {
             i = A2I(tolower(cmd));
             if (0 <= i && i < ct)
             {
                 _group_ptr g = &_groups[i];
-                doc_display_help("Skillmaster.txt", g->name);
+                doc_display_help("Skillmasters.txt", g->name);
             }
         }
         else

@@ -1038,6 +1038,9 @@ static void _class_help(FILE *fp, int idx)
     case CLASS_WEAPONMASTER:
         fputs("See <link:Weaponmasters.txt> for more details on weaponmasters.\n\n", fp);
         break;
+    case CLASS_SKILLMASTER:
+        fputs("See <link:Skillmasters.txt> for more details on skillmasters.\n\n", fp);
+        break;
     }
 
     _class_help_table(fp, class_ptr);
