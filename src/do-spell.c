@@ -564,7 +564,7 @@ static void wild_magic(int spell)
 
 static void cast_shuffle(void)
 {
-    int plev = py_casting_lvl(REALM_TRUMP);
+    int plev = p_ptr->lev;
     int dir;
     int die;
     int vir = virtue_current(VIRTUE_CHANCE);
@@ -904,7 +904,7 @@ static bool item_tester_offer(object_type *o_ptr)
  */
 bool cast_summon_greater_demon(void)
 {
-    int plev = py_casting_lvl(REALM_DAEMON);
+    int plev = p_ptr->lev;
     int item;
     cptr q, s;
     int summon_lev;
@@ -970,7 +970,7 @@ static cptr do_life_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
     bool spoil = (mode == SPELL_SPOIL_DESC) ? TRUE : FALSE;
 
-    int plev = py_casting_lvl(REALM_LIFE);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -1536,7 +1536,7 @@ static cptr do_sorcery_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = py_casting_lvl(REALM_SORCERY);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -2071,7 +2071,7 @@ static cptr do_nature_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = py_casting_lvl(REALM_NATURE);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -2768,7 +2768,7 @@ static cptr do_chaos_spell(int spell, int mode)
     static const char s_random[] = "random";
 
     int dir;
-    int plev = py_casting_lvl(REALM_CHAOS);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -3409,7 +3409,7 @@ static cptr do_death_spell(int spell, int mode)
     static const char s_random[] = "random";
 
     int dir;
-    int plev = py_casting_lvl(REALM_DEATH);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -4078,7 +4078,7 @@ static cptr do_trump_spell(int spell, int mode)
     static const char s_random[] = "random";
 
     int dir;
-    int plev = py_casting_lvl(REALM_TRUMP);
+    int plev = p_ptr->lev;
     int x = px;
     int y = py;
 
@@ -4742,7 +4742,7 @@ static cptr do_arcane_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = py_casting_lvl(REALM_ARCANE);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -5364,7 +5364,7 @@ static cptr do_craft_spell(int spell, int mode)
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
-    int plev = py_casting_lvl(REALM_CRAFT);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -5865,7 +5865,7 @@ static cptr do_daemon_spell(int spell, int mode)
     static const char s_dam[] = "dam ";
 
     int dir;
-    int plev = py_casting_lvl(REALM_DAEMON);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -6480,7 +6480,7 @@ static cptr do_crusade_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = py_casting_lvl(REALM_CRUSADE);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -7065,7 +7065,7 @@ static cptr do_music_spell(int spell, int mode)
     bool stop = (mode == SPELL_STOP) ? TRUE : FALSE;
 
     int dir;
-    int plev = py_casting_lvl(REALM_MUSIC);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -8006,7 +8006,7 @@ static cptr do_hex_spell(int spell, int mode)
 
     bool add = TRUE;
 
-    int plev = py_casting_lvl(REALM_HEX);
+    int plev = p_ptr->lev;
     int power;
 
     switch (spell)
@@ -8801,7 +8801,7 @@ static cptr do_armageddon_spell(int spell, int mode)
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
-    int plev = py_casting_lvl(REALM_ARMAGEDDON);
+    int plev = p_ptr->lev;
     int dir;
 
     switch (spell)

@@ -10,7 +10,7 @@ cptr do_hissatsu_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
 
     int dir;
-    int plev = py_casting_lvl(REALM_HISSATSU);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
@@ -1108,7 +1108,7 @@ static bool _choose_kata(void)
 
 static int _max_sp(void)
 {
-    return MAX(p_ptr->msp*4, py_casting_lvl(REALM_HISSATSU)*5+5);
+    return MAX(p_ptr->msp*4, p_ptr->lev*5+5);
 }
 
 static void _concentrate(bool noisy)

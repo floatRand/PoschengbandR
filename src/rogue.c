@@ -11,7 +11,7 @@ static cptr _rogue_pick_pocket(int power)
     char          m_name[MAX_NLEN];
     char          o_name[MAX_NLEN];
 
-    power += py_casting_lvl(REALM_BURGLARY);
+    power += p_ptr->lev;
     power += adj_stat_save[p_ptr->stat_ind[A_DEX]];
 
     if (!get_rep_dir2(&dir)) return NULL;
@@ -251,7 +251,7 @@ cptr do_burglary_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
     bool fail = (mode == SPELL_FAIL) ? TRUE : FALSE;
 
-    int plev = py_casting_lvl(REALM_BURGLARY);
+    int plev = p_ptr->lev;
     int rad = DETECT_RAD_DEFAULT;
     int dir;
 

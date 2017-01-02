@@ -2,6 +2,20 @@
 
 #include <assert.h>
 
+static doc_ptr _doc = NULL;
+
+static int _inkey(void)
+{
+    return inkey_special(TRUE);
+}
+
+static void _sync_term(doc_ptr doc)
+{
+    rect_t r = ui_screen_rect();
+    Term_load();
+    doc_sync_term(doc, doc_range_top_lines(doc, r.cy), doc_pos_create(r.x, r.y));
+}
+
 /************************************************************************
  * The Skill System
  ***********************************************************************/
@@ -279,12 +293,12 @@ static int _get_skill_ct_aux(_group_ptr g)
     return ct;
 }
 
-static int _get_skill_ct(int type)
+/*static int _get_skill_ct(int type)
 {
     _group_ptr g = _get_group(type);
     assert(g);
     return _get_skill_ct_aux(g);
-}
+}*/
 
 static void _reset_group(_group_ptr g)
 {
@@ -348,229 +362,6 @@ static void _save_player(savefile_ptr file)
         savefile_write_u16b(file, 0xFFFE);
     }
     savefile_write_u16b(file, 0xFFFF);
-}
-
-/************************************************************************
- * Gain a Skill (UI)
- ***********************************************************************/
-static doc_ptr _doc = NULL;
-
-static int _inkey(void)
-{
-    return inkey_special(TRUE);
-}
-
-static void _sync_term(doc_ptr doc)
-{
-    rect_t r = ui_screen_rect();
-    Term_load();
-    doc_sync_term(doc, doc_range_top_lines(doc, r.cy), doc_pos_create(r.x, r.y));
-}
-
-static int _confirm_skill_ui(_skill_ptr s)
-{
-    for (;;)
-    {
-        int cmd;
-
-        doc_clear(_doc);
-        doc_printf(_doc, "<color:v>Warning</color>: <indent>You are about to learn the <color:B>%s</color> skill. "
-                         "Are you sure you want to do this? The skills you learn are permanent choices and you "
-                         "won't be able to change your mind later!</indent>\n", s->name);
-        doc_newline(_doc);
-        doc_insert(_doc, "<color:y>RET</color>) <color:v>Accept</color>\n");
-        doc_insert(_doc, "<color:y>ESC</color>) Cancel\n");
-
-        _sync_term(_doc);
-        cmd = _inkey();
-        if (cmd == ESCAPE) return UI_CANCEL;
-        else if (cmd == '\r') return UI_OK;
-    }
-}
-
-static bool _can_gain_skill(_skill_ptr s)
-{
-    if (!_get_free_pts()) return FALSE;
-    if (s->current == s->max) return FALSE;
-    if (s->type == _TYPE_MAGIC)
-    {
-        _skill_ptr s2 = _get_skill(_TYPE_PRAYER, s->subtype);
-        if (s2 && s2->current) return FALSE;
-    }
-    else if (s->type == _TYPE_PRAYER)
-    {
-        _skill_ptr s2 = _get_skill(_TYPE_MAGIC, s->subtype);
-        if (s2 && s2->current) return FALSE;
-    }
-    return TRUE;
-}
-
-static int _gain_skill_ui(_group_ptr g)
-{
-    int cmd = 0;
-    REPEAT_PULL(&cmd);
-    for (;;)
-    {
-        int     i, ct = _get_skill_ct_aux(g);
-        int     free_pts = _get_free_pts();
-        int     group_pts = _get_group_pts_aux(g);
-        doc_ptr cols[2];
-
-        if (!cmd) /* repeat? */
-        {
-            cols[0] = doc_alloc(40);
-            cols[1] = doc_alloc(30);
-
-            doc_clear(_doc);
-            doc_printf(_doc, "%s\n\n", g->desc);
-            doc_insert(cols[0], "<color:G>Choose the Skill</color>\n");
-            for (i = 0; ; i++, ct++)
-            {
-                _skill_ptr s = &g->skills[i];
-                if (!s->type) break;
-                doc_printf(cols[0], "  <color:%c>%c</color>) %s",
-                    _can_gain_skill(s) ? 'y' : 'D',
-                    I2A(i),
-                    s->name
-                );
-                if (s->current && s->max)
-                    doc_printf(cols[0], " (%d%%)", 100*s->current/s->max);
-                doc_newline(cols[0]);
-            }
-            doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Learned", group_pts ? 'G' : 'r', group_pts);
-            doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Available", free_pts ? 'G' : 'r', free_pts);
-            doc_insert(cols[1], "\n\n");
-            doc_insert(cols[1], "  <color:y>?</color>) Help\n");
-            doc_insert(cols[1], "<color:y>ESC</color>) Cancel\n");
-            doc_insert_cols(_doc, cols, 2, 1);
-            doc_free(cols[0]);
-            doc_free(cols[1]);
-
-            _sync_term(_doc);
-            cmd = _inkey();
-        }
-        if (cmd == ESCAPE) return UI_CANCEL;
-        else if (cmd == '?') doc_display_help("Skillmaster.txt", NULL);
-        else if (isupper(cmd))
-        {
-            i = A2I(tolower(cmd));
-            if (0 <= i && i < ct)
-            {
-                _skill_ptr s = &g->skills[i];
-                doc_display_help("Skillmaster.txt", s->name);
-            }
-        }
-        else
-        {
-            i = A2I(cmd);
-            if (0 <= i && i < ct)
-            {
-                _skill_ptr s = &g->skills[i];
-                if (_can_gain_skill(s))
-                {
-                    REPEAT_PUSH(cmd);
-                    if(_confirm_skill_ui(s) == UI_OK)
-                    {
-                        s->current++;
-                        return UI_OK;
-                    }
-                    REPEAT_POP();
-                }
-            }
-        }
-        cmd = 0;
-    }
-}
-
-static int _gain_type_ui(void)
-{
-    int cmd = 0;
-    REPEAT_PULL(&cmd);
-    for (;;)
-    {
-        int i, pts, ct = _get_group_ct();
-        int free_pts = _get_free_pts();
-        int learned_pts = _get_pts();
-        doc_ptr cols[2];
-
-        if (!cmd) /* repeat? */
-        {
-            cols[0] = doc_alloc(40);
-            cols[1] = doc_alloc(30);
-
-            doc_clear(_doc);
-            doc_insert(_doc,
-                "You must choose which <color:B>skills</color> to learn. The various skills are grouped "
-                "into categories. Often, the total number of points in a given group determines broad level "
-                "skills and perhaps grants boosts to your starting stats, while the specific skill points "
-                "grant targetted benefits (such as proficiency with a class of weapons, or access to "
-                "a specific spell realm). Details are given in the submenu for each group. Feel free to "
-                "explore the various groups since you may always <color:keypress>ESC</color> to return here.\n\n");
-            doc_insert(cols[0], "<color:G>Choose the Skill Type</color>\n");
-            for (i = 0; ; i++)
-            {
-                _group_ptr g = &_groups[i];
-                if (!g->type) break;
-                pts = _get_group_pts_aux(g);
-                doc_printf(cols[0], "  <color:y>%c</color>) %s", I2A(i), g->name);
-                if (pts) doc_printf(cols[0], " (%d)", pts);
-                doc_newline(cols[0]);
-            }
-
-            doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Learned", learned_pts ? 'G' : 'r', learned_pts);
-            doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Available", free_pts ? 'G' : 'r', free_pts);
-            doc_insert(cols[1], "\n\n");
-            doc_insert(cols[1], "  <color:y>?</color>) Help\n");
-            doc_insert(cols[1], "<color:y>ESC</color>) <color:v>Quit</color>\n");
-            doc_insert_cols(_doc, cols, 2, 1);
-            doc_free(cols[0]);
-            doc_free(cols[1]);
-
-            _sync_term(_doc);
-            cmd = _inkey();
-        }
-        if (cmd == ESCAPE) return UI_CANCEL;
-        else if (cmd == '?') doc_display_help("Skillmaster.txt", NULL);
-        else if (isupper(cmd))
-        {
-            i = A2I(tolower(cmd));
-            if (0 <= i && i < ct)
-            {
-                _group_ptr g = &_groups[i];
-                doc_display_help("Skillmaster.txt", g->name);
-            }
-        }
-        else
-        {
-            i = A2I(cmd);
-            if (0 <= i && i < ct)
-            {
-                _group_ptr g = &_groups[i];
-                REPEAT_PUSH(cmd);
-                if (_gain_skill_ui(g) == UI_OK) return UI_OK;
-                REPEAT_POP();
-            }
-        }
-        cmd = 0;
-    }
-}
-
-void skillmaster_gain_skill(void)
-{
-    assert(!_doc);
-    _doc = doc_alloc(80);
-
-    msg_line_clear();
-    Term_save();
-    if (_gain_type_ui() == UI_OK)
-    {
-        p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;
-        p_ptr->redraw |= PR_EFFECTS | PR_HP | PR_MANA;
-    }
-    Term_load();
-
-    doc_free(_doc);
-    _doc = NULL;
 }
 
 /************************************************************************
@@ -1202,14 +993,14 @@ static void _prayer_init_class(class_t *class_ptr)
     class_ptr->stats[A_WIS] += row.wis;
 }
 
-typedef struct { int max_lvl; int cost_mult; int fail_adj; int fail_min; } _realm_skill_t;
+typedef struct { int lvl_mult; int cost_mult; int fail_adj; int fail_min; } _realm_skill_t;
 static _realm_skill_t _realm_skills[6] = {
-    {  1,   0,  0, 50 },
-    { 30, 150, 10,  5 },
-    { 35, 125,  5,  5 },
-    { 40, 110,  2,  4 },
-    { 45, 100,  1,  3 },
-    { 50,  90,  0,  0 }
+    {   0,   0,  0,  0 },
+    { 150, 150, 10,  5 },
+    { 125, 125,  5,  5 },
+    { 110, 110,  2,  4 },
+    { 100, 100,  1,  3 },
+    {  99,  90,  0,  0 }
 };
 
 caster_info *_caster_info(void)
@@ -1342,35 +1133,6 @@ static int _get_realm_stat(int realm)
     return A_NONE;
 }
 
-static int _get_realm_lvl(int realm)
-{
-    int pts = _get_realm_pts(realm);
-    int max = 0;
-
-    assert(0 <= pts && pts <= 5);
-    max = _realm_skills[pts].max_lvl;
-    if (p_ptr->lev > max)
-        return max;
-    return p_ptr->lev;
-}
-
-int py_casting_lvl(int realm)
-{
-    if (p_ptr->pclass != CLASS_SKILLMASTER)
-        return p_ptr->lev;
-    return _get_realm_lvl(realm);
-}
-
-int py_max_casting_lvl(void)
-{
-    int i, lvl = 0;
-    if (p_ptr->pclass != CLASS_SKILLMASTER)
-        return p_ptr->lev;
-    for (i = 0; i <= MAX_REALM; i++)
-        lvl = MAX(lvl, _get_realm_lvl(i));
-    return lvl;
-}
-
 static bool _spellbook_hook(object_type *o_ptr)
 {
     if (TV_BOOK_BEGIN <= o_ptr->tval && o_ptr->tval <= TV_BOOK_END)
@@ -1398,6 +1160,30 @@ static object_type *_prompt_spellbook(void)
         return &o_list[-item];
 }
 
+/* shared with spell table spoilers, so we pass in the skill points to use */
+static _spell_info_ptr _get_spell(int realm, int idx, int pts)
+{
+    magic_type      info;
+    _spell_info_ptr spell = malloc(sizeof(_spell_info_t));
+    _realm_skill_t  skill = _realm_skills[pts];
+
+    if (is_magic(realm))
+        info = mp_ptr->info[realm - 1][idx];
+    else
+        info = technic_info[realm - MIN_TECHNIC][idx];
+
+    spell->realm = realm;
+    spell->idx = idx;
+    spell->level = MAX(1, info.slevel * skill.lvl_mult / 100);
+    spell->cost = MAX(1, info.smana * skill.cost_mult / 100);
+    if (realm == REALM_HISSATSU)
+        spell->fail = 0;
+    else
+        spell->fail = MIN(95, MAX(5, info.sfail + skill.fail_adj));
+
+    return spell;
+}
+
 static vec_ptr _get_spell_list(object_type *spellbook)
 {
     vec_ptr        v = vec_alloc(free);
@@ -1406,7 +1192,6 @@ static vec_ptr _get_spell_list(object_type *spellbook)
     _realm_skill_t skill;
     int            start = 8*spellbook->sval;
     int            stop = start + 8;
-    int            lvl = _get_realm_lvl(realm);
     int            stat = p_ptr->stat_ind[_get_realm_stat(realm)];
     int            i;
 
@@ -1414,33 +1199,20 @@ static vec_ptr _get_spell_list(object_type *spellbook)
     skill = _realm_skills[pts];
     for (i = start; i < stop; i++)
     {
-        magic_type      info;
-        _spell_info_ptr spell = malloc(sizeof(_spell_info_t));
+        _spell_info_ptr spell = _get_spell(realm, i, pts);
 
-        if (is_magic(realm))
-            info = mp_ptr->info[realm - 1][i];
-        else
-            info = technic_info[realm - MIN_TECHNIC][i];
-        spell->level = info.slevel;
-        spell->cost = info.smana * skill.cost_mult / 100;
-        /* Dec mana: The realm stones always work, but wizardstaves et. al.
-         * require both 5 pts total in Magic/Prayer and 4 pts in the realm
-         * in question */
         if (spell->cost && is_magic(realm))
         {
             if (p_ptr->easy_realm1 == realm || (p_ptr->dec_mana && pts >= 4))
                 spell->cost = MAX(1, spell->cost * 3 / 4);
         }
-        if (realm == REALM_HISSATSU)
-            spell->fail = 0;
-        else
+        if (realm != REALM_HISSATSU)
         {
-            spell->fail = calculate_fail_rate_aux(lvl, info.slevel, MIN(100, MAX(0, info.sfail + skill.fail_adj)), stat);
+            spell->fail = calculate_fail_rate_aux(p_ptr->lev, spell->level, spell->fail, stat);
             if (spell->fail < skill.fail_min)
                 spell->fail = skill.fail_min;
         }
-        spell->realm = realm;
-        spell->idx = i;
+
         vec_add(v, spell);
     }
     return v;
@@ -1451,8 +1223,6 @@ static void _list_spells(doc_ptr doc, object_type *spellbook, vec_ptr spells, in
 {
     int          i;
     object_kind *k_ptr = &k_info[spellbook->k_idx];
-    int          realm = tval2realm(spellbook->tval);
-    int          lvl = _get_realm_lvl(realm);
 
     doc_printf(doc, "<color:%c>%-27.27s</color> <color:G>Lvl  SP Fail Desc</color>\n",
         attr_to_attr_char(k_ptr->d_attr), k_name + k_ptr->name);
@@ -1460,14 +1230,14 @@ static void _list_spells(doc_ptr doc, object_type *spellbook, vec_ptr spells, in
     for (i = 0; i < vec_length(spells); i++)
     {
         _spell_info_ptr spell = vec_get(spells, i);
-        if (spell->level >= 99)
+        if (spell->level > PY_MAX_LEVEL)
         {
             doc_printf(doc, " <color:D>%c) Illegible</color>\n", I2A(i));
         }
         else
         {
             doc_printf(doc, " <color:%c>%c</color>) ",
-                (spell->level <= lvl && spell->cost <= p_ptr->csp) ? 'y' : 'D', I2A(i));
+                (spell->level <= p_ptr->lev && spell->cost <= p_ptr->csp) ? 'y' : 'D', I2A(i));
             doc_printf(doc, "<color:%c>%-23.23s</color> ",
                 i == browse_idx ? 'B' : 'w',
                 do_spell(spell->realm, spell->idx, SPELL_NAME));
@@ -1475,11 +1245,51 @@ static void _list_spells(doc_ptr doc, object_type *spellbook, vec_ptr spells, in
                 spell->level,
                 spell->cost <= p_ptr->csp ? 'w' : 'r',
                 spell->cost, spell->fail);
-            if (spell->level <= lvl)
+            if (spell->level <= p_ptr->lev)
                 doc_printf(doc, "%s", do_spell(spell->realm, spell->idx, SPELL_INFO));
             doc_newline(doc);
         }
     }
+}
+
+static void _spoil_book(doc_ptr doc, int realm, int book)
+{
+    int idx, pts;
+    int start = book * 8;
+    int stop = start + 8;
+    int k_idx = lookup_kind(realm2tval(realm), book);
+
+    doc_printf(doc, "<color:G>%-20.20s</color>", k_name + k_info[k_idx].name);
+    for (pts = 1; pts <= 5; pts++)
+        doc_printf(doc, " <color:%c>Lv Cst Fail</color>", pts % 2 ? 'G' : 'R');
+    doc_newline(doc);
+    for (idx = start; idx < stop; idx++)
+    {
+        doc_printf(doc, "%-20.20s", do_spell(realm, idx, SPELL_NAME));
+        for (pts = 1; pts <= 5; pts++)
+        {
+            _spell_info_ptr spell = _get_spell(realm, idx, pts);
+            if (spell->level > PY_MAX_LEVEL)
+                doc_insert(doc, " <color:D> Illegible </color>");
+            else
+            {
+                doc_printf(doc, " <color:%c>%2d %3d %3d%%</color>",
+                    pts % 2 ? 'w' : 'U', spell->level, spell->cost, spell->fail);
+            }
+            free(spell);
+        }
+        doc_newline(doc);
+    }
+    doc_newline(doc);
+}
+
+static void _spoil_realm(doc_ptr doc, int realm)
+{
+    int book;
+    doc_insert(doc, "<style:table>");
+    for (book = 0; book < 4; book++)
+        _spoil_book(doc, realm, book);
+    doc_insert(doc, "</style>");
 }
 
 #define _BROWSE_MODE 0x01
@@ -1488,8 +1298,6 @@ static bool _prompt_spell(object_type *spellbook, _spell_info_ptr chosen_spell, 
     bool    result = FALSE;
     vec_ptr spells = _get_spell_list(spellbook);
     int     browse_idx = -1, cmd, i;
-    int     realm = tval2realm(spellbook->tval);
-    int     lvl = _get_realm_lvl(realm);
 
     if (REPEAT_PULL(&cmd))
     {
@@ -1497,7 +1305,7 @@ static bool _prompt_spell(object_type *spellbook, _spell_info_ptr chosen_spell, 
         if (0 <= i && i < vec_length(spells))
         {
             _spell_info_ptr spell = vec_get(spells, i);
-            if (spell->level <= lvl && spell->cost <= p_ptr->csp)
+            if (spell->level <= p_ptr->lev && spell->cost <= p_ptr->csp)
             {
                 *chosen_spell = *spell;
                 vec_free(spells);
@@ -1541,7 +1349,7 @@ static bool _prompt_spell(object_type *spellbook, _spell_info_ptr chosen_spell, 
                 else
                 {
                     _spell_info_ptr spell = vec_get(spells, i);
-                    if (spell->level <= lvl && spell->cost <= p_ptr->csp)
+                    if (spell->level <= p_ptr->lev && spell->cost <= p_ptr->csp)
                     {
                         *chosen_spell = *spell;
                         result = TRUE;
@@ -1563,9 +1371,7 @@ static bool _prompt_spell(object_type *spellbook, _spell_info_ptr chosen_spell, 
 
 static void _cast_spell(_spell_info_ptr spell)
 {
-    int lvl = _get_realm_lvl(spell->realm);
-
-    assert(spell->level <= lvl);
+    assert(spell->level <= p_ptr->lev);
     assert(spell->cost <= p_ptr->csp);
 
     p_ptr->csp -= spell->cost;
@@ -1744,6 +1550,241 @@ int skillmaster_dual_wielding_prof(void)
     int pts = _get_skill_pts(_TYPE_TECHNIQUE, _DUAL_WIELDING);
     int prof[6] = { 0, WEAPON_EXP_BEGINNER, WEAPON_EXP_SKILLED, WEAPON_EXP_EXPERT, WEAPON_EXP_MASTER, WEAPON_EXP_MASTER };
     return prof[MIN(5, pts)];
+}
+
+/************************************************************************
+ * Gain a Skill (UI)
+ ***********************************************************************/
+static int _confirm_skill_ui(_skill_ptr s)
+{
+    for (;;)
+    {
+        int cmd;
+
+        doc_clear(_doc);
+        doc_printf(_doc, "<color:v>Warning</color>: <indent>You are about to learn the <color:B>%s</color> skill. "
+                         "Are you sure you want to do this? The skills you learn are permanent choices and you "
+                         "won't be able to change your mind later!</indent>\n", s->name);
+        doc_newline(_doc);
+        doc_insert(_doc, "<color:y>RET</color>) <color:v>Accept</color>\n");
+        doc_insert(_doc, "<color:y>ESC</color>) Cancel\n");
+
+        _sync_term(_doc);
+        cmd = _inkey();
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '\r') return UI_OK;
+    }
+}
+
+static bool _can_gain_skill(_skill_ptr s)
+{
+    if (!_get_free_pts()) return FALSE;
+    if (s->current == s->max) return FALSE;
+    if (s->type == _TYPE_MAGIC)
+    {
+        _skill_ptr s2 = _get_skill(_TYPE_PRAYER, s->subtype);
+        if (s2 && s2->current) return FALSE;
+    }
+    else if (s->type == _TYPE_PRAYER)
+    {
+        _skill_ptr s2 = _get_skill(_TYPE_MAGIC, s->subtype);
+        if (s2 && s2->current) return FALSE;
+    }
+    return TRUE;
+}
+
+static int _get_skill_realm(_skill_ptr s)
+{
+    int realm = REALM_NONE;
+    if (s->type == _TYPE_MAGIC || s->type == _TYPE_PRAYER)
+        realm = s->subtype;
+    else if (s->type == _TYPE_TECHNIQUE && (s->subtype == REALM_BURGLARY || s->subtype == REALM_HISSATSU))
+        realm = s->subtype;
+    return realm;
+}
+
+static void _skill_display_help(_skill_ptr s)
+{
+    int realm = _get_skill_realm(s);
+    if (realm != REALM_NONE)
+    {
+        if (p_ptr->wizard || 1)
+        {
+            doc_ptr doc = doc_alloc(80);
+            _spoil_realm(doc, realm);
+            doc_display(doc, realm_names[realm], 0);
+            doc_free(doc);
+        }
+        else
+            doc_display_help("magic.txt", realm_names[realm]);
+    }
+    else
+        doc_display_help("Skillmaster.txt", s->name);
+}
+
+static int _gain_skill_ui(_group_ptr g)
+{
+    int cmd = 0;
+    REPEAT_PULL(&cmd);
+    for (;;)
+    {
+        int     i, ct = _get_skill_ct_aux(g);
+        int     free_pts = _get_free_pts();
+        int     group_pts = _get_group_pts_aux(g);
+        doc_ptr cols[2];
+
+        if (!cmd) /* repeat? */
+        {
+            cols[0] = doc_alloc(40);
+            cols[1] = doc_alloc(30);
+
+            doc_clear(_doc);
+            doc_printf(_doc, "%s\n\n", g->desc);
+            doc_insert(cols[0], "<color:G>Choose the Skill</color>\n");
+            for (i = 0; ; i++)
+            {
+                _skill_ptr s = &g->skills[i];
+                if (!s->type) break;
+                doc_printf(cols[0], "  <color:%c>%c</color>) %s",
+                    _can_gain_skill(s) ? 'y' : 'D',
+                    I2A(i),
+                    s->name
+                );
+                if (s->current && s->max)
+                    doc_printf(cols[0], " (%d%%)", 100*s->current/s->max);
+                doc_newline(cols[0]);
+            }
+            doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Learned", group_pts ? 'G' : 'r', group_pts);
+            doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Available", free_pts ? 'G' : 'r', free_pts);
+            doc_insert(cols[1], "\n\n");
+            doc_insert(cols[1], "  <color:y>?</color>) Help\n");
+            doc_insert(cols[1], "<color:y>ESC</color>) Cancel\n");
+            doc_insert_cols(_doc, cols, 2, 1);
+            doc_free(cols[0]);
+            doc_free(cols[1]);
+
+            _sync_term(_doc);
+            cmd = _inkey();
+        }
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '?') doc_display_help("Skillmaster.txt", NULL);
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < ct)
+                _skill_display_help(&g->skills[i]);
+        }
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < ct)
+            {
+                _skill_ptr s = &g->skills[i];
+                if (_can_gain_skill(s))
+                {
+                    REPEAT_PUSH(cmd);
+                    if(_confirm_skill_ui(s) == UI_OK)
+                    {
+                        s->current++;
+                        return UI_OK;
+                    }
+                    REPEAT_POP();
+                }
+            }
+        }
+        cmd = 0;
+    }
+}
+
+static int _gain_type_ui(void)
+{
+    int cmd = 0;
+    REPEAT_PULL(&cmd);
+    for (;;)
+    {
+        int i, pts, ct = _get_group_ct();
+        int free_pts = _get_free_pts();
+        int learned_pts = _get_pts();
+        doc_ptr cols[2];
+
+        if (!cmd) /* repeat? */
+        {
+            cols[0] = doc_alloc(40);
+            cols[1] = doc_alloc(30);
+
+            doc_clear(_doc);
+            doc_insert(_doc,
+                "You must choose which <color:B>skills</color> to learn. The various skills are grouped "
+                "into categories. Often, the total number of points in a given group determines broad level "
+                "skills and perhaps grants boosts to your starting stats, while the specific skill points "
+                "grant targetted benefits (such as proficiency with a class of weapons, or access to "
+                "a specific spell realm). Details are given in the submenu for each group. Feel free to "
+                "explore the various groups since you may always <color:keypress>ESC</color> to return here.\n\n");
+            doc_insert(cols[0], "<color:G>Choose the Skill Type</color>\n");
+            for (i = 0; ; i++)
+            {
+                _group_ptr g = &_groups[i];
+                if (!g->type) break;
+                pts = _get_group_pts_aux(g);
+                doc_printf(cols[0], "  <color:y>%c</color>) %s", I2A(i), g->name);
+                if (pts) doc_printf(cols[0], " (%d)", pts);
+                doc_newline(cols[0]);
+            }
+
+            doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Learned", learned_pts ? 'G' : 'r', learned_pts);
+            doc_printf(cols[1], "%-10.10s: <color:%c>%d</color>\n", "Available", free_pts ? 'G' : 'r', free_pts);
+            doc_insert(cols[1], "\n\n");
+            doc_insert(cols[1], "  <color:y>?</color>) Help\n");
+            doc_insert(cols[1], "<color:y>ESC</color>) <color:v>Quit</color>\n");
+            doc_insert_cols(_doc, cols, 2, 1);
+            doc_free(cols[0]);
+            doc_free(cols[1]);
+
+            _sync_term(_doc);
+            cmd = _inkey();
+        }
+        if (cmd == ESCAPE) return UI_CANCEL;
+        else if (cmd == '?') doc_display_help("Skillmaster.txt", NULL);
+        else if (isupper(cmd))
+        {
+            i = A2I(tolower(cmd));
+            if (0 <= i && i < ct)
+            {
+                _group_ptr g = &_groups[i];
+                doc_display_help("Skillmaster.txt", g->name);
+            }
+        }
+        else
+        {
+            i = A2I(cmd);
+            if (0 <= i && i < ct)
+            {
+                _group_ptr g = &_groups[i];
+                REPEAT_PUSH(cmd);
+                if (_gain_skill_ui(g) == UI_OK) return UI_OK;
+                REPEAT_POP();
+            }
+        }
+        cmd = 0;
+    }
+}
+
+void skillmaster_gain_skill(void)
+{
+    assert(!_doc);
+    _doc = doc_alloc(80);
+
+    msg_line_clear();
+    Term_save();
+    if (_gain_type_ui() == UI_OK)
+    {
+        p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;
+        p_ptr->redraw |= PR_EFFECTS | PR_HP | PR_MANA;
+    }
+    Term_load();
+
+    doc_free(_doc);
+    _doc = NULL;
 }
 
 /************************************************************************

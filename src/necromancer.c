@@ -187,7 +187,7 @@ cptr do_necromancy_spell(int spell, int mode)
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
     bool fail = (mode == SPELL_FAIL) ? TRUE : FALSE;
 
-    int plev = py_casting_lvl(REALM_NECROMANCY);
+    int plev = p_ptr->lev;
 
     switch (spell)
     {
