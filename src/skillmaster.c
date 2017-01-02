@@ -2,6 +2,7 @@
 
 #include <assert.h>
 
+/* UI helpers for gaining skills and casting spells */
 static doc_ptr _doc = NULL;
 
 static int _inkey(void)
@@ -996,11 +997,11 @@ static void _prayer_init_class(class_t *class_ptr)
 typedef struct { int lvl_mult; int cost_mult; int fail_adj; int fail_min; } _realm_skill_t;
 static _realm_skill_t _realm_skills[6] = {
     {   0,   0,  0,  0 },
-    { 150, 150, 10,  5 },
-    { 125, 125,  5,  5 },
-    { 110, 110,  2,  4 },
-    { 100, 100,  1,  3 },
-    {  99,  90,  0,  0 }
+    { 167, 200, 15,  5 },
+    { 134, 150,  7,  5 },
+    { 115, 125,  4,  4 },
+    { 105, 110,  2,  3 },
+    { 100,  95,  0,  0 }
 };
 
 caster_info *_caster_info(void)
