@@ -2531,6 +2531,7 @@ extern int      skillmaster_riding_prof(void);
 extern int      skillmaster_dual_wielding_prof(void);
 extern void     skillmaster_cast(void);
 extern void     skillmaster_browse(void);
+extern bool     skillmaster_is_allowed_book(int tval, int sval);
 
 extern class_t *tourist_get_class(void);
 extern class_t *scout_get_class(void);

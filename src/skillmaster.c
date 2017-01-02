@@ -1437,6 +1437,18 @@ void skillmaster_browse(void)
     }
 }
 
+static bool _is_spellbook(int tval)
+{
+    if (tval < TV_BOOK_BEGIN || tval > TV_BOOK_END) return FALSE;
+    return TRUE;
+}
+
+bool skillmaster_is_allowed_book(int tval, int sval) /* For autopick.c */
+{
+    if (!_is_spellbook(tval)) return FALSE;
+    return _get_realm_pts(tval2realm(tval)) > 0;
+}
+
 /************************************************************************
  * Skills
  ***********************************************************************/

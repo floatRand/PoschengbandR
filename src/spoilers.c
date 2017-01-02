@@ -1066,7 +1066,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
     { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_IMITATOR, CLASS_RAGE_MAGE,
-                    CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
+                    CLASS_SKILLMASTER, CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
 };
 
 static void _classes_help(FILE* fp)
