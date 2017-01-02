@@ -1220,14 +1220,18 @@ static vec_ptr _get_spell_list(object_type *spellbook)
 }
 
 /* This is shared with the character dump ... */
-static void _list_spells(doc_ptr doc, object_type *spellbook, vec_ptr spells, int browse_idx)
+#define _SHOW_STATS 0x01
+static void _list_spells(doc_ptr doc, object_type *spellbook, vec_ptr spells, int browse_idx, int options)
 {
     int          i;
     object_kind *k_ptr = &k_info[spellbook->k_idx];
 
-    doc_printf(doc, "<color:%c>%-27.27s</color> <color:G>Lvl  SP Fail Desc</color>\n",
-        attr_to_attr_char(k_ptr->d_attr), k_name + k_ptr->name);
-    
+    doc_printf(doc, "<color:%c>%-27.27s</color> <color:G>Lvl  SP Fail %-15.15s",
+        attr_to_attr_char(k_ptr->d_attr), k_name + k_ptr->name, "Desc");
+    if (options & _SHOW_STATS)
+        doc_insert(doc, "  Cast Fail");
+    doc_insert(doc, "</color>\n");
+
     for (i = 0; i < vec_length(spells); i++)
     {
         _spell_info_ptr spell = vec_get(spells, i);
@@ -1247,7 +1251,21 @@ static void _list_spells(doc_ptr doc, object_type *spellbook, vec_ptr spells, in
                 spell->cost <= p_ptr->csp ? 'w' : 'r',
                 spell->cost, spell->fail);
             if (spell->level <= p_ptr->lev)
-                doc_printf(doc, "%s", do_spell(spell->realm, spell->idx, SPELL_INFO));
+                doc_printf(doc, "%-15.15s", do_spell(spell->realm, spell->idx, SPELL_INFO));
+            else
+                doc_printf(doc, "%-15.15s", "");
+            if (options & _SHOW_STATS)
+            {
+                spell_stats_ptr stats = spell_stats_old(spell->realm, spell->idx);
+                if (stats->ct_cast + stats->ct_fail)
+                {
+                    doc_printf(doc, " %5d %4d %3d%%",
+                        stats->ct_cast,
+                        stats->ct_fail,
+                        spell_stats_fail(stats)
+                    );
+                }
+            }
             doc_newline(doc);
         }
     }
@@ -1323,7 +1341,7 @@ static bool _prompt_spell(object_type *spellbook, _spell_info_ptr chosen_spell, 
     for (;;)
     {
         doc_clear(_doc);
-        _list_spells(_doc, spellbook, spells, browse_idx);
+        _list_spells(_doc, spellbook, spells, browse_idx, 0);
         if (0 <= browse_idx && browse_idx < vec_length(spells))
         {
             _spell_info_ptr spell = vec_get(spells, browse_idx);
@@ -1874,7 +1892,7 @@ static int _get_powers(spell_info* spells, int max)
 static void _dump_book(doc_ptr doc, object_type *spellbook)
 {
     vec_ptr spells = _get_spell_list(spellbook);
-    _list_spells(doc, spellbook, spells, -1);
+    _list_spells(doc, spellbook, spells, -1, _SHOW_STATS);
     doc_newline(doc);
     vec_free(spells);
 }
