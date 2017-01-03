@@ -3890,6 +3890,8 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
                 break;
             }
         }
+        if (p_ptr->psubclass == WEAPONMASTER_BOWS && p_ptr->lev >= 20)
+            p_ptr->shooter_info.breakage = 30;
     }
 }
 

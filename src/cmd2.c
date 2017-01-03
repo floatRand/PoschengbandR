@@ -2656,22 +2656,16 @@ void do_cmd_rest(void)
  */
 static int breakage_chance(object_type *o_ptr)
 {
-    int archer_bonus = (p_ptr->pclass == CLASS_ARCHER ? (p_ptr->lev-1)/7 + 4: 0);
-
-    /* Hack: Bowmasters should have 75% protection ... */
-    if (weaponmaster_is_(WEAPONMASTER_BOWS) && p_ptr->lev >= 20)
-        archer_bonus = 7;
-
     /* Examine the snipe type */
     if (snipe_type)
     {
-        if (snipe_type == SP_KILL_WALL) return (100);
-        if (snipe_type == SP_EXPLODE) return (100);
-        if (snipe_type == SP_PIERCE) return (100);
-        if (snipe_type == SP_FINAL) return (100);
-        if (snipe_type == SP_NEEDLE) return (100);
-        if (snipe_type == SP_EVILNESS) return (40);
-        if (snipe_type == SP_HOLYNESS) return (40);
+        if (snipe_type == SP_KILL_WALL) return 100;
+        if (snipe_type == SP_EXPLODE) return 100;
+        if (snipe_type == SP_PIERCE) return 100;
+        if (snipe_type == SP_FINAL) return 100;
+        if (snipe_type == SP_NEEDLE) return 100;
+        if (snipe_type == SP_EVILNESS) return 40;
+        if (snipe_type == SP_HOLYNESS) return 40;
     }
 
     if (shoot_hack == SHOOT_SHATTER) return 100;
@@ -2688,27 +2682,27 @@ static int breakage_chance(object_type *o_ptr)
         case TV_BOTTLE:
         case TV_FOOD:
         case TV_JUNK:
-            return (100);
+            return 100;
 
         /* Often break */
         case TV_LITE:
         case TV_SCROLL:
         case TV_SKELETON:
-            return (50);
+            return 50;
 
         /* Sometimes break */
         case TV_WAND:
         case TV_SPIKE:
-            return (25);
+            return 25;
         case TV_ARROW:
-            return (20 - archer_bonus * 2);
+            return 20 * p_ptr->shooter_info.breakage / 100;
 
         /* Rarely break */
         case TV_SHOT:
         case TV_BOLT:
-            return (10 - archer_bonus);
+            return 10 * p_ptr->shooter_info.breakage / 100;
         default:
-            return (10);
+            return 10;
     }
 }
 

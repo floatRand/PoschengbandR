@@ -1096,6 +1096,7 @@ typedef struct {
     int to_mult;
     int num_fire;
     byte tval_ammo;
+    int breakage; /* pct of normal breakage odds ... default is 100 */
     bool heavy_shoot;
     u32b flags[OF_ARRAY_SIZE];
 } shooter_info_t;

@@ -2953,6 +2953,7 @@ static void _calc_encumbrance(void)
     case CLASS_RED_MAGE:
     case CLASS_WARRIOR_MAGE:
     case CLASS_ARCHAEOLOGIST:
+    case CLASS_SKILLMASTER: /* TODO */
         weight += equip_weight(object_is_melee_weapon) / 3;
         break;
 
@@ -3498,6 +3499,7 @@ void calc_bonuses(void)
     p_ptr->shooter_info.heavy_shoot = FALSE;
     p_ptr->shooter_info.to_mult = 0;
     p_ptr->shooter_info.tval_ammo = 0;
+    p_ptr->shooter_info.breakage = 100;
 
     for (i = 0; i < OF_ARRAY_SIZE; i++)
         p_ptr->shooter_info.flags[i] = 0;
