@@ -476,7 +476,9 @@ static caster_info * _caster_info(void)
     {
         me.which_stat = A_INT;
         me.magic_desc = "talent";
-        me.weight = 3000;
+        me.encumbrance.max_wgt = 1000;
+        me.encumbrance.weapon_pct = 0;
+        me.encumbrance.enc_wgt = 1200;
         init = TRUE;
     }
     return &me;

@@ -594,7 +594,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "force";
         me.which_stat = A_WIS;
-        me.weight = 350;
+        me.encumbrance.max_wgt = 350;
+        me.encumbrance.weapon_pct = 100;
+        me.encumbrance.enc_wgt = 800;
         me.on_fail = _on_fail;
         me.on_cast = _on_cast;
         init = TRUE;

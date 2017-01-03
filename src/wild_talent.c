@@ -607,7 +607,9 @@ static caster_info * _caster_info(void)
     if (!init)
     {
         me.magic_desc = "wild spell";
-        me.weight = 450;
+        me.encumbrance.max_wgt = 450;
+        me.encumbrance.weapon_pct = 0;
+        me.encumbrance.enc_wgt = 800;
         init = TRUE;
     }
     return &me;

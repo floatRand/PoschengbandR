@@ -47,7 +47,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "spell";
         me.which_stat = A_CHR;
-        me.weight = 40;
+        me.encumbrance.max_wgt = 40;
+        me.encumbrance.weapon_pct = 100;
+        me.encumbrance.enc_wgt = 900;
         me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
         init = TRUE;
     }

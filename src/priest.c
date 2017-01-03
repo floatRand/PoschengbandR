@@ -31,7 +31,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "prayer";
         me.which_stat = A_WIS;
-        me.weight = 430;
+        me.encumbrance.max_wgt = 430;
+        me.encumbrance.weapon_pct = 67;
+        me.encumbrance.enc_wgt = 800;
         me.options = CASTER_ALLOW_DEC_MANA;
         init = TRUE;
     }

@@ -531,7 +531,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "mystic technique";
         me.which_stat = A_CHR;
-        me.weight = 350;
+        me.encumbrance.max_wgt = 350;
+        me.encumbrance.weapon_pct = 100;
+        me.encumbrance.enc_wgt = 800;
         me.options = CASTER_SUPERCHARGE_MANA;
         init = TRUE;
     }

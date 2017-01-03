@@ -2063,9 +2063,15 @@ typedef spell_stats_t        *spell_stats_ptr;
 #define CASTER_SUPERCHARGE_MANA     0x0080
 
 typedef struct {
+    int max_wgt;    /* max weight before encumbrance */
+    int weapon_pct; /* how much do melee weapons matter for encumbrance? */
+    int enc_wgt;    /* how much weight over the max before 0sp */
+} encumbrance_info;
+
+typedef struct {
     cptr magic_desc;    /* spell, mindcraft, brutal power, ninjitsu, etc */
     int  min_fail;
-    int  weight;
+    encumbrance_info encumbrance;
     int  which_stat;
     int  min_level;
     u32b options;

@@ -819,7 +819,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "mirror magic";
         me.which_stat = A_INT;
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 50;
+        me.encumbrance.enc_wgt = 800;
         me.on_fail = _on_fail;
         init = TRUE;
     }

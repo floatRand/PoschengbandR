@@ -65,7 +65,11 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "blood spell";
         me.which_stat = A_INT;
-        me.weight = 430;
+        /* Note: Even though we use HP for casting, encumbrance matters.
+         * See mod_spell_chance* in spells3.c */
+        me.encumbrance.max_wgt = 430;
+        me.encumbrance.weapon_pct = 100;
+        me.encumbrance.enc_wgt = 600;
         me.options = CASTER_USE_HP | CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
         me.on_cast = _on_cast;
         init = TRUE;

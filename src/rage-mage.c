@@ -1117,7 +1117,9 @@ static caster_info * _caster_info(void)
     if (!init)
     {
         me.magic_desc = "rage";
-        me.weight = 1000;
+        me.encumbrance.max_wgt = 1000;
+        me.encumbrance.weapon_pct = 20;
+        me.encumbrance.enc_wgt = 1200;
         init = TRUE;
     }
     return &me;

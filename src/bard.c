@@ -148,7 +148,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "song";
         me.which_stat = A_CHR;
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 67;
+        me.encumbrance.enc_wgt = 800;
         init = TRUE;
     }
     return &me;

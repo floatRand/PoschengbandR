@@ -1241,7 +1241,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "technique";
         me.which_stat = A_WIS;
-        me.weight = 3000;
+        me.encumbrance.max_wgt = 3000;
+        me.encumbrance.weapon_pct = 0;
+        me.encumbrance.enc_wgt = 1200;
         me.options = CASTER_SUPERCHARGE_MANA;
         init = TRUE;
     }

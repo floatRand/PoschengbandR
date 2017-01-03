@@ -900,7 +900,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "timecraft";
         me.which_stat = A_WIS;
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 80;
+        me.encumbrance.enc_wgt = 600;
         me.on_fail = _on_fail;
         init = TRUE;
     }

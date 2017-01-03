@@ -654,7 +654,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "mindcraft";
         me.which_stat = A_WIS;
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 50;
+        me.encumbrance.enc_wgt = 800;
         me.on_fail = _on_fail;
         init = TRUE;
     }

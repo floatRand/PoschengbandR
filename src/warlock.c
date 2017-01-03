@@ -1924,7 +1924,14 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "arcane power";
         me.which_stat = A_CHR;
-        me.weight = 500;
+        me.encumbrance.max_wgt = 450;
+        if (p_ptr->psubclass == WARLOCK_DRAGONS)
+            me.encumbrance.weapon_pct = 33;
+        else if (p_ptr->psubclass == WARLOCK_GIANTS)
+            me.encumbrance.weapon_pct = 20;
+        else
+            me.encumbrance.weapon_pct = 67;
+        me.encumbrance.enc_wgt = 800;
         init = TRUE;
     }
     return &me;

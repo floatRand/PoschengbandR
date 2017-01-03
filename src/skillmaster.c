@@ -995,14 +995,31 @@ static _realm_skill_t _realm_skills[6] = {
     { 100,  95,  0,  0 }
 };
 
+static encumbrance_info _encumbrance_tbl[11] = {
+    { 500,   0, 1200 },
+
+    { 490,  10, 1200 },
+    { 480,  20, 1100 },
+    { 470,  30, 1000 },
+    { 460,  50,  900 },
+    { 450,  70,  800 },
+
+    { 440,  90,  700 },
+    { 430, 100,  600 },
+    { 420, 100,  600 },
+    { 410, 100,  600 },
+    { 400, 100,  600 }
+};
+
 caster_info *_caster_info(void)
 {
     static caster_info info = {0};
     int magic_pts = _get_group_pts(_TYPE_MAGIC);
     int prayer_pts = _get_group_pts(_TYPE_PRAYER);
+    int enc_pts = magic_pts + (prayer_pts + 1) / 2;
 
     info.options = 0;
-    info.weight = 450;
+    info.encumbrance = _encumbrance_tbl[MIN(10, enc_pts)];
     /* Experimental: Learning Kendo let's you focus
      * to supercharge mana, no matter what other realms you
      * know. This is powerful, so we preclude access

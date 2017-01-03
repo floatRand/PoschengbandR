@@ -2124,7 +2124,9 @@ static caster_info * _caster_info(void)
     if (!init)
     {
         me.magic_desc = "focus";
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 50;
+        me.encumbrance.enc_wgt = 800;
         init = TRUE;
     }
     me.which_stat = _spell_stat();

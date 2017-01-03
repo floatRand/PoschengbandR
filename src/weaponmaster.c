@@ -3259,7 +3259,6 @@ static caster_info * _caster_info(void)
         me.which_stat = A_STR;
         me.magic_desc = "skill";
         me.options = CASTER_USE_HP;
-        me.weight = 3000;
         init = TRUE;
     }
     return &me;

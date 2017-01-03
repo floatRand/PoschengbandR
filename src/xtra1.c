@@ -2909,68 +2909,16 @@ static void _calc_encumbrance(void)
 
     /* Armor/Weapon Weight */
     weight = equip_weight(object_is_armour);
-    switch (get_class_idx())
+    if (caster_ptr->encumbrance.weapon_pct)
     {
-    case CLASS_MAGE:
-    case CLASS_NECROMANCER:
-    case CLASS_BLOOD_MAGE:
-    case CLASS_HIGH_MAGE:
-    case CLASS_BLUE_MAGE:
-    case CLASS_MONK:
-    case CLASS_FORCETRAINER:
-    case CLASS_SORCERER:
-    case CLASS_YELLOW_MAGE:
-    case CLASS_GRAY_MAGE:
-        weight += equip_weight(object_is_melee_weapon);
-        break;
-
-    case CLASS_WARLOCK:
-        if (p_ptr->psubclass == WARLOCK_DRAGONS)
-            weight += equip_weight(object_is_melee_weapon) / 3;
-        else if (p_ptr->psubclass == WARLOCK_GIANTS)
-            weight += equip_weight(object_is_melee_weapon) / 5;
-        else
-            weight += equip_weight(object_is_melee_weapon) * 2 / 3;
-        break;
-
-    case CLASS_PRIEST:
-    case CLASS_BARD:
-    case CLASS_TOURIST:
-    case CLASS_SCOUT:
-    case CLASS_MONSTER:
-        weight += equip_weight(object_is_melee_weapon) * 2 / 3;
-        break;
-
-    case CLASS_MINDCRAFTER:
-    case CLASS_PSION:
-    case CLASS_BEASTMASTER:
-    case CLASS_MIRROR_MASTER:
-        weight += equip_weight(object_is_melee_weapon) / 2;
-        break;
-
-    case CLASS_ROGUE:
-    case CLASS_RANGER:
-    case CLASS_RED_MAGE:
-    case CLASS_WARRIOR_MAGE:
-    case CLASS_ARCHAEOLOGIST:
-    case CLASS_SKILLMASTER: /* TODO */
-        weight += equip_weight(object_is_melee_weapon) / 3;
-        break;
-
-    case CLASS_PALADIN:
-    case CLASS_CHAOS_WARRIOR:
-    case CLASS_RAGE_MAGE:
-        weight += equip_weight(object_is_melee_weapon) / 5;
-        break;
-
-    default:
-        weight += equip_weight(object_is_melee_weapon);
+        int wgt = equip_weight(object_is_melee_weapon);
+        int pct = caster_ptr->encumbrance.weapon_pct;
+        weight += wgt * pct / 100;
     }
-
-    if (weight > caster_ptr->weight)
+    if (weight > caster_ptr->encumbrance.max_wgt)
     {
         p_ptr->cumber_armor = TRUE;
-        p_ptr->cumber_armor_amt = weight - caster_ptr->weight;
+        p_ptr->cumber_armor_amt = weight - caster_ptr->encumbrance.max_wgt;
     }
 }
 
@@ -3070,61 +3018,19 @@ static void calc_mana(void)
 
     _calc_encumbrance();
     if (p_ptr->cumber_glove)
-        msp = (3 * msp) / 4;
+        msp = 3 * msp / 4;
 
     if (p_ptr->cumber_armor)
     {
-        switch (get_class_idx())
+        int div = caster_ptr->encumbrance.enc_wgt;
+        if (!div) div = 800;
+        if (caster_ptr->options & CASTER_SUPERCHARGE_MANA)
         {
-        case CLASS_MAGE:
-        case CLASS_NECROMANCER:
-        case CLASS_BLOOD_MAGE:
-        case CLASS_HIGH_MAGE:
-        case CLASS_BLUE_MAGE:
-        case CLASS_YELLOW_MAGE:
-        case CLASS_GRAY_MAGE:
-            msp -= msp * p_ptr->cumber_armor_amt / 600;
-            break;
-
-        case CLASS_PRIEST:
-        case CLASS_MINDCRAFTER:
-        case CLASS_PSION:
-        case CLASS_BEASTMASTER:
-        case CLASS_BARD:
-        case CLASS_FORCETRAINER:
-        case CLASS_TOURIST:
-        case CLASS_MIRROR_MASTER:
-        case CLASS_MONSTER:
-            msp -= msp * p_ptr->cumber_armor_amt / 800;
-            break;
-
-        case CLASS_SORCERER:
-            msp -= msp * p_ptr->cumber_armor_amt / 900;
-            break;
-
-        case CLASS_ROGUE:
-        case CLASS_RANGER:
-        case CLASS_MONK:
-        case CLASS_RED_MAGE:
-            msp -= msp * p_ptr->cumber_armor_amt / 1000;
-            break;
-
-        case CLASS_PALADIN:
-        case CLASS_CHAOS_WARRIOR:
-        case CLASS_WARRIOR_MAGE:
-        case CLASS_RAGE_MAGE:
-            msp -= msp * p_ptr->cumber_armor_amt / 1200;
-            break;
-
-        case CLASS_SAMURAI:
-        case CLASS_MYSTIC:
             p_ptr->cumber_armor = FALSE;
             p_ptr->cumber_armor_amt = 0;
-            break;
-
-        default:
-            msp -= msp * p_ptr->cumber_armor_amt / 800;
         }
+        else
+            msp -= msp * p_ptr->cumber_armor_amt / div; 
     }
 
     if (msp < 0) msp = 0;

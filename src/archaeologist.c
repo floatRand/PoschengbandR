@@ -780,7 +780,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "spell";
         me.which_stat = A_WIS;
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 33;
+        me.encumbrance.enc_wgt = 800;
         init = TRUE;
     }
     return &me;

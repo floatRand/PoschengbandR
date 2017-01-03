@@ -763,7 +763,9 @@ static caster_info * _caster_info(void)
     if (!init)
     {
         me.magic_desc = "spell";
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 33;
+        me.encumbrance.enc_wgt = 1000;
         me.options = CASTER_GLOVE_ENCUMBRANCE;
         init = TRUE;
     }
