@@ -891,6 +891,7 @@ extern int      effect_value(effect_t *effect);
 extern byte     effect_color(effect_t *effect);
 extern cptr     do_effect(effect_t *effect_ptr, int mode, int boost);
 
+extern void     mass_identify(void);
 
 /* do-spell.c */
 extern int get_realm_idx(cptr name);

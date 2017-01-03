@@ -143,6 +143,32 @@ static void _do_identify_aux(int item)
     autopick_alter_item(item, (bool)(destroy_identify && !old_known));
 }
 
+void mass_identify(void)
+{
+    int i;
+    int this_o_idx, next_o_idx;
+
+    /* Equipment and Pack */
+    for (i = 0; i < INVEN_TOTAL; i++)
+    {
+        if (!inventory[i].k_idx) continue;
+        if (object_is_known(&inventory[i])) continue;
+        _do_identify_aux(i);
+    }
+
+    /* Floor */
+    for (this_o_idx = cave[py][px].o_idx;
+            this_o_idx;
+            this_o_idx = next_o_idx)
+    {
+        object_type *o_ptr = &o_list[this_o_idx];
+
+        next_o_idx = o_ptr->next_o_idx;
+        if (object_is_known(o_ptr)) continue;
+        _do_identify_aux(-this_o_idx);
+    }
+}
+
 static bool _do_identify(void)
 {
     int             item;

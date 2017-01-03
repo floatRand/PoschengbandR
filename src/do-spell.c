@@ -1703,13 +1703,19 @@ static cptr do_sorcery_spell(int spell, int mode)
         break;
 
     case 9:
-        if (name) return "Identify";
-        if (desc) return "Identifies an item.";
+        if (name) return plev < 30 ? "Identify" : "Mass Identify";
+        if (desc) return plev < 30 ? "Identifies an item." : "Identifies all items in your pack";
 
         {
             if (cast)
             {
-                if (!ident_spell(NULL)) return NULL;
+                if (plev < 30) 
+                {
+                    if (!ident_spell(NULL))
+                        return NULL;
+                }
+                else
+                    mass_identify();
             }
         }
         break;
