@@ -1052,15 +1052,24 @@ struct player_pact
  * is saved in the savefile.  The "transient" info is recomputed
  * whenever anything important changes.
  */
- #define WIELD_NONE       0
- #define WIELD_ONE_HAND   1
- #define WIELD_TWO_HANDS  2
+#define WIELD_NONE       0
+#define WIELD_ONE_HAND   1
+#define WIELD_TWO_HANDS  2
 
- #define MAX_HANDS 6
- #define MAX_ARMS  3
- #define HAND_NONE -1
+#define MAX_HANDS 6
+#define MAX_ARMS  3
+#define HAND_NONE -1
 
- typedef struct {
+/* For the blows calculation, see calculate_base_blows in combat.c
+ * This structure should be initialized in the appropriate calc_weapon_bonuses
+ * cf calc_bonuses in xtra1.c */
+typedef struct {
+    int max;
+    int wgt;
+    int mult;
+} _blows_calc_t;
+
+typedef struct {
     int  wield_how;
     bool omoi;   /* WIELD_TWO_HANDS but too heavy for WIELD_ONE_HAND */
     bool bare_hands; /* Monks and Forcetrainers */
@@ -1072,6 +1081,7 @@ struct player_pact
     int  dis_to_d;
     int  to_dd;
     int  to_ds;
+    _blows_calc_t blows_calc; /* set in calc_weapon_bonuses (class_t or sometimes race_t) */
     int  base_blow;
     int  xtra_blow;
     bool genji;

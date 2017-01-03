@@ -3217,56 +3217,6 @@ bool weaponmaster_is_favorite(object_type *o_ptr)
     return _check_speciality_aux(o_ptr);
 }
 
-int weaponmaster_get_max_blows(object_type *o_ptr, int hand)
-{
-    int num = 100;
-    switch (_specialities[p_ptr->psubclass].kind)
-    {
-    case _WEAPONMASTER_BOWS:
-        num = 300;
-        break;
-
-    case _WEAPONMASTER_SHIELDS: /* Shieldmaster can bash or melee with aplomb */
-        num = 500;
-        break;
-
-    case _WEAPONMASTER_MELEE:
-        if (_check_speciality_aux(o_ptr))
-        {
-            switch (p_ptr->psubclass)
-            {
-            case WEAPONMASTER_AXES:
-                num = 500;
-                if (p_ptr->weapon_info[hand].wield_how == WIELD_TWO_HANDS)
-                    num = 600;
-                break;
-            case WEAPONMASTER_DAGGERS:
-                num = 500;
-                if (_get_toggle() == TOGGLE_FRENZY_STANCE)
-                    num = 600;
-                break;
-            case WEAPONMASTER_CLUBS:
-                num = 525;
-                break;
-            case WEAPONMASTER_POLEARMS:
-                num = 525;
-                break;
-            case WEAPONMASTER_STAVES:
-                num = 500;
-                break;
-            case WEAPONMASTER_SWORDS:
-                num = 525;
-                break;
-            case WEAPONMASTER_DIGGERS:
-                num = 550;
-                break;
-            }
-        }
-        break;
-    }
-    return num;
-}
-
 static int _get_spells_aux(spell_info* spells, int max)
 {
     int i;
@@ -3895,9 +3845,64 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
     }
 }
 
+static void _init_blows_calc(object_type *o_ptr, weapon_info_t *info_ptr)
+{
+    info_ptr->blows_calc.max = 100; /* Default for melee specialties with unfavored weapons */
+    info_ptr->blows_calc.wgt = 70;
+    info_ptr->blows_calc.mult = 50;
+    switch (_specialities[p_ptr->psubclass].kind)
+    {
+    case _WEAPONMASTER_BOWS:
+        info_ptr->blows_calc.max = 300;
+        break;
+
+    case _WEAPONMASTER_SHIELDS: /* Shieldmaster can bash or melee with aplomb */
+        info_ptr->blows_calc.max = 500;
+        break;
+
+    case _WEAPONMASTER_MELEE:
+        if (_check_speciality_aux(o_ptr))
+        {
+            switch (p_ptr->psubclass)
+            {
+            case WEAPONMASTER_AXES:
+                if (info_ptr->wield_how == WIELD_TWO_HANDS)
+                    info_ptr->blows_calc.max = 600;
+                else
+                    info_ptr->blows_calc.max = 500;
+                break;
+            case WEAPONMASTER_DAGGERS:
+                if (_get_toggle() == TOGGLE_FRENZY_STANCE)
+                    info_ptr->blows_calc.max = 600;
+                else
+                    info_ptr->blows_calc.max = 500;
+                break;
+            case WEAPONMASTER_CLUBS:
+                info_ptr->blows_calc.max = 525;
+                break;
+            case WEAPONMASTER_POLEARMS:
+                info_ptr->blows_calc.max = 525;
+                break;
+            case WEAPONMASTER_STAVES:
+                info_ptr->blows_calc.max = 500;
+                break;
+            case WEAPONMASTER_SWORDS:
+                info_ptr->blows_calc.max = 525;
+                break;
+            case WEAPONMASTER_DIGGERS:
+                info_ptr->blows_calc.max = 550;
+                break;
+            }
+        }
+        break;
+    }
+}
+
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
     int spec1 = _check_speciality_aux(o_ptr);
+
+    _init_blows_calc(o_ptr, info_ptr);
 
     /* (+L/5, +L/5) for all weaponmasters replacing 'Signature Weapon' */
     if (spec1 && p_ptr->speciality_equip)

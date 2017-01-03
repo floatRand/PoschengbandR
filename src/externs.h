@@ -1583,6 +1583,7 @@ extern void display_weapon_info(doc_ptr doc, int hand);
 extern int display_weapon_mode;
 extern void display_innate_attack_info(doc_ptr doc, int which);
 extern void display_shooter_info(doc_ptr doc);
+extern void init_blows_calc(object_type *o_ptr, weapon_info_t *info_ptr);
 extern int calculate_base_blows(int hand, int str_idx, int dex_idx);
 
 /* util.c */
@@ -2520,8 +2521,6 @@ extern void     samurai_posture_calc_bonuses(void);
 extern cptr     do_hissatsu_spell(int spell, int mode);
 
 extern class_t *skillmaster_get_class(void);
-extern int      skillmaster_get_blows_max(object_type *o_ptr);
-extern int      skillmaster_get_blows_mult(object_type *o_ptr);
 extern void     skillmaster_gain_skill(void);
 extern int      skillmaster_new_skills(void);
 extern int      skillmaster_bow_prof(void);
@@ -2629,7 +2628,6 @@ extern int weaponmaster_get_toggle(void);
 extern void weaponmaster_set_toggle(int toggle);
 extern void weaponmaster_adjust_skills(void);
 extern bool weaponmaster_is_favorite(object_type *o_ptr);
-extern int weaponmaster_get_max_blows(object_type *o_ptr, int hand);
 extern int weaponmaster_wield_hack(object_type *o_ptr);
 extern void weaponmaster_do_wild_blade(void);
 extern void weaponmaster_do_readied_shot(monster_type *m_ptr);

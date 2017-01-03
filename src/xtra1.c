@@ -4562,6 +4562,7 @@ void calc_bonuses(void)
     {
         weapon_info_t *info_ptr = &p_ptr->weapon_info[i];
         int            tmp_hold = hold;
+        int            arm = i/2;
 
         if (info_ptr->wield_how == WIELD_NONE) continue;
 
@@ -4612,12 +4613,29 @@ void calc_bonuses(void)
         }
 
 
+        /* calc_weapon_bonuses
+         * This should also init the blows_calc in preparation for calc_base_blows,
+         * but this is not finished just yet. In the meantime init_blows_calc in
+         * combat.c is required. */
+        init_blows_calc(o_ptr, info_ptr);
+
         if (class_ptr->calc_weapon_bonuses)
             class_ptr->calc_weapon_bonuses(o_ptr, info_ptr);
         if (race_ptr->calc_weapon_bonuses)
             race_ptr->calc_weapon_bonuses(o_ptr, info_ptr);
 
-        /* Normal weapons */
+        /* Hacks */
+        if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
+            info_ptr->blows_calc.max = 100;
+        if (arm > 0)
+            info_ptr->blows_calc.max = MAX(100, info_ptr->blows_calc.max - 100);
+        if (hex_spelling(HEX_XTRA_MIGHT) || hex_spelling(HEX_BUILDING) || p_ptr->tim_building_up)
+        {
+            info_ptr->blows_calc.wgt /= 2;
+            info_ptr->blows_calc.mult += 20;
+        }
+
+        /* Calculate Blows */
         if (!info_ptr->heavy_wield)
         {
             info_ptr->base_blow = calculate_base_blows(i, p_ptr->stat_ind[A_STR], p_ptr->stat_ind[A_DEX]);
@@ -4639,7 +4657,7 @@ void calc_bonuses(void)
                 info_ptr->xtra_blow = 0;
             }
 
-            p_ptr->skill_dig += (o_ptr->weight / 10);
+            p_ptr->skill_dig += o_ptr->weight / 10;
         }
 
         /* Two Handed wielding bonus */

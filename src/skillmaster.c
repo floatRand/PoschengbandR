@@ -414,26 +414,10 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     assert(0 <= pts && pts <= 5);
     info = _melee_info[pts];
 
-    info_ptr->to_h += info.to_h;
-    info_ptr->dis_to_h += info.to_h;
-
-    info_ptr->to_d += info.to_d;
-    info_ptr->dis_to_d += info.to_d;
-}
-
-int skillmaster_get_blows_max(object_type *o_ptr)
-{
-    int pts = _get_skill_pts(_TYPE_MELEE, o_ptr->tval);
-    assert(0 <= pts && pts <= 5);
-    return _melee_info[pts].blows_max;
-}
-
-int skillmaster_get_blows_mult(object_type *o_ptr)
-{
-    int pts = _get_skill_pts(_TYPE_MELEE, o_ptr->tval);
-    int mult;
-    assert(0 <= pts && pts <= 5);
-    mult = _melee_info[pts].blows_mult;
+    /* Blows Calculation */
+    info_ptr->blows_calc.max = info.blows_max;
+    info_ptr->blows_calc.wgt = 70;
+    info_ptr->blows_calc.mult = info.blows_mult;
     if (p_ptr->riding)
     {
         u32b flgs[OF_ARRAY_SIZE];
@@ -441,10 +425,16 @@ int skillmaster_get_blows_mult(object_type *o_ptr)
         if (have_flag(flgs, OF_RIDING))
         {
             pts = _get_skill_pts(_TYPE_TECHNIQUE, _RIDING);
-            mult += 5 * pts;
+            info_ptr->blows_calc.mult += 5 * pts;
         }
     }
-    return mult;
+
+    /* Combat Bonuses */
+    info_ptr->to_h += info.to_h;
+    info_ptr->dis_to_h += info.to_h;
+
+    info_ptr->to_d += info.to_d;
+    info_ptr->dis_to_d += info.to_d;
 }
 
 int skillmaster_weapon_prof(int tval)
