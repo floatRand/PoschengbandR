@@ -1753,7 +1753,7 @@ static void prt_state(void)
 static bool prt_speed(int row, int col)
 {
     int i = p_ptr->pspeed;
-    bool is_fast = IS_FAST();
+    bool any_speed_boost = (IS_FAST() || IS_LIGHT_SPEED() || psion_speed());
 
     byte attr = TERM_WHITE;
     char buf[32] = "";
@@ -1764,16 +1764,7 @@ static bool prt_speed(int row, int col)
     /* Fast */
     if (i > 110)
     {
-        if (p_ptr->riding)
-        {
-            monster_type *m_ptr = &m_list[p_ptr->riding];
-            if (MON_FAST(m_ptr) && !MON_SLOW(m_ptr)) attr = TERM_L_BLUE;
-            else if (MON_SLOW(m_ptr) && !MON_FAST(m_ptr)) attr = TERM_VIOLET;
-            else attr = TERM_GREEN;
-        }
-        else if ((is_fast && !p_ptr->slow) || IS_LIGHT_SPEED() || psion_speed()) attr = TERM_YELLOW;
-        else if (p_ptr->slow && !is_fast) attr = TERM_VIOLET;
-        else attr = TERM_L_GREEN;
+        attr = TERM_L_GREEN;
         sprintf(buf, "Fast (+%d)", (i - 110));
 
     }
@@ -1783,13 +1774,8 @@ static bool prt_speed(int row, int col)
     {
         if (p_ptr->riding)
         {
-            monster_type *m_ptr = &m_list[p_ptr->riding];
-            if (MON_FAST(m_ptr) && !MON_SLOW(m_ptr)) attr = TERM_L_BLUE;
-            else if (MON_SLOW(m_ptr) && !MON_FAST(m_ptr)) attr = TERM_VIOLET;
-            else attr = TERM_RED;
+            attr = TERM_RED;
         }
-        else if (is_fast && !p_ptr->slow) attr = TERM_YELLOW;
-        else if (p_ptr->slow && !is_fast) attr = TERM_VIOLET;
         else attr = TERM_L_UMBER;
         sprintf(buf, "Slow (-%d)", (110 - i));
     }
@@ -1798,8 +1784,31 @@ static bool prt_speed(int row, int col)
         attr = TERM_GREEN;
         strcpy(buf, "Riding");
     }
+
+    /* Only prints this if we set a color later down */
+    else if (i == 110)
+    {
+        strcpy(buf, "Normal (+0)");
+    }
+
+    /* Now change color based on temporary buffs */
+    if (p_ptr->riding)
+    {
+        monster_type *m_ptr = &m_list[p_ptr->riding];
+        if (MON_FAST(m_ptr) && !MON_SLOW(m_ptr)) attr = TERM_L_BLUE;
+        else if (MON_SLOW(m_ptr) && !MON_FAST(m_ptr)) attr = TERM_VIOLET;
+        else if (MON_SLOW(m_ptr) && MON_FAST(m_ptr)) attr = TERM_ORANGE;
+
+    }
     else
-        return FALSE;
+    {
+        if ((any_speed_boost && !p_ptr->slow)) attr = TERM_YELLOW;
+        else if (p_ptr->slow && !any_speed_boost) attr = TERM_VIOLET;
+        else if (p_ptr->slow && any_speed_boost) attr = TERM_ORANGE;
+    }
+
+    /* Hack -- attr is only still white if the player is speed 0 and neither fast nor slowed */
+    if (attr == TERM_WHITE) return FALSE;
 
     /* Display the speed */
     c_put_str(attr, buf, row, col);
