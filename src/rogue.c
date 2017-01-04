@@ -815,8 +815,7 @@ class_t *rogue_get_class(void)
                     "allowing him to sneak around many creatures without having to "
                     "fight, or to get in a telling first blow. A rogue may also "
                     "backstab a fleeing monster. Rogues also gain shooting bonuses "
-                    "when using a sling. Intelligence determines a rogue's "
-                    "spell casting ability.\n \n"
+                    "when using a sling.\n \n"
                     "Rogues can select one realm from Sorcery, Death, Trump, Arcane, Craft, "
                     "or Burglary. Except for this last realm, rogues have certain limitations " 
                     "on which spells they can learn, and they do not learn new spells "
@@ -824,7 +823,10 @@ class_t *rogue_get_class(void)
                     "offers spells for setting traps, picking pockets, negotiating with "
                     "other thieves, and escaping from a tight spot. Burglary rogues are "
                     "agents of the Black Market and receive favorable pricing from "
-                    "that shop.";
+                    "that shop. A Burglary rogue uses DEX as their spellcasting stat, "
+                    "and may learn spells beginning at level 1. For other realms, however, "
+                    "the rogue uses INT as the spellcasting stat, and won't be able to "
+                    "learn spells until level 5.";
 
         me.stats[A_STR] =  2;
         me.stats[A_INT] =  1;
