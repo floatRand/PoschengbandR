@@ -65,6 +65,7 @@ enum {
     _REGENERATION,
     _RESISTANCE,
     _STONE_SKIN,
+    _CREATE_AMMO,
     _ABILITY_STOP
 };
 
@@ -179,6 +180,7 @@ static _group_t _groups[] = {
         "without fail. Alternatively, abilities may grant a bonus such as regeneration or "
         "good fortune.",
         {{ _TYPE_ABILITY, _CLEAR_MIND, "Clear Mind", 1, 0 },
+         { _TYPE_ABILITY, _CREATE_AMMO, "Create Ammo", 1, 0 },
          { _TYPE_ABILITY, _EAT_MAGIC, "Eat Magic", 1, 0 },
          { _TYPE_ABILITY, _LOREMASTER, "Loremastery", 1, 0 },
          { _TYPE_ABILITY, _LUCK, "Luck", 1, 0 },
@@ -435,6 +437,10 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 
     info_ptr->to_d += info.to_d;
     info_ptr->dis_to_d += info.to_d;
+
+    pts = _get_skill_pts(_TYPE_TECHNIQUE, _DUAL_WIELDING);
+    if (pts >= 5)
+        info_ptr->genji = TRUE;
 }
 
 int skillmaster_weapon_prof(int tval)
@@ -780,6 +786,7 @@ static void _throw_weapon_imp(_throw_weapon_info * info)
             if (test_hit_fire(chance - cur_dis, MON_AC(r_ptr, m_ptr), m_ptr->ml))
             {
                 bool fear = FALSE;
+                bool ambush = MON_CSLEEP(m_ptr) && p_ptr->ambush;
 
                 if (!visible)
                     msg_format("The %s finds a mark.", o_name);
@@ -787,7 +794,10 @@ static void _throw_weapon_imp(_throw_weapon_info * info)
                 {
                     char m_name[80];
                     monster_desc(m_name, m_ptr, 0);
-                    msg_format("The %s hits %s.", o_name, m_name);
+                    if (ambush)
+                        cmsg_format(TERM_RED, "The %s cruelly hits %s.", o_name, m_name);
+                    else
+                        msg_format("The %s hits %s.", o_name, m_name);
                     if (m_ptr->ml)
                     {
                         if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
@@ -802,6 +812,8 @@ static void _throw_weapon_imp(_throw_weapon_info * info)
                 tdam += info->o_ptr->to_d;
                 tdam += adj_str_td[p_ptr->stat_ind[A_STR]] - 128;
                 tdam = tdam * info->mult / 100;
+                if (ambush)
+                    tdam *= 2;
                 /*tdam += p_ptr->shooter_info.to_d; <== It feels wrong for Rings of Archery to work here!*/
                 if (tdam < 0) tdam = 0;
                 tdam = mon_damage_mod(m_ptr, tdam, FALSE);
@@ -958,6 +970,13 @@ static void _magic_init_class(class_t *class_ptr)
     class_ptr->stats[A_STR] += row.str;
     class_ptr->stats[A_CON] += row.con;
     class_ptr->life -= (pts + 1) / 2;
+
+    pts = _get_skill_pts(_TYPE_MAGIC, REALM_TRUMP);
+    class_ptr->pets -= 6 * pts;
+    class_ptr->stats[A_CHR] += (pts + 1) / 2;
+
+    pts = _get_skill_pts(_TYPE_MAGIC, REALM_SORCERY);
+    class_ptr->base_skills.dev += pts;
 }
 
 static void _prayer_init_class(class_t *class_ptr)
@@ -1055,6 +1074,10 @@ caster_info *_caster_info(void)
     {
         info.which_stat = A_DEX;
         info.magic_desc = "thieving talent";
+        /* Since nothing but Burglary is known, use rogue encumbrance */
+        info.encumbrance.max_wgt = 400;
+        info.encumbrance.weapon_pct = 33;
+        info.encumbrance.enc_wgt = 1000;
         return &info;
     }
     return NULL;
@@ -1217,7 +1240,11 @@ static vec_ptr _get_spell_list(object_type *spellbook)
         }
         if (realm != REALM_HISSATSU)
         {
-            spell->fail = calculate_fail_rate_aux(p_ptr->lev, spell->level, spell->fail, stat);
+            int old_dec_mana = p_ptr->dec_mana;
+            if (p_ptr->easy_realm1 == realm) /* Hack: spells.c is not prepared for book based casting */
+                p_ptr->dec_mana = TRUE;
+            spell->fail = calculate_fail_rate(spell->level, spell->fail, stat);
+            p_ptr->dec_mana = old_dec_mana;
             if (spell->fail < skill.fail_min)
                 spell->fail = skill.fail_min;
         }
@@ -1569,12 +1596,9 @@ void _tech_calc_bonuses(void)
 {
     int pts;
 
-    pts = _get_skill_pts(_TYPE_TECHNIQUE, _DUAL_WIELDING);
+    pts = _get_skill_pts(_TYPE_TECHNIQUE, _RIDING);
     if (pts >= 5)
-    {
-        p_ptr->weapon_info[0].genji = TRUE;
-        p_ptr->weapon_info[1].genji = TRUE;
-    }
+        p_ptr->easy_capture = TRUE;
 }
 
 int skillmaster_riding_prof(void)
@@ -1893,6 +1917,8 @@ static int _get_powers(spell_info* spells, int max)
         _add_power(&spells[ct++], resistance_spell);
     if (ct < max && _get_skill_pts(_TYPE_ABILITY, _STONE_SKIN) > 0)
         _add_power(&spells[ct++], stone_skin_spell);
+    if (ct < max && _get_skill_pts(_TYPE_ABILITY, _CREATE_AMMO) > 0)
+        _add_power(&spells[ct++], create_ammo_spell);
 
     return ct;
 }

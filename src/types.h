@@ -1594,6 +1594,7 @@ struct player_type
     bool warning;
     bool mighty_throw;
     bool see_nocto;        /* Noctovision */
+    bool easy_capture;
 
     byte easy_realm1;   /* Magic Stones give realm specific boosts */
 

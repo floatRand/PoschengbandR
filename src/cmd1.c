@@ -3051,8 +3051,17 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
         }
         break;
     case CLASS_SKILLMASTER:
-        if (p_ptr->ambush && MON_CSLEEP(m_ptr) && m_ptr->ml)
-            backstab = TRUE;
+        if (MON_CSLEEP(m_ptr) && m_ptr->ml) /* Works for Martial Arts as well */
+        {
+            if (p_ptr->ambush || (p_ptr->special_defense & NINJA_S_STEALTH))
+                backstab = TRUE;
+        }
+        else if (p_ptr->special_defense & NINJA_S_STEALTH) /* Burglary Hide in Shadows */
+        {
+            int tmp = p_ptr->lev * 6 + (p_ptr->skills.stl + 10) * 4;
+            if (randint0(tmp) > r_ptr->level + 20 && m_ptr->ml && !(r_ptr->flagsr & RFR_RES_ALL))
+                fuiuchi = TRUE;
+        }
         break;
     }
 
@@ -3161,6 +3170,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
             success_hit = one_in_(n);
         }
+        else if (fuiuchi && !(r_ptr->flagsr & RFR_RES_ALL)) success_hit = TRUE;
         else if ((p_ptr->pclass == CLASS_NINJA) && ((backstab || fuiuchi) && !(r_ptr->flagsr & RFR_RES_ALL))) success_hit = TRUE;
         else if (duelist_attack && one_in_(2))
         {
@@ -3301,6 +3311,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 }
                 if (backstab) /* stealthy skillmaster martial artist */
                     k *= 3;
+                else if (fuiuchi) /* burglary skillmaster martial artist hiding in shadows */
+                    k = k*(5 + p_ptr->lev*2/25)/2;
 
                 if ((special_effect == MA_KNEE) && ((k + p_ptr->weapon_info[hand].to_d) < m_ptr->hp))
                 {

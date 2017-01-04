@@ -3535,6 +3535,7 @@ void calc_bonuses(void)
     p_ptr->warning = FALSE;
     p_ptr->mighty_throw = FALSE;
     p_ptr->see_nocto = FALSE;
+    p_ptr->easy_capture = FALSE;
     p_ptr->easy_realm1 = REALM_NONE;
 
     p_ptr->move_random = FALSE;
@@ -3989,7 +3990,7 @@ void calc_bonuses(void)
                 p_ptr->weapon_info[i].to_d += to_d;
                 p_ptr->weapon_info[i].dis_to_h += to_d;
             }
-            else
+            else if (ct > 0)
             {
                 p_ptr->weapon_info[i].to_d += to_d / ct;
                 p_ptr->weapon_info[i].dis_to_h += to_d / ct;
