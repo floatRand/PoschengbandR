@@ -703,6 +703,16 @@ s16b tot_dam_aux_monk(int tdam, monster_type *m_ptr, int mode)
         }
     }
 
+    if (p_ptr->tim_force) /* Craft skillmaster martial artist. Craft Monks cannot learn Mana Branding */
+    {
+        int cost = 1 + tdam / 7; /* 100 -> 170 for +70 costs 15 (4.7 dmg/sp) */
+        if (p_ptr->csp >= cost)
+        {
+            p_ptr->csp -= cost;
+            p_ptr->redraw |= (PR_MANA);
+            mult = mult * 12 / 10 + 5; /* 1.0x -> 1.7x; 1.7x -> 2.5x; 2.5x -> 3.5x */
+        }
+    }
     return tdam * mult / 10 + bonus;
 }
 
@@ -3270,6 +3280,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                 k = damroll(ma_ptr->dd + p_ptr->weapon_info[hand].to_dd, ma_ptr->ds + p_ptr->weapon_info[hand].to_ds);
                 k = tot_dam_aux_monk(k, m_ptr, mode);
 
+                if (backstab || fuiuchi) /* skillmaster (stealthy or hiding in shadows) */
+                {
+                    int mult = 250 + p_ptr->lev * 4;
+                    if (backstab) mult += 50;
+                    k = k * mult / 100;
+                }
                 if (p_ptr->special_attack & ATTACK_SUIKEN) k *= 2; /* Drunken Boxing! */
 
                 if (ma_ptr->effect == MA_KNEE)
@@ -3309,10 +3325,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     k = k * crit.mul/100 + crit.to_d;
                     msg_print(crit.desc);
                 }
-                if (backstab) /* stealthy skillmaster martial artist */
-                    k *= 3;
-                else if (fuiuchi) /* burglary skillmaster martial artist hiding in shadows */
-                    k = k*(5 + p_ptr->lev*2/25)/2;
 
                 if ((special_effect == MA_KNEE) && ((k + p_ptr->weapon_info[hand].to_d) < m_ptr->hp))
                 {

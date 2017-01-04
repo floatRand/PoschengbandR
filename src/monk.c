@@ -125,6 +125,13 @@ int monk_get_attack_idx(void)
     return _get_attack_idx(p_ptr->monk_lvl, p_ptr->special_defense);
 }
 
+static int _calc_damage_per_hit(int dice_dmg, int xtra_dmg, int mult, bool force)
+{
+    if (force)
+        mult = mult * 12 / 10 + 5;
+    return dice_dmg * mult / 10 + xtra_dmg;
+}
+
 void monk_display_attack_info(doc_ptr doc, int hand)
 {
     _attack_t counts[MAX_MA];
@@ -199,71 +206,66 @@ void monk_display_attack_info(doc_ptr doc, int hand)
     doc_printf(cols[1], " One Strike: %d.%1d\n", (tot_dam + to_d)/10, (tot_dam + to_d)%10);
 
     /* Note: blows are scaled by 100. tot_dam and to_d by 10. So we divide by 1000 to recover the integer part ... */
-    doc_printf(cols[1], " One Attack: %d.%1d\n", blows*(tot_dam + to_d)/1000, ((blows*(tot_dam + to_d))/100)%10);
+    doc_printf(cols[1], " One Attack: %d\n", blows*(tot_dam + to_d)/1000);
 
+    if (p_ptr->tim_force)
+    {
+        int hit = _calc_damage_per_hit(tot_dam, to_d, 10, TRUE);
+        doc_printf(cols[1], " <color:B>     Force</color>: %d\n", blows * hit / 1000);
+    }
     if (display_weapon_mode == MYSTIC_ACID)
     {
-        doc_printf(cols[1], " <color:r>      Acid</color>: %d.%1d\n",
-            blows*(tot_dam*20/10 + to_d + 50)/1000,
-            ((blows*(tot_dam*20/10 + to_d + 50))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d + 50, 20, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Acid</color>: %d\n", blows * hit / 1000);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ACID))
     {
-        doc_printf(cols[1], " <color:r>      Acid</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d)/1000,
-            ((blows*(tot_dam*17/10 + to_d))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d, 17, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Acid</color>: %d\n", blows * hit / 1000);
     }
 
     if (display_weapon_mode == MYSTIC_FIRE)
     {
-        doc_printf(cols[1], " <color:r>      Fire</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d + 30)/1000,
-            ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d + 30, 17, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Fire</color>: %d\n", blows * hit / 1000);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_FIRE))
     {
-        doc_printf(cols[1], " <color:r>      Fire</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d)/1000,
-            ((blows*(tot_dam*17/10 + to_d))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d, 17, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Fire</color>: %d\n", blows * hit / 1000);
     }
 
     if (display_weapon_mode == MYSTIC_COLD)
     {
-        doc_printf(cols[1], " <color:r>      Cold</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d + 30)/1000,
-            ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d + 30, 17, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Cold</color>: %d\n", blows * hit / 1000);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_COLD))
     {
-        doc_printf(cols[1], " <color:r>      Cold</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d)/1000,
-            ((blows*(tot_dam*17/10 + to_d))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d, 17, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Cold</color>: %d\n", blows * hit / 1000);
     }
 
     if (display_weapon_mode == MYSTIC_ELEC)
     {
-        doc_printf(cols[1], " <color:r>      Elec</color>: %d.%1d\n",
-            blows*(tot_dam*25/10 + to_d + 70)/1000,
-            ((blows*(tot_dam*25/10 + to_d + 70))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d + 70, 25, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Elec</color>: %d\n", blows * hit / 1000);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_ELEC))
     {
-        doc_printf(cols[1], " <color:r>      Elec</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d)/1000,
-            ((blows*(tot_dam*17/10 + to_d))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d, 17, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Elec</color>: %d\n", blows * hit / 1000);
     }
 
     if (display_weapon_mode == MYSTIC_POIS)
     {
-        doc_printf(cols[1], " <color:r>      Pois</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d + 30)/1000,
-            ((blows*(tot_dam*17/10 + to_d + 30))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d + 30, 17, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Pois</color>: %d\n", blows * hit / 1000);
     }
     else if (have_flag(p_ptr->weapon_info[hand].flags, OF_BRAND_POIS))
     {
-        doc_printf(cols[1], " <color:r>      Pois</color>: %d.%1d\n",
-            blows*(tot_dam*17/10 + to_d)/1000,
-            ((blows*(tot_dam*17/10 + to_d))/100)%10);
+        int hit = _calc_damage_per_hit(tot_dam, to_d, 17, p_ptr->tim_force);
+        doc_printf(cols[1], " <color:r>      Pois</color>: %d\n", blows * hit / 1000);
     }
 
     doc_insert_cols(doc, cols, 2, 0);
