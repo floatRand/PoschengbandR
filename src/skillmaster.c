@@ -12,7 +12,7 @@ static int _inkey(void)
 
 static void _sync_term(doc_ptr doc)
 {
-    rect_t r = ui_screen_rect();
+    rect_t r = ui_map_rect();
     Term_load();
     doc_sync_term(doc, doc_range_top_lines(doc, r.cy), doc_pos_create(r.x, r.y));
 }
@@ -182,8 +182,8 @@ static _group_t _groups[] = {
         {{ _TYPE_ABILITY, _CLEAR_MIND, "Clear Mind", 1, 0 },
          { _TYPE_ABILITY, _CREATE_AMMO, "Create Ammo", 1, 0 },
          { _TYPE_ABILITY, _EAT_MAGIC, "Eat Magic", 1, 0 },
+         { _TYPE_ABILITY, _LUCK, "Good Luck", 1, 0 },
          { _TYPE_ABILITY, _LOREMASTER, "Loremastery", 1, 0 },
-         { _TYPE_ABILITY, _LUCK, "Luck", 1, 0 },
          { _TYPE_ABILITY, _MASSACRE, "Massacre", 1, 0 },
          { _TYPE_ABILITY, _PANIC_HIT, "Panic Hit", 1, 0 },
          { _TYPE_ABILITY, _REGENERATION, "Regeneration", 1, 0 },
@@ -372,27 +372,29 @@ static void _save_player(savefile_ptr file)
  ***********************************************************************/
 static void _melee_init_class(class_t *class_ptr)
 {
-    typedef struct { int base_thn; int xtra_thn; int str; int dex; } _melee_skill_t;
+    typedef struct { int base_thn; int xtra_thn; int str; int dex; int int_; } _melee_skill_t;
     static _melee_skill_t _tbl[11] = {
-        { 34,  6, 0, 0 },
-        { 50, 10, 1, 0 },
-        { 55, 12, 1, 1 },
-        { 60, 15, 2, 1 },
-        { 65, 18, 2, 1 },
-        { 70, 21, 2, 1 },
+        { 34,  6, 0, 0,  0 },
+        { 50, 10, 1, 0,  0 },
+        { 55, 12, 1, 1,  0 },
+        { 60, 15, 2, 1,  0 },
+        { 65, 18, 2, 1,  0 },
+        { 70, 21, 2, 1, -1 },
 
-        { 70, 23, 2, 2 },
-        { 70, 25, 3, 2 },
-        { 70, 27, 3, 2 },
-        { 70, 29, 3, 2 },
-        { 70, 30, 4, 2 }
+        { 70, 23, 2, 2, -1 },
+        { 70, 25, 3, 2, -1 },
+        { 70, 27, 3, 2, -2 },
+        { 70, 29, 3, 2, -2 },
+        { 70, 30, 4, 2, -2 }
     };
     int pts = MIN(10, _get_group_pts(_TYPE_MELEE));
     _melee_skill_t row = _tbl[pts];
     class_ptr->base_skills.thn += row.base_thn;
     class_ptr->extra_skills.thn += row.xtra_thn;
+    class_ptr->base_skills.dev -= pts;
     class_ptr->stats[A_STR] += row.str;
     class_ptr->stats[A_DEX] += row.dex;
+    class_ptr->stats[A_INT] += row.int_;
 
     pts = _get_skill_pts(_TYPE_MELEE, _MARTIAL_ARTS);
     class_ptr->stats[A_DEX] += (pts + 1)/3;
@@ -411,13 +413,14 @@ static _melee_info_t _melee_info[6] = {
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
     int           pts = _get_skill_pts(_TYPE_MELEE, o_ptr->tval);
+    int           magic_pts = _get_group_pts(_TYPE_MAGIC);
     _melee_info_t info;
 
     assert(0 <= pts && pts <= 5);
     info = _melee_info[pts];
 
     /* Blows Calculation */
-    info_ptr->blows_calc.max = info.blows_max;
+    info_ptr->blows_calc.max = info.blows_max - 5*magic_pts;
     info_ptr->blows_calc.wgt = 70;
     info_ptr->blows_calc.mult = info.blows_mult;
     if (p_ptr->riding)
@@ -952,14 +955,14 @@ static void _magic_init_class(class_t *class_ptr)
 
         { 25,  9, 1,  0,  0 },
         { 27,  9, 1,  0,  0 },
-        { 29,  9, 2, -1,  0 },
-        { 30,  9, 2, -1,  0 },
+        { 29,  9, 2,  0,  0 },
+        { 30,  9, 2,  0,  0 },
         { 31,  9, 3, -1, -1 },
 
-        { 32, 10, 3, -2, -1 },
+        { 32, 10, 3, -1, -1 },
         { 33, 10, 3, -2, -1 },
         { 34, 10, 3, -2, -1 },
-        { 35, 10, 3, -2, -2 },
+        { 35, 10, 3, -2, -1 },
         { 35, 11, 4, -3, -2 }
     };
     int pts = _get_group_pts(_TYPE_MAGIC);
@@ -977,6 +980,10 @@ static void _magic_init_class(class_t *class_ptr)
 
     pts = _get_skill_pts(_TYPE_MAGIC, REALM_SORCERY);
     class_ptr->base_skills.dev += pts;
+
+    pts = _get_skill_pts(_TYPE_MAGIC, REALM_CRAFT);
+    class_ptr->base_skills.thn += 3*pts;
+    class_ptr->base_skills.thb += 2*pts;
 }
 
 static void _prayer_init_class(class_t *class_ptr)
