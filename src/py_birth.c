@@ -172,6 +172,7 @@ extern void py_birth_light(void)
 extern void py_birth_runesword(void)
 {
 	if (!runesword_start) return;
+	if (p_ptr->prace == RACE_MON_SWORD) return;
 	object_type forge = { 0 };
 	object_prep(&forge, lookup_kind(TV_SWORD, SV_RUNESWORD));
 	forge.number = 1;
@@ -179,6 +180,7 @@ extern void py_birth_runesword(void)
 
 	if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
 		rune_add(&forge, RUNE_ABSORPTION, FALSE);
+
 	py_birth_obj(&forge);
 }
 

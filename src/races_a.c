@@ -86,7 +86,7 @@ int android_obj_exp(object_type *o_ptr)
 
     if (!o_ptr) return 0;
     if (!object_is_wearable(o_ptr)) return 0;
-    if (object_is_jewelry(o_ptr)) return 0;
+    /* Change in PCBR  if (object_is_jewelry(o_ptr)) return 0; */
     if (o_ptr->tval == TV_LITE) return 0;
 
     value = _obj_value(o_ptr);
@@ -160,6 +160,7 @@ void android_calc_exp(void)
         object_type *o_ptr = equip_obj(slot);
         total_exp += android_obj_exp(o_ptr);
     }
+	if (coffeebreak_mode) total_exp *= 2;
     p_ptr->exp = p_ptr->max_exp = total_exp;
     check_experience();
 }
