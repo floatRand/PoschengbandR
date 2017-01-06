@@ -1470,7 +1470,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     if (_essences[OF_TELEPATHY] >= 2)
         add_flag(flgs, OF_TELEPATHY);
 
-    for (i = OF_ESP_ANIMAL; i <= OF_ESP_UNIQUE; i++)
+    for (i = OF_ESP_EVIL; i <= OF_ESP_GIANT; i++)
     {
         if (_essences[i] >= 2)
             add_flag(flgs, i);
