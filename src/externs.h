@@ -1822,6 +1822,7 @@ extern bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note);
 extern void mon_check_kill_unique(int m_idx);
 extern void resize_map(void);
 extern void redraw_window(void);
+extern int mspell_damage(int fGroup, u32b atk, monster_race *r_ptr);
 
 /* Display
    Various regions of the terminal are reserved for different things.
