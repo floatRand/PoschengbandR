@@ -5762,7 +5762,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_DISPEL_EVIL_HERO:
     {
         int dam = _extra(effect, 2*effect->power);
-        if (name) return "Dispel Evil";
+        if (name) return "Heroic Dispel Evil";
         if (desc) return "It damages all evil monsters in sight and grants temporary heroism.";
         if (info) return info_damage(0, 0, _BOOST(dam));
         if (value) return format("%d", 500 + 30*dam);
