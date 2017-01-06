@@ -315,6 +315,10 @@ bool skills_weapon_is_icky(int tval, int sval)
         if (s_info[p_ptr->pclass].w_max[tval-TV_WEAPON_BEGIN][sval] <= WEAPON_EXP_BEGINNER)
             result = TRUE;
         break;
+    case CLASS_SKILLMASTER:
+        if (skillmaster_weapon_prof(tval) < WEAPON_EXP_BEGINNER) /* 2000 is icky (-10 to hit) */
+            result = TRUE;
+        break;
     }
     return result;
 }

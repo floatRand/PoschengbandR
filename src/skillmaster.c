@@ -372,26 +372,27 @@ static void _save_player(savefile_ptr file)
  ***********************************************************************/
 static void _melee_init_class(class_t *class_ptr)
 {
-    typedef struct { int base_thn; int xtra_thn; int str; int dex; int int_; } _melee_skill_t;
+    typedef struct { int base_thn; int xtra_thn; int dev; int str; int dex; int int_; } _melee_skill_t;
     static _melee_skill_t _tbl[11] = {
-        { 34,  6, 0, 0,  0 },
-        { 50, 10, 1, 0,  0 },
-        { 55, 12, 1, 1,  0 },
-        { 60, 15, 2, 1,  0 },
-        { 65, 18, 2, 1,  0 },
-        { 70, 21, 2, 1, -1 },
+       /*thn thn dev  S  D   I */
+        { 34,  6,  0, 0, 0,  0 },
+        { 50, 10,  0, 1, 0,  0 },
+        { 55, 12,  0, 1, 1,  0 },
+        { 60, 15,  0, 2, 1,  0 },
+        { 65, 18, -1, 2, 1,  0 },
+        { 70, 21, -2, 2, 2,  0 },
 
-        { 70, 23, 2, 2, -1 },
-        { 70, 25, 3, 2, -1 },
-        { 70, 27, 3, 2, -2 },
-        { 70, 29, 3, 2, -2 },
-        { 70, 30, 4, 2, -2 }
+        { 70, 23, -3, 3, 2, -1 },
+        { 70, 25, -4, 3, 2, -1 },
+        { 70, 27, -5, 3, 2, -1 },
+        { 70, 29, -6, 4, 2, -2 },
+        { 70, 30, -7, 4, 2, -2 }
     };
     int pts = MIN(10, _get_group_pts(_TYPE_MELEE));
     _melee_skill_t row = _tbl[pts];
     class_ptr->base_skills.thn += row.base_thn;
     class_ptr->extra_skills.thn += row.xtra_thn;
-    class_ptr->base_skills.dev -= pts;
+    class_ptr->base_skills.dev += row.dev;
     class_ptr->stats[A_STR] += row.str;
     class_ptr->stats[A_DEX] += row.dex;
     class_ptr->stats[A_INT] += row.int_;
@@ -467,8 +468,12 @@ static void _melee_calc_bonuses(void)
     int pts = _get_skill_pts(_TYPE_MELEE, _MARTIAL_ARTS);
     assert(0 <= pts && pts <= 5);
     p_ptr->monk_lvl = (p_ptr->lev * _melee_info[pts].ma_wgt + 50) / 100;
-    if (!equip_find_first(object_is_melee_weapon) && p_ptr->monk_lvl)
+    if (!equip_find_first(object_is_melee_weapon) && p_ptr->monk_lvl && !heavy_armor())
+    {
         monk_ac_bonus();
+        if (pts >= 5)
+            p_ptr->sh_retaliation = TRUE;
+    }
 }
 
 /************************************************************************
@@ -956,14 +961,14 @@ static void _magic_init_class(class_t *class_ptr)
         { 25,  9, 1,  0,  0 },
         { 27,  9, 1,  0,  0 },
         { 29,  9, 2,  0,  0 },
-        { 30,  9, 2,  0,  0 },
-        { 31,  9, 3, -1, -1 },
+        { 31,  9, 2,  0,  0 },
+        { 33,  9, 3, -1,  0 },
 
-        { 32, 10, 3, -1, -1 },
-        { 33, 10, 3, -2, -1 },
-        { 34, 10, 3, -2, -1 },
+        { 33, 10, 3, -1, -1 },
         { 35, 10, 3, -2, -1 },
-        { 35, 11, 4, -3, -2 }
+        { 37, 10, 3, -2, -1 },
+        { 39, 10, 3, -2, -1 },
+        { 40, 11, 4, -3, -2 }
     };
     int pts = _get_group_pts(_TYPE_MAGIC);
     _magic_skill_t row = _tbl[MIN(10, pts)];
@@ -1009,6 +1014,7 @@ static void _prayer_init_class(class_t *class_ptr)
     class_ptr->base_skills.sav += row.base_sav;
     class_ptr->extra_skills.sav += row.xtra_sav;
     class_ptr->stats[A_WIS] += row.wis;
+    class_ptr->base_skills.dev += (pts + 1) / 2;
 }
 
 typedef struct { int lvl_mult; int cost_mult; int fail_adj; int fail_min; } _realm_skill_t;
@@ -1590,8 +1596,7 @@ void _tech_init_class(class_t *class_ptr)
     int pts;
 
     pts = _get_skill_pts(_TYPE_TECHNIQUE, REALM_BURGLARY);
-    class_ptr->stats[A_DEX] += (pts + 2) / 3;
-    class_ptr->base_skills.stl += (pts + 2) / 3;
+    class_ptr->base_skills.stl += (pts + 1) / 2;
     class_ptr->base_skills.dis += 5*pts;
 
     pts = _get_skill_pts(_TYPE_TECHNIQUE, REALM_HISSATSU);
@@ -1678,15 +1683,17 @@ static void _skill_display_help(_skill_ptr s)
     int realm = _get_skill_realm(s);
     if (realm != REALM_NONE)
     {
-        if (p_ptr->wizard || 1)
+        if (p_ptr->wizard || 0)
         {
             doc_ptr doc = doc_alloc(80);
             _spoil_realm(doc, realm);
-            doc_display(doc, realm_names[realm], 0);
+            doc_display(doc, s->name, 0);
             doc_free(doc);
         }
+        else if (realm == REALM_HISSATSU)
+            doc_display_help("Skillmasters.txt", s->name);
         else
-            doc_display_help("magic.txt", realm_names[realm]);
+            doc_display_help("magic.txt", s->name);
     }
     else
         doc_display_help("Skillmasters.txt", s->name);
@@ -1738,6 +1745,15 @@ static int _gain_skill_ui(_group_ptr g)
         }
         if (cmd == ESCAPE) return UI_CANCEL;
         else if (cmd == '?') doc_display_help("Skillmasters.txt", NULL);
+        else if (p_ptr->wizard && cmd == KTRL('R'))
+        {
+            if (get_check("Really reset this group? "))
+            {
+                _reset_group(g);
+                p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;
+                p_ptr->redraw |= PR_EFFECTS | PR_HP | PR_MANA;
+            }
+        }
         else if (isupper(cmd))
         {
             i = A2I(tolower(cmd));
@@ -1815,6 +1831,15 @@ static int _gain_type_ui(void)
         }
         if (cmd == ESCAPE) return UI_CANCEL;
         else if (cmd == '?') doc_display_help("Skillmasters.txt", NULL);
+        else if (p_ptr->wizard && cmd == KTRL('R'))
+        {
+            if (get_check("Really reset all skills? "))
+            {
+                _reset_groups();
+                p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;
+                p_ptr->redraw |= PR_EFFECTS | PR_HP | PR_MANA;
+            }
+        }
         else if (isupper(cmd))
         {
             i = A2I(tolower(cmd));

@@ -131,7 +131,7 @@ static void _display_skill(doc_ptr doc, cptr name, int amt, int div)
 {
     skill_desc_t desc = skills_describe(amt, div);
     doc_printf(doc, "   %-11.11s: <color:%c>%s</color>", name, attr_to_attr_char(desc.color), desc.desc);
-    if (p_ptr->wizard)
+    if (p_ptr->wizard || 0)
         doc_printf(doc, " (%d)", amt);
     doc_newline(doc);
 }
