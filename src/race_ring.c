@@ -1,4 +1,6 @@
 #include "angband.h"
+static bool _spell_in_groups(int effect);
+static bool _gain_effect(effect_t e);
 
 static cptr _mon_name(int r_idx)
 {
@@ -267,12 +269,7 @@ static bool _absorb(object_type *o_ptr)
     if (obj_has_effect(o_ptr))
     {
         effect_t e = obj_get_effect(o_ptr);
-        if (!_effects[e.type])
-        {
-            msg_format("You have gained the power of '%s'.", do_effect(&e, SPELL_NAME, 0));
-        }
-        _effects[e.type]++;
-        result = TRUE;
+        if (_gain_effect(e)) result = TRUE;
     }
 
     if (result)
@@ -475,15 +472,29 @@ static bool _drain_essences(int div)
     return result;
 }
 
+static bool _gain_effect(effect_t e)
+{
+    /* The savefile still records effects that the player can't cast. Useful if an update adds new spells to the castable list, I suppose. */
+    _effects[e.type]++; 
+    if (_spell_in_groups(e.type))
+    {
+        if (!_effects[e.type])
+            msg_format("You have gained the power of '%s'.", do_effect(&e, SPELL_NAME, 0));
+        else
+            msg_format("Your power of '%s' has grown stronger.", do_effect(&e, SPELL_NAME, 0));
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
 static void _gain_one_effect(int list[])
 {
     effect_t e = {0};
     e.type = _random(list);
-    if (!_effects[e.type])
-        msg_format("You have gained the power of '%s'.", do_effect(&e, SPELL_NAME, 0));
-    else
-        msg_format("Your power of '%s' has grown stronger.", do_effect(&e, SPELL_NAME, 0));
-    _effects[e.type]++;
+    (void)_gain_effect(e);
 }
 
 static void _gain_level(int new_level) 
@@ -1004,6 +1015,31 @@ static int _spells_count_allowed(_spell_ptr spells)
             result++;
     }
     return result;
+}
+
+static bool _spell_in_list(int effect, _spell_ptr spells)
+{
+    int i;
+    for (i = 0; ; i++)
+    {
+        if (spells[i].effect == EFFECT_NONE) break;
+        if (spells[i].effect == effect)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _spell_in_groups(int effect)
+{
+    int i;
+    int numgroups = _groups_count();
+    
+    for (i = 0; i < numgroups; i++)
+    {
+        if (_spell_in_list(effect, _groups[i].spells))
+            return TRUE;
+    }
+    return FALSE;
 }
 
 /* Menu Code 1: Choose which group of magic to use */
