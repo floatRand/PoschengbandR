@@ -1057,6 +1057,8 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
         char     info[255];
         effect_t effect = {0};
 
+        if (s->effect == EFFECT_NONE) break;
+
         effect.type = s->effect;
         effect.power = s->level;
         effect.difficulty = s->level;
@@ -1073,6 +1075,8 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
     {
         effect_t effect;
 
+        if (s->effect == EFFECT_NONE) break;
+
         effect.type = s->effect;
         effect.power = s->level;
         effect.difficulty = s->level;
@@ -1083,6 +1087,8 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
         if (s->level > p_ptr->lev)
             var_set_int(res, TERM_L_DARK);
         else if (s->cost > p_ptr->csp)
+            var_set_int(res, TERM_L_DARK);
+        else if(s->effect == EFFECT_NONE)
             var_set_int(res, TERM_L_DARK);
         else
             var_set_int(res, TERM_WHITE);
@@ -1102,17 +1108,23 @@ static _spell_t _prompt_spell(_spell_ptr spells)
     for (i = 0; i < ct_total; i++)
     {
         _spell_ptr spell = &spells[i];
-        
+        _spell_ptr choice = &choices[i];
+
         if (_effects[spell->effect])
         {
-            _spell_ptr choice = &choices[ct_avail];
-            
             choice->effect = spell->effect;
             choice->level = spell->level;
             choice->cost = _calculate_cost(spell->effect, spell->cost);
             choice->fail = calculate_fail_rate(spell->level, spell->fail, p_ptr->stat_ind[A_INT]);
 
             ct_avail++;
+        }
+        else
+        {
+            choice->effect = EFFECT_NONE;
+            choice->level = 0;
+            choice->cost = 0;
+            choice->fail = 0;                
         }
     }
 
@@ -1125,7 +1137,7 @@ static _spell_t _prompt_spell(_spell_ptr spells)
         int    idx = -1;
         char   heading[255], prompt1[255], prompt2[255];
         menu_t menu = { prompt1, prompt2, heading,
-                        _spell_menu_fn, choices, ct_avail};
+                        _spell_menu_fn, choices, ct_total};
 
         sprintf(prompt1, "Use which type of %s?", _group_choice);
         sprintf(prompt2, "Browse which type of %s?", _group_choice);
@@ -1219,7 +1231,7 @@ static void _browse(void)
     {
         group = _prompt_group();
         if (!group) break;
-        ct = _spells_count_allowed(group->spells);
+        ct = _spells_count(group->spells);
         screen_save();
         for (;;)
         {
