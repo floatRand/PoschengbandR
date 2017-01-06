@@ -851,7 +851,6 @@ static _group_t _groups[] = {
         { EFFECT_RESIST_FIRE,         15,  10, 50 },
         { EFFECT_RESIST_COLD,         15,  10, 50 },
         { EFFECT_RESIST_POIS,         23,  15, 50 },
-        { EFFECT_BERSERK,             25,  10, 55 }, 
         { EFFECT_STONE_SKIN,          25,  15, 60 },
         { EFFECT_SPEED,               27,  20, 65 }, 
         { EFFECT_RESISTANCE,          30,  25, 65 },
