@@ -5974,11 +5974,15 @@ bool class_doesnt_study(int class_idx){
 /* Returns whetever resist teleportation. 0 doesn't resist, 1 is resist, 2 is immune, 3 is temp  */
 int monster_tele_save(monster_race *r_ptr, int power){
 
+
 	if (r_ptr->flagsr & RFR_RES_ALL) return 2; // immune
-	else if (maledict_get_toggle() == MALEDICT_TOGGLE_ANTITELE) return 3; // temp
-	else if ( (int)r_ptr->level - ((power)/5) > randint1(100) && (r_ptr->flags1 & RF1_UNIQUE && one_in_(2))) // resists
-	{
-		return 1;
+	if (maledict_get_toggle() == MALEDICT_TOGGLE_ANTITELE) return 3; // temp
+	if (r_ptr->flagsr & RFR_RES_TELE){
+		if (r_ptr->flags1 & RF1_UNIQUE){
+			if (r_ptr->level >= 90) return 2;
+			if (MAX(60,(60 + (int)r_ptr->level - (int)p_ptr->lev)) > randint1(100)) return 1; // additional save for uniques
+		}
+		if ((int)r_ptr->level - ((power) / 5) > randint1(100)) return 1; // regular resist
 	}
 	return 0;
 }
