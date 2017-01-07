@@ -20637,8 +20637,8 @@ S:BR_FIRE | BA_DARK | THROW | TELE_TO
 S:S_DEMON
 D:A balrog whose true name has been forgotten.
 D:Its massive fiery form hosts two malicious stars that with their glare
-D:bore holes into your soul. You must have woken it up from its slumber, and now
-D:have to bear the consequences.
+D:bore holes into your soul and the shadow about it reached out like two vast wings. 
+D:You must have woken it up from its slumber, and now must bear the consequences.
 
 # N: serial number : monster name
 # G: symbol : color
