@@ -543,10 +543,10 @@ typedef struct { int skill; int back; int mult; int energy; } _throw_info_t;
 static _throw_info_t _throw_info[6] = {
     {   0, 15, 100, 100 },
     {  12, 18, 100, 100 },
-    {  28, 21, 150, 100 }, /* 18/220 Dex for 0% fail */
-    {  48, 24, 200,  90 }, /* 18/180 Dex for 0% fail */
-    {  72, 27, 300,  80 }, /* 18/150 Dex for 0% fail */
-    { 100, 30, 400,  60 }, /* 18/110 Dex for 0% fail */
+    {  28, 21, 150,  90 }, /* 18/220 Dex for 0% fail */
+    {  48, 24, 200,  80 }, /* 18/180 Dex for 0% fail */
+    {  72, 27, 300,  60 }, /* 18/150 Dex for 0% fail */
+    { 100, 30, 400,  50 }, /* 18/110 Dex for 0% fail */
 };
 
 static void _shoot_calc_bonuses(void)
@@ -587,16 +587,33 @@ static int _throw_back_chance(void)
     return result;
 }
 
+static int _adj_str_td(void)
+{
+    int td = adj_str_td[p_ptr->stat_ind[A_STR]];
+    td -= 128;
+    return td;
+}
+
 static int _throw_mult(int hand)
 {
-    int result;
-    int pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
+    int          result;
+    int          pts = _get_skill_pts(_TYPE_SHOOT, _THROWING);
+    object_type *o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
+    u32b         flags[OF_ARRAY_SIZE];
+
     assert(0 <= pts && pts <= 5);
 
     result = _throw_info[pts].mult;
     if (p_ptr->mighty_throw)
         result += 100;
 
+    obj_flags(o_ptr, flags);
+    if (have_flag(flags, OF_THROWING))
+        result += 100;
+
+    /* Much like archery, STR increases the overall
+     * multiplier by up to +20% */
+    result = result * (100 + _adj_str_td()) / 100;
     return result;
 }
 
@@ -794,7 +811,7 @@ static void _throw_weapon_imp(_throw_weapon_info * info)
             if (test_hit_fire(chance - cur_dis, MON_AC(r_ptr, m_ptr), m_ptr->ml))
             {
                 bool fear = FALSE;
-                bool ambush = MON_CSLEEP(m_ptr) && p_ptr->ambush;
+                bool ambush = MON_CSLEEP(m_ptr) && visible && p_ptr->ambush;
 
                 if (!visible)
                     msg_format("The %s finds a mark.", o_name);
@@ -818,11 +835,9 @@ static void _throw_weapon_imp(_throw_weapon_info * info)
                 tdam = tot_dam_aux(info->o_ptr, tdam, m_ptr, 0, 0, TRUE);
                 tdam = critical_throw(info->o_ptr->weight, info->o_ptr->to_h, tdam);
                 tdam += info->o_ptr->to_d;
-                tdam += adj_str_td[p_ptr->stat_ind[A_STR]] - 128;
                 tdam = tdam * info->mult / 100;
                 if (ambush)
                     tdam *= 2;
-                /*tdam += p_ptr->shooter_info.to_d; <== It feels wrong for Rings of Archery to work here!*/
                 if (tdam < 0) tdam = 0;
                 tdam = mon_damage_mod(m_ptr, tdam, FALSE);
 
@@ -1690,7 +1705,7 @@ static void _skill_display_help(_skill_ptr s)
             doc_display(doc, s->name, 0);
             doc_free(doc);
         }
-        else if (realm == REALM_HISSATSU)
+        else if (realm == REALM_HISSATSU || realm == REALM_BURGLARY)
             doc_display_help("Skillmasters.txt", s->name);
         else
             doc_display_help("magic.txt", s->name);
