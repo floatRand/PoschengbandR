@@ -248,7 +248,7 @@ static int _max_vampiric_drain(void)
         msg_print("Only cursed Rune Swords may feed.");
 }
 
-static void death_scythe_miss(object_type *o_ptr, int hand, int mode)
+void death_scythe_miss(object_type *o_ptr, int hand, int mode)
 {
     u32b flgs[OF_ARRAY_SIZE];
     int k;
@@ -258,7 +258,10 @@ static void death_scythe_miss(object_type *o_ptr, int hand, int mode)
     sound(SOUND_HIT);
 
     /* Message */
-    msg_print("Your scythe returns to you!");
+    if (mode == MODE_THROWING)
+        cmsg_print(TERM_VIOLET, "Your scythe viciously slashes you!");
+    else
+        cmsg_print(TERM_VIOLET, "Your scythe returns to you!");
 
     /* Extract the flags */
     obj_flags(o_ptr, flgs);

@@ -5308,6 +5308,7 @@ extern int PlayerUID;
 #define WEAPONMASTER_FLURRY  85
 
 #define BEHOLDER_GAZE        86
+#define MODE_THROWING        87
 
 #define HISSATSU_IAI    100
 

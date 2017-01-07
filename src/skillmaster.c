@@ -561,6 +561,7 @@ static void _shoot_calc_bonuses(void)
 
 /* THROW WEAPON ... TODO: Try to consolidate this with the 2 other versions in weaponmaster.c */
 typedef struct {
+    int hand;
     int item;
     object_type *o_ptr;
     int mult; /* scaled by 100 */
@@ -641,6 +642,7 @@ static bool _throw_weapon(int hand)
     int oops = 100;
 
     /* Setup info for the toss */
+    info.hand = hand;
     info.item = p_ptr->weapon_info[hand].slot;
     info.o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
     info.come_back = FALSE;
@@ -692,6 +694,9 @@ static bool _throw_weapon(int hand)
 
     /* Throw */
     _throw_weapon_imp(&info);
+
+    if (info.come_back && object_is_(info.o_ptr, TV_POLEARM, SV_DEATH_SCYTHE) && (one_in_(3) || info.fail_catch))
+        death_scythe_miss(info.o_ptr, info.hand, MODE_THROWING);
 
     /* Handle Inventory */
     if (!info.come_back || info.fail_catch)
