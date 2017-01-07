@@ -3213,9 +3213,7 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
     best_power = -10000000;
     power = 0;
     old_level = object_level;
-
-    if (object_level < a_ptr->level)
-        object_level = a_ptr->level;
+    object_level = a_ptr->level;
 
     for (i = 0; i < 10000; i++)
     {
@@ -3247,6 +3245,13 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
             o_ptr->name3 = a_idx;
             o_ptr->weight = forge1.weight;
             return TRUE;
+        }
+
+        if (i % 1000 == 999)
+	{
+            object_level += 10;
+            if (object_level > 127)
+                object_level = 127;
         }
     }
 
