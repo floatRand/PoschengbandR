@@ -2357,13 +2357,13 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     add_flag(o_ptr->flags, OF_BLOWS);
                     has_pval = TRUE;
                 }
-                else if (one_in_(20))
+                else if (one_in_(50))
                 {
                     add_flag(o_ptr->flags, OF_XTRA_MIGHT);
                     if (!one_in_(7)) remove_flag(o_ptr->flags, OF_XTRA_SHOTS);
                     has_pval = TRUE;
                 }
-                else if (one_in_(20))
+                else if (one_in_(50))
                 {
                     add_flag(o_ptr->flags, OF_XTRA_SHOTS);
                     if (!one_in_(7)) remove_flag(o_ptr->flags, OF_XTRA_MIGHT);
@@ -2418,7 +2418,16 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     one_high_resistance(o_ptr);
                     break;
                 }
-            case 5: case 6:
+            case 5:
+                if (one_in_(2))
+                {
+                    random_plus(o_ptr);
+                    has_pval = TRUE;
+                }
+                else
+                    random_resistance(o_ptr);
+                break;
+            case 6:
                 random_resistance(o_ptr);
                 break;
             case 7:
