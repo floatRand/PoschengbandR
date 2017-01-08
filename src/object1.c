@@ -2894,6 +2894,7 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
     bool equip = (mode & USE_EQUIP) ? TRUE : FALSE;
     bool inven = (mode & USE_INVEN) ? TRUE : FALSE;
     bool floor = (mode & USE_FLOOR) ? TRUE : FALSE;
+    bool quiver = (mode & USE_QUIVER) ? TRUE : FALSE;
 
     bool allow_equip = FALSE;
     bool allow_inven = FALSE;
@@ -2923,6 +2924,20 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
     {
         /* the_force */
         if (select_the_force && (*cp == INVEN_FORCE))
+        {
+            item_tester_tval = 0;
+            item_tester_hook = NULL;
+            command_cmd = 0; /* Hack -- command_cmd is no longer effective */
+            return (TRUE);
+        }
+        else if (quiver && (*cp == INVEN_UNLIMITED_QUIVER))
+        {
+            item_tester_tval = 0;
+            item_tester_hook = NULL;
+            command_cmd = 0; /* Hack -- command_cmd is no longer effective */
+            return (TRUE);
+        }
+        else if ((mode & OPTION_ALL) && *cp == INVEN_ALL)
         {
             item_tester_tval = 0;
             item_tester_hook = NULL;
@@ -3091,6 +3106,11 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
             *cp = INVEN_FORCE;
             item = TRUE;
         }
+        if (quiver && p_ptr->unlimited_quiver) {
+            *cp = INVEN_UNLIMITED_QUIVER;
+            item = TRUE;
+            oops = FALSE;
+        }
     }
 
     /* Analyze choices */
@@ -3223,7 +3243,7 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
             }
 
             /* Indicate ability to "view" */
-            if (!command_see && !use_menu) strcat(out_val, " * to see,");
+            if (!(mode & OPTION_ALL) && !command_see && !use_menu) strcat(out_val, " * to see,");
 
             /* Append */
             if (allow_equip)
@@ -3265,7 +3285,7 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
             }
 
             /* Indicate ability to "view" */
-            if (!command_see && !use_menu) strcat(out_val, " * to see,");
+            if (!(mode & OPTION_ALL) && !command_see && !use_menu) strcat(out_val, " * to see,");
 
             /* Append */
             if (allow_inven)
@@ -3342,6 +3362,8 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
 
         /* Append */
         if (select_the_force) strcat(out_val, " w for the Force,");
+        if (quiver && p_ptr->unlimited_quiver) strcat(out_val, " z for unlimited quiver,");
+        if (mode & OPTION_ALL) strcat(out_val, " * for All,");
 
         /* Finish the prompt */
         strcat(out_val, " ESC");
@@ -3364,8 +3386,6 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
         switch (which)
         {
             case ESCAPE:
-            case 'z':
-            case 'Z':
             case '0':
             {
                 done = TRUE;
@@ -3553,6 +3573,15 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
                     break;
                 }
             }
+            case 'z':
+            {
+                if (quiver && p_ptr->unlimited_quiver) {
+                    *cp = INVEN_UNLIMITED_QUIVER;
+                    item = TRUE;
+                    done = TRUE;
+                }
+                break;
+            }
         }
         if (menu_line > max_line) menu_line -= max_line;
         }
@@ -3568,6 +3597,15 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
             }
 
             case '*':
+            {
+                if (mode & OPTION_ALL)
+                {
+                    (*cp) = INVEN_ALL;
+                    item = TRUE;
+                    done = TRUE;
+                    break;
+                }
+            }
             case '?':
             case ' ':
             {
@@ -3864,6 +3902,17 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
             {
                 if (select_the_force) {
                     *cp = INVEN_FORCE;
+                    item = TRUE;
+                    done = TRUE;
+                    break;
+                }
+
+                /* Fall through */
+            }
+            case 'z':
+            {
+                if (quiver && p_ptr->unlimited_quiver) {
+                    *cp = INVEN_UNLIMITED_QUIVER;
                     item = TRUE;
                     done = TRUE;
                     break;
