@@ -1169,13 +1169,13 @@ bool mon_is_type(int r_idx, int type)
             return TRUE;
         else if (r_ptr->flags7 & RF7_NAZGUL)
             return TRUE;
-        else if (r_idx == MON_ANGMAR || r_idx == MON_HOARMURATH)
+        else if (r_idx == MON_ANGMAR || r_idx == MON_HOARMURATH || r_idx == MON_DWAR || r_idx == MON_KHAMUL)
              return TRUE;
-        else if (r_ptr->d_char == 'V' && r_idx != 521 && r_idx != 536 && r_idx != 613)
+        else if (r_ptr->d_char == 'V' && r_idx != 521 && r_idx != 536 && r_idx != 613) /* Excludes Oriental, Star, and Fire Vampire*/
             return TRUE;
-        else if (r_ptr->d_char == 'L' && r_idx != 666)
+        else if (r_ptr->d_char == 'L' && r_idx != 666) /* Excludes Iron Lich */
             return TRUE;
-        else if (r_idx == 112 || r_idx == 748)
+        else if (r_idx == 112 || r_idx == 748) /* Disembodied Hand and Hand Druj */
             return TRUE;
         break;
     case SUMMON_MONK:

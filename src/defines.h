@@ -5140,6 +5140,7 @@ extern int PlayerUID;
 #define MON_GRAND_FEARLORD 1121
 
 /* Maximum "Nazguls" number */
+/* 9 Total, minus uniques Angmar, Hoarmurath, Dwar, and Khamul */
 #define MAX_NAZGUL_NUM 5
 
 #define DO_AUTOPICK       0x01
