@@ -811,9 +811,9 @@ static _group_t _groups[] = {
         { EFFECT_BALL_SHARDS,         32,  27, 65 },
         /*{ EFFECT_BALL_DISEN,          34,  27, 65 },*/
         /*{ EFFECT_BALL_TIME,           34,  30, 65 },*/
-        /*{ EFFECT_BALL_LITE,           35,  35, 65 },*/
+        { EFFECT_BALL_LITE,           35,  35, 65 },
         { EFFECT_BALL_DARK,           36,  35, 65 },
-        /*{ EFFECT_BALL_CHAOS,          37,  35, 65 },*/
+        { EFFECT_BALL_CHAOS,          37,  35, 65 },
         { EFFECT_BALL_WATER,          38,  37, 70 },
         { EFFECT_BALL_MANA,           40,  42, 75 },
         { EFFECT_NONE } } },
@@ -831,7 +831,7 @@ static _group_t _groups[] = {
         /*{ EFFECT_BREATHE_CONF,        37,  40, 65 },*/
         /*{ EFFECT_BREATHE_DISEN,       38,  45, 65 },*/
         /*{ EFFECT_BREATHE_TIME,        39,  45, 65 },*/
-        /*{ EFFECT_BREATHE_CHAOS,       40,  50, 70 },*/
+        { EFFECT_BREATHE_CHAOS,       40,  50, 70 },
         { EFFECT_BREATHE_SOUND,       41,  55, 70 },
         { EFFECT_BREATHE_SHARDS,      42,  55, 70 },
         { EFFECT_NONE } } },
