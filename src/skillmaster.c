@@ -1283,6 +1283,7 @@ static vec_ptr _get_spell_list(object_type *spellbook)
             int old_dec_mana = p_ptr->dec_mana;
             if (p_ptr->easy_realm1 == realm) /* Hack: spells.c is not prepared for book based casting */
                 p_ptr->dec_mana = TRUE;
+            spell->fail = virtue_mod_spell_fail(realm, spell->fail); /* Ditto with virtues */
             spell->fail = calculate_fail_rate(spell->level, spell->fail, stat);
             p_ptr->dec_mana = old_dec_mana;
             if (spell->fail < skill.fail_min)
@@ -1481,6 +1482,7 @@ static void _cast_spell(_spell_info_ptr spell)
         spell_stats_on_fail_old(spell->realm, spell->idx);
         sound(SOUND_FAIL);
         do_spell(spell->realm, spell->idx, SPELL_FAIL);
+        virtue_on_fail_spell(spell->realm, spell->fail);
     }
     else
     {
@@ -1492,6 +1494,7 @@ static void _cast_spell(_spell_info_ptr spell)
         }
         sound(SOUND_ZAP);
         spell_stats_on_cast_old(spell->realm, spell->idx);
+        virtue_on_cast_spell(spell->realm, spell->cost, spell->fail);
     }
     p_ptr->redraw |= PR_MANA;
     p_ptr->window |= PW_SPELL;
@@ -2021,6 +2024,10 @@ static void _dump_realm(doc_ptr doc, int realm)
             _dump_book(doc, spellbook);
         }
     }
+
+    i = virtue_mod_spell_fail(realm, 0);
+    if (!first && i)
+        doc_printf(doc, " Your alignment is adding <color:R>%+d%%</color> to your fail rates in this realm.\n\n", i);
 }
 
 static void _dump_group(doc_ptr doc, _group_ptr g)

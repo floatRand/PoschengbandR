@@ -2134,14 +2134,18 @@ extern void stats_add_ego(object_type *o_ptr);
 extern void wiz_obj_create(void);
 extern void wiz_obj_smith(void);
 
-/* avatar.c */
+/* virtue.c */
 extern cptr virtue_name(int which);
-extern int virtue_find(int which);
+extern int  virtue_find(int which);
 extern bool virtue_present(int which);
-extern int virtue_current(int which);
+extern int  virtue_current(int which);
 extern void virtue_add(int which, int amount);
 extern void virtue_init(void);
 extern void virtue_display(doc_ptr doc);
+extern void virtue_on_fail_spell(int realm, int fail);
+extern void virtue_on_cast_spell(int realm, int cost, int fail);
+extern int  virtue_mod_spell_fail(int realm, int fail);
+
 
 extern travel_type travel;
 

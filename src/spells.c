@@ -1281,6 +1281,9 @@ static void _dump_realm(doc_ptr doc, int realm)
             _dump_book(doc, realm, i);
         }
     }
+    i = virtue_mod_spell_fail(realm, 0);
+    if (!first && i)
+        doc_printf(doc, " Your alignment is adding <color:R>%+d%%</color> to your fail rates in this realm.\n\n", i);
 }
 
 void spellbook_character_dump(doc_ptr doc)
