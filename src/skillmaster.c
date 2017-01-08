@@ -441,10 +441,6 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 
     info_ptr->to_d += info.to_d;
     info_ptr->dis_to_d += info.to_d;
-
-    pts = _get_skill_pts(_TYPE_TECHNIQUE, _DUAL_WIELDING);
-    if (pts >= 5)
-        info_ptr->genji = TRUE;
 }
 
 int skillmaster_weapon_prof(int tval)
@@ -473,6 +469,17 @@ static void _melee_calc_bonuses(void)
         monk_ac_bonus();
         if (pts >= 5)
             p_ptr->sh_retaliation = TRUE;
+    }
+
+    /* I'd prefer this in calc_weapon_bonuses, but we have a sequencing issue ...
+     * It might be possible to move the dual_wielding block in calc_bonuses below 
+     * the blows calculation, but those sorts of changes tend to have subtly 
+     * unpredictable consequences ... */
+    pts = _get_skill_pts(_TYPE_TECHNIQUE, _DUAL_WIELDING);
+    if (pts >= 5)
+    {
+        p_ptr->weapon_info[0].genji = TRUE;
+        p_ptr->weapon_info[1].genji = TRUE;
     }
 }
 
@@ -2059,6 +2066,25 @@ static void _character_dump(doc_ptr doc)
                 _dump_realm(doc, i);
         }
     }
+}
+
+/* For the sake of flavor, we will tweak the extra hp allocation
+ * to match the player's current skill allocation. This makes buying
+ * early health more useful and also make mage-like skillmasters
+ * less advantageous than proper mages. */
+int skillmaster_calc_xtra_hp(int amt)
+{
+    int w1 = 5, w2 = 5, w3 = 5;
+
+    w1 += _get_group_pts(_TYPE_MELEE);
+    w1 += 5 * _get_skill_pts(_TYPE_SKILLS, _HEALTH);
+
+    w2 += _get_group_pts(_TYPE_SHOOT);
+    w2 += _get_group_pts(_TYPE_PRAYER);
+
+    w3 += _get_group_pts(_TYPE_MAGIC);
+
+    return py_prorata_level_aux(amt, w1, w2, w3);
 }
 
 class_t *skillmaster_get_class(void)

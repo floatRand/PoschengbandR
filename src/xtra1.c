@@ -3081,6 +3081,9 @@ int py_prorata_level_aux(int amt, int w1, int w2, int w3)
     int wt = w1 + w2 + w3;
     int l = p_ptr->lev;
 
+    if (l == 50)
+        return amt; /* make sure the player gets the entire amt */
+
     result += amt * l * w1 / (50*wt);
     result += amt * l * l * w2 / (50*50*wt);
     result += (amt * l * l / 50) * l * w3 / (50*50*wt); /* 2^31/50^3 is about 17000 */
@@ -3094,6 +3097,9 @@ static int _calc_xtra_hp(int amt)
 {
     int w1 = 1, w2 = 1, w3 = 1;
     int class_idx = get_class_idx();
+
+    if (p_ptr->pclass == CLASS_SKILLMASTER)
+        return skillmaster_calc_xtra_hp(amt);
 
     switch (class_idx)
     {
