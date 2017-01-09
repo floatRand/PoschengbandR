@@ -4674,8 +4674,20 @@ static void process_player(void)
             /* Take a turn */
             energy_use = 100;
 
-            if (p_ptr->clear_mind && p_ptr->csp < p_ptr->msp)
-                cast_clear_mind();
+            if (p_ptr->csp < p_ptr->msp)
+            {
+                caster_info *caster_ptr = get_caster_info();
+                if (caster_ptr && (caster_ptr->options & CASTER_SUPERCHARGE_MANA))
+                {
+                    msg_boundary();
+                    cast_concentration();
+                }
+                else if (p_ptr->clear_mind)
+                {
+                    msg_boundary();
+                    cast_clear_mind();
+                }
+            }
         }
 
         else if (p_ptr->action == ACTION_FISH)
@@ -4713,8 +4725,8 @@ static void process_player(void)
             /* Redraw stuff */
             redraw_stuff();
 
-            /* Hack -- Assume messages were seen */
-            msg_line_clear();
+            /* Hack -- Assume messages were seen 
+            msg_line_clear(); */
 
             /* Process the command */
             process_command();

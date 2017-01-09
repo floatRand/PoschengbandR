@@ -2292,7 +2292,7 @@ static void _fix_message_aux(void)
         if (m->count > 1)
         {
             char buf[10];
-            sprintf(buf, " <x%d>", m->count);
+            sprintf(buf, " (x%d)", m->count);
             doc_insert_text(doc, m->color, buf);
         }
         doc_newline(doc);

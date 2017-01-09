@@ -2519,6 +2519,7 @@ extern void     rune_calc_stats(object_type *o_ptr, s16b stats[MAX_STATS]);
 extern class_t *rune_knight_get_class(void);
 
 extern void     samurai_concentration_spell(int cmd, variant *res);
+extern void     cast_concentration(void);
 extern class_t *samurai_get_class(void);
 extern void     samurai_posture_spell(int cmd, variant *res);
 extern void     samurai_posture_get_flags(u32b flgs[OF_ARRAY_SIZE]);
