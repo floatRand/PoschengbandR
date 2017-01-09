@@ -2539,6 +2539,7 @@ extern void     skillmaster_cast(void);
 extern void     skillmaster_browse(void);
 extern bool     skillmaster_is_allowed_book(int tval, int sval);
 extern int      skillmaster_calc_xtra_hp(int amt);
+extern bool     skillmaster_weapon_is_icky(int tval);
 
 extern class_t *tourist_get_class(void);
 extern class_t *scout_get_class(void);

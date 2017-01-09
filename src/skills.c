@@ -316,9 +316,7 @@ bool skills_weapon_is_icky(int tval, int sval)
             result = TRUE;
         break;
     case CLASS_SKILLMASTER:
-        if (skillmaster_weapon_prof(tval) < WEAPON_EXP_BEGINNER) /* 2000 is icky (-10 to hit) */
-            result = TRUE;
-        break;
+        return skillmaster_weapon_is_icky(tval);
     }
     return result;
 }

@@ -450,6 +450,13 @@ int skillmaster_weapon_prof(int tval)
     return _melee_info[pts].prof;
 }
 
+bool skillmaster_weapon_is_icky(int tval)
+{
+    if (_get_skill_pts(_TYPE_MELEE, tval) || _get_skill_pts(_TYPE_SHOOT, _THROWING))
+        return FALSE;
+    return TRUE;
+}
+
 int skillmaster_martial_arts_prof(void)
 {
     int pts = _get_skill_pts(_TYPE_MELEE, _MARTIAL_ARTS);
@@ -764,7 +771,7 @@ static void _throw_weapon_imp(_throw_weapon_info * info)
 
     chance = p_ptr->skill_tht + (p_ptr->shooter_info.to_h + info->o_ptr->to_h) * BTH_PLUS_ADJ;
 
-    object_desc(o_name, info->o_ptr, OD_NAME_ONLY);
+    object_desc(o_name, info->o_ptr, OD_NAME_ONLY | OD_OMIT_PREFIX);
     ct = project_path(path, info->tdis, py, px, info->ty, info->tx, PROJECT_PATH);
 
     y = py;
