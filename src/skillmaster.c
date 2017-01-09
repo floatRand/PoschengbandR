@@ -982,7 +982,7 @@ static void _throw_weapon_spell(int cmd, variant *res)
 static void _magic_init_class(class_t *class_ptr)
 {
     typedef struct { int base_dev; int xtra_dev; int int_; int str; int con; } _magic_skill_t;
-    static _magic_skill_t _tbl[11] = {
+    static _magic_skill_t _tbl[16] = {
         { 23,  9, 0,  0,  0 },
 
         { 25,  9, 1,  0,  0 },
@@ -995,10 +995,16 @@ static void _magic_init_class(class_t *class_ptr)
         { 35, 10, 3, -2, -1 },
         { 37, 10, 3, -2, -1 },
         { 39, 10, 3, -2, -1 },
-        { 40, 11, 4, -3, -2 }
+        { 40, 11, 4, -3, -2 },
+
+        { 41, 11, 5, -3, -2 },
+        { 42, 11, 5, -4, -2 },
+        { 43, 11, 5, -4, -3 },
+        { 44, 11, 6, -4, -3 },
+        { 45, 12, 7, -5, -3 }
     };
     int pts = _get_group_pts(_TYPE_MAGIC);
-    _magic_skill_t row = _tbl[MIN(10, pts)];
+    _magic_skill_t row = _tbl[MIN(15, pts)];
     class_ptr->base_skills.dev += row.base_dev;
     class_ptr->extra_skills.dev += row.xtra_dev;
     class_ptr->stats[A_INT] += row.int_;
@@ -1573,8 +1579,8 @@ static void _skills_init_class(class_t *class_ptr)
 
     pts = _get_skill_pts(_TYPE_SKILLS, _HEALTH);
     class_ptr->stats[A_CON] += pts;
-    class_ptr->life += 5*pts;
-    class_ptr->base_hp += 10*pts;
+    class_ptr->life += 4*pts;
+    class_ptr->base_hp += 7*pts;
 
     pts = _get_skill_pts(_TYPE_SKILLS, _MAGIC_RESISTANCE);
     class_ptr->base_skills.sav += 15*pts;
