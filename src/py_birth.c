@@ -2544,10 +2544,13 @@ static void _birth_finalize(void)
 
     mp_ptr = &m_info[p_ptr->pclass];
     /* Hack ... external files always make easy stuff hard ... Burglary is natural for rogues!!!*/
-    if (p_ptr->pclass == CLASS_ROGUE && p_ptr->realm1 == REALM_BURGLARY)
-        mp_ptr->spell_first = 1;
-    else
-        mp_ptr->spell_first = 5;
+    if (p_ptr->pclass == CLASS_ROGUE)
+    {
+        if (p_ptr->realm1 == REALM_BURGLARY)
+            mp_ptr->spell_first = 1;
+        else
+            mp_ptr->spell_first = 5;
+    }
 
     /* Rest Up to Max HP and SP */
     p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;
