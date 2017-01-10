@@ -186,6 +186,9 @@ This ability allows you to more quickly recover both hit points and spell points
   <indent><topic:Resistance><color:o>Resistance</color>
 This power grants temporary resistance to the basic elemental attacks of acid, fire, cold, electricity and poison. Your resistances stack, as you know, so having multiple sources of the same protection can be useful both in protecting you and in protecting your gear.</indent>
 
+  <indent><topic:Rodeo><color:o>Rodeo</color>
+This power allows you to attempt to forcibly mount an unfriendly monster. If successful, you may tame yourself a new mount to ride. But often such an attempt ends in utter humiliation. Perhaps you've heard a certain saying?</indent>
+
   <indent><topic:Stone Skin><color:o>Stone Skin</color>
 This power temporarily grants increased armor class, making you harder to hit and harder to damage in melee combat. The amount of protection increases with your experience level. If you plan on defeating the <color:keyword>Serpent of Chaos</color> with melee, then this would be a very useful ability to have.</indent>
 

@@ -2431,7 +2431,10 @@ extern class_t *berserker_get_class(void);
 extern class_t *blood_knight_get_class(void);
 extern class_t *blood_mage_get_class(void);
 extern class_t *blue_mage_get_class(void);
+
 extern class_t *cavalry_get_class(void);
+extern void     rodeo_spell(int cmd, variant *res);
+
 extern class_t *chaos_warrior_get_class(void);
 extern void     chaos_warrior_reward(void);
 extern class_t *devicemaster_get_class(int psubclass);

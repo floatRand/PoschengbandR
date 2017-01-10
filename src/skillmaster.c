@@ -66,6 +66,7 @@ enum {
     _RESISTANCE,
     _STONE_SKIN,
     _CREATE_AMMO,
+    _RODEO,
     _ABILITY_STOP
 };
 
@@ -188,6 +189,7 @@ static _group_t _groups[] = {
          { _TYPE_ABILITY, _PANIC_HIT, "Panic Hit", 1, 0 },
          { _TYPE_ABILITY, _REGENERATION, "Regeneration", 1, 0 },
          { _TYPE_ABILITY, _RESISTANCE, "Resistance", 1, 0 },
+         { _TYPE_ABILITY, _RODEO, "Rodeo", 1, 0 },
          { _TYPE_ABILITY, _STONE_SKIN, "Stone Skin", 1 , 0 },
          { 0 }}},
     { 0 }
@@ -2038,6 +2040,8 @@ static int _get_powers(spell_info* spells, int max)
         _add_power(&spells[ct++], stone_skin_spell);
     if (ct < max && _get_skill_pts(_TYPE_ABILITY, _CREATE_AMMO) > 0)
         _add_power(&spells[ct++], create_ammo_spell);
+    if (ct < max && _get_skill_pts(_TYPE_ABILITY, _RODEO) > 0)
+        _add_power(&spells[ct++], rodeo_spell);
 
     return ct;
 }
