@@ -559,10 +559,10 @@ typedef struct { int skill; int back; int mult; int energy; } _throw_info_t;
 static _throw_info_t _throw_info[6] = {
     {   0, 15, 100, 100 },
     {  12, 18, 100, 100 },
-    {  28, 21, 150,  90 }, /* 18/220 Dex for 0% fail */
-    {  48, 24, 200,  80 }, /* 18/180 Dex for 0% fail */
-    {  72, 27, 300,  60 }, /* 18/150 Dex for 0% fail */
-    { 100, 30, 400,  50 }, /* 18/110 Dex for 0% fail */
+    {  28, 21, 150,  90 }, /* 18/220 Dex for 1% fail */
+    {  48, 24, 200,  80 }, /* 18/180 Dex for 1% fail */
+    {  72, 27, 300,  60 }, /* 18/150 Dex for 1% fail */
+    { 100, 30, 400,  50 }, /* 18/110 Dex for 1% fail */
 };
 
 static void _shoot_calc_bonuses(void)
@@ -2061,7 +2061,7 @@ static int _gain_skill_ui(_group_ptr g)
             cmd = _inkey();
         }
         if (cmd == ESCAPE) return UI_CANCEL;
-        else if (cmd == '?') doc_display_help("Skillmasters.txt", NULL);
+        else if (cmd == '?') doc_display_help("Skillmasters.txt", g->name);
         else if (p_ptr->wizard && cmd == KTRL('R'))
         {
             if (get_check("Really reset this group? "))

@@ -1414,6 +1414,9 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, i
                 else
                     cost = (1 + (dd * ds / 7));
 
+                if (thrown)
+                    cost *= 3;
+
                 if (caster && (caster->options & CASTER_USE_AU))
                 {
                     cost *= 10;
