@@ -768,6 +768,9 @@ static void _throw_weapon_imp(_throw_weapon_info * info)
     int y, x, ny, nx, tdam;
     int cur_dis, ct;
     int chance;
+    u32b flags[OF_ARRAY_SIZE];
+
+    obj_flags(info->o_ptr, flags);
 
     chance = p_ptr->skill_tht + (p_ptr->shooter_info.to_h + info->o_ptr->to_h) * BTH_PLUS_ADJ;
 
@@ -852,20 +855,61 @@ static void _throw_weapon_imp(_throw_weapon_info * info)
                 /***** The Damage Calculation!!! *****/
                 tdam = damroll(info->o_ptr->dd, info->o_ptr->ds);
                 tdam = tot_dam_aux(info->o_ptr, tdam, m_ptr, 0, 0, TRUE);
+                if (have_flag(flags, OF_VORPAL) || have_flag(flags, OF_VORPAL2))
+                {
+                    int  vorpal_chance = have_flag(flags, OF_VORPAL2) ? 2 : 4;
+                    if (one_in_(vorpal_chance * 3 / 2))
+                    {
+                        int mult = 2;
+                        char m_name[80];
+
+                        while (one_in_(vorpal_chance))
+                            mult++;
+
+                        tdam *= mult;
+
+                        monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+                        switch (mult)
+                        {
+                        case 2: msg_format("Your weapon <color:U>gouges</color> %s!", m_name); break;
+                        case 3: msg_format("Your weapon <color:y>maims</color> %s!!", m_name); break;
+                        case 4: msg_format("Your weapon <color:R>carves</color> %s!!!", m_name); break;
+                        case 5: msg_format("Your weapon <color:r>cleaves</color> %s!!!!", m_name); break;
+                        case 6: msg_format("Your weapon <color:v>smites</color> %s!!!!!", m_name); break;
+                        case 7: msg_format("Your weapon <color:v>eviscerates</color> %s!!!!!!", m_name); break;
+                        default: msg_format("Your weapon <color:v>shreds</color> %s!!!!!!!", m_name); break;
+                        }
+
+                        if (have_flag(flags, OF_VORPAL2))
+                            obj_learn_slay(info->o_ptr, OF_VORPAL2, "is <color:v>*Sharp*</color>");
+                        else
+                            obj_learn_slay(info->o_ptr, OF_VORPAL, "is <color:R>Sharp</color>");
+                    }
+                }
                 tdam = critical_throw(info->o_ptr->weight, info->o_ptr->to_h, tdam);
                 tdam += info->o_ptr->to_d;
                 tdam = tdam * info->mult / 100;
                 if (ambush)
                     tdam *= 2;
+
+
                 if (tdam < 0) tdam = 0;
                 tdam = mon_damage_mod(m_ptr, tdam, FALSE);
-
                 if (mon_take_hit(c_ptr->m_idx, tdam, &fear, extract_note_dies(real_r_ptr(m_ptr))))
                 {
                     /* Dead monster */
                 }
                 else
                 {
+                    if (have_flag(flags, OF_BRAND_VAMP))
+                    {
+                        char m_name[80];
+                        int  heal = MIN(30, damroll(3, tdam / 8));
+                        monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+                        msg_format("Your weapon drains life from %s!", m_name);
+                        hp_player_aux(heal);
+                        obj_learn_slay(info->o_ptr, OF_BRAND_VAMP, "is <color:D>Vampiric</color>");
+                    }
                     message_pain(c_ptr->m_idx, tdam);
                     if (tdam > 0)
                         anger_monster(m_ptr);

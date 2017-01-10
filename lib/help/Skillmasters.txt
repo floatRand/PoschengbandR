@@ -160,7 +160,7 @@ Finally, as a Skillmaster you may invest a single point in any of the following 
 The other types of abilities grant a passive talent, such as <color:keyword>Regeneration</color> or <color:keyword>Good Luck</color>. Since they only cost a single skill point, they are worthy of consideration for fleshing out your character design.
 
   <indent><topic:Clear Mind><color:o>Clear Mind</color>
-This power regenerates a very small amount of mana on each usage and aids a spellcaster to recover their mana faster than resting alone. With this power, the game will automatically activate it for you while resting to save your typing fingers. You can hide the extra messages while resting by turning off the <link:option.txt#disturb_minor><color:link> disturb_minor</color> option.</indent>
+This power regenerates a very small amount of mana on each usage and aids a spellcaster to recover their mana faster than resting alone. With this power, the game will automatically activate it for you while resting to save your typing fingers.</indent>
 
   <indent><topic:Create Ammo><color:o>Create Ammo</color>
 Normally restricted to the Archer, this talent allows you to create missiles from junk objects in the dungeon. You may create shots from rubble; arrows from skeletons and broken sticks; and bolts from skeletons. The quality of the ammo so created depends only upon your character level.</indent>
