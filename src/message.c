@@ -117,8 +117,17 @@ void cmsg_append(byte color, cptr str)
         msg_ptr m = msg_get(0);
 
         assert(m);
-        /* You tunnel into the granite wall. <x17> The heroism wears off.
-           Not: You tunnel into the granite wall. The heroism wears off. <x17> */
+
+        /* Repeat last message? Even when appending, this scenario
+         * is common. For example: "A tree was blasted! (x4)" */
+        if (strcmp(string_buffer(m->msg), str) == 0)
+        {
+            m->count++;
+            return;
+        }
+
+        /* You tunnel into the granite wall. (x17) The heroism wears off.
+           Not: You tunnel into the granite wall. The heroism wears off. (x17) */
         if (m->count > 1)
         {
             cmsg_add(color, str);
