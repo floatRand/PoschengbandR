@@ -764,6 +764,7 @@ static void _club_toss_imp(_club_toss_info * info)
             if (test_hit_fire(chance - cur_dis, MON_AC(r_ptr, m_ptr), m_ptr->ml))
             {
                 bool fear = FALSE;
+                critical_t crit;
 
                 if (!visible)
                     msg_format("The %s finds a mark.", o_name);
@@ -783,7 +784,12 @@ static void _club_toss_imp(_club_toss_info * info)
                 dd = info->o_ptr->dd;
                 tdam = damroll(dd, info->o_ptr->ds);
                 tdam = tot_dam_aux(info->o_ptr, tdam, m_ptr, 0, 0, TRUE);
-                tdam = critical_throw(info->o_ptr->weight, info->o_ptr->to_h, tdam);
+                crit = critical_throw(info->o_ptr->weight, info->o_ptr->to_h);
+                if (crit.desc)
+                {
+                    tdam = tdam * crit.mul/100 + crit.to_d;
+                    msg_print(crit.desc);
+                }
                 tdam += info->o_ptr->to_d;
                 tdam *= info->mult;
                 tdam += p_ptr->to_d_m;
@@ -1287,6 +1293,7 @@ static void _dagger_toss_imp(_dagger_toss_info * info)
             if (test_hit_fire(chance - cur_dis, MON_AC(r_ptr, m_ptr), m_ptr->ml))
             {
                 bool fear = FALSE;
+                critical_t crit;
 
                 if (!visible)
                     msg_format("The %s finds a mark.", o_name);
@@ -1308,7 +1315,12 @@ static void _dagger_toss_imp(_dagger_toss_info * info)
                     dd += p_ptr->lev/15;
                 tdam = damroll(dd, info->o_ptr->ds);
                 tdam = tot_dam_aux(info->o_ptr, tdam, m_ptr, 0, 0, TRUE);
-                tdam = critical_throw(info->o_ptr->weight, info->o_ptr->to_h, tdam);
+                crit = critical_throw(info->o_ptr->weight, info->o_ptr->to_h);
+                if (crit.desc)
+                {
+                    tdam = tdam * crit.mul/100 + crit.to_d;
+                    msg_print(crit.desc);
+                }
                 tdam += info->o_ptr->to_d;
                 tdam *= info->mult;
                 tdam += p_ptr->shooter_info.to_d;

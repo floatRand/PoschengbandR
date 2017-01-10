@@ -2412,6 +2412,7 @@ enum {
 #define OD_FORCE_FLAVOR     0x00000080  /* Get un-shuffled flavor name */
 #define OD_NAME_AND_DICE    0x00000100
 #define OD_COLOR_CODED      0x00000200  /* For msg_print only */
+#define OD_THROWING         0x00000400  /* buggy otherwise for throwing weapon info */
 
 #define OD_LORE (OD_NAME_ONLY | OD_OMIT_PREFIX | OD_COLOR_CODED)
 

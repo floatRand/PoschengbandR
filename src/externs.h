@@ -708,7 +708,6 @@ extern void touch_zap_player(int m_idx);
 extern bool test_hit_fire(int chance, int ac, int vis);
 extern bool random_opponent(int *y, int *x);
 extern bool test_hit_norm(int chance, int ac, int vis);
-extern s16b critical_throw(int weight, int plus, int dam);
 
 typedef struct critical_s {
     int mul; /* Scaled by 100 */
@@ -717,6 +716,7 @@ typedef struct critical_s {
 } critical_t;
 extern critical_t critical_shot(int weight, int plus);
 extern critical_t critical_norm(int weight, int plus, s16b meichuu, int mode, int hand);
+extern critical_t critical_throw(int weight, int plus);
 
 extern s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, int mode, bool thrown);
 extern void search(void);
@@ -1587,6 +1587,7 @@ extern void display_innate_attack_info(doc_ptr doc, int which);
 extern void display_shooter_info(doc_ptr doc);
 extern void init_blows_calc(object_type *o_ptr, weapon_info_t *info_ptr);
 extern int calculate_base_blows(int hand, int str_idx, int dex_idx);
+extern int throw_hit_chance(int to_h, int ac, int range);
 
 /* util.c */
 extern errr path_parse(char *buf, int max, cptr file);

@@ -4304,6 +4304,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
             if (test_hit_fire(chance - cur_dis, MON_AC(r_ptr, m_ptr), m_ptr->ml))
             {
                 bool fear = FALSE;
+                critical_t crit;
 
                 /* Handle unseen monster */
                 if (!visible)
@@ -4338,7 +4339,12 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
                 tdam = damroll(q_ptr->dd, q_ptr->ds);
                 /* Apply special damage XXX XXX XXX */
                 tdam = tot_dam_aux(q_ptr, tdam, m_ptr, 0, 0, TRUE);
-                tdam = critical_throw(q_ptr->weight, q_ptr->to_h, tdam);
+                crit = critical_throw(o_ptr->weight, o_ptr->to_h);
+                if (crit.desc)
+                {
+                    tdam = tdam * crit.mul/100 + crit.to_d;
+                    msg_print(crit.desc);
+                }
                 if (q_ptr->to_d > 0)
                     tdam += q_ptr->to_d;
                 else

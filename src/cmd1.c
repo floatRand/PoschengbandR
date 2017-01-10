@@ -478,12 +478,13 @@ critical_t critical_shot(int weight, int plus)
  * Critical hits (from bows/crossbows/slings)
  * Factor in item weight, total plusses, and player level.
  */
-s16b critical_throw(int weight, int plus, int dam)
+critical_t critical_throw(int weight, int plus)
 {
+    critical_t result = {0};
     int i, k;
 
     /* Extract "shot" power */
-    i = ((p_ptr->shooter_info.to_h + plus) * 4) + (p_ptr->lev * 3);
+    i = (p_ptr->shooter_info.to_h + plus)*4 + p_ptr->lev*3;
 
     /* Critical hit */
     if (randint1(5000) <= i)
@@ -492,22 +493,22 @@ s16b critical_throw(int weight, int plus, int dam)
 
         if (k < 400)
         {
-            msg_print("It was a good hit!");
-            dam += (dam / 2);
+            result.desc = "It was a <color:y>good</color> hit!";
+            result.mul = 150;
         }
         else if (k < 700)
         {
-            msg_print("It was a great hit!");
-            dam += dam;
+            result.desc = "It was a <color:R>great</color> hit!";
+            result.mul = 200;
         }
         else
         {
-            msg_print("It was a superb hit!");
-            dam += 3*dam/2;
+            result.desc = "It was a <color:r>superb</color> hit!";
+            result.mul = 250;
         }
     }
 
-    return (dam);
+    return result;
 }
 
 

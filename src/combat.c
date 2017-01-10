@@ -29,6 +29,19 @@ int hit_chance(int hand, int to_h, int ac)
     return (odds+5)/10;
 }
 
+int throw_hit_chance(int to_h, int ac, int range)
+{
+    int chance = p_ptr->skill_tht + (p_ptr->shooter_info.to_h + to_h) * BTH_PLUS_ADJ - range;
+    int odds;
+
+    if (chance <= 0) return 0;
+
+    odds = 95*(chance - ac*3/4)*1000/(chance*100);
+    if (p_ptr->personality == PERS_LAZY) odds = (19*odds+10)/20;
+    if (odds < 50) odds = 50;
+    return (odds+5)/10;
+}
+
 int bow_hit_chance(int sval, int to_h, int ac)
 {
     int chance;
