@@ -1380,7 +1380,7 @@ caster_info *_caster_info(void)
     }
     /* Now, use INT or WIS for mana, depending on which
      * has the most total points */
-    else if (magic_pts && magic_pts > prayer_pts)
+    else if (magic_pts && magic_pts >= prayer_pts)
     {
         info.which_stat = A_INT;
         info.magic_desc = "spell";
