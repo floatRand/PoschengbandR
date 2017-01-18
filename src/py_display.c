@@ -517,7 +517,7 @@ static int _build_flags_imp(doc_ptr doc, cptr name, int flg, int dec_flg, _flagz
         doc_insert_char(doc, TERM_WHITE, '+');
         result++;
     }
-    else if (have_flag(flagzilla->py_flgs, dec_flg))
+    else if (dec_flg != OF_INVALID && have_flag(flagzilla->py_flgs, dec_flg))
     {
         doc_insert_char(doc, TERM_L_RED, '-');
         result++;
