@@ -4252,7 +4252,8 @@ bool polymorph_monster(int y, int x)
     monster_type *m_ptr = &m_list[c_ptr->m_idx];
     int           r_idx = poly_r_idx(m_ptr->r_idx);
 
-    mon_change_race(c_ptr->m_idx, r_idx, "polymorphed");
+    if (r_idx != m_ptr->r_idx)
+        mon_change_race(c_ptr->m_idx, r_idx, "polymorphed");
     return TRUE;
 }
 

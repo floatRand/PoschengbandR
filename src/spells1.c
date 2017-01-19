@@ -2367,6 +2367,11 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             else
             {
                 do_poly = TRUE;
+                /* Try to make the Chaos Vortex more playable. With too frequent
+                 * polymorphing, you always seem to get stuck on a chaos resistant
+                 * foe eventually. */
+                if (p_ptr->current_r_idx == MON_CHAOS_VORTEX && !one_in_(5))
+                    do_poly = FALSE;
                 do_conf = (5 + randint1(11) + r) / (r + 1);
             }
             break;
@@ -5968,7 +5973,8 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 /* Obvious */
                 if (seen) obvious = TRUE;
-                dam = 0;
+                /* Why, in the name of all sanity, would you do this??!
+                 * dam = 0;*/
             }
             else
             {
