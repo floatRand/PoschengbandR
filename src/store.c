@@ -2594,8 +2594,10 @@ static void store_examine(void)
     /* Get the actual item */
     o_ptr = &st_ptr->stock[item];
 
-    /* do not obj_identify_fully() as this would leak lore.
-     * IDENT_STORE will make the object display correctly. */
+    /* If you want examine to leak ego lore (but never flavors),
+     * then keep the following call */
+    obj_learn_store(o_ptr);
+
     obj_display(o_ptr);
     return;
 }

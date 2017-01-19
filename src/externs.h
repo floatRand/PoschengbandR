@@ -1206,6 +1206,7 @@ extern bool obj_is_identified(object_type *o_ptr);
 extern bool obj_is_identified_fully(object_type *o_ptr);
 extern void obj_identify(object_type *o_ptr);
 extern void obj_identify_fully(object_type *o_ptr);
+extern void obj_learn_store(object_type *o_ptr);
 
 /* obj_learn_*() methods return TRUE if the flag is present and unknown (hence learned)
    and FALSE otherwise. So FALSE means either the flag is not applicable, or that

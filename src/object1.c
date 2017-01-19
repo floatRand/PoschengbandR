@@ -481,6 +481,12 @@ void obj_identify_fully(object_type *o_ptr)
         _obj_learn_curses(o_ptr);
 }
 
+void obj_learn_store(object_type *o_ptr)
+{
+    assert(o_ptr->ident & IDENT_STORE);
+    _obj_identify_fully_aux(o_ptr);
+}
+
 bool obj_learn_flag(object_type *o_ptr, int which)
 {
     assert(o_ptr);
