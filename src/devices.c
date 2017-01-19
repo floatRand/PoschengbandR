@@ -4992,7 +4992,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         if (color) return format("%d", TERM_SLATE);
         if (cast)
         {
-            if (!get_fire_dir(&dir)) return NULL;
+            if (!get_fire_dir_aux(&dir, TARGET_DISI)) return NULL;
             fire_beam(GF_DISINTEGRATE, dir, _BOOST(damroll(dd, ds)));
             device_noticed = TRUE;
         }

@@ -857,7 +857,7 @@ static bool cast_learned_spell(int spell, bool success)
         fire_ball(GF_CHAOS, dir, spell_power(damage), 4);
         break;
     case MS_BR_DISI:
-        if (!get_fire_dir(&dir)) return FALSE;
+        if (!get_fire_dir_aux(&dir, TARGET_DISI)) return FALSE;
             else msg_print("You breathe disintegration.");
         damage = MIN(hp / 6, 150);
         fire_ball(GF_DISINTEGRATE, dir, spell_power(damage), (plev > 40 ? -3 : -2));

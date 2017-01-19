@@ -396,7 +396,7 @@ static bool use_mane(int spell)
         fire_ball(GF_CHAOS, dir, damage, 4);
         break;
     case MS_BR_DISI:
-        if (!get_fire_dir(&dir)) return FALSE;
+        if (!get_fire_dir_aux(&dir, TARGET_DISI)) return FALSE;
         else msg_print("You breathe disintegration.");
         fire_ball(GF_DISINTEGRATE, dir, damage, (plev > 35 ? -3 : -2));
         break;

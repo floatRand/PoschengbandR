@@ -5218,10 +5218,24 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
         /* Update stuff */
         p_ptr->update |= (PU_VIEW | PU_LITE | PU_FLOW | PU_MON_LITE | PU_DISTANCE);
         p_ptr->window |= PW_MONSTER_LIST | PW_OBJECT_LIST;
+
+        /* Position Targets are confusing. They should be dismissed when no longer valid.
+         * Note: Originally, I had this check in target_okay(), which is, of course, called
+         * fairly often and repeatedly. While this had the fortunate side effect of preventing
+         * many 'trick shot' projection abuses, it also messed up 'disintegration' effects
+         * (such as Breathe Disintegration or Beam of Disintegration). For these, the user
+         * needs to target a non-projectable monster. As a compromise, we will continue to
+         * dismiss such targets, but only once the player moves. */
         if (target_who < 0)
         {
-            target_okay(); /* dismiss if no longer valid */
-            p_ptr->redraw |= PR_HEALTH_BARS;
+            if ( !in_bounds(target_row, target_col)
+              || !projectable(py, px, target_row, target_col) )
+            {
+                target_who = 0;
+                target_row = 0;
+                target_col = 0;
+                p_ptr->redraw |= PR_HEALTH_BARS;
+            }
         }
 
         if (!view_unsafe_grids)

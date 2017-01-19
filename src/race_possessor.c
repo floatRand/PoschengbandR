@@ -771,8 +771,9 @@ static void _breathe_spell(int what, int cmd, variant *res)
     case SPELL_CAST:
     {
         int dir = 0;
+        int mode = (what == GF_DISINTEGRATE) ? TARGET_DISI : TARGET_KILL;
         var_set_bool(res, FALSE);
-        if (get_fire_dir(&dir))
+        if (get_fire_dir_aux(&dir, mode))
         {
             if (p_ptr->current_r_idx == MON_BOTEI) 
                 msg_print("'Botei-Build cutter!!!'");

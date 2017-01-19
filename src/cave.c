@@ -1667,7 +1667,7 @@ void prt_map(void)
 /*
  * print project path
  */
-void prt_path(int y, int x)
+void prt_path(int y, int x, int xtra_flgs)
 {
     int i;
     int path_n;
@@ -1675,13 +1675,13 @@ void prt_path(int y, int x)
     int default_color = TERM_SLATE;
     int flgs = PROJECT_PATH|PROJECT_THRU;
 
+    flgs |= xtra_flgs;
+
     if (!display_path) return;
     if (-1 == project_length)
         return;
 
     /* Get projection path */
-    if (shoot_hack == SHOOT_DISINTEGRATE)
-        flgs |= PROJECT_DISI;
     path_n = project_path(path_g, (project_length ? project_length : MAX_RANGE), py, px, y, x, flgs);
 
     /* Redraw map */
@@ -1724,7 +1724,7 @@ void prt_path(int y, int x)
         }
 
         /* Known Wall */
-        if (shoot_hack != SHOOT_DISINTEGRATE)
+        if (!(flgs & PROJECT_DISI))
         {
             if ((c_ptr->info & CAVE_MARK) && !cave_have_flag_grid(c_ptr, FF_PROJECT)) break;
         }

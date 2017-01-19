@@ -3520,21 +3520,10 @@ bool target_able(int m_idx)
  */
 bool target_okay(void)
 {
-    /* Accept (projectable) stationary targets */
-    if (target_who < 0)
-    {
-        if ( in_bounds(target_row, target_col)
-          && projectable(py, px, target_row, target_col) )
-        {
-            return TRUE;
-        }
-        /* Position Targets are confusing. They should be dismissed when no longer valid. */
-        target_who = 0;
-        target_row = 0;
-        target_col = 0;
-        p_ptr->redraw |= PR_HEALTH_BARS;
-        return FALSE;
-    }
+    /* Accept stationary targets ... but cf move_player_effect
+     * in cmd1.c. We will dismiss a non-projectable positional
+     * target the next time the player moves. */
+    if (target_who < 0) return TRUE;
 
     /* Check moving targets */
     if (target_who > 0)
@@ -4489,7 +4478,7 @@ bool target_set(int mode)
             if ( !(mode & TARGET_LOOK)
               && !(mode & TARGET_MARK) )
             {
-                prt_path(y, x);
+                prt_path(y, x, (mode & TARGET_DISI) ? PROJECT_DISI : 0);
             }
 
             /* Access */
@@ -4734,7 +4723,7 @@ bool target_set(int mode)
             if ( !(mode & TARGET_LOOK)
               && !(mode & TARGET_MARK) )
             {
-                prt_path(y, x);
+                prt_path(y, x, (mode & TARGET_DISI) ? PROJECT_DISI : 0);
             }
 
             /* Access */
@@ -4959,7 +4948,8 @@ bool target_set(int mode)
  * Note that confusion over-rides any (explicit?) user choice.
  *
  */
-bool get_fire_dir(int *dp)
+bool get_fire_dir(int *dp) { return get_fire_dir_aux(dp, TARGET_KILL); }
+bool get_fire_dir_aux(int *dp, int target_mode)
 {
     bool valid_target = FALSE;
     if (use_old_target && target_okay())
@@ -4974,7 +4964,7 @@ bool get_fire_dir(int *dp)
             monster_type *m_ptr = &m_list[i];
             if (!m_ptr->r_idx) continue;
             if (!m_ptr->ml) continue;
-            if (!projectable(py, px, m_ptr->fy, m_ptr->fx)) continue;
+            if (target_mode != TARGET_DISI && !projectable(py, px, m_ptr->fy, m_ptr->fx)) continue;
             if (m_ptr->cdis < best_dis)
             {
                 best_dis = m_ptr->cdis;
@@ -4992,10 +4982,11 @@ bool get_fire_dir(int *dp)
         }
     }
     /* fall back on normal target selection */
-    return get_aim_dir(dp);
+    return get_aim_dir_aux(dp, target_mode);
 }
 
-bool get_aim_dir(int *dp)
+bool get_aim_dir(int *dp) { return get_aim_dir_aux(dp, TARGET_KILL); }
+bool get_aim_dir_aux(int *dp, int target_mode)
 {
     int        dir;
 
@@ -5070,7 +5061,7 @@ bool get_aim_dir(int *dp)
             case ' ':
             case '\r':
             {
-                if (target_set(TARGET_KILL)) dir = 5;
+                if (target_set(target_mode)) dir = 5;
                 break;
             }
 

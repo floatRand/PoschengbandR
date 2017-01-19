@@ -3716,8 +3716,12 @@ bool fire_ball_aux(int typ, int dir, int dam, int rad, int xtra_flgs)
     tx = px + 99 * ddx[dir];
     ty = py + 99 * ddy[dir];
 
-    /* Hack -- Use an actual "target" */
-    if ((dir == 5) && target_okay())
+    /* Hack -- Use an actual "target"
+     * Note: target_okay() will check target_able() which requires projectable() 
+     * This requirement is *wrong* in certain situations (e.g. Breathe Disintegration) 
+     * but it is unclear how to best communicate that fact. However, what would we do
+     * at this point anyway? Project() at the players feet? That is just silly ... */
+    if (dir == 5 /* && target_okay() */)
     {
         flg &= ~(PROJECT_STOP);
         tx = target_col;
@@ -3939,8 +3943,12 @@ bool project_hook(int typ, int dir, int dam, int flg)
     tx = px + ddx[dir];
     ty = py + ddy[dir];
 
-    /* Hack -- Use an actual "target" */
-    if ((dir == 5) && target_okay())
+    /* Hack -- Use an actual "target"
+     * Note: target_okay() will check target_able() which requires projectable() 
+     * This requirement is *wrong* in certain situations (e.g. Beam of Disintegration) 
+     * but it is unclear how to best communicate that fact. However, what would we do
+     * at this point anyway? Project() at the players feet? That is just silly ... */
+    if (dir == 5 /*&& target_okay()*/)
     {
         tx = target_col;
         ty = target_row;

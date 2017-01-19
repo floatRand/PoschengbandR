@@ -9366,7 +9366,7 @@ static cptr do_armageddon_spell(int spell, int mode)
 
             if (cast)
             {
-                if (!get_fire_dir(&dir)) return NULL;
+                if (!get_fire_dir_aux(&dir, TARGET_DISI)) return NULL;
                 fire_ball(GF_DISINTEGRATE, dir, dam, rad);
             }
         }

@@ -667,7 +667,7 @@ extern void note_spot(int y, int x);
 extern void display_dungeon(void);
 extern void lite_spot(int y, int x);
 extern void prt_map(void);
-extern void prt_path(int y, int x);
+extern void prt_path(int y, int x, int xtra_flgs);
 extern void display_map(int *cy, int *cx);
 extern void do_cmd_view_map(void);
 extern void forget_lite(void);
@@ -1892,6 +1892,8 @@ extern bool target_set(int mode);
  * and stone to mud. */
 extern bool get_fire_dir(int *dp);
 extern bool get_aim_dir(int *dp);
+extern bool get_fire_dir_aux(int *dp, int target_mode);
+extern bool get_aim_dir_aux(int *dp, int target_mode);
 
 extern bool get_hack_dir(int *dp);
 extern bool get_rep_dir(int *dp, bool under);
