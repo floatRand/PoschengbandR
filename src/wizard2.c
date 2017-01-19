@@ -2702,11 +2702,10 @@ void do_cmd_debug(void)
     }
     case ';':
     {
-        object_type forge;
-        object_prep(&forge, lookup_kind(TV_WAND, SV_ANY));
-        if (device_init_fixed(&forge, EFFECT_WALL_BUILDING))
-            py_birth_obj(&forge);
-        /*py_display();*/
+        int dummy;
+        for (dummy = 0; dummy < randint1(5) + 1; dummy++)
+            summon_specific(0, py, px, dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
+        /*activate_hi_summon(py, px, FALSE);*/
         break;
     }
     default:
