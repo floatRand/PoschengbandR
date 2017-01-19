@@ -71,6 +71,10 @@ int py_birth(void)
 {
     int result = UI_OK;
 
+    /* Windows is not setting a player name for new files */
+    if (0 == strlen(player_name))
+        strcpy(player_name, "PLAYER");
+
     assert(!_doc);
     _doc = doc_alloc(80);
 
@@ -173,6 +177,7 @@ void py_birth_spellbooks(void)
  * Welcome to Poschengband!
  ***********************************************************************/ 
 static void _set_mode(int mode);
+static bool _stats_changed = FALSE;
 
 static int _welcome_ui(void)
 {
@@ -242,6 +247,7 @@ static int _welcome_ui(void)
                 p_ptr->stat_cur[i] = previous_char.stat_max[i];
                 p_ptr->stat_max[i] = previous_char.stat_max[i];
             }
+            _stats_changed = TRUE; /* block default stat allocation via _stats_init */
             if (_race_class_ui() == UI_OK)
                 return UI_OK;
         }
@@ -936,7 +942,7 @@ static _class_group_t _class_groups[_MAX_CLASS_GROUPS] = {
     { "Mind", {CLASS_MINDCRAFTER, CLASS_MIRROR_MASTER, CLASS_PSION,
                     CLASS_TIME_LORD, CLASS_WARLOCK, -1} },
     { "Other", {CLASS_ARCHAEOLOGIST, CLASS_BARD, CLASS_IMITATOR, CLASS_RAGE_MAGE,
-                    CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
+                    CLASS_SKILLMASTER, CLASS_TOURIST, CLASS_WILD_TALENT, -1} },
 };
 
 static void _class_group_ui(void)
@@ -1774,7 +1780,6 @@ static int _stats_score(void);
 static void _stat_dec(int which);
 static void _stat_inc(int which);
 static cptr _stat_desc(int stat);
-static bool _stats_changed = FALSE;
 
 static cptr _stat_names[MAX_STATS] = { "STR", "INT", "WIS", "DEX", "CON", "CHR" };
 static char _stat_to_char(int which);
@@ -2151,7 +2156,7 @@ static void _stat_inc(int which)
     _stats_changed = TRUE;
 }
 
-static int _stats_score()
+static int _stats_score(void)
 {
     int i, score = 0;
 
@@ -2548,6 +2553,14 @@ static void _birth_finalize(void)
     p_ptr->expfact = calc_exp_factor();
 
     mp_ptr = &m_info[p_ptr->pclass];
+    /* Hack ... external files always make easy stuff hard ... Burglary is natural for rogues!!!*/
+    if (p_ptr->pclass == CLASS_ROGUE)
+    {
+        if (p_ptr->realm1 == REALM_BURGLARY)
+            mp_ptr->spell_first = 1;
+        else
+            mp_ptr->spell_first = 5;
+    }
 
     /* Rest Up to Max HP and SP */
     p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;

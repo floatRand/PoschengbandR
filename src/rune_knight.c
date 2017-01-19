@@ -1133,7 +1133,6 @@ static caster_info * _caster_info(void)
         me.magic_desc = "rune";
         me.options = CASTER_USE_HP;
         me.which_stat = A_STR;
-        me.weight = 1000;
         init = TRUE;
     }
     return &me;
@@ -1178,6 +1177,7 @@ class_t *rune_knight_get_class(void)
         me.base_hp = 6;
         me.exp = 150;
         me.pets = 35;
+        me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG;
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

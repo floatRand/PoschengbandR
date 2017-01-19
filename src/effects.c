@@ -6869,7 +6869,7 @@ bool set_tim_dark_stalker(int v, bool do_dec)
         }
         else
         {
-            if (p_ptr->pclass == CLASS_ROGUE)
+            if (p_ptr->pclass == CLASS_ROGUE || p_ptr->pclass == CLASS_SKILLMASTER)
                 msg_print("You begin to tread softly.");
             else if (p_ptr->pclass == CLASS_NECROMANCER)
                 msg_print("You are cloaked in darkness.");
@@ -6883,7 +6883,7 @@ bool set_tim_dark_stalker(int v, bool do_dec)
     {
         if (p_ptr->tim_dark_stalker)
         {
-            if (p_ptr->pclass == CLASS_ROGUE)
+            if (p_ptr->pclass == CLASS_ROGUE || p_ptr->pclass == CLASS_SKILLMASTER)
                 msg_print("You no longer tread softly.");
             else if (p_ptr->pclass == CLASS_NECROMANCER)
                 msg_print("You are no longer cloaked in darkness.");
@@ -7125,7 +7125,10 @@ bool set_tim_inven_prot(int v, bool do_dec)
         }
         else
         {
-            msg_print("You feel your loot is safe.");
+            if (p_ptr->pclass == CLASS_ROGUE)
+                msg_print("You feel your loot is safe.");
+            else
+                msg_print("Your inventory seems safer now.");
             notice = TRUE;
         }
     }
@@ -7134,7 +7137,10 @@ bool set_tim_inven_prot(int v, bool do_dec)
     {
         if (p_ptr->tim_inven_prot)
         {
-            msg_print("Your loot feels exposed once again.");
+            if (p_ptr->pclass == CLASS_ROGUE)
+                msg_print("Your loot feels exposed once again.");
+            else
+                msg_print("Your inventory is no longer protected.");
             notice = TRUE;
         }
     }
