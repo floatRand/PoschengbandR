@@ -3485,7 +3485,8 @@ void ang_sort(vptr u, vptr v, int n)
  * Future versions may restrict the ability to target "trappers"
  * and "mimics", but the semantics is a little bit weird.
  */
-bool target_able(int m_idx)
+bool target_able(int m_idx) { return target_able_aux(m_idx, TARGET_KILL); }
+bool target_able_aux(int m_idx, int mode)
 {
     monster_type *m_ptr = &m_list[m_idx];
 
@@ -3501,7 +3502,7 @@ bool target_able(int m_idx)
     if (p_ptr->riding && (p_ptr->riding == m_idx)) return (TRUE);
 
     /* Monster must be projectable */
-    if (!projectable(py, px, m_ptr->fy, m_ptr->fx)) return (FALSE);
+    if (mode != TARGET_DISI && !projectable(py, px, m_ptr->fy, m_ptr->fx)) return (FALSE);
 
     /* XXX XXX XXX Hack -- Never target trappers */
     /* if (CLEAR_ATTR && (CLEAR_CHAR)) return (FALSE); */
@@ -3510,15 +3511,13 @@ bool target_able(int m_idx)
     return (TRUE);
 }
 
-
-
-
 /*
  * Update (if necessary) and verify (if possible) the target.
  *
  * We return TRUE if the target is "okay" and FALSE otherwise.
  */
-bool target_okay(void)
+bool target_okay(void) { return target_okay_aux(TARGET_KILL); }
+bool target_okay_aux(int mode)
 {
     /* Accept stationary targets ... but cf move_player_effect
      * in cmd1.c. We will dismiss a non-projectable positional
@@ -3529,7 +3528,7 @@ bool target_okay(void)
     if (target_who > 0)
     {
         /* Accept reasonable targets */
-        if (target_able(target_who))
+        if (target_able_aux(target_who, mode))
         {
             monster_type *m_ptr = &m_list[target_who];
 
@@ -4952,7 +4951,7 @@ bool get_fire_dir(int *dp) { return get_fire_dir_aux(dp, TARGET_KILL); }
 bool get_fire_dir_aux(int *dp, int target_mode)
 {
     bool valid_target = FALSE;
-    if (use_old_target && target_okay())
+    if (use_old_target && target_okay_aux(target_mode))
         valid_target = TRUE;
     /* auto_target the closest monster if no valid target is selected up front */
     if (!valid_target && auto_target && !p_ptr->confused && !p_ptr->image)
@@ -5001,7 +5000,7 @@ bool get_aim_dir_aux(int *dp, int target_mode)
     dir = command_dir;
 
     /* Hack -- auto-target if requested */
-    if (use_old_target && target_okay()) dir = 5;
+    if (use_old_target && target_okay_aux(target_mode)) dir = 5;
 
 #ifdef ALLOW_REPEAT /* TNB */
 
@@ -5010,7 +5009,7 @@ bool get_aim_dir_aux(int *dp, int target_mode)
         /* Confusion? */
 
         /* Verify */
-        if (!(*dp == 5 && !target_okay()))
+        if (!(*dp == 5 && !target_okay_aux(target_mode)))
         {
 /*            return (TRUE); */
             dir = *dp;
@@ -5023,7 +5022,7 @@ bool get_aim_dir_aux(int *dp, int target_mode)
     while (!dir)
     {
         /* Choose a prompt */
-        if (!target_okay())
+        if (!target_okay_aux(target_mode))
         {
             p = "Direction ('*' to choose a target, Escape to cancel)? ";
 
@@ -5075,7 +5074,7 @@ bool get_aim_dir_aux(int *dp, int target_mode)
         }
 
         /* Verify requested targets */
-        if ((dir == 5) && !target_okay()) dir = 0;
+        if ((dir == 5) && !target_okay_aux(target_mode)) dir = 0;
 
         /* Error */
         if (!dir) bell();

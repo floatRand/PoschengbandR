@@ -1884,6 +1884,8 @@ extern void ang_sort_aux(vptr u, vptr v, int p, int q);
 extern void ang_sort(vptr u, vptr v, int n);
 extern bool target_able(int m_idx);
 extern bool target_okay(void);
+extern bool target_able_aux(int m_idx, int mode);
+extern bool target_okay_aux(int mode);
 extern bool target_set(int mode);
 
 /* get_fire_dir will attempt to auto_target (if set) and should be used
