@@ -247,9 +247,12 @@ static void _scroll_cave(int dx, int dy)
 {
     int x, y, i;
 
-#if 0
-    msg_format("Scoll Cave (%d,%d)", dx, dy);
-    msg_boundary();
+#if 1
+    if (p_ptr->wizard)
+    {
+        cmsg_format(TERM_VIOLET, "Scoll Cave (%d,%d)", dx, dy);
+        msg_boundary();
+    }
 #endif
 
     if (dy == 0 && dx == 0)
@@ -401,16 +404,23 @@ void wilderness_move_player(int old_x, int old_y)
     if (qy == 0)
         dy = -1;
 
-#if 0
+#if 1
     /* Because I am so easily confused :( */
-    c_put_str(TERM_WHITE, format("P:%3d/%3d", px, py), 26, 0);
-    c_put_str(TERM_WHITE, format("W:%3d/%3d", p_ptr->wilderness_x, p_ptr->wilderness_y), 27, 0);
-    c_put_str(TERM_WHITE, format("D:%3d/%3d", p_ptr->wilderness_dx, p_ptr->wilderness_dy), 28, 0);
-    c_put_str(TERM_WHITE, format("O:%3d/%3d", old_qx, old_qy), 29, 0);
-    c_put_str(TERM_WHITE, format("Q:%3d/%3d", qx, qy), 30, 0);
-    c_put_str(TERM_WHITE, format("S:%3d/%3d", dx, dy), 31, 0);
-    c_put_str(TERM_WHITE, format("L:%3d", wilderness_level(p_ptr->wilderness_x, p_ptr->wilderness_y)), 32, 0);
-    c_put_str(TERM_WHITE, format("T:%3d", p_ptr->town_num), 33, 0);
+    if (p_ptr->wizard)
+    {
+        rect_t r = ui_char_info_rect();
+        int    row = r.y + r.cy - 11;
+        int    col = r.x;
+
+        c_put_str(TERM_WHITE, format("P:%3d/%3d", px, py), row++, col);
+        c_put_str(TERM_WHITE, format("W:%3d/%3d", p_ptr->wilderness_x, p_ptr->wilderness_y), row++, col);
+        c_put_str(TERM_WHITE, format("D:%3d/%3d", p_ptr->wilderness_dx, p_ptr->wilderness_dy), row++, col);
+        c_put_str(TERM_WHITE, format("O:%3d/%3d", old_qx, old_qy), row++, col);
+        c_put_str(TERM_WHITE, format("Q:%3d/%3d", qx, qy), row++, col);
+        c_put_str(TERM_WHITE, format("S:%3d/%3d", dx, dy), row++, col);
+        c_put_str(TERM_WHITE, format("L:%3d", wilderness_level(p_ptr->wilderness_x, p_ptr->wilderness_y)), row++, col);
+        c_put_str(TERM_WHITE, format("T:%3d", p_ptr->town_num), row++, col);
+    }
 #endif
 
     if (!dx && !dy)
