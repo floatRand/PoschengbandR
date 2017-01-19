@@ -2540,6 +2540,10 @@ static void _birth_finalize(void)
 
     p_ptr->au = randint1(600) + randint1(100) + 100;
 
+    /* Everybody gets a chaos patron. The chaos warrior is obvious,
+     * but anybody else can acquire MUT_CHAOS_GIFT during the game */
+    p_ptr->chaos_patron = randint0(MAX_PATRON);
+
     get_max_stats();
     do_cmd_rerate_aux();
 
