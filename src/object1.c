@@ -474,8 +474,8 @@ void obj_identify_fully(object_type *o_ptr)
 {
     assert(o_ptr);
     if (!obj_is_identified(o_ptr))
-        _obj_identify_aux(o_ptr);    /* v~~~~Store items have no 'unknown' flags */
-    if (!obj_is_identified_fully(o_ptr) || (o_ptr->ident & IDENT_STORE))
+        _obj_identify_aux(o_ptr);
+    if (!obj_is_identified_fully(o_ptr))
         _obj_identify_fully_aux(o_ptr);
     else
         _obj_learn_curses(o_ptr);

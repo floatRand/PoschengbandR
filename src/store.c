@@ -1510,10 +1510,9 @@ static void store_create(void)
     {
         if (!_get_store_obj(&forge)) continue;
 
-        /* The item is "known" */
-        obj_identify(&forge);
-
-        /* Mark it storebought */
+        /* Mark it storebought ... Note: do not obj_identify() yet as
+         * this will learn the flavor. IDENT_STORE is a globally respected
+         * hack to make the object seem fully known. */
         forge.ident |= IDENT_STORE;
 
         /* Mega-Hack -- no chests in stores */
@@ -2595,8 +2594,8 @@ static void store_examine(void)
     /* Get the actual item */
     o_ptr = &st_ptr->stock[item];
 
-    if (cur_store_num != STORE_HOME)
-        obj_identify_fully(o_ptr);
+    /* do not obj_identify_fully() as this would leak lore.
+     * IDENT_STORE will make the object display correctly. */
     obj_display(o_ptr);
     return;
 }
