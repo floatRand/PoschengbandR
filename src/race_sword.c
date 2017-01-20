@@ -545,11 +545,30 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     if (_essences[OF_TELEPATHY] >= 2)
         add_flag(flgs, OF_TELEPATHY);
 
-    for (i = OF_ESP_ANIMAL; i <= OF_ESP_UNIQUE; i++)
-    {
-        if (_essences[i] >= 2)
-            add_flag(flgs, i);
-    }
+    if (_essences[OF_ESP_EVIL] >= 2)
+        add_flag(flgs, OF_ESP_EVIL);
+    if (_essences[OF_ESP_GOOD] >= 2)
+        add_flag(flgs, OF_ESP_GOOD);
+    if (_essences[OF_ESP_NONLIVING] >= 2)
+        add_flag(flgs, OF_ESP_NONLIVING);
+    if (_essences[OF_ESP_UNIQUE] >= 2)
+        add_flag(flgs, OF_ESP_UNIQUE);
+    if (_essences[OF_ESP_DRAGON] >= 2)
+        add_flag(flgs, OF_ESP_DRAGON);
+    if (_essences[OF_ESP_DEMON] >= 2)
+        add_flag(flgs, OF_ESP_DEMON);
+    if (_essences[OF_ESP_UNDEAD] >= 2)
+        add_flag(flgs, OF_ESP_UNDEAD);
+    if (_essences[OF_ESP_ANIMAL] >= 2)
+        add_flag(flgs, OF_ESP_ANIMAL);
+    if (_essences[OF_ESP_HUMAN] >= 2)
+        add_flag(flgs, OF_ESP_HUMAN);
+    if (_essences[OF_ESP_ORC] >= 2)
+        add_flag(flgs, OF_ESP_ORC);
+    if (_essences[OF_ESP_TROLL] >= 2)
+        add_flag(flgs, OF_ESP_TROLL);
+    if (_essences[OF_ESP_GIANT] >= 2)
+        add_flag(flgs, OF_ESP_GIANT);
 
     if (_essences[OF_NO_MAGIC] >= 5)
         add_flag(flgs, OF_NO_MAGIC);
