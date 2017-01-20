@@ -124,19 +124,32 @@ extern void py_birth_obj(object_type *o_ptr)
     if (p_ptr->prace == RACE_ANDROID && object_is_body_armour(o_ptr))
         return;
 
-    /* Big hack for sexy players ... only get one melee weapon */
-    if ( p_ptr->personality == PERS_SEXY
-      && object_is_melee_weapon(o_ptr)
-      && !object_is_(o_ptr, TV_HAFTED, SV_WHIP) )
+    /* Weed out duplicate gear (e.g. Artemis Archer) but note
+     * that centipedes start with duplicate boots (so allow
+     * multiple objects provided they can also be equipped) */
+    if ( object_is_wearable(o_ptr)
+      && o_ptr->number == 1
+      && p_ptr->prace != RACE_MON_RING /* Hack: Ring cannot wear rings, but can absorb them for powers */
+      && equip_find_object(o_ptr->tval, o_ptr->sval)
+      && !equip_first_empty_slot(o_ptr) ) /* Hack: Centipede gets multiple boots */
     {
         return;
     }
 
-    /* Weed out duplicate gear (e.g. Artemis Archer) */
-    if (object_is_wearable(o_ptr) && o_ptr->number == 1 && equip_find_object(o_ptr->tval, o_ptr->sval))
-        return;
-
     obj_identify_fully(o_ptr);
+
+    /* Big hack for sexy players ... only wield the starting whip,
+     * but carry the alternate weapon. Previously, sexy characters
+     * would usually start off dual-wielding (ineffectual and confusing)*/
+    if ( p_ptr->personality == PERS_SEXY
+      && p_ptr->prace != RACE_MON_SWORD
+      && object_is_melee_weapon(o_ptr)
+      && !object_is_(o_ptr, TV_HAFTED, SV_WHIP) )
+    {
+        slot = inven_carry(o_ptr);
+        autopick_alter_item(slot, FALSE);
+        return;
+    }
 
     slot = equip_first_empty_slot(o_ptr);
     if (slot && o_ptr->number == 1)
