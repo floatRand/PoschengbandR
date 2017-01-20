@@ -1899,7 +1899,9 @@ extern bool get_fire_dir_aux(int *dp, int target_mode);
 extern bool get_aim_dir_aux(int *dp, int target_mode);
 
 extern bool get_hack_dir(int *dp);
-extern bool get_rep_dir(int *dp, bool under);
+#define GET_DIR_OK 1
+#define GET_DIR_RANDOM 2
+extern int get_rep_dir(int *dp, bool under);
 extern bool get_rep_dir2(int *dp);
 extern bool tgt_pt (int *x, int *y, int rng);
 extern void do_poly_wounds(void);

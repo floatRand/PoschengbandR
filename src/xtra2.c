@@ -5138,8 +5138,9 @@ bool get_aim_dir_aux(int *dp, int target_mode)
  * This function tracks and uses the "global direction", and uses
  * that as the "desired direction", to which "confusion" is applied.
  */
-bool get_rep_dir(int *dp, bool under)
+int get_rep_dir(int *dp, bool under)
 {
+    int result = GET_DIR_OK;
     int dir;
 
     /* Initialize */
@@ -5230,10 +5231,7 @@ bool get_rep_dir(int *dp, bool under)
     if (command_dir != dir)
     {
         if (p_ptr->confused)
-        {
-            /* Warn the user */
             msg_print("You are confused.");
-        }
         else if (p_ptr->move_random)
             cmsg_print(TERM_YELLOW, "You are moving erratically.");
         else
@@ -5243,15 +5241,12 @@ bool get_rep_dir(int *dp, bool under)
 
             monster_desc(m_name, m_ptr, 0);
             if (MON_CONFUSED(m_ptr))
-            {
- msg_format("%^s is confusing.", m_name);
-
-            }
+                msg_format("%^s is confused.", m_name);
             else
-            {
-msg_format("You cannot control %s.", m_name);
-            }
+                msg_format("You cannot control %s.", m_name);
         }
+        /* Block running in random directions */
+        result = GET_DIR_RANDOM;
     }
 
     /* Save direction */
@@ -5265,7 +5260,7 @@ msg_format("You cannot control %s.", m_name);
 #endif /* ALLOW_REPEAT -- TNB */
 
     /* Success */
-    return (TRUE);
+    return result;
 }
 
 

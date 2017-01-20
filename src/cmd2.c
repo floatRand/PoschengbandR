@@ -2357,6 +2357,36 @@ void do_cmd_spike(void)
 /*
  * Support code for the "Walk" and "Jump" commands
  */
+static void do_cmd_walk_aux(int dir, bool pickup)
+{
+    /* Take a turn */
+    energy_use = 100;
+
+    if ((dir != 5) && (p_ptr->special_defense & KATA_MUSOU))
+    {
+        set_action(ACTION_NONE);
+    }
+
+    /* Hack -- In small scale wilderness it takes MUCH more time to move */
+    if (p_ptr->wild_mode) energy_use *= ((MAX_HGT + MAX_WID) / 2);
+
+    if (p_ptr->action == ACTION_QUICK_WALK) energy_use = energy_use * (45-(p_ptr->lev/2)) / 100;
+    if (p_ptr->action == ACTION_STALK) energy_use = energy_use * (175 - p_ptr->lev) / 100;
+    if (weaponmaster_get_toggle() == TOGGLE_SHADOW_STANCE)
+        energy_use = energy_use * (45-(p_ptr->lev/2)) / 100;
+
+    if (!p_ptr->wild_mode && p_ptr->tim_shrike)
+        energy_use /= 3;
+    else if (p_ptr->quick_walk)
+        energy_use = energy_use * 60 / 100;
+
+    if (prace_is_(RACE_MON_GOLEM))
+        energy_use *= 2;
+
+    /* Actually move the character */
+    move_player(dir, pickup, FALSE);
+
+}
 void do_cmd_walk(bool pickup)
 {
     int dir;
@@ -2380,34 +2410,7 @@ void do_cmd_walk(bool pickup)
     /* Get a "repeated" direction */
     if (get_rep_dir(&dir,FALSE))
     {
-        /* Take a turn */
-        energy_use = 100;
-
-        if ((dir != 5) && (p_ptr->special_defense & KATA_MUSOU))
-        {
-            set_action(ACTION_NONE);
-        }
-
-        /* Hack -- In small scale wilderness it takes MUCH more time to move */
-        if (p_ptr->wild_mode) energy_use *= ((MAX_HGT + MAX_WID) / 2);
-
-        if (p_ptr->action == ACTION_QUICK_WALK) energy_use = energy_use * (45-(p_ptr->lev/2)) / 100;
-        if (p_ptr->action == ACTION_STALK) energy_use = energy_use * (175 - p_ptr->lev) / 100;
-        if (weaponmaster_get_toggle() == TOGGLE_SHADOW_STANCE)
-            energy_use = energy_use * (45-(p_ptr->lev/2)) / 100;
-
-        if (!p_ptr->wild_mode && p_ptr->tim_shrike)
-            energy_use /= 3;
-        else if (p_ptr->quick_walk)
-            energy_use = energy_use * 60 / 100;
-
-        if (prace_is_(RACE_MON_GOLEM))
-            energy_use *= 2;
-
-        /* Actually move the character */
-        move_player(dir, pickup, FALSE);
-
-        /* Allow more walking */
+        do_cmd_walk_aux(dir, pickup);
         more = TRUE;
     }
 
@@ -2422,10 +2425,6 @@ void do_cmd_walk(bool pickup)
 
         if (!is_daytime())
             tmp /= 2;
-
-#if 0
-        msg_format("Ambush=%.2f%%", (double)(21 - p_ptr->skills.stl) * 100.0/(double)tmp);
-#endif
 
         if ( lvl + 5 > p_ptr->lev / 2
           && randint0(tmp) < 21 - p_ptr->skills.stl )
@@ -2450,36 +2449,27 @@ void do_cmd_walk(bool pickup)
     if (!more) disturb(0, 0);
 }
 
-
-
 /*
- * Start running.
+ * Start running. For confused or randomly moving
+ * players, we disallow running in a random direction.
+ * They will simply stumble a single step instead.
  */
 void do_cmd_run(void)
 {
     int dir;
 
-    /* Hack -- no running when confused */
-    if (p_ptr->confused)
-    {
-        msg_print("You are too confused!");
-
-        return;
-    }
-
     if (p_ptr->special_defense & KATA_MUSOU)
-    {
         set_action(ACTION_NONE);
-    }
 
-    /* Get a "repeated" direction */
-    if (get_rep_dir(&dir,FALSE))
+    switch (get_rep_dir(&dir,FALSE))
     {
-        /* Hack -- Set the run counter */
+    case GET_DIR_OK:
         running = (command_arg ? command_arg : 1000);
-
-        /* First step */
         run_step(dir);
+        break;
+    case GET_DIR_RANDOM:
+        do_cmd_walk_aux(dir, FALSE);
+        break;
     }
 }
 
