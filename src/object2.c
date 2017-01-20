@@ -1212,7 +1212,7 @@ s32b obj_value_real(object_type *o_ptr)
 s32b obj_value(object_type *o_ptr)
 {
     s32b value;
-    if (object_is_known(o_ptr))
+    if (object_is_known(o_ptr) || (o_ptr->ident & IDENT_STORE))
     {
         /* Identify now reveals accurate object scoring. The purpose of this
            is to assist the user in determining when to *Id* and object, or,
