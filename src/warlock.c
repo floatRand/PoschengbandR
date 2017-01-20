@@ -1939,7 +1939,13 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
+    if (p_ptr->psubclass == WARLOCK_GIANTS)
+    {
+        skills_weapon_init(TV_SWORD, SV_CLAYMORE, WEAPON_EXP_BEGINNER);
+        py_birth_obj_aux(TV_SWORD, SV_CLAYMORE, 1);
+    }
+    else
+        py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
 }

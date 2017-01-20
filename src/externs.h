@@ -2595,6 +2595,7 @@ extern void skills_bow_gain(int sval);
 extern int skills_weapon_current(int tval, int sval);
 extern int skills_weapon_max(int tval, int sval);
 extern void skills_weapon_gain(int tval, int sval);
+extern void skills_weapon_init(int tval, int sval, int skill);
 extern bool skills_weapon_is_icky(int tval, int sval);
 extern int skills_weapon_calc_bonus(int tval, int sval);
 extern cptr skills_weapon_describe_current(int tval, int sval);

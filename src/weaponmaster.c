@@ -3309,6 +3309,8 @@ void _on_birth(void)
             py_birth_obj(&forge);
             break;
         }
+        object_prep(&forge, lookup_kind(TV_SWORD, SV_DAGGER));
+        py_birth_obj(&forge);
     }
 
     for (i = 0; i < _MAX_OBJECTS_PER_SPECIALITY; i++)
