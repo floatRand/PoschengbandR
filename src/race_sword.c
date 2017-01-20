@@ -356,7 +356,10 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
         int j = _slay_flag_info[i].flag;
         if (j < 0) break;
         if (_essences[j] >= _slay_power(i))
+        {
             add_flag(o_ptr->flags, j);
+            add_flag(o_ptr->known_flags, j);
+        }
     }
 
     info_ptr->xtra_blow += blows * _blows_mult();
