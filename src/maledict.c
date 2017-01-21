@@ -669,7 +669,9 @@ static caster_info * _caster_info(void)
 	{
 		me.magic_desc = "malison";
 		me.which_stat = A_CHR;
-		me.weight = 4000;
+		me.encumbrance.max_wgt = 4000;
+		me.encumbrance.weapon_pct = 20;
+		me.encumbrance.enc_wgt = 1200;
 		me.min_fail = 5;
 		init = TRUE;
 	}
@@ -721,6 +723,10 @@ class_t *maledict_get_class(void)
 		me.get_spells = _get_spells;
 		me.get_powers = _get_powers;
 		me.birth = _birth;
+
+		me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG |
+			CLASS_SENSE2_STRONG;
+
 		init = TRUE;
 	}
 

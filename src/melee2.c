@@ -2424,7 +2424,7 @@ static void process_monster(int m_idx)
         (void)set_monster_csleep(m_idx, 0);
 
         /* Notice the "waking up" */
-        if (m_ptr->ml)
+        if (m_ptr->ml && disturb_minor)
         {
             char m_name[80];
 
@@ -4396,7 +4396,7 @@ static void process_monsters_mtimed_aux(int m_idx, int mtimed_idx)
                 else
                 {
                     /* Notice the "waking up" */
-                    if (m_ptr->ml)
+                    if (m_ptr->ml && disturb_minor)
                     {
                         char m_name[80];
 

@@ -165,6 +165,9 @@ class_t *result = NULL;
     case CLASS_SCOUT:
         result = scout_get_class();
         break;
+    case CLASS_SKILLMASTER:
+        result = skillmaster_get_class();
+        break;
     case CLASS_SNIPER:
         result = sniper_get_class();
         break;
@@ -201,9 +204,11 @@ class_t *result = NULL;
 	case CLASS_MALEDICT:
 		result = maledict_get_class();
 		break;
+		/*
 	case CLASS_FREELANCER:
 		result = freelancer_get_class();
 		break;
+		*/
     case CLASS_YELLOW_MAGE:
         result = yellow_mage_get_class();
         break;

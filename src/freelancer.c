@@ -1,3 +1,4 @@
+/* Bye freelancer :_: */
 #include "angband.h"
 #include "assert.h"
 
@@ -929,9 +930,9 @@ int _calc_max_ma_skill(int lv){
 	return WEAPON_EXP_UNSKILLED;
 }
 
-int freelancer_ma_lev(void){ 
-	if (p_ptr->pclass != CLASS_FREELANCER) return -1;
-	return fl_GetProfLevel(_FL_LEARN_MARTIAL_ARTS, 0); }
+//int freelancer_ma_lev(void){ 
+//	if (p_ptr->pclass != CLASS_FREELANCER) return -1;
+//	return fl_GetProfLevel(_FL_LEARN_MARTIAL_ARTS, 0); }
 
 void freelancer_adjust_wpn_skills(void){
 
@@ -1084,7 +1085,7 @@ static caster_info* _caster_info(void)
 		me.magic_desc = "spell";
 		init = TRUE;
 	}
-	me.weight = 430 + fl_GetProfLevel(_FL_F_HEAVY_ARMOR_CASTING,0) * 200;
+//	me.weight = 430 + fl_GetProfLevel(_FL_F_HEAVY_ARMOR_CASTING,0) * 200;
 	me.which_stat = freelancer_key_stat();
 	me.options = CASTER_ALLOW_DEC_MANA;
 	if (fl_GetProfLevel(_FL_F_HEAVY_ARMOR_CASTING, 0)>=1) me.options |= CASTER_GLOVE_ENCUMBRANCE; // allow gloves with armour

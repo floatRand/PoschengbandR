@@ -4058,9 +4058,8 @@ void place_object(int y, int x, u32b mode)
  */
 bool make_gold(object_type *j_ptr, bool do_boost)
 {
-	int i;
-	int au;
 
+    int i, au;
     s32b base;
 
 
@@ -4090,13 +4089,13 @@ bool make_gold(object_type *j_ptr, bool do_boost)
 	au = au * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;
 
     /* Determine how much the treasure is "worth" */
+    au = (base + (8 * randint1(base)) + randint1(8));
+    au = au * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;
     if (do_boost)
-      au += au * object_level / 7;
-
-	if (au > 30000) au = 30000; // hard cap, for now.
-
-	j_ptr->pval = au;
-
+        au += au * object_level / 7;
+    if (au > MAX_SHORT)
+        au = MAX_SHORT;
+    j_ptr->pval = au;
     /* Success */
     return (TRUE);
 }
@@ -4219,8 +4218,8 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
     if (!object_is_artifact(j_ptr) && (randint0(100) < chance))
     {
         /* Message */
-        msg_format("The %s disappear%s.",
-               o_name, (plural ? "" : "s"));
+        cmsg_format(TERM_RED, "The %s disappear%s.",
+               o_name, plural ? "" : "s");
 
 
         /* Debug */

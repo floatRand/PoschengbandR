@@ -742,13 +742,17 @@ bool check_book_realm(const byte book_tval, const byte book_sval)
         if (is_magic(tval2realm(book_tval)))
             return ((book_tval == TV_ARCANE_BOOK) || (book_sval < 2));
     }
-	else if (p_ptr->pclass == CLASS_FREELANCER)
+	/*else if (p_ptr->pclass == CLASS_FREELANCER)
 	{
 		return freelancer_get_realm_lev(tval2realm(book_tval)) > 0;
-	}
+	}*/
     else if (p_ptr->pclass == CLASS_GRAY_MAGE)
     {
         return gray_mage_is_allowed_book(book_tval, book_sval);
+    }
+    else if (p_ptr->pclass == CLASS_SKILLMASTER)
+    {
+        return skillmaster_is_allowed_book(book_tval, book_sval);
     }
     return (REALM1_BOOK == book_tval || REALM2_BOOK == book_tval);
 }
@@ -1885,7 +1889,7 @@ bool get_item(int *cp, cptr pmt, cptr str, int mode)
      * special INVEN_* codes are not ascii printable characters. */
     if (repeat_pull(cp))
     {
-        bool is_tag = command_cmd && isprint(*cp);
+        bool is_tag = command_cmd && *cp > 0 && *cp < 255 && isprint(*cp); /* Range checking required for Windows isprint */
 
         /* Hack: Distinguish between pushed tags and inventory[] indices
          * which may, after all, be valid ascii printable characters */

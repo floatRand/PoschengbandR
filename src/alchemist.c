@@ -1052,7 +1052,9 @@ static caster_info * _caster_info(void)
 	if (!init)
 	{
 		me.magic_desc = "alchemy";
-		me.weight = 1000;
+		me.encumbrance.max_wgt = 1000;
+		me.encumbrance.weapon_pct = 20;
+		me.encumbrance.enc_wgt = 1200;
 		init = TRUE;
 	}
 	me.which_stat = A_INT;
@@ -1140,6 +1142,10 @@ class_t *alchemist_get_class(void)
 		me.calc_bonuses = _calc_bonuses;
 		me.character_dump = _character_dump;
 		me.get_flags = _get_flags;
+
+		me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG |
+			CLASS_SENSE2_STRONG;
+
 		me.caster_info = _caster_info;
 		me.load_player = _load_player;
 		me.save_player = _save_player;

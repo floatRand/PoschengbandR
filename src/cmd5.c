@@ -101,7 +101,7 @@ static int get_spell(int *sn, cptr prompt, int sval, bool learned, int use_realm
     if (!okay) return (FALSE);
     if (((use_realm) != p_ptr->realm1) && ((use_realm) != p_ptr->realm2) 
 		&& !class_doesnt_study(p_ptr->pclass)) return FALSE;
-	if (p_ptr->pclass == CLASS_FREELANCER && freelancer_get_realm_lev(use_realm)<1) return FALSE;
+	//if (p_ptr->pclass == CLASS_FREELANCER && freelancer_get_realm_lev(use_realm)<1) return FALSE;
 	if (class_doesnt_study(p_ptr->pclass) && !is_magic(use_realm)) return FALSE;
     if ((p_ptr->pclass == CLASS_RED_MAGE) && ((use_realm) != REALM_ARCANE) && (sval > 1)) return FALSE;
 
@@ -1180,35 +1180,10 @@ void do_cmd_cast(void)
         if (caster_ptr && (caster_ptr->options & CASTER_USE_HP))
             take_hit(DAMAGE_USELIFE, need_mana, "concentrating too hard", -1);
 
-        switch (use_realm)
-        {
-        case REALM_LIFE:
-            if (randint1(100) < chance) virtue_add(VIRTUE_VITALITY, -1);
-            break;
-        case REALM_DEATH:
-        case REALM_NECROMANCY:
-            if (randint1(100) < chance) virtue_add(VIRTUE_UNLIFE, -1);
-            break;
-        case REALM_NATURE:
-            if (randint1(100) < chance) virtue_add(VIRTUE_NATURE, -1);
-            break;
-        case REALM_DAEMON:
-            if (randint1(100) < chance) virtue_add(VIRTUE_JUSTICE, 1);
-            break;
-        case REALM_CRUSADE:
-            if (randint1(100) < chance) virtue_add(VIRTUE_JUSTICE, -1);
-            break;
-        case REALM_HEX:
-            if (randint1(100) < chance) virtue_add(VIRTUE_COMPASSION, -1);
-            break;
-        default:
-            if (randint1(100) < chance) virtue_add(VIRTUE_KNOWLEDGE, -1);
-            break;
-        }
+        virtue_on_fail_spell(use_realm, chance);
 
         /* Failure casting may activate some side effect */
         do_spell(use_realm, spell, SPELL_FAIL);
-
 
         if ((o_ptr->tval == TV_CHAOS_BOOK) && (randint1(100) < spell))
         {
@@ -1236,8 +1211,6 @@ void do_cmd_cast(void)
             msg_print("An infernal sound echoed.");
             aggravate_monsters(0);
         }
-        if (randint1(100) >= chance)
-            virtue_add(VIRTUE_CHANCE,-1);
     }
 
     /* Process spell */
@@ -1266,9 +1239,6 @@ void do_cmd_cast(void)
             hack.fail = chance;
             (caster_ptr->on_cast)(&hack);
         }
-
-        if (randint1(100) < chance)
-            virtue_add(VIRTUE_CHANCE,1);
 
         /* A spell was cast */
         if (!(increment ?
@@ -1336,44 +1306,10 @@ void do_cmd_cast(void)
                 break;
             }
         }
-        switch (use_realm)
-        {
-        case REALM_LIFE:
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_TEMPERANCE, 1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_COMPASSION, 1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_VITALITY, 1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_DILIGENCE, 1);
-            break;
-        case REALM_DEATH:
-        case REALM_NECROMANCY:
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_UNLIFE, 1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_JUSTICE, -1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_FAITH, -1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_VITALITY, -1);
-            break;
-        case REALM_DAEMON:
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_JUSTICE, -1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_FAITH, -1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_HONOUR, -1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_TEMPERANCE, -1);
-            break;
-        case REALM_CRUSADE:
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_FAITH, 1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_JUSTICE, 1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_SACRIFICE, 1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_HONOUR, 1);
-            break;
-        case REALM_NATURE:
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_NATURE, 1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_HARMONY, 1);
-            break;
-        case REALM_HEX:
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_JUSTICE, -1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_FAITH, -1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_HONOUR, -1);
-            if (randint1(100 + p_ptr->lev) < need_mana) virtue_add(VIRTUE_COMPASSION, -1);
-            break;
-        }
+
+        virtue_on_cast_spell(spell, need_mana, chance);
+
+
         if (mp_ptr->spell_xtra & MAGIC_GAIN_EXP)
         {
             s16b cur_exp = p_ptr->spell_exp[(increment ? 32 : 0)+spell];

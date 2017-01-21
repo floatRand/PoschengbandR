@@ -822,6 +822,7 @@ static int _get_spells(spell_info* spells, int max)
 }
 static void _calc_bonuses(void)
 {
+    p_ptr->monk_lvl = p_ptr->lev;
     if (!heavy_armor())
     {
         p_ptr->pspeed += p_ptr->lev/10;
@@ -872,7 +873,10 @@ static caster_info * _caster_info_mind(void)
     {
         me.magic_desc = "mystic technique";
         me.which_stat = A_CHR;
-        me.weight = 350;
+        me.encumbrance.max_wgt = 350;
+        me.encumbrance.weapon_pct = 100;
+        me.encumbrance.enc_wgt = 800;
+        me.options = CASTER_SUPERCHARGE_MANA;
         init = TRUE;
     }
     return &me;
@@ -920,6 +924,8 @@ class_t *mystic_get_class(int subclass)
         me.base_hp = 4;
         me.exp = 130;
         me.pets = 35;
+        me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
+                   CLASS_SENSE2_SLOW | CLASS_SENSE2_STRONG;
 
         me.calc_bonuses = _calc_bonuses;
         me.get_flags = _get_flags;

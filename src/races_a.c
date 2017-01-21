@@ -1155,7 +1155,7 @@ static int _draconian_attack_level(void)
     case CLASS_WEAPONSMITH:
     case CLASS_ROGUE:
 	case CLASS_ALCHEMIST:
-	case CLASS_FREELANCER:
+	//case CLASS_FREELANCER:
         l = MAX(1, l * 105 / 100);
         break;
     case CLASS_PRIEST:
@@ -1168,6 +1168,7 @@ static int _draconian_attack_level(void)
     case CLASS_DEVICEMASTER:
     case CLASS_FORCETRAINER:
 	case CLASS_MALEDICT:
+    case CLASS_SKILLMASTER:
         /*l = MAX(1, l * 100 / 100);*/
         break;
     case CLASS_BARD:

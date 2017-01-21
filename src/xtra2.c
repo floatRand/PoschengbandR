@@ -5968,7 +5968,7 @@ int spell_exp_level(int spell_exp)
 }
 
 bool class_doesnt_study(int class_idx){
-	return (class_idx == CLASS_RED_MAGE || class_idx == CLASS_SORCERER || class_idx == CLASS_FREELANCER);	
+	return (class_idx == CLASS_RED_MAGE || class_idx == CLASS_SORCERER);	
 }
 
 /* Returns whetever resist teleportation. 0 doesn't resist, 1 is resist, 2 is immune, 3 is temp  */

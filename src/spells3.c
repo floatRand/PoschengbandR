@@ -3212,7 +3212,7 @@ s16b experience_of_spell(int spell, int use_realm)
 {
     if (p_ptr->pclass == CLASS_SORCERER) return SPELL_EXP_MASTER;
     else if (p_ptr->pclass == CLASS_RED_MAGE) return SPELL_EXP_SKILLED;
-	else if (p_ptr->pclass == CLASS_FREELANCER) return SPELL_EXP_SKILLED;
+	//else if (p_ptr->pclass == CLASS_FREELANCER) return SPELL_EXP_SKILLED;
     else if (use_realm == p_ptr->realm1) return p_ptr->spell_exp[spell];
     else if (use_realm == p_ptr->realm2) return p_ptr->spell_exp[spell + 32];
     else return 0;
@@ -3399,28 +3399,7 @@ s16b spell_chance(int spell, int use_realm)
     if (((p_ptr->pclass == CLASS_PRIEST) || (p_ptr->pclass == CLASS_SORCERER)) && p_ptr->weapon_info[1].icky_wield) chance += 25;
 
     chance = mod_spell_chance_1(chance, use_realm);
-
-    /* Goodness or evilness gives a penalty to failure rate */
-    {
-        int    penalty = 2;
-        if (caster_ptr && caster_ptr->which_stat == A_WIS)
-            penalty = 5;
-
-        switch (use_realm)
-        {
-        case REALM_NATURE:
-            if (p_ptr->align > 50 || p_ptr->align < -50) chance += penalty;
-            break;
-        case REALM_LIFE: case REALM_CRUSADE:
-            if (p_ptr->align < -20) chance += penalty;
-            if (p_ptr->align >= 50) chance -= penalty;
-            break;
-        case REALM_DEATH: case REALM_DAEMON: case REALM_HEX:
-            if (p_ptr->align > 20) chance += penalty;
-            if (p_ptr->align <= -50) chance -= penalty;
-            break;
-        }
-    }
+    chance = virtue_mod_spell_fail(use_realm, chance);
 
     /* Minimum failure rate */
     if (chance < minfail) chance = minfail;
@@ -3439,10 +3418,11 @@ s16b spell_chance(int spell, int use_realm)
         if (exp >= SPELL_EXP_EXPERT) chance--;
         if (exp >= SPELL_EXP_MASTER) chance--;
 
+		/*
 		if (p_ptr->pclass == CLASS_FREELANCER){ 
 			if (!freelancer_can_cast(use_realm,s_ptr)) chance = 100;
 			else chance-=freelancer_get_realm_lev(use_realm); 
-		}
+		}*/
     }
 
     /* Return the chance */
@@ -3486,9 +3466,11 @@ bool spell_okay(int spell, bool learned, bool study_pray, int use_realm, bool br
     }
 
 	// Freelancers cannot reach 41-50 spells without 2nd tier.
+	/*
 	if (p_ptr->pclass == CLASS_FREELANCER){
 		return freelancer_can_cast(use_realm, s_ptr);
 	}
+	*/
 
 	if (class_doesnt_study(p_ptr->pclass)) return TRUE;
 
@@ -3582,7 +3564,7 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
             if (!increment && (exp_level == EXP_LEVEL_MASTER)) max = TRUE;
             else if ((increment == 32) && (exp_level >= EXP_LEVEL_EXPERT)) max = TRUE;
             else if (s_ptr->slevel >= 99) max = TRUE;
-            else if ((p_ptr->pclass == CLASS_RED_MAGE || p_ptr->pclass == CLASS_FREELANCER) && (exp_level >= EXP_LEVEL_SKILLED)) max = TRUE;
+            else if ((p_ptr->pclass == CLASS_RED_MAGE) && (exp_level >= EXP_LEVEL_SKILLED)) max = TRUE;
 
             strncpy(ryakuji, exp_level_str[exp_level], 4);
             ryakuji[3] = ']';
@@ -3631,13 +3613,13 @@ void print_spells(int target_spell, byte *spells, int num, rect_t display, int u
 
                 line_attr = TERM_YELLOW;
             }
-			else if (p_ptr->pclass == CLASS_FREELANCER)
+			/*else if (p_ptr->pclass == CLASS_FREELANCER)
 			{
 				if (!freelancer_can_cast(use_realm, s_ptr)){
 					comment = "too difficult";
 					line_attr = TERM_L_DARK;
 				}
-			}
+			}*/
         }
         else if ((use_realm != p_ptr->realm1) && (use_realm != p_ptr->realm2))
         {

@@ -563,7 +563,9 @@ static caster_info * _caster_info(void)
 	{
 		me.magic_desc = "hunter trick";
 		me.which_stat = A_CHR;
-		me.weight = 800;
+		me.encumbrance.max_wgt = 800;
+		me.encumbrance.weapon_pct = 20;
+		me.encumbrance.enc_wgt = 1200;
 		me.min_fail = 0;
 		init = TRUE;
 	}
@@ -641,6 +643,10 @@ class_t *hunter_get_class(void)
 		me.get_powers = _get_powers;
 		me.save_player = _save_player;
 		me.load_player = _load_player;
+
+		me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG |
+			CLASS_SENSE2_STRONG;
+
 		init = TRUE;
 	}
 	return &me;

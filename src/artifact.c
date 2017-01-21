@@ -2068,10 +2068,11 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                 }
                 warrior_artifact_bias = 20;
                 break;
+				/*
 			case  CLASS_FREELANCER: 
 				artifact_bias = randint0(1000000);
 				warrior_artifact_bias = 20;
-				
+				*/
 				break;
             default:
                 artifact_bias = BIAS_WARRIOR;

@@ -401,80 +401,80 @@ static bool mon_hook_quest_nonunique(int r_idx)
 */
 void determine_random_questor(quest_type *q_ptr)
 {
-	int          r_idx;
-	monster_race *r_ptr;
-	int             attempt = 0;
-	bool         force_unique = FALSE;
-	bool         prevent_unique = FALSE;
+    int          r_idx = 0;
+    monster_race *r_ptr;
+    int             attempt = 0;
+    bool         force_unique = FALSE;
+    bool         prevent_unique = FALSE;
 
-	/* High Level quests are stacked with uniques. Everything else
-	is stacked the other way. So lets make some attempt at balance.
-	Of course, users can force all quests to be for uniques, in
-	true Hengband spirit. */
-	if (quest_unique || one_in_(3))
-	{
-		get_mon_num_prep(mon_hook_quest, mon_hook_quest_unique);
-		force_unique = TRUE;
-	}
-	else if (one_in_(2))
-	{
-		get_mon_num_prep(mon_hook_quest, mon_hook_quest_nonunique);
-		prevent_unique = TRUE;
-	}
-	else
-		get_mon_num_prep(mon_hook_quest, NULL);
+    /* High Level quests are stacked with uniques. Everything else
+       is stacked the other way. So lets make some attempt at balance.
+       Of course, users can force all quests to be for uniques, in
+       true Hengband spirit. */
+    if (quest_unique || one_in_(3))
+    {
+        get_mon_num_prep(mon_hook_quest, mon_hook_quest_unique);
+        force_unique = TRUE;
+    }
+    else if (one_in_(2))
+    {
+        get_mon_num_prep(mon_hook_quest, mon_hook_quest_nonunique);
+        prevent_unique = TRUE;
+    }
+    else
+        get_mon_num_prep(mon_hook_quest, NULL);
 
-	while (attempt < 10000)
-	{
-		int accept_lev = q_ptr->level + (q_ptr->level / 20);
-		int mon_lev = q_ptr->level + 5 + randint1(q_ptr->level / 10);
+    while (attempt < 10000)
+    {
+        int accept_lev = q_ptr->level + (q_ptr->level / 20);
+        int mon_lev = q_ptr->level + 5 + randint1(q_ptr->level / 10);
 
-		/* Hacks for high level quests */
-		if (accept_lev > 88)
-			accept_lev = 88;
+        /* Hacks for high level quests */
+        if (accept_lev > 88)
+            accept_lev = 88;
 
-		if (mon_lev > 88)
-			mon_lev = 88;
+        if (mon_lev > 88)
+            mon_lev = 88;
 
-		attempt++;
+        attempt++;
 
-		/*
-		* Random monster 5 - 10 levels out of depth
-		* (depending on level)
-		*/
-		unique_count = 0; /* Hack! */
-		r_idx = get_mon_num(mon_lev);
-		r_ptr = &r_info[r_idx];
+        /*
+         * Random monster 5 - 10 levels out of depth
+         * (depending on level)
+         */
+        unique_count = 0; /* Hack! */
+        r_idx = get_mon_num(mon_lev);
+        r_ptr = &r_info[r_idx];
 
-		if (r_idx == MON_ROBIN_HOOD) continue;
-		if (r_idx == MON_JACK_SHADOWS) continue;
+        if (r_idx == MON_ROBIN_HOOD) continue;
+        if (r_idx == MON_JACK_SHADOWS) continue;
 
-		/* Try to enforce preferences, but its virtually impossible to prevent
-		high level quests for uniques */
-		if (attempt < 5000)
-		{
-			if (prevent_unique && (r_ptr->flags1 & RF1_UNIQUE)) continue;
-			if (force_unique && !(r_ptr->flags1 & RF1_UNIQUE)) continue;
-		}
+        /* Try to enforce preferences, but its virtually impossible to prevent
+           high level quests for uniques */
+        if (attempt < 5000)
+        {
+            if (prevent_unique && (r_ptr->flags1 & RF1_UNIQUE)) continue;
+            if (force_unique && !(r_ptr->flags1 & RF1_UNIQUE)) continue;
+        }
 
-		if (r_ptr->flags1 & RF1_QUESTOR) continue;
+        if (r_ptr->flags1 & RF1_QUESTOR) continue;
 
-		if (r_ptr->rarity > 100) continue;
+        if (r_ptr->rarity > 100) continue;
 
-		if (r_ptr->flags7 & RF7_FRIENDLY) continue;
+        if (r_ptr->flags7 & RF7_FRIENDLY) continue;
 
-		if (r_ptr->flags7 & RF7_AQUATIC) continue;
+        if (r_ptr->flags7 & RF7_AQUATIC) continue;
 
-		if (r_ptr->flags8 & RF8_WILD_ONLY) continue;
+        if (r_ptr->flags8 & RF8_WILD_ONLY) continue;
 
-		if (no_questor_or_bounty_uniques(r_idx)) continue;
+        if (no_questor_or_bounty_uniques(r_idx)) continue;
 
-		if (r_ptr->level > q_ptr->level + 12) continue;
+        if (r_ptr->level > q_ptr->level + 12) continue;
 
-		if (r_ptr->level > accept_lev || attempt > 5000) break;
-	}
+        if (r_ptr->level > accept_lev || attempt > 5000) break;
+    }
 
-	q_ptr->r_idx = r_idx;
+    q_ptr->r_idx = r_idx;
 }
 
 
