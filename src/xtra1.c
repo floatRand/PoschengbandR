@@ -4463,12 +4463,19 @@ void calc_bonuses(void)
             }
         }
 
+        /* Experimental: All classes can reduce ammo breakage based on
+         * Archery Skill. calc_shooter_bonus might decrement this amount
+         * further. */
+        if (p_ptr->skills.thb > 80)
+            p_ptr->shooter_info.breakage = 90 - (p_ptr->skills.thb - 80)/2;
+
         if (race_ptr != NULL && race_ptr->calc_shooter_bonuses != NULL)
             race_ptr->calc_shooter_bonuses(o_ptr, &p_ptr->shooter_info);
 
         if (class_ptr != NULL && class_ptr->calc_shooter_bonuses != NULL)
             class_ptr->calc_shooter_bonuses(o_ptr, &p_ptr->shooter_info);
 
+        if (p_ptr->shooter_info.breakage < 0) p_ptr->shooter_info.breakage = 0;
         if (p_ptr->shooter_info.num_fire < 0) p_ptr->shooter_info.num_fire = 0;
     }
 

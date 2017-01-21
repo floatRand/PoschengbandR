@@ -2758,12 +2758,12 @@ int breakage_chance(object_type *o_ptr)
         case TV_SPIKE:
             return 25;
         case TV_ARROW:
-            return 20 * p_ptr->shooter_info.breakage / 100;
+            return 20 * MAX(0, p_ptr->shooter_info.breakage) / 100;
 
         /* Rarely break */
         case TV_SHOT:
         case TV_BOLT:
-            return 10 * p_ptr->shooter_info.breakage / 100;
+            return 10 * MAX(0, p_ptr->shooter_info.breakage) / 100;
         default:
             return 10;
     }
