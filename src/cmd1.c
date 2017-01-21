@@ -1583,6 +1583,12 @@ void py_pickup_aux(int o_idx)
         if (o_ptr->marked & OM_AUTODESTROY) return;
     }
 
+    if (destroy_get)
+    {
+        autopick_alter_item(slot, TRUE);
+        if (o_ptr->marked & OM_AUTODESTROY) return;
+    }
+
     /* Describe the object */
     object_desc(o_name, o_ptr, OD_COLOR_CODED);
 
@@ -1634,8 +1640,9 @@ void py_pickup_aux(int o_idx)
  * Note that we ONLY handle things that can be picked up.
  * See "move_player()" for handling of other things.
  */
-void carry(bool pickup)
+bool carry(bool pickup)
 {
+    bool       result = FALSE;
     cave_type *c_ptr = &cave[py][px];
 
     s16b this_o_idx, next_o_idx = 0;
@@ -1663,10 +1670,7 @@ void carry(bool pickup)
 #ifdef ALLOW_EASY_FLOOR
 
     if (easy_floor)
-    {
-        py_pickup_floor(pickup);
-        return;
-    }
+        return py_pickup_floor(pickup);
 
 #endif /* ALLOW_EASY_FLOOR */
 
@@ -1721,6 +1725,8 @@ void carry(bool pickup)
 
             if (prace_is_(RACE_MON_LEPRECHAUN))
                 p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+
+            result = TRUE;
         }
 
         /* Pick up objects */
@@ -1765,10 +1771,12 @@ void carry(bool pickup)
                 {
                     /* Pick up the object */
                     py_pickup_aux(this_o_idx);
+                    result = TRUE;
                 }
             }
         }
     }
+    return result;
 }
 
 
@@ -6729,10 +6737,6 @@ static bool travel_abort(void)
     return FALSE;
 }
 
-
-/*
- * Travel command
- */
 void travel_step(void)
 {
     int i;
@@ -6791,7 +6795,11 @@ void travel_step(void)
     travel.run = old_run;
 
     if ((py == travel.y) && (px == travel.x))
-        travel.run = 0;
+    {
+        travel_end();
+    }
     else
         travel.run--;
 }
+
+

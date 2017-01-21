@@ -2050,7 +2050,7 @@ static void _list_monsters_aux(_mon_list_ptr list, rect_t display_rect, int mode
                 assert(info_ptr);
                 if (info_ptr->m_idx)
                 {
-                    do_cmd_travel_xy(m_list[info_ptr->m_idx].fx, m_list[info_ptr->m_idx].fy);
+                    travel_begin(TRAVEL_MODE_NORMAL, m_list[info_ptr->m_idx].fx, m_list[info_ptr->m_idx].fy);
                     done = TRUE;
                     handled = TRUE;
                 }
@@ -2612,7 +2612,7 @@ void do_cmd_list_objects(void)
                     assert(info_ptr);
                     if (info_ptr->idx)
                     {
-                        do_cmd_travel_xy(info_ptr->x, info_ptr->y);
+                        travel_begin(TRAVEL_MODE_NORMAL, info_ptr->x, info_ptr->y);
                         done = TRUE;
                     }
                 }

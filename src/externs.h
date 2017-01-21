@@ -229,7 +229,8 @@ extern bool easy_disarm;    /* Automatically disarm traps */
 #ifdef ALLOW_EASY_FLOOR
 extern bool easy_floor;    /* Display floor stacks in a list */
 #endif
-
+extern bool auto_get_ammo;
+extern bool auto_get_objects;
 extern bool over_exert;    /* Allow casting spells when short of mana */
 extern bool numpad_as_cursorkey;    /* Use numpad keys as cursor key in editor mode */
 
@@ -344,6 +345,7 @@ extern bool destroy_items;    /* Use easy auto-destroyer */
 extern bool destroy_debug;
 extern bool destroy_feeling;    /* Apply auto-destroy as sense feeling */
 extern bool destroy_identify;    /* Apply auto-destroy as identify an item */
+extern bool destroy_get;
 extern bool leave_worth;    /* Auto-destroyer leaves known worthy items */
 extern bool leave_equip;    /* Auto-destroyer leaves weapons and armour */
 extern bool leave_chest;    /* Auto-destroyer leaves closed chests */
@@ -721,7 +723,7 @@ extern critical_t critical_throw(int weight, int plus);
 extern s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, s16b hand, int mode, bool thrown);
 extern void search(void);
 extern void py_pickup_aux(int o_idx);
-extern void carry(bool pickup);
+extern bool carry(bool pickup);
 extern bool py_attack(int y, int x, int mode);
 extern bool pattern_seq(int c_y, int c_x, int n_y, int n_x);
 extern bool player_can_enter(s16b feature, u16b mode);
@@ -744,6 +746,7 @@ extern void do_cmd_alter(void);
 extern void do_cmd_spike(void);
 extern void do_cmd_walk(bool pickup);
 extern void do_cmd_stay(bool pickup);
+extern void do_cmd_get(void);
 extern void do_cmd_run(void);
 extern void do_cmd_rest(void);
 extern bool do_cmd_fire(void);
@@ -752,7 +755,10 @@ extern void do_cmd_fire_aux2(int item, object_type *j_ptr, int sx, int sy, int t
 extern void do_cmd_throw(void);
 extern bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken);
 extern void do_cmd_travel(void);
-extern void do_cmd_travel_xy(int x, int y);
+extern void travel_begin(int mode, int x, int y);
+extern void travel_wilderness_scroll(int new_x, int new_y);
+extern void travel_cancel(void);
+extern void travel_end(void);
 
 /* cmd3.c */
 extern void do_cmd_inven(void);
@@ -2063,7 +2069,7 @@ extern bool do_cmd_disarm_aux(int y, int x, int dir);
 extern int scan_floor(int *items, int y, int x, int mode);
 extern int show_floor(int target_item, int y, int x, int *min_width);
 extern bool get_item_floor(int *cp, cptr pmt, cptr str, int mode);
-extern void py_pickup_floor(bool pickup);
+extern bool py_pickup_floor(bool pickup);
 
 /* variable.c */
 extern bool easy_floor;

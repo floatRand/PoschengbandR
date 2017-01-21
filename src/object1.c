@@ -4095,7 +4095,7 @@ static bool py_pickup_floor_aux(void)
  *
  * This is called by py_pickup() when easy_floor is TRUE.
  */
-void py_pickup_floor(bool pickup)
+bool py_pickup_floor(bool pickup)
 {
     s16b this_o_idx, next_o_idx = 0;
 
@@ -4169,7 +4169,7 @@ void py_pickup_floor(bool pickup)
 
     /* There are no non-gold objects */
     if (!floor_num)
-        return;
+        return FALSE;
 
     /* Mention the number of objects */
     if (!pickup)
@@ -4208,7 +4208,7 @@ void py_pickup_floor(bool pickup)
         }
 
         /* Done */
-        return;
+        return FALSE;
     }
 
     /* The player has no room for anything on the floor. */
@@ -4248,7 +4248,7 @@ void py_pickup_floor(bool pickup)
         }
 
         /* Done */
-        return;
+        return FALSE;
     }
 
     /* One object */
@@ -4284,7 +4284,7 @@ void py_pickup_floor(bool pickup)
             if (!get_check(out_val))
             {
                 /* Done */
-                return;
+                return FALSE;
             }
         }
 
@@ -4304,16 +4304,21 @@ void py_pickup_floor(bool pickup)
 
         /* Pick up the object */
         py_pickup_aux(floor_o_idx);
+        return TRUE;
     }
 
     /* Allow the user to choose an object */
     else
     {
+        bool result = FALSE;
         while (can_pickup--)
         {
             if (!py_pickup_floor_aux()) break;
+            result = TRUE;
         }
+        return result;
     }
+    /* unreachable: return FALSE; */
 }
 
 #endif /* ALLOW_EASY_FLOOR */

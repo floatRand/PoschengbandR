@@ -2503,7 +2503,80 @@ void do_cmd_stay(bool pickup)
     (void)move_player_effect(py, px, mpe_mode);
 }
 
+/* Get Object(s).
+ * Historically, 'g' was 'stay still (flip pickup)' which makes little sense */
+static bool _travel_next_obj(int mode)
+{
+    int i, best_idx = -1, best_dist = 0;
+    for (i = 0; i < max_o_idx; i++)
+    {
+        object_type *o_ptr = &o_list[i];
+        int          dist = 0;
 
+        if (!o_ptr->k_idx) continue;
+        if (!(o_ptr->marked & OM_FOUND)) continue;
+        if (mode == TRAVEL_MODE_AMMO)
+        {
+            if (!o_ptr->inscription) continue;
+            if (!strstr(quark_str(o_ptr->inscription), "=g")) continue;
+            if (o_ptr->ix == px && o_ptr->iy == py)
+            {
+                /* Full pack aborts the travel sequence */
+                continue;
+            }
+        }
+        else if (mode == TRAVEL_MODE_AUTOPICK && o_ptr->tval != TV_GOLD)
+        {
+            int j = is_autopick(o_ptr);
+
+            if (j < 0) continue;
+            if (!(autopick_list[j].action & (DO_AUTODESTROY | DO_AUTOPICK))) continue;
+            if (o_ptr->ix == px && o_ptr->iy == py)
+            {
+                /* Full pack aborts the travel sequence */
+                if (autopick_list[j].action & DO_AUTOPICK)
+                    return FALSE;
+                continue; /* paranoia ... we should have destroyed this object */
+            }
+        }
+
+        dist = distance(py, px, o_ptr->iy, o_ptr->ix);
+        if (!projectable(py, px, o_ptr->iy, o_ptr->ix))
+        {
+            if (mode == TRAVEL_MODE_AUTOPICK) continue;
+            else if (dist > 18) continue;
+        }
+
+        if (best_idx == -1 || dist < best_dist)
+        {
+            best_idx = i;
+            best_dist = dist;
+        }
+    }
+    if (best_idx == -1)
+        return FALSE;
+    travel_begin(mode, o_list[best_idx].ix, o_list[best_idx].iy);
+    return TRUE;
+}
+void do_cmd_get(void)
+{
+    /* Get any objects under foot first ... this is the old
+     * 'g' behavior sans interaction with features (e.g. re-
+     * enter a shop) */
+    if (cave[py][px].o_idx)
+    {
+        if (carry(TRUE))
+            energy_use = 100;
+        else /* Pack is full or the user canceled the easy_floor menu */
+            return;
+    }
+    /* Now, auto pickup nearby objects by iterating
+     * the travel command */
+    if (auto_get_objects)
+        _travel_next_obj(TRAVEL_MODE_AUTOPICK);
+    else if (auto_get_ammo)
+        _travel_next_obj(TRAVEL_MODE_AMMO);
+}
 
 /*
  * Resting allows a player to safely restore his hp    -RAK-
@@ -4681,12 +4754,13 @@ static void travel_flow(int ty, int tx)
     flow_head = flow_tail = 0;
 }
 
-void do_cmd_travel_xy(int x, int y)
+void travel_begin(int mode, int x, int y)
 {
     int i;
     int dx, dy, sx, sy;
     feature_type *f_ptr;
 
+    travel.mode = mode;
     travel.run = 0;
 
     assert(in_bounds2(y, x)); /* Old bug with traveling in a scrollable wilderness */
@@ -4698,6 +4772,7 @@ void do_cmd_travel_xy(int x, int y)
         boundary, and the scroll fires on the last move of the travel flow, but is processed
         before travel_step checks that we are finished.
         msg_print("You are already there!!"); */
+        travel_cancel();
         return;
     }
 
@@ -4709,6 +4784,7 @@ void do_cmd_travel_xy(int x, int y)
             (have_flag(f_ptr->flags, FF_DOOR) && cave[y][x].mimic)))
     {
         msg_print("You cannot travel there!");
+        travel_cancel();
         return;
     }
 
@@ -4736,9 +4812,65 @@ void do_cmd_travel_xy(int x, int y)
     }
 }
 
+void travel_wilderness_scroll(int new_x, int new_y)
+{
+    if (new_x == px && new_y == py)
+    {
+        /* Don't begin a new travel if we are just going
+         * to end it. Call stack is something like:
+         *   travel_wilderness_scroll
+         *   wilderness_move_player
+         *   move_player_effect
+         *   travel_step
+         * When we return to travel_step, it will call
+         * travel_end for us. If we call travel_end, then
+         * we (might) begin a new travel command, and unwinding
+         * to travel_step erroneously (but harmlessly)
+         * marks a step as taken on the new route. */
+        travel.x = px;
+        travel.y = py;
+    }
+    else
+        travel_begin(travel.mode, new_x, new_y);
+}
+
+void travel_cancel(void)
+{
+    travel.run = 0;
+    /* Don't twiddle with the mode here ... If you examine travel_step
+     * you will see it manually undoes the effects of disturb() during
+     * the move_player_effect(). It does this by remembering travel.run
+     * and resetting it when all is done. So, if we were to clear the
+     * mode here, then we would abort an intermediate stage in a travel
+     * sequence (e.g. TRAVEL_MODE_AUTOPICK). It's OK to leave the mode
+     * set after the travel is legitimately completed since nobody can
+     * start a new travel without calling travel_begin(mode, ...).
+     *
+     * BTW, the autopicker is triggering the disturb during travel.
+     * In our case, we are travelling just so the autopicker can do
+     * its thing, and aborting would be a gross error.
+     *
+     * travel.mode = TRAVEL_MODE_NORMAL;*/
+}
+
+void travel_end(void)
+{
+    travel.run = 0;
+    if (travel.mode != TRAVEL_MODE_NORMAL && _travel_next_obj(travel.mode))
+    {
+        /* paranoia ... but don't get stuck */
+        if (travel.x == px && travel.y == py)
+            travel_cancel();
+    }
+    else
+        travel.mode = TRAVEL_MODE_NORMAL;
+}
+
 void do_cmd_travel(void)
 {
     int x, y;
     if (!tgt_pt(&x, &y, -1)) return;
-    do_cmd_travel_xy(x, y);
+    travel_begin(TRAVEL_MODE_NORMAL, x, y);
 }
+
+

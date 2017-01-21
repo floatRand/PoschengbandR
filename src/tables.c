@@ -2621,6 +2621,12 @@ option_type option_info[] =
     "easy_floor",                   "Display floor stacks in a list" },
 #endif /* ALLOW_EASY_FLOOR -- TNB */
 
+    { &auto_get_ammo,               FALSE, OPT_PAGE_INPUT, 6, 5,
+    "auto_get_ammo",                "Automatically get nearby ammo with get cmd" },
+
+    { &auto_get_objects,            FALSE, OPT_PAGE_INPUT, 6, 7,
+    "auto_get_objects",             "Automatically get autopick objects with get cmd" },
+
     { &over_exert,                  FALSE, OPT_PAGE_INPUT, 0, 29,
     "over_exert",                   "Allow casting spells when short of mana" },
 
@@ -2885,10 +2891,13 @@ option_type option_info[] =
     "destroy_items",                "Use easy auto-destroyer" },
 
     { &destroy_feeling,             FALSE, OPT_PAGE_AUTODESTROY, 7, 8,
-    "destroy_feeling",              "Apply auto-destroy as sense feeling" },
+    "destroy_feeling",              "Apply auto-destroy on sensing an item" },
 
     { &destroy_identify,            FALSE, OPT_PAGE_AUTODESTROY, 7, 9,
-    "destroy_identify",             "Apply auto-destroy as identify an item" },
+    "destroy_identify",             "Apply auto-destroy on identifying an item" },
+
+    { &destroy_get,                 FALSE, OPT_PAGE_AUTODESTROY, 6, 9,
+    "destroy_get",                  "Apply auto-destroy on getting an item" },
 
     { &destroy_debug,               FALSE, OPT_PAGE_AUTODESTROY, 7, 10,
     "destroy_debug",                "List the rule used when applying the Mogaminator" },

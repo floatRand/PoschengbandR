@@ -484,7 +484,7 @@ void wilderness_move_player(int old_x, int old_y)
        travel.run to 0 (prior to travel_step restoring it after we return!)
        In other words: Here is a cryptic sequencing issue with global variables! Do not move this!! */
     if (travel.run)
-        do_cmd_travel_xy(travel.x - dx*WILD_SCROLL_CX, travel.y - dy*WILD_SCROLL_CY);
+        travel_wilderness_scroll(travel.x - dx*WILD_SCROLL_CX, travel.y - dy*WILD_SCROLL_CY);
 
     if (do_disturb) disturb(0, 0);
     p_ptr->redraw |= PR_BASIC; /* In case the user left/entered a town ... */

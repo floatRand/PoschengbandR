@@ -212,6 +212,8 @@ bool easy_disarm;    /* Automatically disarm traps */
 #ifdef ALLOW_EASY_FLOOR
 bool easy_floor;    /* Display floor stacks in a list */
 #endif
+bool auto_get_ammo;
+bool auto_get_objects;
 
 bool over_exert;    /* Allow casting spells when short of mana */
 bool numpad_as_cursorkey;    /* Use numpad keys as cursor key in editor mode */
@@ -327,6 +329,7 @@ bool destroy_items;    /* Use easy auto-destroyer */
 bool destroy_debug;
 bool destroy_feeling;    /* Apply auto-destroy as sense feeling */
 bool destroy_identify;    /* Apply auto-destroy as identify an item */
+bool destroy_get;
 bool leave_worth;    /* Auto-destroyer leaves known worthy items */
 bool leave_equip;    /* Auto-destroyer leaves weapons and armour */
 bool leave_chest;    /* Auto-destroyer leaves closed chests */

@@ -5159,8 +5159,7 @@ void disturb(int stop_search, int unused_flag)
 
     if (travel.run)
     {
-        /* Cancel */
-        travel.run = 0;
+        travel_cancel();
 
         /* Check for new panel if appropriate */
         if (center_player && !center_running) viewport_verify();

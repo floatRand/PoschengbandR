@@ -28,6 +28,8 @@ X:target_pet
 Y:easy_open
 Y:easy_disarm
 X:easy_floor
+Y:auto_get_ammo
+Y:auto_get_objects
 X:over_exert
 Y:numpad_as_cursorkey
 
@@ -121,6 +123,7 @@ Y:powerup_home
 X:destroy_items
 Y:destroy_feeling
 Y:destroy_identify
+X:destroy_get
 Y:leave_worth
 X:leave_equip
 Y:leave_chest

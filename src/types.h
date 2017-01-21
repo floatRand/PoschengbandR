@@ -2001,12 +2001,16 @@ typedef struct
 /*
  *  A structure type for travel command
  */
+#define TRAVEL_MODE_NORMAL   0
+#define TRAVEL_MODE_AMMO     1
+#define TRAVEL_MODE_AUTOPICK 2
 typedef struct {
     int run;
     int cost[MAX_HGT][MAX_WID];
     int x;
     int y;
     int dir;
+    int mode;
 } travel_type;
 
 /*

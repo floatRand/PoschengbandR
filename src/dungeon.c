@@ -3524,10 +3524,10 @@ static void process_command(void)
             break;
         }
 
-        /* Stay still (usually do not pick up) */
         case 'g':
         {
-            do_cmd_stay(!always_pickup);
+            do_cmd_get();
+            /*do_cmd_stay(!always_pickup);*/
             break;
         }
 
