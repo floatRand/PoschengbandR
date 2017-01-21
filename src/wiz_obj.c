@@ -851,6 +851,7 @@ static int _smith_device_effect(object_type *o_ptr)
         doc_insert(_doc, " <color:y>m</color>/<color:y>M</color>) Adjust mana\n");
         doc_insert(_doc, " <color:y>l</color>/<color:y>L</color>) Adjust effect level\n");
         doc_insert(_doc, " <color:y>c</color>/<color:y>C</color>) Adjust effect cost\n");
+        doc_insert(_doc, "   <color:y>r</color>) Recharge\n");
 
         doc_newline(_doc);
         doc_insert(_doc, " <color:y>RET</color>) Accept changes\n");
@@ -928,6 +929,9 @@ static int _smith_device_effect(object_type *o_ptr)
             }
             break;
         }
+        case 'r':
+            device_regen_sp(&copy, 1000);
+            break;
         }
     }
 }
