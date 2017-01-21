@@ -2717,7 +2717,7 @@ void do_cmd_rest(void)
  *
  * Note that artifacts never break, see the "drop_near()" function.
  */
-static int breakage_chance(object_type *o_ptr)
+int breakage_chance(object_type *o_ptr)
 {
     /* Examine the snipe type */
     if (snipe_type)

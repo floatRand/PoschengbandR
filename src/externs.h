@@ -759,6 +759,7 @@ extern void travel_begin(int mode, int x, int y);
 extern void travel_wilderness_scroll(int new_x, int new_y);
 extern void travel_cancel(void);
 extern void travel_end(void);
+extern int breakage_chance(object_type *o_ptr);
 
 /* cmd3.c */
 extern void do_cmd_inven(void);

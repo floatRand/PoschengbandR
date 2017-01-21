@@ -1103,6 +1103,7 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
     object_desc(o_name, arrow, OD_OMIT_INSCRIPTION | OD_COLOR_CODED);
     doc_printf(cols[0], "<color:u> Ammo #%-2d</color>: <indent><style:indent>%s</style></indent>\n", ct, o_name);
 
+    doc_printf(cols[0], " %-8.8s: %d%%\n", "Breakage", breakage_chance(arrow));
     doc_printf(cols[0], " %-8.8s: %d.%d lbs\n", "Weight", arrow->weight/10, arrow->weight%10);
     doc_printf(cols[0], " %-8.8s: %d + %d = %d\n", "To Hit", to_h, to_h_bow + to_h_xtra, to_h + to_h_bow + to_h_xtra);
     doc_printf(cols[0], " %-8.8s: %d + %d = %d (%s)\n", "To Dam", to_d, to_d_bow, to_d + to_d_bow, "Multiplier Applies");
