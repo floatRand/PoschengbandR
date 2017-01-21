@@ -47,7 +47,7 @@ Original Keyset
    d  Drop an item                         D  Disarm a trap
    e  Equipment list                       E  Eat some food
    f  Fire an arrow etc.                   F  Fuel your lantern/torch
-   g  Stay still (flip pickup)             G  Gain new spells/prayers
+   g  Get Objects                          G  Gain new spells/prayers
    h  (unused)                             H  (unused)
    i  Inventory list                       I  Inspect an item
    j  Jam a door                           J  (unused)
@@ -111,7 +111,7 @@ Roguelike Keyset
    d  Drop an item                         D  Disarm a trap or chest
    e  Equipment list                       E  Eat some food
    f  Bash a door (force)                  F  Fuel your lantern/torch
-   g  Stay still (flip pickup)             G  Gain new spells/prayers
+   g  Get Objects                          G  Gain new spells/prayers
    h  (walk - west)                        H  (run - west)
    i  Inventory list                       I  Inspect an item
    j  (walk - south)                       J  (run - south)

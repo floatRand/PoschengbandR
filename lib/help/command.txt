@@ -21,7 +21,7 @@ Don't be overwhelmed by the sheer number of commands. Many are not often used or
    d  Drop an item                         <color:y>D</color>  Disarm a trap
    <color:y>e</color>  Equipment list                       <color:y>E</color>  Eat some food
    <color:y>f</color>  Fire an arrow etc.                   <color:y>F</color>  Fuel your lantern/torch
-   g  Stay still (flip pickup)             <color:y>G</color>  Gain new spells/prayers
+   g  Get Objects                          <color:y>G</color>  Gain new spells/prayers
    <color:D>h  (unused)</color>                             <color:D>H  (unused)</color>
    <color:y>i</color>  Inventory list                       I  Inspect an item
    j  Jam a door                           <color:D>J  (unused)</color>
@@ -85,7 +85,7 @@ Don't be overwhelmed by the sheer number of commands. Many are not often used or
    d  Drop an item                         <color:y>D</color>  Disarm a trap or chest
    <color:y>e</color>  Equipment list                       <color:y>E</color>  Eat some food
    f  Bash a door (force)                  <color:y>F</color>  Fuel your lantern/torch
-   g  Stay still (flip pickup)             <color:y>G</color>  Gain new spells/prayers
+   g  Get Objects                          <color:y>G</color>  Gain new spells/prayers
    h  (walk - west)                        H  (run - west)
    <color:y>i</color>  Inventory list                       I  Inspect an item
    j  (walk - south)                       J  (run - south)

@@ -73,6 +73,26 @@ maximal legal value.
   slot should be easy to figure out: Helmets go on your "Head" slot and 
   Gloves go on your "Hands", etc.
 
+  </font><font color="#ffcc80">Get Objects (</font><font color="#ff9200">g</font><font color="#ffcc80">)
+  </font><font color="#ffffff">This command will get any objects located on the same tile as the 
+  player (autodestroyer applies if </font><font color="#ff4040">destroy_get </font><font color="#ffffff">is set). In addition, 
+  this command will automatically get nearby objects by travelling to 
+  them (similar to running). With </font><font color="#ff4040">auto_get_objects </font><font color="#ffffff">enabled, any object 
+  registered for either auto-pickup or auto-destroy will qualify for 
+  automatic get. If that is too much for you (perhaps you enjoy 
+  cleaning up after battles?) then the </font><font color="#ff4040">auto_get_ammo </font><font color="#ffffff">option only 
+  applies to objects inscribed with </font><font color="#ff9200">=g </font><font color="#ffffff">(which is typically your ammo, 
+  or perhaps spikes if you are a ninja).
+  
+  Automatic travelling is very useful, and you won't travel too far 
+  since the objects must be visible to qualify. Hence, this option is 
+  much safer than, say, travelling using the object list which allows 
+  you to undertake lengthy automatic journeys (often into harms way!). 
+  The automatic get travelling will terminate when there are no more 
+  visible qualifying objects; if your pack becomes full; or if you are 
+  disturbed for any reason, such as a nasty dragon waking up and 
+  deciding to breathe on you.
+
   </font><font color="#ffcc80">Drop Item (</font><font color="#ff9200">d</font><font color="#ffcc80">)
   </font><font color="#ffffff">This drops an item from your inventory or equipment onto the dungeon 
   floor. If the floor spot you are standing on already has an object in 
@@ -169,15 +189,6 @@ maximal legal value.
   This command can take a count. You may also use the "5" key (both 
   keysets).  If object auto-picker/destroyer is set up, specified 
   objects will be picked up or destroyed.
-
-  </font><font color="#ffcc80">Stay Still (flip pickup) (</font><font color="#ff9200">g</font><font color="#ffcc80">)
-  </font><font color="#ffffff">Stays in the same square for one move. If you normally pick up 
-  objects you encounter, you will not pick up whatever you are standing 
-  on. If you normally do not pick up objects, you will pick up what you 
-  are standing on. This command is normally only used when the 
-  "always_pickup" option is false. This command can take a count.  If 
-  object auto-picker/destroyer is set up, specified objects will be 
-  picked up or destroyed.
 
   </font><font color="#ffcc80">Rest (</font><font color="#ff9200">R</font><font color="#ffcc80">)
   </font><font color="#ffffff">Resting is better for you than repeatedly staying still, and can be 
@@ -823,6 +834,7 @@ maximal legal value.
   </font><font color="#ffcc80">Inventory Commands         Original        Roguelike
     </font><font color="#ffffff">Inventory List              </font><font color="#ff9200">i                 
     </font><font color="#ffffff">Equipment List              </font><font color="#ff9200">e                 
+    </font><font color="#ffffff">Get Objects                 </font><font color="#ff9200">g                 
     </font><font color="#ffffff">Drop Item                   </font><font color="#ff9200">d                 
     </font><font color="#ffffff">Destroy Item                </font><font color="#ff9200">k               ^D
     </font><font color="#ffffff">Wear/Wield Equipment        </font><font color="#ff9200">w                 
@@ -841,7 +853,6 @@ maximal legal value.
   
   </font><font color="#ffcc80">Resting Commands           Original        Roguelike
     </font><font color="#ffffff">Stay (pickup)               </font><font color="#ff9200">,                .
-    </font><font color="#ffffff">Stay (toggle pickup)        </font><font color="#ff9200">g                 
     </font><font color="#ffffff">Rest                        </font><font color="#ff9200">R                 
   
   </font><font color="#ffcc80">Searching Commands         Original        Roguelike

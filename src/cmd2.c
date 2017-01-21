@@ -2522,7 +2522,7 @@ static bool _travel_next_obj(int mode)
             if (o_ptr->ix == px && o_ptr->iy == py)
             {
                 /* Full pack aborts the travel sequence */
-                continue;
+                return FALSE;
             }
         }
         else if (mode == TRAVEL_MODE_AUTOPICK && o_ptr->tval != TV_GOLD)

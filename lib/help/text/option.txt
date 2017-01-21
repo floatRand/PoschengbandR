@@ -230,6 +230,27 @@ Input Options
   into it! Also the disarm command will automatically select one 
   direction if only one known trap is near you.
   
+  Automatically get nearby ammo (auto_get_ammo)
+  This option enhances the Get Objects command (g) to automatically 
+  travel to nearby, visible ammo which is inscribed with =g (i.e., ammo 
+  which you have instructed the autopicker to automatically pickup). 
+  This enhancement is useful for archer builds after all nearby 
+  monsters have been slain. You might consider using the stronger 
+  auto_get_objects option instead.
+  
+  Automatically get nearby objects (auto_get_objects)
+  This option enhances the Get Objects command (g) to automatically 
+  travel to nearby visible objects which you have registered to either 
+  pickup or destroy. This option subsumes (and extends) the 
+  auto_get_ammo option since ammo inscribed with =g is certainly 
+  registered for auto-pickup. With this option, you might consider also 
+  turning on the [g] destroy_get option. The reason is that you will 
+  probably find the g command so useful that you forget to check for 
+  objects underfoot before issuing it. Traditionally, g gets all 
+  objects you are standing on and bypasses any autopick preferences. I 
+  really can't see why you would want that behaviour (ever) but I 
+  wasn't bold enough to make destroy_get enabled by default.
+  
   Display floor stacks in a list (easy_floor)
   Lets you select an item from a stack on the floor by browsing a list. 
   Also the look command will describe floor stack as "You see a stack 
@@ -436,7 +457,7 @@ Text Display Options
   Fire is not an EXTRA resistance.
   
   The list of abbreviations for each resistances and abilities are 
-  described in [g].
+  described in [h].
   
   Describe obj's all resistances by abbreviation (abbrev_all)
   When an *identified* equipment is displayed, an abbreviation string 
@@ -444,7 +465,7 @@ Text Display Options
   inscriptions of the object.
   
   The list of abbreviations for each resistances and abilities are 
-  described in [h].
+  described in [i].
   
   Show the experience needed for the next level (exp_need)
   Setting this option to yes alters the display of experience on the 
@@ -608,22 +629,30 @@ Easy Auto-Destroyer Options
   
     Note: The Easy Auto-Destroyer is a simpler to use 
     version of the full featured Mogaminator discussed in 
-    [i]. It is designed for those who feel the full version 
+    [j]. It is designed for those who feel the full version 
     is too complicated to use. However, you really should 
     only use one or the other. So if you are using the full 
     version, then you should not also enable the easy 
     version.
   
-  Apply auto-destroy as sense feeling (destroy_feeling)
+  Apply auto-destroy on sensing an item (destroy_feeling)
   If this option is turned on, both The Mogaminator and The Easy 
   Destroyer will take actions whenever the player senses the quality of 
   an object (i.e., whenever pseudo-id kicks in).
   
-  Apply auto-destroy as identify an item (destroy_identify)
+  Apply auto-destroy on identifying an item (destroy_identify)
   If this option is turned on, both The Mogaminator and The Easy 
   Destroyer will take actions whenever the player identifies an object, 
   whether with a spell or with a magical device (but, alas, not via a 
   town service).
+  
+  Apply auto-destroy on getting an item (destroy_get)
+  If this option is turned on, both The Mogaminator and The Easy 
+  Destroyer will apply whenever you get an object into your pack 
+  (typically, by pressing g). If you are using any of the Get Objects 
+  enhancement options (see [k] auto_get_objects) then you probably want 
+  this option as well in order to avoid accidentally picking up 
+  unwanted objects (such as corpses).
   
   List the rule used when applying the Mogaminator (destroy_debug)
   This is a debugging option when using the full-featured Mogaminator. 
