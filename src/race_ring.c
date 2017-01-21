@@ -1,4 +1,6 @@
 #include "angband.h"
+static bool _spell_in_groups(int effect);
+static bool _gain_effect(effect_t e);
 
 static cptr _mon_name(int r_idx)
 {
@@ -267,12 +269,7 @@ static bool _absorb(object_type *o_ptr)
     if (obj_has_effect(o_ptr))
     {
         effect_t e = obj_get_effect(o_ptr);
-        if (!_effects[e.type])
-        {
-            msg_format("You have gained the power of '%s'.", do_effect(&e, SPELL_NAME, 0));
-        }
-        _effects[e.type]++;
-        result = TRUE;
+        if (_gain_effect(e)) result = TRUE;
     }
 
     if (result)
@@ -475,15 +472,29 @@ static bool _drain_essences(int div)
     return result;
 }
 
+static bool _gain_effect(effect_t e)
+{
+    /* The savefile still records effects that the player can't cast. Useful if an update adds new spells to the castable list, I suppose. */
+    _effects[e.type]++; 
+    if (_spell_in_groups(e.type))
+    {
+        if (!_effects[e.type])
+            msg_format("You have gained the power of '%s'.", do_effect(&e, SPELL_NAME, 0));
+        else
+            msg_format("Your power of '%s' has grown stronger.", do_effect(&e, SPELL_NAME, 0));
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
 static void _gain_one_effect(int list[])
 {
     effect_t e = {0};
     e.type = _random(list);
-    if (!_effects[e.type])
-        msg_format("You have gained the power of '%s'.", do_effect(&e, SPELL_NAME, 0));
-    else
-        msg_format("Your power of '%s' has grown stronger.", do_effect(&e, SPELL_NAME, 0));
-    _effects[e.type]++;
+    (void)_gain_effect(e);
 }
 
 static void _gain_level(int new_level) 
@@ -690,7 +701,7 @@ static void _charm_spell(int cmd, variant *res)
     switch (cmd)
     {
     case SPELL_NAME:
-        var_set_string(res, "Charm");
+        var_set_string(res, "Charm Ring Bearer");
         break;
     case SPELL_DESC:
         var_set_string(res, "Attempt to dominate a single ring bearer.");
@@ -773,16 +784,16 @@ static _group_t _groups[] = {
         { EFFECT_BOLT_COLD,           13,   6, 45 },
         { EFFECT_BOLT_ACID,           14,   8, 55 },
         { EFFECT_BOLT_FIRE,           15,   9, 55 },
-        { EFFECT_BOLT_LITE,           17,  11, 55 },
+        /*{ EFFECT_BOLT_LITE,           17,  11, 55 },*/
         { EFFECT_BOLT_DARK,           19,  12, 60 },
         { EFFECT_BOLT_NETHER,         20,  12, 60 },
-        { EFFECT_BOLT_NEXUS,          22,  15, 65 },
-        { EFFECT_BOLT_CONF,           24,  17, 65 },
+        /*{ EFFECT_BOLT_NEXUS,          22,  15, 65 },*/
+        /*{ EFFECT_BOLT_CONF,           24,  17, 65 },*/
         { EFFECT_BOLT_SOUND,          25,  17, 65 },
         { EFFECT_BOLT_SHARDS,         26,  18, 65 },
-        { EFFECT_BOLT_DISEN,          27,  18, 65 },
-        { EFFECT_BOLT_TIME,           28,  19, 65 },
-        { EFFECT_BOLT_CHAOS,          30,  20, 65 },
+        /*{ EFFECT_BOLT_DISEN,          27,  18, 65 },*/
+        /*{ EFFECT_BOLT_TIME,           28,  19, 65 },*/
+        /*{ EFFECT_BOLT_CHAOS,          30,  20, 65 },*/
         { EFFECT_BOLT_WATER,          31,  20, 65 },
         { EFFECT_BOLT_MANA,           32,  22, 70 },
         { EFFECT_NONE } } },
@@ -794,12 +805,12 @@ static _group_t _groups[] = {
         { EFFECT_BALL_ACID,           25,  14, 55 },
         { EFFECT_BALL_FIRE,           27,  16, 55 },
         { EFFECT_BALL_NETHER,         30,  20, 60 },
-        { EFFECT_BALL_NEXUS,          30,  22, 65 },
-        { EFFECT_BALL_CONF,           30,  25, 65 },
+        /*{ EFFECT_BALL_NEXUS,          30,  22, 65 },*/
+        /*{ EFFECT_BALL_CONF,           30,  25, 65 },*/
         { EFFECT_BALL_SOUND,          31,  25, 65 },
         { EFFECT_BALL_SHARDS,         32,  27, 65 },
-        { EFFECT_BALL_DISEN,          34,  27, 65 },
-        { EFFECT_BALL_TIME,           34,  30, 65 },
+        /*{ EFFECT_BALL_DISEN,          34,  27, 65 },*/
+        /*{ EFFECT_BALL_TIME,           34,  30, 65 },*/
         { EFFECT_BALL_LITE,           35,  35, 65 },
         { EFFECT_BALL_DARK,           36,  35, 65 },
         { EFFECT_BALL_CHAOS,          37,  35, 65 },
@@ -813,20 +824,20 @@ static _group_t _groups[] = {
         { EFFECT_BREATHE_ACID,        27,  35, 55 },
         { EFFECT_BREATHE_FIRE,        28,  35, 55 },
         { EFFECT_BREATHE_POIS,        30,  35, 45 },
-        { EFFECT_BREATHE_LITE,        32,  35, 55 },
+        /*{ EFFECT_BREATHE_LITE,        32,  35, 55 },*/
         { EFFECT_BREATHE_DARK,        33,  35, 60 },
         { EFFECT_BREATHE_NETHER,      35,  35, 60 },
-        { EFFECT_BREATHE_NEXUS,       36,  40, 65 },
-        { EFFECT_BREATHE_CONF,        37,  40, 65 },
-        { EFFECT_BREATHE_DISEN,       38,  45, 65 },
-        { EFFECT_BREATHE_TIME,        39,  45, 65 },
+        /*{ EFFECT_BREATHE_NEXUS,       36,  40, 65 },*/
+        /*{ EFFECT_BREATHE_CONF,        37,  40, 65 },*/
+        /*{ EFFECT_BREATHE_DISEN,       38,  45, 65 },*/
+        /*{ EFFECT_BREATHE_TIME,        39,  45, 65 },*/
         { EFFECT_BREATHE_CHAOS,       40,  50, 70 },
         { EFFECT_BREATHE_SOUND,       41,  55, 70 },
         { EFFECT_BREATHE_SHARDS,      42,  55, 70 },
         { EFFECT_NONE } } },
 
     { "Offense: Other", '4', TERM_RED,
-      { { EFFECT_DISPEL_MONSTERS,     10,   5, 40 }, /* Faramir for only 4 damage */
+      { { EFFECT_PESTICIDE,           10,   5, 40 }, /* Faramir for only 4 damage */
         { EFFECT_DRAIN_LIFE,          30,  20, 50 },
         { EFFECT_ARROW,               30,  20, 50 },
         { EFFECT_DISPEL_UNDEAD,       32,  30, 50 }, 
@@ -834,7 +845,7 @@ static _group_t _groups[] = {
         { EFFECT_DISPEL_GOOD,         33,  30, 55 }, 
         { EFFECT_DISPEL_EVIL,         35,  35, 60 }, 
         { EFFECT_DISPEL_LIFE,         35,  35, 60 }, 
-        { EFFECT_CONFUSING_LITE,      37,  40, 60 },
+        /*{ EFFECT_CONFUSING_LITE,      37,  40, 60 },*/
         { EFFECT_DISPEL_EVIL_HERO,    40,  40, 60 },
         { EFFECT_ROCKET,              42,  45, 65 },
         { EFFECT_WRATH_OF_GOD,        43,  50, 70 },
@@ -851,14 +862,13 @@ static _group_t _groups[] = {
         { EFFECT_RESIST_FIRE,         15,  10, 50 },
         { EFFECT_RESIST_COLD,         15,  10, 50 },
         { EFFECT_RESIST_POIS,         23,  15, 50 },
-        { EFFECT_BERSERK,             25,  10, 55 }, 
         { EFFECT_STONE_SKIN,          25,  15, 60 },
         { EFFECT_SPEED,               27,  20, 65 }, 
         { EFFECT_RESISTANCE,          30,  25, 65 },
         { EFFECT_PROT_EVIL,           32,  25, 65 },
         { EFFECT_SPEED_HERO,          35,  30, 65 },
         { EFFECT_HOLY_GRAIL,          37,  30, 65 },
-        { EFFECT_SPEED_HERO_BLESS,    40,  35, 70 },
+        /*{ EFFECT_SPEED_HERO_BLESS,    40,  35, 70 },*/
         { EFFECT_WRAITHFORM,          47,  90, 90 },
         { EFFECT_INVULNERABILITY,     49, 100, 90 },
         { EFFECT_LIGHT_SPEED,         50, 100, 90 },
@@ -887,13 +897,13 @@ static _group_t _groups[] = {
         { EFFECT_DETECT_MONSTERS,      5,   5, 35 },
         { EFFECT_DETECT_OBJECTS,       8,   7, 40 },
         { EFFECT_IDENTIFY,            15,  12, 55 },
-        { EFFECT_LITE_MAP_AREA,       20,  10, 50 },
+        /*{ EFFECT_LITE_MAP_AREA,       20,  10, 50 },*/
         { EFFECT_ENLIGHTENMENT,       20,  10, 50 },
         { EFFECT_DETECT_ALL,          25,  15, 60 },
         { EFFECT_PROBING,             27,  20, 60 },
         { EFFECT_IDENTIFY_FULL,       33,  25, 65 },
-        { EFFECT_LIST_UNIQUES,        40,  50, 75 },
-        { EFFECT_LIST_ARTIFACTS,      42,  50, 75 }, 
+        /*{ EFFECT_LIST_UNIQUES,        40,  50, 75 },*/
+        /*{ EFFECT_LIST_ARTIFACTS,      42,  50, 75 },*/
         { EFFECT_CLAIRVOYANCE,        45,  50, 70 },
         { EFFECT_NONE } } },
 
@@ -911,13 +921,13 @@ static _group_t _groups[] = {
         { EFFECT_NONE } } },
 
     { "Utility", 'U', TERM_L_BLUE, 
-      { { EFFECT_SATISFY_HUNGER,       5,   5, 35 },
+      { /*{ EFFECT_SATISFY_HUNGER,       5,   5, 35 },*/
         { EFFECT_STONE_TO_MUD,        15,  10, 50 },
-        { EFFECT_DESTROY_TRAP,        20,  12, 50 },
+        /*{ EFFECT_DESTROY_TRAP,        20,  12, 50 },*/
         { EFFECT_DESTROY_TRAPS,       25,  15, 55 },
         { EFFECT_EARTHQUAKE,          25,  20, 60 },
         { EFFECT_RUNE_EXPLOSIVE,      29,  25, 65 },
-        { EFFECT_ENCHANTMENT,         30,  80, 85 },
+        /*{ EFFECT_ENCHANTMENT,         30,  80, 85 },*/
         { EFFECT_RECHARGE_FROM_DEVICE,35,  30, 65 },
         { EFFECT_RUNE_PROTECTION,     37,  50, 70 },
         { EFFECT_DESTRUCTION,         40,  35, 70 },
@@ -930,7 +940,7 @@ static _group_t _groups[] = {
       { { EFFECT_SUMMON_ANTS,         20,  15, 45 },        
         { EFFECT_SUMMON_ELEMENTAL,    23,  20, 45 },
         { EFFECT_SUMMON_PHANTASMAL,   25,  25, 45 },
-        { EFFECT_CHARM_ANIMAL,        27,  25, 45 },
+        /*{ EFFECT_CHARM_ANIMAL,        27,  25, 45 },*/
         { EFFECT_SUMMON_MONSTERS,     30,  30, 50 },
         { EFFECT_CHARM_DEMON,         31,  30, 50 },
         { EFFECT_CHARM_UNDEAD,        32,  30, 50 },
@@ -941,16 +951,16 @@ static _group_t _groups[] = {
         { EFFECT_SUMMON_UNDEAD,       39,  50, 55 },
         { EFFECT_SUMMON_DEMON,        40,  55, 55 },
         { EFFECT_SUMMON_ANGEL,        45,  80, 65 },
-        { EFFECT_SUMMON_CYBERDEMON,   50, 100, 75 },
+        /*{ EFFECT_SUMMON_CYBERDEMON,   50, 100, 75 },*/
         { EFFECT_NONE } } },
 
     { "Other", 'O', TERM_UMBER,
       { { EFFECT_AGGRAVATE,           10,   3, 35 },
-        { EFFECT_POLY_SELF,           20,  10, 40 },
+        /*{ EFFECT_POLY_SELF,           20,  10, 40 },*/
         { EFFECT_SCARE_MONSTERS,      22,  15, 45 },
         { EFFECT_SLEEP_MONSTERS,      25,  20, 45 },
-        { EFFECT_SLOW_MONSTERS,       25,  20, 45 },
-        { EFFECT_CONFUSE_MONSTERS,    27,  25, 50 },
+        /*{ EFFECT_SLOW_MONSTERS,       25,  20, 45 },*/
+        /*{ EFFECT_CONFUSE_MONSTERS,    27,  25, 50 },*/
         { EFFECT_ANIMATE_DEAD,        30,  30, 50 },
         { EFFECT_STASIS_MONSTERS,     40,  50, 70 },
         { EFFECT_NONE } } },
@@ -1007,6 +1017,31 @@ static int _spells_count_allowed(_spell_ptr spells)
     return result;
 }
 
+static bool _spell_in_list(int effect, _spell_ptr spells)
+{
+    int i;
+    for (i = 0; ; i++)
+    {
+        if (spells[i].effect == EFFECT_NONE) break;
+        if (spells[i].effect == effect)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _spell_in_groups(int effect)
+{
+    int i;
+    int numgroups = _groups_count();
+    
+    for (i = 0; i < numgroups; i++)
+    {
+        if (_spell_in_list(effect, _groups[i].spells))
+            return TRUE;
+    }
+    return FALSE;
+}
+
 /* Menu Code 1: Choose which group of magic to use */
 static cptr _group_choice = NULL;
 
@@ -1058,6 +1093,8 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
         char     info[255];
         effect_t effect = {0};
 
+        if (s->effect == EFFECT_NONE) break;
+
         effect.type = s->effect;
         effect.power = s->level;
         effect.difficulty = s->level;
@@ -1074,6 +1111,8 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
     {
         effect_t effect;
 
+        if (s->effect == EFFECT_NONE) break;
+
         effect.type = s->effect;
         effect.power = s->level;
         effect.difficulty = s->level;
@@ -1084,6 +1123,8 @@ static void _spell_menu_fn(int cmd, int which, vptr cookie, variant *res)
         if (s->level > p_ptr->lev)
             var_set_int(res, TERM_L_DARK);
         else if (s->cost > p_ptr->csp)
+            var_set_int(res, TERM_L_DARK);
+        else if(s->effect == EFFECT_NONE)
             var_set_int(res, TERM_L_DARK);
         else
             var_set_int(res, TERM_WHITE);
@@ -1103,17 +1144,23 @@ static _spell_t _prompt_spell(_spell_ptr spells)
     for (i = 0; i < ct_total; i++)
     {
         _spell_ptr spell = &spells[i];
-        
+        _spell_ptr choice = &choices[i];
+
         if (_effects[spell->effect])
         {
-            _spell_ptr choice = &choices[ct_avail];
-            
             choice->effect = spell->effect;
             choice->level = spell->level;
             choice->cost = _calculate_cost(spell->effect, spell->cost);
             choice->fail = calculate_fail_rate(spell->level, spell->fail, p_ptr->stat_ind[A_INT]);
 
             ct_avail++;
+        }
+        else
+        {
+            choice->effect = EFFECT_NONE;
+            choice->level = 0;
+            choice->cost = 0;
+            choice->fail = 0;                
         }
     }
 
@@ -1126,7 +1173,7 @@ static _spell_t _prompt_spell(_spell_ptr spells)
         int    idx = -1;
         char   heading[255], prompt1[255], prompt2[255];
         menu_t menu = { prompt1, prompt2, heading,
-                        _spell_menu_fn, choices, ct_avail};
+                        _spell_menu_fn, choices, ct_total};
 
         sprintf(prompt1, "Use which type of %s?", _group_choice);
         sprintf(prompt2, "Browse which type of %s?", _group_choice);
@@ -1220,7 +1267,7 @@ static void _browse(void)
     {
         group = _prompt_group();
         if (!group) break;
-        ct = _spells_count_allowed(group->spells);
+        ct = _spells_count(group->spells);
         screen_save();
         for (;;)
         {
@@ -1423,7 +1470,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     if (_essences[OF_TELEPATHY] >= 2)
         add_flag(flgs, OF_TELEPATHY);
 
-    for (i = OF_ESP_ANIMAL; i <= OF_ESP_UNIQUE; i++)
+    for (i = OF_ESP_EVIL; i <= OF_ESP_GIANT; i++)
     {
         if (_essences[i] >= 2)
             add_flag(flgs, i);

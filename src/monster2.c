@@ -1179,13 +1179,13 @@ bool mon_is_type(int r_idx, int type)
             return TRUE;
         else if (r_ptr->flags7 & RF7_NAZGUL)
             return TRUE;
-        else if (r_idx == MON_ANGMAR || r_idx == MON_HOARMURATH)
+        else if (r_idx == MON_ANGMAR || r_idx == MON_HOARMURATH || r_idx == MON_DWAR || r_idx == MON_KHAMUL)
              return TRUE;
-        else if (r_ptr->d_char == 'V' && r_idx != 521 && r_idx != 536 && r_idx != 613)
+        else if (r_ptr->d_char == 'V' && r_idx != 521 && r_idx != 536 && r_idx != 613) /* Excludes Oriental, Star, and Fire Vampire*/
             return TRUE;
-        else if (r_ptr->d_char == 'L' && r_idx != 666)
+        else if (r_ptr->d_char == 'L' && r_idx != 666) /* Excludes Iron Lich */
             return TRUE;
-        else if (r_idx == 112 || r_idx == 748)
+        else if (r_idx == 112 || r_idx == 748) /* Disembodied Hand and Hand Druj */
             return TRUE;
         break;
     case SUMMON_MONK:
@@ -1833,7 +1833,7 @@ void monster_desc(char *desc, monster_type *m_ptr, int mode)
     bool            named = FALSE;
 
     /* Hack: See Issue 116 */
-    if (m_ptr->nickname && !(mode & MD_NO_PET_ABBREV))
+    if (m_ptr->nickname && !(mode & MD_NO_PET_ABBREV) && !(mode & MD_PRON_VISIBLE))
     {
         sprintf(desc, "%s", quark_str(m_ptr->nickname));
         return;

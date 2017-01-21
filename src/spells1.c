@@ -4678,9 +4678,10 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             int resists_tele = monster_tele_save(r_ptr, dam);
             if (resists_tele>0)
             {
-                if (resists_tele>=2)
+                if ((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flagsr & RFR_RES_ALL) || (m_ptr->smart & SM_GUARDIAN))
                 {
-                    if(resists_tele == 2 )mon_lore_r(m_ptr, RFR_RES_TELE);
+                    if(resists_tele == 2 )
+					mon_lore_r(m_ptr, RFR_RES_TELE);
                     note = " is unaffected!";
                 }
                 else if (resists_tele==1)
