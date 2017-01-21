@@ -610,6 +610,16 @@ static void _display_extra(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_ptr
 {
     int net = 0;
 
+    switch (o_ptr->name2)
+    {
+    case EGO_AMMO_RETURNING:
+        doc_insert(doc, "It often returns to your pack after being fired.\n");
+        break;
+    case EGO_AMMO_ENDURANCE:
+        doc_insert(doc, "It endures almost anything without being destroyed.\n");
+        break;
+    }
+
     if (have_flag(flgs, OF_EASY_SPELL))
         doc_insert(doc, "It affects your ability to cast spells.\n");
 

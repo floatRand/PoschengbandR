@@ -2736,6 +2736,8 @@ int breakage_chance(object_type *o_ptr)
     if (shoot_hack == SHOOT_ELEMENTAL) return 100;
     if (weaponmaster_get_toggle() == TOGGLE_OVERDRAW) return 100;
 
+    if (o_ptr->name2 == EGO_AMMO_ENDURANCE) return 0;
+
     /* Examine the item type */
     switch (o_ptr->tval)
     {

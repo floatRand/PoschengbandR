@@ -3584,18 +3584,25 @@ static void process_monster(int m_idx)
                     else if (!is_pet(m_ptr))
                     {
                         /* Take note */
-                        did_kill_item = TRUE;
+                        if (o_ptr->name2 != EGO_AMMO_ENDURANCE)
+                            did_kill_item = TRUE;
 
                         /* Describe observable situations */
                         if (player_has_los_bold(ny, nx))
                         {
                             /* Dump a message */
-                            msg_format("%^s destroys %s.", m_name, o_name);
-                            stats_on_m_destroy(o_ptr, o_ptr->number);
+                            if (o_ptr->name2 != EGO_AMMO_ENDURANCE)
+                            {
+                                msg_format("%^s destroys %s.", m_name, o_name);
+                                stats_on_m_destroy(o_ptr, o_ptr->number);
+                            }
+                            else
+                                msg_format("%^s tries to destroy %s but fails.", m_name, o_name);
                         }
 
                         /* Delete the object */
-                        delete_object_idx(this_o_idx);
+                        if (o_ptr->name2 != EGO_AMMO_ENDURANCE)
+                            delete_object_idx(this_o_idx);
                     }
                 }
             }
