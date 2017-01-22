@@ -1596,6 +1596,13 @@ static void _ego_create_bow(object_type *o_ptr, int level)
         case EGO_BOW_EXTRA_MIGHT:
             o_ptr->mult  += 25 + m_bonus(15, level) * 5;
             break;
+        case EGO_BOW_EXTRA_SHOTS:
+            o_ptr->pval = randint1(3);
+            if (level >= 40 && one_in_(5))
+                o_ptr->pval++;
+            if (level >= 70 && one_in_(5))
+                o_ptr->pval++;
+            break;
         case EGO_BOW_LOTHLORIEN:
             if (o_ptr->sval != SV_LONG_BOW)
                 done = FALSE;

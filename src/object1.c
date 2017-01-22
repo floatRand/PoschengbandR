@@ -483,7 +483,6 @@ void obj_identify_fully(object_type *o_ptr)
 
 void obj_learn_store(object_type *o_ptr)
 {
-    assert(o_ptr->ident & IDENT_STORE);
     _obj_identify_fully_aux(o_ptr);
 }
 

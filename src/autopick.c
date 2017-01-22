@@ -579,17 +579,15 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
                 break;
 
             case FEEL_AVERAGE:
-                ADD_FLG(FLG_NAMELESS);
+                ADD_FLG(FLG_AVERAGE);
                 break;
 
             case FEEL_GOOD:
                 ADD_FLG(FLG_GOOD);
-                ADD_FLG(FLG_NAMELESS);
                 break;
 
             case FEEL_BAD:
                 ADD_FLG(FLG_CURSED);
-                ADD_FLG(FLG_NAMELESS);
                 break;
 
             case FEEL_EXCELLENT:
@@ -658,7 +656,14 @@ static void autopick_entry_from_object(autopick_type *entry, object_type *o_ptr)
         else
         {
             /* Wearable nameless object */
-            if (object_is_equipment(o_ptr))
+            if (object_is_ammo(o_ptr))
+            {
+                if (o_ptr->to_h || o_ptr->to_d)
+                    ADD_FLG(FLG_GOOD);
+                else
+                    ADD_FLG(FLG_AVERAGE);
+            }
+            else if (object_is_equipment(o_ptr))
                 ADD_FLG(FLG_NAMELESS);
         }
 

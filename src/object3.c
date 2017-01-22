@@ -560,7 +560,7 @@ s32b jewelry_cost(object_type *o_ptr, int options)
     }
     if (have_flag(flgs, OF_XTRA_MIGHT))
     {
-        p += 7500 * pval;
+        p += 3000 * pval;
         if (cost_calc_hook)
         {
             sprintf(dbg_msg, "  * Extra Might: p = %d", p);

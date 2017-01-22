@@ -790,7 +790,7 @@ F:AWARE
 N:163:of Extra Shots
 T:BOW
 W:10:*:2
-C:4:2:0:5
+C:4:2:0:0
 F:XTRA_SHOTS | AWARE
 
 N:164:of Lothlorien

@@ -98,7 +98,7 @@ blade of chaos
 
 ?unidentified dice boosted weapons
 ?unidentified dice boosted shooters
-~?unidentified ego
+~?unidentified ego items
 
 ~dice boosted weapons
 ~dice boosted shooters
@@ -186,7 +186,9 @@ Iron Spike#@v0
 !cursed nameless common items
 ?:1
 
-?:[LEQ $LEVEL 34]
+#If you are using the enhanced get command (auto_get_objects)
+#then I recommend the following 3 rules for the *entire* game.
+?:[LEQ $LEVEL 50]
 #(unidentified armors
 #(unidentified weapons
 #(unidentified shooters
