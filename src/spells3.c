@@ -4212,8 +4212,24 @@ static s16b poly_r_idx(int r_idx)
         return (r_idx);
 
     /* Allowable range of "levels" for resulting monster */
-    lev1 = r_ptr->level - ((randint1(20) / randint1(9)) + 1);
-    lev2 = r_ptr->level + ((randint1(20) / randint1(9)) + 1);
+    if (r_ptr->level < 30)
+    {
+        /* 1d20/1d9 Distribution (AVG 2.96):
+         *  0  1  2  3  4  5  6  7  8  9 10 11 ...
+         * 36 45 36 18 11  7  6  3  3  3  2  1 ... */
+        lev1 = r_ptr->level - ((randint1(20) / randint1(9)) + 1);
+        lev2 = r_ptr->level + ((randint1(20) / randint1(9)) + 1);
+    }
+    else
+    {
+        /* However, polymorph gives the same small set of monsters
+         * once you get deeper. You'll need to consult r_info.txt,
+         * sorted by level (try MonsterDam.csv in lib/help). So,
+         * let's try something else. This is for the Chaos Vortex,
+         * btw, who polymorphs in melee as a way of life! */
+        lev1 = r_ptr->level - r_ptr->level * randnor(100, 20) / 1000;
+        lev2 = r_ptr->level + r_ptr->level * randnor(100, 20) / 1000;
+    }
 
     /* Pick a (possibly new) non-unique race */
     for (i = 0; i < 1000; i++)
@@ -4251,7 +4267,7 @@ bool polymorph_monster(int y, int x)
     monster_type *m_ptr = &m_list[c_ptr->m_idx];
     int           r_idx = poly_r_idx(m_ptr->r_idx);
 
-    if (r_idx != m_ptr->r_idx)
+    if (r_idx != m_ptr->r_idx || p_ptr->wizard)
         mon_change_race(c_ptr->m_idx, r_idx, "polymorphed");
     return TRUE;
 }
