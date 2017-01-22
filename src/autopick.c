@@ -32,6 +32,7 @@ enum _keyword_e {
     FLG_ALL = 0,
 
     /* Object Knowledge */
+    FLG_UNSENSED,
     FLG_UNIDENTIFIED,
     FLG_IDENTIFIED,
     FLG_STAR_IDENTIFIED,
@@ -114,7 +115,7 @@ enum _keyword_e {
 
 #define FLG_ADJECTIVE_BEGIN     FLG_ALL
 #define FLG_ADJECTIVE_END       FLG_HUMAN
-#define FLG_KNOWLEDGE_BEGIN     FLG_UNIDENTIFIED
+#define FLG_KNOWLEDGE_BEGIN     FLG_UNSENSED
 #define FLG_KNOWLEDGE_END       FLG_UNAWARE
 #define FLG_QUALITY_BEGIN       FLG_AVERAGE
 #define FLG_QUALITY_END         FLG_NAMELESS
@@ -126,6 +127,7 @@ enum _keyword_e {
 
 static char KEY_ALL[] = "all";
 
+static char KEY_UNSENSED[] = "unsensed";
 static char KEY_UNIDENTIFIED[] = "unidentified";
 static char KEY_IDENTIFIED[] = "identified";
 static char KEY_STAR_IDENTIFIED[] = "*identified*";
@@ -304,6 +306,7 @@ static bool autopick_new_entry(autopick_type *entry, cptr str, bool allow_defaul
 
         if (MATCH_KEY(KEY_ALL)) ADD_FLG(FLG_ALL);
 
+        if (MATCH_KEY(KEY_UNSENSED)) ADD_FLG(FLG_UNSENSED);
         if (MATCH_KEY(KEY_UNIDENTIFIED)) ADD_FLG(FLG_UNIDENTIFIED);
         if (MATCH_KEY(KEY_IDENTIFIED)) ADD_FLG(FLG_IDENTIFIED);
         if (MATCH_KEY(KEY_STAR_IDENTIFIED)) ADD_FLG(FLG_STAR_IDENTIFIED);
@@ -999,6 +1002,7 @@ string_ptr autopick_line_from_entry(autopick_type *entry, int options)
 
     if (IS_FLG(FLG_ALL)) string_printf(s, "%s ", KEY_ALL);
 
+    if (IS_FLG(FLG_UNSENSED)) string_printf(s, "%s ", KEY_UNSENSED);
     if (IS_FLG(FLG_UNIDENTIFIED)) string_printf(s, "%s ", KEY_UNIDENTIFIED);
     if (IS_FLG(FLG_IDENTIFIED)) string_printf(s, "%s ", KEY_IDENTIFIED);
     if (IS_FLG(FLG_STAR_IDENTIFIED)) string_printf(s, "%s ", KEY_STAR_IDENTIFIED);
@@ -1248,13 +1252,13 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     if (IS_FLG(FLG_UNAWARE) && _is_aware(o_ptr))
         return FALSE;
 
-    /*** Unidentified ***/
-    if (IS_FLG(FLG_UNIDENTIFIED)
-        && object_is_known(o_ptr))
+    /*** Unsensed items ***/
+    if (IS_FLG(FLG_UNSENSED) && (object_is_known(o_ptr) || (o_ptr->ident & IDENT_SENSE)))
         return FALSE;
-    /*if (IS_FLG(FLG_UNIDENTIFIED)
-        && (object_is_known(o_ptr) || (o_ptr->ident & IDENT_SENSE)))
-        return FALSE;*/
+
+    /*** Unidentified ***/
+    if (IS_FLG(FLG_UNIDENTIFIED) && object_is_known(o_ptr))
+        return FALSE;
 
     /*** Identified ***/
     if (IS_FLG(FLG_IDENTIFIED) && !object_is_known(o_ptr))
@@ -2824,6 +2828,10 @@ static void describe_autopick(char *buff, autopick_type *entry)
         whose_str[whose_n++] = "basic abilities are not known";
     }
 
+    /*** Unsensed ***/
+    if (IS_FLG(FLG_UNSENSED))
+        before_str[before_n++] = "unsensed";
+
     /*** Unidentified ***/
     if (IS_FLG(FLG_UNIDENTIFIED))
         before_str[before_n++] = "unidentified";
@@ -4260,6 +4268,7 @@ enum {
 
     EC_OK_COLLECTING,
     EC_IK_UNAWARE,
+    EC_IK_UNSENSED,
     EC_IK_UNIDENTIFIED,
     EC_IK_IDENTIFIED,
     EC_IK_STAR_IDENTIFIED,
@@ -4448,6 +4457,7 @@ command_menu_type menu_data[] =
 
      {MN_ADJECTIVE_GEN, 0, -1, -1},
     {KEY_UNAWARE, 1, -1, EC_IK_UNAWARE},
+    {KEY_UNSENSED, 1, -1, EC_IK_UNSENSED},
     {KEY_UNIDENTIFIED, 1, -1, EC_IK_UNIDENTIFIED},
     {KEY_IDENTIFIED, 1, -1, EC_IK_IDENTIFIED},
     {KEY_STAR_IDENTIFIED, 1, -1, EC_IK_STAR_IDENTIFIED},
@@ -6149,6 +6159,7 @@ static bool do_editor_command(text_body_type *tb, int com_id)
     case EC_CL_AUTO_ID: toggle_command_letter(tb, DO_AUTO_ID); break;
 
     case EC_IK_UNAWARE: toggle_keyword(tb, FLG_UNAWARE); break;
+    case EC_IK_UNSENSED: toggle_keyword(tb, FLG_UNSENSED); break;
     case EC_IK_UNIDENTIFIED: toggle_keyword(tb, FLG_UNIDENTIFIED); break;
     case EC_IK_IDENTIFIED: toggle_keyword(tb, FLG_IDENTIFIED); break;
     case EC_IK_STAR_IDENTIFIED: toggle_keyword(tb, FLG_STAR_IDENTIFIED); break;

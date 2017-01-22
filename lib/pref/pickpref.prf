@@ -189,9 +189,9 @@ Iron Spike#@v0
 #If you are using the enhanced get command (auto_get_objects)
 #then I recommend the following 3 rules for the *entire* game.
 ?:[LEQ $LEVEL 50]
-#(unidentified armors
-#(unidentified weapons
-#(unidentified shooters
+#(unsensed armors
+#(unsensed weapons
+#(unsensed shooters
 ?:1
 
 ~special items
