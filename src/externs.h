@@ -623,7 +623,7 @@ extern string_ptr autopick_line_from_entry(autopick_type *entry, int options);
 extern int is_autopick(object_type *o_ptr);
 extern void autopick_alter_item(int item, bool destroy);
 extern void autopick_delayed_alter(void);
-extern void autopick_pickup_items(cave_type *c_ptr);
+extern bool autopick_pickup_items(cave_type *c_ptr);
 extern bool autopick_autoregister(object_type *o_ptr);
 extern void do_cmd_edit_autopick(void);
 extern int pack_find_device(int effect);

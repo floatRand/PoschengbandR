@@ -2360,8 +2360,9 @@ bool autopick_auto_id(object_type *o_ptr)
 /*
  * Automatically pickup/destroy items in this grid.
  */
-void autopick_pickup_items(cave_type *c_ptr)
+bool autopick_pickup_items(cave_type *c_ptr)
 {
+    bool result = FALSE;
     s16b this_o_idx, next_o_idx = 0;
     bool auto_id = p_ptr->auto_id;
     bool auto_pseudo_id = p_ptr->auto_pseudo_id;
@@ -2391,6 +2392,8 @@ void autopick_pickup_items(cave_type *c_ptr)
                 equip_learn_flag(OF_LORE1);
             }
         }
+        else
+            result = TRUE; /* got some gold */
 
         idx = is_autopick(o_ptr);
 
@@ -2456,6 +2459,7 @@ void autopick_pickup_items(cave_type *c_ptr)
 
             }
             py_pickup_aux(this_o_idx);
+            result = TRUE;
         }
 
         /*
@@ -2469,6 +2473,7 @@ void autopick_pickup_items(cave_type *c_ptr)
             auto_destroy_item(o_ptr, idx);
         }
     } /* for () */
+    return result;
 }
 
 
