@@ -4447,7 +4447,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     }
     case EFFECT_HEAL_CURING_HERO:
     {
-        int amt = _extra(effect, 6*effect->power);
+        int amt = _extra(effect, 50 + 5*effect->power);
         if (name) return "Angelic Healing";
         if (desc) return "It heals your hitpoints, cures what ails you, and makes you heroic.";
         if (info) return info_heal(0, 0, _BOOST(amt));
