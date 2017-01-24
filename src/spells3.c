@@ -1910,7 +1910,7 @@ bool alchemy(void)
 /*
  * Break the curse of an item
  */
-static void break_curse(object_type *o_ptr)
+void break_curse(object_type *o_ptr)
 {
     if (object_is_cursed(o_ptr) && !(o_ptr->curse_flags & OFC_PERMA_CURSE) && !(o_ptr->curse_flags & OFC_HEAVY_CURSE) && (randint0(100) < 25))
     {

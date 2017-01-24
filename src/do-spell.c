@@ -5299,6 +5299,7 @@ static bool _craft_enchant(int max, int inc)
     object_type *o_ptr;
     char        o_name[MAX_NLEN];
     bool        improved = FALSE;
+    u32b        flgs[OF_ARRAY_SIZE];
 
     item_tester_hook = object_is_weapon_armour_ammo;
     item_tester_no_ryoute = TRUE;
@@ -5313,6 +5314,11 @@ static bool _craft_enchant(int max, int inc)
 
     object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
+    /* Some objects cannot be enchanted */
+    obj_flags(o_ptr, flgs);
+    if (have_flag(flgs, OF_NO_ENCHANT))
+        return FALSE;
+
     /* Enchanting is now automatic ... It was always possible to max
      * out enchanting quickly with skilled macro usage, but other players
      * are inviting carpal tunnel issues to no purpose. */
@@ -5321,11 +5327,15 @@ static bool _craft_enchant(int max, int inc)
         if (o_ptr->to_h < max)
         {
             o_ptr->to_h = MIN(max, o_ptr->to_h + inc);
+            if (o_ptr->to_h >= 0)
+                break_curse(o_ptr);
             improved = TRUE;
         }
         if (o_ptr->to_d < max)
         {
             o_ptr->to_d = MIN(max, o_ptr->to_d + inc);
+            if (o_ptr->to_d >= 0)
+                break_curse(o_ptr);
             improved = TRUE;
         }
     }
@@ -5334,6 +5344,8 @@ static bool _craft_enchant(int max, int inc)
         if (o_ptr->to_a < max)
         {
             o_ptr->to_a = MIN(max, o_ptr->to_a + inc);
+            if (o_ptr->to_a >= 0)
+                break_curse(o_ptr);
             improved = TRUE;
         }
     }
