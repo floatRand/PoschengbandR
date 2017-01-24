@@ -2708,10 +2708,7 @@ void do_cmd_debug(void)
     }
     case ';':
     {
-        int dummy;
-        for (dummy = 0; dummy < randint1(5) + 1; dummy++)
-            summon_specific(0, py, px, dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
-        /*activate_hi_summon(py, px, FALSE);*/
+        set_cut(CUT_MORTAL_WOUND, FALSE);
         break;
     }
     default:

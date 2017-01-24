@@ -1134,13 +1134,23 @@ void monster_death(int m_idx, bool drop_item)
             (void)drop_near(q_ptr, -1, y, x);
         }
 
+        /* Moved to bldg.c do_cmd_bldg to handle the obscure case:
+         * [1] Player defeats monster, but is bleeding profusely
+         * [2] Player dies before reaching the exit.
+         * In this scenario, the game reports the player as having
+         * been defeated by the *next* arena foe, which they never
+         * even faced.
         if (p_ptr->arena_number > MAX_ARENA_MONS) p_ptr->arena_number++;
         p_ptr->arena_number++;
+        */
 
         if (p_ptr->prace == RACE_MON_RING && !p_ptr->riding)
         {
             /* Uh Oh. Rings can't move without mounts and nobody will come for them
                in the Arena. Let's boot them out! */
+            if (p_ptr->arena_number > MAX_ARENA_MONS) p_ptr->arena_number++;
+            p_ptr->arena_number++;
+
             prepare_change_floor_mode(CFM_SAVE_FLOORS | CFM_NO_RETURN);
             p_ptr->inside_arena = FALSE;
             p_ptr->leaving = TRUE;

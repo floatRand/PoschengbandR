@@ -3741,6 +3741,11 @@ void do_cmd_bldg(void)
         }
         else
         {
+            /* Player is not victorious unless they manage to leave the
+             * arena alive! */
+            if (p_ptr->arena_number > MAX_ARENA_MONS) p_ptr->arena_number++;
+            p_ptr->arena_number++;
+
             /* Don't save the arena as saved floor */
             prepare_change_floor_mode(CFM_SAVE_FLOORS | CFM_NO_RETURN);
 
