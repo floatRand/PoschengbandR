@@ -4862,7 +4862,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
     case EFFECT_BOLT_WATER:
     {
         int dd = _extra(effect, 7 + effect->power/4);
-        int ds = 8;
+        int ds = 12;
         if (name) return "Water Bolt";
         if (desc) return "It fires a bolt of water.";
         if (info) return info_damage(_BOOST(dd), ds, 0);

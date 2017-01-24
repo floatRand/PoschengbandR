@@ -3901,7 +3901,7 @@ enum r_drop_e
  * Test Two -- Check for "Easy Know" + "Aware"
  */
 #define object_is_known(T) \
-    (((T)->ident & (IDENT_KNOWN)) || \
+    (((T)->ident & (IDENT_KNOWN | IDENT_STORE)) || \
      (k_info[(T)->k_idx].easy_know && k_info[(T)->k_idx].aware))
 
 

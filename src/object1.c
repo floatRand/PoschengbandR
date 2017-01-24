@@ -451,12 +451,13 @@ static void _obj_identify_fully_aux(object_type *o_ptr)
 bool obj_is_identified(object_type *o_ptr)
 {
     assert(o_ptr);
-    return (o_ptr->ident & IDENT_KNOWN) ? TRUE : FALSE;
+    return (o_ptr->ident & (IDENT_KNOWN | IDENT_STORE)) ? TRUE : FALSE;
 }
 
 bool obj_is_identified_fully(object_type *o_ptr)
 {
     u32b flgs[OF_ARRAY_SIZE];
+    if (o_ptr->ident & IDENT_STORE) return TRUE;
     obj_flags_unknown(o_ptr, flgs);
     return !_obj_flags_any(flgs);
 }
