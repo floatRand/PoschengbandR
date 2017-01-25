@@ -492,6 +492,13 @@ static void _melee_calc_bonuses(void)
     }
 }
 
+void _melee_get_flags(u32b flgs[OF_ARRAY_SIZE])
+{
+    int pts = _get_skill_pts(_TYPE_MELEE, _MARTIAL_ARTS);
+    if (pts >= 5)
+        add_flag(flgs, OF_AURA_REVENGE);
+}
+
 /************************************************************************
  * Shoot Skills
  ***********************************************************************/
@@ -2232,6 +2239,7 @@ static void _calc_bonuses(void)
 
 void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
+    _melee_get_flags(flgs);
     _skills_get_flags(flgs);
 }
 

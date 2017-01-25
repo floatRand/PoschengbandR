@@ -2095,7 +2095,8 @@ static void store_purchase(void)
                 j_ptr->ident &= ~(IDENT_STORE);
                 j_ptr->marked &= ~(OM_RESERVED);
 
-                /* Hack -- buying an item makes you aware of it */
+                /* Hack -- buying an item makes you aware of it
+                 * Note: IDENT_STORE must be cleared *before* calling obj_identify_fully()! */
                 obj_identify_fully(j_ptr);
 
                 /* Give it to the player */
