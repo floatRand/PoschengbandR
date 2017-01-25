@@ -1179,6 +1179,7 @@ extern void ego_display_doc(ego_type *e_ptr, doc_ptr doc);
 extern void py_display(void);
 extern void py_display_birth(void);
 extern void py_display_spells(doc_ptr doc, spell_info *table, int ct);
+extern void py_display_spells_aux(doc_ptr doc, spell_info *table, int ct);
 extern void py_display_powers(doc_ptr doc, spell_info *table, int ct);
 extern void py_display_character_sheet(doc_ptr doc);
 extern void py_display_dungeons(doc_ptr doc);

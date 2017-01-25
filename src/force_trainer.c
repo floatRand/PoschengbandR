@@ -612,6 +612,17 @@ static void _birth(void)
     py_birth_spellbooks();
 }
 
+static void _character_dump(doc_ptr doc)
+{
+    spell_info spells[MAX_SPELLS];
+    int        ct = _get_spells(spells, MAX_SPELLS);
+
+    spellbook_character_dump(doc);
+
+    doc_insert(doc, "<color:r>Realm:</color> <color:B>Force</color>\n");
+    py_display_spells_aux(doc, spells, ct);
+}
+
 class_t *force_trainer_get_class(void)
 {
     static class_t me = {0};
@@ -663,7 +674,7 @@ class_t *force_trainer_get_class(void)
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
         me.get_powers = _get_powers;
-        me.character_dump = spellbook_character_dump;
+        me.character_dump = _character_dump;
         init = TRUE;
     }
 
