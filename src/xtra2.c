@@ -5889,7 +5889,7 @@ int mspell_damage(int fGroup, u32b atk, monster_race *r_ptr)
 {
         int hp = (r_ptr->flags1 & RF1_FORCE_MAXHP) ? r_ptr->hdice * r_ptr->hside : r_ptr->hdice * (r_ptr->hside + 1) / 2;
 	int rlev = (r_ptr->level);
-	bool powerful = r_ptr->flags2 & RF2_POWERFUL;
+	bool powerful = ((r_ptr->flags2 & RF2_POWERFUL) != 0);
 
 	if (fGroup == 4){
 		switch (atk){
