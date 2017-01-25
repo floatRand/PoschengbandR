@@ -901,120 +901,6 @@ static void spoil_mon_desc(cptr fname)
  * Primarily based on code already in mon-desc.c, mostly by -BEN-
  */
 
-
-
-/*
- * Buffer text to the given file. (-SHAWN-)
- * This is basically c_roff() from mon-desc.c with a few changes.
- */
-static void spoil_out(cptr str)
-{
-    cptr r;
-
-    /* Line buffer */
-    static char roff_buf[256];
-
-    /* Delay buffer */
-    static char roff_waiting_buf[256];
-
-    /* Current pointer into line roff_buf */
-    static char *roff_p = roff_buf;
-
-    /* Last space saved into roff_buf */
-    static char *roff_s = NULL;
-
-    /* Mega-Hack -- Delayed output */
-    static bool waiting_output = FALSE;
-
-    /* Special handling for "new sequence" */
-    if (!str)
-    {
-        if (waiting_output)
-        {
-            fputs(roff_waiting_buf, fff);
-            waiting_output = FALSE;
-        }
-
-        if (roff_p != roff_buf) roff_p--;
-        while (*roff_p == ' ' && roff_p != roff_buf) roff_p--;
-
-        if (roff_p == roff_buf) fprintf(fff, "\n");
-        else
-        {
-            *(roff_p + 1) = '\0';
-            fprintf(fff, "%s\n\n", roff_buf);
-        }
-
-        roff_p = roff_buf;
-        roff_s = NULL;
-        roff_buf[0] = '\0';
-        return;
-    }
-
-    /* Scan the given string, character at a time */
-    for (; *str; str++)
-    {
-        char ch = *str;
-        bool wrap = (ch == '\n');
-
-        if (!isprint(ch)) ch = ' ';
-
-        if (waiting_output)
-        {
-            fputs(roff_waiting_buf, fff);
-            if (!wrap) fputc('\n', fff);
-            waiting_output = FALSE;
-        }
-
-        if (!wrap)
-        {
-            if (roff_p >= roff_buf + 75) wrap = TRUE;
-            else if ((ch == ' ') && (roff_p >= roff_buf + 73)) wrap = TRUE;
-
-            if (wrap)
-            {
-                cptr tail = str + 1;
-
-                for (; *tail; tail++)
-                {
-                    if (*tail == ' ') continue;
-
-                    if (isprint(*tail)) break;
-                }
-
-                if (!*tail) waiting_output = TRUE;
-            }
-        }
-
-        /* Handle line-wrap */
-        if (wrap)
-        {
-            *roff_p = '\0';
-            r = roff_p;
-            if (roff_s && (ch != ' '))
-            {
-                *roff_s = '\0';
-                r = roff_s + 1;
-            }
-            if (!waiting_output) fprintf(fff, "%s\n", roff_buf);
-            else strcpy(roff_waiting_buf, roff_buf);
-            roff_s = NULL;
-            roff_p = roff_buf;
-            while (*r) *roff_p++ = *r++;
-        }
-
-        /* Save the char */
-        if ((roff_p > roff_buf) || (ch != ' '))
-        {
-            if (ch == ' ') roff_s = roff_p;
-
-            *roff_p++ = ch;
-        }
-    }
-}
-
-
-
 static int _compare_r_level(monster_race *l, monster_race *r)
 {
     if (l->level < r->level) return -1;
@@ -1159,37 +1045,20 @@ static void ang_sort_swap_evol_tree(vptr u, vptr v, int a, int b)
 
 
 /*
- * Print monsters' evolution information to file
+ * Display monsters' evolution information
  */
-static void spoil_mon_evol(cptr fname)
+static void spoil_mon_evol(void)
 {
-    char buf[1024];
     monster_race *r_ptr;
     int **evol_tree, i, j, n, r_idx;
     int *evol_tree_zero; /* For C_KILL() */
+    doc_ptr doc = doc_alloc(80);
 
-    /* Build the filename */
-    path_build(buf, sizeof buf, ANGBAND_DIR_USER, fname);
+    doc_change_name(doc, "mon-evol.html");
 
-    /* File type is "TEXT" */
-    FILE_TYPE(FILE_TYPE_TEXT);
-
-    /* Open the file */
-    fff = my_fopen(buf, "w");
-
-    /* Oops */
-    if (!fff)
-    {
-        msg_print("Cannot create spoiler file.");
-        return;
-    }
-
-    /* Dump the header */
-    sprintf(buf, "Monster Spoilers for PosChengband Version %d.%d.%d\n",
+    doc_printf(doc, "<color:heading>Monster Evolution for PosChengband Version %d.%d.%d</color>\n",
          VER_MAJOR, VER_MINOR, VER_PATCH);
-
-    spoil_out(buf);
-    spoil_out("------------------------------------------\n\n");
+    doc_insert(doc, "<style:table>");
 
     /* Allocate the "evol_tree" array (2-dimension) */
     C_MAKE(evol_tree, max_r_idx, int *);
@@ -1259,34 +1128,39 @@ static void spoil_mon_evol(cptr fname)
 
         /* Trace the evolution tree */
         r_ptr = &r_info[r_idx];
-        fprintf(fff, "[%d]: %s (Level %d, '%c')\n", r_idx,
-            r_name + r_ptr->name, r_ptr->level, r_ptr->d_char);
+        doc_printf(doc, "[%d]: <color:B>%s</color> (Level <color:G>%d</color>, ", r_idx, r_name + r_ptr->name, r_ptr->level);
+        doc_printf(doc, "<color:%c>%c</color>", attr_to_attr_char(r_ptr->d_attr), r_ptr->d_char);
+        if (use_graphics && (r_ptr->x_char != r_ptr->d_char || r_ptr->x_attr != r_ptr->d_attr))
+        {
+            doc_insert(doc, " / ");
+            doc_insert_char(doc, r_ptr->x_attr, r_ptr->x_char);
+        }
+        doc_insert(doc, ")\n");
         for (n = 1; r_ptr->next_exp; n++)
         {
-            fprintf(fff, "%*s-(%d)-> ", n * 2, "", r_ptr->next_exp);
-            fprintf(fff, "[%d]: ", r_ptr->next_r_idx);
+            doc_printf(doc, "%*s<color:y>-<color:R>%d</color>-></color> ", n * 2, "", r_ptr->next_exp);
+            doc_printf(doc, "[%d]: ", r_ptr->next_r_idx);
             r_ptr = &r_info[r_ptr->next_r_idx];
-            fprintf(fff, "%s (Level %d, '%c')\n",
-                r_name + r_ptr->name, r_ptr->level, r_ptr->d_char);
+            doc_printf(doc, "<color:B>%s</color> (Level <color:G>%d</color>, ", r_name + r_ptr->name, r_ptr->level);
+            doc_printf(doc, "<color:%c>%c</color>", attr_to_attr_char(r_ptr->d_attr), r_ptr->d_char);
+            if (use_graphics && (r_ptr->x_char != r_ptr->d_char || r_ptr->x_attr != r_ptr->d_attr))
+            {
+                doc_insert(doc, " / ");
+                doc_insert_char(doc, r_ptr->x_attr, r_ptr->x_char);
+            }
+            doc_insert(doc, ")\n");
         }
 
         /* End of evolution tree */
-        fputc('\n', fff);
+        doc_newline(doc);
     }
 
     /* Free the "evol_tree" array (2-dimension) */
     C_KILL(evol_tree_zero, max_r_idx * (MAX_EVOL_DEPTH + 1), int);
     C_KILL(evol_tree, max_r_idx, int *);
 
-    /* Check for errors */
-    if (ferror(fff) || my_fclose(fff))
-    {
-        msg_print("Cannot close spoiler file.");
-        return;
-    }
-
-    /* Message */
-    msg_print("Successfully created a spoiler file.");
+    doc_display(doc, "Monster Evolution", 0);
+    doc_free(doc);
 }
 
 static bool _check_realm(int class_idx, int realm_idx)
@@ -1635,7 +1509,7 @@ void do_cmd_spoilers(void)
             spoil_mon_info();
             break;
         case 'e':
-            spoil_mon_evol("mon-evol.spo");
+            spoil_mon_evol();
             break;
 
         /* Class Spoilers */

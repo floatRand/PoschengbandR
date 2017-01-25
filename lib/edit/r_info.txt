@@ -4923,7 +4923,7 @@ D:This vast gleaming bronze fly has wings which beat mesmerically fast.
 N:321:Stone giant
 G:P:s
 I:110:50d10:20:75:50:400
-W:18:3:70:350:20000:709
+W:18:3:70:350:10000:1124
 B:HIT:HURT:3d8
 B:HIT:HURT:3d8
 B:HIT:HURT:3d8
@@ -5219,7 +5219,7 @@ D:walking on air. Noxious gases sting your throat.
 N:339:Sabre-tooth tiger
 G:f:y
 I:120:20d14:40:50:0:100
-W:20:2:70:120:0:0
+W:20:2:70:120:20000:987
 B:CLAW:HURT:1d10
 B:CLAW:HURT:1d10
 B:BITE:HURT:1d10
@@ -7726,7 +7726,7 @@ D:before.
 N:487:Storm giant
 G:P:b
 I:113:70d10:20:60:40:600
-W:35:5:999:2700:0:0
+W:35:5:999:2700:30000:1128
 B:HIT:ELEC:3d15
 B:HIT:ELEC:3d15
 B:HIT:ELEC:3d15
@@ -18556,7 +18556,7 @@ D:He wishes to receive payment for your entry.
 N:1026:Old sorcerer
 G:p:v
 I:130:52d25:20:60:10:140
-W:69:3:999:10000:0:0
+W:69:3:999:10000:100000:1083
 B:HIT:HURT:6d8
 B:HIT:HURT:6d8
 B:HIT:HURT:6d8
@@ -20489,7 +20489,7 @@ D:massive frame.
 N:1129:Soul
 G:G:B
 I:110:1d1:4:1:40:60
-W:50:0:0:0:10:14
+W:50:0:0:0:0:0
 F:PASS_WALL | INVISIBLE | COLD_BLOOD
 D:A naked spirit of a great sage, who had left his own body forever
 D: to seek and dominate the bodies of others. It looks like a small
@@ -20523,7 +20523,7 @@ P:Body:Marilith
 N:1131:Mimic
 G:@:w
 I:110:1d1:4:1:40:60
-W:50:0:0:0:10:14
+W:50:0:0:0:0:0
 F:CAN_SWIM
 P:Copy:Human:Imitator
 P:SpellStat:Dex
