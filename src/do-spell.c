@@ -8080,7 +8080,7 @@ static cptr do_hex_spell(int spell, int mode)
     case 3:
         if (name) return "Stinking mist";
         if (desc) return "Deals few damages of poison to all monsters in your sight.";
-        power = plev / 2 + 5;
+        power = plev / 2 + 5 + p_ptr->to_d_spell;
         if (info) return info_damage(1, power, 0);
         if (cast || cont)
         {
@@ -8188,7 +8188,7 @@ static cptr do_hex_spell(int spell, int mode)
     case 7:
         if (name) return "Patience";
         if (desc) return "Bursts hell fire strongly after patients any damage while few turns.";
-        power = MIN(200, (p_ptr->magic_num1[2] * 2));
+        power = MIN(200, p_ptr->magic_num1[2] * 2 + p_ptr->to_d_spell);
         if (info) return info_damage(0, 0, power);
         if (cast)
         {
@@ -8215,7 +8215,7 @@ static cptr do_hex_spell(int spell, int mode)
 
             if ((p_ptr->magic_num2[2] <= 0) || (power >= 200))
             {
-                msg_print("Time for end of patioence!");
+                msg_print("Time for end of patience!");
                 if (power)
                 {
                     project(0, rad, py, px, power, GF_HELL_FIRE,
@@ -8278,7 +8278,7 @@ static cptr do_hex_spell(int spell, int mode)
     case 11:
         if (name) return "Vampiric mist";
         if (desc) return "Deals few damages of drain life to all monsters in your sight.";
-        power = (plev / 2) + 5;
+        power = (plev / 2) + 5 + p_ptr->to_d_spell;
         if (info) return info_damage(1, power, 0);
         if (cast || cont)
         {
@@ -8519,7 +8519,7 @@ static cptr do_hex_spell(int spell, int mode)
     case 22:
         if (name) return "Pains to mana";
         if (desc) return "Deals psychic damages to all monsters in sight, and drains some mana.";
-        power = plev * 3 / 2;
+        power = plev * 3 / 2 + p_ptr->to_d_spell;
         if (info) return info_damage(1, power, 0);
         if (cast || cont)
         {
@@ -8738,7 +8738,7 @@ static cptr do_hex_spell(int spell, int mode)
     case 31:
         if (name) return "Revenge sentence";
         if (desc) return "Fires  a ball of hell fire to try revenging after few turns.";
-        power = p_ptr->magic_num1[2];
+        power = p_ptr->magic_num1[2] + p_ptr->to_d_spell;
         if (info) return info_damage(0, 0, power);
         if (cast)
         {
@@ -8784,7 +8784,7 @@ static cptr do_hex_spell(int spell, int mode)
                 }
                 else
                 {
-                    msg_print("You are not a mood to revenge.");
+                    msg_print("You are not in a mood for revenge.");
                 }
                 p_ptr->magic_num1[2] = 0;
             }
