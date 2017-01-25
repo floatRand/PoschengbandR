@@ -251,9 +251,5 @@ Diggers           Poor          Bad           Superb        Bad
 
 
 
-<<<<<<< HEAD
-Automatically generated for PosChengband R 5.0.3.
-=======
-Automatically generated for PosChengband 5.0.4.
->>>>>>> 41633e5f704b3f131871e19f2ebc2e7c8630a799
+Automatically generated for PosChengband R 5.0.5.
 

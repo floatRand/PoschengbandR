@@ -202,6 +202,23 @@ Life Rating  100%       Melee       <color:R>Poor         </color>
 Base HP        4        Bows        <color:g>Superb       </color>
 Experience   110%
 </style></indent>
+<topic:Hunter><color:o>Hunter</color>
+Hunters are trackers and slayers of beast and collectors of bounties. While their archery does not quite compare to likes of archers', they  supplement it with their unique abilities and techniques. Some examples might be shooting showers of arrows, listing unique monsters and setting down traps. 
+ 
+Indeed - their dedication to slaying significant beasts awards them with bonuses against wanted monsters or quest monsters. Later on they also gain some of this bonus on all unique monsters.
+{ EXPERIMENTAL CLASS }
+
+  <indent><style:table><color:G>Stats                   Skills</color>
+Strength     <color:w> +0</color>        Disarming   <color:G>Excellent    </color>
+Intelligence <color:w> -1</color>        Device      <color:D>Very Bad     </color>
+Wisdom       <color:w> +0</color>        Save        <color:R>Poor         </color>
+Dexterity    <color:w> +2</color>        Stealth     <color:G>Excellent    </color>
+Constitution <color:w> +0</color>        Searching   <color:o>Fair         </color>
+Charisma     <color:v> +2</color>        Perception  <color:R>Poor         </color>
+Life Rating  100%       Melee       <color:R>Poor         </color>
+Base HP        4        Bows        <color:g>Superb       </color>
+Experience   110%
+</style></indent>
 </indent>
 <style:heading>Martial Arts</style>
   <indent><topic:Force-Trainer><color:o>Force-Trainer</color>
@@ -823,6 +840,7 @@ Weaponsmith    +3   -1   -1   +1   +0   +0  111%  +12  130%
 Maledict       +2   -1   -2   +1   +1 <color:v>  +3 </color> 105%  +12  135%
 Archer         +2   -1   -1   +2   +1   +0  111%  +12  110%
 Sniper         +2   -1   -1   +2   +1   +0  100%   +4  110%
+Hunter         +0   -1   +0   +2   +0 <color:v>  +2 </color> 100%   +4  110%
 Force-Trainer  +0   -1 <color:v>  +3 </color>  +2   +1   +0  100%   +4  135%
 Monk           +2   -1 <color:v>  +1 </color>  +3   +2   +1  110%  +12  130%
 Mystic         +2   -1   -2   +3   +1 <color:v>  +2 </color> 100%   +4  130%
@@ -877,6 +895,7 @@ Weaponsmith   <color:y>Good         </color> <color:o>Fair         </color> <col
 Maledict      <color:r>Bad          </color> <color:o>Fair         </color> <color:R>Poor         </color> <color:o>Fair         </color>
 Archer        <color:G>Excellent    </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:y>Very Good    </color>
 Sniper        <color:y>Good         </color> <color:o>Fair         </color> <color:R>Poor         </color> <color:G>Excellent    </color>
+Hunter        <color:G>Excellent    </color> <color:D>Very Bad     </color> <color:R>Poor         </color> <color:G>Excellent    </color>
 Force-Trainer <color:y>Good         </color> <color:y>Very Good    </color> <color:y>Good         </color> <color:y>Very Good    </color>
 Monk          <color:g>Superb       </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:G>Excellent    </color>
 Mystic        <color:g>Superb       </color> <color:y>Very Good    </color> <color:o>Fair         </color> <color:G>Excellent    </color>
@@ -931,6 +950,7 @@ Weaponsmith   <color:o>Fair         </color> <color:r>Bad          </color> <col
 Maledict      <color:R>Poor         </color> <color:r>Bad          </color> <color:G>Excellent    </color> <color:G>Excellent    </color>
 Archer        <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:b>Heroic       </color>
 Sniper        <color:y>Good         </color> <color:o>Fair         </color> <color:R>Poor         </color> <color:g>Superb       </color>
+Hunter        <color:o>Fair         </color> <color:R>Poor         </color> <color:R>Poor         </color> <color:g>Superb       </color>
 Force-Trainer <color:y>Good         </color> <color:o>Fair         </color> <color:o>Fair         </color> <color:o>Fair         </color>
 Monk          <color:y>Good         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:G>Excellent    </color>
 Mystic        <color:y>Good         </color> <color:o>Fair         </color> <color:G>Excellent    </color> <color:G>Excellent    </color>
@@ -965,19 +985,11 @@ Archaeologist <color:G>Excellent    </color> <color:y>Good         </color> <col
 Bard          <color:R>Poor         </color> <color:o>Fair         </color> <color:r>Bad          </color> <color:r>Bad          </color>
 Imitator      <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:G>Excellent    </color>
 Rage-Mage     <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:o>Fair         </color>
-<<<<<<< HEAD
-Tourist       <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:y>Good         </color>
-=======
 Skillmaster   <color:r>Bad          </color> <color:r>Bad          </color> <color:D>Very Bad     </color> <color:D>Very Bad     </color>
-Tourist       <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:r>Bad          </color>
->>>>>>> 41633e5f704b3f131871e19f2ebc2e7c8630a799
+Tourist       <color:R>Poor         </color> <color:r>Bad          </color> <color:o>Fair         </color> <color:y>Good         </color>
 Wild-Talent   <color:o>Fair         </color> <color:R>Poor         </color> <color:y>Very Good    </color> <color:y>Very Good    </color>
 
 </style>
 
 
-<<<<<<< HEAD
-<color:s>Automatically generated for PosChengband R 5.0.3.</color>
-=======
-<color:s>Automatically generated for PosChengband 5.0.4.</color>
->>>>>>> 41633e5f704b3f131871e19f2ebc2e7c8630a799
+<color:s>Automatically generated for PosChengband R 5.0.5.</color>

@@ -18,15 +18,15 @@ Their spells are the most powerful of all demonkind and at very high
 levels they may even call forth fires directly from hell.
 
   Stats                   Skills
-  Strength      +7        Disarming   Good         
-  Intelligence  +3        Device      Very Good    
+  Strength      +4        Disarming   Good         
+  Intelligence  +1        Device      Very Good    
   Wisdom       -10        Save        Superb       
-  Dexterity     +3        Stealth     Bad          
-  Constitution  +6        Searching   Bad          
-  Charisma      +3        Perception  Bad          
-  Life Rating  115%       Melee       Heroic       
+  Dexterity     +1        Stealth     Bad          
+  Constitution  +4        Searching   Bad          
+  Charisma      +2        Perception  Bad          
+  Life Rating  105%       Melee       Heroic       
   Base HP       45        Bows        Bad          
-  Experience   300%       Infravision 150'
+  Experience   300%       Infravision 50'
   
 Tanar'ri
 Tanar'ri were originally slave demons, but rose up to overthrow their 
@@ -36,13 +36,13 @@ Marilith, a female demon with three sets of arms and a serpent body
 capable of attacking with six melee weapons!
 
   Stats                   Skills
-  Strength      +4        Disarming   Good         
-  Intelligence  +2        Device      Very Good    
+  Strength      +0        Disarming   Good         
+  Intelligence  +0        Device      Very Good    
   Wisdom        -5        Save        Fair         
-  Dexterity     +4        Stealth     Good         
-  Constitution  +4        Searching   Poor         
-  Charisma      +2        Perception  Bad          
-  Life Rating  103%       Melee       Excellent    
+  Dexterity     +0        Stealth     Good         
+  Constitution  +0        Searching   Poor         
+  Charisma      +0        Perception  Bad          
+  Life Rating   95%       Melee       Excellent    
   Base HP       30        Bows        Poor         
   Experience   250%       Infravision 50'
   
@@ -53,13 +53,13 @@ will of their master. As they gain experience, Khorne rewards his
 servants with new and more powerful forms.
 
   Stats                   Skills
-  Strength      +6        Disarming   Good         
+  Strength      +3        Disarming   Good         
   Intelligence  -5        Device      Bad          
   Wisdom        -5        Save        Good         
-  Dexterity     +1        Stealth     Bad          
-  Constitution  +5        Searching   Poor         
-  Charisma      +1        Perception  Bad          
-  Life Rating  115%       Melee       Superb       
+  Dexterity     +0        Stealth     Bad          
+  Constitution  +2        Searching   Poor         
+  Charisma      +0        Perception  Bad          
+  Life Rating  100%       Melee       Superb       
   Base HP       42        Bows        Bad          
   Experience   250%       Infravision 50'
   
@@ -70,11 +70,11 @@ unsurpassable firepower more than make up for this. The walls of the
 dungeon reverberate with their heavy steps!
 
   Stats                   Skills
-  Strength     +10        Disarming   Good         
+  Strength      +5        Disarming   Good         
   Intelligence -10        Device      Very Bad     
   Wisdom       -10        Save        Poor         
   Dexterity     -3        Stealth     Bad          
-  Constitution +10        Searching   Poor         
+  Constitution  +5        Searching   Poor         
   Charisma      +0        Perception  Bad          
   Life Rating  120%       Melee       Heroic       
   Base HP       50        Bows        Bad          
@@ -83,10 +83,10 @@ dungeon reverberate with their heavy steps!
 Table 1 - Demon Statistic Bonus Table
 
                   STR  INT  WIS  DEX  CON  CHR  Life  BHP  Exp  Shop
-Balrog             +7   +3  -10   +3   +6   +3  115%  +45  300%  140%
-Tanar'ri           +4   +2   -5   +4   +4   +2  103%  +30  250%  140%
-Servant of Khorne  +6   -5   -5   +1   +5   +1  115%  +42  250%  140%
-Cyberdemon        +10  -10  -10   -3  +10   +0  120%  +50  275%  140%
+Balrog             +4   +1  -10   +1   +4   +2  105%  +45  300%  140%
+Tanar'ri           +0   +0   -5   +0   +0   +0   95%  +30  250%  140%
+Servant of Khorne  +3   -5   -5   +0   +2   +0  100%  +42  250%  140%
+Cyberdemon         +5  -10  -10   -3   +5   +0  120%  +50  275%  140%
 
 
 Table 2 - Demon Skill Bonus Table I
@@ -101,7 +101,7 @@ Cyberdemon        Good          Very Bad      Poor          Bad
 Table 3 - Demon Skill Bonus Table II
 
                   Searching     Perception    Melee         Bows          Infra
-Balrog            Bad           Bad           Heroic        Bad            150'
+Balrog            Bad           Bad           Heroic        Bad             50'
 Tanar'ri          Poor          Bad           Excellent     Poor            50'
 Servant of Khorne Poor          Bad           Superb        Bad             50'
 Cyberdemon        Poor          Bad           Heroic        Bad             50'
@@ -109,9 +109,5 @@ Cyberdemon        Poor          Bad           Heroic        Bad             50'
 
 
 
-<<<<<<< HEAD
-Automatically generated for PosChengband R 5.0.3.
-=======
-Automatically generated for PosChengband 5.0.4.
->>>>>>> 41633e5f704b3f131871e19f2ebc2e7c8630a799
+Automatically generated for PosChengband R 5.0.5.
 

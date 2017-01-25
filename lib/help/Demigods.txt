@@ -248,6 +248,9 @@ You will be able to dual wield more effectively.</indent>
   <indent><color:G>Arcane Mastery</color>
 Your spells will fail less often.</indent>
 
+  <indent><color:G>Astral Guide</color>
+Teleportation costs less energy.</indent>
+
   <indent><color:G>Black Marketeer</color>
 You will gain favorable pricing in the black market.</indent>
 
@@ -259,6 +262,9 @@ You resist charge draining.</indent>
 
   <indent><color:G>Evasion</color>
 You will dodge enemy breath attacks and have better odds for avoiding earthquakes.</indent>
+
+  <indent><color:G>Fantastic Frenzy</color>
+You kill weak monsters more efficiently.</indent>
 
   <indent><color:G>Fast Learner</color>
 You will gain a bonus to experience for each monster slain.</indent>
@@ -318,8 +324,4 @@ You resist the Eldritch Horror.</indent>
 
 
 
-<<<<<<< HEAD
-<color:s>Automatically generated for PosChengband R 5.0.3.</color>
-=======
-<color:s>Automatically generated for PosChengband 5.0.4.</color>
->>>>>>> 41633e5f704b3f131871e19f2ebc2e7c8630a799
+<color:s>Automatically generated for PosChengband R 5.0.5.</color>

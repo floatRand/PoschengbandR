@@ -206,8 +206,4 @@ Diggers           <color:R>Poor         </color> <color:r>Bad          </color> 
 </style>
 
 
-<<<<<<< HEAD
-<color:s>Automatically generated for PosChengband R 5.0.3.</color>
-=======
-<color:s>Automatically generated for PosChengband 5.0.4.</color>
->>>>>>> 41633e5f704b3f131871e19f2ebc2e7c8630a799
+<color:s>Automatically generated for PosChengband R 5.0.5.</color>

@@ -1874,10 +1874,13 @@ static void _skills_calc_bonuses(void)
 {
     int pts;
     pts = _get_skill_pts(_TYPE_SKILLS, _AWARENESS);
-    switch (pts)
-    {
-    case 3: p_ptr->telepathy = TRUE;
-    case 2: p_ptr->auto_pseudo_id = TRUE;
+	switch (pts)
+	{
+	case 3: p_ptr->telepathy = TRUE;
+	case 2:{ 
+		if(p_ptr->lev > 25) p_ptr->automapping++; 
+	    if(p_ptr->lev > 40) p_ptr->automapping++;
+		p_ptr->auto_pseudo_id = TRUE; }
     case 1: p_ptr->see_inv = TRUE;
     }
 
@@ -1893,10 +1896,10 @@ void _skills_get_flags(u32b flgs[OF_ARRAY_SIZE])
 {
     int pts;
     pts = _get_skill_pts(_TYPE_SKILLS, _AWARENESS);
-    switch (pts)
-    {
-    case 3: add_flag(flgs, OF_TELEPATHY);
-    //case 2: add_flag(flgs, OF_LORE1); // TODO: FIND REPLACEMENT
+	switch (pts)
+	{
+	case 3: add_flag(flgs, OF_TELEPATHY);
+	case 2: { add_flag(flgs, OF_AUTOMAP); }
     case 1: add_flag(flgs, OF_SEE_INVIS);
     }
 

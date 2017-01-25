@@ -317,6 +317,29 @@ Archery
     Base HP        4        Bows        Superb       
     Experience   110%
     
+  Hunter
+  Hunters are trackers and slayers of beast and collectors of bounties. 
+  While their archery does not quite compare to likes of archers', they 
+  supplement it with their unique abilities and techniques. Some 
+  examples might be shooting showers of arrows, listing unique monsters 
+  and setting down traps. 
+   
+  Indeed - their dedication to slaying significant beasts awards them 
+  with bonuses against wanted monsters or quest monsters. Later on they 
+  also gain some of this bonus on all unique monsters.
+  { EXPERIMENTAL CLASS }
+  
+    Stats                   Skills
+    Strength      +0        Disarming   Excellent    
+    Intelligence  -1        Device      Very Bad     
+    Wisdom        +0        Save        Poor         
+    Dexterity     +2        Stealth     Excellent    
+    Constitution  +0        Searching   Fair         
+    Charisma      +2        Perception  Poor         
+    Life Rating  100%       Melee       Poor         
+    Base HP        4        Bows        Superb       
+    Experience   110%
+    
   
 Martial Arts
   Force-Trainer
@@ -1351,6 +1374,7 @@ Weaponsmith    +3   -1   -1   +1   +0   +0  111%  +12  130%
 Maledict       +2   -1   -2   +1   +1   +3  105%  +12  135%
 Archer         +2   -1   -1   +2   +1   +0  111%  +12  110%
 Sniper         +2   -1   -1   +2   +1   +0  100%   +4  110%
+Hunter         +0   -1   +0   +2   +0   +2  100%   +4  110%
 Force-Trainer  +0   -1   +3   +2   +1   +0  100%   +4  135%
 Monk           +2   -1   +1   +3   +2   +1  110%  +12  130%
 Mystic         +2   -1   -2   +3   +1   +2  100%   +4  130%
@@ -1405,6 +1429,7 @@ Weaponsmith   Good          Fair          Poor          Fair
 Maledict      Bad           Fair          Poor          Fair         
 Archer        Excellent     Fair          Fair          Very Good    
 Sniper        Good          Fair          Poor          Excellent    
+Hunter        Excellent     Very Bad      Poor          Excellent    
 Force-Trainer Good          Very Good     Good          Very Good    
 Monk          Superb        Very Good     Fair          Excellent    
 Mystic        Superb        Very Good     Fair          Excellent    
@@ -1459,6 +1484,7 @@ Weaponsmith   Fair          Bad           Excellent     Good
 Maledict      Poor          Bad           Excellent     Excellent    
 Archer        Fair          Poor          Very Good     Heroic       
 Sniper        Good          Fair          Poor          Superb       
+Hunter        Fair          Poor          Poor          Superb       
 Force-Trainer Good          Fair          Fair          Fair         
 Monk          Good          Fair          Excellent     Excellent    
 Mystic        Good          Fair          Excellent     Excellent    
@@ -1493,20 +1519,12 @@ Archaeologist Excellent     Good          Very Good     Poor
 Bard          Poor          Fair          Bad           Bad          
 Imitator      Fair          Poor          Very Good     Excellent    
 Rage-Mage     Poor          Bad           Fair          Fair         
-<<<<<<< HEAD
-Tourist       Poor          Bad           Fair          Good         
-=======
 Skillmaster   Bad           Bad           Very Bad      Very Bad     
-Tourist       Poor          Bad           Fair          Bad          
->>>>>>> 41633e5f704b3f131871e19f2ebc2e7c8630a799
+Tourist       Poor          Bad           Fair          Good         
 Wild-Talent   Fair          Poor          Very Good     Very Good    
 
 
 
 
-<<<<<<< HEAD
-Automatically generated for PosChengband R 5.0.3.
-=======
-Automatically generated for PosChengband 5.0.4.
->>>>>>> 41633e5f704b3f131871e19f2ebc2e7c8630a799
+Automatically generated for PosChengband R 5.0.5.
 
