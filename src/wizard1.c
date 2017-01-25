@@ -1159,6 +1159,7 @@ static void spoil_mon_evol(void)
     C_KILL(evol_tree_zero, max_r_idx * (MAX_EVOL_DEPTH + 1), int);
     C_KILL(evol_tree, max_r_idx, int *);
 
+    doc_insert(doc, "</style>");
     doc_display(doc, "Monster Evolution", 0);
     doc_free(doc);
 }
