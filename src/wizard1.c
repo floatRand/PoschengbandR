@@ -895,12 +895,9 @@ static void spoil_mon_desc(cptr fname)
 
 
 
-/*
- * Monster spoilers by: smchorse@ringer.cs.utsa.edu (Shawn McHorse)
- *
- * Primarily based on code already in mon-desc.c, mostly by -BEN-
- */
-
+/************************************************************************
+ * Monster Lore
+ ************************************************************************/
 static int _compare_r_level(monster_race *l, monster_race *r)
 {
     if (l->level < r->level) return -1;
@@ -949,215 +946,76 @@ static void spoil_mon_info(void)
 }
 
 
-
-#define MAX_EVOL_DEPTH 64
-
-
-/*
- * Compare two int-type array like strncmp() and return TRUE if equals
- */
-static bool int_n_cmp(int *a, int *b, int length)
+/************************************************************************
+ * Monster Evolution
+ ************************************************************************/
+static vec_ptr _evol_roots(void)
 {
-    /* Null-string comparation is always TRUE */
-    if (!length) return TRUE;
+    vec_ptr     roots = vec_alloc(NULL);
+    int_map_ptr targets = int_map_alloc(NULL);
+    int         i;
 
-    do
+    /* Find all the targets (monsters that may
+     * be evolved into) */
+    for (i = 1; i < max_r_idx; i++)
     {
-        if (*a != *(b++)) return FALSE;
-        if (!(*(a++))) break;
-    }
-    while (--length);
-
-    return TRUE;
-}
-
-
-/*
- * Returns TRUE if an evolution tree is "partial tree"
- */
-static bool is_partial_tree(int *tree, int *partial_tree)
-{
-    int pt_head = *(partial_tree++);
-    int pt_len = 0;
-
-    while (partial_tree[pt_len]) pt_len++;
-
-    while (*tree)
-    {
-        if (*(tree++) == pt_head)
-        {
-            if (int_n_cmp(tree, partial_tree, pt_len)) return TRUE;
-        }
+        monster_race *r_ptr = &r_info[i];
+        if (!r_ptr->next_exp) continue;
+        int_map_add(targets, r_ptr->next_r_idx, NULL);
     }
 
-    return FALSE;
+    /* Now, the roots are simply monsters that
+     * may evolve, but aren't themselves targets */
+    for (i = 1; i < max_r_idx; i++)
+    {
+        monster_race *r_ptr = &r_info[i];
+        if (!r_ptr->next_exp) continue;
+        if (int_map_contains(targets, i)) continue;
+        vec_add(roots, r_ptr);
+    }
+    int_map_free(targets);
+
+    vec_sort(roots, (vec_cmp_f)_compare_r_level);
+    return roots;
 }
 
-
-/*
- * Sorting hook -- Comp function
- */
-static bool ang_sort_comp_evol_tree(vptr u, vptr v, int a, int b)
+static void _evol_mon_line(doc_ptr doc, monster_race *r_ptr)
 {
-    int **evol_tree = (int **)u;
-
-    int w1 = evol_tree[a][0];
-    int w2 = evol_tree[b][0];
-    monster_race *r1_ptr = &r_info[w1];
-    monster_race *r2_ptr = &r_info[w2];
-
-    /* Unused */
-    (void)v;
-
-    /* Used tree first */
-    if (w1 && !w2) return TRUE;
-    if (!w1 && w2) return FALSE;
-
-    /* Sort by monster level */
-    if (r1_ptr->level < r2_ptr->level) return TRUE;
-    if (r1_ptr->level > r2_ptr->level) return FALSE;
-
-    /* Sort by monster experience */
-    if (r1_ptr->mexp < r2_ptr->mexp) return TRUE;
-    if (r1_ptr->mexp > r2_ptr->mexp) return FALSE;
-
-    /* Compare indexes */
-    return w1 <= w2;
+    doc_printf(doc, "[%d]: <color:B>%s</color> (Level <color:G>%d</color>, ", r_ptr->id, r_name + r_ptr->name, r_ptr->level);
+    doc_printf(doc, "<color:%c>%c</color>", attr_to_attr_char(r_ptr->d_attr), r_ptr->d_char);
+    if (use_graphics && (r_ptr->x_char != r_ptr->d_char || r_ptr->x_attr != r_ptr->d_attr))
+    {
+        doc_insert(doc, " / ");
+        doc_insert_char(doc, r_ptr->x_attr, r_ptr->x_char);
+    }
+    doc_insert(doc, ")\n");
 }
 
-
-/*
- * Sorting hook -- Swap function
- */
-static void ang_sort_swap_evol_tree(vptr u, vptr v, int a, int b)
-{
-    int **evol_tree = (int **)u;
-    int *holder;
-
-    /* Unused */
-    (void)v;
-
-    /* Swap */
-    holder = evol_tree[a];
-    evol_tree[a] = evol_tree[b];
-    evol_tree[b] = holder;
-}
-
-
-/*
- * Display monsters' evolution information
- */
 static void spoil_mon_evol(void)
 {
-    monster_race *r_ptr;
-    int **evol_tree, i, j, n, r_idx;
-    int *evol_tree_zero; /* For C_KILL() */
+    int     i, j;
+    vec_ptr roots = _evol_roots();
     doc_ptr doc = doc_alloc(80);
 
     doc_change_name(doc, "mon-evol.html");
-
     doc_printf(doc, "<color:heading>Monster Evolution for PosChengband Version %d.%d.%d</color>\n",
-         VER_MAJOR, VER_MINOR, VER_PATCH);
+                     VER_MAJOR, VER_MINOR, VER_PATCH);
     doc_insert(doc, "<style:table>");
 
-    /* Allocate the "evol_tree" array (2-dimension) */
-    C_MAKE(evol_tree, max_r_idx, int *);
-    C_MAKE(*evol_tree, max_r_idx * (MAX_EVOL_DEPTH + 1), int);
-    for (i = 1; i < max_r_idx; i++) evol_tree[i] = *evol_tree + i * (MAX_EVOL_DEPTH + 1);
-    evol_tree_zero = *evol_tree;
-
-    /* Step 1: Build the evolution tree */
-    for (i = 1; i < max_r_idx; i++)
+    for (i = 0; i < vec_length(roots); i++)
     {
-        r_ptr = &r_info[i];
+        monster_race *r_ptr = vec_get(roots, i);
 
-        /* No evolution */
-        if (!r_ptr->next_exp) continue;
-
-        /* Trace evolution */
-        n = 0;
-        evol_tree[i][n++] = i;
-        do
+        _evol_mon_line(doc, r_ptr);
+        for (j = 1; r_ptr->next_exp; j++)
         {
-            evol_tree[i][n++] = r_ptr->next_r_idx;
-            r_ptr = &r_info[r_ptr->next_r_idx];
+            doc_printf(doc, "%*s<color:y>-<color:R>%d</color>-></color> ", j * 2, "", r_ptr->next_exp);
+            r_ptr = & r_info[r_ptr->next_r_idx];
+            _evol_mon_line(doc, r_ptr);
         }
-        while (r_ptr->next_exp && (n < MAX_EVOL_DEPTH));
-    }
-
-    /* Step 2: Scan the evolution trees and remove "partial tree" */
-    for (i = 1; i < max_r_idx; i++)
-    {
-        /* Not evolution tree */
-        if (!evol_tree[i][0]) continue;
-
-        for (j = 1; j < max_r_idx; j++)
-        {
-            /* Same tree */
-            if (i == j) continue;
-
-            /* Not evolution tree */
-            if (!evol_tree[j][0]) continue;
-
-            /* Is evolution tree[i] is part of [j]? */
-            if (is_partial_tree(evol_tree[j], evol_tree[i]))
-            {
-                /* Remove this evolution tree */
-                evol_tree[i][0] = 0;
-                break;
-            }
-        }
-    }
-
-    /* Step 3: Sort the evolution trees */
-
-    /* Select the sort method */
-    ang_sort_comp = ang_sort_comp_evol_tree;
-    ang_sort_swap = ang_sort_swap_evol_tree;
-
-    /* Sort the array */
-    ang_sort(evol_tree, NULL, max_r_idx);
-
-    /* Step 4: Print the evolution trees */
-    for (i = 0; i < max_r_idx; i++)
-    {
-        r_idx = evol_tree[i][0];
-
-        /* No evolution or removed evolution tree */
-        if (!r_idx) continue;
-
-        /* Trace the evolution tree */
-        r_ptr = &r_info[r_idx];
-        doc_printf(doc, "[%d]: <color:B>%s</color> (Level <color:G>%d</color>, ", r_idx, r_name + r_ptr->name, r_ptr->level);
-        doc_printf(doc, "<color:%c>%c</color>", attr_to_attr_char(r_ptr->d_attr), r_ptr->d_char);
-        if (use_graphics && (r_ptr->x_char != r_ptr->d_char || r_ptr->x_attr != r_ptr->d_attr))
-        {
-            doc_insert(doc, " / ");
-            doc_insert_char(doc, r_ptr->x_attr, r_ptr->x_char);
-        }
-        doc_insert(doc, ")\n");
-        for (n = 1; r_ptr->next_exp; n++)
-        {
-            doc_printf(doc, "%*s<color:y>-<color:R>%d</color>-></color> ", n * 2, "", r_ptr->next_exp);
-            doc_printf(doc, "[%d]: ", r_ptr->next_r_idx);
-            r_ptr = &r_info[r_ptr->next_r_idx];
-            doc_printf(doc, "<color:B>%s</color> (Level <color:G>%d</color>, ", r_name + r_ptr->name, r_ptr->level);
-            doc_printf(doc, "<color:%c>%c</color>", attr_to_attr_char(r_ptr->d_attr), r_ptr->d_char);
-            if (use_graphics && (r_ptr->x_char != r_ptr->d_char || r_ptr->x_attr != r_ptr->d_attr))
-            {
-                doc_insert(doc, " / ");
-                doc_insert_char(doc, r_ptr->x_attr, r_ptr->x_char);
-            }
-            doc_insert(doc, ")\n");
-        }
-
-        /* End of evolution tree */
         doc_newline(doc);
     }
-
-    /* Free the "evol_tree" array (2-dimension) */
-    C_KILL(evol_tree_zero, max_r_idx * (MAX_EVOL_DEPTH + 1), int);
-    C_KILL(evol_tree, max_r_idx, int *);
+    vec_free(roots);
 
     doc_insert(doc, "</style>");
     doc_display(doc, "Monster Evolution", 0);
