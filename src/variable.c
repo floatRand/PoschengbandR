@@ -317,6 +317,7 @@ bool allow_pets; /* Allow pets: Note, this makes some classes unplayable. */
 bool quest_unique; /* Random quests for unique monsters only */
 bool ironman_quests; /* Random quests must be completed */
 bool random_artifacts;
+bool half_fixedarts;
 bool no_artifacts;
 bool no_egos;
 bool no_selling;

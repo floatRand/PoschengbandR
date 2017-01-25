@@ -293,7 +293,7 @@ void build_streamer(int feat, int chance)
                             msg_format("Artifact (%s) was deleted by streamer.", o_name);
                         }
                     }
-                    else if (random_artifacts && o_ptr->name3)
+                    else if (o_ptr->name3)
                     {
                         /* Mega-Hack -- Preserve the artifact */
                         a_info[o_ptr->name3].generated = FALSE;

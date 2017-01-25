@@ -334,6 +334,7 @@ extern bool allow_pets; /* Allow pets: Note, this makes some classes unplayable.
 extern bool quest_unique; /* Random quests for unique monsters only */
 extern bool ironman_quests; /* Random quests must be completed */
 extern bool random_artifacts;
+extern bool half_fixedarts;
 extern bool no_artifacts;
 extern bool no_egos;
 extern bool no_selling;

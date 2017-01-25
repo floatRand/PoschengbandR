@@ -458,7 +458,7 @@ void wipe_o_list(void)
                 /* Mega-Hack -- Preserve the artifact */
                 a_info[o_ptr->name1].generated = FALSE;
             }
-            if (random_artifacts && o_ptr->name3 && !object_is_known(o_ptr))
+            if (o_ptr->name3 && !object_is_known(o_ptr))
             {
                 /* Mega-Hack -- Preserve the artifact */
                 a_info[o_ptr->name3].generated = FALSE;
@@ -1938,7 +1938,7 @@ static bool make_artifact_special(object_type *o_ptr)
             if (!one_in_(d)) continue;
         }
 
-        if (random_artifacts)
+        if (random_artifacts && !(half_fixedarts && one_in_(2)))
         {
             create_replacement_art(i, o_ptr);
         }
@@ -1998,7 +1998,7 @@ static bool make_artifact(object_type *o_ptr)
 
         if (!one_in_(a_ptr->rarity)) continue;
 
-        if (random_artifacts)
+        if (random_artifacts && !(half_fixedarts && one_in_(2)))
         {
             create_replacement_art(i, o_ptr);
         }
@@ -4028,7 +4028,7 @@ void place_object(int y, int x, u32b mode)
         {
             a_info[q_ptr->name1].generated = FALSE;
         }
-        if (random_artifacts && q_ptr->name3)
+        if (q_ptr->name3)
             a_info[q_ptr->name3].generated = FALSE;
     }
 }
@@ -4375,7 +4375,7 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
                     a_info[j_ptr->name1].generated = FALSE;
                 }
 
-                if (random_artifacts && j_ptr->name3 && !object_is_known(j_ptr))
+                if (j_ptr->name3 && !object_is_known(j_ptr))
                 {
                     /* Mega-Hack -- Preserve the artifact */
                     a_info[j_ptr->name3].generated = FALSE;
@@ -4459,7 +4459,7 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
             a_info[j_ptr->name1].generated = FALSE;
         }
 
-        if (random_artifacts && j_ptr->name3)
+        if (j_ptr->name3)
         {
             a_info[j_ptr->name3].generated = FALSE;
         }
