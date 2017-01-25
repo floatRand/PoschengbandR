@@ -5823,7 +5823,7 @@ bool process_warning(int xx, int yy)
                 {
                     int rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
                     int storm_dam = rlev * 4 + 150;
-                    bool powerful = (bool)(r_ptr->flags2 & RF2_POWERFUL);
+                    bool powerful = (r_ptr->flags2 & RF2_POWERFUL) & TRUE : FALSE;
 
                     if (f4 & RF4_BA_CHAO) spell_damcalc(m_ptr, GF_CHAOS, rlev * (powerful ? 3 : 2) + 100, 0, &dam_max0);
                     if (f5 & RF5_BA_MANA) spell_damcalc(m_ptr, GF_MANA, storm_dam, 0, &dam_max0);
