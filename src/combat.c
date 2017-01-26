@@ -1049,6 +1049,7 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
     int          dd = arrow->dd;
     int          ds = arrow->ds;
     critical_t   crit = {0};
+    int          crit_pct = 0;
     int          num_fire = 0;
     doc_ptr      cols[2] = {0};
 
@@ -1082,7 +1083,7 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
 
     {
         const int ct = 10 * 1000;
-        int i;
+        int i, crits = 0;
         /* Compute Average Effects of Criticals by sampling */
         for (i = 0; i < ct; i++)
         {
@@ -1091,12 +1092,14 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
             {
                 crit.mul += tmp.mul;
                 crit.to_d += tmp.to_d;
+                crits++;
             }
             else
                 crit.mul += 100;
         }
         crit.mul = crit.mul / ct;
         crit.to_d = crit.to_d * 100 / ct;
+        crit_pct = crits * 1000 / ct;
     }
 
     /* First Column */
@@ -1116,8 +1119,8 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
     }
     else
     {
-        doc_printf(cols[0], " %-8.8s: %d.%02dx\n", "Crits",
-                        crit.mul/100, crit.mul%100);
+        doc_printf(cols[0], " %-8.8s: %d.%02dx (%d.%d%%)\n", "Crits",
+                        crit.mul/100, crit.mul%100, crit_pct / 10, crit_pct % 10);
     }
 
     to_d = to_d + to_d_bow;

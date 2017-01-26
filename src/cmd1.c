@@ -443,7 +443,7 @@ critical_t critical_shot(int weight, int plus)
     int i, k;
 
     /* Extract "shot" power */
-    i = ((p_ptr->shooter_info.to_h + plus) * 4) + (p_ptr->lev * 2);
+    i = (p_ptr->shooter_info.to_h + plus) * 3 + p_ptr->skills.thb * 2;
 
     /* Snipers can shot more critically with crossbows */
     if (p_ptr->concent) i += ((i * p_ptr->concent) / 10);
@@ -454,19 +454,34 @@ critical_t critical_shot(int weight, int plus)
     {
         k = weight * randint1(500);
 
-        if (k < 900)
+        if (k < 400)
         {
-            result.desc = "It was a good hit!";
+            result.desc = "It was a <color:y>fair</color> shot!";
+            result.mul = 125;
+        }
+        else if (k < 700)
+        {
+            result.desc = "It was a <color:y>decent</color> shot!";
             result.mul = 150;
+        }
+        else if (k < 1000)
+        {
+            result.desc = "It was a <color:R>good</color> shot!";
+            result.mul = 175;
         }
         else if (k < 1350)
         {
-            result.desc = "It was a great hit!";
+            result.desc = "It was a <color:r>great</color> shot!";
             result.mul = 200;
         }
-        else
+        else if (k < 1800)
         {
-            result.desc = "It was a superb hit!";
+            result.desc = "It was a <color:v>superb</color> shot!";
+            result.mul = 250;
+        }
+        else /* requires 0.4+lb ammo: steel bolt or sheaf arrow or sling ammo */
+        {
+            result.desc = "It was a <color:v>*GREAT*</color> shot!";
             result.mul = 300;
         }
     }
