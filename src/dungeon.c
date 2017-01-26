@@ -3448,6 +3448,7 @@ static void process_command(void)
         case KTRL('I'):
         {
             toggle_inven_equip();
+            toggle_mon_obj_lists();
             break;
         }
 

@@ -1662,6 +1662,27 @@ void toggle_inven_equip(void)
     }
 }
 
+void toggle_mon_obj_lists(void)
+{
+    int i;
+
+    for (i = 0; i < 8; i++)
+    {
+        if (!angband_term[i]) continue;
+        if (window_flag[i] & PW_MONSTER_LIST)
+        {
+            window_flag[i] &= ~PW_MONSTER_LIST;
+            window_flag[i] |= PW_OBJECT_LIST;
+            p_ptr->window |= PW_OBJECT_LIST;
+        }
+        else if (window_flag[i] & PW_OBJECT_LIST)
+        {
+            window_flag[i] &= ~PW_OBJECT_LIST;
+            window_flag[i] |= PW_MONSTER_LIST;
+            p_ptr->window |= PW_MONSTER_LIST;
+        }
+    }
+}
 
 
 /*
