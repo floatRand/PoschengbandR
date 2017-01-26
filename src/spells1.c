@@ -2488,7 +2488,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 dam *= 2; dam /= randint1(6) + 6;
                 mon_lore_r(m_ptr, RFR_RES_SOUN);
             }
-            else if (who == 0 && randint1(10*r_ptr->level) > dam)
+            else if (who == 0 && randint1((1 + r_ptr->level/12)*r_ptr->level) > dam)
             {
                 note = " resists stunning.";
             }
