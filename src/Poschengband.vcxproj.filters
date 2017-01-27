@@ -207,6 +207,9 @@
     <ClCompile Include="ego.c">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="inv.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
     <ClCompile Include="obj_kind.c">
       <Filter>Objects</Filter>
     </ClCompile>

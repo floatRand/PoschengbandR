@@ -2190,12 +2190,12 @@ typedef struct {
     int  type;
     s16b tag;
     int  hand;
-} slot_t;
+} equip_slot_t;
 
 typedef struct equip_template_s {
-    int        count;
-    u32b       name;
-    slot_t     slots[EQUIP_MAX_SLOTS];
+    int          count;
+    u32b         name;
+    equip_slot_t slots[EQUIP_MAX_SLOTS];
 } equip_template_t, *equip_template_ptr;
 
 typedef struct {

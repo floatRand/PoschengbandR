@@ -36,7 +36,6 @@
 
     NULL predicates are always OK and mean that no restriction should be applied.
 */
-
 typedef void (*object_fn)(object_type *o_ptr);
 typedef void (*slot_fn)(int slot);
 

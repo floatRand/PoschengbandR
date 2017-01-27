@@ -50,6 +50,7 @@
 #include "spells.h"
 #include "menu.h"
 #include "fear.h"
+#include "inv.h"
 #include "equip.h"
 
 /***** Some copyright messages follow below *****/
