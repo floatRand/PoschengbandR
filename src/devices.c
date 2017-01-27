@@ -2965,21 +2965,19 @@ void device_stats_on_save(savefile_ptr file)
 
 void device_stats_on_load(savefile_ptr file)
 {
+    int i, ct;
+
     _device_stats_load_imp(file, wand_effect_table);
     _device_stats_load_imp(file, rod_effect_table);
     _device_stats_load_imp(file, staff_effect_table);
 
-    if (!savefile_is_older_than(file, 5, 0, 0, 2))
+    ct = savefile_read_s32b(file);
+    for (i = 0; i < ct; i++)
     {
-        int i, ct;
-        ct = savefile_read_s32b(file);
-        for (i = 0; i < ct; i++)
-        {
-            int type = savefile_read_s32b(file);
-            _effect_info_ptr e = _get_effect_info(type);
-            if (e)
-                e->known = TRUE;
-        }
+        int type = savefile_read_s32b(file);
+        _effect_info_ptr e = _get_effect_info(type);
+        if (e)
+            e->known = TRUE;
     }
 }
 

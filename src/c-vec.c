@@ -21,9 +21,7 @@ struct vec_s
 
    However, gcc whines about converting int <-> void* on 64 bit architectures,
    and as far as I could figure out, the only way to shut up this warning is to
-   convert intptr_t <-> void*. Since I have a sinking feeling that this will not
-   port to Windows, I added some routines to hide this conversion until I can
-   figure out what Windows will handle.
+   convert intptr_t <-> void*. This works just fine on Windows, btw.
 
    All we really need for the correctness of this long standing, traditional
    idiom is sizeof(int) <= sizeof(void*), and I really wish gcc would lighten
@@ -132,8 +130,20 @@ void vec_set(vec_ptr vec, int i, vptr obj)
     if (i < vec->len)
     {
         assert(vec->objs);
+        if (vec->free)
+            vec->free(vec->objs[i]);
         vec->objs[i] = obj;
     }
+}
+
+void vec_swap(vec_ptr vec, int i, int j)
+{
+    vptr tmp;
+    assert(i >= 0 && i < vec->len);
+    assert(j >= 0 && j < vec->len);
+    tmp = vec->objs[i];
+    vec->objs[i] = vec->objs[j];
+    vec->objs[j] = tmp;
 }
 
 int vec_length(vec_ptr vec)

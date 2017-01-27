@@ -7,7 +7,8 @@
  *
  * Object Ownership: Any objects added to the inventory
  * are copied. Clients own the original while this module
- * owns the copies.
+ * owns the copies. Filtered inventories must outlive
+ * the parent (source) inventory.
  */
 
 typedef int slot_t; /* Slots are 1..max ('if (slot) ...' is a valid idiom) */
@@ -19,11 +20,13 @@ typedef void (*slot_f)(slot_t slot);
 typedef bool (*obj_p)(obj_ptr obj);
 
 extern bool obj_exists(obj_ptr obj); /* Useful for counting/iterating occupied slots */
+extern void obj_clear_scratch(obj_ptr obj); /* Used in sorting to memoize obj_value() */
 
 typedef struct inv_s inv_t, *inv_ptr; /* Hidden/Abstract */
 
 /* Creation */
 extern inv_ptr inv_alloc(int max); /* max=0 is unbounded */
+extern inv_ptr inv_filter(inv_ptr src, obj_p p);
 extern void    inv_free(inv_ptr inv);
 
 /* Adding, Removing and Sorting */
@@ -32,8 +35,7 @@ extern slot_t  inv_combine(inv_ptr inv, obj_ptr obj); /* Try to combine obj (ie 
 extern int     inv_remove(inv_ptr inv, slot_t slot, int ct); /* returns new ct at this slot */
 extern void    inv_sort(inv_ptr inv);
 extern void    inv_swap(inv_ptr inv, slot_t left, slot_t right);
-extern int     obj_cmp(obj_ptr left, obj_ptr right); /* Doesn't belong here ... */
-extern int     inv_cmp(inv_ptr inv, slot_t left, slot_t right);   /* Empty slots sort to bottom */
+extern int     obj_cmp(obj_ptr left, obj_ptr right);
 
 /* Iterating, Searching and Accessing Objects (Predicates are always optional) */
 extern obj_ptr inv_obj(inv_ptr inv, slot_t slot); /* NULL if slot is not occupied */
@@ -57,5 +59,7 @@ extern int     inv_max_slots(inv_ptr inv); /* from inv_alloc(max) */
 /* Savefiles */
 extern void    inv_load(inv_ptr inv, savefile_ptr file);
 extern void    inv_save(inv_ptr inv, savefile_ptr file);
+extern void    obj_load(obj_ptr obj, savefile_ptr file);
+extern void    obj_save(obj_ptr obj, savefile_ptr file);
 
 #endif

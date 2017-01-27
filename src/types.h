@@ -376,6 +376,7 @@ struct object_type
     effect_t activation;
 
     s16b level;         /* object_level on generation for my statistical pleasures */
+    int  scratch;
 };
 #define object_is_(O, T, S) ((O)->tval == (T) && (O)->sval == (S))
 

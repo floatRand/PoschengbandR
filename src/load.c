@@ -35,177 +35,7 @@ static void note(cptr msg)
 
 void rd_item(savefile_ptr file, object_type *o_ptr)
 {
-    object_kind *k_ptr;
-    char         buf[128];
-
-    object_wipe(o_ptr);
-
-    o_ptr->k_idx = savefile_read_s16b(file);
-    k_ptr = &k_info[o_ptr->k_idx];
-    o_ptr->tval = k_ptr->tval;
-    o_ptr->sval = k_ptr->sval;
-
-    o_ptr->iy = savefile_read_byte(file);
-    o_ptr->ix = savefile_read_byte(file);
-    o_ptr->weight = savefile_read_s16b(file);
-
-    o_ptr->number = 1;
-
-    for (;;)
-    {
-        byte code = savefile_read_byte(file);
-        if (code == SAVE_ITEM_DONE)
-            break;
-
-        switch (code)
-        {
-        case SAVE_ITEM_PVAL:
-            o_ptr->pval = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_DISCOUNT:
-            o_ptr->discount = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_NUMBER:
-            o_ptr->number = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_NAME1:
-            o_ptr->name1 = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_NAME2:
-            o_ptr->name2 = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_NAME3:
-            o_ptr->name3 = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_TIMEOUT:
-            o_ptr->timeout = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_COMBAT:
-            o_ptr->to_h = savefile_read_s16b(file);
-            o_ptr->to_d = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_ARMOR:
-            o_ptr->to_a = savefile_read_s16b(file);
-            o_ptr->ac = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_DAMAGE_DICE:
-            o_ptr->dd = savefile_read_byte(file);
-            o_ptr->ds = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_MULT:
-            o_ptr->mult = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_IDENT:
-            o_ptr->ident = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_MARKED_BYTE:
-            o_ptr->marked = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_MARKED:
-            o_ptr->marked = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_ART_FLAGS_0:
-            o_ptr->flags[0] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_ART_FLAGS_1:
-            o_ptr->flags[1] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_ART_FLAGS_2:
-            o_ptr->flags[2] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_ART_FLAGS_3:
-            o_ptr->flags[3] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_ART_FLAGS_4:
-            o_ptr->flags[4] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_ART_FLAGS_5:
-            o_ptr->flags[5] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_CURSE_FLAGS:
-            o_ptr->curse_flags = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_KNOWN_FLAGS_0:
-            o_ptr->known_flags[0] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_KNOWN_FLAGS_1:
-            o_ptr->known_flags[1] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_KNOWN_FLAGS_2:
-            o_ptr->known_flags[2] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_KNOWN_FLAGS_3:
-            o_ptr->known_flags[3] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_KNOWN_FLAGS_4:
-            o_ptr->known_flags[4] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_KNOWN_FLAGS_5:
-            o_ptr->known_flags[5] = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_KNOWN_CURSE_FLAGS:
-            o_ptr->known_curse_flags = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_RUNE_FLAGS:
-            o_ptr->rune = savefile_read_u32b(file);
-            break;
-        case SAVE_ITEM_HELD_M_IDX:
-            o_ptr->held_m_idx = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_XTRA1:
-            o_ptr->xtra1 = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_XTRA2:
-            o_ptr->xtra2 = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_XTRA3:
-            o_ptr->xtra3 = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_XTRA4:
-            o_ptr->xtra4 = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_XTRA5_OLD:
-            o_ptr->xtra5 = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_XTRA5:
-            o_ptr->xtra5 = savefile_read_s32b(file);
-            break;
-        case SAVE_ITEM_FEELING:
-            o_ptr->feeling = savefile_read_byte(file);
-            break;
-        case SAVE_ITEM_INSCRIPTION:
-            savefile_read_cptr(file, buf, sizeof(buf));
-            o_ptr->inscription = quark_add(buf);
-            break;
-        case SAVE_ITEM_ART_NAME:
-            savefile_read_cptr(file, buf, sizeof(buf));
-            o_ptr->art_name = quark_add(buf);
-            break;
-        case SAVE_ITEM_ACTIVATION:
-            o_ptr->activation.type = savefile_read_s16b(file);
-            o_ptr->activation.power = savefile_read_byte(file);
-            o_ptr->activation.difficulty = savefile_read_byte(file);
-            o_ptr->activation.cost = savefile_read_s16b(file);
-            o_ptr->activation.extra = savefile_read_s16b(file);
-            break;
-        case SAVE_ITEM_LEVEL:
-            o_ptr->level = savefile_read_s16b(file);
-            break;
-        /* default:
-            TODO: Report an error back to the load routine!!*/
-        }
-    }
-    if (object_is_device(o_ptr))
-        add_flag(o_ptr->flags, OF_ACTIVATE);
-
-    if (savefile_is_older_than(file, 5, 0, 1, 1))
-    {
-        if ( object_is_(o_ptr, TV_BOW, SV_SHORT_BOW)
-          || object_is_(o_ptr, TV_BOW, SV_LIGHT_XBOW) )
-        {
-            o_ptr->mult -= 50;
-        }
-    }
+    obj_load(o_ptr, file);
 }
 
 
@@ -325,16 +155,9 @@ static void rd_lore(savefile_ptr file, int r_idx)
     r_ptr->r_drop_gold = savefile_read_byte(file);
     r_ptr->r_drop_item = savefile_read_byte(file);
     r_ptr->r_cast_spell = savefile_read_byte(file);
-    if (savefile_is_older_than(file, 5, 0, 2, 1))
-    {
-        r_ptr->r_spell_turns = 0;
-        r_ptr->r_move_turns = 0;
-    }
-    else
-    {
-        r_ptr->r_spell_turns = savefile_read_u32b(file);
-        r_ptr->r_move_turns = savefile_read_u32b(file);
-    }
+    r_ptr->r_spell_turns = savefile_read_u32b(file);
+    r_ptr->r_move_turns = savefile_read_u32b(file);
+
     r_ptr->r_blows[0] = savefile_read_byte(file);
     r_ptr->r_blows[1] = savefile_read_byte(file);
     r_ptr->r_blows[2] = savefile_read_byte(file);
@@ -588,8 +411,7 @@ static void rd_quick_start(savefile_ptr file)
 {
     int i;
 
-    if (!savefile_is_older_than(file, 5, 0, 3, 1))
-        previous_char.game_mode = savefile_read_byte(file);
+    previous_char.game_mode = savefile_read_byte(file);
     previous_char.psex = savefile_read_byte(file);
     previous_char.prace = savefile_read_byte(file);
     previous_char.psubrace = savefile_read_byte(file);
@@ -599,25 +421,11 @@ static void rd_quick_start(savefile_ptr file)
     previous_char.realm1 = savefile_read_byte(file);
     previous_char.realm2 = savefile_read_byte(file);
     previous_char.dragon_realm = savefile_read_byte(file);
-    if (savefile_is_older_than(file, 5, 0, 3, 1))
-        previous_char.age = savefile_read_s16b(file);
     previous_char.au = savefile_read_s32b(file);
 
     for (i = 0; i < 6; i++)
         previous_char.stat_max[i] = savefile_read_s16b(file);
-    if (savefile_is_older_than(file, 5, 0, 3, 1))
-    {
-        for (i = 0; i < 6; i++) previous_char.stat_max_max[i] = savefile_read_s16b(file);
-        for (i = 0; i < PY_MAX_LEVEL; i++) previous_char.player_hp[i] = savefile_read_s16b(file);
-
-        previous_char.chaos_patron = savefile_read_s16b(file);
-        previous_char.mutation = savefile_read_s32b(file);
-
-        for (i = 0; i < 8; i++) previous_char.vir_types[i] = savefile_read_s16b(file);
-    }
     previous_char.quick_ok = savefile_read_byte(file);
-    if (savefile_is_older_than(file, 5, 0, 3, 1))
-        previous_char.quick_ok = FALSE;
 }
 
 static void rd_extra(savefile_ptr file)
@@ -1337,9 +1145,10 @@ static errr rd_savefile_new_aux(savefile_ptr file)
              "Loading a %d.%d.%d savefile...",
              (z_major > 9) ? z_major - 10 : z_major, z_minor, z_patch));
 
-    if (savefile_is_older_than(file, 5, 0, 0, 0))
+    /* Savefiles break iff VER_MAJOR bumps */
+    if (savefile_is_older_than(file, VER_MAJOR, 0, 0, 0))
     {
-        note("Old savefiles are not supported!");
+        note(format("Savefiles older than %d.0.0 are not supported!", VER_MAJOR));
         return 1;
     }
 
@@ -1603,8 +1412,7 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     {
         artifact_type *a_ptr = &a_info[i];
         a_ptr->generated = savefile_read_byte(file);
-        if (!savefile_is_older_than(file, 5, 0, 0, 1))
-            a_ptr->found = savefile_read_byte(file);
+        a_ptr->found = savefile_read_byte(file);
         a_ptr->floor_id = savefile_read_s16b(file);
     }
     if (arg_fiddle) note("Loaded Artifacts");

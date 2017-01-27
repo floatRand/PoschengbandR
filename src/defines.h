@@ -16,9 +16,9 @@
 #define VERSION_NAME "PosChengband"
 
 
-#define VER_MAJOR 5
+#define VER_MAJOR 6
 #define VER_MINOR 0
-#define VER_PATCH 6
+#define VER_PATCH 0
 #define VER_EXTRA 0
 
 #define GAME_MODE_BEGINNER  0
