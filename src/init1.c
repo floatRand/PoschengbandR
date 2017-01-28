@@ -3442,7 +3442,7 @@ errr parse_b_info(char *buf, header *head)
     {
         int n1;
 
-        i = b_ptr->count++;
+        i = ++b_ptr->max;
 
         /* Analyze the first field */
         for (s = t = buf+2; *t && (*t != ':'); t++) /* loop */;

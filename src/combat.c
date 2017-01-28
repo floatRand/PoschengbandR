@@ -1214,7 +1214,7 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
 void display_shooter_info(doc_ptr doc)
 {
     object_type *bow_ptr = NULL;
-    int          slot = equip_find_object(TV_BOW, SV_ANY);
+    int          slot = equip_find_obj(TV_BOW, SV_ANY);
     char         o_name[MAX_NLEN];
     int          mult;
     int          num_fire = 0;

@@ -1170,7 +1170,7 @@ static void process_world_aux_hp_and_sp(void)
             }
         }
 
-        slot = equip_find_object(TV_LITE, SV_ANY);
+        slot = equip_find_obj(TV_LITE, SV_ANY);
         if (slot)
         {
             object_type *lite = equip_obj(slot);
@@ -1908,7 +1908,7 @@ static void process_world_aux_timeout(void)
  */
 static void process_world_aux_light(void)
 {
-    int slot = equip_find_object(TV_LITE, SV_ANY);
+    int slot = equip_find_obj(TV_LITE, SV_ANY);
     if (slot)
     {
         object_type *lite = equip_obj(slot);
@@ -1944,7 +1944,7 @@ static void process_world_aux_curse(void)
             int i, i_keep = 0, count = 0;
 
             /* Scan the equipment with random teleport ability */
-            for (i = EQUIP_BEGIN; i < EQUIP_BEGIN + equip_count(); i++)
+            for (i = 1; i <= equip_max(); i++)
             {
                 u32b flgs[OF_ARRAY_SIZE];
                 o_ptr = equip_obj(i);
@@ -1964,7 +1964,7 @@ static void process_world_aux_curse(void)
 
             if (i_keep)
             {
-                o_ptr = &inventory[i_keep];
+                o_ptr = equip_obj(i_keep);
                 object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
                 msg_format("Your %s is activating teleportation.", o_name);
                 if (get_check_strict("Teleport? ", CHECK_OKAY_CANCEL))
@@ -2156,7 +2156,7 @@ static void process_world_aux_curse(void)
     /* Rarely, take damage from the Jewel of Judgement */
     if (one_in_(999) && !p_ptr->anti_magic)
     {
-        int slot = equip_find_artifact(ART_JUDGE);
+        int slot = equip_find_art(ART_JUDGE);
         if (slot)
         {
             object_type *o_ptr = equip_obj(slot);
@@ -2205,7 +2205,7 @@ static void process_world_aux_curse(void)
 
     if (one_in_(666))
     {
-        int slot = equip_find_artifact(ART_HAND_OF_VECNA);
+        int slot = equip_find_art(ART_HAND_OF_VECNA);
         if (slot)
         {
             object_type *o_ptr = equip_obj(slot);
@@ -2219,7 +2219,7 @@ static void process_world_aux_curse(void)
 
     if (one_in_(666))
     {
-        int slot = equip_find_artifact(ART_EYE_OF_VECNA);
+        int slot = equip_find_art(ART_EYE_OF_VECNA);
         if (slot)
         {
             object_type *o_ptr = equip_obj(slot);
@@ -2240,7 +2240,7 @@ static void process_world_aux_curse(void)
 
     if (!p_ptr->wild_mode && one_in_(66))
     {
-        int slot = equip_find_artifact(ART_BLOODRIP);
+        int slot = equip_find_art(ART_BLOODRIP);
         if (slot)
         {
             object_type *o_ptr = equip_obj(slot);

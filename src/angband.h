@@ -42,6 +42,12 @@
 #include "defines.h"
 #include "variant.h"
 #include "resist.h"
+
+#include "obj.h"
+#include "inv.h"
+#include "equip.h"
+#include "pack.h"
+
 #include "types.h"
 #include "externs.h"
 
@@ -50,8 +56,6 @@
 #include "spells.h"
 #include "menu.h"
 #include "fear.h"
-#include "inv.h"
-#include "equip.h"
 
 /***** Some copyright messages follow below *****/
 

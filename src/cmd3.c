@@ -566,13 +566,12 @@ void do_cmd_inspect(void)
         doc_ptr doc = doc_alloc(80);
 
         doc_insert(doc, "<style:wide><topic:Equipment>============================= Character <color:keypress>E</color>quipment =============================</style>\n\n");
-        for (slot = EQUIP_BEGIN, i = 0; slot < EQUIP_BEGIN + equip_count(); slot++, i++)
+        for (slot = 1; slot <= equip_max(); slot++)
         {
             object_type *o_ptr = equip_obj(slot);
             if (!o_ptr) continue;
 
             obj_display_doc(o_ptr, doc);
-            /*doc_newline(doc);*/
         }
 
         doc_printf(doc, "<style:wide><topic:Inventory>============================= Character <color:keypress>I</color>nventory =============================</style>\n\n");
@@ -581,7 +580,6 @@ void do_cmd_inspect(void)
             if (!inventory[i].k_idx) break;
             if (!object_is_weapon_armour_ammo(&inventory[i]) && !object_is_known(&inventory[i])) continue;
             obj_display_doc(&inventory[i], doc);
-            /*doc_newline(doc);*/
         }
 
         screen_save();
@@ -871,7 +869,7 @@ static void do_cmd_refill_torch(object_type *torch)
  */
 void do_cmd_refill(void)
 {
-    int slot = equip_find_object(TV_LITE, SV_ANY);
+    int slot = equip_find_obj(TV_LITE, SV_ANY);
 
     if (slot)
     {

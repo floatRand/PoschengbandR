@@ -639,7 +639,7 @@ static void _load_list(savefile_ptr file, object_type *which_list)
         if (i == 0xFFFF) break;
         assert(0 <= i && i < _MAX_SLOTS);
         o_ptr = which_list + i;
-        rd_item(file, o_ptr);
+        obj_load(o_ptr, file);
         assert(o_ptr->k_idx);
     }
 }
@@ -660,7 +660,7 @@ static void _save_list(savefile_ptr file, object_type *which_list)
         if (o_ptr->k_idx)
         {
             savefile_write_u16b(file, (u16b)i);
-            wr_item(file, o_ptr);
+            obj_save(o_ptr, file);
         }
     }
     savefile_write_u16b(file, 0xFFFF); /* sentinel */

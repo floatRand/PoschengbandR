@@ -919,7 +919,7 @@ bool make_attack_normal(int m_idx)
 
                 case RBE_EAT_LITE:
                 {
-                    int slot = equip_find_object(TV_LITE, SV_ANY);
+                    int slot = equip_find_obj(TV_LITE, SV_ANY);
 
                     damage = reduce_melee_dam_p(damage);
                     get_damage += take_hit(DAMAGE_ATTACK, damage, ddesc, -1);

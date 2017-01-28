@@ -3785,215 +3785,6 @@ static int collect_features(int grp_cur, int *feat_idx, byte mode)
     return feat_cnt;
 }
 
-
-#if 0
-/*
- * Build a list of monster indexes in the given group. Return the number
- * of monsters in the group.
- */
-static int collect_artifacts(int grp_cur, int object_idx[])
-{
-    int i, object_cnt = 0;
-
-    /* Get a list of x_char in this group */
-    byte group_tval = object_group_tval[grp_cur];
-
-    /* Check every object */
-    for (i = 0; i < max_a_idx; i++)
-    {
-        /* Access the artifact */
-        artifact_type *a_ptr = &a_info[i];
-
-        /* Skip empty artifacts */
-        if (!a_ptr->name) continue;
-
-        /* Skip "uncreated" artifacts */
-        if (!a_ptr->cur_num) continue;
-
-        /* Check for race in the group */
-        if (a_ptr->tval == group_tval)
-        {
-            /* Add the race */
-            object_idx[object_cnt++] = i;
-        }
-    }
-
-    /* Terminate the list */
-    object_idx[object_cnt] = 0;
-
-    /* Return the number of races */
-    return object_cnt;
-}
-#endif /* 0 */
-
-cptr inven_res_label =
- "                               AcElFiCoPoLiDkShSoNtNxCaDi BlFeCfFaSiHlEpSdRgLv";
-
-
-#define IM_FLAG_STR  "* "
-#define HAS_FLAG_STR "+ "
-#define NO_FLAG_STR  ". "
-
-#define print_im_or_res_flag(IM, RES) \
-{ \
-    fputs(have_flag(flgs, (IM)) ? IM_FLAG_STR : \
-          (have_flag(flgs, (RES)) ? HAS_FLAG_STR : NO_FLAG_STR), fff); \
-}
-
-#define print_flag(TR) \
-{ \
-    fputs(have_flag(flgs, (TR)) ? HAS_FLAG_STR : NO_FLAG_STR, fff); \
-}
-
-
-/* XTRA HACK RESLIST */
-static void do_cmd_knowledge_inven_aux(FILE *fff, object_type *o_ptr, int *j, byte tval, char *where)
-{
-    char o_name[MAX_NLEN];
-    u32b flgs[OF_ARRAY_SIZE];
-
-    if (!o_ptr->k_idx) return;
-    if (o_ptr->tval != tval) return;
-
-    /* Identified items only */
-    if (!object_is_known(o_ptr)) return;
-
-    /*
-     * HACK:Ring of Lordly protection and Dragon equipment
-     * have random resistances.
-     */
-    if ((object_is_wearable(o_ptr) && object_is_ego(o_ptr))
-        || object_is_dragon_armor(o_ptr)
-        || object_is_artifact(o_ptr))
-    {
-        int i = 0;
-        object_desc(o_name, o_ptr, OD_NAME_ONLY);
-
-        while (o_name[i] && (i < 26))
-        {
-            i++;
-        }
-
-        if (i < 28)
-        {
-            while (i < 28)
-            {
-                o_name[i] = ' '; i++;
-            }
-        }
-        o_name[i] = '\0';
-
-        fprintf(fff, "%s %s", where, o_name);
-
-        obj_flags_known(o_ptr, flgs);
-
-        print_im_or_res_flag(OF_IM_ACID, OF_RES_ACID);
-        print_im_or_res_flag(OF_IM_ELEC, OF_RES_ELEC);
-        print_im_or_res_flag(OF_IM_FIRE, OF_RES_FIRE);
-        print_im_or_res_flag(OF_IM_COLD, OF_RES_COLD);
-        print_flag(OF_RES_POIS);
-        print_flag(OF_RES_LITE);
-        print_flag(OF_RES_DARK);
-        print_flag(OF_RES_SHARDS);
-        print_flag(OF_RES_SOUND);
-        print_flag(OF_RES_NETHER);
-        print_flag(OF_RES_NEXUS);
-        print_flag(OF_RES_CHAOS);
-        print_flag(OF_RES_DISEN);
-
-        fputs(" ", fff);
-
-        print_flag(OF_RES_BLIND);
-        print_flag(OF_RES_FEAR);
-        print_flag(OF_RES_CONF);
-        print_flag(OF_FREE_ACT);
-        print_flag(OF_SEE_INVIS);
-        print_flag(OF_HOLD_LIFE);
-        print_flag(OF_TELEPATHY);
-        print_flag(OF_SLOW_DIGEST);
-        print_flag(OF_REGEN);
-        print_flag(OF_LEVITATION);
-
-        fputc('\n', fff);
-
-        (*j)++;
-        if (*j == 9)
-        {
-            *j = 0;
-            fprintf(fff, "%s\n", inven_res_label);
-        }
-    }
-}
-
-/*
- * Display *ID* ed weapons/armors's resistances
- */
-static void do_cmd_knowledge_inven(void)
-{
-    FILE *fff;
-
-    char file_name[1024];
-
-    store_type  *st_ptr;
-
-    byte tval;
-    int i = 0;
-    int j = 0;
-
-    char  where[32];
-
-    /* Open a new file */
-    fff = my_fopen_temp(file_name, 1024);
-    if (!fff)
-    {
-        msg_format("Failed to create temporary file %s.", file_name);
-        msg_print(NULL);
-        return;
-    }
-    fprintf(fff, "%s\n", inven_res_label);
-
-    for (tval = TV_WEARABLE_BEGIN; tval <= TV_WEARABLE_END; tval++)
-    {
-        if (j != 0)
-        {
-            for (; j < 9; j++) fputc('\n', fff);
-            j = 0;
-            fprintf(fff, "%s\n", inven_res_label);
-        }
-
-        strcpy(where, "E ");
-        for (i = EQUIP_BEGIN; i < EQUIP_BEGIN + equip_count(); i++)
-        {
-            object_type *o_ptr = equip_obj(i);
-            if (o_ptr)
-                do_cmd_knowledge_inven_aux(fff, o_ptr, &j, tval, where);
-        }
-
-        strcpy(where, "I ");
-        for (i = 0; i < INVEN_PACK; i++)
-        {
-            do_cmd_knowledge_inven_aux(fff, &inventory[i], &j, tval, where);
-        }
-
-        st_ptr = &town[1].store[STORE_HOME];
-        strcpy(where, "H ");
-
-        for (i = 0; i < st_ptr->stock_num; i++)
-        {
-            do_cmd_knowledge_inven_aux(fff, &st_ptr->stock[i], &j, tval, where);
-        }
-    }
-
-    /* Close the file */
-    my_fclose(fff);
-
-    /* Display the file contents */
-    show_file(TRUE, file_name, "Resistances of *identified* equipment", 0, 0);
-
-    /* Remove the file */
-    fd_kill(file_name);
-}
-
 void do_cmd_save_screen_doc(void)
 {
     string_ptr s = get_screenshot();
@@ -4594,7 +4385,7 @@ static void _prof_weapon_doc(doc_ptr doc, int tval)
         char         name[MAX_NLEN];
 
         strip_name(name, k_ptr->idx);
-        doc_printf(doc, "<color:%c>%-19s</color> ", equip_find_object(k_ptr->tval, k_ptr->sval) ? 'B' : 'w', name);
+        doc_printf(doc, "<color:%c>%-19s</color> ", equip_find_obj(k_ptr->tval, k_ptr->sval) ? 'B' : 'w', name);
         doc_printf(doc, "%c<color:%c>%-4s</color>", exp >= max ? '!' : ' ', _prof_exp_color[exp_lvl], _prof_exp_str[exp_lvl]);
         doc_newline(doc);
     }
@@ -5462,9 +5253,9 @@ static void display_monster_list(int col, int row, int per_page, s16b mon_idx[],
                         sprintf(buf, "%+3d%%", r_ptr->body.life);
                         c_put_str(TERM_WHITE, buf, row + i, 110);
 
-                        for (j = 0; j < body->count; j++)
+                        for (j = 1; j <= body->max; j++)
                         {
-                            int c = 116 + j;
+                            int c = 115 + j;
                             int r = row + i;
                             switch (body->slots[j].type)
                             {
@@ -7747,7 +7538,6 @@ void do_cmd_knowledge(void)
         prt("(o) Objects", row++, col);
         prt("(e) Egos", row++, col);
         prt("(h) Home Inventory", row++, col);
-        prt("(i) *Identified* Equip.", row++, col);
         prt("(_) Auto Pick/Destroy", row++, col);
         row++;
 
@@ -7772,7 +7562,7 @@ void do_cmd_knowledge(void)
         prt("(@) About Yourself", row++, col);
         if (p_ptr->prace != RACE_MON_RING)
             prt("(W) Weapon Damage", row++, col);
-        if (equip_find_object(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
+        if (equip_find_obj(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
             prt("(S) Shooter Damage", row++, col);
         if (mut_count(NULL))
             prt("(M) Mutations", row++, col);
@@ -7811,9 +7601,6 @@ void do_cmd_knowledge(void)
             break;
         case 'h':
             do_cmd_knowledge_home();
-            break;
-        case 'i':
-            do_cmd_knowledge_inven();
             break;
         case '_':
             do_cmd_knowledge_autopick();
@@ -7861,7 +7648,7 @@ void do_cmd_knowledge(void)
                 bell();
             break;
         case 'S':
-            if (equip_find_object(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
+            if (equip_find_obj(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
                 do_cmd_knowledge_shooter();
             else
                 bell();

@@ -2952,7 +2952,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
 
                 if ( o_ptr->name1 == ART_BARD_ARROW
                   && m_ptr->r_idx == MON_SMAUG
-                  && equip_find_artifact(ART_BARD) )
+                  && equip_find_art(ART_BARD) )
                 {
                     mult *= 5;
                 }

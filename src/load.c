@@ -764,52 +764,6 @@ static void rd_extra(savefile_ptr file)
 }
 
 /*
- * Read the player inventory
- * Note that the inventory is "re-sorted" later by "dungeon()".
- */
-static errr rd_inventory(savefile_ptr file)
-{
-    int           slot = 0;
-    object_type   forge;
-
-    p_ptr->total_weight = 0;
-    inven_cnt = 0;
-
-    /* Read until done */
-    while (1)
-    {
-        u16b n = savefile_read_u16b(file);
-
-        if (n == 0xFFFF) break;
-
-        rd_item(file, &forge);
-
-        if (!forge.k_idx) return (53);
-
-        if (n >= EQUIP_BEGIN)
-        {
-            forge.marked |= OM_TOUCHED;
-            object_copy(&inventory[n], &forge);
-            p_ptr->total_weight += (forge.number * forge.weight);
-        }
-        else if (inven_cnt == INVEN_PACK)
-        {
-            note("Too many items in the inventory!");
-            return (54);
-        }
-        else
-        {
-            n = slot++;
-            forge.marked |= OM_TOUCHED;
-            object_copy(&inventory[n], &forge);
-            p_ptr->total_weight += (forge.number * forge.weight);
-            inven_cnt++;
-        }
-    }
-    return 0;
-}
-
-/*
  * Read the saved floor
  *
  * The monsters/objects must be loaded in the same order
@@ -1463,11 +1417,9 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
     /* Read the inventory */
     equip_on_init();
-    if (rd_inventory(file))
-    {
-        note("Unable to read inventory");
-        return (21);
-    }
+    equip_load(file);
+    /*pack_load(file);
+    quiver_load(file); */
 
     town_count = savefile_read_u16b(file);
     tmp16u = savefile_read_u16b(file);

@@ -101,7 +101,7 @@ void vec_clear(vec_ptr vec)
             for (i = 0; i < vec->len; i++)
                 vec->free(vec->objs[i]);
         }
-        memset(vec->objs, 0, vec->size * sizeof(vptr)); /* unnecessary */
+        memset(vec->objs, 0, vec->size * sizeof(vptr));
         vec->len = 0;
     }
 }

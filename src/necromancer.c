@@ -22,7 +22,7 @@ static bool _necro_check_touch(void)
         return FALSE;
     }
 
-    slot = equip_find_object(TV_GLOVES, SV_ANY);
+    slot = equip_find_obj(TV_GLOVES, SV_ANY);
     if (slot && equip_obj(slot)->name1 != ART_HAND_OF_VECNA)
     {
         msg_print("You can't touch while wielding gloves.");
@@ -33,7 +33,7 @@ static bool _necro_check_touch(void)
 
 static cptr _necro_info_damage(int dice, int sides, int base)
 {
-    if (equip_find_artifact(ART_HAND_OF_VECNA))
+    if (equip_find_art(ART_HAND_OF_VECNA))
     {
         dice *= 2;
         base *= 2;

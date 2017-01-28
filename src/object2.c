@@ -1370,7 +1370,6 @@ void reduce_charges(object_type *o_ptr, int amt)
 /*
  * A "stack" of items is limited to less than or equal to 99 items (hard-coded).
  */
-#define MAX_STACK_SIZE 99
 
 
 /*

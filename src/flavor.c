@@ -1837,7 +1837,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         }
     }
 
-    slot = equip_find_object(TV_BOW, SV_ANY);
+    slot = equip_find_obj(TV_BOW, SV_ANY);
     if (slot)
         bow_ptr = equip_obj(slot);
 

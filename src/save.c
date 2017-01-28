@@ -1095,17 +1095,9 @@ static bool wr_savefile_new(savefile_ptr file)
     for (i = 0; i < 64; i++)
         savefile_write_byte(file, p_ptr->spell_order[i]);
 
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-
-        if (!o_ptr->k_idx) continue;
-        if (i >= EQUIP_BEGIN && !equip_is_valid_slot(i)) continue;
-
-        savefile_write_u16b(file, (u16b)i);
-        wr_item(file, o_ptr);
-    }
-    savefile_write_u16b(file, 0xFFFF); /* sentinel */
+    equip_save(file);
+    /*pack_save(file);
+    quiver_save(file);*/
 
     tmp16u = max_towns;
     savefile_write_u16b(file, tmp16u);

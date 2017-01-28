@@ -525,7 +525,7 @@ static void _calc_bonuses(void)
         p_ptr->pspeed -= p_ptr->lev/10;
         p_ptr->skills.stl -= p_ptr->lev/10;
     }
-    else if (!equip_find_object(TV_SHIELD, SV_ANY))
+    else if (!equip_find_obj(TV_SHIELD, SV_ANY))
     {
         p_ptr->pspeed += 3;
         p_ptr->pspeed += p_ptr->lev/10;

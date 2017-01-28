@@ -4560,7 +4560,7 @@ bool py_attack(int y, int x, int mode)
 
     if ( (r_ptr->flags1 & RF1_FEMALE)
       && !(p_ptr->stun || p_ptr->confused || p_ptr->image || !m_ptr->ml)
-      && equip_find_artifact(ART_ZANTETSU))
+      && equip_find_art(ART_ZANTETSU))
     {
         msg_print("I can not attack women!");
         return FALSE;
@@ -4575,7 +4575,7 @@ bool py_attack(int y, int x, int mode)
     if ( !is_hostile(m_ptr)
       && !(p_ptr->stun || p_ptr->confused || p_ptr->image || IS_SHERO() || !m_ptr->ml) )
     {
-        if (equip_find_artifact(ART_STORMBRINGER))
+        if (equip_find_art(ART_STORMBRINGER))
         {
             msg_format("Your black blade greedily attacks %s!", m_name);
             virtue_add(VIRTUE_INDIVIDUALISM, 1);
@@ -5511,7 +5511,7 @@ void move_player(int dir, bool do_pickup, bool break_trap)
     m_ptr = &m_list[c_ptr->m_idx];
 
 
-    if (equip_find_artifact(ART_STORMBRINGER)) stormbringer = TRUE;
+    if (equip_find_art(ART_STORMBRINGER)) stormbringer = TRUE;
 
     /* Player can not walk through "walls"... */
     /* unless in Shadow Form */

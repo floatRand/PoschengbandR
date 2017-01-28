@@ -314,7 +314,7 @@ static void _excavation_spell(int cmd, variant *res)
         {
             int n = 200;
 
-            if (equip_find_object(TV_DIGGING, SV_ANY))
+            if (equip_find_obj(TV_DIGGING, SV_ANY))
                 n -= 120 * p_ptr->lev / 50;
             else
                 n -= 80 * p_ptr->lev / 50;

@@ -943,7 +943,7 @@ void eat_light_mut(int cmd, variant *res)
     case SPELL_PROCESS:
         if (one_in_(3000))
         {
-            int slot = equip_find_object(TV_LITE, SV_ANY);
+            int slot = equip_find_obj(TV_LITE, SV_ANY);
 
             msg_print("A shadow passes over you.");
             msg_print(NULL);

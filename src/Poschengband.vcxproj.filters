@@ -210,6 +210,12 @@
     <ClCompile Include="inv.c">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="obj.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="obj_get.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
     <ClCompile Include="obj_kind.c">
       <Filter>Objects</Filter>
     </ClCompile>
@@ -220,6 +226,12 @@
       <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="object3.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="pack.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="quiver.c">
       <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="artifact.c">

@@ -57,7 +57,7 @@ bool psion_can_wield(object_type *o_ptr)
       && p_ptr->pclass == CLASS_PSION
       && psion_weapon_graft() )
     {
-        msg_print("Failed!  Your weapon is currently grafted to your arm!");
+        msg_print("Failed! Your weapon is currently grafted to your arm!");
         return FALSE;
     }
     return TRUE;
