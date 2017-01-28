@@ -454,7 +454,7 @@ static void _calc_bonuses(void)
     p_ptr->hold_life = TRUE;
     p_ptr->see_nocto = TRUE;
 
-    if (equip_find_artifact(ART_NIGHT))
+    if (equip_find_art(ART_NIGHT))
     {
         p_ptr->dec_mana = TRUE;
         p_ptr->easy_spell = TRUE;

@@ -130,7 +130,7 @@ extern void py_birth_obj(object_type *o_ptr)
     if ( object_is_wearable(o_ptr)
       && o_ptr->number == 1
       && p_ptr->prace != RACE_MON_RING /* Hack: Ring cannot wear rings, but can absorb them for powers */
-      && equip_find_object(o_ptr->tval, o_ptr->sval)
+      && equip_find_obj(o_ptr->tval, o_ptr->sval)
       && !equip_first_empty_slot(o_ptr) ) /* Hack: Centipede gets multiple boots */
     {
         return;
@@ -2548,7 +2548,9 @@ static void _birth_finalize(void)
     if (game_mode == GAME_MODE_BEGINNER)
         no_wilderness = TRUE;
 
-    equip_on_init();
+    equip_init();
+    pack_init();
+    quiver_init();
     virtue_init();
 
     p_ptr->au = randint1(600) + randint1(100) + 100;

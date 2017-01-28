@@ -3808,7 +3808,7 @@ void request_command(int shopping)
 
 
     /* Hack -- Scan equipment */
-    for (i = EQUIP_BEGIN; i < EQUIP_BEGIN + equip_count(); i++)
+    for (i = 1; i <= equip_max(); i++)
     {
         cptr s;
         object_type *o_ptr = equip_obj(i);

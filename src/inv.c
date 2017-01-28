@@ -6,19 +6,11 @@ struct inv_s
 {
     int     max;
     bool    readonly;
-    int     options;
+    int     flags;
     vec_ptr objects; /* sparse ... grows as needed (up to max+1 if max is set) */
 };
 
 /* Helpers */
-static obj_ptr _copy(obj_ptr obj)
-{
-    obj_ptr copy = malloc(sizeof(object_type));
-    assert(obj);
-    *copy = *obj;
-    return copy;
-}
-
 static void _grow(inv_ptr inv, slot_t slot)
 {
     slot_t i;
@@ -33,11 +25,11 @@ static void _grow(inv_ptr inv, slot_t slot)
 }
 
 /* Creation */
-inv_ptr inv_alloc(int max, int options)
+inv_ptr inv_alloc(int max, int flags)
 {
     inv_ptr result = malloc(sizeof(inv_t));
     result->max = max;
-    result->options = options;
+    result->flags = flags;
     result->readonly = FALSE;
     result->objects = vec_alloc(free);
     return result;
@@ -49,7 +41,7 @@ inv_ptr inv_copy(inv_ptr src)
     int     i;
 
     result->max = src->max;
-    result->options = src->options;
+    result->flags = src->flags;
     result->readonly = FALSE;
     result->objects = vec_alloc(free);
 
@@ -57,7 +49,7 @@ inv_ptr inv_copy(inv_ptr src)
     {
         obj_ptr obj = vec_get(src->objects, i);
         if (obj)
-            vec_add(result->objects, _copy(obj));
+            vec_add(result->objects, obj_copy(obj));
         else
             vec_add(result->objects, NULL);
     }
@@ -70,7 +62,7 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
     int     i;
 
     result->max = src->max;
-    result->options = src->options;
+    result->flags = src->flags;
     result->readonly = TRUE;
     result->objects = vec_alloc(NULL); /* src owns the objects! */
 
@@ -103,14 +95,14 @@ slot_t inv_add(inv_ptr inv, obj_ptr obj)
         obj_ptr old = vec_get(inv->objects, slot);
         if (!old)
         {
-            vec_set(inv->objects, slot, _copy(obj));
+            vec_set(inv->objects, slot, obj_copy(obj));
             return slot;
         }
     }
     if (!inv->max || slot <= inv->max)
     {
         assert(slot == vec_length(inv->objects));
-        vec_add(inv->objects, _copy(obj));
+        vec_add(inv->objects, obj_copy(obj));
         return slot;
     }
     return 0;
@@ -119,12 +111,43 @@ slot_t inv_add(inv_ptr inv, obj_ptr obj)
 void inv_add_at(inv_ptr inv, obj_ptr obj, slot_t slot)
 {
     assert(!inv->readonly);
+    assert(1 <= slot && slot <= inv->max);
     if (slot >= vec_length(inv->objects))
         _grow(inv, slot);
-    vec_set(inv->objects, slot, _copy(obj));
+    vec_set(inv->objects, slot, obj_copy(obj));
 }
 
-int inv_combine(inv_ptr inv, obj_ptr obj)
+/* This version of combine will place all of obj->number
+ * into a single slot, combining if there is room, or
+ * adding to a new slot otherwise. See inv_comine_ex below. */
+slot_t inv_combine(inv_ptr inv, obj_ptr obj)
+{
+    slot_t slot;
+
+    assert(!inv->readonly);
+    assert(obj->number);
+
+    for (slot = 1; slot < vec_length(inv->objects); slot++)
+    {
+        obj_ptr dest = vec_get(inv->objects, slot);
+        if (!dest) continue;
+        if ( obj_can_combine(dest, obj, inv->flags)
+          && dest->number + obj->number <= OBJ_STACK_MAX )
+        {
+            obj_combine(dest, obj, inv->flags);
+            return slot;
+        }
+    }
+    assert(obj->number);
+    return inv_add(inv, obj);
+}
+
+/* This version will combine the obj pile (if pile it be)
+ * into as many slots as possible, splitting the pile in
+ * the process. I think stores need this behaviour. We
+ * cannot return a single slot, so we return the number
+ * of items in the pile that we found room for. */
+int inv_combine_ex(inv_ptr inv, obj_ptr obj)
 {
     int    ct = 0;
     slot_t slot;
@@ -137,9 +160,9 @@ int inv_combine(inv_ptr inv, obj_ptr obj)
     {
         obj_ptr dest = vec_get(inv->objects, slot);
         if (!dest) continue;
-        if (obj_can_combine(dest, obj, inv->options))
+        if (obj_can_combine(dest, obj, inv->flags))
         {
-            ct += obj_combine(dest, obj, inv->options);
+            ct += obj_combine(dest, obj, inv->flags);
             if (!obj->number) break;
         }
     }
@@ -155,24 +178,79 @@ int inv_combine(inv_ptr inv, obj_ptr obj)
     return ct;
 }
 
-int inv_remove(inv_ptr inv, slot_t slot, int ct)
+bool inv_optimize(inv_ptr inv)
 {
-    int     remaining = 0;
+    slot_t slot, seek;
+    bool combined = FALSE;
+
+    for (slot = 1; slot < vec_length(inv->objects); slot++)
+    {
+        obj_ptr dest = vec_get(inv->objects, slot);
+        if (!dest) continue;
+        for (seek = slot + 1; seek < vec_length(inv->objects); seek++)
+        {
+            obj_ptr src = vec_get(inv->objects, seek);
+            if (!src) continue;
+            if (obj_combine(dest, src, inv->flags))
+            {
+                combined = TRUE;
+                if (!src->number)
+                    vec_set(inv->objects, seek, NULL);
+            }
+        }
+    }
+    if (combined)
+        inv_sort(inv);
+    return combined;
+}
+
+/* There is quite a bit of code that needs to check whether an
+ * object can be carried (pack) before actually doing it. */
+bool inv_can_combine(inv_ptr inv, obj_ptr obj)
+{
+    slot_t slot;
+
+    if (inv_next_free_slot(inv))
+        return TRUE;
+
+    for (slot = 1; slot < vec_length(inv->objects); slot++)
+    {
+        obj_ptr dest = vec_get(inv->objects, slot);
+        if (!dest) continue;
+        if ( obj_can_combine(dest, obj, inv->flags)
+          && dest->number + obj->number <= OBJ_STACK_MAX )
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+slot_t inv_next_free_slot(inv_ptr inv)
+{
+    slot_t slot;
+    for (slot = 1; slot < vec_length(inv->objects); slot++)
+    {
+        obj_ptr old = vec_get(inv->objects, slot);
+        if (!old) return slot;
+    }
+    if (!inv->max || slot <= inv->max)
+    {
+        assert(slot == vec_length(inv->objects));
+        return slot;
+    }
+    return 0;
+}
+
+void inv_remove(inv_ptr inv, slot_t slot)
+{
     obj_ptr obj;
 
+    assert(!inv->readonly);
     assert(slot);
     obj = inv_obj(inv, slot);
-    assert(obj);
-    assert(ct > 0);
-    assert(ct <= obj->number);
-    assert(!inv->readonly);
-
-    obj->number -= ct;
-    remaining = obj->number;
-    if (!obj->number)
+    if (obj)
         vec_set(inv->objects, slot, NULL); /* free */
-
-    return remaining;
 }
 
 void inv_clear(inv_ptr inv)

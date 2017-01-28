@@ -242,7 +242,7 @@ static void _build_general2(doc_ptr doc)
 
     {
         skills_t skills = p_ptr->skills;
-        int      slot = equip_find_object(TV_BOW, SV_ANY);
+        int      slot = equip_find_obj(TV_BOW, SV_ANY);
 
         /* Patch Up Skills a bit */
         skills.thn += p_ptr->to_h_m * BTH_PLUS_ADJ;
@@ -291,10 +291,9 @@ static void _equippy_chars(doc_ptr doc, int col)
     {
         int i;
         doc_printf(doc, "<tab:%d>", col);
-        for (i = 0; i < equip_count(); i++)
+        for (i = 1; i <= equip_max(); i++)
         {
-            int          slot = EQUIP_BEGIN + i;
-            object_type *o_ptr = equip_obj(slot);
+            object_type *o_ptr = equip_obj(i);
 
             if (o_ptr)
             {
@@ -317,8 +316,8 @@ static void _equippy_heading_aux(doc_ptr doc, cptr heading, int col)
 {
     int i;
     doc_printf(doc, " <color:G>%-11.11s</color><tab:%d>", heading, col);
-    for (i = 0; i < equip_count(); i++)
-        doc_insert_char(doc, TERM_WHITE, 'a' + i);
+    for (i = 1; i <= equip_max(); i++)
+        doc_insert_char(doc, TERM_WHITE, 'a' + i - 1);
     doc_insert_char(doc, TERM_WHITE, '@');
 }
 
@@ -343,10 +342,9 @@ static _flagzilla_ptr _flagzilla_alloc(void)
 
     player_flags(flagzilla->py_flgs);
     tim_player_flags(flagzilla->tim_py_flgs);
-    for (i = 0; i < equip_count(); i++)
+    for (i = 1; i <= equip_max(); i++)
     {
-        int          slot = EQUIP_BEGIN + i;
-        object_type *o_ptr = equip_obj(slot);
+        object_type *o_ptr = equip_obj(i);
 
         if (o_ptr)
             obj_flags_known(o_ptr, flagzilla->obj_flgs[i]);
@@ -371,7 +369,7 @@ static void _build_res_flags(doc_ptr doc, int which, _flagzilla_ptr flagzilla)
 
     doc_printf(doc, " %-11.11s: ", res_name(which));
 
-    for (i = 0; i < equip_count(); i++)
+    for (i = 1; i <= equip_max(); i++)
     {
         if (im_flg != OF_INVALID && have_flag(flagzilla->obj_flgs[i], im_flg))
             doc_insert_char(doc, TERM_VIOLET, '*');
@@ -437,10 +435,9 @@ static void _build_curse_flags(doc_ptr doc, cptr name)
 {
     int i;
     doc_printf(doc, " %-11.11s: ", name);
-    for (i = 0; i < equip_count(); i++)
+    for (i = 1; i <= equip_max(); i++)
     {
-        int          slot = EQUIP_BEGIN + i;
-        object_type *o_ptr = equip_obj(slot);
+        object_type *o_ptr = equip_obj(i);
 
         if (o_ptr)
         {
@@ -464,7 +461,7 @@ static void _build_slays_imp(doc_ptr doc, cptr name, int flg, int kill_flg, _fla
 {
     int i;
     doc_printf(doc, " %-11.11s: ", name);
-    for (i = 0; i < equip_count(); i++)
+    for (i = 1; i <= equip_max(); i++)
     {
         if (kill_flg != OF_INVALID && have_flag(flagzilla->obj_flgs[i], kill_flg))
             doc_insert_char(doc, TERM_RED, '*');
@@ -492,7 +489,7 @@ static int _build_flags_imp(doc_ptr doc, cptr name, int flg, int dec_flg, _flagz
     int result = 0;
     int i;
     doc_printf(doc, " %-11.11s: ", name);
-    for (i = 0; i < equip_count(); i++)
+    for (i = 1; i <= equip_max(); i++)
     {
         if (have_flag(flagzilla->obj_flgs[i], flg))
         {
@@ -724,10 +721,9 @@ static void _build_stats(doc_ptr doc, _flagzilla_ptr flagzilla)
             doc_insert(doc, "  : ");
 
         /* abcdefghijkl */
-        for (j = 0; j < equip_count(); j++)
+        for (j = 1; j <= equip_max(); j++)
         {
-            int          slot = EQUIP_BEGIN + j;
-            object_type *o_ptr = equip_obj(slot);
+            object_type *o_ptr = equip_obj(j);
 
             if (o_ptr)
             {
@@ -853,18 +849,18 @@ static void _build_equipment(doc_ptr doc)
 
     if (equip_count_used())
     {
-        int slot, i;
+        int slot;
         char o_name[MAX_NLEN];
         _flagzilla_ptr flagzilla = 0;
 
         doc_insert(doc, "<topic:Equipment>============================= Character <color:keypress>E</color>quipment =============================\n\n");
-        for (slot = EQUIP_BEGIN, i = 0; slot < EQUIP_BEGIN + equip_count(); slot++, i++)
+        for (slot = 1; slot <= equip_max(); slot++)
         {
             object_type *o_ptr = equip_obj(slot);
             if (!o_ptr) continue;
 
             object_desc(o_name, o_ptr, OD_COLOR_CODED);
-            doc_printf(doc, " %c) <indent><style:indent>%s</style></indent>\n", index_to_label(i), o_name);
+            doc_printf(doc, " %c) <indent><style:indent>%s</style></indent>\n", slot - 1 + 'a', o_name);
         }
         doc_newline(doc);
 
@@ -921,7 +917,7 @@ static void _build_melee(doc_ptr doc)
 
 static void _build_shooting(doc_ptr doc)
 {
-    if (equip_find_object(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
+    if (equip_find_obj(TV_BOW, SV_ANY) && !prace_is_(RACE_MON_JELLY) && p_ptr->shooter_info.tval_ammo != TV_NO_AMMO)
     {
         doc_insert(doc, "<topic:Shooting>=================================== <color:keypress>S</color>hooting ==================================\n\n");
         display_shooter_info(doc);

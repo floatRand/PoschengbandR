@@ -1416,10 +1416,13 @@ static errr rd_savefile_new_aux(savefile_ptr file)
 
 
     /* Read the inventory */
-    equip_on_init();
+    equip_init();
+    pack_init();
+    quiver_init();
+
     equip_load(file);
-    /*pack_load(file);
-    quiver_load(file); */
+    pack_load(file);
+    quiver_load(file);
 
     town_count = savefile_read_u16b(file);
     tmp16u = savefile_read_u16b(file);

@@ -1135,7 +1135,7 @@ void apply_nexus(monster_type *m_ptr)
  */
 void phlogiston(void)
 {
-    int slot = equip_find_object(TV_LITE, SV_ANY);
+    int slot = equip_find_obj(TV_LITE, SV_ANY);
     if (slot)
     {
         int max_flog = 0;

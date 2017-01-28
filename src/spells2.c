@@ -61,7 +61,7 @@ void self_knowledge(void)
     virtue_add(VIRTUE_ENLIGHTENMENT, 1);
 
     /* Acquire item flags from equipment */
-    for (k = EQUIP_BEGIN; k < EQUIP_BEGIN + equip_count(); k++)
+    for (k = 1; k <= equip_max(); k++)
     {
         u32b tflgs[OF_ARRAY_SIZE];
 

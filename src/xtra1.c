@@ -356,12 +356,11 @@ static void display_player_equippy(int y, int x, u16b mode)
     Term_erase(x, y, 12);
 
     /* Dump equippy chars */
-    for (i = 0; i < equip_count(); i++)
+    for (i = 1; i <= equip_max(); i++)
     {
-        int slot = EQUIP_BEGIN + i;
-        o_ptr = equip_obj(slot);
+        o_ptr = equip_obj(i);
 
-        if (mode == EQUIPPY_MAIN && i >= 12) break; /* Hack: This will overwrite the map display otherwise ... */
+        if (mode == EQUIPPY_MAIN && i > 12) break; /* Hack: This will overwrite the map display otherwise ... */
 
         if (o_ptr && equippy_chars)
         {
@@ -373,7 +372,7 @@ static void display_player_equippy(int y, int x, u16b mode)
             c = ' ';
             a = TERM_DARK;
         }
-        Term_putch(x + i, y, a, c);
+        Term_putch(x + i - 1, y, a, c);
     }
 }
 
@@ -3681,7 +3680,7 @@ void calc_bonuses(void)
     if (p_ptr->tim_superstealth)
         p_ptr->see_nocto = TRUE;
 
-    slot = equip_find_object(TV_LITE, SV_ANY);
+    slot = equip_find_obj(TV_LITE, SV_ANY);
     if (slot)
     {
         o_ptr = equip_obj(slot);
@@ -3815,21 +3814,9 @@ void calc_bonuses(void)
         p_ptr->stat_add[i] += (race_ptr->stats[i] + class_ptr->stats[i] + pers_ptr->stats[i]);
     }
 
-    /* Some Runes work when placed in Inventory */
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        o_ptr = &inventory[i];
-        if (!o_ptr->k_idx) continue;
-        if (o_ptr->name1 == ART_MAUL_OF_VICE)
-            p_ptr->maul_of_vice = TRUE;
-        if (o_ptr->rune == RUNE_ELEMENTAL_PROTECTION)
-            p_ptr->rune_elem_prot = TRUE;
-        if (o_ptr->rune == RUNE_GOOD_FORTUNE)
-            p_ptr->good_luck = TRUE;
-    }
-
     mut_calc_bonuses();  /* Process before equip for MUT_FLESH_ROT */
     equip_calc_bonuses();
+    pack_calc_bonuses();
 
     if (p_ptr->special_defense & KAMAE_MASK)
     {
@@ -3888,7 +3875,7 @@ void calc_bonuses(void)
             p_ptr->sh_elec = TRUE;
             p_ptr->pspeed += 3;
         }
-        for (i = EQUIP_BEGIN; i <= EQUIP_BEGIN + equip_count(); i++)
+        for (i = 1; i <= equip_max(); i++)
         {
             int ac = 0;
             o_ptr = equip_obj(i);
@@ -4403,7 +4390,7 @@ void calc_bonuses(void)
     hold = adj_str_hold[p_ptr->stat_ind[A_STR]];
 
     /* Examine the "current bow" */
-    p_ptr->shooter_info.slot = equip_find_object(TV_BOW, SV_ANY);
+    p_ptr->shooter_info.slot = equip_find_obj(TV_BOW, SV_ANY);
     if (p_ptr->shooter_info.slot)
     {
         o_ptr = equip_obj(p_ptr->shooter_info.slot);
@@ -4924,7 +4911,7 @@ void calc_bonuses(void)
     {
         if (p_ptr->shooter_info.heavy_shoot)
             msg_print("You have trouble wielding such a heavy bow.");
-        else if (equip_find_object(TV_BOW, SV_ANY))
+        else if (equip_find_obj(TV_BOW, SV_ANY))
             msg_print("You have no trouble wielding your bow.");
         else
             msg_print("You feel relieved to put down your heavy bow.");

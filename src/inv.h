@@ -20,7 +20,8 @@ typedef void (*slot_f)(slot_t slot);
 typedef struct inv_s inv_t, *inv_ptr; /* Hidden/Abstract */
 
 /* Creation */
-extern inv_ptr inv_alloc(int max, int options); /* max=0 is unbounded */
+#define INV_STORE 0x0001
+extern inv_ptr inv_alloc(int max, int flags); /* max=0 is unbounded */
 extern inv_ptr inv_copy(inv_ptr src);
 extern inv_ptr inv_filter(inv_ptr src, obj_p p);
 extern void    inv_free(inv_ptr inv);
@@ -28,12 +29,17 @@ extern void    inv_free(inv_ptr inv);
 /* Adding, Removing and Sorting */
 extern slot_t  inv_add(inv_ptr inv, obj_ptr obj); /* Copy obj to next avail slot ... no combining */
 extern void    inv_add_at(inv_ptr inv, obj_ptr obj, slot_t slot); /* equip specifies the slot when wielding */
-extern int     inv_combine(inv_ptr inv, obj_ptr obj); /* Combine obj with inventory objects. Adds left over to new slot.
-                                                         Modifies obj->number and returns number added to inv */
-extern int     inv_remove(inv_ptr inv, slot_t slot, int ct); /* returns new ct at this slot */
+extern slot_t  inv_combine(inv_ptr inv, obj_ptr obj);
+extern int     inv_combine_ex(inv_ptr inv, obj_ptr obj); /* Combine obj with inventory objects. Adds left over to new slot.
+                                                            Modifies obj->number and returns number added to inv */
+extern void    inv_remove(inv_ptr inv, slot_t slot);
 extern void    inv_clear(inv_ptr inv);
+extern bool    inv_optimize(inv_ptr inv);
 extern bool    inv_sort(inv_ptr inv);
 extern void    inv_swap(inv_ptr inv, slot_t left, slot_t right);
+
+extern bool    inv_can_combine(inv_ptr inv, obj_ptr obj);
+extern slot_t  inv_next_free_slot(inv_ptr inv);
 
 /* Iterating, Searching and Accessing Objects (Predicates are always optional) */
 extern obj_ptr inv_obj(inv_ptr inv, slot_t slot); /* NULL if slot is not occupied */

@@ -47,6 +47,8 @@
 #include "inv.h"
 #include "equip.h"
 #include "pack.h"
+#include "quiver.h"
+#include "obj_get.h"
 
 #include "types.h"
 #include "externs.h"

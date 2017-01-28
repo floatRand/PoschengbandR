@@ -261,7 +261,7 @@ static void _sniping_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
         var_set_bool(res, FALSE);
-        if (!equip_find_object(TV_BOW, SV_ANY))
+        if (!equip_find_obj(TV_BOW, SV_ANY))
         {
             msg_print("You need a bow to use this talent.");
             break;

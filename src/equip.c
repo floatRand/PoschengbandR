@@ -1503,7 +1503,7 @@ void equip_calc_bonuses(void)
     }
 }
 
-void equip_on_init(void)
+void equip_init(void)
 {
     race_t *race_ptr = get_race();
     if (race_ptr->equip_template)
@@ -1532,7 +1532,7 @@ void equip_on_load(void)
         if (slot > _template->max)
         {
             inv_add(temp, obj);
-            inv_remove(_inv, slot, obj->number);
+            inv_remove(_inv, slot);
         }
         else
         {
@@ -1540,7 +1540,7 @@ void equip_on_load(void)
             if (!p(obj))
             {
                 inv_add(temp, obj);
-                inv_remove(_inv, slot, obj->number);
+                inv_remove(_inv, slot);
             }
         }
     }
@@ -1561,9 +1561,8 @@ void equip_on_load(void)
             char name[MAX_NLEN];
             object_desc(name, obj, OD_COLOR_CODED);
             msg_format("You can no longer wield %s.", name);
-            /* TODO
-            if (!pack_add(obj))
-                pack_push_overflow(obj);*/
+            if (!pack_carry(obj))
+                pack_push_overflow(obj);
         }
     }
     inv_free(temp);
@@ -1618,15 +1617,13 @@ void equip_on_change_race(void)
                     }
                 }
 
-                /* TODO
-                if (!pack_add(obj))
-                    pack_push_overflow(obj);*/
+                if (!pack_carry(src))
+                    pack_push_overflow(src);
             }
         }
         inv_free(temp);
         temp = NULL;
 
-        /* TODO
         pack_overflow();
         for (slot = 1; slot <= pack_max(); slot++)
         {
@@ -1641,13 +1638,11 @@ void equip_on_change_race(void)
             {
                 obj->marked &= ~OM_WORN;
                 equip_wield_aux(obj, new_slot);
-                pack_remove(slot, 1);
+                pack_remove(slot);
             }
         }
-        pack_sort();
-        */
 
-        /*p_ptr->notice |= PN_REORDER;*/
+        p_ptr->notice |= PN_REORDER;
         p_ptr->update |= PU_BONUS;
         p_ptr->update |= PU_TORCH;
         p_ptr->update |= PU_MANA;
@@ -1713,3 +1708,12 @@ void equip_learn_flag(int obj_flag)
     }
 }
 
+void equip_load(savefile_ptr file)
+{
+    inv_load(_inv, file);
+}
+
+void equip_save(savefile_ptr file)
+{
+    inv_save(_inv, file);
+}

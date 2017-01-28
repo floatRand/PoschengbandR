@@ -533,7 +533,7 @@ static void _calc_bonuses(void)
         if (p_ptr->lev >= 25)
             p_ptr->free_act = TRUE;
     }
-    if (!equip_find_object(TV_SHIELD, SV_ANY))
+    if (!equip_find_obj(TV_SHIELD, SV_ANY))
     {
         p_ptr->to_a += p_ptr->lev/2 + 5;
         p_ptr->dis_to_a += p_ptr->lev/2 + 5;
@@ -553,7 +553,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
         add_flag(flgs, OF_SPEED);
     else
     {
-        if (!equip_find_object(TV_SHIELD, SV_ANY))
+        if (!equip_find_obj(TV_SHIELD, SV_ANY))
         {
             add_flag(flgs, OF_SPEED);
         }
@@ -570,7 +570,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 {
     if ( skills_weapon_is_icky(o_ptr->tval, o_ptr->sval) 
-      || equip_find_object(TV_SHIELD, SV_ANY) )
+      || equip_find_obj(TV_SHIELD, SV_ANY) )
     {
         info_ptr->to_h -= 40;
         info_ptr->dis_to_h -= 40;

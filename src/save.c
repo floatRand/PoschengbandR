@@ -1096,8 +1096,8 @@ static bool wr_savefile_new(savefile_ptr file)
         savefile_write_byte(file, p_ptr->spell_order[i]);
 
     equip_save(file);
-    /*pack_save(file);
-    quiver_save(file);*/
+    pack_save(file);
+    quiver_save(file);
 
     tmp16u = max_towns;
     savefile_write_u16b(file, tmp16u);

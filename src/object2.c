@@ -5572,7 +5572,7 @@ static void spell_damcalc(monster_type *m_ptr, int typ, int dam, int limit, int 
         break;
 
     case GF_ARROW:
-        if (!p_ptr->blind && equip_find_artifact(ART_ZANTETSU))
+        if (!p_ptr->blind && equip_find_art(ART_ZANTETSU))
         {
             dam = 0;
             ignore_wraith_form = TRUE;

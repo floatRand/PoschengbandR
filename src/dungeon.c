@@ -4257,49 +4257,6 @@ static bool monster_tsuri(int r_idx)
 }
 
 
-/* Hack -- Pack Overflow */
-static void pack_overflow(void)
-{
-    if (inventory[INVEN_PACK].k_idx)
-    {
-        char o_name[MAX_NLEN];
-        object_type *o_ptr;
-
-        /* Is auto-destroy done? */
-        notice_stuff();
-        if (!inventory[INVEN_PACK].k_idx) return;
-
-        /* Access the slot to be dropped */
-        o_ptr = &inventory[INVEN_PACK];
-
-        /* Disturbing */
-        disturb(0, 0);
-
-        /* Warning */
-        msg_print("Your pack overflows!");
-
-        /* Describe */
-        object_desc(o_name, o_ptr, 0);
-
-        /* Message */
-        msg_format("You drop %s (%c).", o_name, index_to_label(INVEN_PACK));
-
-        /* Drop it (carefully) near the player */
-        (void)drop_near(o_ptr, 0, py, px);
-
-        /* Modify, Describe, Optimize */
-        inven_item_increase(INVEN_PACK, -255);
-        inven_item_describe(INVEN_PACK);
-        inven_item_optimize(INVEN_PACK);
-
-        /* Handle "p_ptr->notice" */
-        notice_stuff();
-
-        /* Handle "p_ptr->update" and "p_ptr->redraw" and "p_ptr->window" */
-        handle_stuff();
-    }
-}
-
 
 /*
  * Process the player

@@ -2410,7 +2410,7 @@ void _circle_kick(void)
     int ds = p_ptr->lev;
     int bonus = p_ptr->to_h_m;
     int chance = p_ptr->skills.thn + (bonus * BTH_PLUS_ADJ);
-    int slot = equip_find_object(TV_BOOTS, SV_ANY);
+    int slot = equip_find_obj(TV_BOOTS, SV_ANY);
 
     if (slot)
         dd = equip_obj(slot)->ac;
@@ -2485,7 +2485,7 @@ static void _circle_kick_spell(int cmd, variant *res)
     {
         int ds = p_ptr->lev;
         int dd = 0;
-        int slot = equip_find_object(TV_BOOTS, SV_ANY);
+        int slot = equip_find_obj(TV_BOOTS, SV_ANY);
 
         if (slot)
             dd = equip_obj(slot)->ac;

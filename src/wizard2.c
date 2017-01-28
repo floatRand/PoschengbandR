@@ -2067,7 +2067,7 @@ static void _wiz_kill_monsters(int level)
         monster_type *m_ptr = &m_list[i];
         monster_race *r_ptr;
         bool          fear = FALSE;
-        int           slot = equip_find_object(TV_SWORD, SV_RUNESWORD);
+        int           slot = equip_find_obj(TV_SWORD, SV_RUNESWORD);
 
         if (!m_ptr->r_idx) continue;
         if (i == p_ptr->riding) continue;

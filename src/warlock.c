@@ -371,7 +371,7 @@ static void _undead_calc_bonuses(void)
     if (p_ptr->lev >= 35)
         res_add(RES_DARK);
 
-    if (equip_find_artifact(ART_STONE_OF_DEATH))
+    if (equip_find_art(ART_STONE_OF_DEATH))
     {
         p_ptr->dec_mana = TRUE;
         p_ptr->easy_spell = TRUE;
@@ -1078,7 +1078,7 @@ static void _angel_calc_bonuses(void)
     if (p_ptr->lev >= 35)
         p_ptr->reflect = TRUE;
 
-    if (equip_find_artifact(ART_STONE_OF_CRUSADE) || equip_find_artifact(ART_STONE_OF_LIFE))
+    if (equip_find_art(ART_STONE_OF_CRUSADE) || equip_find_art(ART_STONE_OF_LIFE))
     {
         p_ptr->dec_mana = TRUE;
         p_ptr->easy_spell = TRUE;
@@ -1190,7 +1190,7 @@ static void _demon_calc_bonuses(void)
     if (p_ptr->lev >= 50)
         res_add_immune(RES_FIRE);
 
-    if (equip_find_artifact(ART_STONE_OF_DAEMON))
+    if (equip_find_art(ART_STONE_OF_DAEMON))
     {
         p_ptr->dec_mana = TRUE;
         p_ptr->easy_spell = TRUE;

@@ -43,7 +43,7 @@ extern slot_t  equip_is_worn(obj_ptr obj); /* Hack for sloppy code ... */
 extern int     equip_which_hand(obj_ptr obj); /* Hack for sloppy code ... */
 extern obj_ptr equip_obj(slot_t slot);
 extern int     equip_weight(obj_p p);
-extern void    equip_on_init(void);
+extern void    equip_init(void);
 extern void    equip_on_load(void);
 extern void    equip_on_change_race(void);
 extern bool    equip_can_wield_kind(int tval, int sval);

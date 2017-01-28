@@ -1329,7 +1329,7 @@ int possessor_r_speed(int r_idx)
             equip_template_ptr body = &b_info[r_ptr->body.body_idx];
             bool humanoid = FALSE;
 
-            for (i = 0; i < body->count; i++)
+            for (i = 1; i <= body->max; i++)
             {
                 if (body->slots[i].type == EQUIP_SLOT_WEAPON_SHIELD)
                 {

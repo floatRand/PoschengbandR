@@ -6701,7 +6701,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
         case GF_ARROW:
         {
             if (fuzzy) msg_print("You are hit by something sharp!");
-            else if (equip_find_artifact(ART_ZANTETSU))
+            else if (equip_find_art(ART_ZANTETSU))
             {
                 msg_print("You cut down the arrow!");
                 break;

@@ -43,7 +43,7 @@ static cptr _necro_info_damage(int dice, int sides, int base)
 
 static int _necro_damroll(int dice, int sides, int base)
 {
-    if (equip_find_artifact(ART_HAND_OF_VECNA))
+    if (equip_find_art(ART_HAND_OF_VECNA))
     {
         dice *= 2;
         base *= 2;
@@ -529,9 +529,9 @@ static void _calc_bonuses(void)
     p_ptr->align -= 200;
     p_ptr->spell_cap += 2;
 
-    if (equip_find_artifact(ART_EYE_OF_VECNA))
+    if (equip_find_art(ART_EYE_OF_VECNA))
         p_ptr->dec_mana = TRUE;
-    if (equip_find_artifact(ART_HAND_OF_VECNA))
+    if (equip_find_art(ART_HAND_OF_VECNA))
         p_ptr->easy_spell = TRUE;
 
     if (p_ptr->lev >= 5) res_add(RES_COLD);

@@ -912,7 +912,7 @@ void display_equip(void)
     Term_get_size(&wid, &hgt);
 
     /* Display the equipment */
-    for (i = EQUIP_BEGIN; i < EQUIP_BEGIN + equip_count(); i++, r++)
+    for (i = 1; i <= equip_max(); i++, r++)
     {
         o_ptr = equip_obj(i);
 
@@ -988,12 +988,12 @@ static bool get_tag(int *cp, char tag, int mode)
     if (equip && inven)
     {
         start = 0;
-        end = EQUIP_BEGIN + equip_count() - 1;
+        end = EQUIP_BEGIN + equip_max() - 1; /* TODO: This is totally fucked */
     }
     else if (equip)
     {
         start = EQUIP_BEGIN;
-        end = EQUIP_BEGIN + equip_count() - 1;
+        end = EQUIP_BEGIN + equip_max() - 1;
     }
     else if (inven)
     {
@@ -1469,7 +1469,7 @@ int show_equip(int target_item, int mode)
     }
 
     /* Compute/Measure Display Strings */
-    for (k = 0, i = EQUIP_BEGIN; i < EQUIP_BEGIN + equip_count(); i++)
+    for (k = 0, i = 1; i <= equip_max(); i++)
     {
         o_ptr = equip_obj(i);
 
@@ -2033,19 +2033,19 @@ bool get_item(int *cp, cptr pmt, cptr str, int mode)
 
 
     /* Full equipment */
-    e1 = EQUIP_BEGIN;
-    e2 = EQUIP_BEGIN + equip_count() - 1;
+    e1 = 1;
+    e2 = equip_max();
 
     /* Forbid equipment */
     if (!equip) e2 = -1;
     else if (use_menu)
     {
-        for (j = EQUIP_BEGIN; j < EQUIP_BEGIN + equip_count(); j++)
-            if (item_tester_okay(&inventory[j])) max_equip++;
+        /*for (j = EQUIP_BEGIN; j < EQUIP_BEGIN + equip_count(); j++)
+            if (item_tester_okay(&inventory[j])) max_equip++;*/
     }
 
     /* Restrict equipment indexes */
-    while ((e1 <= e2) && (!get_item_okay(e1))) e1++;
+    while ((e1 <= e2) && (!get_item_okay(e1))) e1++; /* TODO: broken. */
     while ((e1 <= e2) && (!get_item_okay(e2))) e2--;
 
     /* Restrict floor usage */
@@ -3072,19 +3072,19 @@ bool get_item_floor(int *cp, cptr pmt, cptr str, int mode)
 
 
     /* Full equipment */
-    e1 = EQUIP_BEGIN;
-    e2 = EQUIP_BEGIN + equip_count() - 1;
+    e1 = 1;
+    e2 = equip_max();
 
     /* Forbid equipment */
     if (!equip) e2 = -1;
     else if (use_menu)
     {
-        for (j = EQUIP_BEGIN; j < EQUIP_BEGIN + equip_count(); j++)
-            if (item_tester_okay(&inventory[j])) max_equip++;
+        /*for (j = EQUIP_BEGIN; j < EQUIP_BEGIN + equip_count(); j++)
+            if (item_tester_okay(&inventory[j])) max_equip++;*/
     }
 
     /* Restrict equipment indexes */
-    while ((e1 <= e2) && (!get_item_okay(e1))) e1++;
+    while ((e1 <= e2) && (!get_item_okay(e1))) e1++; /* TODO: Broken */
     while ((e1 <= e2) && (!get_item_okay(e2))) e2--;
 
     /* Count "okay" floor items */
