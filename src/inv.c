@@ -96,9 +96,12 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
 
 void inv_free(inv_ptr inv)
 {
-    vec_free(inv->objects);
-    inv->objects = NULL;
-    free(inv);
+    if (inv)
+    {
+        vec_free(inv->objects);
+        inv->objects = NULL;
+        free(inv);
+    }
 }
 
 /* Adding, Removing and Sorting
@@ -109,6 +112,10 @@ static void _add_aux(inv_ptr inv, obj_ptr obj, slot_t slot)
 {
     obj_ptr   copy;
     obj_loc_t loc = {0};
+    int       ct = obj->number;
+
+    if (inv->flags & INV_EQUIP)
+        ct = 1;
 
     assert(!_readonly(inv));
     assert(1 <= slot && slot <= inv->max);
@@ -118,11 +125,14 @@ static void _add_aux(inv_ptr inv, obj_ptr obj, slot_t slot)
 
     copy = obj_copy(obj);
     copy->loc = loc;
+    copy->number = ct;
     obj_clear_dun_info(copy);
+
     if (slot >= vec_length(inv->objects))
         _grow(inv, slot);
     vec_set(inv->objects, slot, copy);
-    obj->number = 0;
+
+    obj->number -= ct;
 }
 
 slot_t inv_add(inv_ptr inv, obj_ptr obj)
@@ -140,7 +150,6 @@ slot_t inv_add(inv_ptr inv, obj_ptr obj)
     }
     if (!inv->max || slot <= inv->max)
     {
-        assert(slot == vec_length(inv->objects));
         _add_aux(inv, obj, slot);
         return slot;
     }
@@ -579,9 +588,12 @@ void inv_calculate_labels(inv_ptr inv)
             char label = obj_label(obj);
             if (label)
             {
+                /* override this label if in use ... */
                 slot_t slot2 = inv_label_slot(inv, label);
                 if (slot2)
                     inv_obj(inv, slot2)->scratch = ' ';
+                /* ... before marking this object */
+                obj->scratch = label;
             }
         }
     }
@@ -602,7 +614,7 @@ void inv_load(inv_ptr inv, savefile_ptr file)
         slot = savefile_read_s32b(file);
         obj_load(obj, file);
 
-        if (slot > vec_length(inv->objects))
+        if (slot >= vec_length(inv->objects))
             _grow(inv, slot);
         vec_set(inv->objects, slot, obj);
     }

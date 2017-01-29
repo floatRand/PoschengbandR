@@ -7,7 +7,7 @@ static int     _capacity = 100;
 
 void quiver_init(void)
 {
-   assert(!_inv);
+   inv_free(_inv);
    _inv = inv_alloc(QUIVER_MAX, INV_QUIVER); 
 }
 

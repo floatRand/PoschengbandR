@@ -440,7 +440,7 @@ void equip_ui(void)
     doc_ptr doc = doc_alloc(MIN(80, r.cx));
 
     r = ui_screen_rect();
-    doc_insert(doc, "<color:B>Equipment:</color>\n");
+    doc_insert(doc, "<color:G>Equipment:</color>\n");
 
     equip_display(doc, NULL);
     doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> \n",
@@ -644,7 +644,6 @@ static void _wield(obj_ptr obj, slot_t slot)
         equip_takeoff_aux(slot);
 
     inv_add_at(_inv, obj, slot);
-    /* TODO: obj->number--; */
 }
 
 static void _wield_after(slot_t slot)
@@ -1548,7 +1547,8 @@ void equip_init(void)
         _template = race_ptr->equip_template;
     else
         _template = &b_info[0];
-    assert(!_inv);
+
+    inv_free(_inv);
     _inv = inv_alloc(EQUIP_MAX_SLOTS, INV_EQUIP);
 }
 

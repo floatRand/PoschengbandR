@@ -7,9 +7,39 @@ static vec_ptr _overflow = NULL;
 
 void pack_init(void)
 {
-    assert(!_inv);
+    inv_free(_inv);
     _inv = inv_alloc(PACK_MAX, INV_PACK);
     _overflow = vec_alloc(free);
+}
+
+void pack_ui(void)
+{
+    int     wgt = py_total_weight();
+    int     pct = wgt * 100 / weight_limit();
+    rect_t  r = ui_map_rect();
+    doc_ptr doc = doc_alloc(MIN(80, r.cx));
+
+    r = ui_screen_rect();
+    doc_insert(doc, "<color:G>Inventory:</color>\n");
+
+    pack_display(doc, obj_exists);
+    doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> \n",
+                    wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
+
+    screen_save();
+    doc_sync_term(doc, doc_range_top_lines(doc, r.cy), doc_pos_create(r.x, r.y));
+    command_new = inkey();
+    screen_load();
+
+    if (command_new == ESCAPE)
+        command_new = 0;
+    else
+        command_see = TRUE;
+}
+
+void pack_display(doc_ptr doc, obj_p p)
+{
+    inv_display(_inv, doc, p, NULL, 0);
 }
 
 /* Adding and removing */

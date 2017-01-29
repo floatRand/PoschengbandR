@@ -90,7 +90,7 @@ int py_birth(void)
     return result;
 }
 
-extern void py_birth_obj_aux(int tval, int sval, int qty)
+void py_birth_obj_aux(int tval, int sval, int qty)
 {
     object_type forge;
 
@@ -113,7 +113,7 @@ extern void py_birth_obj_aux(int tval, int sval, int qty)
     py_birth_obj(&forge);
 }
 
-extern void py_birth_obj(object_type *o_ptr)
+void py_birth_obj(object_type *o_ptr)
 {
     int slot;
 
@@ -146,8 +146,7 @@ extern void py_birth_obj(object_type *o_ptr)
       && object_is_melee_weapon(o_ptr)
       && !object_is_(o_ptr, TV_HAFTED, SV_WHIP) )
     {
-        slot = inven_carry(o_ptr);
-        autopick_alter_item(slot, FALSE);
+        pack_carry(o_ptr);
         return;
     }
 
@@ -155,18 +154,16 @@ extern void py_birth_obj(object_type *o_ptr)
     if (slot && o_ptr->number == 1)
         equip_wield_aux(o_ptr, slot);
     else
-        slot = inven_carry(o_ptr);
-
-    autopick_alter_item(slot, FALSE);
+        pack_carry(o_ptr);
 }
 
 /* Standard Food and Light */
-extern void py_birth_food(void)
+void py_birth_food(void)
 {
     py_birth_obj_aux(TV_FOOD, SV_FOOD_RATION, 2 + rand_range(3, 7));
 }
 
-extern void py_birth_light(void)
+void py_birth_light(void)
 {
     if (p_ptr->pclass != CLASS_NINJA)
     {

@@ -3430,7 +3430,7 @@ static void process_command(void)
         /* Inventory list */
         case 'i':
         {
-            do_cmd_inven();
+            pack_ui();
             break;
         }
 
