@@ -186,13 +186,26 @@ int pack_count_slots(obj_p p)
 /* Savefiles */
 void pack_load(savefile_ptr file)
 {
-    assert(!vec_length(_overflow));
+    int i, ct;
     inv_load(_inv, file);
+    ct = savefile_read_s16b(file);
+    for (i = 0; i < ct; i++)
+    {
+        obj_ptr obj = obj_alloc();
+        obj_load(obj, file);
+        vec_add(_overflow, obj);
+    }
 }
 
 void pack_save(savefile_ptr file)
 {
-    assert(!vec_length(_overflow));
+    int i;
     inv_save(_inv, file);
+    savefile_write_s16b(file, vec_length(_overflow));
+    for (i = 0; i < vec_length(_overflow); i++)
+    {
+        obj_ptr obj = vec_get(_overflow, i);
+        obj_save(obj, file);
+    }
 }
 

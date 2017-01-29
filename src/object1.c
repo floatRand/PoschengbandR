@@ -1473,6 +1473,7 @@ int show_equip(int target_item, int mode)
     {
         o_ptr = equip_obj(i);
 
+        if (!o_ptr) continue;
         if (!item_tester_okay(o_ptr)) continue; /* NULL is OK ... */
         if (equip_is_empty_two_handed_slot(i)) continue;
 

@@ -3395,14 +3395,14 @@ static void process_command(void)
         /* Wear/wield equipment */
         case 'w':
         {
-            if (!p_ptr->wild_mode) equip_wield();
+            if (!p_ptr->wild_mode) equip_wield_ui();
             break;
         }
 
         /* Take off equipment */
         case 't':
         {
-            if (!p_ptr->wild_mode) equip_takeoff();
+            if (!p_ptr->wild_mode) equip_takeoff_ui();
             break;
         }
 
@@ -3423,7 +3423,7 @@ static void process_command(void)
         /* Equipment list */
         case 'e':
         {
-            do_cmd_equip();
+            equip_ui();
             break;
         }
 

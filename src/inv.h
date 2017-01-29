@@ -16,6 +16,8 @@
 typedef int slot_t; /* Slots are 1..max ('if (slot) ...' is a valid idiom) */
                     /* Slots may be empty (unused) */
 typedef void (*slot_f)(slot_t slot);
+typedef void (*slot_display_f)(doc_ptr doc, slot_t slot);
+
 extern char    slot_label(slot_t slot);
 extern slot_t  label_slot(char label);
 
@@ -66,6 +68,12 @@ extern int     inv_weight(inv_ptr inv, obj_p p); /* Pass NULL for total weight *
 extern int     inv_count(inv_ptr inv, obj_p p); /* Sum(obj->number) for all objects p accepts */
 extern int     inv_count_slots(inv_ptr inv, obj_p p); /* Sum(1) for all objects p accepts */
 extern int     inv_max_slots(inv_ptr inv); /* from inv_alloc(max) */
+
+/* Menus and Display */
+extern void    inv_display(inv_ptr inv, doc_ptr doc, obj_p p, slot_display_f slot_f, int flags);
+extern char    inv_slot_label(inv_ptr inv, slot_t slot);
+extern slot_t  inv_label_slot(inv_ptr inv, char label);
+extern void    inv_calculate_labels(inv_ptr inv);
 
 /* Savefiles */
 extern void    inv_load(inv_ptr inv, savefile_ptr file);

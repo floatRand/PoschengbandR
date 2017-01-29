@@ -430,6 +430,44 @@ bool equip_is_empty_two_handed_slot(int slot)
 }
 
 /************************************************************************
+ * Display Equipment List
+ ***********************************************************************/
+void equip_ui(void)
+{
+    int     wgt = py_total_weight();
+    int     pct = wgt * 100 / weight_limit();
+    rect_t  r = ui_map_rect();
+    doc_ptr doc = doc_alloc(MIN(80, r.cx));
+
+    r = ui_screen_rect();
+    doc_insert(doc, "<color:B>Equipment:</color>\n");
+
+    equip_display(doc, NULL);
+    doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> \n",
+                    wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
+
+    screen_save();
+    doc_sync_term(doc, doc_range_top_lines(doc, r.cy), doc_pos_create(r.x, r.y));
+    command_new = inkey();
+    screen_load();
+
+    if (command_new == ESCAPE)
+        command_new = 0;
+    else
+        command_see = TRUE;
+}
+
+static void _equip_slot_f(doc_ptr doc, slot_t slot)
+{
+    doc_printf(doc, "%-10.10s: ", equip_describe_slot(slot));
+}
+
+void equip_display(doc_ptr doc, obj_p p)
+{
+    inv_display(_inv, doc, p, show_labels ? _equip_slot_f : NULL, 0);
+}
+
+/************************************************************************
  * Wielding
  ***********************************************************************/
 typedef struct { int item; obj_ptr obj; } _obj_get_t, *_obj_get_ptr; /* TODO: Rewrite get_item */
@@ -443,7 +481,7 @@ static void       _wield_before(obj_ptr obj, slot_t slot);
 static void       _wield(obj_ptr obj, slot_t slot);
 static void       _wield_after(slot_t slot);
 
-void equip_wield(void)
+void equip_wield_ui(void)
 {
     slot_t     slot;
     _obj_get_t obj_get = _wield_get_obj();
@@ -670,7 +708,7 @@ static void _wield_after(slot_t slot)
 /************************************************************************
  * Unwielding (Take Off)
  ***********************************************************************/
-void equip_takeoff(void)
+void equip_takeoff_ui(void)
 {
     int slot;
     obj_ptr obj;
@@ -1076,7 +1114,7 @@ void equip_calc_bonuses(void)
         u32b    flgs[OF_ARRAY_SIZE];
         int     bonus_to_h, bonus_to_d;
 
-        if (!obj->k_idx) continue;
+        if (!obj) continue;
 
         obj_flags(obj, flgs);
 

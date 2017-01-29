@@ -2,6 +2,13 @@
 
 #include <assert.h>
 
+obj_ptr obj_alloc(void)
+{
+    obj_ptr obj = malloc(sizeof(object_type));
+    object_wipe(obj);
+    return obj;
+}
+
 obj_ptr obj_copy(obj_ptr obj)
 {
     obj_ptr copy = malloc(sizeof(object_type));
@@ -136,6 +143,36 @@ int obj_cmp(obj_ptr left, obj_ptr right)
     if (left->scratch > right->scratch) return -1;
 
     return 0;
+}
+
+/************************************************************************
+ * Menus
+ ***********************************************************************/
+char obj_label(obj_ptr obj)
+{
+    cptr insc;
+    if (!obj->inscription) return '\0';
+    insc = quark_str(obj->inscription);
+
+    for (insc = strchr(insc, '@'); *insc; insc = strchr(insc, '@'))
+    {
+        insc++;
+        /* @mc uses 'c' as a label only for the 'm' command */
+        if (command_cmd && *insc == command_cmd)
+        {
+            insc++;
+            if ( ('a' <= *insc && *insc <= 'z')
+              || ('A' <= *insc && *insc <= 'Z')
+              || ('0' <= *insc && *insc <= '9') )
+            {
+                return *insc;
+            }
+        }
+        /* @3 uses '3' as a label for *any* command */
+        else if ('0' <= *insc && *insc <= '9')
+            return *insc;
+    }
+    return '\0';
 }
 
 /************************************************************************

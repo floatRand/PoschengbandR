@@ -254,7 +254,7 @@ void inv_clear(inv_ptr inv)
 
 bool inv_sort(inv_ptr inv)
 {
-    vec_for_each(inv->objects, (vec_item_f)obj_clear_scratch);
+    inv_for_each(inv, obj_clear_scratch);
     if (!vec_is_sorted(inv->objects, (vec_cmp_f)obj_cmp))
     {
         slot_t slot;
@@ -466,6 +466,125 @@ int inv_count_slots(inv_ptr inv, obj_p p)
 int inv_max_slots(inv_ptr inv)
 {
     return inv->max;
+}
+
+/* Menus and Display */
+void inv_display(inv_ptr inv, doc_ptr doc, obj_p p, slot_display_f slot_f, int flags)
+{
+    slot_t slot;
+    int    xtra = 0;
+    int    max = inv->max ? inv->max : vec_length(inv->objects) - 1;
+
+    if (inv->flags & INV_EQUIP)
+        max = equip_max(); /* Ugly hack ... but equip_max() shifts with body type while inv->max remains constant */
+
+    if (show_weights)
+        xtra = 9;  /* " 123.0 lbs" */
+
+    inv_calculate_labels(inv);
+
+    doc_insert(doc, "<style:table>");
+    for (slot = 1; slot <= max; slot++)
+    {
+        obj_ptr obj = inv_obj(inv, slot);
+
+        if (!obj)
+        {
+            if (!p)
+            {
+                doc_printf(doc, " %c) ", inv_slot_label(inv, slot));
+                if (show_item_graph)
+                    doc_insert(doc, "  ");
+                if (slot_f)
+                    slot_f(doc, slot);
+                doc_insert(doc, "<color:D>Empty</color>\n");
+            }
+            continue;
+        }
+        if (!p || p(obj))
+        {
+            char name[MAX_NLEN];
+            doc_style_t style = *doc_current_style(doc);
+            object_desc(name, obj, OD_COLOR_CODED);
+            doc_printf(doc, " %c) ", inv_slot_label(inv, slot));
+            if (show_item_graph)
+            {
+                doc_insert_char(doc, object_attr(obj), object_char(obj));
+                doc_insert(doc, " ");
+            }
+            if (slot_f)
+                slot_f(doc, slot);
+            if (xtra)
+            {
+                style.right = doc_width(doc) - xtra;
+                doc_push_style(doc, &style);
+            }
+            doc_printf(doc, "%s", name);
+            if (xtra)
+            {
+                /*doc_insert(doc, " {<color:v>This is a <color:y>really, <color:R>very, <color:o>incredibly</color>, "
+                                "extremely</color>, mighty</color> long object name</color>}");*/
+                doc_pop_style(doc);
+            }
+            if (show_weights)
+            {
+                int wgt = obj->weight * obj->number;
+                doc_printf(doc, "<tab:%d> %3d.%d lbs", doc_width(doc) - xtra, wgt/10, wgt%10);
+            }
+            doc_newline(doc);
+        }
+    }
+    doc_insert(doc, "</style>");
+}
+
+char inv_slot_label(inv_ptr inv, slot_t slot)
+{
+    obj_ptr obj = inv_obj(inv, slot);
+    if (obj && obj->scratch)
+        return obj->scratch;
+    return ' ';
+}
+
+slot_t inv_label_slot(inv_ptr inv, char label)
+{
+    slot_t slot;
+    inv_for_each(inv, obj_clear_scratch);
+    for (slot = 1; slot <= 26 && slot < vec_length(inv->objects); slot++)
+    {
+        obj_ptr obj = vec_get(inv->objects, slot);
+        if (!obj) continue;
+        if (obj->scratch != label) continue;
+        return slot;
+    }
+    return 0;
+}
+
+void inv_calculate_labels(inv_ptr inv)
+{
+    slot_t slot;
+    inv_for_each(inv, obj_clear_scratch);
+    /* Initialize by ordinal */
+    for (slot = 1; slot <= 26 && slot < vec_length(inv->objects); slot++)
+    {
+        obj_ptr obj = vec_get(inv->objects, slot);
+        if (obj)
+            obj->scratch = slot_label(slot);
+    }
+    /* Override by inscription (e.g. @mf) */
+    for (slot = 1; slot <= 26 && slot < vec_length(inv->objects); slot++)
+    {
+        obj_ptr obj = vec_get(inv->objects, slot);
+        if (obj)
+        {
+            char label = obj_label(obj);
+            if (label)
+            {
+                slot_t slot2 = inv_label_slot(inv, label);
+                if (slot2)
+                    inv_obj(inv, slot2)->scratch = ' ';
+            }
+        }
+    }
 }
 
 /* Savefiles */

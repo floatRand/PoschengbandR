@@ -2799,14 +2799,14 @@ static void store_process_command(void)
         /* Wear/wield equipment */
         case 'w':
         {
-            equip_wield();
+            equip_wield_ui();
             break;
         }
 
         /* Take off equipment */
         case 't':
         {
-            equip_takeoff();
+            equip_takeoff_ui();
             break;
         }
 
@@ -2820,7 +2820,7 @@ static void store_process_command(void)
         /* Equipment list */
         case 'e':
         {
-            do_cmd_equip();
+            equip_ui();
             break;
         }
 

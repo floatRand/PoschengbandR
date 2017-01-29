@@ -12,14 +12,18 @@
    probably out. Dragons get multiple ring slots but not much else
    (cf Drangband which was always good fun, back in the day).
 
-   Slots are [1..template->max]
+   Slots are [1..equip_max()]
 
    NULL predicates are always OK and mean that no restriction should be applied.
 */
-extern void    equip_wield(void); 
+extern void    equip_ui(void);
+extern void    equip_wield_ui(void); 
+extern void    equip_takeoff_ui(void);
+
 extern void    equip_wield_aux(obj_ptr obj, slot_t slot); 
-extern void    equip_takeoff(void);
 extern void    equip_takeoff_aux(slot_t slot); /* takeoff, drop, throw */
+extern void    equip_display(doc_ptr doc, obj_p p);
+
 extern void    equip_calc_bonuses(void);
 extern void    equip_for_each_obj(obj_f f);
 extern void    equip_for_each_slot(slot_f f);

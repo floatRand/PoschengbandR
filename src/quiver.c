@@ -35,6 +35,7 @@ void quiver_set_capacity(int capacity)
 
 void quiver_carry(obj_ptr obj)
 {
+    /* Helper for pack_carry and equip_wield */
     int ct = quiver_count(NULL);
     int xtra = 0;
     if (ct + obj->number > _capacity)
@@ -63,28 +64,86 @@ void quiver_remove(slot_t slot)
 }
 
 /* Accessing, Iterating, Searching */
-extern obj_ptr quiver_obj(slot_t slot);
-extern int     quiver_max(void); /* for (slot = 1; slot <= quiver_max(); slot++) ... */
+obj_ptr quiver_obj(slot_t slot)
+{
+    return inv_obj(_inv, slot);
+}
 
-extern void    quiver_for_each(obj_f f);
-extern slot_t  quiver_find_first(obj_p p);
-extern slot_t  quiver_find_next(obj_p p, slot_t prev_match);
-extern slot_t  quiver_find_art(int which);
-extern slot_t  quiver_find_ego(int which);
-extern slot_t  quiver_find_obj(int tval, int sval);
-extern slot_t  quiver_random_slot(obj_p p);
+int quiver_max(void)
+{
+    return QUIVER_MAX;
+}
 
-/* The quiver will 'optimize' upon request, combining objects via
- * stacking and resorting. See PN_REORDER and PN_COMBINE, which
- * I've combined into a single method since it is unclear why 
- * they need to be separate. */
-extern bool    quiver_optimize(void);
+void quiver_for_each(obj_f f)
+{
+    inv_for_each(_inv, f);
+}
+
+slot_t quiver_find_first(obj_p p)
+{
+    return inv_first(_inv, p);
+}
+
+slot_t quiver_find_next(obj_p p, slot_t prev_match)
+{
+    return inv_next(_inv, p, prev_match);
+}
+
+slot_t quiver_find_art(int which)
+{
+    return inv_find_art(_inv, which);
+}
+
+slot_t quiver_find_ego(int which)
+{
+    return inv_find_ego(_inv, which);
+}
+
+slot_t quiver_find_obj(int tval, int sval)
+{
+    return inv_find_obj(_inv, tval, sval);
+}
+
+slot_t quiver_random_slot(obj_p p)
+{
+    return inv_random_slot(_inv, p);
+}
+
+/* Optimize */
+bool quiver_optimize(void)
+{
+    if (inv_optimize(_inv))
+    {
+        msg_print("You reorder your quiver.");
+        return TRUE;
+    }
+    return FALSE;
+}
 
 /* Properties of the Entire Inventory */
-extern int     quiver_weight(obj_p p);
-extern int     quiver_count(obj_p p);
-extern int     quiver_count_slots(obj_p p);
+int quiver_weight(obj_p p)
+{
+    return inv_weight(_inv, p);
+}
+
+int quiver_count(obj_p p)
+{
+    return inv_count(_inv, p);
+}
+
+int quiver_count_slots(obj_p p)
+{
+    return inv_count_slots(_inv, p);
+}
 
 /* Savefiles */
-extern void    quiver_load(savefile_ptr file);
-extern void    quiver_save(savefile_ptr file);
+void quiver_load(savefile_ptr file)
+{
+    inv_load(_inv, file);
+}
+
+void quiver_save(savefile_ptr file)
+{
+    inv_save(_inv, file);
+}
+
