@@ -163,9 +163,6 @@ static void player_wipe(void)
         quest[i].seed = 0;
     }
 
-    /* No weight */
-    p_ptr->total_weight = 0;
-
     /* No items */
     inven_cnt = 0;
 

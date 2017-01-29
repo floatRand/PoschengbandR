@@ -4712,9 +4712,6 @@ void inven_item_increase(int item, int num)
         /* Add the number */
         o_ptr->number += num;
 
-        /* Add the weight */
-        p_ptr->total_weight += (num * o_ptr->weight);
-
         /* Recalculate bonuses */
         p_ptr->update |= (PU_BONUS);
 
@@ -5018,9 +5015,6 @@ s16b inven_carry(object_type *o_ptr)
             /* Combine the items */
             object_absorb(j_ptr, o_ptr);
 
-            /* Increase the weight */
-            p_ptr->total_weight += (o_ptr->number * o_ptr->weight);
-
             /* Recalculate bonuses */
             p_ptr->update |= (PU_BONUS);
 
@@ -5095,9 +5089,6 @@ s16b inven_carry(object_type *o_ptr)
     /* Player touches it, and no longer marked */
     j_ptr->marked &= (OM_WORN | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);  /* Ah, but remember the "worn" status ... */
     j_ptr->marked |= OM_TOUCHED;
-
-    /* Increase the weight */
-    p_ptr->total_weight += (j_ptr->number * j_ptr->weight);
 
     /* Count the items */
     inven_cnt++;

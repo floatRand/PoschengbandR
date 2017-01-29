@@ -3312,16 +3312,26 @@ static void calc_torch(void)
 }
 
 
+int py_total_weight(void)
+{
+    int weight = 0;
+
+    weight += equip_weight(NULL);
+    weight += pack_weight(NULL);
+    weight += quiver_weight(NULL);
+
+    return weight;
+}
 
 /*
  * Computes current weight limit.
  */
-u32b weight_limit(void)
+int weight_limit(void)
 {
-    u32b i;
+    int i;
 
     /* Weight limit based only on strength */
-    i = (u32b)adj_str_wgt[p_ptr->stat_ind[A_STR]] * 50; /* Constant was 100 */
+    i = (int)adj_str_wgt[p_ptr->stat_ind[A_STR]] * 50; /* Constant was 100 */
     if (p_ptr->pclass == CLASS_BERSERKER) i = i * 3 / 2;
 
     /* Return the result */
@@ -4288,12 +4298,12 @@ void calc_bonuses(void)
 
 
     /* Extract the current weight (in tenth pounds) */
-    j = p_ptr->total_weight;
+    j = py_total_weight();
 
     if (!p_ptr->riding)
     {
         /* Extract the "weight limit" (in tenth pounds) */
-        i = (int)weight_limit();
+        i = weight_limit();
     }
     else
     {
@@ -5029,7 +5039,6 @@ void notice_stuff(void)
     /* Notice stuff */
     if (!p_ptr->notice) return;
 
-
     /* Actually do auto-destroy */
     if (p_ptr->notice & (PN_AUTODESTROY))
     {
@@ -5037,14 +5046,26 @@ void notice_stuff(void)
         autopick_delayed_alter();
     }
 
-    /* Combine the pack */
+    if (p_ptr->notice & PN_OPTIMIZE_PACK)
+    {
+        p_ptr->notice &= ~PN_OPTIMIZE_PACK;
+        pack_optimize();
+    }
+
+    if (p_ptr->notice & PN_OPTIMIZE_QUIVER)
+    {
+        p_ptr->notice &= ~PN_OPTIMIZE_QUIVER;
+        quiver_optimize();
+    }
+
+    /* DEAD: Combine the pack */
     if (p_ptr->notice & (PN_COMBINE))
     {
         p_ptr->notice &= ~(PN_COMBINE);
         combine_pack();
     }
 
-    /* Reorder the pack */
+    /* DEAD: Reorder the pack */
     if (p_ptr->notice & (PN_REORDER))
     {
         p_ptr->notice &= ~(PN_REORDER);

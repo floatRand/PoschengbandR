@@ -313,12 +313,18 @@ struct ego_type
 typedef struct object_type object_type;
 typedef bool (*object_p)(object_type *o_ptr);
 
+struct obj_loc_s {
+    byte where; /* INV_EQUIP, INV_PACK, INV_QUIVER, INV_STORE or INV_FLOOR */
+    byte x, y;  /* where == INV_FLOOR */
+    int  slot;  /* o_idx if floor, slot otherwise */
+};
+typedef struct obj_loc_s obj_loc_t;
+
 struct object_type
 {
     s16b k_idx;            /* Kind index (zero if "dead") */
 
-    byte iy;            /* Y-position on map, or zero */
-    byte ix;            /* X-position on map, or zero */
+byte iy, ix;  /* DEAD: Its here now so I can compile but its dead!!! */
 
     byte tval;            /* Item type (from kind) */
     byte sval;            /* Item sub-type (from kind) */
@@ -374,6 +380,7 @@ struct object_type
 
     s16b held_m_idx;    /* Monster holding us (if any) */
     effect_t activation;
+    obj_loc_t loc;
 
     s16b level;         /* object_level on generation for my statistical pleasures */
     int  scratch;
@@ -1518,8 +1525,6 @@ struct player_type
 
 
     /*** Extracted fields ***/
-    u32b total_weight;    /* Total weight being carried */
-
     s16b stat_add[6];    /* Modifiers to stat values */
     s16b stat_ind[6];    /* Indexes into stat tables */
 

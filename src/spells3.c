@@ -2440,7 +2440,6 @@ bool mundane_spell(bool only_equip)
         byte ix = o_ptr->ix;                 /* X-position on map, or zero */
         s16b next_o_idx = o_ptr->next_o_idx; /* Next object in stack (if any) */
         byte marked = o_ptr->marked;         /* Object is marked */
-        s16b weight = o_ptr->number * o_ptr->weight;
         u16b inscription = o_ptr->inscription;
 
         /* Wipe it clean */
@@ -2451,7 +2450,6 @@ bool mundane_spell(bool only_equip)
         o_ptr->next_o_idx = next_o_idx;
         o_ptr->marked = marked;
         o_ptr->inscription = inscription;
-        if (item >= 0) p_ptr->total_weight += (o_ptr->weight - weight);
     }
     p_ptr->update |= PU_BONUS;
     android_calc_exp();

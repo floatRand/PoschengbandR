@@ -2182,7 +2182,6 @@ void autopick_delayed_alter(void)
 void autopick_alter_item(int item, bool destroy)
 {
     object_type *o_ptr;
-    int idx;
 
     /* Get the item (in the pack) */
     if (item >= 0) o_ptr = &inventory[item];
@@ -2190,8 +2189,12 @@ void autopick_alter_item(int item, bool destroy)
     /* Get the item (on the floor) */
     else o_ptr = &o_list[0 - item];
 
+    autopick_alter_obj(o_ptr, destroy);
+}
+void autopick_alter_obj(obj_ptr o_ptr, bool allow_destroy)
+{
     /* Get the index in the auto-pick/destroy list */
-    idx = is_autopick(o_ptr);
+    int idx = is_autopick(o_ptr);
 
     /* Auto-id: Try "?unidentified good" for a L30 monk ... */
     if (idx >= 0 && autopick_list[idx].action & DO_AUTO_ID)
@@ -2208,7 +2211,7 @@ void autopick_alter_item(int item, bool destroy)
     auto_inscribe_item(o_ptr, idx);
 
     /* Do auto-destroy if needed */
-    if (destroy && item <= INVEN_PACK)
+    if (allow_destroy)
         auto_destroy_item(o_ptr, idx);
 }
 

@@ -22,7 +22,7 @@
 void do_cmd_inven(void)
 {
     char out_val[160];
-
+    int  wgt = py_total_weight();
 
     /* Note that we are in "inventory" mode */
     command_wrk = FALSE;
@@ -47,8 +47,7 @@ void do_cmd_inven(void)
     item_tester_full = FALSE;
 
     sprintf(out_val, "Inventory: carrying %d.%d pounds (%d%% of capacity). Command: ",
-        (int)(p_ptr->total_weight / 10), (int)(p_ptr->total_weight % 10),
-        (p_ptr->total_weight * 100) / weight_limit());
+        wgt / 10, wgt % 10, wgt * 100 / weight_limit());
 
 
     /* Get a command */
@@ -89,7 +88,7 @@ void do_cmd_inven(void)
 void do_cmd_equip(void)
 {
     char out_val[160];
-
+    int wgt = py_total_weight();
 
     /* Note that we are in "equipment" mode */
     command_wrk = TRUE;
@@ -115,8 +114,7 @@ void do_cmd_equip(void)
 
     /* Build a prompt */
     sprintf(out_val, "Equipment: carrying %d.%d pounds (%d%% of capacity). Command: ",
-        (int)(p_ptr->total_weight / 10), (int)(p_ptr->total_weight % 10),
-        (p_ptr->total_weight * 100) / weight_limit());
+        wgt / 10, wgt % 10, wgt * 100 / weight_limit());
 
     /* Get a command */
     prt(out_val, 0, 0);

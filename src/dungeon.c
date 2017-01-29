@@ -1231,7 +1231,7 @@ static void process_world_aux_hp_and_sp(void)
     if (have_flag(f_ptr->flags, FF_WATER) && have_flag(f_ptr->flags, FF_DEEP) &&
         !p_ptr->levitation && !p_ptr->can_swim && !elemental_is_(ELEMENTAL_WATER))
     {
-        if (p_ptr->total_weight > weight_limit())
+        if (py_total_weight() > weight_limit())
         {
             /* Take damage */
             msg_print("You are drowning!");

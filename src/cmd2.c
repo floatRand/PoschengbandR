@@ -4602,9 +4602,6 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
             /* Wear the new stuff */
             object_copy(o_ptr, q_ptr);
 
-            /* Increase the weight */
-            p_ptr->total_weight += q_ptr->weight;
-
             p_ptr->update |= (PU_BONUS);
             p_ptr->update |= (PU_TORCH);
             p_ptr->update |= (PU_MANA);

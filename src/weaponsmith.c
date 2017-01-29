@@ -2184,7 +2184,6 @@ static bool _smithing(void)
 {
     int          item;
     object_type *o_ptr;
-    object_type  old_obj;
 
     item_tester_hook = object_is_weapon_armour_ammo;
     item_tester_no_ryoute = TRUE;
@@ -2209,13 +2208,10 @@ static bool _smithing(void)
         if (p_ptr->lev >= 30)
             obj_identify_fully(o_ptr);
     }
-    old_obj = *o_ptr;
 
     _smith_object(o_ptr);
 
-    if (item >= 0)
-        p_ptr->total_weight += (o_ptr->weight*o_ptr->number - old_obj.weight*old_obj.number);
-    else
+    if (item < 0)
         autopick_alter_item(item, TRUE);
 
     p_ptr->notice |= PN_COMBINE | PN_REORDER;

@@ -1511,7 +1511,7 @@ void equip_init(void)
     else
         _template = &b_info[0];
     assert(!_inv);
-    _inv = inv_alloc(EQUIP_MAX_SLOTS, 0);
+    _inv = inv_alloc(EQUIP_MAX_SLOTS, INV_EQUIP);
 }
 
 /* Attempt to gracefully handle changes to body type between
@@ -1522,7 +1522,7 @@ void equip_init(void)
 void equip_on_load(void)
 {
     slot_t  slot, max = inv_last(_inv, obj_exists);
-    inv_ptr temp = inv_alloc(EQUIP_MAX_SLOTS, 0);
+    inv_ptr temp = inv_alloc(EQUIP_MAX_SLOTS, INV_EQUIP);
 
     for (slot = 1; slot <= max; slot++)
     {
@@ -1561,8 +1561,7 @@ void equip_on_load(void)
             char name[MAX_NLEN];
             object_desc(name, obj, OD_COLOR_CODED);
             msg_format("You can no longer wield %s.", name);
-            if (!pack_carry(obj))
-                pack_push_overflow(obj);
+            pack_carry(obj);
         }
     }
     inv_free(temp);
@@ -1616,9 +1615,7 @@ void equip_on_change_race(void)
                         src->marked |= OM_WORN;
                     }
                 }
-
-                if (!pack_carry(src))
-                    pack_push_overflow(src);
+                pack_carry(src);
             }
         }
         inv_free(temp);

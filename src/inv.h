@@ -16,30 +16,37 @@
 typedef int slot_t; /* Slots are 1..max ('if (slot) ...' is a valid idiom) */
                     /* Slots may be empty (unused) */
 typedef void (*slot_f)(slot_t slot);
+extern char    slot_label(slot_t slot);
+extern slot_t  label_slot(char label);
 
 typedef struct inv_s inv_t, *inv_ptr; /* Hidden/Abstract */
 
+/* The following are used both as flags to inv_alloc() and
+ * as a byte tag for obj_t.loc.where */
+#define INV_EQUIP     0x0001
+#define INV_PACK      0x0002
+#define INV_QUIVER    0x0004
+#define INV_STORE     0x0008 /* TODO: Rewrite stores to use inv_t */
+#define INV_FLOOR     0x0010 /* not really for inv_alloc, but obj_t.loc */
+#define INV_LOC_MASK  (INV_EQUIP | INV_PACK | INV_QUIVER | INV_STORE | INV_FLOOR)
+#define INV_READ_ONLY 0x0020
+
 /* Creation */
-#define INV_STORE 0x0001
 extern inv_ptr inv_alloc(int max, int flags); /* max=0 is unbounded */
 extern inv_ptr inv_copy(inv_ptr src);
 extern inv_ptr inv_filter(inv_ptr src, obj_p p);
 extern void    inv_free(inv_ptr inv);
 
 /* Adding, Removing and Sorting */
-extern slot_t  inv_add(inv_ptr inv, obj_ptr obj); /* Copy obj to next avail slot ... no combining */
-extern void    inv_add_at(inv_ptr inv, obj_ptr obj, slot_t slot); /* equip specifies the slot when wielding */
+extern slot_t  inv_add(inv_ptr inv, obj_ptr obj);
+extern void    inv_add_at(inv_ptr inv, obj_ptr obj, slot_t slot);
 extern slot_t  inv_combine(inv_ptr inv, obj_ptr obj);
-extern int     inv_combine_ex(inv_ptr inv, obj_ptr obj); /* Combine obj with inventory objects. Adds left over to new slot.
-                                                            Modifies obj->number and returns number added to inv */
+extern int     inv_combine_ex(inv_ptr inv, obj_ptr obj);
 extern void    inv_remove(inv_ptr inv, slot_t slot);
 extern void    inv_clear(inv_ptr inv);
 extern bool    inv_optimize(inv_ptr inv);
 extern bool    inv_sort(inv_ptr inv);
 extern void    inv_swap(inv_ptr inv, slot_t left, slot_t right);
-
-extern bool    inv_can_combine(inv_ptr inv, obj_ptr obj);
-extern slot_t  inv_next_free_slot(inv_ptr inv);
 
 /* Iterating, Searching and Accessing Objects (Predicates are always optional) */
 extern obj_ptr inv_obj(inv_ptr inv, slot_t slot); /* NULL if slot is not occupied */

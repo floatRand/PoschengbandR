@@ -621,7 +621,8 @@ extern errr process_autopick_file_command(char *buf);
 #define AUTOPICK_COLOR_CODED 0x01
 extern string_ptr autopick_line_from_entry(autopick_type *entry, int options);
 extern int is_autopick(object_type *o_ptr);
-extern void autopick_alter_item(int item, bool destroy);
+extern void autopick_alter_item(int item, bool destroy); /* DEAD */
+extern void autopick_alter_obj(obj_ptr o_ptr, bool allow_destroy);
 extern void autopick_delayed_alter(void);
 extern bool autopick_pickup_items(cave_type *c_ptr);
 extern bool autopick_autoregister(object_type *o_ptr);
@@ -1683,7 +1684,8 @@ extern bool is_daytime(void);
 extern void extract_day_hour_min(int *day, int *hour, int *min);
 extern void extract_day_hour_min_imp(int turn, int *day, int *hour, int *min);
 extern void prt_time(void);
-extern u32b weight_limit(void);
+extern int  weight_limit(void);
+extern int  py_total_weight(void);
 extern void calc_bonuses(void);
 extern void calc_innate_blows(innate_attack_ptr a, int max);
 extern void notice_stuff(void);

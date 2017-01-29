@@ -1145,9 +1145,7 @@ void wiz_obj_smith(void)
     msg_line_clear();
     if (_smith_object(&copy) == _OK)
     {
-        if (item >= 0) p_ptr->total_weight -= o_ptr->weight*o_ptr->number;
         *o_ptr = copy;
-        if (item >= 0) p_ptr->total_weight += o_ptr->weight*o_ptr->number;
         p_ptr->update |= PU_BONUS;
         p_ptr->notice |= PN_COMBINE | PN_REORDER;
         p_ptr->window |= PW_INVEN;

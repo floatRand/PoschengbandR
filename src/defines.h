@@ -1590,6 +1590,7 @@ enum {
 #define TV_LITE         39
 #define TV_AMULET       40
 #define TV_RING         45
+#define TV_QUIVER       46
 #define TV_CARD         50
 #define TV_STAFF        55
 #define TV_WAND         65
@@ -2290,9 +2291,11 @@ enum {
 /*
  * Bit flags for the "p_ptr->notice" variable
  */
-#define PN_COMBINE      0x00000001     /* Combine the pack */
-#define PN_REORDER      0x00000002     /* Reorder the pack */
-#define PN_AUTODESTROY  0x00000004     /* Auto-destroy marked item */
+#define PN_COMBINE         0x0001     /* DEAD */
+#define PN_REORDER         0x0002     /* DEAD */
+#define PN_AUTODESTROY     0x0004     /* Auto-destroy marked item */
+#define PN_OPTIMIZE_PACK   0x0008
+#define PN_OPTIMIZE_QUIVER 0x0010
 /* xxx (many) */
 
 
@@ -5404,62 +5407,6 @@ extern int PlayerUID;
 #define SLF_SECOND          0x0001  /* Called from another save/load function */
 #define SLF_NO_KILL      0x0002  /* Don't kill temporal files */
 
-
-/*
- * Fields for wr_item()/rd_item() stored in savefiles (byte).
- */
-enum object_save_fields_e {
-    SAVE_ITEM_DONE = 0,
-    SAVE_ITEM_PVAL,
-    SAVE_ITEM_DISCOUNT,
-    SAVE_ITEM_NUMBER,
-    SAVE_ITEM_NAME1,
-    SAVE_ITEM_NAME2,
-    SAVE_ITEM_NAME3,
-    SAVE_ITEM_ART_NAME,
-    SAVE_ITEM_TIMEOUT,
-    SAVE_ITEM_COMBAT,
-    SAVE_ITEM_ARMOR,
-    SAVE_ITEM_DAMAGE_DICE,
-    SAVE_ITEM_IDENT,
-    SAVE_ITEM_MARKED_BYTE,
-    SAVE_ITEM_FEELING,
-    SAVE_ITEM_INSCRIPTION,
-    SAVE_ITEM_ART_FLAGS_0,
-    SAVE_ITEM_ART_FLAGS_1,
-    SAVE_ITEM_ART_FLAGS_2,
-    SAVE_ITEM_ART_FLAGS_3,
-    SAVE_ITEM_ART_FLAGS_4,
-    SAVE_ITEM_ART_FLAGS_5,
-    SAVE_ITEM_ART_FLAGS_6,
-    SAVE_ITEM_ART_FLAGS_7,
-    SAVE_ITEM_ART_FLAGS_8,
-    SAVE_ITEM_ART_FLAGS_9,
-    SAVE_ITEM_CURSE_FLAGS,
-    SAVE_ITEM_RUNE_FLAGS,
-    SAVE_ITEM_HELD_M_IDX,
-    SAVE_ITEM_XTRA1,
-    SAVE_ITEM_XTRA2,
-    SAVE_ITEM_XTRA3,
-    SAVE_ITEM_XTRA4,
-    SAVE_ITEM_XTRA5_OLD,
-    SAVE_ITEM_ACTIVATION,
-    SAVE_ITEM_MULT,
-    SAVE_ITEM_MARKED,
-    SAVE_ITEM_XTRA5,
-    SAVE_ITEM_KNOWN_FLAGS_0,
-    SAVE_ITEM_KNOWN_FLAGS_1,
-    SAVE_ITEM_KNOWN_FLAGS_2,
-    SAVE_ITEM_KNOWN_FLAGS_3,
-    SAVE_ITEM_KNOWN_FLAGS_4,
-    SAVE_ITEM_KNOWN_FLAGS_5,
-    SAVE_ITEM_KNOWN_FLAGS_6,
-    SAVE_ITEM_KNOWN_FLAGS_7,
-    SAVE_ITEM_KNOWN_FLAGS_8,
-    SAVE_ITEM_KNOWN_FLAGS_9,
-    SAVE_ITEM_KNOWN_CURSE_FLAGS,
-    SAVE_ITEM_LEVEL,
-};
 
 /*
  * Fields for wr_monster()/rd_monster() stored in savefiles (byte).
