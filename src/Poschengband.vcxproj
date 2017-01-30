@@ -169,7 +169,7 @@
     <ClCompile Include="necromancer.c" />
     <ClCompile Include="ninja.c" />
     <ClCompile Include="obj.c" />
-    <ClCompile Include="obj_get.c" />
+    <ClCompile Include="obj_prompt.c" />
     <ClCompile Include="object1.c" />
     <ClCompile Include="object2.c" />
     <ClCompile Include="object3.c" />

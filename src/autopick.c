@@ -1162,12 +1162,6 @@ static cptr autopick_line_from_entry_kill(autopick_type *entry)
 }
 
 
-static bool _collecting(object_type *o1, object_type *o2)
-{
-    if (o1->k_idx != o2->k_idx)     return FALSE;
-    return object_similar(o1, o2);
-}
-
 /*
  * A function for Auto-picker/destroyer
  * Examine whether the object matches to the entry
@@ -1812,18 +1806,11 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
     if (!IS_FLG(FLG_COLLECTING)) return TRUE;
 
     /* Check if there is a same item */
-    for (j = 0; j < INVEN_PACK; j++)
+    for (j = 1; j <= pack_max(); j++)
     {
-        /*
-         * 'Collecting' means the item must be absorbed
-         * into an inventory slot.
-         * But an item can not be absorbed into itself!
-         */
-        if ((&inventory[j] != o_ptr) &&
-            _collecting(&inventory[j], o_ptr))
-        {
+        obj_ptr obj = pack_obj(j);
+        if (obj && obj_can_combine(obj, o_ptr, 0))
             return TRUE;
-        }
     }
 
     /* Not collecting */

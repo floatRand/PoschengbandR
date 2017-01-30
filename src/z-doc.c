@@ -1513,6 +1513,12 @@ void doc_clear(doc_ptr doc)
     doc_rollback(doc, doc_pos_create(0, 0));
 }
 
+void doc_sync_menu(doc_ptr doc)
+{
+    rect_t r = ui_menu_rect();
+    doc_sync_term(doc, doc_range_top_lines(doc, r.cy), doc_pos_create(r.x, r.y));
+}
+
 void doc_sync_term(doc_ptr doc, doc_region_t range, doc_pos_t term_pos)
 {
     doc_pos_t pos;

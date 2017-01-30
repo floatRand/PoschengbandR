@@ -27,7 +27,7 @@ void pack_ui(void)
                     wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
 
     screen_save();
-    doc_sync_term(doc, doc_range_top_lines(doc, r.cy), doc_pos_create(r.x, r.y));
+    doc_sync_menu(doc);
     command_new = inkey();
     screen_load();
 

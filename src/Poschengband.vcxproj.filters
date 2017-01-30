@@ -213,7 +213,7 @@
     <ClCompile Include="obj.c">
       <Filter>Objects</Filter>
     </ClCompile>
-    <ClCompile Include="obj_get.c">
+    <ClCompile Include="obj_prompt.c">
       <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="obj_kind.c">

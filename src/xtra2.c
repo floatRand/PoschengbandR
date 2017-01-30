@@ -3272,14 +3272,19 @@ rect_t ui_map_rect(void)
     );
 }
 
+rect_t ui_menu_rect(void)
+{
+    return rect_create(
+        0,
+        0,
+        Term->wid - 12 - 1,
+        Term->hgt - 1 - 1
+    );
+}
+
 rect_t ui_screen_rect(void)
 {
     return rect_create(0, 0, Term->wid, Term->hgt);
-}
-
-rect_t ui_menu_rect(void)
-{
-    return ui_map_rect();
 }
 
 rect_t ui_char_info_rect(void)

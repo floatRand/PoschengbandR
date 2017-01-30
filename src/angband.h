@@ -48,7 +48,7 @@
 #include "equip.h"
 #include "pack.h"
 #include "quiver.h"
-#include "obj_get.h"
+#include "obj_prompt.h"
 
 #include "types.h"
 #include "externs.h"
