@@ -1058,8 +1058,8 @@ bool detect_objects_gold(int range)
         if (o_ptr->held_m_idx) continue;
 
         /* Location */
-        y = o_ptr->iy;
-        x = o_ptr->ix;
+        y = o_ptr->loc.y;
+        x = o_ptr->loc.x;
 
         /* Only detect nearby objects */
         if (distance(py, px, y, x) > range2) continue;
@@ -1121,8 +1121,8 @@ bool detect_objects_normal(int range)
         if (o_ptr->held_m_idx) continue;
 
         /* Location */
-        y = o_ptr->iy;
-        x = o_ptr->ix;
+        y = o_ptr->loc.y;
+        x = o_ptr->loc.x;
 
         /* Only detect nearby objects */
         if (distance(py, px, y, x) > range2) continue;
@@ -1190,8 +1190,8 @@ bool detect_objects_magic(int range)
         if (o_ptr->held_m_idx) continue;
 
         /* Location */
-        y = o_ptr->iy;
-        x = o_ptr->ix;
+        y = o_ptr->loc.y;
+        x = o_ptr->loc.x;
 
         /* Only detect nearby objects */
         if (distance(py, px, y, x) > range) continue;

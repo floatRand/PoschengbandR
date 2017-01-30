@@ -904,7 +904,7 @@ static errr rd_saved_floor(savefile_ptr file, saved_floor_type *sf_ptr)
         }
         else
         {
-            cave_type *c_ptr = &cave[o_ptr->iy][o_ptr->ix];
+            cave_type *c_ptr = &cave[o_ptr->loc.y][o_ptr->loc.x];
             o_ptr->next_o_idx = c_ptr->o_idx;
             c_ptr->o_idx = o_idx;
         }

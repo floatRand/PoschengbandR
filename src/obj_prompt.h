@@ -3,7 +3,9 @@
 
 #include "obj.h"
 
-#define MAX_LOC           4
+typedef bool (*obj_prompt_cmd_f)(doc_ptr doc, inv_ptr current, char cmd);
+
+#define MAX_LOC           5
 #define OBJ_PROMPT_ALL    0x0001
 #define OBJ_PROMPT_FORCE  0x0002
 struct obj_prompt_s
@@ -13,6 +15,9 @@ struct obj_prompt_s
     obj_p filter; 
     int   where[MAX_LOC]; /* INV_EQUIP, INV_FLOOR, etc. order matters */
     int   flags;
+
+    obj_prompt_cmd_f
+          cmd_handler;    /* return TRUE to eat the cmd */
 };
 
 typedef struct obj_prompt_s obj_prompt_t, *obj_prompt_ptr;

@@ -28,6 +28,10 @@ extern char obj_label(obj_ptr obj);
 extern bool obj_can_combine(obj_ptr dest, obj_ptr obj, int options);
 extern int  obj_combine(obj_ptr dest, obj_ptr obj, int options);
 
+/* Commands */
+extern void obj_inscribe_ui(void);
+extern void obj_inspect_ui(void);
+
 /* Savefiles */
 extern void obj_load(obj_ptr obj, savefile_ptr file);
 extern void obj_save(obj_ptr obj, savefile_ptr file);

@@ -146,8 +146,8 @@ static bool _sense_great_discovery(int range)
         if (object_is_known(o_ptr)) continue;
 
         /* Location */
-        y = o_ptr->iy;
-        x = o_ptr->ix;
+        y = o_ptr->loc.y;
+        x = o_ptr->loc.x;
 
         /* Only detect nearby objects */
         if (distance(py, px, y, x) > range2) continue;

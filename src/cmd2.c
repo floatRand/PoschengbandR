@@ -2519,7 +2519,7 @@ static bool _travel_next_obj(int mode)
         {
             if (!o_ptr->inscription) continue;
             if (!strstr(quark_str(o_ptr->inscription), "=g")) continue;
-            if (o_ptr->ix == px && o_ptr->iy == py)
+            if (o_ptr->loc.x == px && o_ptr->loc.y == py)
             {
                 /* Full pack aborts the travel sequence */
                 return FALSE;
@@ -2531,7 +2531,7 @@ static bool _travel_next_obj(int mode)
 
             if (j < 0) continue;
             if (!(autopick_list[j].action & (DO_AUTODESTROY | DO_AUTOPICK))) continue;
-            if (o_ptr->ix == px && o_ptr->iy == py)
+            if (o_ptr->loc.x == px && o_ptr->loc.y == py)
             {
                 /* Full pack aborts the travel sequence */
                 if (autopick_list[j].action & DO_AUTOPICK)
@@ -2540,8 +2540,8 @@ static bool _travel_next_obj(int mode)
             }
         }
 
-        dist = distance(py, px, o_ptr->iy, o_ptr->ix);
-        if (!projectable(py, px, o_ptr->iy, o_ptr->ix))
+        dist = distance(py, px, o_ptr->loc.y, o_ptr->loc.x);
+        if (!projectable(py, px, o_ptr->loc.y, o_ptr->loc.x))
         {
             if (mode == TRAVEL_MODE_AUTOPICK) continue;
             else if (dist > 18) continue;
@@ -2555,7 +2555,7 @@ static bool _travel_next_obj(int mode)
     }
     if (best_idx == -1)
         return FALSE;
-    travel_begin(mode, o_list[best_idx].ix, o_list[best_idx].iy);
+    travel_begin(mode, o_list[best_idx].loc.x, o_list[best_idx].loc.y);
     return TRUE;
 }
 void do_cmd_get(void)
@@ -3952,7 +3952,9 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
             object_copy(o_ptr, q_ptr);
 
             o_ptr->marked &= (OM_TOUCHED | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);
-            o_ptr->iy = o_ptr->ix = 0;
+            o_ptr->loc.where = INV_FLOOR;
+            o_ptr->loc.y = o_ptr->loc.x = 0;
+            o_ptr->loc.slot = o_idx;
             o_ptr->held_m_idx = m_idx;
             o_ptr->next_o_idx = m_ptr->hold_o_idx;
             m_ptr->hold_o_idx = o_idx;

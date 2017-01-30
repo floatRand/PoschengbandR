@@ -80,6 +80,9 @@ extern cptr    inv_name(inv_ptr inv);
  * Labels are calculated by inv_display which properly handles all the inscription
  * coding (e.g. @mh to label an object 'h' for the 'm' command, etc.).
  * We respect show_weights (provided flags don't override) as well as show_item_graph */
+#define INV_SHOW_FAIL_RATES 0x0001
+#define INV_SHOW_VALUE      0x0002
+#define INV_SHOW_FULL_INFO  0x0004
 extern void inv_display(
     /* What we display */
     inv_ptr inv,

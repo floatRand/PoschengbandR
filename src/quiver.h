@@ -7,6 +7,8 @@
 
 extern void    quiver_init(void);
 
+extern void    quiver_display(doc_ptr doc, obj_p p, int flags);
+
 /* Adding and removing: Quivers allow a large number of slots
  * (QUIVER_MAX) but restrict the number arrows, etc. The capacity 
  * of the quiver may change as the user finds new and better 

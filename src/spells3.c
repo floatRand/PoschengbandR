@@ -1590,8 +1590,8 @@ void fetch(int dir, int wgt, bool require_los)
     c_ptr->o_idx = o_ptr->next_o_idx;
     cave[py][px].o_idx = i; /* 'move' it */
     o_ptr->next_o_idx = 0;
-    o_ptr->iy = (byte)py;
-    o_ptr->ix = (byte)px;
+    o_ptr->loc.y = (byte)py;
+    o_ptr->loc.x = (byte)px;
 
     object_desc(o_name, o_ptr, OD_NAME_ONLY);
     msg_format("%^s flies through the air to your feet.", o_name);
@@ -2436,8 +2436,7 @@ bool mundane_spell(bool only_equip)
     /* Oops */
     msg_print("There is a bright flash of light!");
     {
-        byte iy = o_ptr->iy;                 /* Y-position on map, or zero */
-        byte ix = o_ptr->ix;                 /* X-position on map, or zero */
+        obj_loc_t loc = o_ptr->loc;
         s16b next_o_idx = o_ptr->next_o_idx; /* Next object in stack (if any) */
         byte marked = o_ptr->marked;         /* Object is marked */
         u16b inscription = o_ptr->inscription;
@@ -2445,8 +2444,7 @@ bool mundane_spell(bool only_equip)
         /* Wipe it clean */
         object_prep(o_ptr, o_ptr->k_idx);
 
-        o_ptr->iy = iy;
-        o_ptr->ix = ix;
+        o_ptr->loc = loc;
         o_ptr->next_o_idx = next_o_idx;
         o_ptr->marked = marked;
         o_ptr->inscription = inscription;

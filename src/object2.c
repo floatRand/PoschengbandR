@@ -89,8 +89,8 @@ void excise_object_idx(int o_idx)
     {
         cave_type *c_ptr;
 
-        int y = j_ptr->iy;
-        int x = j_ptr->ix;
+        int y = j_ptr->loc.y;
+        int x = j_ptr->loc.x;
 
         /* Grid */
         c_ptr = &cave[y][x];
@@ -164,8 +164,8 @@ void delete_object_idx(int o_idx)
         int y, x;
 
         /* Location */
-        y = j_ptr->iy;
-        x = j_ptr->ix;
+        y = j_ptr->loc.y;
+        x = j_ptr->loc.x;
 
         /* Visual update */
         lite_spot(y, x);
@@ -483,8 +483,8 @@ void wipe_o_list(void)
             cave_type *c_ptr;
 
             /* Access location */
-            int y = o_ptr->iy;
-            int x = o_ptr->ix;
+            int y = o_ptr->loc.y;
+            int x = o_ptr->loc.x;
 
             /* Access grid */
             c_ptr = &cave[y][x];
@@ -3991,8 +3991,10 @@ void place_object(int y, int x, u32b mode)
         object_copy(o_ptr, q_ptr);
 
         /* Location */
-        o_ptr->iy = y;
-        o_ptr->ix = x;
+        o_ptr->loc.where = INV_FLOOR;
+        o_ptr->loc.y = y;
+        o_ptr->loc.x = x;
+        o_ptr->loc.slot = o_idx;
 
         /* Build a stack */
         o_ptr->next_o_idx = c_ptr->o_idx;
@@ -4118,8 +4120,10 @@ void place_gold(int y, int x)
         object_copy(o_ptr, q_ptr);
 
         /* Save location */
-        o_ptr->iy = y;
-        o_ptr->ix = x;
+        o_ptr->loc.where = INV_FLOOR;
+        o_ptr->loc.y = y;
+        o_ptr->loc.x = x;
+        o_ptr->loc.slot = o_idx;
 
         /* Build a stack */
         o_ptr->next_o_idx = c_ptr->o_idx;
@@ -5079,7 +5083,7 @@ s16b inven_carry(object_type *o_ptr)
     j_ptr->held_m_idx = 0;
 
     /* Forget location */
-    j_ptr->iy = j_ptr->ix = 0;
+    j_ptr->loc.y = j_ptr->loc.x = 0;
 
     /* Player touches it, and no longer marked */
     j_ptr->marked &= (OM_WORN | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);  /* Ah, but remember the "worn" status ... */

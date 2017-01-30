@@ -680,8 +680,8 @@ static void _detect_spell(int cmd, variant *res)
 
             if (!o_ptr->k_idx) continue;
             if (o_ptr->held_m_idx) continue;
-            y = o_ptr->iy;
-            x = o_ptr->ix;
+            y = o_ptr->loc.y;
+            x = o_ptr->loc.x;
             if (distance(py, px, y, x) > rng) continue;
             if (!object_is_melee_weapon(o_ptr)) continue;
             o_ptr->marked |= OM_FOUND;

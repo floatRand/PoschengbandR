@@ -409,78 +409,6 @@ void do_cmd_destroy(void)
 }
 
 
-/*
- * Observe an item which has been *identify*-ed
- */
-void do_cmd_inspect(void)
-{
-    int            item;
-
-    object_type        *o_ptr;
-
-    cptr q, s;
-
-    item_tester_no_ryoute = TRUE;
-    /* Get an item */
-    q = "Examine which item? ";
-    s = "You have nothing to examine.";
-
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | OPTION_ALL))) return;
-
-    if (item == INVEN_ALL)
-    {
-        int     slot, i;
-        doc_ptr doc = doc_alloc(80);
-
-        doc_insert(doc, "<style:wide><topic:Equipment>============================= Character <color:keypress>E</color>quipment =============================</style>\n\n");
-        for (slot = 1; slot <= equip_max(); slot++)
-        {
-            object_type *o_ptr = equip_obj(slot);
-            if (!o_ptr) continue;
-
-            obj_display_doc(o_ptr, doc);
-        }
-
-        doc_printf(doc, "<style:wide><topic:Inventory>============================= Character <color:keypress>I</color>nventory =============================</style>\n\n");
-        for (i = 0; i < INVEN_PACK; i++)
-        {
-            if (!inventory[i].k_idx) break;
-            if (!object_is_weapon_armour_ammo(&inventory[i]) && !object_is_known(&inventory[i])) continue;
-            obj_display_doc(&inventory[i], doc);
-        }
-
-        screen_save();
-        doc_display(doc, "Equipment", 0);
-        screen_load();
-        doc_free(doc);
-    }
-    else
-    {
-        /* Get the item (in the pack) */
-        if (item >= 0)
-        {
-            o_ptr = &inventory[item];
-        }
-
-        /* Get the item (on the floor) */
-        else
-        {
-            o_ptr = &o_list[0 - item];
-        }
-
-
-        /* Note, some descriptions (potions, scrolls, mushrooms) spoil the object's effects. */
-        if ( object_is_flavor(o_ptr) && !object_is_known(o_ptr))
-        {
-            msg_print("You have no special knowledge about that item.");
-            return;
-        }
-
-        obj_display(o_ptr);
-    }
-}
-
-
 
 /*
  * Remove the inscription from an object
@@ -537,68 +465,6 @@ void do_cmd_uninscribe(void)
     p_ptr->update |= (PU_BONUS);
 
 }
-
-
-/*
- * Inscribe an object with a comment
- */
-void do_cmd_inscribe(void)
-{
-    int          item;
-    object_type *o_ptr;
-    char         o_name[MAX_NLEN];
-    char         out_val[80];
-
-    item_tester_no_ryoute = TRUE;
-    /* Get an item */
-
-    if (!get_item(&item, "Inscribe which item? ", "You have nothing to inscribe.", (USE_EQUIP | USE_INVEN | USE_FLOOR))) return;
-
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-    /* Describe the activity */
-    object_desc(o_name, o_ptr, OD_OMIT_INSCRIPTION | OD_COLOR_CODED);
-
-    /* Message */
-    msg_format("Inscribing %s.", o_name);
-
-    /* Start with nothing */
-    strcpy(out_val, "");
-
-    /* Use old inscription */
-    if (o_ptr->inscription)
-    {
-        /* Start with the old inscription */
-        strcpy(out_val, quark_str(o_ptr->inscription));
-    }
-
-    /* Get a new inscription (possibly empty) */
-    if (cmsg_input(TERM_YELLOW, "Inscription: ", out_val, 80))
-    {
-        /* Save the inscription */
-        o_ptr->inscription = quark_add(out_val);
-
-        /* Combine the pack */
-        p_ptr->notice |= (PN_COMBINE);
-
-        /* Window stuff */
-        p_ptr->window |= (PW_INVEN | PW_EQUIP);
-
-        p_ptr->update |= (PU_BONUS);
-    }
-}
-
-
 
 /*
  * An "item_tester_hook" for refilling lanterns
@@ -2242,8 +2108,8 @@ static _obj_list_ptr _create_obj_list(void)
         info = _obj_list_info_alloc();
         info->subgroup = _SUBGROUP_DATA;
         info->idx = i;
-        info->x = o_ptr->ix;
-        info->y = o_ptr->iy;
+        info->x = o_ptr->loc.x;
+        info->y = o_ptr->loc.y;
         info->dy = info->y - py;
         info->dx = info->x - px;
         info->score = obj_value(o_ptr);

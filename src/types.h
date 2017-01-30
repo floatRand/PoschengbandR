@@ -324,8 +324,6 @@ struct object_type
 {
     s16b k_idx;            /* Kind index (zero if "dead") */
 
-byte iy, ix;  /* DEAD: Its here now so I can compile but its dead!!! */
-
     byte tval;            /* Item type (from kind) */
     byte sval;            /* Item sub-type (from kind) */
 

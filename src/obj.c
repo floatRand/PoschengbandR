@@ -21,8 +21,8 @@ void obj_clear_dun_info(obj_ptr obj)
 {
     obj->next_o_idx = 0;
     obj->held_m_idx = 0;
-    obj->ix = 0;
-    obj->iy = 0;
+    obj->loc.x = 0;
+    obj->loc.y = 0;
     obj->marked &= (OM_WORN | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);
 }
 
@@ -381,6 +381,102 @@ int obj_combine(obj_ptr dest, obj_ptr obj, int options)
         if (dest->discount < obj->discount) dest->discount = obj->discount;
     }
     return amt;
+}
+
+/************************************************************************
+ * Commands:
+ * For Inspect and Inscribe, it seems useful to keep the obj_prompt up
+ * to allow multiple operations. There is no energy cost for these commands.
+ ***********************************************************************/
+static bool _inspector(doc_ptr doc, inv_ptr inv, char cmd)
+{
+    slot_t slot = inv_label_slot(inv, cmd);
+    if (slot)
+    {
+        obj_ptr obj = inv_obj(inv, slot);
+        doc_clear(doc);
+        if (object_is_flavor(obj) && !object_is_known(obj))
+        {
+            char name[MAX_NLEN];
+            object_desc(name, obj, OD_COLOR_CODED);
+            doc_insert(doc, name);
+            doc_insert(doc, "\n\nYou have no special knowledge about this item.\n");
+        }
+        else
+            obj_display_doc(obj, doc);
+        doc_insert(doc, "Press <color:y>Any Key</color> to Continue.");
+        Term_load();
+        doc_sync_menu(doc);
+        cmd = inkey();
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void obj_inspect_ui(void)
+{
+    obj_prompt_t prompt = {0};
+    obj_ptr      obj;
+
+    prompt.prompt = "<color:y>Examine which item?</color> ";
+    prompt.error = "<color:R>You have nothing to examine.</color>";
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
+    prompt.cmd_handler = _inspector;
+
+    obj = obj_prompt(&prompt);
+    assert(!obj);
+}
+
+static bool _inscriber(doc_ptr doc, inv_ptr inv, char cmd)
+{
+    slot_t slot = inv_label_slot(inv, cmd);
+    if (slot)
+    {
+        obj_ptr obj = inv_obj(inv, slot);
+        char    name[MAX_NLEN];
+        char    insc[80];
+
+        object_desc(name, obj, OD_OMIT_INSCRIPTION | OD_COLOR_CODED);
+        if (obj->inscription)
+            strcpy(insc, quark_str(obj->inscription));
+        else
+            strcpy(insc, "");
+
+
+        doc_clear(doc);
+        doc_printf(doc, "Inscribing %s.\n", name);
+        doc_printf(doc, "Inscription: ");
+        Term_load();
+        doc_sync_menu(doc);
+        if (askfor(insc, 80))
+            obj->inscription = quark_add(insc);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void obj_inscribe_ui(void)
+{
+    obj_prompt_t prompt = {0};
+    obj_ptr      obj;
+
+    prompt.prompt = "<color:y>Inscribe which item?</color> ";
+    prompt.error = "<color:r>You have nothing to inscribe.</color>";
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
+    prompt.cmd_handler = _inscriber;
+
+    obj = obj_prompt(&prompt);
+    assert(!obj);
+
+    p_ptr->notice |= PN_OPTIMIZE_PACK | PN_OPTIMIZE_QUIVER;
+    p_ptr->window |= PW_INVEN | PW_EQUIP;
+    p_ptr->update |= PU_BONUS; /* Why??? */
 }
 
 /************************************************************************

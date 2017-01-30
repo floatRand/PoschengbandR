@@ -223,8 +223,8 @@ static void _scroll_grid(int src_x, int src_y, int dest_x, int dest_y)
         for (this_o_idx = dest->o_idx; this_o_idx; this_o_idx = next_o_idx)
         {
             next_o_idx = o_list[this_o_idx].next_o_idx;
-            o_list[this_o_idx].iy = dest_y;
-            o_list[this_o_idx].ix = dest_x;
+            o_list[this_o_idx].loc.y = dest_y;
+            o_list[this_o_idx].loc.x = dest_x;
             if (_is_boundary(dest_x, dest_y))
                 delete_object_idx(this_o_idx);
         }

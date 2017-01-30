@@ -3568,7 +3568,7 @@ static void process_monster(int m_idx)
                         o_ptr->marked &= (OM_TOUCHED | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);
 
                         /* Forget location */
-                        o_ptr->iy = o_ptr->ix = 0;
+                        o_ptr->loc.y = o_ptr->loc.x = 0;
 
                         /* Memorize monster */
                         o_ptr->held_m_idx = m_idx;

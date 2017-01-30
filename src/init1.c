@@ -4682,8 +4682,10 @@ void drop_here(object_type *j_ptr, int y, int x)
 
 
     /* Locate */
-    o_ptr->iy = y;
-    o_ptr->ix = x;
+    o_ptr->loc.where = INV_FLOOR;
+    o_ptr->loc.y = y;
+    o_ptr->loc.x = x;
+    o_ptr->loc.slot = o_idx;
 
     /* No monster */
     o_ptr->held_m_idx = 0;

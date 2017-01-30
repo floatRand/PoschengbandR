@@ -277,7 +277,7 @@ bool pack_optimize(void)
 {
     if (inv_optimize(_inv))
     {
-        msg_print("You reorder your pack.");
+        /*msg_print("You reorder your pack.");*/
         return TRUE;
     }
     return FALSE;

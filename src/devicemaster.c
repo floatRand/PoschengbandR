@@ -63,8 +63,8 @@ bool _detect_devices(int range)
         if (!o_ptr->k_idx) continue;
         if (o_ptr->held_m_idx) continue;
 
-        y = o_ptr->iy;
-        x = o_ptr->ix;
+        y = o_ptr->loc.y;
+        x = o_ptr->loc.x;
 
         if (distance(py, px, y, x) > range) continue;
 

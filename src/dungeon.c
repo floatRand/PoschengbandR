@@ -3440,7 +3440,7 @@ static void process_command(void)
         /* Identify an object */
         case 'I':
         {
-            do_cmd_inspect();
+            obj_inspect_ui();
             break;
         }
 
@@ -3832,7 +3832,7 @@ static void process_command(void)
         /* Inscribe an object */
         case '{':
         {
-            do_cmd_inscribe();
+            obj_inscribe_ui();
             break;
         }
 

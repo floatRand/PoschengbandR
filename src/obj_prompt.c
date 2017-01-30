@@ -40,7 +40,13 @@ static vec_ptr _get_tabs(obj_prompt_ptr prompt)
     return vec;
 }
 
-static void _display(doc_ptr doc, vec_ptr tabs, int tab)
+static void _sync_doc(doc_ptr doc)
+{
+    Term_load();
+    doc_sync_menu(doc);
+}
+
+static void _display(doc_ptr doc, vec_ptr tabs, int tab, obj_prompt_ptr prompt)
 {
     inv_ptr inv = vec_get(tabs, tab);
     int     i;
@@ -52,7 +58,7 @@ static void _display(doc_ptr doc, vec_ptr tabs, int tab)
     {
         inv_ptr inv = vec_get(tabs, i);
         if (i)
-            doc_insert(doc, "<color:b>|</color> ");
+            doc_insert(doc, " <color:b>|</color> ");
         doc_printf(doc, "<color:%c>%s</color>",
             i == tab ? 'G' : 'D',
             inv_name(inv));
@@ -61,10 +67,23 @@ static void _display(doc_ptr doc, vec_ptr tabs, int tab)
 
     /* Active Tab */
     inv_display(inv, 1, inv_max(inv), obj_exists, doc, NULL, 0);
-    doc_insert(doc, "\n<color:y>Choice:</color>\n");
+    doc_newline(doc);
+    #if 0
+    doc_insert(doc, "[");
+    if (prompt->flags & OBJ_PROMPT_ALL)
+        doc_insert(doc, "<color:keypress>*</color> for all, ");
+    if (prompt->flags & OBJ_PROMPT_FORCE)
+        doc_insert(doc, "<color:keypress>F</color> for the Force, ");
+    if (vec_length(tabs) > 1)
+        doc_insert(doc, "<color:keypress>/</color> for next tab, ");
+    doc_insert(doc, "<color:keypress>?</color> for help]\n");
+    #endif 
+    if (prompt->prompt)
+        doc_insert(doc, prompt->prompt);
+    else
+        doc_insert(doc, "<color:y>Choice</color>: ");
 
-    Term_load();
-    doc_sync_menu(doc);
+    _sync_doc(doc);
 }
 
 obj_ptr obj_prompt(obj_prompt_ptr prompt)
@@ -90,14 +109,32 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
         char    cmd;
         slot_t  slot;
 
-        _display(doc, tabs, tab);
+        _display(doc, tabs, tab, prompt);
 
         cmd = inkey();
+        if (cmd == ' ') continue;
+        if (prompt->cmd_handler)
+        {
+            if (prompt->cmd_handler(doc, inv, cmd))
+                continue;
+        }
         slot = inv_label_slot(inv, cmd);
         if (slot)
         {
             result = inv_obj(inv, slot);
             break;
+        }
+        if (isupper(cmd))
+        {
+            slot = inv_label_slot(inv, tolower(cmd));
+            if (slot)
+            {
+                doc_clear(doc);
+                obj_display_doc(inv_obj(inv, slot), doc);
+                _sync_doc(doc);
+                cmd = inkey();
+                continue;
+            }
         }
         if (cmd == '/')
         {
@@ -116,18 +153,20 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
             result = obj_alloc();
             result->loc.where = inv_loc(inv);
             result->loc.slot = _FAKE_SLOT_ALL;
+            break;
         }
         else if ((prompt->flags & OBJ_PROMPT_FORCE) && cmd == 'F')
         {
             result = obj_alloc();
             result->loc.where = inv_loc(inv);
             result->loc.slot = _FAKE_SLOT_FORCE;
+            break;
         }
         else if (cmd == '?')
         {
-            /* TODO */
+            doc_display_help("command.txt", "SelectingObjects");
         }
-        else if (cmd == ESCAPE || quick_messages)
+        else if (cmd == ESCAPE || cmd == '\r')
         {
             break;
         }

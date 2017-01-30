@@ -422,8 +422,7 @@ static void _absorb_all(object_type *o_ptr, _absorb_essence_f absorb_f)
 
     /* Mundanity */
     object_prep(&new_obj, o_ptr->k_idx);
-    new_obj.iy = old_obj.iy;
-    new_obj.ix = old_obj.ix;
+    new_obj.loc = old_obj.loc;
     new_obj.next_o_idx = old_obj.next_o_idx;
     new_obj.marked = old_obj.marked;
     new_obj.number = old_obj.number;
