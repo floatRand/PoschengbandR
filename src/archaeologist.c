@@ -803,6 +803,30 @@ static void _birth(void)
     py_birth_obj_aux(TV_SCROLL, SV_SCROLL_MAPPING, rand_range(5, 10));
 }
 
+void _get_object(obj_ptr obj)
+{
+    if (object_is_artifact(obj) && !object_is_known(obj))
+    {
+        /* Suppress you are leaving something special behind message ... */
+        if (p_ptr->sense_artifact)
+        {
+            p_ptr->sense_artifact = FALSE;    /* There may be more than one? */
+            p_ptr->redraw |= PR_STATUS;
+        }
+
+        if (!(obj->ident & IDENT_SENSE))
+        {
+            char name[MAX_NLEN];
+
+            object_desc(name, obj, OD_COLOR_CODED);
+            cmsg_format(TERM_L_BLUE, "You feel that the %s is %s...", name, game_inscriptions[FEEL_SPECIAL]);
+
+            obj->ident |= IDENT_SENSE;
+            obj->feeling = FEEL_SPECIAL;
+        }
+    }
+}
+
 class_t *archaeologist_get_class(void)
 {
     static class_t me = {0};
@@ -843,6 +867,7 @@ class_t *archaeologist_get_class(void)
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
         me.character_dump = _character_dump;
+        me.get_object = _get_object;
 
         init = TRUE;
     }

@@ -69,11 +69,29 @@ extern int     inv_count(inv_ptr inv, obj_p p); /* Sum(obj->number) for all obje
 extern int     inv_count_slots(inv_ptr inv, obj_p p); /* Sum(1) for all objects p accepts */
 extern int     inv_max_slots(inv_ptr inv); /* from inv_alloc(max) */
 
-/* Menus and Display */
-extern void    inv_display(inv_ptr inv, doc_ptr doc, obj_p p, slot_display_f slot_f, int flags);
+/* Menus and Display
+ * inv_display is a bit overwhelming, but it is a low level helper for pack_display,
+ * etc. Basically, the requested range in inv is displayed to doc, but the range
+ * might be filtered by a predicate. We support optional slot labelling (for equip)
+ * as well as flags for some future items I haven't coded up yet.
+ * Labels are calculated by inv_display which properly handles all the inscription
+ * coding (e.g. @mh to label an object 'h' for the 'm' command, etc.).
+ * We respect show_weights (provided flags don't override) as well as show_item_graph */
+extern void inv_display(
+    /* What we display */
+    inv_ptr inv,
+    slot_t start, slot_t stop, /* Range to display: stores diplay one page at a time.*/
+    obj_p p,                   /* NULL shows all slots, even empty ones. Otherwise, p must match an existing object */
+    /* Where and how we display it */
+    doc_ptr doc,
+    slot_display_f slot_f,     /* e.g. equip_describe_slot ... */
+    int flags                  /* TODO: Display Fail Rates or Object Values ... */
+);
 extern char    inv_slot_label(inv_ptr inv, slot_t slot);
 extern slot_t  inv_label_slot(inv_ptr inv, char label);
-extern void    inv_calculate_labels(inv_ptr inv);
+
+/* You shouldn't need to do this yourself. inv_display will calculate labels.
+ * extern void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop);*/
 
 /* Savefiles */
 extern void    inv_load(inv_ptr inv, savefile_ptr file);

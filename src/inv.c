@@ -216,7 +216,6 @@ bool inv_optimize(inv_ptr inv)
 {
     slot_t slot, seek;
     bool result = FALSE;
-
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr dest = vec_get(inv->objects, slot);
@@ -263,12 +262,14 @@ void inv_clear(inv_ptr inv)
 
 bool inv_sort(inv_ptr inv)
 {
+    int start = 1, stop = vec_length(inv->objects) - 1;
+    if (start == stop) return FALSE;
     inv_for_each(inv, obj_clear_scratch);
-    if (!vec_is_sorted(inv->objects, (vec_cmp_f)obj_cmp))
+    if (!vec_is_sorted_range(inv->objects, start, stop, (vec_cmp_f)obj_cmp))
     {
         slot_t slot;
-        vec_sort(inv->objects, (vec_cmp_f)obj_cmp);
-        for (slot = 1; slot < vec_length(inv->objects); slot++)
+        vec_sort_range(inv->objects, start, stop, (vec_cmp_f)obj_cmp);
+        for (slot = start; slot <= stop; slot++)
         {
             obj_ptr obj = vec_get(inv->objects, slot);
             if (obj)
@@ -277,6 +278,26 @@ bool inv_sort(inv_ptr inv)
                 assert(obj->loc.where == (inv->flags & INV_LOC_MASK));
             }
         }
+        #if 0
+        msg_print("Checking sorting ");
+        msg_boundary();
+        for (slot = start; slot <= stop; slot++)
+        {
+            obj_ptr fst = vec_get(inv->objects, slot);
+            obj_ptr snd = vec_get(inv->objects, slot + 1);
+            if (obj_cmp(fst, snd) > 0)
+            {
+                char name1[MAX_NLEN];
+                char name2[MAX_NLEN];
+                if (fst)
+                    object_desc(name1, fst, OD_COLOR_CODED);
+                if (snd)
+                    object_desc(name2, snd, OD_COLOR_CODED);
+                msg_format("%s > %s", fst ? name1 : "NULL", snd ? name2 : name2);
+                msg_boundary();
+            }
+        }
+        #endif
         return TRUE; /* So clients can notify the player ... */
     }
     return FALSE;
@@ -478,22 +499,20 @@ int inv_max_slots(inv_ptr inv)
 }
 
 /* Menus and Display */
-void inv_display(inv_ptr inv, doc_ptr doc, obj_p p, slot_display_f slot_f, int flags)
+static void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop);
+
+void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, slot_display_f slot_f, int flags)
 {
     slot_t slot;
     int    xtra = 0;
-    int    max = inv->max ? inv->max : vec_length(inv->objects) - 1;
-
-    if (inv->flags & INV_EQUIP)
-        max = equip_max(); /* Ugly hack ... but equip_max() shifts with body type while inv->max remains constant */
 
     if (show_weights)
         xtra = 9;  /* " 123.0 lbs" */
 
-    inv_calculate_labels(inv);
+    inv_calculate_labels(inv, start, stop);
 
     doc_insert(doc, "<style:table>");
-    for (slot = 1; slot <= max; slot++)
+    for (slot = start; slot <= stop; slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
 
@@ -557,8 +576,7 @@ char inv_slot_label(inv_ptr inv, slot_t slot)
 slot_t inv_label_slot(inv_ptr inv, char label)
 {
     slot_t slot;
-    inv_for_each(inv, obj_clear_scratch);
-    for (slot = 1; slot <= 26 && slot < vec_length(inv->objects); slot++)
+    for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = vec_get(inv->objects, slot);
         if (!obj) continue;
@@ -568,21 +586,21 @@ slot_t inv_label_slot(inv_ptr inv, char label)
     return 0;
 }
 
-void inv_calculate_labels(inv_ptr inv)
+void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop)
 {
     slot_t slot;
     inv_for_each(inv, obj_clear_scratch);
     /* Initialize by ordinal */
-    for (slot = 1; slot <= 26 && slot < vec_length(inv->objects); slot++)
+    for (slot = start; slot <= stop; slot++)
     {
-        obj_ptr obj = vec_get(inv->objects, slot);
+        obj_ptr obj = inv_obj(inv, slot);
         if (obj)
             obj->scratch = slot_label(slot);
     }
     /* Override by inscription (e.g. @mf) */
-    for (slot = 1; slot <= 26 && slot < vec_length(inv->objects); slot++)
+    for (slot = start; slot <= stop; slot++)
     {
-        obj_ptr obj = vec_get(inv->objects, slot);
+        obj_ptr obj = inv_obj(inv, slot);
         if (obj)
         {
             char label = obj_label(obj);

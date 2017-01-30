@@ -91,16 +91,16 @@ int obj_cmp(obj_ptr left, obj_ptr right)
     if (left->tval > right->tval) return -1;
 
     /* Non-aware (flavored) items always come last */
-    if (!object_is_aware(left)) return 1;
-    if (!object_is_aware(right)) return -1;
+    if (!object_is_aware(left) && object_is_aware(right)) return 1;
+    if (object_is_aware(left) && !object_is_aware(right)) return -1;
 
     /* Objects sort by increasing sval */
     if (left->sval < right->sval) return -1;
     if (left->sval > right->sval) return 1;
 
     /* Unidentified objects always come last */
-    if (!object_is_known(left)) return 1;
-    if (!object_is_known(right)) return -1;
+    if (!object_is_known(left) && object_is_known(right)) return 1;
+    if (object_is_known(left) && !object_is_known(right)) return -1;
 
     /* Fixed artifacts, random artifacts and ego items */
     left_type = _obj_cmp_type(left);
@@ -135,13 +135,20 @@ int obj_cmp(obj_ptr left, obj_ptr right)
         break;
     }
 
-    /* Lastly, sort by decreasing value */
-    if (!left->scratch) left->scratch = obj_value(left);
-    if (!right->scratch) right->scratch = obj_value(right);
+    /* Lastly, sort by decreasing value ... but consider stacks */
+    if (left->number == 1 && right->number == 1)
+    {
+        if (!left->scratch) left->scratch = obj_value(left);
+        if (!right->scratch) right->scratch = obj_value(right);
 
-    if (left->scratch < right->scratch) return 1;
-    if (left->scratch > right->scratch) return -1;
-
+        if (left->scratch < right->scratch) return 1;
+        if (left->scratch > right->scratch) return -1;
+    }
+    else
+    {
+        if (left->number < right->number) return 1;
+        if (left->number > right->number) return -1;
+    }
     return 0;
 }
 
@@ -154,7 +161,7 @@ char obj_label(obj_ptr obj)
     if (!obj->inscription) return '\0';
     insc = quark_str(obj->inscription);
 
-    for (insc = strchr(insc, '@'); *insc; insc = strchr(insc, '@'))
+    for (insc = strchr(insc, '@'); insc; insc = strchr(insc, '@'))
     {
         insc++;
         /* @mc uses 'c' as a label only for the 'm' command */
@@ -337,7 +344,7 @@ int obj_combine(obj_ptr dest, obj_ptr obj, int options)
     if (dest->number + obj->number > OBJ_STACK_MAX)
         amt = OBJ_STACK_MAX - dest->number;
     else
-        amt = dest->number;
+        amt = obj->number;
 
     dest->number += amt;
     obj->number -= amt;

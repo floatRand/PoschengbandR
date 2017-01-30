@@ -2423,21 +2423,7 @@ bool autopick_pickup_items(cave_type *c_ptr)
             if (destroy_debug)
                 msg_autopick(idx, "Pickup");
 
-            if (!inven_carry_okay(o_ptr))
-            {
-                char o_name[MAX_NLEN];
-
-                /* Describe the object */
-                object_desc(o_name, o_ptr, 0);
-
-                /* Message */
-                msg_format("You have no room for %s.", o_name);
-                /* Hack - remember that the item has given a message here. */
-                o_ptr->marked |= OM_NOMSG;
-
-                continue;
-            }
-            else if (autopick_list[idx].action & DO_QUERY_AUTOPICK)
+            if (autopick_list[idx].action & DO_QUERY_AUTOPICK)
             {
                 char out_val[MAX_NLEN+20];
                 char o_name[MAX_NLEN];
@@ -2461,7 +2447,7 @@ bool autopick_pickup_items(cave_type *c_ptr)
                 }
 
             }
-            py_pickup_aux(this_o_idx);
+            pack_get_aux(this_o_idx);
             result = TRUE;
         }
 

@@ -442,7 +442,7 @@ void equip_ui(void)
     r = ui_screen_rect();
     doc_insert(doc, "<color:G>Equipment:</color>\n");
 
-    equip_display(doc, NULL);
+    equip_display(doc, NULL, 0);
     doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> \n",
                     wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
 
@@ -455,6 +455,8 @@ void equip_ui(void)
         command_new = 0;
     else
         command_see = TRUE;
+
+    doc_free(doc);
 }
 
 static void _equip_slot_f(doc_ptr doc, slot_t slot)
@@ -462,9 +464,16 @@ static void _equip_slot_f(doc_ptr doc, slot_t slot)
     doc_printf(doc, "%-10.10s: ", equip_describe_slot(slot));
 }
 
-void equip_display(doc_ptr doc, obj_p p)
+void equip_display(doc_ptr doc, obj_p p, int flags)
 {
-    inv_display(_inv, doc, p, show_labels ? _equip_slot_f : NULL, 0);
+    inv_display(
+        _inv,
+        1, equip_max(),
+        p,
+        doc,
+        show_labels ? _equip_slot_f : NULL,
+        flags
+    );
 }
 
 /************************************************************************

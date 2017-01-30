@@ -22,7 +22,7 @@ void pack_ui(void)
     r = ui_screen_rect();
     doc_insert(doc, "<color:G>Inventory:</color>\n");
 
-    pack_display(doc, obj_exists);
+    pack_display(doc, obj_exists, 0);
     doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> \n",
                     wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
 
@@ -35,11 +35,13 @@ void pack_ui(void)
         command_new = 0;
     else
         command_see = TRUE;
+
+    doc_free(doc);
 }
 
-void pack_display(doc_ptr doc, obj_p p)
+void pack_display(doc_ptr doc, obj_p p, int flags)
 {
-    inv_display(_inv, doc, p, NULL, 0);
+    inv_display(_inv, 1, pack_max(), p, doc, NULL, flags);
 }
 
 /* Adding and removing */
@@ -74,6 +76,85 @@ void pack_carry(obj_ptr obj)
         pack_push_overflow(obj);
     p_ptr->update |= PU_BONUS;
     p_ptr->window |= PW_INVEN;
+}
+
+void pack_get_aux(int o_idx)
+{
+    object_type *o_ptr = &o_list[o_idx];
+    char         name[MAX_NLEN];
+    class_t     *class_ptr = get_class();
+    int          i;
+
+    if (class_ptr->get_object)
+        class_ptr->get_object(o_ptr);
+
+    object_desc(name, o_ptr, OD_COLOR_CODED);
+    msg_format("You have %s.", name);
+
+    for (i = 0; i < max_quests; i++)
+    {
+        if ((quest[i].type == QUEST_TYPE_FIND_ARTIFACT) &&
+            (quest[i].status == QUEST_STATUS_TAKEN) &&
+               (quest[i].k_idx == o_ptr->name1 || quest[i].k_idx == o_ptr->name3))
+        {
+            quest[i].status = QUEST_STATUS_COMPLETED;
+            quest[i].complev = p_ptr->lev;
+            cmsg_print(TERM_L_BLUE, "You completed your quest!");
+        }
+    }
+    pack_carry(o_ptr);
+    delete_object_idx(o_idx);
+
+    if (o_ptr->tval == TV_RUNE)
+        p_ptr->update |= PU_BONUS;
+
+}
+
+bool pack_get(void)
+{
+    bool       result = FALSE;
+    cave_type *c_ptr = &cave[py][px];
+    int        this_o_idx, next_o_idx = 0;
+
+    if (autopick_pickup_items(c_ptr))
+        result = TRUE;
+
+    for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
+    {
+        object_type *o_ptr = &o_list[this_o_idx];
+
+        next_o_idx = o_ptr->next_o_idx;
+
+        if (o_ptr->tval == TV_GOLD)
+        {
+            char name[MAX_NLEN];
+            int  value = o_ptr->pval;
+
+            object_desc(name, o_ptr, OD_COLOR_CODED);
+            delete_object_idx(this_o_idx);
+
+            msg_format("You collect %d gold pieces worth of %s.",
+                   value, name);
+
+            sound(SOUND_SELL);
+
+            p_ptr->au += value;
+            stats_on_gold_find(value);
+
+            p_ptr->redraw |= (PR_GOLD);
+
+            if (prace_is_(RACE_MON_LEPRECHAUN))
+                p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+
+            result = TRUE;
+        }
+        else
+        {
+            pack_get_aux(this_o_idx);
+            result = TRUE;
+        }
+    }
+    return result;
 }
 
 void pack_remove(slot_t slot)

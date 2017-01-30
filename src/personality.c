@@ -337,6 +337,7 @@ static void _munchkin_birth(void)
 
 static void _munchkin_calc_bonuses(void)
 {
+    p_ptr->auto_id = TRUE;
     res_add(RES_BLIND);
     res_add(RES_CONF);
     p_ptr->hold_life = TRUE;

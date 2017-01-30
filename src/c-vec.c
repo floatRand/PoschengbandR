@@ -346,8 +346,13 @@ static void _merge_sort(vptr vec[], int left, int right, vec_cmp_f f)
 
 bool vec_is_sorted(vec_ptr vec, vec_cmp_f f)
 {
+    return vec_is_sorted_range(vec, 0, vec->len - 1, f);
+}
+
+bool vec_is_sorted_range(vec_ptr vec, int start, int stop, vec_cmp_f f)
+{
     int i;
-    for (i = 0; i < vec->len - 1; i++)
+    for (i = start; i < stop; i++)
     {
         if (f(vec->objs[i], vec->objs[i+1]) > 0)
             return FALSE;
@@ -359,6 +364,15 @@ void vec_quick_sort(vec_ptr vec, vec_cmp_f f)
 {
     _quick_sort(vec->objs, 0, vec->len - 1, f);
     assert(vec_is_sorted(vec, f));
+}
+
+void vec_sort_range(vec_ptr vec, int start, int stop, vec_cmp_f f)
+{
+    assert(0 <= start && start < vec->len);
+    assert(0 <= stop && stop < vec->len);
+    assert(start <= stop);
+    _quick_sort(vec->objs, start, stop, f);
+    assert(vec_is_sorted_range(vec, start, stop, f));
 }
 
 void vec_merge_sort(vec_ptr vec, vec_cmp_f f)

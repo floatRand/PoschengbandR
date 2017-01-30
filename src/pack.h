@@ -8,9 +8,11 @@
 extern void    pack_init(void);
 
 extern void    pack_ui(void);
-extern void    pack_display(doc_ptr doc, obj_p p);
+extern void    pack_display(doc_ptr doc, obj_p p, int flags);
 
 /* Adding and removing */
+extern bool    pack_get(void);
+extern void    pack_get_aux(int o_idx);
 extern void    pack_carry(obj_ptr obj);
 extern void    pack_remove(slot_t slot);
 

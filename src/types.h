@@ -2145,7 +2145,8 @@ typedef struct {
     flags_fn                get_flags;
     load_fn                 load_player;
     save_fn                 save_player;
-    object_p                destroy_object;
+    obj_p                   destroy_object;
+    obj_f                   get_object;
 } class_t;
 
 struct equip_template_s;

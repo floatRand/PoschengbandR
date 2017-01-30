@@ -29,6 +29,9 @@ extern void    vec_for_each(vec_ptr vec, vec_item_f f);
 extern void    vec_sort(vec_ptr vec, vec_cmp_f f);
 extern bool    vec_is_sorted(vec_ptr vec, vec_cmp_f f);
 
+extern void    vec_sort_range(vec_ptr vec, int start, int stop, vec_cmp_f f);
+extern bool    vec_is_sorted_range(vec_ptr vec, int start, int stop, vec_cmp_f f);
+
 extern void    vec_quick_sort(vec_ptr vec, vec_cmp_f f);
 extern void    vec_merge_sort(vec_ptr vec, vec_cmp_f f);
 
