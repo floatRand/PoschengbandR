@@ -140,6 +140,7 @@ static int _slot_count(obj_ptr obj)
 
 static bool _can_wield(obj_ptr obj)
 {
+    if (!obj) return FALSE;
     if (_slot_count(obj) > 0) return TRUE;
     return FALSE;
 }
@@ -311,7 +312,7 @@ bool equip_can_wield_kind(int tval, int sval)
 
 int equip_first_slot(obj_ptr obj)
 {
-    return equip_next_slot(obj, EQUIP_BEGIN - 1);
+    return equip_next_slot(obj, 0);
 }
 
 int equip_next_slot(obj_ptr obj, int last)
@@ -342,6 +343,11 @@ bool equip_verify_slot(slot_t slot, obj_ptr obj)
             return TRUE;
     }
     return FALSE;
+}
+
+inv_ptr equip_filter(obj_p p)
+{
+    return inv_filter(_inv, p);
 }
 
 void equip_for_each_obj(obj_f f)
@@ -479,10 +485,9 @@ void equip_display(doc_ptr doc, obj_p p, int flags)
 /************************************************************************
  * Wielding
  ***********************************************************************/
-typedef struct { int item; obj_ptr obj; } _obj_get_t, *_obj_get_ptr; /* TODO: Rewrite get_item */
 
 /* Wielding has the following phases where various things might/must happen */
-static _obj_get_t _wield_get_obj(void);
+static obj_ptr    _wield_get_obj(void);
 static bool       _wield_verify(obj_ptr obj);
 static slot_t     _wield_get_slot(obj_ptr obj);
 static bool       _wield_confirm(obj_ptr obj, slot_t slot);
@@ -492,35 +497,24 @@ static void       _wield_after(slot_t slot);
 
 void equip_wield_ui(void)
 {
-    slot_t     slot;
-    _obj_get_t obj_get = _wield_get_obj();
+    slot_t  slot;
+    obj_ptr obj = _wield_get_obj();
 
-    if (!obj_get.obj) return;
-    if (!_wield_verify(obj_get.obj)) return;
+    if (!obj) return;
+    if (!_wield_verify(obj)) return;
 
-    slot = _wield_get_slot(obj_get.obj);
+    slot = _wield_get_slot(obj);
     if (!slot) return;
-    if (!_wield_confirm(obj_get.obj, slot)) return;
+    if (!_wield_confirm(obj, slot)) return;
 
-    _wield_before(obj_get.obj, slot);
+    _wield_before(obj, slot);
 
-    energy_use = weaponmaster_wield_hack(obj_get.obj);
-    _wield(obj_get.obj, slot);
+    energy_use = weaponmaster_wield_hack(obj);
+    _wield(obj, slot);
 
     _wield_after(slot);
 
-    /* TODO: obj_get_update(&obj_get); */
-    if (obj_get.item >= 0)
-    {
-        inven_item_increase(obj_get.item, -1);
-        inven_item_optimize(obj_get.item);
-    }
-    else
-    {
-        floor_item_increase(-obj_get.item, -1);
-        floor_item_optimize(-obj_get.item);
-    }
-
+    obj_release(obj, OBJ_RELEASE_QUIET);
 }
 
 void equip_wield_aux(obj_ptr obj, slot_t slot)
@@ -529,21 +523,17 @@ void equip_wield_aux(obj_ptr obj, slot_t slot)
     _wield_after(slot);
 }
 
-static _obj_get_t _wield_get_obj(void)
+static obj_ptr _wield_get_obj(void)
 {
-    _obj_get_t obj_get = {0};
+    obj_prompt_t prompt = {0};
 
-    item_tester_hook = _can_wield;
-    if (get_item(&obj_get.item, "Wear/Wield which item? ",
-            "You have nothing you can wear or wield.", USE_INVEN | USE_FLOOR))
-    {
-        if (obj_get.item >= 0)
-            obj_get.obj = &inventory[obj_get.item];
-        else
-            obj_get.obj = &o_list[-obj_get.item];
-    }
+    prompt.prompt = "Wear/Wield which item?";
+    prompt.error = "You have nothing you can wear or wield.";
+    prompt.filter = _can_wield;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
 
-    return obj_get;
+    return obj_prompt(&prompt);
 }
 
 static bool _wield_verify(obj_ptr obj)
@@ -716,82 +706,114 @@ static void _wield_after(slot_t slot)
 /************************************************************************
  * Unwielding (Take Off)
  ***********************************************************************/
+
+void equip_remove(slot_t slot)
+{
+    inv_remove(_inv, slot);
+}
+
+/* Unwielding has the following phases where various things might/must happen */
+static obj_ptr _unwield_get_obj(void);
+static bool    _unwield_verify(obj_ptr obj);
+static void    _unwield_before(obj_ptr obj);
+static void    _unwield(obj_ptr obj);
+static void    _unwield_after(void);
+
 void equip_takeoff_ui(void)
 {
-    int slot;
-    obj_ptr obj;
+    obj_ptr obj = _unwield_get_obj();
 
-    if (p_ptr->special_defense & KATA_MUSOU)
-        set_action(ACTION_NONE);
+    if (!obj) return;
+    if (!_unwield_verify(obj)) return;
 
-    if (!get_item(&slot, "Take off which item? ", "You are not wearing anything to take off.", USE_EQUIP)) return;
-    obj = &inventory[slot];
+    energy_use = 50;
+    _unwield_before(obj);
+    _unwield(obj);
+    _unwield_after();
 
-    if (!psion_can_wield(obj)) return;
-    if (have_flag(obj->flags, OF_NO_REMOVE)) /* Hack!!!! */
+    obj_release(obj, 0);
+}
+
+void equip_takeoff_aux(slot_t slot)
+{
+    obj_ptr obj = equip_obj(slot);
+
+    if (obj)
+    {
+        _unwield(obj);
+        _unwield_after();
+        obj_release(obj, 0);
+    }
+}
+
+static obj_ptr _unwield_get_obj(void)
+{
+    obj_prompt_t prompt = {0};
+
+    prompt.prompt = "Take off which item?";
+    prompt.error = "You are not wearing anything to take off.";
+    prompt.where[0] = INV_EQUIP;
+
+    return obj_prompt(&prompt);
+}
+
+bool _unwield_verify(obj_ptr obj)
+{
+    if (!psion_can_wield(obj)) return FALSE;
+    if (have_flag(obj->flags, OF_NO_REMOVE))
     {
         msg_print("You try to take yourself off, but fail!");
-        return;
+        return FALSE;
     }
 
     if (object_is_cursed(obj))
     {
-        if (obj->curse_flags & OFC_PERMA_CURSE || (p_ptr->pclass != CLASS_BERSERKER))
+        if ((obj->curse_flags & OFC_PERMA_CURSE) || p_ptr->pclass != CLASS_BERSERKER)
         {
             msg_print("Hmmm, it seems to be cursed.");
-            return;
+            return FALSE;
         }
         if (((obj->curse_flags & OFC_HEAVY_CURSE) && one_in_(7)) || one_in_(4))
         {
-            msg_print("You teared a cursed equipment off by sheer strength!");
+            msg_print("You tear the cursed equipment off by sheer strength!");
             obj->ident |= IDENT_SENSE;
             obj->curse_flags = 0L;
             obj->feeling = FEEL_NONE;
             p_ptr->update |= PU_BONUS;
             p_ptr->window |= PW_EQUIP;
             p_ptr->redraw |= PR_EFFECTS;
-
             msg_print("You break the curse.");
         }
         else
         {
             msg_print("You couldn't remove the equipment.");
             energy_use = 50;
-            return;
+            return FALSE;
         }
     }
-    energy_use = 50;
-    equip_takeoff_aux(slot);
-    if (weaponmaster_is_(WEAPONMASTER_SHIELDS))
-        handle_stuff();
-
-    android_calc_exp();
+    return TRUE;
 }
 
-void equip_takeoff_aux(int slot)
+void _unwield_before(obj_ptr obj)
 {
-    obj_ptr obj = equip_obj(slot);
+    if (p_ptr->special_defense & KATA_MUSOU)
+        set_action(ACTION_NONE);
+}
 
-    if (obj)
-    {
-        object_type copy;
-        int  new_slot;
-        char o_name[MAX_NLEN];
+void _unwield(obj_ptr obj)
+{
+    pack_carry(obj);
 
-        object_copy(&copy, obj);
-        object_desc(o_name, &copy, OD_COLOR_CODED);
-        inven_item_increase(slot, -1);
-        inven_item_optimize(slot);
+    p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;
+    p_ptr->redraw |= PR_EQUIPPY;
+    p_ptr->window |= PW_INVEN | PW_EQUIP;
+}
 
-        new_slot = inven_carry(&copy);
-        msg_format("You were using %s (%c).", o_name, index_to_label(new_slot));
-
-        p_ptr->update |= PU_BONUS;
-        p_ptr->update |= PU_TORCH;
-        p_ptr->update |= PU_MANA;
-        p_ptr->redraw |= PR_EQUIPPY;
-        p_ptr->window |= PW_INVEN | PW_EQUIP;
-    }
+void _unwield_after(void)
+{
+    if (weaponmaster_is_(WEAPONMASTER_SHIELDS))
+        handle_stuff();
+    android_calc_exp();
 }
 
 /************************************************************************
@@ -1558,7 +1580,7 @@ void equip_init(void)
         _template = &b_info[0];
 
     inv_free(_inv);
-    _inv = inv_alloc(EQUIP_MAX_SLOTS, INV_EQUIP);
+    _inv = inv_alloc("Equipment", EQUIP_MAX_SLOTS, INV_EQUIP);
 }
 
 /* Attempt to gracefully handle changes to body type between
@@ -1569,7 +1591,7 @@ void equip_init(void)
 void equip_on_load(void)
 {
     slot_t  slot, max = inv_last(_inv, obj_exists);
-    inv_ptr temp = inv_alloc(EQUIP_MAX_SLOTS, INV_EQUIP);
+    inv_ptr temp = inv_alloc("Temp", EQUIP_MAX_SLOTS, INV_EQUIP);
 
     for (slot = 1; slot <= max; slot++)
     {

@@ -9,6 +9,7 @@ typedef bool (*obj_p)(obj_ptr obj);
 extern obj_ptr obj_alloc(void);
 extern obj_ptr obj_copy(obj_ptr obj);
 extern void    obj_clear_dun_info(obj_ptr obj);
+extern void    obj_free(obj_ptr obj);
 
 /* Predicates */
 extern bool obj_is_art(obj_ptr obj);

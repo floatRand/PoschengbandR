@@ -26,6 +26,15 @@ void obj_clear_dun_info(obj_ptr obj)
     obj->marked &= (OM_WORN | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);
 }
 
+void obj_free(obj_ptr obj)
+{
+    if (obj)
+    {
+        object_wipe(obj);
+        free(obj);
+    }
+}
+
 /************************************************************************
  * Predicates
  ***********************************************************************/

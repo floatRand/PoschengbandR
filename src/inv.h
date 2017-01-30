@@ -29,14 +29,15 @@ typedef struct inv_s inv_t, *inv_ptr; /* Hidden/Abstract */
 #define INV_PACK      0x0002
 #define INV_QUIVER    0x0004
 #define INV_STORE     0x0008 /* TODO: Rewrite stores to use inv_t */
-#define INV_FLOOR     0x0010 /* not really for inv_alloc, but obj_t.loc */
+#define INV_FLOOR     0x0010
 #define INV_LOC_MASK  (INV_EQUIP | INV_PACK | INV_QUIVER | INV_STORE | INV_FLOOR)
 #define INV_READ_ONLY 0x0020
 
 /* Creation */
-extern inv_ptr inv_alloc(int max, int flags); /* max=0 is unbounded */
+extern inv_ptr inv_alloc(cptr name, int max, int flags); /* max=0 is unbounded */
 extern inv_ptr inv_copy(inv_ptr src);
 extern inv_ptr inv_filter(inv_ptr src, obj_p p);
+extern inv_ptr inv_filter_floor(obj_p p);     /* player's current tile */
 extern void    inv_free(inv_ptr inv);
 
 /* Adding, Removing and Sorting */
@@ -67,7 +68,9 @@ extern slot_t  inv_random_slot(inv_ptr inv, obj_p p); /* used for disenchantment
 extern int     inv_weight(inv_ptr inv, obj_p p); /* Pass NULL for total weight */
 extern int     inv_count(inv_ptr inv, obj_p p); /* Sum(obj->number) for all objects p accepts */
 extern int     inv_count_slots(inv_ptr inv, obj_p p); /* Sum(1) for all objects p accepts */
-extern int     inv_max_slots(inv_ptr inv); /* from inv_alloc(max) */
+extern int     inv_loc(inv_ptr inv);
+extern int     inv_max(inv_ptr inv);
+extern cptr    inv_name(inv_ptr inv);
 
 /* Menus and Display
  * inv_display is a bit overwhelming, but it is a low level helper for pack_display,

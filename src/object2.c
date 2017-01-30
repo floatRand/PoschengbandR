@@ -263,7 +263,6 @@ static void compact_objects_aux(int i1, int i2)
     /* Acquire object */
     o_ptr = &o_list[i1];
 
-
     /* Monster */
     if (o_ptr->held_m_idx)
     {
@@ -286,8 +285,8 @@ static void compact_objects_aux(int i1, int i2)
         int y, x;
 
         /* Acquire location */
-        y = o_ptr->iy;
-        x = o_ptr->ix;
+        y = o_ptr->loc.y;
+        x = o_ptr->loc.x;
 
         /* Acquire grid */
         c_ptr = &cave[y][x];
@@ -303,6 +302,7 @@ static void compact_objects_aux(int i1, int i2)
 
     /* Structure copy */
     o_list[i2] = o_list[i1];
+    o_list[i2].loc.slot = i2;
 
     /* Wipe the hole */
     object_wipe(o_ptr);
@@ -383,8 +383,8 @@ void compact_objects(int size)
             else
             {
                 /* Get the location */
-                y = o_ptr->iy;
-                x = o_ptr->ix;
+                y = o_ptr->loc.y;
+                x = o_ptr->loc.x;
             }
 
             /* Nearby objects start out "immune" */
@@ -4403,23 +4403,16 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
     {
         object_type *o_ptr;
 
-        /* Acquire object */
         o_ptr = &o_list[this_o_idx];
-
-        /* Acquire next object */
         next_o_idx = o_ptr->next_o_idx;
-
-        /* Check for combination */
-        if (object_similar(o_ptr, j_ptr))
+        if (obj_can_combine(o_ptr, j_ptr, 0))
         {
-            /* Combine the items */
-            object_absorb(o_ptr, j_ptr);
-
-            /* Success */
-            done = TRUE;
-
-            /* Done */
-            break;
+            obj_combine(o_ptr, j_ptr, 0);
+            if (!j_ptr->number)
+            {
+                done = TRUE;
+                break;
+            }
         }
     }
 
@@ -4463,8 +4456,10 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
         j_ptr = &o_list[o_idx];
 
         /* Locate */
-        j_ptr->iy = by;
-        j_ptr->ix = bx;
+        j_ptr->loc.where = INV_FLOOR;
+        j_ptr->loc.y = by;
+        j_ptr->loc.x = bx;
+        j_ptr->loc.slot = o_idx;
 
         /* No monster */
         j_ptr->held_m_idx = 0;

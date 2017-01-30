@@ -23,8 +23,10 @@ extern void    equip_takeoff_ui(void);
 extern void    equip_wield_aux(obj_ptr obj, slot_t slot); 
 extern void    equip_takeoff_aux(slot_t slot); /* takeoff, drop, throw */
 extern void    equip_display(doc_ptr doc, obj_p p, int flags);
+extern void    equip_remove(slot_t slot);
 
 extern void    equip_calc_bonuses(void);
+extern inv_ptr equip_filter(obj_p p);
 extern void    equip_for_each_obj(obj_f f);
 extern void    equip_for_each_slot(slot_f f);
 extern int     equip_max(void);

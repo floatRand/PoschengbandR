@@ -22,6 +22,7 @@ extern void    quiver_remove(slot_t slot);
 extern obj_ptr quiver_obj(slot_t slot);
 extern int     quiver_max(void); /* for (slot = 1; slot <= quiver_max(); slot++) ... */
 
+extern inv_ptr quiver_filter(obj_p p);
 extern void    quiver_for_each(obj_f f);
 extern slot_t  quiver_find_first(obj_p p);
 extern slot_t  quiver_find_next(obj_p p, slot_t prev_match);

@@ -4,6 +4,7 @@
 
 struct inv_s
 {
+    cptr    name;
     int     max;
     int     flags;
     vec_ptr objects; /* sparse ... grows as needed (up to max+1 if max is set) */
@@ -44,12 +45,13 @@ static bool _readonly(inv_ptr inv)
 }
 
 /* Creation */
-inv_ptr inv_alloc(int max, int flags)
+inv_ptr inv_alloc(cptr name, int max, int flags)
 {
     inv_ptr result = malloc(sizeof(inv_t));
+    result->name = name;
     result->max = max;
     result->flags = flags;
-    result->objects = vec_alloc(free);
+    result->objects = vec_alloc((vec_free_f)obj_free);
     return result;
 }
 
@@ -58,9 +60,10 @@ inv_ptr inv_copy(inv_ptr src)
     inv_ptr result = malloc(sizeof(inv_t));
     int     i;
 
+    result->name = src->name;
     result->max = src->max;
     result->flags = src->flags;
-    result->objects = vec_alloc(free);
+    result->objects = vec_alloc((vec_free_f)obj_free);
 
     for (i = 0; i < vec_length(src->objects); i++)
     {
@@ -78,6 +81,7 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
     inv_ptr result = malloc(sizeof(inv_t));
     int     i;
 
+    result->name = src->name;
     result->max = src->max;
     result->flags = src->flags | INV_READ_ONLY;
     result->objects = vec_alloc(NULL); /* src owns the objects! */
@@ -94,12 +98,37 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
     return result;
 }
 
+inv_ptr inv_filter_floor(obj_p p)
+{
+    inv_ptr    result = malloc(sizeof(inv_t));
+    cave_type *c_ptr = &cave[py][px];
+    int        this_o_idx, next_o_idx = 0;
+
+    result->name = "Floor";
+    result->max = 0;
+    result->flags = INV_FLOOR;
+    result->objects = vec_alloc(NULL); /* o_list owns the objects! */
+    vec_add(result->objects, NULL); /* slot 0 is invalid */
+
+    for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
+    {
+        object_type *obj = &o_list[this_o_idx];
+
+        assert(obj);
+        next_o_idx = obj->next_o_idx;
+        if (!p || p(obj))
+            vec_add(result->objects, obj);
+    }
+    return result;
+}
+
 void inv_free(inv_ptr inv)
 {
     if (inv)
     {
         vec_free(inv->objects);
         inv->objects = NULL;
+        inv->name = NULL;
         free(inv);
     }
 }
@@ -493,9 +522,19 @@ int inv_count_slots(inv_ptr inv, obj_p p)
     return ct;
 }
 
-int inv_max_slots(inv_ptr inv)
+int inv_loc(inv_ptr inv)
+{
+    return inv->flags & INV_LOC_MASK;
+}
+
+int inv_max(inv_ptr inv)
 {
     return inv->max;
+}
+
+cptr inv_name(inv_ptr inv)
+{
+    return inv->name;
 }
 
 /* Menus and Display */
@@ -506,6 +545,9 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
     slot_t slot;
     int    xtra = 0;
 
+    if (!stop)
+        stop = vec_length(inv->objects) - 1;
+    
     if (show_weights)
         xtra = 9;  /* " 123.0 lbs" */
 

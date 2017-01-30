@@ -8,7 +8,7 @@ static vec_ptr _overflow = NULL;
 void pack_init(void)
 {
     inv_free(_inv);
-    _inv = inv_alloc(PACK_MAX, INV_PACK);
+    _inv = inv_alloc("Inventory", PACK_MAX, INV_PACK);
     _overflow = vec_alloc(free);
 }
 
@@ -171,6 +171,11 @@ obj_ptr pack_obj(slot_t slot)
 int pack_max(void)
 {
     return PACK_MAX;
+}
+
+inv_ptr pack_filter(obj_p p)
+{
+    return inv_filter(_inv, p);
 }
 
 void pack_for_each(obj_f f)

@@ -20,6 +20,7 @@ extern void    pack_remove(slot_t slot);
 extern obj_ptr pack_obj(slot_t slot);
 extern int     pack_max(void); /* for (slot = 1; slot <= pack_max(); slot++) ... */
 
+extern inv_ptr pack_filter(obj_p p);
 extern void    pack_for_each(obj_f f);
 extern slot_t  pack_find_first(obj_p p);
 extern slot_t  pack_find_next(obj_p p, slot_t prev_match);

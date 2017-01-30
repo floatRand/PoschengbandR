@@ -8,7 +8,7 @@ static int     _capacity = 100;
 void quiver_init(void)
 {
    inv_free(_inv);
-   _inv = inv_alloc(QUIVER_MAX, INV_QUIVER); 
+   _inv = inv_alloc("Quiver", QUIVER_MAX, INV_QUIVER); 
 }
 
 /* Adding and removing: Quivers allow a large number of slots
@@ -72,6 +72,11 @@ obj_ptr quiver_obj(slot_t slot)
 int quiver_max(void)
 {
     return QUIVER_MAX;
+}
+
+inv_ptr quiver_filter(obj_p p)
+{
+    return inv_filter(_inv, p);
 }
 
 void quiver_for_each(obj_f f)
