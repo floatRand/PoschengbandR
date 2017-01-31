@@ -6,7 +6,7 @@
 /* Customization */
 struct obj_prompt_context_s;
 typedef struct obj_prompt_context_s obj_prompt_context_t, *obj_prompt_context_ptr;
-typedef int (*obj_prompt_cmd_f)(obj_prompt_context_ptr context, char cmd);
+typedef int (*obj_prompt_cmd_f)(obj_prompt_context_ptr context, int cmd);
 enum {
     OP_CMD_SKIPPED = 0,
       /* prompt->cmd_handler did not process the cmd */
@@ -49,8 +49,10 @@ struct obj_prompt_context_s
 {
     obj_prompt_ptr prompt;
     vec_ptr        tabs;   /* vec<inv_ptr> */
-    int            tab;
+    int            tab;    /* current tab */
     doc_ptr        doc;
+    int            page_size;
+    vec_ptr        pages;  /* current page in each tab */
 };
 
 /* Prompt for an object, but we are very customizable.

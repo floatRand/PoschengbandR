@@ -136,6 +136,11 @@ void vec_set(vec_ptr vec, int i, vptr obj)
     }
 }
 
+void vec_set_int(vec_ptr vec, int i, int val)
+{
+    vec_set(vec, i, (vptr)(intptr_t)val);
+}
+
 void vec_swap(vec_ptr vec, int i, int j)
 {
     vptr tmp;

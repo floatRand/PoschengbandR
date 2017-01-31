@@ -422,7 +422,7 @@ int obj_combine(obj_ptr dest, obj_ptr obj, int loc)
  * For Inspect and Inscribe, it seems useful to keep the obj_prompt up
  * to allow multiple operations. There is no energy cost for these commands.
  ***********************************************************************/
-static int _inspector(obj_prompt_context_ptr context, char cmd)
+static int _inspector(obj_prompt_context_ptr context, int cmd)
 {
     inv_ptr inv = vec_get(context->tabs, context->tab);
     slot_t  slot = inv_label_slot(inv, cmd);
@@ -451,7 +451,6 @@ static int _inspector(obj_prompt_context_ptr context, char cmd)
 void obj_inspect_ui(void)
 {
     obj_prompt_t prompt = {0};
-    obj_ptr      obj;
 
     prompt.prompt = "Examine which item?";
     prompt.error = "You have nothing to examine.";
@@ -464,7 +463,7 @@ void obj_inspect_ui(void)
     obj_prompt(&prompt);
 }
 
-static int _inscriber(obj_prompt_context_ptr context, char cmd)
+static int _inscriber(obj_prompt_context_ptr context, int cmd)
 {
     inv_ptr inv = vec_get(context->tabs, context->tab);
     slot_t  slot = inv_label_slot(inv, cmd);
@@ -495,7 +494,6 @@ static int _inscriber(obj_prompt_context_ptr context, char cmd)
 void obj_inscribe_ui(void)
 {
     obj_prompt_t prompt = {0};
-    obj_ptr      obj;
 
     prompt.prompt = "Inscribe which item?";
     prompt.error = "You have nothing to inscribe.";

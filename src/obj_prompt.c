@@ -5,27 +5,29 @@
 #define _FAKE_SLOT_ALL   1000000
 #define _FAKE_SLOT_FORCE 1000001
 
-static vec_ptr _get_tabs(obj_prompt_ptr prompt)
+static void _get_tabs(obj_prompt_context_ptr context)
 {
-    vec_ptr vec = vec_alloc((vec_free_f)inv_free);
-    int     i;
+    int i;
+
+    context->tabs = vec_alloc((vec_free_f)inv_free);
+    context->pages = vec_alloc(NULL);
 
     for (i = 0; i < MAX_LOC; i++)
     {
         inv_ptr inv = NULL;
-        switch (prompt->where[i])
+        switch (context->prompt->where[i])
         {
         case INV_FLOOR:
-            inv = inv_filter_floor(prompt->filter);
+            inv = inv_filter_floor(context->prompt->filter);
             break;
         case INV_EQUIP:
-            inv = equip_filter(prompt->filter);
+            inv = equip_filter(context->prompt->filter);
             break;
         case INV_PACK:
-            inv = pack_filter(prompt->filter);
+            inv = pack_filter(context->prompt->filter);
             break;
         case INV_QUIVER:
-            inv = quiver_filter(prompt->filter);
+            inv = quiver_filter(context->prompt->filter);
             break;
         }
         if (inv)
@@ -34,10 +36,13 @@ static vec_ptr _get_tabs(obj_prompt_ptr prompt)
             if (!ct)
                 inv_free(inv);
             else
-                vec_add(vec, inv);
+            {
+                inv_paginate(inv, context->prompt->filter, context->page_size);
+                vec_add(context->tabs, inv);
+                vec_add_int(context->pages, 0);
+            }
         }
     }
-    return vec;
 }
 
 static void _sync_doc(doc_ptr doc)
@@ -49,6 +54,7 @@ static void _sync_doc(doc_ptr doc)
 static void _display(obj_prompt_context_ptr context)
 {
     inv_ptr inv = vec_get(context->tabs, context->tab);
+    int     page = vec_get_int(context->pages, context->tab);
     int     i;
 
     doc_clear(context->doc);
@@ -68,8 +74,19 @@ static void _display(obj_prompt_context_ptr context)
     doc_newline(context->doc);
 
     /* Active Tab */
-    inv_display(inv, 1, inv_max(inv), obj_exists, context->doc, NULL, context->prompt->flags);
-    doc_newline(context->doc);
+    inv_display_page(inv, page, context->doc, context->prompt->flags);
+    if (inv_page_count(inv) > 1)
+    {
+        int page = vec_get_int(context->pages, context->tab);
+        int ct = inv_page_count(inv);
+
+        doc_printf(context->doc,
+            "<color:B>-%s-</color> <color:G>Page %d of %d</color>\n",
+            page == ct - 1 ? "less" : "more",
+            page + 1, ct);
+    }
+    else
+        doc_newline(context->doc);
     if (context->prompt->prompt)
         doc_printf(context->doc, "<color:y>%s</color> ", context->prompt->prompt);
     else
@@ -90,20 +107,83 @@ static int _find_tab(vec_ptr tabs, int loc)
     return -1;
 }
 
+static void _context_free(obj_prompt_context_ptr context)
+{
+    assert(context);
+    vec_free(context->tabs);
+    vec_free(context->pages);
+    doc_free(context->doc);
+}
+
+static int _basic_cmd(obj_prompt_context_ptr context, int cmd)
+{
+    switch (cmd)
+    {
+    case '-': {
+        /* Legacy: In the olden days, - was used to autopick
+         * the floor item. Of course, you had to do it blind
+         * since it was never displayed. */
+        int floor_tab = _find_tab(context->tabs, INV_FLOOR);
+        if (floor_tab >= 0)
+        {
+            inv_ptr inv = vec_get(context->tabs, floor_tab);
+            context->tab = floor_tab;
+            if (inv_count_slots(inv, obj_exists) == 1)
+            {
+                slot_t slot = inv_first(inv, obj_exists);
+                assert(slot);
+                context->prompt->obj = inv_obj(inv, slot);
+                REPEAT_PUSH(cmd);
+                return OP_CMD_DISMISS;
+            }
+        }
+        return OP_CMD_HANDLED; }
+    case '/':
+        context->tab++;
+        if (context->tab == vec_length(context->tabs))
+            context->tab = 0;
+        return OP_CMD_HANDLED;
+    case '\\':
+        context->tab--;
+        if (context->tab < 0)
+            context->tab = vec_length(context->tabs) - 1;
+        return OP_CMD_HANDLED;
+    case SKEY_PGDOWN: case '3': {
+        int     page = vec_get_int(context->pages, context->tab);
+        inv_ptr inv = vec_get(context->tabs, context->tab);
+        if (page < inv_page_count(inv) - 1)
+            vec_set_int(context->pages, context->tab, page + 1);
+        return OP_CMD_HANDLED; }
+    case SKEY_PGUP: case '9': {
+        int     page = vec_get_int(context->pages, context->tab);
+        if (page > 0)
+            vec_set_int(context->pages, context->tab, page - 1);
+        return OP_CMD_HANDLED; }
+    case '?':
+        if (context->prompt->help)
+            doc_display_help(context->prompt->help, NULL);
+        else
+            doc_display_help("command.txt", "SelectingObjects");
+        return OP_CMD_HANDLED;
+    }
+    return OP_CMD_SKIPPED;
+}
+
 int obj_prompt(obj_prompt_ptr prompt)
 {
     obj_prompt_context_t context = {0};
     int                  tmp;
     int                  result = 0;
 
-    context.tabs = _get_tabs(prompt);
     context.prompt = prompt;
+    context.page_size = MIN(26, ui_menu_rect().cy - 4);
+    _get_tabs(&context);
 
     if (!vec_length(context.tabs))
     {
         if (prompt->error)
             msg_format("<color:r>%s</color>", prompt->error);
-        vec_free(context.tabs);
+        _context_free(&context);
         return OP_NO_OBJECTS;
     }
 
@@ -120,7 +200,7 @@ int obj_prompt(obj_prompt_ptr prompt)
             if (slot)
             {
                 prompt->obj = inv_obj(inv, slot);
-                vec_free(context.tabs);
+                _context_free(&context);
                 return OP_SUCCESS;
             }
         }
@@ -131,40 +211,24 @@ int obj_prompt(obj_prompt_ptr prompt)
     for (;;)
     {
         inv_ptr inv = vec_get(context.tabs, context.tab);
-        char    cmd;
+        int     cmd;
         slot_t  slot;
 
         _display(&context);
 
-        cmd = inkey();
+        cmd = inkey_special(TRUE);
         if (cmd == ' ') continue;
-        if (cmd == '-')
+        tmp = _basic_cmd(&context, cmd);
+        if (tmp == OP_CMD_HANDLED) continue;
+        if (tmp == OP_CMD_DISMISS)
         {
-            /* Legacy: In the olden days, - was used to autopick
-             * the floor item. Of course, you had to do it blind
-             * since it was never displayed. */
-            int floor_tab = _find_tab(context.tabs, INV_FLOOR);
-            if (floor_tab >= 0)
-            {
-                context.tab = floor_tab;
-                inv = vec_get(context.tabs, context.tab);
-                if (inv_count_slots(inv, obj_exists) == 1)
-                {
-                    slot = inv_first(inv, obj_exists);
-                    assert(slot);
-                    prompt->obj = inv_obj(inv, slot);
-                    result = OP_SUCCESS;
-                    REPEAT_PUSH(cmd);
-                    break;
-                }
-            }
-            continue;
+            result = OP_SUCCESS;
+            break;
         }
         if (prompt->cmd_handler)
         {
             tmp = prompt->cmd_handler(&context, cmd);
-            if (tmp == OP_CMD_HANDLED)
-                continue;
+            if (tmp == OP_CMD_HANDLED) continue;
             if (tmp == OP_CMD_DISMISS)
             {
                 result = OP_CUSTOM;
@@ -179,25 +243,6 @@ int obj_prompt(obj_prompt_ptr prompt)
             REPEAT_PUSH(inv_loc(inv));
             REPEAT_PUSH(cmd);
             break;
-        }
-        if (cmd == '/')
-        {
-            context.tab++;
-            if (context.tab == vec_length(context.tabs))
-                context.tab = 0;
-        }
-        else if (cmd == '\\')
-        {
-            context.tab--;
-            if (context.tab < 0)
-                context.tab = vec_length(context.tabs) - 1;
-        }
-        else if (cmd == '?')
-        {
-            if (prompt->help)
-                doc_display_help(prompt->help, NULL);
-            else
-                doc_display_help("command.txt", "SelectingObjects");
         }
         else if (isupper(cmd))
         {
@@ -218,10 +263,7 @@ int obj_prompt(obj_prompt_ptr prompt)
         }
     }
     Term_load();
-
-    doc_free(context.doc);
-    vec_free(context.tabs);
-
+    _context_free(&context);
     return result;
 }
 

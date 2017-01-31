@@ -70,8 +70,8 @@ extern int     inv_loc(inv_ptr inv);
 extern int     inv_max(inv_ptr inv);
 extern cptr    inv_name(inv_ptr inv);
 
-/* Menus and Display
- * inv_display is a bit overwhelming, but it is a low level helper for pack_display,
+/* Menus and Display */
+/* inv_display is a bit overwhelming, but it is a low level helper for pack_display,
  * etc. Basically, the requested range in inv is displayed to doc, but the range
  * might be filtered by a predicate. We support optional slot labelling (for equip)
  * as well as flags for some future items I haven't coded up yet.
@@ -95,6 +95,12 @@ extern slot_t  inv_label_slot(inv_ptr inv, char label);
 /* Normally, you don't need to call this since you will usually display()
  * before inspecting labels. Except for REPEAT_PULL() ... sigh */
 extern void    inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop);
+
+/* Pagination ... for obj_prompt */
+extern void    inv_paginate(inv_ptr inv, obj_p p, int page_size);
+extern int     inv_page_count(inv_ptr inv);
+extern void    inv_display_page(inv_ptr inv, int page, doc_ptr doc, int flags);
+extern void    inv_unpaginate(inv_ptr inv);
 
 /* Savefiles */
 extern void    inv_load(inv_ptr inv, savefile_ptr file);

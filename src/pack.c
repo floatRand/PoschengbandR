@@ -132,7 +132,7 @@ void pack_get(obj_ptr obj)
     obj_release(obj, OBJ_RELEASE_QUIET);
 }
 
-static int _get_cmd_handler(obj_prompt_context_ptr context, char cmd)
+static int _get_cmd_handler(obj_prompt_context_ptr context, int cmd)
 {
     if (cmd == '*')
         return OP_CMD_DISMISS;

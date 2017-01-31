@@ -2,12 +2,62 @@
 
 #include <assert.h>
 
+struct _page_s
+{
+    slot_t start;
+    slot_t stop;
+};
+typedef struct _page_s _page_t, *_page_ptr;
+
+static _page_ptr _page_alloc(slot_t start, slot_t stop)
+{
+    _page_ptr page = malloc(sizeof(_page_t));
+    page->start = start;
+    page->stop = stop;
+    return page;
+}
+
+static void _page_free(_page_ptr page)
+{
+    if (page) free(page);
+}
+
+struct _pagination_s
+{
+    obj_p   filter;
+    int     page_size;
+    int     page_count;
+    vec_ptr pages;
+};
+typedef struct _pagination_s _pagination_t, *_pagination_ptr;
+
+static _pagination_ptr _pagination_alloc(obj_p p, int page_size)
+{
+    _pagination_ptr pagination = malloc(sizeof(_pagination_t));
+    pagination->filter = p;
+    pagination->page_size = page_size;
+    pagination->page_count = 0;
+    pagination->pages = vec_alloc((vec_free_f)_page_free);
+    return pagination;
+}
+
+static void _pagination_free(_pagination_ptr pagination)
+{
+    if (pagination)
+    {
+        vec_free(pagination->pages);
+        pagination->pages = NULL;
+        free(pagination);
+    }
+}
+
 struct inv_s
 {
     cptr    name;
     int     type;
     int     max;
     vec_ptr objects; /* sparse ... grows as needed (up to max+1 if max is set) */
+    _pagination_ptr pagination;
 };
 
 /* Slots: We are assuming slot <= 26 */
@@ -46,6 +96,7 @@ inv_ptr inv_alloc(cptr name, int type, int max)
     result->type = type;
     result->max = max;
     result->objects = vec_alloc((vec_free_f)obj_free);
+    result->pagination = NULL;
     return result;
 }
 
@@ -58,6 +109,7 @@ inv_ptr inv_copy(inv_ptr src)
     result->type = src->type;
     result->max = src->max;
     result->objects = vec_alloc((vec_free_f)obj_free);
+    result->pagination = NULL;
 
     for (i = 0; i < vec_length(src->objects); i++)
     {
@@ -89,6 +141,7 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
     result->type = src->type;
     result->max = src->max;
     result->objects = vec_alloc(NULL); /* src owns the objects! */
+    result->pagination = NULL;
 
     for (i = 0; i < vec_length(src->objects); i++)
     {
@@ -114,6 +167,8 @@ inv_ptr inv_filter_floor(obj_p p)
     result->type = INV_FLOOR;
     result->max = 0;
     result->objects = vec_alloc(NULL); /* o_list owns the objects! */
+    result->pagination = NULL;
+
     vec_add(result->objects, NULL); /* slot 0 is invalid */
 
     for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
@@ -141,6 +196,8 @@ inv_ptr inv_filter_home(obj_p p)
     result->type = INV_HOME;
     result->max = 0;
     result->objects = vec_alloc(NULL); /* shop owns the objects! */
+    result->pagination = NULL;
+
     vec_add(result->objects, NULL); /* slot 0 is invalid */
 
     for (i = 0; i < st_ptr->stock_num; i++)
@@ -160,6 +217,8 @@ void inv_free(inv_ptr inv)
     {
         vec_free(inv->objects);
         inv->objects = NULL;
+        _pagination_free(inv->pagination);
+        inv->pagination = NULL;
         inv->name = NULL;
         free(inv);
     }
@@ -657,7 +716,7 @@ void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop)
     {
         obj_ptr obj = inv_obj(inv, slot);
         if (obj)
-            obj->scratch = slot_label(slot);
+            obj->scratch = slot_label(slot - start + 1);
     }
 
     /* Inscription overrides don't function is shops */
@@ -682,6 +741,68 @@ void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop)
             }
         }
     }
+}
+
+/* Pagination */
+void inv_paginate(inv_ptr inv, obj_p p, int page_size)
+{
+    slot_t start, pos, max;
+
+    assert(!inv->pagination); /* you forgot to call inv_unpaginate() */
+    inv->pagination = _pagination_alloc(p, page_size);
+
+    max = inv_last(inv, p);
+    if (!max) return;
+
+    start = inv_first(inv, p);
+    assert(start);
+
+    for (pos = start; pos <= max; pos++)
+    {
+        _page_ptr page;
+        int       ct = 1;
+
+        while (ct < page_size)
+        {
+            assert(pos && pos <= max);
+            pos = inv_next(inv, p, pos);
+            ct++;
+            if (!pos) break;
+        }
+        if (!pos) pos = max;
+        page = _page_alloc(start, pos);
+        vec_add(inv->pagination->pages, page);
+        inv->pagination->page_count++;
+
+        start = pos + 1;
+    }
+}
+
+int inv_page_count(inv_ptr inv)
+{
+    assert(inv->pagination);
+    return inv->pagination->page_count;
+}
+
+void inv_display_page(inv_ptr inv, int page, doc_ptr doc, int flags)
+{
+    _page_ptr page_ptr;
+    assert(inv->pagination);
+    assert(0 <= page && page < vec_length(inv->pagination->pages));
+    page_ptr = vec_get(inv->pagination->pages, page);
+    inv_display(
+        inv, 
+        page_ptr->start, page_ptr->stop,
+        inv->pagination->filter,
+        doc, NULL, flags
+    );
+}
+
+void inv_unpaginate(inv_ptr inv)
+{
+    assert(inv->pagination);
+    _pagination_free(inv->pagination);
+    inv->pagination = NULL;
 }
 
 /* Savefiles */
