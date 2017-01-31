@@ -1125,7 +1125,6 @@ static bool _smith_p(object_type *o_ptr)
 
 void wiz_obj_smith(void)
 {
-    obj_ptr      obj;
     obj_t        copy;
     obj_prompt_t prompt = {0};
 
@@ -1136,17 +1135,17 @@ void wiz_obj_smith(void)
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_FLOOR;
 
-    obj = obj_prompt(&prompt);
-    if (!obj) return;
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
 
-    copy = *obj;
+    copy = *prompt.obj;
     obj_identify_fully(&copy);
 
     msg_line_clear();
     if (_smith_object(&copy) == _OK)
     {
-        *obj = copy;
-        obj_release(obj, 0);
+        *prompt.obj = copy;
+        obj_release(prompt.obj, 0);
         p_ptr->update |= PU_BONUS;
         p_ptr->notice |= PN_COMBINE | PN_REORDER;
         p_ptr->window |= PW_INVEN;

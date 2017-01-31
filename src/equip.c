@@ -533,7 +533,8 @@ static obj_ptr _wield_get_obj(void)
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_FLOOR;
 
-    return obj_prompt(&prompt);
+    obj_prompt(&prompt);
+    return prompt.obj;
 }
 
 static bool _wield_verify(obj_ptr obj)
@@ -754,7 +755,8 @@ static obj_ptr _unwield_get_obj(void)
     prompt.error = "You are not wearing anything to take off.";
     prompt.where[0] = INV_EQUIP;
 
-    return obj_prompt(&prompt);
+    obj_prompt(&prompt);
+    return prompt.obj;
 }
 
 bool _unwield_verify(obj_ptr obj)

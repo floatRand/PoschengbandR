@@ -35,6 +35,44 @@ void obj_free(obj_ptr obj)
     }
 }
 
+void obj_release(obj_ptr obj, int options)
+{
+    char name[MAX_NLEN];
+    bool quiet = (options & OBJ_RELEASE_QUIET) ? TRUE : FALSE;
+
+    if (!obj) return;
+    if (!quiet)
+        object_desc(name, obj, OD_COLOR_CODED);
+
+    switch (obj->loc.where)
+    {
+    case INV_FLOOR:
+        if (!quiet)
+            msg_format("You see %s.", name);
+        if (obj->number <= 0)
+            delete_object_idx(obj->loc.slot);
+        break;
+    case INV_EQUIP:
+        if (!quiet)
+            msg_format("You are no longer wearing %s.", name);
+        if (obj->number <= 0)
+            equip_remove(obj->loc.slot);
+        break;
+    case INV_PACK:
+        if (!quiet)
+            msg_format("You have %s in your pack.", name);
+        if (obj->number <= 0)
+            pack_remove(obj->loc.slot);
+        break;
+    case INV_QUIVER:
+        if (!quiet)
+            msg_format("You have %s in your quiver.", name);
+        if (obj->number <= 0)
+            quiver_remove(obj->loc.slot);
+        break;
+    }
+}
+
 /************************************************************************
  * Predicates
  ***********************************************************************/
@@ -384,29 +422,30 @@ int obj_combine(obj_ptr dest, obj_ptr obj, int loc)
  * For Inspect and Inscribe, it seems useful to keep the obj_prompt up
  * to allow multiple operations. There is no energy cost for these commands.
  ***********************************************************************/
-static bool _inspector(doc_ptr doc, inv_ptr inv, char cmd)
+static int _inspector(obj_prompt_context_ptr context, char cmd)
 {
-    slot_t slot = inv_label_slot(inv, cmd);
+    inv_ptr inv = vec_get(context->tabs, context->tab);
+    slot_t  slot = inv_label_slot(inv, cmd);
     if (slot)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        doc_clear(doc);
+        doc_clear(context->doc);
         if (object_is_flavor(obj) && !object_is_known(obj))
         {
             char name[MAX_NLEN];
             object_desc(name, obj, OD_COLOR_CODED);
-            doc_insert(doc, name);
-            doc_insert(doc, "\n\nYou have no special knowledge about this item.\n");
+            doc_insert(context->doc, name);
+            doc_insert(context->doc, "\n\nYou have no special knowledge about this item.\n");
         }
         else
-            obj_display_doc(obj, doc);
-        doc_insert(doc, "Press <color:y>Any Key</color> to Continue.");
+            obj_display_doc(obj, context->doc);
+        doc_insert(context->doc, "Press <color:y>Any Key</color> to Continue.");
         Term_load();
-        doc_sync_menu(doc);
+        doc_sync_menu(context->doc);
         cmd = inkey();
-        return TRUE;
+        return OP_CMD_HANDLED;
     }
-    return FALSE;
+    return OP_CMD_SKIPPED;
 }
 
 void obj_inspect_ui(void)
@@ -422,13 +461,13 @@ void obj_inspect_ui(void)
     prompt.where[3] = INV_FLOOR;
     prompt.cmd_handler = _inspector;
 
-    obj = obj_prompt(&prompt);
-    assert(!obj);
+    obj_prompt(&prompt);
 }
 
-static bool _inscriber(doc_ptr doc, inv_ptr inv, char cmd)
+static int _inscriber(obj_prompt_context_ptr context, char cmd)
 {
-    slot_t slot = inv_label_slot(inv, cmd);
+    inv_ptr inv = vec_get(context->tabs, context->tab);
+    slot_t  slot = inv_label_slot(inv, cmd);
     if (slot)
     {
         obj_ptr obj = inv_obj(inv, slot);
@@ -441,16 +480,16 @@ static bool _inscriber(doc_ptr doc, inv_ptr inv, char cmd)
         else
             strcpy(insc, "");
 
-        doc_clear(doc);
-        doc_printf(doc, "Inscribing %s.\n", name);
-        doc_printf(doc, "Inscription: ");
+        doc_clear(context->doc);
+        doc_printf(context->doc, "Inscribing %s.\n", name);
+        doc_printf(context->doc, "Inscription: ");
         Term_load();
-        doc_sync_menu(doc);
+        doc_sync_menu(context->doc);
         if (askfor(insc, 80))
             obj->inscription = quark_add(insc);
-        return TRUE;
+        return OP_CMD_HANDLED;
     }
-    return FALSE;
+    return OP_CMD_SKIPPED;
 }
 
 void obj_inscribe_ui(void)
@@ -466,8 +505,7 @@ void obj_inscribe_ui(void)
     prompt.where[3] = INV_FLOOR;
     prompt.cmd_handler = _inscriber;
 
-    obj = obj_prompt(&prompt);
-    assert(!obj);
+    obj_prompt(&prompt);
 
     p_ptr->notice |= PN_OPTIMIZE_PACK | PN_OPTIMIZE_QUIVER;
     p_ptr->window |= PW_INVEN | PW_EQUIP;

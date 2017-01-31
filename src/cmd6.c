@@ -1028,7 +1028,6 @@ static bool _can_read(object_type *o_ptr)
 void do_cmd_read_scroll(void)
 {
     obj_prompt_t prompt = {0};
-    obj_ptr      o_ptr;
 
     if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
         set_action(ACTION_NONE);
@@ -1057,10 +1056,10 @@ void do_cmd_read_scroll(void)
     prompt.where[1] = INV_FLOOR;
     prompt.flags = INV_SHOW_FAIL_RATES;
 
-    o_ptr = obj_prompt(&prompt);
-    if (!o_ptr) return ;
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
 
-    do_cmd_read_scroll_aux(o_ptr);
+    do_cmd_read_scroll_aux(prompt.obj);
 }
 
 /* Helper for Rods, Wands and Staves */

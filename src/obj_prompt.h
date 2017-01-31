@@ -3,47 +3,88 @@
 
 #include "obj.h"
 
-typedef bool (*obj_prompt_cmd_f)(doc_ptr doc, inv_ptr current, char cmd);
+/* Customization */
+struct obj_prompt_context_s;
+typedef struct obj_prompt_context_s obj_prompt_context_t, *obj_prompt_context_ptr;
+typedef int (*obj_prompt_cmd_f)(obj_prompt_context_ptr context, char cmd);
+enum {
+    OP_CMD_SKIPPED = 0,
+      /* prompt->cmd_handler did not process the cmd */
 
-#define MAX_LOC           5
-#define OBJ_PROMPT_ALL    0x00010000 /* These extend INV_SHOW_* options */
-#define OBJ_PROMPT_FORCE  0x00020000
-struct obj_prompt_s
-{
-    cptr  prompt;         /* "Wear/Wield which item?" */
-    cptr  error;          /* "You have nothing you can wear or wield." */
-    obj_p filter; 
-    int   where[MAX_LOC]; /* INV_EQUIP, INV_FLOOR, etc. order matters */
-    int   flags;
+    OP_CMD_HANDLED,
+      /* prompt->cmd_handler processed the cmd. The dialog
+       * should continue so the user can select an object. */
 
-    obj_prompt_cmd_f
-          cmd_handler;    /* return TRUE to eat the cmd */
+    OP_CMD_DISMISS
+      /* prompt->cmd_handler not only processed the cmd, but
+       * obj_prompt should now dismiss the dialog with OP_CUSTOM.
+       * In this case the handler should fill in context->prompt->custom
+       * and perhaps context->prompt->obj as well. Its really up to you. */
 };
 
+/* Parameters to obj_prompt */
+#define MAX_LOC 5
+struct obj_prompt_s
+{
+    /* input */
+    cptr    prompt;         /* "Wear/Wield which item?" */
+    cptr    error;          /* "You have nothing you can wear or wield." */
+    cptr    help;           /* "command.txt#SelectingObjects" if not set. */
+    obj_p   filter; 
+    int     where[MAX_LOC]; /* INV_EQUIP, INV_FLOOR, etc. order matters */
+    int     flags;          /* INV_SHOW_FAIL_RATES, etc. */
+
+    /* customize */
+    obj_prompt_cmd_f
+            cmd_handler;
+
+    /* output */
+    obj_ptr obj;
+    vptr    custom;
+};
 typedef struct obj_prompt_s obj_prompt_t, *obj_prompt_ptr;
 
-/* Prompt for an object. For simplicity, we simply return the
- * selected object or NULL if the user cancels (or there are
- * no valid objects meeting prompt.filter). Call obj_prompt_release()
- * if obj->number changes or if obj is a special return code. */
-extern obj_ptr obj_prompt(obj_prompt_ptr prompt);
+/* Context for Customization */
+struct obj_prompt_context_s
+{
+    obj_prompt_ptr prompt;
+    vec_ptr        tabs;   /* vec<inv_ptr> */
+    int            tab;
+    doc_ptr        doc;
+};
 
-/* Now, we must pay for the simplicity. Sometimes you want to
- * be able to prompt with special options, such as selecting all
- * objects (or a Force-trainer prompts for a spellbook, but wants
- * to be able to choose their mental Force realm). In these cases
- * the returned object is a fake one, so you need to call one
- * of the following to check for it. You must always obj_prompt_release()
- * a fake object return code! */
-extern bool    obj_prompt_all(obj_ptr obj);
-extern bool    obj_prompt_force(obj_ptr obj);
+/* Prompt for an object, but we are very customizable.
+ * Usually, the return is OP_SUCCESS and prompt->obj holds 
+ * the selected object. Most clients can just check
+ * if (prompt.obj) to see if the user selected an object
+ * and just ignore the return code. */
+extern int obj_prompt(obj_prompt_ptr prompt);
+enum {
+    OP_NO_OBJECTS = 1,
+      /* No objects meet prompt->filter in the various prompt->where locations.
+       * prompt->obj is set to NULL */
 
-/* You usually release the prompted object when you are done with
- * it. This will delete the object if obj->number was reduced to 
- * 0 and will also inform the user of the change (msg). If obj
- * is a special return code (i.e. fake object), then memory is freed.
- * If you prompt for an object and then do nothing with it, then you
- * should not release() it (e.g. trying to takeoff a cursed item). */
-#define OBJ_RELEASE_QUIET 0x0001
-extern void    obj_release(obj_ptr obj, int options);
+    OP_CANCELED,
+      /* User canceled the prompt. prompt->obj is NULL */
+
+    OP_SUCCESS,
+      /* User chose a single object which is now in prompt->obj.
+       * prompt->obj->loc describes where it came from. Be sure
+       * to obj_release(prompt->obj) if you move it or use it. */
+
+    OP_CUSTOM
+      /* prompt->cmd_handler handled a cmd with OP_CMD_DISMISS.
+       * prompt->obj is probably NULL and prompt->custom is probably not.
+       * The cmd_handler fills in these fields as needed prior to
+       * dismissing the dialog.
+       *
+       * Why have this?
+       * [1] Option to select all (*) for Identify, Get, etc. All
+       *     may apply to a single location (context->tab) or to
+       *     all valid locations (context->tabs). You decide.
+       * [2] Force-trainers select the Force (F) when choosing spellbooks.
+       * [3] Bowmasters select Unlimited Quiver (U) when choosing ammo.
+       * etc. */
+};
+
 #endif

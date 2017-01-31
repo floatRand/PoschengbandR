@@ -132,11 +132,17 @@ void pack_get(obj_ptr obj)
     obj_release(obj, OBJ_RELEASE_QUIET);
 }
 
+static int _get_cmd_handler(obj_prompt_context_ptr context, char cmd)
+{
+    if (cmd == '*')
+        return OP_CMD_DISMISS;
+    return OP_CMD_SKIPPED;
+}
+
 static bool _get_floor(inv_ptr floor)
 {
     int          ct = inv_count(floor, NULL);
     obj_prompt_t prompt = {0};
-    obj_ptr      obj;
 
     /* Autopicker cleared 'em all? */
     if (!ct) return FALSE;
@@ -149,21 +155,22 @@ static bool _get_floor(inv_ptr floor)
     }
 
     /* Prompt user for multiple floor objects */
-    prompt.prompt = "Get which item?";
+    prompt.prompt = "Get which item (<color:keypress>*</color> for all)? ";
     prompt.where[0] = INV_FLOOR;
-    prompt.flags = OBJ_PROMPT_ALL; /* '*' gets 'em all */
+    prompt.cmd_handler = _get_cmd_handler;
 
-    obj = obj_prompt(&prompt);
-    if (!obj)
-        return FALSE;
-    if (obj_prompt_all(obj))
+    switch (obj_prompt(&prompt))
     {
+    case OP_CUSTOM:
         inv_for_each(floor, pack_get);
-        obj_release(obj, OBJ_RELEASE_QUIET);
+        return TRUE;
+
+    case OP_SUCCESS:
+        assert(prompt.obj);
+        pack_get(prompt.obj);
         return TRUE;
     }
-    pack_get(obj);
-    return TRUE;
+    return FALSE;
 }
 
 bool pack_get_floor(void)
@@ -172,6 +179,7 @@ bool pack_get_floor(void)
     inv_ptr floor;
 
     autopick_get_floor(); /* no energy charge */
+    msg_print(NULL);
 
     floor = inv_filter_floor(NULL);
     result = _get_floor(floor);
@@ -280,10 +288,10 @@ bool pack_overflow(void)
         if (!result)
         {
             disturb(0, 0);
-            cmsg_print(TERM_RED, "Your pack overflows!");
+            cmsg_print(TERM_VIOLET, "Your pack overflows!");
             result = TRUE;
         }
-        object_desc(name, obj, 0);
+        object_desc(name, obj, OD_COLOR_CODED);
         msg_format("You drop %s.", name);
         drop_near(obj, 0, py, px);
         free(obj);

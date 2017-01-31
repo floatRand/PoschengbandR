@@ -20,6 +20,9 @@ extern obj_ptr obj_alloc(void);
 extern obj_ptr obj_copy(obj_ptr obj);
 extern void    obj_free(obj_ptr obj);
 
+#define OBJ_RELEASE_QUIET 0x0001
+extern void    obj_release(obj_ptr obj, int options);
+
 /* Commands (Top Level User Interface) */
 extern void obj_inscribe_ui(void);
 extern void obj_inspect_ui(void);
