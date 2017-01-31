@@ -1580,7 +1580,7 @@ void equip_init(void)
         _template = &b_info[0];
 
     inv_free(_inv);
-    _inv = inv_alloc("Equipment", EQUIP_MAX_SLOTS, INV_EQUIP);
+    _inv = inv_alloc("Equipment", INV_EQUIP, EQUIP_MAX_SLOTS);
 }
 
 /* Attempt to gracefully handle changes to body type between
@@ -1591,7 +1591,7 @@ void equip_init(void)
 void equip_on_load(void)
 {
     slot_t  slot, max = inv_last(_inv, obj_exists);
-    inv_ptr temp = inv_alloc("Temp", EQUIP_MAX_SLOTS, INV_EQUIP);
+    inv_ptr temp = inv_alloc("Temp", INV_EQUIP, EQUIP_MAX_SLOTS);
 
     for (slot = 1; slot <= max; slot++)
     {

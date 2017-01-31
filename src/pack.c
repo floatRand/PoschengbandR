@@ -8,7 +8,7 @@ static vec_ptr _overflow = NULL;
 void pack_init(void)
 {
     inv_free(_inv);
-    _inv = inv_alloc("Inventory", PACK_MAX, INV_PACK);
+    _inv = inv_alloc("Inventory", INV_PACK, PACK_MAX);
     _overflow = vec_alloc(free);
 }
 
@@ -160,6 +160,9 @@ bool pack_get(void)
 void pack_remove(slot_t slot)
 {
     inv_remove(_inv, slot);
+    p_ptr->notice |= PN_OPTIMIZE_PACK;
+    p_ptr->update |= PU_BONUS;
+    p_ptr->window |= PW_INVEN;
 }
 
 /* Accessing, Iterating, Searching */

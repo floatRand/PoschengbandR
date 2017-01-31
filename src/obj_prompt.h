@@ -6,8 +6,8 @@
 typedef bool (*obj_prompt_cmd_f)(doc_ptr doc, inv_ptr current, char cmd);
 
 #define MAX_LOC           5
-#define OBJ_PROMPT_ALL    0x0001
-#define OBJ_PROMPT_FORCE  0x0002
+#define OBJ_PROMPT_ALL    0x00010000 /* These extend INV_SHOW_* options */
+#define OBJ_PROMPT_FORCE  0x00020000
 struct obj_prompt_s
 {
     cptr  prompt;         /* "Wear/Wield which item?" */

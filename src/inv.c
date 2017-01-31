@@ -5,8 +5,8 @@
 struct inv_s
 {
     cptr    name;
+    int     type;
     int     max;
-    int     flags;
     vec_ptr objects; /* sparse ... grows as needed (up to max+1 if max is set) */
 };
 
@@ -38,19 +38,13 @@ static void _grow(inv_ptr inv, slot_t slot)
     }
 }
 
-static bool _readonly(inv_ptr inv)
-{
-    if (inv->flags & INV_READ_ONLY) return TRUE;
-    return FALSE;
-}
-
 /* Creation */
-inv_ptr inv_alloc(cptr name, int max, int flags)
+inv_ptr inv_alloc(cptr name, int type, int max)
 {
     inv_ptr result = malloc(sizeof(inv_t));
     result->name = name;
+    result->type = type;
     result->max = max;
-    result->flags = flags;
     result->objects = vec_alloc((vec_free_f)obj_free);
     return result;
 }
@@ -61,8 +55,8 @@ inv_ptr inv_copy(inv_ptr src)
     int     i;
 
     result->name = src->name;
+    result->type = src->type;
     result->max = src->max;
-    result->flags = src->flags;
     result->objects = vec_alloc((vec_free_f)obj_free);
 
     for (i = 0; i < vec_length(src->objects); i++)
@@ -82,8 +76,8 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
     int     i;
 
     result->name = src->name;
+    result->type = src->type;
     result->max = src->max;
-    result->flags = src->flags | INV_READ_ONLY;
     result->objects = vec_alloc(NULL); /* src owns the objects! */
 
     for (i = 0; i < vec_length(src->objects); i++)
@@ -105,8 +99,8 @@ inv_ptr inv_filter_floor(obj_p p)
     int        this_o_idx, next_o_idx = 0;
 
     result->name = "Floor";
+    result->type = INV_FLOOR;
     result->max = 0;
-    result->flags = INV_FLOOR;
     result->objects = vec_alloc(NULL); /* o_list owns the objects! */
     vec_add(result->objects, NULL); /* slot 0 is invalid */
 
@@ -143,13 +137,12 @@ static void _add_aux(inv_ptr inv, obj_ptr obj, slot_t slot)
     obj_loc_t loc = {0};
     int       ct = obj->number;
 
-    if (inv->flags & INV_EQUIP)
+    if (inv->type == INV_EQUIP)
         ct = 1;
 
-    assert(!_readonly(inv));
     assert(1 <= slot && slot <= inv->max);
 
-    loc.where = inv->flags & INV_LOC_MASK;
+    loc.where = inv->type;
     loc.slot = slot;
 
     copy = obj_copy(obj);
@@ -167,7 +160,6 @@ static void _add_aux(inv_ptr inv, obj_ptr obj, slot_t slot)
 slot_t inv_add(inv_ptr inv, obj_ptr obj)
 {
     slot_t slot;
-    assert(!_readonly(inv));
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr old = vec_get(inv->objects, slot);
@@ -196,17 +188,16 @@ slot_t inv_combine(inv_ptr inv, obj_ptr obj)
 {
     slot_t slot;
 
-    assert(!_readonly(inv));
     assert(obj->number);
 
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr dest = vec_get(inv->objects, slot);
         if (!dest) continue;
-        if ( obj_can_combine(dest, obj, inv->flags)
+        if ( obj_can_combine(dest, obj, inv->type)
           && dest->number + obj->number <= OBJ_STACK_MAX )
         {
-            obj_combine(dest, obj, inv->flags);
+            obj_combine(dest, obj, inv->type);
             return slot;
         }
     }
@@ -224,7 +215,6 @@ int inv_combine_ex(inv_ptr inv, obj_ptr obj)
     int    ct = 0;
     slot_t slot;
 
-    assert(!_readonly(inv));
     assert(obj->number);
 
     /* combine obj with as many existing slots as possible */
@@ -232,9 +222,9 @@ int inv_combine_ex(inv_ptr inv, obj_ptr obj)
     {
         obj_ptr dest = vec_get(inv->objects, slot);
         if (!dest) continue;
-        if (obj_can_combine(dest, obj, inv->flags))
+        if (obj_can_combine(dest, obj, inv->type))
         {
-            ct += obj_combine(dest, obj, inv->flags);
+            ct += obj_combine(dest, obj, inv->type);
             if (!obj->number) break;
         }
     }
@@ -260,7 +250,7 @@ bool inv_optimize(inv_ptr inv)
         {
             obj_ptr src = vec_get(inv->objects, seek);
             if (!src) continue;
-            if (obj_combine(dest, src, inv->flags))
+            if (obj_combine(dest, src, inv->type))
             {
                 result = TRUE;
                 if (!src->number)
@@ -276,7 +266,6 @@ void inv_remove(inv_ptr inv, slot_t slot)
 {
     obj_ptr obj;
 
-    assert(!_readonly(inv));
     assert(slot);
     obj = inv_obj(inv, slot);
     if (obj)
@@ -285,7 +274,6 @@ void inv_remove(inv_ptr inv, slot_t slot)
 
 void inv_clear(inv_ptr inv)
 {
-    assert(!_readonly(inv));
     vec_clear(inv->objects);
 }
 
@@ -304,29 +292,9 @@ bool inv_sort(inv_ptr inv)
             if (obj)
             {
                 obj->loc.slot = slot;
-                assert(obj->loc.where == (inv->flags & INV_LOC_MASK));
+                assert(obj->loc.where == inv->type);
             }
         }
-        #if 0
-        msg_print("Checking sorting ");
-        msg_boundary();
-        for (slot = start; slot <= stop; slot++)
-        {
-            obj_ptr fst = vec_get(inv->objects, slot);
-            obj_ptr snd = vec_get(inv->objects, slot + 1);
-            if (obj_cmp(fst, snd) > 0)
-            {
-                char name1[MAX_NLEN];
-                char name2[MAX_NLEN];
-                if (fst)
-                    object_desc(name1, fst, OD_COLOR_CODED);
-                if (snd)
-                    object_desc(name2, snd, OD_COLOR_CODED);
-                msg_format("%s > %s", fst ? name1 : "NULL", snd ? name2 : name2);
-                msg_boundary();
-            }
-        }
-        #endif
         return TRUE; /* So clients can notify the player ... */
     }
     return FALSE;
@@ -524,7 +492,7 @@ int inv_count_slots(inv_ptr inv, obj_p p)
 
 int inv_loc(inv_ptr inv)
 {
-    return inv->flags & INV_LOC_MASK;
+    return inv->type;
 }
 
 int inv_max(inv_ptr inv)
@@ -547,8 +515,10 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
 
     if (!stop)
         stop = vec_length(inv->objects) - 1;
-    
-    if (show_weights)
+
+    if (flags & INV_SHOW_FAIL_RATES)
+        xtra = 6;  /* " 98.7%" */
+    else if (show_weights)
         xtra = 9;  /* " 123.0 lbs" */
 
     inv_calculate_labels(inv, start, stop);
@@ -596,7 +566,18 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
                                 "extremely</color>, mighty</color> long object name</color>}");*/
                 doc_pop_style(doc);
             }
-            if (show_weights)
+            if (flags & INV_SHOW_FAIL_RATES)
+            {
+                if (obj_is_identified_fully(obj))
+                {
+                    int fail = device_calc_fail_rate(obj);
+                    if (fail == 1000)
+                        doc_printf(doc, "<tab:%d> %3d%%", doc_width(doc) - xtra, fail/10);
+                    else
+                        doc_printf(doc, "<tab:%d> %2d.%d%%", doc_width(doc) - xtra, fail/10, fail%10);
+                }
+            }
+            else if (show_weights)
             {
                 int wgt = obj->weight * obj->number;
                 doc_printf(doc, "<tab:%d> %3d.%d lbs", doc_width(doc) - xtra, wgt/10, wgt%10);
@@ -663,7 +644,6 @@ void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop)
 void inv_load(inv_ptr inv, savefile_ptr file)
 {
     int i, ct, slot;
-    assert(!_readonly(inv));
     vec_clear(inv->objects);
     ct = savefile_read_s32b(file);
     for (i = 0; i < ct; i++)

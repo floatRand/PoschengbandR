@@ -869,27 +869,11 @@ void do_cmd_quaff_potion(void)
  * include scrolls with no effects but recharge or identify, which are
  * cancelled before use. XXX Reading them still takes a turn, though.
  */
-static void do_cmd_read_scroll_aux(int item, bool known)
+static void do_cmd_read_scroll_aux(obj_ptr o_ptr)
 {
-    int         used_up, lev;
-    object_type *o_ptr;
-    int         number = 1;
-
-
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-    /* Object level */
-    lev = k_info[o_ptr->k_idx].level;
+    int  used_up, lev = k_info[o_ptr->k_idx].level;
+    int  number = 1;
+    bool known = object_is_aware(o_ptr);
 
     /* Take a turn */
     if (mut_present(MUT_SPEED_READER) || p_ptr->tim_shrike)
@@ -917,7 +901,7 @@ static void do_cmd_read_scroll_aux(int item, bool known)
     if (world_player)
     {
         if (flush_failure) flush();
-        msg_print("Nothing happen.");
+        msg_print("Nothing happens.");
         sound(SOUND_FAIL);
         return;
     }
@@ -999,7 +983,7 @@ static void do_cmd_read_scroll_aux(int item, bool known)
         used_up = FALSE;
     }
 
-    if (!(object_is_aware(o_ptr)))
+    if (!known)
     {
         virtue_add(VIRTUE_PATIENCE, -1);
         virtue_add(VIRTUE_CHANCE, 1);
@@ -1007,7 +991,7 @@ static void do_cmd_read_scroll_aux(int item, bool known)
     }
 
     object_tried(o_ptr);
-    if (device_noticed && !object_is_aware(o_ptr))
+    if (device_noticed && !known)
     {
         object_aware(o_ptr);
         stats_on_notice(o_ptr, o_ptr->number);
@@ -1028,88 +1012,55 @@ static void do_cmd_read_scroll_aux(int item, bool known)
     else
     {
         stats_on_use(o_ptr, number);
-        if (item >= 0)
-        {
-            inven_item_increase(item, -number);
-            inven_item_describe(item);
-            inven_item_optimize(item);
-        }
-        else
-        {
-            floor_item_increase(0 - item, -number);
-            floor_item_describe(0 - item);
-            floor_item_optimize(0 - item);
-        }
+        o_ptr->number -= number;
+        obj_release(o_ptr, 0);
     }
 }
 
-
-/*
- * Hook to determine if an object is readable
- */
-static bool item_tester_hook_readable(object_type *o_ptr)
+static bool _can_read(object_type *o_ptr)
 {
-    if ((o_ptr->tval==TV_SCROLL) || (o_ptr->tval==TV_PARCHMENT) || (o_ptr->name1 == ART_GHB) || (o_ptr->name1 == ART_POWER)) return (TRUE);
-
-    /* Assume not */
-    return (FALSE);
+    if (!o_ptr) return FALSE;
+    if (o_ptr->tval==TV_SCROLL || o_ptr->tval==TV_PARCHMENT || o_ptr->name1 == ART_GHB || o_ptr->name1 == ART_POWER)
+        return TRUE;
+    return FALSE;
 }
-
 
 void do_cmd_read_scroll(void)
 {
-    object_type *o_ptr;
-    int  item;
-    cptr q, s;
+    obj_prompt_t prompt = {0};
+    obj_ptr      o_ptr;
 
     if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
-    {
         set_action(ACTION_NONE);
-    }
 
     /* Check some conditions */
     if (p_ptr->blind)
     {
         msg_print("You can't see anything.");
-
         return;
     }
     if (no_lite())
     {
         msg_print("You have no light to read by.");
-
         return;
     }
     if (p_ptr->confused)
     {
         msg_print("You are too confused!");
-
         return;
     }
 
+    prompt.prompt = "Read which scroll? ";
+    prompt.error = "You have no scrolls to read.";
+    prompt.filter = _can_read;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
+    prompt.flags = INV_SHOW_FAIL_RATES;
 
-    /* Restrict choices to scrolls */
-    item_tester_hook = item_tester_hook_readable;
+    o_ptr = obj_prompt(&prompt);
+    if (!o_ptr) return ;
 
-    /* Get an item */
-    q = "Read which scroll? ";
-    s = "You have no scrolls to read.";
-    if (!get_item(&item, q, s, USE_INVEN | USE_FLOOR | SHOW_FAIL_RATES)) return;
-
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-    /* Read the scroll */
-    do_cmd_read_scroll_aux(item, object_is_aware(o_ptr));
+    do_cmd_read_scroll_aux(o_ptr);
 }
 
 /* Helper for Rods, Wands and Staves */

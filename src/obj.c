@@ -194,10 +194,8 @@ char obj_label(obj_ptr obj)
 /************************************************************************
  * Stacking
  ***********************************************************************/
-bool obj_can_combine(obj_ptr dest, obj_ptr obj, int options)
+bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
 {
-    /* HISTORIAN: object_similar_part and store_object_similar */
-    bool is_store = options & INV_STORE;
     int  i;
 
     if (dest == obj) return FALSE;
@@ -251,7 +249,7 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int options)
         /* Require full knowledge of both items. Ammo skips this check
          * so that you can shoot unidentifed stacks of arrows and have
          * them recombine later. */
-        if (!is_store)
+        if (loc != INV_STORE)
         {
             if (!object_is_known(dest) || !object_is_known(obj)) return FALSE;
         }
@@ -259,7 +257,7 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int options)
     case TV_BOLT:
     case TV_ARROW:
     case TV_SHOT:
-        if (!is_store)
+        if (loc != INV_STORE)
         {
             if (object_is_known(dest) != object_is_known(obj)) return FALSE;
             if (dest->feeling != obj->feeling) return FALSE;
@@ -319,7 +317,7 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int options)
     /* Shops always merge inscriptions, but never discounts. For the
      * player, merging of inscriptions and discounts is controlled
      * by options (stack_force_*) */
-    if (is_store)
+    if (loc == INV_STORE)
     {
         if (dest->discount != obj->discount) return FALSE;
     }
@@ -339,16 +337,14 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int options)
 /* combine obj into dest up to the max stack size.
  * decrease obj->number by the amount combined and 
  * return the amount combined. */
-int obj_combine(obj_ptr dest, obj_ptr obj, int options)
+int obj_combine(obj_ptr dest, obj_ptr obj, int loc)
 {
-    /* HISTORIAN: object_absorb and store_object_absorb */
-    bool is_store = options & INV_STORE;
-    int  amt;
+    int amt;
 
     assert(dest && obj);
     assert(dest->number <= OBJ_STACK_MAX);
 
-    if (!obj_can_combine(dest, obj, options)) return 0;
+    if (!obj_can_combine(dest, obj, loc)) return 0;
 
     if (dest->number + obj->number > OBJ_STACK_MAX)
         amt = OBJ_STACK_MAX - dest->number;
@@ -358,7 +354,7 @@ int obj_combine(obj_ptr dest, obj_ptr obj, int options)
     dest->number += amt;
     obj->number -= amt;
 
-    if (!is_store)
+    if (loc != INV_STORE)
     {
         if (object_is_known(obj)) obj_identify(dest);
 
@@ -418,8 +414,8 @@ void obj_inspect_ui(void)
     obj_prompt_t prompt = {0};
     obj_ptr      obj;
 
-    prompt.prompt = "<color:y>Examine which item?</color> ";
-    prompt.error = "<color:R>You have nothing to examine.</color>";
+    prompt.prompt = "Examine which item?";
+    prompt.error = "You have nothing to examine.";
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;
@@ -463,8 +459,8 @@ void obj_inscribe_ui(void)
     obj_prompt_t prompt = {0};
     obj_ptr      obj;
 
-    prompt.prompt = "<color:y>Inscribe which item?</color> ";
-    prompt.error = "<color:r>You have nothing to inscribe.</color>";
+    prompt.prompt = "Inscribe which item?";
+    prompt.error = "You have nothing to inscribe.";
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;

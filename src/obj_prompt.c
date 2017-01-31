@@ -52,7 +52,7 @@ static void _display(doc_ptr doc, vec_ptr tabs, int tab, obj_prompt_ptr prompt)
     int     i;
 
     doc_clear(doc);
-
+    doc_insert(doc, "<style:table>");
     /* Tab Headers */
     for (i = 0; i < vec_length(tabs); i++)
     {
@@ -63,27 +63,31 @@ static void _display(doc_ptr doc, vec_ptr tabs, int tab, obj_prompt_ptr prompt)
             i == tab ? 'G' : 'D',
             inv_name(inv));
     }
+    if (prompt->flags & INV_SHOW_FAIL_RATES)
+        doc_printf(doc, "<tab:%d><color:r>Fail</color>", doc_width(doc) - 5);
     doc_newline(doc);
 
     /* Active Tab */
-    inv_display(inv, 1, inv_max(inv), obj_exists, doc, NULL, 0);
+    inv_display(inv, 1, inv_max(inv), obj_exists, doc, NULL, prompt->flags);
     doc_newline(doc);
-    #if 0
-    doc_insert(doc, "[");
-    if (prompt->flags & OBJ_PROMPT_ALL)
-        doc_insert(doc, "<color:keypress>*</color> for all, ");
-    if (prompt->flags & OBJ_PROMPT_FORCE)
-        doc_insert(doc, "<color:keypress>F</color> for the Force, ");
-    if (vec_length(tabs) > 1)
-        doc_insert(doc, "<color:keypress>/</color> for next tab, ");
-    doc_insert(doc, "<color:keypress>?</color> for help]\n");
-    #endif 
     if (prompt->prompt)
-        doc_insert(doc, prompt->prompt);
+        doc_printf(doc, "<color:y>%s</color> ", prompt->prompt);
     else
         doc_insert(doc, "<color:y>Choice</color>: ");
 
+    doc_insert(doc, "</style>");
     _sync_doc(doc);
+}
+
+static int _find_tab(vec_ptr tabs, int loc)
+{
+    int i;
+    for (i = 0; i < vec_length(tabs); i++)
+    {
+        inv_ptr inv = vec_get(tabs, i);
+        if (inv_loc(inv) == loc) return i;
+    }
+    return -1;
 }
 
 obj_ptr obj_prompt(obj_prompt_ptr prompt)
@@ -91,14 +95,30 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
     obj_ptr  result = NULL;
     vec_ptr  tabs = _get_tabs(prompt);
     doc_ptr  doc;
-    int      tab = 0;
+    int      tab = 0, tmp;
 
     if (!vec_length(tabs))
     {
         if (prompt->error)
-            msg_print(prompt->error);
+            msg_format("<color:r>%s</color>", prompt->error);
         vec_free(tabs);
         return NULL;
+    }
+
+    if (REPEAT_PULL(&tmp))
+    {
+        int repeat_tab = _find_tab(tabs, tmp);
+        if (repeat_tab >= 0 && REPEAT_PULL(&tmp))
+        {
+            inv_ptr inv = vec_get(tabs, repeat_tab);
+            slot_t  slot = inv_label_slot(inv, tmp);
+            if (slot)
+            {
+                result = inv_obj(inv, slot);
+                vec_free(tabs);
+                return result;
+            }
+        }
     }
 
     doc = doc_alloc(MIN(80, ui_map_rect().cx));
@@ -113,6 +133,27 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
 
         cmd = inkey();
         if (cmd == ' ') continue;
+        if (cmd == '-')
+        {
+            /* Legacy: In the olden days, - was used to autopick
+             * the floor item. Of course, you had to do it blind
+             * since it was never displayed. */
+            int floor_tab = _find_tab(tabs, INV_FLOOR);
+            if (floor_tab >= 0)
+            {
+                tab = floor_tab;
+                inv = vec_get(tabs, tab);
+                if (inv_count_slots(inv, obj_exists) == 1)
+                {
+                    slot = inv_first(inv, obj_exists);
+                    assert(slot);
+                    result = inv_obj(inv, slot);
+                    REPEAT_PUSH(cmd);
+                    break;
+                }
+            }
+            continue;
+        }
         if (prompt->cmd_handler)
         {
             if (prompt->cmd_handler(doc, inv, cmd))
@@ -122,6 +163,8 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
         if (slot)
         {
             result = inv_obj(inv, slot);
+            REPEAT_PUSH(inv_loc(inv));
+            REPEAT_PUSH(cmd);
             break;
         }
         if (isupper(cmd))
@@ -153,6 +196,8 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
             result = obj_alloc();
             result->loc.where = inv_loc(inv);
             result->loc.slot = _FAKE_SLOT_ALL;
+            REPEAT_PUSH(inv_loc(inv));
+            REPEAT_PUSH(cmd);
             break;
         }
         else if ((prompt->flags & OBJ_PROMPT_FORCE) && cmd == 'F')
@@ -160,6 +205,8 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
             result = obj_alloc();
             result->loc.where = inv_loc(inv);
             result->loc.slot = _FAKE_SLOT_FORCE;
+            REPEAT_PUSH(inv_loc(inv));
+            REPEAT_PUSH(cmd);
             break;
         }
         else if (cmd == '?')

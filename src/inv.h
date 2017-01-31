@@ -23,18 +23,15 @@ extern slot_t  label_slot(char label);
 
 typedef struct inv_s inv_t, *inv_ptr; /* Hidden/Abstract */
 
-/* The following are used both as flags to inv_alloc() and
- * as a byte tag for obj_t.loc.where */
-#define INV_EQUIP     0x0001
-#define INV_PACK      0x0002
-#define INV_QUIVER    0x0004
-#define INV_STORE     0x0008 /* TODO: Rewrite stores to use inv_t */
-#define INV_FLOOR     0x0010
-#define INV_LOC_MASK  (INV_EQUIP | INV_PACK | INV_QUIVER | INV_STORE | INV_FLOOR)
-#define INV_READ_ONLY 0x0020
+#define INV_EQUIP     1
+#define INV_PACK      2
+#define INV_QUIVER    3
+#define INV_STORE     4
+#define INV_FLOOR     5
+#define INV_HOME      6
 
 /* Creation */
-extern inv_ptr inv_alloc(cptr name, int max, int flags); /* max=0 is unbounded */
+extern inv_ptr inv_alloc(cptr name, int type, int max);
 extern inv_ptr inv_copy(inv_ptr src);
 extern inv_ptr inv_filter(inv_ptr src, obj_p p);
 extern inv_ptr inv_filter_floor(obj_p p);     /* player's current tile */
@@ -82,7 +79,6 @@ extern cptr    inv_name(inv_ptr inv);
  * We respect show_weights (provided flags don't override) as well as show_item_graph */
 #define INV_SHOW_FAIL_RATES 0x0001
 #define INV_SHOW_VALUE      0x0002
-#define INV_SHOW_FULL_INFO  0x0004
 extern void inv_display(
     /* What we display */
     inv_ptr inv,

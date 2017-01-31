@@ -8,7 +8,7 @@ static int     _capacity = 100;
 void quiver_init(void)
 {
    inv_free(_inv);
-   _inv = inv_alloc("Quiver", QUIVER_MAX, INV_QUIVER); 
+   _inv = inv_alloc("Quiver", INV_QUIVER, QUIVER_MAX); 
 }
 
 void quiver_display(doc_ptr doc, obj_p p, int flags)
