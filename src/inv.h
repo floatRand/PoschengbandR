@@ -91,9 +91,9 @@ extern void inv_display(
 );
 extern char    inv_slot_label(inv_ptr inv, slot_t slot);
 extern slot_t  inv_label_slot(inv_ptr inv, char label);
-
-/* You shouldn't need to do this yourself. inv_display will calculate labels.
- * extern void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop);*/
+/* Normally, you don't need to call this since you will usually display()
+ * before inspecting labels. Except for REPEAT_PULL() ... sigh */
+extern void    inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop);
 
 /* Savefiles */
 extern void    inv_load(inv_ptr inv, savefile_ptr file);

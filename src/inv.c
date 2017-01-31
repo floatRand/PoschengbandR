@@ -506,8 +506,6 @@ cptr inv_name(inv_ptr inv)
 }
 
 /* Menus and Display */
-static void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop);
-
 void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, slot_display_f slot_f, int flags)
 {
     slot_t slot;
@@ -568,7 +566,7 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
             }
             if (flags & INV_SHOW_FAIL_RATES)
             {
-                if (obj_is_identified_fully(obj))
+                if (object_is_aware(obj) && obj_is_identified_fully(obj))
                 {
                     int fail = device_calc_fail_rate(obj);
                     if (fail == 1000)
@@ -612,6 +610,8 @@ slot_t inv_label_slot(inv_ptr inv, char label)
 void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop)
 {
     slot_t slot;
+    if (!stop)
+        stop = vec_length(inv->objects) - 1;
     inv_for_each(inv, obj_clear_scratch);
     /* Initialize by ordinal */
     for (slot = start; slot <= stop; slot++)

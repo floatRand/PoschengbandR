@@ -111,7 +111,10 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
         if (repeat_tab >= 0 && REPEAT_PULL(&tmp))
         {
             inv_ptr inv = vec_get(tabs, repeat_tab);
-            slot_t  slot = inv_label_slot(inv, tmp);
+            slot_t  slot;
+
+            inv_calculate_labels(inv, 1, 0);
+            slot = inv_label_slot(inv, tmp);
             if (slot)
             {
                 result = inv_obj(inv, slot);
