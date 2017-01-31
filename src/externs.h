@@ -624,7 +624,7 @@ extern int is_autopick(object_type *o_ptr);
 extern void autopick_alter_item(int item, bool destroy); /* DEAD */
 extern void autopick_alter_obj(obj_ptr o_ptr, bool allow_destroy);
 extern void autopick_delayed_alter(void);
-extern bool autopick_pickup_items(cave_type *c_ptr);
+extern void autopick_get_floor(void);
 extern bool autopick_autoregister(object_type *o_ptr);
 extern void do_cmd_edit_autopick(void);
 extern int pack_find_device(int effect);

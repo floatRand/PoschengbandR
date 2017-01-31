@@ -35,6 +35,7 @@ extern inv_ptr inv_alloc(cptr name, int type, int max);
 extern inv_ptr inv_copy(inv_ptr src);
 extern inv_ptr inv_filter(inv_ptr src, obj_p p);
 extern inv_ptr inv_filter_floor(obj_p p);     /* player's current tile */
+extern inv_ptr inv_filter_home(obj_p p);
 extern void    inv_free(inv_ptr inv);
 
 /* Adding, Removing and Sorting */

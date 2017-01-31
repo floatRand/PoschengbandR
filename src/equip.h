@@ -20,10 +20,11 @@ extern void    equip_ui(void);
 extern void    equip_wield_ui(void); 
 extern void    equip_takeoff_ui(void);
 
-extern void    equip_wield_aux(obj_ptr obj, slot_t slot); 
-extern void    equip_takeoff_aux(slot_t slot); /* takeoff, drop, throw */
 extern void    equip_display(doc_ptr doc, obj_p p, int flags);
-extern void    equip_remove(slot_t slot);
+
+extern void    equip_wield(obj_ptr obj, slot_t slot);
+extern void    equip_takeoff(slot_t slot); /* takeoff, drop, throw */
+extern void    equip_remove(slot_t slot);  /* helper fn ... try equip_takeoff instead */
 
 extern void    equip_calc_bonuses(void);
 extern inv_ptr equip_filter(obj_p p);

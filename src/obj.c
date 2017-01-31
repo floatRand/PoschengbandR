@@ -441,7 +441,6 @@ static bool _inscriber(doc_ptr doc, inv_ptr inv, char cmd)
         else
             strcpy(insc, "");
 
-
         doc_clear(doc);
         doc_printf(doc, "Inscribing %s.\n", name);
         doc_printf(doc, "Inscription: ");

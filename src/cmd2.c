@@ -2565,7 +2565,7 @@ void do_cmd_get(void)
      * enter a shop) */
     if (cave[py][px].o_idx)
     {
-        if (pack_get())
+        if (pack_get_floor())
             energy_use = 100;
         else /* Pack is full or the user canceled the easy_floor menu */
             return;

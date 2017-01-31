@@ -1679,9 +1679,9 @@ bool carry(bool pickup)
     /* Handle stuff */
     handle_stuff();
 
-    /* Automatically pickup/destroy/inscribe items */
+    /* Automatically pickup/destroy/inscribe items
     if (autopick_pickup_items(c_ptr))
-        result = TRUE;
+        result = TRUE;*/
 
 #ifdef ALLOW_EASY_FLOOR
 

@@ -1125,27 +1125,28 @@ static bool _smith_p(object_type *o_ptr)
 
 void wiz_obj_smith(void)
 {
-    int          item;
-    object_type *o_ptr;
-    object_type  copy;
+    obj_ptr      obj;
+    obj_t        copy;
+    obj_prompt_t prompt = {0};
 
-    item_tester_hook = _smith_p;
-    item_tester_no_ryoute = TRUE;
+    prompt.prompt = "Smith which object?";
+    prompt.error = "You have nothing to work with.";
+    prompt.filter = _smith_p;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_FLOOR;
 
-    if (!get_item(&item, "Smith which object? ", "You have nothing to work with.", USE_INVEN | USE_EQUIP | USE_FLOOR))
-        return;
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[0 - item];
-    
-    copy = *o_ptr;
+    obj = obj_prompt(&prompt);
+    if (!obj) return;
+
+    copy = *obj;
     obj_identify_fully(&copy);
 
     msg_line_clear();
     if (_smith_object(&copy) == _OK)
     {
-        *o_ptr = copy;
+        *obj = copy;
+        obj_release(obj, 0);
         p_ptr->update |= PU_BONUS;
         p_ptr->notice |= PN_COMBINE | PN_REORDER;
         p_ptr->window |= PW_INVEN;

@@ -76,84 +76,107 @@ void pack_carry(obj_ptr obj)
         pack_push_overflow(obj);
     p_ptr->update |= PU_BONUS;
     p_ptr->window |= PW_INVEN;
-}
-
-void pack_get_aux(int o_idx)
-{
-    object_type *o_ptr = &o_list[o_idx];
-    char         name[MAX_NLEN];
-    class_t     *class_ptr = get_class();
-    int          i;
-
-    if (class_ptr->get_object)
-        class_ptr->get_object(o_ptr);
-
-    object_desc(name, o_ptr, OD_COLOR_CODED);
-    msg_format("You have %s.", name);
-
-    for (i = 0; i < max_quests; i++)
-    {
-        if ((quest[i].type == QUEST_TYPE_FIND_ARTIFACT) &&
-            (quest[i].status == QUEST_STATUS_TAKEN) &&
-               (quest[i].k_idx == o_ptr->name1 || quest[i].k_idx == o_ptr->name3))
-        {
-            quest[i].status = QUEST_STATUS_COMPLETED;
-            quest[i].complev = p_ptr->lev;
-            cmsg_print(TERM_L_BLUE, "You completed your quest!");
-        }
-    }
-    pack_carry(o_ptr);
-    delete_object_idx(o_idx);
-
-    if (o_ptr->tval == TV_RUNE)
+    if (obj->tval == TV_RUNE)
         p_ptr->update |= PU_BONUS;
-
 }
 
-bool pack_get(void)
+/* Helper for pack_get_floor ... probably s/b private but the autopicker needs it */
+void pack_get(obj_ptr obj)
 {
-    bool       result = FALSE;
-    cave_type *c_ptr = &cave[py][px];
-    int        this_o_idx, next_o_idx = 0;
+    char     name[MAX_NLEN];
+    class_t *class_ptr = get_class();
+    int      i;
 
-    if (autopick_pickup_items(c_ptr))
-        result = TRUE;
+    object_desc(name, obj, OD_COLOR_CODED);
 
-    for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
+    if (obj->tval == TV_GOLD)
     {
-        object_type *o_ptr = &o_list[this_o_idx];
+        int value = obj->pval;
 
-        next_o_idx = o_ptr->next_o_idx;
+        msg_format("You collect %d gold pieces worth of %s.",
+               value, name);
 
-        if (o_ptr->tval == TV_GOLD)
-        {
-            char name[MAX_NLEN];
-            int  value = o_ptr->pval;
+        sound(SOUND_SELL);
 
-            object_desc(name, o_ptr, OD_COLOR_CODED);
-            delete_object_idx(this_o_idx);
+        p_ptr->au += value;
+        stats_on_gold_find(value);
 
-            msg_format("You collect %d gold pieces worth of %s.",
-                   value, name);
+        p_ptr->redraw |= PR_GOLD;
 
-            sound(SOUND_SELL);
+        if (prace_is_(RACE_MON_LEPRECHAUN))
+            p_ptr->update |= PU_BONUS | PU_HP | PU_MANA;
 
-            p_ptr->au += value;
-            stats_on_gold_find(value);
-
-            p_ptr->redraw |= (PR_GOLD);
-
-            if (prace_is_(RACE_MON_LEPRECHAUN))
-                p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
-
-            result = TRUE;
-        }
-        else
-        {
-            pack_get_aux(this_o_idx);
-            result = TRUE;
-        }
+        obj->number = 0;
     }
+    else
+    {
+        if (class_ptr->get_object)
+            class_ptr->get_object(obj);
+
+        msg_format("You have %s.", name);
+
+        /* TODO: quest_check_obj(obj), quest_check_mon(mon), etc. */
+        for (i = 0; i < max_quests; i++)
+        {
+            if ((quest[i].type == QUEST_TYPE_FIND_ARTIFACT) &&
+                (quest[i].status == QUEST_STATUS_TAKEN) &&
+                   (quest[i].k_idx == obj->name1 || quest[i].k_idx == obj->name3))
+            {
+                quest[i].status = QUEST_STATUS_COMPLETED;
+                quest[i].complev = p_ptr->lev;
+                cmsg_print(TERM_L_BLUE, "You completed your quest!");
+            }
+        }
+        pack_carry(obj);
+    }
+    obj_release(obj, OBJ_RELEASE_QUIET);
+}
+
+static bool _get_floor(inv_ptr floor)
+{
+    int          ct = inv_count(floor, NULL);
+    obj_prompt_t prompt = {0};
+    obj_ptr      obj;
+
+    /* Autopicker cleared 'em all? */
+    if (!ct) return FALSE;
+
+    /* Autoget a single floor object */
+    if (ct == 1) 
+    {
+        pack_get(inv_obj(floor, 1));
+        return TRUE;
+    }
+
+    /* Prompt user for multiple floor objects */
+    prompt.prompt = "Get which item?";
+    prompt.where[0] = INV_FLOOR;
+    prompt.flags = OBJ_PROMPT_ALL; /* '*' gets 'em all */
+
+    obj = obj_prompt(&prompt);
+    if (!obj)
+        return FALSE;
+    if (obj_prompt_all(obj))
+    {
+        inv_for_each(floor, pack_get);
+        obj_release(obj, OBJ_RELEASE_QUIET);
+        return TRUE;
+    }
+    pack_get(obj);
+    return TRUE;
+}
+
+bool pack_get_floor(void)
+{
+    bool    result = FALSE;
+    inv_ptr floor;
+
+    autopick_get_floor(); /* no energy charge */
+
+    floor = inv_filter_floor(NULL);
+    result = _get_floor(floor);
+    inv_free(floor);
+
     return result;
 }
 
@@ -243,6 +266,7 @@ static void pack_push_overflow(obj_ptr obj)
     new_obj->marked |= OM_TOUCHED;
     autopick_alter_obj(new_obj, FALSE);
     vec_push(_overflow, new_obj);
+    obj->number = 0;
 }
 
 bool pack_overflow(void)

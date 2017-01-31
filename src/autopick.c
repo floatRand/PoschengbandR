@@ -2348,108 +2348,95 @@ bool autopick_auto_id(object_type *o_ptr)
 }
 
 /*
- * Automatically pickup/destroy items in this grid.
+ * Automatically pickup/destroy items in player's current grid
  */
-bool autopick_pickup_items(cave_type *c_ptr)
+static void _get_obj(obj_ptr obj)
 {
-    bool result = FALSE;
-    s16b this_o_idx, next_o_idx = 0;
-    bool auto_id = p_ptr->auto_id;
-    bool auto_pseudo_id = p_ptr->auto_pseudo_id;
+    int idx;
+    assert(obj);
 
-    /* Scan the pile of objects */
-    for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
+    /* Gold always picks up */
+    if (obj->tval == TV_GOLD)
     {
-        int idx;
+        pack_get(obj);
+        return;
+    }
 
-        /* Acquire object */
-        object_type *o_ptr = &o_list[this_o_idx];
+    /* Player Sensing */
+    if (p_ptr->auto_id)
+    {
+        identify_item(obj);
+        equip_learn_flag(OF_LORE2);
+    }
+    else if (p_ptr->auto_pseudo_id)
+    {
+        _sense_object_floor(obj);
+        equip_learn_flag(OF_LORE1);
+    }
 
-        /* Acquire next object */
-        next_o_idx = o_ptr->next_o_idx;
+    idx = is_autopick(obj);
 
-        /* Identify or Pseudo-Identify before applying pickup rules */
-        if (o_ptr->tval != TV_GOLD)
+    /* AutoID (?unaware items) */
+    if (idx >= 0 && autopick_list[idx].action & DO_AUTO_ID)
+    {
+        if (autopick_auto_id(obj))
         {
-            if (auto_id)
-            {
-                identify_item(o_ptr);
-                equip_learn_flag(OF_LORE2);
-            }
-            else if (auto_pseudo_id)
-            {
-                _sense_object_floor(o_ptr);
-                equip_learn_flag(OF_LORE1);
-            }
-        }
-        else
-            result = TRUE; /* got some gold */
-
-        idx = is_autopick(o_ptr);
-
-        if (idx >= 0 && autopick_list[idx].action & DO_AUTO_ID)
-        {
-            if (autopick_auto_id(o_ptr))
-            {
-                int new_idx = is_autopick(o_ptr); /* requery for destroy/pickup/inscribe once known */
-                if (destroy_debug)
-                    msg_autopick(idx, "AutoID");
-                if (new_idx >= 0)
-                    idx = new_idx;
-            }
-        }
-
-        /* Item index for floor -1,-2,-3,... */
-        auto_inscribe_item(o_ptr, idx); /* after auto-id, please! */
-
-        if (idx >= 0 &&
-            (autopick_list[idx].action & (DO_AUTOPICK | DO_QUERY_AUTOPICK)))
-        {
-            disturb(0,0);
-
+            int new_idx = is_autopick(obj); /* requery for destroy/pickup/inscribe once known */
             if (destroy_debug)
-                msg_autopick(idx, "Pickup");
-
-            if (autopick_list[idx].action & DO_QUERY_AUTOPICK)
-            {
-                char out_val[MAX_NLEN+20];
-                char o_name[MAX_NLEN];
-
-                if (o_ptr->marked & OM_NO_QUERY)
-                {
-                    /* Already answered as 'No' */
-                    continue;
-                }
-
-                /* Describe the object */
-                object_desc(o_name, o_ptr, OD_COLOR_CODED);
-
-                sprintf(out_val, "Pick up %s? ", o_name);
-
-                if (!get_check(out_val))
-                {
-                    /* Hack - remember that the item has given a message here. */
-                    o_ptr->marked |= (OM_NOMSG | OM_NO_QUERY);
-                    continue;
-                }
-
-            }
-            pack_get_aux(this_o_idx);
-            result = TRUE;
+                msg_autopick(idx, "AutoID");
+            if (new_idx >= 0)
+                idx = new_idx;
         }
+    }
 
-        /*
-         * Do auto-destroy;
-         * When always_pickup is 'yes', we disable
-         * auto-destroyer from autopick function, and do only
-         * easy-auto-destroyer.
-         */
-        else
+    /* Inscribe */
+    auto_inscribe_item(obj, idx);
+
+    /* Pickup */
+    if (idx >= 0 &&
+        (autopick_list[idx].action & (DO_AUTOPICK | DO_QUERY_AUTOPICK)))
+    {
+        disturb(0,0);
+
+        if (destroy_debug)
+            msg_autopick(idx, "Pickup");
+
+        if (autopick_list[idx].action & DO_QUERY_AUTOPICK)
         {
-            auto_destroy_item(o_ptr, idx);
+            char out_val[MAX_NLEN+20];
+            char o_name[MAX_NLEN];
+
+            if (obj->marked & OM_NO_QUERY)
+            {
+                /* Already answered as 'No' */
+                return;
+            }
+
+            /* Describe the object */
+            object_desc(o_name, obj, OD_COLOR_CODED);
+
+            sprintf(out_val, "Pick up %s? ", o_name);
+
+            if (!get_check(out_val))
+            {
+                obj->marked |= (OM_NOMSG | OM_NO_QUERY);
+                return;
+            }
+
         }
-    } /* for () */
-    return result;
+        pack_get(obj);
+        return;
+    }
+
+    /* Autodestroy (Later) */
+    auto_destroy_item(obj, idx);
+}
+
+void autopick_get_floor(void)
+{
+    inv_ptr floor = inv_filter_floor(NULL);
+    inv_for_each(floor, _get_obj);
+    inv_free(floor);
 }
 
 

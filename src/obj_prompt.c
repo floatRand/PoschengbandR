@@ -170,18 +170,6 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
             REPEAT_PUSH(cmd);
             break;
         }
-        if (isupper(cmd))
-        {
-            slot = inv_label_slot(inv, tolower(cmd));
-            if (slot)
-            {
-                doc_clear(doc);
-                obj_display_doc(inv_obj(inv, slot), doc);
-                _sync_doc(doc);
-                cmd = inkey();
-                continue;
-            }
-        }
         if (cmd == '/')
         {
             tab++;
@@ -216,6 +204,18 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
         {
             doc_display_help("command.txt", "SelectingObjects");
         }
+        else if (isupper(cmd))
+        {
+            slot = inv_label_slot(inv, tolower(cmd));
+            if (slot)
+            {
+                doc_clear(doc);
+                obj_display_doc(inv_obj(inv, slot), doc);
+                _sync_doc(doc);
+                cmd = inkey();
+                continue;
+            }
+        }
         else if (cmd == ESCAPE || cmd == '\r')
         {
             break;
@@ -231,21 +231,21 @@ obj_ptr obj_prompt(obj_prompt_ptr prompt)
 
 bool obj_prompt_all(obj_ptr obj)
 {
-    assert(obj);
+    if (!obj) return FALSE;
     if (obj->loc.slot == _FAKE_SLOT_ALL) return TRUE;
     return FALSE;
 }
 
 bool obj_prompt_force(obj_ptr obj)
 {
-    assert(obj);
+    if (!obj) return FALSE;
     if (obj->loc.slot == _FAKE_SLOT_FORCE) return TRUE;
     return FALSE;
 }
 
 static bool obj_prompt_special(obj_ptr obj)
 {
-    assert(obj);
+    if (!obj) return FALSE;
     if (obj->loc.slot >= _FAKE_SLOT_ALL) return TRUE;
     return FALSE;
 }
@@ -255,7 +255,7 @@ void obj_release(obj_ptr obj, int options)
     char name[MAX_NLEN];
     bool quiet = (options & OBJ_RELEASE_QUIET) ? TRUE : FALSE;
 
-    assert(obj);
+    if (!obj) return;
     if (obj_prompt_special(obj))
     {
         obj_free(obj);

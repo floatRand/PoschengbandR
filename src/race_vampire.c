@@ -269,7 +269,7 @@ void equip_shuffle(cptr tag)
             inven_item_increase(i, -1);
             inven_item_optimize(i);
 
-            equip_wield_aux(&copy, slot);
+            equip_wield(&copy, slot);
         }
     }
 }

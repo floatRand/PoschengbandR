@@ -517,7 +517,7 @@ void equip_wield_ui(void)
     obj_release(obj, OBJ_RELEASE_QUIET);
 }
 
-void equip_wield_aux(obj_ptr obj, slot_t slot)
+void equip_wield(obj_ptr obj, slot_t slot)
 {
     _wield(obj, slot);
     _wield_after(slot);
@@ -640,7 +640,7 @@ static void _wield(obj_ptr obj, slot_t slot)
     obj_ptr old_obj = inv_obj(_inv, slot);
 
     if (old_obj)
-        equip_takeoff_aux(slot);
+        equip_takeoff(slot);
 
     inv_add_at(_inv, obj, slot);
 }
@@ -734,7 +734,7 @@ void equip_takeoff_ui(void)
     obj_release(obj, 0);
 }
 
-void equip_takeoff_aux(slot_t slot)
+void equip_takeoff(slot_t slot)
 {
     obj_ptr obj = equip_obj(slot);
 
@@ -742,7 +742,7 @@ void equip_takeoff_aux(slot_t slot)
     {
         _unwield(obj);
         _unwield_after();
-        obj_release(obj, 0);
+        obj_release(obj, OBJ_RELEASE_QUIET);
     }
 }
 
@@ -802,6 +802,9 @@ void _unwield_before(obj_ptr obj)
 
 void _unwield(obj_ptr obj)
 {
+    char name[MAX_NLEN];
+    object_desc(name, obj, OD_COLOR_CODED);
+    msg_format("You are no longer wearing %s.", name);
     pack_carry(obj);
 
     p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;
@@ -1703,7 +1706,7 @@ void equip_on_change_race(void)
             if (new_slot && obj->number == 1)
             {
                 obj->marked &= ~OM_WORN;
-                equip_wield_aux(obj, new_slot);
+                equip_wield(obj, new_slot);
                 pack_remove(slot);
             }
         }

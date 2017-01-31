@@ -152,7 +152,7 @@ void py_birth_obj(object_type *o_ptr)
 
     slot = equip_first_empty_slot(o_ptr);
     if (slot && o_ptr->number == 1)
-        equip_wield_aux(o_ptr, slot);
+        equip_wield(o_ptr, slot);
     else
         pack_carry(o_ptr);
 }

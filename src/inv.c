@@ -70,6 +70,16 @@ inv_ptr inv_copy(inv_ptr src)
     return result;
 }
 
+static bool _filter(obj_ptr obj, obj_p p)
+{
+    if (!obj) return FALSE;
+    if (!p) return TRUE;
+    return p(obj);
+}
+
+/* Filtering preserves the slots, but nulls out objects
+ * not meeting the predicate. You should never sort a
+ * filtered inventory. (cf obj_prompt) */
 inv_ptr inv_filter(inv_ptr src, obj_p p)
 {
     inv_ptr result = malloc(sizeof(inv_t));
@@ -84,7 +94,7 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
     {
         obj_ptr obj = vec_get(src->objects, i);
 
-        if (!p || p(obj))
+        if (_filter(obj, p))
             vec_add(result->objects, obj);
         else
             vec_add(result->objects, NULL);
@@ -92,6 +102,8 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
     return result;
 }
 
+/* floor objects form a linked list. There is no slot structure to
+ * preserve. This 'fake inventory' is useful for obj_prompt */
 inv_ptr inv_filter_floor(obj_p p)
 {
     inv_ptr    result = malloc(sizeof(inv_t));
@@ -110,8 +122,34 @@ inv_ptr inv_filter_floor(obj_p p)
 
         assert(obj);
         next_o_idx = obj->next_o_idx;
-        if (!p || p(obj))
+        if (_filter(obj, p))
             vec_add(result->objects, obj);
+    }
+    return result;
+}
+
+/* Eventually, shops will be rewritten and this can disappear.
+ * For now, it is useful for a couple of obj_prompt scenarios
+ * like Inspect. We do not preserve slot structure. */
+inv_ptr inv_filter_home(obj_p p)
+{
+    inv_ptr     result = malloc(sizeof(inv_t));
+    store_type *st_ptr = &town[1].store[STORE_HOME];
+    int         i;
+
+    result->name = "Home";
+    result->type = INV_HOME;
+    result->max = 0;
+    result->objects = vec_alloc(NULL); /* shop owns the objects! */
+    vec_add(result->objects, NULL); /* slot 0 is invalid */
+
+    for (i = 0; i < st_ptr->stock_num; i++)
+    {
+        obj_ptr obj = &st_ptr->stock[i];
+        assert(obj);
+        if (!obj->k_idx) continue;
+        if (!_filter(obj, p)) continue;
+        vec_add(result->objects, obj);
     }
     return result;
 }
@@ -336,7 +374,7 @@ slot_t inv_next(inv_ptr inv, obj_p p, slot_t prev_match)
     for (slot = prev_match + 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (obj && (!p || p(obj))) return slot;
+        if (_filter(obj, p)) return slot;
     }
     return 0;
 }
@@ -347,7 +385,7 @@ slot_t inv_last(inv_ptr inv, obj_p p)
     for (slot = vec_length(inv->objects) - 1; slot > 0; slot--)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (obj && (!p || p(obj))) return slot;
+        if (_filter(obj, p)) return slot;
     }
     return 0;
 }
@@ -407,9 +445,8 @@ void inv_for_each_that(inv_ptr inv, obj_f f, obj_p p)
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (!obj) continue;
-        if (p && !p(obj)) continue;
-        f(obj);
+        if (_filter(obj, p))
+            f(obj);
     }
 }
 
@@ -430,7 +467,7 @@ slot_t inv_random_slot(inv_ptr inv, obj_p p)
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (obj && (!p || p(obj)))
+        if (_filter(obj, p))
             ct++;
     }
 
@@ -440,7 +477,7 @@ slot_t inv_random_slot(inv_ptr inv, obj_p p)
         for (slot = 1; slot < vec_length(inv->objects); slot++)
         {
             obj_ptr obj = inv_obj(inv, slot);
-            if (obj && (!p || p(obj)))
+            if (_filter(obj, p))
             {
                 if (!which) return slot;
                 which--;
@@ -458,7 +495,7 @@ int inv_weight(inv_ptr inv, obj_p p)
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (obj && (!p || p(obj)))
+        if (_filter(obj, p))
             wgt += obj->weight * obj->number;
     }
     return wgt;
@@ -471,7 +508,7 @@ int inv_count(inv_ptr inv, obj_p p)
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (obj && (!p || p(obj)))
+        if (_filter(obj, p))
             ct += obj->number;
     }
     return ct;
@@ -484,7 +521,7 @@ int inv_count_slots(inv_ptr inv, obj_p p)
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (obj && (!p || p(obj)))
+        if (_filter(obj, p))
             ct++;
     }
     return ct;
@@ -526,6 +563,9 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
     {
         obj_ptr obj = inv_obj(inv, slot);
 
+        /* Unlike other _filters, we show empty slots if
+         * p is omitted. To suppress this, pass obj_exists
+         * for a predicate (This is for INV_EQUIP). */
         if (!obj)
         {
             if (!p)
@@ -537,9 +577,8 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
                     slot_f(doc, slot);
                 doc_insert(doc, "<color:D>Empty</color>\n");
             }
-            continue;
         }
-        if (!p || p(obj))
+        else if (_filter(obj, p))
         {
             char name[MAX_NLEN];
             doc_style_t style = *doc_current_style(doc);
@@ -620,6 +659,11 @@ void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop)
         if (obj)
             obj->scratch = slot_label(slot);
     }
+
+    /* Inscription overrides don't function is shops */
+    if (inv->type == INV_STORE || inv->type == INV_HOME)
+        return;
+
     /* Override by inscription (e.g. @mf) */
     for (slot = start; slot <= stop; slot++)
     {
