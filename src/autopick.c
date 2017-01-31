@@ -2042,17 +2042,10 @@ static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
 /*
  *  Auto-destroy marked item
  */
-static void autopick_delayed_alter_aux(int item, bool detailed_msg)
+static bool _detailed_msg = FALSE;
+static void autopick_delayed_alter_obj(obj_ptr o_ptr)
 {
-    object_type *o_ptr;
-
-    /* Get the item (in the pack) */
-    if (item >= 0) o_ptr = &inventory[item];
-
-    /* Get the item (on the floor) */
-    else o_ptr = &o_list[0 - item];
-
-    if (o_ptr->k_idx && (o_ptr->marked & OM_AUTODESTROY))
+    if (o_ptr->marked & OM_AUTODESTROY)
     {
         char     o_name[MAX_NLEN];
         bool     msg = FALSE;
@@ -2075,23 +2068,13 @@ static void autopick_delayed_alter_aux(int item, bool detailed_msg)
 
         if (!handled)
         {
-            if (detailed_msg)
+            if (_detailed_msg)
                 object_desc(o_name, o_ptr, OD_COLOR_CODED);
             msg = TRUE;
         }
 
-        /* Eliminate the item (from the pack) */
-        if (item >= 0)
-        {
-            inven_item_increase(item, -(o_ptr->number));
-            inven_item_optimize(item);
-        }
-
-        /* Eliminate the item (from the floor) */
-        else
-        {
-            delete_object_idx(0 - item);
-        }
+        o_ptr->number = 0;
+        obj_release(o_ptr, 0);
 
         /* Print a message, but let's decrease message spam.
            For example:
@@ -2101,12 +2084,17 @@ static void autopick_delayed_alter_aux(int item, bool detailed_msg)
            forces a -more- prompt. */
         if (msg)
         {
-            if (detailed_msg)
+            if (_detailed_msg)
                 msg_format("Auto-destroying %s.", o_name);
             else
                 msg_print("Auto-destroying.");
         }
     }
+}
+
+static bool _obj_marked_autodestroy(obj_ptr obj)
+{
+    return (obj->marked & OM_AUTODESTROY) ? TRUE : FALSE;
 }
 
 static bool _show_detailed_msg(void)
@@ -2115,11 +2103,8 @@ static bool _show_detailed_msg(void)
     int  item;
 
     /* Always give details when destroying from the pack. */
-    for (item = INVEN_TOTAL - 1; item >= 0 ; item--)
-    {
-        if (inventory[item].marked & OM_AUTODESTROY)
-            return TRUE;
-    }
+    if (pack_find_first(_obj_marked_autodestroy))
+        return TRUE;
 
     /* Only give details when destroying floor objects if there
        are more than one possible object */
@@ -2139,22 +2124,19 @@ static bool _show_detailed_msg(void)
  */
 void autopick_delayed_alter(void)
 {
-    bool detailed_msg = _show_detailed_msg();
     int item;
 
-    /*
-     * Scan inventry in reverse order to prevent
-     * skipping after inven_item_optimize()
-     */
-    for (item = INVEN_TOTAL - 1; item >= 0 ; item--)
-        autopick_delayed_alter_aux(item, detailed_msg);
+    _detailed_msg = _show_detailed_msg();
+
+    pack_for_each(autopick_delayed_alter_obj);
 
     /* Scan the pile of objects */
     item = cave[py][px].o_idx;
     while (item)
     {
-        int next = o_list[item].next_o_idx;
-        autopick_delayed_alter_aux(-item, detailed_msg);
+        obj_ptr obj = &o_list[item];
+        int     next = obj->next_o_idx;
+        autopick_delayed_alter_obj(obj);
         item = next;
     }
 }

@@ -2,9 +2,6 @@
 
 #include <assert.h>
 
-#define _FAKE_SLOT_ALL   1000000
-#define _FAKE_SLOT_FORCE 1000001
-
 static void _get_tabs(obj_prompt_context_ptr context)
 {
     int i;

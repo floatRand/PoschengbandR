@@ -155,6 +155,7 @@ static bool _get_floor(inv_ptr floor)
     }
 
     /* Prompt user for multiple floor objects */
+    msg_print(NULL); /* Clear Autopicker Msg Spam */
     prompt.prompt = "Get which item (<color:keypress>*</color> for all)? ";
     prompt.where[0] = INV_FLOOR;
     prompt.cmd_handler = _get_cmd_handler;
@@ -179,7 +180,6 @@ bool pack_get_floor(void)
     inv_ptr floor;
 
     autopick_get_floor(); /* no energy charge */
-    msg_print(NULL);
 
     floor = inv_filter_floor(NULL);
     result = _get_floor(floor);
@@ -215,6 +215,11 @@ inv_ptr pack_filter(obj_p p)
 void pack_for_each(obj_f f)
 {
     inv_for_each(_inv, f);
+}
+
+void pack_for_each_that(obj_f f, obj_p p)
+{
+    inv_for_each_that(_inv, f, p);
 }
 
 slot_t pack_find_first(obj_p p)

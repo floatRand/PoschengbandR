@@ -2276,7 +2276,7 @@ static void process_world_aux_recharge(void)
 {
     int i;
     _recharge_changed = FALSE;
-    equip_for_each_obj(_recharge_aux);
+    equip_for_each(_recharge_aux);
     if (_recharge_changed)
     {
         p_ptr->window |= PW_EQUIP;

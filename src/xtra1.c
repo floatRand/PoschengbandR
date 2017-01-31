@@ -3282,7 +3282,7 @@ static void calc_torch(void)
     if (prace_is_(RACE_MON_RING))
         p_ptr->cur_lite += ring_calc_torch();
 
-    equip_for_each_obj(_calc_torch_imp);
+    equip_for_each(_calc_torch_imp);
 
     if (d_info[dungeon_type].flags1 & DF1_DARKNESS && p_ptr->cur_lite > 1)
         p_ptr->cur_lite = 1;

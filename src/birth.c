@@ -166,13 +166,6 @@ static void player_wipe(void)
     /* No items */
     inven_cnt = 0;
 
-    /* Clear the inventory */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        object_wipe(&inventory[i]);
-    }
-
-
     /* Start with no artifacts made yet */
     for (i = 0; i < max_a_idx; i++)
     {

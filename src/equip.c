@@ -350,9 +350,14 @@ inv_ptr equip_filter(obj_p p)
     return inv_filter(_inv, p);
 }
 
-void equip_for_each_obj(obj_f f)
+void equip_for_each(obj_f f)
 {
     inv_for_each(_inv, f);
+}
+
+void equip_for_each_that(obj_f f, obj_p p)
+{
+    inv_for_each_that(_inv, f, p);
 }
 
 int equip_weight(obj_p p)

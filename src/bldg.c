@@ -1696,203 +1696,151 @@ static struct {
 
 
 /* Get prize */
+static int _prize_count = 0;
+static bool _is_captured_tsuchinoko(obj_ptr obj)
+{
+    if (obj->tval == TV_CAPTURE && obj->pval == MON_TSUCHINOKO)
+        return TRUE;
+    return FALSE;
+}
+static bool _is_corpse_tsuchinoko(obj_ptr obj)
+{
+    if (obj->tval == TV_CORPSE && obj->pval == MON_TSUCHINOKO)
+        return TRUE;
+    return FALSE;
+}
+static int _tsuchinoko_amt(obj_ptr obj)
+{
+    if (obj->tval == TV_CAPTURE)
+        return 1000000 * obj->number;
+    if (obj->tval == TV_CORPSE && obj->sval == SV_CORPSE)
+        return 200000 * obj->number;
+    if (obj->tval == TV_CORPSE && obj->sval == SV_SKELETON)
+        return 100000 * obj->number;
+    return 0;
+}
+static void _obj_reward(obj_ptr obj, int amt)
+{
+    msg_format("You get %dgp.", amt);
+    p_ptr->au += amt;
+    stats_on_gold_winnings(amt);
+    obj->number = 0;
+    obj_release(obj, 0);
+    p_ptr->redraw |= PR_GOLD;
+    p_ptr->notice |= PN_OPTIMIZE_PACK;
+}
+static void _process_tsuchinoko(obj_ptr obj)
+{
+    char name[MAX_NLEN];
+    char buf[MAX_NLEN+30];
+    object_desc(name, obj, OD_COLOR_CODED);
+    sprintf(buf, "Convert %s into money? ", name);
+    if (get_check(buf))
+        _obj_reward(obj, _tsuchinoko_amt(obj));
+    ++_prize_count;
+}
+static bool _is_todays_prize(obj_ptr obj)
+{
+    if (obj->tval == TV_CORPSE)
+    {
+        if (streq(r_name + r_info[obj->pval].name,
+                  r_name + r_info[today_mon].name) )
+            return TRUE;
+    }
+    return FALSE;
+}
+static void _process_todays_prize(obj_ptr obj)
+{
+    char name[MAX_NLEN];
+    char buf[MAX_NLEN+30];
+    object_desc(name, obj, OD_COLOR_CODED);
+    sprintf(buf, "Convert %s into money? ", name);
+    if (get_check(buf))
+    {
+        int mult = obj->sval == SV_CORPSE ? 50 : 30;
+        int amt = (r_info[today_mon].level * mult + 100) * obj->number;
+        _obj_reward(obj, amt);
+    }
+    ++_prize_count;
+}
+static int _wanted_monster_idx(int r_idx)
+{
+    int i;
+    for (i = 0; i < MAX_KUBI; i++)
+    {
+        if (kubi_r_idx[i] == r_idx)
+            return i;
+    }
+    return -1;
+}
+static bool _is_wanted_monster(int r_idx)
+{
+    int idx = _wanted_monster_idx(r_idx);
+    if (idx >= 0) return TRUE;
+    return FALSE;
+}
+static void _forge_wanted_monster_prize(obj_ptr obj, int r_idx)
+{
+    int idx = _wanted_monster_idx(r_idx);
+    int tval = prize_list[idx].tval;
+    int sval = prize_list[idx].sval;
+
+    object_prep(obj, lookup_kind(tval, sval));
+    apply_magic(obj, object_level, AM_NO_FIXED_ART);
+    mass_produce(obj);
+    obj_identify_fully(obj);
+}
+static bool _is_wanted_corpse(obj_ptr obj)
+{
+    if (obj->tval == TV_CORPSE && _is_wanted_monster(obj->pval))
+        return TRUE;
+    return FALSE;
+}
+static void _process_wanted_corpse(obj_ptr obj)
+{
+    char  name[MAX_NLEN];
+    char  buf[MAX_NLEN+30];
+    obj_t prize;
+    int   r_idx = obj->pval;
+    int   num, k, kubi_idx = _wanted_monster_idx(r_idx);
+
+    ++_prize_count;
+
+    object_desc(name, obj, OD_COLOR_CODED);
+    sprintf(buf, "Hand %s over? ", name);
+    if (!get_check(buf)) return;
+
+    _forge_wanted_monster_prize(&prize, r_idx);
+    obj->number = 0;
+    obj_release(obj, 0);
+
+    virtue_add(VIRTUE_JUSTICE, 5);
+    p_ptr->fame++;
+    kubi_r_idx[kubi_idx] += 10000;
+
+    /* Count number of unique corpses already handed */
+    for (num = 0, k = 0; k < MAX_KUBI; k++)
+    {
+        if (kubi_r_idx[k] >= 10000) num++;
+    }
+
+    msg_format("You earned %d point%s total.", num, num > 1 ? "s" : "");
+
+    object_desc(name, &prize, OD_COLOR_CODED);
+    msg_format("You get %s.", name);
+    pack_carry(&prize);
+}
 static bool kankin(void)
 {
-    int i, j;
-    bool change = FALSE;
-    char o_name[MAX_NLEN];
-    object_type *o_ptr;
-
-    /* Loop for inventory and right/left arm */
-    for (i = 0; i < INVEN_TOTAL; i++)
+    _prize_count = 0;
+    equip_for_each_that(_process_tsuchinoko, _is_captured_tsuchinoko);
+    pack_for_each_that(_process_tsuchinoko, _is_captured_tsuchinoko);
+    pack_for_each_that(_process_tsuchinoko, _is_corpse_tsuchinoko);
+    pack_for_each_that(_process_todays_prize, _is_todays_prize);
+    pack_for_each_that(_process_wanted_corpse, _is_wanted_corpse);
+    if (!_prize_count)
     {
-        o_ptr = &inventory[i];
-
-        /* Living Tsuchinoko worthes $1000000 */
-        if ((o_ptr->tval == TV_CAPTURE) && (o_ptr->pval == MON_TSUCHINOKO))
-        {
-            char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, OD_COLOR_CODED);
-            sprintf(buf, "Convert %s into money? ",o_name);
-            if (get_check(buf))
-            {
-                int amt = 1000000 * o_ptr->number;
-                msg_format("You get %dgp.", amt);
-                p_ptr->au += amt;
-                stats_on_gold_winnings(amt);
-                p_ptr->redraw |= (PR_GOLD);
-                inven_item_increase(i, -o_ptr->number);
-                inven_item_describe(i);
-                inven_item_optimize(i);
-            }
-            change = TRUE;
-        }
-    }
-
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        o_ptr = &inventory[i];
-
-        /* Corpse of Tsuchinoko worthes $200000 */
-        if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval == SV_CORPSE) && (o_ptr->pval == MON_TSUCHINOKO))
-        {
-            char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, OD_COLOR_CODED);
-            sprintf(buf, "Convert %s into money? ",o_name);
-            if (get_check(buf))
-            {
-                int amt = 200000 * o_ptr->number;
-                msg_format("You get %dgp.", amt);
-                p_ptr->au += amt;
-                stats_on_gold_winnings(amt);
-                p_ptr->redraw |= (PR_GOLD);
-                inven_item_increase(i, -o_ptr->number);
-                inven_item_describe(i);
-                inven_item_optimize(i);
-            }
-            change = TRUE;
-        }
-    }
-
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        o_ptr = &inventory[i];
-
-        /* Bones of Tsuchinoko worthes $100000 */
-        if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval == SV_SKELETON) && (o_ptr->pval == MON_TSUCHINOKO))
-        {
-            char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, OD_COLOR_CODED);
-            sprintf(buf, "Convert %s into money? ",o_name);
-            if (get_check(buf))
-            {
-                int amt = 100000 * o_ptr->number;
-                msg_format("You get %dgp.", amt);
-                p_ptr->au += amt;
-                stats_on_gold_winnings(amt);
-                p_ptr->redraw |= (PR_GOLD);
-                inven_item_increase(i, -o_ptr->number);
-                inven_item_describe(i);
-                inven_item_optimize(i);
-            }
-            change = TRUE;
-        }
-    }
-
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        o_ptr = &inventory[i];
-        if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval == SV_CORPSE) && (streq(r_name + r_info[o_ptr->pval].name, r_name + r_info[today_mon].name)))
-        {
-            char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, OD_COLOR_CODED);
-            sprintf(buf, "Convert %s into money? ",o_name);
-            if (get_check(buf))
-            {
-                int amt = (int)(r_info[today_mon].level * 50 + 100) * o_ptr->number;
-                msg_format("You get %dgp.", amt);
-                p_ptr->au += amt;
-                stats_on_gold_winnings(amt);
-                p_ptr->redraw |= (PR_GOLD);
-                inven_item_increase(i, -o_ptr->number);
-                inven_item_describe(i);
-                inven_item_optimize(i);
-            }
-            change = TRUE;
-        }
-    }
-
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        o_ptr = &inventory[i];
-
-        if ((o_ptr->tval == TV_CORPSE) && (o_ptr->sval == SV_SKELETON) && (streq(r_name + r_info[o_ptr->pval].name, r_name + r_info[today_mon].name)))
-        {
-            char buf[MAX_NLEN+20];
-            object_desc(o_name, o_ptr, OD_COLOR_CODED);
-            sprintf(buf, "Convert %s into money? ",o_name);
-            if (get_check(buf))
-            {
-                int amt = (int)(r_info[today_mon].level * 30 + 60) * o_ptr->number;
-                msg_format("You get %dgp.", amt);
-                p_ptr->au += amt;
-                stats_on_gold_winnings(amt);
-                p_ptr->redraw |= (PR_GOLD);
-                inven_item_increase(i, -o_ptr->number);
-                inven_item_describe(i);
-                inven_item_optimize(i);
-            }
-            change = TRUE;
-        }
-    }
-
-    for (j = 0; j < MAX_KUBI; j++)
-    {
-        /* Need reverse order --- Positions will be changed in the loop */
-        for (i = INVEN_PACK-1; i >= 0; i--)
-        {
-            o_ptr = &inventory[i];
-            if ((o_ptr->tval == TV_CORPSE) && (o_ptr->pval == kubi_r_idx[j]))
-            {
-                char buf[MAX_NLEN+20];
-                int num, k, item_new;
-                object_type forge;
-
-                object_desc(o_name, o_ptr, OD_COLOR_CODED);
-                sprintf(buf, "Hand %s over? ",o_name);
-                if (!get_check(buf)) continue;
-
-                /* Hand it first */
-                inven_item_increase(i, -o_ptr->number);
-                inven_item_describe(i);
-                inven_item_optimize(i);
-
-                virtue_add(VIRTUE_JUSTICE, 5);
-                p_ptr->fame++;
-                kubi_r_idx[j] += 10000;
-
-                /* Count number of unique corpses already handed */
-                for (num = 0, k = 0; k < MAX_KUBI; k++)
-                {
-                    if (kubi_r_idx[k] >= 10000) num++;
-                }
-
-                msg_format("You earned %d point%s total.", num, (num > 1 ? "s" : ""));
-
-                /* Prepare to make a prize */
-                object_prep(&forge, lookup_kind(prize_list[num-1].tval, prize_list[num-1].sval));
-                apply_magic(&forge, object_level, AM_NO_FIXED_ART);
-                mass_produce(&forge);
-
-                /* Identify it fully */
-                obj_identify_fully(&forge);
-
-                /*
-                 * Hand it --- Assume there is an empty slot.
-                 * Since a corpse is handed at first,
-                 * there is at least one empty slot.
-                 */
-                item_new = inven_carry(&forge);
-
-                /* Describe the object */
-                object_desc(o_name, &forge, OD_COLOR_CODED);
-                msg_format("You get %s (%c). ", o_name, index_to_label(item_new));
-
-                /* Auto-inscription */
-                autopick_alter_item(item_new, FALSE);
-
-                /* Handle stuff */
-                handle_stuff();
-
-                change = TRUE;
-            }
-        }
-    }
-
-    if (!change)
-    {
-        msg_print("You have nothing.");
-        msg_print(NULL);
+        msg_print("You have nothing that I want.");
         return FALSE;
     }
     return TRUE;
