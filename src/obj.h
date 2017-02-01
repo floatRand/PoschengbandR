@@ -28,6 +28,7 @@ extern void obj_inscribe_ui(void);
 extern void obj_inspect_ui(void);
 
 extern void obj_drop(obj_ptr obj, int amt);
+extern void obj_describe_charges(obj_ptr obj);
 
 /* Predicates */
 extern bool obj_is_art(obj_ptr obj);

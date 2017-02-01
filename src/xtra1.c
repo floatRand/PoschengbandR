@@ -2173,13 +2173,16 @@ static void prt_frame_extra(void)
 static void _fix_inven_aux(void)
 {
     doc_ptr doc;
-    int     w, h;
+    int     w, h, y;
+
+    for (y = 0; y < Term->hgt; y++)
+        Term_erase(0, y, 255);
 
     Term_get_size(&w, &h);
     doc = doc_alloc(w);
 
     doc_insert(doc, "<style:table>");
-    pack_display(doc, NULL, 0);
+    pack_display(doc, obj_exists, 0);
     doc_insert(doc, "</style>");
     doc_sync_term(
         doc,
@@ -2210,7 +2213,10 @@ static void fix_inven(void)
 static void _fix_equip_aux(void)
 {
     doc_ptr doc;
-    int     w, h;
+    int     w, h, y;
+
+    for (y = 0; y < Term->hgt; y++)
+        Term_erase(0, y, 255);
 
     Term_get_size(&w, &h);
     doc = doc_alloc(w);

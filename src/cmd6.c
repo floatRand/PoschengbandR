@@ -106,49 +106,29 @@ bool restore_mana(void)
     return result;
 }
 
-static void do_cmd_eat_food_aux(int item)
+static void do_cmd_eat_food_aux(obj_ptr obj)
 {
-    int ident, lev;
-    object_type *o_ptr;
+    int  lev = k_info[obj->k_idx].level;
+    bool ident = FALSE;
 
     if (music_singing_any()) bard_stop_singing();
     if (hex_spelling_any()) stop_hex_spell_all();
     warlock_stop_singing();
 
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-    if (object_is_mushroom(o_ptr) && o_ptr->art_name && o_ptr->timeout)
+    if (object_is_mushroom(obj) && obj->art_name && obj->timeout)
     {
         msg_print("Your mushroom is still charging.");
         return;
     }
 
-    /* Sound */
     sound(SOUND_EAT);
-
-    /* Take a turn */
     energy_use = 100;
-
-    /* Identity not known yet */
     ident = FALSE;
 
-    /* Object level */
-    lev = k_info[o_ptr->k_idx].level;
-
-    if (o_ptr->tval == TV_FOOD)
+    /* Food may have effects */
+    if (obj->tval == TV_FOOD)
     {
-        /* Analyze the food */
-        switch (o_ptr->sval)
+        switch (obj->sval)
         {
             case SV_FOOD_POISON:
             {
@@ -213,7 +193,7 @@ static void do_cmd_eat_food_aux(int item)
             case SV_FOOD_WEAKNESS:
             {
                 take_hit(DAMAGE_NOESCAPE, damroll(6, 6), "poisonous food", -1);
-                (void)do_dec_stat(A_STR);
+                do_dec_stat(A_STR);
                 ident = TRUE;
                 break;
             }
@@ -221,7 +201,7 @@ static void do_cmd_eat_food_aux(int item)
             case SV_FOOD_SICKNESS:
             {
                 take_hit(DAMAGE_NOESCAPE, damroll(6, 6), "poisonous food", -1);
-                (void)do_dec_stat(A_CON);
+                do_dec_stat(A_CON);
                 ident = TRUE;
                 break;
             }
@@ -229,7 +209,7 @@ static void do_cmd_eat_food_aux(int item)
             case SV_FOOD_STUPIDITY:
             {
                 take_hit(DAMAGE_NOESCAPE, damroll(8, 8), "poisonous food", -1);
-                (void)do_dec_stat(A_INT);
+                do_dec_stat(A_INT);
                 ident = TRUE;
                 break;
             }
@@ -237,7 +217,7 @@ static void do_cmd_eat_food_aux(int item)
             case SV_FOOD_NAIVETY:
             {
                 take_hit(DAMAGE_NOESCAPE, damroll(8, 8), "poisonous food", -1);
-                (void)do_dec_stat(A_WIS);
+                do_dec_stat(A_WIS);
                 ident = TRUE;
                 break;
             }
@@ -245,7 +225,7 @@ static void do_cmd_eat_food_aux(int item)
             case SV_FOOD_UNHEALTH:
             {
                 take_hit(DAMAGE_NOESCAPE, damroll(10, 10), "poisonous food", -1);
-                (void)do_dec_stat(A_CON);
+                do_dec_stat(A_CON);
                 ident = TRUE;
                 break;
             }
@@ -253,7 +233,7 @@ static void do_cmd_eat_food_aux(int item)
             case SV_FOOD_DISEASE:
             {
                 take_hit(DAMAGE_NOESCAPE, damroll(10, 10), "poisonous food", -1);
-                (void)do_dec_stat(A_STR);
+                do_dec_stat(A_STR);
                 ident = TRUE;
                 break;
             }
@@ -343,8 +323,8 @@ static void do_cmd_eat_food_aux(int item)
             case SV_FOOD_WAYBREAD:
             {
                 msg_print("That tastes good.");
-                (void)set_poisoned(0, TRUE);
-                (void)hp_player(damroll(4, 8));
+                set_poisoned(0, TRUE);
+                hp_player(damroll(4, 8));
                 ident = TRUE;
                 break;
             }
@@ -359,9 +339,8 @@ static void do_cmd_eat_food_aux(int item)
         }
     }
 
-    if (prace_is_(RACE_SNOTLING) && object_is_mushroom(o_ptr))
+    if (prace_is_(RACE_SNOTLING) && object_is_mushroom(obj))
     {
-        int lev = k_info[o_ptr->k_idx].level;
         int dur = lev + randint1(lev);
         set_fast(p_ptr->fast + dur, FALSE);
         set_shield(p_ptr->shield + dur, FALSE);
@@ -369,10 +348,7 @@ static void do_cmd_eat_food_aux(int item)
         set_tim_building_up(p_ptr->tim_building_up + dur, FALSE);
     }
 
-    /* Combine / Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-    if (!(object_is_aware(o_ptr)))
+    if (!object_is_aware(obj))
     {
         virtue_add(VIRTUE_KNOWLEDGE, -1);
         virtue_add(VIRTUE_PATIENCE, -1);
@@ -380,21 +356,18 @@ static void do_cmd_eat_food_aux(int item)
     }
 
     /* We have tried it */
-    if (o_ptr->tval == TV_FOOD) object_tried(o_ptr);
+    if (obj->tval == TV_FOOD) object_tried(obj);
 
-    stats_on_use(o_ptr, 1);
+    stats_on_use(obj, 1);
 
     /* The player is now aware of the object */
-    if (ident && !object_is_aware(o_ptr))
+    if (ident && !object_is_aware(obj))
     {
-        object_aware(o_ptr);
-        stats_on_notice(o_ptr, 1);
+        object_aware(obj);
+        stats_on_notice(obj, 1);
         gain_exp((lev + (p_ptr->lev >> 1)) / p_ptr->lev);
+        p_ptr->notice |= PN_OPTIMIZE_PACK;
     }
-
-    /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP);
-
 
     /* Food can feed the player */
     if ( prace_is_(RACE_VAMPIRE)
@@ -402,14 +375,14 @@ static void do_cmd_eat_food_aux(int item)
       || p_ptr->mimic_form == MIMIC_VAMPIRE )
     {
         /* Reduced nutritional benefit */
-        (void)set_food(p_ptr->food + (o_ptr->pval / 10));
+        set_food(p_ptr->food + obj->pval / 10);
         msg_print("Mere victuals hold scant sustenance for a being such as yourself.");
         if (p_ptr->food < PY_FOOD_ALERT)   /* Hungry */
             msg_print("Your hunger can only be satisfied with fresh blood!");
     }
     else if (prace_is_(RACE_MON_JELLY))
     {
-        jelly_eat_object(o_ptr);
+        jelly_eat_object(obj);
     }
     else if ( ( prace_is_(RACE_SKELETON)
              || prace_is_(RACE_GOLEM)
@@ -425,12 +398,12 @@ static void do_cmd_eat_food_aux(int item)
              || prace_is_(RACE_SPECTRE)
              || prace_is_(RACE_MON_VORTEX)
              || elemental_is_(ELEMENTAL_AIR) )
-           && object_is_device(o_ptr) )
+           && object_is_device(obj) )
     {
-        int amt = o_ptr->activation.cost;
+        int amt = obj->activation.cost;
 
-        if (amt > device_sp(o_ptr))
-            amt = device_sp(o_ptr);
+        if (amt > device_sp(obj))
+            amt = device_sp(obj);
 
         if (!amt)
         {
@@ -438,45 +411,33 @@ static void do_cmd_eat_food_aux(int item)
             return;
         }
 
-        device_decrease_sp(o_ptr, amt);
+        device_decrease_sp(obj, amt);
         set_food(p_ptr->food + 5000);
 
-        if (item >= 0)
-            inven_item_charges(item);
-        else
-            floor_item_charges(0 - item);
-
-        p_ptr->window |= (PW_INVEN | PW_EQUIP);
+        obj_describe_charges(obj);
+        p_ptr->window |= PW_INVEN;
 
         /* Don't consume the object */
         return;
     }
     else if ((p_ptr->mimic_form == MIMIC_DEMON || p_ptr->mimic_form == MIMIC_DEMON_LORD || prace_is_(RACE_BALROG) || prace_is_(RACE_MON_DEMON))
-           && (o_ptr->tval == TV_CORPSE && o_ptr->sval == SV_CORPSE && my_strchr("pht", r_info[o_ptr->pval].d_char)))
+           && (obj->tval == TV_CORPSE && obj->sval == SV_CORPSE && my_strchr("pht", r_info[obj->pval].d_char)))
     {
         /* Drain vitality of humanoids */
         char o_name[MAX_NLEN];
 
-        object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+        object_desc(o_name, obj, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
         msg_format("%^s is burnt to ashes. You absorb its vitality!", o_name);
-        (void)set_food(PY_FOOD_MAX - 1);
+        set_food(PY_FOOD_MAX - 1);
     }
     else if (prace_is_(RACE_SKELETON))
     {
-        if (!((o_ptr->sval == SV_FOOD_WAYBREAD) ||
-              (o_ptr->sval < SV_FOOD_BISCUIT)))
+        if (!(obj->sval == SV_FOOD_WAYBREAD ||
+              obj->sval < SV_FOOD_BISCUIT))
         {
-            object_type forge;
-            object_type *q_ptr = &forge;
-
             msg_print("The food falls through your jaws!");
-
-            /* Create the item */
-            object_prep(q_ptr, lookup_kind(o_ptr->tval, o_ptr->sval));
-
-            /* Drop the object from heaven */
-            (void)drop_near(q_ptr, -1, py, px);
+            drop_near(obj, -1, py, px);
         }
         else
         {
@@ -486,9 +447,9 @@ static void do_cmd_eat_food_aux(int item)
     else if ((get_race()->flags & RACE_IS_NONLIVING) || prace_is_(RACE_ENT))
     {
         msg_print("The food of mortals is poor sustenance for you.");
-        set_food(p_ptr->food + ((o_ptr->pval) / 20));
+        set_food(p_ptr->food + obj->pval / 20);
     }
-    else if (o_ptr->tval == TV_FOOD && (o_ptr->sval == SV_FOOD_WAYBREAD || o_ptr->sval == SV_FOOD_AMBROSIA))
+    else if (obj->tval == TV_FOOD && (obj->sval == SV_FOOD_WAYBREAD || obj->sval == SV_FOOD_AMBROSIA))
     {
         /* Waybread is always fully satisfying. */
         set_food(MAX(p_ptr->food, PY_FOOD_MAX - 1));
@@ -496,30 +457,16 @@ static void do_cmd_eat_food_aux(int item)
     else
     {
         /* Food can feed the player */
-        (void)set_food(p_ptr->food + o_ptr->pval);
+        set_food(p_ptr->food + obj->pval);
     }
 
-    /* Destroy a food in the pack */
-    if (o_ptr->art_name) /* Hack: Artifact Food does not get destroyed! */
-    {
-        o_ptr->timeout += 99;
-    }
+    /* Consume the object */
+    if (obj->art_name) /* Hack: Artifact Food does not get destroyed! */
+        obj->timeout += 99;
     else
     {
-        if (item >= 0)
-        {
-            inven_item_increase(item, -1);
-            inven_item_describe(item);
-            inven_item_optimize(item);
-        }
-
-        /* Destroy a food on the floor */
-        else
-        {
-            floor_item_increase(0 - item, -1);
-            floor_item_describe(0 - item);
-            floor_item_optimize(0 - item);
-        }
+        obj->number--;
+        obj_release(obj, 0);
     }
 }
 
@@ -527,7 +474,7 @@ static void do_cmd_eat_food_aux(int item)
 /*
  * Hook to determine if an object is eatable
  */
-static bool item_tester_hook_eatable(object_type *o_ptr)
+static bool _can_eat(object_type *o_ptr)
 {
     if (o_ptr->tval==TV_FOOD) return TRUE;
 
@@ -559,8 +506,7 @@ static bool item_tester_hook_eatable(object_type *o_ptr)
     else if (prace_is_(RACE_MON_JELLY))
         return TRUE;
 
-    /* Assume not */
-    return (FALSE);
+    return FALSE;
 }
 
 
@@ -569,26 +515,21 @@ static bool item_tester_hook_eatable(object_type *o_ptr)
  */
 void do_cmd_eat_food(void)
 {
-    int         item;
-    cptr        q, s;
-
+    obj_prompt_t prompt = {0};
 
     if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
-    {
         set_action(ACTION_NONE);
-    }
 
-    /* Restrict choices to food */
-    item_tester_hook = item_tester_hook_eatable;
+    prompt.prompt = "Eat which item?";
+    prompt.error = "You have nothing to eat.";
+    prompt.filter = _can_eat;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
 
-    /* Get an item */
-    q = "Eat which item? ";
-    s = "You have nothing to eat.";
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
 
-    if (!get_item(&item, q, s, (USE_INVEN | USE_FLOOR))) return;
-
-    /* Eat the object */
-    do_cmd_eat_food_aux(item);
+    do_cmd_eat_food_aux(prompt.obj);
 
     if (p_ptr->fasting)
     {
