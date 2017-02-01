@@ -423,12 +423,11 @@ int equip_slot_type(slot_t slot)
 
 bool equip_is_empty_two_handed_slot(int slot)
 {
-    int idx = slot - EQUIP_BEGIN;
     if (equip_obj(slot)) return FALSE;
 
-    if (_template->slots[idx].type == EQUIP_SLOT_WEAPON_SHIELD)
+    if (_template->slots[slot].type == EQUIP_SLOT_WEAPON_SHIELD)
     {
-        int hand = _template->slots[idx].hand;
+        int hand = _template->slots[slot].hand;
         int arm = hand / 2;
         int rhand = arm*2;
         int lhand = arm*2 + 1;
@@ -470,11 +469,6 @@ void equip_ui(void)
     doc_free(doc);
 }
 
-static void _equip_slot_f(doc_ptr doc, slot_t slot)
-{
-    doc_printf(doc, "%-10.10s: ", equip_describe_slot(slot));
-}
-
 void equip_display(doc_ptr doc, obj_p p, int flags)
 {
     inv_display(
@@ -482,7 +476,6 @@ void equip_display(doc_ptr doc, obj_p p, int flags)
         1, equip_max(),
         p,
         doc,
-        show_labels ? _equip_slot_f : NULL,
         flags
     );
 }
@@ -740,7 +733,6 @@ void equip_takeoff_ui(void)
     _unwield(obj, FALSE);
     _unwield_after();
 
-    obj_release(obj, 0);
 }
 
 void equip_takeoff(slot_t slot)
@@ -751,7 +743,6 @@ void equip_takeoff(slot_t slot)
     {
         _unwield(obj, FALSE);
         _unwield_after();
-        obj_release(obj, OBJ_RELEASE_QUIET);
     }
 }
 
@@ -765,7 +756,6 @@ void equip_drop(obj_ptr obj)
 
     _unwield(obj, TRUE);
     _unwield_after();
-
 }
 
 static obj_ptr _unwield_get_obj(void)
@@ -836,8 +826,10 @@ void _unwield(obj_ptr obj, bool drop)
         obj_drop(obj, 1);
     }
     else
+    {
         pack_carry(obj);
-
+        obj_release(obj, OBJ_RELEASE_QUIET);
+    }
     p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;
     p_ptr->redraw |= PR_EQUIPPY;
     p_ptr->window |= PW_EQUIP;
@@ -846,7 +838,7 @@ void _unwield(obj_ptr obj, bool drop)
 void _unwield_after(void)
 {
     if (weaponmaster_is_(WEAPONMASTER_SHIELDS))
-        handle_stuff();
+        handle_stuff(); /* Explain! */
     android_calc_exp();
 }
 

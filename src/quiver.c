@@ -13,7 +13,7 @@ void quiver_init(void)
 
 void quiver_display(doc_ptr doc, obj_p p, int flags)
 {
-    inv_display(_inv, 1, quiver_max(), p, doc, NULL, flags);
+    inv_display(_inv, 1, quiver_max(), p, doc, flags);
 }
 
 /* Adding and removing: Quivers allow a large number of slots

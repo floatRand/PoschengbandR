@@ -504,7 +504,18 @@ void cmsg_print(byte color, cptr msg)
         auto_more_state = AUTO_MORE_PROMPT;
 
     p_ptr->window |= PW_MESSAGE;
-    window_stuff();
+
+    /* BUG: notice_stuff()
+     *       pack_optimize()
+     *        cmsg_print()
+     *         window_stuff()
+     *          _fix_equip_aux()
+     * This means PW_EQUIP redraws before PU_BONUS and
+     * gives incorrect info with no way to fix! Clients
+     * are supposed to be able to set notice and redraw
+     * and update flags and have things just work! Grrr ...
+     *
+    window_stuff(); */
     if (fresh_message) /* ?? */
         Term_fresh();
 

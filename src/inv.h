@@ -23,7 +23,6 @@
 typedef int slot_t; /* Slots are 1..max ('if (slot) ...' is a valid idiom) */
                     /* Slots may be empty (unused) */
 typedef void (*slot_f)(slot_t slot);
-typedef void (*slot_display_f)(doc_ptr doc, slot_t slot);
 
 extern char    slot_label(slot_t slot);
 extern slot_t  label_slot(char label);
@@ -80,8 +79,7 @@ extern cptr    inv_name(inv_ptr inv);
 /* Menus and Display */
 /* inv_display is a bit overwhelming, but it is a low level helper for pack_display,
  * etc. Basically, the requested range in inv is displayed to doc, but the range
- * might be filtered by a predicate. We support optional slot labelling (for equip)
- * as well as flags for some future items I haven't coded up yet.
+ * might be filtered by a predicate.
  * Labels are calculated by inv_display which properly handles all the inscription
  * coding (e.g. @mh to label an object 'h' for the 'm' command, etc.).
  * We respect show_weights (provided flags don't override) as well as show_item_graph */
@@ -95,7 +93,6 @@ extern void inv_display(
     obj_p p,                   /* NULL shows all slots, even empty ones. Otherwise, p must match an existing object */
     /* Where and how we display it */
     doc_ptr doc,
-    slot_display_f slot_f,     /* e.g. equip_describe_slot ... */
     int flags                  /* TODO: Display Fail Rates or Object Values ... */
 );
 extern char    inv_slot_label(inv_ptr inv, slot_t slot);

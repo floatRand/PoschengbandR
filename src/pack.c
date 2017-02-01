@@ -41,7 +41,7 @@ void pack_ui(void)
 
 void pack_display(doc_ptr doc, obj_p p, int flags)
 {
-    inv_display(_inv, 1, pack_max(), p, doc, NULL, flags);
+    inv_display(_inv, 1, pack_max(), p, doc, flags);
 }
 
 /* Adding and removing */

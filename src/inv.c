@@ -606,8 +606,11 @@ cptr inv_name(inv_ptr inv)
     return inv->name;
 }
 
-/* Menus and Display */
-void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, slot_display_f slot_f, int flags)
+/* Menus and Display
+ * It turns out to be more convenient for inv_display() to know
+ * about special equipment handling (cf show_labels and two-handed
+ * wielding). */
+void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, int flags)
 {
     slot_t slot;
     int    xtra = 0;
@@ -628,13 +631,15 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
         obj_ptr obj = inv_obj(inv, slot);
 
         if (!_filter(obj, p)) continue;
+        if (inv->type == INV_EQUIP && equip_is_empty_two_handed_slot(slot)) continue;
+
         if (!obj)
         {
             doc_printf(doc, " %c) ", slot_label(slot - start + 1));
             if (show_item_graph)
                 doc_insert(doc, "  ");
-            if (slot_f)
-                slot_f(doc, slot);
+            if (inv->type == INV_EQUIP && show_labels)
+                doc_printf(doc, "%-10.10s: ", equip_describe_slot(slot));
             /*doc_insert(doc, "<color:D>Empty</color>\n");*/
             doc_newline(doc);
         }
@@ -649,8 +654,8 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
                 doc_insert_char(doc, object_attr(obj), object_char(obj));
                 doc_insert(doc, " ");
             }
-            if (slot_f)
-                slot_f(doc, slot);
+            if (inv->type == INV_EQUIP && show_labels)
+                doc_printf(doc, "%-10.10s: ", equip_describe_slot(slot));
             if (xtra)
             {
                 style.right = doc_width(doc) - xtra;
@@ -748,7 +753,12 @@ void inv_paginate(inv_ptr inv, obj_p p, int page_size)
     assert(!inv->pagination); /* you forgot to call inv_unpaginate() */
     inv->pagination = _pagination_alloc(p, page_size);
 
-    /* Hack for equipment to keep slot labels consistent */
+    /* Hack for equipment to keep slot labels consistent.
+     * Btw, other types of equipment will not preserve labels, 
+     * and this is intentional. The relevant choices for
+     * commands now always start sequencing at 'a' rather than
+     * constantly shifting as objects insert above them in
+     * your pack. Try it a bit before complaining :) */
     if (inv->type == INV_EQUIP)
     {
         vec_add(inv->pagination->pages, _page_alloc(1, equip_max()));
@@ -799,7 +809,7 @@ void inv_display_page(inv_ptr inv, int page, doc_ptr doc, int flags)
         inv, 
         page_ptr->start, page_ptr->stop,
         inv->pagination->filter,
-        doc, NULL, flags
+        doc, flags
     );
 }
 
