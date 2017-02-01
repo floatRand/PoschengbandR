@@ -716,13 +716,16 @@ static void _wield_after(slot_t slot)
 void equip_remove(slot_t slot)
 {
     inv_remove(_inv, slot);
+    p_ptr->update |= PU_BONUS;
+    p_ptr->window |= PW_EQUIP;
+    p_ptr->redraw |= PR_EQUIPPY;
 }
 
 /* Unwielding has the following phases where various things might/must happen */
 static obj_ptr _unwield_get_obj(void);
 static bool    _unwield_verify(obj_ptr obj);
 static void    _unwield_before(obj_ptr obj);
-static void    _unwield(obj_ptr obj);
+static void    _unwield(obj_ptr obj, bool drop);
 static void    _unwield_after(void);
 
 void equip_takeoff_ui(void)
@@ -730,11 +733,11 @@ void equip_takeoff_ui(void)
     obj_ptr obj = _unwield_get_obj();
 
     if (!obj) return;
+    energy_use = 50;
     if (!_unwield_verify(obj)) return;
 
-    energy_use = 50;
     _unwield_before(obj);
-    _unwield(obj);
+    _unwield(obj, FALSE);
     _unwield_after();
 
     obj_release(obj, 0);
@@ -746,10 +749,23 @@ void equip_takeoff(slot_t slot)
 
     if (obj)
     {
-        _unwield(obj);
+        _unwield(obj, FALSE);
         _unwield_after();
         obj_release(obj, OBJ_RELEASE_QUIET);
     }
+}
+
+void equip_drop(obj_ptr obj)
+{
+    assert(obj);
+    assert(obj->loc.where == INV_EQUIP);
+    assert(obj->number == 1);
+
+    if (!_unwield_verify(obj)) return;
+
+    _unwield(obj, TRUE);
+    _unwield_after();
+
 }
 
 static obj_ptr _unwield_get_obj(void)
@@ -770,6 +786,7 @@ bool _unwield_verify(obj_ptr obj)
     if (have_flag(obj->flags, OF_NO_REMOVE))
     {
         msg_print("You try to take yourself off, but fail!");
+        energy_use = 0;
         return FALSE;
     }
 
@@ -778,6 +795,7 @@ bool _unwield_verify(obj_ptr obj)
         if ((obj->curse_flags & OFC_PERMA_CURSE) || p_ptr->pclass != CLASS_BERSERKER)
         {
             msg_print("Hmmm, it seems to be cursed.");
+            energy_use = 0;
             return FALSE;
         }
         if (((obj->curse_flags & OFC_HEAVY_CURSE) && one_in_(7)) || one_in_(4))
@@ -794,7 +812,7 @@ bool _unwield_verify(obj_ptr obj)
         else
         {
             msg_print("You couldn't remove the equipment.");
-            energy_use = 50;
+            /* still takes energy! */
             return FALSE;
         }
     }
@@ -807,16 +825,22 @@ void _unwield_before(obj_ptr obj)
         set_action(ACTION_NONE);
 }
 
-void _unwield(obj_ptr obj)
+void _unwield(obj_ptr obj, bool drop)
 {
     char name[MAX_NLEN];
     object_desc(name, obj, OD_COLOR_CODED);
     msg_format("You are no longer wearing %s.", name);
-    pack_carry(obj);
+    if (drop)
+    {
+        assert(obj->number == 1);
+        obj_drop(obj, 1);
+    }
+    else
+        pack_carry(obj);
 
     p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;
     p_ptr->redraw |= PR_EQUIPPY;
-    p_ptr->window |= PW_INVEN | PW_EQUIP;
+    p_ptr->window |= PW_EQUIP;
 }
 
 void _unwield_after(void)
@@ -1714,18 +1738,15 @@ void equip_on_change_race(void)
             {
                 obj->marked &= ~OM_WORN;
                 equip_wield(obj, new_slot);
-                pack_remove(slot);
+                obj_release(obj, OBJ_RELEASE_QUIET);
             }
         }
 
-        p_ptr->notice |= PN_REORDER;
-        p_ptr->update |= PU_BONUS;
-        p_ptr->update |= PU_TORCH;
-        p_ptr->update |= PU_MANA;
+        p_ptr->notice |= PN_OPTIMIZE_PACK;
+        p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;
         p_ptr->redraw |= PR_EQUIPPY;
         p_ptr->window |= PW_INVEN | PW_EQUIP;
         android_calc_exp();
-
     }
 }
 

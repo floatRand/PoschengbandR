@@ -27,6 +27,8 @@ extern void    obj_release(obj_ptr obj, int options);
 extern void obj_inscribe_ui(void);
 extern void obj_inspect_ui(void);
 
+extern void obj_drop(obj_ptr obj, int amt);
+
 /* Predicates */
 extern bool obj_is_art(obj_ptr obj);
 extern bool obj_is_ego(obj_ptr obj);
@@ -36,8 +38,9 @@ extern bool obj_exists(obj_ptr obj);
 extern void obj_clear_scratch(obj_ptr obj); /* Call before sorting ... scratch is used to memoize obj_value */
 extern int  obj_cmp(obj_ptr left, obj_ptr right);
 
-/* Menus */
+/* Menus: These helpers handle the inscription hacks (@mw !* !q) */
 extern char obj_label(obj_ptr obj);
+extern bool obj_confirm_choice(obj_ptr obj);
 
 /* Stacking */
 #define OBJ_STACK_MAX 99

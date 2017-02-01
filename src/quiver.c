@@ -68,6 +68,26 @@ void quiver_remove(slot_t slot)
     inv_remove(_inv, slot);
 }
 
+void quiver_drop(obj_ptr obj)
+{
+    int amt = obj->number;
+
+    assert(obj);
+    assert(obj->loc.where == INV_QUIVER);
+    assert(obj->number > 0);
+
+    if (obj->number > 1)
+    {
+        amt = get_quantity(NULL, obj->number);
+        if (amt <= 0)
+        {
+            energy_use = 0;
+            return;
+        }
+    }
+
+    obj_drop(obj, amt);
+}
 /* Accessing, Iterating, Searching */
 obj_ptr quiver_obj(slot_t slot)
 {

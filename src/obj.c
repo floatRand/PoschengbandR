@@ -510,6 +510,38 @@ void obj_inscribe_ui(void)
     p_ptr->update |= PU_BONUS; /* Why??? */
 }
 
+static void _drop(obj_ptr obj)
+{
+    char name[MAX_NLEN];
+    object_desc(name, obj, OD_COLOR_CODED);
+    msg_format("You drop %s.", name);
+    drop_near(obj, 0, py, px);
+}
+
+void obj_drop(obj_ptr obj, int amt)
+{
+    assert(obj);
+    assert(amt <= obj->number);
+
+    if (!amt) return;
+
+    if (amt < obj->number)
+    {
+        obj_t copy = *obj;
+        copy.number = amt;
+        obj->number -= amt;
+        copy.marked &= ~OM_WORN;
+        _drop(&copy);
+    }
+    else
+    {
+        obj->marked &= ~OM_WORN;
+        _drop(obj);
+        obj->number = 0;
+        obj_release(obj, OBJ_RELEASE_QUIET);
+    }
+}
+
 /************************************************************************
  * Savefiles
  ***********************************************************************/

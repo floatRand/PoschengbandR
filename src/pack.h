@@ -7,14 +7,43 @@
 
 extern void    pack_init(void);
 
+/* User Interface and Display */
 extern void    pack_ui(void);
 extern void    pack_display(doc_ptr doc, obj_p p, int flags);
 
-/* Adding and removing */
-extern bool    pack_get_floor(void);
-extern void    pack_get(obj_ptr obj);
-extern void    pack_carry(obj_ptr obj);
-extern void    pack_remove(slot_t slot);
+/* Adding and Removing Items */
+extern bool pack_get_floor(void);
+    extern void pack_get(obj_ptr obj);
+        extern void pack_carry(obj_ptr obj);
+            extern void pack_remove(slot_t slot);
+/* pack_get_floor gets all items on the floor, potentially prompting the
+ *   user for a selection. This is used by the 'g'et command, as well
+ *   as movement when XXXX is enabled.
+ *
+ * pack_get(obj) gets a single item. This helper function is called by
+ *   pack_get_floor for each obj to add, as well as by the autopicker.
+ *   Also, some spells, like Whip Fetch, directly move objects from the
+ *   floor to the pack and use this function. obj will be released. This
+ *   version must be used in preference to pack_carry whenever obj->loc.where
+ *   is INV_EQUIP, INV_QUIVER, INV_FLOOR. This version properly handles
+ *   checking for quest completion and then calls pack_carry(obj).
+ *
+ * pack_carry(obj) is the next layer down and actually adds obj, but it
+ *   might go to the quiver instead. obj may stack (multiple times) or
+ *   it may go to a new slot. Stop worrying about which slot gets it. Also,
+ *   if the pack is full, obj gets pushed to the overflow stack which will
+ *   be handled later by pack_overflow(). Don't worry about checking whether
+ *   the pack is full or not: Just let overflow handle things. obj is not
+ *   released!
+ *   pack_carry(obj) is called directly during player birth and by several
+ *   buildings to directly give the player objects (obj can be a stack
+ *   variable here). Of course, pack_carry is the servant of pack_get(obj).
+ *
+ * pack_remove(obj) is a helper fn which you should never call. It is used
+ *   by obj_release.
+ */
+extern void    pack_drop(obj_ptr obj);
+extern void    pack_describe(obj_ptr obj);
 
 /* Accessing, Iterating, Searching */
 extern obj_ptr pack_obj(slot_t slot);

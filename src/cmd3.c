@@ -17,100 +17,40 @@
 #include <assert.h>
 
 
-void kamaenaoshi(int item)
-{
-}
-
 /*
  * Drop an item
  */
 void do_cmd_drop(void)
 {
-    int item, amt = 1;
-
-    object_type *o_ptr;
-
-    cptr q, s;
+    obj_prompt_t prompt = {0};
 
     if (p_ptr->special_defense & KATA_MUSOU)
-    {
         set_action(ACTION_NONE);
-    }
 
-    item_tester_no_ryoute = TRUE;
-    /* Get an item */
-    q = "Drop which item? ";
-    s = "You have nothing to drop.";
+    prompt.prompt = "Drop which item?";
+    prompt.error = "You have nothing to drop.";
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
 
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN))) return;
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
 
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-
-        /* Ugly hack! */
-        if ( object_is_melee_weapon(o_ptr)
-          && equip_is_valid_slot(item)
-          && p_ptr->pclass == CLASS_PSION
-          && psion_weapon_graft() )
-        {
-            msg_print("Failed!  Your weapon is currently grafted to your arm!");
-            return;
-        }
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-
-    /* Hack -- Cannot remove cursed items */
-    if (equip_is_valid_slot(item))
-    {
-        if (object_is_cursed(o_ptr))
-        {
-            msg_print("Hmmm, it seems to be cursed.");
-            return;
-        }
-        if (have_flag(o_ptr->flags, OF_NO_REMOVE))
-        {
-            msg_print("You can't drop yourself, silly!");
-            return;
-        }
-    }
-
-    if (o_ptr->tval == TV_POTION && o_ptr->sval == SV_POTION_BLOOD)
-    {
-        msg_print("You can't do that!  Your blood will go sour!");
-        return;
-    }
-
-    /* See how many items */
-    if (o_ptr->number > 1)
-    {
-        /* Get a quantity */
-        amt = get_quantity(NULL, o_ptr->number);
-
-        /* Allow user abort */
-        if (amt <= 0) return;
-    }
-
-
-    /* Take a partial turn */
     energy_use = 50;
 
-    /* Drop (some of) the item */
-    inven_drop(item, amt);
-
-    if (equip_is_valid_slot(item))
-        android_calc_exp();
-
-    p_ptr->redraw |= PR_EQUIPPY;
+    switch (prompt.obj->loc.where)
+    {
+    case INV_PACK:
+        pack_drop(prompt.obj);
+        break;
+    case INV_EQUIP:
+        equip_drop(prompt.obj);
+        break;
+    case INV_QUIVER:
+        quiver_drop(prompt.obj);
+        break;
+    }
 }
-
 
 static bool high_level_book(object_type *o_ptr)
 {

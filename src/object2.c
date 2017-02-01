@@ -4405,9 +4405,7 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
     /* Scan objects in that grid for combination */
     for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
     {
-        object_type *o_ptr;
-
-        o_ptr = &o_list[this_o_idx];
+        object_type *o_ptr = &o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if (obj_can_combine(o_ptr, j_ptr, 0))
         {

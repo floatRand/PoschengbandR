@@ -19,6 +19,7 @@ extern int     quiver_capacity(void);
 extern void    quiver_set_capacity(int capacity);
 extern void    quiver_carry(obj_ptr obj); /* combines quiver, then carries pack, then overflows */
 extern void    quiver_remove(slot_t slot);
+extern void    quiver_drop(obj_ptr obj);
 
 /* Accessing, Iterating, Searching */
 extern obj_ptr quiver_obj(slot_t slot);

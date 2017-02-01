@@ -122,10 +122,14 @@ inv_ptr inv_copy(inv_ptr src)
     return result;
 }
 
+/* Note, a null predicate accepts null objects. This is
+ * for INV_EQUIP which is rigidly slot based. Other inventories
+ * are lists occupied from [1..N] with valid objects (provided
+ * you optimize them). */
 static bool _filter(obj_ptr obj, obj_p p)
 {
-    if (!obj) return FALSE;
     if (!p) return TRUE;
+    if (!obj) return FALSE;
     return p(obj);
 }
 
@@ -501,6 +505,7 @@ void inv_for_each_that(inv_ptr inv, obj_f f, obj_p p)
 {
     int slot;
     assert(f);
+    assert(p);
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
@@ -554,7 +559,7 @@ int inv_weight(inv_ptr inv, obj_p p)
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (_filter(obj, p))
+        if (obj && _filter(obj, p))
             wgt += obj->weight * obj->number;
     }
     return wgt;
@@ -567,7 +572,7 @@ int inv_count(inv_ptr inv, obj_p p)
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
-        if (_filter(obj, p))
+        if (obj && _filter(obj, p))
             ct += obj->number;
     }
     return ct;
@@ -622,22 +627,17 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
     {
         obj_ptr obj = inv_obj(inv, slot);
 
-        /* Unlike other _filters, we show empty slots if
-         * p is omitted. To suppress this, pass obj_exists
-         * for a predicate (This is for INV_EQUIP). */
+        if (!_filter(obj, p)) continue;
         if (!obj)
         {
-            if (!p)
-            {
-                doc_printf(doc, " %c) ", inv_slot_label(inv, slot));
-                if (show_item_graph)
-                    doc_insert(doc, "  ");
-                if (slot_f)
-                    slot_f(doc, slot);
-                doc_insert(doc, "<color:D>Empty</color>\n");
-            }
+            doc_printf(doc, " %c) ", inv_slot_label(inv, slot));
+            if (show_item_graph)
+                doc_insert(doc, "  ");
+            if (slot_f)
+                slot_f(doc, slot);
+            doc_insert(doc, "<color:D>Empty</color>\n");
         }
-        else if (_filter(obj, p))
+        else
         {
             char name[MAX_NLEN];
             doc_style_t style = *doc_current_style(doc);
@@ -657,11 +657,7 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
             }
             doc_printf(doc, "%s", name);
             if (xtra)
-            {
-                /*doc_insert(doc, " {<color:v>This is a <color:y>really, <color:R>very, <color:o>incredibly</color>, "
-                                "extremely</color>, mighty</color> long object name</color>}");*/
                 doc_pop_style(doc);
-            }
             if (flags & INV_SHOW_FAIL_RATES)
             {
                 if (object_is_aware(obj) && obj_is_identified_fully(obj))

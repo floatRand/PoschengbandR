@@ -11,6 +11,13 @@
  * are copied. Clients own the original while this module
  * owns the copies. Filtered inventories must outlive
  * the parent (source) inventory.
+ *
+ * You should know that a NULL predicate accepts a NULL
+ * object. If you don't like this, then pass obj_exists.
+ * For inv_filter*, we always return an inventory with
+ * the same slot structure as the source no matter the
+ * predicate (but non-matching slots will be NULL in the
+ * filtered inventory).
  */
 
 typedef int slot_t; /* Slots are 1..max ('if (slot) ...' is a valid idiom) */
@@ -64,8 +71,8 @@ extern slot_t  inv_random_slot(inv_ptr inv, obj_p p); /* used for disenchantment
 
 /* Properties of the Entire Inventory */
 extern int     inv_weight(inv_ptr inv, obj_p p); /* Pass NULL for total weight */
-extern int     inv_count(inv_ptr inv, obj_p p); /* Sum(obj->number) for all objects p accepts */
-extern int     inv_count_slots(inv_ptr inv, obj_p p); /* Sum(1) for all objects p accepts */
+extern int     inv_count(inv_ptr inv, obj_p p); /* Sum(obj->number) for all non-null objects p accepts */
+extern int     inv_count_slots(inv_ptr inv, obj_p p); /* Sum(1) for all (possibly null) objects p accepts */
 extern int     inv_loc(inv_ptr inv);
 extern int     inv_max(inv_ptr inv);
 extern cptr    inv_name(inv_ptr inv);

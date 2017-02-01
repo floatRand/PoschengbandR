@@ -74,10 +74,8 @@ void pack_carry(obj_ptr obj)
     }
     if (obj->number)
         pack_push_overflow(obj);
-    p_ptr->update |= PU_BONUS;
+    p_ptr->update |= PU_BONUS; /* Weight changed */
     p_ptr->window |= PW_INVEN;
-    if (obj->tval == TV_RUNE)
-        p_ptr->update |= PU_BONUS;
 }
 
 /* Helper for pack_get_floor ... probably s/b private but the autopicker needs it */
@@ -113,7 +111,7 @@ void pack_get(obj_ptr obj)
         if (class_ptr->get_object)
             class_ptr->get_object(obj);
 
-        msg_format("You have %s.", name);
+        msg_format("You get %s.", name);
 
         /* TODO: quest_check_obj(obj), quest_check_mon(mon), etc. */
         for (i = 0; i < max_quests; i++)
@@ -186,6 +184,51 @@ bool pack_get_floor(void)
     inv_free(floor);
 
     return result;
+}
+
+void pack_drop(obj_ptr obj)
+{
+    int  amt = obj->number;
+    bool msg = FALSE;
+
+    assert(obj);
+    assert(obj->loc.where == INV_PACK);
+    assert(obj->number > 0);
+
+    if (obj->tval == TV_POTION && obj->sval == SV_POTION_BLOOD)
+    {
+        msg_print("You can't do that! Your blood will go sour!");
+        energy_use = 0;
+        return;
+    }
+
+    if (obj->number > 1)
+    {
+        amt = get_quantity(NULL, obj->number);
+        if (amt <= 0)
+        {
+            energy_use = 0;
+            return;
+        }
+    }
+
+    if (amt < obj->number)
+        msg = TRUE;
+    obj_drop(obj, amt);
+    if (msg)
+        pack_describe(obj);
+}
+
+void pack_describe(obj_ptr obj)
+{
+    char name[MAX_NLEN];
+
+    assert(obj);
+    assert(obj->loc.where == INV_PACK);
+    assert(1 <= obj->loc.slot && obj->loc.slot <= 26);
+
+    object_desc(name, obj, OD_COLOR_CODED);
+    msg_format("You have %s in your pack (%c).", name, slot_label(obj->loc.slot));
 }
 
 void pack_remove(slot_t slot)

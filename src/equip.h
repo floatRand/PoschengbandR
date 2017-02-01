@@ -16,15 +16,23 @@
 
    NULL predicates are always OK and mean that no restriction should be applied.
 */
-extern void    equip_ui(void);
-extern void    equip_wield_ui(void); 
-extern void    equip_takeoff_ui(void);
 
+extern void    equip_ui(void);
 extern void    equip_display(doc_ptr doc, obj_p p, int flags);
 
-extern void    equip_wield(obj_ptr obj, slot_t slot);
-extern void    equip_takeoff(slot_t slot); /* takeoff, drop, throw */
-extern void    equip_remove(slot_t slot);  /* helper fn ... try equip_takeoff instead */
+/* Adding and Removing Equipment */
+extern void equip_wield_ui(void); 
+    extern void equip_wield(obj_ptr obj, slot_t slot);
+
+extern void equip_takeoff_ui(void);
+    extern void equip_takeoff(slot_t slot);
+    /* Taking off an item implies moving it to the pack */
+
+extern void    equip_drop(obj_ptr obj);
+    /* helper for do_cmd_drop */
+
+extern void    equip_remove(slot_t slot);
+    /* helper fn ... try equip_takeoff instead */
 
 extern void    equip_calc_bonuses(void);
 extern inv_ptr equip_filter(obj_p p);
