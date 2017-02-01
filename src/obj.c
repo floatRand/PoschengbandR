@@ -456,6 +456,7 @@ void obj_inspect_ui(void)
 
     prompt.prompt = "Examine which item?";
     prompt.error = "You have nothing to examine.";
+    prompt.filter = obj_exists;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;
@@ -499,6 +500,7 @@ void obj_inscribe_ui(void)
 
     prompt.prompt = "Inscribe which item?";
     prompt.error = "You have nothing to inscribe.";
+    prompt.filter = obj_exists;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     prompt.where[2] = INV_QUIVER;

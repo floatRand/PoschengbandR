@@ -620,7 +620,7 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
     else if (show_weights)
         xtra = 9;  /* " 123.0 lbs" */
 
-    inv_calculate_labels(inv, start, stop);
+    inv_calculate_labels(inv, start, stop, flags);
 
     doc_insert(doc, "<style:table>");
     for (slot = start; slot <= stop; slot++)
@@ -630,7 +630,7 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
         if (!_filter(obj, p)) continue;
         if (!obj)
         {
-            doc_printf(doc, " %c) ", inv_slot_label(inv, slot));
+            doc_printf(doc, " %c) ", slot_label(slot - start + 1));
             if (show_item_graph)
                 doc_insert(doc, "  ");
             if (slot_f)
@@ -702,7 +702,7 @@ slot_t inv_label_slot(inv_ptr inv, char label)
     return 0;
 }
 
-void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop)
+void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop, int flags)
 {
     slot_t slot;
     if (!stop)
@@ -717,7 +717,7 @@ void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop)
     }
 
     /* Inscription overrides don't function is shops */
-    if (inv->type == INV_STORE || inv->type == INV_HOME)
+    if (inv->type == INV_STORE || inv->type == INV_HOME || (flags & INV_IGNORE_INSCRIPTIONS))
         return;
 
     /* Override by inscription (e.g. @mf) */
@@ -747,6 +747,14 @@ void inv_paginate(inv_ptr inv, obj_p p, int page_size)
 
     assert(!inv->pagination); /* you forgot to call inv_unpaginate() */
     inv->pagination = _pagination_alloc(p, page_size);
+
+    /* Hack for equipment to keep slot labels consistent */
+    if (inv->type == INV_EQUIP)
+    {
+        vec_add(inv->pagination->pages, _page_alloc(1, equip_max()));
+        inv->pagination->page_count++;
+        return;
+    }
 
     max = inv_last(inv, p);
     if (!max) return;
@@ -801,7 +809,7 @@ void inv_calculate_page_labels(inv_ptr inv, int page)
     assert(inv->pagination);
     assert(0 <= page && page < vec_length(inv->pagination->pages));
     page_ptr = vec_get(inv->pagination->pages, page);
-    inv_calculate_labels(inv, page_ptr->start, page_ptr->stop);
+    inv_calculate_labels(inv, page_ptr->start, page_ptr->stop, 0);
 }
 
 void inv_unpaginate(inv_ptr inv)

@@ -85,8 +85,9 @@ extern cptr    inv_name(inv_ptr inv);
  * Labels are calculated by inv_display which properly handles all the inscription
  * coding (e.g. @mh to label an object 'h' for the 'm' command, etc.).
  * We respect show_weights (provided flags don't override) as well as show_item_graph */
-#define INV_SHOW_FAIL_RATES 0x0001
-#define INV_SHOW_VALUE      0x0002
+#define INV_SHOW_FAIL_RATES     0x0001
+#define INV_SHOW_VALUE          0x0002
+#define INV_IGNORE_INSCRIPTIONS 0x0004
 extern void inv_display(
     /* What we display */
     inv_ptr inv,
@@ -101,7 +102,7 @@ extern char    inv_slot_label(inv_ptr inv, slot_t slot);
 extern slot_t  inv_label_slot(inv_ptr inv, char label);
 /* Normally, you don't need to call this since you will usually display()
  * before inspecting labels. Except for REPEAT_PULL() ... sigh */
-extern void    inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop);
+extern void    inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop, int flags);
 
 /* Pagination ... for obj_prompt */
 extern void    inv_paginate(inv_ptr inv, obj_p p, int page_size);
