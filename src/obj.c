@@ -53,12 +53,14 @@ void obj_release(obj_ptr obj, int options)
             delete_object_idx(obj->loc.slot);
         break;
     case INV_EQUIP:
+        p_ptr->window |= PW_EQUIP;
         if (!quiet)
             msg_format("You are no longer wearing %s.", name);
         if (obj->number <= 0)
             equip_remove(obj->loc.slot);
         break;
     case INV_PACK:
+        p_ptr->window |= PW_INVEN;
         if (!quiet)
             msg_format("You have %s in your pack.", name);
         if (obj->number <= 0)

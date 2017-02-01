@@ -239,7 +239,8 @@ int obj_prompt(obj_prompt_ptr prompt)
             prompt->obj = inv_obj(inv, slot);
             result = OP_SUCCESS;
             REPEAT_PUSH(inv_loc(inv));
-            if (vec_get_int(context.pages, context.tab) == 0)
+            /* repeat can be dangerous if the pack shuffles */
+            if (vec_get_int(context.pages, context.tab) == 0 && object_is_aware(prompt->obj))
                 REPEAT_PUSH(cmd);
             break;
         }

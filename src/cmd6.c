@@ -602,14 +602,10 @@ void do_cmd_eat_food(void)
 /*
  * Quaff a potion (from the pack or the floor)
  */
-static void do_cmd_quaff_potion_aux(int item)
+static void do_cmd_quaff_potion_aux(obj_ptr obj)
 {
-    int         lev;
-    object_type    *o_ptr;
-    object_type forge;
-    object_type *q_ptr;
-    int         number = 1;
-
+    int   lev = k_info[obj->k_idx].level;
+    int   number = 1;
 
     /* Take a turn */
     if (mut_present(MUT_POTION_CHUGGER) || p_ptr->tim_shrike)
@@ -632,21 +628,6 @@ static void do_cmd_quaff_potion_aux(int item)
     }
     warlock_stop_singing();
 
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-    /* Object level */
-    lev = k_info[o_ptr->k_idx].level;
-
     if (devicemaster_is_(DEVICEMASTER_POTIONS) && !devicemaster_desperation)
     {
         int delta = MIN(50, 2*p_ptr->lev - lev);
@@ -659,7 +640,7 @@ static void do_cmd_quaff_potion_aux(int item)
     if (devicemaster_desperation)
     {
         int i, amt = 50;
-        number = o_ptr->number;
+        number = obj->number;
         if (number > 4) number = 4;
         for (i = 1; i < number && amt; i++)
         {
@@ -668,77 +649,30 @@ static void do_cmd_quaff_potion_aux(int item)
         }
     }
 
-    /* Copy */
-    q_ptr = &forge;
-    object_copy(q_ptr, o_ptr);
-    q_ptr->number = number;
-
-    /* Consume Item */
-    if (devicemaster_is_(DEVICEMASTER_POTIONS) && !devicemaster_desperation && randint1(3*p_ptr->lev/2) > MAX(10, lev))
-    {
-        msg_print("You sip the potion sparingly.");
-    }
-    else
-    {
-        stats_on_use(q_ptr, number);
-
-        if (item >= 0)
-        {
-            inven_item_increase(item, -number);
-            inven_item_describe(item);
-            inven_item_optimize(item);
-        }
-        else
-        {
-            stats_on_pickup(q_ptr);
-            floor_item_increase(0 - item, -number);
-            floor_item_describe(0 - item);
-            floor_item_optimize(0 - item);
-        }
-    }
-    o_ptr = NULL; /* Crappy code warning: Use q_ptr from here on ... */
-
     sound(SOUND_QUAFF);
-    if (q_ptr->tval == TV_POTION)
-        device_use(q_ptr, 0);
+    if (obj->tval == TV_POTION) /* Skip Flasks of Oil */
+        device_use(obj, 0);
 
     if (prace_is_(RACE_SKELETON) || (p_ptr->current_r_idx && r_info[p_ptr->current_r_idx].d_char == 's'))
     {
         msg_print("Some of the fluid falls through your jaws!");
-        potion_smash_effect(0, py, px, q_ptr->k_idx);
+        potion_smash_effect(0, py, px, obj->k_idx);
     }
 
-    /* Combine / Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-    if (!(object_is_aware(q_ptr)))
+    if (!object_is_aware(obj))
     {
         virtue_add(VIRTUE_PATIENCE, -1);
         virtue_add(VIRTUE_CHANCE, 1);
         virtue_add(VIRTUE_KNOWLEDGE, -1);
     }
 
-    object_tried(q_ptr);
-    if (device_noticed && !object_is_aware(q_ptr))
+    object_tried(obj);
+    if (device_noticed && !object_is_aware(obj))
     {
-        object_aware(q_ptr);
+        object_aware(obj);
         gain_exp((lev + (p_ptr->lev >> 1)) / p_ptr->lev);
-
-        /* Try to keep stats up to date. It's possible inventory[item]
-           is no longer the item we just noticed and I'm rather frustrated
-           that the code consumes the objects before actually using them. */
-        if (item >= 0)
-            o_ptr = &inventory[item];
-        else
-            o_ptr = &o_list[0 - item];
-        if (o_ptr->k_idx == q_ptr->k_idx)
-            stats_on_notice(o_ptr, o_ptr->number + number);
-        else
-            k_info[q_ptr->k_idx].counts.found += number;
+        p_ptr->notice |= PN_OPTIMIZE_PACK;
     }
-
-    /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
     /* Potions can feed the player */
     switch (p_ptr->mimic_form)
@@ -748,11 +682,10 @@ static void do_cmd_quaff_potion_aux(int item)
         {
             case RACE_VAMPIRE:
             case RACE_MON_VAMPIRE:
-                (void)set_food(p_ptr->food + (q_ptr->pval / 10));
+                set_food(p_ptr->food + obj->pval / 10);
                 break;
             case RACE_SKELETON:
             case RACE_MON_JELLY:
-                /* Do nothing */
                 break;
             case RACE_GOLEM:
             case RACE_MON_GOLEM:
@@ -764,49 +697,64 @@ static void do_cmd_quaff_potion_aux(int item)
             case RACE_MON_DEMON:
             case RACE_MON_SWORD:
             case RACE_MON_RING:
-                set_food(p_ptr->food + ((q_ptr->pval) / 20));
+                set_food(p_ptr->food + obj->pval / 20);
                 break;
             case RACE_ANDROID:
-                if (q_ptr->tval == TV_FLASK)
+                if (obj->tval == TV_FLASK)
                 {
                     msg_print("You replenish yourself with the oil.");
                     set_food(p_ptr->food + 5000);
                 }
                 else
                 {
-                    set_food(p_ptr->food + ((q_ptr->pval) / 20));
+                    set_food(p_ptr->food + obj->pval / 20);
                 }
                 break;
             case RACE_ENT:
                 msg_print("You are moistened.");
-                set_food(MIN(p_ptr->food + q_ptr->pval + MAX(0, q_ptr->pval * 10) + 2000, PY_FOOD_MAX - 1));
+                set_food(MIN(p_ptr->food + obj->pval + MAX(0, obj->pval * 10) + 2000, PY_FOOD_MAX - 1));
                 break;
             default:
                 if (elemental_is_(ELEMENTAL_WATER))
                 {
                     msg_print("That tastes delicious.");
-                    set_food(MIN(p_ptr->food + q_ptr->pval + MAX(0, q_ptr->pval * 10) + 2000, PY_FOOD_MAX - 1));
+                    set_food(MIN(p_ptr->food + obj->pval + MAX(0, obj->pval * 10) + 2000, PY_FOOD_MAX - 1));
                 }
-                else if (elemental_is_(ELEMENTAL_FIRE) && q_ptr->tval == TV_FLASK)
+                else if (elemental_is_(ELEMENTAL_FIRE) && obj->tval == TV_FLASK)
                 {
                     msg_print("Your body flames up with renewed vigor.");
                     set_food(p_ptr->food + 5000);
                 }
                 else
-                    set_food(p_ptr->food + q_ptr->pval);
+                    set_food(p_ptr->food + obj->pval);
                 break;
         }
         break;
     case MIMIC_DEMON:
     case MIMIC_DEMON_LORD:
-        set_food(p_ptr->food + ((q_ptr->pval) / 20));
+        set_food(p_ptr->food + obj->pval / 20);
         break;
     case MIMIC_VAMPIRE:
-        (void)set_food(p_ptr->food + (q_ptr->pval / 10));
+        set_food(p_ptr->food + obj->pval / 10);
         break;
     default:
-        (void)set_food(p_ptr->food + q_ptr->pval);
+        set_food(p_ptr->food + obj->pval);
         break;
+    }
+
+    /* Consume Item */
+    if (devicemaster_is_(DEVICEMASTER_POTIONS) && !devicemaster_desperation && randint1(3*p_ptr->lev/2) > MAX(10, lev))
+    {
+        msg_print("You sip the potion sparingly.");
+    }
+    else
+    {
+        stats_on_use(obj, number);
+        if (obj->loc.where == INV_FLOOR)
+            stats_on_pickup(obj);
+
+        obj->number -= number;
+        obj_release(obj, 0);
     }
 }
 
@@ -814,7 +762,7 @@ static void do_cmd_quaff_potion_aux(int item)
 /*
  * Hook to determine if an object can be quaffed
  */
-static bool item_tester_hook_quaff(object_type *o_ptr)
+static bool _can_quaff(object_type *o_ptr)
 {
     if (o_ptr->tval == TV_POTION) return TRUE;
 
@@ -833,25 +781,21 @@ static bool item_tester_hook_quaff(object_type *o_ptr)
  */
 void do_cmd_quaff_potion(void)
 {
-    int  item;
-    cptr q, s;
+    obj_prompt_t prompt = {0};
 
     if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
-    {
         set_action(ACTION_NONE);
-    }
 
-    /* Restrict choices to potions */
-    item_tester_hook = item_tester_hook_quaff;
+    prompt.prompt = "Quaff which potion?";
+    prompt.error = "You have no potions to quaff.";
+    prompt.filter = _can_quaff;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
 
-    /* Get an item */
-    q = "Quaff which potion? ";
-    s = "You have no potions to quaff.";
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
 
-    if (!get_item(&item, q, s, (USE_INVEN | USE_FLOOR))) return;
-
-    /* Quaff the potion */
-    do_cmd_quaff_potion_aux(item);
+    do_cmd_quaff_potion_aux(prompt.obj);
 
     if (p_ptr->fasting)
     {
