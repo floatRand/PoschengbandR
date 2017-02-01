@@ -107,6 +107,7 @@ extern void    inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop);
 extern void    inv_paginate(inv_ptr inv, obj_p p, int page_size);
 extern int     inv_page_count(inv_ptr inv);
 extern void    inv_display_page(inv_ptr inv, int page, doc_ptr doc, int flags);
+extern void    inv_calculate_page_labels(inv_ptr inv, int page);
 extern void    inv_unpaginate(inv_ptr inv);
 
 /* Savefiles */

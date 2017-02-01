@@ -2170,65 +2170,73 @@ static void prt_frame_extra(void)
 /*
  * Hack -- display inventory in sub-windows
  */
+static void _fix_inven_aux(void)
+{
+    doc_ptr doc;
+    int     w, h;
+
+    Term_get_size(&w, &h);
+    doc = doc_alloc(w);
+
+    doc_insert(doc, "<style:table>");
+    pack_display(doc, NULL, 0);
+    doc_insert(doc, "</style>");
+    doc_sync_term(
+        doc,
+        doc_range_top_lines(doc, h),
+        doc_pos_create(0, 0)
+    );
+    doc_free(doc);
+}
 static void fix_inven(void)
 {
     int j;
 
-    /* Scan windows */
     for (j = 0; j < 8; j++)
     {
         term *old = Term;
-
-        /* No window */
         if (!angband_term[j]) continue;
-
-        /* No relevant flags */
-        if (!(window_flag[j] & (PW_INVEN))) continue;
-
-        /* Activate */
+        if (!(window_flag[j] & PW_INVEN)) continue;
         Term_activate(angband_term[j]);
-
-        /* Display inventory */
-        display_inven();
-
-        /* Fresh */
+        _fix_inven_aux();
         Term_fresh();
-
-        /* Restore */
         Term_activate(old);
     }
 }
 
-
-
 /*
  * Hack -- display equipment in sub-windows
  */
+static void _fix_equip_aux(void)
+{
+    doc_ptr doc;
+    int     w, h;
+
+    Term_get_size(&w, &h);
+    doc = doc_alloc(w);
+
+    doc_insert(doc, "<style:table>");
+    equip_display(doc, NULL, 0);
+    doc_insert(doc, "</style>");
+    doc_sync_term(
+        doc,
+        doc_range_top_lines(doc, h),
+        doc_pos_create(0, 0)
+    );
+    doc_free(doc);
+}
 static void fix_equip(void)
 {
     int j;
 
-    /* Scan windows */
     for (j = 0; j < 8; j++)
     {
         term *old = Term;
-
-        /* No window */
         if (!angband_term[j]) continue;
-
-        /* No relevant flags */
         if (!(window_flag[j] & (PW_EQUIP))) continue;
-
-        /* Activate */
         Term_activate(angband_term[j]);
-
-        /* Display equipment */
-        display_equip();
-
-        /* Fresh */
+        _fix_equip_aux();
         Term_fresh();
-
-        /* Restore */
         Term_activate(old);
     }
 }

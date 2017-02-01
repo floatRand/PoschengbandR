@@ -5698,6 +5698,7 @@ void play_game(bool new_game)
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_SPELL);
     p_ptr->window |= (PW_MESSAGE | PW_OVERHEAD | PW_DUNGEON | PW_MONSTER_LIST | PW_OBJECT_LIST | PW_MONSTER | PW_OBJECT);
     window_stuff();
+    viewport_verify_aux(VIEWPORT_FORCE_CENTER);
 
     /* Give startup outfit (after loading pref files) */
     if (new_game)

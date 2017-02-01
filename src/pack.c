@@ -139,7 +139,7 @@ static int _get_cmd_handler(obj_prompt_context_ptr context, int cmd)
 
 static bool _get_floor(inv_ptr floor)
 {
-    int          ct = inv_count(floor, NULL);
+    int          ct = inv_count_slots(floor, obj_exists);
     obj_prompt_t prompt = {0};
 
     /* Autopicker cleared 'em all? */
@@ -217,6 +217,8 @@ void pack_drop(obj_ptr obj)
     obj_drop(obj, amt);
     if (msg)
         pack_describe(obj);
+    p_ptr->update |= PU_BONUS; /* Weight changed */
+    p_ptr->window |= PW_INVEN;
 }
 
 void pack_describe(obj_ptr obj)
@@ -360,6 +362,7 @@ bool pack_optimize(void)
 {
     if (inv_optimize(_inv))
     {
+        p_ptr->window |= PW_INVEN;
         /*msg_print("You reorder your pack.");*/
         return TRUE;
     }

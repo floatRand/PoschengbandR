@@ -130,7 +130,8 @@ static int _basic_cmd(obj_prompt_context_ptr context, int cmd)
                 slot_t slot = inv_first(inv, obj_exists);
                 assert(slot);
                 context->prompt->obj = inv_obj(inv, slot);
-                REPEAT_PUSH(cmd);
+                REPEAT_PUSH(inv_loc(inv));
+                REPEAT_PUSH('a');
                 return OP_CMD_DISMISS;
             }
         }
@@ -192,7 +193,7 @@ int obj_prompt(obj_prompt_ptr prompt)
             inv_ptr inv = vec_get(context.tabs, repeat_tab);
             slot_t  slot;
 
-            inv_calculate_labels(inv, 1, 0);
+            inv_calculate_page_labels(inv, 0);
             slot = inv_label_slot(inv, tmp);
             if (slot)
             {
@@ -238,7 +239,8 @@ int obj_prompt(obj_prompt_ptr prompt)
             prompt->obj = inv_obj(inv, slot);
             result = OP_SUCCESS;
             REPEAT_PUSH(inv_loc(inv));
-            REPEAT_PUSH(cmd);
+            if (vec_get_int(context.pages, context.tab) == 0)
+                REPEAT_PUSH(cmd);
             break;
         }
         else if (isupper(cmd))

@@ -1197,8 +1197,6 @@ extern s16b label_to_equip(int c);
 extern cptr describe_use(int i);
 extern bool check_book_realm(const byte book_tval, const byte book_sval);
 extern bool item_tester_okay(object_type *o_ptr);
-extern void display_inven(void);
-extern void display_equip(void);
 extern int show_inven(int target_item, int mode);
 extern int show_equip(int target_item, int mode);
 extern void toggle_inven_equip(void);

@@ -635,7 +635,8 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, s
                 doc_insert(doc, "  ");
             if (slot_f)
                 slot_f(doc, slot);
-            doc_insert(doc, "<color:D>Empty</color>\n");
+            /*doc_insert(doc, "<color:D>Empty</color>\n");*/
+            doc_newline(doc);
         }
         else
         {
@@ -792,6 +793,15 @@ void inv_display_page(inv_ptr inv, int page, doc_ptr doc, int flags)
         inv->pagination->filter,
         doc, NULL, flags
     );
+}
+
+void inv_calculate_page_labels(inv_ptr inv, int page)
+{
+    _page_ptr page_ptr;
+    assert(inv->pagination);
+    assert(0 <= page && page < vec_length(inv->pagination->pages));
+    page_ptr = vec_get(inv->pagination->pages, page);
+    inv_calculate_labels(inv, page_ptr->start, page_ptr->stop);
 }
 
 void inv_unpaginate(inv_ptr inv)
