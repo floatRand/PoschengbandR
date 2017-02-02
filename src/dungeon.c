@@ -4595,7 +4595,9 @@ static void process_player(void)
             msg_line_clear(); */
 
             /* Process the command */
+            pack_lock();
             process_command();
+            pack_unlock();
         }
 
         /* Normal command */
@@ -4610,7 +4612,9 @@ static void process_player(void)
             can_save = FALSE;
 
             /* Process the command */
+            pack_lock();
             process_command();
+            pack_unlock();
         }
 
         /* Hack -- Pack Overflow */

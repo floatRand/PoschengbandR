@@ -373,7 +373,12 @@ bool pack_overflow(void)
  * they need to be separate. */
 bool pack_optimize(void)
 {
-    if (!_lock && inv_optimize(_inv))
+    if (_lock)
+    {
+        /* Try again later ... */
+        p_ptr->notice |= PN_OPTIMIZE_PACK;
+    }
+    else if (inv_optimize(_inv))
     {
         p_ptr->window |= PW_INVEN;
         cmsg_print(TERM_YELLOW, "You reorder your pack.");
