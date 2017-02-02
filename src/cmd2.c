@@ -2563,7 +2563,7 @@ void do_cmd_get(void)
     /* Get any objects under foot first ... this is the old
      * 'g' behavior sans interaction with features (e.g. re-
      * enter a shop) */
-    if (cave[py][px].o_idx)
+    if (cave[py][px].o_idx || p_ptr->wizard)
     {
         if (pack_get_floor())
             energy_use = 100;

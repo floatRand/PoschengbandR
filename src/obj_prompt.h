@@ -45,14 +45,22 @@ struct obj_prompt_s
 typedef struct obj_prompt_s obj_prompt_t, *obj_prompt_ptr;
 
 /* Context for Customization */
+struct obj_prompt_tab_s
+{
+    inv_ptr inv;
+    int     ct;
+    int     page_ct;
+    int     page;
+};
+typedef struct obj_prompt_tab_s obj_prompt_tab_t, *obj_prompt_tab_ptr;
+
 struct obj_prompt_context_s
 {
     obj_prompt_ptr prompt;
-    vec_ptr        tabs;   /* vec<inv_ptr> */
-    int            tab;    /* current tab */
+    vec_ptr        tabs;
+    int            tab;
     doc_ptr        doc;
     int            page_size;
-    vec_ptr        pages;  /* current page in each tab */
 };
 
 /* Prompt for an object, but we are very customizable.

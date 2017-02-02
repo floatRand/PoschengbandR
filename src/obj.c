@@ -426,11 +426,11 @@ int obj_combine(obj_ptr dest, obj_ptr obj, int loc)
  ***********************************************************************/
 static int _inspector(obj_prompt_context_ptr context, int cmd)
 {
-    inv_ptr inv = vec_get(context->tabs, context->tab);
-    slot_t  slot = inv_label_slot(inv, cmd);
+    obj_prompt_tab_ptr tab = vec_get(context->tabs, context->tab);
+    slot_t             slot = inv_label_slot(tab->inv, cmd);
     if (slot)
     {
-        obj_ptr obj = inv_obj(inv, slot);
+        obj_ptr obj = inv_obj(tab->inv, slot);
         doc_clear(context->doc);
         if (object_is_flavor(obj) && !object_is_known(obj))
         {
@@ -468,11 +468,11 @@ void obj_inspect_ui(void)
 
 static int _inscriber(obj_prompt_context_ptr context, int cmd)
 {
-    inv_ptr inv = vec_get(context->tabs, context->tab);
-    slot_t  slot = inv_label_slot(inv, cmd);
+    obj_prompt_tab_ptr tab = vec_get(context->tabs, context->tab);
+    slot_t             slot = inv_label_slot(tab->inv, cmd);
     if (slot)
     {
-        obj_ptr obj = inv_obj(inv, slot);
+        obj_ptr obj = inv_obj(tab->inv, slot);
         char    name[MAX_NLEN];
         char    insc[80];
 

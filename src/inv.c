@@ -2,62 +2,14 @@
 
 #include <assert.h>
 
-struct _page_s
-{
-    slot_t start;
-    slot_t stop;
-};
-typedef struct _page_s _page_t, *_page_ptr;
-
-static _page_ptr _page_alloc(slot_t start, slot_t stop)
-{
-    _page_ptr page = malloc(sizeof(_page_t));
-    page->start = start;
-    page->stop = stop;
-    return page;
-}
-
-static void _page_free(_page_ptr page)
-{
-    if (page) free(page);
-}
-
-struct _pagination_s
-{
-    obj_p   filter;
-    int     page_size;
-    int     page_count;
-    vec_ptr pages;
-};
-typedef struct _pagination_s _pagination_t, *_pagination_ptr;
-
-static _pagination_ptr _pagination_alloc(obj_p p, int page_size)
-{
-    _pagination_ptr pagination = malloc(sizeof(_pagination_t));
-    pagination->filter = p;
-    pagination->page_size = page_size;
-    pagination->page_count = 0;
-    pagination->pages = vec_alloc((vec_free_f)_page_free);
-    return pagination;
-}
-
-static void _pagination_free(_pagination_ptr pagination)
-{
-    if (pagination)
-    {
-        vec_free(pagination->pages);
-        pagination->pages = NULL;
-        free(pagination);
-    }
-}
-
+#define _FILTER 0x01
 struct inv_s
 {
     cptr    name;
     int     type;
     int     max;
+    int     flags;
     vec_ptr objects; /* sparse ... grows as needed (up to max+1 if max is set) */
-    _pagination_ptr pagination;
 };
 
 /* Slots: We are assuming slot <= 26 */
@@ -95,8 +47,8 @@ inv_ptr inv_alloc(cptr name, int type, int max)
     result->name = name;
     result->type = type;
     result->max = max;
+    result->flags = 0;
     result->objects = vec_alloc((vec_free_f)obj_free);
-    result->pagination = NULL;
     return result;
 }
 
@@ -108,8 +60,8 @@ inv_ptr inv_copy(inv_ptr src)
     result->name = src->name;
     result->type = src->type;
     result->max = src->max;
+    result->flags = src->flags;
     result->objects = vec_alloc((vec_free_f)obj_free);
-    result->pagination = NULL;
 
     for (i = 0; i < vec_length(src->objects); i++)
     {
@@ -144,8 +96,8 @@ inv_ptr inv_filter(inv_ptr src, obj_p p)
     result->name = src->name;
     result->type = src->type;
     result->max = src->max;
+    result->flags = src->flags | _FILTER;
     result->objects = vec_alloc(NULL); /* src owns the objects! */
-    result->pagination = NULL;
 
     for (i = 0; i < vec_length(src->objects); i++)
     {
@@ -170,19 +122,35 @@ inv_ptr inv_filter_floor(obj_p p)
     result->name = "Floor";
     result->type = INV_FLOOR;
     result->max = 0;
+    result->flags = _FILTER;
     result->objects = vec_alloc(NULL); /* o_list owns the objects! */
-    result->pagination = NULL;
 
     vec_add(result->objects, NULL); /* slot 0 is invalid */
 
-    for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
+    if (p_ptr->wizard) /* wizards have mighty magicks */
     {
-        object_type *obj = &o_list[this_o_idx];
+        result->name = "*FLOOR*";
+        for (this_o_idx = 0; this_o_idx < max_o_idx; this_o_idx++)
+        {
+            obj_ptr obj = &o_list[this_o_idx];
+            assert(obj);
+            if (!obj->k_idx) continue;
+            if (_filter(obj, p))
+                vec_add(result->objects, obj);
+        }
+    }
+    else
+    {
+        for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
+        {
+            obj_ptr obj = &o_list[this_o_idx];
 
-        assert(obj);
-        next_o_idx = obj->next_o_idx;
-        if (_filter(obj, p))
-            vec_add(result->objects, obj);
+            assert(obj);
+            assert(obj->k_idx);
+            next_o_idx = obj->next_o_idx;
+            if (_filter(obj, p))
+                vec_add(result->objects, obj);
+        }
     }
     return result;
 }
@@ -199,8 +167,8 @@ inv_ptr inv_filter_home(obj_p p)
     result->name = "Home";
     result->type = INV_HOME;
     result->max = 0;
+    result->flags = _FILTER;
     result->objects = vec_alloc(NULL); /* shop owns the objects! */
-    result->pagination = NULL;
 
     vec_add(result->objects, NULL); /* slot 0 is invalid */
 
@@ -221,8 +189,6 @@ void inv_free(inv_ptr inv)
     {
         vec_free(inv->objects);
         inv->objects = NULL;
-        _pagination_free(inv->pagination);
-        inv->pagination = NULL;
         inv->name = NULL;
         free(inv);
     }
@@ -242,6 +208,7 @@ static void _add_aux(inv_ptr inv, obj_ptr obj, slot_t slot)
         ct = 1;
 
     assert(1 <= slot && slot <= inv->max);
+    assert(!(inv->flags & _FILTER));
 
     loc.where = inv->type;
     loc.slot = slot;
@@ -290,6 +257,7 @@ slot_t inv_combine(inv_ptr inv, obj_ptr obj)
     slot_t slot;
 
     assert(obj->number);
+    assert(!(inv->flags & _FILTER));
 
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
@@ -317,6 +285,7 @@ int inv_combine_ex(inv_ptr inv, obj_ptr obj)
     slot_t slot;
 
     assert(obj->number);
+    assert(!(inv->flags & _FILTER));
 
     /* combine obj with as many existing slots as possible */
     for (slot = 1; slot < vec_length(inv->objects); slot++)
@@ -336,6 +305,7 @@ bool inv_optimize(inv_ptr inv)
 {
     slot_t slot, seek;
     bool result = FALSE;
+    assert(!(inv->flags & _FILTER));
     for (slot = 1; slot < vec_length(inv->objects); slot++)
     {
         obj_ptr dest = vec_get(inv->objects, slot);
@@ -387,13 +357,18 @@ bool inv_sort(inv_ptr inv)
     {
         slot_t slot;
         vec_sort_range(inv->objects, start, stop, (vec_cmp_f)obj_cmp);
-        for (slot = start; slot <= stop; slot++)
+        /* It is OK to sort a filtered inv, but we better not update
+         * locations for objects we do not own! */
+        if (!(inv->flags & _FILTER))
         {
-            obj_ptr obj = vec_get(inv->objects, slot);
-            if (obj)
+            for (slot = start; slot <= stop; slot++)
             {
-                obj->loc.slot = slot;
-                assert(obj->loc.where == inv->type);
+                obj_ptr obj = vec_get(inv->objects, slot);
+                if (obj)
+                {
+                    obj->loc.slot = slot;
+                    assert(obj->loc.where == inv->type);
+                }
             }
         }
         return TRUE; /* So clients can notify the player ... */
@@ -404,6 +379,8 @@ bool inv_sort(inv_ptr inv)
 void inv_swap(inv_ptr inv, slot_t left, slot_t right)
 {
     obj_ptr obj;
+
+    assert(!(inv->flags & _FILTER));
 
     _grow(inv, MAX(left, right)); /* force allocation of slots */
     vec_swap(inv->objects, left, right);
@@ -614,9 +591,10 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, i
 {
     slot_t slot;
     int    xtra = 0;
+    int    max = vec_length(inv->objects) - 1;
 
-    if (!stop)
-        stop = vec_length(inv->objects) - 1;
+    if (!stop) stop = max;
+    if (stop > max) stop = max;
 
     if (flags & INV_SHOW_FAIL_RATES)
         xtra = 6;  /* " 98.7%" */
@@ -710,9 +688,14 @@ slot_t inv_label_slot(inv_ptr inv, char label)
 void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop, int flags)
 {
     slot_t slot;
-    if (!stop)
-        stop = vec_length(inv->objects) - 1;
+    int    max = vec_length(inv->objects) - 1;
+
+    if (!stop) stop = max;
+    if (stop > max) stop = max;
+
+    /* Clear old labels or old sort data */
     inv_for_each(inv, obj_clear_scratch);
+    
     /* Initialize by ordinal */
     for (slot = start; slot <= stop; slot++)
     {
@@ -743,90 +726,6 @@ void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop, int flags)
             }
         }
     }
-}
-
-/* Pagination */
-void inv_paginate(inv_ptr inv, obj_p p, int page_size)
-{
-    slot_t start, pos, max;
-
-    assert(!inv->pagination); /* you forgot to call inv_unpaginate() */
-    inv->pagination = _pagination_alloc(p, page_size);
-
-    /* Hack for equipment to keep slot labels consistent.
-     * Btw, other types of equipment will not preserve labels, 
-     * and this is intentional. The relevant choices for
-     * commands now always start sequencing at 'a' rather than
-     * constantly shifting as objects insert above them in
-     * your pack. Try it a bit before complaining :) */
-    if (inv->type == INV_EQUIP)
-    {
-        vec_add(inv->pagination->pages, _page_alloc(1, equip_max()));
-        inv->pagination->page_count++;
-        return;
-    }
-
-    max = inv_last(inv, p);
-    if (!max) return;
-
-    start = inv_first(inv, p);
-    assert(start);
-
-    for (pos = start; pos <= max; pos++)
-    {
-        _page_ptr page;
-        int       ct = 1;
-
-        while (ct < page_size)
-        {
-            assert(pos && pos <= max);
-            pos = inv_next(inv, p, pos);
-            ct++;
-            if (!pos) break;
-        }
-        if (!pos) pos = max;
-        page = _page_alloc(start, pos);
-        vec_add(inv->pagination->pages, page);
-        inv->pagination->page_count++;
-
-        start = pos + 1;
-    }
-}
-
-int inv_page_count(inv_ptr inv)
-{
-    assert(inv->pagination);
-    return inv->pagination->page_count;
-}
-
-void inv_display_page(inv_ptr inv, int page, doc_ptr doc, int flags)
-{
-    _page_ptr page_ptr;
-    assert(inv->pagination);
-    assert(0 <= page && page < vec_length(inv->pagination->pages));
-    page_ptr = vec_get(inv->pagination->pages, page);
-    inv_display(
-        inv, 
-        page_ptr->start, page_ptr->stop,
-        inv->pagination->filter,
-        doc, flags
-    );
-}
-
-void inv_calculate_page_labels(inv_ptr inv, int page)
-{
-    _page_ptr page_ptr;
-    assert(inv->pagination);
-    assert(0 <= page && page < vec_length(inv->pagination->pages));
-    page_ptr = vec_get(inv->pagination->pages, page);
-    inv_calculate_labels(inv, page_ptr->start, page_ptr->stop, 0);
-}
-
-void inv_unpaginate(inv_ptr inv)
-{
-    assert(inv->pagination);
-    _pagination_free(inv->pagination);
-    inv->pagination = NULL;
 }
 
 /* Savefiles */

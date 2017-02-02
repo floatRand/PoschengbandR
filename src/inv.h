@@ -40,7 +40,7 @@ typedef struct inv_s inv_t, *inv_ptr; /* Hidden/Abstract */
 extern inv_ptr inv_alloc(cptr name, int type, int max);
 extern inv_ptr inv_copy(inv_ptr src);
 extern inv_ptr inv_filter(inv_ptr src, obj_p p);
-extern inv_ptr inv_filter_floor(obj_p p);     /* player's current tile */
+extern inv_ptr inv_filter_floor(obj_p p);     /* player's current tile; entire level for wizards */
 extern inv_ptr inv_filter_home(obj_p p);
 extern void    inv_free(inv_ptr inv);
 
@@ -100,13 +100,6 @@ extern slot_t  inv_label_slot(inv_ptr inv, char label);
 /* Normally, you don't need to call this since you will usually display()
  * before inspecting labels. Except for REPEAT_PULL() ... sigh */
 extern void    inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop, int flags);
-
-/* Pagination ... for obj_prompt */
-extern void    inv_paginate(inv_ptr inv, obj_p p, int page_size);
-extern int     inv_page_count(inv_ptr inv);
-extern void    inv_display_page(inv_ptr inv, int page, doc_ptr doc, int flags);
-extern void    inv_calculate_page_labels(inv_ptr inv, int page);
-extern void    inv_unpaginate(inv_ptr inv);
 
 /* Savefiles */
 extern void    inv_load(inv_ptr inv, savefile_ptr file);
