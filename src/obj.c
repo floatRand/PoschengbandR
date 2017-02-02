@@ -78,6 +78,54 @@ void obj_release(obj_ptr obj, int options)
 /************************************************************************
  * Predicates
  ***********************************************************************/
+bool obj_can_sense1(obj_ptr obj)
+{
+    switch (obj->tval)
+    {
+    case TV_SHOT:
+    case TV_ARROW:
+    case TV_BOLT:
+    case TV_BOW:
+    case TV_DIGGING:
+    case TV_HAFTED:
+    case TV_POLEARM:
+    case TV_SWORD:
+    case TV_BOOTS:
+    case TV_GLOVES:
+    case TV_HELM:
+    case TV_CROWN:
+    case TV_SHIELD:
+    case TV_CLOAK:
+    case TV_SOFT_ARMOR:
+    case TV_HARD_ARMOR:
+    case TV_DRAG_ARMOR:
+    case TV_CARD:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool obj_can_sense2(obj_ptr obj)
+{
+    switch (obj->tval)
+    {
+    case TV_RING:
+    case TV_AMULET:
+    case TV_LITE:
+    case TV_FIGURINE:
+    case TV_WAND:
+    case TV_STAFF:
+    case TV_ROD:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool obj_exists(obj_ptr obj)
+{
+    return obj ? TRUE : FALSE;
+}
+
 bool obj_is_art(obj_ptr obj)
 {
     if (obj->name1 || obj->art_name) return TRUE;
@@ -88,11 +136,6 @@ bool obj_is_ego(obj_ptr obj)
 {
     if (obj->name2) return TRUE;
     return FALSE;
-}
-
-bool obj_exists(obj_ptr obj)
-{
-    return obj ? TRUE : FALSE;
 }
 
 /************************************************************************

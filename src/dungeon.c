@@ -101,67 +101,56 @@ static byte value_check_aux2(object_type *o_ptr)
     return FEEL_AVERAGE;
 }
 
+static bool _sense_strong = FALSE;
 
-
-static void sense_inventory_aux(int slot, bool strong)
+static void _sense_obj(obj_ptr obj)
 {
-    byte        feel;
-    object_type *o_ptr = &inventory[slot];
-    char        o_name[MAX_NLEN];
+    byte feel;
+    char name[MAX_NLEN];
+    bool strong = _sense_strong;
 
-    /* We know about it already, do not tell us again */
-    if (o_ptr->ident & (IDENT_SENSE))return;
+    if (obj->ident & IDENT_SENSE) return;
+    if (object_is_known(obj)) return;
+    if (obj->loc.where == INV_PACK && !one_in_(3)) return;
 
-    /* It is fully known, no information needed */
-    if (object_is_known(o_ptr)) return;
-
-    /* Check for a feeling */
-    feel = (strong ? value_check_aux1(o_ptr) : value_check_aux2(o_ptr));
-
-    /* Skip non-feelings */
+    if (!strong && p_ptr->good_luck && !randint0(13))
+        strong = TRUE;
+    feel = strong ? value_check_aux1(obj) : value_check_aux2(obj);
     if (!feel) return;
 
-    /* Stop everything */
     if (disturb_minor) disturb(0, 0);
 
-    /* Get an object description */
-    object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-
-    /* Message (equipment) */
-    if (equip_is_valid_slot(slot))
+    object_desc(name, obj, OD_OMIT_PREFIX | OD_NAME_ONLY | OD_COLOR_CODED);
+    msg_boundary();
+    if (obj->loc.where == INV_EQUIP)
     {
-        msg_format("You feel the %s (%c) you are %s %s %s...",
-               o_name, index_to_label(slot), describe_use(slot),
-               ((o_ptr->number == 1) ? "is" : "are"),
+        msg_format("You feel the %s (%c) you are wearing %s %s...",
+               name, slot_label(obj->loc.slot),
+               obj->number == 1 ? "is" : "are",
                    game_inscriptions[feel]);
     }
-
-    /* Message (inventory) */
     else
     {
-        msg_format("You feel the %s (%c) in your pack %s %s...",
-               o_name, index_to_label(slot),
-               ((o_ptr->number == 1) ? "is" : "are"),
+        msg_format("You feel the %s (%c) in your %s %s %s...",
+               name, slot_label(obj->loc.slot),
+               obj->loc.where == INV_QUIVER ? "quiver" : "pack", 
+               obj->number == 1 ? "is" : "are",
                    game_inscriptions[feel]);
     }
 
-    /* We have "felt" it */
-    o_ptr->ident |= (IDENT_SENSE);
+    obj->ident |= IDENT_SENSE;
+    obj->feeling = feel;
 
-    /* Set the "inscription" */
-    o_ptr->feeling = feel;
+    autopick_alter_obj(obj, destroy_feeling && obj->loc.where != INV_EQUIP);
 
-    /* Auto-inscription/destroy */
-    autopick_alter_item(slot, destroy_feeling);
-
-    /* Combine / Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP);
+    if (obj->loc.where == INV_PACK)
+    {
+        p_ptr->notice |= PN_OPTIMIZE_PACK;
+        p_ptr->window |= PW_INVEN;
+    }
+    else if (obj->loc.where == INV_EQUIP)
+        p_ptr->window |= PW_EQUIP;
 }
-
-
 
 /*
  * Sense the inventory
@@ -196,10 +185,8 @@ static int _get_pseudo_id_flags(void)
 
 static void sense_inventory1(void)
 {
-    int         i;             /* v~~~ Early Game speed is ridiculous otherwise */
-    int         plev = p_ptr->lev + 10;
-    bool        strong = FALSE;
-    object_type *o_ptr;
+    int  plev = p_ptr->lev + 10;
+    bool strong = FALSE;
 
     if (p_ptr->confused) return;
 
@@ -232,67 +219,17 @@ static void sense_inventory1(void)
     }
 
     /*** Sense everything ***/
-
-    /* Check everything */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        bool okay = FALSE;
-
-        o_ptr = &inventory[i];
-
-        /* Skip empty slots */
-        if (!o_ptr->k_idx) continue;
-
-        /* Valid "tval" codes */
-        switch (o_ptr->tval)
-        {
-            case TV_SHOT:
-            case TV_ARROW:
-            case TV_BOLT:
-            case TV_BOW:
-            case TV_DIGGING:
-            case TV_HAFTED:
-            case TV_POLEARM:
-            case TV_SWORD:
-            case TV_BOOTS:
-            case TV_GLOVES:
-            case TV_HELM:
-            case TV_CROWN:
-            case TV_SHIELD:
-            case TV_CLOAK:
-            case TV_SOFT_ARMOR:
-            case TV_HARD_ARMOR:
-            case TV_DRAG_ARMOR:
-            case TV_CARD:
-            {
-                okay = TRUE;
-                break;
-            }
-        }
-
-        /* Skip non-sense machines */
-        if (!okay) continue;
-
-        /* Occasional failure on inventory items */
-        if ((i < INVEN_PACK) && (0 != randint0(5))) continue;
-
-        /* Good luck */
-        if (p_ptr->good_luck && !randint0(13))
-        {
-            strong = TRUE;
-        }
-
-        sense_inventory_aux(i, strong);
-    }
+    _sense_strong = strong;
+    pack_for_each_that(_sense_obj, obj_can_sense1);
+    equip_for_each_that(_sense_obj, obj_can_sense1);
+    quiver_for_each_that(_sense_obj, obj_can_sense1);
 }
 
 
 static void sense_inventory2(void)
 {
-    int         i;
-    int         plev = p_ptr->lev + 10;
-    bool        strong = FALSE;
-    object_type *o_ptr;
+    int  plev = p_ptr->lev + 10;
+    bool strong = FALSE;
 
     if (p_ptr->confused) return;
 
@@ -330,41 +267,9 @@ static void sense_inventory2(void)
     }
 
     /*** Sense everything ***/
-
-    /* Check everything */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        bool okay = FALSE;
-
-        o_ptr = &inventory[i];
-
-        /* Skip empty slots */
-        if (!o_ptr->k_idx) continue;
-
-        /* Valid "tval" codes */
-        switch (o_ptr->tval)
-        {
-            case TV_RING:
-            case TV_AMULET:
-            case TV_LITE:
-            case TV_FIGURINE:
-            case TV_WAND:
-            case TV_STAFF:
-            case TV_ROD:
-            {
-                okay = TRUE;
-                break;
-            }
-        }
-
-        /* Skip non-sense machines */
-        if (!okay) continue;
-
-        /* Occasional failure on inventory items */
-        if ((i < INVEN_PACK) && (0 != randint0(5))) continue;
-
-        sense_inventory_aux(i, strong);
-    }
+    _sense_strong = strong;
+    pack_for_each_that(_sense_obj, obj_can_sense2);
+    equip_for_each_that(_sense_obj, obj_can_sense2);
 }
 
 

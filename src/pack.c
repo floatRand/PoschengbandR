@@ -4,12 +4,24 @@
 
 static inv_ptr _inv = NULL;
 static vec_ptr _overflow = NULL;
+static int     _lock = 0;
 
 void pack_init(void)
 {
     inv_free(_inv);
     _inv = inv_alloc("Inventory", INV_PACK, PACK_MAX);
     _overflow = vec_alloc(free);
+}
+
+void pack_lock(void)
+{
+    _lock++;
+}
+
+void pack_unlock(void)
+{
+    assert(_lock > 0);
+    _lock--;
 }
 
 void pack_ui(void)
@@ -143,7 +155,7 @@ static bool _get_floor(inv_ptr floor)
     obj_prompt_t prompt = {0};
 
     /* Autopicker cleared 'em all? */
-    if (!ct) return FALSE;
+    if (!ct) return TRUE;
 
     /* Autoget a single floor object */
     if (ct == 1) 
@@ -338,7 +350,8 @@ bool pack_overflow(void)
         if (!result)
         {
             disturb(0, 0);
-            cmsg_print(TERM_VIOLET, "Your pack overflows!");
+            msg_boundary();
+            cmsg_print(TERM_VIOLET, "Your pack overflows:");
             result = TRUE;
         }
         object_desc(name, obj, OD_COLOR_CODED);
@@ -360,7 +373,7 @@ bool pack_overflow(void)
  * they need to be separate. */
 bool pack_optimize(void)
 {
-    if (inv_optimize(_inv))
+    if (!_lock && inv_optimize(_inv))
     {
         p_ptr->window |= PW_INVEN;
         cmsg_print(TERM_YELLOW, "You reorder your pack.");

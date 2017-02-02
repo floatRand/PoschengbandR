@@ -2180,7 +2180,7 @@ void autopick_alter_obj(obj_ptr o_ptr, bool allow_destroy)
     auto_inscribe_item(o_ptr, idx);
 
     /* Do auto-destroy if needed */
-    if (allow_destroy)
+    if (allow_destroy && o_ptr->loc.where != INV_EQUIP)
         auto_destroy_obj(o_ptr, idx);
 }
 

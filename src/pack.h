@@ -66,8 +66,13 @@ extern void    pack_calc_bonuses(void);
 extern void    pack_push_overflow(obj_ptr obj);*/
 extern bool    pack_overflow(void);
 
-/* Optimize: Combine, Sort, Cleanup Garbage */
+/* Optimize: Combine, Sort, Cleanup Garbage
+ * Pack slots are stable until pack_optimize, making looping safe.
+ * Normally, notice_stuff() should not be called in the middle of a loop,
+ * but you can lock() the pack just to be safe. Be sure to unlock(). */
+extern void    pack_lock(void);
 extern bool    pack_optimize(void);
+extern void    pack_unlock(void);
 
 /* Properties of the Entire Inventory */
 extern int     pack_weight(obj_p p);

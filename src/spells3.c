@@ -1689,24 +1689,16 @@ bool explosive_rune(void)
  * Identify everything being carried.
  * Done by a potion of "self knowledge".
  */
+static void _identify_obj(obj_ptr obj)
+{
+    identify_item(obj);
+    autopick_alter_obj(obj, FALSE);
+}
+
 void identify_pack(void)
 {
-    int i;
-
-    /* Simply identify and know every item */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-
-        /* Skip non-objects */
-        if (!o_ptr->k_idx) continue;
-
-        /* Identify it */
-        identify_item(o_ptr);
-
-        /* Auto-inscription */
-        autopick_alter_item(i, FALSE);
-    }
+    pack_for_each(_identify_obj);
+    equip_for_each(_identify_obj);
 }
 
 
