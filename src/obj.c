@@ -256,7 +256,7 @@ bool obj_confirm_choice(obj_ptr obj)
                 }
                 if (!get_check(prompt)) return FALSE;
             }
-            else if (!*pos || *pos < 'a' || *pos > 'z')
+            else if (!*pos || !isalpha(*pos))
                 break;
         }
     }
