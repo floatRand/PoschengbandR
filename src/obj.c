@@ -121,22 +121,12 @@ bool obj_can_sense2(obj_ptr obj)
     return FALSE;
 }
 
-bool obj_exists(obj_ptr obj)
-{
-    return obj ? TRUE : FALSE;
-}
-
-bool obj_is_art(obj_ptr obj)
-{
-    if (obj->name1 || obj->art_name) return TRUE;
-    return FALSE;
-}
-
-bool obj_is_ego(obj_ptr obj)
-{
-    if (obj->name2) return TRUE;
-    return FALSE;
-}
+bool obj_exists(obj_ptr obj)   { return BOOL(obj); }
+bool obj_is_art(obj_ptr obj)   { return obj->name1 || obj->art_name; }
+bool obj_is_ego(obj_ptr obj)   { return BOOL(obj->name2); }
+bool obj_is_staff(obj_ptr obj) { return obj->tval == TV_STAFF; }
+bool obj_is_wand(obj_ptr obj)  { return obj->tval == TV_WAND; }
+bool obj_is_rod(obj_ptr obj)   { return obj->tval == TV_ROD; }
 
 /************************************************************************
  * Sorting

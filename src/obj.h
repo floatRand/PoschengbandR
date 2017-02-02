@@ -38,6 +38,9 @@ extern bool obj_can_sense2(obj_ptr obj);
 extern bool obj_exists(obj_ptr obj);
 extern bool obj_is_art(obj_ptr obj);
 extern bool obj_is_ego(obj_ptr obj);
+extern bool obj_is_staff(obj_ptr obj);
+extern bool obj_is_wand(obj_ptr obj);
+extern bool obj_is_rod(obj_ptr obj);
 
 /* Sorting */
 extern void obj_clear_scratch(obj_ptr obj); /* Call before sorting ... scratch is used to memoize obj_value */
