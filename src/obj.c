@@ -300,7 +300,10 @@ bool obj_confirm_choice(obj_ptr obj)
                 if (!get_check(prompt)) return FALSE;
             }
             else if (!*pos || !isalpha(*pos))
+            {
+                if (*pos == '!') pos--; /* !k!q */
                 break;
+            }
         }
     }
     return TRUE;
