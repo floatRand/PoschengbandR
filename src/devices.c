@@ -35,7 +35,8 @@ static bool ang_sort_comp_pet(vptr u, vptr v, int a, int b)
 /* Devices: We are following the do_spell() pattern which is quick and dirty,
    but not my preferred approach ... */
 
-/* Fail Rates ... Scaled by 10 (95.2% returned as 952) */
+/* Fail Rates ... Scaled by 10 (95.2% returned as 952)
+ * cf design/devices.ods */
 int  effect_calc_fail_rate(effect_t *effect)
 {
     int chance, fail;
@@ -111,120 +112,83 @@ int  device_extra_power = 0;
    It's ugly, but worthwhile! */
 int  device_available_charges = 0; /* How many can we do? */
 int  device_used_charges = 0;      /* How many did we do? */
+static bool _use_charges = FALSE;
 
-static bool _do_identify_hook(object_type *o_ptr)
+static void _do_identify_aux(obj_ptr obj)
 {
-    if (!object_is_known(o_ptr))
-        return TRUE;
-    return FALSE;
+    char name[MAX_NLEN];
+    bool old_known;
+
+    if (_use_charges && device_used_charges >= device_available_charges) return;
+
+    old_known = identify_item(obj);
+    object_desc(name, obj, OD_COLOR_CODED);
+    switch (obj->loc.where)
+    {
+    case INV_EQUIP:
+        msg_format("%^s: %s (%c).", equip_describe_slot(obj->loc.slot),
+                name, slot_label(obj->loc.slot));
+        break;
+    case INV_PACK:
+        msg_format("In your pack: %s (%c).", name, slot_label(obj->loc.slot));
+        break;
+    case INV_QUIVER:
+        msg_format("In your quiver: %s (%c).", name, slot_label(obj->loc.slot));
+        break;
+    case INV_FLOOR:
+        msg_format("On the ground: %s.", name);
+        break;
+    }
+    autopick_alter_obj(obj, destroy_identify && !old_known);
+    if (_use_charges) device_used_charges++;
 }
 
-static void _do_identify_aux(int item)
+void mass_identify(bool use_charges) /* shared with Sorcery spell */
 {
-    object_type    *o_ptr;
-    char            o_name[MAX_NLEN];
-    bool            old_known;
+    inv_ptr floor = inv_filter_floor(obj_exists);
 
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[-item];
+    _use_charges = use_charges;
+    pack_for_each_that(_do_identify_aux, obj_is_unknown);
+    equip_for_each_that(_do_identify_aux, obj_is_unknown);
+    quiver_for_each_that(_do_identify_aux, obj_is_unknown);
+    inv_for_each_that(floor, _do_identify_aux, obj_is_unknown);
 
-    old_known = identify_item(o_ptr);
-    object_desc(o_name, o_ptr, OD_COLOR_CODED);
-
-    if (equip_is_valid_slot(item))
-        msg_format("%^s: %s (%c).", equip_describe_slot(item), o_name, index_to_label(item));
-    else if (item >= 0)
-        msg_format("In your pack: %s (%c).", o_name, index_to_label(item));
-    else
-        msg_format("On the ground: %s.", o_name);
-
-    autopick_alter_item(item, (bool)(destroy_identify && !old_known));
+    inv_free(floor);
 }
 
-void mass_identify(void)
+static int _cmd_handler(obj_prompt_context_ptr context, int cmd)
 {
-    int i;
-    int this_o_idx, next_o_idx;
-
-    /* Equipment and Pack */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        if (!inventory[i].k_idx) continue;
-        if (object_is_known(&inventory[i])) continue;
-        _do_identify_aux(i);
-    }
-
-    /* Floor */
-    for (this_o_idx = cave[py][px].o_idx;
-            this_o_idx;
-            this_o_idx = next_o_idx)
-    {
-        object_type *o_ptr = &o_list[this_o_idx];
-
-        next_o_idx = o_ptr->next_o_idx;
-        if (object_is_known(o_ptr)) continue;
-        _do_identify_aux(-this_o_idx);
-    }
+    if (cmd == '*')
+        return OP_CMD_DISMISS;
+    return OP_CMD_SKIPPED;
 }
 
 static bool _do_identify(void)
 {
-    int             item;
-    cptr            q, s;
-    int             options = USE_EQUIP | USE_INVEN | USE_FLOOR;
+    obj_prompt_t prompt = {0};
 
     assert(device_used_charges == 0);
-    if (device_available_charges > 1)
-        options |=  OPTION_ALL;
 
-    item_tester_no_ryoute = TRUE;
-    item_tester_hook = _do_identify_hook;
+    prompt.prompt = "Identify which item (<color:keypress>*</color> for all)?";
+    prompt.error = "All items are identified.";
+    prompt.filter = obj_is_unknown;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
+    prompt.cmd_handler = _cmd_handler;
 
-    if (can_get_item())
-        q = "Identify which item? ";
-    else
-        q = "All items are identified. ";
-
-    s = "You have nothing to identify.";
-    if (!get_item(&item, q, s, options))
-        return FALSE;
-
-    if (item == INVEN_ALL)
+    switch (obj_prompt(&prompt))
     {
-        int i;
-        int this_o_idx, next_o_idx;
-
-        /* Equipment and Pack */
-        for (i = 0; i < INVEN_TOTAL && device_used_charges < device_available_charges; i++)
-        {
-            if (!inventory[i].k_idx) continue;
-            if (object_is_known(&inventory[i])) continue;
-            _do_identify_aux(i);
-            device_used_charges++;
-        }
-
-        /* Floor */
-        for (this_o_idx = cave[py][px].o_idx;
-                this_o_idx && device_used_charges < device_available_charges;
-                this_o_idx = next_o_idx)
-        {
-            object_type *o_ptr = &o_list[this_o_idx];
-
-            next_o_idx = o_ptr->next_o_idx;
-            if (object_is_known(o_ptr)) continue;
-            _do_identify_aux(-this_o_idx);
-            device_used_charges++;
-        }
+    case OP_CUSTOM:
+        mass_identify(TRUE);
+        return TRUE;
+    case OP_SUCCESS:
+        _use_charges = TRUE;
+        _do_identify_aux(prompt.obj);
+        return TRUE;
     }
-    else
-    {
-        _do_identify_aux(item);
-        device_used_charges++;
-    }
-
-    return TRUE;
+    return FALSE;
 }
 
 /* Using Devices

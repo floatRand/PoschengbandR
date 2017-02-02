@@ -121,12 +121,22 @@ bool obj_can_sense2(obj_ptr obj)
     return FALSE;
 }
 
-bool obj_exists(obj_ptr obj)   { return BOOL(obj); }
-bool obj_is_art(obj_ptr obj)   { return obj->name1 || obj->art_name; }
-bool obj_is_ego(obj_ptr obj)   { return BOOL(obj->name2); }
-bool obj_is_staff(obj_ptr obj) { return obj->tval == TV_STAFF; }
-bool obj_is_wand(obj_ptr obj)  { return obj->tval == TV_WAND; }
-bool obj_is_rod(obj_ptr obj)   { return obj->tval == TV_ROD; }
+bool obj_is_known(obj_ptr obj)
+{
+    obj_kind_ptr k;
+    if (obj->ident & (IDENT_KNOWN | IDENT_STORE)) return TRUE;
+    k = &k_info[obj->k_idx];
+    if (k->easy_know && k->aware) return TRUE;
+    return FALSE;
+}
+
+bool obj_exists(obj_ptr obj)     { return BOOL(obj); }
+bool obj_is_art(obj_ptr obj)     { return obj->name1 || obj->art_name; }
+bool obj_is_ego(obj_ptr obj)     { return BOOL(obj->name2); }
+bool obj_is_rod(obj_ptr obj)     { return obj->tval == TV_ROD; }
+bool obj_is_staff(obj_ptr obj)   { return obj->tval == TV_STAFF; }
+bool obj_is_unknown(obj_ptr obj) { return !obj_is_known(obj); }
+bool obj_is_wand(obj_ptr obj)    { return obj->tval == TV_WAND; }
 
 /************************************************************************
  * Sorting
@@ -529,6 +539,10 @@ void obj_inspect_ui(void)
     prompt.cmd_handler = _inspector;
 
     obj_prompt(&prompt);
+
+    /* The '-' key autoselects a single floor object */
+    if (prompt.obj)
+        obj_display(prompt.obj);
 }
 
 static int _inscriber(obj_prompt_context_ptr context, int cmd)

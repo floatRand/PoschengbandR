@@ -7,6 +7,9 @@
 struct object_type;
 typedef struct object_type obj_t, *obj_ptr;
 
+struct object_kind;
+typedef struct object_kind obj_kind_t, *obj_kind_ptr;
+
 /* An object function (obj_f) operates/modifies an object.
  * It should never be called with NULL. */
 typedef void (*obj_f)(obj_ptr obj);
@@ -41,6 +44,9 @@ extern bool obj_is_ego(obj_ptr obj);
 extern bool obj_is_staff(obj_ptr obj);
 extern bool obj_is_wand(obj_ptr obj);
 extern bool obj_is_rod(obj_ptr obj);
+
+extern bool obj_is_known(obj_ptr obj);
+extern bool obj_is_unknown(obj_ptr obj);
 
 /* Sorting */
 extern void obj_clear_scratch(obj_ptr obj); /* Call before sorting ... scratch is used to memoize obj_value */

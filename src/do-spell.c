@@ -1715,7 +1715,7 @@ static cptr do_sorcery_spell(int spell, int mode)
                         return NULL;
                 }
                 else
-                    mass_identify();
+                    mass_identify(FALSE);
             }
         }
         break;
