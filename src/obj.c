@@ -241,21 +241,24 @@ bool obj_confirm_choice(obj_ptr obj)
     if (!command_cmd) return TRUE;
 
     insc = quark_str(obj->inscription);
-    pos = strchr(insc, '!');
-    while (pos)
+    /* !sdk = !s!d!k */
+    for (pos = strchr(insc, '!'); pos && *pos; pos = strchr(pos + 1, '!'))
     {
-        pos++;
-        if (!*pos) break;
-        if (*pos == command_cmd || *pos == '*')
+        for (;;)
         {
-            if (!ct++)
+            pos++;
+            if (*pos == command_cmd || *pos == '*')
             {
-                object_desc(name, obj, OD_COLOR_CODED);
-                sprintf(prompt, "Really try %s? ", name);
+                if (!ct++)
+                {
+                    object_desc(name, obj, OD_COLOR_CODED);
+                    sprintf(prompt, "Really try %s? ", name);
+                }
+                if (!get_check(prompt)) return FALSE;
             }
-            if (!get_check(prompt)) return FALSE;
+            else if (!*pos || *pos < 'a' || *pos > 'z')
+                break;
         }
-        pos = strchr(pos + 1, '!');
     }
     return TRUE;
 }
