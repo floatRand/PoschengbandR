@@ -231,6 +231,35 @@ char obj_label(obj_ptr obj)
     return '\0';
 }
 
+bool obj_confirm_choice(obj_ptr obj)
+{
+    char name[MAX_NLEN], prompt[MAX_NLEN + 20];
+    cptr insc, pos;
+    int  ct = 0;
+
+    if (!obj->inscription) return TRUE;
+    if (!command_cmd) return TRUE;
+
+    insc = quark_str(obj->inscription);
+    pos = strchr(insc, '!');
+    while (pos)
+    {
+        pos++;
+        if (!*pos) break;
+        if (*pos == command_cmd || *pos == '*')
+        {
+            if (!ct++)
+            {
+                object_desc(name, obj, OD_COLOR_CODED);
+                sprintf(prompt, "Really try %s? ", name);
+            }
+            if (!get_check(prompt)) return FALSE;
+        }
+        pos = strchr(pos + 1, '!');
+    }
+    return TRUE;
+}
+
 /************************************************************************
  * Stacking
  ***********************************************************************/

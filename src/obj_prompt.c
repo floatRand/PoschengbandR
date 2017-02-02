@@ -17,6 +17,8 @@ int obj_prompt(obj_prompt_ptr prompt)
     int                  tmp;
     int                  result = 0;
 
+    assert(!prompt->obj);
+
     context.prompt = prompt;
     context.page_size = MIN(26, ui_menu_rect().cy - 4);
     _context_make(&context);
@@ -80,11 +82,13 @@ int obj_prompt(obj_prompt_ptr prompt)
         slot = inv_label_slot(tab->inv, cmd);
         if (slot)
         {
-            prompt->obj = inv_obj(tab->inv, slot);
+            obj_ptr obj = inv_obj(tab->inv, slot);
+            if (!obj_confirm_choice(obj)) continue;
+            prompt->obj = obj; 
             result = OP_SUCCESS;
             REPEAT_PUSH(inv_loc(tab->inv));
             /* repeat can be dangerous if the pack shuffles */
-            if (tab->ct <= context.page_size && object_is_aware(prompt->obj))
+            if (tab->page == 0 && object_is_aware(obj))
                 REPEAT_PUSH(cmd);
             break;
         }
@@ -262,11 +266,16 @@ static int _basic_cmd(obj_prompt_context_ptr context, int cmd)
             if (inv_count_slots(tab->inv, obj_exists) == 1)
             {
                 slot_t slot = inv_first(tab->inv, obj_exists);
+                obj_ptr obj; 
                 assert(slot);
-                context->prompt->obj = inv_obj(tab->inv, slot);
-                REPEAT_PUSH(inv_loc(tab->inv));
-                REPEAT_PUSH('a');
-                return OP_CMD_DISMISS;
+                obj = inv_obj(tab->inv, slot);
+                if (obj_confirm_choice(obj))
+                {
+                    context->prompt->obj = obj; 
+                    REPEAT_PUSH(inv_loc(tab->inv));
+                    REPEAT_PUSH('a');
+                    return OP_CMD_DISMISS;
+                }
             }
         }
         return OP_CMD_HANDLED; }
