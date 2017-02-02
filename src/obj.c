@@ -666,9 +666,12 @@ static void _destroy(obj_ptr obj)
 
         if (!handled)
         {
-            if (obj->loc.where)
+            if (obj->marked & OM_AUTODESTROY)
+            {
+            }
+            else if (obj->loc.where)
                 msg_print("Destroyed.");
-            else /* Destroying part of a pile */
+            else  /* Destroying part of a pile */
             {
                 char name[MAX_NLEN];
                 object_desc(name, obj, OD_COLOR_CODED);

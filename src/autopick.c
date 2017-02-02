@@ -1986,6 +1986,7 @@ static object_type autopick_last_destroyed_object;
 static void auto_destroy_obj(object_type *o_ptr, int autopick_idx)
 {
     bool destroy = FALSE;
+    char name[MAX_NLEN];
 
     /* Easy-Auto-Destroyer (3rd priority) */
     if (is_opt_confirm_destroy(o_ptr)) destroy = TRUE;
@@ -2017,24 +2018,31 @@ static void auto_destroy_obj(object_type *o_ptr, int autopick_idx)
     /* Artifact? */
     if (!can_player_destroy_object(o_ptr))
     {
-        char o_name[MAX_NLEN];
-
         /* Describe the object (with {terrible/special}) */
-        object_desc(o_name, o_ptr, 0);
+        object_desc(name, o_ptr, OD_COLOR_CODED);
 
         /* Message */
-        msg_format("You cannot auto-destroy %s.", o_name);
+        msg_format("You cannot auto-destroy %s.", name);
 
         /* Done */
         return;
     }
 
     /* Record name of destroyed item */
-    COPY(&autopick_last_destroyed_object, o_ptr, object_type);
+    autopick_last_destroyed_object = *o_ptr;
 
-    /* Destroy Later */
+    if (destroy_debug)
+    {
+        int idx = is_autopick(o_ptr);
+        msg_autopick(idx, "Destroy");
+    }
     o_ptr->marked |= OM_AUTODESTROY;
-    p_ptr->notice |= PN_AUTODESTROY;
+    object_desc(name, o_ptr, OD_COLOR_CODED);
+    msg_format("Auto-destroying %s.", name);
+    obj_destroy(o_ptr, o_ptr->number);
+    /* Destroy Later
+    o_ptr->marked |= OM_AUTODESTROY;
+    p_ptr->notice |= PN_AUTODESTROY;*/
 
     return;
 }
@@ -2150,15 +2158,7 @@ void autopick_delayed_alter(void)
  */
 void autopick_alter_item(int item, bool destroy)
 {
-    object_type *o_ptr;
-
-    /* Get the item (in the pack) */
-    if (item >= 0) o_ptr = &inventory[item];
-
-    /* Get the item (on the floor) */
-    else o_ptr = &o_list[0 - item];
-
-    autopick_alter_obj(o_ptr, destroy);
+    /* I am dead ... I just don't know it yet. */
 }
 void autopick_alter_obj(obj_ptr o_ptr, bool allow_destroy)
 {
@@ -2410,7 +2410,7 @@ static void _get_obj(obj_ptr obj)
         return;
     }
 
-    /* Autodestroy (Later) */
+    /* Autodestroy */
     auto_destroy_obj(obj, idx);
 }
 
