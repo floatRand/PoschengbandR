@@ -1983,7 +1983,7 @@ static void msg_autopick(int idx, cptr action)
  */
 static object_type autopick_last_destroyed_object;
 
-static void auto_destroy_item(object_type *o_ptr, int autopick_idx)
+static void auto_destroy_obj(object_type *o_ptr, int autopick_idx)
 {
     bool destroy = FALSE;
 
@@ -2181,7 +2181,7 @@ void autopick_alter_obj(obj_ptr o_ptr, bool allow_destroy)
 
     /* Do auto-destroy if needed */
     if (allow_destroy)
-        auto_destroy_item(o_ptr, idx);
+        auto_destroy_obj(o_ptr, idx);
 }
 
 static bool _can_sense_object(object_type *o_ptr)
@@ -2411,7 +2411,7 @@ static void _get_obj(obj_ptr obj)
     }
 
     /* Autodestroy (Later) */
-    auto_destroy_item(obj, idx);
+    auto_destroy_obj(obj, idx);
 }
 
 void autopick_get_floor(void)

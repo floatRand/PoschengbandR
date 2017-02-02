@@ -1278,13 +1278,13 @@ bool can_player_destroy_object(object_type *o_ptr)
         o_ptr->feeling = feel;
 
         /* We have "felt" it (again) */
-        o_ptr->ident |= (IDENT_SENSE);
+        o_ptr->ident |= IDENT_SENSE;
 
         /* Combine the pack */
-        p_ptr->notice |= (PN_COMBINE);
+        p_ptr->notice |= PN_OPTIMIZE_PACK;
 
         /* Window stuff */
-        p_ptr->window |= (PW_INVEN | PW_EQUIP);
+        p_ptr->window |= PW_INVEN | PW_EQUIP;
 
         /* Done */
         return FALSE;

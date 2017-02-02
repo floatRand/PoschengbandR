@@ -712,6 +712,7 @@ void equip_remove(slot_t slot)
     p_ptr->update |= PU_BONUS;
     p_ptr->window |= PW_EQUIP;
     p_ptr->redraw |= PR_EQUIPPY;
+    android_calc_exp();
 }
 
 /* Unwielding has the following phases where various things might/must happen */
@@ -765,6 +766,7 @@ static obj_ptr _unwield_get_obj(void)
     prompt.prompt = "Take off which item?";
     prompt.error = "You are not wearing anything to take off.";
     prompt.where[0] = INV_EQUIP;
+    prompt.where[1] = INV_QUIVER;
 
     obj_prompt(&prompt);
     return prompt.obj;

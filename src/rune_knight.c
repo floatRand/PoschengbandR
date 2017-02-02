@@ -1330,6 +1330,35 @@ static void _birth(void)
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
 }
 
+static bool _destroy_object(obj_ptr obj)
+{
+    if (obj->rune == RUNE_SACRIFICE)
+    {
+        bool is_equipped = obj->loc.where == INV_EQUIP;
+        int add_hp = is_equipped ? p_ptr->mhp : p_ptr->mhp/3;
+        int add_sp = is_equipped ? p_ptr->msp : p_ptr->msp/3;
+
+        msg_print("You feel a surge of wondrous power enter your body.");
+
+        p_ptr->chp = MIN(p_ptr->mhp, p_ptr->chp + add_hp);
+        p_ptr->chp_frac = 0;
+        p_ptr->csp = MIN(p_ptr->msp, p_ptr->csp + add_sp);
+        p_ptr->csp_frac = 0;
+
+        p_ptr->redraw |= (PR_MANA);
+        p_ptr->window |= (PW_SPELL);
+        p_ptr->redraw |= (PR_HP);
+
+        if (is_equipped)
+        {
+            blast_object(obj);
+            obj->curse_flags = OFC_HEAVY_CURSE;
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
 class_t *rune_knight_get_class(void)
 {
     static class_t me = {0};
@@ -1368,6 +1397,7 @@ class_t *rune_knight_get_class(void)
         me.calc_bonuses = _calc_bonuses;
         me.caster_info = _caster_info;
         me.get_spells = _get_spells;
+        me.destroy_object = _destroy_object;
         init = TRUE;
     }
 

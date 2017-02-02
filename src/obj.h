@@ -24,9 +24,11 @@ extern void    obj_free(obj_ptr obj);
 extern void    obj_release(obj_ptr obj, int options);
 
 /* Commands (Top Level User Interface) */
+extern void obj_destroy_ui(void);
 extern void obj_inscribe_ui(void);
 extern void obj_inspect_ui(void);
 
+extern void obj_destroy(obj_ptr obj, int amt);
 extern void obj_drop(obj_ptr obj, int amt);
 extern void obj_describe_charges(obj_ptr obj);
 

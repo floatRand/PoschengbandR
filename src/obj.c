@@ -578,6 +578,146 @@ void obj_drop(obj_ptr obj, int amt)
     }
 }
 
+static bool _can_destroy(obj_ptr obj)
+{
+    if (obj->loc.where == INV_EQUIP && obj->rune != RUNE_SACRIFICE)
+        return FALSE;
+    return TRUE;
+}
+
+void obj_destroy_ui(void)
+{
+    obj_prompt_t prompt = {0};
+    char         name[MAX_NLEN];
+    int          pos = 0;
+    bool         force = command_arg > 0; /* 033kx to destroy 33 in slot (x) */
+    int          amt = 1;
+
+    if (p_ptr->special_defense & KATA_MUSOU)
+        set_action(ACTION_NONE);
+
+    /* Prompt for an object */
+    prompt.prompt = "Destroy which item?";
+    prompt.error = "You have nothing to destroy.";
+    prompt.filter = _can_destroy;
+    prompt.where[pos++] = INV_PACK;
+    if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
+        prompt.where[pos++] = INV_EQUIP;
+    prompt.where[pos++] = INV_QUIVER;
+    prompt.where[pos++] = INV_FLOOR;
+
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
+
+    /* Verify unless quantity given beforehand */
+    if (!force && (confirm_destroy || (obj_value(prompt.obj) > 0)))
+    {
+        char ch;
+        int  options = OD_COLOR_CODED;
+        char msg[MAX_NLEN + 100];
+
+        if (prompt.obj->number > 1)
+            options |= OD_OMIT_PREFIX;
+        object_desc(name, prompt.obj, options);
+        sprintf(msg, "Really destroy %s? <color:y>[y/n/Auto]</color>", name);
+
+        ch = msg_prompt(msg, "nyA", PROMPT_DEFAULT);
+        if (ch == 'n') return;
+        if (ch == 'A')
+        {
+            if (autopick_autoregister(prompt.obj))
+                autopick_alter_obj(prompt.obj, TRUE); /* destroyed! */
+            return;
+        }
+    }
+
+    /* Get a quantity. Note: get_quantity will return command_arg if set. */
+    if (prompt.obj->number > 1)
+    {
+        amt = get_quantity(NULL, prompt.obj->number);
+        if (amt <= 0) return;
+    }
+
+    /* Artifacts cannot be destroyed */
+    if (!can_player_destroy_object(prompt.obj)) /* side effect: obj->sense = FEEL_SPECIAL */
+    {
+        object_desc(name, prompt.obj, OD_COLOR_CODED);
+        msg_format("You cannot destroy %s.", name);
+        return;
+    }
+    obj_destroy(prompt.obj, amt);
+}
+
+static void _destroy(obj_ptr obj)
+{
+    energy_use = 100;
+
+    stats_on_p_destroy(obj, obj->number);
+    {
+        race_t  *race_ptr = get_race();
+        class_t *class_ptr = get_class();
+        bool     handled = FALSE;
+
+        if (!handled && race_ptr->destroy_object)
+            handled = race_ptr->destroy_object(obj);
+
+        if (!handled && class_ptr->destroy_object)
+            handled = class_ptr->destroy_object(obj);
+
+        if (!handled)
+        {
+            if (obj->loc.where)
+                msg_print("Destroyed.");
+            else /* Destroying part of a pile */
+            {
+                char name[MAX_NLEN];
+                object_desc(name, obj, OD_COLOR_CODED);
+                msg_format("You destroy %s.", name);
+            }
+        }
+    }
+
+    sound(SOUND_DESTITEM);
+
+    if (high_level_book(obj))
+        spellbook_destroy(obj);
+    if (obj->to_a || obj->to_h || obj->to_d)
+        virtue_add(VIRTUE_ENCHANTMENT, -1);
+
+    if (obj_value_real(obj) > 30000)
+        virtue_add(VIRTUE_SACRIFICE, 2);
+
+    else if (obj_value_real(obj) > 10000)
+        virtue_add(VIRTUE_SACRIFICE, 1);
+
+    if (obj->to_a != 0 || obj->to_d != 0 || obj->to_h != 0)
+        virtue_add(VIRTUE_HARMONY, 1);
+}
+
+void obj_destroy(obj_ptr obj, int amt)
+{
+    assert(obj);
+    assert(amt <= obj->number);
+
+    if (!amt) return;
+
+    if (amt < obj->number)
+    {
+        obj_t copy = *obj;
+        copy.number = amt;
+        obj->number -= amt;
+        _destroy(&copy);
+        if (obj->loc.where == INV_PACK)
+            p_ptr->window |= PW_INVEN;
+    }
+    else
+    {
+        _destroy(obj);
+        obj->number = 0;
+        obj_release(obj, OBJ_RELEASE_QUIET);
+    }
+}
+
 void obj_describe_charges(obj_ptr obj)
 {
     int charges;

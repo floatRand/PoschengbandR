@@ -1324,3 +1324,51 @@ void spellbook_character_dump(doc_ptr doc)
     }
 }
 
+void spellbook_destroy(obj_ptr obj)
+{
+    bool gain_expr = FALSE;
+    if (!high_level_book(obj)) return;
+
+    if (p_ptr->prace == RACE_ANDROID)
+    {
+    }
+    else if (p_ptr->pclass == CLASS_WARRIOR || p_ptr->pclass == CLASS_BERSERKER)
+    {
+        gain_expr = TRUE;
+    }
+    else if (p_ptr->pclass == CLASS_PALADIN)
+    {
+        if (is_good_realm(p_ptr->realm1))
+        {
+            if (!is_good_realm(tval2realm(obj->tval))) gain_expr = TRUE;
+        }
+        else
+        {
+            if (is_good_realm(tval2realm(obj->tval))) gain_expr = TRUE;
+        }
+    }
+
+    if (gain_expr && (p_ptr->exp < PY_MAX_EXP))
+    {
+        s32b tester_exp = p_ptr->max_exp / 20;
+        if (tester_exp > 10000) tester_exp = 10000;
+        if (obj->sval < 3) tester_exp /= 4;
+        if (tester_exp<1) tester_exp = 1;
+
+        msg_print("You feel more experienced.");
+        gain_exp(tester_exp * obj->number);
+    }
+
+    if (obj->tval == TV_LIFE_BOOK)
+    {
+        virtue_add(VIRTUE_UNLIFE, 1);
+        virtue_add(VIRTUE_VITALITY, -1);
+    }
+    else if ( high_level_book(obj)
+           && (obj->tval == TV_DEATH_BOOK || obj->tval == TV_NECROMANCY_BOOK) )
+    {
+        virtue_add(VIRTUE_UNLIFE, -1);
+        virtue_add(VIRTUE_VITALITY, 1);
+    }
+}
+

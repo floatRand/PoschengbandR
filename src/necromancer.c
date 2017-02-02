@@ -590,6 +590,33 @@ static void _birth(void)
     py_birth_spellbooks();
 }
 
+static bool _destroy_object(obj_ptr obj)
+{
+    if (obj->tval == TV_LIFE_BOOK || obj->tval == TV_CRUSADE_BOOK)
+    {
+        char name[MAX_NLEN];
+        int  sp = 0;
+        int  osp = p_ptr->csp;
+
+        switch (obj->sval)
+        {
+        case 0: sp = 10; break;
+        case 1: sp = 25; break;
+        case 2: sp = 100; break;
+        case 3: sp = 666; break;
+        }
+
+        sp_player(sp);
+        object_desc(name, obj, OD_COLOR_CODED);
+        msg_format("You gleefully destroy %s!", name);
+        if (p_ptr->csp > osp)
+            msg_print("You feel your head clear.");
+
+        return TRUE;
+    }
+    return FALSE;
+}
+
 class_t *necromancer_get_class(void)
 {
     static class_t me = {0};
@@ -633,6 +660,7 @@ class_t *necromancer_get_class(void)
         me.get_flags = _get_flags;
         me.get_powers = _get_powers;
         me.character_dump = spellbook_character_dump;
+        me.destroy_object = _destroy_object;
         init = TRUE;
     }
 

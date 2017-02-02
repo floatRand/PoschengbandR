@@ -1651,152 +1651,6 @@ void py_pickup_aux(int o_idx)
 
 
 /*
- * Player "wants" to pick up an object or gold.
- * Note that we ONLY handle things that can be picked up.
- * See "move_player()" for handling of other things.
- */
-bool carry(bool pickup)
-{
-    bool       result = FALSE;
-    cave_type *c_ptr = &cave[py][px];
-
-    s16b this_o_idx, next_o_idx = 0;
-
-    char    o_name[MAX_NLEN];
-
-    /* Recenter the map around the player */
-    viewport_verify();
-
-    /* Update stuff */
-    p_ptr->update |= (PU_MONSTERS);
-
-    /* Redraw map */
-    p_ptr->redraw |= (PR_MAP);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_OVERHEAD);
-
-    /* Handle stuff */
-    handle_stuff();
-
-    /* Automatically pickup/destroy/inscribe items
-    if (autopick_pickup_items(c_ptr))
-        result = TRUE;*/
-
-#ifdef ALLOW_EASY_FLOOR
-
-    if (easy_floor)
-        return py_pickup_floor(pickup);
-
-#endif /* ALLOW_EASY_FLOOR */
-
-    /* Scan the pile of objects */
-    for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
-    {
-        object_type *o_ptr;
-
-        /* Acquire object */
-        o_ptr = &o_list[this_o_idx];
-
-#ifdef ALLOW_EASY_SENSE /* TNB */
-
-        /* Option: Make item sensing easy */
-        if (easy_sense)
-        {
-            /* Sense the object */
-            (void)sense_object(o_ptr);
-        }
-
-#endif /* ALLOW_EASY_SENSE -- TNB */
-
-        /* Describe the object */
-        object_desc(o_name, o_ptr, OD_COLOR_CODED);
-
-        /* Acquire next object */
-        next_o_idx = o_ptr->next_o_idx;
-
-        /* Hack -- disturb */
-        disturb(0, 0);
-
-        /* Pick up gold */
-        if (o_ptr->tval == TV_GOLD)
-        {
-            int value = o_ptr->pval;
-
-            /* Delete the gold */
-            delete_object_idx(this_o_idx);
-
-            /* Message */
-            msg_format("You collect %d gold pieces worth of %s.",
-                   value, o_name);
-
-            sound(SOUND_SELL);
-
-            /* Collect the gold */
-            p_ptr->au += value;
-            stats_on_gold_find(value);
-
-            /* Redraw gold */
-            p_ptr->redraw |= (PR_GOLD);
-
-            if (prace_is_(RACE_MON_LEPRECHAUN))
-                p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
-
-            result = TRUE;
-        }
-
-        /* Pick up objects */
-        else
-        {
-            /* Hack - some objects were handled in autopick_pickup_items(). */
-            if (o_ptr->marked & OM_NOMSG)
-            {
-                /* Clear the flag. */
-                o_ptr->marked &= ~OM_NOMSG;
-            }
-            /* Describe the object */
-            else if (!pickup)
-            {
-                msg_format("You see %s.", o_name);
-
-            }
-
-            /* Note that the pack is too full */
-            else if (!inven_carry_okay(o_ptr))
-            {
-                msg_format("You have no room for %s.", o_name);
-
-            }
-
-            /* Pick up the item (if requested and allowed) */
-            else
-            {
-                int okay = TRUE;
-
-                /* Hack -- query every item */
-                if (carry_query_flag)
-                {
-                    char out_val[MAX_NLEN+20];
-                    sprintf(out_val, "Pick up %s? ", o_name);
-
-                    okay = get_check(out_val);
-                }
-
-                /* Attempt to pick up an object. */
-                if (okay)
-                {
-                    /* Pick up the object */
-                    py_pickup_aux(this_o_idx);
-                    result = TRUE;
-                }
-            }
-        }
-    }
-    return result;
-}
-
-
-/*
  * Determine if a trap affects the player.
  * Always miss 5% of the time, Always hit 5% of the time.
  * Otherwise, match trap power against player armor.
@@ -5336,7 +5190,22 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
     /* Handle "objects" */
     if (!(mpe_mode & MPE_DONT_PICKUP))
     {
-        carry((mpe_mode & MPE_DO_PICKUP) ? TRUE : FALSE);
+        if (mpe_mode & MPE_DO_PICKUP)
+            pack_get_floor();
+        else
+        {
+            char name[MAX_NLEN];
+            int  this_o_idx, next_o_idx = 0;
+            autopick_get_floor();
+            for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)
+            {
+                obj_ptr obj = &o_list[this_o_idx];
+                next_o_idx = obj->next_o_idx;
+                object_desc(name, obj, OD_COLOR_CODED);
+                msg_format("You see %s.", name);
+                disturb(0, 0);
+            }
+        }
     }
 
     /* Handle "store doors" */

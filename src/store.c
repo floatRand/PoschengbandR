@@ -2813,7 +2813,7 @@ static void store_process_command(void)
         /* Destroy an item */
         case 'k':
         {
-            do_cmd_destroy();
+            obj_destroy_ui();
             break;
         }
 
