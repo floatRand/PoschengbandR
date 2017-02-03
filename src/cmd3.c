@@ -105,25 +105,26 @@ static bool _lite_is_darkness(object_type *lite)
  */
 static void do_cmd_refill_lamp(object_type *lantern)
 {
-    int item;
-    object_type *o_ptr;
+    obj_prompt_t prompt = {0};
 
-    item_tester_hook = item_tester_refill_lantern;
-    if (!get_item(&item, "Refill with which flask? ", "You have no flasks of oil.", USE_INVEN | USE_FLOOR)) return;
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[0 - item];
+    prompt.prompt = "Refill with which flask?";
+    prompt.error = "You have no flasks of oil.";
+    prompt.filter = item_tester_refill_lantern;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
+
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
 
     energy_use = 50;
-    lantern->xtra4 += o_ptr->xtra4;
+    lantern->xtra4 += prompt.obj->xtra4;
     msg_print("You fuel your lamp.");
-    if ( _lite_is_darkness(o_ptr) && lantern->xtra4 > 0)
+    if (_lite_is_darkness(prompt.obj) && lantern->xtra4 > 0)
     {
         lantern->xtra4 = 0;
         msg_print("Your lamp has gone out!");
     }
-    else if (_lite_is_darkness(o_ptr) || _lite_is_darkness(lantern))
+    else if (_lite_is_darkness(prompt.obj) || _lite_is_darkness(lantern))
     {
         lantern->xtra4 = 0;
         msg_print("Curiously, your lamp doesn't light.");
@@ -134,19 +135,8 @@ static void do_cmd_refill_lamp(object_type *lantern)
         msg_print("Your lamp is full.");
     }
 
-    if (item >= 0)
-    {
-        inven_item_increase(item, -1);
-        inven_item_describe(item);
-        inven_item_optimize(item);
-    }
-    else
-    {
-        floor_item_increase(0 - item, -1);
-        floor_item_describe(0 - item);
-        floor_item_optimize(0 - item);
-    }
-
+    prompt.obj->number--;
+    obj_release(prompt.obj, 0);
     p_ptr->update |= PU_TORCH;
 }
 
@@ -159,26 +149,27 @@ static bool _is_torch(object_type *o_ptr) {
 }
 static void do_cmd_refill_torch(object_type *torch)
 {
-    int item;
-    object_type *o_ptr;
+    obj_prompt_t prompt = {0};
 
-    item_tester_hook = _is_torch;
-    if (!get_item(&item, "Refuel with which torch? ", "You have no extra torches.", USE_INVEN | USE_FLOOR)) return;
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[0 - item];
+    prompt.prompt = "Refuel with which torch?";
+    prompt.error = "You have no extra torches.";
+    prompt.filter = _is_torch;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
+
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
 
     energy_use = 50;
-    torch->xtra4 += o_ptr->xtra4 + 5;
+    torch->xtra4 += prompt.obj->xtra4 + 5;
 
     msg_print("You combine the torches.");
-    if (_lite_is_darkness(o_ptr) && torch->xtra4 > 0)
+    if (_lite_is_darkness(prompt.obj) && torch->xtra4 > 0)
     {
         torch->xtra4 = 0;
         msg_print("Your torch has gone out!");
     }
-    else if (_lite_is_darkness(o_ptr) || _lite_is_darkness(torch))
+    else if (_lite_is_darkness(prompt.obj) || _lite_is_darkness(torch))
     {
         torch->xtra4 = 0;
         msg_print("Curiously, your torch does not light.");
@@ -191,22 +182,10 @@ static void do_cmd_refill_torch(object_type *torch)
     else
         msg_print("Your torch glows more brightly.");
 
-    if (item >= 0)
-    {
-        inven_item_increase(item, -1);
-        inven_item_describe(item);
-        inven_item_optimize(item);
-    }
-    else
-    {
-        floor_item_increase(0 - item, -1);
-        floor_item_describe(0 - item);
-        floor_item_optimize(0 - item);
-    }
-
+    prompt.obj->number--;
+    obj_release(prompt.obj, 0);
     p_ptr->update |= PU_TORCH;
 }
-
 
 /*
  * Refill the players lamp, or restock his torches
