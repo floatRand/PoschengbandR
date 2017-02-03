@@ -127,7 +127,7 @@ inv_ptr inv_filter_floor(obj_p p)
 
     vec_add(result->objects, NULL); /* slot 0 is invalid */
 
-    if (p_ptr->wizard) /* wizards have mighty magicks */
+    if (0 && p_ptr->wizard) /* wizards have mighty magicks */
     {
         result->name = "*FLOOR*";
         for (this_o_idx = 0; this_o_idx < max_o_idx; this_o_idx++)

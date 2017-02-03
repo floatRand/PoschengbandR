@@ -169,7 +169,7 @@ static bool _do_identify(void)
 
     assert(device_used_charges == 0);
 
-    prompt.prompt = "Identify which item (<color:keypress>*</color> for all)?";
+    prompt.prompt = "Identify which item <color:w>(<color:keypress>*</color> for all)</color>?";
     prompt.error = "All items are identified.";
     prompt.filter = obj_is_unknown;
     prompt.where[0] = INV_PACK;

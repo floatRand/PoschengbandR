@@ -559,7 +559,7 @@ void obj_inspect_ui(void)
 {
     obj_prompt_t prompt = {0};
 
-    prompt.prompt = "Examine which item?";
+    prompt.prompt = "Examine which item <color:w>(<color:keypress>Esc</color> to exit)</color>?";
     prompt.error = "You have nothing to examine.";
     prompt.filter = obj_exists;
     prompt.where[0] = INV_PACK;
@@ -607,7 +607,7 @@ void obj_inscribe_ui(void)
 {
     obj_prompt_t prompt = {0};
 
-    prompt.prompt = "Inscribe which item?";
+    prompt.prompt = "Inscribe which item <color:w>(<color:keypress>Esc</color> to exit)</color>?";
     prompt.error = "You have nothing to inscribe.";
     prompt.filter = obj_exists;
     prompt.where[0] = INV_PACK;

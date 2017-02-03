@@ -228,8 +228,16 @@ static void _display(obj_prompt_context_ptr context)
             tab->page == tab->page_ct - 1 ? "less" : "more",
             tab->page + 1, tab->page_ct);
     }
-    else
-        doc_newline(context->doc);
+    if (!(context->prompt->flags & (INV_SHOW_FAIL_RATES | INV_SHOW_VALUE)))
+    {
+        if (show_weights)
+        {
+            int wgt = inv_weight(tab->inv, NULL);
+            doc_printf(context->doc, "<tab:%d><color:R> %3d.%d lbs</color>",
+                doc_width(context->doc) - 9, wgt/10, wgt%10);
+        }
+    }
+    doc_newline(context->doc);
     if (context->prompt->prompt)
         doc_printf(context->doc, "<color:y>%s</color> ", context->prompt->prompt);
     else
@@ -288,6 +296,35 @@ static int _basic_cmd(obj_prompt_context_ptr context, int cmd)
         context->tab--;
         if (context->tab < 0)
             context->tab = vec_length(context->tabs) - 1;
+        return OP_CMD_HANDLED;
+    case KTRL('I'): case KTRL('P'): { /* fyi, TAB is ^I in current encoding scheme ... */
+        int tab = _find_tab(context->tabs, INV_PACK);
+        if (tab >= 0)
+            context->tab = tab;
+        return OP_CMD_HANDLED; }
+    case KTRL('E'): {
+        int tab = _find_tab(context->tabs, INV_EQUIP);
+        if (tab >= 0)
+            context->tab = tab;
+        return OP_CMD_HANDLED; }
+    case KTRL('Q'): {
+        int tab = _find_tab(context->tabs, INV_QUIVER);
+        if (tab >= 0)
+            context->tab = tab;
+        return OP_CMD_HANDLED; }
+    case KTRL('F'): {
+        int tab = _find_tab(context->tabs, INV_FLOOR);
+        if (tab >= 0)
+            context->tab = tab;
+        return OP_CMD_HANDLED; }
+    case KTRL('W'):
+        show_weights = !show_weights;
+        return OP_CMD_HANDLED;
+    case KTRL('G'):
+        show_item_graph = !show_item_graph;
+        return OP_CMD_HANDLED;
+    case KTRL('L'):
+        show_labels = !show_labels;
         return OP_CMD_HANDLED;
     case SKEY_PGDOWN: case '3': {
         obj_prompt_tab_ptr tab = vec_get(context->tabs, context->tab);
