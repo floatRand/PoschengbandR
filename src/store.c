@@ -604,6 +604,9 @@ static bool store_will_buy(object_type *o_ptr)
             }
             break;
         }
+        case STORE_JEWELER:
+            if (!object_is_jewelry(o_ptr)) return FALSE;
+            break;
     }
 
     /* XXX XXX XXX Ignore "worthless" items */
