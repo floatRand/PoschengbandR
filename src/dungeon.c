@@ -3752,14 +3752,13 @@ static void process_command(void)
         {
             if (!p_ptr->wild_mode)
             {
-            if (!p_ptr->inside_arena)
-                do_cmd_activate();
-            else
-            {
-                msg_print("The arena absorbs all attempted magic!");
-
-                msg_print(NULL);
-            }
+                if (!p_ptr->inside_arena)
+                    do_cmd_activate();
+                else
+                {
+                    msg_print("The arena absorbs all attempted magic!");
+                    msg_print(NULL);
+                }
             }
             break;
         }

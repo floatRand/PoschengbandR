@@ -1320,26 +1320,14 @@ static void _do_capture_ball(object_type *o_ptr)
  * Note that it always takes a turn to activate an artifact, even if
  * the user hits "escape" at the "direction" prompt.
  */
-static void do_cmd_activate_aux(int item)
+static void do_cmd_activate_aux(obj_ptr obj)
 {
-    object_type *o_ptr;
-    cptr         msg;
-    effect_t     effect;
-    int          boost = device_power(100) - 100;
-    u32b         flgs[OF_ARRAY_SIZE];
+    cptr     msg;
+    effect_t effect;
+    int      boost = device_power(100) - 100;
+    u32b     flgs[OF_ARRAY_SIZE];
 
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-    obj_flags_known(o_ptr, flgs);
+    obj_flags_known(obj, flgs);
 
     /* Take a turn */
     energy_use = 100;
@@ -1352,7 +1340,7 @@ static void do_cmd_activate_aux(int item)
         return;
     }
 
-    effect = obj_get_effect(o_ptr);
+    effect = obj_get_effect(obj);
     if (!effect_try(&effect))
     {
         if (flush_failure) flush();
@@ -1361,7 +1349,7 @@ static void do_cmd_activate_aux(int item)
         return;
     }
 
-    if (o_ptr->timeout)
+    if (obj->timeout)
     {
         msg_print("It whines, glows and fades...");
         return;
@@ -1370,22 +1358,22 @@ static void do_cmd_activate_aux(int item)
     msg_print("You activate it...");
     sound(SOUND_ZAP);
 
-    msg = obj_get_effect_msg(o_ptr);
+    msg = obj_get_effect_msg(obj);
     if (msg)
         msg_print(msg);
 
-    if (o_ptr->tval == TV_CAPTURE)
+    if (obj->tval == TV_CAPTURE)
     {
-        _do_capture_ball(o_ptr);
+        _do_capture_ball(obj);
         return;
     }
     device_known = have_flag(flgs, OF_ACTIVATE);
     if (effect_use(&effect, boost))
     {
         if (device_noticed)
-            obj_learn_activation(o_ptr);
+            obj_learn_activation(obj);
 
-        o_ptr->timeout = effect.cost;
+        obj->timeout = effect.cost;
         p_ptr->window |= (PW_INVEN | PW_EQUIP);
     }
 }
@@ -1397,24 +1385,19 @@ static bool _activate_p(object_type *o_ptr)
 
 void do_cmd_activate(void)
 {
-    int     item;
-    cptr    q, s;
-
+    obj_prompt_t prompt = {0};
 
     if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
-    {
         set_action(ACTION_NONE);
-    }
 
-    item_tester_no_ryoute = TRUE;
-    /* Prepare the hook */
-    item_tester_hook = _activate_p;
+    prompt.prompt ="Activate which item?"; 
+    prompt.error = "You have nothing to activate.";
+    prompt.filter = _activate_p;
+    prompt.where[0] = INV_EQUIP;
+    prompt.flags = INV_SHOW_FAIL_RATES;
 
-    /* Get an item */
-    q = "Activate which item? ";
-    s = "You have nothing to activate.";
-    if (!get_item(&item, q, s, USE_EQUIP | SHOW_FAIL_RATES)) return;
-
-    /* Activate the item */
-    do_cmd_activate_aux(item);
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
+    do_cmd_activate_aux(prompt.obj);
 }
+

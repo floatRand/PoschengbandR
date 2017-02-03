@@ -318,7 +318,8 @@ static int _basic_cmd(obj_prompt_context_ptr context, int cmd)
             context->tab = tab;
         return OP_CMD_HANDLED; }
     case KTRL('W'):
-        show_weights = !show_weights;
+        if (!(context->prompt->flags & (INV_SHOW_FAIL_RATES | INV_SHOW_VALUE)))
+            show_weights = !show_weights;
         return OP_CMD_HANDLED;
     case KTRL('G'):
         show_item_graph = !show_item_graph;
