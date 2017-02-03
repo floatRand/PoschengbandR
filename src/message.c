@@ -45,7 +45,7 @@ void msg_on_startup(void)
     _msg_head = 0;
     _msg_append = FALSE;
 
-    msg_line_init(NULL);
+    msg_line_init(ui_msg_rect());
 }
 
 void msg_on_shutdown(void)
@@ -196,27 +196,20 @@ rect_t msg_line_rect(void)
     );
 }
 
-void msg_line_init(const rect_t *display_rect)
+void msg_line_init(rect_t display_rect)
 {
-    if (display_rect && rect_is_valid(display_rect))
+    assert(rect_is_valid(&display_rect));
+    if (_msg_line_doc)
     {
-        if (_msg_line_doc)
-        {
-            msg_line_clear();
-            doc_free(_msg_line_doc);
-        }
-        _msg_line_rect = *display_rect;
-        if (_msg_line_rect.x + _msg_line_rect.cx > Term->wid)
-            _msg_line_rect.cx = Term->wid - _msg_line_rect.x;
-        _msg_line_doc = doc_alloc(_msg_line_rect.cx);
-        _msg_line_sync_pos = doc_cursor(_msg_line_doc);
-        _msg_line_last_msg_pos = doc_cursor(_msg_line_doc);
+        msg_line_clear();
+        doc_free(_msg_line_doc);
     }
-    else
-    {
-        rect_t r = rect_create(0, 0, MIN(72, Term->wid - 13), 10);
-        msg_line_init(&r);
-    }
+    _msg_line_rect = display_rect;
+    if (_msg_line_rect.x + _msg_line_rect.cx > Term->wid)
+        _msg_line_rect.cx = Term->wid - _msg_line_rect.x;
+    _msg_line_doc = doc_alloc(_msg_line_rect.cx);
+    _msg_line_sync_pos = doc_cursor(_msg_line_doc);
+    _msg_line_last_msg_pos = doc_cursor(_msg_line_doc);
 }
 
 void msg_boundary(void)
@@ -428,6 +421,35 @@ char cmsg_prompt(byte color, cptr prompt, char keys[], int options)
 char msg_prompt(cptr prompt, char keys[], int options)
 {
     return cmsg_prompt(TERM_WHITE, prompt, keys, options);
+}
+
+bool msg_command(cptr prompt, char *cmd)
+{
+    return cmsg_command(TERM_WHITE, prompt, cmd);
+}
+
+bool cmsg_command(byte color, cptr prompt, char *cmd)
+{
+    bool result = FALSE;
+    msg_boundary();
+    auto_more_state = AUTO_MORE_PROMPT;
+    cmsg_print(color, prompt);
+
+    if (get_com_no_macros)
+        *cmd = inkey_special(FALSE);
+    else
+        *cmd = inkey();
+
+    if (*cmd == ESCAPE)
+        cmsg_print(TERM_L_RED, "Cancelled");
+    else
+    {
+        if (isprint(*cmd))
+            msg_print(format("=> <color:y>%c</color>.", *cmd));
+        result = TRUE;
+    }
+    msg_line_clear();
+    return result;
 }
 
 bool cmsg_input(byte color, cptr prompt, char *buf, int len)

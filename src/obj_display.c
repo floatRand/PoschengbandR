@@ -1011,7 +1011,7 @@ void obj_display_rect(object_type *o_ptr, rect_t display)
     screen_save();
     if (doc_cursor(doc).y < display.cy - 3)
     {
-        doc_insert(doc, "\n[Press Any Key to Continue]\n\n");
+        doc_insert(doc, "\n<color:B>[Press <color:y>Any Key</color> to Continue]</color>\n\n");
         doc_sync_term(doc, doc_range_all(doc), doc_pos_create(display.x, display.y));
         inkey();
     }

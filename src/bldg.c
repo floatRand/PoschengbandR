@@ -3657,8 +3657,6 @@ void do_cmd_bldg(void)
     char            command;
     bool            validcmd;
     building_type   *bldg;
-    rect_t          msg_display_rect;
-
 
     energy_use = 100;
 
@@ -3747,8 +3745,7 @@ void do_cmd_bldg(void)
     leave_bldg = FALSE;
     show_building(bldg);
 
-    msg_display_rect = rect_create(0, 0, 80, 3);
-    msg_line_init(&msg_display_rect);
+    msg_line_init(ui_shop_msg_rect());
     store_hack = TRUE;
 
     while (!leave_bldg)
@@ -3792,7 +3789,7 @@ void do_cmd_bldg(void)
     }
 
     store_hack = FALSE;
-    msg_line_init(NULL);
+    msg_line_init(ui_msg_rect());
 
     /* Reinit wilderness to activate quests ... */
     if (reinit_wilderness)

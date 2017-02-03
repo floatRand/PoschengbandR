@@ -1840,6 +1840,9 @@ extern rect_t ui_menu_rect(void);
 extern rect_t ui_status_bar_rect(void);
 extern rect_t ui_char_info_rect(void);
 extern rect_t ui_screen_rect(void);
+extern rect_t ui_shop_msg_rect(void);
+extern rect_t ui_shop_rect(void);
+extern rect_t ui_msg_rect(void);
 /* cf msg_line_rect() in message.h and note that the message "line" is
    really a drop down box of sorts. It may drop on top of whatever is beneath
    it (currently the map region). */

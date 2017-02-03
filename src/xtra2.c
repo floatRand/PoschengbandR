@@ -3185,7 +3185,7 @@ void resize_map(void)
      */
     if (can_save) move_cursor_relative(py, px);
 
-    msg_line_init(NULL);
+    msg_line_init(ui_msg_rect());
 
     /* Refresh */
     Term_fresh();
@@ -3279,6 +3279,26 @@ rect_t ui_menu_rect(void)
         0,
         Term->wid - 12 - 1,
         Term->hgt - 1 - 1
+    );
+}
+
+rect_t ui_shop_msg_rect(void)
+{
+    return rect_create(0, 0, 80, 3);
+}
+
+rect_t ui_msg_rect(void)
+{
+    return rect_create(0, 0, MIN(72, Term->wid - 13), 10);
+}
+
+rect_t ui_shop_rect(void)
+{
+    return rect_create(
+        0,
+        3,
+        Term->wid,
+        Term->hgt - 3
     );
 }
 

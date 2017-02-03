@@ -48,6 +48,7 @@
 #include "equip.h"
 #include "pack.h"
 #include "quiver.h"
+#include "home.h"
 #include "obj_prompt.h"
 
 #include "types.h"

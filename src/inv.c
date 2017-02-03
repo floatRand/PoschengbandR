@@ -207,7 +207,7 @@ static void _add_aux(inv_ptr inv, obj_ptr obj, slot_t slot)
     if (inv->type == INV_EQUIP)
         ct = 1;
 
-    assert(1 <= slot && slot <= inv->max);
+    if (inv->max) { assert(1 <= slot && slot <= inv->max); }
     assert(!(inv->flags & _FILTER));
 
     loc.where = inv->type;

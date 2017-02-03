@@ -1098,6 +1098,7 @@ static bool wr_savefile_new(savefile_ptr file)
     equip_save(file);
     pack_save(file);
     quiver_save(file);
+    home_save(file);
 
     tmp16u = max_towns;
     savefile_write_u16b(file, tmp16u);

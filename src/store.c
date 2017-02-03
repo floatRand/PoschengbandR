@@ -3032,7 +3032,6 @@ void do_cmd_store(void)
     int         w, h;
     bool        friend_hack = FALSE;
     int         options = STORE_MAINT_NORMAL;
-    rect_t      msg_display_rect;
 
 
     /* Get term size */
@@ -3054,6 +3053,11 @@ void do_cmd_store(void)
 
     /* Extract the store code */
     which = f_info[c_ptr->feat].subtype;
+    if (which == STORE_HOME)
+    {
+        home_ui();
+        return;
+    }
 
     old_town_num = p_ptr->town_num;
     if ((which == STORE_HOME) || (which == STORE_MUSEUM)) p_ptr->town_num = 1;
@@ -3081,8 +3085,7 @@ void do_cmd_store(void)
         return;
     }
 
-    msg_display_rect = rect_create(0, 0, 80, 3);
-    msg_line_init(&msg_display_rect);
+    msg_line_init(ui_shop_msg_rect());
     store_hack = TRUE;
 
     /* Calculate the number of store maintainances since the last visit */
@@ -3423,7 +3426,7 @@ void do_cmd_store(void)
     p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
 
     store_hack = FALSE;
-    msg_line_init(NULL);
+    msg_line_init(ui_msg_rect());
 }
 
 
