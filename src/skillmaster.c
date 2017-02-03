@@ -1498,11 +1498,11 @@ static int _get_realm_stat(int realm)
     return A_NONE;
 }
 
-static bool _spellbook_hook(object_type *o_ptr)
+static bool _spellbook_hook(obj_ptr obj)
 {
-    if (TV_BOOK_BEGIN <= o_ptr->tval && o_ptr->tval <= TV_BOOK_END)
+    if (obj_is_book(obj))
     {
-        int realm = tval2realm(o_ptr->tval);
+        int realm = tval2realm(obj->tval);
         int pts = _get_realm_pts(realm);
         if (pts > 0)
             return TRUE;
@@ -1510,19 +1510,18 @@ static bool _spellbook_hook(object_type *o_ptr)
     return FALSE;
 }
 
-/* Note: At the moment, we only support spellbook base realms. Should that
- * change, I will probably need to replace get_item() with something more
- * intelligent that also handles non-book based realms in a single menu. */
 static object_type *_prompt_spellbook(void)
 {
-    int item;
-    item_tester_hook = _spellbook_hook;
-    if (!get_item(&item, "Use which book? ", "You have no spellbooks!", USE_INVEN | USE_FLOOR))
-        return NULL;
-    if (item >= 0)
-        return &inventory[item];
-    else
-        return &o_list[-item];
+    obj_prompt_t prompt = {0};
+
+    prompt.prompt = "Use which book?";
+    prompt.error = "You have no books that you can read.";
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
+    prompt.filter = _spellbook_hook;
+
+    obj_prompt(&prompt);
+    return prompt.obj;
 }
 
 /* shared with spell table spoilers, so we pass in the skill points to use */
