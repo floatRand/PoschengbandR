@@ -3436,7 +3436,6 @@ static void process_command(void)
         case 'g':
         {
             do_cmd_get();
-            /*do_cmd_stay(!always_pickup);*/
             break;
         }
 
@@ -3744,7 +3743,7 @@ static void process_command(void)
         /* Uninscribe an object */
         case '}':
         {
-            do_cmd_uninscribe();
+            obj_uninscribe_ui();
             break;
         }
 

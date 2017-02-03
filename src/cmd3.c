@@ -78,62 +78,6 @@ bool high_level_book(object_type *o_ptr)
 }
 
 /*
- * Remove the inscription from an object
- * XXX Mention item (when done)?
- */
-void do_cmd_uninscribe(void)
-{
-    int   item;
-
-    object_type *o_ptr;
-
-    cptr q, s;
-
-    item_tester_no_ryoute = TRUE;
-    /* Get an item */
-    q = "Un-inscribe which item? ";
-    s = "You have nothing to un-inscribe.";
-
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR))) return;
-
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-    /* Nothing to remove */
-    if (!o_ptr->inscription)
-    {
-        msg_print("That item had no inscription to remove.");
-
-        return;
-    }
-
-    /* Message */
-    msg_print("Inscription removed.");
-
-
-    /* Remove the incription */
-    o_ptr->inscription = 0;
-
-    /* Combine the pack */
-    p_ptr->notice |= (PN_COMBINE);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP);
-
-    p_ptr->update |= (PU_BONUS);
-
-}
-
-/*
  * An "item_tester_hook" for refilling lanterns
  */
 static bool item_tester_refill_lantern(object_type *o_ptr)

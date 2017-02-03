@@ -2862,7 +2862,7 @@ static void store_process_command(void)
         /* Uninscribe an object */
         case '}':
         {
-            do_cmd_uninscribe();
+            obj_uninscribe_ui();
             break;
         }
 

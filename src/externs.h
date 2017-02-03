@@ -762,11 +762,8 @@ extern void travel_end(void);
 extern int breakage_chance(object_type *o_ptr);
 
 /* cmd3.c */
-extern void do_cmd_inven(void);
-extern void do_cmd_equip(void);
 extern void do_cmd_drop(void);
 extern bool high_level_book(object_type *o_ptr);
-extern void do_cmd_uninscribe(void);
 extern void do_cmd_refill(void);
 extern void do_cmd_target(void);
 extern void do_cmd_look(void);

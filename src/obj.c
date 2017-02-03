@@ -157,6 +157,7 @@ bool obj_exists(obj_ptr obj)     { return BOOL(obj); }
 bool obj_is_art(obj_ptr obj)     { return obj->name1 || obj->art_name; }
 bool obj_is_book(obj_ptr obj)    { return TV_BOOK_BEGIN <= obj->tval && obj->tval <= TV_BOOK_END; }
 bool obj_is_ego(obj_ptr obj)     { return BOOL(obj->name2); }
+bool obj_is_inscribed(obj_ptr obj) { return BOOL(obj->inscription); }
 bool obj_is_rod(obj_ptr obj)     { return obj->tval == TV_ROD; }
 bool obj_is_staff(obj_ptr obj)   { return obj->tval == TV_STAFF; }
 bool obj_is_unknown(obj_ptr obj) { return !obj_is_known(obj); }
@@ -620,7 +621,38 @@ void obj_inscribe_ui(void)
 
     p_ptr->notice |= PN_OPTIMIZE_PACK | PN_OPTIMIZE_QUIVER;
     p_ptr->window |= PW_INVEN | PW_EQUIP;
-    p_ptr->update |= PU_BONUS; /* Why??? */
+}
+
+static int _uninscriber(obj_prompt_context_ptr context, int cmd)
+{
+    obj_prompt_tab_ptr tab = vec_get(context->tabs, context->tab);
+    slot_t             slot = inv_label_slot(tab->inv, cmd);
+    if (slot)
+    {
+        obj_ptr obj = inv_obj(tab->inv, slot);
+        obj->inscription = 0;
+        return OP_CMD_HANDLED;
+    }
+    return OP_CMD_SKIPPED;
+}
+
+void obj_uninscribe_ui(void)
+{
+    obj_prompt_t prompt = {0};
+
+    prompt.prompt = "Remove inscription from which item <color:w>(<color:keypress>Esc</color> to exit)</color>?";
+    prompt.error = "You have nothing to uninscribe.";
+    prompt.filter = obj_is_inscribed;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
+    prompt.cmd_handler = _uninscriber;
+
+    obj_prompt(&prompt);
+
+    p_ptr->notice |= PN_OPTIMIZE_PACK | PN_OPTIMIZE_QUIVER;
+    p_ptr->window |= PW_INVEN | PW_EQUIP;
 }
 
 static void _drop(obj_ptr obj)

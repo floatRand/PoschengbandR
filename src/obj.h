@@ -29,6 +29,7 @@ extern void    obj_release(obj_ptr obj, int options);
 /* Commands (Top Level User Interface) */
 extern void obj_destroy_ui(void);
 extern void obj_inscribe_ui(void);
+extern void obj_uninscribe_ui(void);
 extern void obj_inspect_ui(void);
 
 extern void obj_destroy(obj_ptr obj, int amt);
@@ -42,6 +43,7 @@ extern bool obj_exists(obj_ptr obj);
 extern bool obj_is_art(obj_ptr obj);
 extern bool obj_is_book(obj_ptr obj);
 extern bool obj_is_ego(obj_ptr obj);
+extern bool obj_is_inscribed(obj_ptr obj);
 extern bool obj_is_staff(obj_ptr obj);
 extern bool obj_is_wand(obj_ptr obj);
 extern bool obj_is_readable_book(obj_ptr obj);
