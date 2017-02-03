@@ -130,8 +130,32 @@ bool obj_is_known(obj_ptr obj)
     return FALSE;
 }
 
+bool obj_is_readable_book(obj_ptr obj)
+{
+    if (!obj_is_book(obj)) return FALSE;
+    if (p_ptr->pclass == CLASS_SORCERER)
+    {
+        return is_magic(tval2realm(obj->tval));
+    }
+    else if (p_ptr->pclass == CLASS_RED_MAGE)
+    {
+        if (is_magic(tval2realm(obj->tval)))
+            return ((obj->tval == TV_ARCANE_BOOK) || (obj->sval < 2));
+    }
+    else if (p_ptr->pclass == CLASS_GRAY_MAGE)
+    {
+        return gray_mage_is_allowed_book(obj->tval, obj->sval);
+    }
+    else if (p_ptr->pclass == CLASS_SKILLMASTER)
+    {
+        return skillmaster_is_allowed_book(obj->tval, obj->sval);
+    }
+    return (REALM1_BOOK == obj->tval || REALM2_BOOK == obj->tval);
+}
+
 bool obj_exists(obj_ptr obj)     { return BOOL(obj); }
 bool obj_is_art(obj_ptr obj)     { return obj->name1 || obj->art_name; }
+bool obj_is_book(obj_ptr obj)    { return TV_BOOK_BEGIN <= obj->tval && obj->tval <= TV_BOOK_END; }
 bool obj_is_ego(obj_ptr obj)     { return BOOL(obj->name2); }
 bool obj_is_rod(obj_ptr obj)     { return obj->tval == TV_ROD; }
 bool obj_is_staff(obj_ptr obj)   { return obj->tval == TV_STAFF; }
@@ -285,12 +309,15 @@ bool obj_confirm_choice(obj_ptr obj)
 
     insc = quark_str(obj->inscription);
     /* !sdk = !s!d!k */
-    for (pos = strchr(insc, '!'); pos && *pos; pos = strchr(pos + 1, '!'))
+    for (pos = strchr(insc, '!');
+            pos && *pos;
+            pos = strchr(pos + 1, '!'))
     {
         for (;;)
         {
             pos++;
-            if (*pos == command_cmd || *pos == '*')
+            if (!*pos) return TRUE;
+            else if (*pos == command_cmd || *pos == '*')
             {
                 if (!ct++)
                 {
@@ -299,7 +326,7 @@ bool obj_confirm_choice(obj_ptr obj)
                 }
                 if (!get_check(prompt)) return FALSE;
             }
-            else if (!*pos || !isalpha(*pos))
+            else if (!isalpha(*pos))
             {
                 if (*pos == '!') pos--; /* !k!q */
                 break;

@@ -5060,7 +5060,10 @@ void notice_stuff(void)
 
     if (p_ptr->notice & PN_OPTIMIZE_PACK)
     {
+        /* Clear the bit first ... */
         p_ptr->notice &= ~PN_OPTIMIZE_PACK;
+        /* ... as the pack will refuse the optimize if locked,
+         * adding back PN_OPTIMIZE_PACK */
         pack_optimize();
     }
 

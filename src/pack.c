@@ -9,6 +9,8 @@ static int     _lock = 0;
 void pack_init(void)
 {
     inv_free(_inv);
+    vec_free(_overflow);
+
     _inv = inv_alloc("Inventory", INV_PACK, PACK_MAX);
     _overflow = vec_alloc(free);
 }

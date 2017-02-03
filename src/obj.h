@@ -40,9 +40,11 @@ extern bool obj_can_sense1(obj_ptr obj);
 extern bool obj_can_sense2(obj_ptr obj);
 extern bool obj_exists(obj_ptr obj);
 extern bool obj_is_art(obj_ptr obj);
+extern bool obj_is_book(obj_ptr obj);
 extern bool obj_is_ego(obj_ptr obj);
 extern bool obj_is_staff(obj_ptr obj);
 extern bool obj_is_wand(obj_ptr obj);
+extern bool obj_is_readable_book(obj_ptr obj);
 extern bool obj_is_rod(obj_ptr obj);
 
 extern bool obj_is_known(obj_ptr obj);
