@@ -3207,26 +3207,8 @@ extern void do_cmd_debug(void);
  *
  * XXX XXX XXX Make some "blocks"
  */
-static void process_command(void)
+static void _dispatch_command(int old_now_turn)
 {
-    int old_now_turn = now_turn;
-
-
-#ifdef ALLOW_REPEAT /* TNB */
-
-    /* Handle repeating the last command */
-    repeat_check(FALSE);
-
-#endif /* ALLOW_REPEAT -- TNB */
-
-    now_turn = game_turn;
-    msg_boundary();
-
-    /* Sniper */
-    if ((p_ptr->pclass == CLASS_SNIPER) && (p_ptr->concent))
-        reset_concent = TRUE;
-
-    /* Parse the command */
     switch (command_cmd)
     {
         /* Ignore */
@@ -3464,19 +3446,6 @@ static void process_command(void)
 
         /*** Stairs and Doors and Chests and Traps ***/
 
-        /* Enter store */
-        case SPECIAL_KEY_STORE:
-        {
-            if (!p_ptr->wild_mode) do_cmd_store();
-            break;
-        }
-
-        /* Enter building -KMW- */
-        case SPECIAL_KEY_BUILDING:
-        {
-            if (!p_ptr->wild_mode) do_cmd_bldg();
-            break;
-        }
 
         /* Enter quest level -KMW- */
         case SPECIAL_KEY_QUEST:
@@ -4141,6 +4110,38 @@ static void process_command(void)
             break;
         }
     }
+}
+
+static void process_command(void)
+{
+    int old_now_turn = now_turn;
+
+#ifdef ALLOW_REPEAT /* TNB */
+
+    /* Handle repeating the last command */
+    repeat_check(FALSE);
+
+#endif /* ALLOW_REPEAT -- TNB */
+
+    now_turn = game_turn;
+    msg_boundary();
+
+    if (p_ptr->pclass == CLASS_SNIPER && p_ptr->concent)
+        reset_concent = TRUE;
+
+    switch (command_cmd)
+    {
+    case SPECIAL_KEY_STORE:
+        if (!p_ptr->wild_mode) do_cmd_store();
+        break;
+    case SPECIAL_KEY_BUILDING:
+        if (!p_ptr->wild_mode) do_cmd_bldg();
+        break;
+    default:
+        pack_lock();
+        _dispatch_command(old_now_turn);
+        pack_unlock();
+    }
 
     if (!energy_use)
         now_turn = old_now_turn;
@@ -4593,9 +4594,7 @@ static void process_player(void)
             msg_line_clear(); */
 
             /* Process the command */
-            pack_lock();
             process_command();
-            pack_unlock();
         }
 
         /* Normal command */
@@ -4610,9 +4609,7 @@ static void process_player(void)
             can_save = FALSE;
 
             /* Process the command */
-            pack_lock();
             process_command();
-            pack_unlock();
         }
 
         /* Hack -- Pack Overflow */

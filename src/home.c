@@ -273,6 +273,7 @@ void home_ui(void)
         cmd = inkey_special(TRUE);
         msg_line_clear();
         if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q') break;
+        pack_lock();
         if (!shop_common_cmd_handler(cmd))
         {
             switch (cmd)
@@ -306,6 +307,7 @@ void home_ui(void)
                 }
             }
         }
+        pack_unlock();
         notice_stuff(); /* PW_INVEN and PW_PACK ... */
         handle_stuff(); /* Plus 'C' to view character sheet */
     }
