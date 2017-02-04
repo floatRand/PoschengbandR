@@ -3058,6 +3058,11 @@ void do_cmd_store(void)
         home_ui();
         return;
     }
+    if (which == STORE_MUSEUM)
+    {
+        museum_ui();
+        return;
+    }
 
     old_town_num = p_ptr->town_num;
     if ((which == STORE_HOME) || (which == STORE_MUSEUM)) p_ptr->town_num = 1;

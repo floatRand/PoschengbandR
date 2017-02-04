@@ -12,4 +12,7 @@ extern void    home_display(doc_ptr doc, obj_p p, int flags);
 extern void    home_load(savefile_ptr file);
 extern void    home_save(savefile_ptr file);
 
+extern void    museum_ui(void);
+extern void    museum_display(doc_ptr doc, obj_p p, int flags);
+
 #endif

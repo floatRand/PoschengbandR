@@ -72,6 +72,9 @@ void obj_release(obj_ptr obj, int options)
         if (obj->number <= 0)
             quiver_remove(obj->loc.slot);
         break;
+    case INV_TMP_ALLOC:
+        obj_free(obj);
+        break;
     }
 }
 

@@ -1467,26 +1467,10 @@ static void _build_home(doc_ptr doc)
 
 static void _build_museum(doc_ptr doc)
 {
-    char o_name[MAX_NLEN];
-    store_type  *st_ptr = &town[1].store[STORE_MUSEUM];
-
-    if (st_ptr->stock_num)
-    {
-        int i;
-        int page = 1;
-
-        doc_printf(doc, "<topic:Museum>==================================== <color:keypress>M</color>useum ===================================\n");
-
-        for (i = 0; i < st_ptr->stock_num; i++)
-        {
-            if ((i % 12) == 0)
-                doc_printf(doc, "\n ( page %d )\n", page++);
-            object_desc(o_name, &st_ptr->stock[i], OD_COLOR_CODED);
-            doc_printf(doc, "%c) <indent><style:indent>%s</style></indent>\n", I2A(i%12), o_name);
-        }
-
-        doc_newline(doc);
-    }
+    doc_printf(doc, "<topic:Museum>==================================== <color:keypress>M</color>useum ===================================\n");
+    doc_newline(doc);
+    museum_display(doc, obj_exists, 0);
+    doc_newline(doc);
 }
 
 /****************************** Statistics ************************************/
