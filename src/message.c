@@ -378,63 +378,45 @@ static void msg_line_display(byte color, cptr msg)
 */
 static char cmsg_prompt_imp(byte color, cptr prompt, char keys[], int options)
 {
-    char result = '\0';
     if (options & PROMPT_NEW_LINE)
         msg_boundary();
 
     auto_more_state = AUTO_MORE_PROMPT;
     cmsg_print(color, prompt);
 
-    while (!result)
+    for (;;)
     {
         char ch = inkey();
         int  i;
 
         if (ch == ESCAPE && (options & PROMPT_ESCAPE_DEFAULT))
-        {
-            result = keys[0];
-            break;
-        }
+            return keys[0];
 
         if (ch == '\r' && (options & PROMPT_RETURN_1))
-        {
-            result = keys[1];
-            break;
-        }
+            return keys[1];
 
         for (i = 0; ; i++)
         {
             char choice = keys[i];
             if (!choice) break;
-            if (ch == choice)
-            {
-                result = choice;
-                break;
-            }
+            if (ch == choice) return choice;
             if (!(options & PROMPT_CASE_SENSITIVE))
             {
                 if (tolower(ch) == tolower(choice))
-                {
-                    result = choice;
-                    break;
-                }
+                    return choice;
             }
         }
 
         if (!(options & PROMPT_FORCE_CHOICE) && quick_messages)
-        {
-            result = keys[0];
-            break;
-        }
+            return keys[0];
     }
-    if (isprint(result))
-        msg_print(format("=> <color:y>%c</color>.", result));
-    return result;
 }
 
 char cmsg_prompt(byte color, cptr prompt, char keys[], int options)
 {
     char ch = cmsg_prompt_imp(color, prompt, keys, options);
+    if (isprint(ch))
+        msg_print(format("=> <color:y>%c</color>.", ch));
     msg_line_clear();
     return ch;
 }

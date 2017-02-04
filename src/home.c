@@ -228,7 +228,7 @@ static void _display(_ui_context_ptr context)
     
     doc_insert(context->doc,
         "<color:keypress>x</color> to begin examining items.\n"
-        "<color:keypress>Esc</color> to exit home. "
+        "<color:keypress>Esc</color> to exit. "
         "<color:keypress>PageUp/Down</color> to scroll. "
         "<color:keypress>?</color> for help.");
     doc_insert(context->doc, "</style>");
