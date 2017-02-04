@@ -317,12 +317,13 @@ static bool item_tester_learn_spell(object_type *o_ptr)
         }
     }
 
-    if ((o_ptr->tval < TV_LIFE_BOOK) || (o_ptr->tval > (TV_LIFE_BOOK + MAX_REALM - 1))) return (FALSE);
-    if ((o_ptr->tval == TV_MUSIC_BOOK) && (p_ptr->pclass == CLASS_BARD)) return (TRUE);
+    if (!obj_is_book(o_ptr)) return FALSE;
+    if (o_ptr->tval == TV_MUSIC_BOOK && p_ptr->pclass == CLASS_BARD) return TRUE;
+    if (o_ptr->tval == TV_BURGLARY_BOOK && p_ptr->pclass == CLASS_ROGUE) return TRUE;
     else if (!is_magic(tval2realm(o_ptr->tval))) return FALSE;
-    if ((REALM1_BOOK == o_ptr->tval) || (REALM2_BOOK == o_ptr->tval)) return (TRUE);
-    if (choices & (0x0001 << (tval2realm(o_ptr->tval) - 1))) return (TRUE);
-    return (FALSE);
+    if (REALM1_BOOK == o_ptr->tval || REALM2_BOOK == o_ptr->tval) return TRUE;
+    if (choices & (0x0001 << (tval2realm(o_ptr->tval) - 1))) return TRUE;
+    return FALSE;
 }
 
 static void change_realm2(int next_realm)
