@@ -1398,7 +1398,12 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     t = tmp_val;
 
     if (o_ptr->marked & OM_RESERVED)
-        t = object_desc_str(t, "<<Hold>> ");
+    {
+        if (mode & OD_COLOR_CODED)
+            t = object_desc_str(t, "<color:B><<Hold>></color> ");
+        else
+            t = object_desc_str(t, "<<Hold>> ");
+    }
 
     if (o_ptr->marked & OM_WORN)
         t = object_desc_str(t, "<<Worn>> ");

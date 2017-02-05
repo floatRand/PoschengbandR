@@ -503,6 +503,7 @@ static void _buy(_ui_context_ptr context);
 static void _examine(_ui_context_ptr context);
 static void _sell(_ui_context_ptr context);
 static void _sellout(_ui_context_ptr context);
+static void _reserve(_ui_context_ptr context);
 static void _loop(_ui_context_ptr context);
 
 static void _maintain(shop_ptr shop);
@@ -554,11 +555,12 @@ static void _loop(_ui_context_ptr context)
         {
             switch (cmd) /* cmd is from the player's perspective */
             {
-            case 'g': case 'b': _sell(context); break;
+            case 'g': case 'b': case 'p': _sell(context); break;
             case 'B': _sellout(context); break;
             case 'd': case 's': _buy(context); break;
             case 'x': _examine(context); break;
             case 'S': _shuffle_stock(context->shop); break;
+            case 'R': _reserve(context); break;
             case '?':
                 doc_display_help("context_shop.txt", NULL);
                 Term_clear_rect(ui_shop_msg_rect());
@@ -612,6 +614,7 @@ static void _display(_ui_context_ptr context)
     doc_ptr  doc = context->doc;
     shop_ptr shop = context->shop;
     int      ct = strlen(shop->type->name) + 10; /* " (20000gp)" */
+    char     buf[10];
 
     doc_clear(doc);
     doc_insert(doc, "<style:table>");
@@ -623,11 +626,23 @@ static void _display(_ui_context_ptr context)
 
     _display_inv(doc, shop, context->top, context->page_size);
     
-    doc_printf(doc, "Gold Remaining: <color:y>%d</color>\n\n", p_ptr->au);
+    big_num_display(p_ptr->au, buf);
+    doc_printf(doc, "Gold Remaining: <color:y>%s</color>\n\n", buf);
     doc_insert(doc,
         "<color:keypress>b</color> to buy. "
         "<color:keypress>s</color> to sell. "
         "<color:keypress>x</color> to begin examining items.\n"
+        "<color:keypress>B</color> to buyout inventory. ");
+
+    if (mut_present(MUT_MERCHANTS_FRIEND))
+    {
+        doc_insert(doc,
+            "<color:keypress>S</color> to shuffle stock. "
+            "<color:keypress>R</color> to reserve an item.");
+    }
+    doc_newline(doc);
+
+    doc_insert(doc,
         "<color:keypress>Esc</color> to exit. "
         "<color:keypress>PageUp/Down</color> to scroll. "
         "<color:keypress>?</color> for help.");
@@ -678,6 +693,12 @@ static void _buy_aux(shop_ptr shop, obj_ptr obj)
 
     object_desc(name, obj, OD_COLOR_CODED); /* again...in case *id* */
     msg_format("You sold %s for <color:R>%d</color> gold.", name, price);
+
+    if (shop->type->id == SHOP_BLACK_MARKET)
+        virtue_add(VIRTUE_JUSTICE, -1);
+
+    if (obj->tval == TV_BOTTLE)
+        virtue_add(VIRTUE_NATURE, 1);
 
     if (_add_obj(shop, obj))
         inv_sort(shop->inv);
@@ -734,6 +755,64 @@ static void _examine(_ui_context_ptr context)
     }
 }
 
+static void _reserve_aux(shop_ptr shop, obj_ptr obj)
+{
+    int        cost = _sell_price(shop, 10000);
+    string_ptr s;
+    char       c;
+    char       name[MAX_NLEN];
+
+    object_desc(name, obj, OD_COLOR_CODED);
+    s = string_alloc_format("Reserve %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, cost);
+    c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+    string_free(s);
+    if (c == 'n') return;
+    if (cost > p_ptr->au)
+    {
+        msg_print("You don't have enough gold.");
+        return;
+    }
+    p_ptr->au -= cost;
+    stats_on_gold_services(cost);
+
+    p_ptr->redraw |= PR_GOLD;
+    if (prace_is_(RACE_MON_LEPRECHAUN))
+        p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+
+    obj->marked |= OM_RESERVED;
+    msg_format("Done! I'll hold on to %s for you. You may come back at any time to purchase it.", name);
+}
+
+static void _reserve(_ui_context_ptr context)
+{
+    if (p_ptr->wizard || mut_present(MUT_MERCHANTS_FRIEND))
+    {
+        for (;;)
+        {
+            char    cmd;
+            slot_t  slot;
+            obj_ptr obj;
+
+            if (!msg_command("<color:y>Reserve which item <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
+            if (cmd < 'a' || cmd > 'z') continue;
+            slot = label_slot(cmd);
+            slot = slot - context->top + 1;
+            obj = inv_obj(context->shop->inv, slot);
+            if (!obj) continue;
+
+            if (obj->marked & OM_RESERVED)
+            {
+                msg_print("You have already reserved that item. Choose another.");
+                continue;
+            }
+            _reserve_aux(context->shop, obj);
+            break;
+        }
+    }
+    else
+        msg_print("I will only reserve items in my stock for wizards or true friends of the merchant's guild.");
+}
+
 static void _sell_aux(shop_ptr shop, obj_ptr obj)
 {
     char       name[MAX_NLEN];
@@ -769,6 +848,12 @@ static void _sell_aux(shop_ptr shop, obj_ptr obj)
 
     obj_identify_fully(obj);
     stats_on_purchase(obj);
+
+    if (shop->type->id == SHOP_BLACK_MARKET)
+        virtue_add(VIRTUE_JUSTICE, -1);
+
+    if (obj->tval == TV_BOTTLE)
+        virtue_add(VIRTUE_NATURE, -1);
 
     pack_carry(obj);
     msg_format("You have %s.", name);
@@ -954,9 +1039,32 @@ static void _shuffle_stock(shop_ptr shop)
 {
     if (p_ptr->wizard || mut_present(MUT_MERCHANTS_FRIEND))
     {
+        if (!p_ptr->wizard)
+        {
+            int        cost = _sell_price(shop, 5000);
+            string_ptr s;
+            char       c;
+            s = string_alloc_format("Shuffle stock for <color:R>%d</color> gp? <color:y>[y/n]</color>", cost);
+            c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+            string_free(s);
+            if (c == 'n') return;
+            if (cost > p_ptr->au)
+            {
+                msg_print("You don't have enough gold.");
+                return;
+            }
+            p_ptr->au -= cost;
+            stats_on_gold_services(cost);
+
+            p_ptr->redraw |= PR_GOLD;
+            if (prace_is_(RACE_MON_LEPRECHAUN))
+                p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+        }
         _cull(shop, 0);
         _restock(shop, 12 + randint0(5));
     }
+    else
+        msg_print("I will only shuffle my stock for wizards or true friends of the merchant's guild.");
 }
 
 /************************************************************************
