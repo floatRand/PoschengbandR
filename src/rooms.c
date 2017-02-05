@@ -1565,7 +1565,11 @@ static void _apply_room_grid1(int x, int y, const room_grid_t *grid_ptr, u16b ro
             c_ptr->special = grid_ptr->extra;
 
         if (have_flag(f_info[c_ptr->feat].flags, FF_STORE))
-            store_init(NO_TOWN, f_info[c_ptr->feat].subtype);
+        {
+            town_ptr town = towns_get_town(TOWN_DUNGEON);
+            shop_ptr shop = town_get_shop(town, f_info[c_ptr->feat].subtype);
+            shop_reset(shop);
+        }
     }
 
     /* Traps */

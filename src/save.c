@@ -226,24 +226,6 @@ static void wr_xtra_art(savefile_ptr file, int a_idx)
         savefile_write_u32b(file, a_ptr->known_flags[i]);
 }
 
-static void wr_store(savefile_ptr file, store_type *st_ptr)
-{
-    int j;
-
-    savefile_write_u32b(file, st_ptr->store_open);
-    savefile_write_s16b(file, st_ptr->insult_cur);
-    savefile_write_byte(file, st_ptr->owner);
-    savefile_write_s16b(file, st_ptr->stock_num);
-    savefile_write_s16b(file, st_ptr->good_buy);
-    savefile_write_s16b(file, st_ptr->bad_buy);
-    savefile_write_s32b(file, st_ptr->last_visit);
-    savefile_write_s16b(file, st_ptr->last_lev);
-    savefile_write_s32b(file, st_ptr->last_exp);
-
-    for (j = 0; j < st_ptr->stock_num; j++)
-        wr_item(file, &st_ptr->stock[j]);
-}
-
 static void wr_randomizer(savefile_ptr file)
 {
     int i;
@@ -1098,17 +1080,8 @@ static bool wr_savefile_new(savefile_ptr file)
     equip_save(file);
     pack_save(file);
     quiver_save(file);
+    towns_save(file);
     home_save(file);
-
-    tmp16u = max_towns;
-    savefile_write_u16b(file, tmp16u);
-    tmp16u = MAX_STORES;
-    savefile_write_u16b(file, tmp16u);
-    for (i = 1; i < max_towns; i++)
-    {
-        for (j = 0; j < MAX_STORES; j++)
-            wr_store(file, &town[i].store[j]);
-    }
 
     savefile_write_s16b(file, p_ptr->pet_follow_distance);
     savefile_write_s16b(file, p_ptr->pet_extra_flags);

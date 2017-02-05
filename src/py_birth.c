@@ -2548,6 +2548,7 @@ static void _birth_finalize(void)
     equip_init();
     pack_init();
     quiver_init();
+    towns_init();
     home_init();
     virtue_init();
 

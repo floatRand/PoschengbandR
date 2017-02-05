@@ -17,6 +17,21 @@ obj_ptr obj_copy(obj_ptr obj)
     return copy;
 }
 
+obj_ptr obj_split(obj_ptr obj, int amt)
+{
+    obj_ptr copy;
+    assert(obj);
+    assert(0 < amt && amt < obj->number);
+    copy = obj_copy(obj);
+    copy->loc.where = INV_TMP_ALLOC;
+    copy->loc.slot = 0;
+
+    copy->number = amt;
+    obj->number -= amt;
+
+    return copy;
+}
+
 void obj_clear_dun_info(obj_ptr obj)
 {
     obj->next_o_idx = 0;
@@ -262,6 +277,11 @@ int obj_cmp(obj_ptr left, obj_ptr right)
         if (device_level(left) < device_level(right)) return -1;
         if (device_level(left) > device_level(right)) return 1;
         break;
+
+    case TV_LITE:
+        if (left->xtra4 < right->xtra4) return 1;
+        if (left->xtra4 > right->xtra4) return -1;
+        break;
     }
 
     /* Lastly, sort by decreasing value ... but consider stacks */
@@ -407,7 +427,7 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
         /* Require full knowledge of both items. Ammo skips this check
          * so that you can shoot unidentifed stacks of arrows and have
          * them recombine later. */
-        if (loc != INV_STORE)
+        if (loc != INV_SHOP)
         {
             if (!object_is_known(dest) || !object_is_known(obj)) return FALSE;
         }
@@ -415,7 +435,7 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
     case TV_BOLT:
     case TV_ARROW:
     case TV_SHOT:
-        if (loc != INV_STORE)
+        if (loc != INV_SHOP)
         {
             if (object_is_known(dest) != object_is_known(obj)) return FALSE;
             if (dest->feeling != obj->feeling) return FALSE;
@@ -475,7 +495,7 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
     /* Shops always merge inscriptions, but never discounts. For the
      * player, merging of inscriptions and discounts is controlled
      * by options (stack_force_*) */
-    if (loc == INV_STORE)
+    if (loc == INV_SHOP)
     {
         if (dest->discount != obj->discount) return FALSE;
     }
@@ -512,7 +532,7 @@ int obj_combine(obj_ptr dest, obj_ptr obj, int loc)
     dest->number += amt;
     obj->number -= amt;
 
-    if (loc != INV_STORE)
+    if (loc != INV_SHOP)
     {
         if (object_is_known(obj)) obj_identify(dest);
 

@@ -188,128 +188,6 @@ static void rd_lore(savefile_ptr file, int r_idx)
         r_ptr->r_flagsr |= RFR_PACT_MONSTER;
 }
 
-/*
- * Add the item "o_ptr" to the inventory of the "Home"
- *
- * In all cases, return the slot (or -1) where the object was placed
- *
- * Note that this is a hacked up version of "inven_carry()".
- *
- * Also note that it may not correctly "adapt" to "knowledge" bacoming
- * known, the player may have to pick stuff up and drop it again.
- */
-static void home_carry(store_type *st_ptr, object_type *o_ptr)
-{
-    int                 slot;
-    s32b               value;
-    int     i;
-    object_type *j_ptr;
-
-
-    /* Check each existing item (try to combine) */
-    for (slot = 0; slot < st_ptr->stock_num; slot++)
-    {
-        /* Get the existing item */
-        j_ptr = &st_ptr->stock[slot];
-
-        /* The home acts just like the player */
-        if (object_similar(j_ptr, o_ptr))
-        {
-            /* Save the new number of items */
-            object_absorb(j_ptr, o_ptr);
-
-            /* All done */
-            return;
-        }
-    }
-
-    /* No space? */
-    if (st_ptr->stock_num >= STORE_INVEN_MAX * 10) {
-        return;
-    }
-
-    /* Determine the "value" of the item */
-    value = obj_value(o_ptr);
-
-    /* Check existing slots to see if we must "slide" */
-    for (slot = 0; slot < st_ptr->stock_num; slot++)
-    {
-        if (object_sort_comp(o_ptr, value, &st_ptr->stock[slot])) break;
-    }
-
-    /* Slide the others up */
-    for (i = st_ptr->stock_num; i > slot; i--)
-    {
-        st_ptr->stock[i] = st_ptr->stock[i-1];
-    }
-
-    /* More stuff now */
-    st_ptr->stock_num++;
-
-    /* Insert the new item */
-    st_ptr->stock[slot] = *o_ptr;
-
-    virtue_add(VIRTUE_SACRIFICE, -1);
-
-    /* Return the location */
-    return;
-}
-
-static errr rd_store(savefile_ptr file, int town_number, int store_number)
-{
-    store_type *st_ptr;
-
-    int j;
-
-    byte own;
-    s16b num;
-
-    bool sort = FALSE;
-
-    st_ptr = &town[town_number].store[store_number];
-
-    st_ptr->store_open = savefile_read_s32b(file);
-    st_ptr->insult_cur = savefile_read_s16b(file);
-    own = savefile_read_byte(file);
-    num = savefile_read_s16b(file);
-    st_ptr->good_buy = savefile_read_s16b(file);
-    st_ptr->bad_buy = savefile_read_s16b(file);
-    st_ptr->last_visit = savefile_read_s32b(file);
-    st_ptr->last_lev = savefile_read_s16b(file);
-    st_ptr->last_exp = savefile_read_s32b(file);
-
-    /* Extract the owner (see above) */
-    st_ptr->owner = own;
-
-    /* Read the items */
-    for (j = 0; j < num; j++)
-    {
-        object_type forge;
-        object_type *q_ptr;
-
-        q_ptr = &forge;
-
-        rd_item(file, q_ptr);
-
-        /* Acquire valid items */
-        if (st_ptr->stock_num < (store_number == STORE_HOME ? (STORE_INVEN_MAX) * 10 : (store_number == STORE_MUSEUM ? (STORE_INVEN_MAX) * 50 : STORE_INVEN_MAX)))
-        {
-            int k;
-            if (sort)
-            {
-                home_carry(st_ptr, q_ptr);
-            }
-            else
-            {
-                k = st_ptr->stock_num++;
-                object_copy(&st_ptr->stock[k], q_ptr);
-            }
-        }
-    }
-
-    return 0;
-}
-
 static void rd_randomizer(savefile_ptr file)
 {
     int i;
@@ -1082,7 +960,6 @@ static errr rd_dungeon(savefile_ptr file)
 static errr rd_savefile_new_aux(savefile_ptr file)
 {
     int i, j;
-    int town_count;
 
     s32b wild_x_size;
     s32b wild_y_size;
@@ -1419,22 +1296,14 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     equip_init();
     pack_init();
     quiver_init();
+    towns_init();
     home_init();
 
     equip_load(file);
     pack_load(file);
     quiver_load(file);
+    towns_load(file);
     home_load(file);
-
-    town_count = savefile_read_u16b(file);
-    tmp16u = savefile_read_u16b(file);
-    for (i = 1; i < town_count; i++)
-    {
-        for (j = 0; j < tmp16u; j++)
-        {
-            if (rd_store(file, i, j)) return (22);
-        }
-    }
 
     p_ptr->pet_follow_distance = savefile_read_s16b(file);
     p_ptr->pet_extra_flags = savefile_read_s16b(file);

@@ -20,6 +20,7 @@ typedef bool (*obj_p)(obj_ptr obj);
 
 /* Creation */
 extern obj_ptr obj_alloc(void);
+extern obj_ptr obj_split(obj_ptr obj, int amt);
 extern obj_ptr obj_copy(obj_ptr obj);
 extern void    obj_free(obj_ptr obj);
 

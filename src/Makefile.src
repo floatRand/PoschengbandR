@@ -58,3 +58,4 @@ ANGFILES = \
     wizard1.o wizard2.o wiz_obj.o xtra1.o xtra2.o yellow_mage.o \
 	home.o shop.o
 
+#TODO: remove store.o

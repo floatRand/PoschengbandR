@@ -567,8 +567,6 @@ cptr birth_get_realm_desc(int i)
 bool birth_hack = FALSE;
 void player_birth(void)
 {
-    int i, j;
-
     birth_hack = TRUE;
     playtime = 0;
 
@@ -582,13 +580,6 @@ void player_birth(void)
     /* Here's a bunch of crap that py_birth() shouldn't need to know */
     init_dungeon_quests();
     init_turn();
-
-    /* Init the shops */
-    for (i = 1; i < max_towns; i++)
-    {
-        for (j = 0; j < MAX_STORES; j++)
-            store_init(i, j);
-    }
 
     /* Generate the random seeds for the wilderness */
     seed_wilderness();

@@ -314,7 +314,7 @@ typedef struct object_type object_type;
 typedef bool (*object_p)(object_type *o_ptr);
 
 struct obj_loc_s {
-    byte where; /* INV_EQUIP, INV_PACK, INV_QUIVER, INV_STORE or INV_FLOOR */
+    byte where; /* INV_EQUIP, INV_PACK, INV_QUIVER, INV_SHOP or INV_FLOOR */
     byte x, y;  /* where == INV_FLOOR */
     int  slot;  /* o_idx if floor, slot otherwise */
 };

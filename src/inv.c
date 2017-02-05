@@ -716,7 +716,7 @@ void inv_calculate_labels(inv_ptr inv, slot_t start, slot_t stop, int flags)
     }
 
     /* Inscription overrides don't function is shops */
-    if (inv->type == INV_STORE || inv->type == INV_HOME || (flags & INV_IGNORE_INSCRIPTIONS))
+    if (inv->type == INV_SHOP || inv->type == INV_HOME || (flags & INV_IGNORE_INSCRIPTIONS))
         return;
 
     /* Override by inscription (e.g. @mf) */

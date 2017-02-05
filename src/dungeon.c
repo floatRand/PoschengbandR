@@ -4132,7 +4132,25 @@ static void process_command(void)
     switch (command_cmd)
     {
     case SPECIAL_KEY_STORE:
-        if (!p_ptr->wild_mode) do_cmd_store();
+        if (!p_ptr->wild_mode)
+        {
+            cave_type *c_ptr = &cave[py][px];
+
+            if (p_ptr->town_num && cave_have_flag_grid(c_ptr, FF_STORE))
+            {
+                int which = f_info[c_ptr->feat].subtype;
+
+                if (which == SHOP_HOME) home_ui();
+                else if (which == SHOP_MUSEUM) museum_ui();
+                else
+                {
+                    town_ptr town = towns_current_town();
+                    shop_ptr shop = town_get_shop(town, which);
+
+                    shop_ui(shop);
+                }
+            }
+        }
         break;
     case SPECIAL_KEY_BUILDING:
         if (!p_ptr->wild_mode) do_cmd_bldg();
