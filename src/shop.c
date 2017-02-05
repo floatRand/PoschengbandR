@@ -502,7 +502,7 @@ static void _display(_ui_context_ptr context);
 static void _buy(_ui_context_ptr context);
 static void _examine(_ui_context_ptr context);
 static void _sell(_ui_context_ptr context);
-static void _sellout(_ui_context_ptr context);
+static void _sellout(shop_ptr shop);
 static void _reserve(_ui_context_ptr context);
 static void _loop(_ui_context_ptr context);
 
@@ -556,7 +556,7 @@ static void _loop(_ui_context_ptr context)
             switch (cmd) /* cmd is from the player's perspective */
             {
             case 'g': case 'b': case 'p': _sell(context); break;
-            case 'B': _sellout(context); break;
+            case 'B': _sellout(context->shop); break;
             case 'd': case 's': _buy(context); break;
             case 'x': _examine(context); break;
             case 'S': _shuffle_stock(context->shop); break;
@@ -589,6 +589,7 @@ static void _loop(_ui_context_ptr context)
             if (pack_overflow_count())
             {
                 msg_print("<color:v>Your pack is overflowing!</color> It's time for you to leave!");
+                msg_print(NULL);
                 break;
             }
         }
@@ -902,9 +903,74 @@ static void _sell(_ui_context_ptr context)
     }
 }
 
-static void _sellout(_ui_context_ptr context)
+static void _sellout(shop_ptr shop)
 {
+    slot_t slot, max = inv_last(shop->inv, obj_exists);
+    int    price, total_price = 0;
+
+    if (!get_check("Are you sure you want to buy the entire inventory of this store? "))
+        return;
+
+    for (slot = 1; slot <= max; slot++)
+    {
+        obj_ptr obj = inv_obj(shop->inv, slot);
+        if (!obj) continue;
+        price = _sell_price(shop, obj_value(obj));
+        price *= obj->number;
+        if (price <= p_ptr->au)
+        {
+            bool destroy = FALSE;
+            int auto_pick_idx = is_autopick(obj);
+
+            if (auto_pick_idx >= 0 && autopick_list[auto_pick_idx].action & DO_AUTODESTROY)
+                destroy = TRUE;
+
+            obj->ident &= ~IDENT_STORE;
+            obj->inscription = 0;
+            obj->feeling = FEEL_NONE;
+            obj->marked &= ~OM_RESERVED;
+
+            obj_identify_fully(obj);
+
+            if (!destroy)
+            {
+                pack_carry(obj);
+                stats_on_purchase(obj);
+            }
+            obj->number = 0;
+            inv_remove(shop->inv, slot);
+
+            p_ptr->au -= price;
+            total_price += price;
+            stats_on_gold_buying(price);
+
+            p_ptr->redraw |= PR_GOLD;
+
+            if (shop->type->id == SHOP_BLACK_MARKET)
+                virtue_add(VIRTUE_JUSTICE, -1);
+
+            if (obj->tval == TV_BOTTLE)
+                virtue_add(VIRTUE_NATURE, -1);
+        }
+        else
+        {
+            msg_print("You have run out of gold.");
+            break;
+        }
+    }
+
+    msg_format("You spent <color:R>%d</color> gp.", total_price);
+    if (prace_is_(RACE_MON_LEPRECHAUN))
+        p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+
+    inv_sort(shop->inv);
+    if (!inv_count_slots(shop->inv, obj_exists))
+    {
+        _restock(shop, 12 + randint0(5));
+        msg_format("<color:U>%s</color> grins and brings out some new stock.", shop->owner->name);
+    }
 }
+
 
 /************************************************************************
  * Stocking
@@ -918,7 +984,7 @@ static void _maintain(shop_ptr shop)
     /* Initialize an empty shop */
     if (!inv_count_slots(shop->inv, obj_exists))
     {
-        _restock(shop, 12);
+        _restock(shop, 12 + randint0(5));
         return;
     }
 
@@ -947,7 +1013,7 @@ static void _maintain(shop_ptr shop)
     for (i = 0; i < num; i++)
     {
         int ct = inv_count_slots(shop->inv, obj_exists);
-        if (ct < 6) _restock(shop, 12);
+        if (ct < 6) _restock(shop, 12 + randint0(5));
         else if (ct > 24) _cull(shop, 12);
         else
         {
