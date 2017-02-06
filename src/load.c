@@ -627,7 +627,6 @@ static void rd_extra(savefile_ptr file)
     p_ptr->floor_id = savefile_read_s16b(file);
 
     playtime = savefile_read_u32b(file);
-    p_ptr->visit = savefile_read_s32b(file);
     p_ptr->count = savefile_read_u32b(file);
 
     {

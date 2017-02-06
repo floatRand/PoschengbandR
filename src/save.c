@@ -594,7 +594,6 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->riding);
     savefile_write_s16b(file, p_ptr->floor_id);
     savefile_write_u32b(file, playtime);
-    savefile_write_s32b(file, p_ptr->visit);
     savefile_write_u32b(file, p_ptr->count);
 
     {

@@ -273,7 +273,6 @@ static void player_wipe(void)
         dungeon_flags[i] = 0;
     }
 
-    p_ptr->visit = 1;
     p_ptr->wild_mode = FALSE;
 
     for (i = 0; i < MAX_MAGIC_NUM; i++)

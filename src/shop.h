@@ -50,7 +50,10 @@ enum
     TOWN_MORIVANT,
     TOWN_ANGWIL,
     TOWN_ZUL,
-    TOWN_RANDOM
+    TOWN_RANDOM,
+    TOWN_MIN = TOWN_OUTPOST,
+    TOWN_MAX = TOWN_RANDOM,
+    TOWN_MAX_STD = TOWN_ANGWIL,
 };
 
 extern void     towns_init(void);
@@ -61,6 +64,10 @@ extern void     towns_save(savefile_ptr file);
 extern void     towns_load(savefile_ptr file);
 
 extern shop_ptr town_get_shop(town_ptr town, int which);
+
+extern void     town_on_visit(int which);
+extern bool     town_visited(int which);
+extern cptr     town_name(int which);
 
 extern int      town_service_price(int price);
 #endif

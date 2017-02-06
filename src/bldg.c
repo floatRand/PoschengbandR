@@ -3000,6 +3000,7 @@ bool tele_town(void)
 {
     int i, x, y;
     int num = 0;
+    int town_id = 0;
 
     if (dun_level)
     {
@@ -3016,16 +3017,14 @@ bool tele_town(void)
     screen_save();
     clear_bldg(4, 10);
 
-    for (i=1;i<max_towns;i++)
+    for (i = TOWN_MIN; i <= TOWN_MAX_STD; i++)
     {
         char buf[80];
 
-        if ((i == NO_TOWN) || 
-            (i == SECRET_TOWN) || 
-            (i == p_ptr->town_num) || 
-            (!(p_ptr->visit & (1L << (i-1))) && !p_ptr->wizard)) continue;
+        if (i == p_ptr->town_num) continue;
+        if (!town_visited(i) && !p_ptr->wizard) continue;
 
-        sprintf(buf,"%c) %-20s", I2A(i-1), town[i].name);
+        sprintf(buf,"%c) %-20s", I2A(i-1), town_name(i));
         prt(buf, 5+i, 5);
         num++;
     }
@@ -3048,8 +3047,11 @@ bool tele_town(void)
             screen_load();
             return FALSE;
         }
-        else if ((i < 'a') || (i > ('a'+max_towns-2))) continue;
-        else if (((i-'a'+1) == p_ptr->town_num) || ((i-'a'+1) == NO_TOWN) || ((i-'a'+1) == SECRET_TOWN) || (!(p_ptr->visit & (1L << (i-'a'))) && !p_ptr->wizard)) continue;
+        else if ((i < 'a') || (i > ('a'+TOWN_MAX_STD-1))) continue;
+
+        town_id = A2I(i) + 1;
+        if (town_id == p_ptr->town_num) continue;
+        if (!p_ptr->wizard && !town_visited(town_id)) continue;
         break;
     }
 
@@ -3057,7 +3059,7 @@ bool tele_town(void)
     {
         for (x = 0; x < max_wild_x; x++)
         {
-            if(wilderness[y][x].town == (i-'a'+1))
+            if(wilderness[y][x].town == town_id)
             {
                 p_ptr->wilderness_y = y;
                 p_ptr->wilderness_x = x;

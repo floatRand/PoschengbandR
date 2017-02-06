@@ -786,7 +786,7 @@ void _generate_cave(const rect_t *valid)
             if (wilderness[wild_y][wild_x].town)
             {
                 p_ptr->town_num = wilderness[wild_y][wild_x].town;
-                p_ptr->visit |= (1L << (p_ptr->town_num - 1));
+                town_on_visit(p_ptr->town_num);
             }
 
             /* ... before excluding this tile during scrolling.

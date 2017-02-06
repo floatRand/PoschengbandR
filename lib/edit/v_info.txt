@@ -4258,7 +4258,7 @@ M:%%%%%%%%%%%%%
 
 N:Jeweler
 T:ROOM:NORMAL:SHOP
-W:20:*:64
+W:20:*:32
 L:7:JEWELER(GLOW)
 M:%%%%%%%%%%%%%
 M:%...........%

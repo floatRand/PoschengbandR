@@ -1443,7 +1443,6 @@ struct player_type
 
     s16b riding;              /* Riding on a monster of this index */
     byte knowledge;           /* Knowledge about yourself */
-    s32b visit;               /* Visited towns */
 
     byte start_race;          /* Race at birth */
     s32b old_race1;           /* Record of race changes */

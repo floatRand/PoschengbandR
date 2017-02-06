@@ -67,6 +67,8 @@ static bool _black_market_will_buy(obj_ptr obj);
 static bool _black_market_create(obj_ptr obj, int mode);
 static bool _book_will_buy(obj_ptr obj);
 static bool _book_create(obj_ptr obj, int mode);
+static bool _jeweler_will_buy(obj_ptr obj);
+static bool _jeweler_create(obj_ptr obj, int mode);
 
 static _type_t _types[] = 
 {
@@ -304,6 +306,22 @@ static _type_t _types[] =
          { 21, "Isung the Lord",           30000, 105, RACE_HIGH_ELF },
          { 0 }}},
 
+    { SHOP_JEWELER, "Jewelry Shop", _jeweler_will_buy, _jeweler_create,
+        {{  1, "Dalanna the Sweet",        20000, 108, RACE_HUMAN },
+         {  2, "Mesistrond",               15000, 105, RACE_DARK_ELF },
+         {  3, "Mr. Biggles",              50000, 110, RACE_GNOME },
+         {  4, "Snivelsby",                10000, 108, RACE_SNOTLING },
+         {  5, "Grug",                     10000, 110, RACE_HALF_TROLL },
+         {  6, "Raphaella",                35000, 105, RACE_ARCHON },
+         {  7, "Sylphrana Lightfoot",      25000, 105, RACE_SPRITE },
+         {  8, "Helen the Beautiful",      20000, 110, RACE_DEMIGOD },
+         {  9, "Rattles Neverborn",        10000, 112, RACE_SKELETON },
+         { 10, "Trinkles the Stinky",      30000, 110, RACE_GNOME },
+         { 11, "Gaudella",                 15000, 105, RACE_HUMAN },
+         { 12, "Argwynna of the Wood",     40000, 105, RACE_WOOD_ELF },
+         { 13, "Mugbasha",                  5000, 120, RACE_KOBOLD },
+         { 0 }}},
+
     { SHOP_NONE }
 };
 
@@ -391,7 +409,9 @@ static int _get_k_idx(_k_idx_p p, int lvl)
 
 static int _mod_lvl(int lvl)
 {
-    return dun_level/3 + lvl;
+    if (dun_level > lvl)
+        return (dun_level - lvl)/3 + lvl;
+    return lvl;
 }
 
 static void _discount(obj_ptr obj)
@@ -961,6 +981,34 @@ static bool _book_create(obj_ptr obj, int mode)
 {
     int k_idx = _get_k_idx(_book_stock_p, _mod_lvl(20));
     return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)), mode);
+}
+
+/************************************************************************
+ * The Jeweler
+ ***********************************************************************/
+static bool _jeweler_will_buy(obj_ptr obj)
+{
+    if (obj->tval != TV_RING && obj->tval != TV_AMULET) return FALSE;
+    return _will_buy(obj);
+}
+
+static bool _jeweler_stock_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+    switch (k_info[k_idx].tval)
+    {
+    case TV_RING:
+    case TV_AMULET:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _jeweler_create(obj_ptr obj, int mode)
+{
+    int k_idx = _get_k_idx(_jeweler_stock_p, _mod_lvl(25 + randint0(25)));
+    return _create(obj, k_idx, _mod_lvl(25 + randint0(25)), mode);
 }
 
 /************************************************************************
@@ -1896,9 +1944,6 @@ bool shop_common_cmd_handler(int cmd)
     case '}':
         obj_uninscribe_ui();
         return TRUE;
-    case '/':
-        do_cmd_query_symbol();
-        return TRUE;
     case 'C':
         py_display();
         return TRUE;
@@ -2012,6 +2057,7 @@ struct town_s
 {
    int         id;
    cptr        name;
+   bool        visited;
    int_map_ptr shops;
 };
 
@@ -2020,6 +2066,7 @@ static town_ptr _town_alloc(int which, cptr name)
     town_ptr town = malloc(sizeof(town_t));
     town->id = which;
     town->name = name;
+    town->visited = FALSE;
     town->shops = int_map_alloc((int_map_free_f)shop_free);
     return town;
 }
@@ -2032,6 +2079,7 @@ static town_ptr _town_load(savefile_ptr file)
     town->id = savefile_read_s16b(file);
     assert(0 < town->id && town->id <= TOWN_RANDOM);
     town->name = _names[town->id];
+    town->visited = savefile_read_bool(file);
     town->shops = int_map_alloc((int_map_free_f)shop_free);
 
     ct = savefile_read_s16b(file);
@@ -2058,6 +2106,7 @@ static void _town_save(town_ptr town, savefile_ptr file)
     int_map_iter_ptr iter;
 
     savefile_write_s16b(file, town->id);
+    savefile_write_bool(file, town->visited);
     savefile_write_s16b(file, int_map_count(town->shops));
 
     for (iter = int_map_iter_alloc(town->shops);
@@ -2082,6 +2131,20 @@ shop_ptr town_get_shop(town_ptr town, int which)
     return shop;
 }
 
+bool town_visited(int which)
+{
+    return towns_get_town(which)->visited;
+}
+
+void town_on_visit(int which)
+{
+    towns_get_town(which)->visited = TRUE;
+}
+
+cptr town_name(int which)
+{
+    return _names[which];
+}
 /************************************************************************
  * Towns
  ***********************************************************************/
