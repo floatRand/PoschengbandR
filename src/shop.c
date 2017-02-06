@@ -15,11 +15,12 @@ struct _owner_s
     int  purse;
     int  greed;
     int  race_id;
+    bool active;
 };
 typedef struct _owner_s _owner_t, *_owner_ptr;
 
 typedef bool (*_k_idx_p)(int k_idx);
-typedef bool (*_create_obj_f)(obj_ptr obj);
+typedef bool (*_create_obj_f)(obj_ptr obj, int mode);
 struct _type_s
 {
     int           id;
@@ -47,11 +48,17 @@ struct shop_s
 };
 
 /************************************************************************
- * Shop Types and Their Owners (originally from CthAngband)
+ * Shop Types and Their Owners (names originally from CthAngband?)
  ***********************************************************************/
 
 static bool _general_will_buy(obj_ptr obj);
-static bool _general_create(obj_ptr obj);
+static bool _general_create(obj_ptr obj, int mode);
+static bool _armory_will_buy(obj_ptr obj);
+static bool _armory_create(obj_ptr obj, int mode);
+static bool _weapon_will_buy(obj_ptr obj);
+static bool _weapon_create(obj_ptr obj, int mode);
+static bool _temple_will_buy(obj_ptr obj);
+static bool _temple_create(obj_ptr obj, int mode);
 
 static _type_t _types[] = 
 {
@@ -89,6 +96,93 @@ static _type_t _types[] =
          { 31, "Soalin the Wretched",        750, 107, RACE_ZOMBIE },
          { 32, "Merulla the Humble",        1000, 107, RACE_DEMIGOD }}},
         
+    { SHOP_ARMORY, "Armory", _armory_will_buy, _armory_create,
+        {{  1, "Kon-Dar the Ugly",          5000, 115, RACE_SNOTLING },
+         {  2, "Darg-Low the Grim",        10000, 111, RACE_HUMAN },
+         {  3, "Decado the Handsome",      25000, 112, RACE_DUNADAN },
+         {  4, "Wieland the Smith",        40000, 112, RACE_DWARF },
+         {  5, "Kon-Dar the Ugly",         10000, 115, RACE_SNOTLING },
+         {  6, "Darg-Low the Grim",        15000, 111, RACE_HUMAN },
+         {  7, "Decado the Handsome",      25000, 112, RACE_AMBERITE },
+         {  8, "Elo Dragonscale",          35000, 112, RACE_DEMIGOD },
+         {  9, "Delicatus",                10000, 115, RACE_SPRITE },
+         { 10, "Gruce the Huge",           15000, 111, RACE_HALF_GIANT },
+         { 11, "Animus",                   25000, 112, RACE_GOLEM },
+         { 12, "Malvus",                   30000, 112, RACE_HALF_TITAN },
+         { 13, "Selaxis",                  10000, 115, RACE_ZOMBIE },
+         { 14, "Deathchill",                5000, 111, RACE_SPECTRE },
+         { 15, "Drios the Faint",          25000, 112, RACE_SPECTRE },
+         { 16, "Bathric the Cold",         30000, 112, RACE_VAMPIRE },
+         { 17, "Vengella the Cruel",       10000, 115, RACE_HALF_TROLL },
+         { 18, "Wyrana the Mighty",        15000, 111, RACE_HUMAN },
+         { 19, "Yojo II",                  25000, 112, RACE_DWARF },
+         { 20, "Ranalar the Sweet",        30000, 112, RACE_AMBERITE },
+         { 21, "Horbag the Unclean",        5000, 115, RACE_SNOTLING },
+         { 22, "Elelen the Telepath",      15000, 111, RACE_DARK_ELF },
+         { 23, "Isedrelias",               25000, 112, RACE_SPRITE },
+         { 24, "Vegnar One-eye",            5000, 112, RACE_CYCLOPS },
+         { 25, "Rodish the Chaotic",       10000, 115, RACE_BEASTMAN },
+         { 26, "Hesin Swordmaster",        15000, 111, RACE_NIBELUNG },
+         { 27, "Elvererith the Cheat",     10000, 112, RACE_DARK_ELF },
+         { 28, "Zzathath the Imp",         30000, 112, RACE_IMP },
+         { 0 }}},
+
+    { SHOP_WEAPON, "Weapon Smiths", _weapon_will_buy, _weapon_create,
+        {{  1, "Arnold the Beastly",        5000, 115, RACE_BARBARIAN },
+         {  2, "Arndal Beast-Slayer",      10000, 110, RACE_HUMAN },
+         {  3, "Eddie Beast-Master",       25000, 115, RACE_SNOTLING },
+         {  4, "Oglign Dragon-Slayer",     50000, 112, RACE_DWARF },
+         {  5, "Drew the Skilled",         10000, 115, RACE_HUMAN },
+         {  6, "Orrax Dragonson",          15000, 110, RACE_DRACONIAN },
+         {  7, "Anthrax Disease-Carrier",  25000, 115, RACE_BEASTMAN },
+         {  8, "Arkhoth the Stout",        35000, 112, RACE_DWARF },
+         {  9, "Sarlyas the Rotten",        5000, 115, RACE_ZOMBIE },
+         { 10, "Tuethic Bare-Bones",       15000, 110, RACE_SKELETON },
+         { 11, "Bilious",                  25000, 115, RACE_BEASTMAN },
+         { 12, "Fasgul",                   30000, 112, RACE_ZOMBIE },
+         { 13, "Ellefris the Paladin",     10000, 115, RACE_BARBARIAN },
+         { 14, "K'trrik'k",                15000, 110, RACE_KLACKON },
+         { 15, "Drocus Spiderfriend",      25000, 115, RACE_DARK_ELF },
+         { 16, "Fungus Giant-Slayer",      40000, 112, RACE_DWARF },
+         { 17, "Delantha",                 10000, 115, RACE_DEMIGOD },
+         { 18, "Solvistani the Ranger",    15000, 110, RACE_WOOD_ELF },
+         { 19, "Xoril the Slow",           25000, 115, RACE_GOLEM },
+         { 20, "Aeon Flux",                20000, 112, RACE_TONBERRY },
+         { 21, "Nadoc the Strong",         10000, 115, RACE_HOBBIT },
+         { 22, "Eramog the Weak",          15000, 110, RACE_KOBOLD },
+         { 23, "Eowilith the Fair",        25000, 115, RACE_VAMPIRE },
+         { 24, "Huimog Balrog-Slayer",     30000, 112, RACE_SNOTLING },
+         { 25, "Peadus the Cruel",          5000, 115, RACE_HUMAN },
+         { 26, "Vamog Slayer",             15000, 110, RACE_HALF_OGRE },
+         { 27, "Hooshnak the Vicious",     25000, 115, RACE_BEASTMAN },
+         { 28, "Balenn War-Dancer",        30000, 112, RACE_BARBARIAN },
+         { 0 }}},
+
+    { SHOP_TEMPLE, "Temple", _temple_will_buy, _temple_create,
+        {{  1, "Ludwig the Humble",         5000, 109, RACE_DWARF },
+         {  2, "Gunnar the Paladin",       10000, 110, RACE_HALF_TROLL },
+         {  3, "Torin the Chosen",         25000, 107, RACE_HIGH_ELF },
+         {  4, "Sarastro the Wise",        30000, 109, RACE_HUMAN },
+         {  5, "Sir Parsival the Pure",    25000, 107, RACE_HIGH_ELF },
+         {  6, "Asenath the Holy",         30000, 109, RACE_HUMAN },
+         {  7, "McKinnon",                 10000, 109, RACE_HUMAN },
+         {  8, "Mistress Chastity",        15000, 110, RACE_HIGH_ELF },
+         {  9, "Hashnik the Druid",        25000, 107, RACE_HOBBIT },
+         { 10, "Finak",                    30000, 109, RACE_YEEK },
+         { 11, "Krikkik",                  10000, 109, RACE_KLACKON },
+         { 12, "Morival the Wild",         15000, 110, RACE_DEMIGOD },
+         { 13, "Hoshak the Dark",          25000, 107, RACE_IMP },
+         { 14, "Atal the Wise",            30000, 109, RACE_HUMAN },
+         { 15, "Ibenidd the Chaste",       10000, 109, RACE_HUMAN },
+         { 16, "Eridish",                  15000, 110, RACE_HALF_TROLL },
+         { 17, "Vrudush the Shaman",       25000, 107, RACE_HALF_OGRE },
+         { 18, "Haob the Berserker",       30000, 109, RACE_BARBARIAN },
+         { 19, "Proogdish the Youthfull",  10000, 109, RACE_HALF_OGRE },
+         { 20, "Lumwise the Mad",          15000, 110, RACE_YEEK },
+         { 21, "Muirt the Virtuous",       25000, 107, RACE_KOBOLD },
+         { 22, "Dardobard the Weak",       30000, 109, RACE_SPECTRE },
+         { 0 }}},
+
     { SHOP_NONE }
 };
 
@@ -101,6 +195,17 @@ static _type_ptr _get_type(int which)
         if (type->id == SHOP_NONE) return NULL;
         if (type->id == which) return type;
     }
+}
+
+static bool _shop_is_basic(shop_ptr shop)
+{
+    switch (shop->type->id)
+    {
+    case SHOP_BLACK_MARKET:
+    case SHOP_JEWELER:
+        return FALSE;
+    }
+    return TRUE;
 }
 
 static _owner_ptr _get_owner(_type_ptr type, int which)
@@ -138,7 +243,7 @@ static bool _stock_p(int k_idx)
     if (k_info[k_idx].gen_flags & OFG_INSTA_ART)
         return FALSE;
 
-    if (p_ptr->town_num != TOWN_ZUL && p_ptr->town_num != TOWN_DUNGEON)
+    if (!dun_level && p_ptr->town_num != TOWN_ZUL)
     {
         if (!(k_info[k_idx].gen_flags & OFG_TOWN))
             return FALSE;
@@ -185,18 +290,8 @@ static void _discount(obj_ptr obj)
     obj->discount = discount;
 }
 
-static bool _create(obj_ptr obj, int k_idx, int lvl)
+static bool _create(obj_ptr obj, int k_idx, int lvl, int mode)
 {
-    int mode = AM_NO_FIXED_ART;
-
-    /* TODO:if (p_ptr->town_num != SECRET_TOWN && cur_store_num != STORE_BLACK)
-    {
-        mode |=  AM_STOCK_TOWN;
-    }
-
-    if (cur_store_num == STORE_BLACK)
-        mode |= AM_STOCK_BM;*/
-
     if (!k_idx) return FALSE;
 
     object_prep(obj, k_idx);
@@ -269,7 +364,7 @@ static bool _general_stock_p(int k_idx)
     return FALSE;
 }
 
-static bool _general_create(obj_ptr obj)
+static bool _general_create(obj_ptr obj, int mode)
 {
     int k_idx;
     if (one_in_(50))
@@ -288,7 +383,214 @@ static bool _general_create(obj_ptr obj)
         k_idx = lookup_kind(TV_DIGGING, SV_PICK);
     else
         k_idx = _get_k_idx(_general_stock_p, _mod_lvl(20));
-    return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)));
+    return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)), mode);
+}
+
+/************************************************************************
+ * The Armory
+ ***********************************************************************/
+static bool _armory_will_buy(obj_ptr obj)
+{
+    return obj_is_armor(obj) && _will_buy(obj);
+}
+
+static bool _armory_stock_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+
+    switch (k_info[k_idx].tval)
+    {
+    case TV_HARD_ARMOR:
+    case TV_SOFT_ARMOR:
+    case TV_GLOVES:
+    case TV_HELM:
+    case TV_BOOTS:
+    case TV_SHIELD:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _armory_create(obj_ptr obj, int mode)
+{
+    int k_idx = _get_k_idx(_armory_stock_p, _mod_lvl(20));
+    return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)), mode);
+}
+
+/************************************************************************
+ * The Weapon Smiths
+ ***********************************************************************/
+static bool _weapon_will_buy(obj_ptr obj)
+{
+    switch (obj->tval)
+    {
+    case TV_SHOT:
+    case TV_BOLT:
+    case TV_ARROW:
+    case TV_BOW:
+    case TV_DIGGING:
+    case TV_POLEARM:
+    case TV_SWORD:
+    case TV_HISSATSU_BOOK:
+    case TV_RAGE_BOOK:
+        break;
+    case TV_HAFTED:
+        if(obj->sval == SV_WIZSTAFF) return FALSE;
+        break;
+    default:
+        return FALSE;
+    }
+    return _will_buy(obj);
+}
+
+static bool _weapon_stock_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+
+    switch (k_info[k_idx].tval)
+    {
+    case TV_POLEARM:
+    case TV_SWORD:
+    case TV_HISSATSU_BOOK:
+    case TV_RAGE_BOOK:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _weapon_stock_shooter_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+    switch (k_info[k_idx].tval)
+    {
+    case TV_BOW:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _weapon_stock_ammo_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+    switch (k_info[k_idx].tval)
+    {
+    case TV_SHOT:
+    case TV_ARROW:
+    case TV_BOLT:
+        return TRUE;
+    }
+    return FALSE;
+}
+static bool _weapon_create(obj_ptr obj, int mode)
+{
+    int k_idx;
+    int l1 = _mod_lvl(20);
+    int l2 = _mod_lvl(rand_range(1, 5));
+    if (one_in_(4))
+        k_idx = _get_k_idx(_weapon_stock_shooter_p, l1);
+    else if (one_in_(4))
+        k_idx = _get_k_idx(_weapon_stock_ammo_p, l1);
+    else
+        k_idx = _get_k_idx(_weapon_stock_p, l1);
+    return _create(obj, k_idx, l2, mode);
+}
+
+/************************************************************************
+ * The Temple
+ ***********************************************************************/
+static bool _temple_will_buy(obj_ptr obj)
+{
+    switch (obj->tval)
+    {
+    case TV_LIFE_BOOK:
+    case TV_CRUSADE_BOOK:
+    case TV_SCROLL:
+    case TV_POTION:
+    case TV_HAFTED:
+        break;
+    case TV_FIGURINE:
+    case TV_STATUE: {
+        monster_race *r_ptr = &r_info[obj->pval];
+
+        if (!(r_ptr->flags3 & RF3_EVIL))
+        {
+            if (r_ptr->flags3 & RF3_GOOD) break;
+            if (r_ptr->flags3 & RF3_ANIMAL) break;
+            if (strchr("?!", r_ptr->d_char)) break; /* mimics?? */
+        }
+        return FALSE; }
+    case TV_POLEARM:
+    case TV_SWORD:
+        if (obj_is_blessed(obj)) break;
+        return FALSE;
+    default:
+        return FALSE;
+    }
+    return _will_buy(obj);
+}
+
+static bool _temple_stock_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+
+    switch (k_info[k_idx].tval)
+    {
+    case TV_LIFE_BOOK:
+    case TV_CRUSADE_BOOK:
+        return TRUE;
+
+    case TV_HAFTED:
+        return TRUE;
+
+    /* Scrolls and Potions are also stocked by the Alchemist */
+    case TV_SCROLL:
+        switch (k_info[k_idx].sval)
+        {
+        case SV_SCROLL_REMOVE_CURSE:
+        case SV_SCROLL_BLESSING:
+        case SV_SCROLL_HOLY_CHANT:
+        case SV_SCROLL_WORD_OF_RECALL:
+        case SV_SCROLL_STAR_REMOVE_CURSE:
+        case SV_SCROLL_RUNE_OF_PROTECTION:
+            return TRUE;
+        }
+        return FALSE;
+
+    case TV_POTION:
+        switch (k_info[k_idx].sval)
+        {
+        case SV_POTION_RESIST_HEAT:
+        case SV_POTION_RESIST_COLD:
+        case SV_POTION_RESTORE_EXP:
+        case SV_POTION_CURE_CRITICAL:
+        case SV_POTION_CURE_SERIOUS:
+        case SV_POTION_CURE_LIGHT:
+        case SV_POTION_BOLDNESS:
+        case SV_POTION_HEROISM:
+        case SV_POTION_HEALING:
+        case SV_POTION_CURING:
+            return TRUE;
+        }
+        return FALSE;
+    }
+    return FALSE;
+}
+
+static bool _temple_create(obj_ptr obj, int mode)
+{
+    int k_idx;
+    if (one_in_(3))
+        k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
+    else if (one_in_(7))
+        k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_REMOVE_CURSE);
+    else if (one_in_(20))
+        k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
+    else
+        k_idx = _get_k_idx(_temple_stock_p, _mod_lvl(20));
+    return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)), mode);
 }
 
 /************************************************************************
@@ -303,9 +605,15 @@ static void _change_owner(shop_ptr shop)
         int        idx = randint0(ct);
         _owner_ptr owner = &shop->type->owners[idx];
 
-        if (owner != shop->owner)
+        if (owner != shop->owner && !owner->active)
         {
+            if (shop->owner)
+            {
+                msg_format("<color:U>%s</color> retires.", shop->owner->name);
+                shop->owner->active = FALSE;
+            }
             shop->owner = owner;
+            shop->owner->active = TRUE;
             break;
         }
     }
@@ -334,6 +642,7 @@ shop_ptr shop_load(savefile_ptr file)
     tmp = savefile_read_s16b(file);
     shop->owner = _get_owner(shop->type, tmp);
     assert(shop->owner);
+    shop->owner->active = TRUE;
 
     shop->inv = inv_alloc(shop->type->name, INV_SHOP, 0);
     inv_load(shop->inv, file);
@@ -510,6 +819,7 @@ static void _maintain(shop_ptr shop);
 static int  _cull(shop_ptr shop, int target);
 static int  _restock(shop_ptr shop, int target);
 static void _shuffle_stock(shop_ptr shop);
+static int  _stock_base(shop_ptr shop);
 
 void shop_ui(shop_ptr shop)
 {
@@ -541,9 +851,9 @@ static void _loop(_ui_context_ptr context)
     {
         int    max = inv_last(context->shop->inv, obj_exists);
         rect_t r = ui_shop_rect(); /* recalculate in case resize */
-        int    cmd;
+        int    cmd, ct;
 
-        context->page_size = MIN(26, r.cy - 4 - 4);
+        context->page_size = MIN(26, r.cy - 3 - 6);
         _display(context);
 
         cmd = inkey_special(TRUE);
@@ -566,7 +876,7 @@ static void _loop(_ui_context_ptr context)
                 Term_clear_rect(ui_shop_msg_rect());
                 break;
             case SKEY_PGDOWN: case '3':
-                if (context->top + context->page_size < max)
+                if (context->top + context->page_size - 1 < max)
                     context->top += context->page_size;
                 break;
             case SKEY_PGUP: case '9':
@@ -591,6 +901,21 @@ static void _loop(_ui_context_ptr context)
                 msg_print("<color:v>Your pack is overflowing!</color> It's time for you to leave!");
                 msg_print(NULL);
                 break;
+            }
+            ct = inv_count_slots(context->shop->inv, obj_exists);
+            if (!ct)
+            {
+                _restock(context->shop, _stock_base(context->shop));
+                context->top = 1;
+                if (one_in_(20)) _change_owner(context->shop);
+                msg_format("<color:U>%s</color> brings out some new stock.", context->shop->owner->name);
+            }
+            else
+            {
+                max = inv_last(context->shop->inv, obj_exists);
+                while (context->top > max)
+                    context->top -= context->page_size;
+                if (context->top < 1) context->top = 1;
             }
         }
         pack_unlock();
@@ -621,12 +946,24 @@ static void _display(_ui_context_ptr context)
     doc_insert(doc, "<style:table>");
     doc_printf(doc, "    <color:U>%s (%s)</color>",
         shop->owner->name, get_race_aux(shop->owner->race_id, 0)->name);
-    doc_printf(doc, "<tab:%d><color:G>%s</color> (<color:r>%dgp</color>)\n\n",
-        doc_width(doc) - ct,
-        shop->type->name, shop->owner->purse);
+    doc_printf(doc, "<tab:%d><color:G>%s</color> (<color:r>%d</color>)\n\n",
+        doc_width(doc) - ct, shop->type->name, shop->owner->purse);
 
     _display_inv(doc, shop, context->top, context->page_size);
     
+    {
+        slot_t max = inv_last(shop->inv, obj_exists);
+        slot_t bottom = context->top + context->page_size - 1;
+
+        if (context->top > 1 || bottom < max)
+        {
+            int page_count = (max - 1) / context->page_size + 1;
+            int page_current = (context->top - 1) / context->page_size + 1;
+
+            doc_printf(doc, "<color:B>(Page %d of %d)</color>\n", page_current, page_count);
+        }
+    }
+
     big_num_display(p_ptr->au, buf);
     doc_printf(doc, "Gold Remaining: <color:y>%s</color>\n\n", buf);
     doc_insert(doc,
@@ -645,7 +982,6 @@ static void _display(_ui_context_ptr context)
 
     doc_insert(doc,
         "<color:keypress>Esc</color> to exit. "
-        "<color:keypress>PageUp/Down</color> to scroll. "
         "<color:keypress>?</color> for help.");
     doc_insert(doc, "</style>");
 
@@ -748,7 +1084,7 @@ static void _examine(_ui_context_ptr context)
         if (!msg_command("<color:y>Examine which item <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
         if (cmd < 'a' || cmd > 'z') continue;
         slot = label_slot(cmd);
-        slot = slot - context->top + 1;
+        slot = slot + context->top - 1;
         obj = inv_obj(context->shop->inv, slot);
         if (!obj) continue;
 
@@ -797,7 +1133,7 @@ static void _reserve(_ui_context_ptr context)
             if (!msg_command("<color:y>Reserve which item <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
             if (cmd < 'a' || cmd > 'z') continue;
             slot = label_slot(cmd);
-            slot = slot - context->top + 1;
+            slot = slot + context->top - 1;
             obj = inv_obj(context->shop->inv, slot);
             if (!obj) continue;
 
@@ -814,7 +1150,7 @@ static void _reserve(_ui_context_ptr context)
         msg_print("I will only reserve items in my stock for wizards or true friends of the merchant's guild.");
 }
 
-static void _sell_aux(shop_ptr shop, obj_ptr obj)
+static bool _sell_aux(shop_ptr shop, obj_ptr obj)
 {
     char       name[MAX_NLEN];
     string_ptr s = string_alloc();
@@ -828,12 +1164,12 @@ static void _sell_aux(shop_ptr shop, obj_ptr obj)
     string_printf(s, "Really buy %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, price);
     c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
     string_free(s);
-    if (c == 'n') return;
+    if (c == 'n') return FALSE;
 
     if (price > p_ptr->au)
     {
         msg_print("You do not have enough gold.");
-        return;
+        return FALSE;
     }
     p_ptr->au -= price;
     stats_on_gold_buying(price);
@@ -858,6 +1194,7 @@ static void _sell_aux(shop_ptr shop, obj_ptr obj)
 
     pack_carry(obj);
     msg_format("You have %s.", name);
+    return TRUE;
 }
 
 static void _sell(_ui_context_ptr context)
@@ -873,7 +1210,7 @@ static void _sell(_ui_context_ptr context)
                          "to cancel)</color>?</color>", &cmd)) break;
         if (cmd < 'a' || cmd > 'z') continue;
         slot = label_slot(cmd);
-        slot = slot - context->top + 1;
+        slot = slot + context->top - 1;
         obj = inv_obj(context->shop->inv, slot);
         if (!obj) continue;
 
@@ -887,8 +1224,8 @@ static void _sell(_ui_context_ptr context)
         {
             obj_t copy = *obj;
             copy.number = amt;
-            obj->number -= amt;
-            _sell_aux(context->shop, &copy);
+            if (_sell_aux(context->shop, &copy))
+                obj->number -= amt;
         }
         else
         {
@@ -964,27 +1301,33 @@ static void _sellout(shop_ptr shop)
         p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
 
     inv_sort(shop->inv);
-    if (!inv_count_slots(shop->inv, obj_exists))
-    {
-        _restock(shop, 12 + randint0(5));
-        msg_format("<color:U>%s</color> grins and brings out some new stock.", shop->owner->name);
-    }
 }
 
 
 /************************************************************************
  * Stocking
  ***********************************************************************/
+#define _STOCK_LO   6
+#define _STOCK_BASE 15
+#define _STOCK_HI   24
+
+static int _stock_base(shop_ptr shop)
+{
+    if (shop->type->id == SHOP_GENERAL)
+        return 10 - 2 + randint1(4);
+    return _STOCK_BASE - 4 + randint1(8);
+}
+
 static void _maintain(shop_ptr shop)
 {
     int  num;
     int  i;
     bool allow_restock = TRUE;
 
-    /* Initialize an empty shop */
+    /* Always initialize an empty shop */
     if (!inv_count_slots(shop->inv, obj_exists))
     {
-        _restock(shop, 12 + randint0(5));
+        _restock(shop, _stock_base(shop));
         return;
     }
 
@@ -993,7 +1336,7 @@ static void _maintain(shop_ptr shop)
     if (!num) return;
 
     /* Limit shop scumming (ie resting in town or on DL1 for BM wares) */
-    if (shop->type->id == SHOP_BLACK_MARKET || shop->type->id == SHOP_JEWELER)
+    if (!_shop_is_basic(shop))
     {
         if (shop->last_visit.turn)
         {
@@ -1013,13 +1356,13 @@ static void _maintain(shop_ptr shop)
     for (i = 0; i < num; i++)
     {
         int ct = inv_count_slots(shop->inv, obj_exists);
-        if (ct < 6) _restock(shop, 12 + randint0(5));
-        else if (ct > 24) _cull(shop, 12);
+        if (ct < _STOCK_LO) _restock(shop, _stock_base(shop));
+        else if (ct > _STOCK_HI) _cull(shop, _stock_base(shop));
         else
         {
-            ct = _cull(shop, MAX(6, ct - randint1(9)));
+            ct = _cull(shop, MAX(_STOCK_LO, ct - randint1(9)));
             if (allow_restock)
-                ct = _restock(shop, MIN(24, ct + randint1(9)));
+                ct = _restock(shop, MIN(_STOCK_HI, ct + randint1(9)));
         }
     }
 }
@@ -1086,12 +1429,19 @@ static int _restock(shop_ptr shop, int target)
 {
     int ct = inv_count_slots(shop->inv, obj_exists);
     int attempt = 0;
+    int mode = AM_NO_FIXED_ART;
+
+    if (!dun_level && _shop_is_basic(shop))
+        mode |=  AM_STOCK_TOWN;
+
+    if (shop->type->id == SHOP_BLACK_MARKET)
+        mode |= AM_STOCK_BM;
 
     assert(ct <= target);
     for (attempt = 1; ct < target && attempt < 100; attempt++)
     {
         obj_t forge = {0};
-        if (shop->type->create_f(&forge))
+        if (shop->type->create_f(&forge, mode))
             ct += _add_obj(shop, &forge);
     }
     inv_sort(shop->inv);
@@ -1127,7 +1477,7 @@ static void _shuffle_stock(shop_ptr shop)
                 p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
         }
         _cull(shop, 0);
-        _restock(shop, 12 + randint0(5));
+        _restock(shop, _stock_base(shop));
     }
     else
         msg_print("I will only shuffle my stock for wizards or true friends of the merchant's guild.");
@@ -1304,7 +1654,7 @@ static town_ptr _town_load(savefile_ptr file)
     int      ct, i;
 
     town->id = savefile_read_s16b(file);
-    assert(0 < town->id && town->id <= TOWN_DUNGEON);
+    assert(0 < town->id && town->id <= TOWN_RANDOM);
     town->name = _names[town->id];
     town->shops = int_map_alloc((int_map_free_f)shop_free);
 

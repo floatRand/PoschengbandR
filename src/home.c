@@ -148,9 +148,9 @@ static void _ui(_ui_context_ptr context)
     {
         int    max = inv_last(context->inv, obj_exists);
         rect_t r = ui_shop_rect(); /* recalculate in case resize */
-        int    cmd;
+        int    cmd, ct;
 
-        context->page_size = MIN(26, r.cy - 3 - 2);
+        context->page_size = MIN(26, r.cy - 3 - 3);
         _display(context);
 
         cmd = inkey_special(TRUE);
@@ -170,7 +170,7 @@ static void _ui(_ui_context_ptr context)
                 Term_clear_rect(ui_shop_msg_rect());
                 break;
             case SKEY_PGDOWN: case '3':
-                if (context->top + context->page_size < max)
+                if (context->top + context->page_size - 1 < max)
                     context->top += context->page_size;
                 break;
             case SKEY_PGUP: case '9':
@@ -190,6 +190,14 @@ static void _ui(_ui_context_ptr context)
                                "Press <color:keypress>?</color> for help.", cmd);
                 }
             }
+            ct = inv_count_slots(context->inv, obj_exists);
+            if (ct)
+            {
+                max = inv_last(context->inv, obj_exists);
+                while (context->top > max)
+                    context->top -= context->page_size;
+                if (context->top < 1) context->top = 1;
+            }
         }
         pack_unlock();
         notice_stuff(); /* PW_INVEN and PW_PACK ... */
@@ -208,33 +216,45 @@ static void _ui(_ui_context_ptr context)
 
 static void _display(_ui_context_ptr context)
 {
-    rect_t r = ui_shop_rect();
+    rect_t  r = ui_shop_rect();
+    doc_ptr doc = context->doc;
 
-    doc_clear(context->doc);
-    doc_insert(context->doc, "<style:table>");
-    doc_printf(context->doc, "%*s<color:G>%s</color>\n\n",
+    doc_clear(doc);
+    doc_insert(doc, "<style:table>");
+    doc_printf(doc, "%*s<color:G>%s</color>\n\n",
         (r.cx - 10)/2, "", inv_name(context->inv));
 
-    shop_display_inv(context->doc, context->inv, context->top, context->page_size);
+    shop_display_inv(doc, context->inv, context->top, context->page_size);
     
+    {
+        slot_t max = inv_last(context->inv, obj_exists);
+        slot_t bottom = context->top + context->page_size - 1;
+
+        if (context->top > 1 || bottom < max)
+        {
+            int page_count = (max - 1) / context->page_size + 1;
+            int page_current = (context->top - 1) / context->page_size + 1;
+
+            doc_printf(doc, "<color:B>(Page %d of %d)</color>\n", page_current, page_count);
+        }
+    }
     if (inv_loc(context->inv) == INV_HOME)
     {
-        doc_insert(context->doc,
+        doc_insert(doc,
             "<color:keypress>g</color> to get an item. "
             "<color:keypress>d</color> to drop an item. ");
     }
     else
-        doc_insert(context->doc, "<color:keypress>d</color> to donate an item. ");
+        doc_insert(doc, "<color:keypress>d</color> to donate an item. ");
     
-    doc_insert(context->doc,
+    doc_insert(doc,
         "<color:keypress>x</color> to begin examining items.\n"
         "<color:keypress>Esc</color> to exit. "
-        "<color:keypress>PageUp/Down</color> to scroll. "
         "<color:keypress>?</color> for help.");
-    doc_insert(context->doc, "</style>");
+    doc_insert(doc, "</style>");
 
     Term_clear_rect(r);
-    doc_sync_term(context->doc,
+    doc_sync_term(doc,
         doc_range_top_lines(context->doc, r.cy),
         doc_pos_create(r.x, r.y));
 }
@@ -266,7 +286,7 @@ static void _get(_ui_context_ptr context)
                          "to cancel)</color>?</color>", &cmd)) break;
         if (cmd < 'a' || cmd > 'z') continue;
         slot = label_slot(cmd);
-        slot = slot - context->top + 1;
+        slot = slot + context->top - 1;
         obj = inv_obj(context->inv, slot);
         if (!obj) continue;
 
@@ -379,7 +399,7 @@ static void _examine(_ui_context_ptr context)
         if (!msg_command("<color:y>Examine which item <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
         if (cmd < 'a' || cmd > 'z') continue;
         slot = label_slot(cmd);
-        slot = slot - context->top + 1;
+        slot = slot + context->top - 1;
         obj = inv_obj(context->inv, slot);
         if (!obj) continue;
 

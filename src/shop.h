@@ -13,7 +13,7 @@ enum
 {
     SHOP_NONE = -1, /* TODO: f_info.txt */
     SHOP_GENERAL = 0,
-    SHOP_ARMOURY,
+    SHOP_ARMORY,
     SHOP_WEAPON,
     SHOP_TEMPLE,
     SHOP_ALCHEMIST,
@@ -50,7 +50,7 @@ enum
     TOWN_MORIVANT,
     TOWN_ANGWIL,
     TOWN_ZUL,
-    TOWN_DUNGEON
+    TOWN_RANDOM
 };
 
 extern void     towns_init(void);

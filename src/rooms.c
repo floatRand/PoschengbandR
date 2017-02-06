@@ -1566,7 +1566,7 @@ static void _apply_room_grid1(int x, int y, const room_grid_t *grid_ptr, u16b ro
 
         if (have_flag(f_info[c_ptr->feat].flags, FF_STORE))
         {
-            town_ptr town = towns_get_town(TOWN_DUNGEON);
+            town_ptr town = towns_get_town(TOWN_RANDOM);
             shop_ptr shop = town_get_shop(town, f_info[c_ptr->feat].subtype);
             shop_reset(shop);
         }

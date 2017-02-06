@@ -146,6 +146,13 @@ bool obj_can_shoot(obj_ptr obj)
     return obj->tval == p_ptr->shooter_info.tval_ammo;
 }
 
+bool obj_is_blessed(obj_ptr obj)
+{
+    u32b flgs[OF_ARRAY_SIZE];
+    obj_flags(obj, flgs);
+    return have_flag(flgs, OF_BLESSED);
+}
+
 bool obj_is_known(obj_ptr obj)
 {
     obj_kind_ptr k;
@@ -180,6 +187,7 @@ bool obj_is_readable_book(obj_ptr obj)
 
 bool obj_exists(obj_ptr obj)     { return BOOL(obj); }
 bool obj_is_ammo(obj_ptr obj)    { return TV_MISSILE_BEGIN <= obj->tval && obj->tval <= TV_MISSILE_END; }
+bool obj_is_armor(obj_ptr obj)   { return TV_ARMOR_BEGIN <= obj->tval && obj->tval <= TV_ARMOR_END; }
 bool obj_is_art(obj_ptr obj)     { return obj->name1 || obj->art_name; }
 bool obj_is_book(obj_ptr obj)    { return TV_BOOK_BEGIN <= obj->tval && obj->tval <= TV_BOOK_END; }
 bool obj_is_device(obj_ptr obj)  { return obj_is_wand(obj) || obj_is_rod(obj) || obj_is_staff(obj); }
