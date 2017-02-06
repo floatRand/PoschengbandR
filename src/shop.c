@@ -61,6 +61,8 @@ static bool _temple_will_buy(obj_ptr obj);
 static bool _temple_create(obj_ptr obj, int mode);
 static bool _alchemist_will_buy(obj_ptr obj);
 static bool _alchemist_create(obj_ptr obj, int mode);
+static bool _magic_will_buy(obj_ptr obj);
+static bool _magic_create(obj_ptr obj, int mode);
 
 static _type_t _types[] = 
 {
@@ -212,6 +214,32 @@ static _type_t _types[] =
          { 24, "Lignus the Pungent",       10000, 110, RACE_SNOTLING },
          { 25, "Tilba",                    15000, 116, RACE_HOBBIT },
          { 26, "Myrildric the Wealthy",    15000, 111, RACE_HUMAN },
+         { 0 }}},
+
+    { SHOP_MAGIC, "Magic Shop", _magic_will_buy, _magic_create,
+        {{  1, "Lo Pan the Sorcerer",      20000, 110, RACE_HUMAN },
+         {  2, "Buggerby the Great",       20000, 113, RACE_GNOME },
+         {  3, "The Wizard of Yendor",     30000, 110, RACE_HUMAN },
+         {  4, "Rjak the Necromancer",     30000, 110, RACE_DARK_ELF },
+         {  5, "Skidney the Sorcerer",     15000, 110, RACE_HUMAN },
+         {  6, "Kyria the Illusionist",    30000, 110, RACE_HUMAN },
+         {  7, "Nikki the Necromancer",    30000, 110, RACE_DARK_ELF },
+         {  8, "Solostoran",               15000, 110, RACE_SPRITE },
+         {  9, "Achshe the Tentacled",     20000, 113, RACE_MIND_FLAYER },
+         { 10, "Kaza the Noble",           30000, 110, RACE_HIGH_ELF },
+         { 11, "Fazzil the Dark",          30000, 110, RACE_DARK_ELF },
+         { 12, "Keldorn the Grand",        15000, 110, RACE_DWARF },
+         { 13, "Philanthropus",            20000, 113, RACE_HOBBIT },
+         { 14, "Agnar the Enchantress",    30000, 110, RACE_HUMAN },
+         { 15, "Buliance the Necromancer", 30000, 110, RACE_BEASTMAN },
+         { 16, "Vuirak the High-Mage",     15000, 110, RACE_BEASTMAN },
+         { 17, "Madish the Smart",         20000, 113, RACE_BEASTMAN },
+         { 18, "Falebrimbor",              30000, 110, RACE_HIGH_ELF },
+         { 19, "Felil-Gand the Subtle",    30000, 110, RACE_DARK_ELF },
+         { 20, "Thalegord the Shaman",     15000, 110, RACE_BARBARIAN },
+         { 21, "Cthoaloth the Mystic",     20000, 113, RACE_MIND_FLAYER },
+         { 22, "Ibeli the Illusionist",    30000, 110, RACE_SKELETON },
+         { 23, "Heto the Necromancer",     30000, 110, RACE_YEEK },
          { 0 }}},
 
     { SHOP_NONE }
@@ -673,6 +701,101 @@ static bool _alchemist_create(obj_ptr obj, int mode)
     else
         k_idx = _get_k_idx(_alchemist_stock_p, _mod_lvl(20));
     return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)), mode);
+}
+
+/************************************************************************
+ * The Magic Shop
+ ***********************************************************************/
+static bool _magic_will_buy(obj_ptr obj)
+{
+    switch (obj->tval)
+    {
+    case TV_SORCERY_BOOK:
+    case TV_NATURE_BOOK:
+    case TV_CHAOS_BOOK:
+    case TV_ARMAGEDDON_BOOK:
+    case TV_DEATH_BOOK:
+    case TV_TRUMP_BOOK:
+    case TV_ARCANE_BOOK:
+    case TV_CRAFT_BOOK:
+    case TV_DAEMON_BOOK:
+    case TV_MUSIC_BOOK:
+    case TV_HEX_BOOK:
+    case TV_AMULET:
+    case TV_RING:
+    case TV_STAFF:
+    case TV_WAND:
+    case TV_ROD:
+    case TV_SCROLL:
+    case TV_POTION:
+    case TV_FIGURINE:
+        break;
+    case TV_HAFTED:
+        if(obj->sval == SV_WIZSTAFF) break;
+        else return FALSE;
+    default:
+        return FALSE;
+    }
+    return _will_buy(obj);
+}
+
+static bool _magic_stock_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+    switch (k_info[k_idx].tval)
+    {
+    case TV_WAND:
+    case TV_STAFF:
+    case TV_FIGURINE:
+    case TV_ARCANE_BOOK:
+    case TV_SORCERY_BOOK:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _magic_create(obj_ptr obj, int mode)
+{
+    int k_idx;
+    if (one_in_(20))
+    {
+        /* Hack: Early resists are hard to find, and Archviles are so damn nasty!
+           BTW, since we are cheating and not using normal ego generation code, we'll
+           need to manually add to ego_type.xtra_flags. This will improve the
+           player's lore experience should they purchase or examine this item
+           of stock. */
+        if (one_in_(5))
+        {
+            object_prep(obj, lookup_kind(TV_AMULET, 0));
+            obj->name2 = EGO_JEWELRY_ELEMENTAL;
+        }
+        else
+        {
+            object_prep(obj, lookup_kind(TV_RING, 0));
+            obj->name2 = EGO_JEWELRY_ELEMENTAL;
+        }
+        switch (randint1(5))
+        {
+        case 1: case 2:
+            add_flag(obj->flags, OF_RES_COLD);
+            add_flag(e_info[EGO_JEWELRY_ELEMENTAL].xtra_flags, OF_RES_COLD);
+            break;
+        case 3: case 4:
+            add_flag(obj->flags, OF_RES_FIRE);
+            add_flag(e_info[EGO_JEWELRY_ELEMENTAL].xtra_flags, OF_RES_FIRE);
+            break;
+        case 5:
+            add_flag(obj->flags, OF_RES_ACID);
+            add_flag(e_info[EGO_JEWELRY_ELEMENTAL].xtra_flags, OF_RES_ACID);
+            break;
+        }
+        obj->ident |= IDENT_STORE;
+        return TRUE;
+    }
+    else
+        k_idx = _get_k_idx(_magic_stock_p, _mod_lvl(20));
+    return _create(obj, k_idx, _mod_lvl(15), mode);
 }
 
 /************************************************************************
