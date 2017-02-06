@@ -65,6 +65,8 @@ static bool _magic_will_buy(obj_ptr obj);
 static bool _magic_create(obj_ptr obj, int mode);
 static bool _black_market_will_buy(obj_ptr obj);
 static bool _black_market_create(obj_ptr obj, int mode);
+static bool _book_will_buy(obj_ptr obj);
+static bool _book_create(obj_ptr obj, int mode);
 
 static _type_t _types[] = 
 {
@@ -278,6 +280,30 @@ static _type_t _types[] =
          { 31, "Theradfrid the Loser",     30000, 150, RACE_HUMAN },
          { 32, "One-Legged Eroolo",        30000, 150, RACE_HALF_OGRE }}},
 
+    { SHOP_BOOK, "Bookstore", _book_will_buy, _book_create,
+        {{  1, "Dolaf the Greedy",         10000, 108, RACE_HUMAN },
+         {  2, "Odnar the Sage",           15000, 105, RACE_HIGH_ELF },
+         {  3, "Gandar the Neutral",       25000, 110, RACE_DARK_ELF },
+         {  4, "Ro-sha the Patient",       30000, 105, RACE_DEMIGOD },
+         {  5, "Randolph Carter",          15000, 108, RACE_HUMAN },
+         {  6, "Sarai the Swift",          15000, 108, RACE_HUMAN },
+         {  7, "Bodril the Seer",          20000, 105, RACE_HIGH_ELF },
+         {  8, "Veloin the Quiet",         25000, 110, RACE_ZOMBIE },
+         {  9, "Vanthylas the Learned",    30000, 105, RACE_MIND_FLAYER },
+         { 10, "Ossein the Literate",      15000, 108, RACE_SKELETON },
+         { 11, "Olvar Bookworm",           20000, 105, RACE_VAMPIRE },
+         { 12, "Shallowgrave",             25000, 110, RACE_ZOMBIE },
+         { 13, "Death Mask",               30000, 105, RACE_ZOMBIE },
+         { 14, "Asuunu the Learned",       15000, 108, RACE_MIND_FLAYER },
+         { 15, "Prirand the Dead",         20000, 105, RACE_ZOMBIE },
+         { 16, "Ronar the Iron",           25000, 110, RACE_GOLEM },
+         { 17, "Galil-Gamir",              35000, 105, RACE_HIGH_ELF },
+         { 18, "Rorbag Book-Eater",         5000, 108, RACE_KOBOLD },
+         { 19, "Kiriarikirk",              20000, 105, RACE_KLACKON },
+         { 20, "Rilin the Quiet",          25000, 110, RACE_DWARF },
+         { 21, "Isung the Lord",           30000, 105, RACE_HIGH_ELF },
+         { 0 }}},
+
     { SHOP_NONE }
 };
 
@@ -400,6 +426,8 @@ static bool _create(obj_ptr obj, int k_idx, int lvl, int mode)
     if (object_is_cursed(obj)) return FALSE;
 
     obj->ident |= IDENT_STORE;
+    if (obj_value(obj) <= 0) return FALSE; /* Note: requires IDENT_STORE to work!!! */
+
     _discount(obj);
     mass_produce(obj);
     return TRUE;
@@ -498,6 +526,7 @@ static bool _armory_stock_p(int k_idx)
     {
     case TV_HARD_ARMOR:
     case TV_SOFT_ARMOR:
+    case TV_DRAG_ARMOR:
     case TV_GLOVES:
     case TV_HELM:
     case TV_BOOTS:
@@ -666,6 +695,8 @@ static bool _temple_stock_p(int k_idx)
         case SV_POTION_BOLDNESS:
         case SV_POTION_HEROISM:
         case SV_POTION_HEALING:
+        case SV_POTION_STAR_HEALING:
+        case SV_POTION_LIFE:
         case SV_POTION_CURING:
             return TRUE;
         }
@@ -873,6 +904,63 @@ static bool _black_market_create(obj_ptr obj, int mode)
             return FALSE;
     }
     return TRUE;
+}
+
+/************************************************************************
+ * The Bookstore
+ ***********************************************************************/
+static bool _book_will_buy(obj_ptr obj)
+{
+    switch (obj->tval)
+    {
+    case TV_SORCERY_BOOK:
+    case TV_NATURE_BOOK:
+    case TV_CHAOS_BOOK:
+    case TV_DEATH_BOOK:
+    case TV_LIFE_BOOK:
+    case TV_TRUMP_BOOK:
+    case TV_ARCANE_BOOK:
+    case TV_CRAFT_BOOK:
+    case TV_DAEMON_BOOK:
+    case TV_CRUSADE_BOOK:
+    case TV_NECROMANCY_BOOK:
+    case TV_ARMAGEDDON_BOOK:
+    case TV_MUSIC_BOOK:
+    case TV_HEX_BOOK:
+        break;
+    default:
+        return FALSE;
+    }
+    return _will_buy(obj);
+}
+
+static bool _book_stock_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+    switch (k_info[k_idx].tval)
+    {
+    case TV_ARCANE_BOOK:
+    case TV_SORCERY_BOOK:
+    case TV_NATURE_BOOK:
+    case TV_CHAOS_BOOK:
+    case TV_DEATH_BOOK:
+    case TV_TRUMP_BOOK:
+    case TV_CRAFT_BOOK:
+    case TV_DAEMON_BOOK:
+    case TV_MUSIC_BOOK:
+    case TV_HEX_BOOK:
+    case TV_NECROMANCY_BOOK:
+    case TV_ARMAGEDDON_BOOK:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool _book_create(obj_ptr obj, int mode)
+{
+    int k_idx = _get_k_idx(_book_stock_p, _mod_lvl(20));
+    return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)), mode);
 }
 
 /************************************************************************
@@ -1727,7 +1815,10 @@ static int _restock(shop_ptr shop, int target)
     {
         obj_t forge = {0};
         if (shop->type->create_f(&forge, mode))
+        {
+            assert(obj_value(&forge) > 0);
             ct += _add_obj(shop, &forge);
+        }
     }
     inv_sort(shop->inv);
     assert(ct == inv_count_slots(shop->inv, obj_exists));
@@ -2004,16 +2095,18 @@ void towns_init(void)
 
 town_ptr towns_current_town(void)
 {
-    town_ptr town = NULL;
-    if (p_ptr->town_num)
-        town = towns_get_town(p_ptr->town_num);
-    return town;
+    if (dun_level)
+        return towns_get_town(TOWN_RANDOM);
+    else if (p_ptr->town_num)
+        return towns_get_town(p_ptr->town_num);
+    return NULL;
 }
 
 
 town_ptr towns_get_town(int which)
 {
     town_ptr town = int_map_find(_towns, which);
+    assert(0 < which && which <= TOWN_RANDOM);
     if (!town)
     {
         town = _town_alloc(which, _names[which]);

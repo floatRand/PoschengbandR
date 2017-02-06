@@ -4136,7 +4136,7 @@ static void process_command(void)
         {
             cave_type *c_ptr = &cave[py][px];
 
-            if (p_ptr->town_num && cave_have_flag_grid(c_ptr, FF_STORE))
+            if (cave_have_flag_grid(c_ptr, FF_STORE))
             {
                 int which = f_info[c_ptr->feat].subtype;
 
