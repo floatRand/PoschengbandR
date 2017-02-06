@@ -854,6 +854,9 @@ static void _loop(_ui_context_ptr context)
         int    cmd, ct;
 
         context->page_size = MIN(26, r.cy - 3 - 6);
+        if ((context->top - 1) % context->page_size != 0) /* resize?? */
+            context->top = 1;
+
         _display(context);
 
         cmd = inkey_special(TRUE);
