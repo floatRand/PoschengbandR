@@ -3,6 +3,9 @@
 
 #include "inv.h"
 
+/************************************************************************
+ * Shops
+ ***********************************************************************/
 struct shop_s;
 typedef struct shop_s shop_t, *shop_ptr;
 
@@ -33,6 +36,10 @@ extern bool     shop_common_cmd_handler(int cmd); /* shared with home_ui */
 extern void     shop_display_inv(doc_ptr doc, inv_ptr inv, slot_t top, int page_size);
 extern void     shop_save(shop_ptr shop, savefile_ptr file);
 
+
+/************************************************************************
+ * Towns
+ ***********************************************************************/
 struct town_s;
 typedef struct town_s town_t, *town_ptr;
 
@@ -55,4 +62,5 @@ extern void     towns_load(savefile_ptr file);
 
 extern shop_ptr town_get_shop(town_ptr town, int which);
 
+extern int      town_service_price(int price);
 #endif

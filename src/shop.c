@@ -13,8 +13,7 @@ struct _owner_s
     int  id;
     cptr name;
     int  purse;
-    int  max_inflate;
-    int  min_inflate;
+    int  greed;
     int  race_id;
 };
 typedef struct _owner_s _owner_t, *_owner_ptr;
@@ -57,38 +56,38 @@ static bool _general_create(obj_ptr obj);
 static _type_t _types[] = 
 {
     { SHOP_GENERAL, "General Store", _general_will_buy, _general_create,
-        {{  1, "Bilbo the Friendly",         200,    170, 108, RACE_HOBBIT },
-         {  2, "Rincewind the Chicken",      200,    175, 108, RACE_HUMAN },
-         {  3, "Sultan the Midget",          300,    170, 107, RACE_GNOME },
-         {  4, "Lyar-el the Comely",         300,    165, 107, RACE_DEMIGOD },
-         {  5, "Falilmawen the Friendly",    250,    170, 108, RACE_HOBBIT },
-         {  6, "Voirin the Cowardly",        500,    175, 108, RACE_HUMAN },
-         {  7, "Erashnak the Midget",        750,    170, 107, RACE_BEASTMAN },
-         {  8, "Grug the Comely",           1000,    165, 107, RACE_HALF_TITAN },
-         {  9, "Forovir the Cheap",          250,    170, 108, RACE_HUMAN },
-         { 10, "Ellis the Fool",             500,    175, 108, RACE_HUMAN },
-         { 11, "Filbert the Hungry",         750,    170, 107, RACE_VAMPIRE },
-         { 12, "Fthnargl Psathiggua",       1000,    165, 107, RACE_MIND_FLAYER },
-         { 13, "Eloise Long-Dead",           250,    170, 108, RACE_SPECTRE },
-         { 14, "Fundi the Slow",             500,    175, 108, RACE_ZOMBIE },
-         { 15, "Granthus",                   750,    170, 107, RACE_SKELETON },
-         { 16, "Lorax the Suave",           1000,    165, 107, RACE_VAMPIRE },
-         { 17, "Butch",                      250,    170, 108, RACE_SNOTLING },
-         { 18, "Elbereth the Beautiful",     500,    175, 108, RACE_HIGH_ELF },
-         { 19, "Sarleth the Sneaky",         750,    170, 107, RACE_GNOME },
-         { 20, "Narlock",                   1000,    165, 107, RACE_DWARF },
-         { 21, "Haneka the Small",           250,    170, 108, RACE_GNOME },
-         { 22, "Loirin the Mad",             500,    175, 108, RACE_HALF_GIANT },
-         { 23, "Wuto Poisonbreath",          750,    170, 107, RACE_DRACONIAN },
-         { 24, "Araaka the Rotund",         1000,    165, 107, RACE_DRACONIAN },
-         { 25, "Poogor the Dumb",            250,    170, 108, RACE_BEASTMAN },
-         { 26, "Felorfiliand",               500,    175, 108, RACE_DEMIGOD },
-         { 27, "Maroka the Aged",            750,    170, 107, RACE_GNOME },
-         { 28, "Sasin the Bold",            1000,    165, 107, RACE_HALF_GIANT },
-         { 29, "Abiemar the Peasant",        250,    170, 108, RACE_HUMAN },
-         { 30, "Hurk the Poor",              500,    175, 108, RACE_SNOTLING },
-         { 31, "Soalin the Wretched",        750,    170, 107, RACE_ZOMBIE },
-         { 32, "Merulla the Humble",        1000,    165, 107, RACE_DEMIGOD }}},
+        {{  1, "Bilbo the Friendly",         200, 108, RACE_HOBBIT },
+         {  2, "Rincewind the Chicken",      200, 108, RACE_HUMAN },
+         {  3, "Sultan the Midget",          300, 107, RACE_GNOME },
+         {  4, "Lyar-el the Comely",         300, 107, RACE_DEMIGOD },
+         {  5, "Falilmawen the Friendly",    250, 108, RACE_HOBBIT },
+         {  6, "Voirin the Cowardly",        500, 108, RACE_HUMAN },
+         {  7, "Erashnak the Midget",        750, 107, RACE_BEASTMAN },
+         {  8, "Grug the Comely",           1000, 107, RACE_HALF_TITAN },
+         {  9, "Forovir the Cheap",          250, 108, RACE_HUMAN },
+         { 10, "Ellis the Fool",             500, 108, RACE_HUMAN },
+         { 11, "Filbert the Hungry",         750, 107, RACE_VAMPIRE },
+         { 12, "Fthnargl Psathiggua",       1000, 107, RACE_MIND_FLAYER },
+         { 13, "Eloise Long-Dead",           250, 108, RACE_SPECTRE },
+         { 14, "Fundi the Slow",             500, 108, RACE_ZOMBIE },
+         { 15, "Granthus",                   750, 107, RACE_SKELETON },
+         { 16, "Lorax the Suave",           1000, 107, RACE_VAMPIRE },
+         { 17, "Butch",                      250, 108, RACE_SNOTLING },
+         { 18, "Elbereth the Beautiful",     500, 108, RACE_HIGH_ELF },
+         { 19, "Sarleth the Sneaky",         750, 107, RACE_GNOME },
+         { 20, "Narlock",                   1000, 107, RACE_DWARF },
+         { 21, "Haneka the Small",           250, 108, RACE_GNOME },
+         { 22, "Loirin the Mad",             500, 108, RACE_HALF_GIANT },
+         { 23, "Wuto Poisonbreath",          750, 107, RACE_DRACONIAN },
+         { 24, "Araaka the Rotund",         1000, 107, RACE_DRACONIAN },
+         { 25, "Poogor the Dumb",            250, 108, RACE_BEASTMAN },
+         { 26, "Felorfiliand",               500, 108, RACE_DEMIGOD },
+         { 27, "Maroka the Aged",            750, 107, RACE_GNOME },
+         { 28, "Sasin the Bold",            1000, 107, RACE_HALF_GIANT },
+         { 29, "Abiemar the Peasant",        250, 108, RACE_HUMAN },
+         { 30, "Hurk the Poor",              500, 108, RACE_SNOTLING },
+         { 31, "Soalin the Wretched",        750, 107, RACE_ZOMBIE },
+         { 32, "Merulla the Humble",        1000, 107, RACE_DEMIGOD }}},
         
     { SHOP_NONE }
 };
@@ -380,11 +379,112 @@ void shop_save(shop_ptr shop, savefile_ptr file)
 }
 
 /************************************************************************
- * User Interface
- *
+ * Pricing
  * Note: All functions take the point of view of the *shop*, not 
  *       the player. So _buy is the shop buying or the player
  *       selling. This is appropriate for a shop module!
+ ***********************************************************************/
+static int _price_factor_aux(int greed)
+{
+    int factor;
+
+    factor = get_race()->shop_adjust;
+    if (factor == 0)
+        factor = 110;
+
+    factor = (factor * adj_gold[p_ptr->stat_ind[A_CHR]] + 50) / 100;
+    factor = (factor * (135 - MIN(200, p_ptr->fame)/4) + 50) / 100;
+    factor = (factor * greed + 50) / 100;
+
+    return factor;
+}
+
+int _price_factor(shop_ptr shop)
+{
+    int factor = _price_factor_aux(shop->owner->greed);
+
+    if (prace_is_(shop->owner->race_id))
+        factor = factor * 90 / 100;
+
+    return factor;
+}
+
+static int _sell_price_aux(int price, int factor)
+{
+    if (factor < 100)
+        factor = 100;
+
+    if (price > 1000*1000)
+        price = (price / 100) * factor;
+    else
+        price = (price * factor + 50) / 100;
+
+    if (price > 1000)
+        price = big_num_round(price, 3);
+
+    return price;
+}
+
+static int _sell_price(shop_ptr shop, int price)
+{
+    int factor = _price_factor(shop);
+
+    price = _sell_price_aux(price, factor);
+    if (shop->type->id == SHOP_BLACK_MARKET)
+    {
+        if (p_ptr->realm1 != REALM_BURGLARY && !mut_present(MUT_BLACK_MARKETEER))
+            price = price * 2;
+
+        price = price * (625 + virtue_current(VIRTUE_JUSTICE)) / 625;
+    }
+    else if (shop->type->id == SHOP_JEWELER)
+        price = price * 2;
+
+    return price;
+}
+
+static int _buy_price_aux(int price, int factor)
+{
+    if (factor < 105)
+        factor = 105;
+
+    if (price > 1000*1000)
+        price = (price / factor) * 100;
+    else
+        price = (price * 100) / factor;
+
+    if (price > 1000)
+        price = big_num_round(price, 3);
+
+    return price;
+}
+
+static int _buy_price(shop_ptr shop, int price)
+{
+    int factor = _price_factor(shop);
+
+    price = _buy_price_aux(price, factor);
+    if (shop->type->id == SHOP_BLACK_MARKET)
+    {
+        if (p_ptr->realm1 != REALM_BURGLARY && !mut_present(MUT_BLACK_MARKETEER))
+            price = price / 2;
+
+        price = price * (625 - virtue_current(VIRTUE_JUSTICE)) / 625;
+    }
+    else if (shop->type->id == SHOP_JEWELER)
+        price = price / 2;
+
+    return price;
+}
+
+int town_service_price(int price)
+{
+    int factor = _price_factor_aux(100);
+    return _sell_price_aux(price, factor);
+}
+
+/************************************************************************
+ * User Interface
  ***********************************************************************/
 struct _ui_context_s
 {
@@ -404,6 +504,7 @@ static void _loop(_ui_context_ptr context);
 static void _maintain(shop_ptr shop);
 static int  _cull(shop_ptr shop, int target);
 static int  _restock(shop_ptr shop, int target);
+static void _shuffle_stock(shop_ptr shop);
 
 void shop_ui(shop_ptr shop)
 {
@@ -437,7 +538,7 @@ static void _loop(_ui_context_ptr context)
         rect_t r = ui_shop_rect(); /* recalculate in case resize */
         int    cmd;
 
-        context->page_size = MIN(26, r.cy - 3 - 2);
+        context->page_size = MIN(26, r.cy - 4 - 2);
         _display(context);
 
         cmd = inkey_special(TRUE);
@@ -452,6 +553,7 @@ static void _loop(_ui_context_ptr context)
             case 'g': case 'b': _sell(context); break;
             case 'd': case 's': _buy(context); break;
             case 'x': _examine(context); break;
+            case 'S': _shuffle_stock(context->shop); break;
             case '?':
                 doc_display_help("context_shop.txt", NULL);
                 Term_clear_rect(ui_shop_msg_rect());
@@ -493,46 +595,70 @@ static void _loop(_ui_context_ptr context)
     doc_free(context->doc);
 }
 
-void _display(_ui_context_ptr context)
+static void _display_inv(doc_ptr doc, shop_ptr shop, slot_t top, int page_size);
+static void _display(_ui_context_ptr context)
 {
-    rect_t r = ui_shop_rect();
+    rect_t   r = ui_shop_rect();
+    doc_ptr  doc = context->doc;
+    shop_ptr shop = context->shop;
+    int      ct = strlen(shop->type->name) + 10; /* " (20000gp)" */
 
-    doc_clear(context->doc);
-    doc_insert(context->doc, "<style:table>");
-    doc_printf(context->doc, "%*s<color:G>%s</color>\n\n",
-        (r.cx - 10)/2, "", context->shop->type->name);
+    doc_clear(doc);
+    doc_insert(doc, "<style:table>");
+    doc_printf(doc, "    <color:U>%s (%s)</color>",
+        shop->owner->name, get_race_aux(shop->owner->race_id, 0)->name);
+    doc_printf(doc, "<tab:%d><color:G>%s</color> (<color:r>%dgp</color>)\n\n",
+        doc_width(doc) - ct,
+        shop->type->name, shop->owner->purse);
 
-    shop_display_inv(context->doc, context->shop->inv, context->top, context->page_size);
+    _display_inv(doc, shop, context->top, context->page_size);
     
-    doc_insert(context->doc,
+    doc_insert(doc,
+        "<color:keypress>b</color> to buy. "
+        "<color:keypress>s</color> to sell. "
         "<color:keypress>x</color> to begin examining items.\n"
         "<color:keypress>Esc</color> to exit. "
         "<color:keypress>PageUp/Down</color> to scroll. "
         "<color:keypress>?</color> for help.");
-    doc_insert(context->doc, "</style>");
+    doc_insert(doc, "</style>");
 
     Term_clear_rect(r);
-    doc_sync_term(context->doc,
-        doc_range_top_lines(context->doc, r.cy),
+    doc_sync_term(doc,
+        doc_range_top_lines(doc, r.cy),
         doc_pos_create(r.x, r.y));
 }
 
-void _buy(_ui_context_ptr context)
+static void _buy(_ui_context_ptr context)
 {
 }
 
-void _examine(_ui_context_ptr context)
+static void _examine(_ui_context_ptr context)
 {
+    for (;;)
+    {
+        char    cmd;
+        slot_t  slot;
+        obj_ptr obj;
+
+        if (!msg_command("<color:y>Examine which item <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
+        if (cmd < 'a' || cmd > 'z') continue;
+        slot = label_slot(cmd);
+        slot = slot - context->top + 1;
+        obj = inv_obj(context->shop->inv, slot);
+        if (!obj) continue;
+
+        obj_display(obj);
+    }
 }
 
-void _sell(_ui_context_ptr context)
+static void _sell(_ui_context_ptr context)
 {
 }
 
 /************************************************************************
  * Stocking
  ***********************************************************************/
-void _maintain(shop_ptr shop)
+static void _maintain(shop_ptr shop)
 {
     int  num;
     int  i;
@@ -581,22 +707,27 @@ void _maintain(shop_ptr shop)
     }
 }
 
-int _cull(shop_ptr shop, int target)
+static bool _can_cull(obj_ptr obj)
+{
+    if (obj && !(obj->marked & OM_RESERVED)) return TRUE;
+    return FALSE;
+}
+static int _cull(shop_ptr shop, int target)
 {
     int ct = inv_count_slots(shop->inv, obj_exists);
     int attempt;
 
-    assert(ct > 0 && target > 0);
     assert(ct >= target);
     for (attempt = 1; ct > target && attempt < 100; attempt++)
     {
-        slot_t  slot = inv_random_slot(shop->inv, obj_exists);
-        obj_ptr obj = inv_obj(shop->inv, slot);
+        slot_t  slot = inv_random_slot(shop->inv, _can_cull);
+        obj_ptr obj;
 
-        assert(obj);
+        if (!slot) break; /* nothing but 'Reserved' objects remain */
+
+        obj = inv_obj(shop->inv, slot);
         assert(obj->number > 0);
-
-        if (obj->marked & OM_RESERVED) continue;
+        assert (!(obj->marked & OM_RESERVED));
 
         if (one_in_(2))
             obj->number = (obj->number + 1)/2;
@@ -616,7 +747,7 @@ int _cull(shop_ptr shop, int target)
     return ct;
 }
 
-int _add_obj(shop_ptr shop, obj_ptr obj) /* return number of new slots used (0 or 1) */
+static int _add_obj(shop_ptr shop, obj_ptr obj) /* return number of new slots used (0 or 1) */
 {
     slot_t slot, max = inv_last(shop->inv, obj_exists);
     for (slot = 1; slot <= max; slot++)
@@ -633,7 +764,7 @@ int _add_obj(shop_ptr shop, obj_ptr obj) /* return number of new slots used (0 o
     return 1;
 }
 
-int _restock(shop_ptr shop, int target)
+static int _restock(shop_ptr shop, int target)
 {
     int ct = inv_count_slots(shop->inv, obj_exists);
     int attempt = 0;
@@ -650,6 +781,15 @@ int _restock(shop_ptr shop, int target)
     shop->last_visit.level = p_ptr->max_plv;
     shop->last_visit.exp = p_ptr->max_exp;
     return ct;
+}
+
+static void _shuffle_stock(shop_ptr shop)
+{
+    if (p_ptr->wizard || mut_present(MUT_MERCHANTS_FRIEND))
+    {
+        _cull(shop, 0);
+        _restock(shop, 12 + randint0(5));
+    }
 }
 
 /************************************************************************
@@ -705,18 +845,33 @@ bool shop_common_cmd_handler(int cmd)
     return FALSE;
 }
 
-void shop_display_inv(doc_ptr doc, inv_ptr inv, slot_t top, int page_size)
+static void _display_inv(doc_ptr doc, shop_ptr shop, slot_t top, int page_size)
 {
-    slot_t slot;
-    int    xtra = 0;
-    char   name[MAX_NLEN];
+    slot_t  slot;
+    int     xtra = 0;
+    char    name[MAX_NLEN];
+    inv_ptr inv = shop->inv;
+    bool    show_prices = inv_loc(inv) == INV_SHOP;
+    bool    show_values = inv_loc(inv) != INV_SHOP || p_ptr-> wizard;
 
     if (show_weights)
-        xtra = 9;  /* " 123.0 lbs" */
+        xtra += 10;  /* " 123.0 lbs" */
+    if (show_prices)
+        xtra += 7;
+    if (show_values)
+        xtra += 7;
 
     doc_insert(doc, "    Item Description");
-    if (show_weights)
-        doc_printf(doc, "<tab:%d>   Weight", doc_width(doc) - xtra);
+    if (xtra)
+    {
+        doc_printf(doc, "<tab:%d>", doc_width(doc) - xtra);
+        if (show_weights)
+            doc_printf(doc, " %9.9s", "Weight");
+        if (show_prices)
+            doc_printf(doc, " %6.6s", "Price");
+        if (show_values)
+            doc_printf(doc, " %6.6s", "Score");
+    }
     doc_newline(doc);
 
     for (slot = top; slot < top + page_size; slot++)
@@ -745,18 +900,40 @@ void shop_display_inv(doc_ptr doc, inv_ptr inv, slot_t top, int page_size)
                 doc_push_style(doc, &style);
             }
             doc_printf(doc, "%s", name);
-            if (xtra) doc_pop_style(doc);
-
-            if (show_weights)
+            if (xtra)
             {
-                int wgt = obj->weight * obj->number;
-                doc_printf(doc, "<tab:%d> %3d.%d lbs", doc_width(doc) - xtra, wgt/10, wgt%10);
+                doc_pop_style(doc);
+                doc_printf(doc, "<tab:%d>", doc_width(doc) - xtra);
+
+                if (show_weights)
+                {
+                    int wgt = obj->weight; /* single object only for home/shops */
+                    doc_printf(doc, " %3d.%d lbs", wgt/10, wgt%10);
+                }
+                if (show_prices || show_values)
+                {
+                    int value = obj_value(obj);
+
+                    if (show_prices)
+                    {
+                        int price = _sell_price(shop, value);
+                        doc_printf(doc, " <color:%c>%6d</color>", price <= p_ptr->au ? 'w' : 'D', price);
+                    }
+                    if (show_values)
+                        doc_printf(doc, " %6d", value);
+                }
             }
             doc_newline(doc);
         }
         else
             doc_newline(doc);
     }
+}
+void shop_display_inv(doc_ptr doc, inv_ptr inv, slot_t top, int page_size)
+{
+    shop_t hack = {0};
+    hack.inv = inv;
+    _display_inv(doc, &hack, top, page_size);
 }
 
 /************************************************************************

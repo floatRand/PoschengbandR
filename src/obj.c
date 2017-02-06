@@ -220,6 +220,7 @@ int obj_cmp(obj_ptr left, obj_ptr right)
     if (!left && !right) return 0;
     if (!left && right) return 1;
     if (left && !right) return -1;
+    if (left == right) return 0;
 
     assert(left && right);
 
@@ -259,8 +260,10 @@ int obj_cmp(obj_ptr left, obj_ptr right)
     case TV_CORPSE:
     case TV_CAPTURE:
         if (r_info[left->pval].level < r_info[right->pval].level) return -1;
-        if (r_info[left->pval].level == r_info[right->pval].level && left->pval < right->pval) return -1;
-        return 1;
+        if (r_info[left->pval].level > r_info[right->pval].level) return 1;
+        if (left->pval < right->pval) return -1;
+        if (left->pval > right->pval) return -1;
+        break;
 
     case TV_SHOT:
     case TV_ARROW:

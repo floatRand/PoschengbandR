@@ -489,7 +489,7 @@ byte adj_mag_stat[] =
 
 
 /*
- * Stat Table (WIS) -- payment percentages
+ * Stat Table (CHR) -- payment percentages
  */
 byte adj_gold[] =
 {

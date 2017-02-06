@@ -380,7 +380,7 @@ void vec_sort_range(vec_ptr vec, int start, int stop, vec_cmp_f f)
     assert(0 <= stop && stop < vec->len);
     assert(start <= stop);
     _quick_sort(vec->objs, start, stop, f);
-    /*assert(vec_is_sorted_range(vec, start, stop, f));*/
+    assert(vec_is_sorted_range(vec, start, stop, f));
 }
 
 void vec_merge_sort(vec_ptr vec, vec_cmp_f f)
