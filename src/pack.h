@@ -65,6 +65,7 @@ extern void    pack_calc_bonuses(void);
 /* Overflow
 extern void    pack_push_overflow(obj_ptr obj);*/
 extern bool    pack_overflow(void);
+extern int     pack_overflow_count(void);
 
 /* Optimize: Combine, Sort, Cleanup Garbage
  * Pack slots are stable until pack_optimize, making looping safe.

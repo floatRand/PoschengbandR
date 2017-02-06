@@ -341,6 +341,11 @@ static void pack_push_overflow(obj_ptr obj)
     obj->number = 0;
 }
 
+int pack_overflow_count(void)
+{
+    return vec_length(_overflow);
+}
+
 bool pack_overflow(void)
 {
     bool result = FALSE;

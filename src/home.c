@@ -330,8 +330,7 @@ static void _drop(_ui_context_ptr context)
         prompt.error = "You have nothing to drop.";
     }
     prompt.where[0] = INV_PACK;
-    prompt.where[1] = INV_EQUIP;
-    prompt.where[2] = INV_QUIVER;
+    prompt.where[1] = INV_QUIVER;
 
     obj_prompt(&prompt);
     if (!prompt.obj) return;
@@ -340,14 +339,13 @@ static void _drop(_ui_context_ptr context)
     {
         char       name[MAX_NLEN];
         string_ptr s = string_copy_s("<color:v>Warning:</color> All donations are final! ");
-        bool       quit = FALSE;
+        char       c;
 
         object_desc(name, prompt.obj, OD_COLOR_CODED);
         string_printf(s, "Really donate %s to the museum? <color:y>[y/n]</color>", name);
-        if (msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT) == 'n')
-            quit = TRUE;
+        c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
         string_free(s);
-        if (quit) return;
+        if (c == 'n') return;
     }
 
     if (prompt.obj->number > 1)

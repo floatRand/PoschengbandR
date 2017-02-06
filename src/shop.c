@@ -24,7 +24,7 @@ struct _type_s
 {
     int           id;
     cptr          name;
-    obj_p         purchase_p;
+    obj_p         buy_p;
     _create_obj_f create_f;
     _owner_t      owners[_MAX_OWNERS];
 };
@@ -474,7 +474,10 @@ static int _buy_price(shop_ptr shop, int price)
     else if (shop->type->id == SHOP_JEWELER)
         price = price / 2;
 
-    return price;
+    if (price > shop->owner->purse)
+        price = shop->owner->purse;
+
+    return MAX(1, price);
 }
 
 int town_service_price(int price)
@@ -499,6 +502,7 @@ static void _display(_ui_context_ptr context);
 static void _buy(_ui_context_ptr context);
 static void _examine(_ui_context_ptr context);
 static void _sell(_ui_context_ptr context);
+static void _sellout(_ui_context_ptr context);
 static void _loop(_ui_context_ptr context);
 
 static void _maintain(shop_ptr shop);
@@ -538,7 +542,7 @@ static void _loop(_ui_context_ptr context)
         rect_t r = ui_shop_rect(); /* recalculate in case resize */
         int    cmd;
 
-        context->page_size = MIN(26, r.cy - 4 - 2);
+        context->page_size = MIN(26, r.cy - 4 - 4);
         _display(context);
 
         cmd = inkey_special(TRUE);
@@ -551,6 +555,7 @@ static void _loop(_ui_context_ptr context)
             switch (cmd) /* cmd is from the player's perspective */
             {
             case 'g': case 'b': _sell(context); break;
+            case 'B': _sellout(context); break;
             case 'd': case 's': _buy(context); break;
             case 'x': _examine(context); break;
             case 'S': _shuffle_stock(context->shop); break;
@@ -578,6 +583,11 @@ static void _loop(_ui_context_ptr context)
                     msg_format("Unrecognized command: <color:R>^%c</color>. "
                                "Press <color:keypress>?</color> for help.", cmd);
                 }
+            }
+            if (pack_overflow_count())
+            {
+                msg_print("<color:v>Your pack is overflowing!</color> It's time for you to leave!");
+                break;
             }
         }
         pack_unlock();
@@ -613,6 +623,7 @@ static void _display(_ui_context_ptr context)
 
     _display_inv(doc, shop, context->top, context->page_size);
     
+    doc_printf(doc, "Gold Remaining: <color:y>%d</color>\n\n", p_ptr->au);
     doc_insert(doc,
         "<color:keypress>b</color> to buy. "
         "<color:keypress>s</color> to sell. "
@@ -628,8 +639,80 @@ static void _display(_ui_context_ptr context)
         doc_pos_create(r.x, r.y));
 }
 
+static int _add_obj(shop_ptr shop, obj_ptr obj);
+static void _buy_aux(shop_ptr shop, obj_ptr obj)
+{
+    char       name[MAX_NLEN];
+    string_ptr s = string_alloc();
+    char       c;
+    int        price = obj_value(obj);
+
+    if (!price)
+    {
+        msg_print("I have no interest in your junk!");
+        return;
+    }
+    price = _buy_price(shop, price);
+    price *= obj->number;
+
+    object_desc(name, obj, OD_COLOR_CODED);
+    string_printf(s, "Really sell %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, price);
+    c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+    string_free(s);
+    if (c == 'n') return;
+
+    p_ptr->au += price;
+    stats_on_gold_selling(price);
+
+    p_ptr->redraw |= PR_GOLD;
+    if (prace_is_(RACE_MON_LEPRECHAUN))
+        p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+
+    obj->inscription = 0;
+    obj->feeling = FEEL_NONE;
+    obj->marked &= ~OM_WORN;
+    obj->timeout = 0;
+
+    obj_identify_fully(obj);
+    stats_on_purchase(obj);
+
+    object_desc(name, obj, OD_COLOR_CODED); /* again...in case *id* */
+    msg_format("You sold %s for <color:R>%d</color> gold.", name, price);
+
+    if (_add_obj(shop, obj))
+        inv_sort(shop->inv);
+}
+
 static void _buy(_ui_context_ptr context)
 {
+    obj_prompt_t prompt = {0};
+    int          amt = 1;
+
+    prompt.prompt = "Sell which item?";
+    prompt.error = "You have nothing to sell.";
+    prompt.filter = context->shop->type->buy_p;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_QUIVER;
+
+    obj_prompt(&prompt);
+    if (!prompt.obj) return;
+
+    if (prompt.obj->number > 1)
+    {
+        amt = get_quantity(NULL, prompt.obj->number);
+        if (amt <= 0) return;
+    }
+
+    if (amt < prompt.obj->number)
+    {
+        obj_t copy = *prompt.obj;
+        copy.number = amt;
+        _buy_aux(context->shop, &copy);
+    }
+    else
+        _buy_aux(context->shop, prompt.obj);
+
+    obj_release(prompt.obj, OBJ_RELEASE_QUIET);
 }
 
 static void _examine(_ui_context_ptr context)
@@ -651,7 +734,90 @@ static void _examine(_ui_context_ptr context)
     }
 }
 
+static void _sell_aux(shop_ptr shop, obj_ptr obj)
+{
+    char       name[MAX_NLEN];
+    string_ptr s = string_alloc();
+    char       c;
+    int        price = obj_value(obj);
+
+    price = _sell_price(shop, price);
+    price *= obj->number;
+
+    object_desc(name, obj, OD_COLOR_CODED);
+    string_printf(s, "Really buy %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, price);
+    c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+    string_free(s);
+    if (c == 'n') return;
+
+    if (price > p_ptr->au)
+    {
+        msg_print("You do not have enough gold.");
+        return;
+    }
+    p_ptr->au -= price;
+    stats_on_gold_buying(price);
+
+    p_ptr->redraw |= PR_GOLD;
+    if (prace_is_(RACE_MON_LEPRECHAUN))
+        p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA);
+
+    obj->ident &= ~IDENT_STORE;
+    obj->inscription = 0;
+    obj->feeling = FEEL_NONE;
+    obj->marked &= ~OM_RESERVED;
+
+    obj_identify_fully(obj);
+    stats_on_purchase(obj);
+
+    pack_carry(obj);
+    msg_format("You have %s.", name);
+}
+
 static void _sell(_ui_context_ptr context)
+{
+    for (;;)
+    {
+        char    cmd;
+        slot_t  slot;
+        obj_ptr obj;
+        int     amt = 1;
+
+        if (!msg_command("<color:y>Buy which item <color:w>(<color:keypress>Esc</color> "
+                         "to cancel)</color>?</color>", &cmd)) break;
+        if (cmd < 'a' || cmd > 'z') continue;
+        slot = label_slot(cmd);
+        slot = slot - context->top + 1;
+        obj = inv_obj(context->shop->inv, slot);
+        if (!obj) continue;
+
+        if (obj->number > 1)
+        {
+            amt = get_quantity(NULL, obj->number);
+            if (amt <= 0) break;
+        }
+
+        if (amt < obj->number)
+        {
+            obj_t copy = *obj;
+            copy.number = amt;
+            obj->number -= amt;
+            _sell_aux(context->shop, &copy);
+        }
+        else
+        {
+            _sell_aux(context->shop, obj);
+            if (!obj->number)
+            {
+                inv_remove(context->shop->inv, slot);
+                inv_sort(context->shop->inv);
+            }
+        }
+        break;
+    }
+}
+
+static void _sellout(_ui_context_ptr context)
 {
 }
 
@@ -757,6 +923,7 @@ static int _add_obj(shop_ptr shop, obj_ptr obj) /* return number of new slots us
         if (obj_can_combine(dest, obj, INV_SHOP))
         {
             obj_combine(dest, obj, INV_SHOP);
+            obj->number = 0; /* forget spillover */
             return 0;
         }
     }
