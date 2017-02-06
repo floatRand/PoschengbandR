@@ -2,6 +2,8 @@
 
 #include <assert.h>
 
+bool store_hack = FALSE;
+
 /************************************************************************
  * Data Types
  ***********************************************************************/
@@ -449,7 +451,7 @@ static bool _create(obj_ptr obj, int k_idx, int lvl, int mode)
     if (obj_value(obj) <= 0) return FALSE; /* Note: requires IDENT_STORE to work!!! */
 
     _discount(obj);
-    mass_produce(obj);
+    obj_make_pile(obj);
     return TRUE;
 }
 

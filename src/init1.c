@@ -2710,7 +2710,7 @@ errr parse_k_info(char *buf, header *head)
     else if (!k_ptr) return (3);
     /* From Vanilla: M:P:XdY to control object stacks. P is
        the probabilty (1 to 100) for a stack and XdY is how
-       many get rolled up. Replaces TRG_STACK and mass_produce(). */
+       many get rolled up. Replaces TRG_STACK and obj_make_pile(). */
     else if (buf[0] == 'M')
     {
         int p, x, y;

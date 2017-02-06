@@ -27,6 +27,8 @@ extern void    obj_free(obj_ptr obj);
 #define OBJ_RELEASE_QUIET 0x0001
 extern void    obj_release(obj_ptr obj, int options);
 
+extern void    obj_make_pile(obj_ptr obj);
+
 /* Commands (Top Level User Interface) */
 extern void obj_destroy_ui(void);
 extern void obj_inscribe_ui(void);

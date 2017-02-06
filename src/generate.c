@@ -383,7 +383,7 @@ static void alloc_object(int set, int typ, int num)
             else
                 k_idx = lookup_kind(TV_FOOD, SV_FOOD_RATION);
             object_prep(&forge, k_idx);
-            mass_produce(&forge);
+            obj_make_pile(&forge);
             drop_near(&forge, -1, y, x);
             break;
 
@@ -394,14 +394,14 @@ static void alloc_object(int set, int typ, int num)
                 k_idx = lookup_kind(TV_LITE, SV_LITE_LANTERN);
             object_prep(&forge, k_idx);
             apply_magic(&forge, dun_level, 0);
-            mass_produce(&forge);
+            obj_make_pile(&forge);
             drop_near(&forge, -1, y, x);
             break;
 
         case ALLOC_TYP_RECALL:
             k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
             object_prep(&forge, k_idx);
-            /*mass_produce(&forge);*/
+            /*obj_make_pile(&forge);*/
             drop_near(&forge, -1, y, x);
             break;
 

@@ -2862,59 +2862,6 @@ static void process_world(void)
         }
     }
 
-    /* While in the dungeon (no_wilderness mode only) */
-    else if ( no_wilderness
-           && !p_ptr->inside_quest
-           && !p_ptr->inside_battle
-           && !p_ptr->inside_arena
-           && dun_level )
-    {
-        /*** Shuffle the Storekeepers ***/
-
-        /* Chance is only once a day (while in dungeon) */
-        if (!(game_turn % (TURNS_PER_TICK * STORE_TICKS)))
-        {
-            /* Sometimes, shuffle the shop-keepers */
-            if (one_in_(STORE_SHUFFLE))
-            {
-                int n, i;
-
-                /* Pick a random shop (except home and museum) */
-                do
-                {
-                    n = randint0(MAX_STORES);
-                }
-                while ((n == STORE_HOME) || (n == STORE_MUSEUM));
-
-                /* Check every feature */
-                for (i = 1; i < max_f_idx; i++)
-                {
-                    /* Access the index */
-                    feature_type *f_ptr = &f_info[i];
-
-                    /* Skip empty index */
-                    if (!f_ptr->name) continue;
-
-                    /* Skip non-store features */
-                    if (!have_flag(f_ptr->flags, FF_STORE)) continue;
-
-                    /* Verify store type */
-                    if (f_ptr->subtype == n)
-                    {
-                        /* Message */
-                        if (cheat_xtra) msg_format("Shuffle a Shopkeeper of %s.", f_name + f_ptr->name);
-
-                        /* Shuffle it */
-                        store_shuffle(n);
-
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-
     /*** Process the monsters ***/
 
     /* Check for creature generation. */
@@ -3989,7 +3936,6 @@ static void _dispatch_command(int old_now_turn)
         case '=':
         {
             do_cmd_options();
-            (void)combine_and_reorder_home(STORE_HOME);
             do_cmd_redraw();
             break;
         }
@@ -5696,9 +5642,6 @@ void play_game(bool new_game)
         m_ptr->hp = r_ptr->hdice*(r_ptr->hside+1)/2;
         m_ptr->energy_need = ENERGY_NEED() + ENERGY_NEED();
     }
-
-    (void)combine_and_reorder_home(STORE_HOME);
-    (void)combine_and_reorder_home(STORE_MUSEUM);
 
     /* Process */
     while (TRUE)

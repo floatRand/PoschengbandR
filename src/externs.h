@@ -1555,7 +1555,7 @@ extern bool summon_kin_player(int level, int y, int x, u32b mode);
 
 /* store.c */
 extern bool store_hack;
-extern bool combine_and_reorder_home(int store_num);
+/*extern bool combine_and_reorder_home(int store_num);
 extern void do_cmd_store(void);
 extern void store_shuffle(int which);
 enum { STORE_MAINT_CULL = 1, STORE_MAINT_NORMAL };
@@ -1565,7 +1565,7 @@ extern int  store_calc_price_factor(int greed);
 extern int  store_calc_sell_price(int price, int factor);
 extern int  store_calc_purchase_price(int price, int factor);
 extern void move_to_black_market(object_type * o_ptr);
-extern void mass_produce(object_type *o_ptr);
+extern void mass_produce(object_type *o_ptr);*/
 
 /* bldg.c */
 extern int get_bldg_member_code(cptr name);

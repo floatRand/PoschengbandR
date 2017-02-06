@@ -1128,7 +1128,7 @@ void monster_death(int m_idx, bool drop_item)
             default:
                 object_prep(q_ptr, lookup_kind(tval, sval));
                 apply_magic(q_ptr, object_level, AM_NO_FIXED_ART);
-                mass_produce(q_ptr);
+                obj_make_pile(q_ptr);
             }
 
             (void)drop_near(q_ptr, -1, y, x);
@@ -1661,7 +1661,7 @@ void monster_death(int m_idx, bool drop_item)
         object_prep(&forge, k_idx);
         if (!apply_magic(&forge, object_level, mode) && object_is_device(&forge))
             apply_magic(&forge, object_level, 0);
-        mass_produce(&forge);
+        obj_make_pile(&forge);
         drop_near(&forge, -1, y, x);
     }
 

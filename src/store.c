@@ -24,7 +24,6 @@ static store_type *st_ptr = NULL;
 static owner_type *ot_ptr = NULL;
 static s16b old_town_num = 0;
 static s16b inner_town_num = 0;
-bool store_hack = FALSE;
 static int cur_store_feat;
 
 static void _buyout(void);

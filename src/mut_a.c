@@ -2038,21 +2038,6 @@ void random_banish_mut(int cmd, variant *res)
             msg_print("You suddenly feel almost lonely.");
 
             banish_monsters(100);
-            if (!dun_level && p_ptr->town_num)
-            {
-                int n;
-
-                /* Pick a random shop (except home) */
-                do
-                {
-                    n = randint0(MAX_STORES);
-                }
-                while ((n == STORE_HOME) || (n == STORE_MUSEUM));
-
-                msg_print("You see one of the shopkeepers running for the hills!");
-                store_shuffle(n);
-            }
-            msg_print(NULL);
         }
         break;
     default:

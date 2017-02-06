@@ -50,6 +50,35 @@ void obj_free(obj_ptr obj)
     }
 }
 
+void obj_make_pile(obj_ptr obj)
+{
+    int          size = 1;
+    object_kind *k_ptr = &k_info[obj->k_idx];
+
+    if (object_is_artifact(obj)) return;
+    if (object_is_ego(obj) && !object_is_ammo(obj)) return;
+    if (!k_ptr->stack_chance) return;
+    if (randint1(100) > k_ptr->stack_chance) return;
+
+    assert(k_ptr->stack_dice);
+    assert(k_ptr->stack_sides);
+    size = damroll(k_ptr->stack_dice, k_ptr->stack_sides);
+
+    if (size <= 1) return;
+
+    obj->number = size;
+    if (!store_hack)
+    {
+        k_ptr->counts.generated += size - 1;
+        if (obj->name2)
+            e_info[obj->name2].counts.generated += size - 1;
+    }
+    else if (obj->discount)
+    {
+        obj->number -= (size * obj->discount / 100);
+    }
+}
+
 void obj_release(obj_ptr obj, int options)
 {
     char name[MAX_NLEN];

@@ -1678,7 +1678,7 @@ static void _apply_room_grid1(int x, int y, const room_grid_t *grid_ptr, u16b ro
 
             object_prep(&forge, k_idx);
             apply_magic(&forge, object_level, mode);
-            mass_produce(&forge);
+            obj_make_pile(&forge);
             drop_here(&forge, y, x);
         }
     }

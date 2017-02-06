@@ -133,9 +133,8 @@ static void show_building(building_type* bldg)
     {
         if (bldg->letters[i])
         {
-            int factor = store_calc_price_factor(100);
-            int member_cost = store_calc_sell_price(bldg->member_costs[i], factor);
-            int other_cost = store_calc_sell_price(bldg->other_costs[i], factor);
+            int member_cost = town_service_price(bldg->member_costs[i]);
+            int other_cost = town_service_price(bldg->other_costs[i]);
             bool owner = is_owner(bldg);
             bool member = is_member(bldg);
             int cost = owner ? member_cost : other_cost;
@@ -1787,7 +1786,7 @@ static void _forge_wanted_monster_prize(obj_ptr obj, int r_idx)
 
     object_prep(obj, lookup_kind(tval, sval));
     apply_magic(obj, object_level, AM_NO_FIXED_ART);
-    mass_produce(obj);
+    obj_make_pile(obj);
     obj_identify_fully(obj);
 }
 static bool _is_wanted_corpse(obj_ptr obj)
@@ -2822,10 +2821,9 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     cptr        q, s;
     int         maxenchant;
     char        tmp_str[MAX_NLEN];
-    int         store_factor = store_calc_price_factor(100);
 
     if (cost == 0)
-        cost = store_calc_sell_price(1500, store_factor);
+        cost = town_service_price(1500);
 
     if (p_ptr->prace == RACE_MON_SWORD)
     {
@@ -2909,7 +2907,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
 
                 unit_cost *= m;
 
-                unit_cost = store_calc_sell_price(unit_cost, store_factor);
+                unit_cost = town_service_price(unit_cost);
 
                 if (unit_cost < min_cost)
                     unit_cost = min_cost;
@@ -3357,7 +3355,7 @@ static void bldg_process_command(building_type *bldg, int i)
         bcost = bldg->other_costs[i];
 
     /* Adjst price for race, charisma and fame */
-    bcost = store_calc_sell_price(bcost, store_calc_price_factor(100));
+    bcost = town_service_price(bcost);
 
     /* action restrictions */
     if (((bldg->action_restr[i] == 1) && !is_member(bldg)) ||
