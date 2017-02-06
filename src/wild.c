@@ -782,14 +782,16 @@ void _generate_cave(const rect_t *valid)
             rect_t  tile = rect_translate(&viewport, dx, dy);
             rect_t  r = rect_intersect(&viewport, &tile);
 
-            if (!rect_is_valid(&r)) continue;
-
+            /* Keep the town_num accurate ... */
             if (wilderness[wild_y][wild_x].town)
             {
                 p_ptr->town_num = wilderness[wild_y][wild_x].town;
                 p_ptr->visit |= (1L << (p_ptr->town_num - 1));
             }
 
+            /* ... before excluding this tile during scrolling.
+             * We did just clear p_ptr->town_num at the top, after all! */
+            if (!rect_is_valid(&r)) continue;
             if (valid && rect_contains(valid, &r)) continue;
 
             _generate_area(wild_x, wild_y, dx, dy, valid);
