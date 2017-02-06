@@ -59,6 +59,8 @@ static bool _weapon_will_buy(obj_ptr obj);
 static bool _weapon_create(obj_ptr obj, int mode);
 static bool _temple_will_buy(obj_ptr obj);
 static bool _temple_create(obj_ptr obj, int mode);
+static bool _alchemist_will_buy(obj_ptr obj);
+static bool _alchemist_create(obj_ptr obj, int mode);
 
 static _type_t _types[] = 
 {
@@ -181,6 +183,35 @@ static _type_t _types[] =
          { 20, "Lumwise the Mad",          15000, 110, RACE_YEEK },
          { 21, "Muirt the Virtuous",       25000, 107, RACE_KOBOLD },
          { 22, "Dardobard the Weak",       30000, 109, RACE_SPECTRE },
+         { 0 }}},
+
+    { SHOP_ALCHEMIST, "Alchemy Shop", _alchemist_will_buy, _alchemist_create,
+        {{  1, "Mauser the Chemist",       10000, 111, RACE_HUMAN },
+         {  2, "Wizzle the Chaotic",       10000, 110, RACE_HOBBIT },
+         {  3, "Midas the Greedy",         15000, 116, RACE_GNOME },
+         {  4, "Ja-Far the Alchemist",     15000, 111, RACE_DEMIGOD },
+         {  5, "Kakalrakakal",             15000, 116, RACE_KLACKON },
+         {  6, "Jal-Eth the Alchemist",    15000, 111, RACE_DEMIGOD },
+         {  7, "Fanelath the Cautious",    10000, 111, RACE_DWARF },
+         {  8, "Runcie the Insane",        10000, 110, RACE_HUMAN },
+         {  9, "Grumbleworth",             15000, 116, RACE_GNOME },
+         { 10, "Flitter",                  15000, 111, RACE_SPRITE },
+         { 11, "Xarillus",                 10000, 111, RACE_HUMAN },
+         { 12, "Egbert the Old",           10000, 110, RACE_DWARF },
+         { 13, "Valindra the Proud",       15000, 116, RACE_HIGH_ELF },
+         { 14, "Taen the Alchemist",       15000, 111, RACE_HUMAN },
+         { 15, "Cayd the Sweet",           10000, 111, RACE_VAMPIRE },
+         { 16, "Fulir the Dark",           10000, 110, RACE_NIBELUNG },
+         { 17, "Domli the Humble",         15000, 116, RACE_DWARF },
+         { 18, "Yaarjukka Demonspawn",     15000, 111, RACE_IMP },
+         { 19, "Gelaraldor the Herbmaster",10000, 111, RACE_HIGH_ELF },
+         { 20, "Olelaldan the Wise",       10000, 110, RACE_BARBARIAN },
+         { 21, "Fthoglo the Demonicist",   15000, 116, RACE_IMP },
+         { 22, "Dridash the Alchemist",    15000, 111, RACE_SNOTLING },
+         { 23, "Nelir the Strong",         10000, 111, RACE_CYCLOPS },
+         { 24, "Lignus the Pungent",       10000, 110, RACE_SNOTLING },
+         { 25, "Tilba",                    15000, 116, RACE_HOBBIT },
+         { 26, "Myrildric the Wealthy",    15000, 111, RACE_HUMAN },
          { 0 }}},
 
     { SHOP_NONE }
@@ -590,6 +621,57 @@ static bool _temple_create(obj_ptr obj, int mode)
         k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_REMOVE_CURSE);
     else
         k_idx = _get_k_idx(_temple_stock_p, _mod_lvl(20));
+    return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)), mode);
+}
+
+/************************************************************************
+ * Shops
+ ***********************************************************************/
+static bool _alchemist_will_buy(obj_ptr obj)
+{
+    switch (obj->tval)
+    {
+    case TV_POTION:
+    case TV_SCROLL:
+        break;
+    default:
+        return FALSE;
+    }
+    return _will_buy(obj);
+}
+
+static bool _alchemist_stock_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+
+    switch (k_info[k_idx].tval)
+    {
+    /* Scrolls and Potions are also stocked by the Temple. */
+    case TV_SCROLL:
+    case TV_POTION:
+        if (!_temple_stock_p(k_idx))
+            return TRUE;
+        break;
+    }
+    return FALSE;
+}
+
+static bool _alchemist_create(obj_ptr obj, int mode)
+{
+    int k_idx;
+    if (one_in_(3))
+        k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_WORD_OF_RECALL);
+    else if (one_in_(5))
+        k_idx = lookup_kind(TV_POTION, SV_POTION_RES_STR + randint0(6));
+    else if (one_in_(7))
+        k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_IDENTIFY);
+    else if (one_in_(10))
+        k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_TELEPORT);
+    else if (!easy_id && one_in_(20))
+        k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_STAR_IDENTIFY);
+    else
+        k_idx = _get_k_idx(_alchemist_stock_p, _mod_lvl(20));
     return _create(obj, k_idx, _mod_lvl(rand_range(1, 5)), mode);
 }
 
