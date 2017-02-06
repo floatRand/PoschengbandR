@@ -63,6 +63,8 @@ static bool _alchemist_will_buy(obj_ptr obj);
 static bool _alchemist_create(obj_ptr obj, int mode);
 static bool _magic_will_buy(obj_ptr obj);
 static bool _magic_create(obj_ptr obj, int mode);
+static bool _black_market_will_buy(obj_ptr obj);
+static bool _black_market_create(obj_ptr obj, int mode);
 
 static _type_t _types[] = 
 {
@@ -241,6 +243,40 @@ static _type_t _types[] =
          { 22, "Ibeli the Illusionist",    30000, 110, RACE_SKELETON },
          { 23, "Heto the Necromancer",     30000, 110, RACE_YEEK },
          { 0 }}},
+
+    { SHOP_BLACK_MARKET, "Black Market", _black_market_will_buy, _black_market_create,
+        {{  1, "Gary Gygaz",               20000, 150, RACE_HALF_TROLL },
+         {  2, "Histor the Goblin",        20000, 150, RACE_SNOTLING },
+         {  3, "Quark the Ferengi",        30000, 150, RACE_DWARF },
+         {  4, "Topi the Fair(?)",         30000, 150, RACE_HUMAN },
+         {  5, "Vhassa the Dead",          20000, 150, RACE_ZOMBIE },
+         {  6, "Kyn the Treacherous",      20000, 150, RACE_VAMPIRE },
+         {  7, "Bubonicus",                30000, 150, RACE_BEASTMAN },
+         {  8, "Corpselight",              30000, 150, RACE_SPECTRE },
+         {  9, "Parrish the Bloodthirsty", 20000, 150, RACE_VAMPIRE },
+         { 10, "Vile",                     20000, 150, RACE_SKELETON },
+         { 11, "Prentice the Trusted",     30000, 150, RACE_SKELETON },
+         { 12, "Griella Humanslayer",      30000, 150, RACE_IMP },
+         { 13, "Angel",                    20000, 150, RACE_VAMPIRE },
+         { 14, "Flotsam the Bloated",      20000, 150, RACE_ZOMBIE },
+         { 15, "Nieval",                   30000, 150, RACE_VAMPIRE },
+         { 16, "Anastasia the Luminous",   30000, 150, RACE_SPECTRE },
+         { 17, "Charity the Necromancer",  20000, 150, RACE_DARK_ELF },
+         { 18, "Pugnacious the Pugilist",  20000, 150, RACE_SNOTLING },
+         { 19, "Footsore the Lucky",       30000, 150, RACE_BEASTMAN },
+         { 20, "Sidria Lighfingered",      30000, 150, RACE_HUMAN },
+         { 21, "Riatho the Juggler",       20000, 150, RACE_HOBBIT },
+         { 22, "Janaaka the Shifty",       20000, 150, RACE_GNOME },
+         { 23, "Cina the Rogue",           30000, 150, RACE_GNOME },
+         { 24, "Arunikki Greatclaw",       30000, 150, RACE_DRACONIAN },
+         { 25, "Chaeand the Poor",         20000, 150, RACE_HUMAN },
+         { 26, "Afardorf the Brigand",     20000, 150, RACE_BARBARIAN },
+         { 27, "Lathaxl the Greedy",       30000, 150, RACE_MIND_FLAYER },
+         { 28, "Falarewyn",                30000, 150, RACE_SPRITE },
+         { 29, "Vosur the Wrinkled",       20000, 150, RACE_NIBELUNG },
+         { 30, "Araord the Handsome",      20000, 150, RACE_AMBERITE },
+         { 31, "Theradfrid the Loser",     30000, 150, RACE_HUMAN },
+         { 32, "One-Legged Eroolo",        30000, 150, RACE_HALF_OGRE }}},
 
     { SHOP_NONE }
 };
@@ -796,6 +832,47 @@ static bool _magic_create(obj_ptr obj, int mode)
     else
         k_idx = _get_k_idx(_magic_stock_p, _mod_lvl(20));
     return _create(obj, k_idx, _mod_lvl(15), mode);
+}
+
+/************************************************************************
+ * The Black Market
+ ***********************************************************************/
+static bool _black_market_will_buy(obj_ptr obj)
+{
+    return _will_buy(obj);
+}
+
+static bool _black_market_stock_p(int k_idx)
+{
+    if (k_info[k_idx].gen_flags & OFG_INSTA_ART)
+        return FALSE;
+
+    if (k_info[k_idx].gen_flags & OFG_TOWN)
+        return FALSE;
+
+    return TRUE;
+}
+
+static bool _black_market_create(obj_ptr obj, int mode)
+{
+    int l1 = 25 + randint0(25);
+    int l2 = 25 + randint0(25);
+    int k_idx;
+
+    for (;;)
+    {
+        choose_obj_kind(0);
+        k_idx = _get_k_idx(get_obj_num_hook, _mod_lvl(l1));
+        if (_black_market_stock_p(k_idx)) break;
+    }
+    if (!_create(obj, k_idx, _mod_lvl(l2), mode)) return FALSE;
+    if (obj_value(obj) < 10) return FALSE;
+    if (object_is_nameless(obj) && !object_is_rare(obj) && object_is_wearable(obj))
+    {
+        if (obj->to_a <= 0 && obj->to_h <= 0 && obj->to_d <= 0)
+            return FALSE;
+    }
+    return TRUE;
 }
 
 /************************************************************************
