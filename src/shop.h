@@ -62,6 +62,7 @@ extern town_ptr towns_current_town(void);
 extern town_ptr towns_get_town(int which);
 extern void     towns_save(savefile_ptr file);
 extern void     towns_load(savefile_ptr file);
+extern void     towns_on_turn_overflow(int rollback_turns);
 
 extern shop_ptr town_get_shop(town_ptr town, int which);
 

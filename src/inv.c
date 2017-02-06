@@ -155,34 +155,6 @@ inv_ptr inv_filter_floor(obj_p p)
     return result;
 }
 
-/* Eventually, shops will be rewritten and this can disappear.
- * For now, it is useful for a couple of obj_prompt scenarios
- * like Inspect. We do not preserve slot structure. */
-inv_ptr inv_filter_home(obj_p p)
-{
-    inv_ptr     result = malloc(sizeof(inv_t));
-    store_type *st_ptr = &town[1].store[STORE_HOME];
-    int         i;
-
-    result->name = "Home";
-    result->type = INV_HOME;
-    result->max = 0;
-    result->flags = _FILTER;
-    result->objects = vec_alloc(NULL); /* shop owns the objects! */
-
-    vec_add(result->objects, NULL); /* slot 0 is invalid */
-
-    for (i = 0; i < st_ptr->stock_num; i++)
-    {
-        obj_ptr obj = &st_ptr->stock[i];
-        assert(obj);
-        if (!obj->k_idx) continue;
-        if (!_filter(obj, p)) continue;
-        vec_add(result->objects, obj);
-    }
-    return result;
-}
-
 void inv_free(inv_ptr inv)
 {
     if (inv)

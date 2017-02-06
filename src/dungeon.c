@@ -5839,7 +5839,7 @@ s32b turn_real(s32b hoge)
 
 void prevent_turn_overflow(void)
 {
-    int rollback_days, i, j;
+    int rollback_days;
     s32b rollback_turns;
 
     if (game_turn < game_turn_limit) return;
@@ -5856,25 +5856,7 @@ void prevent_turn_overflow(void)
     if (p_ptr->feeling_turn > rollback_turns) p_ptr->feeling_turn -= rollback_turns;
     else p_ptr->feeling_turn = 1;
 
-    for (i = 1; i < max_towns; i++)
-    {
-        for (j = 0; j < MAX_STORES; j++)
-        {
-            store_type *st_ptr = &town[i].store[j];
-
-            if (st_ptr->last_visit > -10L * TURNS_PER_TICK * STORE_TICKS)
-            {
-                st_ptr->last_visit -= rollback_turns;
-                if (st_ptr->last_visit < -10L * TURNS_PER_TICK * STORE_TICKS) st_ptr->last_visit = -10L * TURNS_PER_TICK * STORE_TICKS;
-            }
-
-            if (st_ptr->store_open)
-            {
-                st_ptr->store_open -= rollback_turns;
-                if (st_ptr->store_open < 1) st_ptr->store_open = 1;
-            }
-        }
-    }
+    towns_on_turn_overflow(rollback_turns);
 }
 
 

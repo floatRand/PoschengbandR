@@ -670,17 +670,6 @@ s16b mproc_max[MAX_MTIMED]; /* Number of monsters to be processed */
 
 
 /*
- * Maximum number of towns
- */
-u16b max_towns;
-
-/*
- * The towns [max_towns]
- */
-town_type *town;
-
-
-/*
  * The player's inventory [INVEN_TOTAL]
  */
 object_type *inventory;

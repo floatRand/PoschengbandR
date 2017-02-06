@@ -19,6 +19,11 @@ inv_ptr home_filter(obj_p p)
     return inv_filter(_home, p);
 }
 
+void home_for_each(obj_f f)
+{
+    inv_for_each(_home, f);
+}
+
 static void home_carry(obj_ptr obj)
 {
     if (obj->number)

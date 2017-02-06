@@ -1846,7 +1846,7 @@ cptr map_name(void)
     else if (p_ptr->inside_battle)
         return "Monster Arena";
     else if (!dun_level && p_ptr->town_num)
-        return town[p_ptr->town_num].name;
+        return town_name(p_ptr->town_num);
     else
         return d_name+d_info[dungeon_type].name;
 }
@@ -3247,9 +3247,8 @@ static void print_tomb(void)
  */
 static void show_info(void)
 {
-    int             i, j;
-    object_type        *o_ptr;
-    store_type        *st_ptr;
+    int             i;
+    object_type    *o_ptr;
 
     /* Hack -- Know everything in the inven/equip */
     for (i = 0; i < INVEN_TOTAL; i++)
@@ -3263,22 +3262,7 @@ static void show_info(void)
         obj_identify(o_ptr);
     }
 
-    for (i = 1; i < max_towns; i++)
-    {
-        st_ptr = &town[i].store[STORE_HOME];
-
-        /* Hack -- Know everything in the home */
-        for (j = 0; j < st_ptr->stock_num; j++)
-        {
-            o_ptr = &st_ptr->stock[j];
-
-            /* Skip non-objects */
-            if (!o_ptr->k_idx) continue;
-
-            /* Aware and Known */
-            obj_identify(o_ptr);
-        }
-    }
+    home_for_each(obj_identify);
 
     /* Hack -- Recalculate bonuses */
     p_ptr->update |= (PU_BONUS);

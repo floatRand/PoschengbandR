@@ -2053,7 +2053,7 @@ void shop_display_inv(doc_ptr doc, inv_ptr inv, slot_t top, int page_size)
 /************************************************************************
  * Town
  ***********************************************************************/
-static cptr _names[] = { "", "Outpost", "Telmora", "Morivant", "Angwil", "Zul", "Dungeon" };
+static cptr _names[] = { "Wilderness", "Outpost", "Telmora", "Morivant", "Angwil", "Zul", "Dungeon" };
 
 struct town_s
 {
@@ -2211,3 +2211,24 @@ void towns_load(savefile_ptr file)
     }
 }
 
+void towns_on_turn_overflow(int rollback_turns)
+{
+    int town_id;
+    for (town_id = TOWN_MIN; town_id <= TOWN_MAX; town_id++)
+    {
+        town_ptr town = int_map_find(_towns, town_id);
+        int_map_iter_ptr iter;
+        if (!town) continue;
+        for (iter = int_map_iter_alloc(town->shops);
+                int_map_iter_is_valid(iter);
+                int_map_iter_next(iter))
+        {
+            shop_ptr shop = int_map_iter_current(iter);
+            if (shop->last_visit.turn > rollback_turns)
+                shop->last_visit.turn -= rollback_turns;
+            else
+                shop->last_visit.turn = 0;
+        }
+        int_map_iter_free(iter);
+    }
+}

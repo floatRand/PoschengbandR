@@ -3187,7 +3187,7 @@ void do_cmd_feeling(void)
     /* No useful feeling in town */
     else if (p_ptr->town_num && !dun_level)
     {
-        if (!strcmp(town[p_ptr->town_num].name, "wilderness"))
+        if (!strcmp(town_name(p_ptr->town_num), "Wilderness"))
         {
             msg_print("Looks like a strange wilderness.");
         }
@@ -3411,8 +3411,6 @@ static int collect_monsters(int grp_cur, s16b mon_idx[], byte mode)
 
     if (grp_corpses)
     {
-        store_type *store_ptr = &town[1].store[STORE_HOME];
-
         available_corpses = int_map_alloc(NULL);
 
         /* In Pack */
@@ -3424,14 +3422,14 @@ static int collect_monsters(int grp_cur, s16b mon_idx[], byte mode)
             int_map_add(available_corpses, o_ptr->pval, NULL);
         }
 
-        /* At Home */
+        /* At Home
         for (i = 0; i < store_ptr->stock_num; i++)
         {
             object_type *o_ptr = &store_ptr->stock[i];
             if (!o_ptr->k_idx) continue;
             if (!object_is_(o_ptr, TV_CORPSE, SV_CORPSE)) continue;
             int_map_add(available_corpses, o_ptr->pval, NULL);
-        }
+        }*/
 
         /* Underfoot */
         if (in_bounds2(py, px))
@@ -7290,168 +7288,6 @@ static void do_cmd_knowledge_quests(void)
     C_KILL(quest_num, max_quests, int);
 }
 
-
-/*
- * List my home
- * Code snagged from store.c, and probably should be shared.
- */
-static void do_cmd_knowledge_home(void)
-{
-    int         w, h, i;
-    int         page_size, page_top = 0;
-    store_type *st_ptr = &town[1].store[STORE_HOME];
-    bool        done = FALSE;
-    bool        show_weights2 = show_weights;
-
-    Term_get_size(&w, &h);
-    Term_clear();
-
-    page_size = h - 12;
-
-    while (!done)
-    {
-        int row, cmd;
-        int page_num = 1 + page_top / page_size;
-        int max_width = show_weights2 ? 65 : 75;
-
-        clear_from(1);
-        put_str("Your Home", 3, 30);
-        put_str(format("Item Description (Page %d)", page_num), 5, 3);
-        if (show_weights2)
-            put_str("Weight", 5, 70);
-
-        row = 6;
-
-        /* Draw the Inventory */
-        for (i = 0; i < page_size; i++, row++)
-        {
-            object_type *o_ptr;
-            char         buf[255];
-            char         o_name[MAX_NLEN];
-            int          col = 3;
-
-            col = 3;
-
-            if (page_top + i >= st_ptr->stock_num) break;
-            o_ptr = &st_ptr->stock[page_top + i];
-
-            sprintf(buf, "%c) ", ((i > 25) ? toupper(I2A(i - 26)) : I2A(i)));
-            prt(buf, row, 0);
-            if (show_item_graph)
-            {
-                byte a = object_attr(o_ptr);
-                char c = object_char(o_ptr);
-
-                Term_queue_bigchar(col, row, a, c, 0, 0);
-                if (use_bigtile) col++;
-
-                col += 2;
-            }
-
-            object_desc(o_name, o_ptr, 0);
-            o_name[max_width] = '\0';
-            c_put_str(tval_to_attr[o_ptr->tval], o_name, row, col);
-            if (show_weights2)
-            {
-                int wgt = o_ptr->weight;
-                sprintf(buf, "%3d.%d lb", wgt / 10, wgt % 10);
-                put_str(buf, row, 68);
-
-            }
-        }
-
-        /* Commands */
-        row++;
-        prt(" ESC) Quit.", row, 0);
-        if (st_ptr->stock_num > page_size)
-        {
-            prt(" -) Previous page", row + 1, 0);
-            prt(" SPACE) Next page", row + 2, 0);
-        }
-        prt("x) eXamine an item", row, 27);
-        if (show_weights2)
-            prt("w) Hide Weights", row + 1, 27);
-        else
-            prt("w) Show Weights", row + 1, 27);
-
-        cmd = inkey_special(FALSE);
-
-        switch (cmd)
-        {
-        case ESCAPE:
-            done = TRUE;
-            break;
-
-        case 'w':
-            show_weights2 = show_weights2 ? FALSE : TRUE;
-            break;
-
-        case '-':
-            if (st_ptr->stock_num <= page_size)
-                msg_print("Entire inventory is shown.");
-            else
-            {
-                page_top -= page_size;
-                if (page_top < 0)
-                    page_top = ((st_ptr->stock_num - 1)/page_size)*page_size;
-            }
-            break;
-
-        case ' ':
-            if (st_ptr->stock_num <= page_size)
-                msg_print("Entire inventory is shown.");
-            else
-            {
-                page_top += page_size;
-                if (page_top >= st_ptr->stock_num)
-                    page_top = 0;
-            }
-            break;
-
-        case 'x':
-            if (st_ptr->stock_num <= 0)
-                msg_print("Your home is empty.");
-            else
-            {
-                int cmd2, which = -1;
-                prt("Which item do you want to examine? (* for All)", 0, 0);
-                cmd2 = inkey_special(FALSE);
-                prt("", 0, 0);
-                if (cmd2 == '*')
-                {
-                    doc_ptr doc = doc_alloc(80);
-                    for (i = 0; i < st_ptr->stock_num; i++, row++)
-                    {
-                        if (!object_is_weapon_armour_ammo(&st_ptr->stock[i]) && !object_is_known(&st_ptr->stock[i])) continue;
-                        obj_display_doc(&st_ptr->stock[i], doc);
-                        /*doc_newline(doc);*/
-                    }
-                    doc_display(doc, "Your Home", 0);
-                    doc_free(doc);
-                }
-                else
-                {
-                    if (islower(cmd2))
-                        which = A2I(cmd2);
-                    else if (isupper(cmd2))
-                        which = A2I(tolower(cmd2)) + 26;
-
-                    if (0 <= which && which < page_size && page_top + which < st_ptr->stock_num)
-                    {
-                        object_type *o_ptr = &st_ptr->stock[page_top + which];
-                        if (object_is_flavor(o_ptr) && !obj_is_identified(o_ptr))
-                            msg_print("You have no special knowledge about that item.");
-                        else
-                            obj_display(o_ptr);
-                    }
-                }
-            }
-            break;
-        }
-    }
-}
-
-
 /*
  * Check the status of "autopick"
  */
@@ -7537,7 +7373,6 @@ void do_cmd_knowledge(void)
         prt("(a) Artifacts", row++, col);
         prt("(o) Objects", row++, col);
         prt("(e) Egos", row++, col);
-        prt("(h) Home Inventory", row++, col);
         prt("(_) Auto Pick/Destroy", row++, col);
         row++;
 
@@ -7598,9 +7433,6 @@ void do_cmd_knowledge(void)
             break;
         case 'e':
             do_cmd_knowledge_egos();
-            break;
-        case 'h':
-            do_cmd_knowledge_home();
             break;
         case '_':
             do_cmd_knowledge_autopick();

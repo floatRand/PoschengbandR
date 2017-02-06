@@ -1128,16 +1128,8 @@ static errr rd_savefile_new_aux(savefile_ptr file)
     }
 
     {
-        u16b max_towns_load;
         u16b max_quests_load;
         byte max_rquests_load;
-
-        max_towns_load = savefile_read_u16b(file);
-        if (max_towns_load > max_towns)
-        {
-            note(format("Too many (%u) towns!", max_towns_load));
-            return (23);
-        }
 
         max_quests_load = savefile_read_u16b(file);
         max_rquests_load = savefile_read_byte(file);

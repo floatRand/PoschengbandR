@@ -1947,13 +1947,7 @@ void possessor_character_dump(doc_ptr doc)
             sprintf(lvl, "%3d", quest[p->d_lvl].level);
             break;
         case DUNGEON_TOWN:
-            /* Yikes!! Town names are not guaranteed to have ever been loaded! */
-            if (!strlen(town[p->d_lvl].name))
-            {
-                init_flags = INIT_SHOW_TEXT;
-                process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
-            }
-            sprintf(loc, "%s", town[p->d_lvl].name);
+            sprintf(loc, "%s", town_name(p->d_lvl));
             sprintf(lvl, "%s", "   ");
             break;
         default: /* DUNGEON_WILD is present in the pref file d_info.txt with the name: Wilderness */

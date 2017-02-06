@@ -1499,7 +1499,7 @@ static void prt_depth(void)
         else if (p_ptr->inside_battle)
             sprintf(buf, "%s", "Monster Arena");
         else if (p_ptr->town_num)
-            sprintf(buf, "%s", town[p_ptr->town_num].name);
+            sprintf(buf, "%s", town_name(p_ptr->town_num));
         else
             sprintf(buf, "Wilderness: L%d", base_level);
     }

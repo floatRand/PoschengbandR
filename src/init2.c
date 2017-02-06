@@ -694,57 +694,6 @@ static errr init_misc(void)
     return 0;
 }
 
-
-/*
- * Initialize town array
- */
-static errr init_towns(void)
-{
-    int i, j;
-
-    /*** Prepare the Towns ***/
-
-    /* Allocate the towns */
-    C_MAKE(town, max_towns, town_type);
-
-    for (i = 1; i < max_towns; i++)
-    {
-        /*** Prepare the Stores ***/
-
-        /* Allocate the stores */
-        C_MAKE(town[i].store, MAX_STORES, store_type);
-
-        /* Fill in each store */
-        for (j = 0; j < MAX_STORES; j++)
-        {
-            /* Access the store */
-            store_type *st_ptr = &town[i].store[j];
-
-            if ((i > 1) && (j == STORE_MUSEUM || j == STORE_HOME)) continue;
-
-            /* Assume full stock */
-            if (j == STORE_HOME)
-            {
-                st_ptr->stock_size = (STORE_INVEN_MAX * 10);
-            }
-            else if (j == STORE_MUSEUM)
-            {
-                st_ptr->stock_size = (STORE_INVEN_MAX * 50);
-            }
-            else
-            {
-                st_ptr->stock_size = STORE_INVEN_MAX;
-            }
-
-
-            /* Allocate the stock */
-            C_MAKE(st_ptr->stock, st_ptr->stock_size, object_type);
-        }
-    }
-
-    return 0;
-}
-
 /*
  * Initialize buildings
  */
@@ -1649,12 +1598,6 @@ void init_angband(void)
     note("[Initializing arrays... (wilderness)]");
 
     if (init_wilderness()) quit("Cannot initialize wilderness");
-
-
-    /* Initialize town array */
-    note("[Initializing arrays... (towns)]");
-
-    if (init_towns()) quit("Cannot initialize towns");
 
 
     /* Initialize building array */

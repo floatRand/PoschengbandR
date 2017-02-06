@@ -5119,14 +5119,8 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
     {
         if (tokenize(buf+2, 2, zz, 0) == 2)
         {
-            /* Maximum towns */
-            if (zz[0][0] == 'T')
-            {
-                max_towns = atoi(zz[1]);
-            }
-
             /* Maximum quests */
-            else if (zz[0][0] == 'Q')
+            if (zz[0][0] == 'Q')
             {
                 max_quests = atoi(zz[1]);
             }

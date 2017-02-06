@@ -1007,9 +1007,6 @@ static bool wr_savefile_new(savefile_ptr file)
     savefile_write_u16b(file, tmp16u);
     for (i = 0; i < tmp16u; i++) wr_xtra_art(file, i);
 
-    tmp16u = max_towns;
-    savefile_write_u16b(file, tmp16u);
-
     tmp16u = max_quests;
     savefile_write_u16b(file, tmp16u);
 
