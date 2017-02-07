@@ -80,7 +80,6 @@ extern byte adj_con_fix[];
 extern byte adj_con_mhp[];
 extern byte adj_chr_chm[];
 extern arena_type arena_info[MAX_ARENA_MONS + 2];
-extern owner_type owners[MAX_STORES][MAX_OWNERS];
 extern byte extract_energy[200];
 extern player_sex sex_info[MAX_SEXES];
 extern player_pact pact_info[WARLOCK_MAX];
@@ -1551,19 +1550,6 @@ extern bool polymorph_monster(int y, int x);
 extern bool dimension_door(int rng);
 extern bool summon_kin_player(int level, int y, int x, u32b mode);
 
-/* store.c */
-extern bool store_hack;
-/*extern bool combine_and_reorder_home(int store_num);
-extern void do_cmd_store(void);
-extern void store_shuffle(int which);
-enum { STORE_MAINT_CULL = 1, STORE_MAINT_NORMAL };
-extern void store_maint(int town_num, int store_num, int options);
-extern void store_init(int town_num, int store_num);
-extern int  store_calc_price_factor(int greed);
-extern int  store_calc_sell_price(int price, int factor);
-extern int  store_calc_purchase_price(int price, int factor);
-extern void move_to_black_market(object_type * o_ptr);
-extern void mass_produce(object_type *o_ptr);*/
 
 /* bldg.c */
 extern int get_bldg_member_code(cptr name);

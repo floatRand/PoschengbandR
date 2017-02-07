@@ -114,30 +114,9 @@
  */
 #define MAX_BLDG        32
 
-/*
- * Store types
- */
-#define STORE_GENERAL   0
-#define STORE_ARMOURY   1
-#define STORE_WEAPON    2
-#define STORE_TEMPLE    3
-#define STORE_ALCHEMIST 4
-#define STORE_MAGIC     5
-#define STORE_BLACK     6
-#define STORE_HOME      7
-#define STORE_BOOK      8
-#define STORE_MUSEUM    9
-#define STORE_JEWELER  10
-
-
 #define BUILDING_NON_MEMBER 0
 #define BUILDING_MEMBER     1
 #define BUILDING_OWNER      2
-
-/*
- * Total number of owners per store (see "store.c", etc)
- */
-#define MAX_OWNERS      32
 
 /*
  * Maximum number of player "sex" types (see "table.c", etc)
@@ -316,19 +295,6 @@
 #define SPECIAL_KEY_BUILDING 254
 #define SPECIAL_KEY_STORE    253
 #define SPECIAL_KEY_QUIT     252
-
-/*
- * Store constants
- */
-#define STORE_INVEN_MAX 24              /* Max number of discrete objs in inven */
-#define STORE_CHOICES   48              /* Number of items to choose stock from */
-#define STORE_OBJ_LEVEL 5               /* Magic Level for normal stores */
-#define STORE_TURNOVER  9               /* Normal shop turnover, per day */
-#define STORE_MIN_KEEP  6               /* Min slots to "always" keep full */
-#define STORE_MAX_KEEP  18              /* Max slots to "always" keep full */
-#define STORE_SHUFFLE   21              /* 1/Chance (per day) of an owner changing */
-#define STORE_TICKS     1000            /* Number of ticks between turnovers */
-
 
 /*
  * Random energy
