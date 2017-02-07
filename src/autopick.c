@@ -3682,35 +3682,21 @@ static bool insert_return_code(text_body_type *tb)
 /*
  * Choose an item and get auto-picker entry from it.
  */
-static object_type *choose_object(cptr q, cptr s)
-{
-    int item;
-
-    if (!get_item(&item, q, s, (USE_INVEN | USE_FLOOR | USE_EQUIP))) return NULL;
-
-    /* Get the item (in the pack) */
-    if (item >= 0) return &inventory[item];
-
-    /* Get the item (on the floor) */
-    else return &o_list[0 - item];
-}
-
-
-/*
- * Choose an item and get auto-picker entry from it.
- */
 static bool entry_from_choosed_object(autopick_type *entry)
 {
-    object_type *o_ptr;
-    cptr q, s;
+    obj_prompt_t prompt = {0};
 
-    /* Get an item */
-    q = "Enter which item? ";
-    s = "You have nothing to enter.";
-    o_ptr = choose_object(q, s);
-    if (!o_ptr) return FALSE;
+    prompt.prompt = "Enter which item?";
+    prompt.error = "You have nothing to enter.";
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
 
-    autopick_entry_from_object(entry, o_ptr);
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
+
+    autopick_entry_from_object(entry, prompt.obj);
     return TRUE;
 }
 
@@ -3721,16 +3707,19 @@ static bool entry_from_choosed_object(autopick_type *entry)
 static byte get_object_for_search(object_type **o_handle, cptr *search_strp)
 {
     char buf[MAX_NLEN+20];
-    object_type *o_ptr;
-    cptr q, s;
+    obj_prompt_t prompt = {0};
 
-    /* Get an item */
-    q = "Enter which item? ";
-    s = "You have nothing to enter.";
-    o_ptr = choose_object(q, s);
-    if (!o_ptr) return 0;
+    prompt.prompt = "Enter which item?";
+    prompt.error = "You have nothing to enter.";
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
 
-    *o_handle = o_ptr;
+    obj_prompt(&prompt);
+    if (!prompt.obj) return 0;
+
+    *o_handle = prompt.obj;
 
     z_string_free(*search_strp);
     object_desc(buf, *o_handle, (OD_NO_FLAVOR | OD_OMIT_PREFIX | OD_NO_PLURAL));
@@ -6386,7 +6375,8 @@ void do_cmd_edit_autopick(void)
     }
 
     /* Save the screen */
-    screen_save();
+    Term_clear();
+    /*screen_save(); is currently very broken ... */
 
     /* Process requests until done */
     while (!quit)
@@ -6472,8 +6462,10 @@ void do_cmd_edit_autopick(void)
         if (com_id) quit = do_editor_command(tb, com_id);
     } /* while (TRUE) */
 
-    /* Restore the screen */
-    screen_load();
+    /* Restore the screen
+    screen_load(); is currently very broken.*/
+    Term_clear();
+    do_cmd_redraw();
 
     /* Get the filename of preference */
     strcpy(buf, pickpref_filename(tb->filename_mode));

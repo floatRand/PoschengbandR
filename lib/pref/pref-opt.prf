@@ -16,7 +16,7 @@ X:always_pickup
 X:toggle_run_status
 X:carry_query_flag
 X:quick_messages
-Y:command_menu
+X:command_menu
 X:other_query_flag
 Y:use_old_target
 X:auto_target

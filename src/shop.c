@@ -1294,6 +1294,9 @@ static void _loop(_ui_context_ptr context)
             case 'x': _examine(context); break;
             case 'S': _shuffle_stock(context->shop); break;
             case 'R': _reserve(context); break;
+            case KTRL('O'):
+                if (p_ptr->wizard) _change_owner(context->shop);
+                break;
             case '?':
                 doc_display_help("context_shop.txt", NULL);
                 Term_clear_rect(ui_shop_msg_rect());
@@ -1697,6 +1700,12 @@ static void _sellout(shop_ptr shop)
                 pack_carry(obj);
                 stats_on_purchase(obj);
             }
+            if (shop->type->id == SHOP_BLACK_MARKET)
+                virtue_add(VIRTUE_JUSTICE, -1);
+
+            if (obj->tval == TV_BOTTLE)
+                virtue_add(VIRTUE_NATURE, -1);
+
             obj->number = 0;
             inv_remove(shop->inv, slot);
 
@@ -1705,12 +1714,6 @@ static void _sellout(shop_ptr shop)
             stats_on_gold_buying(price);
 
             p_ptr->redraw |= PR_GOLD;
-
-            if (shop->type->id == SHOP_BLACK_MARKET)
-                virtue_add(VIRTUE_JUSTICE, -1);
-
-            if (obj->tval == TV_BOTTLE)
-                virtue_add(VIRTUE_NATURE, -1);
         }
         else
         {

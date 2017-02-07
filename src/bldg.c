@@ -2657,11 +2657,43 @@ static bool _gamble_shop_artifact(void)
     return _gamble_shop_aux(&forge);
 }
 
+static obj_ptr _get_reforge_src(int max_power)
+{
+    char buf[255];
+    obj_prompt_t prompt = {0};
+
+    sprintf(buf, "Use what artifact for reforging (Max Power = %d)? ", max_power);
+    prompt.prompt = buf;
+    prompt.error = "You have no artifacts to reforge.";
+    prompt.filter = object_is_artifact;
+    prompt.where[0] = INV_PACK;
+    prompt.flags = INV_SHOW_VALUE;
+
+    obj_prompt(&prompt);
+    return prompt.obj;
+}
+
+static obj_ptr _get_reforge_dest(int max_power)
+{
+    char buf[255];
+    obj_prompt_t prompt = {0};
+
+    sprintf(buf, "Reforge which object (Max Power = %d)? ", max_power);
+    prompt.prompt = buf;
+    prompt.error = "You have nothing to reforge.";
+    prompt.filter = item_tester_hook_nameless_weapon_armour;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.flags = INV_SHOW_VALUE;
+
+    obj_prompt(&prompt);
+    return prompt.obj;
+}
+
 static bool _reforge_artifact(void)
 {
-    int src_idx, dest_idx, cost;
+    int  cost;
     char o_name[MAX_NLEN];
-    char buf[255];
     object_type *src, *dest;
     int f = MIN(200, p_ptr->fame);
     int src_max_power = f*250 + f*f*3;
@@ -2673,12 +2705,9 @@ static bool _reforge_artifact(void)
         return FALSE;
     }
 
-    item_tester_hook = object_is_artifact;
-    sprintf(buf, "Use what artifact for reforging (Max Power = %d)? ", src_max_power);
-    if (!get_item(&src_idx, buf, "You have no artifacts to reforge.", USE_INVEN | SHOW_VALUE))
-        return FALSE;
+    src = _get_reforge_src(src_max_power);
+    if (!src) return FALSE;
 
-    src = &inventory[src_idx];
     if (!object_is_artifact(src)) /* paranoia */
     {
         msg_print("You must choose an artifact for reforging.");
@@ -2715,12 +2744,8 @@ static bool _reforge_artifact(void)
     if (!get_check(format("Really use %s? (It will be destroyed!) ", o_name))) 
         return FALSE;
 
-    sprintf(buf, "Reforge which object (Max Power = %d)? ", dest_max_power);
-    item_tester_hook = item_tester_hook_nameless_weapon_armour;
-    if (!get_item(&dest_idx, buf, "You have nothing to reforge.", USE_EQUIP | USE_INVEN | SHOW_VALUE))
-        return FALSE;
-
-    dest = &inventory[dest_idx];
+    dest = _get_reforge_dest(dest_max_power);
+    if (!dest) return FALSE;
 
     if (dest->number > 1)
     {
@@ -2764,12 +2789,15 @@ static bool _reforge_artifact(void)
         return FALSE;
     }
 
-    inven_item_increase(src_idx, -1);
-    inven_item_describe(src_idx);
+    src->number = 0;
+    obj_release(src, OBJ_RELEASE_QUIET);
+    src = NULL;
+
     p_ptr->au -= cost;
     stats_on_gold_services(cost);
 
     msg_print("After several hours, you are presented your new artifact...");
+    game_turn += rand_range(5000, 15000);
 
     obj_identify_fully(dest);
 
@@ -2778,9 +2806,6 @@ static bool _reforge_artifact(void)
     handle_stuff();
 
     obj_display(dest);
-
-    inven_item_optimize(src_idx);
-
     return TRUE;
 }
 
@@ -2815,12 +2840,11 @@ static void _enchant_menu_fn(int cmd, int which, vptr cookie, variant *res)
 
 static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_guild)
 {
-    int         i, item;
-    bool        okay = FALSE;
-    object_type *o_ptr;
-    cptr        q, s;
-    int         maxenchant;
-    char        tmp_str[MAX_NLEN];
+    obj_prompt_t prompt = {0};
+    int          i;
+    bool         okay = FALSE;
+    int          maxenchant;
+    char         tmp_str[MAX_NLEN];
 
     if (cost == 0)
         cost = town_service_price(1500);
@@ -2834,13 +2858,15 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     clear_bldg(4, 18);
 
     /* Which Item? Client sets item_tester_hook! */
-    item_tester_no_ryoute = TRUE;
-    q = "Improve which item? ";
-    s = "You have nothing to improve.";
-    if (!get_item(&item, q, s, (USE_INVEN | USE_EQUIP))) return (FALSE);
-    o_ptr = &inventory[item];
+    prompt.prompt = "Improve which item?";
+    prompt.error = "You have nothing to improve.";
+    prompt.filter = item_tester_hook;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    if (o_ptr->tval == TV_ARROW || o_ptr->tval == TV_BOLT || o_ptr->tval == TV_SHOT)
+    if (prompt.obj->tval == TV_ARROW || prompt.obj->tval == TV_BOLT || prompt.obj->tval == TV_SHOT)
         maxenchant = (p_ptr->lev / 5);
     else if (is_guild)
         maxenchant = 5 + (p_ptr->lev / 5);
@@ -2858,7 +2884,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
                         "Amt      Cost", _enchant_menu_fn,
                         choices, 25 };
 
-        object_copy(&copy, o_ptr);
+        object_copy(&copy, prompt.obj);
         copy.curse_flags = 0;
         remove_flag(copy.flags, OF_AGGRAVATE);
         remove_flag(copy.flags, OF_NO_TELE);
@@ -2890,14 +2916,14 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
                     m += v - 10;
             }
 
-            if (object_is_artifact(o_ptr))
+            if (object_is_artifact(prompt.obj))
                 m *= 3;
 
             if (!ok) break;
 
-            if (o_ptr->tval == TV_ARROW || o_ptr->tval == TV_BOLT || o_ptr->tval == TV_SHOT)
+            if (prompt.obj->tval == TV_ARROW || prompt.obj->tval == TV_BOLT || prompt.obj->tval == TV_SHOT)
             {
-                choices[i].cost = (i+1)*cost*o_ptr->number;
+                choices[i].cost = (i+1)*cost*prompt.obj->number;
             }
             else
             {
@@ -2923,7 +2949,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
         }
         if (!i)
         {
-            object_desc(tmp_str, o_ptr, OD_COLOR_CODED);
+            object_desc(tmp_str, prompt.obj, OD_COLOR_CODED);
             msg_format("%^s can not be further improved.", tmp_str);
             return FALSE;
         }
@@ -2941,7 +2967,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     /* Check if the player has enough money */
     if (p_ptr->au < cost)
     {
-        object_desc(tmp_str, o_ptr, OD_NAME_ONLY | OD_COLOR_CODED);
+        object_desc(tmp_str, prompt.obj, OD_NAME_ONLY | OD_COLOR_CODED);
         msg_format("You do not have the gold to improve %s!", tmp_str);
         return FALSE;
     }
@@ -2949,9 +2975,9 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     /* Enchant to hit */
     for (i = 0; i < to_hit; i++)
     {
-        if (o_ptr->to_h < maxenchant)
+        if (prompt.obj->to_h < maxenchant)
         {
-            if (enchant(o_ptr, 1, (ENCH_TOHIT | ENCH_FORCE)))
+            if (enchant(prompt.obj, 1, (ENCH_TOHIT | ENCH_FORCE)))
                 okay = TRUE;
         }
     }
@@ -2959,9 +2985,9 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     /* Enchant to damage */
     for (i = 0; i < to_dam; i++)
     {
-        if (o_ptr->to_d < maxenchant)
+        if (prompt.obj->to_d < maxenchant)
         {
-            if (enchant(o_ptr, 1, (ENCH_TODAM | ENCH_FORCE)))
+            if (enchant(prompt.obj, 1, (ENCH_TODAM | ENCH_FORCE)))
                 okay = TRUE;
         }
     }
@@ -2969,9 +2995,9 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     /* Enchant to AC */
     for (i = 0; i < to_ac; i++)
     {
-        if (o_ptr->to_a < maxenchant)
+        if (prompt.obj->to_a < maxenchant)
         {
-            if (enchant(o_ptr, 1, (ENCH_TOAC | ENCH_FORCE)))
+            if (enchant(prompt.obj, 1, (ENCH_TOAC | ENCH_FORCE)))
                 okay = TRUE;
         }
     }
@@ -2984,12 +3010,12 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     }
     else
     {
-        object_desc(tmp_str, o_ptr, OD_NAME_AND_ENCHANT | OD_COLOR_CODED);
-        msg_format("Improved into %s for %d gold.", tmp_str, cost);
+        object_desc(tmp_str, prompt.obj, OD_NAME_AND_ENCHANT | OD_COLOR_CODED);
+        msg_format("Improved %s for %d gold.", tmp_str, cost);
 
         p_ptr->au -= cost;
         stats_on_gold_services(cost);
-        if (equip_is_valid_slot(item)) android_calc_exp();
+        if (prompt.obj->loc.where == INV_EQUIP) android_calc_exp();
         return (TRUE);
     }
 }
@@ -3477,7 +3503,7 @@ static void bldg_process_command(building_type *bldg, int i)
         enchant_item(bcost, 1, 1, 0, is_guild);
         break;
     case BACT_ENCHANT_BOW:
-        item_tester_tval = TV_BOW;
+        item_tester_hook = object_is_bow;
         enchant_item(bcost, 1, 1, 0, is_guild);
         break;
     case BACT_RECALL:

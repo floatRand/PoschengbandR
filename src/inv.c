@@ -570,6 +570,8 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, i
 
     if (flags & INV_SHOW_FAIL_RATES)
         xtra = 6;  /* " 98.7%" */
+    else if (flags & INV_SHOW_VALUE)
+        xtra = 7;
     else if (show_weights)
         xtra = 9;  /* " 123.0 lbs" */
 
@@ -635,6 +637,11 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, i
                     else
                         doc_printf(doc, "<tab:%d> %2d.%d%%", doc_width(doc) - xtra, fail/10, fail%10);
                 }
+            }
+            else if (flags & INV_SHOW_VALUE)
+            {
+                int value = obj_value(obj);
+                doc_printf(doc, "<tab:%d> %5d", doc_width(doc) - xtra, value);
             }
             else if (show_weights)
             {
