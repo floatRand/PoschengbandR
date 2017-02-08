@@ -1255,10 +1255,15 @@ void display_shooter_info(doc_ptr doc)
 
     /* Ammo */
     j = 0;
-    for (i = 0; i < INVEN_PACK; i++)
+    for (i = quiver_find_first(obj_can_shoot); i; i = quiver_find_next(obj_can_shoot, i))
     {
-        if (inventory[i].tval == p_ptr->shooter_info.tval_ammo)
-            _shooter_info_aux(doc, bow_ptr, &inventory[i], ++j);
+        obj_ptr ammo = quiver_obj(i);
+        _shooter_info_aux(doc, bow_ptr, ammo, ++j);
+    }
+    for (i = pack_find_first(obj_can_shoot); i; i = pack_find_next(obj_can_shoot, i))
+    {
+        obj_ptr ammo = pack_obj(i);
+        _shooter_info_aux(doc, bow_ptr, ammo, ++j);
     }
 
 }

@@ -98,10 +98,14 @@ void obj_release(obj_ptr obj, int options)
         break;
     case INV_EQUIP:
         p_ptr->window |= PW_EQUIP;
-        if (!quiet)
-            msg_format("You are no longer wearing %s.", name);
         if (obj->number <= 0)
+        {
+            if (!quiet)
+                msg_format("You are no longer wearing %s.", name);
             equip_remove(obj->loc.slot);
+        }
+        else if (!quiet)
+            msg_format("You are wearing %s.", name);
         break;
     case INV_PACK:
         p_ptr->window |= PW_INVEN;
