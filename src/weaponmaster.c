@@ -4,9 +4,9 @@
 
 #include "angband.h"
 
-int shoot_hack = SHOOT_NONE;
-int shoot_count = 0;
-int shoot_item = 0;
+int       shoot_hack = SHOOT_NONE;
+int       shoot_count = 0;
+obj_loc_t shoot_item = {0};
 
 #define _MAX_TARGETS 100
 
@@ -45,18 +45,6 @@ static bool _check_direct_shot(int tx, int ty)
 
 static bool _check_speciality_equip(void);
 static bool _check_speciality_aux(object_type *o_ptr);
-
-static int _find_ammo_slot(void)
-{
-    int i;
-
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        if (inventory[i].tval == p_ptr->shooter_info.tval_ammo) return i;
-    }
-    if (p_ptr->unlimited_quiver) return INVEN_UNLIMITED_QUIVER;
-    return -1;
-}
 
 static int _get_nearest_target_los(void)
 {
@@ -174,6 +162,25 @@ static bool _fire(int power)
     shoot_count = 0;
 
     return result;
+}
+
+static obj_ptr _get_ammo(bool allow_floor)
+{
+    obj_prompt_t prompt = {0};
+
+    if (allow_floor)
+        prompt.prompt = "Fire which ammo?";
+    else
+        prompt.prompt = "Choose ammo to use for this technique.";
+    prompt.error = "You have nothing to fire.";
+    prompt.filter = obj_can_shoot;
+    prompt.where[0] = INV_QUIVER;
+    prompt.where[1] = INV_PACK;
+    if (allow_floor)
+        prompt.where[2] = INV_FLOOR;
+
+    obj_prompt(&prompt);
+    return prompt.obj;
 }
 
 /* Weaponmasters have toggle based abilities */
@@ -416,16 +423,13 @@ static void _readied_shot_spell(int cmd, variant *res)
             _set_toggle(TOGGLE_NONE);
         else
         {
-            /* Prompt for ammo to use, but disallow choosing from the floor since
-               the player will be moving */
-            item_tester_tval = p_ptr->shooter_info.tval_ammo;
-            if (!get_item(&shoot_item,
-                          "Choose ammo for this technique.",
-                          "You have nothing to fire.", (USE_INVEN | USE_QUIVER)))
+            obj_ptr ammo = _get_ammo(FALSE);
+            if (!ammo)
             {
                 flush();
                 return;
             }
+            shoot_item = ammo->loc;
             _set_toggle(TOGGLE_READIED_SHOT);
         }
         var_set_bool(res, TRUE);
@@ -2108,15 +2112,13 @@ static void _greater_many_shot_spell(int cmd, variant *res)
         }
         else
         {
-            int i, item;
+            int i;
             int tgts[_MAX_TARGETS];
             int ct = _get_greater_many_shot_targets(tgts, _MAX_TARGETS);
-            object_type *bow = equip_obj(p_ptr->shooter_info.slot);
+            obj_ptr bow = equip_obj(p_ptr->shooter_info.slot);
+            obj_ptr ammo = _get_ammo(TRUE);
 
-            item_tester_tval = p_ptr->shooter_info.tval_ammo;
-            if (!get_item(&item,
-                          "Fire which ammo? ",
-                          "You have nothing to fire.", (USE_INVEN | USE_QUIVER)))
+            if (!ammo)
             {
                 flush();
                 return;
@@ -2130,9 +2132,10 @@ static void _greater_many_shot_spell(int cmd, variant *res)
                 int tx = m_list[tgt].fx;
                 int ty = m_list[tgt].fy;
 
-                do_cmd_fire_aux2(item, bow, px, py, tx, ty);
+                do_cmd_fire_aux2(bow, ammo, px, py, tx, ty);
             }
 
+            obj_release(ammo, 0);
             shoot_hack = SHOOT_NONE;
             var_set_bool(res, TRUE);
         }
@@ -2162,15 +2165,13 @@ static void _many_shot_spell(int cmd, variant *res)
         }
         else
         {
-            int i, item;
+            int i;
             int tgts[_MAX_TARGETS];
             int ct = _get_many_shot_targets(tgts, _MAX_TARGETS);
-            object_type *bow = equip_obj(p_ptr->shooter_info.slot);
+            obj_ptr bow = equip_obj(p_ptr->shooter_info.slot);
+            obj_ptr ammo = _get_ammo(TRUE);
 
-            item_tester_tval = p_ptr->shooter_info.tval_ammo;
-            if (!get_item(&item,
-                          "Fire which ammo? ",
-                          "You have nothing to fire.", (USE_INVEN | USE_QUIVER)))
+            if (!ammo)
             {
                 flush();
                 return;
@@ -2184,9 +2185,10 @@ static void _many_shot_spell(int cmd, variant *res)
                 int tx = m_list[tgt].fx;
                 int ty = m_list[tgt].fy;
 
-                do_cmd_fire_aux2(item, bow, px, py, tx, ty);
+                do_cmd_fire_aux2(bow, ammo, px, py, tx, ty);
             }
 
+            obj_release(ammo, 0);
             shoot_hack = SHOOT_NONE;
             var_set_bool(res, TRUE);
         }
@@ -2234,16 +2236,13 @@ static void _shot_on_the_run_spell(int cmd, variant *res)
             _set_toggle(TOGGLE_NONE);
         else
         {
-            /* Prompt for ammo to use, but disallow choosing from the floor since
-               the player will be moving */
-            item_tester_tval = p_ptr->shooter_info.tval_ammo;
-            if (!get_item(&shoot_item,
-                          "Choose ammo for this technique.",
-                          "You have nothing to fire.", (USE_INVEN | USE_QUIVER)))
+            obj_ptr ammo = _get_ammo(FALSE);
+            if (!ammo)
             {
                 flush();
                 return;
             }
+            shoot_item = ammo->loc;
             _set_toggle(TOGGLE_SHOT_ON_THE_RUN);
             /* _move_player() will handle the gritty details */
         }
@@ -4112,12 +4111,37 @@ static void _process_player(void)
     }
 }
 
+static obj_ptr _relocate_ammo(obj_loc_t loc)
+{
+    obj_ptr ammo = NULL;
+    if (loc.where == INV_QUIVER && loc.slot)
+        ammo = quiver_obj(loc.slot);
+    else if (loc.where == INV_PACK && loc.slot)
+        ammo = pack_obj(loc.slot);
+    if (ammo && obj_can_shoot(ammo))
+        return ammo;
+    return NULL;
+}
+
+static obj_ptr _find_ammo(void)
+{
+    slot_t slot = quiver_find_first(obj_can_shoot);
+    if (slot)
+        return quiver_obj(slot);
+    slot = pack_find_first(obj_can_shoot);
+    if (slot)
+        return pack_obj(slot);
+    /* if (p_ptr->unlimited_quiver) ... */
+    return NULL;
+}
+
 static void _move_player(void)
 {
     if (_get_toggle() == TOGGLE_SHOT_ON_THE_RUN)
     {
         int idx = -1;
         int num_shots = 1 + p_ptr->shooter_info.num_fire / 400;
+        obj_ptr ammo;
         int i;
 
         /* Paranoia:  Did the player remove their sling? */
@@ -4127,25 +4151,31 @@ static void _move_player(void)
             return;
         }
 
+        ammo = _relocate_ammo(shoot_item);
+        if (!ammo)
+            ammo = _find_ammo();
+        if (!ammo)
+        {
+            msg_print("You are out of ammo.");
+            _set_toggle(TOGGLE_NONE);
+            return;
+        }
+
         for (i = 0; i < num_shots; i++)
         {
             /* End the technique when the ammo runs out.  Note that "return ammo"
                might not consume the current shot. Note that we will intentionally spill
-               over into the next stack of shots, provided they are legal for this shooter. */
-            if (shoot_item != INVEN_UNLIMITED_QUIVER)
+               over into the next stack of shots, provided they are legal for this shooter. 
+            if (shoot_item != INVEN_UNLIMITED_QUIVER)??? */
+            if (!ammo->number)
             {
-                if (inventory[shoot_item].tval != p_ptr->shooter_info.tval_ammo)
+                obj_release(ammo, 0);
+                ammo = _find_ammo();
+                if (!ammo)
                 {
-                    /* Ugh, with this technique, the ammo slot is constantly moving thanks
-                       to pseudo-id/autodestroyer or unstacking and stacking of staves.
-                       Just try to find usable ammo should this occur */
-                    shoot_item = _find_ammo_slot();
-                    if (shoot_item < 0)
-                    {
-                        msg_print("Your ammo has run out. Time to reload!");
-                        _set_toggle(TOGGLE_NONE);
-                        return;
-                    }
+                    msg_print("Your ammo has run out. Time to reload!");
+                    _set_toggle(TOGGLE_NONE);
+                    return;
                 }
             }
 
@@ -4153,19 +4183,20 @@ static void _move_player(void)
             idx = _get_nearest_target_los();
             if (idx > 0)
             {
-                int tx, ty;
-                object_type *bow = equip_obj(p_ptr->shooter_info.slot);
+                int     tx, ty;
+                obj_ptr bow = equip_obj(p_ptr->shooter_info.slot);
 
                 if (bow)
                 {
                     tx = m_list[idx].fx;
                     ty = m_list[idx].fy;
                     shoot_hack = SHOOT_RUN;
-                    do_cmd_fire_aux2(shoot_item, bow, px, py, tx, ty);
+                    do_cmd_fire_aux2(bow, ammo, px, py, tx, ty);
                     shoot_hack = SHOOT_NONE;
                 }
             }
         }
+        obj_release(ammo, OBJ_RELEASE_QUIET);
     }
     if (p_ptr->psubclass == WEAPONMASTER_POLEARMS)
     {
@@ -4419,12 +4450,29 @@ void weaponmaster_do_readied_shot(monster_type *m_ptr)
     {
         int tx = m_ptr->fx;
         int ty = m_ptr->fy;
-        object_type *bow = equip_obj(p_ptr->shooter_info.slot);
+        obj_ptr bow = equip_obj(p_ptr->shooter_info.slot);
 
         if (bow)
         {
+            obj_ptr ammo = _relocate_ammo(shoot_item);
+            /* Probably, the player should ready another? Also, 
+             * do_cmd_fire should clear the toggle? There is no
+             * game concept of a "loaded arrow", but ideally, the
+             * object would be copied out at time of casting and
+             * stored someplace else ... then do_cmd_fire would simply
+             * use the loaded arrow (rather than prompting) with
+             * less energy ... but that seems too complicated to implement.
+            if (!ammo)
+                ammo = _find_ammo();*/
+            if (!ammo)
+            {
+                msg_print("The ammo you readied no longer exists!");
+                _set_toggle(TOGGLE_NONE);
+                return;
+            }
             shoot_hack = SHOOT_RETALIATE;
-            do_cmd_fire_aux2(shoot_item, bow, px, py, tx, ty);
+            do_cmd_fire_aux2(bow, ammo, px, py, tx, ty);
+            obj_release(ammo, 0);
             shoot_hack = SHOOT_NONE;
         }
         /* Force the player to ready another arrow ... */

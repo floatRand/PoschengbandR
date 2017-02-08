@@ -747,8 +747,8 @@ extern void do_cmd_get(void);
 extern void do_cmd_run(void);
 extern void do_cmd_rest(void);
 extern bool do_cmd_fire(void);
-extern bool do_cmd_fire_aux1(int item, object_type *j_ptr); /* ammo already chosen */
-extern void do_cmd_fire_aux2(int item, object_type *j_ptr, int sx, int sy, int tx, int ty); /* ammo and target already chosen */
+extern bool do_cmd_fire_aux1(obj_ptr bow, obj_ptr arrows);
+extern void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int ty);
 extern void do_cmd_throw(void);
 extern bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken);
 extern void do_cmd_travel(void);
@@ -2644,7 +2644,6 @@ extern void weaponmaster_do_wild_blade(void);
 extern void weaponmaster_do_readied_shot(monster_type *m_ptr);
 extern int shoot_hack;
 extern int shoot_count;
-extern int shoot_item;
 extern cptr weaponmaster_speciality_name(int psubclass);
 
 /* spoilers.c */

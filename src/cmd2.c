@@ -3088,7 +3088,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
  * Note that Bows of "Extra Shots" give an extra shot.
  */
 #define SIGN(x) ((x) > 0 ? 1 : ((x) < 0 ? -1: 0))
-bool do_cmd_fire_aux1(int item, object_type *bow)
+bool do_cmd_fire_aux1(obj_ptr bow, obj_ptr arrows)
 {
     int dir;
     int tdis, tx, ty;
@@ -3154,73 +3154,43 @@ bool do_cmd_fire_aux1(int item, object_type *bow)
         return FALSE;
     }
 
-    do_cmd_fire_aux2(item, bow, px, py, tx, ty);
-
+    do_cmd_fire_aux2(bow, arrows, px, py, tx, ty);
+    obj_release(arrows, OBJ_RELEASE_QUIET);
     return TRUE;
 }
-void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty)
+void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int ty)
 {
-    int i, j, y, x, ny, nx, prev_y, prev_x, dd;
-    int tdam_base, tdis, thits, tmul;
-    int bonus, chance;
-    int cur_dis, visible;
+    int  i, break_chance, y, x, ny, nx, prev_y, prev_x, dd;
+    int  tdis, thits, tmul;
+    int  bonus, chance;
+    int  cur_dis, visible;
     bool no_energy = FALSE;
-    int num_shots = 1;
-
-    object_type forge, forge2;
-    object_type *q_ptr;
-
-    object_type *o_ptr;
-
+    int  num_shots = 1;
     bool hit_body = FALSE;
     bool return_ammo = FALSE;
-
     char o_name[MAX_NLEN];
-
-    u16b path_g[512];    /* For calcuration of path length */
-    int flgs = PROJECT_PATH | PROJECT_THRU;
-
-    int msec = delay_factor * delay_factor * delay_factor;
-
+    u16b path_g[512];
+    int  flgs = PROJECT_PATH | PROJECT_THRU;
+    int  msec = delay_factor * delay_factor * delay_factor;
     bool stick_to = FALSE;
 
-    /* Access the item (if in the pack) */
-    if (item >= 0)
-    {
-        if (item == INVEN_UNLIMITED_QUIVER)
-        {
-            int k_idx = lookup_kind(p_ptr->shooter_info.tval_ammo, SV_AMMO_NORMAL);
-            object_prep(&forge2, k_idx);
-            o_ptr = &forge2;
-        }
-        else
-            o_ptr = &inventory[item];
-    }
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-    /* Sniper - Cannot shot a single arrow twice */
-    if ((snipe_type == SP_DOUBLE) && (o_ptr->number < 2)) snipe_type = SP_NONE;
+    /* Sniper - Cannot shoot a single arrow twice */
+    if ((snipe_type == SP_DOUBLE) && (arrows->number < 2)) snipe_type = SP_NONE;
     if (snipe_type == SP_DOUBLE) num_shots = 2;
 
     /* Describe the object */
-    object_desc(o_name, o_ptr, OD_OMIT_PREFIX | OD_NO_PLURAL | OD_OMIT_INSCRIPTION);
+    object_desc(o_name, arrows, OD_OMIT_PREFIX | OD_NO_PLURAL | OD_OMIT_INSCRIPTION);
 
     /* Use the proper number of shots */
     thits = p_ptr->shooter_info.num_fire;
 
     /* Base damage from thrown object plus launcher bonus */
-    dd = o_ptr->dd;
+    dd = arrows->dd;
     if (p_ptr->big_shot)
         dd *= 2;
-    tdam_base = damroll(dd, o_ptr->ds) + o_ptr->to_d + bow->to_d;
-    if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
-        tdam_base += 1 + p_ptr->lev/10;
 
     /* Actually "fire" the object */
-    bonus = (p_ptr->shooter_info.to_h + o_ptr->to_h + bow->to_h);
+    bonus = (p_ptr->shooter_info.to_h + arrows->to_h + bow->to_h);
 
     switch (shoot_hack)
     {
@@ -3287,15 +3257,8 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
     else
         chance = p_ptr->skills.thb + ((skills_bow_current(bow->sval) - WEAPON_EXP_MASTER/2) / 200 + bonus) * BTH_PLUS_ADJ;
 
-    if (!no_energy)
-        energy_use = bow_energy(bow->sval);
-
     /* Calculate the Multiplier */
     tmul = bow_mult(bow);
-
-    /* Boost the damage */
-    tdam_base *= tmul;
-    tdam_base /= 100;
 
     /* Base range */
     tdis = bow_range(bow);
@@ -3305,13 +3268,13 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
     if (shoot_hack == SHOOT_DISINTEGRATE)
         flgs |= PROJECT_DISI;
 
-    tdis = project_path(path_g, project_length, sy, sx, ty, tx, flgs) - 1;
+    tdis = project_path(path_g, project_length, py, px, ty, tx, flgs) - 1;
 
     project_length = 0; /* reset to default */
 
     /* Take a (partial) turn */
     if (!no_energy)
-        energy_use = (energy_use / thits);
+        energy_use = (bow_energy(bow->sval) / thits);
 
     is_fired = TRUE;
 
@@ -3321,56 +3284,30 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
     /* Sniper - Repeat shooting when double shots */
     for (i = 0; i < num_shots; i++)
     {
+        obj_t arrow;
+
         /* Make sure there is ammo left over for this shot */
-        if (item >= 0 && item != INVEN_UNLIMITED_QUIVER)
+        if (!arrows->number)
         {
-            if (inventory[item].tval != p_ptr->shooter_info.tval_ammo)
-            {
-                msg_print("Your ammo has run out. Time to reload!");
-                break;
-            }
+            msg_print("Your ammo has run out. Time to reload!");
+            break;
         }
 
         /* Start at the source */
         y = sy;
         x = sx;
 
-        /* Weaponmaster power:  Ammo is not consumed */
-        if ( (p_ptr->return_ammo || o_ptr->name2 == EGO_AMMO_RETURNING)
+        /* Weaponmaster power: Ammo is not consumed */
+        if ( (p_ptr->return_ammo || arrows->name2 == EGO_AMMO_RETURNING)
           && randint1(100) <= 50 + p_ptr->lev/2 )
         {
             return_ammo = TRUE;
         }
 
-        /* Get local object */
-        q_ptr = &forge;
-
-        /* Obtain a local object */
-        object_copy(q_ptr, o_ptr);
-
-        /* Single object */
-        q_ptr->number = 1;
-
-        /* Reduce and describe inventory */
-        if (return_ammo)
-        {
-        }
-        else if (item >= 0)
-        {
-            if (item != INVEN_UNLIMITED_QUIVER)
-            {
-                inven_item_increase(item, -1);
-                inven_item_describe(item);
-                inven_item_optimize(item);
-            }
-        }
-
-        /* Reduce and describe floor item */
-        else
-        {
-            floor_item_increase(0 - item, -1);
-            floor_item_optimize(0 - item);
-        }
+        arrow = *arrows;
+        arrow.number = 1;
+        if (!return_ammo)
+            arrows->number--;
 
         /* Sound */
         sound(SOUND_SHOOT);
@@ -3447,8 +3384,8 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
             /* The player can see the (on screen) missile */
             if (panel_contains(ny, nx) && player_can_see_bold(ny, nx))
             {
-                char c = object_char(q_ptr);
-                byte a = object_attr(q_ptr);
+                char c = object_char(&arrow);
+                byte a = object_attr(&arrow);
 
                 /* Draw, Hilite, Fresh, Pause, Erase */
                 print_rel(c, a, ny, nx);
@@ -3572,8 +3509,15 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                 if (hit)
                 {
                     bool fear = FALSE;
-                    int tdam = tdam_base;
+                    int  tdam;
                     bool ambush = FALSE;
+
+                    tdam = damroll(dd, arrow.ds) + arrow.to_d + bow->to_d;
+                    if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
+                        tdam += 1 + p_ptr->lev/10;
+
+                    tdam *= tmul;
+                    tdam /= 100;
 
                     if (MON_CSLEEP(m_ptr) && m_ptr->ml && !p_ptr->confused && !p_ptr->image && !p_ptr->stun)
                     {
@@ -3636,12 +3580,12 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                     {
                         critical_t crit = {0};
                         if (shoot_hack != SHOOT_SHATTER && shoot_hack != SHOOT_ELEMENTAL)
-                            tdam = tot_dam_aux_shot(q_ptr, tdam, m_ptr);
+                            tdam = tot_dam_aux_shot(&arrow, tdam, m_ptr);
 
                         if (ambush)
                             tdam *= 2;
 
-                        crit = critical_shot(q_ptr->weight, q_ptr->to_h);
+                        crit = critical_shot(arrow.weight, arrow.to_h);
                         if (crit.desc)
                         {
                             tdam = tdam * crit.mul/100 + crit.to_d;
@@ -3763,7 +3707,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                            after hurting/angering the monster since Cupid's Arrow
                            might charm the target, while anger_monster() would set
                            it back to being hostile. */
-                        if (object_is_fixed_artifact(q_ptr))
+                        if (object_is_fixed_artifact(&arrow))
                         {
                             char m_name[80];
                             monster_desc(m_name, m_ptr, 0);
@@ -3774,7 +3718,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                                having the arrow stick is highly annoying since
                                you can't command your pets to drop objects they
                                are carrying. */
-                            if (q_ptr->name1 == ART_CUPIDS_ARROW && !(r_ptr->flags1 & RF1_UNIQUE))
+                            if (arrow.name1 == ART_CUPIDS_ARROW && !(r_ptr->flags1 & RF1_UNIQUE))
                             {
                                 if (!mon_save_p(m_ptr->r_idx, A_CHR))
                                 {
@@ -3906,7 +3850,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                             {
                                 tx = x + 99 * ddx[dir];
                                 ty = y + 99 * ddy[dir];
-                                do_cmd_fire_aux2(item, bow, x, y, tx, ty);
+                                do_cmd_fire_aux2(bow, arrows, x, y, tx, ty);
                                 return;
                             }
                         }
@@ -3919,15 +3863,15 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
         }
 
         /* Chance of breakage (during attacks) */
-        j = (hit_body ? breakage_chance(q_ptr) : 0);
-        if (shoot_hack == SHOOT_DISINTEGRATE) j = 100;
+        break_chance = (hit_body ? breakage_chance(&arrow) : 0);
+        if (shoot_hack == SHOOT_DISINTEGRATE) break_chance = 100;
 
-        if (item == INVEN_UNLIMITED_QUIVER)
+        /*if (item == INVEN_UNLIMITED_QUIVER)
         {
             if (disturb_minor)
                 msg_print("Your quiver seems endless.");
         }
-        else if (return_ammo)
+        else*/ if (return_ammo)
         {
             if (disturb_minor)
                 msg_format("The %s returns to your pack.", o_name);
@@ -3937,19 +3881,20 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
             int m_idx = cave[y][x].m_idx;
             monster_type *m_ptr = &m_list[m_idx];
             int o_idx = o_pop();
+            obj_ptr o_ptr;
 
             if (!o_idx)
             {
-                msg_format("The %s have gone to somewhere.", o_name);
-                if (object_is_fixed_artifact(q_ptr))
-                    a_info[q_ptr->name1].generated = FALSE;
-                if (random_artifacts && q_ptr->name3)
-                    a_info[q_ptr->name3].generated = FALSE;
+                msg_format("The %s has gone somewhere else.", o_name);
+                if (object_is_fixed_artifact(&arrow))
+                    a_info[arrow.name1].generated = FALSE;
+                if (random_artifacts && arrow.name3)
+                    a_info[arrow.name3].generated = FALSE;
                 return;
             }
 
             o_ptr = &o_list[o_idx];
-            object_copy(o_ptr, q_ptr);
+            *o_ptr = arrow;
 
             o_ptr->marked &= (OM_TOUCHED | OM_COUNTED | OM_EFFECT_COUNTED | OM_EGO_COUNTED | OM_ART_COUNTED);
             o_ptr->loc.where = INV_FLOOR;
@@ -3962,12 +3907,12 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
         else if (cave_have_flag_bold(y, x, FF_PROJECT))
         {
             /* Drop (or break) near that location */
-            (void)drop_near(q_ptr, j, y, x);
+            drop_near(&arrow, break_chance, y, x);
         }
         else
         {
             /* Drop (or break) near that location */
-            (void)drop_near(q_ptr, j, prev_y, prev_x);
+            drop_near(&arrow, break_chance, prev_y, prev_x);
         }
 
     /* Sniper - Repeat shooting when double shots */
@@ -3980,11 +3925,10 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
 
 bool do_cmd_fire(void)
 {
-    bool result = FALSE;
-    int item;
-    int slot = equip_find_first(object_is_bow);
-    object_type *bow = NULL;
-    cptr q, s;
+    bool         result = FALSE;
+    obj_prompt_t prompt = {0};
+    int          slot = equip_find_first(object_is_bow);
+    obj_ptr      bow = NULL;
 
     if (!slot)
     {
@@ -4019,26 +3963,26 @@ bool do_cmd_fire(void)
     if (p_ptr->special_defense & KATA_MUSOU)
         set_action(ACTION_NONE);
 
-    item_tester_tval = p_ptr->shooter_info.tval_ammo;
-    q = "Fire which item? ";
-    s = "You have nothing to fire.";
-    if (!get_item(&item, q, s, (USE_INVEN | USE_FLOOR | USE_QUIVER)))
-    {
-        flush();
-        return FALSE;
-    }
+    prompt.prompt = "Fire which item?";
+    prompt.error = "You have nothing to fire.";
+    prompt.filter = obj_can_shoot;
+    prompt.where[0] = INV_QUIVER;
+    prompt.where[1] = INV_PACK;
+    prompt.where[2] = INV_FLOOR;
 
-    result = do_cmd_fire_aux1(item, bow);
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    if (p_ptr->pclass == CLASS_SNIPER)
+    result = do_cmd_fire_aux1(bow, prompt.obj);
+    if (result && p_ptr->pclass == CLASS_SNIPER)
     {
         if (snipe_type == SP_AWAY)
             teleport_player(10 + (p_ptr->concent * 2), 0L);
         if (snipe_type == SP_FINAL)
         {
             msg_print("You experience a powerful recoil!");
-            (void)set_slow(p_ptr->slow + randint0(7) + 7, FALSE);
-            (void)set_stun(p_ptr->stun + randint1(25), FALSE);
+            set_slow(p_ptr->slow + randint0(7) + 7, FALSE);
+            set_stun(p_ptr->stun + randint1(25), FALSE);
         }
     }
 
