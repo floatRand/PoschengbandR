@@ -3263,6 +3263,7 @@ static void show_info(void)
     }
 
     home_for_each(obj_identify);
+    home_optimize();
 
     /* Hack -- Recalculate bonuses */
     p_ptr->update |= (PU_BONUS);

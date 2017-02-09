@@ -24,6 +24,11 @@ void home_for_each(obj_f f)
     inv_for_each(_home, f);
 }
 
+void home_optimize(void)
+{
+    inv_optimize(_home);
+}
+
 static void home_carry(obj_ptr obj)
 {
     if (obj->number)

@@ -742,6 +742,7 @@ void equip_takeoff(slot_t slot)
 
     if (obj)
     {
+        if (!_unwield_verify(obj)) return;
         _unwield(obj, FALSE);
         _unwield_after();
     }
