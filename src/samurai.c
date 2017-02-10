@@ -72,7 +72,7 @@ cptr do_hissatsu_spell(int spell, int mode)
         {
             py_throw_t context = {0};
             context.type = THROW_BOOMERANG;
-            context.back_chance = 20;
+            context.back_chance = 24 + randint1(5);
             if (!py_throw(&context)) return NULL;
         }
         break;

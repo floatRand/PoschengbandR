@@ -41,7 +41,7 @@ bool    fail_catch;/* BOOMERANG: if (back_chance <= 37) ... */
 
 /* Hooks for Customization */
 int   (*mod_damage_f)(py_throw_ptr context, int dam);
-void  (*after_hit_f)(py_throw_ptr context, mon_ptr mon); /* e.g. confuse or stun effects */
+void  (*after_hit_f)(py_throw_ptr context, int m_idx); /* e.g. confuse or stun effects */
 };
 
 extern bool py_throw(py_throw_ptr context);

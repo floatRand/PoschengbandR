@@ -592,348 +592,68 @@ static void _smash_ground_spell(int cmd, variant *res)
     }
 }
 
-/***** THROW WEAPON SPELL **********/
-typedef struct {
-    int item;
-    object_type *o_ptr;
-    int mult;
-    int tdis;
-    int tx;
-    int ty;
-    bool come_back;
-    bool fail_catch;
-} _club_toss_info;
-static void _club_toss_imp(_club_toss_info * info);
-
-static bool _club_toss(int hand)
+static void _toss_hit_mon(py_throw_ptr context, int m_idx)
 {
-    int dir;
-    _club_toss_info info;
-    int back_chance;
+    monster_type *m_ptr = &m_list[m_idx];
+    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    char          m_name[80];
+    int           odds = 5;
 
-    /* Setup info for the toss */
-    info.item = p_ptr->weapon_info[hand].slot;
-    info.o_ptr = equip_obj(p_ptr->weapon_info[hand].slot);
-
-    /* Toss mechanics stolen from Samurai Boomerang ... see do_cmd_throw_aux() */
-    back_chance = randint1(30)+20+((int)(adj_dex_th[p_ptr->stat_ind[A_DEX]]) - 128);
-    back_chance += 4+randint1(5);
-
-    info.come_back = FALSE;
-    info.fail_catch = FALSE;
-    if (back_chance > 30 && !one_in_(100))
+    monster_desc(m_name, m_ptr, 0);
+    if (one_in_(odds))
     {
-        info.come_back = TRUE;
-        if (p_ptr->blind || p_ptr->image || p_ptr->confused || one_in_(100))
-            info.fail_catch = TRUE;
-        else if (back_chance <= 37)
-            info.fail_catch = TRUE;
-    }
-
-    if (!_check_speciality_aux(info.o_ptr)) return FALSE;
-    if (object_is_cursed(info.o_ptr))
-    {
-        msg_print("Hmmm, it seems to be cursed.");
-        return FALSE;
-    }
-
-    /* Pick a target */
-    info.mult = 1 + NUM_BLOWS(hand)/100;
-    if (p_ptr->mighty_throw) info.mult++;
-    {
-        int mul, div;
-        mul = 10 + 2 * (info.mult - 1);
-        div = (info.o_ptr->weight > 10) ? info.o_ptr->weight : 10;
-        div /= 2;
-        info.tdis = (adj_str_blow[p_ptr->stat_ind[A_STR]] + 20) * mul / div;
-        if (info.tdis > mul) info.tdis = mul;
-
-        project_length = info.tdis + 1;
-        if (!get_fire_dir(&dir)) return FALSE;
-
-        info.tx = px + 99 * ddx[dir];
-        info.ty = py + 99 * ddy[dir];
-
-        if ((dir == 5) && target_okay())
+        if (r_ptr->flags3 & RF3_NO_CONF)
         {
-            info.tx = target_col;
-            info.ty = target_row;
+            mon_lore_3(m_ptr, RF3_NO_CONF);
+            msg_format("%^s is unaffected.", m_name);
         }
-
-        project_length = 0;
-
-        if (info.tx == px && info.ty == py) return FALSE;
-    }
-
-    /* Toss */
-    _club_toss_imp(&info);
-
-    /* Handle Inventory */
-    if (!info.come_back || info.fail_catch)
-    {
-        object_type copy;
-
-        if (info.fail_catch)
-            msg_print("But you can't catch!");
-
-        object_copy(&copy, info.o_ptr);
-        copy.number = 1;
-
-        inven_item_increase(info.item, -1);
-        inven_item_describe(info.item);
-        inven_item_optimize(info.item);
-
-
-        if (!info.come_back)
-            drop_near(&copy, 0, info.ty, info.tx);
-        else
-            drop_near(&copy, 0, py, px);
-
-        p_ptr->redraw |= PR_EQUIPPY;
-        p_ptr->update |= PU_BONUS;
-
-        android_calc_exp();
-        handle_stuff();
-    }
-
-    return TRUE;
-}
-
-static void _club_toss_imp(_club_toss_info * info)
-{
-    char o_name[MAX_NLEN];
-    u16b path[512];
-    int msec = delay_factor * delay_factor * delay_factor;
-    int y, x, ny, nx, dd, tdam;
-    int cur_dis, ct;
-    int chance;
-
-    chance = p_ptr->skill_tht + ((p_ptr->shooter_info.to_h + info->o_ptr->to_h) * BTH_PLUS_ADJ);
-    chance *= 2; /* mimicking code for ninja shuriken */
-
-    object_desc(o_name, info->o_ptr, OD_OMIT_PREFIX);
-    ct = project_path(path, info->tdis, py, px, info->ty, info->tx, PROJECT_PATH);
-
-    y = py;
-    x = px;
-
-    for (cur_dis = 0; cur_dis < ct; )
-    {
-        /* Peek ahead at the next square in the path */
-        ny = GRID_Y(path[cur_dis]);
-        nx = GRID_X(path[cur_dis]);
-
-        /* Stopped by walls/doors/forest ... but allow hitting your target, please! */
-        if (!cave_have_flag_bold(ny, nx, FF_PROJECT)
-         && !cave[ny][nx].m_idx)
+        else if (mon_save_p(m_ptr->r_idx, A_STR))
         {
-            break;
+            msg_format("%^s is unaffected.", m_name);
         }
-
-        /* The player can see the (on screen) missile */
-        if (panel_contains(ny, nx) && player_can_see_bold(ny, nx))
-        {
-            char c = object_char(info->o_ptr);
-            byte a = object_attr(info->o_ptr);
-
-            /* Draw, Hilite, Fresh, Pause, Erase */
-            print_rel(c, a, ny, nx);
-            move_cursor_relative(ny, nx);
-            Term_fresh();
-            Term_xtra(TERM_XTRA_DELAY, msec);
-            lite_spot(ny, nx);
-            Term_fresh();
-        }
-
-        /* The player cannot see the missile */
         else
         {
-            /* Pause anyway, for consistancy */
-            Term_xtra(TERM_XTRA_DELAY, msec);
-        }
-
-        /* Save the new location */
-        x = nx;
-        y = ny;
-
-        /* Advance the distance */
-        cur_dis++;
-
-        /* Monster here, Try to hit it */
-        if (cave[y][x].m_idx)
-        {
-            cave_type *c_ptr = &cave[y][x];
-            monster_type *m_ptr = &m_list[c_ptr->m_idx];
-            monster_race *r_ptr = &r_info[m_ptr->r_idx];
-            bool visible = m_ptr->ml;
-
-            if (test_hit_fire(chance - cur_dis, MON_AC(r_ptr, m_ptr), m_ptr->ml))
-            {
-                bool fear = FALSE;
-                critical_t crit;
-
-                if (!visible)
-                    msg_format("The %s finds a mark.", o_name);
-                else
-                {
-                    char m_name[80];
-                    monster_desc(m_name, m_ptr, 0);
-                    msg_format("The %s hits %s.", o_name, m_name);
-                    if (m_ptr->ml)
-                    {
-                        if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
-                        health_track(c_ptr->m_idx);
-                    }
-                }
-
-                /***** The Damage Calculation!!! *****/
-                dd = info->o_ptr->dd;
-                tdam = damroll(dd, info->o_ptr->ds);
-                tdam = tot_dam_aux(info->o_ptr, tdam, m_ptr, 0, 0, TRUE);
-                crit = critical_throw(info->o_ptr->weight, info->o_ptr->to_h);
-                if (crit.desc)
-                {
-                    tdam = tdam * crit.mul/100 + crit.to_d;
-                    msg_print(crit.desc);
-                }
-                tdam += info->o_ptr->to_d;
-                tdam *= info->mult;
-                tdam += p_ptr->to_d_m;
-                if (tdam < 0) tdam = 0;
-                tdam = mon_damage_mod(m_ptr, tdam, FALSE);
-
-                if (mon_take_hit(c_ptr->m_idx, tdam, &fear, extract_note_dies(real_r_ptr(m_ptr))))
-                {
-                    /* Dead monster */
-                }
-                else
-                {
-                    message_pain(c_ptr->m_idx, tdam);
-                    if (tdam > 0)
-                        anger_monster(m_ptr);
-
-                    if (tdam > 0 && m_ptr->cdis > 1 && allow_ticked_off(r_ptr))
-                    {
-                        if (mut_present(MUT_PEERLESS_SNIPER))
-                        {
-                        }
-                        else
-                        {
-                            m_ptr->anger_ct++;
-                        }
-                    }
-
-                    if (fear && m_ptr->ml)
-                    {
-                        char m_name[80];
-                        sound(SOUND_FLEE);
-                        monster_desc(m_name, m_ptr, 0);
-                        msg_format("%^s flees in terror!", m_name);
-                    }
-
-                    {
-                        char m_name[80];
-                        int odds = 5;
-                        monster_desc(m_name, m_ptr, 0);
-
-                        if (one_in_(odds))
-                        {
-                            if (r_ptr->flags3 & RF3_NO_CONF)
-                            {
-                                mon_lore_3(m_ptr, RF3_NO_CONF);
-                                msg_format("%^s is unaffected.", m_name);
-                            }
-                            else if (mon_save_p(m_ptr->r_idx, A_STR))
-                            {
-                                msg_format("%^s is unaffected.", m_name);
-                            }
-                            else
-                            {
-                                msg_format("%^s appears confused.", m_name);
-                                set_monster_confused(c_ptr->m_idx, MON_CONFUSED(m_ptr) + 10 + randint0(p_ptr->lev) / 5);
-                            }
-                        }
-
-                        if (p_ptr->lev >= 20 && one_in_(odds))
-                        {
-                            if (r_ptr->flags3 & RF3_NO_SLEEP)
-                            {
-                                mon_lore_3(m_ptr, RF3_NO_SLEEP);
-                                msg_format("%^s is unaffected.", m_name);
-                            }
-                            else if (mon_save_p(m_ptr->r_idx, A_STR))
-                            {
-                                msg_format("%^s is unaffected.", m_name);
-                            }
-                            else
-                            {
-                                msg_format("%^s is knocked out.", m_name);
-                                set_monster_csleep(c_ptr->m_idx, MON_CSLEEP(m_ptr) + 500);
-                            }
-                        }
-
-                        if (p_ptr->lev >= 45 && one_in_(odds))
-                        {
-                            if (r_ptr->flags3 & RF3_NO_STUN)
-                            {
-                                mon_lore_3(m_ptr, RF3_NO_STUN);
-                                msg_format("%^s is unaffected.", m_name);
-                            }
-                            else if (mon_save_p(m_ptr->r_idx, A_STR))
-                            {
-                                msg_format("%^s is unaffected.", m_name);
-                            }
-                            else
-                            {
-                                msg_format("%^s is stunned.", m_name);
-                                set_monster_stunned(c_ptr->m_idx, MAX(MON_STUNNED(m_ptr), 2));
-                            }
-                        }
-                    }
-                }
-            }
-
-            /* Stop looking */
-            break;
+            msg_format("%^s appears confused.", m_name);
+            set_monster_confused(m_idx, MON_CONFUSED(m_ptr) + 10 + randint0(p_ptr->lev) / 5);
         }
     }
 
-    if (info->come_back)
+    if (p_ptr->lev >= 20 && one_in_(odds))
     {
-        int i;
-        for (i = cur_dis; i >= 0; i--)
+        if (r_ptr->flags3 & RF3_NO_SLEEP)
         {
-            y = GRID_Y(path[i]);
-            x = GRID_X(path[i]);
-            if (panel_contains(y, x) && player_can_see_bold(y, x))
-            {
-                char c = object_char(info->o_ptr);
-                byte a = object_attr(info->o_ptr);
-
-                /* Draw, Hilite, Fresh, Pause, Erase */
-                print_rel(c, a, y, x);
-                move_cursor_relative(y, x);
-                Term_fresh();
-                Term_xtra(TERM_XTRA_DELAY, msec);
-                lite_spot(y, x);
-                Term_fresh();
-            }
-            else
-            {
-                /* Pause anyway, for consistancy */
-                Term_xtra(TERM_XTRA_DELAY, msec);
-            }
+            mon_lore_3(m_ptr, RF3_NO_SLEEP);
+            msg_format("%^s is unaffected.", m_name);
         }
-        msg_format("Your %s comes back to you.", o_name);
+        else if (mon_save_p(m_ptr->r_idx, A_STR))
+        {
+            msg_format("%^s is unaffected.", m_name);
+        }
+        else
+        {
+            msg_format("%^s is knocked out.", m_name);
+            set_monster_csleep(m_idx, MON_CSLEEP(m_ptr) + 500);
+        }
     }
-    else
+
+    if (p_ptr->lev >= 45 && one_in_(odds))
     {
-        /* Record the actual location of the toss so we can drop the object here if required */
-        info->tx = x;
-        info->ty = y;
+        if (r_ptr->flags3 & RF3_NO_STUN)
+        {
+            mon_lore_3(m_ptr, RF3_NO_STUN);
+            msg_format("%^s is unaffected.", m_name);
+        }
+        else if (mon_save_p(m_ptr->r_idx, A_STR))
+        {
+            msg_format("%^s is unaffected.", m_name);
+        }
+        else
+        {
+            msg_format("%^s is stunned.", m_name);
+            set_monster_stunned(m_idx, MAX(MON_STUNNED(m_ptr), 2));
+        }
     }
 }
-
 static void _throw_weapon_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -942,29 +662,25 @@ static void _throw_weapon_spell(int cmd, variant *res)
         var_set_string(res, "Throw Weapon");
         break;
     case SPELL_DESC:
-        var_set_string(res, "Throws your leading weapon, which might return to you.");
+        var_set_string(res, "Throws your weapon which might return to you.");
         break;
     case SPELL_CAST:
-    {
-        int hand;
-        var_set_bool(res, FALSE);
         if (!_check_speciality_equip())
         {
             msg_print("Failed! You do not feel comfortable with your weapon.");
             return;
         }
-        for (hand = 0; hand < MAX_HANDS; hand++)
+        else
         {
-            if (p_ptr->weapon_info[hand].wield_how != WIELD_NONE)
-            {
-                if (_club_toss(hand))
-                    var_set_bool(res, TRUE);
-                else
-                    break;
-            }
+            py_throw_t context = {0};
+
+            context.type = THROW_BOOMERANG;
+            context.mult = 100 + 4 * p_ptr->lev;
+            context.back_chance = 24 + randint1(5);
+            context.after_hit_f = _toss_hit_mon;
+            var_set_bool(res, py_throw(&context));
         }
         break;
-    }
     default:
         default_spell(cmd, res);
         break;

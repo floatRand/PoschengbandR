@@ -353,7 +353,7 @@ bool _hit_mon(py_throw_ptr context, int m_idx)
                 msg_format("%^s flees in terror!", m_name);
             }
             if (context->after_hit_f)
-                context->after_hit_f(context, m_ptr);
+                context->after_hit_f(context, m_idx);
         }
     }
     context->break_chance = breakage_chance(context->obj);
