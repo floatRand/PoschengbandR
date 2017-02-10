@@ -355,14 +355,16 @@ bool _hit_mon(py_throw_ptr context, int m_idx)
             if (context->after_hit_f)
                 context->after_hit_f(context, m_idx);
         }
+        if (!(context->type & THROW_BOOMERANG))
+            context->break_chance = breakage_chance(context->obj);
     }
-    context->break_chance = breakage_chance(context->obj);
     return TRUE;
 }
 
 bool _hit_wall(py_throw_ptr context)
 {
-    context->break_chance = breakage_chance(context->obj);
+    if (!(context->type & THROW_BOOMERANG))
+        context->break_chance = breakage_chance(context->obj);
     return TRUE;
 }
 
