@@ -1184,7 +1184,7 @@ bool brand_weapon(int brand_type)
     s = "You have nothing to enchant.";
     if (!get_item(&item, q, s, (USE_EQUIP))) return FALSE;
 
-    if (inventory[item].name1 || inventory[item].name2)
+    if (inventory[item].name2 || object_is_artifact(&inventory[item]))
     {
     }
     else if (have_flag(inventory[item].flags, OF_NO_REMOVE))
@@ -1232,7 +1232,7 @@ bool brand_weapon_slaying(int brand_flag, int res_flag)
     s = "You have nothing to enchant.";
     if (!get_item(&item, q, s, (USE_EQUIP))) return FALSE;
 
-    if (inventory[item].name1 || inventory[item].name2)
+    if (inventory[item].name2 || object_is_artifact(&inventory[item]))
     {
     }
     else if (have_flag(inventory[item].flags, OF_NO_REMOVE))
