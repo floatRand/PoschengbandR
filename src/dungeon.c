@@ -3705,7 +3705,8 @@ static void _dispatch_command(int old_now_turn)
         {
             if (!p_ptr->wild_mode)
             {
-                do_cmd_throw();
+                py_throw_t context = {0};
+                py_throw(&context);
             }
             break;
         }

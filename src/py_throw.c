@@ -6,6 +6,8 @@
  * Throw Object
  ***********************************************************************/
 static void    _animate(py_throw_ptr context);
+static bool    _hit_mon(py_throw_ptr context, int m_idx);
+static bool    _hit_wall(py_throw_ptr context);
 static obj_ptr _get_obj(int type);
 static bool    _get_target(py_throw_ptr context);
 static bool    _init_context(py_throw_ptr context);
@@ -63,8 +65,8 @@ static obj_ptr _get_obj(int type)
     }
     else
     {
-        prompt.where[0] = INV_EQUIP;
-        prompt.where[1] = INV_PACK;
+        prompt.where[0] = INV_PACK;
+        prompt.where[1] = INV_EQUIP;
         prompt.where[2] = INV_FLOOR;
     }
     obj_prompt(&prompt);
@@ -74,25 +76,36 @@ static obj_ptr _get_obj(int type)
 bool _get_target(py_throw_ptr context)
 {
     int tx, ty;
-    project_length = context->range;
-    if (!get_fire_dir(&context->dir)) return FALSE;
-
-    tx = px + 99 * ddx[context->dir];
-    ty = py + 99 * ddy[context->dir];
-
-    if (context->dir == 5 && target_okay())
+    if (context->dir == 5 && !target_okay())
+        context->dir = 0;
+    if (!context->dir)
+    {
+        project_length = context->range;
+        if (!get_fire_dir(&context->dir)) return FALSE;
+        project_length = 0;
+    }
+    if (context->dir == DIR_RANDOM) /* Shuriken Spreading (ninja.c) */
+    {
+        tx = randint0(101)-50+px;
+        ty = randint0(101)-50+py;
+    }
+    else if (context->dir == DIR_TARGET && target_okay())
     {
         tx = target_col;
         ty = target_row;
     }
-    project_length = 0;
-
+    else
+    {
+        tx = px + 99 * ddx[context->dir];
+        ty = py + 99 * ddy[context->dir];
+    }
     if (tx == px && ty == py) return FALSE;
 
     assert(context->range <= MAX_SIGHT);
     context->path_ct = project_path(context->path,
         context->range, py, px, ty, tx, PROJECT_PATH);
     context->path_pos = 0;
+    if (!context->path_ct) return FALSE;
     return TRUE;
 }
 
@@ -107,6 +120,20 @@ bool _init_context(py_throw_ptr context)
     obj_flags(context->obj, context->flags);
     object_desc(context->obj_name, context->obj, OD_NAME_ONLY | OD_OMIT_PREFIX | OD_OMIT_INSCRIPTION);
 
+    /* checks before taking a turn */
+    if (object_is_(context->obj, TV_POTION, SV_POTION_BLOOD))
+    {
+        msg_print("You can't do that! Your blood will go sour!");
+        return FALSE;
+    }
+    if (p_ptr->inside_arena && !(context->type & THROW_BOOMERANG))
+    {
+        if (context->obj->tval != TV_SPIKE || p_ptr->pclass != CLASS_NINJA)
+        {
+            msg_print("You're in the arena now. This is hand-to-hand!");
+            return FALSE;
+        }
+    }
 
     /* energy and take a turn */
     if (!(context->type & THROW_DISPLAY))
@@ -136,8 +163,6 @@ bool _init_context(py_throw_ptr context)
         context->mult += 100;
     context->mult = context->mult * (100 + adj_str_td[p_ptr->stat_ind[A_STR]] - 128) / 100;
 
-    context->skill += p_ptr->skill_tht + (p_ptr->shooter_info.to_h + context->obj->to_h) * BTH_PLUS_ADJ;
-
     /* range */
     if (!context->range)
     {
@@ -165,6 +190,11 @@ bool _init_context(py_throw_ptr context)
     /* boomerang? */
     context->come_back = FALSE;
     context->fail_catch = FALSE;
+    if (context->obj->name1 == ART_MJOLLNIR || context->obj->name1 == ART_AEGISFANG)
+    {
+        context->type |= THROW_BOOMERANG;
+        context->back_chance += 20; /* upgrade the odds if already Boomerang */
+    }
     if (context->type & THROW_BOOMERANG)
     {
         context->back_chance += adj_dex_th[p_ptr->stat_ind[A_DEX]] - 128;
@@ -188,168 +218,178 @@ bool _init_context(py_throw_ptr context)
             }
         }
     }
+
+    /* skill and some ninja hacks (hengband) */
+    context->skill += p_ptr->skill_tht + (p_ptr->shooter_info.to_h + context->obj->to_h) * BTH_PLUS_ADJ;
+    if (p_ptr->pclass == CLASS_NINJA)
+    {
+        if ( context->obj->tval == TV_SPIKE
+          || (context->obj->tval == TV_SWORD && have_flag(context->flags, OF_THROWING)) )
+        {
+            context->skill *= 2; /* wow! */
+            context->to_d += ((p_ptr->lev+30)*(p_ptr->lev+30)-900)/55; /* +100 at CL50 */
+        }
+    }
+
+    return TRUE;
+}
+
+bool _hit_mon(py_throw_ptr context, int m_idx)
+{
+    monster_type *m_ptr = &m_list[m_idx];
+    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    int           ac = MON_AC(r_ptr, m_ptr);
+    bool          visible = m_ptr->ml;
+
+    if (test_hit_fire(context->skill - (context->path_pos + 1), ac, m_ptr->ml))
+    {
+        bool fear = FALSE;
+        bool ambush = MON_CSLEEP(m_ptr) && visible && p_ptr->ambush;
+        int  tdam;
+
+        if (!visible)
+            msg_format("The %s finds a mark.", context->obj_name);
+        else
+        {
+            char m_name[80];
+            monster_desc(m_name, m_ptr, 0);
+            if (ambush)
+                cmsg_format(TERM_RED, "The %s cruelly hits %s.", context->obj_name, m_name);
+            else
+                msg_format("The %s hits %s.", context->obj_name, m_name);
+            if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
+            health_track(m_idx);
+        }
+
+        /***** The Damage Calculation!!! *****/
+        tdam = damroll(context->obj->dd + context->to_dd, context->obj->ds);
+        tdam = tot_dam_aux(context->obj, tdam, m_ptr, 0, 0, TRUE);
+        if (have_flag(context->flags, OF_VORPAL) || have_flag(context->flags, OF_VORPAL2))
+        {
+            int  vorpal_chance = have_flag(context->flags, OF_VORPAL2) ? 2 : 4;
+            if (one_in_(vorpal_chance * 3 / 2))
+            {
+                int mult = 2;
+                char m_name[80];
+
+                while (one_in_(vorpal_chance))
+                    mult++;
+
+                tdam *= mult;
+
+                monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+                switch (mult)
+                {
+                case 2: msg_format("Your weapon <color:U>gouges</color> %s!", m_name); break;
+                case 3: msg_format("Your weapon <color:y>maims</color> %s!!", m_name); break;
+                case 4: msg_format("Your weapon <color:R>carves</color> %s!!!", m_name); break;
+                case 5: msg_format("Your weapon <color:r>cleaves</color> %s!!!!", m_name); break;
+                case 6: msg_format("Your weapon <color:v>smites</color> %s!!!!!", m_name); break;
+                case 7: msg_format("Your weapon <color:v>eviscerates</color> %s!!!!!!", m_name); break;
+                default: msg_format("Your weapon <color:v>shreds</color> %s!!!!!!!", m_name); break;
+                }
+
+                if (have_flag(context->flags, OF_VORPAL2))
+                    obj_learn_slay(context->obj, OF_VORPAL2, "is <color:v>*Sharp*</color>");
+                else
+                    obj_learn_slay(context->obj, OF_VORPAL, "is <color:R>Sharp</color>");
+            }
+        }
+        if (!have_flag(context->flags, OF_BRAND_ORDER))
+        {
+            critical_t crit = critical_throw(context->obj->weight, context->obj->to_h);
+            if (crit.desc)
+            {
+                tdam = tdam * crit.mul/100 + crit.to_d;
+                msg_print(crit.desc);
+            }
+        }
+        tdam += context->obj->to_d;
+        tdam = tdam * context->mult / 100;
+        if (ambush)
+            tdam *= 2;
+        tdam += context->to_d;
+
+        if (context->mod_damage_f)
+            tdam = context->mod_damage_f(context, tdam);
+
+        if (tdam < 0) tdam = 0;
+        tdam = mon_damage_mod(m_ptr, tdam, FALSE);
+        if (mon_take_hit(m_idx, tdam, &fear, extract_note_dies(real_r_ptr(m_ptr))))
+        {
+            /* Dead monster */
+        }
+        else
+        {
+            if (have_flag(context->flags, OF_BRAND_VAMP))
+            {
+                char m_name[80];
+                int  heal = MIN(30, damroll(3, tdam / 8));
+                monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+                msg_format("Your weapon drains life from %s!", m_name);
+                hp_player_aux(heal);
+                obj_learn_slay(context->obj, OF_BRAND_VAMP, "is <color:D>Vampiric</color>");
+            }
+            message_pain(m_idx, tdam);
+            if (tdam > 0)
+                anger_monster(m_ptr);
+
+            if (tdam > 0 && m_ptr->cdis > 1 && allow_ticked_off(r_ptr))
+            {
+                if (mut_present(MUT_PEERLESS_SNIPER))
+                {
+                }
+                else
+                {
+                    m_ptr->anger_ct++;
+                }
+            }
+
+            if (fear && m_ptr->ml)
+            {
+                char m_name[80];
+                sound(SOUND_FLEE);
+                monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
+                msg_format("%^s flees in terror!", m_name);
+            }
+            if (context->after_hit_f)
+                context->after_hit_f(context, m_ptr);
+        }
+    }
+    context->break_chance = breakage_chance(context->obj);
+    return TRUE;
+}
+
+bool _hit_wall(py_throw_ptr context)
+{
+    context->break_chance = breakage_chance(context->obj);
     return TRUE;
 }
 
 void _throw(py_throw_ptr context)
 {
-    int y, x, ny, nx, tdam;
-    int cur_dis = 0;
-
-    y = py;
-    x = px;
-
-    for (context->path_pos = 0; context->path_pos < context->path_ct; context->path_pos++)
+    assert(context->path_ct);
+    for (context->path_pos = 0; ; context->path_pos++)
     {
-        /* Peek ahead at the next square in the path */
-        ny = GRID_Y(context->path[context->path_pos]);
-        nx = GRID_X(context->path[context->path_pos]);
-
-        /* Stopped by walls/doors/forest ... but allow hitting your target, please! */
-        if (!cave_have_flag_bold(ny, nx, FF_PROJECT)
-         && !cave[ny][nx].m_idx)
-        {
-            break;
-        }
+        int x = GRID_X(context->path[context->path_pos]);
+        int y = GRID_Y(context->path[context->path_pos]);
 
         _animate(context);
 
-        /* Save the new location */
-        x = nx;
-        y = ny;
-
-        /* Advance the distance */
-        cur_dis++;
-
-        /* Monster here, Try to hit it */
         if (cave[y][x].m_idx)
         {
-            cave_type    *c_ptr = &cave[y][x];
-            monster_type *m_ptr = &m_list[c_ptr->m_idx];
-            monster_race *r_ptr = &r_info[m_ptr->r_idx];
-            int           ac = MON_AC(r_ptr, m_ptr);
-            bool          visible = m_ptr->ml;
-
-            if (test_hit_fire(context->skill - cur_dis, ac, m_ptr->ml))
-            {
-                bool fear = FALSE;
-                bool ambush = MON_CSLEEP(m_ptr) && visible && p_ptr->ambush;
-
-                if (!visible)
-                    msg_format("The %s finds a mark.", context->obj_name);
-                else
-                {
-                    char m_name[80];
-                    monster_desc(m_name, m_ptr, 0);
-                    if (ambush)
-                        cmsg_format(TERM_RED, "The %s cruelly hits %s.", context->obj_name, m_name);
-                    else
-                        msg_format("The %s hits %s.", context->obj_name, m_name);
-                    if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
-                    health_track(c_ptr->m_idx);
-                }
-
-                /***** The Damage Calculation!!! *****/
-                tdam = damroll(context->obj->dd + context->to_dd, context->obj->ds);
-                tdam = tot_dam_aux(context->obj, tdam, m_ptr, 0, 0, TRUE);
-                if (have_flag(context->flags, OF_VORPAL) || have_flag(context->flags, OF_VORPAL2))
-                {
-                    int  vorpal_chance = have_flag(context->flags, OF_VORPAL2) ? 2 : 4;
-                    if (one_in_(vorpal_chance * 3 / 2))
-                    {
-                        int mult = 2;
-                        char m_name[80];
-
-                        while (one_in_(vorpal_chance))
-                            mult++;
-
-                        tdam *= mult;
-
-                        monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
-                        switch (mult)
-                        {
-                        case 2: msg_format("Your weapon <color:U>gouges</color> %s!", m_name); break;
-                        case 3: msg_format("Your weapon <color:y>maims</color> %s!!", m_name); break;
-                        case 4: msg_format("Your weapon <color:R>carves</color> %s!!!", m_name); break;
-                        case 5: msg_format("Your weapon <color:r>cleaves</color> %s!!!!", m_name); break;
-                        case 6: msg_format("Your weapon <color:v>smites</color> %s!!!!!", m_name); break;
-                        case 7: msg_format("Your weapon <color:v>eviscerates</color> %s!!!!!!", m_name); break;
-                        default: msg_format("Your weapon <color:v>shreds</color> %s!!!!!!!", m_name); break;
-                        }
-
-                        if (have_flag(context->flags, OF_VORPAL2))
-                            obj_learn_slay(context->obj, OF_VORPAL2, "is <color:v>*Sharp*</color>");
-                        else
-                            obj_learn_slay(context->obj, OF_VORPAL, "is <color:R>Sharp</color>");
-                    }
-                }
-                if (!have_flag(context->flags, OF_BRAND_ORDER))
-                {
-                    critical_t crit = critical_throw(context->obj->weight, context->obj->to_h);
-                    if (crit.desc)
-                    {
-                        tdam = tdam * crit.mul/100 + crit.to_d;
-                        msg_print(crit.desc);
-                    }
-                }
-                tdam += context->obj->to_d;
-                tdam = tdam * context->mult / 100;
-                if (ambush)
-                    tdam *= 2;
-                tdam += context->to_d;
-
-                if (context->mod_damage_f)
-                    tdam = context->mod_damage_f(context, tdam);
-
-                if (tdam < 0) tdam = 0;
-                tdam = mon_damage_mod(m_ptr, tdam, FALSE);
-                if (mon_take_hit(c_ptr->m_idx, tdam, &fear, extract_note_dies(real_r_ptr(m_ptr))))
-                {
-                    /* Dead monster */
-                }
-                else
-                {
-                    if (have_flag(context->flags, OF_BRAND_VAMP))
-                    {
-                        char m_name[80];
-                        int  heal = MIN(30, damroll(3, tdam / 8));
-                        monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
-                        msg_format("Your weapon drains life from %s!", m_name);
-                        hp_player_aux(heal);
-                        obj_learn_slay(context->obj, OF_BRAND_VAMP, "is <color:D>Vampiric</color>");
-                    }
-                    message_pain(c_ptr->m_idx, tdam);
-                    if (tdam > 0)
-                        anger_monster(m_ptr);
-
-                    if (tdam > 0 && m_ptr->cdis > 1 && allow_ticked_off(r_ptr))
-                    {
-                        if (mut_present(MUT_PEERLESS_SNIPER))
-                        {
-                        }
-                        else
-                        {
-                            m_ptr->anger_ct++;
-                        }
-                    }
-
-                    if (fear && m_ptr->ml)
-                    {
-                        char m_name[80];
-                        sound(SOUND_FLEE);
-                        monster_desc(m_name, m_ptr, MD_PRON_VISIBLE | MD_OBJECTIVE);
-                        msg_format("%^s flees in terror!", m_name);
-                    }
-                    if (context->after_hit_f)
-                        context->after_hit_f(context, m_ptr);
-                }
-            }
-
-            /* Stop looking */
-            break;
+            if (_hit_mon(context, cave[y][x].m_idx)) break;
         }
-    }
 
+        if (!cave_have_flag_bold(y, x, FF_PROJECT))
+        {
+            if (_hit_wall(context)) break;
+        }
+
+        /* careful ... leave path_pos on the last processed square
+         * so we can drop the object if needed */
+        if (context->path_pos == context->path_ct - 1) break;
+    }
 }
 
 void _return(py_throw_ptr context)
@@ -367,33 +407,73 @@ void _return(py_throw_ptr context)
     /* handle fumbling, dropping and catching */
     if (!context->come_back || context->fail_catch)
     {
-        if (!context->come_back)
-            msg_format("Your %s fails to return!", context->obj_name);
-
-        if (context->fail_catch)
-            cmsg_print(TERM_VIOLET, "But you can't catch!");
-
-        if (context->obj->loc.where == INV_EQUIP)
+        /* only message/warn if the user expects a return */
+        if (context->type & THROW_BOOMERANG)
         {
-            msg_print("Press <color:y>Space</color> to continue.");
-            flush();
-            for (;;)
-            {
-                char ch = inkey();
-                if (ch == ' ') break;
-            }
-            msg_line_clear();
-        }
+            if (!context->come_back)
+                msg_format("Your %s fails to return!", context->obj_name);
 
+            if (context->fail_catch)
+                cmsg_print(TERM_VIOLET, "But you can't catch!");
+
+            if (context->obj->loc.where == INV_EQUIP)
+            {
+                msg_print("Press <color:y>Space</color> to continue.");
+                flush();
+                for (;;)
+                {
+                    char ch = inkey();
+                    if (ch == ' ') break;
+                }
+                msg_line_clear();
+            }
+        }
         if (!context->come_back)
         {
             int x,y;
             y = GRID_Y(context->path[context->path_pos]);
             x = GRID_X(context->path[context->path_pos]);
-            obj_drop_at(context->obj, 1, x, y, 0);
+            /* Figurines transform into pets (enemies if cursed) */
+            if (context->obj->tval == TV_FIGURINE && !p_ptr->inside_arena)
+            {
+                if (!summon_named_creature(0, y, x, context->obj->pval,
+                                !object_is_cursed(context->obj) ? PM_FORCE_PET : 0))
+                    msg_print("The Figurine writhes and then shatters.");
+
+                else if (object_is_cursed(context->obj))
+                    msg_print("You have a bad feeling about this.");
+
+                context->obj->number--;
+                obj_release(context->obj, OBJ_RELEASE_QUIET);
+            }
+            /* potions shatter with effects if they hit a wall or monster */
+            else if (context->obj->tval == TV_POTION && randint0(100) < context->break_chance)
+            {
+                msg_format("The %s shatters!", context->obj_name);
+                if (potion_smash_effect(0, y, x, context->obj->k_idx))
+                {
+                    /* I think this needs fixing in project_m ... */
+                    if (cave[y][x].m_idx)
+                    {
+                        monster_type *m_ptr = &m_list[cave[y][x].m_idx];
+                        if (is_friendly(m_ptr) && !MON_INVULNER(m_ptr))
+                        {
+                            char m_name[80];
+                            monster_desc(m_name, m_ptr, 0);
+                            msg_format("%^s gets angry!", m_name);
+                            set_hostile(m_ptr);
+                        }
+                    }
+                }
+                context->obj->number--;
+                obj_release(context->obj, OBJ_RELEASE_QUIET);
+            }
+            /* everything else drops (perhaps breaks) at the end of the path */
+            else
+                obj_drop_at(context->obj, 1, x, y, context->break_chance);
         }
         else
-            obj_drop_at(context->obj, 1, px, py, 0);
+            obj_drop_at(context->obj, 1, px, py, context->break_chance);
         context->obj = NULL;
     }
     else
