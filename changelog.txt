@@ -1,4 +1,4 @@
-Changelog (from "vanilla" poschengband, as of Feb 9, 2017, with commit hashes
+Changelog (from "vanilla" poschengband, as of Feb 10, 2017, with commit hashes
            in parentheses)
 
 Significant gameplay changes:
@@ -36,6 +36,7 @@ Interface changes:
 birth/town:
 - Use the previous game's race/class/etc as default (50b0eff, 6ddbb80)
 - Don't randomize starting gold. (7d1b8fa)
+- Don't randomize starting object quantities. (5ce8ea8)
 - Let males be sexy and females be lucky (7d1b8fa)
 - Start with a lantern instead of torches (7d1b8fa)
 - Reimplement no_selling option, but without giving larger gold piles. (74ac340)
@@ -69,6 +70,7 @@ other:
 
 Bug fixes:
 ----------
+- Fix branding spells working on randarts. (c233c82)
 - Fix enchanting prices not being additive. (8636a03)
 - Fix targetting weirdnesses. (c2a63f4, 37791f0)
 - Sync some quest rewards in t_lite.txt. (2f22904)
