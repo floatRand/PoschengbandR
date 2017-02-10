@@ -51,6 +51,7 @@
 #include "home.h"
 #include "shop.h"
 #include "obj_prompt.h"
+#include "py_throw.h"
 
 #include "types.h"
 #include "externs.h"

@@ -24,6 +24,7 @@ extern void    equip_display(doc_ptr doc, obj_p p, int flags);
 extern void equip_wield_ui(void); 
     extern void equip_wield(obj_ptr obj, slot_t slot);
 
+extern bool equip_can_takeoff(obj_ptr obj);
 extern void equip_takeoff_ui(void);
     extern void equip_takeoff(slot_t slot);
     /* Taking off an item implies moving it to the pack */

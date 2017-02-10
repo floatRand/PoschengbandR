@@ -253,20 +253,30 @@ void death_scythe_miss(object_type *o_ptr, int hand, int mode)
     u32b flgs[OF_ARRAY_SIZE];
     int k;
     critical_t crit;
+    int dd = o_ptr->dd;
+    int ds = o_ptr->ds;
+    int to_h = 0;
+    int to_d = 0;
 
     /* Sound */
     sound(SOUND_HIT);
 
     /* Message */
-    if (mode == MODE_THROWING)
+    if (hand == HAND_NONE) /* this is a thrown  weapon */
         cmsg_print(TERM_VIOLET, "Your scythe viciously slashes you!");
     else
+    {
         cmsg_print(TERM_VIOLET, "Your scythe returns to you!");
+        dd += p_ptr->weapon_info[hand].to_dd;
+        ds += p_ptr->weapon_info[hand].to_ds;
+        to_h += p_ptr->weapon_info[hand].to_h;
+        to_d += p_ptr->weapon_info[hand].to_d;
+    }
 
     /* Extract the flags */
     obj_flags(o_ptr, flgs);
 
-    k = damroll(o_ptr->dd + p_ptr->weapon_info[hand].to_dd, o_ptr->ds + p_ptr->weapon_info[hand].to_ds);
+    k = damroll(dd, ds);
     {
         int mult;
         switch (p_ptr->mimic_form)
@@ -326,11 +336,6 @@ void death_scythe_miss(object_type *o_ptr, int hand, int mode)
         if (!res_save_default(RES_POIS) && mult < 25)
             mult = 25;
 
-        if (p_ptr->tim_slay_sentient && p_ptr->weapon_info[hand].wield_how == WIELD_TWO_HANDS)
-        {
-            if (mult < 20) mult = 20;
-        }
-
         if ((have_flag(flgs, OF_BRAND_MANA) || p_ptr->tim_force) && (p_ptr->csp > (p_ptr->msp / 30)))
         {
             p_ptr->csp -= (1+(p_ptr->msp / 30));
@@ -342,7 +347,7 @@ void death_scythe_miss(object_type *o_ptr, int hand, int mode)
         k /= 10;
     }
 
-    crit = critical_norm(o_ptr->weight, o_ptr->to_h, p_ptr->weapon_info[hand].to_h, mode, hand);
+    crit = critical_norm(o_ptr->weight, o_ptr->to_h, to_h, mode, hand);
     if (crit.desc)
     {
         k = k * crit.mul/100 + crit.to_d;
@@ -361,7 +366,7 @@ void death_scythe_miss(object_type *o_ptr, int hand, int mode)
 
         k *= mult;
     }
-    k += (p_ptr->weapon_info[hand].to_d + o_ptr->to_d);
+    k += to_d + o_ptr->to_d;
 
     if (k < 0) k = 0;
 

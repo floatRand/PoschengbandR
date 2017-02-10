@@ -763,6 +763,35 @@ void obj_drop(obj_ptr obj, int amt)
     }
 }
 
+static void _drop_at(obj_ptr obj, int x, int y, int break_chance)
+{
+    drop_near(obj, break_chance, y, x);
+}
+
+void obj_drop_at(obj_ptr obj, int amt, int x, int y, int break_chance)
+{
+    assert(obj);
+    assert(amt <= obj->number);
+
+    if (!amt) return;
+
+    if (amt < obj->number)
+    {
+        obj_t copy = *obj;
+        copy.number = amt;
+        obj->number -= amt;
+        copy.marked &= ~OM_WORN;
+        _drop_at(&copy, x, y, break_chance);
+    }
+    else
+    {
+        obj->marked &= ~OM_WORN;
+        _drop_at(obj, x, y, break_chance);
+        obj->number = 0;
+        obj_release(obj, OBJ_RELEASE_QUIET);
+    }
+}
+
 static bool _can_destroy(obj_ptr obj)
 {
     if (obj->loc.where == INV_EQUIP && obj->rune != RUNE_SACRIFICE)

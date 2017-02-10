@@ -709,7 +709,7 @@ static void _wield_after(slot_t slot)
 void equip_remove(slot_t slot)
 {
     inv_remove(_inv, slot);
-    p_ptr->update |= PU_BONUS;
+    p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;
     p_ptr->window |= PW_EQUIP;
     p_ptr->redraw |= PR_EQUIPPY;
     android_calc_exp();
@@ -734,6 +734,12 @@ void equip_takeoff_ui(void)
     _unwield(obj, FALSE);
     _unwield_after();
 
+}
+
+bool equip_can_takeoff(obj_ptr obj)
+{
+    assert(obj->loc.where == INV_EQUIP);
+    return _unwield_verify(obj);
 }
 
 void equip_takeoff(slot_t slot)
@@ -1005,6 +1011,7 @@ static void _weapon_bonus(slot_t slot, int to_h, int to_d)
 
 bool equip_is_valid_hand(int hand)
 {
+    if (hand == HAND_NONE) return FALSE;
     return p_ptr->weapon_info[hand].slot;
 }
 
