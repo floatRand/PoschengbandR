@@ -428,6 +428,8 @@ static void _smoke_ball_spell(int cmd, variant *res)
     }
 }
 
+static bool _obj_is_shuriken(obj_ptr obj) { return obj->tval == TV_SPIKE; }
+
 static void _syuriken_spreading_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -443,18 +445,17 @@ static void _syuriken_spreading_spell(int cmd, variant *res)
         int i;
         for (i = 0; i < 8; i++)
         {
-            int slot;
-            for (slot = 0; slot < INVEN_PACK; slot++)
-            {
-                if (inventory[slot].tval == TV_SPIKE) break;
-            }
-            if (slot == INVEN_PACK)
+            int        slot = pack_find_first(_obj_is_shuriken);
+            py_throw_t context = {0}; /* better reset for each shot! */
+            if (!slot)
             {
                 if (!i) msg_print("You have no Iron Spikes.");
                 else msg_print("You have no more Iron Spikes.");
                 break;
             }
-            do_cmd_throw_aux(1, FALSE, slot);
+            context.dir = DIR_RANDOM;
+            context.obj = pack_obj(slot);
+            py_throw(&context);
         }
         var_set_bool(res, TRUE);
         break;
