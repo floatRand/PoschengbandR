@@ -2338,45 +2338,28 @@ static bool item_tester_hook_identify(object_type *o_ptr)
 }
 bool ident_spell(object_p p)
 {
-    int             item;
-    object_type     *o_ptr;
-    char            o_name[MAX_NLEN];
-    cptr            q, s;
-    bool old_known;
+    obj_prompt_t prompt = {0};
+    char         o_name[MAX_NLEN];
+    bool         old_known;
 
-    item_tester_no_ryoute = TRUE;
     _hack_obj_p = p;
-    item_tester_hook = item_tester_hook_identify;
+    prompt.prompt = "Identify which item?";
+    prompt.error = "All items are identified.";
+    prompt.filter = item_tester_hook_identify;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
 
-    if (can_get_item())
-    {
-        q = "Identify which item? ";
-    }
-    else
-    {
-        item_tester_hook = p;
-        q = "All items are identified. ";
-    }
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    s = "You have nothing to identify.";
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR))) return (FALSE);
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[0 - item];
+    old_known = identify_item(prompt.obj);
 
-    old_known = identify_item(o_ptr);
+    object_desc(o_name, prompt.obj, OD_COLOR_CODED);
 
-    object_desc(o_name, o_ptr, 0);
-
-    if (equip_is_valid_slot(item))
-        msg_format("%^s: %s (%c).", equip_describe_slot(item), o_name, index_to_label(item));
-    else if (item >= 0)
-        msg_format("In your pack: %s (%c).", o_name, index_to_label(item));
-    else
-        msg_format("On the ground: %s.", o_name);
-
-    autopick_alter_item(item, (bool)(destroy_identify && !old_known));
+    msg_format("You identify %s.", o_name);
+    autopick_alter_obj(prompt.obj, destroy_identify && !old_known);
     return TRUE;
 }
 
@@ -2471,60 +2454,35 @@ static bool item_tester_hook_identify_fully(object_type *o_ptr)
  */
 bool identify_fully(object_p p)
 {
-    int             item;
-    object_type     *o_ptr;
-    char            o_name[MAX_NLEN];
-    cptr            q, s;
-    bool old_known;
+    obj_prompt_t prompt = {0};
+    bool         old_known;
 
-    item_tester_no_ryoute = TRUE;
     _hack_obj_p = p;
-    item_tester_hook = item_tester_hook_identify_fully;
+    prompt.prompt = "*Identify* which item?";
+    prompt.error = "You have nothing to *identify*.";
+    prompt.filter = item_tester_hook_identify_fully;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
 
-    if (can_get_item())
-    {
-        q = "*Identify* which item? ";
-    }
-    else
-    {
-        item_tester_hook = p;
-        q = "All items are *identified*. ";
-    }
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    /* Get an item */
-    s = "You have nothing to *identify*.";
+    old_known = identify_item(prompt.obj); /* For the stat tracking and old_known ... */
+    obj_identify_fully(prompt.obj);
 
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR))) return (FALSE);
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[0 - item];
-
-    old_known = identify_item(o_ptr); /* For the stat tracking and old_known ... */
-    obj_identify_fully(o_ptr);
-
-    handle_stuff();
-    object_desc(o_name, o_ptr, 0);
-
-/*  Message seems redundant ...
-    if (equip_is_valid_slot(item))
-        msg_format("%^s: %s (%c).", equip_describe_slot(item), o_name, index_to_label(item));
-    else if (item >= 0)
-        msg_format("In your pack: %s (%c).", o_name, index_to_label(item));
-    else
-        msg_format("On the ground: %s.", o_name);
-*/
     if ( p_ptr->prace == RACE_MON_POSSESSOR
-      && o_ptr->tval == TV_CORPSE
-      && o_ptr->sval == SV_CORPSE )
+      && prompt.obj->tval == TV_CORPSE
+      && prompt.obj->sval == SV_CORPSE )
     {
-        if (!(r_info[o_ptr->pval].r_xtra1 & MR1_POSSESSOR))
+        if (!(r_info[prompt.obj->pval].r_xtra1 & MR1_POSSESSOR))
             msg_print("You learn more about this body.");
-        lore_do_probe(o_ptr->pval);
+        lore_do_probe(prompt.obj->pval);
     }
 
-    obj_display(o_ptr);
-    autopick_alter_item(item, (bool)(destroy_identify && !old_known));
+    obj_display(prompt.obj);
+    autopick_alter_obj(prompt.obj, destroy_identify && !old_known);
     return TRUE;
 }
 
@@ -2591,23 +2549,22 @@ static void _recharge_aux(object_type *o_ptr, int amt, int power)
 
 bool recharge_from_player(int power)
 {
-    int          item;
+    obj_prompt_t prompt = {0};
     int          amt, max;
-    object_type *o_ptr;
 
     /* Get destination device */
     _obj_recharge_src_ptr = NULL;
-    item_tester_hook = _obj_recharge_dest;
-    if (!get_item(&item, "Recharge which item? ", "You have nothing to recharge.", USE_INVEN | USE_FLOOR))
-        return FALSE;
+    prompt.prompt = "Recharge which item?";
+    prompt.error = "You have nothing to recharge.";
+    prompt.filter = _obj_recharge_dest;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
 
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[0 - item];
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
     amt = power;
-    max = device_max_sp(o_ptr) - device_sp(o_ptr);
+    max = device_max_sp(prompt.obj) - device_sp(prompt.obj);
     if (amt > max)
         amt = max;
     if (p_ptr->prace == RACE_MON_LEPRECHAUN)
@@ -2634,11 +2591,8 @@ bool recharge_from_player(int power)
     else
         sp_player(-amt);
 
-    _recharge_aux(o_ptr, amt, power);
-
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-    p_ptr->window |= PW_INVEN;
-
+    _recharge_aux(prompt.obj, amt, power);
+    obj_release(prompt.obj, 0);
     return TRUE;
 }
 

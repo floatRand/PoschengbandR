@@ -897,10 +897,15 @@ static bool _black_market_will_buy(obj_ptr obj)
 
 static bool _black_market_stock_p(int k_idx)
 {
-    if (k_info[k_idx].gen_flags & OFG_INSTA_ART)
+    object_kind *k_ptr = &k_info[k_idx];
+
+    if (k_ptr->gen_flags & OFG_INSTA_ART)
         return FALSE;
 
-    if (k_info[k_idx].gen_flags & OFG_TOWN)
+    if (k_ptr->tval == TV_WAND || k_ptr->tval == TV_STAFF || k_ptr->tval == TV_ROD)
+        return TRUE;
+
+    if (k_ptr->gen_flags & OFG_TOWN)
         return FALSE;
 
     return TRUE;
