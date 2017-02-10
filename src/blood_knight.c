@@ -542,7 +542,7 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_CURE_CRITICAL, rand_range(2, 5));
+    py_birth_obj_aux(TV_POTION, SV_POTION_CURE_CRITICAL, 3);
 }
 
 class_t *blood_knight_get_class(void)

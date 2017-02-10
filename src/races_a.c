@@ -233,7 +233,7 @@ static void _android_birth(void)
     object_type forge = {0};
     object_prep(&forge, lookup_kind(TV_FLASK, SV_ANY));
     apply_magic(&forge, 1, AM_NO_FIXED_ART); /* Hack (pval->xtra4) */
-    forge.number = rand_range(7, 12);
+    forge.number = 10;
     py_birth_obj(&forge);
 
     py_birth_light();
@@ -384,7 +384,7 @@ static void _balrog_get_flags(u32b flgs[OF_ARRAY_SIZE])
 }
 static void _balrog_birth(void)
 {
-    int i, ct = rand_range(3, 4);
+    int i, ct = 4;
     get_mon_num_prep(monster_hook_human, NULL);
     for (i = 0; i < ct; i++)
     {
@@ -1634,7 +1634,7 @@ static void _ent_get_flags(u32b flgs[OF_ARRAY_SIZE])
 }
 static void _ent_birth(void)
 {
-    py_birth_obj_aux(TV_POTION, SV_POTION_WATER, rand_range(15, 23));
+    py_birth_obj_aux(TV_POTION, SV_POTION_WATER, 20);
     py_birth_light();
 }
 race_t *ent_get_race(void)

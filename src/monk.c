@@ -703,7 +703,7 @@ static caster_info *_caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_POTION, SV_POTION_HEROISM, randint1(5));
+    py_birth_obj_aux(TV_POTION, SV_POTION_HEROISM, 3);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_spellbooks();
 }

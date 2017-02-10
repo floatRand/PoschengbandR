@@ -150,7 +150,7 @@ extern void py_birth_obj(object_type *o_ptr)
 /* Standard Food and Light */
 extern void py_birth_food(void)
 {
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_RATION, 2 + rand_range(3, 7));
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_RATION, 7);
 }
 
 extern void py_birth_light(void)

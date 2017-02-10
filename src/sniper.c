@@ -517,7 +517,7 @@ static void _birth(void)
     py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_BOW, SV_LIGHT_XBOW, 1);
-    py_birth_obj_aux(TV_BOLT, SV_AMMO_NORMAL, rand_range(20, 30));
+    py_birth_obj_aux(TV_BOLT, SV_AMMO_NORMAL, 25);
 }
 
 class_t *sniper_get_class(void)

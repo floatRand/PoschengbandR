@@ -29,7 +29,7 @@ static caster_info * _caster_info(void)
 
 static void _demon_birth(void)
 {
-    int i, ct = rand_range(3, 4);
+    int i, ct = 4;
     get_mon_num_prep(monster_hook_human, NULL);
     for (i = 0; i < ct; i++)
     {
