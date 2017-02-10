@@ -749,8 +749,6 @@ extern void do_cmd_rest(void);
 extern bool do_cmd_fire(void);
 extern bool do_cmd_fire_aux1(obj_ptr bow, obj_ptr arrows);
 extern void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int ty);
-extern void do_cmd_throw(void);
-extern bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken);
 extern void do_cmd_travel(void);
 extern void travel_begin(int mode, int x, int y);
 extern void travel_wilderness_scroll(int new_x, int new_y);

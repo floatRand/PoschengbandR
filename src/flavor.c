@@ -1902,7 +1902,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     }
     else if ((p_ptr->pclass == CLASS_NINJA) && (o_ptr->tval == TV_SPIKE))
     {
-        int avgdam = p_ptr->mighty_throw ? (1 + 3) : 1;
+        int avgdam = 1;
         s16b energy_fire = 100 - p_ptr->lev;
 
         avgdam += ((p_ptr->lev + 30) * (p_ptr->lev + 30) - 900) / 55;
