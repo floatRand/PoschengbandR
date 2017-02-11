@@ -304,53 +304,55 @@ void crafting_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int          item;
+        obj_prompt_t prompt = {0};
         bool         okay = FALSE;
-        object_type *o_ptr;
         char         o_name[MAX_NLEN];
 
         var_set_bool(res, FALSE);
 
-        item_tester_hook = object_is_weapon_armour_ammo;
-        item_tester_no_ryoute = TRUE;
+        prompt.prompt = "Enchant which item?";
+        prompt.error = "You have nothing to enchant.";
+        prompt.filter = object_is_weapon_armour_ammo;
+        prompt.where[0] = INV_PACK;
+        prompt.where[1] = INV_EQUIP;
+        prompt.where[2] = INV_QUIVER;
+        prompt.where[3] = INV_FLOOR;
 
-        if (!get_item(&item, "Enchant which item? ", "You have nothing to enchant.", (USE_EQUIP | USE_INVEN)))
-            return;
+        obj_prompt(&prompt);
+        if (!prompt.obj) return;
 
-        o_ptr = &inventory[item];
-        object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+        object_desc(o_name, prompt.obj, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
-        if (object_is_nameless(o_ptr))
+        if (object_is_nameless(prompt.obj))
         {
-            if (object_is_ammo(o_ptr) && randint1(30) > (o_ptr->number - 30))
+            if (object_is_ammo(prompt.obj) && randint1(30) > (prompt.obj->number - 30))
             {
-                if (brand_weapon_aux(item))
+                if (brand_weapon_aux(prompt.obj))
                 {
-                    o_ptr->discount = 99;
+                    prompt.obj->discount = 99;
                     okay = TRUE;
                 }
             }
-            else if (object_is_weapon(o_ptr) && o_ptr->number == 1)
+            else if (object_is_weapon(prompt.obj) && prompt.obj->number == 1)
             {
-                if (brand_weapon_aux(item))
+                if (brand_weapon_aux(prompt.obj))
                 {
-                    o_ptr->discount = 99;
+                    prompt.obj->discount = 99;
                     okay = TRUE;
                 }
             }
-            else if (object_is_armour(o_ptr) && o_ptr->number == 1)
+            else if (object_is_armour(prompt.obj) && prompt.obj->number == 1)
             {
-                if (brand_armour_aux(item))
+                if (brand_armour_aux(prompt.obj))
                 {
-                    o_ptr->discount = 99;
+                    prompt.obj->discount = 99;
                     okay = TRUE;
                 }
             }
         }
 
-        msg_format("%s %s glow%s brightly!",
-                ((item >= 0) ? "Your" : "The"), o_name,
-                ((o_ptr->number > 1) ? "" : "s"));
+        msg_format("The %s glow%s brightly!", o_name,
+                ((prompt.obj->number > 1) ? "" : "s"));
 
         if (!okay)
         {
@@ -363,8 +365,8 @@ void crafting_spell(int cmd, variant *res)
             virtue_add(VIRTUE_ENCHANTMENT, 1);
             android_calc_exp();
 
-            obj_identify_fully(o_ptr);
-            obj_display(o_ptr);
+            obj_identify_fully(prompt.obj);
+            obj_display(prompt.obj);
         }
         var_set_bool(res, TRUE);
         break;

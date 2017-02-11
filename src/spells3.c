@@ -1172,41 +1172,44 @@ void phlogiston(void)
  */
 bool brand_weapon(int brand_type)
 {
-    bool        result = FALSE;
-    int         item;
-    cptr        q, s;
+    obj_prompt_t prompt = {0};
+    bool         result = FALSE;
 
-    item_tester_hook = object_allow_enchant_melee_weapon;
-    item_tester_no_ryoute = TRUE;
+    prompt.prompt = "Enchant which weapon?";
+    prompt.error = "You have nothing to enchant.";
+    prompt.filter = object_allow_enchant_melee_weapon;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
 
-    q = "Enchant which weapon? ";
-    s = "You have nothing to enchant.";
-    if (!get_item(&item, q, s, (USE_EQUIP))) return FALSE;
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    if (inventory[item].name1 || inventory[item].name2)
+    if (prompt.obj->name1 || prompt.obj->name2)
     {
     }
-    else if (have_flag(inventory[item].flags, OF_NO_REMOVE))
+    else if (have_flag(prompt.obj->flags, OF_NO_REMOVE))
     {
         msg_print("You are already excellent!");
     }
     else if (brand_type == -1)
     {
-        result = brand_weapon_aux(item);
+        result = brand_weapon_aux(prompt.obj);
     }
     else
     {
-        ego_brand_weapon(&inventory[item], brand_type);
+        ego_brand_weapon(prompt.obj, brand_type);
         result = TRUE;
     }
     if (result)
     {
-        enchant(&inventory[item], randint0(3) + 4, ENCH_TOHIT | ENCH_TODAM);
-        inventory[item].discount = 99;
+        enchant(prompt.obj, randint0(3) + 4, ENCH_TOHIT | ENCH_TODAM);
+        prompt.obj->discount = 99;
 
         virtue_add(VIRTUE_ENCHANTMENT, 2);
-        obj_identify_fully(&inventory[item]);
-        obj_display(&inventory[item]);
+        obj_identify_fully(prompt.obj);
+        obj_display(prompt.obj);
     }
     else
     {
@@ -1264,20 +1267,18 @@ bool brand_weapon_slaying(int brand_flag, int res_flag)
     android_calc_exp();
     return TRUE;
 }
-bool brand_weapon_aux(int item)
+bool brand_weapon_aux(object_type *o_ptr)
 {
-    assert(item >= 0);
-    if (have_flag(inventory[item].flags, OF_NO_REMOVE))
+    if (have_flag(o_ptr->flags, OF_NO_REMOVE))
         return FALSE;
-    apply_magic(&inventory[item], dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
+    apply_magic(o_ptr, dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
-bool brand_armour_aux(int item)
+bool brand_armour_aux(object_type *o_ptr)
 {
-    assert(item >= 0);
-    if (have_flag(inventory[item].flags, OF_NO_REMOVE))
+    if (have_flag(o_ptr->flags, OF_NO_REMOVE))
         return FALSE;
-    apply_magic(&inventory[item], dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
+    apply_magic(o_ptr, dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
 
@@ -2169,99 +2170,69 @@ bool item_tester_hook_nameless_weapon_armour(object_type *o_ptr)
 
 bool artifact_scroll(void)
 {
-    int             item;
-    bool            okay = FALSE;
-    object_type     *o_ptr;
-    char            o_name[MAX_NLEN];
-    cptr            q, s;
+    obj_prompt_t prompt = {0};
+    bool         okay = FALSE;
+    char         o_name[MAX_NLEN];
 
+    prompt.prompt = "Enchant which item?";
+    prompt.error = "You have nothing to enchant.";
+    prompt.filter = item_tester_hook_nameless_weapon_armour;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
 
-    item_tester_no_ryoute = TRUE;
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    /* Enchant weapon/armour */
-    item_tester_hook = item_tester_hook_nameless_weapon_armour;
-
-    /* Get an item */
-    q = "Enchant which item? ";
-    s = "You have nothing to enchant.";
-
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR))) return (FALSE);
-
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-    /* Description */
-    object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+    object_desc(o_name, prompt.obj, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
     /* Describe */
-    msg_format("%s %s radiate%s a blinding light!",
-          ((item >= 0) ? "Your" : "The"), o_name,
-          ((o_ptr->number > 1) ? "" : "s"));
+    msg_format("The %s radiate%s a blinding light!", o_name,
+          ((prompt.obj->number > 1) ? "" : "s"));
 
-    if (object_is_artifact(o_ptr))
+    if (object_is_artifact(prompt.obj))
     {
         msg_format("The %s %s already %s!",
-            o_name, ((o_ptr->number > 1) ? "are" : "is"),
-            ((o_ptr->number > 1) ? "artifacts" : "an artifact"));
-
-        okay = FALSE;
+            o_name, ((prompt.obj->number > 1) ? "are" : "is"),
+            ((prompt.obj->number > 1) ? "artifacts" : "an artifact"));
     }
 
-    else if (object_is_ego(o_ptr))
+    else if (object_is_ego(prompt.obj))
     {
         msg_format("The %s %s already %s!",
-            o_name, ((o_ptr->number > 1) ? "are" : "is"),
-            ((o_ptr->number > 1) ? "ego items" : "an ego item"));
-
-        okay = FALSE;
+            o_name, ((prompt.obj->number > 1) ? "are" : "is"),
+            ((prompt.obj->number > 1) ? "ego items" : "an ego item"));
     }
 
-    else if (o_ptr->xtra3)
+    else if (prompt.obj->xtra3)
     {
         msg_format("The %s %s already %s!",
-            o_name, ((o_ptr->number > 1) ? "are" : "is"),
-            ((o_ptr->number > 1) ? "customized items" : "a customized item"));
+            o_name, ((prompt.obj->number > 1) ? "are" : "is"),
+            ((prompt.obj->number > 1) ? "customized items" : "a customized item"));
     }
 
-    else if (have_flag(o_ptr->flags, OF_NO_REMOVE))
+    else if (have_flag(prompt.obj->flags, OF_NO_REMOVE))
     {
         msg_print("You are quite special already!");
-        okay = FALSE;
     }
-
     else
     {
-        if (o_ptr->number > 1)
+        if (prompt.obj->number > 1)
         {
             msg_print("Not enough enough energy to enchant more than one object!");
-            msg_format("%d of your %s %s destroyed!",(o_ptr->number)-1, o_name, (o_ptr->number>2?"were":"was"));
-
-            if (item >= 0)
-            {
-                inven_item_increase(item, 1-(o_ptr->number));
-            }
-            else
-            {
-                floor_item_increase(0-item, 1-(o_ptr->number));
-            }
+            msg_format("%d of your %s %s destroyed!",(prompt.obj->number)-1, o_name, (prompt.obj->number>2?"were":"was"));
+            prompt.obj->number = 1;
         }
-        if (object_is_mushroom(o_ptr)) /* Hack for Snotlings ... */
+
+        if (object_is_mushroom(prompt.obj)) /* Hack for Snotlings ... */
         {
-            o_ptr->art_name = quark_add("(Eternal Mushroom)");
+            prompt.obj->art_name = quark_add("(Eternal Mushroom)");
             okay = TRUE;
         }
         else
         {
-            okay = create_artifact(o_ptr, CREATE_ART_SCROLL | CREATE_ART_GOOD);
+            okay = create_artifact(prompt.obj, CREATE_ART_SCROLL | CREATE_ART_GOOD);
         }
     }
 
@@ -4083,8 +4054,9 @@ bool curse_armor(int slot)
     object_type *o_ptr;
     char o_name[MAX_NLEN];
 
-    o_ptr = &inventory[slot];
-    if (!o_ptr->k_idx) return (FALSE);
+    if (!slot) return FALSE;
+    o_ptr = equip_obj(slot);
+    if (!o_ptr) return FALSE;
 
     object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
 
@@ -4113,8 +4085,9 @@ bool curse_weapon(bool force, int slot)
     object_type *o_ptr;
     char o_name[MAX_NLEN];
 
-    o_ptr = &inventory[slot];
-    if (!o_ptr->k_idx) return FALSE;
+    if (!slot) return FALSE;
+    o_ptr = equip_obj(slot);
+    if (!o_ptr) return FALSE;
 
     object_desc(o_name, o_ptr, OD_OMIT_PREFIX);
 

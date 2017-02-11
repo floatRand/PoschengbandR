@@ -1531,66 +1531,52 @@ static cptr _do_scroll(int sval, int mode)
         if (desc) return "It seems to be the hurried scribblings of a mad wizard on the verge of some great arcane discovery. You can't make heads or tails of it. Do you read it to see what happens?";
         if (cast)
         {
-            int item;
-            object_type *o_ptr;
             int n = randint0(_scroll_power(100));
-
-            item_tester_hook = item_tester_hook_nameless_weapon_armour;
-            if (!get_item(&item, "Use which item? ", "You have nothing to use.", (USE_EQUIP | USE_INVEN | USE_FLOOR))) return NULL;
-
-            if (item >= 0)
-                o_ptr = &inventory[item];
-            else
-                o_ptr = &o_list[0 - item];
-
-            if (o_ptr->number > 1)
-            {
-                msg_print("Don't be greedy. Just try it out on a single object at a time.");
-                return NULL;
-            }
-
             device_noticed = TRUE;
-
-            /* TODO: Add more goodies ... */
-            if (n < 10)
+            if (n < 2)
             {
-                msg_print("Ooops!  That didn't work at all!");
+                int curses = 1 + randint1(3);
+                bool stop_ty = FALSE;
+                int count = 0;
+
+                cmsg_print(TERM_VIOLET, "The scroll has an ancient, foul curse!");
+                curse_equipment(100, 50);
+                do
+                {
+                    stop_ty = activate_ty_curse(stop_ty, &count);
+                }
+                while (--curses);
+            }
+            else if (n < 12)
+            {
+                msg_print("Ooops! That didn't work at all!");
                 destroy_area(py, px, 13 + randint0(5), 300);
             }
-            else if (n < 15)
+            else if (n < 17)
             {
                 msg_print("You faintly hear crazy laughter for a moment.");
                 summon_cyber(-1, py, px);
             }
-            else if (n < 25)
+            else if (n < 27)
             {
                 msg_print("The scroll explodes violently!");
-                call_chaos(100);
+                project(0, 10, py, px, 300, GF_MANA, PROJECT_KILL | PROJECT_ITEM, -1);
             }
-            else if (n < 65)
+            else if (n < 50)
             {
-                curse_weapon(FALSE, item);    /* This curses armor too ... */
+                _do_scroll(SV_SCROLL_CURSE_ARMOR, mode);
             }
-            else if (n < 90)
+            else if (n < 75)
             {
-                if (object_is_melee_weapon(o_ptr))
-                {
-                    if (!brand_weapon_aux(item)) return "";
-                }
-                else
-                    msg_print("Funny, nothing happened.");
+                _do_scroll(SV_SCROLL_CURSE_WEAPON, mode);
+            }
+            else if (n < 95)
+            {
+                _do_scroll(SV_SCROLL_CRAFTING, mode);
             }
             else
             {
-                if (no_artifacts)
-                {
-                    if (object_is_melee_weapon(o_ptr))
-                    {
-                        if (!brand_weapon_aux(item)) return "";
-                    }
-                }
-                else
-                    create_artifact(o_ptr, CREATE_ART_SCROLL | CREATE_ART_GOOD);
+                _do_scroll(SV_SCROLL_ARTIFACT, mode);
             }
         }
         break;

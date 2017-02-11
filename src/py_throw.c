@@ -510,7 +510,7 @@ void py_throw_doc(py_throw_ptr context, doc_ptr doc)
     int mult = 100;
     critical_t crit = {0};
     int crit_pct = 0;
-    int num_throw = 100;;
+    int num_throw = 100;
     bool force = FALSE;
     doc_ptr cols[2] = {0};
 
