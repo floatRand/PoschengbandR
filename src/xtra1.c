@@ -2181,7 +2181,7 @@ static void _fix_inven_aux(void)
     doc = doc_alloc(w);
 
     doc_insert(doc, "<style:table>");
-    pack_display(doc, obj_exists, INV_IGNORE_INSCRIPTIONS);
+    pack_display(doc, obj_exists, INV_IGNORE_INSCRIPTIONS | INV_NO_LABELS);
     doc_insert(doc, "</style>");
     doc_sync_term(
         doc,

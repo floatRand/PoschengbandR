@@ -36,7 +36,7 @@ void pack_ui(void)
     r = ui_screen_rect();
     doc_insert(doc, "<color:G>Inventory:</color>\n");
 
-    pack_display(doc, obj_exists, 0);
+    pack_display(doc, obj_exists, INV_NO_LABELS);
     doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> ",
                     wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
 

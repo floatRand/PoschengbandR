@@ -587,7 +587,9 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, i
 
         if (!obj)
         {
-            doc_printf(doc, " %c) ", slot_label(slot - start + 1));
+            if (!(flags & INV_NO_LABELS))
+                doc_printf(doc, " %c)", slot_label(slot - start + 1));
+            doc_insert(doc, " ");
             if (show_item_graph)
                 doc_insert(doc, "  ");
             if (inv->type == INV_EQUIP && show_labels)
@@ -608,7 +610,9 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, i
             }
             else
                 object_desc(name, obj, OD_COLOR_CODED);
-            doc_printf(doc, " %c) ", inv_slot_label(inv, slot));
+            if (!(flags & INV_NO_LABELS))
+                doc_printf(doc, " %c)", inv_slot_label(inv, slot));
+            doc_insert(doc, " ");
             if (show_item_graph)
             {
                 doc_insert_char(doc, object_attr(obj), object_char(obj));

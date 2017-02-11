@@ -87,6 +87,7 @@ extern cptr    inv_name(inv_ptr inv);
 #define INV_SHOW_FAIL_RATES     0x0001
 #define INV_SHOW_VALUE          0x0002
 #define INV_IGNORE_INSCRIPTIONS 0x0004
+#define INV_NO_LABELS           0x0008
 extern void inv_display(
     /* What we display */
     inv_ptr inv,
