@@ -79,15 +79,10 @@ static cptr _rogue_pick_pocket(int power)
                 stats_on_gold_find(loot.pval);
                 p_ptr->redraw |= (PR_GOLD);
             }
-            else if (!inven_carry_okay(&loot))
-            {
-                msg_format("You have no room for %s.", o_name);
-                drop_near(&loot, -1, y, x);
-            }
             else
             {
-                int slot = inven_carry(&loot);
-                msg_format("You steal %s (%c).", o_name, index_to_label(slot));
+                pack_carry(&loot);
+                msg_format("You steal %s.", o_name);
             }
         }
 

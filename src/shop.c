@@ -1423,7 +1423,7 @@ static void _display(_ui_context_ptr context)
 }
 
 static int _add_obj(shop_ptr shop, obj_ptr obj);
-static void _buy_aux(shop_ptr shop, obj_ptr obj)
+static bool _buy_aux(shop_ptr shop, obj_ptr obj)
 {
     char       name[MAX_NLEN];
     string_ptr s = string_alloc();
@@ -1433,7 +1433,7 @@ static void _buy_aux(shop_ptr shop, obj_ptr obj)
     if (!price)
     {
         msg_print("I have no interest in your junk!");
-        return;
+        return FALSE;
     }
     price = _buy_price(shop, price);
     price *= obj->number;
@@ -1442,7 +1442,7 @@ static void _buy_aux(shop_ptr shop, obj_ptr obj)
     string_printf(s, "Really sell %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, price);
     c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
     string_free(s);
-    if (c == 'n') return;
+    if (c == 'n') return FALSE;
 
     p_ptr->au += price;
     stats_on_gold_selling(price);
@@ -1468,8 +1468,15 @@ static void _buy_aux(shop_ptr shop, obj_ptr obj)
     if (obj->tval == TV_BOTTLE)
         virtue_add(VIRTUE_NATURE, 1);
 
+    if (object_is_(obj, TV_POTION, SV_POTION_BLOOD))
+    {
+        msg_print("The potion goes sour.");
+        obj->sval = SV_POTION_SALT_WATER;
+        obj->k_idx = lookup_kind(TV_POTION, SV_POTION_SALT_WATER);
+    }
     if (_add_obj(shop, obj))
         inv_sort(shop->inv);
+    return TRUE;
 }
 
 static void _buy(_ui_context_ptr context)
@@ -1496,7 +1503,8 @@ static void _buy(_ui_context_ptr context)
     {
         obj_t copy = *prompt.obj;
         copy.number = amt;
-        _buy_aux(context->shop, &copy);
+        if (_buy_aux(context->shop, &copy))
+            prompt.obj->number -= amt;
     }
     else
         _buy_aux(context->shop, prompt.obj);

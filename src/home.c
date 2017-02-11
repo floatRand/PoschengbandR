@@ -331,6 +331,12 @@ static void _get(_ui_context_ptr context)
 static void _drop_aux(obj_ptr obj, _ui_context_ptr context)
 {
     char name[MAX_NLEN];
+    if (object_is_(obj, TV_POTION, SV_POTION_BLOOD))
+    {
+        msg_print("The potion goes sour.");
+        obj->sval = SV_POTION_SALT_WATER;
+        obj->k_idx = lookup_kind(TV_POTION, SV_POTION_SALT_WATER);
+    }
     object_desc(name, obj, OD_COLOR_CODED);
     if (inv_loc(context->inv) == INV_MUSEUM)
     {

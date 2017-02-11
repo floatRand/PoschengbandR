@@ -1564,97 +1564,6 @@ void search(void)
     }
 }
 
-
-/*
- * Helper routine for py_pickup() and py_pickup_floor().
- *
- * Add the given dungeon object to the character's inventory.
- *
- * Delete the object afterwards.
- */
-void py_pickup_aux(int o_idx)
-{
-    int slot, i;
-
-    char o_name[MAX_NLEN];
-
-    object_type *o_ptr;
-
-    o_ptr = &o_list[o_idx];
-
-    /* Carry the object */
-    slot = inven_carry(o_ptr);
-
-    /* Get the object again */
-    o_ptr = &inventory[slot];
-
-    /* Delete the object */
-    delete_object_idx(o_idx);
-
-    if ( p_ptr->personality == PERS_MUNCHKIN
-      || randint0(1000) < virtue_current(VIRTUE_KNOWLEDGE) )
-    {
-        bool old_known = identify_item(o_ptr);
-
-        /* Auto-inscription/destroy */
-        autopick_alter_item(slot, (bool)(destroy_identify && !old_known));
-
-        /* If it is destroyed, don't pick it up */
-        if (o_ptr->marked & OM_AUTODESTROY) return;
-    }
-
-    if (destroy_get)
-    {
-        autopick_alter_item(slot, TRUE);
-        if (o_ptr->marked & OM_AUTODESTROY) return;
-    }
-
-    /* Describe the object */
-    object_desc(o_name, o_ptr, OD_COLOR_CODED);
-
-    /* Message */
-    msg_format("You have %s (%c).", o_name, index_to_label(slot));
-
-    /* Runes confer benefits even when in inventory */
-    p_ptr->update |= PU_BONUS;
-
-    /* Hack: Archaeologists Instantly Pseudo-ID artifacts on pickup */
-    if ( p_ptr->pclass == CLASS_ARCHAEOLOGIST
-      && object_is_artifact(o_ptr)
-      && !object_is_known(o_ptr) )
-    {
-        /* Suppress you are leaving something special behind message ... */
-        if (p_ptr->sense_artifact)
-        {
-            p_ptr->sense_artifact = FALSE;    /* There may be more than one? */
-            p_ptr->redraw |= PR_STATUS;
-        }
-
-        if (!(o_ptr->ident & (IDENT_SENSE)))
-        {
-            cmsg_format(TERM_L_BLUE, "You feel that the %s is %s...", o_name, game_inscriptions[FEEL_SPECIAL]);
-
-            o_ptr->ident |= (IDENT_SENSE);
-            o_ptr->feeling = FEEL_SPECIAL;
-        }
-    }
-
-    /* Check if completed a quest */
-    for (i = 0; i < max_quests; i++)
-    {
-        if ((quest[i].type == QUEST_TYPE_FIND_ARTIFACT) &&
-            (quest[i].status == QUEST_STATUS_TAKEN) &&
-               (quest[i].k_idx == o_ptr->name1 || quest[i].k_idx == o_ptr->name3))
-        {
-            quest[i].status = QUEST_STATUS_COMPLETED;
-            quest[i].complev = (byte)p_ptr->lev;
-            msg_print("You completed your quest!");
-            msg_print(NULL);
-        }
-    }
-}
-
-
 /*
  * Determine if a trap affects the player.
  * Always miss 5% of the time, Always hit 5% of the time.
@@ -4182,7 +4091,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     m_ptr->hold_o_idx = q_ptr->next_o_idx;
                     q_ptr->next_o_idx = 0;
                     msg_format("You snatched %s.", o_name);
-                    inven_carry(q_ptr);
+                    pack_carry(q_ptr);
+                    obj_release(q_ptr, OBJ_RELEASE_QUIET);
                 }
             }
 

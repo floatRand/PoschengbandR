@@ -3780,9 +3780,6 @@ int inven_damage(inven_func typ, int p1, int which)
                     (void)potion_smash_effect(0, py, px, o_ptr->k_idx);
                 }
 
-                /* Reduce the charges of rods/wands */
-                reduce_charges(o_ptr, amt);
-
                 stats_on_m_destroy(o_ptr, amt);
 
                 /* Destroy "amt" items */

@@ -453,7 +453,7 @@ void equip_ui(void)
     doc_insert(doc, "<color:G>Equipment:</color>\n");
 
     equip_display(doc, NULL, 0);
-    doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> \n",
+    doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> ",
                     wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
 
     screen_save();

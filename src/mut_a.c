@@ -1364,10 +1364,10 @@ void fumbling_mut(int cmd, variant *res)
             if (slot)
             {
                 object_type *o_ptr = equip_obj(slot);
-                if (!object_is_cursed(o_ptr))
+                if (equip_can_takeoff(o_ptr))
                 {
                     cmsg_print(TERM_VIOLET, "You drop your weapon!");
-                    inven_drop(slot, 1);
+                    equip_drop(o_ptr);
                     msg_print("Press 'Y' to continue.");
                     flush();
                     for (;;)

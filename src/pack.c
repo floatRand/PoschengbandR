@@ -37,7 +37,7 @@ void pack_ui(void)
     doc_insert(doc, "<color:G>Inventory:</color>\n");
 
     pack_display(doc, obj_exists, 0);
-    doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> \n",
+    doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> ",
                     wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
 
     screen_save();
@@ -208,13 +208,6 @@ void pack_drop(obj_ptr obj)
     assert(obj);
     assert(obj->loc.where == INV_PACK);
     assert(obj->number > 0);
-
-    if (obj->tval == TV_POTION && obj->sval == SV_POTION_BLOOD)
-    {
-        msg_print("You can't do that! Your blood will go sour!");
-        energy_use = 0;
-        return;
-    }
 
     if (obj->number > 1)
     {

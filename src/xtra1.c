@@ -3411,7 +3411,6 @@ void calc_bonuses(void)
     bool old_esp_unique = p_ptr->esp_unique;
     bool old_esp_magical = p_ptr->esp_magical;
     bool old_see_inv = p_ptr->see_inv;
-    bool old_mighty_throw = p_ptr->mighty_throw;
 
     /* Save the old armor class */
     s16b old_dis_ac = p_ptr->dis_ac;
@@ -3862,12 +3861,6 @@ void calc_bonuses(void)
 
     for (i = 0; i < MAX_STATS; i++)
         p_ptr->stat_add[i] += stats[i];
-
-    if (old_mighty_throw != p_ptr->mighty_throw)
-    {
-        /* Redraw average damege display of Shuriken */
-        p_ptr->window |= PW_INVEN;
-    }
 
     if (p_ptr->cursed & OFC_TELEPORT) p_ptr->cursed &= ~(OFC_TELEPORT_SELF);
 
@@ -5072,20 +5065,6 @@ void notice_stuff(void)
     {
         p_ptr->notice &= ~PN_OPTIMIZE_QUIVER;
         quiver_optimize();
-    }
-
-    /* DEAD: Combine the pack */
-    if (p_ptr->notice & (PN_COMBINE))
-    {
-        p_ptr->notice &= ~(PN_COMBINE);
-        combine_pack();
-    }
-
-    /* DEAD: Reorder the pack */
-    if (p_ptr->notice & (PN_REORDER))
-    {
-        p_ptr->notice &= ~(PN_REORDER);
-        reorder_pack();
     }
 }
 

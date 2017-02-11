@@ -6483,7 +6483,6 @@ cptr do_effect(effect_t *effect, int mode, int boost)
         {
             object_type forge;
             char o_name[MAX_NLEN];
-            int slot;
 
             object_prep(&forge, lookup_kind(TV_ARROW, m_bonus(1, p_ptr->lev)+ 1));
             forge.number = (byte)rand_range(5, 10);
@@ -6495,9 +6494,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             object_desc(o_name, &forge, 0);
             msg_format("It creates %s.", o_name);
 
-            slot = inven_carry(&forge);
-            if (slot >= 0) autopick_alter_item(slot, FALSE);
-
+            pack_carry(&forge);
             device_noticed = TRUE;
         }
         break;

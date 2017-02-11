@@ -121,11 +121,6 @@ bool _init_context(py_throw_ptr context)
     object_desc(context->obj_name, context->obj, OD_NAME_ONLY | OD_OMIT_PREFIX | OD_OMIT_INSCRIPTION);
 
     /* checks before taking a turn */
-    if (object_is_(context->obj, TV_POTION, SV_POTION_BLOOD))
-    {
-        msg_print("You can't do that! Your blood will go sour!");
-        return FALSE;
-    }
     if (p_ptr->inside_arena && !(context->type & THROW_BOOMERANG))
     {
         if (context->obj->tval != TV_SPIKE || p_ptr->pclass != CLASS_NINJA)

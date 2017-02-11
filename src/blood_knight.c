@@ -300,18 +300,8 @@ void _blood_pool_spell(int cmd, variant *res)
         msg_print("You feel light headed.");
         object_prep(&forge, lookup_kind(TV_POTION, SV_POTION_BLOOD));
 
-        /* We can't just drop potions on the ground, or the user can spam the spell! */
-        if (!inven_carry_okay(&forge))
-        {
-            msg_print("Your pack is full!  The potion goes sour ...");
-            object_prep(&forge, lookup_kind(TV_POTION, SV_POTION_SALT_WATER));
-            drop_near(&forge, -1, py, px);
-        }
-        else
-        {
-            inven_carry(&forge);
-            msg_print("You store your blood for future use.");
-        }
+        pack_carry(&forge);
+        msg_print("You store your blood for future use.");
         var_set_bool(res, TRUE);
         break;
     }

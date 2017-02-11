@@ -84,7 +84,7 @@ static bool _whip_fetch(int dir, int rng)
             tx += ddx[dir];
             c_ptr = &cave[ty][tx];
 
-            if ((distance(py, px, ty, tx) > MAX_RANGE) ||
+            if ((distance(py, px, ty, tx) > rng) ||
                 !in_bounds(ty, tx) ||
                 !cave_have_flag_bold(ty, tx, FF_PROJECT))
             {
@@ -105,16 +105,9 @@ static bool _whip_fetch(int dir, int rng)
     object_desc(o_name, o_ptr, OD_NAME_ONLY);
 
     /* Get the object */
-    if (!inven_carry_okay(o_ptr))
-    {
-        cmsg_format(TERM_VIOLET, "You fail to fetch %^s since your pack is full.", o_name);
-        /* Leave the object where it is */
-    }
-    else
-    {
-        msg_format("You skillfully crack your whip and fetch %^s.", o_name);
-        py_pickup_aux(c_ptr->o_idx);
-    }
+    msg_format("You skillfully crack your whip and fetch %^s.", o_name);
+    pack_carry(o_ptr);
+    obj_release(o_ptr, OBJ_RELEASE_QUIET);
 
     return TRUE;
 }

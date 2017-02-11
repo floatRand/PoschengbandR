@@ -2532,38 +2532,24 @@ static int _gamble_shop_roll(const _gamble_shop_t *choices)
 static bool _gamble_shop_aux(object_type *o_ptr)
 {
     char buf[MAX_NLEN];
-    int slot, auto_pick_idx;
+    int auto_pick_idx;
 
     obj_identify_fully(o_ptr);
     stats_on_identify(o_ptr);
     object_desc(buf, o_ptr, OD_COLOR_CODED);
-
-    clear_bldg(5, 10);
-    
-    c_put_str(TERM_YELLOW, "You Win:", 5, 0);
-    put_str(buf, 5, 9);
+    msg_format("You win %s.", buf);
 
     auto_pick_idx = is_autopick(o_ptr);
     if (auto_pick_idx >= 0)
     {
         if (autopick_list[auto_pick_idx].action & DO_AUTODESTROY)
         {
-            msg_format("You destroy %s.", buf);
+            msg_print("You destroy your prize.");
             return TRUE;
         }
     }
 
-    if (!inven_carry_okay(o_ptr))
-    {
-        msg_print("You cannot carry that many different items.");
-        /* Charge the player anyway. Otherwise, they can get whatever object
-           they want by playing games with their inventory! */
-        return TRUE;
-    }
-    slot = inven_carry(o_ptr);
-    object_desc(buf, &inventory[slot], OD_COLOR_CODED);
-    msg_format("You have %s (%c).", buf, index_to_label(slot));
-    handle_stuff();
+    pack_carry(o_ptr);
     return TRUE;
 }
 
@@ -3807,6 +3793,12 @@ void do_cmd_bldg(void)
             bldg_process_command(bldg, i);
         }
 
+        if (pack_overflow_count())
+        {
+            msg_print("<color:v>Your pack is overflowing!</color> It's time for you to leave!");
+            msg_print(NULL);
+            leave_bldg = TRUE;
+        }
         /* Notice stuff */
         notice_stuff();
 
