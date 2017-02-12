@@ -615,37 +615,25 @@ static void _absorb_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        object_type * o_ptr;
-        int item;
+        obj_prompt_t prompt = {0};
         char o_name[MAX_NLEN];
 
         var_set_bool(res, FALSE);
-        item_tester_hook = object_is_melee_weapon;
+        prompt.prompt = "Absorb which item?";
+        prompt.error = "You have nothing to absorb.";
+        prompt.filter = object_is_melee_weapon;
+        prompt.where[0] = INV_PACK;
+        prompt.where[1] = INV_FLOOR;
 
-        if (!get_item(&item, "Absorb which item? ", "You have nothing to absorb.", USE_INVEN | USE_FLOOR)) break;
+        obj_prompt(&prompt);
+        if (!prompt.obj) return;
 
-        if (item >= 0)
-            o_ptr = &inventory[item];
-        else
-            o_ptr = &o_list[0 - item];
-
-        object_desc(o_name, o_ptr, OD_NAME_ONLY);
+        object_desc(o_name, prompt.obj, OD_NAME_ONLY);
         msg_format("You absorb the power of %s!", o_name);
-        _absorb(o_ptr);
+        _absorb(prompt.obj);
 
-        if (item >= 0)
-        {
-            inven_item_increase(item, -1);
-            inven_item_describe(item);
-            inven_item_optimize(item);
-        }
-        else
-        {
-            floor_item_increase(0 - item, -1);
-            floor_item_describe(0 - item);
-            floor_item_optimize(0 - item);
-        }
-        
+        prompt.obj->number = 0;
+        obj_release(prompt.obj, 0);
 
         var_set_bool(res, TRUE);
         break;
