@@ -947,6 +947,7 @@ char tval_to_attr_char(int tval)
  *   OD_STORE            : Assume to be aware and known
  *   OD_NO_FLAVOR        : Allow to hidden flavor
  *   OD_FORCE_FLAVOR     : Get un-shuffled flavor name
+ *   OD_SINGULAR         : Pretend o_ptr->number == 1.
  */
 void object_desc(char *buf, object_type *o_ptr, u32b mode)
 {
@@ -988,6 +989,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
     object_kind    *k_ptr = &k_info[o_ptr->k_idx];
     object_kind    *flavor_k_ptr = &k_info[k_ptr->flavor];
+
+    int             number = (mode & OD_SINGULAR) ? 1 : o_ptr->number;
 
     /* Extract some flags */
     obj_flags(o_ptr, flgs); /* TR_FULL_NAME and TR_SHOW_MODS should never really be hidden ... */
@@ -1421,15 +1424,15 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         }
 
         /* Hack -- None left */
-        else if (o_ptr->number <= 0)
+        else if (number <= 0)
         {
             t = object_desc_str(t, "no more ");
         }
 
         /* Extract the number */
-        else if (o_ptr->number > 1)
+        else if (number > 1)
         {
-            t = object_desc_num(t, o_ptr->number);
+            t = object_desc_num(t, number);
             t = object_desc_chr(t, ' ');
         }
 
@@ -1479,15 +1482,15 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         }
 
         /* Hack -- all gone */
-        else if (o_ptr->number <= 0)
+        else if (number <= 0)
         {
             t = object_desc_str(t, "no more ");
         }
 
         /* Prefix a number if required */
-        else if (o_ptr->number > 1)
+        else if (number > 1)
         {
-            t = object_desc_num(t, o_ptr->number);
+            t = object_desc_num(t, number);
             t = object_desc_chr(t, ' ');
         }
 
@@ -1538,7 +1541,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         else if (*s == '~')
         {
             /* Add a plural if needed */
-            if (!(mode & OD_NO_PLURAL) && (o_ptr->number != 1))
+            if (!(mode & OD_NO_PLURAL) && (number != 1))
             {
                 char k = t[-1];
 

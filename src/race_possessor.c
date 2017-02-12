@@ -584,10 +584,9 @@ static void _possess_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int item;
-        char o_name[MAX_NLEN];
-        object_type *o_ptr;
-        object_type copy;
+        obj_prompt_t  prompt = {0};
+        monster_race *r_ptr;
+        char          name[MAX_NLEN];
 
         var_set_bool(res, FALSE);
 
@@ -597,26 +596,25 @@ static void _possess_spell(int cmd, variant *res)
             return;
         }
 
-        item_tester_hook = _obj_can_possess;
-        if (!get_item(&item, "Possess which corpse? ", "You have nothing to possess.", (USE_INVEN | USE_FLOOR))) 
-            return;
+        prompt.prompt = "Possess which corpse?";
+        prompt.error = "You have nothing to possess.";
+        prompt.filter = _obj_can_possess;
+        prompt.where[0] = INV_PACK;
+        prompt.where[1] = INV_FLOOR;
 
-        if (item >= 0)
-            o_ptr = &inventory[item];
-        else
-            o_ptr = &o_list[0 - item];
+        obj_prompt(&prompt);
+        if (!prompt.obj) return;
+        r_ptr = &r_info[prompt.obj->pval];
 
-        object_copy(&copy, o_ptr);
-        copy.number = 1;
-        object_desc(o_name, &copy, OD_NAME_ONLY);
-
-        if (r_info[copy.pval].level > _calc_level(p_ptr->max_plv) + 5)
+        object_desc(name, prompt.obj, OD_NAME_ONLY | OD_SINGULAR);
+        if (r_ptr->level > _calc_level(p_ptr->max_plv) + 5)
         {
-            msg_format("You are not powerful enough to possess %s (Lvl %d).", o_name, r_info[copy.pval].level);
+            msg_format("You are not powerful enough to possess %s (Lvl %d).",
+                name, r_ptr->level);
             return;
         }
 
-        msg_format("You possess %s.", o_name);
+        msg_format("You possess %s.", name);
         if (p_ptr->current_r_idx != MON_POSSESSOR_SOUL)
         {
             if (p_ptr->lev <= 10 || one_in_(3))
@@ -632,23 +630,9 @@ static void _possess_spell(int cmd, variant *res)
                 msg_print("Your previous body quickly decays!");
         }
 
-        /* Order is important. Changing body forms may result in illegal
-           equipment being placed in the pack, invalidating the item index.
-           This is exacerbated by corpses sorting to the bottom :( */
-        if (item >= 0)
-        {
-            inven_item_increase(item, -1);
-            inven_item_describe(item);
-            inven_item_optimize(item);
-        }
-        else
-        {
-            floor_item_increase(0 - item, -1);
-            floor_item_describe(0 - item);
-            floor_item_optimize(0 - item);
-        }
-        o_ptr = NULL;
-        possessor_set_current_r_idx(copy.pval);
+        possessor_set_current_r_idx(prompt.obj->pval);
+        prompt.obj->number--;
+        obj_release(prompt.obj, 0);
         var_set_bool(res, TRUE);
         break;
     }
