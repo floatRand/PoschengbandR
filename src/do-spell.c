@@ -5268,7 +5268,7 @@ static cptr do_arcane_spell(int spell, int mode)
     return "";
 }
 
-static bool _craft_enchant(int max, int inc)
+bool craft_enchant(int max, int inc)
 {
     obj_prompt_t prompt = {0};
     char         o_name[MAX_NLEN];
@@ -5365,7 +5365,7 @@ static cptr do_craft_spell(int spell, int mode)
 
         if (cast)
         {
-            if (!_craft_enchant(2 + plev/5, 1))
+            if (!craft_enchant(2 + plev/5, 1))
                 return NULL;
         }
         break;
@@ -5776,7 +5776,7 @@ static cptr do_craft_spell(int spell, int mode)
 
         if (cast)
         {
-            if (!_craft_enchant(15, 3))
+            if (!craft_enchant(15, 3))
                 return NULL;
         }
         break;

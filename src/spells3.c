@@ -2740,64 +2740,42 @@ bool bless_weapon(void)
  */
 bool polish_shield(void)
 {
-    int             item;
-    object_type     *o_ptr;
-    u32b flgs[OF_ARRAY_SIZE];
-    char            o_name[MAX_NLEN];
-    cptr            q, s;
+    obj_prompt_t prompt = {0};
+    u32b         flgs[OF_ARRAY_SIZE];
+    char         o_name[MAX_NLEN];
 
-    item_tester_no_ryoute = TRUE;
-    /* Assume enchant weapon */
-    item_tester_tval = TV_SHIELD;
+    prompt.prompt = "Polish which shield?";
+    prompt.error = "You have no shield to polish.";
+    prompt.filter = object_is_shield; 
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_FLOOR;
 
-    /* Get an item */
-    q = "Polish which weapon? ";
-    s = "You have no shield to polish.";
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR)))
-        return FALSE;
+    object_desc(o_name, prompt.obj, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+    obj_flags(prompt.obj, flgs);
 
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-
-    /* Description */
-    object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-
-    /* Extract the flags */
-    obj_flags(o_ptr, flgs);
-
-    if (o_ptr->k_idx && !object_is_artifact(o_ptr) && !object_is_ego(o_ptr) &&
-        !object_is_cursed(o_ptr) && (o_ptr->sval != SV_MIRROR_SHIELD))
+    if (!object_is_artifact(prompt.obj) && !object_is_ego(prompt.obj) &&
+        !object_is_cursed(prompt.obj) && (prompt.obj->sval != SV_MIRROR_SHIELD))
     {
         msg_format("%s %s shine%s!",
-            ((item >= 0) ? "Your" : "The"), o_name,
-            ((o_ptr->number > 1) ? "" : "s"));
-        o_ptr->name2 = EGO_SHIELD_REFLECTION;
-        enchant(o_ptr, randint0(3) + 4, ENCH_TOAC);
+            ((prompt.obj->loc.where != INV_FLOOR) ? "Your" : "The"), o_name,
+            ((prompt.obj->number > 1) ? "" : "s"));
+        prompt.obj->name2 = EGO_SHIELD_REFLECTION;
+        enchant(prompt.obj, randint0(3) + 4, ENCH_TOAC);
 
-        o_ptr->discount = 99;
+        prompt.obj->discount = 99;
         virtue_add(VIRTUE_ENCHANTMENT, 2);
     }
     else
     {
         if (flush_failure) flush();
-
         msg_print("Failed.");
-
         virtue_add(VIRTUE_ENCHANTMENT, -2);
     }
     android_calc_exp();
-
     return TRUE;
 }
 
@@ -3881,51 +3859,35 @@ int cold_dam(int dam, cptr kb_str, int monspell)
 
 bool rustproof(void)
 {
-    int         item;
-    object_type *o_ptr;
-    char        o_name[MAX_NLEN];
-    cptr        q, s;
+    obj_prompt_t prompt = {0};
+    char         o_name[MAX_NLEN];
 
-    item_tester_no_ryoute = TRUE;
-    /* Select a piece of armour */
-    item_tester_hook = object_is_armour;
+    prompt.prompt = "Rustproof which piece of armour?";
+    prompt.error = "You have nothing to rustproof.";
+    prompt.filter = object_is_armour;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_FLOOR;
 
-    /* Get an item */
-    q = "Rustproof which piece of armour? ";
-    s = "You have nothing to rustproof.";
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR))) return FALSE;
+    object_desc(o_name, prompt.obj, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
+    add_flag(prompt.obj->flags, OF_IGNORE_ACID);
+    add_flag(prompt.obj->known_flags, OF_IGNORE_ACID);
 
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
-
-
-    /* Description */
-    object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-
-    add_flag(o_ptr->flags, OF_IGNORE_ACID);
-    add_flag(o_ptr->known_flags, OF_IGNORE_ACID);
-
-    if ((o_ptr->to_a < 0) && !object_is_cursed(o_ptr))
+    if ((prompt.obj->to_a < 0) && !object_is_cursed(prompt.obj))
     {
         msg_format("%s %s look%s as good as new!",
-            ((item >= 0) ? "Your" : "The"), o_name,
-            ((o_ptr->number > 1) ? "" : "s"));
-        o_ptr->to_a = 0;
+            ((prompt.obj->loc.where != INV_FLOOR) ? "Your" : "The"), o_name,
+            ((prompt.obj->number > 1) ? "" : "s"));
+        prompt.obj->to_a = 0;
     }
 
     msg_format("%s %s %s now protected against corrosion.",
-        ((item >= 0) ? "Your" : "The"), o_name,
-        ((o_ptr->number > 1) ? "are" : "is"));
+        ((prompt.obj->loc.where != INV_FLOOR) ? "Your" : "The"), o_name,
+        ((prompt.obj->number > 1) ? "are" : "is"));
 
     android_calc_exp();
     return TRUE;
@@ -4170,9 +4132,9 @@ bool dimension_door(int rng)
 
 bool eat_magic(int power)
 {
-    object_type * o_ptr;
-    int item, amt;
-    int fail_odds = 0, lev;
+    obj_prompt_t prompt = {0};
+    int          amt;
+    int          fail_odds = 0, lev;
 
     if (p_ptr->pclass == CLASS_RUNE_KNIGHT)
     {
@@ -4180,21 +4142,20 @@ bool eat_magic(int power)
         return FALSE;
     }
 
-    /* Get an item */
-    item_tester_hook = _obj_recharge_src;
-    if (!get_item(&item, "Drain which item? ", "You have nothing to drain.", USE_INVEN | USE_FLOOR))
-        return FALSE;
+    prompt.prompt = "Drain which item?";
+    prompt.error = "You have nothing to drain.";
+    prompt.filter = _obj_recharge_src;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
 
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[0 - item];
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
-    amt = o_ptr->activation.difficulty;
-    if (amt > device_sp(o_ptr))
-        amt = device_sp(o_ptr);
+    amt = prompt.obj->activation.difficulty;
+    if (amt > device_sp(prompt.obj))
+        amt = device_sp(prompt.obj);
 
-    lev = o_ptr->activation.difficulty;
+    lev = prompt.obj->activation.difficulty;
     if (power > lev/2)
         fail_odds = (power - lev/2) / 5;
 
@@ -4203,43 +4164,29 @@ bool eat_magic(int power)
         char name[MAX_NLEN];
         bool drain = FALSE;
 
-        object_desc(name, o_ptr, OD_OMIT_PREFIX);
+        object_desc(name, prompt.obj, OD_OMIT_PREFIX | OD_COLOR_CODED);
 
-        if (object_is_fixed_artifact(o_ptr) || !one_in_(10))
+        if (object_is_fixed_artifact(prompt.obj) || !one_in_(10))
             drain = TRUE;
 
         if (drain)
         {
             msg_format("Failed! Your %s is completely drained.", name);
-            device_decrease_sp(o_ptr, device_sp(o_ptr));
+            device_decrease_sp(prompt.obj, device_sp(prompt.obj));
         }
         else
         {
             msg_format("Failed! Your %s is destroyed.", name);
-            if (item >= 0)
-            {
-                inven_item_increase(item, -1);
-                inven_item_describe(item);
-                inven_item_optimize(item);
-            }
-
-            /* Reduce and describe floor item */
-            else
-            {
-                floor_item_increase(0 - item, -1);
-                floor_item_describe(0 - item);
-                floor_item_optimize(0 - item);
-            }
+            prompt.obj->number--;
+            obj_release(prompt.obj, OBJ_RELEASE_QUIET);
         }
     }
     else
     {
-        device_decrease_sp(o_ptr, amt);
+        device_decrease_sp(prompt.obj, amt);
         sp_player(amt);
     }
 
-    p_ptr->redraw |= PR_MANA;
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
     p_ptr->window |= PW_INVEN;
     return TRUE;
 }

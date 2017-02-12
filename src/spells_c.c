@@ -1578,63 +1578,8 @@ void minor_enchantment_spell(int cmd, variant *res)
         var_set_string(res, "Attempts to enchant a weapon, ammo or armor.");
         break;
     case SPELL_CAST:
-    {
-        int         item;
-        bool        okay = FALSE;
-        object_type *o_ptr;
-        char        o_name[MAX_NLEN];
-
-        var_set_bool(res, FALSE);
-
-        item_tester_hook = object_is_weapon_armour_ammo;
-        item_tester_no_ryoute = TRUE;
-
-        if (!get_item(&item, "Enchant which item? ", "You have nothing to enchant.", (USE_EQUIP | USE_INVEN | USE_FLOOR))) return;
-
-        if (item >= 0)
-            o_ptr = &inventory[item];
-        else
-            o_ptr = &o_list[0 - item];
-
-        object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-
-        if (object_is_weapon_ammo(o_ptr))
-        {
-            if (one_in_(2))
-            {
-                if (enchant(o_ptr, 1, ENCH_TOHIT | ENCH_MINOR_HACK)) okay = TRUE;
-            }
-            else
-            {
-                if (enchant(o_ptr, 1, ENCH_TODAM | ENCH_MINOR_HACK)) okay = TRUE;
-            }
-        }
-        else
-        {
-            if (enchant(o_ptr, 1, ENCH_TOAC | ENCH_MINOR_HACK)) okay = TRUE;
-        }
-
-
-        msg_format("%s %s glow%s brightly!",
-               ((item >= 0) ? "Your" : "The"), o_name,
-               ((o_ptr->number > 1) ? "" : "s"));
-
-        if (!okay)
-        {
-            if (flush_failure) flush();
-            msg_print("The enchantment failed.");
-            if (one_in_(3) && virtue_current(VIRTUE_ENCHANTMENT) < 100)
-                virtue_add(VIRTUE_ENCHANTMENT, -1);
-        }
-        else
-        {
-            o_ptr->discount = 99;
-            virtue_add(VIRTUE_ENCHANTMENT, 1);
-        }
-        android_calc_exp();
-        var_set_bool(res, TRUE);
+        var_set_bool(res, craft_enchant(2 + p_ptr->lev/5, 1));
         break;
-    }
     default:
         default_spell(cmd, res);
         break;
@@ -1652,55 +1597,8 @@ void enchantment_spell(int cmd, variant *res)
         var_set_string(res, "Attempts to enchant a weapon, ammo or armor.");
         break;
     case SPELL_CAST:
-    {
-        int         item;
-        bool        okay = FALSE;
-        object_type *o_ptr;
-        char        o_name[MAX_NLEN];
-
-        var_set_bool(res, FALSE);
-
-        item_tester_hook = object_is_weapon_armour_ammo;
-        item_tester_no_ryoute = TRUE;
-
-        if (!get_item(&item, "Enchant which item? ", "You have nothing to enchant.", (USE_EQUIP | USE_INVEN | USE_FLOOR))) return;
-
-        if (item >= 0)
-            o_ptr = &inventory[item];
-        else
-            o_ptr = &o_list[0 - item];
-
-        object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-
-        if (object_is_weapon_ammo(o_ptr))
-        {
-            if (enchant(o_ptr, randint0(4) + 1, ENCH_TOHIT)) okay = TRUE;
-            if (enchant(o_ptr, randint0(4) + 1, ENCH_TODAM)) okay = TRUE;
-        }
-        else
-        {
-            if (enchant(o_ptr, randint0(3) + 2, ENCH_TOAC)) okay = TRUE;
-        }
-
-
-        msg_format("%s %s glow%s brightly!",
-               ((item >= 0) ? "Your" : "The"), o_name,
-               ((o_ptr->number > 1) ? "" : "s"));
-
-        if (!okay)
-        {
-            if (flush_failure) flush();
-            msg_print("The enchantment failed.");
-            if (one_in_(3) && virtue_current(VIRTUE_ENCHANTMENT) < 100)
-                virtue_add(VIRTUE_ENCHANTMENT, -1);
-        }
-        else
-            virtue_add(VIRTUE_ENCHANTMENT, 1);
-
-        android_calc_exp();
-        var_set_bool(res, TRUE);
+        var_set_bool(res, craft_enchant(15, 3));
         break;
-    }
     default:
         default_spell(cmd, res);
         break;

@@ -2181,12 +2181,12 @@ static void process_world_aux_recharge(void)
      * Recharge Devices
      */
     _recharge_changed = FALSE;
-    for (i = 0; i < INVEN_PACK; i++)
+    for (i = 1; i <= pack_max(); i++)
     {
-        object_type *o_ptr = &inventory[i];
-        object_kind *k_ptr = &k_info[o_ptr->k_idx];
+        object_type *o_ptr = pack_obj(i);
 
-        if (!o_ptr->k_idx) continue;
+        if (!o_ptr) continue;
+
         switch (o_ptr->tval)
         {
         case TV_ROD:
@@ -2199,28 +2199,14 @@ static void process_world_aux_recharge(void)
             break;
         }
 
-        if (object_is_mushroom(o_ptr) && (o_ptr->timeout))
+        /* artifact mushrooms for the snotling ... they never stack */
+        if (object_is_mushroom(o_ptr) && o_ptr->timeout)
         {
-            /* Determine how many rods are charging. */
-            int temp = (o_ptr->timeout + (k_ptr->pval - 1)) / k_ptr->pval;
-            if (temp > o_ptr->number) temp = o_ptr->number;
-
-            /* Decrease timeout by that number. */
-            o_ptr->timeout -= temp;
-
-            /* Boundary control. */
+            o_ptr->timeout--;
             if (o_ptr->timeout < 0) o_ptr->timeout = 0;
-
-            /* Notice changes, provide message if object is inscribed. */
-            if (!(o_ptr->timeout))
+            if (!o_ptr->timeout)
             {
                 recharged_notice(o_ptr);
-                _recharge_changed = TRUE;
-            }
-
-            /* One of the stack of rod is charged */
-            else if (o_ptr->timeout % k_ptr->pval)
-            {
                 _recharge_changed = TRUE;
             }
         }

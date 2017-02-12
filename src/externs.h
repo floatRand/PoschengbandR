@@ -887,6 +887,7 @@ extern cptr     do_effect(effect_t *effect_ptr, int mode, int boost);
 extern void     mass_identify(bool use_charges);
 
 /* do-spell.c */
+extern bool craft_enchant(int max, int inc);
 extern int get_realm_idx(cptr name);
 extern int beam_chance(void);
 extern void cast_wonder(int dir);

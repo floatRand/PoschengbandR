@@ -917,11 +917,18 @@ static bool _black_market_create(obj_ptr obj, int mode)
     int l2 = 25 + randint0(25);
     int k_idx;
 
-    for (;;)
+    if (one_in_(9))
     {
-        choose_obj_kind(0);
-        k_idx = _get_k_idx(get_obj_num_hook, _mod_lvl(l1));
-        if (_black_market_stock_p(k_idx)) break;
+        k_idx = lookup_kind(TV_BURGLARY_BOOK, randint0(2));
+    }
+    else
+    {
+        for (;;)
+        {
+            choose_obj_kind(0);
+            k_idx = _get_k_idx(get_obj_num_hook, _mod_lvl(l1));
+            if (_black_market_stock_p(k_idx)) break;
+        }
     }
     if (!_create(obj, k_idx, _mod_lvl(l2), mode)) return FALSE;
     if (obj_value(obj) < 10) return FALSE;
