@@ -134,7 +134,7 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
     if (prompt)
     {
         if (!get_check(
-                format("Really add %^s to %^s?", 
+                format("Really add %^s to %s?",
                     rune_desc(which), o_name))) return FALSE;
     }
 
@@ -301,30 +301,19 @@ bool rune_add(object_type *o_ptr, int which, bool prompt)    /* Birthing needs a
 /****************************************************************
  * Private Spells and Helpers
  ****************************************************************/
-
-typedef bool (*object_pred)(object_type *o_ptr);
-
-static object_type *_rune_object_prompt(object_pred pred)
+static object_type *_rune_object_prompt(obj_p filter)
 {
-    object_type * result = NULL;
-    object_pred   old = item_tester_hook;
-    int           item;
+    obj_prompt_t prompt = {0};
 
-    item_tester_hook = pred;
+    prompt.prompt = "Enchant which item?";
+    prompt.error = "You have nothing to enchant.";
+    prompt.filter = filter;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_FLOOR;
 
-    if (get_item(&item, 
-                 "Enchant which item?", 
-                 "You have nothing to enchant.", 
-                 (USE_EQUIP | USE_INVEN | USE_FLOOR))) 
-    {
-        if (item >= 0) /* Pack */
-            result = &inventory[item];
-        else /* Floor */
-            result = &o_list[0 - item];
-    }
-
-    item_tester_hook = old;
-    return result;
+    obj_prompt(&prompt);
+    return prompt.obj;
 }
 
 static void _rune_default_spell(int cmd, variant *res)
