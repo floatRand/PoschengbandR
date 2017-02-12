@@ -3272,7 +3272,8 @@ rect_t ui_map_rect(void)
     );
 }
 
-rect_t ui_menu_rect(void)
+rect_t ui_menu_rect(void) { return ui_map_rect(); }
+rect_t ui_doc_menu_rect(void)
 {
     return rect_create(
         0,
@@ -3930,22 +3931,6 @@ static int target_set_aux(int y, int x, int mode, cptr info)
     int query = '\001';
     char out_val[MAX_NLEN+80];
 
-#ifdef ALLOW_EASY_FLOOR
-    int floor_list[23], floor_num = 0;
-
-    /* Scan all objects in the grid */
-    if (easy_floor)
-    {
-        floor_num = scan_floor(floor_list, y, x, 0x02);
-
-        if (floor_num)
-        {
-            x_info = "x,";
-        }
-    }
-
-#endif /* ALLOW_EASY_FLOOR */
-
     /* Hack -- under the player */
     if (player_bold(y, x))
     {
@@ -4132,117 +4117,6 @@ static int target_set_aux(int y, int x, int mode, cptr info)
         /* Use a preposition */
         s2 = "on ";
     }
-
-
-#ifdef ALLOW_EASY_FLOOR
-    if (floor_num)
-    {
-        int min_width = 0;
-
-        while (1)
-        {
-            if (floor_num == 1)
-            {
-                char o_name[MAX_NLEN];
-
-                object_type *o_ptr;
-
-                /* Acquire object */
-                o_ptr = &o_list[floor_list[0]];
-
-                /* Describe the object */
-                object_desc(o_name, o_ptr, 0);
-
-                /* Message */
-                sprintf(out_val, "%s%s%s%s [%s]",
-                    s1, s2, s3, o_name, info);
-
-                prt(out_val, 0, 0);
-                move_cursor_relative(y, x);
-
-                /* Command */
-                query = inkey();
-
-                /* End this grid */
-                return query;
-            }
-
-            /* Provide one cushion before item listing  */
-            if (boring)
-            {
-                /* Display rough information about items */
-                sprintf(out_val, "%s%s%sa pile of %d items [x,%s]",
-                    s1, s2, s3, floor_num, info);
-
-                prt(out_val, 0, 0);
-                move_cursor_relative(y, x);
-
-                /* Command */
-                query = inkey();
-
-                /* No request for listing */
-                if (query != 'x' && query != ' ') return query;
-            }
-
-
-            /** Display list of items **/
-
-            /* Continue scrolling list if requested */
-            while (1)
-            {
-                int i, o_idx;
-
-                /* Save screen */
-                screen_save();
-
-                /* Display */
-                show_gold_on_floor = TRUE;
-                (void)show_floor(0, y, x, &min_width);
-                show_gold_on_floor = FALSE;
-
-                /* Prompt */
-                sprintf(out_val, "%s%s%sa pile of %d items [Enter,%s]",
-                    s1, s2, s3, floor_num, info);
-                prt(out_val, 0, 0);
-
-
-                /* Wait */
-                query = inkey();
-
-                /* Load screen */
-                screen_load();
-
-                /* Exit unless 'Enter' */
-                if (query != '\n' && query != '\r')
-                {
-                    return query;
-                }
-
-                /* Get the object being moved. */
-                o_idx = c_ptr->o_idx;
-
-                /* Only rotate a pile of two or more objects. */
-                if (!(o_idx && o_list[o_idx].next_o_idx)) continue;
-
-                /* Remove the first object from the list. */
-                excise_object_idx(o_idx);
-
-                /* Find end of the list. */
-                i = c_ptr->o_idx;
-                while (o_list[i].next_o_idx)
-                    i = o_list[i].next_o_idx;
-
-                /* Add after the last object. */
-                o_list[i].next_o_idx = o_idx;
-
-                /* Loop and re-display the list */
-            }
-        }
-
-        /* NOTREACHED */
-    }
-#endif /* ALLOW_EASY_FLOOR */
-
 
     /* Scan all objects in the grid */
     for (this_o_idx = c_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx)

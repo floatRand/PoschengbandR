@@ -225,9 +225,6 @@ extern bool easy_open;    /* Automatically open doors */
 extern bool easy_disarm;    /* Automatically disarm traps */
 #endif
 
-#ifdef ALLOW_EASY_FLOOR
-extern bool easy_floor;    /* Display floor stacks in a list */
-#endif
 extern bool auto_get_ammo;
 extern bool auto_get_objects;
 extern bool over_exert;    /* Allow casting spells when short of mana */
@@ -1187,8 +1184,6 @@ extern s16b label_to_equip(int c);
 extern cptr describe_use(int i);
 extern bool check_book_realm(const byte book_tval, const byte book_sval);
 extern bool item_tester_okay(object_type *o_ptr);
-extern int show_inven(int target_item, int mode);
-extern int show_equip(int target_item, int mode);
 extern void toggle_inven_equip(void);
 extern void toggle_mon_obj_lists(void);
 extern bool can_get_item(void);
@@ -1806,6 +1801,7 @@ extern void redraw_window(void);
    right. You can query the placement with: */
 extern rect_t ui_map_rect(void);
 extern rect_t ui_menu_rect(void);
+extern rect_t ui_doc_menu_rect(void);
 extern rect_t ui_status_bar_rect(void);
 extern rect_t ui_char_info_rect(void);
 extern rect_t ui_screen_rect(void);
@@ -2031,19 +2027,6 @@ extern bool do_cmd_disarm_aux(int y, int x, int dir);
 
 #endif /* ALLOW_EASY_DISARM -- TNB */
 
-
-#ifdef ALLOW_EASY_FLOOR /* TNB */
-
-/* object1.c */
-extern int scan_floor(int *items, int y, int x, int mode);
-extern int show_floor(int target_item, int y, int x, int *min_width);
-extern bool get_item_floor(int *cp, cptr pmt, cptr str, int mode);
-extern bool py_pickup_floor(bool pickup);
-
-/* variable.c */
-extern bool easy_floor;
-
-#endif /* ALLOW_EASY_FLOOR -- TNB */
 
 /* obj_kind.c */
 extern const int pval_flags[];

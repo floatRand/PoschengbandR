@@ -2205,11 +2205,6 @@ option_type option_info[] =
     "easy_disarm",                  "Automatically disarm traps" },
 #endif /* ALLOW_EASY_DISARM */
 
-#ifdef ALLOW_EASY_FLOOR /* TNB */
-    { &easy_floor,                  FALSE, OPT_PAGE_INPUT, 5, 9,
-    "easy_floor",                   "Display floor stacks in a list" },
-#endif /* ALLOW_EASY_FLOOR -- TNB */
-
     { &auto_get_ammo,               FALSE, OPT_PAGE_INPUT, 6, 5,
     "auto_get_ammo",                "Automatically get nearby ammo with get cmd" },
 

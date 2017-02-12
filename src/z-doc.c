@@ -1515,7 +1515,7 @@ void doc_clear(doc_ptr doc)
 
 void doc_sync_menu(doc_ptr doc)
 {
-    rect_t mr = ui_menu_rect();
+    rect_t mr = ui_doc_menu_rect();
     rect_t dr = mr;
 
     dr.cx = doc_width(doc);

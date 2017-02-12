@@ -20,7 +20,7 @@ int obj_prompt(obj_prompt_ptr prompt)
     assert(!prompt->obj);
 
     context.prompt = prompt;
-    context.page_size = MIN(26, ui_menu_rect().cy - 4);
+    context.page_size = MIN(26, ui_doc_menu_rect().cy - 4);
     _context_make(&context);
 
     if (!vec_length(context.tabs))

@@ -845,34 +845,23 @@ void leave_quest_check(void)
  */
 bool psychometry(void)
 {
-    int             item;
-    object_type     *o_ptr;
-    char            o_name[MAX_NLEN];
-    byte            feel;
-    cptr            q, s;
-    bool okay = FALSE;
+    obj_prompt_t prompt = {0};
+    char         o_name[MAX_NLEN];
+    byte         feel;
+    bool         okay = FALSE;
 
-    item_tester_no_ryoute = TRUE;
-    /* Get an item */
-    q = "Meditate on which item? ";
-    s = "You have nothing appropriate.";
+    prompt.prompt = "Meditate on which item?";
+    prompt.error = "You have nothing appropriate.";
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.where[3] = INV_FLOOR;
 
-    if (!get_item(&item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR))) return (FALSE);
-
-    /* Get the item (in the pack) */
-    if (item >= 0)
-    {
-        o_ptr = &inventory[item];
-    }
-
-    /* Get the item (on the floor) */
-    else
-    {
-        o_ptr = &o_list[0 - item];
-    }
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
     /* It is fully known, no information needed */
-    if (object_is_known(o_ptr))
+    if (object_is_known(prompt.obj))
     {
         msg_print("You cannot find out anything more about that.");
 
@@ -880,10 +869,10 @@ bool psychometry(void)
     }
 
     /* Check for a feeling */
-    feel = value_check_aux1(o_ptr);
+    feel = value_check_aux1(prompt.obj);
 
     /* Get an object description */
-    object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
+    object_desc(o_name, prompt.obj, (OD_OMIT_PREFIX | OD_NAME_ONLY));
 
     /* Skip non-feelings */
     if (!feel)
@@ -894,18 +883,18 @@ bool psychometry(void)
     }
 
     msg_format("You feel that the %s %s %s...",
-               o_name, ((o_ptr->number == 1) ? "is" : "are"),
+               o_name, ((prompt.obj->number == 1) ? "is" : "are"),
                game_inscriptions[feel]);
 
 
     /* We have "felt" it */
-    o_ptr->ident |= (IDENT_SENSE);
+    prompt.obj->ident |= (IDENT_SENSE);
 
     /* "Inscribe" it */
-    o_ptr->feeling = feel;
+    prompt.obj->feeling = feel;
 
     /* Player touches it */
-    o_ptr->marked |= OM_TOUCHED;
+    prompt.obj->marked |= OM_TOUCHED;
 
     /* Combine / Reorder the pack (later) */
     p_ptr->notice |= (PN_COMBINE | PN_REORDER);
@@ -914,7 +903,7 @@ bool psychometry(void)
     p_ptr->window |= (PW_INVEN | PW_EQUIP);
 
     /* Valid "tval" codes */
-    switch (o_ptr->tval)
+    switch (prompt.obj->tval)
     {
     case TV_SHOT:
     case TV_ARROW:
@@ -943,7 +932,7 @@ bool psychometry(void)
     }
 
     /* Auto-inscription/destroy */
-    autopick_alter_item(item, (bool)(okay && destroy_feeling));
+    autopick_alter_obj(prompt.obj, okay && destroy_feeling);
 
     /* Something happened */
     return (TRUE);

@@ -27,7 +27,6 @@ Y:confirm_quest
 X:target_pet
 Y:easy_open
 Y:easy_disarm
-X:easy_floor
 Y:auto_get_ammo
 Y:auto_get_objects
 X:over_exert

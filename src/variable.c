@@ -209,9 +209,6 @@ bool easy_open;    /* Automatically open doors */
 bool easy_disarm;    /* Automatically disarm traps */
 #endif
 
-#ifdef ALLOW_EASY_FLOOR
-bool easy_floor;    /* Display floor stacks in a list */
-#endif
 bool auto_get_ammo;
 bool auto_get_objects;
 
@@ -964,10 +961,6 @@ bool easy_open;
 #ifdef ALLOW_EASY_DISARM /* TNB */
 bool easy_disarm;
 #endif /* ALLOW_EASY_DISARM -- TNB */
-
-#ifdef ALLOW_EASY_FLOOR /* TNB */
-bool easy_floor;
-#endif /* ALLOW_EASY_FLOOR -- TNB */
 
 bool center_player;
 bool center_running;
