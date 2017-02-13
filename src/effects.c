@@ -5530,11 +5530,14 @@ bool restore_level(void)
  */
 static void _forget(obj_ptr obj)
 {
-    obj->feeling = FEEL_NONE;
-    obj->ident &= ~(IDENT_EMPTY);
-    obj->ident &= ~(IDENT_TRIED);
-    obj->ident &= ~(IDENT_KNOWN);
-    obj->ident &= ~(IDENT_SENSE);
+    if (!obj_is_identified_fully(obj))
+    {
+        obj->feeling = FEEL_NONE;
+        obj->ident &= ~(IDENT_EMPTY);
+        obj->ident &= ~(IDENT_TRIED);
+        obj->ident &= ~(IDENT_KNOWN);
+        obj->ident &= ~(IDENT_SENSE);
+    }
 }
 
 bool lose_all_info(void)
@@ -5542,9 +5545,9 @@ bool lose_all_info(void)
     virtue_add(VIRTUE_KNOWLEDGE, -5);
     virtue_add(VIRTUE_ENLIGHTENMENT, -5);
 
-    pack_for_each_that(_forget, obj_is_identified_fully);
-    equip_for_each_that(_forget, obj_is_identified_fully);
-    quiver_for_each_that(_forget, obj_is_identified_fully);
+    pack_for_each(_forget);
+    equip_for_each(_forget);
+    quiver_for_each(_forget);
 
     p_ptr->update |= PU_BONUS;
     p_ptr->notice |= PN_OPTIMIZE_PACK;
