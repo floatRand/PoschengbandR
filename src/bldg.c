@@ -2127,7 +2127,7 @@ static bool inn_comm(int cmd)
                 }
                 else
                 {
-                    int i;
+                    slot_t slot;
 
                     set_blind(0, TRUE);
                     set_confused(0, TRUE);
@@ -2139,15 +2139,17 @@ static bool inn_comm(int cmd)
                     if (p_ptr->pclass == CLASS_MAGIC_EATER)
                         magic_eater_restore_all();
 
-                    for (i = 0; i < INVEN_TOTAL; i++)
+                    for (slot = 1; slot <= pack_max(); slot++)
                     {
-                        object_type *o_ptr = &inventory[i];
-
-                        if (!o_ptr->k_idx) continue;
-                        if (object_is_device(o_ptr))
-                            device_regen_sp_aux(o_ptr, 1000);
-                        else if (o_ptr->timeout > 0)
-                            o_ptr->timeout = 0;
+                        obj_ptr obj = pack_obj(slot);
+                        if (obj && object_is_device(obj))
+                            device_regen_sp_aux(obj, 1000);
+                    }
+                    for (slot = 1; slot <= equip_max(); slot++)
+                    {
+                        obj_ptr obj = equip_obj(slot);
+                        if (obj && obj->timeout > 0)
+                            obj->timeout = 0;
                     }
 
                     if (prev_hour >= 6 && prev_hour <= 17)

@@ -547,7 +547,7 @@ int inv_loc(inv_ptr inv)
 
 int inv_max(inv_ptr inv)
 {
-    return inv->max;
+    return inv->max ? inv->max : vec_length(inv->objects) - 1;
 }
 
 cptr inv_name(inv_ptr inv)
