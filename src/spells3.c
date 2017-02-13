@@ -3606,7 +3606,6 @@ int set_cold_destroy(object_type *o_ptr)
 int inven_damage(inven_func typ, int p1, int which)
 {
     int         i, j, k, amt;
-    object_type *o_ptr;
     char        o_name[MAX_NLEN];
     int         p2 = 100;
 
@@ -3619,22 +3618,18 @@ int inven_damage(inven_func typ, int p1, int which)
     /* Count the casualties */
     k = 0;
 
-    /* Scan through the slots backwards */
-    for (i = 0; i < INVEN_PACK; i++)
+    for (i = 1; i <= pack_max(); i++)
     {
-        o_ptr = &inventory[i];
+        obj_ptr obj = pack_obj(i);
 
-        /* Skip non-objects */
-        if (!o_ptr->k_idx) continue;
-
-        /* Hack -- for now, skip artifacts */
-        if (object_is_artifact(o_ptr)) continue;
+        if (!obj) continue;
+        if (object_is_artifact(obj)) continue;
 
         /* Give this item slot a shot at death */
-        if ((*typ)(o_ptr))
+        if (typ(obj))
         {
             /* Count the casualties */
-            for (amt = j = 0; j < o_ptr->number; ++j)
+            for (amt = j = 0; j < obj->number; ++j)
             {
                 if ( randint0(100) < p1    /* Effects of Breath Quality */
                   && randint0(100) < p2 /* Effects of Inventory Protection (Rune or Spell) */
@@ -3648,22 +3643,22 @@ int inven_damage(inven_func typ, int p1, int which)
             if (amt)
             {
                 /* Get a description */
-                object_desc(o_name, o_ptr, OD_OMIT_PREFIX | OD_COLOR_CODED);
+                object_desc(o_name, obj, OD_OMIT_PREFIX | OD_COLOR_CODED);
 
-                msg_format("%d of your %s (%c) %s destroyed!",
-                            amt, o_name, index_to_label(i), (amt > 1) ? "were" : "was");
+                msg_format("%d of your %s %s destroyed!",
+                            amt, o_name, (amt > 1) ? "were" : "was");
 
                 /* Potions smash open */
-                if (object_is_potion(o_ptr))
+                if (object_is_potion(obj))
                 {
-                    (void)potion_smash_effect(0, py, px, o_ptr->k_idx);
+                    (void)potion_smash_effect(0, py, px, obj->k_idx);
                 }
 
-                stats_on_m_destroy(o_ptr, amt);
+                stats_on_m_destroy(obj, amt);
 
                 /* Destroy "amt" items */
-                inven_item_increase(i, -amt);
-                inven_item_optimize(i);
+                obj->number -= amt;
+                obj_release(obj, OBJ_RELEASE_QUIET);
 
                 /* Count the casualties */
                 k += amt;
