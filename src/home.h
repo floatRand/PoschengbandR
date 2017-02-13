@@ -8,6 +8,10 @@ extern inv_ptr home_filter(obj_p p);
 extern void    home_for_each(obj_f f);
 extern void    home_optimize(void);
 
+extern obj_ptr home_obj(slot_t slot);
+extern int     home_max(void);
+
+extern int     home_max(void);
 extern void    home_ui(void);
 extern void    home_display(doc_ptr doc, obj_p p, int flags);
 

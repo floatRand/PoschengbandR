@@ -3414,22 +3414,22 @@ static int collect_monsters(int grp_cur, s16b mon_idx[], byte mode)
         available_corpses = int_map_alloc(NULL);
 
         /* In Pack */
-        for (i = 0; i < INVEN_PACK; i++)
+        for (i = 1; i <= pack_max(); i++)
         {
-            object_type *o_ptr = &inventory[i];
-            if (!o_ptr->k_idx) continue;
+            object_type *o_ptr = pack_obj(i);
+            if (!o_ptr) continue;
             if (!object_is_(o_ptr, TV_CORPSE, SV_CORPSE)) continue;
             int_map_add(available_corpses, o_ptr->pval, NULL);
         }
 
-        /* At Home
-        for (i = 0; i < store_ptr->stock_num; i++)
+        /* At Home */
+        for (i = 1; i <= home_max(); i++)
         {
-            object_type *o_ptr = &store_ptr->stock[i];
-            if (!o_ptr->k_idx) continue;
+            object_type *o_ptr = home_obj(i);
+            if (!o_ptr) continue;
             if (!object_is_(o_ptr, TV_CORPSE, SV_CORPSE)) continue;
             int_map_add(available_corpses, o_ptr->pval, NULL);
-        }*/
+        }
 
         /* Underfoot */
         if (in_bounds2(py, px))

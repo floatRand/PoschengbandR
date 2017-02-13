@@ -19,6 +19,16 @@ inv_ptr home_filter(obj_p p)
     return inv_filter(_home, p);
 }
 
+obj_ptr home_obj(slot_t slot)
+{
+    return inv_obj(_home, slot);
+}
+
+int home_max(void)
+{
+    return inv_max(_home);
+}
+
 void home_for_each(obj_f f)
 {
     inv_for_each(_home, f);

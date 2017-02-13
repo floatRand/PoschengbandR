@@ -254,21 +254,10 @@ void _blood_revenge_spell(int cmd, variant *res)
     }
 }
 
+static bool _is_blood_potion(obj_ptr obj)
+    { return obj->tval == TV_POTION && obj->sval == SV_POTION_BLOOD; }
 static int _count_blood_potions(void)
-{
-    int result = 0, i;
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-
-        if (!o_ptr->k_idx) continue;
-
-        if (o_ptr->tval == TV_POTION && o_ptr->sval == SV_POTION_BLOOD)
-            result += o_ptr->number;
-    }
-
-    return result;
-}
+    { return pack_count(_is_blood_potion); }
 
 void _blood_pool_spell(int cmd, variant *res)
 {

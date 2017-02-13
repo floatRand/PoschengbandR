@@ -2242,39 +2242,6 @@ void do_cmd_alter(void)
 
 
 /*
- * Find the index of some "spikes", if possible.
- *
- * XXX XXX XXX Let user choose a pile of spikes, perhaps?
- */
-static bool get_spike(int *ip)
-{
-    int i;
-
-    /* Check every item in the pack */
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-
-        /* Skip non-objects */
-        if (!o_ptr->k_idx) continue;
-
-        /* Check the "tval" code */
-        if (o_ptr->tval == TV_SPIKE)
-        {
-            /* Save the spike index */
-            (*ip) = i;
-
-            /* Success */
-            return (TRUE);
-        }
-    }
-
-    /* Oops */
-    return (FALSE);
-}
-
-
-/*
  * Jam a closed door with a spike
  *
  * This command may NOT be repeated
@@ -2291,7 +2258,7 @@ void do_cmd_spike(void)
     /* Get a "repeated" direction */
     if (get_rep_dir(&dir,FALSE))
     {
-        int y, x, item;
+        int y, x;
         cave_type *c_ptr;
         s16b feat;
 
@@ -2312,14 +2279,6 @@ void do_cmd_spike(void)
             msg_print("You see nothing there to spike.");
 
         }
-
-        /* Get a spike */
-        else if (!get_spike(&item))
-        {
-            /* Message */
-            msg_print("You have no spikes!");
-        }
-
         /* Is a monster in the way? */
         else if (c_ptr->m_idx)
         {
@@ -2336,6 +2295,14 @@ void do_cmd_spike(void)
         /* Go for it */
         else
         {
+            slot_t slot = pack_find_obj(TV_SPIKE, SV_ANY);
+            obj_ptr spike;
+            if (!slot)
+            {
+                msg_print("You have no spikes.");
+                return;
+            }
+
             /* Take a turn */
             energy_use = 100;
 
@@ -2344,10 +2311,9 @@ void do_cmd_spike(void)
 
             cave_alter_feat(y, x, FF_SPIKE);
 
-            /* Use up, and describe, a single spike, from the bottom */
-            inven_item_increase(item, -1);
-            inven_item_describe(item);
-            inven_item_optimize(item);
+            spike = pack_obj(slot);
+            spike->number--;
+            obj_release(spike, 0);
         }
     }
 }
