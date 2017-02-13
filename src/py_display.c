@@ -1441,17 +1441,17 @@ static void _build_pets(doc_ptr doc)
 /****************************** Objects ************************************/
 static void _build_inventory(doc_ptr doc)
 {
-    int i;
+    slot_t slot;
     char o_name[MAX_NLEN];
 
     doc_printf(doc, "<topic:Inventory>============================= Character <color:keypress>I</color>nventory =============================\n\n");
 
-    for (i = 0; i < INVEN_PACK; i++)
+    for (slot = 1; slot <= pack_max(); slot++)
     {
-        if (!inventory[i].k_idx) break;
-
-        object_desc(o_name, &inventory[i], OD_COLOR_CODED);
-        doc_printf(doc, "%c) <indent><style:indent>%s</style></indent>\n", index_to_label(i), o_name);
+        obj_ptr obj = pack_obj(slot);
+        if (!obj) continue;
+        object_desc(o_name, obj, OD_COLOR_CODED);
+        doc_printf(doc, "<indent><style:indent>%s</style></indent>\n", o_name);
     }
 
     doc_newline(doc);

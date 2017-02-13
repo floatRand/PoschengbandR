@@ -3262,7 +3262,13 @@ static void show_info(void)
         obj_identify(o_ptr);
     }
 
+    pack_for_each(obj_identify);
+    equip_for_each(obj_identify);
+    quiver_for_each(obj_identify);
     home_for_each(obj_identify);
+
+    pack_optimize();
+    quiver_optimize();
     home_optimize();
 
     /* Hack -- Recalculate bonuses */

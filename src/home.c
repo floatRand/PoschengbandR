@@ -75,7 +75,7 @@ void home_display(doc_ptr doc, obj_p p, int flags)
         obj_ptr obj = inv_obj(_home, slot);
         if (!obj) continue; /* bug */
         object_desc(name, obj, OD_COLOR_CODED);
-        doc_printf(doc, "%3d) <indent><style:indent>%s</style></indent>\n", slot, name);
+        doc_printf(doc, "<indent><style:indent>%s</style></indent>\n", name);
     }
 }
 
@@ -96,7 +96,7 @@ void museum_display(doc_ptr doc, obj_p p, int flags)
         obj_ptr obj = inv_obj(_museum, slot);
         if (!obj) continue; /* bug */
         object_desc(name, obj, OD_COLOR_CODED);
-        doc_printf(doc, "%3d) <indent><style:indent>%s</style></indent>\n", slot, name);
+        doc_printf(doc, "<indent><style:indent>%s</style></indent>\n", name);
     }
 }
 
