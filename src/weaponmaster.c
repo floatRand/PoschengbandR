@@ -1021,10 +1021,8 @@ static void _bury_dead_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int item;
+        obj_prompt_t prompt = {0};
         char o_name[MAX_NLEN];
-        object_type *o_ptr;
-        object_type copy;
         int turns;
 
         var_set_bool(res, FALSE);
@@ -1034,39 +1032,28 @@ static void _bury_dead_spell(int cmd, variant *res)
             return;
         }
 
-        item_tester_hook = _object_is_corpse_or_skeleton;
-        if (!get_item(&item, "Bury which corpse? ", "You have nothing to bury.", (USE_INVEN | USE_FLOOR))) return;
+        prompt.prompt = "Bury which corpse?";
+        prompt.error = "You have nothing to bury.";
+        prompt.filter = _object_is_corpse_or_skeleton;
+        prompt.where[0] = INV_PACK;
+        prompt.where[1] = INV_FLOOR;
 
-        if (item >= 0)
-            o_ptr = &inventory[item];
-        else
-            o_ptr = &o_list[0 - item];
+        obj_prompt(&prompt);
+        if (!prompt.obj) return;
 
         /* TV_CORPSE, SV_CORPSE = Corpse
            TV_CORPSE, SV_SKELETON = Skeleton
            TV_SKELETON, ??? = Skeleton */
-        if (o_ptr->tval == TV_CORPSE && o_ptr->sval == SV_CORPSE)
+        if (prompt.obj->tval == TV_CORPSE && prompt.obj->sval == SV_CORPSE)
             turns = 40;
         else
             turns = 15;
 
-        object_copy(&copy, o_ptr);
-        copy.number = 1;
-        object_desc(o_name, &copy, OD_NAME_ONLY);
+        object_desc(o_name, prompt.obj, OD_NAME_ONLY | OD_COLOR_CODED | OD_SINGULAR);
         msg_format("You dig a hasty grave and toss in %s.", o_name);
 
-        if (item >= 0)
-        {
-            inven_item_increase(item, -1);
-            inven_item_describe(item);
-            inven_item_optimize(item);
-        }
-        else
-        {
-            floor_item_increase(0 - item, -1);
-            floor_item_describe(0 - item);
-            floor_item_optimize(0 - item);
-        }
+        prompt.obj->number--;
+        obj_release(prompt.obj, 0);
 
         set_blessed(p_ptr->blessed + turns, FALSE);
         if (p_ptr->lev >= 15)

@@ -2824,7 +2824,7 @@ static void _enchant_menu_fn(int cmd, int which, vptr cookie, variant *res)
     }
 }
 
-static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_guild)
+static bool enchant_item(obj_p filter, int cost, int to_hit, int to_dam, int to_ac, bool is_guild)
 {
     obj_prompt_t prompt = {0};
     int          i;
@@ -2843,10 +2843,9 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
 
     clear_bldg(4, 18);
 
-    /* Which Item? Client sets item_tester_hook! */
     prompt.prompt = "Improve which item?";
     prompt.error = "You have nothing to improve.";
-    prompt.filter = item_tester_hook;
+    prompt.filter = filter;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
     obj_prompt(&prompt);
@@ -3430,12 +3429,10 @@ static void bldg_process_command(building_type *bldg, int i)
     /*    paid = compare_weapons(); */
         break;
     case BACT_ENCHANT_WEAPON:
-        item_tester_hook = object_allow_enchant_melee_weapon;
-        enchant_item(bcost, 1, 1, 0, is_guild);
+        enchant_item(object_allow_enchant_melee_weapon, bcost, 1, 1, 0, is_guild);
         break;
     case BACT_ENCHANT_ARMOR:
-        item_tester_hook = object_is_armour;
-        enchant_item(bcost, 0, 0, 1, is_guild);
+        enchant_item(object_is_armour, bcost, 0, 0, 1, is_guild);
         break;
     case BACT_RECHARGE:
         msg_print("My apologies, but that service is no longer available!");
@@ -3485,12 +3482,10 @@ static void bldg_process_command(building_type *bldg, int i)
         if (do_res_stat(A_CHR)) paid = TRUE;
         break;
     case BACT_ENCHANT_ARROWS:
-        item_tester_hook = item_tester_hook_ammo;
-        enchant_item(bcost, 1, 1, 0, is_guild);
+        enchant_item(item_tester_hook_ammo, bcost, 1, 1, 0, is_guild);
         break;
     case BACT_ENCHANT_BOW:
-        item_tester_hook = object_is_bow;
-        enchant_item(bcost, 1, 1, 0, is_guild);
+        enchant_item(object_is_bow, bcost, 1, 1, 0, is_guild);
         break;
     case BACT_RECALL:
         if (recall_player(1)) paid = TRUE;

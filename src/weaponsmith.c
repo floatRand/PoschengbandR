@@ -2181,39 +2181,36 @@ static void _smith_object(object_type *o_ptr)
 /* entrypoint for smithing: pick an object and enter the toplevel menu */
 static bool _smithing(void)
 {
-    int          item;
-    object_type *o_ptr;
+    obj_prompt_t prompt = {0};
 
-    item_tester_hook = object_is_weapon_armour_ammo;
-    item_tester_no_ryoute = TRUE;
+    prompt.prompt = "Smith which object?";
+    prompt.error = "You have nothing to work with.";
+    prompt.filter = object_is_weapon_armour_ammo;
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_FLOOR;
 
-    if (!get_item(&item, "Smith which object? ", "You have nothing to work with.", (USE_INVEN | USE_FLOOR)))
-        return FALSE;
-    if (item >= 0)
-        o_ptr = &inventory[item];
-    else
-        o_ptr = &o_list[0 - item];
+    obj_prompt(&prompt);
+    if (!prompt.obj) return FALSE;
 
     /* Smithing now automatically 'Judges' the object for free */
     if (p_ptr->lev < 10)
     {
-        o_ptr->ident |= IDENT_SENSE;
-        o_ptr->feeling = value_check_aux1(o_ptr);
-        o_ptr->marked |= OM_TOUCHED;
+        prompt.obj->ident |= IDENT_SENSE;
+        prompt.obj->feeling = value_check_aux1(prompt.obj);
+        prompt.obj->marked |= OM_TOUCHED;
     }
     else
     {
-        identify_item(o_ptr);
+        identify_item(prompt.obj);
         if (p_ptr->lev >= 30)
-            obj_identify_fully(o_ptr);
+            obj_identify_fully(prompt.obj);
     }
 
-    _smith_object(o_ptr);
+    _smith_object(prompt.obj);
+    if (prompt.obj->loc.where == INV_FLOOR)
+        autopick_alter_obj(prompt.obj, TRUE);
 
-    if (item < 0)
-        autopick_alter_item(item, TRUE);
-
-    p_ptr->notice |= PN_COMBINE | PN_REORDER;
+    p_ptr->notice |= PN_OPTIMIZE_PACK;
     p_ptr->window |= PW_INVEN;
 
     return TRUE;

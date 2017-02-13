@@ -759,51 +759,6 @@ bool check_book_realm(const byte book_tval, const byte book_sval)
     return (REALM1_BOOK == book_tval || REALM2_BOOK == book_tval);
 }
 
-
-/*
- * Check an item against the item tester info
- */
-bool item_tester_okay(object_type *o_ptr)
-{
-    /* Hack -- allow listing empty slots */
-    if (item_tester_full) return (TRUE);
-
-    if (!o_ptr) return FALSE;
-
-    /* Require an item */
-    if (!o_ptr->k_idx) return (FALSE);
-
-    /* Hack -- ignore "gold" */
-    if (o_ptr->tval == TV_GOLD)
-    {
-        /* See xtra2.c */
-        extern bool show_gold_on_floor;
-
-        if (!show_gold_on_floor) return (FALSE);
-    }
-
-    /* Check the tval */
-    if (item_tester_tval)
-    {
-        /* Is it a spellbook? If so, we need a hack -- TY */
-        if ((item_tester_tval <= TV_DEATH_BOOK) &&
-            (item_tester_tval >= TV_LIFE_BOOK))
-            return check_book_realm(o_ptr->tval, o_ptr->sval);
-        else
-            if (item_tester_tval != o_ptr->tval) return (FALSE);
-    }
-
-    /* Check the hook */
-    if (item_tester_hook)
-    {
-        if (!(*item_tester_hook)(o_ptr)) return (FALSE);
-    }
-
-    /* Assume okay */
-    return (TRUE);
-}
-
-
 /*
  * Flip "inven" and "equip" in any sub-windows
  */
@@ -861,10 +816,5 @@ void toggle_mon_obj_lists(void)
             p_ptr->window |= PW_MONSTER_LIST;
         }
     }
-}
-
-bool get_item(int *cp, cptr pmt, cptr str, int mode)
-{
-    return 0;
 }
 

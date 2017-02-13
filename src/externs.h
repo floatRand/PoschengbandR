@@ -476,10 +476,6 @@ extern cptr ANGBAND_DIR_PREF;
 extern cptr ANGBAND_DIR_SAVE;
 extern cptr ANGBAND_DIR_USER;
 extern cptr ANGBAND_DIR_XTRA;
-extern bool item_tester_full;
-extern bool item_tester_no_ryoute;
-extern byte item_tester_tval;
-extern bool (*item_tester_hook)(object_type *o_ptr);
 extern bool (*ang_sort_comp)(vptr u, vptr v, int a, int b);
 extern void (*ang_sort_swap)(vptr u, vptr v, int a, int b);
 extern monster_hook_type get_mon_num_hook;
@@ -1184,11 +1180,8 @@ extern s16b label_to_inven(int c);
 extern s16b label_to_equip(int c);
 extern cptr describe_use(int i);
 extern bool check_book_realm(const byte book_tval, const byte book_sval);
-extern bool item_tester_okay(object_type *o_ptr);
 extern void toggle_inven_equip(void);
 extern void toggle_mon_obj_lists(void);
-extern bool can_get_item(void);
-extern bool get_item(int *cp, cptr pmt, cptr str, int mode);
 
 /* Object Lore */
 extern void obj_flags_known(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE]);
