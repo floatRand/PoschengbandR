@@ -2639,13 +2639,30 @@ int device_sp(object_type *o_ptr)
     return 0;
 }
 
+int device_charges(object_type *o_ptr)
+{
+    if (_is_valid_device(o_ptr) && o_ptr->activation.cost)
+        return  device_sp(o_ptr) / o_ptr->activation.cost;
+    return 0;
+}
+
+int device_max_charges(object_type *o_ptr)
+{
+    if (_is_valid_device(o_ptr) && o_ptr->activation.cost)
+        return  device_max_sp(o_ptr) / o_ptr->activation.cost;
+    return 0;
+}
+
 void device_decrease_sp(object_type *o_ptr, int amt)
 {
     if (_is_valid_device(o_ptr))
     {
+        int charges = device_charges(o_ptr);
         o_ptr->xtra5 -= amt * 100;
         if (o_ptr->xtra5 < 0)
             o_ptr->xtra5 = 0;
+        if (device_charges(o_ptr) != charges)
+            p_ptr->window |= PW_INVEN;
     }
 }
 
@@ -2653,9 +2670,12 @@ void device_increase_sp(object_type *o_ptr, int amt)
 {
     if (_is_valid_device(o_ptr))
     {
+        int charges = device_charges(o_ptr);
         o_ptr->xtra5 += amt * 100;
         if (o_ptr->xtra5 > o_ptr->xtra4 * 100)
             o_ptr->xtra5 = o_ptr->xtra4 * 100;
+        if (device_charges(o_ptr) != charges)
+            p_ptr->window |= PW_INVEN;
     }
 }
 
@@ -2676,8 +2696,9 @@ void device_regen_sp_aux(object_type *o_ptr, int per_mill)
 {
     if (!device_is_fully_charged(o_ptr))
     {
-        int  div = 1000;
-        int  amt = o_ptr->xtra4 * 100 * per_mill;
+        int div = 1000;
+        int amt = o_ptr->xtra4 * 100 * per_mill;
+        int charges = device_charges(o_ptr);
 
         o_ptr->xtra5 += amt / div;
         if (randint0(div) < (amt % div))
@@ -2688,6 +2709,9 @@ void device_regen_sp_aux(object_type *o_ptr, int per_mill)
 
         if (device_is_fully_charged(o_ptr))
             recharged_notice(o_ptr);
+
+        if (device_charges(o_ptr) != charges)
+            p_ptr->window |= PW_INVEN;
     }
 }
 

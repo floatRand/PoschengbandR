@@ -4868,36 +4868,36 @@ bool player_can_enter(s16b feature, u16b mode)
 
 static bool _auto_detect_traps(void)
 {
-    int i;
+    slot_t slot;
     if (p_ptr->pclass == CLASS_BERSERKER) return FALSE;
     if (p_ptr->pclass == CLASS_MAGIC_EATER && magic_eater_auto_detect_traps()) return TRUE;
 
-    i = pack_find(TV_SCROLL, SV_SCROLL_DETECT_TRAP);
-    if (i >= 0 && !p_ptr->blind && !(get_race()->flags & RACE_IS_ILLITERATE))
+    slot = pack_find_obj(TV_SCROLL, SV_SCROLL_DETECT_TRAP);
+    if (slot && !p_ptr->blind && !(get_race()->flags & RACE_IS_ILLITERATE))
     {
+        obj_ptr scroll = pack_obj(slot);
         detect_traps(DETECT_RAD_DEFAULT, TRUE);
-        stats_on_use(&inventory[i], 1);
-        inven_item_increase(i, -1);
-        inven_item_describe(i);
-        inven_item_optimize(i);
+        stats_on_use(scroll, 1);
+        scroll->number--;
+        obj_release(scroll, 0);
         return TRUE;
     }
-    i = pack_find_device(EFFECT_DETECT_TRAPS);
-    if (i >= 0)
+    slot = pack_find_device(EFFECT_DETECT_TRAPS);
+    if (slot)
     {
+        obj_ptr device = pack_obj(slot);
         detect_traps(DETECT_RAD_DEFAULT, TRUE);
-        stats_on_use(&inventory[i], 1);
-        device_decrease_sp(&inventory[i], inventory[i].activation.cost);
-        inven_item_charges(i);
+        stats_on_use(device, 1);
+        device_decrease_sp(device, device->activation.cost);
         return TRUE;
     }
-    i = pack_find_device(EFFECT_DETECT_ALL);
-    if (i >= 0)
+    slot = pack_find_device(EFFECT_DETECT_ALL);
+    if (slot)
     {
+        obj_ptr device = pack_obj(slot);
         detect_all(DETECT_RAD_DEFAULT);
-        stats_on_use(&inventory[i], 1);
-        device_decrease_sp(&inventory[i], inventory[i].activation.cost);
-        inven_item_charges(i);
+        stats_on_use(device, 1);
+        device_decrease_sp(device, device->activation.cost);
         return TRUE;
     }
     return FALSE;

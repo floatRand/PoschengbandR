@@ -299,6 +299,22 @@ slot_t pack_find_obj(int tval, int sval)
     return inv_find_obj(_inv, tval, sval);
 }
 
+slot_t pack_find_device(int effect)
+{
+    int slot;
+    for (slot = 1; slot <= PACK_MAX; slot++)
+    {
+        obj_ptr obj = inv_obj(_inv, slot);
+        if (!obj) continue;
+        if (!object_is_device(obj)) continue;
+        if (!object_is_known(obj)) continue;
+        if (obj->activation.type != effect) continue;
+        if (device_sp(obj) < obj->activation.cost) continue;
+        return slot;
+    }
+    return 0;
+}
+
 slot_t pack_random_slot(obj_p p)
 {
     return inv_random_slot(_inv, p);

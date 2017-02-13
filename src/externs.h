@@ -617,8 +617,6 @@ extern void autopick_delayed_alter(void);
 extern void autopick_get_floor(void);
 extern bool autopick_autoregister(object_type *o_ptr);
 extern void do_cmd_edit_autopick(void);
-extern int pack_find_device(int effect);
-extern int pack_find(int tval, int sval);
 
 /* birth.c */
 extern cptr realm_jouhou[VALID_REALM];
@@ -844,6 +842,8 @@ extern int  device_sp(object_type *o_ptr);
 extern void device_decrease_sp(object_type *o_ptr, int amt);
 extern void device_increase_sp(object_type *o_ptr, int amt);
 extern int  device_max_sp(object_type *o_ptr);
+extern int  device_charges(object_type *o_ptr);
+extern int  device_max_charges(object_type *o_ptr);
 extern bool device_is_fully_charged(object_type *o_ptr);
 extern void device_regen_sp(object_type *o_ptr, int base_per_mill);
 extern void device_regen_sp_aux(object_type *o_ptr, int per_mill);

@@ -1056,7 +1056,7 @@ void do_cmd_use_staff(void)
     if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
         set_action(ACTION_NONE);
 
-    if (p_ptr->pclass == CLASS_MAGIC_EATER && !pack_find(TV_STAFF, SV_ANY))
+    if (p_ptr->pclass == CLASS_MAGIC_EATER && !pack_find_obj(TV_STAFF, SV_ANY))
     {
         magic_eater_cast(TV_STAFF);
         return;
@@ -1083,7 +1083,7 @@ void do_cmd_aim_wand(void)
     if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
         set_action(ACTION_NONE);
 
-    if (p_ptr->pclass == CLASS_MAGIC_EATER && !pack_find(TV_WAND, SV_ANY))
+    if (p_ptr->pclass == CLASS_MAGIC_EATER && !pack_find_obj(TV_WAND, SV_ANY))
     {
         magic_eater_cast(TV_WAND);
         return;
@@ -1109,7 +1109,7 @@ void do_cmd_zap_rod(void)
     if (p_ptr->special_defense & (KATA_MUSOU | KATA_KOUKIJIN))
         set_action(ACTION_NONE);
 
-    if (p_ptr->pclass == CLASS_MAGIC_EATER && !pack_find(TV_ROD, SV_ANY))
+    if (p_ptr->pclass == CLASS_MAGIC_EATER && !pack_find_obj(TV_ROD, SV_ANY))
     {
         magic_eater_cast(TV_ROD);
         return;

@@ -57,6 +57,7 @@ extern slot_t  pack_find_next(obj_p p, slot_t prev_match);
 extern slot_t  pack_find_art(int which);
 extern slot_t  pack_find_ego(int which);
 extern slot_t  pack_find_obj(int tval, int sval);
+extern slot_t  pack_find_device(int effect);
 extern slot_t  pack_random_slot(obj_p p);
 
 /* Bonuses: A few rare items grant bonuses from the pack. */

@@ -2245,36 +2245,6 @@ static void _sense_object_floor(object_type *o_ptr)
     o_ptr->feeling = _get_object_feeling(o_ptr);
 }
 
-int pack_find_device(int effect)
-{
-    int i;
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-
-        if (!o_ptr->k_idx) continue;
-        if (object_is_device(o_ptr) && object_is_known(o_ptr) && o_ptr->activation.type == effect)
-        {
-            if (device_sp(o_ptr) >= o_ptr->activation.cost)
-                return i;
-        }
-    }
-    return -1;
-}
-
-int pack_find(int tval, int sval)
-{
-    int i;
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-        if (!o_ptr->k_idx) continue; /* tval and sval are probably 0 too ... */
-        if (!object_is_known(o_ptr)) continue;
-        if (o_ptr->tval == tval && o_ptr->sval == sval) return i;
-    }
-    return -1;
-}
-
 /* Automatically identify objects, consuming requisite resources.
    We support scrolls and devices as the source for this convenience.
    We ignore fail rates and don't even charge the player energy for
@@ -2290,39 +2260,36 @@ bool autopick_auto_id(object_type *o_ptr)
 
     if (!object_is_known(o_ptr) && class_idx != CLASS_BERSERKER)
     {
-        int i;
+        slot_t slot;
 
         if (p_ptr->pclass == CLASS_MAGIC_EATER && magic_eater_auto_id(o_ptr))
             return TRUE;
 
-        i = pack_find(TV_SCROLL, SV_SCROLL_IDENTIFY);
-
-        if (i >= 0 && !p_ptr->blind && !(race->flags & RACE_IS_ILLITERATE))
+        slot = pack_find_obj(TV_SCROLL, SV_SCROLL_IDENTIFY);
+        if (slot && !p_ptr->blind && !(race->flags & RACE_IS_ILLITERATE))
         {
+            obj_ptr scroll = pack_obj(slot);
             identify_item(o_ptr);
-            stats_on_use(&inventory[i], 1);
-            inven_item_increase(i, -1);
-            inven_item_describe(i);
-            inven_item_optimize(i);
+            stats_on_use(scroll, 1);
+            scroll->number--;
+            obj_release(scroll, 0);
             return TRUE;
         }
 
-        i = pack_find_device(EFFECT_IDENTIFY);
-        if (i >= 0)
+        slot = pack_find_device(EFFECT_IDENTIFY);
+        if (slot)
         {
+            obj_ptr device = pack_obj(slot);
             identify_item(o_ptr);
-            stats_on_use(&inventory[i], 1);
-            device_decrease_sp(&inventory[i], inventory[i].activation.cost);
-            inven_item_charges(i);
+            stats_on_use(device, 1);
+            device_decrease_sp(device, device->activation.cost);
             return TRUE;
         }
 
         if (p_ptr->auto_id_sp && p_ptr->csp >= p_ptr->auto_id_sp)
         {
             identify_item(o_ptr);
-            p_ptr->csp -= p_ptr->auto_id_sp;
-            p_ptr->redraw |= PR_MANA;
-            p_ptr->window |= PW_SPELL;
+            sp_player(-p_ptr->auto_id_sp);
             return TRUE;
         }
     }
