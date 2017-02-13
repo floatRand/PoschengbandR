@@ -5528,54 +5528,32 @@ bool restore_level(void)
 /*
  * Forget everything
  */
+static void _forget(obj_ptr obj)
+{
+    obj->feeling = FEEL_NONE;
+    obj->ident &= ~(IDENT_EMPTY);
+    obj->ident &= ~(IDENT_TRIED);
+    obj->ident &= ~(IDENT_KNOWN);
+    obj->ident &= ~(IDENT_SENSE);
+}
+
 bool lose_all_info(void)
 {
-    int i;
-
     virtue_add(VIRTUE_KNOWLEDGE, -5);
     virtue_add(VIRTUE_ENLIGHTENMENT, -5);
 
-    /* Forget info about objects */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        object_type *o_ptr = &inventory[i];
+    pack_for_each_that(_forget, obj_is_identified_fully);
+    equip_for_each_that(_forget, obj_is_identified_fully);
+    quiver_for_each_that(_forget, obj_is_identified_fully);
 
-        /* Skip non-objects */
-        if (!o_ptr->k_idx) continue;
-
-        /* Allow "protection" by *ID* */
-        if (obj_is_identified_fully(o_ptr)) continue;
-
-        /* Remove "default inscriptions" */
-        o_ptr->feeling = FEEL_NONE;
-
-        /* Hack -- Clear the "empty" flag */
-        o_ptr->ident &= ~(IDENT_EMPTY);
-        o_ptr->ident &= ~(IDENT_TRIED);
-
-        /* Hack -- Clear the "known" flag */
-        o_ptr->ident &= ~(IDENT_KNOWN);
-
-        /* Hack -- Clear the "felt" flag */
-        o_ptr->ident &= ~(IDENT_SENSE);
-    }
-
-    /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS);
-
-    /* Combine / Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-    /* Window stuff */
+    p_ptr->update |= PU_BONUS;
+    p_ptr->notice |= PN_OPTIMIZE_PACK;
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_OBJECT_LIST);
 
-    /* Mega-Hack -- Forget the map */
     wiz_dark();
 
-    /* It worked */
-    return (TRUE);
+    return TRUE;
 }
-
 
 void do_poly_wounds(void)
 {

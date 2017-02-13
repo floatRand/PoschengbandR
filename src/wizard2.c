@@ -1770,6 +1770,9 @@ void do_cmd_debug(void)
         do_cmd_redraw();
         break;
     }
+    case '_':
+        lose_all_info();
+        break;
     default:
         msg_print("That is not a valid debug command.");
         break;
