@@ -686,55 +686,23 @@ static void regen_monsters(void)
  *
  * XXX XXX XXX Should probably be done during monster turns.
  */
+static bool _is_captured_mon(obj_ptr obj) { return obj->tval == TV_CAPTURE && obj->pval; }
+static void _regen_captured_mon(obj_ptr obj)
+{
+    monster_race *r_ptr = &r_info[obj->pval];
+    if (obj->xtra4 < obj->xtra5)
+    {
+        int amt = obj->xtra5 / 100;
+        if (!amt && one_in_(2)) amt = 1;
+        if (r_ptr->flags2 & RF2_REGENERATE) amt *= 2;
+        obj->xtra4 = MIN(obj->xtra5, obj->xtra4 + amt);
+    }
+}
+
 static void regen_captured_monsters(void)
 {
-    int i, frac;
-    bool heal = FALSE;
-
-    /* Regenerate everyone */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        monster_race *r_ptr;
-        object_type *o_ptr = &inventory[i];
-
-        if (!o_ptr->k_idx) continue;
-        if (o_ptr->tval != TV_CAPTURE) continue;
-        if (!o_ptr->pval) continue;
-
-        heal = TRUE;
-
-        r_ptr = &r_info[o_ptr->pval];
-
-        /* Allow regeneration (if needed) */
-        if (o_ptr->xtra4 < o_ptr->xtra5)
-        {
-            /* Hack -- Base regeneration */
-            frac = o_ptr->xtra5 / 100;
-
-            /* Hack -- Minimal regeneration rate */
-            if (!frac) if (one_in_(2)) frac = 1;
-
-            /* Hack -- Some monsters regenerate quickly */
-            if (r_ptr->flags2 & RF2_REGENERATE) frac *= 2;
-
-            /* Hack -- Regenerate */
-            o_ptr->xtra4 += frac;
-
-            /* Do not over-regenerate */
-            if (o_ptr->xtra4 > o_ptr->xtra5) o_ptr->xtra4 = o_ptr->xtra5;
-        }
-    }
-
-    if (heal)
-    {
-        /* Combine pack */
-        p_ptr->notice |= (PN_COMBINE);
-
-        /* Window stuff */
-        p_ptr->window |= (PW_INVEN);
-        p_ptr->window |= (PW_EQUIP);
-        wild_regen = 20;
-    }
+    pack_for_each_that(_regen_captured_mon, _is_captured_mon);
+    equip_for_each_that(_regen_captured_mon, _is_captured_mon);
 }
 
 

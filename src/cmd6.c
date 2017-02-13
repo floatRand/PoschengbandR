@@ -31,8 +31,8 @@
 
 bool restore_mana(void)
 {
-    bool result = FALSE;
-    int  i;
+    bool   result = FALSE;
+    slot_t slot;
 
     if (p_ptr->pclass == CLASS_MAGIC_EATER)
     {
@@ -52,16 +52,19 @@ bool restore_mana(void)
         result = TRUE;
     }
 
-    for (i = 0; i < INVEN_PACK; i++)
+    for (slot = 1; slot <= pack_max(); slot++)
     {
-        if (!inventory[i].k_idx) continue;
-        if (!object_is_device(&inventory[i])) continue;
-        if (inventory[i].activation.type == EFFECT_RESTORE_MANA) continue;
+        obj_ptr obj = pack_obj(slot);
 
-        if (inventory[i].tval == TV_ROD)
-            device_regen_sp_aux(&inventory[i], 500);
+        if (!obj) continue;
+        if (!object_is_device(obj)) continue;
+        if (obj->activation.type == EFFECT_RESTORE_MANA) continue;
+
+        if (obj->tval == TV_ROD)
+            device_regen_sp_aux(obj, 500);
         else
-            device_regen_sp_aux(&inventory[i], 250);
+            device_regen_sp_aux(obj, 250);
+        result = TRUE;
     }
 
     msg_print("You feel your head clear.");
