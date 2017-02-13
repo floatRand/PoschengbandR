@@ -973,12 +973,6 @@ static errr init_other(void)
     /* Quark variables */
     quark_init();
 
-    /*** Prepare the Player inventory ***/
-
-    /* Allocate it */
-    C_MAKE(inventory, INVEN_TOTAL, object_type);
-
-
     /*** Prepare the options ***/
 
     /* Scan the options */

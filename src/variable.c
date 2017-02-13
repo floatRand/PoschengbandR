@@ -153,11 +153,7 @@ bool shimmer_objects;    /* Hack -- optimize multi-hued objects */
 bool repair_monsters;    /* Hack -- optimize detect monsters */
 bool repair_objects;    /* Hack -- optimize detect objects */
 
-s16b inven_nxt;            /* Hack -- unused */
 bool hack_mind;
-
-s16b inven_cnt;            /* Number of items in inventory */
-s16b equip_cnt;            /* Number of items in equipment */
 
 s16b o_max = 1;            /* Number of allocated objects */
 s16b o_cnt = 0;            /* Number of live objects */
@@ -664,12 +660,6 @@ s16b pack_info_count;
  */
 s16b *mproc_list[MAX_MTIMED];
 s16b mproc_max[MAX_MTIMED]; /* Number of monsters to be processed */
-
-
-/*
- * The player's inventory [INVEN_TOTAL]
- */
-object_type *inventory;
 
 
 /*

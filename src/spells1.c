@@ -1658,7 +1658,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
             identify_item(o_ptr);
 
             /* Auto-inscription */
-            autopick_alter_item((-this_o_idx), FALSE);
+            autopick_alter_obj(o_ptr, FALSE);
             break;
     case GF_KILL_TRAP:
     case GF_KILL_DOOR:

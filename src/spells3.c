@@ -1000,14 +1000,14 @@ bool apply_disenchant(int mode)
 
         if (object_is_artifact(o_ptr) && (randint0(100) < 71))
         {
-            msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(slot));
+            msg_format("Your %s resists disenchantment!", o_name);
             return TRUE;
         }
 
         obj_flags(o_ptr, flgs);
         if (have_flag(flgs, OF_RES_DISEN))
         {
-            msg_format("Your %s (%c) resists disenchantment!", o_name, index_to_label(slot));
+            msg_format("Your %s resists disenchantment!", o_name);
             obj_learn_flag(o_ptr, OF_RES_DISEN);
             return TRUE;
         }
@@ -1037,7 +1037,7 @@ bool apply_disenchant(int mode)
         if ((to_h != o_ptr->to_h) || (to_d != o_ptr->to_d) ||
             (to_a != o_ptr->to_a) || (pval != o_ptr->pval))
         {
-            msg_format("Your %s (%c) was disenchanted!", o_name, index_to_label(slot));
+            msg_format("Your %s was disenchanted!", o_name);
             virtue_add(VIRTUE_HARMONY, 1);
             virtue_add(VIRTUE_ENCHANTMENT, -2);
 

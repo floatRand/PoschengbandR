@@ -652,7 +652,7 @@ static void _wield_after(slot_t slot)
     if (p_ptr->personality == PERS_MUNCHKIN)
     {
         identify_item(obj);
-        autopick_alter_item(slot, FALSE);
+        autopick_alter_obj(obj, FALSE);
     }
     obj_learn_equipped(obj);
     stats_on_equip(obj);

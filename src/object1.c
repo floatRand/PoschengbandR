@@ -674,32 +674,6 @@ bool obj_has_lore(object_type *o_ptr)
     return FALSE;
 }
 
-/*
- * Convert an inventory index into a one character label
- * Note that the label does NOT distinguish inven/equip.
- */
-char index_to_label(int i)
-{
-    /* Indexes for "inven" are easy */
-    if (i <= INVEN_PACK) return (I2A(i));
-
-    /* Indexes for "equip" are offset */
-    return (I2A(i - EQUIP_BEGIN));
-}
-
-
-/*
- * Return a string describing how a given item is being worn.
- * Currently, only used for items in the equipment, not inventory.
- */
-cptr describe_use(int i)
-{
-    if (equip_is_valid_slot(i))
-        return "wearing";
-    return "carrying in your pack;";
-}
-
-
 /* Hack: Check if a spellbook is one of the realms we can use. -- TY */
 
 bool check_book_realm(const byte book_tval, const byte book_sval)

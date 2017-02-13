@@ -163,9 +163,6 @@ static void player_wipe(void)
         quest[i].seed = 0;
     }
 
-    /* No items */
-    inven_cnt = 0;
-
     /* Start with no artifacts made yet */
     for (i = 0; i < max_a_idx; i++)
     {

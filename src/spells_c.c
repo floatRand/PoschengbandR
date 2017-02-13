@@ -887,6 +887,12 @@ void destruction_spell(int cmd, variant *res)
 }
 bool cast_destruction(void) { return cast_spell(destruction_spell); }
 
+static void _detect_curses(obj_ptr obj)
+{
+    if (object_is_cursed(obj))
+        obj->feeling = FEEL_CURSED;
+}
+
 void detect_curses_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -908,17 +914,9 @@ void detect_curses_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
     {
-        int i;
-
-        for (i = 0; i < INVEN_TOTAL; i++)
-        {
-            object_type *o_ptr = &inventory[i];
-
-            if (!o_ptr->k_idx) continue;
-            if (!object_is_cursed(o_ptr)) continue;
-
-            o_ptr->feeling = FEEL_CURSED;
-        }
+        pack_for_each(_detect_curses);
+        equip_for_each(_detect_curses);
+        quiver_for_each(_detect_curses);
         var_set_bool(res, TRUE);
         break;
     }

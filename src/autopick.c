@@ -2156,10 +2156,6 @@ void autopick_delayed_alter(void)
  * Auto-destroyer works only on inventory or on floor stack only when
  * requested.
  */
-void autopick_alter_item(int item, bool destroy)
-{
-    /* I am dead ... I just don't know it yet. */
-}
 void autopick_alter_obj(obj_ptr o_ptr, bool allow_destroy)
 {
     /* Get the index in the auto-pick/destroy list */

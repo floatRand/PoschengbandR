@@ -1240,14 +1240,8 @@ static bool _has_book(int realm, int book)
 {
     int tval = realm2tval(realm);
     int sval = book;
-    int i;
 
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        if (inventory[i].tval == tval && inventory[i].sval == sval)
-            return TRUE;
-    }
-    return FALSE;
+    return pack_find_obj(tval, sval);
 }
 
 static void _dump_realm(doc_ptr doc, int realm)
