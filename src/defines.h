@@ -1488,6 +1488,7 @@ enum {
 #define ART_DEFENDER_OF_THE_CROWN 252
 #define ART_MONKEY_KING            255
 #define ART_MAUL_OF_VICE        279
+#define ART_WINDWHIP			338
 
 /* Bows */
 #define ART_BELTHRONDING        124

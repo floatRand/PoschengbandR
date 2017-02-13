@@ -3368,7 +3368,7 @@ D:Worn coin, cold to touch. It seems to have passed through many unfortunate han
 
 N:331:Pendant of Nightmares
 I:40:0:5
-W:30:70:2:300000
+W:30:95:2:300000
 P:0:0d0:5:5:5
 F:FULL_NAME | INSTA_ART 
 F:STR | INT | WIS | DEX | CON | CHR | SPEED
@@ -3436,6 +3436,17 @@ P:3:1d1:0:0:6
 F:STEALTH | DEX | FULL_NAME
 D:A pair of boots, reducing even the most cumbersome tread into a dainty, feather-light step.
 D:No blade of grass nor trap is bothered by such soft touch.
+
+N:338:Strange Current of Air
+I:21:2:3
+W:40:30:1:250000
+P:0:1d1:0:0:0
+F:FULL_NAME | HIDE_TYPE | NO_ENCHANT
+F:KILL_EVIL | VORPAL2 | BRAND_VAMP | BRAND_MANA | BRAND_ELEC | BLOWS | 
+F:FREE_ACT | RES_POIS | SPEED | DEC_CON |
+F:SEE_INVIS | LEVITATION | SHOW_MODS | 
+D:A mere leather handle. When you move it around, you hear a strange whistling noise.
+
 
 # N: serial number : item name
 # I: tval : sval : pval

@@ -303,8 +303,11 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
         case ART_SPECTRAL_DSM: /* Passwall */
             xtra = 50000;
             break;
+		case ART_WINDWHIP:
+			xtra = 5000;
+			break;
 		case ART_AMULET_NIGHTMARE:
-			p = p / 2;
+			p = p / 5;
 			break;
         }
         if (xtra)

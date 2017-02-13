@@ -682,6 +682,9 @@ static void _display_extra(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_ptr
     if (have_flag(flgs, OF_DUAL_WIELDING))
         doc_insert(doc, "It affects your ability to hit when you are wielding two weapons.\n");
 
+	if (ironman_nightmare && o_ptr->name3 == ART_AMULET_NIGHTMARE)
+		doc_insert(doc, "There is faded inscription on the amulet: 'I beckoned the nightmares, but all in the world remained the same.'\n");
+
     if (o_ptr->tval == TV_STATUE)
     {
         if (o_ptr->pval == MON_BULLGATES)

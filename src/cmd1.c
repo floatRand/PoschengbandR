@@ -3584,8 +3584,12 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                     if (o_ptr->name1 == ART_VORPAL_BLADE)
                         msg_print("Your Vorpal Blade goes <color:y>snicker-snack</color>!");
-                    else
-                        msg_format("Your weapon <color:y>cuts deep</color> into %s!", m_name_object);
+					else if (o_ptr->name1 == ART_WINDWHIP)
+					{
+						msg_print("Your whip of air <color:y>whistles</color>!");
+						mult += randint0(3);
+					}
+					else msg_format("Your weapon <color:y>cuts deep</color> into %s!", m_name_object);
 
                     while (one_in_(vorpal_chance))
                         mult++;
