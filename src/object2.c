@@ -4342,27 +4342,6 @@ void place_trap(int y, int x)
 
 
 /*
- * Describe the charges on an item in the inventory.
- */
-void inven_item_charges(int item)
-{
-    object_type *o_ptr = &inventory[item];
-    int          charges;
-
-    if (!object_is_device(o_ptr)) return;
-    if (!object_is_known(o_ptr)) return;
-    if (!o_ptr->activation.cost) return; /* Just checking ... */
-
-    charges = device_sp(o_ptr) / o_ptr->activation.cost;
-
-    if (charges == 1)
-        msg_print("You have 1 charge remaining.");
-    else
-        msg_format("You have %d charges remaining.", charges);
-}
-
-
-/*
  * Describe an item in the inventory.
  */
 void inven_item_describe(int item)

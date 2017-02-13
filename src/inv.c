@@ -477,7 +477,7 @@ slot_t inv_random_slot(inv_ptr inv, obj_p p)
     int ct = 0;
     int slot;
 
-    for (slot = 1; slot < vec_length(inv->objects); slot++)
+    for (slot = 1; slot <= inv_max(inv); slot++)
     {
         obj_ptr obj = inv_obj(inv, slot);
         if (_filter(obj, p))
@@ -487,7 +487,7 @@ slot_t inv_random_slot(inv_ptr inv, obj_p p)
     if (ct)
     {
         int which = randint0(ct);
-        for (slot = 1; slot < vec_length(inv->objects); slot++)
+        for (slot = 1; slot <= inv_max(inv); slot++)
         {
             obj_ptr obj = inv_obj(inv, slot);
             if (_filter(obj, p))

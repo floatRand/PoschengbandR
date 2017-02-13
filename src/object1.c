@@ -689,40 +689,6 @@ char index_to_label(int i)
 
 
 /*
- * Convert a label into the index of an item in the "inven"
- * Return "-1" if the label does not indicate a real item
- */
-s16b label_to_inven(int c)
-{
-    int i;
-
-    /* Convert */
-    i = (islower(c) ? A2I(c) : -1);
-
-    /* Verify the index */
-    if ((i < 0) || (i > INVEN_PACK)) return (-1);
-
-    /* Empty slots can never be chosen */
-    if (!inventory[i].k_idx) return (-1);
-
-    /* Return the index */
-    return (i);
-}
-
-
-/*
- * Convert a label into the index of a item in the "equip"
- * Return "-1" if the label does not indicate a real item
- */
-s16b label_to_equip(int c)
-{
-    int i = (islower(c) ? A2I(c) : -1) + EQUIP_BEGIN;
-    if (!equip_is_valid_slot(i)) return -1;
-    if (!equip_obj(i)) return -1;
-    return i;
-}
-
-/*
  * Return a string describing how a given item is being worn.
  * Currently, only used for items in the equipment, not inventory.
  */

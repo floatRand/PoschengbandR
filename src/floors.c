@@ -864,6 +864,11 @@ static void locate_connected_stairs(saved_floor_type *sf_ptr)
  * Maintain quest monsters, mark next floor_id at stairs, save current
  * floor, and prepare to enter next floor.
  */
+static void _fix_art_hack(obj_ptr obj)
+{
+    if (obj->name1) a_info[obj->name1].floor_id = 0;
+    else if (obj->name3) a_info[obj->name3].floor_id = 0;
+}
 void leave_floor(void)
 {
     cave_type *c_ptr = NULL;
@@ -931,23 +936,9 @@ void leave_floor(void)
     }
 
     /* Check if there is a same item */
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        object_type *o_ptr = &inventory[i];
-
-        /* Skip dead objects */
-        if (!o_ptr->k_idx) continue;
-
-        /* Delete old memorized location of the artifact */
-        if (object_is_fixed_artifact(o_ptr))
-        {
-            a_info[o_ptr->name1].floor_id = 0;
-        }
-        else if (o_ptr->name3)
-        {
-            a_info[o_ptr->name3].floor_id = 0;
-        }
-    }
+    equip_for_each(_fix_art_hack);
+    pack_for_each(_fix_art_hack);
+    quiver_for_each(_fix_art_hack);
 
     /* Extract current floor info or NULL */
     sf_ptr = get_sf_ptr(p_ptr->floor_id);

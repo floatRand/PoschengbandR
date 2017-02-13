@@ -3247,21 +3247,6 @@ static void print_tomb(void)
  */
 static void show_info(void)
 {
-    int             i;
-    object_type    *o_ptr;
-
-    /* Hack -- Know everything in the inven/equip */
-    for (i = 0; i < INVEN_TOTAL; i++)
-    {
-        o_ptr = &inventory[i];
-
-        /* Skip non-objects */
-        if (!o_ptr->k_idx) continue;
-
-        /* Aware and Known */
-        obj_identify(o_ptr);
-    }
-
     pack_for_each(obj_identify);
     equip_for_each(obj_identify);
     quiver_for_each(obj_identify);
