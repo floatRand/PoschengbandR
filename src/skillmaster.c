@@ -1637,15 +1637,11 @@ static void _dump_book(doc_ptr doc, object_type *spellbook)
 
 static object_type *_find_book(int realm, int book)
 {
-    int tval = realm2tval(realm);
-    int sval = book;
-    int i;
+    int    tval = realm2tval(realm);
+    int    sval = book;
+    slot_t slot = pack_find_obj(tval, sval);
 
-    for (i = 0; i < INVEN_PACK; i++)
-    {
-        if (inventory[i].tval == tval && inventory[i].sval == sval)
-            return &inventory[i];
-    }
+    if (slot) return pack_obj(slot);
     return NULL;
 }
 
