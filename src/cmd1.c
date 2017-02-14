@@ -462,32 +462,32 @@ critical_t critical_shot(int weight, int plus)
         if (k < 400)
         {
             result.desc = "It was a <color:y>fair</color> shot!";
-            result.mul = 125;
+            result.mul = 175;
         }
         else if (k < 700)
         {
             result.desc = "It was a <color:y>decent</color> shot!";
-            result.mul = 150;
+            result.mul = 200;
         }
         else if (k < 1000)
         {
             result.desc = "It was a <color:R>good</color> shot!";
-            result.mul = 175;
+            result.mul = 225;
         }
         else if (k < 1350)
         {
             result.desc = "It was a <color:r>great</color> shot!";
-            result.mul = 200;
+            result.mul = 250;
         }
         else if (k < 1800)
         {
             result.desc = "It was a <color:v>superb</color> shot!";
-            result.mul = 250;
+            result.mul = 300;
         }
         else /* requires 0.4+lb ammo: steel bolt or sheaf arrow or sling ammo */
         {
             result.desc = "It was a <color:v>*GREAT*</color> shot!";
-            result.mul = 300;
+            result.mul = 350;
         }
     }
 

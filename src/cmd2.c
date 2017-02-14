@@ -3558,6 +3558,7 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                             tdam = tdam * crit.mul/100 + crit.to_d;
                             msg_print(crit.desc);
                         }
+                        if (p_ptr->concent) tdam = boost_concentration_damage(tdam);
 
                         tdam += arrow.to_d;
                         if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
@@ -3567,7 +3568,6 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                         tdam /= 100;
                         tdam += bow->to_d;
 
-                        if (p_ptr->concent) tdam = boost_concentration_damage(tdam);
                         tdam += p_ptr->shooter_info.to_d;
                         /* End of Damage Calculation (Changed) */
 

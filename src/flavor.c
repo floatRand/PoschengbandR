@@ -985,9 +985,6 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     u32b            flgs[OF_ARRAY_SIZE];
     u32b            known_flgs[OF_ARRAY_SIZE];
 
-    int             slot;
-    object_type    *bow_ptr = NULL;
-
     object_kind    *k_ptr = &k_info[o_ptr->k_idx];
     object_kind    *flavor_k_ptr = &k_info[k_ptr->flavor];
 
@@ -1854,65 +1851,7 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         }
     }
 
-    slot = equip_find_obj(TV_BOW, SV_ANY);
-    if (slot)
-        bow_ptr = equip_obj(slot);
-
-    /* If have a firing weapon + ammo matches bow */
-    if (bow_ptr && o_ptr->tval == p_ptr->shooter_info.tval_ammo)
-    {
-#if 0
-        int avgdam;
-        int tmul = bow_mult(bow_ptr);
-        /*s16b energy_fire = bow_energy(bow_ptr->sval);*/
-
-        if (p_ptr->big_shot && o_ptr->tval == p_ptr->shooter_info.tval_ammo)
-            avgdam = o_ptr->dd * 2 * (o_ptr->ds + 1) * 10 / 2;
-        else
-            avgdam = o_ptr->dd * (o_ptr->ds + 1) * 10 / 2;
-
-        /* See if the bow is "known" - then set damage bonus */
-        if (object_is_known(bow_ptr)) avgdam += (bow_ptr->to_d * 10);
-        if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
-            avgdam += (1 + p_ptr->lev/10)*10;
-
-        /* Effect of ammo */
-        if (known) avgdam += (o_ptr->to_d * 10);
-
-        /* Launcher multiplier */
-        avgdam *= tmul;
-        avgdam /= (100 * 10);
-
-        /* Get extra damage from concentration */
-        if (p_ptr->concent) avgdam = boost_concentration_damage(avgdam);
-
-        /* Testing */
-        avgdam += p_ptr->shooter_info.to_d;
-
-        if (avgdam < 0) avgdam = 0;
-
-        /* Display (shot damage/ avg damage) */
-        t = object_desc_chr(t, ' ');       
-        t = object_desc_chr(t, p1);
-        t = object_desc_num(t, avgdam);
-        t = object_desc_chr(t, '/');
-
-        if (p_ptr->shooter_info.num_fire == 0)
-        {
-            t = object_desc_chr(t, '0');
-        }
-        else
-        {
-            /* Calc effects of energy */
-            avgdam *= (p_ptr->shooter_info.num_fire * 100);
-            avgdam /= energy_fire;
-            t = object_desc_num(t, avgdam);
-        }
-
-        t = object_desc_chr(t, p2);
-#endif
-    }
-    else if ((p_ptr->pclass == CLASS_NINJA) && (o_ptr->tval == TV_SPIKE))
+    if ((p_ptr->pclass == CLASS_NINJA) && (o_ptr->tval == TV_SPIKE))
     {
         int avgdam = 1;
         s16b energy_fire = 100 - p_ptr->lev;
