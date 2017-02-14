@@ -3001,6 +3001,19 @@ void obj_create_armor(object_type *o_ptr, int level, int power, int mode)
 }
 
 /*************************************************************************
+ * Quivers
+ *************************************************************************/
+void obj_create_quiver(object_type *o_ptr, int level, int power, int mode)
+{
+    /* capacity */
+    o_ptr->xtra4 = 60;
+    while (one_in_(2)) o_ptr->xtra4 += 10;
+
+    /* egos */
+    /* TODO */
+}
+
+/*************************************************************************
  * Lites
  *************************************************************************/
 void obj_create_lite(object_type *o_ptr, int level, int power, int mode)

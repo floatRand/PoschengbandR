@@ -2207,6 +2207,10 @@ bool apply_magic(object_type *o_ptr, int lev, u32b mode)
     /* Apply magic */
     switch (o_ptr->tval)
     {
+        case TV_QUIVER:
+            obj_create_quiver(o_ptr, lev, power, mode);
+            break;
+
         case TV_DIGGING:
         case TV_HAFTED:
         case TV_BOW:
@@ -2869,8 +2873,8 @@ static bool _kind_is_lance(int k_idx) {
         return TRUE;
     return FALSE;
 }
-static bool _kind_is_bow(int k_idx) {
-    if (k_info[k_idx].tval == TV_BOW)
+static bool _kind_is_bow_quiver(int k_idx) {
+    if (k_info[k_idx].tval == TV_BOW || k_info[k_idx].tval == TV_QUIVER)
         return TRUE;
     return FALSE;
 }
@@ -2912,25 +2916,11 @@ typedef struct {
     int     good;
     int     great;
 } _kind_alloc_entry;
-/*
-static _kind_alloc_entry _kind_alloc_table[] = {
-    { kind_is_weapon,          210,    0,    0 },
-    { kind_is_body_armor,      200,    0,    0 },
-    { kind_is_other_armor,     210,    0,    0 },
-    { kind_is_wand_rod_staff,   90,  -40,  -60 },
-    { _kind_is_potion_scroll,  100,  -50,  -90 },
-    { _kind_is_bow,             45,    0,   25 },
-    { _kind_is_ammo,            30,    0,  -25 },
-    { kind_is_book,             25,   10,   15 },
-    { kind_is_jewelry,          40,    0,    0 },
-    { kind_is_misc,             50,  -50,  -50 },
-    { NULL, 0}
-};*/
 static _kind_alloc_entry _kind_alloc_table[] = {
     /* Equipment by Slot */
-    { kind_is_weapon,          215,    0,    0 },
+    { kind_is_weapon,          200,    0,    0 },
     { _kind_is_shield,          30,    0,    0 },
-    { _kind_is_bow,             65,    0,    0 },
+    { _kind_is_bow_quiver,      70,    0,    0 },
     { kind_is_jewelry,          40,    0,    0 },
     { _kind_is_lite,            10,    0,    0 },
     { kind_is_body_armor,      200,    0,    0 },
@@ -2938,14 +2928,14 @@ static _kind_alloc_entry _kind_alloc_table[] = {
     { kind_is_helm,             30,    0,    0 },
     { _kind_is_gloves,          30,    0,    0 },
     { _kind_is_boots,           30,    0,    0 },
-    /*                         680              */
+    /*                         670              */
 
     { kind_is_wand_rod_staff,   95,  -40,  -60 },
     { _kind_is_potion_scroll,  105,  -50,  -90 },
-    { _kind_is_ammo,            45,    0,  -30 },
+    { _kind_is_ammo,            55,    0,    0 },
     { kind_is_book,             25,   10,   15 }, /* R_DROP_MAGE is covering this ... */
     { kind_is_misc,             50,  -50,  -50 },
-    /*                         320              */
+    /*                         330              */
     { NULL, 0}
 };
 static int _kind_alloc_weight(_kind_alloc_entry *entry, u32b mode)

@@ -22,6 +22,7 @@ N:0:Standard
 S:WEAPON_SHIELD:Right Hand:0
 S:WEAPON_SHIELD:Left Hand:1
 S:BOW:Shooting
+S:QUIVER:Quiver
 S:RING:Right Ring:0
 S:RING:Left Ring:1
 S:AMULET:Neck

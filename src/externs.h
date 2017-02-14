@@ -1209,6 +1209,7 @@ extern bool obj_create_device(object_type *o_ptr, int level, int power, int mode
 extern void obj_create_weapon(object_type *o_ptr, int level, int power, int mode);
 extern void obj_create_armor(object_type *o_ptr, int level, int power, int mode);
 extern void obj_create_lite(object_type *o_ptr, int level, int power, int mode);
+extern void obj_create_quiver(object_type *o_ptr, int level, int power, int mode);
 extern int  ego_choose_type(int type, int level);
 extern void ego_weapon_adjust_weight(object_type *o_ptr);
 extern void ego_brand_weapon(object_type *o_ptr, int which);

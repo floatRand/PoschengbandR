@@ -3390,6 +3390,7 @@ static cptr b_info_slots[] =
     "ANY",
     "WEAPON",
     "CAPTURE_BALL",
+    "QUIVER",
 };
 
 errr parse_b_info(char *buf, header *head)

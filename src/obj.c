@@ -115,6 +115,7 @@ void obj_release(obj_ptr obj, int options)
             pack_remove(obj->loc.slot);
         break;
     case INV_QUIVER:
+        p_ptr->window |= PW_EQUIP; /* a Quiver [32 of 110] */
         if (!quiet)
             msg_format("You have %s in your quiver.", name);
         if (obj->number <= 0)
@@ -434,6 +435,7 @@ bool obj_can_combine(obj_ptr dest, obj_ptr obj, int loc)
     case TV_STAFF:
     case TV_WAND:
     case TV_ROD:
+    case TV_QUIVER:
         return FALSE;
 
     case TV_STATUE:

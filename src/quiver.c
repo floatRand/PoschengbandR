@@ -3,7 +3,6 @@
 #include <assert.h>
 
 static inv_ptr _inv = NULL;
-static int     _capacity = 100;
 
 void quiver_init(void)
 {
@@ -27,25 +26,28 @@ bool quiver_likes(obj_ptr obj)
     return FALSE;
 }
 
-int quiver_capacity(void)
+bool quiver_tolerates(obj_ptr obj)
 {
-    return _capacity;
+    return obj_is_ammo(obj);
 }
 
-void quiver_set_capacity(int capacity)
+int quiver_capacity(void)
 {
-    assert(capacity >= quiver_count(NULL));
-    _capacity = capacity;
+    slot_t slot = equip_find_obj(TV_QUIVER, SV_ANY);
+    if (!slot) return 0;
+    return equip_obj(slot)->xtra4;
 }
 
 void quiver_carry(obj_ptr obj)
 {
     /* Helper for pack_carry and equip_wield */
     int ct = quiver_count(NULL);
+    int cap = quiver_capacity();
     int xtra = 0;
-    if (ct + obj->number > _capacity)
+    if (ct >= cap) return;
+    if (ct + obj->number > cap)
     {
-        xtra = ct + obj->number - _capacity;
+        xtra = ct + obj->number - cap;
         obj->number -= xtra;
     }
     inv_combine_ex(_inv, obj);
@@ -61,6 +63,7 @@ void quiver_carry(obj_ptr obj)
         }
     }
     obj->number += xtra;
+    p_ptr->window |= PW_EQUIP; /* a Quiver [32 of 110] */
 }
 
 void quiver_remove(slot_t slot)

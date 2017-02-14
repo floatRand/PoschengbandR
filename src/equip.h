@@ -3,6 +3,27 @@
 
 #include "inv.h"
 
+#define EQUIP_MAX 15
+
+enum {
+    EQUIP_SLOT_NONE,
+    EQUIP_SLOT_GLOVES,
+    EQUIP_SLOT_WEAPON_SHIELD,
+    EQUIP_SLOT_RING,
+    EQUIP_SLOT_BOW,
+    EQUIP_SLOT_AMULET,
+    EQUIP_SLOT_LITE,
+    EQUIP_SLOT_BODY_ARMOR,
+    EQUIP_SLOT_CLOAK,
+    EQUIP_SLOT_BOOTS,
+    EQUIP_SLOT_HELMET,
+    EQUIP_SLOT_ANY,
+    EQUIP_SLOT_WEAPON,
+    EQUIP_SLOT_CAPTURE_BALL,
+    EQUIP_SLOT_QUIVER,
+    EQUIP_SLOT_MAX
+};
+
 /* Equipment Module.
 
    The goal is to support different kinds of equipment "templates".
@@ -26,7 +47,6 @@ extern void equip_wield_ui(void);
 
 extern bool equip_can_takeoff(obj_ptr obj);
 extern void equip_takeoff_ui(void);
-    extern void equip_takeoff(slot_t slot);
     /* Taking off an item implies moving it to the pack */
 
 extern void    equip_drop(obj_ptr obj);

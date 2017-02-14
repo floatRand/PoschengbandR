@@ -548,26 +548,6 @@
 #define SPELL_ON_BROWSE      20      /* Custom Handler for browsing the spell */
 
 /*
- * Maximum number of "normal" pack slots, and the index of the "overflow"
- * slot, which can hold an item, but only temporarily, since it causes the
- * pack to "overflow", dropping the "last" item onto the ground.
- */
-#define MAX_STACK_SIZE  99
-#define INVEN_PACK      26
-#define EQUIP_BEGIN     (INVEN_PACK + 1)
-#define INVEN_TOTAL     50
-#define EQUIP_MAX_SLOTS (INVEN_TOTAL - EQUIP_BEGIN)
-
-/* If you are looking for old INVEN_* crap, look in equip.h instead ... */
-
-/*
- * Fake inventory slot for selecting force (hard-coded).
- */
-#define INVEN_FORCE               1111
-#define INVEN_UNLIMITED_QUIVER    1112
-#define INVEN_ALL                 1113
-
-/*
  * Indexes of the various "stats" (hard-coded by savefiles, etc).
  */
 #define A_NONE -1
@@ -5731,56 +5711,39 @@ enum mon_save_fields_e {
    entry, if present)
 */
 
-enum slot_e {
-    EQUIP_SLOT_NONE,
-    EQUIP_SLOT_GLOVES,
-    EQUIP_SLOT_WEAPON_SHIELD,
-    EQUIP_SLOT_RING,
-    EQUIP_SLOT_BOW,
-    EQUIP_SLOT_AMULET,
-    EQUIP_SLOT_LITE,
-    EQUIP_SLOT_BODY_ARMOR,
-    EQUIP_SLOT_CLOAK,
-    EQUIP_SLOT_BOOTS,
-    EQUIP_SLOT_HELMET,
-    EQUIP_SLOT_ANY,
-    EQUIP_SLOT_WEAPON,
-    EQUIP_SLOT_CAPTURE_BALL,
-    EQUIP_SLOT_MAX
-};
-
 /* Many ego types are now shared across mutliple kinds of equipment */
 enum ego_e {
     EGO_TYPE_NONE         = 0,
 
     /* Melee Weapons */
-    EGO_TYPE_WEAPON       = 0x00001,
-    EGO_TYPE_DIGGER       = 0x00002,
+    EGO_TYPE_WEAPON       = 0x00000001,
+    EGO_TYPE_DIGGER       = 0x00000002,
 
     /* Armor */
-    EGO_TYPE_SHIELD       = 0x00004,
-    EGO_TYPE_BODY_ARMOR   = 0x00008,
-    EGO_TYPE_ROBE         = 0x00010,
-    EGO_TYPE_DRAGON_ARMOR = 0x00020,
-    EGO_TYPE_CLOAK        = 0x00040,
-    EGO_TYPE_HELMET       = 0x00080,
-    EGO_TYPE_CROWN        = 0x00100,
-    EGO_TYPE_GLOVES       = 0x00200,
-    EGO_TYPE_BOOTS        = 0x00400,
+    EGO_TYPE_SHIELD       = 0x00000004,
+    EGO_TYPE_BODY_ARMOR   = 0x00000008,
+    EGO_TYPE_ROBE         = 0x00000010,
+    EGO_TYPE_DRAGON_ARMOR = 0x00000020,
+    EGO_TYPE_CLOAK        = 0x00000040,
+    EGO_TYPE_HELMET       = 0x00000080,
+    EGO_TYPE_CROWN        = 0x00000100,
+    EGO_TYPE_GLOVES       = 0x00000200,
+    EGO_TYPE_BOOTS        = 0x00000400,
 
     /* Missile Weapons */
-    EGO_TYPE_BOW          = 0x00800,
-    EGO_TYPE_AMMO         = 0x01000,
-    EGO_TYPE_HARP         = 0x02000,
+    EGO_TYPE_BOW          = 0x00000800,
+    EGO_TYPE_AMMO         = 0x00001000,
+    EGO_TYPE_HARP         = 0x00002000,
+    EGO_TYPE_QUIVER       = 0x00004000,
 
     /* Jewelry, Lights, Devices */
-    EGO_TYPE_RING         = 0x04000,
-    EGO_TYPE_AMULET       = 0x08000,
-    EGO_TYPE_LITE         = 0x10000,
-    EGO_TYPE_DEVICE       = 0x20000,
+    EGO_TYPE_RING         = 0x00008000,
+    EGO_TYPE_AMULET       = 0x00010000,
+    EGO_TYPE_LITE         = 0x00020000,
+    EGO_TYPE_DEVICE       = 0x00040000,
 
     /* (Blasted) */
-    EGO_TYPE_SPECIAL      = 0x40000,
+    EGO_TYPE_SPECIAL      = 0x00080000,
 };
 
 enum ego_type_e {
@@ -5965,6 +5928,11 @@ enum ego_type_e {
 
     /* Special */
     EGO_SPECIAL_BLASTED = 260,
+
+    /* Quivers */
+    EGO_QUIVER_HOLDING = 265,
+    EGO_QUIVER_ENDLESS,
+    EGO_QUIVER_PHASE,
 };
 
 

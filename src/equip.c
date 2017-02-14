@@ -3,25 +3,17 @@
 
 #include <assert.h>
 
-/* Slots on the equipment template now *match* slots in our inventory.
- * This never used to be the case, and coding was awkward! */
+/* Slots on the equipment template now *match* slots in our inventory. */
 static equip_template_ptr _template = NULL;
 static inv_ptr _inv = NULL;
 
-bool _object_is_amulet(obj_ptr obj)
-{
-    if (obj->tval == TV_AMULET || obj->tval == TV_WHISTLE) return TRUE;
-    return FALSE;
-}
+static bool _object_is_amulet(obj_ptr obj)
+    { return obj->tval == TV_AMULET || obj->tval == TV_WHISTLE; }
 
-bool _object_is_anything(obj_ptr obj)
-{
-    if (TV_WEARABLE_BEGIN <= obj->tval && obj->tval <= TV_WEARABLE_END)
-        return TRUE;
-    return FALSE;
-}
+static bool _object_is_anything(obj_ptr obj)
+    { return TV_WEARABLE_BEGIN <= obj->tval && obj->tval <= TV_WEARABLE_END; }
 
-bool _object_is_body_armor(obj_ptr obj)
+static bool _object_is_body_armor(obj_ptr obj)
 {
     switch (obj->tval)
     {
@@ -31,31 +23,22 @@ bool _object_is_body_armor(obj_ptr obj)
     return FALSE;
 }
 
-bool _object_is_boots(obj_ptr obj)
-{
-    if (obj->tval == TV_BOOTS) return TRUE;
-    return FALSE;
-}
+static bool _object_is_boots(obj_ptr obj)
+    { return obj->tval == TV_BOOTS; }
 
-bool _object_is_bow(obj_ptr obj)
-{
-    if (obj->tval == TV_BOW) return TRUE;
-    return FALSE;
-}
+static bool _object_is_bow(obj_ptr obj)
+    { return obj->tval == TV_BOW; }
 
-bool _object_is_cloak(obj_ptr obj)
-{
-    if (obj->tval == TV_CLOAK) return TRUE;
-    return FALSE;
-}
+static bool _object_is_quiver(obj_ptr obj)
+    { return obj->tval == TV_QUIVER; }
 
-bool _object_is_gloves(obj_ptr obj)
-{
-    if (obj->tval == TV_GLOVES) return TRUE;
-    return FALSE;
-}
+static bool _object_is_cloak(obj_ptr obj)
+    { return obj->tval == TV_CLOAK; }
 
-bool _object_is_helmet(obj_ptr obj)
+static bool _object_is_gloves(obj_ptr obj)
+    { return obj->tval == TV_GLOVES; }
+
+static bool _object_is_helmet(obj_ptr obj)
 {
     switch (obj->tval)
     {
@@ -65,19 +48,13 @@ bool _object_is_helmet(obj_ptr obj)
     return FALSE;
 }
 
-bool _object_is_lite(obj_ptr obj)
-{
-    if (obj->tval == TV_LITE) return TRUE;
-    return FALSE;
-}
+static bool _object_is_lite(obj_ptr obj)
+    { return obj->tval == TV_LITE; }
 
-bool _object_is_ring(obj_ptr obj)
-{
-    if (obj->tval == TV_RING) return TRUE;
-    return FALSE;
-}
+static bool _object_is_ring(obj_ptr obj)
+    { return obj->tval == TV_RING; }
 
-bool _object_is_weapon(obj_ptr obj)
+static bool _object_is_weapon(obj_ptr obj)
 {
     switch (obj->tval)
     {
@@ -87,7 +64,7 @@ bool _object_is_weapon(obj_ptr obj)
     return FALSE;
 }
 
-bool _object_is_weapon_or_shield(obj_ptr obj)
+static bool _object_is_weapon_or_shield(obj_ptr obj)
 {
     switch (obj->tval)
     {
@@ -98,15 +75,8 @@ bool _object_is_weapon_or_shield(obj_ptr obj)
     return FALSE;
 }
 
-bool _object_is_capture_ball(obj_ptr obj)
-{
-    switch (obj->tval)
-    {
-    case TV_CAPTURE:
-        return TRUE;
-    }
-    return FALSE;
-}
+static bool _object_is_capture_ball(obj_ptr obj)
+    { return obj->tval == TV_CAPTURE; }
 
 static obj_p _accept[EQUIP_SLOT_MAX] = {
     NULL,
@@ -122,7 +92,8 @@ static obj_p _accept[EQUIP_SLOT_MAX] = {
     _object_is_helmet,
     _object_is_anything,
     _object_is_weapon,
-    _object_is_capture_ball
+    _object_is_capture_ball,
+    _object_is_quiver,
 };
 
 static int _slot_count(obj_ptr obj)
@@ -141,11 +112,12 @@ static int _slot_count(obj_ptr obj)
 static bool _can_wield(obj_ptr obj)
 {
     if (!obj) return FALSE;
+    if (quiver_tolerates(obj)) return TRUE;
     if (_slot_count(obj) > 0) return TRUE;
     return FALSE;
 }
 
-static int _get_slots(obj_ptr obj, slot_t slots[EQUIP_MAX_SLOTS])
+static int _get_slots(obj_ptr obj, slot_t slots[EQUIP_MAX])
 {
     int    ct = 0;
     slot_t slot = equip_first_slot(obj);
@@ -200,7 +172,7 @@ static void _slot_menu_fn(int cmd, int which, vptr cookie, variant *res)
 
 static slot_t _prompt_wield_slot(obj_ptr obj)
 {
-    slot_t slots[EQUIP_MAX_SLOTS];
+    slot_t slots[EQUIP_MAX];
     int    ct = _get_slots(obj, slots);
 
     if (ct == 1)
@@ -485,13 +457,13 @@ void equip_display(doc_ptr doc, obj_p p, int flags)
  ***********************************************************************/
 
 /* Wielding has the following phases where various things might/must happen */
-static obj_ptr    _wield_get_obj(void);
-static bool       _wield_verify(obj_ptr obj);
-static slot_t     _wield_get_slot(obj_ptr obj);
-static bool       _wield_confirm(obj_ptr obj, slot_t slot);
-static void       _wield_before(obj_ptr obj, slot_t slot);
-static void       _wield(obj_ptr obj, slot_t slot);
-static void       _wield_after(slot_t slot);
+static obj_ptr _wield_get_obj(void);
+static bool    _wield_verify(obj_ptr obj);
+static slot_t  _wield_get_slot(obj_ptr obj);
+static bool    _wield_confirm(obj_ptr obj, slot_t slot);
+static void    _wield_before(obj_ptr obj, slot_t slot);
+static void    _wield(obj_ptr obj, slot_t slot);
+static void    _wield_after(slot_t slot);
 
 void equip_wield_ui(void)
 {
@@ -499,19 +471,33 @@ void equip_wield_ui(void)
     obj_ptr obj = _wield_get_obj();
 
     if (!obj) return;
-    if (!_wield_verify(obj)) return;
+    if (obj_is_ammo(obj))
+    {
+        assert(equip_find_obj(TV_QUIVER, SV_ANY));
+        /* TODO: Prompt for quantity? */
+        if (quiver_capacity() <= quiver_count(NULL))
+        {
+            msg_print("Your quiver is full.");
+            return;
+        }
+        quiver_carry(obj);
+        energy_use = 50;
+    }
+    else
+    {
+        if (!_wield_verify(obj)) return;
 
-    slot = _wield_get_slot(obj);
-    if (!slot) return;
-    if (!_wield_confirm(obj, slot)) return;
+        slot = _wield_get_slot(obj);
+        if (!slot) return;
+        if (!_wield_confirm(obj, slot)) return;
 
-    _wield_before(obj, slot);
+        _wield_before(obj, slot);
 
-    energy_use = weaponmaster_wield_hack(obj);
-    _wield(obj, slot);
+        energy_use = weaponmaster_wield_hack(obj);
+        _wield(obj, slot);
 
-    _wield_after(slot);
-
+        _wield_after(slot);
+    }
     obj_release(obj, OBJ_RELEASE_QUIET);
 }
 
@@ -540,6 +526,12 @@ static bool _wield_verify(obj_ptr obj)
     if (!psion_can_wield(obj)) return FALSE;
     /* We'll confirm cursed gear later (_wield_confirm)
      * since the user might cancle the slot prompt */
+    if (obj->tval == TV_QUIVER && quiver_count(NULL) > obj->xtra4)
+    {
+        msg_format("Failed! Your current quiver holds %d missiles but this quiver "
+            "only has a capacity for %d missiles.", quiver_count(NULL), obj->xtra4);
+        return FALSE;
+    }
     return TRUE;
 }
 
@@ -634,6 +626,7 @@ static void _wield_before(obj_ptr obj, slot_t slot)
     }
 }
 
+static void equip_takeoff(slot_t slot);
 static void _wield(obj_ptr obj, slot_t slot)
 {
     obj_ptr old_obj = inv_obj(_inv, slot);
@@ -727,6 +720,11 @@ void equip_takeoff_ui(void)
     obj_ptr obj = _unwield_get_obj();
 
     if (!obj) return;
+    if (obj->tval == TV_QUIVER && quiver_count(NULL))
+    {
+        msg_print("Your quiver still holds ammo. Remove all the ammo from your quiver first.");
+        return;
+    }
     energy_use = 50;
     if (!_unwield_verify(obj)) return;
 
@@ -742,13 +740,12 @@ bool equip_can_takeoff(obj_ptr obj)
     return _unwield_verify(obj);
 }
 
-void equip_takeoff(slot_t slot)
+static void equip_takeoff(slot_t slot)
 {
     obj_ptr obj = equip_obj(slot);
 
     if (obj)
     {
-        if (!_unwield_verify(obj)) return;
         _unwield(obj, FALSE);
         _unwield_after();
     }
@@ -788,7 +785,6 @@ bool _unwield_verify(obj_ptr obj)
         energy_use = 0;
         return FALSE;
     }
-
     if (object_is_cursed(obj))
     {
         if ((obj->curse_flags & OFC_PERMA_CURSE) || p_ptr->pclass != CLASS_BERSERKER)
@@ -828,11 +824,13 @@ void _unwield(obj_ptr obj, bool drop)
 {
     char name[MAX_NLEN];
     object_desc(name, obj, OD_COLOR_CODED);
-    msg_format("You are no longer wearing %s.", name);
+    if (obj->loc.where == INV_QUIVER)
+        msg_format("You remove %s from your quiver.", name);
+    else
+        msg_format("You are no longer wearing %s.", name);
     if (drop)
     {
-        assert(obj->number == 1);
-        obj_drop(obj, 1);
+        obj_drop(obj, obj->number);
     }
     else
     {
@@ -1616,7 +1614,7 @@ void equip_init(void)
         _template = &b_info[0];
 
     inv_free(_inv);
-    _inv = inv_alloc("Equipment", INV_EQUIP, EQUIP_MAX_SLOTS);
+    _inv = inv_alloc("Equipment", INV_EQUIP, EQUIP_MAX);
 }
 
 /* Attempt to gracefully handle changes to body type between
@@ -1627,7 +1625,7 @@ void equip_init(void)
 void equip_on_load(void)
 {
     slot_t  slot, max = inv_last(_inv, obj_exists);
-    inv_ptr temp = inv_alloc("Temp", INV_EQUIP, EQUIP_MAX_SLOTS);
+    inv_ptr temp = inv_alloc("Temp", INV_EQUIP, EQUIP_MAX);
 
     for (slot = 1; slot <= max; slot++)
     {

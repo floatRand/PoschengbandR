@@ -4302,6 +4302,13 @@ A:50/4
 F:IGNORE_COLD | IGNORE_FIRE | IGNORE_ACID | IGNORE_ELEC
 M:20:1d3
 
+N:749:& Quiver~
+G:~:U
+I:46:0:0
+W:1:0:0:10:30
+A:1/2
+F:TOWN
+
 # N: serial number : & object name~
 # G: symbol : color
 # I: tval : sval : pval

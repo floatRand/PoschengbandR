@@ -563,7 +563,7 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, i
 {
     slot_t slot;
     int    xtra = 0;
-    int    max = vec_length(inv->objects) - 1;
+    int    max = inv_max(inv);
 
     if (!stop) stop = max;
     if (stop > max) stop = max;

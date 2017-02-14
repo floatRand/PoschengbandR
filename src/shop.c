@@ -575,6 +575,7 @@ static bool _weapon_will_buy(obj_ptr obj)
     case TV_BOLT:
     case TV_ARROW:
     case TV_BOW:
+    case TV_QUIVER:
     case TV_DIGGING:
     case TV_POLEARM:
     case TV_SWORD:
@@ -638,6 +639,8 @@ static bool _weapon_create(obj_ptr obj, int mode)
         k_idx = _get_k_idx(_weapon_stock_shooter_p, l1);
     else if (one_in_(4))
         k_idx = _get_k_idx(_weapon_stock_ammo_p, l1);
+    else if (one_in_(9))
+        k_idx = lookup_kind(TV_QUIVER, 0);
     else
         k_idx = _get_k_idx(_weapon_stock_p, l1);
     return _create(obj, k_idx, l2, mode);

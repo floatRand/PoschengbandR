@@ -10,6 +10,7 @@
 
 #include "angband.h"
 
+#include <assert.h>
 /*
  * Certain items, if aware, are known instantly
  * This function is used only by "flavor_init()"
@@ -1135,6 +1136,8 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
 
             break;
         }
+        case TV_QUIVER:
+            break;
 
         /* Armour */
         case TV_BOOTS:
@@ -1805,6 +1808,12 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
         /* All done */
         break;
     }
+    case TV_QUIVER: /* show capacity */
+        if (o_ptr->loc.where == INV_EQUIP)
+            t = object_desc_str(t, format(" [%d of %d]", quiver_count(NULL), o_ptr->xtra4));
+        else
+            t = object_desc_str(t, format(" [%d]", o_ptr->xtra4));
+        break;
     }
 
     if (mode & OD_NAME_AND_DICE) goto object_desc_done;

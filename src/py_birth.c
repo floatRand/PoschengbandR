@@ -105,6 +105,10 @@ void py_birth_obj_aux(int tval, int sval, int qty)
         qty = 1;
         break;
     }
+    case TV_QUIVER:
+        object_prep(&forge, lookup_kind(tval, sval));
+        apply_magic(&forge, 0, AM_AVERAGE);
+        break;
     default:
         object_prep(&forge, lookup_kind(tval, sval));
     }

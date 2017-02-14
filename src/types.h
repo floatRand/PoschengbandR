@@ -342,7 +342,7 @@ struct object_type
     byte xtra1;            /* Extra info type (now unused) */
     byte xtra2;            /* Extra info index */
     byte xtra3;            /* Extra info: Chests and Weaponsmith */
-    s16b xtra4;            /* Extra info: Lights, Capture, ... */
+    s16b xtra4;            /* Extra info: Lights, Capture, Quiver Capacity ... */
     s32b xtra5;            /* Extra info */
 
     s16b to_h;            /* Plusses to hit */
@@ -2132,7 +2132,7 @@ typedef struct {
 typedef struct equip_template_s {
     int          max;
     u32b         name;
-    equip_slot_t slots[EQUIP_MAX_SLOTS];
+    equip_slot_t slots[EQUIP_MAX];
 } equip_template_t, *equip_template_ptr;
 
 typedef struct {

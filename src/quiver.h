@@ -3,7 +3,7 @@
 
 #include "inv.h"
 
-#define QUIVER_MAX 15
+#define QUIVER_MAX 26
 
 extern void    quiver_init(void);
 
@@ -15,8 +15,8 @@ extern void    quiver_display(doc_ptr doc, obj_p p, int flags);
  * quivers in the dungeon. Note: We rely on the cooperation of
  * other code to ensure that the user has equipped a quiver. */
 extern bool    quiver_likes(obj_ptr obj);
+extern bool    quiver_tolerates(obj_ptr obj);
 extern int     quiver_capacity(void);
-extern void    quiver_set_capacity(int capacity);
 extern void    quiver_carry(obj_ptr obj); /* combines quiver, then carries pack, then overflows */
 extern void    quiver_remove(slot_t slot);
 extern void    quiver_drop(obj_ptr obj);
