@@ -1343,7 +1343,7 @@ void equip_calc_bonuses(void)
         }
 
         if (have_flag(flgs, OF_XTRA_SHOTS))
-            p_ptr->shooter_info.num_fire += 25 * obj->pval;
+            p_ptr->shooter_info.num_fire += 15 * obj->pval;
 
         if (have_flag(flgs, OF_LIFE))
             p_ptr->life += 3*obj->pval;

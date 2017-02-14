@@ -285,7 +285,7 @@ static void _display_other_pval(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], do
     }
     if (have_flag(flgs, OF_XTRA_SHOTS))
     {
-        int num = o_ptr->pval * 25;
+        int num = o_ptr->pval * 15;
         doc_printf(doc, "<color:%c>%+d.%2.2d</color> to Shooting Speed\n",
                     (net > 0) ? 'G' : 'r', num / 100, num % 100);
     }

@@ -2703,6 +2703,7 @@ int breakage_chance(object_type *o_ptr)
     if (weaponmaster_get_toggle() == TOGGLE_OVERDRAW) return 100;
 
     if (o_ptr->name2 == EGO_AMMO_ENDURANCE) return 0;
+    if (o_ptr->name2 == EGO_AMMO_EXPLODING) return 100;
 
     /* Examine the item type */
     switch (o_ptr->tval)
@@ -2761,7 +2762,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_ANIMAL);
                 obj_learn_slay(o_ptr, OF_SLAY_ANIMAL, "slays <color:g>Animals</color>");
-                if (mult < 17) mult = 17;
+                if (mult < 25) mult = 25;
             }
 
             /* Kill Animal */
@@ -2770,7 +2771,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_ANIMAL);
                 obj_learn_slay(o_ptr, OF_KILL_ANIMAL, "slays <color:g>*Animals*</color>");
-                if (mult < 27) mult = 27;
+                if (mult < 40) mult = 40;
             }
 
             /* Slay Evil */
@@ -2779,7 +2780,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_EVIL);
                 obj_learn_slay(o_ptr, OF_SLAY_EVIL, "slays <color:y>Evil</color>");
-                if (mult < 15) mult = 15;
+                if (mult < 20) mult = 20;
             }
 
             /* Kill Evil */
@@ -2788,7 +2789,16 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_EVIL);
                 obj_learn_slay(o_ptr, OF_KILL_EVIL, "slays <color:y>*Evil*</color>");
-                if (mult < 25) mult = 25;
+                if (mult < 35) mult = 35;
+            }
+
+            /* Slay Good */
+            if ((have_flag(flgs, OF_SLAY_GOOD)) &&
+                (r_ptr->flags3 & RF3_GOOD))
+            {
+                mon_lore_3(m_ptr, RF3_GOOD);
+                obj_learn_slay(o_ptr, OF_SLAY_GOOD, "slays <color:W>Good</color>");
+                if (mult < 20) mult = 20;
             }
 
             /* Slay Human */
@@ -2797,7 +2807,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_2(m_ptr, RF2_HUMAN);
                 obj_learn_slay(o_ptr, OF_SLAY_HUMAN, "slays <color:s>Humans</color>");
-                if (mult < 17) mult = 17;
+                if (mult < 25) mult = 25;
             }
 
             /* Kill Human */
@@ -2806,7 +2816,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_2(m_ptr, RF2_HUMAN);
                 obj_learn_slay(o_ptr, OF_KILL_HUMAN, "slays <color:s>*Humans*</color>");
-                if (mult < 27) mult = 27;
+                if (mult < 40) mult = 40;
             }
 
             /* Slay Undead */
@@ -2815,7 +2825,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_UNDEAD);
                 obj_learn_slay(o_ptr, OF_SLAY_UNDEAD, "slays <color:D>Undead</color>");
-                if (mult < 20) mult = 20;
+                if (mult < 30) mult = 30;
             }
 
             /* Kill Undead */
@@ -2824,7 +2834,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_UNDEAD);
                 obj_learn_slay(o_ptr, OF_KILL_UNDEAD, "slays <color:D>*Undead*</color>");
-                if (mult < 30) mult = 30;
+                if (mult < 50) mult = 50;
             }
 
             /* Slay Demon */
@@ -2833,7 +2843,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_DEMON);
                 obj_learn_slay(o_ptr, OF_SLAY_DEMON, "slays <color:R>Demons</color>");
-                if (mult < 20) mult = 20;
+                if (mult < 30) mult = 30;
             }
 
             /* Kill Demon */
@@ -2842,7 +2852,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_DEMON);
                 obj_learn_slay(o_ptr, OF_KILL_DEMON, "slays <color:R>*Demons*</color>");
-                if (mult < 30) mult = 30;
+                if (mult < 50) mult = 50;
             }
 
             /* Slay Orc */
@@ -2851,7 +2861,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_ORC);
                 obj_learn_slay(o_ptr, OF_SLAY_ORC, "slays <color:U>Orcs</color>");
-                if (mult < 20) mult = 20;
+                if (mult < 30) mult = 30;
             }
 
             /* Kill Orc */
@@ -2860,7 +2870,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_ORC);
                 obj_learn_slay(o_ptr, OF_KILL_ORC, "slays <color:U>*Orcs*</color>");
-                if (mult < 30) mult = 30;
+                if (mult < 50) mult = 50;
             }
 
             /* Slay Troll */
@@ -2869,7 +2879,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_TROLL);
                 obj_learn_slay(o_ptr, OF_SLAY_TROLL, "slays <color:g>Trolls</color>");
-                if (mult < 20) mult = 20;
+                if (mult < 30) mult = 30;
             }
 
             /* Kill Troll */
@@ -2878,7 +2888,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_TROLL);
                 obj_learn_slay(o_ptr, OF_KILL_TROLL, "slays <color:g>*Trolls*</color>");
-                if (mult < 30) mult = 30;
+                if (mult < 50) mult = 50;
             }
 
             /* Slay Giant */
@@ -2887,7 +2897,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_GIANT);
                 obj_learn_slay(o_ptr, OF_SLAY_GIANT, "slays <color:u>Giants</color>");
-                if (mult < 20) mult = 20;
+                if (mult < 30) mult = 30;
             }
 
             /* Kill Giant */
@@ -2896,7 +2906,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_GIANT);
                 obj_learn_slay(o_ptr, OF_KILL_GIANT, "slays <color:u>*Giants*</color>");
-                if (mult < 30) mult = 30;
+                if (mult < 50) mult = 50;
             }
 
             /* Slay Dragon  */
@@ -2905,7 +2915,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_DRAGON);
                 obj_learn_slay(o_ptr, OF_SLAY_DRAGON, "slays <color:r>Dragons</color>");
-                if (mult < 20) mult = 20;
+                if (mult < 30) mult = 30;
             }
 
             /* Execute Dragon */
@@ -2914,7 +2924,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
             {
                 mon_lore_3(m_ptr, RF3_DRAGON);
                 obj_learn_slay(o_ptr, OF_KILL_DRAGON, "slays <color:r>*Dragons*</color>");
-                if (mult < 30) mult = 30;
+                if (mult < 50) mult = 50;
 
                 if ( o_ptr->name1 == ART_BARD_ARROW
                   && m_ptr->r_idx == MON_SMAUG
@@ -2934,7 +2944,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 else
                 {
                     obj_learn_slay(o_ptr, OF_BRAND_ACID, "is <color:g>Acid Branded</color>");
-                    if (mult < 17) mult = 17;
+                    if (mult < 25) mult = 25;
                 }
             }
 
@@ -2948,7 +2958,7 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 else
                 {
                     obj_learn_slay(o_ptr, OF_BRAND_ELEC, "is <color:b>Lightning Branded</color>");
-                    if (mult < 17) mult = 17;
+                    if (mult < 25) mult = 25;
                 }
             }
 
@@ -2965,9 +2975,9 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                     if (r_ptr->flags3 & RF3_HURT_FIRE)
                     {
                         mon_lore_3(m_ptr, RF3_HURT_FIRE);
-                        if (mult < 25) mult = 25;
+                        if (mult < 50) mult = 50;
                     }
-                    else if (mult < 17) mult = 17;
+                    else if (mult < 25) mult = 25;
                 }
             }
 
@@ -2983,10 +2993,10 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                     obj_learn_slay(o_ptr, OF_BRAND_COLD, "is <color:W>Frost Branded</color>");
                     if (r_ptr->flags3 & RF3_HURT_COLD)
                     {
-                        if (mult < 25) mult = 25;
+                        if (mult < 50) mult = 50;
                         mon_lore_3(m_ptr, RF3_HURT_COLD);
                     }
-                    else if (mult < 17) mult = 17;
+                    else if (mult < 25) mult = 25;
                 }
             }
 
@@ -3000,17 +3010,19 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
                 else
                 {
                     obj_learn_slay(o_ptr, OF_BRAND_POIS, "has <color:G>Viper's Fang</color>");
-                    if (mult < 17) mult = 17;
+                    if (mult < 25) mult = 25;
                 }
             }
 
-            if ( (have_flag(flgs, OF_BRAND_MANA) || p_ptr->tim_force)
-              && (p_ptr->csp > (p_ptr->msp / 30)))
+            if (have_flag(flgs, OF_BRAND_MANA) || p_ptr->tim_force)
             {
-                p_ptr->csp -= (1+(p_ptr->msp / 30));
-                p_ptr->redraw |= (PR_MANA);
-                mult = mult * 3 / 2;
-                obj_learn_slay(o_ptr, OF_BRAND_MANA, "is <color:B>Mana Branded</color>");
+                int cost = 1 + o_ptr->dd * o_ptr->ds / 3;
+                if (cost <= p_ptr->csp)
+                {
+                    sp_player(-cost);
+                    mult += 15;
+                    obj_learn_slay(o_ptr, OF_BRAND_MANA, "is <color:B>Mana Branded</color>");
+                }
             }
 
             break;
@@ -3053,7 +3065,6 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
  *
  * Note that Bows of "Extra Shots" give an extra shot.
  */
-#define SIGN(x) ((x) > 0 ? 1 : ((x) < 0 ? -1: 0))
 bool do_cmd_fire_aux1(obj_ptr bow, obj_ptr arrows)
 {
     int dir;
@@ -3478,13 +3489,6 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                     int  tdam;
                     bool ambush = FALSE;
 
-                    tdam = damroll(dd, arrow.ds) + arrow.to_d + bow->to_d;
-                    if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
-                        tdam += 1 + p_ptr->lev/10;
-
-                    tdam *= tmul;
-                    tdam /= 100;
-
                     if (MON_CSLEEP(m_ptr) && m_ptr->ml && !p_ptr->confused && !p_ptr->image && !p_ptr->stun)
                     {
                         if (shoot_hack == SHOOT_SNIPING || (p_ptr->pclass == CLASS_SKILLMASTER && p_ptr->ambush))
@@ -3492,9 +3496,6 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                             ambush = TRUE;
                         }
                     }
-                    /* Get extra damage from concentration */
-                    if (p_ptr->concent) tdam = boost_concentration_damage(tdam);
-
                     /* Handle unseen monster */
                     if (!visible)
                     {
@@ -3545,12 +3546,12 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                     else
                     {
                         critical_t crit = {0};
+
+                        /* The Damage Calculation (Changed) */
+                        tdam = damroll(dd, arrow.ds);
                         if (shoot_hack != SHOOT_SHATTER && shoot_hack != SHOOT_ELEMENTAL)
                             tdam = tot_dam_aux_shot(&arrow, tdam, m_ptr);
-
-                        if (ambush)
-                            tdam *= 2;
-
+                        if (ambush) tdam *= 2;
                         crit = critical_shot(arrow.weight, arrow.to_h);
                         if (crit.desc)
                         {
@@ -3558,7 +3559,18 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                             msg_print(crit.desc);
                         }
 
+                        tdam += arrow.to_d;
+                        if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
+                            tdam += 1 + p_ptr->lev/10;
+
+                        tdam *= tmul;
+                        tdam /= 100;
+                        tdam += bow->to_d;
+
+                        if (p_ptr->concent) tdam = boost_concentration_damage(tdam);
                         tdam += p_ptr->shooter_info.to_d;
+                        /* End of Damage Calculation (Changed) */
+
                         if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS))
                         {
                             if (p_ptr->lev >= 20)
@@ -3579,6 +3591,13 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                         u16b flg = (PROJECT_STOP | PROJECT_JUMP | PROJECT_KILL | PROJECT_GRID);
                         sound(SOUND_EXPLODE); /* No explode sound - use breath fire instead */
                         project(0, ((p_ptr->concent + 1) / 2 + 1), ny, nx, tdam, GF_MISSILE, flg, -1);
+                        break;
+                    }
+                    if (arrow.name2 == EGO_AMMO_EXPLODING)
+                    {
+                        u16b flg = (PROJECT_STOP | PROJECT_JUMP | PROJECT_KILL | PROJECT_GRID);
+                        sound(SOUND_EXPLODE); /* No explode sound - use breath fire instead */
+                        project(0, 3, ny, nx, tdam, GF_MISSILE, flg, -1);
                         break;
                     }
                     if (shoot_hack == SHOOT_ELEMENTAL)
@@ -3832,12 +3851,7 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
         break_chance = (hit_body ? breakage_chance(&arrow) : 0);
         if (shoot_hack == SHOOT_DISINTEGRATE) break_chance = 100;
 
-        /*if (item == INVEN_UNLIMITED_QUIVER)
-        {
-            if (disturb_minor)
-                msg_print("Your quiver seems endless.");
-        }
-        else*/ if (return_ammo)
+        if (return_ammo)
         {
             if (disturb_minor)
                 msg_format("The %s returns to your pack.", o_name);
