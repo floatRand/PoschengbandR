@@ -771,6 +771,132 @@ s32b lite_cost(object_type *o_ptr, int options)
     return p;
 }
 
+s32b quiver_cost(object_type *o_ptr, int options)
+{
+    s32b j, y, q, p;
+    int  pval = 0;
+    u32b flgs[OF_ARRAY_SIZE];
+    char dbg_msg[512];
+
+    if (options & COST_REAL)
+        obj_flags(o_ptr, flgs);
+    else
+        obj_flags_known(o_ptr, flgs);
+
+    pval = o_ptr->pval;
+
+    j = MAX(0, o_ptr->xtra4 - 60);
+    j = 30 + j * j / 5;
+    if (cost_calc_hook)
+    {
+        sprintf(dbg_msg, "  * Base Cost: j = %d", j);
+        cost_calc_hook(dbg_msg);
+    }
+
+    /* These egos don't use flags for their effects ... sigh. */
+    if ((options & COST_REAL) || object_is_known(o_ptr))
+    {
+        switch (o_ptr->name2)
+        {
+        case EGO_QUIVER_PROTECTION:
+            j += 1500;
+            break;
+        case EGO_QUIVER_PHASE:
+            j += 5000;
+            break;
+        }
+    }
+
+    /* Resistances */
+    q = _resistances_q(flgs);
+    p = j + q;
+
+    if (cost_calc_hook)
+    {
+        sprintf(dbg_msg, "  * Resistances: q = %d, p = %d", q, p);
+        cost_calc_hook(dbg_msg);
+    }
+
+    /* Abilities */
+    q = _abilities_q(flgs);
+    if (have_flag(flgs, OF_NO_MAGIC)) q += 7000;
+    if (have_flag(flgs, OF_NO_TELE)) q += 5000;
+    if (have_flag(flgs, OF_NO_SUMMON)) q += 1000000;
+    p += q;
+
+    if (cost_calc_hook)
+    {
+        sprintf(dbg_msg, "  * Abilities: q = %d, p = %d", q, p);
+        cost_calc_hook(dbg_msg);
+    }
+
+    /* Speed */
+    if (have_flag(flgs, OF_SPEED))
+    {
+        p += _speed_p(pval);
+
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Speed: p = %d", p);
+            cost_calc_hook(dbg_msg);
+        }
+    }
+
+    /* Stats */
+    q = _stats_q(flgs, pval);
+    if (q != 0)
+    {
+        p += q;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Stats/Stealth: q = %d, p = %d", q, p);
+            cost_calc_hook(dbg_msg);
+        }
+    }
+
+    /* Other Bonuses */
+    y = 0;
+    if (have_flag(flgs, OF_SEARCH)) y += 100;
+    if (have_flag(flgs, OF_INFRA)) y += 500;
+
+    if (y != 0)
+    {
+        q = y*pval;
+        p += q;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Other Crap: y = %d, q = %d, p = %d", y, q, p);
+            cost_calc_hook(dbg_msg);
+        }
+    }
+
+    /* Stats */
+    q = _stats_q(flgs, pval);
+    if (q != 0)
+    {
+        p += q;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Stats/Stealth: q = %d, p = %d", q, p);
+            cost_calc_hook(dbg_msg);
+        }
+    }
+
+    /* Auras */
+    y = _aura_p(flgs);
+    if (y != 0)
+    {
+        p += y;
+        if (cost_calc_hook)
+        {
+            sprintf(dbg_msg, "  * Auras: p = %d", p);
+            cost_calc_hook(dbg_msg);
+        }
+    }
+
+    p = _finalize_p(p, flgs, o_ptr);
+    return p;
+}
 s32b armor_cost(object_type *o_ptr, int options)
 {
     s32b a, y, q, p;
@@ -1439,6 +1565,7 @@ s32b new_object_cost(object_type *o_ptr, int options)
     else if (object_is_armour(o_ptr) || object_is_shield(o_ptr)) return armor_cost(o_ptr, options);
     else if (object_is_jewelry(o_ptr) || (o_ptr->tval == TV_LITE && object_is_artifact(o_ptr))) return jewelry_cost(o_ptr, options);
     else if (o_ptr->tval == TV_LITE) return lite_cost(o_ptr, options);
+    else if (o_ptr->tval == TV_QUIVER) return quiver_cost(o_ptr, options);
     else if (object_is_device(o_ptr)) return device_value(o_ptr, options);
     return 0;
 }

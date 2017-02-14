@@ -1145,7 +1145,9 @@ void wiz_obj_smith(void)
     msg_line_clear();
     if (_smith_object(&copy) == _OK)
     {
+        obj_loc_t loc = prompt.obj->loc; /* re-roll will erase this ... */
         *prompt.obj = copy;
+        prompt.obj->loc = loc;
         obj_release(prompt.obj, 0);
         p_ptr->update |= PU_BONUS;
         p_ptr->notice |= PN_COMBINE | PN_REORDER;

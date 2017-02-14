@@ -834,7 +834,7 @@ void _unwield(obj_ptr obj, bool drop)
     }
     else
     {
-        pack_carry(obj);
+        pack_carry_aux(obj); /* Hack: don't put ammo back in the quiver if we just removed it! */
         obj_release(obj, OBJ_RELEASE_QUIET);
     }
     p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;

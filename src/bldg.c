@@ -2747,6 +2747,12 @@ static bool _reforge_artifact(void)
         return FALSE;
     }
 
+    if (dest->tval == TV_QUIVER)
+    {
+        msg_print("I am unable to reforge quivers.");
+        return FALSE;
+    }
+
     if (have_flag(dest->flags, OF_NO_REMOVE))
     {
         msg_print("You cannot be reforged!");

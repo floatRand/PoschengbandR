@@ -3603,71 +3603,85 @@ int set_cold_destroy(object_type *o_ptr)
  * New-style wands and rods handled correctly. -LM-
  * Returns number of items destroyed.
  */
-int inven_damage(inven_func typ, int p1, int which)
+static void _damage_obj(obj_ptr obj, int p1, int p2, int which_res)
 {
-    int         i, j, k, amt;
-    char        o_name[MAX_NLEN];
-    int         p2 = 100;
+    int i, amt = 0;
 
-    if (CHECK_MULTISHADOW()) return 0;
-    if (p_ptr->inside_arena) return 0;
+    /* Test each and every object in the pile for destruction */
+    for (i = 0; i < obj->number; i++)
+    {
+        if ( randint0(100) < p1 /* Effects of Breath Quality */
+          && randint0(100) < p2 /* Effects of Inventory Protection (Rune or Spell) */
+          && !res_save_inventory(which_res) ) /* Effects of Resistance */
+        {
+            amt++;
+        }
+    }
+
+    if (amt)
+    {
+        char o_name[MAX_NLEN];
+        object_desc(o_name, obj, OD_OMIT_PREFIX | OD_COLOR_CODED);
+
+        if (amt < obj->number)
+            msg_format("%d of your %s %s destroyed!",
+                        amt, o_name, (amt > 1) ? "were" : "was");
+        else if (obj->number == 1)
+            msg_format("Your %s was destroyed!", o_name);
+        else
+            msg_format("All of your %s were destroyed!", o_name);
+
+        if (object_is_potion(obj))
+            potion_smash_effect(0, py, px, obj->k_idx);
+
+        stats_on_m_destroy(obj, amt);
+
+        obj->number -= amt;
+        obj_release(obj, OBJ_RELEASE_QUIET);
+    }
+}
+void inven_damage(inven_func typ, int p1, int which)
+{
+    slot_t slot;
+    int    p2 = 100;
+
+    if (CHECK_MULTISHADOW()) return;
+    if (p_ptr->inside_arena) return;
 
     if (p_ptr->rune_elem_prot) p2 = 50;
     if (p_ptr->inven_prot) p2 = 50;
 
-    /* Count the casualties */
-    k = 0;
-
-    for (i = 1; i <= pack_max(); i++)
+    /* Pack */
+    for (slot = 1; slot <= pack_max(); slot++)
     {
-        obj_ptr obj = pack_obj(i);
+        obj_ptr obj = pack_obj(slot);
 
         if (!obj) continue;
         if (object_is_artifact(obj)) continue;
+        if (!typ(obj)) continue;
 
-        /* Give this item slot a shot at death */
-        if (typ(obj))
+        _damage_obj(obj, p1, p2, which);
+    }
+
+    /* Quiver */
+    slot = equip_find_obj(TV_QUIVER, SV_ANY);
+    if (slot)
+    {
+        obj_ptr quiver = equip_obj(slot);
+        if (quiver->name2 != EGO_QUIVER_PROTECTION)
         {
-            /* Count the casualties */
-            for (amt = j = 0; j < obj->number; ++j)
+            for (slot = 1; slot <= quiver_max(); slot++)
             {
-                if ( randint0(100) < p1    /* Effects of Breath Quality */
-                  && randint0(100) < p2 /* Effects of Inventory Protection (Rune or Spell) */
-                  && !res_save_inventory(which) ) /* Effects of Resistance */
-                {
-                    amt++;
-                }
-            }
+                obj_ptr obj = quiver_obj(slot);
 
-            /* Some casualities */
-            if (amt)
-            {
-                /* Get a description */
-                object_desc(o_name, obj, OD_OMIT_PREFIX | OD_COLOR_CODED);
+                if (!obj) continue;
+                if (object_is_artifact(obj)) continue;
+                if (!typ(obj)) continue;
 
-                msg_format("%d of your %s %s destroyed!",
-                            amt, o_name, (amt > 1) ? "were" : "was");
-
-                /* Potions smash open */
-                if (object_is_potion(obj))
-                {
-                    (void)potion_smash_effect(0, py, px, obj->k_idx);
-                }
-
-                stats_on_m_destroy(obj, amt);
-
-                /* Destroy "amt" items */
-                obj->number -= amt;
-                obj_release(obj, OBJ_RELEASE_QUIET);
-
-                /* Count the casualties */
-                k += amt;
+                _damage_obj(obj, p1, p2, which);
             }
         }
     }
-
-    /* Return the casualty count */
-    return (k);
 }
 
 

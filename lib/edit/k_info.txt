@@ -780,7 +780,7 @@ G:{:U
 I:17:1:0
 W:3:0:70:2:1
 A:3/1
-P:0:1d4:0:0:0
+P:0:3d4:0:0:0
 F:SHOW_MODS | TOWN
 M:100:6d7
 D:A standard clothyard arrow, straight and cleanly fletched.
@@ -802,7 +802,7 @@ G:{:s
 I:18:1:0
 W:3:0:70:3:2
 A:3/1
-P:0:1d5:0:0:0
+P:0:3d5:0:0:0
 F:SHOW_MODS | TOWN
 M:100:6d7
 D:A short, heavy arrow shot from a crossbow.
@@ -823,7 +823,7 @@ G:{:s
 I:16:0:0
 W:0:0:60:4:1
 A:0/1
-P:0:1d2:0:0:0
+P:0:3d2:0:0:0
 F:SHOW_MODS | TOWN
 M:100:6d7
 
@@ -832,7 +832,7 @@ G:{:s
 I:16:1:0
 W:3:0:70:5:2
 A:3/1
-P:0:1d3:0:0:0
+P:0:3d3:0:0:0
 F:SHOW_MODS | TOWN
 M:100:6d7
 
@@ -1480,7 +1480,7 @@ G:{:o
 I:17:1:0
 W:10:0:0:4:3
 A:30/2
-P:0:2d4:0:0:0
+P:0:4d4:0:0:0
 F:SHOW_MODS
 M:100:6d7
 
@@ -1489,7 +1489,7 @@ G:{:B
 I:16:2:0
 W:25:0:0:5:15
 A:30/2
-P:0:4d3:0:0:0
+P:0:5d3:0:0:0
 F:SHOW_MODS
 F:IGNORE_ACID | IGNORE_COLD | IGNORE_FIRE | IGNORE_ELEC
 M:100:6d7
@@ -2097,7 +2097,7 @@ G:{:y
 I:17:1:0
 W:3:0:60:1:1
 A:3/2
-P:0:1d3:0:0:0
+P:0:3d3:0:0:0
 M:100:6d7
 F:SHOW_MODS
 
@@ -3590,7 +3590,7 @@ N:613:& Black Arrow~
 G:{:U
 I:17:10:0
 W:35:0:0:2:1
-P:0:1d4:0:0:0
+P:0:3d4:0:0:0
 F:INSTA_ART | SHOW_MODS
 
 N:614:Sexy Swimsuit
@@ -3620,7 +3620,7 @@ G:{:w
 I:18:1:0
 W:10:0:0:4:10
 A:40/2
-P:0:3d5:0:0:0
+P:0:5d5:0:0:0
 F:SHOW_MODS
 M:100:6d7
 

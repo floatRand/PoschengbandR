@@ -635,7 +635,14 @@ void inv_display(inv_ptr inv, slot_t start, slot_t stop, obj_p p, doc_ptr doc, i
             {
                 if (object_is_aware(obj) && obj_is_identified_fully(obj))
                 {
-                    int fail = device_calc_fail_rate(obj);
+                    int fail;
+                    if (obj_is_device(obj))
+                        fail = device_calc_fail_rate(obj);
+                    else
+                    {
+                        effect_t effect = obj_get_effect(obj);
+                        fail = effect_calc_fail_rate(&effect);
+                    }
                     if (fail == 1000)
                         doc_printf(doc, "<tab:%d> %3d%%", doc_width(doc) - xtra, fail/10);
                     else

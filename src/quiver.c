@@ -161,6 +161,11 @@ bool quiver_optimize(void)
 /* Properties of the Entire Inventory */
 int quiver_weight(obj_p p)
 {
+    slot_t  slot = equip_find_obj(TV_QUIVER, SV_ANY);
+    obj_ptr obj;
+    if (!slot) return 0;
+    obj = equip_obj(slot);
+    if (obj->name2 == EGO_QUIVER_PHASE) return 0;
     return inv_weight(_inv, p);
 }
 

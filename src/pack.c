@@ -74,6 +74,11 @@ void pack_carry(obj_ptr obj)
     if (quiver_likes(obj))
         quiver_carry(obj);
     if (obj->number)
+        pack_carry_aux(obj);
+}
+void pack_carry_aux(obj_ptr obj)
+{
+    if (obj->number)
         inv_combine_ex(_inv, obj);
     if (obj->number)
     {

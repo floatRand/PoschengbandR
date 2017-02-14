@@ -2036,6 +2036,7 @@ static _effect_info_t _effect_info[] =
     {"POLYMORPH",       EFFECT_POLYMORPH,           15, 100,  2, BIAS_CHAOS},
     {"STARLITE",        EFFECT_STARLITE,            20, 100,  2, 0},
     {"NOTHING",         EFFECT_NOTHING,              1,   1,  0, 0},
+    {"ENDLESS_QUIVER",  EFFECT_ENDLESS_QUIVER,      50, 150,  0, BIAS_ARCHER},
 
     /* Bad Effects                                  Lv    T   R  Bias */
     {"AGGRAVATE",       EFFECT_AGGRAVATE,           10, 100,  1, BIAS_DEMON},
@@ -6236,6 +6237,31 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             shoot_hack = SHOOT_NONE;
             if (!fired) return NULL;
             device_known = TRUE;
+        }
+        break;
+    case EFFECT_ENDLESS_QUIVER: /* should only be on a quiver ... */
+        if (name) return "Endless Quiver";
+        if (desc) return "Your quiver will refill with average ammo.";
+        if (value) return format("%d", 1500);
+        if (color) return format("%d", TERM_L_RED);
+        if (cast)
+        {
+            obj_t forge = {0};
+            int   tval = p_ptr->shooter_info.tval_ammo;
+
+            if (!tval) tval = TV_ARROW;
+
+            object_prep(&forge, lookup_kind(tval, SV_AMMO_NORMAL));
+            forge.number = MAX(0, MIN(50, quiver_capacity() - quiver_count(NULL)));
+            obj_identify_fully(&forge);
+
+            if (!forge.number)
+                msg_print("Your quiver is full.");
+            else
+            {
+                msg_print("Your quiver refills.");
+                quiver_carry(&forge);
+            }
         }
         break;
     case EFFECT_WALL_BUILDING:

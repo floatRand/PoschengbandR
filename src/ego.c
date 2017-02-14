@@ -1599,6 +1599,10 @@ static void _ego_create_bow(object_type *o_ptr, int level)
         case EGO_BOW_EXTRA_SHOTS:
             o_ptr->pval = 1 + m_bonus(4, level);
             break;
+        case EGO_BOW_HUNTER:
+            if (one_in_(5)) add_esp_strong(o_ptr);
+            else add_esp_weak(o_ptr, FALSE);
+            break;
         case EGO_BOW_LOTHLORIEN:
             if (o_ptr->sval != SV_LONG_BOW)
                 done = FALSE;
@@ -1716,8 +1720,6 @@ static void _ego_create_weapon_slaying(object_type *o_ptr, int level)
     int rolls = 1 + m_bonus(4, level);
     int i;
 
-    assert(o_ptr->name2 == EGO_WEAPON_SLAYING);
-
     if (one_in_(GREAT_OBJ))
         rolls *= 2;
 
@@ -1731,13 +1733,13 @@ static void _ego_create_weapon_slaying(object_type *o_ptr, int level)
         if (info->kill_flag != OF_INVALID && one_in_(info->rarity*info->rarity*info->rarity))
         {
             add_flag(o_ptr->flags, info->kill_flag);
-            if (info->esp_flag != OF_INVALID)
+            if (info->esp_flag != OF_INVALID && !obj_is_ammo(o_ptr))
                 add_flag(o_ptr->flags, info->esp_flag);
         }
         else
         {
             add_flag(o_ptr->flags, info->slay_flag);
-            if (info->esp_flag != OF_INVALID && one_in_(6))
+            if (info->esp_flag != OF_INVALID && one_in_(6) && !obj_is_ammo(o_ptr))
                 add_flag(o_ptr->flags, info->esp_flag);
         }
     }
@@ -1820,8 +1822,6 @@ static void _ego_create_weapon_craft(object_type *o_ptr, int level)
     int rolls = 1 + m_bonus(4, level);
     int i;
 
-    assert(o_ptr->name2 == EGO_WEAPON_CRAFT);
-
     if (one_in_(GREAT_OBJ))
         rolls *= 2;
 
@@ -1858,7 +1858,7 @@ static void _ego_create_weapon_craft(object_type *o_ptr, int level)
         }
 
         /* Mimic old boring brand flavors ... */
-        if (i == 0 && one_in_(2))
+        if (i == 0 && one_in_(2) && !obj_is_ammo(o_ptr))
         {
             add_flag(o_ptr->flags, res_flag);
             if (one_in_(ACTIVATION_CHANCE))
@@ -1866,10 +1866,10 @@ static void _ego_create_weapon_craft(object_type *o_ptr, int level)
             break;
         }
 
-        if (one_in_(3))
+        if (one_in_(3) && !obj_is_ammo(o_ptr))
             add_flag(o_ptr->flags, res_flag);
     }
-    if (one_in_(6) && level > 60)
+    if (one_in_(6) && level > 60 && !obj_is_ammo(o_ptr))
         add_flag(o_ptr->flags, OF_BRAND_MANA);
 }
 static void _ego_create_weapon_defender(object_type *o_ptr, int level)
@@ -2223,7 +2223,10 @@ void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
         switch (o_ptr->name2)
         {
         case EGO_AMMO_SLAYING:
-            o_ptr->dd++;
+            _ego_create_weapon_slaying(o_ptr, level);
+            break;
+        case EGO_AMMO_ELEMENTAL:
+            _ego_create_weapon_craft(o_ptr, level);
             break;
         }
 
@@ -3010,7 +3013,23 @@ void obj_create_quiver(object_type *o_ptr, int level, int power, int mode)
     while (one_in_(2)) o_ptr->xtra4 += 10;
 
     /* egos */
-    /* TODO */
+    if (power > 1)
+    {
+        o_ptr->name2 = ego_choose_type(EGO_TYPE_QUIVER, level);
+
+        switch (o_ptr->name2)
+        {
+        case EGO_QUIVER_HOLDING:
+            o_ptr->xtra4 *= 2;
+            break;
+        case EGO_QUIVER_PHASE:
+            o_ptr->weight = 0;
+            break;
+        }
+        o_ptr->xtra4 += 50;
+    }
+    else if (power == 1)
+        o_ptr->xtra4 += 20;
 }
 
 /*************************************************************************

@@ -1496,7 +1496,7 @@ extern int set_acid_destroy(object_type *o_ptr);
 extern int set_elec_destroy(object_type *o_ptr);
 extern int set_fire_destroy(object_type *o_ptr);
 extern int set_cold_destroy(object_type *o_ptr);
-extern int inven_damage(inven_func typ, int perc, int which);
+extern void inven_damage(inven_func typ, int perc, int which);
 extern int acid_dam(int dam, cptr kb_str, int monspell);
 extern int elec_dam(int dam, cptr kb_str, int monspell);
 extern int fire_dam(int dam, cptr kb_str, int monspell);

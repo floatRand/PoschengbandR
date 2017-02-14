@@ -814,73 +814,40 @@ C:10:5:0:3
 F:SPEED | XTRA_SHOTS |
 F:IGNORE_ACID | IGNORE_FIRE
 
+N:167:of the Hunter
+T:BOW
+W:20:*:2
+C:10:5:0:4
+F:STEALTH
+
 ############
 ### Ammo ###
 ############
 
-N:180:of Hurt Animal
+N:180:of Slaying
 T:AMMO
-W:0:60:2
-F:SLAY_ANIMAL | AWARE
-
-N:181:of Hurt Dragon
-T:AMMO
-W:0:70:2
-F:SLAY_DRAGON | AWARE
-
-N:182:of Hurt Evil
-T:AMMO
-W:20:*:4
-F:SLAY_EVIL | AWARE
-
-N:183:of Slaying
-T:AMMO
-W:10:*:0
+W:10:*:1
 C:10:10:0:0
-F:AWARE
 
-N:184:of Wounding
+N:181:(Elemental)
 T:AMMO
-W:10:*:0
-C:5:5:0:0
-F:AWARE
+W:20:*:1
+F:IGNORE_ACID | IGNORE_FIRE | IGNORE_COLD | IGNORE_ELEC
 
-N:185:of Shocking
+N:182:of Holy Might
 T:AMMO
-W:20:*:3
-F:BRAND_ELEC | IGNORE_ELEC | AWARE
-
-N:186:of Flame
-T:AMMO
-W:20:*:3
-F:BRAND_FIRE | IGNORE_FIRE | AWARE
-
-N:187:of Frost
-T:AMMO
-W:20:*:3
-F:BRAND_COLD | IGNORE_COLD | AWARE
-
-N:188:of Prism
-T:AMMO
-W:30:*:4
-C:5:5:0:0
-F:BRAND_FIRE | BRAND_COLD | BRAND_ELEC
-F:IGNORE_FIRE | IGNORE_COLD | IGNORE_ELEC
-
-N:189:of Returning
-T:AMMO
-W:40:*:4
-
-N:190:of Holy Might
-T:AMMO
-W:60:*:8
+W:60:*:4
 C:5:5:0:0
 F:SLAY_EVIL | SLAY_DEMON | SLAY_UNDEAD | BRAND_FIRE | BLESSED
-F:IGNORE_FIRE | IGNORE_ACID
+F:IGNORE_ACID | IGNORE_FIRE | IGNORE_COLD | IGNORE_ELEC
 
-N:191:of Endurance
+N:183:of Returning
 T:AMMO
-W:40:*:4
+W:40:*:2
+
+N:184:of Endurance
+T:AMMO
+W:40:*:2
 F:IGNORE_ACID | IGNORE_FIRE | IGNORE_COLD | IGNORE_ELEC
 
 #############
@@ -1100,3 +1067,33 @@ F:SPEED
 
 N:260:(Blasted)
 T:SPECIAL
+
+###############
+### Quiver  ###
+###############
+N:265:of Holding
+T:QUIVER
+W:1:*:1
+
+N:266:of Protection
+T:QUIVER
+W:1:*:1
+
+N:267:Endless Quiver
+T:QUIVER
+W:50:*:4
+F:FULL_NAME
+E:ENDLESS_QUIVER:50:150
+
+N:268:Phase Quiver
+T:QUIVER
+W:50:*:4
+F:FULL_NAME
+
+
+
+
+
+
+
+

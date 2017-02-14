@@ -15,6 +15,7 @@ extern void    pack_display(doc_ptr doc, obj_p p, int flags);
 extern bool pack_get_floor(void);
     extern void pack_get(obj_ptr obj);
         extern void pack_carry(obj_ptr obj);
+            extern void pack_carry_aux(obj_ptr obj);
             extern void pack_remove(slot_t slot);
 /* pack_get_floor gets all items on the floor, potentially prompting the
  *   user for a selection. This is used by the 'g'et command, as well

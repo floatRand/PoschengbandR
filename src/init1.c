@@ -3159,6 +3159,7 @@ static bool grab_one_ego_type_flag(ego_type *e_ptr, cptr what)
     else if (streq(what, "SPECIAL")) e_ptr->type |= EGO_TYPE_SPECIAL;
     else if (streq(what, "DEVICE")) e_ptr->type |= EGO_TYPE_DEVICE;
     else if (streq(what, "DRAGON_ARMOR")) e_ptr->type |= EGO_TYPE_DRAGON_ARMOR;
+    else if (streq(what, "QUIVER")) e_ptr->type |= EGO_TYPE_QUIVER;
     else
     {
         msg_format("Unknown ego type flag: '%s'.", what);
