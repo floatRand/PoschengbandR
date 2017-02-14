@@ -451,8 +451,8 @@ critical_t critical_shot(int weight, int plus)
     i = (p_ptr->shooter_info.to_h + plus) * 3 + p_ptr->skills.thb * 2;
 
     /* Snipers can shot more critically with crossbows */
-    if (p_ptr->concent) i += ((i * p_ptr->concent) / 10);
-    if ((p_ptr->pclass == CLASS_SNIPER) && (p_ptr->shooter_info.tval_ammo == TV_BOLT)) i *= 2;
+    if (p_ptr->concent) i += i * p_ptr->concent / 10;
+    if (p_ptr->pclass == CLASS_SNIPER && p_ptr->shooter_info.tval_ammo == TV_BOLT) i = i * 3 / 2;
 
     /* Critical hit */
     if (randint1(5000) <= i)

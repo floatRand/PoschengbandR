@@ -1812,6 +1812,12 @@ static bool is_autopick_aux(object_type *o_ptr, autopick_type *entry, cptr o_nam
         if (obj && obj_can_combine(obj, o_ptr, 0))
             return TRUE;
     }
+    for (j = 1; j <= quiver_max(); j++)
+    {
+        obj_ptr obj = quiver_obj(j);
+        if (obj && obj_can_combine(obj, o_ptr, 0))
+            return TRUE;
+    }
 
     /* Not collecting */
     return FALSE;
