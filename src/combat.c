@@ -1012,7 +1012,7 @@ static void _display_missile_slay(int bow_mult, int slay_mult, int crit_mult,
 {
     int dam = dd*(ds + 1)/2;
 
-    if (force) slay_mult += 150;
+    if (force) slay_mult += 100;
     dam = dam * slay_mult / 100;
     dam = dam * crit_mult / 100;
     if (p_ptr->concent) dam = boost_concentration_damage(dam);
@@ -1120,7 +1120,7 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
 
     _display_missile_slay(mult, 100, crit.mul, FALSE, num_fire, dd, ds, to_d, to_d_xtra, "Normal", TERM_WHITE, cols[0]);
 
-    if (p_ptr->tim_force && p_ptr->csp >= 1 + arrow->dd * arrow->ds / 3)
+    if (p_ptr->tim_force && p_ptr->csp >= 1 + arrow->dd * arrow->ds / 2)
     {
         force = TRUE;
         _display_missile_slay(mult, 100, crit.mul, force, num_fire, dd, ds, to_d, to_d_xtra, "Force", TERM_L_BLUE, cols[0]);

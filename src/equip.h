@@ -56,6 +56,7 @@ extern void    equip_remove(slot_t slot);
     /* helper fn ... try equip_takeoff instead */
 
 extern void    equip_calc_bonuses(void);
+extern void    equip_xtra_might(int pval);
 extern inv_ptr equip_filter(obj_p p);
 extern void    equip_for_each(obj_f f);
 extern void    equip_for_each_that(obj_f f, obj_p p);
@@ -96,4 +97,5 @@ extern void    equip_learn_flag(int obj_flag);
 
 extern void    equip_load(savefile_ptr file);
 extern void    equip_save(savefile_ptr file);
+
 #endif

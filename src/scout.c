@@ -467,7 +467,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
       && p_ptr->shooter_info.tval_ammo <= TV_BOLT
       && p_ptr->shooter_info.tval_ammo >= TV_SHOT )
     {
-        p_ptr->shooter_info.num_fire += p_ptr->lev * 150 / 50;
+        p_ptr->shooter_info.num_fire += p_ptr->lev * 2;
     }
 }
 

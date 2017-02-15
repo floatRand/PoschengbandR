@@ -3443,8 +3443,7 @@ void calc_bonuses(void)
         p_ptr->shooter_info.num_fire += 100;
 
     if (p_ptr->tim_weaponmastery)
-        p_ptr->shooter_info.to_mult += (p_ptr->lev/23) * 25;
-
+        equip_xtra_might(p_ptr->lev/23);
 
     p_ptr->dis_to_a = p_ptr->to_a = 0;
     p_ptr->to_h_m = 0;

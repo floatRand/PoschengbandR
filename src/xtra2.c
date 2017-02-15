@@ -5659,7 +5659,7 @@ s16b gain_energy(void)
  */
 int bow_energy(int sval)
 {
-    int energy = 100;
+    int energy = 10000;
 
     /* Analyze the launcher */
     switch (sval)

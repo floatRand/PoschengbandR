@@ -1375,12 +1375,12 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
           && p_ptr->shooter_info.tval_ammo <= TV_BOLT
           && p_ptr->shooter_info.tval_ammo >= TV_SHOT )
         {
-            p_ptr->shooter_info.num_fire += p_ptr->lev * 200 / 50;
+            p_ptr->shooter_info.num_fire += p_ptr->lev * 3;
         }
         else if ( r_ptr->body.class_idx == CLASS_RANGER
                && p_ptr->shooter_info.tval_ammo == TV_ARROW )
         {
-            p_ptr->shooter_info.num_fire += p_ptr->lev * 150 / 50;
+            p_ptr->shooter_info.num_fire += p_ptr->lev * 2;
         }
         /* Note: I would do rogues as well, but many rogue forms probably shouldn't get
            this bonus (e.g. Hounds).*/

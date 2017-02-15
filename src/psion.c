@@ -2051,7 +2051,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
 {
     if (p_ptr->magic_num1[_ARCHERY])
     {
-        info_ptr->num_fire += p_ptr->magic_num2[_ARCHERY] * 25;
+        info_ptr->num_fire += p_ptr->magic_num2[_ARCHERY] * 20;
     }
 }
 

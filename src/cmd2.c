@@ -3016,11 +3016,11 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
 
             if (have_flag(flgs, OF_BRAND_MANA) || p_ptr->tim_force)
             {
-                int cost = 1 + o_ptr->dd * o_ptr->ds / 3;
+                int cost = 1 + o_ptr->dd * o_ptr->ds / 2;
                 if (cost <= p_ptr->csp)
                 {
                     sp_player(-cost);
-                    mult += 15;
+                    mult += 10;
                     obj_learn_slay(o_ptr, OF_BRAND_MANA, "is <color:B>Mana Branded</color>");
                 }
             }

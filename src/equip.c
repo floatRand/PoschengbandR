@@ -1019,6 +1019,16 @@ bool equip_is_empty_hand(int hand)
         && !equip_obj(p_ptr->weapon_info[hand].slot);
 }
 
+void equip_xtra_might(int pval)
+{
+    slot_t slot = equip_find_obj(TV_BOW, SV_ANY);
+    if (slot)
+    {
+        obj_ptr bow = equip_obj(slot);
+        p_ptr->shooter_info.to_mult += 20 * pval * bow_energy(bow->sval) / 10000;
+    }
+}
+
 void equip_calc_bonuses(void)
 {
     slot_t slot;
@@ -1387,7 +1397,7 @@ void equip_calc_bonuses(void)
         if (have_flag(flgs, OF_MAGIC_RESISTANCE))   p_ptr->magic_resistance += 5*obj->pval;
 
         if (have_flag(flgs, OF_XTRA_MIGHT) && obj->tval != TV_BOW)
-            p_ptr->shooter_info.to_mult += 25 * obj->pval;
+            equip_xtra_might(obj->pval);
 
         if (have_flag(flgs, OF_SLOW_DIGEST)) p_ptr->slow_digest = TRUE;
         if (have_flag(flgs, OF_REGEN))       p_ptr->regen += 100;
@@ -1814,3 +1824,4 @@ void equip_save(savefile_ptr file)
 {
     inv_save(_inv, file);
 }
+

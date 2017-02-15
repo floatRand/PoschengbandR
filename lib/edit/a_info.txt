@@ -1612,7 +1612,7 @@ D: alive, by the command of Morgoth..."
 N:134:of Buckland
 I:19:2:3
 W:40:35:20:50000
-P:0:x3.00:19:15:0
+P:0:x2.75:19:15:0
 F:SPEED | RES_BLIND | RES_CONF | SHOW_MODS | XTRA_RES_OR_POWER
 D:A sling granting extraordinary clarity of mind amidst darkness and
 D:confusion, and which hurls shot with deadly speed.
