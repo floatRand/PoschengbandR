@@ -619,7 +619,7 @@ static void _display_extra(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_ptr
         doc_insert(doc, "It endures almost anything without being destroyed.\n");
         break;
     case EGO_QUIVER_PHASE:
-        doc_insert(doc, "This quiver, and any ammo it contains, weighs absolutely nothing at all.\n");
+        doc_insert(doc, "This quiver and its contents weigh absolutely nothing at all.\n");
         break;
     case EGO_QUIVER_PROTECTION:
         doc_insert(doc, "This quiver protects its contents from accidental destruction.\n");

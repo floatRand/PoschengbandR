@@ -2161,12 +2161,6 @@ void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
     int todam2 = m_bonus(10, level);
     bool crafting = (mode & AM_CRAFTING) ? TRUE : FALSE;
 
-    if (object_is_ammo(o_ptr))
-    {
-        tohit2 = (tohit2+1)/2;
-        todam2 = (todam2+1)/2;
-    }
-
     if (object_is_(o_ptr, TV_SWORD, SV_DIAMOND_EDGE))
     {
         if (!crafting && power >= 2 && !one_in_(7)) return;

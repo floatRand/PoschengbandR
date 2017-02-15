@@ -2756,6 +2756,12 @@ static s16b tot_dam_aux_shot(object_type *o_ptr, int tdam, monster_type *m_ptr)
         case TV_ARROW:
         case TV_BOLT:
         {
+            if (monster_living(r_ptr) && have_flag(flgs, OF_SLAY_LIVING))
+            {
+                obj_learn_slay(o_ptr, OF_SLAY_LIVING, "slays <color:o>Living</color>");
+                if (mult < 20) mult = 20;
+            }
+
             /* Slay Animal */
             if ((have_flag(flgs, OF_SLAY_ANIMAL)) &&
                 (r_ptr->flags3 & RF3_ANIMAL))
