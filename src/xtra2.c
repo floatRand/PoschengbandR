@@ -3279,7 +3279,7 @@ rect_t ui_doc_menu_rect(void)
         0,
         0,
         Term->wid - 12 - 1,
-        Term->hgt - 1 - 1
+        Term->hgt
     );
 }
 

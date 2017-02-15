@@ -28,29 +28,7 @@ void pack_unlock(void)
 
 void pack_ui(void)
 {
-    int     wgt = py_total_weight();
-    int     pct = wgt * 100 / weight_limit();
-    rect_t  r = ui_map_rect();
-    doc_ptr doc = doc_alloc(MIN(80, r.cx));
-
-    r = ui_screen_rect();
-    doc_insert(doc, "<color:G>Inventory:</color>\n");
-
-    pack_display(doc, obj_exists, INV_NO_LABELS);
-    doc_printf(doc, "\nCarrying %d.%d pounds (<color:%c>%d%%</color> capacity). <color:y>Command:</color> ",
-                    wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
-
-    screen_save();
-    doc_sync_menu(doc);
-    command_new = inkey();
-    screen_load();
-
-    if (command_new == ESCAPE)
-        command_new = 0;
-    else
-        command_see = TRUE;
-
-    doc_free(doc);
+    gear_ui(INV_PACK);
 }
 
 void pack_display(doc_ptr doc, obj_p p, int flags)

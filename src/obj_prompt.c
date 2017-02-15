@@ -5,6 +5,7 @@
 static void _context_make(obj_prompt_context_ptr context);
 static void _context_unmake(obj_prompt_context_ptr context);
 static int  _find_tab(vec_ptr tabs, int loc);
+static int  _count_lines(cptr s);
 
 static void _display(obj_prompt_context_ptr context);
 static void _sync_doc(doc_ptr doc);
@@ -20,7 +21,7 @@ int obj_prompt(obj_prompt_ptr prompt)
     assert(!prompt->obj);
 
     context.prompt = prompt;
-    context.page_size = MIN(26, ui_doc_menu_rect().cy - 4);
+    context.page_size = MIN(26, ui_doc_menu_rect().cy - 3 - _count_lines(prompt->prompt));
     _context_make(&context);
 
     if (!vec_length(context.tabs))
@@ -141,6 +142,10 @@ static void _tab_free(obj_prompt_tab_ptr tab)
 static void _context_make(obj_prompt_context_ptr context)
 {
     int i;
+    obj_p filter = context->prompt->filter;
+
+    if (!filter)
+        filter = obj_exists;
 
     context->tabs = vec_alloc((vec_free_f)_tab_free);
 
@@ -150,19 +155,21 @@ static void _context_make(obj_prompt_context_ptr context)
         switch (context->prompt->where[i])
         {
         case INV_FLOOR:
-            inv = inv_filter_floor(context->prompt->filter);
+            inv = inv_filter_floor(filter);
             inv_sort(inv);
             break;
         case INV_EQUIP:
             inv = equip_filter(context->prompt->filter);
-            /* don't sort: always keep same slot labels! */
+            /* don't sort: always keep same slot labels!
+             * always use the supplied filter (NULL->show
+             * empty slots) */
             break;
         case INV_PACK:
-            inv = pack_filter(context->prompt->filter);
+            inv = pack_filter(filter);
             inv_sort(inv);
             break;
         case INV_QUIVER:
-            inv = quiver_filter(context->prompt->filter);
+            inv = quiver_filter(filter);
             inv_sort(inv);
             break;
         }
@@ -172,7 +179,11 @@ static void _context_make(obj_prompt_context_ptr context)
             if (!ct)
                 inv_free(inv);
             else
+            {
+                if (context->prompt->top_loc == context->prompt->where[i])
+                    context->tab = vec_length(context->tabs);
                 vec_add(context->tabs, _tab_alloc(inv, context->page_size));
+            }
         }
     }
 }
@@ -193,7 +204,8 @@ static void _sync_doc(doc_ptr doc)
 static void _display(obj_prompt_context_ptr context)
 {
     obj_prompt_tab_ptr tab;
-    int                i;
+    int                i, start, stop;
+    obj_p              filter = context->prompt->filter;
 
     doc_clear(context->doc);
     doc_insert(context->doc, "<style:table>");
@@ -213,13 +225,14 @@ static void _display(obj_prompt_context_ptr context)
 
     /* Active Tab */
     tab = vec_get(context->tabs, context->tab);
-    inv_display(
-        tab->inv,
-        tab->page * context->page_size + 1,
-        (tab->page + 1) * context->page_size,
-        obj_exists,
-        context->doc, context->prompt->flags
-    );
+    start = tab->page * context->page_size + 1;
+    stop = (tab->page + 1) * context->page_size;
+    if (inv_loc(tab->inv) == INV_EQUIP)
+        stop = equip_max(); /* Hack: only show valid slots for this body type */
+    else if (!filter)
+        filter = obj_exists; /* Hack: null filter only shows empty slots for INV_EQUIP */
+
+    inv_display(tab->inv, start, stop, filter, context->doc, context->prompt->flags);
 
     if (tab->page_ct > 1)
     {
@@ -345,6 +358,18 @@ static int _basic_cmd(obj_prompt_context_ptr context, int cmd)
         return OP_CMD_HANDLED;
     }
     return OP_CMD_SKIPPED;
+}
+
+int _count_lines(cptr s)
+{
+    int ct = 1;
+    cptr pos = strchr(s, '\n');
+    while (pos)
+    {
+        ct++;
+        pos = strchr(pos + 1, '\n');
+    }
+    return ct;
 }
 
 

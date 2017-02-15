@@ -208,7 +208,7 @@ struct term_data
 static term_data data[MAX_TERM_DATA];
 
 #define MAP_MIN_CX 80
-#define MAP_MIN_CY 27
+#define MAP_MIN_CY 24
 
 /*
  * Hack -- try to guess which systems use what commands
@@ -1395,8 +1395,8 @@ errr init_gcu(int argc, char *argv[])
    core_aux = hook_quit;
 
    /* Hack -- Require large screen, or Quit with message */
-   i = ((LINES < 27) || (COLS < 80));
-   if (i) quit("Angband needs an 80x27 'curses' screen");
+   i = ((LINES < 24) || (COLS < 80));
+   if (i) quit("Angband needs an 80x24 'curses' screen");
 
 
 #ifdef A_COLOR

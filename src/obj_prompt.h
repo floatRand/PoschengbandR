@@ -33,6 +33,7 @@ struct obj_prompt_s
     obj_p   filter; 
     int     where[MAX_LOC]; /* INV_EQUIP, INV_FLOOR, etc. order matters */
     int     flags;          /* INV_SHOW_FAIL_RATES, etc. */
+    int     top_loc;
 
     /* customize */
     obj_prompt_cmd_f

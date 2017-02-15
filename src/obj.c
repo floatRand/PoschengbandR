@@ -655,6 +655,29 @@ void obj_inspect_ui(void)
         obj_display(prompt.obj);
 }
 
+void gear_ui(int which)
+{
+    obj_prompt_t prompt = {0};
+    int          wgt = py_total_weight();
+    int          pct = wgt * 100 / weight_limit();
+    string_ptr   s;
+
+    s = string_alloc_format(
+        "<color:w>Carrying %d.%d pounds (<color:%c>%d%%</color> capacity).</color>\n\n"
+        "Examine which item <color:w>(<color:keypress>Esc</color> to exit)</color>?",
+         wgt / 10, wgt % 10, pct > 100 ? 'r' : 'G', pct);
+    prompt.prompt = string_buffer(s);
+    prompt.where[0] = INV_PACK;
+    prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
+    prompt.top_loc = which;
+
+    prompt.cmd_handler = _inspector;
+
+    obj_prompt(&prompt);
+    string_free(s);
+}
+
 static int _inscriber(obj_prompt_context_ptr context, int cmd)
 {
     obj_prompt_tab_ptr tab = vec_get(context->tabs, context->tab);

@@ -34,6 +34,7 @@ extern void obj_destroy_ui(void);
 extern void obj_inscribe_ui(void);
 extern void obj_uninscribe_ui(void);
 extern void obj_inspect_ui(void);
+extern void gear_ui(int which);
 
 extern void obj_destroy(obj_ptr obj, int amt);
 extern void obj_drop(obj_ptr obj, int amt);

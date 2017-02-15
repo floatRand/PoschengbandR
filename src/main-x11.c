@@ -3260,10 +3260,10 @@ static errr term_data_init(term_data *td, int i)
 	/* Main window has a differing minimum size */
 	if (i == 0)
 	{
-        /* Main window min size is 80x27 */
+        /* Main window min size is 80x24 */
         td->sizeh->flags = PMinSize | PMaxSize;
         td->sizeh->min_width = 80 * td->fnt->wid + (ox + ox);
-        td->sizeh->min_height = 27 * td->fnt->hgt + (oy + oy);
+        td->sizeh->min_height = 24 * td->fnt->hgt + (oy + oy);
         td->sizeh->max_width = 255 * td->fnt->wid + (ox + ox);
         td->sizeh->max_height = 255 * td->fnt->hgt + (oy + oy);
 	}
