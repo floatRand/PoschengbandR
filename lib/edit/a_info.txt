@@ -1521,7 +1521,7 @@ D:songs record.
 N:126:of Brand
 I:19:23:5
 W:70:25:110:100000
-P:0:x4.25:10:12:0
+P:0:x4.25:10:17:0
 F:SPEED | RES_FIRE | SHOW_MODS | XTRA_RES_OR_POWER
 F:BRAND_FIRE
 
@@ -2365,7 +2365,7 @@ D:This is of Robin Hood who live in the deep forest.
 N:222:of Hellfire
 I:19:23:4
 W:50:15:110:60000
-P:0:x4.00:10:12:0
+P:0:x4.00:10:18:0
 F:STR | INFRA | RES_FIRE | AURA_FIRE |
 F:HIDE_TYPE | SHOW_MODS
 F:BRAND_FIRE
@@ -2865,7 +2865,7 @@ D:This arrow is traditionally shot only by fat, scantily clad babies.
 N:271:'Ballista'
 I:19:24:3
 W:50:15:110:60000
-P:0:x5.00:10:12:0
+P:0:x5.00:10:20:0
 F:HIDE_TYPE | SHOW_MODS
 F:STR | RES_CONF
 E:PIERCING_SHOT:30:100

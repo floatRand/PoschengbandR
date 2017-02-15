@@ -1339,6 +1339,18 @@ s32b ammo_cost(object_type *o_ptr, int options)
        Also, some egos, like EGO_AMMO_RETURNING will not score properly */
     s32b result = weapon_cost(o_ptr, options);
     result /= 25;
+    switch (o_ptr->name2)
+    {
+    case EGO_AMMO_ENDURANCE:
+        result += 200;
+        break;
+    case EGO_AMMO_EXPLODING:
+        result += 50;
+        break;
+    case EGO_AMMO_RETURNING:
+        result += 150;
+        break;
+    }
     if (!result)
         result = 1;
     return result;
@@ -1348,35 +1360,31 @@ static s32b _avg_dam_bow(object_type *o_ptr, int options)
 {
     s32b d = 0;
     s32b m = o_ptr->mult;
-    int  to_d = 0;
-
-    if ((options & COST_REAL) || object_is_known(o_ptr))
-        to_d = o_ptr->to_d;
 
     switch (o_ptr->sval)
     {
     case SV_SLING:
-        d = m*(2 + to_d) / 100;
+        d = m*16 / 100;
         break;
 
     case SV_SHORT_BOW:
-        d = m*(2 + to_d) / 100;
+        d = m*17 / 100;
         break;
 
     case SV_LONG_BOW:
-        d = m*(3 + to_d) / 100;
+        d = m*20 / 100;
         break;
 
     case SV_NAMAKE_BOW:
-        d = m*(3 + to_d) / 100;
+        d = m*20 / 100;
         break;
 
     case SV_LIGHT_XBOW:
-        d = m*(4 + to_d) / 100;
+        d = m*25 / 100;
         break;
 
     case SV_HEAVY_XBOW:
-        d = m*(4 + to_d) / 100;
+        d = m*25 / 100;
         break;
 
     case SV_HARP:
@@ -1394,7 +1402,7 @@ static s32b _avg_dam_bow(object_type *o_ptr, int options)
 s32b bow_cost(object_type *o_ptr, int options)
 {
     s32b y, w, p, q, t;
-    int  to_h = 0, to_a = 0, pval = 0;
+    int  to_h = 0, to_d = 0, to_a = 0, pval = 0;
     u32b flgs[OF_ARRAY_SIZE];
     char dbg_msg[512];
 
@@ -1406,6 +1414,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     if ((options & COST_REAL) || object_is_known(o_ptr))
     {
         to_h = o_ptr->to_h;
+        to_d = o_ptr->to_d;
         to_a = o_ptr->to_a;
     }
     pval = o_ptr->pval;
@@ -1426,7 +1435,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     if (have_flag(flgs, OF_BRAND_FIRE)) t = t * 5 / 4;
     if (have_flag(flgs, OF_BRAND_COLD)) t = t * 5 / 4;
 
-    w = (t * t / 11) * t;
+    w = (t * t / 22) * t;
     if (cost_calc_hook)
     {
         sprintf(dbg_msg, "  * Base Cost: w = %d", w);
@@ -1450,12 +1459,12 @@ s32b bow_cost(object_type *o_ptr, int options)
     else
     {
         w += 100 * to_h;
-        /*w += 10 * o_ptr->to_h * o_ptr->to_h;*/
     }
+    w += 6 * to_d * to_d;
 
     if (cost_calc_hook)
     {
-        sprintf(dbg_msg, "  * Accuracy: w = %d", w);
+        sprintf(dbg_msg, "  * Accuracy/Damage: w = %d", w);
         cost_calc_hook(dbg_msg);
     }
 

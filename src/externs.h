@@ -1300,6 +1300,7 @@ extern s32b bow_cost(object_type *o_ptr, int options);
 extern s32b armor_cost(object_type *o_ptr, int options);
 extern s32b jewelry_cost(object_type *o_ptr, int options);
 extern s32b lite_cost(object_type *o_ptr, int options);
+extern s32b quiver_cost(object_type *o_ptr, int options);
 extern s32b new_object_cost(object_type *o_ptr, int options);
 
 /* racial.c */

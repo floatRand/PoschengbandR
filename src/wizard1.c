@@ -709,6 +709,8 @@ static void spoil_object_tables(void)
     _spoil_object_table_aux(doc, "Helmets", object_is_helmet);
     _spoil_object_table_aux(doc, "Gloves", object_is_gloves);
     _spoil_object_table_aux(doc, "Boots", object_is_boots);
+    _spoil_object_table_aux(doc, "Ammo", obj_is_ammo);
+    _spoil_object_table_aux(doc, "Quivers", obj_is_quiver);
     spoiler_hack = FALSE;
 
     doc_display(doc, "Object Tables", 0);

@@ -1894,6 +1894,7 @@ static void _build_statistics(doc_ptr doc)
     _group_counts_imp(doc, kind_is_weapon, "Weapons");
     _group_counts_tval_imp(doc, TV_SHIELD, "Shields");
     _group_counts_tval_imp(doc, TV_BOW, "Bows");
+    _group_counts_tval_imp(doc, TV_QUIVER, "Quivers");
     _group_counts_tval_imp(doc, TV_RING, "Rings");
     _group_counts_tval_imp(doc, TV_AMULET, "Amulets");
     _group_counts_tval_imp(doc, TV_LITE, "Lights");

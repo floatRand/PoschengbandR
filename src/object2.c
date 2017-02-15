@@ -3000,8 +3000,8 @@ static bool _kind_theme_warrior_shoot(int k_idx) {
     return _kind_theme_warrior(k_idx);
 }
 static bool _kind_theme_archer(int k_idx) {
-    if ( _kind_is_(k_idx, TV_BOW,  SV_SHORT_BOW)
-      || _kind_is_(k_idx, TV_BOW,  SV_LONG_BOW)
+    if ( _kind_is_(k_idx, TV_BOW,  SV_ANY)
+      || _kind_is_(k_idx, TV_QUIVER, SV_ANY)
       || _kind_is_(k_idx, TV_ARROW,  SV_ANY) )
     {
         return TRUE;

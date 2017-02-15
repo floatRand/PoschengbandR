@@ -850,6 +850,10 @@ T:AMMO
 W:40:*:2
 F:IGNORE_ACID | IGNORE_FIRE | IGNORE_COLD | IGNORE_ELEC
 
+N:185:of Exploding
+T:AMMO
+W:1:*:2
+
 #############
 ### Harps ###
 #############
