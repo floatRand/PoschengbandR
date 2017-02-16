@@ -56,7 +56,6 @@ extern char cmsg_prompt(byte color, cptr prompt, char keys[], int options);
 extern bool msg_input(cptr prompt, char *buf, int len);
 extern bool cmsg_input(byte color, cptr prompt, char *buf, int len);
 extern bool msg_input_num(cptr prompt, int *num, int min, int max);
-extern bool cmsg_input_num(byte color, cptr prompt, int *num, int min, int max);
 extern bool msg_command(cptr prompt, char *cmd);
 extern bool cmsg_command(byte color, cptr prompt, char *cmd);
 

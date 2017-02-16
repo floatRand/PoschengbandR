@@ -451,15 +451,28 @@ void equip_wield_ui(void)
     if (!obj) return;
     if (obj_is_ammo(obj))
     {
+        int  amt;
+        char name[MAX_NLEN];
         assert(equip_find_obj(TV_QUIVER, SV_ANY));
-        /* TODO: Prompt for quantity? */
         if (quiver_capacity() <= quiver_count(NULL))
         {
             msg_print("Your quiver is full.");
             return;
         }
-        quiver_carry(obj);
-        energy_use = 50;
+        if (msg_input_num("Quantity", &amt, 1, obj->number))
+        {
+            obj_t copy = *obj;
+            copy.number = amt;
+            quiver_carry(&copy);
+            amt -= copy.number; /* quiver might not hold the requested amt */
+            obj->number -= amt;
+
+            copy.number = amt;
+            object_desc(name, &copy, OD_COLOR_CODED);
+            msg_format("You add %s to your quiver.", name);
+            obj_release(obj, obj->number ? 0 : OBJ_RELEASE_QUIET);
+            energy_use = 50;
+        }
     }
     else
     {
@@ -475,8 +488,8 @@ void equip_wield_ui(void)
         _wield(obj, slot);
 
         _wield_after(slot);
+        obj_release(obj, OBJ_RELEASE_QUIET);
     }
-    obj_release(obj, OBJ_RELEASE_QUIET);
 }
 
 void equip_wield(obj_ptr obj, slot_t slot)
@@ -709,7 +722,6 @@ void equip_takeoff_ui(void)
     _unwield_before(obj);
     _unwield(obj, FALSE);
     _unwield_after();
-
 }
 
 bool equip_can_takeoff(obj_ptr obj)
@@ -800,24 +812,45 @@ void _unwield_before(obj_ptr obj)
 
 void _unwield(obj_ptr obj, bool drop)
 {
-    char name[MAX_NLEN];
-    object_desc(name, obj, OD_COLOR_CODED);
     if (obj->loc.where == INV_QUIVER)
-        msg_format("You remove %s from your quiver.", name);
+    {
+        int  amt;
+        char name[MAX_NLEN];
+        assert(equip_find_obj(TV_QUIVER, SV_ANY));
+        assert(!drop); /* quiver_drop ... not us. cf do_cmd_drop */
+        if (msg_input_num("Quantity", &amt, 1, obj->number))
+        {
+            obj_t copy = *obj;
+
+            copy.number = amt;
+            object_desc(name, &copy, OD_COLOR_CODED);
+            msg_format("You remove %s from your quiver.", name);
+
+            pack_carry_aux(&copy); /* Hack: don't put ammo back in the quiver if we just removed it! */
+
+            obj->number -= amt;
+            obj_release(obj, obj->number ? 0 : OBJ_RELEASE_QUIET);
+            energy_use = 50;
+        }
+    }
     else
+    {
+        char name[MAX_NLEN];
+        object_desc(name, obj, OD_COLOR_CODED);
         msg_format("You are no longer wearing %s.", name);
-    if (drop)
-    {
-        obj_drop(obj, obj->number);
+        if (drop)
+        {
+            obj_drop(obj, obj->number);
+        }
+        else
+        {
+            pack_carry_aux(obj);
+            obj_release(obj, OBJ_RELEASE_QUIET);
+        }
+        p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;
+        p_ptr->redraw |= PR_EQUIPPY;
+        p_ptr->window |= PW_EQUIP;
     }
-    else
-    {
-        pack_carry_aux(obj); /* Hack: don't put ammo back in the quiver if we just removed it! */
-        obj_release(obj, OBJ_RELEASE_QUIET);
-    }
-    p_ptr->update |= PU_BONUS | PU_TORCH | PU_MANA;
-    p_ptr->redraw |= PR_EQUIPPY;
-    p_ptr->window |= PW_EQUIP;
 }
 
 void _unwield_after(void)

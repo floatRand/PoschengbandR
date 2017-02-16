@@ -475,33 +475,6 @@ bool msg_input(cptr prompt, char *buf, int len)
     return cmsg_input(TERM_WHITE, prompt, buf, len);
 }
 
-bool cmsg_input_num(byte color, cptr prompt, int *num, int min, int max)
-{
-    bool result = FALSE;
-    char buf[10];
-
-    msg_boundary();
-    auto_more_state = AUTO_MORE_PROMPT;
-    cmsg_print(color, prompt);
-    result = askfor_aux(buf, 10, FALSE);
-    if (result)
-    {
-        if (isalpha(buf[0]))
-            *num = max;
-        else
-            *num = atoi(buf);
-
-        if (*num > max) *num = max;
-        if (*num < min) *num = min;
-
-        msg_format("%d", *num);
-    }
-    else
-        cmsg_print(TERM_L_RED, "Cancelled");
-    msg_line_clear();
-    return result;
-}
-
 void cmsg_print(byte color, cptr msg)
 {
     if (world_monster) return;
@@ -620,5 +593,27 @@ void msg_on_save(savefile_ptr file)
 
 bool msg_input_num(cptr prompt, int *num, int min, int max)
 {
-    return cmsg_input_num(TERM_WHITE, prompt, num, min, max);
+    bool result = FALSE;
+    char buf[10] = {0};
+
+    msg_boundary();
+    auto_more_state = AUTO_MORE_PROMPT;
+    msg_format("<color:y>%s <color:w>(%d to %d)</color>:</color> ", prompt, min, max);
+    result = askfor_aux(buf, 10, FALSE);
+    if (result)
+    {
+        if (isalpha(buf[0]))
+            *num = max;
+        else
+            *num = atoi(buf);
+
+        if (*num > max) *num = max;
+        if (*num < min) *num = min;
+
+        cmsg_format(TERM_YELLOW, "%d", *num);
+    }
+    else
+        cmsg_print(TERM_L_RED, "Cancelled");
+    msg_line_clear();
+    return result;
 }
