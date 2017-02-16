@@ -1436,7 +1436,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     dam = _avg_dam_bow(o_ptr, options);
     xtra_dam = MAX(0, dam - base_dam);
 
-    w = base_dam/10 + (base_dam - 320)*(base_dam - 320)/100;
+    w = base_dam/10 + (base_dam - 320)*(base_dam - 320)/200;
     w += 10*xtra_dam + xtra_dam*xtra_dam*xtra_dam/1000;
 
     if (have_flag(flgs, OF_BRAND_POIS)) w = w * 5 / 4;

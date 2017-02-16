@@ -750,7 +750,7 @@ G:}:s
 I:19:23:0
 W:15:0:0:110:500
 P:0:x3.50:0:0:0
-A:15/1
+A:25/1
 F:SHOW_MODS | TOWN
 D:A mechanical bow made of wood, it is cocked to augment the strength of
 D:its wielder.
@@ -760,7 +760,7 @@ G:}:s
 I:19:24:0
 W:30:0:0:200:500
 P:0:x4.00:0:0:0
-A:30/2
+A:40/2
 F:SHOW_MODS
 
 N:77:& Sling~

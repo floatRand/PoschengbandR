@@ -1337,12 +1337,6 @@ static void _loop(_ui_context_ptr context)
                                "Press <color:keypress>?</color> for help.", cmd);
                 }
             }
-            if (pack_overflow_count())
-            {
-                msg_print("<color:v>Your pack is overflowing!</color> It's time for you to leave!");
-                msg_print(NULL);
-                break;
-            }
             ct = inv_count_slots(context->shop->inv, obj_exists);
             if (!ct)
             {
@@ -1362,6 +1356,12 @@ static void _loop(_ui_context_ptr context)
         pack_unlock();
         notice_stuff(); /* PW_INVEN and PW_PACK ... */
         handle_stuff(); /* Plus 'C' to view character sheet */
+        if (pack_overflow_count())
+        {
+            msg_print("<color:v>Your pack is overflowing!</color> It's time for you to leave!");
+            msg_print(NULL);
+            break;
+        }
     }
     character_icky = FALSE;
     energy_use = 100;

@@ -49,8 +49,8 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
-    py_birth_obj_aux(TV_BOW, SV_LIGHT_XBOW, 1);
-    py_birth_obj_aux(TV_BOLT, SV_AMMO_NORMAL, rand_range(15, 30));
+    py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
+    py_birth_obj_aux(TV_ARROW, SV_AMMO_NORMAL, rand_range(15, 30));
 }
 
 class_t *warrior_get_class(void)

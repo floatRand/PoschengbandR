@@ -79,6 +79,16 @@ void home_display(doc_ptr doc, obj_p p, int flags)
     }
 }
 
+int home_count(obj_p p)
+{
+    return inv_count(_home, p);
+}
+
+int museum_count(obj_p p)
+{
+    return inv_count(_museum, p);
+}
+
 void museum_display(doc_ptr doc, obj_p p, int flags)
 {
     slot_t slot;
@@ -225,6 +235,12 @@ static void _ui(_ui_context_ptr context)
         pack_unlock();
         notice_stuff(); /* PW_INVEN and PW_PACK ... */
         handle_stuff(); /* Plus 'C' to view character sheet */
+        if (pack_overflow_count())
+        {
+            msg_print("<color:v>Your pack is overflowing!</color> It's time for you to leave!");
+            msg_print(NULL);
+            break;
+        }
     }
     character_icky = FALSE;
     energy_use = 100;
@@ -315,8 +331,7 @@ static void _get(_ui_context_ptr context)
 
         if (obj->number > 1)
         {
-            amt = get_quantity(NULL, obj->number);
-            if (amt <= 0) break;
+            if (!msg_input_num("Quantity", &amt, 1, obj->number)) continue;
         }
         if (amt < obj->number)
         {
@@ -392,16 +407,16 @@ static void _drop(_ui_context_ptr context)
 
         object_desc(name, prompt.obj, OD_COLOR_CODED);
         string_printf(s, "Really donate %s to the museum? <color:y>[y/n]</color>", name);
-        c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+        c = msg_prompt(string_buffer(s), "ny", PROMPT_YES_NO);
         string_free(s);
         if (c == 'n') return;
     }
+    else
+        amt = prompt.obj->number;
 
     if (prompt.obj->number > 1)
     {
-        amt = get_quantity(NULL, prompt.obj->number);
-        if (amt <= 0)
-            return;
+        if (!msg_input_num("Quantity", &amt, 1, prompt.obj->number)) return;
     }
 
     if (amt < prompt.obj->number)

@@ -26,6 +26,7 @@ static void _build_race_history(doc_ptr doc);
 static void _build_mutations(doc_ptr doc);
 static void _build_pets(doc_ptr doc);
 static void _build_inventory(doc_ptr doc);
+static void _build_quiver(doc_ptr doc);
 static void _build_home(doc_ptr doc);
 static void _build_museum(doc_ptr doc);
 static void _build_statistics(doc_ptr doc);
@@ -1457,20 +1458,47 @@ static void _build_inventory(doc_ptr doc)
     doc_newline(doc);
 }
 
+static void _build_quiver(doc_ptr doc)
+{
+    if (quiver_count(NULL))
+    {
+        slot_t slot;
+        char o_name[MAX_NLEN];
+
+        doc_printf(doc, "<topic:vQuiver>============================== Character Qui<color:keypress>v</color>er ===============================\n\n");
+
+        for (slot = 1; slot <= quiver_max(); slot++)
+        {
+            obj_ptr obj = quiver_obj(slot);
+            if (!obj) continue;
+            object_desc(o_name, obj, OD_COLOR_CODED);
+            doc_printf(doc, "<indent><style:indent>%s</style></indent>\n", o_name);
+        }
+
+        doc_newline(doc);
+    }
+}
+
 static void _build_home(doc_ptr doc)
 {
-    doc_printf(doc, "<topic:Home>================================ <color:keypress>H</color>ome Inventory ===============================\n");
-    doc_newline(doc);
-    home_display(doc, obj_exists, 0);
-    doc_newline(doc);
+    if (home_count(NULL))
+    {
+        doc_printf(doc, "<topic:Home>================================ <color:keypress>H</color>ome Inventory ===============================\n");
+        doc_newline(doc);
+        home_display(doc, obj_exists, 0);
+        doc_newline(doc);
+    }
 }
 
 static void _build_museum(doc_ptr doc)
 {
-    doc_printf(doc, "<topic:Museum>==================================== <color:keypress>M</color>useum ===================================\n");
-    doc_newline(doc);
-    museum_display(doc, obj_exists, 0);
-    doc_newline(doc);
+    if (museum_count(NULL))
+    {
+        doc_printf(doc, "<topic:Museum>==================================== <color:keypress>M</color>useum ===================================\n");
+        doc_newline(doc);
+        museum_display(doc, obj_exists, 0);
+        doc_newline(doc);
+    }
 }
 
 /****************************** Statistics ************************************/
@@ -2336,6 +2364,7 @@ void py_display_character_sheet(doc_ptr doc)
     _build_mutations(doc);
     _build_pets(doc);
     _build_inventory(doc);
+    _build_quiver(doc);
     _build_home(doc);
     _build_museum(doc);
     _build_statistics(doc);
