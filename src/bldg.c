@@ -2856,15 +2856,14 @@ static bool enchant_item(obj_p filter, int cost, int to_hit, int to_dam, int to_
     prompt.filter = filter;
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_EQUIP;
+    prompt.where[2] = INV_QUIVER;
     obj_prompt(&prompt);
     if (!prompt.obj) return FALSE;
 
-    if (prompt.obj->tval == TV_ARROW || prompt.obj->tval == TV_BOLT || prompt.obj->tval == TV_SHOT)
-        maxenchant = (p_ptr->lev / 5);
-    else if (is_guild)
-        maxenchant = 5 + (p_ptr->lev / 5);
+    if (is_guild)
+        maxenchant = 5 + p_ptr->lev/5;
     else
-        maxenchant = 2 + (p_ptr->lev / 5);
+        maxenchant = 2 + p_ptr->lev/5;
 
     /* Streamline. Nothing is more fun then enchanting Twilight (-40,-60)->(+10, +10), I 
        admit. But other players might not share my love of carpal tunnel syndrome! */
