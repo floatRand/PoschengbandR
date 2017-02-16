@@ -511,7 +511,7 @@ static void _shoot_init_class(class_t *class_ptr)
         { 50, 20 },
         { 55, 25 },
         { 60, 27 },
-        { 70, 30 }
+        { 70, 28 }
     };
     int pts = MIN(5, _get_group_pts(_TYPE_SHOOT));
     _shoot_skill_t row = _tbl[pts];
@@ -530,10 +530,10 @@ static _shoot_info_t _shoot_info[6] = {
     {  0,  0, 2000,   0 },
 
     {  0,  0, 4000,   0 },
-    {  1,  0, 6000,  25 },
-    {  3,  0, 7000,  50 },
-    {  5,  2, 8000,  75 },
-    { 10,  5, 8000, 125 }
+    {  0,  0, 5000,  25 },
+    {  0,  0, 6000,  50 },
+    {  0,  0, 7000,  75 },
+    {  0,  0, 8000, 100 }
 };
 
 static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)

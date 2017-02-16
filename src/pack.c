@@ -380,7 +380,7 @@ bool pack_optimize(void)
     else if (inv_optimize(_inv))
     {
         p_ptr->window |= PW_INVEN;
-        cmsg_print(TERM_YELLOW, "You reorder your pack.");
+        /*cmsg_print(TERM_YELLOW, "You reorder your pack.");*/
         return TRUE;
     }
     return FALSE;

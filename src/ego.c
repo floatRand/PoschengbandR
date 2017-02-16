@@ -2229,8 +2229,14 @@ void obj_create_weapon(object_type *o_ptr, int level, int power, int mode)
         }
 
         /* Hack -- super-charge the damage dice */
-        while (one_in_(10 * o_ptr->dd * o_ptr->ds))
-            o_ptr->dd++;
+        if (one_in_(5 + 200/MAX(level, 1)))
+        {
+            do
+            {
+                o_ptr->dd++;
+            }
+            while (one_in_(o_ptr->dd * o_ptr->ds / 2));
+        }
 
         if (o_ptr->dd > 9)
             o_ptr->dd = 9;
