@@ -1450,7 +1450,7 @@ static bool _buy_aux(shop_ptr shop, obj_ptr obj)
 
     object_desc(name, obj, OD_COLOR_CODED);
     string_printf(s, "Really sell %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, price);
-    c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+    c = msg_prompt(string_buffer(s), "ny", PROMPT_YES_NO);
     string_free(s);
     if (c == 'n') return FALSE;
 
@@ -1505,8 +1505,8 @@ static void _buy(_ui_context_ptr context)
 
     if (prompt.obj->number > 1)
     {
-        amt = get_quantity(NULL, prompt.obj->number);
-        if (amt <= 0) return;
+        amt = prompt.obj->number;
+        if (!msg_input_num("Quantity", &amt, 1, prompt.obj->number)) return;
     }
 
     if (amt < prompt.obj->number)
@@ -1550,7 +1550,7 @@ static void _reserve_aux(shop_ptr shop, obj_ptr obj)
 
     object_desc(name, obj, OD_COLOR_CODED);
     s = string_alloc_format("Reserve %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, cost);
-    c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+    c = msg_prompt(string_buffer(s), "ny", PROMPT_YES_NO);
     string_free(s);
     if (c == 'n') return;
     if (cost > p_ptr->au)
@@ -1611,7 +1611,7 @@ static bool _sell_aux(shop_ptr shop, obj_ptr obj)
 
     object_desc(name, obj, OD_COLOR_CODED);
     string_printf(s, "Really buy %s for <color:R>%d</color> gp? <color:y>[y/n]</color>", name, price);
-    c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+    c = msg_prompt(string_buffer(s), "ny", PROMPT_YES_NO);
     string_free(s);
     if (c == 'n') return FALSE;
 
@@ -1665,8 +1665,7 @@ static void _sell(_ui_context_ptr context)
 
         if (obj->number > 1)
         {
-            amt = get_quantity(NULL, obj->number);
-            if (amt <= 0) break;
+            if (!msg_input_num("Quantity", &amt, 1, obj->number)) continue;
         }
 
         if (amt < obj->number)
@@ -1913,7 +1912,7 @@ static void _shuffle_stock(shop_ptr shop)
             string_ptr s;
             char       c;
             s = string_alloc_format("Shuffle stock for <color:R>%d</color> gp? <color:y>[y/n]</color>", cost);
-            c = msg_prompt(string_buffer(s), "ny", PROMPT_DEFAULT);
+            c = msg_prompt(string_buffer(s), "ny", PROMPT_YES_NO);
             string_free(s);
             if (c == 'n') return;
             if (cost > p_ptr->au)

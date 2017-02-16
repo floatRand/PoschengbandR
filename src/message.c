@@ -373,16 +373,16 @@ static void msg_line_display(byte color, cptr msg)
        your coding).
 
    Sample Usage:
-   char ch = cmsg_prompt(TERM_VIOLET, "Really commit suicide? [Y,n]", "nY", PROMPT_NEW_LINE | PROMPT_CASE_SENSITIVE);
+   char ch = msg_prompt("Really commit suicide? [Y,n]", "nY", PROMPT_NEW_LINE | PROMPT_CASE_SENSITIVE);
    if (ch == 'Y') {...}
 */
-static char cmsg_prompt_imp(byte color, cptr prompt, char keys[], int options)
+static char msg_prompt_imp(cptr prompt, char keys[], int options)
 {
     if (options & PROMPT_NEW_LINE)
         msg_boundary();
 
     auto_more_state = AUTO_MORE_PROMPT;
-    cmsg_print(color, prompt);
+    msg_print(prompt);
 
     for (;;)
     {
@@ -412,31 +412,21 @@ static char cmsg_prompt_imp(byte color, cptr prompt, char keys[], int options)
     }
 }
 
-char cmsg_prompt(byte color, cptr prompt, char keys[], int options)
+char msg_prompt(cptr prompt, char keys[], int options)
 {
-    char ch = cmsg_prompt_imp(color, prompt, keys, options);
+    char ch = msg_prompt_imp(prompt, keys, options);
     if (isprint(ch))
         msg_print(format("=> <color:y>%c</color>.", ch));
     msg_line_clear();
     return ch;
 }
 
-char msg_prompt(cptr prompt, char keys[], int options)
-{
-    return cmsg_prompt(TERM_WHITE, prompt, keys, options);
-}
-
 bool msg_command(cptr prompt, char *cmd)
-{
-    return cmsg_command(TERM_WHITE, prompt, cmd);
-}
-
-bool cmsg_command(byte color, cptr prompt, char *cmd)
 {
     bool result = FALSE;
     msg_boundary();
     auto_more_state = AUTO_MORE_PROMPT;
-    cmsg_print(color, prompt);
+    msg_print(prompt);
 
     if (get_com_no_macros)
         *cmd = inkey_special(FALSE);
@@ -455,12 +445,12 @@ bool cmsg_command(byte color, cptr prompt, char *cmd)
     return result;
 }
 
-bool cmsg_input(byte color, cptr prompt, char *buf, int len)
+bool msg_input(cptr prompt, char *buf, int len)
 {
     bool result = FALSE;
     msg_boundary();
     auto_more_state = AUTO_MORE_PROMPT;
-    cmsg_print(color, prompt);
+    msg_print(prompt);
     result = askfor(buf, len);
     if (result)
         msg_print(buf);
@@ -468,11 +458,6 @@ bool cmsg_input(byte color, cptr prompt, char *buf, int len)
         cmsg_print(TERM_L_RED, "Cancelled");
     msg_line_clear();
     return result;
-}
-
-bool msg_input(cptr prompt, char *buf, int len)
-{
-    return cmsg_input(TERM_WHITE, prompt, buf, len);
 }
 
 void cmsg_print(byte color, cptr msg)
@@ -596,6 +581,7 @@ bool msg_input_num(cptr prompt, int *num, int min, int max)
     bool result = FALSE;
     char buf[10] = {0};
 
+    sprintf(buf, "%d", MAX(min, MIN(max, *num)));
     msg_boundary();
     auto_more_state = AUTO_MORE_PROMPT;
     msg_format("<color:y>%s <color:w>(%d to %d)</color>:</color> ", prompt, min, max);

@@ -451,7 +451,7 @@ void equip_wield_ui(void)
     if (!obj) return;
     if (obj_is_ammo(obj))
     {
-        int  amt;
+        int  amt = obj->number;
         char name[MAX_NLEN];
         assert(equip_find_obj(TV_QUIVER, SV_ANY));
         if (quiver_capacity() <= quiver_count(NULL))
@@ -814,7 +814,7 @@ void _unwield(obj_ptr obj, bool drop)
 {
     if (obj->loc.where == INV_QUIVER)
     {
-        int  amt;
+        int  amt = obj->number;
         char name[MAX_NLEN];
         assert(equip_find_obj(TV_QUIVER, SV_ANY));
         assert(!drop); /* quiver_drop ... not us. cf do_cmd_drop */

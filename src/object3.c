@@ -1394,7 +1394,6 @@ static s32b _avg_dam_bow(object_type *o_ptr, int options) /* scaled by 10 */
     default:
         d = 500; /* Gun */
     }
-    d = d * 10000 / bow_energy(o_ptr->sval);
 
     return MAX(0, d);
 }
@@ -1437,7 +1436,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     dam = _avg_dam_bow(o_ptr, options);
     xtra_dam = MAX(0, dam - base_dam);
 
-    w = base_dam/10 + (base_dam - 320);
+    w = base_dam/10 + (base_dam - 320)*(base_dam - 320)/100;
     w += 10*xtra_dam + xtra_dam*xtra_dam*xtra_dam/1000;
 
     if (have_flag(flgs, OF_BRAND_POIS)) w = w * 5 / 4;
@@ -1446,6 +1445,7 @@ s32b bow_cost(object_type *o_ptr, int options)
     if (have_flag(flgs, OF_BRAND_FIRE)) w = w * 5 / 4;
     if (have_flag(flgs, OF_BRAND_COLD)) w = w * 5 / 4;
 
+    /* ??? w = w * 10000 / bow_energy(o_ptr->sval);*/
     if (cost_calc_hook)
     {
         sprintf(dbg_msg, "  * Base Cost: w = %d", w);
