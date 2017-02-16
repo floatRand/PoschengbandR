@@ -616,6 +616,7 @@ static int _inspector(obj_prompt_context_ptr context, int cmd)
     if (slot)
     {
         obj_ptr obj = inv_obj(tab->inv, slot);
+        if (!obj) return OP_CMD_SKIPPED; /* gear_ui(INV_EQUIP) */
         doc_clear(context->doc);
         if (object_is_flavor(obj) && !object_is_known(obj))
         {

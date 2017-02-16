@@ -330,7 +330,7 @@ static void _equippy_heading(doc_ptr doc, cptr heading, int col)
 typedef struct {
     u32b py_flgs[OF_ARRAY_SIZE];
     u32b tim_py_flgs[OF_ARRAY_SIZE];
-    u32b obj_flgs[EQUIP_MAX][OF_ARRAY_SIZE];
+    u32b obj_flgs[EQUIP_MAX + 1][OF_ARRAY_SIZE];
 } _flagzilla_t, *_flagzilla_ptr;
 
 static _flagzilla_ptr _flagzilla_alloc(void)

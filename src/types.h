@@ -2132,7 +2132,7 @@ typedef struct {
 typedef struct equip_template_s {
     int          max;
     u32b         name;
-    equip_slot_t slots[EQUIP_MAX];
+    equip_slot_t slots[EQUIP_MAX + 1];
 } equip_template_t, *equip_template_ptr;
 
 typedef struct {

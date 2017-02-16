@@ -117,7 +117,7 @@ static bool _can_wield(obj_ptr obj)
     return FALSE;
 }
 
-static int _get_slots(obj_ptr obj, slot_t slots[EQUIP_MAX])
+static int _get_slots(obj_ptr obj, slot_t slots[EQUIP_MAX + 1])
 {
     int    ct = 0;
     slot_t slot = equip_first_slot(obj);
@@ -172,7 +172,7 @@ static void _slot_menu_fn(int cmd, int which, vptr cookie, variant *res)
 
 static slot_t _prompt_wield_slot(obj_ptr obj)
 {
-    slot_t slots[EQUIP_MAX];
+    slot_t slots[EQUIP_MAX + 1];
     int    ct = _get_slots(obj, slots);
 
     if (ct == 1)

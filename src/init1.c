@@ -3445,6 +3445,7 @@ errr parse_b_info(char *buf, header *head)
         int n1;
 
         i = ++b_ptr->max;
+        if (i > EQUIP_MAX) return PARSE_ERROR_OUT_OF_BOUNDS;
 
         /* Analyze the first field */
         for (s = t = buf+2; *t && (*t != ':'); t++) /* loop */;
