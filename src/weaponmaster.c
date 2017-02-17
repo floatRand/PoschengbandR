@@ -2444,8 +2444,7 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
     { "Slings",
       "Watch out, Goliath! As a master of slings you will shoot pebbles with uncanny speed. Your "
       "shots may even ricochet off other monsters to score multiple hits. As with other archery "
-      "specializations, your ammo will break less often and, at high levels you will gain access "
-      "to an 'unlimited quiver' which allows you to shoot an infinite amount of (average) ammo.",
+      "specializations, your ammo will break less often.",
       _WEAPONMASTER_BOWS,
     /*  S   I   W   D   C   C */
       {-1, +1, +1, +3, -1,  0},
@@ -2814,17 +2813,12 @@ static void _calc_bonuses(void)
 
             if (p_ptr->lev >= 20)
                 p_ptr->big_shot = TRUE;
-
-            if (p_ptr->lev >= 45)
-                p_ptr->unlimited_quiver = TRUE;
         }
     }
     else if (p_ptr->psubclass == WEAPONMASTER_BOWS)
     {
         if (spec)
         {
-            if (p_ptr->lev >= 45)
-                p_ptr->unlimited_quiver = TRUE;
         }
     }
     else if (p_ptr->psubclass == WEAPONMASTER_CROSSBOWS)
@@ -3521,7 +3515,6 @@ static obj_ptr _find_ammo(void)
     slot = pack_find_first(obj_can_shoot);
     if (slot)
         return pack_obj(slot);
-    /* if (p_ptr->unlimited_quiver) ... */
     return NULL;
 }
 
@@ -3689,8 +3682,6 @@ static void _character_dump(doc_ptr doc)
         doc_printf(doc, "  * Your ammo often returns to you when wielding a sling.\n");
         if (p_ptr->lev >= 20)
             doc_printf(doc, "  * Your ammo gains extra damage dice when wielding a sling.\n");
-        if (p_ptr->lev >= 45)
-            doc_printf(doc, "  * You have access to an unlimited quiver when wielding a sling.\n");
 
         if (p_ptr->lev >= 10)
             doc_printf(doc, "  * <indent>Your shots never miss your target once you score 3 consecutive hits when wielding a sling.</indent>\n");

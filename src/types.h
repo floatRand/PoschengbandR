@@ -1265,7 +1265,6 @@ struct player_type
     bool sense_artifact;
     s16b duelist_target_idx;
 
-    bool unlimited_quiver;
     bool return_ammo;
     bool big_shot;
     bool painted_target;

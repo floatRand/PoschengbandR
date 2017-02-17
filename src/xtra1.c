@@ -3583,7 +3583,6 @@ void calc_bonuses(void)
     p_ptr->hidarite = FALSE;
     p_ptr->no_flowed = FALSE;
 
-    p_ptr->unlimited_quiver = FALSE;
     p_ptr->return_ammo = FALSE;
     p_ptr->big_shot = FALSE;
     p_ptr->painted_target = FALSE;
