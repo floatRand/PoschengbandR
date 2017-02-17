@@ -152,7 +152,7 @@ bool quiver_optimize(void)
 {
     if (inv_optimize(_inv))
     {
-        msg_print("You reorder your quiver.");
+        /*msg_print("You reorder your quiver.");*/
         return TRUE;
     }
     return FALSE;

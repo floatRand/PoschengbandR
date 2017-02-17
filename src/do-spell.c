@@ -5341,10 +5341,7 @@ bool craft_enchant(int max, int inc)
         /* Minor Enchantment should not allow gold farming ... */
         if (inc == 1 && object_is_nameless(prompt.obj))
             prompt.obj->discount = 99;
-        p_ptr->update |= PU_BONUS;
-        p_ptr->notice |= PN_OPTIMIZE_PACK;
-        p_ptr->window |= PW_INVEN | PW_EQUIP;
-        android_calc_exp();
+        obj_release(prompt.obj, OBJ_RELEASE_ENCHANT);
     }
     return TRUE;
 }

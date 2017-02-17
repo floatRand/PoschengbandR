@@ -24,7 +24,8 @@ extern obj_ptr obj_split(obj_ptr obj, int amt);
 extern obj_ptr obj_copy(obj_ptr obj);
 extern void    obj_free(obj_ptr obj);
 
-#define OBJ_RELEASE_QUIET 0x0001
+#define OBJ_RELEASE_QUIET   0x0001
+#define OBJ_RELEASE_ENCHANT 0x0002
 extern void    obj_release(obj_ptr obj, int options);
 
 extern void    obj_make_pile(obj_ptr obj);

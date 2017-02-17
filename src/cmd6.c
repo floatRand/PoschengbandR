@@ -915,7 +915,7 @@ void do_cmd_read_scroll(void)
 /* Helper for Rods, Wands and Staves */
 static void do_cmd_device_aux(obj_ptr obj)
 {
-    bool used = FALSE;
+    bool used = FALSE, identified = FALSE;
     int  charges = 1;
     int  boost;
     bool is_devicemaster = FALSE;
@@ -1015,7 +1015,7 @@ static void do_cmd_device_aux(obj_ptr obj)
     if (device_noticed && !object_is_known(obj))
     {
         identify_item(obj);
-        autopick_alter_obj(obj, destroy_identify);
+        identified = TRUE;
         p_ptr->notice |= PN_OPTIMIZE_PACK;
     }
     p_ptr->window |= PW_INVEN | PW_EQUIP;
@@ -1045,7 +1045,10 @@ static void do_cmd_device_aux(obj_ptr obj)
                 obj_release(obj, OBJ_RELEASE_QUIET);
             }
             else
+            {
                 device_decrease_sp(obj, obj->activation.cost * charges);
+                if (identified) autopick_alter_obj(obj, destroy_identify);
+            }
         }
     }
     else

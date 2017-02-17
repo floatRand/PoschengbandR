@@ -141,8 +141,6 @@ static void _sense_obj(obj_ptr obj)
     obj->ident |= IDENT_SENSE;
     obj->feeling = feel;
 
-    autopick_alter_obj(obj, destroy_feeling && obj->loc.where != INV_EQUIP);
-
     if (obj->loc.where == INV_PACK)
     {
         p_ptr->notice |= PN_OPTIMIZE_PACK;
@@ -150,6 +148,8 @@ static void _sense_obj(obj_ptr obj)
     }
     else if (obj->loc.where == INV_EQUIP)
         p_ptr->window |= PW_EQUIP;
+
+    autopick_alter_obj(obj, destroy_feeling && obj->loc.where != INV_EQUIP);
 }
 
 /*

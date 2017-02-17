@@ -509,6 +509,20 @@ static bool _general_stock_p(int k_idx)
     return FALSE;
 }
 
+static bool _stock_ammo_p(int k_idx)
+{
+    if (!_stock_p(k_idx))
+        return FALSE;
+    switch (k_info[k_idx].tval)
+    {
+    case TV_SHOT:
+    case TV_ARROW:
+    case TV_BOLT:
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static bool _general_create(obj_ptr obj, int mode)
 {
     int k_idx;
@@ -522,6 +536,8 @@ static bool _general_create(obj_ptr obj, int mode)
         k_idx = lookup_kind(TV_FLASK, SV_FLASK_OIL);
     else if (one_in_(3))
         k_idx = lookup_kind(TV_LITE, SV_LITE_LANTERN);
+    else if (one_in_(3))
+        k_idx = _get_k_idx(_stock_ammo_p, _mod_lvl(10));
     else if (one_in_(3))
         k_idx = lookup_kind(TV_DIGGING, SV_SHOVEL);
     else if (one_in_(5))
@@ -617,19 +633,6 @@ static bool _weapon_stock_shooter_p(int k_idx)
     }
     return FALSE;
 }
-static bool _weapon_stock_ammo_p(int k_idx)
-{
-    if (!_stock_p(k_idx))
-        return FALSE;
-    switch (k_info[k_idx].tval)
-    {
-    case TV_SHOT:
-    case TV_ARROW:
-    case TV_BOLT:
-        return TRUE;
-    }
-    return FALSE;
-}
 static bool _weapon_create(obj_ptr obj, int mode)
 {
     int k_idx;
@@ -637,8 +640,8 @@ static bool _weapon_create(obj_ptr obj, int mode)
     int l2 = _mod_lvl(rand_range(1, 5));
     if (one_in_(4))
         k_idx = _get_k_idx(_weapon_stock_shooter_p, l1);
-    else if (one_in_(4))
-        k_idx = _get_k_idx(_weapon_stock_ammo_p, l1);
+    else if (one_in_(3))
+        k_idx = _get_k_idx(_stock_ammo_p, l1);
     else if (one_in_(9))
         k_idx = lookup_kind(TV_QUIVER, 0);
     else

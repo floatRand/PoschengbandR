@@ -82,7 +82,8 @@ void obj_make_pile(obj_ptr obj)
 void obj_release(obj_ptr obj, int options)
 {
     char name[MAX_NLEN];
-    bool quiet = (options & OBJ_RELEASE_QUIET) ? TRUE : FALSE;
+    bool quiet = BOOL(options & OBJ_RELEASE_QUIET);
+    bool enchant = BOOL(options & OBJ_RELEASE_ENCHANT);
 
     if (!obj) return;
     if (!quiet)
@@ -97,7 +98,6 @@ void obj_release(obj_ptr obj, int options)
             delete_object_idx(obj->loc.slot);
         break;
     case INV_EQUIP:
-        p_ptr->window |= PW_EQUIP;
         if (obj->number <= 0)
         {
             if (!quiet)
@@ -106,20 +106,30 @@ void obj_release(obj_ptr obj, int options)
         }
         else if (!quiet)
             msg_format("You are wearing %s.", name);
+        if (enchant)
+        {
+            p_ptr->update |= PU_BONUS;
+            android_calc_exp();
+        }
+        p_ptr->window |= PW_EQUIP;
         break;
     case INV_PACK:
-        p_ptr->window |= PW_INVEN;
         if (!quiet)
             msg_format("You have %s in your pack.", name);
         if (obj->number <= 0)
             pack_remove(obj->loc.slot);
+        if (enchant)
+            p_ptr->notice |= PN_OPTIMIZE_PACK;
+        p_ptr->window |= PW_INVEN;
         break;
     case INV_QUIVER:
-        p_ptr->window |= PW_EQUIP; /* a Quiver [32 of 110] */
         if (!quiet)
             msg_format("You have %s in your quiver.", name);
         if (obj->number <= 0)
             quiver_remove(obj->loc.slot);
+        if (enchant)
+            p_ptr->notice |= PN_OPTIMIZE_QUIVER;
+        p_ptr->window |= PW_EQUIP; /* a Quiver [32 of 110] */
         break;
     case INV_TMP_ALLOC:
         obj_free(obj);
@@ -330,20 +340,14 @@ int obj_cmp(obj_ptr left, obj_ptr right)
         break;
     }
 
-    /* Lastly, sort by decreasing value ... but consider stacks */
-    if (left->number == 1 && right->number == 1)
-    {
-        if (!left->scratch) left->scratch = obj_value(left);
-        if (!right->scratch) right->scratch = obj_value(right);
+    if (!left->scratch) left->scratch = obj_value(left);
+    if (!right->scratch) right->scratch = obj_value(right);
 
-        if (left->scratch < right->scratch) return 1;
-        if (left->scratch > right->scratch) return -1;
-    }
-    else
-    {
-        if (left->number < right->number) return 1;
-        if (left->number > right->number) return -1;
-    }
+    if (left->scratch < right->scratch) return 1;
+    if (left->scratch > right->scratch) return -1;
+
+    if (left->number < right->number) return 1;
+    if (left->number > right->number) return -1;
     return 0;
 }
 
