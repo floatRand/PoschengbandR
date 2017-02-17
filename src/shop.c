@@ -1517,7 +1517,10 @@ static void _buy(_ui_context_ptr context)
         obj_t copy = *prompt.obj;
         copy.number = amt;
         if (_buy_aux(context->shop, &copy))
+        {
+            obj_identify_fully(prompt.obj);
             prompt.obj->number -= amt;
+        }
     }
     else
         _buy_aux(context->shop, prompt.obj);
