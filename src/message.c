@@ -579,7 +579,7 @@ void msg_on_save(savefile_ptr file)
 bool msg_input_num(cptr prompt, int *num, int min, int max)
 {
     bool result = FALSE;
-    char buf[10] = {0};
+    char buf[11] = {0};
 
     sprintf(buf, "%d", MAX(min, MIN(max, *num)));
     msg_boundary();

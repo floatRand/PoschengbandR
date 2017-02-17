@@ -2702,6 +2702,9 @@ void clear_from(int row)
  * BACKSPACE (^H) deletes a char at the left of cursor position.
  * ESCAPE clears the buffer and the window and returns FALSE.
  * RETURN accepts the current buffer contents and returns TRUE.
+ *
+ * N.B. len is not the length of buf, but the length of input.
+ * buf s/b char[len+1] ... at least!
  */
 bool askfor_aux(char *buf, int len, bool numpad_cursor)
 {
@@ -2906,6 +2909,9 @@ bool askfor_aux(char *buf, int len, bool numpad_cursor)
  * Get some string input at the cursor location.
  *
  * Allow to use numpad keys as cursor keys.
+ *
+ * N.B. len is not the length of buf, but the length of input.
+ * buf s/b char[len+1] ... at least!
  */
 bool askfor(char *buf, int len)
 {
@@ -2922,6 +2928,9 @@ bool askfor(char *buf, int len)
  * the default response, so be sure to "clear" it if needed.
  *
  * We clear the input, and return FALSE, on "ESCAPE".
+ *
+ * N.B. len is not the length of buf, but the length of input.
+ * buf s/b char[len+1] ... at least!
  */
 bool get_string(cptr prompt, char *buf, int len)
 {
