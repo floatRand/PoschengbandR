@@ -771,13 +771,13 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 N:160:of Accuracy
 T:BOW
 W:0:40:1
-C:20:5:0:0
+C:10:5:0:0
 F:AWARE
 
 N:161:of Velocity
 T:BOW
 W:0:60:1
-C:5:10:0:0
+C:5:5:0:0
 F:AWARE
 
 N:162:of Extra Might

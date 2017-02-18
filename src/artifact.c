@@ -2737,7 +2737,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
     /* Hack: Apply extra might at the end (so only once) */
     if (o_ptr->tval == TV_BOW && have_flag(o_ptr->flags, OF_XTRA_MIGHT) && o_ptr->mult)
     {
-        o_ptr->mult += (25 + m_bonus(15, object_level) * 5) * bow_energy(o_ptr->sval) / 10000;
+        o_ptr->mult += (25 + m_bonus(75, object_level)) * bow_energy(o_ptr->sval) / 10000;
         remove_flag(o_ptr->flags, OF_XTRA_MIGHT);
     }
 
