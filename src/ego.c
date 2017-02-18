@@ -1580,7 +1580,7 @@ static void _ego_create_harp(object_type *o_ptr, int level)
 {
     o_ptr->name2 = ego_choose_type(EGO_TYPE_HARP, level);
 }
-static void _bow_mult(obj_ptr obj, int mult)
+static void _increase_bow_mult(obj_ptr obj, int mult)
 {
     obj->mult += mult * bow_energy(obj->sval) / 10000;
 }
@@ -1595,10 +1595,10 @@ static void _ego_create_bow(object_type *o_ptr, int level)
         switch (o_ptr->name2)
         {
         case EGO_BOW_VELOCITY:
-            _bow_mult(o_ptr, 5 + m_bonus(4, level) * 5);
+            _increase_bow_mult(o_ptr, 5 + m_bonus(4, level) * 5);
             break;
         case EGO_BOW_EXTRA_MIGHT:
-            _bow_mult(o_ptr, 25 + m_bonus(15, level) * 5);
+            _increase_bow_mult(o_ptr, 25 + m_bonus(15, level) * 5);
             break;
         case EGO_BOW_EXTRA_SHOTS:
             o_ptr->pval = 1 + m_bonus(4, level);
@@ -1612,7 +1612,7 @@ static void _ego_create_bow(object_type *o_ptr, int level)
                 done = FALSE;
             else
             {
-                _bow_mult(o_ptr, 25 + m_bonus(17, level) * 5);
+                _increase_bow_mult(o_ptr, 25 + m_bonus(17, level) * 5);
 
                 if (one_in_(3))
                     add_flag(o_ptr->flags, OF_XTRA_SHOTS);
@@ -1626,7 +1626,7 @@ static void _ego_create_bow(object_type *o_ptr, int level)
             else
             {
                 if (one_in_(3))
-                    _bow_mult(o_ptr, 25 + m_bonus(15, level) * 5);
+                    _increase_bow_mult(o_ptr, 25 + m_bonus(15, level) * 5);
                 else
                     one_high_resistance(o_ptr);
             }
@@ -1636,7 +1636,7 @@ static void _ego_create_bow(object_type *o_ptr, int level)
                 done = FALSE;
             else
             {
-                _bow_mult(o_ptr, 25 + m_bonus(17, level) * 5);
+                _increase_bow_mult(o_ptr, 25 + m_bonus(17, level) * 5);
                 if (one_in_(3))
                 {
                     add_flag(o_ptr->flags, OF_XTRA_SHOTS);

@@ -783,9 +783,8 @@ F:AWARE
 N:162:of Extra Might
 T:BOW
 W:20:*:2
-C:2:4:0:0
-F:XTRA_RES
-F:AWARE
+C:2:4:0:3
+F:STR
 
 N:163:of Extra Shots
 T:BOW

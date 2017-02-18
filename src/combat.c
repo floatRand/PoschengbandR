@@ -992,17 +992,13 @@ int bow_range(object_type *o_ptr)
     switch (o_ptr->sval)
     {
     case SV_LIGHT_XBOW:
-        if (p_ptr->concent) /* Sniper */
-            range += (p_ptr->concent + 1) / 2;
-        break;
     case SV_HEAVY_XBOW:
-        range -= 5;
-        if (p_ptr->concent) /* Sniper */
+        if (p_ptr->concent)
             range += (p_ptr->concent + 1) / 2;
         break;
     }
 
-    return range;
+    return MIN(MAX_RANGE, range);
 }
 
 static void _display_missile_slay(int bow_mult, int slay_mult, int crit_mult,
