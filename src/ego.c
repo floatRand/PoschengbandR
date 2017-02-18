@@ -3114,7 +3114,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
         if (!store_hack)
             e_ptr->counts.generated++;
 
-        if (have_flag(o_ptr->flags, OF_BRAND_FIRE))
+        if (have_flag(o_ptr->flags, OF_BRAND_FIRE) && !obj_is_ammo(o_ptr))
             add_flag(o_ptr->flags, OF_LITE);
 
         /* Curses */

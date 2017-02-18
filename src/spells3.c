@@ -1284,14 +1284,14 @@ bool brand_weapon_aux(object_type *o_ptr)
 {
     if (have_flag(o_ptr->flags, OF_NO_REMOVE))
         return FALSE;
-    apply_magic(o_ptr, dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
+    apply_magic(o_ptr, p_ptr->lev, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
 bool brand_armour_aux(object_type *o_ptr)
 {
     if (have_flag(o_ptr->flags, OF_NO_REMOVE))
         return FALSE;
-    apply_magic(o_ptr, dun_level, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
+    apply_magic(o_ptr, p_ptr->lev, AM_GOOD | AM_GREAT | AM_NO_FIXED_ART | AM_CRAFTING);
     return TRUE;
 }
 

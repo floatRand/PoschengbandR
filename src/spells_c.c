@@ -363,10 +363,9 @@ void crafting_spell(int cmd, variant *res)
         else
         {
             virtue_add(VIRTUE_ENCHANTMENT, 1);
-            android_calc_exp();
-
             obj_identify_fully(prompt.obj);
             obj_display(prompt.obj);
+            obj_release(prompt.obj, OBJ_RELEASE_ENCHANT);
         }
         var_set_bool(res, TRUE);
         break;
