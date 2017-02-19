@@ -955,5 +955,5 @@ Yeek         Good          Heroic        Bad           Bad             20'
 
 
 
-Automatically generated for PosChengband 5.0.4.
+Automatically generated for PosChengband 5.0.5.
 
