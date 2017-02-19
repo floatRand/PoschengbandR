@@ -1209,6 +1209,46 @@ static void spoil_spells_by_realm(void)
 }
 
 /************************************************************************
+ * Miscellaneous
+ ************************************************************************/
+static void spoil_option_bits(void)
+{
+    int     set, bit, seek;
+    doc_ptr doc = doc_alloc(80);
+    doc_ptr cols[2];
+
+    doc_insert(doc, "Options are stored in the savefile using hard coded "
+        "bits. When adding new options, it is hard to locate a free slot. "
+        "Perhaps this will help?\n\n");
+    cols[0] = doc_alloc(36);
+    cols[1] = doc_alloc(36);
+    for (set = 0; set < 8; set++) /* 8 is hardcoded ... */
+    {
+        doc_ptr col = cols[set < 4 ? 0 : 1];
+        for (bit = 0; bit < 32; bit++) /* u32b ... */
+        {
+            doc_printf(col, "<color:R>%d.%2d:</color> ", set, bit);
+            for (seek = 0; option_info[seek].o_desc; seek++)
+            {
+                if ( option_info[seek].o_set == set
+                  && option_info[seek].o_bit == bit )
+                {
+                    doc_printf(col, "%s", option_info[seek].o_text);
+                    break;
+                }
+            }
+            doc_newline(col);
+        }
+        doc_newline(col);
+    }
+    doc_insert_cols(doc, cols, 2, 0);
+    doc_free(cols[0]);
+    doc_free(cols[1]);
+    doc_display(doc, "Option Bits", 0);
+    doc_free(doc);
+}
+
+/************************************************************************
  * Public
  ************************************************************************/
 void do_cmd_spoilers(void)
@@ -1242,6 +1282,13 @@ void do_cmd_spoilers(void)
         c_prt(TERM_RED, "Class Spoilers", row++, col - 2);
         prt("(s) Spells by Class", row++, col);
         prt("(r) Spells by Realm", row++, col);
+        row++;
+
+        row = 4;
+        col = 40;
+
+        c_prt(TERM_RED, "Miscellaneous", row++, col - 2);
+        prt("(1) Option Bits", row++, col);
         row++;
 
         /* Prompt */
@@ -1286,6 +1333,11 @@ void do_cmd_spoilers(void)
             break;
         case 'r':
             spoil_spells_by_realm();
+            break;
+
+        /* Miscellaneous */
+        case '1':
+            spoil_option_bits();
             break;
 
         /* Oops */
