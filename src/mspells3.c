@@ -1486,15 +1486,8 @@ bool do_cmd_cast_learned(void)
     /* Verify "dangerous" spells */
     if (need_mana > p_ptr->csp)
     {
-        /* Warning */
         msg_print("You do not have enough mana to use this power.");
-
-
-        if (!over_exert) return FALSE;
-
-        /* Verify */
-        if (!get_check("Attempt it anyway? ")) return FALSE;
-
+        return FALSE;
     }
 
     /* Spell failure chance */
@@ -1557,36 +1550,6 @@ bool do_cmd_cast_learned(void)
     {
         /* Use some mana */
         p_ptr->csp -= need_mana;
-    }
-    else
-    {
-        int oops = need_mana;
-
-        /* No mana left */
-        p_ptr->csp = 0;
-        p_ptr->csp_frac = 0;
-
-        /* Message */
-        msg_print("You faint from the effort!");
-
-
-        /* Hack -- Bypass free action */
-        (void)set_paralyzed(p_ptr->paralyzed + randint1(5 * oops + 1), FALSE);
-
-        virtue_add(VIRTUE_KNOWLEDGE, -10);
-
-        /* Damage CON (possibly permanently) */
-        if (randint0(100) < 50)
-        {
-            bool perm = (randint0(100) < 25);
-
-            /* Message */
-            msg_print("You have damaged your health!");
-
-
-            /* Reduce constitution */
-            (void)dec_stat(A_CON, 15 + randint1(10), perm);
-        }
     }
 
     /* Take a turn */

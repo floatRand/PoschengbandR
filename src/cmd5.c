@@ -854,12 +854,7 @@ void do_cmd_cast(void)
             ((mp_ptr->spell_book == TV_LIFE_BOOK) ? "recite" : "cast"),
             prayer);
 
-
-        if (!over_exert) return;
-
-        /* Verify */
-        if (!get_check_strict("Attempt it anyway? ", CHECK_OKAY_CANCEL)) return;
-
+        return;
     }
 
     /* Spell failure chance */
@@ -1110,62 +1105,6 @@ void do_cmd_cast(void)
         else if (need_mana <= p_ptr->csp)
         {
             p_ptr->csp -= need_mana;
-        }
-
-        /* Over-exert the player */
-        else
-        {
-            int oops = need_mana;
-
-            /* No mana left */
-            p_ptr->csp = 0;
-            p_ptr->csp_frac = 0;
-
-            /* Message */
-            msg_print("You faint from the effort!");
-
-
-            /* Hack -- Bypass free action */
-            (void)set_paralyzed(randint1(5 * oops + 1), FALSE);
-
-            switch (realm)
-            {
-            case REALM_LIFE:
-                virtue_add(VIRTUE_VITALITY, -10);
-                break;
-            case REALM_DEATH:
-            case REALM_NECROMANCY:
-                virtue_add(VIRTUE_UNLIFE, -10);
-                break;
-            case REALM_DAEMON:
-                virtue_add(VIRTUE_JUSTICE, 10);
-                break;
-            case REALM_NATURE:
-                virtue_add(VIRTUE_NATURE, -10);
-                break;
-            case REALM_CRUSADE:
-                virtue_add(VIRTUE_JUSTICE, -10);
-                break;
-            case REALM_HEX:
-                virtue_add(VIRTUE_COMPASSION, 10);
-                break;
-            default:
-                virtue_add(VIRTUE_KNOWLEDGE, -10);
-                break;
-            }
-
-            /* Damage CON (possibly permanently) */
-            if (randint0(100) < 50)
-            {
-                bool perm = (randint0(100) < 25);
-
-                /* Message */
-                msg_print("You have damaged your health!");
-
-
-                /* Reduce constitution */
-                (void)dec_stat(A_CON, 15 + randint1(10), perm);
-            }
         }
     }
 

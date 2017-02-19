@@ -183,12 +183,8 @@ int current_flow_depth = 0;
 
 bool rogue_like_commands;    /* Rogue-like commands */
 bool always_pickup;    /* Pick things up by default */
-bool toggle_run_status;
-bool toggle_running;
-bool carry_query_flag;    /* Prompt before picking things up */
 bool quick_messages;    /* Activate quick messages */
 bool command_menu;    /* Enable command selection menu */
-bool other_query_flag;    /* Prompt for floor item selection */
 bool use_old_target;    /* Use old target by default */
 bool auto_target;    /* Automatically target nearest monster */
 bool always_repeat;    /* Repeat obvious commands */
@@ -208,7 +204,6 @@ bool easy_disarm;    /* Automatically disarm traps */
 bool auto_get_ammo;
 bool auto_get_objects;
 
-bool over_exert;    /* Allow casting spells when short of mana */
 bool numpad_as_cursorkey;    /* Use numpad keys as cursor key in editor mode */
 
 
@@ -233,7 +228,6 @@ bool display_path;    /* Display actual path before shooting */
 /*** Text Display Options ***/
 
 bool plain_descriptions;    /* Plain object descriptions */
-bool plain_pickup;    /* Plain pickup messages(japanese only) */
 bool always_show_list;    /* Always show list when choosing items */
 bool depth_in_feet;    /* Show dungeon level in feet */
 bool show_labels;    /* Show labels in object listings */
@@ -305,7 +299,6 @@ bool ironman_empty_levels;    /* Always create empty 'arena' levels (*) */
 bool ironman_rooms;    /* Always generate very unusual rooms (*) */
 bool ironman_nightmare;    /* Nightmare mode(it isn't even remotely fair!)(*) */
 bool preserve_mode;    /* Preserve artifacts (*) */
-bool powerup_home;    /* Increase capacity of your home (*) */
 bool allow_friendly_monster; /* Allow monsters friendly to player */
 bool allow_hostile_monster; /* Allow monsters hostile to each other */
 bool allow_pets; /* Allow pets: Note, this makes some classes unplayable. */

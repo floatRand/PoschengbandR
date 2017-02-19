@@ -201,12 +201,8 @@ extern bool hack_mind;
 
 extern bool rogue_like_commands;    /* Rogue-like commands */
 extern bool always_pickup;    /* Pick things up by default */
-extern bool toggle_run_status;
-extern bool toggle_running;
-extern bool carry_query_flag;    /* Prompt before picking things up */
 extern bool quick_messages;    /* Activate quick messages */
 extern bool command_menu;    /* Enable command selection menu */
-extern bool other_query_flag;    /* Prompt for floor item selection */
 extern bool use_old_target;    /* Use old target by default */
 extern bool auto_target;       /* Automatically target nearest monster */
 extern bool always_repeat;    /* Repeat obvious commands */
@@ -225,7 +221,6 @@ extern bool easy_disarm;    /* Automatically disarm traps */
 
 extern bool auto_get_ammo;
 extern bool auto_get_objects;
-extern bool over_exert;    /* Allow casting spells when short of mana */
 extern bool numpad_as_cursorkey;    /* Use numpad keys as cursor key in editor mode */
 
 
@@ -250,7 +245,6 @@ extern bool display_path;    /* Display actual path before shooting */
 /*** Text Display Options ***/
 
 extern bool plain_descriptions;    /* Plain object descriptions */
-extern bool plain_pickup;    /* Plain pickup messages(japanese only) */
 extern bool always_show_list;    /* Always show list when choosing items */
 extern bool depth_in_feet;    /* Show dungeon level in feet */
 extern bool show_labels;    /* Show labels in object listings */
@@ -322,7 +316,6 @@ extern bool ironman_empty_levels;    /* Always create empty 'arena' levels (*) *
 extern bool ironman_rooms;    /* Always generate very unusual rooms (*) */
 extern bool ironman_nightmare;    /* Nightmare mode(it isn't even remotely fair!)(*) */
 extern bool preserve_mode;    /* Preserve artifacts (*) */
-extern bool powerup_home;    /* Increase capacity of your home (*) */
 extern bool allow_friendly_monster; /* Allow monsters friendly to player */
 extern bool allow_hostile_monster; /* Allow monsters hostile to each other */
 extern bool allow_pets; /* Allow pets: Note, this makes some classes unplayable. */

@@ -2159,20 +2159,11 @@ option_type option_info[] =
     { &always_pickup,               FALSE, OPT_PAGE_INPUT, 0, 5,
     "always_pickup",                "Pick things up by default" },
 
-    { &toggle_run_status,           FALSE, OPT_PAGE_INPUT, 0, 13,
-    "toggle_run_status",            "Toggle run status with '.' key" },
-
-    { &carry_query_flag,            FALSE, OPT_PAGE_INPUT, 0, 3,
-    "carry_query_flag",             "Prompt before picking things up" },
-
     { &quick_messages,              TRUE,  OPT_PAGE_INPUT, 0, 1,
     "quick_messages",               "Activate quick messages" },
 
     { &command_menu,                TRUE,  OPT_PAGE_INPUT, 2, 7,
     "command_menu",                 "Enable command selection menu" },
-
-    { &other_query_flag,            FALSE, OPT_PAGE_INPUT, 0, 2,
-    "other_query_flag",             "Prompt for floor item selection" },
 
     { &use_old_target,              FALSE, OPT_PAGE_INPUT, 0, 4,
     "use_old_target",               "Use old target by default" },
@@ -2210,9 +2201,6 @@ option_type option_info[] =
 
     { &auto_get_objects,            FALSE, OPT_PAGE_INPUT, 6, 7,
     "auto_get_objects",             "Automatically get autopick objects with get cmd" },
-
-    { &over_exert,                  FALSE, OPT_PAGE_INPUT, 0, 29,
-    "over_exert",                   "Allow casting spells when short of mana" },
 
     { &numpad_as_cursorkey,         TRUE, OPT_PAGE_INPUT, 2, 31,
     "numpad_as_cursorkey",          "Use numpad keys as cursor keys in editor mode" },
@@ -2265,9 +2253,6 @@ option_type option_info[] =
 
     { &plain_descriptions,          TRUE,  OPT_PAGE_TEXT, 5, 1,
     "plain_descriptions",           "Plain object descriptions" },
-
-    { &plain_pickup,                FALSE, OPT_PAGE_JAPANESE_ONLY, 6, 6,
-    "plain_pickup",                 "Plain pickup messages(japanese only)" },
 
     { &always_show_list,            TRUE,  OPT_PAGE_TEXT, 4, 0,
     "always_show_list",             "Always show list when choosing items" },
@@ -2444,9 +2429,6 @@ option_type option_info[] =
 
     { &preserve_mode,               TRUE,  OPT_PAGE_BIRTH, 6, 14,
     "preserve_mode",                "Preserve artifacts (*)" },
-
-    { &powerup_home,                TRUE,  OPT_PAGE_BIRTH, 4, 3,
-    "powerup_home",                 "Increase capacity of your home (*)" },
 
     { &allow_friendly_monster,          TRUE, OPT_PAGE_BIRTH, 6, 17,
     "allow_friendly_monster",           "Allow monsters friendly to player" },
