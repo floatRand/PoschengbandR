@@ -47,7 +47,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "spell";
         me.which_stat = A_CHR;
-        me.weight = 40;
+        me.encumbrance.max_wgt = 40;
+        me.encumbrance.weapon_pct = 100;
+        me.encumbrance.enc_wgt = 900;
         me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
         init = TRUE;
     }
@@ -62,7 +64,7 @@ static void _birth(void)
 
     py_birth_obj_aux(TV_HAFTED, SV_WIZSTAFF, 1);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(10, 20));
+    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, 15);
 
     for (i = TV_LIFE_BOOK; i < TV_LIFE_BOOK + MAX_MAGIC; i++)
     {
@@ -103,6 +105,8 @@ class_t *sorcerer_get_class(void)
         me.base_hp = 0;
         me.exp = 160;
         me.pets = 25;
+        me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
+                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
         
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

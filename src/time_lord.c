@@ -900,7 +900,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "timecraft";
         me.which_stat = A_WIS;
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 80;
+        me.encumbrance.enc_wgt = 600;
         me.on_fail = _on_fail;
         init = TRUE;
     }
@@ -919,7 +921,7 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(4, 7));
+    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 5);
 }
 
 class_t *time_lord_get_class(void)
@@ -963,6 +965,8 @@ class_t *time_lord_get_class(void)
         me.base_hp = 0;
         me.exp = 125;
         me.pets = 20;
+        me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_WEAK |
+                   CLASS_SENSE2_MED | CLASS_SENSE2_STRONG;
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

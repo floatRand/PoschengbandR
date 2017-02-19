@@ -2490,7 +2490,7 @@ static void _birth(void)
     py_birth_obj_aux(TV_POLEARM, SV_BROAD_AXE, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_LIGHT_XBOW, 1);
-    py_birth_obj_aux(TV_BOLT, SV_AMMO_NORMAL, rand_range(15, 25));
+    py_birth_obj_aux(TV_BOLT, SV_AMMO_NORMAL, 20);
 }
 
 /**********************************************************************
@@ -2533,7 +2533,9 @@ class_t *weaponsmith_get_class(void)
         me.base_hp = 12;
         me.exp = 130;
         me.pets = 40;
-        
+        me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG |
+                   CLASS_SENSE2_STRONG;
+
         me.birth = _birth;
         me.get_powers = _get_powers;
         me.character_dump = _character_dump;

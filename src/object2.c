@@ -458,7 +458,7 @@ void wipe_o_list(void)
                 /* Mega-Hack -- Preserve the artifact */
                 a_info[o_ptr->name1].generated = FALSE;
             }
-            if (random_artifacts && o_ptr->name3 && !object_is_known(o_ptr))
+            if (o_ptr->name3 && !object_is_known(o_ptr))
             {
                 /* Mega-Hack -- Preserve the artifact */
                 a_info[o_ptr->name3].generated = FALSE;
@@ -1938,7 +1938,7 @@ static bool make_artifact_special(object_type *o_ptr)
             if (!one_in_(d)) continue;
         }
 
-        if (random_artifacts)
+        if (random_artifacts && !(half_fixedarts && one_in_(2)))
         {
             create_replacement_art(i, o_ptr);
         }
@@ -1998,7 +1998,7 @@ static bool make_artifact(object_type *o_ptr)
 
         if (!one_in_(a_ptr->rarity)) continue;
 
-        if (random_artifacts)
+        if (random_artifacts && !(half_fixedarts && one_in_(2)))
         {
             create_replacement_art(i, o_ptr);
         }
@@ -4028,7 +4028,7 @@ void place_object(int y, int x, u32b mode)
         {
             a_info[q_ptr->name1].generated = FALSE;
         }
-        if (random_artifacts && q_ptr->name3)
+        if (q_ptr->name3)
             a_info[q_ptr->name3].generated = FALSE;
     }
 }
@@ -4041,7 +4041,7 @@ void place_object(int y, int x, u32b mode)
  */
 bool make_gold(object_type *j_ptr, bool do_boost)
 {
-    int i;
+    int i, au;
 
     s32b base;
 
@@ -4068,12 +4068,13 @@ bool make_gold(object_type *j_ptr, bool do_boost)
     base = k_info[OBJ_GOLD_LIST+i].cost;
 
     /* Determine how much the treasure is "worth" */
-    j_ptr->pval = (base + (8 * randint1(base)) + randint1(8));
-
-    j_ptr->pval = j_ptr->pval * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;
-
+    au = (base + (8 * randint1(base)) + randint1(8));
+    au = au * (625 - virtue_current(VIRTUE_SACRIFICE)) / 625;
     if (do_boost)
-        j_ptr->pval += j_ptr->pval * object_level / 7;
+        au += au * object_level / 7;
+    if (au > MAX_SHORT)
+        au = MAX_SHORT;
+    j_ptr->pval = au;
 
     /* Success */
     return (TRUE);
@@ -4197,8 +4198,8 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
     if (!object_is_artifact(j_ptr) && (randint0(100) < chance))
     {
         /* Message */
-        msg_format("The %s disappear%s.",
-               o_name, (plural ? "" : "s"));
+        cmsg_format(TERM_RED, "The %s disappear%s.",
+               o_name, plural ? "" : "s");
 
 
         /* Debug */
@@ -4374,7 +4375,7 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
                     a_info[j_ptr->name1].generated = FALSE;
                 }
 
-                if (random_artifacts && j_ptr->name3 && !object_is_known(j_ptr))
+                if (j_ptr->name3 && !object_is_known(j_ptr))
                 {
                     /* Mega-Hack -- Preserve the artifact */
                     a_info[j_ptr->name3].generated = FALSE;
@@ -4458,7 +4459,7 @@ s16b drop_near(object_type *j_ptr, int chance, int y, int x)
             a_info[j_ptr->name1].generated = FALSE;
         }
 
-        if (random_artifacts && j_ptr->name3)
+        if (j_ptr->name3)
         {
             a_info[j_ptr->name3].generated = FALSE;
         }
@@ -5540,365 +5541,11 @@ object_type *choose_warning_item(void)
     return NULL;
 }
 
-/* Calculate spell damages */
-static void spell_damcalc(monster_type *m_ptr, int typ, int dam, int limit, int *max)
-{
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
-    int          rlev = r_ptr->level;
-    bool         ignore_wraith_form = FALSE;
-
-    if (limit) dam = (dam > limit) ? limit : dam;
-
-    /* Vulnerability, resistance and immunity */
-    switch (typ)
-    {
-    case GF_ELEC:
-        dam = res_calc_dam(RES_ELEC, dam);
-        if (dam == 0)
-            ignore_wraith_form = TRUE;
-        break;
-
-    case GF_POIS:
-        dam = res_calc_dam(RES_POIS, dam);
-        break;
-
-    case GF_ACID:
-        dam = res_calc_dam(RES_ACID, dam);
-        if (dam == 0)
-            ignore_wraith_form = TRUE;
-        break;
-
-    case GF_COLD:
-    case GF_ICE:
-        dam = res_calc_dam(RES_COLD, dam);
-        if (dam == 0)
-            ignore_wraith_form = TRUE;
-        break;
-
-    case GF_FIRE:
-        dam = res_calc_dam(RES_FIRE, dam);
-        if (dam == 0)
-            ignore_wraith_form = TRUE;
-        break;
-
-    case GF_PSY_SPEAR:
-        ignore_wraith_form = TRUE;
-        break;
-
-    case GF_ARROW:
-        if (!p_ptr->blind && equip_find_artifact(ART_ZANTETSU))
-        {
-            dam = 0;
-            ignore_wraith_form = TRUE;
-        }
-        break;
-
-    case GF_LITE:
-        dam = res_calc_dam(RES_LITE, dam);
-        /*
-         * Cannot use "ignore_wraith_form" strictly (for "random one damage")
-         * "dam *= 2;" for later "dam /= 2"
-         */
-        if (IS_WRAITH()) dam *= 2;
-        break;
-
-    case GF_DARK:
-        dam = res_calc_dam(RES_DARK, dam);
-        break;
-
-    case GF_SHARDS:
-        dam = res_calc_dam(RES_SHARDS, dam);
-        break;
-
-    case GF_SOUND:
-        dam = res_calc_dam(RES_SOUND, dam);
-        break;
-
-    case GF_CONFUSION:
-        dam = res_calc_dam(RES_CONF, dam);
-        break;
-
-    case GF_CHAOS:
-        dam = res_calc_dam(RES_CHAOS, dam);
-        break;
-
-    case GF_NETHER:
-        dam = res_calc_dam(RES_NETHER, dam);
-        break;
-
-    case GF_DISENCHANT:
-        dam = res_calc_dam(RES_DISEN, dam);
-        break;
-
-    case GF_NEXUS:
-        dam = res_calc_dam(RES_NEXUS, dam);
-        break;
-
-    case GF_TIME:
-        dam = res_calc_dam(RES_TIME, dam);
-        break;
-
-    case GF_GRAVITY:
-        if (p_ptr->levitation) dam = (dam * 2) / 3;
-        break;
-
-    case GF_ROCKET:
-        dam = res_calc_dam(RES_SHARDS, dam);
-        break;
-
-    case GF_NUKE:
-        dam = res_calc_dam(RES_POIS, dam);
-        break;
-
-    case GF_DEATH_RAY:
-        if (get_race()->flags & RACE_IS_NONLIVING)
-        {
-            dam = 0;
-            ignore_wraith_form = TRUE;
-        }
-        break;
-
-    case GF_HOLY_FIRE:
-        if (p_ptr->align > 10) dam /= 2;
-        else if (p_ptr->align < -10) dam *= 2;
-        break;
-
-    case GF_HELL_FIRE:
-        if (p_ptr->align > 10) dam *= 2;
-        break;
-
-    case GF_MIND_BLAST:
-    case GF_BRAIN_SMASH:
-        if (100 + rlev / 2 <= MAX(5, p_ptr->skills.sav))
-        {
-            dam = 0;
-            ignore_wraith_form = TRUE;
-        }
-        break;
-
-    case GF_CAUSE_1:
-    case GF_CAUSE_2:
-    case GF_CAUSE_3:
-    case GF_HAND_DOOM:
-        if (100 + rlev / 2 <= p_ptr->skills.sav)
-        {
-            dam = 0;
-            ignore_wraith_form = TRUE;
-        }
-        break;
-
-    case GF_CAUSE_4:
-        if ((100 + rlev / 2 <= p_ptr->skills.sav) && (m_ptr->r_idx != MON_KENSHIROU))
-        {
-            dam = 0;
-            ignore_wraith_form = TRUE;
-        }
-        break;
-    }
-
-    if (IS_WRAITH() && !ignore_wraith_form)
-    {
-        dam /= 2;
-        if (!dam) dam = 1;
-    }
-
-    if (dam > *max) *max = dam;
-}
-
-/* Calculate blow damages */
-static int blow_damcalc(monster_type *m_ptr, monster_blow *blow_ptr)
-{
-    int  dam = blow_ptr->d_dice * blow_ptr->d_side;
-    int  dummy_max = 0;
-    bool check_wraith_form = TRUE;
-
-    if (blow_ptr->method != RBM_EXPLODE)
-    {
-        int ac = p_ptr->ac + p_ptr->to_a;
-
-        switch (blow_ptr->effect)
-        {
-        case RBE_SUPERHURT:
-        {
-            int tmp_dam = dam - (dam * ((ac < 150) ? ac : 150) / 250);
-            dam = MAX(dam, tmp_dam * 2);
-            break;
-        }
-
-        case RBE_HURT:
-        case RBE_SHATTER:
-            dam -= (dam * ((ac < 150) ? ac : 150) / 250);
-            break;
-
-        case RBE_ACID:
-            spell_damcalc(m_ptr, GF_ACID, dam, 0, &dummy_max);
-            dam = dummy_max;
-            check_wraith_form = FALSE;
-            break;
-
-        case RBE_ELEC:
-            spell_damcalc(m_ptr, GF_ELEC, dam, 0, &dummy_max);
-            dam = dummy_max;
-            check_wraith_form = FALSE;
-            break;
-
-        case RBE_FIRE:
-            spell_damcalc(m_ptr, GF_FIRE, dam, 0, &dummy_max);
-            dam = dummy_max;
-            check_wraith_form = FALSE;
-            break;
-
-        case RBE_COLD:
-            spell_damcalc(m_ptr, GF_COLD, dam, 0, &dummy_max);
-            dam = dummy_max;
-            check_wraith_form = FALSE;
-            break;
-
-        case RBE_DR_MANA:
-            dam = 0;
-            check_wraith_form = FALSE;
-            break;
-        }
-
-        if (check_wraith_form && IS_WRAITH())
-        {
-            dam /= 2;
-            if (!dam) dam = 1;
-        }
-    }
-    else
-    {
-        dam = (dam + 1) / 2;
-        spell_damcalc(m_ptr, mbe_info[blow_ptr->effect].explode_type, dam, 0, &dummy_max);
-        dam = dummy_max;
-    }
-
-    return dam;
-}
-
 /* Examine the grid (xx,yy) and warn the player if there are any danger */
 bool process_warning(int xx, int yy)
 {
-    int mx, my;
     cave_type *c_ptr;
     char o_name[MAX_NLEN];
-
-#define WARNING_AWARE_RANGE 12
-    int dam_max = 0;
-    static int old_damage = 0;
-
-    for (mx = xx - WARNING_AWARE_RANGE; mx < xx + WARNING_AWARE_RANGE + 1; mx++)
-    {
-        for (my = yy - WARNING_AWARE_RANGE; my < yy + WARNING_AWARE_RANGE + 1; my++)
-        {
-            int dam_max0 = 0;
-            monster_type *m_ptr;
-            monster_race *r_ptr;
-
-            if (!in_bounds(my, mx) || (distance(my, mx, yy, xx) > WARNING_AWARE_RANGE)) continue;
-
-            c_ptr = &cave[my][mx];
-
-            if (!c_ptr->m_idx) continue;
-
-            m_ptr = &m_list[c_ptr->m_idx];
-
-            if (MON_CSLEEP(m_ptr)) continue;
-            if (!is_hostile(m_ptr)) continue;
-            if (!is_aware(m_ptr)) continue;
-
-            r_ptr = &r_info[m_ptr->r_idx];
-
-            /* Monster spells (only powerful ones)*/
-            if (projectable(my, mx, yy, xx))
-            {
-                int breath_dam_div3 = m_ptr->hp / 3;
-                int breath_dam_div6 = m_ptr->hp / 6;
-                u32b f4 = r_ptr->flags4;
-                u32b f5 = r_ptr->flags5;
-                u32b f6 = r_ptr->flags6;
-
-                if (!(d_info[dungeon_type].flags1 & DF1_NO_MAGIC))
-                {
-                    int rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
-                    int storm_dam = rlev * 4 + 150;
-                    bool powerful = (bool)(r_ptr->flags2 & RF2_POWERFUL);
-
-                    if (f4 & RF4_BA_CHAO) spell_damcalc(m_ptr, GF_CHAOS, rlev * (powerful ? 3 : 2) + 100, 0, &dam_max0);
-                    if (f5 & RF5_BA_MANA) spell_damcalc(m_ptr, GF_MANA, storm_dam, 0, &dam_max0);
-                    if (f5 & RF5_BA_DARK) spell_damcalc(m_ptr, GF_DARK, storm_dam, 0, &dam_max0);
-                    if (f5 & RF5_BA_LITE) spell_damcalc(m_ptr, GF_LITE, storm_dam, 0, &dam_max0);
-                    if (f6 & RF6_HAND_DOOM) spell_damcalc(m_ptr, GF_HAND_DOOM, p_ptr->chp * 6 / 10, 0, &dam_max0);
-                    if (f6 & RF6_PSY_SPEAR) spell_damcalc(m_ptr, GF_PSY_SPEAR, powerful ? (rlev * 2 + 150) : (rlev * 3 / 2 + 100), 0, &dam_max0);
-                }
-                if (f4 & RF4_ROCKET) spell_damcalc(m_ptr, GF_ROCKET, m_ptr->hp / 4, 800, &dam_max0);
-                if (f4 & RF4_BR_ACID) spell_damcalc(m_ptr, GF_ACID, breath_dam_div3, 1600, &dam_max0);
-                if (f4 & RF4_BR_ELEC) spell_damcalc(m_ptr, GF_ELEC, breath_dam_div3, 1600, &dam_max0);
-                if (f4 & RF4_BR_FIRE) spell_damcalc(m_ptr, GF_FIRE, breath_dam_div3, 1600, &dam_max0);
-                if (f4 & RF4_BR_COLD) spell_damcalc(m_ptr, GF_COLD, breath_dam_div3, 1600, &dam_max0);
-                if (f4 & RF4_BR_POIS) spell_damcalc(m_ptr, GF_POIS, breath_dam_div3, 800, &dam_max0);
-                if (f4 & RF4_BR_NETH) spell_damcalc(m_ptr, GF_NETHER, breath_dam_div6, 550, &dam_max0);
-                if (f4 & RF4_BR_LITE) spell_damcalc(m_ptr, GF_LITE, breath_dam_div6, 400, &dam_max0);
-                if (f4 & RF4_BR_DARK) spell_damcalc(m_ptr, GF_DARK, breath_dam_div6, 400, &dam_max0);
-                if (f4 & RF4_BR_CONF) spell_damcalc(m_ptr, GF_CONFUSION, breath_dam_div6, 450, &dam_max0);
-                if (f4 & RF4_BR_SOUN) spell_damcalc(m_ptr, GF_SOUND, breath_dam_div6, 450, &dam_max0);
-                if (f4 & RF4_BR_CHAO) spell_damcalc(m_ptr, GF_CHAOS, breath_dam_div6, 600, &dam_max0);
-                if (f4 & RF4_BR_DISE) spell_damcalc(m_ptr, GF_DISENCHANT, breath_dam_div6, 500, &dam_max0);
-                if (f4 & RF4_BR_NEXU) spell_damcalc(m_ptr, GF_NEXUS, breath_dam_div3, 250, &dam_max0);
-                if (f4 & RF4_BR_TIME) spell_damcalc(m_ptr, GF_TIME, breath_dam_div3, 150, &dam_max0);
-                if (f4 & RF4_BR_INER) spell_damcalc(m_ptr, GF_INERT, breath_dam_div6, 200, &dam_max0);
-                if (f4 & RF4_BR_GRAV) spell_damcalc(m_ptr, GF_GRAVITY, breath_dam_div3, 200, &dam_max0);
-                if (f4 & RF4_BR_SHAR) spell_damcalc(m_ptr, GF_SHARDS, breath_dam_div6, 500, &dam_max0);
-                if (f4 & RF4_BR_PLAS) spell_damcalc(m_ptr, GF_PLASMA, breath_dam_div6, 150, &dam_max0);
-                if (f4 & RF4_BR_WALL) spell_damcalc(m_ptr, GF_FORCE, breath_dam_div6, 200, &dam_max0);
-                if (f4 & RF4_BR_MANA) spell_damcalc(m_ptr, GF_MANA, breath_dam_div3, 250, &dam_max0);
-                if (f4 & RF4_BR_NUKE) spell_damcalc(m_ptr, GF_NUKE, breath_dam_div3, 800, &dam_max0);
-                if (f4 & RF4_BR_DISI) spell_damcalc(m_ptr, GF_DISINTEGRATE, breath_dam_div6, 150, &dam_max0);
-            }
-
-            /* Monster melee attacks */
-            if (!(r_ptr->flags1 & RF1_NEVER_BLOW) && !(d_info[dungeon_type].flags1 & DF1_NO_MELEE))
-            {
-                if (mx <= xx + 1 && mx >= xx - 1 && my <= yy + 1 && my >= yy - 1)
-                {
-                    int m;
-                    int dam_melee = 0;
-                    for (m = 0; m < 4; m++)
-                    {
-                        /* Skip non-attacks */
-                        if (!r_ptr->blow[m].method || (r_ptr->blow[m].method == RBM_SHOOT)) continue;
-
-                        /* Extract the attack info */
-                        dam_melee += blow_damcalc(m_ptr, &r_ptr->blow[m]);
-                        if (r_ptr->blow[m].method == RBM_EXPLODE) break;
-                    }
-                    if (dam_melee > dam_max0) dam_max0 = dam_melee;
-                }
-            }
-
-            /* Contribution from this monster */
-            dam_max += dam_max0;
-        }
-    }
-
-    /* Prevent excessive warning */
-    if (dam_max > old_damage)
-    {
-        old_damage = dam_max * 3 / 2;
-
-        if (dam_max > p_ptr->chp / 2)
-        {
-            object_type *o_ptr = choose_warning_item();
-
-            if (o_ptr) object_desc(o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
-            else strcpy(o_name, "body"); /* Warning ability without item */
-            msg_format("Your %s pulsates sharply!", o_name);
-            if (o_ptr) obj_learn_flag(o_ptr, OF_WARNING);
-            disturb(0, 0);
-            return get_check("Really want to go ahead? ");
-        }
-    }
-    else old_damage = old_damage / 2;
 
     c_ptr = &cave[yy][xx];
     if (((!easy_disarm && is_trap(c_ptr->feat))

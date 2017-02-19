@@ -4014,6 +4014,22 @@ void repeat_push(int what)
     }
 }
 
+static void _repeat_pop(_repeat_buffer_ptr buf)
+{
+    if (buf->ct > 0)
+        buf->ct--;
+}
+
+void repeat_pop(void)
+{
+    if (_repeat_state == _RECORDING)
+    {
+        _repeat_pop(&_repeat_buffers['.']);
+        if (_repeat_reg && _repeat_reg != '.')
+            _repeat_pop(&_repeat_buffers[(int)_repeat_reg]);
+    }
+}
+
 static bool _repeat_pull(_repeat_buffer_ptr buf, int *what)
 {
     if (buf->pos >= buf->ct) return FALSE;
@@ -4038,7 +4054,8 @@ static void _repeat_list_aux(doc_ptr doc, int i)
         for (j = 0; j < buf->ct; j++)
         {
             c = buf->keys[j];
-            if (isprint(c))
+            /* Range checking is required before calling isprint on Windows */
+            if (0 < c && c < 256 && isprint(c))
                 doc_printf(doc, "'%c' ", (char)c);
             else
                 doc_printf(doc, "%d ", c);

@@ -50,7 +50,7 @@ static void _birth(void)
     py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_LIGHT_XBOW, 1);
-    py_birth_obj_aux(TV_BOLT, SV_AMMO_NORMAL, rand_range(15, 30));
+    py_birth_obj_aux(TV_BOLT, SV_AMMO_NORMAL, 25);
 }
 
 class_t *warrior_get_class(void)
@@ -85,6 +85,7 @@ class_t *warrior_get_class(void)
         me.base_hp = 18;
         me.exp = 100;
         me.pets = 40;
+        me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG;
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

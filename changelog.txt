@@ -1,0 +1,79 @@
+Changelog (from "vanilla" poschengband, as of Feb 10, 2017, with commit hashes
+           in parentheses)
+
+Significant gameplay changes:
+-----------------------------
+- New monsters by clouded. (0c2980e)
+- Add an option to only replace half of all fixedarts with randarts. (aec1a15)
+- Remove non-rune spells from rune-knights, remove MP costs from rune spells.
+  (a7754bd, 926bae6, 1526f52)
+
+Minor gameplay changes:
+-----------------------
+no_wilderness changes:
+- Give dungeon guardians their special drop in no_wilderness. (bd8e73c)
+- Add warg quest to t_lite. (6041335)
+- Remove WILD_ONLY from two uniques (so that they generate in no_wilderness).
+  (bfd337a)
+
+randart changes:
+- Keep activations of replaced randarts. (27716f8, 425a0eb, 151d683, bc0a7c9)
+- Tweak replacementart object_level. (81ad7bc)
+- Tweak randart rings. (e1321a2)
+
+specific races/classes:
+- Make !newlife reroll subrace for those monster races with random subrace
+  (a2907a6, 2a14d0d)
+- Remove erratic movement for players. (c3d6de5)
+- Make Duelists automatically duel when attacking a monster. (32c911e)
+
+other:
+- Only trigger eldritch horror/fear effects for monsters in LOS (a150551)
+- Change Warning to apply only to traps. (334a291)
+
+Interface changes:
+------------------
+birth/town:
+- Use the previous game's race/class/etc as default (50b0eff, 6ddbb80)
+- Don't randomize starting gold. (7d1b8fa)
+- Don't randomize starting object quantities. (5ce8ea8)
+- Let males be sexy and females be lucky (7d1b8fa)
+- Start with a lantern instead of torches (7d1b8fa)
+- Reimplement no_selling option, but without giving larger gold piles. (74ac340)
+- Allow all species to eat at the inn, don't fail to eat if already full.
+  (b4aa846, 9421be4)
+- Give Beginner spell proficiency immediately upon casting the spell once
+  (since you can get to Beginner with 15 casts in town anyway). (12be6d5)
+
+easy_lore (not all changes implemented properly for games with easy_lore
+           turned off, since I always use it):
+- Show more information (spell damage, EAT_WALL, etc) in monster recall.
+  (dc853ff, a6c0a2d, 93ab4c0)
+- Revert "Monster Lore: Always display the observed spell frequency" - at
+  least in easy_lore this commit isn't good. (3be7781)
+- Give "The X resists." messages for monsters that are only seen via telepathy
+  (96d441b)
+- Give players auto_id at XL 25 when using easy_lore. (5a2b4b8)
+
+other:
+- Cap idle time at 30s. (681321c)
+- Automatic character dump on death (e79b7c5, 92c6322)
+- Don't print a message when autosaving (2a0bc63)
+- Don't give a message when failing to autodestroy artefacts (5ac422f)
+- Always allow browsing spell information (6cbc176)
+- Don't use special player char for monster species (this should probably
+  actually be an option, since I know some people do like it). (e27e9fe)
+- Don't reduce weaponsmith essence gain due to removable curses. (f687d74)
+- Change landmines/lurkers etc to the 'x' glyph (4939c3c)
+- Remove maprot from the Labyrinth (dc9fc7b)
+- Let Ninjas regain stealth by spending a turn stationary. (498aba1)
+
+Bug fixes:
+----------
+- Fix branding spells working on randarts. (c233c82)
+- Fix enchanting prices not being additive. (8636a03)
+- Fix targetting weirdnesses. (c2a63f4, 37791f0)
+- Sync some quest rewards in t_lite.txt. (2f22904)
+- Fix aether vortex damage display. (7addefc)
+- Fix some int -> bool casts. (cd5b2cc)
+- Fix shoggoth speech. (45b7da5)

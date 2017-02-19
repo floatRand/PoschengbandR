@@ -590,7 +590,6 @@ static caster_info * _caster_info(void)
         me.magic_desc = "ninjutsu";
         me.options = CASTER_USE_HP;
         me.which_stat = A_DEX;
-        me.weight = 350;
         init = TRUE;
     }
     return &me;
@@ -601,7 +600,7 @@ static void _birth(void)
     py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
     py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 1);
-    py_birth_obj_aux(TV_SPIKE, 0, rand_range(15, 20));
+    py_birth_obj_aux(TV_SPIKE, 0, 17);
 }
 
 class_t *ninja_get_class(void)
@@ -643,6 +642,8 @@ class_t *ninja_get_class(void)
         me.base_hp = 4;
         me.exp = 120;
         me.pets = 40;
+        me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_STRONG |
+                   CLASS_SENSE2_STRONG;
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

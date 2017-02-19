@@ -127,6 +127,15 @@ static void _build_general1(doc_ptr doc)
                format("%.2lu:%.2lu:%.2lu", playtime/(60*60), (playtime/60)%60, playtime%60));
 }
 
+static void _display_skill(doc_ptr doc, cptr name, int amt, int div)
+{
+    skill_desc_t desc = skills_describe(amt, div);
+    doc_printf(doc, "   %-11.11s: <color:%c>%s</color>", name, attr_to_attr_char(desc.color), desc.desc);
+    if (p_ptr->wizard || 0)
+        doc_printf(doc, " (%d)", amt);
+    doc_newline(doc);
+}
+
 static void _build_general2(doc_ptr doc)
 {
     string_ptr s = string_alloc();
@@ -233,9 +242,8 @@ static void _build_general2(doc_ptr doc)
     doc_insert(doc, "   ========== Skills =========\n");
 
     {
-        skills_t        skills = p_ptr->skills;
-        int             slot = equip_find_object(TV_BOW, SV_ANY);
-        skill_desc_t    desc = {0};
+        skills_t skills = p_ptr->skills;
+        int      slot = equip_find_object(TV_BOW, SV_ANY);
 
         /* Patch Up Skills a bit */
         skills.thn += p_ptr->to_h_m * BTH_PLUS_ADJ;
@@ -249,29 +257,14 @@ static void _build_general2(doc_ptr doc)
             skills.stl = -1; /* Force "Very Bad" */
 
         /* Display */
-        desc = skills_describe(skills.thn, 12);
-        doc_printf(doc, "   Melee      : <color:%c>%s</color>\n", attr_to_attr_char(desc.color), desc.desc);
-
-        desc = skills_describe(skills.thb, 12);
-        doc_printf(doc, "   Ranged     : <color:%c>%s</color>\n", attr_to_attr_char(desc.color), desc.desc);
-
-        desc = skills_describe(skills.sav, 7);
-        doc_printf(doc, "   SavingThrow: <color:%c>%s</color>\n", attr_to_attr_char(desc.color), desc.desc);
-
-        desc = skills_describe(skills.stl, 1);
-        doc_printf(doc, "   Stealth    : <color:%c>%s</color>\n", attr_to_attr_char(desc.color), desc.desc);
-
-        desc = skills_describe(skills.fos, 6);
-        doc_printf(doc, "   Perception : <color:%c>%s</color>\n", attr_to_attr_char(desc.color), desc.desc);
-
-        desc = skills_describe(skills.srh, 6);
-        doc_printf(doc, "   Searching  : <color:%c>%s</color>\n", attr_to_attr_char(desc.color), desc.desc);
-
-        desc = skills_describe(skills.dis, 8);
-        doc_printf(doc, "   Disarming  : <color:%c>%s</color>\n", attr_to_attr_char(desc.color), desc.desc);
-
-        desc = skills_describe(skills.dev, 6);
-        doc_printf(doc, "   Device     : <color:%c>%s</color>\n", attr_to_attr_char(desc.color), desc.desc);
+        _display_skill(doc, "Melee", skills.thn, 12);
+        _display_skill(doc, "Ranged", skills.thb, 12);
+        _display_skill(doc, "SavingThrow", skills.sav, 7);
+        _display_skill(doc, "Stealth", skills.stl, 1);
+        _display_skill(doc, "Perception", skills.fos, 6);
+        _display_skill(doc, "Searching", skills.srh, 6);
+        _display_skill(doc, "Disarming", skills.dis, 8);
+        _display_skill(doc, "Device", skills.dev, 6);
     }
 
     string_free(s);
@@ -2267,7 +2260,7 @@ static void _build_messages(doc_ptr doc)
         if (m->count > 1)
         {
             char buf[10];
-            sprintf(buf, " <x%d>", m->count);
+            sprintf(buf, " (x%d)", m->count);
             doc_insert_text(doc, m->color, buf);
         }
         doc_newline(doc);
@@ -2325,7 +2318,12 @@ static void _build_options(doc_ptr doc)
     if (no_artifacts)
         doc_printf(doc, " No Artifacts:       Enabled\n");
     else if (random_artifacts)
-        doc_printf(doc, " Random Artifacts:   Enabled\n");
+    {
+        if (half_fixedarts)
+            doc_printf(doc, " Random Artifacts:   Half\n");
+        else
+            doc_printf(doc, " Random Artifacts:   Enabled\n");
+    }
 
     if (no_egos)
         doc_printf(doc, " No Egos:            Enabled\n");

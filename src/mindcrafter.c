@@ -654,7 +654,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "mindcraft";
         me.which_stat = A_WIS;
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 50;
+        me.encumbrance.enc_wgt = 800;
         me.on_fail = _on_fail;
         init = TRUE;
     }
@@ -673,7 +675,7 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_SMALL_SWORD, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(2, 5));
+    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 3);
 }
 
 class_t *mindcrafter_get_class(void)
@@ -712,6 +714,8 @@ class_t *mindcrafter_get_class(void)
         me.base_hp = 4;
         me.exp = 125;
         me.pets = 35;
+        me.flags = CLASS_SENSE1_SLOW | CLASS_SENSE1_WEAK |
+                   CLASS_SENSE2_MED | CLASS_SENSE2_STRONG;
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

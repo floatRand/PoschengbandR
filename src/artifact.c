@@ -2357,13 +2357,13 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     add_flag(o_ptr->flags, OF_BLOWS);
                     has_pval = TRUE;
                 }
-                else if (one_in_(20))
+                else if (one_in_(50))
                 {
                     add_flag(o_ptr->flags, OF_XTRA_MIGHT);
                     if (!one_in_(7)) remove_flag(o_ptr->flags, OF_XTRA_SHOTS);
                     has_pval = TRUE;
                 }
-                else if (one_in_(20))
+                else if (one_in_(50))
                 {
                     add_flag(o_ptr->flags, OF_XTRA_SHOTS);
                     if (!one_in_(7)) remove_flag(o_ptr->flags, OF_XTRA_MIGHT);
@@ -2418,7 +2418,16 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
                     one_high_resistance(o_ptr);
                     break;
                 }
-            case 5: case 6:
+            case 5:
+                if (one_in_(2))
+                {
+                    random_plus(o_ptr);
+                    has_pval = TRUE;
+                }
+                else
+                    random_resistance(o_ptr);
+                break;
+            case 6:
                 random_resistance(o_ptr);
                 break;
             case 7:
@@ -3204,9 +3213,7 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
     best_power = -10000000;
     power = 0;
     old_level = object_level;
-
-    if (object_level < a_ptr->level)
-        object_level = a_ptr->level;
+    object_level = a_ptr->level;
 
     for (i = 0; i < 10000; i++)
     {
@@ -3238,6 +3245,13 @@ bool create_replacement_art(int a_idx, object_type *o_ptr)
             o_ptr->name3 = a_idx;
             o_ptr->weight = forge1.weight;
             return TRUE;
+        }
+
+        if (i % 1000 == 999)
+	{
+            object_level += 10;
+            if (object_level > 127)
+                object_level = 127;
         }
     }
 
@@ -3304,7 +3318,7 @@ bool create_named_art(int a_idx, int y, int x)
 {
     if (no_artifacts) return FALSE;
 
-    if (random_artifacts)
+    if (random_artifacts && !(half_fixedarts && one_in_(2)))
     {
         object_type forge;
         if (create_replacement_art(a_idx, &forge))

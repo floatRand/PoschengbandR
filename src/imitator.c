@@ -952,7 +952,7 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(2, 5));
+    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 3);
 }
 
 class_t *imitator_get_class(void)
@@ -994,6 +994,8 @@ class_t *imitator_get_class(void)
         me.base_hp = 10;
         me.exp = 110;
         me.pets = 20;
+        me.flags = CLASS_SENSE1_SLOW | CLASS_SENSE1_STRONG |
+                   CLASS_SENSE2_STRONG;
         
         me.birth = _birth;
         me.get_powers = _get_powers;

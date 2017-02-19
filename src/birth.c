@@ -328,7 +328,7 @@ static void player_wipe(void)
     p_ptr->duelist_target_idx = 0;
 
     /* Reset virtues*/
-    for (i = 0; i < 8; i++) p_ptr->virtues[i] = 0;
+    for (i = 0; i < 8; i++) p_ptr->virtues[i]=0;
 
     /* Set the recall dungeon accordingly */
     if (no_wilderness)
@@ -392,7 +392,7 @@ static bool mon_hook_quest_nonunique(int r_idx)
  */
 void determine_random_questor(quest_type *q_ptr)
 {
-    int          r_idx;
+    int          r_idx = 0;
     monster_race *r_ptr;
     int             attempt = 0;
     bool         force_unique = FALSE;

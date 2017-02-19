@@ -53,7 +53,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "spell";
         me.which_stat = A_INT;
-        me.weight = 450;
+        me.encumbrance.max_wgt = 450;
+        me.encumbrance.weapon_pct = 67;
+        me.encumbrance.enc_wgt = 800;
         me.min_fail = 5;
         me.min_level = 5;
         me.options = CASTER_GLOVE_ENCUMBRANCE;
@@ -64,15 +66,15 @@ static caster_info * _caster_info(void)
 
 static void _birth(void)
 {
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_BISCUIT, rand_range(2, 4));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_WAYBREAD, rand_range(2, 4));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_JERKY, rand_range(1, 3));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_PINT_OF_ALE, rand_range(2, 4));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_PINT_OF_WINE, rand_range(2, 4));
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_BISCUIT, rand_range(2, 4));
-    py_birth_obj_aux(TV_SCROLL, SV_SCROLL_MAPPING, rand_range(2, 5));
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_BISCUIT, 3);
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_WAYBREAD, 3);
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_JERKY, 3);
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_PINT_OF_ALE, 3);
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_PINT_OF_WINE, 3);
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_BISCUIT, 3);
+    py_birth_obj_aux(TV_SCROLL, SV_SCROLL_MAPPING, 3);
     py_birth_obj_aux(TV_BOW, SV_SLING, 1);
-    py_birth_obj_aux(TV_SHOT, SV_AMMO_LIGHT, rand_range(20, 40));
+    py_birth_obj_aux(TV_SHOT, SV_AMMO_LIGHT, 30);
     p_ptr->au += 2000;
 }
 
@@ -109,7 +111,9 @@ class_t *tourist_get_class(void)
         me.base_hp = 0;
         me.exp = 70;
         me.pets = 40;
-        
+        me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG |
+                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
+
         me.birth = _birth;
         me.caster_info = _caster_info;
         /* TODO: This class uses spell books, so we are SOL

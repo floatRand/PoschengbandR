@@ -46,7 +46,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "spell";
         me.which_stat = A_INT;
-        me.weight = 430;
+        me.encumbrance.max_wgt = 430;
+        me.encumbrance.weapon_pct = 100;
+        me.encumbrance.enc_wgt = 600;
         me.options = CASTER_ALLOW_DEC_MANA | CASTER_GLOVE_ENCUMBRANCE;
         init = TRUE;
     }
@@ -57,7 +59,7 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_DAGGER, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_ROBE, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(10, 20));
+    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, 15);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
     py_birth_spellbooks();
 }
@@ -96,6 +98,8 @@ class_t *high_mage_get_class(void)
         me.base_hp = 0;
         me.exp = 130;
         me.pets = 25;
+        me.flags = CLASS_SENSE1_MED | CLASS_SENSE1_WEAK |
+                   CLASS_SENSE2_FAST | CLASS_SENSE2_STRONG;
         
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

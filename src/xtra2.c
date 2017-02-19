@@ -3575,8 +3575,22 @@ bool target_able(int m_idx)
  */
 bool target_okay(void)
 {
-    /* Accept stationary targets */
-    if (target_who < 0) return TRUE;
+    /* Accept (projectable) stationary targets */
+    if (target_who < 0)
+    {
+        if ( in_bounds(target_row, target_col)
+          && projectable(py, px, target_row, target_col) )
+        {
+            return TRUE;
+        }
+        /* Position Targets are confusing. They should be dismissed when no longer valid. */
+        /* But out-of-LOS doesn't necessarily mean invalid, so this block gets in the way of gameplay. */
+        /*target_who = 0;
+        target_row = 0;
+        target_col = 0;
+        p_ptr->redraw |= PR_HEALTH_BARS;
+        return FALSE;*/
+    }
 
     /* Check moving targets */
     if (target_who > 0)
@@ -3596,7 +3610,7 @@ bool target_okay(void)
     }
 
     /* Assume no target */
-    return (FALSE);
+    return (TRUE);
 }
 
 
@@ -5270,13 +5284,6 @@ bool get_rep_dir(int *dp, bool under)
             dir = ddd[randint0(8)];
         }
     }
-    else if (p_ptr->move_random && !p_ptr->wild_mode)
-    {
-        if (one_in_(66))
-        {
-            dir = ddd[randint0(8)];
-        }
-    }
 
     /* Notice confusion */
     if (command_dir != dir)
@@ -5285,11 +5292,6 @@ bool get_rep_dir(int *dp, bool under)
         {
             /* Warn the user */
             msg_print("You are confused.");
-        }
-        else if (p_ptr->move_random)
-        {
-            cmsg_print(TERM_YELLOW, "You are moving erratically.");
-            disturb(0, 0);
         }
         else
         {
@@ -5915,4 +5917,89 @@ int spell_exp_level(int spell_exp)
     else if (spell_exp < SPELL_EXP_EXPERT) return EXP_LEVEL_SKILLED;
     else if (spell_exp < SPELL_EXP_MASTER) return EXP_LEVEL_EXPERT;
     else return EXP_LEVEL_MASTER;
+}
+
+int mspell_damage(int fGroup, u32b atk, monster_race *r_ptr)
+{
+        int hp = (r_ptr->flags1 & RF1_FORCE_MAXHP) ? r_ptr->hdice * r_ptr->hside : r_ptr->hdice * (r_ptr->hside + 1) / 2;
+	int rlev = (r_ptr->level);
+	bool powerful = ((r_ptr->flags2 & RF2_POWERFUL) != 0);
+
+	if (fGroup == 4){
+		switch (atk){
+			/* HP-BASED BREATHS */
+		case RF4_ROCKET: return MIN(hp / 4, 600);
+		case RF4_BR_FIRE:
+		case RF4_BR_ELEC:
+		case RF4_BR_COLD:
+		case RF4_BR_ACID: return MIN(hp / 4, 900);
+		case RF4_BR_LITE:
+		case RF4_BR_DARK:
+		case RF4_BR_CONF: return MIN(hp / 6, 400);
+		case RF4_BR_CHAO: return MIN(hp / 6, 600);
+		case RF4_BR_DISE:
+		case RF4_BR_SHAR: return MIN(hp / 6, 500);
+		case RF4_BR_STORM: return MIN(hp / 5, 300);
+		case RF4_BR_POIS: return MIN(hp / 5, 600);
+		case RF4_BR_NETH: return MIN(hp / 7, 550);
+		case RF4_BR_NEXU: return MIN(hp / 3, 250);
+		case RF4_BR_SOUN: return MIN(hp / 6, 450);
+		case RF4_BR_NUKE: return MIN(hp / 5, 600);
+		case RF4_BR_TIME: return MIN(hp / 3, 150);
+		case RF4_BR_MANA: return MIN(hp / 3, 250);
+		case RF4_BR_WALL:
+		case RF4_BR_GRAV: return MIN(hp / 3, 200);
+		case RF4_BR_DISI: return MIN(hp / 6, 150);
+		case RF4_BR_INER:
+		case RF4_BR_PLAS: return MIN(hp / 6, 200);
+			/* OTHER */
+		case RF4_BA_NUKE: return (rlev + 35) * ((powerful) ? 2 : 1);  /* TY: Nuke Ball */
+		case RF4_BA_CHAO: return ((powerful) ? (rlev * 3) : (rlev * 2)) + 55;  /* TY: Logrus Ball */
+		case RF4_THROW: return rlev * 3;
+		case RF4_SHOOT: return r_ptr->blow[0].d_dice * (r_ptr->blow[0].d_side + 1) / 2; // since it's based on blows-info...
+		default: return 0;
+		}
+	}
+	else if (fGroup == 5){
+		switch (atk){
+		case RF5_BA_ACID: return (rlev * 3 / 2 + 15) * ((powerful) ? 2 : 1);
+		case RF5_BA_ELEC: return (rlev * 3 / 4 + 8) * ((powerful) ? 2 : 1);
+		case RF5_BA_FIRE: return (rlev * 7 / 4 + 10) * ((powerful) ? 2 : 1);
+		case RF5_BA_COLD: return (rlev * 3 / 4 + 10) * ((powerful) ? 2 : 1);
+		case RF5_BA_POIS: return 18 * ((powerful) ? 2 : 1);
+		case RF5_BA_NETH: return 50 + 55 + (rlev * ((powerful) ? 2 : 1));
+		case RF5_BA_WATE: return ((powerful) ? (rlev * 3 / 2) : (rlev)) + 50;
+		case RF5_BA_MANA:
+		case RF5_BA_DARK: return (rlev * 4) + 50 + 55;
+		case RF5_DRAIN_MANA: return (rlev / 4) + 1;
+		case RF5_MIND_BLAST: return 28;
+		case RF5_BRAIN_SMASH: return 78;
+		case RF5_CAUSE_1: return 13;
+		case RF5_CAUSE_2: return 36;
+		case RF5_CAUSE_3: return 80;
+		case RF5_CAUSE_4: return 120;
+		case RF5_BO_ACID: return (31 + (rlev / 3)) * ((powerful) ? 2 : 1);
+		case RF5_BO_ELEC: return (18 + (rlev / 3)) * ((powerful) ? 2 : 1);
+		case RF5_BO_FIRE: return (40 + (rlev / 3)) * ((powerful) ? 2 : 1);
+		case RF5_BO_COLD: return (27 + (rlev / 3)) * ((powerful) ? 2 : 1);
+		case RF5_BA_LITE: return (rlev * 4) + 50 + 55;
+		case RF5_BO_NETH: return 30 + 15 + (rlev * 4) / ((powerful) ? 2 : 3);
+		case RF5_BO_WATE: return 55 + (rlev * 3 / ((powerful) ? 2 : 3));
+		case RF5_BO_MANA: return (rlev * 7 / 4) + 50;
+		case RF5_BO_PLAS: return 10 + 32 + (rlev * 3 / ((powerful) ? 2 : 3));
+		case RF5_BO_ICEE: return 21 + (rlev * 3 / ((powerful) ? 2 : 3));  
+		case RF5_MISSILE: return 7 + (rlev / 3);
+		default: return 0;
+		}
+	}
+	else if (fGroup == 6){
+		switch (atk){
+			case RF6_SPECIAL: if (r_ptr->d_char == 'B'){ return 18 + 27; } else return 0; // birds' drop attack is weirdly specific to 'B' creatures.
+			case RF6_PSY_SPEAR: return (powerful) ? ((rlev) + 150) : ((rlev * 3 / 4) + 100);
+			default: return 0;
+		}
+	}
+
+	return 0;
+
 }

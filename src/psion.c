@@ -2126,7 +2126,9 @@ static caster_info * _caster_info(void)
     if (!init)
     {
         me.magic_desc = "focus";
-        me.weight = 400;
+        me.encumbrance.max_wgt = 400;
+        me.encumbrance.weapon_pct = 50;
+        me.encumbrance.enc_wgt = 800;
         init = TRUE;
     }
     me.which_stat = _spell_stat();
@@ -2201,7 +2203,7 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_SMALL_SWORD, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(5, 10));
+    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, 7);
 }
 
 class_t *psion_get_class(void)
@@ -2239,6 +2241,8 @@ class_t *psion_get_class(void)
         me.base_hp = 4;
         me.exp = 150;
         me.pets = 35;
+        me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_WEAK |
+                   CLASS_SENSE2_MED | CLASS_SENSE2_STRONG;
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

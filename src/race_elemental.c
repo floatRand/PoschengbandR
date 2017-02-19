@@ -735,7 +735,7 @@ static void _water_birth(void)
     object_prep(&forge, lookup_kind(TV_POLEARM, SV_TRIDENT));
     py_birth_obj(&forge);
 
-    py_birth_obj_aux(TV_POTION, SV_POTION_WATER, rand_range(15, 23));
+    py_birth_obj_aux(TV_POTION, SV_POTION_WATER, 20);
     py_birth_light();
 
     p_ptr->current_r_idx = MON_WATER_SPIRIT; 

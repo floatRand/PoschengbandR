@@ -2656,22 +2656,16 @@ void do_cmd_rest(void)
  */
 static int breakage_chance(object_type *o_ptr)
 {
-    int archer_bonus = (p_ptr->pclass == CLASS_ARCHER ? (p_ptr->lev-1)/7 + 4: 0);
-
-    /* Hack: Bowmasters should have 75% protection ... */
-    if (weaponmaster_is_(WEAPONMASTER_BOWS) && p_ptr->lev >= 20)
-        archer_bonus = 7;
-
     /* Examine the snipe type */
     if (snipe_type)
     {
-        if (snipe_type == SP_KILL_WALL) return (100);
-        if (snipe_type == SP_EXPLODE) return (100);
-        if (snipe_type == SP_PIERCE) return (100);
-        if (snipe_type == SP_FINAL) return (100);
-        if (snipe_type == SP_NEEDLE) return (100);
-        if (snipe_type == SP_EVILNESS) return (40);
-        if (snipe_type == SP_HOLYNESS) return (40);
+        if (snipe_type == SP_KILL_WALL) return 100;
+        if (snipe_type == SP_EXPLODE) return 100;
+        if (snipe_type == SP_PIERCE) return 100;
+        if (snipe_type == SP_FINAL) return 100;
+        if (snipe_type == SP_NEEDLE) return 100;
+        if (snipe_type == SP_EVILNESS) return 40;
+        if (snipe_type == SP_HOLYNESS) return 40;
     }
 
     if (shoot_hack == SHOOT_SHATTER) return 100;
@@ -2688,27 +2682,27 @@ static int breakage_chance(object_type *o_ptr)
         case TV_BOTTLE:
         case TV_FOOD:
         case TV_JUNK:
-            return (100);
+            return 100;
 
         /* Often break */
         case TV_LITE:
         case TV_SCROLL:
         case TV_SKELETON:
-            return (50);
+            return 50;
 
         /* Sometimes break */
         case TV_WAND:
         case TV_SPIKE:
-            return (25);
+            return 25;
         case TV_ARROW:
-            return (20 - archer_bonus * 2);
+            return 20 * p_ptr->shooter_info.breakage / 100;
 
         /* Rarely break */
         case TV_SHOT:
         case TV_BOLT:
-            return (10 - archer_bonus);
+            return 10 * p_ptr->shooter_info.breakage / 100;
         default:
-            return (10);
+            return 10;
     }
 }
 
@@ -3224,9 +3218,9 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
     }
 
     if (bow->sval == SV_LIGHT_XBOW || bow->sval == SV_HEAVY_XBOW)
-        chance = (p_ptr->skills.thb + (p_ptr->weapon_exp[0][bow->sval] / 400 + bonus) * BTH_PLUS_ADJ);
+        chance = p_ptr->skills.thb + (skills_bow_current(bow->sval) / 400 + bonus) * BTH_PLUS_ADJ;
     else
-        chance = (p_ptr->skills.thb + ((p_ptr->weapon_exp[0][bow->sval] - (WEAPON_EXP_MASTER / 2)) / 200 + bonus) * BTH_PLUS_ADJ);
+        chance = p_ptr->skills.thb + ((skills_bow_current(bow->sval) - WEAPON_EXP_MASTER/2) / 200 + bonus) * BTH_PLUS_ADJ;
 
     if (!no_energy)
         energy_use = bow_energy(bow->sval);
@@ -3514,7 +3508,15 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                 {
                     bool fear = FALSE;
                     int tdam = tdam_base;
+                    bool ambush = FALSE;
 
+                    if (MON_CSLEEP(m_ptr) && m_ptr->ml && !p_ptr->confused && !p_ptr->image && !p_ptr->stun)
+                    {
+                        if (shoot_hack == SHOOT_SNIPING || (p_ptr->pclass == CLASS_SKILLMASTER && p_ptr->ambush))
+                        {
+                            ambush = TRUE;
+                        }
+                    }
                     /* Get extra damage from concentration */
                     if (p_ptr->concent) tdam = boost_concentration_damage(tdam);
 
@@ -3528,7 +3530,10 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                     {
                         char m_name[80];
                         monster_desc(m_name, m_ptr, 0);
-                        msg_format("The %s hits %s.", o_name, m_name);
+                        if (ambush)
+                            cmsg_format(TERM_VIOLET, "You cruelly shoot %s!", m_name);
+                        else
+                            msg_format("The %s hits %s.", o_name, m_name);
 
                         if (m_ptr->ml)
                         {
@@ -3554,7 +3559,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                         if ((randint1(randint1(r_ptr->level / (3 + p_ptr->concent)) + (8 - p_ptr->concent)) == 1)
                             && !(r_ptr->flags1 & RF1_UNIQUE) && !(r_ptr->flags7 & RF7_UNIQUE2))
                         {
-                            char m_name[80];
+                            char m_name[MAX_NLEN];
                             monster_desc(m_name, m_ptr, 0);
                             tdam = m_ptr->hp + 1;
                             msg_format("Your shot hit a fatal spot of %s!", m_name);
@@ -3568,7 +3573,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                         if (shoot_hack != SHOOT_SHATTER && shoot_hack != SHOOT_ELEMENTAL)
                             tdam = tot_dam_aux_shot(q_ptr, tdam, m_ptr);
 
-                        if (shoot_hack == SHOOT_SNIPING && MON_CSLEEP(m_ptr))
+                        if (ambush)
                             tdam *= 2;
 
                         crit = critical_shot(q_ptr->weight, q_ptr->to_h);
@@ -3873,7 +3878,7 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                 msg_format("The %s have gone to somewhere.", o_name);
                 if (object_is_fixed_artifact(q_ptr))
                     a_info[q_ptr->name1].generated = FALSE;
-                if (random_artifacts && q_ptr->name3)
+                if (q_ptr->name3)
                     a_info[q_ptr->name3].generated = FALSE;
                 return;
             }
@@ -4303,6 +4308,7 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
             if (test_hit_fire(chance - cur_dis, MON_AC(r_ptr, m_ptr), m_ptr->ml))
             {
                 bool fear = FALSE;
+                critical_t crit;
 
                 /* Handle unseen monster */
                 if (!visible)
@@ -4337,7 +4343,12 @@ bool do_cmd_throw_aux(int mult, bool boomerang, int shuriken)
                 tdam = damroll(q_ptr->dd, q_ptr->ds);
                 /* Apply special damage XXX XXX XXX */
                 tdam = tot_dam_aux(q_ptr, tdam, m_ptr, 0, 0, TRUE);
-                tdam = critical_throw(q_ptr->weight, q_ptr->to_h, tdam);
+                crit = critical_throw(o_ptr->weight, o_ptr->to_h);
+                if (crit.desc)
+                {
+                    tdam = tdam * crit.mul/100 + crit.to_d;
+                    msg_print(crit.desc);
+                }
                 if (q_ptr->to_d > 0)
                     tdam += q_ptr->to_d;
                 else

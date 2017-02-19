@@ -1253,7 +1253,9 @@ caster_info *possessor_caster_info(void)
         info.which_stat = r_ptr->body.spell_stat;
         info.magic_desc = "power";
         info.options = 0;
-        info.weight = 450;
+        info.encumbrance.max_wgt = 450;
+        info.encumbrance.weapon_pct = 0;
+        info.encumbrance.enc_wgt = 800;
         return &info;
     }
 
@@ -1435,8 +1437,6 @@ void possessor_calc_bonuses(void)
 
     if (r_ptr->flags9 & RF9_POS_HOLD_LIFE)
         p_ptr->hold_life = TRUE;
-    /*if (r_ptr->flags1 & (RF1_RAND_25 | RF1_RAND_50))
-        p_ptr->move_random = TRUE;*/
     if (r_ptr->flags9 & RF9_POS_TELEPATHY)
         p_ptr->telepathy = TRUE;
     if (r_ptr->flags9 & RF9_POS_SEE_INVIS)

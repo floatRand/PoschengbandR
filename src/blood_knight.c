@@ -533,7 +533,6 @@ static caster_info * _caster_info(void)
         me.options = CASTER_USE_HP;
         me.which_stat = A_CON;
         me.on_cast = _on_cast;
-        me.weight = 1000;
         init = TRUE;
     }
     return &me;
@@ -543,7 +542,7 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_BROAD_SWORD, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_CURE_CRITICAL, rand_range(2, 5));
+    py_birth_obj_aux(TV_POTION, SV_POTION_CURE_CRITICAL, 3);
 }
 
 class_t *blood_knight_get_class(void)
@@ -585,6 +584,7 @@ class_t *blood_knight_get_class(void)
         me.base_hp = 20;
         me.exp = 150;
         me.pets = 40;
+        me.flags = CLASS_SENSE1_FAST | CLASS_SENSE1_STRONG;
 
         me.birth = _birth;
         me.calc_bonuses = _calc_bonuses;

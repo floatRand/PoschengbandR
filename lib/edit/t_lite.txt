@@ -81,7 +81,7 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:132:206
 
 # Steel Helm
-?:[AND [EQU $QUEST1 3] [EQU $RACE Hydra] ]
+?:[AND [EQU $QUEST1 3] [EQU $RACE Hydra Vortex] ]
 F:b:BUILDING_1:3:0:0:0:0:NONE:13
 F:!:FLOOR:3:0:97
 
@@ -251,7 +251,7 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:32
 F:!:FLOOR:3:0:132:208
 
 # Ring of Combat
-?:[AND [EQU $QUEST13 3] [EQU $RACE Beholder Dragon Hound Spider] ]
+?:[AND [EQU $QUEST13 3] [EQU $RACE Dragon Hound Spider] ]
 F:b:BUILDING_1:3:0:0:0:0:NONE:32
 F:!:FLOOR:3:0:132:206
 
@@ -261,7 +261,7 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:32
 F:!:FLOOR:3:0:93
 
 # Elemental Ring
-?:[AND [EQU $QUEST13 3] [EQU $RACE Ring] ]
+?:[AND [EQU $QUEST13 3] [EQU $RACE Ring Beholder Vortex] ]
 F:b:BUILDING_1:3:0:0:0:0:NONE:32
 F:!:FLOOR:3:0:132:201
 
@@ -590,12 +590,12 @@ F:!:FLOOR:3:0:0:0:218
 ##########################################################################
 # Hydra
 # Dor-Lomin
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Monster] [EQU $RACE Hydra Golem] [EQU [MOD $RANDOM27 5] 0] ]
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Monster] [EQU $RACE Hydra Golem Vortex] [EQU [MOD $RANDOM27 5] 0] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:39
 
 # Colluin
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Monster] [EQU $RACE Hydra Golem] [GEQ [MOD $RANDOM27 5] 1] ]
+?:[AND [EQU $QUEST27 3] [EQU $CLASS Monster] [EQU $RACE Hydra Golem Vortex] [GEQ [MOD $RANDOM27 5] 1] ]
 F:b:BUILDING_1:3
 F:!:FLOOR:3:0:0:0:44
 
@@ -1182,6 +1182,11 @@ F:a:BUILDING_0:3:0:0:0:0:NONE:19
 F:a:BUILDING_0:3:0:0:0:0:NONE:29
 F:?:FLOOR:3:0:132:201
 
+# Elemental Charm
+?:[AND [EQU $QUEST19 3] [EQU $RACE Hydra] ]
+F:a:BUILDING_0:3:0:0:0:0:NONE:29
+F:?:FLOOR:3:0:163:201
+
 # Quest 19 finished, continue with quest 29
 ?:[EQU $QUEST19 4]
 F:a:BUILDING_0:3:0:0:0:0:NONE:29
@@ -1216,7 +1221,12 @@ F:?:FLOOR:3:0:132:205
 # Dagger of Westernesse
 ?:[AND [EQU $QUEST29 3] [EQU $RACE Death-Sword] ]
 F:a:BUILDING_0:3:0:0:0:0:NONE:30
-F:!:FLOOR:3:0:43:19
+F:?:FLOOR:3:0:43:19
+
+# Elemental Charm
+?:[AND [EQU $QUEST29 3] [EQU $RACE Hydra] ]
+F:a:BUILDING_0:3:0:0:0:0:NONE:30
+F:?:FLOOR:3:0:163:201
 
 # Quest 29 finished, continue with quest 30
 ?:[EQU $QUEST29 4]

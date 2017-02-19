@@ -19,7 +19,9 @@ static caster_info * _caster_info(void)
     {
         me.magic_desc = "devilish power";
         me.which_stat = A_INT;
-        me.weight = 750;
+        me.encumbrance.max_wgt = 750;
+        me.encumbrance.weapon_pct = 0;
+        me.encumbrance.enc_wgt = 800;
         init = TRUE;
     }
     return &me;
@@ -27,7 +29,7 @@ static caster_info * _caster_info(void)
 
 static void _demon_birth(void)
 {
-    int i, ct = rand_range(3, 4);
+    int i, ct = 4;
     get_mon_num_prep(monster_hook_human, NULL);
     for (i = 0; i < ct; i++)
     {
@@ -822,8 +824,6 @@ static void _cyber_calc_bonuses(void)
 {
     int to_a = py_prorata_level(75);
 
-    p_ptr->move_random = TRUE;
-
     p_ptr->to_a += to_a;
     p_ptr->dis_to_a += to_a;
     p_ptr->pspeed -= 1 + p_ptr->lev/23;
@@ -850,7 +850,7 @@ static void _cyber_get_flags(u32b flgs[OF_ARRAY_SIZE])
 
 static void _cyber_move_player(void)
 {
-    /* Cyberdemons move erratically (cf get_rep_dir()) and make a lot of noise */
+    /* Cyberdemons make a lot of noise */
     if (one_in_(66))
     {
         int i;
@@ -882,7 +882,7 @@ static race_t *_cyber_get_race_t(void)
 
         me.subname = "Cyberdemon";
         me.subdesc = "Cyberdemons are giant humanoid forms, half demon and half machine. They are a bit "
-        "slow and move erratically, but their immense bodies and unsurpassable firepower "
+        "slow, but their immense bodies and unsurpassable firepower "
         "more than make up for this. The walls of the dungeon reverberate with their heavy steps!";
         me.skills = bs;
         me.extra_skills = xs;

@@ -533,7 +533,7 @@ static void _snotling_get_flags(u32b flgs[OF_ARRAY_SIZE])
 }
 static void _snotling_birth(void)
 {
-    py_birth_obj_aux(TV_FOOD, SV_FOOD_CURE_SERIOUS, randint1(3));
+    py_birth_obj_aux(TV_FOOD, SV_FOOD_CURE_SERIOUS, 2);
     py_birth_food();
     py_birth_light();
 }
@@ -866,7 +866,7 @@ static void _vampire_get_flags(u32b flgs[OF_ARRAY_SIZE])
 }
 static void _vampire_birth(void)
 {
-    py_birth_obj_aux(TV_SCROLL, SV_SCROLL_DARKNESS, rand_range(2, 5));
+    py_birth_obj_aux(TV_SCROLL, SV_SCROLL_DARKNESS, 3);
 }
 race_t *vampire_get_race(void)
 {
