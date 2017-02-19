@@ -1056,8 +1056,6 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
     {
         to_h_bow = bow->to_h;
         to_d_bow = bow->to_d;
-        if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
-            to_d_bow += 1 + p_ptr->lev/10;
     }
 
     if (object_is_known(arrow))
@@ -1065,6 +1063,9 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
         to_h = arrow->to_h;
         to_d = arrow->to_d;
     }
+
+    if (weaponmaster_is_(WEAPONMASTER_CROSSBOWS) && p_ptr->lev >= 15)
+        to_d += 1 + p_ptr->lev/10;
 
     if (p_ptr->big_shot)
         dd *= 2;
@@ -1098,7 +1099,7 @@ static void _shooter_info_aux(doc_ptr doc, object_type *bow, object_type *arrow,
     doc_printf(cols[0], " %-8.8s: %d.%d lbs\n", "Weight", arrow->weight/10, arrow->weight%10);
     doc_printf(cols[0], " %-8.8s: %d + %d = %d\n", "To Hit", to_h, to_h_bow + to_h_xtra, to_h + to_h_bow + to_h_xtra);
     doc_printf(cols[0], " %-8.8s: %d (%s)\n", "To Dam", to_d, "Multiplier Applies");
-    doc_printf(cols[0], " %-8.8s: %d (%s)\n", "To Dam", to_d_bow, "Multiplier Does Not Apply");
+    doc_printf(cols[0], " %-8.8s: %d (%s)\n", "To Dam", to_d_bow + to_d_xtra, "Multiplier Does Not Apply");
     doc_printf(cols[0], " <color:G>%-8.8s</color>\n", "Damage");
 
     if (crit.to_d)

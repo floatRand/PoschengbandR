@@ -598,6 +598,7 @@ static void prt_stat(int stat)
 #define BAR_HOARDING 173
 #define BAR_RUNNING  174
 #define BAR_WALKING  175
+#define BAR_CAREFUL_AIM 176
 
 static struct {
     byte attr;
@@ -782,6 +783,7 @@ static struct {
     {TERM_YELLOW, "$$", "Hoarding"},
     {TERM_L_RED, "Run", "Running"},
     {TERM_L_BLUE, "Walk", "Walking"},
+    {TERM_L_BLUE, "Aim", "Aim"},
     {0, NULL, NULL}
 };
 
@@ -1070,6 +1072,9 @@ static void prt_status(void)
             break;
         case TOGGLE_OVERDRAW:
             ADD_FLG(BAR_OVERDRAW);
+            break;
+        case TOGGLE_CAREFUL_AIM:
+            ADD_FLG(BAR_CAREFUL_AIM);
             break;
         }
 

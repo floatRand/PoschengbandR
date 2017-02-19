@@ -5604,82 +5604,84 @@ enum mon_save_fields_e {
 #define SHOOT_ELEMENTAL    14
 #define SHOOT_SNIPING      15  /* Scout */
 
-/* Weaponmaster et. al. toggle modes */
-#define TOGGLE_NONE                0
+/* Weaponmaster et. al. toggle modes. These
+ * values are written to savefiles, so do not
+ * alter! (p_ptr->magic_num1[0]) */
+enum {
+    TOGGLE_NONE = 0,
 
-/* Slingmaster */
-#define TOGGLE_SHOT_ON_THE_RUN    1
-#define TOGGLE_RAPID_SHOT        2
+    /* Slingmaster */
+    TOGGLE_SHOT_ON_THE_RUN = 1,
+    TOGGLE_RAPID_SHOT,
 
-/* Daggermaster */
-#define TOGGLE_FLYING_DAGGER_STANCE    3
-#define TOGGLE_SHADOW_STANCE        4
-#define TOGGLE_FRENZY_STANCE        5
+    /* Daggermaster */
+    TOGGLE_FLYING_DAGGER_STANCE = 10,
+    TOGGLE_SHADOW_STANCE,
+    TOGGLE_FRENZY_STANCE,
 
-/* Clubmaster */
-#define TOGGLE_COMBAT_EXPERTISE        6
-#define TOGGLE_TRADE_BLOWS            8
+    /* Clubmaster */
+    TOGGLE_COMBAT_EXPERTISE = 20,
+    TOGGLE_TRADE_BLOWS,
 
-/* Axemaster */
-#define TOGGLE_POWER_ATTACK            9
+    /* Axemaster */
+    TOGGLE_POWER_ATTACK = 30,
 
-/* Swordmaster */
-#define TOGGLE_BURNING_BLADE        10
-#define TOGGLE_ICE_BLADE            11
-#define TOGGLE_THUNDER_BLADE        12
-#define TOGGLE_BLOOD_BLADE            13
-#define TOGGLE_HOLY_BLADE            14
-#define TOGGLE_ORDER_BLADE            15
-#define TOGGLE_WILD_BLADE            16
+    /* Swordmaster */
+    TOGGLE_BURNING_BLADE = 40,
+    TOGGLE_ICE_BLADE,
+    TOGGLE_THUNDER_BLADE,
+    TOGGLE_BLOOD_BLADE,
+    TOGGLE_HOLY_BLADE,
+    TOGGLE_ORDER_BLADE,
+    TOGGLE_WILD_BLADE,
 
-/* Scythemaster */
-#define TOGGLE_MANY_STRIKE            17
-#define TOGGLE_PIERCING_STRIKE        18
-#define TOGGLE_TRIP                    19
+    /* Scythemaster */
+    TOGGLE_MANY_STRIKE = 60,
+    TOGGLE_PIERCING_STRIKE,
+    TOGGLE_TRIP,
 
-/* Pickmaster */
-#define TOGGLE_STRENGTH_OF_THE_UNDERTAKER    22
-#define TOGGLE_STOICISM                        23
-#define TOGGLE_INDUSTRIOUS_MORTICIAN        24
+    /* Pickmaster */
+    TOGGLE_STRENGTH_OF_THE_UNDERTAKER = 70,
+    TOGGLE_STOICISM,
+    TOGGLE_INDUSTRIOUS_MORTICIAN,
 
-/* Shieldmaster */
-#define TOGGLE_SHIELD_BASH      25
-#define TOGGLE_BULWARK            26
-#define TOGGLE_SHIELD_REVENGE    27
+    /* Shieldmaster */
+    TOGGLE_SHIELD_BASH = 80,
+    TOGGLE_BULWARK,
+    TOGGLE_SHIELD_REVENGE,
 
-/* Mauler */
-#define MAULER_TOGGLE_BLOCK     28
-#define MAULER_TOGGLE_SHATTER   29
-#define MAULER_TOGGLE_TUNNEL    30
-#define MAULER_TOGGLE_DRAIN     31
-#define MAULER_TOGGLE_MAUL      32
-#define MAULER_TOGGLE_SPLATTER  33
+    /* Bowmaster */
+    TOGGLE_READIED_SHOT = 90,
+    TOGGLE_PIERCING_ARROW,
 
-/* Bowmaster */
-#define TOGGLE_READIED_SHOT      34
-#define TOGGLE_PIERCING_ARROW    35
+    /* Crossbowmaster */
+    TOGGLE_RAPID_RELOAD = 100,
+    TOGGLE_EXPLODING_BOLT,
+    TOGGLE_OVERDRAW,
+    TOGGLE_CAREFUL_AIM,
 
-/* Crossbowmaster */
-#define TOGGLE_RAPID_RELOAD      36
-#define TOGGLE_EXPLODING_BOLT    37
-#define TOGGLE_OVERDRAW          38
+    MAULER_TOGGLE_BLOCK = 110,
+    MAULER_TOGGLE_SHATTER,
+    MAULER_TOGGLE_TUNNEL,
+    MAULER_TOGGLE_DRAIN,
+    MAULER_TOGGLE_MAUL,
+    MAULER_TOGGLE_SPLATTER,
 
-/* Mystic */
-#define MYSTIC_TOGGLE_STEALTH    39
-#define MYSTIC_TOGGLE_FAST       40
-#define MYSTIC_TOGGLE_RETALIATE  41
-#define MYSTIC_TOGGLE_OFFENSE    42
-#define MYSTIC_TOGGLE_DEFENSE    43
+    MYSTIC_TOGGLE_STEALTH = 120,
+    MYSTIC_TOGGLE_FAST,
+    MYSTIC_TOGGLE_RETALIATE,
+    MYSTIC_TOGGLE_OFFENSE,
+    MYSTIC_TOGGLE_DEFENSE,
 
-#define LEPRECHAUN_TOGGLE_BLINK    44
+    LEPRECHAUN_TOGGLE_BLINK = 130,
+    LEPRECHAUN_TOGGLE_HOARDING,
 
-#define WARLOCK_DRAGON_TOGGLE_BLESS 45
-#define WARLOCK_DRAGON_TOGGLE_CANTER 46
-#define WARLOCK_DRAGON_TOGGLE_GALLOP 47
-#define WARLOCK_DRAGON_TOGGLE_HEALING 48
-#define WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE 49
-
-#define LEPRECHAUN_TOGGLE_HOARDING 50
+    WARLOCK_DRAGON_TOGGLE_BLESS = 140,
+    WARLOCK_DRAGON_TOGGLE_CANTER,
+    WARLOCK_DRAGON_TOGGLE_GALLOP,
+    WARLOCK_DRAGON_TOGGLE_HEALING,
+    WARLOCK_DRAGON_TOGGLE_HEROIC_CHARGE,
+};
 
 /* Wild Counters */
 #define WILD_INFRAVISION 1

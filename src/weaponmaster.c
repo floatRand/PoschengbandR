@@ -45,6 +45,7 @@ static bool _check_direct_shot(int tx, int ty)
 
 static bool _check_speciality_equip(void);
 static bool _check_speciality_aux(object_type *o_ptr);
+static bool _can_judge(obj_ptr obj);
 
 static int _get_nearest_target_los(void)
 {
@@ -280,9 +281,9 @@ static void _judge_spell(int cmd, variant *res)
         break;
     case SPELL_CAST:
         if (p_ptr->lev >= 45)
-            var_set_bool(res, identify_fully(_check_speciality_aux));
+            var_set_bool(res, identify_fully(_can_judge));
         else
-            var_set_bool(res, ident_spell(_check_speciality_aux));
+            var_set_bool(res, ident_spell(_can_judge));
         break;
         break;
     default:
@@ -706,6 +707,22 @@ static void _trade_blows_spell(int cmd, variant *res)
 /****************************************************************
  * Crossbowmaster
  ****************************************************************/
+static void _careful_aim_spell(int cmd, variant *res)
+{
+    switch (cmd)
+    {
+    case SPELL_NAME:
+        var_set_string(res, "Careful Aim");
+        break;
+    case SPELL_DESC:
+        var_set_string(res, "You shoot more slowly but much more accurately.");
+        break;
+    default:
+        _toggle_spell(TOGGLE_CAREFUL_AIM, cmd, res);
+        break;
+    }
+}
+
 static void _elemental_bolt_spell(int cmd, variant *res)
 {
     switch (cmd)
@@ -2319,13 +2336,14 @@ static _speciality _specialities[_MAX_SPECIALITIES] = {
         { TV_BOW, SV_HEAVY_XBOW },
         { 0, 0 },
       },
-      { {  5,   0,  0, _rapid_reload_spell },
+      { {  5,   0,  0, _careful_aim_spell },
         { 10,  10,  0, _shattering_bolt_spell },
         { 25,  20, 50, _judge_spell },
         { 25,  15,  0, _knockback_bolt_spell },
         { 30,   0,  0, _exploding_bolt_spell },
         { 35,  30,  0, _elemental_bolt_spell },
-        { 40,   0,  0, _overdraw_spell },
+        { 38,   0,  0, _rapid_reload_spell },
+        { 42,   0,  0, _overdraw_spell },
         { -1,   0,  0, NULL },
       },
       { TV_BOW, SV_LIGHT_XBOW },
@@ -2591,6 +2609,23 @@ static bool _check_speciality_aux(object_type *o_ptr)
     }
 
     return FALSE;
+}
+
+static bool _can_judge(obj_ptr obj)
+{
+    switch (p_ptr->psubclass)
+    {
+    case WEAPONMASTER_CROSSBOWS:
+        if (obj->tval == TV_BOLT) return TRUE;
+        break;
+    case WEAPONMASTER_SLINGS:
+        if (obj->tval == TV_SHOT) return TRUE;
+        break;
+    case WEAPONMASTER_BOWS:
+        if (obj->tval == TV_ARROW) return TRUE;
+        break;
+    }
+    return _check_speciality_aux(obj);
 }
 
 static bool _check_speciality_equip(void)
@@ -3235,6 +3270,11 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
                 p_ptr->shooter_info.to_mult += 100;
                 p_ptr->shooter_info.to_h -= 20;
                 p_ptr->shooter_info.dis_to_h -= 20;
+                break;
+            case TOGGLE_CAREFUL_AIM:
+                p_ptr->shooter_info.to_h += 20;
+                p_ptr->shooter_info.dis_to_h += 20;
+                p_ptr->shooter_info.num_fire /= 2;
                 break;
             }
         }
