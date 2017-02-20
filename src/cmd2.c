@@ -3588,6 +3588,7 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                                 tdam = tdam * mult / 100;
                             }
                         }
+                        if (0) msg_format("<color:B>%d damage</color>", tdam);
                         if (tdam < 0) tdam = 0;
                         tdam = mon_damage_mod(m_ptr, tdam, FALSE);
                     }

@@ -2347,7 +2347,7 @@ static void _get_obj(obj_ptr obj)
     if (idx >= 0 &&
         (autopick_list[idx].action & (DO_AUTOPICK | DO_QUERY_AUTOPICK)))
     {
-        disturb(0,0);
+        /*disturb(0,0);*/
 
         if (destroy_debug)
             msg_autopick(idx, "Pickup");

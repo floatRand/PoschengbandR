@@ -63,13 +63,6 @@ int obj_prompt(obj_prompt_ptr prompt)
 
         cmd = inkey_special(TRUE);
         if (cmd == ' ') continue;
-        tmp = _basic_cmd(&context, cmd);
-        if (tmp == OP_CMD_HANDLED) continue;
-        if (tmp == OP_CMD_DISMISS)
-        {
-            result = OP_SUCCESS;
-            break;
-        }
         if (prompt->cmd_handler)
         {
             tmp = prompt->cmd_handler(&context, cmd);
@@ -109,6 +102,16 @@ int obj_prompt(obj_prompt_ptr prompt)
         {
             result = OP_CANCELED;
             break;
+        }
+        else /* Note: We do basic commands last in case the user inscribed @3. */
+        {    /* 3 is Page Down in curses ... Similarly with 9 and Page Up in curses. */
+            tmp = _basic_cmd(&context, cmd);
+            if (tmp == OP_CMD_HANDLED) continue;
+            if (tmp == OP_CMD_DISMISS)
+            {
+                result = OP_SUCCESS;
+                break;
+            }
         }
     }
     Term_load();

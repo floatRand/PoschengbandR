@@ -118,7 +118,7 @@ static void _sense_obj(obj_ptr obj)
     feel = strong ? value_check_aux1(obj) : value_check_aux2(obj);
     if (!feel) return;
 
-    if (disturb_minor) disturb(0, 0);
+    /*if (disturb_minor) disturb(0, 0);*/
 
     object_desc(name, obj, OD_OMIT_PREFIX | OD_NAME_ONLY | OD_COLOR_CODED);
     msg_boundary();
