@@ -3576,22 +3576,7 @@ bool target_able(int m_idx)
 bool target_okay(void)
 {
     /* Accept (projectable) stationary targets */
-    if (target_who < 0)
-    {
-        if ( in_bounds(target_row, target_col)
-          && projectable(py, px, target_row, target_col) )
-        {
-            return TRUE;
-        }
-        /* Position Targets are confusing. They should be dismissed when no longer valid. */
-        /* But out-of-LOS doesn't necessarily mean invalid, so this block gets in the way of gameplay. */
-        /*target_who = 0;
-        target_row = 0;
-        target_col = 0;
-        p_ptr->redraw |= PR_HEALTH_BARS;
-        return FALSE;*/
-    }
-
+    if (target_who < 0) return (TRUE);
     /* Check moving targets */
     if (target_who > 0)
     {
@@ -3610,7 +3595,7 @@ bool target_okay(void)
     }
 
     /* Assume no target */
-    return (TRUE);
+    return (FALSE);
 }
 
 
