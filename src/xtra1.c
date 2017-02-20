@@ -1463,7 +1463,7 @@ static void prt_sp(void)
 static int _depth_width = 0;
 rect_t ui_status_bar_rect(void)
 {
-    return rect_create(
+    return rect(
         _depth_width,
         Term->hgt - 1,
         Term->wid - _depth_width,

@@ -1535,7 +1535,7 @@ errr init_gcu(int argc, char *argv[])
         EDIT: Added support for -left and -top.
     */
     {
-        rect_t remaining = rect_create(0, 0, COLS, LINES); 
+        rect_t remaining = rect(0, 0, COLS, LINES);
         int    spacer_cx = 1;
         int    spacer_cy = 1;
         int    next_term = 1;
@@ -1595,7 +1595,7 @@ errr init_gcu(int argc, char *argv[])
                         quit(format("Out of bounds in -%s: %d is too large (%d rows max for this strip)", 
                             left ? "left" : "right", cys[j], remaining.cy));
                     }
-                    data[next_term++].r = rect_create(x, y, cx, cy);
+                    data[next_term++].r = rect(x, y, cx, cy);
                     y += cy + spacer_cy;
                     term_ct++;
                 }
@@ -1647,7 +1647,7 @@ errr init_gcu(int argc, char *argv[])
                         quit(format("Out of bounds in -%s: %d is too large (%d cols max for this strip)", 
                             top ? "top" : "bottom", cxs[j], remaining.cx));
                     }
-                    data[next_term++].r = rect_create(x, y, cx, cy);
+                    data[next_term++].r = rect(x, y, cx, cy);
                     x += cx + spacer_cx;
                     term_ct++;
                 }

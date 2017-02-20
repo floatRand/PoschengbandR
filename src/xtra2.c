@@ -3216,55 +3216,55 @@ void redraw_window(void)
 point_t ui_pt_to_cave_pt(point_t pt)
 {
     rect_t  r = ui_map_rect();
-    point_t v = point_subtract(pt, rect_topleft(&r));
+    point_t v = point_subtract(pt, rect_topleft(r));
     return point_add(viewport_origin, v);
 }
 
 point_t ui_xy_to_cave_pt(int x, int y)
 {
-    return ui_pt_to_cave_pt(point_create(x, y));
+    return ui_pt_to_cave_pt(point(x, y));
 }
 
 point_t cave_pt_to_ui_pt(point_t pt)
 {
     rect_t  r = ui_map_rect();
     point_t v = point_subtract(pt, viewport_origin);
-    return point_add(rect_topleft(&r), v);
+    return point_add(rect_topleft(r), v);
 }
 
 point_t cave_xy_to_ui_pt(int x, int y)
 {
-    return cave_pt_to_ui_pt(point_create(x, y));
+    return cave_pt_to_ui_pt(point(x, y));
 }
 
 bool cave_pt_is_visible(point_t pt)
 {
     point_t ui = cave_pt_to_ui_pt(pt);
     rect_t  r = ui_map_rect();
-    return rect_contains_pt(&r, ui.x, ui.y);
+    return rect_contains_pt(r, ui.x, ui.y);
 }
 
 bool cave_xy_is_visible(int x, int y)
 {
     return in_bounds2(y, x) /* This is for legacy code ... */
-        && cave_pt_is_visible(point_create(x, y));
+        && cave_pt_is_visible(point(x, y));
 }
 
 bool ui_pt_is_visible(point_t pt)
 {
-    rect_t  r = ui_map_rect();
-    return rect_contains_pt(&r, pt.x, pt.y);
+    rect_t r = ui_map_rect();
+    return rect_contains_pt(r, pt.x, pt.y);
 }
 
 bool ui_xy_is_visible(int x, int y)
 {
-    rect_t  r = ui_map_rect();
-    return rect_contains_pt(&r, x, y);
+    rect_t r = ui_map_rect();
+    return rect_contains_pt(r, x, y);
 }
 
 rect_t ui_map_rect(void)
 {
-    return rect_create(
+    return rect(
         0,
         1,
         Term->wid - 12 - 1,
@@ -3275,7 +3275,7 @@ rect_t ui_map_rect(void)
 rect_t ui_menu_rect(void) { return ui_map_rect(); }
 rect_t ui_doc_menu_rect(void)
 {
-    return rect_create(
+    return rect(
         0,
         0,
         Term->wid - 12 - 1,
@@ -3285,17 +3285,17 @@ rect_t ui_doc_menu_rect(void)
 
 rect_t ui_shop_msg_rect(void)
 {
-    return rect_create(0, 0, 80, 3);
+    return rect(0, 0, 80, 3);
 }
 
 rect_t ui_msg_rect(void)
 {
-    return rect_create(0, 0, MIN(72, Term->wid - 13), 10);
+    return rect(0, 0, MIN(72, Term->wid - 13), 10);
 }
 
 rect_t ui_shop_rect(void)
 {
-    return rect_create(
+    return rect(
         0,
         3,
         Term->wid,
@@ -3305,12 +3305,12 @@ rect_t ui_shop_rect(void)
 
 rect_t ui_screen_rect(void)
 {
-    return rect_create(0, 0, Term->wid, Term->hgt);
+    return rect(0, 0, Term->wid, Term->hgt);
 }
 
 rect_t ui_char_info_rect(void)
 {
-    return rect_create(
+    return rect(
         Term->wid - 12,
         1,
         12,
@@ -3372,9 +3372,9 @@ void viewport_verify_aux(u32b options)
     rect_t  r = ui_map_rect();
     point_t o = viewport_origin;
 
-    if ((options & VIEWPORT_FORCE_CENTER) || !rect_contains_pt(&r, p.x, p.y))
+    if ((options & VIEWPORT_FORCE_CENTER) || !rect_contains_pt(r, p.x, p.y))
     {
-        point_t c = rect_center(&r);
+        point_t c = rect_center(r);
         point_t d = point_subtract(p, c);
         o = point_add(o, d);
     }

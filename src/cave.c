@@ -1628,7 +1628,7 @@ void prt_map(void)
     /* Hide the cursor */
     (void)Term_set_cursor(0);
 
-    for (uip = rect_topleft(&map_rect); uip.y < map_rect.y + map_rect.cy; uip.y++)
+    for (uip = rect_topleft(map_rect); uip.y < map_rect.y + map_rect.cy; uip.y++)
     {
         if (msg_line_contains(uip.y, -1))
         {

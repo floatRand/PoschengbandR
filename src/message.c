@@ -188,7 +188,7 @@ void cmsg_add(byte color, cptr str)
 rect_t msg_line_rect(void)
 {
     assert(_msg_line_doc); /* call msg_on_startup()! */
-    return rect_create(
+    return rect(
         _msg_line_rect.x,
         _msg_line_rect.y,
         _msg_line_rect.cx,
@@ -198,7 +198,7 @@ rect_t msg_line_rect(void)
 
 void msg_line_init(rect_t display_rect)
 {
-    assert(rect_is_valid(&display_rect));
+    assert(rect_is_valid(display_rect));
     if (_msg_line_doc)
     {
         msg_line_clear();
@@ -232,7 +232,7 @@ bool msg_line_contains(int row, int col)
         col = r.x;
     if (row < 0)
         row = r.y;
-    return rect_contains_pt(&r, col, row);
+    return rect_contains_pt(r, col, row);
 }
 
 bool msg_line_is_empty(void)
