@@ -141,15 +141,8 @@ static void _sense_obj(obj_ptr obj)
     obj->ident |= IDENT_SENSE;
     obj->feeling = feel;
 
-    if (obj->loc.where == INV_PACK)
-    {
-        p_ptr->notice |= PN_OPTIMIZE_PACK;
-        p_ptr->window |= PW_INVEN;
-    }
-    else if (obj->loc.where == INV_EQUIP)
-        p_ptr->window |= PW_EQUIP;
-
     autopick_alter_obj(obj, destroy_feeling && obj->loc.where != INV_EQUIP);
+    obj_release(obj, OBJ_RELEASE_ID | OBJ_RELEASE_QUIET);
 }
 
 /*
@@ -863,7 +856,6 @@ bool psychometry(void)
 
     /* Player touches it */
     prompt.obj->marked |= OM_TOUCHED;
-    obj_release(prompt.obj, OBJ_RELEASE_ID | OBJ_RELEASE_QUIET);
 
     /* Valid "tval" codes */
     switch (prompt.obj->tval)
@@ -894,8 +886,8 @@ bool psychometry(void)
         break;
     }
 
-    /* Auto-inscription/destroy */
     autopick_alter_obj(prompt.obj, okay && destroy_feeling);
+    obj_release(prompt.obj, OBJ_RELEASE_ID | OBJ_RELEASE_QUIET);
 
     /* Something happened */
     return (TRUE);

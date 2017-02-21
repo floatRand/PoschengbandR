@@ -2038,13 +2038,10 @@ bool enchant(object_type *o_ptr, int n, int eflag)
         }
     }
 
-    /* Failure */
-    if (!res) return (FALSE);
+    if (!res) return FALSE;
 
-    obj_release(o_ptr, OBJ_RELEASE_ENCHANT | OBJ_RELEASE_QUIET);
-
-    /* Success */
-    return (TRUE);
+    gear_notice_enchant(o_ptr);
+    return TRUE;
 }
 
 
@@ -2228,10 +2225,8 @@ bool identify_item(object_type *o_ptr)
 
     obj_identify(o_ptr);
     stats_on_identify(o_ptr);
-
     o_ptr->marked |= OM_TOUCHED;
-    obj_release(o_ptr, OBJ_RELEASE_ID);
-
+    gear_notice_id(o_ptr);
     return old_known;
 }
 
@@ -2275,6 +2270,7 @@ bool ident_spell(object_p p)
 
     msg_format("You identify %s.", o_name);
     autopick_alter_obj(prompt.obj, destroy_identify && !old_known);
+    obj_release(prompt.obj, OBJ_RELEASE_QUIET | OBJ_RELEASE_ID);
     return TRUE;
 }
 
@@ -2388,6 +2384,7 @@ bool identify_fully(object_p p)
 
     obj_display(prompt.obj);
     autopick_alter_obj(prompt.obj, destroy_identify && !old_known);
+    obj_release(prompt.obj, OBJ_RELEASE_QUIET | OBJ_RELEASE_ID);
     return TRUE;
 }
 

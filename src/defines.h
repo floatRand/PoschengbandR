@@ -2771,7 +2771,7 @@ enum summon_specific_e {
 #define OM_FOUND           0x0001    /* original boolean flag */
 #define OM_NOMSG           0x0002    /* temporary flag to suppress messages */
 #define OM_NO_QUERY        0x0004    /* Query for auto-pick was already answered as 'No' */
-#define OM_XXXX            0x0008
+#define OM_AUTODESTROY     0x0008
 #define OM_TOUCHED         0x0010    /* Object was touched by player */
 #define OM_RESERVED        0x0020    /* Object reserved in the shop */
 #define OM_WORN            0x0040    /* Object was previously being worn but is possibly no longer a legal piece of equipment (Mimics) */

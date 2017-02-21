@@ -2044,7 +2044,12 @@ static void auto_destroy_obj(object_type *o_ptr, int autopick_idx)
     }
     object_desc(name, o_ptr, OD_COLOR_CODED);
     msg_format("Auto-destroying %s.", name);
-    obj_destroy(o_ptr, o_ptr->number);
+    /* Note: It turns out to be convenient to delay destruction after
+     * all. But rather than waiting until notice_stuff(), we need
+     * only wait until obj_release(). Otherwise, clients need to think
+     * a bit to avoid accidentally using destroyed memory. */
+    o_ptr->marked |= OM_AUTODESTROY; /* clients *must* obj_release() */
+    /*obj_destroy(o_ptr, o_ptr->number);*/
 
     return;
 }
@@ -2274,6 +2279,7 @@ static void _get_obj(obj_ptr obj)
 
     /* Autodestroy */
     auto_destroy_obj(obj, idx);
+    obj_release(obj, OBJ_RELEASE_QUIET);
 }
 
 void autopick_get_floor(void)

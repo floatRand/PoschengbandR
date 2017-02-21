@@ -2210,8 +2210,7 @@ static bool _smithing(void)
     if (prompt.obj->loc.where == INV_FLOOR)
         autopick_alter_obj(prompt.obj, TRUE);
 
-    p_ptr->notice |= PN_OPTIMIZE_PACK;
-    p_ptr->window |= PW_INVEN;
+    obj_release(prompt.obj, OBJ_RELEASE_QUIET | OBJ_RELEASE_ID);
 
     return TRUE;
 }

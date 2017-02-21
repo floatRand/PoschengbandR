@@ -79,16 +79,27 @@ void obj_make_pile(obj_ptr obj)
     }
 }
 
+static void _destroy(obj_ptr obj);
+
 void obj_release(obj_ptr obj, int options)
 {
     char name[MAX_NLEN];
     bool quiet = BOOL(options & OBJ_RELEASE_QUIET);
-    bool enchant = BOOL(options & OBJ_RELEASE_ENCHANT);
-    bool id = BOOL(options & OBJ_RELEASE_ID);
 
     if (!obj) return;
     if (!quiet)
         object_desc(name, obj, OD_COLOR_CODED);
+
+    if ((obj->marked & OM_AUTODESTROY) && obj->number)
+    {
+        _destroy(obj);
+        obj->number = 0;
+    }
+
+    if (options & OBJ_RELEASE_ENCHANT)
+        gear_notice_enchant(obj);
+    if (options & OBJ_RELEASE_ID)
+        gear_notice_id(obj);
 
     switch (obj->loc.where)
     {
@@ -107,11 +118,6 @@ void obj_release(obj_ptr obj, int options)
         }
         else if (!quiet)
             msg_format("You are wearing %s.", name);
-        if (enchant) /* historically, id => PU_BONUS but I have no idea why ... */
-        {
-            p_ptr->update |= PU_BONUS;
-            android_calc_exp();
-        }
         p_ptr->window |= PW_EQUIP;
         break;
     case INV_PACK:
@@ -119,8 +125,6 @@ void obj_release(obj_ptr obj, int options)
             msg_format("You have %s in your pack.", name);
         if (obj->number <= 0)
             pack_remove(obj->loc.slot);
-        if (enchant || id)
-            p_ptr->notice |= PN_OPTIMIZE_PACK;
         p_ptr->window |= PW_INVEN;
         break;
     case INV_QUIVER:
@@ -128,12 +132,48 @@ void obj_release(obj_ptr obj, int options)
             msg_format("You have %s in your quiver.", name);
         if (obj->number <= 0)
             quiver_remove(obj->loc.slot);
-        if (enchant || id)
-            p_ptr->notice |= PN_OPTIMIZE_QUIVER;
         p_ptr->window |= PW_EQUIP; /* a Quiver [32 of 110] */
         break;
     case INV_TMP_ALLOC:
         obj_free(obj);
+        break;
+    }
+}
+
+void gear_notice_id(obj_ptr obj)
+{
+    switch (obj->loc.where)
+    {
+    case INV_EQUIP:
+        p_ptr->window |= PW_EQUIP;
+        break;
+    case INV_PACK:
+        p_ptr->notice |= PN_OPTIMIZE_PACK;
+        p_ptr->window |= PW_INVEN;
+        break;
+    case INV_QUIVER:
+        p_ptr->notice |= PN_OPTIMIZE_QUIVER;
+        p_ptr->window |= PW_EQUIP; /* a Quiver [32 of 110] */
+        break;
+    }
+}
+
+void gear_notice_enchant(obj_ptr obj)
+{
+    switch (obj->loc.where)
+    {
+    case INV_EQUIP:
+        p_ptr->update |= PU_BONUS;
+        p_ptr->window |= PW_EQUIP;
+        android_calc_exp();
+        break;
+    case INV_PACK:
+        p_ptr->notice |= PN_OPTIMIZE_PACK;
+        p_ptr->window |= PW_INVEN;
+        break;
+    case INV_QUIVER:
+        p_ptr->notice |= PN_OPTIMIZE_QUIVER;
+        p_ptr->window |= PW_EQUIP; /* a Quiver [32 of 110] */
         break;
     }
 }
@@ -872,7 +912,10 @@ void obj_destroy_ui(void)
         if (ch == 'A')
         {
             if (autopick_autoregister(prompt.obj))
+            {
                 autopick_alter_obj(prompt.obj, TRUE); /* destroyed! */
+                obj_release(prompt.obj, OBJ_RELEASE_QUIET);
+            }
             return;
         }
     }
@@ -896,8 +939,6 @@ void obj_destroy_ui(void)
 
 static void _destroy(obj_ptr obj)
 {
-    energy_use = 100;
-
     stats_on_p_destroy(obj, obj->number);
     {
         race_t  *race_ptr = get_race();
@@ -947,6 +988,7 @@ void obj_destroy(obj_ptr obj, int amt)
 
     if (!amt) return;
 
+    energy_use = 100;
     if (amt < obj->number)
     {
         obj_t copy = *obj;

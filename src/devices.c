@@ -140,6 +140,7 @@ static void _do_identify_aux(obj_ptr obj)
         break;
     }
     autopick_alter_obj(obj, destroy_identify && !old_known);
+    obj_release(obj, OBJ_RELEASE_ID | OBJ_RELEASE_QUIET);
     if (_use_charges) device_used_charges++;
 }
 

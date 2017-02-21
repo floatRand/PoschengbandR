@@ -724,7 +724,6 @@ static void do_cmd_read_scroll_aux(obj_ptr o_ptr)
     int  used_up, lev = k_info[o_ptr->k_idx].level;
     int  number = 1;
     bool known = object_is_aware(o_ptr);
-    bool identified = FALSE;
 
     /* Take a turn */
     if (mut_present(MUT_SPEED_READER) || p_ptr->tim_shrike)
@@ -845,7 +844,7 @@ static void do_cmd_read_scroll_aux(obj_ptr o_ptr)
     if (device_noticed && !known)
     {
         object_aware(o_ptr);
-        identified = TRUE;
+        gear_notice_id(o_ptr);
         stats_on_notice(o_ptr, o_ptr->number);
         gain_exp((lev + (p_ptr->lev >> 1)) / p_ptr->lev);
     }
@@ -862,7 +861,7 @@ static void do_cmd_read_scroll_aux(obj_ptr o_ptr)
     {
         stats_on_use(o_ptr, number);
         o_ptr->number -= number;
-        obj_release(o_ptr, identified ? OBJ_RELEASE_ID : 0);
+        obj_release(o_ptr, 0);
     }
 }
 
@@ -914,7 +913,7 @@ void do_cmd_read_scroll(void)
 /* Helper for Rods, Wands and Staves */
 static void do_cmd_device_aux(obj_ptr obj)
 {
-    bool used = FALSE, identified = FALSE;
+    bool used = FALSE;
     int  charges = 1;
     int  boost;
     bool is_devicemaster = FALSE;
@@ -1014,10 +1013,8 @@ static void do_cmd_device_aux(obj_ptr obj)
     if (device_noticed && !object_is_known(obj))
     {
         identify_item(obj);
-        identified = TRUE;
-        p_ptr->notice |= PN_OPTIMIZE_PACK;
+        autopick_alter_obj(obj, destroy_identify);
     }
-    p_ptr->window |= PW_INVEN | PW_EQUIP;
 
     if (used)
     {
@@ -1041,17 +1038,17 @@ static void do_cmd_device_aux(obj_ptr obj)
                 object_desc(o_name, obj, OD_OMIT_PREFIX | OD_NAME_ONLY | OD_COLOR_CODED);
                 msg_format("Desperation magic consumes your %s!", o_name);
                 obj->number = 0;
-                obj_release(obj, OBJ_RELEASE_QUIET);
             }
             else
             {
                 device_decrease_sp(obj, obj->activation.cost * charges);
-                if (identified) autopick_alter_obj(obj, destroy_identify);
             }
         }
     }
     else
         energy_use = 0;
+
+    obj_release(obj, OBJ_RELEASE_QUIET);
 }
 
 void do_cmd_use_staff(void)
