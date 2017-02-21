@@ -3007,7 +3007,7 @@ static bool enchant_item(obj_p filter, int cost, int to_hit, int to_dam, int to_
 
         p_ptr->au -= cost;
         stats_on_gold_services(cost);
-        if (prompt.obj->loc.where == INV_EQUIP) android_calc_exp();
+        obj_release(prompt.obj, OBJ_RELEASE_ENCHANT);
         return (TRUE);
     }
 }

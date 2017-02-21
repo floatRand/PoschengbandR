@@ -3264,7 +3264,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
                 p_ptr->shooter_info.num_fire += p_ptr->shooter_info.num_fire * (10 + p_ptr->lev/3) / 100;
                 break;
             case TOGGLE_EXPLODING_BOLT:
-                p_ptr->shooter_info.num_fire /= 2;
+                p_ptr->shooter_info.num_fire -= p_ptr->lev;
                 break;
             case TOGGLE_OVERDRAW:
                 p_ptr->shooter_info.to_mult += 100;
@@ -3274,7 +3274,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
             case TOGGLE_CAREFUL_AIM:
                 p_ptr->shooter_info.to_h += 20;
                 p_ptr->shooter_info.dis_to_h += 20;
-                p_ptr->shooter_info.num_fire /= 2;
+                p_ptr->shooter_info.num_fire -= p_ptr->lev * 2;
                 break;
             }
         }

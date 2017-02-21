@@ -1148,10 +1148,7 @@ void wiz_obj_smith(void)
         obj_loc_t loc = prompt.obj->loc; /* re-roll will erase this ... */
         *prompt.obj = copy;
         prompt.obj->loc = loc;
-        obj_release(prompt.obj, 0);
-        p_ptr->update |= PU_BONUS;
-        p_ptr->notice |= PN_COMBINE | PN_REORDER;
-        p_ptr->window |= PW_INVEN;
+        obj_release(prompt.obj, OBJ_RELEASE_ENCHANT);
     }
 }
 

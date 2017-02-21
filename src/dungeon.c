@@ -863,12 +863,7 @@ bool psychometry(void)
 
     /* Player touches it */
     prompt.obj->marked |= OM_TOUCHED;
-
-    /* Combine / Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP);
+    obj_release(prompt.obj, OBJ_RELEASE_ID | OBJ_RELEASE_QUIET);
 
     /* Valid "tval" codes */
     switch (prompt.obj->tval)
@@ -4783,7 +4778,7 @@ static void dungeon(bool load_game)
     p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
 
     /* Combine / Reorder the pack */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
+    p_ptr->notice |= (PN_OPTIMIZE_PACK | PN_OPTIMIZE_QUIVER);
 
     /* Handle "p_ptr->notice" */
     notice_stuff();

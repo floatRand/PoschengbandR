@@ -724,6 +724,7 @@ static void do_cmd_read_scroll_aux(obj_ptr o_ptr)
     int  used_up, lev = k_info[o_ptr->k_idx].level;
     int  number = 1;
     bool known = object_is_aware(o_ptr);
+    bool identified = FALSE;
 
     /* Take a turn */
     if (mut_present(MUT_SPEED_READER) || p_ptr->tim_shrike)
@@ -844,12 +845,10 @@ static void do_cmd_read_scroll_aux(obj_ptr o_ptr)
     if (device_noticed && !known)
     {
         object_aware(o_ptr);
+        identified = TRUE;
         stats_on_notice(o_ptr, o_ptr->number);
         gain_exp((lev + (p_ptr->lev >> 1)) / p_ptr->lev);
     }
-
-    p_ptr->notice |= PN_COMBINE | PN_REORDER;
-    p_ptr->window |= PW_INVEN | PW_EQUIP;
 
     if (!used_up)
         return;
@@ -863,7 +862,7 @@ static void do_cmd_read_scroll_aux(obj_ptr o_ptr)
     {
         stats_on_use(o_ptr, number);
         o_ptr->number -= number;
-        obj_release(o_ptr, 0);
+        obj_release(o_ptr, identified ? OBJ_RELEASE_ID : 0);
     }
 }
 

@@ -2041,16 +2041,7 @@ bool enchant(object_type *o_ptr, int n, int eflag)
     /* Failure */
     if (!res) return (FALSE);
 
-    /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS);
-
-    /* Combine / Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP);
-
-    android_calc_exp();
+    obj_release(o_ptr, OBJ_RELEASE_ENCHANT | OBJ_RELEASE_QUIET);
 
     /* Success */
     return (TRUE);
@@ -2238,17 +2229,8 @@ bool identify_item(object_type *o_ptr)
     obj_identify(o_ptr);
     stats_on_identify(o_ptr);
 
-    /* Player touches it */
     o_ptr->marked |= OM_TOUCHED;
-
-    /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS);
-
-    /* Combine / Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
-    /* Window stuff */
-    p_ptr->window |= (PW_INVEN | PW_EQUIP);
+    obj_release(o_ptr, OBJ_RELEASE_ID);
 
     return old_known;
 }

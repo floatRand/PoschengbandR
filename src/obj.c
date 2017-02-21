@@ -84,6 +84,7 @@ void obj_release(obj_ptr obj, int options)
     char name[MAX_NLEN];
     bool quiet = BOOL(options & OBJ_RELEASE_QUIET);
     bool enchant = BOOL(options & OBJ_RELEASE_ENCHANT);
+    bool id = BOOL(options & OBJ_RELEASE_ID);
 
     if (!obj) return;
     if (!quiet)
@@ -106,7 +107,7 @@ void obj_release(obj_ptr obj, int options)
         }
         else if (!quiet)
             msg_format("You are wearing %s.", name);
-        if (enchant)
+        if (enchant) /* historically, id => PU_BONUS but I have no idea why ... */
         {
             p_ptr->update |= PU_BONUS;
             android_calc_exp();
@@ -118,7 +119,7 @@ void obj_release(obj_ptr obj, int options)
             msg_format("You have %s in your pack.", name);
         if (obj->number <= 0)
             pack_remove(obj->loc.slot);
-        if (enchant)
+        if (enchant || id)
             p_ptr->notice |= PN_OPTIMIZE_PACK;
         p_ptr->window |= PW_INVEN;
         break;
@@ -127,7 +128,7 @@ void obj_release(obj_ptr obj, int options)
             msg_format("You have %s in your quiver.", name);
         if (obj->number <= 0)
             quiver_remove(obj->loc.slot);
-        if (enchant)
+        if (enchant || id)
             p_ptr->notice |= PN_OPTIMIZE_QUIVER;
         p_ptr->window |= PW_EQUIP; /* a Quiver [32 of 110] */
         break;
@@ -911,10 +912,7 @@ static void _destroy(obj_ptr obj)
 
         if (!handled)
         {
-            if (obj->marked & OM_AUTODESTROY)
-            {
-            }
-            else if (obj->loc.where)
+            if (obj->loc.where)
                 msg_print("Destroyed.");
             else  /* Destroying part of a pile */
             {

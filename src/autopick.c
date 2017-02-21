@@ -2042,119 +2042,12 @@ static void auto_destroy_obj(object_type *o_ptr, int autopick_idx)
         int idx = is_autopick(o_ptr);
         msg_autopick(idx, "Destroy");
     }
-    o_ptr->marked |= OM_AUTODESTROY;
     object_desc(name, o_ptr, OD_COLOR_CODED);
     msg_format("Auto-destroying %s.", name);
     obj_destroy(o_ptr, o_ptr->number);
-    /* Destroy Later
-    o_ptr->marked |= OM_AUTODESTROY;
-    p_ptr->notice |= PN_AUTODESTROY;*/
 
     return;
 }
-
-/*
- *  Auto-destroy marked item
- */
-static bool _detailed_msg = FALSE;
-static void autopick_delayed_alter_obj(obj_ptr o_ptr)
-{
-    if (o_ptr->marked & OM_AUTODESTROY)
-    {
-        char     o_name[MAX_NLEN];
-        bool     msg = FALSE;
-        race_t  *race_ptr = get_race();
-        class_t *class_ptr = get_class();
-        bool     handled = FALSE;
-
-        if (destroy_debug)
-        {
-            int idx = is_autopick(o_ptr);
-            msg_autopick(idx, "Destroy");
-        }
-        stats_on_p_destroy(o_ptr, o_ptr->number);
-
-        if (!handled && race_ptr->destroy_object)
-            handled = race_ptr->destroy_object(o_ptr);
-
-        if (!handled && class_ptr->destroy_object)
-            handled = class_ptr->destroy_object(o_ptr);
-
-        if (!handled)
-        {
-            if (_detailed_msg)
-                object_desc(o_name, o_ptr, OD_COLOR_CODED);
-            msg = TRUE;
-        }
-
-        o_ptr->number = 0;
-        obj_release(o_ptr, 0);
-
-        /* Print a message, but let's decrease message spam.
-           For example:
-           > You see 16 Rounded Pebbles (1d2) (+0,+0).
-           > Auto-destroying 16 Rounded Pebbles (1d2) (+0,+0).
-           The second repeated description is unnecessary and
-           forces a -more- prompt. */
-        if (msg)
-        {
-            if (_detailed_msg)
-                msg_format("Auto-destroying %s.", o_name);
-            else
-                msg_print("Auto-destroying.");
-        }
-    }
-}
-
-static bool _obj_marked_autodestroy(obj_ptr obj)
-{
-    return (obj->marked & OM_AUTODESTROY) ? TRUE : FALSE;
-}
-
-static bool _show_detailed_msg(void)
-{
-    int  ct = 0;
-    int  item;
-
-    /* Always give details when destroying from the pack. */
-    if (pack_find_first(_obj_marked_autodestroy))
-        return TRUE;
-
-    /* Only give details when destroying floor objects if there
-       are more than one possible object */
-    for (item = cave[py][px].o_idx; item; item = o_list[item].next_o_idx)
-    {
-        if (o_list[item].k_idx)
-            ct++;
-    }
-    if (ct > 1)
-        return TRUE;
-
-    return FALSE;
-}
-
-/*
- *  Auto-destroy marked items in inventory and on floor
- */
-void autopick_delayed_alter(void)
-{
-    int item;
-
-    _detailed_msg = _show_detailed_msg();
-
-    pack_for_each(autopick_delayed_alter_obj);
-
-    /* Scan the pile of objects */
-    item = cave[py][px].o_idx;
-    while (item)
-    {
-        obj_ptr obj = &o_list[item];
-        int     next = obj->next_o_idx;
-        autopick_delayed_alter_obj(obj);
-        item = next;
-    }
-}
-
 
 /*
  * Auto-inscription and/or destroy

@@ -652,9 +652,6 @@ bool make_attack_normal(int m_idx)
                         /* Redraw (later) if needed */
                         check_mon_health_redraw(m_idx);
 
-                        /* Combine / Reorder the pack */
-                        p_ptr->notice |= (PN_COMBINE | PN_REORDER);
-
                         /* Window stuff */
                         p_ptr->window |= (PW_INVEN);
 

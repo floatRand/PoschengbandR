@@ -5036,13 +5036,6 @@ void notice_stuff(void)
     /* Notice stuff */
     if (!p_ptr->notice) return;
 
-    /* Actually do auto-destroy */
-    if (p_ptr->notice & (PN_AUTODESTROY))
-    {
-        p_ptr->notice &= ~(PN_AUTODESTROY);
-        autopick_delayed_alter();
-    }
-
     if (p_ptr->notice & PN_OPTIMIZE_PACK)
     {
         /* Clear the bit first ... */

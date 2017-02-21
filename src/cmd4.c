@@ -362,7 +362,7 @@ void do_cmd_redraw(void)
 
 
     /* Combine and Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
+    p_ptr->notice |= (PN_OPTIMIZE_PACK | PN_OPTIMIZE_QUIVER);
 
 
     /* Update torch */

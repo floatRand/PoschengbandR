@@ -348,7 +348,7 @@ static void change_realm2(int next_realm)
     p_ptr->old_realm |= 1 << (p_ptr->realm2-1);
     p_ptr->realm2 = next_realm;
 
-    p_ptr->notice |= (PN_REORDER);
+    p_ptr->notice |= (PN_OPTIMIZE_PACK); /* cf obj_cmp's initial hack */
     p_ptr->update |= (PU_SPELLS);
     handle_stuff();
 
