@@ -1503,7 +1503,9 @@ static void _buy(_ui_context_ptr context)
     prompt.where[0] = INV_PACK;
     prompt.where[1] = INV_QUIVER;
 
+    command_cmd = 's'; /* Hack for !s inscriptions */
     obj_prompt(&prompt);
+    command_cmd = '\0';
     if (!prompt.obj) return;
 
     if (prompt.obj->number > 1)
