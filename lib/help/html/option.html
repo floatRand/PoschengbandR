@@ -109,9 +109,6 @@ off after the creation is finished!
   before it is completely explored as any fixed artifact can be 
   regenerated in subsequent levels.
   
-<a name="powerup_home"></a>  </font><font color="#ffcc80">Increase capacity of your home </font><font color="#8a8a8a">(powerup_home)
-  </font><font color="#ffffff">If this option is enabled, the capacity of your home will be expanded 
-  to 20 pages. If not, capacity is only 2 pages.
   
 <a name="Input"></a></font><font color="#c00000">Input Options
   
@@ -124,32 +121,6 @@ off after the creation is finished!
   up. Otherwise, you must use the </font><font color="#ff9200">g </font><font color="#ffffff">command, or the </font><font color="#ff9200">- </font><font color="#ffffff">command while 
   walking. Combined with </font><font color="#ff4040">carry_query_flag</font><font color="#ffffff">, allows you to selectively 
   pick up all items which you step on.
-  
-<a name="toggle_run_status"></a>  </font><font color="#ffcc80">Toggle Run Status </font><font color="#8a8a8a">(toggle_run_status)
-  </font><font color="#ffffff">Internally, the player walks in a direction by pressing </font><font color="#ff9200">; </font><font color="#ffffff">followed by 
-  the direction argument </font><font color="#ff9200">(0-9) </font><font color="#ffffff">and runs by pressing </font><font color="#ff9200">. </font><font color="#ffffff">followed by the 
-  direction argument </font><font color="#ff9200">(0-9) </font><font color="#ffffff">(Roguelike: Pressing </font><font color="#ff9200">, </font><font color="#ffffff">followed by the 
-  direction argument). Of course, this is ridiculous tedium, so the 
-  game uses keymaps to map the number keys, arrow keys, and numpad keys 
-  to the appropriate </font><font color="#ff9200">;&lt;dir&gt; </font><font color="#ffffff">sequence. For all ports but Curses, the 
-  player can press </font><font color="#ff9200">&lt;shift&gt;&lt;dir&gt; </font><font color="#ffffff">to run since the default preferences 
-  map this single keypress into a </font><font color="#ff9200">.&lt;dir&gt; </font><font color="#ffffff">sequence. In Curses with the 
-  default keyset, the </font><font color="#ff9200">&lt;shift&gt;&lt;arrow or numpad&gt; </font><font color="#ffffff">keymaps are not 
-  available ("Curses doesn't do that"), so the player is forced to 
-  manually enter the </font><font color="#ff9200">.&lt;dir&gt; </font><font color="#ffffff">sequence by hand in order to run, or to 
-  play with the Roguelike keyset (see <a href="command.html#RogueKeyset"></font><font color="#00ff00">[e]</a></font><font color="#ffffff">).
-  
-  With the </font><font color="#ff4040">toggle_run_status </font><font color="#ffffff">option enabled, the internal key commands 
-  are altered from the default. The direction keys now either walk or 
-  run in the indicated direction, depending on the current status. This 
-  status is toggled by pressing </font><font color="#ff9200">. </font><font color="#ffffff">(Roguelike: </font><font color="#ff9200">,</font><font color="#ffffff">) and displayed to the 
-  user on the bottom of the screen. Thus, with this option, the player 
-  can run during dungeon exploration with a single keystroke rather 
-  than two, toggling between running and walking as needed.
-  
-<a name="carry_query_flag"></a>  </font><font color="#ffcc80">Prompt before picking things up </font><font color="#8a8a8a">(carry_query_flag)
-  </font><font color="#ffffff">Forces the game to ask you if you want to pick something up when you 
-  do something that would normally cause the item to be picked up.
   
 <a name="quick_messages"></a>  </font><font color="#ffcc80">Activate quick messages </font><font color="#8a8a8a">(quick_messages)
   </font><font color="#ffffff">Allows the use of any keypress as a response to the </font><font color="#00c8ff">-more- </font><font color="#ffffff">prompt 
@@ -173,8 +144,6 @@ off after the creation is finished!
             |   Command pets(p)         Search mode ON/OFF(S/#)  |
             +----------------------------------------------------+
   
-<a name="other_query_flag"></a>  </font><font color="#ffcc80">Prompt for floor item selection </font><font color="#8a8a8a">(other_query_flag)
-  </font><font color="#ffffff">Forces the game to ask you before select an item on floor.
   
 <a name="use_old_target"></a>  </font><font color="#ffcc80">Use old target by default </font><font color="#8a8a8a">(use_old_target)
   </font><font color="#ffffff">This option forces all commands which normally ask for a </font><font color="#ff4040">direction </font><font color="#ffffff">to 
@@ -197,7 +166,7 @@ off after the creation is finished!
 <a name="always_repeat"></a>  </font><font color="#ffcc80">Repeat obvious commands </font><font color="#8a8a8a">(always_repeat)
   </font><font color="#ffffff">Tells the game that when you attempt to </font><font color="#ff4040">open </font><font color="#ffffff">a door or chest, </font><font color="#ff4040">bash </font><font color="#ffffff">a 
   door, </font><font color="#ff4040">tunnel </font><font color="#ffffff">through walls, or </font><font color="#ff4040">disarm </font><font color="#ffffff">traps or chests, that you wish 
-  to repeat the command 99 times (see <a href="command.html#CommandCounts"></font><font color="#00ff00">[f]</a></font><font color="#ffffff">).
+  to repeat the command 99 times (see <a href="command.html#CommandCounts"></font><font color="#00ff00">[e]</a></font><font color="#ffffff">).
   
 <a name="confirm_destroy"></a>  </font><font color="#ffcc80">Prompt for destruction of known worthless items </font><font color="#8a8a8a">(confirm_destroy)
   </font><font color="#ffffff">Normally, no confirmation will be asked if you attempt to destroy an 
@@ -247,7 +216,7 @@ off after the creation is finished!
   pickup or destroy. This option subsumes (and extends) the 
   </font><font color="#ff4040">auto_get_ammo </font><font color="#ffffff">option since ammo inscribed with </font><font color="#ff9200">=g </font><font color="#ffffff">is certainly 
   registered for auto-pickup. With this option, you might consider also 
-  turning on the <a href="option.html#destroy_get"></font><font color="#00ff00">[g]</a> destroy_get </font><font color="#ffffff">option. The reason is that you will 
+  turning on the <a href="option.html#destroy_get"></font><font color="#00ff00">[f]</a> destroy_get </font><font color="#ffffff">option. The reason is that you will 
   probably find the </font><font color="#ff9200">g </font><font color="#ffffff">command so useful that you forget to check for 
   objects underfoot before issuing it. Traditionally, </font><font color="#ff9200">g </font><font color="#ffffff">gets all 
   objects you are standing on and bypasses any autopick preferences. I 
@@ -259,13 +228,6 @@ off after the creation is finished!
   Also the look command will describe floor stack as "You see a stack 
   of n items.", when there is more than one item on a floor grid, and 
   display a list of items when you press 'x' at that time.
-  
-<a name="over_exert"></a>  </font><font color="#ffcc80">Allow casting spells when short of mana </font><font color="#8a8a8a">(over_exert)
-  </font><font color="#ffffff">Normally, you are prevented from casting spells when you don't have 
-  enough mana since accidentally doing so can have very nasty 
-  consequences, including death. If this option is set, then you are 
-  permitted to cast spells at such dangerous times, with a warning 
-  prompt, of course!
   
 <a name="numpad_as_cursorkey"></a>  </font><font color="#ffcc80">Use numpad keys as cursor keys in editor mode </font><font color="#8a8a8a">(numpad_as_cursorkey)
   </font><font color="#ffffff">This option makes numpad keys work as cursor movement keys while text 
@@ -460,7 +422,7 @@ off after the creation is finished!
   Fire is not an EXTRA resistance.
   
   The list of abbreviations for each resistances and abilities are 
-  described in <a href="objects.html#InscriptionAbbrev"></font><font color="#00ff00">[h]</a></font><font color="#ffffff">.
+  described in <a href="objects.html#InscriptionAbbrev"></font><font color="#00ff00">[g]</a></font><font color="#ffffff">.
   
 <a name="abbrev_all"></a>  </font><font color="#ffcc80">Describe obj's all resistances by abbreviation </font><font color="#8a8a8a">(abbrev_all)
   </font><font color="#ffffff">When an *identified* equipment is displayed, an abbreviation string 
@@ -468,7 +430,7 @@ off after the creation is finished!
   inscriptions of the object.
   
   The list of abbreviations for each resistances and abilities are 
-  described in <a href="objects.html#InscriptionAbbrev"></font><font color="#00ff00">[i]</a></font><font color="#ffffff">.
+  described in <a href="objects.html#InscriptionAbbrev"></font><font color="#00ff00">[h]</a></font><font color="#ffffff">.
   
 <a name="exp_need"></a>  </font><font color="#ffcc80">Show the experience needed for the next level </font><font color="#8a8a8a">(exp_need)
   </font><font color="#ffffff">Setting this option to yes alters the display of experience on the 
@@ -632,7 +594,7 @@ off after the creation is finished!
   
     </font><font color="#00ff00">Note: The </font><font color="#ff4040">Easy Auto-Destroyer </font><font color="#00ff00">is a simpler to use 
     version of the full featured </font><font color="#ff4040">Mogaminator </font><font color="#00ff00">discussed in <a href="editor.html">
-    [j]</a>. It is designed for those who feel the full version 
+    [i]</a>. It is designed for those who feel the full version 
     is too complicated to use. However, you really should 
     only use one or the other. So if you are using the full 
     version, then you should not also enable the easy 
@@ -653,7 +615,7 @@ off after the creation is finished!
   </font><font color="#ffffff">If this option is turned on, both The Mogaminator and The Easy 
   Destroyer will apply whenever you get an object into your pack 
   (typically, by pressing </font><font color="#ff9200">g</font><font color="#ffffff">). If you are using any of the Get Objects 
-  enhancement options (see <a href="option.html#auto_get_objects"></font><font color="#00ff00">[k]</a> auto_get_objects</font><font color="#ffffff">) then you probably want 
+  enhancement options (see <a href="option.html#auto_get_objects"></font><font color="#00ff00">[j]</a> auto_get_objects</font><font color="#ffffff">) then you probably want 
   this option as well in order to avoid accidentally picking up 
   unwanted objects (such as corpses).
   

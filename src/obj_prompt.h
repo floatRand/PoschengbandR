@@ -29,7 +29,7 @@ struct obj_prompt_s
     /* input */
     cptr    prompt;         /* "Wear/Wield which item?" */
     cptr    error;          /* "You have nothing you can wear or wield." */
-    cptr    help;           /* "command.txt#SelectingObjects" if not set. */
+    cptr    help;           /* generic help topic if not set */
     obj_p   filter; 
     int     where[MAX_LOC]; /* INV_EQUIP, INV_FLOOR, etc. order matters */
     int     flags;          /* INV_SHOW_FAIL_RATES, etc. */

@@ -357,7 +357,7 @@ static int _basic_cmd(obj_prompt_context_ptr context, int cmd)
         if (context->prompt->help)
             doc_display_help(context->prompt->help, NULL);
         else
-            doc_display_help("command.txt", "SelectingObjects");
+            doc_display_help("context_obj_prompt.txt", "QuickRef");
         return OP_CMD_HANDLED;
     }
     return OP_CMD_SKIPPED;
