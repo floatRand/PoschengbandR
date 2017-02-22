@@ -4227,6 +4227,7 @@ void map_area(int range)
             if (distance(py, px, y, x) > range) continue;
 
             c_ptr = &cave[y][x];
+            c_ptr->info |= CAVE_IN_MAP;
 
             /* Feature code (applying "mimic" field) */
             feat = get_feat_mimic(c_ptr);

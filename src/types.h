@@ -723,7 +723,7 @@ typedef struct cave_type cave_type;
 
 struct cave_type
 {
-    u16b info;        /* Hack -- cave flags */
+    u32b info;        /* Hack -- cave flags */
 
     s16b feat;        /* Hack -- feature type */
 
@@ -1888,7 +1888,7 @@ typedef struct
  */
 typedef struct
 {
-    u16b info;
+    u32b info;
     s16b feat;
     s16b mimic;
     s16b special;

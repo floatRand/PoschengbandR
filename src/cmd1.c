@@ -4905,6 +4905,34 @@ static bool _auto_detect_traps(void)
     return FALSE;
 }
 
+static bool _auto_mapping(void)
+{
+    slot_t slot;
+    if (p_ptr->pclass == CLASS_BERSERKER) return FALSE;
+    /*if (p_ptr->pclass == CLASS_MAGIC_EATER && magic_eater_auto_mapping()) return TRUE;*/
+
+    slot = pack_find_obj(TV_SCROLL, SV_SCROLL_MAPPING);
+    if (slot && !p_ptr->blind && !(get_race()->flags & RACE_IS_ILLITERATE))
+    {
+        obj_ptr scroll = pack_obj(slot);
+        map_area(DETECT_RAD_MAP);
+        stats_on_use(scroll, 1);
+        scroll->number--;
+        obj_release(scroll, 0);
+        return TRUE;
+    }
+    slot = pack_find_device(EFFECT_ENLIGHTENMENT);
+    if (slot)
+    {
+        obj_ptr device = pack_obj(slot);
+        map_area(DETECT_RAD_MAP);
+        stats_on_use(device, 1);
+        device_decrease_sp(device, device->activation.cost);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 
 /*
  * Move the player
@@ -4914,6 +4942,7 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
     cave_type *c_ptr = &cave[ny][nx];
     feature_type *f_ptr = &f_info[c_ptr->feat];
     bool old_dtrap = FALSE, new_dtrap = FALSE;
+    bool old_map = FALSE, new_map = FALSE;
 
     if (cave[py][px].info & CAVE_IN_DETECT)
         old_dtrap = TRUE;
@@ -4930,6 +4959,19 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
             cmsg_print(TERM_VIOLET, "You are about to leave a trap detected zone.");
             return FALSE;
         }
+    }
+
+    /* Automatically detecting traps is just so lovable. Let's try the same
+     * with Magic Mapping! */
+    if (cave[py][px].info & CAVE_IN_MAP)
+        old_map = TRUE;
+    if (cave[ny][nx].info & CAVE_IN_MAP)
+        new_map = TRUE;
+
+    if (!(mpe_mode & MPE_STAYING) && (running || travel.run))
+    {
+        if (old_map && !new_map)
+            _auto_mapping();
     }
 
     if (cave[py][px].info & CAVE_IN_DETECT)

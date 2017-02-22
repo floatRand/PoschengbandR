@@ -19,7 +19,7 @@
 #define VER_MAJOR 6
 #define VER_MINOR 0
 #define VER_PATCH 0
-#define VER_EXTRA 1
+#define VER_EXTRA 2
 
 #define GAME_MODE_BEGINNER  0
 #define GAME_MODE_NORMAL    1
@@ -2067,33 +2067,34 @@ enum {
 /*
  * Special cave grid flags
  */
-#define CAVE_MARK       0x0001    /* memorized feature */
-#define CAVE_GLOW       0x0002    /* self-illuminating */
-#define CAVE_ICKY       0x0004    /* part of a vault */
-#define CAVE_ROOM       0x0008    /* part of a room */
-#define CAVE_LITE       0x0010    /* lite flag  */
-#define CAVE_VIEW       0x0020    /* view flag */
-#define CAVE_TEMP       0x0040    /* temp flag */
-#define CAVE_XTRA       0x0080    /* misc flag */
-#define CAVE_MNLT       0x0100    /* Illuminated by monster */
-#define CAVE_MNDK       0x8000    /* Darken by monster */
+#define CAVE_MARK       0x000001    /* memorized feature */
+#define CAVE_GLOW       0x000002    /* self-illuminating */
+#define CAVE_ICKY       0x000004    /* part of a vault */
+#define CAVE_ROOM       0x000008    /* part of a room */
+#define CAVE_LITE       0x000010    /* lite flag  */
+#define CAVE_VIEW       0x000020    /* view flag */
+#define CAVE_TEMP       0x000040    /* temp flag */
+#define CAVE_XTRA       0x000080    /* misc flag */
+#define CAVE_MNLT       0x000100    /* Illuminated by monster */
+#define CAVE_MNDK       0x008000    /* Darken by monster */
 
 /* Used only while cave generation */
-#define CAVE_FLOOR      0x0200
-#define CAVE_EXTRA      0x0400
-#define CAVE_INNER      0x0800
-#define CAVE_OUTER      0x1000
-#define CAVE_SOLID      0x2000
-#define CAVE_VAULT      0x4000
+#define CAVE_FLOOR      0x000200
+#define CAVE_EXTRA      0x000400
+#define CAVE_INNER      0x000800
+#define CAVE_OUTER      0x001000
+#define CAVE_SOLID      0x002000
+#define CAVE_VAULT      0x004000
 #define CAVE_MASK (CAVE_FLOOR | CAVE_EXTRA | CAVE_INNER | CAVE_OUTER | CAVE_SOLID | CAVE_VAULT)
 
 /* Used only after cave generation */
-#define CAVE_NOTE       0x0400    /* Flag for delayed visual update (needs note_spot()) */
-#define CAVE_REDRAW     0x0800    /* Flag for delayed visual update (needs lite_spot()) */
-#define CAVE_OBJECT     0x1000    /* Mirror, glyph, etc. */
-#define CAVE_UNSAFE     0x2000    /* Might have trap */
-#define CAVE_IN_DETECT  0x4000    /* trap detected area (inner circle only) */
-/* NOTE: 0x8000 is used above, listed out of sequence!!!! Also note we are now out of bits ... :( */
+#define CAVE_NOTE       0x000400    /* Flag for delayed visual update (needs note_spot()) */
+#define CAVE_REDRAW     0x000800    /* Flag for delayed visual update (needs lite_spot()) */
+#define CAVE_OBJECT     0x001000    /* Mirror, glyph, etc. */
+#define CAVE_UNSAFE     0x002000    /* Might have trap */
+#define CAVE_IN_DETECT  0x004000    /* trap detected area (inner circle only) */
+/* NOTE: 0x8000 is used above, listed out of sequence!!!!*/
+#define CAVE_IN_MAP     0x010000
 
 /*
  * Bit flags for the "project()" function

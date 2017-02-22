@@ -711,7 +711,10 @@ static errr rd_saved_floor(savefile_ptr file, saved_floor_type *sf_ptr)
     for (i = 0; i < limit; i++)
     {
         cave_template_type *ct_ptr = &template[i];
-        ct_ptr->info = savefile_read_u16b(file);
+        if (savefile_is_older_than(file, 6, 0, 0, 2))
+            ct_ptr->info = savefile_read_u16b(file);
+        else
+            ct_ptr->info = savefile_read_u32b(file);
         ct_ptr->feat = savefile_read_s16b(file);
         ct_ptr->mimic = savefile_read_s16b(file);
         ct_ptr->special = savefile_read_s16b(file);

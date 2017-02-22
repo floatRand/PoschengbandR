@@ -758,7 +758,7 @@ static void wr_saved_floor(savefile_ptr file, saved_floor_type *sf_ptr)
         cave_template_type *ct_ptr = &template[i];
 
         /* Dump it */
-        savefile_write_u16b(file, ct_ptr->info);
+        savefile_write_u32b(file, ct_ptr->info);
         savefile_write_s16b(file, ct_ptr->feat);
         savefile_write_s16b(file, ct_ptr->mimic);
         savefile_write_s16b(file, ct_ptr->special);
