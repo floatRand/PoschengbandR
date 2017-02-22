@@ -489,7 +489,7 @@ static void prt_stat(int stat)
 #define BAR_VAMPILIC 64
 #define BAR_CURE 65
 #define BAR_ESP_EVIL 66
-#define BAR_SPEED_ESSENTIA 67
+#define BAR_XXXX1 67
 #define BAR_BLOOD_SHIELD 68
 #define BAR_BLOOD_SEEK 69
 #define BAR_BLOOD_REVENGE 70
@@ -504,7 +504,7 @@ static void prt_stat(int stat)
 #define BAR_FLYING_DAGGER 79
 #define BAR_SHADOW_STANCE 80
 #define BAR_FRENZY_STANCE 81
-#define BAR_GENJI 82
+#define BAR_XXXX3 82
 #define BAR_FORCE 83
 #define BAR_COMBAT_EXPERTISE 84
 #define BAR_STONE_BONES 85
@@ -565,7 +565,7 @@ static void prt_stat(int stat)
 #define BAR_TUNNEL 140
 #define BAR_QUICK_WALK 141
 #define BAR_INVEN_PROT 142
-#define BAR_SHRIKE 143
+#define BAR_XXXX2 143
 #define BAR_WEAPONMASTERY 144
 #define BAR_DEVICE_POWER 145
 #define BAR_SPLATTER 146
@@ -959,8 +959,6 @@ static void prt_status(void)
     if (IS_REVENGE()) ADD_FLG(BAR_EYEEYE);
 
     if (p_ptr->tim_spurt) ADD_FLG(BAR_TIME_SPURT);
-    if (p_ptr->tim_speed_essentia) ADD_FLG(BAR_SPEED_ESSENTIA);
-    if (p_ptr->tim_shrike) ADD_FLG(BAR_SHRIKE);
     if (p_ptr->tim_blood_shield) ADD_FLG(BAR_BLOOD_SHIELD);
     if (p_ptr->tim_blood_seek) ADD_FLG(BAR_BLOOD_SEEK);
     if (p_ptr->tim_blood_sight) ADD_FLG(BAR_BLOOD_SIGHT);
@@ -968,7 +966,6 @@ static void prt_status(void)
     if (p_ptr->tim_blood_rite) ADD_FLG(BAR_BLOOD_RITE);
     if (p_ptr->tim_no_spells) ADD_FLG(BAR_NO_SPELLS);
     if (p_ptr->tim_blood_revenge) ADD_FLG(BAR_BLOOD_REVENGE);
-    if (p_ptr->tim_genji) ADD_FLG(BAR_GENJI);
     if (p_ptr->tim_force) ADD_FLG(BAR_FORCE);
     if (p_ptr->pclass == CLASS_WEAPONMASTER)
     {
@@ -3432,9 +3429,6 @@ void calc_bonuses(void)
     for (i = 0; i < OF_ARRAY_SIZE; i++)
         p_ptr->shooter_info.flags[i] = 0;
 
-    if (p_ptr->tim_speed_essentia)
-        p_ptr->shooter_info.num_fire += 100;
-
     if (p_ptr->tim_weaponmastery)
         equip_xtra_might(p_ptr->lev/23);
 
@@ -3457,7 +3451,7 @@ void calc_bonuses(void)
         p_ptr->weapon_info[i].bare_hands = FALSE;
         p_ptr->weapon_info[i].riding = FALSE;
         p_ptr->weapon_info[i].slot = 0;
-        p_ptr->weapon_info[i].genji = p_ptr->tim_genji > 0;
+        p_ptr->weapon_info[i].genji = 0;
         p_ptr->weapon_info[i].dis_to_h = 0;
         p_ptr->weapon_info[i].to_h = 0;
         p_ptr->weapon_info[i].dis_to_d = 0;
@@ -4188,9 +4182,6 @@ void calc_bonuses(void)
             if (class_idx == CLASS_MONSTER)
                 class_idx = race_ptr->pseudo_class_idx;
 
-            if (p_ptr->tim_genji && skill < 7000)
-                skill = 7000;
-
             /* Some classes (e.g. Berserkers) don't mind dual wielding with heavy weapons */
             switch (class_idx)
             {
@@ -4556,9 +4547,6 @@ void calc_bonuses(void)
         {
             info_ptr->base_blow = calculate_base_blows(i, p_ptr->stat_ind[A_STR], p_ptr->stat_ind[A_DEX]);
 
-            if (p_ptr->tim_speed_essentia && p_ptr->pclass != CLASS_MAULER)
-                info_ptr->xtra_blow += 200;
-
             if (p_ptr->special_defense & KATA_FUUJIN) info_ptr->xtra_blow -= 100;
 
             if (o_ptr->tval == TV_SWORD && o_ptr->sval == SV_POISON_NEEDLE)
@@ -4651,10 +4639,6 @@ void calc_bonuses(void)
 
         attack->to_h += bonus;
     }
-
-    /* Kamikaze Warrior with a Monster Race/Possessor */
-    if (!p_ptr->weapon_ct && p_ptr->tim_speed_essentia)
-        p_ptr->innate_attack_info.xtra_blow += 200;
 
     if (p_ptr->riding)
     {

@@ -1549,16 +1549,6 @@ static void process_world_aux_timeout(void)
         (void)set_ultimate_res(p_ptr->ult_res - 1, TRUE);
     }
 
-    if (p_ptr->tim_speed_essentia)
-    {
-        (void)set_tim_speed_essentia(p_ptr->tim_speed_essentia - 1, TRUE);
-    }
-
-    if (p_ptr->tim_shrike)
-    {
-        (void)set_tim_shrike(p_ptr->tim_shrike - 1, TRUE);
-    }
-
     if (p_ptr->tim_spurt)
     {
         (void)set_tim_spurt(p_ptr->tim_spurt - 1, TRUE);
@@ -1596,11 +1586,6 @@ static void process_world_aux_timeout(void)
 
     if (p_ptr->tim_superstealth)
         set_tim_superstealth(p_ptr->tim_superstealth - 1, TRUE);
-
-    if (p_ptr->tim_genji)
-    {
-        set_tim_genji(p_ptr->tim_genji - 1, TRUE);
-    }
 
     if (p_ptr->tim_force)
     {

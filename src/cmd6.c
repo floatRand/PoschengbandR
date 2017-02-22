@@ -514,7 +514,7 @@ static void do_cmd_quaff_potion_aux(obj_ptr obj)
     int   number = 1;
 
     /* Take a turn */
-    if (mut_present(MUT_POTION_CHUGGER) || p_ptr->tim_shrike)
+    if (mut_present(MUT_POTION_CHUGGER))
         energy_use = 50;
     else
         energy_use = 100;
@@ -726,7 +726,7 @@ static void do_cmd_read_scroll_aux(obj_ptr o_ptr)
     bool known = object_is_aware(o_ptr);
 
     /* Take a turn */
-    if (mut_present(MUT_SPEED_READER) || p_ptr->tim_shrike)
+    if (mut_present(MUT_SPEED_READER))
         energy_use = 50;
     else
         energy_use = 100;

@@ -2341,9 +2341,7 @@ static void do_cmd_walk_aux(int dir, bool pickup)
     if (weaponmaster_get_toggle() == TOGGLE_SHADOW_STANCE)
         energy_use = energy_use * (45-(p_ptr->lev/2)) / 100;
 
-    if (!p_ptr->wild_mode && p_ptr->tim_shrike)
-        energy_use /= 3;
-    else if (p_ptr->quick_walk)
+    if (p_ptr->quick_walk)
         energy_use = energy_use * 60 / 100;
 
     if (prace_is_(RACE_MON_GOLEM))

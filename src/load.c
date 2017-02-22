@@ -466,22 +466,27 @@ static void rd_extra(savefile_ptr file)
     p_ptr->tim_sh_holy = savefile_read_s16b(file);
     p_ptr->tim_eyeeye = savefile_read_s16b(file);
     p_ptr->tim_spurt = savefile_read_s16b(file);
-    p_ptr->tim_spec_corporeal = savefile_read_s16b(file);
+    if (savefile_is_older_than(file, 6, 0, 0, 1))
+        savefile_read_s16b(file);
     p_ptr->tim_no_spells = savefile_read_s16b(file);
     p_ptr->tim_no_device = savefile_read_s16b(file);
-    p_ptr->tim_speed_essentia = savefile_read_s16b(file);
-    p_ptr->tim_slow_digest = savefile_read_s16b(file);
-    p_ptr->tim_crystal_skin = savefile_read_s16b(file);
-    p_ptr->tim_chaotic_surge = savefile_read_s16b(file);
-    p_ptr->tim_wild_pos = savefile_read_s16b(file);
-    p_ptr->tim_wild_mind = savefile_read_s16b(file);
+    if (savefile_is_older_than(file, 6, 0, 0, 1))
+    {
+        savefile_read_s16b(file);
+        savefile_read_s16b(file);
+        savefile_read_s16b(file);
+        savefile_read_s16b(file);
+        savefile_read_s16b(file);
+        savefile_read_s16b(file);
+    }
     p_ptr->tim_blood_shield = savefile_read_s16b(file);
     p_ptr->tim_blood_sight = savefile_read_s16b(file);
     p_ptr->tim_blood_feast = savefile_read_s16b(file);
     p_ptr->tim_blood_revenge = savefile_read_s16b(file);
     p_ptr->tim_blood_seek = savefile_read_s16b(file);
     p_ptr->tim_blood_rite = savefile_read_s16b(file);
-    p_ptr->tim_genji = savefile_read_s16b(file);
+    if (savefile_is_older_than(file, 6, 0, 0, 1))
+        savefile_read_s16b(file);
     p_ptr->tim_force = savefile_read_s16b(file);
     p_ptr->tim_building_up = savefile_read_s16b(file);
     p_ptr->tim_vicious_strike = savefile_read_s16b(file);
@@ -495,7 +500,8 @@ static void rd_extra(savefile_ptr file)
     p_ptr->tim_stealthy_snipe = savefile_read_s16b(file);
     p_ptr->tim_killing_spree = savefile_read_s16b(file);
     p_ptr->tim_slay_sentient = savefile_read_s16b(file);
-    p_ptr->tim_shrike = savefile_read_s16b(file);
+    if (savefile_is_older_than(file, 6, 0, 0, 1))
+        savefile_read_s16b(file);
 
     {
         int i;

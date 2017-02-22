@@ -2794,9 +2794,7 @@ static bool _reforge_artifact(void)
     game_turn += rand_range(5000, 15000);
 
     obj_identify_fully(dest);
-
-    p_ptr->update |= PU_BONUS;
-    p_ptr->window |= (PW_INVEN | PW_EQUIP);
+    gear_notice_enchant(dest);
     handle_stuff();
 
     obj_display(dest);

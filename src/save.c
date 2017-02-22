@@ -457,22 +457,14 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->tim_eyeeye);
 
     savefile_write_s16b(file, p_ptr->tim_spurt);
-    savefile_write_s16b(file, p_ptr->tim_spec_corporeal);
     savefile_write_s16b(file, p_ptr->tim_no_spells);
     savefile_write_s16b(file, p_ptr->tim_no_device);
-    savefile_write_s16b(file, p_ptr->tim_speed_essentia);
-    savefile_write_s16b(file, p_ptr->tim_slow_digest);
-    savefile_write_s16b(file, p_ptr->tim_crystal_skin);
-    savefile_write_s16b(file, p_ptr->tim_chaotic_surge);
-    savefile_write_s16b(file, p_ptr->tim_wild_pos);
-    savefile_write_s16b(file, p_ptr->tim_wild_mind);
     savefile_write_s16b(file, p_ptr->tim_blood_shield);
     savefile_write_s16b(file, p_ptr->tim_blood_sight);
     savefile_write_s16b(file, p_ptr->tim_blood_feast);
     savefile_write_s16b(file, p_ptr->tim_blood_revenge);
     savefile_write_s16b(file, p_ptr->tim_blood_seek);
     savefile_write_s16b(file, p_ptr->tim_blood_rite);
-    savefile_write_s16b(file, p_ptr->tim_genji);
     savefile_write_s16b(file, p_ptr->tim_force);
     savefile_write_s16b(file, p_ptr->tim_building_up);
     savefile_write_s16b(file, p_ptr->tim_vicious_strike);
@@ -489,7 +481,6 @@ static void wr_extra(savefile_ptr file)
 
     savefile_write_s16b(file, p_ptr->tim_killing_spree);
     savefile_write_s16b(file, p_ptr->tim_slay_sentient);
-    savefile_write_s16b(file, p_ptr->tim_shrike);
 
     {
         int i;

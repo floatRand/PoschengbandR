@@ -935,11 +935,7 @@ bool dispel_check(int m_idx)
         if (randint1(500) < get_race()->exp) return TRUE;
     }
 
-    if (p_ptr->tim_shrike) return TRUE;
-    if (p_ptr->tim_speed_essentia) return TRUE;
-
     /* Craft Munckin Checks :) */
-    if (p_ptr->tim_genji) return TRUE;
     if (p_ptr->tim_force) return TRUE;
     if (p_ptr->tim_enlarge_weapon) return TRUE;
     if (p_ptr->kabenuke) return TRUE;

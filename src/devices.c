@@ -1871,7 +1871,6 @@ static _effect_info_t _effect_info[] =
     {"SPEED",           EFFECT_SPEED,               25, 150,  4, BIAS_ROGUE | BIAS_MAGE | BIAS_ARCHER},
     {"SPEED_HERO",      EFFECT_SPEED_HERO,          35, 200,  6, BIAS_WARRIOR},
     {"SPEED_HERO_BLESS",EFFECT_SPEED_HERO_BLESS,    40, 250,  8, 0},
-    {"SPEED_ESSENTIA",  EFFECT_SPEED_ESSENTIA,      90, 999,  0, 0},
     {"LIGHT_SPEED",     EFFECT_LIGHT_SPEED,         99, 999, 99, 0},
     {"ENLARGE_WEAPON",  EFFECT_ENLARGE_WEAPON,      80, 900,  0, 0},
     {"TELEPATHY",       EFFECT_TELEPATHY,           30, 150,  8, BIAS_MAGE | BIAS_ARCHER},
@@ -3864,21 +3863,6 @@ cptr do_effect(effect_t *effect, int mode, int boost)
             if (set_fast(dur, FALSE)) device_noticed = TRUE;
             if (set_hero(dur, FALSE)) device_noticed = TRUE;
             if (set_blessed(dur, FALSE)) device_noticed = TRUE;
-        }
-        break;
-    }
-    case EFFECT_SPEED_ESSENTIA:
-    {
-        int power = _extra(effect, 5);
-        if (name) return "Speed Essentia";
-        if (desc) return "It temporarily grants you extra melee attacks.";
-        if (info) return format("Dur d%d + %d", _BOOST(power), _BOOST(power));
-        if (value) return format("%d", 5000 + 1000*power);
-        if (color) return format("%d", TERM_VIOLET);
-        if (cast)
-        {
-            if (set_tim_speed_essentia(_BOOST(5 + randint1(5)), FALSE))
-                device_noticed = TRUE;
         }
         break;
     }

@@ -145,6 +145,7 @@ void gear_notice_id(obj_ptr obj)
     switch (obj->loc.where)
     {
     case INV_EQUIP:
+        p_ptr->update |= PU_BONUS; /* dis_to_h, dis_to_d, dis_to_ac, etc. */
         p_ptr->window |= PW_EQUIP;
         break;
     case INV_PACK:

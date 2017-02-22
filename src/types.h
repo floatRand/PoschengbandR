@@ -1218,23 +1218,14 @@ struct player_type
     s16b tim_eyeeye;
 
     s16b tim_spurt;
-    s16b tim_spec_corporeal;
-    s16b tim_speed_essentia;
-    s16b tim_slow_digest;
-    s16b tim_crystal_skin;
-    s16b tim_chaotic_surge;
-    s16b tim_wild_pos;
-    s16b tim_wild_mind;
 
     s16b tim_blood_shield;
     s16b tim_blood_seek;
     s16b tim_blood_sight;
     s16b tim_blood_feast;
     s16b tim_blood_revenge;
-
     s16b tim_blood_rite;
 
-    s16b tim_genji;
     s16b tim_force;
     s16b tim_building_up;
     s16b tim_vicious_strike;
@@ -1253,8 +1244,6 @@ struct player_type
     s16b tim_killing_spree;
     s16b tim_slay_sentient;
     bool maul_of_vice;
-
-    s16b tim_shrike;  /* cf Hyperion by Dan Simmons */
 
     counter_t wild_counters[MAX_WILD_COUNTERS];    /* Wild Weapons */
 
