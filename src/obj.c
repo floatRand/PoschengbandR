@@ -190,6 +190,7 @@ bool obj_can_sense1(obj_ptr obj)
     case TV_ARROW:
     case TV_BOLT:
     case TV_BOW:
+    case TV_QUIVER:
     case TV_DIGGING:
     case TV_HAFTED:
     case TV_POLEARM:
