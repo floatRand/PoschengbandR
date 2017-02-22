@@ -116,7 +116,6 @@ Y:preserve_mode
 X:destroy_items
 Y:destroy_feeling
 Y:destroy_identify
-X:destroy_get
 Y:leave_worth
 X:leave_equip
 Y:leave_chest

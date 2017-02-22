@@ -59,7 +59,7 @@ Carrying 113.9 pounds (<color:G>81%</color> capacity).                          
 Outpost                                                                         
 </style>
 
-To choose an objects, simply press the indicated letter. What happens next depends on the context of the object prompt and is indicated by the bottom line on the dialog. In this case, you are simply browsing your gear, so what could be more useful than letting you inspect individual objects?
+To choose an object, simply press the indicated letter. What happens next depends on the context of the object prompt and is indicated by the bottom line on the dialog. In this case, you are simply browsing your gear, so what could be more useful than letting you inspect individual objects?
 <style:screenshot>
 <color:U>25 Arrows (3d4) (+0,+0)</color>                                                         
   A standard clothyard arrow, straight and cleanly fletched.        LEVEL <color:G>     1</color>

@@ -2462,9 +2462,6 @@ option_type option_info[] =
     { &destroy_identify,            FALSE, OPT_PAGE_AUTODESTROY, 7, 9,
     "destroy_identify",             "Apply auto-destroy on identifying an item" },
 
-    { &destroy_get,                 FALSE, OPT_PAGE_AUTODESTROY, 6, 9,
-    "destroy_get",                  "Apply auto-destroy on getting an item" },
-
     { &destroy_debug,               FALSE, OPT_PAGE_AUTODESTROY, 7, 10,
     "destroy_debug",                "List the rule used when applying the Mogaminator" },
 

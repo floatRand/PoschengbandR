@@ -332,7 +332,6 @@ extern bool destroy_items;    /* Use easy auto-destroyer */
 extern bool destroy_debug;
 extern bool destroy_feeling;    /* Apply auto-destroy as sense feeling */
 extern bool destroy_identify;    /* Apply auto-destroy as identify an item */
-extern bool destroy_get;
 extern bool leave_worth;    /* Auto-destroyer leaves known worthy items */
 extern bool leave_equip;    /* Auto-destroyer leaves weapons and armour */
 extern bool leave_chest;    /* Auto-destroyer leaves closed chests */

@@ -107,7 +107,7 @@ Makes it easy for your character disarms a trap: simply by walking into it! Also
 This option enhances the Get Objects command (<color:keypress>g</color>) to automatically travel to nearby, visible ammo which is inscribed with <color:keypress>=g</color> (i.e., ammo which you have instructed the autopicker to automatically pickup). This enhancement is useful for archer builds after all nearby monsters have been slain. You might consider using the stronger <color:keyword>auto_get_objects</color> option instead.
 
 <topic:auto_get_objects><color:U>Automatically get nearby objects</color> <color:D>(auto_get_objects)</color>
-This option enhances the Get Objects command (<color:keypress>g</color>) to automatically travel to nearby visible objects which you have registered to either pickup or destroy. This option subsumes (and extends) the <color:keyword>auto_get_ammo</color> option since ammo inscribed with <color:keypress>=g</color> is certainly registered for auto-pickup. With this option, you might consider also turning on the <link:option.txt#destroy_get> <color:link>destroy_get</color> option. The reason is that you will probably find the <color:keypress>g</color> command so useful that you forget to check for objects underfoot before issuing it. Traditionally, <color:keypress>g</color> gets all objects you are standing on and bypasses any autopick preferences. I really can't see why you would want that behaviour (ever) but I wasn't bold enough to make <color:keyword>destroy_get</color> enabled by default.
+This option enhances the Get Objects command (<color:keypress>g</color>) to automatically travel to nearby visible objects which you have registered to either pickup or destroy. This option subsumes (and extends) the <color:keyword>auto_get_ammo</color> option since ammo inscribed with <color:keypress>=g</color> is certainly registered for auto-pickup.
 
 <topic:easy_floor><color:U>Display floor stacks in a list</color> <color:D>(easy_floor)</color>
 Lets you select an item from a stack on the floor by browsing a list. Also the look command will describe floor stack as "You see a stack of n items.", when there is more than one item on a floor grid, and display a list of items when you press 'x' at that time.
@@ -309,9 +309,6 @@ If this option is turned on, both The Mogaminator and The Easy Destroyer will ta
 
 <topic:destroy_identify><color:U>Apply auto-destroy on identifying an item</color> <color:D>(destroy_identify)</color>
 If this option is turned on, both The Mogaminator and The Easy Destroyer will take actions whenever the player identifies an object, whether with a spell or with a magical device (but, alas, not via a town service).
-
-<topic:destroy_get><color:U>Apply auto-destroy on getting an item</color> <color:D>(destroy_get)</color>
-If this option is turned on, both The Mogaminator and The Easy Destroyer will apply whenever you get an object into your pack (typically, by pressing <color:keypress>g</color>). If you are using any of the Get Objects enhancement options (see <link:option.txt#auto_get_objects> <color:link>auto_get_objects</color>) then you probably want this option as well in order to avoid accidentally picking up unwanted objects (such as corpses).
 
 <topic:destroy_debug><color:U>List the rule used when applying the Mogaminator</color> <color:D>(destroy_debug)</color>
 This is a debugging option when using the full-featured Mogaminator. Enabling this option results in the reporting of the rule used whenever an action is taken, such as pickup, auto-identify or destroy. The rule in question will appear in the message line. For example:<style:screenshot>

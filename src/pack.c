@@ -65,7 +65,7 @@ void pack_carry_aux(obj_ptr obj)
         {
             obj_ptr new_obj = inv_obj(_inv, slot);
             new_obj->marked |= OM_TOUCHED;
-            autopick_alter_obj(new_obj, FALSE /* XXX destroy_get*/);
+            autopick_alter_obj(new_obj, FALSE);
             p_ptr->notice |= PN_OPTIMIZE_PACK;
         }
     }
