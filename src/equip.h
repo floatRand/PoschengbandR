@@ -3,6 +3,24 @@
 
 #include "inv.h"
 
+/* Equipment Module.
+
+   The goal is to support different kinds of equipment "templates".
+   For example, a "hydra" player race would have multiple heads and
+   should allow one amulet and helmet per head. An "insect" player
+   race might allow multiple pairs of boots, but body armor is 
+   probably out. Dragons get multiple ring slots but not much else
+   (cf Drangband which was always good fun, back in the day).
+
+   Slots are [1..equip_max()]
+
+   NULL predicates are always OK and mean that no restriction should be applied.
+*/
+
+/* This is the maximum possible value of equip_max() ... It is needed
+ * by code that creates fixed size arrays at compile time, such as 
+ * _flagzilla_t in py_display.c or b_info's equip_template_t. *YOU* should
+ * not be using this, however. */
 #define EQUIP_MAX 15
 
 enum {
@@ -23,20 +41,6 @@ enum {
     EQUIP_SLOT_QUIVER,
     EQUIP_SLOT_MAX
 };
-
-/* Equipment Module.
-
-   The goal is to support different kinds of equipment "templates".
-   For example, a "hydra" player race would have multiple heads and
-   should allow one amulet and helmet per head. An "insect" player
-   race might allow multiple pairs of boots, but body armor is 
-   probably out. Dragons get multiple ring slots but not much else
-   (cf Drangband which was always good fun, back in the day).
-
-   Slots are [1..equip_max()]
-
-   NULL predicates are always OK and mean that no restriction should be applied.
-*/
 
 extern void    equip_ui(void);
 extern void    equip_display(doc_ptr doc, obj_p p, int flags);
@@ -91,7 +95,7 @@ extern bool    equip_is_valid_hand(int hand);
 extern bool    equip_is_empty_two_handed_slot(slot_t slot);
 
 extern void    equip_learn_curse(int flag);
-extern void    equip_learn_resist(int obj_flag); /* pass TR_RES_FIRE rather than RES_FIRE */
+extern void    equip_learn_resist(int obj_flag); /* pass OF_RES_FIRE rather than RES_FIRE */
 extern void    equip_learn_vuln(int obj_flag);
 extern void    equip_learn_flag(int obj_flag);
 
