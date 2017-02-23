@@ -1220,7 +1220,7 @@ F:SHOW_MODS
 M:100:6d7
 
 N:*:& Mithril Arrow~
-G:{:o
+G:{:B
 I:17:3:0
 W:50:0:0:4:20
 A:50/2
@@ -1271,7 +1271,7 @@ F:SHOW_MODS
 M:100:6d7
 
 N:*:& Mithril Bolt~
-G:{:w
+G:{:B
 I:18:3:0
 W:60:0:0:4:20
 A:60/2
@@ -1281,7 +1281,7 @@ F:IGNORE_ACID | IGNORE_COLD | IGNORE_FIRE | IGNORE_ELEC
 M:100:6d7
 
 N:*:& Seeker Bolt~
-G:{:B
+G:{:r
 I:18:4:0
 W:80:0:0:3:25
 A:80/2
