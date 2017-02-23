@@ -2337,7 +2337,12 @@ static void _build_options(doc_ptr doc)
     if (no_artifacts)
         doc_printf(doc, " No Artifacts:       Enabled\n");
     else if (random_artifacts)
-        doc_printf(doc, " Random Artifacts:   Enabled\n");
+    {
+        if (half_fixedarts)
+            doc_printf(doc, " Random Artifacts:   Half\n");
+        else
+            doc_printf(doc, " Random Artifacts:   Enabled\n");
+    }
 
     if (no_egos)
         doc_printf(doc, " No Egos:            Enabled\n");

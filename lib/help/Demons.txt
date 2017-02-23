@@ -49,7 +49,7 @@ Base HP       42        Bows        <color:r>Bad          </color>
 Experience   250%       Infravision 50'
 </style></indent>
 <topic:Cyberdemon><color:o>Cyberdemon</color>
-Cyberdemons are giant humanoid forms, half demon and half machine. They are a bit slow and move erratically, but their immense bodies and unsurpassable firepower more than make up for this. The walls of the dungeon reverberate with their heavy steps!
+Cyberdemons are giant humanoid forms, half demon and half machine. They are a bit slow, but their immense bodies and unsurpassable firepower more than make up for this. The walls of the dungeon reverberate with their heavy steps!
 
   <indent><style:table><color:G>Stats                   Skills</color>
 Strength     <color:w> +5</color>        Disarming   <color:y>Good         </color>

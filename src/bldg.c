@@ -2131,12 +2131,6 @@ static bool inn_comm(int cmd)
     switch (cmd)
     {
         case BACT_FOOD: /* Buy food & drink */
-            if (p_ptr->food >= PY_FOOD_FULL)
-            {
-                msg_print("You are full now.");
-                return FALSE;
-            }
-
             msg_print("The barkeep gives you some gruel and a beer.");
 
             (void)set_food(PY_FOOD_MAX - 1);

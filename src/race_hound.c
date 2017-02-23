@@ -685,6 +685,37 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE]) {
         break;
     }
 }
+
+// Also used by other species with randomized subraces
+void rechoose_subrace(void)
+{
+    int i;
+
+    switch (p_ptr->prace)
+    {
+    case RACE_MON_HOUND:
+        p_ptr->current_r_idx = MON_CLEAR_HOUND;
+        break;
+    case RACE_MON_VORTEX:
+        p_ptr->current_r_idx = (randint0(2) ? MON_COLD_VORTEX : MON_FIRE_VORTEX);
+        msg_format("You are born a %s.", _mon_name(p_ptr->current_r_idx));
+        break;
+    case RACE_MON_QUYLTHULG:
+        p_ptr->current_r_idx = MON_QUYLTHULG;
+        break;
+    case RACE_MON_TROLL:
+        p_ptr->current_r_idx = MON_FOREST_TROLL;
+        break;
+    default:
+        return;
+    }
+
+    for (i = 2; i <= p_ptr->max_plv; ++i)
+        get_race()->gain_level(i);
+    p_ptr->redraw |= PR_MAP;
+    p_ptr->update |= PU_BONUS;
+}
+
 static void _gain_level(int new_level) {
     int tier = _find_tier(p_ptr->current_r_idx);
     if (tier < 0 || tier == _MAX_TIERS - 1) return;

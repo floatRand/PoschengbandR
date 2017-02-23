@@ -1309,7 +1309,6 @@ void do_cmd_cast(void)
 
         virtue_on_cast_spell(spell, need_mana, chance);
 
-
         if (mp_ptr->spell_xtra & MAGIC_GAIN_EXP)
         {
             s16b cur_exp = p_ptr->spell_exp[(increment ? 32 : 0)+spell];

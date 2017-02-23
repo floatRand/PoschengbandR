@@ -361,7 +361,7 @@ s32b _finalize_p(s32b p, u32b flgs[OF_ARRAY_SIZE], object_type *o_ptr)
         }
     }
 
-    if (have_flag(flgs, OF_TY_CURSE))
+    if (have_flag(flgs, OF_TY_CURSE) && !(o_ptr->curse_flags & OFC_PERMA_CURSE))
     {
         p = p * 5 / 10;
         if (cost_calc_hook)

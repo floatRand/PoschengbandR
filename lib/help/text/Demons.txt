@@ -65,9 +65,9 @@ servants with new and more powerful forms.
   
 Cyberdemon
 Cyberdemons are giant humanoid forms, half demon and half machine. They 
-are a bit slow and move erratically, but their immense bodies and 
-unsurpassable firepower more than make up for this. The walls of the 
-dungeon reverberate with their heavy steps!
+are a bit slow, but their immense bodies and unsurpassable firepower 
+more than make up for this. The walls of the dungeon reverberate with 
+their heavy steps!
 
   Stats                   Skills
   Strength      +5        Disarming   Good         

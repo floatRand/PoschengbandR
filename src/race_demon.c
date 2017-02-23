@@ -29,7 +29,7 @@ static caster_info * _caster_info(void)
 
 static void _demon_birth(void)
 {
-    int i, ct = rand_range(3, 4);
+    int i, ct = 4;
     get_mon_num_prep(monster_hook_human, NULL);
     for (i = 0; i < ct; i++)
     {
@@ -824,8 +824,6 @@ static void _cyber_calc_bonuses(void)
 {
     int to_a = py_prorata_level(75);
 
-    p_ptr->move_random = TRUE;
-
     p_ptr->to_a += to_a;
     p_ptr->dis_to_a += to_a;
     p_ptr->pspeed -= 1 + p_ptr->lev/23;
@@ -856,7 +854,7 @@ static void _cyber_move_player(void)
     /* Cyberdemons move erratically (cf get_rep_dir()) and make a lot of noise */
 	/* R: Boots of Soft Tread negates this. Have fun with mental image of cybie ballerinas. */
     if (one_in_(66) && !soft_tread) 
-    {
+	{
         int i;
 
         cmsg_print(TERM_RED, "The dungeon trembles!");
@@ -886,7 +884,7 @@ static race_t *_cyber_get_race_t(void)
 
         me.subname = "Cyberdemon";
         me.subdesc = "Cyberdemons are giant humanoid forms, half demon and half machine. They are a bit "
-        "slow and move erratically, but their immense bodies and unsurpassable firepower "
+        "slow, but their immense bodies and unsurpassable firepower "
         "more than make up for this. The walls of the dungeon reverberate with their heavy steps!";
         me.skills = bs;
         me.extra_skills = xs;

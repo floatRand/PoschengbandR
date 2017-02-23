@@ -1323,7 +1323,7 @@ static void _birth(void)
 {
     object_type forge = {0};
     object_prep(&forge, lookup_kind(TV_SWORD, SV_BROAD_SWORD));
-    rune_add(&forge, RUNE_ABSORPTION, FALSE);
+    rune_add(&forge, RUNE_FIRE, FALSE);
     py_birth_obj(&forge);
 
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);

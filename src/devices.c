@@ -969,8 +969,8 @@ static cptr _do_potion(int sval, int mode)
                 wild_talent_new_life();
             if (p_ptr->pclass == CLASS_PSION && get_check("Relearn Powers? "))
                 psion_relearn_powers();
-			/*if (p_ptr->pclass == CLASS_FREELANCER && get_check("Forget all proficiencies and start anew? "))
-				freelancer_reset();*/
+            if (p_ptr->prace == RACE_MON_HOUND || p_ptr->prace == RACE_MON_VORTEX || p_ptr->prace == RACE_MON_QUYLTHULG || p_ptr->prace == RACE_MON_TROLL)
+                rechoose_subrace();
         }
         break;
     case SV_POTION_NEO_TSUYOSHI:

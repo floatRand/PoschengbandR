@@ -921,7 +921,7 @@ static void _birth(void)
 {
     py_birth_obj_aux(TV_SWORD, SV_SHORT_SWORD, 1);
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, rand_range(4, 7));
+    py_birth_obj_aux(TV_POTION, SV_POTION_SPEED, 5);
 }
 
 class_t *time_lord_get_class(void)

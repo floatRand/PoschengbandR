@@ -47,7 +47,7 @@ static int _max_vampiric_drain(void)
     if (o_ptr->curse_flags & OFC_PERMA_CURSE)
     {
         bool feed = FALSE;
-        bool unique = (r_ptr->flags1 & RF1_UNIQUE);
+        bool unique = (r_ptr->flags1 & RF1_UNIQUE) ? TRUE : FALSE;
 
         switch (randint1(4))
         {

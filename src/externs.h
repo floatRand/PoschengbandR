@@ -336,6 +336,7 @@ extern bool allow_pets; /* Allow pets: Note, this makes some classes unplayable.
 extern bool quest_unique; /* Random quests for unique monsters only */
 extern bool ironman_quests; /* Random quests must be completed */
 extern bool random_artifacts;
+extern bool half_fixedarts;
 extern bool no_artifacts;
 extern bool no_egos;
 extern bool no_selling;
@@ -1841,9 +1842,9 @@ extern void resize_map(void);
 extern void redraw_window(void);
 extern bool class_doesnt_study(int class_idx);
 extern int monster_tele_save(monster_race *r_ptr, int power);
-extern int max_mspell_damage(int fGroup, u32b atk, monster_race *r_ptr);
-
 extern int Rfear_get_fail_chance(int ml);
+extern int mspell_damage(int fGroup, u32b atk, monster_race *r_ptr);
+
 
 /* Display
    Various regions of the terminal are reserved for different things.
@@ -2296,6 +2297,8 @@ extern int dragon_vamp_amt;
 extern dragon_realm_ptr dragon_get_realm(int which);
 extern int subjugation_power(void);
 extern bool monster_toss(int m_idx);
+
+extern void    rechoose_subrace(void);
 
 extern void    hound_calc_innate_attacks(void);
 extern void    hound_sniff_spell(int cmd, variant *res);

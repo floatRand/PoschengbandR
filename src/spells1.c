@@ -1843,7 +1843,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
     /* Is the monster "seen"? */
     bool seen = m_ptr->ml;
-    bool seen_msg = is_seen(m_ptr);
+    bool seen_msg = seen;
 
     bool slept = (bool)MON_CSLEEP(m_ptr);
 

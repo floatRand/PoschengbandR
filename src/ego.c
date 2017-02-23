@@ -3263,7 +3263,7 @@ void ego_finalize(object_type *o_ptr, int level, int power, int mode)
 void ego_brand_weapon(object_type *o_ptr, int which)
 {
     assert(o_ptr);
-    assert(!o_ptr->name1 && !o_ptr->name2);
+    assert(!o_ptr->name2 && !object_is_artifact(o_ptr));
     assert(EGO_WEAPON_SLAYING <= which && which <= EGO_WEAPON_NOLDOR);
     apply_magic_ego = which;
     _ego_create_weapon(o_ptr, object_level);

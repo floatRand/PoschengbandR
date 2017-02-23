@@ -3319,19 +3319,19 @@ void _on_birth(void)
         {
         case SV_SLING:
             object_prep(&forge, lookup_kind(TV_SHOT, SV_AMMO_NORMAL));
-            forge.number = (byte)rand_range(15, 20);
+            forge.number = (byte)17;
             py_birth_obj(&forge);
             break;
         case SV_SHORT_BOW:
         case SV_LONG_BOW:
             object_prep(&forge, lookup_kind(TV_ARROW, SV_AMMO_NORMAL));
-            forge.number = (byte)rand_range(15, 20);
+            forge.number = (byte)17;
             py_birth_obj(&forge);
             break;
         case SV_LIGHT_XBOW:
         case SV_HEAVY_XBOW:
             object_prep(&forge, lookup_kind(TV_BOLT, SV_AMMO_NORMAL));
-            forge.number = (byte)rand_range(15, 20);
+            forge.number = (byte)17;
             py_birth_obj(&forge);
             break;
         }

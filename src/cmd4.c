@@ -4158,7 +4158,10 @@ static void do_cmd_knowledge_artifacts(void)
 
     if (random_artifacts)
     {
-        cmsg_print(TERM_L_RED, "You won't find any fixed artifacts this game.");
+        if (half_fixedarts)
+            cmsg_print(TERM_L_RED, "Half of your fixed artifacts this game will be replaced with random artifacts.");
+        else
+            cmsg_print(TERM_L_RED, "You won't find any fixed artifacts this game.");
         return;
     }
     else if (no_artifacts)

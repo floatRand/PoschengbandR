@@ -64,7 +64,7 @@ static void _birth(void)
 
     py_birth_obj_aux(TV_HAFTED, SV_WIZSTAFF, 1);
     py_birth_obj_aux(TV_WAND, EFFECT_BOLT_MISSILE, 1);
-    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, rand_range(10, 20));
+    py_birth_obj_aux(TV_POTION, SV_POTION_CLARITY, 15);
 
     for (i = TV_LIFE_BOOK; i < TV_LIFE_BOOK + MAX_MAGIC; i++)
     {

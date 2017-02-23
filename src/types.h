@@ -1620,8 +1620,6 @@ struct player_type
 
     byte easy_realm1;   /* Magic Stones give realm specific boosts */
 
-    bool move_random;   /* Cyberdemons and Possessors ... */
-
     s16b monk_lvl;
 
     int           weapon_ct;

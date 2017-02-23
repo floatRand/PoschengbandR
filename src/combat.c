@@ -891,9 +891,12 @@ void display_innate_attack_info(doc_ptr doc, int which)
     }
     if (p_ptr->current_r_idx == MON_AETHER_VORTEX) /* Hack ... cf race_vortex.c:_calc_innate_attacks() */
     {
-        int min3 = 9*(min_base + a->to_d)/4 + p_ptr->to_d_m; /* 1 + .75 + .5 = 2.25 = 9/4 */
-        int max3 = 9*(max_base + a->to_d)/4 + p_ptr->to_d_m;
-        doc_printf(cols[0], "<color:r> %-7.7s</color>: %d\n", _effect_name(a->effect[i]), blows * (min3 + max3)/200);
+        int min3 = 9*min/4; /* 1 + .75 + .5 = 2.25 = 9/4 */
+        int max3 = 9*max/4;
+        doc_printf(cols[0], "<color:r> %-7.7s</color>: %d\n",
+                _effect_name(a->effect[i]),
+                blows * (min3 + max3)/200
+        );
     }
     else
     {
