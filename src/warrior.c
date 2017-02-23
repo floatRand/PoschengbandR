@@ -28,7 +28,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
       && info_ptr->tval_ammo <= TV_BOLT
       && info_ptr->tval_ammo >= TV_SHOT )
     {
-        p_ptr->shooter_info.num_fire += py_prorata_level_aux(100, 0, 1, 1);
+        p_ptr->shooter_info.num_fire += p_ptr->lev * 2;
     }
 }
 

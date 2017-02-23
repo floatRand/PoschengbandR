@@ -626,7 +626,7 @@ static int _smith_reroll(object_type *o_ptr)
         case ESCAPE: return _CANCEL;
         case 'm':
         {
-            char buf[50];
+            char buf[51];
             sprintf(buf, "%d", min);
             if (get_string("Min Score: ", buf, 50))
             {
