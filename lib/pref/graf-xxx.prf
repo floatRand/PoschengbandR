@@ -3808,9 +3808,11 @@ F:198:0xA2:0x89
 
 
 # Object attr/char definitions
-
 # something
 K:0:0:0x01/0x26
+
+# a Red Mushroom
+K:80:0:0xBA/0x81
 
 # a Blue Mushroom
 K:80:1:0xBA/0x80
@@ -3824,6 +3826,27 @@ K:80:3:0xBA/0x84
 # a Brown Mushroom
 K:80:4:0xBA/0x87
 
+# a Tan Mushroom
+K:80:5:0xBA/0x87
+
+# a Furry Mushroom
+K:80:6:0xBA/0x85
+
+# a Slimy Mushroom
+K:80:7:0xBA/0x85
+
+# a Light Green Mushroom
+K:80:8:0xBA/0x82
+
+# a Violet Mushroom
+K:80:9:0xBA/0x83
+
+# a Green Mushroom
+K:80:10:0xBA/0x82
+
+# a White Spotted Mushroom
+K:80:11:0xBA/0x85
+
 # a Dark Blue Mushroom
 K:80:12:0xBA/0x80
 
@@ -3836,38 +3859,14 @@ K:80:14:0xBA/0x81
 # a Yellow Mushroom
 K:80:15:0xBA/0x86
 
-# a Furry Mushroom
-K:80:6:0xBA/0x85
-
-# a Green Mushroom
-K:80:10:0xBA/0x82
-
 # a Grey Mushroom
 K:80:18:0xBA/0x85
 
 # a Light Blue Mushroom
 K:80:19:0xBA/0x80
 
-# a Light Green Mushroom
-K:80:8:0xBA/0x82
-
-# a Violet Mushroom
-K:80:9:0xBA/0x83
-
-# a Red Mushroom
-K:80:0:0xBA/0x81
-
-# a Slimy Mushroom
-K:80:7:0xBA/0x85
-
-# a Tan Mushroom
-K:80:5:0xBA/0x87
-
 # a White Mushroom
 K:80:17:0xBA/0x85
-
-# a White Spotted Mushroom
-K:80:11:0xBA/0x85
 
 # a Wrinkled Mushroom
 K:80:16:0xBA/0x87
@@ -3884,29 +3883,56 @@ K:80:33:0x8B/0x82
 # Slime Mold
 K:80:36:0x8A/0x9F
 
-# Piece of Elvish Waybread
-K:80:37:0x8B/0x80
-
 # Pint of Fine Ale
 K:80:38:0x8A/0x95
 
 # Pint of Fine Wine
 K:80:39:0x8A/0x96
 
-# Mattock
-K:20:7:0xCD/0x80
+# Piece of Elvish Waybread
+K:80:37:0x8B/0x80
 
-# No-dachi
-K:23:27:0xCD/0x81
+# Serving of Ambrosia
+K:80:40:0x0B/0x2C
 
 # Broken Dagger
 K:23:1:0x89/0x83
 
-# Bastard Sword
-K:23:21:0x89/0x85
+# Broken Sword
+K:23:2:0x89/0x83
 
-# Scimitar
-K:23:18:0x89/0x85
+# Dagger
+K:23:4:0x89/0x83
+
+# Main Gauche
+K:23:5:0x89/0x83
+
+# Tanto
+K:23:6:0xCD/0x89
+
+# Rapier
+K:23:7:0x89/0x84
+
+# Small Sword
+K:23:8:0x89/0x84
+
+# Basillard
+K:23:9:0xCE/0x85
+
+# Short Sword
+K:23:10:0x89/0x84
+
+# Sabre
+K:23:11:0x89/0x84
+
+# Cutlass
+K:23:12:0x89/0x84
+
+# Wakizashi
+K:23:13:0xCE/0x80
+
+# Khopesh
+K:23:14:0xCD/0x9B
 
 # Tulwar
 K:23:15:0x89/0x84
@@ -3914,152 +3940,203 @@ K:23:15:0x89/0x84
 # Broad Sword
 K:23:16:0x89/0x85
 
-# Short Sword
-K:23:10:0x89/0x84
+# Long Sword
+K:23:17:0x89/0x85
 
-# Blade of Chaos
-K:23:30:0x89/0x87
+# Scimitar
+K:23:18:0x89/0x85
 
-# Two-Handed Sword
-K:23:25:0x89/0x85
-
-# Main Gauche
-K:23:5:0x89/0x83
-
-# Cutlass
-K:23:12:0x89/0x84
-
-# Executioner's Sword
-K:23:28:0x89/0x86
+# Ninjato
+K:23:19:0xCE/0x86
 
 # Katana
 K:23:20:0x89/0x85
 
-# Long Sword
-K:23:17:0x89/0x85
+# Bastard Sword
+K:23:21:0x89/0x85
 
-# Dagger
-K:23:4:0x89/0x83
+# Falchion
+K:23:22:0xCD/0x9F
 
-# Rapier
-K:23:7:0x89/0x84
+# Claymore
+K:23:23:0xCD/0x9D
 
-# Sabre
-K:23:11:0x89/0x84
+# Espadon
+K:23:24:0xCD/0x9E
 
-# Small Sword
-K:23:8:0x89/0x84
+# Two-Handed Sword
+K:23:25:0x89/0x85
 
-# Broken Sword
-K:23:2:0x89/0x83
+# Flamberge
+K:23:26:0xCD/0x9C
 
-# Ball-and-Chain
-K:21:6:0x89/0x88
+# No-dachi
+K:23:27:0xCD/0x81
 
-# Whip
-K:21:2:0x89/0x89
+# Executioner's Sword
+K:23:28:0x89/0x86
 
-# Flail
-K:21:13:0x89/0x8B
+# Zweihander
+K:23:29:0xCD/0x88
 
-# Two-Handed Flail
-K:21:18:0x89/0x8B
+# Blade of Chaos
+K:23:30:0x89/0x87
 
-# Morning Star
-K:21:12:0x89/0x8B
+# Diamond Edge
+K:23:31:0xCE/0x90
 
-# Mace
-K:21:5:0x89/0x8C
+# Poison Needle
+K:23:32:0x84/0x8E
 
-# Quarterstaff
-K:21:3:0x89/0x8E
+# Falcon Sword
+K:23:33:0xCD/0x9E
 
-# War Hammer
-K:21:8:0x89/0x8F
+# Rune Sword
+K:23:34:0x08/0x7C
 
-# Lead-Filled Mace
-K:21:15:0x89/0x8C
+# Dragon Fang
+K:23:35:0x0D/0x7C
 
-# Mace of Disruption
-K:21:20:0x89/0x8D
-
-# Lucerne Hammer
-K:22:12:0x89/0x90
-
-# Beaked Axe
-K:22:10:0x89/0x90
-
-# Glaive
-K:22:13:0x89/0x90
-
-# Halberd
-K:22:15:0x89/0x90
-
-# Awl-Pike
-K:22:4:0x89/0x91
-
-# Pike
-K:22:8:0x89/0x91
+# Hatchet
+K:22:1:0xCD/0x90
 
 # Spear
 K:22:2:0x89/0x91
 
+# Sickle
+K:22:3:0xCD/0x93
+
+# Awl-Pike
+K:22:4:0x89/0x91
+
 # Trident
 K:22:5:0x89/0x92
 
-# Lance
-K:22:20:0x89/0x93
+# Fauchard
+K:22:6:0xCE/0x82
 
-# Great Axe
-K:22:25:0x89/0x90
+# Broad Spear
+K:22:7:0xCD/0x9A
 
-# Battle Axe
-K:22:22:0x89/0x90
+# Pike
+K:22:8:0x89/0x91
 
-# Lochaber Axe
-K:22:28:0x89/0x90
+# Naginata
+K:22:9:0xCE/0x81
+
+# Beaked Axe
+K:22:10:0x89/0x90
 
 # Broad Axe
 K:22:11:0x89/0x90
 
+# Lucerne Hammer
+K:22:12:0x89/0x90
+
+# Glaive
+K:22:13:0x89/0x90
+
+# Lajatang
+K:22:14:0xCD/0x8F
+
+# Halberd
+K:22:15:0x89/0x90
+
+# Guisarme
+K:22:16:0xCE/0x83
+
 # Scythe
 K:22:17:0x89/0x94
+
+# Lance
+K:22:20:0x89/0x93
+
+# Battle Axe
+K:22:22:0x89/0x90
+
+# Great Axe
+K:22:25:0x89/0x90
+
+# Trifurcate Spear
+K:22:26:0xCD/0x96
+
+# Lochaber Axe
+K:22:28:0x89/0x90
+
+# Heavy Lance
+K:22:29:0xCE/0x84
 
 # Scythe of Slicing
 K:22:30:0x89/0x94
 
-# Short Bow
-K:19:12:0x89/0x95
+# Fishingpole
+K:22:40:0x0E/0x2F
 
-# Long Bow
-K:19:13:0x89/0x96
+# Death Scythe
+K:22:50:0x89/0x94
 
-# Light Crossbow
-K:19:23:0x89/0x97
+# Death Scythe
+K:22:51:0x0C/0x2F
 
-# Heavy Crossbow
-K:19:24:0x89/0x98
+# Club
+K:21:1:0xCD/0x99
 
-# Sling
-K:19:2:0x89/0x99
+# Whip
+K:21:2:0x89/0x89
 
-# Arrow
-K:17:1:0x89/0x9A
+# Quarterstaff
+K:21:3:0x89/0x8E
 
-# Seeker Arrow
-K:17:4:0x89/0x9B
+# Nunchaku
+K:21:4:0xCD/0x95
 
-# Bolt
-K:18:1:0x89/0x9C
+# Mace
+K:21:5:0x89/0x8C
 
-# Seeker Bolt
-K:18:4:0x89/0x9D
+# Ball-and-Chain
+K:21:6:0x89/0x88
 
-# Rounded Pebble
-K:16:1:0x89/0x9E
+# Jo Staff
+K:21:7:0xCD/0x98
 
-# Iron Shot
-K:16:2:0x89/0x9F
+# War Hammer
+K:21:8:0x89/0x8F
+
+# Three Piece Rod
+K:21:11:0xCD/0x8C
+
+# Morning Star
+K:21:12:0x89/0x8B
+
+# Flail
+K:21:13:0x89/0x8B
+
+# Bo Staff
+K:21:14:0xCD/0x97
+
+# Lead-Filled Mace
+K:21:15:0x89/0x8C
+
+# Tetsubo
+K:21:16:0xCD/0x94
+
+# Two-Handed Flail
+K:21:18:0x89/0x8B
+
+# Great Hammer
+K:21:19:0xCD/0x87
+
+# Mace of Disruption
+K:21:20:0x89/0x8D
+
+# Wizardstaff
+K:21:21:0xCE/0x9F
+
+# Mighty Hammer
+K:21:50:0x87/0x9A
+
+# Stick
+K:21:63:0xCD/0x98
 
 # Shovel
 K:20:1:0x8A/0x98
@@ -4079,14 +4156,101 @@ K:20:5:0x8B/0x8D
 # Dwarven Pick
 K:20:6:0x8B/0x8E
 
+# Mattock
+K:20:7:0xCD/0x80
+
+# Sling
+K:19:2:0x89/0x99
+
+# Short Bow
+K:19:12:0x89/0x95
+
+# Long Bow
+K:19:13:0x89/0x96
+
+# Light Crossbow
+K:19:23:0x89/0x97
+
+# Heavy Crossbow
+K:19:24:0x89/0x98
+
+# Gun
+K:19:50:0x04/0x7D
+
+# Gun
+K:19:51:0x04/0x7D
+
+# Yumi
+K:19:63:0x89/0x95
+
+# Harp
+K:19:70:0x0F/0x7D
+
+# Quiver
+K:46:0:0x0F/0x7E
+
+# Arrow
+K:17:1:0x89/0x9A
+
+# Sheaf Arrow
+K:17:2:0xCD/0x84
+
+# Mithril Arrow
+K:17:3:0x03/0x7B
+
+# Seeker Arrow
+K:17:4:0x89/0x9B
+
+# Black Arrow
+K:17:10:0x0F/0x7B
+
+# Bolt
+K:18:1:0x89/0x9C
+
+# Steel Bolt
+K:18:2:0x89/0x9C
+
+# Mithril Bolt
+K:18:3:0x01/0x7B
+
+# Seeker Bolt
+K:18:4:0x89/0x9D
+
+# Rounded Pebble
+K:16:1:0x89/0x9E
+
+# Iron Shot
+K:16:2:0x89/0x9F
+
+# Mithril Shot
+K:16:3:0xCD/0x85
+
+# Cloak
+K:35:1:0x88/0x80
+
 # Elven Cloak
 K:35:2:0x88/0x81
+
+# Fur Cloak
+K:35:3:0xCD/0x8E
+
+# Ethereal Cloak
+K:35:5:0xCE/0x93
+
+# Shadow Cloak
+K:35:6:0x88/0x81
+
+# Pair of Dragon Wings
+K:35:7:0x0D/0x28
 
 # Pair of Soft Leather Boots
 K:30:2:0x88/0x89
 
 # Pair of Hard Leather Boots
 K:30:3:0x88/0x8A
+
+# Pair of Dragon Boots
+K:30:4:0x0D/0x5D
 
 # Pair of Metal Shod Boots
 K:30:6:0x88/0x8B
@@ -4097,11 +4261,20 @@ K:32:2:0x88/0x82
 # Metal Cap
 K:32:3:0x88/0x83
 
+# Jingasa
+K:32:4:0xCE/0x8D
+
 # Iron Helm
 K:32:5:0x88/0x84
 
 # Steel Helm
 K:32:6:0x88/0x85
+
+# Dragon Helm
+K:32:7:0xA2/0x9D
+
+# Kabuto
+K:32:8:0xCE/0x8B
 
 # Iron Crown
 K:33:10:0x88/0x86
@@ -4112,11 +4285,62 @@ K:33:11:0x88/0x87
 # Jewel Encrusted Crown
 K:33:12:0x88/0x88
 
-# Robe
-K:36:2:0x88/0x95
+# Massive Iron Crown
+K:33:50:0x87/0x9B
+
+# Set of Leather Gloves
+K:31:1:0x88/0x8C
+
+# Set of Gauntlets
+K:31:2:0x88/0x8D
+
+# Set of Dragon Gloves
+K:31:3:0x0D/0x5D
+
+# Set of Cesti
+K:31:5:0x88/0x8E
+
+# a Hand [0]
+K:31:6:0x09/0x5D
+
+# Small Leather Shield
+K:34:2:0x88/0x8F
+
+# Small Metal Shield
+K:34:3:0x88/0x91
+
+# Large Leather Shield
+K:34:4:0x88/0x90
+
+# Large Metal Shield
+K:34:5:0x88/0x92
+
+# Dragon Shield
+K:34:6:0xA2/0x9C
+
+# Knight's Shield
+K:34:7:0x88/0x93
+
+# Mirror Shield
+K:34:10:0x88/0x93
+
+# Mirror
+K:34:50:0x06/0x2A
+
+# Card
+K:50:0:0x0D/0x7E
+
+# T-shirt
+K:36:0:0xB4/0x8D
 
 # Filthy Rag
 K:36:1:0x88/0x94
+
+# Robe
+K:36:2:0x88/0x95
+
+# Paper Armour
+K:36:3:0xCE/0x89
 
 # Soft Leather Armour
 K:36:4:0x88/0x96
@@ -4130,8 +4354,41 @@ K:36:6:0x88/0x97
 # Hard Studded Leather
 K:36:7:0x88/0x97
 
+# Rhino Hide Armour
+K:36:8:0xCD/0x91
+
+# Cord Armour
+K:36:9:0xCE/0x88
+
+# Padded Armour
+K:36:10:0xCE/0x8A
+
 # Leather Scale Mail
 K:36:11:0x88/0x98
+
+# Leather Jacket
+K:36:12:0xCD/0x92
+
+# Black Clothes
+K:36:13:0xCE/0x8C
+
+# Stone and Hide Armour
+K:36:15:0xCE/0x8C
+
+# Sexy Swimsuit
+K:36:50:0x0A/0x28
+
+# Robe
+K:36:60:0x88/0x95
+
+# Clothes
+K:36:63:0xB4/0x8D
+
+# Rusty Chain Mail
+K:37:1:0x88/0x9A
+
+# Ring Mail
+K:37:2:0xCE/0x87
 
 # Metal Scale Mail
 K:37:3:0x88/0x98
@@ -4139,11 +4396,14 @@ K:37:3:0x88/0x98
 # Chain Mail
 K:37:4:0x88/0x99
 
-# Rusty Chain Mail
-K:37:1:0x88/0x9A
+# Double Ring Mail
+K:37:5:0xCD/0x83
 
 # Augmented Chain Mail
 K:37:6:0x88/0x99
+
+# Double Chain Mail
+K:37:7:0x88/0x99
 
 # Bar Chain Mail
 K:37:8:0x88/0x99
@@ -4151,488 +4411,38 @@ K:37:8:0x88/0x99
 # Metal Brigandine Armour
 K:37:9:0x88/0x99
 
+# Splint Mail
+K:37:10:0xCD/0x8A
+
+# Do-maru
+K:37:11:0xCD/0x8B
+
 # Partial Plate Armour
 K:37:12:0x88/0x9B
 
 # Metal Lamellar Armour
 K:37:13:0x88/0x9B
 
+# Haramakido
+K:37:14:0xCE/0x8E
+
 # Full Plate Armour
 K:37:15:0xCD/0x82
+
+# O-yoroi
+K:37:16:0xCD/0x8D
 
 # Ribbed Plate Armour
 K:37:18:0x88/0x9B
 
-# Adamantite Plate Mail
-K:37:30:0xA3/0x96
+# Mithril Chain Mail
+K:37:20:0x88/0x9C
 
 # Mithril Plate Mail
 K:37:25:0x88/0x9C
 
-# Mithril Chain Mail
-K:37:20:0x88/0x9C
-
-# Double Chain Mail
-K:37:7:0x88/0x99
-
-# Mirror Shield
-K:34:10:0x88/0x93
-
-# Cloak
-K:35:1:0x88/0x80
-
-# Shadow Cloak
-K:35:6:0x88/0x81
-
-# Set of Leather Gloves
-K:31:1:0x88/0x8C
-
-# Set of Gauntlets
-K:31:2:0x88/0x8D
-
-# Set of Cesti
-K:31:5:0x88/0x8E
-
-# Small Leather Shield
-K:34:2:0x88/0x8F
-
-# Large Leather Shield
-K:34:4:0x88/0x90
-
-# Small Metal Shield
-K:34:3:0x88/0x91
-
-# Large Metal Shield
-K:34:5:0x88/0x92
-
-# Ring
-K:45:0:0xB5/0x82
-
-# Amulet
-K:40:0:0xB6/0x86
-
-# Double Ring Mail
-K:37:5:0xCD/0x83
-
-# a Scroll titled "mipay sun"
-K:70:17:0x86/0x82
-
-# a Scroll titled "batuni blaame"
-K:70:18:0x86/0x82
-
-# a Scroll titled "rolsan triple"
-K:70:16:0x86/0x82
-
-# a Scroll titled "temeep aks el"
-K:70:12:0x86/0x82
-
-# a Scroll titled "triapp trolpet"
-K:70:13:0x86/0x82
-
-# a Scroll titled "an gan nagblaa" {tried}
-K:70:51:0x86/0x82
-
-# a Scroll titled "comp turs"
-K:70:50:0x86/0x82
-
-# a Scroll titled "byti sne"
-K:70:14:0x86/0x82
-
-# a Scroll titled "misat dernin"
-K:70:24:0x86/0x82
-
-# a Scroll titled "onip batsat"
-K:70:48:0x86/0x82
-
-# a Scroll titled "shu urfor"
-K:70:49:0x86/0x82
-
-# a Scroll titled "binvom cosmung"
-K:70:4:0x86/0x82
-
-# a Scroll titled "ankh sanfu bit"
-K:70:8:0x86/0x82
-
-# a Scroll titled "arzemi zunag"
-K:70:9:0x86/0x82
-
-# a Scroll titled "bie xuxuval"
-K:70:10:0x86/0x82
-
-# a Scroll titled "blaata arze"
-K:70:36:0x86/0x82
-
-# a Scroll titled "rea fri elip"
-K:70:25:0x86/0x82
-
-# a Scroll titled "sef unag famur"
-K:70:38:0x86/0x82
-
-# a Scroll titled "bluju wex blu"
-K:70:15:0x86/0x82
-
-# a Scroll titled "ner fidtri"
-K:70:26:0x86/0x82
-
-# a Scroll titled "for mic rol"
-K:70:27:0x86/0x82
-
-# a Scroll titled "sri nelgun"
-K:70:28:0x86/0x82
-
-# Sheaf Arrow
-K:17:2:0xCD/0x84
-
-# Mithril Shot
-K:16:3:0xCD/0x85
-
-# a Scroll titled "sehsat ulkab"
-K:70:29:0x86/0x82
-
-# a Scroll titled "klinej ere"
-K:70:46:0x86/0x82
-
-# a Scroll titled "snetrol uni"
-K:70:47:0x86/0x82
-
-# a Scroll titled "trolsee mex"
-K:70:45:0x86/0x82
-
-# a Scroll titled "stafoo lechi"
-K:70:30:0x86/0x82
-
-# a Scroll titled "itemar habyt"
-K:70:1:0x86/0x82
-
-# a Scroll titled "wahx our gre"
-K:70:7:0x86/0x82
-
-# a Scroll titled "erk bieklis"
-K:70:39:0x86/0x82
-
-# a Scroll titled "engsno argsan"
-K:70:52:0x86/0x82
-
-# a Scroll titled "klis glenash"
-K:70:22:0x86/0x82
-
-# a Scroll titled "ashval paylech"
-K:70:44:0x86/0x82
-
-# a Scroll titled "fapay doea"
-K:70:0:0x86/0x82
-
-# a Scroll titled "sefeng danod"
-K:70:37:0x86/0x82
-
-# a Scroll titled "kli ing tadalf"
-K:70:32:0x86/0x82
-
-# a Scroll titled "wah snofoo"
-K:70:42:0x86/0x82
-
-# a Scroll titled "vlytox"
-K:70:21:0x86/0x82
-
-# a Scroll titled "prokaks wahish"
-K:70:3:0x86/0x82
-
-# a Scroll titled "klimon bieder"
-K:70:20:0x86/0x82
-
-# a Scroll titled "alacre re org"
-K:70:2:0x86/0x82
-
-# a Scroll titled "umgar danri"
-K:70:5:0x86/0x82
-
-# a Scroll titled "ooder dokrog"
-K:70:33:0x86/0x82
-
-# a Scroll titled "nihum khomar"
-K:70:34:0x86/0x82
-
-# a Scroll titled "wexab jahnag" {tried}
-K:70:35:0x86/0x82
-
-# a Scroll titled "re ab evssna"
-K:70:11:0x86/0x82
-
-# a Scroll titled "denmung ishbul"
-K:70:41:0x86/0x82
-
-# an Icky Green Potion
-K:75:2:0xBC/0x86
-
-# a Light Brown Potion
-K:75:1:0xBC/0x89
-
-# a Clear Potion
-K:75:0:0xBC/0x83
-
-# an Azure Potion
-K:75:48:0xBC/0x8D
-
-# a Blue Potion
-K:75:16:0xBC/0x85
-
-# a Blue Speckled Potion
-K:75:42:0xBC/0x85
-
-# a Black Potion
-K:75:49:0xBC/0x84
-
-# a Brown Potion
-K:75:17:0xBC/0x89
-
-# a Brown Speckled Potion
-K:75:43:0xBC/0x89
-
-# a Bubbling Potion
-K:75:50:0xBC/0x83
-
-# a Chartreuse Potion
-K:75:18:0xBC/0x8C
-
-# a Cloudy Potion
-K:75:44:0xBC/0x83
-
-# a Copper Speckled Potion
-K:75:53:0xBC/0x89
-
-# a Crimson Potion
-K:75:21:0xBC/0x87
-
-# a Cyan Potion
-K:75:47:0xBC/0x8D
-
-# a Dark Blue Potion
-K:75:61:0xBC/0x85
-
-# a Dark Green Potion
-K:75:62:0xBC/0x86
-
-# a Dark Red Potion
-K:75:63:0xBC/0x87
-
-# a Gold Speckled Potion
-K:75:35:0xBC/0x88
-
-# a Gray Potion
-K:75:36:0xBC/0x8A
-
-# a Gray Speckled Potion
-K:75:37:0xBC/0x8A
-
-# a Green Potion
-K:75:52:0xBC/0x86
-
-# a Green Speckled Potion
-K:75:59:0xBC/0x86
-
-# a Hazy Potion
-K:75:11:0xBC/0x83
-
-# an Indigo Potion
-K:75:7:0xBC/0x8E
-
-# a Light Blue Potion
-K:75:9:0xBC/0x8D
-
-# a Light Green Potion
-K:75:6:0xBC/0x8C
-
-# a Magenta Potion
-K:75:29:0xBC/0x87
-
-# a Metallic Blue Potion
-K:75:4:0xBC/0x85
-
-# a Metallic Red Potion
-K:75:51:0xBC/0x87
-
-# a Metallic Green Potion
-K:75:45:0xBC/0x86
-
-# a Metallic Purple Potion
-K:75:46:0xBC/0x8E
-
-# an Orange Potion
-K:75:13:0xBC/0x8B
-
-# an Orange Speckled Potion
-K:75:5:0xBC/0x8B
-
-# a Pink Potion
-K:75:56:0xBC/0x8B
-
-# a Pink Speckled Potion
-K:75:32:0xBC/0x8B
-
-# a Puce Potion
-K:75:33:0xBC/0x8E
-
-# a Purple Potion
-K:75:28:0xBC/0x8E
-
-# a Red Potion
-K:75:41:0xBC/0x87
-
-# a Red Speckled Potion
-K:75:30:0xBC/0x87
-
-# a Silver Speckled Potion
-K:75:31:0xBC/0x83
-
-# a Smoky Potion
-K:75:25:0xBC/0x84
-
-# a Tangerine Potion
-K:75:26:0xBC/0x8B
-
-# a Violet Potion
-K:75:27:0xBC/0x8E
-
-# a Vermilion Potion
-K:75:40:0xBC/0x87
-
-# a White Potion
-K:75:24:0xBC/0x83
-
-# a Yellow Potion
-K:75:60:0xBC/0x88
-
-# Wand
-K:65:0:0xB7/0x80
-
-# Staff
-K:55:0:0xB9/0x87
-
-# Rod
-K:66:0:0xB8/0x85
-
-# Book of Common Prayer
-K:90:0:0xA3/0x8A
-
-# High Mass
-K:90:1:0xA3/0x8A
-
-# Book of the Unicorn
-K:90:2:0xA3/0x8B
-
-# Blessings of the Grail
-K:90:3:0xA3/0x8B
-
-# Beginner's Handbook
-K:91:0:0xA3/0x8C
-
-# Master Sorcerer's Handbook
-K:91:1:0xA3/0x8C
-
-# Pattern Sorcery
-K:91:2:0xA3/0x8D
-
-# Grimoire of Power
-K:91:3:0xA3/0x8D
-
-# Small wooden chest
-K:7:1:0x80/0x96
-
-# Large wooden chest
-K:7:5:0x80/0x97
-
-# Small iron chest
-K:7:2:0x80/0x98
-
-# Large iron chest
-K:7:6:0x80/0x99
-
-# Small steel chest
-K:7:3:0x80/0x9A
-
-# Large steel chest
-K:7:7:0x80/0x9B
-
-# Ruined chest
-K:7:0:0x80/0x9C
-
-# Iron Spike
-K:5:0:0x8B/0x84
-
-# Wooden Torch
-K:39:0:0x8B/0x86
-
-# Brass Lantern
-K:39:1:0x8B/0x85
-
-# Flask of oil
-K:77:0:0xBC/0x90
-
-# Empty Bottle
-K:2:1:0x8A/0x99
-
-# Call of the Wild
-K:92:0:0xA3/0x8E
-
-# Nature Mastery
-K:92:1:0xA3/0x8E
-
-# Nature's Gifts
-K:92:2:0xA3/0x8F
-
-# Nature's Wrath
-K:92:3:0xA3/0x8F
-
-# Sign of Chaos
-K:93:0:0xA3/0x90
-
-# Chaos Mastery
-K:93:1:0xA3/0x90
-
-# Chaos Channels
-K:93:2:0xA3/0x91
-
-# Armageddon Tome
-K:93:3:0xA3/0x91
-
-# Black Prayers
-K:94:0:0xA3/0x92
-
-# Black Mass
-K:94:1:0xA3/0x92
-
-# Shard of Pottery
-K:3:3:0x8B/0x88
-
-# Broken Stick
-K:3:6:0x8B/0x89
-
-# Broken Skull
-K:1:1:0x8B/0x8A
-
-# Broken Bone
-K:1:2:0x8B/0x8B
-
-# Canine Skeleton
-K:1:4:0x8B/0x87
-
-# Rodent Skeleton
-K:1:3:0x8B/0x87
-
-# Human Skeleton
-K:1:8:0x8B/0x87
-
-# Dwarf Skeleton
-K:1:7:0x8B/0x87
-
-# Elf Skeleton
-K:1:6:0x8B/0x87
-
-# Gnome Skeleton
-K:1:5:0x8B/0x87
-
-# Great Hammer
-K:21:19:0xCD/0x87
+# Adamantite Plate Mail
+K:37:30:0xA3/0x96
 
 # Black Dragon Scale Mail
 K:38:1:0x88/0x9F
@@ -4673,23 +4483,299 @@ K:38:20:0xCE/0x88
 # Power Dragon Scale Mail
 K:38:30:0xA2/0x9E
 
-# Dragon Helm
-K:32:7:0xA2/0x9D
+# Ring
+K:45:0:0xB5/0x82
 
-# Dragon Shield
-K:34:6:0xA2/0x9C
+# Amulet
+K:40:0:0xB6/0x86
 
-# a Violet Speckled Potion
-K:75:23:0xBC/0x8E
+# Wand
+K:65:0:0xB7/0x80
+
+# Staff
+K:55:0:0xB9/0x87
+
+# Rod
+K:66:0:0xB8/0x85
+
+# a Scroll titled "fapay doea"
+K:70:0:0x86/0x82
+
+# a Scroll titled "itemar habyt"
+K:70:1:0x86/0x82
+
+# a Scroll titled "alacre re org"
+K:70:2:0x86/0x82
+
+# a Scroll titled "prokaks wahish"
+K:70:3:0x86/0x82
+
+# a Scroll titled "binvom cosmung"
+K:70:4:0x86/0x82
+
+# a Scroll titled "umgar danri"
+K:70:5:0x86/0x82
+
+# a Scroll titled "he proktab"
+K:70:6:0x86/0x82
+
+# a Scroll titled "wahx our gre"
+K:70:7:0x86/0x82
+
+# a Scroll titled "ankh sanfu bit"
+K:70:8:0x86/0x82
+
+# a Scroll titled "arzemi zunag"
+K:70:9:0x86/0x82
+
+# a Scroll titled "bie xuxuval"
+K:70:10:0x86/0x82
+
+# a Scroll titled "re ab evssna"
+K:70:11:0x86/0x82
+
+# a Scroll titled "temeep aks el"
+K:70:12:0x86/0x82
+
+# a Scroll titled "triapp trolpet"
+K:70:13:0x86/0x82
+
+# a Scroll titled "byti sne"
+K:70:14:0x86/0x82
+
+# a Scroll titled "bluju wex blu"
+K:70:15:0x86/0x82
+
+# a Scroll titled "rolsan triple"
+K:70:16:0x86/0x82
+
+# a Scroll titled "mipay sun"
+K:70:17:0x86/0x82
+
+# a Scroll titled "batuni blaame"
+K:70:18:0x86/0x82
+
+# a Scroll titled "klimon bieder"
+K:70:20:0x86/0x82
+
+# a Scroll titled "vlytox"
+K:70:21:0x86/0x82
+
+# a Scroll titled "klis glenash"
+K:70:22:0x86/0x82
+
+# a Scroll titled "danseh nejood"
+K:70:23:0x86/0x82
+
+# a Scroll titled "misat dernin"
+K:70:24:0x86/0x82
+
+# a Scroll titled "rea fri elip"
+K:70:25:0x86/0x82
+
+# a Scroll titled "ner fidtri"
+K:70:26:0x86/0x82
+
+# a Scroll titled "for mic rol"
+K:70:27:0x86/0x82
+
+# a Scroll titled "sri nelgun"
+K:70:28:0x86/0x82
+
+# a Scroll titled "sehsat ulkab"
+K:70:29:0x86/0x82
+
+# a Scroll titled "stafoo lechi"
+K:70:30:0x86/0x82
+
+# a Scroll titled "kli ing tadalf"
+K:70:32:0x86/0x82
+
+# a Scroll titled "ooder dokrog"
+K:70:33:0x86/0x82
+
+# a Scroll titled "nihum khomar"
+K:70:34:0x86/0x82
+
+# a Scroll titled "wexab jahnag"
+K:70:35:0x86/0x82
+
+# a Scroll titled "blaata arze"
+K:70:36:0x86/0x82
+
+# a Scroll titled "sefeng danod"
+K:70:37:0x86/0x82
+
+# a Scroll titled "sef unag famur"
+K:70:38:0x86/0x82
+
+# a Scroll titled "erk bieklis"
+K:70:39:0x86/0x82
+
+# a Scroll titled "denmung ishbul"
+K:70:41:0x86/0x82
+
+# a Scroll titled "wah snofoo"
+K:70:42:0x86/0x82
+
+# a Scroll titled "nin xuxucre"
+K:70:43:0x86/0x82
+
+# a Scroll titled "ashval paylech"
+K:70:44:0x86/0x82
+
+# a Scroll titled "trolsee mex"
+K:70:45:0x86/0x82
+
+# a Scroll titled "klinej ere"
+K:70:46:0x86/0x82
+
+# a Scroll titled "snetrol uni"
+K:70:47:0x86/0x82
+
+# a Scroll titled "onip batsat"
+K:70:48:0x86/0x82
+
+# a Scroll titled "shu urfor"
+K:70:49:0x86/0x82
+
+# a Scroll titled "comp turs"
+K:70:50:0x86/0x82
+
+# a Scroll titled "an gan nagblaa"
+K:70:51:0x86/0x82
+
+# a Scroll titled "engsno argsan"
+K:70:52:0x86/0x82
+
+# a Scroll titled "unjah blu comp"
+K:70:53:0x86/0x82
+
+# a Scroll titled "bulther valish"
+K:70:54:0x86/0x82
+
+# a Scroll titled "enchantus maximus"
+K:70:55:0x01/0x3F
+
+# a Scroll titled "mumblus incognitus"
+K:70:56:0x01/0x3F
+
+# a Scroll titled "wascally wabbit"
+K:70:57:0x01/0x3F
+
+# a Scroll titled "itus whamko"
+K:70:58:0x01/0x3F
+
+# a Scroll titled "facwon mailor"
+K:70:59:0x01/0x3F
+
+# a Scroll titled "fentwon gerbil"
+K:70:60:0x01/0x3F
+
+# a Scroll titled "deedil dorko"
+K:70:61:0x01/0x3F
+
+# a Scroll titled "wonto maroki"
+K:70:62:0x01/0x3F
+
+# a Clear Potion
+K:75:0:0xBC/0x83
+
+# a Light Brown Potion
+K:75:1:0xBC/0x89
+
+# an Icky Green Potion
+K:75:2:0xBC/0x86
+
+# a Metallic Blue Potion
+K:75:4:0xBC/0x85
+
+# an Orange Speckled Potion
+K:75:5:0xBC/0x8B
+
+# a Light Green Potion
+K:75:6:0xBC/0x8C
+
+# an Indigo Potion
+K:75:7:0xBC/0x8E
+
+# a Light Blue Potion
+K:75:9:0xBC/0x8D
+
+# a Hazy Potion
+K:75:11:0xBC/0x83
+
+# an Orange Potion
+K:75:13:0xBC/0x8B
 
 # a Pungent Potion
 K:75:15:0xBC/0x8B
 
+# a Blue Potion
+K:75:16:0xBC/0x85
+
+# a Brown Potion
+K:75:17:0xBC/0x89
+
+# a Chartreuse Potion
+K:75:18:0xBC/0x8C
+
+# a Stinking Potion
+K:75:19:0xBC/0x89
+
+# an Ivory White Potion
+K:75:20:0xBC/0x83
+
+# a Crimson Potion
+K:75:21:0xBC/0x87
+
 # a Clotted Red Potion
 K:75:22:0xBC/0x87
 
-# a Viscous Pink Potion
-K:75:55:0xBC/0x8B
+# a Violet Speckled Potion
+K:75:23:0xBC/0x8E
+
+# a White Potion
+K:75:24:0xBC/0x83
+
+# a Smoky Potion
+K:75:25:0xBC/0x84
+
+# a Tangerine Potion
+K:75:26:0xBC/0x8B
+
+# a Violet Potion
+K:75:27:0xBC/0x8E
+
+# a Purple Potion
+K:75:28:0xBC/0x8E
+
+# a Magenta Potion
+K:75:29:0xBC/0x87
+
+# a Red Speckled Potion
+K:75:30:0xBC/0x87
+
+# a Silver Speckled Potion
+K:75:31:0xBC/0x83
+
+# a Pink Speckled Potion
+K:75:32:0xBC/0x8B
+
+# a Puce Potion
+K:75:33:0xBC/0x8E
+
+# a Gold Potion
+K:75:34:0xBC/0x88
+
+# a Gold Speckled Potion
+K:75:35:0xBC/0x88
+
+# a Gray Potion
+K:75:36:0xBC/0x8A
+
+# a Gray Speckled Potion
+K:75:37:0xBC/0x8A
 
 # an Oily Yellow Potion
 K:75:38:0xBC/0x88
@@ -4697,11 +4783,152 @@ K:75:38:0xBC/0x88
 # a Gloopy Green Potion
 K:75:39:0xBC/0x86
 
-# a Shimmering Potion
-K:75:58:0xBC/0x8E
+# a Vermilion Potion
+K:75:40:0xBC/0x87
+
+# a Red Potion
+K:75:41:0xBC/0x87
+
+# a Blue Speckled Potion
+K:75:42:0xBC/0x85
+
+# a Brown Speckled Potion
+K:75:43:0xBC/0x89
+
+# a Cloudy Potion
+K:75:44:0xBC/0x83
+
+# a Metallic Green Potion
+K:75:45:0xBC/0x86
+
+# a Metallic Purple Potion
+K:75:46:0xBC/0x8E
+
+# a Cyan Potion
+K:75:47:0xBC/0x8D
+
+# an Azure Potion
+K:75:48:0xBC/0x8D
+
+# a Black Potion
+K:75:49:0xBC/0x84
+
+# a Bubbling Potion
+K:75:50:0xBC/0x83
+
+# a Metallic Red Potion
+K:75:51:0xBC/0x87
+
+# a Green Potion
+K:75:52:0xBC/0x86
+
+# a Copper Speckled Potion
+K:75:53:0xBC/0x89
+
+# a Viscous Pink Potion
+K:75:55:0xBC/0x8B
+
+# a Pink Potion
+K:75:56:0xBC/0x8B
 
 # a Yellow Speckled Potion
 K:75:57:0xBC/0x88
+
+# a Shimmering Potion
+K:75:58:0xBC/0x8E
+
+# a Green Speckled Potion
+K:75:59:0xBC/0x86
+
+# a Yellow Potion
+K:75:60:0xBC/0x88
+
+# a Dark Blue Potion
+K:75:61:0xBC/0x85
+
+# a Dark Green Potion
+K:75:62:0xBC/0x86
+
+# a Dark Red Potion
+K:75:63:0xBC/0x87
+
+# a Sky Blue Potion
+K:75:64:0xBC/0x8D
+
+# a Silver Potion
+K:75:65:0xBC/0x83
+
+# a Bronze Potion
+K:75:66:0xBC/0x87
+
+# a Blood Red Potion
+K:75:67:0x04/0x21
+
+# a Noxious Potion
+K:75:68:0x0F/0x21
+
+# a Fuming Potion
+K:75:69:0x0F/0x21
+
+# a Metallic Potion
+K:75:70:0x01/0x21
+
+# an Acrid Potion
+K:75:71:0x0B/0x21
+
+# Book of Common Prayer
+K:90:0:0xA3/0x8A
+
+# High Mass
+K:90:1:0xA3/0x8A
+
+# Book of the Unicorn
+K:90:2:0xA3/0x8B
+
+# Blessings of the Grail
+K:90:3:0xA3/0x8B
+
+# Beginner's Handbook
+K:91:0:0xA3/0x8C
+
+# Master Sorcerer's Handbook
+K:91:1:0xA3/0x8C
+
+# Pattern Sorcery
+K:91:2:0xA3/0x8D
+
+# Grimoire of Power
+K:91:3:0xA3/0x8D
+
+# Call of the Wild
+K:92:0:0xA3/0x8E
+
+# Nature Mastery
+K:92:1:0xA3/0x8E
+
+# Nature's Gifts
+K:92:2:0xA3/0x8F
+
+# Nature's Wrath
+K:92:3:0xA3/0x8F
+
+# Sign of Chaos
+K:93:0:0xA3/0x90
+
+# Chaos Mastery
+K:93:1:0xA3/0x90
+
+# Chaos Channels
+K:93:2:0xA3/0x91
+
+# Armageddon Tome
+K:93:3:0xA3/0x91
+
+# Black Prayers
+K:94:0:0xA3/0x92
+
+# Black Mass
+K:94:1:0xA3/0x92
 
 # Black Channels
 K:94:2:0xA3/0x93
@@ -4709,14 +4936,248 @@ K:94:2:0xA3/0x93
 # Necronomicon
 K:94:3:0xA3/0x93
 
-# a Gold Potion
-K:75:34:0xBC/0x88
+# Conjurings & Tricks
+K:95:0:0xBC/0x91
 
-# a Stinking Potion
-K:75:19:0xBC/0x89
+# Deck of Many Things
+K:95:1:0xBC/0x92
 
-# an Ivory White Potion
-K:75:20:0xBC/0x83
+# Trumps of Doom
+K:95:2:0xBC/0x93
+
+# Five Aces
+K:95:3:0xBC/0x94
+
+# Cantrips for Beginners
+K:96:0:0xBC/0x95
+
+# Minor Arcana
+K:96:1:0xBC/0x95
+
+# Major Arcana
+K:96:2:0xBC/0x95
+
+# Manual of Mastery
+K:96:3:0xBC/0x95
+
+# Handbook for Pupils
+K:97:0:0x0B/0x3F
+
+# Grade Holder's Book
+K:97:1:0x0B/0x3F
+
+# Note of Acting Master
+K:97:2:0x0F/0x3F
+
+# Spiritual Enlightenment
+K:97:3:0x0F/0x3F
+
+# Dark Incantations
+K:98:0:0x0C/0x3F
+
+# Immortal Rituals
+K:98:1:0x0C/0x3F
+
+# Demonthoughts
+K:98:2:0x04/0x3F
+
+# Hellfire Tome
+K:98:3:0x04/0x3F
+
+# Rites of Initiation
+K:99:0:0x09/0x3F
+
+# Ways of War
+K:99:1:0x09/0x3F
+
+# Exorcism and Dispelling
+K:99:2:0x01/0x3F
+
+# Wrath of God
+K:99:3:0x01/0x3F
+
+# Stench of Death
+K:100:0:0x0A/0x3F
+
+# Sepulchral Ways
+K:100:1:0x0A/0x3F
+
+# Return of the Dead
+K:100:2:0x08/0x3F
+
+# Necromatic Tome
+K:100:3:0x08/0x3F
+
+# Book of Elements
+K:101:0:0x0C/0x3F
+
+# Earth, Wind and Fire
+K:101:1:0x0C/0x3F
+
+# Path of Destruction
+K:101:2:0x04/0x3F
+
+# Day of Ragnarok
+K:101:3:0x04/0x3F
+
+# Apprentice Handbook
+K:105:0:0xA3/0x81
+
+# Minstrel's Music
+K:105:1:0xA3/0x81
+
+# Harps of Rivendell
+K:105:2:0x8A/0x90
+
+# Lays of Beleriand
+K:105:3:0x8A/0x90
+
+# Bugei Shofu
+K:106:0:0x03/0x3F
+
+# Yagyuu Bugeichou
+K:106:1:0x03/0x3F
+
+# Gorinnosho
+K:106:2:0x07/0x3F
+
+# Hokusin Ittouryuu Kaiden
+K:106:3:0x07/0x3F
+
+# Handbook of Hex
+K:107:0:0xA3/0x92
+
+# High Curse
+K:107:1:0xA3/0x92
+
+# Curse and Spelling
+K:107:2:0xA3/0x93
+
+# Forbidden Cursebook
+K:107:3:0xA3/0x93
+
+# Anger Management
+K:108:0:0x0A/0x3F
+
+# Northern Frights
+K:108:1:0x0A/0x3F
+
+# The Sound and the Fury
+K:108:2:0x08/0x3F
+
+# Dire Ire
+K:108:3:0x08/0x3F
+
+# Burglar's Handbook
+K:109:0:0x03/0x3F
+
+# Thieving Ways
+K:109:1:0x03/0x3F
+
+# Great Escapes
+K:109:2:0x07/0x3F
+
+# Book of Shadows
+K:109:3:0x07/0x3F
+
+# Wooden Torch
+K:39:0:0x8B/0x86
+
+# Brass Lantern
+K:39:1:0x8B/0x85
+
+# Flask of oil
+K:77:0:0xBC/0x90
+
+# Feanorian Lamp
+K:39:2:0xD8/0x86
+
+# Incandescent Light
+K:39:3:0x0B/0x21
+
+# Phial
+K:39:4:0x87/0x9D
+
+# Star
+K:39:5:0x87/0x9E
+
+# Jewel
+K:39:6:0x87/0x9F
+
+# Stone
+K:39:7:0xD7/0x80
+
+# Crystal Ball
+K:39:8:0xD7/0x81
+
+# Levitation Stone
+K:39:9:0xD7/0x82
+
+# an Eye
+K:39:10:0x0C/0x2A
+
+# Stone
+K:39:11:0x07/0x2A
+
+# Stone
+K:39:12:0x01/0x2A
+
+# Stone
+K:39:13:0x0E/0x2A
+
+# Stone
+K:39:14:0x04/0x2A
+
+# Stone
+K:39:15:0x08/0x2A
+
+# Stone
+K:39:16:0x03/0x2A
+
+# Stone
+K:39:17:0x04/0x2A
+
+# Stone
+K:39:18:0x01/0x2A
+
+# Stone
+K:39:19:0x0B/0x2A
+
+# Stone
+K:39:20:0x07/0x2A
+
+# Stone
+K:39:21:0x0C/0x2A
+
+# Eye
+K:39:22:0x0B/0x2A
+
+# Stone
+K:39:23:0x0E/0x2A
+
+# Small wooden chest
+K:7:1:0x80/0x96
+
+# Large wooden chest
+K:7:5:0x80/0x97
+
+# Small iron chest
+K:7:2:0x80/0x98
+
+# Large iron chest
+K:7:6:0x80/0x99
+
+# Small steel chest
+K:7:3:0x80/0x9A
+
+# Large steel chest
+K:7:7:0x80/0x9B
+
+# Ruined chest
+K:7:0:0x80/0x9C
+
+# Can of Toys
+K:7:50:0x80/0x9B
 
 # copper
 K:127:1:0x80/0x8B
@@ -4772,170 +5233,35 @@ K:127:17:0x80/0x8E
 # adamantite
 K:127:18:0xA3/0x95
 
-# Mighty Hammer
-K:21:50:0x87/0x9A
+# Broken Skull
+K:1:1:0x8B/0x8A
 
-# Massive Iron Crown
-K:33:50:0x87/0x9B
+# Broken Bone
+K:1:2:0x8B/0x8B
 
-# Phial
-K:39:4:0x87/0x9D
+# Rodent Skeleton
+K:1:3:0x8B/0x87
 
-# Star
-K:39:5:0x87/0x9E
+# Canine Skeleton
+K:1:4:0x8B/0x87
 
-# Jewel
-K:39:6:0x87/0x9F
+# Gnome Skeleton
+K:1:5:0x8B/0x87
 
-# Conjurings & Tricks
-K:95:0:0xBC/0x91
+# Elf Skeleton
+K:1:6:0x8B/0x87
 
-# Deck of Many Things
-K:95:1:0xBC/0x92
+# Dwarf Skeleton
+K:1:7:0x8B/0x87
 
-# Trumps of Doom
-K:95:2:0xBC/0x93
+# Human Skeleton
+K:1:8:0x8B/0x87
 
-# Five Aces
-K:95:3:0xBC/0x94
+# Skeleton
+K:10:0:0xB4/0x8B
 
-# Cantrips for Beginners
-K:96:0:0xBC/0x95
-
-# Minor Arcana
-K:96:1:0xBC/0x95
-
-# Major Arcana
-K:96:2:0xBC/0x95
-
-# Manual of Mastery
-K:96:3:0xBC/0x95
-
-# Zweihander
-K:23:29:0xCD/0x88
-
-# Tanto
-K:23:6:0xCD/0x89
-
-# Splint Mail
-K:37:10:0xCD/0x8A
-
-# Do-maru
-K:37:11:0xCD/0x8B
-
-# Trifurcate Spear
-K:22:26:0xCD/0x96
-
-# Three Piece Rod
-K:21:11:0xCD/0x8C
-
-# O-yoroi
-K:37:16:0xCD/0x8D
-
-# Fur Cloak
-K:35:3:0xCD/0x8E
-
-# Lajatang
-K:22:14:0xCD/0x8F
-
-# Hatchet
-K:22:1:0xCD/0x90
-
-# Rhino Hide Armour
-K:36:8:0xCD/0x91
-
-# Leather Jacket
-K:36:12:0xCD/0x92
-
-# Sickle
-K:22:3:0xCD/0x93
-
-# Tetsubo
-K:21:16:0xCD/0x94
-
-# Nunchaku
-K:21:4:0xCD/0x95
-
-# Bo Staff
-K:21:14:0xCD/0x97
-
-# Jo Staff
-K:21:7:0xCD/0x98
-
-# Club
-K:21:1:0xCD/0x99
-
-# Broad Spear
-K:22:7:0xCD/0x9A
-
-# Khopesh
-K:23:14:0xCD/0x9B
-
-# Flamberge
-K:23:26:0xCD/0x9C
-
-# Claymore
-K:23:23:0xCD/0x9D
-
-# Espadon
-K:23:24:0xCD/0x9E
-
-# Falchion
-K:23:22:0xCD/0x9F
-
-# Wakizashi
-K:23:13:0xCE/0x80
-
-# Naginata
-K:22:9:0xCE/0x81
-
-# Fauchard
-K:22:6:0xCE/0x82
-
-# Guisarme
-K:22:16:0xCE/0x83
-
-# Heavy Lance
-K:22:29:0xCE/0x84
-
-# Basillard
-K:23:9:0xCE/0x85
-
-# Ninjato
-K:23:19:0xCE/0x86
-
-# Ring Mail
-K:37:2:0xCE/0x87
-
-# Cord Armour
-K:36:9:0xCE/0x88
-
-# Paper Armour
-K:36:3:0xCE/0x89
-
-# Padded Armour
-K:36:10:0xCE/0x8A
-
-# Kabuto
-K:32:8:0xCE/0x8B
-
-# Stone and Hide Armour
-K:36:15:0xCE/0x8C
-
-# Jingasa
-K:32:4:0xCE/0x8D
-
-# Haramakido
-K:37:14:0xCE/0x8E
-
-# Incandescent Light
-K:39:3:0x0B/0x21
-
-# Diamond Edge
-K:23:31:0xCE/0x90
-
-# a Scroll titled "danseh nejood"
-K:70:23:0x86/0x82
+# Corpse
+K:10:1:0xB4/0x8C
 
 # Magical Figurine of #
 K:8:0:0xB4/0x81
@@ -4970,347 +5296,29 @@ K:9:8:0xB4/0x8A
 # Ornate Statue of #
 K:9:9:0xD3/0x99
 
-# Skeleton
-K:10:0:0xB4/0x8B
+# Iron Spike
+K:5:0:0x8B/0x84
 
-# Corpse
-K:10:1:0xB4/0x8C
+# Empty Bottle
+K:2:1:0x8A/0x99
 
-# T-shirt
-K:36:0:0xB4/0x8D
+# Shard of Pottery
+K:3:3:0x8B/0x88
 
-# Wizardstaff
-K:21:21:0xCE/0x9F
-
-# Feanorian Lamp
-K:39:2:0xD8/0x86
-
-# Set of Dragon Gloves
-K:31:3:0x0D/0x5D
-
-# Pair of Dragon Boots
-K:30:4:0x0D/0x5D
-
-# Gun
-K:19:50:0x04/0x7D
-
-# Crystal Ball
-K:39:8:0xD7/0x81
-
-# Stone
-K:39:7:0xD7/0x80
-
-# Poison Needle
-K:23:32:0x84/0x8E
+# Broken Stick
+K:3:6:0x8B/0x89
 
 # Capture Ball#
 K:11:0:0x80/0x91
 
-# Death Scythe
-K:22:50:0x89/0x94
-
-# a Sky Blue Potion
-K:75:64:0xBC/0x8D
-
-# Card
-K:50:0:0x0D/0x7E
-
-# a Scroll titled "nin xuxucre"
-K:70:43:0x86/0x82
-
-# a Scroll titled "he proktab"
-K:70:6:0x86/0x82
-
-# a Silver Potion
-K:75:65:0xBC/0x83
-
-# Handbook for Pupils
-K:97:0:0x0B/0x3F
-
-# Grade Holder's Book
-K:97:1:0x0B/0x3F
-
-# Note of Acting Master
-K:97:2:0x0F/0x3F
-
-# Spiritual Enlightenment
-K:97:3:0x0F/0x3F
-
-# Levitation Stone
-K:39:9:0xD7/0x82
-
-# Ethereal Cloak
-K:35:5:0xCE/0x93
-
-# Mirror
-K:34:50:0x06/0x2A
-
-# Black Arrow
-K:17:10:0x0F/0x7B
-
-# Sexy Swimsuit
-K:36:50:0x0A/0x28
-
-# Fishingpole
-K:22:40:0x0E/0x2F
-
-# a Bronze Potion
-K:75:66:0xBC/0x87
-
-# Steel Bolt
-K:18:2:0x89/0x9C
-
-# Can of Toys
-K:7:50:0x80/0x9B
-
-# Stick
-K:21:63:0xCD/0x98
-
-# Yumi
-K:19:63:0x89/0x95
-
-# Clothes
-K:36:63:0xB4/0x8D
-
-# Knight's Shield
-K:34:7:0x88/0x93
-
-# a Scroll titled "unjah blu comp"
-K:70:53:0x86/0x82
-
-# Apprentice Handbook
-K:105:0:0xA3/0x81
-
-# Minstrel's Music
-K:105:1:0xA3/0x81
-
-# Harps of Rivendell
-K:105:2:0x8A/0x90
-
-# Lays of Beleriand
-K:105:3:0x8A/0x90
-
-# Falcon Sword
-K:23:33:0xCD/0x9E
-
-# Bugei Shofu
-K:106:0:0x03/0x3F
-
-# Yagyuu Bugeichou
-K:106:1:0x03/0x3F
-
-# Gorinnosho
-K:106:2:0x07/0x3F
-
-# Hokusin Ittouryuu Kaiden
-K:106:3:0x07/0x3F
-
 # Photograph of #
 K:9:50:0x02/0x7E
-
-# Robe
-K:36:60:0x88/0x95
-
-# Dark Incantations
-K:98:0:0x0C/0x3F
-
-# Immortal Rituals
-K:98:1:0x0C/0x3F
-
-# Demonthoughts
-K:98:2:0x04/0x3F
-
-# Hellfire Tome
-K:98:3:0x04/0x3F
-
-# a Scroll titled "bulther valish"
-K:70:54:0x86/0x82
 
 # Magic Whistle
 K:4:1:0x03/0x7E
 
-# Black Clothes
-K:36:13:0xCE/0x8C
-
-# Rites of Initiation
-K:99:0:0x09/0x3F
-
-# Ways of War
-K:99:1:0x09/0x3F
-
-# Exorcism and Dispelling
-K:99:2:0x01/0x3F
-
-# Wrath of God
-K:99:3:0x01/0x3F
-
-# Handbook of Hex
-K:107:0:0xA3/0x92
-
-# High Curse
-K:107:1:0xA3/0x92
-
-# Curse and Spelling
-K:107:2:0xA3/0x93
-
-# Forbidden Cursebook
-K:107:3:0xA3/0x93
-
-# Pair of Dragon Wings
-K:35:7:0x0D/0x28
-
-# a Blood Red Potion
-K:75:67:0x04/0x21
-
-# Harp
-K:19:70:0x0F/0x7D
-
 # Rune
 K:81:1:0x0E/0x2A
-
-# a Scroll titled "enchantus maximus"
-K:70:55:0x01/0x3F
-
-# a Scroll titled "mumblus incognitus"
-K:70:56:0x01/0x3F
-
-# a Hand [0]
-K:31:6:0x09/0x5D
-
-# an Eye
-K:39:10:0x0C/0x2A
-
-# Stench of Death
-K:100:0:0x0A/0x3F
-
-# Sepulchral Ways
-K:100:1:0x0A/0x3F
-
-# Return of the Dead
-K:100:2:0x08/0x3F
-
-# Necromatic Tome
-K:100:3:0x08/0x3F
-
-# Rune Sword
-K:23:34:0x08/0x7C
-
-# Anger Management
-K:108:0:0x0A/0x3F
-
-# Northern Frights
-K:108:1:0x0A/0x3F
-
-# The Sound and the Fury
-K:108:2:0x08/0x3F
-
-# Dire Ire
-K:108:3:0x08/0x3F
-
-# Gun
-K:19:51:0x04/0x7D
-
-# a Noxious Potion
-K:75:68:0x0F/0x21
-
-# a Fuming Potion
-K:75:69:0x0F/0x21
-
-# Dragon Fang
-K:23:35:0x0D/0x7C
-
-# Burglar's Handbook
-K:109:0:0x03/0x3F
-
-# Thieving Ways
-K:109:1:0x03/0x3F
-
-# Great Escapes
-K:109:2:0x07/0x3F
-
-# Book of Shadows
-K:109:3:0x07/0x3F
-
-# Stone
-K:39:11:0x07/0x2A
-
-# Stone
-K:39:12:0x01/0x2A
-
-# Stone
-K:39:13:0x0E/0x2A
-
-# Stone
-K:39:14:0x04/0x2A
-
-# Stone
-K:39:15:0x08/0x2A
-
-# Stone
-K:39:16:0x03/0x2A
-
-# Stone
-K:39:17:0x04/0x2A
-
-# Stone
-K:39:18:0x01/0x2A
-
-# Stone
-K:39:19:0x0B/0x2A
-
-# Stone
-K:39:20:0x07/0x2A
-
-# a Metallic Potion
-K:75:70:0x01/0x21
-
-# an Acrid Potion
-K:75:71:0x0B/0x21
-
-# Serving of Ambrosia
-K:80:40:0x0B/0x2C
-
-# Book of Elements
-K:101:0:0x0C/0x3F
-
-# Earth, Wind and Fire
-K:101:1:0x0C/0x3F
-
-# Path of Destruction
-K:101:2:0x04/0x3F
-
-# Day of Ragnarok
-K:101:3:0x04/0x3F
-
-# a Scroll titled "wascally wabbit"
-K:70:57:0x01/0x3F
-
-# Stone
-K:39:21:0x0C/0x2A
-
-# Eye
-K:39:22:0x0B/0x2A
-
-# a Scroll titled "itus whamko"
-K:70:58:0x01/0x3F
-
-# a Scroll titled "facwon mailor"
-K:70:59:0x01/0x3F
-
-# a Scroll titled "fentwon gerbil"
-K:70:60:0x01/0x3F
-
-# a Scroll titled "deedil dorko"
-K:70:61:0x01/0x3F
-
-# Death Scythe
-K:22:51:0x0C/0x2F
-
-# Stone
-K:39:23:0x0E/0x2A
-
-# a Scroll titled "wonto maroki"
-K:70:62:0x01/0x3F
 
 # Load the special player pictures
 %:xtra-xxx.prf
