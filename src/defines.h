@@ -2071,7 +2071,7 @@ enum {
 #define SV_BOOK_MIN_GOOD    2
 
 
-#define OBJ_GOLD_LIST   480     /* First "gold" entry */
+#define OBJ_GOLD_LIST   650     /* First "gold" entry */
 #define MAX_GOLD        18      /* Number of "gold" entries */
 
 

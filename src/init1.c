@@ -4139,7 +4139,7 @@ errr parse_d_info(char *buf, header *head)
     /* Process 'F' for "Dungeon Flags" (multiple lines) */
     else if (buf[0] == 'F')
     {
-        int artif = 0, monst = 0;
+        int artif = 0, monst = 0, tval = 0, sval = 0;
 
         /* Parse every entry */
         for (s = buf + 2; *s; )
@@ -4168,9 +4168,11 @@ errr parse_d_info(char *buf, header *head)
             }
 
             /* XXX XXX XXX Hack -- Read Final Object */
-            if (1 == sscanf(s, "FINAL_OBJECT_%d", &artif))
+            if (2 == sscanf(s, "FINAL_OBJECT_%d_%d", &tval, &sval))
             {
-                d_ptr->final_object = artif;
+                int k_idx = lookup_kind(tval, sval);
+                if (!k_idx) return PARSE_ERROR_UNDEFINED_TERRAIN_TAG;
+                d_ptr->final_object = k_idx;
                 s = t;
                 continue;
             }

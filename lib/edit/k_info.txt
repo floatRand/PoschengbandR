@@ -3976,6 +3976,7 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 ########################################################################
 # Gold (TV_GOLD)
+# Note: OBJ_GOLD_LIST uses the k_idx (650) defined below. Don't change!!!
 ########################################################################
 
 N:650:copper

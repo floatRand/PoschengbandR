@@ -2189,50 +2189,16 @@ void monster_death(int m_idx, bool drop_item)
             /* Hack: Lonely Mountain grants first realm's spellbook.
                I tried to do this in d_info.txt using ?:[EQU $REALM1 ...] but
                d_info.txt is processed before the save file is even loaded. */
-            if (k_idx == 336)
+            if (k_idx == lookup_kind(TV_LIFE_BOOK, 2) && p_ptr->realm1)
             {
-                switch (p_ptr->realm1)
-                {
-                case REALM_NATURE: k_idx = 381; break;
-                case REALM_CRAFT: k_idx = 606; break;
-                case REALM_DAEMON: k_idx = 648; break;
-                case REALM_LIFE: k_idx = 332; break;
-                case REALM_DEATH: k_idx = 423; break;
-                case REALM_CHAOS: k_idx = 385; break;
-                case REALM_TRUMP: k_idx = 514; break;
-                case REALM_CRUSADE: k_idx = 656; break;
-                case REALM_HISSATSU: k_idx = 639; break;
-                case REALM_MUSIC: k_idx = 633; break;
-                case REALM_HEX: k_idx = 665; break;
-                case REALM_NECROMANCY: k_idx = 685; break;
-                case REALM_RAGE: k_idx = 690; break;
-                case REALM_ARCANE: k_idx = 519; break;
-                case REALM_BURGLARY: k_idx = 703; break;
-                case REALM_ARMAGEDDON: k_idx = 721; break;
-                }
+                int tval = realm2tval(p_ptr->realm1);
+                k_idx = lookup_kind(tval, 2);
             }
 
-            if (k_idx == 337)
+            if (k_idx == lookup_kind(TV_LIFE_BOOK, 3) && p_ptr->realm1)
             {
-                switch (p_ptr->realm1)
-                {
-                case REALM_NATURE: k_idx = 382; break;
-                case REALM_CRAFT: k_idx = 607; break;
-                case REALM_DAEMON: k_idx = 649; break;
-                case REALM_LIFE: k_idx = 333; break;
-                case REALM_DEATH: k_idx = 424; break;
-                case REALM_CHAOS: k_idx = 386; break;
-                case REALM_TRUMP: k_idx = 515; break;
-                case REALM_CRUSADE: k_idx = 657; break;
-                case REALM_HISSATSU: k_idx = 640; break;
-                case REALM_MUSIC: k_idx = 634; break;
-                case REALM_HEX: k_idx = 666; break;
-                case REALM_NECROMANCY: k_idx = 686; break;
-                case REALM_RAGE: k_idx = 691; break;
-                case REALM_ARCANE: k_idx = 519; break;
-                case REALM_BURGLARY: k_idx = 704; break;
-                case REALM_ARMAGEDDON: k_idx = 722; break;
-                }
+                int tval = realm2tval(p_ptr->realm1);
+                k_idx = lookup_kind(tval, 3);
             }
 
             if (k_idx)
@@ -2274,26 +2240,6 @@ void monster_death(int m_idx, bool drop_item)
                 }
                 else
                 {
-#if 1
-                    if (p_ptr->wizard)
-                    {
-                        int iii;
-                        char buf[MAX_NLEN];
-                        for (iii = 0; iii < 100; )
-                        {
-                            object_type forge = {0};
-                            int         score;
-
-                            object_prep(&forge, k_idx);
-                            if (!apply_magic(&forge, object_level, AM_NO_FIXED_ART | AM_GOOD | AM_GUARDIAN)) continue;
-                            iii++;
-                            score = obj_value_real(&forge);
-                            obj_identify_fully(&forge);
-                            object_desc(buf, &forge, OD_COLOR_CODED);
-                            msg_format("%d) %s (%d)\n", iii, buf, score);
-                        }
-                    }
-#endif
                     apply_magic(q_ptr, object_level, AM_NO_FIXED_ART | AM_GOOD | AM_GUARDIAN);
                 }
                 /* Drop it in the dungeon */
