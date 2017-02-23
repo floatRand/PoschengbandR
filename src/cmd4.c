@@ -2322,7 +2322,8 @@ void do_cmd_visuals(void)
                 auto_dump_printf("# %s\n", o_name);
 
                 /* Dump the object attr/char info */
-                auto_dump_printf("K:%d:0x%02X/0x%02X\n\n", i,
+                auto_dump_printf("K:%d:%d:0x%02X/0x%02X\n\n",
+                    k_ptr->tval, k_ptr->sval,
                     (byte)(k_ptr->x_attr), (byte)(k_ptr->x_char));
             }
 

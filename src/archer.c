@@ -23,7 +23,7 @@ static bool _create_arrows(void)
 
     if (!prompt.obj) return FALSE;
 
-    object_prep(&forge, lookup_kind(TV_ARROW, m_bonus(1, p_ptr->lev)+ 1));
+    object_prep(&forge, lookup_kind(TV_ARROW, SV_ARROW + m_bonus(3, p_ptr->lev)));
     forge.number = rand_range(5, 10);
     apply_magic(&forge, p_ptr->lev, AM_NO_FIXED_ART);
     obj_identify_fully(&forge);
@@ -54,10 +54,7 @@ static bool _create_bolts(void)
 
     if (!prompt.obj) return FALSE;
 
-    /* Note: You won't ever get Steel Bolts this way since I:18:1 is shared with 
-       by Bolts and Steel Bolts and lookup_kind() picks the first match in k_info.txt.
-       However, getting Steel from Bones/Junk would be a bit odd anyway ... */
-    object_prep(&forge, lookup_kind(TV_BOLT, m_bonus(1, p_ptr->lev)+ 1));
+    object_prep(&forge, lookup_kind(TV_BOLT, SV_BOLT + m_bonus(3, p_ptr->lev)));
     forge.number = rand_range(4, 8);
     apply_magic(&forge, p_ptr->lev, AM_NO_FIXED_ART);
     obj_identify_fully(&forge);
@@ -98,7 +95,7 @@ static bool _create_shots(void)
         return FALSE;
     }
 
-    object_prep(&forge, lookup_kind(TV_SHOT, m_bonus(1, p_ptr->lev) + 1));
+    object_prep(&forge, lookup_kind(TV_SHOT, SV_PEBBLE + m_bonus(2, p_ptr->lev)));
     forge.number = (byte)rand_range(15,30);
     apply_magic(&forge, p_ptr->lev, AM_NO_FIXED_ART);
     obj_identify_fully(&forge);
@@ -225,7 +222,7 @@ static void _birth(void)
     py_birth_obj_aux(TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
     py_birth_obj_aux(TV_QUIVER, 0, 1);
-    py_birth_obj_aux(TV_ARROW, SV_AMMO_NORMAL, rand_range(30, 50));
+    py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(30, 50));
 }
 
 class_t *archer_get_class(void)

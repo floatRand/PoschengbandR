@@ -1604,13 +1604,28 @@ enum {
 #define SV_SKELETON             0
 #define SV_CORPSE            1
 
-/* The "sval" codes for TV_SHOT/TV_ARROW/TV_BOLT */
-#define SV_AMMO_LIGHT                    0    /* pebbles */
-#define SV_AMMO_NORMAL                   1    /* shots, arrows, bolts */
-#define SV_AMMO_HEAVY                    2    /* seeker arrows and bolts, mithril shots */
+/* TV_ARROW */
+#define SV_ARROW         1
+#define SV_SHEAF_ARROW   2
+#define SV_MITHRIL_ARROW 3
+#define SV_SEEKER_ARROW  4
+#define SV_BLACK_ARROW  10
+
+/* TV_BOLT */
+#define SV_BOLT          1
+#define SV_STEEL_BOLT    2
+#define SV_MITHRIL_BOLT  3
+#define SV_SEEKER_BOLT   4
+
+/* TV_SHOT */
+#define SV_PEBBLE        1
+#define SV_SHOT          2
+#define SV_MITHRIL_SHOT  3
 
 /* The "sval" codes for TV_BOW. The weird sequencing is historic (Previously,
-   sval%10 gave the bow multiplier, but this is now specified in k_info, etc). */
+   sval%10 gave the bow multiplier, but this is now specified in k_info, etc).
+   BTW: Don't change svals unless you plan on spending quite some time patching
+   up s_info.txt for the proficiency system. */
 #define SV_SLING                         2
 #define SV_SHORT_BOW                    12
 #define SV_LONG_BOW                     13
@@ -1759,7 +1774,6 @@ enum {
 #define SV_ETHEREAL_CLOAK                5
 #define SV_SHADOW_CLOAK                  6
 #define SV_DRAGON_CLOAK                  7
-#define SV_WIZARD_CLOAK                  8
 
 /* The "sval" codes for TV_GLOVES */
 #define SV_SET_OF_LEATHER_GLOVES         1

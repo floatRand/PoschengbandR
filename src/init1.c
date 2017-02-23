@@ -2648,13 +2648,11 @@ static errr grab_one_kind_flag(object_kind *k_ptr, cptr what)
  */
 errr parse_k_info(char *buf, header *head)
 {
-    int i;
-
     char *s, *t;
 
     /* Current entry */
     static object_kind *k_ptr = NULL;
-
+    static int k_idx = 0;
 
     /* Process 'N' for "New/Number/Name" */
     if (buf[0] == 'N')
@@ -2671,20 +2669,23 @@ errr parse_k_info(char *buf, header *head)
         *s++ = '\0';
 
         /* Get the index */
-        i = atoi(buf+2);
+        if (strcmp(buf+2, "*") == 0)
+            k_idx++;
+        else
+            k_idx = atoi(buf+2);
 
         /* Verify information */
-        if (i <= error_idx) return (4);
+        if (k_idx <= error_idx) return (4);
 
         /* Verify information */
-        if (i >= head->info_num) return (2);
+        if (k_idx >= head->info_num) return (2);
 
         /* Save the index */
-        error_idx = i;
+        error_idx = k_idx;
 
         /* Point at the "info" */
-        k_ptr = &k_info[i];
-        k_ptr->idx = i;
+        k_ptr = &k_info[k_idx];
+        k_ptr->idx = k_idx;
 
         /* Paranoia -- require a name */
         if (!*s) return (1);

@@ -510,16 +510,20 @@ errr process_pref_file_command(char *buf)
         }
         break;
 
-    /* Process "K:<num>:<a>/<c>"  -- attr/char for object kinds */
+    /* Process "K:<tval>:<sval>:<a>/<c>"  -- attr/char for object kinds
+     * N.B. Stop using k_idx some day ... map (tv, sv)->obj_kind_ptr instead. */
     case 'K':
-        if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
+        if (tokenize(buf+2, 4, zz, TOKENIZE_CHECKQUOTE) == 4)
         {
             object_kind *k_ptr;
-            i = (huge)strtol(zz[0], NULL, 0);
-            n1 = strtol(zz[1], NULL, 0);
-            n2 = strtol(zz[2], NULL, 0);
-            if (i >= max_k_idx) return 1;
-            k_ptr = &k_info[i];
+            int tval, sval, k_idx;
+            tval = strtol(zz[0], NULL, 0);
+            sval = strtol(zz[1], NULL, 0);
+            n1 = strtol(zz[2], NULL, 0);
+            n2 = strtol(zz[3], NULL, 0);
+            k_idx = lookup_kind(tval, sval);
+            if (!k_idx) return 1;
+            k_ptr = &k_info[k_idx];
             if (n1 || (!(n2 & 0x80) && n2)) k_ptr->x_attr = n1; /* Allow TERM_DARK text */
             if (n2) k_ptr->x_char = n2;
             return 0;

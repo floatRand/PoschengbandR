@@ -6236,7 +6236,7 @@ cptr do_effect(effect_t *effect, int mode, int boost)
 
             if (!tval) tval = TV_ARROW;
 
-            object_prep(&forge, lookup_kind(tval, SV_AMMO_NORMAL));
+            object_prep(&forge, lookup_kind(tval, SV_ARROW)); /* Hack: SV_ARROW == SV_BOLT == SV_PEBBLE */
             forge.number = MAX(0, MIN(50, quiver_capacity() - quiver_count(NULL)));
             obj_identify_fully(&forge);
 

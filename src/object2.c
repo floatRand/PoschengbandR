@@ -3262,7 +3262,7 @@ static bool _kind_theme_rogue(int k_idx) {
 static bool _kind_theme_hobbit(int k_idx) {
     if ( _kind_is_(k_idx, TV_FOOD, SV_ANY)
       || _kind_is_(k_idx, TV_BOW, SV_SLING)
-      || _kind_is_(k_idx, TV_SHOT, SV_AMMO_LIGHT) )
+      || _kind_is_(k_idx, TV_SHOT, SV_PEBBLE) )
     {
         return TRUE;
     }

@@ -2471,7 +2471,7 @@ static void _birth(void)
     py_birth_obj_aux(TV_POLEARM, SV_BROAD_AXE, 1);
     py_birth_obj_aux(TV_HARD_ARMOR, SV_CHAIN_MAIL, 1);
     py_birth_obj_aux(TV_BOW, SV_SHORT_BOW, 1);
-    py_birth_obj_aux(TV_ARROW, SV_AMMO_NORMAL, rand_range(15, 25));
+    py_birth_obj_aux(TV_ARROW, SV_ARROW, rand_range(15, 25));
 }
 
 /**********************************************************************
