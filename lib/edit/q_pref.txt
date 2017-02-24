@@ -2,38 +2,15 @@
 
 # Preferences for quest features
 
-# F:letter:feature:cave_info:monster:object:ego:artifact:trap:special
+L:X:PERMANENT(ROOM)
+L:T:FLOOR(ROOM):OBJ(*)
+L:.:FLOOR(ROOM)
+L:D:CLOSED_DOOR(ROOM)
+L:<:UP_STAIR(ROOM)
+L:W:DEEP_WATER(ROOM)
+L:V:SHALLOW_WATER(ROOM)
+L:%:GRANITE(ROOM)
+L:9:FLOOR(ROOM):OBJ(*, DEPTH+7):MON(*, DEPTH+9)
+L:@:FLOOR(ROOM):MON(*, DEPTH+11)
+L:*:FLOOR(ROOM):TRAP(*, 25):OBJ(*)
 
-# Permanent wall
-F:X:PERMANENT:8
-
-# Floor with random object
-F:T:FLOOR:8:0:*
-
-# Floor
-F:.:FLOOR:8
-
-# Door
-F:D:CLOSED_DOOR:8
-
-# up staircase
-F:<:UP_STAIR:8
-
-# Deep water
-F:W:DEEP_WATER:8
-
-# Shallow water
-F:V:SHALLOW_WATER:8
-
-# Granite wall
-F:%:GRANITE:8
-
-# Floor with monster (9 levels out of deep) and object (7 levels out of deep)
-F:9:FLOOR:8:*9:*7
-
-# Floor with monster (11 levels out of deep)
-F:@:FLOOR:8:*11
-
-# Random trap or object
-# (25% chance for trap, 75% chance for object hardcoded)
-F:*:FLOOR:8:0:*:0:0:*

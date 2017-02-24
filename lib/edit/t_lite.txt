@@ -5,52 +5,52 @@
 ############### Additional default terrain settings ###############
 
 # Default for reward 1
-F:!:FLOOR:3
+L:!:FLOOR
 
 # Default for reward 2
-F:?:FLOOR:3
+L:?:FLOOR
 
 # Default sorcery tower reward
-F:(:FLOOR:3
+L:(:FLOOR
 
 # Default chaos tower reward
-F:$:FLOOR:3
+L:$:FLOOR
 
 # Default nature tower reward
-F:":FLOOR:3
+L:":FLOOR
 
 # Default for Quest 1, 32
-F:z:PERMANENT:3
+L:z:PERMANENT(GLOW | MARK)
 
 # Default for Quest 29, 30
-F:y:PERMANENT:3
+L:y:PERMANENT(GLOW | MARK)
 
 # Default for Quest 4
-F:w:PERMANENT:3
+L:w:PERMANENT(GLOW | MARK)
 
 # Default for Quest 33
-F:C:PERMANENT:3
+L:C:PERMANENT(GLOW | MARK)
 
 # Default for Quest 27
-F:O:PERMANENT:3
+L:O:PERMANENT(GLOW | MARK)
 
 # Default for Quest 5
-F:u:GRASS:3
+L:u:GRASS
 
 # Default for Quest 22
-F:v:TREE:3
+L:v:TREE
 
 # Default for Quest 19, 21
-F:D:TREE:3
+L:D:TREE
 
 # Default for Quest 10
-F:s:PERMANENT:3
+L:s:PERMANENT
 
 # Default for Quest 11
-F:t:PERMANENT:3
+L:t:PERMANENT
 
 # Default for Quest 12
-F:N:PERMANENT:3
+L:N:PERMANENT
 
 
 ############### Quest Chain 1 ###########################
@@ -59,163 +59,117 @@ F:N:PERMANENT:3
 
 # Quest 1 untaken
 ?:[EQU $QUEST1 0]
-F:b:BUILDING_1:3:0:0:0:0:NONE:1
+L:b:BUILDING_1(GLOW, 1)
 
 # Quest 1 taken, entrance is quest entrance
 ?:[EQU $QUEST1 1]
-F:z:QUEST_ENTER:3:0:0:0:0:NONE:1
-F:b:BUILDING_1:3:0:0:0:0:NONE:1
+L:z:QUEST_ENTER(GLOW | MARK, 1)
+L:b:BUILDING_1(GLOW, 1)
 
 # Quest 1 completed
 ?:[EQU $QUEST1 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:1
+L:b:BUILDING_1(GLOW, 1)
 
 # Quest 1 rewarding, reward is a Longsword, continue with quest 32
 ?:[EQU $QUEST1 3]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:42
+L:b:BUILDING_1(GLOW, 32)
+L:!:FLOOR:OBJ(SWORD, long sword, DEPTH+5)
 
-# Ring of Combat
 ?:[AND [EQU $QUEST1 3] [EQU $RACE Beholder Dragon Hound Possessor Spider] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:132:206
+L:!:FLOOR:OBJ(RING):EGO(combat)
 
-# Steel Helm
 ?:[AND [EQU $QUEST1 3] [EQU $RACE Hydra] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:97
+L:!:FLOOR:OBJ(HELM, steel helm, DEPTH+5)
 
-# Steel Helm
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Monster] [EQU $RACE Golem] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:97
+L:!:FLOOR:OBJ(HELM, steel helm, DEPTH+5)
 
-# Two-handed Sword
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Monster] [EQU $RACE Giant] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:37
+L:!:FLOOR:OBJ(SWORD, two-handed sword, DEPTH+5)
 
-# Ring of Protection
 ?:[AND [EQU $QUEST1 3] [EQU $RACE Lich Quylthulg] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:132:205
+L:!:FLOOR:OBJ(RING):EGO(205)
 
-# Rapier
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Duelist] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:44
+L:!:FLOOR:OBJ(SWORD, rapier, DEPTH+5)
 
-# Sling
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Rogue] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:77
+L:!:FLOOR:OBJ(BOW, sling, DEPTH+5)
 
-# Whip
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Archaeologist] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:49
+L:!:FLOOR:OBJ(HAFTED, whip, DEPTH+5)
 
-# Broad Spear
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Beastmaster Cavalry] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:543
+L:!:FLOOR:OBJ(POLEARM, broad spear, DEPTH+5)
 
-# Set of Gauntlets
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Monk Force-Trainer Mystic] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:126
+L:!:FLOOR:OBJ(GLOVES, gauntlets, DEPTH+5)
 
-# War Hammer
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Priest] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:55
+L:!:FLOOR:OBJ(HAFTED, war hammer, DEPTH+5)
 
-# Short Bow
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Archer] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:73
+L:!:FLOOR:OBJ(BOW, short bow, DEPTH+5)
 
-# Broad Axe
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponsmith] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:70
+L:!:FLOOR:OBJ(POLEARM, broad axe, DEPTH+5)
 
-# Ring of Protection
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:132:205
+L:!:FLOOR:OBJ(RING):EGO(205)
 
-# Dagger
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Ninja] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:43
+L:!:FLOOR:OBJ(SWORD, dagger, DEPTH+5)
 
-# Light Crossbow
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Sniper] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:75
+L:!:FLOOR:OBJ(BOW, light crossbow, DEPTH+5)
 
-#Two-handed Flail
-?:[AND [EQU $QUEST14 3] [EQU $CLASS Mauler] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:51
+?:[AND [EQU $QUEST1 3] [EQU $CLASS Mauler] ]
+L:!:FLOOR:OBJ(HAFTED, two-handed flail, DEPTH+5)
 
-# Weaponmasters
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:70
+L:!:FLOOR:OBJ(POLEARM, broad axe, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:73
+L:!:FLOOR:OBJ(BOW, short bow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:55
+L:!:FLOOR:OBJ(HAFTED, war hammer, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:75
+L:!:FLOOR:OBJ(BOW, light crossbow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:43
+L:!:FLOOR:OBJ(SWORD, dagger, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:87
+L:!:FLOOR:OBJ(DIGGING, pick, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:63
+L:!:FLOOR:OBJ(POLEARM, pike, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:128
+L:!:FLOOR:OBJ(SHIELD, small leather shield, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:77
+L:!:FLOOR:OBJ(BOW, sling, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:54
+L:!:FLOOR:OBJ(HAFTED, quarterstaff, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
-F:!:FLOOR:3:0:42
+L:!:FLOOR:OBJ(SWORD, long sword, DEPTH+5)
 
 # Quest 1 finished, continue with quest 32
 ?:[EQU $QUEST1 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+L:b:BUILDING_1(GLOW, 32)
 
 # Quest 1 failed
 ?:[EQU $QUEST1 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:1
+L:b:BUILDING_1(GLOW, 1)
 
-# Quest 1 failed but done, continue with quest 32
+# Quest 1 failed
 ?:[EQU $QUEST1 6]
-F:b:BUILDING_1:3
+L:b:BUILDING_1(GLOW, 1)
 
 ?:1
 

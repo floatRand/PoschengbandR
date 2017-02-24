@@ -28,7 +28,7 @@ room_ptr room_alloc(cptr name)
     memset(room, 0, sizeof(room_t));
     room->name = z_string_make(name);
     room->map = vec_alloc(free);
-    room->letters = vec_alloc(free);
+    room->letters = int_map_alloc(free);
     return room;
 }
 
@@ -38,7 +38,7 @@ void room_free(room_ptr room)
     {
         z_string_free(room->name);
         vec_free(room->map);
-        vec_free(room->letters);
+        int_map_free(room->letters);
         free(room);
     }
 }
@@ -1541,14 +1541,7 @@ void coord_trans(int *x, int *y, int xoffset, int yoffset, int transno)
 
 static room_grid_ptr _find_room_grid(room_ptr room, char letter)
 {
-    int i;
-    for (i = 0; i < vec_length(room->letters); i++)
-    {
-        room_grid_ptr grid = vec_get(room->letters, i);
-        if (grid->letter == letter)
-            return grid;
-    }
-    return NULL;
+    return int_map_find(room->letters, letter);
 }
 
 static bool _obj_kind_is_good = FALSE;
@@ -1586,7 +1579,9 @@ static void _apply_room_grid1(int x, int y, room_grid_ptr grid, u16b room_flags)
         if (grid->flags & ROOM_GRID_SPECIAL)
             c_ptr->special = grid->extra;
 
-        if (have_flag(f_info[c_ptr->feat].flags, FF_STORE))
+        /* Dungeon Shops need to init TOWN_RANDOM, but town shops definitely do not!
+         * The ROOM_SHOP flag won't be set by process_dungeon_file(), only in v_info.txt. */
+        if (have_flag(f_info[c_ptr->feat].flags, FF_STORE) && (room_flags & ROOM_SHOP))
         {
             town_ptr town = towns_get_town(TOWN_RANDOM);
             shop_ptr shop = town_get_shop(town, f_info[c_ptr->feat].subtype);

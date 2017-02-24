@@ -2105,8 +2105,8 @@ errr parse_v_info(char *buf)
         int rc;
         room_grid_ptr letter = malloc(sizeof(room_grid_t));
         memset(letter, 0, sizeof(room_grid_t));
-        vec_push(room_ptr->letters, letter);
         rc = parse_room_grid(buf + 2, letter);
+        int_map_add(room_ptr->letters, letter->letter, letter);
         if (rc) return rc;
     }
 
@@ -4462,164 +4462,6 @@ static int i = 0;
 #endif    /* ALLOW_TEMPLATES */
 
 
-/* Random dungeon grid effects */
-#define RANDOM_NONE         0x00000000
-#define RANDOM_FEATURE      0x00000001
-#define RANDOM_MONSTER      0x00000002
-#define RANDOM_OBJECT       0x00000004
-#define RANDOM_EGO          0x00000008
-#define RANDOM_ARTIFACT     0x00000010
-#define RANDOM_TRAP         0x00000020
-
-
-typedef struct dungeon_grid dungeon_grid;
-
-struct dungeon_grid
-{
-    int        feature;        /* Terrain feature */
-    int        monster;        /* Monster */
-    int        object;            /* Object */
-    int        ego;            /* Ego-Item */
-    int        artifact;        /* Artifact */
-    int        trap;            /* Trap */
-    int        cave_info;        /* Flags for CAVE_MARK, CAVE_GLOW, CAVE_ICKY, CAVE_ROOM */
-    int        special;        /* Reserved for special terrain info */
-    int        random;            /* Number of the random effect */
-    int        level;          /* TODO: Quest Rewards should not be generated at DL0! Better solution? */
-};
-
-
-static dungeon_grid letter[255];
-
-
-/*
- * Process "F:<letter>:<terrain>:<cave_info>:<monster>:<object>:<ego>:<artifact>:<trap>:<special>:<level>" -- info for dungeon grid
- */
-static errr parse_line_feature(char *buf)
-{
-    int num;
-    char *zz[10];
-
-
-    if (init_flags & INIT_ONLY_BUILDINGS) return (0);
-
-    /* Tokenize the line */
-    if ((num = tokenize(buf+2, 10, zz, 0)) > 1)
-    {
-        /* Letter to assign */
-        int index = zz[0][0];
-
-        /* Reset the info for the letter */
-        letter[index].feature = feat_none;
-        letter[index].monster = 0;
-        letter[index].object = 0;
-        letter[index].ego = 0;
-        letter[index].artifact = 0;
-        letter[index].trap = feat_none;
-        letter[index].cave_info = 0;
-        letter[index].special = 0;
-        letter[index].random = RANDOM_NONE;
-        letter[index].level = 0;
-
-        switch (num)
-        {
-            case 10:
-                letter[index].level = atoi(zz[9]);
-                /* Fall through */
-            /* Special */
-            case 9:
-                letter[index].special = atoi(zz[8]);
-                /* Fall through */
-            /* Trap */
-            case 8:
-                if ((zz[7][0] == '*') && !zz[7][1])
-                {
-                    letter[index].random |= RANDOM_TRAP;
-                }
-                else
-                {
-                    letter[index].trap = f_tag_to_index(zz[7]);
-                    if (letter[index].trap < 0) return PARSE_ERROR_UNDEFINED_TERRAIN_TAG;
-                }
-                /* Fall through */
-            /* Artifact */
-            case 7:
-                if (zz[6][0] == '*')
-                {
-                    letter[index].random |= RANDOM_ARTIFACT;
-                    if (zz[6][1]) letter[index].artifact = atoi(zz[6] + 1);
-                }
-                else
-                {
-                    letter[index].artifact = atoi(zz[6]);
-                }
-                /* Fall through */
-            /* Ego-item */
-            case 6:
-                if (zz[5][0] == '*')
-                {
-                    letter[index].random |= RANDOM_EGO;
-                    if (zz[5][1]) letter[index].ego = atoi(zz[5] + 1);
-                }
-                else
-                {
-                    letter[index].ego = atoi(zz[5]);
-                }
-                /* Fall through */
-            /* Object */
-            case 5:
-                if (zz[4][0] == '*')
-                {
-                    letter[index].random |= RANDOM_OBJECT;
-                    if (zz[4][1]) letter[index].object = atoi(zz[4] + 1);
-                }
-                else
-                {
-                    letter[index].object = atoi(zz[4]);
-                }
-                /* Fall through */
-            /* Monster */
-            case 4:
-                if (zz[3][0] == '*')
-                {
-                    letter[index].random |= RANDOM_MONSTER;
-                    if (zz[3][1]) letter[index].monster = atoi(zz[3] + 1);
-                }
-                else if (zz[3][0] == 'c')
-                {
-                    if (!zz[3][1]) return PARSE_ERROR_GENERIC;
-                    letter[index].monster = - atoi(zz[3] + 1);
-                }
-                else
-                {
-                    letter[index].monster = atoi(zz[3]);
-                }
-                /* Fall through */
-            /* Cave info */
-            case 3:
-                letter[index].cave_info = atoi(zz[2]);
-                /* Fall through */
-            /* Feature */
-            case 2:
-                if ((zz[1][0] == '*') && !zz[1][1])
-                {
-                    letter[index].random |= RANDOM_FEATURE;
-                }
-                else
-                {
-                    letter[index].feature = f_tag_to_index(zz[1]);
-                    if (letter[index].feature < 0) return PARSE_ERROR_UNDEFINED_TERRAIN_TAG;
-                }
-                break;
-        }
-
-        return (0);
-    }
-
-    return (1);
-}
-
-
 /*
  * Process "B:<Index>:<Command>:..." -- Building definition
  */
@@ -4855,12 +4697,12 @@ void drop_here(object_type *j_ptr, int y, int x)
 /*
  * Parse a sub-file of the "extra info"
  */
+static room_ptr _room = NULL;
 static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, int xmax, int *y, int *x)
 {
-    int i;
-
     char *zz[33];
 
+    assert(_room);
 
     /* Skip "empty" lines */
     if (!buf[0]) return (0);
@@ -4882,12 +4724,44 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
         return (process_dungeon_file(buf + 2, ymin, xmin, ymax, xmax));
     }
 
-    /* Process "F:<letter>:<terrain>:<cave_info>:<monster>:<object>:<ego>:<artifact>:<trap>:<special>" -- info for dungeon grid */
     if (buf[0] == 'F')
     {
-        return parse_line_feature(buf);
+        /* Skip for now ... remove later */
+        /* Process "F:<letter>:<terrain>:<cave_info>:<monster>:<object>:<ego>:<artifact>:<trap>:<special>" -- info for dungeon grid */
+        /*return parse_line_feature(buf);*/
+        return 0;
     }
+    else if (buf[0] == 'L')
+    {
+        int rc;
+        room_grid_ptr letter = malloc(sizeof(room_grid_t));
+        memset(letter, 0, sizeof(room_grid_t));
+        rc = parse_room_grid(buf + 2, letter);
+        int_map_add(_room->letters, letter->letter, letter);
+        return rc;
+    }
+    else if (buf[0] == 'D')
+    {
+        /* Acquire the text */
+        cptr s = buf+2;
 
+        /* Calculate room dimensions automagically */
+        _room->height++;
+        if (!_room->width)
+            _room->width = strlen(s);
+        else if (strlen(s) != _room->width)
+        {
+            msg_format(
+                "Error: Inconsistent map widths. Room width auto-calculated to %d but "
+                "current line is %d. Please make all map lines the same length.",
+                _room->width, strlen(s)
+            );
+            return PARSE_ERROR_GENERIC;
+        }
+        vec_push(_room->map, z_string_make(s));
+        return 0;
+    }
+#if 0
     /* Process "D:<dungeon>" -- info for the cave grids */
     else if (buf[0] == 'D')
     {
@@ -5130,7 +5004,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
 
         return (0);
     }
-
+#endif
     /* Process "Q:<number>:<command>:... -- quest info */
     else if (buf[0] == 'Q')
     {
@@ -5217,22 +5091,13 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                 int panels_x, panels_y;
 
                 /* Hack - Set the dungeon size */
-                panels_y = (*y / SCREEN_HGT);
-                if (*y % SCREEN_HGT) panels_y++;
+                panels_y = (_room->height / SCREEN_HGT);
+                if (_room->height % SCREEN_HGT) panels_y++;
                 cur_hgt = panels_y * SCREEN_HGT;
 
-                panels_x = (*x / SCREEN_WID);
-                if (*x % SCREEN_WID) panels_x++;
+                panels_x = (_room->width / SCREEN_WID);
+                if (_room->width % SCREEN_WID) panels_x++;
                 cur_wid = panels_x * SCREEN_WID;
-
-                /* Assume illegal panel ... Well, there goes 5 hours of my life!
-                   Don't do this ... We might be reloading a town as a result of
-                   wilderness scrolling!
-                if (!panel_lock)
-                {
-                    panel_row_min = cur_hgt;
-                    panel_col_min = cur_wid;
-                } */
 
                 /* Place player in a quest level */
                 if (p_ptr->inside_quest)
@@ -5689,6 +5554,26 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
     return (v);
 }
 
+static void _build_room(const room_ptr room, rect_t r, int transno)
+{
+    int x = room->width;
+    int y = room->height;
+    int xoffset = 0;
+    int yoffset = 0;
+
+    coord_trans(&x, &y, 0, 0, transno);
+    if (x < 0) xoffset = -x;
+    if (y < 0) yoffset = -y;
+
+    build_room_template_aux(
+        room,
+        r.y + r.cy/2, /* expects the *center* of the rect ... sigh */
+        r.x + r.cx/2,
+        xoffset,
+        yoffset,
+        transno
+    );
+}
 
 errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
 {
@@ -5703,6 +5588,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
     bool bypass = FALSE;
 
     int x = xmin, y = ymin;
+    static int depth = 0;
 
 
     /* Build the filename */
@@ -5714,6 +5600,12 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
     /* No such file */
     if (!fp) return (-1);
 
+    /* The pattern of recursion is awkward ... process_dungeon_file -> aux -> process_dungeon_file -> aux -> etc. */
+    if (!depth++)
+    {
+        assert(!_room);
+        _room = room_alloc("Temp");
+    }
 
     /* Process the file */
     while (0 == my_fgets(fp, buf, sizeof(buf)))
@@ -5776,7 +5668,17 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
 
         msg_print(NULL);
     }
-
+    if (!--depth)
+    {
+        assert(_room);
+        if (!(init_flags & INIT_ONLY_BUILDINGS) && vec_length(_room->map))
+        {
+            /* TODO: Wilderness scrolling ... Yuk! */
+            _build_room(_room, rect(0, 0, _room->width, _room->height), 0);
+        }
+        room_free(_room);
+        _room = NULL;
+    }
 
     /* Close the file */
     my_fclose(fp);

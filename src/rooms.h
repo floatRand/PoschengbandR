@@ -180,7 +180,7 @@ struct room_s
     byte width;
 
     vec_ptr map;
-    vec_ptr letters;
+    int_map_ptr letters;
 };
 
 typedef struct room_s room_t, *room_ptr;
