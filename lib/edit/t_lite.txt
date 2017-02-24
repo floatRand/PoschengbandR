@@ -1,6 +1,7 @@
 # File: t_lite.txt
 
 # Town
+T:TOWN:NORMAL:NO_ROTATE
 
 ############### Additional default terrain settings ###############
 
@@ -177,8 +178,8 @@ L:b:BUILDING_1(GLOW, 1)
 
 # Quest 32 taken, entrance is quest entrance
 ?:[EQU $QUEST32 1]
-F:z:QUEST_ENTER:3:0:0:0:0:NONE:32
-F:b:BUILDING_1:3:0:0:0:0:NONE:32
+L:z:QUEST_ENTER(GLOW | MARK, 32)
+L:b:BUILDING_1(GLOW, 32)
 
 # Quest 32 completed
 ?:[EQU $QUEST32 2]
@@ -190,7 +191,7 @@ F:b:BUILDING_1:3:0:0:0:0:NONE:32
 F:b:BUILDING_1:3:0:0:0:0:NONE:4
 F:!:FLOOR:3:0:0:0:1
 
-# Quest 32 finished, continue with quest 33
+# Quest 32 finished, continue with quest 4
 ?:[EQU $QUEST32 4]
 F:b:BUILDING_1:3:0:0:0:0:NONE:4
 

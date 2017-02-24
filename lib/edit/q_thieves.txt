@@ -1,4 +1,3 @@
-# q0000001.txt
 
 # Name
 Q:1:N:Thieves Hideout
@@ -28,23 +27,25 @@ Q:1:T:hired another adventurer to clean up the remaining thieves.
 ?:1
 
 # Floor with Novice rogue
-F:a:FLOOR:8:44
-
-# Floor with Bandit
-F:b:FLOOR:8:150
+T:QUEST:NORMAL:FORMATION
+L:#:PERMANENT(ROOM)
+L:.:FLOOR(ROOM)
+L:0:MON(THIEF, DEPTH+5)
+L:^:TRAP(*, 50)
+L:$:FLOOR(ROOM):OBJ(*)
+L:+:CLOSED_DOOR(ROOM)
+L:<:UP_STAIR(ROOM)
 
 # Dungeon layout
-D:XXXXXXXXXXXXXXX
-D:X....a....X..TX
-D:X.........D...X
-D:X.........Xb..X
-D:XXXXX.....XXXXX
-D:XT..D........aX
-D:X.b.X.........X
-D:XXXXX.........X
-D:X<..D.........X
-D:XXXXXXXXXXXXXXX
-
-# Starting position
-P:8:1
+D:###############
+D:#....1....#..$#
+D:#.........+^..#
+D:#2........#0..#
+D:#####.....#####
+D:#$.^+........1#
+D:#.0.#..^......#
+D:#####.........#
+D:#@^.+.........#
+D:#<^.+........2#
+D:###############
 

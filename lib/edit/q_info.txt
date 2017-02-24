@@ -7,7 +7,7 @@
 
 # Thieves Hideout
 ?:[EQU $QUEST_NUMBER 1]
-%:q0000001.txt
+%:q_thieves.txt
 
 # Sever
 ?:[EQU $QUEST_NUMBER 2]

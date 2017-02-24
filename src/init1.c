@@ -1955,12 +1955,99 @@ static errr _parse_room_flags(char* buf, room_ptr room)
     return 0;
 }
 
+static errr _parse_room_type(char *buf, room_ptr room)
+{
+    char *zz[10];
+    int   num = tokenize(buf, 10, zz, 0);
+
+    if (num < 2 || num > 3)
+    {
+        msg_print("Error: Invalid T: line. Syntax is T:<Type>:<Subtype>[:<Flags>].");
+        return PARSE_ERROR_TOO_FEW_ARGUMENTS;
+    }
+
+    if (streq(zz[0], "VAULT"))
+    {
+        room->type = ROOM_VAULT;
+        if (streq(zz[1], "LESSER"))
+            room->subtype = VAULT_LESSER;
+        else if (streq(zz[1], "GREATER"))
+            room->subtype = VAULT_GREATER;
+
+        if (!room->subtype)
+        {
+            msg_format("Error: Unknown vault type %s.", zz[1]);
+            return PARSE_ERROR_GENERIC;
+        }
+    }
+    else if (streq(zz[0], "ROOM"))
+    {
+        room->type = ROOM_NORMAL;
+        room->subtype = 0; /* TODO */
+    }
+    else if (streq(zz[0], "QUEST"))
+    {
+        room->type = ROOM_QUEST;
+        room->subtype = 0; /* TODO */
+    }
+    else if (streq(zz[0], "TOWN"))
+    {
+        room->type = ROOM_TOWN;
+        room->subtype = 0; /* TODO */
+    }
+    else if (streq(zz[0], "WILD") || streq(zz[0], "AMBUSH"))
+    {
+        static struct { cptr name; int type; } types[] = {
+            {"WATER",    TERRAIN_DEEP_WATER}, /* TERRAIN_SHALLOW_WATER */
+            {"SWAMP",    TERRAIN_SWAMP},
+            {"GRASS",    TERRAIN_GRASS},      /* TERRAIN_DIRT, TERRAIN_DESERT */
+            {"TREES",    TERRAIN_TREES},
+            {"LAVA",     TERRAIN_DEEP_LAVA},  /* TERRAIN_SHALLOW_LAVA */
+            {"MOUNTAIN", TERRAIN_MOUNTAIN},
+            { 0, 0 }
+        };
+        int j;
+        if (streq(zz[0], "AMBUSH"))
+            room->type = ROOM_AMBUSH;
+        else
+            room->type = ROOM_WILDERNESS;
+        for (j = 0; ; j++)
+        {
+            if (!types[j].name) break;
+            if (streq(types[j].name, zz[1]))
+            {
+                room->subtype = types[j].type;
+                break;
+            }
+        }
+
+        if (!room->subtype)
+        {
+            msg_format("Error: Unknown wilderness type %s.", zz[1]);
+            return PARSE_ERROR_GENERIC;
+        }
+    }
+
+    if (!room->type)
+    {
+        msg_format("Error: Unknown room type %s.", zz[0]);
+        return PARSE_ERROR_GENERIC;
+    }
+
+    if (num == 3)
+    {
+        errr rc = _parse_room_flags(zz[2], room);
+        if (rc) return rc;
+    }
+    return 0;
+}
+
 errr parse_v_info(char *buf)
 {
     char *s;
 
     /* Current entry */
-    static room_t *room_ptr = NULL;
+    static room_ptr room = NULL;
 
     /* N:Name */
     if (buf[0] == 'N')
@@ -1975,12 +2062,12 @@ errr parse_v_info(char *buf)
         }
 
         error_idx = vec_length(room_info);
-        room_ptr = room_alloc(zz[0]);
-        vec_push(room_info, room_ptr);
+        room = room_alloc(zz[0]);
+        vec_push(room_info, room);
     }
 
-    /* There better be a current room_ptr */
-    else if (!room_ptr)
+    /* There better be a current room */
+    else if (!room)
     {
         msg_print("Error: Missing N: line for new room template.");
         return PARSE_ERROR_MISSING_RECORD_HEADER;
@@ -1989,88 +2076,8 @@ errr parse_v_info(char *buf)
     /* T:Type:Subtype[:Flags] */
     else if (buf[0] == 'T')
     {
-        char *zz[10];
-        int   num = tokenize(buf + 2, 10, zz, 0);
-
-        if (num < 2 || num > 3)
-        {
-            msg_print("Error: Invalid T: line. Syntax is T:<Type>:<Subtype>[:<Flags>].");
-            return PARSE_ERROR_TOO_FEW_ARGUMENTS;
-        }
-
-        if (streq(zz[0], "VAULT"))
-        {
-            room_ptr->type = ROOM_VAULT;
-            if (streq(zz[1], "LESSER"))
-                room_ptr->subtype = VAULT_LESSER;
-            else if (streq(zz[1], "GREATER"))
-                room_ptr->subtype = VAULT_GREATER;
-
-            if (!room_ptr->subtype)
-            {
-                msg_format("Error: Unknown vault type %s.", zz[1]);
-                return PARSE_ERROR_GENERIC;
-            }
-        }
-        else if (streq(zz[0], "ROOM"))
-        {
-            room_ptr->type = ROOM_NORMAL;
-            room_ptr->subtype = 0; /* TODO */
-        }
-        else if (streq(zz[0], "QUEST"))
-        {
-            room_ptr->type = ROOM_QUEST;
-            room_ptr->subtype = 0; /* TODO */
-        }
-        else if (streq(zz[0], "TOWN"))
-        {
-            room_ptr->type = ROOM_TOWN;
-            room_ptr->subtype = 0; /* TODO */
-        }
-        else if (streq(zz[0], "WILD") || streq(zz[0], "AMBUSH"))
-        {
-            static struct { cptr name; int type; } types[] = {
-                {"WATER",    TERRAIN_DEEP_WATER}, /* TERRAIN_SHALLOW_WATER */
-                {"SWAMP",    TERRAIN_SWAMP},
-                {"GRASS",    TERRAIN_GRASS},      /* TERRAIN_DIRT, TERRAIN_DESERT */
-                {"TREES",    TERRAIN_TREES},
-                {"LAVA",     TERRAIN_DEEP_LAVA},  /* TERRAIN_SHALLOW_LAVA */
-                {"MOUNTAIN", TERRAIN_MOUNTAIN},
-                { 0, 0 }
-            };
-            int j;
-            if (streq(zz[0], "AMBUSH"))
-                room_ptr->type = ROOM_AMBUSH;
-            else
-                room_ptr->type = ROOM_WILDERNESS;
-            for (j = 0; ; j++)
-            {
-                if (!types[j].name) break;
-                if (streq(types[j].name, zz[1]))
-                {
-                    room_ptr->subtype = types[j].type;
-                    break;
-                }
-            }
-
-            if (!room_ptr->subtype)
-            {
-                msg_format("Error: Unknown wilderness type %s.", zz[1]);
-                return PARSE_ERROR_GENERIC;
-            }
-        }
-
-        if (!room_ptr->type)
-        {
-            msg_format("Error: Unknown room type %s.", zz[0]);
-            return PARSE_ERROR_GENERIC;
-        }
-
-        if (num == 3)
-        {
-            errr rc = _parse_room_flags(zz[2], room_ptr);
-            if (rc) return rc;
-        }
+        errr rc = _parse_room_type(buf + 2, room);
+        if (rc) return rc;
     }
 
     /* W:Level:MaxLevel:Rarity */
@@ -2085,18 +2092,18 @@ errr parse_v_info(char *buf)
             msg_print("Error: Invalid W: line. Syntax: W:<Level>:<MaxLevel>:<Rarity>.");
             return PARSE_ERROR_TOO_FEW_ARGUMENTS;
         }
-        room_ptr->level = atoi(zz[0]);
+        room->level = atoi(zz[0]);
         if (streq(zz[1], "*"))
-            room_ptr->max_level = 0;
+            room->max_level = 0;
         else
-            room_ptr->max_level = atoi(zz[1]);
+            room->max_level = atoi(zz[1]);
         tmp = atoi(zz[2]);
         if (tmp < 0 || tmp > 255)
         {
             msg_format("Error: Invalid rarity %d. Enter a value between 1 and 255.", tmp);
             return PARSE_ERROR_OUT_OF_BOUNDS;
         }
-        room_ptr->rarity = tmp;
+        room->rarity = tmp;
     }
 
     /* Process custom 'L'etters */
@@ -2106,7 +2113,7 @@ errr parse_v_info(char *buf)
         room_grid_ptr letter = malloc(sizeof(room_grid_t));
         memset(letter, 0, sizeof(room_grid_t));
         rc = parse_room_grid(buf + 2, letter);
-        int_map_add(room_ptr->letters, letter->letter, letter);
+        int_map_add(room->letters, letter->letter, letter);
         if (rc) return rc;
     }
 
@@ -2117,19 +2124,19 @@ errr parse_v_info(char *buf)
         s = buf+2;
 
         /* Calculate room dimensions automagically */
-        room_ptr->height++;
-        if (!room_ptr->width)
-            room_ptr->width = strlen(s);
-        else if (strlen(s) != room_ptr->width)
+        room->height++;
+        if (!room->width)
+            room->width = strlen(s);
+        else if (strlen(s) != room->width)
         {
             msg_format(
                 "Error: Inconsistent map widths. Room width auto-calculated to %d but "
                 "current line is %d. Please make all map lines the same length.",
-                room_ptr->width, strlen(s)
+                room->width, strlen(s)
             );
             return PARSE_ERROR_GENERIC;
         }
-        vec_push(room_ptr->map, z_string_make(s));
+        vec_push(room->map, z_string_make(s));
     }
     /* Oops */
     else    return PARSE_ERROR_UNDEFINED_DIRECTIVE;
@@ -4702,8 +4709,6 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
 {
     char *zz[33];
 
-    assert(_room);
-
     /* Skip "empty" lines */
     if (!buf[0]) return (0);
 
@@ -4731,34 +4736,45 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
         /*return parse_line_feature(buf);*/
         return 0;
     }
+    else if (buf[0] == 'T')
+    {
+        if (_room) return _parse_room_type(buf + 2, _room);
+        return 0;
+    }
     else if (buf[0] == 'L')
     {
-        int rc;
-        room_grid_ptr letter = malloc(sizeof(room_grid_t));
-        memset(letter, 0, sizeof(room_grid_t));
-        rc = parse_room_grid(buf + 2, letter);
-        int_map_add(_room->letters, letter->letter, letter);
-        return rc;
+        if (_room)
+        {
+            int rc;
+            room_grid_ptr letter = malloc(sizeof(room_grid_t));
+            memset(letter, 0, sizeof(room_grid_t));
+            rc = parse_room_grid(buf + 2, letter);
+            int_map_add(_room->letters, letter->letter, letter);
+            return rc;
+        }
+        return 0;
     }
     else if (buf[0] == 'D')
     {
-        /* Acquire the text */
-        cptr s = buf+2;
-
-        /* Calculate room dimensions automagically */
-        _room->height++;
-        if (!_room->width)
-            _room->width = strlen(s);
-        else if (strlen(s) != _room->width)
+        if (_room)
         {
-            msg_format(
-                "Error: Inconsistent map widths. Room width auto-calculated to %d but "
-                "current line is %d. Please make all map lines the same length.",
-                _room->width, strlen(s)
-            );
-            return PARSE_ERROR_GENERIC;
+            cptr s = buf+2;
+
+            /* Calculate room dimensions automagically */
+            _room->height++;
+            if (!_room->width)
+                _room->width = strlen(s);
+            else if (strlen(s) != _room->width)
+            {
+                msg_format(
+                    "Error: Inconsistent map widths. Room width auto-calculated to %d but "
+                    "current line is %d. Please make all map lines the same length.",
+                    _room->width, strlen(s)
+                );
+                return PARSE_ERROR_GENERIC;
+            }
+            vec_push(_room->map, z_string_make(s));
         }
-        vec_push(_room->map, z_string_make(s));
         return 0;
     }
 #if 0
@@ -5088,17 +5104,6 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
         {
             if (tokenize(buf + 2, 2, zz, 0) == 2)
             {
-                int panels_x, panels_y;
-
-                /* Hack - Set the dungeon size */
-                panels_y = (_room->height / SCREEN_HGT);
-                if (_room->height % SCREEN_HGT) panels_y++;
-                cur_hgt = panels_y * SCREEN_HGT;
-
-                panels_x = (_room->width / SCREEN_WID);
-                if (_room->width % SCREEN_WID) panels_x++;
-                cur_wid = panels_x * SCREEN_WID;
-
                 /* Place player in a quest level */
                 if (p_ptr->inside_quest)
                 {
@@ -5554,12 +5559,22 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
     return (v);
 }
 
-static void _build_room(const room_ptr room, rect_t r, int transno)
+static void _build_dungeon(const room_ptr room, rect_t r, int transno)
 {
     int x = room->width;
     int y = room->height;
     int xoffset = 0;
     int yoffset = 0;
+    int panels_x, panels_y;
+
+    /* Hack - Set the dungeon size */
+    panels_y = (room->height / SCREEN_HGT);
+    if (room->height % SCREEN_HGT) panels_y++;
+    cur_hgt = panels_y * SCREEN_HGT;
+
+    panels_x = (room->width / SCREEN_WID);
+    if (room->width % SCREEN_WID) panels_x++;
+    cur_wid = panels_x * SCREEN_WID;
 
     coord_trans(&x, &y, 0, 0, transno);
     if (x < 0) xoffset = -x;
@@ -5601,7 +5616,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
     if (!fp) return (-1);
 
     /* The pattern of recursion is awkward ... process_dungeon_file -> aux -> process_dungeon_file -> aux -> etc. */
-    if (!depth++)
+    if (!depth++ && (init_flags & INIT_CREATE_DUNGEON))
     {
         assert(!_room);
         _room = room_alloc("Temp");
@@ -5668,14 +5683,44 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
 
         msg_print(NULL);
     }
-    if (!--depth)
+    if (!--depth && (init_flags & INIT_CREATE_DUNGEON))
     {
+        int cx = _room->width;
+        int cy = _room->height;
+        int transno = 0;
+
         assert(_room);
-        if (!(init_flags & INIT_ONLY_BUILDINGS) && vec_length(_room->map))
+        assert(vec_length(_room->map));
+
+        /*Coordinate transforms (TODO: This code needs a rewrite, IMO)*/
+        if (!(_room->flags & ROOM_NO_ROTATE))
         {
-            /* TODO: Wilderness scrolling ... Yuk! */
-            _build_room(_room, rect(0, 0, _room->width, _room->height), 0);
+            int n = randint0(100);
+            if (n < 45)
+                transno = 0;
+            else if (n < 90)
+                transno = 2;
+            else if (n < 95)
+            {
+                int temp = cx;
+                transno = 1;
+                cx = cy;
+                cy = temp;
+            }
+            else
+            {
+                int temp = cx;
+                transno = 3;
+                cx = cy;
+                cy = temp;
+            }
+
+            if (one_in_(2))
+                transno |= 0x04;
         }
+
+        /* TODO: Wilderness scrolling ... Yuk! */
+        _build_dungeon(_room, rect(0, 0, cx, cy), transno);
         room_free(_room);
         _room = NULL;
     }

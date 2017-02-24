@@ -2224,6 +2224,11 @@ void build_room_template_aux(room_ptr room, int yval, int xval, int xoffset, int
                         p_ptr->oldpx = x;
                         p_ptr->oldpy = y;
                     }
+                    else if (room->type == ROOM_QUEST)
+                    {
+                        py = y;
+                        px = x;
+                    }
                     else
                     {
                         monster_level = base_level + 11;
