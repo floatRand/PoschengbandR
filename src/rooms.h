@@ -1,3 +1,5 @@
+#ifndef INCLUDED_ROOMS_H
+#define INCLUDED_ROOMS_H
 /*
  * File: rooms.h
  * Purpose: Header file for rooms.c, used only in generate.c
@@ -56,6 +58,8 @@ enum room_type_e {
     ROOM_NORMAL,
     ROOM_WILDERNESS,
     ROOM_AMBUSH,
+    ROOM_QUEST,
+    ROOM_TOWN,
 };
 
 enum vault_type_e {
@@ -80,17 +84,119 @@ struct room_info_type
         int min_level;
 };
 
+/*
+ * Generating rooms from templates
+ * This includes support for user defined "letters" in the template file
+ * as well as built in predefined "letters" (for historical reasons).
+ *
+ * Sample syntax for the Parser for room_grid_t:
+ * L:9:FLOOR(ROOM):OBJ(*, 7):MON(*, 9)  i.e., Random object 7 levels OoD and random monster 9 levels OoD
+ * L:9:FLOOR(ROOM):MON(*, 9):OBJ(*, 7)  i.e., order of named directives does not matter
+ * L:D:FLOOR(ROOM | ICKY):MON(DRAGON, 20):OBJ(SWORD, 20):EGO(*)
+ * L:%:GRANITE(ROOM)
+ * L:#:GRANITE
+ * L:=:FLOOR(ROOM | ICKY):OBJ(RING, 50):EGO(306)  i.e., ring of speed on a "vault" tile generated 50 level OoD!!!
+ */
+
+#define ROOM_GRID_MON_TYPE      0x00000001  /* monster is SUMMON_* rather than a specific r_idx */
+#define ROOM_GRID_MON_CHAR      0x00000002  /* monster is a "d_char" rather than a specific r_idx */
+#define ROOM_GRID_MON_RANDOM    0x00000004
+#define ROOM_GRID_MON_NO_GROUP  0x00000008
+#define ROOM_GRID_MON_NO_SLEEP  0x00000010
+#define ROOM_GRID_MON_NO_UNIQUE 0x00000020
+#define ROOM_GRID_MON_FRIENDLY  0x00000040
+#define ROOM_GRID_MON_HASTE     0x00000080
+#define ROOM_GRID_MON_CLONED    0x00000100  /* hack for The Cloning Pits */
+
+#define ROOM_GRID_OBJ_TYPE      0x00010000  /* object is TV_* or OBJ_TYPE_* rather than a specific k_idx */
+#define ROOM_GRID_OBJ_ARTIFACT  0x00020000  /* object is a_idx (which implies k_idx) */
+#define ROOM_GRID_OBJ_EGO       0x00040000  /* named ego using extra for type */
+#define ROOM_GRID_OBJ_RANDOM    0x00080000  /* object is completely random */
+#define ROOM_GRID_EGO_RANDOM    0x00100000  /* object is either k_idx or tval, but make it an ego */
+#define ROOM_GRID_ART_RANDOM    0x00200000  /* object is either k_idx or tval, but make it a rand art */
+
+#define ROOM_GRID_TRAP_RANDOM   0x10000000  /* this may override object info */
+#define ROOM_GRID_SPECIAL       0x20000000  /* use extra for cave.special field */
+
+
+#define ROOM_THEME_GOOD        0x0001
+#define ROOM_THEME_EVIL        0x0002
+#define ROOM_THEME_FRIENDLY    0x0004
+#define ROOM_THEME_NIGHT       0x0008  /* Useful for wilderness graveyards where monsters only spawn at night */
+#define ROOM_THEME_DAY         0x0010
+#define ROOM_THEME_FORMATION   0x0020  /* Hack (see source for details): Allows monster formations. */
+#define ROOM_SHOP              0x2000  /* Room is a shop ... NO_TOWN means multiple shops on same level
+                                          would all stock the same stuff. This is still a wilderness problem, though */
+#define ROOM_DEBUG             0x4000  /* For debugging ... force this template to always be chosen */
+#define ROOM_NO_ROTATE         0x8000
+
+enum obj_types_e                           /* OBJ(DEVICE), etc */
+{
+    OBJ_TYPE_TVAL_MAX = 255,
+    OBJ_TYPE_DEVICE,
+    OBJ_TYPE_JEWELRY,
+    OBJ_TYPE_BOOK,
+    OBJ_TYPE_BODY_ARMOR,
+    OBJ_TYPE_OTHER_ARMOR,
+    OBJ_TYPE_WEAPON,
+    OBJ_TYPE_BOW_AMMO,
+    OBJ_TYPE_MISC,
+};
+
+struct room_grid_s
+{
+    s16b cave_feat;
+    s16b cave_trap;
+
+    u16b cave_info;
+    s16b monster;
+
+    s16b object;
+    s16b extra;
+
+    u32b flags;
+
+    byte letter;
+    byte monster_level;
+    byte object_level;
+    byte trap_pct;
+};
+
+typedef struct room_grid_s room_grid_t, *room_grid_ptr;
+
+struct room_s
+{
+    cptr name;
+
+    byte level;
+    byte max_level;
+    byte rarity;
+    byte type;
+
+    u16b subtype;
+    u16b flags;
+
+    byte height;
+    byte width;
+
+    vec_ptr map;
+    vec_ptr letters;
+};
+
+typedef struct room_s room_t, *room_ptr;
+extern room_ptr room_alloc(cptr name);
+extern void room_free(room_ptr room);
 
 /* Externs */
-#ifdef ALLOW_CAVERNS_AND_LAKES
 extern void build_lake(int type);
 extern void build_cavern(void);
-#endif /* ALLOW_CAVERNS_AND_LAKES */
 
 extern bool generate_rooms(void);
 extern void build_maze_vault(int x0, int y0, int xsize, int ysize, bool is_vault);
-extern room_template_t *choose_room_template(int type, int subtype);
-extern void build_room_template_aux(const room_template_t *room_ptr, int yval, int xval, int xoffset, int yoffset, int transno);
+extern room_ptr choose_room_template(int type, int subtype);
+extern void build_room_template_aux(room_ptr room, int yval, int xval, int xoffset, int yoffset, int transno);
 extern void coord_trans(int *x, int *y, int xoffset, int yoffset, int transno);
 extern bool vault_aux_chapel_g(int r_idx);
 extern bool vault_aux_chapel_e(int r_idx);
+
+#endif

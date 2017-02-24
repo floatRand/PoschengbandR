@@ -1358,7 +1358,7 @@ static int _lookup_monster(cptr name)
    MON(ORC, NO_GROUP | HASTE)     A hasted orc loner at current depth
    MON(o, NO_GROUP | HASTE)       Ditto: You can use any valid d_char
    MON(black knight)              A Black Knight */
-static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_t *grid_ptr)
+static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_ptr grid)
 {
     if (arg_ct < 1 || arg_ct > 2)
     {
@@ -1369,21 +1369,21 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_t *grid_
     /* Which monster? Can be random, by index, by display character, or by summoning type.*/
     if (streq(args[0], "*"))
     {
-        grid_ptr->flags |= ROOM_GRID_MON_RANDOM;
+        grid->flags |= ROOM_GRID_MON_RANDOM;
     }
     else if (_is_numeric(args[0]))
     {
-        grid_ptr->monster = atoi(args[0]);
-        if (!grid_ptr->monster)
+        grid->monster = atoi(args[0]);
+        if (!grid->monster)
         {
-            msg_format("Error: %d is not a valid monster index (See r_idx.txt).", grid_ptr->monster);
+            msg_format("Error: %d is not a valid monster index (See r_idx.txt).", grid->monster);
             return PARSE_ERROR_GENERIC;
         }
     }
     else if (_is_d_char(args[0]))
     {
-        grid_ptr->flags |= ROOM_GRID_MON_CHAR;
-        grid_ptr->monster = args[0][0];
+        grid->flags |= ROOM_GRID_MON_CHAR;
+        grid->monster = args[0][0];
     }
     else
     {
@@ -1392,8 +1392,8 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_t *grid_
         {
             if (!_summon_specific_types[i])
             {
-                grid_ptr->monster = _lookup_monster(args[0]);
-                if (!grid_ptr->monster)
+                grid->monster = _lookup_monster(args[0]);
+                if (!grid->monster)
                 {
                     msg_format("Error: Invalid monster specifier %s.", args[0]);
                     return PARSE_ERROR_GENERIC;
@@ -1402,8 +1402,8 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_t *grid_
             }
             if (streq(args[0], _summon_specific_types[i]))
             {
-                grid_ptr->flags |= ROOM_GRID_MON_TYPE;
-                grid_ptr->monster = i;
+                grid->flags |= ROOM_GRID_MON_TYPE;
+                grid->monster = i;
                 break;
             }
         }
@@ -1422,27 +1422,27 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_t *grid_
             char* flag = flags[i];
             if (streq(flag, "NO_GROUP"))
             {
-                grid_ptr->flags |= ROOM_GRID_MON_NO_GROUP;
+                grid->flags |= ROOM_GRID_MON_NO_GROUP;
             }
             else if (streq(flag, "NO_SLEEP"))
             {
-                grid_ptr->flags |= ROOM_GRID_MON_NO_SLEEP;
+                grid->flags |= ROOM_GRID_MON_NO_SLEEP;
             }
             else if (streq(flag, "NO_UNIQUE"))
             {
-                grid_ptr->flags |= ROOM_GRID_MON_NO_UNIQUE;
+                grid->flags |= ROOM_GRID_MON_NO_UNIQUE;
             }
             else if (streq(flag, "FRIENDLY"))
             {
-                grid_ptr->flags |= ROOM_GRID_MON_FRIENDLY;
+                grid->flags |= ROOM_GRID_MON_FRIENDLY;
             }
             else if (streq(flag, "HASTE"))
             {
-                grid_ptr->flags |= ROOM_GRID_MON_HASTE;
+                grid->flags |= ROOM_GRID_MON_HASTE;
             }
             else if (strstr(flag, "DEPTH+") == flag)
             {
-                grid_ptr->monster_level = atoi(flag + strlen("DEPTH+"));
+                grid->monster_level = atoi(flag + strlen("DEPTH+"));
             }
             else
             {
@@ -1561,7 +1561,7 @@ static int _lookup_obj_kind(char *arg, int tval)
     return 0;
 }
 
-static errr _parse_obj_flags(char *arg, room_grid_t *grid_ptr)
+static errr _parse_obj_flags(char *arg, room_grid_ptr grid)
 {
     char *flags[10];
     int   flag_ct = z_string_split(arg, flags, 10, "|");
@@ -1573,7 +1573,7 @@ static errr _parse_obj_flags(char *arg, room_grid_t *grid_ptr)
         char* flag = flags[i];
         if (strstr(flag, "DEPTH+") == flag)
         {
-            grid_ptr->object_level = atoi(flag + strlen("DEPTH+"));
+            grid->object_level = atoi(flag + strlen("DEPTH+"));
         }
         else
         {
@@ -1595,7 +1595,7 @@ static errr _parse_obj_flags(char *arg, room_grid_t *grid_ptr)
    be a mushroom or a potion. Thus, you need to disambiguate:
    OBJ(FOOD, cure serious wounds)
    OBJ(POTION, cure serious wounds) */
-static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_t *grid_ptr)
+static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid)
 {
     if (!arg_ct)
     {
@@ -1609,8 +1609,8 @@ static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_t *grid_p
      * Meaning flags are either in args[1] or args[2]. */
     if (streq(args[0], "*"))
     {
-        grid_ptr->flags |= ROOM_GRID_OBJ_RANDOM;
-        if (arg_ct >= 2) return _parse_obj_flags(args[1], grid_ptr);
+        grid->flags |= ROOM_GRID_OBJ_RANDOM;
+        if (arg_ct >= 2) return _parse_obj_flags(args[1], grid);
         return 0;
     }
     else
@@ -1629,14 +1629,14 @@ static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_t *grid_p
 
         if (k_idx)
         {
-            grid_ptr->object = k_idx;
-            if (arg_ct >= 3) return _parse_obj_flags(args[2], grid_ptr);
+            grid->object = k_idx;
+            if (arg_ct >= 3) return _parse_obj_flags(args[2], grid);
             return 0;
         }
 
-        grid_ptr->object = type;
-        grid_ptr->flags |= ROOM_GRID_OBJ_TYPE;
-        if (arg_ct >= 2) return _parse_obj_flags(args[1], grid_ptr);
+        grid->object = type;
+        grid->flags |= ROOM_GRID_OBJ_TYPE;
+        if (arg_ct >= 2) return _parse_obj_flags(args[1], grid);
         return 0;
     }
 }
@@ -1669,27 +1669,27 @@ static int _lookup_ego(cptr name)
    I'll try to fix this some day, but for now, use the index for names
    that duplicate (e.g. 'of Speed' for boots and rings). Other problems
    are 'of Elvenkind' 'of Slaying' 'Elemental' ... */
-static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_t *grid_ptr)
+static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid)
 {
     switch (arg_ct)
     {
     case 1:
         if (streq(args[0], "*"))
         {
-            grid_ptr->flags |= ROOM_GRID_EGO_RANDOM;
+            grid->flags |= ROOM_GRID_EGO_RANDOM;
         }
         else
         {
             if (_is_numeric(args[0]))
-                grid_ptr->extra = atoi(args[0]);
+                grid->extra = atoi(args[0]);
             else
-                grid_ptr->extra = _lookup_ego(args[0]);
-            if (!grid_ptr->extra)
+                grid->extra = _lookup_ego(args[0]);
+            if (!grid->extra)
             {
                 msg_format("Error: Unknown Ego %s.", args[0]);
                 return PARSE_ERROR_GENERIC;
             }
-            grid_ptr->flags |= ROOM_GRID_OBJ_EGO;
+            grid->flags |= ROOM_GRID_OBJ_EGO;
         }
         break;
 
@@ -1720,27 +1720,27 @@ static int _lookup_art(cptr name)
 
 /* OBJ(CLOAK, DEPTH+20):ART(*)   Rand-art cloak generated 20 levels OoD
    ART(dwarves)                  Necklace of the Dwarves (a_idx = 6) */
-static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_t *grid_ptr)
+static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_ptr grid)
 {
     switch (arg_ct)
     {
     case 1:
         if (streq(args[0], "*"))
         {
-            grid_ptr->flags |= ROOM_GRID_ART_RANDOM;
+            grid->flags |= ROOM_GRID_ART_RANDOM;
         }
         else
         {
             if (_is_numeric(args[0]))
-                grid_ptr->object = atoi(args[0]);
+                grid->object = atoi(args[0]);
             else
-                grid_ptr->object = _lookup_art(args[0]);
-            if (!grid_ptr->object)
+                grid->object = _lookup_art(args[0]);
+            if (!grid->object)
             {
                 msg_format("Error: Unknown Artifact %s.", args[0]);
                 return PARSE_ERROR_GENERIC;
             }
-            grid_ptr->flags |= ROOM_GRID_OBJ_ARTIFACT;
+            grid->flags |= ROOM_GRID_OBJ_ARTIFACT;
         }
         break;
 
@@ -1751,17 +1751,17 @@ static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_t *grid
     return 0;
 }
 
-static errr _parse_room_grid_trap(char **args, int arg_ct, room_grid_t *grid_ptr)
+static errr _parse_room_grid_trap(char **args, int arg_ct, room_grid_ptr grid)
 {
     switch (arg_ct)
     {
     case 2:
-        grid_ptr->trap_pct = atoi(args[1]);
+        grid->trap_pct = atoi(args[1]);
         /* vvvvvvvvv Fall Through vvvvvvvvvvvv */
     case 1:
         if (streq(args[0], "*"))
         {
-            grid_ptr->flags |= ROOM_GRID_TRAP_RANDOM;
+            grid->flags |= ROOM_GRID_TRAP_RANDOM;
         }
         else
         {
@@ -1771,7 +1771,7 @@ static errr _parse_room_grid_trap(char **args, int arg_ct, room_grid_t *grid_ptr
                 msg_format("Error: Unknown Trap %s.", args[0]);
                 return PARSE_ERROR_GENERIC;
             }
-            grid_ptr->cave_trap = trap;
+            grid->cave_trap = trap;
         }
         break;
 
@@ -1784,7 +1784,7 @@ static errr _parse_room_grid_trap(char **args, int arg_ct, room_grid_t *grid_ptr
 
 /* GRANITE
    FLOOR(ROOM | ICKY | GLOW) */
-static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_grid_t *grid_ptr)
+static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_grid_ptr grid)
 {
     s16b feat = f_tag_to_index(name);
 
@@ -1793,7 +1793,7 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
         msg_format("Error: Unknown Feature %s.", name);
         return PARSE_ERROR_GENERIC;
     }
-    grid_ptr->cave_feat = feat;
+    grid->cave_feat = feat;
 
     if (arg_ct > 2)
     {
@@ -1803,8 +1803,8 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
     if (arg_ct >= 2)
     {
         /* Extra is the dungeon type for wilderness random dungeon entrances. */
-        grid_ptr->flags |= ROOM_GRID_SPECIAL;
-        grid_ptr->extra = atoi(args[1]);
+        grid->flags |= ROOM_GRID_SPECIAL;
+        grid->extra = atoi(args[1]);
     }
     if (arg_ct >= 1)
     {
@@ -1818,13 +1818,13 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
             char* flag = flags[i];
 
             if (streq(flag, "ROOM"))
-                grid_ptr->cave_info |= CAVE_ROOM;
+                grid->cave_info |= CAVE_ROOM;
             else if (streq(flag, "ICKY"))
-                grid_ptr->cave_info |= CAVE_ICKY;
+                grid->cave_info |= CAVE_ICKY;
             else if (streq(flag, "GLOW"))
-                grid_ptr->cave_info |= CAVE_GLOW;
+                grid->cave_info |= CAVE_GLOW;
             else if (streq(flag, "MARK"))
-                grid_ptr->cave_info |= CAVE_MARK;
+                grid->cave_info |= CAVE_MARK;
             else
             {
                 msg_format("Error: Unknown Feature Option %s.", flag);
@@ -1838,7 +1838,7 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
 /* L:.:FLOOR(ROOM|ICKY):MON(DRAGON, 20):EGO(*)
    Room Grids are designed to replace old dungeon_grid F: lines
    but I haven't got around to replacing those just yet. */
-errr parse_room_grid(char *buf, room_grid_t *grid_ptr)
+errr parse_room_grid(char *buf, room_grid_ptr grid)
 {
     errr  result = 0;
     char *commands[10];
@@ -1846,7 +1846,7 @@ errr parse_room_grid(char *buf, room_grid_t *grid_ptr)
     int   i;
     bool  found_feature = FALSE;
 
-    WIPE(grid_ptr, room_grid_t);
+    WIPE(grid, room_grid_t);
 
     /* First command is the "letter" for this room grid */
     if (command_ct < 2)
@@ -1859,7 +1859,7 @@ errr parse_room_grid(char *buf, room_grid_t *grid_ptr)
         msg_format("Error: Invalid letter %s on L: line. Should be one character only.", commands[0]);
         return PARSE_ERROR_GENERIC;
     }
-    grid_ptr->letter = commands[0][0];
+    grid->letter = commands[0][0];
 
     /* Remaining commands are name(args) directives in any order */
     for (i = 1; i < command_ct; i++)
@@ -1877,27 +1877,27 @@ errr parse_room_grid(char *buf, room_grid_t *grid_ptr)
 
         if (streq(name, "MON"))
         {
-            result = _parse_room_grid_monster(args, arg_ct, grid_ptr);
+            result = _parse_room_grid_monster(args, arg_ct, grid);
             if (result) break;
         }
         else if (streq(name, "OBJ"))
         {
-            result = _parse_room_grid_object(args, arg_ct, grid_ptr);
+            result = _parse_room_grid_object(args, arg_ct, grid);
             if (result) break;
         }
         else if (streq(name, "EGO"))
         {
-            result = _parse_room_grid_ego(args, arg_ct, grid_ptr);
+            result = _parse_room_grid_ego(args, arg_ct, grid);
             if (result) break;
         }
         else if (streq(name, "ART"))
         {
-            result = _parse_room_grid_artifact(args, arg_ct, grid_ptr);
+            result = _parse_room_grid_artifact(args, arg_ct, grid);
             if (result) break;
         }
         else if (streq(name, "TRAP"))
         {
-            result = _parse_room_grid_trap(args, arg_ct, grid_ptr);
+            result = _parse_room_grid_trap(args, arg_ct, grid);
             if (result) break;
         }
         else
@@ -1908,7 +1908,7 @@ errr parse_room_grid(char *buf, room_grid_t *grid_ptr)
                 return PARSE_ERROR_GENERIC;
             }
 
-            result = _parse_room_grid_feature(name, args, arg_ct, grid_ptr);
+            result = _parse_room_grid_feature(name, args, arg_ct, grid);
             if (result) break;
             found_feature = TRUE;
         }
@@ -1917,7 +1917,7 @@ errr parse_room_grid(char *buf, room_grid_t *grid_ptr)
     return result;
 }
 
-static errr _parse_room_flags(char* buf, room_template_t *room_ptr)
+static errr _parse_room_flags(char* buf, room_ptr room)
 {
     char *flags[10];
     int   flag_ct = z_string_split(buf, flags, 10, "|");
@@ -1929,23 +1929,23 @@ static errr _parse_room_flags(char* buf, room_template_t *room_ptr)
         char* flag = flags[i];
 
         if (streq(flag, "GOOD"))
-            room_ptr->flags |= ROOM_THEME_GOOD;
+            room->flags |= ROOM_THEME_GOOD;
         else if (streq(flag, "EVIL"))
-            room_ptr->flags |= ROOM_THEME_EVIL;
+            room->flags |= ROOM_THEME_EVIL;
         else if (streq(flag, "FRIENDLY"))
-            room_ptr->flags |= ROOM_THEME_FRIENDLY;
+            room->flags |= ROOM_THEME_FRIENDLY;
         else if (streq(flag, "NIGHT"))
-            room_ptr->flags |= ROOM_THEME_NIGHT;
+            room->flags |= ROOM_THEME_NIGHT;
         else if (streq(flag, "DAY"))
-            room_ptr->flags |= ROOM_THEME_DAY;
+            room->flags |= ROOM_THEME_DAY;
         else if (streq(flag, "SHOP"))
-            room_ptr->flags |= ROOM_SHOP;
+            room->flags |= ROOM_SHOP;
         else if (streq(flag, "DEBUG"))
-            room_ptr->flags |= ROOM_DEBUG;
+            room->flags |= ROOM_DEBUG;
         else if (streq(flag, "NO_ROTATE"))
-            room_ptr->flags |= ROOM_NO_ROTATE;
+            room->flags |= ROOM_NO_ROTATE;
         else if (streq(flag, "FORMATION"))
-            room_ptr->flags |= ROOM_THEME_FORMATION;
+            room->flags |= ROOM_THEME_FORMATION;
         else
         {
             msg_format("Error: Invalid room flag %s.", flag);
@@ -1955,16 +1955,12 @@ static errr _parse_room_flags(char* buf, room_template_t *room_ptr)
     return 0;
 }
 
-/*
- * Initialize the "v_info" array, by parsing an ascii "template" file
- */
-errr parse_v_info(char *buf, header *head)
+errr parse_v_info(char *buf)
 {
-    int i;
     char *s;
 
     /* Current entry */
-    static room_template_t *room_ptr = NULL;
+    static room_t *room_ptr = NULL;
 
     /* N:Name */
     if (buf[0] == 'N')
@@ -1978,21 +1974,9 @@ errr parse_v_info(char *buf, header *head)
             return PARSE_ERROR_TOO_FEW_ARGUMENTS;
         }
 
-        /* Auto-gen a sequence id ... these are never stored or referred to in code, so why force numbering? */
-        i = MAX(1, error_idx + 1);
-        if (i >= head->info_num)
-        {
-            msg_format("Error: Too many v_info records. Max is currently set to %d in misc.txt.", head->info_num);
-            return (2);
-        }
-        error_idx = i;
-
-        /* Point at the "info" */
-        room_ptr = &room_info[i];
-        WIPE(room_ptr, room_template_t);
-
-        /* Store the name */
-        if (!add_name(&room_ptr->name, head, zz[0])) return PARSE_ERROR_OUT_OF_MEMORY;
+        error_idx = vec_length(room_info);
+        room_ptr = room_alloc(zz[0]);
+        vec_push(room_info, room_ptr);
     }
 
     /* There better be a current room_ptr */
@@ -2031,6 +2015,16 @@ errr parse_v_info(char *buf, header *head)
         else if (streq(zz[0], "ROOM"))
         {
             room_ptr->type = ROOM_NORMAL;
+            room_ptr->subtype = 0; /* TODO */
+        }
+        else if (streq(zz[0], "QUEST"))
+        {
+            room_ptr->type = ROOM_QUEST;
+            room_ptr->subtype = 0; /* TODO */
+        }
+        else if (streq(zz[0], "TOWN"))
+        {
+            room_ptr->type = ROOM_TOWN;
             room_ptr->subtype = 0; /* TODO */
         }
         else if (streq(zz[0], "WILD") || streq(zz[0], "AMBUSH"))
@@ -2108,14 +2102,12 @@ errr parse_v_info(char *buf, header *head)
     /* Process custom 'L'etters */
     else if (buf[0] == 'L')
     {
-        int j;
-        for (j = 0; j < ROOM_MAX_LETTERS; j++)
-        {
-            if (!room_ptr->letters[j].letter)
-                return parse_room_grid(buf + 2, &room_ptr->letters[j]);
-        }
-        msg_format("Error: Too many letters. Only %d letters are allowed.", ROOM_MAX_LETTERS);
-        return PARSE_ERROR_GENERIC;
+        int rc;
+        room_grid_ptr letter = malloc(sizeof(room_grid_t));
+        memset(letter, 0, sizeof(room_grid_t));
+        vec_push(room_ptr->letters, letter);
+        rc = parse_room_grid(buf + 2, letter);
+        if (rc) return rc;
     }
 
     /* Process 'M'ap lines */
@@ -2137,9 +2129,7 @@ errr parse_v_info(char *buf, header *head)
             );
             return PARSE_ERROR_GENERIC;
         }
-
-        /* Store the text */
-        if (!add_text(&room_ptr->text, head, s, FALSE)) return PARSE_ERROR_OUT_OF_MEMORY;
+        vec_push(room_ptr->map, z_string_make(s));
     }
     /* Oops */
     else    return PARSE_ERROR_UNDEFINED_DIRECTIVE;
@@ -2147,7 +2137,6 @@ errr parse_v_info(char *buf, header *head)
     /* Success */
     return 0;
 }
-
 
 
 /*
@@ -5373,7 +5362,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
 
 
 static char tmp[255];
-static cptr variant_name = "CHENGBAND";
+static cptr variant_name = "POSCHENGBAND";
 
 /*
  * Helper function for "process_dungeon_file()"

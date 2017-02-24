@@ -139,14 +139,14 @@ vptr ralloc(huge len)
 /*
  * Allocate a constant string, containing the same thing as 'str'
  */
-cptr z_string_make(cptr str)
+char *z_string_make(cptr str)
 {
     huge len = 0;
     cptr t = str;
     char *s, *res;
 
     /* Simple sillyness */
-    if (!str) return (str);
+    if (!str) return (char*)str;
 
     /* Get the number of chars in the string, including terminator */
     while (str[len++]) /* loop */;

@@ -52,6 +52,7 @@
 #include "shop.h"
 #include "obj_prompt.h"
 #include "py_throw.h"
+#include "rooms.h"
 
 #include "types.h"
 #include "externs.h"

@@ -674,7 +674,6 @@ static void set_bound_perm_wall(cave_type *c_ptr)
  */
 static void gen_caverns_and_lakes(void)
 {
-#ifdef ALLOW_CAVERNS_AND_LAKES
     /* Possible "destroyed" level */
     if ((dun_level > 30) && one_in_(DUN_DEST*2) && (small_levels) && (d_info[dungeon_type].flags1 & DF1_DESTROY))
     {
@@ -752,7 +751,6 @@ static void gen_caverns_and_lakes(void)
 
         build_cavern();
     }
-#endif /* ALLOW_CAVERNS_AND_LAKES */
 
     /* Hack -- No destroyed "quest" levels */
     if (quest_number(dun_level)) dun->destroyed = FALSE;

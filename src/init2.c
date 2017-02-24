@@ -352,7 +352,6 @@ cptr err_str[PARSE_ERROR_MAX] =
 /*
  * File headers
  */
-header room_head;
 header f_head;
 header k_head;
 header a_head;
@@ -621,23 +620,59 @@ static errr init_d_info(void)
 /*
  * Initialize the "v_info" array
  *
- * Note that we let each entry have a unique "name" and "text" string,
- * even if the string happens to be empty (everyone has a unique '\0').
+ * Note: I'm moving away from the header stuff ... It's just too inflexible.
+ * For room info, we need an arbitrary number of letter overrides, so require
+ * dynamic storage allocation. Quests will now use the new room formats and
+ * they can require many, many letters!
+ *
+ * Code needs refactoring ... also, the line based processing is awkward.
+ * A recursive descent parser would be much cleaner ...
  */
 errr init_v_info(void)
 {
-    /* Init the header */
-    init_header(&room_head, max_room_idx, sizeof(room_template_t));
+    FILE *fp;
+    char buf[1024];
+    errr err;
 
-#ifdef ALLOW_TEMPLATES
+    path_build(buf, sizeof(buf), ANGBAND_DIR_EDIT, "v_info.txt");
+    fp = my_fopen(buf, "r");
+    if (!fp) quit("Cannot open 'v_info.txt' file.");
 
-    /* Save a pointer to the parsing function */
-    room_head.parse_info_txt = parse_v_info;
+    room_info = vec_alloc((vec_free_f)room_free);
 
-#endif /* ALLOW_TEMPLATES */
+    /* parse */
+    error_idx = -1;
+    error_line = 0;
+    while (0 == my_fgets(fp, buf, 1024))
+    {
+        error_line++;
 
-    return init_info("v_info", &room_head,
-             (void*)&room_info, &room_name, &room_text, NULL);
+        /* scan to next N: line */
+        if (!buf[0] || (buf[0] == '#')) continue;
+        if (buf[1] != ':') { err = PARSE_ERROR_GENERIC; break; }
+
+        err = parse_v_info(buf);
+        if (err) break;
+    }
+
+    my_fclose(fp);
+    if (err)
+    {
+        cptr oops;
+
+        /* Error string */
+        oops = (((err > 0) && (err < PARSE_ERROR_MAX)) ? err_str[err] : "unknown");
+
+        /* Oops */
+        msg_format("Error %d at line %d of 'v_info.txt'.", err, error_line);
+        msg_format("Record %d contains a '%s' error.", error_idx, oops);
+        msg_format("Parsing '%s'.", buf);
+        msg_print(NULL);
+
+        /* Quit */
+        quit("Error in 'v_info.txt' file.");
+    }
+    return err;
 }
 
 
@@ -1566,11 +1601,11 @@ void init_angband(void)
     if (init_b_info()) quit("Cannot initialize body types");
 
 
-    /* Initialize monster info */
+    /* Initialize monster info ... requires b_info */
     note("[Initializing arrays... (monsters)]");
     if (init_r_info()) quit("Cannot initialize monsters");
 
-    /* Initialize dungeon info */
+    /* Initialize dungeon info ... requires k_info */
     note("[Initializing arrays... (dungeon)]");
     if (init_d_info()) quit("Cannot initialize dungeon");
     {

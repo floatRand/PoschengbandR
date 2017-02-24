@@ -517,10 +517,10 @@ static void _wipe_generate_cave_flags(rect_t r)
     }
 }
 
-static void _build_room(const room_template_t *room_ptr, rect_t r, int transno)
+static void _build_room(const room_ptr room, rect_t r, int transno)
 {
-    int x = room_ptr->width;
-    int y = room_ptr->height;
+    int x = room->width;
+    int y = room->height;
     int xoffset = 0;
     int yoffset = 0;
 
@@ -529,7 +529,7 @@ static void _build_room(const room_template_t *room_ptr, rect_t r, int transno)
     if (y < 0) yoffset = -y;
 
     build_room_template_aux(
-        room_ptr,
+        room,
         r.y + r.cy/2, /* expects the *center* of the rect ... sigh */
         r.x + r.cx/2,
         xoffset,
@@ -558,7 +558,7 @@ static int _encounter_terrain_type(int x, int y)
     return result;
 }
 
-static bool _generate_special_encounter(room_template_t *room_ptr, int x, int y, rect_t r, rect_t exclude)
+static bool _generate_special_encounter(room_ptr room, int x, int y, rect_t r, rect_t exclude)
 {
     int    i, x2, y2;
     rect_t room_rect, quad_rect;
@@ -571,14 +571,14 @@ static bool _generate_special_encounter(room_template_t *room_ptr, int x, int y,
     {
         int qx = rand_range(qx_min, qx_max);
         int qy = rand_range(qy_min, qy_max);
-        int cx = room_ptr->width;
-        int cy = room_ptr->height;
+        int cx = room->width;
+        int cy = room->height;
         int transno = 0;
 
         quad_rect = rect(qx*WILD_SCROLL_CX, qy*WILD_SCROLL_CY, WILD_SCROLL_CX, WILD_SCROLL_CY);
 
         /*Coordinate transforms (TODO: This code needs a rewrite, IMO)*/
-        if (room_ptr->flags & ROOM_NO_ROTATE)
+        if (room->flags & ROOM_NO_ROTATE)
             transno = 0;
         else
         {
@@ -630,20 +630,20 @@ static bool _generate_special_encounter(room_template_t *room_ptr, int x, int y,
         /* Exclude if player is in the room during a non-scroll op (e.g. ambush)
             Note the player will always be inside the exclude rect during
             a scroll op. */
-        else if (room_ptr->type == ROOM_WILDERNESS)
+        else if (room->type == ROOM_WILDERNESS)
         {
             /* Player has not been placed yet, but will be placed at (oldpx, oldpy) shortly */
             /* N.B. Ambush encounters include player placement information */
             if (rect_contains_pt(room_rect, p_ptr->oldpx, p_ptr->oldpy)) continue;
         }
 
-        _build_room(room_ptr, room_rect, transno);
-        if (is_daytime() && room_ptr->type == ROOM_WILDERNESS && disturb_minor)
+        _build_room(room, room_rect, transno);
+        if (is_daytime() && room->type == ROOM_WILDERNESS && disturb_minor)
         {
             msg_print("You've stumbled onto something interesting ...");
             disturb(0, 0);
         }
-        if (room_ptr->type == ROOM_AMBUSH)
+        if (room->type == ROOM_AMBUSH)
         {
             msg_print("Press <color:y>Space</color> to continue.");
             flush();
@@ -690,9 +690,9 @@ static void _generate_encounters(int x, int y, rect_t r, rect_t exclude)
       && !no_encounters_hack
       && one_in_(_WILD_ENCOUNTER_CHANCE))
     {
-        room_template_t *room_ptr = choose_room_template(ROOM_WILDERNESS, _encounter_terrain_type(x, y));
-        if (room_ptr)
-            _generate_special_encounter(room_ptr, x, y, r, exclude);
+        room_ptr room= choose_room_template(ROOM_WILDERNESS, _encounter_terrain_type(x, y));
+        if (room)
+            _generate_special_encounter(room, x, y, r, exclude);
     }
 
     /* Scripted Ambush? */
@@ -701,8 +701,8 @@ static void _generate_encounters(int x, int y, rect_t r, rect_t exclude)
       && !no_wilderness
       && one_in_(5))
     {
-        room_template_t *room_ptr = choose_room_template(ROOM_AMBUSH, _encounter_terrain_type(x, y));
-        if (room_ptr && _generate_special_encounter(room_ptr, x, y, r, exclude))
+        room_ptr room = choose_room_template(ROOM_AMBUSH, _encounter_terrain_type(x, y));
+        if (room && _generate_special_encounter(room, x, y, r, exclude))
             generate_encounter = FALSE;
     }
 
