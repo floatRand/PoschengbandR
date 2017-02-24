@@ -1156,7 +1156,7 @@ static int dehex(char c)
 }
 
 
-static int my_stricmp(cptr a, cptr b)
+int my_stricmp(cptr a, cptr b)
 {
     cptr s1, s2;
     char z1, z2;

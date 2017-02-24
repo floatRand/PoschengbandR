@@ -1207,6 +1207,32 @@ static bool _is_d_char(const char *token)
     return FALSE;
 }
 
+/* this is almost strip_name_aux ... but I want to support
+ * partial matches (e.g. EGO(speed) to match 'of Speed' and
+ * EGO(pattern) to match '(Pattern)' (Note: EGO((Pattern)) 
+ * would sadly confuse our parser ...) Also, MON(raal's)
+ * rather than MON(raal's tome of destruction) will keep
+ * my fingers happy. */
+static void _prep_name(char *dest, const char *src)
+{
+    char *t;
+
+    while (*src == ' ' || *src == '&' || *src == '[' || *src == '(')
+        src++;
+
+    for (t = dest; *src; src++)
+    {
+        char c = *src;
+        if (c != '~' && c != ']' && c != ')')
+        {
+            if (isupper(c)) c = tolower(c);
+            *t++ = c;
+        }
+    }
+
+    *t = '\0';
+}
+
 /* Same order as summon_specific_e in defines.h
    These are legal monster types for the MON() directive when
    specifying room_grid_t
@@ -1297,11 +1323,41 @@ static const char *_summon_specific_types[] = {
     0,
 };
 
+static int _lookup_monster(cptr name)
+{
+    int i;
+    /* match full name ... */
+    for (i = 1; i < max_r_idx; i++)
+    {
+        monster_race *r_ptr = &r_info[i];
+        if (!r_ptr->name) continue;
+        if (my_stricmp(r_name + r_ptr->name, name) == 0)
+        {
+            /*msg_format("Mapping %s to %s (%d).", name, r_name + r_ptr->name, i);*/
+            return i;
+        }
+    }
+    /* ... then look for partial matches. (e.g. MON(ent) should not match 'Agent of black market') */
+    for (i = 1; i < max_r_idx; i++)
+    {
+        monster_race *r_ptr = &r_info[i];
+        char buf[255];
+        if (!r_ptr->name) continue;
+        _prep_name(buf, r_name + r_ptr->name);
+        if (strstr(buf, name))
+        {
+            /*msg_format("Mapping %s to %s (%d).", name, r_name + r_ptr->name, i);*/
+            return i;
+        }
+    }
+    return 0;
+}
+
 /* MON(DRAGON, DEPTH+20)          Any dragon, 20 levels OoD
    MON(*, DEPTH+40)               Any monster, 40 levels OoD
    MON(ORC, NO_GROUP | HASTE)     A hasted orc loner at current depth
    MON(o, NO_GROUP | HASTE)       Ditto: You can use any valid d_char
-   MON(442)                       A Black Knight */
+   MON(black knight)              A Black Knight */
 static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_t *grid_ptr)
 {
     if (arg_ct < 1 || arg_ct > 2)
@@ -1336,8 +1392,13 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_t *grid_
         {
             if (!_summon_specific_types[i])
             {
-                msg_format("Error: Invalid monster specifier %s.", args[0]);
-                return PARSE_ERROR_GENERIC;
+                grid_ptr->monster = _lookup_monster(args[0]);
+                if (!grid_ptr->monster)
+                {
+                    msg_format("Error: Invalid monster specifier %s.", args[0]);
+                    return PARSE_ERROR_GENERIC;
+                }
+                break;
             }
             if (streq(args[0], _summon_specific_types[i]))
             {
@@ -1465,77 +1526,149 @@ static _object_type_t _object_types[] =
     { 0, 0 }
 };
 
-/* OBJ(*)          Any object
-   OBJ(*, DEPTH+7) Any object, 7 levels OoD
-   OBJ(242)        Potion of Healing
-   OBJ(POTION)     Any potion                   */
-static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_t *grid_ptr)
+static int _parse_obj_type(char *arg)
 {
-    switch (arg_ct)
+    int i;
+    for (i = 0; ; i++)
     {
-    case 2:
-    {
-        char *flags[10];
-        int   flag_ct = z_string_split(args[1], flags, 10, "|");
-        int   i;
-
-        trim_tokens(flags, flag_ct);
-        for (i = 0; i < flag_ct; i++)
-        {
-            char* flag = flags[i];
-            if (strstr(flag, "DEPTH+") == flag)
-            {
-                grid_ptr->object_level = atoi(flag + strlen("DEPTH+"));
-            }
-            else
-            {
-                msg_format("Error: Invalid object option %s.", flag);
-                return PARSE_ERROR_GENERIC;
-            }
-        }
-        /* vvvvvvvvv Fall Through vvvvvvvvvvvv */
+        if (!_object_types[i].name) return 0;
+        if (streq(arg, _object_types[i].name))
+            return _object_types[i].type;
     }
-    case 1:
-        if (streq(args[0], "*"))
-        {
-            grid_ptr->flags |= ROOM_GRID_OBJ_RANDOM;
-        }
-        else
-        {
-            int i;
-            for (i = 0; ; i++)
-            {
-                if (!_object_types[i].name)
-                {
-                    grid_ptr->object = atoi(args[0]);
-                    if (!grid_ptr->object)
-                    {
-                        msg_format("Error: Invalid object %s.", args[0]);
-                        return PARSE_ERROR_GENERIC;
-                    }
-                    break;
-                }
-                if (streq(args[0], _object_types[i].name))
-                {
-                    grid_ptr->object = _object_types[i].type;
-                    grid_ptr->flags |= ROOM_GRID_OBJ_TYPE;
-                    break;
-                }
-            }
-        }
-        break;
+}
 
-    default:
-        msg_print("Error: Invalid OBJ() directive. Syntax: OBJ(<which> [,<flags>]).");
-        return PARSE_ERROR_TOO_FEW_ARGUMENTS;
+static int _lookup_obj_kind(char *arg, int tval)
+{
+    int i;
+    if (_is_numeric(arg))
+    {
+        int sval = atoi(arg);
+        return lookup_kind(tval, sval);
+    }
+    for (i = 1; i < max_k_idx; i++)
+    {
+        object_kind *k_ptr = &k_info[i];
+        char         buf[255];
+
+        if (k_ptr->tval != tval) continue;
+        _prep_name(buf, k_name + k_ptr->name);
+        if (strstr(buf, arg))
+        {
+            /*msg_format("Mapping kind %s to %s (%d).", arg, k_name + k_ptr->name, i);*/
+            return i;
+        }
     }
     return 0;
 }
 
-/* OBJ(RING):EGO(306)            Ring of Speed
+static errr _parse_obj_flags(char *arg, room_grid_t *grid_ptr)
+{
+    char *flags[10];
+    int   flag_ct = z_string_split(arg, flags, 10, "|");
+    int   i;
+
+    trim_tokens(flags, flag_ct);
+    for (i = 0; i < flag_ct; i++)
+    {
+        char* flag = flags[i];
+        if (strstr(flag, "DEPTH+") == flag)
+        {
+            grid_ptr->object_level = atoi(flag + strlen("DEPTH+"));
+        }
+        else
+        {
+            msg_format("Error: Invalid object option %s.", flag);
+            return PARSE_ERROR_GENERIC;
+        }
+    }
+    return 0;
+}
+
+/* OBJ(*)                              Any object
+   OBJ(*, DEPTH+7)                     Any object, 7 levels OoD
+   OBJ(POTION, healing)                Potion of Healing
+   OBJ(POTION)                         Any potion
+   OBJ(SWORD, diamond edge, DEPTH+100) A really deep diamond edge
+
+   Note: looking up k_info by text requires the type as well, since
+   the name is often ambiguous. For example, "cure serious wounds" could
+   be a mushroom or a potion. Thus, you need to disambiguate:
+   OBJ(FOOD, cure serious wounds)
+   OBJ(POTION, cure serious wounds) */
+static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_t *grid_ptr)
+{
+    if (!arg_ct)
+    {
+        msg_print("Error: Invalid OBJ() directive. Syntax: OBJ(<type> [,<subtype>] [,<flags>]).");
+        return PARSE_ERROR_TOO_FEW_ARGUMENTS;
+    }
+
+    /* OK, the grammar for this directive is highly ambiguous. The first argument
+     * is always the type. If it is a TV_* then the second argument, if present, may
+     * give the SV_* (either numerically or by string lookup). But this is optional.
+     * Meaning flags are either in args[1] or args[2]. */
+    if (streq(args[0], "*"))
+    {
+        grid_ptr->flags |= ROOM_GRID_OBJ_RANDOM;
+        if (arg_ct >= 2) return _parse_obj_flags(args[1], grid_ptr);
+        return 0;
+    }
+    else
+    {
+        int type = _parse_obj_type(args[0]);
+        int k_idx = 0;
+
+        if (!type)
+        {
+            msg_format("Error: Invalid object %s.", args[0]);
+            return PARSE_ERROR_GENERIC;
+        }
+
+        if (type <= OBJ_TYPE_TVAL_MAX && arg_ct >= 2)
+            k_idx = _lookup_obj_kind(args[1], type);
+
+        if (k_idx)
+        {
+            grid_ptr->object = k_idx;
+            if (arg_ct >= 3) return _parse_obj_flags(args[2], grid_ptr);
+            return 0;
+        }
+
+        grid_ptr->object = type;
+        grid_ptr->flags |= ROOM_GRID_OBJ_TYPE;
+        if (arg_ct >= 2) return _parse_obj_flags(args[1], grid_ptr);
+        return 0;
+    }
+}
+
+static int _lookup_ego(cptr name)
+{
+    int i;
+    for (i = 1; i < max_e_idx; i++)
+    {
+        ego_type *e_ptr = &e_info[i];
+        char      buf[255];
+        if (!e_ptr->name) continue;
+        _prep_name(buf, e_name + e_ptr->name);
+        if (strstr(buf, name))
+        {
+            /*msg_format("Matching ego %s to %s (%d).", name, e_name + e_ptr->name, i);*/
+            return i;
+        }
+    }
+    return 0;
+}
+
+/* OBJ(RING):EGO(209)            Ring of Speed
    OBJ(RING):EGO(*)              Any ego ring
    OBJ(CLOAK, DEPTH+20):EGO(*)   Any ego cloak generated 20 levels OoD
-   OBJ(RING, DEPTH+50):EGO(306)  Ring of Speed generated 50 level OoD */
+   OBJ(RING, DEPTH+50):EGO(209)  Ring of Speed generated 50 level OoD
+   OBJ(SWORD):EGO(pattern)       A pattern blade
+   
+   Note: ego names are not unique, so be careful when using text matches.
+   I'll try to fix this some day, but for now, use the index for names
+   that duplicate (e.g. 'of Speed' for boots and rings). Other problems
+   are 'of Elvenkind' 'of Slaying' 'Elemental' ... */
 static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_t *grid_ptr)
 {
     switch (arg_ct)
@@ -1547,7 +1680,10 @@ static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_t *grid_ptr)
         }
         else
         {
-            grid_ptr->extra = atoi(args[0]);
+            if (_is_numeric(args[0]))
+                grid_ptr->extra = atoi(args[0]);
+            else
+                grid_ptr->extra = _lookup_ego(args[0]);
             if (!grid_ptr->extra)
             {
                 msg_format("Error: Unknown Ego %s.", args[0]);
@@ -1564,8 +1700,26 @@ static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_t *grid_ptr)
     return 0;
 }
 
+static int _lookup_art(cptr name)
+{
+    int i;
+    for (i = 1; i < max_a_idx; i++)
+    {
+        artifact_type *a_ptr = &a_info[i];
+        char           buf[255];
+        if (!a_ptr->name) continue;
+        _prep_name(buf, a_name + a_ptr->name);
+        if (strstr(buf, name))
+        {
+            /*msg_format("Matching artifact %s to %s (%d).", name, a_name + a_ptr->name, i);*/
+            return i;
+        }
+    }
+    return 0;
+}
+
 /* OBJ(CLOAK, DEPTH+20):ART(*)   Rand-art cloak generated 20 levels OoD
-   ART(6)                        Necklace of the Dwarves (a_idx = 6) */
+   ART(dwarves)                  Necklace of the Dwarves (a_idx = 6) */
 static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_t *grid_ptr)
 {
     switch (arg_ct)
@@ -1577,7 +1731,10 @@ static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_t *grid
         }
         else
         {
-            grid_ptr->object = atoi(args[0]);
+            if (_is_numeric(args[0]))
+                grid_ptr->object = atoi(args[0]);
+            else
+                grid_ptr->object = _lookup_art(args[0]);
             if (!grid_ptr->object)
             {
                 msg_format("Error: Unknown Artifact %s.", args[0]);

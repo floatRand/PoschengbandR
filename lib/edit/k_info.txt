@@ -73,7 +73,7 @@
 V:2.8.1
 
 ##### Something special #####
-
+#Note: 0 is reserved and should never be a valid object kind
 N:0:something
 G:&:w
 
