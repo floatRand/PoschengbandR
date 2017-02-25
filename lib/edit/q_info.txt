@@ -131,7 +131,7 @@
 
 # The Cloning Pits
 ?:[EQU $QUEST_NUMBER 33]
-%:q0clone0.txt
+%:q_cloning_pits.txt
 
 # Random quests (always adressed with number 40)
 ?:[EQU $QUEST_NUMBER 40]
