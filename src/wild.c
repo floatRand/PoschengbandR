@@ -1206,6 +1206,7 @@ void wilderness_gen(void)
     cur_wid = MAX_WID;
 
     /* Init the wilderness */
+    init_flags = 0;
     process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
 
     dun_level = 0;
@@ -1296,6 +1297,7 @@ void wilderness_gen_small(void)
     }
 
     /* Init the wilderness */
+    init_flags = 0;
     process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
 
     /* Fill the map */

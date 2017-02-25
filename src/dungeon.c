@@ -5415,6 +5415,7 @@ void play_game(bool new_game)
     {
         /* Init the wilderness */
 
+        init_flags = 0;
         process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
 
         /* Init the town */

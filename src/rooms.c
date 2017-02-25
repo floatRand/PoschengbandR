@@ -1612,7 +1612,7 @@ static void _apply_room_grid1(int x, int y, room_grid_ptr grid, u16b room_flags)
         return;
 
     /* Object */
-    object_level = base_level + grid->object_level;
+    object_level = MAX(1, base_level + grid->object_level);
     if (grid->flags & ROOM_GRID_OBJ_ARTIFACT)
     {
         int a_idx = grid->object;

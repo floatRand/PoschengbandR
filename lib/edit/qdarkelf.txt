@@ -27,48 +27,37 @@ Q:32:T:Thank you!  Your reward is wating outside.
 Q:32:T:The quest was more than you could handle.  Try another one.   
 ?:1
 
-# The Monsters
-# Dweller on the threshold (level:15, Speed:110, XP:50, #:6, Tot:300)
-F:y:FLOOR:8:263
+T:QUEST:NORMAL
+L:#:PERMANENT(ROOM)
+L:%:GRANITE(ROOM)
+L:.:FLOOR(ROOM)
+L:+:CLOSED_DOOR(ROOM)
+L:<:UP_STAIR(ROOM)
+L:^:TRAP(*, 25)
+L:y:MON(dweller on the threshold)
+L:P:MON(stone giant)
+L:g:MON(stone golem)
+L:z:MON(stunwall)
+L:h:MON(dark elven lord)
+D:#########
+D:#.......#
+D:#.h.h.h.#
+D:#.......#
+D:#.h...h.#
+D:#.......#
+D:#P.P.g.g#
+D:#+++%+++#
+D:#...%...#
+D:#y^y%z^z#
+D:#y^y%z^z#
+D:#y^y%z^z#
+D:#...%...#
+D:#...%...#
+D:#+++%+++#
+D:#P.P%g.g#
+D:#.......#
+D:#.......#
+D:#..%%%..#
+D:#...<@..#
+D:#########
 
-# Stone Giant (level:18, Speed:110, XP:90, #:4, Tot:360)
-F:P:FLOOR:8:321
-
-# Stone Golem (level:19, Speed:100, XP:100, #:4, Tot:400)
-F:g:FLOOR:8:323
-
-# Stunwall (level:18, Speed:110, XP:50, #:6, Tot:300)
-F:#:FLOOR:8:326
-
-# Dark eleven lord (level:20, Speed:120, XP:500, #:5, Tot:2500)
-F:h:FLOOR:8:348
-
-# The doors, floors and treasures
-# Normal floor
-F: :FLOOR:8
-
-# Dungeon layout
-D:XXXXXXXXX
-D:X       X
-D:X h h h X
-D:X       X
-D:X h   h X
-D:X       X
-D:XP P g gX
-D:XDDD%DDDX
-D:X   %   X
-D:Xy y%# #X
-D:Xy y%# #X
-D:Xy y%# #X
-D:X   %   X
-D:X   %   X
-D:XDDD%DDDX
-D:XP P%g gX
-D:X       X
-D:X       X
-D:X  %%%  X
-D:X   <   X
-D:XXXXXXXXX
-
-# Starting position
-P:19:4

@@ -26,17 +26,14 @@ Q:1:T:It seems like this task was too difficult for you.  Good that I
 Q:1:T:hired another adventurer to clean up the remaining thieves.
 ?:1
 
-# Floor with Novice rogue
 T:QUEST:NORMAL:FORMATION
 L:#:PERMANENT(ROOM)
 L:.:FLOOR(ROOM)
 L:0:MON(THIEF, DEPTH+5)
-L:^:TRAP(*, 50)
+L:^:TRAP(*, 25)
 L:$:FLOOR(ROOM):OBJ(*)
 L:+:CLOSED_DOOR(ROOM)
 L:<:UP_STAIR(ROOM)
-
-# Dungeon layout
 D:###############
 D:#....1....#..$#
 D:#.........+^..#
