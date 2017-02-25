@@ -209,28 +209,28 @@ L:b:BUILDING_1(GLOW, 0)
 
 # Quest 4 assigned, entrance is quest entrance
 ?:[EQU $QUEST4 1]
-F:w:QUEST_ENTER:3:0:0:0:0:NONE:4
-F:b:BUILDING_1:3:0:0:0:0:NONE:4
+L:w:QUEST_ENTER(GLOW | MARK, 4)
+L:b:BUILDING_1(GLOW, 4)
 
 # Quest 4 completed
 ?:[EQU $QUEST4 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:4
+L:b:BUILDING_1(GLOW, 4)
 
 # Quest 4 rewarding, no extra reward
 ?:[EQU $QUEST4 3]
-F:b:BUILDING_1:3:0:0:0:0:NONE:5
+L:b:BUILDING_1(GLOW, 5)
 
 # Quest 4 finished
 ?:[EQU $QUEST4 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:5
+L:b:BUILDING_1(GLOW, 5)
 
 # Quest 4 failed
 ?:[EQU $QUEST4 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:4
+L:b:BUILDING_1(GLOW, 4)
 
-# Quest 4 failed but done, continue with quest 5
+# Quest 4 failed ... That's all folks!
 ?:[EQU $QUEST4 6]
-F:b:BUILDING_1:3
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 

@@ -19,7 +19,7 @@
 
 # Vault
 ?:[EQU $QUEST_NUMBER 4]
-%:q0000004.txt
+%:q_vault.txt
 
 # Tower
 ?:[EQU $QUEST_NUMBER 5]

@@ -1,0 +1,107 @@
+# Name
+Q:4:N:The Vault
+
+# Definition
+Q:4:Q:3:0:0:0:30:0:88:0:6
+
+# Description for quest
+?:[LEQ $QUEST4 2]
+Q:4:T:The vault was used outside the town as a minor fortress and
+Q:4:T:stored many valuable items.  It has since been overrun.  Please
+Q:4:T:find the short sword known as Sting and return it to us!
+Q:4:T:The moment you find the sword, your quest will be complete.
+Q:4:T:While the sword could be in any of the chambers, only look
+Q:4:T:through one at a time. The monsters here are strong and there are
+Q:4:T:traps to be concerned with as well.
+?:1
+
+# Description for quest rewarding
+?:[EQU $QUEST4 3]
+Q:4:T:Please keep the sword, it will aid you in your future quests.
+?:1
+
+# Description for quest failed
+?:[EQU $QUEST4 5]
+Q:4:T:You didn't find the sword?  Well, the monsters have probably
+Q:4:T:carried it away.  Too bad, Sting would have been quiet helpful
+Q:4:T:in driving the evil out of our town.
+?:1
+
+T:QUEST:NORMAL:NO_ROTATE
+L:#:PERMANENT(ROOM)
+L:%:GRANITE(ROOM)
+L:.:FLOOR(ROOM)
+L:+:CLOSED_DOOR(ROOM)
+L:<:UP_STAIR(ROOM)
+L:^:TRAP(*, 25)
+L:5:FLOOR(ROOM | ICKY):MON(*, DEPTH+7)
+L:9:FLOOR(ROOM):OBJ(*, DEPTH+7):MON(*, DEPTH+9)
+L:*:FLOOR(ROOM):TRAP(*, 25):OBJ(*)
+
+#Note: The dungeon is not symmetric, so a clever player could figure out
+#where Sting was even with rotation of the room.
+
+?:[EQU [MOD $RANDOM4 4] 0]
+L:a:ART(sting)
+L:b:OBJ(SWORD, small sword, DEPTH+5)
+L:c:OBJ(SWORD, small sword, DEPTH+5)
+L:d:OBJ(SWORD, small sword, DEPTH+5)
+?:[EQU [MOD $RANDOM4 4] 1]
+L:b:ART(sting)
+L:c:OBJ(SWORD, small sword, DEPTH+5)
+L:d:OBJ(SWORD, small sword, DEPTH+5)
+L:a:OBJ(SWORD, small sword, DEPTH+5)
+?:[EQU [MOD $RANDOM4 4] 2]
+L:c:ART(sting)
+L:d:OBJ(SWORD, small sword, DEPTH+5)
+L:a:OBJ(SWORD, small sword, DEPTH+5)
+L:b:OBJ(SWORD, small sword, DEPTH+5)
+?:[EQU [MOD $RANDOM4 4] 3]
+L:d:ART(sting)
+L:a:OBJ(SWORD, small sword, DEPTH+5)
+L:b:OBJ(SWORD, small sword, DEPTH+5)
+L:c:OBJ(SWORD, small sword, DEPTH+5)
+?:1
+
+# Dungeon
+D:#####################################################
+D:#####################....9a*....#####################
+D:##################...5.............##################
+D:##################........*........##################
+D:#################..........*.*......#################
+D:#################.................5.#################
+D:#################...5....%.%.%......#################
+D:#################...........*.......#################
+D:##################............5....##################
+D:##################....5..5.........##################
+D:#####################.........5.#####################
+D:#########################+++#########################
+D:#########################...#########################
+D:#####.....*....##########...##########..........#####
+D:##....5..*...*....#######...#######5..............*##
+D:##............5..5#######...#######.....%..........##
+D:#......5...%.......######...######..5....%..5.....*.#
+D:#*........%........+.............+........%........*#
+D:#b...5.....%..5....+......<......+...5.....%.......d#
+D:#9.................+.............+.................9#
+D:#...........%......######...######........%.........#
+D:##......5........5#######...#######....5...........##
+D:##................#######...#######........5.......##
+D:#####..........##########...##########..........#####
+D:#########################...#########################
+D:#########################+++#########################
+D:#####################...........#####################
+D:##################.................##################
+D:##################..5..............##################
+D:#################...........5...5...#################
+D:#################........5..........#################
+D:#################.....5.............#################
+D:#################...................#################
+D:##################.5...............##################
+D:##################.................##################
+D:#####################....*c9....#####################
+D:#####################################################
+
+# Starting position
+P:16:25
+

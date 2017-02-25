@@ -2201,6 +2201,11 @@ void build_room_template_aux(room_ptr room, int yval, int xval, int xoffset, int
             if (grid)
             {
                 _apply_room_grid2(x, y, grid, room->flags);
+                if (letter == '<' && room->type == ROOM_QUEST)
+                {
+                    py = y;
+                    px = x;
+                }
                 continue;
             }
 
