@@ -1694,8 +1694,30 @@ static void _apply_room_grid1(int x, int y, room_grid_ptr grid, u16b room_flags)
                 mode = AM_GOOD;
 
             object_prep(&forge, k_idx);
-            apply_magic(&forge, object_level, mode);
-            obj_make_pile(&forge);
+            if (object_is_device(&forge) && (grid->flags & ROOM_GRID_OBJ_EFFECT))
+            {
+                /* Hack: There is only a single k_idx for each class of devices, so
+                 * we use the ego index to pick an effect. This means there is no way
+                 * to actually grant an ego device ...*/
+                if (!device_init_fixed(&forge, grid->extra))
+                {
+                    if (grid->extra)
+                    {
+                        char     name[255];
+                        effect_t e = {0};
+                        e.type = grid->extra;
+                        sprintf(name, "%s", do_effect(&e, SPELL_NAME, 0));
+                        msg_format("Software Bug: %s is not a valid effect for this device.", name);
+                        msg_print("Generating a random device instead.");
+                    }
+                    device_init(&forge, object_level, 0);
+                }
+            }
+            else
+            {
+                apply_magic(&forge, object_level, mode);
+                obj_make_pile(&forge);
+            }
             drop_here(&forge, y, x);
         }
     }

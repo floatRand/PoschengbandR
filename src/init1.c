@@ -1333,7 +1333,8 @@ static int _lookup_monster(cptr name)
         if (!r_ptr->name) continue;
         if (my_stricmp(r_name + r_ptr->name, name) == 0)
         {
-            /*msg_format("Mapping %s to %s (%d).", name, r_name + r_ptr->name, i);*/
+            if (init_flags & INIT_DEBUG)
+                msg_format("Mapping <color:B>%s</color> to <color:R>%s</color> (%d).", name, r_name + r_ptr->name, i);
             return i;
         }
     }
@@ -1346,7 +1347,8 @@ static int _lookup_monster(cptr name)
         _prep_name(buf, r_name + r_ptr->name);
         if (strstr(buf, name))
         {
-            /*msg_format("Mapping %s to %s (%d).", name, r_name + r_ptr->name, i);*/
+            if (init_flags & INIT_DEBUG)
+                msg_format("Mapping <color:B>%s</color> to <color:R>%s</color> (%d).", name, r_name + r_ptr->name, i);
             return i;
         }
     }
@@ -1558,7 +1560,8 @@ static int _lookup_obj_kind(char *arg, int tval)
         _prep_name(buf, k_name + k_ptr->name);
         if (my_stricmp(buf, arg) == 0)
         {
-            /*msg_format("Mapping kind %s to %s (%d).", arg, k_name + k_ptr->name, i);*/
+            if (init_flags & INIT_DEBUG)
+                msg_format("Mapping kind <color:B>%s</color> to <color:R>%s</color> (%d).", arg, k_name + k_ptr->name, i);
             return i;
         }
     }
@@ -1571,7 +1574,8 @@ static int _lookup_obj_kind(char *arg, int tval)
         _prep_name(buf, k_name + k_ptr->name);
         if (strstr(buf, arg))
         {
-            /*msg_format("Mapping kind %s to %s (%d).", arg, k_name + k_ptr->name, i);*/
+            if (init_flags & INIT_DEBUG)
+                msg_format("Mapping kind <color:B>%s</color> to <color:R>%s</color> (%d).", arg, k_name + k_ptr->name, i);
             return i;
         }
     }
@@ -1642,8 +1646,34 @@ static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid)
         }
 
         if (type <= OBJ_TYPE_TVAL_MAX && arg_ct >= 2)
+        {
+            /* Special handling for devices: OBJ(WAND, ROCKET) ... lookup
+             * is set in _effect_info (devices.c) ... "FOO" -> EFFECT_FOO */
+            if (type == TV_WAND || type == TV_STAFF || type == TV_ROD)
+            {
+                int effect_id = effect_parse_type(args[1]);
+                if (effect_id)
+                {
+                    grid->object = lookup_kind(type, SV_ANY);
+                    grid->extra = effect_id;
+                    grid->flags |= ROOM_GRID_OBJ_EFFECT;
+                    if (init_flags & INIT_DEBUG)
+                    {
+                        char     name[255];
+                        effect_t e = {0};
+                        e.type = grid->extra;
+                        sprintf(name, "%s", do_effect(&e, SPELL_NAME, 0));
+                        msg_format("Mapping kind to <color:R>%s</color> (%d).", k_name + k_info[grid->object].name, grid->object);
+                        msg_format("Mapping effect <color:B>%s</color> to <color:R>%s</color> (%d).",
+                            args[1], name, grid->extra);
+                    }
+                    if (arg_ct >= 3) return _parse_obj_flags(args[2], grid);
+                    return 0;
+                }
+                /* continue for OBJ(WAND, DEPTH+10) ... */
+            }
             k_idx = _lookup_obj_kind(args[1], type);
-
+        }
         if (k_idx)
         {
             grid->object = k_idx;
@@ -1669,7 +1699,8 @@ static int _lookup_ego(cptr name)
         _prep_name(buf, e_name + e_ptr->name);
         if (strstr(buf, name))
         {
-            /*msg_format("Matching ego %s to %s (%d).", name, e_name + e_ptr->name, i);*/
+            if (init_flags & INIT_DEBUG)
+                msg_format("Matching ego <color:B>%s</color> to <color:R>%s</color> (%d).", name, e_name + e_ptr->name, i);
             return i;
         }
     }
@@ -1728,7 +1759,8 @@ static int _lookup_art(cptr name)
         _prep_name(buf, a_name + a_ptr->name);
         if (strstr(buf, name))
         {
-            /*msg_format("Matching artifact %s to %s (%d).", name, a_name + a_ptr->name, i);*/
+            if (init_flags & INIT_DEBUG)
+                msg_format("Matching artifact <color:B>%s</color> to <color:R>%s</color> (%d).", name, a_name + a_ptr->name, i);
             return i;
         }
     }
@@ -1912,7 +1944,7 @@ errr parse_room_grid(char *buf, room_grid_ptr grid)
             result = _parse_room_grid_artifact(args, arg_ct, grid);
             if (result) break;
         }
-        else if (streq(name, "TRAP"))
+        else if (streq(name, "TRAP") || streq(name, "SECRET"))
         {
             result = _parse_room_grid_trap(args, arg_ct, grid);
             if (result) break;
@@ -5634,7 +5666,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
     if (!fp) return (-1);
 
     /* The pattern of recursion is awkward ... process_dungeon_file -> aux -> process_dungeon_file -> aux -> etc. */
-    if (!depth++ && (init_flags & INIT_CREATE_DUNGEON))
+    if (!depth++ && (init_flags & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
     {
         assert(!_room);
         _room = room_alloc("Temp");
@@ -5677,10 +5709,16 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
             continue;
         }
 
-        /* Apply conditionals */
-        if (bypass) continue;
+        /* Apply conditionals ... INIT_DEBUG is for testing purposes */
+        if (!(init_flags & INIT_DEBUG) && bypass) continue;
 
         /* Process the line */
+        if ((init_flags & INIT_DEBUG) && buf[0] == 'L')
+        {
+            msg_boundary();
+            msg_format("<color:R>%s</color>:<color:y>%d</color> %s", name, num, buf);
+            msg_boundary();
+        }
         err = process_dungeon_file_aux(buf, ymin, xmin, ymax, xmax, &y, &x);
 
         /* Oops */
@@ -5696,21 +5734,19 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
         oops = (((err > 0) && (err < PARSE_ERROR_MAX)) ? err_str[err] : "unknown");
 
         /* Oops */
-        msg_format("Error %d (%s) at line %d of '%s'.", err, oops, num, name);
+        msg_format("<color:v>Error</color> %d (%s) at line %d of '%s'.", err, oops, num, name);
         msg_format("Parsing '%s'.", buf);
 
         msg_print(NULL);
     }
-    if (!--depth && (init_flags & INIT_CREATE_DUNGEON))
+    if (!--depth && (init_flags & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
     {
         int cx = _room->width;
         int cy = _room->height;
         int transno = 0;
 
         assert(_room);
-        /* This is still failing and I'm not sure why/how! It never reproduces ... 
-         * assert(vec_length(_room->map));*/
-        if (vec_length(_room->map))
+        if (vec_length(_room->map) && (init_flags & INIT_CREATE_DUNGEON))
         {
             /*Coordinate transforms (TODO: This code needs a rewrite, IMO)*/
             if (!(_room->flags & ROOM_NO_ROTATE))

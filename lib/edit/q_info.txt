@@ -107,7 +107,7 @@
 
 # The Old Castle
 ?:[EQU $QUEST_NUMBER 27]
-%:q0000027.txt
+%:q_old_castle.txt
 
 # Royal Crypt
 ?:[EQU $QUEST_NUMBER 28]

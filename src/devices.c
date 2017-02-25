@@ -2097,6 +2097,18 @@ bool effect_learn(int type)
     return FALSE;
 }
 
+int effect_parse_type(char *type)
+{
+    int i;
+    for (i = 0; ; i++)
+    {
+        if (!_effect_info[i].text) break;
+        if (streq(type, _effect_info[i].text))
+            return _effect_info[i].type;
+    }
+    return EFFECT_NONE;
+}
+
 errr effect_parse(char *line, effect_t *effect) /* LITE_AREA:<Lvl>:<Timeout>:<Extra> */
 {
     char *tokens[5];

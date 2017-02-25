@@ -4409,6 +4409,7 @@ extern int PlayerUID;
 #define INIT_CREATE_DUNGEON     0x04
 #define INIT_SCROLL_WILDERNESS  0x08
 #define INIT_ONLY_BUILDINGS     0x10
+#define INIT_DEBUG              0x20
 
 /*
  * Quest flags

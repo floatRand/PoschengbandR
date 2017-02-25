@@ -317,615 +317,415 @@ L:b:BUILDING_1(GLOW, 0)
 
 ############### Quest 27 - The Old Castle ###############
 
-# Quest 27 assigned, entrance is quest entrance
-?:[EQU $QUEST27 1]
-F:O:QUEST_ENTER:3:0:0:0:0:NONE:27
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
+?:[EQU $QUEST27 Taken]
+L:O:QUEST_ENTER(MARK | GLOW, 27)
+L:b:BUILDING_1(GLOW, 27)
 
-# Quest 27 completed
-?:[EQU $QUEST27 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
+?:[EQU $QUEST27 Completed]
+L:b:BUILDING_1(GLOW, 27)
 
-# Quest 27 rewarding (default reward if not given one from below)
-# the Executioner's Sword 'Crisdurian'
-?:[EQU $QUEST27 3]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:80
+?:[EQU $QUEST27 Rewarded]
+L:b:BUILDING_1(GLOW, 0)
+L:!:ART(crisdurian)
 
 ##########################################################################
 # Beholder
-# Amber
-?:[AND [EQU $QUEST27 3] [EQU $RACE Beholder Quylthulg] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:42
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Beholder Quylthulg] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(amber)
 
-# Tulkas
-?:[AND [EQU $QUEST27 3] [EQU $RACE Beholder Quylthulg] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:9
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Beholder Quylthulg] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(tulkas)
 
-# Tulkas
-?:[AND [EQU $QUEST27 3] [EQU $RACE Ring] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:9
+##########################################################################
+# Ring
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Ring] ]
+L:!:ART(tulkas)
 
 ##########################################################################
 # Centipede
 # Shiva's Avatar
-?:[AND [EQU $QUEST27 3] [EQU $RACE Centipede] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:63
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Centipede] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(63)
 
-# Stone of War
-?:[AND [EQU $QUEST27 3] [EQU $RACE Centipede] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:291
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Centipede] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(stone of war)
 
 ##########################################################################
 # Dragon
-# Colluin
-?:[AND [EQU $QUEST27 3] [EQU $RACE Dragon] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:44
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Dragon] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(colluin)
 
-# Stone of War
-?:[AND [EQU $QUEST27 3] [EQU $RACE Dragon] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:291
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Dragon] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(stone of war)
 
 ##########################################################################
 # Hound
-# Jack of Shadows
-?:[AND [EQU $QUEST27 3] [EQU $RACE Hound] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:43
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Hound] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(jack of shadows)
 
-# Harness of the Hell
-?:[AND [EQU $QUEST27 3] [EQU $RACE Hound] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:218
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Hound] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(harness of the hell)
 
 ##########################################################################
 # Hydra
-# Dor-Lomin
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Monster] [EQU $RACE Hydra Golem] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:39
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Monster] [EQU $RACE Hydra Golem] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(dor-lomin)
 
 # Colluin
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Monster] [EQU $RACE Hydra Golem] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:44
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Monster] [EQU $RACE Hydra Golem] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(colluin)
 
 ##########################################################################
 # Lich
-# Kaschei
-?:[AND [EQU $QUEST27 3] [EQU $RACE Lich] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:250
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Lich] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(kaschei)
 
-# Indra
-?:[AND [EQU $QUEST27 3] [EQU $RACE Lich] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:33
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Lich] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(indra)
 
 ##########################################################################
 # Spider
-# Luthien
-?:[AND [EQU $QUEST27 3] [EQU $RACE Spider] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:49
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Spider] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(luthien)
 
-# Pitch Dark Night
-?:[AND [EQU $QUEST27 3] [EQU $RACE Spider] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:215
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Spider] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(pitch dark night)
 
 ##########################################################################
 # Archaeologist
-# Nain
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Archaeologist] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:211
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Archaeologist] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(nain)
 
-# Palantir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Archaeologist] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:15
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Archaeologist] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(palantir of westernesse)
 
 ##########################################################################
 # Duelist
-# Rapier of the Duelist
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Duelist] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:248
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Duelist] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(duelist)
 
-# Quickthorn
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Duelist] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:174
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Duelist] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(quickthorn)
 
 ##########################################################################
 # Mauler
-# Aegir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mauler] [EQU [MOD $RANDOM27 9] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:251
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mauler] [EQU [MOD $RANDOM27 9] 0] ]
+L:!:ART(aegir)
 
-# Benkei
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mauler] [GEQ [MOD $RANDOM27 9] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:152
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mauler] [GEQ [MOD $RANDOM27 9] 1] ]
+L:!:ART(benkei)
 
 ##########################################################################
 # Weaponsmith
-# Balance Dragon Scale Mail
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponsmith] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:411
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponsmith] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:OBJ(DRAG_ARMOR, balance)
 
-# Multi-Hued Dragon Scale Mail
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponsmith] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:405
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponsmith] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:OBJ(DRAG_ARMOR, multi-hued)
 
 ##########################################################################
 # Tourist
-# Tourists *always* get the PYEC.  Don't change this :)
-# The Platinum Yendorian Express Card
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Tourist] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:141
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Tourist] ]
+L:!:ART(platinum yendorian express card)
 
 ##########################################################################
 # Archer
-# Brand
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Archer] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:126
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Archer] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(brand)
 
-# Bard
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Archer] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:125
+# Bard (Bow rather than Boots or Arrow ... all 3 named the same)
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Archer] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(125)
 
 ##########################################################################
 # Ranger
-# Belthronding
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Ranger] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:124
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Ranger] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(belthronding)
 
-# Yoichi
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Ranger] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:148
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Ranger] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(yoichi)
 
 ##########################################################################
 # Blood-Knight
-# Bloodrip
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Blood-Knight] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:243
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Blood-Knight] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(bloodrip)
 
-# Crisdurian
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Blood-Knight] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:80
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Blood-Knight] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(crisdurian)
 
 ##########################################################################
 # Warrior, Beserker
-# Slayer
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Warrior Berserker] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:123
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Warrior Berserker] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(slayer)
 
-# The Glaive of Pain
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Warrior Berserker] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:94
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Warrior Berserker] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(pain)
 
 ##########################################################################
 # Beastmaster
-# Impaler
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Beastmaster] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:324
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Beastmaster] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(impaler)
 
-# Eorlingas
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Beastmaster] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:100
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Beastmaster] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(eorlingas)
 
 ##########################################################################
 # Cavalry
-# Dragonlance
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Cavalry] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:322
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Cavalry] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(dragonlance)
 
-# GaeBolg
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Cavalry] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:163
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Cavalry] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(gae bulg)
 
 ##########################################################################
 # Chaos-Warrior
-# Zarcuthra
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Chaos-Warrior Rune-Knight] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:77
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Chaos-Warrior Rune-Knight] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(zarcuthra)
 
-# Crisdurian
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Chaos-Warrior Rune-Knight] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:80
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Chaos-Warrior Rune-Knight] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(crisdurian)
 
 ##########################################################################
 # Devicemaster
 
-# Wand: Rocket
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Wands] ]
-F:!:FLOOR:3:0:269:559
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Wands] ]
+L:!:OBJ(WAND, ROCKET)
 
-# Staff: Mana Storm
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Staves] ]
-F:!:FLOOR:3:0:270:560
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Staves] ]
+L:!:OBJ(STAFF, MANA_STORM)
 
-# Rod: Mana Ball
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Rods] ]
-F:!:FLOOR:3:0:271:416
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Rods] ]
+L:!:OBJ(ROD, BALL_MANA)
 
 ##########################################################################
 # Weaponmaster
 
-# Hurin
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:133
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(hurin)
 
-# Balli Stonehand
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:103
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(balli stonehand)
 
 # Bard
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:125
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(125)
 
-# Yoichi
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:148
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(yoichi)
 
-# Aegir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:251
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(aegir)
 
-# Aegis Fang
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:208
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(aegis fang)
 
-# Brand
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:126
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(brand)
 
 # Wilhelm Tell
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:223
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(223)
 
-# Silver Chariot
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:140
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(silver chariot)
 
-# Fiona
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:70
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(fiona)
 
-# Nain
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:211
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(nain)
 
-# Undertaker
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:296
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(undertaker)
 
-# Glaive of Pain
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:94
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(pain)
 
-# Avavir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:109
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(avavir)
 
-# Thorin
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:30
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(thorin)
 
-# Gil-Galad
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:138
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(gil-galad)
 
-# Buckland
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:134
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
+L:!:ART(buckland)
 
-# Ruyi Jingu Bang
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:255
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(ruyi jingu bang)
 
-# Asclepius
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:225
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(asclepius)
 
-# Werewindle
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:84
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(werewindle)
 
-# Anduril
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:83
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(anduril)
 
 ##########################################################################
 # Warlock
-# Daeron
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Warlock] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:246
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Warlock] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(daeron)
 
-# Palantir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Warlock] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:15
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Warlock] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(palantir of westernesse)
 
 ##########################################################################
 # Rogue
-# Aglarang
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Rogue Scout] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:81
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Rogue Scout] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(aglarang)
 
-# Buckland
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Rogue Scout] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:134
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Rogue Scout] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(buckland)
 
 ##########################################################################
 # Monk, Force-Trainer
-# The Robe of Eternity
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Monk Force-Trainer Mystic] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:244
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Monk Force-Trainer Mystic] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(eternity)
 
-# Palantir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Monk Force-Trainer Mystic] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:15
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Monk Force-Trainer Mystic] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(palantir of westernesse)
 
 ##########################################################################
 # Ninja
-# Silver Chariot
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Ninja] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:140
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Ninja] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(silver chariot)
 
-# Pitch Dark Night
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Ninja] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:215
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Ninja] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(pitch dark night)
 
 ##########################################################################
 # Mage, High-Mage, Sorcerer, Blue-Mage, Blood-Mage
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [EQU [MOD $RANDOM27 10] 0] ]
+L:!:ART(gandalf)
 
-# Gandalf
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [EQU [MOD $RANDOM27 10] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:120
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [EQU [MOD $RANDOM27 10] 1] ]
+L:!:ART(saruman)
 
-# Saruman
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [EQU [MOD $RANDOM27 10] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:249
-
-# Thranduil
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [GEQ [MOD $RANDOM27 10] 2] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:36
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mage High-Mage Sorcerer Blue-Mage Blood-Mage Yellow-Mage Gray-Mage] [GEQ [MOD $RANDOM27 10] 2] ]
+L:!:ART(thranduil)
 
 ##########################################################################
 # Priest
-# Aule
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Priest] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:117
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Priest] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(aule)
 
-# Palantir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Priest] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:15
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Priest] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(palantir of westernesse)
 
-# Aule
-?:[AND [EQU $QUEST27 3] [EQU $RACE Angel] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:117
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Angel] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(aule)
 
-# Palantir
-?:[AND [EQU $QUEST27 3] [EQU $RACE Angel] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:15
+?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Angel] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(palantir of westernesse)
 
 ##########################################################################
 # Bard
-# Harp of Maglor
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Bard] [EQU [MOD $RANDOM27 10] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:245
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Bard] [EQU [MOD $RANDOM27 10] 0] ]
+L:!:ART(maglor)
 
-# Harp of Daeron
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Bard] [EQU [MOD $RANDOM27 10] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:246
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Bard] [EQU [MOD $RANDOM27 10] 1] ]
+L:!:ART(daeron)
 
-# Palantir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Bard] [GEQ [MOD $RANDOM27 10] 2] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:15
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Bard] [GEQ [MOD $RANDOM27 10] 2] ]
+L:!:ART(palantir of westernesse)
 
 ##########################################################################
 # Mindcrafter, Psion
-# The Robe of Eternity
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mindcrafter Psion] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:244
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mindcrafter Psion] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(eternity)
 
-# Palantir
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mindcrafter Psion] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:15
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mindcrafter Psion] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(palantir of westernesse)
 
 ##########################################################################
 # Mirror-Master
-# Yata-no-Kagami
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mirror-Master] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:151
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mirror-Master] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(yata-no-kagami)
 
-# Numenor
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Mirror-Master] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:132
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Mirror-Master] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(numenor)
 
 ##########################################################################
 # Time-Lord
-# Eternity
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Time-Lord] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:244
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Time-Lord] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(eternity)
 
-# The Ring of Ages
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Time-Lord] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:274
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Time-Lord] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(of the ages)
 
 ##########################################################################
 # Samurai
-# Aglarang
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Samurai] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:81
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Samurai] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(aglarang)
 
-# Taro Dachi
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Samurai] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:229
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Samurai] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(taro dachi)
 
 ##########################################################################
 # Good Paladin
-# Excalibur
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Paladin] [EQU $REALM1 Crusade Life] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:176
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Paladin] [EQU $REALM1 Crusade Life] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(excalibur)
 
-# Sacred Knights
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Paladin] [EQU $REALM1 Crusade Life] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:217
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Paladin] [EQU $REALM1 Crusade Life] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(sacred knights)
 
 ##########################################################################
 # Evil Paladin
-# Doomcaller
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Paladin] [EQU $REALM1 Death Daemon] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:91
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Paladin] [EQU $REALM1 Death Daemon] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(doomcaller)
 
-# Harness of the Hell
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Paladin] [EQU $REALM1 Death Daemon] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:218
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Paladin] [EQU $REALM1 Death Daemon] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(harness of the hell)
 
 ##########################################################################
 # Warrior-Mage, Red-Mage, Magic-Eater
-# Lohengrin
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Warrior-Mage Red-Mage Magic-Eater Wild-Talent] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:22
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Warrior-Mage Red-Mage Magic-Eater Wild-Talent] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(lohengrin)
 
-# The Charmed Pendant
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Warrior-Mage Red-Mage Magic-Eater Wild-Talent] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:219
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Warrior-Mage Red-Mage Magic-Eater Wild-Talent] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(charmed pendant)
 
 ##########################################################################
 # Imitator
-# TODO
-# Pendant of Gogo
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Imitator] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:220
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Imitator] ]
+L:!:ART(gogo)
 
 ##########################################################################
 # Necromancer
-# Special :)
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Necromancer] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:269
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Necromancer] ]
+L:!:ART(269)
 
 ##########################################################################
 # Sniper
-# Brand
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Sniper] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:126
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Sniper] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(brand)
 
-# Cloak of Tuor
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Sniper] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:50
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Sniper] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(tuor)
 
 ##########################################################################
 # Rage-Mage
-# Falis
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Rage-Mage] [EQU [MOD $RANDOM27 5] 0] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:155
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Rage-Mage] [EQU [MOD $RANDOM27 5] 0] ]
+L:!:ART(falis)
 
-# Balli Stonehand
-?:[AND [EQU $QUEST27 3] [EQU $CLASS Rage-Mage] [GEQ [MOD $RANDOM27 5] 1] ]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:103
+?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Rage-Mage] [GEQ [MOD $RANDOM27 5] 1] ]
+L:!:ART(balli stonehand)
 
 # End of Class specific random Old Castle rewards ... phew!
 ##########################################################################
 
-# Quest 27 finished, no new quest is available
-?:[EQU $QUEST27 4]
-F:b:BUILDING_1:3
+?:[EQU $QUEST27 Finished]
+L:b:BUILDING_1(GLOW, 0)
 
-# Quest 27 failed, wait for the player to enter the inn
-?:[EQU $QUEST27 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
+?:[EQU $QUEST27 Failed]
+L:b:BUILDING_1(GLOW, 27)
 
-# Quest 27 failed but done, no new quest is available
-?:[EQU $QUEST27 6]
-F:b:BUILDING_1:3
+?:[EQU $QUEST27 FailedDone]
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 

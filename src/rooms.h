@@ -114,6 +114,7 @@ struct room_info_type
 #define ROOM_GRID_OBJ_RANDOM    0x00080000  /* object is completely random */
 #define ROOM_GRID_EGO_RANDOM    0x00100000  /* object is either k_idx or tval, but make it an ego */
 #define ROOM_GRID_ART_RANDOM    0x00200000  /* object is either k_idx or tval, but make it a rand art */
+#define ROOM_GRID_OBJ_EFFECT    0x00400000  /* object is a device and extra is the EFFECT_* code */
 
 #define ROOM_GRID_TRAP_RANDOM   0x10000000  /* this may override object info */
 #define ROOM_GRID_SPECIAL       0x20000000  /* use extra for cave.special field */
@@ -146,7 +147,7 @@ enum obj_types_e                           /* OBJ(DEVICE), etc */
 struct room_grid_s
 {
     s16b cave_feat;
-    s16b cave_trap;
+    s16b cave_trap; /* This could also be a secret door ... */
 
     u16b cave_info;
     s16b monster;

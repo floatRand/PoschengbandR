@@ -1,0 +1,117 @@
+# The Old Castle
+# By Shayne Steele (steele@cs.fsu.edu)
+
+Q:27:N:The Old Castle
+Q:27:Q:6:0:0:0:50:0:0:0:6
+
+?:[EQU $QUEST27 Taken Completed]
+Q:27:T:The old castle has been taken over by evil beings. Mighty undead,
+Q:27:T:evil spell casters, dragons, and even titans are rumored to be
+Q:27:T:in there. The entrance to the old castle is in a large clearing 
+Q:27:T:east of here. Destroy ALL the monsters within the castle, and your
+Q:27:T:reward will be an artifact of great value.
+?:1
+
+?:[EQU $QUEST27 Rewarded]
+Q:27:T:Impressive!! Your reward is waiting for you outside.
+?:1
+
+?:[EQU $QUEST27 Failed]
+Q:1:T:It seems like this task was too difficult for you.
+?:1
+
+T:QUEST:NORMAL:NO_ROTATE
+###################################
+# The Monsters
+L:r:MON(roper)
+L:w:MON(lesser wall monster)
+L:g:MON(mithril golem)
+L:a:MON(anti-paladin)
+L:P:MON(master vampire)
+L:M:MON(greater mummy)
+L:G:MON(eog golem)
+L:o:MON(olog)
+L:x:DEEP_WATER:MON(sea troll)
+L:R:MON(revenant)
+L:m:FLOOR(ROOM | ICKY):MON(raal's tome)
+L:d:MON(time bomb)
+L:O:MON(mummified troll)
+L:C:MON(crypt thing)
+L:H:MON(death knight)
+L:l:MON(monastic lich)
+L:L:MON(vampire lord)
+L:t:MON(lesser titan)
+L:E:MON(enchantress)
+L:S:MON(sorcerer)
+L:K:MON(death drake)
+L:N:MON(ancient red dragon)
+L:A:MON(fallen angel)
+L:I:MON(iron lich)
+L:z:MON(dracolich)
+L:Z:MON(greater titan)
+L:5:FLOOR(ROOM | ICKY):MON(*)
+
+###################################
+# Terrain
+L:#:PERMANENT(ROOM)
+L:%:GRANITE(ROOM)
+L:.:FLOOR(ROOM)
+L:~:DEEP_WATER
+L:+:CLOSED_DOOR(ROOM)
+L:,:FLOOR(ROOM | ICKY)
+L:]:RUBBLE(ROOM | ICKY)
+L:s:GRANITE(ROOM):SECRET(CLOSED_DOOR)
+L:u:GRANITE(ROOM | ICKY):SECRET(CLOSED_DOOR)
+L:U:CLOSED_DOOR(ROOM | ICKY)
+L:;:RUBBLE
+L:|:LOCKED_DOOR_7
+L:v:LOCKED_DOOR_7(ICKY)
+
+###################################
+# Goodies
+L:c:FLOOR(ROOM | ICKY):OBJ(LIFE_BOOK, book of the unicorn)
+L:p:FLOOR(ROOM | ICKY):OBJ(SORCERY_BOOK, pattern sorcery)
+L:n:FLOOR(ROOM | ICKY):OBJ(NATURE_BOOK, nature's gifts)
+L:i:FLOOR(ROOM | ICKY):OBJ(CHAOS_BOOK, chaos channels)
+L:b:FLOOR(ROOM | ICKY):OBJ(DEATH_BOOK, black channels)
+L:f:FLOOR(ROOM | ICKY):OBJ(TRUMP_BOOK, trumps of doom)
+L:y:FLOOR(ROOM | ICKY):OBJ(CRAFT_BOOK, note of acting master)
+L:k:FLOOR(ROOM | ICKY):OBJ(DAEMON_BOOK, demonthoughts)
+L:B:FLOOR(ROOM | ICKY):OBJ(CRUSADE_BOOK, exorcism and dispelling)
+L:Y:OBJ(POTION, *healing*)
+L:e:FLOOR(ROOM | ICKY):OBJ(SCROLL, *identify*)
+L:h:OBJ(*)
+L:q:FLOOR(ROOM | ICKY):OBJ(*)
+L:j:OBJ(*, DEPTH+7)
+L:Q:FLOOR(ROOM | ICKY):OBJ(*, DEPTH+7)
+
+# Dungeon layout
+D:#######################################################################
+D:#xx~~~~~~x#%sTTTTTT%##%###%#%#,<,#%#TT..sM......M%%%TThTT###%###%%%%hT#
+D:#~~~~~~~~##R%%%%%%%s##%%%%##%#,,,#%#T..####....###%%T...T###%###%%T..T#
+D:#xx#..####R%......%R%###%##%##]]]#%#jTh#M........%%%%%+%%%%#%#%.+....T#
+D:#x##..%%%%%...w.w..%%##%%%%###,P,#%#######..............%%%#%#..%%..hT#
+D:###.....s.+....w...%%##%###%%#+++#%#h.sM...........%%%%.O.%%.O.%%%C%%%#
+D:###...%%%%%...w.w..%%##%%%##%g...g%######.........%%..%%%....%#%%h...T#
+D:##%...%%%%%%......%R%####%%%.......%%%##%r........+...I%%%..%%#j....TT#
+D:##%...%%%%%%%....%%%%#TTT%%%d.....d%%%%##%%%s%####%%%%%%#%%.%%#%%%s%%%#
+D:##%%..%%%%%%%%r..+.%%#T..sL.........L%%%##%..##%%%%%%%%##%%s%%%%%%.%%%#
+D:##....######%%%%%#..%#TTT%%%d.....d%%%%%%%%...;.%%######%......%%#s####
+D:##....#qqqq#%%%%%#%..%%%%%L.........L%%%#####%%...%%%%%............%%%#
+D:##....|,,,Q#######%%..%%%%%%d.....d%%%%##ThT#%%%%.s%%..............%%%#
+D:##z...#qqqq#pmfmi#%%%....sL.........L%%#%T.T##%%%%%.................%Y#
+D:##%%..######cenek#%%%%%%%%%%.......%%%%%%%s%%##.t.+..............Z..%.#
+D:##%%%..%%%%#mbBym#%%%%%%%..+.......+..............+.................+h#
+D:##%%..%%%%%#%%s%%#%%%%%%...+.G...G.+..............+.................+h#
+D:##%%%..%%%%%%....##%%%.....%%%+++%%%%%%%s%%%%%%.t.+..............Z..%.#
+D:##%%%%..%.........%%N.....%%%%...%%%%%%T.T%%%%%%%%%.................%Y#
+D:##%%%..%%.E........+....%%%%%%.K.%%%###...########%%%..............%%%#
+D:#%o....%%.S........+.N%%%%%%%%+++%%%%%ThThT%%%%%%%%%%%%...........%%%%#
+D:#.....o%%.........%%%%%%%%%%.a...a.%%#################%%%......%%######
+D:#...%%%%###%%.....%%%ThhT%%%...a...s.;|;|;;;;%%%%%%%%%%%%%%%%s%%%#,,,5#
+D:#..%%%%TTT#%%%%%s%%%%%++%%%%...A...%###u###################%%....v,,,,#
+D:#....s.TTT%.r.%...%H......H%..a.a..%#5,,,#,,,,,,,,#5,,#,,,########,,,,#
+D:#%l..%%%%%%...%%s%%........%%%%s%%%%##,,,U,,,#,,,,#,,,#,,,,,,,,,,,,,,,#
+D:#%%...................%%.........%%%#5,,,#,,,#5,,,,,,,U,,,#5,,#,,,#,,5#
+D:#######################################################################
+

@@ -859,6 +859,7 @@ extern bool     effect_add(object_type *o_ptr, int type);
 extern bool     effect_try(effect_t *effect_ptr);
 extern bool     effect_use(effect_t *effect_ptr, int boost);
 extern errr     effect_parse(char *line, effect_t *effect);
+extern int      effect_parse_type(char *type);
 extern bool     effect_is_known(int type);
 extern bool     effect_learn(int type);
 extern int      effect_value(effect_t *effect);
