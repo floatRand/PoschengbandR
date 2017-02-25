@@ -55,204 +55,184 @@ L:N:PERMANENT
 
 
 ############### Quest Chain 1 ###########################
-
+# 1 -> 32 -> 4 -> 5 -> 33 -> 27
 ############### Quest 1 - Thieves Hideout ###############
 
-# Quest 1 untaken
-?:[EQU $QUEST1 0]
+?:[EQU $QUEST1 Untaken]
 L:b:BUILDING_1(GLOW, 1)
 
-# Quest 1 taken, entrance is quest entrance
-?:[EQU $QUEST1 1]
+?:[EQU $QUEST1 Taken]
 L:z:QUEST_ENTER(GLOW | MARK, 1)
 L:b:BUILDING_1(GLOW, 1)
 
-# Quest 1 completed
-?:[EQU $QUEST1 2]
+?:[EQU $QUEST1 Completed]
 L:b:BUILDING_1(GLOW, 1)
 
-# Quest 1 rewarding, reward is a Longsword, continue with quest 32
-?:[EQU $QUEST1 3]
+?:[EQU $QUEST1 Rewarded]
 L:b:BUILDING_1(GLOW, 32)
 L:!:FLOOR:OBJ(SWORD, long sword, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $RACE Beholder Dragon Hound Possessor Spider] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Beholder Dragon Hound Possessor Spider] ]
 L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(combat)
 
-?:[AND [EQU $QUEST1 3] [EQU $RACE Hydra] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Hydra] ]
 L:!:FLOOR:OBJ(HELM, steel helm, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Monster] [EQU $RACE Golem] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Golem] ]
 L:!:FLOOR:OBJ(HELM, steel helm, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Monster] [EQU $RACE Giant] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Giant] ]
 L:!:FLOOR:OBJ(SWORD, two-handed sword, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $RACE Lich Quylthulg] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Lich Quylthulg] ]
 L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(205)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Duelist] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Duelist] ]
 L:!:FLOOR:OBJ(SWORD, rapier, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Rogue] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Rogue] ]
 L:!:FLOOR:OBJ(BOW, sling, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Archaeologist] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archaeologist] ]
 L:!:FLOOR:OBJ(HAFTED, whip, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Beastmaster Cavalry] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Beastmaster Cavalry] ]
 L:!:FLOOR:OBJ(POLEARM, broad spear, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Monk Force-Trainer Mystic] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monk Force-Trainer Mystic] ]
 L:!:FLOOR:OBJ(GLOVES, gauntlets, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Priest] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Priest] ]
 L:!:FLOOR:OBJ(HAFTED, war hammer, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Archer] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archer] ]
 L:!:FLOOR:OBJ(BOW, short bow, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponsmith] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponsmith] ]
 L:!:FLOOR:OBJ(POLEARM, broad axe, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
 L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(205)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Ninja] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Ninja] ]
 L:!:FLOOR:OBJ(SWORD, dagger, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Sniper] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Sniper] ]
 L:!:FLOOR:OBJ(BOW, light crossbow, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Mauler] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mauler] ]
 L:!:FLOOR:OBJ(HAFTED, two-handed flail, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
 L:!:FLOOR:OBJ(POLEARM, broad axe, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
 L:!:FLOOR:OBJ(BOW, short bow, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
 L:!:FLOOR:OBJ(HAFTED, war hammer, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
 L:!:FLOOR:OBJ(BOW, light crossbow, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
 L:!:FLOOR:OBJ(SWORD, dagger, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
 L:!:FLOOR:OBJ(DIGGING, pick, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
 L:!:FLOOR:OBJ(POLEARM, pike, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
 L:!:FLOOR:OBJ(SHIELD, small leather shield, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
 L:!:FLOOR:OBJ(BOW, sling, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
 L:!:FLOOR:OBJ(HAFTED, quarterstaff, DEPTH+5)
 
-?:[AND [EQU $QUEST1 3] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
+?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
 L:!:FLOOR:OBJ(SWORD, long sword, DEPTH+5)
 
-# Quest 1 finished, continue with quest 32
-?:[EQU $QUEST1 4]
+?:[EQU $QUEST1 Finished]
 L:b:BUILDING_1(GLOW, 32)
 
-# Quest 1 failed
-?:[EQU $QUEST1 5]
+?:[EQU $QUEST1 Failed]
 L:b:BUILDING_1(GLOW, 32)
 
-# Quest 1 failed
-?:[EQU $QUEST1 6]
+?:[EQU $QUEST1 FailedDone]
 L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
 ############### Quest 32 - Dark Elven Lords Quest ###############
 
-# Quest 32 taken, entrance is quest entrance
-?:[EQU $QUEST32 1]
+?:[EQU $QUEST32 Taken]
 L:z:QUEST_ENTER(GLOW | MARK, 32)
 L:b:BUILDING_1(GLOW, 32)
 
-# Quest 32 completed
-?:[EQU $QUEST32 2]
+?:[EQU $QUEST32 Completed]
 L:b:BUILDING_1(GLOW, 32)
 
-# Quest 32 rewarding, The Phial of Galadriel
-# continue with quest 4
-?:[EQU $QUEST32 3]
+?:[EQU $QUEST32 Rewarded]
 L:b:BUILDING_1(GLOW, 4)
 L:!:FLOOR:ART(galadriel)
 
-# Quest 32 finished, continue with quest 4
-?:[EQU $QUEST32 4]
+?:[EQU $QUEST32 Finished]
 L:b:BUILDING_1(GLOW, 4)
 
-# Quest 32 failed, wait for the player to enter the Inn
-?:[EQU $QUEST32 5]
+?:[EQU $QUEST32 Failed]
 L:b:BUILDING_1(GLOW, 32)
 
-# Quest 32 failed, that's all folks!
-?:[EQU $QUEST32 6]
+?:[EQU $QUEST32 FailedDone]
 L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
 ############### Quest 4 - The Vault ###############
 
-# Quest 4 assigned, entrance is quest entrance
-?:[EQU $QUEST4 1]
+?:[EQU $QUEST4 Taken]
 L:w:QUEST_ENTER(GLOW | MARK, 4)
 L:b:BUILDING_1(GLOW, 4)
 
-# Quest 4 completed
-?:[EQU $QUEST4 2]
+?:[EQU $QUEST4 Completed]
 L:b:BUILDING_1(GLOW, 4)
 
-# Quest 4 rewarding, no extra reward
-?:[EQU $QUEST4 3]
+?:[EQU $QUEST4 Rewarded]
 L:b:BUILDING_1(GLOW, 5)
 
-# Quest 4 finished
-?:[EQU $QUEST4 4]
+?:[EQU $QUEST4 Finished]
 L:b:BUILDING_1(GLOW, 5)
 
-# Quest 4 failed
-?:[EQU $QUEST4 5]
+?:[EQU $QUEST4 Failed]
 L:b:BUILDING_1(GLOW, 4)
 
-# Quest 4 failed ... That's all folks!
-?:[EQU $QUEST4 6]
+?:[EQU $QUEST4 FailedDone]
 L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
 #################### Quest 5 - The Barrow Downs ####################
+?:[EQU $QUEST5 Taken]
+L:u:QUEST_ENTER(GLOW | MARK, 5)
+L:b:BUILDING_1(GLOW, 5)
 
-# Quest 5 assigned, entrance is quest entrance
-?:[EQU $QUEST5 1]
-F:u:QUEST_ENTER:3:0:0:0:0:NONE:5
-F:b:BUILDING_1:3:0:0:0:0:NONE:5
+?:[EQU $QUEST5 Completed]
+L:b:BUILDING_1(GLOW, 5)
 
-# Quest 5 completed
-?:[EQU $QUEST5 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:5
+?:[EQU $QUEST5 Rewarded]
+L:b:BUILDING_1(GLOW, 33)
 
-# Quest 5 rewarding, continue with quest 33
-# reward is cheaper *Identify* at the Library (see buildings)
-?:[EQU $QUEST5 3]
-F:b:BUILDING_1:3:0:0:0:0:NONE:33
+?:[EQU $QUEST5 Finished]
+L:b:BUILDING_1(GLOW, 33)
 
-# Quest 5 finished, continue with quest 33
-?:[EQU $QUEST5 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:33
+?:[EQU $QUEST5 Failed]
+L:b:BUILDING_1(GLOW, 33)
+
+?:[EQU $QUEST5 FailedDone]
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 

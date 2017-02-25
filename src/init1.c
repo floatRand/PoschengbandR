@@ -1552,6 +1552,19 @@ static int _lookup_obj_kind(char *arg, int tval)
 
         if (k_ptr->tval != tval) continue;
         _prep_name(buf, k_name + k_ptr->name);
+        if (my_stricmp(buf, arg) == 0)
+        {
+            /*msg_format("Mapping kind %s to %s (%d).", arg, k_name + k_ptr->name, i);*/
+            return i;
+        }
+    }
+    for (i = 1; i < max_k_idx; i++)
+    {
+        object_kind *k_ptr = &k_info[i];
+        char         buf[255];
+
+        if (k_ptr->tval != tval) continue;
+        _prep_name(buf, k_name + k_ptr->name);
         if (strstr(buf, arg))
         {
             /*msg_format("Mapping kind %s to %s (%d).", arg, k_name + k_ptr->name, i);*/
@@ -5495,8 +5508,9 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
             /* Quest status */
             else if (prefix(b+1, "QUEST"))
             {
-                /* "QUEST" uses a special parameter to determine the number of the quest */
-                sprintf(tmp, "%d", quest[atoi(b+6)].status);
+                cptr _status[] = { "Untaken", "Taken", "Completed", "Rewarded", "Finished", "Failed", "FailedDone" };
+                int  which = atoi(b+6);
+                sprintf(tmp, "%s", _status[quest[which].status]);
                 v = tmp;
             }
 
@@ -5568,12 +5582,12 @@ static void _build_dungeon(const room_ptr room, rect_t r, int transno)
     int panels_x, panels_y;
 
     /* Hack - Set the dungeon size */
-    panels_y = (room->height / SCREEN_HGT);
-    if (room->height % SCREEN_HGT) panels_y++;
+    panels_y = (r.cy / SCREEN_HGT);
+    if (r.cy % SCREEN_HGT) panels_y++;
     cur_hgt = panels_y * SCREEN_HGT;
 
-    panels_x = (room->width / SCREEN_WID);
-    if (room->width % SCREEN_WID) panels_x++;
+    panels_x = (r.cx / SCREEN_WID);
+    if (r.cx % SCREEN_WID) panels_x++;
     cur_wid = panels_x * SCREEN_WID;
 
     coord_trans(&x, &y, 0, 0, transno);

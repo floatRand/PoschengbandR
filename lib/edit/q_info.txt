@@ -23,7 +23,7 @@
 
 # Tower
 ?:[EQU $QUEST_NUMBER 5]
-%:q0000005.txt
+%:q_barrow.txt
 
 # Tower part 2
 ?:[EQU $QUEST_NUMBER 6]

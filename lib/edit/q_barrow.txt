@@ -1,0 +1,88 @@
+##################################
+# The Barrow Downs
+
+Q:5:N:The Barrow Downs
+Q:5:Q:6:0:0:0:35:0:0:0:6
+
+?:[EQU $QUEST5 Taken Completed]
+Q:5:T:Lately, a dark evil has been discovered.  An ancient burial ground
+Q:5:T:has been taken over by something terrible.  Creatures black as night
+Q:5:T:now inhabit the place.  They attack our villagers, and eat our young.
+Q:5:T:Please, we are desperate.  We don't have much to offer, but we beg you
+Q:5:T:to help us!
+?:1
+
+?:[EQU $QUEST5 Rewarded]
+Q:5:T:Thank you!  You have saved our town.  Our people rejoice!!
+Q:5:T:I've talked with Astinus, the local librarian, Suiyan, the local
+Q:5:T:weaponmaster, and Lorien, the local beastmaster. They will offer you
+Q:5:T:a special discount price when they serve you.  It is not much, but
+Q:5:T:we are a poor people.
+?:1
+
+?:[EQU $QUEST5 Failed]
+Q:5:T:Oh no!  We are doomed to periodic culling from the foul denizens of
+Q:5:T:the Barrow Downs.  You have disappointed me dearly.  Please, begone
+Q:5:T:for now.  I must inform the village of your failure.  Come back later
+Q:5:T:after we have had time to grieve.
+?:1
+
+T:QUEST:NORMAL:NO_ROTATE
+##################################
+# Terrain
+L:;:RUBBLE(ROOM)
+L:#:PERMANENT(ROOM)
+L:.:GRASS(ROOM)
+L:%:GRANITE(ROOM)
+
+##################################
+# Monsters
+L:A:GRASS(ROOM):MON(kouko)
+L:B:GRASS(ROOM):MON(white wraith)
+L:C:GRASS(ROOM):MON(grave wight)
+L:W:GRASS(ROOM):MON(barrow wight)
+L:Z:GRASS(ROOM):MON(emperor wight)
+
+##################################
+# Objects
+L:2:GRASS(ROOM):OBJ(POTION, healing)
+L:4:GRASS(ROOM):ART(merry)
+L:9:GRASS(ROOM):OBJ(*)
+L:8:GRASS(ROOM):OBJ(*, DEPTH+7)
+L:7:GRASS(ROOM):OBJ(SWORD, broken):EGO(westernesse)
+
+##################################
+# Dungeon
+D:#######################################################
+D:#..............................................;.....2#
+D:#..................;;;;;;;;....................;...ZW9#
+D:#................;;;......;;;..................;......#
+D:#...............;;..........;;.................;;.;;;;#
+D:#........C.....;;.....C......;;...B...................#
+D:#..............;.9...CZC......;.......................#
+D:#........;.....;......C......;;......;................#
+D:#...............;;..........;;........................#
+D:#.B..............;;;......;;;.........................#
+D:#..................;;;;;;;;...........................#
+D:#....;;;;;;;;..................;;;;;;;;;;.............#
+D:#..;;;......;;;..............;;;........;;;...........#
+D:#.;;..........;;............;;.....%%%....;;..........#
+D:#;;......W.....;;..........;;8...W.%4%.W..7;;.........#
+D:#;.9....WZW...9.;....B.....;....WZ.%Z%.ZW..8;.........#
+D:#;;......W.....;;..........;;....W.%Z%.W...;;.........#
+D:#.;;..........;;............;......%W%....;;..........#
+D:#..;;.......;;;..............;;;........;;;...........#
+D:#....;;;;;;;;..................;;;;;;;;;;.............#
+D:#.B...................................................#
+D:#.......A..........;;;;;;;;...........................#
+D:#................;;;......;;;.........................#
+D:#...............;;..........;;........................#
+D:#......;.......;;......C....9;;.......;.B.............#
+D:#..............;......CZC.....;.......................#
+D:#..............;;......C....9;;.......................#
+D:#...............;...........;;.................;;.;;;;#
+D:#................;;;......;;;..................;......#
+D:#..................;;;;;;;;....................;..ZW..#
+D:#<.................................A...........;....92#
+D:#######################################################
+

@@ -5,8 +5,7 @@ Q:1:N:Thieves Hideout
 # Definition
 Q:1:Q:6:0:0:0:5:0:0:0:6
 
-# Description for quest
-?:[LEQ $QUEST1 2]
+?:[EQU $QUEST1 Taken Completed]
 Q:1:T:There are thieves robbing my people! They live in a small
 Q:1:T:burrow outside the city walls robbing people as they pass
 Q:1:T:on the roads. They even sneak inside the town to mug and
@@ -14,14 +13,12 @@ Q:1:T:pillage! Your task is to go to the burrow and kill these
 Q:1:T:ruffians.
 ?:1
 
-# Description for quest reward
-?:[EQU $QUEST1 3]
+?:[EQU $QUEST1 Rewarded]
 Q:1:T:Thank you for killing the band of thieves! A small reward
 Q:1:T:awaits you outside.
 ?:1
 
-# Description for quest failed
-?:[EQU $QUEST1 5]
+?:[EQU $QUEST1 Failed]
 Q:1:T:It seems like this task was too difficult for you.  Good that I
 Q:1:T:hired another adventurer to clean up the remaining thieves.
 ?:1
