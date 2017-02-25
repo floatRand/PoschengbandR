@@ -1440,6 +1440,10 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_ptr grid
             {
                 grid->flags |= ROOM_GRID_MON_HASTE;
             }
+            else if (streq(flag, "CLONE"))
+            {
+                grid->flags |= ROOM_GRID_MON_CLONED;
+            }
             else if (strstr(flag, "DEPTH+") == flag)
             {
                 grid->monster_level = atoi(flag + strlen("DEPTH+"));
@@ -5704,37 +5708,40 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
         int transno = 0;
 
         assert(_room);
-        assert(vec_length(_room->map));
-
-        /*Coordinate transforms (TODO: This code needs a rewrite, IMO)*/
-        if (!(_room->flags & ROOM_NO_ROTATE))
+        /* This is still failing and I'm not sure why/how! It never reproduces ... 
+         * assert(vec_length(_room->map));*/
+        if (vec_length(_room->map))
         {
-            int n = randint0(100);
-            if (n < 45)
-                transno = 0;
-            else if (n < 90)
-                transno = 2;
-            else if (n < 95)
+            /*Coordinate transforms (TODO: This code needs a rewrite, IMO)*/
+            if (!(_room->flags & ROOM_NO_ROTATE))
             {
-                int temp = cx;
-                transno = 1;
-                cx = cy;
-                cy = temp;
-            }
-            else
-            {
-                int temp = cx;
-                transno = 3;
-                cx = cy;
-                cy = temp;
+                int n = randint0(100);
+                if (n < 45)
+                    transno = 0;
+                else if (n < 90)
+                    transno = 2;
+                else if (n < 95)
+                {
+                    int temp = cx;
+                    transno = 1;
+                    cx = cy;
+                    cy = temp;
+                }
+                else
+                {
+                    int temp = cx;
+                    transno = 3;
+                    cx = cy;
+                    cy = temp;
+                }
+
+                if (one_in_(2))
+                    transno |= 0x04;
             }
 
-            if (one_in_(2))
-                transno |= 0x04;
+            /* TODO: Wilderness scrolling ... Yuk! */
+            _build_dungeon(_room, rect(0, 0, cx, cy), transno);
         }
-
-        /* TODO: Wilderness scrolling ... Yuk! */
-        _build_dungeon(_room, rect(0, 0, cx, cy), transno);
         room_free(_room);
         _room = NULL;
     }

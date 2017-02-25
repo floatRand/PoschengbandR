@@ -18,7 +18,7 @@ L:(:FLOOR
 L:$:FLOOR
 
 # Default nature tower reward
-L:":FLOOR
+L:):FLOOR
 
 # Default for Quest 1, 32
 L:z:PERMANENT(GLOW | MARK)
@@ -229,7 +229,7 @@ L:b:BUILDING_1(GLOW, 33)
 L:b:BUILDING_1(GLOW, 33)
 
 ?:[EQU $QUEST5 Failed]
-L:b:BUILDING_1(GLOW, 33)
+L:b:BUILDING_1(GLOW, 5)
 
 ?:[EQU $QUEST5 FailedDone]
 L:b:BUILDING_1(GLOW, 0)
@@ -238,107 +238,80 @@ L:b:BUILDING_1(GLOW, 0)
 
 ############### Quest 33 - The Cloning Pits ###############
 
-# Quest 33 taken, entrance is quest entrance
-?:[EQU $QUEST33 1]
-F:C:QUEST_ENTER:3:0:0:0:0:NONE:33
-F:b:BUILDING_1:3:0:0:0:0:NONE:33
+?:[EQU $QUEST33 Taken]
+L:C:QUEST_ENTER(GLOW | MARK, 33)
+L:b:BUILDING_1(GLOW, 33)
 
-# Quest 33 completed
-?:[EQU $QUEST33 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:33
+?:[EQU $QUEST33 Completed]
+L:b:BUILDING_1(GLOW, 33)
 
-# Quest 33 rewarding
-# Shiva's Avatar
-?:[AND [EQU $QUEST33 3] [EQU [MOD $RANDOM33 6] 0] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:63
+?:[EQU $QUEST33 Rewarded]
+L:b:BUILDING_1(GLOW, 27)
 
-# Thror
-?:[AND [EQU $QUEST33 3] [EQU [MOD $RANDOM33 6] 1] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:62
+# Shiva's Avatar (name is duplicated so use a_idx)
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 0] ]
+L:!:FLOOR(ROOM):ART(63)
 
-# Stomper
-?:[AND [EQU $QUEST33 3] [EQU [MOD $RANDOM33 6] 2] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:277
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 1] ]
+L:!:FLOOR(ROOM):ART(thror)
 
-# Aragorn
-?:[AND [EQU $QUEST33 3] [EQU [MOD $RANDOM33 6] 3] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:238
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 2] ]
+L:!:FLOOR(ROOM):ART(stomper)
 
-# Bard
-?:[AND [EQU $QUEST33 3] [EQU [MOD $RANDOM33 6] 4] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:276
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 3] ]
+L:!:FLOOR(ROOM):ART(aragorn)
+
+# Bard (name is duplicated ... sigh)
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 4] ]
+L:!:FLOOR(ROOM):ART(276)
 
 # Flora
-?:[AND [EQU $QUEST33 3] [EQU [MOD $RANDOM33 6] 5] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:61
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 5] ]
+L:!:FLOOR(ROOM):ART(flora)
 
 ##########################################################################
 # Dragon/Hydra
-# Hammerhand
-?:[AND [EQU $QUEST33 3] [EQU $RACE Dragon Hydra Centaur] [EQU [MOD $RANDOM33 5] 0] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:38
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Dragon Hydra Centaur] [EQU [MOD $RANDOM33 5] 0] ]
+L:!:FLOOR(ROOM):ART(hammerhand)
 
-# Thranduil
-?:[AND [EQU $QUEST33 3] [EQU $RACE Dragon Hydra Centaur] [GEQ [MOD $RANDOM33 5] 1] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:36
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Dragon Hydra Centaur] [GEQ [MOD $RANDOM33 5] 1] ]
+L:!:FLOOR(ROOM):ART(thranduil)
 
 ##########################################################################
 # Death-Sword
-# Werewindle
-?:[AND [EQU $QUEST33 3] [EQU $RACE Death-Sword] [EQU [MOD $RANDOM33 5] 0] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:84
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Death-Sword] [EQU [MOD $RANDOM33 5] 0] ]
+L:!:FLOOR(ROOM):ART(werewindle)
 
-# Grayswandir
-?:[AND [EQU $QUEST33 3] [EQU $RACE Death-Sword] [GEQ [MOD $RANDOM33 5] 1] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:72
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Death-Sword] [GEQ [MOD $RANDOM33 5] 1] ]
+L:!:FLOOR(ROOM):ART(grayswandir)
 
 ##########################################################################
 # Beholder
-# Ring of the Ages
-?:[AND [EQU $QUEST33 3] [EQU $RACE Beholder Quylthulg] [EQU [MOD $RANDOM33 5] 0] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:274
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Beholder Quylthulg] [EQU [MOD $RANDOM33 5] 0] ]
+L:!:FLOOR(ROOM):ART(of the ages)
 
 # Frakir
-?:[AND [EQU $QUEST33 3] [EQU $RACE Beholder Quylthulg] [GEQ [MOD $RANDOM33 5] 1] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:8
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Beholder Quylthulg] [GEQ [MOD $RANDOM33 5] 1] ]
+L:!:FLOOR(ROOM):ART(frakir)
 
 ##########################################################################
 # Xorn
-# Thorin
-?:[AND [EQU $QUEST33 3] [EQU $RACE Xorn] [EQU [MOD $RANDOM33 5] 0] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:30
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Xorn] [EQU [MOD $RANDOM33 5] 0] ]
+L:!:FLOOR(ROOM):ART(thorin)
 
-# Perseus
-?:[AND [EQU $QUEST33 3] [EQU $RACE Xorn] [GEQ [MOD $RANDOM33 5] 1] ]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
-F:!:FLOOR:3:0:0:0:197
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Xorn] [GEQ [MOD $RANDOM33 5] 1] ]
+L:!:FLOOR(ROOM):ART(perseus)
 
 ##########################################################################
 
-# Quest 33 finished, continue with quest 27
-?:[EQU $QUEST33 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:27
+?:[EQU $QUEST33 Finished]
+L:b:BUILDING_1(GLOW, 27)
 
-# Quest 33 failed, wait for the player to enter the Inn
-?:[EQU $QUEST33 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:33
+?:[EQU $QUEST33 Failed]
+L:b:BUILDING_1(GLOW, 33)
 
-# Quest 33 failed
-?:[EQU $QUEST33 6]
-F:b:BUILDING_1:3
+?:[EQU $QUEST33 FailedDone]
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
@@ -1204,7 +1177,7 @@ F:f:BUILDING_5:3:0:0:0:0:NONE:12
 # Quest 12 rewarding, reward is Nature's wrath, no new quest available
 ?:[EQU $QUEST12 3]
 F:f:BUILDING_5:3
-F:":GRASS:3:0:382
+F:):GRASS:3:0:382
 
 # Quest 12 finished, no new quest available
 ?:[EQU $QUEST12 4]
@@ -1251,12 +1224,12 @@ B:2:A:2:Palace of heros:0:0:s:11:0
 
 B:3:N:Library:Astinus:Human?
 B:3:A:0:Research item:1500:1500:a:1:0
-?:[EQU $QUEST5 3 4]
+?:[EQU $QUEST5 Rewarded Finished]
 B:3:A:0:Research item:750:750:a:1:0
 ?:1
 B:3:A:1:Town Overview:0:0:h:2:0
 B:3:A:2:Research monster:10000:10000:r:20:0
-?:[EQU $QUEST5 3 4]
+?:[EQU $QUEST5 Rewarded Finished]
 B:3:A:2:Research monster:1200:1200:r:20:0
 ?:1
 
@@ -1289,7 +1262,7 @@ B:7:A:1:Enchant armor:300:600:a:24:0
 B:7:A:2:Reforge artifact:0:0:r:56:0
 B:7:A:3:Compare weapons:1000:1000:c:21:0
 B:7:A:4:Evaluate AC:1000:1000:a:46:0
-?:[EQU $QUEST5 3 4]
+?:[EQU $QUEST5 Rewarded Finished]
 B:7:A:3:Compare weapons:150:150:c:21:0
 B:7:A:4:Evaluate AC:150:150:a:46:0
 ?:1
@@ -1385,7 +1358,7 @@ D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT-;u;-;TTTTTTT.T........######l.......
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT;T---TTTTTTTT.TT........#######.......................................................#######........T.TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT-;--;TTTTTTTTT.........######.........###0###..####h####...####g####..###j###.........######.........TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT-TTTTTTTTTT..........###f#...#####..#######..#########...#########..#######..#####...#n###.........TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
-D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT...........##."....#####..#######..#########...#########..#######..#####......##........TT###TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
+D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT...........##.)....#####..#######..#########...#########..#######..#####......##........TT###TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..........##......##a##..###9###..####3####...####6####..###4###..##b##......##..........z##TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT........##........?...............................................!........##..........###TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT...........##.................................................................##..........TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#

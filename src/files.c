@@ -201,11 +201,13 @@ s16b tokenize(char *buf, s16b num, char **tokens, int mode)
     return (i);
 }
 
-/* tokenize, but with user supplied delimiters and no special backslash/quote handling */
+/* tokenize, but with user supplied delimiters and no special backslash/quote handling
+ * Added support for quoted delimiters, e.g. MON("fang, farmer maggot's dog", CLONE). */
 int z_string_split(char *buf, char **tokens, int max, cptr delim)
 {
     int i = 0;
     char *s = buf;
+    bool quote = FALSE;
 
     /* inch-worm alogorithm: s marks the start of the current token
        while t scans ahead for the next delimiter. buf is destroyed. */
@@ -215,7 +217,8 @@ int z_string_split(char *buf, char **tokens, int max, cptr delim)
 
         for (t = s; *t; t++)
         {
-            if (strchr(delim, *t)) break;
+            if (*t == '"') quote = !quote;
+            if (!quote && strchr(delim, *t)) break;
         }
 
         if (!*t) break;
@@ -241,6 +244,13 @@ void trim_tokens(char **tokens, int ct)
 
         while (*t && *t == ' ' && t > s)
             t--;
+
+        /* unquote */
+        if (*s && *s == '"' && *t && *t == '"' && t > s)
+        {
+            s++;
+            t--;
+        }
 
         t++;
         *t = '\0';

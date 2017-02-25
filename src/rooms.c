@@ -1807,12 +1807,37 @@ static void _apply_room_grid2(int x, int y, room_grid_ptr grid, u16b room_flags)
     }
     else if (grid->monster)
     {
+        int old_cur_num, old_max_num;
+
+        /* Letters in quest files need extra handling for cloned uniques,
+           as well as resurrecting uniques already slain. */
+        old_cur_num = r_info[grid->monster].cur_num;
+        old_max_num = r_info[grid->monster].max_num;
+
+        if (r_info[grid->monster].flags1 & RF1_UNIQUE)
+        {
+            r_info[grid->monster].cur_num = 0;
+            r_info[grid->monster].max_num = 1;
+        }
+        else if (r_info[grid->monster].flags7 & RF7_NAZGUL)
+        {
+            if (r_info[grid->monster].cur_num == r_info[grid->monster].max_num)
+            {
+                r_info[grid->monster].max_num++;
+            }
+        }
+
         place_monster_aux(0, y, x, grid->monster, mode | PM_NO_KAGE);
+        if (grid->flags & ROOM_GRID_MON_CLONED)
+        {
+            m_list[hack_m_idx_ii].smart |= SM_CLONED;
+
+            /* Make alive again for real unique monster */
+            r_info[grid->monster].cur_num = old_cur_num;
+            r_info[grid->monster].max_num = old_max_num;
+        }
     }
 
-    /* TODO: Letters in quest files need extra handling for cloned uniques,
-       as well as resurrecting uniques already slain. See process_dungeon_file_aux
-       in init1.c for gory details. */
 }
 
 #define _MAX_FORMATION 10
