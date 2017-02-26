@@ -23,32 +23,34 @@ Q:1:T:It seems like this task was too difficult for you.
 T:QUEST:NORMAL
 ###################################
 # The Monsters
-L:r:MON(roper)
-L:w:MON(lesser wall monster)
-L:g:MON(mithril golem)
 L:a:MON(anti-paladin)
-L:P:MON(master vampire)
-L:M:MON(greater mummy)
-L:G:MON(eog golem)
-L:o:MON(olog)
-L:x:DEEP_WATER:MON(sea troll)
-L:R:MON(revenant)
-L:m:FLOOR(ROOM | ICKY):MON(raal's tome)
-L:d:MON(time bomb)
-L:O:MON(mummified troll)
+L:A:MON(fallen angel)
 L:C:MON(crypt thing)
+L:d:MON(time bomb)
+L:E:MON(enchantress)
+L:g:MON(mithril golem)
+L:G:MON(eog golem)
 L:H:MON(death knight)
+L:I:MON(iron lich)
+L:K:MON(death drake)
 L:l:MON(monastic lich)
 L:L:MON(vampire lord)
-L:t:MON(lesser titan)
-L:E:MON(enchantress)
-L:S:MON(sorcerer)
-L:K:MON(death drake)
+L:m:FLOOR(ROOM | ICKY):MON(raal's tome)
+L:M:MON(greater mummy)
 L:N:MON(ancient red dragon)
-L:A:MON(fallen angel)
-L:I:MON(iron lich)
+L:o:MON(olog)
+L:O:MON(mummified troll)
+L:P:MON(master vampire)
+L:r:MON(roper)
+L:R:MON(revenant)
+L:S:MON(sorcerer)
+L:t:MON(lesser titan)
+L:w:MON(lesser wall monster)
+L:x:DEEP_WATER:MON(sea troll)
 L:z:MON(dracolich)
 L:Z:MON(greater titan)
+!:SCRAMBLE(l,z,E,S,P,A,C,I,K)
+!:SCRAMBLE(N,t,Z,o,H,O)
 L:5:FLOOR(ROOM | ICKY):MON(*)
 
 ###################################
@@ -105,7 +107,7 @@ D:##%%%..%%%%#mbBym#%%%%%%%..+.......+..............+.................+h#
 D:##%%..%%%%%#%%s%%#%%%%%%...+.G...G.+..............+.................+h#
 D:##%%%..%%%%%%....##%%%.....%%%+++%%%%%%%s%%%%%%.t.+..............Z..%.#
 D:##%%%%..%.........%%N.....%%%%...%%%%%%T.T%%%%%%%%%.................%Y#
-D:##%%%..%%.E........+....%%%%%%.K.%%%###...########%%%..............%%%#
+D:##%%%..%%.E........+....%%%%%%.K.%%####...########%%%..............%%%#
 D:#%o....%%.S........+.N%%%%%%%%+++%%%%%ThThT%%%%%%%%%%%%...........%%%%#
 D:#.....o%%.........%%%%%%%%%%.a...a.%%#################%%%......%%######
 D:#...%%%%###%%.....%%%ThhT%%%...a...s.;|;|;;;;%%%%%%%%%%%%%%%%s%%%#,,,5#
@@ -114,4 +116,3 @@ D:#....s.TTT%.r.%...%H......H%..a.a..%#5,,,#,,,,,,,,#5,,#,,,########,,,,#
 D:#%l..%%%%%%...%%s%%........%%%%s%%%%##,,,U,,,#,,,,#,,,#,,,,,,,,,,,,,,,#
 D:#%%...................%%.........%%%#5,,,#,,,#5,,,,,,,U,,,#5,,#,,,#,,5#
 D:#######################################################################
-
