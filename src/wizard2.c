@@ -1773,12 +1773,22 @@ void do_cmd_debug(void)
         do_cmd_redraw();
         break;
     }
-    case '_':
+    case '_': {
         init_flags = INIT_DEBUG;
+        process_dungeon_file("q_cloning_pits.txt", 0, 0, 0, 0);
+        /*
+        process_dungeon_file("t_lite.txt", 0, 0, 0, 0);
+        process_dungeon_file("qdarkelf.txt", 0, 0, 0, 0);
+        process_dungeon_file("q_thieves.txt", 0, 0, 0, 0);
+        process_dungeon_file("q_doom1.txt", 0, 0, 0, 0);
+        process_dungeon_file("q_orcs.txt", 0, 0, 0, 0);
+        process_dungeon_file("q_barrow.txt", 0, 0, 0, 0);
+        process_dungeon_file("q_thieves.txt", 0, 0, 0, 0);
         process_dungeon_file("q_vault.txt", 0, 0, 0, 0);
         process_dungeon_file("q_cloning_pits.txt", 0, 0, 0, 0);
         process_dungeon_file("q_old_castle.txt", 0, 0, 0, 0);
-        break;
+        */
+        break; }
     default:
         msg_print("That is not a valid debug command.");
         break;

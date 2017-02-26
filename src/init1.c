@@ -4888,6 +4888,21 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                 return PARSE_ERROR_GENERIC;
             }
             vec_push(_room->map, z_string_make(s));
+            if ((init_flags & INIT_DEBUG) && _room->type != ROOM_TOWN)
+            {
+                cptr t = s;
+                while (*t)
+                {
+                    char letter = *t;
+                    room_grid_ptr grid = int_map_find(_room->letters, letter);
+                    if (!grid && !((_room->flags & ROOM_THEME_FORMATION) && '1' <= letter && letter <= '9'))
+                    {
+                        msg_format("<color:v>Error</color>: Map uses undefined letter <color:B>%c</color>.", letter);
+                        return PARSE_ERROR_GENERIC;
+                    }
+                    t++;
+                }
+            }
         }
         return 0;
     }
@@ -5705,6 +5720,98 @@ static void _build_dungeon(const room_ptr room, rect_t r, int transno)
     );
 }
 
+static void _display_room(room_ptr room)
+{
+    int which = 0, x, y, cmd;
+    int animate = 0;
+    bool random = TRUE;
+
+    msg_line_clear();
+    for (;;)
+    {
+        transform_ptr xform;
+
+        if (random)
+            xform = transform_alloc_random(rect(0, 0, room->width, room->height));
+        else
+            xform = transform_alloc(which, rect(0, 0, room->width, room->height));
+
+        if (xform->dest.cx < Term->wid)
+            xform->dest = rect_translate(xform->dest, (Term->wid - xform->dest.cx)/2, 0);
+
+        if (xform->dest.cy < Term->hgt)
+            xform->dest = rect_translate(xform->dest, 0, (Term->hgt - xform->dest.cy)/2);
+
+        Term_clear();
+        for (y = 0; y < room->height; y++)
+        {
+            cptr line = vec_get(room->map, y);
+            for (x = 0; x < room->width; x++)
+            {
+                char letter = line[x];
+                point_t p = transform_point(xform, point(x,y));
+                if (0 <= p.x && p.x < Term->wid && 0 <= p.y && p.y < Term->hgt)
+                {
+                    room_grid_ptr grid = int_map_find(room->letters, letter);
+                    int           r_idx = 0, k_idx = 0;
+                    byte          a = TERM_WHITE;
+                    char          c = letter;
+
+                    if (grid && grid->scramble)
+                        grid = int_map_find(room->letters, grid->scramble);
+
+                    if (grid && grid->monster)
+                    {
+                        if (!(grid->flags & (ROOM_GRID_MON_CHAR |
+                                ROOM_GRID_MON_RANDOM | ROOM_GRID_MON_TYPE)))
+                        {
+                            r_idx = grid->monster;
+                        }
+                    }
+                    if (grid && grid->object)
+                    {
+                        if (!(grid->flags & (ROOM_GRID_OBJ_TYPE |
+                                ROOM_GRID_OBJ_ARTIFACT | ROOM_GRID_OBJ_RANDOM)))
+                        {
+                            k_idx = grid->object;
+                        }
+                    }
+                    if (r_idx)
+                    {
+                        monster_race *r_ptr = &r_info[r_idx];
+                        a = r_ptr->x_attr;
+                        c = r_ptr->x_char;
+                    }
+                    else if (k_idx)
+                    {
+                        object_kind *k_ptr = &k_info[k_idx];
+                        a = k_ptr->x_attr;
+                        c = k_ptr->x_char;
+                    }
+                    else if (grid)
+                    {
+                        feature_type *f_ptr = &f_info[grid->cave_feat ? grid->cave_feat : feat_floor];
+                        if (f_ptr->mimic) f_ptr = &f_info[f_ptr->mimic];
+                        a = f_ptr->x_attr[F_LIT_STANDARD];
+                        c = f_ptr->x_char[F_LIT_STANDARD];
+                    }
+                    Term_putch(p.x, p.y, a, c);
+                }
+            }
+            if (animate)
+            {
+                Term_fresh();
+                Term_xtra(TERM_XTRA_DELAY, animate);
+            }
+        }
+        transform_free(xform);
+        cmd = inkey_special(FALSE);
+        if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q' || cmd == '\r') break;
+        if ('0' <= cmd && cmd < '8') which = cmd - '0';
+    }
+    do_cmd_redraw();
+}
+
 errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
 {
     FILE *fp;
@@ -5735,6 +5842,12 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
     {
         assert(!_room);
         _room = room_alloc("Temp");
+        if (init_flags & INIT_DEBUG)
+        {
+            msg_boundary();
+            cmsg_print(TERM_RED, "=====================================================");
+            msg_boundary();
+        }
     }
 
     /* Process the file */
@@ -5841,6 +5954,8 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
             /* TODO: Wilderness scrolling ... Yuk! */
             _build_dungeon(_room, rect(0, 0, cx, cy), transno);
         }
+        else if (init_flags & INIT_DEBUG)
+            _display_room(_room);
         room_free(_room);
         _room = NULL;
     }

@@ -1,4 +1,6 @@
-#include "rect.h"
+#include "angband.h"
+
+#include <assert.h>
 
 point_t point(int x, int y)
 {
@@ -115,3 +117,82 @@ int rect_area(rect_t r)
     return result;
 }
 
+/************************************************************************
+ * Coordinate Transforms
+ ***********************************************************************/
+transform_ptr transform_alloc(int which, rect_t src)
+{
+    transform_ptr result = malloc(sizeof(transform_t));
+
+    /* avoid SIGSEGV */
+    if (src.cx > MAX_HGT - 2)
+        which &= ~01;
+
+    result->which = which;
+    result->src = src;
+    if (which & 01) /* odd number of rotations: (w,h) -> (h,w) */
+        result->dest = rect(0, 0, src.cy, src.cx);
+    else
+        result->dest = rect(0, 0, src.cx, src.cy);
+
+    /* force symmetry wrt center ... hmmm ... */
+    if (which)
+    {
+        if (result->dest.cx % 2 == 0) result->dest.cx++;
+        if (result->dest.cy % 2 == 0) result->dest.cy++;
+    }
+    return result;
+}
+transform_ptr transform_alloc_random(rect_t src)
+{
+    int which = 0;
+    /* how many rotations? (0 .. 3) */
+    if (one_in_(2) && src.cx <= MAX_HGT - 2 && src.cy*100/src.cx > 70 )
+        which |= 01;
+    if (one_in_(2))
+        which |= 02;
+    /* how many flips? (0 .. 1) */
+    if (one_in_(2))
+        which |= 04;
+    return transform_alloc(which, src);
+}
+
+point_t transform_point(transform_ptr xform, point_t p)
+{
+    int x,y,i;
+    point_t src_center = rect_center(xform->src);
+    point_t dest_center = rect_center(xform->dest);
+    point_t result = {0};
+
+    assert(rect_contains_pt(xform->src, p.x, p.y));
+
+    /* convert from screen mapping mode to a center of src rect 
+     * coordinate system, inverting the sense of the y-axis */
+    x = p.x - src_center.x;
+    y = src_center.y - p.y;
+
+    /* transform by
+     * [1] rotating counter clockwise: (x,y) -> (-y,x) */
+    for (i = 0; i < (xform->which & 03); i++)
+    {
+        int tmp = x;
+        x = -y;
+        y = tmp;
+    }
+    /* [2] flipping: (x,y) -> (-x,y) */
+    if (xform->which & 04)
+        x = -x;
+
+    /* convert to destination rect using screen mapping coordinates
+     * suitable for cave[y][x] access. */
+    result.x = dest_center.x + x;
+    result.y = dest_center.y - y;
+
+    assert(rect_contains_pt(xform->dest, result.x, result.y));
+    return result;
+}
+
+void transform_free(transform_ptr x)
+{
+    if (x) free(x);
+}

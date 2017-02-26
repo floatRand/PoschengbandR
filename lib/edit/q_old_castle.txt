@@ -60,6 +60,7 @@ L:%:GRANITE(ROOM)
 L:.:FLOOR(ROOM)
 L:~:DEEP_WATER
 L:+:CLOSED_DOOR(ROOM)
+L:<:UP_STAIR
 L:,:FLOOR(ROOM | ICKY)
 L:]:RUBBLE(ROOM | ICKY)
 L:s:GRANITE(ROOM):SECRET(CLOSED_DOOR)
@@ -86,6 +87,7 @@ L:h:OBJ(*)
 L:q:FLOOR(ROOM | ICKY):OBJ(*)
 L:j:OBJ(*, DEPTH+7)
 L:Q:FLOOR(ROOM | ICKY):OBJ(*, DEPTH+7)
+L:T:FLOOR(ROOM):OBJ(*)
 
 # Dungeon layout
 D:#######################################################################

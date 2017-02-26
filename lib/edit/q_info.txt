@@ -75,7 +75,7 @@
 
 # Doom Quest 1
 ?:[EQU $QUEST_NUMBER 19]
-%:q0000019.txt
+%:q_doom1.txt
 
 # Vapor Quest
 ?:[EQU $QUEST_NUMBER 20]
