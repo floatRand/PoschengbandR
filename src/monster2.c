@@ -3239,6 +3239,9 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
     /* Paranoia */
     if (!r_idx) return 0;
 
+    /* Sanity */
+    if (pack_idx && pack_info_list[pack_idx].count > 40) return 0;
+
     /* Paranoia */
     if (!r_ptr->name) return 0;
 

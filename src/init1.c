@@ -5748,31 +5748,29 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
         assert(_room);
         if (vec_length(_room->map) && (init_flags & INIT_CREATE_DUNGEON))
         {
-            /*Coordinate transforms (TODO: This code needs a rewrite, IMO)*/
+            /* Coordinate transforms (TODO: This code needs a rewrite, IMO)
+             * The dihedral group D4 has 8 possibilities, and they are encoded
+             * in the low 3 bits of transno. bit 3 gives 's' while the other
+             * 2 give the power of 'r' (D4 = <r,s|r^4 = 1>) */
             if (!(_room->flags & ROOM_NO_ROTATE))
             {
-                int n = randint0(100);
-                if (n < 45)
-                    transno = 0;
-                else if (n < 90)
-                    transno = 2;
-                else if (n < 95)
+                /* an odd number of rotations will interchange width and height
+                 * don't do this often and be careful that the quest is not
+                 * too wide for the rather low MAX_HGT (66) */
+                if (one_in_(20) && _room->width <= MAX_HGT - 2)
                 {
                     int temp = cx;
-                    transno = 1;
                     cx = cy;
                     cy = temp;
+                    transno |= 01;
                 }
-                else
-                {
-                    int temp = cx;
-                    transno = 3;
-                    cx = cy;
-                    cy = temp;
-                }
-
                 if (one_in_(2))
-                    transno |= 0x04;
+                    transno |= 02;
+                if (one_in_(2)) /* flip */
+                    transno |= 04;
+
+                assert(cx <= MAX_WID);
+                assert(cy <= MAX_HGT);
             }
 
             /* TODO: Wilderness scrolling ... Yuk! */

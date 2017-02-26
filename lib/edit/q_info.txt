@@ -87,7 +87,7 @@
 
 # Orc Camp
 ?:[EQU $QUEST_NUMBER 22]
-%:q0000022.txt
+%:q_orcs.txt
 
 # Spawning Pits
 ?:[EQU $QUEST_NUMBER 23]

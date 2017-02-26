@@ -732,35 +732,28 @@ L:b:BUILDING_1(GLOW, 0)
 ############### Quest Chain 2 #########################
 ############### Quest 22 - Orc Camp ###################
 
-# Quest 22 untaken
-?:[EQU $QUEST22 0]
-F:a:BUILDING_0:3:0:0:0:0:NONE:22
+?:[EQU $QUEST22 Untaken]
+L:a:BUILDING_0(GLOW, 22)
 
-# Quest 22 assigned, entrance is quest entrance
-?:[EQU $QUEST22 1]
-F:v:QUEST_ENTER:3:0:0:0:0:NONE:22
-F:a:BUILDING_0:3:0:0:0:0:NONE:22
+?:[EQU $QUEST22 Taken]
+L:a:BUILDING_0(GLOW, 22)
+L:v:QUEST_ENTER(MARK | GLOW, 22)
 
-# Quest 22 completed
-?:[EQU $QUEST22 2]
-F:a:BUILDING_0:3:0:0:0:0:NONE:22
+?:[EQU $QUEST22 Completed]
+L:a:BUILDING_0(GLOW, 22)
 
-# Quest 22 rewarding, reward is Cloak of Stealth, continue with quest 19
-?:[EQU $QUEST22 3]
-F:a:BUILDING_0:3:0:0:0:0:NONE:19
-F:?:FLOOR:3:0:123:54
+?:[EQU $QUEST22 Rewarded]
+L:a:BUILDING_0(GLOW, 19)
+L:?:OBJ(CLOAK, DEPTH+15):EGO(of stealth)
 
-# Quest 22 finished, continue with quest 19
-?:[EQU $QUEST22 4]
-F:a:BUILDING_0:3:0:0:0:0:NONE:19
+?:[EQU $QUEST22 Finished]
+L:a:BUILDING_0(GLOW, 19)
 
-# Quest 22 failed
-?:[EQU $QUEST22 5]
-F:a:BUILDING_0:3:0:0:0:0:NONE:22
+?:[EQU $QUEST22 Failed]
+L:a:BUILDING_0(GLOW, 22)
 
-# Quest 22 failed
-?:[EQU $QUEST22 6]
-F:a:BUILDING_0:3
+?:[EQU $QUEST22 FailedDone]
+L:a:BUILDING_0(GLOW, 0)
 
 ?:1
 

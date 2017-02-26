@@ -27,7 +27,7 @@ Q:5:T:for now.  I must inform the village of your failure.  Come back later
 Q:5:T:after we have had time to grieve.
 ?:1
 
-T:QUEST:NORMAL:NO_ROTATE
+T:QUEST:NORMAL
 ##################################
 # Terrain
 L:;:RUBBLE(ROOM)

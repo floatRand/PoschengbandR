@@ -20,7 +20,7 @@ Q:27:T:Impressive!! Your reward is waiting for you outside.
 Q:1:T:It seems like this task was too difficult for you.
 ?:1
 
-T:QUEST:NORMAL:NO_ROTATE
+T:QUEST:NORMAL
 ###################################
 # The Monsters
 L:r:MON(roper)
