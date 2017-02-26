@@ -120,6 +120,24 @@ int rect_area(rect_t r)
 /************************************************************************
  * Coordinate Transforms
  ***********************************************************************/
+point_t _transform(point_t p, int which)
+{
+    int i;
+    /* transform by
+     * [1] rotating counter clockwise: (x,y) -> (-y,x) */
+    for (i = 0; i < (which & 03); i++)
+    {
+        int tmp = p.x;
+        p.x = -p.y;
+        p.y = tmp;
+    }
+    /* [2] flipping: (x,y) -> (-x,y) */
+    if (which & 04)
+        p.x = -p.x;
+
+    return p;
+}
+
 transform_ptr transform_alloc(int which, rect_t src)
 {
     transform_ptr result = malloc(sizeof(transform_t));
@@ -135,12 +153,16 @@ transform_ptr transform_alloc(int which, rect_t src)
     else
         result->dest = rect(0, 0, src.cx, src.cy);
 
-    /* force symmetry wrt center ... hmmm ... */
-    if (which)
-    {
-        if (result->dest.cx % 2 == 0) result->dest.cx++;
-        if (result->dest.cy % 2 == 0) result->dest.cy++;
-    }
+    /* rotating around the center is conceptually cleaner, but has
+     * issues with rounding (ie the center might not be symmetric).
+     * instead, we rotate around the top left and translate to patch
+     * things up (with fudge) */
+    result->fudge = _transform(point(src.cx - 1, src.cy - 1), which);
+    if (result->fudge.x > 0) result->fudge.x = 0;
+    else result->fudge.x = -result->fudge.x;
+    if (result->fudge.y > 0) result->fudge.y = 0;
+    else result->fudge.y = -result->fudge.y;
+
     return result;
 }
 transform_ptr transform_alloc_random(rect_t src)
@@ -159,37 +181,13 @@ transform_ptr transform_alloc_random(rect_t src)
 
 point_t transform_point(transform_ptr xform, point_t p)
 {
-    int x,y,i;
-    point_t src_center = rect_center(xform->src);
-    point_t dest_center = rect_center(xform->dest);
-    point_t result = {0};
-
     assert(rect_contains_pt(xform->src, p.x, p.y));
-
-    /* convert from screen mapping mode to a center of src rect 
-     * coordinate system, inverting the sense of the y-axis */
-    x = p.x - src_center.x;
-    y = src_center.y - p.y;
-
-    /* transform by
-     * [1] rotating counter clockwise: (x,y) -> (-y,x) */
-    for (i = 0; i < (xform->which & 03); i++)
-    {
-        int tmp = x;
-        x = -y;
-        y = tmp;
-    }
-    /* [2] flipping: (x,y) -> (-x,y) */
-    if (xform->which & 04)
-        x = -x;
-
-    /* convert to destination rect using screen mapping coordinates
-     * suitable for cave[y][x] access. */
-    result.x = dest_center.x + x;
-    result.y = dest_center.y - y;
-
-    assert(rect_contains_pt(xform->dest, result.x, result.y));
-    return result;
+    p = point_subtract(p, rect_topleft(xform->src));
+    p = _transform(p, xform->which);
+    p = point_add(p, xform->fudge);
+    p = point_add(p, rect_topleft(xform->dest));
+    assert(rect_contains_pt(xform->dest, p.x, p.y));
+    return p;
 }
 
 void transform_free(transform_ptr x)

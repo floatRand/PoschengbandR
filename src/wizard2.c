@@ -1775,7 +1775,7 @@ void do_cmd_debug(void)
     }
     case '_': {
         init_flags = INIT_DEBUG;
-        process_dungeon_file("q_cloning_pits.txt", 0, 0, 0, 0);
+        process_dungeon_file("q_doom1.txt", 0, 0, 0, 0);
         /*
         process_dungeon_file("t_lite.txt", 0, 0, 0, 0);
         process_dungeon_file("qdarkelf.txt", 0, 0, 0, 0);

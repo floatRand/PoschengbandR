@@ -35,9 +35,10 @@ extern int     rect_area(rect_t r);
 /* Coodinate transforms are a bijection from points in a src rect to points in dest rect */
 struct transform_s
 {
-    int    which;
-    rect_t src;
-    rect_t dest;
+    int     which;
+    rect_t  src;
+    rect_t  dest;
+    point_t fudge;
 };
 typedef struct transform_s transform_t, *transform_ptr;
 
