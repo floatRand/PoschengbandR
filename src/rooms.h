@@ -158,6 +158,7 @@ struct room_grid_s
     u32b flags;
 
     byte letter;
+    byte scramble; /* useful in randomizing quests (e.g. Vault and Cloning Pits) */
     byte monster_level;
     byte object_level;
     byte trap_pct;

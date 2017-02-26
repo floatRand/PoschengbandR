@@ -1775,10 +1775,8 @@ void do_cmd_debug(void)
     }
     case '_':
         init_flags = INIT_DEBUG;
-        process_dungeon_file("t_lite.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_barrow.txt", 0, 0, 0, 0);
+        process_dungeon_file("q_vault.txt", 0, 0, 0, 0);
         process_dungeon_file("q_cloning_pits.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_old_castle.txt", 0, 0, 0, 0);
         break;
     default:
         msg_print("That is not a valid debug command.");

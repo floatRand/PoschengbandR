@@ -35,30 +35,11 @@ L:5:FLOOR(ROOM | ICKY):MON(*, DEPTH+7)
 L:9:FLOOR(ROOM):OBJ(*, DEPTH+7):MON(*, DEPTH+9)
 L:*:FLOOR(ROOM):TRAP(*, 25):OBJ(*)
 
-#Note: The dungeon is not symmetric, so a clever player could figure out
-#where Sting was even with rotation of the room.
-
-?:[EQU [MOD $RANDOM4 4] 0]
 L:a:ART(sting)
 L:b:OBJ(SWORD, small sword, DEPTH+5)
 L:c:OBJ(SWORD, small sword, DEPTH+5)
 L:d:OBJ(SWORD, small sword, DEPTH+5)
-?:[EQU [MOD $RANDOM4 4] 1]
-L:b:ART(sting)
-L:c:OBJ(SWORD, small sword, DEPTH+5)
-L:d:OBJ(SWORD, small sword, DEPTH+5)
-L:a:OBJ(SWORD, small sword, DEPTH+5)
-?:[EQU [MOD $RANDOM4 4] 2]
-L:c:ART(sting)
-L:d:OBJ(SWORD, small sword, DEPTH+5)
-L:a:OBJ(SWORD, small sword, DEPTH+5)
-L:b:OBJ(SWORD, small sword, DEPTH+5)
-?:[EQU [MOD $RANDOM4 4] 3]
-L:d:ART(sting)
-L:a:OBJ(SWORD, small sword, DEPTH+5)
-L:b:OBJ(SWORD, small sword, DEPTH+5)
-L:c:OBJ(SWORD, small sword, DEPTH+5)
-?:1
+!:SCRAMBLE(a,b,c,d)
 
 # Dungeon
 D:#####################################################

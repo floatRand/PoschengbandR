@@ -4803,6 +4803,71 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
         }
         return 0;
     }
+    /* !:SCRAMBLE(a,b,c,d) */
+    else if (buf[0] == '!')
+    {
+        char *command = buf + 2;
+        char *name;
+        char *args[10];
+        int   arg_ct = parse_args(command, &name, args, 10);
+
+        if (!_room) return 0;
+        if (arg_ct < 0)
+        {
+            msg_format("Error: Malformed argument %s. Missing )?", name);
+            return PARSE_ERROR_GENERIC;
+        }
+
+        if (streq(name, "SCRAMBLE"))
+        {
+            const int max_scramble = 20;
+            char letters[max_scramble], scrambles[max_scramble];
+            int  i;
+            if (arg_ct > max_scramble)
+            {
+                msg_format("I can only scramble %d letters.", max_scramble);
+                return PARSE_ERROR_GENERIC;
+            }
+            for (i = 0; i < arg_ct; i++)
+            {
+                letters[i] = args[i][0];
+                scrambles[i] = letters[i];
+            }
+            for (i = 0; i < arg_ct; i++) /* XXX I just made this up ... any good? */
+            {                            /* Symmetries of n letters are a product of transpositions ... */
+                int j = randint0(arg_ct);
+                char t = scrambles[i];
+                scrambles[i] = scrambles[j];
+                scrambles[j] = t;
+            }
+            for (i = 0; i < arg_ct; i++)
+            {
+                char letter = letters[i];
+                char scramble = scrambles[i];
+                room_grid_ptr grid = int_map_find(_room->letters, letter);
+                if (!grid)
+                {
+                    msg_format("Error: Undefined letter: %c", letter);
+                    return PARSE_ERROR_GENERIC;
+                }
+                grid->scramble = scramble; /* cf _find_room_grid (rooms.c) */
+                grid = int_map_find(_room->letters, scramble);
+                if (!grid)
+                {
+                    msg_format("Error: Undefined scramble: %c", scramble);
+                    return PARSE_ERROR_GENERIC;
+                }
+                if (init_flags & INIT_DEBUG)
+                    msg_format("Scrambled <color:R>%c</color> to <color:B>%c</color>.", letter, scramble);
+            }
+        }
+        else
+        {
+            msg_format("Error: Unknown directive: %s", name);
+            return PARSE_ERROR_GENERIC;
+        }
+        return 0;
+    }
     else if (buf[0] == 'D')
     {
         if (_room)
@@ -5713,7 +5778,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
         if (!(init_flags & INIT_DEBUG) && bypass) continue;
 
         /* Process the line */
-        if ((init_flags & INIT_DEBUG) && buf[0] == 'L')
+        if ((init_flags & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == '!'))
         {
             msg_boundary();
             msg_format("<color:R>%s</color>:<color:y>%d</color> %s", name, num, buf);

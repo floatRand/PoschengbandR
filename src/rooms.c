@@ -1541,7 +1541,13 @@ void coord_trans(int *x, int *y, int xoffset, int yoffset, int transno)
 
 static room_grid_ptr _find_room_grid(room_ptr room, char letter)
 {
-    return int_map_find(room->letters, letter);
+    room_grid_ptr grid1 = int_map_find(room->letters, letter);
+    if (grid1 && grid1->scramble)
+    {
+        room_grid_ptr grid2 = int_map_find(room->letters, grid1->scramble);
+        if (grid2) return grid2;
+    }
+    return grid1;
 }
 
 static bool _obj_kind_is_good = FALSE;
