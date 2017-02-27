@@ -781,43 +781,34 @@ L:a:BUILDING_0(GLOW, 0)
 
 ?:1
 
-############### Quest 29 - Thieves Quest 1 ###############
+############### Quest 29 - Tengu and Death Swords ###############
 
-# Quest 29 taken, entrance is quest entrance
-?:[EQU $QUEST29 1]
-F:y:QUEST_ENTER:3:0:0:0:0:NONE:29
-F:a:BUILDING_0:3:0:0:0:0:NONE:29
+?:[EQU $QUEST29 Taken]
+L:y:QUEST_ENTER(GLOW | MARK, 29)
+L:a:BUILDING_0(GLOW, 29)
 
-# Quest 29 completed
-?:[EQU $QUEST29 2]
-F:a:BUILDING_0:3:0:0:0:0:NONE:29
+?:[EQU $QUEST29 Completed]
+L:a:BUILDING_0(GLOW, 29)
 
-# Quest 29 rewarding, reward is Ring of Protection
-# continue with quest 30
-?:[EQU $QUEST29 3]
-F:a:BUILDING_0:3:0:0:0:0:NONE:30
-F:?:FLOOR:3:0:132:205
+?:[EQU $QUEST29 Rewarded]
+L:a:BUILDING_0(GLOW, 30)
+L:?:OBJ(RING, DEPTH+25):EGO(protection)
 
-# Dagger of Westernesse
-?:[AND [EQU $QUEST29 3] [EQU $RACE Death-Sword] ]
-F:a:BUILDING_0:3:0:0:0:0:NONE:30
-F:!:FLOOR:3:0:43:19
+?:[AND [EQU $QUEST29 Rewaded] [EQU $RACE Death-Sword] ]
+L:?:OBJ(SWORD, dagger, DEPTH+25):EGO(westernesse)
 
-# Quest 29 finished, continue with quest 30
-?:[EQU $QUEST29 4]
-F:a:BUILDING_0:3:0:0:0:0:NONE:30
+?:[EQU $QUEST29 Finished]
+L:a:BUILDING_0(GLOW, 30)
 
-# Quest 29 failed, wait for the player to enter the Thieves Guild
-?:[EQU $QUEST29 5]
-F:a:BUILDING_0:3:0:0:0:0:NONE:29
+?:[EQU $QUEST29 Failed]
+L:a:BUILDING_0(GLOW, 29)
 
-# Quest 29 failed
-?:[EQU $QUEST29 6]
-F:a:BUILDING_0:3
+?:[EQU $QUEST29 FailedDone]
+L:a:BUILDING_0(GLOW, 0)
 
 ?:1
 
-############### Quest 30 - Thieves Quest 2 ###############
+############### Quest 30 - Mimics' Treasure ###############
 
 # Quest 30 taken, entrance is quest entrance
 ?:[EQU $QUEST30 1]

@@ -1918,6 +1918,12 @@ errr parse_room_grid(char *buf, room_grid_ptr grid)
     int   i;
     bool  found_feature = FALSE;
 
+    if (buf[0] == '"')
+    {
+        msg_print("Don't use <color:R>\"</color> for a letter ... z_string_split thinks you are quoting.");
+        return PARSE_ERROR_GENERIC;
+    }
+
     WIPE(grid, room_grid_t);
 
     /* First command is the "letter" for this room grid */
@@ -5841,7 +5847,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
 
     char buf[1024];
 
-    int num = -1;
+    int num = 0;
 
     errr err = 0;
 
