@@ -29,7 +29,7 @@ T:QUEST:NORMAL
 # The Monsters
 L:c:MON("fang, farmer maggot's dog", CLONE)
 L:f:MON(freesia, CLONE)
-L:I:MON(it, CLONE)
+L:I:MON(^it$, CLONE)
 L:R:MON(gachapin, CLONE)
 L:g:MON(ultimate dungeon cleaner, CLONE)
 L:S:MON(bokrug, CLONE | NO_GROUP)
@@ -57,8 +57,8 @@ L:W:DEEP_WATER
 
 ###################################
 # Goodies
-L:!:OBJ(POTION, *healing*)
-L:,:OBJ(FOOD, elvish waybread)
+L:!:OBJ(potion of *healing*)
+L:,:OBJ(elvish waybread)
 
 # Dungeon layout
 D:################################################################################

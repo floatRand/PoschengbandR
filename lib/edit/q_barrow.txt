@@ -46,11 +46,11 @@ L:Z:GRASS:MON(emperor wight)
 
 ##################################
 # Objects
-L:2:GRASS:OBJ(POTION, healing)
+L:2:GRASS:OBJ(potion of healing)
 L:4:GRASS:ART(merry)
 L:9:GRASS:OBJ(*)
 L:8:GRASS:OBJ(*, DEPTH+7)
-L:7:GRASS:OBJ(SWORD, broken):EGO(westernesse)
+L:7:GRASS:OBJ(broken sword):EGO(westernesse)
 
 ##################################
 # Dungeon

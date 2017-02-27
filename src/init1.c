@@ -1213,7 +1213,7 @@ static bool _is_d_char(const char *token)
  * would sadly confuse our parser ...) Also, MON(raal's)
  * rather than MON(raal's tome of destruction) will keep
  * my fingers happy. */
-static void _prep_name(char *dest, const char *src)
+static void _prep_name_aux(char *dest, const char *src)
 {
     char *t;
 
@@ -1231,6 +1231,13 @@ static void _prep_name(char *dest, const char *src)
     }
 
     *t = '\0';
+}
+
+static void _prep_name(char *dest, const char *src)
+{
+    strcpy(dest, "^"); /* OBJ(^dagger) matches ^dagger$ not ^broken dagger$ */
+    _prep_name_aux(dest + strlen(dest), src);
+    strcat(dest, "$"); /* MON(ent$) matches ^ent$ not ^agent of the black market$ */
 }
 
 /* Same order as summon_specific_e in defines.h
@@ -1326,19 +1333,6 @@ static const char *_summon_specific_types[] = {
 static int _lookup_monster(cptr name)
 {
     int i;
-    /* match full name ... */
-    for (i = 1; i < max_r_idx; i++)
-    {
-        monster_race *r_ptr = &r_info[i];
-        if (!r_ptr->name) continue;
-        if (my_stricmp(r_name + r_ptr->name, name) == 0)
-        {
-            if (init_flags & INIT_DEBUG)
-                msg_format("Mapping <color:B>%s</color> to <color:R>%s</color> (%d).", name, r_name + r_ptr->name, i);
-            return i;
-        }
-    }
-    /* ... then look for partial matches. (e.g. MON(ent) should not match 'Agent of black market') */
     for (i = 1; i < max_r_idx; i++)
     {
         monster_race *r_ptr = &r_info[i];
@@ -1348,7 +1342,7 @@ static int _lookup_monster(cptr name)
         if (strstr(buf, name))
         {
             if (init_flags & INIT_DEBUG)
-                msg_format("Mapping <color:B>%s</color> to <color:R>%s</color> (%d).", name, r_name + r_ptr->name, i);
+                msg_format("Mapping <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
             return i;
         }
     }
@@ -1359,7 +1353,8 @@ static int _lookup_monster(cptr name)
    MON(*, DEPTH+40)               Any monster, 40 levels OoD
    MON(ORC, NO_GROUP | HASTE)     A hasted orc loner at current depth
    MON(o, NO_GROUP | HASTE)       Ditto: You can use any valid d_char
-   MON(black knight)              A Black Knight */
+   MON(black knight)              A Black Knight
+   MON(^ent$)                     An Ent (not an Agent of the black market) */
 static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_ptr grid)
 {
     if (arg_ct < 1 || arg_ct > 2)
@@ -1533,17 +1528,6 @@ static _object_type_t _object_types[] =
     { 0, 0 }
 };
 
-static int _parse_obj_type(char *arg)
-{
-    int i;
-    for (i = 0; ; i++)
-    {
-        if (!_object_types[i].name) return 0;
-        if (streq(arg, _object_types[i].name))
-            return _object_types[i].type;
-    }
-}
-
 static int _lookup_ego_type(int object)
 {
     int i;
@@ -1555,149 +1539,145 @@ static int _lookup_ego_type(int object)
     }
 }
 
-static int _lookup_obj_kind(char *arg, int tval)
+static int _lookup_kind(char *arg)
 {
     int i;
-    if (_is_numeric(arg))
-    {
-        int sval = atoi(arg);
-        return lookup_kind(tval, sval);
-    }
     for (i = 1; i < max_k_idx; i++)
     {
         object_kind *k_ptr = &k_info[i];
         char         buf[255];
 
-        if (k_ptr->tval != tval) continue;
-        _prep_name(buf, k_name + k_ptr->name);
-        if (my_stricmp(buf, arg) == 0)
-        {
-            if (init_flags & INIT_DEBUG)
-                msg_format("Mapping kind <color:B>%s</color> to <color:R>%s</color> (%d).", arg, k_name + k_ptr->name, i);
-            return i;
-        }
-    }
-    for (i = 1; i < max_k_idx; i++)
-    {
-        object_kind *k_ptr = &k_info[i];
-        char         buf[255];
+        if (k_ptr->tval == TV_FOOD && k_ptr->sval <= SV_FOOD_MAX_MUSHROOM)
+            strcpy(buf, "^mushroom of ");
+        else if (k_ptr->tval == TV_POTION)
+            strcpy(buf, "^potion of ");
+        else if (k_ptr->tval == TV_SCROLL)
+            strcpy(buf, "^scroll of ");
+        else
+            strcpy(buf, "^");
 
-        if (k_ptr->tval != tval) continue;
-        _prep_name(buf, k_name + k_ptr->name);
+        _prep_name_aux(buf + strlen(buf), k_name + k_ptr->name);
+        strcat(buf, "$");
         if (strstr(buf, arg))
         {
             if (init_flags & INIT_DEBUG)
-                msg_format("Mapping kind <color:B>%s</color> to <color:R>%s</color> (%d).", arg, k_name + k_ptr->name, i);
+                msg_format("Mapping kind <color:B>%s</color> to <color:R>%s</color> (%d).", arg, buf, i);
             return i;
         }
     }
     return 0;
 }
 
-static errr _parse_obj_flags(char *arg, room_grid_ptr grid)
+/* OBJ(WAND_ROCKET)      -> _parse_effect(TV_WAND, "ROCKET")     -> EFFECT_ROCKET
+ * OBJ(STAFF_MANA_STORM) -> _parse_effect(TV_STAFF, "MANA_STORM")-> EFFECT_MANA_STORM */
+static errr _parse_effect(int tval, cptr arg, room_grid_ptr grid)
 {
-    char *flags[10];
-    int   flag_ct = z_string_split(arg, flags, 10, "|");
-    int   i;
-
-    trim_tokens(flags, flag_ct);
-    for (i = 0; i < flag_ct; i++)
+    int effect_id = effect_parse_type(arg);
+    if (!effect_id)
     {
-        char* flag = flags[i];
-        if (strstr(flag, "DEPTH+") == flag)
-        {
-            grid->object_level = atoi(flag + strlen("DEPTH+"));
-        }
-        else
-        {
-            msg_format("Error: Invalid object option %s.", flag);
-            return PARSE_ERROR_GENERIC;
-        }
+        msg_format("Unkown effect: %s", arg);
+        return PARSE_ERROR_GENERIC;
+    }
+    if (!device_is_valid_effect(tval, effect_id))
+    {
+        msg_format("Invalid effect for this device type: %s (%d)", arg, effect_id);
+        return PARSE_ERROR_GENERIC;
+    }
+    grid->object = lookup_kind(tval, SV_ANY);
+    grid->extra = effect_id;
+    grid->flags |= ROOM_GRID_OBJ_EFFECT;
+    if (init_flags & INIT_DEBUG)
+    {
+        char     name[255];
+        effect_t e = {0};
+        e.type = grid->extra;
+        sprintf(name, "%s", do_effect(&e, SPELL_NAME, 0));
+        msg_format("Mapping effect <color:B>%s</color> to <color:R>%s</color> (%d).",
+            arg, name, grid->extra);
     }
     return 0;
 }
 
-/* OBJ(*)                              Any object
-   OBJ(*, DEPTH+7)                     Any object, 7 levels OoD
-   OBJ(POTION, healing)                Potion of Healing
-   OBJ(POTION)                         Any potion
-   OBJ(SWORD, diamond edge, DEPTH+100) A really deep diamond edge
-
-   Note: looking up k_info by text requires the type as well, since
-   the name is often ambiguous. For example, "cure serious wounds" could
-   be a mushroom or a potion. Thus, you need to disambiguate:
-   OBJ(FOOD, cure serious wounds)
-   OBJ(POTION, cure serious wounds) */
+/* OBJ(*)                       Any object
+   OBJ(*, DEPTH+7)              Any object, 7 levels OoD
+   OBJ(potion of healing)       Potion of Healing
+   OBJ(POTION)                  Any potion
+   OBJ(diamond edge, DEPTH+100) A really deep diamond edge
+   OBJ(STAFF_MANA_STORM)        A staff with EFFECT_MANA_STORM
+   OBJ(mushroom of cure serious wounds)
+   OBJ(potion of cure serious wounds)   i.e. you must disambiguate!
+*/
 static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid)
 {
-    if (!arg_ct)
+    switch (arg_ct)
     {
-        msg_print("Error: Invalid OBJ() directive. Syntax: OBJ(<type> [,<subtype>] [,<flags>]).");
-        return PARSE_ERROR_TOO_FEW_ARGUMENTS;
-    }
+    case 2:
+    {
+        char *flags[10];
+        int   flag_ct = z_string_split(args[1], flags, 10, "|");
+        int   i;
 
-    /* OK, the grammar for this directive is highly ambiguous. The first argument
-     * is always the type. If it is a TV_* then the second argument, if present, may
-     * give the SV_* (either numerically or by string lookup). But this is optional.
-     * Meaning flags are either in args[1] or args[2]. */
-    if (streq(args[0], "*"))
-    {
-        grid->flags |= ROOM_GRID_OBJ_RANDOM;
-        if (arg_ct >= 2) return _parse_obj_flags(args[1], grid);
-        return 0;
-    }
-    else
-    {
-        int type = _parse_obj_type(args[0]);
-        int k_idx = 0;
-
-        if (!type)
+        trim_tokens(flags, flag_ct);
+        for (i = 0; i < flag_ct; i++)
         {
-            msg_format("Error: Invalid object %s.", args[0]);
-            return PARSE_ERROR_GENERIC;
-        }
-
-        if (type <= OBJ_TYPE_TVAL_MAX && arg_ct >= 2)
-        {
-            /* Special handling for devices: OBJ(WAND, ROCKET) ... lookup
-             * is set in _effect_info (devices.c) ... "FOO" -> EFFECT_FOO */
-            if (type == TV_WAND || type == TV_STAFF || type == TV_ROD)
+            char* flag = flags[i];
+            if (strstr(flag, "DEPTH+") == flag)
             {
-                int effect_id = effect_parse_type(args[1]);
-                if (effect_id)
+                grid->object_level = atoi(flag + strlen("DEPTH+"));
+            }
+            else
+            {
+                msg_format("Error: Invalid object option %s.", flag);
+                return PARSE_ERROR_GENERIC;
+            }
+        }
+        /* vvvvvvvvvvvvv Fall Through vvvvvvvvvvvvv */
+    }
+    case 1:
+        if (streq(args[0], "*"))
+        {
+            grid->flags |= ROOM_GRID_OBJ_RANDOM;
+        }
+        else
+        {
+            int i;
+            /* OBJ(WAND_ROCKET) ... note: OBJ(WAND) will fall thru to normal type handling */
+            if (prefix(args[0], "WAND_"))
+                return _parse_effect(TV_WAND, args[0] + strlen("WAND_"), grid);
+            if (prefix(args[0], "ROD_"))
+                return _parse_effect(TV_ROD, args[0] + strlen("ROD_"), grid);
+            if (prefix(args[0], "STAFF_"))
+                return _parse_effect(TV_STAFF, args[0] + strlen("STAFF_"), grid);
+            /* OBJ(SWORD) */
+            for (i = 0; ; i++)
+            {
+                if (!_object_types[i].name) break;
+                if (streq(args[0], _object_types[i].name))
                 {
-                    grid->object = lookup_kind(type, SV_ANY);
-                    grid->extra = effect_id;
-                    grid->flags |= ROOM_GRID_OBJ_EFFECT;
-                    if (init_flags & INIT_DEBUG)
-                    {
-                        char     name[255];
-                        effect_t e = {0};
-                        e.type = grid->extra;
-                        sprintf(name, "%s", do_effect(&e, SPELL_NAME, 0));
-                        msg_format("Mapping kind to <color:R>%s</color> (%d).", k_name + k_info[grid->object].name, grid->object);
-                        msg_format("Mapping effect <color:B>%s</color> to <color:R>%s</color> (%d).",
-                            args[1], name, grid->extra);
-                    }
-                    if (arg_ct >= 3) return _parse_obj_flags(args[2], grid);
+                    grid->object = _object_types[i].type;
+                    grid->flags |= ROOM_GRID_OBJ_TYPE;
                     return 0;
                 }
-                /* continue for OBJ(WAND, DEPTH+10) ... */
             }
-            k_idx = _lookup_obj_kind(args[1], type);
+            /* OBJ(^dagger$) */
+            grid->object = _lookup_kind(args[0]);
+            if (!grid->object)
+            {
+                /* OBJ(212) ... whatever that might be?? */
+                grid->object = atoi(args[0]);
+                if (!grid->object)
+                {
+                    msg_format("Invalid object: %s", args[0]);
+                    return PARSE_ERROR_GENERIC;
+                }
+            }
         }
-        if (k_idx)
-        {
-            grid->object = k_idx;
-            if (arg_ct >= 3) return _parse_obj_flags(args[2], grid);
-            return 0;
-        }
-
-        grid->object = type;
-        grid->flags |= ROOM_GRID_OBJ_TYPE;
-        if (arg_ct >= 2) return _parse_obj_flags(args[1], grid);
-        return 0;
+        break;
+    default:
+        msg_print("Error: Invalid OBJ() directive. Syntax: OBJ(<which> [,<flags>]).");
+        return PARSE_ERROR_TOO_FEW_ARGUMENTS;
     }
+    return 0;
 }
 
 static int _lookup_ego(cptr name, int type)
@@ -1779,11 +1759,22 @@ static int _lookup_art(cptr name)
         artifact_type *a_ptr = &a_info[i];
         char           buf[255];
         if (!a_ptr->name) continue;
-        _prep_name(buf, a_name + a_ptr->name);
+        if (have_flag(a_ptr->flags, OF_FULL_NAME))
+            _prep_name(buf, a_name + a_ptr->name);
+        else /* ART(bow of bard) matches "long bow of bard" */
+        {    /* not "black arrow of bard" or "soft leather boots of bard" */
+            int          k_idx = lookup_kind(a_ptr->tval, a_ptr->sval);
+            object_kind *k_ptr = &k_info[k_idx];
+            strcpy(buf, "^");
+            _prep_name_aux(buf + strlen(buf), k_name + k_ptr->name);
+            strcat(buf, " ");
+            _prep_name_aux(buf + strlen(buf), a_name + a_ptr->name);
+            strcat(buf, "$");
+        }
         if (strstr(buf, name))
         {
             if (init_flags & INIT_DEBUG)
-                msg_format("Matching artifact <color:B>%s</color> to <color:R>%s</color> (%d).", name, a_name + a_ptr->name, i);
+                msg_format("Matching artifact <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
             return i;
         }
     }
@@ -2140,8 +2131,16 @@ errr parse_v_info(char *buf)
         }
 
         error_idx = vec_length(room_info);
-        room = room_alloc(zz[0]);
-        vec_push(room_info, room);
+        if (init_flags & INIT_DEBUG)
+        {
+            room_free(room);
+            room = room_alloc(zz[0]);
+        }
+        else
+        {
+            room = room_alloc(zz[0]);
+            vec_push(room_info, room);
+        }
     }
 
     /* There better be a current room */
@@ -5941,6 +5940,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
         oops = (((err > 0) && (err < PARSE_ERROR_MAX)) ? err_str[err] : "unknown");
 
         /* Oops */
+        msg_boundary();
         msg_format("<color:v>Error</color> %d (%s) at line %d of '%s'.", err, oops, num, name);
         msg_format("Parsing '%s'.", buf);
 
@@ -5983,7 +5983,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
             /* TODO: Wilderness scrolling ... Yuk! */
             _build_dungeon(_room, rect(0, 0, cx, cy), transno);
         }
-        else if (vec_length(_room->map) && (init_flags & INIT_DEBUG))
+        else if (vec_length(_room->map) && (init_flags & INIT_DISPLAY_DUNGEON))
             _display_room(_room);
         room_free(_room);
         _room = NULL;

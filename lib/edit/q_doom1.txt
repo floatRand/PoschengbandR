@@ -28,8 +28,8 @@ L:+:CLOSED_DOOR
 L:;:RUBBLE
 L:<:UP_STAIR(ROOM)
 L:$:OBJ(*)
-L:a:MON(manes)
-L:b:MON(imp)
+L:a:MON(^manes$)
+L:b:MON(^imp$)
 L:c:MON(flying skull)
 L:d:MON(arch-vile)
 

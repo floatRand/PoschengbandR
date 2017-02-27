@@ -5,6 +5,10 @@ T:TOWN:NORMAL:NO_ROTATE
 
 ############### Additional default terrain settings ###############
 
+# A test tile for debugging
+L:&:FLOOR
+#L:&:OBJ(ROD_DETECT_ALL)
+
 # Default for reward 1
 L:!:FLOOR
 
@@ -55,7 +59,6 @@ L:N:PERMANENT
 
 
 ############### Quest Chain 1 ###########################
-# 1 -> 32 -> 4 -> 5 -> 33 -> 27
 ############### Quest 1 - Thieves Hideout ###############
 
 ?:[EQU $QUEST1 Untaken]
@@ -70,97 +73,97 @@ L:b:BUILDING_1(GLOW, 1)
 
 ?:[EQU $QUEST1 Rewarded]
 L:b:BUILDING_1(GLOW, 32)
-L:!:FLOOR:OBJ(SWORD, long sword, DEPTH+5)
+L:!:FLOOR:OBJ(long sword, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Beholder Dragon Hound Possessor Spider] ]
 L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(combat)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Hydra] ]
-L:!:FLOOR:OBJ(HELM, steel helm, DEPTH+5)
+L:!:FLOOR:OBJ(steel helm, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Golem] ]
-L:!:FLOOR:OBJ(HELM, steel helm, DEPTH+5)
+L:!:FLOOR:OBJ(steel helm, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Giant] ]
-L:!:FLOOR:OBJ(SWORD, two-handed sword, DEPTH+5)
+L:!:FLOOR:OBJ(two-handed sword, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Lich Quylthulg] ]
 L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(protection)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Duelist] ]
-L:!:FLOOR:OBJ(SWORD, rapier, DEPTH+5)
+L:!:FLOOR:OBJ(rapier, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Rogue] ]
-L:!:FLOOR:OBJ(BOW, sling, DEPTH+5)
+L:!:FLOOR:OBJ(^sling$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archaeologist] ]
-L:!:FLOOR:OBJ(HAFTED, whip, DEPTH+5)
+L:!:FLOOR:OBJ(^whip$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Beastmaster Cavalry] ]
-L:!:FLOOR:OBJ(POLEARM, broad spear, DEPTH+5)
+L:!:FLOOR:OBJ(broad spear, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monk Force-Trainer Mystic] ]
-L:!:FLOOR:OBJ(GLOVES, gauntlets, DEPTH+5)
+L:!:FLOOR:OBJ(gauntlets, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Priest] ]
-L:!:FLOOR:OBJ(HAFTED, war hammer, DEPTH+5)
+L:!:FLOOR:OBJ(war hammer, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archer] ]
-L:!:FLOOR:OBJ(BOW, short bow, DEPTH+5)
+L:!:FLOOR:OBJ(short bow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponsmith] ]
-L:!:FLOOR:OBJ(POLEARM, broad axe, DEPTH+5)
+L:!:FLOOR:OBJ(broad axe, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
 L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(protection)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Ninja] ]
-L:!:FLOOR:OBJ(SWORD, dagger, DEPTH+5)
+L:!:FLOOR:OBJ(^dagger$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Sniper] ]
-L:!:FLOOR:OBJ(BOW, light crossbow, DEPTH+5)
+L:!:FLOOR:OBJ(light crossbow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mauler] ]
-L:!:FLOOR:OBJ(HAFTED, two-handed flail, DEPTH+5)
+L:!:FLOOR:OBJ(two-handed flail, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
-L:!:FLOOR:OBJ(POLEARM, broad axe, DEPTH+5)
+L:!:FLOOR:OBJ(broad axe, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
-L:!:FLOOR:OBJ(BOW, short bow, DEPTH+5)
+L:!:FLOOR:OBJ(short bow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-L:!:FLOOR:OBJ(HAFTED, war hammer, DEPTH+5)
+L:!:FLOOR:OBJ(war hammer, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
-L:!:FLOOR:OBJ(BOW, light crossbow, DEPTH+5)
+L:!:FLOOR:OBJ(light crossbow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
-L:!:FLOOR:OBJ(SWORD, dagger, DEPTH+5)
+L:!:FLOOR:OBJ(^dagger$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
-L:!:FLOOR:OBJ(DIGGING, pick, DEPTH+5)
+L:!:FLOOR:OBJ(^pick$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
-L:!:FLOOR:OBJ(POLEARM, pike, DEPTH+5)
+L:!:FLOOR:OBJ(^pike$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
-L:!:FLOOR:OBJ(SHIELD, small leather shield, DEPTH+5)
+L:!:FLOOR:OBJ(small leather shield, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
-L:!:FLOOR:OBJ(BOW, sling, DEPTH+5)
+L:!:FLOOR:OBJ(^sling$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
-L:!:FLOOR:OBJ(HAFTED, quarterstaff, DEPTH+5)
+L:!:FLOOR:OBJ(quarterstaff, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
-L:!:FLOOR:OBJ(SWORD, long sword, DEPTH+5)
+L:!:FLOOR:OBJ(long sword, DEPTH+5)
 
 ?:[EQU $QUEST1 Finished]
 L:b:BUILDING_1(GLOW, 32)
 
 ?:[EQU $QUEST1 Failed]
-L:b:BUILDING_1(GLOW, 32)
+L:b:BUILDING_1(GLOW, 1)
 
 ?:[EQU $QUEST1 FailedDone]
 L:b:BUILDING_1(GLOW, 0)
@@ -248,9 +251,8 @@ L:b:BUILDING_1(GLOW, 33)
 ?:[EQU $QUEST33 Rewarded]
 L:b:BUILDING_1(GLOW, 27)
 
-# Shiva's Avatar (name is duplicated so use a_idx)
 ?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 0] ]
-L:!:FLOOR(ROOM):ART(63)
+L:!:FLOOR(ROOM):ART(boots of shiva's avatar)
 
 ?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 1] ]
 L:!:FLOOR(ROOM):ART(thror)
@@ -261,9 +263,8 @@ L:!:FLOOR(ROOM):ART(stomper)
 ?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 3] ]
 L:!:FLOOR(ROOM):ART(aragorn)
 
-# Bard (name is duplicated ... sigh)
 ?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 4] ]
-L:!:FLOOR(ROOM):ART(276)
+L:!:FLOOR(ROOM):ART(boots of the bard)
 
 # Flora
 ?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 5] ]
@@ -343,9 +344,8 @@ L:!:ART(tulkas)
 
 ##########################################################################
 # Centipede
-# Shiva's Avatar
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Centipede] [EQU [MOD $RANDOM27 5] 0] ]
-L:!:ART(63)
+L:!:ART(boots of shiva's avatar)
 
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $RACE Centipede] [GEQ [MOD $RANDOM27 5] 1] ]
 L:!:ART(stone of war)
@@ -418,10 +418,10 @@ L:!:ART(benkei)
 ##########################################################################
 # Weaponsmith
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponsmith] [EQU [MOD $RANDOM27 5] 0] ]
-L:!:OBJ(DRAG_ARMOR, balance)
+L:!:OBJ(balance dragon scale mail)
 
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponsmith] [GEQ [MOD $RANDOM27 5] 1] ]
-L:!:OBJ(DRAG_ARMOR, multi-hued)
+L:!:OBJ(multi-hued dragon scale mail)
 
 ##########################################################################
 # Tourist
@@ -433,9 +433,8 @@ L:!:ART(platinum yendorian express card)
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Archer] [EQU [MOD $RANDOM27 5] 0] ]
 L:!:ART(brand)
 
-# Bard (Bow rather than Boots or Arrow ... all 3 named the same)
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Archer] [GEQ [MOD $RANDOM27 5] 1] ]
-L:!:ART(125)
+L:!:ART(bow of bard)
 
 ##########################################################################
 # Ranger
@@ -489,13 +488,13 @@ L:!:ART(crisdurian)
 # Devicemaster
 
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Wands] ]
-L:!:OBJ(WAND, ROCKET)
+L:!:OBJ(WAND_ROCKET)
 
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Staves] ]
-L:!:OBJ(STAFF, MANA_STORM)
+L:!:OBJ(STAFF_MANA_STORM)
 
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Devicemaster] [EQU $SPECIALITY Rods] ]
-L:!:OBJ(ROD, BALL_MANA)
+L:!:OBJ(ROD_BALL_MANA)
 
 ##########################################################################
 # Weaponmaster
@@ -506,9 +505,8 @@ L:!:ART(hurin)
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] [GEQ [MOD $RANDOM27 5] 1] ]
 L:!:ART(balli stonehand)
 
-# Bard
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] [EQU [MOD $RANDOM27 5] 0] ]
-L:!:ART(125)
+L:!:ART(bow of bard)
 
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] [GEQ [MOD $RANDOM27 5] 1] ]
 L:!:ART(yoichi)
@@ -522,9 +520,8 @@ L:!:ART(aegis fang)
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] [EQU [MOD $RANDOM27 5] 0] ]
 L:!:ART(brand)
 
-# Wilhelm Tell
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] [GEQ [MOD $RANDOM27 5] 1] ]
-L:!:ART(223)
+L:!:ART(bow of wilhelm tell)
 
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] [EQU [MOD $RANDOM27 5] 0] ]
 L:!:ART(silver chariot)
@@ -697,7 +694,7 @@ L:!:ART(gogo)
 ##########################################################################
 # Necromancer
 ?:[AND [EQU $QUEST27 Rewarded] [EQU $CLASS Necromancer] ]
-L:!:ART(269)
+L:!:ART(eye of vecna)
 
 ##########################################################################
 # Sniper
@@ -794,8 +791,8 @@ L:a:BUILDING_0(GLOW, 29)
 L:a:BUILDING_0(GLOW, 30)
 L:?:OBJ(RING, DEPTH+25):EGO(protection)
 
-?:[AND [EQU $QUEST29 Rewaded] [EQU $RACE Death-Sword] ]
-L:?:OBJ(SWORD, dagger, DEPTH+25):EGO(westernesse)
+?:[AND [EQU $QUEST29 Rewarded] [EQU $RACE Death-Sword] ]
+L:?:OBJ(^dagger$, DEPTH+25):EGO(westernesse)
 
 ?:[EQU $QUEST29 Finished]
 L:a:BUILDING_0(GLOW, 30)
@@ -810,62 +807,49 @@ L:a:BUILDING_0(GLOW, 0)
 
 ############### Quest 30 - Mimics' Treasure ###############
 
-# Quest 30 taken, entrance is quest entrance
-?:[EQU $QUEST30 1]
-F:y:QUEST_ENTER:3:0:0:0:0:NONE:30
-F:a:BUILDING_0:3:0:0:0:0:NONE:30
+?:[EQU $QUEST30 Taken]
+L:y:QUEST_ENTER(GLOW | MARK, 30)
+L:a:BUILDING_0(GLOW, 30)
 
-# Quest 30 completed
-?:[EQU $QUEST30 2]
-F:a:BUILDING_0:3:0:0:0:0:NONE:30
+?:[EQU $QUEST30 Completed]
+L:a:BUILDING_0(GLOW, 30)
 
-# Quest 30 rewarding, reward is a Rod of Detection
-# continue to quest 21
-?:[EQU $QUEST30 3]
-F:a:BUILDING_0:3:0:0:0:0:NONE:21
-F:?:FLOOR:3:0:271:8
+?:[EQU $QUEST30 Rewarded]
+L:a:BUILDING_0(GLOW, 21)
+L:?:OBJ(ROD_DETECT_ALL)
 
-# Quest 30 finished, continue to quest 21
-?:[EQU $QUEST30 4]
-F:a:BUILDING_0:3:0:0:0:0:NONE:21
+?:[EQU $QUEST30 Finished]
+L:a:BUILDING_0(GLOW, 21)
 
-# Quest 30 failed, wait for the player to enter the Thieves Guild
-?:[EQU $QUEST30 5]
-F:a:BUILDING_0:3:0:0:0:0:NONE:30
+?:[EQU $QUEST30 Failed]
+L:a:BUILDING_0(GLOW, 30)
 
-# Quest 30 failed but done, no new quest available
-?:[EQU $QUEST30 6]
-F:a:BUILDING_0:3
+?:[EQU $QUEST30 FailedDone]
+L:a:BUILDING_0(GLOW, 0)
 
 ?:1
 
 ############### Quest 21 - Doom Quest 2 ###############
 
-# Quest 21 assigned, entrance is quest entrance
-?:[EQU $QUEST21 1]
-F:D:QUEST_ENTER:3:0:0:0:0:NONE:21
-F:a:BUILDING_0:3:0:0:0:0:NONE:21
+?:[EQU $QUEST21 Taken]
+L:D:QUEST_ENTER(MARK | GLOW, 21)
+L:a:BUILDING_0(GLOW, 21)
 
-# Quest 21 completed
-?:[EQU $QUEST21 2]
-F:a:BUILDING_0:3:0:0:0:0:NONE:21
+?:[EQU $QUEST21 Completed]
+L:a:BUILDING_0(GLOW, 21)
 
-# Quest 21 rewarding (_Healing)
-?:[EQU $QUEST21 3]
-F:a:BUILDING_0:3
-F:?:FLOOR:3:0:270:205
+?:[EQU $QUEST21 Rewarded]
+L:a:BUILDING_0(GLOW, 0)
+L:?:OBJ(STAFF_HEAL_CURING)
 
-# Quest 21 finished, no new quest available
-?:[EQU $QUEST21 4]
-F:a:BUILDING_0:3
+?:[EQU $QUEST21 Finished]
+L:a:BUILDING_0(GLOW, 0)
 
-# Quest 21 failed
-?:[EQU $QUEST21 5]
-F:a:BUILDING_0:3:0:0:0:0:NONE:21
+?:[EQU $QUEST21 Failed]
+L:a:BUILDING_0(GLOW, 21)
 
-# Quest 21 failed but done, no new quest available
-?:[EQU $QUEST21 6]
-F:a:BUILDING_0:3
+?:[EQU $QUEST21 FailedDone]
+L:a:BUILDING_0(GLOW, 0)
 
 ?:1
 
@@ -1141,7 +1125,7 @@ D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..........##......##a##.
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT........##........?...............................................!........##..........###TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT...........##.................................................................##..........TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT.........##.................................................................##...........TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
-D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT.............................................<...........................................TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
+D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..........................................&..<...........................................TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT###.T.........##.................................................................##..........TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT###T..........##.................................................................##...........TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT##w...........##.................................................................##..........TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#

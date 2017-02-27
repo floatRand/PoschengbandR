@@ -1,90 +1,51 @@
-# q0000021.txt
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 # redone by clouded
 
-# Name
 Q:21:N:Doom Quest 2
 
-# Definition
 Q:21:Q:6:0:0:0:55:0:0:0:6
 
-# Description for quest
-?:[LEQ $QUEST21 2]
+?:[EQU $QUEST21 Taken Completed]
 Q:21:T:A strange hole in reality has opened up on the edge of our
 Q:21:T:town, near the dungeon entrance, and appears to be even more 
-Q:21:T:dangerous than the hole reported in Angwil.  Five of our 
+Q:21:T:dangerous than the hole reported in Angwil. Five of our 
 Q:21:T:strongest knights ventured within -- only one returned, 
-Q:21:T:scorched by fire and babbling incoherently.  We have not the 
-Q:21:T:resources to deal with this threat.  Do you?
+Q:21:T:scorched by fire and babbling incoherently. We have not the 
+Q:21:T:resources to deal with this threat. Do you?
 ?:1
 
-# Description for quest reward
-?:[EQU $QUEST21 3]
-Q:21:T:Gods be praised, you have returned alive!  When the last
+?:[EQU $QUEST21 Rewarded]
+Q:21:T:Gods be praised, you have returned alive! When the last
 Q:21:T:demon fell, we felt an evil aura depart from this town,
-Q:21:T:letting all breathe easier again.  Please accept our 
+Q:21:T:letting all breathe easier again. Please accept our 
 Q:21:T:sincerest thanks for saving our lives -- and a powerful
-Q:21:T:gift from our armory.  May you find it useful in your 
+Q:21:T:gift from our armory. May you find it useful in your 
 Q:21:T:questing.
 ?:1
 
-# Description for quest failed
-?:[EQU $QUEST21 5]
-Q:21:T:I've sent out someone else to do the job.  Now leave me alone!
+?:[EQU $QUEST21 Failed]
+Q:21:T:I've sent out someone else to do the job. Now leave me alone!
 ?:1
 
-# Monsters and Terrain
+T:QUEST:NORMAL
+L:h:MON(maulotaur)
+L:i:MON(hell knight)
+L:j:MON(baron of hell)
+L:k:MON(revenant)
+!:SCRAMBLE(h,i,j,k)
 
-# Randomise the position of the Maulotaur and Hell Knight
-?:[EQU [MOD $RANDOM21 4] 0]
-# Floor with Maulotaur
-F:h:FLOOR:8:723
-# Floor with Hell Knight
-F:i:FLOOR:8:731
-# Floor with Baron of Hell
-F:j:FLOOR:8:609
-# Floor with Revenant
-F:k:FLOOR:8:555
+L:d:MON(arch-vile)
+L:e:MON(revenant)
+L:f:MON(baron of hell)
+L:g:MON(iron lich)
 
-?:[EQU [MOD $RANDOM21 4] 1]
-F:i:FLOOR:8:723
-F:j:FLOOR:8:731
-F:k:FLOOR:8:609
-F:h:FLOOR:8:555
+L:l:DEEP_LAVA
+L:x:PERMANENT
+L:X:PERMANENT
+L:.:FLOOR
+L:<:UP_STAIR
+L:$:FLOOR(ROOM):OBJ(*, DEPTH+1)
 
-?:[EQU [MOD $RANDOM21 4] 2]
-F:j:FLOOR:8:723
-F:k:FLOOR:8:731
-F:h:FLOOR:8:609
-F:i:FLOOR:8:555
-
-?:[EQU [MOD $RANDOM21 4] 3]
-F:k:FLOOR:8:723
-F:h:FLOOR:8:731
-F:i:FLOOR:8:609
-F:j:FLOOR:8:555
-
-?:1
-
-# Floor with Arch-Vile
-F:d:FLOOR:8:357
-
-# Floor with Revenant
-F:e:FLOOR:8:555
-
-# Floor with Baron of Hell
-F:f:FLOOR:8:609
-
-# Floor with Iron Lich
-F:g:FLOOR:8:666
-
-# Deep lava
-F:l:DEEP_LAVA:2
-
-# Permawalls
-F:x:PERMANENT:8
-
-# Dungeon layout
 D:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 D:XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 D:XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxlxxxlllxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
@@ -100,9 +61,9 @@ D:Xxxxxxxllll...................llll....e.................lllllxxxxxxxX
 D:Xxxxxxxxllll...................llll..................e...lllxxxxxxxxX
 D:Xxxxxxxxxllll......xx.xx........ll...........xx.xx......llllxxxxxxxxX
 D:Xxxxxxxxxllll.....xxx.xxx...e.....l.........xxx.xxx....lllllxxxxxxxxX
-D:Xxxxxxxxllll......xxTTTxx...................xxTTTxx..llllllxxxxxxxxxX
-D:Xxxxxxxxlllll.......TgT......l..l.......e.....TgT...lllllllxxxxxxxxxX
-D:Xxxxxxxxxxlll..i..xxTTTxx.....l.lld.........xxTTTxxlllllllllxxxxxxxxX
+D:Xxxxxxxxllll......xx$$$xx...................xx$$$xx..llllllxxxxxxxxxX
+D:Xxxxxxxxlllll.......$g$......l..l.......e.....$g$...lllllllxxxxxxxxxX
+D:Xxxxxxxxxxlll..i..xx$$$xx.....l.lld.........xx$$$xxlllllllllxxxxxxxxX
 D:Xxxxxxxxxllll.....xxx.xxx.l..l.llllll.....llxxx.xxxllllllllllxxxxxxxX
 D:Xxxxxxxxxxllll.....xx.xx...l.llllllllll..llllxx.xxllllllllllxxxxxxxxX
 D:Xxxxxxxxxlllll............l.lllllllxllllllllllllllllllllllllxxxxxxxxX
@@ -120,9 +81,9 @@ D:Xxxxxxxxxxxlllllll...llllllllxlxllllllxlll.........e...llllxxxxxxxxxX
 D:Xxxxxxxxxxlllllllll....llll.llllxxlllxlll...............lllxxxxxxxxxX
 D:Xxxxxxxxxxlllllllllxx.xxll....lllllllll......xx.xx.....llllxxxxxxxxxX
 D:Xxxxxxxxxxxlllllllxxx.xxxl...l..lllllll.....xxx.xxx....lllxxxxxxxxxxX
-D:XxxxxxxxxxllllllllxxTTTxx......l.lllllll....xxTTTxx....lllxxxxxxxxxxX
-D:Xxxxxxxxxlllllll....TgT........l.llllllll.....TgT.......lllxxxxxxxxxX
-D:Xxxxxxxxllllllll..xxTTTxx..e..l.lllxlxlxl...xxTTTxx.....lllllxxxxxxxX
+D:Xxxxxxxxxxllllllllxx$$$xx......l.lllllll....xx$$$xx....lllxxxxxxxxxxX
+D:Xxxxxxxxxlllllll....$g$........l.llllllll.....$g$.......lllxxxxxxxxxX
+D:Xxxxxxxxllllllll..xx$$$xx..e..l.lllxlxlxl...xx$$$xx.....lllllxxxxxxxX
 D:Xxxxxxxlllllll....xxx.xxx........llllxxll...xxx.xxx.j....lllllxxxxxxX
 D:Xxxxxllllllll......xx.xx.........ldlxlxll....xx.xx.......llllxxxxxxxX
 D:Xxxxxxllllll....e............e..l..lxlll................llllxxxxxxxxX
@@ -138,5 +99,3 @@ D:XxxxxxxxxxxxxxxxxxxlxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 D:XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 D:XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 D:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-# Starting position
-P:26:34

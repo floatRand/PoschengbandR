@@ -4409,7 +4409,8 @@ extern int PlayerUID;
 #define INIT_CREATE_DUNGEON     0x04
 #define INIT_SCROLL_WILDERNESS  0x08
 #define INIT_ONLY_BUILDINGS     0x10
-#define INIT_DEBUG              0x20
+#define INIT_DEBUG              0x20 /* error checking on dungeon files */
+#define INIT_DISPLAY_DUNGEON    0x40 /* requires INIT_DEBUG as well */
 
 /*
  * Quest flags

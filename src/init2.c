@@ -638,7 +638,14 @@ errr init_v_info(void)
     fp = my_fopen(buf, "r");
     if (!fp) quit("Cannot open 'v_info.txt' file.");
 
-    room_info = vec_alloc((vec_free_f)room_free);
+    if (init_flags & INIT_DEBUG)
+    {
+        msg_boundary();
+        cmsg_print(TERM_RED, "=====================================================");
+        msg_boundary();
+    }
+    else
+        room_info = vec_alloc((vec_free_f)room_free);
 
     /* parse */
     error_idx = -1;
@@ -651,6 +658,12 @@ errr init_v_info(void)
         if (!buf[0] || (buf[0] == '#')) continue;
         if (buf[1] != ':') { err = PARSE_ERROR_GENERIC; break; }
 
+        if ((init_flags & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == '!'))
+        {
+            msg_boundary();
+            msg_format("<color:R>%s</color>:<color:y>%d</color> %s", "v_info.txt", error_line, buf);
+            msg_boundary();
+        }
         err = parse_v_info(buf);
         if (err) break;
     }

@@ -492,7 +492,7 @@ M:    X
 N:Murder
 T:WILD:GRASS
 W:10:*:16
-L:M:MON(crow)
+L:M:MON(^crow$)
 M:  M  
 M: MMM 
 M:MMMMM
@@ -928,7 +928,7 @@ N:The Enchantress
 T:AMBUSH:MOUNTAIN:FORMATION
 W:30:*:8
 L:0:TREE:MON(DRAGON)
-L:p:TREE:MON(enchantress, NO_SLEEP)
+L:p:TREE:MON(^enchantress$, NO_SLEEP)
 L:.:TREE
 M:741.....
 M:8p0..@..
@@ -1027,7 +1027,7 @@ M:T
 N:Ewok Village
 T:WILD:TREES
 W:10:*:4
-L:h:TREE:MON(ewok)
+L:h:TREE:MON(^ewok$)
 L:T:TREE
 L:~:GRASS
 M:TTh~hTTTh
@@ -1040,8 +1040,8 @@ N:Druidic Circle
 T:WILD:TREES
 W:10:*:32
 L:T:TREE
-L:M:GRASS:MON(huorn, NO_SLEEP)
-L:p:GRASS:MON(druid)
+L:M:GRASS:MON(^huorn$, NO_SLEEP)
+L:p:GRASS:MON(^druid$)
 L:~:GRASS
 M:       TTT       
 M:     TTTTTTT     
@@ -1062,7 +1062,7 @@ M:       TTT
 N:Treeherder
 T:WILD:TREES
 W:30:*:200
-L:T:MON(ent, FRIENDLY | NO_SLEEP)
+L:T:MON(^ent$, FRIENDLY | NO_SLEEP)
 M:T
 
 #Fishing Hole
@@ -1779,7 +1779,7 @@ M:%%%%%%%%%%%%%%%%%%%%%%%%%
 N:Pantry?
 T:ROOM:NORMAL
 W:10:20:8
-L:$:MON(slime mold):OBJ(FOOD, slime mold)
+L:$:MON(slime mold):OBJ(slime mold)
 L:M:MON(*)
 M:%%%%%%%%%%%%%%%%%%%%%%%%%
 M:%.......................%

@@ -83,7 +83,7 @@
 
 # Doom Quest 2
 ?:[EQU $QUEST_NUMBER 21]
-%:q0000021.txt
+%:q_doom2.txt
 
 # Orc Camp
 ?:[EQU $QUEST_NUMBER 22]

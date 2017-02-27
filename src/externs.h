@@ -822,6 +822,7 @@ extern cptr do_device(object_type *o_ptr, int mode, int boost);
 
 extern bool device_init(object_type *o_ptr, int level, int mode);
 extern bool device_init_fixed(object_type *o_ptr, int effect);
+extern bool device_is_valid_effect(int tval, int effect);
 extern int  device_level(object_type *o_ptr);
 extern int  device_sp(object_type *o_ptr);
 extern void device_decrease_sp(object_type *o_ptr, int amt);
@@ -859,7 +860,7 @@ extern bool     effect_add(object_type *o_ptr, int type);
 extern bool     effect_try(effect_t *effect_ptr);
 extern bool     effect_use(effect_t *effect_ptr, int boost);
 extern errr     effect_parse(char *line, effect_t *effect);
-extern int      effect_parse_type(char *type);
+extern int      effect_parse_type(cptr type);
 extern bool     effect_is_known(int type);
 extern bool     effect_learn(int type);
 extern int      effect_value(effect_t *effect);

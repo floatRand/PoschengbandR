@@ -2097,7 +2097,7 @@ bool effect_learn(int type)
     return FALSE;
 }
 
-int effect_parse_type(char *type)
+int effect_parse_type(cptr type)
 {
     int i;
     for (i = 0; ; i++)
@@ -2578,6 +2578,20 @@ static device_effect_info_ptr _device_find_effect(device_effect_info_ptr table, 
     }
 
     return NULL;
+}
+
+bool device_is_valid_effect(int tval, int effect)
+{
+    switch (tval)
+    {
+    case TV_WAND:
+        return _device_find_effect(wand_effect_table, effect) != NULL;
+    case TV_ROD:
+        return _device_find_effect(rod_effect_table, effect) != NULL;
+    case TV_STAFF:
+        return _device_find_effect(staff_effect_table, effect) != NULL;
+    }
+    return FALSE;
 }
 
 /* Initialize a device with a fixed effect. This is useful for birth objects, quest rewards, etc */
