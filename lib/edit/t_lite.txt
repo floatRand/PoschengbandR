@@ -85,7 +85,7 @@ L:!:FLOOR:OBJ(HELM, steel helm, DEPTH+5)
 L:!:FLOOR:OBJ(SWORD, two-handed sword, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Lich Quylthulg] ]
-L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(205)
+L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(protection)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Duelist] ]
 L:!:FLOOR:OBJ(SWORD, rapier, DEPTH+5)
@@ -112,7 +112,7 @@ L:!:FLOOR:OBJ(BOW, short bow, DEPTH+5)
 L:!:FLOOR:OBJ(POLEARM, broad axe, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
-L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(205)
+L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(protection)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Ninja] ]
 L:!:FLOOR:OBJ(SWORD, dagger, DEPTH+5)
@@ -759,31 +759,25 @@ L:a:BUILDING_0(GLOW, 0)
 
 ############### Quest 19 - Doom Quest 1 ###############
 
-# Quest 19 assigned, entrance is quest entrance
-?:[EQU $QUEST19 1]
-F:D:QUEST_ENTER:3:0:0:0:0:NONE:19
-F:a:BUILDING_0:3:0:0:0:0:NONE:19
+?:[EQU $QUEST19 Taken]
+L:D:QUEST_ENTER(MARK | GLOW, 19)
+L:a:BUILDING_0(GLOW, 19)
 
-# Quest 19 completed
-?:[EQU $QUEST19 2]
-F:a:BUILDING_0:3:0:0:0:0:NONE:19
+?:[EQU $QUEST19 Completed]
+L:a:BUILDING_0(GLOW, 19)
 
-# Quest 19 rewarding, reward is an Elemental Ring, continue with quest 29
-?:[EQU $QUEST19 3]
-F:a:BUILDING_0:3:0:0:0:0:NONE:29
-F:?:FLOOR:3:0:132:201
+?:[EQU $QUEST19 Rewarded]
+L:a:BUILDING_0(GLOW, 29)
+L:?:OBJ(RING, DEPTH+15):EGO(elemental)
 
-# Quest 19 finished, continue with quest 29
-?:[EQU $QUEST19 4]
-F:a:BUILDING_0:3:0:0:0:0:NONE:29
+?:[EQU $QUEST19 Finished]
+L:a:BUILDING_0(GLOW, 29)
 
-# Quest 19 failed
-?:[EQU $QUEST19 5]
-F:a:BUILDING_0:3:0:0:0:0:NONE:19
+?:[EQU $QUEST19 Failed]
+L:a:BUILDING_0(GLOW, 19)
 
-# Quest 19 failed
-?:[EQU $QUEST19 6]
-F:a:BUILDING_0:3
+?:[EQU $QUEST19 FailedDone]
+L:a:BUILDING_0(GLOW, 0)
 
 ?:1
 

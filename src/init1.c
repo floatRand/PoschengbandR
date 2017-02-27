@@ -1464,6 +1464,7 @@ struct _object_type_s
 {
     cptr name;
     int  type;
+    int  ego_type;
 };
 typedef struct _object_type_s _object_type_t;
 
@@ -1477,29 +1478,29 @@ static _object_type_t _object_types[] =
     { "STATUE",             TV_STATUE },
     { "FIGURINE",           TV_FIGURINE },
     { "CHEST",              TV_CHEST },
-    { "SHOT",               TV_SHOT },
-    { "ARROW",              TV_ARROW },
-    { "BOLT",               TV_BOLT },
-    { "BOW",                TV_BOW },
-    { "DIGGING",            TV_DIGGING },
-    { "HAFTED",             TV_HAFTED },
-    { "POLEARM",            TV_POLEARM },
-    { "SWORD",              TV_SWORD },
-    { "BOOTS",              TV_BOOTS },
-    { "GLOVES",             TV_GLOVES },
-    { "HELM",               TV_HELM },
-    { "CROWN",              TV_CROWN },
-    { "SHIELD",             TV_SHIELD },
-    { "CLOAK",              TV_CLOAK },
-    { "SOFT_ARMOR",         TV_SOFT_ARMOR },
-    { "HARD_ARMOR",         TV_HARD_ARMOR },
-    { "DRAG_ARMOR",         TV_DRAG_ARMOR },
-    { "LITE",               TV_LITE },
-    { "AMULET",             TV_AMULET },
-    { "RING",               TV_RING },
-    { "STAFF",              TV_STAFF },
-    { "WAND",               TV_WAND },
-    { "ROD",                TV_ROD },
+    { "SHOT",               TV_SHOT, EGO_TYPE_AMMO },
+    { "ARROW",              TV_ARROW, EGO_TYPE_AMMO },
+    { "BOLT",               TV_BOLT, EGO_TYPE_AMMO },
+    { "BOW",                TV_BOW, EGO_TYPE_BOW },
+    { "DIGGING",            TV_DIGGING, EGO_TYPE_DIGGER },
+    { "HAFTED",             TV_HAFTED, EGO_TYPE_WEAPON },
+    { "POLEARM",            TV_POLEARM, EGO_TYPE_WEAPON },
+    { "SWORD",              TV_SWORD, EGO_TYPE_WEAPON },
+    { "BOOTS",              TV_BOOTS, EGO_TYPE_BOOTS },
+    { "GLOVES",             TV_GLOVES, EGO_TYPE_GLOVES },
+    { "HELM",               TV_HELM, EGO_TYPE_HELMET },
+    { "CROWN",              TV_CROWN, EGO_TYPE_CROWN },
+    { "SHIELD",             TV_SHIELD, EGO_TYPE_SHIELD },
+    { "CLOAK",              TV_CLOAK, EGO_TYPE_CLOAK },
+    { "SOFT_ARMOR",         TV_SOFT_ARMOR, EGO_TYPE_BODY_ARMOR },
+    { "HARD_ARMOR",         TV_HARD_ARMOR, EGO_TYPE_BODY_ARMOR },
+    { "DRAG_ARMOR",         TV_DRAG_ARMOR, EGO_TYPE_BODY_ARMOR },
+    { "LITE",               TV_LITE, EGO_TYPE_LITE },
+    { "AMULET",             TV_AMULET, EGO_TYPE_AMULET },
+    { "RING",               TV_RING, EGO_TYPE_RING },
+    { "STAFF",              TV_STAFF, EGO_TYPE_DEVICE },
+    { "WAND",               TV_WAND, EGO_TYPE_DEVICE },
+    { "ROD",                TV_ROD, EGO_TYPE_DEVICE },
     { "SCROLL",             TV_SCROLL },
     { "POTION",             TV_POTION },
     { "FOOD",               TV_FOOD },
@@ -1521,13 +1522,13 @@ static _object_type_t _object_types[] =
     { "RAGE_BOOK",          TV_RAGE_BOOK },
     { "BURGLARY_BOOK",      TV_BURGLARY_BOOK },
     { "GOLD",               TV_GOLD },
-    { "DEVICE",             OBJ_TYPE_DEVICE },
+    { "DEVICE",             OBJ_TYPE_DEVICE, EGO_TYPE_DEVICE },
     { "JEWELRY",            OBJ_TYPE_JEWELRY },
     { "BOOK",               OBJ_TYPE_BOOK },
-    { "BODY_ARMOR",         OBJ_TYPE_BODY_ARMOR },
+    { "BODY_ARMOR",         OBJ_TYPE_BODY_ARMOR, EGO_TYPE_BODY_ARMOR },
     { "OTHER_ARMOR",        OBJ_TYPE_OTHER_ARMOR },
-    { "WEAPON",             OBJ_TYPE_WEAPON },
-    { "BOW_AMMO",           OBJ_TYPE_BOW_AMMO },
+    { "WEAPON",             OBJ_TYPE_WEAPON, EGO_TYPE_WEAPON },
+    { "BOW_AMMO",           OBJ_TYPE_BOW_AMMO, EGO_TYPE_AMMO },
     { "MISC",               OBJ_TYPE_MISC },
     { 0, 0 }
 };
@@ -1540,6 +1541,17 @@ static int _parse_obj_type(char *arg)
         if (!_object_types[i].name) return 0;
         if (streq(arg, _object_types[i].name))
             return _object_types[i].type;
+    }
+}
+
+static int _lookup_ego_type(int object)
+{
+    int i;
+    for (i = 0; ; i++)
+    {
+        if (!_object_types[i].name) return EGO_TYPE_NONE;
+        if (_object_types[i].type == object)
+            return _object_types[i].ego_type;
     }
 }
 
@@ -1688,7 +1700,7 @@ static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid)
     }
 }
 
-static int _lookup_ego(cptr name)
+static int _lookup_ego(cptr name, int type)
 {
     int i;
     for (i = 1; i < max_e_idx; i++)
@@ -1696,6 +1708,7 @@ static int _lookup_ego(cptr name)
         ego_type *e_ptr = &e_info[i];
         char      buf[255];
         if (!e_ptr->name) continue;
+        if (type && !(e_ptr->type & type)) continue;
         _prep_name(buf, e_name + e_ptr->name);
         if (strstr(buf, name))
         {
@@ -1730,8 +1743,13 @@ static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid)
         {
             if (_is_numeric(args[0]))
                 grid->extra = atoi(args[0]);
+            else if (grid->flags & ROOM_GRID_OBJ_TYPE)
+            {
+                int type = _lookup_ego_type(grid->object);
+                grid->extra = _lookup_ego(args[0], type);
+            }
             else
-                grid->extra = _lookup_ego(args[0]);
+                grid->extra = _lookup_ego(args[0], 0);
             if (!grid->extra)
             {
                 msg_format("Error: Unknown Ego %s.", args[0]);
@@ -5954,7 +5972,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
             /* TODO: Wilderness scrolling ... Yuk! */
             _build_dungeon(_room, rect(0, 0, cx, cy), transno);
         }
-        else if (init_flags & INIT_DEBUG)
+        else if (vec_length(_room->map) && (init_flags & INIT_DEBUG))
             _display_room(_room);
         room_free(_room);
         _room = NULL;
