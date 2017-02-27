@@ -1748,6 +1748,11 @@ static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid)
                 int type = _lookup_ego_type(grid->object);
                 grid->extra = _lookup_ego(args[0], type);
             }
+            else if (grid->object && !(grid->flags & ROOM_GRID_OBJ_RANDOM))
+            {
+                int type = _lookup_ego_type(k_info[grid->object].tval);
+                grid->extra = _lookup_ego(args[0], type);
+            }
             else
                 grid->extra = _lookup_ego(args[0], 0);
             if (!grid->extra)
