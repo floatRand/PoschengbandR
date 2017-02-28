@@ -9,7 +9,7 @@
 ?:[EQU $QUEST_NUMBER 1]
 %:q_thieves.txt
 
-# Sever
+# Sewer
 ?:[EQU $QUEST_NUMBER 2]
 %:q0000002.txt
 

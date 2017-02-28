@@ -204,35 +204,27 @@ L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
-
 ############### Quest 25 - Haunted House ###############
 
-# Quest 25 assigned, entrance is quest entrance
-?:[EQU $QUEST25 1]
-F:x:QUEST_ENTER:3:0:0:0:0:NONE:25
-F:b:BUILDING_1:3:0:0:0:0:NONE:25
+?:[EQU $QUEST25 Taken]
+L:x:QUEST_ENTER(MARK | GLOW, 25)
+L:b:BUILDING_1(GLOW, 25)
 
-# Quest 25 completed
-?:[EQU $QUEST25 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:25
+?:[EQU $QUEST25 Completed]
+L:b:BUILDING_1(GLOW, 25)
 
-# Quest 25 rewarding, reward is Staff of Dispel Evil,
-# continue with quest 28
-?:[EQU $QUEST25 3]
-F:b:BUILDING_1:3:0:0:0:0:NONE:28
-F:!:FLOOR:3:0:270:550
+?:[EQU $QUEST25 Rewarded]
+L:b:BUILDING_1(GLOW, 28)
+L:!:OBJ(STAFF_HOLINESS)
 
-# Quest 25 finished, continue with quest 28
-?:[EQU $QUEST25 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:28
+?:[EQU $QUEST25 Finished]
+L:b:BUILDING_1(GLOW, 28)
 
-# Quest 25 failed, wait for the player to enter the castle
-?:[EQU $QUEST25 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:25
+?:[EQU $QUEST25 Failed]
+L:b:BUILDING_1(GLOW, 25)
 
-# Quest 25 failed
-?:[EQU $QUEST25 6]
-F:b:BUILDING_1:3
+?:[EQU $QUEST25 FailedDone]
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
@@ -1078,7 +1070,7 @@ B:0:N:The White Horse Inn:Otick:Human
 B:0:A:0:Rest for the night:20:20:r:17:0
 B:0:A:1:buy Food and drink:1:1:f:18:1
 B:0:A:2:Listen for rumors:5:5:u:19:0
-B:0:A:3:request Quest:0:0:q:6:0
+B:0:A:3:Request quest:0:0:q:6:0
 B:0:A:4:Teleport to other town:500:500:m:42:0
 B:0:A:5:Ask about your reputation:1:1:a:55:0
 B:0:R:*:Member

@@ -2095,7 +2095,7 @@ void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr
     assert(xform->src.x == 0);
     assert(xform->src.y == 0);
 
-    /* Pass 1: Place dungeon features and objects */
+    /* Pass 1: Place features */
     for (y = 0; y < room->height; y++)
     {
         cptr line = vec_get(room->map, y);
@@ -2253,7 +2253,7 @@ void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr
     if (scroll && (scroll->flags & INIT_SCROLL_WILDERNESS))
         return;
 
-    /* Pass2: Place dungeon monsters and objects */
+    /* Pass2: Place monsters and objects */
     for (y = 0; y < room->height; y++)
     {
         cptr line = vec_get(room->map, y);

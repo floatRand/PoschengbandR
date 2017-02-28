@@ -1774,10 +1774,11 @@ void do_cmd_debug(void)
         break;
     }
     case '_': {
-        init_flags = INIT_DEBUG;
+        init_flags = INIT_DEBUG | INIT_DISPLAY_DUNGEON;
         /*init_v_info();*/
-        process_dungeon_file("t_outpost.txt", 0, 0, 0, 0);
+        process_dungeon_file("qhaunted.txt", 0, 0, 0, 0);
 break;
+        process_dungeon_file("t_outpost.txt", 0, 0, 0, 0);
         process_dungeon_file("t_lite.txt", 0, 0, 0, 0);
         process_dungeon_file("q_doom2.txt", 0, 0, 0, 0);
         process_dungeon_file("q_thieves.txt", 0, 0, 0, 0);
