@@ -1030,10 +1030,7 @@ s16b gf_color[MAX_GF];
 int init_flags;
 
 /* Parameters for process_dungeon_file to support wilderness scrolling */
-int init_dx = 0;
-int init_dy = 0;
-const rect_t *init_exclude_rect = 0;
-
+wild_scroll_ptr wild_scroll = NULL;
 
 /*
  * The "highscore" file descriptor, if available.

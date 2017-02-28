@@ -4846,7 +4846,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
             return PARSE_ERROR_GENERIC;
         }
 
-        if (streq(name, "SCRAMBLE"))
+        if (streq(name, "SCRAMBLE") || streq(name, "SHUFFLE"))
         {
             const int max_scramble = 20;
             char letters[max_scramble], scrambles[max_scramble];
@@ -4861,8 +4861,8 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                 letters[i] = args[i][0];
                 scrambles[i] = letters[i];
             }
-            for (i = 0; i < arg_ct; i++) /* XXX I just made this up ... any good? */
-            {                            /* Symmetries of n letters are a product of transpositions ... */
+            for (i = 0; i < arg_ct; i++) /* every permutation can be written as */
+            {                            /* a product of transpositions */
                 int j = randint0(arg_ct);
                 char t = scrambles[i];
                 scrambles[i] = scrambles[j];
@@ -5264,22 +5264,22 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                 /* Place player in a quest level */
                 if (p_ptr->inside_quest)
                 {
-                    int y, x;
-
-                    /* Delete the monster (if any) */
-                    delete_monster(py, px);
-
-                    y = atoi(zz[0]);
-                    x = atoi(zz[1]);
-
-                    py = y + init_dy;
-                    px = x + init_dx;
+                    /* now handled by '<' tile. I see no reason to ever change this. */
                 }
                 /* Place player in the town */
                 else if (!p_ptr->oldpx && !p_ptr->oldpy)
                 {
-                    p_ptr->oldpy = atoi(zz[0]) + init_dy;
-                    p_ptr->oldpx = atoi(zz[1]) + init_dx;
+                    /* towns, on the other hand, need to place the player after quests,
+                     * though even now, I'm not sure why this cannot just be remembered
+                     * when the player enters the quest. manually computing P:x:y coordinates
+                     * is rather irksome. */
+                    p_ptr->oldpy = atoi(zz[0]);
+                    p_ptr->oldpx = atoi(zz[1]);
+                    if (wild_scroll)
+                    {
+                        p_ptr->oldpy += wild_scroll->scroll.y;
+                        p_ptr->oldpx += wild_scroll->scroll.x;
+                    }
                 }
             }
         }
@@ -5717,37 +5717,6 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
     return (v);
 }
 
-static void _build_dungeon(const room_ptr room, rect_t r, int transno)
-{
-    int x = room->width;
-    int y = room->height;
-    int xoffset = 0;
-    int yoffset = 0;
-    int panels_x, panels_y;
-
-    /* Hack - Set the dungeon size */
-    panels_y = (r.cy / SCREEN_HGT);
-    if (r.cy % SCREEN_HGT) panels_y++;
-    cur_hgt = panels_y * SCREEN_HGT;
-
-    panels_x = (r.cx / SCREEN_WID);
-    if (r.cx % SCREEN_WID) panels_x++;
-    cur_wid = panels_x * SCREEN_WID;
-
-    coord_trans(&x, &y, 0, 0, transno);
-    if (x < 0) xoffset = -x;
-    if (y < 0) yoffset = -y;
-
-    build_room_template_aux(
-        room,
-        r.y + r.cy/2, /* expects the *center* of the rect ... sigh */
-        r.x + r.cx/2,
-        xoffset,
-        yoffset,
-        transno
-    );
-}
-
 static void _display_room(room_ptr room)
 {
     int which = 0, x, y, cmd;
@@ -5760,7 +5729,7 @@ static void _display_room(room_ptr room)
         transform_ptr xform;
 
         if (random)
-            xform = transform_alloc_random(rect(0, 0, room->width, room->height));
+            xform = transform_alloc_room(room, size(MAX_WID, MAX_HGT));
         else
             xform = transform_alloc(which, rect(0, 0, room->width, room->height));
 
@@ -5948,40 +5917,24 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
     }
     if (!--depth && (init_flags & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
     {
-        int cx = _room->width;
-        int cy = _room->height;
-        int transno = 0;
-
         assert(_room);
         if (vec_length(_room->map) && (init_flags & INIT_CREATE_DUNGEON))
         {
-            /* Coordinate transforms (TODO: This code needs a rewrite, IMO)
-             * The dihedral group D4 has 8 possibilities, and they are encoded
-             * in the low 3 bits of transno. bit 3 gives 's' while the other
-             * 2 give the power of 'r' (D4 = <r,s|r^4 = 1>) */
-            if (!(_room->flags & ROOM_NO_ROTATE))
-            {
-                /* an odd number of rotations will interchange width and height
-                 * don't do this often and be careful that the quest is not
-                 * too wide for the rather low MAX_HGT (66) */
-                if (one_in_(20) && _room->width <= MAX_HGT - 2)
-                {
-                    int temp = cx;
-                    cx = cy;
-                    cy = temp;
-                    transno |= 01;
-                }
-                if (one_in_(2))
-                    transno |= 02;
-                if (one_in_(2)) /* flip */
-                    transno |= 04;
+            transform_ptr   xform = transform_alloc_room(_room, size(MAX_WID, MAX_HGT));
+            int             panels_x, panels_y;
 
-                assert(cx <= MAX_WID);
-                assert(cy <= MAX_HGT);
-            }
+            /* set the dungeon size */
+            panels_y = xform->dest.cy / SCREEN_HGT;
+            if (xform->dest.cy % SCREEN_HGT) panels_y++;
+            cur_hgt = panels_y * SCREEN_HGT;
 
-            /* TODO: Wilderness scrolling ... Yuk! */
-            _build_dungeon(_room, rect(0, 0, cx, cy), transno);
+            panels_x = (xform->dest.cx / SCREEN_WID);
+            if (xform->dest.cx % SCREEN_WID) panels_x++;
+            cur_wid = panels_x * SCREEN_WID;
+
+            build_room_template_aux(_room, xform, wild_scroll);
+            transform_free(xform);
+            wild_scroll = NULL;
         }
         else if (vec_length(_room->map) && (init_flags & INIT_DISPLAY_DUNGEON))
             _display_room(_room);

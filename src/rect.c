@@ -1,6 +1,4 @@
-#include "angband.h"
-
-#include <assert.h>
+#include "rect.h"
 
 point_t point(int x, int y)
 {
@@ -34,6 +32,11 @@ int point_compare(point_t p1, point_t p2)
     if (p1.x > p2.x)
         return 1;
     return 0;
+}
+
+point_t size(int cx, int cy)
+{
+    return point(cx, cy);
 }
 
 /* Trivial rectangle utility to make code a bit more readable */
@@ -117,80 +120,3 @@ int rect_area(rect_t r)
     return result;
 }
 
-/************************************************************************
- * Coordinate Transforms
- ***********************************************************************/
-point_t _transform(point_t p, int which)
-{
-    int i;
-    /* transform by
-     * [1] rotating counter clockwise: (x,y) -> (-y,x) */
-    for (i = 0; i < (which & 03); i++)
-    {
-        int tmp = p.x;
-        p.x = -p.y;
-        p.y = tmp;
-    }
-    /* [2] flipping: (x,y) -> (-x,y) */
-    if (which & 04)
-        p.x = -p.x;
-
-    return p;
-}
-
-transform_ptr transform_alloc(int which, rect_t src)
-{
-    transform_ptr result = malloc(sizeof(transform_t));
-
-    /* avoid SIGSEGV */
-    if (src.cx > MAX_HGT - 2)
-        which &= ~01;
-
-    result->which = which;
-    result->src = src;
-    if (which & 01) /* odd number of rotations: (w,h) -> (h,w) */
-        result->dest = rect(0, 0, src.cy, src.cx);
-    else
-        result->dest = rect(0, 0, src.cx, src.cy);
-
-    /* rotating around the center is conceptually cleaner, but has
-     * issues with rounding (ie the center might not be symmetric).
-     * instead, we rotate around the top left and translate to patch
-     * things up (with fudge) */
-    result->fudge = _transform(point(src.cx - 1, src.cy - 1), which);
-    if (result->fudge.x > 0) result->fudge.x = 0;
-    else result->fudge.x = -result->fudge.x;
-    if (result->fudge.y > 0) result->fudge.y = 0;
-    else result->fudge.y = -result->fudge.y;
-
-    return result;
-}
-transform_ptr transform_alloc_random(rect_t src)
-{
-    int which = 0;
-    /* how many rotations? (0 .. 3) */
-    if (one_in_(2) && src.cx <= MAX_HGT - 2 && src.cy*100/src.cx > 70 )
-        which |= 01;
-    if (one_in_(2))
-        which |= 02;
-    /* how many flips? (0 .. 1) */
-    if (one_in_(2))
-        which |= 04;
-    return transform_alloc(which, src);
-}
-
-point_t transform_point(transform_ptr xform, point_t p)
-{
-    assert(rect_contains_pt(xform->src, p.x, p.y));
-    p = point_subtract(p, rect_topleft(xform->src));
-    p = _transform(p, xform->which);
-    p = point_add(p, xform->fudge);
-    p = point_add(p, rect_topleft(xform->dest));
-    assert(rect_contains_pt(xform->dest, p.x, p.y));
-    return p;
-}
-
-void transform_free(transform_ptr x)
-{
-    if (x) free(x);
-}

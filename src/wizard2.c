@@ -1776,9 +1776,10 @@ void do_cmd_debug(void)
     case '_': {
         init_flags = INIT_DEBUG;
         /*init_v_info();*/
+        process_dungeon_file("t_outpost.txt", 0, 0, 0, 0);
+break;
         process_dungeon_file("t_lite.txt", 0, 0, 0, 0);
         process_dungeon_file("q_doom2.txt", 0, 0, 0, 0);
-break;
         process_dungeon_file("q_thieves.txt", 0, 0, 0, 0);
         process_dungeon_file("qdarkelf.txt", 0, 0, 0, 0);
         process_dungeon_file("q_vault.txt", 0, 0, 0, 0);

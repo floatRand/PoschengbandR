@@ -517,28 +517,6 @@ static void _wipe_generate_cave_flags(rect_t r)
     }
 }
 
-static void _build_room(const room_ptr room, rect_t r, int transno)
-{
-    int x = room->width;
-    int y = room->height;
-    int xoffset = 0;
-    int yoffset = 0;
-
-    coord_trans(&x, &y, 0, 0, transno);
-    if (x < 0) xoffset = -x;
-    if (y < 0) yoffset = -y;
-
-    build_room_template_aux(
-        room,
-        r.y + r.cy/2, /* expects the *center* of the rect ... sigh */
-        r.x + r.cx/2,
-        xoffset,
-        yoffset,
-        transno
-    );
-    _wipe_generate_cave_flags(r);
-}
-
 static int _encounter_terrain_type(int x, int y)
 {
     int result = wilderness[y][x].terrain;
@@ -558,103 +536,70 @@ static int _encounter_terrain_type(int x, int y)
     return result;
 }
 
-static bool _generate_special_encounter(room_ptr room, int x, int y, rect_t r, rect_t exclude)
+static bool _build_room(room_ptr room, transform_ptr xform, rect_t r, rect_t exclude)
 {
-    int    i, x2, y2;
-    rect_t room_rect, quad_rect;
     int    qx_min = r.x/WILD_SCROLL_CX;
     int    qx_max = (r.x + r.cx - 1)/WILD_SCROLL_CX;
     int    qy_min = r.y/WILD_SCROLL_CY;
     int    qy_max = (r.y + r.cy - 1)/WILD_SCROLL_CY;
+    int    qx = rand_range(qx_min, qx_max);
+    int    qy = rand_range(qy_min, qy_max);
+    rect_t qrect = rect(qx*WILD_SCROLL_CX, qy*WILD_SCROLL_CY, WILD_SCROLL_CX, WILD_SCROLL_CY);
+        
+    xform->dest = rect_translate(xform->dest, 
+        qrect.x + 2 + randint0(qrect.cx - xform->dest.cx - 4),
+        qrect.y + 1 + randint0(qrect.cy - xform->dest.cy - 2));
 
+    if (!rect_contains(r, xform->dest)) return FALSE;
+    if (!rect_contains(qrect, xform->dest)) return FALSE;
+
+    /* Exclude if overlaps the "valid region" during a scroll op */
+    if (rect_is_valid(exclude))
+    {
+        rect_t temp_rect = rect_intersect(exclude, xform->dest);
+        if (rect_is_valid(temp_rect)) return FALSE;
+    }
+    /* Exclude if player is in the room during a non-scroll op (e.g. ambush)
+        Note the player will always be inside the exclude rect during
+        a scroll op. */
+    else if (room->type == ROOM_WILDERNESS)
+    {
+        /* Player has not been placed yet, but will be placed at (oldpx, oldpy) shortly */
+        /* N.B. Ambush encounters include player placement information */
+        if (rect_contains_pt(xform->dest, p_ptr->oldpx, p_ptr->oldpy)) return FALSE;
+    }
+
+    build_room_template_aux(room, xform, NULL);
+    _wipe_generate_cave_flags(r);
+
+    if (is_daytime() && room->type == ROOM_WILDERNESS && disturb_minor)
+    {
+        msg_print("You've stumbled onto something interesting ...");
+        disturb(0, 0);
+    }
+    if (room->type == ROOM_AMBUSH)
+    {
+        msg_print("Press <color:y>Space</color> to continue.");
+        flush();
+        for (;;)
+        {
+            char ch = inkey();
+            if (ch == ' ') break;
+        }
+        msg_line_clear();
+    }
+    return TRUE;
+}
+
+static bool _generate_special_encounter(room_ptr room, rect_t r, rect_t exclude)
+{
+    int i;
     for (i = 0; i < 100; i++)
     {
-        int qx = rand_range(qx_min, qx_max);
-        int qy = rand_range(qy_min, qy_max);
-        int cx = room->width;
-        int cy = room->height;
-        int transno = 0;
-
-        quad_rect = rect(qx*WILD_SCROLL_CX, qy*WILD_SCROLL_CY, WILD_SCROLL_CX, WILD_SCROLL_CY);
-
-        /*Coordinate transforms (TODO: This code needs a rewrite, IMO)*/
-        if (room->flags & ROOM_NO_ROTATE)
-            transno = 0;
-        else
-        {
-            int n = randint0(100);
-            if (n < 45)
-                transno = 0;
-            else if (n < 90)
-                transno = 2;
-            else if (n < 95)
-            {
-                int temp = cx;
-                transno = 1;
-                cx = cy;
-                cy = temp;
-            }
-            else
-            {
-                int temp = cx;
-                transno = 3;
-                cx = cy;
-                cy = temp;
-            }
-
-            if (one_in_(2))
-                transno |= 0x04;
-        }
-
-        /* It's easy to exceed the 62x20 encounter size if you rotate. */
-        if (quad_rect.cx - cx - 4 < 0) continue;
-        if (quad_rect.cy - cy - 2 < 0) continue;
-
-        x2 = quad_rect.x + 2 + randint0(quad_rect.cx - cx - 4);
-        y2 = quad_rect.y + 1 + randint0(quad_rect.cy - cy - 2);
-
-        room_rect = rect(x2, y2, cx, cy);
-
-        /* Exclude out of bounds */
-        if (!rect_contains(r, room_rect)) continue;
-
-        /* Exclude unless restricted to a single "quadrant" (Should never fail) */
-        if (!rect_contains(quad_rect, room_rect)) continue;
-
-        /* Exclude if overlaps the "valid region" during a scroll op */
-        if (rect_is_valid(exclude))
-        {
-            rect_t temp_rect = rect_intersect(exclude, room_rect);
-            if (rect_is_valid(temp_rect)) continue;
-        }
-        /* Exclude if player is in the room during a non-scroll op (e.g. ambush)
-            Note the player will always be inside the exclude rect during
-            a scroll op. */
-        else if (room->type == ROOM_WILDERNESS)
-        {
-            /* Player has not been placed yet, but will be placed at (oldpx, oldpy) shortly */
-            /* N.B. Ambush encounters include player placement information */
-            if (rect_contains_pt(room_rect, p_ptr->oldpx, p_ptr->oldpy)) continue;
-        }
-
-        _build_room(room, room_rect, transno);
-        if (is_daytime() && room->type == ROOM_WILDERNESS && disturb_minor)
-        {
-            msg_print("You've stumbled onto something interesting ...");
-            disturb(0, 0);
-        }
-        if (room->type == ROOM_AMBUSH)
-        {
-            msg_print("Press <color:y>Space</color> to continue.");
-            flush();
-            for (;;)
-            {
-                char ch = inkey();
-                if (ch == ' ') break;
-            }
-            msg_line_clear();
-        }
-        return TRUE;
+        transform_ptr xform = transform_alloc_room(room, size(WILD_SCROLL_CX-4, WILD_SCROLL_CY-2));
+        bool ok = _build_room(room, xform, r, exclude);
+        transform_free(xform);
+        if (ok) return TRUE;
     }
     return FALSE;
 }
@@ -692,7 +637,7 @@ static void _generate_encounters(int x, int y, rect_t r, rect_t exclude)
     {
         room_ptr room= choose_room_template(ROOM_WILDERNESS, _encounter_terrain_type(x, y));
         if (room)
-            _generate_special_encounter(room, x, y, r, exclude);
+            _generate_special_encounter(room, r, exclude);
     }
 
     /* Scripted Ambush? */
@@ -702,7 +647,7 @@ static void _generate_encounters(int x, int y, rect_t r, rect_t exclude)
       && one_in_(5))
     {
         room_ptr room = choose_room_template(ROOM_AMBUSH, _encounter_terrain_type(x, y));
-        if (room && _generate_special_encounter(room, x, y, r, exclude))
+        if (room && _generate_special_encounter(room, r, exclude))
             generate_encounter = FALSE;
     }
 
@@ -1163,21 +1108,24 @@ static void _generate_area(int x, int y, int dx, int dy, rect_t exclude)
         /* Create the town on top of default terrain */
         if (wilderness[y][x].town)
         {
+            wild_scroll_t scroll = {{0}};
+
             /* Reset the buildings */
             init_buildings();
 
             /* Initialize the town */
             init_flags = INIT_CREATE_DUNGEON;
             if (rect_is_valid(exclude))
+            {
                 init_flags |= INIT_SCROLL_WILDERNESS;
-            init_dx = dx;
-            init_dy = dy;
-            init_exclude_rect = &exclude;
+                scroll.exclude = exclude;
+            }
+            scroll.flags = init_flags;
+            scroll.scroll = point(dx, dy);
+            wild_scroll = &scroll;
             process_dungeon_file("t_info.txt", 0, 0, MAX_HGT, MAX_WID);
             init_flags = 0;
-            init_dx = 0;
-            init_dy = 0;
-            init_exclude_rect = NULL;
+            wild_scroll = NULL;
         }
 
 
@@ -1265,7 +1213,8 @@ void wilderness_gen(void)
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(0);
 
-    /* Set rewarded quests to finished */
+    /* Set rewarded quests to finished ... this hack ensures
+     * the player only gets rewarded once for each quest. */
     for (i = 0; i < max_quests; i++)
     {
         if (quest[i].status == QUEST_STATUS_REWARDED)

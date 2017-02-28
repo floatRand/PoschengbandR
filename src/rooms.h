@@ -89,13 +89,10 @@ struct room_info_type
  * This includes support for user defined "letters" in the template file
  * as well as built in predefined "letters" (for historical reasons).
  *
- * Sample syntax for the Parser for room_grid_t:
- * L:9:FLOOR(ROOM):OBJ(*, 7):MON(*, 9)  i.e., Random object 7 levels OoD and random monster 9 levels OoD
- * L:9:FLOOR(ROOM):MON(*, 9):OBJ(*, 7)  i.e., order of named directives does not matter
- * L:D:FLOOR(ROOM | ICKY):MON(DRAGON, 20):OBJ(SWORD, 20):EGO(*)
- * L:%:GRANITE(ROOM)
- * L:#:GRANITE
- * L:=:FLOOR(ROOM | ICKY):OBJ(RING, 50):EGO(306)  i.e., ring of speed on a "vault" tile generated 50 level OoD!!!
+ * See lib/edit/readme.txt for parser syntax.
+ * See lib/edit/v_info.txt for sample rooms and vaults.
+ * See lib/edit/q_*.txt for sample quests.
+ * See lib/edit/t_*.txt for sample towns.
  */
 
 #define ROOM_GRID_MON_TYPE      0x00000001  /* monster is SUMMON_* rather than a specific r_idx */
@@ -163,7 +160,6 @@ struct room_grid_s
     byte object_level;
     byte trap_pct;
 };
-
 typedef struct room_grid_s room_grid_t, *room_grid_ptr;
 
 struct room_s
@@ -184,19 +180,50 @@ struct room_s
     vec_ptr map;
     int_map_ptr letters;
 };
-
 typedef struct room_s room_t, *room_ptr;
-extern room_ptr room_alloc(cptr name);
-extern void room_free(room_ptr room);
 
-/* Externs */
+extern room_ptr room_alloc(cptr name);
+extern void     room_free(room_ptr room);
+extern room_ptr choose_room_template(int type, int subtype); /* from v_info.txt */
+
+/* Coordinate Transformations allow rooms to be rotated */
+struct transform_s
+{
+    int     which;
+    rect_t  src;
+    rect_t  dest;
+    point_t fudge;
+};
+typedef struct transform_s transform_t, *transform_ptr;
+
+transform_ptr transform_alloc(int which, rect_t src);
+transform_ptr transform_alloc_random(rect_t src, point_t max_size);
+transform_ptr transform_alloc_room(room_ptr room, point_t max_size);
+void          transform_free(transform_ptr x);
+point_t       transform_point(transform_ptr x, point_t p);
+
+
+/* Wilderness Scrolling allows towns to be partially generated */
+struct wild_scroll_s
+{
+    point_t scroll;
+    rect_t  exclude;
+    int     flags;
+};
+typedef struct wild_scroll_s wild_scroll_t, *wild_scroll_ptr;
+
+
+/* Generate the room from the template, apply the indicated transformation.
+ * The wilderness scroll info is optional (cf wild.c) */
+extern void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr wild);
+
+
+/* Other stuff ... */
 extern void build_lake(int type);
 extern void build_cavern(void);
 
 extern bool generate_rooms(void);
 extern void build_maze_vault(int x0, int y0, int xsize, int ysize, bool is_vault);
-extern room_ptr choose_room_template(int type, int subtype);
-extern void build_room_template_aux(room_ptr room, int yval, int xval, int xoffset, int yoffset, int transno);
 extern void coord_trans(int *x, int *y, int xoffset, int yoffset, int transno);
 extern bool vault_aux_chapel_g(int r_idx);
 extern bool vault_aux_chapel_e(int r_idx);
