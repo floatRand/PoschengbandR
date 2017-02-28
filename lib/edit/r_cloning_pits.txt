@@ -1,0 +1,58 @@
+# Shared rewards for The Cloning Pits
+# t_outpost.txt and t_lite.txt
+# For this to work, both files must use '!' as the reward letter
+
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 0] ]
+L:!:ART(boots of shiva's avatar)
+
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 1] ]
+L:!:ART(thror)
+
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 2] ]
+L:!:ART(stomper)
+
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 3] ]
+L:!:ART(aragorn)
+
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 4] ]
+L:!:ART(boots of the bard)
+
+# Flora
+?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 5] ]
+L:!:FLOOR(ROOM):ART(flora)
+
+##########################################################################
+# Dragon/Hydra
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Dragon Hydra Centaur] [EQU [MOD $RANDOM33 5] 0] ]
+L:!:FLOOR(ROOM):ART(hammerhand)
+
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Dragon Hydra Centaur] [GEQ [MOD $RANDOM33 5] 1] ]
+L:!:FLOOR(ROOM):ART(thranduil)
+
+##########################################################################
+# Death-Sword
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Death-Sword] [EQU [MOD $RANDOM33 5] 0] ]
+L:!:FLOOR(ROOM):ART(werewindle)
+
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Death-Sword] [GEQ [MOD $RANDOM33 5] 1] ]
+L:!:FLOOR(ROOM):ART(grayswandir)
+
+##########################################################################
+# Beholder
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Beholder Quylthulg] [EQU [MOD $RANDOM33 5] 0] ]
+L:!:FLOOR(ROOM):ART(of the ages)
+
+# Frakir
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Beholder Quylthulg] [GEQ [MOD $RANDOM33 5] 1] ]
+L:!:FLOOR(ROOM):ART(frakir)
+
+##########################################################################
+# Xorn
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Xorn] [EQU [MOD $RANDOM33 5] 0] ]
+L:!:FLOOR(ROOM):ART(thorin)
+
+?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Xorn] [GEQ [MOD $RANDOM33 5] 1] ]
+L:!:FLOOR(ROOM):ART(perseus)
+
+##########################################################################
+

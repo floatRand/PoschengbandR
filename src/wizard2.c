@@ -1776,8 +1776,8 @@ void do_cmd_debug(void)
     case '_': {
         int flags = INIT_DEBUG;
         /*init_v_info(flags);*/
+        process_dungeon_file("t_lite.txt", flags);
         process_dungeon_file("t_outpost.txt", flags);
-        process_dungeon_file("q0willow.txt", flags);
 break;
         process_dungeon_file("t_outpost.txt", flags);
         process_dungeon_file("t_lite.txt", flags);
