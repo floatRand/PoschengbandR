@@ -231,35 +231,27 @@ L:b:BUILDING_1(GLOW, 0)
 
 ############### Quest 28 - The Royal Crypt ###############
 
-# Quest 28 assigned, entrance is quest entrance
-?:[EQU $QUEST28 1]
-F:w:QUEST_ENTER:3:0:0:0:0:NONE:28
-F:b:BUILDING_1:3:0:0:0:0:NONE:28
+?:[EQU $QUEST28 Taken]
+L:w:QUEST_ENTER(MARK | GLOW, 28)
+L:b:BUILDING_1(GLOW, 28)
 
-# Quest 28 completed
-?:[EQU $QUEST28 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:28
+?:[EQU $QUEST28 Completed]
+L:b:BUILDING_1(GLOW, 28)
 
-# Quest 28 rewarding, no new quest available
-# 'No reward changed' to The last and most powerful of the Hobbit Artifacts (which are all rather weak)
-?:[EQU $QUEST28 3]
-F:b:BUILDING_1:3
-F:!:FLOOR:3:0:0:0:242
+?:[EQU $QUEST28 Rewarded]
+L:b:BUILDING_1(GLOW, 0)
+L:!:ART(bilbo)
 
-# Quest 28 finished, no new quest available
-?:[EQU $QUEST28 4]
-F:b:BUILDING_1:3
+?:[EQU $QUEST28 Finished]
+L:b:BUILDING_1(GLOW, 0)
 
-# Quest 28 failed, no new quest available
-?:[EQU $QUEST28 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:28
+?:[EQU $QUEST28 Failed]
+L:b:BUILDING_1(GLOW, 28)
 
-# Quest 28 failed but done, no new quest available
-?:[EQU $QUEST28 6]
-F:b:BUILDING_1:3
+?:[EQU $QUEST28 FailedDone]
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
-
 
 ############### Quest 31 - Old Man Willow Quest ###############
 

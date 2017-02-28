@@ -1774,9 +1774,9 @@ void do_cmd_debug(void)
         break;
     }
     case '_': {
-        int flags = INIT_DEBUG | INIT_DISPLAY_DUNGEON;
+        int flags = INIT_DEBUG;
         /*init_v_info(flags);*/
-        process_dungeon_file("q_crypt.txt", flags);
+        process_dungeon_file("t_outpost.txt", flags);
 break;
         process_dungeon_file("t_outpost.txt", flags);
         process_dungeon_file("t_lite.txt", flags);

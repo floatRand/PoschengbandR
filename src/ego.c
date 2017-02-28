@@ -683,6 +683,11 @@ static void _create_ring_aux(object_type *o_ptr, int level, int power, int mode)
 {
     int powers = 0;
 
+    if (mode & AM_SPECIAL)
+    {
+        _art_create_random(o_ptr, level, power);
+        return;
+    }
     o_ptr->name2 = ego_choose_type(EGO_TYPE_RING, level);
 
     switch (o_ptr->name2)
@@ -1044,6 +1049,11 @@ static void _create_amulet_aux(object_type *o_ptr, int level, int power, int mod
 {
     int powers = 0;
 
+    if (mode & AM_SPECIAL)
+    {
+        _art_create_random(o_ptr, level, power);
+        return;
+    }
     o_ptr->name2 = ego_choose_type(EGO_TYPE_AMULET, level);
 
     switch (o_ptr->name2)

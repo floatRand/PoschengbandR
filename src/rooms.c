@@ -2311,7 +2311,15 @@ void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr
             {
                 _apply_room_grid_mon(p, grid, room->flags);
                 _apply_room_grid_obj(p, grid, room->flags);
-                if (letter == '<' && room->type == ROOM_QUEST)
+                /* Remove need for tedious P:px:py line in quest files ... normally, we
+                 * can just use the '<' tile for the player's starting location. That worked
+                 * fine for me until the Royal Crypt ... So a '@' will take precedence. */
+                if (letter == '@' && room->type == ROOM_QUEST)
+                {
+                    py = p.y;
+                    px = p.x;
+                }
+                if (letter == '<' && !_find_room_grid(room, '@') && room->type == ROOM_QUEST)
                 {
                     py = p.y;
                     px = p.x;
