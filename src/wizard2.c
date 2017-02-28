@@ -1777,6 +1777,7 @@ void do_cmd_debug(void)
         int flags = INIT_DEBUG;
         /*init_v_info(flags);*/
         process_dungeon_file("t_outpost.txt", flags);
+        process_dungeon_file("q0willow.txt", flags);
 break;
         process_dungeon_file("t_outpost.txt", flags);
         process_dungeon_file("t_lite.txt", flags);
@@ -1796,6 +1797,9 @@ break;
 
         process_dungeon_file("qhaunted.txt", flags);
         process_dungeon_file("q_crypt.txt", flags);
+
+        process_dungeon_file("q0willow.txt", flags);
+
         break; }
     default:
         msg_print("That is not a valid debug command.");

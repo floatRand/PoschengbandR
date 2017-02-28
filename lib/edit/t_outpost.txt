@@ -1,5 +1,7 @@
 # Outpost
 
+%:t_pref.txt
+
 T:TOWN:NORMAL:NO_ROTATE
 ############### Additional default terrain settings ###############
 # A test tile for debugging
@@ -255,41 +257,31 @@ L:b:BUILDING_1(GLOW, 0)
 
 ############### Quest 31 - Old Man Willow Quest ###############
 
-# Quest 31 untaken
-?:[EQU $QUEST31 0]
-F:a:BUILDING_0:3:0:0:0:0:NONE:31
+?:[EQU $QUEST31 Untaken]
+L:a:BUILDING_0(GLOW, 31)
 
-# Quest 31 taken, entrance is quest entrance
-?:[EQU $QUEST31 1]
-F:s:QUEST_ENTER:3:0:0:0:0:NONE:31
-F:a:BUILDING_0:3:0:0:0:0:NONE:31
+?:[EQU $QUEST31 Taken]
+L:s:QUEST_ENTER(MARK | GLOW, 31)
+L:a:BUILDING_0(GLOW, 31)
 
-# Quest 31 completed
-?:[EQU $QUEST31 2]
-F:a:BUILDING_0:3:0:0:0:0:NONE:31
+?:[EQU $QUEST31 Completed]
+L:a:BUILDING_0(GLOW, 31)
 
-# Quest 31 rewarding, Elemental Ring
-# continue with quest 32
-?:[EQU $QUEST31 3]
-F:a:BUILDING_0:3:0:0:0:0:NONE:32
-F:@:FLOOR:3:0:132:201
+?:[EQU $QUEST31 Rewarded]
+L:a:BUILDING_0(GLOW, 32)
+L:@:OBJ(RING, DEPTH+22):EGO(elemental)
 
-# Elemental Charm
 ?:[AND [EQU $QUEST31 3] [EQU $RACE Hydra] ]
-F:a:BUILDING_0:3:0:0:0:0:NONE:32
-F:@:FLOOR:3:0:163:201
+L:@:OBJ(AMULET, DEPTH+22):EGO(elemental)
 
-# Quest 31 finished, continue with quest 32
-?:[EQU $QUEST31 4]
-F:a:BUILDING_0:3:0:0:0:0:NONE:32
+?:[EQU $QUEST31 Finished]
+L:a:BUILDING_0(GLOW, 32)
 
-# Quest 31 failed, wait for the player to enter the Inn
-?:[EQU $QUEST31 5]
-F:a:BUILDING_0:3:0:0:0:0:NONE:31
+?:[EQU $QUEST31 Failed]
+L:a:BUILDING_0(GLOW, 31)
 
-# Quest 31 failed
-?:[EQU $QUEST31 6]
-F:a:BUILDING_0:3
+?:[EQU $QUEST31 FailedDone]
+L:a:BUILDING_0(GLOW, 0)
 
 ?:1
 
