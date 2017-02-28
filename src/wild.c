@@ -1114,17 +1114,15 @@ static void _generate_area(int x, int y, int dx, int dy, rect_t exclude)
             init_buildings();
 
             /* Initialize the town */
-            init_flags = INIT_CREATE_DUNGEON;
+            scroll.flags = INIT_CREATE_DUNGEON;
             if (rect_is_valid(exclude))
             {
-                init_flags |= INIT_SCROLL_WILDERNESS;
+                scroll.flags |= INIT_SCROLL_WILDERNESS;
                 scroll.exclude = exclude;
             }
-            scroll.flags = init_flags;
             scroll.scroll = point(dx, dy);
             wild_scroll = &scroll;
-            process_dungeon_file("t_info.txt", 0, 0, MAX_HGT, MAX_WID);
-            init_flags = 0;
+            process_dungeon_file("t_info.txt", scroll.flags);
             wild_scroll = NULL;
         }
 
@@ -1154,8 +1152,7 @@ void wilderness_gen(void)
     cur_wid = MAX_WID;
 
     /* Init the wilderness */
-    init_flags = 0;
-    process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
+    process_dungeon_file("w_info.txt", 0);
 
     dun_level = 0;
 
@@ -1246,8 +1243,7 @@ void wilderness_gen_small(void)
     }
 
     /* Init the wilderness */
-    init_flags = 0;
-    process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
+    process_dungeon_file("w_info.txt", 0);
 
     /* Fill the map */
     for (i = 0; i < max_wild_x; i++)
@@ -1300,14 +1296,11 @@ static wilderness_grid w_letter[255];
 /*
  * Parse a sub-file of the "extra info"
  */
-errr parse_line_wilderness(char *buf, int ymin, int xmin, int ymax, int xmax, int *y, int *x)
+static int _parse_y;
+errr parse_line_wilderness(char *buf, int options)
 {
     int i, num;
     char *zz[33];
-
-    /* Unused */
-    (void)ymin;
-    (void)ymax;
 
     /* Paranoia */
     if (!(buf[0] == 'W')) return (PARSE_ERROR_GENERIC);
@@ -1320,6 +1313,7 @@ errr parse_line_wilderness(char *buf, int ymin, int xmin, int ymax, int xmax, in
     case 'F':
     case 'E':
     {
+        _parse_y = 0; /* hack: prepare to reparse the map */
         if ((num = tokenize(buf+4, 6, zz, 0)) > 1)
         {
             int index = zz[0][0];
@@ -1362,27 +1356,21 @@ errr parse_line_wilderness(char *buf, int ymin, int xmin, int ymax, int xmax, in
     /* Layout of the wilderness */
     case 'D':
     {
-        /* Acquire the text */
+        int   i;
         char *s = buf+4;
-
-        /* Length of the text */
         int len = strlen(s);
 
-        for (*x = xmin, i = 0; ((*x < xmax) && (i < len)); (*x)++, s++, i++)
+        assert(0 <= _parse_y && _parse_y < max_wild_y);
+        for (i = 0; i < len; i++)
         {
-            int idx = s[0];
-
-            wilderness[*y][*x].terrain = w_letter[idx].terrain;
-
-            wilderness[*y][*x].level = w_letter[idx].level;
-
-            wilderness[*y][*x].town = w_letter[idx].town;
-
-            wilderness[*y][*x].road = w_letter[idx].road;
+            int letter = s[i];
+            assert(0 <= i && i < max_wild_x);
+            wilderness[_parse_y][i].terrain = w_letter[letter].terrain;
+            wilderness[_parse_y][i].level = w_letter[letter].level;
+            wilderness[_parse_y][i].town = w_letter[letter].town;
+            wilderness[_parse_y][i].road = w_letter[letter].road;
         }
-
-        (*y)++;
-
+        _parse_y++;
         break;
     }
 

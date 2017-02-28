@@ -465,11 +465,8 @@ static void init_dungeon_quests(void)
     num_random_quests = 10; /*get_quantity("How many quests (0 to 49)? ", 49);*/
 
     /* Init the random quests */
-    init_flags = INIT_ASSIGN;
     p_ptr->inside_quest = MIN_RANDOM_QUEST;
-
-    process_dungeon_file("q_info.txt", 0, 0, 0, 0);
-
+    process_dungeon_file("q_info.txt", INIT_ASSIGN);
     p_ptr->inside_quest = 0;
 
     /* Generate quests */
@@ -495,17 +492,11 @@ static void init_dungeon_quests(void)
     }
 
     /* Init the two main quests (Oberon + Serpent) */
-    init_flags = INIT_ASSIGN;
     p_ptr->inside_quest = QUEST_OBERON;
-
-    process_dungeon_file("q_info.txt", 0, 0, 0, 0);
-
+    process_dungeon_file("q_info.txt", INIT_ASSIGN);
     quest[QUEST_OBERON].status = QUEST_STATUS_TAKEN;
-
     p_ptr->inside_quest = QUEST_SERPENT;
-
-    process_dungeon_file("q_info.txt", 0, 0, 0, 0);
-
+    process_dungeon_file("q_info.txt", INIT_ASSIGN);
     quest[QUEST_SERPENT].status = QUEST_STATUS_TAKEN;
     p_ptr->inside_quest = 0;
 }

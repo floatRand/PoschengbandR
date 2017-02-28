@@ -1922,8 +1922,7 @@ void possessor_character_dump(doc_ptr doc)
                 quest_text_line = 0;
 
                 p_ptr->inside_quest = p->d_lvl;
-                init_flags = INIT_SHOW_TEXT;
-                process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+                process_dungeon_file("q_info.txt", INIT_SHOW_TEXT);
                 p_ptr->inside_quest = old_quest;
             }
 

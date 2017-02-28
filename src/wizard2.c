@@ -1774,25 +1774,28 @@ void do_cmd_debug(void)
         break;
     }
     case '_': {
-        init_flags = INIT_DEBUG | INIT_DISPLAY_DUNGEON;
-        /*init_v_info();*/
-        process_dungeon_file("qhaunted.txt", 0, 0, 0, 0);
+        int flags = INIT_DEBUG | INIT_DISPLAY_DUNGEON;
+        /*init_v_info(flags);*/
+        process_dungeon_file("q_crypt.txt", flags);
 break;
-        process_dungeon_file("t_outpost.txt", 0, 0, 0, 0);
-        process_dungeon_file("t_lite.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_doom2.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_thieves.txt", 0, 0, 0, 0);
-        process_dungeon_file("qdarkelf.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_vault.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_barrow.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_cloning_pits.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_old_castle.txt", 0, 0, 0, 0);
+        process_dungeon_file("t_outpost.txt", flags);
+        process_dungeon_file("t_lite.txt", flags);
+        process_dungeon_file("q_doom2.txt", flags);
+        process_dungeon_file("q_thieves.txt", flags);
+        process_dungeon_file("qdarkelf.txt", flags);
+        process_dungeon_file("q_vault.txt", flags);
+        process_dungeon_file("q_barrow.txt", flags);
+        process_dungeon_file("q_cloning_pits.txt", flags);
+        process_dungeon_file("q_old_castle.txt", flags);
 
-        process_dungeon_file("q_orcs.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_doom1.txt", 0, 0, 0, 0);
-        process_dungeon_file("q_doom2.txt", 0, 0, 0, 0);
-        process_dungeon_file("q0thief1.txt", 0, 0, 0, 0);
-        process_dungeon_file("q0thief2.txt", 0, 0, 0, 0);
+        process_dungeon_file("q_orcs.txt", flags);
+        process_dungeon_file("q_doom1.txt", flags);
+        process_dungeon_file("q_doom2.txt", flags);
+        process_dungeon_file("q0thief1.txt", flags);
+        process_dungeon_file("q0thief2.txt", flags);
+
+        process_dungeon_file("qhaunted.txt", flags);
+        process_dungeon_file("q_crypt.txt", flags);
         break; }
     default:
         msg_print("That is not a valid debug command.");

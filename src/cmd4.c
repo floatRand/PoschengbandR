@@ -6897,13 +6897,7 @@ static void do_cmd_knowledge_quests_current(FILE *fff)
             quest_text_line = 0;
 
             p_ptr->inside_quest = i;
-
-            /* Get the quest text */
-            init_flags = INIT_SHOW_TEXT;
-
-            process_dungeon_file("q_info.txt", 0, 0, 0, 0);
-
-            /* Reset the old quest number */
+            process_dungeon_file("q_info.txt", INIT_SHOW_TEXT);
             p_ptr->inside_quest = old_quest;
 
             /* No info from "silent" quests */
@@ -7033,17 +7027,9 @@ void do_cmd_knowledge_quests_completed(FILE *fff, int quest_num[])
         {
             if (is_fixed_quest_idx(q_idx))
             {
-                /* Set the quest number temporary */
                 int old_quest = p_ptr->inside_quest;
-
                 p_ptr->inside_quest = q_idx;
-
-                /* Get the quest */
-                init_flags = INIT_ASSIGN;
-
-                process_dungeon_file("q_info.txt", 0, 0, 0, 0);
-
-                /* Reset the old quest number */
+                process_dungeon_file("q_info.txt", INIT_ASSIGN);
                 p_ptr->inside_quest = old_quest;
 
                 /* No info from "silent" quests */
@@ -7107,17 +7093,9 @@ void do_cmd_knowledge_quests_failed(FILE *fff, int quest_num[])
         {
             if (is_fixed_quest_idx(q_idx))
             {
-                /* Set the quest number temporary */
                 int old_quest = p_ptr->inside_quest;
-
                 p_ptr->inside_quest = q_idx;
-
-                /* Get the quest text */
-                init_flags = INIT_ASSIGN;
-
-                process_dungeon_file("q_info.txt", 0, 0, 0, 0);
-
-                /* Reset the old quest number */
+                process_dungeon_file("q_info.txt", INIT_ASSIGN);
                 p_ptr->inside_quest = old_quest;
 
                 /* No info from "silent" quests */

@@ -2184,8 +2184,6 @@ static void get_questinfo(int questnum)
     int     old_quest;
     char    tmp_str[80];
 
-
-    /* Clear the text */
     for (i = 0; i < 10; i++)
     {
         quest_text[i][0] = '\0';
@@ -2193,23 +2191,13 @@ static void get_questinfo(int questnum)
 
     quest_text_line = 0;
 
-    /* Set the quest number temporary */
     old_quest = p_ptr->inside_quest;
     p_ptr->inside_quest = questnum;
-
-    /* Get the quest text */
-    init_flags = INIT_SHOW_TEXT | INIT_ASSIGN;
-
-    process_dungeon_file("q_info.txt", 0, 0, 0, 0);
-
-    /* Reset the old quest number */
+    process_dungeon_file("q_info.txt", INIT_SHOW_TEXT | INIT_ASSIGN);
     p_ptr->inside_quest = old_quest;
 
-    /* Print the quest info */
     sprintf(tmp_str, "Quest Information (Danger level: %d)", quest[questnum].level);
-
     prt(tmp_str, 5, 0);
-
     prt(quest[questnum].name, 7, 0);
 
     for (i = 0; i < 10; i++)

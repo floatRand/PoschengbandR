@@ -5413,16 +5413,8 @@ void play_game(bool new_game)
     /* Initialize the town-buildings if necessary */
     if (!dun_level && !p_ptr->inside_quest)
     {
-        /* Init the wilderness */
-
-        init_flags = 0;
-        process_dungeon_file("w_info.txt", 0, 0, max_wild_y, max_wild_x);
-
-        /* Init the town */
-        init_flags = INIT_ONLY_BUILDINGS;
-
-        process_dungeon_file("t_info.txt", 0, 0, MAX_HGT, MAX_WID);
-
+        process_dungeon_file("w_info.txt", 0);
+        process_dungeon_file("t_info.txt", INIT_ONLY_BUILDINGS);
     }
 
 

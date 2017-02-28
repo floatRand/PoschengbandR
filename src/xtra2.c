@@ -4143,16 +4143,10 @@ static int target_set_aux(int y, int x, int mode, cptr info)
             quest_text_line = 0;
 
             p_ptr->inside_quest = c_ptr->special;
-
-            /* Get the quest text */
-            init_flags = INIT_SHOW_TEXT;
-
-            process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+            process_dungeon_file("q_info.txt", INIT_SHOW_TEXT);
+            p_ptr->inside_quest = old_quest;
 
             name = format("the entrance to the quest '%s'(level %d)", quest[c_ptr->special].name, quest[c_ptr->special].level);
-
-            /* Reset the old quest number */
-            p_ptr->inside_quest = old_quest;
         }
 
         /* Hack -- special handling for building doors */

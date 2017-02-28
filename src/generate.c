@@ -1431,10 +1431,7 @@ static void quest_gen(void)
 
     /* Prepare allocation table */
     get_mon_num_prep(get_monster_hook(), NULL);
-
-    init_flags = INIT_CREATE_DUNGEON | INIT_ASSIGN;
-
-    process_dungeon_file("q_info.txt", 0, 0, MAX_HGT, MAX_WID);
+    process_dungeon_file("q_info.txt", INIT_CREATE_DUNGEON | INIT_ASSIGN);
 }
 
 /* Make a real level */

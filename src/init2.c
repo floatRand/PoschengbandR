@@ -628,7 +628,7 @@ static errr init_d_info(void)
  * Code needs refactoring ... also, the line based processing is awkward.
  * A recursive descent parser would be much cleaner ...
  */
-errr init_v_info(void)
+errr init_v_info(int options)
 {
     FILE *fp;
     char buf[1024];
@@ -638,7 +638,7 @@ errr init_v_info(void)
     fp = my_fopen(buf, "r");
     if (!fp) quit("Cannot open 'v_info.txt' file.");
 
-    if (init_flags & INIT_DEBUG)
+    if (options & INIT_DEBUG)
     {
         msg_boundary();
         cmsg_print(TERM_RED, "=====================================================");
@@ -658,13 +658,13 @@ errr init_v_info(void)
         if (!buf[0] || (buf[0] == '#')) continue;
         if (buf[1] != ':') { err = PARSE_ERROR_GENERIC; break; }
 
-        if ((init_flags & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == '!'))
+        if ((options & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == '!'))
         {
             msg_boundary();
             msg_format("<color:R>%s</color>:<color:y>%d</color> %s", "v_info.txt", error_line, buf);
             msg_boundary();
         }
-        err = parse_v_info(buf);
+        err = parse_v_info(buf, options);
         if (err) break;
     }
 
@@ -736,10 +736,7 @@ static errr init_m_info(void)
  */
 static errr init_misc(void)
 {
-    /* Initialize the values */
-    init_flags = 0;
-    process_dungeon_file("misc.txt", 0, 0, 0, 0);
-
+    process_dungeon_file("misc.txt", 0);
     return 0;
 }
 
@@ -1656,7 +1653,7 @@ void init_angband(void)
 
 
     /* Initialize vault info */
-    if (init_v_info()) quit("Cannot initialize vaults");
+    if (init_v_info(0)) quit("Cannot initialize vaults");
 
     /* Initialize some other arrays */
     note("[Initializing arrays... (other)]");

@@ -111,7 +111,7 @@
 
 # Royal Crypt
 ?:[EQU $QUEST_NUMBER 28]
-%:q0000028.txt
+%:q_crypt.txt
 
 # Tengu and Death Swords
 ?:[EQU $QUEST_NUMBER 29]

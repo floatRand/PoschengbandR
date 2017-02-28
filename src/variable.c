@@ -1024,11 +1024,6 @@ int quest_text_line;
  */
 s16b gf_color[MAX_GF];
 
-/*
- * Flags for initialization
- */
-int init_flags;
-
 /* Parameters for process_dungeon_file to support wilderness scrolling */
 wild_scroll_ptr wild_scroll = NULL;
 

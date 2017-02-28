@@ -491,7 +491,6 @@ extern quest_type *quest;
 extern char quest_text[10][80];
 extern int quest_text_line;
 extern s16b gf_color[MAX_GF];
-extern int init_flags;
 extern wild_scroll_ptr wild_scroll;
 extern int highscore_fd;
 extern int mutant_regenerate_mod;
@@ -984,13 +983,13 @@ extern void generate_cave(void);
 extern byte color_char_to_attr(char c);
 extern s16b f_tag_to_index(cptr str);
 extern void drop_here(object_type *j_ptr, int y, int x);
-extern errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax);
+extern errr process_dungeon_file(cptr name, int options);
 
 /* init2.c */
 extern void init_file_paths(const char *configpath, const char *libpath, const char *datapath);
 extern void create_needed_dirs(void);
 extern cptr err_str[PARSE_ERROR_MAX];
-extern errr init_v_info(void);
+extern errr init_v_info(int options);
 extern errr init_buildings(void);
 extern s16b f_tag_to_index_in_init(cptr str);
 extern void init_angband(void);
@@ -2048,7 +2047,7 @@ extern int  wilderness_level(int x, int y);
 extern errr init_wilderness(void);
 extern void init_wilderness_terrains(void);
 extern void seed_wilderness(void);
-extern errr parse_line_wilderness(char *buf, int ymin, int xmin, int ymax, int xmax, int *y, int *x);
+extern errr parse_line_wilderness(char *buf, int options);
 extern bool change_wild_mode(void);
 
 /* wizard2.c */

@@ -107,7 +107,7 @@ extern errr init_info_txt(FILE *fp, char *buf, header *head,
 #ifdef ALLOW_TEMPLATES
 extern errr parse_z_info(char *buf, header *head);
 extern errr parse_f_info(char *buf, header *head);
-extern errr parse_v_info(char *buf);
+extern errr parse_v_info(char *buf, int options);
 extern void retouch_f_info(header *head);
 extern errr parse_k_info(char *buf, header *head);
 extern errr parse_a_info(char *buf, header *head);

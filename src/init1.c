@@ -1330,7 +1330,7 @@ static const char *_summon_specific_types[] = {
     0,
 };
 
-static int _lookup_monster(cptr name)
+static int _lookup_monster(cptr name, int options)
 {
     int i;
     for (i = 1; i < max_r_idx; i++)
@@ -1341,7 +1341,7 @@ static int _lookup_monster(cptr name)
         _prep_name(buf, r_name + r_ptr->name);
         if (strstr(buf, name))
         {
-            if (init_flags & INIT_DEBUG)
+            if (options & INIT_DEBUG)
                 msg_format("Mapping <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
             return i;
         }
@@ -1355,7 +1355,7 @@ static int _lookup_monster(cptr name)
    MON(o, NO_GROUP | HASTE)       Ditto: You can use any valid d_char
    MON(black knight)              A Black Knight
    MON(^ent$)                     An Ent (not an Agent of the black market) */
-static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_ptr grid)
+static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_ptr grid, int options)
 {
     if (arg_ct < 1 || arg_ct > 2)
     {
@@ -1389,7 +1389,7 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_ptr grid
         {
             if (!_summon_specific_types[i])
             {
-                grid->monster = _lookup_monster(args[0]);
+                grid->monster = _lookup_monster(args[0], options);
                 if (!grid->monster)
                 {
                     msg_format("Error: Invalid monster specifier %s.", args[0]);
@@ -1539,7 +1539,7 @@ static int _lookup_ego_type(int object)
     }
 }
 
-static int _lookup_kind(char *arg)
+static int _lookup_kind(char *arg, int options)
 {
     int i;
     for (i = 1; i < max_k_idx; i++)
@@ -1560,7 +1560,7 @@ static int _lookup_kind(char *arg)
         strcat(buf, "$");
         if (strstr(buf, arg))
         {
-            if (init_flags & INIT_DEBUG)
+            if (options & INIT_DEBUG)
                 msg_format("Mapping kind <color:B>%s</color> to <color:R>%s</color> (%d).", arg, buf, i);
             return i;
         }
@@ -1570,7 +1570,7 @@ static int _lookup_kind(char *arg)
 
 /* OBJ(WAND_ROCKET)      -> _parse_effect(TV_WAND, "ROCKET")     -> EFFECT_ROCKET
  * OBJ(STAFF_MANA_STORM) -> _parse_effect(TV_STAFF, "MANA_STORM")-> EFFECT_MANA_STORM */
-static errr _parse_effect(int tval, cptr arg, room_grid_ptr grid)
+static errr _parse_effect(int tval, cptr arg, room_grid_ptr grid, int options)
 {
     int effect_id = effect_parse_type(arg);
     if (!effect_id)
@@ -1586,7 +1586,7 @@ static errr _parse_effect(int tval, cptr arg, room_grid_ptr grid)
     grid->object = lookup_kind(tval, SV_ANY);
     grid->extra = effect_id;
     grid->flags |= ROOM_GRID_OBJ_EFFECT;
-    if (init_flags & INIT_DEBUG)
+    if (options & INIT_DEBUG)
     {
         char     name[255];
         effect_t e = {0};
@@ -1607,7 +1607,7 @@ static errr _parse_effect(int tval, cptr arg, room_grid_ptr grid)
    OBJ(mushroom of cure serious wounds)
    OBJ(potion of cure serious wounds)   i.e. you must disambiguate!
 */
-static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid)
+static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid, int options)
 {
     switch (arg_ct)
     {
@@ -1643,11 +1643,11 @@ static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid)
             int i;
             /* OBJ(WAND_ROCKET) ... note: OBJ(WAND) will fall thru to normal type handling */
             if (prefix(args[0], "WAND_"))
-                return _parse_effect(TV_WAND, args[0] + strlen("WAND_"), grid);
+                return _parse_effect(TV_WAND, args[0] + strlen("WAND_"), grid, options);
             if (prefix(args[0], "ROD_"))
-                return _parse_effect(TV_ROD, args[0] + strlen("ROD_"), grid);
+                return _parse_effect(TV_ROD, args[0] + strlen("ROD_"), grid, options);
             if (prefix(args[0], "STAFF_"))
-                return _parse_effect(TV_STAFF, args[0] + strlen("STAFF_"), grid);
+                return _parse_effect(TV_STAFF, args[0] + strlen("STAFF_"), grid, options);
             /* OBJ(SWORD) */
             for (i = 0; ; i++)
             {
@@ -1660,7 +1660,7 @@ static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid)
                 }
             }
             /* OBJ(^dagger$) */
-            grid->object = _lookup_kind(args[0]);
+            grid->object = _lookup_kind(args[0], options);
             if (!grid->object)
             {
                 /* OBJ(212) ... whatever that might be?? */
@@ -1680,7 +1680,7 @@ static errr _parse_room_grid_object(char **args, int arg_ct, room_grid_ptr grid)
     return 0;
 }
 
-static int _lookup_ego(cptr name, int type)
+static int _lookup_ego(cptr name, int type, int options)
 {
     int i;
     for (i = 1; i < max_e_idx; i++)
@@ -1692,7 +1692,7 @@ static int _lookup_ego(cptr name, int type)
         _prep_name(buf, e_name + e_ptr->name);
         if (strstr(buf, name))
         {
-            if (init_flags & INIT_DEBUG)
+            if (options & INIT_DEBUG)
                 msg_format("Matching ego <color:B>%s</color> to <color:R>%s</color> (%d).", name, e_name + e_ptr->name, i);
             return i;
         }
@@ -1710,7 +1710,7 @@ static int _lookup_ego(cptr name, int type)
    I'll try to fix this some day, but for now, use the index for names
    that duplicate (e.g. 'of Speed' for boots and rings). Other problems
    are 'of Elvenkind' 'of Slaying' 'Elemental' ... */
-static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid)
+static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid, int options)
 {
     switch (arg_ct)
     {
@@ -1726,15 +1726,15 @@ static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid)
             else if (grid->flags & ROOM_GRID_OBJ_TYPE)
             {
                 int type = _lookup_ego_type(grid->object);
-                grid->extra = _lookup_ego(args[0], type);
+                grid->extra = _lookup_ego(args[0], type, options);
             }
             else if (grid->object && !(grid->flags & ROOM_GRID_OBJ_RANDOM))
             {
                 int type = _lookup_ego_type(k_info[grid->object].tval);
-                grid->extra = _lookup_ego(args[0], type);
+                grid->extra = _lookup_ego(args[0], type, options);
             }
             else
-                grid->extra = _lookup_ego(args[0], 0);
+                grid->extra = _lookup_ego(args[0], 0, options);
             if (!grid->extra)
             {
                 msg_format("Error: Unknown Ego %s.", args[0]);
@@ -1751,7 +1751,7 @@ static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid)
     return 0;
 }
 
-static int _lookup_art(cptr name)
+static int _lookup_art(cptr name, int options)
 {
     int i;
     for (i = 1; i < max_a_idx; i++)
@@ -1773,7 +1773,7 @@ static int _lookup_art(cptr name)
         }
         if (strstr(buf, name))
         {
-            if (init_flags & INIT_DEBUG)
+            if (options & INIT_DEBUG)
                 msg_format("Matching artifact <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
             return i;
         }
@@ -1783,7 +1783,7 @@ static int _lookup_art(cptr name)
 
 /* OBJ(CLOAK, DEPTH+20):ART(*)   Rand-art cloak generated 20 levels OoD
    ART(dwarves)                  Necklace of the Dwarves (a_idx = 6) */
-static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_ptr grid)
+static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_ptr grid, int options)
 {
     switch (arg_ct)
     {
@@ -1797,7 +1797,7 @@ static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_ptr gri
             if (_is_numeric(args[0]))
                 grid->object = atoi(args[0]);
             else
-                grid->object = _lookup_art(args[0]);
+                grid->object = _lookup_art(args[0], options);
             if (!grid->object)
             {
                 msg_format("Error: Unknown Artifact %s.", args[0]);
@@ -1901,7 +1901,7 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
 /* L:.:FLOOR(ROOM|ICKY):MON(DRAGON, 20):EGO(*)
    Room Grids are designed to replace old dungeon_grid F: lines
    but I haven't got around to replacing those just yet. */
-errr parse_room_grid(char *buf, room_grid_ptr grid)
+errr parse_room_grid(char *buf, room_grid_ptr grid, int options)
 {
     errr  result = 0;
     char *commands[10];
@@ -1946,22 +1946,22 @@ errr parse_room_grid(char *buf, room_grid_ptr grid)
 
         if (streq(name, "MON"))
         {
-            result = _parse_room_grid_monster(args, arg_ct, grid);
+            result = _parse_room_grid_monster(args, arg_ct, grid, options);
             if (result) break;
         }
         else if (streq(name, "OBJ"))
         {
-            result = _parse_room_grid_object(args, arg_ct, grid);
+            result = _parse_room_grid_object(args, arg_ct, grid, options);
             if (result) break;
         }
         else if (streq(name, "EGO"))
         {
-            result = _parse_room_grid_ego(args, arg_ct, grid);
+            result = _parse_room_grid_ego(args, arg_ct, grid, options);
             if (result) break;
         }
         else if (streq(name, "ART"))
         {
-            result = _parse_room_grid_artifact(args, arg_ct, grid);
+            result = _parse_room_grid_artifact(args, arg_ct, grid, options);
             if (result) break;
         }
         else if (streq(name, "TRAP") || streq(name, "SECRET"))
@@ -2111,7 +2111,7 @@ static errr _parse_room_type(char *buf, room_ptr room)
     return 0;
 }
 
-errr parse_v_info(char *buf)
+errr parse_v_info(char *buf, int options)
 {
     char *s;
 
@@ -2131,7 +2131,7 @@ errr parse_v_info(char *buf)
         }
 
         error_idx = vec_length(room_info);
-        if (init_flags & INIT_DEBUG)
+        if (options & INIT_DEBUG)
         {
             room_free(room);
             room = room_alloc(zz[0]);
@@ -2189,7 +2189,7 @@ errr parse_v_info(char *buf)
         int rc;
         room_grid_ptr letter = malloc(sizeof(room_grid_t));
         memset(letter, 0, sizeof(room_grid_t));
-        rc = parse_room_grid(buf + 2, letter);
+        rc = parse_room_grid(buf + 2, letter, options);
         int_map_add(room->letters, letter->letter, letter);
         if (rc) return rc;
     }
@@ -4782,7 +4782,7 @@ void drop_here(object_type *j_ptr, int y, int x)
  * Parse a sub-file of the "extra info"
  */
 static room_ptr _room = NULL;
-static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, int xmax, int *y, int *x)
+static errr process_dungeon_file_aux(char *buf, int options)
 {
     char *zz[33];
 
@@ -4802,8 +4802,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
     /* Process "%:<fname>" */
     if (buf[0] == '%')
     {
-        /* Attempt to Process the given file */
-        return (process_dungeon_file(buf + 2, ymin, xmin, ymax, xmax));
+        return process_dungeon_file(buf + 2, options);
     }
 
     if (buf[0] == 'F')
@@ -4825,7 +4824,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
             int rc;
             room_grid_ptr letter = malloc(sizeof(room_grid_t));
             memset(letter, 0, sizeof(room_grid_t));
-            rc = parse_room_grid(buf + 2, letter);
+            rc = parse_room_grid(buf + 2, letter, options);
             int_map_add(_room->letters, letter->letter, letter);
             return rc;
         }
@@ -4885,7 +4884,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                     msg_format("Error: Undefined scramble: %c", scramble);
                     return PARSE_ERROR_GENERIC;
                 }
-                if (init_flags & INIT_DEBUG)
+                if (options & INIT_DEBUG)
                     msg_format("Scrambled <color:R>%c</color> to <color:B>%c</color>.", letter, scramble);
             }
         }
@@ -4916,7 +4915,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
                 return PARSE_ERROR_GENERIC;
             }
             vec_push(_room->map, z_string_make(s));
-            if ((init_flags & INIT_DEBUG) && _room->type != ROOM_TOWN)
+            if ((options & INIT_DEBUG) && _room->type != ROOM_TOWN)
             {
                 cptr t = s;
                 while (*t)
@@ -4951,7 +4950,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
         /* Process "Q:<q_index>:Q:<type>:<num_mon>:<cur_num>:<max_num>:<level>:<r_idx>:<k_idx>:<flags>" -- quest info */
         if (zz[1][0] == 'Q')
         {
-            if (init_flags & INIT_ASSIGN)
+            if (options & INIT_ASSIGN)
             {
                 monster_race *r_ptr;
                 artifact_type *a_ptr;
@@ -4983,7 +4982,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
         /* Process "Q:<q_index>:N:<name>" -- quest name */
         else if (zz[1][0] == 'N')
         {
-            if (init_flags & (INIT_ASSIGN | INIT_SHOW_TEXT))
+            if (options & (INIT_ASSIGN | INIT_SHOW_TEXT))
             {
                 strcpy(q_ptr->name, zz[2]);
             }
@@ -4994,7 +4993,7 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
         /* Process "Q:<q_index>:T:<text>" -- quest description line */
         else if (zz[1][0] == 'T')
         {
-            if (init_flags & INIT_SHOW_TEXT)
+            if (options & INIT_SHOW_TEXT)
             {
                 strcpy(quest_text[quest_text_line], zz[2]);
                 quest_text_line++;
@@ -5007,13 +5006,13 @@ static errr process_dungeon_file_aux(char *buf, int ymin, int xmin, int ymax, in
     /* Process "W:<command>: ..." -- info for the wilderness */
     else if (buf[0] == 'W')
     {
-        return parse_line_wilderness(buf, ymin, xmin, ymax, xmax, y, x);
+        return parse_line_wilderness(buf, options);
     }
 
     /* Process "P:<y>:<x>" -- player position */
     else if (buf[0] == 'P')
     {
-        if (init_flags & INIT_CREATE_DUNGEON)
+        if (options & INIT_CREATE_DUNGEON)
         {
             if (tokenize(buf + 2, 2, zz, 0) == 2)
             {
@@ -5565,19 +5564,13 @@ static void _display_room(room_ptr room)
     do_cmd_redraw();
 }
 
-errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
+errr process_dungeon_file(cptr name, int options)
 {
-    FILE *fp;
-
-    char buf[1024];
-
-    int num = 0;
-
-    errr err = 0;
-
-    bool bypass = FALSE;
-
-    int x = xmin, y = ymin;
+    FILE      *fp;
+    char       buf[1024];
+    int        num = 0;
+    errr       err = 0;
+    bool       bypass = FALSE;
     static int depth = 0;
 
 
@@ -5591,11 +5584,11 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
     if (!fp) return (-1);
 
     /* The pattern of recursion is awkward ... process_dungeon_file -> aux -> process_dungeon_file -> aux -> etc. */
-    if (!depth++ && (init_flags & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
+    if (!depth++ && (options & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
     {
         assert(!_room);
         _room = room_alloc("Temp");
-        if (init_flags & INIT_DEBUG)
+        if (options & INIT_DEBUG)
         {
             msg_boundary();
             cmsg_print(TERM_RED, "=====================================================");
@@ -5641,16 +5634,16 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
         }
 
         /* Apply conditionals ... INIT_DEBUG is for testing purposes */
-        if (!(init_flags & INIT_DEBUG) && bypass) continue;
+        if (!(options & INIT_DEBUG) && bypass) continue;
 
         /* Process the line */
-        if ((init_flags & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == '!'))
+        if ((options & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == '!'))
         {
             msg_boundary();
             msg_format("<color:R>%s</color>:<color:y>%d</color> %s", name, num, buf);
             msg_boundary();
         }
-        err = process_dungeon_file_aux(buf, ymin, xmin, ymax, xmax, &y, &x);
+        err = process_dungeon_file_aux(buf, options);
 
         /* Oops */
         if (err) break;
@@ -5671,10 +5664,10 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
 
         msg_print(NULL);
     }
-    if (!--depth && (init_flags & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
+    if (!--depth && (options & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
     {
         assert(_room);
-        if (vec_length(_room->map) && (init_flags & INIT_CREATE_DUNGEON))
+        if (vec_length(_room->map) && (options & INIT_CREATE_DUNGEON))
         {
             transform_ptr   xform = transform_alloc_room(_room, size(MAX_WID, MAX_HGT));
             int             panels_x, panels_y;
@@ -5692,7 +5685,7 @@ errr process_dungeon_file(cptr name, int ymin, int xmin, int ymax, int xmax)
             transform_free(xform);
             wild_scroll = NULL;
         }
-        else if (vec_length(_room->map) && (init_flags & INIT_DISPLAY_DUNGEON))
+        else if (vec_length(_room->map) && (options & INIT_DISPLAY_DUNGEON))
             _display_room(_room);
         room_free(_room);
         _room = NULL;

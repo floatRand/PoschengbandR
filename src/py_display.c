@@ -1118,10 +1118,8 @@ static void _build_quests(doc_ptr doc)
             if (is_fixed_quest_idx(q_ptr->id))
             {
                 int old_quest = p_ptr->inside_quest;
-
                 p_ptr->inside_quest = q_ptr->id;
-                init_flags = INIT_ASSIGN;
-                process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+                process_dungeon_file("q_info.txt", INIT_ASSIGN);
                 p_ptr->inside_quest = old_quest;
 
                 if (q_ptr->flags & QUEST_FLAG_SILENT) continue;
@@ -1183,10 +1181,8 @@ static void _build_quests(doc_ptr doc)
             if (is_fixed_quest_idx(q_ptr->id))
             {
                 int old_quest = p_ptr->inside_quest;
-
                 p_ptr->inside_quest = q_ptr->id;
-                init_flags = INIT_ASSIGN;
-                process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+                process_dungeon_file("q_info.txt", INIT_ASSIGN);
                 p_ptr->inside_quest = old_quest;
 
                 if (q_ptr->flags & QUEST_FLAG_SILENT) continue;
@@ -2178,9 +2174,7 @@ void py_display_dungeons(doc_ptr doc)
         {
             /* Get the quest text */
             /* Bewere that INIT_ASSIGN resets the cur_num. */
-            init_flags = INIT_ASSIGN;
-
-            process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+            process_dungeon_file("q_info.txt", INIT_ASSIGN);
             doc_printf(doc, "You were killed by %s in the quest '%s'.\n",
                 p_ptr->died_from, quest[p_ptr->inside_quest].name);
         }
@@ -2206,10 +2200,7 @@ void py_display_dungeons(doc_ptr doc)
             }
             quest_text_line = 0;
 
-            /* Get the quest text */
-            init_flags = INIT_SHOW_TEXT;
-
-            process_dungeon_file("q_info.txt", 0, 0, 0, 0);
+            process_dungeon_file("q_info.txt", INIT_SHOW_TEXT);
             doc_printf(doc, "Now, you are in the quest '%s'.\n", quest[p_ptr->inside_quest].name);
         }
         else
