@@ -421,35 +421,28 @@ L:a:BUILDING_0(GLOW, 0)
 
 #################### Quest 10 - Node of Sorcery ####################
 
-# Quest 10 not started
-?:[EQU $QUEST10 0]
-F:i:BUILDING_8:3:0:0:0:0:NONE:10
+?:[EQU $QUEST10 Untaken]
+L:i:BUILDING_8(GLOW, 10)
 
-# Quest 10 assigned, entrance is quest entrance
-?:[EQU $QUEST10 1]
-F:s:QUEST_ENTER:3:0:0:0:0:NONE:10
-F:i:BUILDING_8:3:0:0:0:0:NONE:10
+?:[EQU $QUEST10 Taken]
+L:s:QUEST_ENTER(MARK | GLOW, 10)
+L:i:BUILDING_8(GLOW, 10)
 
-# Quest 10 completed
-?:[EQU $QUEST10 2]
-F:i:BUILDING_8:3:0:0:0:0:NONE:10
+?:[EQU $QUEST10 Completed]
+L:i:BUILDING_8(GLOW, 10)
 
-# Quest 10 rewarding, reward is the Grimoire of Power
-?:[EQU $QUEST10 3]
-F:i:BUILDING_8:3
-F:(:FLOOR:3:0:337
+?:[EQU $QUEST10 Rewarded]
+L:i:BUILDING_8(GLOW, 0)
+L:(:OBJ(grimoire of power)
 
-# Quest 10 finished, no new quest available
-?:[EQU $QUEST10 4]
-F:i:BUILDING_8:3
+?:[EQU $QUEST10 Finished]
+L:i:BUILDING_8(GLOW, 0)
 
-# Quest 10 failed
-?:[EQU $QUEST10 5]
-F:i:BUILDING_8:3:0:0:0:0:NONE:10
+?:[EQU $QUEST10 Failed]
+L:i:BUILDING_8(GLOW, 10)
 
-# Quest 10 failed but done, no new quest available
-?:[EQU $QUEST10 6]
-F:i:BUILDING_8:3
+?:[EQU $QUEST10 FailedDone]
+L:i:BUILDING_8(GLOW, 0)
 
 ?:1
 
