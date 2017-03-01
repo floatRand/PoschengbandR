@@ -448,35 +448,28 @@ L:i:BUILDING_8(GLOW, 0)
 
 #################### Quest 11 - Node of Chaos ####################
 
-# Quest 11 not yet assigned
-?:[EQU $QUEST11 0]
-F:e:BUILDING_4:3:0:0:0:0:NONE:11
+?:[EQU $QUEST11 Untaken]
+L:e:BUILDING_4(GLOW, 11)
 
-# Quest 11 assigned, entrance is quest entrance
-?:[EQU $QUEST11 1]
-F:t:QUEST_ENTER:3:0:0:0:0:NONE:11
-F:e:BUILDING_4:3:0:0:0:0:NONE:11
+?:[EQU $QUEST11 Taken]
+L:e:BUILDING_4(GLOW, 11)
+L:t:QUEST_ENTER(MARK | GLOW, 11)
 
-# Quest 11 completed
-?:[EQU $QUEST11 2]
-F:e:BUILDING_4:3:0:0:0:0:NONE:11
+?:[EQU $QUEST11 Completed]
+L:e:BUILDING_4(GLOW, 11)
 
-# Quest 11 rewarding, reward is Armageddon Tome, no new quest available
-?:[EQU $QUEST11 3]
-F:e:BUILDING_4:3
-F:$:GRASS:3:0:386
+?:[EQU $QUEST11 Rewarded]
+L:e:BUILDING_4(GLOW, 0)
+L:$:GRASS:OBJ(armageddon tome)
 
-# Quest 11 finished, no new quest available
-?:[EQU $QUEST11 4]
-F:e:BUILDING_4:3
+?:[EQU $QUEST11 Finished]
+L:e:BUILDING_4(GLOW, 0)
 
-# Quest 11 failed
-?:[EQU $QUEST11 5]
-F:e:BUILDING_4:3:0:0:0:0:NONE:11
+?:[EQU $QUEST11 Failed]
+L:e:BUILDING_4(GLOW, 11)
 
-# Quest 11 failed but done, no new quest available
-?:[EQU $QUEST11 6]
-F:e:BUILDING_4:3
+?:[EQU $QUEST11 FailedDone]
+L:e:BUILDING_4(GLOW, 0)
 
 ?:1
 
