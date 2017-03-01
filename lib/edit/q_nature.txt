@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # Created by Topi Ylinen
 
 Q:12:N:Node of Nature

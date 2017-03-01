@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # Old Man Willow Quest
 # By Shayne Steele (steele@cs.fsu.edu)
 

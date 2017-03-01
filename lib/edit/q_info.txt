@@ -1,3 +1,4 @@
+# vim: filetype=q :
 
 ?:[EQU $QUEST_NUMBER 1]
 %:q_thieves.txt
@@ -5,9 +6,8 @@
 ?:[EQU $QUEST_NUMBER 2]
 %:q_sewer.txt
 
-# Druid Shop
 ?:[EQU $QUEST_NUMBER 3]
-%:q0000003.txt
+%:q_logrus_master.txt
 
 ?:[EQU $QUEST_NUMBER 4]
 %:q_vault.txt

@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # Created by Topi Ylinen
 
 Q:10:N:Node of Sorcery

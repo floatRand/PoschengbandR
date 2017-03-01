@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # The Old Castle
 # By Shayne Steele (steele@cs.fsu.edu)
 

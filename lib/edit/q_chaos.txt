@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # Created by Topi Ylinen
 
 Q:11:N:Node of Chaos

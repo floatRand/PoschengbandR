@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 
 Q:19:N:Doom Quest 1

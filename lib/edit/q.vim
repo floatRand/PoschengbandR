@@ -1,42 +1,54 @@
-syn clear
+if version < 600
+  syntax clear
+elseif exists("b:current_syntax")
+  finish
+endif
 syn case match
-syn keyword qStatus Untaken Taken Completed Rewarded Finished Failed FailedDone contained
-syn keyword qFeature FLOOR GRASS GRANITE PERMANENT TREE OPEN_DOOR CLOSED_DOOR UP_STAIR DOWN_STAIR 
-syn keyword qFeature SHALLOW_WATER DEEP_WATER SHALLOW_LAVA DEEP_LAVA
-syn keyword qFeature RUBBLE MOUNTAIN_WALL
-syn keyword qFeature QUEST_ENTER ENTRANCE
-syn keyword qExKeyword AND EQU LEQ GEQ NOT contained
 
-syn match qBuilding /BUILDING_[0-9]*/
-syn match qTrap /TRAP_[A-Z]*/
-syn match qLockedDoor /LOCKED_DOOR_[0-9]*/
+syn keyword qStatus Untaken Taken Completed Rewarded Finished Failed FailedDone contained
+syn keyword qFeature FLOOR GRASS GRANITE PERMANENT TREE OPEN_DOOR CLOSED_DOOR UP_STAIR DOWN_STAIR contained
+syn keyword qFeature SHALLOW_WATER DEEP_WATER SHALLOW_LAVA DEEP_LAVA contained
+syn keyword qFeature RUBBLE MOUNTAIN_WALL BROKEN_DOOR contained
+syn keyword qFeature QUEST_ENTER ENTRANCE contained
+syn match qFeature /BUILDING_[0-9]*/ contained
+syn match qFeature /TRAP_[A-Z]*/ contained
+syn match qFeature /LOCKED_DOOR_[0-9]*/ contained
+syn keyword qExKeyword AND EQU LEQ GEQ NOT MOD contained
+syn match qVariable /$[A-Z0-9_]*/ contained
+syn match qNumber /\d\+/ contained
+
 syn match qComment /^#.*$/
 syn match qInclude /%:.*$/
-syn match qVariable /$[A-Z0-9]*/ contained
 
-syn region qExp matchgroup=qParen start=/\[/ end=/\]/ contains=qExp,qExKeyword,qVariable,qStatus contained
-syn region qExpLine matchgroup=qExpPrefix start=/?:/ end=/$/ contains=qExp
-syn region qObjExp matchgroup=qObj start=/OBJ(/ end=/)/ contained
-syn region qEgoExp matchgroup=qEgo start=/EGO(/ end=/)/ contained
-syn region qArtExp matchgroup=qArt start=/ART(/ end=/)/ contained
-syn region qLetterLine matchgroup=qLetterPrefix start=/L:/ end=/$/ contains=qObjExp,qEgoExp,qArtExp
+syn region qExp matchgroup=qParen start=/\[/ end=/\]/ contains=qExp,qExKeyword,qVariable,qStatus,qNumber contained
+syn region qObjExp matchgroup=qOp start=/OBJ(/ end=/)/ contains=qNumber contained
+syn region qEgoExp matchgroup=qOp start=/EGO(/ end=/)/ contains=qNumber contained
+syn region qArtExp matchgroup=qOp start=/ART(/ end=/)/ contains=qNumber contained
+syn region qMonExp matchgroup=qOp start=/MON(/ end=/)/ contains=qNumber contained
+syn region qTrapExp matchgroup=qOp start=/TRAP(/ end=/)/ contains=qNumber,qFeature contained
+syn region qCmdExp matchgroup=qOp start=/SCRAMBLE(/ end=/)/ contained
+
+syn region qExpLine matchgroup=qExpPrefix start=/^?:/ end=/$/ contains=qExp
+syn region qCmdLine matchgroup=qCmdPrefix start=/^!:/ end=/$/ contains=qCmdExp
+syn region qLetterLine matchgroup=qLetterPrefix start=/^L:./ end=/$/ contains=qObjExp,qEgoExp,qArtExp,qMonExp,qTrapExp,qCmdExp,qFeature,qNumber
+syn region qMapLine matchgroup=qMapPrefix start=/^D:/ end=/$/
+syn region qTypeLine start=/^T:/ end=/$/
 
 
-hi def link qStatus Special
+hi def link qNumber Number
+hi def link qStatus Identifier
 hi def link qComment Comment
-hi def link qFeature Constant
-hi def link qTrap Constant
-hi def link qLockedDoor Constant
-hi def link qBuilding Constant
+hi def link qFeature Identifier
 hi def link qInclude PreProc
 hi def link qVariable Define
-hi def link qKeyword Keyword
 hi def link qExKeyword Keyword
 hi def link qParen PreProc
-hi def link qObj Constant
-hi def link qEgo Type
-hi def link qArt Identifier
-hi def link qArtExp Special
-hi def link qLetterPrefix Label
+hi def link qOp Operator
+hi def link qLetterPrefix Type
 hi def link qExpPrefix Label
+hi def link qMapPrefix PreProc
+hi def link qTypeLine Special
+hi def link qCmdPrefix Operator
+
+let b:current_syntax = "q"
 

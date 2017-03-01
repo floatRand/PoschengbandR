@@ -1,3 +1,4 @@
+# vim: filetype=q :
 ##################################
 # The Barrow Downs
 
@@ -28,32 +29,21 @@ Q:5:T:after we have had time to grieve.
 ?:1
 
 T:QUEST:NORMAL
-##################################
-# Terrain
 L:;:RUBBLE
 L:#:PERMANENT
 L:.:GRASS
 L:%:GRANITE
 L:<:UP_STAIR
-
-##################################
-# Monsters
 L:A:GRASS:MON(kouko)
 L:B:GRASS:MON(white wraith)
 L:C:GRASS:MON(grave wight)
 L:W:GRASS:MON(barrow wight)
 L:Z:GRASS:MON(emperor wight)
-
-##################################
-# Objects
 L:2:GRASS:OBJ(potion of healing)
 L:4:GRASS:ART(merry)
 L:9:GRASS:OBJ(*)
 L:8:GRASS:OBJ(*, DEPTH+7)
 L:7:GRASS:OBJ(broken sword):EGO(westernesse)
-
-##################################
-# Dungeon
 D:#######################################################
 D:#..............................................;.....2#
 D:#..................;;;;;;;;....................;...ZW9#

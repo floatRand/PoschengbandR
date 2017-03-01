@@ -1,11 +1,8 @@
-# qdarkelf.txt
+# vim: filetype=q :
 # Dark Elven Lords Quest
 # By Shayne Steele (steele@cs.fsu.edu)
 
-# Name Dark Elven Lords Quest
 Q:32:N:Dark Elven Lords Quest
-
-# Definition 
 Q:32:Q:6:0:0:0:25:0:0:0:6
 
 ?:[EQU $QUEST32 Taken Completed]

@@ -274,7 +274,7 @@ L:a:BUILDING_0(GLOW, 31)
 L:a:BUILDING_0(GLOW, 32)
 L:!:OBJ(RING, DEPTH+22):EGO(elemental)
 
-?:[AND [EQU $QUEST31 3] [EQU $RACE Hydra] ]
+?:[AND [EQU $QUEST31 Rewarded] [EQU $RACE Hydra] ]
 L:!:OBJ(AMULET, DEPTH+22):EGO(elemental)
 
 ?:[EQU $QUEST31 Finished]

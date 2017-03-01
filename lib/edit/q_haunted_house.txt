@@ -1,9 +1,9 @@
+# vim: filetype=q :
 # Haunted House, (C) Topi Ylinen 1999
 
 Q:25:N:Haunted House
 Q:25:Q:6:0:0:0:48:0:0:0:6
 
-# Description for quest
 ?:[EQU $QUEST25 Taken Completed]
 Q:25:T:There is something evil going on in the old, thatched house
 Q:25:T:near the south-west corner of the city wall. People say that

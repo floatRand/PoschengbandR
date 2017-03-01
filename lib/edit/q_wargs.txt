@@ -1,12 +1,9 @@
+# vim: filetype=q :
 # q_warg.txt
 
-# Name
 Q:14:N:Warg problem
-
-# type:num_mon:cur_num:max_num:level:r_idx:k_idx
 Q:14:Q:1:0:0:16:5:257:0:30
 
-# Description for quest
 ?:[EQU $QUEST14 Taken Completed]
 Q:14:T:Our scouts report a large number of Wargs in the dungeon.
 Q:14:T:We don't know who set them on guard at 250 feet, but we
@@ -15,7 +12,6 @@ Q:14:T:in the dungeon. We offer you a small reward if you clear
 Q:14:T:the path for the supplies.
 ?:1
 
-# Description for quest reward
 ?:[EQU $QUEST14 Rewarded]
 Q:14:T:Since most of the supplies have been send to our troops
 Q:14:T:in the dungeon, we can only give you a small reward.

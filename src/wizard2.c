@@ -1775,9 +1775,9 @@ void do_cmd_debug(void)
     }
     case '_': {
         int flags = INIT_DEBUG | INIT_DISPLAY_DUNGEON;
-        flags = INIT_DEBUG;
-        /*init_v_info(flags); */
-        process_dungeon_file("t_telmora.txt", flags);
+        /*flags = INIT_DEBUG;
+        init_v_info(flags); */
+        process_dungeon_file("q_logrus_master.txt", flags);
 break;
         process_dungeon_file("t_lite.txt", flags);
         process_dungeon_file("t_outpost.txt", flags);
@@ -1810,6 +1810,7 @@ break;
         process_dungeon_file("q_old_man_willow.txt", flags);
 
         process_dungeon_file("q_sewer.txt", flags);
+        process_dungeon_file("q_logrus_master.txt", flags);
         break; }
     default:
         msg_print("That is not a valid debug command.");

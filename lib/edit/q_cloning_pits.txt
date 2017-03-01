@@ -1,4 +1,4 @@
-# q0clone0.txt
+# vim: filetype=q :
 # The Cloning Pits
 # By Shayne Steele (steele@cs.fsu.edu)
 

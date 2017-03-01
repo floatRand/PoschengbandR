@@ -2,124 +2,105 @@
 # Telmora
 %:t_pref.txt
 
+T:TOWN:NORMAL:NO_ROTATE
+
 ############### Additional default terrain settings ###############
 
 # Default castle reward = floor
-F:!:FLOOR:0
+L:!:FLOOR
 
 # Default for Quest 2 = entrance is floor
-F:z:FLOOR:0
+L:z:FLOOR
 
 # Default for Quest 3 = entrance is stone
-F:y:PERMANENT:3
+L:y:PERMANENT
 
 # Default for Quest 4 = entrance is stone
-F:x:PERMANENT:3
+L:x:PERMANENT
 
 # Default for Quest 5 = entrance is stone
-F:w:GRASS:0
+L:w:GRASS
 
 # Default for Quest 15 = entrance is stone
-F:v:PERMANENT:3
+L:v:PERMANENT
 
 # Default for Quest 16 = entrance is stone
-F:u:PERMANENT:3
+L:u:PERMANENT
 
 # Default for Quest 26 = entrance is tree
-F:t:TREE:0
-
+L:t:TREE
 
 ############### Quest 2 - The Sewer ###############
 
-# Quest 2 untaken
 ?:[EQU $QUEST2 Untaken]
-F:b:BUILDING_1:3:0:0:0:0:NONE:2
+L:b:BUILDING_1(GLOW, 2)
 
-# Quest 2 assigned, entrance is quest entrance
-?:[EQU $QUEST2 1]
-F:z:QUEST_ENTER:3:0:0:0:0:NONE:2
-F:b:BUILDING_1:3:0:0:0:0:NONE:2
+?:[EQU $QUEST2 Taken]
+L:b:BUILDING_1(GLOW, 2)
+L:z:QUEST_ENTER(MARK | GLOW, 2)
 
-# Quest 2 completed
-?:[EQU $QUEST2 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:2
+?:[EQU $QUEST2 Completed]
+L:b:BUILDING_1(GLOW, 2)
 
-# Quest 2 rewarding, reward is Feanorian lamp
-?:[EQU $QUEST2 3]
-F:b:BUILDING_1:3:0:0:0:0:NONE:3
-F:!:FLOOR:3:0:582
+?:[EQU $QUEST2 Rewarded]
+L:b:BUILDING_1(GLOW, 3)
+L:!:OBJ(feanorian lamp)
 
-# Quest 2 finished
-?:[EQU $QUEST2 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:3
+?:[EQU $QUEST2 Finished]
+L:b:BUILDING_1(GLOW, 3)
 
-# Quest 2 failed, wait for the player to enter the castle
-?:[EQU $QUEST2 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:2
+?:[EQU $QUEST2 Failed]
+L:b:BUILDING_1(GLOW, 2)
 
-# Quest 2 failed
-?:[EQU $QUEST2 6]
-F:b:BUILDING_1:3
+?:[EQU $QUEST2 FailedDone]
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
 ############### Quest 3 - Logrus Master ###############
 
-# Quest 3 assigned, entrance is quest entrance
-?:[EQU $QUEST3 1]
-F:y:QUEST_ENTER:3:0:0:0:0:NONE:3
-F:b:BUILDING_1:3:0:0:0:0:NONE:3
+?:[EQU $QUEST3 Taken]
+L:y:QUEST_ENTER(MARK | GLOW, 3)
+L:b:BUILDING_1(GLOW, 3)
 
-# Quest 3 completed
-?:[EQU $QUEST3 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:3
+?:[EQU $QUEST3 Completed]
+L:b:BUILDING_1(GLOW, 3)
 
-# Quest 3 rewarding, reward is Rod: Chaos Strike
-?:[EQU $QUEST3 3]
-F:b:BUILDING_1:3:0:0:0:0:NONE:4
-F:!:FLOOR:3:0:271:359
+?:[EQU $QUEST3 Rewarded]
+L:b:BUILDING_1(GLOW, 4)
+L:!:OBJ(ROD_BEAM_CHAOS)
 
+?:[EQU $QUEST3 Finished]
+L:b:BUILDING_1(GLOW, 4)
 
-# Quest 3 finished
-?:[EQU $QUEST3 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:4
+?:[EQU $QUEST3 Failed]
+L:b:BUILDING_1(GLOW, 3)
 
-# Quest 3 failed, wait for the player to enter the castle
-?:[EQU $QUEST3 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:3
-
-# Quest 3 failed
-?:[EQU $QUEST3 6]
-F:b:BUILDING_1:3
+?:[EQU $QUEST3 FailedDone]
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
 ############### Quest 4 - The Vault ###############
 
-# Quest 4 assigned, entrance is quest entrance
-?:[EQU $QUEST4 1]
-F:x:QUEST_ENTER:3:0:0:0:0:NONE:4
-F:b:BUILDING_1:3:0:0:0:0:NONE:4
+?:[EQU $QUEST4 Taken]
+L:x:QUEST_ENTER(MARK | GLOW, 4)
+L:b:BUILDING_1(GLOW, 4)
 
-# Quest 4 completed
-?:[EQU $QUEST4 2]
-F:b:BUILDING_1:3:0:0:0:0:NONE:4
+?:[EQU $QUEST4 Completed]
+L:b:BUILDING_1(GLOW, 4)
 
-# Quest 4 rewarding, no extra reward
-?:[EQU $QUEST4 3]
-F:b:BUILDING_1:3:0:0:0:0:NONE:5
+?:[EQU $QUEST4 Rewarded]
+L:b:BUILDING_1(GLOW, 5)
 
-# Quest 4 finished
-?:[EQU $QUEST4 4]
-F:b:BUILDING_1:3:0:0:0:0:NONE:5
+?:[EQU $QUEST4 Finished]
+L:b:BUILDING_1(GLOW, 5)
 
-# Quest 4 failed, wait for the player to enter the castle
-?:[EQU $QUEST4 5]
-F:b:BUILDING_1:3:0:0:0:0:NONE:4
+?:[EQU $QUEST4 Failed]
+L:b:BUILDING_1(GLOW, 4)
 
-# Quest 4 failed
-?:[EQU $QUEST4 6]
-F:b:BUILDING_1:3
+?:[EQU $QUEST4 FailedDone]
+L:b:BUILDING_1(GLOW, 0)
 
 ?:1
 
@@ -258,8 +239,7 @@ F:b:BUILDING_1:3
 
 B:0:N:Library:Astinus:Human?
 B:0:A:0:Research item:2000:2000:a:1:0
-# After clearing the tower the research gets cheaper
-?:[EQU $QUEST5 3 4]
+?:[EQU $QUEST5 Rewarded Finished]
 B:0:A:0:Research item:1000:1000:a:1:0
 ?:1
 B:0:A:1:Town Overview:0:0:h:2:0
@@ -304,13 +284,13 @@ B:4:R:Jelly:None
 
 B:5:N:Beastmaster:Lorien:Elf
 B:5:A:0:Research monster:10000:10000:r:20:0
-?:[EQU $QUEST5 3 4]
+?:[EQU $QUEST5 Rewarded Finished]
 B:5:A:0:Research monster:1200:1200:r:20:0
 ?:1
 
 B:6:N:Weaponmaster:Suiyan:Human
 B:6:A:0:Evaluate AC:1000:1000:a:46:0
-?:[EQU $QUEST5 3 4]
+?:[EQU $QUEST5 Rewarded Finished]
 B:6:A:0:Evaluate AC:150:150:a:46:0
 ?:1
 

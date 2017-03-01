@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 
 Q:22:N:Orc Camp
@@ -22,22 +23,16 @@ Q:22:T:I've sent out someone else to do the job.  Now leave me alone!
 ?:1
 
 T:QUEST:NORMAL
-###################################
-# The Monsters
+L:#:PERMANENT(ROOM)
+L:.:FLOOR(ROOM)
+L:<:UP_STAIR(ROOM)
+L:^:TRAP(TRAP_ALARM, 15)
 L:a:MON(golfimbul)
 L:b:MON(orc captain)
 L:c:MON(black orc)
 L:d:MON(hill orc)
 !:SCRAMBLE(a,b,c,d)
 L:s:MON(snaga sapper)
-
-###################################
-# Terrain
-L:#:PERMANENT(ROOM)
-L:.:FLOOR(ROOM)
-L:<:UP_STAIR(ROOM)
-L:^:TRAP(TRAP_ALARM, 15)
-
 D:#####################################################################
 D:###########################.^<^........##############################
 D:#####################.......^^^....................##################
