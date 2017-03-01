@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # Outpost
 
 %:t_pref.txt
@@ -7,6 +8,7 @@ T:TOWN:NORMAL:NO_ROTATE
 ############### Additional default terrain settings ###############
 # A test tile for debugging
 L:&:FLOOR
+#L:&:QUEST_ENTER(MARK | GLOW, 28)
 #L:&:MON(morgoth):OBJ(power dragon)
 
 # Default for castle reward

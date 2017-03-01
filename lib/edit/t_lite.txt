@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # No Wilderness Option
 
 %:t_pref.txt

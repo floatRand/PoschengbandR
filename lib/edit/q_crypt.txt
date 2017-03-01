@@ -1,3 +1,4 @@
+# vim: filetype=q :
 Q:28:N:The Royal Crypt
 Q:28:Q:1:0:0:5:70:776:0:0:6
 

@@ -1,3 +1,4 @@
+# vim: filetype=q :
 # Shared rewards for The Old Castle
 # t_outpost.txt and t_lite.txt
 # Both files must use '!' as the reward letter

@@ -1,6 +1,6 @@
-# File: t0000002.txt
-
+# vim: filetype=q :
 # Telmora
+%:t_pref.txt
 
 ############### Additional default terrain settings ###############
 
@@ -32,7 +32,7 @@ F:t:TREE:0
 ############### Quest 2 - The Sewer ###############
 
 # Quest 2 untaken
-?:[EQU $QUEST2 0]
+?:[EQU $QUEST2 Untaken]
 F:b:BUILDING_1:3:0:0:0:0:NONE:2
 
 # Quest 2 assigned, entrance is quest entrance

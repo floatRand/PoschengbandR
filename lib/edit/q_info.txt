@@ -1,13 +1,9 @@
-# File: q_info.txt
-
-# Includes all the quest files
 
 ?:[EQU $QUEST_NUMBER 1]
 %:q_thieves.txt
 
-# Sewer
 ?:[EQU $QUEST_NUMBER 2]
-%:q0000002.txt
+%:q_sewer.txt
 
 # Druid Shop
 ?:[EQU $QUEST_NUMBER 3]
@@ -90,7 +86,7 @@
 
 # Dark Elven Lords Quest
 ?:[EQU $QUEST_NUMBER 32]
-%:q_darkelves.txt
+%:q_dark_elves.txt
 
 ?:[EQU $QUEST_NUMBER 33]
 %:q_cloning_pits.txt
