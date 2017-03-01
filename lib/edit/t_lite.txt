@@ -460,7 +460,7 @@ L:e:BUILDING_4(GLOW, 11)
 
 ?:[EQU $QUEST11 Rewarded]
 L:e:BUILDING_4(GLOW, 0)
-L:$:GRASS:OBJ(armageddon tome)
+L:$:OBJ(armageddon tome)
 
 ?:[EQU $QUEST11 Finished]
 L:e:BUILDING_4(GLOW, 0)
@@ -475,35 +475,28 @@ L:e:BUILDING_4(GLOW, 0)
 
 #################### Quest 12 - Node of Nature ####################
 
-# Quest 12 not yet assigned
-?:[EQU $QUEST12 0]
-F:f:BUILDING_5:3:0:0:0:0:NONE:12
+?:[EQU $QUEST12 Untaken]
+L:f:BUILDING_5(GLOW, 12)
 
-# Quest 12 assigned, entrance is quest entrance
-?:[EQU $QUEST12 1]
-F:N:QUEST_ENTER:3:0:0:0:0:NONE:12
-F:f:BUILDING_5:3:0:0:0:0:NONE:12
+?:[EQU $QUEST12 Taken]
+L:f:BUILDING_5(GLOW, 12)
+L:N:QUEST_ENTER(MARK | GLOW, 12)
 
-# Quest 12 completed
-?:[EQU $QUEST12 2]
-F:f:BUILDING_5:3:0:0:0:0:NONE:12
+?:[EQU $QUEST12 Completed]
+L:f:BUILDING_5(GLOW, 12)
 
-# Quest 12 rewarding, reward is Nature's wrath, no new quest available
-?:[EQU $QUEST12 3]
-F:f:BUILDING_5:3
-F:):GRASS:3:0:382
+?:[EQU $QUEST12 Rewarded]
+L:f:BUILDING_5(GLOW, 0)
+L:):OBJ(nature's wrath)
 
-# Quest 12 finished, no new quest available
-?:[EQU $QUEST12 4]
-F:f:BUILDING_5:3
+?:[EQU $QUEST12 Finished]
+L:f:BUILDING_5(GLOW, 0)
 
-# Quest 12 failed
-?:[EQU $QUEST12 5]
-F:f:BUILDING_5:3:0:0:0:0:NONE:12
+?:[EQU $QUEST12 Failed]
+L:f:BUILDING_5(GLOW, 12)
 
-# Quest 12 failed but done, no new quest available
-?:[EQU $QUEST12 6]
-F:f:BUILDING_5:3
+?:[EQU $QUEST12 FailedDone]
+L:f:BUILDING_5(GLOW, 0)
 
 ?:1
 
