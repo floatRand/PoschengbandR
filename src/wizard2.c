@@ -1777,7 +1777,7 @@ void do_cmd_debug(void)
         int flags = INIT_DEBUG;
         /*init_v_info(flags);*/
         process_dungeon_file("t_lite.txt", flags);
-        process_dungeon_file("t_outpost.txt", flags);
+        process_dungeon_file("q000sorc.txt", flags);
 break;
         process_dungeon_file("t_outpost.txt", flags);
         process_dungeon_file("t_lite.txt", flags);
@@ -1794,6 +1794,8 @@ break;
         process_dungeon_file("q_doom2.txt", flags);
         process_dungeon_file("q0thief1.txt", flags);
         process_dungeon_file("q0thief2.txt", flags);
+
+        process_dungeon_file("q000sorc.txt", flags);
 
         process_dungeon_file("qhaunted.txt", flags);
         process_dungeon_file("q_crypt.txt", flags);

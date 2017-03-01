@@ -621,7 +621,10 @@ static bool build_room_template(int type, int subtype)
      * Hack -- Prepare a bit larger space (+2, +2) to 
      * prevent generation of vaults with no-entrance. */
     if (!find_space(&center.y, &center.x, xform->dest.cy + 2, xform->dest.cx + 2))
+    {
+        transform_free(xform);
         return FALSE;
+    }
 
     /* Position the destination rect. Things are awkward due to find_space's weird interface.
      * I'd prefer "rect_t find_space(point_t size)" for an API, but it's used elsewhere and some
