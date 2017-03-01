@@ -5149,7 +5149,7 @@ static cptr variant_name = "POSCHENGBAND";
 /*
  * Helper function for "process_dungeon_file()"
  */
-static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
+static cptr process_dungeon_file_expr(char **sp, char *fp)
 {
     cptr v;
 
@@ -5183,7 +5183,7 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
         s++;
 
         /* First */
-        t = process_dungeon_file_expr(&s, &f, options);
+        t = process_dungeon_file_expr(&s, &f);
 
         /* Oops */
         if (!*t)
@@ -5197,7 +5197,7 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
             v = "0";
             while (*s && (f != b2))
             {
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
                 if (*t && !streq(t, "0")) v = "1";
             }
         }
@@ -5208,7 +5208,7 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
             v = "1";
             while (*s && (f != b2))
             {
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
                 if (*t && streq(t, "0")) v = "0";
             }
         }
@@ -5219,7 +5219,7 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
             v = "1";
             while (*s && (f != b2))
             {
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
                 if (*t && streq(t, "1")) v = "0";
             }
         }
@@ -5230,11 +5230,11 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
             v = "0";
             if (*s && (f != b2))
             {
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
             }
             while (*s && (f != b2))
             {
-                p = process_dungeon_file_expr(&s, &f, options);
+                p = process_dungeon_file_expr(&s, &f);
                 if (streq(t, p)) v = "1";
             }
         }
@@ -5246,11 +5246,11 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
             v = "0";
             if (*s && (f != b2))
             {
-                x = atoi(process_dungeon_file_expr(&s, &f, options));
+                x = atoi(process_dungeon_file_expr(&s, &f));
             }
             if(*s && (f != b2))
             {
-                y = atoi(process_dungeon_file_expr(&s, &f, options));
+                y = atoi(process_dungeon_file_expr(&s, &f));
                 sprintf(tmp, "%d", x%y);
                 v = tmp;
             }
@@ -5262,12 +5262,12 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
             v = "1";
             if (*s && (f != b2))
             {
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
             }
             while (*s && (f != b2))
             {
                 p = t;
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
                 if (*t && atoi(p) > atoi(t)) v = "0";
             }
         }
@@ -5278,12 +5278,12 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
             v = "1";
             if (*s && (f != b2))
             {
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
             }
             while (*s && (f != b2))
             {
                 p = t;
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
 
                 /* Compare two numbers instead of string */
                 if (*t && atoi(p) < atoi(t)) v = "0";
@@ -5295,7 +5295,7 @@ static cptr process_dungeon_file_expr(char **sp, char *fp, int options)
         {
             while (*s && (f != b2))
             {
-                t = process_dungeon_file_expr(&s, &f, options);
+                t = process_dungeon_file_expr(&s, &f);
             }
         }
 
@@ -5624,7 +5624,7 @@ errr process_dungeon_file(cptr name, int options)
             s = buf + 2;
 
             /* Parse the expr */
-            v = process_dungeon_file_expr(&s, &f, options);
+            v = process_dungeon_file_expr(&s, &f);
 
             /* Set flag */
             bypass = (streq(v, "0") ? TRUE : FALSE);
