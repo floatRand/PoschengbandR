@@ -8,7 +8,7 @@ T:TOWN:NORMAL:NO_ROTATE
 ############### Additional default terrain settings ###############
 # A test tile for debugging
 L:&:FLOOR
-#L:&:QUEST_ENTER(MARK | GLOW, 28)
+#L:&:QUEST_ENTER(28)
 #L:&:MON(morgoth):OBJ(power dragon)
 
 # Default for castle reward
@@ -42,17 +42,17 @@ L:q:PERMANENT
 ############### Quest 1 - Thieves Hideout ###############
 
 ?:[EQU $QUEST1 Untaken]
-L:b:BUILDING_1(GLOW, 1)
+L:b:BUILDING_1(1)
 
 ?:[EQU $QUEST1 Taken]
-L:z:QUEST_ENTER(MARK | GLOW, 1)
-L:b:BUILDING_1(GLOW, 1)
+L:z:QUEST_ENTER(1)
+L:b:BUILDING_1(1)
 
 ?:[EQU $QUEST1 Completed]
-L:b:BUILDING_1(GLOW, 1)
+L:b:BUILDING_1(1)
 
 ?:[EQU $QUEST1 Rewarded]
-L:b:BUILDING_1(GLOW, 14)
+L:b:BUILDING_1(14)
 L:):OBJ(long sword, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Beholder Spider Ring] ]
@@ -113,26 +113,26 @@ L:):OBJ(^dagger$, DEPTH+5)
 L:):OBJ(light crossbow, DEPTH+5)
 
 ?:[EQU $QUEST1 Finished]
-L:b:BUILDING_1(GLOW, 14)
+L:b:BUILDING_1(14)
 
 ?:[EQU $QUEST1 Failed]
-L:b:BUILDING_1(GLOW, 1)
+L:b:BUILDING_1(1)
 
 ?:[EQU $QUEST1 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 14 - Warg problem ###############
 
 ?:[EQU $QUEST14 Taken]
-L:b:BUILDING_1(GLOW, 14)
+L:b:BUILDING_1(14)
 
 ?:[EQU $QUEST14 Completed]
-L:b:BUILDING_1(GLOW, 14)
+L:b:BUILDING_1(14)
 
 ?:[EQU $QUEST14 Rewarded]
-L:b:BUILDING_1(GLOW, 25)
+L:b:BUILDING_1(25)
 L:):OBJ(small metal shield, DEPTH+5)
 
 ?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Magic-Eater] ]
@@ -199,37 +199,37 @@ L:):FLOOR:OBJ(gauntlets, DEPTH+5)
 L:):FLOOR:OBJ(two-handed flail, DEPTH+5)
 
 ?:[EQU $QUEST14 Finished]
-L:b:BUILDING_1(GLOW, 25)
+L:b:BUILDING_1(25)
 
 ?:[EQU $QUEST14 Failed]
-L:b:BUILDING_1(GLOW, 14)
+L:b:BUILDING_1(14)
 
 ?:[EQU $QUEST14 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 25 - Haunted House ###############
 
 ?:[EQU $QUEST25 Taken]
-L:x:QUEST_ENTER(MARK | GLOW, 25)
-L:b:BUILDING_1(GLOW, 25)
+L:x:QUEST_ENTER(25)
+L:b:BUILDING_1(25)
 
 ?:[EQU $QUEST25 Completed]
-L:b:BUILDING_1(GLOW, 25)
+L:b:BUILDING_1(25)
 
 ?:[EQU $QUEST25 Rewarded]
-L:b:BUILDING_1(GLOW, 28)
+L:b:BUILDING_1(28)
 L:):OBJ(STAFF_HOLINESS)
 
 ?:[EQU $QUEST25 Finished]
-L:b:BUILDING_1(GLOW, 28)
+L:b:BUILDING_1(28)
 
 ?:[EQU $QUEST25 Failed]
-L:b:BUILDING_1(GLOW, 25)
+L:b:BUILDING_1(25)
 
 ?:[EQU $QUEST25 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
@@ -237,54 +237,54 @@ L:b:BUILDING_1(GLOW, 0)
 ############### Quest 28 - The Royal Crypt ###############
 
 ?:[EQU $QUEST28 Taken]
-L:w:QUEST_ENTER(MARK | GLOW, 28)
-L:b:BUILDING_1(GLOW, 28)
+L:w:QUEST_ENTER(28)
+L:b:BUILDING_1(28)
 
 ?:[EQU $QUEST28 Completed]
-L:b:BUILDING_1(GLOW, 28)
+L:b:BUILDING_1(28)
 
 ?:[EQU $QUEST28 Rewarded]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 L:):ART(bilbo)
 
 ?:[EQU $QUEST28 Finished]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:[EQU $QUEST28 Failed]
-L:b:BUILDING_1(GLOW, 28)
+L:b:BUILDING_1(28)
 
 ?:[EQU $QUEST28 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 31 - Old Man Willow Quest ###############
 
 ?:[EQU $QUEST31 Untaken]
-L:a:BUILDING_0(GLOW, 31)
+L:a:BUILDING_0(31)
 
 ?:[EQU $QUEST31 Taken]
-L:s:QUEST_ENTER(MARK | GLOW, 31)
-L:a:BUILDING_0(GLOW, 31)
+L:s:QUEST_ENTER(31)
+L:a:BUILDING_0(31)
 
 ?:[EQU $QUEST31 Completed]
-L:a:BUILDING_0(GLOW, 31)
+L:a:BUILDING_0(31)
 
 ?:[EQU $QUEST31 Rewarded]
-L:a:BUILDING_0(GLOW, 32)
+L:a:BUILDING_0(32)
 L:!:OBJ(RING, DEPTH+22):EGO(elemental)
 
 ?:[AND [EQU $QUEST31 Rewarded] [EQU $RACE Hydra] ]
 L:!:OBJ(AMULET, DEPTH+22):EGO(elemental)
 
 ?:[EQU $QUEST31 Finished]
-L:a:BUILDING_0(GLOW, 32)
+L:a:BUILDING_0(32)
 
 ?:[EQU $QUEST31 Failed]
-L:a:BUILDING_0(GLOW, 31)
+L:a:BUILDING_0(31)
 
 ?:[EQU $QUEST31 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
@@ -292,74 +292,74 @@ L:a:BUILDING_0(GLOW, 0)
 ############### Quest 32 - Dark Elven Lords Quest ###############
 
 ?:[EQU $QUEST32 Taken]
-L:r:QUEST_ENTER(MARK | GLOW, 32)
-L:a:BUILDING_0(GLOW, 32)
+L:r:QUEST_ENTER(32)
+L:a:BUILDING_0(32)
 
 ?:[EQU $QUEST32 Completed]
-L:a:BUILDING_0(GLOW, 32)
+L:a:BUILDING_0(32)
 
 ?:[EQU $QUEST32 Rewarded]
-L:a:BUILDING_0(GLOW, 33)
+L:a:BUILDING_0(33)
 L:!:ART(galadriel)
 
 ?:[EQU $QUEST32 Finished]
-L:a:BUILDING_0(GLOW, 33)
+L:a:BUILDING_0(33)
 
 ?:[EQU $QUEST32 Failed]
-L:a:BUILDING_0(GLOW, 32)
+L:a:BUILDING_0(32)
 
 ?:[EQU $QUEST32 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
 ############### Quest 33 - The Cloning Pits ###############
 
 ?:[EQU $QUEST33 Taken]
-L:q:QUEST_ENTER(MARK | GLOW, 33)
-L:a:BUILDING_0(GLOW, 33)
+L:q:QUEST_ENTER(33)
+L:a:BUILDING_0(33)
 
 ?:[EQU $QUEST33 Completed]
-L:a:BUILDING_0(GLOW, 33)
+L:a:BUILDING_0(33)
 
 ?:[EQU $QUEST33 Rewarded]
-L:a:BUILDING_0(GLOW, 27)
+L:a:BUILDING_0(27)
 
 %:r_cloning_pits.txt
 
 ?:[EQU $QUEST33 Finished]
-L:a:BUILDING_0(GLOW, 27)
+L:a:BUILDING_0(27)
 
 ?:[EQU $QUEST33 Failed]
-L:a:BUILDING_0(GLOW, 33)
+L:a:BUILDING_0(33)
 
 ?:[EQU $QUEST33 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
 ############### Quest 27 - The Old Castle ###############
 
 ?:[EQU $QUEST27 Taken]
-L:v:QUEST_ENTER(MARK | GLOW, 27)
-L:a:BUILDING_0(GLOW, 27)
+L:v:QUEST_ENTER(27)
+L:a:BUILDING_0(27)
 
 ?:[EQU $QUEST27 Completed]
-L:a:BUILDING_0(GLOW, 27)
+L:a:BUILDING_0(27)
 
 ?:[EQU $QUEST27 Rewarded]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 L:!:ART(crisdurian)
 %:r_old_castle.txt
 
 ?:[EQU $QUEST27 Finished]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:[EQU $QUEST27 Failed]
-L:a:BUILDING_0(GLOW, 27)
+L:a:BUILDING_0(27)
 
 ?:[EQU $QUEST27 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
