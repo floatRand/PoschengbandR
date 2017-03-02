@@ -36,7 +36,7 @@ L:I:MON(iron lich)
 L:K:MON(death drake)
 L:l:MON(monastic lich)
 L:L:MON(vampire lord)
-L:m:FLOOR(ROOM | ICKY):MON(raal's tome)
+L:m:MON(raal's tome):OBJ(BOOK, DEPTH+5)
 L:M:MON(greater mummy)
 L:N:MON(ancient red dragon)
 L:o:MON(olog)
@@ -52,43 +52,34 @@ L:z:MON(dracolich)
 L:Z:MON(greater titan)
 !:SCRAMBLE(l,z,E,S,P,A,C,I,K)
 !:SCRAMBLE(N,t,Z,o,H,O)
-L:5:FLOOR(ROOM | ICKY):MON(*)
+L:5:MON(*)
 
 ###################################
 # Terrain
-L:#:PERMANENT(ROOM)
-L:%:GRANITE(ROOM)
-L:.:FLOOR(ROOM)
+L:#:PERMANENT
+L:%:GRANITE
+L:.:FLOOR
 L:~:DEEP_WATER
-L:+:CLOSED_DOOR(ROOM)
+L:+:CLOSED_DOOR
 L:<:UP_STAIR
-L:,:FLOOR(ROOM | ICKY)
-L:]:RUBBLE(ROOM | ICKY)
-L:s:GRANITE(ROOM):SECRET(CLOSED_DOOR)
-L:u:GRANITE(ROOM | ICKY):SECRET(CLOSED_DOOR)
-L:U:CLOSED_DOOR(ROOM | ICKY)
+L:,:FLOOR(ICKY)
+L:]:RUBBLE
+L:s:GRANITE:SECRET(CLOSED_DOOR)
+L:u:GRANITE:SECRET(CLOSED_DOOR)
+L:U:CLOSED_DOOR
 L:;:RUBBLE
 L:|:LOCKED_DOOR_7
-L:v:LOCKED_DOOR_7(ICKY)
 
 ###################################
 # Goodies
-L:c:FLOOR(ROOM | ICKY):OBJ(book of the unicorn)
-L:p:FLOOR(ROOM | ICKY):OBJ(pattern sorcery)
-L:n:FLOOR(ROOM | ICKY):OBJ(nature's gifts)
-L:i:FLOOR(ROOM | ICKY):OBJ(chaos channels)
-L:b:FLOOR(ROOM | ICKY):OBJ(black channels)
-L:f:FLOOR(ROOM | ICKY):OBJ(trumps of doom)
-L:y:FLOOR(ROOM | ICKY):OBJ(note of acting master)
-L:k:FLOOR(ROOM | ICKY):OBJ(demonthoughts)
-L:B:FLOOR(ROOM | ICKY):OBJ(exorcism and dispelling)
+L:?:OBJ(BOOK, DEPTH+5)
 L:Y:OBJ(potion of *healing*)
-L:e:FLOOR(ROOM | ICKY):OBJ(scroll of *identify*)
+L:e:OBJ(scroll of *identify*)
 L:h:OBJ(*)
-L:q:FLOOR(ROOM | ICKY):OBJ(*)
+L:q:FLOOR(ICKY):OBJ(*)
 L:j:OBJ(*, DEPTH+7)
-L:Q:FLOOR(ROOM | ICKY):OBJ(*, DEPTH+7)
-L:T:FLOOR(ROOM):OBJ(*)
+L:Q:FLOOR(ICKY):OBJ(*, DEPTH+7)
+L:T:OBJ(*)
 
 # Dungeon layout
 D:#######################################################################
@@ -104,9 +95,9 @@ D:##%%..%%%%%%%%r..+.%%#T..sL.........L%%%##%..##%%%%%%%%##%%s%%%%%%.%%%#
 D:##....######%%%%%#..%#TTT%%%d.....d%%%%%%%%...;.%%######%......%%#s####
 D:##....#qqqq#%%%%%#%..%%%%%L.........L%%%#####%%...%%%%%............%%%#
 D:##....|,,,Q#######%%..%%%%%%d.....d%%%%##ThT#%%%%.s%%..............%%%#
-D:##z...#qqqq#pmfmi#%%%....sL.........L%%#%T.T##%%%%%.................%Y#
-D:##%%..######cenek#%%%%%%%%%%.......%%%%%%%s%%##.t.+..............Z..%.#
-D:##%%%..%%%%#mbBym#%%%%%%%..+.......+..............+.................+h#
+D:##z...#qqqq#?m?m?#%%%....sL.........L%%#%T.T##%%%%%.................%Y#
+D:##%%..######?e?e?#%%%%%%%%%%.......%%%%%%%s%%##.t.+..............Z..%.#
+D:##%%%..%%%%#m???m#%%%%%%%..+.......+..............+.................+h#
 D:##%%..%%%%%#%%s%%#%%%%%%...+.G...G.+..............+.................+h#
 D:##%%%..%%%%%%....##%%%.....%%%+++%%%%%%%s%%%%%%.t.+..............Z..%.#
 D:##%%%%..%.........%%N.....%%%%...%%%%%%T.T%%%%%%%%%.................%Y#
@@ -114,7 +105,7 @@ D:##%%%..%%.E........+....%%%%%%.K.%%####...########%%%..............%%%#
 D:#%o....%%.S........+.N%%%%%%%%+++%%%%%ThThT%%%%%%%%%%%%...........%%%%#
 D:#.....o%%.........%%%%%%%%%%.a...a.%%#################%%%......%%######
 D:#...%%%%###%%.....%%%ThhT%%%...a...s.;|;|;;;;%%%%%%%%%%%%%%%%s%%%#,,,5#
-D:#..%%%%TTT#%%%%%s%%%%%++%%%%...A...%###u###################%%....v,,,,#
+D:#..%%%%TTT#%%%%%s%%%%%++%%%%...A...%###u###################%%....|,,,,#
 D:#....s.TTT%.r.%...%H......H%..a.a..%#5,,,#,,,,,,,,#5,,#,,,########,,,,#
 D:#%l..%%%%%%...%%s%%........%%%%s%%%%##,,,U,,,#,,,,#,,,#,,,,,,,,,,,,,,,#
 D:#%%...................%%.........%%%#5,,,#,,,#5,,,,,,,U,,,#5,,#,,,#,,5#

@@ -9,7 +9,8 @@ T:TOWN:NORMAL:NO_ROTATE
 
 # A test tile for debugging
 L:&:FLOOR
-#L:&:OBJ(ROD_DETECT_ALL)
+#L:&:OBJ(BOOK, DEPTH+70)
+#L:&:QUEST_ENTER(27)
 
 # Default for reward 1 (same as t_outpost.txt)
 L:!:FLOOR
@@ -27,19 +28,19 @@ L:$:FLOOR
 L:):FLOOR
 
 # Default for Quest 1, 32
-L:z:PERMANENT(GLOW | MARK)
+L:z:PERMANENT
 
 # Default for Quest 29, 30
-L:y:PERMANENT(GLOW | MARK)
+L:y:PERMANENT
 
 # Default for Quest 4
-L:w:PERMANENT(GLOW | MARK)
+L:w:PERMANENT
 
 # Default for Quest 33
-L:C:PERMANENT(GLOW | MARK)
+L:C:PERMANENT
 
 # Default for Quest 27
-L:O:PERMANENT(GLOW | MARK)
+L:O:PERMANENT
 
 # Default for Quest 5
 L:u:GRASS
@@ -59,237 +60,235 @@ L:t:PERMANENT
 # Default for Quest 12
 L:N:PERMANENT
 
-
 ############### Quest Chain 1 ###########################
 ############### Quest 1 - Thieves Hideout ###############
 
 ?:[EQU $QUEST1 Untaken]
-L:b:BUILDING_1(GLOW, 1)
+L:b:BUILDING_1(1)
 
 ?:[EQU $QUEST1 Taken]
-L:z:QUEST_ENTER(GLOW | MARK, 1)
-L:b:BUILDING_1(GLOW, 1)
+L:z:QUEST_ENTER(1)
+L:b:BUILDING_1(1)
 
 ?:[EQU $QUEST1 Completed]
-L:b:BUILDING_1(GLOW, 1)
+L:b:BUILDING_1(1)
 
 ?:[EQU $QUEST1 Rewarded]
-L:b:BUILDING_1(GLOW, 32)
-L:!:FLOOR:OBJ(long sword, DEPTH+5)
+L:b:BUILDING_1(32)
+L:!:OBJ(long sword, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Beholder Dragon Hound Possessor Spider] ]
-L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(combat)
+L:!:OBJ(RING, DEPTH+10):EGO(combat)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Hydra] ]
-L:!:FLOOR:OBJ(steel helm, DEPTH+5)
+L:!:OBJ(steel helm, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Golem] ]
-L:!:FLOOR:OBJ(steel helm, DEPTH+5)
+L:!:OBJ(steel helm, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Giant] ]
-L:!:FLOOR:OBJ(two-handed sword, DEPTH+5)
+L:!:OBJ(two-handed sword, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Lich Quylthulg] ]
-L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(protection)
+L:!:OBJ(RING, DEPTH+10):EGO(protection)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Duelist] ]
-L:!:FLOOR:OBJ(rapier, DEPTH+5)
+L:!:OBJ(rapier, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Rogue] ]
-L:!:FLOOR:OBJ(^sling$, DEPTH+5)
+L:!:OBJ(^sling$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archaeologist] ]
-L:!:FLOOR:OBJ(^whip$, DEPTH+5)
+L:!:OBJ(^whip$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Beastmaster Cavalry] ]
-L:!:FLOOR:OBJ(broad spear, DEPTH+5)
+L:!:OBJ(broad spear, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monk Force-Trainer Mystic] ]
-L:!:FLOOR:OBJ(gauntlets, DEPTH+5)
+L:!:OBJ(gauntlets, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Priest] ]
-L:!:FLOOR:OBJ(war hammer, DEPTH+5)
+L:!:OBJ(war hammer, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archer] ]
-L:!:FLOOR:OBJ(short bow, DEPTH+5)
+L:!:OBJ(short bow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponsmith] ]
-L:!:FLOOR:OBJ(broad axe, DEPTH+5)
+L:!:OBJ(broad axe, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
-L:!:FLOOR:OBJ(RING, DEPTH+10):EGO(protection)
+L:!:OBJ(RING, DEPTH+10):EGO(protection)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Ninja] ]
-L:!:FLOOR:OBJ(^dagger$, DEPTH+5)
+L:!:OBJ(^dagger$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Sniper] ]
-L:!:FLOOR:OBJ(light crossbow, DEPTH+5)
+L:!:OBJ(light crossbow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mauler] ]
-L:!:FLOOR:OBJ(two-handed flail, DEPTH+5)
+L:!:OBJ(two-handed flail, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
-L:!:FLOOR:OBJ(broad axe, DEPTH+5)
+L:!:OBJ(broad axe, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
-L:!:FLOOR:OBJ(short bow, DEPTH+5)
+L:!:OBJ(short bow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-L:!:FLOOR:OBJ(war hammer, DEPTH+5)
+L:!:OBJ(war hammer, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
-L:!:FLOOR:OBJ(light crossbow, DEPTH+5)
+L:!:OBJ(light crossbow, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
-L:!:FLOOR:OBJ(^dagger$, DEPTH+5)
+L:!:OBJ(^dagger$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
-L:!:FLOOR:OBJ(^pick$, DEPTH+5)
+L:!:OBJ(^pick$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
-L:!:FLOOR:OBJ(^pike$, DEPTH+5)
+L:!:OBJ(^pike$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
-L:!:FLOOR:OBJ(small leather shield, DEPTH+5)
+L:!:OBJ(small leather shield, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
-L:!:FLOOR:OBJ(^sling$, DEPTH+5)
+L:!:OBJ(^sling$, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
-L:!:FLOOR:OBJ(quarterstaff, DEPTH+5)
+L:!:OBJ(quarterstaff, DEPTH+5)
 
 ?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
-L:!:FLOOR:OBJ(long sword, DEPTH+5)
+L:!:OBJ(long sword, DEPTH+5)
 
 ?:[EQU $QUEST1 Finished]
-L:b:BUILDING_1(GLOW, 32)
+L:b:BUILDING_1(32)
 
 ?:[EQU $QUEST1 Failed]
-L:b:BUILDING_1(GLOW, 1)
+L:b:BUILDING_1(1)
 
 ?:[EQU $QUEST1 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 32 - Dark Elven Lords Quest ###############
 
 ?:[EQU $QUEST32 Taken]
-L:z:QUEST_ENTER(GLOW | MARK, 32)
-L:b:BUILDING_1(GLOW, 32)
+L:z:QUEST_ENTER(32)
+L:b:BUILDING_1(32)
 
 ?:[EQU $QUEST32 Completed]
-L:b:BUILDING_1(GLOW, 32)
+L:b:BUILDING_1(32)
 
 ?:[EQU $QUEST32 Rewarded]
-L:b:BUILDING_1(GLOW, 4)
-L:!:FLOOR:ART(galadriel)
+L:b:BUILDING_1(4)
+L:!:ART(galadriel)
 
 ?:[EQU $QUEST32 Finished]
-L:b:BUILDING_1(GLOW, 4)
+L:b:BUILDING_1(4)
 
 ?:[EQU $QUEST32 Failed]
-L:b:BUILDING_1(GLOW, 32)
+L:b:BUILDING_1(32)
 
 ?:[EQU $QUEST32 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 4 - The Vault ###############
 
 ?:[EQU $QUEST4 Taken]
-L:w:QUEST_ENTER(GLOW | MARK, 4)
-L:b:BUILDING_1(GLOW, 4)
+L:w:QUEST_ENTER(4)
+L:b:BUILDING_1(4)
 
 ?:[EQU $QUEST4 Completed]
-L:b:BUILDING_1(GLOW, 4)
+L:b:BUILDING_1(4)
 
 ?:[EQU $QUEST4 Rewarded]
-L:b:BUILDING_1(GLOW, 5)
+L:b:BUILDING_1(5)
 
 ?:[EQU $QUEST4 Finished]
-L:b:BUILDING_1(GLOW, 5)
+L:b:BUILDING_1(5)
 
 ?:[EQU $QUEST4 Failed]
-L:b:BUILDING_1(GLOW, 4)
+L:b:BUILDING_1(4)
 
 ?:[EQU $QUEST4 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 #################### Quest 5 - The Barrow Downs ####################
 ?:[EQU $QUEST5 Taken]
-L:u:QUEST_ENTER(GLOW | MARK, 5)
-L:b:BUILDING_1(GLOW, 5)
+L:u:QUEST_ENTER(5)
+L:b:BUILDING_1(5)
 
 ?:[EQU $QUEST5 Completed]
-L:b:BUILDING_1(GLOW, 5)
+L:b:BUILDING_1(5)
 
 ?:[EQU $QUEST5 Rewarded]
-L:b:BUILDING_1(GLOW, 33)
+L:b:BUILDING_1(33)
 
 ?:[EQU $QUEST5 Finished]
-L:b:BUILDING_1(GLOW, 33)
+L:b:BUILDING_1(33)
 
 ?:[EQU $QUEST5 Failed]
-L:b:BUILDING_1(GLOW, 5)
+L:b:BUILDING_1(5)
 
 ?:[EQU $QUEST5 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 33 - The Cloning Pits ###############
 
 ?:[EQU $QUEST33 Taken]
-L:C:QUEST_ENTER(GLOW | MARK, 33)
-L:b:BUILDING_1(GLOW, 33)
+L:C:QUEST_ENTER(33)
+L:b:BUILDING_1(33)
 
 ?:[EQU $QUEST33 Completed]
-L:b:BUILDING_1(GLOW, 33)
+L:b:BUILDING_1(33)
 
 ?:[EQU $QUEST33 Rewarded]
-L:b:BUILDING_1(GLOW, 27)
+L:b:BUILDING_1(27)
 
 %:r_cloning_pits.txt
 
 ?:[EQU $QUEST33 Finished]
-L:b:BUILDING_1(GLOW, 27)
+L:b:BUILDING_1(27)
 
 ?:[EQU $QUEST33 Failed]
-L:b:BUILDING_1(GLOW, 33)
+L:b:BUILDING_1(33)
 
 ?:[EQU $QUEST33 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 27 - The Old Castle ###############
 
 ?:[EQU $QUEST27 Taken]
-L:O:QUEST_ENTER(MARK | GLOW, 27)
-L:b:BUILDING_1(GLOW, 27)
+L:O:QUEST_ENTER(27)
+L:b:BUILDING_1(27)
 
 ?:[EQU $QUEST27 Completed]
-L:b:BUILDING_1(GLOW, 27)
+L:b:BUILDING_1(27)
 
 ?:[EQU $QUEST27 Rewarded]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 L:!:ART(crisdurian)
 
 %:r_old_castle.txt
 
-
 ?:[EQU $QUEST27 Finished]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:[EQU $QUEST27 Failed]
-L:b:BUILDING_1(GLOW, 27)
+L:b:BUILDING_1(27)
 
 ?:[EQU $QUEST27 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
@@ -297,207 +296,207 @@ L:b:BUILDING_1(GLOW, 0)
 ############### Quest 22 - Orc Camp ###################
 
 ?:[EQU $QUEST22 Untaken]
-L:a:BUILDING_0(GLOW, 22)
+L:a:BUILDING_0(22)
 
 ?:[EQU $QUEST22 Taken]
-L:a:BUILDING_0(GLOW, 22)
-L:v:QUEST_ENTER(MARK | GLOW, 22)
+L:a:BUILDING_0(22)
+L:v:QUEST_ENTER(22)
 
 ?:[EQU $QUEST22 Completed]
-L:a:BUILDING_0(GLOW, 22)
+L:a:BUILDING_0(22)
 
 ?:[EQU $QUEST22 Rewarded]
-L:a:BUILDING_0(GLOW, 19)
+L:a:BUILDING_0(19)
 L:?:OBJ(CLOAK, DEPTH+15):EGO(of stealth)
 
 ?:[EQU $QUEST22 Finished]
-L:a:BUILDING_0(GLOW, 19)
+L:a:BUILDING_0(19)
 
 ?:[EQU $QUEST22 Failed]
-L:a:BUILDING_0(GLOW, 22)
+L:a:BUILDING_0(22)
 
 ?:[EQU $QUEST22 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
 ############### Quest 19 - Doom Quest 1 ###############
 
 ?:[EQU $QUEST19 Taken]
-L:D:QUEST_ENTER(MARK | GLOW, 19)
-L:a:BUILDING_0(GLOW, 19)
+L:D:QUEST_ENTER(19)
+L:a:BUILDING_0(19)
 
 ?:[EQU $QUEST19 Completed]
-L:a:BUILDING_0(GLOW, 19)
+L:a:BUILDING_0(19)
 
 ?:[EQU $QUEST19 Rewarded]
-L:a:BUILDING_0(GLOW, 29)
+L:a:BUILDING_0(29)
 L:?:OBJ(RING, DEPTH+15):EGO(elemental)
 
 ?:[EQU $QUEST19 Finished]
-L:a:BUILDING_0(GLOW, 29)
+L:a:BUILDING_0(29)
 
 ?:[EQU $QUEST19 Failed]
-L:a:BUILDING_0(GLOW, 19)
+L:a:BUILDING_0(19)
 
 ?:[EQU $QUEST19 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
 ############### Quest 29 - Tengu and Death Swords ###############
 
 ?:[EQU $QUEST29 Taken]
-L:y:QUEST_ENTER(GLOW | MARK, 29)
-L:a:BUILDING_0(GLOW, 29)
+L:y:QUEST_ENTER(29)
+L:a:BUILDING_0(29)
 
 ?:[EQU $QUEST29 Completed]
-L:a:BUILDING_0(GLOW, 29)
+L:a:BUILDING_0(29)
 
 ?:[EQU $QUEST29 Rewarded]
-L:a:BUILDING_0(GLOW, 30)
+L:a:BUILDING_0(30)
 L:?:OBJ(RING, DEPTH+25):EGO(protection)
 
 ?:[AND [EQU $QUEST29 Rewarded] [EQU $RACE Death-Sword] ]
 L:?:OBJ(^dagger$, DEPTH+25):EGO(westernesse)
 
 ?:[EQU $QUEST29 Finished]
-L:a:BUILDING_0(GLOW, 30)
+L:a:BUILDING_0(30)
 
 ?:[EQU $QUEST29 Failed]
-L:a:BUILDING_0(GLOW, 29)
+L:a:BUILDING_0(29)
 
 ?:[EQU $QUEST29 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
 ############### Quest 30 - Mimics' Treasure ###############
 
 ?:[EQU $QUEST30 Taken]
-L:y:QUEST_ENTER(GLOW | MARK, 30)
-L:a:BUILDING_0(GLOW, 30)
+L:y:QUEST_ENTER(30)
+L:a:BUILDING_0(30)
 
 ?:[EQU $QUEST30 Completed]
-L:a:BUILDING_0(GLOW, 30)
+L:a:BUILDING_0(30)
 
 ?:[EQU $QUEST30 Rewarded]
-L:a:BUILDING_0(GLOW, 21)
+L:a:BUILDING_0(21)
 L:?:OBJ(ROD_DETECT_ALL)
 
 ?:[EQU $QUEST30 Finished]
-L:a:BUILDING_0(GLOW, 21)
+L:a:BUILDING_0(21)
 
 ?:[EQU $QUEST30 Failed]
-L:a:BUILDING_0(GLOW, 30)
+L:a:BUILDING_0(30)
 
 ?:[EQU $QUEST30 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
 ############### Quest 21 - Doom Quest 2 ###############
 
 ?:[EQU $QUEST21 Taken]
-L:D:QUEST_ENTER(MARK | GLOW, 21)
-L:a:BUILDING_0(GLOW, 21)
+L:D:QUEST_ENTER(21)
+L:a:BUILDING_0(21)
 
 ?:[EQU $QUEST21 Completed]
-L:a:BUILDING_0(GLOW, 21)
+L:a:BUILDING_0(21)
 
 ?:[EQU $QUEST21 Rewarded]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 L:?:OBJ(STAFF_HEAL_CURING)
 
 ?:[EQU $QUEST21 Finished]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:[EQU $QUEST21 Failed]
-L:a:BUILDING_0(GLOW, 21)
+L:a:BUILDING_0(21)
 
 ?:[EQU $QUEST21 FailedDone]
-L:a:BUILDING_0(GLOW, 0)
+L:a:BUILDING_0(0)
 
 ?:1
 
 #################### Quest 10 - Node of Sorcery ####################
 
 ?:[EQU $QUEST10 Untaken]
-L:i:BUILDING_8(GLOW, 10)
+L:i:BUILDING_8(10)
 
 ?:[EQU $QUEST10 Taken]
-L:s:QUEST_ENTER(MARK | GLOW, 10)
-L:i:BUILDING_8(GLOW, 10)
+L:s:QUEST_ENTER(10)
+L:i:BUILDING_8(10)
 
 ?:[EQU $QUEST10 Completed]
-L:i:BUILDING_8(GLOW, 10)
+L:i:BUILDING_8(10)
 
 ?:[EQU $QUEST10 Rewarded]
-L:i:BUILDING_8(GLOW, 0)
+L:i:BUILDING_8(0)
 L:(:OBJ(grimoire of power)
 
 ?:[EQU $QUEST10 Finished]
-L:i:BUILDING_8(GLOW, 0)
+L:i:BUILDING_8(0)
 
 ?:[EQU $QUEST10 Failed]
-L:i:BUILDING_8(GLOW, 10)
+L:i:BUILDING_8(10)
 
 ?:[EQU $QUEST10 FailedDone]
-L:i:BUILDING_8(GLOW, 0)
+L:i:BUILDING_8(0)
 
 ?:1
 
 #################### Quest 11 - Node of Chaos ####################
 
 ?:[EQU $QUEST11 Untaken]
-L:e:BUILDING_4(GLOW, 11)
+L:e:BUILDING_4(11)
 
 ?:[EQU $QUEST11 Taken]
-L:e:BUILDING_4(GLOW, 11)
-L:t:QUEST_ENTER(MARK | GLOW, 11)
+L:e:BUILDING_4(11)
+L:t:QUEST_ENTER(11)
 
 ?:[EQU $QUEST11 Completed]
-L:e:BUILDING_4(GLOW, 11)
+L:e:BUILDING_4(11)
 
 ?:[EQU $QUEST11 Rewarded]
-L:e:BUILDING_4(GLOW, 0)
+L:e:BUILDING_4(0)
 L:$:OBJ(armageddon tome)
 
 ?:[EQU $QUEST11 Finished]
-L:e:BUILDING_4(GLOW, 0)
+L:e:BUILDING_4(0)
 
 ?:[EQU $QUEST11 Failed]
-L:e:BUILDING_4(GLOW, 11)
+L:e:BUILDING_4(11)
 
 ?:[EQU $QUEST11 FailedDone]
-L:e:BUILDING_4(GLOW, 0)
+L:e:BUILDING_4(0)
 
 ?:1
 
 #################### Quest 12 - Node of Nature ####################
 
 ?:[EQU $QUEST12 Untaken]
-L:f:BUILDING_5(GLOW, 12)
+L:f:BUILDING_5(12)
 
 ?:[EQU $QUEST12 Taken]
-L:f:BUILDING_5(GLOW, 12)
-L:N:QUEST_ENTER(MARK | GLOW, 12)
+L:f:BUILDING_5(12)
+L:N:QUEST_ENTER(12)
 
 ?:[EQU $QUEST12 Completed]
-L:f:BUILDING_5(GLOW, 12)
+L:f:BUILDING_5(12)
 
 ?:[EQU $QUEST12 Rewarded]
-L:f:BUILDING_5(GLOW, 0)
+L:f:BUILDING_5(0)
 L:):OBJ(nature's wrath)
 
 ?:[EQU $QUEST12 Finished]
-L:f:BUILDING_5(GLOW, 0)
+L:f:BUILDING_5(0)
 
 ?:[EQU $QUEST12 Failed]
-L:f:BUILDING_5(GLOW, 12)
+L:f:BUILDING_5(12)
 
 ?:[EQU $QUEST12 FailedDone]
-L:f:BUILDING_5(GLOW, 0)
+L:f:BUILDING_5(0)
 
 ?:1
 

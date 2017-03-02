@@ -2150,6 +2150,15 @@ void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr
             if (grid)
             {
                 _apply_room_grid_feat(p, grid, room->flags);
+                /* Force consistent town behavior ... towns are auto-mapped. Quest
+                 * entrances and other permanent fixtures are mapped and glowing. */
+                if (room->type == ROOM_TOWN)
+                {
+                    if (have_flag(f_info[c_ptr->feat].flags, FF_GLOW))
+                        c_ptr->info |= CAVE_MARK | CAVE_GLOW;
+                    if (have_flag(f_info[c_ptr->feat].flags, FF_PERMANENT))
+                        c_ptr->info |= CAVE_MARK | CAVE_GLOW;
+                }
                 continue;
             }
 

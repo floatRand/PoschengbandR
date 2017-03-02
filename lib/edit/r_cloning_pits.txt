@@ -20,40 +20,40 @@ L:!:ART(boots of the bard)
 
 # Flora
 ?:[AND [EQU $QUEST33 Rewarded] [EQU [MOD $RANDOM33 6] 5] ]
-L:!:FLOOR(ROOM):ART(flora)
+L:!:ART(flora)
 
 ##########################################################################
 # Dragon/Hydra
 ?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Dragon Hydra Centaur] [EQU [MOD $RANDOM33 5] 0] ]
-L:!:FLOOR(ROOM):ART(hammerhand)
+L:!:ART(hammerhand)
 
 ?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Dragon Hydra Centaur] [GEQ [MOD $RANDOM33 5] 1] ]
-L:!:FLOOR(ROOM):ART(thranduil)
+L:!:ART(thranduil)
 
 ##########################################################################
 # Death-Sword
 ?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Death-Sword] [EQU [MOD $RANDOM33 5] 0] ]
-L:!:FLOOR(ROOM):ART(werewindle)
+L:!:ART(werewindle)
 
 ?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Death-Sword] [GEQ [MOD $RANDOM33 5] 1] ]
-L:!:FLOOR(ROOM):ART(grayswandir)
+L:!:ART(grayswandir)
 
 ##########################################################################
 # Beholder
 ?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Beholder Quylthulg] [EQU [MOD $RANDOM33 5] 0] ]
-L:!:FLOOR(ROOM):ART(of the ages)
+L:!:ART(of the ages)
 
 # Frakir
 ?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Beholder Quylthulg] [GEQ [MOD $RANDOM33 5] 1] ]
-L:!:FLOOR(ROOM):ART(frakir)
+L:!:ART(frakir)
 
 ##########################################################################
 # Xorn
 ?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Xorn] [EQU [MOD $RANDOM33 5] 0] ]
-L:!:FLOOR(ROOM):ART(thorin)
+L:!:ART(thorin)
 
 ?:[AND [EQU $QUEST33 Rewarded] [EQU $RACE Xorn] [GEQ [MOD $RANDOM33 5] 1] ]
-L:!:FLOOR(ROOM):ART(perseus)
+L:!:ART(perseus)
 
 ##########################################################################
 

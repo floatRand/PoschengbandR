@@ -22,11 +22,11 @@ Q:32:T:The quest was more than you could handle. I'll try somebody else next tim
 ?:1
 
 T:QUEST:NORMAL
-L:#:PERMANENT(ROOM)
-L:%:GRANITE(ROOM)
-L:.:FLOOR(ROOM)
-L:+:CLOSED_DOOR(ROOM)
-L:<:UP_STAIR(ROOM)
+L:#:PERMANENT
+L:%:GRANITE
+L:.:FLOOR
+L:+:CLOSED_DOOR
+L:<:UP_STAIR
 L:^:TRAP(*, 25)
 L:y:MON(dweller on the threshold)
 L:P:MON(stone giant)

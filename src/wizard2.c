@@ -1777,7 +1777,6 @@ void do_cmd_debug(void)
         int flags = INIT_DEBUG | INIT_DISPLAY_DUNGEON;
         /*flags = INIT_DEBUG;
         init_v_info(flags); */
-        process_dungeon_file("q_logrus_master.txt", flags);
 break;
         process_dungeon_file("t_lite.txt", flags);
         process_dungeon_file("t_outpost.txt", flags);

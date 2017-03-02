@@ -23,9 +23,9 @@ Q:22:T:I've sent out someone else to do the job.  Now leave me alone!
 ?:1
 
 T:QUEST:NORMAL
-L:#:PERMANENT(ROOM)
-L:.:FLOOR(ROOM)
-L:<:UP_STAIR(ROOM)
+L:#:PERMANENT
+L:.:FLOOR
+L:<:UP_STAIR
 L:^:TRAP(TRAP_ALARM, 15)
 L:a:MON(golfimbul)
 L:b:MON(orc captain)

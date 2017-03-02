@@ -23,15 +23,15 @@ Q:4:T:in driving the evil out of our town.
 ?:1
 
 T:QUEST:NORMAL
-L:#:PERMANENT(ROOM)
-L:%:GRANITE(ROOM)
-L:.:FLOOR(ROOM)
-L:+:CLOSED_DOOR(ROOM)
-L:<:UP_STAIR(ROOM)
+L:#:PERMANENT
+L:%:GRANITE
+L:.:FLOOR
+L:+:CLOSED_DOOR
+L:<:UP_STAIR
 L:^:TRAP(*, 25)
-L:5:FLOOR(ROOM | ICKY):MON(*, DEPTH+7)
-L:9:FLOOR(ROOM):OBJ(*, DEPTH+7):MON(*, DEPTH+9)
-L:*:FLOOR(ROOM):TRAP(*, 25):OBJ(*)
+L:5:MON(*, DEPTH+7)
+L:9:OBJ(*, DEPTH+7):MON(*, DEPTH+9)
+L:*:TRAP(*, 25):OBJ(*)
 
 L:a:ART(sting)
 L:b:OBJ(small sword, DEPTH+5)

@@ -27,7 +27,7 @@ L:#:PERMANENT
 L:.:FLOOR
 L:+:CLOSED_DOOR
 L:;:RUBBLE
-L:<:UP_STAIR(ROOM)
+L:<:UP_STAIR
 L:$:OBJ(*)
 L:a:MON(^manes$)
 L:b:MON(^imp$)

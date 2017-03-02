@@ -1700,16 +1700,12 @@ static int _lookup_ego(cptr name, int type, int options)
     return 0;
 }
 
-/* OBJ(RING):EGO(209)            Ring of Speed
+/* OBJ(RING):EGO(speed)          Ring of Speed
    OBJ(RING):EGO(*)              Any ego ring
    OBJ(CLOAK, DEPTH+20):EGO(*)   Any ego cloak generated 20 levels OoD
-   OBJ(RING, DEPTH+50):EGO(209)  Ring of Speed generated 50 level OoD
+   OBJ(RING, DEPTH+50):EGO(speed) Ring of Speed generated 50 level OoD
    OBJ(SWORD):EGO(pattern)       A pattern blade
-   
-   Note: ego names are not unique, so be careful when using text matches.
-   I'll try to fix this some day, but for now, use the index for names
-   that duplicate (e.g. 'of Speed' for boots and rings). Other problems
-   are 'of Elvenkind' 'of Slaying' 'Elemental' ... */
+*/   
 static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid, int options)
 {
     switch (arg_ct)
@@ -1782,7 +1778,7 @@ static int _lookup_art(cptr name, int options)
 }
 
 /* OBJ(CLOAK, DEPTH+20):ART(*)   Rand-art cloak generated 20 levels OoD
-   ART(dwarves)                  Necklace of the Dwarves (a_idx = 6) */
+   ART(dwarves)                  Necklace of the Dwarves */
 static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_ptr grid, int options)
 {
     switch (arg_ct)
@@ -1888,6 +1884,11 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
                 grid->cave_info |= CAVE_GLOW;
             else if (streq(flag, "MARK"))
                 grid->cave_info |= CAVE_MARK;
+            else if (_is_numeric(flag)) /* QUEST_ENTER(1) or QUEST_ENTER(GLOW, 1) */
+            {
+                grid->flags |= ROOM_GRID_SPECIAL;
+                grid->extra = atoi(flag);
+            }
             else
             {
                 msg_format("Error: Unknown Feature Option %s.", flag);
