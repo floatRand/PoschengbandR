@@ -80,7 +80,6 @@ void pack_get(obj_ptr obj)
 {
     char     name[MAX_NLEN];
     class_t *class_ptr = get_class();
-    int      i;
 
     object_desc(name, obj, OD_COLOR_CODED);
 
@@ -110,18 +109,7 @@ void pack_get(obj_ptr obj)
 
         msg_format("You get %s.", name);
 
-        /* TODO: quest_check_obj(obj), quest_check_mon(mon), etc. */
-        for (i = 0; i < max_quests; i++)
-        {
-            if ((quest[i].type == QUEST_TYPE_FIND_ARTIFACT) &&
-                (quest[i].status == QUEST_STATUS_TAKEN) &&
-                   (quest[i].k_idx == obj->name1 || quest[i].k_idx == obj->name3))
-            {
-                quest[i].status = QUEST_STATUS_COMPLETED;
-                quest[i].complev = p_ptr->lev;
-                cmsg_print(TERM_L_BLUE, "You completed your quest!");
-            }
-        }
+        quests_on_get_obj(obj);
         pack_carry(obj);
     }
     obj_release(obj, OBJ_RELEASE_QUIET);

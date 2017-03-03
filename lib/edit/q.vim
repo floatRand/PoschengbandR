@@ -31,7 +31,14 @@ syn region qCmdExp matchgroup=qOp start=/SCRAMBLE(/ end=/)/ contained
 syn region qExpLine matchgroup=qExpPrefix start=/^?:/ end=/$/ contains=qExp
 syn region qCmdLine matchgroup=qCmdPrefix start=/^!:/ end=/$/ contains=qCmdExp
 syn region qLetterLine matchgroup=qLetterPrefix start=/^L:./ end=/$/ contains=qObjExp,qEgoExp,qArtExp,qMonExp,qTrapExp,qCmdExp,qFeature,qNumber
-syn region qMapLine matchgroup=qMapPrefix start=/^D:/ end=/$/
+syn match qMapWall /[#%;]/ contained
+syn match qMapDoor /+/ contained
+syn match qMapTrap /\^/ contained
+syn match qMapLoot /\$/ contained
+syn match qMapTree /T/ contained
+syn region qMapLine matchgroup=qMapPrefix start=/^M:/ end=/$/ contains=qMapWall,qMapDoor,qMapTrap,qMapLoot,qMapTree
+syn region qDescLine matchgroup=qDescPrefix start=/^D:/ end=/$/
+syn region qRewardLine matchgroup=qRewardPrefix start=/^R:/ end=/$/ contains=qObjExp,qEgoExp,qArtExp,qNumber
 syn region qTypeLine start=/^T:/ end=/$/
 
 
@@ -47,8 +54,16 @@ hi def link qOp Operator
 hi def link qLetterPrefix Type
 hi def link qExpPrefix Label
 hi def link qMapPrefix PreProc
+hi def link qDescPrefix PreProc
 hi def link qTypeLine Special
 hi def link qCmdPrefix Operator
+hi def link qRewardPrefix Special
+
+hi qMapWall term=bold ctermfg=Brown
+hi qMapDoor term=bold ctermfg=Brown
+hi qMapTrap term=bold ctermfg=Red
+hi qMapLoot term=bold ctermfg=Yellow
+hi qMapTree term=bold ctermfg=Green
 
 let b:current_syntax = "q"
 

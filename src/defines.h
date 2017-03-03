@@ -94,9 +94,6 @@
 /* Check is the quest index is "fixed" */
 #define is_fixed_quest_idx(Q_IDX) (((Q_IDX) < MIN_RANDOM_QUEST) || ((Q_IDX) >= MIN_RANDOM_QUEST + num_random_quests))
 
-#define QUEST_OBERON         8
-#define QUEST_SERPENT        9
-
 /*
  * Arena constants
  */
@@ -4402,6 +4399,13 @@ extern int PlayerUID;
 #define QUEST_TYPE_RANDOM                    7
 
 /*
+ * Quest flags
+ */
+#define QUEST_FLAG_SILENT  0x01 /* no messages fro completion */
+#define QUEST_FLAG_PRESET  0x02 /* quest is outside the main dungeon */
+#define QUEST_FLAG_ONCE    0x04 /* quest is marked finished after leaving */
+
+/*
  * Initialization flags
  */
 #define INIT_SHOW_TEXT          0x01
@@ -4411,13 +4415,6 @@ extern int PlayerUID;
 #define INIT_ONLY_BUILDINGS     0x10
 #define INIT_DEBUG              0x20 /* error checking on dungeon files */
 #define INIT_DISPLAY_DUNGEON    0x40 /* requires INIT_DEBUG as well */
-
-/*
- * Quest flags
- */
-#define QUEST_FLAG_SILENT  0x01 /* no messages fro completion */
-#define QUEST_FLAG_PRESET  0x02 /* quest is outside the main dungeon */
-#define QUEST_FLAG_ONCE    0x04 /* quest is marked finished after leaving */
 
 /*
  * Available graphic modes

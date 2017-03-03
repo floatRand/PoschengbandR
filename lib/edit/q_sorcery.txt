@@ -1,26 +1,4 @@
-# vim: filetype=q :
 # Created by Topi Ylinen
-
-Q:10:N:Node of Sorcery
-Q:10:Q:6:0:0:0:65:0:0:0:6
-
-?:[EQU $QUEST10 Taken Completed]
-Q:10:T:The Wizards of Sorcery have discovered a magical Node of Sorcery 
-Q:10:T:in a damp area nearby. You must seek the Node and dispatch 
-Q:10:T:its guardians so that the Tower of Sorcery can claim the 
-Q:10:T:mystical energies of the Node.
-?:1
-
-?:[EQU $QUEST10 Rewarded]
-Q:10:T:You have done well. A powerful spellbook awaits you outside.
-?:1
-
-?:[EQU $QUEST10 Failed]
-Q:10:T:Begone, incompetent fool! The dimensional energies of the 
-Q:10:T:mystic Node have faded away and are lost forever! You had
-Q:10:T:your chance and botched the job. 
-?:1
-
 T:QUEST:NORMAL
 L:#:PERMANENT
 L:%:GRANITE
@@ -32,29 +10,48 @@ L:b:MON(phantom warrior)
 L:c:MON(phantom beast)
 L:d:SHALLOW_WATER:MON(air elemental)
 L:e:DEEP_WATER:MON(great wyrm of many colours)
-D:###############################
-D:##~~~~~~~~~~~~~~~~~~~~~~~~~~~##
-D:#~~~~~~~~~~~~~aaa~~~~~~~~~~~~~#
-D:#~~a~~~~~~~~~~~~~~~~~~~~~~~a~~#
-D:#.~aa%%%%%%%%%~a~%%%%%%%%%aa~.#
-D:#..~%%%%%%%%%~aaa~%%%%%%%%%~..#
-D:#..~%%%ccbbbbb~a~bbbbbcc%%%~..#
-D:#..~%%ccb.............bcc%%~..#
-D:#..~%%...%%%%%%%%%%%%%...%%~..#
-D:#..~%%..%%...........%%..%%~..#
-D:#..~%%..%.....~d~.....%..%%~..#
-D:#..~%%..%....~ded~....%..%%~..#
-D:#..~%%......~deeed~......%%~..#
-D:#..~%%..%....~ded~....%..%%~..#
-D:#..~%%..%.....~d~.....%..%%~..#
-D:#..~%%b.%%...........%%bb%%~..#
-D:#..~%%%b.%%%.......%%%bb%%%~..#
-D:#..~%%%ccbbbbbbbbbbbbbcc%%%~..#
-D:#..~%%%%cbbbbbbbbbbbbbc%%%%~..#
-D:#..~%%%%%%%%%%%%%%%%%%%%%%%~..#
-D:#..~~%%%%%%%%%%%%%%%%%%%%%~~..#
-D:#...~~~~~~~~~~~~~~~~~~~~~~~...#
-D:#.....~~~~~~~~~~~~~~~~~~~.....#
-D:#<...........................##
-D:###############################
+M:###############################
+M:##~~~~~~~~~~~~~~~~~~~~~~~~~~~##
+M:#~~~~~~~~~~~~~aaa~~~~~~~~~~~~~#
+M:#~~a~~~~~~~~~~~~~~~~~~~~~~~a~~#
+M:#.~aa%%%%%%%%%~a~%%%%%%%%%aa~.#
+M:#..~%%%%%%%%%~aaa~%%%%%%%%%~..#
+M:#..~%%%ccbbbbb~a~bbbbbcc%%%~..#
+M:#..~%%ccb.............bcc%%~..#
+M:#..~%%...%%%%%%%%%%%%%...%%~..#
+M:#..~%%..%%...........%%..%%~..#
+M:#..~%%..%.....~d~.....%..%%~..#
+M:#..~%%..%....~ded~....%..%%~..#
+M:#..~%%......~deeed~......%%~..#
+M:#..~%%..%....~ded~....%..%%~..#
+M:#..~%%..%.....~d~.....%..%%~..#
+M:#..~%%b.%%...........%%bb%%~..#
+M:#..~%%%b.%%%.......%%%bb%%%~..#
+M:#..~%%%ccbbbbbbbbbbbbbcc%%%~..#
+M:#..~%%%%cbbbbbbbbbbbbbc%%%%~..#
+M:#..~%%%%%%%%%%%%%%%%%%%%%%%~..#
+M:#..~~%%%%%%%%%%%%%%%%%%%%%~~..#
+M:#...~~~~~~~~~~~~~~~~~~~~~~~...#
+M:#.....~~~~~~~~~~~~~~~~~~~.....#
+M:#<...........................##
+M:###############################
+R:OBJ(grimoire of power)
 
+?:[EQU $QUEST10 Taken Completed]
+D::The Wizards of Sorcery have discovered a magical Node of Sorcery 
+D::in a damp area nearby. You must seek the Node and dispatch 
+D::its guardians so that the Tower of Sorcery can claim the 
+D::mystical energies of the Node.
+?:1
+
+?:[EQU $QUEST10 Rewarded]
+D::You have done well. A powerful spellbook awaits you outside.
+?:1
+
+?:[EQU $QUEST10 Failed]
+D::Begone, incompetent fool! The dimensional energies of the 
+D::mystic Node have faded away and are lost forever! You had
+D::your chance and botched the job. 
+?:1
+
+# vim: filetype=q :

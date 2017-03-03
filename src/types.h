@@ -472,7 +472,7 @@ struct monster_body_s
 typedef struct monster_body_s monster_body_t;
 
 
-typedef struct monster_race monster_race;
+typedef struct monster_race monster_race, *mon_race_ptr;
 
 #define MON_AC(r_ptr, m_ptr) MAX((r_ptr)->ac + (m_ptr)->ac_adj, 0)
 #define MON_MELEE_LVL(r_ptr, m_ptr) MAX(((r_ptr)->melee_level ? (r_ptr)->melee_level : (r_ptr)->level) + (m_ptr)->melee_adj, 1)

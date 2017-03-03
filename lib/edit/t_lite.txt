@@ -63,114 +63,23 @@ L:N:PERMANENT
 ############### Quest Chain 1 ###########################
 ############### Quest 1 - Thieves Hideout ###############
 
-?:[EQU $QUEST1 Untaken]
-L:b:BUILDING_1(1)
-
 ?:[EQU $QUEST1 Taken]
 L:z:QUEST_ENTER(1)
+
+?:[EQU $QUEST1 Untaken Taken Completed Failed]
 L:b:BUILDING_1(1)
-
-?:[EQU $QUEST1 Completed]
-L:b:BUILDING_1(1)
-
-?:[EQU $QUEST1 Rewarded]
-L:b:BUILDING_1(32)
-L:!:OBJ(long sword, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Beholder Dragon Hound Possessor Spider] ]
-L:!:OBJ(RING, DEPTH+10):EGO(combat)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Hydra] ]
-L:!:OBJ(steel helm, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Golem] ]
-L:!:OBJ(steel helm, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Giant] ]
-L:!:OBJ(two-handed sword, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Lich Quylthulg] ]
-L:!:OBJ(RING, DEPTH+10):EGO(protection)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Duelist] ]
-L:!:OBJ(rapier, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Rogue] ]
-L:!:OBJ(^sling$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archaeologist] ]
-L:!:OBJ(^whip$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Beastmaster Cavalry] ]
-L:!:OBJ(broad spear, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monk Force-Trainer Mystic] ]
-L:!:OBJ(gauntlets, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Priest] ]
-L:!:OBJ(war hammer, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archer] ]
-L:!:OBJ(short bow, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponsmith] ]
-L:!:OBJ(broad axe, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
-L:!:OBJ(RING, DEPTH+10):EGO(protection)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Ninja] ]
-L:!:OBJ(^dagger$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Sniper] ]
-L:!:OBJ(light crossbow, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mauler] ]
-L:!:OBJ(two-handed flail, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
-L:!:OBJ(broad axe, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
-L:!:OBJ(short bow, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-L:!:OBJ(war hammer, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
-L:!:OBJ(light crossbow, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
-L:!:OBJ(^dagger$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
-L:!:OBJ(^pick$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
-L:!:OBJ(^pike$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
-L:!:OBJ(small leather shield, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
-L:!:OBJ(^sling$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
-L:!:OBJ(quarterstaff, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
-L:!:OBJ(long sword, DEPTH+5)
-
-?:[EQU $QUEST1 Finished]
-L:b:BUILDING_1(32)
-
-?:[EQU $QUEST1 Failed]
-L:b:BUILDING_1(1)
-
-?:[EQU $QUEST1 FailedDone]
-L:b:BUILDING_1(0)
-
+?:[EQU $QUEST1 Finished FailedDone]
+L:b:BUILDING_1(14)
 ?:1
+
+############### Quest 14 - Warg problem ###############
+
+?:[EQU $QUEST14 Taken Completed Failed]
+L:b:BUILDING_1(14)
+?:[EQU $QUEST14 Finished FailedDone]
+L:b:BUILDING_1(32)
+?:1
+#########<<<<<<<<<<<<<<<< Here I am >>>>>>>>>>>>>>>>>>>
 
 ############### Quest 32 - Dark Elven Lords Quest ###############
 

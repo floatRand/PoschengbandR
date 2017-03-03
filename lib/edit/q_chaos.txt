@@ -1,26 +1,4 @@
-# vim: filetype=q :
 # Created by Topi Ylinen
-
-Q:11:N:Node of Chaos
-Q:11:Q:6:0:0:0:65:0:0:0:6
-
-?:[EQU $QUEST11 Taken Completed]
-Q:11:T:The Wizards of Chaos have discovered a magical Node of
-Q:11:T:Chaos in a nearby volcano. You must seek the Node and
-Q:11:T:dispatch its guardians so that the Tower of Chaos can
-Q:11:T:claim the mystical energies of the Node.
-?:1
-
-?:[EQU $QUEST11 Rewarded]
-Q:11:T:You have done well. A powerful spellbook awaits you outside.
-?:1
-
-?:[EQU $QUEST11 Failed]
-Q:11:T:Begone, incompetent fool! The dimensional energies of the 
-Q:11:T:mystic Node have faded away and are lost forever! You had
-Q:11:T:your chance and botched the job. 
-?:1
-
 T:QUEST:NORMAL
 L:#:MOUNTAIN_WALL
 L:.:FLOOR
@@ -32,29 +10,48 @@ L:b:MON(hell hound)
 L:c:SHALLOW_LAVA:MON(fire elemental)
 L:d:SHALLOW_LAVA:MON(magma elemental)
 L:e:DEEP_LAVA:MON(great hell wyrm)
-D:###############################
-D:##*****~~~~~~*****~~~~~~~****##
-D:#***~~~c~~~~~~***~~~~~c~~~*~**#
-D:#*~~~~cdc~~~~~~~~~~~~cdc~~~~~*#
-D:#.~~~#########ccc#########~~~.#
-D:#..~#########cdddc#########~..#
-D:#..~###...aaaacccaaaa...###~..#
-D:#..~##....aaaabbbaaaa....##~..#
-D:#..~##...#############...##~..#
-D:#..~##..##...........##..##~..#
-D:#..~##..#.....cdc.....#..##~..#
-D:#..~##..#b...cdedc...b#..##~..#
-D:#..~##..bbb.cdeeedc.bbb..##~..#
-D:#..~##..#b...cdedc...b#..##~..#
-D:#..~##..#.....cdc.....#..##~..#
-D:#..~##..##...........##..##~..#
-D:#..~###..###.......###..###~..#
-D:#..~###..aaaaaaaaaaaaa..###~..#
-D:#..~####.aaaaabbbaaaaa.####~..#
-D:#..~#######################~..#
-D:#..~~#####################~~..#
-D:#...~~~~~~~~~~~~~~~~~~~~~~~...#
-D:#.....~~~~~~~~~~~~~~~~~~~.....#
-D:#<...........................##
-D:###############################
+M:###############################
+M:##*****~~~~~~*****~~~~~~~****##
+M:#***~~~c~~~~~~***~~~~~c~~~*~**#
+M:#*~~~~cdc~~~~~~~~~~~~cdc~~~~~*#
+M:#.~~~#########ccc#########~~~.#
+M:#..~#########cdddc#########~..#
+M:#..~###...aaaacccaaaa...###~..#
+M:#..~##....aaaabbbaaaa....##~..#
+M:#..~##...#############...##~..#
+M:#..~##..##...........##..##~..#
+M:#..~##..#.....cdc.....#..##~..#
+M:#..~##..#b...cdedc...b#..##~..#
+M:#..~##..bbb.cdeeedc.bbb..##~..#
+M:#..~##..#b...cdedc...b#..##~..#
+M:#..~##..#.....cdc.....#..##~..#
+M:#..~##..##...........##..##~..#
+M:#..~###..###.......###..###~..#
+M:#..~###..aaaaaaaaaaaaa..###~..#
+M:#..~####.aaaaabbbaaaaa.####~..#
+M:#..~#######################~..#
+M:#..~~#####################~~..#
+M:#...~~~~~~~~~~~~~~~~~~~~~~~...#
+M:#.....~~~~~~~~~~~~~~~~~~~.....#
+M:#<...........................##
+M:###############################
+R:OBJ(armageddon tome)
 
+?:[EQU $QUEST11 Taken Completed]
+D::The Wizards of Chaos have discovered a magical Node of
+D::Chaos in a nearby volcano. You must seek the Node and
+D::dispatch its guardians so that the Tower of Chaos can
+D::claim the mystical energies of the Node.
+?:1
+
+?:[EQU $QUEST11 Rewarded]
+D::You have done well. A powerful spellbook awaits you outside.
+?:1
+
+?:[EQU $QUEST11 Failed]
+D::Begone, incompetent fool! The dimensional energies of the 
+D::mystic Node have faded away and are lost forever! You had
+D::your chance and botched the job. 
+?:1
+
+# vim: filetype=q :

@@ -1,12 +1,9 @@
 # vim: filetype=q :
 
-Q:9:N:Serpent of Chaos
-Q:9:Q:1:0:0:1:100:862:0:1
-
 ?:[EQU $QUEST9 Taken]
-Q:9:T:Your final quest is the ultimate quest that has always been
-Q:9:T:required of you. You must enter the realm of the Serpent,
-Q:9:T:travel deep, and defeat this source of all our problems.
-Q:9:T:Be prepared, be patient, and good luck. May the light shine on you.
+D:Your final quest is the ultimate quest that has always been
+D:required of you. You must enter the realm of the Serpent,
+D:travel deep, and defeat this source of all our problems.
+D:Be prepared, be patient, and good luck. May the light shine on you.
 ?:1
 

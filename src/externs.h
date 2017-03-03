@@ -1750,7 +1750,6 @@ extern bool set_sanctuary(bool set);
 extern void check_experience(void);
 extern int exp_requirement(int level);
 extern void gain_chosen_stat(void);
-extern void check_quest_completion(monster_type *m_ptr);
 extern cptr extract_note_dies(monster_race *r_ptr);
 extern void monster_death(int m_idx, bool drop_item);
 extern bool get_monster_drop(int m_idx, object_type *o_ptr);

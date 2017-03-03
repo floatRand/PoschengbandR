@@ -776,9 +776,7 @@ void teleport_level(int m_idx)
     if (m_idx > 0)
     {
         monster_type *m_ptr = &m_list[m_idx];
-
-        /* Check for quest completion */
-        check_quest_completion(m_ptr);
+        quests_on_kill_mon(m_ptr);
         delete_monster_idx(m_idx);
     }
 

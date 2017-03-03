@@ -41,162 +41,20 @@ L:q:PERMANENT
 
 ############### Quest 1 - Thieves Hideout ###############
 
-?:[EQU $QUEST1 Untaken]
-L:b:BUILDING_1(1)
-
 ?:[EQU $QUEST1 Taken]
 L:z:QUEST_ENTER(1)
-L:b:BUILDING_1(1)
 
-?:[EQU $QUEST1 Completed]
+?:[EQU $QUEST1 Untaken Taken Completed Failed]
 L:b:BUILDING_1(1)
-
-?:[EQU $QUEST1 Rewarded]
+?:[EQU $QUEST1 Finished FailedDone]
 L:b:BUILDING_1(14)
-L:):OBJ(long sword, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Beholder Spider Ring] ]
-L:):OBJ(RING, DEPTH+10):EGO(protection)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Centipede] ]
-L:):OBJ(metal shod boots, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Dragon] ]
-L:):OBJ(^cloak$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Hound Hydra Vortex] ]
-L:):OBJ(steel helm, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Golem] ]
-L:):OBJ(steel helm, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monster] [EQU $RACE Giant] ]
-L:):OBJ(two-handed sword, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Lich Quylthulg] ]
-L:):OBJ(RING, DEPTH+10):EGO(protection)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Duelist] ]
-L:):OBJ(rapier, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Rogue] ]
-L:):OBJ(^sling$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archaeologist] ]
-L:):OBJ(^whip$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Beastmaster Cavalry] ]
-L:):OBJ(broad spear, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Monk Force-Trainer Mystic] ]
-L:):OBJ(gauntlets, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Priest] ]
-L:):OBJ(war hammer, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $RACE Angel] ]
-L:):OBJ(war hammer, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Archer] ]
-L:):OBJ(short bow, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Weaponsmith] ]
-L:):OBJ(broad axe, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
-L:):OBJ(RING, DEPTH+10):EGO(protection)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Ninja] ]
-L:):OBJ(^dagger$, DEPTH+5)
-
-?:[AND [EQU $QUEST1 Rewarded] [EQU $CLASS Sniper] ]
-L:):OBJ(light crossbow, DEPTH+5)
-
-?:[EQU $QUEST1 Finished]
-L:b:BUILDING_1(14)
-
-?:[EQU $QUEST1 Failed]
-L:b:BUILDING_1(1)
-
-?:[EQU $QUEST1 FailedDone]
-L:b:BUILDING_1(0)
-
 ?:1
 
 ############### Quest 14 - Warg problem ###############
 
-?:[EQU $QUEST14 Taken]
+?:[EQU $QUEST14 Taken Completed Failed]
 L:b:BUILDING_1(14)
 
-?:[EQU $QUEST14 Completed]
-L:b:BUILDING_1(14)
-
-?:[EQU $QUEST14 Rewarded]
-L:b:BUILDING_1(25)
-L:):OBJ(small metal shield, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Magic-Eater] ]
-L:):OBJ(WAND_BOLT_COLD)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $RACE Death-Sword] ]
-L:):OBJ(long sword, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Scout] ]
-L:):OBJ(light crossbow, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage] ]
-L:):OBJ(RING, DEPTH+10):EGO(wizardry)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $RACE Dragon Hound Spider] ]
-L:):OBJ(RING, DEPTH+10):EGO(combat)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $RACE Centipede] ]
-L:):OBJ(metal shod boots, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $RACE Ring Beholder Vortex] ]
-L:):OBJ(RING, DEPTH+10):EGO(elemental)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $RACE Hydra Quylthulg] ]
-L:):OBJ(^cloak$, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
-L:):FLOOR:OBJ(broad axe, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
-L:):FLOOR:OBJ(short bow, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-L:):FLOOR:OBJ(war hammer, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
-L:):FLOOR:OBJ(light crossbow, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
-L:):FLOOR:OBJ(^dagger$, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
-L:):FLOOR:OBJ(^pick$, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
-L:):FLOOR:OBJ(^pike$, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
-L:):FLOOR:OBJ(small leather shield, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
-L:):FLOOR:OBJ(^sling$, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
-L:):FLOOR:OBJ(quarterstaff, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
-L:):FLOOR:OBJ(long sword, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Beastmaster Cavalry Ninja] ]
-L:):FLOOR:OBJ(gauntlets, DEPTH+5)
-
-?:[AND [EQU $QUEST14 Rewarded] [EQU $CLASS Mauler] ]
-L:):FLOOR:OBJ(two-handed flail, DEPTH+5)
 
 ?:[EQU $QUEST14 Finished]
 L:b:BUILDING_1(25)

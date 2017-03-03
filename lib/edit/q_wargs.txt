@@ -1,20 +1,82 @@
-# vim: filetype=q :
 # q_warg.txt
 
-Q:14:N:Warg problem
-Q:14:Q:1:0:0:16:5:257:0:30
-
 ?:[EQU $QUEST14 Taken Completed]
-Q:14:T:Our scouts report a large number of Wargs in the dungeon.
-Q:14:T:We don't know who set them on guard at 250 feet, but we
-Q:14:T:think their task is to hinder resupply of our outposts
-Q:14:T:in the dungeon. We offer you a small reward if you clear
-Q:14:T:the path for the supplies.
+D::Our scouts report a large number of Wargs in the dungeon.
+D::We don't know who set them on guard at 250 feet, but we
+D::think their task is to hinder resupply of our outposts
+D::in the dungeon. We offer you a small reward if you clear
+D::the path for the supplies.
 ?:1
 
 ?:[EQU $QUEST14 Rewarded]
-Q:14:T:Since most of the supplies have been send to our troops
-Q:14:T:in the dungeon, we can only give you a small reward.
-Q:14:T:It awaits you outside.
+D::Since most of the supplies have been send to our troops
+D::in the dungeon, we can only give you a small reward.
+D::It awaits you outside.
 ?:1
 
+R::OBJ(small metal shield, DEPTH+5)
+
+?:[EQU $CLASS Magic-Eater]
+R::OBJ(WAND_BOLT_COLD)
+
+?:[EQU $RACE Death-Sword]
+R::OBJ(long sword, DEPTH+5)
+
+?:[EQU $CLASS Scout]
+R::OBJ(light crossbow, DEPTH+5)
+
+?:[EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage]
+R::OBJ(RING, DEPTH+10):EGO(wizardry)
+
+?:[EQU $RACE Dragon Hound Spider]
+R::OBJ(RING, DEPTH+10):EGO(combat)
+
+?:[EQU $RACE Centipede]
+R::OBJ(metal shod boots, DEPTH+5)
+
+?:[EQU $RACE Ring Beholder Vortex]
+R::OBJ(RING, DEPTH+10):EGO(elemental)
+
+?:[EQU $RACE Hydra Quylthulg]
+R::OBJ(^cloak$, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
+R::OBJ(broad axe, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
+R::OBJ(short bow, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
+R::OBJ(war hammer, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
+R::OBJ(light crossbow, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
+R::OBJ(^dagger$, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
+R::OBJ(^pick$, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
+R::OBJ(^pike$, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
+R::OBJ(small leather shield, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
+R::OBJ(^sling$, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
+R::OBJ(quarterstaff, DEPTH+5)
+
+?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
+R::OBJ(long sword, DEPTH+5)
+
+?:[EQU $CLASS Beastmaster Cavalry Ninja]
+R::OBJ(gauntlets, DEPTH+5)
+
+?:[EQU $CLASS Mauler]
+R::OBJ(two-handed flail, DEPTH+5)
+
+# vim: filetype=q :

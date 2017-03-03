@@ -1,26 +1,4 @@
-# vim: filetype=q :
 # Created by Topi Ylinen
-
-Q:12:N:Node of Nature
-Q:12:Q:6:0:0:0:65:0:0:0:6
-
-?:[EQU $QUEST12 Taken Completed]
-Q:12:T:The Wizards of Nature have discovered a magical Node of 
-Q:12:T:Nature in a nearby forest. You must seek the Node and 
-Q:12:T:dispatch its guardians so that the Tower of Nature can 
-Q:12:T:claim the mystical energies of the Node.
-?:1
-
-?:[EQU $QUEST12 Rewarded]
-Q:12:T:You have done well. A powerful spellbook awaits you outside.
-?:1
-
-?:[EQU $QUEST12 Failed]
-Q:12:T:Begone, incompetent fool! The dimensional energies of the 
-Q:12:T:mystic Node have faded away and are lost forever! You had
-Q:12:T:your chance and botched the job. 
-?:1
-
 T:QUEST:NORMAL
 L:#:PERMANENT
 L:.:GRASS
@@ -32,31 +10,50 @@ L:c:MON(giant spider)
 L:d:MON(earth elemental)
 L:e:MON(great storm wyrm)
 L:g:MON(colossus)
-D:#################################
-D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
-D:#TTTTTT...................TTTTTT#
-D:#TTTT..........TgT..........TTTT#
-D:#TTT..aaa.TTTTTbbbTTTTT.aaa..TTT#
-D:#TTaacTTTTTTTTT...TTTTTTTTTcaaTT#
-D:#TcccTTTTTTTTT..T..TTTTTTTTTcccT#
-D:#T..TTTTbbdd...TTT..ddbbbTTTT..T#
-D:#T..TTTbbdd...TTTTT..ddbbbTTT..T#
-D:#T..TTTddgTTTTTTTTTTTTTgddTTT..T#
-D:#T..TTT..TTT.........TTT..TTT..T#
-D:#T.TTTT..TT....TTTe...TT..TTTT.T#
-D:#T.TTTT..T....TTeTT....T..TTTT.T#
-D:#T.TTTT..g...TTeeeTT...g..TTTT.T#
-D:#T.TTTT..T....TTeTT....T..TTTT.T#
-D:#T.TTTT..TT...eTTT....TT..TTTT.T#
-D:#T..TTTddTTT.........TTTddTTT..T#
-D:#T..TTTTbdTTT.......TTTdbTTTT..T#
-D:#T..TTTTgbd...........dbgTTTT..T#
-D:#TcccTTTTgbd.TTTTTTT.dbgTTTTc..T#
-D:#TacaTTTTTTTTTTTTTTTTTTTTTTTc..T#
-D:#TTa..TTTTTTTTTTTTTTTTTTTTTacaTT#
-D:#TT.....TTTTTTTTTTTTTTTTT...a.TT#
-D:#T..........TTTTTTTTT.......TTTT#
-D:#T<........................TTTTT#
-D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
-D:#################################
+M:#################################
+M:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
+M:#TTTTTT...................TTTTTT#
+M:#TTTT..........TgT..........TTTT#
+M:#TTT..aaa.TTTTTbbbTTTTT.aaa..TTT#
+M:#TTaacTTTTTTTTT...TTTTTTTTTcaaTT#
+M:#TcccTTTTTTTTT..T..TTTTTTTTTcccT#
+M:#T..TTTTbbdd...TTT..ddbbbTTTT..T#
+M:#T..TTTbbdd...TTTTT..ddbbbTTT..T#
+M:#T..TTTddgTTTTTTTTTTTTTgddTTT..T#
+M:#T..TTT..TTT.........TTT..TTT..T#
+M:#T.TTTT..TT....TTTe...TT..TTTT.T#
+M:#T.TTTT..T....TTeTT....T..TTTT.T#
+M:#T.TTTT..g...TTeeeTT...g..TTTT.T#
+M:#T.TTTT..T....TTeTT....T..TTTT.T#
+M:#T.TTTT..TT...eTTT....TT..TTTT.T#
+M:#T..TTTddTTT.........TTTddTTT..T#
+M:#T..TTTTbdTTT.......TTTdbTTTT..T#
+M:#T..TTTTgbd...........dbgTTTT..T#
+M:#TcccTTTTgbd.TTTTTTT.dbgTTTTc..T#
+M:#TacaTTTTTTTTTTTTTTTTTTTTTTTc..T#
+M:#TTa..TTTTTTTTTTTTTTTTTTTTTacaTT#
+M:#TT.....TTTTTTTTTTTTTTTTT...a.TT#
+M:#T..........TTTTTTTTT.......TTTT#
+M:#T<........................TTTTT#
+M:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
+M:#################################
+R:OBJ(nature's wrath)
 
+?:[EQU $QUEST12 Taken Completed]
+D::The Wizards of Nature have discovered a magical Node of 
+D::Nature in a nearby forest. You must seek the Node and 
+D::dispatch its guardians so that the Tower of Nature can 
+D::claim the mystical energies of the Node.
+?:1
+
+?:[EQU $QUEST12 Rewarded]
+D::You have done well. A powerful spellbook awaits you outside.
+?:1
+
+?:[EQU $QUEST12 Failed]
+D::Begone, incompetent fool! The dimensional energies of the 
+D::mystic Node have faded away and are lost forever! You had
+D::your chance and botched the job. 
+?:1
+
+# vim: filetype=q :

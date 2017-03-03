@@ -2391,7 +2391,7 @@ static void process_monster(int m_idx)
                 if (is_riding_mon && rakuba(-1, FALSE))
                     msg_print("You have fallen from riding pet.");
 
-                check_quest_completion(m_ptr);
+                quests_on_kill_mon(m_ptr);
                 delete_monster_idx(m_idx);
                 return;
             }

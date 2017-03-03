@@ -783,28 +783,6 @@ errr init_buildings(void)
 }
 
 
-/*
- * Initialize quest array
- */
-static errr init_quests(void)
-{
-    int i;
-
-    /*** Prepare the quests ***/
-
-    /* Allocate the quests */
-    C_MAKE(quest, max_quests, quest_type);
-
-    /* Set all quest to "untaken" */
-    for (i = 0; i < max_quests; i++)
-    {
-        quest[i].status = QUEST_STATUS_UNTAKEN;
-    }
-
-    return 0;
-}
-
-
 static bool feat_tag_is_not_found = FALSE;
 
 
@@ -1649,7 +1627,7 @@ void init_angband(void)
     /* Initialize quest array */
     note("[Initializing arrays... (quests)]");
 
-    if (init_quests()) quit("Cannot initialize quests");
+    if (quests_init()) quit("Cannot initialize quests");
 
 
     /* Initialize vault info */

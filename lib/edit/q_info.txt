@@ -1,38 +1,109 @@
-# vim: filetype=q :
+########################################################################
+# PosChengband Quests (cf quest.h and quest.c)
+#
+# N:id:lvl:name
+# T:type flags
+# W:where to find quest?
+# G:goal of quest?
+# F:quest file with map, descriptions and rewards
+#
+########################################################################
+N:1:5:Thieves' Hideout
+T:TOWN | GENERATE
+F:q_thieves.txt
 
-?:[EQU $QUEST_NUMBER 1]
-%:q_thieves.txt
+N:2:15:The Sewer
+T:TOWN | GENERATE
+F:q_sewer.txt
 
-?:[EQU $QUEST_NUMBER 2]
-%:q_sewer.txt
+N:3:25:Logrus Master
+T:TOWN | GENERATE
+G:KILL(logrus master)
+F:q_logrus_master.txt
 
-?:[EQU $QUEST_NUMBER 3]
-%:q_logrus_master.txt
+N:4:30:The Vault
+T:TOWN | GENERATE
+G:FIND(^sting$)
+F:q_vault.txt
 
-?:[EQU $QUEST_NUMBER 4]
-%:q_vault.txt
+N:5:35:The Barrow Downs
+T:TOWN | GENERATE
+F:q_barrow_downs.txt
 
-?:[EQU $QUEST_NUMBER 5]
-%:q_barrow_downs.txt
+N:8:99:Oberon
+T:RETAKE
+W:Angband
+G:KILL(oberon)
+F:q_oberon.txt
 
-?:[EQU $QUEST_NUMBER 8]
-%:q_oberon.txt
+N:9:100:Serpent of Chaos
+T:RETAKE
+W:Angband
+G:KILL(serpent of chaos)
+F:q_serpent_of_chaos.txt
 
-?:[EQU $QUEST_NUMBER 9]
-%:q_serpent_of_chaos.txt
+N:10:65:Node of Sorcery
+T:TOWN | GENERATE
+F:q_sorcery.txt
 
-?:[EQU $QUEST_NUMBER 10]
-%:q_sorcery.txt
+N:11:65:Node of Chaos
+T:TOWN | GENERATE
+F:q_chaos.txt
 
-?:[EQU $QUEST_NUMBER 11]
-%:q_chaos.txt
+N:12:65:Node of Nature
+T:TOWN | GENERATE
+F:q_nature.txt
 
-?:[EQU $QUEST_NUMBER 12]
-%:q_nature.txt
+N:14:5:The Warg Problem
+T:TOWN
+W:Stronghold
+G:KILL(^warg$, 16)
+F:q_wargs.txt
 
-?:[EQU $QUEST_NUMBER 14]
-%:q_wargs.txt
+########################################################################
+# Random Quests ... assigned in quests_on_birth()
+########################################################################
+N:40:Random
+T:Angband(12) | RANDOM
+G:KILL(*)
 
+N:41:Random
+T:Angband(24) | RANDOM
+G:KILL(*)
+
+N:42:Random
+T:Angband(38) | RANDOM
+G:KILL(*)
+
+N:43:Random
+T:Angband(44) | RANDOM
+G:KILL(*)
+
+N:44:Random
+T:Angband(50) | RANDOM
+G:KILL(*)
+
+N:45:Random
+T:Angband(56) | RANDOM
+G:KILL(*)
+
+N:46:Random
+T:Angband(62) | RANDOM
+G:KILL(*)
+
+N:47:Random
+T:Angband(71) | RANDOM
+G:KILL(*)
+
+N:48:Random
+T:Angband(78) | RANDOM
+G:KILL(*)
+
+N:49:Random
+T:Angband(88) | RANDOM
+G:KILL(*)
+
+########################################################################
 # Eric's Stronghold
 ?:[EQU $QUEST_NUMBER 15]
 %:q000eric.txt
@@ -84,13 +155,10 @@
 ?:[EQU $QUEST_NUMBER 31]
 %:q_old_man_willow.txt
 
-# Dark Elven Lords Quest
 ?:[EQU $QUEST_NUMBER 32]
 %:q_dark_elves.txt
 
 ?:[EQU $QUEST_NUMBER 33]
 %:q_cloning_pits.txt
 
-# Random quests (always adressed with number 40)
-?:[EQU $QUEST_NUMBER 40]
-%:q_random.txt
+# vim: filetype=qi :
