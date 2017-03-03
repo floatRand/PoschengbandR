@@ -33,74 +33,74 @@ L:t:TREE
 ############### Quest 2 - The Sewer ###############
 
 ?:[EQU $QUEST2 Untaken]
-L:b:BUILDING_1(GLOW, 2)
+L:b:BUILDING_1(2)
 
 ?:[EQU $QUEST2 Taken]
-L:b:BUILDING_1(GLOW, 2)
-L:z:QUEST_ENTER(MARK | GLOW, 2)
+L:b:BUILDING_1(2)
+L:z:QUEST_ENTER(2)
 
 ?:[EQU $QUEST2 Completed]
-L:b:BUILDING_1(GLOW, 2)
+L:b:BUILDING_1(2)
 
 ?:[EQU $QUEST2 Rewarded]
-L:b:BUILDING_1(GLOW, 3)
+L:b:BUILDING_1(3)
 L:!:OBJ(feanorian lamp)
 
 ?:[EQU $QUEST2 Finished]
-L:b:BUILDING_1(GLOW, 3)
+L:b:BUILDING_1(3)
 
 ?:[EQU $QUEST2 Failed]
-L:b:BUILDING_1(GLOW, 2)
+L:b:BUILDING_1(2)
 
 ?:[EQU $QUEST2 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 3 - Logrus Master ###############
 
 ?:[EQU $QUEST3 Taken]
-L:y:QUEST_ENTER(MARK | GLOW, 3)
-L:b:BUILDING_1(GLOW, 3)
+L:y:QUEST_ENTER(3)
+L:b:BUILDING_1(3)
 
 ?:[EQU $QUEST3 Completed]
-L:b:BUILDING_1(GLOW, 3)
+L:b:BUILDING_1(3)
 
 ?:[EQU $QUEST3 Rewarded]
-L:b:BUILDING_1(GLOW, 4)
+L:b:BUILDING_1(4)
 L:!:OBJ(ROD_BEAM_CHAOS)
 
 ?:[EQU $QUEST3 Finished]
-L:b:BUILDING_1(GLOW, 4)
+L:b:BUILDING_1(4)
 
 ?:[EQU $QUEST3 Failed]
-L:b:BUILDING_1(GLOW, 3)
+L:b:BUILDING_1(3)
 
 ?:[EQU $QUEST3 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
 ############### Quest 4 - The Vault ###############
 
 ?:[EQU $QUEST4 Taken]
-L:x:QUEST_ENTER(MARK | GLOW, 4)
-L:b:BUILDING_1(GLOW, 4)
+L:x:QUEST_ENTER(4)
+L:b:BUILDING_1(4)
 
 ?:[EQU $QUEST4 Completed]
-L:b:BUILDING_1(GLOW, 4)
+L:b:BUILDING_1(4)
 
 ?:[EQU $QUEST4 Rewarded]
-L:b:BUILDING_1(GLOW, 5)
+L:b:BUILDING_1(5)
 
 ?:[EQU $QUEST4 Finished]
-L:b:BUILDING_1(GLOW, 5)
+L:b:BUILDING_1(5)
 
 ?:[EQU $QUEST4 Failed]
-L:b:BUILDING_1(GLOW, 4)
+L:b:BUILDING_1(4)
 
 ?:[EQU $QUEST4 FailedDone]
-L:b:BUILDING_1(GLOW, 0)
+L:b:BUILDING_1(0)
 
 ?:1
 
