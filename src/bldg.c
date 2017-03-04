@@ -2174,138 +2174,52 @@ static bool inn_comm(int cmd)
     return (TRUE);
 }
 
-
-/*
- * Display quest information
- */
-static void get_questinfo(int questnum)
-{
-    int     i;
-    int     old_quest;
-    char    tmp_str[80];
-
-    for (i = 0; i < 10; i++)
-    {
-        quest_text[i][0] = '\0';
-    }
-
-    quest_text_line = 0;
-
-    old_quest = p_ptr->inside_quest;
-    p_ptr->inside_quest = questnum;
-    process_dungeon_file("q_info.txt", INIT_SHOW_TEXT | INIT_ASSIGN);
-    p_ptr->inside_quest = old_quest;
-
-    sprintf(tmp_str, "Quest Information (Danger level: %d)", quest[questnum].level);
-    prt(tmp_str, 5, 0);
-    prt(quest[questnum].name, 7, 0);
-
-    for (i = 0; i < 10; i++)
-    {
-        c_put_str(TERM_YELLOW, quest_text[i], i + 8, 0);
-    }
-}
-
-
 /*
  * Request a quest from the Lord.
  */
 static void castle_quest(void)
 {
-    int             q_index = 0;
-    monster_race    *r_ptr;
-    quest_type      *q_ptr;
-    cptr            name;
+    int             quest_id = 0;
+    quest_ptr       quest;
 
 
     clear_bldg(4, 18);
 
     /* Current quest of the building */
-    q_index = cave[py][px].special;
+    quest_id = cave[py][px].special;
 
     /* Is there a quest available at the building? */
-    if (!q_index)
+    if (!quest_id)
     {
         put_str("I don't have a quest for you at the moment.", 8, 0);
         return;
     }
 
-    q_ptr = &quest[q_index];
+    quest = quests_get(quest_id);
 
-    /* Quest is completed */
-    if (q_ptr->status == QUEST_STATUS_COMPLETED)
+    if (quest->status == QS_COMPLETED)
     {
-        /* Rewarded quest */
-        q_ptr->status = QUEST_STATUS_REWARDED;
-
-        get_questinfo(q_index);
-
+        quest_reward(quest);
         reinit_wilderness = TRUE;
     }
-    /* Failed quest */
-    else if (q_ptr->status == QUEST_STATUS_FAILED)
+    else if (quest->status == QS_FAILED)
     {
-        get_questinfo(q_index);
-
-        /* Mark quest as done (but failed) */
-        q_ptr->status = QUEST_STATUS_FAILED_DONE;
-
+        string_ptr s = quest_get_description(quest);
+        msg_format("<color:R>%s</color> (<color:U>Level %d</color>): %s",
+            quest->name, quest->level, string_buffer(s));
+        string_free(s);
+        quest->status = QS_FAILED_DONE;
         reinit_wilderness = TRUE;
     }
-    /* Quest is still unfinished */
-    else if (q_ptr->status == QUEST_STATUS_TAKEN)
+    else if (quest->status == QS_TAKEN)
     {
         put_str("You have not completed your current quest yet!", 8, 0);
-
         put_str("Use CTRL-Q to check the status of your quest.", 9, 0);
-
         put_str("Return when you have completed your quest.", 12, 0);
     }
-    /* No quest yet */
-    else if (q_ptr->status == QUEST_STATUS_UNTAKEN)
+    else if (quest->status == QS_UNTAKEN)
     {
-        q_ptr->status = QUEST_STATUS_TAKEN;
-
-        /* Handle $RANDOM_ for each quest independently */
-        q_ptr->seed = randint0(0x10000000);
-
-        reinit_wilderness = TRUE;
-
-        /* Assign a new quest */
-        if (q_ptr->type == QUEST_TYPE_KILL_ANY_LEVEL)
-        {
-            if (q_ptr->r_idx == 0)
-            {
-                /* Random monster at least 5 - 10 levels out of deep */
-                q_ptr->r_idx = get_mon_num(q_ptr->level + 4 + randint1(6));
-            }
-
-            r_ptr = &r_info[q_ptr->r_idx];
-
-            while ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->rarity != 1))
-            {
-                q_ptr->r_idx = get_mon_num(q_ptr->level) + 4 + randint1(6);
-                r_ptr = &r_info[q_ptr->r_idx];
-            }
-
-            if (q_ptr->max_num == 0)
-            {
-                /* Random monster number */
-                if (randint1(10) > 7)
-                    q_ptr->max_num = 1;
-                else
-                    q_ptr->max_num = randint1(3) + 1;
-            }
-
-            q_ptr->cur_num = 0;
-            name = (r_name + r_ptr->name);
-            msg_format("Your quest: kill %d %s", q_ptr->max_num, name);
-
-        }
-        else
-        {
-            get_questinfo(q_index);
-        }
+        quest_take(quest);
     }
 }
 
@@ -3498,8 +3412,8 @@ static void bldg_process_command(building_type *bldg, int i)
         /* Limit depth in Angband */
         if (select_dungeon == DUNGEON_ANGBAND)
         {
-            if (quest[QUEST_OBERON].status != QUEST_STATUS_FINISHED) max_depth = 98;
-            else if(quest[QUEST_SERPENT].status != QUEST_STATUS_FINISHED) max_depth = 99;
+            if (quests_get(QUEST_OBERON)->status != QS_FINISHED) max_depth = 98;
+            else if(quests_get(QUEST_SERPENT)->status != QS_FINISHED) max_depth = 99;
         }
 
         amt = get_quantity(format("Teleport to which level of %s? ", d_name + d_info[select_dungeon].name), max_depth);
@@ -3634,11 +3548,9 @@ void do_cmd_quest(void)
         msg_print("There is an entry of a quest.");
         if (!get_check("Do you enter? ")) return;
 
-        /* Player enters a new quest */
+        /* Player enters a new quest XXX
         p_ptr->oldpy = 0;
-        p_ptr->oldpx = 0;
-
-        leave_quest_check();
+        p_ptr->oldpx = 0; */
 
         if (quest[p_ptr->inside_quest].type != QUEST_TYPE_RANDOM) dun_level = 1;
         p_ptr->inside_quest = cave[py][px].special;
@@ -3817,66 +3729,6 @@ void do_cmd_bldg(void)
 
     /* Window stuff */
     p_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
-}
-
-
-/* Array of places to find an inscription */
-static cptr find_quest[] =
-{
-    "You find the following inscription in the floor",
-
-    "You see a message inscribed in the wall",
-
-    "There is a sign saying",
-
-    "Something is written on the staircase",
-
-    "You find a scroll with the following message",
-
-};
-
-
-/*
- * Discover quest
- */
-void quest_discovery(int q_idx)
-{
-    quest_type      *q_ptr = &quest[q_idx];
-    monster_race    *r_ptr = &r_info[q_ptr->r_idx];
-    int             q_num = q_ptr->max_num;
-    char            name[80];
-
-    /* No quest index */
-    if (!q_idx) return;
-
-    strcpy(name, (r_name + r_ptr->name));
-
-    msg_print(find_quest[rand_range(0, 4)]);
-
-    if (q_num == 1)
-    {
-        /* Unique */
-
-        /* Hack -- "unique" monsters must be "unique" */
-        if ((r_ptr->flags1 & RF1_UNIQUE) &&
-            (0 == r_ptr->max_num))
-        {
-            msg_print("It seems that this level was protected by someone before...");
-            /* The unique is already dead */
-            quest[q_idx].status = QUEST_STATUS_FINISHED;
-        }
-        else
-        {
-            cmsg_format(TERM_VIOLET, "Beware, this level is protected by %s!", name);
-        }
-    }
-    else
-    {
-        /* Normal monsters */
-        plural_aux(name);
-        cmsg_format(TERM_VIOLET, "Be warned, this level is guarded by %d %s!", q_num, name);
-
-    }
 }
 
 

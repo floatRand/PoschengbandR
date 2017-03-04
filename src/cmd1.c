@@ -5200,26 +5200,6 @@ bool move_player_effect(int ny, int nx, u32b mpe_mode)
         command_new = SPECIAL_KEY_QUEST;
     }
 
-    else if (have_flag(f_ptr->flags, FF_QUEST_EXIT))
-    {
-        if (quest[p_ptr->inside_quest].type == QUEST_TYPE_FIND_EXIT)
-        {
-            quest[p_ptr->inside_quest].status = QUEST_STATUS_COMPLETED;
-            quest[p_ptr->inside_quest].complev = (byte)p_ptr->lev;
-            msg_print("You accomplished your quest!");
-            msg_print(NULL);
-        }
-
-        leave_quest_check();
-
-        p_ptr->inside_quest = c_ptr->special;
-        dun_level = 0;
-        p_ptr->oldpx = 0;
-        p_ptr->oldpy = 0;
-
-        p_ptr->leaving = TRUE;
-    }
-
     /* Set off a trap */
     else if (have_flag(f_ptr->flags, FF_HIT_TRAP) && !(mpe_mode & MPE_STAYING))
     {

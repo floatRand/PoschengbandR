@@ -149,20 +149,6 @@ static void player_wipe(void)
     (void)WIPE(p_ptr, player_type);
     p_ptr->mimic_form = MIMIC_NONE;
 
-    /* Wipe the quests */
-    for (i = 0; i < max_quests; i++)
-    {
-        quest[i].status = QUEST_STATUS_UNTAKEN;
-
-        quest[i].cur_num = 0;
-        quest[i].max_num = 0;
-        quest[i].type = 0;
-        quest[i].level = 0;
-        quest[i].r_idx = 0;
-        quest[i].complev = 0;
-        quest[i].seed = 0;
-    }
-
     /* Start with no artifacts made yet */
     for (i = 0; i < max_a_idx; i++)
     {

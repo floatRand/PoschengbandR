@@ -1014,8 +1014,8 @@ enum {
 #define FF_SPECIAL       96
 #define FF_HURT_DISI     97
 #define FF_QUEST_ENTER   98
-#define FF_QUEST_EXIT    99
-#define FF_QUEST         100
+/* #define FF_QUEST_EXIT    99 */
+/* #define FF_QUEST         100 */
 #define FF_SHAFT         101
 #define FF_MOUNTAIN      102
 #define FF_BLDG          103

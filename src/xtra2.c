@@ -4981,7 +4981,6 @@ static bool tgt_pt_accept(int y, int x)
 
         /* Notice quest features */
         if (cave_have_flag_grid(c_ptr, FF_QUEST_ENTER)) return (TRUE);
-        if (cave_have_flag_grid(c_ptr, FF_QUEST_EXIT)) return (TRUE);
     }
 
     /* Nope */
@@ -5094,8 +5093,7 @@ bool tgt_pt(int *x_ptr, int *y_ptr, int rng)
                     }
                     else /* if (ch == '<') */
                     {
-                        if (cave_have_flag_grid(c_ptr, FF_MORE) ||
-                            cave_have_flag_grid(c_ptr, FF_QUEST_EXIT))
+                        if (cave_have_flag_grid(c_ptr, FF_MORE))
                             n++;
                         else
                             break;

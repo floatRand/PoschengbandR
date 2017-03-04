@@ -110,12 +110,23 @@ void quest_complete(quest_ptr q, point_t p)
 
 void quest_reward(quest_ptr q)
 {
-    obj_ptr o = quest_get_reward(q);
+    string_ptr s;
+    obj_ptr reward;
+
+    assert(q);
     assert(q->status == QS_COMPLETED);
-    if (o)
+
+    q->status = QS_FINISHED;
+    s = quest_get_description(q);
+    msg_format("<color:R>%s</color> (<color:U>Level %d</color>): %s",
+        q->name, q->level, string_buffer(s));
+    string_free(s);
+
+    reward = quest_get_reward(q);
+    if (reward)
     {
-        pack_carry(o);
-        obj_free(o);
+        pack_carry(reward);
+        obj_free(reward);
     }
 }
 
@@ -213,9 +224,10 @@ bool quest_post_generate(quest_ptr q)
         int           mode = PM_NO_KAGE | PM_NO_PET, i, j, k;
         int           ct = q->goal_count - q->goal_current;
 
-        if ((r_ptr->flags1 & RF1_UNIQUE) && r_ptr->cur_num >= r_ptr->max_num)
+        if ((r_ptr->flags1 & RF1_UNIQUE) && r_ptr->max_num == 0)
         {
-            q->status = QS_FAILED_DONE; /* XXX */
+            msg_print("It seems that this level was protected by someone before...");
+            q->status = QS_FINISHED;
             return TRUE;
         }
 
@@ -255,6 +267,15 @@ bool quest_post_generate(quest_ptr q)
 
             /* Failed to place */
             if (!j) return FALSE;
+            if (ct == 1)
+                cmsg_format(TERM_VIOLET, "Beware, this level is protected by %s!", r_name + r_ptr->name);
+            else
+            {
+                char name[MAX_NLEN];
+                strcpy(name, r_name + r_ptr->name);
+                plural_aux(name);
+                cmsg_format(TERM_VIOLET, "Be warned, this level is guarded by %d %s!", ct, name);
+            }
         }
     }
     return TRUE;
@@ -308,6 +329,8 @@ cptr quests_get_name(int id)
 
 static int _quest_cmp_level(quest_ptr l, quest_ptr r)
 {
+    if (l->completed_lev < r->completed_lev) return -1;
+    if (l->completed_lev > r->completed_lev) return 1;
     if (l->level < r->level) return -1;
     if (l->level > r->level) return 1;
     if (l->id < r->id) return -1;
@@ -538,6 +561,7 @@ void quests_on_generate(int dungeon, int level)
     if (q)
     {
         _current = q->id;
+        p_ptr->inside_quest = q->id;
         q->status = QS_IN_PROGRESS;
     }
 }
@@ -546,6 +570,7 @@ void quests_generate(int id)
 {
     quest_ptr q = quests_get(id);
     _current = id;
+    p_ptr->inside_quest = q->id;
     q->status = QS_IN_PROGRESS;
     quest_generate(q);
 }
@@ -556,6 +581,7 @@ void quests_on_restore_floor(int dungeon, int level)
     if (q)
     {
         _current = q->id;
+        p_ptr->inside_quest = q->id;
         q->status = QS_IN_PROGRESS;
         quest_post_generate(q); /* replace quest monsters */
     }
@@ -634,19 +660,28 @@ bool quests_check_leave(void)
     return TRUE;
 }
 
-void quests_on_leave(void)
+bool quests_on_leave(void)
 {
     quest_ptr q;
-    if (!_current) return;
+    if (!_current) return FALSE;
     q = quests_get(_current);
     assert(q);
+    leaving_quest = _current; /* XXX */
     if (q->status == QS_IN_PROGRESS)
     {
         if (q->flags & QF_RETAKE)
             q->status = QS_TAKEN;
         else
+        {
             quest_fail(q);
+            if (q->goal == QG_KILL_MON)
+                r_info[q->goal_idx].flags1 &= ~RF1_QUESTOR;
+            prepare_change_floor_mode(CFM_NO_RETURN);
+        }
     }
+    _current = 0;
+    p_ptr->inside_quest = 0;
+    return TRUE;
 }
 
 bool quests_allow_downstairs(void)
@@ -670,6 +705,72 @@ bool quests_allow_all_spells(void)
     q = quests_get(_current);
     assert(q);
     return !(q->flags & QF_GENERATE);
+}
+
+/************************************************************************
+ * Quests: Display
+ ***********************************************************************/
+void quests_display(void)
+{
+}
+
+static void quest_doc(quest_ptr q, doc_ptr doc)
+{
+    if (q->flags & QF_RANDOM)
+    {
+        if (q->goal == QG_KILL_MON)
+        {
+            if (q->completed_lev == 0)
+            {
+                doc_printf(doc, "  %-40s (Dungeon level: %3d) - (Cancelled)\n",
+                    r_name + r_info[q->goal_idx].name,
+                    q->level);
+            }
+            else
+            {
+                doc_printf(doc, "  %-40s (Dungeon level: %3d) - level %2d\n",
+                    r_name + r_info[q->goal_idx].name,
+                    q->level,
+                    q->completed_lev);
+            }
+        }
+    }
+    else
+    {
+        doc_printf(doc, "  %-40s (Danger  level: %3d) - level %2d\n",
+            q->name, q->level, q->completed_lev);
+    }
+}
+
+void quests_doc(doc_ptr doc)
+{
+    int     i;
+    vec_ptr v = quests_get_finished();
+
+    if (vec_length(v))
+    {
+        doc_printf(doc, "  <color:G>Completed Quests</color>\n");
+        for (i = 1; i < vec_length(v); i++)
+        {
+            quest_ptr quest = vec_get(v, i);
+            quest_doc(quest, doc);
+        }
+    }
+    vec_free(v);
+    doc_newline(doc);
+
+    v = quests_get_failed();
+    if (vec_length(v))
+    {
+        doc_printf(doc, "  <color:r>Failed Quests</color>\n");
+        for (i = 1; i < vec_length(v); i++)
+        {
+            quest_ptr quest = vec_get(v, i);
+            quest_doc(quest, doc);
+        }
+    }
+    vec_free(v);
+    doc_newline(doc);
 }
 
 /************************************************************************

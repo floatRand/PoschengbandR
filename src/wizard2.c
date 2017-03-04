@@ -800,9 +800,7 @@ static void do_cmd_wiz_jump(void)
     p_ptr->inside_arena = FALSE;
     p_ptr->wild_mode = FALSE;
 
-    leave_quest_check();
-
-    p_ptr->inside_quest = 0;
+    quests_on_leave();
     energy_use = 0;
 
     /* Prevent energy_need from being too lower than 0 */
@@ -1551,25 +1549,7 @@ void do_cmd_debug(void)
     /* Complete a Quest -KMW- */
     case 'q':
     {
-        int i;
-        for (i = 0; i < max_quests; i++)
-        {
-            if (i == QUEST_OBERON || i == QUEST_SERPENT)
-                continue;
-
-            if (is_fixed_quest_idx(i) && quest[i].status == QUEST_STATUS_TAKEN)
-            {
-                quest[i].status++;
-                msg_print("Completed Quest");
-                msg_print(NULL);
-                break;
-            }
-        }
-        if (i == max_quests)
-        {
-            msg_print("No current quest");
-            msg_print(NULL);
-        }
+        /* XXX */
         break;
     }
     /* Summon Random Monster(s) */

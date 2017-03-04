@@ -1497,7 +1497,7 @@ static void prt_depth(void)
     {
         sprintf(buf, "Quest: L%d", dun_level);
         /* Level is "special" until completed */
-        if (quest[p_ptr->inside_quest].status != QUEST_STATUS_COMPLETED)
+        if (quests_get(p_ptr->inside_quest)->status < QS_COMPLETED)
             attr = TERM_L_BLUE;
     }
     else

@@ -19,7 +19,6 @@ static void _build_shooting(doc_ptr doc);
 static void _build_powers(doc_ptr doc);
 static void _build_spells(doc_ptr doc);
 static void _build_dungeons(doc_ptr doc);
-static void _build_quests(doc_ptr doc);
 static void _build_uniques(doc_ptr doc);
 static void _build_virtues(doc_ptr doc);
 static void _build_race_history(doc_ptr doc);
@@ -1073,182 +1072,6 @@ static void _build_race_history(doc_ptr doc)
         }
         doc_newline(doc);
     }
-}
-
-static int _compare_quests(quest_type *left, quest_type *right)
-{
-    if (left->complev < right->complev)
-        return -1;
-    if (left->complev > right->complev)
-        return 1;
-    if (left->level < right->level)
-        return -1;
-    if (left->level > right->level)
-        return 1;
-    return 0;
-}
-
-static void _build_quests(doc_ptr doc)
-{
-    int     i, ct;
-    vec_ptr v = vec_alloc(NULL);
-                          /*v--- 'q' and 'Q' are used to quit the document viewer, and take precedence over navigation keys */
-    doc_printf(doc, "<topic:uQuests>==================================== Q<color:keypress>u</color>ests ===================================\n\n");
-
-    /* Completed */
-    for (i = 1; i < max_quests; i++)
-    {
-        quest_type *q_ptr = &quest[i];
-
-        if (q_ptr->status == QUEST_STATUS_FINISHED)
-        {
-            q_ptr->id = i; /* You'll see why in a minute ... */
-            vec_add(v, q_ptr);
-        }
-    }
-    if (vec_length(v))
-    {
-        vec_sort(v, (vec_cmp_f)_compare_quests);
-
-        doc_printf(doc, "  <color:G>Completed Quests</color>\n");
-        ct = 0;
-        for (i = 0; i < vec_length(v); i++)
-        {
-            quest_type *q_ptr = vec_get(v, i);
-            if (is_fixed_quest_idx(q_ptr->id))
-            {
-                int old_quest = p_ptr->inside_quest;
-                p_ptr->inside_quest = q_ptr->id;
-                process_dungeon_file("q_info.txt", INIT_ASSIGN);
-                p_ptr->inside_quest = old_quest;
-
-                if (q_ptr->flags & QUEST_FLAG_SILENT) continue;
-            }
-
-            ct++;
-
-            if (!is_fixed_quest_idx(q_ptr->id) && q_ptr->r_idx)
-            {
-                if (q_ptr->complev == 0)
-                {
-                    doc_printf(doc, "  %-40s (Dungeon level: %3d) - (Cancelled)\n",
-                        r_name + r_info[q_ptr->r_idx].name,
-                        q_ptr->level);
-                }
-                else
-                {
-                    doc_printf(doc, "  %-40s (Dungeon level: %3d) - level %2d\n",
-                        r_name + r_info[q_ptr->r_idx].name,
-                        q_ptr->level,
-                        q_ptr->complev);
-                }
-            }
-            else
-            {
-                doc_printf(doc, "  %-40s (Danger  level: %3d) - level %2d\n",
-                    q_ptr->name, q_ptr->level, q_ptr->complev);
-            }
-        }
-        if (!ct)
-            doc_printf(doc, "  Nothing.\n");
-
-        doc_newline(doc);
-    }
-
-    /* Failed */
-    vec_clear(v);
-    for (i = 1; i < max_quests; i++)
-    {
-        quest_type *q_ptr = &quest[i];
-
-        if ( q_ptr->status == QUEST_STATUS_FAILED_DONE
-          || q_ptr->status == QUEST_STATUS_FAILED )
-        {
-            q_ptr->id = i; /* You'll see why in a minute ... */
-            vec_add(v, q_ptr);
-        }
-    }
-
-    if (vec_length(v))
-    {
-        vec_sort(v, (vec_cmp_f)_compare_quests);
-
-        doc_printf(doc, "  <color:R>Failed Quests</color>\n");
-        ct = 0;
-        for (i = 0; i < vec_length(v); i++)
-        {
-            quest_type *q_ptr = vec_get(v, i);
-            if (is_fixed_quest_idx(q_ptr->id))
-            {
-                int old_quest = p_ptr->inside_quest;
-                p_ptr->inside_quest = q_ptr->id;
-                process_dungeon_file("q_info.txt", INIT_ASSIGN);
-                p_ptr->inside_quest = old_quest;
-
-                if (q_ptr->flags & QUEST_FLAG_SILENT) continue;
-            }
-
-            ct++;
-
-            if (!is_fixed_quest_idx(q_ptr->id) && q_ptr->r_idx)
-            {
-                monster_race *r_ptr = &r_info[q_ptr->r_idx];
-                if (r_ptr->flags1 & RF1_UNIQUE)
-                {
-                    doc_printf(doc, "  %-40s (Dungeon level: %3d) - level %2d\n",
-                        r_name + r_ptr->name, q_ptr->level, q_ptr->complev);
-                }
-                else
-                {
-                    doc_printf(doc, "  %-40s (Kill %d) (Dungeon level: %3d) - level %2d\n",
-                        r_name + r_ptr->name, q_ptr->max_num,
-                        q_ptr->level, q_ptr->complev);
-                }
-            }
-            else
-            {
-                doc_printf(doc, "  %-40s (Danger  level: %3d) - level %2d\n",
-                    q_ptr->name, q_ptr->level, q_ptr->complev);
-            }
-        }
-        if (!ct)
-            doc_printf(doc, "  Nothing.\n");
-
-        doc_newline(doc);
-    }
-
-    doc_newline(doc);
-    vec_free(v);
-
-    if (p_ptr->arena_number < 0)
-    {
-        if (p_ptr->arena_number <= ARENA_DEFEATED_OLD_VER)
-        {
-            doc_printf(doc, "  <color:G>Arena</color>: <color:v>Defeated</color>\n");
-        }
-        else
-        {
-            doc_printf(doc, "  <color:G>Arena</color>: <color:v>Defeated</color> by %s in the %d%s fight\n",
-                r_name + r_info[arena_info[-1 - p_ptr->arena_number].r_idx].name,
-                -p_ptr->arena_number, get_ordinal_number_suffix(-p_ptr->arena_number));
-        }
-    }
-    else if (p_ptr->arena_number > MAX_ARENA_MONS + 2)
-    {
-        doc_printf(doc, "  <color:G>Arena</color>: <color:B>True Champion</color>\n");
-    }
-    else if (p_ptr->arena_number > MAX_ARENA_MONS - 1)
-    {
-        doc_printf(doc, "  <color:G>Arena</color>: <color:R>Champion</color>\n");
-    }
-    else
-    {
-        doc_printf(doc, "  <color:G>Arena</color>: %2d Victor%s\n",
-            p_ptr->arena_number > MAX_ARENA_MONS ? MAX_ARENA_MONS : p_ptr->arena_number,
-            p_ptr->arena_number > 1 ? "ies" : "y");
-    }
-
-    doc_newline(doc);
 }
 
 static int _compare_monsters_counts(monster_race *left, monster_race *right)
@@ -2320,6 +2143,39 @@ static void _build_options(doc_ptr doc)
 }
 
 /****************************** Character Sheet ************************************/
+static void _build_quests(doc_ptr doc)
+{
+    doc_printf(doc, "<topic:uQuests>==================================== Q<color:keypress>u</color>ests ===================================\n\n");
+    quests_doc(doc);
+    doc_newline(doc);
+    if (p_ptr->arena_number < 0)
+    {
+        if (p_ptr->arena_number <= ARENA_DEFEATED_OLD_VER)
+        {
+            doc_printf(doc, "  <color:G>Arena</color>: <color:v>Defeated</color>\n");
+        }
+        else
+        {
+            doc_printf(doc, "  <color:G>Arena</color>: <color:v>Defeated</color> by %s in the %d%s fight\n",
+                r_name + r_info[arena_info[-1 - p_ptr->arena_number].r_idx].name,
+                -p_ptr->arena_number, get_ordinal_number_suffix(-p_ptr->arena_number));
+        }
+    }
+    else if (p_ptr->arena_number > MAX_ARENA_MONS + 2)
+    {
+        doc_printf(doc, "  <color:G>Arena</color>: <color:B>True Champion</color>\n");
+    }
+    else if (p_ptr->arena_number > MAX_ARENA_MONS - 1)
+    {
+        doc_printf(doc, "  <color:G>Arena</color>: <color:R>Champion</color>\n");
+    }
+    else
+    {
+        doc_printf(doc, "  <color:G>Arena</color>: %2d Victor%s\n",
+            p_ptr->arena_number > MAX_ARENA_MONS ? MAX_ARENA_MONS : p_ptr->arena_number,
+            p_ptr->arena_number > 1 ? "ies" : "y");
+    }
+}
 void py_display_character_sheet(doc_ptr doc)
 {
     doc_insert(doc, "<style:wide>  [PosChengband <$:version> Character Dump]\n");

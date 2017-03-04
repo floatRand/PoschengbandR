@@ -342,9 +342,7 @@ static void pattern_teleport(void)
     /* Change level */
     dun_level = command_arg;
 
-    leave_quest_check();
-
-    p_ptr->inside_quest = 0;
+    quests_on_leave();
     energy_use = 0;
 
     /*
@@ -757,40 +755,6 @@ void fame_on_failure(void)
     assert (dec <= p_ptr->fame);
     p_ptr->fame -= dec;
 }
-
-void leave_quest_check(void)
-{
-    /* Save quest number for dungeon pref file ($LEAVING_QUEST) */
-    leaving_quest = p_ptr->inside_quest;
-
-    /* Leaving an 'only once' quest marks it as failed */
-    if (leaving_quest &&
-        ((quest[leaving_quest].flags & QUEST_FLAG_ONCE)  || (quest[leaving_quest].type == QUEST_TYPE_RANDOM)) &&
-        (quest[leaving_quest].status == QUEST_STATUS_TAKEN))
-    {
-        /* Hack: Ironman quests *must* be completed! */
-        if (quest[leaving_quest].type == QUEST_TYPE_RANDOM && ironman_quests)
-        {
-            quest[leaving_quest].cur_num = 0; /* Quests get "reinforcements" */
-            return;
-        }
-
-        quest[leaving_quest].status = QUEST_STATUS_FAILED;
-        quest[leaving_quest].complev = (byte)p_ptr->lev;
-        virtue_add(VIRTUE_VALOUR, -2);
-        fame_on_failure();
-
-        if (quest[leaving_quest].type == QUEST_TYPE_RANDOM)
-        {
-            if (quest[leaving_quest].r_idx)
-                r_info[quest[leaving_quest].r_idx].flags1 &= ~(RF1_QUESTOR);
-
-            /* Floor of random quest will be blocked */
-            prepare_change_floor_mode(CFM_NO_RETURN);
-        }
-    }
-}
-
 
 /*
  * Forcibly pseudo-identify an object in the inventory
@@ -2194,8 +2158,7 @@ void process_world_aux_movement(void)
 
                 dun_level = 0;
                 dungeon_type = 0;
-                leave_quest_check();
-                p_ptr->inside_quest = 0;
+                quests_on_leave();
                 p_ptr->leaving = TRUE;
             }
             else
@@ -2248,26 +2211,6 @@ void process_world_aux_movement(void)
 
                 /* Leaving */
                 p_ptr->leaving = TRUE;
-
-                if (dungeon_type == DUNGEON_ANGBAND    &&
-                    !ironman_quests) /* Hack: Using the Trump Tower to circumvent quests does not fail them for Ironman Quests */
-                {
-                    int i;
-
-                    for (i = MIN_RANDOM_QUEST; i < MIN_RANDOM_QUEST + num_random_quests; i++)
-                    {
-                        if ((quest[i].type == QUEST_TYPE_RANDOM) &&
-                            (quest[i].status == QUEST_STATUS_TAKEN) &&
-                            (quest[i].level < dun_level))
-                        {
-                            quest[i].status = QUEST_STATUS_FAILED;
-                            quest[i].complev = (byte)p_ptr->lev;
-                            virtue_add(VIRTUE_VALOUR, -2);
-                            fame_on_failure(); /* Trump Tower?? */
-                            r_info[quest[i].r_idx].flags1 &= ~(RF1_QUESTOR);
-                        }
-                    }
-                }
             }
 
             /* Sound */
@@ -3878,7 +3821,7 @@ static void _dispatch_command(int old_now_turn)
         /* Show quest status -KMW- */
         case KTRL('Q'):
         {
-            do_cmd_checkquest();
+            quests_display();
             break;
         }
 
@@ -4791,11 +4734,6 @@ static void dungeon(bool load_game)
     if (!p_ptr->playing || p_ptr->is_dead) return;
 
     /* Print quest message if appropriate */
-    if (!p_ptr->inside_quest && (dungeon_type == DUNGEON_ANGBAND))
-    {
-        quest_discovery(random_quest_number(dun_level));
-        p_ptr->inside_quest = random_quest_number(dun_level);
-    }
     if ((dun_level == d_info[dungeon_type].maxdepth) && d_info[dungeon_type].final_guardian)
     {
         if (r_info[d_info[dungeon_type].final_guardian].max_num)

@@ -4896,7 +4896,7 @@ static errr process_dungeon_file_aux(char *buf, int options)
         }
         return 0;
     }
-    else if (buf[0] == 'D')
+    else if (buf[0] == 'M')
     {
         if (_room)
         {
@@ -4934,75 +4934,6 @@ static errr process_dungeon_file_aux(char *buf, int options)
         }
         return 0;
     }
-    /* Process "Q:<number>:<command>:... -- quest info */
-    else if (buf[0] == 'Q')
-    {
-        int num;
-        quest_type *q_ptr;
-
-        num = tokenize(buf + 2, 33, zz, 0);
-
-        /* Have we enough parameters? */
-        if (num < 3) return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
-
-        /* Get the quest */
-        q_ptr = &(quest[atoi(zz[0])]);
-
-        /* Process "Q:<q_index>:Q:<type>:<num_mon>:<cur_num>:<max_num>:<level>:<r_idx>:<k_idx>:<flags>" -- quest info */
-        if (zz[1][0] == 'Q')
-        {
-            if (options & INIT_ASSIGN)
-            {
-                monster_race *r_ptr;
-                artifact_type *a_ptr;
-
-                if (num < 9) return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
-
-                q_ptr->type    = atoi(zz[2]);
-                q_ptr->num_mon = atoi(zz[3]);
-                q_ptr->cur_num = atoi(zz[4]);
-                q_ptr->max_num = atoi(zz[5]);
-                q_ptr->level   = atoi(zz[6]);
-                q_ptr->r_idx   = atoi(zz[7]);
-                q_ptr->k_idx   = atoi(zz[8]);
-                q_ptr->dungeon = atoi(zz[9]);
-
-                if (num > 10)
-                    q_ptr->flags  = atoi(zz[10]);
-
-                r_ptr = &r_info[q_ptr->r_idx];
-                if (r_ptr->flags1 & RF1_UNIQUE)
-                    r_ptr->flags1 |= RF1_QUESTOR;
-
-                a_ptr = &a_info[q_ptr->k_idx];
-                a_ptr->gen_flags |= OFG_QUESTITEM;
-            }
-            return (0);
-        }
-
-        /* Process "Q:<q_index>:N:<name>" -- quest name */
-        else if (zz[1][0] == 'N')
-        {
-            if (options & (INIT_ASSIGN | INIT_SHOW_TEXT))
-            {
-                strcpy(q_ptr->name, zz[2]);
-            }
-
-            return (0);
-        }
-
-        /* Process "Q:<q_index>:T:<text>" -- quest description line */
-        else if (zz[1][0] == 'T')
-        {
-            if (options & INIT_SHOW_TEXT)
-            {
-                strcpy(quest_text[quest_text_line], zz[2]);
-                quest_text_line++;
-            }
-
-            return (0);
-        }
-    }
 
     /* Process "W:<command>: ..." -- info for the wilderness */
     else if (buf[0] == 'W')
@@ -5013,6 +4944,9 @@ static errr process_dungeon_file_aux(char *buf, int options)
     /* Process "P:<y>:<x>" -- player position */
     else if (buf[0] == 'P')
     {
+        #if 0
+        XXX Try to remove this ... we *know* where the player entered quests, so
+        why not just restore that? That only leaves the initial position for a new game.
         if (options & INIT_CREATE_DUNGEON)
         {
             if (tokenize(buf + 2, 2, zz, 0) == 2)
@@ -5039,7 +4973,7 @@ static errr process_dungeon_file_aux(char *buf, int options)
                 }
             }
         }
-
+        #endif
         return (0);
     }
 

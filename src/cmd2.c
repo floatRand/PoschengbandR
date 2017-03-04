@@ -21,8 +21,6 @@ static bool do_cmd_bash_aux(int y, int x, int dir);
  */
 void do_cmd_go_up(void)
 {
-    bool go_up = FALSE;
-
     /* Player grid */
     cave_type *c_ptr = &cave[py][px];
     feature_type *f_ptr = &f_info[c_ptr->feat];
@@ -42,105 +40,20 @@ void do_cmd_go_up(void)
         return;
     }
 
-    /* Quest up stairs */
-    if (have_flag(f_ptr->flags, FF_QUEST))
-    {
-        /* Success */
-        msg_print("You enter the up staircase.");
-
-        leave_quest_check();
-
-        p_ptr->inside_quest = c_ptr->special;
-
-        /* Activate the quest */
-        if (!quest[p_ptr->inside_quest].status)
-        {
-            quest[p_ptr->inside_quest].status = QUEST_STATUS_TAKEN;
-        }
-
-        /* Leaving a quest */
-        if (!p_ptr->inside_quest)
-        {
-            dun_level = 0;
-        }
-
-        /* Leaving */
-        p_ptr->leaving = TRUE;
-
-        p_ptr->oldpx = 0;
-        p_ptr->oldpy = 0;
-
-        /* End the command */
-        return;
-    }
-
-    if (!dun_level)
-    {
-        go_up = TRUE;
-    }
-    else
-    {
-        quest_type *q_ptr = &quest[p_ptr->inside_quest];
-
-        /* Confirm leaving from once only quest */
-        if (confirm_quest && p_ptr->inside_quest &&
-            (q_ptr->type == QUEST_TYPE_RANDOM ||
-             (q_ptr->flags & QUEST_FLAG_ONCE &&
-              q_ptr->status != QUEST_STATUS_COMPLETED)))
-        {
-            if (q_ptr->type == QUEST_TYPE_RANDOM && ironman_quests)
-            {
-                go_up = TRUE;
-            }
-            else
-            {
-                msg_print("You can't come back here once you leave this floor.");
-                if (get_check("Really leave this floor? ")) go_up = TRUE;
-            }
-        }
-        else
-        {
-            go_up = TRUE;
-        }
-    }
-
-    /* Cancel the command */
-    if (!go_up) return;
+    if (!quests_check_leave()) return;
 
     /* Hack -- take a turn */
     energy_use = 100;
 
     if (autosave_l) do_cmd_save_game(TRUE);
 
-    /* For a random quest */
-    if (p_ptr->inside_quest &&
-        quest[p_ptr->inside_quest].type == QUEST_TYPE_RANDOM)
-    {
-        leave_quest_check();
-
-        p_ptr->inside_quest = 0;
-    }
-
-    /* For a fixed quest */
-    if (p_ptr->inside_quest &&
-        quest[p_ptr->inside_quest].type != QUEST_TYPE_RANDOM)
-    {
-        leave_quest_check();
-
-        p_ptr->inside_quest = c_ptr->special;
-        dun_level = 0;
-        up_num = 0;
-    }
-
-    /* For normal dungeon and random quest */
-    else
+    if (!quests_on_leave())
     {
         /* New depth */
         if (have_flag(f_ptr->flags, FF_SHAFT))
         {
             /* Create a way back */
             prepare_change_floor_mode(CFM_SAVE_FLOORS | CFM_UP | CFM_SHAFT);
-
             up_num = 2;
         }
         else
@@ -204,34 +117,6 @@ void do_cmd_go_down(void)
     if (have_flag(f_ptr->flags, FF_QUEST_ENTER))
     {
         do_cmd_quest();
-    }
-
-    /* Quest down stairs */
-    else if (have_flag(f_ptr->flags, FF_QUEST))
-    {
-        msg_print("You enter the down staircase.");
-
-        leave_quest_check();
-
-        p_ptr->inside_quest = c_ptr->special;
-
-        /* Activate the quest */
-        if (!quest[p_ptr->inside_quest].status)
-        {
-            quest[p_ptr->inside_quest].status = QUEST_STATUS_TAKEN;
-        }
-
-        /* Leaving a quest */
-        if (!p_ptr->inside_quest)
-        {
-            dun_level = 0;
-        }
-
-        /* Leaving */
-        p_ptr->leaving = TRUE;
-
-        p_ptr->oldpx = 0;
-        p_ptr->oldpy = 0;
     }
 
     else

@@ -598,23 +598,10 @@ static bool _wield_confirm(obj_ptr obj, slot_t slot)
 
 static void _wield_before(obj_ptr obj, slot_t slot)
 {
-    int i;
-
     if (p_ptr->special_defense & KATA_MUSOU)
         set_action(ACTION_NONE);
 
-    for (i = 0; i < max_quests; i++)
-    {
-        if ( quest[i].type == QUEST_TYPE_FIND_ARTIFACT
-          && quest[i].status == QUEST_STATUS_TAKEN
-          && (quest[i].k_idx == obj->name1 || quest[i].k_idx == obj->name3) )
-        {
-            quest[i].status = QUEST_STATUS_COMPLETED;
-            p_ptr->redraw |= PR_DEPTH;
-            quest[i].complev = p_ptr->lev;
-            cmsg_print(TERM_L_BLUE, "You completed the quest!");
-        }
-    }
+    quests_on_get_obj(obj);
 }
 
 static void equip_takeoff(slot_t slot);

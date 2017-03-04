@@ -1210,14 +1210,6 @@ void wilderness_gen(void)
     /* Fill the arrays of floors and walls in the good proportions */
     set_floor_and_wall(0);
 
-    /* Set rewarded quests to finished ... this hack ensures
-     * the player only gets rewarded once for each quest. */
-    for (i = 0; i < max_quests; i++)
-    {
-        if (quest[i].status == QUEST_STATUS_REWARDED)
-            quest[i].status = QUEST_STATUS_FINISHED;
-    }
-
     /* Force scroll after wilderness travel since we are typically
        placed in a boundary "quadrant" */
     viewport_verify();

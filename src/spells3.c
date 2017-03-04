@@ -729,10 +729,7 @@ void teleport_level(int m_idx)
 
             prepare_change_floor_mode(CFM_SAVE_FLOORS | CFM_UP | CFM_RAND_PLACE | CFM_RAND_CONNECT);
 
-            leave_quest_check();
-
-            /* Leaving */
-            p_ptr->inside_quest = 0;
+            quests_on_leave();
             p_ptr->leaving = TRUE;
             p_ptr->leaving_method = LEAVING_TELEPORT_LEVEL;
         }
