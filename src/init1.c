@@ -5325,13 +5325,6 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
                 v = tmp;
             }
 
-            /* Current quest number */
-            else if (streq(b+1, "QUEST_NUMBER"))
-            {
-                sprintf(tmp, "%d", p_ptr->inside_quest);
-                v = tmp;
-            }
-
             /* Number of last quest */
             else if (streq(b+1, "LEAVING_QUEST"))
             {
@@ -5342,9 +5335,9 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
             /* Quest status */
             else if (prefix(b+1, "QUEST"))
             {
-                cptr _status[] = { "Untaken", "Taken", "Completed", "Rewarded", "Finished", "Failed", "FailedDone" };
+                cptr _status[] = { "Untaken", "Taken", "InProgress", "Completed", "Finished", "Failed", "FailedDone" };
                 int  which = atoi(b+6);
-                sprintf(tmp, "%s", _status[quest[which].status]);
+                sprintf(tmp, "%s", _status[quests_get(which)->status]);
                 v = tmp;
             }
 
@@ -5358,7 +5351,7 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
             {
                 int q_idx = atoi(b+7);
                 /* "RANDOM" uses a special parameter to determine the number of the quest */
-                sprintf(tmp, "%d", quest[q_idx].seed);
+                sprintf(tmp, "%d", quests_get(q_idx)->seed);
                 v = tmp;
             }
 

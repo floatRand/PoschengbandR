@@ -68,19 +68,24 @@ static void _history_on_possess(int r_idx)
     {
         p->r_idx = r_idx;
 
-        if (!dungeon_type)
+        if (!py_in_dungeon())
         {
-            if (p_ptr->inside_quest)
-            {
-                p->d_idx = DUNGEON_QUEST;
-                p->d_lvl = p_ptr->inside_quest;
-            }
-            else if (p_ptr->town_num)
+            if (py_in_town())
             {
                 p->d_idx = DUNGEON_TOWN;
                 p->d_lvl = p_ptr->town_num;
             }
-            else
+            else if (py_on_surface())
+            {
+                p->d_idx = DUNGEON_WILD;
+                p->d_lvl = wilderness_level(p_ptr->wilderness_x, p_ptr->wilderness_y);
+            }
+            else if (quests_get_current())
+            {
+                p->d_idx = DUNGEON_QUEST;
+                p->d_lvl = quests_get_current()->level;
+            }
+            else /* ??? */
             {
                 p->d_idx = DUNGEON_WILD;
                 p->d_lvl = wilderness_level(p_ptr->wilderness_x, p_ptr->wilderness_y);
@@ -1911,23 +1916,8 @@ void possessor_character_dump(doc_ptr doc)
         switch (p->d_idx)
         {
         case DUNGEON_QUEST:
-            /* Yikes!! Quest names are not guaranteed to have been loaded!*/
-            if (!strlen(quest[p->d_lvl].name))
-            {
-                int old_quest = p_ptr->inside_quest;
-                int j;
-
-                for (j = 0; j < 10; j++) 
-                    quest_text[j][0] = '\0';
-                quest_text_line = 0;
-
-                p_ptr->inside_quest = p->d_lvl;
-                process_dungeon_file("q_info.txt", INIT_SHOW_TEXT);
-                p_ptr->inside_quest = old_quest;
-            }
-
-            sprintf(loc, "%s", quest[p->d_lvl].name);
-            sprintf(lvl, "%3d", quest[p->d_lvl].level);
+            sprintf(loc, "%s", quests_get(p->d_lvl)->name);
+            sprintf(lvl, "%3d", quests_get(p->d_lvl)->level);
             break;
         case DUNGEON_TOWN:
             sprintf(loc, "%s", town_name(p->d_lvl));

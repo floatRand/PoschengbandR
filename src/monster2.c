@@ -1449,7 +1449,7 @@ errr get_mon_num_prep(monster_hook_type monster_hook,
         /* Accept this monster */
         entry->prob2 = entry->prob1;
 
-        if (dun_level && (!p_ptr->inside_quest || is_fixed_quest_idx(p_ptr->inside_quest)) && !restrict_monster_to_dungeon(entry->index) && !p_ptr->inside_battle)
+        if (py_in_dungeon() && !restrict_monster_to_dungeon(entry->index))
         {
             int hoge = entry->prob2 * d_info[dungeon_type].special_div;
             entry->prob2 = hoge / 64;
@@ -2856,13 +2856,7 @@ void update_mon(int m_idx, bool full)
               && projectable(m_ptr->fy, m_ptr->fx, py, px)
               && projectable(py, px, m_ptr->fy, m_ptr->fx) )
             {
-                if ( town_no_disturb
-                  && !dun_level
-                  && p_ptr->town_num
-                  && !p_ptr->inside_arena
-                  && !p_ptr->inside_battle
-                  && !p_ptr->inside_quest
-                  && r_ptr->level == 0 )
+                if (town_no_disturb && py_in_town() && r_ptr->level == 0)
                 {
                 }
                 else if (disturb_pets || is_hostile(m_ptr))
@@ -3286,28 +3280,6 @@ int place_monster_one(int who, int y, int x, int r_idx, int pack_idx, u32b mode)
         {
             /* Cannot create */
             return 0;
-        }
-    }
-
-    if (quest_number(dun_level))
-    {
-        int hoge = quest_number(dun_level);
-        if ((quest[hoge].type == QUEST_TYPE_KILL_LEVEL) || (quest[hoge].type == QUEST_TYPE_RANDOM))
-        {
-            if(r_idx == quest[hoge].r_idx)
-            {
-                int number_mon, i2, j2;
-                number_mon = 0;
-
-                /* Count all quest monsters */
-                for (i2 = 0; i2 < cur_wid; ++i2)
-                    for (j2 = 0; j2 < cur_hgt; j2++)
-                        if (cave[j2][i2].m_idx > 0)
-                            if (m_list[cave[j2][i2].m_idx].r_idx == quest[hoge].r_idx)
-                                number_mon++;
-                if(number_mon + quest[hoge].cur_num >= quest[hoge].max_num)
-                    return 0;
-            }
         }
     }
 

@@ -1059,11 +1059,13 @@ void do_cmd_cast(void)
                The turn check is for utility spells (Teleport & Detect tactics) since one
                might be doing a bunch of legitimate casting without fighting monsters.
 
+               The quest check is to prohibit spamming on completed quest levels.
+
                Note: Androids will probably always fail to pass the xp check! Hmm ...
                Note: One still might be able to macro up a cast followed by a rest command.
             */
             if ( last_pexp != p_ptr->exp
-              || (!p_ptr->inside_quest && game_turn > last_turn + 50 + randint1(50)) )
+              || (!quests_get_current() && game_turn > last_turn + 50 + randint1(50)) )
             {
                 if (cur_exp < SPELL_EXP_BEGINNER)
                     exp_gain += 60;

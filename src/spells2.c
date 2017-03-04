@@ -2050,7 +2050,8 @@ bool genocide_aux(int m_idx, int power, bool player_cast, int dam_side, cptr spe
 
     else if (m_idx == p_ptr->riding) resist = TRUE;
 
-    else if ((p_ptr->inside_quest && !random_quest_number(dun_level)) || p_ptr->inside_arena || p_ptr->inside_battle) resist = TRUE;
+    else if (!quests_allow_all_spells()) resist = TRUE;
+    else if (p_ptr->inside_arena || p_ptr->inside_battle) resist = TRUE;
 
     else if (player_cast && (r_ptr->level > randint0(power))) resist = TRUE;
 
@@ -2126,7 +2127,8 @@ bool symbol_genocide(int power, bool player_cast)
     bool do_virtue = FALSE;
 
     /* Prevent genocide in quest levels */
-    if ((p_ptr->inside_quest && !random_quest_number(dun_level)) || p_ptr->inside_arena || p_ptr->inside_battle)
+    if (!quests_allow_all_spells()) return TRUE;
+    if (p_ptr->inside_arena || p_ptr->inside_battle)
     {
         return TRUE; /* But charge the player for the (stupid) action! */
     }
@@ -2167,10 +2169,8 @@ bool mass_genocide(int power, bool player_cast)
     bool result = FALSE;
 
     /* Prevent mass genocide in quest levels */
-    if ((p_ptr->inside_quest && !random_quest_number(dun_level)) || p_ptr->inside_arena || p_ptr->inside_battle)
-    {
-        return (FALSE);
-    }
+    if (!quests_allow_all_spells()) return FALSE;
+    if (p_ptr->inside_arena || p_ptr->inside_battle) return FALSE;
 
     /* Delete the (nearby) monsters */
     for (i = 1; i < m_max; i++)
@@ -2207,10 +2207,8 @@ bool mass_genocide_undead(int power, bool player_cast)
     bool result = FALSE;
 
     /* Prevent mass genocide in quest levels */
-    if ((p_ptr->inside_quest && !random_quest_number(dun_level)) || p_ptr->inside_arena || p_ptr->inside_battle)
-    {
-        return (FALSE);
-    }
+    if (!quests_allow_all_spells()) return FALSE;
+    if (p_ptr->inside_arena || p_ptr->inside_battle) return FALSE;
 
     /* Delete the (nearby) monsters */
     for (i = 1; i < m_max; i++)
@@ -2396,7 +2394,7 @@ bool destroy_area(int y1, int x1, int r, int power)
         in_generate = TRUE;
 
     /* Prevent destruction of quest levels and town */
-    if ((p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest)) || !dun_level)
+    if (!py_in_dungeon())
     {
         return (FALSE);
     }
@@ -2735,7 +2733,7 @@ bool earthquake_aux(int cy, int cx, int r, int m_idx)
 
 
     /* Prevent destruction of quest levels and town */
-    if ((p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest)) || !dun_level)
+    if (!py_in_dungeon())
     {
         return (FALSE);
     }

@@ -1225,14 +1225,6 @@ static errr rd_savefile_new_aux(savefile_ptr file)
         if (buf[0]) screen_dump = z_string_make(buf);
     }
 
-    if (p_ptr->is_dead)
-    {
-        for (i = MIN_RANDOM_QUEST; i < MIN_RANDOM_QUEST + num_random_quests; i++)
-        {
-            r_info[quest[i].r_idx].flags1 &= ~(RF1_QUESTOR);
-        }
-    }
-
     spell_stats_on_load(file);
     skills_on_load(file);
     stats_on_load(file);

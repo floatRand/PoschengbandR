@@ -5479,8 +5479,13 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         case GF_CAPTURE:
         {
             int nokori_hp;
-            if ((p_ptr->inside_quest && (quest[p_ptr->inside_quest].type == QUEST_TYPE_KILL_ALL) && !is_pet(m_ptr)) ||
-                (r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flags7 & (RF7_NAZGUL)) || (r_ptr->flags7 & (RF7_UNIQUE2)) || (r_ptr->flags1 & RF1_QUESTOR) || m_ptr->parent_m_idx)
+            if (!quests_allow_all_spells() && !is_pet(m_ptr))
+            {
+                msg_format("%^s is unaffected.", m_name);
+                skipped = TRUE;
+                break;
+            }
+            if ( (r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flags7 & (RF7_NAZGUL)) || (r_ptr->flags7 & (RF7_UNIQUE2)) || (r_ptr->flags1 & RF1_QUESTOR) || m_ptr->parent_m_idx)
             {
                 msg_format("%^s is unaffected.", m_name);
                 skipped = TRUE;
@@ -5506,6 +5511,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             {
                 if (m_ptr->mflag2 & MFLAG2_CHAMELEON) choose_new_monster(c_ptr->m_idx, FALSE, MON_CHAMELEON);
                 msg_format("You capture %^s!", m_name);
+                quests_on_kill_mon(m_ptr);
                 cap_mon = m_ptr->r_idx;
                 cap_mspeed = m_ptr->mspeed;
                 cap_hp = m_ptr->hp;

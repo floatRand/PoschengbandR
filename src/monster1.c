@@ -511,7 +511,7 @@ monster_hook_type get_wilderness_monster_hook(int x, int y)
 
 monster_hook_type get_monster_hook(void)
 {
-    if (!dun_level && !p_ptr->inside_quest)
+    if (py_on_surface())
         return get_wilderness_monster_hook(p_ptr->wilderness_x, p_ptr->wilderness_y);
     else
         return (monster_hook_type)mon_hook_dungeon;

@@ -86,15 +86,6 @@
 #define WILD_SCROLL_CX  (MAX_WID/3)
 
 /*
- * Quest constants
- */
-#define MIN_RANDOM_QUEST    40
-/*#define MAX_RANDOM_QUEST    (MIN_RANDOM_QUEST + num_random_quests - 1)*/
-
-/* Check is the quest index is "fixed" */
-#define is_fixed_quest_idx(Q_IDX) (((Q_IDX) < MIN_RANDOM_QUEST) || ((Q_IDX) >= MIN_RANDOM_QUEST + num_random_quests))
-
-/*
  * Arena constants
  */
 #define MAX_ARENA_MONS        38    /* -KMW- */
@@ -4377,35 +4368,6 @@ extern int PlayerUID;
 #define BACT_CHANGE_NAME            57
 
 /*
- * Quest status
- */
-#define QUEST_STATUS_UNTAKEN         0
-#define QUEST_STATUS_TAKEN           1
-#define QUEST_STATUS_COMPLETED       2
-#define QUEST_STATUS_REWARDED        3
-#define QUEST_STATUS_FINISHED        4
-#define QUEST_STATUS_FAILED          5
-#define QUEST_STATUS_FAILED_DONE     6
-
-/*
- * Quest type
- */
-#define QUEST_TYPE_KILL_LEVEL                1
-#define QUEST_TYPE_KILL_ANY_LEVEL            2
-#define QUEST_TYPE_FIND_ARTIFACT             3
-#define QUEST_TYPE_FIND_EXIT                 4
-#define QUEST_TYPE_KILL_NUMBER               5
-#define QUEST_TYPE_KILL_ALL                  6
-#define QUEST_TYPE_RANDOM                    7
-
-/*
- * Quest flags
- */
-#define QUEST_FLAG_SILENT  0x01 /* no messages fro completion */
-#define QUEST_FLAG_PRESET  0x02 /* quest is outside the main dungeon */
-#define QUEST_FLAG_ONCE    0x04 /* quest is marked finished after leaving */
-
-/*
  * Initialization flags
  */
 #define INIT_SHOW_TEXT          0x01
@@ -5431,8 +5393,8 @@ enum mon_save_fields_e {
 /* Is "teleport level" ineffective to this target? */
 #define TELE_LEVEL_IS_INEFF(TARGET) \
     (p_ptr->inside_arena || p_ptr->inside_battle || \
-     (p_ptr->inside_quest && !random_quest_number(dun_level)) || \
-     (((TARGET) <= 0) && (quest_number(dun_level) || (dun_level >= d_info[dungeon_type].maxdepth)) && \
+     !quests_allow_all_spells() || \
+     (((TARGET) <= 0) && (quests_get_current() || (dun_level >= d_info[dungeon_type].maxdepth)) && \
       (dun_level >= 1) && ironman_downward))
 
 

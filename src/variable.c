@@ -1005,21 +1005,6 @@ s32b max_wild_x;
 s32b max_wild_y;
 
 /*
- * Quest info
- */
-quest_type *quest;
-
-/*
- * Quest text
- */
-char quest_text[10][80];
-
-/*
- * Current line of the quest text
- */
-int quest_text_line;
-
-/*
  * Default spell color table (quark index)
  */
 s16b gf_color[MAX_GF];

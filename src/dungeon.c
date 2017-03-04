@@ -2151,17 +2151,7 @@ void process_world_aux_movement(void)
             disturb(0, 0);
 
             /* Determine the level */
-            if (dun_level || p_ptr->inside_quest)
-            {
-                cmsg_print(TERM_YELLOW, "You feel yourself yanked upwards!");
-                if (dungeon_type) p_ptr->recall_dungeon = dungeon_type;
-
-                dun_level = 0;
-                dungeon_type = 0;
-                quests_on_leave();
-                p_ptr->leaving = TRUE;
-            }
-            else
+            if (py_on_surface())
             {
                 cmsg_print(TERM_YELLOW, "You feel yourself yanked downwards!");
                 dungeon_type = p_ptr->recall_dungeon;
@@ -2212,6 +2202,16 @@ void process_world_aux_movement(void)
                 /* Leaving */
                 p_ptr->leaving = TRUE;
             }
+            else
+            {
+                cmsg_print(TERM_YELLOW, "You feel yourself yanked upwards!");
+                if (dungeon_type) p_ptr->recall_dungeon = dungeon_type;
+
+                dun_level = 0;
+                dungeon_type = 0;
+                quests_on_leave();
+                p_ptr->leaving = TRUE;
+            }
 
             /* Sound */
             sound(SOUND_TPLEVEL);
@@ -2237,7 +2237,9 @@ void process_world_aux_movement(void)
             disturb(0, 0);
 
             /* Determine the level */
-            if (!quest_number(dun_level) && dun_level)
+            if (quests_get_current())
+                msg_print("The world seems to change for a moment!");
+            else
             {
                 msg_print("The world changes!");
 
@@ -2249,10 +2251,6 @@ void process_world_aux_movement(void)
 
                 /* Leaving */
                 p_ptr->leaving = TRUE;
-            }
-            else
-            {
-                msg_print("The world seems to change for a moment!");
             }
 
             /* Sound */
@@ -2430,7 +2428,6 @@ static byte get_dungeon_feeling(void)
 static void update_dungeon_feeling(void)
 {
     byte new_feeling;
-    int quest_num;
     int delay;
 
     /* No feeling on the surface */
@@ -2448,15 +2445,7 @@ static void update_dungeon_feeling(void)
      /* Not yet felt anything */
     if (game_turn < p_ptr->feeling_turn + delay && !cheat_xtra) return;
 
-    /* Extract quest number (if any) */
-    quest_num = quest_number(dun_level);
-
-    /* No feeling in a quest */
-    if (quest_num &&
-        (is_fixed_quest_idx(quest_num) &&
-         !((quest_num == QUEST_OBERON) || (quest_num == QUEST_SERPENT) ||
-           !(quest[quest_num].flags & QUEST_FLAG_PRESET)))) return;
-
+    if (!quests_allow_feeling()) return;
 
     /* Get new dungeon feeling */
     new_feeling = get_dungeon_feeling();
@@ -2619,7 +2608,7 @@ static void process_world(void)
     /*** Handle the wilderness/town (sunshine) ***/
 
     /* While in town/wilderness */
-    if (!dun_level && !p_ptr->inside_quest && !p_ptr->inside_battle && !p_ptr->inside_arena)
+    if (py_on_surface())
     {
         /* Hack -- Daybreak/Nighfall in town */
         if (!(game_turn % ((TURNS_PER_TICK * TOWN_DAWN) / 2)))
@@ -2723,7 +2712,7 @@ static void process_world(void)
     /*** Process the monsters ***/
 
     /* Check for creature generation. */
-    if (!p_ptr->inside_arena && !p_ptr->inside_quest && !p_ptr->inside_battle)
+    if (!p_ptr->inside_arena && !quests_get_current() && !p_ptr->inside_battle)
     {
         int  chance = d_info[dungeon_type].max_m_alloc_chance;
 
@@ -2739,7 +2728,7 @@ static void process_world(void)
         }
     }
     /* It's too easy to get stuck playing a race that can't move! Sigh ... */
-    else if ( p_ptr->inside_quest
+    else if ( quests_get_current()
            && p_ptr->action == ACTION_GLITTER
            && one_in_(50) )
     {
@@ -3251,7 +3240,7 @@ static void _dispatch_command(int old_now_turn)
         /* Go up staircase */
         case '<':
         {
-            if (!p_ptr->wild_mode && !dun_level && !p_ptr->inside_arena && !p_ptr->inside_quest)
+            if (py_on_surface())
             {
                 if (no_wilderness) break;
 
@@ -4590,8 +4579,6 @@ static void process_player(void)
  */
 static void dungeon(bool load_game)
 {
-    int quest_num = 0;
-
     /* Set the base level */
     if (dun_level)
         base_level = dun_level;
@@ -4632,17 +4619,6 @@ static void dungeon(bool load_game)
     /* Disturb */
     disturb(1, 0);
 
-    /* Get index of current quest (if any) */
-    quest_num = quest_number(dun_level);
-
-    /* Inside a quest? */
-    if (quest_num)
-    {
-        /* Mark the quest monster */
-        if (quest[quest_num].r_idx) /* TODO: Non-monster quests are coming ... */
-            r_info[quest[quest_num].r_idx].flags1 |= RF1_QUESTOR;
-    }
-
     /* Track maximum player level */
     if (p_ptr->max_plv < p_ptr->lev)
     {
@@ -4650,9 +4626,10 @@ static void dungeon(bool load_game)
     }
 
 
-    /* Track maximum dungeon level (if not in quest -KMW-) */
+    /* Track maximum dungeon level (if not in quest -KMW-)
+     * XXX Why is this here? Why not in generate()? */
     if ( max_dlv[dungeon_type] < dun_level
-      && !p_ptr->inside_quest
+      && !quests_get_current()
       && !(d_info[dungeon_type].flags1 & DF1_RANDOM) )
     {
         max_dlv[dungeon_type] = dun_level;
@@ -4709,9 +4686,7 @@ static void dungeon(bool load_game)
     /* Refresh */
     Term_fresh();
 
-    if (quest_num && (is_fixed_quest_idx(quest_num) &&
-        !((quest_num == QUEST_OBERON) || (quest_num == QUEST_SERPENT) ||
-        !(quest[quest_num].flags & QUEST_FLAG_PRESET)))) do_cmd_feeling();
+    if (quests_allow_feeling()) do_cmd_feeling();
 
     if (p_ptr->inside_battle)
     {
@@ -4876,21 +4851,6 @@ static void dungeon(bool load_game)
 
         /* Forget the flag */
         reinit_wilderness = FALSE;
-    }
-
-    /* Inside a quest and non-unique questor?
-       Remark: leave_floor() requires RF1_QUESTOR still be valid for the old level
-               ... look up a few lines!
-    */
-    if (quest_num)
-    {
-        /* Mark the quest monster */
-        if ( quest[quest_num].r_idx /* TODO: Non-monster quests are coming ... */
-          && !(r_info[quest[quest_num].r_idx].flags1 & RF1_UNIQUE) )
-        {
-            /* Un-mark the quest monster */
-            r_info[quest[quest_num].r_idx].flags1 &= ~RF1_QUESTOR;
-        }
     }
 
     /* Write about current level on the play record once per level */
@@ -5349,7 +5309,7 @@ void play_game(bool new_game)
     }
 
     /* Initialize the town-buildings if necessary */
-    if (!dun_level && !p_ptr->inside_quest)
+    if (py_on_surface())
     {
         process_dungeon_file("w_info.txt", 0);
         process_dungeon_file("t_info.txt", INIT_ONLY_BUILDINGS);

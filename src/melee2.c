@@ -580,7 +580,7 @@ static bool get_moves_aux(int m_idx, int *yp, int *xp, bool no_flow)
     {
         rng = AAF_LIMIT_RING;
     }
-    else if (!dun_level /*&& !p_ptr->town_num*/ && !p_ptr->inside_arena && !p_ptr->inside_battle && !p_ptr->inside_quest)
+    else if (py_on_surface())
         rng = AAF_LIMIT;
 
     /* Can monster cast attack spell? */
@@ -3448,13 +3448,7 @@ static void process_monster(int m_idx)
                  (disturb_near && projectable(py, px, m_ptr->fy, m_ptr->fx)) ||
                  (disturb_high && ap_r_ptr->r_tkills && ap_r_ptr->level >= p_ptr->lev)))
             {
-                if ( town_no_disturb
-                  && !dun_level
-                  && p_ptr->town_num
-                  && !p_ptr->inside_arena
-                  && !p_ptr->inside_battle
-                  && !p_ptr->inside_quest
-                  && r_ptr->level == 0 )
+                if (town_no_disturb && py_in_town() && r_ptr->level == 0)
                 {
                 }
                 else if (is_hostile(m_ptr))
@@ -3819,7 +3813,7 @@ void process_monsters(void)
             /* Lure a potential ring bearer, no matter how distant */
             radius = AAF_LIMIT_RING;
         }
-        else if (!dun_level /*&& !p_ptr->town_num*/ && !p_ptr->inside_arena && !p_ptr->inside_battle && !p_ptr->inside_quest)
+        else if (py_on_surface())
             radius *= 3;
 
         if (m_ptr->cdis <= radius)

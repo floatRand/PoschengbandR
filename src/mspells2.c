@@ -321,8 +321,7 @@ bool mon_spell_mon(int m_idx, int options)
 
     bool pet = is_pet(m_ptr);
 
-    bool in_no_magic_dungeon = (d_info[dungeon_type].flags1 & DF1_NO_MAGIC) && dun_level
-        && (!p_ptr->inside_quest || is_fixed_quest_idx(p_ptr->inside_quest));
+    bool in_no_magic_dungeon = py_in_dungeon() && (d_info[dungeon_type].flags1 & DF1_NO_MAGIC);
 
     bool can_use_lite_area = FALSE;
 

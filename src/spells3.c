@@ -105,7 +105,7 @@ bool teleport_away(int m_idx, int dis, u32b mode)
             if (!cave_monster_teleportable_bold(m_idx, ny, nx, mode)) continue;
 
             /* No teleporting into vaults and such */
-            if (!(p_ptr->inside_quest || p_ptr->inside_arena))
+            if (!(quests_get_current() || p_ptr->inside_arena))
                 if (cave[ny][nx].info & CAVE_ICKY) continue;
 
             /* This grid looks good */
@@ -718,7 +718,7 @@ void teleport_level(int m_idx)
     }
 
     /* Up only */
-    else if (quest_number(dun_level) || (dun_level >= d_info[dungeon_type].maxdepth))
+    else if (quests_get_current() || (dun_level >= d_info[dungeon_type].maxdepth))
     {
         if (see_m) msg_format("%^s rise%s up through the ceiling.", m_name, (m_idx <= 0) ? "" : "s");
 
@@ -875,9 +875,8 @@ bool recall_player(int turns)
         return TRUE;
     }
 
-    if ( dun_level
+    if ( py_in_dungeon()
       && !(d_info[dungeon_type].flags1 & DF1_RANDOM)
-      && !p_ptr->inside_quest
       && !p_ptr->word_recall
       && max_dlv[dungeon_type] > dun_level )
     {
@@ -1302,10 +1301,8 @@ static bool vanish_dungeon(void)
     char         m_name[80];
 
     /* Prevent vasishing of quest levels and town */
-    if ((p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest)) || !dun_level)
-    {
+    if (!py_in_dungeon())
         return FALSE;
-    }
 
     /* Scan all normal grids */
     for (y = 1; y < cur_hgt - 1; y++)
@@ -1471,7 +1468,7 @@ void call_the_(void)
     }
 
     /* Prevent destruction of quest levels and town */
-    else if ((p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest)) || !dun_level)
+    else if (!py_in_dungeon())
     {
         msg_print("The ground trembles.");
     }

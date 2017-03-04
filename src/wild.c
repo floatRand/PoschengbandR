@@ -1143,7 +1143,7 @@ static void _generate_area(int x, int y, int dx, int dy, rect_t exclude)
  */
 void wilderness_gen(void)
 {
-    int           i, y, x;
+    int           y, x;
     cave_type    *c_ptr;
     feature_type *f_ptr;
 
@@ -1684,3 +1684,19 @@ bool change_wild_mode(void)
     /* Succeed */
     return TRUE;
 }
+
+bool py_on_surface(void)
+{
+    return !dun_level && !p_ptr->inside_arena && !p_ptr->inside_battle && !quests_get_current();
+}
+
+bool py_in_town(void)
+{
+    return py_on_surface() && p_ptr->town_num;
+}
+
+bool py_in_dungeon(void)
+{
+    return dungeon_type != 0;
+}
+

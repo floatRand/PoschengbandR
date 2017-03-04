@@ -100,6 +100,7 @@ extern bool       quests_on_leave(void); /* quest_fail() if !QS_COMPLETED */
 extern bool       quests_allow_downstairs(void); /* check for cave_gen '>' */
 extern bool       quests_allow_downshaft(void);
 extern bool       quests_allow_all_spells(void); /* some quests restrict Destruction et. al. */
+extern bool       quests_allow_feeling(void); /* some quests preclude receiving level feelings */
 
 extern void       quests_display(void);
 extern void       quests_doc(doc_ptr doc);

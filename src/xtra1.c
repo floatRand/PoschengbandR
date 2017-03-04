@@ -1493,11 +1493,11 @@ static void prt_depth(void)
         else
             sprintf(buf, "Wilderness: L%d", base_level);
     }
-    else if (p_ptr->inside_quest && !dungeon_type)
+    else if (quests_get_current() && !dungeon_type)
     {
         sprintf(buf, "Quest: L%d", dun_level);
         /* Level is "special" until completed */
-        if (quests_get(p_ptr->inside_quest)->status < QS_COMPLETED)
+        if (quests_get_current()->status < QS_COMPLETED)
             attr = TERM_L_BLUE;
     }
     else

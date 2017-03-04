@@ -801,37 +801,6 @@ struct option_type
 };
 
 
-/*
- * Structure for the "quests"
- */
-typedef struct quest_type quest_type;
-
-struct quest_type
-{
-    s16b id;
-    s16b status;            /* Is the quest taken, completed, finished? */
-
-    s16b type;              /* The quest type */
-
-    char name[60];          /* Quest name */
-    s16b level;             /* Dungeon level */
-    s16b r_idx;             /* Monster race */
-
-    s16b cur_num;           /* Number killed */
-    s16b max_num;           /* Number required */
-
-    s16b k_idx;             /* object index */
-    s16b num_mon;           /* number of monsters on level */
-
-    byte flags;             /* quest flags */
-    byte dungeon;           /* quest dungeon */
-
-    byte complev;           /* player level (complete) */
-
-    u32b seed;                /* For $RANDOM_ in quest files ... using seed_town is really */
-                              /* not a good idea, as it correlates quest results unless you are careful */
-};
-
 typedef struct magic_type magic_type;
 
 struct magic_type

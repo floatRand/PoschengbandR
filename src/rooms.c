@@ -1761,7 +1761,7 @@ static void _apply_room_grid_mon(point_t p, room_grid_ptr grid, u16b room_flags)
     /* The NIGHT theme is designed for wilderness cemeteries and 
        such, which should be populated with foul undead, but only
        in the deep, dark hours of night! */
-    if ((room_flags & ROOM_THEME_NIGHT) && !dun_level && !p_ptr->inside_quest)
+    if ((room_flags & ROOM_THEME_NIGHT) && py_on_surface())
     {
         int day, hour, min;
         extract_day_hour_min(&day, &hour, &min);
@@ -1770,7 +1770,7 @@ static void _apply_room_grid_mon(point_t p, room_grid_ptr grid, u16b room_flags)
     }
 
     /* Added for symmetry with ROOM_THEME_NIGHT ... any ideas? */
-    if ((room_flags & ROOM_THEME_DAY) && !dun_level && !p_ptr->inside_quest)
+    if ((room_flags & ROOM_THEME_DAY) && py_on_surface())
     {
         int day, hour, min;
         extract_day_hour_min(&day, &hour, &min);

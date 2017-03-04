@@ -707,6 +707,15 @@ bool quests_allow_all_spells(void)
     return !(q->flags & QF_GENERATE);
 }
 
+bool quests_allow_feeling(void)
+{
+    quest_ptr q;
+    if (!_current) return TRUE;
+    q = quests_get(_current);
+    assert(q);
+    return !(q->flags & QF_GENERATE);
+}
+
 /************************************************************************
  * Quests: Display
  ***********************************************************************/
@@ -799,7 +808,7 @@ void quests_load(savefile_ptr file)
 
         if (q->goal == QG_FIND_ART)
             a_info[q->goal_idx].gen_flags |= OFG_QUESTITEM;
-        if (q->goal == QG_KILL_MON)
+        if (q->goal == QG_KILL_MON && !p_ptr->is_dead)
         {
             monster_race *r_ptr = &r_info[q->goal_idx];
             if (r_ptr->flags1 & RF1_UNIQUE)

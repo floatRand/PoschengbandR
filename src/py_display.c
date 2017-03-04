@@ -1989,47 +1989,35 @@ void py_display_dungeons(doc_ptr doc)
             doc_printf(doc, "<color:v>You %s after winning.</color>\n",
                 streq(p_ptr->died_from, "Seppuku") ? "did Seppuku" : "retired from the adventure");
         }
-        else if (!dun_level)
+        else if (py_on_surface())
         {
             doc_printf(doc, "You were killed by %s in %s.\n", p_ptr->died_from, map_name());
         }
-        else if (p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest))
-        {
-            /* Get the quest text */
-            /* Bewere that INIT_ASSIGN resets the cur_num. */
-            process_dungeon_file("q_info.txt", INIT_ASSIGN);
-            doc_printf(doc, "You were killed by %s in the quest '%s'.\n",
-                p_ptr->died_from, quest[p_ptr->inside_quest].name);
-        }
-        else
+        else if (py_in_dungeon())
         {
             doc_printf(doc, "You were killed by %s on level %d of %s.\n",
                 p_ptr->died_from, dun_level, map_name());
         }
+        else if (quests_get_current())
+        {
+            doc_printf(doc, "You were killed by %s in the quest '%s'.\n",
+                p_ptr->died_from, quests_get_current()->name);
+        }
+        else /* ??? */
+        {
+            doc_printf(doc, "You were killed by %s in %s.\n", p_ptr->died_from, map_name());
+        }
     }
     else if (character_dungeon)
     {
-        if (!dun_level)
-        {
+        if (py_on_surface())
             doc_printf(doc, "Now, you are in %s.\n", map_name());
-        }
-        else if (p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest))
-        {
-            /* Clear the text */
-            /* Must be done before doing INIT_SHOW_TEXT */
-            for (i = 0; i < 10; i++)
-            {
-                quest_text[i][0] = '\0';
-            }
-            quest_text_line = 0;
-
-            process_dungeon_file("q_info.txt", INIT_SHOW_TEXT);
-            doc_printf(doc, "Now, you are in the quest '%s'.\n", quest[p_ptr->inside_quest].name);
-        }
-        else
-        {
+        else if (py_in_dungeon())
             doc_printf(doc, "Now, you are exploring level %d of %s.\n", dun_level, map_name());
-        }
+        else if (quests_get_current())
+            doc_printf(doc, "Now, you are in the quest '%s'.\n", quests_get_current()->name);
+        else
+            doc_insert(doc, "Hmmm ... Where are you?");
     }
 
     if (p_ptr->last_message)

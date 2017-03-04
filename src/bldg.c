@@ -3552,7 +3552,9 @@ void do_cmd_quest(void)
         p_ptr->oldpy = 0;
         p_ptr->oldpx = 0; */
 
-        if (quest[p_ptr->inside_quest].type != QUEST_TYPE_RANDOM) dun_level = 1;
+        /* XXX */
+        dun_level = 1;
+
         p_ptr->inside_quest = cave[py][px].special;
 
         p_ptr->leaving = TRUE;
@@ -3732,54 +3734,3 @@ void do_cmd_bldg(void)
 }
 
 
-/*
- * Hack -- Check if a level is a "quest" level
- */
-int quest_number(int level)
-{
-    int i;
-
-    /* Check quests */
-    if (p_ptr->inside_quest)
-        return (p_ptr->inside_quest);
-
-    for (i = 0; i < max_quests; i++)
-    {
-        if (quest[i].status != QUEST_STATUS_TAKEN) continue;
-
-        if ((quest[i].type == QUEST_TYPE_KILL_LEVEL) &&
-            !(quest[i].flags & QUEST_FLAG_PRESET) &&
-            (quest[i].level == level) &&
-            (quest[i].dungeon == dungeon_type))
-            return (i);
-    }
-
-    /* Check for random quest */
-    return (random_quest_number(level));
-}
-
-
-/*
- * Return the index of the random quest on this level
- * (or zero)
- */
-int random_quest_number(int level)
-{
-    int i;
-
-    if (dungeon_type != DUNGEON_ANGBAND) return 0;
-
-    for (i = MIN_RANDOM_QUEST; i < MIN_RANDOM_QUEST + num_random_quests; i++)
-    {
-        if ((quest[i].type == QUEST_TYPE_RANDOM) &&
-            (quest[i].status == QUEST_STATUS_TAKEN) &&
-            (quest[i].level == level) &&
-            (quest[i].dungeon == DUNGEON_ANGBAND))
-        {
-            return i;
-        }
-    }
-
-    /* Nope */
-    return 0;
-}

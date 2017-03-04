@@ -1311,7 +1311,7 @@ void change_floor(void)
                 /*** Create connected stairs ***/
 
                 /* No stairs down from Quest */
-                if ((change_floor_mode & CFM_UP) && !quest_number(dun_level))
+                if ((change_floor_mode & CFM_UP) && !quests_get_current())
                 {
                     c_ptr->feat = (change_floor_mode & CFM_SHAFT) ? feat_state(feat_down_stair, FF_SHAFT) : feat_down_stair;
                 }
@@ -1408,12 +1408,10 @@ void stair_creation(bool down_only)
     if (ironman_downward || down_only) up = FALSE;
 
     /* Forbid down staircases on quest level */
-    if (quest_number(dun_level) || (dun_level >= d_info[dungeon_type].maxdepth)) down = FALSE;
+    if (quests_get_current() || (dun_level >= d_info[dungeon_type].maxdepth)) down = FALSE;
 
     /* No effect out of standard dungeon floor */
-    if (!dun_level || (!up && !down) ||
-        (p_ptr->inside_quest && is_fixed_quest_idx(p_ptr->inside_quest)) ||
-        p_ptr->inside_arena || p_ptr->inside_battle)
+    if (py_on_surface() || (!up && !down) || !quests_allow_all_spells())
     {
         /* arena or quest */
         msg_print("There is no effect!");

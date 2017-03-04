@@ -4755,7 +4755,7 @@ void hit_mon_trap(int y, int x, int m_idx)
                     }
                     break;
                 case 5: /* Trap Door */
-                    if (!p_ptr->inside_quest && !p_ptr->inside_arena)
+                    if (!quests_get_current() && !p_ptr->inside_arena)
                     {
                         if (r_ptr->flags7 & RF7_CAN_FLY)
                         {

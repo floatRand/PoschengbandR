@@ -487,9 +487,6 @@ extern u16b max_o_idx;
 extern u16b max_m_idx;
 extern s32b max_wild_x;
 extern s32b max_wild_y;
-extern quest_type *quest;
-extern char quest_text[10][80];
-extern int quest_text_line;
 extern s16b gf_color[MAX_GF];
 extern wild_scroll_ptr wild_scroll;
 extern int highscore_fd;
@@ -608,7 +605,6 @@ extern cptr birth_get_class_desc(int i);
 extern cptr birth_get_realm_desc(int i);
 extern void player_birth(void);
 extern void get_max_stats(void);
-extern void determine_random_questor(quest_type *q_ptr);
 extern int calc_exp_factor(void);
 extern bool monster_hook_human(int r_idx);
 
@@ -1500,8 +1496,6 @@ extern void have_nightmare(int r_idx);
 extern void battle_monsters(void);
 extern void do_cmd_bldg(void);
 extern void do_cmd_quest(void);
-extern int quest_number(int level);
-extern int random_quest_number(int level);
 extern bool tele_town(void);
 extern int hit_chance(int hand, int to_h, int ac);
 
@@ -2029,6 +2023,9 @@ extern bool object_is_nameless(object_type *o_ptr);
 extern bool object_allow_two_hands_wielding(object_type *o_ptr);
 
 /* wild.c */
+extern bool py_on_surface(void);
+extern bool py_in_town(void);
+extern bool py_in_dungeon(void);
 extern void set_floor_and_wall(byte type);
 extern void wilderness_gen(void);
 extern monster_hook_type wilderness_mon_hook;

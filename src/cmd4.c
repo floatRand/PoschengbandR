@@ -3180,7 +3180,7 @@ static _feeling_info_t _level_feelings_lucky[11] =
 void do_cmd_feeling(void)
 {
     /* No useful feeling in quests */
-    if (p_ptr->inside_quest && !random_quest_number(dun_level))
+    if (!quests_allow_feeling())
     {
         msg_print("Looks like a typical quest level.");
     }
