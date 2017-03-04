@@ -2555,6 +2555,7 @@ static void _birth_finalize(void)
     towns_init();
     home_init();
     virtue_init();
+    quests_on_birth();
 
     p_ptr->au = randint1(600) + randint1(100) + 100;
 

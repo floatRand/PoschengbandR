@@ -998,27 +998,7 @@ static bool wr_savefile_new(savefile_ptr file)
     savefile_write_u16b(file, tmp16u);
     for (i = 0; i < tmp16u; i++) wr_xtra_art(file, i);
 
-    tmp16u = max_quests;
-    savefile_write_u16b(file, tmp16u);
-
-    savefile_write_byte(file, num_random_quests);
-    for (i = 0; i < max_quests; i++)
-    {
-        savefile_write_s16b(file, quest[i].status);
-        savefile_write_s16b(file, quest[i].level);
-        savefile_write_byte(file, quest[i].complev);
-        if (quest[i].status == QUEST_STATUS_TAKEN || quest[i].status == QUEST_STATUS_COMPLETED || !is_fixed_quest_idx(i))
-        {
-            savefile_write_s16b(file, quest[i].cur_num);
-            savefile_write_s16b(file, quest[i].max_num);
-            savefile_write_s16b(file, quest[i].type);
-            savefile_write_s16b(file, quest[i].r_idx);
-            savefile_write_s16b(file, quest[i].k_idx);
-            savefile_write_byte(file, quest[i].flags);
-            savefile_write_byte(file, quest[i].dungeon);
-            savefile_write_u32b(file, quest[i].seed);
-        }
-    }
+    quests_save(file);
 
     savefile_write_s32b(file, p_ptr->wilderness_x);
     savefile_write_s32b(file, p_ptr->wilderness_y);

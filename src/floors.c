@@ -874,8 +874,6 @@ void leave_floor(void)
     cave_type *c_ptr = NULL;
     feature_type *f_ptr;
     saved_floor_type *sf_ptr;
-    int quest_r_idx = 0;
-    int i;
 
     /* Preserve pets and prepare to take these to next floor */
     preserve_pet();
@@ -897,43 +895,8 @@ void leave_floor(void)
         p_ptr->floor_id = get_new_floor_id();
     }
 
-
-    /* Search the quest monster index */
-    for (i = 0; i < max_quests; i++)
-    {
-        if ((quest[i].status == QUEST_STATUS_TAKEN) &&
-            ((quest[i].type == QUEST_TYPE_KILL_LEVEL) ||
-            (quest[i].type == QUEST_TYPE_RANDOM)) &&
-            (quest[i].level == dun_level) &&
-            (dungeon_type == quest[i].dungeon) &&
-            !(quest[i].flags & QUEST_FLAG_PRESET))
-        {
-            quest_r_idx = quest[i].r_idx;
-        }
-    }
-
-    /* Maintain quest monsters */
-    for (i = 1; i < m_max; i++)
-    {
-        monster_race *r_ptr;
-        monster_type *m_ptr = &m_list[i];
-
-        /* Skip dead monsters */
-        if (!m_ptr->r_idx) continue;
-
-        /* Only maintain quest monsters */
-        if (quest_r_idx != m_ptr->r_idx) continue;
-
-        /* Extract real monster race */
-        r_ptr = real_r_ptr(m_ptr);
-
-        /* Ignore unique monsters */
-        if ((r_ptr->flags1 & RF1_UNIQUE) ||
-            (r_ptr->flags7 & RF7_NAZGUL)) continue;
-
-        /* Delete non-unique quest monsters */
-        delete_monster_idx(i);
-    }
+    /* remove quest monsters */
+    quests_on_leave_floor();
 
     /* Check if there is a same item */
     equip_for_each(_fix_art_hack);
@@ -1289,7 +1252,7 @@ void change_floor(void)
                 }
             }
 
-            (void)place_quest_monsters();
+            quests_on_restore_floor(dungeon_type, dun_level);
 
             /* Place some random monsters */
             alloc_times = absence_ticks / alloc_chance;

@@ -1118,101 +1118,29 @@ static errr rd_savefile_new_aux(savefile_ptr file)
         }
     }
 
+    quests_load(file);
+    if (arg_fiddle) note("Loaded Quests");
+
+    p_ptr->wilderness_x = savefile_read_s32b(file);
+    p_ptr->wilderness_y = savefile_read_s32b(file);
+    p_ptr->wilderness_dx = savefile_read_s16b(file);
+    p_ptr->wilderness_dy = savefile_read_s16b(file);
+    p_ptr->wild_mode = savefile_read_byte(file);
+    savefile_read_skip(file, 1);
+
+    wild_x_size = savefile_read_s32b(file);
+    wild_y_size = savefile_read_s32b(file);
+    if ((wild_x_size > max_wild_x) || (wild_y_size > max_wild_y))
     {
-        u16b max_quests_load;
-        byte max_rquests_load;
-
-        max_quests_load = savefile_read_u16b(file);
-        max_rquests_load = savefile_read_byte(file);
-        num_random_quests = max_rquests_load;
-        if (max_quests_load > max_quests)
-        {
-            note(format("Too many (%u) quests!", max_quests_load));
-            return (23);
-        }
-        for (i = 0; i < max_quests_load; i++)
-        {
-            if (i < max_quests)
-            {
-                quest[i].status = savefile_read_s16b(file);
-                quest[i].level = savefile_read_s16b(file);
-                quest[i].complev = savefile_read_byte(file);
-
-                if ((quest[i].status == QUEST_STATUS_TAKEN) ||
-                    (quest[i].status == QUEST_STATUS_COMPLETED) ||
-                    ((i >= MIN_RANDOM_QUEST) && (i < (MIN_RANDOM_QUEST + max_rquests_load))))
-                {
-                    quest[i].cur_num = savefile_read_s16b(file);
-                    quest[i].max_num = savefile_read_s16b(file);
-                    quest[i].type = savefile_read_s16b(file);
-                    quest[i].r_idx = savefile_read_s16b(file);
-
-                    if (quest[i].type == QUEST_TYPE_RANDOM)
-                    {
-                        if (!quest[i].r_idx || quest[i].r_idx == MON_NAZGUL)
-                        {
-                            quest_type      *q_ptr = &quest[i];
-                            monster_race    *quest_r_ptr;
-
-                            determine_random_questor(q_ptr);
-                            quest_r_ptr = &r_info[q_ptr->r_idx];
-
-                            if (quest_r_ptr->flags1 & RF1_UNIQUE)
-                            {
-                                quest_r_ptr->flags1 |= RF1_QUESTOR;
-                                q_ptr->max_num = 1;
-                            }
-                            else
-                            {
-                                q_ptr->max_num = randint1(20) + 5;
-                            }
-                        }
-                    }
-
-                    quest[i].k_idx = savefile_read_s16b(file);
-                    if (quest[i].k_idx)
-                        a_info[quest[i].k_idx].gen_flags |= OFG_QUESTITEM;
-
-                    quest[i].flags = savefile_read_byte(file);
-                    quest[i].dungeon = savefile_read_byte(file);
-                    /* Mark uniques */
-                    if (quest[i].status == QUEST_STATUS_TAKEN || quest[i].status == QUEST_STATUS_UNTAKEN)
-                        if (r_info[quest[i].r_idx].flags1 & RF1_UNIQUE)
-                            r_info[quest[i].r_idx].flags1 |= RF1_QUESTOR;
-
-                    quest[i].seed = savefile_read_u32b(file);
-                }
-            }
-            /* Ignore the empty quests from old versions */
-            else
-            {
-                savefile_read_skip(file, 4);
-            }
-        }
-
-        p_ptr->wilderness_x = savefile_read_s32b(file);
-        p_ptr->wilderness_y = savefile_read_s32b(file);
-        p_ptr->wilderness_dx = savefile_read_s16b(file);
-        p_ptr->wilderness_dy = savefile_read_s16b(file);
-        p_ptr->wild_mode = savefile_read_byte(file);
-        savefile_read_skip(file, 1);
-
-        wild_x_size = savefile_read_s32b(file);
-        wild_y_size = savefile_read_s32b(file);
-        if ((wild_x_size > max_wild_x) || (wild_y_size > max_wild_y))
-        {
-            note(format("Wilderness is too big (%u/%u)!", wild_x_size, wild_y_size));
-            return (23);
-        }
-
-        for (i = 0; i < wild_x_size; i++)
-        {
-            for (j = 0; j < wild_y_size; j++)
-                wilderness[j][i].seed = savefile_read_u32b(file);
-        }
+        note(format("Wilderness is too big (%u/%u)!", wild_x_size, wild_y_size));
+        return (23);
     }
 
-    if (arg_fiddle) note("Loaded Quests");
+    for (i = 0; i < wild_x_size; i++)
+    {
+        for (j = 0; j < wild_y_size; j++)
+            wilderness[j][i].seed = savefile_read_u32b(file);
+    }
 
     /* Load the Artifacts */
     tmp16u = savefile_read_u16b(file);

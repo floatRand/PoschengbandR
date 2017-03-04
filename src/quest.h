@@ -23,9 +23,9 @@ enum {
     QS_UNTAKEN,
     QS_TAKEN,
     QS_IN_PROGRESS,
-    QS_COMPLETED,
+    QS_COMPLETED,   /* QF_TOWN: user must return to town for the reward */
     QS_FINISHED,
-    QS_FAILED,
+    QS_FAILED,      /* QF_TOWN: user must return to town for the shame message */
     QS_FAILED_DONE
 };
 enum {
@@ -39,7 +39,7 @@ struct quest_s
     cptr name;
     cptr file;
     int  level;
-    int  dungeon;  /* where to find the quest? 0 -> Wilderness QUEST_ENTER(id) */
+    int  dungeon;     /* where to find the quest? 0 -> Wilderness QUEST_ENTER(id) */
     int  flags;
 
     int  goal;
@@ -49,8 +49,16 @@ struct quest_s
 
     int  status;
     int  completed_lev;
+
+    u32b seed;        /* For $RANDOM_ in quest files */
 };
 typedef struct quest_s quest_t, *quest_ptr;
+typedef void (*quest_f)(quest_ptr q);
+typedef bool (*quest_p)(quest_ptr q);
+
+extern quest_ptr  quest_alloc(cptr name);
+extern void       quest_free(quest_ptr q);
+extern void       quest_change_file(quest_ptr q, cptr file);
 
 extern void       quest_take(quest_ptr q);
 extern void       quest_complete(quest_ptr q, point_t p);
@@ -64,12 +72,15 @@ extern room_ptr   quest_get_map(quest_ptr q); /* QF_GENERATE: read q->file for t
 
 extern void       quest_generate(quest_ptr q); /* QF_GENERATE: quest_gen() */
 extern void       quest_analyze(quest_ptr q); /* WIZARD: diagnostics on q->file */
-extern void       quest_post_generate(quest_ptr q); /* place quest monsters */
+extern bool       quest_post_generate(quest_ptr q); /* place quest monsters */
 
 extern bool       quests_init(void); /* parse lib/edit/q_info.txt */
+extern void       quests_add(quest_ptr q); /* for the q_info.txt parser on N: line */
+extern void       quests_cleanup(void);
 
 extern quest_ptr  quests_get_current(void);
 extern quest_ptr  quests_get(int id);
+extern cptr       quests_get_name(int id);
 extern vec_ptr    quests_get_all(void);
 extern vec_ptr    quests_get_active(void);
 extern vec_ptr    quests_get_finished(void);
@@ -78,12 +89,20 @@ extern vec_ptr    quests_get_hidden(void);
                   /* Note: quest lists are returned sorted. You must vec_free() when finished. */
 
 extern void       quests_on_birth(void); /* assign random quests */
-extern void       quests_on_change_floor(void); /* delete quest monsters if OF_RETAKE */
+extern void       quests_on_leave_floor(void); /* delete quest monsters if OF_RETAKE */
+extern void       quests_on_restore_floor(int dungeon, int level); /* player re-entered a saved floor (persistent levels) */
 extern void       quests_on_generate(int dungeon, int level); /* see if this level is a quest level */
+extern void       quests_generate(int id); /* QF_GENERATE located on surface (QUEST_ENTER(id)) */
 extern void       quests_on_kill_mon(mon_ptr mon); /* check for completion */
 extern void       quests_on_get_obj(obj_ptr obj); /* check for completion */
 extern bool       quests_check_leave(void); /* confirm if !OF_RETAKE and !QS_COMPLETED */
 extern void       quests_on_leave(void); /* quest_fail() if !QS_COMPLETED */
+extern bool       quests_allow_downstairs(void); /* check for cave_gen '>' */
+extern bool       quests_allow_downshaft(void);
+extern bool       quests_allow_all_spells(void); /* some quests restrict Destruction et. al. */
+
+extern void       quests_display(void);
+extern void       quests_doc(doc_ptr doc);
 extern void       quests_load(savefile_ptr file);
 extern void       quests_save(savefile_ptr file);
 #endif
