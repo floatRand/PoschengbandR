@@ -561,7 +561,6 @@ void quests_on_generate(int dungeon, int level)
     if (q)
     {
         _current = q->id;
-        p_ptr->inside_quest = q->id;
         q->status = QS_IN_PROGRESS;
     }
 }
@@ -570,7 +569,6 @@ void quests_generate(int id)
 {
     quest_ptr q = quests_get(id);
     _current = id;
-    p_ptr->inside_quest = q->id;
     q->status = QS_IN_PROGRESS;
     quest_generate(q);
 }
@@ -581,7 +579,6 @@ void quests_on_restore_floor(int dungeon, int level)
     if (q)
     {
         _current = q->id;
-        p_ptr->inside_quest = q->id;
         q->status = QS_IN_PROGRESS;
         quest_post_generate(q); /* replace quest monsters */
     }
@@ -680,7 +677,6 @@ bool quests_on_leave(void)
         }
     }
     _current = 0;
-    p_ptr->inside_quest = 0;
     return TRUE;
 }
 

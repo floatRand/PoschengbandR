@@ -997,7 +997,7 @@ struct player_type
     s16b town_num;            /* Current town number */
     s16b arena_number;        /* monster number in arena -KMW- */
     bool inside_arena;        /* Is character inside arena? */
-    s16b inside_quest;        /* Inside quest level */
+    s16b inside_quest;        /* Temp hack for QUEST_ENTER(id) -> generate special quest level */
     bool inside_battle;        /* Is character inside tougijou? */
 
     s32b wilderness_x;    /* Coordinates in the wilderness */
