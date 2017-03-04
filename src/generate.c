@@ -105,6 +105,8 @@
 #include "rooms.h"
 #include "streams.h"
 
+int enter_quest = 0;
+
 int dun_tun_rnd;
 int dun_tun_chg;
 int dun_tun_con;
@@ -1496,9 +1498,10 @@ void generate_cave(void)
             battle_gen();
         }
         /* Enter a special quest level from the wilderness (QUEST_ENTER(id)) */
-        else if (p_ptr->inside_quest)
+        else if (enter_quest)
         {
-            quests_generate(p_ptr->inside_quest);
+            quests_generate(enter_quest);
+            enter_quest = 0;
         }
         /* Build the town */
         else if (!dun_level)

@@ -470,8 +470,24 @@ static void _get_questor(quest_ptr q)
 
 void quests_on_birth(void)
 {
-    vec_ptr v = quests_get_random();
+    vec_ptr v;
     int i;
+
+    /* stale data from the last character */
+    v = quests_get_all();
+    for (i = 0; i < vec_length(v); i++)
+    {
+        quest_ptr q = vec_get(v, i);
+        q->status = QS_UNTAKEN;
+        q->completed_lev = 0;
+        q->goal_current = 0;
+        q->seed = 0;
+    }
+    vec_free(v);
+    _current = 0;
+
+    /* assign random quests */
+    v = quests_get_random();
     for (i = 0; i < vec_length(v); i++)
     {
         quest_ptr q = vec_get(v, i);
@@ -479,6 +495,7 @@ void quests_on_birth(void)
     }
     vec_free(v);
 
+    /* take the standard fixed quests */
     quests_get(QUEST_OBERON)->status = QS_TAKEN;
     quests_get(QUEST_SERPENT)->status = QS_TAKEN;
 }
@@ -811,6 +828,7 @@ void quests_load(savefile_ptr file)
                 r_ptr->flags1 |= RF1_QUESTOR;
         }
     }
+    _current = savefile_read_s16b(file);
 }
 
 void quests_save(savefile_ptr file)
@@ -833,7 +851,7 @@ void quests_save(savefile_ptr file)
             savefile_write_u32b(file, q->seed);
         }
     }
-
+    savefile_write_s16b(file, _current);
     vec_clear(v);
 }
 

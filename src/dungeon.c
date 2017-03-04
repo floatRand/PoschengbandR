@@ -5212,7 +5212,6 @@ void play_game(bool new_game)
 
         /* Start in town */
         dun_level = 0;
-        p_ptr->inside_quest = 0;
         p_ptr->inside_arena = FALSE;
         p_ptr->inside_battle = FALSE;
 
@@ -5294,9 +5293,6 @@ void play_game(bool new_game)
             {
                 /* Initialize the saved floors data */
                 init_saved_floors(TRUE);
-
-                /* Avoid crash */
-                p_ptr->inside_quest = 0;
 
                 /* Avoid crash in update_view() */
                 py = px = 10;
@@ -5571,7 +5567,6 @@ void play_game(bool new_game)
                     p_ptr->inside_arena = FALSE;
                     p_ptr->inside_battle = FALSE;
                     leaving_quest = 0;
-                    p_ptr->inside_quest = 0;
                     if (dungeon_type) p_ptr->recall_dungeon = dungeon_type;
                     dungeon_type = 0;
                     if (no_wilderness)

@@ -3552,11 +3552,10 @@ void do_cmd_quest(void)
         p_ptr->oldpy = 0;
         p_ptr->oldpx = 0; */
 
-        /* XXX */
-        dun_level = 1;
+        /* XXX
+        dun_level = 1; */
 
-        p_ptr->inside_quest = cave[py][px].special;
-
+        enter_quest = cave[py][px].special;
         p_ptr->leaving = TRUE;
     }
 }

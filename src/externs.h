@@ -964,6 +964,7 @@ extern void change_floor(void);
 extern void stair_creation(bool down_only);
 
 /* generate.c */
+extern int enter_quest;
 extern bool place_quest_monsters(void);
 extern void wipe_generate_cave_flags(void);
 extern void clear_cave(void);

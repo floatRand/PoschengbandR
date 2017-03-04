@@ -378,7 +378,6 @@ static void wr_extra(savefile_ptr file)
     savefile_write_s16b(file, p_ptr->town_num);
     savefile_write_s16b(file, p_ptr->arena_number);
     savefile_write_s16b(file, p_ptr->inside_arena);
-    savefile_write_s16b(file, p_ptr->inside_quest);
     savefile_write_s16b(file, p_ptr->inside_battle);
     savefile_write_byte(file, p_ptr->exit_bldg);
     savefile_write_s16b(file, p_ptr->oldpx);

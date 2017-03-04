@@ -378,7 +378,6 @@ static void rd_extra(savefile_ptr file)
 
     p_ptr->arena_number = savefile_read_s16b(file);
     p_ptr->inside_arena = (bool)savefile_read_s16b(file);
-    p_ptr->inside_quest = savefile_read_s16b(file);
     p_ptr->inside_battle = (bool)savefile_read_s16b(file);
     p_ptr->exit_bldg = savefile_read_byte(file);
 

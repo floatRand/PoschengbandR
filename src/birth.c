@@ -270,7 +270,6 @@ static void player_wipe(void)
     /* Initialize arena and rewards information -KMW- */
     p_ptr->arena_number = 0;
     p_ptr->inside_arena = FALSE;
-    p_ptr->inside_quest = 0;
     for (i = 0; i < MAX_MANE; i++)
     {
         p_ptr->mane_spell[i] = -1;
