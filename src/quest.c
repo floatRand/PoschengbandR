@@ -331,15 +331,15 @@ bool quest_post_generate(quest_ptr q)
 
             /* Failed to place */
             if (!j) return FALSE;
-            if (ct == 1)
-                cmsg_format(TERM_VIOLET, "Beware, this level is protected by %s!", r_name + r_ptr->name);
-            else
-            {
-                char name[MAX_NLEN];
-                strcpy(name, r_name + r_ptr->name);
-                plural_aux(name);
-                cmsg_format(TERM_VIOLET, "Be warned, this level is guarded by %d %s!", ct, name);
-            }
+        }
+        if (ct == 1)
+            cmsg_format(TERM_VIOLET, "Beware, this level is protected by %s!", r_name + r_ptr->name);
+        else
+        {
+            char name[MAX_NLEN];
+            strcpy(name, r_name + r_ptr->name);
+            plural_aux(name);
+            cmsg_format(TERM_VIOLET, "Be warned, this level is guarded by %d %s!", ct, name);
         }
     }
     return TRUE;
@@ -821,21 +821,33 @@ bool quests_check_leave(void)
     {
         if (q->flags & QF_RETAKE)
         {
-            string_ptr s = string_alloc_format(
-                "<color:r>Warning,</color> you are about to leave the quest: "
-                "<color:R>%s</color>. You may return to this quest later though. "
-                "Are you sure you want to leave? <color:y>[Y,n]</color>", q->name);
-            char c = msg_prompt(string_buffer(s), "ny", PROMPT_YES_NO);
+            char       c;
+            string_ptr s = string_alloc();
+
+            string_append_s(s, "<color:r>Warning,</color> you are about to leave the quest: <color:R>");
+            if ((q->flags & QF_RANDOM) && q->goal == QG_KILL_MON)
+                string_printf(s, "Kill %s", r_name + r_info[q->goal_idx].name);
+            else
+                string_append_s(s, q->name);
+            string_append_s(s, "</color>. You may return to this quest later though. "
+                               "Are you sure you want to leave? <color:y>[Y,n]</color>");
+            c = msg_prompt(string_buffer(s), "ny", PROMPT_YES_NO);
             string_free(s);
             if (c == 'n') return FALSE;
         }
         else
         {
-            string_ptr s = string_alloc_format(
-                "<color:r>Warning,</color> you are about to leave the quest: "
-                "<color:R>%s</color>. <color:v>You will fail this quest if you leave!</color> "
-                "Are you sure you want to leave? <color:y>[Y,n]</color>", q->name);
-            char c = msg_prompt(string_buffer(s), "nY", PROMPT_YES_NO | PROMPT_CASE_SENSITIVE);
+            char       c;
+            string_ptr s = string_alloc();
+
+            string_append_s(s, "<color:r>Warning,</color> you are about to leave the quest: <color:R>");
+            if ((q->flags & QF_RANDOM) && q->goal == QG_KILL_MON)
+                string_printf(s, "Kill %s", r_name + r_info[q->goal_idx].name);
+            else
+                string_append_s(s, q->name);
+            string_append_s(s, "</color>. <color:v>You will fail this quest if you leave!</color> "
+                               "Are you sure you want to leave? <color:y>[Y,n]</color>");
+            c = msg_prompt(string_buffer(s), "nY", PROMPT_NEW_LINE | PROMPT_ESCAPE_DEFAULT | PROMPT_CASE_SENSITIVE);
             string_free(s);
             if (c == 'n') return FALSE;
         }
@@ -943,7 +955,7 @@ void quests_doc(doc_ptr doc)
     if (vec_length(v))
     {
         doc_printf(doc, "  <color:G>Completed Quests</color>\n");
-        for (i = 1; i < vec_length(v); i++)
+        for (i = 0; i < vec_length(v); i++)
         {
             quest_ptr quest = vec_get(v, i);
             quest_doc(quest, doc);
@@ -956,7 +968,7 @@ void quests_doc(doc_ptr doc)
     if (vec_length(v))
     {
         doc_printf(doc, "  <color:r>Failed Quests</color>\n");
-        for (i = 1; i < vec_length(v); i++)
+        for (i = 0; i < vec_length(v); i++)
         {
             quest_ptr quest = vec_get(v, i);
             quest_doc(quest, doc);

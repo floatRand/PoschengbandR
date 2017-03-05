@@ -1,3 +1,26 @@
+?:[EQU $QUEST5 Taken]
+D:Lately, a dark evil has been discovered. An ancient burial ground
+D:has been taken over by something terrible. Creatures black as night
+D:now inhabit the place, attacking out villagers and eating our young.
+D:Please, we are desperate. We don't have much to offer, but we beg you
+D:to help us!
+?:1
+
+?:[EQU $QUEST5 Completed]
+D:Thank you! You have saved our town and our people rejoice!
+D:I've talked with Astinus, the local librarian, Suiyan, the local
+D:weaponmaster, and Lorien, the local beastmaster. They will offer you
+D:a special discount price when they serve you. It is not much, but
+D:we are a poor people.
+?:1
+
+?:[EQU $QUEST5 Failed]
+D:Oh no! We are doomed to periodic culling from the foul denizens of
+D:the Barrow Downs. You have disappointed me dearly. Please, begone
+D:for now. I must inform the village of your failure. Come back later
+D:after we have had time to grieve.
+?:1
+
 T:QUEST:NORMAL
 L:;:RUBBLE
 L:#:PERMANENT
@@ -46,28 +69,5 @@ M:#................;;;......;;;..................;......#
 M:#..................;;;;;;;;....................;..ZW..#
 M:#<.................................A...........;....92#
 M:#######################################################
-
-?:[EQU $QUEST5 Taken Completed]
-D::Lately, a dark evil has been discovered. An ancient burial ground
-D::has been taken over by something terrible. Creatures black as night
-D::now inhabit the place. They attack our villagers, and eat our young.
-D::Please, we are desperate. We don't have much to offer, but we beg you
-D::to help us!
-?:1
-
-?:[EQU $QUEST5 Rewarded]
-D::Thank you! You have saved our town. Our people rejoice!!
-D::I've talked with Astinus, the local librarian, Suiyan, the local
-D::weaponmaster, and Lorien, the local beastmaster. They will offer you
-D::a special discount price when they serve you. It is not much, but
-D::we are a poor people.
-?:1
-
-?:[EQU $QUEST5 Failed]
-D::Oh no! We are doomed to periodic culling from the foul denizens of
-D::the Barrow Downs. You have disappointed me dearly. Please, begone
-D::for now. I must inform the village of your failure. Come back later
-D::after we have had time to grieve.
-?:1
 
 # vim: filetype=q :

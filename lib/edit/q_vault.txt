@@ -1,3 +1,23 @@
+?:[EQU $QUEST4 Taken]
+D:The vault was used outside the town as a minor fortress and
+D:stored many valuable items. It has since been overrun. Please
+D:find the short sword known as Sting and return it to us!
+D:The moment you find the sword, your quest will be complete.
+D:While the sword could be in any of the chambers, only look
+D:through one at a time. The monsters there are strong and we left
+D:traps to be concerned with as well.
+?:1
+
+?:[EQU $QUEST4 Completed]
+D:Please keep the sword, it will aid you in your future quests.
+?:1
+
+?:[EQU $QUEST4 Failed]
+D:You didn't find the sword? Well, the monsters have probably
+D:carried it away. Too bad, Sting would have been quiet helpful
+D:in driving the evil out of our town.
+?:1
+
 T:QUEST:NORMAL
 L:#:PERMANENT
 L:%:GRANITE
@@ -50,25 +70,5 @@ M:##################.5...............##################
 M:##################.................##################
 M:#####################....*c9....#####################
 M:#####################################################
-
-?:[EQU $QUEST4 Taken Completed]
-D::The vault was used outside the town as a minor fortress and
-D::stored many valuable items. It has since been overrun. Please
-D::find the short sword known as Sting and return it to us!
-D::The moment you find the sword, your quest will be complete.
-D::While the sword could be in any of the chambers, only look
-D::through one at a time. The monsters here are strong and there are
-D::traps to be concerned with as well.
-?:1
-
-?:[EQU $QUEST4 Rewarded]
-D::Please keep the sword, it will aid you in your future quests.
-?:1
-
-?:[EQU $QUEST4 Failed]
-D::You didn't find the sword? Well, the monsters have probably
-D::carried it away. Too bad, Sting would have been quiet helpful
-D::in driving the evil out of our town.
-?:1
 
 # vim: filetype=q :

@@ -5028,6 +5028,22 @@ bool player_place(int y, int x)
     /* Paranoia XXX XXX */
     if (cave[y][x].m_idx != 0) return FALSE;
 
+    /* returning from a quest (QUEST_ENTER -> PERMANENT) */
+    if (!player_can_enter(cave[y][x].feat, 0))
+    {
+        int dir, nx, ny;
+        for (dir = 1; dir < 9; dir++)
+        {
+            nx = x + ddx[dir];
+            ny = y + ddy[dir];
+            if (!in_bounds2(ny, nx)) continue;
+            if (!player_can_enter(cave[ny][nx].feat, 0)) continue;
+            x = nx;
+            y = ny;
+            break;
+        }
+    }
+
     /* Save player location */
     py = y;
     px = x;

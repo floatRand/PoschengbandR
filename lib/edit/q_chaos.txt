@@ -1,4 +1,21 @@
 # Created by Topi Ylinen
+?:[EQU $QUEST11 Taken Completed]
+D:The Wizards of Chaos have discovered a magical Node of
+D:Chaos in a nearby volcano. You must seek the Node and
+D:dispatch its guardians so that the Tower of Chaos can
+D:claim the mystical energies of the Node.
+?:1
+
+?:[EQU $QUEST11 Rewarded]
+D:You have done well. A powerful spellbook awaits you outside.
+?:1
+
+?:[EQU $QUEST11 Failed]
+D:Begone, incompetent fool! The dimensional energies of the 
+D:mystic Node have faded away and are lost forever! You had
+D:your chance and botched the job. 
+?:1
+
 T:QUEST:NORMAL
 L:#:MOUNTAIN_WALL
 L:.:FLOOR
@@ -36,22 +53,5 @@ M:#.....~~~~~~~~~~~~~~~~~~~.....#
 M:#<...........................##
 M:###############################
 R:OBJ(armageddon tome)
-
-?:[EQU $QUEST11 Taken Completed]
-D::The Wizards of Chaos have discovered a magical Node of
-D::Chaos in a nearby volcano. You must seek the Node and
-D::dispatch its guardians so that the Tower of Chaos can
-D::claim the mystical energies of the Node.
-?:1
-
-?:[EQU $QUEST11 Rewarded]
-D::You have done well. A powerful spellbook awaits you outside.
-?:1
-
-?:[EQU $QUEST11 Failed]
-D::Begone, incompetent fool! The dimensional energies of the 
-D::mystic Node have faded away and are lost forever! You had
-D::your chance and botched the job. 
-?:1
 
 # vim: filetype=q :

@@ -1,4 +1,21 @@
 # Created by Topi Ylinen
+?:[EQU $QUEST12 Taken Completed]
+D:The Wizards of Nature have discovered a magical Node of 
+D:Nature in a nearby forest. You must seek the Node and 
+D:dispatch its guardians so that the Tower of Nature can 
+D:claim the mystical energies of the Node.
+?:1
+
+?:[EQU $QUEST12 Rewarded]
+D:You have done well. A powerful spellbook awaits you outside.
+?:1
+
+?:[EQU $QUEST12 Failed]
+D:Begone, incompetent fool! The dimensional energies of the 
+D:mystic Node have faded away and are lost forever! You had
+D:your chance and botched the job. 
+?:1
+
 T:QUEST:NORMAL
 L:#:PERMANENT
 L:.:GRASS
@@ -38,22 +55,5 @@ M:#T<........................TTTTT#
 M:#TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
 M:#################################
 R:OBJ(nature's wrath)
-
-?:[EQU $QUEST12 Taken Completed]
-D::The Wizards of Nature have discovered a magical Node of 
-D::Nature in a nearby forest. You must seek the Node and 
-D::dispatch its guardians so that the Tower of Nature can 
-D::claim the mystical energies of the Node.
-?:1
-
-?:[EQU $QUEST12 Rewarded]
-D::You have done well. A powerful spellbook awaits you outside.
-?:1
-
-?:[EQU $QUEST12 Failed]
-D::Begone, incompetent fool! The dimensional energies of the 
-D::mystic Node have faded away and are lost forever! You had
-D::your chance and botched the job. 
-?:1
 
 # vim: filetype=q :

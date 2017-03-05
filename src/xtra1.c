@@ -1522,6 +1522,9 @@ static void prt_depth(void)
         case  9: attr = TERM_WHITE;   break; /* Reasonably safe */
         case 10: attr = TERM_WHITE;   break; /* Boring place */
         }
+        /* Level is "special" until completed */
+        if (quests_get_current() && quests_get_current()->status < QS_COMPLETED)
+            attr = TERM_L_BLUE;
     }
 
     Term_erase(r.x, r.y, r.cx);

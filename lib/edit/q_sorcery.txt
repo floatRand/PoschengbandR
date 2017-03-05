@@ -1,4 +1,21 @@
 # Created by Topi Ylinen
+?:[EQU $QUEST10 Taken Completed]
+D:The Wizards of Sorcery have discovered a magical Node of Sorcery 
+D:in a damp area nearby. You must seek the Node and dispatch 
+D:its guardians so that the Tower of Sorcery can claim the 
+D:mystical energies of the Node.
+?:1
+
+?:[EQU $QUEST10 Rewarded]
+D:You have done well. A powerful spellbook awaits you outside.
+?:1
+
+?:[EQU $QUEST10 Failed]
+D:Begone, incompetent fool! The dimensional energies of the 
+D:mystic Node have faded away and are lost forever! You had
+D:your chance and botched the job. 
+?:1
+
 T:QUEST:NORMAL
 L:#:PERMANENT
 L:%:GRANITE
@@ -36,22 +53,5 @@ M:#.....~~~~~~~~~~~~~~~~~~~.....#
 M:#<...........................##
 M:###############################
 R:OBJ(grimoire of power)
-
-?:[EQU $QUEST10 Taken Completed]
-D::The Wizards of Sorcery have discovered a magical Node of Sorcery 
-D::in a damp area nearby. You must seek the Node and dispatch 
-D::its guardians so that the Tower of Sorcery can claim the 
-D::mystical energies of the Node.
-?:1
-
-?:[EQU $QUEST10 Rewarded]
-D::You have done well. A powerful spellbook awaits you outside.
-?:1
-
-?:[EQU $QUEST10 Failed]
-D::Begone, incompetent fool! The dimensional energies of the 
-D::mystic Node have faded away and are lost forever! You had
-D::your chance and botched the job. 
-?:1
 
 # vim: filetype=q :

@@ -4686,8 +4686,6 @@ static void dungeon(bool load_game)
     /* Refresh */
     Term_fresh();
 
-    if (quests_allow_feeling()) do_cmd_feeling();
-
     if (p_ptr->inside_battle)
     {
         if (load_game)
