@@ -3257,6 +3257,33 @@ bool make_attack_spell(int m_idx, bool ticked_off)
                 }
                 if (blind && count) msg_print("You hear many things are scattered nearby.");
                 break;
+			case MON_MUMO:
+			{
+				
+				int num = randint1(3);
+				cptr w1 = "", obj_thrown = "";
+				switch (num){
+					case 1: w1 = "hurls"; break;
+					case 2: w1 = "throws"; break;
+					default: w1 = "tosses"; break;
+				}
+				num = randint1(6);
+				switch (num){
+					case 1: obj_thrown = "a moldy loaf of bread";  break;
+					case 2: obj_thrown = "a worn troll hide"; break;
+					case 3: obj_thrown = "a bundle of broken rods";  break;
+					case 4: obj_thrown = "an illegal deck of cards"; break;
+					case 5: obj_thrown = "a non-functional anti-mutation charm"; break;
+					default: obj_thrown = "something funny"; break;
+				}
+
+				if (blind) msg_format("%^s %s something.", m_name, w1);
+				else msg_format("%^s %s %s at you.", m_name, w1, obj_thrown);
+
+				bolt(m_idx, GF_ARROW, randint1(6), MS_SHOOT, FALSE);
+
+				break;
+			}
 
             default:
                 if (r_ptr->d_char == 'B')

@@ -21758,6 +21758,30 @@ D:Its massive fiery form hosts two malicious stars that with their glare
 D:bore holes into your soul and the shadow about it reached out like two vast wings. 
 D:You must have woken it up from its slumber, and now must bear the consequences.
 
+N:1220:Mumou K'cid
+G:z:B
+I:117:40d100:30:80:255:150
+W:40:20:999:8000:0:0
+B:PUNCH:SUPERHURT:12d15
+B:KICK:SUPERHURT:12d15
+B:CLAW:LOSE_CON:1d6
+B:CLAW:EXP_VAMP:3d4
+F:FORCE_SLEEP | FORCE_MAXHP | EVIL | UNDEAD | UNIQUE
+F:COLD_BLOOD | MALE |
+F:ONLY_ITEM | DROP_1D2 | DROP_2D2 | DROP_GOOD | RES_TELE
+F:SMART | TAKE_ITEM | OPEN_DOOR | BASH_DOOR | MOVE_BODY |
+F:RES_ACID | RES_FIRE | RES_COLD | RES_ELEC | IM_POIS | RES_NETH |
+F:NO_CONF | NO_SLEEP | REGENERATE |
+F:POS_HOLD_LIFE | POS_SEE_INVIS
+P:Copy:Zombie:Monk
+P:Body:Monk
+P:Speed:+10
+S:1_IN_5 |
+S:SPECIAL |
+D:A particularly determined mummified warrior. |
+D:The desire to accomplish his goals is mountainous, |
+D:and you might unfortunately be standing on his way.
+
 # N: serial number : monster name
 # G: symbol : color
 # I: speed : hit points : vision : armor class : alertness : weight (lbs)

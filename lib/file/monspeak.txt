@@ -764,13 +764,13 @@ says, "Don't you monkey with the monkey!"
 munches on a banana.
 says, "Hear no evil, see no evil, speak no evil."
 
-N:1133:Taisabachi
+N:1215:Taisabachi
 chitters.
 
-N:1134:Hibachi
+N:1216:Hibachi
 chitters furiously.
 
-N:1135:Rumourmonger
+N:1217:Rumourmonger
 
 N:*:Default lines
 cackles evilly.
