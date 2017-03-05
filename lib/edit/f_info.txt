@@ -35,11 +35,6 @@
 # R - Light Red    G - Light Green    B - Light Blue    U - Light Brown
 
 
-# Version stamp (required)
-
-V:2.8.1
-
-
 # 0x00 --> nothing
 
 N:0:NONE

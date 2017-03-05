@@ -1330,7 +1330,7 @@ static const char *_summon_specific_types[] = {
     0,
 };
 
-static int _lookup_monster(cptr name, int options)
+int parse_lookup_monster(cptr name, int options)
 {
     int i;
     for (i = 1; i < max_r_idx; i++)
@@ -1343,6 +1343,25 @@ static int _lookup_monster(cptr name, int options)
         {
             if (options & INIT_DEBUG)
                 msg_format("Mapping <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
+            return i;
+        }
+    }
+    return 0;
+}
+
+int parse_lookup_dungeon(cptr name, int options)
+{
+    int i;
+    for (i = 1; i < max_d_idx; i++)
+    {
+        dungeon_info_type *d_ptr = &d_info[i];
+        char buf[255];
+        if (!d_ptr->name) continue;
+        _prep_name(buf, d_name + d_ptr->name);
+        if (strstr(buf, name))
+        {
+            if (options & INIT_DEBUG)
+                msg_format("Mapping dungeon <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
             return i;
         }
     }
@@ -1389,7 +1408,7 @@ static errr _parse_room_grid_monster(char **args, int arg_ct, room_grid_ptr grid
         {
             if (!_summon_specific_types[i])
             {
-                grid->monster = _lookup_monster(args[0], options);
+                grid->monster = parse_lookup_monster(args[0], options);
                 if (!grid->monster)
                 {
                     msg_format("Error: Invalid monster specifier %s.", args[0]);
@@ -1747,7 +1766,7 @@ static errr _parse_room_grid_ego(char **args, int arg_ct, room_grid_ptr grid, in
     return 0;
 }
 
-static int _lookup_art(cptr name, int options)
+int parse_lookup_artifact(cptr name, int options)
 {
     int i;
     for (i = 1; i < max_a_idx; i++)
@@ -1793,7 +1812,7 @@ static errr _parse_room_grid_artifact(char **args, int arg_ct, room_grid_ptr gri
             if (_is_numeric(args[0]))
                 grid->object = atoi(args[0]);
             else
-                grid->object = _lookup_art(args[0], options);
+                grid->object = parse_lookup_artifact(args[0], options);
             if (!grid->object)
             {
                 msg_format("Error: Unknown Artifact %s.", args[0]);
@@ -2112,7 +2131,7 @@ static errr _parse_room_type(char *buf, room_ptr room)
     return 0;
 }
 
-errr parse_v_info(char *buf, int options)
+static errr parse_v_info(char *buf, int options)
 {
     char *s;
 
@@ -2223,6 +2242,12 @@ errr parse_v_info(char *buf, int options)
     return 0;
 }
 
+errr init_v_info(int options)
+{
+    if (room_info) vec_free(room_info); /* double initialization?? */
+    room_info = vec_alloc((vec_free_f)room_free);
+    return parse_edit_file("v_info.txt", parse_v_info, options);
+}
 
 /*
  * Initialize the "s_info" array, by parsing an ascii "template" file
@@ -4785,8 +4810,6 @@ void drop_here(object_type *j_ptr, int y, int x)
 static room_ptr _room = NULL;
 static errr process_dungeon_file_aux(char *buf, int options)
 {
-    char *zz[33];
-
     /* Skip "empty" lines */
     if (!buf[0]) return (0);
 
@@ -4982,96 +5005,6 @@ static errr process_dungeon_file_aux(char *buf, int options)
     {
         return parse_line_building(buf);
     }
-
-    /* Process "M:<type>:<maximum>" -- set maximum values */
-    else if (buf[0] == 'M')
-    {
-        if (tokenize(buf+2, 2, zz, 0) == 2)
-        {
-            /* Maximum quests */
-            if (zz[0][0] == 'Q')
-            {
-                max_quests = atoi(zz[1]);
-            }
-
-            /* Maximum r_idx */
-            else if (streq(zz[0], "R"))
-            {
-                max_r_idx = atoi(zz[1]);
-            }
-            else if (zz[0][0] == 'B')
-            {
-                max_b_idx = atoi(zz[1]);
-            }
-
-            /* Maximum k_idx */
-            else if (zz[0][0] == 'K')
-            {
-                max_k_idx = atoi(zz[1]);
-            }
-
-            /* Maximum v_idx */
-            else if (streq(zz[0], "ROOMS"))
-            {
-                max_room_idx = atoi(zz[1]);
-            }
-
-            /* Maximum f_idx */
-            else if (zz[0][0] == 'F')
-            {
-                max_f_idx = atoi(zz[1]);
-            }
-
-            /* Maximum a_idx */
-            else if (zz[0][0] == 'A')
-            {
-                max_a_idx = atoi(zz[1]);
-            }
-
-            /* Maximum e_idx */
-            else if (zz[0][0] == 'E')
-            {
-                max_e_idx = atoi(zz[1]);
-            }
-
-            /* Maximum d_idx */
-            else if (zz[0][0] == 'D')
-            {
-                max_d_idx = atoi(zz[1]);
-            }
-
-            /* Maximum o_idx */
-            else if (zz[0][0] == 'O')
-            {
-                max_o_idx = atoi(zz[1]);
-            }
-
-            /* Maximum m_idx */
-            else if (zz[0][0] == 'M')
-            {
-                max_m_idx = atoi(zz[1]);
-            }
-
-            else if (zz[0][0] == 'P')
-            {
-                max_pack_info_idx = atoi(zz[1]);
-            }
-
-            /* Wilderness size */
-            else if (zz[0][0] == 'W')
-            {
-                /* Maximum wild_x_size */
-                if (zz[0][1] == 'X')
-                    max_wild_x = atoi(zz[1]);
-                /* Maximum wild_y_size */
-                if (zz[0][1] == 'Y')
-                    max_wild_y = atoi(zz[1]);
-            }
-
-            return (0);
-        }
-    }
-
 
     /* Failure */
     return (1);
@@ -5337,7 +5270,9 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
             {
                 cptr _status[] = { "Untaken", "Taken", "InProgress", "Completed", "Finished", "Failed", "FailedDone" };
                 int  which = atoi(b+6);
-                sprintf(tmp, "%s", _status[quests_get(which)->status]);
+                quest_ptr q = quests_get(which);
+                if (q) sprintf(tmp, "%s", _status[q->status]);
+                else sprintf(tmp, "Unknown");
                 v = tmp;
             }
 
@@ -5492,6 +5427,7 @@ static void _display_room(room_ptr room)
     do_cmd_redraw();
 }
 
+/* XXX Replace with parse_edit_file ... */
 errr process_dungeon_file(cptr name, int options)
 {
     FILE      *fp;
@@ -5626,5 +5562,59 @@ errr process_dungeon_file(cptr name, int options)
     return (err);
 }
 
+errr parse_edit_file(cptr name, parser_f parser, int options)
+{
+    FILE *fp;
+    char  buf[1024];
+    int   line_num = 0;
+    errr  err = 0;
+    bool  bypass = FALSE;
+
+    assert(parser);
+
+    path_build(buf, sizeof(buf), ANGBAND_DIR_EDIT, name);
+    fp = my_fopen(buf, "r");
+    if (!fp) return (-1);
+
+    while (!err && 0 == my_fgets(fp, buf, sizeof(buf)))
+    {
+        line_num++;
+
+        if (!buf[0]) continue; /* empty line */
+        if (isspace(buf[0])) continue; /* blank line */
+        if (buf[0] == '#') continue; /* comment */
+        if (buf[0] == '?' && buf[1] == ':') /* ?:<exp> conditional controls subsequent parsing */
+        {
+            char f;
+            cptr v;
+            char *s;
+
+            s = buf + 2;
+            v = process_dungeon_file_expr(&s, &f);
+            bypass = streq(v, "0"); /* skip until subsequent ?: returns true */
+            continue;
+        }
+        if (!(options & INIT_DEBUG) && bypass) continue; /* apply skip unless debugging */
+
+        if (buf[0] == '%' && buf[1] == ':') /* %:file.txt */
+            err = parse_edit_file(buf + 2, parser, options);
+        else
+        {
+            err = parser(buf, options);
+            if (err) /* report now for recursion */
+            {
+                cptr oops = (err > 0 && err < PARSE_ERROR_MAX) ? err_str[err] : "unknown";
+
+                msg_boundary();
+                msg_format("<color:v>Error</color> %d (%s) at line %d of '%s'.", err, oops, line_num, name);
+                msg_format("Parsing '%s'.", buf);
+                msg_print(NULL); /* quit() during initialization ... */
+            }
+        }
+    }
+
+    my_fclose(fp);
+    return err;
+}
 
 

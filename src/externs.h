@@ -974,13 +974,19 @@ extern void generate_cave(void);
 extern byte color_char_to_attr(char c);
 extern s16b f_tag_to_index(cptr str);
 extern void drop_here(object_type *j_ptr, int y, int x);
-extern errr process_dungeon_file(cptr name, int options);
+extern errr process_dungeon_file(cptr name, int options); /* XXX */
+typedef errr (*parser_f)(char *line, int options);
+extern errr parse_edit_file(cptr name, parser_f f, int options);
+extern errr init_v_info(int options);
+extern errr parse_room_grid(char *buf, room_grid_ptr grid, int options);
+extern int parse_lookup_monster(cptr name, int options);
+extern int parse_lookup_artifact(cptr name, int options);
+extern int parse_lookup_dungeon(cptr name, int options);
 
 /* init2.c */
 extern void init_file_paths(const char *configpath, const char *libpath, const char *datapath);
 extern void create_needed_dirs(void);
 extern cptr err_str[PARSE_ERROR_MAX];
-extern errr init_v_info(int options);
 extern errr init_buildings(void);
 extern s16b f_tag_to_index_in_init(cptr str);
 extern void init_angband(void);

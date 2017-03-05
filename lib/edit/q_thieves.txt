@@ -1,3 +1,21 @@
+?:[EQU $QUEST1 Taken Completed]
+D:There are thieves robbing my people! They live in a small
+D:burrow outside the city walls robbing people as they pass
+D:on the roads. They even sneak inside the town to mug and
+D:pillage! Your task is to go to the burrow and kill these
+D:ruffians.
+?:1
+
+?:[EQU $QUEST1 Rewarded]
+D:Thank you for killing the band of thieves! A small reward
+D:awaits you outside.
+?:1
+
+?:[EQU $QUEST1 Failed]
+D:It seems like this task was too difficult for you.  Good that I
+D:hired another adventurer to clean up the remaining thieves.
+?:1
+
 T:QUEST:NORMAL:FORMATION
 L:#:PERMANENT
 L:.:FLOOR
@@ -17,24 +35,6 @@ M:#####.........#
 M:#.^.+.........#
 M:#<^.+........2#
 M:###############
-
-?:[EQU $QUEST1 Taken Completed]
-D:There are thieves robbing my people! They live in a small
-D:burrow outside the city walls robbing people as they pass
-D:on the roads. They even sneak inside the town to mug and
-D:pillage! Your task is to go to the burrow and kill these
-D:ruffians.
-?:1
-
-?:[EQU $QUEST1 Rewarded]
-D:Thank you for killing the band of thieves! A small reward
-D:awaits you outside.
-?:1
-
-?:[EQU $QUEST1 Failed]
-D:It seems like this task was too difficult for you.  Good that I
-D:hired another adventurer to clean up the remaining thieves.
-?:1
 
 R::OBJ(long sword, DEPTH+5)
 

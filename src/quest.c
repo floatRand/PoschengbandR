@@ -287,12 +287,117 @@ bool quest_post_generate(quest_ptr q)
 static int_map_ptr _quests = NULL;
 static int         _current = 0;
 
+static errr _parse_q_info(char *line, int options)
+{
+    static quest_ptr quest = NULL;
+
+    /* N:1:5:Thieves' Hideout */
+    if (line[0] == 'N' && line[1] == ':')
+    {
+        char *zz[10];
+        int   num = tokenize(line + 2, 10, zz, 0);
+
+        if (num != 3 || !*zz[2])
+        {
+            msg_print("Error: Invalid N: line. Syntax: N:id:lvl:name.");
+            return PARSE_ERROR_TOO_FEW_ARGUMENTS;
+        }
+
+        quest = quest_alloc(zz[2]);
+        quest->id = atoi(zz[0]);
+        quest->level = atoi(zz[1]);
+        int_map_add(_quests, quest->id, quest);
+    }
+    /* T:TOWN | GENERATE */
+    else if (line[0] == 'T' && line[1] == ':')
+    {
+        char *flags[10];
+        int   flag_ct = z_string_split(line + 2, flags, 10, "|");
+        int   i;
+
+        trim_tokens(flags, flag_ct);
+        for (i = 0; i < flag_ct; i++)
+        {
+            char* flag = flags[i];
+
+            if (streq(flag, "TOWN"))
+                quest->flags |= QF_TOWN;
+            else if (streq(flag, "GENERATE"))
+                quest->flags |= QF_GENERATE;
+            else if (streq(flag, "RETAKE"))
+                quest->flags |= QF_RETAKE;
+            else if (streq(flag, "RANDOM"))
+                quest->flags |= QF_RANDOM;
+            else if (streq(flag, "ANYWHERE"))
+                quest->flags |= QF_ANYWHERE;
+            else if (streq(flag, "NO_MSG"))
+                quest->flags |= QF_NO_MSG;
+            else
+            {
+                msg_format("Error: Invalid quest flag %s.", flag);
+                return PARSE_ERROR_INVALID_FLAG;
+            }
+        }
+    }
+    /* F:q_thieves.txt */
+    else if (line[0] == 'F' && line[1] == ':')
+    {
+        quest->file = _strcpy(line + 2);
+    }
+    /* G:KILL(logrus master)
+     * G:KILL(archlich, 5)
+     * G:FIND(^sting$) */
+    else if (line[0] == 'G' && line[1] == ':')
+    {
+        char *name;
+        char *args[10];
+        int   arg_ct = parse_args(line + 2, &name, args, 10);
+
+        if (arg_ct < 1)
+        {
+            msg_format("Error: Missing arguments to %s quest goal.", name);
+            return PARSE_ERROR_TOO_FEW_ARGUMENTS;
+        }
+
+        if (streq(name, "KILL"))
+        {
+            quest->goal = QG_KILL_MON;
+            quest->goal_idx = parse_lookup_monster(args[0], options);
+            quest->goal_count = 1;
+            if (arg_ct >= 2)
+                quest->goal_count = atoi(args[1]);
+        }
+        else if (streq(name, "FIND"))
+        {
+            quest->goal = QG_FIND_ART;
+            quest->goal_idx = parse_lookup_artifact(args[0], options);
+        }
+        else
+        {
+            msg_format("Error: Unkown quest goal %s. Try KILL(name[, ct]) or FIND(art).", name);
+            return PARSE_ERROR_INVALID_FLAG;
+        }
+    }
+    /* W:Stronghold */
+    else if (line[0] == 'W' && line[1] == ':')
+    {
+        quest->dungeon = parse_lookup_dungeon(line + 2, options);
+        if (!quest->dungeon)
+        {
+            msg_format("Error: Unkown dungeon %s. Consult d_info.txt.", line + 2);
+            return PARSE_ERROR_INVALID_FLAG;
+        }
+    }
+    else
+        return PARSE_ERROR_UNDEFINED_DIRECTIVE;
+    return 0;
+}
+
 bool quests_init(void)
 {
     assert(!_quests);
     _quests = int_map_alloc((int_map_free_f)quest_free);
-    /* XXX Parse q_info.txt */
-    return TRUE;
+    return !parse_edit_file("q_info.txt", _parse_q_info, 0); /* errr -> bool */
 }
 
 void quests_add(quest_ptr q)

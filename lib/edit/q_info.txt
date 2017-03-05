@@ -1,3 +1,9 @@
+# File: q_info.txt
+#
+# Do not modify this file unless you know exactly what you are doing
+# and you wish to risk possible system crashes and broken savefiles.
+#
+
 ########################################################################
 # PosChengband Quests (cf quest.h and quest.c)
 #
@@ -7,7 +13,9 @@
 # G:goal of quest?
 # F:quest file with map, descriptions and rewards
 #
+# Use lower case for all string lookups
 ########################################################################
+
 N:1:5:Thieves' Hideout
 T:TOWN | GENERATE
 F:q_thieves.txt
@@ -32,13 +40,13 @@ F:q_barrow_downs.txt
 
 N:8:99:Oberon
 T:RETAKE
-W:Angband
+W:angband
 G:KILL(oberon)
 F:q_oberon.txt
 
 N:9:100:Serpent of Chaos
 T:RETAKE
-W:Angband
+W:angband
 G:KILL(serpent of chaos)
 F:q_serpent_of_chaos.txt
 
@@ -56,109 +64,119 @@ F:q_nature.txt
 
 N:14:5:The Warg Problem
 T:TOWN
-W:Stronghold
+W:stronghold
 G:KILL(^warg$, 16)
 F:q_wargs.txt
 
 ########################################################################
 # Random Quests ... assigned in quests_on_birth()
 ########################################################################
-N:40:Random
-T:Angband(12) | RANDOM
+N:40:12:Random12
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:41:Random
-T:Angband(24) | RANDOM
+N:41:24:Random24
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:42:Random
-T:Angband(38) | RANDOM
+N:42:38:Random38
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:43:Random
-T:Angband(44) | RANDOM
+N:43:44:Random44
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:44:Random
-T:Angband(50) | RANDOM
+N:44:50:Random50
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:45:Random
-T:Angband(56) | RANDOM
+N:45:56:Random56
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:46:Random
-T:Angband(62) | RANDOM
+N:46:62:Random62
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:47:Random
-T:Angband(71) | RANDOM
+N:47:71:Random71
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:48:Random
-T:Angband(78) | RANDOM
+N:48:78:Random78
+T:RANDOM
+W:angband
 G:KILL(*)
 
-N:49:Random
-T:Angband(88) | RANDOM
+N:49:88:Random88
+T:RANDOM
+W:angband
 G:KILL(*)
 
 ########################################################################
 # Eric's Stronghold
-?:[EQU $QUEST_NUMBER 15]
-%:q000eric.txt
-
-# Assault on Montsalvat
-?:[EQU $QUEST_NUMBER 16]
-%:q000dekn.txt
-
-?:[EQU $QUEST_NUMBER 19]
-%:q_doom1.txt
-
-# Vapor Quest
-?:[EQU $QUEST_NUMBER 20]
-%:q0000020.txt
-
-?:[EQU $QUEST_NUMBER 21]
-%:q_doom2.txt
-
-?:[EQU $QUEST_NUMBER 22]
-%:q_orcs.txt
-
-# Spawning Pits
-?:[EQU $QUEST_NUMBER 23]
-%:q0000023.txt
-
-# The Rise and Fall of Micro$oft
-?:[EQU $QUEST_NUMBER 24]
-%:q00000ms.txt
-
-?:[EQU $QUEST_NUMBER 25]
-%:q_haunted_house.txt
-
-# Killing Fields
-?:[EQU $QUEST_NUMBER 26]
-%:q0fields.txt
-
-?:[EQU $QUEST_NUMBER 27]
-%:q_old_castle.txt
-
-?:[EQU $QUEST_NUMBER 28]
-%:q_crypt.txt
-
-?:[EQU $QUEST_NUMBER 29]
-%:q_tengu_death_swords.txt
-
-?:[EQU $QUEST_NUMBER 30]
-%:q_mimics_treasure.txt
-
-?:[EQU $QUEST_NUMBER 31]
-%:q_old_man_willow.txt
-
-?:[EQU $QUEST_NUMBER 32]
-%:q_dark_elves.txt
-
-?:[EQU $QUEST_NUMBER 33]
-%:q_cloning_pits.txt
+#?:[EQU $QUEST_NUMBER 15]
+#%:q000eric.txt
+#
+## Assault on Montsalvat
+#?:[EQU $QUEST_NUMBER 16]
+#%:q000dekn.txt
+#
+#?:[EQU $QUEST_NUMBER 19]
+#%:q_doom1.txt
+#
+## Vapor Quest
+#?:[EQU $QUEST_NUMBER 20]
+#%:q0000020.txt
+#
+#?:[EQU $QUEST_NUMBER 21]
+#%:q_doom2.txt
+#
+#?:[EQU $QUEST_NUMBER 22]
+#%:q_orcs.txt
+#
+## Spawning Pits
+#?:[EQU $QUEST_NUMBER 23]
+#%:q0000023.txt
+#
+## The Rise and Fall of Micro$oft
+#?:[EQU $QUEST_NUMBER 24]
+#%:q00000ms.txt
+#
+#?:[EQU $QUEST_NUMBER 25]
+#%:q_haunted_house.txt
+#
+## Killing Fields
+#?:[EQU $QUEST_NUMBER 26]
+#%:q0fields.txt
+#
+#?:[EQU $QUEST_NUMBER 27]
+#%:q_old_castle.txt
+#
+#?:[EQU $QUEST_NUMBER 28]
+#%:q_crypt.txt
+#
+#?:[EQU $QUEST_NUMBER 29]
+#%:q_tengu_death_swords.txt
+#
+#?:[EQU $QUEST_NUMBER 30]
+#%:q_mimics_treasure.txt
+#
+#?:[EQU $QUEST_NUMBER 31]
+#%:q_old_man_willow.txt
+#
+#?:[EQU $QUEST_NUMBER 32]
+#%:q_dark_elves.txt
+#
+#?:[EQU $QUEST_NUMBER 33]
+#%:q_cloning_pits.txt
 
 # vim: filetype=qi :

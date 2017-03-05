@@ -2336,6 +2336,15 @@ void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr
                     py = p.y;
                     px = p.x;
                 }
+                /* initial positioning in towns (formerly P:x:y line) */
+                if ((letter == '<' || letter == '>') && room->type == ROOM_TOWN)
+                {
+                    if (!p_ptr->oldpx && !p_ptr->oldpy)
+                    {
+                        p_ptr->oldpx = p.x;
+                        p_ptr->oldpy = p.y;
+                    }
+                }
                 continue;
             }
 

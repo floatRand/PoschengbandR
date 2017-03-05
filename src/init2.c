@@ -617,77 +617,6 @@ static errr init_d_info(void)
 }
 
 
-/*
- * Initialize the "v_info" array
- *
- * Note: I'm moving away from the header stuff ... It's just too inflexible.
- * For room info, we need an arbitrary number of letter overrides, so require
- * dynamic storage allocation. Quests will now use the new room formats and
- * they can require many, many letters!
- *
- * Code needs refactoring ... also, the line based processing is awkward.
- * A recursive descent parser would be much cleaner ...
- */
-errr init_v_info(int options)
-{
-    FILE *fp;
-    char buf[1024];
-    errr err;
-
-    path_build(buf, sizeof(buf), ANGBAND_DIR_EDIT, "v_info.txt");
-    fp = my_fopen(buf, "r");
-    if (!fp) quit("Cannot open 'v_info.txt' file.");
-
-    if (options & INIT_DEBUG)
-    {
-        msg_boundary();
-        cmsg_print(TERM_RED, "=====================================================");
-        msg_boundary();
-    }
-    else
-        room_info = vec_alloc((vec_free_f)room_free);
-
-    /* parse */
-    error_idx = -1;
-    error_line = 0;
-    while (0 == my_fgets(fp, buf, 1024))
-    {
-        error_line++;
-
-        /* scan to next N: line */
-        if (!buf[0] || (buf[0] == '#')) continue;
-        if (buf[1] != ':') { err = PARSE_ERROR_GENERIC; break; }
-
-        if ((options & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == '!'))
-        {
-            msg_boundary();
-            msg_format("<color:R>%s</color>:<color:y>%d</color> %s", "v_info.txt", error_line, buf);
-            msg_boundary();
-        }
-        err = parse_v_info(buf, options);
-        if (err) break;
-    }
-
-    my_fclose(fp);
-    if (err)
-    {
-        cptr oops;
-
-        /* Error string */
-        oops = (((err > 0) && (err < PARSE_ERROR_MAX)) ? err_str[err] : "unknown");
-
-        /* Oops */
-        msg_format("Error %d at line %d of 'v_info.txt'.", err, error_line);
-        msg_format("Record %d contains a '%s' error.", error_idx, oops);
-        msg_format("Parsing '%s'.", buf);
-        msg_print(NULL);
-
-        /* Quit */
-        quit("Error in 'v_info.txt' file.");
-    }
-    return err;
-}
-
 
 /*
  * Initialize the "s_info" array
@@ -734,10 +663,48 @@ static errr init_m_info(void)
 /*
  * Initialize misc. values
  */
+static errr _parse_misc(char *line, int options)
+{
+    char *zz[2];
+    if (tokenize(line, 2, zz, 0) == 2)
+    {
+        if (zz[0][0] == 'Q')
+            max_quests = atoi(zz[1]);
+        else if (streq(zz[0], "R"))
+            max_r_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'B')
+            max_b_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'K')
+            max_k_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'F')
+            max_f_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'A')
+            max_a_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'E')
+            max_e_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'D')
+            max_d_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'O')
+            max_o_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'M')
+            max_m_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'P')
+            max_pack_info_idx = atoi(zz[1]);
+        else if (zz[0][0] == 'W')
+        {
+            if (zz[0][1] == 'X')
+                max_wild_x = atoi(zz[1]);
+            if (zz[0][1] == 'Y')
+                max_wild_y = atoi(zz[1]);
+        }
+        return 0;
+    }
+    return PARSE_ERROR_GENERIC;
+}
+
 static errr init_misc(void)
 {
-    process_dungeon_file("misc.txt", 0);
-    return 0;
+    return parse_edit_file("misc.txt", _parse_misc, 0);
 }
 
 /*
@@ -1624,10 +1591,8 @@ void init_angband(void)
     if (init_buildings()) quit("Cannot initialize buildings");
 
 
-    /* Initialize quest array */
     note("[Initializing arrays... (quests)]");
-
-    if (quests_init()) quit("Cannot initialize quests");
+    if (!quests_init()) quit("Cannot initialize quests");
 
 
     /* Initialize vault info */

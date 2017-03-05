@@ -2220,6 +2220,7 @@ static void castle_quest(void)
     else if (quest->status == QS_UNTAKEN)
     {
         quest_take(quest);
+        reinit_wilderness = TRUE;
     }
 }
 

@@ -1753,44 +1753,6 @@ void do_cmd_debug(void)
         do_cmd_redraw();
         break;
     }
-    case '_': {
-        int flags = INIT_DEBUG | INIT_DISPLAY_DUNGEON;
-        /*flags = INIT_DEBUG;
-        init_v_info(flags); */
-break;
-        process_dungeon_file("t_lite.txt", flags);
-        process_dungeon_file("t_outpost.txt", flags);
-        process_dungeon_file("t_telmora.txt", flags);
-        process_dungeon_file("t_morivant.txt", flags);
-        process_dungeon_file("t_angwil.txt", flags);
-        process_dungeon_file("t_zul.txt", flags);
-
-        process_dungeon_file("q_doom2.txt", flags);
-        process_dungeon_file("q_thieves.txt", flags);
-        process_dungeon_file("q_dark_elves.txt", flags);
-        process_dungeon_file("q_vault.txt", flags);
-        process_dungeon_file("q_barrow_downs.txt", flags);
-        process_dungeon_file("q_cloning_pits.txt", flags);
-        process_dungeon_file("q_old_castle.txt", flags);
-
-        process_dungeon_file("q_orcs.txt", flags);
-        process_dungeon_file("q_doom1.txt", flags);
-        process_dungeon_file("q_doom2.txt", flags);
-        process_dungeon_file("q_tengu_death_swords.txt", flags);
-        process_dungeon_file("q_mimics_treasure.txt", flags);
-
-        process_dungeon_file("q_sorcery.txt", flags);
-        process_dungeon_file("q_chaos.txt", flags);
-        process_dungeon_file("q_nature.txt", flags);
-
-        process_dungeon_file("q_haunted_house.txt", flags);
-        process_dungeon_file("q_crypt.txt", flags);
-
-        process_dungeon_file("q_old_man_willow.txt", flags);
-
-        process_dungeon_file("q_sewer.txt", flags);
-        process_dungeon_file("q_logrus_master.txt", flags);
-        break; }
     default:
         msg_print("That is not a valid debug command.");
         break;
