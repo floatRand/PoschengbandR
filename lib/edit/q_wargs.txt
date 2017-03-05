@@ -1,17 +1,18 @@
-# q_warg.txt
-
-?:[EQU $QUEST14 Taken Completed]
-D::Our scouts report a large number of Wargs in the dungeon.
-D::We don't know who set them on guard at 250 feet, but we
-D::think their task is to hinder resupply of our outposts
-D::in the dungeon. We offer you a small reward if you clear
-D::the path for the supplies.
+?:[EQU $QUEST14 Taken]
+D:Our scouts report a large number of Wargs in the dungeon.
+D:We don't know who set them on guard at 250 feet, but we
+D:think their task is to hinder resupply of our outposts
+D:in the dungeon. We offer you a small reward if you clear
+D:the path for the supplies.
 ?:1
 
-?:[EQU $QUEST14 Rewarded]
-D::Since most of the supplies have been send to our troops
-D::in the dungeon, we can only give you a small reward.
-D::It awaits you outside.
+?:[EQU $QUEST14 Completed]
+D:Since most of the supplies have been sent to our troops
+D:in the dungeon, we can only give you a small reward.
+?:1
+
+?:[EQU $QUEST14 Failed]
+D:Bah! I'll have to find another for this simple task.
 ?:1
 
 R::OBJ(small metal shield, DEPTH+5)

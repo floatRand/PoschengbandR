@@ -978,10 +978,11 @@ extern errr process_dungeon_file(cptr name, int options); /* XXX */
 typedef errr (*parser_f)(char *line, int options);
 extern errr parse_edit_file(cptr name, parser_f f, int options);
 extern errr init_v_info(int options);
-extern errr parse_room_grid(char *buf, room_grid_ptr grid, int options);
 extern int parse_lookup_monster(cptr name, int options);
 extern int parse_lookup_artifact(cptr name, int options);
 extern int parse_lookup_dungeon(cptr name, int options);
+extern errr parse_room_line(room_ptr room, char *line, int options);
+extern errr parse_room_grid(char *buf, room_grid_ptr grid, int options);
 
 /* init2.c */
 extern void init_file_paths(const char *configpath, const char *libpath, const char *datapath);

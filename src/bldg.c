@@ -3549,9 +3549,9 @@ void do_cmd_quest(void)
         msg_print("There is an entry of a quest.");
         if (!get_check("Do you enter? ")) return;
 
-        /* Player enters a new quest XXX
-        p_ptr->oldpy = 0;
-        p_ptr->oldpx = 0; */
+        /* Player enters a new quest XXX */
+        p_ptr->oldpy = py;
+        p_ptr->oldpx = px;
 
         /* XXX
         dun_level = 1; */

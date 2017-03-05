@@ -162,7 +162,7 @@ extern vptr ralloc(huge len);
 
 /* Note: See c-string.h for a better string implementation */
 /* Create a "dynamic string" */
-extern char *z_string_make(cptr str);
+extern cptr z_string_make(cptr str);
 
 /* Free a string allocated with "z_string_make()" */
 extern errr z_string_free(cptr str);

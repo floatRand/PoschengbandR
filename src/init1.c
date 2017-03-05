@@ -1918,9 +1918,11 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
     return 0;
 }
 
-/* L:.:FLOOR(ROOM|ICKY):MON(DRAGON, 20):EGO(*)
-   Room Grids are designed to replace old dungeon_grid F: lines
-   but I haven't got around to replacing those just yet. */
+/*     v---------- buf
+   L:.:FLOOR(ROOM|ICKY):MON(DRAGON, 20):EGO(*)
+   R:ART(ringil)
+     ^-----buf
+*/
 errr parse_room_grid(char *buf, room_grid_ptr grid, int options)
 {
     errr  result = 0;
@@ -1929,29 +1931,7 @@ errr parse_room_grid(char *buf, room_grid_ptr grid, int options)
     int   i;
     bool  found_feature = FALSE;
 
-    if (buf[0] == '"')
-    {
-        msg_print("Don't use <color:R>\"</color> for a letter ... z_string_split thinks you are quoting.");
-        return PARSE_ERROR_GENERIC;
-    }
-
-    WIPE(grid, room_grid_t);
-
-    /* First command is the "letter" for this room grid */
-    if (command_ct < 2)
-    {
-        msg_print("Error: Not enough info on the L: line. Syntax: L:<letter>:<option_list>.");
-        return PARSE_ERROR_TOO_FEW_ARGUMENTS;
-    }
-    if (strlen(commands[0]) != 1)
-    {
-        msg_format("Error: Invalid letter %s on L: line. Should be one character only.", commands[0]);
-        return PARSE_ERROR_GENERIC;
-    }
-    grid->letter = commands[0][0];
-
-    /* Remaining commands are name(args) directives in any order */
-    for (i = 1; i < command_ct; i++)
+    for (i = 0; i < command_ct; i++)
     {
         char *command = commands[i];
         char *name;
@@ -2133,8 +2113,6 @@ static errr _parse_room_type(char *buf, room_ptr room)
 
 static errr parse_v_info(char *buf, int options)
 {
-    char *s;
-
     /* Current entry */
     static room_ptr room = NULL;
 
@@ -2169,74 +2147,8 @@ static errr parse_v_info(char *buf, int options)
         msg_print("Error: Missing N: line for new room template.");
         return PARSE_ERROR_MISSING_RECORD_HEADER;
     }
-
-    /* T:Type:Subtype[:Flags] */
-    else if (buf[0] == 'T')
-    {
-        errr rc = _parse_room_type(buf + 2, room);
-        if (rc) return rc;
-    }
-
-    /* W:Level:MaxLevel:Rarity */
-    else if (buf[0] == 'W')
-    {
-        char *zz[10];
-        int   num = tokenize(buf + 2, 10, zz, 0);
-        int   tmp;
-
-        if (num != 3)
-        {
-            msg_print("Error: Invalid W: line. Syntax: W:<Level>:<MaxLevel>:<Rarity>.");
-            return PARSE_ERROR_TOO_FEW_ARGUMENTS;
-        }
-        room->level = atoi(zz[0]);
-        if (streq(zz[1], "*"))
-            room->max_level = 0;
-        else
-            room->max_level = atoi(zz[1]);
-        tmp = atoi(zz[2]);
-        if (tmp < 0 || tmp > 255)
-        {
-            msg_format("Error: Invalid rarity %d. Enter a value between 1 and 255.", tmp);
-            return PARSE_ERROR_OUT_OF_BOUNDS;
-        }
-        room->rarity = tmp;
-    }
-
-    /* Process custom 'L'etters */
-    else if (buf[0] == 'L')
-    {
-        int rc;
-        room_grid_ptr letter = malloc(sizeof(room_grid_t));
-        memset(letter, 0, sizeof(room_grid_t));
-        rc = parse_room_grid(buf + 2, letter, options);
-        int_map_add(room->letters, letter->letter, letter);
-        if (rc) return rc;
-    }
-
-    /* Process 'M'ap lines */
-    else if (buf[0] == 'M')
-    {
-        /* Acquire the text */
-        s = buf+2;
-
-        /* Calculate room dimensions automagically */
-        room->height++;
-        if (!room->width)
-            room->width = strlen(s);
-        else if (strlen(s) != room->width)
-        {
-            msg_format(
-                "Error: Inconsistent map widths. Room width auto-calculated to %d but "
-                "current line is %d. Please make all map lines the same length.",
-                room->width, strlen(s)
-            );
-            return PARSE_ERROR_GENERIC;
-        }
-        vec_push(room->map, z_string_make(s));
-    }
-    /* Oops */
-    else    return PARSE_ERROR_UNDEFINED_DIRECTIVE;
+    else
+        return parse_room_line(room, buf, options);
 
     /* Success */
     return 0;
@@ -4803,6 +4715,137 @@ void drop_here(object_type *j_ptr, int y, int x)
     p_ptr->window |= PW_OBJECT_LIST;
 }
 
+errr parse_room_line(room_ptr room, char *line, int options)
+{
+    /* T:Type:Subtype[:Flags] */
+    if (line[0] == 'T' && line[1] == ':')
+        return _parse_room_type(line + 2, room);
+
+    /* W:Level:MaxLevel:Rarity */
+    else if (line[0] == 'W' && line[1] == ':')
+    {
+        char *zz[10];
+        int   num = tokenize(line + 2, 10, zz, 0);
+        int   tmp;
+
+        if (num != 3)
+        {
+            msg_print("Error: Invalid W: line. Syntax: W:<Level>:<MaxLevel>:<Rarity>.");
+            return PARSE_ERROR_TOO_FEW_ARGUMENTS;
+        }
+        room->level = atoi(zz[0]);
+        if (streq(zz[1], "*"))
+            room->max_level = 0;
+        else
+            room->max_level = atoi(zz[1]);
+        tmp = atoi(zz[2]);
+        if (tmp < 0 || tmp > 255)
+        {
+            msg_format("Error: Invalid rarity %d. Enter a value between 1 and 255.", tmp);
+            return PARSE_ERROR_OUT_OF_BOUNDS;
+        }
+        room->rarity = tmp;
+    }
+
+    /* L:X:... */
+    else if (line[0] == 'L' && line[1] == ':')
+    {
+        int rc;
+        room_grid_ptr letter = malloc(sizeof(room_grid_t));
+        memset(letter, 0, sizeof(room_grid_t));
+        letter->letter = line[2];
+        rc = parse_room_grid(line + 4, letter, options);
+        if (!rc) int_map_add(room->letters, letter->letter, letter);
+        else free(letter);
+        if (rc) return rc;
+    }
+
+    /* Process 'M'ap lines */
+    else if (line[0] == 'M' && line[1] == ':')
+    {
+        /* Acquire the text */
+        char *s = line+2;
+
+        /* Calculate room dimensions automagically */
+        room->height++;
+        if (!room->width)
+            room->width = strlen(s);
+        else if (strlen(s) != room->width)
+        {
+            msg_format(
+                "Error: Inconsistent map widths. Room width auto-calculated to %d but "
+                "current line is %d. Please make all map lines the same length.",
+                room->width, strlen(s)
+            );
+            return PARSE_ERROR_GENERIC;
+        }
+        vec_push(room->map, (vptr)z_string_make(s));
+    }
+    /* !:SCRAMBLE(a,b,c,d) */
+    else if (line[0] == '!' && line[1] == ':')
+    {
+        char *name;
+        char *args[10];
+        int   arg_ct = parse_args(line + 2, &name, args, 10);
+
+        if (arg_ct < 0)
+        {
+            msg_format("Error: Malformed argument %s. Missing )?", name);
+            return PARSE_ERROR_GENERIC;
+        }
+
+        if (streq(name, "SCRAMBLE") || streq(name, "SHUFFLE"))
+        {
+            const int max_scramble = 20;
+            char letters[max_scramble], scrambles[max_scramble];
+            int  i;
+            if (arg_ct > max_scramble)
+            {
+                msg_format("I can only scramble %d letters.", max_scramble);
+                return PARSE_ERROR_GENERIC;
+            }
+            for (i = 0; i < arg_ct; i++)
+            {
+                letters[i] = args[i][0];
+                scrambles[i] = letters[i];
+            }
+            for (i = 0; i < arg_ct; i++) /* every permutation can be written as */
+            {                            /* a product of transpositions */
+                int j = randint0(arg_ct);
+                char t = scrambles[i];
+                scrambles[i] = scrambles[j];
+                scrambles[j] = t;
+            }
+            for (i = 0; i < arg_ct; i++)
+            {
+                char letter = letters[i];
+                char scramble = scrambles[i];
+                room_grid_ptr grid = int_map_find(room->letters, letter);
+                if (!grid)
+                {
+                    msg_format("Error: Undefined letter: %c", letter);
+                    return PARSE_ERROR_GENERIC;
+                }
+                grid->scramble = scramble; /* cf _find_room_grid (rooms.c) */
+                grid = int_map_find(room->letters, scramble);
+                if (!grid)
+                {
+                    msg_format("Error: Undefined scramble: %c", scramble);
+                    return PARSE_ERROR_GENERIC;
+                }
+                if (options & INIT_DEBUG)
+                    msg_format("Scrambled <color:R>%c</color> to <color:B>%c</color>.", letter, scramble);
+            }
+        }
+        else
+        {
+            msg_format("Error: Unknown directive: %s", name);
+            return PARSE_ERROR_GENERIC;
+        }
+        return 0;
+    }
+    return 0;
+}
 
 /*
  * Parse a sub-file of the "extra info"
@@ -4841,81 +4884,18 @@ static errr process_dungeon_file_aux(char *buf, int options)
         if (_room) return _parse_room_type(buf + 2, _room);
         return 0;
     }
-    else if (buf[0] == 'L')
+    else if (buf[0] == 'L' && buf[1] == ':')
     {
         if (_room)
         {
             int rc;
             room_grid_ptr letter = malloc(sizeof(room_grid_t));
             memset(letter, 0, sizeof(room_grid_t));
-            rc = parse_room_grid(buf + 2, letter, options);
-            int_map_add(_room->letters, letter->letter, letter);
+            letter->letter = buf[2];
+            rc = parse_room_grid(buf + 4, letter, options);
+            if (!rc) int_map_add(_room->letters, letter->letter, letter);
+            else free(letter);
             return rc;
-        }
-        return 0;
-    }
-    /* !:SCRAMBLE(a,b,c,d) */
-    else if (buf[0] == '!')
-    {
-        char *command = buf + 2;
-        char *name;
-        char *args[10];
-        int   arg_ct = parse_args(command, &name, args, 10);
-
-        if (!_room) return 0;
-        if (arg_ct < 0)
-        {
-            msg_format("Error: Malformed argument %s. Missing )?", name);
-            return PARSE_ERROR_GENERIC;
-        }
-
-        if (streq(name, "SCRAMBLE") || streq(name, "SHUFFLE"))
-        {
-            const int max_scramble = 20;
-            char letters[max_scramble], scrambles[max_scramble];
-            int  i;
-            if (arg_ct > max_scramble)
-            {
-                msg_format("I can only scramble %d letters.", max_scramble);
-                return PARSE_ERROR_GENERIC;
-            }
-            for (i = 0; i < arg_ct; i++)
-            {
-                letters[i] = args[i][0];
-                scrambles[i] = letters[i];
-            }
-            for (i = 0; i < arg_ct; i++) /* every permutation can be written as */
-            {                            /* a product of transpositions */
-                int j = randint0(arg_ct);
-                char t = scrambles[i];
-                scrambles[i] = scrambles[j];
-                scrambles[j] = t;
-            }
-            for (i = 0; i < arg_ct; i++)
-            {
-                char letter = letters[i];
-                char scramble = scrambles[i];
-                room_grid_ptr grid = int_map_find(_room->letters, letter);
-                if (!grid)
-                {
-                    msg_format("Error: Undefined letter: %c", letter);
-                    return PARSE_ERROR_GENERIC;
-                }
-                grid->scramble = scramble; /* cf _find_room_grid (rooms.c) */
-                grid = int_map_find(_room->letters, scramble);
-                if (!grid)
-                {
-                    msg_format("Error: Undefined scramble: %c", scramble);
-                    return PARSE_ERROR_GENERIC;
-                }
-                if (options & INIT_DEBUG)
-                    msg_format("Scrambled <color:R>%c</color> to <color:B>%c</color>.", letter, scramble);
-            }
-        }
-        else
-        {
-            msg_format("Error: Unknown directive: %s", name);
-            return PARSE_ERROR_GENERIC;
         }
         return 0;
     }
@@ -4938,7 +4918,7 @@ static errr process_dungeon_file_aux(char *buf, int options)
                 );
                 return PARSE_ERROR_GENERIC;
             }
-            vec_push(_room->map, z_string_make(s));
+            vec_push(_room->map, (vptr)z_string_make(s));
             if ((options & INIT_DEBUG) && _room->type != ROOM_TOWN)
             {
                 cptr t = s;

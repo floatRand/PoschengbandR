@@ -1823,32 +1823,21 @@ static void _apply_room_grid_mon(point_t p, room_grid_ptr grid, u16b room_flags)
     }
 }
 
-static void _apply_room_grid_obj(point_t p, room_grid_ptr grid, u16b room_flags)
+obj_ptr room_grid_make_obj(room_grid_ptr grid)
 {
+    obj_t forge = {0};
     object_level = MAX(1, base_level + grid->object_level);
-
-    /* see if tile was trapped */
-    if (!cave_drop_bold(p.y, p.x)) return;
-
     if (grid->flags & ROOM_GRID_OBJ_ARTIFACT)
     {
-        int a_idx = grid->object;
         if (no_artifacts)
+            object_prep(&forge, lookup_kind(TV_SCROLL, SV_SCROLL_ACQUIREMENT));
+        else if (a_info[grid->object].generated || random_artifacts)
+            create_replacement_art(grid->object, &forge);
+        else
         {
-            int k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_ACQUIREMENT);
-            object_type forge;
-
-            object_prep(&forge, k_idx);
-            drop_here(&forge, p.y, p.x);                
+            create_named_art_aux(grid->object, &forge);
+            a_info[grid->object].generated = TRUE;
         }
-        else if (a_info[a_idx].generated)
-        {
-            object_type forge;
-            create_replacement_art(a_idx, &forge);
-            drop_here(&forge, p.y, p.x);
-        }
-        else if (create_named_art(a_idx, p.y, p.x))
-            a_info[a_idx].generated = TRUE;
     }
     else if (grid->flags & ROOM_GRID_OBJ_RANDOM)
     {
@@ -1859,13 +1848,11 @@ static void _apply_room_grid_obj(point_t p, room_grid_ptr grid, u16b room_flags)
             mode = AM_GOOD | AM_GREAT | AM_NO_FIXED_ART;
         else if (grid->object_level)
             mode = AM_GOOD;
-        place_object(p.y, p.x, mode);
+        make_object(&forge, mode);
     }
     else if ((grid->flags & ROOM_GRID_OBJ_TYPE) && grid->object == TV_GOLD)
     {
-        object_type forge;
-        if (make_gold(&forge, FALSE))
-            drop_here(&forge, p.y, p.x);
+        make_gold(&forge, FALSE);
     }
     else if (grid->object)
     {
@@ -1895,8 +1882,7 @@ static void _apply_room_grid_obj(point_t p, room_grid_ptr grid, u16b room_flags)
 
         if (k_idx)
         {
-            int         mode = 0;
-            object_type forge;
+            int mode = 0;
 
             if (grid->flags & ROOM_GRID_ART_RANDOM)
             {
@@ -1939,10 +1925,26 @@ static void _apply_room_grid_obj(point_t p, room_grid_ptr grid, u16b room_flags)
                 apply_magic(&forge, object_level, mode);
                 obj_make_pile(&forge);
             }
-            drop_here(&forge, p.y, p.x);
         }
     }
     object_level = base_level;
+    if (forge.k_idx) return obj_copy(&forge);
+    return NULL;
+}
+
+static void _apply_room_grid_obj(point_t p, room_grid_ptr grid, u16b room_flags)
+{
+    obj_ptr obj;
+
+    /* see if tile was trapped in _apply_room_grid_feat */
+    if (!cave_drop_bold(p.y, p.x)) return;
+
+    obj = room_grid_make_obj(grid);
+    if (obj)
+    {
+       drop_here(obj, p.y, p.x);
+       obj_free(obj);
+    }
 }
 
 #define _MAX_FORMATION 10

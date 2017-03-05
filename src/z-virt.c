@@ -139,7 +139,7 @@ vptr ralloc(huge len)
 /*
  * Allocate a constant string, containing the same thing as 'str'
  */
-char *z_string_make(cptr str)
+cptr z_string_make(cptr str)
 {
     huge len = 0;
     cptr t = str;

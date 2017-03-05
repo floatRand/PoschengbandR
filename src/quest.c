@@ -116,7 +116,6 @@ void quest_reward(quest_ptr q)
     assert(q);
     assert(q->status == QS_COMPLETED);
 
-    q->status = QS_FINISHED;
     s = quest_get_description(q);
     msg_format("<color:R>%s</color> (<color:U>Level %d</color>): %s",
         q->name, q->level, string_buffer(s));
@@ -125,9 +124,15 @@ void quest_reward(quest_ptr q)
     reward = quest_get_reward(q);
     if (reward)
     {
+        char name[MAX_NLEN];
+        obj_identify_fully(reward);
+        object_desc(name, reward, OD_COLOR_CODED);
+        msg_format("You receive %s as a reward.", name);
         pack_carry(reward);
         obj_free(reward);
     }
+
+    q->status = QS_FINISHED;
 }
 
 void quest_fail(quest_ptr q)
@@ -145,18 +150,77 @@ void quest_fail(quest_ptr q)
 /************************************************************************
  * Quest Info from q->file
  ***********************************************************************/
+static string_ptr _temp_desc;
+static errr _parse_desc(char *line, int options)
+{
+    if (line[0] == 'D' && line[1] == ':')
+    {
+        if (string_length(_temp_desc) && string_get_last(_temp_desc) != ' ')
+            string_append_c(_temp_desc, ' ');
+        string_append_s(_temp_desc, line + 2);
+    }
+    return 0;
+}
 string_ptr quest_get_description(quest_ptr q)
 {
-    return NULL;
+    string_ptr s = string_alloc();
+    if (q->file)
+    {
+        _temp_desc = s;
+        parse_edit_file(q->file, _parse_desc, 0);
+        _temp_desc = NULL;
+    }
+    return s;
 }
 
+static room_grid_ptr _temp_reward;
+static errr _parse_reward(char *line, int options)
+{
+    if (line[0] == 'R' && line[1] == ':')
+    {
+        /* It is common to set a default reward, and then
+         * to over-write it later for class specific rewards.
+         * The last reward line wins. */
+        memset(_temp_reward, 0, sizeof(room_grid_t));
+        return parse_room_grid(line + 2, _temp_reward, options);
+    }
+    return 0;
+}
 obj_ptr quest_get_reward(quest_ptr q)
 {
-    return NULL;
+    obj_ptr reward = NULL;
+    if (q->file)
+    {
+        room_grid_ptr letter = malloc(sizeof(room_grid_t));
+        memset(letter, 0, sizeof(room_grid_t));
+        _temp_reward = letter;
+        if (parse_edit_file(q->file, _parse_reward, 0) == ERROR_SUCCESS)
+            reward = room_grid_make_obj(letter);
+        _temp_reward = NULL;
+        free(letter);
+    }
+    return reward;
 }
 
+static room_ptr _temp_room;
+static errr _parse_room(char *line, int options)
+{
+    return parse_room_line(_temp_room, line, options);
+}
 room_ptr quest_get_map(quest_ptr q)
 {
+    if (q->file && (q->flags & QF_GENERATE))
+    {
+        room_ptr room = room_alloc(q->name);
+        _temp_room = room;
+        if (parse_edit_file(q->file, _parse_room, 0) != ERROR_SUCCESS)
+        {
+            room_free(room);
+            room = NULL;
+        }
+        _temp_room = NULL;
+        return room;
+    }
     return NULL;
 }
 
@@ -779,10 +843,10 @@ bool quests_check_leave(void)
     return TRUE;
 }
 
-bool quests_on_leave(void)
+void quests_on_leave(void)
 {
     quest_ptr q;
-    if (!_current) return FALSE;
+    if (!_current) return;
     q = quests_get(_current);
     assert(q);
     leaving_quest = _current; /* XXX */
@@ -795,11 +859,13 @@ bool quests_on_leave(void)
             quest_fail(q);
             if (q->goal == QG_KILL_MON)
                 r_info[q->goal_idx].flags1 &= ~RF1_QUESTOR;
-            prepare_change_floor_mode(CFM_NO_RETURN);
         }
     }
+    prepare_change_floor_mode(CFM_NO_RETURN);
+    /* Hack: Return to surface */
+    if ((q->flags & QF_GENERATE) && !q->dungeon)
+        dun_level = 0;
     _current = 0;
-    return TRUE;
 }
 
 bool quests_allow_downstairs(void)

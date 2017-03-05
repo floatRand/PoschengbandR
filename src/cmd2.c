@@ -47,7 +47,8 @@ void do_cmd_go_up(void)
 
     if (autosave_l) do_cmd_save_game(TRUE);
 
-    if (!quests_on_leave())
+    quests_on_leave();
+    if (dun_level)
     {
         /* New depth */
         if (have_flag(f_ptr->flags, FF_SHAFT))
