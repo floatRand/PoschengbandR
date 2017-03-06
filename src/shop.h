@@ -56,6 +56,8 @@ enum
     TOWN_MIN = TOWN_OUTPOST,
     TOWN_MAX = TOWN_RANDOM,
     TOWN_MAX_STD = TOWN_ANGWIL,
+    /* XXX This may get redone at some point. See the q_info.txt changes
+     * for my thoughts ... */
 };
 
 extern void     towns_init(void);
@@ -65,6 +67,13 @@ extern town_ptr towns_get_town(int which);
 extern void     towns_save(savefile_ptr file);
 extern void     towns_load(savefile_ptr file);
 extern void     towns_on_turn_overflow(int rollback_turns);
+
+extern room_ptr towns_get_map(void);
+                /* Comment: atm, t_info.txt uses $TOWN to load the correct
+                 * file (p_ptr->town_num). This should change to town_get_map(town_ptr)
+                 * in my opinion. Also, atm, buildings are global and stored outside
+                 * of the town but are initialized when the appropriate t_*.txt file
+                 * is parsed. I think town_t should own buildings as well as shops (later) */
 
 extern shop_ptr town_get_shop(town_ptr town, int which);
 

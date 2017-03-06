@@ -68,55 +68,63 @@ W:stronghold
 G:KILL(^warg$, 16)
 F:q_wargs.txt
 
+N:32:25:Dark Elven Lords
+T:TOWN | GENERATE
+F:q_dark_elves.txt
+
+N:33:45:The Cloning Pits
+T:TOWN | GENERATE
+F:q_cloning_pits.txt
+
 ########################################################################
 # Random Quests ... assigned in quests_on_birth()
 ########################################################################
-N:40:12:Random12
+N:40:12:Angband L12
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:41:24:Random24
+N:41:24:Angband L24
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:42:38:Random38
+N:42:38:Angband L38
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:43:44:Random44
+N:43:44:Angband L44
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:44:50:Random50
+N:44:50:Angband L50
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:45:56:Random56
+N:45:56:Angband L56
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:46:62:Random62
+N:46:62:Angband L62
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:47:71:Random71
+N:47:71:Angband L71
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:48:78:Random78
+N:48:78:Angband L78
 T:RANDOM
 W:angband
 G:KILL(*)
 
-N:49:88:Random88
+N:49:88:Angband L88
 T:RANDOM
 W:angband
 G:KILL(*)
@@ -173,10 +181,6 @@ G:KILL(*)
 #?:[EQU $QUEST_NUMBER 31]
 #%:q_old_man_willow.txt
 #
-#?:[EQU $QUEST_NUMBER 32]
-#%:q_dark_elves.txt
 #
-#?:[EQU $QUEST_NUMBER 33]
-#%:q_cloning_pits.txt
 
 # vim: filetype=qi :

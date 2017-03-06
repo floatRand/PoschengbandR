@@ -71,7 +71,6 @@ extern room_ptr   quest_get_map(quest_ptr q); /* QF_GENERATE: read q->file for t
                   /* Note: fetching info from a q_*.txt file always allocates new memory, which *you* must delete */
 
 extern void       quest_generate(quest_ptr q); /* QF_GENERATE: quest_gen() */
-extern void       quest_analyze(quest_ptr q); /* WIZARD: diagnostics on q->file */
 extern bool       quest_post_generate(quest_ptr q); /* place quest monsters */
 
 extern bool       quests_init(void); /* parse lib/edit/q_info.txt */
@@ -103,6 +102,7 @@ extern bool       quests_allow_all_spells(void); /* some quests restrict Destruc
 extern bool       quests_allow_feeling(void); /* some quests preclude receiving level feelings */
 
 extern void       quests_display(void);
+extern void       quests_wizard(void);
 extern void       quests_doc(doc_ptr doc);
 extern void       quests_load(savefile_ptr file);
 extern void       quests_save(savefile_ptr file);

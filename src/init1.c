@@ -4483,202 +4483,6 @@ static int i = 0;
 
 #endif    /* ALLOW_TEMPLATES */
 
-
-/*
- * Process "B:<Index>:<Command>:..." -- Building definition
- */
-static errr parse_line_building(char *buf)
-{
-    int i;
-    char *zz[128];
-    int index;
-    char *s;
-
-    s = buf + 2;
-    /* Get the building number */
-    index = atoi(s);
-
-    /* Find the colon after the building number */
-    s = my_strchr(s, ':');
-
-    /* Verify that colon */
-    if (!s) return (1);
-
-    /* Nuke the colon, advance to the sub-index */
-    *s++ = '\0';
-
-    /* Paranoia -- require a sub-index */
-    if (!*s) return (1);
-
-    /* Building definition sub-index */
-    switch (s[0])
-    {
-        /* Building name, owner, race */
-        case 'N':
-        {
-            if (tokenize(s + 2, 3, zz, 0) == 3)
-            {
-                /* Name of the building */
-                strcpy(building[index].name, zz[0]);
-
-                /* Name of the owner */
-                strcpy(building[index].owner_name, zz[1]);
-
-                /* Race of the owner */
-                strcpy(building[index].owner_race, zz[2]);
-
-                break;
-            }
-
-            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
-        }
-
-        /* Building Action */
-        case 'A':
-        {
-            if (tokenize(s + 2, 8, zz, 0) >= 7)
-            {
-                /* Index of the action */
-                int action_index = atoi(zz[0]);
-
-                /* Name of the action */
-                strcpy(building[index].act_names[action_index], zz[1]);
-
-                /* Cost of the action for members */
-                building[index].member_costs[action_index] = atoi(zz[2]);
-
-                /* Cost of the action for non-members */
-                building[index].other_costs[action_index] = atoi(zz[3]);
-
-                /* Letter assigned to the action */
-                building[index].letters[action_index] = zz[4][0];
-
-                /* Action code */
-                building[index].actions[action_index] = atoi(zz[5]);
-
-                /* Action restriction */
-                building[index].action_restr[action_index] = atoi(zz[6]);
-
-                break;
-            }
-
-            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
-        }
-
-        /* Building Classes
-            The old way:
-            B:7:C:2:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:2:0:0:2:2:2:0:0:0:0:0:2:0:0:2:0:2:2:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
-
-            The new way:
-            B:7:C:*:None to set a default
-            B:7:C:Warrior:Owner to set an owner
-            B:7:C:Ranger:Member to set a member
-            (You probably should always specify a default first since I am unsure if
-            code cleans up properly.)
-        */
-        case 'C':
-        {
-            if (tokenize(s + 2, 2, zz, 0) == 2)
-            {
-                int c = get_bldg_member_code(zz[1]);
-
-                if (c < 0)
-                    return PARSE_ERROR_GENERIC;
-
-                if (strcmp(zz[0], "*") == 0)
-                {
-                    for (i = 0; i < MAX_CLASS; i++)
-                        building[index].member_class[i] = c;
-                }
-                else
-                {
-                    int idx = lookup_class_idx(zz[0]);
-                    if (idx < 0 || idx >= MAX_CLASS)
-                        return PARSE_ERROR_GENERIC;
-                    building[index].member_class[idx] = c;
-                }
-                break;
-            }
-
-            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
-        }
-
-        /* Building Races
-            Same as with classes ...
-        */
-        case 'R':
-        {
-            if (tokenize(s + 2, 2, zz, 0) == 2)
-            {
-                int c = get_bldg_member_code(zz[1]);
-
-                if (c < 0)
-                    return PARSE_ERROR_GENERIC;
-
-                if (strcmp(zz[0], "*") == 0)
-                {
-                    for (i = 0; i < MAX_RACES; i++)
-                        building[index].member_race[i] = c;
-                }
-                else
-                {
-                    int idx = get_race_idx(zz[0]);
-                    if (idx < 0 || idx >= MAX_RACES)
-                        return PARSE_ERROR_GENERIC;
-                    building[index].member_race[idx] = c;
-                    if (idx == RACE_VAMPIRE) /* We have 2 races with the same name! */
-                        building[index].member_race[RACE_MON_VAMPIRE] = c;
-                }
-                break;
-            }
-
-            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
-        }
-
-        /* Building Realms */
-        case 'M':
-        {
-            if (tokenize(s + 2, 2, zz, 0) == 2)
-            {
-                int c = get_bldg_member_code(zz[1]);
-
-                if (c < 0)
-                    return PARSE_ERROR_GENERIC;
-
-                if (strcmp(zz[0], "*") == 0)
-                {
-                    for (i = 0; i <= MAX_REALM; i++)
-                        building[index].member_realm[i] = c;
-                }
-                else
-                {
-                    int idx = get_realm_idx(zz[0]);
-                    if (idx < 0 || idx > MAX_REALM)
-                        return PARSE_ERROR_GENERIC;
-                    building[index].member_realm[idx] = c;
-                }
-                break;
-            }
-
-            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
-        }
-
-        case 'Z':
-        {
-            /* Ignore scripts */
-            break;
-        }
-
-        default:
-        {
-            return (PARSE_ERROR_UNDEFINED_DIRECTIVE);
-        }
-    }
-
-    return (0);
-}
-
-
 /*
  * Place the object j_ptr to a grid
  */
@@ -4850,7 +4654,6 @@ errr parse_room_line(room_ptr room, char *line, int options)
 /*
  * Parse a sub-file of the "extra info"
  */
-static room_ptr _room = NULL;
 static errr process_dungeon_file_aux(char *buf, int options)
 {
     /* Skip "empty" lines */
@@ -4872,118 +4675,10 @@ static errr process_dungeon_file_aux(char *buf, int options)
         return process_dungeon_file(buf + 2, options);
     }
 
-    if (buf[0] == 'F')
-    {
-        /* Skip for now ... remove later */
-        /* Process "F:<letter>:<terrain>:<cave_info>:<monster>:<object>:<ego>:<artifact>:<trap>:<special>" -- info for dungeon grid */
-        /*return parse_line_feature(buf);*/
-        return 0;
-    }
-    else if (buf[0] == 'T')
-    {
-        if (_room) return _parse_room_type(buf + 2, _room);
-        return 0;
-    }
-    else if (buf[0] == 'L' && buf[1] == ':')
-    {
-        if (_room)
-        {
-            int rc;
-            room_grid_ptr letter = malloc(sizeof(room_grid_t));
-            memset(letter, 0, sizeof(room_grid_t));
-            letter->letter = buf[2];
-            rc = parse_room_grid(buf + 4, letter, options);
-            if (!rc) int_map_add(_room->letters, letter->letter, letter);
-            else free(letter);
-            return rc;
-        }
-        return 0;
-    }
-    else if (buf[0] == 'M')
-    {
-        if (_room)
-        {
-            cptr s = buf+2;
-
-            /* Calculate room dimensions automagically */
-            _room->height++;
-            if (!_room->width)
-                _room->width = strlen(s);
-            else if (strlen(s) != _room->width)
-            {
-                msg_format(
-                    "Error: Inconsistent map widths. Room width auto-calculated to %d but "
-                    "current line is %d. Please make all map lines the same length.",
-                    _room->width, strlen(s)
-                );
-                return PARSE_ERROR_GENERIC;
-            }
-            vec_push(_room->map, (vptr)z_string_make(s));
-            if ((options & INIT_DEBUG) && _room->type != ROOM_TOWN)
-            {
-                cptr t = s;
-                while (*t)
-                {
-                    char letter = *t;
-                    room_grid_ptr grid = int_map_find(_room->letters, letter);
-                    if (!grid && !((_room->flags & ROOM_THEME_FORMATION) && '1' <= letter && letter <= '9'))
-                    {
-                        msg_format("<color:v>Error</color>: Map uses undefined letter <color:B>%c</color>.", letter);
-                        return PARSE_ERROR_GENERIC;
-                    }
-                    t++;
-                }
-            }
-        }
-        return 0;
-    }
-
     /* Process "W:<command>: ..." -- info for the wilderness */
     else if (buf[0] == 'W')
     {
         return parse_line_wilderness(buf, options);
-    }
-
-    /* Process "P:<y>:<x>" -- player position */
-    else if (buf[0] == 'P')
-    {
-        #if 0
-        XXX Try to remove this ... we *know* where the player entered quests, so
-        why not just restore that? That only leaves the initial position for a new game.
-        if (options & INIT_CREATE_DUNGEON)
-        {
-            if (tokenize(buf + 2, 2, zz, 0) == 2)
-            {
-                /* Place player in a quest level */
-                if (p_ptr->inside_quest)
-                {
-                    /* now handled by '<' tile. I see no reason to ever change this. */
-                }
-                /* Place player in the town */
-                else if (!p_ptr->oldpx && !p_ptr->oldpy)
-                {
-                    /* towns, on the other hand, need to place the player after quests,
-                     * though even now, I'm not sure why this cannot just be remembered
-                     * when the player enters the quest. manually computing P:x:y coordinates
-                     * is rather irksome. */
-                    p_ptr->oldpy = atoi(zz[0]);
-                    p_ptr->oldpx = atoi(zz[1]);
-                    if (wild_scroll)
-                    {
-                        p_ptr->oldpy += wild_scroll->scroll.y;
-                        p_ptr->oldpx += wild_scroll->scroll.x;
-                    }
-                }
-            }
-        }
-        #endif
-        return (0);
-    }
-
-    /* Process "B:<Index>:<Command>:..." -- Building definition */
-    else if (buf[0] == 'B')
-    {
-        return parse_line_building(buf);
     }
 
     /* Failure */
@@ -5315,98 +5010,6 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
     return (v);
 }
 
-static void _display_room(room_ptr room)
-{
-    int which = 0, x, y, cmd;
-    int animate = 0;
-    bool random = TRUE;
-
-    msg_line_clear();
-    for (;;)
-    {
-        transform_ptr xform;
-
-        if (random)
-            xform = transform_alloc_room(room, size(MAX_WID, MAX_HGT));
-        else
-            xform = transform_alloc(which, rect(0, 0, room->width, room->height));
-
-        if (xform->dest.cx < Term->wid)
-            xform->dest = rect_translate(xform->dest, (Term->wid - xform->dest.cx)/2, 0);
-
-        if (xform->dest.cy < Term->hgt)
-            xform->dest = rect_translate(xform->dest, 0, (Term->hgt - xform->dest.cy)/2);
-
-        Term_clear();
-        for (y = 0; y < room->height; y++)
-        {
-            cptr line = vec_get(room->map, y);
-            for (x = 0; x < room->width; x++)
-            {
-                char letter = line[x];
-                point_t p = transform_point(xform, point(x,y));
-                if (0 <= p.x && p.x < Term->wid && 0 <= p.y && p.y < Term->hgt)
-                {
-                    room_grid_ptr grid = int_map_find(room->letters, letter);
-                    int           r_idx = 0, k_idx = 0;
-                    byte          a = TERM_WHITE;
-                    char          c = letter;
-
-                    if (grid && grid->scramble)
-                        grid = int_map_find(room->letters, grid->scramble);
-
-                    if (grid && grid->monster)
-                    {
-                        if (!(grid->flags & (ROOM_GRID_MON_CHAR |
-                                ROOM_GRID_MON_RANDOM | ROOM_GRID_MON_TYPE)))
-                        {
-                            r_idx = grid->monster;
-                        }
-                    }
-                    if (grid && grid->object)
-                    {
-                        if (!(grid->flags & (ROOM_GRID_OBJ_TYPE |
-                                ROOM_GRID_OBJ_ARTIFACT | ROOM_GRID_OBJ_RANDOM)))
-                        {
-                            k_idx = grid->object;
-                        }
-                    }
-                    if (r_idx)
-                    {
-                        monster_race *r_ptr = &r_info[r_idx];
-                        a = r_ptr->x_attr;
-                        c = r_ptr->x_char;
-                    }
-                    else if (k_idx)
-                    {
-                        object_kind *k_ptr = &k_info[k_idx];
-                        a = k_ptr->x_attr;
-                        c = k_ptr->x_char;
-                    }
-                    else if (grid)
-                    {
-                        feature_type *f_ptr = &f_info[grid->cave_feat ? grid->cave_feat : feat_floor];
-                        if (f_ptr->mimic) f_ptr = &f_info[f_ptr->mimic];
-                        a = f_ptr->x_attr[F_LIT_STANDARD];
-                        c = f_ptr->x_char[F_LIT_STANDARD];
-                    }
-                    Term_putch(p.x, p.y, a, c);
-                }
-            }
-            if (animate)
-            {
-                Term_fresh();
-                Term_xtra(TERM_XTRA_DELAY, animate);
-            }
-        }
-        transform_free(xform);
-        cmd = inkey_special(FALSE);
-        if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q' || cmd == '\r') break;
-        if ('0' <= cmd && cmd < '8') which = cmd - '0';
-    }
-    do_cmd_redraw();
-}
-
 /* XXX Replace with parse_edit_file ... */
 errr process_dungeon_file(cptr name, int options)
 {
@@ -5415,8 +5018,6 @@ errr process_dungeon_file(cptr name, int options)
     int        num = 0;
     errr       err = 0;
     bool       bypass = FALSE;
-    static int depth = 0;
-
 
     /* Build the filename */
     path_build(buf, sizeof(buf), ANGBAND_DIR_EDIT, name);
@@ -5426,19 +5027,6 @@ errr process_dungeon_file(cptr name, int options)
 
     /* No such file */
     if (!fp) return (-1);
-
-    /* The pattern of recursion is awkward ... process_dungeon_file -> aux -> process_dungeon_file -> aux -> etc. */
-    if (!depth++ && (options & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
-    {
-        assert(!_room);
-        _room = room_alloc("Temp");
-        if (options & INIT_DEBUG)
-        {
-            msg_boundary();
-            cmsg_print(TERM_RED, "=====================================================");
-            msg_boundary();
-        }
-    }
 
     /* Process the file */
     while (0 == my_fgets(fp, buf, sizeof(buf)))
@@ -5480,13 +5068,6 @@ errr process_dungeon_file(cptr name, int options)
         /* Apply conditionals ... INIT_DEBUG is for testing purposes */
         if (!(options & INIT_DEBUG) && bypass) continue;
 
-        /* Process the line */
-        if ((options & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == '!'))
-        {
-            msg_boundary();
-            msg_format("<color:R>%s</color>:<color:y>%d</color> %s", name, num, buf);
-            msg_boundary();
-        }
         err = process_dungeon_file_aux(buf, options);
 
         /* Oops */
@@ -5507,32 +5088,6 @@ errr process_dungeon_file(cptr name, int options)
         msg_format("Parsing '%s'.", buf);
 
         msg_print(NULL);
-    }
-    if (!--depth && (options & (INIT_CREATE_DUNGEON | INIT_DEBUG)))
-    {
-        assert(_room);
-        if (vec_length(_room->map) && (options & INIT_CREATE_DUNGEON))
-        {
-            transform_ptr   xform = transform_alloc_room(_room, size(MAX_WID, MAX_HGT));
-            int             panels_x, panels_y;
-
-            /* set the dungeon size */
-            panels_y = xform->dest.cy / SCREEN_HGT;
-            if (xform->dest.cy % SCREEN_HGT) panels_y++;
-            cur_hgt = panels_y * SCREEN_HGT;
-
-            panels_x = (xform->dest.cx / SCREEN_WID);
-            if (xform->dest.cx % SCREEN_WID) panels_x++;
-            cur_wid = panels_x * SCREEN_WID;
-
-            build_room_template_aux(_room, xform, wild_scroll);
-            transform_free(xform);
-            wild_scroll = NULL;
-        }
-        else if (vec_length(_room->map) && (options & INIT_DISPLAY_DUNGEON))
-            _display_room(_room);
-        room_free(_room);
-        _room = NULL;
     }
 
     /* Close the file */
@@ -5580,6 +5135,13 @@ errr parse_edit_file(cptr name, parser_f parser, int options)
             err = parse_edit_file(buf + 2, parser, options);
         else
         {
+            if ((options & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == 'R'))
+            {
+                msg_boundary();
+                msg_format("<color:R>%s:%d</color> <indent>%s</indent>",
+                    name, line_num, buf);
+                msg_boundary();
+            }
             err = parser(buf, options);
             if (err) /* report now for recursion */
             {

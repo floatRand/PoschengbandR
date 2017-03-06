@@ -1546,10 +1546,9 @@ void do_cmd_debug(void)
         teleport_player(10, 0L);
         break;
 
-    /* Complete a Quest -KMW- */
     case 'q':
     {
-        /* XXX */
+        quests_wizard();
         break;
     }
     /* Summon Random Monster(s) */

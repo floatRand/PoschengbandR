@@ -205,6 +205,7 @@ obj_ptr quest_get_reward(quest_ptr q)
 static room_ptr _temp_room;
 static errr _parse_room(char *line, int options)
 {
+    assert(_temp_room);
     return parse_room_line(_temp_room, line, options);
 }
 room_ptr quest_get_map(quest_ptr q)
@@ -252,9 +253,8 @@ static void _generate(room_ptr room)
 
     /* generate the level */
     get_mon_num_prep(get_monster_hook(), NULL);
-    build_room_template_aux(room, xform, wild_scroll);
+    build_room_template_aux(room, xform, NULL);
     transform_free(xform);
-    wild_scroll = NULL;
 }
 void quest_generate(quest_ptr q)
 {
@@ -272,10 +272,6 @@ void quest_generate(quest_ptr q)
 
     _generate(room);
     room_free(room);
-}
-
-void quest_analyze(quest_ptr q)
-{
 }
 
 bool quest_post_generate(quest_ptr q)
@@ -498,10 +494,10 @@ cptr quests_get_name(int id)
 
 static int _quest_cmp_level(quest_ptr l, quest_ptr r)
 {
-    if (l->completed_lev < r->completed_lev) return -1;
-    if (l->completed_lev > r->completed_lev) return 1;
     if (l->level < r->level) return -1;
     if (l->level > r->level) return 1;
+    if (l->completed_lev < r->completed_lev) return -1;
+    if (l->completed_lev > r->completed_lev) return 1;
     if (l->id < r->id) return -1;
     if (l->id > r->id) return 1;
     return 0;
@@ -660,7 +656,11 @@ void quests_on_birth(void)
     for (i = 0; i < vec_length(v); i++)
     {
         quest_ptr q = vec_get(v, i);
-        if (q->goal == QG_KILL_MON) _get_questor(q);
+        if (q->goal == QG_KILL_MON)
+        {
+            if (q->goal_idx) r_info[q->goal_idx].flags1 &= ~RF1_QUESTOR;
+            _get_questor(q);
+        }
     }
     vec_free(v);
 
@@ -1038,3 +1038,404 @@ void quests_save(savefile_ptr file)
     vec_clear(v);
 }
 
+/************************************************************************
+ * Quests: Wizard Utilities
+ * This is a lot of work, but it really helps me test things.
+ ***********************************************************************/
+struct _ui_context_s
+{
+    vec_ptr quests;
+    int     top;
+    int     page_size;
+    doc_ptr doc;
+};
+typedef struct _ui_context_s _ui_context_t, *_ui_context_ptr;
+
+static void _display_menu(_ui_context_ptr context);
+static void _map_cmd(_ui_context_ptr context);
+static void _status_cmd(_ui_context_ptr context, int status);
+static void _reward_cmd(_ui_context_ptr context);
+static void _analyze_cmd(_ui_context_ptr context);
+static void _display_map(room_ptr room);
+
+void quests_wizard(void)
+{
+    _ui_context_t context = {0};
+    context.quests = quests_get_all();
+
+    forget_lite(); /* resizing the term would redraw the map ... sigh */
+    forget_view();
+    character_icky = TRUE;
+
+    msg_line_clear();
+    msg_line_init(ui_shop_msg_rect());
+
+    Term_clear();
+    context.doc = doc_alloc(MIN(80, ui_shop_rect().cx));
+    for (;;)
+    {
+        int    max = vec_length(context.quests) - 1;
+        rect_t r = ui_shop_rect(); /* recalculate in case resize */
+        int    cmd;
+
+        context.page_size = MIN(26, r.cy - 6);
+        if (context.top % context.page_size != 0) /* resize?? */
+            context.top = 0;
+
+        _display_menu(&context);
+
+        cmd = inkey_special(TRUE);
+        msg_line_clear();
+        msg_boundary(); /* turn_count is unchanging while in home/museum */
+        if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q') break;
+        switch (cmd) /* cmd is from the player's perspective */
+        {
+        case 'm': _map_cmd(&context); break;
+        case 'R': quests_on_birth(); break; /* wizards need no confirmation prompt! */
+        case 'c': _status_cmd(&context, QS_COMPLETED); break;
+        case 'f': _status_cmd(&context, QS_FAILED); break;
+        case 'u': _status_cmd(&context, QS_UNTAKEN); break;
+        case '$': _reward_cmd(&context); break;
+        case '?': _analyze_cmd(&context); break;
+        case KTRL('P'): do_cmd_messages(game_turn); break;
+        case SKEY_PGDOWN: case '3':
+            if (context.top + context.page_size - 1 < max)
+                context.top += context.page_size;
+            break;
+        case SKEY_PGUP: case '9':
+            if (context.top >= context.page_size)
+                context.top -= context.page_size;
+            break;
+        default:
+            if (cmd < 256 && isprint(cmd))
+            {
+                msg_format("Unrecognized command: <color:R>%c</color>. "
+                           "Press <color:keypress>?</color> for help.", cmd);
+            }
+            else if (KTRL('A') <= cmd && cmd <= KTRL('Z'))
+            {
+                cmd |= 0x40;
+                msg_format("Unrecognized command: <color:R>^%c</color>. "
+                           "Press <color:keypress>?</color> for help.", cmd);
+            }
+        }
+    }
+    character_icky = FALSE;
+    msg_line_clear();
+    msg_line_init(ui_msg_rect());
+
+    Term_clear();
+    do_cmd_redraw();
+
+    vec_free(context.quests);
+    doc_free(context.doc);
+}
+
+static cptr _status_name(int status)
+{
+    switch (status)
+    {
+    case QS_UNTAKEN: return "Untaken";
+    case QS_TAKEN: return "Taken";
+    case QS_IN_PROGRESS: return "In Progress";
+    case QS_COMPLETED: return "Completed";
+    case QS_FINISHED: return "Finished";
+    case QS_FAILED: return "Failed";
+    case QS_FAILED_DONE: return "FailedDone";
+    }
+    return "";
+}
+static char _status_color(int status)
+{
+    switch (status)
+    {
+    case QS_UNTAKEN: return 'D';
+    case QS_IN_PROGRESS: return 'y';
+    case QS_COMPLETED: case QS_FINISHED: return 'G';
+    case QS_FAILED: case QS_FAILED_DONE: return 'r';
+    }
+    return 'w';
+}
+static char _quest_color(quest_ptr q)
+{
+    if (q->status < QS_IN_PROGRESS && (q->flags & QF_RANDOM) && q->goal == QG_KILL_MON)
+        return 'B';
+    return _status_color(q->status);
+}
+static void _display_menu(_ui_context_ptr context)
+{
+    rect_t   r = ui_shop_rect();
+    doc_ptr  doc = context->doc;
+    int      i;
+
+    doc_clear(doc);
+    doc_insert(doc, "<style:table>");
+
+    doc_printf(doc, "   <color:U>%-40.40s %-10.10s Lvl</color>\n", "Quest", "Status");
+    for (i = 0; i < context->page_size; i++)
+    {
+        int idx = context->top + i;
+        if (idx < vec_length(context->quests))
+        {
+            quest_ptr quest = vec_get(context->quests, idx);
+            doc_printf(doc, "%c) <color:%c>", I2A(i), _quest_color(quest));
+            if ((quest->flags & QF_RANDOM) && quest->goal == QG_KILL_MON)
+                doc_printf(doc, "%-40.40s ", r_name + r_info[quest->goal_idx].name);
+            else
+                doc_printf(doc, "%-40.40s ", quest->name);
+            doc_printf(doc, "%-10.10s %3d</color>", _status_name(quest->status), quest->level);
+            doc_newline(doc);
+        }
+        else
+            doc_newline(doc);
+    }
+    {
+        int max = vec_length(context->quests) - 1;
+        int bottom = context->top + context->page_size;
+
+        if (context->top > 0 || bottom < max)
+        {
+            int page_count = (max - 1) / context->page_size + 1;
+            int page_current = context->top / context->page_size + 1;
+
+            doc_printf(doc, "<color:B>(Page %d of %d)</color>\n", page_current, page_count);
+        }
+    }
+
+    doc_insert(doc,
+        "<color:keypress>m</color> to display map. "
+        "<color:keypress>R</color> to reset all quests and re-assign all random quests.\n"
+        "<color:keypress>$</color> to see reward. "
+        "<color:keypress>c</color> to set complete. "
+        "<color:keypress>f</color> to set failed. "
+        "<color:keypress>u</color> to set untaken.\n"
+        "<color:keypress>?</color> to analyze quest file.\n");
+
+    doc_insert(doc, "<color:keypress>Esc</color> to exit.</style>");
+
+    Term_clear_rect(r);
+    doc_sync_term(doc,
+        doc_range_top_lines(doc, r.cy),
+        doc_pos_create(r.x, r.y));
+}
+
+static void _map_cmd(_ui_context_ptr context)
+{
+    for (;;)
+    {
+        char cmd;
+        int  idx;
+
+        if (!msg_command("<color:y>View which quest map <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
+        if (cmd < 'a' || cmd > 'z') continue;
+        idx = A2I(cmd);
+        idx += context->top;
+        if (idx < vec_length(context->quests))
+        {
+            quest_ptr quest = vec_get(context->quests, idx);
+            room_ptr  map;
+            if (!(quest->flags & QF_GENERATE) || !quest->file)
+            {
+                msg_format("The <color:R>%s</color> quest has no map.", quest->name);
+                continue;
+            }
+            map = quest_get_map(quest);
+            if (!map)
+            {
+                msg_format("Unable to load the <color:R>%s</color> quest map.", quest->name);
+                continue;
+            }
+            _display_map(map);
+            break;
+        }
+    }
+}
+static void _display_map(room_ptr room)
+{
+    int which = 0, x, y, cmd;
+    int animate = 0;
+    bool random = TRUE;
+
+    msg_line_clear();
+    for (;;)
+    {
+        transform_ptr xform;
+
+        if (random)
+            xform = transform_alloc_room(room, size(MAX_WID, MAX_HGT));
+        else
+            xform = transform_alloc(which, rect(0, 0, room->width, room->height));
+
+        if (xform->dest.cx < Term->wid)
+            xform->dest = rect_translate(xform->dest, (Term->wid - xform->dest.cx)/2, 0);
+
+        if (xform->dest.cy < Term->hgt)
+            xform->dest = rect_translate(xform->dest, 0, (Term->hgt - xform->dest.cy)/2);
+
+        Term_clear();
+        for (y = 0; y < room->height; y++)
+        {
+            cptr line = vec_get(room->map, y);
+            for (x = 0; x < room->width; x++)
+            {
+                char letter = line[x];
+                point_t p = transform_point(xform, point(x,y));
+                if (0 <= p.x && p.x < Term->wid && 0 <= p.y && p.y < Term->hgt)
+                {
+                    room_grid_ptr grid = int_map_find(room->letters, letter);
+                    int           r_idx = 0, k_idx = 0;
+                    byte          a = TERM_WHITE;
+                    char          c = letter;
+
+                    if (grid && grid->scramble)
+                        grid = int_map_find(room->letters, grid->scramble);
+
+                    if (grid && grid->monster)
+                    {
+                        if (!(grid->flags & (ROOM_GRID_MON_CHAR |
+                                ROOM_GRID_MON_RANDOM | ROOM_GRID_MON_TYPE)))
+                        {
+                            r_idx = grid->monster;
+                        }
+                    }
+                    if (grid && grid->object)
+                    {
+                        if (!(grid->flags & (ROOM_GRID_OBJ_TYPE |
+                                ROOM_GRID_OBJ_ARTIFACT | ROOM_GRID_OBJ_RANDOM)))
+                        {
+                            k_idx = grid->object;
+                        }
+                    }
+                    if (r_idx)
+                    {
+                        monster_race *r_ptr = &r_info[r_idx];
+                        a = r_ptr->x_attr;
+                        c = r_ptr->x_char;
+                    }
+                    else if (k_idx)
+                    {
+                        object_kind *k_ptr = &k_info[k_idx];
+                        a = k_ptr->x_attr;
+                        c = k_ptr->x_char;
+                    }
+                    else if (grid)
+                    {
+                        feature_type *f_ptr = &f_info[grid->cave_feat ? grid->cave_feat : feat_floor];
+                        if (f_ptr->mimic) f_ptr = &f_info[f_ptr->mimic];
+                        a = f_ptr->x_attr[F_LIT_STANDARD];
+                        c = f_ptr->x_char[F_LIT_STANDARD];
+                    }
+                    Term_putch(p.x, p.y, a, c);
+                }
+            }
+            if (animate)
+            {
+                Term_fresh();
+                Term_xtra(TERM_XTRA_DELAY, animate);
+            }
+        }
+        transform_free(xform);
+        cmd = inkey_special(FALSE);
+        if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q' || cmd == '\r') break;
+        if ('0' <= cmd && cmd < '8') which = cmd - '0';
+    }
+    do_cmd_redraw();
+}
+static void _status_cmd(_ui_context_ptr context, int status)
+{
+    for (;;)
+    {
+        char cmd;
+        int  idx;
+
+        if (!msg_command(
+            format("<color:y>Change status to <color:B>%s</color> for which quest <color:w>(<color:keypress>Esc</color> to cancel)</color>?</color>",
+                _status_name(status)), &cmd)) break;
+        if (cmd < 'a' || cmd > 'z') continue;
+        idx = A2I(cmd);
+        idx += context->top;
+        if (idx < vec_length(context->quests))
+        {
+            quest_ptr quest = vec_get(context->quests, idx);
+            quest->status = status;
+            if (quest->status >= QS_COMPLETED)
+                quest->completed_lev = p_ptr->lev;
+            break;
+        }
+    }
+}
+static void _reward_cmd(_ui_context_ptr context)
+{
+    for (;;)
+    {
+        char cmd;
+        int  idx;
+
+        if (!msg_command("<color:y>View which quest reward <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
+        if (cmd == ESCAPE) break;
+        if (cmd < 'a' || cmd > 'z') continue;
+        idx = A2I(cmd);
+        idx += context->top;
+        if (idx < vec_length(context->quests))
+        {
+            quest_ptr quest = vec_get(context->quests, idx);
+            obj_ptr   reward;
+
+            quest->seed = randint0(0x10000000);
+            reward = quest_get_reward(quest);
+
+            if (!reward)
+                msg_format("<color:R>%s</color> has no reward.", quest->name);
+            else
+            {
+                char name[MAX_NLEN];
+                obj_identify_fully(reward);
+                object_desc(name, reward, OD_COLOR_CODED);
+                msg_format("<color:R>%s</color> gives %s.", quest->name, name);
+                if (reward->name1) a_info[reward->name1].generated = FALSE;
+                obj_free(reward);
+            }
+        }
+    }
+}
+static errr _parse_debug(char *line, int options)
+{
+    if (line[0] == 'R')
+        return _parse_reward(line, options);
+    return _parse_room(line, options);
+}
+static void _analyze_cmd(_ui_context_ptr context)
+{
+    for (;;)
+    {
+        char cmd;
+        int  idx;
+
+        if (!msg_command("<color:y>Analyze which quest file <color:w>(<color:keypress>Esc</color> to cancel)</color>?</color>", &cmd)) break;
+        if (cmd == ESCAPE) break;
+        if (cmd < 'a' || cmd > 'z') continue;
+        idx = A2I(cmd);
+        idx += context->top;
+        if (idx < vec_length(context->quests))
+        {
+            quest_ptr quest = vec_get(context->quests, idx);
+            if (!quest->file || !strlen(quest->file))
+            {
+                msg_format("<color:R>%s</color> has no quest file.", quest->name);
+                continue;
+            }
+            else
+            {   /* very hackish ... but very useful */
+                _temp_room = room_alloc(quest->name);
+                _temp_reward = malloc(sizeof(room_grid_t));
+                memset(_temp_reward, 0, sizeof(room_grid_t));
+                parse_edit_file(quest->file, _parse_debug, INIT_DEBUG);
+                room_free(_temp_room);
+                free(_temp_reward);
+                _temp_room = NULL;
+                _temp_reward = NULL;
+            }
+            break;
+        }
+    }
+}

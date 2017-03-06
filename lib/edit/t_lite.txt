@@ -61,120 +61,53 @@ L:N:PERMANENT
 
 ############### Quest Chain 1 ###########################
 ############### Quest 1 - Thieves Hideout ###############
-
 ?:[EQU $QUEST1 Taken]
 L:z:QUEST_ENTER(1)
-
 ?:[EQU $QUEST1 Untaken Taken Completed Failed]
 L:b:BUILDING_1(1)
 ?:[EQU $QUEST1 Finished FailedDone]
 L:b:BUILDING_1(14)
 ?:1
-
-############### Quest 14 - Warg problem ###############
-
+############### Quest 14 - Warg problem #################
 ?:[EQU $QUEST14 Taken Completed Failed]
 L:b:BUILDING_1(14)
 ?:[EQU $QUEST14 Finished FailedDone]
 L:b:BUILDING_1(32)
 ?:1
-#########<<<<<<<<<<<<<<<< Here I am >>>>>>>>>>>>>>>>>>>
-
-############### Quest 32 - Dark Elven Lords Quest ###############
-
+############### Quest 32 - Dark Elven Lords Quest #######
 ?:[EQU $QUEST32 Taken]
 L:z:QUEST_ENTER(32)
+?:[EQU $QUEST32 Taken Completed Failed]
 L:b:BUILDING_1(32)
-
-?:[EQU $QUEST32 Completed]
-L:b:BUILDING_1(32)
-
-?:[EQU $QUEST32 Rewarded]
+?:[EQU $QUEST32 Finished FailedDone]
 L:b:BUILDING_1(4)
-L:!:ART(galadriel)
-
-?:[EQU $QUEST32 Finished]
-L:b:BUILDING_1(4)
-
-?:[EQU $QUEST32 Failed]
-L:b:BUILDING_1(32)
-
-?:[EQU $QUEST32 FailedDone]
-L:b:BUILDING_1(0)
-
 ?:1
-
-############### Quest 4 - The Vault ###############
-
+############### Quest 4 - The Vault #####################
 ?:[EQU $QUEST4 Taken]
 L:w:QUEST_ENTER(4)
+?:[EQU $QUEST4 Taken Completed Failed]
 L:b:BUILDING_1(4)
-
-?:[EQU $QUEST4 Completed]
-L:b:BUILDING_1(4)
-
-?:[EQU $QUEST4 Rewarded]
+?:[EQU $QUEST4 Finished FailedDone]
 L:b:BUILDING_1(5)
-
-?:[EQU $QUEST4 Finished]
-L:b:BUILDING_1(5)
-
-?:[EQU $QUEST4 Failed]
-L:b:BUILDING_1(4)
-
-?:[EQU $QUEST4 FailedDone]
-L:b:BUILDING_1(0)
-
 ?:1
-
-#################### Quest 5 - The Barrow Downs ####################
+#################### Quest 5 - The Barrow Downs #########
 ?:[EQU $QUEST5 Taken]
 L:u:QUEST_ENTER(5)
+?:[EQU $QUEST5 Taken Completed Failed]
 L:b:BUILDING_1(5)
-
-?:[EQU $QUEST5 Completed]
-L:b:BUILDING_1(5)
-
-?:[EQU $QUEST5 Rewarded]
+?:[EQU $QUEST5 Finished FailedDone]
 L:b:BUILDING_1(33)
-
-?:[EQU $QUEST5 Finished]
-L:b:BUILDING_1(33)
-
-?:[EQU $QUEST5 Failed]
-L:b:BUILDING_1(5)
-
-?:[EQU $QUEST5 FailedDone]
-L:b:BUILDING_1(0)
-
 ?:1
-
-############### Quest 33 - The Cloning Pits ###############
-
+############### Quest 33 - The Cloning Pits #############
 ?:[EQU $QUEST33 Taken]
 L:C:QUEST_ENTER(33)
+?:[EQU $QUEST33 Taken Completed Failed]
 L:b:BUILDING_1(33)
-
-?:[EQU $QUEST33 Completed]
-L:b:BUILDING_1(33)
-
-?:[EQU $QUEST33 Rewarded]
+?:[EQU $QUEST33 Finished FailedDone]
 L:b:BUILDING_1(27)
-
-%:r_cloning_pits.txt
-
-?:[EQU $QUEST33 Finished]
-L:b:BUILDING_1(27)
-
-?:[EQU $QUEST33 Failed]
-L:b:BUILDING_1(33)
-
-?:[EQU $QUEST33 FailedDone]
-L:b:BUILDING_1(0)
-
 ?:1
-
 ############### Quest 27 - The Old Castle ###############
+#########<<<<<<<<<<<<<<<< Here I am >>>>>>>>>>>>>>>>>>>
 
 ?:[EQU $QUEST27 Taken]
 L:O:QUEST_ENTER(27)

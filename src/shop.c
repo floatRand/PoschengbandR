@@ -2265,3 +2265,221 @@ void towns_on_turn_overflow(int rollback_turns)
         int_map_iter_free(iter);
     }
 }
+
+/************************************************************************
+ * Towns: Parsing
+ * TODO: Redo buildings? I've kept the old parser/syntax for now.
+ * TODO: Redesign t_info.txt like q_info.txt. town_t.file will give
+ *       the correct file to parse and town_t.buildings will store
+ *       the buildings.
+ ***********************************************************************/
+static errr _parse_building(char *buf, int options) /* moved w/o change from init1.c */
+{
+    int i;
+    char *zz[128];
+    int index;
+    char *s;
+
+    s = buf + 2;
+    /* Get the building number */
+    index = atoi(s);
+
+    /* Find the colon after the building number */
+    s = my_strchr(s, ':');
+
+    /* Verify that colon */
+    if (!s) return (1);
+
+    /* Nuke the colon, advance to the sub-index */
+    *s++ = '\0';
+
+    /* Paranoia -- require a sub-index */
+    if (!*s) return (1);
+
+    /* Building definition sub-index */
+    switch (s[0])
+    {
+        /* Building name, owner, race */
+        case 'N':
+        {
+            if (tokenize(s + 2, 3, zz, 0) == 3)
+            {
+                /* Name of the building */
+                strcpy(building[index].name, zz[0]);
+
+                /* Name of the owner */
+                strcpy(building[index].owner_name, zz[1]);
+
+                /* Race of the owner */
+                strcpy(building[index].owner_race, zz[2]);
+
+                break;
+            }
+
+            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
+        }
+
+        /* Building Action */
+        case 'A':
+        {
+            if (tokenize(s + 2, 8, zz, 0) >= 7)
+            {
+                /* Index of the action */
+                int action_index = atoi(zz[0]);
+
+                /* Name of the action */
+                strcpy(building[index].act_names[action_index], zz[1]);
+
+                /* Cost of the action for members */
+                building[index].member_costs[action_index] = atoi(zz[2]);
+
+                /* Cost of the action for non-members */
+                building[index].other_costs[action_index] = atoi(zz[3]);
+
+                /* Letter assigned to the action */
+                building[index].letters[action_index] = zz[4][0];
+
+                /* Action code */
+                building[index].actions[action_index] = atoi(zz[5]);
+
+                /* Action restriction */
+                building[index].action_restr[action_index] = atoi(zz[6]);
+
+                break;
+            }
+
+            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
+        }
+
+        /* Building Classes
+            The old way:
+            B:7:C:2:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:2:0:0:2:2:2:0:0:0:0:0:2:0:0:2:0:2:2:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
+
+            The new way:
+            B:7:C:*:None to set a default
+            B:7:C:Warrior:Owner to set an owner
+            B:7:C:Ranger:Member to set a member
+            (You probably should always specify a default first since I am unsure if
+            code cleans up properly.)
+        */
+        case 'C':
+        {
+            if (tokenize(s + 2, 2, zz, 0) == 2)
+            {
+                int c = get_bldg_member_code(zz[1]);
+
+                if (c < 0)
+                    return PARSE_ERROR_GENERIC;
+
+                if (strcmp(zz[0], "*") == 0)
+                {
+                    for (i = 0; i < MAX_CLASS; i++)
+                        building[index].member_class[i] = c;
+                }
+                else
+                {
+                    int idx = lookup_class_idx(zz[0]);
+                    if (idx < 0 || idx >= MAX_CLASS)
+                        return PARSE_ERROR_GENERIC;
+                    building[index].member_class[idx] = c;
+                }
+                break;
+            }
+
+            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
+        }
+
+        /* Building Races
+            Same as with classes ...
+        */
+        case 'R':
+        {
+            if (tokenize(s + 2, 2, zz, 0) == 2)
+            {
+                int c = get_bldg_member_code(zz[1]);
+
+                if (c < 0)
+                    return PARSE_ERROR_GENERIC;
+
+                if (strcmp(zz[0], "*") == 0)
+                {
+                    for (i = 0; i < MAX_RACES; i++)
+                        building[index].member_race[i] = c;
+                }
+                else
+                {
+                    int idx = get_race_idx(zz[0]);
+                    if (idx < 0 || idx >= MAX_RACES)
+                        return PARSE_ERROR_GENERIC;
+                    building[index].member_race[idx] = c;
+                    if (idx == RACE_VAMPIRE) /* We have 2 races with the same name! */
+                        building[index].member_race[RACE_MON_VAMPIRE] = c;
+                }
+                break;
+            }
+
+            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
+        }
+
+        /* Building Realms */
+        case 'M':
+        {
+            if (tokenize(s + 2, 2, zz, 0) == 2)
+            {
+                int c = get_bldg_member_code(zz[1]);
+
+                if (c < 0)
+                    return PARSE_ERROR_GENERIC;
+
+                if (strcmp(zz[0], "*") == 0)
+                {
+                    for (i = 0; i <= MAX_REALM; i++)
+                        building[index].member_realm[i] = c;
+                }
+                else
+                {
+                    int idx = get_realm_idx(zz[0]);
+                    if (idx < 0 || idx > MAX_REALM)
+                        return PARSE_ERROR_GENERIC;
+                    building[index].member_realm[idx] = c;
+                }
+                break;
+            }
+
+            return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
+        }
+
+        case 'Z':
+        {
+            /* Ignore scripts */
+            break;
+        }
+
+        default:
+        {
+            return (PARSE_ERROR_UNDEFINED_DIRECTIVE);
+        }
+    }
+
+    return (0);
+}
+static room_ptr _temp_room;
+static errr _parse_town(char *line, int options)
+{
+    if (line[0] == 'B' && line[1] == ':')
+        return _parse_building(line, options);
+    return parse_room_line(_temp_room, line, options);
+}
+room_ptr towns_get_map(void)
+{
+    room_ptr room = room_alloc("NotSureYet");
+    _temp_room = room;
+    if (parse_edit_file("t_info.txt", _parse_town, 0) != ERROR_SUCCESS)
+    {
+        room_free(room);
+        room = NULL;
+    }
+    _temp_room = NULL;
+    return room;
+}
+

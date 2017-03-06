@@ -1009,9 +1009,6 @@ s32b max_wild_y;
  */
 s16b gf_color[MAX_GF];
 
-/* Parameters for process_dungeon_file to support wilderness scrolling */
-wild_scroll_ptr wild_scroll = NULL;
-
 /*
  * The "highscore" file descriptor, if available.
  */

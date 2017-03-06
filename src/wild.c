@@ -1109,21 +1109,25 @@ static void _generate_area(int x, int y, int dx, int dy, rect_t exclude)
         if (wilderness[y][x].town)
         {
             wild_scroll_t scroll = {{0}};
+            room_ptr      town_map;
 
             /* Reset the buildings */
             init_buildings();
 
             /* Initialize the town */
-            scroll.flags = INIT_CREATE_DUNGEON;
             if (rect_is_valid(exclude))
             {
                 scroll.flags |= INIT_SCROLL_WILDERNESS;
                 scroll.exclude = exclude;
             }
             scroll.scroll = point(dx, dy);
-            wild_scroll = &scroll;
-            process_dungeon_file("t_info.txt", scroll.flags);
-            wild_scroll = NULL;
+            town_map = towns_get_map();
+            if (town_map)
+            {
+                transform_ptr xform = transform_alloc(0, rect(0, 0, town_map->width, town_map->height));
+                build_room_template_aux(town_map, xform, &scroll);
+                room_free(town_map);
+            }
         }
 
 
