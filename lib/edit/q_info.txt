@@ -68,6 +68,10 @@ W:stronghold
 G:KILL(^warg$, 16)
 F:q_wargs.txt
 
+N:27:50:The Old Castle
+T:TOWN | GENERATE
+F:q_old_castle.txt
+
 N:32:25:Dark Elven Lords
 T:TOWN | GENERATE
 F:q_dark_elves.txt
@@ -114,7 +118,7 @@ T:RANDOM
 W:angband
 G:KILL(*)
 
-N:47:71:Angband L71
+N:47:68:Angband L68
 T:RANDOM
 W:angband
 G:KILL(*)
@@ -165,9 +169,6 @@ G:KILL(*)
 ## Killing Fields
 #?:[EQU $QUEST_NUMBER 26]
 #%:q0fields.txt
-#
-#?:[EQU $QUEST_NUMBER 27]
-#%:q_old_castle.txt
 #
 #?:[EQU $QUEST_NUMBER 28]
 #%:q_crypt.txt

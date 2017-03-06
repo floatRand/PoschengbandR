@@ -107,32 +107,15 @@ L:b:BUILDING_1(33)
 L:b:BUILDING_1(27)
 ?:1
 ############### Quest 27 - The Old Castle ###############
-#########<<<<<<<<<<<<<<<< Here I am >>>>>>>>>>>>>>>>>>>
-
 ?:[EQU $QUEST27 Taken]
 L:O:QUEST_ENTER(27)
+?:[EQU $QUEST27 Taken Completed Failed]
 L:b:BUILDING_1(27)
-
-?:[EQU $QUEST27 Completed]
-L:b:BUILDING_1(27)
-
-?:[EQU $QUEST27 Rewarded]
+?:[EQU $QUEST27 Finished FailedDone]
 L:b:BUILDING_1(0)
-L:!:ART(crisdurian)
-
-%:r_old_castle.txt
-
-?:[EQU $QUEST27 Finished]
-L:b:BUILDING_1(0)
-
-?:[EQU $QUEST27 Failed]
-L:b:BUILDING_1(27)
-
-?:[EQU $QUEST27 FailedDone]
-L:b:BUILDING_1(0)
-
 ?:1
 
+#########<<<<<<<<<<<<<<<< Here I am >>>>>>>>>>>>>>>>>>>
 ############### Quest Chain 2 #########################
 ############### Quest 22 - Orc Camp ###################
 

@@ -6,10 +6,10 @@ D:For the past few years we have been cloning exceptionally powerful
 D:creatures for gladiatorial combat. Something has gone very wrong in 
 D:the Cloning Pits. Please eliminate ALL the clones, you will be well
 D:rewarded. The active security systems have stopped working. The
-D:clones can use magic, teleport, summon, etc.. "The Ultimate Dungeon 
+D:clones can use magic, teleport, summon, etc. "The Ultimate Dungeon 
 D:Cleaner" security bots are no longer controlled, so you will 
 D:eliminate them too. Levitation and a good distance weapon are
-D:needed. The entrance to the pits is in a building behind the inn.  
+D:needed. The entrance to the pits is in a building behind the inn.
 ?:1
 
 ?:[EQU $QUEST33 Completed]
