@@ -488,7 +488,7 @@ quest_ptr quests_get(int id)
 cptr quests_get_name(int id)
 {
     quest_ptr q = quests_get(id);
-    if (!q) return NULL;
+    if (!q) return "";
     return q->name;
 }
 
@@ -737,7 +737,7 @@ static quest_ptr _find_quest(int dungeon, int level)
             break;
         }
     }
-    vec_clear(v);
+    vec_free(v);
     return result;
 }
 
@@ -1035,11 +1035,11 @@ void quests_save(savefile_ptr file)
         }
     }
     savefile_write_s16b(file, _current);
-    vec_clear(v);
+    vec_free(v);
 }
 
 /************************************************************************
- * Quests: Wizard Utilities
+ * Quests: Wizard Utilities (^Aq)
  * This is a lot of work, but it really helps me test things.
  ***********************************************************************/
 struct _ui_context_s
@@ -1226,7 +1226,8 @@ static void _map_cmd(_ui_context_ptr context)
         char cmd;
         int  idx;
 
-        if (!msg_command("<color:y>View which quest map <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
+        if (!msg_command("<color:y>View which quest map <color:w>(<color:keypress>Esc</color> to cancel)</color>?</color>", &cmd)) break;
+        if (cmd == ESCAPE) break;
         if (cmd < 'a' || cmd > 'z') continue;
         idx = A2I(cmd);
         idx += context->top;
@@ -1246,6 +1247,7 @@ static void _map_cmd(_ui_context_ptr context)
                 continue;
             }
             _display_map(map);
+            Term_clear();
             break;
         }
     }
@@ -1351,6 +1353,7 @@ static void _status_cmd(_ui_context_ptr context, int status)
         if (!msg_command(
             format("<color:y>Change status to <color:B>%s</color> for which quest <color:w>(<color:keypress>Esc</color> to cancel)</color>?</color>",
                 _status_name(status)), &cmd)) break;
+        if (cmd == ESCAPE) break;
         if (cmd < 'a' || cmd > 'z') continue;
         idx = A2I(cmd);
         idx += context->top;
@@ -1439,3 +1442,4 @@ static void _analyze_cmd(_ui_context_ptr context)
         }
     }
 }
+
