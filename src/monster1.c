@@ -794,24 +794,3 @@ bool monster_magical(monster_race *r_ptr)
         return FALSE;
 }
 
-/*
- * Is this monster declined to be questor or bounty?
- */
-bool no_questor_or_bounty_uniques(int r_idx)
-{
-    switch (r_idx)
-    {
-    /*
-     * Decline them to be questor or bounty because they use
-     * special motion "split and combine"
-     * TODO: RF?_NO_QUEST
-     */
-    case MON_BANORLUPART:
-    case MON_BANOR:
-    case MON_LUPART:
-    case MON_CHAMELEON_K: /* No Wilderness: He's not dropping a corpse for some reason? */
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}

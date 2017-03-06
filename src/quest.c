@@ -601,9 +601,6 @@ static void _get_questor(quest_ptr q)
         r_idx = get_mon_num(mon_lev);
         r_ptr = &r_info[r_idx];
 
-        if (r_idx == MON_ROBIN_HOOD) continue; /* TODO: RF?_NO_QUEST */
-        if (r_idx == MON_JACK_SHADOWS) continue;
-
         /* Try to enforce preferences, but its virtually impossible to prevent
            high level quests for uniques */
         if (attempt < 4000)
@@ -613,11 +610,11 @@ static void _get_questor(quest_ptr q)
         }
 
         if (r_ptr->flags1 & RF1_QUESTOR) continue;
+        if (r_ptr->flags1 & RF1_NO_QUEST) continue;
         if (r_ptr->rarity > 100) continue;
         if (r_ptr->flags7 & RF7_FRIENDLY) continue;
         if (r_ptr->flags7 & RF7_AQUATIC) continue;
         if (r_ptr->flags8 & RF8_WILD_ONLY) continue;
-        if (no_questor_or_bounty_uniques(r_idx)) continue;
         if (r_ptr->level > q->level + 12) continue;
         if (r_ptr->level > accept_lev || attempt > 5000)
         {
@@ -1182,7 +1179,16 @@ static void _display_menu(_ui_context_ptr context)
             quest_ptr quest = vec_get(context->quests, idx);
             doc_printf(doc, "%c) <color:%c>", I2A(i), _quest_color(quest));
             if ((quest->flags & QF_RANDOM) && quest->goal == QG_KILL_MON)
-                doc_printf(doc, "%-40.40s ", r_name + r_info[quest->goal_idx].name);
+            {
+                if (quest->goal_count > 1)
+                {
+                    string_ptr s = string_alloc_format("%s (%d)", r_name + r_info[quest->goal_idx].name, quest->goal_count);
+                    doc_printf(doc, "%-40.40s ", string_buffer(s));
+                    string_free(s);
+                }
+                else
+                    doc_printf(doc, "%-40.40s ", r_name + r_info[quest->goal_idx].name);
+            }
             else
                 doc_printf(doc, "%-40.40s ", quest->name);
             doc_printf(doc, "%-10.10s %3d</color>", _status_name(quest->status), quest->level);
@@ -1429,23 +1435,21 @@ static void _analyze_cmd(_ui_context_ptr context)
                 msg_format("<color:R>%s</color> has no quest file.", quest->name);
                 continue;
             }
-            else
-            {   /* very hackish ... but very useful */
-                _temp_room = room_alloc(quest->name);
-                _temp_reward = malloc(sizeof(room_grid_t));
-                trace_doc = context->doc;
-                doc_clear(context->doc);
-                memset(_temp_reward, 0, sizeof(room_grid_t));
-                parse_edit_file(quest->file, _parse_debug, INIT_DEBUG);
-                room_free(_temp_room);
-                free(_temp_reward);
-                _temp_room = NULL;
-                _temp_reward = NULL;
-                trace_doc = NULL;
-                Term_clear();
-                doc_display(context->doc, quest->name, 0);
-                Term_clear();
-            }
+            /* very hackish ... but very useful */
+            _temp_room = room_alloc(quest->name);
+            _temp_reward = malloc(sizeof(room_grid_t));
+            memset(_temp_reward, 0, sizeof(room_grid_t));
+            trace_doc = context->doc;
+            doc_clear(context->doc);
+            parse_edit_file(quest->file, _parse_debug, INIT_DEBUG);
+            room_free(_temp_room);
+            free(_temp_reward);
+            _temp_room = NULL;
+            _temp_reward = NULL;
+            trace_doc = NULL;
+            Term_clear();
+            doc_display(context->doc, quest->name, 0);
+            Term_clear();
             break;
         }
     }

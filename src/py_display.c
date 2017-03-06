@@ -2113,9 +2113,6 @@ static void _build_options(doc_ptr doc)
     doc_printf(doc, " Arena Levels:       %s\n", ironman_empty_levels ? "*Always*" :
                                                     empty_levels ? "Sometimes" : "Never");
 
-    if (ironman_quests)
-        doc_printf(doc, " Ironman Quests:     Enabled\n");
-
     if (no_artifacts)
         doc_printf(doc, " No Artifacts:       Enabled\n");
     else if (random_artifacts)

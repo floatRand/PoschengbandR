@@ -292,7 +292,7 @@ static cptr r_info_flags1[] =
     "DROP_GOOD",
     "DROP_GREAT",
     "TRUMP",
-    "XXX3"
+    "NO_QUEST"
 };
 
 /*

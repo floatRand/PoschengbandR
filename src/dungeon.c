@@ -4970,12 +4970,9 @@ void determine_bounty_uniques(void)
             r_ptr = &r_info[kubi_r_idx[i]];
 
             if (!(r_ptr->flags1 & RF1_UNIQUE)) continue;
-
+            if (r_ptr->flags1 & RF1_NO_QUEST) continue;
             if (!(r_ptr->flags9 & (RF9_DROP_CORPSE | RF9_DROP_SKELETON))) continue;
-
             if (r_ptr->rarity > 100) continue;
-
-            if (no_questor_or_bounty_uniques(kubi_r_idx[i])) continue;
 
             for (j = 0; j < i; j++)
                 if (kubi_r_idx[i] == kubi_r_idx[j]) break;

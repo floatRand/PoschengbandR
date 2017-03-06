@@ -2418,9 +2418,6 @@ option_type option_info[] =
     { &ironman_rooms,               FALSE, OPT_PAGE_BIRTH, 6, 12,
     "ironman_rooms",                "Always generate very unusual rooms (*)" },
 
-    { &ironman_quests,                FALSE, OPT_PAGE_BIRTH, 6, 22,
-    "ironman_quests",                "Random quests must be completed" },
-
     { &ironman_nightmare,           FALSE, OPT_PAGE_BIRTH, 6, 18,
     "ironman_nightmare",            "Nightmare mode(it isn't even remotely fair!)(*)" },
 
