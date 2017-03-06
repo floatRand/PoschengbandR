@@ -1341,8 +1341,8 @@ int parse_lookup_monster(cptr name, int options)
         _prep_name(buf, r_name + r_ptr->name);
         if (strstr(buf, name))
         {
-            if (options & INIT_DEBUG)
-                msg_format("Mapping <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
+            if (trace_doc)
+                doc_printf(trace_doc, "Mapping <color:B>%s</color> to <color:R>%s</color> (%d).\n", name, buf, i);
             return i;
         }
     }
@@ -1360,8 +1360,8 @@ int parse_lookup_dungeon(cptr name, int options)
         _prep_name(buf, d_name + d_ptr->name);
         if (strstr(buf, name))
         {
-            if (options & INIT_DEBUG)
-                msg_format("Mapping dungeon <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
+            if (trace_doc)
+                doc_printf(trace_doc, "Mapping dungeon <color:B>%s</color> to <color:R>%s</color> (%d).\n", name, buf, i);
             return i;
         }
     }
@@ -1579,8 +1579,8 @@ static int _lookup_kind(char *arg, int options)
         strcat(buf, "$");
         if (strstr(buf, arg))
         {
-            if (options & INIT_DEBUG)
-                msg_format("Mapping kind <color:B>%s</color> to <color:R>%s</color> (%d).", arg, buf, i);
+            if (trace_doc)
+                doc_printf(trace_doc, "Mapping kind <color:B>%s</color> to <color:R>%s</color> (%d).\n", arg, buf, i);
             return i;
         }
     }
@@ -1605,13 +1605,13 @@ static errr _parse_effect(int tval, cptr arg, room_grid_ptr grid, int options)
     grid->object = lookup_kind(tval, SV_ANY);
     grid->extra = effect_id;
     grid->flags |= ROOM_GRID_OBJ_EFFECT;
-    if (options & INIT_DEBUG)
+    if (trace_doc)
     {
         char     name[255];
         effect_t e = {0};
         e.type = grid->extra;
         sprintf(name, "%s", do_effect(&e, SPELL_NAME, 0));
-        msg_format("Mapping effect <color:B>%s</color> to <color:R>%s</color> (%d).",
+        doc_printf(trace_doc, "Mapping effect <color:B>%s</color> to <color:R>%s</color> (%d).\n",
             arg, name, grid->extra);
     }
     return 0;
@@ -1711,8 +1711,8 @@ static int _lookup_ego(cptr name, int type, int options)
         _prep_name(buf, e_name + e_ptr->name);
         if (strstr(buf, name))
         {
-            if (options & INIT_DEBUG)
-                msg_format("Matching ego <color:B>%s</color> to <color:R>%s</color> (%d).", name, e_name + e_ptr->name, i);
+            if (trace_doc)
+                doc_printf(trace_doc, "Matching ego <color:B>%s</color> to <color:R>%s</color> (%d).\n", name, e_name + e_ptr->name, i);
             return i;
         }
     }
@@ -1788,8 +1788,8 @@ int parse_lookup_artifact(cptr name, int options)
         }
         if (strstr(buf, name))
         {
-            if (options & INIT_DEBUG)
-                msg_format("Matching artifact <color:B>%s</color> to <color:R>%s</color> (%d).", name, buf, i);
+            if (trace_doc)
+                doc_printf(trace_doc, "Matching artifact <color:B>%s</color> to <color:R>%s</color> (%d).\n", name, buf, i);
             return i;
         }
     }
@@ -4637,8 +4637,8 @@ errr parse_room_line(room_ptr room, char *line, int options)
                     msg_format("Error: Undefined scramble: %c", scramble);
                     return PARSE_ERROR_GENERIC;
                 }
-                if (options & INIT_DEBUG)
-                    msg_format("Scrambled <color:R>%c</color> to <color:B>%c</color>.", letter, scramble);
+                if (trace_doc)
+                    doc_printf(trace_doc, "Scrambled <color:R>%c</color> to <color:B>%c</color>.\n", letter, scramble);
             }
         }
         else
@@ -5135,12 +5135,10 @@ errr parse_edit_file(cptr name, parser_f parser, int options)
             err = parse_edit_file(buf + 2, parser, options);
         else
         {
-            if ((options & INIT_DEBUG) && (buf[0] == 'L' || buf[0] == 'R'))
+            if (trace_doc && (buf[0] == 'L' || buf[0] == 'R'))
             {
-                msg_boundary();
-                msg_format("<color:R>%s:%d</color> <indent>%s</indent>",
+                doc_printf(trace_doc, "<color:R>%s:%d</color> <indent>%s</indent>\n",
                     name, line_num, buf);
-                msg_boundary();
             }
             err = parser(buf, options);
             if (err) /* report now for recursion */

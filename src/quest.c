@@ -3,6 +3,8 @@
 
 #include <assert.h>
 
+doc_ptr trace_doc = NULL;
+
 static cptr _strcpy(cptr s)
 {
     char *r = malloc(strlen(s)+1);
@@ -1431,12 +1433,18 @@ static void _analyze_cmd(_ui_context_ptr context)
             {   /* very hackish ... but very useful */
                 _temp_room = room_alloc(quest->name);
                 _temp_reward = malloc(sizeof(room_grid_t));
+                trace_doc = context->doc;
+                doc_clear(context->doc);
                 memset(_temp_reward, 0, sizeof(room_grid_t));
                 parse_edit_file(quest->file, _parse_debug, INIT_DEBUG);
                 room_free(_temp_room);
                 free(_temp_reward);
                 _temp_room = NULL;
                 _temp_reward = NULL;
+                trace_doc = NULL;
+                Term_clear();
+                doc_display(context->doc, quest->name, 0);
+                Term_clear();
             }
             break;
         }

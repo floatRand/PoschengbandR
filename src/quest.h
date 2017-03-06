@@ -106,4 +106,6 @@ extern void       quests_wizard(void);
 extern void       quests_doc(doc_ptr doc);
 extern void       quests_load(savefile_ptr file);
 extern void       quests_save(savefile_ptr file);
+
+extern doc_ptr    trace_doc;
 #endif
