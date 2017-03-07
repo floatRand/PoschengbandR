@@ -22,8 +22,9 @@
  * works on my system while the gcc link warning seriously messes
  * with :make in vim. And I compile about 100 times a day, or more! */
 #define HAVE_MKSTEMP
+/* UPDATE: I added -D_GNU_SOURCE=1 to src/Makefile
 extern int mkstemp(char *);
-extern FILE *fdopen(int, const char *);
+extern FILE *fdopen(int, const char *);*/
 
 /* Stop using auto_more and use the new improved handling instead! */
 #define AUTO_MORE_PROMPT     0

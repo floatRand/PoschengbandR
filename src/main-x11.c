@@ -130,8 +130,8 @@ main-x11.c:2747:3: warning: implicit declaration of function ‘usleep’ [-Wimp
    ^
    Anybody know how to remove the warning? #include <stdlib.h> does not work ... On my system, this
    is defined in /usr/include/unistd.h but even #including this directly is not enough to satisfy gcc.
-*/
-extern int usleep(__useconds_t);
+   UPDATE: I put -D_GNU_SOURCE=1 into src/Makefile. Better solution?
+extern int usleep(__useconds_t);*/
 
 /*
  * Hack -- avoid some compiler warnings

@@ -190,9 +190,10 @@ main-gcu.c:1374:8: warning: implicit declaration of function ‘putenv’ [-Wimp
         putenv("ESCDELAY=20");
         ^
    Anybody know how to remove the warning? #include <stdlib.h> does not work ...
-*/
+   UPDATE: -D_GNU_SOURCE=1 ... but I can't figure out how to get autoconf to do this.
+   Best I can tell is that vanilla gets this from sdlconfig ... but that is a guess.
 extern int usleep(__useconds_t);
-extern int putenv(char*);
+extern int putenv(char*); */
 
 typedef struct term_data term_data;
 
