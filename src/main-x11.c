@@ -124,15 +124,6 @@ char *XSetIMValues(XIM, ...); /* Hack for XFree86 4.0 */
  */
 #include "maid-x11.c"
 
-/* gcc warns that this is implicitly declared:
-main-x11.c:2747:3: warning: implicit declaration of function ‘usleep’ [-Wimplicit-function-declaration]
-   case TERM_XTRA_DELAY: usleep(1000 * v); return (0);
-   ^
-   Anybody know how to remove the warning? #include <stdlib.h> does not work ... On my system, this
-   is defined in /usr/include/unistd.h but even #including this directly is not enough to satisfy gcc.
-   UPDATE: I put -D_GNU_SOURCE=1 into src/Makefile. Better solution?
-extern int usleep(__useconds_t);*/
-
 /*
  * Hack -- avoid some compiler warnings
  */

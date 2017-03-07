@@ -15,17 +15,6 @@
 
 #include <assert.h>
 
-/* If you are having problems compiling, just take these out.
- * On my system, these are defined in stdlib.h and stdio.h which
- * we are definitely including, so I'm not sure why gcc complains.
- * Also, our configure doesn't check for mkstemp?? Anyway, this
- * works on my system while the gcc link warning seriously messes
- * with :make in vim. And I compile about 100 times a day, or more! */
-#define HAVE_MKSTEMP
-/* UPDATE: I added -D_GNU_SOURCE=1 to src/Makefile
-extern int mkstemp(char *);
-extern FILE *fdopen(int, const char *);*/
-
 /* Stop using auto_more and use the new improved handling instead! */
 #define AUTO_MORE_PROMPT     0
 #define AUTO_MORE_SKIP_ONE   1   /* Skip to next message */
