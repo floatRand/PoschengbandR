@@ -4060,7 +4060,8 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
             else if ((chaos_effect == 5) && (randint1(90) > r_ptr->level))
             {
-                if (!(r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) &&
+                if (!(r_ptr->flags1 & RF1_UNIQUE) &&
+                    !(m_ptr->mflag2 & MFLAG2_QUESTOR) && 
                     !(r_ptr->flagsr & RFR_EFF_RES_CHAO_MASK))
                 {
                     if (polymorph_monster(y, x))

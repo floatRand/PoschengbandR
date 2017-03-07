@@ -411,7 +411,7 @@ void banish_evil_spell(int cmd, variant *res)
         r_ptr = &r_info[m_ptr->r_idx];
 
         if ((r_ptr->flags3 & RF3_EVIL) &&
-            !(r_ptr->flags1 & RF1_QUESTOR) &&
+            !(m_ptr->mflag2 & MFLAG2_QUESTOR) &&
             !(r_ptr->flags1 & RF1_UNIQUE) &&
             !p_ptr->inside_arena && !quests_get_current() &&
             (r_ptr->level < randint1(p_ptr->lev+50)) &&

@@ -283,7 +283,7 @@ bool quest_post_generate(quest_ptr q)
     if (q->goal == QG_KILL_MON)
     {
         monster_race *r_ptr = &r_info[q->goal_idx];
-        int           mode = PM_NO_KAGE | PM_NO_PET, i, j, k;
+        int           mode = PM_NO_KAGE | PM_NO_PET | PM_QUESTOR, i, j, k;
         int           ct = q->goal_count - q->goal_current;
 
         if ((r_ptr->flags1 & RF1_UNIQUE) && r_ptr->max_num == 0)
@@ -324,7 +324,11 @@ bool quest_post_generate(quest_ptr q)
                 /* No empty grids */
                 if (!k) return FALSE;
 
-                if (place_monster_aux(0, y, x, q->goal_idx, mode)) break;
+                if (place_monster_aux(0, y, x, q->goal_idx, mode))
+                {
+                    m_list[hack_m_idx_ii].mflag2 |= MFLAG2_QUESTOR;
+                    break;
+                }
             }
 
             /* Failed to place */
@@ -1003,7 +1007,7 @@ void quests_load(savefile_ptr file)
 
         if (q->goal == QG_FIND_ART)
             a_info[q->goal_idx].gen_flags |= OFG_QUESTITEM;
-        if (q->goal == QG_KILL_MON && !p_ptr->is_dead)
+        if (q->goal == QG_KILL_MON && !p_ptr->is_dead && q->status < QS_COMPLETED)
         {
             monster_race *r_ptr = &r_info[q->goal_idx];
             if (r_ptr->flags1 & RF1_UNIQUE)

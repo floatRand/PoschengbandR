@@ -247,10 +247,9 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
     /* It is dead now... or is it? */
     if (m_ptr->hp < 0)
     {
-        if (((r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) ||
-            (r_ptr->flags7 & RF7_NAZGUL)) &&
-            !p_ptr->inside_battle &&
-            !prace_is_(RACE_MON_QUYLTHULG))
+        if ( ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL) || (m_ptr->mflag2 & MFLAG2_QUESTOR))
+          && !p_ptr->inside_battle
+          && !prace_is_(RACE_MON_QUYLTHULG))
         {
             m_ptr->hp = 1;
         }
@@ -2319,7 +2318,7 @@ static void process_monster(int m_idx)
         if (!randint0(2)) return;
 
         /* Sometimes die */
-        if (!randint0((m_idx % 100) + 10) && !(r_ptr->flags1 & RF1_QUESTOR))
+        if (!randint0((m_idx % 100) + 10) && !(m_ptr->mflag2 & MFLAG2_QUESTOR))
         {
             bool sad = FALSE;
 

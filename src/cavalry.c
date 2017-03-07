@@ -40,7 +40,7 @@ void rodeo_spell(int cmd, variant *res)
           && !p_ptr->inside_arena 
           && !p_ptr->inside_battle
           && !(r_ptr->flags7 & RF7_GUARDIAN) 
-          && !(r_ptr->flags1 & RF1_QUESTOR)
+          && !(m_ptr->mflag2 & MFLAG2_QUESTOR)
           && rlev < p_ptr->lev * 3 / 2 + randint0(p_ptr->lev / 5) )
         {
             cmsg_format(TERM_L_GREEN, "You tame %s.", m_name);

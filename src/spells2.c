@@ -2044,7 +2044,8 @@ bool genocide_aux(int m_idx, int power, bool player_cast, int dam_side, cptr spe
     if (is_pet(m_ptr) && !player_cast) return FALSE;
 
     /* Hack -- Skip Unique Monsters or Quest Monsters */
-    if (r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) resist = TRUE;
+    if (r_ptr->flags1 & RF1_UNIQUE) resist = TRUE;
+    if (m_ptr->mflag2 & MFLAG2_QUESTOR) resist = TRUE;
 
     else if (r_ptr->flags7 & RF7_UNIQUE2) resist = TRUE;
 
@@ -2394,7 +2395,7 @@ bool destroy_area(int y1, int x1, int r, int power)
         in_generate = TRUE;
 
     /* Prevent destruction of quest levels and town */
-    if (!py_in_dungeon())
+    if (!py_in_dungeon() || !quests_allow_all_spells())
     {
         return (FALSE);
     }
@@ -2485,7 +2486,7 @@ bool destroy_area(int y1, int x1, int r, int power)
                             set_hostile(m_ptr);
                         }
 
-                        if (!(r_ptr->flags1 & RF1_QUESTOR) /* Questors becoming immune to *destruct* can be advantageous! */
+                        if (!(m_ptr->mflag2 & MFLAG2_QUESTOR) /* Questors becoming immune to *destruct* can be advantageous! */
                              && !(r_ptr->flags2 & RF2_MULTIPLY)  /* Unmakers ... *shudder* */
                              && one_in_(13))
                         {
@@ -2495,7 +2496,7 @@ bool destroy_area(int y1, int x1, int r, int power)
                     }
                     else
                     {
-                        if (r_ptr->flags1 & RF1_QUESTOR)
+                        if (m_ptr->mflag2 & MFLAG2_QUESTOR)
                         {
                             /* Heal the monster */
                             m_ptr->hp = m_ptr->maxhp;
@@ -2935,7 +2936,7 @@ bool earthquake_aux(int cy, int cx, int r, int m_idx)
                 monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
                 /* Quest monsters */
-                if (r_ptr->flags1 & RF1_QUESTOR)
+                if (m_ptr->mflag2 & MFLAG2_QUESTOR)
                 {
                     /* No wall on quest monsters */
                     map[16+yy-cy][16+xx-cx] = FALSE;

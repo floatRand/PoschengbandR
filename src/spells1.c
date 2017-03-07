@@ -3353,9 +3353,9 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
             }
             else
             {
-                bool unique = (r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) ? TRUE : FALSE;
+                bool unique = BOOL(r_ptr->flags1 & RF1_UNIQUE);
 
-                if (!unique && power > 29 && randint1(100) < power)
+                if (!unique && !(m_ptr->mflag2 & MFLAG2_QUESTOR) && power > 29 && randint1(100) < power)
                 {
                     note = " is in your thrall!";
                     set_pet(m_ptr);
@@ -3548,7 +3548,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
             /* Powerful monsters can resist */
             if ((r_ptr->flags1 & RF1_UNIQUE) ||
-                (r_ptr->flags1 & RF1_QUESTOR) ||
+                (m_ptr->mflag2 & MFLAG2_QUESTOR) ||
                 (r_ptr->level > randint1((dam - 10) < 1 ? 1 : (dam - 10)) + 10))
             {
                 note = " is unaffected!";
@@ -3569,7 +3569,11 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
         {
             if (seen) obvious = TRUE;
 
-            if ((p_ptr->inside_arena) || is_pet(m_ptr) || (r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) || (r_ptr->flags7 & (RF7_NAZGUL | RF7_UNIQUE2)))
+            if ( p_ptr->inside_arena
+              || is_pet(m_ptr)
+              || (r_ptr->flags1 & RF1_UNIQUE)
+              || (r_ptr->flags7 & (RF7_NAZGUL | RF7_UNIQUE2))
+              || (m_ptr->mflag2 & MFLAG2_QUESTOR) )
             {
                 note = " is unaffected!";
             }
@@ -3858,7 +3862,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
 
         case GF_SUBJUGATION:
         {
-            bool unique = (r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) ? TRUE : FALSE;
+            bool unique = BOOL(r_ptr->flags1 & RF1_UNIQUE);
             int  attempts = randint1(1 + p_ptr->lev/50);
             int  ct = 0;
 
@@ -3894,7 +3898,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                     }
                     break;
                 case 3:
-                    if (!unique && randint1(r_ptr->level) <= randint1(dam))
+                    if (!unique && !(m_ptr->mflag2 & MFLAG2_QUESTOR) && randint1(r_ptr->level) <= randint1(dam))
                     {
                         note = " is frozen in terror!";
                         do_paralyzed = randint1(3);
@@ -3910,7 +3914,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                     }
                     break;
                 default:
-                    if (unique || p_ptr->inside_arena)
+                    if (unique || (m_ptr->mflag2 & MFLAG2_QUESTOR) || p_ptr->inside_arena)
                     {
                     }
                     else if ((m_ptr->mflag2 & MFLAG2_NOPET) || randint1(r_ptr->level) > randint1(dam))
@@ -4006,7 +4010,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 mon_lore_r(m_ptr, RFR_RES_ALL);
                 break;
             }
-            else if (r_ptr->flags1 & RF1_QUESTOR)
+            else if (m_ptr->mflag2 & MFLAG2_QUESTOR)
             {
                 note = " is unaffected!";
                 obvious = FALSE;
@@ -4058,10 +4062,10 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 dam = dam * 2 / 3;
 
             /* Attempt a saving throw */
-            if ((r_ptr->flags1 & RF1_QUESTOR) ||
-              (!(r_ptr->flags3 & RF3_UNDEAD)) ||
+            if ((m_ptr->mflag2 & MFLAG2_QUESTOR) ||
+                !(r_ptr->flags3 & RF3_UNDEAD) ||
                 (m_ptr->mflag2 & MFLAG2_NOPET) ||
-                 (r_ptr->level > randint1((dam - 10) < 1 ? 1 : (dam - 10)) + 10))
+                (r_ptr->level > randint1((dam - 10) < 1 ? 1 : (dam - 10)) + 10))
             {
                 /* No obvious effect */
                 note = " is unaffected!";
@@ -4107,10 +4111,10 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 dam = dam * 2 / 3;
 
             /* Attempt a saving throw */
-            if ((r_ptr->flags1 & RF1_QUESTOR) ||
-              (!(r_ptr->flags3 & RF3_DEMON)) ||
+            if ((m_ptr->mflag2 & MFLAG2_QUESTOR) ||
+                !(r_ptr->flags3 & RF3_DEMON) ||
                 (m_ptr->mflag2 & MFLAG2_NOPET) ||
-                 (r_ptr->level > randint1((dam - 10) < 1 ? 1 : (dam - 10)) + 10))
+                (r_ptr->level > randint1((dam - 10) < 1 ? 1 : (dam - 10)) + 10))
             {
                 /* No obvious effect */
                 note = " is unaffected!";
@@ -4156,11 +4160,11 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 dam = dam * 2 / 3;
 
             /* Attempt a saving throw */
-            if ((r_ptr->flags1 & (RF1_QUESTOR)) ||
-              (!(r_ptr->flags3 & (RF3_ANIMAL))) ||
+            if ((m_ptr->mflag2 & MFLAG2_QUESTOR) ||
+                !(r_ptr->flags3 & RF3_ANIMAL) ||
                 (m_ptr->mflag2 & MFLAG2_NOPET) ||
-                 (r_ptr->flags3 & (RF3_NO_CONF)) ||
-                 (r_ptr->level > randint1((dam - 10) < 1 ? 1 : (dam - 10)) + 10))
+                (r_ptr->flags3 & RF3_NO_CONF) ||
+                (r_ptr->level > randint1((dam - 10) < 1 ? 1 : (dam - 10)) + 10))
             {
                 /* Memorize a flag */
                 if (r_ptr->flags3 & (RF3_NO_CONF))
@@ -4202,7 +4206,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 if (seen) obvious = TRUE;
 
                 /* Attempt a saving throw */
-                if ( (r_ptr->flags1 & RF1_QUESTOR)
+                if ( (m_ptr->mflag2 & MFLAG2_QUESTOR)
                   || (m_ptr->mflag2 & MFLAG2_NOPET)
                   || mon_save_p(m_ptr->r_idx, A_CHR)
                   || ((r_ptr->flags1 & RF1_UNIQUE) && mon_save_p(m_ptr->r_idx, A_CHR)) )
@@ -4259,7 +4263,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 dam = dam * 2 / 3;
 
             /* Attempt a saving throw */
-            if ((r_ptr->flags1 & (RF1_QUESTOR)) ||
+            if ((m_ptr->mflag2 & MFLAG2_QUESTOR) ||
                 (m_ptr->mflag2 & MFLAG2_NOPET) ||
                  !monster_living(r_ptr) ||
                  ((r_ptr->level+10) > randint1(dam)))
@@ -5485,7 +5489,11 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 skipped = TRUE;
                 break;
             }
-            if ( (r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flags7 & (RF7_NAZGUL)) || (r_ptr->flags7 & (RF7_UNIQUE2)) || (r_ptr->flags1 & RF1_QUESTOR) || m_ptr->parent_m_idx)
+            if ( (r_ptr->flags1 & RF1_UNIQUE)
+              || (r_ptr->flags7 & RF7_NAZGUL)
+              || (r_ptr->flags7 & RF7_UNIQUE2)
+              || (m_ptr->mflag2 & MFLAG2_QUESTOR)
+              || m_ptr->parent_m_idx )
             {
                 msg_format("%^s is unaffected.", m_name);
                 skipped = TRUE;
@@ -5780,7 +5788,7 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
                 }
 
                 /* Attempt a saving throw */
-                else if ((r_ptr->flags1 & (RF1_QUESTOR)) ||
+                else if ((m_ptr->mflag2 & MFLAG2_QUESTOR) ||
                     (r_ptr->flags1 & (RF1_UNIQUE)) ||
                     (m_ptr->mflag2 & MFLAG2_NOPET) ||
                     (p_ptr->cursed & OFC_AGGRAVATE) ||
@@ -5862,12 +5870,12 @@ bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see
     if (r_ptr->flags1 & (RF1_UNIQUE)) do_poly = FALSE;
 
     /* Quest monsters cannot be polymorphed */
-    if (r_ptr->flags1 & RF1_QUESTOR) do_poly = FALSE;
+    if (m_ptr->mflag2 & MFLAG2_QUESTOR) do_poly = FALSE;
 
     if (p_ptr->riding && (c_ptr->m_idx == p_ptr->riding)) do_poly = FALSE;
 
     /* "Unique" and "quest" monsters can only be "killed" by the player. */
-    if (((r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) || (r_ptr->flags7 & RF7_NAZGUL))
+    if (((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL) || (m_ptr->mflag2 & MFLAG2_QUESTOR))
       && !p_ptr->inside_battle
       && !prace_is_(RACE_MON_QUYLTHULG))
     {

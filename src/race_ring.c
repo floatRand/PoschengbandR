@@ -1817,7 +1817,7 @@ static bool _mon_save_p(monster_type *m_ptr)
     int           ml = _r_level(r_ptr);
     bool          result = FALSE;
 
-    if (r_ptr->flags1 & RF1_QUESTOR)
+    if (m_ptr->mflag2 & MFLAG2_QUESTOR)
         return TRUE;
     
     /* Player may not exert their force of will out of sight! */

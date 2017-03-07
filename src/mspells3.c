@@ -1145,7 +1145,7 @@ static bool cast_learned_spell(int spell, bool success)
         msg_format("You gesture at %^s's feet.", m_name);
 
         if ((r_ptr->flagsr & (RFR_EFF_RES_NEXU_MASK | RFR_RES_TELE)) ||
-            (r_ptr->flags1 & RF1_QUESTOR) || (r_ptr->level + randint1(50) > plev + randint1(60)))
+            (m_ptr->mflag2 & MFLAG2_QUESTOR) || (r_ptr->level + randint1(50) > plev + randint1(60)))
         {
             msg_format("%^s is unaffected!", m_name);
         }

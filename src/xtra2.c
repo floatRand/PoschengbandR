@@ -573,7 +573,7 @@ bool get_monster_drop(int m_idx, object_type *o_ptr)
         obj_drop_theme = r_ptr->drop_theme;
     else /* Don't try to tailor themed drops since they could easily fail ... */
     {
-        if ( (r_ptr->flags1 & RF1_QUESTOR)
+        if ( (m_ptr->mflag2 & MFLAG2_QUESTOR)
           || (r_ptr->flags7 & RF7_GUARDIAN) )
         {
             if (one_in_(5))
@@ -2083,7 +2083,7 @@ void monster_death(int m_idx, bool drop_item)
     }
 
     /* Only process "Quest Monsters" */
-    if (!(r_ptr->flags1 & RF1_QUESTOR)) return;
+    if (!(m_ptr->mflag2 & MFLAG2_QUESTOR)) return;
     if (p_ptr->inside_battle) return;
 
     /* Winner? */

@@ -2334,6 +2334,7 @@ enum {
 #define PM_ALLOW_CLONED   0x00000800
 #define PM_WALL_SCUMMER   0x00001000
 #define PM_RING_BEARER    0x00002000
+#define PM_QUESTOR        0x00004000
 
 
 /* Bit flags for monster_desc() */
@@ -2807,8 +2808,9 @@ enum summon_specific_e {
 #define MFLAG2_AWARE            0x00000400
 #define MFLAG2_DROP_BASIC       0x00000800
 #define MFLAG2_DROP_UTILITY     0x00001000
-#define MFLAG2_DROP_PRIZE       0X00002000
+#define MFLAG2_DROP_PRIZE       0x00002000
 #define MFLAG2_DROP_MASK        (MFLAG2_DROP_BASIC | MFLAG2_DROP_UTILITY | MFLAG2_DROP_PRIZE)
+#define MFLAG2_QUESTOR          0x00004000   /* using monster_race.flags1 & RF1_QUESTOR is error prone */
 
 
 /*
@@ -3209,7 +3211,7 @@ enum obj_flags_e {
  * New monster race bit flags
  */
 #define RF1_UNIQUE              0x00000001  /* Unique Monster */
-#define RF1_QUESTOR             0x00000002  /* Quest Monster Remark: See dungeon() for setting/unsetting for quests.*/
+#define RF1_QUESTOR             0x00000002  /* Unique Monster tagged for a random quest */
 #define RF1_MALE                0x00000004  /* Male gender */
 #define RF1_FEMALE              0x00000008  /* Female gender */
 #define RF1_CHAR_CLEAR          0x00000010  /* Absorbs symbol */

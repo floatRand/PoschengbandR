@@ -443,7 +443,7 @@ void compact_monsters(int size)
             chance = 90;
 
             /* Only compact "Quest" Monsters in emergencies */
-            if ((r_ptr->flags1 & (RF1_QUESTOR)) && (cnt < 1000)) chance = 100;
+            if ((m_ptr->mflag2 & MFLAG2_QUESTOR) && cnt < 1000) chance = 100;
 
             /* Try not to compact Unique Monsters */
             if (r_ptr->flags1 & (RF1_UNIQUE)) chance = 100;
@@ -1430,7 +1430,7 @@ errr get_mon_num_prep(monster_hook_type monster_hook,
         if (!p_ptr->inside_battle && !chameleon_change_m_idx &&
             summon_specific_type != SUMMON_GUARDIAN)
         {
-            /* Hack -- don't create questors */
+            /* Hack -- don't create (unique) questors */
             if (r_ptr->flags1 & RF1_QUESTOR)
                 continue;
 
@@ -3994,7 +3994,7 @@ bool place_monster(int y, int x, u32b mode)
     {
         monster_race *r_ptr = &r_info[r_idx];
         if ( warlock_is_pact_monster(r_ptr)
-          && !(r_ptr->flags1 & RF1_QUESTOR)
+          && !(mode & PM_QUESTOR) /* RF1_QUESTOR is *not* set for non-unique quest monsters */
           && one_in_(12 - p_ptr->lev/5) )
         {
             mode |= PM_FORCE_FRIENDLY;

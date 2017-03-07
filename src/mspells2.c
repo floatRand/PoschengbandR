@@ -2990,7 +2990,7 @@ bool mon_spell_mon(int m_idx, int options)
             {
                 if (see_t) msg_format("%^s is unaffected!", t_name);
             }
-            else if ((tr_ptr->flags1 & RF1_QUESTOR) ||
+            else if ((t_ptr->mflag2 & MFLAG2_QUESTOR) ||
                     (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10))
             {
                 if (see_t) msg_format("%^s resist the effects!", t_name);
