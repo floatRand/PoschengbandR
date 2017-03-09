@@ -2468,7 +2468,9 @@ static errr _parse_town(char *line, int options)
 {
     if (line[0] == 'B' && line[1] == ':')
         return _parse_building(line, options);
-    return parse_room_line(_temp_room, line, options);
+    if (_temp_room)
+        return parse_room_line(_temp_room, line, options);
+    return 0;
 }
 room_ptr towns_get_map(void)
 {
@@ -2481,5 +2483,10 @@ room_ptr towns_get_map(void)
     }
     _temp_room = NULL;
     return room;
+}
+
+void towns_init_buildings(void)
+{
+    parse_edit_file("t_info.txt", _parse_town, 0);
 }
 

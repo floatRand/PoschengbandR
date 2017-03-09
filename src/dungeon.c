@@ -5299,13 +5299,13 @@ void play_game(bool new_game)
         }
     }
 
-    /* Initialize the town-buildings if necessary
-     * XXX
+    /* Initialize the town-buildings if necessary ... user restarted the
+     * game while on the surface, possibly even inside a town */
     if (py_on_surface())
     {
         process_dungeon_file("w_info.txt", 0);
-        process_dungeon_file("t_info.txt", INIT_ONLY_BUILDINGS);
-    }*/
+        towns_init_buildings();
+    }
 
     /* Generate a dungeon level if needed */
     if (!character_dungeon)

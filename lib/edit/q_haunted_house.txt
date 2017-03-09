@@ -1,29 +1,24 @@
-# vim: filetype=q :
 # Haunted House, (C) Topi Ylinen 1999
-
-Q:25:N:Haunted House
-Q:25:Q:6:0:0:0:48:0:0:0:6
-
-?:[EQU $QUEST25 Taken Completed]
-Q:25:T:There is something evil going on in the old, thatched house
-Q:25:T:near the south-west corner of the city wall. People say that
-Q:25:T:the house is haunted and refuse to go near it. We need someone
-Q:25:T:to exorcise the evil spirits that are infesting the house.
+?:[EQU $QUEST25 Taken]
+D:There is something evil going on in the old, thatched house
+D:near the south-west corner of the city wall. People say that
+D:the house is haunted and refuse to go near it. We need someone
+D:to exorcise the evil spirits that are infesting the house.
 ?:1
 
-?:[EQU $QUEST25 Rewarded]
-Q:25:T:Well done, indeed! Our citizens can finally sigh in relief.
-Q:25:T:As a reward, we would like to give you something that will
-Q:25:T:help you banish the forces of evil even more efficiently!
+?:[EQU $QUEST25 Completed]
+D:Well done, indeed! Our citizens can finally sigh in relief.
+D:As a reward, we would like to give you something that will
+D:help you banish the forces of evil even more efficiently!
 ?:1
 
 ?:[EQU $QUEST25 Failed]
-Q:25:T:Bah, what a loser!
-Q:25:T:Fortunately, a bunch of pilgrims who were passing by turned
-Q:25:T:out to be ultra-elite paladins on their pilgrimage to the
-Q:25:T:holy city, and -- as a spiritual exercise -- the cleaned up
-Q:25:T:the house without even asking for a reward. Maybe you should
-Q:25:T:try to find them, you could learn a thing or two from them.
+D:Bah, what a loser!
+D:Fortunately, a bunch of pilgrims who were passing by turned
+D:out to be ultra-elite paladins on their pilgrimage to the
+D:holy city, and -- as a spiritual exercise -- the cleaned up
+D:the house without even asking for a reward. Maybe you should
+D:try to find them: you could learn a thing or two!
 ?:1
 
 T:QUEST:NORMAL
@@ -35,7 +30,6 @@ L:~:DEEP_WATER
 L:!:TRAP(*, 25):OBJ(*, DEPTH+10)
 L:^:TRAP(*)
 L:<:UP_STAIR
-L:s:FLOOR(ICKY)
 L:Z:MON(hound of tindalos)
 L:?:MON(raal's)
 L:I:MON(ipsissimus)
@@ -48,19 +42,21 @@ L:T:MON(spectral tyrannosaurus)
 L:m:MON(undead mass):TRAP(*)
 L:C:MON(spectre)
 L:V:MON(^vampire$)
-D:###############################
-D:#..+!..+^^^m^^m^^^+...........#
-D:#..#.t.#^^^^^^^^^^#...........#
-D:#!#################...........#
-D:#+#...............#.!!!!!!!!!.#
-D:#.................#.!#######!.#
-D:#..###..........~~#.!#######!.#
-D:#.##Z#..........~I#.!!!!!!!!!.#
-D:#.#ss#.~~~~.~~~.~I#...........#
-D:#+#%##.~?Q~.~Q~.~I#T..........#
-D:#..###+####+###+########+######
-D:#..#^....#SSS#...#j+^^^^^^^^+!#
-D:#..#..!..#SSS#.!.###^......^###
-D:#<.#C...C#SSS#.V.#!+^^^^^^^^+>#
-D:###############################
+M:###############################
+M:#..+!..+^^^m^^m^^^+...........#
+M:#..#.t.#^^^^^^^^^^#...........#
+M:#!#################...........#
+M:#+#...............#.!!!!!!!!!.#
+M:#.................#.!#######!.#
+M:#..###..........~~#.!#######!.#
+M:#.##Z#..........~I#.!!!!!!!!!.#
+M:#.#..#.~~~~.~~~.~I#...........#
+M:#+#%##.~?Q~.~Q~.~I#T..........#
+M:#..###+####+###+########+######
+M:#..#^....#SSS#...#j+^^^^^^^^+!#
+M:#..#..!..#SSS#.!.###^......^###
+M:#<.#C...C#SSS#.V.#!+^^^^^^^^+>#
+M:###############################
+R:OBJ(STAFF_HOLINESS)
 
+# vim: filetype=q :

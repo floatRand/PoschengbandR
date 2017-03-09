@@ -1,24 +1,20 @@
-# vim: filetype=q :
 # Old Man Willow Quest
 # By Shayne Steele (steele@cs.fsu.edu)
-
-Q:31:N:Old Man Willow Quest
-Q:31:Q:6:0:0:0:22:0:0:0:6
-
-?:[EQU $QUEST31 Taken Completed]
-Q:31:T:Old Man Willow has gone too far! He has turned a small section
-Q:31:T:of the forest against all men. Kill everything you find in Old 
-Q:31:T:Man Willow's section of the forest. You will be well rewarded 
-Q:31:T:for completing this quest. The quest is in a clearing east of
-Q:31:T:the town.
+?:[EQU $QUEST31 Taken]
+D:Old Man Willow has gone too far! He has turned a small section
+D:of the forest against all men. Kill everything you find in Old 
+D:Man Willow's section of the forest. You will be well rewarded 
+D:for completing this quest. The quest is in a clearing east of
+D:the town.
 ?:1
 
-?:[EQU $QUEST31 Rewarded]
-Q:31:T:Thank you! Your reward is wating outside.
+?:[EQU $QUEST31 Completed]
+D:Thank you! Old Man Willow was much more manageable when good
+D:ol' Tom Bombadil was still around.
 ?:1
 
 ?:[EQU $QUEST31 Failed]
-Q:31:T:The quest was more than you could handle.
+D:The quest was more than you could handle.
 ?:1
 
 T:QUEST:NORMAL
@@ -31,24 +27,29 @@ L:M:MON(old man willow)
 L:H:MON(huorn)
 L:f:MON(sabre-tooth tiger)
 L:Y:MON(sasquatch)
-D:###############################
-D:#TTTTTTTTTTTTTTTT.............#
-D:#T.........Y..TTT.TTHTTTTTTTT.#
-D:#T.H....H.....TTTY........r.T.#
-D:#T............TTTTTTTTTTTTT.T.#
-D:#T.....M....H.TTT.......r.T.T.#
-D:#T..H....H....TTT.TTTTTTT.T.T.#
-D:#T............TTT.....r.T.T.T.#
-D:#T.Y....Y..Y..HTTTTTTTT.T.T.T.#
-D:#T....Y...............T.T.T.T.#
-D:#TTTTTTTTTTTTTTTTTTTT.T.T.T.T.#
-D:#TTTTTTTTTTTTTTTTTTTT...T...T.#
-D:#TTTTTTTTTTTTTTTTTTTTTTTTTTTT.#
-D:#r..........................f.#
-D:#rTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
-D:#r.......................f....#
-D:#TTHTTTTTTTTTTTTTTTTTTTTTTTTT.#
-D:#.............................#
-D:#<TTTTTTTTTTTTTTTTTTTTTTTTTTTT#
-D:###############################
+M:###############################
+M:#TTTTTTTTTTTTTTTT.............#
+M:#T.........Y..TTT.TTHTTTTTTTT.#
+M:#T.H....H.....TTTY........r.T.#
+M:#T............TTTTTTTTTTTTT.T.#
+M:#T.....M....H.TTT.......r.T.T.#
+M:#T..H....H....TTT.TTTTTTT.T.T.#
+M:#T............TTT.....r.T.T.T.#
+M:#T.Y....Y..Y..HTTTTTTTT.T.T.T.#
+M:#T....Y...............T.T.T.T.#
+M:#TTTTTTTTTTTTTTTTTTTT.T.T.T.T.#
+M:#TTTTTTTTTTTTTTTTTTTT...T...T.#
+M:#TTTTTTTTTTTTTTTTTTTTTTTTTTTT.#
+M:#r..........................f.#
+M:#rTTTTTTTTTTTTTTTTTTTTTTTTTTTT#
+M:#r.......................f....#
+M:#TTHTTTTTTTTTTTTTTTTTTTTTTTTT.#
+M:#.............................#
+M:#<TTTTTTTTTTTTTTTTTTTTTTTTTTTT#
+M:###############################
+R:OBJ(^ring$):EGO(elemental)
 
+?:[EQU $RACE Hydra]
+R:OBJ(^amulet$):EGO(elemental)
+
+# vim: filetype=q :

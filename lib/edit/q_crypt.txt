@@ -1,41 +1,38 @@
-# vim: filetype=q :
-Q:28:N:The Royal Crypt
-Q:28:Q:1:0:0:5:70:776:0:0:6
-
-?:[EQU $QUEST28 Taken Completed]
-Q:28:T:A mysterious force has entered the royal crypt and is
-Q:28:T:desecrating the graves of the king's noble ancestors. Their
-Q:28:T:bodily remains have been magicly animated and their spirits
-Q:28:T:enslaved and forcibly turned to evil. You must enter the
-Q:28:T:crypt and seek out the Archliches. Once they have been
-Q:28:T:eliminated, my guards should be able to take care of the
-Q:28:T:rest.
+?:[EQU $QUEST28 Taken]
+D:A mysterious force has entered the royal crypt and is
+D:desecrating the graves of the king's noble ancestors. Their
+D:bodily remains have been magicly animated and their spirits
+D:enslaved and forcibly turned to evil. You must enter the
+D:crypt and seek out the Archliches. Once they have been
+D:eliminated, my guards should be able to take care of the
+D:rest.
 ?:1
 
-?:[EQU $QUEST28 Rewarded]
-Q:28:T:How can I ever thank you? Let the people rejoice - a hero
-Q:28:T:of legend walks this day in Outpost. My treasurer tells me
-Q:28:T:a number of rather valuable heirlooms seem to be missing
-Q:28:T:from the crypt - how about I turn a blind eye and we call
-Q:28:T:it quits? Oh wait a moment ... Now where did I put that?
-Q:28:T:Ah! Take this trinket and be glad you still live.
+?:[EQU $QUEST28 Completed]
+D:How can I ever thank you? Let the people rejoice - a hero
+D:of legend walks this day in Outpost. My treasurer tells me
+D:a number of rather valuable heirlooms seem to be missing
+D:from the crypt - how about I turn a blind eye and we call
+D:it quits? Oh wait a moment ... Now where did I put that?
+D:Ah! Take this trinket and be glad you still live.
 ?:1
 
 ?:[EQU $QUEST28 Failed]
-Q:28:T:I trusted you and you have failed me. Heaven knows how
-Q:28:T:we will appease the spirits of the king's ancestors now!
+D:I trusted you and you have failed me. Heaven knows how
+D:we will appease the spirits of the king's ancestors now!
 ?:1
 
 T:QUEST:NORMAL
 L:#:PERMANENT
 L:%:GRANITE
 L:.:FLOOR
+L:,:FLOOR(ICKY)
 L:@:FLOOR
 L:W:DEEP_WATER
 L:+:LOCKED_DOOR_7
 L:':BROKEN_DOOR
 L:^:TRAP(*)
-L:<:UP_STAIR
+L:<:UP_STAIR(ICKY)
 L:~:OBJ(human skeleton)
 L:a:MON(crypt creep)
 L:b:MON(phantom beast)
@@ -53,34 +50,36 @@ L:m:MON(^dread$)
 L:n:MON(dreadmaster)
 L:o:MON(lesser black reaver)
 L:p:MON(demilich)
-L:q:MON(eye druj)
-L:r:MON(skull druj)
+L:q:FLOOR(ICKY):MON(eye druj)
+L:r:FLOOR(ICKY):MON(skull druj)
 L:s:MON(shadowlord)
 L:t:MON(archlich)
 L:u:MON(^black reaver$)
-L:$:OBJ(DRAG_ARMOR, DEPTH+10):ART(*)
-L:&:OBJ(RING, DEPTH+10):ART(*)
-L:*:OBJ(AMULET, DEPTH+10):ART(*)
-D:#######################################################################
-D:#f..#.#b#aaaaa#.%.....#.+......%..%u%..+........................+.....#
-D:#...#.#b#aaaaa#.#..s..#.########..%%%..##########################.%%%.#
-D:####'.%b#%aaa##.##...##.#%%....##.....##^^^^^^^^^^^^^^^^^^##%#%#%.%u%.#
-D:#.....#bb##a##...##.##...##..t..##...##^#################^#%#%#%#.%%%.#
-D:#####.#%bb#.#.....#.#.....#......#####^^#t%p%p%o%o%l%l%k%^%######.....#
-D:#.#.##.####.#..t..#.#..s..#..t..##q#r##^#################^###q#r##....#
-D:#....##.....#.....#.%.....#....##.....##^^^^^^^^^^^^^^^^^^##.....###+##
-D:#.....#####.####################.......####################......&#j.j#
-D:#..@..+.....#%%%%%%%%%%%%%%%%%%%.......%%%%%%%%%%<%%%%%%%%%......$##.##
-D:#.....#####%#%##################.......####################......*#j.j#
-D:#....##...#.#.+.....#.....+....##.....##WWWWWWWWWWWWWWWWWW##.....###+##
-D:#.#.##.dd.#.#.#.###.#.#%#.#.###.##r#q##W##################W##r#q##....#
-D:#####.ggd.#.#.#.#m%.#.#m%.#.#m%#.#####W##..#.#.#.#.#.#.#.##W#####.%%%%#
-D:#~..+.igd...#.#.#%#.#.###.#.#nm#.+...+W#.t.'^s^'^n^'^n^'..%W+...+.%ooo#
-D:##.##.ggd.#.#.#.....+.....#.####.#####W##..#.#.#.#.#.#.#.##W#####.%%%%#
-D:#~..##.dd.###%#############.....##...##W##################W%#...##....#
-D:###..##...#e#e#e#e#e#^^^^^###+###.%+%.##WWWWWWWWWWWWWWWWWW##.%+%.######
-D:#b%%..#####+#+#+#+#+#^...^#n+.+n#.%s%.#####################..%s%..#^^^#
-D:#bb%#...............#^...^###.###.%%%.+^^^^^^^^^^^^^^^^^^^+..%%%..%^~^#
-D:#bbb#~#~#~#~#~#~#~#~#^^^^^%n+.+n#.....#c#c#c#c#c#c#c#c#c#c#......~#^^^#
-D:#######################################################################
+L:$:FLOOR(ICKY):OBJ(DRAG_ARMOR, DEPTH+10):ART(*)
+L:&:FLOOR(ICKY):OBJ(RING, DEPTH+10):ART(*)
+L:*:FLOOR(ICKY):OBJ(AMULET, DEPTH+10):ART(*)
+M:#######################################################################
+M:#f..#.#b#aaaaa#.%.....#.+......%..%u%..+........................+.....#
+M:#...#.#b#aaaaa#.#..s..#.########..%%%..##########################.%%%.#
+M:####'.%b#%aaa##.##...##.#%%....##.....##^^^^^^^^^^^^^^^^^^##%#%#%.%u%.#
+M:#.....#bb##a##...##.##...##..t..##...##^#################^#%#%#%#.%%%.#
+M:#####.#%bb#.#.....#.#.....#......#####^^#t%p%p%o%o%l%l%k%^%######.....#
+M:#.#.##.####.#..t..#.#..s..#..t..##q#r##^#################^###q#r##....#
+M:#....##.....#.....#.%.....#....##,,,,,##^^^^^^^^^^^^^^^^^^##,,,,,###+##
+M:#.....#####.####################,,,,,,,####################,,,,,,&#j.j#
+M:#..@..+.....#%%%%%%%%%%%%%%%%%%%,,,,,,,%%%%%%%%%%<%%%%%%%%%,,,,,,$##.##
+M:#.....#####%#%##################,,,,,,,####################,,,,,,*#j.j#
+M:#....##...#.#.+.....#.....+....##,,,,,##WWWWWWWWWWWWWWWWWW##,,,,,###+##
+M:#.#.##.dd.#.#.#.###.#.#%#.#.###.##r#q##W##################W##r#q##....#
+M:#####.ggd.#.#.#.#m%.#.#m%.#.#m%#.#####W##..#.#.#.#.#.#.#.##W#####.%%%%#
+M:#~..+.igd...#.#.#%#.#.###.#.#nm#.+...+W#.t.'^s^'^n^'^n^'..%W+...+.%ooo#
+M:##.##.ggd.#.#.#.....+.....#.####.#####W##..#.#.#.#.#.#.#.##W#####.%%%%#
+M:#~..##.dd.###%#############.....##...##W##################W%#...##....#
+M:###..##...#e#e#e#e#e#^^^^^###+###.%+%.##WWWWWWWWWWWWWWWWWW##.%+%.######
+M:#b%%..#####+#+#+#+#+#^...^#n+.+n#.%s%.#####################..%s%..#^^^#
+M:#bb%#...............#^...^###.###.%%%.+^^^^^^^^^^^^^^^^^^^+..%%%..%^~^#
+M:#bbb#~#~#~#~#~#~#~#~#^^^^^%n+.+n#.....#c#c#c#c#c#c#c#c#c#c#......~#^^^#
+M:#######################################################################
+R:ART(bilbo)
 
+# vim: filetype=q :

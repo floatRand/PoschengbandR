@@ -80,9 +80,17 @@ N:22:15:The Orc Camp
 T:TOWN | GENERATE
 F:q_orcs.txt
 
+N:25:48:The Haunted House
+T:TOWN | GENERATE
+F:q_haunted_house.txt
+
 N:27:50:The Old Castle
 T:TOWN | GENERATE
 F:q_old_castle.txt
+
+N:28:70:The Royal Crypt
+T:TOWN | GENERATE
+F:q_crypt.txt
 
 N:29:25:Tengu and Death Swords
 T:TOWN | GENERATE
@@ -91,6 +99,10 @@ F:q_tengu_death_swords.txt
 N:30:25:The Mimic's Treasure
 T:TOWN | GENERATE
 F:q_mimics_treasure.txt
+
+N:31:22:Old Man Willow Quest
+T:TOWN | GENERATE
+F:q_old_man_willow.txt
 
 N:32:25:The Dark Elven Lords
 T:TOWN | GENERATE
@@ -174,18 +186,9 @@ G:KILL(*)
 #?:[EQU $QUEST_NUMBER 24]
 #%:q00000ms.txt
 #
-#?:[EQU $QUEST_NUMBER 25]
-#%:q_haunted_house.txt
-#
 ## Killing Fields
 #?:[EQU $QUEST_NUMBER 26]
 #%:q0fields.txt
-#
-#?:[EQU $QUEST_NUMBER 28]
-#%:q_crypt.txt
-#
-#?:[EQU $QUEST_NUMBER 31]
-#%:q_old_man_willow.txt
 #
 #
 
