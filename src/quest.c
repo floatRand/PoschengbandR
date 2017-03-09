@@ -226,6 +226,7 @@ room_ptr quest_get_map(quest_ptr q)
             room = NULL;
         }
         _temp_room = NULL;
+        assert(room->type == ROOM_QUEST); /* common mistake ... T:QUEST:NORMAL */
         return room;
     }
     return NULL;

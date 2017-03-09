@@ -80,6 +80,10 @@ N:22:15:The Orc Camp
 T:TOWN | GENERATE
 F:q_orcs.txt
 
+N:23:65:The Spawning Pits
+T:TOWN | GENERATE
+F:q_spawning_pits.txt
+
 N:25:48:The Haunted House
 T:TOWN | GENERATE
 F:q_haunted_house.txt
@@ -177,10 +181,6 @@ G:KILL(*)
 ## Vapor Quest
 #?:[EQU $QUEST_NUMBER 20]
 #%:q0000020.txt
-#
-## Spawning Pits
-#?:[EQU $QUEST_NUMBER 23]
-#%:q0000023.txt
 #
 ## The Rise and Fall of Micro$oft
 #?:[EQU $QUEST_NUMBER 24]
