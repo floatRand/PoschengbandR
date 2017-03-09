@@ -1127,6 +1127,7 @@ static void _generate_area(int x, int y, int dx, int dy, rect_t exclude)
                 transform_ptr xform = transform_alloc(0, rect(0, 0, town_map->width, town_map->height));
                 build_room_template_aux(town_map, xform, &scroll);
                 room_free(town_map);
+                transform_free(xform);
             }
         }
 

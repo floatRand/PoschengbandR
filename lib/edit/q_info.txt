@@ -16,7 +16,7 @@
 # Use lower case for all string lookups
 ########################################################################
 
-N:1:5:Thieves' Hideout
+N:1:5:The Thieves' Hideout
 T:TOWN | GENERATE
 F:q_thieves.txt
 
@@ -24,7 +24,7 @@ N:2:15:The Sewer
 T:TOWN | GENERATE
 F:q_sewer.txt
 
-N:3:25:Logrus Master
+N:3:25:The Logrus Master
 T:TOWN | GENERATE
 G:KILL(logrus master)
 F:q_logrus_master.txt
@@ -50,15 +50,15 @@ W:angband
 G:KILL(serpent of chaos)
 F:q_serpent_of_chaos.txt
 
-N:10:65:Node of Sorcery
+N:10:65:The Node of Sorcery
 T:TOWN | GENERATE
 F:q_sorcery.txt
 
-N:11:65:Node of Chaos
+N:11:65:The Node of Chaos
 T:TOWN | GENERATE
 F:q_chaos.txt
 
-N:12:65:Node of Nature
+N:12:65:The Node of Nature
 T:TOWN | GENERATE
 F:q_nature.txt
 
@@ -68,11 +68,31 @@ W:stronghold
 G:KILL(^warg$, 16)
 F:q_wargs.txt
 
+N:19:15:Doom Quest I
+T:TOWN | GENERATE
+F:q_doom1.txt
+
+N:21:55:Doom Quest II
+T:TOWN | GENERATE
+F:q_doom2.txt
+
+N:22:15:The Orc Camp
+T:TOWN | GENERATE
+F:q_orcs.txt
+
 N:27:50:The Old Castle
 T:TOWN | GENERATE
 F:q_old_castle.txt
 
-N:32:25:Dark Elven Lords
+N:29:25:Tengu and Death Swords
+T:TOWN | GENERATE
+F:q_tengu_death_swords.txt
+
+N:30:25:The Mimic's Treasure
+T:TOWN | GENERATE
+F:q_mimics_treasure.txt
+
+N:32:25:The Dark Elven Lords
 T:TOWN | GENERATE
 F:q_dark_elves.txt
 
@@ -142,18 +162,9 @@ G:KILL(*)
 #?:[EQU $QUEST_NUMBER 16]
 #%:q000dekn.txt
 #
-#?:[EQU $QUEST_NUMBER 19]
-#%:q_doom1.txt
-#
 ## Vapor Quest
 #?:[EQU $QUEST_NUMBER 20]
 #%:q0000020.txt
-#
-#?:[EQU $QUEST_NUMBER 21]
-#%:q_doom2.txt
-#
-#?:[EQU $QUEST_NUMBER 22]
-#%:q_orcs.txt
 #
 ## Spawning Pits
 #?:[EQU $QUEST_NUMBER 23]
@@ -172,12 +183,6 @@ G:KILL(*)
 #
 #?:[EQU $QUEST_NUMBER 28]
 #%:q_crypt.txt
-#
-#?:[EQU $QUEST_NUMBER 29]
-#%:q_tengu_death_swords.txt
-#
-#?:[EQU $QUEST_NUMBER 30]
-#%:q_mimics_treasure.txt
 #
 #?:[EQU $QUEST_NUMBER 31]
 #%:q_old_man_willow.txt

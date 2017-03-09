@@ -1,23 +1,18 @@
-# vim: filetype=q :
-# Thieves Quest 2
 # By Shayne Steele (steele@cs.fsu.edu)
 
-Q:29:N:Tengu and Death Swords
-Q:29:Q:6:0:0:0:25:0:0:0:6
-
-?:[EQU $QUEST29 Taken Completed]
-Q:29:T:The Magic Shop's owner is thinking of opening another Thieves Guild. 
-Q:29:T:I do not need the competition, here is the key to the Magic Shop's
-Q:29:T:back treasure room. Destroy everything you find there and you will
-Q:29:T:be rewarded. The quest is located in the Black Market building.
+?:[EQU $QUEST29 Taken]
+D:The Magic Shop's owner is thinking of opening another Thieves Guild. 
+D:I do not need the competition, here is the key to the Magic Shop's
+D:back treasure room. Destroy everything you find there and you will
+D:be rewarded. The quest is located in the Black Market building.
 ?:1
 
-?:[EQU $QUEST29 Rewarded]
-Q:29:T:You have done well, your reward is outside the door.
+?:[EQU $QUEST29 Completed]
+D:You have done well. Perhaps this will prove useful.
 ?:1
 
 ?:[EQU $QUEST29 Failed]
-Q:29:T:You have failed this quest, but keep what you have found. 
+D:You have failed this quest, but keep what you have found. 
 ?:1
 
 T:QUEST:NORMAL
@@ -34,23 +29,31 @@ L:B:GRANITE
 L:C:GRANITE
 L:D:GRANITE
 !:SCRAMBLE(A,B,C,D)
-D:#####################
-D:#...................#
-D:#.j...............j.#
-D:#..%%%%%%AAA%%%%%%..#
-D:#..%.............%..#
-D:#..%..|.u.|.u.|..%..#
-D:#..%.............%..#
-D:#..%..u.|.|.|.u..%..#
-D:#..D.............B..#
-D:#..D..|.|.$.|.|..B..#
-D:#..D.............B..#
-D:#..%..u.|.|.|.u..%..#
-D:#..%.............%..#
-D:#..%..|.u.|.u.|..%..#
-D:#..%.............%..#
-D:#..%%%%%%CCC%%%%%%..#
-D:#.j...............j.#
-D:#.........<.........#
-D:#####################
+M:#####################
+M:#...................#
+M:#.j...............j.#
+M:#..%%%%%%AAA%%%%%%..#
+M:#..%.............%..#
+M:#..%..|.u.|.u.|..%..#
+M:#..%.............%..#
+M:#..%..u.|.|.|.u..%..#
+M:#..D.............B..#
+M:#..D..|.|.$.|.|..B..#
+M:#..D.............B..#
+M:#..%..u.|.|.|.u..%..#
+M:#..%.............%..#
+M:#..%..|.u.|.u.|..%..#
+M:#..%.............%..#
+M:#..%%%%%%CCC%%%%%%..#
+M:#.j...............j.#
+M:#.........<.........#
+M:#####################
+R:OBJ(^ring$):EGO(protection)
 
+?:[EQU $RACE Death-Sword]
+R:OBJ(^dagger$):EGO(westernesse)
+
+?:[EQU $RACE Hydra]
+R:OBJ(^amulet$):EGO(elemental)
+
+# vim: filetype=q :

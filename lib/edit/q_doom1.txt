@@ -1,25 +1,20 @@
-# vim: filetype=q :
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 
-Q:19:N:Doom Quest 1
-Q:19:Q:6:0:0:0:15:0:0:0:6
-
-?:[EQU $QUEST19 Taken Completed]
-Q:19:T:We need your help, adventurer. A hole has opened up to the
-Q:19:T:northwest of our town, and strange demons lurk within. One
-Q:19:T:of our townspeople investigated it unwittingly and barely 
-Q:19:T:escaped with his life! Please destroy these demons and 
-Q:19:T:ensure the continued safety of our town, else we are surely
-Q:19:T:doomed.
+?:[EQU $QUEST19 Taken]
+D:We need your help, adventurer. A hole has opened up to the
+D:northwest of our town, and strange demons lurk within. One
+D:of our townspeople investigated it unwittingly and barely 
+D:escaped with his life! Please destroy these demons and 
+D:ensure the continued safety of our town, else we are surely
+D:doomed.
 ?:1
 
-?:[EQU $QUEST19 Rewarded]
-Q:19:T:Thank you for killing the demons! A small reward
-Q:19:T:awaits you outside.
+?:[EQU $QUEST19 Completed]
+D:Thank you for killing the demons!
 ?:1
 
 ?:[EQU $QUEST19 Failed]
-Q:19:T:I've sent out someone else to do the job. Now leave me alone!
+D:I've sent out someone else to do the job. Now leave me alone!
 ?:1
 
 T:QUEST:NORMAL
@@ -33,15 +28,16 @@ L:a:MON(^manes$)
 L:b:MON(^imp$)
 L:c:MON(flying skull)
 L:d:MON(arch-vile)
+M:###############################################
+M:#$....c....a....#$....#.......+c+...ca...;#.$$#
+M:#$......######..#.bcb.+..b.b..+c+..b...###...$#
+M:#.b.....#b......#..b..#..a....+c+....####....$#
+M:#####...#.$...b.#.....#.b..$$.+c+..#####c...d.#
+M:#$..+...#......#####+##.b..$$.+c+..#####....d.#
+M:#$b.#.a.#...b.##......#.......+c+...$####....$#
+M:#####...#..####.c.....#..b.b..+c+..b...###...$#
+M:#<..+...#...b........$#.......+c+...ca...;#.$$#
+M:###############################################
+R:OBJ(^ring$):EGO(elemental)
 
-D:###############################################
-D:#$....c....a....#$....#.......+c+...ca...;#.$$#
-D:#$......######..#.bcb.+..b.b..+c+..b...###...$#
-D:#.b.....#b......#..b..#..a....+c+....####....$#
-D:#####...#.$...b.#.....#.b..$$.+c+..#####c...d.#
-D:#$..+...#......#####+##.b..$$.+c+..#####....d.#
-D:#$b.#.a.#...b.##......#.......+c+...$####....$#
-D:#####...#..####.c.....#..b.b..+c+..b...###...$#
-D:#<..+...#...b........$#.......+c+...ca...;#.$$#
-D:###############################################
-
+# vim: filetype=q :

@@ -25,74 +25,74 @@ L:^:TRAP(*, 50)
 L:0:MON(THIEF, DEPTH+5)
 L:$:OBJ(*)
 M:###############
-M:#....1....#..$#
+M:#....4....#..$#
 M:#.........+^..#
-M:#2........#0..#
+M:#8........#0..#
 M:#####.....#####
-M:#$.^+........1#
-M:#.0.#..^......#
+M:#$.^+........5#
+M:#.2.#..^......#
 M:#####.........#
 M:#.^.+.........#
-M:#<^.+........2#
+M:#<^.+........7#
 M:###############
 
-R:OBJ(long sword, DEPTH+5)
+R:OBJ(long sword)
 
 ?:[EQU $RACE Beholder Spider Ring]
-R:OBJ(RING, DEPTH+10):EGO(protection)
+R:OBJ(^ring$):EGO(protection)
 
 ?:[EQU $RACE Centipede]
-R:OBJ(metal shod boots, DEPTH+5)
+R:OBJ(metal shod boots)
 
 ?:[EQU $RACE Dragon]
-R:OBJ(^cloak$, DEPTH+5)
+R:OBJ(^cloak$)
 
 ?:[EQU $RACE Hound Hydra Vortex]
-R:OBJ(steel helm, DEPTH+5)
+R:OBJ(steel helm)
 
 ?:[AND [EQU $CLASS Monster] [EQU $RACE Golem] ]
-R:OBJ(steel helm, DEPTH+5)
+R:OBJ(steel helm)
 
 ?:[AND [EQU $CLASS Monster] [EQU $RACE Giant] ]
-R:OBJ(two-handed sword, DEPTH+5)
+R:OBJ(two-handed sword)
 
 ?:[EQU $RACE Lich Quylthulg]
-R:OBJ(RING, DEPTH+10):EGO(protection)
+R:OBJ(^ring$):EGO(protection)
 
 ?:[EQU $CLASS Duelist]
-R:OBJ(rapier, DEPTH+5)
+R:OBJ(rapier)
 
 ?:[EQU $CLASS Rogue]
-R:OBJ(^sling$, DEPTH+5)
+R:OBJ(^sling$)
 
 ?:[EQU $CLASS Archaeologist]
-R:OBJ(^whip$, DEPTH+5)
+R:OBJ(^whip$)
 
 ?:[EQU $CLASS Beastmaster Cavalry]
-R:OBJ(broad spear, DEPTH+5)
+R:OBJ(broad spear)
 
 ?:[EQU $CLASS Monk Force-Trainer Mystic]
-R:OBJ(gauntlets, DEPTH+5)
+R:OBJ(gauntlets)
 
 ?:[EQU $CLASS Priest]
-R:OBJ(war hammer, DEPTH+5)
+R:OBJ(war hammer)
 
 ?:[EQU $RACE Angel]
-R:OBJ(war hammer, DEPTH+5)
+R:OBJ(war hammer)
 
 ?:[EQU $CLASS Archer]
-R:OBJ(short bow, DEPTH+5)
+R:OBJ(short bow)
 
 ?:[EQU $CLASS Weaponsmith]
-R:OBJ(broad axe, DEPTH+5)
+R:OBJ(broad axe)
 
 ?:[EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage]
-R:OBJ(RING, DEPTH+10):EGO(protection)
+R:OBJ(^ring$):EGO(protection)
 
 ?:[EQU $CLASS Ninja]
-R:OBJ(^dagger$, DEPTH+5)
+R:OBJ(^dagger$)
 
 ?:[EQU $CLASS Sniper]
-R:OBJ(light crossbow, DEPTH+5)
+R:OBJ(light crossbow)
 
 # vim: filetype=q :

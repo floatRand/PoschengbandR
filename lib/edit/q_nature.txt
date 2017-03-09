@@ -1,12 +1,12 @@
 # Created by Topi Ylinen
-?:[EQU $QUEST12 Taken Completed]
+?:[EQU $QUEST12 Taken]
 D:The Wizards of Nature have discovered a magical Node of 
 D:Nature in a nearby forest. You must seek the Node and 
 D:dispatch its guardians so that the Tower of Nature can 
 D:claim the mystical energies of the Node.
 ?:1
 
-?:[EQU $QUEST12 Rewarded]
+?:[EQU $QUEST12 Completed]
 D:You have done well. A powerful spellbook awaits you outside.
 ?:1
 

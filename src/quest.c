@@ -197,7 +197,11 @@ obj_ptr quest_get_reward(quest_ptr q)
         memset(letter, 0, sizeof(room_grid_t));
         _temp_reward = letter;
         if (parse_edit_file(q->file, _parse_reward, 0) == ERROR_SUCCESS)
-            reward = room_grid_make_obj(letter);
+        {
+            if (!letter->object_level)
+                letter->object_level = 1; /* Hack: force at least AM_GOOD */
+            reward = room_grid_make_obj(letter, q->level);
+        }
         _temp_reward = NULL;
         free(letter);
     }
@@ -1081,7 +1085,7 @@ void quests_wizard(void)
         rect_t r = ui_shop_rect(); /* recalculate in case resize */
         int    cmd;
 
-        context.page_size = MIN(26, r.cy - 6);
+        context.page_size = MIN(26, r.cy - 7);
         if (context.top % context.page_size != 0) /* resize?? */
             context.top = 0;
 
@@ -1201,6 +1205,7 @@ static void _display_menu(_ui_context_ptr context)
         else
             doc_newline(doc);
     }
+    doc_newline(doc);
     {
         int max = vec_length(context->quests) - 1;
         int bottom = context->top + context->page_size;
@@ -1260,6 +1265,7 @@ static void _map_cmd(_ui_context_ptr context)
             }
             _display_map(map);
             Term_clear();
+            room_free(map);
             break;
         }
     }

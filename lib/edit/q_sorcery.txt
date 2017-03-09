@@ -1,13 +1,13 @@
 # Created by Topi Ylinen
-?:[EQU $QUEST10 Taken Completed]
+?:[EQU $QUEST10 Taken]
 D:The Wizards of Sorcery have discovered a magical Node of Sorcery 
 D:in a damp area nearby. You must seek the Node and dispatch 
 D:its guardians so that the Tower of Sorcery can claim the 
 D:mystical energies of the Node.
 ?:1
 
-?:[EQU $QUEST10 Rewarded]
-D:You have done well. A powerful spellbook awaits you outside.
+?:[EQU $QUEST10 Completed]
+D:You have done well.
 ?:1
 
 ?:[EQU $QUEST10 Failed]

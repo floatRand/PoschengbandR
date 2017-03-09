@@ -1,7 +1,7 @@
 ?:[EQU $QUEST5 Taken]
 D:Lately, a dark evil has been discovered. An ancient burial ground
 D:has been taken over by something terrible. Creatures black as night
-D:now inhabit the place, attacking out villagers and eating our young.
+D:now inhabit the place, attacking our villagers and eating our young.
 D:Please, we are desperate. We don't have much to offer, but we beg you
 D:to help us!
 ?:1

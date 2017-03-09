@@ -15,69 +15,69 @@ D:in the dungeon, we can only give you a small reward.
 D:Bah! I'll have to find another for this simple task.
 ?:1
 
-R:OBJ(small metal shield, DEPTH+5)
+R:OBJ(small metal shield)
 
 ?:[EQU $CLASS Magic-Eater]
 R:OBJ(WAND_BOLT_COLD)
 
 ?:[EQU $RACE Death-Sword]
-R:OBJ(long sword, DEPTH+5)
+R:OBJ(long sword)
 
 ?:[EQU $CLASS Scout]
-R:OBJ(light crossbow, DEPTH+5)
+R:OBJ(light crossbow)
 
 ?:[EQU $CLASS Mage High-Mage Blue-Mage Sorcerer Mirror-Master Blood-Mage Yellow-Mage Gray-Mage]
-R:OBJ(RING, DEPTH+10):EGO(wizardry)
+R:OBJ(^ring$):EGO(wizardry)
 
 ?:[EQU $RACE Dragon Hound Spider]
-R:OBJ(RING, DEPTH+10):EGO(combat)
+R:OBJ(^ring$):EGO(combat)
 
 ?:[EQU $RACE Centipede]
-R:OBJ(metal shod boots, DEPTH+5)
+R:OBJ(metal shod boots)
 
 ?:[EQU $RACE Ring Beholder Vortex]
-R:OBJ(RING, DEPTH+10):EGO(elemental)
+R:OBJ(^ring$):EGO(elemental)
 
 ?:[EQU $RACE Hydra Quylthulg]
-R:OBJ(^cloak$, DEPTH+5)
+R:OBJ(^cloak$)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Axes] ]
-R:OBJ(broad axe, DEPTH+5)
+R:OBJ(broad axe)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Bows] ]
-R:OBJ(short bow, DEPTH+5)
+R:OBJ(short bow)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Clubs] ]
-R:OBJ(war hammer, DEPTH+5)
+R:OBJ(war hammer)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Crossbows] ]
-R:OBJ(light crossbow, DEPTH+5)
+R:OBJ(light crossbow)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Daggers] ]
-R:OBJ(^dagger$, DEPTH+5)
+R:OBJ(^dagger$)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Diggers] ]
-R:OBJ(^pick$, DEPTH+5)
+R:OBJ(^pick$)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Polearms] ]
-R:OBJ(^pike$, DEPTH+5)
+R:OBJ(^pike$)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Shields] ]
-R:OBJ(small leather shield, DEPTH+5)
+R:OBJ(small leather shield)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Slings] ]
-R:OBJ(^sling$, DEPTH+5)
+R:OBJ(^sling$)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Staves] ]
-R:OBJ(quarterstaff, DEPTH+5)
+R:OBJ(quarterstaff)
 
 ?:[AND [EQU $CLASS Weaponmaster] [EQU $SPECIALITY Swords] ]
-R:OBJ(long sword, DEPTH+5)
+R:OBJ(long sword)
 
 ?:[EQU $CLASS Beastmaster Cavalry Ninja]
-R:OBJ(gauntlets, DEPTH+5)
+R:OBJ(gauntlets)
 
 ?:[EQU $CLASS Mauler]
-R:OBJ(two-handed flail, DEPTH+5)
+R:OBJ(two-handed flail)
 
 # vim: filetype=q :

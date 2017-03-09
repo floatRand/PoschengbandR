@@ -1823,10 +1823,10 @@ static void _apply_room_grid_mon(point_t p, room_grid_ptr grid, u16b room_flags)
     }
 }
 
-obj_ptr room_grid_make_obj(room_grid_ptr grid)
+obj_ptr room_grid_make_obj(room_grid_ptr grid, int level)
 {
     obj_t forge = {0};
-    object_level = MAX(1, base_level + grid->object_level);
+    object_level = MAX(1, level + grid->object_level);
     if (grid->flags & ROOM_GRID_OBJ_ARTIFACT)
     {
         if (no_artifacts)
@@ -1939,7 +1939,7 @@ static void _apply_room_grid_obj(point_t p, room_grid_ptr grid, u16b room_flags)
     /* see if tile was trapped in _apply_room_grid_feat */
     if (!cave_drop_bold(p.y, p.x)) return;
 
-    obj = room_grid_make_obj(grid);
+    obj = room_grid_make_obj(grid, object_level);
     if (obj)
     {
        drop_here(obj, p.y, p.x);
