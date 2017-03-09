@@ -4613,9 +4613,9 @@ errr parse_room_line(room_ptr room, char *line, int options)
                 letters[i] = args[i][0];
                 scrambles[i] = letters[i];
             }
-            for (i = 0; i < arg_ct; i++) /* every permutation can be written as */
-            {                            /* a product of transpositions */
-                int j = randint0(arg_ct);
+            for (i = 0; i < arg_ct - 1; i++) /* Skiena: _Algorithm_Design_Manual_ p248 */
+            {
+                int j = rand_range(i, arg_ct - 1);
                 char t = scrambles[i];
                 scrambles[i] = scrambles[j];
                 scrambles[j] = t;
