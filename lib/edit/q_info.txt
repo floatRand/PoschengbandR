@@ -81,6 +81,10 @@ N:19:15:Doom Quest I
 T:TOWN | GENERATE
 F:q_doom1.txt
 
+N:20:25:Vapor Quest
+T:TOWN | GENERATE
+F:q_vapor.txt
+
 N:21:55:Doom Quest II
 T:TOWN | GENERATE
 F:q_doom2.txt
@@ -92,6 +96,11 @@ F:q_orcs.txt
 N:23:65:The Spawning Pits
 T:TOWN | GENERATE
 F:q_spawning_pits.txt
+
+N:24:50:The Rise and Fall of Micro$oft
+T:TOWN | GENERATE
+G:KILL(bull gates)
+F:q_microsoft.txt
 
 N:25:48:The Haunted House
 T:TOWN | GENERATE
@@ -174,7 +183,7 @@ T:RANDOM
 W:angband
 G:KILL(*)
 
-N:48:78:Angband L78
+N:48:76:Angband L76
 T:RANDOM
 W:angband
 G:KILL(*)
@@ -183,16 +192,5 @@ N:49:88:Angband L88
 T:RANDOM
 W:angband
 G:KILL(*)
-
-########################################################################
-## Vapor Quest
-#?:[EQU $QUEST_NUMBER 20]
-#%:q0000020.txt
-#
-## The Rise and Fall of Micro$oft
-#?:[EQU $QUEST_NUMBER 24]
-#%:q00000ms.txt
-#
-#
 
 # vim: filetype=qi :
