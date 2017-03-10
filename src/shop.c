@@ -1270,8 +1270,6 @@ void shop_ui(shop_ptr shop)
     context.top = 1;
     _loop(&context);
     store_hack = FALSE;
-
-    shop->last_visit.turn = game_turn;
 }
 
 static void _loop(_ui_context_ptr context)
@@ -1821,6 +1819,8 @@ static void _maintain(shop_ptr shop)
                 ct = _restock(shop, MIN(_STOCK_HI, ct + randint1(9)));
         }
     }
+    if (allow_restock)
+        shop->last_visit.turn = game_turn;
 }
 
 static bool _can_cull(obj_ptr obj)
