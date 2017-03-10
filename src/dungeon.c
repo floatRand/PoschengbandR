@@ -5561,7 +5561,6 @@ void play_game(bool new_game)
                     dun_level = 0;
                     p_ptr->inside_arena = FALSE;
                     p_ptr->inside_battle = FALSE;
-                    leaving_quest = 0;
                     if (dungeon_type) p_ptr->recall_dungeon = dungeon_type;
                     dungeon_type = 0;
                     if (no_wilderness)

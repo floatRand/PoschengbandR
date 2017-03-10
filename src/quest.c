@@ -873,7 +873,6 @@ void quests_on_leave(void)
     if (!_current) return;
     q = quests_get(_current);
     assert(q);
-    leaving_quest = _current; /* XXX */
     if (q->status == QS_IN_PROGRESS)
     {
         if (q->flags & QF_RETAKE)

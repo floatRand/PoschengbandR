@@ -4933,13 +4933,6 @@ static cptr process_dungeon_file_expr(char **sp, char *fp)
                 v = tmp;
             }
 
-            /* Number of last quest */
-            else if (streq(b+1, "LEAVING_QUEST"))
-            {
-                sprintf(tmp, "%d", leaving_quest);
-                v = tmp;
-            }
-
             /* Quest status */
             else if (prefix(b+1, "QUEST"))
             {
