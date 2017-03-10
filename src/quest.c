@@ -465,6 +465,7 @@ bool quests_init(void)
 {
     assert(!_quests);
     _quests = int_map_alloc((int_map_free_f)quest_free);
+    _current = 0;
     return !parse_edit_file("q_info.txt", _parse_q_info, 0); /* errr -> bool */
 }
 
@@ -477,6 +478,21 @@ void quests_add(quest_ptr q)
 
 void quests_cleanup(void)
 {
+    vec_ptr v;
+    int     i;
+
+    assert(_quests);
+
+    /* remove RF1_QUESTOR from previously assigned random quests */
+    v = quests_get_random();
+    for (i = 0; i < vec_length(v); i++)
+    {
+        quest_ptr q = vec_get(v, i);
+        if (q->goal == QG_KILL_MON && q->goal_idx)
+            r_info[q->goal_idx].flags1 &= ~RF1_QUESTOR;
+    }
+    vec_free(v);
+
     int_map_free(_quests);
     _quests = NULL;
     _current = 0;
@@ -644,17 +660,8 @@ void quests_on_birth(void)
     int i;
 
     /* stale data from the last character */
-    v = quests_get_all();
-    for (i = 0; i < vec_length(v); i++)
-    {
-        quest_ptr q = vec_get(v, i);
-        q->status = QS_UNTAKEN;
-        q->completed_lev = 0;
-        q->goal_current = 0;
-        q->seed = 0;
-    }
-    vec_free(v);
-    _current = 0;
+    quests_cleanup();
+    quests_init();
 
     /* assign random quests */
     v = quests_get_random();
@@ -1091,18 +1098,49 @@ void quests_wizard(void)
 
         cmd = inkey_special(TRUE);
         msg_line_clear();
-        msg_boundary(); /* turn_count is unchanging while in home/museum */
+        msg_boundary();
         if (cmd == ESCAPE || cmd == 'q' || cmd == 'Q') break;
-        switch (cmd) /* cmd is from the player's perspective */
+        switch (cmd)
         {
         case 'm': _map_cmd(&context); break;
-        case 'R': quests_on_birth(); break; /* wizards need no confirmation prompt! */
         case 'c': _status_cmd(&context, QS_COMPLETED); break;
         case 'f': _status_cmd(&context, QS_FAILED); break;
         case 'u': _status_cmd(&context, QS_UNTAKEN); break;
         case '$': _reward_cmd(&context); break;
         case '?': _analyze_cmd(&context); break;
-        case KTRL('P'): do_cmd_messages(game_turn); break;
+        case 'R':
+            quests_on_birth();
+            vec_free(context.quests);
+            context.quests = quests_get_all();
+            break;
+        case KTRL('R'):
+            vec_free(context.quests);
+            context.quests = quests_get_random();
+            context.top = 0;
+            break;
+        case KTRL('A'):
+            vec_free(context.quests);
+            context.quests = quests_get_active();
+            context.top = 0;
+            break;
+        case KTRL('C'):
+            vec_free(context.quests);
+            context.quests = quests_get_finished();
+            context.top = 0;
+            break;
+        case KTRL('F'):
+            vec_free(context.quests);
+            context.quests = quests_get_failed();
+            context.top = 0;
+            break;
+        case '*':
+            vec_free(context.quests);
+            context.quests = quests_get_all();
+            context.top = 0;
+            break;
+        case KTRL('P'):
+            do_cmd_messages(game_turn);
+            break;
         case SKEY_PGDOWN: case '3':
             if (context.top + context.page_size - 1 < max)
                 context.top += context.page_size;

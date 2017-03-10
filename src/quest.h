@@ -85,6 +85,7 @@ extern vec_ptr    quests_get_active(void);
 extern vec_ptr    quests_get_finished(void);
 extern vec_ptr    quests_get_failed(void);
 extern vec_ptr    quests_get_hidden(void);
+extern vec_ptr    quests_get_random(void);
                   /* Note: quest lists are returned sorted. You must vec_free() when finished. */
 
 extern void       quests_on_birth(void); /* assign random quests */
