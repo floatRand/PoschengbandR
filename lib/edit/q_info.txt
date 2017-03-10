@@ -68,6 +68,15 @@ W:stronghold
 G:KILL(^warg$, 16)
 F:q_wargs.txt
 
+N:15:70:Eric's Stronghold
+T:TOWN | GENERATE
+G:KILL(eric the usurper)
+F:q_eric.txt
+
+N:16:40:Assault on Montsalvat
+T:TOWN | GENERATE
+F:q_montsalvat.txt
+
 N:19:15:Doom Quest I
 T:TOWN | GENERATE
 F:q_doom1.txt
@@ -88,12 +97,18 @@ N:25:48:The Haunted House
 T:TOWN | GENERATE
 F:q_haunted_house.txt
 
+N:26:50:The Killing Fields
+T:TOWN | GENERATE
+G:KILL(maulotaur)
+F:q_killing_fields.txt
+
 N:27:50:The Old Castle
 T:TOWN | GENERATE
 F:q_old_castle.txt
 
 N:28:70:The Royal Crypt
 T:TOWN | GENERATE
+G:KILL(archlich, 5)
 F:q_crypt.txt
 
 N:29:25:Tengu and Death Swords
@@ -170,14 +185,6 @@ W:angband
 G:KILL(*)
 
 ########################################################################
-# Eric's Stronghold
-#?:[EQU $QUEST_NUMBER 15]
-#%:q000eric.txt
-#
-## Assault on Montsalvat
-#?:[EQU $QUEST_NUMBER 16]
-#%:q000dekn.txt
-#
 ## Vapor Quest
 #?:[EQU $QUEST_NUMBER 20]
 #%:q0000020.txt
@@ -185,10 +192,6 @@ G:KILL(*)
 ## The Rise and Fall of Micro$oft
 #?:[EQU $QUEST_NUMBER 24]
 #%:q00000ms.txt
-#
-## Killing Fields
-#?:[EQU $QUEST_NUMBER 26]
-#%:q0fields.txt
 #
 #
 

@@ -1,5 +1,4 @@
 #include "angband.h"
-#include "grid.h"
 
 #include <assert.h>
 
@@ -253,9 +252,7 @@ static void _generate(room_ptr room)
     for (y = 0; y < cur_hgt; y++)
     {
         for (x = 0; x < cur_wid; x++)
-        {
-            place_solid_perm_bold(y, x);
-        }
+            cave[y][x].feat = feat_permanent;
     }
 
     /* generate the level */
