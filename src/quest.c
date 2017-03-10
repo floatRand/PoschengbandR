@@ -929,6 +929,51 @@ bool quests_allow_feeling(void)
  ***********************************************************************/
 void quests_display(void)
 {
+    doc_ptr doc = doc_alloc(80);
+    vec_ptr v = quests_get_active();
+    int     i;
+
+    if (vec_length(v))
+    {
+        doc_printf(doc, "  <color:B>Current Quests</color>\n");
+        for (i = 0; i < vec_length(v); i++)
+        {
+            quest_ptr q = vec_get(v, i);
+
+            doc_printf(doc, "  <color:R>%s</color> (Lvl <color:U>%d</color>)\n", q->name, q->level);
+            if (q->status == QS_COMPLETED)
+                doc_insert(doc, "    Quest Completed (Unrewarded)");
+            else if ((q->flags & QF_RANDOM) && q->goal == QG_KILL_MON)
+            {
+                monster_race *r_ptr = &r_info[q->goal_idx];
+                if (q->goal_count > 1)
+                {
+                    char name[MAX_NLEN];
+                    strcpy(name, r_name + r_ptr->name);
+                    plural_aux(name);
+                    doc_printf(doc, "    Kill %d %s", q->goal_count, name);
+                }
+                else
+                    doc_printf(doc, "    Kill %s", r_name + r_ptr->name);
+            }
+            else
+            {
+                string_ptr s = quest_get_description(q);
+                doc_printf(doc, "    <indent>%s</indent>", string_buffer(s));
+                string_free(s);
+            }
+            doc_newline(doc);
+        }
+        doc_newline(doc);
+    }
+    vec_free(v);
+
+    quests_doc(doc);
+
+    screen_save();
+    doc_display(doc, "Quests", 0);
+    screen_load();
+    doc_free(doc);
 }
 
 static void quest_doc(quest_ptr q, doc_ptr doc)
@@ -964,6 +1009,7 @@ void quests_doc(doc_ptr doc)
     int     i;
     vec_ptr v = quests_get_finished();
 
+    doc_insert(doc, "<style:table>");
     if (vec_length(v))
     {
         doc_printf(doc, "  <color:G>Completed Quests</color>\n");
@@ -988,6 +1034,7 @@ void quests_doc(doc_ptr doc)
     }
     vec_free(v);
     doc_newline(doc);
+    doc_insert(doc, "</style>");
 }
 
 /************************************************************************
