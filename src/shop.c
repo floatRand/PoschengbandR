@@ -905,16 +905,17 @@ static bool _black_market_stock_p(int k_idx)
 {
     object_kind *k_ptr = &k_info[k_idx];
 
-    if (k_ptr->gen_flags & OFG_INSTA_ART)
-        return FALSE;
+    if (k_ptr->gen_flags & OFG_INSTA_ART) return FALSE;
 
-    if (k_ptr->tval == TV_WAND || k_ptr->tval == TV_STAFF || k_ptr->tval == TV_ROD)
-        return TRUE;
+    switch (k_ptr->tval)
+    {
+    case TV_CHEST: return FALSE;
+    case TV_WAND:
+    case TV_ROD:
+    case TV_STAFF: return TRUE;
+    }
 
-    if (k_ptr->gen_flags & OFG_TOWN)
-        return FALSE;
-
-    return TRUE;
+    return !(k_ptr->gen_flags & OFG_TOWN);
 }
 
 static bool _black_market_create(obj_ptr obj, int mode)
