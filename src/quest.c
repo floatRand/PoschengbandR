@@ -964,25 +964,28 @@ void quests_display(void)
             /* Description. However, the QS_COMPLETED description is the 'reward' message */
             if (q->status == QS_COMPLETED)
                 doc_insert(doc, "    Quest Completed (Unrewarded)");
-            else if ((q->flags & QF_RANDOM) && q->goal == QG_KILL_MON)
-            {
-                monster_race *r_ptr = &r_info[q->goal_idx];
-                if (q->goal_count > 1)
-                {
-                    char name[MAX_NLEN];
-                    strcpy(name, r_name + r_ptr->name);
-                    plural_aux(name);
-                    doc_printf(doc, "    <indent>Kill %d %s (%d killed so far)</indent>",
-                        q->goal_count, name, q->goal_current);
-                }
-                else
-                    doc_printf(doc, "    Kill %s", r_name + r_ptr->name);
-            }
             else
             {
-                string_ptr s = quest_get_description(q);
-                doc_printf(doc, "    <indent>%s</indent>", string_buffer(s));
-                string_free(s);
+                if (q->goal == QG_KILL_MON)
+                {
+                    monster_race *r_ptr = &r_info[q->goal_idx];
+                    if (q->goal_count > 1)
+                    {
+                        char name[MAX_NLEN];
+                        strcpy(name, r_name + r_ptr->name);
+                        plural_aux(name);
+                        doc_printf(doc, "    <indent>Kill %d %s (%d killed so far)</indent>\n",
+                            q->goal_count, name, q->goal_current);
+                    }
+                    else if (q->flags & QF_RANDOM)
+                        doc_printf(doc, "    Kill %s\n", r_name + r_ptr->name);
+                }
+                if (!(q->flags & QF_RANDOM))
+                {
+                    string_ptr s = quest_get_description(q);
+                    doc_printf(doc, "    <indent>%s</indent>", string_buffer(s));
+                    string_free(s);
+                }
             }
             doc_newline(doc);
         }
