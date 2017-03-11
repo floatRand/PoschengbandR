@@ -895,10 +895,6 @@ void leave_floor(void)
         p_ptr->floor_id = get_new_floor_id();
     }
 
-    /* remove quest monsters
-     * moved to quests_on_leave() which has already been called
-    quests_on_leave_floor(); */
-
     /* Check if there is a same item */
     equip_for_each(_fix_art_hack);
     pack_for_each(_fix_art_hack);

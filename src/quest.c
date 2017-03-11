@@ -684,44 +684,6 @@ void quests_on_birth(void)
 /************************************************************************
  * Quests: Hooks
  ***********************************************************************/
-void quests_on_leave_floor(void)
-{
-    quest_ptr q;
-    if (!_current) return;
-    q = quests_get(_current);
-    assert(q);
-    /* From floors.c ... I'm not quite sure what we are after here.
-     * I suppose if the user flees an uncompleted quest for non-unique
-     * monsters (e.g. Kill 16 Wargs) then, if they re-enter the quest
-     * level, those quest monsters should not be present. Hey, they
-     * missed their chance! It's weird that we let the uniques remain, though. */
-    if (q->goal == QG_KILL_MON)
-    {
-        int i;
-        for (i = 1; i < m_max; i++)
-        {
-            monster_race *r_ptr;
-            monster_type *m_ptr = &m_list[i];
-
-            /* Skip dead monsters */
-            if (!m_ptr->r_idx) continue;
-
-            /* Only maintain quest monsters */
-            if (q->goal_idx != m_ptr->r_idx) continue;
-
-            /* Extract real monster race */
-            r_ptr = real_r_ptr(m_ptr);
-
-            /* Ignore unique monsters */
-            if ((r_ptr->flags1 & RF1_UNIQUE) ||
-                (r_ptr->flags7 & RF7_NAZGUL)) continue;
-
-            /* Delete non-unique quest monsters */
-            delete_monster_idx(i);
-        }
-    }
-}
-
 static int _quest_dungeon(quest_ptr q)
 {
     int d = q->dungeon;
@@ -869,6 +831,57 @@ bool quests_check_leave(void)
     return TRUE;
 }
 
+static void _remove_questors(void)
+{
+    quest_ptr q;
+    if (!_current) return;
+    q = quests_get(_current);
+    assert(q);
+    /* Remove non-unique quests for QF_RETAKE quests. Why?
+     * Imagine fleeing an incomplete quest. You might then
+     * take the same stairs back to that level, in which case
+     * it seems we should have left the questors in place. But,
+     * you might take a *different* staircase to q->level in
+     * q->dungeon. Then, we get a new level, but it is still
+     * the quest level, and we need to place an appropriate
+     * number of new quest monsters on the level. Kill some more,
+     * flee the level, backtrack to the original staircase, and
+     * re-enter the first instance of the quest level. Had we
+     * left 'em around, there would now be too many. Perhaps
+     * the quest is even completed now? Better to remove and
+     * replace as needed. (This was never explained before ... I
+     * had to guess the code's purpose and I'd like to save you
+     * the trouble. It's not obvious.)
+     * BTW, if you flee a non-QF_RETAKE quest, then you cannot
+     * return to that level. The stairs are blocked by CFM_NO_RETURN.
+     * In this case, there is no need to remove the questors. */
+    if (q->goal == QG_KILL_MON)
+    {
+        int i;
+        for (i = 1; i < m_max; i++)
+        {
+            monster_race *r_ptr;
+            monster_type *m_ptr = &m_list[i];
+
+            if (!m_ptr->r_idx) continue;
+            if (q->goal_idx != m_ptr->r_idx) continue;
+
+            r_ptr = real_r_ptr(m_ptr); /* XXX */
+
+            /* Ignore unique monsters ... If you leave the Oberon
+             * quest, for example, and then return, he will remain
+             * in the same spot. If you take different stairs to
+             * DL99 and kill him, then backtrack to the original,
+             * he will be gone. floors.c has logic to prevent duplicate
+             * uniques (and artifacts, too). */
+            if ((r_ptr->flags1 & RF1_UNIQUE) ||
+                (r_ptr->flags7 & RF7_NAZGUL)) continue;
+
+            delete_monster_idx(i);
+        }
+    }
+}
+
 void quests_on_leave(void)
 {
     quest_ptr q;
@@ -880,10 +893,7 @@ void quests_on_leave(void)
         if (q->flags & QF_RETAKE)
         {
             q->status = QS_TAKEN;
-            /* formerly leave_floor() -> quests_on_leave_floor(). however,
-             * _current will be cleared at that point and QF_RETAKE non-unique
-             * random questors will multiply uncontollably! */
-            quests_on_leave_floor();
+            _remove_questors();
         }
         else
         {

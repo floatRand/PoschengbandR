@@ -89,7 +89,6 @@ extern vec_ptr    quests_get_random(void);
                   /* Note: quest lists are returned sorted. You must vec_free() when finished. */
 
 extern void       quests_on_birth(void); /* assign random quests */
-extern void       quests_on_leave_floor(void); /* delete quest monsters if OF_RETAKE */
 extern void       quests_on_restore_floor(int dungeon, int level); /* player re-entered a saved floor (persistent levels) */
 extern void       quests_on_generate(int dungeon, int level); /* see if this level is a quest level */
 extern void       quests_generate(int id); /* QF_GENERATE located on surface (QUEST_ENTER(id)) */
