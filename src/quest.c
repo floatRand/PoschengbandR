@@ -885,10 +885,15 @@ void quests_on_leave(void)
                 r_info[q->goal_idx].flags1 &= ~RF1_QUESTOR;
         }
     }
-    prepare_change_floor_mode(CFM_NO_RETURN);
     /* Hack: Return to surface */
     if ((q->flags & QF_GENERATE) && !q->dungeon)
+    {
         dun_level = 0;
+        prepare_change_floor_mode(CFM_NO_RETURN);
+    }
+    /* Oberon and The Serpent should not block the return stairs */
+    else if (!(q->flags & QF_RETAKE))
+        prepare_change_floor_mode(CFM_NO_RETURN);
     _current = 0;
 }
 
