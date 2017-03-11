@@ -762,7 +762,7 @@ bool _unwield_verify(obj_ptr obj)
         energy_use = 0;
         return FALSE;
     }
-    if (object_is_cursed(obj))
+    if (object_is_cursed(obj) && obj->loc.where == INV_EQUIP)
     {
         if ((obj->curse_flags & OFC_PERMA_CURSE) || p_ptr->pclass != CLASS_BERSERKER)
         {
