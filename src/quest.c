@@ -743,11 +743,12 @@ static quest_ptr _find_quest(int dungeon, int level)
         quest_ptr q = vec_get(v, i);
         int       d = _quest_dungeon(q);
 
-        if (d == dungeon && q->level == level)
-        {
-            result = q;
-            break;
-        }
+        if (d != dungeon) continue;
+        if (q->level != level) continue;
+        if ((q->flags & QF_TOWN) && q->status == QS_UNTAKEN) continue;
+
+        result = q;
+        break;
     }
     vec_free(v);
     return result;
