@@ -1,4 +1,4 @@
-?:[EQU $QUEST1 Taken]
+?:[EQU $QUEST1 Taken InProgress]
 D:There are thieves robbing my people! They live in a small
 D:burrow outside the city walls robbing people as they pass
 D:on the roads. They even sneak inside the town to mug and

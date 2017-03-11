@@ -159,6 +159,8 @@ void do_cmd_go_down(void)
 
         if (autosave_l) do_cmd_save_game(TRUE);
 
+        quests_on_leave(); /* QS_COMPLETED and taking the victory stairs? */
+
         /* Go down */
         if (have_flag(f_ptr->flags, FF_SHAFT)) down_num += 2;
         else down_num += 1;

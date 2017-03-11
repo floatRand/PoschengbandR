@@ -1,4 +1,4 @@
-?:[EQU $QUEST28 Taken]
+?:[EQU $QUEST28 Taken InProgress]
 D:A mysterious force has entered the royal crypt and is
 D:desecrating the graves of the king's noble ancestors. Their
 D:bodily remains have been magicly animated and their spirits

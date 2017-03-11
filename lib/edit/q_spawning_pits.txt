@@ -1,7 +1,7 @@
 # q0000023.txt
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 
-?:[EQU $QUEST23 Taken]
+?:[EQU $QUEST23 Taken InProgress]
 D:A great, great evil approaches, perhaps the end for our town.
 D:Our scouts lie slaughtered, their bodies crushed and mangled
 D:by powerful beasts. I know not what you shall face. 

@@ -1,5 +1,5 @@
 # Haunted House, (C) Topi Ylinen 1999
-?:[EQU $QUEST25 Taken]
+?:[EQU $QUEST25 Taken InProgress]
 D:There is something evil going on in the old, thatched house
 D:near the south-west corner of the city wall. People say that
 D:the house is haunted and refuse to go near it. We need someone

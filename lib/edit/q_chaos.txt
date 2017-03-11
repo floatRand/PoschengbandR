@@ -1,5 +1,5 @@
 # Created by Topi Ylinen
-?:[EQU $QUEST11 Taken]
+?:[EQU $QUEST11 Taken InProgress]
 D:The Wizards of Chaos have discovered a magical Node of
 D:Chaos in a nearby volcano. You must seek the Node and
 D:dispatch its guardians so that the Tower of Chaos can

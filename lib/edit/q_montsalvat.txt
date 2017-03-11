@@ -1,4 +1,4 @@
-?:[EQU $QUEST16 Taken]
+?:[EQU $QUEST16 Taken InProgress]
 D:Those annoying do-gooders who call themselves the knights of
 D:the Holy Grail are a pain in our flesh. We can tolerate them
 D:no longer! You must storm their Castle Montsalvat and show them

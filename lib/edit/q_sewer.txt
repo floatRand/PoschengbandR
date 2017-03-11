@@ -1,4 +1,4 @@
-?:[EQU $QUEST2 Taken]
+?:[EQU $QUEST2 Taken InProgress]
 D:The sewer underneath the city has been acting strange
 D:lately. There are rumors of monsters living beneath our
 D:fair city. I need you to exterminate the vermin and

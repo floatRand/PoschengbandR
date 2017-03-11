@@ -1,4 +1,4 @@
-?:[EQU $QUEST24 Taken]
+?:[EQU $QUEST24 Taken InProgress]
 D:A mysterious building has appeared, with the eldritch runes "M$"
 D:inscribed in its walls. An aura of evil radiates from this building.
 D:People in nearby villages have lost their money and sanity, and

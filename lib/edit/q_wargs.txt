@@ -1,4 +1,4 @@
-?:[EQU $QUEST14 Taken]
+?:[EQU $QUEST14 Taken InProgress]
 D:Our scouts report a large number of Wargs in the dungeon.
 D:We don't know who set them on guard at 250 feet, but we
 D:think their task is to hinder resupply of our outposts

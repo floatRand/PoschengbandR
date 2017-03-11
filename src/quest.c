@@ -757,6 +757,7 @@ static quest_ptr _find_quest(int dungeon, int level)
 void quests_on_generate(int dungeon, int level)
 {
     quest_ptr q = _find_quest(dungeon, level);
+    assert(!_current);
     if (q)
     {
         _current = q->id;
@@ -877,23 +878,24 @@ void quests_on_leave(void)
     if (q->status == QS_IN_PROGRESS)
     {
         if (q->flags & QF_RETAKE)
+        {
             q->status = QS_TAKEN;
+            /* formerly leave_floor() -> quests_on_leave_floor(). however,
+             * _current will be cleared at that point and QF_RETAKE non-unique
+             * random questors will multiply uncontollably! */
+            quests_on_leave_floor();
+        }
         else
         {
             quest_fail(q);
             if (q->goal == QG_KILL_MON)
                 r_info[q->goal_idx].flags1 &= ~RF1_QUESTOR;
+            prepare_change_floor_mode(CFM_NO_RETURN);
         }
     }
     /* Hack: Return to surface */
     if ((q->flags & QF_GENERATE) && !q->dungeon)
-    {
         dun_level = 0;
-        prepare_change_floor_mode(CFM_NO_RETURN);
-    }
-    /* Oberon and The Serpent should not block the return stairs */
-    else if (!(q->flags & QF_RETAKE))
-        prepare_change_floor_mode(CFM_NO_RETURN);
     _current = 0;
 }
 
@@ -945,7 +947,11 @@ void quests_display(void)
         {
             quest_ptr q = vec_get(v, i);
 
-            doc_printf(doc, "  <color:R>%s</color> (Lvl <color:U>%d</color>)\n", q->name, q->level);
+            /* Quest Name and Status */
+            doc_printf(doc, "  <color:%c>%s</color> (Lvl <color:U>%d</color>)\n",
+                (q->status == QS_IN_PROGRESS) ? 'y' : 'R', q->name, q->level);
+
+            /* Description. However, the QS_COMPLETED description is the 'reward' message */
             if (q->status == QS_COMPLETED)
                 doc_insert(doc, "    Quest Completed (Unrewarded)");
             else if ((q->flags & QF_RANDOM) && q->goal == QG_KILL_MON)
@@ -956,7 +962,8 @@ void quests_display(void)
                     char name[MAX_NLEN];
                     strcpy(name, r_name + r_ptr->name);
                     plural_aux(name);
-                    doc_printf(doc, "    Kill %d %s", q->goal_count, name);
+                    doc_printf(doc, "    <indent>Kill %d %s (%d killed so far)</indent>",
+                        q->goal_count, name, q->goal_current);
                 }
                 else
                     doc_printf(doc, "    Kill %s", r_name + r_ptr->name);
@@ -989,22 +996,28 @@ static void quest_doc(quest_ptr q, doc_ptr doc)
         {
             if (q->completed_lev == 0)
             {
-                doc_printf(doc, "  %-40s (Dungeon level: %3d) - (Cancelled)\n",
-                    r_name + r_info[q->goal_idx].name,
-                    q->level);
+                doc_printf(doc, "  Kill %s <tab:60>DL%3d <color:B>Cancelled</color>\n",
+                    r_name + r_info[q->goal_idx].name, q->level);
+            }
+            else if (q->goal_count > 1)
+            {
+                char name[MAX_NLEN];
+                monster_race *r_ptr = &r_info[q->goal_idx];
+                strcpy(name, r_name + r_ptr->name);
+                plural_aux(name);
+                doc_printf(doc, "  Kill %d %s (%d killed) <tab:60>DL%3d CL%2d\n",
+                    q->goal_count, name, q->goal_current, q->level, q->completed_lev);
             }
             else
             {
-                doc_printf(doc, "  %-40s (Dungeon level: %3d) - level %2d\n",
-                    r_name + r_info[q->goal_idx].name,
-                    q->level,
-                    q->completed_lev);
+                doc_printf(doc, "  Kill %s <tab:60>DL%3d CL%2d\n",
+                    r_name + r_info[q->goal_idx].name, q->level, q->completed_lev);
             }
         }
     }
     else
     {
-        doc_printf(doc, "  %-40s (Danger  level: %3d) - level %2d\n",
+        doc_printf(doc, "  %s <tab:60>DL%3d CL%2d\n",
             q->name, q->level, q->completed_lev);
     }
 }

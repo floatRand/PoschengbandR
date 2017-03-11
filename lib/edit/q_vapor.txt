@@ -1,6 +1,6 @@
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 
-?:[EQU $QUEST20 Taken]
+?:[EQU $QUEST20 Taken InProgress]
 D:Something curious has taken root beneath our Inn. Celebor,
 D:the innkeeper, has reported strange vapors and auras in the
 D:basement that drive out all living things. A caged canary was

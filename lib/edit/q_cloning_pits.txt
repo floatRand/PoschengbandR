@@ -1,7 +1,7 @@
 # The Cloning Pits
 # By Shayne Steele (steele@cs.fsu.edu)
 
-?:[EQU $QUEST33 Taken]
+?:[EQU $QUEST33 Taken InProgress]
 D:For the past few years we have been cloning exceptionally powerful 
 D:creatures for gladiatorial combat. Something has gone very wrong in 
 D:the Cloning Pits. Please eliminate ALL the clones, you will be well

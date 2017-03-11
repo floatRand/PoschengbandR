@@ -1,4 +1,4 @@
-?:[EQU $QUEST4 Taken]
+?:[EQU $QUEST4 Taken InProgress]
 D:The vault was used outside the town as a minor fortress and
 D:stored many valuable items. It has since been overrun. Please
 D:find the short sword known as Sting and return it to us!

@@ -1,5 +1,5 @@
 # Killing Fields, (C) Topi Ylinen 1999
-?:[EQU $QUEST26 Taken]
+?:[EQU $QUEST26 Taken InProgress]
 D:A mysterious army has appeared near the eastern border.
 D:Their troops seem endless. There is not a hope a we can
 D:defeat them by numbers, we have to take out their general

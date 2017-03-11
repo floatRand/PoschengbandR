@@ -1,6 +1,6 @@
 # Old Man Willow Quest
 # By Shayne Steele (steele@cs.fsu.edu)
-?:[EQU $QUEST31 Taken]
+?:[EQU $QUEST31 Taken InProgress]
 D:Old Man Willow has gone too far! He has turned a small section
 D:of the forest against all men. Kill everything you find in Old 
 D:Man Willow's section of the forest. You will be well rewarded 

@@ -1,6 +1,6 @@
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 
-?:[EQU $QUEST19 Taken]
+?:[EQU $QUEST19 Taken InProgress]
 D:We need your help, adventurer. A hole has opened up to the
 D:northwest of our town, and strange demons lurk within. One
 D:of our townspeople investigated it unwittingly and barely 

@@ -1,6 +1,6 @@
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 
-?:[EQU $QUEST22 Taken]
+?:[EQU $QUEST22 Taken InProgress]
 D:The marauding orcs approach ever closer to our quiet town, as
 D:is happening all over in these troubled times. To the south
 D:lies a valley where our scouts have found an orc raiding party,

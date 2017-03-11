@@ -1,6 +1,6 @@
 # By Shayne Steele (steele@cs.fsu.edu)
 
-?:[EQU $QUEST29 Taken]
+?:[EQU $QUEST29 Taken InProgress]
 D:The Magic Shop's owner is thinking of opening another Thieves Guild. 
 D:I do not need the competition, here is the key to the Magic Shop's
 D:back treasure room. Destroy everything you find there and you will

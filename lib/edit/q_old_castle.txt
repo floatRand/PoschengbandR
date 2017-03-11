@@ -1,7 +1,7 @@
 # The Old Castle
 # By Shayne Steele (steele@cs.fsu.edu)
 
-?:[EQU $QUEST27 Taken]
+?:[EQU $QUEST27 Taken InProgress]
 D:The old castle has been taken over by evil beings. Mighty undead,
 D:evil spell casters, dragons, and even titans are rumored to be
 D:in there. The entrance to the old castle is in a large clearing 

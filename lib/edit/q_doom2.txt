@@ -1,7 +1,7 @@
 # a quick creation by Jeff Coleburn <vsp@netaxs.com>
 # redone by clouded
 
-?:[EQU $QUEST21 Taken]
+?:[EQU $QUEST21 Taken InProgress]
 D:A strange hole in reality has opened up on the edge of our
 D:town, near the dungeon entrance, and appears to be even more 
 D:dangerous than the hole reported in Angwil. Five of our 

@@ -1,5 +1,5 @@
 # Created by Topi Ylinen
-?:[EQU $QUEST10 Taken]
+?:[EQU $QUEST10 Taken InProgress]
 D:The Wizards of Sorcery have discovered a magical Node of Sorcery 
 D:in a damp area nearby. You must seek the Node and dispatch 
 D:its guardians so that the Tower of Sorcery can claim the 
