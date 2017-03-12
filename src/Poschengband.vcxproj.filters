@@ -207,9 +207,6 @@
     <ClCompile Include="races_mimic.c">
       <Filter>Player\Races</Filter>
     </ClCompile>
-    <ClCompile Include="angband.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="effects.c">
       <Filter>Effects</Filter>
     </ClCompile>

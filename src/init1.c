@@ -4600,12 +4600,12 @@ errr parse_room_line(room_ptr room, char *line, int options)
 
         if (streq(name, "SCRAMBLE") || streq(name, "SHUFFLE"))
         {
-            const int max_scramble = 20;
-            char letters[max_scramble], scrambles[max_scramble];
+            #define _max_scramble 20 /* Windows */
+            char letters[_max_scramble], scrambles[_max_scramble];
             int  i;
-            if (arg_ct > max_scramble)
+            if (arg_ct > _max_scramble)
             {
-                msg_format("I can only scramble %d letters.", max_scramble);
+                msg_format("I can only scramble %d letters.", _max_scramble);
                 return PARSE_ERROR_GENERIC;
             }
             for (i = 0; i < arg_ct; i++)
