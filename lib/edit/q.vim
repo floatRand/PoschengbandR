@@ -6,7 +6,7 @@ endif
 syn case match
 
 syn keyword qOops Rewarded contained
-syn keyword qStatus Untaken Taken Completed Finished Failed FailedDone contained
+syn keyword qStatus Untaken Taken InProgress Completed Finished Failed FailedDone contained
 syn keyword qFeature FLOOR GRASS GRANITE PERMANENT TREE OPEN_DOOR CLOSED_DOOR UP_STAIR DOWN_STAIR contained
 syn keyword qFeature SHALLOW_WATER DEEP_WATER SHALLOW_LAVA DEEP_LAVA contained
 syn keyword qFeature RUBBLE MOUNTAIN_WALL BROKEN_DOOR contained
@@ -19,15 +19,15 @@ syn match qVariable /$[A-Z0-9_]*/ contained
 syn match qNumber /\d\+/ contained
 
 syn match qComment /^#.*$/
-syn match qInclude /%:.*$/
+syn match qInclude /^%:.*$/
 
-syn region qExp matchgroup=qParen start=/\[/ end=/\]/ contains=qExp,qExKeyword,qVariable,qStatus,qNumber,qOops contained
-syn region qObjExp matchgroup=qOp start=/OBJ(/ end=/)/ contains=qNumber contained
-syn region qEgoExp matchgroup=qOp start=/EGO(/ end=/)/ contains=qNumber contained
-syn region qArtExp matchgroup=qOp start=/ART(/ end=/)/ contains=qNumber contained
-syn region qMonExp matchgroup=qOp start=/MON(/ end=/)/ contains=qNumber contained
-syn region qTrapExp matchgroup=qOp start=/TRAP(/ end=/)/ contains=qNumber,qFeature contained
-syn region qCmdExp matchgroup=qOp start=/SCRAMBLE(/ end=/)/ contained
+syn region qExp matchgroup=qParen start=/\[/ end=/\]/ oneline contains=qExp,qExKeyword,qVariable,qStatus,qNumber,qOops contained
+syn region qObjExp matchgroup=qOp start=/OBJ(/ end=/)/ oneline contains=qNumber contained
+syn region qEgoExp matchgroup=qOp start=/EGO(/ end=/)/ oneline contains=qNumber contained
+syn region qArtExp matchgroup=qOp start=/ART(/ end=/)/ oneline contains=qNumber contained
+syn region qMonExp matchgroup=qOp start=/MON(/ end=/)/ oneline contains=qNumber contained
+syn region qTrapExp matchgroup=qOp start=/TRAP(/ end=/)/ oneline contains=qNumber,qFeature contained
+syn region qCmdExp matchgroup=qOp start=/SCRAMBLE(/ end=/)/ oneline contained
 
 syn region qExpLine matchgroup=qExpPrefix start=/^?:/ end=/$/ contains=qExp
 syn region qCmdLine matchgroup=qCmdPrefix start=/^!:/ end=/$/ contains=qCmdExp

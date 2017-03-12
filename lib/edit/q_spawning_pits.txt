@@ -6,9 +6,9 @@ D:A great, great evil approaches, perhaps the end for our town.
 D:Our scouts lie slaughtered, their bodies crushed and mangled
 D:by powerful beasts. I know not what you shall face. 
 D:Monsters appear as if out of thin air, as if spawned by a foul 
-D:altar in a southern valley close to where you defeated the orcs.
+D:altar in a valley close to where you defeated the orcs.
 D:I am hesistant to ask for your help, knowing you may be sent 
-D:to your doom, and yet you are the last hope for Angwil. 
+D:to your doom, and yet you are the last hope for our town. 
 D:Approach each nook carefully, as evil lies in unexpected places.
 D:Please prepare well, and strike hard in our names.
 ?:1
