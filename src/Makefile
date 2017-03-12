@@ -14,12 +14,7 @@ PROG    = poschengband$(PROG_SUFFIX)
 #      I can't figure out how, though. Perhaps sdl is doing it:
 #      >sdl-config --cflags
 #      -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
-# -fstandalone-debug is for clang-3.5 ... for some reason, most locals are <optimized out>
-#  in gdb when compiling with clang. This makes debugging difficult, and I often recompile
-#  with gcc just to debug (time wasted). Let's see if this option helps.
-CFLAGS += -D_GNU_SOURCE=1 -DBUILD_ID=${VERSION} -I. -std=c99 -Wdeclaration-after-statement -O0 -g -fno-omit-frame-pointer -fstandalone-debug
-#Here is the gcc version:
-#CFLAGS += -D_GNU_SOURCE=1 -DBUILD_ID=${VERSION} -I. -std=c99 -Wdeclaration-after-statement -O0 -g -fno-omit-frame-pointer
+CFLAGS += -D_GNU_SOURCE=1 -DBUILD_ID=${VERSION} -I. -std=c99 -Wdeclaration-after-statement -O0 -g -fno-omit-frame-pointer
 
 #Use this for release code:
 #CFLAGS += -D_GNU_SOURCE=1 -DBUILD_ID=${VERSION} -I. -std=c99 -Wdeclaration-after-statement -DNDEBUG -O2 -fno-omit-frame-pointer
