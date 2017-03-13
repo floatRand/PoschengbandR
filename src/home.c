@@ -139,6 +139,7 @@ typedef struct _ui_context_s _ui_context_t, *_ui_context_ptr;
 
 static void _display(_ui_context_ptr context);
 static void _drop(_ui_context_ptr context);
+static void _remove(_ui_context_ptr context);
 static void _examine(_ui_context_ptr context);
 static void _get(_ui_context_ptr context);
 static void _ui(_ui_context_ptr context);
@@ -180,7 +181,7 @@ static void _ui(_ui_context_ptr context)
         rect_t r = ui_shop_rect(); /* recalculate in case resize */
         int    cmd, ct;
 
-        context->page_size = MIN(26, r.cy - 3 - 3);
+        context->page_size = MIN(26, r.cy - 3 - 4);
         if ((context->top - 1) % context->page_size != 0) /* resize?? */
             context->top = 1;
 
@@ -198,8 +199,9 @@ static void _ui(_ui_context_ptr context)
             case 'g': _get(context); break;
             case 'd': _drop(context); break;
             case 'x': _examine(context); break;
+            case 'r': _remove(context); break;
             case '?':
-                doc_display_help("context_home.txt", NULL);
+                doc_display_help("context_home.txt", inv_loc(context->inv) == INV_MUSEUM ? "Museum" : NULL);
                 Term_clear_rect(ui_shop_msg_rect());
                 break;
             case SKEY_PGDOWN: case '3':
@@ -276,6 +278,8 @@ static void _display(_ui_context_ptr context)
 
             doc_printf(doc, "<color:B>(Page %d of %d)</color>\n", page_current, page_count);
         }
+        else
+            doc_newline(doc);
     }
     if (inv_loc(context->inv) == INV_HOME)
     {
@@ -288,6 +292,7 @@ static void _display(_ui_context_ptr context)
     
     doc_insert(doc,
         "<color:keypress>x</color> to begin examining items.\n"
+        "<color:keypress>r</color> to begin removing (destroying) items.\n"
         "<color:keypress>Esc</color> to exit. "
         "<color:keypress>?</color> for help.");
     doc_insert(doc, "</style>");
@@ -448,6 +453,38 @@ static void _examine(_ui_context_ptr context)
         if (!obj) continue;
 
         obj_display(obj);
+    }
+}
+
+static void _remove(_ui_context_ptr context)
+{
+    for (;;)
+    {
+        char    cmd;
+        slot_t  slot;
+        obj_ptr obj;
+        char    name[MAX_NLEN];
+
+        if (!msg_command("<color:y>Remove which item <color:w>(<color:keypress>Esc</color> when done)</color>?</color>", &cmd)) break;
+        if (cmd < 'a' || cmd > 'z') continue;
+        slot = label_slot(cmd);
+        slot = slot + context->top - 1;
+        obj = inv_obj(context->inv, slot);
+        if (!obj) continue;
+
+        object_desc(name, obj, OD_COLOR_CODED);
+        cmd = msg_prompt(format("<color:y>Really remove %s?</color> <color:v>It will "
+            "be permanently destroyed!</color> <color:y>[Y,n]</color>", name), "ny", PROMPT_YES_NO);
+        if (cmd == 'n') continue;
+        if (!can_player_destroy_object(obj))
+        {
+            object_desc(name, obj, OD_COLOR_CODED);
+            msg_format("You cannot destroy %s.", name);
+            continue;
+        }
+        inv_remove(context->inv, slot);
+        inv_sort(context->inv);
+        _display(context);
     }
 }
 
