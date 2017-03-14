@@ -176,7 +176,7 @@ extern void py_birth_light(void)
 extern void py_birth_runesword(void)
 {
 	if (!runesword_start) return;
-	if (p_ptr->prace == RACE_MON_SWORD) return;
+	if (p_ptr->prace == RACE_MON_SWORD || p_ptr->prace == RACE_MON_RING || p_ptr->prace == RACE_MON_VORTEX || p_ptr->prace == RACE_MON_JELLY) return;
 	object_type forge = { 0 };
 	object_prep(&forge, lookup_kind(TV_SWORD, SV_RUNESWORD));
 	forge.number = 1;
@@ -829,7 +829,7 @@ static bool _is_valid_race_class(int race_id, int class_id)
         if (race_id == RACE_CENTAUR)
             return FALSE;
     }
-    if (class_id == CLASS_DUELIST || class_id == CLASS_MAULER)
+    if (class_id == CLASS_MAULER)
     {
         if (race_id == RACE_TONBERRY)
             return FALSE;

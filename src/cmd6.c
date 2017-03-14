@@ -438,6 +438,12 @@ static void do_cmd_eat_food_aux(int item)
             return;
         }
 
+		if (equip_find_artifact(ART_BATTERY))
+		{
+			msg_print("The Aetheric Battery prevents you from siphoning energy from the device.");
+			return;
+		}
+
         device_decrease_sp(o_ptr, amt);
         set_food(p_ptr->food + 5000);
 

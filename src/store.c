@@ -1387,8 +1387,8 @@ static bool _get_store_obj(object_type *o_ptr)
         else
         {
 			/* Make black market items more worth in long run. */
-			level1 = 25 + randint0(15 + p_ptr->lev / 2) + p_ptr->lev / 2;
-			level2 = 25 + randint0(15 + p_ptr->lev / 2) + p_ptr->lev / 2;
+			level1 = 25 + randint0(p_ptr->lev / 2 + 5) + p_ptr->lev / 2;
+			level2 = 25 + randint0(p_ptr->lev / 2 + 5) + p_ptr->lev / 2;
         }
         break;
     case STORE_JEWELER:

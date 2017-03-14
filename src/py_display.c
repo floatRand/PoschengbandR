@@ -132,6 +132,7 @@ static void _build_general1(doc_ptr doc)
     update_playtime();
     doc_printf(doc, " Play Time  : <color:G>%8.8s</color>\n",
                format("%.2lu:%.2lu:%.2lu", playtime/(60*60), (playtime/60)%60, playtime%60));
+	if (coffeebreak_mode) doc_printf(doc, " <color:U>[Coffeebreak mode]</color>\n");
 }
 
 static void _display_skill(doc_ptr doc, cptr name, int amt, int div)
@@ -2363,6 +2364,7 @@ static void _build_options(doc_ptr doc)
 void py_display_character_sheet(doc_ptr doc)
 {
     doc_insert(doc, "<style:wide>  [PosChengband R <$:version> Character Dump]\n");
+
     if (p_ptr->total_winner)
         doc_insert(doc, "              <color:B>***WINNER***</color>\n");
     else if (p_ptr->is_dead)

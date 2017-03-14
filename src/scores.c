@@ -762,23 +762,45 @@ void kingly(void)
 
 
     /* Display a crown */
-    put_str("#", cy - 11, cx - 1);
-    put_str("#####", cy - 10, cx - 3);
-    put_str("#", cy - 9, cx - 1);
-    put_str(",,,  $$$  ,,,", cy - 8, cx - 7);
-    put_str(",,=$   \"$$$$$\"   $=,,", cy - 7, cx - 11);
-    put_str(",$$        $$$        $$,", cy - 6, cx - 13);
-    put_str("*>         <*>         <*", cy - 5, cx - 13);
-    put_str("$$         $$$         $$", cy - 4, cx - 13);
-    put_str("\"$$        $$$        $$\"", cy - 3, cx - 13);
-    put_str("\"$$       $$$       $$\"", cy - 2, cx - 12);
-    put_str("*#########*#########*", cy - 1, cx - 11);
-    put_str("*#########*#########*", cy, cx - 11);
+	if (!coffeebreak_mode){
+		put_str("#", cy - 11, cx - 1);
+		put_str("#####", cy - 10, cx - 3);
+		put_str("#", cy - 9, cx - 1);
+		put_str(",,,  $$$  ,,,", cy - 8, cx - 7);
+		put_str(",,=$   \"$$$$$\"   $=,,", cy - 7, cx - 11);
+		put_str(",$$        $$$        $$,", cy - 6, cx - 13);
+		put_str("*>         <*>         <*", cy - 5, cx - 13);
+		put_str("$$         $$$         $$", cy - 4, cx - 13);
+		put_str("\"$$        $$$        $$\"", cy - 3, cx - 13);
+		put_str("\"$$       $$$       $$\"", cy - 2, cx - 12);
+		put_str("*#########*#########*", cy - 1, cx - 11);
+		put_str("*#########*#########*", cy, cx - 11);
+	}
+	else {
+		put_str("	 $$$$$$$", cy - 11, cx - 8);
+		put_str(" .-''$$$$$$$''-.", cy - 10, cx - 10);
+		put_str("((-''$$$$$$$$'-))", cy - 9, cx - 10);
+		put_str("|'=::_______::='|", cy - 8, cx - 10);
+		put_str("|             __|", cy - 7, cx - 10);
+		put_str("|            (_ '-. ", cy - 6, cx - 10);
+		put_str("|              '-. ) ", cy - 5, cx - 10);
+		put_str("|               || |", cy - 4, cx - 10);
+		put_str("|             _ || |", cy - 3, cx - 10);
+		put_str("|            ( '-| |", cy - 2, cx - 10);
+		put_str("|             '-.__)", cy - 1, cx - 10);
+		put_str(" '-.._______..-'", cy, cx - 10);
+	}
 
 		put_str("Veni, Vidi, Vici!", cy + 3, cx - 9);
 		put_str("I came, I saw, I conquered!", cy + 4, cx - 14);
 		if (!coffeebreak_mode) put_str(format("All Hail the Mighty %s!", sex_info[p_ptr->psex].winner), cy + 5, cx - 13);
-		else put_str(format("Now get back to work, %s!", player_name), cy + 5, cx - 13);
+		else {
+			size_t name_len = 0;
+			name_len = strlen(player_name); 
+			put_str(format("Now get back to work, %s!", player_name), cy + 5, cx - 12 - name_len/2);
+		}
+
+
 
     /* Flush input */
     flush();

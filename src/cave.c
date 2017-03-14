@@ -4521,9 +4521,9 @@ void map_rot(void)
 			chance = _forget_percentage(y, x);
 
 			if (chance != 0 && (randint0(100) < chance)){
-				c_ptr->info &= ~(CAVE_MARK | CAVE_IN_DETECT);
+				c_ptr->info &= ~(CAVE_MARK);
 			}
-			c_ptr->info |= (CAVE_UNSAFE); // Really annoying otherwise...
+			c_ptr->info &= ~(CAVE_UNSAFE | CAVE_IN_DETECT); // Really annoying otherwise...
 
 		}
 	}

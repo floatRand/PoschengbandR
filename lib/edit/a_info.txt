@@ -3350,7 +3350,7 @@ E:You focus your thoughts as your stone thrums with power.
 
 N:329:Lucky Coin
 I:39:24:2
-W:30:50:1:100000
+W:30:250:1:100000
 P:0:1d1:0:0:0
 F:FULL_NAME | INSTA_ART 
 F:FREE_ACT | HOLD_LIFE
@@ -3358,7 +3358,7 @@ D:Dull coin emanating warmth.
 
 N:330:Unlucky Coin
 I:39:24:2
-W:30:50:1:100000
+W:30:250:1:100000
 P:0:1d1:3:3:3
 F:FULL_NAME | INSTA_ART 
 F:CURSED | HEAVY_CURSE | PERMA_CURSE
@@ -3437,16 +3437,14 @@ F:STEALTH | DEX | FULL_NAME
 D:A pair of boots, reducing even the most cumbersome tread into a dainty, feather-light step.
 D:No blade of grass nor trap is bothered by such soft touch.
 
-N:338:Strange Current of Air
-I:21:2:3
-W:40:30:1:250000
+N:338:Aetheric Battery
+I:39:25:-3
+W:50:250:20:100000
 P:0:1d1:0:0:0
-F:FULL_NAME | HIDE_TYPE | NO_ENCHANT
-F:KILL_EVIL | VORPAL2 | BRAND_VAMP | BRAND_MANA | BRAND_ELEC | BLOWS | 
-F:FREE_ACT | RES_POIS | SPEED | DEC_CON |
-F:SEE_INVIS | LEVITATION | SHOW_MODS | 
-D:A mere leather handle. When you move it around, you hear a strange whistling noise.
-
+F:FULL_NAME | HIDE_TYPE
+F:RES_DISEN | VULN_ELEC | SEE_INVIS 
+D:A product of a artificer utterly upset by passing spectres draining power from his devices.
+D:While it protects the nearby devices on person, it dulls their power.
 
 # N: serial number : item name
 # I: tval : sval : pval

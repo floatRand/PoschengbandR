@@ -3114,16 +3114,6 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
         }
     }
 
-	if (o_ptr->name1 == ART_WINDWHIP)
-	{
-		if (p_ptr->prace == RACE_TONBERRY){
-			add_flag(o_ptr->flags, OF_AGGRAVATE);
-			add_flag(o_ptr->flags, OF_TY_CURSE);
-			o_ptr->curse_flags |=
-				(OFC_CURSED | OFC_HEAVY_CURSE);
-		}
-	}
-
 	if (o_ptr->name1 == ART_AMULET_NIGHTMARE)
 	{
 		if (ironman_nightmare){
@@ -3135,6 +3125,10 @@ void random_artifact_resistance(object_type * o_ptr, artifact_type *a_ptr)
 		}
 	}
 
+	if (o_ptr->name1 == ART_BATTERY)
+	{
+		add_flag(o_ptr->flags, OF_DEVICE_POWER);
+	}
 
     if (o_ptr->name1 == ART_DR_JONES)
     {

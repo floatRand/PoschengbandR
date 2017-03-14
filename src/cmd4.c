@@ -3123,11 +3123,11 @@ void do_cmd_note(void)
 
 
 /*
- * Mention the current version
+ * Mention the current version. In R also include build date. 
  */
 void do_cmd_version(void)
 {
-    msg_format("You are playing PosChengband R %d.%d.%d.", VER_MAJOR, VER_MINOR, VER_PATCH);
+    msg_format("You are playing PosChengband R %d.%d.%d, (%d).", VER_MAJOR, VER_MINOR, VER_PATCH, __DATE__);
 }
 
 

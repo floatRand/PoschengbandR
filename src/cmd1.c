@@ -3584,11 +3584,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
                     if (o_ptr->name1 == ART_VORPAL_BLADE)
                         msg_print("Your Vorpal Blade goes <color:y>snicker-snack</color>!");
-					else if (o_ptr->name1 == ART_WINDWHIP)
-					{
-						msg_print("Your whip of air <color:y>whistles</color>!");
-						mult += randint0(3);
-					}
 					else msg_format("Your weapon <color:y>cuts deep</color> into %s!", m_name_object);
 
                     while (one_in_(vorpal_chance))
@@ -3631,7 +3626,7 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
             if (mode == HISSATSU_SEKIRYUKA && !monster_living(r_ptr)) k = 0;
             if (mode == HISSATSU_SEKIRYUKA && !p_ptr->cut) k /= 2;
 
-			if (k <= 0){ /* A small hack, mostly for runesword starts. You can have one point of damage occasionally. */ 
+			if (k <= 0 && !(r_ptr->flagsr & RFR_RES_ALL)){ /* A small hack, mostly for runesword starts. You can have one point of damage occasionally. */
 				if (one_in_(2)) k = 1; else k = 0;
 			}
 
@@ -3990,6 +3985,10 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                   && o_ptr->sval == SV_RUNESWORD )
                 {
                     rune_sword_kill(o_ptr, r_ptr);
+					if (coffeebreak_mode){
+						int i;
+						for (i = 0; i < 2; i++){ rune_sword_kill(o_ptr, r_ptr); } /*Hack, making it so that the runeswords don't fall behind too much*/
+					}
                 }
 
                 if (duelist_attack)

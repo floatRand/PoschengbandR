@@ -3826,6 +3826,9 @@ void calc_bonuses(void)
 		case ART_ULCOIN:
 			p_ptr->bad_luck = TRUE; 
 			break;
+		case ART_BATTERY:
+			p_ptr->no_charge_drain = TRUE;
+			break;
         }
     }
 

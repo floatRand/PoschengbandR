@@ -671,6 +671,8 @@ static void _display_extra(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_ptr
     case ART_STONEMASK:
         doc_insert(doc, "It makes you turn into a vampire permanently.\n");
         break;
+	case ART_BATTERY:
+		doc_insert(doc, "It protects you from charge draining.\n");
     }
 
     if (object_is_(o_ptr, TV_SWORD, SV_POISON_NEEDLE))
