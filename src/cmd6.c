@@ -1198,7 +1198,7 @@ static void do_cmd_device_aux(int item)
         return;
     }
 
-	if (object_is_cursed(o_ptr) && one_in_(2)) // if curses are not known, reveal them
+	if (object_is_cursed(o_ptr) && one_in_(3)) // if curses are not known, reveal them
 	{
 		msg_print("This device feels really unstable...");
 		obj_learn_curse(o_ptr, OFC_CURSED);
