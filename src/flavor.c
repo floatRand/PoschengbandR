@@ -2349,9 +2349,9 @@ void object_desc(char *buf, object_type *o_ptr, u32b mode)
     /* Note "cursed" if the item is known to be cursed */
     else if (object_is_cursed(o_ptr) && (known || (o_ptr->ident & IDENT_SENSE)))
     {
-        if (object_is_device(o_ptr) && ((o_ptr->known_curse_flags & OFC_CURSED) || obj_is_identified_fully(o_ptr) ))
+        if (object_is_device(o_ptr) && !(obj_is_identified_fully(o_ptr) || o_ptr->known_curse_flags & OFC_CURSED))
         {
-			strcpy(fake_insc_buf, "cursed");
+            /* Hide cursed status of devices until *Identified* */
         }
         else
             strcpy(fake_insc_buf, "cursed");
