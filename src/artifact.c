@@ -9,7 +9,7 @@
  */
 
 #include "angband.h"
-#include <assert.h>na
+#include <assert.h>
 
 static void random_resistance(object_type * o_ptr);
 static void random_slay(object_type *o_ptr);

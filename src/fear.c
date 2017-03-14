@@ -586,7 +586,6 @@ int Rfear_get_fail_chance(int ml){
 	/* Don't talk to me about random equalities ever again. */
 	if (rolls < 1) { rolls = 1; pl = (pl + 1) / 2; }
 
-	int chance;
 	/* Failure: ML > PL  */
 	int denom = pl + ml;
 	int numer = ml;

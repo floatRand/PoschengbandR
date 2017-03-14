@@ -652,6 +652,7 @@ extern void py_birth_obj_aux(int tval, int sval, int qty);
 extern void py_birth_food(void);
 extern void py_birth_light(void);
 extern void py_birth_spellbooks(void);
+extern void py_birth_runesword(void);
 
 /* cave.c */
 extern int distance(int y1, int x1, int y2, int x2);

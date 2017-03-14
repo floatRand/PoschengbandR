@@ -55,7 +55,6 @@ extern void py_birth_obj_aux(int tval, int sval, int qty);
 extern void py_birth_food(void);
 extern void py_birth_light(void);
 extern void py_birth_spellbooks(void);
-extern void py_birth_runesword(void);
 
 /* I prefer to render menus to a document rather than directly to the terminal */
 static doc_ptr _doc = NULL;
@@ -829,7 +828,7 @@ static bool _is_valid_race_class(int race_id, int class_id)
         if (race_id == RACE_CENTAUR)
             return FALSE;
     }
-    if (class_id == CLASS_MAULER)
+    if (class_id == CLASS_DUELIST || class_id == CLASS_MAULER)
     {
         if (race_id == RACE_TONBERRY)
             return FALSE;

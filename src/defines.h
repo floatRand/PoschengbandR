@@ -334,7 +334,7 @@
 /*
  * Random energy
  */
-#define ENERGY_NEED() (randnor(100, 25))
+#define ENERGY_NEED() (randnor(100, 12))
 
 
 /*
@@ -5173,6 +5173,7 @@ extern int PlayerUID;
 #define MON_TAISABACHI          1215
 #define MON_HIBACHI             1216
 #define MON_RUMOURMONGER		1217
+#define MON_MUMO			    1220
 
 /* The Metal Babble guards the Arena dungeon, but this requires the guardian to be a unique
    monster or the dungeon never gets flagged as completed. Note, this messes up the needle
