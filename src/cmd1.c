@@ -3985,10 +3985,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                   && o_ptr->sval == SV_RUNESWORD )
                 {
                     rune_sword_kill(o_ptr, r_ptr);
-					if (coffeebreak_mode){
-						int i;
-						for (i = 0; i < 2; i++){ rune_sword_kill(o_ptr, r_ptr); } /*Hack, making it so that the runeswords don't fall behind too much*/
-					}
                 }
 
                 if (duelist_attack)
