@@ -732,7 +732,10 @@ static void _display_curses(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_pt
 {
     vec_ptr v;
 
-    if (object_is_device(o_ptr)) return;
+	if (object_is_device(o_ptr)){
+		doc_insert(doc, "It is <color:D>Cursed</color>.\n");
+		return;
+	}
     if (!(o_ptr->ident & (IDENT_KNOWN | IDENT_SENSE))) return;
 
     v = vec_alloc((vec_free_f)string_free);

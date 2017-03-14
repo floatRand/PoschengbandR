@@ -3602,13 +3602,15 @@ void do_cmd_fire_aux2(int item, object_type *bow, int sx, int sy, int tx, int ty
                         if (ambush)
                             tdam *= 2;
 
-						else if (shoot_hack == SHOOT_POISON && !(r_ptr->r_flagsr & RES_POIS)){
-							tdam *= 15;
-							tdam /= 10;
-							mon_lore_r(m_ptr, RES_POIS);
+						else if (shoot_hack == SHOOT_POISON){
+							if (!(r_ptr->r_flagsr & RES_POIS)){
+								tdam *= 15;
+								tdam /= 10;
+							}
+							else mon_lore_r(m_ptr, RES_POIS);
 						}
 						else if (shoot_hack == SHOOT_MANA){
-							tdam *= 3;
+							tdam *= 2;
 						}
 
                         crit = critical_shot(q_ptr->weight, q_ptr->to_h);

@@ -2191,6 +2191,12 @@ void monster_death(int m_idx, bool drop_item)
             msg_add_tiny_screenshot(50, 24);
         }
 
+		if (m_idx == get_hunter_quarry()){
+			p_ptr->redraw |= PR_STATUS;
+			set_hunter_quarry(0);
+			msg_print("Your quarry is slain!");
+		}
+
         if (a_idx > 0 && randint0(100) < chance)
         {
             artifact_type *a_ptr = &a_info[a_idx];

@@ -1197,10 +1197,11 @@ static void do_cmd_device_aux(int item)
         }
         return;
     }
-	else if ((o_ptr->curse_flags & OFC_CURSED) && o_ptr->known_curse_flags == 0 && one_in_(3)) // if curses are not known, reveal them
+
+	if (object_is_cursed(o_ptr) && one_in_(2)) // if curses are not known, reveal them
 	{
 		msg_print("This device feels really unstable...");
-		o_ptr->known_curse_flags = o_ptr->curse_flags;
+		obj_learn_curse(o_ptr, OFC_CURSED);
 	}
 
     if (device_sp(o_ptr) < o_ptr->activation.cost)

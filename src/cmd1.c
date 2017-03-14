@@ -2615,10 +2615,11 @@ static void innate_attacks(s16b m_idx, bool *fear, bool *mdeath, int mode)
 
 						// If there is no effect, it gets replaced with the brand, unless monster is immune.
 						// No idea how to handle vampiric effect yet. Sorry.
-						int b_mult = 12;
-						if ((p_ptr->innate_brands & INNA_BRAND_HUMAN) && r_ptr->flags2 & RF2_HUMAN){ e = GF_MISSILE; b_mult = 15; }
-						else if (mana_brand && p_ptr->csp >= p_ptr->msp / 30){ e = GF_MANA; p_ptr->csp -= p_ptr->msp / 30; b_mult = 13; }
-						else if (p_ptr->innate_brands & INNA_BRAND_GOOD && r_ptr->flags2 & RF3_GOOD){ e = GF_MISSILE; b_mult = 12; }
+						// Also, as for now, brands also apply to total damage. 
+						int b_mult = 11;
+						if ((p_ptr->innate_brands & INNA_BRAND_HUMAN) && r_ptr->flags2 & RF2_HUMAN){ e = GF_MISSILE; b_mult = 14; }
+						else if (mana_brand && p_ptr->csp >= p_ptr->msp / 30){ e = GF_MANA; p_ptr->csp -= p_ptr->msp / 30; b_mult = 12; }
+						else if (p_ptr->innate_brands & INNA_BRAND_GOOD && r_ptr->flags2 & RF3_GOOD){ e = GF_MISSILE; b_mult = 11; }
 						else if (acid_brand && !(r_ptr->flagsr & RFR_EFF_IM_ACID_MASK || r_ptr->r_flagsr & RFR_RES_ACID)) e = GF_ACID;
 						else if (elec_brand && !(r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK || r_ptr->r_flagsr & RFR_RES_ELEC)) e = GF_ELEC;
 						else if (cold_brand && !(r_ptr->flagsr & RFR_EFF_IM_COLD_MASK || r_ptr->r_flagsr & RFR_RES_COLD)) e = GF_COLD;
@@ -4003,12 +4004,6 @@ static bool py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
                     else
                         msg_print("Your chosen target is vanquished!");
                 }
-
-				if (hunter_attack){
-					p_ptr->redraw |= PR_STATUS;
-					set_hunter_quarry(0);
-					msg_print("Your quarry is slain!");
-				}
 
                 if ((p_ptr->pclass == CLASS_BERSERKER || mut_present(MUT_FANTASTIC_FRENZY) || p_ptr->tim_shrike) && energy_use)
                 {

@@ -1,9 +1,10 @@
-PCB-R changelog as of 10.12.2016:
+PCB-R changelog as of 14.3.2017:
  
 CORE CHANGES:
 * Much faster leveling, especially at the higher levels.
   Skills also level up much faster, three times as fast.
 * Nexus doesn't scramble stats, siphons instead ( max 1d6+4 points ), giving saving throw after each point siphoned.
+* Energy is somewhat less random.
 * Brands work on monk/innate attacks.
 * Much, much faster identification. At 25 you get pseudo-id by default.
 * Pseudo-id property on items has been replaced with automapping-property. Stones of Nature automatically gain this.
@@ -18,8 +19,9 @@ CORE CHANGES:
 * Cursed devices are uncursed alongside with equipment. You also sometimes get feeling of cursed device when using such.
 * Summon Traps have energy-penalty on summoned monsters.
 * More naming schemes for artifacts.
-* Expanded the size of home from 240 items to 960.
- 
+* Expanded the size of home from 240 items to 960. 
+* Scouts now get anti-summoning features on later levels, redirecting and preventing enemy summons depending on open squares.
+
 ADDITIONS ( OPTIONS )
 * Option for simple stat-display ( 3-40 ), although this was adopted to pseudo from R already.
 * Two new birth options, forced runesword start and coffee-break mode ( very accelereted exp-gain and loot, no-wilderness and vanilla ironman_stairs )
@@ -27,8 +29,10 @@ ADDITIONS ( OPTIONS )
  
 ADDITIONS ( CONTENT )
 * Monster spell damage lore
-* Three new classes, alchemist ( stores, reproduces and evaporates potions ), maledict ( wear cursed shit for bonuses, throw curses at things ) and freelancer ( start out as blank slate, purchase realms / skills / boosts by leveling ). Although I must warn that the classes are still unbalanced due to little playtesting.
+* Three new classes, alchemist ( stores, reproduces and evaporates potions ), maledict ( wear cursed shit for bonuses, throw curses at things ) and hunter ( a ranged class, sort of mixture of scout, duelist 
+and sniper ). Although I must warn that the classes are still unbalanced due to little playtesting.
 * New race that gains automapping and autodetecting creatures, but can't use teleportation abilities outside of their own
 * Bunch of new named artifacts.
-* Two ( three ) new unique monsters
+* Bunch of named uniques
+* Endbosses for The Mines and The Glass Castle.
 * Subclass for mystics. Trades out summoning and branded hits for various physical techniques.

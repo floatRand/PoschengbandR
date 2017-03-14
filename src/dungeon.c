@@ -3769,7 +3769,6 @@ static void process_command(void)
                 && p_ptr->pclass != CLASS_WEAPONMASTER
                 && p_ptr->pclass != CLASS_MAULER 
 				&& p_ptr->pclass != CLASS_ALCHEMIST
-				&& p_ptr->pclass != CLASS_HUNTER
 				)
             {
                 msg_print("The dungeon absorbs all attempted magic!");
@@ -3780,8 +3779,7 @@ static void process_command(void)
                     && p_ptr->pclass != CLASS_BLOOD_KNIGHT
                     && p_ptr->pclass != CLASS_WEAPONMASTER
                     && p_ptr->pclass != CLASS_MAULER 
-					&& p_ptr->pclass != CLASS_ALCHEMIST
-					&& p_ptr->pclass != CLASS_HUNTER)
+					&& p_ptr->pclass != CLASS_ALCHEMIST)
             {
                 cptr which_power = "magic";
                 if (p_ptr->pclass == CLASS_MINDCRAFTER || p_ptr->pclass == CLASS_PSION)

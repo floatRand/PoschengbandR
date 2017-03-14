@@ -473,7 +473,7 @@ static void _smoke_bomb(int cmd, variant *res)
 		var_set_string(res, "Smoke Bomb");
 		break;
 	case SPELL_DESC:
-		var_set_string(res, "Teleports away.");
+		var_set_string(res, "Teleport away.");
 		break;
 	default:
 		teleport_spell(cmd, res);
@@ -514,10 +514,10 @@ static spell_info _spells[] =
 	{ 27, 13, 40, _smoke_bomb }, // tele
 	{ 30, 30, 40, _penetrating_shot }, // as per 'penetrating arrow'
 	{ 32, 36, 40, _exploding_shot }, // rocket, damage based on attack quality
-	{ 34, 40, 40, _set_major_trap_spell }, // set a major trap
+	{ 34, 50, 40, _set_major_trap_spell }, // set a major trap
 	{ 36, 0, 0, _scout_uniques }, // list uniques
-	{ 40, 40, 40, _culling_shot }, // fuck off with single monster
-	{ 50, 50, 40, _mana_shot }, // hurts
+	{ 40, 50, 40, _culling_shot }, // fuck off with single monster
+	{ 50, 70, 40, _mana_shot }, // hurts
 	{ -1, -1, -1, NULL }
 };
 
@@ -563,9 +563,9 @@ static caster_info * _caster_info(void)
 	{
 		me.magic_desc = "hunter trick";
 		me.which_stat = A_CHR;
-		me.encumbrance.max_wgt = 800;
-		me.encumbrance.weapon_pct = 20;
-		me.encumbrance.enc_wgt = 1200;
+        me.encumbrance.max_wgt = 350;
+        me.encumbrance.weapon_pct = 50;
+        me.encumbrance.enc_wgt = 800;
 		me.min_fail = 0;
 		init = TRUE;
 	}
@@ -630,10 +630,10 @@ class_t *hunter_get_class(void)
 		me.stats[A_CHR] = 2;
 		me.base_skills = bs;
 		me.extra_skills = xs;
-		me.life = 100;
-		me.base_hp = 4;
-		me.exp = 110;
-		me.pets = 40;
+		me.life = 102;
+		me.base_hp = 8;
+		me.exp = 140;
+		me.pets = 30;
 
 		me.birth = _birth;
 		me.calc_shooter_bonuses = _calc_shooter_bonuses;

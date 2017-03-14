@@ -180,7 +180,7 @@ bool _curse_item_aux(bool all){
 	int item, power = 0;
 	char tmp_str[MAX_NLEN];
 	object_type *o_ptr;
-	item_tester_hook = object_is_equipment;
+	item_tester_hook = object_is_device;
 
 	if (!all){
 		if (!get_item(&item, "Curse which item? ", "There's nothing to curse.", (USE_INVEN | USE_EQUIP)))
