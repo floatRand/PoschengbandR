@@ -1797,22 +1797,27 @@ static int remove_curse_aux(int all)
     }
 
 	/* Uncurse devices as well... Maybe make *remove* curse scan through inventory for weak curses as well... */
-	for (i = 0; i < INVEN_PACK; i++)
-	{
-		object_type *o_ptr = &inventory[i];
+	if (all){
+		for (i = 0; i < INVEN_PACK; i++)
+		{
+			object_type *o_ptr = &inventory[i];
 
-		/* Skip non-objects */
-		if (!o_ptr->k_idx) continue;
-		if (!(o_ptr->tval == TV_ROD || o_ptr->tval == TV_WAND || o_ptr->tval == TV_STAFF)) continue;
+			/* Skip non-objects */
+			if (!o_ptr->k_idx) continue;
+			/* Don't bother with non-cursed items either*/
+			if (!object_is_cursed(o_ptr)) continue;
+			/*Only devices allowed*/
+			if (!(o_ptr->tval == TV_ROD || o_ptr->tval == TV_WAND || o_ptr->tval == TV_STAFF)) continue;
 
-		o_ptr->curse_flags = 0;
-		o_ptr->known_curse_flags = 0; 
-		o_ptr->ident |= IDENT_SENSE;
-		o_ptr->feeling = FEEL_NONE;
-		p_ptr->update |= PU_BONUS;
-		p_ptr->window |= PW_EQUIP;
-		p_ptr->redraw |= PR_EFFECTS;
-		ct++;
+			o_ptr->curse_flags = 0;
+			o_ptr->known_curse_flags = 0;
+			o_ptr->ident |= IDENT_SENSE;
+			o_ptr->feeling = FEEL_NONE;
+			p_ptr->update |= PU_BONUS;
+			p_ptr->window |= PW_EQUIP;
+			p_ptr->redraw |= PR_EFFECTS;
+			ct++;
+		}
 	}
 
 

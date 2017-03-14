@@ -1219,7 +1219,7 @@ static cptr _do_scroll(int sval, int mode)
         }
         break;
     case SV_SCROLL_STAR_REMOVE_CURSE:
-        if (desc) return "It removes normal and heavy curses from equipped items when you read it.";
+        if (desc) return "It removes normal and heavy curses from equipped items and carried devices when you read it.";
         if (cast)
         {
             if (remove_all_curse())
