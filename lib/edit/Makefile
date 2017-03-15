@@ -13,15 +13,12 @@ CONFIG = a_info.txt \
 	q_chaos.txt \
 	q_cloning_pits.txt \
 	q_crypt.txt \
-	q_crypt.txt.html \
 	q_dark_elves.txt \
 	q_doom1.txt \
-	q_doom1.txt.html \
 	q_doom2.txt \
 	q_eric.txt \
 	q_haunted_house.txt \
 	q_info.txt \
-	q_info.txt.html \
 	q_killing_fields.txt \
 	q_logrus_master.txt \
 	q_microsoft.txt \
