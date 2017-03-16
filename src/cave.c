@@ -1483,6 +1483,7 @@ void note_spot(int y, int x)
         p_ptr->window |= PW_OBJECT_LIST;
     }
 
+    c_ptr->info |= CAVE_AWARE;
 
     /* Hack -- memorize grids */
     if (!(c_ptr->info & (CAVE_MARK)))
@@ -4236,6 +4237,7 @@ void map_area(int range)
             /* All non-walls are "checked" */
             if (!have_flag(f_ptr->flags, FF_WALL))
             {
+                c_ptr->info |= CAVE_AWARE;
                 /* Memorize normal features */
                 if (have_flag(f_ptr->flags, FF_REMEMBER))
                 {
@@ -4256,7 +4258,7 @@ void map_area(int range)
                     if (have_flag(f_ptr->flags, FF_REMEMBER))
                     {
                         /* Memorize the walls */
-                        c_ptr->info |= (CAVE_MARK);
+                        c_ptr->info |= (CAVE_MARK | CAVE_AWARE);
                     }
                 }
             }
@@ -4336,6 +4338,8 @@ void wiz_lite(bool ninja)
 
                     /* Feature code (applying "mimic" field) */
                     f_ptr = &f_info[get_feat_mimic(c_ptr)];
+
+                    c_ptr->info |= CAVE_AWARE;
 
                     /* Perma-lite the grid */
                     if (!(d_info[dungeon_type].flags1 & DF1_DARKNESS) && !ninja)

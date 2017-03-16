@@ -1902,7 +1902,7 @@ static errr _parse_room_grid_feature(char* name, char **args, int arg_ct, room_g
             else if (streq(flag, "GLOW"))
                 grid->cave_info |= CAVE_GLOW;
             else if (streq(flag, "MARK"))
-                grid->cave_info |= CAVE_MARK;
+                grid->cave_info |= CAVE_MARK | CAVE_AWARE;
             else if (_is_numeric(flag)) /* QUEST_ENTER(1) or QUEST_ENTER(GLOW, 1) */
             {
                 grid->flags |= ROOM_GRID_SPECIAL;

@@ -3897,8 +3897,9 @@ static bool travel_flow_aux(int y, int x, int n, bool wall)
 
     n = n % TRAVEL_UNABLE;
 
-    /* Ignore out of bounds */
+    /* Ignore out of bounds or undiscovered terrain */
     if (!in_bounds(y, x)) return wall;
+    if (!(c_ptr->info & CAVE_AWARE)) return wall;
 
     /* Ignore "pre-stamped" entries */
     if (travel.cost[y][x] != TRAVEL_UNABLE) return wall;

@@ -2156,6 +2156,7 @@ void build_room_template_aux(room_ptr room, transform_ptr xform, wild_scroll_ptr
                  * entrances and other permanent fixtures are mapped and glowing. */
                 if (room->type == ROOM_TOWN)
                 {
+                    c_ptr->info |= CAVE_AWARE;
                     if (have_flag(f_info[c_ptr->feat].flags, FF_GLOW))
                         c_ptr->info |= CAVE_MARK | CAVE_GLOW;
                     if (have_flag(f_info[c_ptr->feat].flags, FF_PERMANENT))

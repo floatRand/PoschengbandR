@@ -1099,40 +1099,40 @@ static void build_arena(void)
         for (j = x_left; j <= x_right; j++)
         {
             place_extra_perm_bold(i, j);
-            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK);
+            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
         }
     for (i = y_depth; i >= y_depth - 5; i--)
         for (j = x_left; j <= x_right; j++)
         {
             place_extra_perm_bold(i, j);
-            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK);
+            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
         }
     for (j = x_left; j <= x_left + 17; j++)
         for (i = y_height; i <= y_depth; i++)
         {
             place_extra_perm_bold(i, j);
-            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK);
+            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
         }
     for (j = x_right; j >= x_right - 17; j--)
         for (i = y_height; i <= y_depth; i++)
         {
             place_extra_perm_bold(i, j);
-            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK);
+            cave[i][j].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
         }
 
     place_extra_perm_bold(y_height+6, x_left+18);
-    cave[y_height+6][x_left+18].info |= (CAVE_GLOW | CAVE_MARK);
+    cave[y_height+6][x_left+18].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
     place_extra_perm_bold(y_depth-6, x_left+18);
-    cave[y_depth-6][x_left+18].info |= (CAVE_GLOW | CAVE_MARK);
+    cave[y_depth-6][x_left+18].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
     place_extra_perm_bold(y_height+6, x_right-18);
-    cave[y_height+6][x_right-18].info |= (CAVE_GLOW | CAVE_MARK);
+    cave[y_height+6][x_right-18].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
     place_extra_perm_bold(y_depth-6, x_right-18);
-    cave[y_depth-6][x_right-18].info |= (CAVE_GLOW | CAVE_MARK);
+    cave[y_depth-6][x_right-18].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
 
     i = y_height + 5;
     j = xval;
     cave[i][j].feat = f_tag_to_index("ARENA_GATE");
-    cave[i][j].info |= (CAVE_GLOW | CAVE_MARK);
+    cave[i][j].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
     player_place(i, j);
 }
 
@@ -1159,7 +1159,7 @@ static void arena_gen(void)
             place_solid_perm_bold(y, x);
 
             /* Illuminate and memorize the walls */
-            cave[y][x].info |= (CAVE_GLOW | CAVE_MARK);
+            cave[y][x].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
         }
     }
 

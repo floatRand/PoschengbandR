@@ -151,7 +151,7 @@ static void _apply_glow(bool all)
                     }
                     else
                     {
-                        c_ptr->info |= CAVE_GLOW;
+                        c_ptr->info |= CAVE_GLOW | CAVE_AWARE;
                         if (view_perma_grids) c_ptr->info |= CAVE_MARK;
                     }
                 }
@@ -169,7 +169,7 @@ static void _apply_glow(bool all)
                     }
                     else if (have_flag(f_ptr->flags, FF_ENTRANCE))
                     {
-                        c_ptr->info |= CAVE_GLOW;
+                        c_ptr->info |= CAVE_GLOW | CAVE_AWARE;
                         if (view_perma_grids) c_ptr->info |= CAVE_MARK;
                     }
                 }
@@ -1259,7 +1259,7 @@ void wilderness_gen_small(void)
         }
         else cave[j][i].feat = conv_terrain2feat[wilderness[j][i].terrain];
 
-        cave[j][i].info |= (CAVE_GLOW | CAVE_MARK);
+        cave[j][i].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
     }
 
     cur_hgt = (s16b) max_wild_y;

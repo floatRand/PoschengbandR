@@ -1569,7 +1569,7 @@ void do_cmd_debug(void)
         {
             for (x = 0; x < cur_wid; x++)
             {
-                cave[y][x].info |= (CAVE_GLOW | CAVE_MARK);
+                cave[y][x].info |= (CAVE_GLOW | CAVE_MARK | CAVE_AWARE);
             }
         }
         wiz_lite(FALSE);

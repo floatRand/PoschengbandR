@@ -2069,7 +2069,7 @@ enum {
 /*
  * Special cave grid flags
  */
-#define CAVE_MARK       0x000001    /* memorized feature */
+#define CAVE_MARK       0x000001    /* memorized feature displayed in the map window */
 #define CAVE_GLOW       0x000002    /* self-illuminating */
 #define CAVE_ICKY       0x000004    /* part of a vault */
 #define CAVE_ROOM       0x000008    /* part of a room */
@@ -2097,6 +2097,9 @@ enum {
 #define CAVE_IN_DETECT  0x004000    /* trap detected area (inner circle only) */
 /* NOTE: 0x8000 is used above, listed out of sequence!!!!*/
 #define CAVE_IN_MAP     0x010000
+#define CAVE_AWARE      0x020000    /* Similar to CAVE_MARK, but stronger. the player is CAVE_AWARE
+                                     * of floor tiles that might not be CAVE_MARKed (depending on options).
+                                     * We need this for a non-spoiling travel command. */
 
 /*
  * Bit flags for the "project()" function

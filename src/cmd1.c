@@ -5600,7 +5600,7 @@ void move_player(int dir, bool do_pickup, bool break_trap)
                 msg_format("You feel %s %s blocking your way.",
                     is_a_vowel(name[0]) ? "an" : "a", name);
 
-                c_ptr->info |= (CAVE_MARK);
+                c_ptr->info |= (CAVE_MARK | CAVE_AWARE);
                 lite_spot(y, x);
             }
         }

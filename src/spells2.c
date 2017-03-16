@@ -935,7 +935,7 @@ static bool detect_feat_flag(int range, int flag, bool known)
                 disclose_grid(y, x);
 
                 /* Hack -- Memorize */
-                c_ptr->info |= (CAVE_MARK);
+                c_ptr->info |= (CAVE_MARK | CAVE_AWARE);
 
                 /* Redraw */
                 lite_spot(y, x);

@@ -2637,7 +2637,7 @@ static void process_world(void)
                             cave_type *c_ptr = &cave[y][x];
 
                             /* Assume lit */
-                            c_ptr->info |= (CAVE_GLOW);
+                            c_ptr->info |= (CAVE_GLOW | CAVE_AWARE);
 
                             /* Hack -- Memorize lit grids if allowed */
                             if (view_perma_grids) c_ptr->info |= (CAVE_MARK);
