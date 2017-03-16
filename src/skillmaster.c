@@ -550,7 +550,7 @@ static void _calc_shooter_bonuses(object_type *o_ptr, shooter_info_t *info_ptr)
         p_ptr->shooter_info.dis_to_h += row.to_h;
         p_ptr->shooter_info.to_d += row.to_d;
         p_ptr->shooter_info.dis_to_d += row.to_d;
-        p_ptr->shooter_info.num_fire += row.shots;
+        p_ptr->shooter_info.num_fire += row.shots * p_ptr->lev / 50;
     }
 }
 
