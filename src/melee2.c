@@ -1247,7 +1247,9 @@ static bool get_moves(int m_idx, int *mm)
 
     if (!done)
     {
-        /* Flow towards the player */
+        /* Flow towards the player ... Note (x2,y2) == (px,py). If
+         * get_moves_aux fails (returns FALSE) then we proceed directly
+         * towards the player. */
         (void)get_moves_aux(m_idx, &y2, &x2, no_flow);
 
         /* Extract the "pseudo-direction" */
@@ -2207,7 +2209,7 @@ static void process_monster(int m_idx)
 
     int             i, d, oy, ox, ny, nx;
 
-    int             mm[8];
+    int             mm[8] = {0};
 
     cave_type       *c_ptr;
     feature_type    *f_ptr;
@@ -2765,11 +2767,6 @@ static void process_monster(int m_idx)
     if (projectable(py, px, m_ptr->fy, m_ptr->fx))
         mon_lore_move(m_ptr);
 
-    /* Hack -- Assume no movement */
-    mm[0] = mm[1] = mm[2] = mm[3] = 0;
-    mm[4] = mm[5] = mm[6] = mm[7] = 0;
-
-
     /* Confused -- 100% random */
     if (MON_CONFUSED(m_ptr) || !aware)
     {
@@ -2865,11 +2862,12 @@ static void process_monster(int m_idx)
     /* Friendly monster movement */
     else if (!is_hostile(m_ptr))
     {
-        /* by default, move randomly */
-        mm[0] = mm[1] = mm[2] = mm[3] = 5;
-
-        /* Look for an enemy */
-        get_enemy_dir(m_idx, mm);
+        /* XXX Perhaps friendly monsters should join up with the
+         * player? This would make them more interesting/useful
+         * (e.g. Gandalf). The random stuff just looks silly
+         * when there are no enemies around. */
+        if (!get_enemy_dir(m_idx, mm) && !get_moves(m_idx, mm))
+            mm[0] = mm[1] = mm[2] = mm[3] = 5;
     }
     /* Normal movement */
     else
