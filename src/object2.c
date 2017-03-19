@@ -3520,7 +3520,7 @@ void choose_obj_kind(int mode)
  *
  * We assume that the given object has been "wiped".
  */
-bool make_object(object_type *j_ptr, u32b mode)
+static bool _make_object_aux(object_type *j_ptr, u32b mode)
 {
     int prob, base;
     byte obj_level;
@@ -3535,46 +3535,23 @@ bool make_object(object_type *j_ptr, u32b mode)
     if (!one_in_(prob) || !make_artifact_special(j_ptr))
     {
         int k_idx;
-        int max_attempts = 1;
-        int attempt = 1;
 
-        _drop_tailored = FALSE;
-        if (mode & AM_TAILORED)
+        if (!get_obj_num_hook)
+            get_obj_num_hook = _choose_obj_kind(mode);
+
+        if (get_obj_num_hook)
+            get_obj_num_prep();
+
+        k_idx = get_obj_num(base);
+
+        if (get_obj_num_hook)
         {
-            _drop_tailored = TRUE;
-            max_attempts = 1000; /* Tailored drops can fail for certain _choose_obj_kind()s */
-        }
-
-        for (;;)
-        {
-            if (!get_obj_num_hook)
-                get_obj_num_hook = _choose_obj_kind(mode);
-
-            if (get_obj_num_hook)
-                get_obj_num_prep();
-
-            k_idx = get_obj_num(base);
-
-            if (get_obj_num_hook)
-            {
-                get_obj_num_hook = NULL;
-                get_obj_num_prep();
-            }
-
-            if (k_idx)
-                break;
-
-            attempt++;
-            if (attempt > max_attempts)
-                break;
+            get_obj_num_hook = NULL;
+            get_obj_num_prep();
         }
 
         /* Handle failure */
-        if (!k_idx)
-        {
-            obj_drop_theme = 0;
-            return FALSE;
-        }
+        if (!k_idx) return FALSE;
 
         /* Prepare the object */
         object_prep(j_ptr, k_idx);
@@ -3582,10 +3559,7 @@ bool make_object(object_type *j_ptr, u32b mode)
 
     /* Apply magic (allow artifacts) */
     if (!apply_magic(j_ptr, object_level, mode))
-    {
-        obj_drop_theme = 0;
         return FALSE;
-    }
 
     /* Note: It is important to do this *after* apply_magic rather than in, say,
        object_prep() since artifacts should never spawn multiple copies. Ego ammo
@@ -3604,11 +3578,39 @@ bool make_object(object_type *j_ptr, u32b mode)
         if (cheat_peek) object_mention(j_ptr);
     }
 
-    /* Success */
-    obj_drop_theme = 0;
     return TRUE;
 }
 
+bool make_object(obj_ptr obj, u32b mode)
+{
+    bool result = FALSE;
+    int max_attempts = 1;
+    int attempt = 0;
+
+    _drop_tailored = FALSE;
+    if (mode & AM_TAILORED)
+    {
+        _drop_tailored = TRUE;
+        max_attempts = 1000; /* Tailored drops can fail for certain _choose_obj_kind()s */
+    }
+    else if ((mode & (AM_GOOD | AM_GREAT)) && !get_obj_num_hook)
+    {
+        max_attempts = 100; /* AM_GOOD devices often fail before OL50 ... see the effect tables */
+    }
+
+    for (; attempt < max_attempts; attempt++)
+    {
+        if (_make_object_aux(obj, mode))
+        {
+            result = TRUE;
+            break;
+        }
+        object_wipe(obj);
+    }
+    obj_drop_theme = 0;
+    _drop_tailored = FALSE;
+    return result;
+}
 
 /*
  * Attempt to place an object (normal or good/great) at the given location.
