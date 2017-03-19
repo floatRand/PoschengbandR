@@ -3493,8 +3493,12 @@ static void cave_temp_room_aux(int y, int x, bool only_room, bool (*pass_bold)(i
         /* Verify */
         if (!in_bounds2(y, x)) return;
 
-        /* Do not exceed the maximum spell range */
-        if (distance(py, px, y, x) > MAX_RANGE) return;
+        /* Do not exceed the maximum spell range ...
+         * ... x2 for quests. When designing quests, it is a bit
+         * tedious to set the ROOM flag correctly (unless the entire
+         * quest is a single room). Much easier to just have light
+         * area work a bit farther than normal.*/
+        if (distance(py, px, y, x) > MAX_RANGE*2) return;
 
         /* Verify this grid */
         /*

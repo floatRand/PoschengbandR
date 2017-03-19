@@ -1546,6 +1546,7 @@ static void _examine(_ui_context_ptr context)
         obj = inv_obj(context->shop->inv, slot);
         if (!obj) continue;
 
+        obj_learn_store(obj);
         obj_display(obj);
     }
 }

@@ -1620,6 +1620,7 @@ static void _ego_create_bow(object_type *o_ptr, int level)
         case EGO_BOW_HUNTER:
             if (one_in_(5)) add_esp_strong(o_ptr);
             else add_esp_weak(o_ptr, FALSE);
+            if (one_in_(30)) add_flag(o_ptr->flags, OF_SLAY_ANIMAL);
             break;
         case EGO_BOW_LOTHLORIEN:
             if (o_ptr->sval != SV_LONG_BOW)
