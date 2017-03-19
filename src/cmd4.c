@@ -3222,7 +3222,7 @@ void do_cmd_feeling(void)
 
 				if (dist < 2){ cmsg_print(feeling.color, " ...You might have just found it!"); }
 				else if (dist < 8){ cmsg_print(feeling.color, "It feels very hot!"); }
-				else if (dist < 16){ cmsg_print(feeling.color, "It feels hot."); }
+				else if (dist < 16){ cmsg_print(feeling.color, "It feels hot!"); }
 				else if (dist < 32){ cmsg_print(feeling.color, "It feels warm."); }
 				else if (dist < 64){ cmsg_print(feeling.color, "It feels chilly."); }
 				else{ cmsg_print(feeling.color, "It feels cold."); }
