@@ -2354,6 +2354,9 @@ static void _build_options(doc_ptr doc)
     if (no_selling)
         doc_printf(doc, " No Selling:         Enabled\n");
 
+	if (max_merchant_value) 
+		doc_printf(doc, " Max Merchant Value:         Enabled\n");
+
     if (p_ptr->noscore)
         doc_printf(doc, "\n <color:v>You have done something illegal.</color>\n");
 

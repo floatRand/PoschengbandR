@@ -343,6 +343,7 @@ extern bool no_selling;
 extern bool enable_virtues;
 extern bool coffeebreak_mode;
 extern bool runesword_start;
+extern bool max_merchant_value;
 
 /*** Easy Object Auto-Destroyer ***/
 

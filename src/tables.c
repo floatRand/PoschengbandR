@@ -3598,9 +3598,11 @@ option_type option_info[] =
 	{ &coffeebreak_mode,				FALSE, OPT_PAGE_BIRTH, 6, 26,
 	"coffee_break",						"When in hurry. (*)" },
 
-    { &no_selling,                        FALSE, OPT_PAGE_BIRTH, 6, 27,
+    { &no_selling,                        FALSE, OPT_PAGE_BIRTH, 6, 9,
     "no_selling",                       "Prohibit selling to shops" },
 
+	{ &max_merchant_value, FALSE, OPT_PAGE_BIRTH, 6, 10,
+	"max_merchant_value", "Merchants have always 30000 AU." },
     /*** Easy Object Auto-Destroyer ***/
 
     { &destroy_items,               FALSE, OPT_PAGE_AUTODESTROY, 7, 0,

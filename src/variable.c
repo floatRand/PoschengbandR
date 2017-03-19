@@ -326,6 +326,7 @@ bool no_selling;
 bool enable_virtues;
 bool runesword_start;
 bool coffeebreak_mode;
+bool max_merchant_value;
 
 /*** Easy Object Auto-Destroyer ***/
 

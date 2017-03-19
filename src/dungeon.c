@@ -2623,6 +2623,9 @@ static byte get_dungeon_feeling(void)
         rating += RATING_BOOST(delta);
     }
 
+	int find_art = find_first_artifact();
+	if (find_art > 0) return 1;
+
     /* Examine each unidentified object */
     for (i = 1; i < o_max; i++)
     {
@@ -2642,10 +2645,6 @@ static byte get_dungeon_feeling(void)
 
         /* Skip pseudo-known objects */
         if (o_ptr->ident & IDENT_SENSE) continue;
-
-        /* Experimental Hack: Force Special Feelings for artifacts no matter what. */
-        if (object_is_artifact(o_ptr))
-            return 1;
 
         if ( object_is_artifact(o_ptr)
           || object_is_ego(o_ptr)
@@ -2685,6 +2684,24 @@ static byte get_dungeon_feeling(void)
     return 10;
 }
 
+// Find first artifact from list. This is used for finding the damn nearest artifact. 
+int find_first_artifact(){
+	int i;
+	for (i = 1; i < o_max; i++)
+	{
+		object_type *o_ptr = &o_list[i];
+		if (!o_ptr->k_idx) continue;
+		if (object_is_known(o_ptr))
+		{
+			if (o_ptr->marked & OM_TOUCHED) continue;
+		}
+
+		if (o_ptr->ident & IDENT_SENSE) continue;
+		if (object_is_artifact(o_ptr))
+			return i;
+	}
+	return -1; // nothing found
+}
 
 /*
  * Update dungeon feeling, and announce it if changed

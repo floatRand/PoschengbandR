@@ -3213,6 +3213,21 @@ void do_cmd_feeling(void)
         else
             feeling = _level_feelings[p_ptr->feeling];
         cmsg_print(feeling.color, feeling.msg);
+
+		if (p_ptr->feeling == 1){
+			int find_art = find_first_artifact();
+			if (find_art > 0){
+				object_type *o_ptr = &o_list[find_art];
+				int dist = distance(py, px, o_ptr->iy, o_ptr->ix);
+
+				if (dist < 2){ cmsg_print(feeling.color, " ...You might have just found it!"); }
+				else if (dist < 8){ cmsg_print(feeling.color, "It feels very hot!"); }
+				else if (dist < 16){ cmsg_print(feeling.color, "It feels hot."); }
+				else if (dist < 32){ cmsg_print(feeling.color, "It feels warm."); }
+				else if (dist < 64){ cmsg_print(feeling.color, "It feels chilly."); }
+				else{ cmsg_print(feeling.color, "It feels cold."); }
+			}
+		}
     }
 }
 

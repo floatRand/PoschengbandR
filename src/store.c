@@ -284,10 +284,15 @@ static bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
 }
 
 static int _get_purse_limit(owner_type *ot_ptr){
-
 	if (ot_ptr){
-		if(mut_present(MUT_MERCHANTS_FRIEND)) return MIN((int)ot_ptr->max_cost+10000,40000);
-		else return ot_ptr->max_cost;
+		if (max_merchant_value){
+			if (mut_present(MUT_MERCHANTS_FRIEND)) return 40000;
+			else return 30000;
+		}
+		else{
+			if (mut_present(MUT_MERCHANTS_FRIEND)) return MIN((int)ot_ptr->max_cost + 10000, 40000);
+			else return ot_ptr->max_cost;
+		}
 	} return 5000;
 
 }
