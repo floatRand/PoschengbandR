@@ -3590,7 +3590,7 @@ void do_cmd_fire_aux2(obj_ptr bow, obj_ptr arrows, int sx, int sy, int tx, int t
                             char m_name[80];
                             monster_desc(m_name, m_ptr, 0);
 
-                            stick_to = TRUE;
+                            stick_to = one_in_(2);
 
                             /* If Cupid's Arrow charms the monster,
                                having the arrow stick is highly annoying since

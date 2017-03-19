@@ -31,7 +31,7 @@ F:q_logrus_master.txt
 
 N:4:30:The Vault
 T:TOWN | GENERATE
-G:FIND(^sting$)
+G:FIND(sting)
 F:q_vault.txt
 
 N:5:35:The Barrow Downs
