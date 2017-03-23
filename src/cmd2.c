@@ -669,7 +669,11 @@ static void chest_trap(int y, int x, s16b o_idx)
                         (void)set_stun(p_ptr->stun + 10 + randint0(100), FALSE);
                     }
                 }
-                else if (one_in_(3)) apply_disenchant(0);
+				else if (one_in_(3)){
+					if (p_ptr->prace == RACE_MON_SWORD) sword_disenchant();
+					else if (p_ptr->prace == RACE_MON_RING) ring_disenchant();
+					else apply_disenchant(0);
+				}
                 else if (one_in_(2))
                 {
                     (void)do_dec_stat(A_STR);

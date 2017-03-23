@@ -538,37 +538,38 @@ bool make_attack_normal(int m_idx)
                 {
                     if (explode) break;
 
-                    if (one_in_(3))
-                    {
-                        if ((res_save_default(RES_DISEN) || CHECK_MULTISHADOW()) && one_in_(2))
-                        {
-                        }
-                        else if (prace_is_(RACE_MON_SWORD) && one_in_(2) && sword_disenchant())
-                        {
-                            obvious = TRUE;
-                        }
-                        else if (prace_is_(RACE_MON_RING) && one_in_(2) && ring_disenchant())
-                        {
-                            obvious = TRUE;
-                        }
-                        else if (disenchant_player())
-                        {
-                            obvious = TRUE;
-                        }
-                    }
-                    else
-                    {
-                        if (!res_save(RES_DISEN, 31) && !CHECK_MULTISHADOW())
-                        {
-                            /* Apply disenchantment */
-                            if (apply_disenchant(0))
-                            {
-                                /* Hack -- Update AC */
-                                update_stuff();
-                                obvious = TRUE;
-                            }
-                        }
-                    }
+					if (p_ptr->prace == RACE_MON_RING || p_ptr->prace == RACE_MON_SWORD)
+					{
+						if (one_in_(2)){
+							if (p_ptr->prace == RACE_MON_SWORD && sword_disenchant()) obvious = TRUE;
+							else if (p_ptr->prace == RACE_MON_RING && ring_disenchant()) obvious = TRUE;
+						}
+					}
+					else{
+						if (one_in_(3))
+						{
+							if ((res_save_default(RES_DISEN) || CHECK_MULTISHADOW()) && one_in_(2))
+							{
+							}
+							else if (disenchant_player())
+							{
+								obvious = TRUE;
+							}
+						}
+						else
+						{
+							if (!res_save(RES_DISEN, 31) && !CHECK_MULTISHADOW())
+							{
+								/* Apply disenchantment */
+								if (apply_disenchant(0))
+								{
+									/* Hack -- Update AC */
+									update_stuff();
+									obvious = TRUE;
+								}
+							}
+						}
+					}
 
                     /* Take some damage */
                     damage = reduce_melee_dam_p(damage);

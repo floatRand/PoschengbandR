@@ -251,8 +251,6 @@ static int _res_power(int which)
     case RES_SOUND:
     case RES_SHARDS:
     case RES_CHAOS:
-        return 4;
-
     case RES_DISEN:
     case RES_POIS:
     case RES_LITE:
@@ -961,8 +959,8 @@ race_t *mon_sword_get_race(void)
 
         me.infra = 3;
         me.exp = 150;
-        me.base_hp = 30;
-        me.shop_adjust = 110; /* I think shopkeepers are puzzled, more than anything else! */
+        me.base_hp = 40;
+        me.shop_adjust = 100; /* I think shopkeepers are puzzled, more than anything else! */
 
         me.calc_bonuses = _calc_bonuses;
         me.calc_stats = _calc_stats;
@@ -1003,32 +1001,75 @@ race_t *mon_sword_get_race(void)
     return &me;
 }
 
+bool lose_essence(int e){
+	int r = _rank();
+	int n = _essences[e];
+	int k = 0;
+
+	if (!n) return FALSE;
+
+	/*Protected essences*/
+	if (e == OF_SPEED) return FALSE;
+	if (res_save(RES_DISEN, 44)) FALSE;
+
+	k = _essences[e] * randint1(r) / 20;
+	if (k > p_ptr->lev * 2) k = p_ptr->lev * 2;
+
+	_essences[e] -= MAX(1, k);
+	if (_essences[e] < 0) _essences[e] = 0;
+
+	if (_essences[e] < n)
+		return TRUE;
+	return FALSE;
+}
+
 bool sword_disenchant(void)
 {
     bool result = FALSE;
-    int  r = _rank();
-    int  i;
 
-    for (i = 0; i < _MAX_ESSENCE; i++)
-    {
-        int n = _essences[i];
-        
-        if (!n) continue;
-        if (i == OF_SPEED) continue;
-        if (res_save(RES_DISEN, 44)) continue;
-        
-        _essences[i] -= MAX(1, _essences[i] * randint1(r) / 20);
-        if (_essences[i] < n)
-            result = TRUE;
-    }
+    int  i = 0;
+	bool all = FALSE;
+	int repeats = FALSE;
+	do{
+		if (!one_in_(3)){
+			if (one_in_(2)) i = _ESSENCE_TO_HIT;
+			else i = _ESSENCE_TO_DAM;
+		}
+		else if (!one_in_(3))
+		{
+			if (one_in_(2)) i = _ESSENCE_AC;
+			else i = _ESSENCE_XTRA_DICE;
+		}
+		else if (!one_in_(3)){
+			i = randint0(_MIN_SPECIAL);
+		}
+		else{
+			for (i = 0; i < _MAX_ESSENCE; i++)
+			{
+				if (lose_essence(i)) result = TRUE;
+			}
+			all = TRUE;
+		}
+
+		if (!all){
+			if (lose_essence(i)) result = TRUE;
+			repeats = one_in_(3);
+		}
+		else {
+			repeats = FALSE;
+		}
+		repeats--;
+
+	} while (repeats);
+
     if (result)
     {
         p_ptr->update |= PU_BONUS;
-        msg_print("You feel power draining from your body!");
+        if(all) msg_print("<color:R>You feel power escaping from your body!!</color>");
+		else msg_print("Your power slips away!");
     }
     return result;
 }
-
 
 int sword_calc_torch(void)
 {

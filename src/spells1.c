@@ -6821,7 +6821,9 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
         {
             if (fuzzy) msg_print("You are hit by something static!");
             dam = res_calc_dam(RES_DISEN, dam);
-            if (!res_save_default(RES_DISEN) && !CHECK_MULTISHADOW())
+			if (p_ptr->prace == RACE_MON_SWORD) sword_disenchant();
+			else if (p_ptr->prace == RACE_MON_RING) ring_disenchant();
+			else if (!res_save_default(RES_DISEN) && !CHECK_MULTISHADOW())
                 (void)apply_disenchant(0);
             get_damage = take_hit(DAMAGE_ATTACK, dam, killer, monspell);
             break;

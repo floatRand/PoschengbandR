@@ -905,7 +905,9 @@ static void wild_magic(int spell)
         break;
     case 29:
     case 30:
-        apply_disenchant(1);
+		if (p_ptr->prace == RACE_MON_SWORD) sword_disenchant();
+		else if (p_ptr->prace == RACE_MON_RING) ring_disenchant();
+        else apply_disenchant(1);
         break;
     case 31:
         lose_all_info();

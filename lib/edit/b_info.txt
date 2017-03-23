@@ -689,6 +689,7 @@ S:BOOTS:Back Paws
 
 N:64:Death-Sword
 S:WEAPON:You
+S:AMULET:Hilt
 
 N:65:Benedict
 S:WEAPON_SHIELD:Right Hand
