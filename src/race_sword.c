@@ -1010,7 +1010,7 @@ bool lose_essence(int e){
 
 	/*Protected essences*/
 	if (e == OF_SPEED) return FALSE;
-	if (res_save(RES_DISEN, 44)) FALSE;
+	if (res_save(RES_DISEN, 44) && !one_in_(20)) FALSE; // 5% chance of failing for ~fun~
 
 	k = _essences[e] * randint1(r) / 20;
 	if (k > p_ptr->lev * 2) k = p_ptr->lev * 2;
