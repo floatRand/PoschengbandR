@@ -73,7 +73,31 @@ maximal legal value.
   slot should be easy to figure out: Helmets go on your "Head" slot and 
   Gloves go on your "Hands", etc.
 
+<<<<<<< HEAD
   </font><font color="#c08040">Drop Item (</font><font color="#ff8000">d</font><font color="#c08040">)
+=======
+  </font><font color="#ffcc80">Get Objects (</font><font color="#ff9200">g</font><font color="#ffcc80">)
+  </font><font color="#ffffff">This command will get any objects located on the same tile as the 
+  player (autodestroyer applies). In addition, this command will 
+  automatically get nearby objects by travelling to them (similar to 
+  running). With </font><font color="#ff4040">auto_get_objects </font><font color="#ffffff">enabled, any object registered for 
+  either auto-pickup or auto-destroy will qualify for automatic get. If 
+  that is too much for you (perhaps you enjoy cleaning up after 
+  battles?) then the </font><font color="#ff4040">auto_get_ammo </font><font color="#ffffff">option only applies to objects 
+  inscribed with </font><font color="#ff9200">=g </font><font color="#ffffff">(which is typically your ammo, or perhaps spikes if 
+  you are a ninja).
+  
+  Automatic travelling is very useful, and you won't travel too far 
+  since the objects must be visible to qualify. Hence, this option is 
+  much safer than, say, travelling using the object list which allows 
+  you to undertake lengthy automatic journeys (often into harms way!). 
+  The automatic get travelling will terminate when there are no more 
+  visible qualifying objects; if your pack becomes full; or if you are 
+  disturbed for any reason, such as a nasty dragon waking up and 
+  deciding to breathe on you.
+
+  </font><font color="#ffcc80">Drop Item (</font><font color="#ff9200">d</font><font color="#ffcc80">)
+>>>>>>> c7d6ba9668b27ea035ce08e84a032bec4a48cfbb
   </font><font color="#ffffff">This drops an item from your inventory or equipment onto the dungeon 
   floor. If the floor spot you are standing on already has an object in 
   it, the game will attempt to drop the item onto an adjacent space. Be 
@@ -170,6 +194,7 @@ maximal legal value.
   keysets).  If object auto-picker/destroyer is set up, specified 
   objects will be picked up or destroyed.
 
+<<<<<<< HEAD
   </font><font color="#c08040">Stay Still (flip pickup) (</font><font color="#ff8000">g</font><font color="#c08040">)
   </font><font color="#ffffff">Stays in the same square for one move. If you normally pick up 
   objects you encounter, you will not pick up whatever you are standing 
@@ -180,6 +205,9 @@ maximal legal value.
   picked up or destroyed.
 
   </font><font color="#c08040">Rest (</font><font color="#ff8000">R</font><font color="#c08040">)
+=======
+  </font><font color="#ffcc80">Rest (</font><font color="#ff9200">R</font><font color="#ffcc80">)
+>>>>>>> c7d6ba9668b27ea035ce08e84a032bec4a48cfbb
   </font><font color="#ffffff">Resting is better for you than repeatedly staying still, and can be 
   told to automatically stop after a certain amount of time, or when 
   various conditions are met. In any case, you always wake up when 
@@ -820,6 +848,7 @@ maximal legal value.
   
 <a name="Summary"></a>  </font><font color="#c00000">Summary
   
+<<<<<<< HEAD
   </font><font color="#c08040">Inventory Commands         Original        Roguelike
     </font><font color="#ffffff">Inventory List              </font><font color="#ff8000">i                 
     </font><font color="#ffffff">Equipment List              </font><font color="#ff8000">e                 
@@ -927,6 +956,115 @@ maximal legal value.
   
   
   </font><font color="#707070">Original   : Alexander Cutler and Andy Astrand
+=======
+  </font><font color="#ffcc80">Inventory Commands         Original        Roguelike
+    </font><font color="#ffffff">Inventory List              </font><font color="#ff9200">i                 
+    </font><font color="#ffffff">Equipment List              </font><font color="#ff9200">e                 
+    </font><font color="#ffffff">Get Objects                 </font><font color="#ff9200">g                 
+    </font><font color="#ffffff">Drop Item                   </font><font color="#ff9200">d                 
+    </font><font color="#ffffff">Destroy Item                </font><font color="#ff9200">k               ^D
+    </font><font color="#ffffff">Wear/Wield Equipment        </font><font color="#ff9200">w                 
+    </font><font color="#ffffff">Take Off Equipment          </font><font color="#ff9200">t                T
+  
+  </font><font color="#ffcc80">Movement Commands          Original        Roguelike
+    </font><font color="#ffffff">Walk (with pickup)          </font><font color="#ff9200">;                 
+    </font><font color="#ffffff">Walk (flip pickup)          </font><font color="#ff9200">-                 
+    </font><font color="#ffffff">Run                         </font><font color="#ff9200">.                ,
+    </font><font color="#ffffff">Go Up Staircase             </font><font color="#ff9200">&lt;                 
+    </font><font color="#ffffff">Go Down Staircase           </font><font color="#ff9200">&gt;                 
+    </font><font color="#ffffff">Direction Keys (DIR)     </font><font color="#ff9200">7  8  9          y  k  u
+                             4     6          h     l
+                             1  2  3          b  j  n
+    </font><font color="#ffffff">Run                     </font><font color="#ff9200">SHIFT+DIR             
+  
+  </font><font color="#ffcc80">Resting Commands           Original        Roguelike
+    </font><font color="#ffffff">Stay (pickup)               </font><font color="#ff9200">,                .
+    </font><font color="#ffffff">Rest                        </font><font color="#ff9200">R                 
+  
+  </font><font color="#ffcc80">Searching Commands         Original        Roguelike
+    </font><font color="#ffffff">Search                      </font><font color="#ff9200">s                 
+    </font><font color="#ffffff">Toggle Search Mode          </font><font color="#ff9200">S                #
+  
+  </font><font color="#ffcc80">Alter Commands             Original        Roguelike
+    </font><font color="#ffffff">Tunnel                      </font><font color="#ff9200">T               ^T
+    </font><font color="#ffffff">Open a Door/Chest           </font><font color="#ff9200">o                 
+    </font><font color="#ffffff">Close a Door                </font><font color="#ff9200">c                 
+    </font><font color="#ffffff">Jam/Spike a Door            </font><font color="#ff9200">j                S
+    </font><font color="#ffffff">Bash/Force a Door           </font><font color="#ff9200">B                f
+    </font><font color="#ffffff">Disarm a Trap/Chest         </font><font color="#ff9200">D                 
+    </font><font color="#ffffff">Alter                       </font><font color="#ff9200">+                 
+    </font><font color="#ffffff">Alter                   </font><font color="#ff9200">CTRL+DIR              
+  
+  </font><font color="#ffcc80">Spell Commands             Original        Roguelike
+    </font><font color="#ffffff">Browse/Peruse Spells        </font><font color="#ff9200">b                P
+    </font><font color="#ffffff">Gain Spell                  </font><font color="#ff9200">G                 
+    </font><font color="#ffffff">Cast Spell                  </font><font color="#ff9200">m                 
+    </font><font color="#ffffff">Use Power                   </font><font color="#ff9200">U                O
+  
+  </font><font color="#ffcc80">Object Commands            Original        Roguelike
+    </font><font color="#ffffff">Eat Food                    </font><font color="#ff9200">E                 
+    </font><font color="#ffffff">Fuel Lantern/Torch          </font><font color="#ff9200">F                 
+    </font><font color="#ffffff">Quaff Potion                </font><font color="#ff9200">q                 
+    </font><font color="#ffffff">Read Scroll                 </font><font color="#ff9200">r                 
+    </font><font color="#ffffff">Inscribe Object             </font><font color="#ff9200">{                 
+    </font><font color="#ffffff">Un-inscribe Object          </font><font color="#ff9200">}                 
+  
+  </font><font color="#ffcc80">Magic Device Commands      Original        Roguelike
+    </font><font color="#ffffff">Activate Object             </font><font color="#ff9200">A                 
+    </font><font color="#ffffff">Aim/Zap Wand                </font><font color="#ff9200">a                z
+    </font><font color="#ffffff">Use/Zap Staff               </font><font color="#ff9200">u                Z
+    </font><font color="#ffffff">Zap/Activate Rod            </font><font color="#ff9200">z                a
+  
+  </font><font color="#ffcc80">Missile Commands           Original        Roguelike
+    </font><font color="#ffffff">Fire Item                   </font><font color="#ff9200">f                t
+    </font><font color="#ffffff">Throw Item                  </font><font color="#ff9200">v                 
+    </font><font color="#ffffff">Set Target                  </font><font color="#ff9200">*                 
+  
+  </font><font color="#ffcc80">Looking Commands           Original        Roguelike
+    </font><font color="#ffffff">Full Screen Map             </font><font color="#ff9200">M                 
+    </font><font color="#ffffff">Locate Player on Map        </font><font color="#ff9200">L                W
+    </font><font color="#ffffff">Look Around                 </font><font color="#ff9200">l                x
+    </font><font color="#ffffff">Recenter Viewport          </font><font color="#ff9200">^V                 
+    </font><font color="#ffffff">Inspect Item                </font><font color="#ff9200">I                 
+  
+  </font><font color="#ffcc80">Message Commands           Original        Roguelike
+    </font><font color="#ffffff">Repeat Level Feeling       </font><font color="#ff9200">^F                 
+    </font><font color="#ffffff">Previous Messages          </font><font color="#ff9200">^P                 
+    </font><font color="#ffffff">Take Notes                  </font><font color="#ff9200">:                 
+  
+  </font><font color="#ffcc80">Game Status Commands       Original        Roguelike
+    </font><font color="#ffffff">Character Description       </font><font color="#ff9200">C                 
+    </font><font color="#ffffff">Knowledge Menu              </font><font color="#ff9200">~                 
+    </font><font color="#ffffff">Display Game Time          </font><font color="#ff9200">^T                '
+  
+  </font><font color="#ffcc80">Save/Quit Commands         Original        Roguelike
+    </font><font color="#ffffff">Save and Quit              </font><font color="#ff9200">^X
+    </font><font color="#ffffff">Save                       </font><font color="#ff9200">^S
+    </font><font color="#ffffff">Quit/Commit Suicide         </font><font color="#ff9200">Q
+  
+  </font><font color="#ffcc80">User Preference Commands   Original        Roguelike
+    </font><font color="#ffffff">Interact with Options       </font><font color="#ff9200">=
+    </font><font color="#ffffff">Interact with Macros        </font><font color="#ff9200">@
+    </font><font color="#ffffff">Interact with Visuals       </font><font color="#ff9200">%
+    </font><font color="#ffffff">Interact with Colors        </font><font color="#ff9200">&amp;
+    </font><font color="#ffffff">Reload Auto-Picker Prefs    </font><font color="#ff9200">$
+    </font><font color="#ffffff">Edit Auto-Picker Prefs      </font><font color="#ff9200">_
+  
+  </font><font color="#ffcc80">Help Commands              Original        Roguelike
+    </font><font color="#ffffff">Help                        </font><font color="#ff9200">?
+    </font><font color="#ffffff">Identify Symbol             </font><font color="#ff9200">/
+    </font><font color="#ffffff">Game Version                </font><font color="#ff9200">V
+  
+  </font><font color="#ffcc80">Extra Commands             Original        Roguelike
+    </font><font color="#ffffff">Repeat Last Command         </font><font color="#ff9200">n                X
+    </font><font color="#ffffff">Toggle Choice Window       </font><font color="#ff9200">^I                 
+    </font><font color="#ffffff">Redraw Screen              </font><font color="#ff9200">^R                 
+    </font><font color="#ffffff">Create Screen Dump          </font><font color="#ff9200">)                 
+    </font><font color="#ffffff">Command Pets                </font><font color="#ff9200">p                 
+  
+  
+  </font><font color="#8a8a8a">Original   : Alexander Cutler and Andy Astrand
+>>>>>>> c7d6ba9668b27ea035ce08e84a032bec4a48cfbb
   Updated    : (2.7.6) by Russ Allbery (rra@cs.stanford.edu)
   Updated    : (2.7.9) by Ben Harrison (benh@phial.com)
   Updated    : Zangband 2.2.0 through 2.2.6c by Robert Ruehlmann

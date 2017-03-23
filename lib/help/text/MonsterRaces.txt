@@ -822,5 +822,9 @@ Xorn         Poor          Bad           Excellent     Bad             50'
 
 
 
+<<<<<<< HEAD
 Automatically generated for PosChengband R 5.0.5.
+=======
+Automatically generated for PosChengband 6.0.0.
+>>>>>>> c7d6ba9668b27ea035ce08e84a032bec4a48cfbb
 

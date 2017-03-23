@@ -136,12 +136,6 @@ void reset_tim_flags(void)
     p_ptr->action = ACTION_NONE;
     
     p_ptr->tim_spurt = 0;
-    p_ptr->tim_speed_essentia = 0;
-    p_ptr->tim_slow_digest = 0;
-    p_ptr->tim_crystal_skin = 0;
-    p_ptr->tim_chaotic_surge = 0;
-    p_ptr->tim_wild_pos = 0;
-    p_ptr->tim_wild_mind = 0;
     p_ptr->tim_blood_rite = 0;
     p_ptr->tim_blood_shield = 0;
     p_ptr->tim_blood_seek = 0;
@@ -149,7 +143,6 @@ void reset_tim_flags(void)
     p_ptr->tim_blood_feast = 0;
     p_ptr->tim_blood_revenge = 0;
     p_ptr->tim_superstealth = 0;
-    p_ptr->tim_genji = 0;
     p_ptr->tim_force = 0;
     p_ptr->fasting = FALSE;
     p_ptr->tim_sustain_str = 0;
@@ -210,7 +203,7 @@ bool disenchant_player(void)
     bool result = FALSE;
     for (; attempts; attempts--)
     {
-        switch (randint1(33))
+        switch (randint1(32))
         {
         case 1:
             if (p_ptr->fast)
@@ -397,13 +390,6 @@ bool disenchant_player(void)
             }
             break;
         case 23:
-            if (p_ptr->tim_genji)
-            {
-                (void)set_tim_genji(0, TRUE);
-                result = TRUE;
-                if (one_in_(2)) return result;
-            }
-            break;
         case 24:
             if (p_ptr->tim_force)
             {
@@ -477,7 +463,7 @@ bool disenchant_player(void)
             }
             break;
         case 33:
-            if music_singing_any()
+            if (music_singing_any() || hex_spelling_any())
             {
                 msg_print("Your singing is interrupted.");
                 bard_stop_singing();
@@ -557,7 +543,6 @@ void dispel_player(void)
     set_tim_blood_feast(0, TRUE);
     set_tim_blood_revenge(0, TRUE);
 
-    set_tim_genji(0, TRUE);
     set_tim_force(0, TRUE);
     set_tim_building_up(0, TRUE);
     set_tim_enlarge_weapon(0, TRUE);
@@ -1091,99 +1076,6 @@ bool set_image(int v, bool do_dec)
     return (TRUE);
 }
 
-bool set_tim_speed_essentia(int v, bool do_dec)
-{
-    bool notice = FALSE;
-
-    /* Hack -- Force good values */
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
-
-    if (p_ptr->is_dead) return FALSE;
-
-    /* Open */
-    if (v)
-    {
-        if (p_ptr->tim_speed_essentia)
-        {
-            if (p_ptr->tim_speed_essentia > v && !do_dec) return FALSE;
-        }
-        else
-        {
-            msg_print("You are death incarnate!");
-            notice = TRUE;
-        }
-    }
-    /* Shut */
-    else
-    {
-        if (p_ptr->tim_speed_essentia)
-        {
-            msg_print("You feel the power of death leave you.");
-            notice = TRUE;
-        }
-    }
-
-    /* Use the value */
-    p_ptr->tim_speed_essentia = v;
-
-    /* Nothing to notice */
-    if (!notice) return (FALSE);
-
-    /* Disturb */
-    if (disturb_state) disturb(0, 0);
-
-    /* Recalculate bonuses */
-    p_ptr->redraw |= (PR_STATUS);
-    p_ptr->update |= (PU_BONUS);
-
-    /* Handle stuff */
-    handle_stuff();
-
-    /* Result */
-    return (TRUE);
-}
-
-bool set_tim_shrike(int v, bool do_dec)
-{
-    bool notice = FALSE;
-
-    /* Hack -- Force good values */
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
-
-    if (p_ptr->is_dead) return FALSE;
-
-    /* Open */
-    if (v)
-    {
-        if (p_ptr->tim_shrike)
-        {
-            if (p_ptr->tim_shrike > v && !do_dec) return FALSE;
-        }
-        else
-        {
-            msg_print("You control the flow of time!");
-            notice = TRUE;
-        }
-    }
-    /* Shut */
-    else
-    {
-        if (p_ptr->tim_shrike)
-        {
-            msg_print("You no longer control time's flow.");
-            notice = TRUE;
-        }
-    }
-
-    p_ptr->tim_shrike = v;
-    if (!notice) return (FALSE);
-    if (disturb_state) disturb(0, 0);
-    p_ptr->redraw |= (PR_STATUS);
-    p_ptr->update |= (PU_BONUS);
-    handle_stuff();
-    return (TRUE);
-}
-
 bool set_tim_spurt(int v, bool do_dec)
 {
     bool notice = FALSE;
@@ -1646,58 +1538,6 @@ bool set_tim_no_device(int v, bool do_dec)
     if (disturb_state) disturb(0, 0);
 
     p_ptr->redraw |= (PR_STATUS);
-
-    /* Handle stuff */
-    handle_stuff();
-
-    /* Result */
-    return (TRUE);
-}
-
-bool set_tim_genji(int v, bool do_dec)
-{
-    bool notice = FALSE;
-
-    /* Hack -- Force good values */
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
-
-    if (p_ptr->is_dead) return FALSE;
-
-    /* Open */
-    if (v)
-    {
-        if (p_ptr->tim_genji)
-        {
-            if (p_ptr->tim_genji > v && !do_dec) return FALSE;
-        }
-        else
-        {
-            msg_print("You feel the power of Genji.");
-            notice = TRUE;
-        }
-    }
-    /* Shut */
-    else
-    {
-        if (p_ptr->tim_genji)
-        {
-            msg_print("Dual wielding seems difficult once again.");
-            notice = TRUE;
-        }
-    }
-
-    /* Use the value */
-    p_ptr->tim_genji = v;
-
-    /* Nothing to notice */
-    if (!notice) return (FALSE);
-
-    /* Disturb */
-    if (disturb_state) disturb(0, 0);
-
-    /* Recalculate bonuses */
-    p_ptr->redraw |= (PR_STATUS);
-    p_ptr->update |= (PU_BONUS);
 
     /* Handle stuff */
     handle_stuff();
@@ -5518,15 +5358,9 @@ bool restore_level(void)
 /*
  * Forget everything
  */
-bool lose_all_info(void)
+static void _forget(obj_ptr obj)
 {
-    int i;
-
-    virtue_add(VIRTUE_KNOWLEDGE, -5);
-    virtue_add(VIRTUE_ENLIGHTENMENT, -5);
-
-    /* Forget info about objects */
-    for (i = 0; i < INVEN_TOTAL; i++)
+    if (!obj_is_identified_fully(obj))
     {
 
         object_type *o_ptr = &inventory[i];
@@ -5550,23 +5384,26 @@ bool lose_all_info(void)
         /* Hack -- Clear the "felt" flag */
         o_ptr->ident &= ~(IDENT_SENSE);
     }
+}
 
-    /* Recalculate bonuses */
-    p_ptr->update |= (PU_BONUS);
+bool lose_all_info(void)
+{
+    virtue_add(VIRTUE_KNOWLEDGE, -5);
+    virtue_add(VIRTUE_ENLIGHTENMENT, -5);
 
-    /* Combine / Reorder the pack (later) */
-    p_ptr->notice |= (PN_COMBINE | PN_REORDER);
+    pack_for_each(_forget);
+    equip_for_each(_forget);
+    quiver_for_each(_forget);
 
-    /* Window stuff */
+    p_ptr->update |= PU_BONUS;
+    p_ptr->notice |= PN_OPTIMIZE_PACK;
     p_ptr->window |= (PW_INVEN | PW_EQUIP | PW_OBJECT_LIST);
 
     /* Mega-Hack -- Forget the map */
 	map_rot();
 
-    /* It worked */
-    return (TRUE);
+    return TRUE;
 }
-
 
 void do_poly_wounds(void)
 {

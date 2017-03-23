@@ -96,6 +96,9 @@
     <ClCompile Include="files.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="home.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="init1.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -108,6 +111,12 @@
     <ClCompile Include="main-win.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="py_throw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="quest.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="readdib.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,7 +126,7 @@
     <ClCompile Include="scores.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="store.c">
+    <ClCompile Include="shop.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tables.c">
@@ -201,13 +210,19 @@
     <ClCompile Include="races_mimic.c">
       <Filter>Player\Races</Filter>
     </ClCompile>
-    <ClCompile Include="angband.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="effects.c">
       <Filter>Effects</Filter>
     </ClCompile>
     <ClCompile Include="ego.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="inv.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="obj.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="obj_prompt.c">
       <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="obj_kind.c">
@@ -220,6 +235,12 @@
       <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="object3.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="pack.c">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="quiver.c">
       <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="artifact.c">

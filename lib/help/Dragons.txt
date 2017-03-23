@@ -265,4 +265,8 @@ Steel Dragon      <color:r>Bad          </color> <color:r>Bad          </color> 
 </style>
 
 
+<<<<<<< HEAD
 <color:s>Automatically generated for PosChengband R 5.0.5.</color>
+=======
+<color:s>Automatically generated for PosChengband 6.0.0.</color>
+>>>>>>> c7d6ba9668b27ea035ce08e84a032bec4a48cfbb

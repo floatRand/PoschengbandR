@@ -160,7 +160,7 @@ static void _displayInfusions(rect_t display)
 {
 	char    buf[MAX_NLEN];
 	int     i;
-	point_t pos = rect_topleft(&display);
+	point_t pos = rect_topleft(display);
 	int     padding, max_o_len = 20;
 	doc_ptr doc = NULL;
 	object_type *list = _infusions;
