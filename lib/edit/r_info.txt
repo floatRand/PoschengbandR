@@ -21783,16 +21783,16 @@ D:The desire to accomplish his goals is mountainous,
 D:and you might unfortunately be standing on his way.
 
 N:1221:Almagest I
-G:p:G
-I:125:40d100:100:150:50:160
-W:85:2:999:35000:0:0
+G:I:G
+I:125:45d100:100:150:50:160
+W:85:3:999:35000:0:0
 B:HIT:HURT:10d8
 B:HIT:HURT:10d8
 B:HIT:HURT:10d8
 B:HIT:HURT:10d8
-F:UNIQUE | MALE | HAS_LITE_2 | HUMAN | SMART
+F:UNIQUE | HAS_LITE_2 | SMART
 F:FORCE_SLEEP | FORCE_MAXHP | DROP_1D2 | DROP_GREAT |
-F:OPEN_DOOR | POWERFUL | MOVE_BODY | CAN_SWIM |
+F:OPEN_DOOR | MOVE_BODY | CAN_SWIM |
 F:RES_ACID | RES_ELEC | RES_FIRE | RES_COLD | RES_POIS |
 F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
 F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
@@ -21801,16 +21801,21 @@ F:REFLECTING | REGENERATE
 F:DROP_CORPSE | POS_GAIN_AC 
 S:1_IN_3 |
 S:ROCKET | INVULNER | SPECIAL
-P:Copy:Human:Beastmaster
+P:Copy:Klackon:Warrior
 P:Speed:+5
+D:The Almagest, group of 5 ancient insectoid warrior-deities.
+D:Incredibly skilled, they represent different styles in combat,
+D:and are capable of summoning their brethen to the battle - even
+D:beyond the grave. But those that are live on borrowed time, and 
+D:can't quite do the same. 
 
 N:1222:Almagest II
-G:p:G
-I:120:30d100:100:80:50:160
-W:85:2:999:35000:0:0
-F:UNIQUE | MALE | HAS_LITE_1 | HUMAN | SMART | DROP_1D2 | DROP_GREAT  |
+G:I:G
+I:120:35d100:100:80:50:160
+W:85:3:999:35000:0:0
+F:UNIQUE | MALE | HAS_LITE_1 | SMART | DROP_1D2 | DROP_GREAT  |
 F:FORCE_SLEEP | FORCE_MAXHP |  NEVER_BLOW |
-F:OPEN_DOOR | POWERFUL | MOVE_BODY | CAN_SWIM |
+F:OPEN_DOOR | MOVE_BODY | CAN_SWIM |
 F:RES_DARK | RES_LITE | RES_NETH | RES_WATE | RES_SHAR | 
 F:RES_CHAO | RES_DISE | RES_TIME |
 F:NO_CONF | NO_SLEEP | NO_FEAR |
@@ -21818,18 +21823,23 @@ F:DROP_CORPSE | POS_GAIN_AC
 S:1_IN_2 |
 S:BA_DARK | BA_WATE | BA_LITE | BA_CHAO | BR_DISI | BA_NETH | BLINK | 
 S:BO_MANA | BO_ICEE | BO_PLAS | TPORT | SPECIAL
-P:Copy:Human:Beastmaster
+P:Copy:Klackon:Mage
 P:Speed:+5
+D:The Almagest, group of 5 ancient insectoid warrior-deities.
+D:Incredibly skilled, they represent different styles in combat,
+D:and are capable of summoning their brethen to the battle - even
+D:beyond the grave. But those that are live on borrowed time, and 
+D:can't quite do the same. This one follows path of magic. 
 
 N:1223:Almagest III
-G:p:G
-I:145:40d100:100:150:50:160
-W:85:2:999:35000:0:0
+G:I:G
+I:145:45d100:100:150:50:160
+W:85:3:999:35000:0:0
 B:SLASH:HURT:12d10
 B:SLASH:HURT:12d10
 B:SLASH:TERRIFY:12d10
 B:SLASH:LOSE_CHR:12d10
-F:UNIQUE | MALE | HAS_LITE_1 | HUMAN | SMART
+F:UNIQUE | MALE | HAS_LITE_1 | SMART
 F:FORCE_SLEEP | FORCE_MAXHP | DROP_1D2 | DROP_GREAT |
 F:OPEN_DOOR | BASH_DOOR | POWERFUL | MOVE_BODY | CAN_SWIM |
 F:RES_DARK | RES_LITE | RES_NETH | RES_WATE | RES_SHAR | 
@@ -21839,20 +21849,25 @@ F:REFLECTING | REGENERATE |
 F:DROP_CORPSE | POS_GAIN_AC
 S:1_IN_5 |
 S:SPECIAL
-P:Copy:Human:Berserker
+P:Copy:Klackon:Berserker
 P:Speed:+5
+D:The Almagest, group of 5 ancient insectoid warrior-deities.
+D:Incredibly skilled, they represent different styles in combat,
+D:and are capable of summoning their brethen to the battle - even
+D:beyond the grave. But those that are live on borrowed time, and 
+D:can't quite do the same. 
 
 N:1224:Almagest IV
-G:p:G
-I:120:30d100:100:100:50:160
-W:85:2:999:35000:0:0
+G:I:G
+I:120:35d100:100:100:50:160
+W:85:3:999:35000:0:0
 B:HIT:TIME:10d8
 B:HIT:TIME:10d8
 B:HIT:TIME:10d8
 B:HIT:TIME:10d8
-F:UNIQUE | MALE | HUMAN | SMART
+F:UNIQUE | MALE | SMART
 F:FORCE_SLEEP | FORCE_MAXHP | DROP_1D2 | DROP_GREAT |
-F:OPEN_DOOR | POWERFUL | MOVE_BODY | CAN_SWIM |
+F:OPEN_DOOR | MOVE_BODY | CAN_SWIM |
 F:RES_DARK | RES_LITE | RES_NETH | RES_WATE | RES_SHAR | 
 F:RES_CHAO | RES_DISE | 
 F:NO_CONF | NO_SLEEP | NO_FEAR |
@@ -21861,18 +21876,23 @@ S:1_IN_2 |
 S:CAUSE_4 | SLOW | BLIND | CONF | HOLD  | DISPEL | 
 S:BR_TIME | TPORT | PSY_SPEAR | HEAL | FORGET |
 S:BRAIN_SMASH | MIND_BLAST | ANTI_MAGIC | HAND_DOOM | SPECIAL
-P:Copy:Human:Priest
+P:Copy:Klackon:Priest
 P:Speed:+5
+D:The Almagest, group of 5 ancient insectoid warrior-deities.
+D:Incredibly skilled, they represent different styles in combat,
+D:and are capable of summoning their brethen to the battle - even
+D:beyond the grave. But those that are live on borrowed time, and 
+D:can't quite do the same. 
 
 N:1225:Almagest V
-G:p:G
-I:155:30d100:100:120:0:160
-W:85:2:999:35000:0:0
+G:I:G
+I:155:35d100:100:120:0:160
+W:85:3:999:35000:0:0
 B:HIT:UN_POWER:7d8
 B:HIT:UN_POWER:7d8
 B:HIT:CONFUSE:7d8
 B:HIT:BLIND:7d8
-F:UNIQUE | MALE | SELF_DARK_1 | HUMAN | SMART
+F:UNIQUE | MALE | SELF_DARK_1 | SMART
 F:FORCE_MAXHP | AURA_REVENGE | DROP_1D2 | DROP_GREAT |
 F:OPEN_DOOR | POWERFUL | MOVE_BODY | CAN_SWIM |
 F:RES_DARK | RES_LITE | RES_NETH | RES_WATE | RES_SHAR | 
@@ -21881,8 +21901,33 @@ F:NO_CONF | NO_SLEEP | NO_FEAR |
 F:DROP_CORPSE | POS_GAIN_AC
 S:1_IN_3 |
 S:TPORT | BLINK | DARKNESS | HASTE | TELE_TO | SPECIAL
-P:Copy:Human:Scout
+P:Copy:Klackon:Scout
 P:Speed:+15
+D:The Almagest, group of 5 ancient insectoid warrior-deities.
+D:Incredibly skilled, they represent different styles in combat,
+D:and are capable of summoning their brethen to the battle - even
+D:beyond the grave. But those that are live on borrowed time, and 
+D:can't quite do the same. 
+
+N:1226:Strength, the Bear Hound
+G:C:U
+I:130:80d10:20:100:10:350
+W:25:2:999:1200:0:0
+B:CLAW:HURT:1d8
+B:CLAW:HURT:1d8
+B:BITE:HURT:1d12
+B:BITE:CONFUSE:1d10
+F:MALE | ESCORT
+F:BASH_DOOR | FORCE_MAXHP | UNIQUE |
+F:ANIMAL | GOOD | WILD_WOOD | WILD_MOUNTAIN | NO_SLEEP
+F:DROP_CORPSE | POS_GAIN_AC
+P:Copy:Human:Warrior
+P:Skills:0:-7:0:0:0:0:0:0
+P:ExtraSkills:0:-4:0:0:0:0:0:0
+P:Speed:+7
+P:Body:Hound
+D:A stray hunting dog. It seems to be bent on
+D:killing King of Bears. 
 
 # N: serial number : monster name
 # G: symbol : color

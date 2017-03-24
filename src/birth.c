@@ -448,6 +448,7 @@ void determine_random_questor(quest_type *q_ptr)
 
         if (r_idx == MON_ROBIN_HOOD) continue;
         if (r_idx == MON_JACK_SHADOWS) continue;
+		if (r_idx >= MON_ALMAGEST1 || r_idx <= MON_ALMAGEST5) continue; // Doesn't work well IMO
 
         /* Try to enforce preferences, but its virtually impossible to prevent
            high level quests for uniques */
