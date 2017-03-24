@@ -829,6 +829,10 @@ byte get_monster_drop_ct(monster_type *m_ptr)
         }
     }
 
+	if (m_ptr->r_idx >= MON_ALMAGEST1 && m_ptr->r_idx <= MON_ALMAGEST5 && m_ptr->smart & SM_CLONED){ // almagest clones drop nothing
+		number = 0;
+	}
+
     return number;
 }
 

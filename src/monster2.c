@@ -1206,6 +1206,12 @@ bool mon_is_type(int r_idx, int type)
             }
         }
         break;
+	case SUMMON_ALMAGEST:
+		{
+			if (r_idx >= MON_ALMAGEST1 && r_idx <= MON_ALMAGEST5){ 
+				if(r_ptr->cur_num == 0) return TRUE; 
+			}
+		}
     }
     return FALSE;
 }
@@ -4019,6 +4025,16 @@ bool place_monster_aux(int who, int y, int x, int r_idx, u32b mode)
             m_list[m_idx].pack_idx = pack_idx;
             pack_ptr->count++;
             pack_choose_ai(m_idx);
+
+			if (r_idx >= MON_ALMAGEST1 && r_idx <= MON_ALMAGEST5 && dungeon_type != DUNGEON_ARENA){  
+				int nx, ny, z, d = 3;
+				int a = 0;
+				for (a = MON_ALMAGEST1; a <= MON_ALMAGEST5; a++){
+					if (r_info[a].cur_num > 0) continue;
+					scatter(&ny, &nx, y, x, d, 0);
+					(void)place_monster_one(place_monster_m_idx, ny, nx, a, pack_idx, mode);
+				}
+			}
         }
     }
 

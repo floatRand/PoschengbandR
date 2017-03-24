@@ -438,12 +438,6 @@ static void _build_res_flags(doc_ptr doc, int which, _flagzilla_ptr flagzilla)
 
 	if (which == RES_FEAR && res_pct(RES_FEAR) < 100){
 		doc_printf(doc, " %3dx", res_ct_known(which));
-		if (p_ptr->wizard){
-			doc_printf(doc, "\n<tab:7>Fear Fail Chance (dev%/atk%):\n");
-			doc_printf(doc, "<tab:10><color:U>UNEASY: %3d    %3d\n</color>", Rfear_get_fail_chance(FEAR_UNEASY), Rfear_get_fail_chance(FEAR_UNEASY * 3));
-			doc_printf(doc, "<tab:10><color:y>SCARED: %3d    %3d\n</color>", Rfear_get_fail_chance(FEAR_SCARED), Rfear_get_fail_chance(FEAR_SCARED * 3));
-			doc_printf(doc, "<tab:10><color:R>TERRIF: %3d    %3d\n</color>", Rfear_get_fail_chance(FEAR_TERRIFIED), Rfear_get_fail_chance(FEAR_TERRIFIED * 3));
-		}
 	} 
     else doc_printf(doc, " <color:%c>%3d%%</color>", color, pct);
 	

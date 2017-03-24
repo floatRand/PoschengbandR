@@ -2589,6 +2589,7 @@ enum summon_specific_e {
     SUMMON_ARCHER,
     SUMMON_MONK,
     SUMMON_MAGE,
+	SUMMON_ALMAGEST,
 };
 
 /*
@@ -5174,6 +5175,11 @@ extern int PlayerUID;
 #define MON_HIBACHI             1216
 #define MON_RUMOURMONGER		1217
 #define MON_MUMO			    1220
+#define MON_ALMAGEST1			1221
+#define MON_ALMAGEST2			1222
+#define MON_ALMAGEST3			1223
+#define MON_ALMAGEST4			1224
+#define MON_ALMAGEST5			1225
 
 /* The Metal Babble guards the Arena dungeon, but this requires the guardian to be a unique
    monster or the dungeon never gets flagged as completed. Note, this messes up the needle

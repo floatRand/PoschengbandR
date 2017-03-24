@@ -3284,6 +3284,34 @@ bool make_attack_spell(int m_idx, bool ticked_off)
 
 				break;
 			}
+			case MON_ALMAGEST1: case MON_ALMAGEST2:	case MON_ALMAGEST3:	case MON_ALMAGEST4: case MON_ALMAGEST5:
+			{
+				u32b smode = mode;
+				smode |= (PM_NO_PET | PM_ALLOW_CLONED | PM_ALLOW_UNIQUE | PM_NO_KAGE);
+				bool res = FALSE;
+				int a = 0;
+				// clones lose this ability
+					for (k = 1; k < m_max; k++) // check if they are existing on map already and far-away enough.
+					{
+						if (m_idx == k) continue;
+						if (m_list[k].r_idx >= MON_ALMAGEST1 && m_list[k].r_idx <= MON_ALMAGEST5){ // we have an almagest in our hands
+							/*Teleport near*/
+							if (distance(m_list[k].fy, m_list[k].fx, y, x) > 16){
+								teleport_monster_to(k, y, x, 95, 0);
+								res = TRUE;
+							}
+						}
+					}
+					if (!(m_ptr->smart & SM_CLONED)){
+						for (a = 0; a < 4; a++){ // four times for all the almagests!
+							if(summon_specific(m_idx, y, x, 85, SUMMON_ALMAGEST, smode)) res = TRUE;
+						}
+					}
+					else { msg_format("%^s lives on borrowed time.", m_name); }
+
+				if (res) msg_format("%^s calls upon the Almagest!", m_name);
+				break;
+			}
 
             default:
                 if (r_ptr->d_char == 'B')
