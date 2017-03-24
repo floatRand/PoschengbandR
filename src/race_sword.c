@@ -1035,12 +1035,12 @@ bool sword_disenchant(void)
 			if (one_in_(2)) i = _ESSENCE_TO_HIT;
 			else i = _ESSENCE_TO_DAM;
 		}
-		else if (!one_in_(3))
+		else if (!one_in_(4))
 		{
 			if (one_in_(2)) i = _ESSENCE_AC;
 			else i = _ESSENCE_XTRA_DICE;
 		}
-		else if (!one_in_(3)){
+		else if (!one_in_(5)){
 			i = randint0(_MIN_SPECIAL);
 		}
 		else{
