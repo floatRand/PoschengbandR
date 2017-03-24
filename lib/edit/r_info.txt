@@ -21800,7 +21800,7 @@ F:RES_TELE | NO_CONF | NO_SLEEP | NO_STUN | NO_FEAR |
 F:REFLECTING | REGENERATE
 F:DROP_CORPSE | POS_GAIN_AC 
 S:1_IN_4 |
-S:HASTE | HEAL | SHOOT | SPECIAL
+S:HASTE | HEAL | SHRIEK | SPECIAL
 P:Copy:Klackon:Warrior
 P:Speed:+5
 D:The Almagest, group of 5 ancient insectoid warrior-deities.
