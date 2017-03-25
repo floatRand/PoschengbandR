@@ -1058,7 +1058,7 @@ bool sword_disenchant(void)
 		else {
 			repeats = FALSE;
 		}
-		repeats--;
+		repeats = FALSE;
 
 	} while (repeats);
 
