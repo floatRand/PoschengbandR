@@ -2960,18 +2960,19 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     bool        okay = FALSE;
     object_type *o_ptr;
     cptr        q, s;
-    int         maxenchant;
+    int         maxenchant_hit, maxenchant_dam, maxenchant_ac;
     char        tmp_str[MAX_NLEN];
     int         store_factor = store_calc_price_factor(100);
 
     if (cost == 0)
         cost = store_calc_sell_price(1500, store_factor);
 
+	/*
     if (p_ptr->prace == RACE_MON_SWORD)
     {
         msg_print("Go enchant yourself!");
         return FALSE;
-    }
+    }*/
 
     clear_bldg(4, 18);
 
@@ -2982,12 +2983,17 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     if (!get_item(&item, q, s, (USE_INVEN | USE_EQUIP))) return (FALSE);
     o_ptr = &inventory[item];
 
-    if (o_ptr->tval == TV_ARROW || o_ptr->tval == TV_BOLT || o_ptr->tval == TV_SHOT)
-        maxenchant = (p_ptr->lev / 5);
+	if (p_ptr->prace == RACE_MON_SWORD){
+		maxenchant_dam = p_ptr->lev / 3;
+		maxenchant_hit = p_ptr->lev / 5;
+		maxenchant_ac = 2 + p_ptr->lev / 5;
+	}
+    else if (o_ptr->tval == TV_ARROW || o_ptr->tval == TV_BOLT || o_ptr->tval == TV_SHOT)
+		maxenchant_dam = maxenchant_hit = maxenchant_ac = (p_ptr->lev / 5);
     else if (is_guild)
-        maxenchant = 5 + (p_ptr->lev / 5);
+		maxenchant_dam = maxenchant_hit = maxenchant_ac = 5 + (p_ptr->lev / 5);
     else
-        maxenchant = 2 + (p_ptr->lev / 5);
+		maxenchant_dam = maxenchant_hit = maxenchant_ac = 2 + (p_ptr->lev / 5);
 
     /* Streamline. Nothing is more fun then enchanting Twilight (-40,-60)->(+10, +10), I 
        admit. But other players might not share my love of carpal tunnel syndrome! */
@@ -3017,9 +3023,9 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
             
             choices[i].amt = i+1;
 
-            if (to_hit && copy.to_h < maxenchant) {copy.to_h++; ok = TRUE; v = MAX(v, copy.to_h);}
-            if (to_dam && copy.to_d < maxenchant) {copy.to_d++; ok = TRUE; v = MAX(v, copy.to_d);}
-            if (to_ac && copy.to_a < maxenchant) {copy.to_a++; ok = TRUE; v = MAX(v, copy.to_a);}
+            if (to_hit && copy.to_h < maxenchant_hit) {copy.to_h++; ok = TRUE; v = MAX(v, copy.to_h);}
+            if (to_dam && copy.to_d < maxenchant_dam) {copy.to_d++; ok = TRUE; v = MAX(v, copy.to_d);}
+            if (to_ac && copy.to_a < maxenchant_ac) {copy.to_a++; ok = TRUE; v = MAX(v, copy.to_a);}
 
             if (v > 10)
             {
@@ -3046,10 +3052,13 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
             {
                 int new_cost = new_object_cost(&copy, COST_REAL);
                 int unit_cost_add = new_cost - old_cost;
+				
+				if (p_ptr->prace == RACE_MON_SWORD) unit_cost_add /= 4; // For deathswords, get large discount
+
                 int min_cost = (i+1)*cost;
                 int unit_cost;
                 old_cost = new_cost;
-                
+
                 unit_cost_add *= m;
                 unit_cost_sum += unit_cost_add;
                 unit_cost = unit_cost_sum;
@@ -3096,7 +3105,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     /* Enchant to hit */
     for (i = 0; i < to_hit; i++)
     {
-        if (o_ptr->to_h < maxenchant)
+        if (o_ptr->to_h < maxenchant_hit)
         {
             if (enchant(o_ptr, 1, (ENCH_TOHIT | ENCH_FORCE)))
                 okay = TRUE;
@@ -3106,7 +3115,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     /* Enchant to damage */
     for (i = 0; i < to_dam; i++)
     {
-        if (o_ptr->to_d < maxenchant)
+        if (o_ptr->to_d < maxenchant_dam)
         {
             if (enchant(o_ptr, 1, (ENCH_TODAM | ENCH_FORCE)))
                 okay = TRUE;
@@ -3116,7 +3125,7 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac, bool is_gu
     /* Enchant to AC */
     for (i = 0; i < to_ac; i++)
     {
-        if (o_ptr->to_a < maxenchant)
+        if (o_ptr->to_a < maxenchant_ac)
         {
             if (enchant(o_ptr, 1, (ENCH_TOAC | ENCH_FORCE)))
                 okay = TRUE;

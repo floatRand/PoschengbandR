@@ -104,11 +104,32 @@ static bool _add_essence(int which, int amount)
     return FALSE;
 }
 
+/*In case of high essence, return the weaker one so there can be given more of it*/
+static int _get_low_essence(int fl){
+	switch (fl)
+	{
+	case OF_KILL_EVIL: return OF_SLAY_EVIL;
+	case OF_KILL_UNDEAD: return OF_SLAY_UNDEAD;
+	case OF_KILL_DEMON: return OF_SLAY_DEMON;
+	case OF_KILL_DRAGON: return OF_SLAY_DRAGON;
+	case OF_KILL_HUMAN: return OF_SLAY_HUMAN;
+	case OF_KILL_ANIMAL: return OF_SLAY_ANIMAL;
+	case OF_KILL_ORC: return OF_SLAY_ORC;
+	case OF_KILL_TROLL: return OF_SLAY_TROLL;
+	case OF_KILL_GIANT: return OF_SLAY_GIANT;
+	case OF_VORPAL2: return OF_VORPAL;
+	}
+	return -1;
+}
+
 static bool _absorb(object_type *o_ptr)
 {
     bool result = FALSE;
     int i;
     int div = 1;
+	int of_ = 0;
+	int mult = 1;
+	int tmp = 0;
     object_kind *k_ptr = &k_info[o_ptr->k_idx];
     u32b flags[OF_ARRAY_SIZE];
     obj_flags(o_ptr, flags);
@@ -124,21 +145,33 @@ static bool _absorb(object_type *o_ptr)
             result = TRUE;
         if (_add_essence(_ESSENCE_XTRA_DICE, (o_ptr->dd - k_ptr->dd)/1/*div?*/))
             result = TRUE;
-    }
+	}
+	if (have_flag(flags, OF_BRAND_MANA)){
+		_add_essence(_ESSENCE_XTRA_DICE, 1);
+		result = TRUE;
+	}
 
     for (i = 0; i < OF_COUNT; i++)
     {
         if (_skip_flag(i)) continue;
         if (have_flag(flags, i))
         {
-            if (is_pval_flag(i))
+			tmp = _get_low_essence(i);
+			of_ = i;
+			mult = 1;
+
+			if (tmp > 0){ 
+				of_ = tmp; mult = 4; 
+			}
+
+            if (is_pval_flag(of_))
             {
-                if (_add_essence(i, o_ptr->pval/div))
+                if (_add_essence(of_, (o_ptr->pval * mult )/div))
                     result = TRUE;
             }
             else
             {
-                _essences[i]++;
+                _essences[of_] += mult;
                 result = TRUE;
             }
         }
@@ -155,6 +188,16 @@ static bool _absorb(object_type *o_ptr)
     {
         p_ptr->update |= PU_BONUS;
         msg_print("You grow stronger!");
+
+		// Special cases are thrown here. Very hacky solution, but kinda easy in a way...
+		if (_essences[OF_IMPACT] >= 2 && !mut_present(MUT_EARTHQUAKE)){
+			mut_gain(MUT_EARTHQUAKE);
+			mut_lock(MUT_EARTHQUAKE);
+		}
+		if (_essences[OF_LORE] >= 2 && !mut_present(MUT_LOREMASTER)){
+			mut_gain(MUT_LOREMASTER);
+			mut_lock(MUT_LOREMASTER);
+		}
     }
     return result;
 }
@@ -243,7 +286,6 @@ static int _res_power(int which)
     case RES_COLD:
     case RES_ELEC:
     case RES_CONF:
-    case RES_FEAR:
     case RES_TIME:
     case RES_TELEPORT:
         return 2;
@@ -254,10 +296,14 @@ static int _res_power(int which)
     case RES_DISEN:
     case RES_POIS:
     case RES_LITE:
-    case RES_DARK:
     case RES_NETHER:
-    case RES_NEXUS:
+	case RES_FEAR:
         return 3;
+
+	case RES_DARK: /*Very, very common*/
+	case RES_NEXUS:
+		return 4;
+
     }
 
     return 2;
@@ -270,43 +316,34 @@ typedef struct {
     int flag;
     int power;
     cptr name;
+	int rank2_flag;
+	cptr rank2_name;
 } _flag_info_t;
 
 static _flag_info_t _slay_flag_info[] = {
-    { OF_SLAY_EVIL, 64, "Slay Evil" },
-    { OF_SLAY_GOOD, 16, "Slay Good" },
-    { OF_SLAY_UNDEAD, 16, "Slay Undead" },
-    { OF_SLAY_DEMON, 16, "Slay Demon" },
-    { OF_SLAY_DRAGON, 16, "Slay Dragon" },
-    { OF_SLAY_HUMAN, 16, "Slay Human" },
-    { OF_SLAY_ANIMAL, 8, "Slay Animal" },
-    { OF_SLAY_ORC, 4, "Slay Orc" },
-    { OF_SLAY_TROLL, 8, "Slay Troll" },
-    { OF_SLAY_GIANT, 8, "Slay Giant" },
-    { OF_SLAY_LIVING, 8, "Slay Living" },
+	{ OF_SLAY_EVIL, 64, "Slay Evil", OF_KILL_EVIL, "Kill Evil" },
+	{ OF_SLAY_GOOD, 16, "Slay Good", -1, NULL },
+	{ OF_SLAY_UNDEAD, 16, "Slay Undead", OF_KILL_UNDEAD, "Kill Undead" },
+	{ OF_SLAY_DEMON, 16, "Slay Demon", OF_KILL_DEMON, "Kill Demon" },
+	{ OF_SLAY_DRAGON, 16, "Slay Dragon", OF_KILL_DRAGON, "Kill Dragon" },
+	{ OF_SLAY_HUMAN, 16, "Slay Human", OF_KILL_HUMAN, "Kill Human" },
+	{ OF_SLAY_ANIMAL, 8, "Slay Animal", OF_KILL_ANIMAL, "Kill Animal" },
+	{ OF_SLAY_ORC, 4, "Slay Orc", OF_KILL_ORC, "Kill Orc" },
+	{ OF_SLAY_TROLL, 8, "Slay Troll", OF_KILL_TROLL, "Kill Troll" },
+	{ OF_SLAY_GIANT, 8, "Slay Giant", OF_KILL_GIANT, "Kill Giant" },
+	{ OF_SLAY_LIVING, 8, "Slay Living", -1, NULL },
 
-    { OF_BRAND_ACID, 24, "Brand Acid" },
-    { OF_BRAND_ELEC, 24, "Brand Elec" },
-    { OF_BRAND_FIRE, 24, "Brand Fire" },
-    { OF_BRAND_COLD, 24, "Brand Cold" },
-    { OF_BRAND_POIS, 24, "Brand Poison" },
-    { OF_BRAND_CHAOS, 32, "Chaotic" },
-    { OF_BRAND_VAMP, 32, "Vampiric" },
-    { OF_VORPAL, 16, "Vorpal" },
-    { OF_VORPAL2, 32, "*Vorpal*" },
+	{ OF_BRAND_ACID, 24, "Brand Acid", -1, NULL },
+	{ OF_BRAND_ELEC, 24, "Brand Elec", -1, NULL },
+	{ OF_BRAND_FIRE, 24, "Brand Fire", -1, NULL },
+	{ OF_BRAND_COLD, 24, "Brand Cold", -1, NULL },
+	{ OF_BRAND_POIS, 24, "Brand Poison", -1, NULL },
+	{ OF_BRAND_CHAOS, 32, "Chaotic", -1, NULL },
+	{ OF_BRAND_VAMP, 32, "Vampiric", -1, NULL },
+    { OF_VORPAL, 16, "Vorpal", OF_VORPAL2, "*Vorpal*" },
+	{ OF_STUN, 4, "Stun", -1, NULL }, /*Stun is super-rare as far as slays go*/
 
-    /* Alt: These could be achieved from corresponding slay flags with enough essences */
-    { OF_KILL_EVIL, 16, "Kill Evil" },
-    { OF_KILL_UNDEAD, 8, "Kill Undead" },
-    { OF_KILL_DEMON, 8, "Kill Demon" },
-    { OF_KILL_DRAGON, 8, "Kill Dragon" },
-    { OF_KILL_HUMAN, 8, "Kill Human" },
-    { OF_KILL_ANIMAL, 8, "Kill Animal"},
-    { OF_KILL_ORC, 8, "Kill Orc" },
-    { OF_KILL_TROLL, 8, "Kill Troll" },
-    { OF_KILL_GIANT, 8, "Kill Giant" },
-
-    { -1, 0, NULL}
+    { -1, 0, NULL, -1}
 };
 
 static int _rank_decay(int p)
@@ -352,11 +389,18 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     for (i = 0; ; i++)
     {
         int j = _slay_flag_info[i].flag;
+		int k = _slay_flag_info[i].rank2_flag;
         if (j < 0) break;
         if (_essences[j] >= _slay_power(i))
         {
-            add_flag(o_ptr->flags, j);
-            add_flag(o_ptr->known_flags, j);
+			if (k > 0 && _essences[j] >= _slay_power(i) * 4){
+				add_flag(o_ptr->flags, k);
+				add_flag(o_ptr->known_flags, k);
+			}
+			else {
+				add_flag(o_ptr->flags, j);
+				add_flag(o_ptr->known_flags, j);
+			}
         }
     }
 
@@ -849,6 +893,52 @@ static void _dump_bonus_flag(doc_ptr doc, int which, int power, int rep, cptr na
     }
 }
 
+static void _dump_slay_flag(doc_ptr doc, int which, int whichslay){
+
+	if (whichslay < 0) return;
+	
+	int n = _essences[which];
+	
+	if (n <= 0) return;
+
+	int tr = _slay_flag_info[whichslay].power;
+	bool singletier = (_slay_flag_info[whichslay].rank2_flag < 0) ? TRUE : FALSE;
+	int tr2 = tr * 4;
+
+	if (n > 0 && n < tr)  
+	{
+		doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
+			_slay_flag_info[whichslay].name,
+			n,
+			_slay_flag_info[whichslay].power,
+			""
+			);
+	}
+	else if (singletier){ // single tier
+		doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
+			_slay_flag_info[whichslay].name,
+			n,
+			_slay_flag_info[whichslay].power,
+			"Y"
+			);
+	}else if (n >= tr && n < tr2){
+		doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
+			_slay_flag_info[whichslay].name,
+			n,
+			_slay_flag_info[whichslay].power*4,
+			"+1"
+			);
+	}
+	else {
+		doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
+			_slay_flag_info[whichslay].rank2_name,
+			n,
+			_slay_flag_info[whichslay].power*4,
+			"+2"
+			);
+	}
+}
+
 static void _character_dump(doc_ptr doc)
 {
     int i;
@@ -888,7 +978,7 @@ static void _character_dump(doc_ptr doc)
     {
         int j = _slay_flag_info[i].flag;
         if (j < 0) break;
-        _dump_ability_flag(doc, j, _slay_power(i), _slay_flag_info[i].name);
+	   _dump_slay_flag(doc, j, i);
     }
 
     doc_printf(doc, "\n   <color:G>%-22.22s Total  Need Bonus</color>\n", "Resistances");
@@ -944,7 +1034,7 @@ race_t *mon_sword_get_race(void)
 
     if (!init)
     {           /* dis, dev, sav, stl, srh, fos, thn, thb */
-    skills_t bs = { 25,  24,  40,   4,  14,   5,  56,  20};
+    skills_t bs = { 25,  20,  40,   4,  14,   5,  56,  20};
     skills_t xs = { 12,  10,  12,   0,   0,   0,  20,   7};
 
         me.skills = bs;
@@ -1010,10 +1100,11 @@ bool lose_essence(int e){
 
 	/*Protected essences*/
 	if (e == OF_SPEED) return FALSE;
-	if (res_save(RES_DISEN, 44) && !one_in_(20)) FALSE; // 5% chance of failing for ~fun~
+	if (_essences[e] <= 3) return FALSE; // just bit of safety here.
+	if (!res_save(RES_DISEN, 44) && !one_in_(20)) return FALSE; // 5% chance of failing for ~fun~
 
 	k = _essences[e] * randint1(r) / 20;
-	if (k > p_ptr->lev * 2) k = p_ptr->lev * 2;
+	if (k > p_ptr->lev) k = p_ptr->lev;
 
 	_essences[e] -= MAX(1, k);
 	if (_essences[e] < 0) _essences[e] = 0;
@@ -1029,19 +1120,24 @@ bool sword_disenchant(void)
 
     int  i = 0;
 	bool all = FALSE;
-	int repeats = FALSE;
-	do{
-		if (!one_in_(3)){
+
+	if (!one_in_(2)){
+		if (!res_save(RES_DISEN, 31)) apply_disenchant(0);
+		return TRUE;
+	}
+
+		if (one_in_(2)){
 			if (one_in_(2)) i = _ESSENCE_TO_HIT;
 			else i = _ESSENCE_TO_DAM;
 		}
-		else if (!one_in_(4))
+		else if (one_in_(2))
 		{
 			if (one_in_(2)) i = _ESSENCE_AC;
 			else i = _ESSENCE_XTRA_DICE;
 		}
-		else if (!one_in_(5)){
-			i = randint0(_MIN_SPECIAL);
+		else if (one_in_(2)){
+			int tries = 100;
+			while (tries > 0){ i = randint0(_MIN_SPECIAL); if (_essences[i] > 0) break; }
 		}
 		else{
 			for (i = 0; i < _MAX_ESSENCE; i++)
@@ -1053,15 +1149,8 @@ bool sword_disenchant(void)
 
 		if (!all){
 			if (lose_essence(i)) result = TRUE;
-			repeats = one_in_(3);
 		}
-		else {
-			repeats = FALSE;
-		}
-		repeats = FALSE;
-
-	} while (repeats);
-
+	
     if (result)
     {
         p_ptr->update |= PU_BONUS;

@@ -540,10 +540,13 @@ bool make_attack_normal(int m_idx)
 
 					if (p_ptr->prace == RACE_MON_RING || p_ptr->prace == RACE_MON_SWORD)
 					{
-						if (one_in_(2)){
+							// handled in sword_disenchant
 							if (p_ptr->prace == RACE_MON_SWORD && sword_disenchant()) obvious = TRUE;
-							else if (p_ptr->prace == RACE_MON_RING && ring_disenchant()) obvious = TRUE;
-						}
+							
+							if (one_in_(3)){
+								if (p_ptr->prace == RACE_MON_RING && ring_disenchant()) obvious = TRUE;
+							}
+							else if (!res_save(RES_DISEN, 31)) apply_disenchant(0);
 					}
 					else{
 						if (one_in_(3))
