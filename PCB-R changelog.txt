@@ -21,6 +21,7 @@ CORE CHANGES:
 * More naming schemes for artifacts.
 * Expanded the size of home from 240 items to 960. 
 * Scouts now get anti-summoning features on later levels, redirecting and preventing enemy summons depending on open squares.
+* Deathswords are significantly altered.
 
 ADDITIONS ( OPTIONS )
 * Option for simple stat-display ( 3-40 ), although this was adopted to pseudo from R already.

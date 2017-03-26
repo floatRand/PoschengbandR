@@ -188,16 +188,6 @@ static bool _absorb(object_type *o_ptr)
     {
         p_ptr->update |= PU_BONUS;
         msg_print("You grow stronger!");
-
-		// Special cases are thrown here. Very hacky solution, but kinda easy in a way...
-		if (_essences[OF_IMPACT] >= 2 && !mut_present(MUT_EARTHQUAKE)){
-			mut_gain(MUT_EARTHQUAKE);
-			mut_lock(MUT_EARTHQUAKE);
-		}
-		if (_essences[OF_LORE] >= 2 && !mut_present(MUT_LOREMASTER)){
-			mut_gain(MUT_LOREMASTER);
-			mut_lock(MUT_LOREMASTER);
-		}
     }
     return result;
 }
@@ -286,7 +276,6 @@ static int _res_power(int which)
     case RES_COLD:
     case RES_ELEC:
     case RES_CONF:
-    case RES_TIME:
     case RES_TELEPORT:
         return 2;
 
@@ -303,6 +292,9 @@ static int _res_power(int which)
 	case RES_DARK: /*Very, very common*/
 	case RES_NEXUS:
 		return 4;
+
+	case RES_TIME: /*Upsettingly rare.*/
+		return 1;
 
     }
 
@@ -536,6 +528,21 @@ static void _calc_bonuses(void)
         p_ptr->sh_elec = TRUE;
     if (_essences[OF_AURA_COLD] >= 7)
         p_ptr->sh_cold = TRUE;
+
+
+	// Special cases are thrown here. Very hacky solution, but kinda easy in a way...
+	if (_essences[OF_IMPACT] >= 2 && !mut_present(MUT_EARTHQUAKE)){
+		mut_gain(MUT_EARTHQUAKE);
+		mut_lock(MUT_EARTHQUAKE);
+	}
+	if (_essences[OF_LORE] >= 2 && !mut_present(MUT_LOREMASTER)){
+		mut_gain(MUT_LOREMASTER);
+		mut_lock(MUT_LOREMASTER);
+	}
+	if (_essences[OF_TELEPORT] >= 8 && !mut_present(MUT_TELEPORT)){
+		mut_gain(MUT_TELEPORT);
+		mut_lock(MUT_TELEPORT);
+	}
 }
 
 static void _calc_stats(s16b stats[MAX_STATS])
@@ -1018,6 +1025,11 @@ static void _character_dump(doc_ptr doc)
     _dump_ability_flag(doc, OF_ESP_NONLIVING, 2, "ESP Nonliving");
     _dump_ability_flag(doc, OF_ESP_UNIQUE, 2, "ESP Unique");
 
+	doc_printf(doc, "\n   <color:G>%-22.22s Total  Need Bonus</color>\n", "Special");
+	_dump_ability_flag(doc, OF_TELEPORT, 8, "Teleport");
+	_dump_ability_flag(doc, OF_IMPACT, 2, "Earthquakes");
+	_dump_ability_flag(doc, OF_LORE, 2, "Lore");
+
     doc_newline(doc);
 }
 
@@ -1100,6 +1112,8 @@ bool lose_essence(int e){
 
 	/*Protected essences*/
 	if (e == OF_SPEED) return FALSE;
+	else if (e == OF_LORE || e == OF_IMPACT) return FALSE;
+
 	if (_essences[e] <= 3) return FALSE; // just bit of safety here.
 	if (!res_save(RES_DISEN, 44) && !one_in_(20)) return FALSE; // 5% chance of failing for ~fun~
 
