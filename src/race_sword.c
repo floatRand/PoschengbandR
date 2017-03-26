@@ -413,7 +413,7 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
 static void _calc_bonuses(void) 
 {
     int i;
-    int to_a = py_prorata_level(150);
+    int to_a = 25+py_prorata_level(125);
 
     to_a += _calc_amount(_essences[_ESSENCE_AC], 2, 10);
     if (p_ptr->current_r_idx == MON_DEATH_SCYTHE)
@@ -428,6 +428,7 @@ static void _calc_bonuses(void)
     res_add(RES_BLIND);
     res_add(RES_POIS);
     p_ptr->hold_life = TRUE;
+	p_ptr->free_act = TRUE;
 
     if (p_ptr->lev >= 10)
         p_ptr->pspeed += 1;
@@ -514,8 +515,6 @@ static void _calc_bonuses(void)
 
     if (_essences[OF_NO_MAGIC] >= 5)
         p_ptr->anti_magic = TRUE;
-    if (_essences[OF_FREE_ACT] >= 2)
-        p_ptr->free_act = TRUE;
     if (_essences[OF_SEE_INVIS] >= 3)
         p_ptr->see_inv = TRUE;
     if (_essences[OF_SLOW_DIGEST] >= 2)
@@ -565,6 +564,7 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
     add_flag(flgs, OF_RES_POIS);
     add_flag(flgs, OF_HOLD_LIFE);
     add_flag(flgs, OF_LEVITATION);
+	add_flag(flgs, OF_FREE_ACT);
 
     for (i = 0; i < 6; i++) /* Assume in order */
     {
@@ -605,8 +605,6 @@ static void _get_flags(u32b flgs[OF_ARRAY_SIZE])
 
     if (_essences[OF_NO_MAGIC] >= 5)
         add_flag(flgs, OF_NO_MAGIC);
-    if (_essences[OF_FREE_ACT] >= 2)
-        add_flag(flgs, OF_FREE_ACT);
     if (_essences[OF_SEE_INVIS] >= 3)
         add_flag(flgs, OF_SEE_INVIS);
     if (_essences[OF_SLOW_DIGEST] >= 2)
@@ -1001,7 +999,6 @@ static void _character_dump(doc_ptr doc)
     _dump_ability_flag(doc, OF_IM_COLD, 3, "Immune Cold");
 
     doc_printf(doc, "\n   <color:G>%-22.22s Total  Need Bonus</color>\n", "Abilities");
-    _dump_ability_flag(doc, OF_FREE_ACT, 2, "Free Action");
     _dump_ability_flag(doc, OF_SEE_INVIS, 3, "See Invisible");
     _dump_ability_flag(doc, OF_SLOW_DIGEST, 2, "Slow Digestion");
     _dump_ability_flag(doc, OF_REGEN, 7, "Regeneration");
