@@ -281,7 +281,6 @@ static int _res_power(int which)
 
     case RES_SOUND:
     case RES_SHARDS:
-    case RES_CHAOS:
     case RES_DISEN:
     case RES_POIS:
     case RES_LITE:
@@ -289,8 +288,10 @@ static int _res_power(int which)
 	case RES_FEAR:
         return 3;
 
-	case RES_DARK: /*Very, very common*/
-	case RES_NEXUS:
+	/*Very, very common*/
+	case RES_CHAOS: // On weapons of Chaos and Blades of Chaos
+	case RES_DARK: // On nearly every Gondolin weapon
+	case RES_NEXUS: // On nearly every Trump weapon
 		return 4;
 
 	case RES_TIME: /*Upsettingly rare.*/
@@ -382,18 +383,20 @@ static void _calc_weapon_bonuses(object_type *o_ptr, weapon_info_t *info_ptr)
     {
         int j = _slay_flag_info[i].flag;
 		int k = _slay_flag_info[i].rank2_flag;
+		int n = _essences[j];
+
         if (j < 0) break;
-        if (_essences[j] >= _slay_power(i))
+
+		if (k > 0 && n >= _slay_power(i) * 4){
+			add_flag(o_ptr->flags, k);
+			add_flag(o_ptr->known_flags, k);
+		}
+        else if (n >= _slay_power(i))
         {
-			if (k > 0 && _essences[j] >= _slay_power(i) * 4){
-				add_flag(o_ptr->flags, k);
-				add_flag(o_ptr->known_flags, k);
-			}
-			else {
-				add_flag(o_ptr->flags, j);
-				add_flag(o_ptr->known_flags, j);
-			}
+			add_flag(o_ptr->flags, j);
+			add_flag(o_ptr->known_flags, j);
         }
+		//msg_format("NUM OF ESSENCES OF [%d] is %d. Required is %d.\n", j, n, _slay_power(i));
     }
 
     info_ptr->xtra_blow += blows * _blows_mult();
@@ -907,8 +910,8 @@ static void _dump_slay_flag(doc_ptr doc, int which, int whichslay){
 	int n = _essences[which];
 	
 	if (n <= 0) return;
-
-	int tr = _slay_flag_info[whichslay].power;
+	
+	int tr = _slay_power(whichslay);
 	bool singletier = (_slay_flag_info[whichslay].rank2_flag < 0) ? TRUE : FALSE;
 	int tr2 = tr * 4;
 
@@ -917,7 +920,7 @@ static void _dump_slay_flag(doc_ptr doc, int which, int whichslay){
 		doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
 			_slay_flag_info[whichslay].name,
 			n,
-			_slay_flag_info[whichslay].power,
+			tr,
 			""
 			);
 	}
@@ -925,14 +928,14 @@ static void _dump_slay_flag(doc_ptr doc, int which, int whichslay){
 		doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
 			_slay_flag_info[whichslay].name,
 			n,
-			_slay_flag_info[whichslay].power,
+			tr,
 			"Y"
 			);
 	}else if (n >= tr && n < tr2){
 		doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
 			_slay_flag_info[whichslay].name,
 			n,
-			_slay_flag_info[whichslay].power*4,
+			tr2,
 			"+1"
 			);
 	}
@@ -940,7 +943,7 @@ static void _dump_slay_flag(doc_ptr doc, int which, int whichslay){
 		doc_printf(doc, "   %-22.22s %5d %5d %5.5s\n",
 			_slay_flag_info[whichslay].rank2_name,
 			n,
-			_slay_flag_info[whichslay].power*4,
+			tr2,
 			"+2"
 			);
 	}

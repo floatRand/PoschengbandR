@@ -2419,6 +2419,8 @@ device_effect_info_t rod_effect_table[] =
     {EFFECT_BALL_CHAOS,            85,  45,     3,   0,     0, _DROP_GOOD | _DROP_GREAT},
     {EFFECT_CLAIRVOYANCE,          90, 100,     3,   0,     0, _DROP_GOOD | _DROP_GREAT},
     {EFFECT_BALL_LITE,             95,  50,     3,   0,     0, _DROP_GOOD | _DROP_GREAT},
+	{EFFECT_LIST_UNIQUES,          70,  80,     16,   0,     0, _DROP_GOOD | _DROP_GREAT},
+	{EFFECT_LIST_ARTIFACTS,        70,  80,     16,   0,     0, _DROP_GOOD | _DROP_GREAT},
     {0}
 };
 
@@ -2473,6 +2475,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_STARBURST,             85,  41,     3,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_DARKNESS_STORM,        85,  42,     3,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_RESTORE_MANA,         100, 100,    16,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
+	{EFFECT_SATISFY_HUNGER,        10,  10,    16,   0,     0, _DROP_GOOD},
     {0}
 };
 
