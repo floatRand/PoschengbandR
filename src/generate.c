@@ -276,6 +276,9 @@ static bool alloc_stairs(int feat, int num, int walls)
             /* Clear possible garbage of hidden trap */
             c_ptr->mimic = 0;
 
+			// experimental, all stairs are shaft on coffeebreak, unless there is quest around. 
+			if (coffeebreak_mode && shaft_num != 0) shaft_num = num;
+
             /* Clear previous contents, add stairs */
             c_ptr->feat = (i < shaft_num) ? feat_state(feat, FF_SHAFT) : feat;
 

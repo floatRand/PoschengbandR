@@ -1001,7 +1001,8 @@ void leave_floor(void)
                     move_num = rand_range(d_info[dungeon_type].mindepth, d_info[dungeon_type].maxdepth);
 				else if (coffeebreak_mode && dungeon_type == DUNGEON_ANGBAND){
 					// on coffeebreak we always return to recall level. It can't be reset, either...
-					if (max_dlv[dungeon_type] < 99) move_num = max_dlv[dungeon_type] + 1; 
+					if (max_dlv[dungeon_type] <= 97) move_num = max_dlv[dungeon_type] + 2;
+					else if (max_dlv[dungeon_type] == 98) move_num = max_dlv[dungeon_type] + 1;
 					else move_num = max_dlv[dungeon_type];
 				}
                 else
