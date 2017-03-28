@@ -721,7 +721,11 @@ void check_quest_completion(monster_type *m_ptr)
 
 
         /* Create stairs down */
-        cave_set_feat(y, x, feat_down_stair);
+        if(!coffeebreak_mode) cave_set_feat(y, x, feat_down_stair);
+		else {
+			if (quest_number(dun_level + 1)) cave_set_feat(y, x, feat_down_stair);
+			else cave_set_feat(y, x, feat_state(feat_down_stair, FF_SHAFT));
+		}
 
         /* Remember to update everything */
         p_ptr->update |= (PU_FLOW);
