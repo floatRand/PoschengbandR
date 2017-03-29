@@ -2475,7 +2475,7 @@ device_effect_info_t staff_effect_table[] =
     {EFFECT_STARBURST,             85,  41,     3,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_DARKNESS_STORM,        85,  42,     3,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
     {EFFECT_RESTORE_MANA,         100, 100,    16,   0,     0, _DROP_GOOD | _DROP_GREAT | _NO_DESTROY},
-	{EFFECT_SATISFY_HUNGER,        10,  10,    16,   0,     0, _DROP_GOOD},
+	{EFFECT_SATISFY_HUNGER,        10,  10,    90,   0,     0, 0},
     {0}
 };
 
