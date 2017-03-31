@@ -2410,7 +2410,7 @@ void process_world_aux_movement(void)
 				/*I feel like I should force player to take on Serpent once he reaches it, but for now, it shall be like this.*/
 				if (coffeebreak_mode)
 				{
-					if (dun_level <= 97 && quest_number(dun_level+1)==0) dun_level += 2;
+					if (dun_level <= 97 && !quest_number(dun_level+1)) dun_level += 2;
 					else if (dun_level == 98) dun_level++;
 				}
 
