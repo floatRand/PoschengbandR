@@ -2696,6 +2696,7 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
 			make_obj_sapient(o_ptr);
 			has_pval = TRUE;
 		}
+		else remove_flag(o_ptr->flags, OF_SAPIENCE); /* Pretty bad case of paranoia */
 	}
 
     if (has_pval)
