@@ -4627,6 +4627,8 @@ bool py_attack(int y, int x, int mode)
         return FALSE;
     }
 
+	process_sapience_random(75, TRUE, FALSE);
+
     if ( !is_hostile(m_ptr)
       && !(p_ptr->stun || p_ptr->confused || p_ptr->image || IS_SHERO() || !m_ptr->ml) )
     {

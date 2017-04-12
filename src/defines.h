@@ -3123,6 +3123,9 @@ enum obj_flags_e {
     OF_AGGRAVATE,
     OF_TY_CURSE,
 
+	/* SPECIAL */
+	OF_SAPIENCE,
+
     /* A few places loop from 0 <= i < OF_COUNT ... (init1, race_sword and race_ring) */
     OF_COUNT,
 };
@@ -3604,6 +3607,16 @@ enum r_drop_e
     R_DROP_MAX
 };
 
+
+
+/*
+* Object personalities for sapience
+*/
+#define OBJ_PERS_NONE			0
+#define OBJ_PERS_GOOD			1
+#define OBJ_PERS_EVIL		    2
+#define OBJ_PERS_CHAOS			3
+#define OBJ_PERS_MALEVOLENT     4
 /*
  * Monster bit flags of racial resistances
  * Note: Resist confusion was merged to RFR_NO_CONF
@@ -5171,6 +5184,7 @@ extern int PlayerUID;
 #define MON_MARILITH            1130
 #define MON_MIMIC               1131
 #define MON_MULTIHUED_CENTIPEDE 1132
+#define MON_CURSE_DRAGON		1176
 #define MON_TAISABACHI          1215
 #define MON_HIBACHI             1216
 #define MON_RUMOURMONGER		1217

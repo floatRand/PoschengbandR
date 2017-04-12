@@ -1634,7 +1634,7 @@ P:Body:Snake
 D:It has a copper head and sharp venomous fangs.
 
 N:107:Death sword
-G:|:W
+G:x:W
 I:130:6d6:20:40:0:15
 W:8:5:40:30:0:0
 B:SLASH:HURT:5d5
@@ -21168,6 +21168,56 @@ S:ROCKET
 D:This golem beholder is a perfect sentry and won't let anything come close.
 D:White mouldy flesh covered by metal plating holds a black lidless eye,
 D:slowly turning around and around forever.
+
+N:1175:Time Wyrm
+G:D:G
+I:135:45d100:40:160:255:1000
+W:68:10:999:30000:0:0
+B:CLAW:HURT:6d12
+B:CLAW:HURT:6d12
+B:BITE:TIME:7d10
+B:BITE:TIME:7d10
+F:FORCE_MAXHP | CAN_FLY
+F:ONLY_ITEM | DROP_3D2 | DROP_4D2 | DROP_GOOD |
+F:POWERFUL | MOVE_BODY | PASS_WALL | INVISIBLE |
+F:DRAGON | NO_CONF | NO_SLEEP | RES_TELE |
+F:RES_ELEC | RES_CHAO |
+F:RES_TIME | RES_NEXU | RES_DISE | RIDING |
+F:POS_DETECT_OBJECTS | POS_SEE_INVIS | POS_GAIN_AC | POS_HOLD_LIFE
+P:Copy:Half-Titan:Beastmaster
+P:Stats:1:0:0:0:1:1
+P:Life:110
+P:Body:Dragon
+S:1_IN_4 |
+S:HASTE | BLINK | SLOW
+S:BR_INER | BR_TIME | BR_DISI
+S:S_DRAGON
+D:A strange serpentine apparation, superpositioned between birth and death.
+D:They watch over cogs of time and do not take kindly to meddlers. 
+
+N:1176:Curse Dragon
+G:D:v
+I:120:28d100:25:125:15:500
+W:50:10:999:14000:0:0
+B:CLAW:HURT:5d12
+B:CLAW:HURT:5d12
+B:BITE:UN_BONUS:7d8
+F:FORCE_SLEEP | FORCE_MAXHP |
+F:ONLY_ITEM | DROP_2D2 | DROP_3D2 | DROP_4D2 | DROP_GOOD
+F:CAN_FLY |
+F:POWERFUL | MOVE_BODY | EVIL | DRAGON | 
+F:RES_TELE | RES_LITE | RES_DARK | RES_DISE | NO_CONF | NO_SLEEP | RIDING |
+F:POS_DETECT_OBJECTS | POS_SEE_INVIS | POS_GAIN_AC
+P:Copy:Half-Titan:Beastmaster
+P:Life:110
+P:Body:Dragon
+S:1_IN_4 |
+S:BLIND | SCARE | CONF | CAUSE_3 | CAUSE_4
+S:BR_NETH | BR_DISE | DISPEL | DRAIN_MANA
+D:A terrible dragon with malice coursing through its veins and misfortune in its breath.
+D:An ill omen, but thankfully a rare sight. Although I suppose if you are seeing one, 
+D:you are unlucky to begin with? 
+
 
 # new
 N:1191:The Maw of Hell

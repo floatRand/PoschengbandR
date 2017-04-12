@@ -612,6 +612,10 @@ static void _display_extra(object_type *o_ptr, u32b flgs[OF_ARRAY_SIZE], doc_ptr
 		doc_printf(doc, "<color:y>It automatically maps nearby area with radius of %d.\n</color>", 3 + o_ptr->pval);
 	}
 
+	if (have_flag(flgs, OF_SAPIENCE)){
+		doc_insert(doc, "<color:v>It is sapient.\n</color>");
+	}
+
     if (have_flag(flgs, OF_EASY_SPELL))
         doc_insert(doc, "It affects your ability to cast spells.\n");
 

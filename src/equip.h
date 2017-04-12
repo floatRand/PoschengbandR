@@ -82,4 +82,6 @@ extern void               equip_learn_resist(int obj_flag); /* pass TR_RES_FIRE 
 extern void               equip_learn_vuln(int obj_flag);
 extern void               equip_learn_flag(int obj_flag);
 
+extern int				  equip_find_sapient(void);
+
 #endif

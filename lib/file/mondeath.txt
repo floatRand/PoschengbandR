@@ -59,10 +59,10 @@ says, 'I guess this is the last version of PosChengband - wait, R? What is that?
 says, 'Well, Hengband was much more fun than this!'
 says, 'Vanilla PosChengband was better!'
 
-N:1133:Taisabachi
+N:1215:Taisabachi
 disappears in massive explosion.
 
-N:1134:Hibachi
+N:1216:Hibachi
 explodes violently.
 
 N:*:Default

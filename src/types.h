@@ -339,7 +339,7 @@ struct object_type
     byte xtra2;            /* Extra info index */
     byte xtra3;            /* Extra info: Chests and Weaponsmith */
     s16b xtra4;            /* Extra info: Lights, Capture, ... */
-    s32b xtra5;            /* Extra info */
+    s32b xtra5;            /* Extra info: ... Sapience */
 
     s16b to_h;            /* Plusses to hit */
     s16b to_d;            /* Plusses to damage */

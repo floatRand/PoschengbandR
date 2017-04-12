@@ -1829,7 +1829,6 @@ extern bool set_tim_esp(int v, bool do_dec);
 extern bool set_tim_esp_magical(int v, bool do_dec);
 extern bool set_superstealth(bool set);
 extern bool set_sanctuary(bool set);
-
 /* xtra2.c */
 extern void check_experience(void);
 extern int exp_requirement(int level);
@@ -1847,8 +1846,7 @@ extern bool class_doesnt_study(int class_idx);
 extern int monster_tele_save(monster_race *r_ptr, int power);
 extern int Rfear_get_fail_chance(int ml);
 extern int mspell_damage(int fGroup, u32b atk, monster_race *r_ptr);
-
-
+extern void process_sapience_random(int chancelimit, bool allow_wep, bool allow_ring);
 /* Display
    Various regions of the terminal are reserved for different things.
    For example, msgs are drawn near the top, the map is (now) leftmost, a

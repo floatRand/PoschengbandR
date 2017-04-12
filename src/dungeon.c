@@ -3243,6 +3243,8 @@ static void process_world(void)
     /* Process recharging */
     process_world_aux_recharge();
 
+	if(game_turn % (TURNS_PER_TICK)) process_sapience_random(500, TRUE, TRUE);
+
     /* Have auto_id affect inventory*/
     if (p_ptr->auto_id)
         identify_pack();
@@ -3254,8 +3256,7 @@ static void process_world(void)
     /* Involuntary Movement */
     process_world_aux_movement();
 
-	if (p_ptr->automapping > 0){ map_area(3 + p_ptr->automapping); equip_learn_flag(OF_AUTOMAP); }
-
+	if (p_ptr->automapping > 0 && game_turn % (TURNS_PER_TICK)){ map_area(3 + p_ptr->automapping); equip_learn_flag(OF_AUTOMAP); }
     {
         race_t *race_ptr = get_race();
         if (race_ptr->process_world)

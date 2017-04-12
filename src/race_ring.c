@@ -207,6 +207,7 @@ static bool _skip_flag(int which)
     case OF_DEC_SPELL_POWER:
     case OF_SLAY_LIVING:
     case OF_STUN:
+	case OF_SAPIENCE:
         return TRUE;
     }
     return FALSE;

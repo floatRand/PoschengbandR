@@ -860,6 +860,8 @@ bool get_monster_drop(int m_idx, object_type *o_ptr)
     if (r_ptr->flags1 & RF1_DROP_GREAT)
         mo_mode |= AM_GREAT;
 
+	if(m_ptr->r_idx == MON_CURSE_DRAGON) mo_mode |= AM_CURSED; /* :) */
+
     obj_drop_theme = 0;
     if (r_ptr->drop_theme && one_in_(2))
         obj_drop_theme = r_ptr->drop_theme;
@@ -6073,3 +6075,178 @@ int mspell_damage(int fGroup, u32b atk, monster_race *r_ptr)
 	return 0;
 
 }
+
+/*
+ For sake of simplicity, we just do a 
+*/
+void _sapience_do_thing(object_type *o_ptr, int bene){
+
+	if (dun_level == 0) return; /*Let's not bother here frankly.*/
+	/*Power is determined by object level and pval*/
+	int usb = ABS(bene); /* UnSigned Bene*/
+	char * o_name[60];
+	int rank;
+
+	object_desc(o_name,o_ptr,OD_NAME_ONLY);
+	/*For now, we are going to make a simple fall-through of possible options with one_in_(x).
+	 Try to make 7 effects for each, now.
+	*/
+	if (bene < 0) rank = 0;
+	else if (bene > 0) rank = 2;
+	else rank = 1;
+
+	int count = 0, i;
+	switch (rank){
+		case 0: /*Bad*/
+		{
+			if (one_in_(3)){
+				msg_format("%^s mutters.", o_name);
+			} /*Lucky you!*/
+			else if (one_in_(3) && !p_ptr->blind){ 
+				msg_format("%^s flashes brightly!", o_name); 
+				set_blind(10+randint0(20), FALSE); 
+			}
+			else if (one_in_(3) && !p_ptr->blind){
+				msg_format("%^s scintillates in strange colours.", o_name);
+				set_confused(10 + randint0(20), FALSE);
+			}
+			else if (one_in_(3)){
+				msg_format("%^s slows you down.", o_name);
+				set_slow(10 + randint0(20), FALSE);
+			}
+			else if (one_in_(3)){
+				if(!p_ptr->blind) msg_format("%^s blanks your mind!", o_name);
+				else msg_print("Something strips away your memories...");
+				lose_all_info();
+			}
+			else if (one_in_(3)){
+				if (!p_ptr->blind) msg_format("%^s shrieks!", o_name);
+				else msg_print("Something lets out a shriek!");
+				aggravate_monsters(0);
+			}
+			else if (one_in_(3))
+			{
+				for (i = 0; i < randint1(7); i++){
+					place_monster(py,px, PM_NO_PET | PM_SUMMON_FATIGUE);
+				}
+				if (!p_ptr->blind) msg_format("%^s calls forth monsters!", o_name);
+			}
+			else{ msg_format("%^s invokes a terrible, ancient curse!", o_name);  activate_ty_curse(FALSE, &count); }
+		} break;
+		case 1: break; /*Neutral*/
+		case 2: /*Good*/
+		{
+			if (one_in_(5)){
+				msg_format("%^s purrs.", o_name);
+			} /* Bit unlucky! */
+			else if (one_in_(5) && (p_ptr->chp < p_ptr->mhp / 2 /* This is early on here since it is bit situational.*/
+				|| p_ptr->cut || p_ptr->confused || p_ptr->confused || p_ptr->image || p_ptr->blind || p_ptr->blind)){
+				hp_player(50 + o_ptr->level * 2);
+				set_cut(0, TRUE);
+				set_poisoned(0, TRUE);
+				set_blind(0, TRUE);
+				set_confused(0, TRUE);
+				set_image(0, TRUE);
+			}
+			else if (one_in_(4)){
+					if (!p_ptr->blind) msg_format("%^s encourages you.", o_name);
+						else msg_print("Something encourages you.");
+					set_hero(20 + randint0(40), FALSE);
+			}
+			else if (one_in_(3)){ /*Weaker buffs*/
+				if (!p_ptr->blind) msg_format("%^s helps you out.", o_name);
+					else msg_print("Something helps you out.");
+				int roll = randint0(4); 
+				switch (roll){
+					case 0: set_fast(20 + randint0(20), FALSE); break;
+					case 1: set_tim_esp(20 + randint0(20), FALSE); break;
+					case 2: set_tim_regen(20 + randint0(20), FALSE); break;
+					case 3: set_tim_sh_elements(20 + randint0(20), FALSE); break;
+				}
+			}
+			else if (one_in_(3) && (p_ptr->chp < p_ptr->mhp / 2 /* Another go at it.*/
+				|| p_ptr->cut || p_ptr->confused || p_ptr->confused || p_ptr->image || p_ptr->blind || p_ptr->blind)){
+				hp_player(50 + o_ptr->level * 2);
+				set_cut(0, TRUE);
+				set_poisoned(0, TRUE);
+				set_blind(0, TRUE);
+				set_confused(0, TRUE);
+				set_image(0, TRUE);
+			}
+			else if (one_in_(3)){
+					if (!p_ptr->blind) msg_format("%^s shares a vision with you.", o_name);
+					else msg_print("Something shares a vision with you.");
+					if (one_in_(16)) map_area(DETECT_RAD_ALL);
+					detect_all(DETECT_RAD_DEFAULT);
+			}
+			else if (one_in_(6)){ /*Powerful buffs*/
+				if (!p_ptr->blind) msg_format("%^s really helps you out!", o_name);
+				else msg_print("Something really helps you out!");
+				int roll = randint0(4);
+				switch (roll){
+					case 0: set_lightspeed(16 + randint0(16), FALSE); break;
+					case 1: set_ultimate_res(16 + randint0(16), FALSE); break;
+					case 2: set_invuln(7 + randint0(7), FALSE); break;
+					case 3: set_multishadow(7 + randint0(7), FALSE); break;
+				}
+			}
+			else {
+					msg_format("%^s purrs gladly.", o_name);
+			}
+		} break;
+	}
+
+	obj_learn_flag(o_ptr, OF_SAPIENCE);
+	int misc = 0;
+}
+
+void _sapience_act_on_random(object_type *o_ptr){
+	/*Compare virtues here etc. etc.*/
+	int act = 0;
+	int align_abs = ABS(p_ptr->align);
+	bool evil_player = (p_ptr->align < 0);
+
+	if (evil_player){
+		if (o_ptr->xtra5 == OBJ_PERS_EVIL){
+			if (randint0(align_abs) > 33) act = 1;
+			else act = 0;
+		}
+		if (o_ptr->xtra5 == OBJ_PERS_GOOD){
+			if (randint0(align_abs) > 33) act = -1;
+			else act = 0;
+		}
+	}
+	else{
+		if (o_ptr->xtra5 == OBJ_PERS_EVIL){
+			if (randint0(align_abs) > 33) act = -1;
+			else act = 0;
+		}
+		if (o_ptr->xtra5 == OBJ_PERS_GOOD){
+			if (randint0(align_abs) > 33) act = 1;
+			else act = 0;
+		}
+	}
+
+	_sapience_do_thing(o_ptr, act);
+}
+
+void process_sapience_random(int chancelimit, bool allow_wep, bool allow_ring){
+	int slot, i, base_x;
+	for (slot = EQUIP_BEGIN, i = 0; slot < EQUIP_BEGIN + equip_count(); slot++, i++)
+	{
+		object_type *o_ptr = equip_obj(slot);
+		if (!o_ptr) continue;
+		if (!have_flag(o_ptr->flags, OF_SAPIENCE)) continue;
+		if (!allow_ring && o_ptr->tval == TV_RING) continue;
+		if (!allow_wep && object_is_weapon(o_ptr)) continue;
+
+		base_x = 4;
+		base_x += o_ptr->pval;
+		if (o_ptr->tval == TV_RING) base_x *= 3;
+
+		if (base_x < randint0(chancelimit)) continue;
+			_sapience_act_on_random(o_ptr);
+
+	}
+}
+

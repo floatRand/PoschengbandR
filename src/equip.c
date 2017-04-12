@@ -348,6 +348,21 @@ int equip_find_empty_hand(void)
     return 0;
 }
 
+int equip_find_sapient(void)
+{
+	int i;
+	for (i = EQUIP_BEGIN; i < EQUIP_BEGIN + _template->count; i++)
+	{
+		object_type *o_ptr = equip_obj(i);
+		if (!o_ptr) continue;
+		if (have_flag( o_ptr->flags, OF_SAPIENCE ) && o_ptr->xtra5 > 0)
+		{
+			return i;
+		}
+	}
+	return 0;
+}
+
 bool equip_can_wield_kind(int tval, int sval)
 {
     object_type forge;

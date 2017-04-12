@@ -80,6 +80,7 @@ static bool _skip_flag(int which)
     case OF_ACTIVATE:
     case OF_FULL_NAME:
     case OF_FIXED_FLAVOR:
+	case OF_SAPIENCE:
         return TRUE;
     }
     return FALSE;

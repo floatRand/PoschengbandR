@@ -197,6 +197,12 @@ bool _mon_has_unique(int r_idx){
 			case MON_UBBO_SATHLA:
 			case MON_MASTER_TONBERRY:
 		/*Are just awkward for naming*/
+			case MON_ALMAGEST1:
+			case MON_ALMAGEST2:
+			case MON_ALMAGEST3:
+			case MON_ALMAGEST4:
+			case MON_ALMAGEST5:
+			case MON_ECHIZEN:
 			case 818: /* mouth of sauron - would translate to "The Mouth" */
 			case 451: /* ultimate dungeon cleaner. Bit too long */
 			return TRUE;
@@ -716,6 +722,7 @@ static flag_insc_table flag_insc_misc[] =
     { "Wm", OF_WEAPONMASTERY, -1 },
     { "Am", OF_AUTOMAP, -1 },
     { "Id", OF_LORE, -1 },
+	{ "Sn", OF_SAPIENCE, -1 },
     { NULL, 0, -1 }
 };
 

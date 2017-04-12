@@ -1878,6 +1878,36 @@ void curse_object(object_type *o_ptr)
     }
 }
 
+void make_obj_sapient(object_type *o_ptr)
+{
+	/*For sake of simplicity, we will have number of personalities. Later on you can map them onto space of 32 bits, but alas, this is just
+	prototyping here. Personality is determined by flags, but there is some randomness to it.
+	The personality is stored then in xtra5, which is used for misc things ( not in rings/swords )
+	Pval is strength of the personality.
+
+	Actually, for now, let's just make it random. Oopsiedoo!
+	*/
+	s32b oper = 0;
+	if (o_ptr->name1 && !have_flag(o_ptr->flags,OF_SAPIENCE)) return; /* paranoia */
+	/*Cursed objects ( generated cursed, mind you ) have higher chance of being malevolent*/
+	if ((object_is_cursed(o_ptr) && one_in_(2)) || one_in_((p_ptr->nightmare_mode) ? 8 : 666)) oper = OBJ_PERS_MALEVOLENT;
+	else if (one_in_(8)) oper = OBJ_PERS_CHAOS;
+	else oper = (one_in_(2)) ? OBJ_PERS_EVIL : OBJ_PERS_GOOD;
+
+	if (p_ptr->wizard){
+		switch (oper){
+			case OBJ_PERS_NONE:	 msg_print("Creating sapient object... with no sapience?!"); break;
+			case OBJ_PERS_GOOD:	 msg_format("Creating good sapient object!"); break;
+			case OBJ_PERS_EVIL:	 msg_format("Creating evil sapient object!"); break;
+			case OBJ_PERS_CHAOS: msg_format("Creating chaotic sapient object!"); break;
+			case OBJ_PERS_MALEVOLENT: msg_format("Creating malevolent sapient object!"); break;
+		}
+	}
+
+	o_ptr->xtra5 = oper;
+	add_flag(o_ptr->flags, OF_SAPIENCE);
+}
+
 s32b create_artifact(object_type *o_ptr, u32b mode)
 {
     char    new_name[1024];
@@ -2660,6 +2690,13 @@ s32b create_artifact(object_type *o_ptr, u32b mode)
             }
         }
     };
+	
+	if (object_is_melee_weapon(o_ptr) || object_is_ring(o_ptr)){
+		if (one_in_(128)){ /* pretty rare all things considered */
+			make_obj_sapient(o_ptr);
+			has_pval = TRUE;
+		}
+	}
 
     if (has_pval)
     {
