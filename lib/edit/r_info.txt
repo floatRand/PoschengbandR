@@ -1634,7 +1634,7 @@ P:Body:Snake
 D:It has a copper head and sharp venomous fangs.
 
 N:107:Death sword
-G:x:W
+G:|:o
 I:130:6d6:20:40:0:15
 W:8:5:40:30:0:0
 B:SLASH:HURT:5d5
